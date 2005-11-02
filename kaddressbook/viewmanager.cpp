@@ -86,7 +86,7 @@ void ViewManager::restoreSettings()
   Q3DictIterator<KAddressBookView> it( mViewDict );
   for ( it.toFirst(); it.current(); ++it ) {
     KConfigGroup group( mCore->config(), it.currentKey() );
-    it.current()->readConfig( mCore->config() );
+    it.current()->readConfig( group );
   }
 
   setActiveView( activeViewName );
@@ -99,7 +99,7 @@ void ViewManager::saveSettings()
   Q3DictIterator<KAddressBookView> it( mViewDict );
   for ( it.toFirst(); it.current(); ++it ) {
     KConfigGroup group( mCore->config(), it.currentKey() );
-    (*it)->writeConfig( mCore->config() );
+    (*it)->writeConfig( group );
   }
 
   Filter::save( mCore->config(), "Filter", mFilterList );

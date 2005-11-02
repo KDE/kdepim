@@ -100,14 +100,14 @@ class Filter
     const QStringList &categories() const;
 
     /**
-      Saves the filter to the config file. The group should already be set.
+      Saves the filter to the config file. 
      */
-    void save( KConfig *config );
+    void save( KConfigGroup &cfg );
 
     /**
-      Loads the filter from the config file. The group should already be set.
+      Loads the filter from the config file.
      */
-    void restore( KConfig *config );
+    void restore( KConfigGroup &cfg );
 
     /**
       Saves a list of filters to the config file.

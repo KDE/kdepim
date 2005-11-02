@@ -183,25 +183,25 @@ KABC::Field *KAddressBookCardView::sortField() const
   return KABC::Field::allFields()[ 0 ];
 }
 
-void KAddressBookCardView::readConfig( KConfig *config )
+void KAddressBookCardView::readConfig( KConfigGroup &cfg )
 {
-  KAddressBookView::readConfig( config );
+  KAddressBookView::readConfig( cfg );
 
   // costum colors?
-  if ( config->readBoolEntry( "EnableCustomColors", false ) ) {
+  if ( cfg.readBoolEntry( "EnableCustomColors", false ) ) {
     QPalette p( mCardView->palette() );
     QColor c = p.color( QPalette::Normal, QColorGroup::Base );
-    p.setColor( QPalette::Normal, QColorGroup::Base, config->readColorEntry( "BackgroundColor", &c ) );
+    p.setColor( QPalette::Normal, QColorGroup::Base, cfg.readColorEntry( "BackgroundColor", &c ) );
     c = p.color( QPalette::Normal, QColorGroup::Text );
-    p.setColor( QPalette::Normal, QColorGroup::Text, config->readColorEntry( "TextColor", &c ) );
+    p.setColor( QPalette::Normal, QColorGroup::Text, cfg.readColorEntry( "TextColor", &c ) );
     c = p.color( QPalette::Normal, QColorGroup::Button );
-    p.setColor( QPalette::Normal, QColorGroup::Button, config->readColorEntry( "HeaderColor", &c ) );
+    p.setColor( QPalette::Normal, QColorGroup::Button, cfg.readColorEntry( "HeaderColor", &c ) );
     c = p.color( QPalette::Normal, QColorGroup::ButtonText );
-    p.setColor( QPalette::Normal, QColorGroup::ButtonText, config->readColorEntry( "HeaderTextColor", &c ) );
+    p.setColor( QPalette::Normal, QColorGroup::ButtonText, cfg.readColorEntry( "HeaderTextColor", &c ) );
     c = p.color( QPalette::Normal, QColorGroup::Highlight );
-    p.setColor( QPalette::Normal, QColorGroup::Highlight, config->readColorEntry( "HighlightColor", &c ) );
+    p.setColor( QPalette::Normal, QColorGroup::Highlight, cfg.readColorEntry( "HighlightColor", &c ) );
     c = p.color( QPalette::Normal, QColorGroup::HighlightedText );
-    p.setColor( QPalette::Normal, QColorGroup::HighlightedText, config->readColorEntry( "HighlightedTextColor", &c ) );
+    p.setColor( QPalette::Normal, QColorGroup::HighlightedText, cfg.readColorEntry( "HighlightedTextColor", &c ) );
     mCardView->viewport()->setPalette( p );
   } else {
     // needed if turned off during a session.
@@ -210,27 +210,27 @@ void KAddressBookCardView::readConfig( KConfig *config )
 
   //custom fonts?
   QFont f( font() );
-  if ( config->readBoolEntry( "EnableCustomFonts", false ) ) {
-    mCardView->setFont( config->readFontEntry( "TextFont", &f ) );
+  if ( cfg.readBoolEntry( "EnableCustomFonts", false ) ) {
+    mCardView->setFont( cfg.readFontEntry( "TextFont", &f ) );
     f.setBold( true );
-    mCardView->setHeaderFont( config->readFontEntry( "HeaderFont", &f ) );
+    mCardView->setHeaderFont( cfg.readFontEntry( "HeaderFont", &f ) );
   } else {
     mCardView->setFont( f );
     f.setBold( true );
     mCardView->setHeaderFont( f );
   }
 
-  mCardView->setDrawCardBorder( config->readBoolEntry( "DrawBorder", true ) );
-  mCardView->setDrawColSeparators( config->readBoolEntry( "DrawSeparators", true ) );
-  mCardView->setDrawFieldLabels( config->readBoolEntry( "DrawFieldLabels", false ) );
-  mShowEmptyFields = config->readBoolEntry( "ShowEmptyFields", false );
+  mCardView->setDrawCardBorder( cfg.readBoolEntry( "DrawBorder", true ) );
+  mCardView->setDrawColSeparators( cfg.readBoolEntry( "DrawSeparators", true ) );
+  mCardView->setDrawFieldLabels( cfg.readBoolEntry( "DrawFieldLabels", false ) );
+  mShowEmptyFields = cfg.readBoolEntry( "ShowEmptyFields", false );
 
   mCardView->setShowEmptyFields( mShowEmptyFields );
 
-  mCardView->setItemWidth( config->readNumEntry( "ItemWidth", 200 ) );
-  mCardView->setItemMargin( config->readNumEntry( "ItemMargin", 0 ) );
-  mCardView->setItemSpacing( config->readNumEntry( "ItemSpacing", 10 ) );
-  mCardView->setSeparatorWidth( config->readNumEntry( "SeparatorWidth", 2 ) );
+  mCardView->setItemWidth( cfg.readNumEntry( "ItemWidth", 200 ) );
+  mCardView->setItemMargin( cfg.readNumEntry( "ItemMargin", 0 ) );
+  mCardView->setItemSpacing( cfg.readNumEntry( "ItemSpacing", 10 ) );
+  mCardView->setSeparatorWidth( cfg.readNumEntry( "SeparatorWidth", 2 ) );
 
   disconnect( mCardView, SIGNAL( executed( CardViewItem* ) ),
               this, SLOT( addresseeExecuted( CardViewItem* ) ) );
@@ -243,10 +243,10 @@ void KAddressBookCardView::readConfig( KConfig *config )
              this, SLOT( addresseeExecuted( CardViewItem* ) ) );
 }
 
-void KAddressBookCardView::writeConfig( KConfig *config )
+void KAddressBookCardView::writeConfig( KConfigGroup &cfg )
 {
-  config->writeEntry( "ItemWidth", mCardView->itemWidth() );
-  KAddressBookView::writeConfig( config );
+  cfg.writeEntry( "ItemWidth", mCardView->itemWidth() );
+  KAddressBookView::writeConfig( cfg );
 }
 
 QStringList KAddressBookCardView::selectedUids()

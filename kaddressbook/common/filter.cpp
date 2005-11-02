@@ -121,20 +121,20 @@ const QStringList &Filter::categories() const
   return mCategoryList;
 }
 
-void Filter::save( KConfig *config )
+void Filter::save( KConfigGroup &cfg )
 {
-  config->writeEntry( "Name", mName );
-  config->writeEntry( "Enabled", mEnabled );
-  config->writeEntry( "Categories", mCategoryList );
-  config->writeEntry( "MatchRule", (int)mMatchRule );
+  cfg.writeEntry( "Name", mName );
+  cfg.writeEntry( "Enabled", mEnabled );
+  cfg.writeEntry( "Categories", mCategoryList );
+  cfg.writeEntry( "MatchRule", (int)mMatchRule );
 }
 
-void Filter::restore( KConfig *config )
+void Filter::restore( KConfigGroup &cfg )
 {
-  mName = config->readEntry( "Name", "<internal error>" );
-  mEnabled = config->readBoolEntry( "Enabled", true );
-  mCategoryList = config->readListEntry( "Categories" );
-  mMatchRule = (MatchRule)config->readNumEntry( "MatchRule", Matching );
+  mName = cfg.readEntry( "Name", "<internal error>" );
+  mEnabled = cfg.readBoolEntry( "Enabled", true );
+  mCategoryList = cfg.readListEntry( "Categories" );
+  mMatchRule = (MatchRule)cfg.readNumEntry( "MatchRule", Matching );
 
   mIsEmpty = false;
 }
@@ -157,7 +157,7 @@ void Filter::save( KConfig *config, const QString &baseGroup, Filter::List &list
     if ( !(*iter).mInternal ) {
       KConfigGroup s( config, QString( "%1_%2" ).arg( baseGroup )
                                                      .arg( index ) );
-      (*iter).save( config );
+      (*iter).save( s );
       index++;
     }
   }
@@ -180,7 +180,7 @@ Filter::List Filter::restore( KConfig *config, const QString &baseGroup )
   for ( int i = 0; i < count; i++ ) {
     {
       KConfigGroup s( config, QString( "%1_%2" ).arg( baseGroup ).arg( i ) );
-      f.restore( config );
+      f.restore( s );
     }
 
     list.append( f );

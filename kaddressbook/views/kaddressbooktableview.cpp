@@ -178,18 +178,18 @@ KABC::Field *KAddressBookTableView::sortField() const
   return ( mListView->sortColumn() == -1 ? fields()[ 0 ] : fields()[ mListView->sortColumn() ] );
 }
 
-void KAddressBookTableView::writeConfig( KConfig *config )
+void KAddressBookTableView::writeConfig( KConfigGroup &cfg )
 {
-  KAddressBookView::writeConfig( config );
-
-  mListView->saveLayout( config, config->group() );
+  KAddressBookView::writeConfig(cfg );
+#warning "kde4: port to KConfigGroup ";
+  //mListView->saveLayout( config, config->group() );
 }
 
-void KAddressBookTableView::readConfig( KConfig *config )
+void KAddressBookTableView::readConfig( KConfigGroup &cfg )
 {
-  KAddressBookView::readConfig( config );
+  KAddressBookView::readConfig( cfg );
 
-  if ( config->readBoolEntry( "InstantMessagingPresence", false ) ) {
+  if ( cfg.readBoolEntry( "InstantMessagingPresence", false ) ) {
     if ( !mIMProxy ) {
       mIMProxy = KIMProxy::instance( kapp->dcopClient() );
       connect( mIMProxy, SIGNAL( sigContactPresenceChanged( const QString& ) ),
@@ -208,15 +208,16 @@ void KAddressBookTableView::readConfig( KConfig *config )
   reconstructListView();
 
   // Set the list view options
-  mListView->setAlternateBackgroundEnabled( config->readBoolEntry( "ABackground", true ) );
-  mListView->setSingleLineEnabled( config->readBoolEntry( "SingleLine", false ) );
-  mListView->setToolTipsEnabled( config->readBoolEntry( "ToolTips", true ) );
+  mListView->setAlternateBackgroundEnabled( cfg.readBoolEntry( "ABackground", true ) );
+  mListView->setSingleLineEnabled( cfg.readBoolEntry( "SingleLine", false ) );
+  mListView->setToolTipsEnabled( cfg.readBoolEntry( "ToolTips", true ) );
 
-  if ( config->readBoolEntry( "Background", false ) )
-    mListView->setBackgroundPixmap( config->readPathEntry( "BackgroundName" ) );
+  if ( cfg.readBoolEntry( "Background", false ) )
+    mListView->setBackgroundPixmap( cfg.readPathEntry( "BackgroundName" ) );
 
   // Restore the layout of the listview
-  mListView->restoreLayout( config, config->group() );
+#warning "kde4 port to kconfiggroup"
+  //mListView->restoreLayout( config, cfg.group() );
 }
 
 void KAddressBookTableView::refresh( const QString &uid )

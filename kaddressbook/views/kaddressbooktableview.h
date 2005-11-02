@@ -76,8 +76,8 @@ friend class ContactListView;
     virtual void setFirstSelected( bool selected = true );
     virtual KABC::Field *sortField() const;
 
-    virtual void readConfig( KConfig *config );
-    virtual void writeConfig( KConfig *config );
+    virtual void readConfig( KConfigGroup&cfg );
+    virtual void writeConfig( KConfigGroup &cfg );
     virtual QString type() const { return "Table"; }
 
     void scrollUp();
