@@ -58,6 +58,7 @@
 
 #include <qdatetime.h>
 #include <qfile.h>
+#include <qfileinfo.h>
 
 #include <stdlib.h>
 #include <iostream>
@@ -657,9 +658,14 @@ int main( int argc, char *argv[] )
      * This must be done before we get to opening biz
      */
     bool exists, remote;
-    KURL url( variables.getCalendarFile() );
+    KURL url = KURL::fromPathOrURL( variables.getCalendarFile() );
     if ( url.isLocalFile() ) {
       variables.setCalendarFile( url.path() );
+      exists = QFile::exists( variables.getCalendarFile() );
+      remote = false;
+    } else if ( !variables.getCalendarFile().contains( '/' ) ) {
+      QFileInfo info( variables.getCalendarFile() );
+      variables.setCalendarFile( info.absFilePath() );
       exists = QFile::exists( variables.getCalendarFile() );
       remote = false;
     } else {
