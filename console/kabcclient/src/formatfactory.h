@@ -13,7 +13,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, Inc., 51 Franklin Steet, Fifth Floor, Boston, MA  02110-1301, USA.
+//  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
 #ifndef FORMATFACTORY_H
@@ -59,7 +59,7 @@ typedef QValueList<QCString> QCStringList;
 */
 
 /**
-* @short Factory for input parsers and output formatters
+* @brief Factory for input parsers and output formatters
 *
 * The factory can be queried for the InputFormat and OutputFormat
 * implementations it knows and can create.
@@ -98,17 +98,17 @@ class FormatFactory
 {
 public:
     /**
-    * @short Creates and initializes the factory
+    * @brief Creates and initializes the factory
     */
     FormatFactory();
 
     /**
-    * @short Destroys the factory and its internal data
+    * @brief Destroys the factory and its internal data
     */
     ~FormatFactory();
 
     /**
-    * @short Returns a list of input parser names
+    * @brief Returns a list of input parser names
     *
     * Each list entry is a simple string that can be used to identify
     * the parser on the commandline.
@@ -123,7 +123,7 @@ public:
     inline QCStringList inputFormatList() const  { return m_inputFormats;  }
 
     /**
-    * @short Returns a list of output formatter names
+    * @brief Returns a list of output formatter names
     *
     * Each list entry is a simple string that can be used to identify
     * the formatter on the commandline.
@@ -138,7 +138,7 @@ public:
     inline QCStringList outputFormatList() const { return m_outputFormats; }
 
     /**
-    * @short Creates an InputFormat instance for the given name
+    * @brief Creates an InputFormat instance for the given name
     *
     * @warning Every call creates a new instance and the caller gains its
     * ownership, i.e. has to delete it when it isn't used any longer.
@@ -154,7 +154,7 @@ public:
     InputFormat* inputFormat(const QCString& name);
 
     /**
-    * @short Creates an OutputFormat instance for the given name
+    * @brief Creates an OutputFormat instance for the given name
     *
     * @warning Every call creates a new instance and the caller gains its
     * ownership, i.e. has to delete it when it isn't used any longer.

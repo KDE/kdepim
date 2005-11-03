@@ -13,7 +13,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, Inc., 51 Franklin Steet, Fifth Floor, Boston, MA  02110-1301, USA.
+//  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
 #ifndef INPUTFORMAT_H
@@ -31,7 +31,7 @@ namespace KABC
 };
 
 /**
-* @short Interface for input format parsers
+* @brief Interface for input format parsers
 *
 * This is the interface for input format parsers.
 *
@@ -49,13 +49,13 @@ class InputFormat
 {
 public:
     /**
-    * @short Destroys the instance
+    * @brief Destroys the instance
     * Defined here because the class contains virtual methods
     */
     virtual ~InputFormat() {}
 
     /**
-    * @short Returns a translate description of the input format
+    * @brief Returns a translate description of the input format
     *
     * Returns a translated description of the parser and its
     * general capabilities.
@@ -70,7 +70,7 @@ public:
     virtual QString description() const = 0;
 
     /**
-    * @short Reads one addressee from the input stream
+    * @brief Reads one addressee from the input stream
     *
     * Creates a single KABC::Addressee object from the data available in
     * the given input stream according to the parsers formatting rules.
@@ -94,7 +94,7 @@ public:
     virtual KABC::Addressee readAddressee(std::istream& stream) = 0;
 
     /**
-    * @short Configures the input format
+    * @brief Configures the input format
     *
     * Sets parser options, i.e. format specific settings that change how the
     * input format treats the input text.
@@ -110,7 +110,7 @@ public:
     virtual bool setOptions(const QCString& options) = 0;
 
     /**
-    * @short Returns a translate message about the available format options
+    * @brief Returns a translate message about the available format options
     *
     * The option description string contains each option and its respective
     * description for displaying to the user.
@@ -132,7 +132,7 @@ public:
     virtual QString optionUsage() const { return QString::null; }
 
     /**
-    * @short Sets the text codec to use
+    * @brief Sets the text codec to use
     *
     * This allows to have the text read from the input stream
     * interpreted according to a specific text encoding.

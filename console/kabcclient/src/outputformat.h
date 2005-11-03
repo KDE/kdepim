@@ -13,7 +13,7 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program; if not, write to the Free Software
-//  Foundation, Inc., 51 Franklin Steet, Fifth Floor, Boston, MA  02110-1301, USA.
+//  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
 #ifndef OUTPUTFORMAT_H
@@ -30,7 +30,7 @@ namespace KABC
 };
 
 /**
-* @short Interface for output formatters
+* @brief Interface for output formatters
 *
 * This is the interface for output formatters.
 * Output formats can used to write only parts of the an addressee object's
@@ -51,14 +51,14 @@ class OutputFormat
 {
 public:
     /**
-    * @short Destroys the instance
+    * @brief Destroys the instance
     * Defined here because the class contains virtual methods
     */
     virtual ~OutputFormat() {}
 
 
     /**
-    * @short Returns a translate description of the output format
+    * @brief Returns a translate description of the output format
     *
     * Returns a translated description of the formatter and its
     * general capabilities.
@@ -73,7 +73,7 @@ public:
     virtual QString description() const = 0;
 
     /**
-    * @short Configures the output format
+    * @brief Configures the output format
     *
     * Sets formatter options, e.g. which parts of the addressee data to use
     * or which markup to apply.
@@ -89,7 +89,7 @@ public:
     virtual bool setOptions(const QCString& options) = 0;
 
     /**
-    * @short Returns a translate message about the available format options
+    * @brief Returns a translate message about the available format options
     *
     * The option description string contains each option and its respective
     * description for displaying to the user.
@@ -111,7 +111,7 @@ public:
     virtual QString optionUsage() const { return QString::null; }
 
     /**
-    * @short Sets the text codec to use
+    * @brief Sets the text codec to use
     *
     * This allows to have the text recoded to a specific text encoding.
     * Depending on the format's specifications not all technically available
@@ -127,7 +127,7 @@ public:
     virtual bool setCodec(QTextCodec* codec) = 0;
 
     /**
-    * @short Writes the data of a given addressee to the given output stream
+    * @brief Writes the data of a given addressee to the given output stream
     *
     * Depending on the formatter and its settings it will write all or portions
     * of the available addressee data to the @p stream.
@@ -151,7 +151,7 @@ public:
     virtual bool writeAddressee(const KABC::Addressee& addressee, std::ostream& stream) = 0;
 
     /**
-    * @short Writes the data from each addressee in the given list to the given
+    * @brief Writes the data from each addressee in the given list to the given
     *        output stream
     *
     * Depending on the formatter and its settings it will write all or portions
