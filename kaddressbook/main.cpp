@@ -54,7 +54,7 @@ class KAddressBookApp : public KUniqueApplication {
 
 int KAddressBookApp::newInstance()
 {
-  if ( isRestored() ) {
+  if ( isSessionRestored() ) {
     // There can only be one main window
     if ( KMainWindow::canBeRestored( 1 ) ) {
       mMainWin = new KAddressBookMain;
