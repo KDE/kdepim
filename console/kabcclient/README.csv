@@ -49,7 +49,7 @@ Name=Example CSV template
 ------------------------------------
 This would transform the following input
 "Doe","John","2005-07-25"
-into an addressbook entry for a person names John Doe, having been born on
+into an addressbook entry for a person named John Doe, having been born on
 July 25th, 2005
 
 Quotes can be omitted if the field's value does not contain the separator

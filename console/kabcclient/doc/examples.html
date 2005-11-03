@@ -86,7 +86,7 @@
     </pre>
     Will look for someone called "John Bob", while
     <pre>
-    echo "John" > testinput.txt; echo "Bob" >> testinput.text; cat testinput.txt | kabcclient -S
+    ( echo "John" ; echo "Bob" ) | kabcclient -S
     </pre>
     will first look for all "Johns" and the for all "Bobs"
   </p>
