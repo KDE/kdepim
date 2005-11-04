@@ -47,6 +47,7 @@
 #include <libkcal/calendar.h>
 #include <libkcal/event.h>
 #include <libkcal/htmlexport.h>
+#include <libkdepim/kpimprefs.h>
 
 #include "konsolekalendar.h"
 #include "konsolekalendaradd.h"
@@ -79,7 +80,7 @@ bool KonsoleKalendar::importCalendar()
 bool KonsoleKalendar::createCalendar()
 {
   bool status = false;
-  CalendarLocal newCalendar( QString::fromLatin1("UTC") );
+  CalendarLocal newCalendar( KPimPrefs::timezone() );
 
   if ( m_variables->isDryRun() ) {
     cout << i18n( "Create Calendar <Dry Run>: %1" ).
