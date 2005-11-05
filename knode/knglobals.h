@@ -70,7 +70,10 @@ class KDE_EXPORT KNGlobals
     KNArticleFactory      *artFactory;
     Kpgp::Module          *pgp;
     KConfig               *config();
-    KInstance             *instance;
+    /** Returns the current instance. */
+    KInstance             *instance() const;
+    /** Sets the current instance. */
+    void setInstance( KInstance *inst ) { mInstance = inst; }
 
     KNConfigManager       *configManager();
     /** Returns the scheduler. */
@@ -103,6 +106,7 @@ class KDE_EXPORT KNGlobals
 
     KSharedConfig::Ptr c_onfig;
 
+    KInstance *mInstance;
     KNode::Scheduler      *mScheduler;
     KNConfigManager       *mCfgManager;
     KNAccountManager      *mAccManager;

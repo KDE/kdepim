@@ -59,8 +59,8 @@
 #include "settings.h"
 #include <kpgp.h>
 
-KNode::IdentityWidget::IdentityWidget( Identity *d, QWidget *parent ) :
-  KCModule( knGlobals.instance,parent ),
+KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *parent ) :
+  KCModule( inst ,parent ),
   d_ata( d )
 {
   QString msg;
@@ -288,8 +288,8 @@ void KNode::IdentityWidget::slotSignatureEdit()
 
 //BEGIN: NNTP account configuration widgets ----------------------------------
 
-KNode::NntpAccountListWidget::NntpAccountListWidget( QWidget *parent ) :
-  KCModule(knGlobals.instance, parent ),
+KNode::NntpAccountListWidget::NntpAccountListWidget( KInstance *inst, QWidget *parent ) :
+  KCModule( inst, parent ),
   a_ccManager( knGlobals.accountManager() )
 {
   p_ixmap = SmallIcon("server");
@@ -509,7 +509,7 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
   mInterval->setValue( a->checkInterval() );
 
   // identity tab
-  mIdentityWidget = new KNode::IdentityWidget( a->identity(), addVBoxPage(i18n("&Identity") ) );
+  mIdentityWidget = new KNode::IdentityWidget( a->identity(), knGlobals.instance(), addVBoxPage(i18n("&Identity") ) );
 
   // per server cleanup configuration
   QFrame* cleanupPage = addPage( i18n("&Cleanup") );
@@ -577,8 +577,8 @@ void KNode::NntpAccountConfDialog::slotPasswordChanged()
 
 //=============================================================================================
 
-KNode::SmtpAccountWidget::SmtpAccountWidget( QWidget *parent ) :
-    KCModule(knGlobals.instance, parent )
+KNode::SmtpAccountWidget::SmtpAccountWidget( KInstance *inst, QWidget *parent ) :
+    KCModule( inst, parent )
 {
   setupUi( this );
 
@@ -942,8 +942,8 @@ void KNode::AppearanceWidget::slotFontSelectionChanged()
 //=============================================================================================
 
 
-KNode::ReadNewsGeneralWidget::ReadNewsGeneralWidget( QWidget *parent ) :
-  KCModule(knGlobals.instance, parent )
+KNode::ReadNewsGeneralWidget::ReadNewsGeneralWidget( KInstance *inst, QWidget *parent ) :
+  KCModule( inst, parent )
 {
   setupUi( this );
   addConfig( knGlobals.settings(), this );
@@ -978,8 +978,8 @@ void KNode::ReadNewsGeneralWidget::save()
 //=============================================================================================
 
 
-KNode::ReadNewsNavigationWidget::ReadNewsNavigationWidget( QWidget *parent ) :
-  KCModule(knGlobals.instance, parent )
+KNode::ReadNewsNavigationWidget::ReadNewsNavigationWidget( KInstance *inst, QWidget *parent ) :
+  KCModule( inst, parent )
 {
   KNode::Ui::ReadNewsNavigationWidgetBase ui;
   ui.setupUi( this );
@@ -991,8 +991,8 @@ KNode::ReadNewsNavigationWidget::ReadNewsNavigationWidget( QWidget *parent ) :
 //=============================================================================================
 
 
-KNode::ReadNewsViewerWidget::ReadNewsViewerWidget( QWidget *parent ) :
-  KCModule(knGlobals.instance, parent )
+KNode::ReadNewsViewerWidget::ReadNewsViewerWidget( KInstance *inst, QWidget *parent ) :
+  KCModule( inst, parent )
 {
   KNode::Ui::ReadNewsViewerWidgetBase ui;
   ui.setupUi( this );
@@ -1004,8 +1004,8 @@ KNode::ReadNewsViewerWidget::ReadNewsViewerWidget( QWidget *parent ) :
 //=============================================================================================
 
 
-KNode::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, QWidget *parent ) :
-  KCModule(knGlobals.instance, parent ),
+KNode::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, KInstance *inst, QWidget *parent ) :
+  KCModule( inst, parent ),
   s_ave( false ),
   d_ata( d )
 {
@@ -1298,8 +1298,8 @@ void KNode::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
 //=============================================================================================
 
 
-KNode::ScoringWidget::ScoringWidget( QWidget *parent ) :
-  KCModule(knGlobals.instance, parent )
+KNode::ScoringWidget::ScoringWidget( KInstance *inst, QWidget *parent ) :
+  KCModule( inst, parent )
 {
   QGridLayout *topL = new QGridLayout(this,4,2, 5,5);
   mKsc = new KScoringEditorWidget( knGlobals.scoringManager(), this );
@@ -1341,8 +1341,8 @@ void KNode::ScoringWidget::save()
 //=============================================================================================
 
 
-KNode::FilterListWidget::FilterListWidget( QWidget *parent ) :
-  KCModule( knGlobals.instance,parent ),
+KNode::FilterListWidget::FilterListWidget( KInstance *inst, QWidget *parent ) :
+  KCModule( inst, parent ),
   f_ilManager( knGlobals.filterManager() )
 {
   QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
@@ -1623,8 +1623,8 @@ void KNode::FilterListWidget::slotSelectionChangedMenu()
 //=============================================================================================
 
 
-KNode::PostNewsTechnicalWidget::PostNewsTechnicalWidget( PostNewsTechnical *d, QWidget *parent ) :
-  KCModule(knGlobals.instance, parent ),
+KNode::PostNewsTechnicalWidget::PostNewsTechnicalWidget( PostNewsTechnical *d, KInstance *inst, QWidget *parent ) :
+  KCModule( inst, parent ),
   mData( d )
 {
   setupUi( this );
@@ -1763,8 +1763,8 @@ QString KNode::XHeaderConfDialog::result() const
 //===================================================================================================
 
 
-KNode::PostNewsComposerWidget::PostNewsComposerWidget( QWidget *parent ) :
-  KCModule( knGlobals.instance,parent )
+KNode::PostNewsComposerWidget::PostNewsComposerWidget( KInstance *inst, QWidget *parent ) :
+  KCModule( inst, parent )
 {
   KNode::Ui::PostNewsComposerWidgetBase ui;
   ui.setupUi( this );
@@ -1776,8 +1776,8 @@ KNode::PostNewsComposerWidget::PostNewsComposerWidget( QWidget *parent ) :
 //===================================================================================================
 
 
-KNode::PostNewsSpellingWidget::PostNewsSpellingWidget( QWidget *parent ) :
-  KCModule( knGlobals.instance,parent )
+KNode::PostNewsSpellingWidget::PostNewsSpellingWidget( KInstance *inst, QWidget *parent ) :
+  KCModule( inst, parent )
 {
   QVBoxLayout *topL=new QVBoxLayout(this, 5);
 

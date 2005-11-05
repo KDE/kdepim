@@ -148,7 +148,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   pageL->addStretch(1);
 
   // Specfic Identity tab =========================================
-  i_dWidget=new KNode::IdentityWidget(g_rp->identity(), addVBoxPage(i18n("&Identity")));
+  i_dWidget = new KNode::IdentityWidget( g_rp->identity(), knGlobals.instance(), addVBoxPage( i18n("&Identity") ) );
 
   // per server cleanup configuration
   QFrame* cleanupPage = addPage( i18n("&Cleanup") );

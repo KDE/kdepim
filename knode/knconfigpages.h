@@ -33,7 +33,7 @@ class KDE_EXPORT KCMTabContainer : public KCModule
     /** Create a new tab-based KCModule container.
      * @param parent The parent widget.
      */
-    KCMTabContainer( KInstance *inst,QWidget * parent = 0 );
+    KCMTabContainer( KInstance *inst, QWidget * parent = 0 );
 
     /** Reimplemented to forward load() to all tabs. */
     virtual void load();
@@ -69,7 +69,7 @@ class KDE_EXPORT ReadNewsPage : public KCMTabContainer {
   Q_OBJECT
 
   public:
-    ReadNewsPage( KInstance *inst,QWidget *parent = 0 );
+    ReadNewsPage( KInstance *inst, QWidget *parent = 0 );
 };
 
 /** Post news page. */

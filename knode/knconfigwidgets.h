@@ -74,7 +74,7 @@ class KDE_EXPORT IdentityWidget : public KCModule {
   Q_OBJECT
 
   public:
-    IdentityWidget( Identity *d, QWidget *parent = 0 );
+    IdentityWidget( Identity *d, KInstance *inst, QWidget *parent = 0 );
     ~IdentityWidget();
 
     void load();
@@ -116,7 +116,7 @@ class KDE_EXPORT NntpAccountListWidget : public KCModule {
   Q_OBJECT
 
   public:
-    NntpAccountListWidget( QWidget *parent = 0 );
+    NntpAccountListWidget( KInstance *inst, QWidget *parent = 0 );
     ~NntpAccountListWidget();
 
     void load();
@@ -186,7 +186,7 @@ class KDE_EXPORT SmtpAccountWidget : public KCModule, private Ui::SmtpAccountWid
 Q_OBJECT
 
   public:
-    SmtpAccountWidget( QWidget *parent = 0 );
+    SmtpAccountWidget( KInstance *inst, QWidget *parent = 0 );
     ~SmtpAccountWidget() {}
 
     virtual void load();
@@ -290,7 +290,7 @@ class KDE_EXPORT ReadNewsGeneralWidget : public KCModule, KNode::Ui::ReadNewsGen
     /** Create a new general configuration page.
      * @param parent The QWidget parent.
      */
-    ReadNewsGeneralWidget( QWidget *parent = 0 );
+    ReadNewsGeneralWidget( KInstance *inst, QWidget *parent = 0 );
 
     virtual void load();
     virtual void save();
@@ -304,7 +304,7 @@ class KDE_EXPORT ReadNewsNavigationWidget : public KCModule
     /** Create a new navigation configuration page.
      * @param parent The QWidget parent.
      */
-    ReadNewsNavigationWidget( QWidget *parent = 0 );
+    ReadNewsNavigationWidget( KInstance *inst, QWidget *parent = 0 );
 };
 
 
@@ -315,7 +315,7 @@ class KDE_EXPORT ReadNewsViewerWidget : public KCModule
     /** Create a new article viewer configuration page.
      * @param parent The QWidget parent.
      */
-    ReadNewsViewerWidget( QWidget *parent = 0 );
+    ReadNewsViewerWidget( KInstance *inst, QWidget *parent = 0 );
 };
 
 
@@ -325,7 +325,7 @@ class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
   Q_OBJECT
 
   public:
-    DisplayedHeadersWidget( DisplayedHeaders *d, QWidget *parent = 0 );
+    DisplayedHeadersWidget( DisplayedHeaders *d, KInstance *inst, QWidget *parent = 0 );
     ~DisplayedHeadersWidget();
 
     void load();
@@ -398,7 +398,7 @@ class KDE_EXPORT ScoringWidget : public KCModule
     /** Create a new scoring configuration widget.
      * @param parent The QWidget parent.
      */
-    ScoringWidget( QWidget *parent = 0 );
+    ScoringWidget( KInstance *inst, QWidget *parent = 0 );
 
     virtual void load();
     virtual void save();
@@ -415,7 +415,7 @@ class KDE_EXPORT FilterListWidget : public KCModule {
   Q_OBJECT
 
   public:
-    FilterListWidget( QWidget *parent = 0 );
+    FilterListWidget( KInstance *inst, QWidget *parent = 0 );
     ~FilterListWidget();
 
     void load();
@@ -480,7 +480,7 @@ class KDE_EXPORT PostNewsTechnicalWidget : public KCModule, KNode::Ui::PostNewsT
 {
   Q_OBJECT
   public:
-    PostNewsTechnicalWidget( PostNewsTechnical *d, QWidget *parent = 0 );
+    PostNewsTechnicalWidget( PostNewsTechnical *d, KInstance *inst, QWidget *parent = 0 );
 
     void load();
     void save();
@@ -524,7 +524,7 @@ class KDE_EXPORT PostNewsComposerWidget : public KCModule
     /** Create a new composer configuration widget.
      * @param parent The parent widget.
      */
-    PostNewsComposerWidget( QWidget *parent = 0 );
+    PostNewsComposerWidget( KInstance *inst, QWidget *parent = 0 );
 };
 
 
@@ -532,7 +532,7 @@ class KDE_EXPORT PostNewsComposerWidget : public KCModule
 class KDE_EXPORT PostNewsSpellingWidget : public KCModule {
 
   public:
-    PostNewsSpellingWidget( QWidget *parent = 0 );
+    PostNewsSpellingWidget( KInstance *inst, QWidget *parent = 0 );
     ~PostNewsSpellingWidget();
 
     void save();
@@ -549,7 +549,7 @@ class KDE_EXPORT PrivacyWidget : public KCModule {
   Q_OBJECT
 
   public:
-    PrivacyWidget( KInstance *inst,QWidget *parent = 0 );
+    PrivacyWidget( KInstance *inst, QWidget *parent = 0 );
     ~PrivacyWidget();
 
     void save();
@@ -594,7 +594,7 @@ class KDE_EXPORT CleanupWidget : public KCModule {
   Q_OBJECT
 
   public:
-    CleanupWidget( KInstance *inst,QWidget *parent = 0 );
+    CleanupWidget( KInstance *inst, QWidget *parent = 0 );
     ~CleanupWidget();
 
     void load();

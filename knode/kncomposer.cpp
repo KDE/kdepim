@@ -190,8 +190,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
     spellLineEdit = false;
     m_listAction.setAutoDelete( true );
 
-  if(knGlobals.instance)
-    setInstance(knGlobals.instance);
+  if( knGlobals.instance() )
+    setInstance( knGlobals.instance() );
 
   // activate dnd of attachments...
   setAcceptDrops(true);

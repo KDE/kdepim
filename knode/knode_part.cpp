@@ -63,7 +63,7 @@ KNodePart::KNodePart( QWidget *parentWidget, const char *widgetName,
   KGlobal::locale()->insertCatalog("libkdenetwork");
   kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
   KGlobal::iconLoader()->addAppDir("knode");
-  knGlobals.instance = KNodeFactory::instance();
+  knGlobals.setInstance( KNodeFactory::instance() );
 
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget(parentWidget, widgetName);

@@ -56,7 +56,7 @@ KNMainWindow::KNMainWindow( QWidget* parent )
   connect( KPIM::BroadcastStatus::instance(), SIGNAL(statusMsg(const QString&)),
     this, SLOT(slotShowStatusMsg(const QString& )) );
   createGUI( "knodeui.rc" );
-  knGlobals.instance = 0;
+  knGlobals.setInstance( 0 );
 
   applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
 }

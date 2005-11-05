@@ -14,6 +14,7 @@
 
 #include "knglobals.h"
 
+#include <kapplication.h>
 #include <kconfig.h>
 #include <kstaticdeleter.h>
 
@@ -34,6 +35,7 @@ KNGlobals* KNGlobals::mSelf = 0;
 static KStaticDeleter<KNGlobals> staticKNGlobalsDeleter;
 
 KNGlobals::KNGlobals() :
+  mInstance( 0 ),
   mScheduler( 0 ),
   mCfgManager( 0 ),
   mAccManager( 0 ),
@@ -60,6 +62,14 @@ KNGlobals * KNGlobals::self()
   if ( !mSelf )
     mSelf = staticKNGlobalsDeleter.setObject( mSelf, new KNGlobals() );
   return mSelf;
+}
+
+
+KInstance *KNGlobals::instance() const
+{
+  if ( mInstance )
+    return mInstance;
+  return KApplication::kApplication();
 }
 
 
