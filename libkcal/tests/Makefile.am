@@ -1,4 +1,5 @@
-INCLUDES = -I$(top_srcdir)/libkcal $(all_includes)
+INCLUDES = -I$(top_srcdir)/libkcal -I$(top_builddir)/libkcal/libical/src \
+	-Iqttestlib $(all_includes)
 
 
 check_PROGRAMS = testtostring \
@@ -11,6 +12,7 @@ check_PROGRAMS = testtostring \
                  testrecurprevious \
                  testrecurson \
                  testrecurrencetype \
+		 testicaltimezones \
                  testvcalexport
 
 
@@ -52,6 +54,10 @@ testrecurrencetype_SOURCES = testrecurrencetype.cpp
 testrecurrencetype_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 testrecurrencetype_LDADD = ../libkcal.la
 
+testicaltimezones_SOURCES = testicaltimezones.cpp
+testicaltimezones_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testicaltimezones_LDADD = ../libkcal.la -lqttestlib
+
 testvcalexport_SOURCES = testvcalexport.cpp
 testvcalexport_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 testvcalexport_LDADD = ../libkcal.la
@@ -63,7 +69,7 @@ testfields_CXXFLAGS= -DINPUT='"$(srcdir)/data/test_pilot.ics"'
 
 TESTFILES = test1.ics test2.ics test3.ics test4.ics test5.ics test_Mozilla.ics
 
-check-local: readandwrite testrecurrence testrecurprevious testrecurson testvcalexport
+check-local: readandwrite testrecurrence testrecurprevious testrecurson testvcalexport testicaltimezones
 	rm -f FAILED; \
 	for i in `find $(srcdir)/data/RecurrenceRule/ -name "*.ics"`; do \
 	  perl $(srcdir)/runtestcase.pl testrecurrence "next" $$i; \

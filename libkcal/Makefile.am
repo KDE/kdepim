@@ -40,14 +40,15 @@ libkcal_la_SOURCES = \
 	qtopiaformat.cpp \
 	htmlexportsettings.kcfgc htmlexport.cpp calendarnull.cpp \
 	freebusyurlstore.cpp \
-	confirmsavedialog.cpp
+	confirmsavedialog.cpp icaltimezones.cpp
 
 libkcalincludedir = $(includedir)/libkcal
 libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
   calendarlocal.h calendarnull.h calendarresources.h calfilter.h calformat.h \
   calstorage.h customproperties.h dndfactory.h duration.h event.h \
-  exceptions.h filestorage.h freebusy.h htmlexportsettings.h htmlexport.h icaldrag.h icalformat.h \
-  incidencebase.h incidence.h incidenceformatter.h journal.h kcalversion.h listbase.h period.h person.h \
+  exceptions.h filestorage.h freebusy.h htmlexportsettings.h htmlexport.h icaldrag.h \
+  icalformat.h icaltimezones.h incidencebase.h incidence.h incidenceformatter.h \
+  journal.h kcalversion.h listbase.h period.h person.h \
   qtopiaformat.h recurrencerule.h recurrence.h resourcecached.h resourcecalendar.h \
   resourcelocalconfig.h resourcelocaldirconfig.h resourcelocaldir.h \
   resourcelocal.h scheduler.h libkcal_export.h \
