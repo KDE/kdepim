@@ -698,8 +698,13 @@ void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
 
   if ( tag == fieldName( EventBegin ) ) {
     QDateTime dt;
-    if ( event->doesFloat() ) dt = WebdavHandler::sloxToQDateTime( text );
-    else dt = WebdavHandler::sloxToQDateTime( text, timeZoneId() );
+    if ( event->doesFloat() ) {
+      if ( type() == "ox" )
+        dt = WebdavHandler::sloxToQDateTime( text, timeZoneId() );
+      else
+        dt = WebdavHandler::sloxToQDateTime( text ); // ### is this really correct for SLOX?
+    } else
+      dt = WebdavHandler::sloxToQDateTime( text, timeZoneId() );
     event->setDtStart( dt );
   } else if ( tag == fieldName( EventEnd ) ) {
     QDateTime dt;
