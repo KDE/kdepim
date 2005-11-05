@@ -11,9 +11,11 @@ How you start:
 
   (3) get and install Net::DAV::Server with CPAN
 
-  (4) get and install File::Find::Rule::Filesys::Virtual with CPAN
+  (4) get and install Net::Virtual::Plain with CPAN
 
-  (5) start the automated tests with the command make check
+  (5) get and install File::Find::Rule::Filesys::Virtual with CPAN
+
+  (6) start the automated tests with the command make check
 
 
 Here are some of the issues:
