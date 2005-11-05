@@ -82,13 +82,13 @@ class ICalFormatImpl
     /** Return the PRODID string loaded from calendar file */
     const QString &loadedProductId()  { return mLoadedProductId; }
 
-    icaltimetype writeICalDate(const QDate &);
-    QDate readICalDate(icaltimetype);
+    static icaltimetype writeICalDate(const QDate &);
+    static QDate readICalDate(icaltimetype);
     icaltimetype writeICalDateTime(const QDateTime &);
     QDateTime readICalDateTime( icaltimetype&, icaltimezone* tz = 0 );
-    icaldurationtype writeICalDuration(int seconds);
-    int readICalDuration(icaldurationtype);
-    icaldatetimeperiodtype writeICalDatePeriod( const QDate &date );
+    static icaldurationtype writeICalDuration(int seconds);
+    static int readICalDuration(icaldurationtype);
+    static icaldatetimeperiodtype writeICalDatePeriod( const QDate &date );
     icaldatetimeperiodtype writeICalDateTimePeriod( const QDateTime &date );
 
     icalcomponent *createCalendarComponent(Calendar * = 0);
