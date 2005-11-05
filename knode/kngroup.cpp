@@ -417,11 +417,13 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
 
   // get a list of additional headers provided in the listing
   if ( mOptionalHeaders.isEmpty() ) {
-	
-	for( KIO::UDSEntryList::ConstIterator it = list.begin(); it != list.end(); ++it ) {
-	  QString name = (*it).stringValue(KIO::UDS_EXTRA);
-      kdDebug(5003) << k_funcinfo << name << endl;
-      QString hdrName = name.left( name.indexOf( ':' ) );
+    KIO::UDSEntry entry = list.first();
+    for ( KIO::UDSEntry::ConstIterator it = entry.begin(); it != entry.end(); ++it ) {
+      if ( it.key() < KIO::UDS_EXTRA || it.key() > KIO::UDS_EXTRA_END )
+        continue;
+      QString value = it.value().toString();
+      kdDebug(5003) << k_funcinfo << value << endl;
+      QString hdrName = value.left( value.indexOf( ':' ) );
       if ( hdrName == "Subject" || hdrName == "From" || hdrName == "Date"
            || hdrName == "Message-ID" || hdrName == "References"
            || hdrName == "Bytes" || hdrName == "Lines" )
@@ -437,68 +439,19 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
     //new Header-Object
     art=new KNRemoteArticle(this);
     art->setNew(true);
-	QString name = (*it).stringValue(KIO::UDS_NAME);
-	art->setArticleNumber(name.toInt());
-	QString extra = (*it).stringValue(KIO::UDS_EXTRA);
-	int pos = extra.indexOf( ':' );
-	if ( pos >= extra.length() - 1 )
-			continue;
-	hdrName = extra.left( pos );
-	hdrValue = extra.right( extra.length() - ( hdrName.length() + 2 ) );
-        if ( hdrName == "Subject" ) {
-          art->subject()->from7BitString( hdrValue.toLatin1() );
-          if ( art->subject()->isEmpty() )
-            art->subject()->fromUnicodeString( i18n("no subject"), art->defaultCharset() );
-        } else if ( hdrName == "From" ) {
-          art->from()->from7BitString( hdrValue.toLatin1() );
-        } else if ( hdrName == "Date" ) {
-          art->date()->from7BitString( hdrValue.toLatin1() );
-        } else if ( hdrName == "Message-ID" ) {
-          art->messageID()->from7BitString( hdrValue.simplifyWhiteSpace().toLatin1() );
-        } else if ( hdrName == "References" ) {
-          if( !hdrValue.isEmpty() )
-            art->references()->from7BitString( hdrValue.toLatin1() );
-        } else if ( hdrName == "Lines" ) {
-          art->lines()->setNumberOfLines( hdrValue.toInt() );
-        } else {
-          // optional extra headers
-          art->setHeader( new KMime::Headers::Generic( hdrName.toLatin1(), art, hdrValue.toLatin1() ) );
-        }
-    // check if we have this article already in this group,
-    // if so mark it as new (useful with leafnodes delay-body function)
-    art2=byMessageId(art->messageID()->as7BitString(false));
-    if(art2) { // ok, we already have this article
-      art2->setNew(true);
-      art2->setArticleNumber(art->articleNumber());
-      delete art;
-      new_cnt++;
-    }
-    else if (append(art)) {
-      added_cnt++;
-      new_cnt++;
-    }
-    else {
-      delete art;
-      return;
-    }
 
-    if (timer.elapsed() > 200) {           // don't flicker
-      timer.restart();
-#warning Port me!
-//      if (client) client->updatePercentage((new_cnt*30)/todo);
-    }	
-#if 0
     for ( KIO::UDSEntry::ConstIterator it2 = (*it).begin(); it2 != (*it).end(); ++it2 ) {
 
-      if ( (*it2).m_uds == KIO::UDS_NAME ) {
+      if ( it2.key() == KIO::UDS_NAME ) {
         //Article Number
-        art->setArticleNumber( (*it2).m_str.toInt() );
-      } else if ( (*it2).m_uds == KIO::UDS_EXTRA ) {
-        int pos = (*it2).m_str.indexOf( ':' );
-        if ( pos >= (*it2).m_str.length() - 1 )
+        art->setArticleNumber( (*it2).toNumber() );
+      } else if ( it2.key() >= KIO::UDS_EXTRA && it2.key() <= KIO::UDS_EXTRA_END ) {
+        QString value = it2.value().toString();
+        int pos = value.indexOf( ':' );
+        if ( pos >= value.length() - 1 )
           continue; // value is empty
-        hdrName = (*it2).m_str.left( pos );
-        hdrValue = (*it2).m_str.right( (*it2).m_str.length() - ( hdrName.length() + 2 ) );
+        hdrName = value.left( pos );
+        hdrValue = value.right( value.length() - ( hdrName.length() + 2 ) );
 
         if ( hdrName == "Subject" ) {
           art->subject()->from7BitString( hdrValue.toLatin1() );
@@ -545,7 +498,6 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
 #warning Port me!
 //      if (client) client->updatePercentage((new_cnt*30)/todo);
     }
-#endif	
   }
 
   // now we build the threads
