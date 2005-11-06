@@ -259,7 +259,7 @@ void KNode::IdentityWidget::slotSignatureChoose()
 
 void KNode::IdentityWidget::slotSignatureEdit()
 {
-  QString fileName = c_ompletion->replacedPath(s_ig->text()).stripWhiteSpace();
+  QString fileName = c_ompletion->replacedPath(s_ig->text()).trimmed();
 
   if (fileName.isEmpty()) {
     KMessageBox::sorry(this, i18n("You must specify a filename."));

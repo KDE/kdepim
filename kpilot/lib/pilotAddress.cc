@@ -643,7 +643,7 @@ QString PilotAddress::getPhoneField(EPhoneType type, bool checkCustom4) const
 		endPos = customField.length();
 	QString field = customField.mid(startPos, endPos);
 
-	field = field.simplifyWhiteSpace();
+	field = field.simplified();
 
 	// return the token
 	return field;

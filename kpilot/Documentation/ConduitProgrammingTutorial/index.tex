@@ -1097,7 +1097,7 @@ void DOCConduit::syncNextDOC() {
 
   QDir dr(fDOCDir);
   QFileInfo fl(dr, fn );
-  QString docfilename=fl.absFilePath();
+  QString docfilename=fl.absoluteFilePath();
   QString pdbfilename;
   dociterator++;
   
@@ -1150,7 +1150,7 @@ void DOCConduit::checkPDBFiles() {
 
   QDir dr(fPDBDir);
   QFileInfo fl(dr, fn );
-  QString pdbfilename=fl.absFilePath();
+  QString pdbfilename=fl.absoluteFilePath();
   dociterator++;
   
   //  Get the doc title and check if it has already been synced (in the synced docs list of in fDBNames to be synced)

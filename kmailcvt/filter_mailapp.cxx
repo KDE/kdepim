@@ -48,7 +48,7 @@ void FilterMailApp::import(FilterInfo *info)
     int overall_status = 0;
     bool first_msg = true;
 
-    QString directory = KFileDialog::getExistingDirectory( QDir::homeDirPath(), info->parent() );
+    QString directory = KFileDialog::getExistingDirectory( QDir::homePath(), info->parent() );
     info->setOverall(0);
 
     //   kdDebug() << "starting by looking in directory " << directory << endl;

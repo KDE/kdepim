@@ -462,7 +462,7 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
         } else if ( hdrName == "Date" ) {
           art->date()->from7BitString( hdrValue.toLatin1() );
         } else if ( hdrName == "Message-ID" ) {
-          art->messageID()->from7BitString( hdrValue.simplifyWhiteSpace().toLatin1() );
+          art->messageID()->from7BitString( hdrValue.simplified().toLatin1() );
         } else if ( hdrName == "References" ) {
           if( !hdrValue.isEmpty() )
             art->references()->from7BitString( hdrValue.toLatin1() );

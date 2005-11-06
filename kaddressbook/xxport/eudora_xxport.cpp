@@ -48,7 +48,7 @@ EudoraXXPort::EudoraXXPort( KABC::AddressBook *ab, QWidget *parent, const char *
 
 KABC::Addressee::List EudoraXXPort::importContacts( const QString& ) const
 {
-  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath(),
+  QString fileName = KFileDialog::getOpenFileName( QDir::homePath(),
 		"*.[tT][xX][tT]|" + i18n("Eudora Light Addressbook (*.txt)"), 0 );
   if ( fileName.isEmpty() )
     return KABC::AddresseeList();
@@ -78,26 +78,26 @@ KABC::Addressee::List EudoraXXPort::importContacts( const QString& ) const
       } else
         a = new KABC::Addressee();
 
-      tmp = key( line ).stripWhiteSpace();
+      tmp = key( line ).trimmed();
       if ( !tmp.isEmpty() )
         a->setFormattedName( tmp );
 
-      tmp = email( line ).stripWhiteSpace();
+      tmp = email( line ).trimmed();
       if ( !tmp.isEmpty() )
         a->insertEmail( tmp );
     } else if ( line.startsWith( "note" ) ) {
       if ( !a ) // Must have an alias before a note
         break;
 
-      tmp = comment( line ).stripWhiteSpace();
+      tmp = comment( line ).trimmed();
       if ( !tmp.isEmpty() )
         a->setNote( tmp );
 
-      tmp = get( line, "name" ).stripWhiteSpace();
+      tmp = get( line, "name" ).trimmed();
       if ( !tmp.isEmpty() )
         a->setNameFromString( tmp );
 
-      tmp = get( line, "address" ).stripWhiteSpace();
+      tmp = get( line, "address" ).trimmed();
       if ( !tmp.isEmpty() ) {
         KABC::Address addr;
         kdDebug(5720) << tmp << endl; // dump complete address
@@ -105,7 +105,7 @@ KABC::Addressee::List EudoraXXPort::importContacts( const QString& ) const
         a->insertAddress( addr );
       }
 
-      tmp = get( line, "phone" ).stripWhiteSpace();
+      tmp = get( line, "phone" ).trimmed();
       if ( !tmp.isEmpty() )
          a->insertPhoneNumber( KABC::PhoneNumber( tmp, KABC::PhoneNumber::Home ) );
     }

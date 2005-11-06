@@ -168,7 +168,7 @@ void CertificateInfoWidgetImpl::setKey( const GpgME::Key & key  ) {
     for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() + 1 ; it != uids.end() ; ++it ) {
       if ( !(*it).id() )
 	continue;
-      const QString email = QString::fromUtf8( (*it).id() ).stripWhiteSpace();
+      const QString email = QString::fromUtf8( (*it).id() ).trimmed();
       if ( email.isEmpty() )
 	continue;
       if ( email.startsWith( "<" ) )

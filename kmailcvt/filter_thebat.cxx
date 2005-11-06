@@ -50,7 +50,7 @@ FilterTheBat::~FilterTheBat( void )
 /** Recursive import of The Bat! maildir. */
 void FilterTheBat::import( FilterInfo *info )
 {
-    QString _homeDir = QDir::homeDirPath();
+    QString _homeDir = QDir::homePath();
 
     KFileDialog *kfd;
     kfd = new KFileDialog( _homeDir, "", 0, "kfiledialog", true );
@@ -65,7 +65,7 @@ void FilterTheBat::import( FilterInfo *info )
      * If the user only select homedir no import needed because 
      * there should be no files and we surely import wrong files.
      */
-    else if ( mailDir == QDir::homeDirPath() || mailDir == ( QDir::homeDirPath() + "/" ) ) {
+    else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homeDirPath() + "/" ) ) {
         info->addLog( i18n( "No files found for import." ) );
     } else {
         info->setOverall(0);

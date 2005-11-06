@@ -40,7 +40,7 @@ FilterPlain::~FilterPlain()
 void FilterPlain::import(FilterInfo *info)
 {
     // Select directory containing plain text emails
-    QString mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(),info->parent());
+    QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(),info->parent());
     if (mailDir.isEmpty()) { // No directory selected
         info->alert(i18n("No directory selected."));
         return;

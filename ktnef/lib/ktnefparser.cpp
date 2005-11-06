@@ -573,7 +573,7 @@ QString formatRecipient( const QMap<int,KTNEFProperty*>& props )
 	if ( !addr.isEmpty() && addr != dn )
 		s.append( " <" + addr + ">" );
 
-	return s.stripWhiteSpace();
+	return s.trimmed();
 }
 
 QDateTime readTNEFDate( QDataStream& stream )
@@ -639,7 +639,7 @@ QString readMAPIString( QDataStream& stream, bool isUnicode, bool align, int len
 		stream >> c;
 	QString res;
 	if ( isUnicode )
-		res = QString::fromUcs2( ( const unsigned short* )buf );
+		res = QString::fromUtf16( ( const unsigned short* )buf );
 	else
 		res = QString::fromLocal8Bit( buf );
 	delete [] buf;

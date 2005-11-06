@@ -201,7 +201,7 @@ void KornCfgImpl::readConfig()
 {
 	_config->setGroup( "korn" );
 	
-	QChar layout = _config->readEntry( "layout" ).stripWhiteSpace()[0].upper();
+	QChar layout = _config->readEntry( "layout" ).trimmed()[0].upper();
 	if( layout == QChar( 'H' ) )
 		rbHorizontal->setChecked( true );
 	else if( layout == QChar( 'V' ) )

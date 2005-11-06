@@ -185,7 +185,7 @@ pabfields_t::pabfields_t(pabrec & R, QWidget * /*parent*/)
        e=isWhat(k);
        E=R.getEntry(i);
        { QString s=E;
-           s=s.stripWhiteSpace();
+           s=s.trimmed();
            E=s;
        }
 

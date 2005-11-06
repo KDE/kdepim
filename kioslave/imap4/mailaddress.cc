@@ -180,7 +180,7 @@ mailAddress::parseAddress (const char *aCStr)
     {
 //      if(fullName[0] == '"')
 //        fullName = fullName.mid(1,fullName.length()-2);
-//      fullName = fullName.simplifyWhiteSpace().stripWhiteSpace();
+//      fullName = fullName.simplified().trimmed();
 //      fullName = rfcDecoder::decodeRFC2047String(fullName.ascii());
     }
 #endif
@@ -188,7 +188,7 @@ mailAddress::parseAddress (const char *aCStr)
     {
       if (rawComment[0] == '(')
         rawComment = rawComment.mid (1, rawComment.length () - 2);
-      rawComment = rawComment.stripWhiteSpace ();
+      rawComment = rawComment.trimmed ();
 //      comment = rfcDecoder::decodeRFC2047String(comment.ascii());
     }
   }

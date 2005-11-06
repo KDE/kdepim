@@ -95,7 +95,7 @@ void DynamicTip::maybeTip( const QPoint &pos )
   s += i18n("label: value", "%1: %2").arg(a.organizationLabel())
                                        .arg(a.organization());
 
-  QString notes = a.note().stripWhiteSpace();
+  QString notes = a.note().trimmed();
   if ( !notes.isEmpty() ) {
     notes += '\n';
     s += '\n' + i18n("label: value", "%1: \n").arg(a.noteLabel());

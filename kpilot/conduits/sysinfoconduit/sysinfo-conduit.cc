@@ -582,7 +582,7 @@ void SysInfoConduit::writeFile()
 #endif
 	if (fOutputFile.isEmpty() || (!outfile.open(IO_WriteOnly)) ) {
 		QFileInfo fi(QDir::home(), CSL1("KPilotSysInfo.")+QFileInfo(templatefile).extension() );
-		fOutputFile=fi.absFilePath();
+		fOutputFile=fi.absoluteFilePath();
 		kdWarning()<<i18n("Unable to open output file, using %1 instead.").arg(fOutputFile).latin1()<<endl;
 		emit logMessage(i18n("Unable to open output file, using %1 instead.").arg(fOutputFile));
 		outfile.setName(fOutputFile);

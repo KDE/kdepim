@@ -277,7 +277,7 @@ QString NameEditDialog::formattedName( const KABC::Addressee &addr, int type )
       break;
   }
 
-  return name.simplifyWhiteSpace();
+  return name.simplified();
 }
 
 void NameEditDialog::parseBoxChanged( bool value )

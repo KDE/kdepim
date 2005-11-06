@@ -739,7 +739,7 @@ DateFormatter::localized(time_t otime, bool shortFormat, bool includeSecs,
 QString
 DateFormatter::cTime(time_t otime) const
 {
-  return QString::fromLatin1( ctime(  &otime ) ).stripWhiteSpace() ;
+  return QString::fromLatin1( ctime(  &otime ) ).trimmed() ;
 }
 
 QString

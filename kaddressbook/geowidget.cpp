@@ -426,7 +426,7 @@ void GeoDialog::loadCityList()
     int pos;
 
     while ( !s.atEnd() ) {
-      line = s.readLine().stripWhiteSpace();
+      line = s.readLine().trimmed();
       if ( line.isEmpty() || line[ 0 ] == '#' )
         continue;
 
@@ -438,7 +438,7 @@ void GeoDialog::loadCityList()
 
       pos = name.search(line, pos);
       if ( pos > 0 ) {
-        n = line.mid( pos, name.matchedLength() ).stripWhiteSpace();
+        n = line.mid( pos, name.matchedLength() ).trimmed();
         n.replace( '_', " " );
       }
 

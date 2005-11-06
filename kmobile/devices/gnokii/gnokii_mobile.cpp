@@ -182,13 +182,13 @@ bool KMobileGnokii::loadConfig( KConfig &conf, QString group )
 
 bool KMobileGnokii::saveGnokiiConfiguration()
 {
-  KConfig conf( QDir::homeDirPath() + "/.gnokiirc", false, false, "" );
+  KConfig conf( QDir::homePath() + "/.gnokiirc", false, false, "" );
   return saveConfig( conf, "global" );
 }
 
 bool KMobileGnokii::loadGnokiiConfiguration()
 {
-  KConfig conf( QDir::homeDirPath() + "/.gnokiirc", true, false, "" );
+  KConfig conf( QDir::homePath() + "/.gnokiirc", true, false, "" );
   return loadConfig( conf, "global" );
 }
 
@@ -376,20 +376,20 @@ static gn_error read_phone_entry_highlevel( int index, const gn_memory_type memt
 	.arg(entry.number).arg(entry.location).arg(entry.caller_group).arg(entry.subentries_count));
 
   // try to split Name into FamilyName and GivenName
-  s = QString(entry.name).simplifyWhiteSpace();
+  s = QString(entry.name).simplified();
   a->setFormattedName(s);
   if (s.find(',')!=-1) {
   	addrlist = QStringList::split(',', s);
 	if (addrlist.count()==2) {
-		a->setFamilyName(addrlist[0].simplifyWhiteSpace());
-		a->setGivenName(addrlist[1].simplifyWhiteSpace());
+		a->setFamilyName(addrlist[0].simplified());
+		a->setGivenName(addrlist[1].simplified());
 	  } else
 		a->setGivenName(s);
   } else {
   	addrlist = QStringList::split(' ', s);
 	  if (addrlist.count()==2) {
-		a->setFamilyName(addrlist[1].simplifyWhiteSpace());
-		a->setGivenName(addrlist[0].simplifyWhiteSpace());
+		a->setFamilyName(addrlist[1].simplified());
+		a->setGivenName(addrlist[0].simplified());
 	  } else
 		a->setGivenName(s);
   }
@@ -416,7 +416,7 @@ static gn_error read_phone_entry_highlevel( int index, const gn_memory_type memt
   /* scan sub-entries */
   if (entry.subentries_count)
 	 for (int n=0; n<entry.subentries_count; n++) {
-		QString s = QString(entry.subentries[n].data.number).simplifyWhiteSpace();
+		QString s = QString(entry.subentries[n].data.number).simplified();
 		GNOKII_DEBUG(QString(" Subentry#%1, entry_type=%2, number_type=%3, number=%4\n")
 			.arg(n).arg(entry.subentries[n].entry_type)
 			.arg(entry.subentries[n].number_type).arg(s));
@@ -433,20 +433,20 @@ static gn_error read_phone_entry_highlevel( int index, const gn_memory_type memt
 				addrlist = QStringList::split(',', s, true);
 				addr = new KABC::Address(KABC::Address::Work);
 				switch (addrlist.count()) {
-				 case 4:	addr->setStreet(addrlist[0].simplifyWhiteSpace());
-						addr->setLocality(addrlist[1].simplifyWhiteSpace());
-						addr->setPostalCode(addrlist[2].simplifyWhiteSpace());
-						country = addrlist[3].simplifyWhiteSpace();
+				 case 4:	addr->setStreet(addrlist[0].simplified());
+						addr->setLocality(addrlist[1].simplified());
+						addr->setPostalCode(addrlist[2].simplified());
+						country = addrlist[3].simplified();
 						if (!country.isEmpty())
 							addr->setCountry(i18n(country.utf8()));
 						break;
-				 case 3:	addr->setLocality(addrlist[0].simplifyWhiteSpace());
-						addr->setPostalCode(addrlist[1].simplifyWhiteSpace());
-						country = addrlist[2].simplifyWhiteSpace();
+				 case 3:	addr->setLocality(addrlist[0].simplified());
+						addr->setPostalCode(addrlist[1].simplified());
+						country = addrlist[2].simplified();
 						if (!country.isEmpty())
 							addr->setCountry(i18n(country.utf8()));
 						break;
-				 default:	addr->setStreet(s.simplifyWhiteSpace());
+				 default:	addr->setStreet(s.simplified());
 				}
 				a->insertAddress(*addr);
 				delete addr;

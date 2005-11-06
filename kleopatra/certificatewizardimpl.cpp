@@ -157,7 +157,7 @@ static bool requirementsAreMet( const CertificateWizardImpl::AttrPairList & list
     kndbgstream s = kdDebug();
 #endif
     s << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\": ";
-    if ( key.endsWith("!") && le->text().stripWhiteSpace().isEmpty() ) {
+    if ( key.endsWith("!") && le->text().trimmed().isEmpty() ) {
       s << "required field is empty!" << endl;
       return false;
     }
@@ -218,7 +218,7 @@ void CertificateWizardImpl::slotGenerateCertificate()
 	  if ( !le )
 	    continue;
 
-	  const QString value = le->text().stripWhiteSpace();
+	  const QString value = le->text().trimmed();
 	  if ( value.isEmpty() )
 	    continue;
 
@@ -347,7 +347,7 @@ void CertificateWizardImpl::createPersonalDataPage()
   int row = 0;
 
   for ( QStringList::const_iterator it = attrOrder.begin() ; it != attrOrder.end() ; ++it, ++row ) {
-    const QString key = (*it).stripWhiteSpace().upper();
+    const QString key = (*it).trimmed().upper();
     const QString attr = attributeFromKey( key );
     if ( attr.isEmpty() ) {
       --row;
@@ -384,17 +384,17 @@ bool CertificateWizardImpl::sendToCA() const {
 }
 
 QString CertificateWizardImpl::caEMailAddress() const {
-  return caEmailED->text().stripWhiteSpace();
+  return caEmailED->text().trimmed();
 }
 
 void CertificateWizardImpl::slotURLSelected( const QString& _url )
 {
-  KURL url = KURL::fromPathOrURL( _url.stripWhiteSpace() );
+  KURL url = KURL::fromPathOrURL( _url.trimmed() );
   storeUR->setURL( url.prettyURL() );
 }
 
 KURL CertificateWizardImpl::saveFileUrl() const {
-  return KURL::fromPathOrURL( storeUR->url().stripWhiteSpace() );
+  return KURL::fromPathOrURL( storeUR->url().trimmed() );
 }
 
 void CertificateWizardImpl::showPage( QWidget * page )

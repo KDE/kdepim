@@ -72,20 +72,20 @@ public:
       KURL url;
       url.setProtocol( "ldap" );
       url.setPath( "/" ); // workaround KURL parsing bug
-      const QString host = mConfig.readEntry( QString( "SelectedHost" ) + num ).stripWhiteSpace();
+      const QString host = mConfig.readEntry( QString( "SelectedHost" ) + num ).trimmed();
       url.setHost( host );
 
       const int port = mConfig.readUnsignedNumEntry( QString( "SelectedPort" ) + num );
       if ( port != 0 )
         url.setPort( port );
 
-      const QString base = mConfig.readEntry( QString( "SelectedBase" ) + num ).stripWhiteSpace();
+      const QString base = mConfig.readEntry( QString( "SelectedBase" ) + num ).trimmed();
       url.setQuery( base );
 
-      const QString bindDN = mConfig.readEntry( QString( "SelectedBind" ) + num ).stripWhiteSpace();
+      const QString bindDN = mConfig.readEntry( QString( "SelectedBind" ) + num ).trimmed();
       url.setUser( bindDN );
 
-      const QString pwdBindDN = mConfig.readEntry( QString( "SelectedPwdBind" ) + num ).stripWhiteSpace();
+      const QString pwdBindDN = mConfig.readEntry( QString( "SelectedPwdBind" ) + num ).trimmed();
       url.setPass( pwdBindDN );
       lst.append( url );
     }

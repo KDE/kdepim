@@ -90,7 +90,7 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
   b_ackupPathLabel=new QLabel(i18n("Save backup in:"), w_1);
   w1L->addWidget(b_ackupPathLabel, 3,0);
 
-  b_ackupPath=new KLineEdit(QDir::homeDirPath()+QString("/knodedata-")+v_ersion+".tar.gz", w_1);
+  b_ackupPath=new KLineEdit(QDir::homePath()+QString("/knodedata-")+v_ersion+".tar.gz", w_1);
   w1L->addWidget(b_ackupPath, 3,1);
 
   b_rowseBtn= new QPushButton(i18n("Browse..."), w_1);

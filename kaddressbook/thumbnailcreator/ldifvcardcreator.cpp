@@ -102,10 +102,10 @@ bool VCard_LDIFCreator::readContents( const QString &path )
     int no, linenr;
     for (linenr=no=0; linenr<30 && no<addrList.count(); ++no) {
        addr = addrList[no];
-       info = addr.formattedName().simplifyWhiteSpace();
+       info = addr.formattedName().simplified();
        if (info.isEmpty())
           info = addr.givenName() + " " + addr.familyName();
-       info = info.simplifyWhiteSpace();
+       info = info.simplified();
        if (info.isEmpty())
          continue;
        text.append(info);
@@ -119,23 +119,23 @@ bool VCard_LDIFCreator::readContents( const QString &path )
   addr = addrList[ 0 ];
 
   // prepare the text
-  name = addr.formattedName().simplifyWhiteSpace();
+  name = addr.formattedName().simplified();
   if ( name.isEmpty() )
     name = addr.givenName() + " " + addr.familyName();
-  name = name.simplifyWhiteSpace();
+  name = name.simplified();
 
 
   KABC::PhoneNumber::List pnList = addr.phoneNumbers();
   QStringList phoneNumbers;
   for (int no=0; no<pnList.count(); ++no) {
-    QString pn = pnList[no].number().simplifyWhiteSpace();
+    QString pn = pnList[no].number().simplified();
     if (!pn.isEmpty() && !phoneNumbers.contains(pn))
       phoneNumbers.append(pn);
   }
   if ( !phoneNumbers.isEmpty() )
       text += phoneNumbers.join("\n") + "\n";
 
-  info = addr.organization().simplifyWhiteSpace();
+  info = addr.organization().simplified();
   if ( !info.isEmpty() )
     text += info + "\n";
 

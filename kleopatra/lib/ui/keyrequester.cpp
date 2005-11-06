@@ -249,7 +249,7 @@ void Kleo::KeyRequester::startKeyListJob( const QStringList & fingerprints ) {
 
   unsigned int count = 0;
   for ( QStringList::const_iterator it = fingerprints.begin() ; it != fingerprints.end() ; ++it )
-    if ( !(*it).stripWhiteSpace().isEmpty() )
+    if ( !(*it).trimmed().isEmpty() )
       ++count;
 
   if ( !count ) {

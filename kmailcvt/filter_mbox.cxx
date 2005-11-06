@@ -48,7 +48,7 @@ void FilterMBox::import(FilterInfo *info)
     int overall_status = 0;
     bool first_msg = true;
 
-    QStringList filenames = KFileDialog::getOpenFileNames( QDir::homeDirPath(), "*|" + i18n("mbox Files (*)"), info->parent() );
+    QStringList filenames = KFileDialog::getOpenFileNames( QDir::homePath(), "*|" + i18n("mbox Files (*)"), info->parent() );
     info->setOverall(0);
 
     for ( QStringList::Iterator filename = filenames.begin(); filename != filenames.end(); ++filename, ++currentFile) {

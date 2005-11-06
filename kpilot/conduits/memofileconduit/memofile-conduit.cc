@@ -69,7 +69,7 @@ MemofileConduit::MemofileConduit(KPilotDeviceLink *d,
                                  const char *n,
                                  const QStringList &l) :
 		ConduitAction(d,n,l),
-		_DEFAULT_MEMODIR(QDir::homeDirPath() + CSL1("/MyMemos")),
+		_DEFAULT_MEMODIR(QDir::homePath() + CSL1("/MyMemos")),
 		fMemoAppInfo(0L),
 		_memofiles(0L)
 {

@@ -104,7 +104,7 @@ void Kleo::ObtainKeysJob::slotPerform( bool async ) {
   const QFileInfoList xisFiles = dir.entryInfoList( "*.xis;*.XIS", QDir::Files ); 
   for ( QFileInfoList::const_iterator it = xisFiles.begin(), end = xisFiles.end() ; it != end ; ++it )
     if ( (*it).isReadable() )
-      mResult.push_back( (*it).absFilePath() );
+      mResult.push_back( (*it).absoluteFilePath() );
 
   ++mIndex;
 

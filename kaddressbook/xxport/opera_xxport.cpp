@@ -50,7 +50,7 @@ KABC::Addressee::List OperaXXPort::importContacts( const QString& ) const
 {
   KABC::Addressee::List addrList;
 
-  QString fileName = KFileDialog::getOpenFileName( QDir::homeDirPath() + QString::fromLatin1( "/.opera/contacts.adr" ) );
+  QString fileName = KFileDialog::getOpenFileName( QDir::homePath() + QString::fromLatin1( "/.opera/contacts.adr" ) );
   if ( fileName.isEmpty() )
     return addrList;
 
@@ -71,7 +71,7 @@ KABC::Addressee::List OperaXXPort::importContacts( const QString& ) const
 
   while ( !stream.atEnd() ) {
     line = stream.readLine();
-    line = line.stripWhiteSpace();
+    line = line.trimmed();
     if ( line == QString::fromLatin1( "#CONTACT" ) ) {
       parseContact = true;
       addr = KABC::Addressee();

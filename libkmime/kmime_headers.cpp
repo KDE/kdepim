@@ -603,7 +603,7 @@ void AddressField::from7BitString(const Q3CString &s)
       pos1=0;
       pos2=s.find('<');
       if(pos2!=-1) {
-        n=s.mid(pos1, pos2-pos1).stripWhiteSpace();
+        n=s.mid(pos1, pos2-pos1).trimmed();
         pos1=pos2+1;
         pos2=s.find('>', pos1);
         if(pos2!=-1)
@@ -616,11 +616,11 @@ void AddressField::from7BitString(const Q3CString &s)
       pos1=0;
       pos2=s.find('(');
       if(pos2!=-1) {
-        e_mail=s.mid(pos1, pos2-pos1).stripWhiteSpace();
+        e_mail=s.mid(pos1, pos2-pos1).trimmed();
         pos1=pos2+1;
         pos2=s.find(')', pos1);
         if(pos2!=-1)
-          n=s.mid(pos1, pos2-pos1).stripWhiteSpace();
+          n=s.mid(pos1, pos2-pos1).trimmed();
       }
     break;
 
@@ -685,7 +685,7 @@ void AddressField::fromUnicodeString(const QString &s, const Q3CString &cs)
       pos1=0;
       pos2=s.find('<');
       if(pos2!=-1) {
-        n_ame=s.mid(pos1, pos2-pos1).stripWhiteSpace();
+        n_ame=s.mid(pos1, pos2-pos1).trimmed();
         pos1=pos2+1;
         pos2=s.find('>', pos1);
         if(pos2!=-1)
@@ -698,11 +698,11 @@ void AddressField::fromUnicodeString(const QString &s, const Q3CString &cs)
       pos1=0;
       pos2=s.find('(');
       if(pos2!=-1) {
-        e_mail=s.mid(pos1, pos2-pos1).stripWhiteSpace().latin1();
+        e_mail=s.mid(pos1, pos2-pos1).trimmed().latin1();
         pos1=pos2+1;
         pos2=s.find(')', pos1);
         if(pos2!=-1)
-          n_ame=s.mid(pos1, pos2-pos1).stripWhiteSpace();
+          n_ame=s.mid(pos1, pos2-pos1).trimmed();
       }
     break;
 
@@ -982,7 +982,7 @@ QStringList Newsgroups::getGroups()
   QString s;
 
   for (QStringList::Iterator it = temp.begin(); it != temp.end(); ++it ) {
-    s = (*it).simplifyWhiteSpace();
+    s = (*it).simplified();
     ret.append(s);
   }
 
@@ -1222,10 +1222,10 @@ void ContentType::from7BitString(const Q3CString &s)
   int pos=s.find(';');
 
   if(pos==-1)
-    m_imeType=s.simplifyWhiteSpace();
+    m_imeType=s.simplified();
   else {
-    m_imeType=s.left(pos).simplifyWhiteSpace();
-    p_arams=s.mid(pos, s.length()-pos).simplifyWhiteSpace();
+    m_imeType=s.left(pos).simplified();
+    p_arams=s.mid(pos, s.length()-pos).simplified();
   }
 
   if(isMultipart())
@@ -1493,7 +1493,7 @@ static const encTableType encTable[] = {  { "7Bit", CE7Bit },
 
 void CTEncoding::from7BitString(const Q3CString &s)
 {
-  Q3CString stripped(s.simplifyWhiteSpace());
+  Q3CString stripped(s.simplified());
   c_te=CE7Bit;
   for(int i=0; encTable[i].s!=0; i++)
     if(strcasecmp(stripped.data(), encTable[i].s)==0) {

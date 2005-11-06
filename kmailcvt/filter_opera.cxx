@@ -45,13 +45,13 @@ FilterOpera::~FilterOpera()
 void FilterOpera::import(FilterInfo *info)
 {
     /** try to go to opera mailfolder in the home of the user */
-    QString startdir = QDir::homeDirPath() + "/.opera/mail/store/";
+    QString startdir = QDir::homePath() + "/.opera/mail/store/";
     QDir d( startdir );
     if ( !d.exists() ) {
-        startdir = QDir::homeDirPath();
+        startdir = QDir::homePath();
     }
 
-    //QString mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(), info->parent());
+    //QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(), info->parent());
     KFileDialog *kfd;
     kfd = new KFileDialog( startdir, "", 0, "kfiledialog", true );
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
@@ -65,7 +65,7 @@ void FilterOpera::import(FilterInfo *info)
      * If the user only select homedir no import needed because 
      * there should be no files and we surely import wrong files.
      */
-    else if ( operaDir == QDir::homeDirPath() || operaDir == (QDir::homeDirPath() + "/")) {
+    else if ( operaDir == QDir::homePath() || operaDir == (QDir::homeDirPath() + "/")) {
         info->addLog(i18n("No files found for import."));
     } else {
         info->setOverall(0);

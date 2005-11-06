@@ -53,7 +53,7 @@ void FilterLNotes::import(FilterInfo *info) {
     currentFile = 1;
     totalFiles = 0;
 
-    QStringList filenames = KFileDialog::getOpenFileNames( QDir::homeDirPath(), "*|" + i18n("All Files (*)"), 
+    QStringList filenames = KFileDialog::getOpenFileNames( QDir::homePath(), "*|" + i18n("All Files (*)"), 
                                                            inf->parent() );
     totalFiles = filenames.count();
     inf->setOverall(0);

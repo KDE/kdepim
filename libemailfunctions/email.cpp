@@ -80,7 +80,7 @@ QStringList KPIM::splitEmailAddrList(const QString& aStr)
       if (!insidequote && (commentlevel == 0)) {
         addr = aStr.mid(addrstart, index-addrstart);
         if (!addr.isEmpty())
-          list += addr.simplifyWhiteSpace();
+          list += addr.simplified();
         addrstart = index+1;
       }
       break;
@@ -90,7 +90,7 @@ QStringList KPIM::splitEmailAddrList(const QString& aStr)
   if (!insidequote && (commentlevel == 0)) {
     addr = aStr.mid(addrstart, aStr.length()-addrstart);
     if (!addr.isEmpty())
-      list += addr.simplifyWhiteSpace();
+      list += addr.simplified();
   }
   else
     kdDebug(5300) << "Error in address splitting: "
@@ -225,9 +225,9 @@ KPIM::EmailParseResult splitAddressInternal( const QByteArray& address,
   if ( context == InAngleAddress )
     return KPIM::UnclosedAngleAddr;
 
-  displayName = displayName.stripWhiteSpace();
-  comment = comment.stripWhiteSpace();
-  addrSpec = addrSpec.stripWhiteSpace();
+  displayName = displayName.trimmed();
+  comment = comment.trimmed();
+  addrSpec = addrSpec.trimmed();
 
   if ( addrSpec.isEmpty() ) {
     if ( displayName.isEmpty() )
@@ -704,8 +704,8 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
       }
     }
 
-    name = name.simplifyWhiteSpace();
-    mail = mail.simplifyWhiteSpace();
+    name = name.simplified();
+    mail = mail.simplified();
 
     if( mail.isEmpty() )
       return false;
@@ -772,8 +772,8 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
     }
   }
 
-  name = name.simplifyWhiteSpace();
-  mail = mail.simplifyWhiteSpace();
+  name = name.simplified();
+  mail = mail.simplified();
 
   return ! (name.isEmpty() || mail.isEmpty());
 }

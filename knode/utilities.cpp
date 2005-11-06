@@ -373,7 +373,7 @@ QString KNHelper::rewrapStringList(QStringList text, int wrapAt, QChar quoteChar
     }
 
     thisLine.remove(0,thisPrefix.length());
-    thisLine = thisLine.stripWhiteSpace();
+    thisLine = thisLine.trimmed();
 
     if(!leftover.isEmpty()) {   // don't break paragraphs, tables and quote levels
       if(thisLine.isEmpty() || (thisPrefix!=lastPrefix) || thisLine.contains("  ") || thisLine.contains('\t'))

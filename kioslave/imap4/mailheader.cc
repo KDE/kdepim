@@ -71,7 +71,7 @@ mailHeader::addHdrLine (mimeHdrLine * inLine)
 	goto out;
   }
   if (!qstricmp (label, "Subject")) {
-	_subject = value.simplifyWhiteSpace();
+	_subject = value.simplified();
 	goto out;
   }
   if (!qstricmp (label.data (), "Date")) {

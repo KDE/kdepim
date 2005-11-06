@@ -47,7 +47,7 @@ void FilterPMail::import(FilterInfo *info)
     
     // Select directory from where I have to import files
     KFileDialog *kfd;
-    kfd = new KFileDialog( QDir::homeDirPath(), "", 0, "kfiledialog", true );
+    kfd = new KFileDialog( QDir::homePath(), "", 0, "kfiledialog", true );
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     chosenDir = kfd->selectedFile();

@@ -72,7 +72,7 @@ void IMAddressWidget::init()
 
 void IMAddressWidget::slotAddressChanged( const QString &text )
 {
-  emit inValidState( !text.stripWhiteSpace().isEmpty() );
+  emit inValidState( !text.trimmed().isEmpty() );
 }
 
 KPluginInfo * IMAddressWidget::protocol() const
@@ -111,10 +111,10 @@ QString IMAddressWidget::address() const
 {
   // The protocol irc is a special case and hard coded in.
   // It's not nice, but the simplest way that I can see.
-  if ( protocol()->name() == "IRC" && !edtNetwork->text().stripWhiteSpace().isEmpty() )
-    return edtAddress->text().stripWhiteSpace() + QChar( 0xE120 ) + edtNetwork->text().stripWhiteSpace();
+  if ( protocol()->name() == "IRC" && !edtNetwork->text().trimmed().isEmpty() )
+    return edtAddress->text().trimmed() + QChar( 0xE120 ) + edtNetwork->text().trimmed();
   else
-    return edtAddress->text().stripWhiteSpace();
+    return edtAddress->text().trimmed();
 }
 
 void IMAddressWidget::populateProtocols()

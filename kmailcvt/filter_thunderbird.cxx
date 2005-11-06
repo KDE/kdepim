@@ -51,10 +51,10 @@ void FilterThunderbird::import(FilterInfo *info)
      * We ask the user to choose Evolution's root directory. 
      * This should be usually ~/.thunderbird/xxxx.default/Mail/Local Folders/
      */
-    QString thunderDir = QDir::homeDirPath() + "/.thunderbird/";
+    QString thunderDir = QDir::homePath() + "/.thunderbird/";
     QDir d( thunderDir );
     if ( !d.exists() ) {
-        thunderDir = QDir::homeDirPath();
+        thunderDir = QDir::homePath();
     }
 
     KFileDialog *kfd;
@@ -70,7 +70,7 @@ void FilterThunderbird::import(FilterInfo *info)
      * If the user only select homedir no import needed because 
      * there should be no files and we surely import wrong files.
      */
-    else if ( mailDir == QDir::homeDirPath() || mailDir == (QDir::homeDirPath() + "/")) {
+    else if ( mailDir == QDir::homePath() || mailDir == (QDir::homeDirPath() + "/")) {
         info->addLog(i18n("No files found for import."));
     } else {
         info->setOverall(0);

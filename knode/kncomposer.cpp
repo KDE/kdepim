@@ -1485,7 +1485,7 @@ void KNComposer::slotToBtnClicked()
   QStringList lst;
 
 
-  txt = mEdtTo->text().stripWhiteSpace();
+  txt = mEdtTo->text().trimmed();
   if ( !txt.isEmpty() ) {
       lst = KMMessage::splitEmailAddrList( txt );
       dlg.setSelectedTo( lst );

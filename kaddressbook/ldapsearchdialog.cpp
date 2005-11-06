@@ -365,7 +365,7 @@ void LDAPSearchDialog::slotStartSearch()
 
   bool startsWith = (mSearchType->currentItem() == 1);
 
-  QString filter = makeFilter( mSearchEdit->text().stripWhiteSpace(), mFilterCombo->currentText(), startsWith );
+  QString filter = makeFilter( mSearchEdit->text().trimmed(), mFilterCombo->currentText(), startsWith );
 
    // loop in the list and run the KPIM::LdapClients
   mResultListView->clear();
@@ -420,9 +420,9 @@ QString LDAPSearchDialog::selectedEMails() const
   ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
   while ( cli ) {
     if ( cli->isSelected() ) {
-      QString email = asUtf8( cli->mAttrs[ "mail" ].first() ).stripWhiteSpace();
+      QString email = asUtf8( cli->mAttrs[ "mail" ].first() ).trimmed();
       if ( !email.isEmpty() ) {
-        QString name = asUtf8( cli->mAttrs[ "cn" ].first() ).stripWhiteSpace();
+        QString name = asUtf8( cli->mAttrs[ "cn" ].first() ).trimmed();
         if ( name.isEmpty() ) {
           result << email;
         } else {

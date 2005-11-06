@@ -666,7 +666,7 @@ void ArticleWidget::displayBodyBlock( const QStringList &lines )
   int oldLevel = -2, newLevel = -2;
   bool isSig = false;
   QString line, html;
-  QString quoteChars = knGlobals.settings()->quoteCharacters().simplifyWhiteSpace();
+  QString quoteChars = knGlobals.settings()->quoteCharacters().simplified();
   if (quoteChars.isEmpty())
     quoteChars = ">";
 

@@ -105,7 +105,7 @@ bool ReadMBox::nextLine()
 		}
 	}
 
-	if( m_current_line->stripWhiteSpace().isEmpty() )
+	if( m_current_line->trimmed().isEmpty() )
 		m_header = false;
 
 	return false;

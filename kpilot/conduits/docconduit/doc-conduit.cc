@@ -242,7 +242,7 @@ QString DOCConduit::constructPDBFileName(QString name) {
 	QString fn;
 	QDir dr(DOCConduitSettings::pDBDirectory());
 	QFileInfo pth(dr, name);
-	if (!name.isEmpty()) fn=pth.absFilePath()+CSL1(".pdb");
+	if (!name.isEmpty()) fn=pth.absoluteFilePath()+CSL1(".pdb");
 	return fn;
 }
 QString DOCConduit::constructTXTFileName(QString name) {
@@ -250,7 +250,7 @@ QString DOCConduit::constructTXTFileName(QString name) {
 	QString fn;
 	QDir dr( DOCConduitSettings::tXTDirectory() );
 	QFileInfo pth(dr, name);
-	if (!name.isEmpty()) fn=pth.absFilePath()+CSL1(".txt");
+	if (!name.isEmpty()) fn=pth.absoluteFilePath()+CSL1(".txt");
 	return fn;
 }
 
@@ -472,7 +472,7 @@ void DOCConduit::syncNextTXT()
 
 	QDir dr( DOCConduitSettings::tXTDirectory() );
 	QFileInfo fl(dr, fn );
-	QString txtfilename=fl.absFilePath();
+	QString txtfilename=fl.absoluteFilePath();
 	QString pdbfilename;
 	++dociterator;
 
@@ -532,7 +532,7 @@ void DOCConduit::checkPDBFiles() {
 	QDir dr(DOCConduitSettings::pDBDirectory());
 	QFileInfo fl(dr, fn );
 	QStringList lst;
-	QString pdbfilename = fl.absFilePath();
+	QString pdbfilename = fl.absoluteFilePath();
 	lst << pdbfilename;
 	++dociterator;
 

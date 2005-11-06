@@ -225,7 +225,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
 
   painter->setPen( mForegroundColor );
   if ( !addr.prefix().isEmpty() ) {
-    line1 = addr.prefix().stripWhiteSpace();
+    line1 = addr.prefix().trimmed();
 
     if ( fake ) {
       rect = painter->boundingRect( Ruler1, y, Width-Ruler1, Height,
@@ -268,7 +268,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
     for ( it = phoneNumbers.begin(); it != phoneNumbers.end(); ++it ) {
       line = (*it).typeLabel();
       line += ": " + (*it).number();
-      list.append( line.stripWhiteSpace() );
+      list.append( line.trimmed() );
     }
 
     parts.push_back( list );
@@ -403,14 +403,14 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
       text = QString::null;
 
       if ( !address.extended().isEmpty() )
-        text = address.extended().stripWhiteSpace();
+        text = address.extended().trimmed();
 
       if ( !text.isEmpty() ) {
         line1 = line1 + QString::fromLatin1( " (" ) + text +
         QString::fromLatin1( ")" );
       }
 
-      line1 = line1.stripWhiteSpace();
+      line1 = line1.trimmed();
       line2 = address.street();
       if ( !address.postOfficeBox().isEmpty() )
         line2 += QString::fromLatin1( " - " ) + address.postOfficeBox();

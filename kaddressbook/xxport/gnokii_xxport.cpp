@@ -312,7 +312,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		KABC::Addressee *a = new KABC::Addressee();
 
 		// try to split Name into FamilyName and GivenName
-		s = GN_FROM(entry.name).simplifyWhiteSpace();
+		s = GN_FROM(entry.name).simplified();
 		a->setFormattedName(s); // set formatted name as in Phone
 		if (s.find(',') == -1) {
 		  // assumed format: "givenname [... familyname]"
@@ -322,16 +322,16 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 			a->setGivenName(s);
 		  } else {
 			// multiple strings -> split them.
-			a->setFamilyName(addrlist.last().simplifyWhiteSpace());
+			a->setFamilyName(addrlist.last().simplified());
 			addrlist.remove(addrlist.last());
-			a->setGivenName(addrlist.join(" ").simplifyWhiteSpace());
+			a->setGivenName(addrlist.join(" ").simplified());
 		  }
 		} else {
 		  // assumed format: "familyname, ... givenname"
 		  addrlist = QStringList::split(',', s);
-		  a->setFamilyName(addrlist.first().simplifyWhiteSpace());
+		  a->setFamilyName(addrlist.first().simplified());
 		  addrlist.remove(addrlist.first());
-		  a->setGivenName(addrlist.join(" ").simplifyWhiteSpace());
+		  a->setGivenName(addrlist.join(" ").simplified());
 		}
 
 		a->insertCustom(APP, "X_GSM_CALLERGROUP", s.setNum(entry.caller_group));
@@ -356,7 +356,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		/* scan sub-entries */
 		if (entry.subentries_count)
 		 for (int n=0; n<entry.subentries_count; n++) {
-		  QString s = GN_FROM(entry.subentries[n].data.number).simplifyWhiteSpace();
+		  QString s = GN_FROM(entry.subentries[n].data.number).simplified();
 		  GNOKII_DEBUG(QString(" Subentry#%1, entry_type=%2, number_type=%3, number=%4\n")
 				.arg(n).arg(entry.subentries[n].entry_type)
 				.arg(entry.subentries[n].number_type).arg(s));
@@ -529,7 +529,7 @@ KABC::Addressee::List GNOKIIXXPort::importContacts( const QString& ) const
 static QString makeValidPhone( const QString &number )
 {
 	// allowed chars: 0-9, *, #, p, w, +
-	QString num = number.simplifyWhiteSpace();
+	QString num = number.simplified();
 	QString allowed("0123456789*+#pw");
 	for (unsigned int i=num.length(); i>=1; i--)
 		if (allowed.find(num[i-1])==-1)
@@ -624,7 +624,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 	for (int n=0; n<emails.count(); n++) {
 		if (entry.subentries_count >= GN_PHONEBOOK_SUBENTRIES_MAX_NUMBER)
 			break; // Phonebook full
-		s = emails[n].simplifyWhiteSpace();
+		s = emails[n].simplified();
 		if (s.isEmpty()) continue;
 		// only one email allowed if we have URLS, notes, addresses (to avoid phone limitations)
 		if (n && !addr->url().isEmpty() && !addr->note().isEmpty() && addr->addresses().count()) {
@@ -662,7 +662,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 		subentry++;
 	}
 	// add Note
-	s = addr->note().simplifyWhiteSpace();
+	s = addr->note().simplified();
 	if (!s.isEmpty() && (entry.subentries_count<GN_PHONEBOOK_SUBENTRIES_MAX_NUMBER)) {
 		subentry->entry_type = GN_PHONEBOOK_ENTRY_Note;
 		strncpy(subentry->data.number, GN_TO(s), sizeof(subentry->data.number)-1);

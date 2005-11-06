@@ -114,7 +114,7 @@ QString PilotMemo::getTitle() const
 QString PilotMemo::shortTitle() const
 {
 	FUNCTIONSETUP;
-	QString t = QString(getTitle()).simplifyWhiteSpace();
+	QString t = QString(getTitle()).simplified();
 
 	if (t.length() < 32)
 		return t;

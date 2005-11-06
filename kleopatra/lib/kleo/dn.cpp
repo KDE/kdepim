@@ -274,7 +274,7 @@ serialise( const Q3ValueVector<Kleo::DN::Attribute> & dn ) {
   QStringList result;
   for ( Q3ValueVector<Kleo::DN::Attribute>::const_iterator it = dn.begin() ; it != dn.end() ; ++it )
     if ( !(*it).name().isEmpty() && !(*it).value().isEmpty() )
-      result.push_back( (*it).name().stripWhiteSpace() + '=' + (*it).value().stripWhiteSpace() );
+      result.push_back( (*it).name().trimmed() + '=' + (*it).value().trimmed() );
   return result.join( "," );
 }
 
@@ -482,7 +482,7 @@ const Kleo::DNAttributeMapper * Kleo::DNAttributeMapper::instance() {
 
 QString Kleo::DNAttributeMapper::name2label( const QString & s ) const {
   const std::map<const char*,const char*,ltstr>::const_iterator it
-    = d->map.find( s.stripWhiteSpace().upper().latin1() );
+    = d->map.find( s.trimmed().upper().latin1() );
   if ( it == d->map.end() )
     return QString::null;
   return i18n( it->second );

@@ -51,7 +51,7 @@ void FilterOutlook::import(FilterInfo *info)
     info->addLog(i18n("No files found for import."));
 
     QString outlookDir;
-    outlookDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(), info->parent());
+    outlookDir = KFileDialog::getExistingDirectory(QDir::homePath(), info->parent());
     QDir importDir (outlookDir);
     QStringList files = importDir.entryList("*.[pP][sS][tT]", QDir::Files, QDir::Name);
     for ( QStringList::Iterator pstFile = files.begin(); pstFile != files.end(); ++pstFile) {

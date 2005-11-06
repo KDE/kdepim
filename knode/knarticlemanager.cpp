@@ -102,7 +102,7 @@ void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
       s.append(fName[i]);
     else
       s.append(' ');
-  fName = s.simplifyWhiteSpace();
+  fName = s.simplified();
   fName.replace(QRegExp("[\\s]"),"_");
 
   KNSaveHelper helper(fName,parent);

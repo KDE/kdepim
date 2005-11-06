@@ -295,7 +295,7 @@ void KTNEFMain::cleanup()
 	const QFileInfoList	list = d.entryInfoList(QDir::Files|QDir::Hidden,QDir::Unsorted);
 	for (int i = 0; i < list.size(); ++i)
 	{
-			d.remove(list.at(i).absFilePath());
+			d.remove(list.at(i).absoluteFilePath());
 	}
 }
 

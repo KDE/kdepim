@@ -150,7 +150,7 @@ mimeHeader::addHdrLine (mimeHdrLine * aHdrLine)
         {
           if (skip > 0)
           {
-            addParameter (Q3CString (aCStr, skip).simplifyWhiteSpace(), aList);
+            addParameter (Q3CString (aCStr, skip).simplified(), aList);
 //            cout << "-- '" << aParm.data() << "'" << endl;
             mimeValue = Q3CString (addLine->getValue ().data (), skip);
             aCStr += skip;

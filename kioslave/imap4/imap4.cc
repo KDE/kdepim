@@ -1878,7 +1878,7 @@ bool IMAP4Protocol::makeLogin ()
     unhandled.clear ();
     if (!alreadyConnected) while (!parseLoop ());    //get greeting
     QString greeting;
-    if (!unhandled.isEmpty()) greeting = unhandled.first().stripWhiteSpace();
+    if (!unhandled.isEmpty()) greeting = unhandled.first().trimmed();
     unhandled.clear ();       //get rid of it
     cmd = doCommand (new imapCommand ("CAPABILITY", ""));
 

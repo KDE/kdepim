@@ -708,7 +708,7 @@ void Kleo::KeySelectionDialog::slotCancel() {
 }
 
 void Kleo::KeySelectionDialog::slotSearch( const QString & text ) {
-  mSearchText = text.stripWhiteSpace().upper();
+  mSearchText = text.trimmed().upper();
   slotSearch();
 }
 

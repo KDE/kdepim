@@ -177,7 +177,7 @@ void DOCConverter::setTXTpath(QString path, QString file) {
 	QDir dr(path);
 	QFileInfo pth(dr, file);
 	if (!file.isEmpty())
-		 txtfilename = pth.absFilePath();
+		 txtfilename = pth.absoluteFilePath();
 }
 
 

@@ -247,7 +247,7 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(KInstance *inst,QWidget *parent
 	titleFont.setBold(true);
 	fTitleText->setFont(titleFont);
 	vbox->addWidget(fTitleText, 0, Qt::AlignLeft);
-	vbox->addWidget(new KSeparator(Q3Frame::HLine|Q3Frame::Plain, this));
+	vbox->addWidget(new KSeparator(Qt::Horizontal|Q3Frame::Plain, this));
 
 	// Right hand column
 	fStack = new Q3WidgetStack(this, "RightPart");

@@ -51,13 +51,13 @@ void FilterEvolution_v2::import(FilterInfo *info)
      * We ask the user to choose Evolution's root directory. 
      * This should be usually ~/.evolution/mail/local/
      */
-    QString evolDir = QDir::homeDirPath() + "/.evolution/mail/local";
+    QString evolDir = QDir::homePath() + "/.evolution/mail/local";
     QDir d( evolDir );
     if ( !d.exists() ) {
-        evolDir = QDir::homeDirPath();
+        evolDir = QDir::homePath();
     }
 
-    //QString mailDir = KFileDialog::getExistingDirectory(QDir::homeDirPath(), info->parent());
+    //QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(), info->parent());
     KFileDialog *kfd;
     kfd = new KFileDialog( evolDir, "", 0, "kfiledialog", true );
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
@@ -71,7 +71,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
      * If the user only select homedir no import needed because 
      * there should be no files and we surely import wrong files.
      */
-    else if ( mailDir == QDir::homeDirPath() || mailDir == (QDir::homeDirPath() + "/")) {
+    else if ( mailDir == QDir::homePath() || mailDir == (QDir::homeDirPath() + "/")) {
         info->addLog(i18n("No files found for import."));
     } else {
         info->setOverall(0);

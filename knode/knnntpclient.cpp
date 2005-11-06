@@ -407,7 +407,7 @@ void KNNntpClient::doFetchNewHeaders()
     Q3StrList tmp;
     if (getMsg(tmp)) {
       for(Q3CString s = tmp.first(); s; s = tmp.next()) {
-        s = s.stripWhiteSpace();
+        s = s.trimmed();
         // remove the mandatory xover header
         if (s == "Subject:" || s == "From:" || s == "Date:" || s == "Message-ID:"
             || s == "References:" || s == "Bytes:" || s == "Lines:")

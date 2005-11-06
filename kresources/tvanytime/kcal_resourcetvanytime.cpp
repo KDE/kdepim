@@ -462,7 +462,7 @@ void ResourceTVAnytime::setSubresourceActive( const QString & subresource, bool 
       s.setActive( active );
       mServiceMap.insert( subresource, s );
       doLoad();
-      mResourceChangedTimer.changeInterval( 150 );
+      mResourceChangedTimer.start( 150 );
     }
   }
 }

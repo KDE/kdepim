@@ -1819,7 +1819,7 @@ void KNMainWidget::slotFetchArticleWithID()
   FetchArticleIdDlg *dlg = new FetchArticleIdDlg(this, "messageid" );
 
   if (dlg->exec()) {
-    QString id = dlg->messageId().simplifyWhiteSpace();
+    QString id = dlg->messageId().simplified();
     if (id.find(QRegExp("*@*",false,true))!=-1) {
       if (id.find(QRegExp("<*>",false,true))==-1)   // add "<>" when necessary
         id = QString("<%1>").arg(id);

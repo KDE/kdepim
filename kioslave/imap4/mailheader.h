@@ -108,7 +108,7 @@ public:
    */
   void setSubjectEncoded (const Q3CString & _str)
   {
-    _subject = _str.simplifyWhiteSpace();
+    _subject = _str.simplified();
   }
 
   /** 

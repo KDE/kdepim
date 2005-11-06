@@ -531,7 +531,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       /* If the uid was added by KMail, KOrganizer needs to be told, so
        * schedule emitting of the resourceChanged signal. */
       if ( !mUidsPendingAdding.contains( uid ) ) {
-        if ( !ourOwnUpdate ) mResourceChangedTimer.changeInterval( 100 );
+        if ( !ourOwnUpdate ) mResourceChangedTimer.start( 100 );
       } else {
         mUidsPendingAdding.remove( uid );
       }
@@ -766,7 +766,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
       mCalendar.deleteIncidence( incidence );
     }
     mUidMap.remove( uid );
-    mResourceChangedTimer.changeInterval( 100 );
+    mResourceChangedTimer.start( 100 );
   }
 }
 
@@ -782,7 +782,7 @@ void ResourceKolab::fromKMailRefresh( const QString& type,
     loadAllJournals();
   else
     kdWarning(5006) << "KCal Kolab resource: fromKMailRefresh: unknown type " << type << endl;
-  mResourceChangedTimer.changeInterval( 100 );
+  mResourceChangedTimer.start( 100 );
 }
 
 void ResourceKolab::fromKMailAddSubresource( const QString& type,
@@ -934,7 +934,7 @@ void ResourceKolab::setSubresourceActive( const QString &subresource, bool v )
   if ( map && ( ( *map )[ subresource ].active() != v ) ) {
     ( *map )[ subresource ].setActive( v );
     doLoad();                     // refresh the mCalendar cache
-    mResourceChangedTimer.changeInterval( 100 );
+    mResourceChangedTimer.start( 100 );
   }
 }
 
