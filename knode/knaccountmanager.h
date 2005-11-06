@@ -16,7 +16,7 @@
 #define KNACCOUNTMANAGER_H
 
 #include <qglobal.h>
-#include <q3valuelist.h>
+#include <QList>
 
 namespace KWallet {
   class Wallet;
@@ -34,12 +34,25 @@ class KNAccountManager : public QObject
   Q_OBJECT
 
   public:
+    /** Create a new account manager.
+     * @param gm The group manager.
+     * @param parent The parent object.
+     */
     KNAccountManager( KNGroupManager *gm, QObject * parent = 0 );
+    /** Delete this account manager and all managed accounts.
+     */
     ~KNAccountManager();
 
+    /// List of accounts
+    typedef QList<KNNntpAccount*> List;
+
+    /** Save all accounts. */
     void prepareShutdown();
 
-    void setCurrentAccount(KNNntpAccount *a);
+    /** Sets the current account.
+     * @param a The current account.
+     */
+    void setCurrentAccount( KNNntpAccount *a );
 
     /** Add a new account.
      *  @param a A new account allocated and configured by the caller.
@@ -50,16 +63,22 @@ class KNAccountManager : public QObject
      *  be removed.
      */
     bool removeAccount( KNNntpAccount *a = 0 );
-    void editProperties(KNNntpAccount *a=0);
+    /** Show the properties dialog for the given account.
+     * @param a The account to edit, uses the current if @p a is 0.
+     */
+    void editProperties( KNNntpAccount *a = 0 );
     void accountRenamed(KNNntpAccount *a=0);
 
-    bool hasCurrentAccount() const             { return (c_urrentAccount!=0); }
+    /** Returns true if there is a current account. */
+    bool hasCurrentAccount() const { return c_urrentAccount != 0; }
+    /** Returns the current account. */
     KNNntpAccount* currentAccount() const       { return c_urrentAccount; }
+    /** Returns the SMPT account. */
     KNServerInfo* smtp() const                 { return s_mtp; }
     /** Returns the account with the given id. */
     KNNntpAccount* account( int id );
-    Q3ValueList<KNNntpAccount*>::Iterator begin() { return mAccounts.begin(); }
-    Q3ValueList<KNNntpAccount*>::Iterator end()  { return mAccounts.end(); }
+    /** Returns the list of all accounts. */
+    List accounts() const { return mAccounts; }
     /** Returns the first account (used as fallback sometimes). */
     KNNntpAccount* first() const;
 
@@ -92,7 +111,7 @@ class KNAccountManager : public QObject
     static void prepareWallet();
 
   private:
-    Q3ValueList<KNNntpAccount*> mAccounts;
+    List mAccounts;
     static KWallet::Wallet *mWallet;
     static bool mWalletOpenFailed;
     bool mAsyncOpening;

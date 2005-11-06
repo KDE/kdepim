@@ -15,7 +15,7 @@
 #ifndef KNARTICLEMANAGER_H
 #define KNARTICLEMANAGER_H
 
-#include <q3valuelist.h>
+#include <QList>
 
 #include "knjobdata.h"
 #include "knarticle.h"
@@ -36,6 +36,7 @@ class KNSearchDialog;
 class KNJobData;
 
 
+/** Article manager. */
 class KNArticleManager : public QObject, public KNJobConsumer {
 
   Q_OBJECT
@@ -89,8 +90,9 @@ class KNArticleManager : public QObject, public KNJobConsumer {
 
     void rescoreArticles(KNRemoteArticle::List &l);
 
-    // Allow to delay the setup of UI elements, since the knode part may not
-    // be available when the config dialog is called
+    /** Allow to delay the setup of UI elements, since the knode part may not
+     * be available when the config dialog is called.
+     */
     void setView(KNHeaderView* v);
 
   signals:
@@ -109,7 +111,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     KNArticleFilter *f_ilter;
     KNFilterManager *f_ilterMgr;
     KNSearchDialog *s_earchDlg;
-    Q3ValueList<KTempFile*> mTempFiles;
+    QList<KTempFile*> mTempFiles;
     bool d_isableExpander;
 
   public slots:

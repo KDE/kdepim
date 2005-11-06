@@ -15,8 +15,7 @@
 #include <stdlib.h>
 
 #include <qdir.h>
-//Added by qt3to4:
-#include <Q3ValueList>
+#include <q3valuelist.h>
 
 #include <kdebug.h>
 #include <ksimpleconfig.h>
@@ -53,9 +52,7 @@ KNAccountManager::KNAccountManager( KNGroupManager *gm, QObject * parent )
 
 KNAccountManager::~KNAccountManager()
 {
-  Q3ValueList<KNNntpAccount*>::Iterator it;
-  for ( it = mAccounts.begin(); it != mAccounts.end(); ++it )
-    delete (*it);
+  qDeleteAll( mAccounts );
   mAccounts.clear();
   delete s_mtp;
   delete mWallet;
@@ -65,8 +62,7 @@ KNAccountManager::~KNAccountManager()
 
 void KNAccountManager::prepareShutdown()
 {
-  Q3ValueList<KNNntpAccount*>::Iterator it;
-  for ( it = mAccounts.begin(); it != mAccounts.end(); ++it )
+  for ( List::Iterator it = mAccounts.begin(); it != mAccounts.end(); ++it )
     (*it)->saveInfo();
 }
 
@@ -101,8 +97,7 @@ KNNntpAccount* KNAccountManager::account( int id )
 {
   if ( id <= 0 )
     return 0;
-  Q3ValueList<KNNntpAccount*>::ConstIterator it;
-  for ( it = mAccounts.begin(); it != mAccounts.end(); ++it )
+  for ( List::ConstIterator it = mAccounts.begin(); it != mAccounts.end(); ++it )
     if ( (*it)->id() == id )
       return *it;
   return 0;
@@ -154,14 +149,18 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
   if(!a) return false;
 
   Q3ValueList<KNGroup*> lst;
-  if(knGlobals.folderManager()->unsentForAccount(a->id()) > 0) {
-    KMessageBox::sorry(knGlobals.topWidget, i18n("This account cannot be deleted since there are some unsent messages for it."));
+  if ( knGlobals.folderManager()->unsentForAccount( a->id() ) > 0 ) {
+    KMessageBox::sorry( knGlobals.topWidget,
+      i18n("This account cannot be deleted since there are some unsent messages for it.") );
   }
-  else if(KMessageBox::warningContinueCancel(knGlobals.topWidget, i18n("Do you really want to delete this account?"),"",KGuiItem(i18n("&Delete"),"editdelete"))==KMessageBox::Continue) {
+  else if ( KMessageBox::warningContinueCancel ( knGlobals.topWidget,
+            i18n("Do you really want to delete this account?"), "", KGuiItem( i18n("&Delete"), "editdelete") )
+            ==KMessageBox::Continue ) {
     lst = gManager->groupsOfAccount( a );
     for ( Q3ValueList<KNGroup*>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
       if ( (*it)->isLocked() ) {
-        KMessageBox::sorry(knGlobals.topWidget, i18n("At least one group of this account is currently in use.\nThe account cannot be deleted at the moment."));
+        KMessageBox::sorry( knGlobals.topWidget, i18n("At least one group of this account is currently in use.\n"
+            "The account cannot be deleted at the moment.") );
         return false;
       }
     }
@@ -244,8 +243,7 @@ void KNAccountManager::loadPasswordsAsync()
 void KNAccountManager::loadPasswords()
 {
   s_mtp->readPassword();
-  Q3ValueList<KNNntpAccount*>::Iterator it;
-  for ( it = mAccounts.begin(); it != mAccounts.end(); ++it )
+  for ( List::Iterator it = mAccounts.begin(); it != mAccounts.end(); ++it )
     (*it)->readPassword();
   emit passwordsChanged();
 }

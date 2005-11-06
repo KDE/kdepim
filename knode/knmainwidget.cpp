@@ -416,8 +416,8 @@ void KNMainWidget::openURL(const KURL &url)
   if (url.url().left(7) == "news://") {
 
     // lets see if we already have an account for this host...
-    Q3ValueList<KNNntpAccount*>::Iterator it;
-    for ( it = a_ccManager->begin(); it != a_ccManager->end(); ++it ) {
+    KNAccountManager::List list = a_ccManager->accounts();
+    for ( KNAccountManager::List::Iterator it = list.begin(); it != list.end(); ++it ) {
       if ( (*it)->server().lower() == host.lower() && ( port==0 || (*it)->port() == port ) ) {
         acc = *it;
         break;
@@ -1322,8 +1322,8 @@ void KNMainWidget::slotAccDelete()
 
 void KNMainWidget::slotAccGetNewHdrsAll()
 {
-  Q3ValueList<KNNntpAccount*>::Iterator it;
-  for ( it = a_ccManager->begin(); it != a_ccManager->end(); ++it )
+  KNAccountManager::List list = a_ccManager->accounts();
+  for ( KNAccountManager::List::Iterator it = list.begin(); it != list.end(); ++it )
     g_rpManager->checkAll( *it );
 }
 

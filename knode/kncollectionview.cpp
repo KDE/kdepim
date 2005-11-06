@@ -184,9 +184,8 @@ void KNCollectionView::updateAccount(KNNntpAccount *a)
 
 void KNCollectionView::reloadAccounts()
 {
-  KNAccountManager* am = knGlobals.accountManager();
-  Q3ValueList<KNNntpAccount*>::Iterator it;
-  for ( it = am->begin(); it != am->end(); ++it ) {
+  KNAccountManager::List list = knGlobals.accountManager()->accounts();
+  for ( KNAccountManager::List::Iterator it = list.begin(); it != list.end(); ++it ) {
     removeAccount( *it );
     addAccount( *it );
   }

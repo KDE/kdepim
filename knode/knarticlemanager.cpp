@@ -12,6 +12,9 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include <QByteArray>
+#include <QList>
+
 #include <kmessagebox.h>
 #include <kuserprofile.h>
 #include <kopenwith.h>
@@ -42,10 +45,6 @@
 #include "nntpjobs.h"
 #include "settings.h"
 
-//Added by qt3to4:
-#include <Q3ValueList>
-#include <Q3CString>
-
 using namespace KNode;
 
 
@@ -71,7 +70,7 @@ KNArticleManager::~KNArticleManager()
 
 void KNArticleManager::deleteTempFiles()
 {
-  for ( Q3ValueList<KTempFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
+  for ( QList<KTempFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
     (*it)->unlink();
     delete (*it);
   }
@@ -110,7 +109,7 @@ void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
   QFile *file = helper.getFile(i18n("Save Article"));
 
   if (file) {
-    Q3CString tmp=a->encodedContent(false);
+    QByteArray tmp=a->encodedContent(false);
     if ( file->writeBlock(tmp.data(), tmp.size()) == -1 )
       KNHelper::displayExternalFileError( parent );
   }
@@ -128,7 +127,7 @@ QString KNArticleManager::saveContentToTemp(KMime::Content *c)
     bool found=false;
 
     // lets see if the tempfile-path is still valid...
-    for ( Q3ValueList<KTempFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
+    for ( QList<KTempFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
       if ( (*it)->name() == path ) {
         found = true;
         break;
@@ -669,7 +668,7 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
       KNGroup *targetGroup=0;
       KNRemoteArticle *xp=0;
       KNRemoteArticle::List al;
-      Q3CString mid = (*it)->messageID()->as7BitString( false );
+      QByteArray mid = (*it)->messageID()->as7BitString( false );
 
       for ( QStringList::Iterator it2 = groups.begin(); it2 != groups.end(); ++it2 ) {
         targetGroup = knGlobals.groupManager()->group(*it2, g->account());

@@ -12,11 +12,10 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include <QByteArray>
+#include <QList>
 #include <qlayout.h>
 #include <qlabel.h>
-//Added by qt3to4:
-#include <Q3ValueList>
-#include <Q3CString>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -51,7 +50,7 @@ KNArticleFactory::KNArticleFactory( QObject *parent )
 
 KNArticleFactory::~KNArticleFactory()
 {
-  for ( Q3ValueList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
+  for ( QList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
     delete (*it);
   delete s_endErrDlg;
 }
@@ -83,7 +82,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   if(!g)
     return;
 
-  Q3CString chset;
+  QByteArray chset;
   if (g->useCharset())
     chset = g->defaultCharset();
   else
@@ -114,7 +113,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
 
   KNGroup *g=static_cast<KNGroup*>(a->collection());
 
-  Q3CString chset;
+  QByteArray chset;
   if ( knGlobals.settings()->useOwnCharset() ) {
     if (g->useCharset())
       chset = g->defaultCharset();
@@ -181,7 +180,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
 
   //References
   KMime::Headers::References *references=a->references(false);
-  Q3CString refs;
+  QByteArray refs;
   if (references)
     refs=references->as7BitString(false);
   else
@@ -283,7 +282,7 @@ void KNArticleFactory::createForward(KNArticle *a)
     return;
 
   KMime::Headers::ContentType *ct=a->contentType();
-  Q3CString chset;
+  QByteArray chset;
   bool incAtt = ( !knGlobals.settings()->useExternalMailer() &&
                   ct->isMultipart() && ct->isSubtype("mixed") &&
                   KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget,
@@ -412,7 +411,7 @@ void KNArticleFactory::createCancel(KNArticle *a)
 
   //subject
   KMime::Headers::MessageID *msgId=a->messageID();
-  Q3CString tmp;
+  QByteArray tmp;
   tmp="cancel of "+msgId->as7BitString(false);
   art->subject()->from7BitString(tmp);
 
@@ -690,7 +689,7 @@ void KNArticleFactory::sendOutbox()
 bool KNArticleFactory::closeComposeWindows()
 {
   while ( !mCompList.isEmpty() ) {
-    Q3ValueList<KNComposer*>::Iterator it = mCompList.begin();
+    QList<KNComposer*>::Iterator it = mCompList.begin();
     if ( !(*it)->close() )
       return false;
   }
@@ -711,7 +710,7 @@ void KNArticleFactory::deleteComposerForArticle(KNLocalArticle *a)
 
 KNComposer* KNArticleFactory::findComposer(KNLocalArticle *a)
 {
-  for ( Q3ValueList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
+  for ( QList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
     if ( (*it)->article() == a )
       return (*it);
   return 0;
@@ -720,7 +719,7 @@ KNComposer* KNArticleFactory::findComposer(KNLocalArticle *a)
 
 void KNArticleFactory::configChanged()
 {
-  for ( Q3ValueList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
+  for ( QList<KNComposer*>::Iterator it = mCompList.begin(); it != mCompList.end(); ++it )
     (*it)->setConfig( false );
 }
 
@@ -782,7 +781,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 }
 
 
-KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, Q3CString defChset, bool withXHeaders, KNArticle *origPost)
+KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QByteArray defChset, bool withXHeaders, KNArticle *origPost)
 {
   if ( knGlobals.settings()->generateMessageID() && knGlobals.settings()->hostname().isEmpty() ) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));

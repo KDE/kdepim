@@ -22,6 +22,7 @@ class KNRemoteArticle;
 class KNGroup;
 
 
+/** Article interface for the scoring system. */
 class KNScorableArticle : public ScorableArticle
 {
 public:
@@ -58,6 +59,7 @@ public:
 // };
 
 
+/** Scoring manager. */
 class KNScoringManager : public KScoringManager
 {
   Q_OBJECT

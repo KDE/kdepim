@@ -348,8 +348,8 @@ KNode::NntpAccountListWidget::~NntpAccountListWidget()
 void KNode::NntpAccountListWidget::load()
 {
   l_box->clear();
-  Q3ValueList<KNNntpAccount*>::Iterator it;
-  for ( it = a_ccManager->begin(); it != a_ccManager->end(); ++it )
+  KNAccountManager::List list = a_ccManager->accounts();
+  for ( KNAccountManager::List::Iterator it = list.begin(); it != list.end(); ++it )
     slotAddItem( *it );
 }
 

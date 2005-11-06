@@ -15,7 +15,6 @@
 #define KNODE_ARTICLEWIDGET_H
 
 #include <qmap.h>
-#include <q3valuelist.h>
 #include <qwidget.h>
 //Added by qt3to4:
 #include <QFocusEvent>
