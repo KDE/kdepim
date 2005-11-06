@@ -35,6 +35,7 @@ class KConfig;
 #include <qcheckbox.h>
 #include <qcolor.h>
 #include <qfont.h>
+#include <qlabel.h>
 #include <qstring.h>
 
 KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent, const char * name )
@@ -47,6 +48,13 @@ KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent, const char * name )
 	_fonts[ 1 ] = new QFont;
 	_anims[ 0 ] = new QString;
 	_anims[ 1 ] = new QString;
+
+	lbLeft->setText( i18n( "Left mousebutton", "Left" ) );
+	if( lbLeft->text() == "Left" )
+		lbLeft->setText( i18n( "Left" ) );
+	lbRight->setText( i18n( "Right mousebutton", "Right" ) );
+	if( lbRight->text() == "Right" )
+		lbRight->setText( i18n( "Right" ) );
 	
 	connect( parent, SIGNAL( okClicked() ), this, SLOT( slotOK() ) );
 	connect( parent, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
