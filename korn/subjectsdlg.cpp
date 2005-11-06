@@ -273,7 +273,10 @@ void KornSubjectsDlg::prepareStep2Subjects( KMailDrop *drop )
 	connect( drop, SIGNAL( readSubjectsProgress( int ) ), _subjects->progress, SLOT( setProgress( int ) ) );
 	connect( _subjects->progress, SIGNAL( cancelPressed() ), drop, SLOT( readSubjectsCanceled() ) );
 	
-	_subjects->it->current()->readSubjects( 0 );
+	if( _subjects->it->current()->canReadSubjects() )
+		_subjects->it->current()->readSubjects( 0 );
+	else
+		subjectsReady( true );
 }
 
 void KornSubjectsDlg::removeStep2Subjects( KMailDrop *drop )

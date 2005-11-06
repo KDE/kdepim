@@ -244,7 +244,10 @@ QString KKioDrop::auth() const
 void KKioDrop::recheck()
 {
 	if( _protocol->configName() == "process" ) //Process isn't pollable
+	{
+		emit rechecked();
 		return;
+	}
 
 	_count->count( this );
 		
