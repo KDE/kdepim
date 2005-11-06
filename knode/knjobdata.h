@@ -16,11 +16,10 @@
 #define KNJOBDATA_H
 
 #include <kurl.h>
+#include <kio/global.h>
 
 #include <qobject.h>
-#include <q3valuelist.h>
-
-#include <kio/global.h>
+#include <QList>
 
 #include <libkdepim/progressmanager.h>
 
@@ -56,7 +55,8 @@ class KNJobConsumer {
   protected:
     /** The actual work is done here */
     virtual void processJob(KNJobData *j);
-    Q3ValueList<KNJobData*> mJobs;
+    /** List of all active jobs. */
+    QList<KNJobData*> mJobs;
 
 };
 

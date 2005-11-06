@@ -24,10 +24,10 @@
 #include "readnewsgeneralwidget_base.h"
 #include "smtpaccountwidget_base.h"
 
+#include <QList>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QLabel>
-#include <Q3ValueList>
 
 class Q3ButtonGroup;
 class QCheckBox;
@@ -426,7 +426,7 @@ class KDE_EXPORT FilterListWidget : public KCModule {
     void updateItem(KNArticleFilter *f);
     void addMenuItem(KNArticleFilter *f);
     void removeMenuItem(KNArticleFilter *f);
-    Q3ValueList<int> menuOrder();
+    QList<int> menuOrder();
 
 
   protected:

@@ -16,7 +16,7 @@
 #define KNFILTERMANAGER_H
 
 #include <qglobal.h>
-#include <q3valuelist.h>
+#include <QList>
 
 #include <kaction.h>
 
@@ -89,11 +89,11 @@ class KNFilterManager : public QObject
     KNArticleFilter* byID(int id);
     void updateMenu();
 
-    Q3ValueList<KNArticleFilter*> mFilterList;
+    QList<KNArticleFilter*> mFilterList;
     KNode::FilterListWidget *fset;
     KNArticleFilter *currFilter;
     KNFilterSelectAction *a_ctFilter;
-    Q3ValueList<int> menuOrder;
+    QList<int> menuOrder;
     bool commitNeeded;
 
   protected slots:

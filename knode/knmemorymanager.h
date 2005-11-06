@@ -16,12 +16,12 @@
 #define KNMEMORYMANAGER_H
 
 #include <qglobal.h>
-#include <q3valuelist.h>
+#include <QList>
 
 class KNArticle;
 class KNArticleCollection;
 
-
+/** Memory manager. */
 class KNMemoryManager {
 
   public:
@@ -40,6 +40,7 @@ class KNMemoryManager {
 
   protected:
 
+    /** Article cache item. */
     class ArticleItem {
     public:
       ArticleItem(KNArticle *a) { art=a; sync(); }
@@ -48,8 +49,12 @@ class KNMemoryManager {
 
       KNArticle *art;
       int storageSize;
+
+      /// List of article cache items.
+      typedef QList<KNMemoryManager::ArticleItem*> List;
     };
 
+    /** Group/folder cache item. */
     class CollectionItem {
     public:
       CollectionItem(KNArticleCollection *c) { col=c; sync(); }
@@ -58,6 +63,9 @@ class KNMemoryManager {
 
       KNArticleCollection *col;
       int storageSize;
+
+      /// List of collection cache items.
+      typedef QList<KNMemoryManager::CollectionItem*> List;
     };
 
     CollectionItem* findCacheEntry(KNArticleCollection *c, bool take=false);
@@ -65,8 +73,8 @@ class KNMemoryManager {
     void checkMemoryUsageCollections();
     void checkMemoryUsageArticles();
 
-    Q3ValueList<CollectionItem*> mColList;
-    Q3ValueList<ArticleItem*> mArtList;
+    CollectionItem::List mColList;
+    ArticleItem::List mArtList;
     int c_ollCacheSize, a_rtCacheSize;
 };
 

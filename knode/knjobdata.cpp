@@ -26,7 +26,6 @@
 
 //Added by qt3to4:
 #include <QTimer>
-#include <Q3ValueList>
 
 KNJobConsumer::KNJobConsumer()
 {
@@ -35,8 +34,7 @@ KNJobConsumer::KNJobConsumer()
 
 KNJobConsumer::~KNJobConsumer()
 {
-  Q3ValueList<KNJobData*>::Iterator it;
-  for ( it = mJobs.begin(); it != mJobs.end(); ++it )
+  for ( QList<KNJobData*>::Iterator it = mJobs.begin(); it != mJobs.end(); ++it )
     (*it)->c_onsumer = 0;
 }
 

@@ -32,7 +32,6 @@
 #include <QEvent>
 #include <QKeyEvent>
 #include <QHBoxLayout>
-#include <Q3ValueList>
 
 #include <kaction.h>
 #include <kaddrbook.h>

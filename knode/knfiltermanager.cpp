@@ -27,8 +27,6 @@
 #include "knfiltermanager.h"
 #include "knconfig.h"
 #include "knconfigwidgets.h"
-//Added by qt3to4:
-#include <Q3ValueList>
 
 
 KNFilterSelectAction::KNFilterSelectAction( const QString& text, const QString& pix,
@@ -77,8 +75,7 @@ KNFilterManager::KNFilterManager( QObject * parent )
 
 KNFilterManager::~KNFilterManager()
 {
-  for ( Q3ValueList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
-    delete (*it);
+  qDeleteAll( mFilterList );
 }
 
 
@@ -111,17 +108,15 @@ void KNFilterManager::loadFilters()
   if (!fname.isNull()) {
     KSimpleConfig conf(fname,true);
 
-    Q3ValueList<int> activeFilters = conf.readIntListEntry("Active");
+    QList<int> activeFilters = conf.readIntListEntry("Active");
     menuOrder = conf.readIntListEntry("Menu");
 
-    Q3ValueList<int>::Iterator it = activeFilters.begin();
-    while (it != activeFilters.end()) {
-      KNArticleFilter *f=new KNArticleFilter((*it));
-      if (f->loadInfo())
-        addFilter(f);
+    for ( QList<int>::Iterator it = activeFilters.begin(); it != activeFilters.end(); ++it ) {
+      KNArticleFilter *f = new KNArticleFilter( (*it) );
+      if ( f->loadInfo() )
+        addFilter( f );
       else
         delete f;
-      it++;
     }
   }
   updateMenu();
@@ -138,8 +133,8 @@ void KNFilterManager::saveFilterLists()
     return;
   }
   KSimpleConfig conf(dir+"filters.rc");
-  Q3ValueList<int> activeFilters;
-  for ( Q3ValueList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
+  QList<int> activeFilters;
+  for ( QList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
     activeFilters << (*it)->id();
 
   conf.writeEntry("Active",activeFilters);
@@ -153,10 +148,10 @@ void KNFilterManager::startConfig(KNode::FilterListWidget *fs)
   fset=fs;
   commitNeeded = false;
 
-  for ( Q3ValueList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
+  for ( QList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
     fset->addItem( (*it) );
 
-  Q3ValueList<int>::Iterator it = menuOrder.begin();
+  QList<int>::Iterator it = menuOrder.begin();
   while (it != menuOrder.end()) {
     if ((*it)!=-1)
       fset->addMenuItem(byID((*it)));
@@ -202,9 +197,9 @@ void KNFilterManager::newFilter()
 void KNFilterManager::addFilter(KNArticleFilter *f)
 {
   if ( f->id() == -1 ) {      // new filter, find suitable ID
-    Q3ValueList<int> activeFilters;
+    QList<int> activeFilters;
     // ok, this is a ugly hack: we want to reuse old id's, so we try to find the first unused id
-    for ( Q3ValueList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
+    for ( QList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
       activeFilters << (*it)->id();
     int newId = 1;
     while ( activeFilters.contains( newId ) > 0 )
@@ -282,7 +277,7 @@ void KNFilterManager::deleteFilter(KNArticleFilter *f)
 
 bool KNFilterManager::newNameIsOK(KNArticleFilter *f, const QString &newName)
 {
-  for ( Q3ValueList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
+  for ( QList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
     if ( (*it) != f && newName == (*it)->translatedName() )
       return false;
 
@@ -311,7 +306,7 @@ KNArticleFilter* KNFilterManager::setFilter(const int id)
 
 KNArticleFilter* KNFilterManager::byID(int id)
 {
-  for ( Q3ValueList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
+  for ( QList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
     if ( (*it)->id() == id )
       return (*it);
 
@@ -328,14 +323,13 @@ void KNFilterManager::updateMenu()
   a_ctFilter->popupMenu()->clear();
   KNArticleFilter *f=0;
 
-  Q3ValueList<int>::Iterator it = menuOrder.begin();
-  while (it != menuOrder.end()) {
-    if ((*it)!=-1) {
-      if ((f=byID((*it))))
-        a_ctFilter->popupMenu()->insertItem(f->translatedName(), f->id());
-    }
-    else a_ctFilter->popupMenu()->insertSeparator();
-    ++it;
+  QList<int>::Iterator it = menuOrder.begin();
+  for ( QList<int>::Iterator it = menuOrder.begin(); it != menuOrder.end(); ++it ) {
+    if ( (*it) != -1 ) {
+      if ( ( f = byID( (*it) ) ) )
+        a_ctFilter->popupMenu()->insertItem( f->translatedName(), f->id() );
+    } else
+      a_ctFilter->popupMenu()->insertSeparator();
   }
 
   if(currFilter)
@@ -357,16 +351,14 @@ void KNFilterManager::slotShowFilterChooser()
 {
   KNArticleFilter *f=0;
   QStringList items;
-  Q3ValueList<int> ids;
+  QList<int> ids;
 
-  Q3ValueList<int>::Iterator it = menuOrder.begin();
-  while (it != menuOrder.end()) {
-    if ((*it)!=-1)
-      if ((f=byID((*it)))) {
-        items.append(f->translatedName());
-        ids.append(*it);
+  for ( QList<int>::Iterator it = menuOrder.begin(); it != menuOrder.end(); ++it ) {
+    if ( (*it) != -1 )
+      if ( ( f = byID( (*it) ) ) ) {
+        items.append( f->translatedName() );
+        ids.append( *it );
       }
-    ++it;
   }
 
   int currentItem=0;

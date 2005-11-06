@@ -20,7 +20,6 @@
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QBoxLayout>
-#include <Q3ValueList>
 #include <QVBoxLayout>
 
 #include <klocale.h>
@@ -1485,10 +1484,10 @@ void KNode::FilterListWidget::removeMenuItem(KNArticleFilter *f)
 }
 
 
-Q3ValueList<int> KNode::FilterListWidget::menuOrder()
+QList<int> KNode::FilterListWidget::menuOrder()
 {
   KNArticleFilter *f;
-  Q3ValueList<int> lst;
+  QList<int> lst;
 
   for(uint i=0; i<m_lb->count(); i++) {
     f= (static_cast<LBoxItem*>(m_lb->item(i)))->filter;
