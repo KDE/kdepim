@@ -378,7 +378,7 @@ void KNGroupManager::expireAll(KNNntpAccount *a)
     if( (*it)->account() != a  || (*it)->isLocked() || (*it)->lockedArticles() > 0 )
       continue;
 
-    KNArticleWindow::closeAllWindowsForCollection( (*it) );
+    ArticleWindow::closeAllWindowsForCollection( (*it) );
     cup->appendCollection( (*it) );
   }
 
@@ -461,7 +461,7 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
     return false;
   }
 
-  KNArticleWindow::closeAllWindowsForCollection(g);
+  ArticleWindow::closeAllWindowsForCollection( g );
   ArticleWidget::collectionRemoved( g );
 
   acc=g->account();
@@ -528,7 +528,7 @@ void KNGroupManager::expireGroupNow(KNGroup *g)
     return;
   }
 
-  KNArticleWindow::closeAllWindowsForCollection(g);
+  ArticleWindow::closeAllWindowsForCollection( g );
 
   KNCleanUp cup;
   cup.expireGroup(g, true);

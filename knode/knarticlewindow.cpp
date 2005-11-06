@@ -26,20 +26,17 @@
 #include "knglobals.h"
 #include "knmainwidget.h"
 #include "knarticlewindow.h"
-//Added by qt3to4:
-#include <Q3ValueList>
-#include <Q3CString>
 
 using namespace KNode;
 
-Q3ValueList<KNArticleWindow*> KNArticleWindow::mInstances;
+QList<KNode::ArticleWindow*> ArticleWindow::mInstances;
 
 
-bool KNArticleWindow::closeAllWindowsForCollection( KNArticleCollection *col, bool force )
+bool ArticleWindow::closeAllWindowsForCollection( KNArticleCollection *col, bool force )
 {
-  Q3ValueList<KNArticleWindow*> list = mInstances;
-  for ( Q3ValueList<KNArticleWindow*>::Iterator it = list.begin(); it != list.end(); ++it )
-    if ( (*it)->artW->article() && (*it)->artW->article()->collection() == col ) {
+  ArticleWindow::List list = mInstances;
+  for ( ArticleWindow::List::Iterator it = list.begin(); it != list.end(); ++it )
+    if ( (*it)->mArticleWidget->article() && (*it)->mArticleWidget->article()->collection() == col ) {
       if ( force )
         (*it)->close();
       else
@@ -49,11 +46,11 @@ bool KNArticleWindow::closeAllWindowsForCollection( KNArticleCollection *col, bo
 }
 
 
-bool KNArticleWindow::closeAllWindowsForArticle( KNArticle *art, bool force )
+bool ArticleWindow::closeAllWindowsForArticle( KNArticle *art, bool force )
 {
-  Q3ValueList<KNArticleWindow*> list = mInstances;
-  for ( Q3ValueList<KNArticleWindow*>::Iterator it = list.begin(); it != list.end(); ++it )
-    if ( (*it)->artW->article() && (*it)->artW->article() == art ) {
+  ArticleWindow::List list = mInstances;
+  for ( ArticleWindow::List::Iterator it = list.begin(); it != list.end(); ++it )
+    if ( (*it)->mArticleWidget->article() && (*it)->mArticleWidget->article() == art ) {
       if ( force )
         (*it)->close();
       else
@@ -63,10 +60,10 @@ bool KNArticleWindow::closeAllWindowsForArticle( KNArticle *art, bool force )
 }
 
 
-bool KNArticleWindow::raiseWindowForArticle( KNArticle *art )
+bool ArticleWindow::raiseWindowForArticle( KNArticle *art )
 {
-  for ( Q3ValueList<KNArticleWindow*>::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
-    if ( (*it)->artW->article() && (*it)->artW->article() == art ) {
+  for ( ArticleWindow::List::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
+    if ( (*it)->mArticleWidget->article() && (*it)->mArticleWidget->article() == art ) {
       KWin::activateWindow( (*it)->winId() );
       return true;
     }
@@ -74,10 +71,11 @@ bool KNArticleWindow::raiseWindowForArticle( KNArticle *art )
 }
 
 
-bool KNArticleWindow::raiseWindowForArticle(const Q3CString &mid)
+bool ArticleWindow::raiseWindowForArticle( const QByteArray &mid )
 {
-  for ( Q3ValueList<KNArticleWindow*>::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
-    if ( (*it)->artW->article() && (*it)->artW->article()->messageID()->as7BitString( false ) == mid ) {
+  for ( ArticleWindow::List::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
+    if ( (*it)->mArticleWidget->article() &&
+           (*it)->mArticleWidget->article()->messageID()->as7BitString( false ) == Q3CString( mid ) ) {
       KWin::activateWindow( (*it)->winId() );
       return true;
     }
@@ -88,18 +86,18 @@ bool KNArticleWindow::raiseWindowForArticle(const Q3CString &mid)
 
 //==================================================================================
 
-KNArticleWindow::KNArticleWindow(KNArticle *art)
-  : KMainWindow(0, "articleWindow")
+ArticleWindow::ArticleWindow( KNArticle *art )
+  : KMainWindow( 0, "articleWindow" )
 {
   if ( knGlobals.instance() )
     setInstance( knGlobals.instance() );
 
-  if(art)
-    setCaption(art->subject()->asUnicodeString());
+  if ( art )
+    setCaption( art->subject()->asUnicodeString() );
 
-  artW = new ArticleWidget( this, this, actionCollection() );
-  artW->setArticle(art);
-  setCentralWidget(artW);
+  mArticleWidget = new ArticleWidget( this, this, actionCollection() );
+  mArticleWidget->setArticle( art );
+  setCentralWidget( mArticleWidget );
 
   mInstances.append( this );
 
@@ -110,7 +108,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
   KAccel *accel = new KAccel( this );
-  artW->setCharsetKeyboardAction()->plugAccel( accel );
+  mArticleWidget->setCharsetKeyboardAction()->plugAccel( accel );
 
   setupGUI( ToolBar|Keys|Create, "knreaderui.rc");
 
@@ -121,7 +119,7 @@ KNArticleWindow::KNArticleWindow(KNArticle *art)
 }
 
 
-KNArticleWindow::~KNArticleWindow()
+ArticleWindow::~ArticleWindow()
 {
   mInstances.remove( this );
   KConfig *conf = knGlobals.config();

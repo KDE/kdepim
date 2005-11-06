@@ -488,7 +488,7 @@ void KNFolder::removeArticles( KNLocalArticle::List &l, bool del )
 
     //update
     knGlobals.artFactory->deleteComposerForArticle(a);
-    KNArticleWindow::closeAllWindowsForArticle(a);
+    ArticleWindow::closeAllWindowsForArticle( a );
     ArticleWidget::articleRemoved( a );
     delete a->listItem();
 

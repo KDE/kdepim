@@ -481,7 +481,7 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
       (knGlobals.artFactory->findComposer(static_cast<KNLocalArticle*>(a))!=0))
     return false;
 
-  if (!KNArticleWindow::closeAllWindowsForArticle(a, force))
+  if ( !ArticleWindow::closeAllWindowsForArticle( a, force ) )
     if (!force)
       return false;
 

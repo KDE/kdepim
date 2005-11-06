@@ -32,7 +32,6 @@
 
 //GUI
 #include "knmainwidget.h"
-#include "knarticlewindow.h"
 #include "kncollectionviewitem.h"
 #include "knhdrviewitem.h"
 

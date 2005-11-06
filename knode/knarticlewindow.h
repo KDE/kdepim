@@ -12,39 +12,69 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KNARTICLEWINDOW_H
-#define KNARTICLEWINDOW_H
+#ifndef KNODE_ARTICLEWINDOW_H
+#define KNODE_ARTICLEWINDOW_H
 
 #include <kmainwindow.h>
-//Added by qt3to4:
-#include <Q3ValueList>
-#include <Q3CString>
+
+#include <QByteArray>
+#include <QList>
 
 class KNArticle;
 class KNArticleCollection;
 
 namespace KNode {
-  class ArticleWidget;
-}
 
-class KNArticleWindow : public KMainWindow  {
+class ArticleWidget;
+
+/** A stand-alone article viewer window. */
+class ArticleWindow : public KMainWindow  {
 
   Q_OBJECT
 
   public:
-    KNArticleWindow(KNArticle *art);
-    ~KNArticleWindow();
-    KNode::ArticleWidget* artWidget()const        { return artW; }
+    /** Create a new article window.
+     * @param art The article to show in this window.
+     */
+    ArticleWindow( KNArticle *art );
+    /// Destroy this article viewer window.
+    ~ArticleWindow();
+    /** Returns the article widget of this window. */
+    ArticleWidget* articleWidget() const { return mArticleWidget; }
 
-    static bool closeAllWindowsForCollection(KNArticleCollection *col, bool force=true);
-    static bool closeAllWindowsForArticle(KNArticle *art, bool force=true);
-    static bool raiseWindowForArticle(KNArticle *art);   // false: no window found
-    static bool raiseWindowForArticle(const Q3CString &mid);
+    /// List of article windows.
+    typedef QList<KNode::ArticleWindow*> List;
+
+    /** Close all article windows showing articles from the given collection.
+     * @param col The article collection (folder/group).
+     * @param force Really close the windows.
+     * @return true if all windows have been closed.
+     */
+    static bool closeAllWindowsForCollection( KNArticleCollection *col, bool force = true );
+    /** Clise all windows showing the given article.
+     * @param art Close all windows showing this article.
+     * @param force Really close the windows.
+     * @return true if all windows have been closed.
+     */
+    static bool closeAllWindowsForArticle( KNArticle *art, bool force = true );
+    /** Raise the article window for the given article.
+     * @param art The article.
+     * @return false if no article window was found.
+     */
+    static bool raiseWindowForArticle( KNArticle *art );
+    /** Raise the article window showing a specific article.
+     * @param mid Message-ID of the article.
+     * @return false if no article was found.
+     */
+    static bool raiseWindowForArticle(const QByteArray &mid);
 
   protected:
-    KNode::ArticleWidget *artW;
-    static Q3ValueList<KNArticleWindow*> mInstances;
-
+    /// The article widget of this window.
+    ArticleWidget *mArticleWidget;
+    /// List of all article windows.
+    static List mInstances;
 };
+
+}
 
 #endif

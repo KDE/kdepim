@@ -488,11 +488,11 @@ void KNMainWidget::openURL(const KURL &url)
         g = g_rpManager->firstGroupOfAccount(acc);
 
       if (g) {
-        if(!KNArticleWindow::raiseWindowForArticle(groupname.latin1())) { //article not yet opened
+        if ( !ArticleWindow::raiseWindowForArticle( groupname.latin1() ) ) { //article not yet opened
           KNRemoteArticle *a=new KNRemoteArticle(g);
           QString messageID = "<"+groupname+">";
           a->messageID()->from7BitString(messageID.latin1());
-          KNArticleWindow *awin=new KNArticleWindow(a);
+          ArticleWindow *awin = new ArticleWindow( a );
           awin->show();
         }
       } else {
@@ -1218,8 +1218,8 @@ void KNMainWidget::slotOpenArticle(Q3ListViewItem *item)
                                                (f_olManager->currentFolder()==f_olManager->drafts()))) {
       a_rtFactory->edit( static_cast<KNLocalArticle*>(art) );
     } else {
-      if (!KNArticleWindow::raiseWindowForArticle(art)) {
-        KNArticleWindow *w=new KNArticleWindow(art);
+      if ( !ArticleWindow::raiseWindowForArticle( art ) ) {
+        ArticleWindow *w = new ArticleWindow( art );
         w->show();
       }
     }
@@ -1746,8 +1746,8 @@ void KNMainWidget::slotArtOpenNewWindow()
   kdDebug(5003) << "KNMainWidget::slotArtOpenNewWindow()" << endl;
 
   if( mArticleViewer->article() ) {
-    if ( !KNArticleWindow::raiseWindowForArticle( mArticleViewer->article() )) {
-      KNArticleWindow *win=new KNArticleWindow( mArticleViewer->article() );
+    if ( !ArticleWindow::raiseWindowForArticle( mArticleViewer->article() ) ) {
+      ArticleWindow *win = new ArticleWindow( mArticleViewer->article() );
       win->show();
     }
   }
@@ -1824,10 +1824,10 @@ void KNMainWidget::slotFetchArticleWithID()
       if (id.find(QRegExp("<*>",false,true))==-1)   // add "<>" when necessary
         id = QString("<%1>").arg(id);
 
-      if(!KNArticleWindow::raiseWindowForArticle(id.latin1())) { //article not yet opened
+      if ( !ArticleWindow::raiseWindowForArticle( id.latin1() ) ) { //article not yet opened
         KNRemoteArticle *a=new KNRemoteArticle(g_rpManager->currentGroup());
         a->messageID()->from7BitString(id.latin1());
-        KNArticleWindow *awin=new KNArticleWindow(a);
+        ArticleWindow *awin = new ArticleWindow( a );
         awin->show();
       }
     }
