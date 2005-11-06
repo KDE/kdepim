@@ -21,7 +21,7 @@
 #include <qfont.h>
 #include <qcolor.h>
 #include <q3asciidict.h>
-#include <q3valuelist.h>
+#include <QList>
 //Added by qt3to4:
 #include <Q3CString>
 
@@ -44,14 +44,18 @@ class KNArticleCollection;
 class KNArticle : public KMime::NewsArticle, public KNJobItem {
 
   public:
-    typedef Q3ValueList<KNArticle*> List;
+    /// List of articles.
+    typedef QList<KNArticle*> List;
 
     KNArticle(KNArticleCollection *c);
     ~KNArticle();
 
-    //id
+    /** Returns the article id. */
     int id() const            { return i_d; }
-    void setId(int i)    { i_d=i; }
+    /** Sets the article id.
+     * @param i The article id.
+     */
+    void setId( int i ) { i_d = i; }
 
     //list item handling
     KNHdrViewItem* listItem() const           { return i_tem; }
@@ -89,7 +93,8 @@ class KNGroup;
 class KNRemoteArticle : public KNArticle {
 
   public:
-    typedef Q3ValueList<KNRemoteArticle*> List;
+    /// List of remote articles.
+    typedef QList<KNRemoteArticle*> List;
 
     KNRemoteArticle(KNGroup *g);
     ~KNRemoteArticle();
@@ -208,7 +213,8 @@ class KNRemoteArticle : public KNArticle {
 class KNLocalArticle : public KNArticle {
 
   public:
-    typedef Q3ValueList<KNLocalArticle*> List;
+    /// List of local articles.
+    typedef QList<KNLocalArticle*> List;
 
     KNLocalArticle(KNArticleCollection *c=0);
     ~KNLocalArticle();

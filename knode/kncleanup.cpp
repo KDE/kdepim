@@ -21,7 +21,6 @@
 #include <q3progressbar.h>
 //Added by qt3to4:
 #include <QVBoxLayout>
-#include <Q3ValueList>
 #include <Q3Frame>
 #include <QTextStream>
 #include <QCloseEvent>
@@ -61,7 +60,7 @@ void KNCleanUp::start()
   d_lg = new ProgressDialog( mColList.count() );
   d_lg->show();
 
-  for ( Q3ValueList<KNArticleCollection*>::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
+  for ( QList<KNArticleCollection*>::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
     if ( (*it)->type() == KNCollection::CTgroup ) {
       d_lg->showMessage( i18n("Deleting expired articles in <b>%1</b>").arg( (*it)->name() ) );
       kapp->processEvents();

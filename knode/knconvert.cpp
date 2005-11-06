@@ -21,7 +21,6 @@
 #include <QTextStream>
 #include <QGridLayout>
 #include <QHBoxLayout>
-#include <Q3ValueList>
 #include <QVBoxLayout>
 
 #include <klocale.h>
@@ -125,7 +124,7 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
 
 KNConvert::~KNConvert()
 {
-  for ( Q3ValueList<Converter*>::Iterator it = mConverters.begin(); it != mConverters.end(); ++it )
+  for ( QList<Converter*>::Iterator it = mConverters.begin(); it != mConverters.end(); ++it )
     delete (*it);
 }
 
@@ -133,7 +132,7 @@ KNConvert::~KNConvert()
 void KNConvert::convert()
 {
   int errors=0;
-  for ( Q3ValueList<Converter*>::Iterator it = mConverters.begin(); it != mConverters.end(); ++it )
+  for ( QList<Converter*>::Iterator it = mConverters.begin(); it != mConverters.end(); ++it )
     if( !(*it)->doConvert() )
       errors++;
 

@@ -17,8 +17,6 @@
 
 #include <qobject.h>
 #include <q3sortedlist.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 #include "knjobdata.h"
 #include "kngroup.h"
@@ -53,6 +51,7 @@ class KNGroupInfo {
 };
 
 
+/** Data of group list jobs. */
 class KNGroupListData : public KNJobItem {
 
   public:
@@ -90,7 +89,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     // group access
     void loadGroups(KNNntpAccount *a);
     void getSubscribed(KNNntpAccount *a, QStringList &l);
-    Q3ValueList<KNGroup*> groupsOfAccount( KNNntpAccount *a );
+    KNGroup::List groupsOfAccount( KNNntpAccount *a );
 
     bool loadHeaders(KNGroup *g);
     bool unloadHeaders(KNGroup *g, bool force=true);
@@ -127,7 +126,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
   protected:
     /** Reimplemented from KNJobConsumer */
     void processJob(KNJobData *j);
-    Q3ValueList<KNGroup*> mGroupList;
+    KNGroup::List mGroupList;
     KNGroup *c_urrentGroup;
     KNArticleManager *a_rticleMgr;
 

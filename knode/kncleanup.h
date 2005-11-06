@@ -15,11 +15,10 @@
 #ifndef KNCLEANUP_H
 #define KNCLEANUP_H
 
-//Added by qt3to4:
-#include <Q3ValueList>
-#include <QCloseEvent>
+#include <QList>
 
 class Q3ProgressBar;
+class QCloseEvent;
 class QLabel;
 
 class KNArticleCollection;
@@ -51,6 +50,7 @@ class KNCleanUp {
 
   protected:
 
+    /** Cleanup progress dialog. */
     class ProgressDialog : public QDialog  {
 
       public:
@@ -70,7 +70,7 @@ class KNCleanUp {
     };
 
     ProgressDialog *d_lg;
-    Q3ValueList<KNArticleCollection*> mColList;
+    QList<KNArticleCollection*> mColList;
 
 };
 

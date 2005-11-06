@@ -21,8 +21,8 @@
 #include "resource.h"
 
 #include <qglobal.h>
+#include <QList>
 //Added by qt3to4:
-#include <Q3ValueList>
 #include <QEvent>
 #include <QDropEvent>
 #include <kdepimmacros.h>
@@ -190,10 +190,10 @@ protected:
   bool eventFilter(QObject *, QEvent *);
 
   // convenience methods...
-  void getSelectedArticles( Q3ValueList<KNArticle*> &l );
-  void getSelectedArticles( Q3ValueList<KNRemoteArticle*> &l );
-  void getSelectedThreads( Q3ValueList<KNRemoteArticle*> &l );
-  void getSelectedArticles( Q3ValueList<KNLocalArticle*> &l );
+  void getSelectedArticles( QList<KNArticle*> &l );
+  void getSelectedArticles( QList<KNRemoteArticle*> &l );
+  void getSelectedThreads( QList<KNRemoteArticle*> &l );
+  void getSelectedArticles( QList<KNLocalArticle*> &l );
   void closeCurrentThread();
 
   //GUI

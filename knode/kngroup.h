@@ -50,6 +50,9 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     KNGroup(KNCollection *p=0);
     ~KNGroup();
 
+    /// List of groups.
+    typedef QList<KNGroup*> List;
+
     /** type */
     collectionType type()               { return CTgroup; }
 

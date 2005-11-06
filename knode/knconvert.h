@@ -20,9 +20,8 @@
 #include <qdialog.h>
 
 #include <qglobal.h>
-#include <q3valuelist.h>
-//Added by qt3to4:
-#include <QLabel>
+#include <QList>
+
 #include <kdepimmacros.h>
 
 class Q3ListBox;
@@ -34,6 +33,7 @@ class KLineEdit;
 class KProcess;
 
 
+/** Converter framework for older file formats. */
 class KDE_EXPORT KNConvert : public QDialog {
 
   Q_OBJECT
@@ -50,7 +50,7 @@ class KDE_EXPORT KNConvert : public QDialog {
 
     //------------ <Converter-classes> ---------------
 
-    //Base class for all converters
+    /** Abstract base class for all converters. */
     class Converter {
 
       public:
@@ -63,7 +63,7 @@ class KDE_EXPORT KNConvert : public QDialog {
     };
 
 
-    //Converter for version 0.4
+    /** Converter for version 0.4. */
     class Converter04 : public Converter {
 
       public:
@@ -108,7 +108,7 @@ class KDE_EXPORT KNConvert : public QDialog {
                   *c_ancelBtn;
     Q3ListBox      *l_ogList;
 
-    Q3ValueList<Converter*> mConverters;
+    QList<Converter*> mConverters;
     QStringList l_og;
     bool c_onversionDone;
     QString v_ersion;

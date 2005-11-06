@@ -15,14 +15,15 @@
 #ifndef KNFOLDERMANAGER_H
 #define KNFOLDERMANAGER_H
 
+#include <QList>
 #include <qobject.h>
-#include <q3valuelist.h>
 
 class KNFolder;
 class KNArticleManager;
 class KNCleanUp;
 
 
+/** Folder manager. */
 class KNFolderManager : public QObject
 {
   Q_OBJECT
@@ -31,17 +32,23 @@ class KNFolderManager : public QObject
     KNFolderManager(KNArticleManager *a);
     ~KNFolderManager();
 
+    /// List of folders.
+    typedef QList<KNFolder*> List;
+
     //folder access
     void setCurrentFolder(KNFolder *f);
     KNFolder* currentFolder() const       { return c_urrentFolder; }
     bool hasCurrentFolder() const         { return (c_urrentFolder!=0); }
     KNFolder* folder(int id);
-    Q3ValueList<KNFolder*> folders() const { return mFolderList; }
+    List folders() const { return mFolderList; }
 
-    //standard folders
+    /// Returns the root folder.
     KNFolder* root() const                { return mFolderList[0]; }
+    /// Returns the drafts folder.
     KNFolder* drafts() const              { return mFolderList[1]; }
+    /// Returns the outbox folder.
     KNFolder* outbox() const              { return mFolderList[2]; }
+    /// Returns the sent folder.
     KNFolder* sent() const                { return mFolderList[3]; }
 
     //header loading
@@ -82,7 +89,7 @@ class KNFolderManager : public QObject
     int loadCustomFolders();
 
     KNFolder  *c_urrentFolder;
-    Q3ValueList<KNFolder*> mFolderList;
+    List mFolderList;
     int l_astId;
     KNArticleManager *a_rtManager;
 

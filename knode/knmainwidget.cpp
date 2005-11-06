@@ -18,7 +18,6 @@
 #include <QEvent>
 #include <QDropEvent>
 #include <QLabel>
-#include <Q3ValueList>
 #include <QVBoxLayout>
 #include <Q3PopupMenu>
 #include <QSplitter>

@@ -18,8 +18,6 @@
 #include <QByteArray>
 #include <qdir.h>
 #include <QFile>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -242,14 +240,13 @@ KNGroupManager::KNGroupManager( QObject * parent )
 
 KNGroupManager::~KNGroupManager()
 {
-  for ( Q3ValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
-    delete (*it);
+  qDeleteAll( mGroupList );
 }
 
 
 void KNGroupManager::syncGroups()
 {
-  for ( Q3ValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
+  for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
     (*it)->syncDynamicData();
     (*it)->saveInfo();
   }
@@ -282,16 +279,16 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
 void KNGroupManager::getSubscribed(KNNntpAccount *a, QStringList &l)
 {
   l.clear();
-  for ( Q3ValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
+  for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
     if ( (*it)->account() == a )
       l.append( (*it)->groupname() );
 }
 
 
-Q3ValueList<KNGroup*> KNGroupManager::groupsOfAccount( KNNntpAccount *a )
+KNGroup::List KNGroupManager::groupsOfAccount( KNNntpAccount *a )
 {
-  Q3ValueList<KNGroup*> ret;
-  for ( Q3ValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
+  KNGroup::List ret;
+  for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
     if ( (*it)->account() == a )
       ret.append( (*it) );
   return ret;
@@ -340,7 +337,7 @@ bool KNGroupManager::unloadHeaders(KNGroup *g, bool force)
 
 KNGroup* KNGroupManager::group(const QString &gName, const KNServerInfo *s)
 {
-  for ( Q3ValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
+  for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
     if ( (*it)->account() == s && (*it)->groupname() == gName )
       return (*it);
 
@@ -350,7 +347,7 @@ KNGroup* KNGroupManager::group(const QString &gName, const KNServerInfo *s)
 
 KNGroup* KNGroupManager::firstGroupOfAccount(const KNServerInfo *s)
 {
-  for ( Q3ValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
+  for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
     if ( (*it)->account() == s )
       return (*it);
 
@@ -360,7 +357,7 @@ KNGroup* KNGroupManager::firstGroupOfAccount(const KNServerInfo *s)
 
 void KNGroupManager::expireAll(KNCleanUp *cup)
 {
-  for ( Q3ValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
+  for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
     if( (*it)->isLocked() || (*it)->lockedArticles() > 0 )
       continue;
     if ( !(*it)->activeCleanupConfig()->expireToday() )
@@ -374,7 +371,7 @@ void KNGroupManager::expireAll(KNNntpAccount *a)
 {
   KNCleanUp *cup = new KNCleanUp();
 
-  for ( Q3ValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
+  for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
     if( (*it)->account() != a  || (*it)->isLocked() || (*it)->lockedArticles() > 0 )
       continue;
 
@@ -384,7 +381,7 @@ void KNGroupManager::expireAll(KNNntpAccount *a)
 
   cup->start();
 
-  for ( Q3ValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
+  for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
     if( (*it)->account() != a  || (*it)->isLocked() || (*it)->lockedArticles() > 0 )
       continue;
 
@@ -575,7 +572,7 @@ void KNGroupManager::checkAll(KNNntpAccount *a, bool silent)
 {
   if(!a) return;
 
-  for ( Q3ValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
+  for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
     if ( (*it)->account() == a ) {
       (*it)->setMaxFetch( knGlobals.settings()->maxToFetch() );
       if ( silent )
@@ -596,7 +593,7 @@ void KNGroupManager::processJob(KNJobData *j)
       if (j->success()) {
         if ( j->type() == KNJobData::JTFetchGroups ) {
           // update the descriptions of the subscribed groups
-          for ( Q3ValueList<KNGroup*>::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
+          for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
             if ( (*it)->account() == j->account() ) {
               for ( KNGroupInfo* inf = d->groups->first(); inf; inf = d->groups->next() )
                 if ( inf->name == (*it)->groupname() ) {

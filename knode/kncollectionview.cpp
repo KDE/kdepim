@@ -17,7 +17,6 @@
 #include <QKeyEvent>
 #include <QEvent>
 #include <QDropEvent>
-#include <Q3ValueList>
 #include <QMouseEvent>
 
 #include <kiconloader.h>
@@ -155,8 +154,8 @@ void KNCollectionView::addAccount(KNNntpAccount *a)
   item->setOpen( a->wasOpen() );
 
   // add groups for this account
-  Q3ValueList<KNGroup*> groups = knGlobals.groupManager()->groupsOfAccount( a );
-  for ( Q3ValueList<KNGroup*>::Iterator it = groups.begin(); it != groups.end(); ++it ) {
+  KNGroup::List groups = knGlobals.groupManager()->groupsOfAccount( a );
+  for ( KNGroup::List::Iterator it = groups.begin(); it != groups.end(); ++it ) {
     KNCollectionViewItem *gitem = new KNCollectionViewItem( item, KFolderTreeItem::News );
     (*it)->setListItem( gitem );
     (*it)->updateListItem();
@@ -274,12 +273,12 @@ void KNCollectionView::reloadFolders()
 
 void KNCollectionView::addPendingFolders()
 {
-  Q3ValueList<KNFolder*> folders = knGlobals.folderManager()->folders();
-  for ( Q3ValueList<KNFolder*>::Iterator it = folders.begin(); it != folders.end(); ++it )
+  KNFolderManager::List folders = knGlobals.folderManager()->folders();
+  for ( KNFolderManager::List::Iterator it = folders.begin(); it != folders.end(); ++it )
     if ( !(*it)->listItem() )
       addFolder( (*it) );
   // now open the folders if they were open in the last session
-  for ( Q3ValueList<KNFolder*>::Iterator it = folders.begin(); it != folders.end(); ++it )
+  for ( KNFolderManager::List::Iterator it = folders.begin(); it != folders.end(); ++it )
     if ( (*it)->listItem())
       (*it)->listItem()->setOpen( (*it)->wasOpen() );
 }

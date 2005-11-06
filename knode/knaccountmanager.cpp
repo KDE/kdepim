@@ -15,7 +15,6 @@
 #include <stdlib.h>
 
 #include <qdir.h>
-#include <q3valuelist.h>
 
 #include <kdebug.h>
 #include <ksimpleconfig.h>
@@ -148,7 +147,7 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
   if(!a) a=c_urrentAccount;
   if(!a) return false;
 
-  Q3ValueList<KNGroup*> lst;
+  KNGroup::List lst;
   if ( knGlobals.folderManager()->unsentForAccount( a->id() ) > 0 ) {
     KMessageBox::sorry( knGlobals.topWidget,
       i18n("This account cannot be deleted since there are some unsent messages for it.") );
@@ -157,14 +156,14 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
             i18n("Do you really want to delete this account?"), "", KGuiItem( i18n("&Delete"), "editdelete") )
             ==KMessageBox::Continue ) {
     lst = gManager->groupsOfAccount( a );
-    for ( Q3ValueList<KNGroup*>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+    for ( KNGroup::List::Iterator it = lst.begin(); it != lst.end(); ++it ) {
       if ( (*it)->isLocked() ) {
         KMessageBox::sorry( knGlobals.topWidget, i18n("At least one group of this account is currently in use.\n"
             "The account cannot be deleted at the moment.") );
         return false;
       }
     }
-    for ( Q3ValueList<KNGroup*>::Iterator it = lst.begin(); it != lst.end(); ++it )
+    for ( KNGroup::List::Iterator it = lst.begin(); it != lst.end(); ++it )
       gManager->unsubscribeGroup( (*it) );
 
     QDir dir(a->path());
