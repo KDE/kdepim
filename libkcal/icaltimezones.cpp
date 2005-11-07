@@ -373,7 +373,7 @@ ICalTimezone *ICalTimezoneSource::parse(icalcomponent *vtimezone)
             xlocation = QString::fromUtf8(icalproperty_get_x(p));
         break;
       }
-      case ICAL_LASTMODIFIED_PROPERTY:
+      case ICAL_LASTMODIFIED_PROPERTY: {
         icaltimetype t = icalproperty_get_lastmodified(p);
         if (t.is_utc) {
           data->lastModified = toQDateTime(t);
@@ -381,7 +381,7 @@ ICalTimezone *ICalTimezoneSource::parse(icalcomponent *vtimezone)
           kdDebug(5800) << "ICalTimezoneSource::parse(): LAST-MODIFIED not UTC" << endl;
         }
         break;
-
+		}
       default:
         break;
     }
