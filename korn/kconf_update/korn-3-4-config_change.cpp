@@ -31,7 +31,7 @@ QString decodeString( const QString &password )
 	QString result="";
 	for ( i=0; i < len; i++ )
 	{
-		val = password[i].latin1() - ' ';
+		val = password[i].toLatin1() - ' ';
 		val = (255-' ') - val;
 		result += (char)(val + ' ');
 	}
@@ -111,7 +111,7 @@ int main( int, char**  )
 	QString password = QString::null;
 	QRegExp interesting_group( "^\\[box-(\\d+)\\]" );
 	QRegExp key_value( "^(\\w*)=(.*)$" );
-	Q3ValueList<QString> tobe_deleted;
+	QList<QString> tobe_deleted;
 	int numboxes = -1;
 	bool isKey = false;
 	
@@ -122,7 +122,7 @@ int main( int, char**  )
         out.setEncoding( QTextStream::UnicodeUTF8 );
 
 	QMap<QString,QString> mapping1;
-	Q3ValueList<QString> mapping2;
+	QList<QString> mapping2;
 	QMap<QString,QString> to_printed;
 	
 	mapping1.insert( "caption", "name" );
@@ -158,7 +158,7 @@ int main( int, char**  )
 	{
 		line = in.readLine();
 
-		isKey = key_value.search( line ) >= 0;
+		isKey = key_value.indexIn( line ) >= 0;
 		
 		if( line.left( 1 ) == "[" )
 		{
@@ -171,7 +171,7 @@ int main( int, char**  )
 			currentGroup1 = QString::null;
 		}
 		
-		if( interesting_group.search( line ) >= 0 )
+		if( interesting_group.indexIn( line ) >= 0 )
 		{
 			if( numboxes > -1 && interesting_group.cap( 1 ).toInt() < numboxes )
 			{
@@ -250,8 +250,8 @@ int main( int, char**  )
 		printToprint( out, to_printed, type );
 	}
 
-	Q3ValueList<QString>::Iterator it1     = tobe_deleted.begin();
-	Q3ValueList<QString>::Iterator it1_end = tobe_deleted.end();
+	QList<QString>::Iterator it1     = tobe_deleted.begin();
+	QList<QString>::Iterator it1_end = tobe_deleted.end();
 
 	for( ; it1 != it1_end; ++it1 )
 		out << "# DELETEGROUP " << *it1 << endl;
