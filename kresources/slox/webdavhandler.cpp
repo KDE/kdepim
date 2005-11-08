@@ -29,6 +29,7 @@
 #endif
 #endif
 
+#include <config.h>
 #include <stdlib.h>
 
 #include <libkcal/incidence.h>
