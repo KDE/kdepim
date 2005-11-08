@@ -76,7 +76,7 @@ bool Memofile::load()
 	}
 
 	QFile f( filenameAbs() );
-	if ( !f.open( IO_ReadOnly ) ) {
+	if ( !f.open( QIODevice::ReadOnly ) ) {
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
 		<< ": Couldn't open file: [" << filenameAbs() << "] to read.  "
@@ -161,7 +161,7 @@ bool Memofile::saveFile()
 
 
 	QFile f( filenameAbs() );
-	if ( !f.open( IO_WriteOnly ) ) {
+	if ( !f.open( QIODevice::WriteOnly ) ) {
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
 		<< ": Couldn't open file: [" << filenameAbs() << "] to write your memo to.  "

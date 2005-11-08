@@ -1355,7 +1355,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
       KConfigGroupSaver g(fConfig, DOCConduitFactory::fGroup);
       KMD5 docmd5;
       QFile docfile(docconverter.docFilename());
-      if (docfile.open(IO_ReadOnly)) {
+      if (docfile.open(QIODevice::ReadOnly)) {
         docmd5.update(docfile);
         QString thisDigest(docmd5.hexDigest().data());
         fConfig->writeEntry(docconverter.docFilename(), thisDigest);

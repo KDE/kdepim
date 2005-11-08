@@ -498,7 +498,7 @@ void SysInfoConduit::writeFile()
 		DEBUGCONDUIT<<"Loading template file "<<templatefile<<endl;
 #endif
 		QFile infile(templatefile);
-		if (infile.open(IO_ReadOnly)) {
+		if (infile.open(QIODevice::ReadOnly)) {
 			QTextStream instream(&infile);
 			output = instream.read();
 			infile.close();
@@ -580,13 +580,13 @@ void SysInfoConduit::writeFile()
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Writing file <" << fOutputFile << ">" << endl;
 #endif
-	if (fOutputFile.isEmpty() || (!outfile.open(IO_WriteOnly)) ) {
+	if (fOutputFile.isEmpty() || (!outfile.open(QIODevice::WriteOnly)) ) {
 		QFileInfo fi(QDir::home(), CSL1("KPilotSysInfo.")+QFileInfo(templatefile).extension() );
 		fOutputFile=fi.absoluteFilePath();
 		kdWarning()<<i18n("Unable to open output file, using %1 instead.").arg(fOutputFile).latin1()<<endl;
 		emit logMessage(i18n("Unable to open output file, using %1 instead.").arg(fOutputFile));
 		outfile.setName(fOutputFile);
-		if (!outfile.open(IO_WriteOnly)) {
+		if (!outfile.open(QIODevice::WriteOnly)) {
 			kdWarning()<<i18n("Unable to open %1").arg(fOutputFile).latin1()<<endl;
 			emit logError(i18n("Unable to open %1").arg(fOutputFile));
 			QTimer::singleShot(0, this, SLOT(cleanup()));

@@ -305,7 +305,7 @@ static void listResources(KCal::CalendarResources *p)
 				// Try to create empty file. if it fails,
 				// no valid file name was given.
 				QFile fl(fCalendarFile);
-				if (!fl.open(IO_WriteOnly | IO_Append))
+				if (!fl.open(QIODevice::WriteOnly | QIODevice::Append))
 				{
 #ifdef DEBUG
 					DEBUGCONDUIT << fname

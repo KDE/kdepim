@@ -309,7 +309,7 @@ ICalTimezoneSource::~ICalTimezoneSource()
 bool ICalTimezoneSource::parse(const QString &fileName, KTimezones &zones)
 {
   QFile file(fileName);
-  if (!file.open(IO_ReadOnly))
+  if (!file.open(QIODevice::ReadOnly))
     return false;
   QTextStream ts(&file);
   ts.setEncoding(QTextStream::Latin1);

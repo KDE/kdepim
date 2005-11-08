@@ -59,7 +59,7 @@ void FilterSylpheed::import( FilterInfo *info )
      * If the user only select homedir no import needed because 
      * there should be no files and we surely import wrong files.
      */
-    else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homeDirPath() + "/" ) ) {
+    else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + "/" ) ) {
         info->addLog( i18n( "No files found for import." ) );
     } else {
         info->setOverall(0);

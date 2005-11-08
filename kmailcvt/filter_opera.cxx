@@ -65,7 +65,7 @@ void FilterOpera::import(FilterInfo *info)
      * If the user only select homedir no import needed because 
      * there should be no files and we surely import wrong files.
      */
-    else if ( operaDir == QDir::homePath() || operaDir == (QDir::homeDirPath() + "/")) {
+    else if ( operaDir == QDir::homePath() || operaDir == (QDir::homePath() + "/")) {
         info->addLog(i18n("No files found for import."));
     } else {
         info->setOverall(0);

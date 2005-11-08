@@ -286,7 +286,7 @@ int PopMailConduit::sendViaKMail()
 
 		QByteArray data,returnValue;
 		QCString returnType;
-		QDataStream arg(data,IO_WriteOnly);
+		QDataStream arg(data,QIODevice::WriteOnly);
 
 		arg << kmailOutboxName << t.name();
 
@@ -351,7 +351,7 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 {
 	FUNCTIONSETUP;
 
-	QTextStream mailPipe(sendf, IO_WriteOnly);
+	QTextStream mailPipe(sendf, QIODevice::WriteOnly);
 
 	QString fromAddress = MailConduitSettings::emailAddress();
 	mailPipe << "From: " << fromAddress << "\r\n";
@@ -390,7 +390,7 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 #endif
 
 		QFile f(signature);
-		if ( f.open(IO_ReadOnly) )
+		if ( f.open(QIODevice::ReadOnly) )
 		{    // file opened successfully
 			mailPipe << "-- \r\n";
 			QTextStream t( &f );        // use a text stream

@@ -125,7 +125,7 @@ bool KonsoleKalendar::showInstance()
 
     if ( m_variables->isExportFile() ) {
       f.setName( m_variables->getExportFile() );
-      if ( !f.open( IO_WriteOnly ) ) {
+      if ( !f.open( QIODevice::WriteOnly ) ) {
 	status = false;
 	kdDebug() << "konsolekalendar.cpp::showInstance() | "
                   << "unable to open export file "
@@ -133,7 +133,7 @@ bool KonsoleKalendar::showInstance()
                   << endl;
       }
     } else {
-      f.open( IO_WriteOnly, stdout );
+      f.open( QIODevice::WriteOnly, stdout );
     }
 
     if ( status ) {

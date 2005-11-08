@@ -198,7 +198,7 @@ QString DOCConverter::readText() {
 	FUNCTIONSETUP;
 	if (txtfilename.isEmpty()) return QString();
 	QFile docfile(txtfilename);
-	if (!docfile.open(IO_ReadOnly))
+	if (!docfile.open(QIODevice::ReadOnly))
 	{
 		emit logError(i18n("Unable to open text file %1 for reading.").arg(txtfilename));
 		return QString();
@@ -291,10 +291,10 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 	QString oldbmkfilename=bmkfilename;
 	bmkfilename+=CSL1(BMK_SUFFIX);
 	QFile bmkfile(bmkfilename);
-	if (!bmkfile.open(IO_ReadOnly)) 	{
+	if (!bmkfile.open(QIODevice::ReadOnly)) 	{
 		bmkfilename=oldbmkfilename+CSL1(PDBBMK_SUFFIX);
 		bmkfile.setName(bmkfilename);
-		if (!bmkfile.open(IO_ReadOnly)) {
+		if (!bmkfile.open(QIODevice::ReadOnly)) {
 			DEBUGCONDUIT<<"Unable to open bookmarks file "<<bmkfilename<<" for reading the bookmarks of "<<docdb ->dbPathName()<<endl;
 			return 0;
 		}
@@ -543,7 +543,7 @@ bool DOCConverter::convertPDBtoTXT()
 
 	// next come the header.numRecords real document records (might be compressed, see the version flag in the header)
 	QFile docfile(txtfilename);
-	if (!docfile.open(IO_WriteOnly))
+	if (!docfile.open(QIODevice::WriteOnly))
 	{
 		emit logError(i18n("Unable to open output file %1.").arg(txtfilename));
 		KPILOT_DELETE(docdb);
@@ -594,7 +594,7 @@ bool DOCConverter::convertPDBtoTXT()
 		}
 		bmkfilename+=CSL1(PDBBMK_SUFFIX);
 		QFile bmkfile(bmkfilename);
-		if (!bmkfile.open(IO_WriteOnly))
+		if (!bmkfile.open(QIODevice::WriteOnly))
 		{
 			emit logError(i18n("Unable to open file %1 for the bookmarks of %2.")
 				.arg(bmkfilename).arg(docdb ->dbPathName()));

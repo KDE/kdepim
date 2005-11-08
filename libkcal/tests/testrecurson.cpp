@@ -68,7 +68,7 @@ int main( int argc, char **argv )
     kdDebug() << "We have a file name given: " << fn << endl;
   }
   QFile outfile( fn );
-  if ( !fn.isEmpty() && outfile.open( IO_WriteOnly ) ) {
+  if ( !fn.isEmpty() && outfile.open( QIODevice::WriteOnly ) ) {
     kdDebug() << "Opened output file!!!" << endl;
     outstream = new QTextStream( &outfile );
   }

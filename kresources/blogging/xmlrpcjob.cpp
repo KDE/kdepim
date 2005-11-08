@@ -143,7 +143,7 @@ kdDebug() << m_str_response << endl;
 
   // TODO: Redirection with XML-RPC??
 /*  if (! m_redirectionURL.isEmpty() && m_redirectionURL.isValid() ) {
-    QDataStream istream( m_packedArgs, IO_ReadOnly );
+    QDataStream istream( m_packedArgs, QIODevice::ReadOnly );
     int s_cmd, s_method;
     KURL s_url;
     istream >> s_cmd;
@@ -152,7 +152,7 @@ kdDebug() << m_str_response << endl;
     // PROPFIND
     if ( (s_cmd == 7) && (s_method == (int)KIO::HTTP_POST) ) {
       m_packedArgs.truncate(0);
-      QDataStream stream( m_packedArgs, IO_WriteOnly );
+      QDataStream stream( m_packedArgs, QIODevice::WriteOnly );
       stream << (int)7 << m_redirectionURL << (int)KIO::HTTP_POST;
     }
   } else */

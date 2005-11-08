@@ -1255,7 +1255,7 @@ QByteArray Kolab::Contact::loadDataFromKMail( const QString& attachmentName, KAB
   KURL url;
   if ( resource->kmailGetAttachment( url, subResource, sernum, attachmentName ) && !url.isEmpty() ) {
     QFile f( url.path() );
-    if ( f.open( IO_ReadOnly ) ) {
+    if ( f.open( QIODevice::ReadOnly ) ) {
       data = f.readAll();
       f.close();
     }
@@ -1271,7 +1271,7 @@ QByteArray Kolab::Contact::loadSoundFromAddressee( const KABC::Sound& sound )
     QString tmpFile;
     if ( KIO::NetAccess::download( sound.url(), tmpFile, 0 /*no widget known*/ ) ) {
       QFile f( tmpFile );
-      if ( f.open( IO_ReadOnly ) ) {
+      if ( f.open( QIODevice::ReadOnly ) ) {
         data = f.readAll();
         f.close();
       }

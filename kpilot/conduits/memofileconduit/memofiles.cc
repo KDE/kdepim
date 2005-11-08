@@ -280,7 +280,7 @@ bool Memofiles::loadFromMetadata ()
 	_memofiles.clear();
 
 	QFile f( _memoMetadataFile );
-	if ( !f.open( IO_ReadOnly ) ) {
+	if ( !f.open( QIODevice::ReadOnly ) ) {
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
 		<< ": ooh, bad.  couldn't open your memo-id file for reading."
@@ -485,7 +485,7 @@ bool Memofiles::saveMemoMetadata()
 	QFile f( _memoMetadataFile );
 	QTextStream stream(&f);
 
-	if( !f.open(IO_WriteOnly) ) {
+	if( !f.open(QIODevice::WriteOnly) ) {
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
 		<< ": ooh, bad.  couldn't open your memo-id file for writing."
@@ -532,7 +532,7 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 	QFile f( _categoryMetadataFile );
 	QTextStream stream(&f);
 
-	if( !f.open(IO_ReadOnly) ) {
+	if( !f.open(QIODevice::ReadOnly) ) {
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
 		<< ": ooh, bad.  couldn't open your categories file for reading."
@@ -597,7 +597,7 @@ bool Memofiles::saveCategoryMetadata()
 	QFile f( _categoryMetadataFile );
 	QTextStream stream(&f);
 
-	if( !f.open(IO_WriteOnly) ) {
+	if( !f.open(QIODevice::WriteOnly) ) {
 #ifdef DEBUG
 		DEBUGCONDUIT << fname
 		<< ": ooh, bad.  couldn't open your categories file for writing."

@@ -166,7 +166,7 @@ bool DOCConduit::pcTextChanged(QString txtfn)
 
 	KMD5 docmd5;
 	QFile txtfile(txtfn);
-	if (txtfile.open(IO_ReadOnly)){
+	if (txtfile.open(QIODevice::ReadOnly)){
 		docmd5.update(txtfile);
 		QString thisDigest(docmd5.hexDigest() /* .data() */);
 #ifdef DEBUG
@@ -369,7 +369,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo)
 		{
 			KMD5 docmd5;
 			QFile txtfile(docconverter.txtFilename());
-			if (txtfile.open(IO_ReadOnly)) {
+			if (txtfile.open(QIODevice::ReadOnly)) {
 				docmd5.update(txtfile);
 				QString thisDigest(docmd5.hexDigest() /* .data() */);
 				DOCConduitSettings::self()->config()->writeEntry(docconverter.txtFilename(), thisDigest);
