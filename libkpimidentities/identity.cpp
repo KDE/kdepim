@@ -316,10 +316,10 @@ void Identity::readConfig( const KConfigBase * config )
   mEmailAddr = config->readEntry("Email Address");
   mVCardFile = config->readPathEntry("VCardFile");
   mOrganization = config->readEntry("Organization");
-  mPGPSigningKey = config->readEntry("PGP Signing Key").latin1();
-  mPGPEncryptionKey = config->readEntry("PGP Encryption Key").latin1();
-  mSMIMESigningKey = config->readEntry("SMIME Signing Key").latin1();
-  mSMIMEEncryptionKey = config->readEntry("SMIME Encryption Key").latin1();
+  mPGPSigningKey = config->readEntry("PGP Signing Key").toLatin1();
+  mPGPEncryptionKey = config->readEntry("PGP Encryption Key").toLatin1();
+  mSMIMESigningKey = config->readEntry("SMIME Signing Key").toLatin1();
+  mSMIMEEncryptionKey = config->readEntry("SMIME Encryption Key").toLatin1();
   mPreferredCryptoMessageFormat = Kleo::stringToCryptoMessageFormat( config->readEntry("Preferred Crypto Message Format", "none" ) );
   mReplyToAddr = config->readEntry("Reply-To Address");
   mBcc = config->readEntry("Bcc");
@@ -411,7 +411,7 @@ QDataStream & KPIM::operator>>( QDataStream & stream, KPIM::Identity & i ) {
                 >> i.mXFace
 		>> format;
   i.mUoid = uoid;
-  i.mPreferredCryptoMessageFormat = Kleo::stringToCryptoMessageFormat( format.latin1() );
+  i.mPreferredCryptoMessageFormat = Kleo::stringToCryptoMessageFormat( format.toLatin1() );
 
   return stream;
 }
