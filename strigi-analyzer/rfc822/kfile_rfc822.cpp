@@ -45,7 +45,7 @@ K_EXPORT_COMPONENT_FACTORY(kfile_rfc822, Rfc822Factory( "kfile_rfc822" ))
 KRfc822Plugin::KRfc822Plugin(QObject *parent, const char *name,
                        const QStringList &args)
 
-    : KFilePlugin(parent, name, args)
+    : KFilePlugin(parent, args)
 {
     KFileMimeTypeInfo* info = addMimeTypeInfo( "message/rfc822" );
 
