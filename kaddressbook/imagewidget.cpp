@@ -150,7 +150,7 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
 
   mClearButton = new QPushButton( box );
   mClearButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum ) );
-  mClearButton->setIconSet( SmallIconSet( QApplication::reverseLayout() ? "locationbar_erase" : "clear_left" ) );
+  mClearButton->setIconSet( SmallIconSet( QApplication::isRightToLeft() ? "locationbar_erase" : "clear_left" ) );
   mClearButton->setEnabled( false );
   boxLayout->addWidget( mClearButton, 0, 2 );
 

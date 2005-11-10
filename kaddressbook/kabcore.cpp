@@ -1145,7 +1145,7 @@ void KABCore::initActions()
   mActionCategories->setWhatsThis( i18n( "Set the categories for all selected contacts." ) );
 
   KAction *clearLocation = new KAction( i18n( "Clear Search Bar" ),
-					QApplication::reverseLayout() ? "clear_left" : "locationbar_erase",
+					QApplication::isRightToLeft() ? "clear_left" : "locationbar_erase",
 					Qt::CTRL+Qt::Key_L, this, SLOT( slotClearSearchBar() ), actionCollection(), "clear_search" );
   clearLocation->setWhatsThis( i18n( "Clear Search Bar<p>"
 				     "Clears the content of the quick search bar." ) );

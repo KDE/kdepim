@@ -131,7 +131,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
 
   q_uicksearch = new KToolBar(dummy, "search toolbar");
   KAction *resetQuickSearch = new KAction( i18n( "Reset Quick Search" ),
-                                           QApplication::reverseLayout()
+                                           QApplication::isRightToLeft()
                                            ? "clear_left"
                                            : "locationbar_erase",
                                            KShortcut(), 0, 0, actionCollection(),

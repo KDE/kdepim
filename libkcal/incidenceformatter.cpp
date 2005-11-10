@@ -552,7 +552,7 @@ static QString invitationDetailsEvent( Event* event )
     sLocation = string2HTML( event->location() );
   }
 
-  QString dir = ( QApplication::reverseLayout() ? "rtl" : "ltr" );
+  QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
   html = QString("<div dir=\"%1\">\n").arg(dir);
 
   html += "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n";

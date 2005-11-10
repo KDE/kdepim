@@ -624,7 +624,7 @@ QString HtmlExport::styleSheet() const
 
   QString css;
 
-  if ( QApplication::reverseLayout() ) {
+  if ( QApplication::isRightToLeft() ) {
     css += "    body { background-color:white; color:black; direction: rtl }\n";
     css += "    td { text-align:center; background-color:#eee }\n";
     css += "    th { text-align:center; background-color:#228; color:white }\n";

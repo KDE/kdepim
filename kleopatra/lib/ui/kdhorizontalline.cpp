@@ -144,7 +144,7 @@ void KDHorizontalLine::paintEvent( QPaintEvent * e ) {
     else if ( mAlign & Qt::AlignLeft )       // left alignment
       x = 0;
     else { // auto align
-      if( QApplication::reverseLayout() )
+      if( QApplication::isRightToLeft() )
         x = frameRect().width() - tw;
       else
         x = 0;

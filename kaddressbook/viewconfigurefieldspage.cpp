@@ -237,12 +237,12 @@ void ViewConfigureFieldsPage::initGUI()
   vb1->addStretch();
 
   mAddButton = new QToolButton( this );
-  mAddButton->setIconSet( QApplication::reverseLayout() ? SmallIconSet( "1leftarrow" ) : SmallIconSet( "1rightarrow" ) );
+  mAddButton->setIconSet( QApplication::isRightToLeft() ? SmallIconSet( "1leftarrow" ) : SmallIconSet( "1rightarrow" ) );
   connect( mAddButton, SIGNAL( clicked() ), SLOT( slotSelect() ) );
   vb1->addWidget( mAddButton );
 
   mRemoveButton = new QToolButton( this );
-  mRemoveButton->setIconSet( QApplication::reverseLayout() ? SmallIconSet( "1rightarrow" ) : SmallIconSet( "1leftarrow" ) );
+  mRemoveButton->setIconSet( QApplication::isRightToLeft() ? SmallIconSet( "1rightarrow" ) : SmallIconSet( "1leftarrow" ) );
   connect( mRemoveButton, SIGNAL( clicked() ), SLOT( slotUnSelect() ) );
   vb1->addWidget( mRemoveButton );
 

@@ -73,8 +73,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
 
   pmGroup=knGlobals.configManager()->appearance()->icon(KNode::Appearance::group);
   pmNew=knGlobals.configManager()->appearance()->icon(KNode::Appearance::redBall);
-  pmRight=BarIconSet( QApplication::reverseLayout()? "back": "forward");
-  pmLeft=BarIconSet(  QApplication::reverseLayout() ? "forward" : "back");
+  pmRight=BarIconSet( QApplication::isRightToLeft()? "back": "forward");
+  pmLeft=BarIconSet(  QApplication::isRightToLeft() ? "forward" : "back");
 
   arrowBtn1=new QPushButton(page);
   arrowBtn1->setEnabled(false);
