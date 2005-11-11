@@ -22,7 +22,7 @@
 #include <kdebug.h>
 
 #include <qlayout.h>
-#include <q3ptrvector.h>
+#include <qvector.h>
 #include <qstringlist.h>
 //Added by qt3to4:
 #include <Q3PtrList>
@@ -34,9 +34,9 @@ void Process_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 	groupBoxes->append( "Process" );
 }
 
-void Process_Protocol::configFields( Q3PtrVector< QWidget >* vector, const QObject*, Q3PtrList< AccountInput > *result ) const
+void Process_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, Q3PtrList< AccountInput > *result ) const
 {
-	result->append( new URLInput( (QWidget*)vector->at( 0 ), i18n( "Program:" ), "", "mailbox" ) );
+	result->append( new URLInput( vector->at( 0 ), i18n( "Program:" ), "", "mailbox" ) );
 }
 
 void Process_Protocol::readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const

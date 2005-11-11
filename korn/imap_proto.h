@@ -123,7 +123,7 @@ public:
 	 * @param object The object to connect signals to
 	 * @param ptrlist A list with object which is filled in this function. The list must already be created.
 	 */
-	virtual void configFields( Q3PtrVector< QWidget >* vector, const QObject* object, Q3PtrList< AccountInput >* ptrlist ) const;
+	virtual void configFields( QVector< QWidget* >* vector, const QObject* object, Q3PtrList< AccountInput >* ptrlist ) const;
 	/**
 	 * This function is used to change the configuration.
 	 * In the case, the metadata-key is splitted out, and put in the @p metadata parameter.

@@ -56,7 +56,10 @@ KornCfgImpl::KornCfgImpl( QWidget * parent, const char * name )
 
 	connect( elbBoxes, SIGNAL( elementsSwapped( int, int ) ), this, SLOT( slotElementsSwapped( int, int ) ) );
 	connect( elbBoxes, SIGNAL( elementDeleted( int ) ), this, SLOT( slotElementDeleted( int ) ) );
-	
+	connect( elbBoxes, SIGNAL(activated(const QString&)), this, SLOT(slotActivated(const QString&)));
+	connect( elbBoxes, SIGNAL(setDefaults(const QString&,const int,KConfig*)), this, SLOT(slotSetDefaults(const QString&,const int,KConfig*)));
+	connect( pbEdit, SIGNAL(clicked()), this, SLOT(slotEditBox()) );
+
 	readConfig();
 }
 

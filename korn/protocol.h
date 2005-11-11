@@ -33,7 +33,7 @@ class QStringList;
 class QWidget;
 
 template< class T> class Q3PtrList;
-template< class T> class Q3PtrVector;
+template< class T> class QVector;
 template< class T, class S> class QMap;
 
 #include <qstring.h>
@@ -50,7 +50,7 @@ public:
 	virtual QString configName() const { return "not specified"; }
 
 	virtual void configFillGroupBoxes( QStringList* ) const = 0;
-	virtual void configFields( Q3PtrVector< QWidget >* vector, const QObject*, Q3PtrList< AccountInput >* ) const = 0;
+	virtual void configFields( QVector< QWidget* >* vector, const QObject*, Q3PtrList< AccountInput >* ) const = 0;
 	virtual void readEntries( QMap< QString, QString >* ) const = 0;
 	virtual void writeEntries( QMap< QString, QString >* ) const = 0;
 

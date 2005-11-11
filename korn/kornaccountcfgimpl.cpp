@@ -59,6 +59,9 @@ KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent, const char * name )
 	
 	connect( parent, SIGNAL( okClicked() ), this, SLOT( slotOK() ) );
 	connect( parent, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
+	connect( chUseBox, SIGNAL(toggled(bool)), gbNewMail, SLOT(setDisabled(bool)) );
+	connect( chPassivePopup, SIGNAL(toggled(bool)), chPassiveDate, SLOT(setEnabled(bool)) );
+	connect( cbProtocol, SIGNAL(activated(const QString&)), this, SLOT(slotProtocolChanged(const QString&)) );
 	
 	this->cbProtocol->insertStringList( Protocols::getProtocols() );
 
@@ -179,7 +182,12 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 	protocol->configFillGroupBoxes( groupBoxes );
 	
 	_accountinput->clear();
-	delete _groupBoxes;
+	if( _groupBoxes )
+	{
+		for( int xx = 0; xx < _groupBoxes->size(); ++xx )
+			delete _groupBoxes->at( xx );
+		delete _groupBoxes;
+	}
 	delete _protocolLayout;
 	delete _vlayout;
 	_vlayout = new QVBoxLayout( this->server_tab, groupBoxes->count() + 1 );
@@ -192,11 +200,10 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 
 	QStringList::iterator it;
 	counter = 0;
-	_groupBoxes = new Q3PtrVector< QWidget >( groupBoxes->count() );
-	_groupBoxes->setAutoDelete( true );
+	_groupBoxes = new QVector< QWidget* >( groupBoxes->count() );
 	for( it = groupBoxes->begin(); it != groupBoxes->end(); ++it )
 	{
-		_groupBoxes->insert( counter, new Q3GroupBox( (*it), this->server_tab, "groupbox" ) );
+		(*_groupBoxes)[ counter ] = new Q3GroupBox( (*it), this->server_tab, "groupbox" );
 		_vlayout->addWidget( _groupBoxes->at( counter ) );
 		++counter;
 	}
@@ -205,7 +212,7 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 	AccountInput *input;
 	protocol->configFields( _groupBoxes, this, _accountinput );
 	
-	for( unsigned int groupCounter = 0; groupCounter < _groupBoxes->count(); ++groupCounter )
+	for( int groupCounter = 0; groupCounter < _groupBoxes->count(); ++groupCounter )
 	{
 		int counter = 0;
 		QGridLayout *grid = new QGridLayout( _groupBoxes->at( groupCounter ), 0, 2 );

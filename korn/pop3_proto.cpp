@@ -24,7 +24,7 @@
 #include <qwidget.h>
 #include <qobject.h>
 #include <qstringlist.h>
-#include <q3ptrvector.h>
+#include <qvector.h>
 #include <q3ptrlist.h>
 
 void Pop3_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
@@ -33,7 +33,7 @@ void Pop3_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 	groupBoxes->append( "Identify" );
 }
 
-void Pop3_Protocol::configFields( Q3PtrVector< QWidget >* vector, const QObject* configDialog, Q3PtrList< AccountInput > * result ) const
+void Pop3_Protocol::configFields( QVector< QWidget* >* vector, const QObject* configDialog, Q3PtrList< AccountInput > * result ) const
 {
 	QMap< QString, QString > encrList;
 	encrList.insert( "ssl", i18n( "Secure Socket Layer" ) );
@@ -45,19 +45,19 @@ void Pop3_Protocol::configFields( Q3PtrVector< QWidget >* vector, const QObject*
 	authList.insert( "", i18n( "Plain" ) );
 	authList.insert( "auth=APOP", i18n( "APOP" ) );
 
-	result->append( new TextInput( (QWidget*)vector->at( 0 ), i18n( "Server" ), TextInput::text, "", "server" ) );
-	result->append( new TextInput( (QWidget*)vector->at( 0 ), i18n( "Port" ), 0, 65535, "110", "port" ) );
-	result->append( new ComboInput( (QWidget*)vector->at( 0 ), i18n( "Encryption" ), encrList, "tls=auto", "encryption" ) );
+	result->append( new TextInput( vector->at( 0 ), i18n( "Server" ), TextInput::text, "", "server" ) );
+	result->append( new TextInput( vector->at( 0 ), i18n( "Port" ), 0, 65535, "110", "port" ) );
+	result->append( new ComboInput( vector->at( 0 ), i18n( "Encryption" ), encrList, "tls=auto", "encryption" ) );
 	QObject::connect( (QObject*)result->last()->rightWidget(), SIGNAL( activated( int) ),
 	                  configDialog, SLOT( slotSSLChanged() ) );
 	
-	result->append( new TextInput( (QWidget*)vector->at( 1 ), i18n( "Username" ), TextInput::text, "", "username" ) );
-	result->append( new TextInput( (QWidget*)vector->at( 1 ), i18n( "Password" ), TextInput::password, "", "password" ) );
-	result->append( new CheckboxInput( (QWidget*)vector->at( 1 ), i18n( "Save password" ), "true", "savepassword" ) );
+	result->append( new TextInput( vector->at( 1 ), i18n( "Username" ), TextInput::text, "", "username" ) );
+	result->append( new TextInput( vector->at( 1 ), i18n( "Password" ), TextInput::password, "", "password" ) );
+	result->append( new CheckboxInput( vector->at( 1 ), i18n( "Save password" ), "true", "savepassword" ) );
 	QObject::connect( (QObject*)result->last()->rightWidget(), SIGNAL( toggled( bool ) ),
 			  (QObject*)result->prev()->rightWidget(), SLOT( setEnabled( bool ) ) );
 	result->last()->setValue( "false" );
-	result->append( new ComboInput( (QWidget*)vector->at( 1 ), i18n( "Authentication" ), authList, "", "auth" ) );
+	result->append( new ComboInput( vector->at( 1 ), i18n( "Authentication" ), authList, "", "auth" ) );
 }
 
 void Pop3_Protocol::readEntries( QMap< QString, QString >* map, QMap< QString, QString > *metadata ) const

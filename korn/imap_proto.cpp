@@ -33,7 +33,7 @@ void Imap_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 	groupBoxes->append( "Identity" );
 }
 
-void Imap_Protocol::configFields( Q3PtrVector< QWidget >* vector, const QObject* configDialog, Q3PtrList< AccountInput > * result ) const
+void Imap_Protocol::configFields( QVector< QWidget* >* vector, const QObject* configDialog, Q3PtrList< AccountInput > * result ) const
 {
 	QMap< QString, QString > encrList;
 	encrList.insert( "ssl", i18n( "Secure Socket Layer" ) );
@@ -47,20 +47,20 @@ void Imap_Protocol::configFields( Q3PtrVector< QWidget >* vector, const QObject*
 	authList.insert( "auth=ANONTMOUS", i18n( "Anonymous" ) ); //Note: ANONYMOUS is an authentication method
 	authList.insert( "auth=CRAM-MD5", i18n( "CRAM-MD5" ) ); //Note: CRAM-MD5 is an authentication method
 
-	result->append( new TextInput( (QWidget*)vector->at( 0 ), i18n( "Server" ), TextInput::text, "", "server" ) );
-	result->append( new TextInput( (QWidget*)vector->at( 0 ), i18n( "Port" ), 0, 65535, "143", "port" ) );
-	result->append( new ComboInput( (QWidget*)vector->at( 0 ), i18n( "Encryption" ), encrList, "tls=auto", "encryption" ) );
+	result->append( new TextInput( vector->at( 0 ), i18n( "Server" ), TextInput::text, "", "server" ) );
+	result->append( new TextInput( vector->at( 0 ), i18n( "Port" ), 0, 65535, "143", "port" ) );
+	result->append( new ComboInput( vector->at( 0 ), i18n( "Encryption" ), encrList, "tls=auto", "encryption" ) );
 	QObject::connect( (QObject*)result->last()->rightWidget(), SIGNAL( activated( int) ),
 	                  configDialog, SLOT( slotSSLChanged() ) );
 	
-	result->append( new TextInput( (QWidget*)vector->at( 1 ), i18n( "Username" ), TextInput::text, "", "username" ) );
-	result->append( new TextInput( (QWidget*)vector->at( 1 ), i18n( "Mailbox" ), TextInput::text, "INBOX", "mailbox" ) );
-	result->append( new TextInput( (QWidget*)vector->at( 1 ), i18n( "Password" ), TextInput::password, "", "password" ) );
-	result->append( new CheckboxInput( (QWidget*)vector->at( 1 ), i18n( "Save password" ), "true", "savepassword" ) );
+	result->append( new TextInput( vector->at( 1 ), i18n( "Username" ), TextInput::text, "", "username" ) );
+	result->append( new TextInput( vector->at( 1 ), i18n( "Mailbox" ), TextInput::text, "INBOX", "mailbox" ) );
+	result->append( new TextInput( vector->at( 1 ), i18n( "Password" ), TextInput::password, "", "password" ) );
+	result->append( new CheckboxInput( vector->at( 1 ), i18n( "Save password" ), "true", "savepassword" ) );
 	QObject::connect( (QObject*)result->last()->rightWidget(), SIGNAL( toggled( bool ) ),
 			  (QObject*)result->prev()->rightWidget(), SLOT( setEnabled( bool ) ) );
 	result->last()->setValue( "false" );
-	result->append( new ComboInput( (QWidget*)vector->at( 1 ), i18n( "Authentication" ), authList, "auth=*", "auth" ) );
+	result->append( new ComboInput( vector->at( 1 ), i18n( "Authentication" ), authList, "auth=*", "auth" ) );
 }
 
 void Imap_Protocol::readEntries( QMap< QString, QString >* map, QMap< QString, QString > *metadata ) const

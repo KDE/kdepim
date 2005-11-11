@@ -58,6 +58,27 @@ KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent, const char * name )
 
 	connect( elbAccounts, SIGNAL( elementsSwapped( int, int ) ), this, SLOT( slotAccountsSwapped( int, int ) ) );
 	connect( elbAccounts, SIGNAL( elementDeleted( int ) ), this, SLOT( slotAccountDeleted( int ) ) );
+
+	connect( chNormalText, SIGNAL(toggled(bool)), cbNormalText, SLOT(setEnabled(bool)) );
+	connect( chNewText, SIGNAL(toggled(bool)), cbNewText, SLOT(setEnabled(bool)) );
+	connect( chNormalBack, SIGNAL(toggled(bool)), cbNormalBack, SLOT(setEnabled(bool)) );
+	connect( chNewBack, SIGNAL(toggled(bool)), cbNewBack, SLOT(setEnabled(bool)) );
+	connect( chNormalIcon, SIGNAL(toggled(bool)), ibNormalIcon, SLOT(setEnabled(bool)) );
+	connect( chNewIcon, SIGNAL(toggled(bool)), ibNewIcon, SLOT(setEnabled(bool)) );
+	connect( chShowPassive, SIGNAL(toggled(bool)), chPassiveDate, SLOT(setEnabled(bool)) );
+	connect( pbEdit, SIGNAL(clicked()), this, SLOT(slotEditBox()) );
+	connect( elbAccounts, SIGNAL(activated(const QString&)), this, SLOT(slotActivated(const QString&)) );
+	connect( elbAccounts, SIGNAL(setDefaults(const QString&,const int,KConfig*)), this, SLOT(slotSetDefaults(const QString&,const int,KConfig*)) );
+	connect( pbNormalFont, SIGNAL(pressed()), this, SLOT(slotChangeNormalFont()) );
+	connect( pbNewFont, SIGNAL(pressed()), this, SLOT(slotChangeNewFont()) );
+	connect( pbNormalAnim, SIGNAL(released()), this, SLOT(slotChangeNormalAnim()) );
+	connect( pbNewAnim, SIGNAL(pressed()), this, SLOT(slotChangeNewAnim()) );
+	connect( chNormalFont, SIGNAL(toggled(bool)), pbNormalFont, SLOT(setEnabled(bool)) );
+	connect( chNewFont, SIGNAL(toggled(bool)), pbNewFont, SLOT(setEnabled(bool)) );
+	connect( chNormalAnim, SIGNAL(toggled(bool)), pbNormalAnim, SLOT(setEnabled(bool)) );
+	connect( chNewAnim, SIGNAL(toggled(bool)), pbNewAnim, SLOT(setEnabled(bool)) );
+	connect( chNormalAnim, SIGNAL(toggled(bool)), this, SLOT(slotNormalAnimToggled(bool)) );
+	connect( chNewAnim, SIGNAL(toggled(bool)), this, SLOT(slotNewAnimToggled(bool)) );
 }
 
 KornBoxCfgImpl::~KornBoxCfgImpl()

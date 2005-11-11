@@ -36,7 +36,7 @@ class QStringList;
 class QWidget;
 
 template< class T> class Q3PtrList;
-template< class T> class Q3PtrVector;
+template< class T> class QVector;
 template< class T, class S> class QMap;
 
 #include <qstring.h>
@@ -95,7 +95,7 @@ public:
 	 * @param obj The pointer to the configDialog to connect signals to.
 	 * @param result A list with AccountInput which is used to reconstruct the configuration.
 	 */
-	virtual void configFields( Q3PtrVector< QWidget >* vector, const QObject* obj, Q3PtrList< AccountInput >* result ) const;
+	virtual void configFields( QVector< QWidget* >* vector, const QObject* obj, Q3PtrList< AccountInput >* result ) const;
 	/**
 	 * This function can edit some configuaration option before reading them.
 	 */

@@ -39,7 +39,7 @@ class QWidget;
 class AccountInput;
 
 template< class T > class Q3PtrList;
-template< class T > class Q3PtrVector;
+template< class T > class QVector;
 
 class KornAccountCfgImpl : public QWidget, public Ui_KornAccountCfg
 { Q_OBJECT
@@ -67,7 +67,7 @@ private:
 		
 	QVBoxLayout *_vlayout;
 	QHBoxLayout *_protocolLayout;
-	Q3PtrVector< QWidget > *_groupBoxes;
+	QVector< QWidget* > *_groupBoxes;
 	
 	Q3PtrList< AccountInput > *_accountinput;
 };

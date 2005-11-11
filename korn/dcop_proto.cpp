@@ -27,7 +27,7 @@
 
 #include <qmap.h>
 #include <q3ptrlist.h>
-#include <q3ptrvector.h>
+#include <qvector.h>
 
 KMailDrop* DCOP_Protocol::createMaildrop( KConfigGroup* ) const
 {
@@ -48,9 +48,9 @@ void DCOP_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 	groupBoxes->append( "DCOP" );
 }
 
-void DCOP_Protocol::configFields( Q3PtrVector< QWidget >* vector, const QObject*, Q3PtrList< AccountInput >* result ) const
+void DCOP_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, Q3PtrList< AccountInput >* result ) const
 {
-	result->append( new TextInput( (QWidget*)vector->at( 0 ), i18n( "DCOP name" ), TextInput::text, "korn_dcop", "dcopname" ) );
+	result->append( new TextInput( vector->at( 0 ), i18n( "DCOP name" ), TextInput::text, "korn_dcop", "dcopname" ) );
 }
 
 void DCOP_Protocol::readEntries( QMap< QString, QString >* ) const

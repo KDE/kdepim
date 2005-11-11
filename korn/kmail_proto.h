@@ -91,7 +91,7 @@ public:
 	 * @param object An object to connect slots to.
 	 * @param result The resulting object.
 	 */
-        virtual void configFields( Q3PtrVector< QWidget >* vector, const QObject* object, Q3PtrList< AccountInput >* result ) const;
+        virtual void configFields( QVector< QWidget* >* vector, const QObject* object, Q3PtrList< AccountInput >* result ) const;
 	/**
 	 * This can manipulate entries that are readed from the configuartion.
 	 * This function does nothing here.

@@ -52,7 +52,7 @@ public:
 	virtual void readMailKURL( KURL &, KIO::MetaData & ) const   { }
 
 	virtual void configFillGroupBoxes( QStringList* ) const;
-	virtual void configFields( Q3PtrVector< QWidget >*, const QObject*, Q3PtrList< AccountInput >* ) const;
+	virtual void configFields( QVector< QWidget* >*, const QObject*, Q3PtrList< AccountInput >* ) const;
 	virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
 	virtual void writeEntries( QMap< QString, QString >* ) const;
 };

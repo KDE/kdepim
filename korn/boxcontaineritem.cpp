@@ -274,7 +274,7 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	
 	if( label->movie() ) //Delete movie pointer
 		delete label->movie();
-	label->setMovie( 0 );
+	//label->setMovie( 0 ); //TODO: crash in KDE4!
 	
 	label->setText( "" );
 	//QToolTip::add( label, this->getTooltip() );

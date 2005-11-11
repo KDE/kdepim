@@ -46,7 +46,7 @@ public:
 	virtual unsigned short defaultPort( bool ) const { return 119; }
 
 	virtual void configFillGroupBoxes( QStringList* ) const;
-        virtual void configFields( Q3PtrVector< QWidget >* vector, const QObject*, Q3PtrList< AccountInput >* ) const;
+        virtual void configFields( QVector< QWidget* >* vector, const QObject*, Q3PtrList< AccountInput >* ) const;
         virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
         virtual void writeEntries( QMap< QString, QString >* ) const;
 };

@@ -30,7 +30,7 @@
 
 #include <qmap.h>
 #include <qobject.h>
-#include <q3ptrvector.h>
+#include <qvector.h>
 #include <qstringlist.h>
 //Added by qt3to4:
 #include <Q3PtrList>
@@ -177,7 +177,7 @@ void KMail_Protocol::configFillGroupBoxes( QStringList* lijst ) const
 	lijst->append( "KMail" );
 }
 
-void KMail_Protocol::configFields( Q3PtrVector< QWidget >* vector, const QObject*, Q3PtrList< AccountInput >* result ) const
+void KMail_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, Q3PtrList< AccountInput >* result ) const
 {
 	QMap< QString, QString > accountList;
 	QString type;
@@ -196,7 +196,7 @@ void KMail_Protocol::configFields( Q3PtrVector< QWidget >* vector, const QObject
 		}
 	}
 
-	result->append( new ComboInput( (QWidget*)vector->at( 0 ), i18n( "KMail name" ), accountList, *accountList.begin(), "kmailname" ) );
+	result->append( new ComboInput( vector->at( 0 ), i18n( "KMail name" ), accountList, *accountList.begin(), "kmailname" ) );
 }
 
 void KMail_Protocol::readEntries( QMap< QString, QString >* ) const

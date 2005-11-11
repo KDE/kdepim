@@ -8,103 +8,105 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>350</width>
-    <height>336</height>
+    <width>389</width>
+    <height>443</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Korn Configuration</string>
   </property>
-  <widget class="QTabWidget" name="tabKornCfg" >
-   <property name="geometry" >
-    <rect>
-     <x>11</x>
-     <y>11</y>
-     <width>328</width>
-     <height>314</height>
-    </rect>
+  <layout class="QGridLayout" >
+   <property name="margin" >
+    <number>8</number>
    </property>
-   <widget class="QWidget" name="tab" >
-    <attribute name="title" >
-     <string>&amp;Boxes</string>
-    </attribute>
-    <layout class="QVBoxLayout" >
-     <property name="margin" >
-      <number>10</number>
-     </property>
-     <property name="spacing" >
-      <number>6</number>
-     </property>
-     <item>
-      <widget class="KEditListBoxManager" name="elbBoxes" />
-     </item>
-     <item>
-      <widget class="QPushButton" name="pbEdit" >
-       <property name="text" >
-        <string>&amp;Edit</string>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item row="0" column="0" >
+    <widget class="QTabWidget" name="tabKornCfg" >
+     <widget class="QWidget" name="tab" >
+      <attribute name="title" >
+       <string>&amp;Boxes</string>
+      </attribute>
+      <layout class="QVBoxLayout" >
+       <property name="margin" >
+        <number>10</number>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="chUseWallet" >
-       <property name="text" >
-        <string>Use &amp;KWallet if possible</string>
+       <property name="spacing" >
+        <number>6</number>
        </property>
-       <property name="checked" >
-        <bool>true</bool>
+       <item>
+        <widget class="KEditListBoxManager" name="elbBoxes" />
+       </item>
+       <item>
+        <widget class="QPushButton" name="pbEdit" >
+         <property name="text" >
+          <string>&amp;Edit</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="chUseWallet" >
+         <property name="text" >
+          <string>Use &amp;KWallet if possible</string>
+         </property>
+         <property name="checked" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab" >
+      <attribute name="title" >
+       <string>&amp;View</string>
+      </attribute>
+      <layout class="QVBoxLayout" >
+       <property name="margin" >
+        <number>8</number>
        </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="tab" >
-    <attribute name="title" >
-     <string>&amp;View</string>
-    </attribute>
-    <layout class="QVBoxLayout" >
-     <property name="margin" >
-      <number>8</number>
-     </property>
-     <property name="spacing" >
-      <number>6</number>
-     </property>
-     <item>
-      <widget class="QRadioButton" name="rbVertical" >
-       <property name="text" >
-        <string>&amp;Vertical</string>
+       <property name="spacing" >
+        <number>6</number>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="rbHorizontal" >
-       <property name="text" >
-        <string>&amp;Horizontal</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="rbDocked" >
-       <property name="text" >
-        <string>&amp;Docked</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer>
-       <property name="orientation" >
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" >
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </widget>
-  </widget>
+       <item>
+        <widget class="QRadioButton" name="rbVertical" >
+         <property name="text" >
+          <string>&amp;Vertical</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="rbHorizontal" >
+         <property name="text" >
+          <string>&amp;Horizontal</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="rbDocked" >
+         <property name="text" >
+          <string>&amp;Docked</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction></pixmapfunction>
