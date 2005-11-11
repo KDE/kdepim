@@ -39,6 +39,11 @@ StdCalendar::StdCalendar( const QString &fileName, const QString &resName )
   mManager = resourceManager();
   if ( mManager->isEmpty() ) {
     addFileResource( fileName, resName );
+  } else {
+    CalendarResourceManager::ActiveIterator it;
+    for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+      (*it)->load();
+    }
   }
 }
 
