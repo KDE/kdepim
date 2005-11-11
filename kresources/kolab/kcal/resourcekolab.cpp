@@ -161,10 +161,11 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   const QString labelTxt = mimetype == "application/x-vnd.kolab.task" ? i18n( "Loading tasks..." )
                            : mimetype == "application/x-vnd.kolab.journal" ? i18n( "Loading journals..." )
                            : i18n( "Loading events..." );
+  const bool useProgress = qApp && qApp->type() != QApplication::Tty && count > 200;
   (void)::Observer::self(); // ensure kio_uiserver is running
   UIServer_stub uiserver( "kio_uiserver", "UIServer" );
   int progressId = 0;
-  if ( count > 200 ) {
+  if ( useProgress ) {
     progressId = uiserver.newJob( kapp->dcopClient()->appId(), true );
     uiserver.totalFiles( progressId, count );
     uiserver.infoMessage( progressId, labelTxt );
