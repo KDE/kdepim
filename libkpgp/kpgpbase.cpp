@@ -110,7 +110,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
   pipe(pout);
   pipe(perr);
 
-  QApplication::flushX();
+  QApplication::flush();
   if(!(child_pid = fork()))
   {
     /*We're the child.*/
@@ -447,7 +447,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
     snprintf(gpgcmd, 1023, "LANGUAGE=C gpg %s",cmd);
   }
 
-  QApplication::flushX();
+  QApplication::flush();
   if(!(child_pid = fork()))
   {
     /*We're the child.*/
