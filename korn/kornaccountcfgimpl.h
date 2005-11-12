@@ -25,7 +25,6 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <Q3PtrList>
 
 class KConfigGroup;
 class KURLRequester;
@@ -38,7 +37,7 @@ class QWidget;
 
 class AccountInput;
 
-template< class T > class Q3PtrList;
+template< class T > class QList;
 template< class T > class QVector;
 
 class KornAccountCfgImpl : public QWidget, public Ui_KornAccountCfg
@@ -52,7 +51,7 @@ public:
 
 public slots:
 	void slotSSLChanged();
-	
+
 protected slots:
 	virtual void slotProtocolChanged( const QString& );
 	
@@ -69,7 +68,7 @@ private:
 	QHBoxLayout *_protocolLayout;
 	QVector< QWidget* > *_groupBoxes;
 	
-	Q3PtrList< AccountInput > *_accountinput;
+	QList< AccountInput* > *_accountinput;
 };
 
 #endif //MK_KORNACCOUNTCFGIMPL_H

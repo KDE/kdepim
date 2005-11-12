@@ -20,8 +20,8 @@
 #define MK_PROCESS_PROTOCOL
 
 #include "kio_proto.h"
-//Added by qt3to4:
-#include <Q3PtrList>
+
+template< class T > class QList;
 
 class Process_Protocol : public KIO_Protocol
 {
@@ -42,7 +42,7 @@ public:
 	virtual QString mailboxName() const { return i18n("Program: "); }
 
 	virtual void configFillGroupBoxes( QStringList* ) const;
-	virtual void configFields( QVector< QWidget* >* vector, const QObject*, Q3PtrList< AccountInput >* ) const;
+	virtual void configFields( QVector< QWidget* >* vector, const QObject*, QList< AccountInput* >* ) const;
 	virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
 	virtual void writeEntries( QMap< QString, QString >* ) const;
 };

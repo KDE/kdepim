@@ -35,12 +35,12 @@
 #include <qlayout.h>
 #include <qmap.h>
 #include <qlabel.h>
+#include <qlist.h>
 #include <qwidget.h>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
-#include <Q3PtrList>
 
 KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent, const char * name )
 	: QWidget( parent, name ),
@@ -53,7 +53,7 @@ KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent, const char * name )
 	_vlayout( 0 ),
 	_protocolLayout( 0 ),
 	_groupBoxes( 0 ),
-	_accountinput( new Q3PtrList< AccountInput >() )
+	_accountinput( new QList< AccountInput* >() )
 {
 	setupUi( this );
 	
@@ -64,23 +64,21 @@ KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent, const char * name )
 	connect( cbProtocol, SIGNAL(activated(const QString&)), this, SLOT(slotProtocolChanged(const QString&)) );
 	
 	this->cbProtocol->insertStringList( Protocols::getProtocols() );
-
-	_accountinput->setAutoDelete( true );
-
 }
 	
 KornAccountCfgImpl::~KornAccountCfgImpl()
 {
+	while( !_accountinput->isEmpty() )
+		delete _accountinput->takeFirst();
 	delete _accountinput;
 }
 
 void KornAccountCfgImpl::readConfig( KConfigGroup *config, QMap< QString, QString > *entries, int boxnr, int accountnr )
 {
-	AccountInput *input;
-	
 	_config = config;
 
-	_accountinput->clear();
+	while( !_accountinput->isEmpty() )
+		delete _accountinput->takeFirst();
 
 	this->cbProtocol->setCurrentText( _config->readEntry( "protocol", "mbox" ) );
         slotProtocolChanged( this->cbProtocol->currentText() );
@@ -90,9 +88,9 @@ void KornAccountCfgImpl::readConfig( KConfigGroup *config, QMap< QString, QStrin
 
 	(*entries)[ "password" ] = KOrnPassword::readKOrnPassword( boxnr, accountnr, *config );
 	
-	for( input = _accountinput->first(); input; input = _accountinput->next() )
-		if( entries->contains( input->configName() ) )
-			input->setValue( *(entries->find( input->configName() ) ) );
+	for( int xx = 0; xx < _accountinput->size(); ++xx )
+		if( entries->contains( _accountinput->at( xx )->configName() ) )
+			_accountinput->at( xx )->setValue( *(entries->find( _accountinput->at( xx )->configName() ) ) );
 	
 	this->edInterval->setText( _config->readEntry( "interval", "300" ) );
 	
@@ -108,7 +106,6 @@ void KornAccountCfgImpl::readConfig( KConfigGroup *config, QMap< QString, QStrin
 
 void KornAccountCfgImpl::writeConfig()
 {
-	AccountInput *input;
 	const Protocol *protocol = Protocols::getProto( this->cbProtocol->currentText() );
 
 	if( !protocol )
@@ -121,8 +118,8 @@ void KornAccountCfgImpl::writeConfig()
 		
 	QMap< QString, QString > *map = new QMap< QString, QString >;
 	QMap< QString, QString >::ConstIterator it;
-	for( input = _accountinput->first(); input; input = _accountinput->next() )
-		map->insert( input->configName(), input->value() );
+	for( int xx = 0; xx < _accountinput->size(); ++xx )
+		map->insert( _accountinput->at( xx )->configName(), _accountinput->at( xx )->value() );
 
 	protocol->writeEntries( map );
 
@@ -148,22 +145,23 @@ void KornAccountCfgImpl::writeConfig()
 
 void KornAccountCfgImpl::slotSSLChanged()
 {
-	AccountInput *input;
 	const Protocol* protocol = Protocols::getProto( this->cbProtocol->currentText() );
 	bool ssl = false;
 	
 	if( !protocol )
 		return;
 
-	for( input = _accountinput->first(); input; input = _accountinput->next() )
-		if( ( input->configName() == "ssl" && input->value() == "true" ) || input->value() == "ssl" )
+	for( int xx = 0; xx < _accountinput->size(); ++xx )
+		if( ( _accountinput->at( xx )->configName() == "ssl" && _accountinput->at( xx )->value() == "true" ) ||
+		    _accountinput->at( xx )->value() == "ssl" )
 			ssl = true;
 
-	for( input = _accountinput->first(); input; input = _accountinput->next() )
-		if( input->configName() == "port" && ( input->value() == QString::number( protocol->defaultPort( !ssl ) ) ) )
-			input->setValue( QString::number( protocol->defaultPort( ssl ) ) );
+	for( int xx = 0; xx < _accountinput->size(); ++xx )
+		if( _accountinput->at( xx )->configName() == "port" &&
+		    ( _accountinput->at( xx )->value() == QString::number( protocol->defaultPort( !ssl ) ) ) )
+			_accountinput->at( xx )->setValue( QString::number( protocol->defaultPort( ssl ) ) );
 }
-	
+
 void KornAccountCfgImpl::slotOK()
 {
 	writeConfig();
@@ -181,7 +179,9 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 
 	protocol->configFillGroupBoxes( groupBoxes );
 	
-	_accountinput->clear();
+	while( !_accountinput->isEmpty() )
+		delete _accountinput->takeFirst();
+
 	if( _groupBoxes )
 	{
 		for( int xx = 0; xx < _groupBoxes->size(); ++xx )
@@ -218,8 +218,9 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 		QGridLayout *grid = new QGridLayout( _groupBoxes->at( groupCounter ), 0, 2 );
 		grid->setSpacing( 10 );
 		grid->setMargin( 15 );
-		for( input = _accountinput->first(); input; input = _accountinput->next() )
+		for( int xx = 0; xx < _accountinput->size(); ++xx )
 		{
+			input = _accountinput->at( xx );
 			if( input->leftWidget() && _groupBoxes->at( groupCounter ) == input->leftWidget()->parent() )
 			{
 				grid->addWidget( input->leftWidget(), counter, 0 );

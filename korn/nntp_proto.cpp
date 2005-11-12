@@ -25,7 +25,7 @@
 #include <qobject.h>
 #include <qstringlist.h>
 #include <qvector.h>
-#include <q3ptrlist.h>
+#include <qlist.h>
 
 void Nntp_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 {
@@ -33,7 +33,7 @@ void Nntp_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 	groupBoxes->append( "user" );
 }
 
-void Nntp_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, Q3PtrList< AccountInput > * result ) const
+void Nntp_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, QList< AccountInput* > * result ) const
 {
 	result->append( new TextInput( vector->at( 0 ), i18n( "Server" ), TextInput::text, "", "server" ) );
 	result->append( new TextInput( vector->at( 0 ), i18n( "Port" ), 0, 65535, "119", "port" ) );
@@ -41,8 +41,8 @@ void Nntp_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, Q
 	result->append( new TextInput( vector->at( 1 ), i18n( "Username" ), TextInput::text, "", "username" ) );
 	result->append( new TextInput( vector->at( 1 ), i18n( "Password" ), TextInput::password, "", "password" ) );
 	result->append( new CheckboxInput( vector->at( 1 ), i18n( "Save password" ), "true", "savepassword" ) );
-	QObject::connect( (QObject*)result->last()->rightWidget(), SIGNAL( toggled( bool ) ),
-			  (QObject*)result->prev()->rightWidget(), SLOT( setEnabled( bool ) ) );
+	QObject::connect( (QObject*)result->at( result->size() - 1 )->rightWidget(), SIGNAL( toggled( bool ) ),
+			  (QObject*)result->at( result->size() - 2 )->rightWidget(), SLOT( setEnabled( bool ) ) );
 	result->last()->setValue( "false" );
 }
 

@@ -21,11 +21,11 @@
 #define MK_KMAILPROTOCOL
 
 #include "protocol.h"
-//Added by qt3to4:
-#include <Q3PtrList>
 
 class KConfig;
 class KConfigBase;
+
+template< class T > class QList;
 
 /**
  * This class is the comminucation between KOrn and KMail.
@@ -91,7 +91,7 @@ public:
 	 * @param object An object to connect slots to.
 	 * @param result The resulting object.
 	 */
-        virtual void configFields( QVector< QWidget* >* vector, const QObject* object, Q3PtrList< AccountInput >* result ) const;
+        virtual void configFields( QVector< QWidget* >* vector, const QObject* object, QList< AccountInput* >* result ) const;
 	/**
 	 * This can manipulate entries that are readed from the configuartion.
 	 * This function does nothing here.

@@ -20,9 +20,10 @@
 #define MK_POP3_PROTO_H
 
 #include "kio_proto.h"
+
 #include <kurl.h>
-//Added by qt3to4:
-#include <Q3PtrList>
+
+template< class T > class QList;
 
 class Pop3_Protocol : public KIO_Protocol
 {
@@ -52,7 +53,7 @@ public:
 	virtual void deleteCommitKURL(KURL & kurl, KIO::MetaData & ) { kurl.setPath( "commit" ); }
 
 	virtual void configFillGroupBoxes( QStringList* ) const;
-        virtual void configFields( QVector< QWidget* >* vector, const QObject*, Q3PtrList< AccountInput >* ) const;
+        virtual void configFields( QVector< QWidget* >* vector, const QObject*, QList< AccountInput* >* ) const;
         virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const;
         virtual void writeEntries( QMap< QString, QString >* ) const;
 };

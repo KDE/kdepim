@@ -48,7 +48,7 @@ void DCOP_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 	groupBoxes->append( "DCOP" );
 }
 
-void DCOP_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, Q3PtrList< AccountInput >* result ) const
+void DCOP_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, QList< AccountInput* >* result ) const
 {
 	result->append( new TextInput( vector->at( 0 ), i18n( "DCOP name" ), TextInput::text, "korn_dcop", "dcopname" ) );
 }

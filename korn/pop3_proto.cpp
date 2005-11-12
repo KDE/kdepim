@@ -21,11 +21,13 @@
 
 #include "account_input.h"
 
+#include <kdebug.h>
+
 #include <qwidget.h>
 #include <qobject.h>
+#include <qlist.h>
 #include <qstringlist.h>
 #include <qvector.h>
-#include <q3ptrlist.h>
 
 void Pop3_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 {
@@ -33,7 +35,7 @@ void Pop3_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 	groupBoxes->append( "Identify" );
 }
 
-void Pop3_Protocol::configFields( QVector< QWidget* >* vector, const QObject* configDialog, Q3PtrList< AccountInput > * result ) const
+void Pop3_Protocol::configFields( QVector< QWidget* >* vector, const QObject* configDialog, QList< AccountInput* > * result ) const
 {
 	QMap< QString, QString > encrList;
 	encrList.insert( "ssl", i18n( "Secure Socket Layer" ) );
@@ -54,8 +56,8 @@ void Pop3_Protocol::configFields( QVector< QWidget* >* vector, const QObject* co
 	result->append( new TextInput( vector->at( 1 ), i18n( "Username" ), TextInput::text, "", "username" ) );
 	result->append( new TextInput( vector->at( 1 ), i18n( "Password" ), TextInput::password, "", "password" ) );
 	result->append( new CheckboxInput( vector->at( 1 ), i18n( "Save password" ), "true", "savepassword" ) );
-	QObject::connect( (QObject*)result->last()->rightWidget(), SIGNAL( toggled( bool ) ),
-			  (QObject*)result->prev()->rightWidget(), SLOT( setEnabled( bool ) ) );
+	QObject::connect( (QObject*)result->at( result->size() - 1 )->rightWidget(), SIGNAL(toggled( bool)),
+			  (QObject*)result->at( result->size() - 2 )->rightWidget(), SLOT(setEnabled(bool)) );
 	result->last()->setValue( "false" );
 	result->append( new ComboInput( vector->at( 1 ), i18n( "Authentication" ), authList, "", "auth" ) );
 }

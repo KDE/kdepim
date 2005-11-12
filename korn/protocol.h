@@ -50,7 +50,7 @@ public:
 	virtual QString configName() const { return "not specified"; }
 
 	virtual void configFillGroupBoxes( QStringList* ) const = 0;
-	virtual void configFields( QVector< QWidget* >* vector, const QObject*, Q3PtrList< AccountInput >* ) const = 0;
+	virtual void configFields( QVector< QWidget* >* vector, const QObject*, QList< AccountInput* >* ) const = 0;
 	virtual void readEntries( QMap< QString, QString >* ) const = 0;
 	virtual void writeEntries( QMap< QString, QString >* ) const = 0;
 

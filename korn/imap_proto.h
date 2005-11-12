@@ -21,8 +21,6 @@
 
 #include "kio_proto.h"
 #include <kurl.h>
-//Added by qt3to4:
-#include <Q3PtrList>
 
 /*
  * With deleting and IMAP4 is a small problem: messages don't looks as deleted, as they
@@ -123,7 +121,7 @@ public:
 	 * @param object The object to connect signals to
 	 * @param ptrlist A list with object which is filled in this function. The list must already be created.
 	 */
-	virtual void configFields( QVector< QWidget* >* vector, const QObject* object, Q3PtrList< AccountInput >* ptrlist ) const;
+	virtual void configFields( QVector< QWidget* >* vector, const QObject* object, QList< AccountInput* >* ptrlist ) const;
 	/**
 	 * This function is used to change the configuration.
 	 * In the case, the metadata-key is splitted out, and put in the @p metadata parameter.

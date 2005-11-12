@@ -30,10 +30,9 @@
 
 #include <qmap.h>
 #include <qobject.h>
+#include <qlist.h>
 #include <qvector.h>
 #include <qstringlist.h>
-//Added by qt3to4:
-#include <Q3PtrList>
 
 const char* KMail_Protocol::kmailGroupName = "Account %1";
 const char* KMail_Protocol::kmailKeyType = "Type";
@@ -177,7 +176,7 @@ void KMail_Protocol::configFillGroupBoxes( QStringList* lijst ) const
 	lijst->append( "KMail" );
 }
 
-void KMail_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, Q3PtrList< AccountInput >* result ) const
+void KMail_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, QList< AccountInput* >* result ) const
 {
 	QMap< QString, QString > accountList;
 	QString type;
