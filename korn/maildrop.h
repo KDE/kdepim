@@ -9,7 +9,6 @@
 #include<qstring.h>
 #include<qcolor.h>
 #include<qvector.h>
-#include <q3ptrlist.h>
 
 class Protocol;
 
@@ -20,6 +19,7 @@ class QColor;
 class KornMailSubject;
 class KornMailId;
 
+template< class T > class QList;
 template< class T, class R > class QMap;
 
 /**
@@ -241,7 +241,7 @@ class KMailDrop : public QObject
      * the KornMailSubject instances of the remaining mails might be used
      * further more.
      */
-    virtual bool deleteMails(Q3PtrList<const KornMailId> * ids, bool * stop);
+    virtual bool deleteMails(QList<const KornMailId*> * ids, bool * stop);
 
     /**
      * Return true if the concrete subclass can load individual mails fully.
@@ -361,7 +361,7 @@ signals:
      * As argument, there is a KornSubject, which contains a subject and
      * some more info that could be used with the popup.
      */
-    void showPassivePopup( Q3PtrList< KornMailSubject >*, int, bool, const QString& realname );
+    void showPassivePopup( QList< KornMailSubject >*, int, bool, const QString& realname );
 
     /**
      * This signal is emitted when a passive error message should be displayed.

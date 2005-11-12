@@ -214,7 +214,7 @@ void BoxContainerItem::fillKMenu( KMenu* popupMenu, KActionCollection* actions )
 	KStdAction::aboutApp(  this, SLOT( about()     ), actions )->plug( popupMenu );
 }
 
-void BoxContainerItem::showPassivePopup( QWidget* parent, Q3PtrList< KornMailSubject >* list, int total,
+void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject >* list, int total,
 					 const QString &accountName, bool date )
 {
 	KPassivePopup *popup = new KPassivePopup( parent, "Passive popup" );
@@ -241,14 +241,14 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, Q3PtrList< KornMailSub
 		title->setFont( font );
 	}
 	
-	for( KornMailSubject* subject = list->first(); subject; subject = list->next() )
+	for( int xx = 0; xx < list->size(); ++xx )
 	{
-		new QLabel( subject->getSender(), mainglayout, "from-value" );
-		new QLabel( subject->getSubject(), mainglayout, "subject-value" );
+		new QLabel( list->at( xx ).getSender(), mainglayout, "from-value" );
+		new QLabel( list->at( xx ).getSubject(), mainglayout, "subject-value" );
 		if( date )
 		{
 			QDateTime tijd;
-			tijd.setTime_t( subject->getDate() );
+			tijd.setTime_t( list->at( xx ).getDate() );
 			new QLabel( tijd.toString(), mainglayout, "date-value" );
 		}
 	}

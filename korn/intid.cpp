@@ -23,3 +23,4 @@ KornMailId * KornIntId::clone() const
 {
 	return new KornIntId(*this);
 }
+

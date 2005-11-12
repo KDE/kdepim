@@ -47,7 +47,6 @@ korn_SOURCES = \
   kio_read.cpp \
   kio_delete.cpp \
   kmail_proto.cpp \
-  sortedmailsubject.cpp \
   korncfgimpl.cpp \
   kornaccountcfgimpl.cpp \
   kornboxcfgimpl.cpp \
@@ -99,7 +98,6 @@ noinst_HEADERS = \
   kio_single_subject.h \
   kio_read.h \
   kio_delete.h \
-  sortedmailsubject.h \
   imap_proto.h \
   imaps_proto.h \
   kio_proto.h \

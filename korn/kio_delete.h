@@ -25,8 +25,7 @@
  */
 
 #include <qobject.h>
-//Added by qt3to4:
-#include <Q3PtrList>
+
 class KKioDrop;
 class KIO_Protocol;
 class KornMailId;
@@ -34,7 +33,7 @@ class KornMailId;
 class KURL;
 namespace KIO { class MetaData; class Job; class Slave; }
 
-template<class T> class Q3PtrList;
+template<class T> class QList;
 
 class KIO_Delete : public QObject
 { Q_OBJECT
@@ -44,7 +43,7 @@ public:
 	~KIO_Delete( );
 	
 	//This function should be called if there are messages to be deleted.
-	bool deleteMails( Q3PtrList< const KornMailId > *, KKioDrop* );
+	bool deleteMails( QList< const KornMailId* > *, KKioDrop* );
 	
 	//This function should return false then and only then if an error occurred.
 	bool valid( ) { return _valid; }
@@ -63,7 +62,7 @@ private:
 
 	KKioDrop *_kio;
 	unsigned int _total;
-	Q3PtrList< KIO::Job > *_jobs;
+	QList< KIO::Job* > *_jobs;
 	KIO::Slave *_slave;
 	bool _valid;
 };

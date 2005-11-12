@@ -20,8 +20,6 @@
 #define MK_ACCOUNTMANAGER_H
 
 #include <qobject.h>
-//Added by qt3to4:
-#include <Q3PtrList>
 
 class DCOPDrop;
 class KornSubjectsDlg;
@@ -30,7 +28,7 @@ class KMailDrop;
 
 class KConfig;
 
-template< class T > class Q3PtrList;
+template< class T > class QList;
 template< class T, class W > class QMap;
 
 
@@ -137,8 +135,8 @@ private:
 		int reset;
 	};
 	
-	Q3PtrList< KMailDrop > *_kioList;
-	Q3PtrList< DCOPDrop > *_dcopList;
+	QList< KMailDrop* > *_kioList;
+	QList< DCOPDrop* > *_dcopList;
 	
 	QMap< KMailDrop*, Dropinfo* > *_dropInfo;
 	

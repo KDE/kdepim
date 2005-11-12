@@ -4,8 +4,6 @@
 #include<kdialogbase.h>
 #include <klistview.h>
 #include <QVector>
-//Added by qt3to4:
-#include <Q3PtrList>
 #include <kpushbutton.h>
 
 class KMailDrop;
@@ -16,7 +14,7 @@ class KornMailDlg;
 class QProgressDialog;
 class DoubleProgressDialog;
 
-template< class T > class Q3PtrList;
+template< class T > class QList;
 
 /**
  * KornSubjectsDlg loads all mail subjects and shows them in a list control.
@@ -63,10 +61,10 @@ class KornSubjectsDlg: public KDialogBase
 		KornMailSubject * getMailSubject() const {return _mailSubject;}
 	};
 
-	Q3PtrList< KMailDrop >	*_mailDrop;
+	QList< KMailDrop* >	*_mailDrop;
 	struct SubjectsData
 	{
-		Q3PtrListIterator< KMailDrop > *it;
+		int maildrop_index;
 		QVector< KornMailSubject > *subjects;
 		DoubleProgressDialog *progress;
 		bool atRechecking;
@@ -74,8 +72,8 @@ class KornSubjectsDlg: public KDialogBase
 	
 	struct DeleteData
 	{
-		Q3PtrList< KornMailSubject > *messages;
-		Q3PtrList< const KornMailId > *ids;
+		QList< KornMailSubject* > *messages;
+		QList< const KornMailId* > *ids;
 		QProgressDialog *progress;
 		KMailDrop *drop;
 		int totalNumberOfMessages;

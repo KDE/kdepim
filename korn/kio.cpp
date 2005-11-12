@@ -46,7 +46,7 @@
 #include<klocale.h>
 #include<kprocess.h>
 
-#include<q3ptrlist.h>
+#include<qlist.h>
 #include<qregexp.h>
 #include<qlist.h>
 #include<qvector.h>
@@ -300,7 +300,7 @@ bool KKioDrop::canReadMail( )
 	return (_protocol!=0?_protocol->canReadMail():false);
 }
 
-bool KKioDrop::deleteMails(Q3PtrList<const KornMailId> * ids, bool * /*stop*/)
+bool KKioDrop::deleteMails(QList<const KornMailId*> * ids, bool * /*stop*/)
 {
 	_delete->deleteMails( ids, this );
 	return _delete->valid();

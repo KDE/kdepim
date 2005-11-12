@@ -30,22 +30,24 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include <q3ptrlist.h>
+#include <qlist.h>
 
 KornSubjectsDlg* AccountManager::_subjectsDlg = 0;
 
 AccountManager::AccountManager( QObject * parent, const char * name )
 	: QObject( parent, name ),
-	_kioList( new Q3PtrList< KMailDrop > ),
-	_dcopList( new Q3PtrList< DCOPDrop > ),
+	_kioList( new QList< KMailDrop* > ),
+	_dcopList( new QList< DCOPDrop* > ),
 	_dropInfo( new QMap< KMailDrop*, Dropinfo* > )
 {
-	_kioList->setAutoDelete( true );
-	_dcopList->setAutoDelete( true );
 }
 
 AccountManager::~AccountManager()
 {
+	while( !_kioList->isEmpty() )
+		delete _kioList->takeFirst();
+	while( !_dcopList->isEmpty() )
+		delete _dcopList->takeFirst();
 	delete _kioList;
 	delete _dcopList;
 	delete _dropInfo;
@@ -84,8 +86,8 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		
 		//TODO: connect some stuff
 		connect( kiodrop, SIGNAL( changed( int, KMailDrop* ) ), this, SLOT( slotChanged( int, KMailDrop* ) ) );
-		connect( kiodrop, SIGNAL( showPassivePopup( Q3PtrList< KornMailSubject >*, int, bool, const QString& ) ),
-			 this, SLOT( slotShowPassivePopup( Q3PtrList< KornMailSubject >*, int, bool, const QString& ) ) );
+		connect( kiodrop, SIGNAL( showPassivePopup( QList< KornMailSubject >*, int, bool, const QString& ) ),
+			 this, SLOT( slotShowPassivePopup( QList< KornMailSubject >*, int, bool, const QString& ) ) );
 		connect( kiodrop, SIGNAL( showPassivePopup( const QString&, const QString& ) ),
 			 this, SLOT( slotShowPassivePopup( const QString&, const QString& ) ) );
 		connect( kiodrop, SIGNAL( validChanged( bool ) ), this, SLOT( slotValidChanged( bool ) ) );
@@ -118,8 +120,8 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		Dropinfo *info = new Dropinfo;
 		
 		connect( dcopdrop, SIGNAL( changed( int, KMailDrop* ) ), this, SLOT( slotChanged( int, KMailDrop* ) ) );
-		connect( dcopdrop, SIGNAL( showPassivePopup( Q3PtrList< KornMailSubject >*, int, bool, const QString& ) ),
-			 this, SLOT( slotShowPassivePopup( Q3PtrList< KornMailSubject >*, int, bool, const QString& ) ) );
+		connect( dcopdrop, SIGNAL( showPassivePopup( QList< KornMailSubject >*, int, bool, const QString& ) ),
+			 this, SLOT( slotShowPassivePopup( QList< KornMailSubject >*, int, bool, const QString& ) ) );
 		
 		dcopdrop->readConfigGroup( *masterGroup );
 		dcopdrop->setDCOPName( *it );
@@ -162,9 +164,8 @@ QString AccountManager::getTooltip() const
 	
 void AccountManager::doRecheck()
 {
-	KMailDrop *item;
-	for( item = _kioList->first(); item; item = _kioList->next() )
-		item->forceRecheck();
+	for( int xx = 0; xx < _kioList->size(); ++xx )
+		_kioList->at( xx )->forceRecheck();
 }
 
 void AccountManager::doReset()
@@ -196,18 +197,14 @@ void AccountManager::doView()
 
 void AccountManager::doStartTimer()
 {
-	KMailDrop *item;
-	
-	for( item = _kioList->first(); item; item = _kioList->next() )
-		item->startMonitor();
+	for( int xx = 0; xx < _kioList->size(); ++xx )
+		_kioList->at( xx )->startMonitor();
 }
 
 void AccountManager::doStopTimer()
 {
-	KMailDrop *item;
-
-	for( item = _kioList->first(); item; item = _kioList->next() )
-		item->stopMonitor();
+	for( int xx = 0; xx < _kioList->size(); ++xx )
+		_kioList->at( xx )->stopMonitor();
 }
 
 int AccountManager::totalMessages()

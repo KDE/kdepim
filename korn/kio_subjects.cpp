@@ -27,7 +27,7 @@
 #include <kio/scheduler.h>
 #include <kdebug.h>
 
-#include <q3ptrlist.h>
+#include <qlist.h>
 #include <qstring.h>
 
 KIO_Subjects::KIO_Subjects( QObject * parent, const char * name )
@@ -36,15 +36,15 @@ KIO_Subjects::KIO_Subjects( QObject * parent, const char * name )
 	_slave( 0 ),
 	_valid( true )
 {
-	_jobs = new Q3PtrList<KIO_Single_Subject>;
+	_jobs = new QList<KIO_Single_Subject*>;
 	_kurl = new KURL;
 	_metadata = new KIO::MetaData;
-	
-	_jobs->setAutoDelete( true );
 }
 
 KIO_Subjects::~KIO_Subjects( )
 {
+	while( !_jobs->isEmpty() )
+		delete _jobs->takeFirst();
 	delete _jobs;
 	delete _kurl;
 	delete _metadata;
@@ -64,7 +64,8 @@ void KIO_Subjects::doReadSubjects( KKioDrop *drop )
 	if( _jobs->count() > 0 )
 		kdWarning() << i18n( "Already a slave pending." ) << endl;
 		
-	_jobs->clear( );
+	while( !_jobs->isEmpty() )
+		delete _jobs->takeFirst();
 	
 	//Open connection
 	getConnection( );
@@ -147,7 +148,9 @@ void KIO_Subjects::disConnect( bool result )
 
 void KIO_Subjects::cancelled( )
 {
-	_jobs->clear();
+	while( !_jobs->isEmpty() )
+		delete _jobs->takeFirst();
+	
 	//_slave died in cancelJob with is by called from the destructor of KIO_Single_Subject,
 	//withs is by called by _jobs->clear because autoRemove equals true.
 	_slave = 0;
@@ -164,7 +167,7 @@ void KIO_Subjects::slotReadSubject( KornMailSubject* subject )
 
 void KIO_Subjects::slotFinished( KIO_Single_Subject* item )
 {
-	//Remove sender.... I didn't know of the computer gonna like me, but it seems he does :)
+	item->deleteLater();
 	_jobs->remove( item );
 	
 	_kio->emitReadSubjectsProgress( _jobs->count( ) );

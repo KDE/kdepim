@@ -51,3 +51,9 @@ QString KornMailSubject::toString() const
 		+ ", " + i18n("Sender:") + " " + QString(_sender.utf8()) + ", " + i18n("Size:") + " " + QString::number(_size)
 		+ ", " + i18n("Date:") + " " + date.toString(Qt::ISODate);
 }
+
+bool operator<( const KornMailSubject& sub1, const KornMailSubject& sub2 )
+{
+	return sub1.getDate() < sub2.getDate();
+}
+

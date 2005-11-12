@@ -5,10 +5,10 @@
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <Q3PtrList>
 #include <kcursor.h>
 #include <kdebug.h>
 #include <qlayout.h>
+#include <qlist.h>
 #include <qdatetime.h>
 #include <qtimer.h>
 #include "mailsubject.h"
@@ -59,7 +59,7 @@ int KornSubjectsDlg::SubjectListViewItem::compare( Q3ListViewItem* item, int col
 }
 
 KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
-   : KDialogBase( parent, "urldialog", true, "test", Close, Close, true), _mailDrop( new Q3PtrList< KMailDrop > ), 
+   : KDialogBase( parent, "urldialog", true, "test", Close, Close, true), _mailDrop( new QList< KMailDrop* > ), 
  	_subjects(0), _delete(0), mailDlg(0), _canDeleteMaildrop( true )
 {
 	_loadSubjectsCanceled = false;
@@ -240,14 +240,14 @@ void KornSubjectsDlg::reloadSubjects()
 	_subjects->progress->setNumberOfSteps( 1 );
 	_subjects->progress->setProgress( 0 );
 	
-	_subjects->it->toFirst();
+	_subjects->maildrop_index = 0;
 	
-	if( !_subjects->it->current() )
+	if( _mailDrop->size() == 0 )
 		return; //No maildrops available.
 	
 	_subjects->progress->show();
 	
-	prepareStep1Subjects( _subjects->it->current() );
+	prepareStep1Subjects( _mailDrop->at( _subjects->maildrop_index ) );
 }
 
 //Private help-functions
@@ -278,7 +278,7 @@ void KornSubjectsDlg::prepareStep2Subjects( KMailDrop *drop )
 	connect( drop, SIGNAL( readSubjectsProgress( int ) ), _subjects->progress, SLOT( setProgress( int ) ) );
 	connect( _subjects->progress, SIGNAL( cancelPressed() ), drop, SLOT( readSubjectsCanceled() ) );
 	
-	_subjects->it->current()->readSubjects( 0 );
+	_mailDrop->at( _subjects->maildrop_index )->readSubjects( 0 );
 }
 
 void KornSubjectsDlg::removeStep2Subjects( KMailDrop *drop )
@@ -296,7 +296,7 @@ bool KornSubjectsDlg::makeSubjectsStruct()
 		return false;
 	
 	_subjects = new SubjectsData;
-	_subjects->it = new Q3PtrListIterator< KMailDrop >( *_mailDrop );
+	_subjects->maildrop_index = 0;
 	_subjects->subjects = new QVector< KornMailSubject >;
 	_subjects->progress = new DoubleProgressDialog( this, "progress" );
 	_subjects->atRechecking = true;
@@ -317,7 +317,6 @@ void KornSubjectsDlg::deleteSubjectsStruct()
 	
 	delete _subjects->progress;
 	delete _subjects->subjects;
-	delete _subjects->it;
 	delete _subjects; _subjects = 0;
 }
 
@@ -326,9 +325,9 @@ void KornSubjectsDlg::slotReloadRechecked()
 {
 	_subjects->progress->setText( i18n( "Downloading subjects..." ) ); //Progress message when fetching messages
 	
-	removeStep1Subjects( _subjects->it->current() );
-	_subjects->subjects->reserve( _subjects->it->current()->count() ); //enlarge QValueVector to speed adding up.
-	prepareStep2Subjects( _subjects->it->current() );
+	removeStep1Subjects( _mailDrop->at( _subjects->maildrop_index ) );
+	_subjects->subjects->reserve( _mailDrop->at( _subjects->maildrop_index )->count() ); //enlarge QVector to speed adding up.
+	prepareStep2Subjects( _mailDrop->at( _subjects->maildrop_index ) );
 }
 
 void KornSubjectsDlg::slotSubjectsCanceled()
@@ -337,9 +336,9 @@ void KornSubjectsDlg::slotSubjectsCanceled()
 		return; //Nothing to do
 	
 	if( _subjects->atRechecking )
-		removeStep1Subjects( _subjects->it->current() );
+		removeStep1Subjects( _mailDrop->at( _subjects->maildrop_index ) );
 	else
-		removeStep2Subjects( _subjects->it->current() );
+		removeStep2Subjects( _mailDrop->at( _subjects->maildrop_index ) );
 	
 	deleteSubjectsStruct();
 }
@@ -360,20 +359,20 @@ void KornSubjectsDlg::subjectsReady( bool success )
 	if( !_subjects )
 		return;
 	
-	if( _subjects->it->atFirst() )
+	if( _subjects->maildrop_index == 0 )
 		progress = 0;
 	
-	removeStep2Subjects( _subjects->it->current() );
+	removeStep2Subjects( _mailDrop->at( _subjects->maildrop_index ) );
 	
 	//Goto next drop
-	++(*_subjects->it);
+	++_subjects->maildrop_index;
 	++progress;
 	
 	_subjects->progress->setProgressOfBoxes( progress );
 	
-	if( _subjects->it->current() )
+	if( _subjects->maildrop_index < _mailDrop->size() )
 	{
-		prepareStep1Subjects( _subjects->it->current() );
+		prepareStep1Subjects( _mailDrop->at( _subjects->maildrop_index ) );
 	} else {
 		//Clear list first
 		_list->clear();
@@ -437,8 +436,8 @@ void KornSubjectsDlg::deleteMessage()
 void KornSubjectsDlg::makeDeleteStruct()
 {
 	_delete = new DeleteData;
-	_delete->messages = new Q3PtrList< KornMailSubject >;
-	_delete->ids = new Q3PtrList< const KornMailId >;
+	_delete->messages = new QList< KornMailSubject* >;
+	_delete->ids = new QList< const KornMailId* >;
 	_delete->progress = new QProgressDialog( i18n( "Deleting mail; please wait...." ), "&Cancel", 0, 1, this );
 	_delete->totalNumberOfMessages = 0;
 
@@ -461,19 +460,25 @@ void KornSubjectsDlg::fillDeleteMessageList()
 	Q3PtrList< Q3ListViewItem > list( _list->selectedItems() );
 	
 	for( current = list.first(); current; current = list.next() )
-		_delete->messages->append( ( ( KornSubjectsDlg::SubjectListViewItem * ) current )->getMailSubject() );
+	{
+		KornMailSubject *item = ( ( KornSubjectsDlg::SubjectListViewItem * ) current )->getMailSubject();
+		_delete->messages->append( item );
+	}
 }
 
 void KornSubjectsDlg::fillDeleteIdList( KMailDrop *drop )
 {
 	_delete->ids->clear();
 	KornMailSubject *current;
-	for( current = _delete->messages->first(); current; current = _delete->messages->next() )
+	for( int xx = 0; xx < _delete->messages->size(); ++xx )
+	{
+		current = _delete->messages->at( xx );
 		if( current->getMailDrop() == drop )
 		{
 			_delete->ids->append( current->getId() );
 			_delete->messages->remove( current );
 		}
+	}
 }
 
 void KornSubjectsDlg::deleteNextMessage()
@@ -486,8 +491,8 @@ void KornSubjectsDlg::deleteNextMessage()
 		return;
 	}
 	
-	_delete->ids = new Q3PtrList< const KornMailId >;
-	_delete->drop = _delete->messages->getFirst()->getMailDrop();
+	_delete->ids = new QList< const KornMailId* >;
+	_delete->drop = _delete->messages->first()->getMailDrop();
 	
 	fillDeleteIdList( _delete->drop );
 	

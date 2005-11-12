@@ -22,17 +22,18 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include <q3ptrlist.h>
+#include <qlist.h>
 
 BoxContainer::BoxContainer( QObject * parent, const char * name )
 	: QObject( parent, name ),
-	_items( new Q3PtrList< BoxContainerItem > )
+	_items( new QList< BoxContainerItem* > )
 {
-	_items->setAutoDelete( true );
 }
 
 BoxContainer::~BoxContainer()
 {
+	while( !_items->isEmpty() )
+		delete _items->takeFirst();
 	delete _items;
 }
 
@@ -51,22 +52,15 @@ void BoxContainer::readConfig( KConfig* config )
 
 void BoxContainer::writeConfig( KConfig *config )
 {
-	int index = 0;
-	
-	BoxContainerItem *item;
-	for ( item = _items->first(); item; item = _items->next() )
-	{
-		item->writeConfig( config, index );
-		++index;
-	}
+	for( int index = 0; index < _items->size(); ++index )
+		_items->at( index )->writeConfig( config, index );
 	
 }
 
 void BoxContainer::showBox()
 {
-	BoxContainerItem *item;
-	for( item = _items->first(); item; item = _items->next() )
-		item->showBox();
+	for( int xx = 0; xx < _items->size(); ++xx )
+		_items->at( xx )->showBox();
 }
 
 void BoxContainer::slotShowConfiguration()

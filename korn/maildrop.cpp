@@ -7,8 +7,7 @@
 
 #include<assert.h>
 #include<qapplication.h>
-//Added by qt3to4:
-#include <Q3PtrList>
+#include <qlist.h>
 
 #include<kconfigbase.h>
 #include<kdebug.h>
@@ -156,7 +155,7 @@ QVector<KornMailSubject> * KMailDrop::readSubjects(bool * stop)
 }
 
 
-bool KMailDrop::deleteMails(Q3PtrList<const KornMailId> * /*ids*/, bool * /*stop*/)
+bool KMailDrop::deleteMails(QList<const KornMailId*> * /*ids*/, bool * /*stop*/)
 {
 	return false;
 }

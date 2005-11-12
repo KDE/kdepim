@@ -147,6 +147,8 @@ public:
 	 * Returns the KMailDrop instance of the Maildrop which owns the subject
 	 */
 	KMailDrop* getMailDrop() const { return _drop; }
+
+	friend bool operator<( const KornMailSubject&, const KornMailSubject& );
 };
 
 #endif

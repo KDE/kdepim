@@ -32,7 +32,6 @@ class KIO_Single_Subject;
 class KKioDrop; 
 
 class KornMailSubject;
-class SortedMailSubject;
 
 template<class T> class QList;
 namespace KIO { class Job; class ListJob; class MetaData; class Slave; }
@@ -65,7 +64,7 @@ private:
 	QList<KKioDrop::FileInfo> *_new_mailurls; //entries can come with more function calls.
 	int _subjects_pending;
 	int _total_new_messages;
-	SortedMailSubject *_popup_subjects;
+	QList< KornMailSubject > *_popup_subjects;
 private:
 	void showPassive( const QString& );
 	void disconnectSlave();

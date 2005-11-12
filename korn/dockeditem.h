@@ -22,13 +22,13 @@
 #include "boxcontaineritem.h"
 //Added by qt3to4:
 #include <QPixmap>
-#include <Q3PtrList>
 
 class SystemTray;
 
 class KConfig;
 
 class QPixmap;
+template< class T > class QList;
 
 /**
  * This class is an implementation of a BoxContainerItem for the
@@ -79,7 +79,7 @@ public slots:
 	 */
 	virtual void setTooltip( const QString& string );
 	
-	void slotShowPassivePopup( Q3PtrList< KornMailSubject >* list, int total, bool date, const QString& );
+	void slotShowPassivePopup( QList< KornMailSubject >* list, int total, bool date, const QString& );
 
 	void slotShowPassivePopup( const QString& error, const QString& );
 	

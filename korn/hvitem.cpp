@@ -29,10 +29,10 @@
 #include <kstdaction.h>
 
 #include <qcursor.h>
+#include <qlist.h>
 #include <qtooltip.h>
 #include <QIcon>
 //Added by qt3to4:
-#include <Q3PtrList>
 #include <kiconloader.h>
 
 HVItem::HVItem( QWidget *parent, const char *name )
@@ -69,7 +69,7 @@ void HVItem::setTooltip( const QString& string )
 	QToolTip::add( _label, string );
 }
 
-void HVItem::slotShowPassivePopup( Q3PtrList< KornMailSubject >* list, int total, bool date, const QString& name )
+void HVItem::slotShowPassivePopup( QList< KornMailSubject >* list, int total, bool date, const QString& name )
 {
 	showPassivePopup( _label, list, total, name, date );
 }

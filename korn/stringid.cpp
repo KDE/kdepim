@@ -35,4 +35,4 @@ KornMailId * KornStringId::clone() const
 {
 	return ( new KornStringId( *this ) );
 }
-					 
+

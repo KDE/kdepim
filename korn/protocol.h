@@ -1,5 +1,3 @@
-//Added by qt3to4:
-#include <Q3PtrList>
 /*
  * Copyright (C) 2005, Mart Kelder (mart.kde@hccnet.nl)
  *
@@ -32,7 +30,7 @@ class QObject;
 class QStringList;
 class QWidget;
 
-template< class T> class Q3PtrList;
+template< class T> class QList;
 template< class T> class QVector;
 template< class T, class S> class QMap;
 

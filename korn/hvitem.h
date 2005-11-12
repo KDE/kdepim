@@ -20,13 +20,12 @@
 #define MK_HVITEM_H
 
 #include <boxcontaineritem.h>
-//Added by qt3to4:
-#include <Q3PtrList>
 
 class KActionCollection;
 class KMenu;
 
 class Label;
+template< class T > class QList;
 
 /**
  * Item for a horizontal or vertical displayed window.
@@ -61,7 +60,7 @@ public slots:
 	 * This slot triggered when the passive popup is to be shown. It is transported
 	 * to BoxContainerItem, but so it is possible to change the arguments.
 	 */
-	void slotShowPassivePopup( Q3PtrList< KornMailSubject >* list, int total, bool date, const QString& );
+	void slotShowPassivePopup( QList< KornMailSubject >* list, int total, bool date, const QString& );
 	
 	/**
 	 * This slot triggered when the passive popup is to be shown. It is transported

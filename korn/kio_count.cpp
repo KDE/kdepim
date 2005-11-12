@@ -23,7 +23,6 @@
 #include "kio_proto.h"
 #include "kio_single_subject.h"
 #include "mailsubject.h"
-#include "sortedmailsubject.h"
 
 #include <kdebug.h>
 #include <kio/jobclasses.h>
@@ -33,8 +32,6 @@
 #include <kurl.h>
 
 #include <qstring.h>
-//Added by qt3to4:
-#include <Q3PtrList>
 
 KIO_Count::KIO_Count( QObject * parent, const char * name )
 	: QObject ( parent, name ),
@@ -315,20 +312,16 @@ void KIO_Count::entries( KIO::Job* job, const KIO::UDSEntryList &list )
 void KIO_Count::addtoPassivePopup( KornMailSubject* subject )
 {
 	if( ! _popup_subjects )
-	{
-		_popup_subjects = new SortedMailSubject;
-		_popup_subjects->setAutoDelete( true );
-	}
+		_popup_subjects = new QList< KornMailSubject >;
 
-	_popup_subjects->inSort( subject );
-	if( _popup_subjects->count() > 5 )
-		_popup_subjects->removeFirst(); //Overhead: subject is downloaded
+	_popup_subjects->append( *subject );
 
 	_subjects_pending--;
 	_total_new_messages++;
 	if( _subjects_pending == 0 )
 	{
-		_kio->emitShowPassivePopup( dynamic_cast< Q3PtrList<KornMailSubject>* >( _popup_subjects ), _total_new_messages );
+		qSort( _popup_subjects->begin(), _popup_subjects->end() );
+		_kio->emitShowPassivePopup( _popup_subjects, _total_new_messages );
 		delete _popup_subjects; _popup_subjects = 0;
 		_total_new_messages = 0;
 

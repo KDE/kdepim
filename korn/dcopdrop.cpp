@@ -27,11 +27,10 @@
 #include <kdebug.h>
 
 #include <qdatetime.h>
+#include <qlist.h>
 #include <qmap.h>
 #include <qstring.h>
 #include <qtimer.h>
-//Added by qt3to4:
-#include <Q3PtrList>
 
 DCOPDrop::DCOPDrop()
 	: KMailDrop(),
@@ -120,14 +119,14 @@ QVector< KornMailSubject >* DCOPDrop::doReadSubjects( bool * )
         return vector;
 }
 
-bool DCOPDrop::deleteMails( Q3PtrList<const KornMailId> * ids, bool * )
+bool DCOPDrop::deleteMails( QList<const KornMailId*> * ids, bool * )
 {
 	emit deleteMailsTotalSteps( 1 );
 	
-	for( const KornMailId *it = ids->first(); it; it = ids->next() )
+	for( int xx = 0; xx < ids->size(); ++xx )
 	{
-		const KornIntId* id = dynamic_cast< const KornIntId* >( it );
-		if( _msgList->contains( id->getId() ) )
+		const KornIntId *id = dynamic_cast< const KornIntId* >( ids->at( xx ) );
+		if( id && _msgList->contains( id->getId() ) )
 			_msgList->erase( id->getId() );
 	}
 	

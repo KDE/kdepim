@@ -24,9 +24,7 @@
 #define KEG_KIODROP_H
 
 #include "polldrop.h"
-//Added by qt3to4:
 #include <QList>
-#include <Q3PtrList>
 
 class QWidget;
 class KDropDialog;
@@ -39,7 +37,6 @@ class KIO_Read;
 class KIO_Delete;
 class KConfigGroup;
 class KURL;
-template<class> class Q3PtrList;
 template<class> class QList;
 template<class> class QVector;
 namespace KIO { class Job; class MetaData; class Slave; class TransferJob; }
@@ -142,7 +139,7 @@ public:
 	virtual QVector<KornMailSubject> * doReadSubjects(bool * stop); 
 	
 	virtual bool canDeleteMails();
-	virtual bool deleteMails(Q3PtrList<const KornMailId> * ids, bool * stop);
+	virtual bool deleteMails(QList<const KornMailId*> * ids, bool * stop);
 
 	virtual bool canReadMail ();
 	virtual QString readMail(const KornMailId * id, bool * stop);
@@ -181,7 +178,7 @@ private:
 	void emitDeleteMailsTotalSteps( int value ) { _deleteMailsTotalSteps = value; emit deleteMailsTotalSteps( value ); }
 	void emitDeleteMailsProgress( int value ) { emit deleteMailsProgress( _deleteMailsTotalSteps - value ); }
 	
-	void emitShowPassivePopup( Q3PtrList< KornMailSubject > *subject, int total )
+	void emitShowPassivePopup( QList< KornMailSubject > *subject, int total )
 			{ emit showPassivePopup( subject, total, passiveDate(), this->realName() ); }
 	void emitShowPassivePopup( const QString& error )
 	                { if( passivePopup() ) { emit showPassivePopup( error, this->realName() ); } }

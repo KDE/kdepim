@@ -24,7 +24,6 @@
 //Added by qt3to4:
 #include <QPixmap>
 #include <QLabel>
-#include <Q3PtrList>
 
 class KornMailSubject;
 
@@ -35,8 +34,8 @@ class KProcess;
 
 class QColor;
 class QLabel;
-//template< class T > class QPtrList;
 class QString;
+template< class T > class QList;
 
 /**
  * This class provide a base for an item. This item should be
@@ -132,7 +131,7 @@ protected:
 	 * @param accountName The name of the account it belongs to
 	 * @param date Should the date be displayed?
 	 */
-	void showPassivePopup( QWidget* parent, Q3PtrList< KornMailSubject >* list, int total, const QString& accountName, bool date );
+	void showPassivePopup( QWidget* parent, QList< KornMailSubject >* list, int total, const QString& accountName, bool date );
 		
 	//this functions should be reimplemented
 	/**
