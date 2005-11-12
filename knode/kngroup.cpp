@@ -186,7 +186,7 @@ bool KNGroup::loadHdrs()
   KNFile f;
   KQCStringSplitter split;
   int cnt=0, id, lines, fileFormatVersion, artNumber;
-  time_t timeT;//, fTimeT;
+  unsigned int timeT;
   KNRemoteArticle *art;
 
   QString dir(path());
@@ -235,7 +235,7 @@ bool KNGroup::loadHdrs()
       if(buff!="0") art->references()->from7BitString(buff.copy());
 
       buff=f.readLine();
-      if (sscanf(buff,"%d %d %u %d", &id, &lines, (uint*) &timeT, &fileFormatVersion) < 4)
+      if (sscanf(buff,"%d %d %u %d", &id, &lines, &timeT, &fileFormatVersion) < 4)
         fileFormatVersion = 0;          // KNode <= 0.4 had no version number
       art->setId(id);
       art->lines()->setNumberOfLines(lines);
