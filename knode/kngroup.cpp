@@ -188,7 +188,7 @@ bool KNGroup::loadHdrs()
   QByteArray buffer, hdrValue;
   QFile f;
   int cnt=0, id, lines, fileFormatVersion, artNumber;
-  time_t timeT;//, fTimeT;
+  unsigned int timeT;
   KNRemoteArticle *art;
 
   QString dir(path());
@@ -243,7 +243,7 @@ bool KNGroup::loadHdrs()
         art->references()->from7BitString( buffer );
 
       buffer = f.readLine();
-      if ( sscanf( buffer, "%d %d %u %d", &id, &lines, (uint*) &timeT, &fileFormatVersion) < 4 )
+      if ( sscanf( buffer, "%d %d %u %d", &id, &lines, &timeT, &fileFormatVersion) < 4 )
         fileFormatVersion = 0;          // KNode <= 0.4 had no version number
       art->setId(id);
       art->lines()->setNumberOfLines(lines);
