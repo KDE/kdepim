@@ -36,6 +36,7 @@ class KDE_EXPORT SloxBase {
       LastSync,
       ObjectType,
       ObjectStatus,
+      CreatedBy,
       IncidenceTitle, // incidence fields
       Description,
       Participants,
