@@ -212,7 +212,7 @@ void SloxAccounts::readAccounts()
       tag = tag.right( tag.length() - ( tag.find( ':' ) + 1 ) );
       QString value = e.text();
       if ( tag == "uid" ) id = value;
-      else if ( tag == "mail" ) a.insertEmail( value );
+      else if ( tag == "mail" ) a.insertEmail( value, true );
       else if ( tag == "forename" ) a.setGivenName( value );
       else if ( tag == "surename" ) a.setFamilyName( value );
     }
