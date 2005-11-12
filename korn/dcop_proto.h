@@ -28,7 +28,6 @@ class KIO_Protocol;
 class KMailDrop;
 class Protocol;
 
-class Q3GroupBox;
 class QObject;
 class QStringList;
 class QWidget;

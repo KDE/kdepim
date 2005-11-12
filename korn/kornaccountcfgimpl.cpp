@@ -203,7 +203,7 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 	_groupBoxes = new QVector< QWidget* >( groupBoxes->count() );
 	for( it = groupBoxes->begin(); it != groupBoxes->end(); ++it )
 	{
-		(*_groupBoxes)[ counter ] = new Q3GroupBox( (*it), this->server_tab, "groupbox" );
+		(*_groupBoxes)[ counter ] = new QGroupBox( (*it), this->server_tab );
 		_vlayout->addWidget( _groupBoxes->at( counter ) );
 		++counter;
 	}

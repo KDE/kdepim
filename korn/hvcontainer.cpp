@@ -22,31 +22,39 @@
 
 #include <kdebug.h>
 
-#include <q3vbox.h>
+#include <qboxlayout.h>
+#include <qwidget.h>
 
 HVContainer::HVContainer( Qt::Orientation orientation, QObject * parent, const char * name )
 	: BoxContainer( parent, name ),
-	box( 0 )	
+	widget( 0 ),
+	layout( 0 )	
 {
+	widget = new QWidget();
 	if( orientation == Qt::Horizontal )
-		box = new Q3HBox( 0, "hbox" );
+		layout = new QHBoxLayout();
 	else
-		box = new Q3VBox( 0, "vbox" );
+		layout = new QVBoxLayout();
+	widget->setLayout( layout );
 }
 
 HVContainer::~HVContainer()
 {
-	delete box;
+	delete layout;
+	delete widget;
 }
 
 void HVContainer::showBox()
 {
-	box->show();
+	widget->resize( widget->sizeHint() );
+	widget->show();
 }
 	
 BoxContainerItem* HVContainer::newBoxInstance() const
 {
-	return new HVItem( box, "horizontal/vertical item" );
+	HVItem *item = new HVItem( widget, "horizontal/vertical item" );
+	layout->addWidget( item->getLabel(), 0 );
+	return item;
 }
 
 #include "hvcontainer.moc"

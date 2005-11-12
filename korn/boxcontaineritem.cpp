@@ -40,7 +40,7 @@
 #include <qcolor.h>
 #include <qfont.h>
 #include <qdatetime.h>
-#include <q3grid.h>
+#include <qgridlayout.h>
 #include <qlabel.h>
 #include <qpainter.h>
 #include <qpixmap.h>
@@ -221,21 +221,26 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject
 		
 	KVBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( objId().data() ).arg( accountName )
 			.arg( total ), "", QPixmap(), 0 );
-	Q3Grid *mainglayout = new Q3Grid( date ? 3 : 2 ,mainvlayout, "Grid-Layout" );
+	QWidget *mainglayout_wid = new QWidget( mainvlayout );
+	QGridLayout *mainglayout = new QGridLayout( mainglayout_wid );
 	
-	QLabel *title = new QLabel( "From", mainglayout, "from_label" );
+	QLabel *title = new QLabel( "From", mainglayout_wid, "from_label" );
+	mainglayout->addWidget( title, 0, 0 );
 	QFont font = title->font();
 	font.setBold( true );
 	title->setFont( font );
 		
-	title = new QLabel( "Subject", mainglayout, "subject_label" );
+	title = new QLabel( "Subject", mainglayout_wid, "subject_label" );
+	mainglayout->addWidget( title, 0, 1 );
 	font = title->font();
 	font.setBold( true );
 	title->setFont( font );
 		
+	//Display only column 3 if 'date' is true.
 	if( date )
 	{
-		title = new QLabel( "Date", mainglayout, "date_label" );
+		title = new QLabel( "Date", mainglayout_wid, "date_label" );
+		mainglayout->addWidget( title, 0, 2 );
 		font = title->font();
 		font.setBold( true );
 		title->setFont( font );
@@ -243,13 +248,14 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject
 	
 	for( int xx = 0; xx < list->size(); ++xx )
 	{
-		new QLabel( list->at( xx ).getSender(), mainglayout, "from-value" );
-		new QLabel( list->at( xx ).getSubject(), mainglayout, "subject-value" );
+		//Make a label, add it to the layout and place it into the right position.
+		mainglayout->addWidget( new QLabel( list->at( xx ).getSender(), mainglayout_wid, "from-value" ), xx + 1, 0 );
+		mainglayout->addWidget( new QLabel( list->at( xx ).getSubject(), mainglayout_wid, "subject-value" ), xx + 1, 1 );
 		if( date )
 		{
 			QDateTime tijd;
 			tijd.setTime_t( list->at( xx ).getDate() );
-			new QLabel( tijd.toString(), mainglayout, "date-value" );
+			mainglayout->addWidget( new QLabel( tijd.toString(), mainglayout_wid, "date-value" ), xx + 1, 2 );
 		}
 	}
 	

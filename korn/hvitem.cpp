@@ -29,6 +29,7 @@
 #include <kstdaction.h>
 
 #include <qcursor.h>
+#include <qlabel.h>
 #include <qlist.h>
 #include <qtooltip.h>
 #include <QIcon>
@@ -57,6 +58,11 @@ HVItem::~HVItem()
 void HVItem::showBox()
 {
 	_label->show();
+}
+
+QLabel* HVItem::getLabel() const
+{
+	return _label;
 }
 	
 void HVItem::setCount( const int count, const bool newMessages )

@@ -23,7 +23,8 @@
 
 class BoxContainerItem;
 
-class Q3HBox;
+class QBoxLayout;
+class QWidget;
 
 /**
  * This is a BoxContainer for both Horizontal and Vertical displays.
@@ -52,7 +53,8 @@ protected:
 	 */
 	virtual BoxContainerItem* newBoxInstance() const;
 private:
-	Q3HBox *box;
+	QWidget *widget;
+	QBoxLayout *layout;
 };
 
 #endif //MK_HVCONTAINER_H

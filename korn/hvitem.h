@@ -41,6 +41,13 @@ public:
 	 */
 	virtual void showBox();
 	
+	/**
+	 * This function can be used to get the label belonging to this item.
+	 * This is for example used to add the label to a layout.
+	 *
+	 * @return The label of this item
+	 */
+	QLabel* getLabel() const;
 public slots:
 	/**
 	 * Sets the number of new messages.

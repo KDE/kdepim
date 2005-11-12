@@ -168,6 +168,13 @@ int DCOPDrop::addMessage( const QString& subject, const QString& message )
 	_msgList->insert( id->getId(), mailsubject );
 	
 	emit changed( _msgList->count(), this );
+
+	if( passivePopup() )
+	{
+		QList< KornMailSubject > list;
+		list.append( *mailsubject );
+		emit showPassivePopup( &list, 1, passiveDate(), this->realName() );
+	}
 	
 	return _counter - 1;
 }
