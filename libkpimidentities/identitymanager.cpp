@@ -1,6 +1,3 @@
-//Added by qt3to4:
-#include <Q3ValueList>
-#include <Q3CString>
 /*  -*- mode: C++; c-file-style: "gnu" -*-
     identitymanager.cpp
 
@@ -38,6 +35,9 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 
 #include "identitymanager.h"
 
@@ -59,13 +59,13 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 
 using namespace KPIM;
 
-static Q3CString newDCOPObjectName()
+static DCOPCString newDCOPObjectName()
 {
     static int s_count = 0;
-    Q3CString name( "KPIM::IdentityManager" );
+    DCOPCString name( "KPIM::IdentityManager" );
     if ( s_count++ ) {
       name += '-';
-      name += Q3CString().setNum( s_count );
+      name += DCOPCString().setNum( s_count );
     }
     return name;
 }
