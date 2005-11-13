@@ -22,8 +22,6 @@
 #include <kdebug.h>
 
 #include "network.h"
-//Added by qt3to4:
-#include <Q3CString>
 
 Network::Network( const QString name, NetworkStatus::Properties properties )
 	: m_name( name )
