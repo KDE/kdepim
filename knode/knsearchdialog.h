@@ -12,8 +12,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KNSEARCHDIALOG_H
-#define KNSEARCHDIALOG_H
+#ifndef KNODE_SEARCHDIALOG_H
+#define KNODE_SEARCHDIALOG_H
 
 #include <kdialogbase.h>
 

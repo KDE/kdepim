@@ -1,8 +1,6 @@
 /*
-    knarticlefilter.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -30,6 +28,8 @@ namespace KNode {
   class SearchDialog;
 }
 
+
+/** Article filter. */
 class KNArticleFilter {
 
   friend class KNFilterManager;
@@ -38,7 +38,8 @@ class KNArticleFilter {
 
   public:
     KNArticleFilter(int id=-1);
-    KNArticleFilter(const KNArticleFilter& org);   // constructs a copy of org
+    /// Copy constructor
+    KNArticleFilter(const KNArticleFilter& org);
     ~KNArticleFilter();
 
     bool loadInfo();
@@ -51,7 +52,8 @@ class KNArticleFilter {
     int id()const                        { return i_d; }
     int applyOn()                   { return static_cast<int>(apon); }
     const QString& name()           { return n_ame; }
-    QString translatedName();        // *tries* to translate the name
+    /// *tries* to translate the name
+    QString translatedName();
     bool isEnabled()const                { return e_nabled; }
     bool loaded()const                   { return l_oaded; }
     bool isSearchFilter()const           { return s_earchFilter; }
@@ -60,7 +62,8 @@ class KNArticleFilter {
     void setApplyOn(int i)          { apon=(ApOn)i; }
     void setLoaded(bool l)          { l_oaded=l; }
     void setName(const QString &s)  { n_ame=s; }
-    void setTranslatedName(const QString &s);     // *tries* to retranslate the name to english
+    /// *tries* to retranslate the name to english
+    void setTranslatedName(const QString &s);
     void setEnabled(bool l)         { e_nabled=l; }
     void setSearchFilter(bool b)    { s_earchFilter = b; }
 
@@ -75,9 +78,9 @@ class KNArticleFilter {
     bool l_oaded, e_nabled, translateName, s_earchFilter;
     ApOn apon;
 
-    KNStatusFilter status;
-    KNRangeFilter score, age, lines;
-    KNStringFilter subject, from, messageId, references;
+    KNode::StatusFilter status;
+    KNode::RangeFilter score, age, lines;
+    KNode::StringFilter subject, from, messageId, references;
 };
 
 #endif

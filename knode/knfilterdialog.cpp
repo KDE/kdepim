@@ -19,6 +19,7 @@
 #include <QVBoxLayout>
 #include <Q3Frame>
 #include <QGridLayout>
+#include <QGroupBox>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -39,7 +40,7 @@ KNFilterDialog::KNFilterDialog( KNArticleFilter *f, QWidget *parent )
 {
   QFrame* page=plainPage();
 
-  Q3GroupBox *gb=new Q3GroupBox(page);
+  QGroupBox *gb = new QGroupBox( page );
   fname=new KLineEdit(gb);
   QLabel *l1=new QLabel(fname, i18n("Na&me:"), gb);
   apon=new QComboBox(gb);

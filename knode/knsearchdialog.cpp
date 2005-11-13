@@ -26,7 +26,7 @@
 using namespace KNode;
 
 KNode::SearchDialog::SearchDialog( searchType type, QWidget *parent ) :
-  KDialogBase( parent, 0, true, i18n("Find Articles"),
+  KDialogBase( parent, 0, false, i18n("Find Articles"),
                User1 | User2 | Close, User1, false,
                KGuiItem( i18n("&Search"), "mail_find" ),
                KGuiItem( i18n("C&lear"), "editclear" ) )

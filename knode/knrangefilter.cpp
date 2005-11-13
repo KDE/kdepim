@@ -12,20 +12,19 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include <QHBoxLayout>
 #include <qlabel.h>
-#include <qlayout.h>
 #include <qcheckbox.h>
 #include <qcombobox.h>
-//Added by qt3to4:
-#include <QGridLayout>
 
-#include <ksimpleconfig.h>
 #include <knuminput.h>
+#include <ksimpleconfig.h>
 
 #include "knrangefilter.h"
 
+using namespace KNode;
 
-bool KNRangeFilter::doFilter(int a)
+bool KNode::RangeFilter::doFilter( int a )
 {
   bool ret=true;
   if(enabled) {
@@ -52,7 +51,7 @@ bool KNRangeFilter::doFilter(int a)
 
 
 
-bool KNRangeFilter::matchesOp(int v1, Op o, int v2)
+bool KNode::RangeFilter::matchesOp( int v1, Op o, int v2 )
 {
   bool ret=false;
 
@@ -70,7 +69,7 @@ bool KNRangeFilter::matchesOp(int v1, Op o, int v2)
 
 
 
-void KNRangeFilter::load(KSimpleConfig *conf)
+void KNode::RangeFilter::load( KSimpleConfig *conf )
 {
   enabled=conf->readBoolEntry("enabled", false);
   val1=conf->readNumEntry("val1",0);
@@ -81,7 +80,7 @@ void KNRangeFilter::load(KSimpleConfig *conf)
 
 
 
-void KNRangeFilter::save(KSimpleConfig *conf)
+void KNode::RangeFilter::save( KSimpleConfig *conf )
 {
   conf->writeEntry("enabled", enabled);
   conf->writeEntry("val1", val1);
@@ -94,45 +93,41 @@ void KNRangeFilter::save(KSimpleConfig *conf)
 
 
 //=====================================================================================
-//=====================================================================================
 
-KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max, QWidget* parent, const QString &unit)
-  : Q3GroupBox(value, parent)
+KNode::RangeFilterWidget::RangeFilterWidget( const QString& value, int min, int max,
+                                             QWidget* parent, const QString &unit )
+  : QGroupBox( value, parent )
 {
-  enabled=new QCheckBox(this);
+  QHBoxLayout *layout = new QHBoxLayout( this );
 
-  val1=new KIntSpinBox(min, max, 1, min, this);
-  val1->setSuffix(unit);
-  val2=new KIntSpinBox(min, max, 1, min, this);
-  val2->setSuffix(unit);
+  enabled = new QCheckBox( this );
+  layout->addWidget( enabled );
 
-  op1=new QComboBox(this);
+  val1 = new KIntSpinBox( min, max, 1, min, this );
+  val1->setSuffix( unit );
+  layout->addWidget( val1 );
+
+  op1 = new QComboBox( this );
   op1->insertItem("<");
   op1->insertItem("<=");
   op1->insertItem("=");
   op1->insertItem(">=");
   op1->insertItem(">");
-  op2=new QComboBox(this);
+  layout->addWidget( op1 );
+
+  des = new QLabel( value, this );
+  des->setAlignment( Qt::AlignCenter );
+  layout->addWidget( des );
+
+  op2 = new QComboBox( this );
   op2->insertItem("");
   op2->insertItem("<");
   op2->insertItem("<=");
+  layout->addWidget( op2 );
 
-  des=new QLabel(value, this);
-  des->setAlignment( Qt::AlignCenter );
-
-  QGridLayout *topL=new QGridLayout(this, 2,6, 8,5 );
-
-  topL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  topL->addWidget(enabled,1,0, Qt::AlignHCenter);
-  topL->addColSpacing(0, 30);
-  topL->addWidget(val1,1,1);
-  topL->addWidget(op1,1,2);
-  topL->addWidget(des,1,3);
-  topL->addColSpacing(3, 45);
-  topL->addWidget(op2,1,4);
-  topL->addWidget(val2,1,5);
-  topL->setColStretch(1,1);
-  topL->setColStretch(5,1);
+  val2 = new KIntSpinBox( min, max, 1, min, this );
+  val2->setSuffix( unit );
+  layout->addWidget( val2 );
 
   connect(op1, SIGNAL(activated(int)), SLOT(slotOp1Changed(int)));
   connect(op2, SIGNAL(activated(int)), SLOT(slotOp2Changed(int)));
@@ -143,25 +138,25 @@ KNRangeFilterWidget::KNRangeFilterWidget(const QString& value, int min, int max,
 
 
 
-KNRangeFilterWidget::~KNRangeFilterWidget()
+KNode::RangeFilterWidget::~RangeFilterWidget()
 {
 }
 
 
 
-KNRangeFilter KNRangeFilterWidget::filter()
+RangeFilter KNode::RangeFilterWidget::filter()
 {
-  KNRangeFilter r;
+  RangeFilter r;
   r.val1=val1->value();
   r.val2=val2->value();
 
-  r.op1=(KNRangeFilter::Op) op1->currentItem();
+  r.op1=(RangeFilter::Op) op1->currentItem();
   if (op2->currentText().isEmpty())
-    r.op2=KNRangeFilter::dis;
+    r.op2 = RangeFilter::dis;
   else if (op2->currentText()=="<")
-    r.op2=KNRangeFilter::gt;
+    r.op2 = RangeFilter::gt;
   else if (op2->currentText()=="<=")
-    r.op2=KNRangeFilter::gtoeq;
+    r.op2 = RangeFilter::gtoeq;
 
   r.enabled=enabled->isChecked();
 
@@ -170,17 +165,17 @@ KNRangeFilter KNRangeFilterWidget::filter()
 
 
 
-void KNRangeFilterWidget::setFilter(KNRangeFilter &f)
+void KNode::RangeFilterWidget::setFilter( RangeFilter &f )
 {
   val1->setValue(f.val1);
   val2->setValue(f.val2);
 
   op1->setCurrentItem((int)f.op1);
-  if (f.op2 == KNRangeFilter::dis)
+  if ( f.op2 == RangeFilter::dis )
     op2->setCurrentItem(0);
-  else if (f.op2 == KNRangeFilter::gt)
+  else if ( f.op2 == RangeFilter::gt )
     op2->setCurrentItem(1);
-  else if (f.op2 == KNRangeFilter::gtoeq)
+  else if ( f.op2 == RangeFilter::gtoeq )
     op2->setCurrentItem(2);
 
   enabled->setChecked(f.enabled);
@@ -188,7 +183,7 @@ void KNRangeFilterWidget::setFilter(KNRangeFilter &f)
 
 
 
-void KNRangeFilterWidget::clear()
+void KNode::RangeFilterWidget::clear()
 {
   val1->setValue(val1->minValue());
   val2->setValue(val2->minValue());
@@ -197,9 +192,9 @@ void KNRangeFilterWidget::clear()
 
 
 
-void KNRangeFilterWidget::slotOp1Changed(int id)
+void KNode::RangeFilterWidget::slotOp1Changed( int id )
 {
-    bool state = (op1->isEnabled() && (id<2));
+  bool state = op1->isEnabled() && id < 2;
   op2->setEnabled(state);
   des->setEnabled(state);
   slotOp2Changed(op2->currentItem());
@@ -207,14 +202,14 @@ void KNRangeFilterWidget::slotOp1Changed(int id)
 
 
 
-void KNRangeFilterWidget::slotOp2Changed(int id)
+void KNode::RangeFilterWidget::slotOp2Changed( int id )
 {
   val2->setEnabled(op1->isEnabled() && (op1->currentItem()<2) && (id>0));
 }
 
 
 
-void KNRangeFilterWidget::slotEnabled(bool e)
+void KNode::RangeFilterWidget::slotEnabled( bool e )
 {
   op1->setEnabled(e);
   val1->setEnabled(e);
@@ -225,4 +220,3 @@ void KNRangeFilterWidget::slotEnabled(bool e)
 // -----------------------------------------------------------------------------
 
 #include "knrangefilter.moc"
-

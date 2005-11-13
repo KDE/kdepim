@@ -17,16 +17,16 @@
 
 #include <qtabwidget.h>
 
-class KNStatusFilterWidget;
-class KNStringFilterWidget;
-class KNRangeFilterWidget;
-
 namespace KNode {
+  class RangeFilterWidget;
   class SearchDialog;
+  class StatusFilterWidget;
+  class StringFilterWidget;
 }
 
-class KNFilterConfigWidget : public QTabWidget  {
-
+/** Filter configuration widget. */
+class KNFilterConfigWidget : public QTabWidget
+{
   Q_OBJECT
 
   friend class KNFilterDialog;
@@ -38,17 +38,18 @@ class KNFilterConfigWidget : public QTabWidget  {
 
     void reset();
 
-    void setStartFocus();      // useablity hack for the search dialog
+    /// useablity hack for the search dialog
+    void setStartFocus();
 
   protected:
-    KNStatusFilterWidget *status;
-    KNStringFilterWidget *subject;
-    KNStringFilterWidget *from;
-    KNStringFilterWidget *messageId;
-    KNStringFilterWidget *references;
-    KNRangeFilterWidget *age;
-    KNRangeFilterWidget *lines;
-    KNRangeFilterWidget *score;
+    KNode::StatusFilterWidget *status;
+    KNode::StringFilterWidget *subject;
+    KNode::StringFilterWidget *from;
+    KNode::StringFilterWidget *messageId;
+    KNode::StringFilterWidget *references;
+    KNode::RangeFilterWidget *age;
+    KNode::RangeFilterWidget *lines;
+    KNode::RangeFilterWidget *score;
 };
 
 #endif

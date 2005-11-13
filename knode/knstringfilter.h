@@ -12,10 +12,10 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KNSTRINGFILTER_H
-#define KNSTRINGFILTER_H
+#ifndef KNODE_STRINGFILTER_H
+#define KNODE_STRINGFILTER_H
 
-#include <q3groupbox.h>
+#include <QGroupBox>
 
 class QCheckBox;
 class QComboBox;
@@ -25,16 +25,18 @@ class KSimpleConfig;
 
 class KNGroup;
 
+namespace KNode {
 
-class KNStringFilter {
-
-  friend class KNStringFilterWidget;
+/** Filter for string values. */
+class StringFilter
+{
+  friend class StringFilterWidget;
 
   public:
-    KNStringFilter()  { con=true; regExp=false;}
-    ~KNStringFilter() {}
+    StringFilter()  { con=true; regExp=false;}
+    ~StringFilter() {}
 
-    KNStringFilter& operator=(const KNStringFilter &sf);
+    StringFilter& operator=( const StringFilter &sf );
     /** replace placeholders */
     void expand(KNGroup *g);
 
@@ -53,16 +55,21 @@ class KNStringFilter {
 //===============================================================================
 
 
-class KNStringFilterWidget : public Q3GroupBox  {
-
+/** Configuration widget for KNode::StringFilter. */
+class StringFilterWidget : public QGroupBox
+{
   Q_OBJECT
 
   public:
-    KNStringFilterWidget(const QString& title, QWidget *parent);
-    ~KNStringFilterWidget();
+    /** Create a new configuration widget for StringFilter.
+     * @param title Name of the value that is filtered.
+     * @param parent The parent widget.
+     */
+    StringFilterWidget( const QString& title, QWidget *parent );
+    ~StringFilterWidget();
 
-    KNStringFilter filter();
-    void setFilter(KNStringFilter &f);
+    StringFilter filter();
+    void setFilter( StringFilter &f );
     void clear();
 
     /** usablity hack for the search dialog */
@@ -75,6 +82,7 @@ class KNStringFilterWidget : public Q3GroupBox  {
 
 };
 
+}
 
 #endif
 

@@ -12,31 +12,42 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qlayout.h>
 #include <qcheckbox.h>
-//Added by qt3to4:
 #include <QGridLayout>
+
+#include <kdialog.h>
 #include <klocale.h>
 #include <ksimpleconfig.h>
 
 #include "knarticle.h"
 #include "knstatusfilter.h"
 
+#define EN_R  0
+#define EN_N  1
+#define EN_US 2
+#define EN_NS 3
 
-KNStatusFilter::KNStatusFilter()
+#define DAT_R   4
+#define DAT_N   5
+#define DAT_US  6
+#define DAT_NS  7
+
+using namespace KNode;
+
+KNode::StatusFilter::StatusFilter()
 {
   data.fill(false,8);
 }
 
 
 
-KNStatusFilter::~KNStatusFilter()
+KNode::StatusFilter::~StatusFilter()
 {
 }
 
 
 
-void KNStatusFilter::load(KSimpleConfig *conf)
+void KNode::StatusFilter::load( KSimpleConfig *conf )
 {
   data.setBit(EN_R, conf->readBoolEntry("EN_R", false));
   data.setBit(DAT_R, conf->readBoolEntry("DAT_R", false));
@@ -54,7 +65,7 @@ void KNStatusFilter::load(KSimpleConfig *conf)
 
 
 
-void KNStatusFilter::save(KSimpleConfig *conf)
+void KNode::StatusFilter::save( KSimpleConfig *conf )
 {
   conf->writeEntry("EN_R", data.at(EN_R));
   conf->writeEntry("DAT_R", data.at(DAT_R));
@@ -71,7 +82,7 @@ void KNStatusFilter::save(KSimpleConfig *conf)
 
 
 
-bool KNStatusFilter::doFilter(KNRemoteArticle *a)
+bool KNode::StatusFilter::doFilter( KNRemoteArticle *a )
 {
   bool ret=true;
 
@@ -94,11 +105,9 @@ bool KNStatusFilter::doFilter(KNRemoteArticle *a)
 
 //==============================================================================
 
-KNStatusFilterWidget::KNStatusFilterWidget(QWidget *parent) :
-  Q3ButtonGroup(0, parent)
+KNode::StatusFilterWidget::StatusFilterWidget( QWidget *parent ) :
+  QWidget( parent )
 {
-#warning Port me?
-//   setFrameStyle(NoFrame);
   enR=new QCheckBox(i18n("Is read:"), this);
   enN=new QCheckBox(i18n("Is new:"), this);
   enUS=new QCheckBox(i18n("Has unread followups:"), this);
@@ -109,28 +118,32 @@ KNStatusFilterWidget::KNStatusFilterWidget(QWidget *parent) :
   usCom=new TFCombo(this);
   nsCom=new TFCombo(this);
 
-  QGridLayout *topL=new QGridLayout(this, 5, 3, 15,5);
+  QGridLayout *topL = new QGridLayout( this );
+  topL->setSpacing( KDialog::spacingHint() );
   topL->addWidget(enR,0,0); topL->addWidget(rCom,0,1);
   topL->addWidget(enN,1,0); topL->addWidget(nCom,1,1);
   topL->addWidget(enUS,2,0); topL->addWidget(usCom,2,1);
   topL->addWidget(enNS,3,0); topL->addWidget(nsCom,3,1);
-  topL->setColStretch(2,1);
+  topL->setColumnStretch(2,1);
   topL->setRowStretch(4,1);
 
-  connect(this, SIGNAL(clicked(int)), this, SLOT(slotEnabled(int)));
+  connect( enR, SIGNAL(toggled(bool)), SLOT(slotEnabled()) );
+  connect( enN, SIGNAL(toggled(bool)), SLOT(slotEnabled()) );
+  connect( enUS, SIGNAL(toggled(bool)), SLOT(slotEnabled()) );
+  connect( enNS, SIGNAL(toggled(bool)), SLOT(slotEnabled()) );
 }
 
 
 
-KNStatusFilterWidget::~KNStatusFilterWidget()
+KNode::StatusFilterWidget::~StatusFilterWidget()
 {
 }
 
 
 
-KNStatusFilter KNStatusFilterWidget::filter()
+StatusFilter KNode::StatusFilterWidget::filter()
 {
-  KNStatusFilter f;
+  StatusFilter f;
 
   f.data.setBit(EN_R, enR->isChecked());
   f.data.setBit(DAT_R, rCom->value());
@@ -149,7 +162,7 @@ KNStatusFilter KNStatusFilterWidget::filter()
 
 
 
-void KNStatusFilterWidget::setFilter(KNStatusFilter &f)
+void KNode::StatusFilterWidget::setFilter( StatusFilter &f )
 {
   enR->setChecked(f.data.at(EN_R));
   rCom->setValue(f.data.at(DAT_R));
@@ -163,11 +176,11 @@ void KNStatusFilterWidget::setFilter(KNStatusFilter &f)
   enNS->setChecked(f.data.at(EN_NS));
   nsCom->setValue(f.data.at(DAT_NS));
 
-  for(int i=0; i<4; i++) slotEnabled(i);
+  slotEnabled();
 }
 
 
-void KNStatusFilterWidget::clear()
+void KNode::StatusFilterWidget::clear()
 {
   enR->setChecked(false);
   enN->setChecked(false);
@@ -178,27 +191,24 @@ void KNStatusFilterWidget::clear()
   nsCom->setValue(true);
   usCom->setValue(true);
 
-  for(int i=0; i<4; i++) slotEnabled(i);
+  slotEnabled();
 }
 
 
 
-void KNStatusFilterWidget::slotEnabled(int c)
+void KNode::StatusFilterWidget::slotEnabled()
 {
-  switch(c) {
-
-    case 0: rCom->setEnabled(enR->isChecked());     break;
-    case 1: nCom->setEnabled(enN->isChecked());     break;
-    case 2: usCom->setEnabled(enUS->isChecked());   break;
-    case 3: nsCom->setEnabled(enNS->isChecked());   break;
-  };
+  rCom->setEnabled( enR->isChecked() );
+  nCom->setEnabled( enN->isChecked() );
+  usCom->setEnabled( enUS->isChecked() );
+  nsCom->setEnabled( enNS->isChecked() );
 }
 
 
 //==============================================================================
 
 
-KNStatusFilterWidget::TFCombo::TFCombo(QWidget *parent) : QComboBox(parent)
+KNode::StatusFilterWidget::TFCombo::TFCombo( QWidget *parent ) : QComboBox( parent )
 {
   insertItem(i18n("True"));
   insertItem(i18n("False"));
@@ -206,7 +216,7 @@ KNStatusFilterWidget::TFCombo::TFCombo(QWidget *parent) : QComboBox(parent)
 
 
 
-KNStatusFilterWidget::TFCombo::~TFCombo()
+KNode::StatusFilterWidget::TFCombo::~TFCombo()
 {
 }
 
@@ -215,19 +225,3 @@ KNStatusFilterWidget::TFCombo::~TFCombo()
 //--------------------------------
 
 #include "knstatusfilter.moc"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

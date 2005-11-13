@@ -1,8 +1,6 @@
 /*
-    knstatusfilter.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -14,10 +12,9 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KNSTATUSFILTER_H
-#define KNSTATUSFILTER_H
+#ifndef KNODE_STATUSFILTER_H
+#define KNODE_STATUSFILTER_H
 
-#include <q3buttongroup.h>
 #include <qcombobox.h>
 #include <qbitarray.h>
 
@@ -25,16 +22,18 @@ class QCheckBox;
 class KSimpleConfig;
 class KNRemoteArticle;
 
+namespace KNode {
 
-class KNStatusFilter {
-
-  friend class KNStatusFilterWidget;
+/** Filter for article status flags. */
+class StatusFilter
+{
+  friend class StatusFilterWidget;
 
   public:
-    KNStatusFilter();
-    ~KNStatusFilter();
+    StatusFilter();
+    ~StatusFilter();
 
-    KNStatusFilter& operator=(const KNStatusFilter &sf)
+    StatusFilter& operator=( const StatusFilter &sf )
       { for(int i=0; i<8; i++) data.setBit(i, sf.data.at(i)); return (*this); }
 
     void load(KSimpleConfig *conf);
@@ -51,21 +50,23 @@ class KNStatusFilter {
 //=================================================================================
 
 
-class KNStatusFilterWidget : public Q3ButtonGroup  {
-
+/** Configuration widget for KNode::StatusFilter. */
+class StatusFilterWidget : public QWidget
+{
   Q_OBJECT
 
   public:
-    KNStatusFilterWidget(QWidget *parent);
-    ~KNStatusFilterWidget();
+    StatusFilterWidget( QWidget *parent );
+    ~StatusFilterWidget();
 
-    KNStatusFilter filter();
-    void setFilter(KNStatusFilter &f);
+    StatusFilter filter();
+    void setFilter( StatusFilter &f );
     void clear();
 
 
   protected:
 
+    /** Combobox to select a boolean value (true/false). */
     class TFCombo : public QComboBox {
 
       public:
@@ -80,20 +81,10 @@ class KNStatusFilterWidget : public Q3ButtonGroup  {
     TFCombo *rCom, *nCom, *usCom, *nsCom;
 
   protected slots:
-    void slotEnabled(int c);
+    void slotEnabled();
 
 };
 
-
-#define EN_R  0
-#define EN_N  1
-#define EN_US 2
-#define EN_NS 3
-
-#define DAT_R   4
-#define DAT_N   5
-#define DAT_US  6
-#define DAT_NS  7
-
+}
 
 #endif

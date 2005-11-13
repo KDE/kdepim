@@ -13,14 +13,13 @@
 */
 
 #include <qcombobox.h>
-#include <qlayout.h>
 #include <qcheckbox.h>
-//Added by qt3to4:
 #include <QGridLayout>
 
+#include <kdialog.h>
+#include <klineedit.h>
 #include <klocale.h>
 #include <ksimpleconfig.h>
-#include <klineedit.h>
 
 #include "kngroup.h"
 #include "knnntpaccount.h"
@@ -28,8 +27,9 @@
 #include "knconfigmanager.h"
 #include "knstringfilter.h"
 
+using namespace KNode;
 
-KNStringFilter& KNStringFilter::operator=(const KNStringFilter &sf)
+StringFilter& KNode::StringFilter::operator=( const StringFilter &sf )
 {
   con=sf.con;
   data=sf.data.copy();
@@ -40,7 +40,7 @@ KNStringFilter& KNStringFilter::operator=(const KNStringFilter &sf)
 
 
 
-bool KNStringFilter::doFilter(const QString &s)
+bool KNode::StringFilter::doFilter( const QString &s )
 {
   bool ret=true;
 
@@ -60,9 +60,9 @@ bool KNStringFilter::doFilter(const QString &s)
 
 
 // replace placeholders
-void KNStringFilter::expand(KNGroup *g)
+void KNode::StringFilter::expand( KNGroup *g )
 {
-  KNode::Identity *id = (g) ? g->identity() : 0;
+  Identity *id = (g) ? g->identity() : 0;
 
   if (!id) {
     id = (g) ? g->account()->identity() : 0;
@@ -77,7 +77,7 @@ void KNStringFilter::expand(KNGroup *g)
 
 
 
-void KNStringFilter::load(KSimpleConfig *conf)
+void KNode::StringFilter::load( KSimpleConfig *conf )
 {
   con=conf->readBoolEntry("contains", true);
   data=conf->readEntry("Data");
@@ -86,7 +86,7 @@ void KNStringFilter::load(KSimpleConfig *conf)
 
 
 
-void KNStringFilter::save(KSimpleConfig *conf)
+void KNode::StringFilter::save( KSimpleConfig *conf )
 {
   conf->writeEntry("contains", con);
   conf->writeEntry("Data", data);
@@ -96,8 +96,8 @@ void KNStringFilter::save(KSimpleConfig *conf)
 
 //===============================================================================
 
-KNStringFilterWidget::KNStringFilterWidget(const QString& title, QWidget *parent)
-  : Q3GroupBox(title, parent)
+KNode::StringFilterWidget::StringFilterWidget( const QString& title, QWidget *parent )
+  : QGroupBox( title, parent )
 {
   fType=new QComboBox(this);
   fType->insertItem(i18n("Does Contain"));
@@ -107,26 +107,25 @@ KNStringFilterWidget::KNStringFilterWidget(const QString& title, QWidget *parent
 
   regExp=new QCheckBox(i18n("Regular expression"), this);
 
-  QGridLayout *topL=new QGridLayout(this, 3,3, 8,5 );
-  topL->addRowSpacing(0, fontMetrics().lineSpacing()-4);
-  topL->addWidget(fType, 1,0);
-  topL->addColSpacing(1, 10);
-  topL->addWidget(regExp, 1,1);
-  topL->addMultiCellWidget(fString, 2,2, 0,2);
-  topL->setColStretch(2,1);
+  QGridLayout *topL = new QGridLayout( this );
+  topL->setSpacing( KDialog::spacingHint() );
+  topL->addWidget( fType, 0, 0 );
+  topL->addWidget( regExp, 0, 1 );
+  topL->addWidget( fString, 1, 0, 1, 2 );
+  topL->setColumnStretch( 2, 1 );
 }
 
 
 
-KNStringFilterWidget::~KNStringFilterWidget()
+KNode::StringFilterWidget::~StringFilterWidget()
 {
 }
 
 
 
-KNStringFilter KNStringFilterWidget::filter()
+KNode::StringFilter StringFilterWidget::filter()
 {
-  KNStringFilter ret;
+  StringFilter ret;
   ret.con=(fType->currentItem()==0);
   ret.data=fString->text();
   ret.regExp=regExp->isChecked();
@@ -136,7 +135,7 @@ KNStringFilter KNStringFilterWidget::filter()
 
 
 
-void KNStringFilterWidget::setFilter(KNStringFilter &f)
+void KNode::StringFilterWidget::setFilter( StringFilter &f )
 {
   if(f.con) fType->setCurrentItem(0);
   else fType->setCurrentItem(1);
@@ -146,7 +145,7 @@ void KNStringFilterWidget::setFilter(KNStringFilter &f)
 
 
 
-void KNStringFilterWidget::clear()
+void KNode::StringFilterWidget::clear()
 {
   fString->clear();
   fType->setCurrentItem(0);
@@ -154,7 +153,7 @@ void KNStringFilterWidget::clear()
 }
 
 
-void KNStringFilterWidget::setStartFocus()
+void KNode::StringFilterWidget::setStartFocus()
 {
   fString->setFocus();
 }
@@ -163,5 +162,3 @@ void KNStringFilterWidget::setStartFocus()
 // -----------------------------------------------------------------------------+
 
 #include "knstringfilter.moc"
-
-// kate: space-indent on; indent-width 2;
