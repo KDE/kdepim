@@ -25,13 +25,12 @@
 #include <qstringlist.h>
 //Added by qt3to4:
 #include <Q3ValueList>
-#include <Q3CString>
 #include <ksharedptr.h>
 #include "networkstatuscommon.h"
 
 struct NetworkUsageStruct
 {
-	Q3CString appId;
+	QByteArray appId;
 	QString host;
 };
 
@@ -43,26 +42,26 @@ public:
 	Network( const QString name, NetworkStatus::Properties properties );
 	Network( const Network & other );
 	NetworkStatus::EnumStatus reachabilityFor( const QString & host );
-	void registerUsage( const Q3CString appId, const QString host );
-	void unregisterUsage( const Q3CString appId, const QString host );
+	void registerUsage( const QByteArray appId, const QString host );
+	void unregisterUsage( const QByteArray appId, const QString host );
 	void setStatus( NetworkStatus::EnumStatus status );
 
 	void removeAllUsage();
 
-	NetworkStatus::EnumStatus status() { return m_status; }
-	QString name() { return m_name; }
-	bool internet() { return m_internet; }
-	QStringList netmasks() { return m_netmasks; }
-	Q3CString service() { return m_service; }
-	NetworkStatus::EnumOnDemandPolicy onDemandPolicy() { return m_onDemandPolicy; }
-	NetworkUsageList usage() { return m_usage; }
+	NetworkStatus::EnumStatus status() const { return m_status; }
+	QString name() const { return m_name; }
+	bool internet() const { return m_internet; }
+	QStringList netmasks() const { return m_netmasks; }
+	QByteArray service() const { return m_service; }
+	NetworkStatus::EnumOnDemandPolicy onDemandPolicy() const { return m_onDemandPolicy; }
+	NetworkUsageList usage() const { return m_usage; }
 	
 private:
 	NetworkStatus::EnumStatus m_status;
 	QString m_name;
 	bool m_internet;
 	QStringList m_netmasks;
-	Q3CString m_service;
+	QByteArray m_service;
 	NetworkStatus::EnumOnDemandPolicy m_onDemandPolicy;
 	NetworkUsageList m_usage;
 };

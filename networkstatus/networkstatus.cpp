@@ -24,8 +24,6 @@
 #include <q3dict.h>
 #include <qtimer.h>
 #include <q3valuelist.h>
-//Added by qt3to4:
-#include <Q3CString>
 
 #include <dcopclient.h>
 #include <kapplication.h>
@@ -37,7 +35,7 @@
 #include <kdepimmacros.h>
 
 extern "C" {
-	KDE_EXPORT KDEDModule* create_networkstatus( const Q3CString& obj )
+	KDE_EXPORT KDEDModule* create_networkstatus( const DCOPCString& obj )
 	{
 		return new NetworkStatusModule( obj );
 	}
@@ -58,13 +56,13 @@ public:
 
 // CTORS/DTORS
 
-NetworkStatusModule::NetworkStatusModule( const Q3CString & obj ) : KDEDModule( obj )
+NetworkStatusModule::NetworkStatusModule( const DCOPCString & obj ) : KDEDModule( obj )
 {
 	d = new Private;
 /*	d->clientIface = new ClientIfaceImpl( this );
 	d->serviceIface = new ServiceIfaceImpl( this );*/
-	connect( kapp->dcopClient(), SIGNAL( applicationRemoved( const Q3CString& ) ) , this, SLOT( unregisteredFromDCOP( const Q3CString& ) ) );
-	connect( kapp->dcopClient(), SIGNAL( applicationRegistered( const Q3CString& ) ) , this, SLOT( registeredToDCOP( const Q3CString& ) ) );
+	connect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QByteArray& ) ) , this, SLOT( unregisteredFromDCOP( const QByteArray& ) ) );
+	connect( kapp->dcopClient(), SIGNAL( applicationRegistered( const QByteArray& ) ) , this, SLOT( registeredToDCOP( const QByteArray& ) ) );
 }
 
 NetworkStatusModule::~NetworkStatusModule()
@@ -110,7 +108,7 @@ int NetworkStatusModule::request( const QString & host, bool userInitiated )
 		return NetworkStatus::Unavailable;
 	
 	NetworkStatus::EnumStatus status = p->status();
-	Q3CString appId = kapp->dcopClient()->senderId();
+	QByteArray appId = kapp->dcopClient()->senderId();
 	if ( status == NetworkStatus::Online )
 	{
 		p->registerUsage( appId, host );
@@ -159,7 +157,7 @@ int NetworkStatusModule::request( const QString & host, bool userInitiated )
 
 void NetworkStatusModule::relinquish( const QString & host )
 {
-	Q3CString appId = kapp->dcopClient()->senderId();
+	QByteArray appId = kapp->dcopClient()->senderId();
 	// find network currently used by app for host...
 	NetworkList::iterator end = d->networks.end();
 	NetworkList::iterator it = d->networks.begin();
@@ -216,11 +214,11 @@ Network * NetworkStatusModule::networkForHost( const QString & host )
 }
 
 
-void NetworkStatusModule::registeredToDCOP( const Q3CString & appId )
+void NetworkStatusModule::registeredToDCOP( const QByteArray & appId )
 {
 }
 
-void NetworkStatusModule::unregisteredFromDCOP( const Q3CString & appId )
+void NetworkStatusModule::unregisteredFromDCOP( const QByteArray & appId )
 {
 	// unregister any networks owned by a service that has just unregistered
 	NetworkList::iterator it = d->networks.begin();
