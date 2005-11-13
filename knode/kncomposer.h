@@ -30,7 +30,7 @@
 #include <QEvent>
 #include <QDropEvent>
 #include <QLabel>
-#include <Q3ValueList>
+#include <QList>
 #include <QContextMenuEvent>
 #include <Q3PopupMenu>
 #include <QDragEnterEvent>
@@ -123,7 +123,7 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     SpellingFilter* mSpellingFilter;
 
     //Attachments
-    Q3ValueList<KNAttachment*> mDeletedAttachments;
+    QList<KNAttachment*> mDeletedAttachments;
     Q3PtrList<KAction> m_listAction;
     bool a_ttChanged;
 
@@ -234,7 +234,7 @@ class KNComposer::ComposerView  : public QSplitter {
     void showExternalNotification();
     void hideExternalNotification();
     void restartBackgroundSpellCheck();
-    Q3ValueList<QWidget*> mEdtList;
+    QList<QWidget*> mEdtList;
 
     QLabel      *l_to,
                 *l_groups,

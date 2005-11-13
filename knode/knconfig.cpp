@@ -19,7 +19,6 @@
 #include <qtextcodec.h>
 //Added by qt3to4:
 #include <QPixmap>
-#include <Q3ValueList>
 #include <QTextStream>
 #include <Q3CString>
 
@@ -548,7 +547,7 @@ KNode::DisplayedHeaders::DisplayedHeaders()
     headers.sort();
 
     KNDisplayedHeader *h;
-    Q3ValueList<int> flags;
+    QList<int> flags;
 
     QStringList::Iterator it;
     for( it = headers.begin(); it != headers.end(); ++it ) {
@@ -598,7 +597,7 @@ void KNode::DisplayedHeaders::save()
   for( ;oldIt != oldHeaders.end(); ++oldIt )      // remove all old groups
     headerConf.deleteGroup((*oldIt));             // find a better way to do it?
 
-  Q3ValueList<int> flags;
+  QList<int> flags;
   int idx=0;
   QString group;
 

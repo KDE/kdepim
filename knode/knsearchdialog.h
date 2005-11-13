@@ -1,8 +1,6 @@
 /*
-    knsearchdialog.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -17,24 +15,27 @@
 #ifndef KNSEARCHDIALOG_H
 #define KNSEARCHDIALOG_H
 
-#include <qdialog.h>
-//Added by qt3to4:
-#include <QCloseEvent>
+#include <kdialogbase.h>
 
-class QPushButton;
+class QCloseEvent;
 
 class KNFilterConfigWidget;
 class KNArticleFilter;
 
+namespace KNode {
 
-class KNSearchDialog : public QDialog {
-
+/** Article search dialog. */
+class SearchDialog : public KDialogBase
+{
   Q_OBJECT
 
   public:
     enum searchType { STfolderSearch, STgroupSearch };
-    KNSearchDialog(searchType t=STgroupSearch, QWidget *parent=0);
-    ~KNSearchDialog();
+    /** Create a new article search dialog.
+     * @param parent The parent widget.
+     */
+    SearchDialog( searchType t = STgroupSearch, QWidget *parent = 0 );
+    ~SearchDialog();
 
     KNArticleFilter* filter() const  { return f_ilter; }
 
@@ -42,19 +43,22 @@ class KNSearchDialog : public QDialog {
     void closeEvent( QCloseEvent* e );
 
     KNFilterConfigWidget *fcw;
-    QPushButton *startBtn, *newBtn,  *closeBtn;
     QCheckBox *completeThreads;
     KNArticleFilter *f_ilter;
 
   protected slots:
-    void slotStartClicked();
-    void slotNewClicked();
-    void slotCloseClicked();
+    /** Search button clicked. */
+    void slotUser1();
+    /** Clear button clicked. */
+    void slotUser2();
+    void slotClose();
 
   signals:
     void doSearch(KNArticleFilter *);
     void dialogDone();
 
 };
+
+}
 
 #endif

@@ -1,8 +1,6 @@
 /*
-    knsearchdialog.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -14,79 +12,55 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qlayout.h>
 #include <qcheckbox.h>
-//Added by qt3to4:
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QCloseEvent>
 
 #include <klocale.h>
-#include <kapplication.h>
 #include <kiconloader.h>
-#include <kpushbutton.h>
-#include <kstdguiitem.h>
+#include <kvbox.h>
 
 #include "knfilterconfigwidget.h"
 #include "knarticlefilter.h"
 #include "utilities.h"
 #include "knsearchdialog.h"
 
+using namespace KNode;
 
-KNSearchDialog::KNSearchDialog(searchType /*t*/, QWidget *parent)
-  : QDialog(parent)
+KNode::SearchDialog::SearchDialog( searchType type, QWidget *parent ) :
+  KDialogBase( parent, 0, true, i18n("Find Articles"),
+               User1 | User2 | Close, User1, false,
+               KGuiItem( i18n("&Search"), "mail_find" ),
+               KGuiItem( i18n("C&lear"), "editclear" ) )
 {
-  setCaption(kapp->makeStdCaption( i18n("Search for Articles") ));
-  setIcon(SmallIcon("knode"));
-  Q3GroupBox *bg=new Q3GroupBox(this);
+  Q_UNUSED( type );
 
-  startBtn=new QPushButton(SmallIcon("mail_find"),i18n("Sea&rch"), bg);
-  startBtn->setDefault(true);
-  newBtn=new QPushButton(SmallIcon("editclear"),i18n("C&lear"), bg);
-  closeBtn=new KPushButton(KStdGuiItem::close(), bg);
+  setIcon( SmallIcon("knode") );
+  setButtonBoxOrientation( Qt::Vertical );
 
-  completeThreads=new QCheckBox(i18n("Sho&w complete threads"),this);
-  fcw=new KNFilterConfigWidget(this);
+  KVBox *filterBox = makeVBoxMainWidget();
+
+  completeThreads = new QCheckBox( i18n("Sho&w complete threads"), filterBox );
+  fcw = new KNFilterConfigWidget( filterBox );
   fcw->reset();
 
-  QHBoxLayout *topL=new QHBoxLayout(this, 5);
-  QVBoxLayout *filterL=new QVBoxLayout(this, 0, 5);
-  QVBoxLayout *btnL=new QVBoxLayout(bg, 8, 5);
+  f_ilter = new KNArticleFilter();
+  f_ilter->setLoaded( true );
+  f_ilter->setSearchFilter( true );
 
-  filterL->addWidget(completeThreads);
-  filterL->addWidget(fcw,1);
-
-  btnL->addWidget(startBtn);
-  btnL->addWidget(newBtn);
-  btnL->addStretch(1);
-  btnL->addWidget(closeBtn);
-
-  topL->addLayout(filterL, 1);
-  topL->addWidget(bg);
-
-  connect(startBtn, SIGNAL(clicked()), this, SLOT(slotStartClicked()));
-  connect(newBtn, SIGNAL(clicked()), this, SLOT(slotNewClicked()));
-  connect(closeBtn, SIGNAL(clicked()), this, SLOT(slotCloseClicked()));
-
-  f_ilter=new KNArticleFilter();
-  f_ilter->setLoaded(true);
-  f_ilter->setSearchFilter(true);
-
-  setFixedHeight(sizeHint().height());
-  KNHelper::restoreWindowSize("searchDlg", this, sizeHint());
+  setFixedHeight( sizeHint().height() );
+  KNHelper::restoreWindowSize( "searchDlg", this, sizeHint() );
   fcw->setStartFocus();
 }
 
 
 
-KNSearchDialog::~KNSearchDialog()
+KNode::SearchDialog::~SearchDialog()
 {
   delete f_ilter;
   KNHelper::saveWindowSize("searchDlg", size());
 }
 
 
-void KNSearchDialog::slotStartClicked()
+void KNode::SearchDialog::slotUser1()
 {
   f_ilter->status=fcw->status->filter();
   f_ilter->score=fcw->score->filter();
@@ -102,25 +76,23 @@ void KNSearchDialog::slotStartClicked()
 
 
 
-void KNSearchDialog::slotNewClicked()
+void KNode::SearchDialog::slotUser2()
 {
   fcw->reset();
 }
 
 
 
-void KNSearchDialog::slotCloseClicked()
+void KNode::SearchDialog::slotClose()
 {
   emit dialogDone();
 }
 
 
-void KNSearchDialog::closeEvent( QCloseEvent * )
+void KNode::SearchDialog::closeEvent( QCloseEvent * )
 {
   emit dialogDone();
 }
 
-//--------------------------------
 
 #include "knsearchdialog.moc"
-

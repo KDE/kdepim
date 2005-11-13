@@ -393,7 +393,7 @@ void KNArticleManager::search()
     s_earchDlg->show();
     KWin::activateWindow(s_earchDlg->winId());
   } else {
-    s_earchDlg=new KNSearchDialog(KNSearchDialog::STgroupSearch, 0);
+    s_earchDlg = new SearchDialog( SearchDialog::STgroupSearch, 0 );
     connect(s_earchDlg, SIGNAL(doSearch(KNArticleFilter*)), this,
       SLOT(slotFilterChanged(KNArticleFilter*)));
     connect(s_earchDlg, SIGNAL(dialogDone()), this,

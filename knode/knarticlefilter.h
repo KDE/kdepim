@@ -26,12 +26,15 @@ class KNLocalArticle;
 class KNGroup;
 class KNFolder;
 
+namespace KNode {
+  class SearchDialog;
+}
 
 class KNArticleFilter {
 
   friend class KNFilterManager;
   friend class KNFilterDialog;
-  friend class KNSearchDialog;
+  friend class KNode::SearchDialog;
 
   public:
     KNArticleFilter(int id=-1);

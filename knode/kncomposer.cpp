@@ -24,7 +24,6 @@
 #include <QTextStream>
 #include <Q3CString>
 #include <QContextMenuEvent>
-#include <Q3ValueList>
 #include <QVBoxLayout>
 #include <QDropEvent>
 #include <QDragEnterEvent>
@@ -415,7 +414,7 @@ KNComposer::~KNComposer()
     delete e_ditorTempfile;
   }
 
-  for ( Q3ValueList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
+  for ( QList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
     delete (*it);
 
   KConfig *conf = knGlobals.config();
@@ -796,7 +795,7 @@ bool KNComposer::applyChanges()
     }
   }
 
-  for ( Q3ValueList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
+  for ( QList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
     if ( (*it)->isAttached() )
       (*it)->detach( a_rticle );
 
@@ -1838,7 +1837,7 @@ KNComposer::ComposerView::~ComposerView()
 
     conf->writeEntry("Att_Splitter",sizes());   // save splitter pos
 
-    Q3ValueList<int> lst;                        // save header sizes
+    QList<int> lst;                        // save header sizes
     Q3Header *h=a_ttView->header();
     for (int i=0; i<5; i++)
       lst << h->sectionSize(i);
@@ -1850,12 +1849,12 @@ KNComposer::ComposerView::~ComposerView()
 
 void KNComposer::ComposerView::focusNextPrevEdit(const QWidget* aCur, bool aNext)
 {
-  Q3ValueList<QWidget*>::Iterator it;
+  QList<QWidget*>::Iterator it;
 
   if ( !aCur ) {
     it = --( mEdtList.end() );
   } else {
-    for ( Q3ValueList<QWidget*>::Iterator it2 = mEdtList.begin(); it2 != mEdtList.end(); ++it2 ) {
+    for ( QList<QWidget*>::Iterator it2 = mEdtList.begin(); it2 != mEdtList.end(); ++it2 ) {
       if ( (*it2) == aCur ) {
         it = it2;
         break;
@@ -1962,14 +1961,14 @@ void KNComposer::ComposerView::showAttachmentView()
     KConfig *conf=knGlobals.config();
     conf->setGroup("POSTNEWS");
 
-    Q3ValueList<int> lst=conf->readIntListEntry("Att_Splitter");
+    QList<int> lst = conf->readIntListEntry("Att_Splitter");
     if(lst.count()!=2)
       lst << 267 << 112;
     setSizes(lst);
 
     lst=conf->readIntListEntry("Att_Headers");
     if(lst.count()==5) {
-      Q3ValueList<int>::Iterator it=lst.begin();
+      QList<int>::Iterator it = lst.begin();
 
       Q3Header *h=a_ttView->header();
       for(int i=0; i<5; i++) {

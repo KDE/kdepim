@@ -32,8 +32,11 @@ class KNGroup;
 class KNFolder;
 class KNArticleFilter;
 class KNFilterManager;
-class KNSearchDialog;
 class KNJobData;
+
+namespace KNode {
+  class SearchDialog;
+}
 
 
 /** Article manager. */
@@ -96,8 +99,13 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     void setView(KNHeaderView* v);
 
   signals:
-    // signals for the header view to adapt to the upcoming content
+    /** A newsgroup is about to be shown in the header view.
+     * Connect to the header view to adapt to the upcoming content.
+     */
     void aboutToShowGroup();
+    /** A local folder is about to be shown in the header view.
+     * Connect to the header view to adapt to the upcoming content.
+     */
     void aboutToShowFolder();
 
   protected:
@@ -110,7 +118,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     KNFolder *f_older;
     KNArticleFilter *f_ilter;
     KNFilterManager *f_ilterMgr;
-    KNSearchDialog *s_earchDlg;
+    KNode::SearchDialog *s_earchDlg;
     QList<KTempFile*> mTempFiles;
     bool d_isableExpander;
 

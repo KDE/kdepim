@@ -21,13 +21,16 @@ class KNStatusFilterWidget;
 class KNStringFilterWidget;
 class KNRangeFilterWidget;
 
+namespace KNode {
+  class SearchDialog;
+}
 
 class KNFilterConfigWidget : public QTabWidget  {
 
   Q_OBJECT
 
   friend class KNFilterDialog;
-  friend class KNSearchDialog;
+  friend class KNode::SearchDialog;
 
   public:
     KNFilterConfigWidget( QWidget *parent = 0 );
