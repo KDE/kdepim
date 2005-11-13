@@ -216,23 +216,23 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, QPtrList< KornMailSubj
 {
 	KPassivePopup *popup = new KPassivePopup( parent, "Passive popup" );
 		
-	QVBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( objId() ).arg( accountName )
+	QVBox *mainvlayout = popup->standardView( i18n( "KOrn - %1/%2 (total: %3)" ).arg( objId() ).arg( accountName )
 			.arg( total ), "", QPixmap(), 0 );
 	QGrid *mainglayout = new QGrid( date ? 3 : 2 ,mainvlayout, "Grid-Layout" );
 	
-	QLabel *title = new QLabel( "From", mainglayout, "from_label" );
+	QLabel *title = new QLabel( i18n("From"), mainglayout, "from_label" );
 	QFont font = title->font();
 	font.setBold( true );
 	title->setFont( font );
 		
-	title = new QLabel( "Subject", mainglayout, "subject_label" );
+	title = new QLabel( i18n("Subject"), mainglayout, "subject_label" );
 	font = title->font();
 	font.setBold( true );
 	title->setFont( font );
 		
 	if( date )
 	{
-		title = new QLabel( "Date", mainglayout, "date_label" );
+		title = new QLabel( i18n("Date"), mainglayout, "date_label" );
 		font = title->font();
 		font.setBold( true );
 		title->setFont( font );
