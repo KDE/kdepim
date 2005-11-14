@@ -442,7 +442,7 @@ bool readBrushNode( const QDomElement& element, QBrush& brush )
 bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
 {
     bool ok = true;
-    int tempLength;
+    int tempLengthi;
     QString tempData;
     QDomNode node = element.firstChild();
     while( !node.isNull() ) {
@@ -457,7 +457,7 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
                     qDebug( "Unsupported pixmap format in XML file" );
 #endif
             } else if( tagName == "Length" ) {
-                ok = ok & readIntNode( element, tempLength );
+                ok = ok & readIntNode( element, tempLengthi );
             } else if( tagName == "Data" ) {
                 ok = ok & readStringNode( element, tempData );
             } else {
@@ -468,7 +468,7 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
     }
 
     if( ok ) {
-	if( 0 < tempLength ) {
+	if( 0 < tempLengthi ) {
             // Decode the image file format in the same way Qt Designer does.
             char *ba = new char[ tempData.length() / 2 ];
             for ( int i = 0; i < (int)tempData.length() / 2; ++i ) {
@@ -487,10 +487,11 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
                 ba[ i ] = r;
             }
 
-            if( tempLength < (int)tempData.length() * 5 )
-                tempLength = tempData.length() * 5;
+            if( tempLengthi < (int)tempData.length() * 5 )
+                tempLengthi = tempData.length() * 5;
+            unsigned long tempLength = tempLengthi;
             QByteArray baunzip( tempLength );
-            ::uncompress( (uchar*) baunzip.data(), (ulong*)&tempLength,
+            ::uncompress( (uchar*) baunzip.data(), &tempLength,
                           (uchar*) ba, tempData.length()/2 );
             QImage image;
             image.loadFromData( (const uchar*)baunzip.data(), tempLength, "XPM" );
