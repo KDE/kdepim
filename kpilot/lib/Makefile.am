@@ -31,7 +31,8 @@ kpilotincludedir = $(includedir)/kpilot
 kpilotinclude_HEADERS = kpilotlink.h uiDialog.h \
 	plugin.h pluginfactory.h syncAction.h \
 	pilotRecord.h pilotDatabase.h \
-	pilotLocalDatabase.h pilotSerialDatabase.h
+	pilotLocalDatabase.h pilotSerialDatabase.h \
+	pilotLinkVersion.h
 
 kde_kcfg_DATA = kpilotlib.kcfg
 
