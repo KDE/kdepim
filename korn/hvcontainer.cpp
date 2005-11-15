@@ -54,6 +54,7 @@ BoxContainerItem* HVContainer::newBoxInstance() const
 {
 	HVItem *item = new HVItem( widget, "horizontal/vertical item" );
 	layout->addWidget( item->getLabel(), 0 );
+	
 	return item;
 }
 

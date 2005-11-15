@@ -40,8 +40,6 @@ public:
 
 	virtual bool startMonitor();
 	virtual bool stopMonitor();
-	virtual bool startProcess() { return true; } //Start en stop-functions for progress; it is not pollable, but a member of kio
-	virtual bool stopProcess() { return true; }
 	
 	virtual bool running() { return _timerRunning; };
 

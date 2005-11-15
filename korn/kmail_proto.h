@@ -22,6 +22,8 @@
 
 #include "protocol.h"
 
+#include <qstring.h>
+
 class KConfig;
 class KConfigBase;
 

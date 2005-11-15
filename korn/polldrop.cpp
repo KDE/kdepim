@@ -29,8 +29,6 @@ bool KPollableDrop::startMonitor()
 		
 		_timerId = startTimer( _freq * 1000 );
 		_timerRunning = true;
-
-		return startProcess();
 	}
 
 	return false;
@@ -42,8 +40,6 @@ bool KPollableDrop::stopMonitor()
 		killTimer( _timerId );
 		_timerId = 0;
 		_timerRunning = false;
-
-		return stopProcess();
 	}
 
 	return false;

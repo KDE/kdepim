@@ -19,14 +19,36 @@
 
 #include "process_proto.h"
 
-#include <kdebug.h>
-
-#include <qlayout.h>
-#include <qlist.h>
-#include <qvector.h>
-#include <qstringlist.h>
-
 #include "account_input.h"
+#include "process_drop.h"
+
+#include <kconfig.h>
+#include <kdebug.h>
+#include <klocale.h>
+
+#include <qlist.h>
+#include <qmap.h>
+#include <qstringlist.h>
+#include <qvector.h>
+
+const Protocol* Process_Protocol::getProtocol( KConfigGroup* ) const
+{
+	return this;
+}
+
+KMailDrop* Process_Protocol::createMaildrop( KConfigGroup* ) const
+{
+	return new ProcessDrop();
+}
+
+QMap< QString, QString > * Process_Protocol::createConfig( KConfigGroup* config, const QString& ) const
+{
+	QMap< QString, QString > *result = new QMap< QString, QString >();
+	
+	result->insert( "program", config->readEntry( "program", "" ) );
+
+	return result;
+}
 
 void Process_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 {
@@ -35,14 +57,14 @@ void Process_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 
 void Process_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, QList< AccountInput* > *result ) const
 {
-	result->append( new URLInput( vector->at( 0 ), i18n( "Program:" ), "", "mailbox" ) );
+	result->append( new URLInput( vector->at( 0 ), i18n( "Program:" ), "", "program" ) );
 }
 
-void Process_Protocol::readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const
+void Process_Protocol::readEntries( QMap< QString, QString >* ) const
 {
 }
 
-void Process_Protocol::writeEntries( QMap< QString, QString >* map ) const
+void Process_Protocol::writeEntries( QMap< QString, QString >* ) const
 {
-	clearFields( map, (KIO_Protocol::Fields)( server | port | username | password | save_password | metadata ) );
 }
+

@@ -27,6 +27,7 @@ korn_SOURCES = \
   maildrop.cpp \
   main.cpp \
   polldrop.cpp \
+  process_drop.cpp \
   protocols.cpp \
   kornshell.cpp \
   subjectsdlg.cpp \
@@ -80,6 +81,7 @@ noinst_HEADERS = \
   korncfg.h \
   korncfgimpl.h \
   maildrop.h \
+  process_drop.h \
   progress_dialog.ui.h \
   protocols.h \
   kornshell.h \

@@ -189,19 +189,9 @@ private slots:
 	void slotConnectionWarning( const QString& );
 	void slotConnectionInfoMessage( const QString& );
 	
-protected:
-	//The next functions are needed for Process;
-	virtual bool startProcess();
-	virtual bool stopProcess();
-
 public slots:
 	virtual void readSubjectsCanceled();
 	virtual void readMailCanceled();
 	virtual void deleteMailsCanceled();
-	
-private slots:
-	//For Process too
-	void processExit(KProcess*);
-	void receivedStdout( KProcess *, char *, int);
 };
 #endif // KEG_KIODROP_H

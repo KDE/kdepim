@@ -243,9 +243,6 @@ QString KKioDrop::auth() const
 
 void KKioDrop::recheck()
 {
-	if( _protocol->configName() == "process" ) //Process isn't pollable
-		return;
-
 	_count->count( this );
 		
 	return;
@@ -253,9 +250,6 @@ void KKioDrop::recheck()
 
 void KKioDrop::forceRecheck()
 {
-	if( _protocol->configName() == "process" )
-		return;
-	
 	_count->stopActiveCount();
 	_count->count( this );
 
@@ -369,29 +363,7 @@ bool KKioDrop::readConfigGroup( const QMap< QString, QString > &map, const Proto
 
 bool KKioDrop::writeConfigGroup( KConfigBase& cfg ) const
 {
-	KPollableDrop::writeConfigGroup( cfg );
-	/*QString p;
-
-	if( _kurl->hasPass() ) {
-		p = _kurl->pass();
-		//encrypt ( p );
-	}
-
-	cfg.writeEntry(fu(ProtoConfigKey),   _protocol->configName() );
-	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::server )
-		cfg.writeEntry(fu(HostConfigKey),    _kurl->host()     );
-	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::port )
-		cfg.writeEntry(fu(PortConfigKey),    _kurl->port()     );
-	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::username )
-		cfg.writeEntry(fu(UserConfigKey),    _kurl->user() );
-	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::mailbox )
-		cfg.writeEntry(fu(MailboxConfigKey), _kurl->path()     );
-	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::password )
-		cfg.writeEntry(fu(PassConfigKey), p );
-	if( ( _protocol->fields() | _protocol->urlFields() ) & KIO_Protocol::auth )
-		cfg.writeEntry(fu(AuthConfigKey), auth() );
-	*/
-	return true;
+	return KPollableDrop::writeConfigGroup( cfg );
 }
 
 KKioDrop& KKioDrop::operator = ( const KKioDrop& other )
@@ -437,109 +409,6 @@ void KKioDrop::slotConnectionWarning( const QString& msg )
 void KKioDrop::slotConnectionInfoMessage( const QString& msg )
 {
 	kdDebug() << msg << endl; //Display only in debug modes
-}
-
-//Private slots
-
-//The next functions are needed for process maildrops.
-bool KKioDrop::startProcess()
-{ //code copyied from edrop.cpp
-	
-	if( _protocol->configName() != "process" )
-		return true;
-
-	if( _process != 0 ) {
-		return false;
-	}
-
-	//      debug( "proc start: %s", _command.data() );
-
-	_process = new KProcess;
-	_process->setUseShell( true );
-
-	// only reading stdin yet
-	
-	connect( _process,SIGNAL(receivedStdout( KProcess *, char *, int)),
-		 this, SLOT(receivedStdout( KProcess *,char *,int)) );
-	connect( _process, SIGNAL(processExited(KProcess*)),
-		 this, SLOT(processExit(KProcess*)) );
-	*_process << _kurl->path();
-	_process->start( KProcess::NotifyOnExit, KProcess::Stdout );
-
-	return true;
-}
-
-bool KKioDrop::stopProcess()
-{ //code copied from edrop.cpp
-	if( _protocol->configName() != "process" )
-		return true;
-		
-	if( _process != 0 ) {
-	 	//              debug( "proc stop" );
-		_process->kill( SIGHUP );
-		delete _process;
-		_process = 0;
-	}
-
-	return true;
-}
-
-void KKioDrop::receivedStdout( KProcess *proc, char * buffer, int /*len*/ )
-{
-	assert(static_cast<void *>(proc) == static_cast<void *>(_process));
-
-	//Original code
-	/*char *buf = new char[ len + 1 ];
-	memcpy( buf, buffer, len );
-	buf[ len ] = '\0';
-
-	char *ptr = buf, *start = buf;
-	int num = 0;
-
-	while( *ptr ) {
-		// find number
-		while( *ptr && !isdigit( *ptr ) ) {
-			ptr++;
-		}
-		start = ptr;
-		if( *ptr == 0 ) {
-			break;
-		}
-
-		// find end
-		while( *ptr && isdigit( *ptr ) ) {
-			ptr++;
-		}
-
-		// atoi number
-		char back = *ptr;
-		*ptr = 0;
-		num = atoi( start );
-		*ptr = back;
-	}
-
-	emit changed( num );
-	delete [] buf;*/
-
-	//Alternatieve code
-	QString buf = buffer;
-	QRegExp regexp( "^(.*\\D+|\\D*)(\\d+)\\D*$" );
-
-	if( regexp.search( buf ) == 0 )
-	{ //Number found
-		emit changed( regexp.cap( 2 ).toInt(), this );
-	}
-
-	
-}
-
-void KKioDrop::processExit(KProcess* proc)
-{
-	assert(static_cast<void *>(proc) == static_cast<void *>(_process));
-
-	_process = 0;
-
-//      debug( "proc exited" );
 }
 
 const char *KKioDrop::ProtoConfigKey = "protocol";
