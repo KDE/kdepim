@@ -73,8 +73,8 @@ static const KJanusWidget::Face determineJanusFace( const Kleo::CryptoConfig * c
     : KJanusWidget::IconList ;
 }
 
-Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent, const char * name )
-  : KJanusWidget( parent, name, determineJanusFace( config ) ), mConfig( config )
+Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent )
+  : KJanusWidget( parent, determineJanusFace( config ) ), mConfig( config )
 {
   QWidget * vbox = 0;
   if ( face() == Plain ) {

@@ -49,7 +49,7 @@ namespace Kleo {
   class CryptoConfigModule : public KJanusWidget {
     Q_OBJECT
   public:
-    CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0, const char * name=0 );
+    CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0 );
 
     void save();
     void reset(); // i.e. reload current settings, discarding user input
