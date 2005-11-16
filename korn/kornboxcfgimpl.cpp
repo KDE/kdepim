@@ -373,7 +373,8 @@ void KornBoxCfgImpl::slotCancel()
 void KornBoxCfgImpl::slotDialogDestroyed()
 {
 	_base->deleteLater(); _base = 0;
-	_group->deleteLater();
+#warning "kde4: now kconfig is not a QObject";
+	//_group->deleteLater();
 	elbAccounts->setEnabled( true );
 }
 

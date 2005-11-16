@@ -142,3 +142,5 @@ void ProcessDrop::slotDataReceived( KProcess *proc, char* data, int length )
 	}
 }
 
+
+#include "process_drop.moc"
