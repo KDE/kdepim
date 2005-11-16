@@ -124,7 +124,7 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
 
     //Attachments
     QList<KNAttachment*> mDeletedAttachments;
-    Q3PtrList<KAction> m_listAction;
+    QList<KAction*> m_listAction;
     bool a_ttChanged;
 
   //------------------------------ <Actions> -----------------------------

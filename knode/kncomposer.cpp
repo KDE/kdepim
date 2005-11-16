@@ -187,7 +187,6 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 {
     mSpellingFilter = 0;
     spellLineEdit = false;
-    m_listAction.setAutoDelete( true );
 
   if( knGlobals.instance() )
     setInstance( knGlobals.instance() );
@@ -420,12 +419,14 @@ KNComposer::~KNComposer()
   KConfig *conf = knGlobals.config();
   conf->setGroup("composerWindow_options");
   saveMainWindowSettings(conf);
+  qDeleteAll( m_listAction );
 }
 
 int KNComposer::listOfResultOfCheckWord( const QStringList & lst , const QString & selectWord)
 {
     createGUI("kncomposerui.rc",  false);
     unplugActionList("spell_result" );
+    qDeleteAll( m_listAction );
     m_listAction.clear();
     if ( !lst.contains( selectWord ) )
     {
