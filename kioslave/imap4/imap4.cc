@@ -459,7 +459,6 @@ IMAP4Protocol::listDir (const KURL & _url)
     {
       QString mailboxName;
       UDSEntry entry;
-      UDSAtom atom;
       KURL aURL = _url;
       if (aURL.path().find(';') != -1)
         aURL.setPath(aURL.path().left(aURL.path().find(';')));
@@ -1680,11 +1679,8 @@ IMAP4Protocol::stat (const KURL & _url)
         aInfo, true);
 
   UDSEntry entry;
-  UDSAtom atom;
 
-  atom.m_uds = UDS_NAME;
-  atom.m_str = aBox;
-  entry.append (atom);
+  entry.insert( UDS_NAME, aBox);
 
   if (!aSection.isEmpty())
   {
@@ -1733,11 +1729,8 @@ IMAP4Protocol::stat (const KURL & _url)
     if ((aSection == "UIDNEXT" && getStatus().uidNextAvailable())
       || (aSection == "UNSEEN" && getStatus().unseenAvailable()))
     {
-      atom.m_uds = UDS_SIZE;
-      atom.m_str = QString::null;
-      atom.m_long = (aSection == "UIDNEXT") ? getStatus().uidNext()
-        : getStatus().unseen();
-      entry.append(atom);
+	entry.insert( UDS_SIZE, (aSection == "UIDNEXT") ? getStatus().uidNext()
+			        : getStatus().unseen());
     }
   } else
   if (aType == ITYPE_BOX || aType == ITYPE_DIR_AND_BOX || aType == ITYPE_MSG ||
@@ -1788,34 +1781,23 @@ IMAP4Protocol::stat (const KURL & _url)
     }
   }
 
-  atom.m_uds = UDS_MIME_TYPE;
-  atom.m_str = getMimeType (aType);
-  entry.append (atom);
+  entry.insert( UDS_MIME_TYPE,getMimeType (aType));
 
-  kdDebug(7116) << "IMAP4: stat: " << atom.m_str << endl;
+  //kdDebug(7116) << "IMAP4: stat: " << atom.m_str << endl;
   switch (aType)
   {
   case ITYPE_DIR:
-    atom.m_uds = UDS_FILE_TYPE;
-    atom.m_str = QString::null;
-    atom.m_long = S_IFDIR;
-    entry.append (atom);
+	entry.insert( UDS_FILE_TYPE, S_IFDIR);
     break;
 
   case ITYPE_BOX:
   case ITYPE_DIR_AND_BOX:
-    atom.m_uds = UDS_FILE_TYPE;
-    atom.m_str = QString::null;
-    atom.m_long = S_IFDIR;
-    entry.append (atom);
+	entry.insert(UDS_FILE_TYPE, S_IFDIR);
     break;
 
   case ITYPE_MSG:
   case ITYPE_ATTACH:
-    atom.m_uds = UDS_FILE_TYPE;
-    atom.m_str = QString::null;
-    atom.m_long = S_IFREG;
-    entry.append (atom);
+	entry.insert(UDS_FILE_TYPE, S_IFREG);
     break;
 
   case ITYPE_UNKNOWN:
@@ -2091,57 +2073,39 @@ IMAP4Protocol::doListEntry (const QString & encodedUrl, int stretch, imapCache *
   if (cache)
   {
     UDSEntry entry;
-    UDSAtom atom;
 
     entry.clear ();
 
     const QString uid = QString::number(cache->getUid());
-
-    atom.m_uds = UDS_NAME;
-    atom.m_str = uid;
-    atom.m_long = 0;
+	QString tmp;
     if (stretch > 0)
     {
-      atom.m_str = "0000000000000000" + atom.m_str;
-      atom.m_str = atom.m_str.right (stretch);
+      tmp = "0000000000000000" + tmp;
+      tmp = tmp.right (stretch);
     }
     if (withSubject)
     {
       mailHeader *header = cache->getHeader();
       if (header)
-        atom.m_str += " " + header->getSubject();
+        tmp += " " + header->getSubject();
     }
-    entry.append (atom);
+    entry.insert (UDS_NAME,tmp);
 
-    atom.m_uds = UDS_URL;
-    atom.m_str = encodedUrl; // utf-8
-    if (atom.m_str[atom.m_str.length () - 1] != '/')
-      atom.m_str += '/';
-    atom.m_str += ";UID=" + uid;
-    atom.m_long = 0;
-    entry.append (atom);
+    tmp = encodedUrl; // utf-8
+    if (tmp[tmp.length () - 1] != '/')
+      tmp += '/';
+    tmp += ";UID=" + uid;
+	entry.insert( UDS_URL, tmp);
 
-    atom.m_uds = UDS_FILE_TYPE;
-    atom.m_str = QString::null;
-    atom.m_long = S_IFREG;
-    entry.append (atom);
+	entry.insert(UDS_FILE_TYPE,S_IFREG);
 
-    atom.m_uds = UDS_SIZE;
-    atom.m_long = cache->getSize();
-    entry.append (atom);
+	entry.insert(UDS_SIZE, cache->getSize());
 
-    atom.m_uds = UDS_MIME_TYPE;
-    atom.m_str = "message/rfc822";
-    atom.m_long = 0;
-    entry.append (atom);
+	entry.insert( UDS_MIME_TYPE, QString::fromLatin1("message/rfc822"));
 
-    atom.m_uds = UDS_USER;
-    atom.m_str = myUser;
-    entry.append (atom);
+	entry.insert(UDS_USER,myUser);
 
-    atom.m_uds = KIO::UDS_ACCESS;
-    atom.m_long = (withFlags) ? cache->getFlags() : S_IRUSR | S_IXUSR | S_IWUSR;
-    entry.append (atom);
+	entry.insert( KIO::UDS_ACCESS, (withFlags) ? cache->getFlags() : S_IRUSR | S_IXUSR | S_IWUSR);
 
     listEntry (entry, false);
   }
@@ -2154,7 +2118,6 @@ IMAP4Protocol::doListEntry (const KURL & _url, const QString & myBox,
   KURL aURL = _url;
   aURL.setQuery (QString::null);
   UDSEntry entry;
-  UDSAtom atom;
   int hdLen = item.hierarchyDelimiter().length();
 
   {
@@ -2174,66 +2137,50 @@ IMAP4Protocol::doListEntry (const KURL & _url, const QString & myBox,
     if (mailboxName.right(hdLen) == item.hierarchyDelimiter())
       mailboxName.truncate(mailboxName.length () - hdLen);
 
-    atom.m_uds = UDS_NAME;
+	QString tmp;
     if (!item.hierarchyDelimiter().isEmpty() &&
         mailboxName.find(item.hierarchyDelimiter()) != -1)
-      atom.m_str = mailboxName.section(item.hierarchyDelimiter(), -1);
+      tmp = mailboxName.section(item.hierarchyDelimiter(), -1);
     else
-      atom.m_str = mailboxName;
+      tmp = mailboxName;
 
     // konqueror will die with an assertion failure otherwise
-    if (atom.m_str.isEmpty ())
-      atom.m_str = "..";
+    if (tmp.isEmpty ())
+      tmp = "..";
 
-    if (!atom.m_str.isEmpty ())
+    if (!tmp.isEmpty ())
     {
-      atom.m_long = 0;
-      entry.append (atom);
+	  entry.insert(UDS_NAME,tmp);
 
       if (!item.noSelect ())
       {
-        atom.m_uds = UDS_MIME_TYPE;
         if (!item.noInferiors ())
         {
-          atom.m_str = "message/directory";
+          tmp = "message/directory";
         } else {
-          atom.m_str = "message/digest";
+          tmp = "message/digest";
         }
-        atom.m_long = 0;
-        entry.append (atom);
-        mailboxName += '/';
+		entry.insert(UDS_MIME_TYPE,tmp);
+        
+		mailboxName += '/';
 
         // explicitly set this as a directory for KFileDialog
-        atom.m_uds = UDS_FILE_TYPE;
-        atom.m_str = QString::null;
-        atom.m_long = S_IFDIR;
-        entry.append (atom);
+		entry.insert(UDS_FILE_TYPE,S_IFDIR);
       }
       else if (!item.noInferiors ())
       {
-        atom.m_uds = UDS_MIME_TYPE;
-        atom.m_str = "inode/directory";
-        atom.m_long = 0;
-        entry.append (atom);
+		entry.insert(UDS_MIME_TYPE, QString::fromLatin1("inode/directory"));
         mailboxName += '/';
 
         // explicitly set this as a directory for KFileDialog
-        atom.m_uds = UDS_FILE_TYPE;
-        atom.m_str = QString::null;
-        atom.m_long = S_IFDIR;
-        entry.append (atom);
+		entry.insert(UDS_FILE_TYPE,S_IFDIR);
       }
       else
       {
-        atom.m_uds = UDS_MIME_TYPE;
-        atom.m_str = "unknown/unknown";
-        atom.m_long = 0;
-        entry.append (atom);
+		entry.insert(UDS_MIME_TYPE,QString::fromLatin1("unknown/unknown"));
       }
 
-      atom.m_uds = UDS_URL;
       QString path = aURL.path();
-      atom.m_str = aURL.url (0, 106); // utf-8
       if (appendPath)
       {
         if (path[path.length() - 1] == '/' && !path.isEmpty() && path != "/")
@@ -2245,22 +2192,14 @@ IMAP4Protocol::doListEntry (const KURL & _url, const QString & myBox,
         path += mailboxName;
       }
       aURL.setPath(path);
-      atom.m_str = aURL.url(0, 106); // utf-8
-      atom.m_long = 0;
-      entry.append (atom);
+      tmp = aURL.url(0, 106); // utf-8
+	  entry.insert(UDS_URL, tmp);
 
-      atom.m_uds = UDS_USER;
-      atom.m_str = myUser;
-      entry.append (atom);
+	  entry.insert( UDS_USER, myUser);
 
-      atom.m_uds = UDS_ACCESS;
-      atom.m_long = S_IRUSR | S_IXUSR | S_IWUSR;
-      entry.append (atom);
+      entry.insert( UDS_ACCESS, S_IRUSR | S_IXUSR | S_IWUSR);
 
-      atom.m_uds = UDS_EXTRA;
-      atom.m_str = item.attributesAsString();
-      atom.m_long = 0;
-      entry.append (atom);
+	  entry.insert( UDS_EXTRA,item.attributesAsString());
 
       listEntry (entry, false);
     }
