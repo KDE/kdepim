@@ -96,7 +96,7 @@ class ExtensionManager : public Q3HBox
     KAB::ExtensionWidget *mCurrentExtensionWidget;
     ExtensionData::List mExtensionList;
     QSignalMapper *mMapper;
-    Q3PtrList<KAction> mActionList;
+    QList<KAction*> mActionList;
     KActionCollection *mActionCollection;
 };
 

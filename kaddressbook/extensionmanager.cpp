@@ -75,10 +75,12 @@ void ExtensionManager::saveSettings()
 {
   KAction *action;
   int index = 0;
-  for ( action = mActionList.first(); action; action = mActionList.next(), index++ )
+  for (int i = 0; i < mActionList.size(); ++i)
+  {
+	action = mActionList.at(i);
     if ( static_cast<KToggleAction*>( action )->isChecked() )
       break;
-
+  }
   Q_ASSERT( index < mExtensionList.size() );
 
   KABPrefs::instance()->setCurrentExtension( mExtensionList[ index ].identifier );
@@ -130,9 +132,10 @@ void ExtensionManager::setActiveExtension( int id )
 void ExtensionManager::createActions()
 {
   mCore->guiClient()->unplugActionList( "extensions_list" );
-  mActionList.setAutoDelete( true );
+#warning "kde4: todo look at this two lines commented"  
+  //mActionList.setAutoDelete( true );
   mActionList.clear();
-  mActionList.setAutoDelete( false );
+  //mActionList.setAutoDelete( false );
 
   delete mMapper;
   mMapper = new QSignalMapper( this, "SignalMapper" );

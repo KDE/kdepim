@@ -47,7 +47,7 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
 {
   QVBoxLayout *topLayout = new QVBoxLayout( this );
 
-  mMainWidget = new KJanusWidget( this, "JanusWidget", KJanusWidget::IconList );
+  mMainWidget = new KJanusWidget( this, KJanusWidget::IconList );
   topLayout->addWidget( mMainWidget );
 
   // Add the first page, the attributes
