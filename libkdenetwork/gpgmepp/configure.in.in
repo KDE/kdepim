@@ -151,7 +151,8 @@ KDEPIM_PATH_GPGME(0.4.5,[
         AC_MSG_CHECKING([if gpgme has gpgme_key_t->is_qualified])
         AC_TRY_COMPILE([#include <gpgme.h>], [
                 gpgme_key_t key;
-                unsigned int iq = key.is_qualified;
+                unsigned int iq;
+                iq = key->is_qualified;
         ], [
                 AC_DEFINE(HAVE_GPGME_KEY_T_IS_QUALIFIED, 1, [Define to 1 if your gpgme's gpgme_key_t has the is_qualified flag])
                 AC_MSG_RESULT([yes])
@@ -162,7 +163,8 @@ KDEPIM_PATH_GPGME(0.4.5,[
         AC_MSG_CHECKING([if gpgme has gpgme_subkey_t->is_qualified])
         AC_TRY_COMPILE([#include <gpgme.h>], [
                 gpgme_subkey_t subkey;
-                unsigned int iq = subkey.is_qualified;
+                unsigned int iq;
+                iq = subkey->is_qualified;
         ], [
                 AC_DEFINE(HAVE_GPGME_SUBKEY_T_IS_QUALIFIED, 1, [Define to 1 if your gpgme's gpgme_subkey_t has the is_qualified flag])
                 AC_MSG_RESULT([yes])
