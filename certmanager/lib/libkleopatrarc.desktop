@@ -117,6 +117,8 @@ Name[zh_CN]=吊销的密钥
 was-validated=true
 is-root-certificate=true
 is-validity=ultimate
+background-color=0,0,255
+font-bold=true
 Name=Trusted root certificate
 Name[ar]=شهادة جذر موثوقة
 Name[bg]=Надеждно удостоверение
@@ -189,6 +191,12 @@ Name[uk]=Кореневі сертифікати без довіри
 Name[zh_CN]=未信任的根证书
 
 [Key Filter #5]
+was-validated=true
+is-qualified=true
+font-bold=true
+Name=Keys for qualified signatures
+
+[Key Filter #6]
 was-validated=true
 Name=Other keys
 Name[ar]=مفاتيح أخرى
