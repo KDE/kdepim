@@ -680,6 +680,9 @@ void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
       // 0 reminder -> disable alarm
       incidence->clearAlarms();
     }
+  } else if ( tag == fieldName( CreatedBy ) ) {
+    KABC::Addressee a = mAccounts->lookupUser( text );
+    incidence->setOrganizer( Person( a.formattedName(), a.preferredEmail() ) );
   } else if ( tag == fieldName( Participants ) ) {
     parseMembersAttribute( e, incidence );
   } else if ( tag == "readrights" ) {

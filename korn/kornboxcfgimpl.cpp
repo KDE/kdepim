@@ -241,7 +241,7 @@ void KornBoxCfgImpl::slotEditBox()
 		return; //No item selected
 	elbAccounts->setEnabled( false );
 	
-	_base = new KDialogBase( this, "Account Dialog", false, "Box Configuration",
+	_base = new KDialogBase( this, "Account Dialog", false, i18n("Box Configuration"),
 					     KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok, true );
 	KornAccountCfgImpl *widget = new KornAccountCfgImpl( _base, "Account Widget" );
 
@@ -291,12 +291,12 @@ void KornBoxCfgImpl::slotSetDefaults( const QString& name, const int, KConfig* c
 
 void KornBoxCfgImpl::slotChangeNormalAnim()
 {
-	*_anims[ 0 ] = KFileDialog::getOpenFileName( *_anims[ 0 ], ".mng .gif", this, "Normal animation" );
+	*_anims[ 0 ] = KFileDialog::getOpenFileName( *_anims[ 0 ], ".mng .gif", this, i18n("Normal animation") );
 }
 
 void KornBoxCfgImpl::slotChangeNewAnim()
 {
-	*_anims[ 1 ] = KFileDialog::getOpenFileName( *_anims[ 1 ], ".mng .gif", this, "Normal animation" );
+	*_anims[ 1 ] = KFileDialog::getOpenFileName( *_anims[ 1 ], ".mng .gif", this, i18n("Normal animation") );
 }
 
 void KornBoxCfgImpl::slotChangeNormalFont()

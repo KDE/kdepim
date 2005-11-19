@@ -27,6 +27,7 @@
 #include <kiconloader.h>
 #include <kpassivepopup.h>
 #include <kpopupmenu.h>
+#include <klocale.h>
 
 #include <qbitmap.h>
 #include <qcursor.h>
@@ -80,7 +81,7 @@ void DockedItem::slotShowPassivePopup( QPtrList< KornMailSubject >* list, int to
 
 void DockedItem::slotShowPassivePopup( const QString& message, const QString& name )
 {
-	KPassivePopup::message( QString( "Korn - %1/%2" ).arg( objId() ).arg( name ), message, _systemtray, "Passive error message" );
+	KPassivePopup::message( i18n( "Korn - %1/%2" ).arg( objId() ).arg( name ), message, _systemtray, "Passive error message" );
 }
 
 void DockedItem::doPopup()
