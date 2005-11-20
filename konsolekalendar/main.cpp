@@ -50,6 +50,7 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfig.h>
+#include <kstandarddirs.h>
 #include <kdebug.h>
 
 #include <libkcal/calformat.h>
@@ -723,7 +724,13 @@ int main( int argc, char *argv[] )
     calendarResource = new StdCalendar( variables.getCalendarFile(),
                                         i18n( "Active Calendar" ) );
   } else {
-    calendarResource = new StdCalendar();
+    // TODO: when certain resources (kolab) don't try to gain access to
+    // an X server, or dcopserver, then put back the following line which
+    // supports all resources, not just the standard resource.
+    // calendarResource = new StdCalendar();
+    calendarResource = new StdCalendar( locateLocal( "data",
+                                                     "korganizer/std.ics" ),
+                                        i18n( "Default Calendar" ) );
   }
   if ( !args->isSet( "import" ) ) {
     variables.setCalendar( calendarResource );
