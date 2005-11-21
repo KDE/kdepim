@@ -32,6 +32,7 @@ class QPixmap;
 //====================================================================================
 
 
+/** List box items that contain an additional pixmap. */
 class KNListBoxItem : public Q3ListBoxItem  {
 
   public:

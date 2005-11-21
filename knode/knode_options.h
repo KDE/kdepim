@@ -1,8 +1,6 @@
 /*
-    main.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -20,6 +18,7 @@
 #include <kcmdlineargs.h>
 #include <klocale.h>
 
+/** KNode's command line options. */
 static KCmdLineOptions knode_options[] =
 {
   { "+[url]", I18N_NOOP("A 'news://server/group' URL"), 0 },

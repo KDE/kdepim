@@ -122,6 +122,7 @@ class KDE_EXPORT NntpAccountListWidget : public KCModule {
     void load();
 
   protected:
+    /** Account list box item. */
     class LBoxItem : public KNListBoxItem {
       public:
         LBoxItem(KNNntpAccount *a, const QString &t, QPixmap *p=0)
@@ -218,6 +219,7 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
     //===================================================================================
     // code taken from KMail, Copyright (C) 2000 Espen Sand, espen@kde.org
 
+    /** Color list box item. */
     class KDE_EXPORT ColorListItem : public Q3ListBoxText {
 
       public:
@@ -237,6 +239,7 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
 
     //===================================================================================
 
+    /** Font list box item. */
     class KDE_EXPORT FontListItem : public Q3ListBoxText {
 
       public:
@@ -333,7 +336,8 @@ class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
 
   protected:
 
-     class HdrItem : public Q3ListBoxText {
+    /** Header list box item. */
+    class HdrItem : public Q3ListBoxText {
 
       public:
         HdrItem( const QString &t, KNDisplayedHeader *h ) : Q3ListBoxText(t), hdr(h) {}
@@ -430,6 +434,7 @@ class KDE_EXPORT FilterListWidget : public KCModule {
 
 
   protected:
+    /** Filter list box item. */
     class LBoxItem : public KNListBoxItem {
       public:
         LBoxItem(KNArticleFilter *f, const QString &t, QPixmap *p=0)

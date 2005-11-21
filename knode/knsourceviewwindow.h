@@ -18,6 +18,7 @@
 #include <ktextbrowser.h>
 
 
+/** Article source view window. */
 class KNSourceViewWindow : public KTextBrowser {
 
   Q_OBJECT

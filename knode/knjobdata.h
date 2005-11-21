@@ -31,6 +31,7 @@ class KNJobData;
 class KNServerInfo;
 
 
+/** Base class for classes that want to create and schedule jobs. */
 class KNJobConsumer {
 
   public:
@@ -61,6 +62,7 @@ class KNJobConsumer {
 };
 
 
+/** Base class for data structures used in jobs. */
 class KNJobItem {
 
   public:

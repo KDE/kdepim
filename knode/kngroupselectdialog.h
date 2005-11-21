@@ -20,6 +20,7 @@
 #include "kngroupbrowser.h"
 
 
+/** Group selection dialog (used in the composer). */
 class KNGroupSelectDialog : public KNGroupBrowser {
 
   Q_OBJECT

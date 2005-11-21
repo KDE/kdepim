@@ -39,6 +39,7 @@ class KNMainWidget;
 class KNHeaderView;
 
 
+/** KNode main window. */
 class KNMainWindow : public KMainWindow
 {
   Q_OBJECT

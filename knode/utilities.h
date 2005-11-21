@@ -59,6 +59,7 @@ public:
 //==============================================================================
 
 
+/** @deprecated Use QFile instead. */
 class KNFile : public QFile {
 
   public:
@@ -73,6 +74,7 @@ class KNFile : public QFile {
 //========================================================================================
 
 
+/** File save helper (includes file save dialog and network upload). */
 class KNSaveHelper {
 
 public:
@@ -98,6 +100,7 @@ private:
 //========================================================================================
 
 
+/** File open helper (includes file open dialog and network download). */
 class KNLoadHelper {
 
 public:

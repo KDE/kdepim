@@ -370,6 +370,7 @@ class KNComposer::AttachmentPropertiesDlg : public KDialogBase {
 };
 
 //-----------------------------------------------------------------------------
+/** Line edit for addresses used in the composer. */
 class KNLineEdit : public KABC::AddressLineEdit
 {
     Q_OBJECT
@@ -388,6 +389,7 @@ private:
     KNComposer::ComposerView *composerView;
 };
 
+/** Line edit with on-the-fly spell checking. */
 class KNLineEditSpell : public KNLineEdit
 {
     Q_OBJECT

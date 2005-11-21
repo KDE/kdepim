@@ -1,8 +1,7 @@
 /*
-    knodeiface.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2003 the KNode authors.
+
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
     Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
@@ -25,6 +24,7 @@
 #include <qstringlist.h>
 
 
+/** DCOP interface. */
 class KNodeIface : virtual public DCOPObject
 {
   K_DCOP

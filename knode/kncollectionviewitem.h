@@ -1,8 +1,6 @@
 /*
-    kncollectionviewitem.h
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -27,6 +25,7 @@ class QColorGroup;
 class KNCollection;
 
 
+/** Folder tree item. */
 class KNCollectionViewItem : public KFolderTreeItem  {
 
   public:

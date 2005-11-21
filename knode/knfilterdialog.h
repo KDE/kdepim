@@ -24,6 +24,7 @@ class QComboBox;
 class QCheckBox;
 
 
+/** Filter configuration dialog. */
 class KNFilterDialog : public KDialogBase {
 
   Q_OBJECT

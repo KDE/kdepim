@@ -4,6 +4,8 @@
 #include <dcopobject.h>
 #include <kurl.h>
 
+
+/** KNode composer DCOP interface. */
 class KNodeComposerIface : virtual public DCOPObject
 {
     K_DCOP

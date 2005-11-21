@@ -44,6 +44,7 @@ private:
 };
 
 
+/** Group interface for the scoring system. */
 class KNScorableGroup : public ScorableGroup
 {
 public:
