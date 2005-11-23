@@ -195,6 +195,7 @@ was-validated=true
 is-qualified=true
 font-bold=true
 Name=Keys for qualified signatures
+Name[de]=Schlüssel für qualifizierte Signaturen
 
 [Key Filter #6]
 was-validated=true
