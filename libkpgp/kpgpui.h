@@ -25,7 +25,6 @@
 //Added by qt3to4:
 #include <QPixmap>
 #include <QLabel>
-#include <Q3ValueList>
 #include <kdebug.h>       // used in inlined methods
 #include <q3cstring.h>     // used in return-by-value
 #include <qstring.h>      // is a member in KeyRequester
@@ -186,7 +185,7 @@ class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
                           TrustCheckMode = NoExpensiveTrustCheck ) const;
 
     // Perform expensive trust checks for the given keys
-    bool checkKeys( const Q3ValueList<Q3ListViewItem*>& ) const;
+    bool checkKeys( const QList<Q3ListViewItem*>& ) const;
 
   private:
     KListView *mListView;

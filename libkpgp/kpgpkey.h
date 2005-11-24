@@ -58,12 +58,12 @@ typedef enum
 
 typedef QByteArray KeyID;
 
-class KeyIDList : public Q3ValueList<KeyID>
+class KeyIDList : public QList<KeyID>
 {
  public:
   KeyIDList() { }
-  KeyIDList( const KeyIDList& l ) : Q3ValueList<KeyID>(l) { }
-  KeyIDList( const Q3ValueList<KeyID>& l ) : Q3ValueList<KeyID>(l) { }
+  KeyIDList( const KeyIDList& l ) : QList<KeyID>(l) { }
+  KeyIDList( const QList<KeyID>& l ) : QList<KeyID>(l) { }
   KeyIDList( const KeyID& i ) { append(i); }
 
   QStringList toStringList() const;

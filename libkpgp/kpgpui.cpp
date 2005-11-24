@@ -33,7 +33,6 @@
 //Added by qt3to4:
 #include <QFrame>
 #include <QByteArray>
-#include <Q3ValueList>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
@@ -903,7 +902,7 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
                 this,      SLOT( slotSelectionChanged() ) );
 
     KeyIDList newKeyIdList;
-    Q3ValueList<Q3ListViewItem*> keysToBeChecked;
+    QList<Q3ListViewItem*> keysToBeChecked;
 
     bool keysAllowed = true;
     enum { UNKNOWN, SELECTED, DESELECTED } userAction = UNKNOWN;
@@ -1008,7 +1007,7 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
 }
 
 
-bool KeySelectionDialog::checkKeys( const Q3ValueList<Q3ListViewItem*>& keys ) const
+bool KeySelectionDialog::checkKeys( const QList<Q3ListViewItem*>& keys ) const
 {
   KProgressDialog* pProgressDlg = 0;
   bool keysAllowed = true;
@@ -1022,7 +1021,7 @@ bool KeySelectionDialog::checkKeys( const Q3ValueList<Q3ListViewItem*>& keys ) c
   pProgressDlg->setMinimumDuration( 1000 );
   pProgressDlg->show();
 
-  for( Q3ValueList<Q3ListViewItem*>::ConstIterator it = keys.begin();
+  for( QList<Q3ListViewItem*>::ConstIterator it = keys.begin();
        it != keys.end();
        ++it ) {
     kdDebug(5100) << "Checking key 0x" << getKeyId( *it ) << "...\n";
