@@ -23,7 +23,7 @@
 #include <qlayout.h>
 #include <qradiobutton.h>
 #include <qspinbox.h>
-#include <q3hbox.h>
+#include <khbox.h>
 #include <qlabel.h>
 //Added by qt3to4:
 #include <QVBoxLayout>
@@ -54,7 +54,7 @@ ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent,
                                                   mGroup );
   connect( intervalRadio, SIGNAL( stateChanged( int ) ),
            SLOT( slotIntervalStateChanged( int ) ) );
-  Q3HBox *intervalBox = new Q3HBox( mGroup );
+  KHBox *intervalBox = new KHBox( mGroup );
   new QLabel( i18n("Interval in minutes"), intervalBox );
   mIntervalSpin = new QSpinBox( intervalBox );
   mIntervalSpin->setEnabled( false );
@@ -94,7 +94,7 @@ ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent,
                                                   mGroup );
   connect( intervalRadio, SIGNAL( stateChanged( int ) ),
            SLOT( slotIntervalStateChanged( int ) ) );
-  Q3HBox *intervalBox = new Q3HBox( mGroup );
+  KHBox *intervalBox = new KHBox( mGroup );
   new QLabel( i18n("Interval in minutes"), intervalBox );
   mIntervalSpin = new QSpinBox( intervalBox );
   mIntervalSpin->setEnabled( false );

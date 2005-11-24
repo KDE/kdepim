@@ -32,7 +32,6 @@
 #include <qstring.h>
 #include <q3ptrlist.h>
 //Added by qt3to4:
-#include <Q3ValueList>
 
 #include <kdebug.h>
 #include <kstandarddirs.h>
@@ -135,7 +134,7 @@ void CalendarResources::load()
     (*i1)->setTimeZoneId( timeZoneId() );
   }
 
-  Q3ValueList<ResourceCalendar *> failed;
+  QList<ResourceCalendar *> failed;
 
   // Open all active resources
   CalendarResourceManager::ActiveIterator it;
@@ -151,7 +150,7 @@ void CalendarResources::load()
     }
   }
 
-  Q3ValueList<ResourceCalendar *>::ConstIterator it2;
+  QList<ResourceCalendar *>::ConstIterator it2;
   for ( it2 = failed.begin(); it2 != failed.end(); ++it2 ) {
     (*it2)->setActive( false );
     emit signalResourceModified( *it2 );

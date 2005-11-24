@@ -29,7 +29,6 @@
 #include <qdialog.h>
 #include <qfile.h>
 //Added by qt3to4:
-#include <Q3ValueList>
 #include <QByteArray>
 
 #include <kdebug.h>
@@ -446,8 +445,8 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     case Recurrence::rMonthlyPos: {
       tmpStr.sprintf("MP%i ", recur->frequency());
       // write out all rMonthPos's
-      Q3ValueList<RecurrenceRule::WDayPos> tmpPositions = recur->monthPositions();
-      for ( Q3ValueListConstIterator<RecurrenceRule::WDayPos> posit = tmpPositions.begin();
+      QList<RecurrenceRule::WDayPos> tmpPositions = recur->monthPositions();
+      for ( QList<RecurrenceRule::WDayPos>::ConstIterator posit = tmpPositions.begin();
             posit != tmpPositions.end(); ++posit ) {
         int pos = (*posit).pos();
         tmpStr2.sprintf("%i", (pos>0) ? pos : (-pos) );
@@ -462,8 +461,8 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     case Recurrence::rMonthlyDay: {
       tmpStr.sprintf("MD%i ", recur->frequency());
       // write out all rMonthDays;
-      Q3ValueList<int> tmpDays = recur->monthDays();
-      for ( Q3ValueListIterator<int> tmpDay = tmpDays.begin();
+      QList<int> tmpDays = recur->monthDays();
+      for ( QList<int>::Iterator tmpDay = tmpDays.begin();
             tmpDay != tmpDays.end(); ++tmpDay ) {
         tmpStr2.sprintf( "%i ", *tmpDay );
         tmpStr += tmpStr2;
@@ -473,8 +472,8 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
       tmpStr.sprintf("YM%i ", recur->frequency());
       // write out all the months;'
       // TODO: Any way to write out the day within the month???
-      Q3ValueList<int> months = recur->yearMonths();
-      for ( Q3ValueListIterator<int> mit = months.begin();
+      QList<int> months = recur->yearMonths();
+      for ( QList<int>::Iterator mit = months.begin();
             mit != months.end(); ++mit ) {
         tmpStr2.sprintf( "%i ", *mit );
         tmpStr += tmpStr2;
@@ -483,8 +482,8 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     case Recurrence::rYearlyDay: {
       tmpStr.sprintf("YD%i ", recur->frequency());
       // write out all the rYearNums;
-      Q3ValueList<int> tmpDays = recur->yearDays();
-      for ( Q3ValueListIterator<int> tmpDay = tmpDays.begin();
+      QList<int> tmpDays = recur->yearDays();
+      for ( QList<int>::Iterator tmpDay = tmpDays.begin();
             tmpDay != tmpDays.end(); ++tmpDay ) {
         tmpStr2.sprintf( "%i ", *tmpDay );
         tmpStr += tmpStr2;
