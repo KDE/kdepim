@@ -23,7 +23,6 @@
 #include <qpixmap.h>
 //Added by qt3to4:
 #include <Q3Frame>
-#include <Q3ValueList>
 #include <QResizeEvent>
 #include <Q3PtrList>
 
@@ -118,7 +117,7 @@ Q3PtrList<KTNEFAttach>* KTNEFView::getSelection()
 void KTNEFView::startDrag()
 {
 	Q3ListViewItemIterator it( this, Q3ListViewItemIterator::Selected );
-	Q3ValueList<KTNEFAttach*> list;
+	QList<KTNEFAttach*> list;
 	while ( it.current() )
 	{
 		list << static_cast<Attachment*>( it.current() )->getAttachment();

@@ -26,7 +26,6 @@
 #include <qlabel.h>
 //Added by qt3to4:
 #include <QPixmap>
-#include <Q3ValueList>
 #include <QTextStream>
 #include <klistview.h>
 #include <kmimetype.h>

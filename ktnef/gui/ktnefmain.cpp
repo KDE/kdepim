@@ -27,7 +27,6 @@
 
 #include <q3popupmenu.h>
 //Added by qt3to4:
-#include <Q3ValueList>
 #include <QTextStream>
 #include <Q3PtrList>
 #include <klistview.h>
@@ -142,7 +141,7 @@ void KTNEFMain::setupTNEF()
 	connect(view_, SIGNAL(selectionChanged()), SLOT(viewSelectionChanged()));
 	connect(view_, SIGNAL(rightButtonPressed(Q3ListViewItem*,const QPoint&,int)), SLOT(viewRightButtonPressed(Q3ListViewItem*,const QPoint&,int)));
 	connect(view_, SIGNAL(doubleClicked(Q3ListViewItem*)), SLOT(viewDoubleClicked(Q3ListViewItem*)));
-	connect(view_, SIGNAL(dragRequested(const Q3ValueList<KTNEFAttach*>&)), SLOT(viewDragRequested(const Q3ValueList<KTNEFAttach*>&)));
+	connect(view_, SIGNAL(dragRequested(const QList<KTNEFAttach*>&)), SLOT(viewDragRequested(const QList<KTNEFAttach*>&)));
 }
 
 void KTNEFMain::loadFile(const QString& filename)
@@ -351,10 +350,10 @@ void KTNEFMain::viewDoubleClicked(Q3ListViewItem *item)
 		viewFile();
 }
 
-void KTNEFMain::viewDragRequested( const Q3ValueList<KTNEFAttach*>& list )
+void KTNEFMain::viewDragRequested( const QList<KTNEFAttach*>& list )
 {
 	KURL::List urlList;
-	for ( Q3ValueList<KTNEFAttach*>::ConstIterator it=list.constBegin(); it!=list.constEnd(); ++it )
+	for ( QList<KTNEFAttach*>::ConstIterator it=list.constBegin(); it!=list.constEnd(); ++it )
 		urlList << KURL( extractTemp( *it ) );
 	if ( !list.isEmpty() )
 	{
