@@ -21,7 +21,6 @@
 #include <klistview.h>
 #include <q3ptrlist.h>
 //Added by qt3to4:
-#include <Q3ValueList>
 #include <QResizeEvent>
 #include <kdepimmacros.h>
 
@@ -39,7 +38,7 @@ public:
 	Q3PtrList<KTNEFAttach>* getSelection();
 
 signals:
-	void dragRequested( const Q3ValueList<KTNEFAttach*>& list );
+	void dragRequested( const QList<KTNEFAttach*>& list );
 
 protected:
 	void resizeEvent(QResizeEvent *e);
