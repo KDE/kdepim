@@ -42,9 +42,6 @@
 #include <kconfig.h>
 
 #include <qfile.h>
-//Added by qt3to4:
-#include <Q3ValueList>
-#include <Q3CString>
 
 SloxItem::SloxItem()
   : status( Invalid )
@@ -90,11 +87,11 @@ void WebdavHandler::log( const QString &text )
   if ( ++mLogCount > 5 ) mLogCount = 0;
 }
 
-Q3ValueList<SloxItem> WebdavHandler::getSloxItems( SloxBase *res, const QDomDocument &doc )
+QList<SloxItem> WebdavHandler::getSloxItems( SloxBase *res, const QDomDocument &doc )
 {
   kdDebug() << "getSloxItems" << endl;
 
-  Q3ValueList<SloxItem> items;
+  QList<SloxItem> items;
 
   QDomElement docElement = doc.documentElement();
 
@@ -180,7 +177,7 @@ QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt,
   // secsTo and toTime_t etc also perform a timezone conversion using the system timezone,
   // but we want to use the calendar timezone, so we have to convert ourself and spoof the tz to UTC before
   // converting to ticks to prevent this
-  Q3CString origTz = getenv("TZ");
+  QByteArray origTz = getenv("TZ");
   setenv( "TZ", "UTC", 1 );
   uint ticks = utc.toTime_t();
   if ( origTz.isNull() )

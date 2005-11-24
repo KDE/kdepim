@@ -200,7 +200,7 @@ void SloxAccounts::readAccounts()
   mUsers.clear();
 
   QDomNodeList nodes = doc.elementsByTagName( mRes->resType() == "ox" ? "ox:user" : "user" );
-  for( uint i = 0; i < nodes.count(); ++i ) {
+  for( int i = 0; i < nodes.count(); ++i ) {
     QDomElement element = nodes.item(i).toElement();
     QString id;
     KABC::Addressee a;

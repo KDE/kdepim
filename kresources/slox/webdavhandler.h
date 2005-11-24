@@ -76,7 +76,7 @@ class KDE_EXPORT WebdavHandler
     static QString qDateTimeToSlox( const QDateTime &dt,
                                     const QString &timeZoneId );
 
-    static Q3ValueList<SloxItem> getSloxItems( SloxBase *res, const QDomDocument &doc );
+    static QList<SloxItem> getSloxItems( SloxBase *res, const QDomDocument &doc );
 
     void clearSloxAttributeStatus();
     void parseSloxAttribute( const QDomElement & );

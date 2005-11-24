@@ -26,8 +26,6 @@
 #include <qstring.h>
 #include <q3ptrlist.h>
 #include <qfile.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 #include <kdebug.h>
 #include <kurl.h>
@@ -918,13 +916,13 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 
     mWebdavHandler.log( doc.toString( 2 ) );
 
-    Q3ValueList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
+    QList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
 
     bool changed = false;
 
     disableChangeNotification();
 
-    Q3ValueList<SloxItem>::ConstIterator it;
+    QList<SloxItem>::ConstIterator it;
     for( it = items.begin(); it != items.end(); ++it ) {
       SloxItem item = *it;
       QString uid = sloxIdToTodoUid( item.sloxId );
@@ -992,13 +990,13 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 
     mWebdavHandler.log( doc.toString( 2 ) );
 
-    Q3ValueList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
+    QList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
 
     bool changed = false;
 
     disableChangeNotification();
 
-    Q3ValueList<SloxItem>::ConstIterator it;
+    QList<SloxItem>::ConstIterator it;
     for( it = items.begin(); it != items.end(); ++it ) {
       SloxItem item = *it;
       QString uid = sloxIdToEventUid( item.sloxId );
