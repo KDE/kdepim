@@ -33,14 +33,12 @@
 #include <q3listview.h>
 #include <q3header.h>
 #include <qpainter.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 static const int BoxSize = 16;
 
 
 //BEGIN FolderListView
-FolderListView::FolderListView( QWidget *parent, const Q3ValueList<Property> &types )
+FolderListView::FolderListView( QWidget *parent, const QList<Property> &types )
     : KListView( parent )
 {
   setEnabledTypes( types );
@@ -51,7 +49,7 @@ FolderListView::FolderListView( QWidget *parent, const Q3ValueList<Property> &ty
            this, SLOT(showPopupMenu(Q3ListViewItem*)) );
 }
 
-void FolderListView::setEnabledTypes( const Q3ValueList<Property> &types )
+void FolderListView::setEnabledTypes( const QList<Property> &types )
 {
 kdDebug() << "FolderListView::setEnabledTypes" << endl;
   for ( int i = 0; i< columns(); ++i ) removeColumn( i );

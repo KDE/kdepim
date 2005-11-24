@@ -62,7 +62,7 @@ class KDE_EXPORT FolderLister : public QObject
       public:
         Entry() : active( false ) {}
 
-        typedef Q3ValueList<Entry> List;
+        typedef QList<Entry> List;
 
         QString id;
         QString name;
@@ -72,7 +72,7 @@ class KDE_EXPORT FolderLister : public QObject
     static QStringList contentTypeToStrings( ContentType );
     ContentType contentTypeFromString( const QString &type );
 
-    Q3ValueList<ContentType> supportedTypes();
+    QList<ContentType> supportedTypes();
 
     FolderLister( Type );
 

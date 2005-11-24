@@ -26,8 +26,6 @@
 
 #include <klistview.h>
 #include "folderlister.h"
-//Added by qt3to4:
-#include <Q3ValueList>
 
 class FolderListItem;
 class FolderListCaption;
@@ -47,14 +45,14 @@ class FolderListView : public KListView
     /* mainly for readability */
     enum Property { FolderName, Event, Todo, Journal, Contact, All, Unknown, PROP_MAX };
     
-    FolderListView( QWidget *parent, const Q3ValueList<Property> &types = Q3ValueList<Property>() );
+    FolderListView( QWidget *parent, const QList<Property> &types = QList<Property>() );
     ~FolderListView() {};
 
     /* Display a popupmenu for item i at the specified global position, eventually with a title,
        promoting the context name of that item */
     void showPopupMenu( FolderListItem *i, const QPoint &globalPos );
     void emitChanged() { emit changed(); };
-    void setEnabledTypes( const Q3ValueList<Property> &types );
+    void setEnabledTypes( const QList<Property> &types );
 
     int columnForType( Property prop ) const { if ( mColumnMap.contains(prop) ) return mColumnMap[prop]; else return -1;}
     Property typeForColumn( int col ) const { if ( mTypeMap.contains( col ) ) return mTypeMap[col]; else return Unknown; }
@@ -70,7 +68,7 @@ class FolderListView : public KListView
   signals:
     void changed();
   private:
-    Q3ValueList<Property> mTypes;
+    QList<Property> mTypes;
     QMap<Property,int> mColumnMap;
     QMap<int,Property> mTypeMap;
 };

@@ -28,7 +28,6 @@
 #include <kurl.h>
 #include <qstring.h>
 //Added by qt3to4:
-#include <Q3ValueList>
 #include <Q3CString>
 #include <libkcal/listbase.h>
 #include <qobject.h>
@@ -239,7 +238,7 @@ Q_OBJECT
     virtual void clearChange( const QString &uid ) = 0;
 
     virtual FolderLister::Entry::List defaultFolders();
-    virtual Q3ValueList<FolderLister::ContentType> supportedTypes() = 0;
+    virtual QList<FolderLister::ContentType> supportedTypes() = 0;
     virtual bool supports( FolderLister::ContentType type ) {
       return supportedTypes().contains( type );
     }

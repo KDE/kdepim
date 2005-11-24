@@ -37,7 +37,7 @@
 
 #include <qlabel.h>
 #include <qlayout.h>
-#include <q3hbox.h>
+#include <khbox.h>
 //Added by qt3to4:
 #include <QGridLayout>
 
@@ -75,7 +75,7 @@ ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,
     SLOT( updateFolders() ) );
   mainLayout->addMultiCellWidget( mFolderConfig, 4, 4, 0, 1 );
 
-  Q3HBox *hBox = new Q3HBox( this );
+  KHBox *hBox = new KHBox( this );
   mCacheSettingsButton = new KPushButton( i18n("Configure Cache Settings..."), hBox );
   mainLayout->addMultiCellWidget( hBox, 5, 5, 0, 1 );
   connect( mCacheSettingsButton, SIGNAL( clicked() ),

@@ -28,8 +28,6 @@
 #include <kabc/addressee.h>
 #include <kdepimmacros.h>
 #include <kurl.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 namespace KABC {
 class ResourceCached;
@@ -50,9 +48,9 @@ class KDE_EXPORT AddressBookAdaptor : public KPIM::GroupwareDataAdaptor
   public:
     AddressBookAdaptor();
 
-    Q3ValueList<KPIM::FolderLister::ContentType> supportedTypes()
+    QList<KPIM::FolderLister::ContentType> supportedTypes()
     {
-      Q3ValueList<KPIM::FolderLister::ContentType> types;
+      QList<KPIM::FolderLister::ContentType> types;
       types << KPIM::FolderLister::Contact;
       return types;
     }

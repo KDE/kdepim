@@ -40,7 +40,6 @@
 #include <qlabel.h>
 //Added by qt3to4:
 #include <QVBoxLayout>
-#include <Q3ValueList>
 #include <QBoxLayout>
 #include <Q3PtrList>
 
@@ -76,8 +75,8 @@ void FolderConfig::setFolderLister( FolderLister *f )
 {
   mFolderLister = f;
   
-  Q3ValueList<FolderListView::Property> types;
-  Q3ValueList<FolderLister::ContentType> suptypes( mFolderLister->supportedTypes() );
+  QList<FolderListView::Property> types;
+  QList<FolderLister::ContentType> suptypes( mFolderLister->supportedTypes() );
   if ( suptypes.contains( FolderLister::Event ) ) types << FolderListView::Event;
   if ( suptypes.contains( FolderLister::Todo ) ) types << FolderListView::Todo;
   if ( suptypes.contains( FolderLister::Journal ) ) types << FolderListView::Journal;
