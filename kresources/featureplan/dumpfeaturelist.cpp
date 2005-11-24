@@ -29,8 +29,6 @@
 
 #include <qfile.h>
 #include <qtextstream.h>
-//Added by qt3to4:
-#include <Q3ValueList>
 
 #include <iostream>
 
@@ -53,7 +51,7 @@ void displayFeature( Feature *f )
   std::cout << "  STATUS: " << f->status().local8Bit() << std::endl;
 }
 
-void displayCategory( const Q3ValueList<Category *> categories )
+void displayCategory( const QList<Category *> categories )
 {
   Category::List::ConstIterator it;
   for( it = categories.begin(); it != categories.end(); ++it ) {
@@ -93,7 +91,7 @@ int main( int argc, char **argv )
   if ( !features ) {
     kdError() << "Parse error" << endl;
   } else {
-    Q3ValueList<Category *> categories = features->categoryList();
+    QList<Category *> categories = features->categoryList();
     displayCategory( categories );
   }
 
