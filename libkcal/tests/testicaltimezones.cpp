@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     KAboutData aboutData("qttest", "qttest", "version");
     KCmdLineArgs::init(argc, argv, &aboutData);
     KApplication::disableAutoDcopRegistration();
-    KApplication app(true, false);
+    KApplication app(false);
     ICalTimezonesTest tc;
     return QtTest::exec(&tc, argc, argv);
 }
@@ -551,6 +551,34 @@ void ICalTimezonesTest::isDst()
     VERIFY(!tz->isDst((time_t)spring01.toTime_t()));
 
     delete tz;
+}
+
+void ICalTimezonesTest::UTCOffsets()
+{
+    icalcomponent *vtimezone = loadVTIMEZONE(VTZ_Western);
+    VERIFY(vtimezone);
+    ICalTimezoneSource src;
+    ICalTimezone *tz = src.parse(vtimezone);
+    VERIFY(tz);
+    icalcomponent_free(vtimezone);
+
+    vtimezone = loadVTIMEZONE(VTZ_other);
+    VERIFY(vtimezone);
+    ICalTimezone *tz2 = src.parse(vtimezone);
+    VERIFY(tz2);
+    icalcomponent_free(vtimezone);
+
+    QList<int> offsets = tz->UTCOffsets();
+    COMPARE(offsets.count(), 2);
+    COMPARE(offsets[0], -5*3600);
+    COMPARE(offsets[1], -4*3600);
+
+    offsets = tz2->UTCOffsets();
+    COMPARE(offsets.count(), 1);
+    COMPARE(offsets[0], 3*3600);
+
+    delete tz;
+    delete tz2;
 }
 
 

@@ -36,6 +36,7 @@ private slots:
     void abbreviation();
     void isDstAtUTC();
     void isDst();
+    void UTCOffsets();
 };
 
 #endif

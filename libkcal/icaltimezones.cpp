@@ -158,10 +158,23 @@ bool ICalTimezone::isDst(time_t t) const
 
 /******************************************************************************/
 
+class ICalTimezoneDataPrivate
+{
+public:
+    QList<int> utcOffsets;
+};
+
+
+ICalTimezoneData::ICalTimezoneData()
+  : d(new ICalTimezoneDataPrivate())
+{
+}
+
 ICalTimezoneData::~ICalTimezoneData()
 {
   for (int i = 0, end = phases.count();  i < end;  ++i)
     delete phases[i];
+  delete d;
 }
 
 ICalTimezoneData::Phase::Phase(const ICalTimezoneData::Phase &p)
@@ -189,6 +202,7 @@ KTimezoneData *ICalTimezoneData::clone()
   newData->tznames      = tznames;
   for (int i = 0, end = phases.count();  i < end;  ++i)
     newData->phases.append(new Phase(*phases[i]));
+  newData->d->utcOffsets = d->utcOffsets;
   return newData;
 }
 
@@ -203,6 +217,19 @@ QByteArray ICalTimezoneData::abbreviation(const QDateTime &utcDateTime) const
     return QByteArray();
   const Phase *ph = phase(utcDateTime);
   return ph ? tznames[ph->tznameIndex[0]] : QByteArray();  // return the first abbreviation
+}
+
+QList<int> ICalTimezoneData::UTCOffsets() const
+{
+  if (d->utcOffsets.isEmpty()) {
+    for (int i = 0, end = phases.count();  i < end;  ++i) {
+      int offset = phases[i]->offset;
+      if (d->utcOffsets.indexOf(offset) < 0)
+          d->utcOffsets.append(offset);
+    }
+    qSort(d->utcOffsets);
+  }
+  return d->utcOffsets;
 }
 
 const ICalTimezoneData::Phase *ICalTimezoneData::phase(const QDateTime &dt, QDateTime *start) const

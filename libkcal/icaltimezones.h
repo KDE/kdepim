@@ -32,6 +32,7 @@ class ICalTimezoneSource;
 class ICalTimezoneData;
 class ICalTimezonePrivate;
 class ICalTimezoneSourcePrivate;
+class ICalTimezoneDataPrivate;
 class Recurrence;
 
 
@@ -272,7 +273,7 @@ class LIBKCAL_EXPORT ICalTimezoneData : public KTimezoneData
       bool               isDst;       /**< true if daylight savings time, false if standard time */
     };
 
-    ICalTimezoneData()  {}
+    ICalTimezoneData();
     virtual ~ICalTimezoneData();
 
     /**
@@ -300,6 +301,13 @@ class LIBKCAL_EXPORT ICalTimezoneData : public KTimezoneData
     virtual QByteArray abbreviation(const QDateTime &utcDateTime) const;
 
     /**
+     * Returns the complete list of UTC offsets for the time zone.
+     *
+     * @return the sorted list of UTC offsets
+     */
+    virtual QList<int> UTCOffsets() const;
+
+    /**
      * Find the timezone phase which is current at a given UTC or local time.
      *
      * @param dt date/time
@@ -313,6 +321,9 @@ class LIBKCAL_EXPORT ICalTimezoneData : public KTimezoneData
     QDateTime         lastModified;   /**< time of last modification of the VTIMEZONE component (optional) */
     QList<QByteArray> tznames;        /**< time zone name abbreviations (e.g. EDT, BST) */
     QList<Phase*>     phases;         /**< time zone observances, ordered by start date/time */
+
+private:
+    ICalTimezoneDataPrivate *d;
 };
 
 }
