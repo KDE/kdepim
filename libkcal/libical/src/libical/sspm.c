@@ -1491,7 +1491,7 @@ void sspm_write_header(struct sspm_buffer *buf,struct sspm_header *header)
     /* Append any content type parameters */    
     if(header->content_type_params != 0){
 	for(i=0; *(header->content_type_params[i])!= 0;i++){
-	    snprintf(temp,sizeof(temp),header->content_type_params[i]);
+	    strncpy(temp,header->content_type_params[i],sizeof(temp));
 	    sspm_append_char(buf,';');
 	    sspm_append_string(buf,temp);
 	}
