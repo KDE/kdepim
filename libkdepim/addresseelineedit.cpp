@@ -808,7 +808,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
   if ( ( obj == this ) &&
      ( e->type() == QEvent::AccelOverride ) ) {
     QKeyEvent *ke = static_cast<QKeyEvent*>( e );
-    if ( ke->key() == Key_Up || ke->key() == Key_Down ) {
+    if ( ke->key() == Key_Up || ke->key() == Key_Down || ke->key() == Key_Tab ) {
       ke->accept();
       return true;
     }
@@ -837,7 +837,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
         }
         return true;
       }
-    } else if ( ke->key() == Key_Down ) {
+    } else if ( ke->key() == Key_Down || ke->key() == Key_Tab ) {
       // same strategy for downwards
       //kdDebug() << "EVENTFILTER: Key_Down. currentIndex=" << currentIndex << endl;
       QListBoxItem *itemBelow = completionBox()->item( currentIndex + 1 );
