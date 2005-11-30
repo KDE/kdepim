@@ -1,13 +1,13 @@
 /* key.h - wraps a gpgme key
-   Copyright (C) 2003 Klarälvdalens Datakonsult AB
+   Copyright (C) 2003, 2005 Klarälvdalens Datakonsult AB
 
    This file is part of GPGME++.
- 
+
    GPGME++ is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
    (at your option) any later version.
- 
+
    GPGME++ is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -70,6 +70,7 @@ namespace GpgME {
     bool canSign() const;
     bool canCertify() const;
     bool canAuthenticate() const;
+    bool isQualified() const;
 
     bool hasSecret() const;
     bool isSecret() const { return hasSecret(); }
@@ -141,6 +142,7 @@ namespace GpgME {
     bool canSign() const;
     bool canCertify() const;
     bool canAuthenticate() const;
+    bool isQualified() const;
 
     bool isSecred() const;
 
