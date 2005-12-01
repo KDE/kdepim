@@ -23,7 +23,6 @@ Name[sv]=Program-oktettström
 Name[ta]=பயன்பாட்டு எண்மம்
 Name[tg]=Миқдори зиёди бинарии барномот
 Name[tr]=Uygulama Sekizli Akışı
-Name[xx]=xxApplication Octetstreamxx
 Name[zh_CN]=应用程序 Octetstream
 Comment=A bodypart formatter plugin for text/vcard
 Comment[bg]=Редактор с поддръжка на форматиране за текст/vcard
@@ -56,7 +55,6 @@ Comment[ta]=உரை அல்லது விஅட்டைக்கான �
 Comment[tg]=Модули ба андозадарории text/vcard
 Comment[tr]=text/vcard için bir gövde biçimleyici eklentisi
 Comment[uk]=Втулок форматування для text/vcard
-Comment[xx]=xxA bodypart formatter plugin for text/vcardxx
 Comment[zh_CN]=text/vcard 的格式化插件
 
 [Plugin]

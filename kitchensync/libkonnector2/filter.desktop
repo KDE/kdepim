@@ -16,6 +16,7 @@ Comment[he]=תוסף עבור Konnector של KitchenSync
 Comment[hu]=Szűrő a KitchenSync-csatolóhoz
 Comment[is]=Sía fyrir KitchenSync Konnector
 Comment[it]=Filtro per il Konnector KitchenSync
+Comment[ja]=KitchenSync Konnector 用フィルタ
 Comment[lt]=Filtras, skirtas KitchenSync Konnector
 Comment[nb]=Programtillegg for KitchenSync Konnector
 Comment[nl]=Filter voor KitchenSync Konnector
@@ -30,7 +31,6 @@ Comment[sv]=Filter för Kitchensync Konnector
 Comment[ta]=கிச்சன்கூட்டிணைப்பு இணைப்பானுக்கான அலங்காரம்
 Comment[tr]=KitchenSync Konnector için filtre
 Comment[uk]=Фільтр для KitchenSync Konnector
-Comment[xx]=xxFilter for KitchenSync Konnectorxx
 Comment[zh_CN]=KitchenSync Konnector 的过滤器
 Name=KitchenSyncFilter
 Name[bg]=Филтър за KitchenSync
@@ -41,7 +41,6 @@ Name[hu]=KitchenSync-szűrő
 Name[pt_BR]=Filtro KitchenSync
 Name[sv]=Kitchensync-filter
 Name[ta]=கிச்சன்சிங்க் அலங்காரம்
-Name[xx]=xxKitchenSyncFilterxx
 
 [PropertyDef::X-KDE-KitchenSyncFilterType]
 Type=QString

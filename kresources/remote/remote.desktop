@@ -39,7 +39,6 @@ Name[ta]=தொலைதூர கோப்பில் உள்ள நாள�
 Name[tg]=Тақвимот дар файли хурӯҷӣ
 Name[tr]=Uzak Dosyadaki Takvim
 Name[uk]=Календар у віддаленому файлі
-Name[xx]=xxCalendar in Remote Filexx
 Name[zh_CN]=远程文件中的日历
 X-KDE-Library=kcal_remote
 Type=Service

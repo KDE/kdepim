@@ -16,6 +16,7 @@ Name[he]=מפתח לא מוודא
 Name[hu]=Nem ellenőrzött kulcs
 Name[is]=Ekki staðfestur lykill
 Name[it]=Chiave non validata
+Name[ja]=有効な鍵がありません
 Name[lt]=Nevaliduotas raktas
 Name[nb]=Nøkkel ikke sjekket for gyldighet
 Name[nl]=Geen gevalideerde sleutel
@@ -31,7 +32,6 @@ Name[sv]=Nyckeln har inte validerats
 Name[ta]=செல்லுபடியாகாத விசை
 Name[tr]=Geçerli Olmayan Anahtar
 Name[uk]=Неперевірений ключ
-Name[xx]=xxNot Validated Keyxx
 Name[zh_CN]=未校验的密钥
 
 [Key Filter #1]
@@ -56,6 +56,7 @@ Name[he]=מפתח לא תקף
 Name[hu]=Lejárt kulcs
 Name[is]=Útrunninn lykill
 Name[it]=Chiave scaduta
+Name[ja]=有効期限切れな鍵
 Name[lt]=Baigęs galioti raktas
 Name[nb]=Utgått nøkkel
 Name[nl]=Verlopen sleutel
@@ -71,7 +72,6 @@ Name[sv]=Utgången nyckel
 Name[ta]=காலாவதியான விசை
 Name[tr]=Süresi Dolmuş Anahtar
 Name[uk]=Застарілий ключ
-Name[xx]=xxExpired Keyxx
 Name[zh_CN]=过期密钥
 
 [Key Filter #2]
@@ -93,6 +93,7 @@ Name[he]=מפתח לא קביל
 Name[hu]=Visszavont kulcs
 Name[is]=Afturkallaður lykill
 Name[it]=Chiave revocata
+Name[ja]=無効化された鍵
 Name[lt]=Atšauktas raktas
 Name[nb]=Tilbakekalt nøkkel
 Name[nl]=Ingetrokken sleutel
@@ -108,7 +109,6 @@ Name[sv]=Återkallad nyckel
 Name[ta]=நீக்கிய விசை
 Name[tr]=Geri Alınmış Anahtar
 Name[uk]=Анульований ключ
-Name[xx]=xxRevoked Keyxx
 Name[zh_CN]=吊销的密钥
 
 [Key Filter #3]
@@ -130,6 +130,7 @@ Name[fr]=Certificat racine de confiance
 Name[hu]=Megbízható gyökértanúsítvány
 Name[is]=Treyst rótarskilríki
 Name[it]=Certificato radice affidabile
+Name[ja]=信頼された Root 証明書
 Name[lt]=Patikimas root sertifikatas
 Name[nb]=Tiltrodd rot-sertifikat
 Name[nl]=Vertrouwd hoofdcertificaat
@@ -145,7 +146,6 @@ Name[sv]=Pålitligt rotcertifikat
 Name[ta]=நம்பகமான மூல சான்றிதழ்
 Name[tr]=Güvenilir Kök Sertifikası
 Name[uk]=Кореневий сертифікат з довірою
-Name[xx]=xxTrusted Root Certificatexx
 Name[zh_CN]=可信任的根证书
 
 [Key Filter #4]
@@ -167,6 +167,7 @@ Name[fr]=Certificat racine non fiable
 Name[hu]=Nem megbízható gyökértanúsítvány
 Name[is]=Ekki traust rótarskilríki
 Name[it]=Certificato radice non affidabile
+Name[ja]=信頼されてない Root 証明書
 Name[lt]=Nepatikimas root sertifikatas
 Name[nb]=Ikke tiltrodd rot-sertifikat
 Name[nl]=Niet vertrouwd hoofdcertificaat
@@ -182,7 +183,6 @@ Name[sv]=Opålitligt rotcertifikat
 Name[ta]=நம்பமுடியாத மூல சான்றிதழ்
 Name[tr]=Güvenilmeyen Kök Sertifikası
 Name[uk]=Кореневий сертифікат без довіри
-Name[xx]=xxNot Trusted Root Certificatexx
 Name[zh_CN]=未信任的根证书
 
 [Key Filter #5]
@@ -205,6 +205,7 @@ Name[he]=מפתחות אחרים
 Name[hu]=Egyéb kulcsok
 Name[is]=Aðrir lyklar
 Name[it]=Altre chiavi
+Name[ja]=他の鍵
 Name[lt]=Kiti raktai
 Name[nb]=Andre nøkler
 Name[nl]=Andere sleutels
@@ -221,6 +222,5 @@ Name[sv]=Andra nycklar
 Name[ta]=மற்ற விசைகள்
 Name[tr]=Diğer Anahtarlar
 Name[uk]=Інші ключі
-Name[xx]=xxOther Keysxx
 Name[zh_CN]=其它密钥
 

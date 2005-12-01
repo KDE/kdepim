@@ -39,7 +39,6 @@ Name[ta]= க்ரிப்டோ முன்னுரிமைகள்
 Name[tg]=Танзимоти рамзгузорӣ
 Name[tr]=Şifreleme Özellikleri
 Name[uk]=Параметри шифрування
-Name[xx]=xxCrypto Preferencesxx
 Name[zh_CN]=加密首选项
 Type=Service
 ServiceTypes=KAddressBook/ContactEditorWidget

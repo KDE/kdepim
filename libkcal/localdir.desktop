@@ -40,7 +40,6 @@ Name[ta]=பொது அடைவில் உள்ள நாள்காட�
 Name[tg]=Тақвимот дар каталоги локалӣ
 Name[tr]=Yerel Dizindeki Takvim
 Name[uk]=Календар у локальному каталозі
-Name[xx]=xxCalendar in Local Directoryxx
 Name[zh_CN]=本地目录中的日历
 X-KDE-Library=kcal_localdir
 Type=Service

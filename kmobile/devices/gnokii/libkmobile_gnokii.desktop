@@ -41,7 +41,6 @@ Name[tg]=Телефони мобилӣ ё органайзери (gnokii)
 Name[tr]=Cep Telefonu ya da Organizer (gnokii)
 Name[uk]=Мобільний телефон та тижневик (gnokii)
 Name[uz]=Уяли телефон ёки органайзер (gnokii)
-Name[xx]=xxMobile Phone or Organizer (gnokii)xx
 Name[zh_CN]=移动电话或 PDA(gnokii)
 Comment=This driver supports many NOKIA and other mobile phones via the gnokii library
 Comment[bg]=Драйвер за поддръжка на мобилни телефони, предимно Нокия, чрез библиотеката gnokii
@@ -80,7 +79,6 @@ Comment[ta]=இந்த இயக்கி பல NOKIA மற்றும் �
 Comment[tg]=Ин драйвер бисёри тамсилаҳои телефонҳои мобилии Nokia-ро ва дигар истеҳсолкунандаҳоро аз китобхонаи gnokii дастгирӣ мекунад
 Comment[tr]=Bu sürücü birçok NOKIA ve gnokii kütüphanesiyle diğer cep telefonlarını destekler
 Comment[uk]=Цей драйвер підтримує багато мобільних телефонів фірми NOKIA та інших мобільних телефонів через бібліотеку gnokii
-Comment[xx]=xxThis driver supports many NOKIA and other mobile phones via the gnokii libraryxx
 Comment[zh_CN]=此驱动程序通过 gnokii 库支持许多诺基亚和其它移动电话
 Type=Service
 ServiceTypes=kdedevice/mobiledevice

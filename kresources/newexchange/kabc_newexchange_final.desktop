@@ -16,6 +16,7 @@ Name[he]=פנקס כתובות בשרת Exchange
 Name[hu]=Exchange-kiszolgáló címjegyzéke
 Name[is]=Vistfangaskrá á Exchange þjóni
 Name[it]=Rubrica indirizzi su un server Exchange
+Name[ja]==Exchange サーバのアドレス帳
 Name[lt]=Adresų knygelė Exchange serveryje
 Name[nb]=Adressebok på en Exchange-tjener
 Name[nl]=Adresboek op een Exchange-server
@@ -31,5 +32,4 @@ Name[sv]=Adressbok på en Exchange-server
 Name[ta]=ஒருமாற்று சேவகனில் முகவரிப்புத்தகம்
 Name[tr]=Bir Exchange Sunucusu üzerinde Adres Defteri
 Name[uk]=Адресна книга на сервері Exchange
-Name[xx]=xxAddressbook on an Exchange Serverxx
 Name[zh_CN]=Exchange 服务器上的地址簿

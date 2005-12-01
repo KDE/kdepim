@@ -16,6 +16,7 @@ Name[ga]=Féilire ar Fhreastalaí IMAP via KMail
 Name[hu]=IMAP-kiszolgálón tárolt naptár a KMailen keresztül
 Name[is]=Dagatal á IMAP þjóni gegnum KMail
 Name[it]=Calendario su server IMAP via KMail
+Name[ja]==KMail 経由 IMAP サーバのカレンダー
 Name[lt]=Kalendorius IMAP serveryje per KMail
 Name[nb]=Kalender på IMAP-tjener via KMail
 Name[nl]=Agenda op IMAP-server via KMail
@@ -31,7 +32,6 @@ Name[sv]=Kalender på IMAP-server via Kmail
 Name[ta]=IMAP சேவையக வழியாக கேஅஞ்சலில் நாட்காட்டி
 Name[tr]=KMail Aracılığı ile IMAP Sunucusunda Takvim
 Name[uk]=Календар на сервері IMAP через KMail
-Name[xx]=xxCalendar on IMAP Server via KMailxx
 Name[zh_CN]=通过 KMail 访问 IMAP 服务器上的日历
 X-KDE-Library=kcal_kolab
 Type=Service

@@ -44,7 +44,6 @@ Name[tg]=Тақвим
 Name[tr]=Takvim
 Name[uk]=Календар
 Name[uz]=Календар
-Name[xx]=xxCalendarxx
 Name[zh_CN]=日历
 Type=Service
 ServiceTypes=KResources/Manager

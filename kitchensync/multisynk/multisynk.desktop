@@ -2,7 +2,6 @@
 Encoding=UTF-8
 Name=MultiSynK
 Name[sv]=Multisynk
-Name[xx]=xxMultiSynKxx
 GenericName=Synchronization
 GenericName[bg]=Синхронизация
 GenericName[ca]=Sincronització
@@ -36,7 +35,6 @@ GenericName[sv]=Synkronisering
 GenericName[ta]=கூட்டிணைப்பு
 GenericName[tr]=Senkronizasyon
 GenericName[uk]=Синхронізація
-GenericName[xx]=xxSynchronizationxx
 GenericName[zh_CN]=同步
 Exec=multisynk
 Icon=multisynk

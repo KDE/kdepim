@@ -12,7 +12,6 @@ Name[hi]=के-मोबाइल
 Name[nn]=KMobil
 Name[sv]=Kmobile
 Name[ta]=கேநடமாடும் தொலைபேசி
-Name[xx]=xxKMobilexx
 
 GenericName=Manage Mobile Devices
 GenericName[be]=Кіраваньне мабільнымі прыладамі
@@ -55,7 +54,6 @@ GenericName[ta]=நடமாடும் சாதனத்தை நிர்�
 GenericName[tg]=Идоракунӣ бо дастгоҳи мобилӣ
 GenericName[tr]=Taşınabilir Aygıtlar Yöneticisi
 GenericName[uk]=Робота з мобільними пристроями
-GenericName[xx]=xxManage Mobile Devicesxx
 GenericName[zh_CN]=管理移动设备
 
 Comment=A KDE Mobile Devices Manager
@@ -98,7 +96,6 @@ Comment[ta]=ஒரு கேடிஇ நடமாடும் சாதனத�
 Comment[tg]=Мудири дастгоҳи мобилии KDE
 Comment[tr]=KDE Taşınabilir Aygıtlar Yöneticisi
 Comment[uk]=Менеджер мобільних пристроїв KDE
-Comment[xx]=xxA KDE Mobile Devices Managerxx
 Comment[zh_CN]=KDE 移动设备管理器
 
 X-KDE-StartupNotify=false

@@ -1,7 +1,6 @@
 [Desktop Entry]
 Name=KTnef
 Name[sv]=Ktnef
-Name[xx]=xxKTnefxx
 GenericName=TNEF File Viewer
 GenericName[bg]=Преглед на файлове TNEF
 GenericName[ca]=Visor de fitxers TNEF
@@ -33,7 +32,6 @@ GenericName[sv]=TNEF-filvisning
 GenericName[ta]=TNEF  கோப்பு காட்சியாளன்
 GenericName[tr]=TNEF Dosya Göstericisi
 GenericName[uk]=Переглядач файлів TNEF
-GenericName[xx]=xxTNEF File Viewerxx
 GenericName[zh_CN]=TNEF 文件查看器
 Exec=ktnef %i %m -caption "%c"
 Icon=ktnef
@@ -77,7 +75,6 @@ Comment[ta]=TNEF கோப்புகளுக்கான காட்சி�
 Comment[tg]=Намоиш ва боз кардани файлҳои TNEF
 Comment[tr]=TNEF dosyaları için gösterici/çıkarıcı
 Comment[uk]=Переглядач/розпаковувач файлів TNEF
-Comment[xx]=xxA viewer/extractor for TNEF filesxx
 Comment[zh_CN]=TNEF 文件的查看/提取器
 Terminal=false
 MimeType=application/ms-tnef;

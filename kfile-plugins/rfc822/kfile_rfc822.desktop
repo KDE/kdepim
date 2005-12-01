@@ -44,7 +44,6 @@ Name[ta]=மின்னஞ்சல் தகவல்
 Name[tg]=Иттилоот дар бораи почтаи электронӣ
 Name[tr]=E-Posta Bilgisi
 Name[uk]=Інформація про повідомлення ел. пошти
-Name[xx]=xxEmail Infoxx
 Name[zh_CN]=电子邮件信息
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_rfc822
