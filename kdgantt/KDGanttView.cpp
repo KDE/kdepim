@@ -4719,6 +4719,12 @@ bool KDGanttView::isLinkItemsEnabled() const
   Gantt view. Notice that \a pos is the absolute mouse position.
 */
 
+/*!
+  \fn void KDGanttView::gvLinkContextMenuRequested ( KDGanttViewTaskLink * link, const QPoint & pos )
+
+  This signal is emitted when the user requests a context menu for a link in the
+  Gantt view. Notice that \a pos is the absolute mouse position.
+*/
 
 /*!
   \fn void KDGanttView::linkItems ( KDGanttViewItem* from, KDGanttViewItem* to, int linkType )

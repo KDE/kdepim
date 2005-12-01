@@ -371,6 +371,7 @@ signals:
     void gvItemDoubleClicked( KDGanttViewItem* );
     // the point is the global position!!
     void gvContextMenuRequested ( KDGanttViewItem * item, const QPoint & pos );
+    void gvLinkContextMenuRequested ( KDGanttViewTaskLink * link, const QPoint & pos );
 
     // lv... means item in listview clicked
     void lvCurrentChanged( KDGanttViewItem* );
