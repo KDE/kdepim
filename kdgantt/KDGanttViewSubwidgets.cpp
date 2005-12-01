@@ -3365,10 +3365,7 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
         }
     }
     if (e->button() == RightButton ) {
-        if (currentLink)
-            mySignalSender->gvLinkContextMenuRequested( currentLink, e->globalPos() );
-        else
-            mySignalSender->gvContextMenuRequested( currentItem, e->globalPos() );
+        mySignalSender->gvContextMenuRequested( currentItem, e->globalPos() );
     }
     if (autoScrollEnabled && e->button() == LeftButton) {
         myScrollTimer->start(50);
