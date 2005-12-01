@@ -20,3 +20,19 @@ if test "x$have_boost" = "xyes"; then
 fi
 AC_DEFINE(HAVE_STLNAMESPACE, 1, [old STL])
 
+AC_LANG_PUSH(C++)
+AC_CACHE_CHECK(for stl coping with namespace std, ac_cv_var_stlnamespace,
+        AC_TRY_COMPILE([
+                #include <iterator>
+                struct s : public std::iterator<std::forward_iterator_tag, int> {};
+        ], [
+        ], ac_cv_var_stlnamespace=yes, ac_cv_var_stlnamespace=no))
+if test $ac_cv_var_stlnamespace = yes; then
+        AC_DEFINE(HAVE_STLNAMESPACE, 1, [Define if your version of stl is defined in namespace std])
+        AC_DEFINE(STD_NAMESPACE_PREFIX, [std::], [Namespace prefix the stl is defined in])
+else
+        AC_DEFINE(STD_NAMESPACE_PREFIX, [], [Namespace prefix the stl is defined in])
+fi
+
+AC_LANG_POP
+
