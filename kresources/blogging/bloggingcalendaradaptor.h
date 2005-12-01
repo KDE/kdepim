@@ -56,9 +56,9 @@ class BloggingCalendarAdaptor : public CalendarAdaptor
 Q_OBJECT
   public:
     BloggingCalendarAdaptor();
-    Q3ValueList<KPIM::FolderLister::ContentType> supportedTypes()
+    QList<KPIM::FolderLister::ContentType> supportedTypes()
     {
-      Q3ValueList<KPIM::FolderLister::ContentType> types;
+      QList<KPIM::FolderLister::ContentType> types;
       types << KPIM::FolderLister::Journal;
       return types;
     }

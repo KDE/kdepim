@@ -30,7 +30,7 @@
 
 #include <kurl.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 #include <Q3CString>
 
 namespace KIO {
@@ -44,9 +44,9 @@ class GroupDavCalendarAdaptor : public DavCalendarAdaptor
   public:
     GroupDavCalendarAdaptor();
 
-    Q3ValueList<KPIM::FolderLister::ContentType> supportedTypes()
+    QList<KPIM::FolderLister::ContentType> supportedTypes()
     {
-      Q3ValueList<KPIM::FolderLister::ContentType> types;
+      QList<KPIM::FolderLister::ContentType> types;
       types << KPIM::FolderLister::Event;
       types << KPIM::FolderLister::Todo;
       return types;
@@ -54,7 +54,7 @@ class GroupDavCalendarAdaptor : public DavCalendarAdaptor
     void customAdaptDownloadUrl( KURL &url );
     void customAdaptUploadUrl( KURL &url );
     Q3CString identifier() const { return "KCalResourceGroupDAV"; }
-    QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.ics"; }
+    QString defaultNewItemName( KPIM::GroupwareUploadItem* /*item*/ ) { return "new.ics"; }
     long flags() const { return 0; }
 
 
