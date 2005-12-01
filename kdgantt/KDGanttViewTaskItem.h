@@ -57,9 +57,11 @@ public:
                             const QString& name = QString::null );
     virtual ~KDGanttViewTaskItem();
 
+    virtual bool moveConnector( Connector, QPoint p );
+    virtual Connector getConnector( QPoint p );
     void setStartTime( const QDateTime& start );
     void setEndTime( const QDateTime& end );
-
+    unsigned int getTimeForTimespan( const QDateTime & start, const QDateTime & end );
 private:
     void showItem( bool show = true, int coordY = 0 );
     void initItem();

@@ -1,5 +1,5 @@
 /* -*- Mode: C++ -*-
-   $Id$
+   $Id: KDGanttSizingControl.h,v 1.4 2005/10/11 11:44:04 lutz Exp $
 */
 /****************************************************************************
  ** Copyright (C)  2002-2004 Klarälvdalens Datakonsult AB.  All rights reserved.
@@ -34,6 +34,8 @@
 #define KDGANTTSIZINGCONTROL_H
 
 #include <qwidget.h>
+
+#include "kdgantt_qt3_compat.h"
 
 class KDGanttSizingControl : public QWidget
 {

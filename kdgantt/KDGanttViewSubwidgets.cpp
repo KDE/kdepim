@@ -4,8 +4,8 @@
 */
 
 /****************************************************************************
- ** Copyright (C)  2002-2004 Klarï¿½vdalens Datakonsult AB.  All rights reserved.
- **
+ ** Copyright (C)  2002-2004 Klarälvdalens Datakonsult AB.  All rights reserved.
+ **(
  ** This file is part of the KDGantt library.
  **
  ** This file may be distributed and/or modified under the terms of the
@@ -37,41 +37,18 @@
 #include "KDGanttViewEventItem.h"
 #include "KDGanttViewSummaryItem.h"
 #include "KDGanttViewTaskItem.h"
-#ifndef KDGANTT_MASTER_CVS
-#include "KDGanttViewSubwidgets.moc"
-#endif
 
 #include <qlabel.h>
-#include <q3header.h>
 #include <qpainter.h>
 #include <qrect.h>
 #include <qtooltip.h>
 #include <qapplication.h>
 #include <qdrawutil.h>
 #include <qpalette.h>
-#include <q3dragobject.h>
-#include <q3ptrlist.h>
-//Added by qt3to4:
-#include <QPaintEvent>
-#include <QResizeEvent>
-#include <Q3PopupMenu>
-#include <QMouseEvent>
-#include <Q3Frame>
-#include <QDragMoveEvent>
-#include <QDragLeaveEvent>
-#include <Q3ValueList>
-#include <QDropEvent>
-#include <QDragEnterEvent>
-#include <QHBoxLayout>
-#include <QPixmap>
 
-#include <kglobal.h>
-#include <klocale.h>
-#include <kcalendarsystem.h>
-#include <kdebug.h>
-
-KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):Q3Canvas (parent)
+KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):QCanvas (parent)
 {
+    mMinimumHeight = 0;
     myGanttView = myGantt;
     taskLinksVisible = true;
     flag_blockUpdating = false;
@@ -85,22 +62,21 @@ KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):Q3C
     pendingHeight = 0;
     pendingWidth = 0;
     retune(256);
-    resize(1,1);
+    resize(1600,1200); 
+    myTaskLinkList.setAutoDelete( false );
+    mUpdateTimer = new QTimer ( this ); 
+    connect( mUpdateTimer, SIGNAL (  timeout() ) , this, SLOT( updateSlot() )) ;
+    mSimpleUpdateTimer = new QTimer ( this ); 
+    connect( mSimpleUpdateTimer, SIGNAL (  timeout() ) , this, SLOT( simpleUpdateSlot() )) ;
+}
+KDTimeTableWidget::~KDTimeTableWidget()
+{
+ 
 }
 
-Q3PtrList<KDGanttViewTaskLink> KDTimeTableWidget::taskLinks()
+QPtrList<KDGanttViewTaskLink> KDTimeTableWidget::taskLinks()
 {
     return myTaskLinkList;
-}
-
-void KDTimeTableWidget::clearTaskLinks()
-{
-    // cannot use clear() here, as tasklinks will remove themselves from my list when deleted!
-    Q3PtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
-    while (it.current()) {
-        delete it.current();
-    }
-        
 }
 
 void KDTimeTableWidget::resetWidth( int wid )
@@ -143,38 +119,25 @@ QBrush KDTimeTableWidget::noInformationBrush() const
 
 void KDTimeTableWidget::removeItemFromTasklinks( KDGanttViewItem* item)
 {
-    Q3PtrListIterator<KDGanttViewTaskLink> it((myTaskLinkList));
+    QPtrListIterator<KDGanttViewTaskLink> it((myTaskLinkList));
     for ( ; it.current(); ++it ) {
         it.current()->removeItemFromList( item );
     }
 }
 
-void KDTimeTableWidget::expandItem( Q3ListViewItem * item)
+void KDTimeTableWidget::expandItem( QListViewItem * item)
 {
     item->invalidateHeight () ;
     //qApp->processEvents();
     updateMyContent();
 }
-void KDTimeTableWidget::collapseItem( Q3ListViewItem * item)
+void KDTimeTableWidget::collapseItem( QListViewItem * item)
 {
     item->invalidateHeight () ;
     //qApp->processEvents();
     updateMyContent();
 }
 
-void KDTimeTableWidget::highlightItem( Q3ListViewItem * item )
-{
-    static bool itemwashighlighted;
-    static KDGanttViewItem* highlightedItem = 0;
-    if (highlightedItem)
-        highlightedItem->setHighlight(itemwashighlighted);
-    highlightedItem = ( KDGanttViewItem*)item;
-    itemwashighlighted = highlightedItem->highlight();
-    highlightedItem->setHighlight(true);
-    item->invalidateHeight () ;
-    myGanttView->myListView->contentsY();
-    updateMyContent();
-}
 int  KDTimeTableWidget::computeHeight()
 {
     // compute height of ListView
@@ -221,8 +184,8 @@ void KDTimeTableWidget::computeVerticalGrid()
 
     if (myGanttView->showMinorTicks()){//minor
         colPen.setWidth(cw);
-        Q3PtrListIterator<KDCanvasRectangle> itcol(columnColorList);
-        Q3PtrListIterator<KDCanvasLine> itgrid(verGridList);
+        QPtrListIterator<KDCanvasRectangle> itcol(columnColorList);
+        QPtrListIterator<KDCanvasLine> itgrid(verGridList);
         for ( ; itgrid.current(); ++itgrid ) {
             if (i < wid) {
                 itgrid.current()->setPoints(i,0,i,h);
@@ -240,8 +203,8 @@ void KDTimeTableWidget::computeVerticalGrid()
                                itcol.current()->setPoints(i+(cw/2),0,i+(cw/2),h);
                              */
 
-                                itcol.current()->setPen( QPen::NoPen );
-                                itcol.current()->setBrush( QBrush( colcol, SolidPattern) );
+                                itcol.current()->setPen( Qt::NoPen );
+                                itcol.current()->setBrush( QBrush( colcol, Qt::SolidPattern) );
                                 itcol.current()->setSize(cw ,h );
                                 itcol.current()->move( i, 0 );
                                 itcol.current()->show();
@@ -254,8 +217,8 @@ void KDTimeTableWidget::computeVerticalGrid()
                                   templine->setPoints(i+(cw/2),0,i+(cw/2),h);
                                 */
                                 temprect = new KDCanvasRectangle(this,0,Type_is_KDGanttGridItem);
-                                temprect->setPen( QPen::NoPen );
-                                temprect->setBrush( QBrush( colcol, SolidPattern) );
+                                temprect->setPen( Qt::NoPen );
+                                temprect->setBrush( QBrush( colcol, Qt::SolidPattern) );
                                 temprect->setSize(cw ,h );
                                 temprect->move( i, 0 );
                                 temprect->setZ(-20);
@@ -286,16 +249,16 @@ void KDTimeTableWidget::computeVerticalGrid()
                            itcol.current()->setPen(colPen);
                            itcol.current()->setPoints(i+(cw/2),0,i+(cw/2),h);
                          */
-                            itcol.current()->setPen( QPen::NoPen );
-                            itcol.current()->setBrush( QBrush( colcol, SolidPattern) );
+                            itcol.current()->setPen( Qt::NoPen );
+                            itcol.current()->setBrush( QBrush( colcol, Qt::SolidPattern) );
                             itcol.current()->setSize(cw ,h );
                             itcol.current()->move( i, 0 );
                             itcol.current()->show();
                             ++itcol;
                         } else {
                             temprect = new KDCanvasRectangle(this,0,Type_is_KDGanttGridItem);
-                            temprect->setPen( QPen::NoPen );
-                            temprect->setBrush( QBrush( colcol, SolidPattern) );
+                            temprect->setPen( Qt::NoPen );
+                            temprect->setBrush( QBrush( colcol, Qt::SolidPattern) );
                             temprect->setSize(cw ,h );
                             temprect->move( i, 0 );
                             temprect->setZ(-20);
@@ -317,10 +280,10 @@ void KDTimeTableWidget::computeVerticalGrid()
                 itcol.current()->hide();
     } else {//major
         if (myGanttView->showMajorTicks()) {
-            Q3ValueList<int>::iterator intIt = myGanttView->myTimeHeader->majorTicks.begin();
-            Q3ValueList<int>::iterator intItEnd = myGanttView->myTimeHeader->majorTicks.end();
-            Q3PtrListIterator<KDCanvasRectangle> itcol(columnColorList);
-            Q3PtrListIterator<KDCanvasLine> itgrid(verGridList);
+            QValueList<int>::iterator intIt = myGanttView->myTimeHeader->majorTicks.begin();
+            QValueList<int>::iterator intItEnd = myGanttView->myTimeHeader->majorTicks.end();
+            QPtrListIterator<KDCanvasRectangle> itcol(columnColorList);
+            QPtrListIterator<KDCanvasLine> itgrid(verGridList);
             int left = 0;
             for ( ; itgrid.current(); ++itgrid ) {
                 if (intIt != intItEnd) {
@@ -342,16 +305,16 @@ void KDTimeTableWidget::computeVerticalGrid()
                                        itcol.current()->setPen(colPen);
                                        itcol.current()->setPoints(i+mid,0,mid,h);
                                      */
-                                        itcol.current()->setPen( QPen::NoPen );
-                                        itcol.current()->setBrush( QBrush( colcol, SolidPattern) );
+                                        itcol.current()->setPen( Qt::NoPen );
+                                        itcol.current()->setBrush( QBrush( colcol, Qt::SolidPattern) );
                                         itcol.current()->setSize(mid ,h );
                                         itcol.current()->move( left, 0 );
                                         itcol.current()->show();
                                         ++itcol;
                                     } else {
                                         temprect = new KDCanvasRectangle(this,0,Type_is_KDGanttGridItem);
-                                        temprect->setPen( QPen::NoPen );
-                                        temprect->setBrush( QBrush( colcol, SolidPattern) );
+                                        temprect->setPen( Qt::NoPen );
+                                        temprect->setBrush( QBrush( colcol, Qt::SolidPattern) );
                                         temprect->setSize(mid,h );
                                         temprect->move( left, 0 );
                                         temprect->setZ(-20);
@@ -396,16 +359,16 @@ void KDTimeTableWidget::computeVerticalGrid()
                                    itcol.current()->setPen(colPen);
                                    itcol.current()->setPoints(i+mid,0,mid,h);
                                  */
-                                    itcol.current()->setPen( QPen::NoPen );
-                                    itcol.current()->setBrush( QBrush( colcol, SolidPattern) );
+                                    itcol.current()->setPen( Qt::NoPen );
+                                    itcol.current()->setBrush( QBrush( colcol, Qt::SolidPattern) );
                                     itcol.current()->setSize(mid ,h );
                                     itcol.current()->move( left, 0 );
                                     itcol.current()->show();
                                     ++itcol;
                                 } else {
                                     temprect = new KDCanvasRectangle(this,0,Type_is_KDGanttGridItem);
-                                    temprect->setPen( QPen::NoPen );
-                                    temprect->setBrush( QBrush( colcol, SolidPattern) );
+                                    temprect->setPen( Qt::NoPen );
+                                    temprect->setBrush( QBrush( colcol, Qt::SolidPattern) );
                                     temprect->setSize(mid ,h );
                                     temprect->move( left, 0 );
                                     temprect->setZ(-20);
@@ -431,11 +394,11 @@ void KDTimeTableWidget::computeVerticalGrid()
         }
         else {
             //hideall
-            Q3PtrListIterator<KDCanvasLine> itgrid(verGridList);
+            QPtrListIterator<KDCanvasLine> itgrid(verGridList);
             for ( ; itgrid.current(); ++itgrid ) {
                 itgrid.current()->hide();
             }
-            Q3PtrListIterator<KDCanvasRectangle> itcol(columnColorList);
+            QPtrListIterator<KDCanvasRectangle> itcol(columnColorList);
             for ( ; itcol.current(); ++itcol ) {
                 itcol.current()->hide();
             }
@@ -453,7 +416,7 @@ void KDTimeTableWidget::computeHorizontalGrid()
     else
         wid = width();
     KDCanvasLine* templine;
-    Q3PtrListIterator<KDCanvasLine> ithor(horGridList);
+    QPtrListIterator<KDCanvasLine> ithor(horGridList);
     if ( ithor.current() ) {
         templine = ithor.current();
         ++ithor;
@@ -504,7 +467,7 @@ void KDTimeTableWidget::computeDenseLines()
         wid = pendingWidth;
     else
         wid = width();
-    Q3PtrListIterator<KDCanvasRectangle> ithordense(horDenseList);
+    QPtrListIterator<KDCanvasRectangle> ithordense(horDenseList);
     KDCanvasRectangle* denseLine;
     int tempDenseLineCount = 0;
     while ( temp ) {
@@ -552,7 +515,7 @@ void KDTimeTableWidget::computeShowNoInformation()
         wid = pendingWidth;
     else
         wid = width();
-    Q3PtrListIterator<KDCanvasRectangle> itnoinfo(showNoInfoList);
+    QPtrListIterator<KDCanvasRectangle> itnoinfo(showNoInfoList);
     KDCanvasRectangle* noInfoLine;
     while ( temp ) {
         if ( temp->showNoInformation() ) {
@@ -578,11 +541,22 @@ void KDTimeTableWidget::computeShowNoInformation()
     }
 
 }
-
+void KDTimeTableWidget::computeTaskLinksForItem( KDGanttViewItem * item )
+{
+  QPtrListIterator<KDGanttViewTaskLink> it((myTaskLinkList));
+    for ( ; it.current(); ++it ) {
+        if ( it.current()->isFromToItem( item ) ) {
+            if (it.current()->isVisible())
+                it.current()->showMe(true);
+            else
+                it.current()->showMe(false);
+        }
+    }
+}
 void KDTimeTableWidget::computeTaskLinks()
 {
     //compute and show tasklinks
-    Q3PtrListIterator<KDGanttViewTaskLink> it((myTaskLinkList));
+    QPtrListIterator<KDGanttViewTaskLink> it((myTaskLinkList));
     for ( ; it.current(); ++it ) {
         if (it.current()->isVisible())
             it.current()->showMe(true);
@@ -594,6 +568,34 @@ void KDTimeTableWidget::computeTaskLinks()
 // updateMyContent() can be blocked by blockUpdating( true ) or inc_blockUpdating()
 // updateMyContent() is blocked, if the GanttView is hidden after startup
 
+int KDTimeTableWidget::minimumHeight()
+{
+    return mMinimumHeight;
+}
+void KDTimeTableWidget::updateSlot()
+{
+    //qDebug("PERFORMING UPDATE ");
+    computeTaskLinks();
+    computeHorizontalGrid();
+    computeDenseLines();
+    computeShowNoInformation();
+    update();
+}
+
+void KDTimeTableWidget::simpleUpdateSlot()
+{
+    update();
+}
+void KDTimeTableWidget::forceUpdate()
+{
+    mUpdateTimer->stop();
+    mSimpleUpdateTimer->stop();
+    updateSlot();
+}
+void KDTimeTableWidget::simpleUpdate()
+{
+    mSimpleUpdateTimer->start( 0, true );
+}
 void KDTimeTableWidget::updateMyContent()
 {
     if ( flag_blockUpdating || int_blockUpdating ) {
@@ -610,7 +612,7 @@ void KDTimeTableWidget::updateMyContent()
     }
     */
     int hei = computeHeight();
-    minimumHeight = hei;
+    mMinimumHeight = hei;
     int viewport_hei = myGanttView->myCanvasView->viewport()->height();
     if ( viewport_hei > hei )
         hei = viewport_hei + 100;
@@ -634,12 +636,9 @@ void KDTimeTableWidget::updateMyContent()
             //compute VerticalGrid and column color
             computeVerticalGrid();
         }
-    computeTaskLinks();
-    computeHorizontalGrid();
-    computeDenseLines();
-    computeShowNoInformation();
     //setAllChanged();
-    update();
+    //qDebug("START TIMER ");
+    mUpdateTimer->start( 0, true );
     if (pendingWidth && pendingHeight ) {
         resize( pendingWidth, pendingHeight );
         pendingWidth = 0;
@@ -699,17 +698,24 @@ int KDTimeTableWidget::horBackgroundLines(  QBrush& brush )
     return denseLineCount;
 }
 
-int KDTimeTableWidget::getCoordX( QDateTime dt ) {
-    return myGanttView->myTimeHeader->getCoordX(dt);
-}
+
 
 /* ***************************************************************
    KDTimeHeaderWidget:: KDTimeHeaderWidget
    ***************************************************************** */
-KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant )
-    : QWidget (parent)
+KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant ):QWidget ( parent, "KDTimeHeaderWidget", Qt::WNoAutoErase )
 {
+    paintPix.resize( 1280,100 );
     myToolTip = new KDTimeHeaderToolTip(this,this);
+    mWeekStartsMonday = false;
+    mWeekScaleShowNumber = false;
+    myMajorScaleCount = 0;
+    mMaxWidFormatMonth = 0;
+    mMaxWidFormatWeek = 0;
+    mMaxWidFormatDay = 0;
+    mMaxWidtimeFormatHour = 0;
+    mMaxWidtimeFormatMinute = 0;
+    mMaxWidtimeFormatSecond = 0;
     mySizeHint = 0;
     myGanttView = gant;
     flagDoNotRecomputeAfterChange = true;
@@ -719,10 +725,10 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant )
     flagStartTimeSet = false;
     flagEndTimeSet = false;
     myCenterDateTime = QDateTime::currentDateTime ();
-    setScale(KDGanttView::Auto);
-    //setScale(KDGanttView::Hour);
+    //setScale(KDGanttView::Auto);
+    setScale(KDGanttView::Hour);
     myMaxScale = KDGanttView::Month;
-    myMinScale = KDGanttView::Minute;
+    myMinScale = KDGanttView::Second;
     myAutoScaleMinorTickcount = 100;
     setMajorScaleCount( 1 );
     setMinorScaleCount( 1);
@@ -733,44 +739,87 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant )
     setWeekendBackgroundColor(QColor(220,220,220) );
     setWeekendDays( 6, 7 );
     myGridMinorWidth = 0;
-    myPopupMenu = new Q3PopupMenu(this);
-    Q3PopupMenu * zoomPopupMenu = new Q3PopupMenu(this);
-    myPopupMenu->insertItem (i18n("Zoom"),zoomPopupMenu, 1);
-    zoomPopupMenu->insertItem( i18n("Zoom to 100%"),this, SLOT(setSettings(int)),0 ,21,21 );
-    zoomPopupMenu->insertItem( i18n("Zoom to Fit"),this, SLOT(setSettings(int)),0 ,20,20 );
-    zoomPopupMenu->insertItem( i18n("Zoom In (x 2)"),this, SLOT(setSettings(int)),0 ,22,22 );
-    zoomPopupMenu->insertItem( i18n("Zoom In (x 6)"),this, SLOT(setSettings(int)),0 ,24,24 );
-    zoomPopupMenu->insertItem( i18n("Zoom In (x 12)"),this, SLOT(setSettings(int)),0 ,26,26 );
-    zoomPopupMenu->insertItem( i18n("Zoom Out (x 1/2)"),this, SLOT(setSettings(int)),0 ,23,23 );
-    zoomPopupMenu->insertItem( i18n("Zoom Out (x 1/6)"),this, SLOT(setSettings(int)),0 ,25,25 );
-    zoomPopupMenu->insertItem( i18n("Zoom Out (x 1/12)"),this, SLOT(setSettings(int)),0 ,27,27 );
-    scalePopupMenu = new Q3PopupMenu(this);
-    myPopupMenu->insertItem (i18n("Scale"),scalePopupMenu, 2);
-    scalePopupMenu->insertItem( i18n("Minute"),this, SLOT(setSettings(int)),0 ,1,1 );
-    scalePopupMenu->insertItem( i18n("Hour"),this, SLOT(setSettings(int)),0 ,2,2 );
-    scalePopupMenu->insertItem( i18n("Day"),this, SLOT(setSettings(int)),0 ,3,3 );
-    scalePopupMenu->insertItem( i18n("Week"),this, SLOT(setSettings(int)),0 ,4,4 );
-    scalePopupMenu->insertItem( i18n("Month"),this, SLOT(setSettings(int)),0 ,5,5 );
-    scalePopupMenu->insertItem( i18n("Auto"),this, SLOT(setSettings(int)),0 ,6,6 );
-    scalePopupMenu->setCheckable ( true );
-    timePopupMenu = new Q3PopupMenu(this);
-    myPopupMenu->insertItem (i18n("Time Format"),timePopupMenu, 3);
-    timePopupMenu->insertItem( i18n("24 Hour"),this, SLOT(setSettings(int)),0 ,40,40 );
-    timePopupMenu->insertItem( i18n("12 PM Hour"),this, SLOT(setSettings(int)),0 ,41,41 );
-    timePopupMenu->insertItem( i18n("24:00 Hour"),this, SLOT(setSettings(int)),0 ,42,42 );
-    yearPopupMenu = new Q3PopupMenu(this);
-    myPopupMenu->insertItem (i18n("Year Format"),yearPopupMenu, 4);
-    yearPopupMenu->insertItem( i18n("Four Digit"),this, SLOT(setSettings(int)),0 ,50,50 );
-    yearPopupMenu->insertItem( i18n("Two Digit"),this, SLOT(setSettings(int)),0 ,51,51 );
-    yearPopupMenu->insertItem( i18n("Two Digit Apostrophe"),this, SLOT(setSettings(int)),0 ,52,52 );
-    yearPopupMenu->insertItem( i18n("No Date on Minute/Hour Scale"),this, SLOT(setSettings(int)),0 ,53,53 );
+    myPopupMenu = new QPopupMenu(this);
 
-    gridPopupMenu = new Q3PopupMenu(this);
-    myPopupMenu->insertItem (i18n("Grid"),gridPopupMenu,5);
-    gridPopupMenu->insertItem( i18n("Show Minor Grid"),this, SLOT(setSettings(int)),0 ,10,10 );
-    gridPopupMenu->insertItem( i18n("Show Major Grid"),this, SLOT(setSettings(int)),0 ,11,11 );
-    gridPopupMenu->insertItem( i18n("Show No Grid"),this, SLOT(setSettings(int)),0 ,12,12 );
-    myPopupMenu->insertItem( i18n("Print"),this, SLOT(setSettings(int)),0 ,30,30 );
+    int ii = 0;
+    int jjj = 0;
+    QPopupMenu * gotoPopupMenu = new QPopupMenu(this);
+    myPopupMenu->insertItem (tr("Go to start of"),gotoPopupMenu, ++ii);
+    gotoPopupMenu->insertItem( tr("Today"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Yesterday"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Current Week"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Last Week"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Current Month"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Last Month"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Current Year"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Last Year"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+
+    gotoPopupMenu = new QPopupMenu(this);
+    myPopupMenu->insertItem (tr("Show timespan of"),gotoPopupMenu, ++ii);
+    jjj = 100;
+    gotoPopupMenu->insertItem( tr("Today"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Yesterday"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Current Week"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Last Week"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Current Month"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Last Month"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Current Year"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+    gotoPopupMenu->insertItem( tr("Last Year"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
+    ++jjj;
+
+    QPopupMenu * zoomPopupMenu = new QPopupMenu(this);
+    myPopupMenu->insertItem (tr("Zoom"),zoomPopupMenu, ++ii);
+    zoomPopupMenu->insertItem( tr("Zoom to 100%"),this, SLOT(setSettings(int)),0 ,21,21 );
+    zoomPopupMenu->insertItem( tr("Zoom to fit"),this, SLOT(setSettings(int)),0 ,20,20 );
+    zoomPopupMenu->insertItem( tr("Zoom in (x 2)"),this, SLOT(setSettings(int)),0 ,22,22 );
+    zoomPopupMenu->insertItem( tr("Zoom in (x 6)"),this, SLOT(setSettings(int)),0 ,24,24 );
+    zoomPopupMenu->insertItem( tr("Zoom in (x 12)"),this, SLOT(setSettings(int)),0 ,26,26 );
+    zoomPopupMenu->insertItem( tr("Zoom out (x 1/2)"),this, SLOT(setSettings(int)),0 ,23,23 );
+    zoomPopupMenu->insertItem( tr("Zoom out (x 1/6)"),this, SLOT(setSettings(int)),0 ,25,25 );
+    zoomPopupMenu->insertItem( tr("Zoom out (x 1/12)"),this, SLOT(setSettings(int)),0 ,27,27 );
+    scalePopupMenu = new QPopupMenu(this);
+    myPopupMenu->insertItem (tr("Scale"),scalePopupMenu, ++ii);
+    scalePopupMenu->insertItem( tr("Second"),this, SLOT(setSettings(int)),0 ,0,0 );
+    scalePopupMenu->insertItem( tr("Minute"),this, SLOT(setSettings(int)),0 ,1,1 );
+    scalePopupMenu->insertItem( tr("Hour"),this, SLOT(setSettings(int)),0 ,2,2 );
+    scalePopupMenu->insertItem( tr("Day"),this, SLOT(setSettings(int)),0 ,3,3 );
+    scalePopupMenu->insertItem( tr("Week"),this, SLOT(setSettings(int)),0 ,4,4 );
+    scalePopupMenu->insertItem( tr("Month"),this, SLOT(setSettings(int)),0 ,5,5 );
+    scalePopupMenu->insertItem( tr("Auto"),this, SLOT(setSettings(int)),0 ,6,6 );
+    scalePopupMenu->setCheckable ( true );
+    timePopupMenu = new QPopupMenu(this);
+    myPopupMenu->insertItem (tr("Time Format"),timePopupMenu, ++ii);
+    timePopupMenu->insertItem( tr("24 Hour"),this, SLOT(setSettings(int)),0 ,40,40 );
+    timePopupMenu->insertItem( tr("12 PM Hour"),this, SLOT(setSettings(int)),0 ,41,41 );
+    timePopupMenu->insertItem( tr("24:00 Hour"),this, SLOT(setSettings(int)),0 ,42,42 );
+    yearPopupMenu = new QPopupMenu(this);
+    myPopupMenu->insertItem (tr("Year Format"),yearPopupMenu, ++ii);
+    yearPopupMenu->insertItem( tr("Four Digit"),this, SLOT(setSettings(int)),0 ,50,50 );
+    yearPopupMenu->insertItem( tr("Two Digit"),this, SLOT(setSettings(int)),0 ,51,51 );
+    yearPopupMenu->insertItem( tr("Two Digit Apostrophe"),this, SLOT(setSettings(int)),0 ,52,52 );
+    yearPopupMenu->insertItem( tr("No Date on Minute/Hour Scale"),this, SLOT(setSettings(int)),0 ,53,53 );
+
+    gridPopupMenu = new QPopupMenu(this);
+    myPopupMenu->insertItem (tr("Grid"),gridPopupMenu, ++ii);
+    gridPopupMenu->insertItem( tr("Show minor grid"),this, SLOT(setSettings(int)),0 ,10,10 );
+    gridPopupMenu->insertItem( tr("Show major grid"),this, SLOT(setSettings(int)),0 ,11,11 );
+    gridPopupMenu->insertItem( tr("Show no grid"),this, SLOT(setSettings(int)),0 ,12,12 );
+    myPopupMenu->insertItem( tr("Print"),this, SLOT(setSettings(int)),0 ,30,30 );
     connect(myPopupMenu, SIGNAL (  aboutToShow () ) , this, SLOT( preparePopupMenu() )) ;
     flagZoomToFit = false;
     setShowMinorTicks( true );
@@ -794,16 +843,15 @@ KDTimeHeaderWidget::~KDTimeHeaderWidget()
 }
 void  KDTimeHeaderWidget::preparePopupMenu()
 {
-    myPopupMenu->setItemVisible ( 1, flagShowZoom  );
-    myPopupMenu->setItemVisible ( 2, flagShowScale );
-    myPopupMenu->setItemVisible ( 3, flagShowTime );
-    myPopupMenu->setItemVisible ( 4, flagShowYear );
-    myPopupMenu->setItemVisible ( 5, flagShowGrid);
+    int ii = 2;
+    myPopupMenu->setItemVisible ( ++ii, flagShowZoom  );
+    int ci = ii;
+    myPopupMenu->setItemVisible ( ++ii, flagShowScale );
+    myPopupMenu->setItemVisible ( ++ii, flagShowTime );
+    myPopupMenu->setItemVisible ( ++ii, flagShowYear );
+    myPopupMenu->setItemVisible ( ++ii, flagShowGrid);
     myPopupMenu->setItemVisible ( 30, flagShowPrint );
-    if (flagZoomToFit)
-        myPopupMenu->changeItem( 1, i18n("Zoom (Fit)"));
-    else
-        myPopupMenu->changeItem( 1, i18n("Zoom (%1)").arg( QString::number( zoomFactor(), 'f',3) ) );
+    myPopupMenu->changeItem( ci, tr ("Zoom  ") + "(" +QString::number( zoomFactor(), 'f',3) +")" );
     int i = 0;
     int id;
     while ( ( id = scalePopupMenu->idAt( i++ )) >= 0 ) {
@@ -833,27 +881,171 @@ void  KDTimeHeaderWidget::preparePopupMenu()
 
 }
 
+void KDTimeHeaderWidget::setDateFormatMonth( const QString& fmt )
+{
+    mDateFormatMonth = fmt;
+    mMaxWidFormatMonth = getMaxTextWidth( mDateFormatMonth , 3 );
+    computeTicks();
+}
+const QString KDTimeHeaderWidget::dateFormatMonth()
+{
+    return mDateFormatMonth;
+}
+
+
+void KDTimeHeaderWidget::setDateFormatWeek( const QString& fmt )
+{
+    mDateFormatWeek = fmt;
+    mMaxWidFormatWeek = getMaxTextWidth( mDateFormatWeek, 2 );
+    computeTicks();
+
+}
+const QString KDTimeHeaderWidget::dateFormatWeek()
+{
+    return mDateFormatWeek;
+}
+
+
+void KDTimeHeaderWidget::setDateFormatDay( const QString& fmt )
+{
+    mDateFormatDay = fmt;
+    mMaxWidFormatDay = getMaxTextWidth( mDateFormatDay, 1 );
+    computeTicks();
+}
+const QString KDTimeHeaderWidget::dateFormatDay()
+{
+    return mDateFormatDay;
+}
+
+
+void KDTimeHeaderWidget::setDatetimeFormatHour( const QString& fmt )
+{
+    mDatetimeFormatHour = fmt;
+    mMaxWidtimeFormatHour = getMaxTextWidth( mDatetimeFormatHour, 0 );
+    computeTicks();
+
+}
+const QString KDTimeHeaderWidget::datetimeFormatHour()
+{
+    return mDatetimeFormatHour;
+}
+void KDTimeHeaderWidget::setDatetimeFormatSecond( const QString& fmt )
+{
+    mDatetimeFormatSecond = fmt;
+    mMaxWidtimeFormatSecond = getMaxTextWidth( mDatetimeFormatSecond, 0 );
+    computeTicks();
+}
+const QString KDTimeHeaderWidget::datetimeFormatSecond()
+{
+    return mDatetimeFormatSecond;
+}
+void KDTimeHeaderWidget::setDatetimeFormatMinute( const QString& fmt )
+{
+    mDatetimeFormatMinute = fmt;
+    mMaxWidtimeFormatMinute = getMaxTextWidth( mDatetimeFormatMinute , 0 );
+    computeTicks();
+}
+const QString KDTimeHeaderWidget::datetimeFormatMinute()
+{
+    return mDatetimeFormatMinute;
+}
+void KDTimeHeaderWidget::setWeekStartsMonday( bool b )
+{
+    mWeekStartsMonday = b;
+    computeTicks();
+}
+bool KDTimeHeaderWidget::weekStartsMonday()
+{
+    return mWeekStartsMonday;
+}
+void KDTimeHeaderWidget::setWeekScaleShowNumber( bool b )
+{
+    mWeekScaleShowNumber = b;
+    computeTicks();
+}
+bool KDTimeHeaderWidget::weekScaleShowNumber()
+{
+    return mWeekScaleShowNumber;
+}
+
+void KDTimeHeaderWidget::setTooltipDateTimeFormat( const QString& fmt )
+{
+    mTooltipDateFormat = fmt;
+}
+const QString KDTimeHeaderWidget::tooltipDateTimeFormat()
+{
+    return mTooltipDateFormat;
+}
+
 QString  KDTimeHeaderWidget::getToolTipText(QPoint p)
 {
-    return KGlobal::locale()->formatDateTime(getDateTimeForIndex(p.x()));
+    if ( mTooltipDateFormat.isEmpty() )
+        return getDateTimeForIndex( p.x()).toString();
+    return getDateTimeForIndex( p.x()).toString( mTooltipDateFormat );
 }
 void KDTimeHeaderWidget::addTickRight( int num )
-{
-    int secs = ((num*getTickTime())-30);
-    setHorizonEnd(getDateTimeForIndex(width()).addSecs(secs));
-    //qApp->processEvents();
+{   
+    bool block = myGanttView->myTimeTable->blockUpdating();
+    myGanttView->myTimeTable->setBlockUpdating( true );
+    setHorizonEnd( addMajorTickTime( getDateTimeForIndex(myGanttView->myCanvasView->contentsWidth() - 1), num ) );
+    myGanttView->myTimeTable->setBlockUpdating( block );
+    //myGanttView->myCanvasView->updateScrollBars();
+    myGanttView->myTimeTable->updateMyContent();
+    myGanttView->myCanvasView->horizontalScrollBar()->setValue( myGanttView->myCanvasView->horizontalScrollBar()->maxValue() );
+    moveTimeLineTo( myGanttView->myCanvasView->contentsWidth() - myGanttView->myCanvasView->viewport()->width()  );
+    myGanttView->myTimeTable->forceUpdate();
 }
 
 void KDTimeHeaderWidget::addTickLeft( int num )
 {
-    int secs = ((num*getTickTime())-30);
-    setHorizonStart(getDateTimeForIndex(0).addSecs(-secs));
-    //qApp->processEvents();
+    bool block = myGanttView->myTimeTable->blockUpdating();
+    myGanttView->myTimeTable->setBlockUpdating( true );
+    setHorizonStart( addMajorTickTime( getDateTimeForIndex(0), -num ) );
+    //myGanttView->myCanvasView->updateScrollBars();
+    myGanttView->myCanvasView->horizontalScrollBar()->setValue( 0 );
+    moveTimeLineTo( 0 );
+    myGanttView->myTimeTable->setBlockUpdating( block );
+    myGanttView->myTimeTable->updateMyContent();
+    myGanttView->myTimeTable->forceUpdate();
+}
+// the time in secs of one Major grid tick
+QDateTime KDTimeHeaderWidget::addMajorTickTime( const QDateTime& dt, int fac )
+{
+    // qDebug("KDTimeHeaderWidget::addMajorTickTime %d %d - %s  ", fac,myMajorScaleCount,  dt.toString().latin1() );
+    fac *= myMajorScaleCount;
+    switch (myRealScale)
+        {
+        case KDGanttView::Second:
+            return dt.addSecs( fac * 60 );
+            break;
+        case KDGanttView::Minute:
+            return dt.addSecs( fac * 3600 );
+            break;
+        case KDGanttView::Hour:
+            return dt.addDays( fac );
+            break;
+        case KDGanttView::Day:
+            return dt.addDays( fac * 7 );
+            break;
+        case KDGanttView::Week:
+            //qDebug("return %s ",dt.addMonths( fac ).toString().latin1() );
+            return dt.addMonths( fac );
+            break;
+        case KDGanttView::Month:
+            //qDebug("return %s ",dt.addYears( fac ).toString().latin1() );
+            return dt.addYears( fac );
+            break;
+        case KDGanttView::Auto:
+            break;
+        }
+    return dt;
 }
 // the time in secs of one minor grid tick
 int KDTimeHeaderWidget::getTickTime()
 {
-    return getDateTimeForIndex(0).secsTo(getDateTimeForIndex(myGridMinorWidth));
+    int ret = getDateTimeForIndex(0).secsTo(getDateTimeForIndex(myGridMinorWidth));
+    //qDebug("TickTime %d", ret);
+    return ret;
 }
 
 
@@ -872,7 +1064,7 @@ void KDTimeHeaderWidget::checkWidth( int wid )
 bool KDTimeHeaderWidget::registerStartTime()
 {
 
-    Q3ListViewItemIterator it( myGanttView->myListView );
+    QListViewItemIterator it( myGanttView->myListView );
     if (!flagStartTimeSet) {
         QDateTime temp , time;
         KDGanttViewItem* item;
@@ -927,7 +1119,7 @@ bool KDTimeHeaderWidget::registerEndTime()
         if ( item ) {
             temp = item->startTime();
             time = temp;
-            Q3ListViewItemIterator it( myGanttView->myListView );
+            QListViewItemIterator it( myGanttView->myListView );
             for ( ; it.current(); ++it ) {
                 item = ( KDGanttViewItem* )it.current();
                 if (item->isVisibleInGanttView) {
@@ -990,11 +1182,75 @@ bool KDTimeHeaderWidget::showPopupMenu() const
 {
     return flagShowPopupMenu;
 }
-
+void KDTimeHeaderWidget::setTimeline( int i )
+{
+    bool allowChange = myGanttView->userHorizonChangeEnabled();
+    switch (i) {
+    case 0:
+        centerDateTime ( QDateTime( today() ), allowChange );
+        break;
+    case 1:
+        centerDateTime ( QDateTime( yesterday() ), allowChange );
+        break;
+    case 2:
+        centerDateTime ( QDateTime( currentWeek() ), allowChange );
+        break;
+    case 3:
+        centerDateTime ( QDateTime( lastWeek() ), allowChange );
+        break;
+    case 4:
+        centerDateTime ( QDateTime( currentMonth() ), allowChange );
+        break;
+    case 5:
+        centerDateTime ( QDateTime( lastMonth() ), allowChange );
+        break;
+    case 6:
+        centerDateTime ( QDateTime( currentYear() ), allowChange );
+        break;
+    case 7:
+        centerDateTime ( QDateTime( lastYear() ), allowChange );
+        break;
+    case 100:
+        setScale( KDGanttView::Hour, false  );
+        zoomToSelectionAndSetStartEnd( QDateTime( today() ), QDateTime( tomorrow() ) );
+        break;
+    case 101:
+        setScale( KDGanttView::Hour, false  );
+        zoomToSelectionAndSetStartEnd( QDateTime( yesterday() ), QDateTime( today() ) );
+        break;
+    case 102:
+        setScale( KDGanttView::Day, false );
+        zoomToSelectionAndSetStartEnd( QDateTime( currentWeek() ), QDateTime( currentWeek().addDays( 7 ) ) );
+        break;
+    case 103:
+        setScale( KDGanttView::Day, false );
+        zoomToSelectionAndSetStartEnd( QDateTime( lastWeek() ), QDateTime( currentWeek() ));
+        break;
+    case 104:
+        setScale( KDGanttView::Day, false );
+        zoomToSelectionAndSetStartEnd( QDateTime( currentMonth() ), QDateTime( currentMonth().addMonths( 1) ) );
+        break;
+    case 105:
+        setScale( KDGanttView::Day, false );
+        zoomToSelectionAndSetStartEnd( QDateTime( lastMonth() ), QDateTime( currentMonth()  ));
+        break;
+    case 106:
+        setScale( KDGanttView::Month, false );
+        zoomToSelectionAndSetStartEnd( QDateTime( currentYear() ), QDateTime( currentYear().addYears( 1) ) );
+        break;
+    case 107:
+        setScale( KDGanttView::Month, false );
+        zoomToSelectionAndSetStartEnd( QDateTime( lastYear() ), QDateTime( currentYear() ) );
+        break;
+    }
+}
 void KDTimeHeaderWidget::setSettings(int i)
 {
 
     switch (i) {
+    case 0:
+        setScale(KDGanttView::Second );
+        break;
     case 1:
         setScale(KDGanttView::Minute );
         break;
@@ -1106,8 +1362,19 @@ double KDTimeHeaderWidget::secsFromTo( QDateTime begin, QDateTime end )
     return secs;
 }
 
-
-void KDTimeHeaderWidget::zoomToSelection( QDateTime start, QDateTime end)
+void KDTimeHeaderWidget::zoomToSelectionAndSetStartEnd( const QDateTime& start, const QDateTime &end)
+{
+    //qDebug("start %s end %s ",start.toString().latin1(), end.toString().latin1() );
+    myHorizonStart = start;
+    flagStartTimeSet = true;
+    myHorizonEnd = end;
+    flagEndTimeSet = true;
+    performZoomToSelection( start, end);
+    moveTimeLineTo((getCoordX(start)));
+    updateTimeTable();
+    pendingPaint();
+}
+void KDTimeHeaderWidget::performZoomToSelection( const QDateTime &start, const QDateTime &end)
 {
     if (start < myHorizonStart) {
         myHorizonStart = start;
@@ -1120,16 +1387,30 @@ void KDTimeHeaderWidget::zoomToSelection( QDateTime start, QDateTime end)
         //qDebug("myHorizonEnd reset ");
     }
     flagDoNotRepaintAfterChange = true;//avoid flicker
-    zoom(1.0); // set to 100%
+    double startFac = 1.0;
     int viewWid = myGanttView->myCanvasView->viewport()->width();
-    int timeWid =  getCoordX(end)-getCoordX(start);
+    int timeWid = 0;
+    while ( timeWid == 0 && startFac < 100000.0) {
+        zoom(startFac); 
+        timeWid =  getCoordX(end)-getCoordX(start);
+        startFac *= 10.0;
+    }
+    if ( timeWid == 0 )
+        timeWid = 1;
     double fac;
     fac  = ( (double)viewWid)/((double) timeWid  );
+    fac *= ( startFac/10.0 );
+    //qDebug("zoooom %d %d %f %f", viewWid, timeWid,fac, startFac / 10.0 );
     zoom (fac);
-    timeWid =  getCoordX(end)-getCoordX(start);
+    timeWid = getCoordX(end)-getCoordX(start);
     int count = 0;
     int lastScaleCount = 0;
-    while (timeWid >viewWid || ( ( myRealMinorScaleCount != lastScaleCount)  && timeWid*2 < viewWid ) ) {
+    int incCounter = 2;
+    while (timeWid >viewWid || ( ( myRealMinorScaleCount != lastScaleCount)  && timeWid*incCounter < viewWid ) ) {
+        ++incCounter;
+        //qDebug("******************While****************** ");
+        //qDebug("timeWid  %d    viewWid %d ", timeWid ,viewWid );
+        //qDebug("myRealMinorScaleCount %d lastScaleCount %d",  myRealMinorScaleCount , lastScaleCount    );
         lastScaleCount = myRealMinorScaleCount;
         fac = (fac * (double)viewWid)/(double)timeWid;
         zoom (fac);
@@ -1140,9 +1421,13 @@ void KDTimeHeaderWidget::zoomToSelection( QDateTime start, QDateTime end)
         }
     }
     flagDoNotRepaintAfterChange = false;
+}
+void KDTimeHeaderWidget::zoomToSelection( const QDateTime &start, const QDateTime &end)
+{
+    performZoomToSelection( start, end );
+    moveTimeLineTo((getCoordX(start)));
     updateTimeTable();
-    repaint();
-    moveTimeLineTo((getCoordX(start)-(viewWid-timeWid)/2));
+    pendingPaint();
 }
 void KDTimeHeaderWidget::moveTimeLineTo(int X)
 {
@@ -1152,9 +1437,8 @@ void KDTimeHeaderWidget::moveTimeLineTo(int X)
 
 void KDTimeHeaderWidget::zoom(double factor, bool absolute)
 {
-    flagZoomToFit = false;
     if ( factor < 0.000001 ) {
-        qDebug("KDGanttView::zoom() : Zoom factor to low. Nothing zoomed. ");
+        qDebug("KDGanttView::zoom() : Zoom factor too low. Nothing zoomed. ");
         return;
     }
     double newZoom;
@@ -1169,7 +1453,7 @@ void KDTimeHeaderWidget::zoom(double factor, bool absolute)
     //qDebug("zooming absolute %f ", newZoom);
     int viewWid = myGanttView->myCanvasView->viewport()->width();
     if ( width() * relativeZoom < viewWid && ( newZoom > 1.01 || newZoom < 0.99 ) ) {
-        qDebug("KDGanttView::zoom() : Zoom factor to low for current horizon. ");
+        qDebug("KDGanttView::zoom() : Zoom factor too low for current horizon. ");
         // qDebug("zooming relative %f, zooming absolute %f, viewWidth %d width %d ", relativeZoom,  newZoom, viewWid, width() );
         return;
     }
@@ -1212,7 +1496,7 @@ QDateTime KDTimeHeaderWidget::horizonStart() const
   \sa setHorizonEnd()
 */
 void KDTimeHeaderWidget::setHorizonEnd( const QDateTime& start )
-{
+{  
     myHorizonEnd = start;
     flagEndTimeSet = true;
     computeTicks();
@@ -1240,11 +1524,12 @@ QDateTime KDTimeHeaderWidget::horizonEnd() const
   \param unit the unit of the lower scale of the header.
   \sa scale()
 */
-void KDTimeHeaderWidget::setScale(Scale unit )
+void KDTimeHeaderWidget::setScale(Scale unit, bool update  )
 {
     myScale = unit;
     myZoomFactor = 1.0;
-    computeTicks();
+    if ( update )
+        computeTicks();
 
 
 }
@@ -1485,11 +1770,18 @@ void KDTimeHeaderWidget::computeIntervals( int height )
     for ( it = icList.begin(); it != icList.end(); ++it ) {
         if ( (*it).minScaleView <= myRealScale && (*it).maxScaleView >= myRealScale ) {
             left = getCoordX((*it).datetime);
+            if ( left < 0 ) left = 0;
             right = getCoordX((*it).end);
+            if ( right <= 0 ) {
+                (*it).canvasRect->hide();
+                return;
+            }
             if ( right == left )
                 ++right;
-            (*it).canvasRect->setPen( QPen::NoPen );
-            (*it).canvasRect->setBrush( QBrush( (*it).color, SolidPattern) );
+            if ( right > width() )
+                right = width();
+            (*it).canvasRect->setPen( Qt::NoPen );
+            (*it).canvasRect->setBrush( QBrush( (*it).color, Qt::SolidPattern) );
             (*it).canvasRect->setSize( right - left ,height );
             (*it).canvasRect->move( left,0 );
             (*it).canvasRect->show();
@@ -1545,16 +1837,24 @@ bool KDTimeHeaderWidget::deleteBackgroundInterval( const QDateTime& start,
 void KDTimeHeaderWidget::setIntervalBackgroundColor( const QDateTime& start,
                                                      const QDateTime& end,
                                                      const QColor& color,
+                                                     int priority,
                                                      Scale mini ,
                                                      Scale maxi )
 {
 
+    if ( priority < 0 )
+        priority = 0;
+    if ( priority > 10 )
+        priority = 10;
+    
     IntervalColorList::iterator it;
     for ( it = icList.begin(); it != icList.end(); ++it ) {
         if ((*it).datetime == start && (*it).end == end ) {
             (*it).color = color;
             (*it).minScaleView = mini;
             (*it).maxScaleView = maxi;
+            (*it).canvasRect->setZ(-19 + priority );
+            (*it).priority =  priority;
             return;
         }
     }
@@ -1566,12 +1866,13 @@ void KDTimeHeaderWidget::setIntervalBackgroundColor( const QDateTime& start,
         newItem.datetime = end;
         newItem.end = start;
     }
+    newItem.priority =  priority;
     newItem.color = color;
     newItem.minScaleView = mini;
     newItem.maxScaleView = maxi;
     //newItem.canvasLine = new KDCanvasLine(myGanttView->myTimeTable,0,Type_is_KDGanttGridItem);
     newItem.canvasRect = new KDCanvasRectangle(myGanttView->myTimeTable,0,Type_is_KDGanttGridItem);
-    newItem.canvasRect->setZ(-19);
+    newItem.canvasRect->setZ(-19 + priority );
     icList.append(newItem);
     updateTimeTable();
 
@@ -1600,14 +1901,6 @@ QDateTime KDTimeHeaderWidget::getDateTimeForIndex(int X, bool local )
     secs = secs - ( ((int) days) *86400.0 );
     return (myRealStart.addDays ( (int) days )).addSecs( (int) secs);
 }
-
-//FIXME: This doesn't work quite intuitively (imho) when scale is day
-//       and each column containes more than 1 day:
-//       1) If a column includes a weekend day, the whole column gets weekend color,
-//       2) If a column includes 7 days, either *all* columns get weekend color, or
-//          *none* get weekend color (haven't figured out why)
-//       Proposal: Only use weekend color if the whole column is a weekend.
-//       Alt: Color the area that actually is the weekend.
 bool KDTimeHeaderWidget::getColumnColor(QColor& col,int coordLow, int coordHigh)
 {
     if (!flagShowMajorTicks && !flagShowMinorTicks)
@@ -1617,8 +1910,9 @@ bool KDTimeHeaderWidget::getColumnColor(QColor& col,int coordLow, int coordHigh)
     end = getDateTimeForIndex(coordHigh).addSecs(-1);
     Scale tempScale = myRealScale;
     if (flagShowMajorTicks)
-        switch (myRealScale)
+        switch (myRealScale) 
             {
+            case KDGanttView::Second: tempScale = KDGanttView::Minute;  break;
             case KDGanttView::Minute: tempScale = KDGanttView::Hour;  break;
             case KDGanttView::Hour: tempScale = KDGanttView::Day   ;  break;
             case KDGanttView::Day: tempScale = KDGanttView::Week   ;  break;
@@ -1671,8 +1965,7 @@ bool KDTimeHeaderWidget::getColumnColor(QColor& col,int coordLow, int coordHigh)
 */
 QColor KDTimeHeaderWidget::columnBackgroundColor( const QDateTime& column ) const
 {
-    QColor c;
-    c = white;
+    QColor c = Qt::white;
     ColumnColorList::const_iterator ite;
     for ( ite = ccList.begin(); ite != ccList.end(); ++ite ) {
         if ((*ite).datetime == column) {
@@ -1826,7 +2119,7 @@ int KDTimeHeaderWidget::minorScaleCount() const
 void KDTimeHeaderWidget::resizeEvent ( QResizeEvent * )
 {
     // qDebug("KDTimeHeaderWidget:: resizeEvent ");
-    paintPix.resize( 800, height () );
+    paintPix.resize( 1280, height () );
 }
 
 
@@ -1837,7 +2130,7 @@ void KDTimeHeaderWidget::updateTimeTable()
     // setting the scrolling steps
     int scrollLineStep = myGridMinorWidth;
     if (showMajorTicks()) {
-        Q3ValueList<int>::iterator intIt = majorTicks.begin();
+        QValueList<int>::iterator intIt = majorTicks.begin();
         scrollLineStep = 5 * myGridMinorWidth;
         if (intIt != majorTicks.end()) {
             int left = *intIt;
@@ -1870,6 +2163,7 @@ int KDTimeHeaderWidget::autoScaleMinorTickCount()
 void KDTimeHeaderWidget::repaintMe(int left,int paintwid, QPainter* painter)
 {
     if (flagDoNotRecomputeAfterChange) return;
+    //qDebug("REPAINTME %d %d", left, paintwid );
     QColorGroup qcg =QColorGroup( Qt::white, Qt::black,Qt::white, Qt::darkGray,Qt::black,Qt::gray,Qt::gray) ;
     QPainter* p;
     int offsetLeft = 0;
@@ -1898,17 +2192,15 @@ void KDTimeHeaderWidget::repaintMe(int left,int paintwid, QPainter* painter)
             p->fillRect( left-offsetLeft, 0, paintwid, height(), QBrush(paletteBackgroundColor()) );
     }
     p->setPen(QColor(40,40,40));
-    QFont tempFont = p->font();
-    tempFont.setWeight(63);
-    p->setFont(tempFont);
+    p->setFont(myFont());
     int hei1 = myMajorGridHeight,
         hei2 = height(),
         wid1 = myGridMinorWidth;
     int xCoord;
     int lwid = 1;
 
-    Q3ValueList<QString>::iterator it;
-    Q3ValueList<int>::iterator intIt = majorTicks.begin();
+    QValueList<QString>::iterator it;
+    QValueList<int>::iterator intIt = majorTicks.begin();
     for ( it =  majorText.begin(); it !=  majorText.end(); ++it ) {
         xCoord  = (*intIt++);
         if (((*intIt)>= left && xCoord <= left+paintwid)) {
@@ -1933,6 +2225,7 @@ void KDTimeHeaderWidget::repaintMe(int left,int paintwid, QPainter* painter)
         p->end();
         delete p;
         bitBlt ( this, left, 0, &paintPix, 50, 0, paintwid, height() );
+        bitBlt ( this, left, 0, &paintPix, 50, 0, paintwid, height() );
     }
 }
 
@@ -1942,34 +2235,35 @@ void KDTimeHeaderWidget::repaintMe(int left,int paintwid, QPainter* painter)
 QDateTime KDTimeHeaderWidget::getEvenTimeDate(QDateTime tempdatetime ,Scale sc)
 {
     QDate tempdate;
-    int min, hour;
+    int min, hour, month;
     int tempMinorScaleCount = myRealMinorScaleCount;
     switch (sc)
         {
         case KDGanttView::Month:
-            tempdate = tempdatetime.date();
-            while (tempdate.day ()!= 1 )
-                tempdate = tempdate.addDays(-1);
-            //while (tempdate.month ()!= 1 )
-            //tempdate = tempdate.addMonths(-1);
-            tempdatetime = QDateTime (tempdate, QTime (0,0));
+            month = tempdatetime.date().month();
+            while ( month > 1 && (month-1) % tempMinorScaleCount > 0 )
+                --month; 
+            tempdatetime = QDateTime (QDate( tempdatetime.date().year(), month,1));
             break;
         case KDGanttView::Week:
-            tempdate = tempdatetime.date();
-            while (tempdate.dayOfWeek ()!= KGlobal::locale()->weekStartDay())
-                tempdate = tempdate.addDays(-1);
-            //tempdate = tempdate.addDays(-7);
-            tempdatetime = QDateTime (tempdate, QTime (0,0));
+            {
+                int sub = ( tempdatetime.date().dayOfWeek() - (mWeekStartsMonday?1:0) ) % 7;
+                if ( sub )
+                    tempdatetime = QDateTime (tempdatetime.date().addDays( - sub ) );
+                else
+                    tempdatetime = QDateTime (tempdatetime.date());
+            }
             break;
         case KDGanttView::Day:
-            tempdatetime = QDateTime (tempdatetime.date(), QTime ( 0,0 ) );
+            tempdatetime = QDateTime (tempdatetime.date() );
             break;
         case KDGanttView::Hour:
             hour = tempdatetime.time().hour();
             while (24%tempMinorScaleCount > 0 && 24%tempMinorScaleCount < 24)
                 ++tempMinorScaleCount;
             hour = ( hour /tempMinorScaleCount)*tempMinorScaleCount;
-            tempdatetime = QDateTime (tempdatetime.date(), QTime (hour, 0 ));
+            //tempdatetime = QDateTime (tempdatetime.date(), QTime (hour, 0 ));
+            tempdatetime = QDateTime (tempdatetime.date());
             break;
         case KDGanttView::Minute:
             min = tempdatetime.time().minute();
@@ -1977,6 +2271,15 @@ QDateTime KDTimeHeaderWidget::getEvenTimeDate(QDateTime tempdatetime ,Scale sc)
                 ++tempMinorScaleCount;
             // qDebug("myMinorScaleCount %d %d %d",myMinorScaleCount, myRealMinorScaleCount, tempMinorScaleCount);
             min = (min /tempMinorScaleCount)*tempMinorScaleCount;
+            //tempdatetime = QDateTime (tempdatetime.date(), QTime (tempdatetime.time().hour(),min ));
+            tempdatetime = QDateTime (tempdatetime.date(), QTime (tempdatetime.time().hour(),0 ));
+
+            break;
+        case KDGanttView::Second:
+            min = tempdatetime.time().minute();
+            while (60%tempMinorScaleCount > 0 && 60%tempMinorScaleCount < 60)
+                ++tempMinorScaleCount;
+            // qDebug("myMinorScaleCount %d %d %d",myMinorScaleCount, myRealMinorScaleCount, tempMinorScaleCount);
             tempdatetime = QDateTime (tempdatetime.date(), QTime (tempdatetime.time().hour(),min ));
 
             break;
@@ -1995,25 +2298,30 @@ void KDTimeHeaderWidget::computeRealScale(QDateTime start)
         //double secsPerMinor = (((double)start.daysTo(myHorizonEnd))* 86400.00)/((double)myAutoScaleMinorTickcount);
         double secsPerMinor = (((double)start.secsTo(myHorizonEnd)))/((double)myAutoScaleMinorTickcount);
         secsPerMinor /= myZoomFactor;
-        if (secsPerMinor <= 1800) {
-            myRealScale =  KDGanttView::Minute;
-            myRealMinorScaleCount = (int) secsPerMinor/60;
+        if (secsPerMinor <= 30 ) {
+            myRealScale =  KDGanttView::Second;
+            myRealMinorScaleCount = (int) secsPerMinor;
         } else {
-            if (secsPerMinor <= 12*3600) {
-                myRealScale =  KDGanttView::Hour;
-                myRealMinorScaleCount = (int)  secsPerMinor/3600;
+            if (secsPerMinor <= 1800) {
+                myRealScale =  KDGanttView::Minute;
+                myRealMinorScaleCount = (int) secsPerMinor/60;
             } else {
-                if (secsPerMinor <= 24*3600*3) {
-                    myRealScale =  KDGanttView::Day;
-                    myRealMinorScaleCount = (int)  secsPerMinor/(3600*24);
+                if (secsPerMinor <= 12*3600) {
+                    myRealScale =  KDGanttView::Hour;
+                    myRealMinorScaleCount = (int)  secsPerMinor/3600;
                 } else {
-                    if (secsPerMinor <= 24*3600*14) {
-                        myRealScale =  KDGanttView::Week;
-                        myRealMinorScaleCount =  (int) secsPerMinor/(3600*24*7);
+                    if (secsPerMinor <= 24*3600*3) {
+                        myRealScale =  KDGanttView::Day;
+                        myRealMinorScaleCount = (int)  secsPerMinor/(3600*24);
                     } else {
-                        myRealScale =  KDGanttView::Month;
-                        myRealMinorScaleCount =  (int) secsPerMinor/(3600*24*30);
+                        if (secsPerMinor <= 24*3600*14) {
+                            myRealScale =  KDGanttView::Week;
+                            myRealMinorScaleCount =  (int) secsPerMinor/(3600*24*7);
+                        } else {
+                            myRealScale =  KDGanttView::Month;
+                            myRealMinorScaleCount =  (int) secsPerMinor/(3600*24*30);
 
+                        }
                     }
                 }
             }
@@ -2039,9 +2347,13 @@ void KDTimeHeaderWidget::computeRealScale(QDateTime start)
             }
             switch (myRealScale)
                 {
-                case KDGanttView::Minute:
+                case KDGanttView::Second:
                     myRealMinorScaleCount = 1;
                     return;
+                    break;
+                case KDGanttView::Minute:
+                    myRealScale = KDGanttView::Second;
+                    tempZoom = tempZoom/60;
                     break;
                 case KDGanttView::Hour:
                     myRealScale = KDGanttView::Minute;
@@ -2066,14 +2378,93 @@ void KDTimeHeaderWidget::computeRealScale(QDateTime start)
         }
     }
 }
-
-
-void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
+int  KDTimeHeaderWidget::getMaxTextWidth( const QString& format, int mode )
+{
+    if ( format.isEmpty() )
+        return 0;
+    int WidthMajor = 0;
+    QFontMetrics fm ( myFont() );
+    if ( mode == 0 ) { // with time - minute and hour mode
+        QDateTime testDT = QDateTime( QDate(2004,1,31 ), QTime (0,0,0 ) );
+        QDateTime tempDT = testDT ;
+        WidthMajor = fm.width( testDT.toString( format ) );
+        int i;
+        // testing max month wid
+        for ( i = 2; i <= 12; ++i ) {
+            testDT = testDT.addDays( testDT.addDays(1).date().daysInMonth() );
+            int wid = fm.width( testDT.toString( format ) );
+            if ( wid >  WidthMajor ) {
+                WidthMajor = wid;
+                tempDT = testDT;
+            }
+        }
+        // testing max weekday wid for max month
+        testDT = tempDT.addDays( -7 );
+        for ( i = 0; i < 6; ++i ) {
+            testDT = testDT.addDays( 1 );
+            int wid = fm.width( testDT.toString( format ) );
+            if ( wid >  WidthMajor ) {
+                WidthMajor = wid;
+                tempDT = testDT;
+            }
+        }
+    } else if ( mode == 1 ) { // day mode
+        QDate testDT;
+        if ( mWeekStartsMonday ) 
+            testDT = QDate ( 2004,1,31 ); // it's a monday
+        else
+            testDT = QDate ( 2004,1,30 ); // it's a sunday
+        WidthMajor = fm.width( testDT.toString( mDateFormatDay ) );
+        int i;
+        for ( i = 2; i <= 12; ++i ) {
+            testDT = testDT.addDays( 7*5 );
+            if ( testDT.month() != i )
+                testDT = testDT.addDays( -7 );
+            int wid = fm.width( testDT.toString( format ) );
+            if ( wid >  WidthMajor )
+                WidthMajor = wid;
+        }
+    } else if ( mode == 2 ) { // week mode
+        QDate testDT;
+        testDT = QDate ( 2004,1,1 ); 
+        WidthMajor = fm.width( testDT.toString( mDateFormatWeek ) );
+        int i;
+        for ( i = 2; i <= 12; ++i ) {
+            testDT = testDT.addDays( testDT.daysInMonth() );
+            int wid = fm.width( testDT.toString( mDateFormatWeek ) );
+            if ( wid >  WidthMajor )
+                WidthMajor = wid;
+        }   
+    } else if ( mode == 3 ) { // month mode  
+        QDate testDT;
+        testDT = QDate ( 2004,1,1 ); 
+        WidthMajor = fm.width( testDT.toString( format ) );
+    }   
+    return WidthMajor;
+}
+int KDTimeHeaderWidget::getWeekOfYear( const QDate& date )
+{
+    int ret;
+    QDate d = date.addDays( mWeekStartsMonday ? 3 : 4 );
+    int dayOfYear = d.dayOfYear();
+    if (dayOfYear % 7 != 0)
+        ret = dayOfYear / 7 + 1;
+    else
+        ret =dayOfYear / 7;
+    return ret;
+} 
+QFont KDTimeHeaderWidget::myFont()
+{
+    QFont tempFont = font();
+    tempFont.setWeight(63);
+    return tempFont;
+}
+void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale) // default false
 {
     if (flagDoNotRecomputeAfterChange) return;
     bool block = myGanttView->myTimeTable->blockUpdating();
     myGanttView->myTimeTable->setBlockUpdating( true );
-    //qDebug("computeticks ");
+    //qDebug("++++++++++++++++++++++computeticks ");
     majorTicks.clear();
     minorText.clear();
     majorText.clear();
@@ -2087,53 +2478,88 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
     int tempMinorScaleCount = myRealMinorScaleCount,
         tempMajorScaleCount = myRealMajorScaleCount;
     int minorItems,minorPerMajor = 1;
-    minorItems = (int)  (secsFromTo( myRealStart, myHorizonEnd)/60.0);
-    //qDebug("tempMinorScaleCount %d ", tempMinorScaleCount);
-    QPainter p(this);
-    int Width, Height;
+    minorItems = (int)  (secsFromTo( myRealStart, myHorizonEnd));
+    //qDebug("tempMinorScaleCount %d scale: %d  - real scale: %d", tempMinorScaleCount, myScale, myRealScale);
+    //qDebug("Zoom factor %f ",myZoomFactor );
+    //qDebug("sta %s - %s end %s ",myRealStart.toString().latin1(), myHorizonStart.toString().latin1(),myHorizonEnd.toString().latin1());
     QString testTextMinor,testTextMajor, tempStr;
     QRect itemRectMinor, itemRectMajor;
     QDate tempDate = myRealStart.date();
     myRealEnd = myRealStart;
     // preparing the testtext for the differennt scales
+    QFontMetrics fm ( myFont() );
+    int WidthMajor = 0;//fm.width( testTextMajor );
     switch (myRealScale)
         {
             // the x in testTextMajor is added to reserve a little bit more space
-        case KDGanttView::Minute:
+        case KDGanttView::Second:
             testTextMinor = "60";
-            if (myHourFormat == KDGanttView::Hour_12)
-                testTextMajor = "Mon Aug 30, 12 AMx";
-            else
-                testTextMajor = "Mon Aug 30, 24:00x";
+            if ( mMaxWidtimeFormatSecond ) {
+                WidthMajor = mMaxWidtimeFormatSecond;
+            } else {
+                if (myHourFormat == KDGanttView::Hour_12)
+                    testTextMajor = "Mon Aug 30, 12:00 AMx";
+                else
+                    testTextMajor = "Mon Aug 30, 24:00x";
+            }
+            minorPerMajor = 6000;
+            break;
+        case KDGanttView::Minute:
+            minorItems = minorItems/60;
+            testTextMinor = "60";
+            if ( mMaxWidtimeFormatMinute ) {
+                WidthMajor = mMaxWidtimeFormatMinute;
+            } else {
+                if (myHourFormat == KDGanttView::Hour_12)
+                    testTextMajor = "Mon Aug 30, 12 AMx";
+                else
+                    testTextMajor = "Mon Aug 30, 24:00x";
+            }
             minorPerMajor = 6000;
             break;
         case KDGanttView::Hour:
-            minorItems = minorItems/60;
+            minorItems = minorItems/(60*60);
             if (myHourFormat == KDGanttView::Hour_24)
                 testTextMinor = "24x";
             else
                 testTextMinor = "12 AM";
-            testTextMajor = "Mon Aug 30, x";
-            if ( yearFormat() != KDGanttView::NoDate )
-                testTextMajor += getYear(QDate::currentDate());
+            if ( mMaxWidtimeFormatHour ) {
+                WidthMajor = mMaxWidtimeFormatHour;
+            } else {
+                testTextMajor = "Mon Aug 30, x";
+                if ( yearFormat() != KDGanttView::NoDate )
+                    testTextMajor += getYear(QDate::currentDate());
+            }
             minorPerMajor = 2400;
             break;
         case KDGanttView::Day:
-            minorItems = minorItems/(60*24);
+            minorItems = minorItems/(60*24*60);
             testTextMinor = "88";
-            testTextMajor = "Aug 30, x"+getYear(QDate::currentDate());
+            if ( mMaxWidFormatDay ) {
+                WidthMajor = mMaxWidFormatDay;
+            } else {
+                testTextMajor = "Aug 30, x"+getYear(QDate::currentDate());
+            }
             minorPerMajor = 700;
             break;
         case KDGanttView::Week:
-            minorItems = minorItems/(60*24*7);
+            minorItems = minorItems/(60*24*7*60);
             testTextMinor = "88";
-            testTextMajor = "Aug x"+getYear(QDate::currentDate());
+            if ( mMaxWidFormatWeek ) {
+                WidthMajor = mMaxWidFormatWeek;
+            } else {
+                testTextMajor = "Aug x"+getYear(QDate::currentDate());
+            }
             minorPerMajor = 435; // 435 = 365days/12months/7days * 100
             break;
         case KDGanttView::Month:
-            minorItems = (minorItems*12)/(60*24*365);
+            minorItems = (minorItems*12)/(60*24*365*60);
             testTextMinor = "M";
-            testTextMajor = "x"+getYear(QDate::currentDate());
+            if ( mMaxWidFormatMonth ) {
+                WidthMajor = mMaxWidFormatMonth;
+            } else {
+                testTextMajor = "x"+getYear(QDate::currentDate());
+            }
             minorPerMajor = 1200;
             break;
         case KDGanttView::Auto:
@@ -2141,12 +2567,14 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
             qDebug("             RealScale == Auto : This may not be! ");
             break;
         }
-    itemRectMinor = p.boundingRect ( 10, 10, 2, 2, Qt::AlignLeft,testTextMinor);
-    itemRectMajor = p.boundingRect ( 10, 10, 2, 2, Qt::AlignLeft,testTextMajor);
-    p.end();
     //qDebug("     tempMinorScaleCount %d ", tempMinorScaleCount);
-    Height = itemRectMinor.height()+itemRectMajor.height()+11;
-    Width = (itemRectMinor.width()+5);
+    if ( !WidthMajor )
+        WidthMajor = fm.width( testTextMajor );
+    else
+        WidthMajor += 5; // we need to add space for the borders 
+    int HeightMajor = fm.height();
+    int Height = fm.height() + HeightMajor+11;
+    int Width = fm.width( testTextMinor ) + 9;
     if (Width < minimumColumnWidth()) Width = minimumColumnWidth();
     // if the desired width is greater than the maximum width of this widget
     // increase the minorscalecount
@@ -2159,6 +2587,22 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
     mySizeHint = (minorItems/tempMinorScaleCount+1)*Width;
     switch (myRealScale)
         {
+        case KDGanttView::Second:
+            if (tempMinorScaleCount < 60)
+                while (60%tempMinorScaleCount > 0 && 60%tempMinorScaleCount < 60)
+                    ++tempMinorScaleCount;
+            if (tempMinorScaleCount >= 60) {
+                myRealScale = KDGanttView::Minute;
+                myRealMinorScaleCount = tempMinorScaleCount/ 60;
+                // myRealMinorScaleCount = 1;
+                myRealMajorScaleCount = 1;
+                qDebug("KDGantt::Overzoom:Rescaling from Second to Minute");
+                myGanttView->myTimeTable->setBlockUpdating( block );
+                emit myGanttView->rescaling( KDGanttView::Minute );
+                computeTicks(true);
+                return;
+            }
+            break;
         case KDGanttView::Minute:
             if (tempMinorScaleCount < 60)
                 while (60%tempMinorScaleCount > 0 && 60%tempMinorScaleCount < 60)
@@ -2190,10 +2634,40 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
                 return;
             }
             break;
+        case KDGanttView::Day:
+            if ( tempMinorScaleCount >= 100 ) {
+                myRealScale = KDGanttView::Week;
+                myRealMinorScaleCount = tempMinorScaleCount / 7;
+                //myRealMinorScaleCount = 1;
+                myRealMajorScaleCount = 1;
+                qDebug("KDGantt::Overzoom:Rescaling from Day to Week");
+                myGanttView->myTimeTable->setBlockUpdating( block );
+                emit myGanttView->rescaling( KDGanttView::Week );
+                computeTicks(true);
+                return;
+            }
+            break;
+        case KDGanttView::Week:
+            if ( tempMinorScaleCount >= 54 ) {
+                myRealScale = KDGanttView::Month;
+                myRealMinorScaleCount = tempMinorScaleCount / 4;
+                //myRealMinorScaleCount = 1;
+                myRealMajorScaleCount = 1;
+                qDebug("KDGantt::Overzoom:Rescaling from Week to Month");
+                myGanttView->myTimeTable->setBlockUpdating( block );
+                emit myGanttView->rescaling( KDGanttView::Month );
+                computeTicks(true);
+                return;
+            }
+            break;
+        case KDGanttView::Month:
+            while (12%tempMinorScaleCount > 0 && 12%tempMinorScaleCount < 12)
+                ++tempMinorScaleCount;
+            break;
         default:
             break;
         }
-    //flagZoomToFit = false;
+    flagZoomToFit = false;
     while((minorItems/tempMinorScaleCount+1)*Width < myMinimumWidth ) {
         ++minorItems;
     }
@@ -2202,8 +2676,10 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
     minorPerMajor = (minorPerMajor*tempMajorScaleCount)/tempMinorScaleCount;
     // checking, if enough space for majorscale
     // if not, increasing MajorScaleCount
-
-    while ((minorPerMajor*Width)/100 < itemRectMajor.width()) {
+    if ( minorPerMajor == 0 )
+        minorPerMajor = 1;
+        
+    while (minorPerMajor && ( (minorPerMajor*Width)/100 < WidthMajor) ) {
         minorPerMajor = minorPerMajor/tempMajorScaleCount;
         ++tempMajorScaleCount;
         minorPerMajor = minorPerMajor*tempMajorScaleCount;
@@ -2219,13 +2695,45 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
             resize( Width, Height );
             emit  sizeChanged( Width );
         }
-    myMajorGridHeight = itemRectMajor.height()+5;
+    myMajorGridHeight = HeightMajor + 5;
     QTime tempTime = myRealStart.time();
     QDateTime tempDateTime;
+    //myMajorScaleCount = tempMajorScaleCount;
     int i;
-    const KCalendarSystem * calendar = KGlobal::locale()->calendar();
     switch (myRealScale)
         {
+        case KDGanttView::Second:
+            myRealEnd = myRealEnd.addSecs((minorItems)*tempMinorScaleCount);
+            for ( i = 0; i < minorItems;++i) {
+                tempStr.setNum(tempTime.second());
+                minorText.append(tempStr);
+                tempTime = tempTime.addSecs(tempMinorScaleCount);
+            }
+            tempDateTime = myRealStart;
+            if (tempDateTime.time().second() != 0) {
+                tempDateTime = tempDateTime.addSecs( 60 - tempDateTime.time().second() );
+            }
+            while (tempDateTime < myRealEnd) {
+                majorTicks.append( getCoordX(tempDateTime));
+                if ( !mDatetimeFormatSecond.isEmpty() ) {
+                    tempStr = tempDateTime.toString ( mDatetimeFormatSecond );
+                } else {
+                    tempStr.setNum(tempDateTime.date().day());
+                    if ( yearFormat() == KDGanttView::NoDate ) {
+                        tempStr = QDate::longDayName (tempDateTime.date().dayOfWeek() )+", "
+                            +getHourMinutes(tempDateTime.time());
+                    } else {
+                        tempStr = QDate::shortDayName (tempDateTime.date().dayOfWeek() )+" "+
+                            QDate::shortMonthName(tempDateTime.date().month())+ " "+
+                            tempStr+", "+getHourMinutes(tempDateTime.time());
+                    }
+                }
+                majorText.append(tempStr);
+                tempDateTime = tempDateTime.addSecs(60*tempMajorScaleCount);
+            }
+            majorTicks.append( getCoordX(tempDateTime));
+            break;
+
         case KDGanttView::Minute:
             myRealEnd = myRealEnd.addSecs((minorItems)*tempMinorScaleCount*60);
             for ( i = 0; i < minorItems;++i) {
@@ -2234,20 +2742,24 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
                 tempTime = tempTime.addSecs(60*tempMinorScaleCount);
             }
             tempDateTime = myRealStart;
-            while (tempDateTime.time().minute() != 0)
-                tempDateTime = tempDateTime.addSecs(60);
+            if (tempDateTime.time().minute() != 0) {
+                tempDateTime = tempDateTime.addSecs( ( 60 - tempDateTime.time().minute()) * 60 );
+            }
             while (tempDateTime < myRealEnd) {
                 majorTicks.append( getCoordX(tempDateTime));
-                tempStr.setNum(tempDateTime.date().day());
-                if ( yearFormat() == KDGanttView::NoDate ) {
-                    tempStr = calendar->weekDayName( tempDateTime.date() )+", "
-                        +getHour(tempDateTime.time());
+                if ( !mDatetimeFormatMinute.isEmpty() ) {
+                    tempStr = tempDateTime.toString ( mDatetimeFormatMinute );
                 } else {
-                    tempStr = calendar->weekDayName( tempDateTime.date(), true )+" "+
-                        calendar->monthName( tempDateTime.date().month(), tempDateTime.date().year(), true)+ " "+
-                        tempStr+", "+getHour(tempDateTime.time());
+                    tempStr.setNum(tempDateTime.date().day());
+                    if ( yearFormat() == KDGanttView::NoDate ) {
+                        tempStr = QDate::longDayName (tempDateTime.date().dayOfWeek() )+", "
+                            +getHour(tempDateTime.time());
+                    } else {
+                        tempStr = QDate::shortDayName (tempDateTime.date().dayOfWeek() )+" "+
+                            QDate::shortMonthName(tempDateTime.date().month())+ " "+
+                            tempStr+", "+getHour(tempDateTime.time());
+                    }
                 }
-
                 majorText.append(tempStr);
                 tempDateTime = tempDateTime.addSecs(3600*tempMajorScaleCount);
             }
@@ -2267,13 +2779,17 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
                 tempDateTime = tempDateTime.addSecs(3600);
             while (tempDateTime < myRealEnd) {
                 majorTicks.append( getCoordX(tempDateTime));
-                tempStr.setNum(tempDateTime.date().day());
-                if ( yearFormat() == KDGanttView::NoDate ) {
-                    tempStr = calendar->weekDayName( tempDateTime.date() );
+                if ( !mDatetimeFormatHour.isEmpty() ) {
+                    tempStr = tempDateTime.toString ( mDatetimeFormatHour );
                 } else {
-                    tempStr = calendar->weekDayName( tempDateTime.date(), true )+" "+
-                        calendar->monthName( tempDateTime.date().month(), tempDateTime.date().year(), true)+ " "+
-                        tempStr+", "+getYear(tempDateTime.date());
+                    tempStr.setNum(tempDateTime.date().day());
+                    if ( yearFormat() == KDGanttView::NoDate ) {
+                        tempStr = QDate::longDayName (tempDateTime.date().dayOfWeek() );
+                    } else {
+                        tempStr = QDate::shortDayName (tempDateTime.date().dayOfWeek() )+" "+
+                            QDate::shortMonthName(tempDateTime.date().month())+ " "+
+                            tempStr+", "+getYear(tempDateTime.date());
+                    }
                 }
                 majorText.append(tempStr);
                 tempDateTime = tempDateTime.addDays(tempMajorScaleCount);
@@ -2284,19 +2800,32 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
             myRealEnd = myRealEnd.addDays(minorItems*tempMinorScaleCount);
             for ( i = 0; i < minorItems;++i) {
                 if (tempMinorScaleCount == 1)
-                    minorText.append((calendar->weekDayName(tempDate, true)).left(1)); //TODO: BIDI
+                    minorText.append((QDate::shortDayName(tempDate.dayOfWeek())).left(1));
                 else
                     minorText.append(QString::number(tempDate.day()));
                 tempDate = tempDate.addDays(tempMinorScaleCount);
             }
             tempDate = myRealStart.date();
-            while (tempDate.dayOfWeek() != KGlobal::locale()->weekStartDay())
-                tempDate = tempDate.addDays(1);
+            {
+                int start = 7;
+                int sub = 7;
+                if ( mWeekStartsMonday ) {
+                    start = 1;
+                    ++sub;
+                }
+                int dof = tempDate.dayOfWeek();
+                if ( dof != start )
+                        tempDate = tempDate.addDays( sub - dof );
+            }
             while (tempDate < myRealEnd.date()) {
                 majorTicks.append( getCoordX(tempDate));
-                tempStr.setNum(tempDate.day());
-                tempStr = calendar->monthName(tempDate.month(), tempDate.year(), true)+ " "+
-                    tempStr+", "+getYear(tempDate);
+                if ( !mDateFormatDay.isEmpty() ) {
+                    tempStr = tempDate.toString ( mDateFormatDay );
+                } else {
+                    tempStr.setNum(tempDate.day());
+                    tempStr = QDate::shortMonthName(tempDate.month())+ " "+
+                        tempStr+", "+getYear(tempDate);
+                }
                 majorText.append(tempStr);
                 tempDate = tempDate.addDays(7*tempMajorScaleCount);
             }
@@ -2305,16 +2834,23 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
         case KDGanttView::Week:
             myRealEnd = myRealEnd.addDays(minorItems*tempMinorScaleCount*7);
             for ( i = 0; i < minorItems;++i) {
-                tempStr.setNum(tempDate.day());
+                if ( mWeekScaleShowNumber )
+                    tempStr.setNum(getWeekOfYear(tempDate));
+                else
+                    tempStr.setNum(tempDate.day());
                 minorText.append(tempStr);
                 tempDate = tempDate.addDays(7*tempMinorScaleCount);
             }
             tempDate = myRealStart.date();
-            while (tempDate.day() != KGlobal::locale()->weekStartDay())
+            while (tempDate.day() != 1)
                 tempDate = tempDate.addDays(1);
             while (tempDate < myRealEnd.date()) {
                 majorTicks.append( getCoordX(tempDate));
-                tempStr = calendar->monthName(tempDate.month(), tempDate.year(), true)+ " "+getYear(tempDate);
+                if ( !mDateFormatWeek.isEmpty() ) {
+                    tempStr = tempDate.toString ( mDateFormatWeek );
+                } else {
+                    tempStr = QDate::shortMonthName(tempDate.month())+ " "+getYear(tempDate);
+                }
                 majorText.append(tempStr);
                 tempDate = tempDate.addMonths(tempMajorScaleCount);
             }
@@ -2323,15 +2859,22 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
         case KDGanttView::Month:
             myRealEnd = myRealEnd.addMonths(minorItems*tempMinorScaleCount);
             for ( i = 0; i < minorItems;++i) {
-                minorText.append((calendar->monthName(tempDate.month(), tempDate.year(), true)).left(1)); //TODO: BIDI
+                minorText.append((QDate::shortMonthName(tempDate.month())).left(1));
                 tempDate = tempDate.addMonths(tempMinorScaleCount);
             }
             tempDate = myRealStart.date();
-            while (tempDate.month() != 1)
-                tempDate = tempDate.addMonths(1);
+            if (tempDate.month() != 1)
+                tempDate = tempDate.addMonths( 12 - tempDate.month() );
             while (tempDate < myRealEnd.date()) {
-                majorTicks.append( getCoordX(tempDate));
-                tempStr = getYear(tempDate);
+                int coord = getCoordX(tempDate) + myGridMinorWidth / 2;
+                int diff = coord % myGridMinorWidth;
+                coord = coord - diff;
+                majorTicks.append( coord );
+                if ( !mDateFormatMonth.isEmpty() ) {
+                    tempStr = tempDate.toString ( mDateFormatMonth );
+                } else {
+                    tempStr = getYear(tempDate);
+                }
                 majorText.append(tempStr);
                 tempDate = tempDate.addYears(tempMajorScaleCount);
             }
@@ -2348,8 +2891,9 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale)
     //qDebug("KDTimeHeaderWidget width %d, viewport width %d  ",width (), myGanttView->myCanvasView->viewport()->width());
     myGanttView->myTimeTable->setBlockUpdating( block );
     updateTimeTable();
-    centerDateTime(myCenterDateTime);
-    repaint();
+    if ( ! block )
+        centerDateTime(myCenterDateTime);
+    pendingPaint();
 }
 
 
@@ -2367,19 +2911,36 @@ void KDTimeHeaderWidget::saveCenterDateTime()
 }
 
 
-void KDTimeHeaderWidget::centerDateTime( const QDateTime& center )
+void KDTimeHeaderWidget::centerDateTime( const QDateTime& center,  bool changeHorizon  )
 {
-     moveTimeLineTo(getCoordX( center )-(myGanttView->myCanvasView->viewport()->width() /2));
+    int coordX = getCoordX( center );
+    bool outOfRange = ( coordX < 0 || coordX > myGanttView->myCanvasView->contentsWidth() );
+    if (  outOfRange ) {
+        if ( changeHorizon ) {
+            double secs = secsFromTo( myHorizonStart, myHorizonEnd );
+            int secdiff = (int) ( secs/2.0 );
+            myHorizonStart = center.addSecs( -secdiff );
+            myHorizonEnd = center.addSecs( secdiff );
+            computeTicks();
+            coordX = getCoordX( center );
+        } else {
+            return;
+        }
+    }
+    moveTimeLineTo(getCoordX( center )-(myGanttView->myCanvasView->viewport()->width() /2));
     //  qDebug("centerDateTime %s %d %d", center.toString().latin1(),getCoordX( center ),(myGanttView->myCanvasView->viewport()->width() /2) );
-   
 }
 
+void KDTimeHeaderWidget::pendingPaint()
+{
+    repaint( false );
+}
 
 void KDTimeHeaderWidget::paintEvent(QPaintEvent *p)
 {
+  
     repaintMe(p->rect().x(),p->rect().width());
 }
-
 
 int KDTimeHeaderWidget::getCoordX(QDate date)
 {
@@ -2387,7 +2948,8 @@ int KDTimeHeaderWidget::getCoordX(QDate date)
     int daysAll = myRealStart.daysTo(myRealEnd);
     if (daysAll == 0) return 0;
     int days = myRealStart.daysTo(QDateTime(date));
-    return (wid *days) /daysAll;
+    int retVal = (wid *days) /daysAll;
+    return retVal;
 }
 
 
@@ -2397,10 +2959,50 @@ int KDTimeHeaderWidget::getCoordX(QDateTime datetime)
     double secsAll = secsFromTo( myRealStart, myRealEnd );
     if (secsAll == 0.0) return 0;
     double secs = secsFromTo( myRealStart, datetime);
-    return ((int)((wid *(secs /secsAll))+0.5));
+    int retVal = ((int)((wid *(secs /secsAll))+0.5));
+    return retVal;
 }
 
 
+QDate KDTimeHeaderWidget::yesterday() const
+{
+    return QDate::currentDate().addDays( -1 ) ;
+}
+QDate KDTimeHeaderWidget::today() const
+{
+    return QDate::currentDate() ;
+}
+QDate KDTimeHeaderWidget::tomorrow() const
+{
+    return QDate::currentDate().addDays( 1 ) ;
+}
+QDate KDTimeHeaderWidget::currentWeek() const
+{
+    int sub = ( QDate::currentDate().dayOfWeek() - (mWeekStartsMonday?1:0) ) % 7;
+    if ( sub )
+        return QDate::currentDate().addDays( -sub );
+    return QDate::currentDate();
+}
+QDate KDTimeHeaderWidget::lastWeek() const
+{
+    return currentWeek().addDays( -7 ) ;
+}
+QDate KDTimeHeaderWidget::currentMonth() const
+{
+    return QDate ( QDate::currentDate().year(),QDate::currentDate().month(),1) ;
+}
+QDate KDTimeHeaderWidget::lastMonth() const
+{
+    return QDate ( QDate::currentDate().year(),QDate::currentDate().month(),1).addMonths( -1 ) ;
+}
+QDate KDTimeHeaderWidget::currentYear() const
+{
+    return QDate ( QDate::currentDate().year(), 1, 1 ) ;
+}
+QDate KDTimeHeaderWidget::lastYear() const
+{
+    return QDate ( QDate::currentDate().year() - 1, 1, 1) ;
+}
 QString KDTimeHeaderWidget::getYear(QDate date)
 {
     QString ret;
@@ -2418,6 +3020,31 @@ QString KDTimeHeaderWidget::getYear(QDate date)
     case KDGanttView::NoDate:
         // nothing to do
         break;
+    }
+    return ret;
+}
+QString KDTimeHeaderWidget::getHourMinutes(QTime time)
+{
+    QString ret;
+    int hour = time.hour();
+    QString min = QString::number( time.minute() );
+    if ( min.length() == 1 )
+        min = "0" + min;
+    if (myHourFormat == KDGanttView::Hour_12) {
+        if (hour >= 12) {
+            if (hour > 12) hour -=12;
+            ret.setNum(hour);
+            ret += "." + min;
+            ret = ret +" PM";
+        } else {
+            if (hour == 0) hour = 12;
+            ret.setNum(hour);
+            ret += "." + min;
+            ret = ret +" AM";
+        }
+    } else {
+        ret.setNum(hour);
+        ret += ":" + min;
     }
     return ret;
 }
@@ -2453,16 +3080,16 @@ void KDTimeHeaderWidget::mousePressEvent ( QMouseEvent * e )
 {
     mouseDown = false;
     switch ( e->button() ) {
-    case LeftButton:
+    case Qt::LeftButton:
         mouseDown = true;
         beginMouseDown = e->pos().x();
         endMouseDown = e->pos().x();
         break;
-    case RightButton:
+    case Qt::RightButton:
         if (flagShowPopupMenu)
             myPopupMenu->popup(e->globalPos());
         break;
-    case MidButton:
+    case Qt::MidButton:
         break;
     default:
         break;
@@ -2492,10 +3119,9 @@ void KDTimeHeaderWidget::mouseReleaseEvent ( QMouseEvent *  )
         //qDebug("end %s ",getDateTimeForIndex(end).toString().latin1() );
         emit myGanttView->timeIntervalSelected( getDateTimeForIndex(start),getDateTimeForIndex(end) );
         emit myGanttView->timeIntervallSelected( getDateTimeForIndex(start),getDateTimeForIndex(end) );
-        //zoomToSelection( getDateTimeForIndex(start),getDateTimeForIndex(end) );
     }
     mouseDown = false;
-    repaint();
+    pendingPaint();
 }
 
 
@@ -2510,7 +3136,7 @@ void KDTimeHeaderWidget::mouseMoveEvent ( QMouseEvent * e )
     if ( mouseDown ) {
         if ( e->pos().y() < -height() || e->pos().y() > 2* height() ) {
             mouseDown = false;
-            repaint();
+            pendingPaint();
             return;
         }
         endMouseDown = e->pos().x();
@@ -2528,7 +3154,8 @@ void KDTimeHeaderWidget::mouseMoveEvent ( QMouseEvent * e )
                 myGanttView->myCanvasView->horizontalScrollBar()->lineStep();
 
         }
-        repaintMe(-x(),parentWidget()->width());
+        pendingPaint();
+        //epaintMe(-x(),parentWidget()->width());
         if ( val > -1 ) {
             if ( val > myGanttView->myCanvasView->horizontalScrollBar()->maxValue() ) {
                 val = myGanttView->myCanvasView->horizontalScrollBar()->maxValue();
@@ -2550,10 +3177,10 @@ KDLegendWidget:: KDLegendWidget( QWidget* parent,
 {
     myLegendParent = legendParent;
     dock = 0;
-    scroll = new Q3ScrollView( legendParent );
+    scroll = new QScrollView( legendParent );
     setMaximizedWidget( scroll );
 
-    setMinimizedWidget( myLabel = new QLabel( i18n( " Legend is hidden" ), this) );
+    setMinimizedWidget( myLabel = new QLabel(" Legend is hidden",this)  );
     setGeometry( 0, 0, 50, 50 );
     myLegend = 0;
     clearLegend();
@@ -2568,16 +3195,16 @@ void KDLegendWidget::setAsDockwindow( bool dockwin )
             setMaximizedWidget( 0 );
             showMe ( false );
             if ( dock ) delete dock;
-            dock = new Q3DockWindow(Q3DockWindow:: OutsideDock,0 );
+            dock = new QDockWindow(QDockWindow:: OutsideDock,0 );
             dock->resize( 200, 100 );
             dock->setHorizontallyStretchable( true );
             dock->setVerticallyStretchable( true );
-            dock->setCaption(i18n("Legend: ") );
+            dock->setCaption(tr("Legend: ") );
             dock->setResizeEnabled (true );
             delete myLegend;
             myLegend = 0;
             delete scroll;
-            scroll = new Q3ScrollView( dock );
+            scroll = new QScrollView( dock );
             clearLegend();
             dock->setWidget(scroll);
             setMaximizedWidget( dock );
@@ -2591,7 +3218,7 @@ void KDLegendWidget::setAsDockwindow( bool dockwin )
             delete scroll;
             delete dock;
             dock = 0;
-            scroll = new Q3ScrollView( myLegendParent );
+            scroll = new QScrollView( myLegendParent );
             clearLegend();
             setMaximizedWidget( scroll );
             showMe ( false );
@@ -2608,7 +3235,7 @@ bool KDLegendWidget::asDockwindow( )
 }
 
 
-Q3DockWindow* KDLegendWidget::dockwindow( )
+QDockWindow* KDLegendWidget::dockwindow( )
 {
     return dock;
 }
@@ -2636,8 +3263,7 @@ QSize KDLegendWidget::legendSize()
 
 QSize KDLegendWidget::legendSizeHint()
 {
-
-    qApp->processEvents();
+    //qApp->processEvents();
     return QSize( myLegend->sizeHint().width(), myLegend->sizeHint().height()+scroll->horizontalScrollBar()->height());
 }
 
@@ -2652,15 +3278,17 @@ void KDLegendWidget::clearLegend ( )
 {
     if ( myLegend ) delete myLegend;
     if ( dock )
-        myLegend = new Q3GroupBox( 1, Qt::Horizontal, scroll->viewport() );
+        myLegend = new QGroupBox( 1, Qt::Horizontal, scroll->viewport() );
     else
-        myLegend = new Q3GroupBox( 1, Qt::Horizontal, i18n( "Legend" ), scroll->viewport() );
+        myLegend = new QGroupBox( 1, Qt::Horizontal, "Legend:", scroll->viewport() );
     myLegend->setBackgroundColor( Qt::white );
     myLegend->setFont( font() );
     scroll->addChild(  myLegend );
-    scroll->setResizePolicy( Q3ScrollView::AutoOneFit );
+    scroll->setResizePolicy( QScrollView::AutoOneFit );
     myLegend->layout()->setMargin( 11 );
-    myLegend->setFrameStyle( Q3Frame::NoFrame );
+#if QT_VERSION < 0x040000
+    myLegend->setFrameStyle( QFrame::NoFrame );
+#endif
     if ( dock )
         scroll->setMaximumHeight( 32000 );
     else
@@ -2671,16 +3299,49 @@ void KDLegendWidget::clearLegend ( )
 void KDLegendWidget::addLegendItem( KDGanttViewItem::Shape shape, const QColor& shapeColor, const QString& text )
 {
     QLabel * temp;
+    QWidget *w = new QWidget( myLegend );
+    w->setBackgroundColor( Qt::white );
+    QHBoxLayout *lay = new QHBoxLayout( w ,0, 6);
+    temp = new QLabel ( w );
+    lay->addWidget( temp, 0, Qt:: AlignRight);
+    temp->setPixmap(KDGanttView::getPixmap( shape,  shapeColor, Qt::white, 10));
+    temp->setBackgroundColor( Qt::white );
+    temp = new QLabel ( text, w );
+    temp->setBackgroundColor( Qt::white );
+    lay->addWidget( temp, 0, Qt:: AlignLeft);
+    lay->addStretch();
+    if ( dock )
+        scroll->setMaximumHeight( 32000 );
+    else
+        scroll->setMaximumHeight( legendSizeHint().height() );
+}
+
+void KDLegendWidget::addLegendItem( KDGanttViewItem::Shape shape, const QColor& shapeColor, const QString& text,
+                                    KDGanttViewItem::Shape shape2, const QColor& shapeColor2, const QString& text2 )
+{
+    QLabel * temp;
     QPixmap p = KDGanttView::getPixmap( shape,  shapeColor, Qt::white, 10);
     QWidget *w = new QWidget( myLegend );
     w->setBackgroundColor( Qt::white );
     QHBoxLayout *lay = new QHBoxLayout( w ,0, 6);
     temp = new QLabel ( w );
     lay->addWidget( temp, 0, Qt:: AlignRight);
-    temp->setPixmap(p);
-    temp = new QLabel ( text, w );
+    temp->setPixmap(p);  
     temp->setBackgroundColor( Qt::white );
-    lay->addWidget( temp, 0, Qt:: AlignLeft);
+    if( !text.isEmpty() ){
+        temp = new QLabel ( text, w );
+        temp->setBackgroundColor( Qt::white );
+        lay->addWidget( temp, 0, Qt::AlignCenter);
+    }
+    temp = new QLabel ( w );
+    lay->addWidget( temp, 0, Qt:: AlignRight);
+    temp->setPixmap( KDGanttView::getPixmap( shape2,  shapeColor2, Qt::white, 10));
+    temp->setBackgroundColor( Qt::white );
+    if( !text2.isEmpty() ){
+        temp = new QLabel ( text2, w );
+        temp->setBackgroundColor( Qt::white );
+        lay->addWidget( temp, 0, Qt::AlignLeft);
+    }
     lay->addStretch();
     if ( dock )
         scroll->setMaximumHeight( 32000 );
@@ -2695,25 +3356,29 @@ bool KDLegendWidget::isShown ( )
 }
 
 
-KDListView::KDListView(QWidget* parent, KDGanttView* gantView):Q3ListView (parent)
+KDListView::KDListView(QWidget* parent, KDGanttView* gantView):QListView (parent)
 {
     myGanttView = gantView;
     setAcceptDrops(true);
     new KDListViewWhatsThis(viewport(),this);
     setRootIsDecorated( true );
     setAllColumnsShowFocus( true );
-    addColumn( i18n( "Task Name" ) );
+    addColumn( tr( "Task Name" ) );
     setSorting( -1 );
     //setVScrollBarMode (QScrollView::AlwaysOn );
-    setHScrollBarMode (Q3ScrollView::AlwaysOn );
-    setDefaultRenameAction(Q3ListView::Accept);
+    setHScrollBarMode (QScrollView::AlwaysOn );
+    setDefaultRenameAction(QListView::Accept);
     setColumnWidthMode ( 0,Maximum  );
     _calendarMode = false;
     // QObject::connect(this, SIGNAL (  pressed ( QListViewItem * )) , this, SLOT( dragItem( QListViewItem *))) ;
 }
 
 
-void  KDListView::dragItem( Q3ListViewItem *  )
+QSize KDListView::minimumSizeHint () const
+{
+    return QSize( 10, 10 );
+}
+void  KDListView::dragItem( QListViewItem *  )
 {
     // qDebug("drag ");
     // startDrag();
@@ -2723,7 +3388,8 @@ QString KDListView::getWhatsThisText(QPoint p)
     KDGanttViewItem* item = ( KDGanttViewItem* ) itemAt( p );
     if ( item )
         return item->whatsThisText();
-    return i18n( "No item Found" );
+    return "No item Found";
+
 }
 
 void  KDListView::setCalendarMode( bool mode )
@@ -2732,18 +3398,18 @@ void  KDListView::setCalendarMode( bool mode )
     // setRootIsDecorated ( ! mode );
 }
 
-void  KDListView::setOpen(Q3ListViewItem * item, bool open )
+void  KDListView::setOpen(QListViewItem * item, bool open )
 {
     if (! _calendarMode || ! open ) {
         (( KDGanttViewItem*)item)->setCallListViewOnSetOpen( false );
-        Q3ListView::setOpen ( item, open );
+        QListView::setOpen ( item, open );
         (( KDGanttViewItem*)item)->setCallListViewOnSetOpen( true );
         return;
     }
     // we are in calendarmode
     // in calendarmode only items can be opened which have subitems which have subitems
 
-    Q3ListViewItem* temp;
+    QListViewItem* temp;
     temp = item->firstChild();
     bool openItem = false;
     while (temp) {
@@ -2759,7 +3425,7 @@ void  KDListView::setOpen(Q3ListViewItem * item, bool open )
     }
     if ( openItem ) {
         (( KDGanttViewItem*)item)->setCallListViewOnSetOpen( false );
-        Q3ListView::setOpen ( item, open );
+        QListView::setOpen ( item, open );
         (( KDGanttViewItem*)item)->setCallListViewOnSetOpen( true );
     }
 }
@@ -2767,7 +3433,7 @@ void  KDListView::setOpen(Q3ListViewItem * item, bool open )
 
 void  KDListView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
 {
-    Q3ListView::contentsMouseDoubleClickEvent ( e );
+    //QListView::contentsMouseDoubleClickEvent ( e );
     //if ( ! _calendarMode )
     // QListView::contentsMouseDoubleClickEvent ( e );
     // else
@@ -2807,7 +3473,10 @@ void KDListView::dragMoveEvent ( QDragMoveEvent * e)
         return;
     }
     KDGanttViewItem* draggedItem = 0;
-    KDGanttViewItem* gItem = (KDGanttViewItem*)itemAt( e->pos()) ;
+    QPoint pos = e->pos();
+    if ( myGanttView->headerVisible() )
+        pos.setY( pos.y() - header()->height()  );
+    KDGanttViewItem* gItem = (KDGanttViewItem*)itemAt( pos ) ;
     setCurrentItem( gItem );
     if (  e->source() == myGanttView )
         draggedItem = myGanttView->myCanvasView->lastClickedItem;
@@ -2846,10 +3515,15 @@ void KDListView::dropEvent ( QDropEvent *e )
         e->accept( false );
         return;
     }
-    KDGanttViewItem* gItem = (KDGanttViewItem*)itemAt( e->pos()) ;
+    QPoint pos = e->pos();
+    if ( myGanttView->headerVisible() )
+        pos.setY( pos.y() - header()->height()  );
+    KDGanttViewItem* gItem = (KDGanttViewItem*)itemAt( pos ) ;
     KDGanttViewItem* draggedItem = 0;
-    if (  e->source() == myGanttView )
+    if (  e->source() == myGanttView ) {
+        //qDebug("internal drop ");
         draggedItem = myGanttView->myCanvasView->lastClickedItem;
+    }
     if (myGanttView->lvDropEvent ( e, draggedItem, gItem ))
         return;
     QString string;
@@ -2897,17 +3571,19 @@ void KDListView::dropEvent ( QDropEvent *e )
         //qDebug("next node2 ");
         node = node.nextSibling();
     }
-    newItem->setDisplaySubitemsAsGroup(myGanttView->displaySubitemsAsGroup());
-    newItem->resetSubitemVisibility();
-    myGanttView->slot_lvDropped(e, draggedItem, gItem);
-    myGanttView->myTimeTable->setBlockUpdating( enable );
-    myGanttView->myTimeTable->updateMyContent();
+    if ( newItem ) {
+        //newItem->setDisplaySubitemsAsGroup(myGanttView->displaySubitemsAsGroup());
+        //newItem->resetSubitemVisibility();
+        myGanttView->slot_lvDropped(e, draggedItem, gItem);
+        myGanttView->myTimeTable->setBlockUpdating( enable );
+        myGanttView->myTimeTable->updateMyContent();
+    }
     return;
 }
 
-Q3DragObject * KDListView::dragObject ()
+QDragObject * KDListView::dragObject ()
 {
-    return Q3ListView::dragObject ();
+    return QListView::dragObject ();
 }
 
 void KDListView::startDrag ()
@@ -2922,7 +3598,7 @@ void KDListView::startDrag ()
 KDCanvasText::KDCanvasText( KDTimeTableWidget* canvas,
                             void* parentItem,
                             int type ) :
-    Q3CanvasText(canvas)
+    QCanvasText(canvas)
 {
     myParentType = type;
     myParentItem = parentItem;
@@ -2932,7 +3608,7 @@ KDCanvasText::KDCanvasText( KDTimeTableWidget* canvas,
 KDCanvasLine::KDCanvasLine( KDTimeTableWidget* canvas,
                             void* parentItem,
                             int type ) :
-    Q3CanvasLine(canvas)
+    QCanvasLine(canvas)
 {
     myParentType = type;
     myParentItem = parentItem;
@@ -2942,7 +3618,7 @@ KDCanvasLine::KDCanvasLine( KDTimeTableWidget* canvas,
 KDCanvasPolygonItem::KDCanvasPolygonItem( KDTimeTableWidget* canvas,
                                           void* parentItem,
                                           int type ) :
-    Q3CanvasPolygonalItem( canvas )
+    QCanvasPolygonalItem( canvas )
 {
     myParentType = type;
     myParentItem = parentItem;
@@ -2952,7 +3628,7 @@ KDCanvasPolygonItem::KDCanvasPolygonItem( KDTimeTableWidget* canvas,
 KDCanvasPolygon::KDCanvasPolygon( KDTimeTableWidget* canvas,
                                   void* parentItem,
                                   int type ) :
-    Q3CanvasPolygon( canvas )
+    QCanvasPolygon( canvas )
 {
     myParentType = type;
     myParentItem = parentItem;
@@ -2962,7 +3638,7 @@ KDCanvasPolygon::KDCanvasPolygon( KDTimeTableWidget* canvas,
 KDCanvasEllipse::KDCanvasEllipse( KDTimeTableWidget* canvas,
                                   void* parentItem,
                                   int type ) :
-    Q3CanvasEllipse( canvas )
+    QCanvasEllipse( canvas )
 {
     myParentType = type;
     myParentItem = parentItem;
@@ -2972,75 +3648,70 @@ KDCanvasEllipse::KDCanvasEllipse( KDTimeTableWidget* canvas,
 KDCanvasRectangle::KDCanvasRectangle( KDTimeTableWidget* canvas,
                                       void* parentItem,
                                       int type ) :
-    Q3CanvasRectangle( canvas )
+    QCanvasRectangle( canvas )
 {
     myParentType = type;
     myParentItem = parentItem;
 }
 
 
-
-
-KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,Q3Canvas* canvas, QWidget* parent,  const char* name ) : Q3CanvasView ( canvas, parent, name )
+KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidget* parent,  const char* name ) : QCanvasView ( canvas, parent, name )
 {
-    setHScrollBarMode (Q3ScrollView::AlwaysOn );
-    setVScrollBarMode( Q3ScrollView::AlwaysOn );
+    setHScrollBarMode (QScrollView::AlwaysOn );
+    setVScrollBarMode( QScrollView::AlwaysOn );
     myToolTip = new KDCanvasToolTip(viewport(),this);
     mySignalSender =  sender;
+    userCreateTaskLinksEnabled = false;
     currentItem = 0;
     currentLink = 0;
     cuttedItem = 0;
-    fromItem = 0;
-    fromArea = 0;
-    linkItemsEnabled = false;
-    linkLine = new Q3CanvasLine(canvas);
-    linkLine->hide();
-    linkLine->setZ(1000);
-    //set_Mouse_Tracking(true);
+    currentConnector =  KDGanttViewItem::NoConnector;
+    set_Mouse_Tracking(true);
     new KDCanvasWhatsThis(viewport(),this);
-    onItem = new Q3PopupMenu( this );
-    Q3PopupMenu * newMenu = new Q3PopupMenu( this );
-    Q3PopupMenu * onView = new Q3PopupMenu( this );
-    onView->insertItem( i18n( "Summary" ), this,
+    onItem = new QPopupMenu( this );
+    QPopupMenu * newMenu = new QPopupMenu( this );
+    QPopupMenu * onView = new QPopupMenu( this );
+    onView->insertItem( tr( "Event" ), this,
                         SLOT ( newRootItem( int ) ), 0, 0 );
-    onView->insertItem( i18n( "Event" ), this,
+    onView->insertItem( tr( "Task" ), this,
                         SLOT ( newRootItem( int ) ), 0, 1);
-    onView->insertItem( i18n( "Task" ), this,
+    onView->insertItem( tr( "Summary" ), this,
                         SLOT ( newRootItem( int ) ), 0, 2 );
 
-    onItem->insertItem( i18n( "New Root" ), onView );
-    newMenu->insertItem( i18n( "Summary" ),
+    onItem->insertItem( tr( "New Root" ), onView );
+    newMenu->insertItem( tr( "Event" ),
                          this, SLOT ( newChildItem(  int) ), 0, 0 );
-    newMenu->insertItem( i18n( "Event" ),
+    newMenu->insertItem( tr( "Task" ),
                          this, SLOT ( newChildItem( int ) ), 0, 1 );
-    newMenu->insertItem( i18n( "Task" ),
+    newMenu->insertItem( tr( "Summary" ),
                          this, SLOT ( newChildItem( int ) ), 0, 2 );
 
-    onItem->insertItem( i18n( "New Child" ), newMenu );
-    Q3PopupMenu * afterMenu = new Q3PopupMenu( this );
-    afterMenu->insertItem( i18n( "Summary" ),
+    onItem->insertItem( tr( "New Child" ), newMenu );
+    QPopupMenu * afterMenu = new QPopupMenu( this );
+    afterMenu->insertItem( tr( "Event" ),
                            this, SLOT ( newChildItem(  int) ), 0, 0+4 );
-    afterMenu->insertItem( i18n( "Event" ),
+    afterMenu->insertItem( tr( "Task" ),
                            this, SLOT ( newChildItem( int ) ), 0, 1+4 );
-    afterMenu->insertItem( i18n( "Task" ),
+    afterMenu->insertItem( tr( "Summary" ),
                            this, SLOT ( newChildItem( int ) ), 0, 2+4 );
-    onItem->insertItem( i18n( "New After" ), afterMenu );
-    Q3PopupMenu *pasteMenu = new Q3PopupMenu( this );
-    pasteMenu->insertItem( i18n( "As Root" ),
+    onItem->insertItem( tr( "New After" ), afterMenu );
+    QPopupMenu *pasteMenu = new QPopupMenu( this );
+    pasteMenu->insertItem( tr( "As Root" ),
                            this, SLOT ( pasteItem( int ) ), 0, 0 );
-    pasteMenu->insertItem( i18n( "As Child" ),
+    pasteMenu->insertItem( tr( "As Child" ),
                            this, SLOT ( pasteItem( int ) ), 0, 1 );
-    pasteMenu->insertItem( i18n( "After" ),
+    pasteMenu->insertItem( tr( "After" ),
                            this, SLOT ( pasteItem( int ) ), 0, 2 );
-    onItem->insertItem( i18n( "Paste" ), pasteMenu, 3 );
-    onItem->insertItem( i18n( "Cut Item" ), this, SLOT ( cutItem() ) );
+    onItem->insertItem( tr( "Paste" ), pasteMenu, 3 );
+    onItem->insertItem( tr( "Cut Item" ), this, SLOT ( cutItem() ) );
     onItem->setItemEnabled( 3, false );
     myMyContentsHeight = 0;
     _showItemAddPopupMenu = false;
-    
-    myScrollTimer = new QTimer( this );
-    connect( myScrollTimer, SIGNAL( timeout() ), SLOT( slotScrollTimer() ) );
-    autoScrollEnabled = false;
+    mScrollbarTimer = new QTimer( this ); 
+    connect( mScrollbarTimer, SIGNAL( timeout() ),
+             this, SLOT( updateMyScrollBars() ) );
+    myScrollBarMode = Auto;
+    mScrollBarCheckCounter = 20;
 }
 
 
@@ -3067,41 +3738,112 @@ void KDGanttCanvasView::moveMyContent( int, int y)
 
 void KDGanttCanvasView::resizeEvent ( QResizeEvent * e )
 {
-    int ho = e->oldSize().height();
-    int wo = e->oldSize().width();
-    int hi = height();
-    int wi = width();
     //QScrollView::blockSignals( true );
 
     verticalScrollBar()->setUpdatesEnabled( false );
-    Q3ScrollView::resizeEvent ( e ) ;
-    if ( ho != hi )
-        emit heightResized( viewport()->height());
-    if ( wo != wi )
-        emit widthResized( viewport()->width() );
+    // QScrollView::resizeEvent starts an update time for the scrollbars
+    // we have to avoid this because we use our own timer
+    // we do not call QScrollView::resizeEvent ( e ) ;
+    QFrame::resizeEvent( e );
+    // as in QScrollView::resizeEvent we call now QScrollView::updateScrollBars()
+    // one time and later again via 
+    // setMyContentsHeight() - updateMyScrollBars()
+    updateScrollBars();
+    emit heightResized( viewport()->height());
+    emit widthResized( viewport()->width() + verticalScrollBar()->width() );
     setMyContentsHeight( 0 );
     //QScrollView::blockSignals( false );
 }
-void KDGanttCanvasView::setMyContentsHeight( int hei )
+void KDGanttCanvasView::setMyVScrollBarMode ( QScrollView::ScrollBarMode m )
 {
-    mySignalSender->closingBlocked = true;
-    qApp->processEvents();
-    mySignalSender->closingBlocked = false;
-    //qDebug("setMyContentsHeight %d %d ", hei,  myMyContentsHeight);
-    if ( hei > 0 )
-        myMyContentsHeight = hei;
+    myScrollBarMode = m;
+    resetScrollBars();
+    mScrollBarCheckCounter = 0;
+    QTimer::singleShot( 0, this, SLOT ( updateMyScrollBarsLater() ) );
+}
+QScrollView::ScrollBarMode KDGanttCanvasView::myVScrollBarMode () const
+{
+    return myScrollBarMode;
+}
+// we are watching the main event loop 20 times if someone else is resetting the
+// max value of the verticalScrollBar()
+void KDGanttCanvasView::updateMyScrollBarsLater()
+{
+    if ( mScrollBarCheckCounter < 20 ) {
+        ++mScrollBarCheckCounter;
+        QTimer::singleShot( 0, this, SLOT ( updateMyScrollBarsLater() ) );
+    }
+    if ( verticalScrollBar()->maxValue () > myMyContentsHeight- viewport()->height()+1  ) {
+        //qDebug("found!!!!!! %d ",mScrollBarCheckCounter );
+        if ( mScrollBarCheckCounter < 20 ) {
+            resetScrollBars();
+            mScrollBarCheckCounter = 20;
+        }
+    }
+}
+void KDGanttCanvasView::updateMyScrollBars()
+{
+    // we call now QScrollView::updateScrollBars();
+    updateScrollBars();
+    // and now we reset the vertical scrollbar to the right range 
+    // and enable updating for the scrollbar again
+    resetScrollBars();
+}
+void KDGanttCanvasView::resetScrollBars()
+{
     verticalScrollBar()->setUpdatesEnabled( true );
-    if ( viewport()->height() <= myMyContentsHeight )
+    if ( viewport()->height() <= myMyContentsHeight ) {
+        if ( myScrollBarMode == QScrollView::Auto ) {
+            setVScrollBarMode( QScrollView::AlwaysOn );
+            mySignalSender->timeHeaderSpacerWidget->setFixedWidth( verticalScrollBar()->width() );
+        }
+        //qDebug("set range %d %d %d  ",myMyContentsHeight, viewport()->height(),myMyContentsHeight- viewport()->height()+1 );
         verticalScrollBar()->setRange( 0, myMyContentsHeight- viewport()->height()+1);
-    else
+    }
+    else {
+        if ( myScrollBarMode == QScrollView::Auto ) {
+            mySignalSender->timeHeaderSpacerWidget->setFixedWidth( 0 );
+            setVScrollBarMode( QScrollView::AlwaysOff );
+        }
         verticalScrollBar()->setRange( 0,0 );
+    }
+    if (  myScrollBarMode == QScrollView::AlwaysOn ) {
+        mySignalSender->timeHeaderSpacerWidget->setFixedWidth( verticalScrollBar()->width() );
+        setVScrollBarMode( QScrollView::AlwaysOn );
+        if ( viewport()->height() <= myMyContentsHeight ) 
+            verticalScrollBar()->setRange( 0, myMyContentsHeight- viewport()->height()+1);
+        else
+            verticalScrollBar()->setRange( 0,0 );
+       
+    } else if (  myScrollBarMode == QScrollView::AlwaysOff ) {
+        mySignalSender->timeHeaderSpacerWidget->setFixedWidth( 0 );
+        setVScrollBarMode( QScrollView::AlwaysOff );
+        if ( viewport()->height() <= myMyContentsHeight ) 
+            verticalScrollBar()->setRange( 0, myMyContentsHeight- viewport()->height()+1);
+        else
+            verticalScrollBar()->setRange( 0,0 );
+    }
     // testing for unmatching ScrollBar values of timeheader and timetable
     // may happen after external resizing
     if ( horizontalScrollBar()->value() != mySignalSender->myTimeHeaderScroll->horizontalScrollBar()->value() ) {
         // I am the Boss!
         mySignalSender->myTimeHeaderScroll->horizontalScrollBar()->setValue(horizontalScrollBar()->value()  );
 
+    } 
+    if ( mScrollBarCheckCounter >= 20 ) {
+        mScrollBarCheckCounter = 0;
+        QTimer::singleShot( 0, this, SLOT ( updateMyScrollBarsLater() ) );
     }
+    mySignalSender->closingBlocked = false;
+}
+void KDGanttCanvasView::setMyContentsHeight( int hei )
+{
+    verticalScrollBar()->setUpdatesEnabled( false );
+    mySignalSender->closingBlocked = true;
+    //qDebug("setMyContentsHeight %d %d ", hei,  myMyContentsHeight);
+    if ( hei > 0 )
+        myMyContentsHeight = hei;
+    mScrollbarTimer->start( 0, true );
 
 }
 void  KDGanttCanvasView::cutItem( KDGanttViewItem* item )
@@ -3190,72 +3932,36 @@ void  KDGanttCanvasView::pasteItem( int type )
 }
 void  KDGanttCanvasView::newRootItem(int type)
 {
-    KDGanttViewItem* temp = 0;
-    switch( type ) {
-    case 1:
-        temp = new KDGanttViewEventItem( mySignalSender, i18n( "New Event" ) );
-        break;
-    case 0:
-        temp = new KDGanttViewSummaryItem( mySignalSender, i18n( "New Summary" ) );
-        break;
-    case 2:
-        temp = new KDGanttViewTaskItem( mySignalSender, i18n( "New Task" ) );
-        break;
-    default:
-        ;
-    }
+    //KDGanttViewItem::typeToString( (KDGanttViewItem::Type)type );
+    KDGanttViewItem* temp = mySignalSender->createNewItem( KDGanttViewItem::typeToString( (KDGanttViewItem::Type)type ), 0, 0, "new " + KDGanttViewItem::typeToString( (KDGanttViewItem::Type)type ) );
     if ( temp )
         mySignalSender->editItem( temp );
 }
 
 void  KDGanttCanvasView::newChildItem( int type )
 {
-    KDGanttViewItem* temp = 0;
-    switch( type ) {
-    case 1:
-        temp = new KDGanttViewEventItem( lastClickedItem, i18n( "New Event" ) );
-        break;
-    case 0:
-        temp = new KDGanttViewSummaryItem( lastClickedItem, i18n( "New Summary" ) );
-        break;
-    case 2:
-        temp = new KDGanttViewTaskItem( lastClickedItem, i18n( "New Task" ) );
-        break;
-    case 5:
-        if ( lastClickedItem->parent() )
-            temp = new KDGanttViewEventItem( lastClickedItem->parent(), lastClickedItem, i18n( "New Event" ) );
-        else
-            temp = new KDGanttViewEventItem( mySignalSender, lastClickedItem, i18n( "New Event" ) );
-        break;
-    case 4:
-        if ( lastClickedItem->parent() )
-            temp = new KDGanttViewSummaryItem( lastClickedItem->parent(), lastClickedItem, i18n( "New Summary" ) );
-        else
-            temp = new KDGanttViewSummaryItem( mySignalSender, lastClickedItem, i18n( "New Summary" ) );
-        break;
-    case 6:
-        if ( lastClickedItem->parent() )
-            temp = new KDGanttViewTaskItem( lastClickedItem->parent(), lastClickedItem, i18n( "New Task" ) );
-        else
-            temp = new KDGanttViewTaskItem( mySignalSender, lastClickedItem, i18n( "New Task" ) );
-        break;
-
-
-    default:
-        ;
+    int newType = type;
+    if ( newType >= 4 )  newType -= 4;
+    QString newText = "new " + KDGanttViewItem::typeToString( (KDGanttViewItem::Type) newType );
+    KDGanttViewItem* par = lastClickedItem;
+    KDGanttViewItem* after = 0;
+    if ( type >= 4 ) {
+        par = lastClickedItem->parent();
+        after = lastClickedItem;
     }
+    KDGanttViewItem* temp = mySignalSender->createNewItem( KDGanttViewItem::typeToString( (KDGanttViewItem::Type)type ),  par, after, newText );
     if ( temp )
         mySignalSender->editItem( temp );
 }
 
 void  KDGanttCanvasView::drawToPainter ( QPainter * p )
 {
-    drawContents ( p, 0, 0, canvas()->width(), canvas()->height() );
+    drawContents ( p, 0, 0, canvas()->width(), mySignalSender->myTimeTable->minimumHeight() + 2 );
 }
 QString  KDGanttCanvasView::getToolTipText(QPoint p)
 {
-    Q3CanvasItemList il = canvas()->collisions ( viewportToContents( p ));
-    Q3CanvasItemList::Iterator it;
+    QCanvasItemList il = canvas()->collisions ( viewportToContents( p ));
+    QCanvasItemList::Iterator it;
     for ( it = il.begin(); it != il.end(); ++it ) {
         switch (getType(*it)) {
         case Type_is_KDGanttViewItem:
@@ -3273,8 +3979,8 @@ QString  KDGanttCanvasView::getToolTipText(QPoint p)
 
 QString  KDGanttCanvasView::getWhatsThisText(QPoint p)
 {
-    Q3CanvasItemList il = canvas() ->collisions (viewportToContents( p ));
-    Q3CanvasItemList::Iterator it;
+    QCanvasItemList il = canvas() ->collisions (viewportToContents( p ));
+    QCanvasItemList::Iterator it;
     for ( it = il.begin(); it != il.end(); ++it ) {
         switch (getType(*it)) {
         case Type_is_KDGanttViewItem:
@@ -3305,13 +4011,15 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
     setFocus();
     currentLink = 0;
     currentItem = 0;
-    if (e->button() == RightButton && mySignalSender->editable()) {
-        lastClickedItem = (KDGanttViewItem*) mySignalSender->myListView->itemAt( QPoint(2,e->pos().y()));
+    currentItemChanged = false;
+    currentConnector =  KDGanttViewItem::NoConnector;
+    if (e->button() == Qt::RightButton && mySignalSender->editable()) {
+        lastClickedItem = (KDGanttViewItem*) mySignalSender->getItemAt( QPoint(2,e->globalPos().y()), true );
         if ( lastClickedItem ) {
             if ( lastClickedItem->displaySubitemsAsGroup() && ! lastClickedItem->isOpen() ) {
-                // findSub subitem
-                Q3CanvasItemList il = canvas() ->collisions ( e->pos() );
-                Q3CanvasItemList::Iterator it;
+                // find subitem
+                QCanvasItemList il = canvas() ->collisions ( e->pos() );
+                QCanvasItemList::Iterator it;
                 for ( it = il.begin(); it != il.end(); ++it ) {
                     if ( getType(*it) == Type_is_KDGanttViewItem ) {
                         lastClickedItem = getItem(*it);
@@ -3322,23 +4030,25 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
                 onItem->popup(e->globalPos());
         }
     }
-    Q3CanvasItemList il = canvas() ->collisions ( e->pos() );
-    Q3CanvasItemList::Iterator it;
+    KDGanttViewItem* testItem;
+    QCanvasItemList il = canvas() ->collisions ( e->pos() );
+    QCanvasItemList::Iterator it;
     for ( it = il.begin(); it != il.end(); ++it ) {
         switch ( e->button() ) {
-        case LeftButton:
+        case Qt::LeftButton:
             switch (getType(*it)) {
             case Type_is_KDGanttViewItem:
-                currentItem = getItem(*it);
-                if (! currentItem->enabled() ) {
-                    currentItem = 0;
-                } else if (linkItemsEnabled && 
-                           !currentItem->isMyTextCanvas(*it)) {
-                    fromArea = getItemArea(currentItem, e->pos().x());
-                    if (fromArea > 0) {
-                        fromItem = currentItem;
-                        linkLine->setPoints(e->pos().x(), e->pos().y(), e->pos().x(), e->pos().y());
-                        linkLine->show();
+                testItem = getItem(*it);
+                if ( testItem->enabled() ) {
+                    if ( !currentItem ) {
+                        currentItem = testItem;
+                        if ( mySignalSender->editable() )
+                            currentConnector = currentItem->getConnector( e->pos() );
+                    } else {
+                        if ( testItem->priority() > currentItem->priority() )
+                            currentItem = testItem;
+                        if ( mySignalSender->editable() )
+                            currentConnector = currentItem->getConnector( e->pos() );
                     }
                 }
                 break;
@@ -3349,24 +4059,36 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
                 break;
             }
             break;
-        case RightButton:
+        case Qt::RightButton:
             switch (getType(*it)) {
             case Type_is_KDGanttViewItem:
-                currentItem = getItem(*it);
-                if (! currentItem->enabled() )
-                    currentItem = 0;
+                testItem = getItem(*it);
+                if ( testItem->enabled() ) {
+                    if ( !currentItem ) {
+                        currentItem = testItem;
+                    } else {
+                        if ( testItem->priority() > currentItem->priority() )
+                            currentItem = testItem;
+                    }
+                }
                 break;
             case Type_is_KDGanttTaskLink:
                 currentLink = getLink(*it);
                 break;
             }
             break;
-        case MidButton:
+        case Qt::MidButton:
             switch (getType(*it)) {
             case Type_is_KDGanttViewItem:
-                currentItem = getItem(*it);
-                if (! currentItem->enabled() )
-                    currentItem = 0;
+                testItem = getItem(*it);
+                if ( testItem->enabled() ) {
+                    if ( !currentItem ) {
+                        currentItem = testItem;
+                    } else {
+                        if ( testItem->priority() > currentItem->priority() )
+                            currentItem = testItem;
+                    }
+                }
                 break;
             case Type_is_KDGanttTaskLink:
                 currentLink = getLink(*it);
@@ -3377,12 +4099,32 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
             break;
         }
     }
-    if (e->button() == RightButton ) {
+    if (e->button() == Qt::RightButton ) {
         mySignalSender->gvContextMenuRequested( currentItem, e->globalPos() );
     }
-    if (autoScrollEnabled && e->button() == LeftButton) {
-        myScrollTimer->start(50);
+    if ( !userCreateTaskLinksEnabled && currentConnector == KDGanttViewItem::TaskLink )
+        currentConnector = KDGanttViewItem::Move;
+    //qDebug("Connector %d ", currentConnector);
+
+    switch( currentConnector ) {
+    case KDGanttViewItem::Start:
+    case KDGanttViewItem::End:
+    case KDGanttViewItem::Middle:
+    case KDGanttViewItem::ActualEnd:
+    case KDGanttViewItem::Lead:
+        viewport()->setCursor(Qt::sizeHorCursor);
+        break;
+    case KDGanttViewItem::Move:
+        viewport()->setCursor(Qt::sizeAllCursor);
+        break;
+    case KDGanttViewItem::TaskLink:
+        viewport()->setCursor(Qt::sizeVerCursor);
+        break;
+    default:
+        break;
     }
+    mySignalSender->gvMouseButtonPressed( e->button(), currentItem ,  e->globalPos() );
+    mButtonDownTime.start();
 }
 /**
    Handles the mouseevent if a mousekey is released
@@ -3393,43 +4135,25 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
 
 void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
 {
+    viewport()->unsetCursor();
     static KDGanttViewItem* lastClicked = 0;
     mySignalSender->gvMouseButtonClicked( e->button(), currentItem ,  e->globalPos() );
+    mySignalSender->gvMouseButtonReleased( e->button(), currentItem ,  e->globalPos() );
     //qDebug("datetime %s ",mySignalSender->getDateTimeForCoordX(e->globalPos().x(), true ).toString().latin1() );
     //qDebug("mousepos %d %d ",e->pos().x(),e->pos().y() );
     //qDebug("mouseup ");
     // if ( currentLink || currentItem )
     {
         switch ( e->button() ) {
-        case LeftButton:
-            myScrollTimer->stop();
+        case Qt::LeftButton:
             {
                 mySignalSender->itemLeftClicked( currentItem );
                 mySignalSender->gvItemLeftClicked( currentItem );
             }
             if ( currentLink )
                 mySignalSender->taskLinkLeftClicked( currentLink );
-            if (linkItemsEnabled && fromItem) {
-                linkLine->hide();
-                canvas()->update();
-                Q3CanvasItemList il = canvas() ->collisions ( e->pos() );
-                Q3CanvasItemList::Iterator it;
-                for ( it = il.begin(); it != il.end(); ++it ) {
-                    if (getType(*it) == Type_is_KDGanttViewItem) {
-                        KDGanttViewItem *toItem = getItem(*it);
-                        if (!toItem->isMyTextCanvas(*it)) {
-                            int toArea = getItemArea(toItem, e->pos().x());
-                            if (toArea > 0 && toItem && fromItem != toItem) {
-                                mySignalSender->linkItems(fromItem, toItem, getLinkType(fromArea, toArea));
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-            fromItem = 0;
             break;
-        case RightButton:
+        case Qt::RightButton:
             {
                 mySignalSender->itemRightClicked( currentItem );
                 mySignalSender->gvItemRightClicked( currentItem );
@@ -3438,7 +4162,7 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
             if ( currentLink )
                 mySignalSender->taskLinkRightClicked( currentLink );
             break;
-        case MidButton:
+        case Qt::MidButton:
             {
                 mySignalSender->itemMidClicked( currentItem );
                 mySignalSender->gvItemMidClicked( currentItem );
@@ -3453,8 +4177,12 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
     if ( lastClicked != currentItem )
         mySignalSender->gvCurrentChanged( currentItem );
     lastClicked = currentItem;
+    if ( currentItem && currentItemChanged ) {
+        emit mySignalSender->itemChanged( currentItem );
+    }
     currentLink = 0;
     currentItem = 0;
+    currentConnector =  KDGanttViewItem::NoConnector;
 }
 /**
    Handles the mouseevent if a mousekey is doubleclicked
@@ -3465,17 +4193,20 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
 
 void KDGanttCanvasView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
 {
-    Q3CanvasItemList il = canvas() ->collisions ( e->pos() );
-    Q3CanvasItemList::Iterator it;
+    QCanvasItemList il = canvas() ->collisions ( e->pos() );
+    QCanvasItemList::Iterator it;
     for ( it = il.begin(); it != il.end(); ++it ) {
         switch ( e->button() ) {
-        case LeftButton:
+        case Qt::LeftButton:
             switch (getType(*it)) {
             case Type_is_KDGanttViewItem:
-                if ( getItem(*it)->enabled() )
-                    mySignalSender->itemDoubleClicked(getItem(*it));
-                mySignalSender->gvItemDoubleClicked(getItem(*it));
-                return;
+                {
+                    KDGanttViewItem *clickItem = getItem(*it);
+                    if ( clickItem->enabled() )
+                        mySignalSender->itemDoubleClicked( clickItem );
+                    mySignalSender->gvItemDoubleClicked( clickItem );
+                    return;
+                }
                 break;
             case Type_is_KDGanttTaskLink:
                 mySignalSender->taskLinkDoubleClicked(getLink(*it));
@@ -3523,137 +4254,112 @@ void KDGanttCanvasView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
 
 */
 
-void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent *e )
+void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent * e )
 {
     //qDebug("mousemove! ");
-    static int moves = 0;
-    if ( (currentLink || currentItem) && (moves < 3) ) {
-        ++moves;
-
-    } else {
-        moves = 0;
-        currentLink = 0;
-        currentItem = 0;
+    mySignalSender->gvMouseMove( e->button(), currentItem ,  e->globalPos() );
+    if ( !currentItem && mySignalSender->editable() ) {
+        KDGanttViewItem* testItem, *foundItem = 0;
+        QCanvasItemList il = canvas() ->collisions ( e->pos() );
+        QCanvasItemList::Iterator it;
+        for ( it = il.begin(); it != il.end(); ++it ) {
+            if ( getType(*it) == Type_is_KDGanttViewItem ) {
+                testItem = getItem(*it);
+                if ( testItem->enabled() ) {
+                    if ( !foundItem ) {
+                        foundItem = testItem;
+                    } else {
+                        if ( testItem->priority() > foundItem->priority() )
+                            foundItem = testItem;
+                    }
+                }
+            }
+        }
+        if ( foundItem ) {
+            KDGanttViewItem::Connector connector = foundItem->getConnector( e->pos() );
+            if ( !userCreateTaskLinksEnabled && connector == KDGanttViewItem::TaskLink )
+                connector = KDGanttViewItem::Move;
+            //qDebug("FOUNDITEM connector %d",connector );
+            switch( connector ) {
+            case KDGanttViewItem::Start:
+            case KDGanttViewItem::End:
+            case KDGanttViewItem::Middle:
+            case KDGanttViewItem::ActualEnd:
+            case KDGanttViewItem::Lead:
+                viewport()->setCursor(Qt::sizeHorCursor);
+                break;
+            case KDGanttViewItem::Move:
+                viewport()->setCursor(Qt::sizeAllCursor);
+                break;
+            case KDGanttViewItem::TaskLink:
+                viewport()->setCursor(Qt::sizeVerCursor);
+                break;
+            default:
+                viewport()->unsetCursor();
+                break;
+            }
+        } else {
+            viewport()->unsetCursor();
+        }
+        return;
     }
-    if (autoScrollEnabled)
-        mousePos = e->pos()- QPoint(contentsX(),contentsY()); // make mousePos relative 0
-    if (fromItem) {
-        //qDebug("mousemove: linking %s: %d,%d ",fromItem->listViewText().latin1(), e->pos().x(), e->pos().y());
-        linkLine->setPoints(linkLine->startPoint().x(), linkLine->startPoint().y(), e->pos().x(), e->pos().y());
-        canvas()->update();
+    if ( !currentItem )
+        return;
+    if ( currentConnector == KDGanttViewItem::TaskLink ) {
+        return;
     }
-    // no action implemented
-    //qDebug("mousemove ");
-    //QToolTip::setGloballyEnabled (false);
-    //QToolTip::remove(viewport());
-    // QToolTip::add(viewport(), "hello");
-    // QToolTip::setGloballyEnabled (true);
-    /*
-      QCanvasItemList il = canvas() ->collisions ( e->pos() );
-
-      QCanvasItemList::Iterator it;
-      KDGanttItem* mouseover = 0;
-      for ( it = il.begin(); it != il.end(); ++it ) {
-
-      }
-
-    */
+    if ( mButtonDownTime.elapsed() > 200 ) 
+        {
+        if ( currentConnector != KDGanttViewItem::NoConnector && currentItem ) {
+            bool result = currentItem->moveConnector( currentConnector, e->pos() );
+            if ( result ) {
+                emit  mySignalSender->itemConfigured( currentItem );
+                currentItemChanged = true;
+            }
+        }
+    }
 }
 void KDGanttCanvasView::viewportPaintEvent ( QPaintEvent * pe )
 {
-    Q3CanvasView::viewportPaintEvent ( pe );
+    QCanvasView::viewportPaintEvent ( pe );
 }
 void KDGanttCanvasView::set_Mouse_Tracking(bool on)
 {
     viewport()->setMouseTracking(on);
 }
-int  KDGanttCanvasView::getType(Q3CanvasItem* it)
+int  KDGanttCanvasView::getType(QCanvasItem* it)
 {
     switch (it->rtti()) {
-    case Q3CanvasItem::Rtti_Line: return ((KDCanvasLine*)it)->myParentType;
-    case Q3CanvasItem::Rtti_Ellipse: return ((KDCanvasEllipse *)it)->myParentType;
-    case Q3CanvasItem::Rtti_Text: return ((KDCanvasText *)it)->myParentType;
-    case Q3CanvasItem::Rtti_Polygon: return ((KDCanvasPolygon *)it)->myParentType;
-    case Q3CanvasItem::Rtti_Rectangle: return ((KDCanvasRectangle *)it)->myParentType;
+    case QCanvasItem::Rtti_Line: return ((KDCanvasLine*)it)->myParentType;
+    case QCanvasItem::Rtti_Ellipse: return ((KDCanvasEllipse *)it)->myParentType;
+    case QCanvasItem::Rtti_Text: return ((KDCanvasText *)it)->myParentType;
+    case QCanvasItem::Rtti_Polygon: return ((KDCanvasPolygon *)it)->myParentType;
+    case QCanvasItem::Rtti_Rectangle: return ((KDCanvasRectangle *)it)->myParentType;
     }
     return -1;
 }
-KDGanttViewItem*  KDGanttCanvasView::getItem(Q3CanvasItem* it)
+KDGanttViewItem*  KDGanttCanvasView::getItem(QCanvasItem* it)
 {
     switch (it->rtti()) {
-    case Q3CanvasItem::Rtti_Line: return (KDGanttViewItem*)  ((KDCanvasLine*)it)->myParentItem;
-    case Q3CanvasItem::Rtti_Ellipse: return (KDGanttViewItem*)  ((KDCanvasEllipse *)it)->myParentItem;
-    case Q3CanvasItem::Rtti_Text: return (KDGanttViewItem*) ((KDCanvasText *)it)->myParentItem;
-    case Q3CanvasItem::Rtti_Polygon: return (KDGanttViewItem*) ((KDCanvasPolygon *)it)->myParentItem;
-    case Q3CanvasItem::Rtti_Rectangle: return (KDGanttViewItem*) ((KDCanvasRectangle *)it)->myParentItem;
+    case QCanvasItem::Rtti_Line: return (KDGanttViewItem*)  ((KDCanvasLine*)it)->myParentItem;
+    case QCanvasItem::Rtti_Ellipse: return (KDGanttViewItem*)  ((KDCanvasEllipse *)it)->myParentItem;
+    case QCanvasItem::Rtti_Text: return (KDGanttViewItem*) ((KDCanvasText *)it)->myParentItem;
+    case QCanvasItem::Rtti_Polygon: return (KDGanttViewItem*) ((KDCanvasPolygon *)it)->myParentItem;
+    case QCanvasItem::Rtti_Rectangle: return (KDGanttViewItem*) ((KDCanvasRectangle *)it)->myParentItem;
 
     }
     return 0;
 }
-KDGanttViewTaskLink*  KDGanttCanvasView::getLink(Q3CanvasItem* it)
+KDGanttViewTaskLink*  KDGanttCanvasView::getLink(QCanvasItem* it)
 {
     switch (it->rtti()) {
-    case Q3CanvasItem::Rtti_Line: return (KDGanttViewTaskLink*)  ((KDCanvasLine*)it)->myParentItem;
-    case Q3CanvasItem::Rtti_Ellipse: return (KDGanttViewTaskLink*)  ((KDCanvasEllipse *)it)->myParentItem;
-    case Q3CanvasItem::Rtti_Text: return (KDGanttViewTaskLink*) ((KDCanvasText *)it)->myParentItem;
-    case Q3CanvasItem::Rtti_Polygon: return (KDGanttViewTaskLink*) ((KDCanvasPolygon *)it)->myParentItem;
+    case QCanvasItem::Rtti_Line: return (KDGanttViewTaskLink*)  ((KDCanvasLine*)it)->myParentItem;
+    case QCanvasItem::Rtti_Ellipse: return (KDGanttViewTaskLink*)  ((KDCanvasEllipse *)it)->myParentItem;
+    case QCanvasItem::Rtti_Text: return (KDGanttViewTaskLink*) ((KDCanvasText *)it)->myParentItem;
+    case QCanvasItem::Rtti_Polygon: return (KDGanttViewTaskLink*) ((KDCanvasPolygon *)it)->myParentItem;
     }
     return 0;
 }
 
-void KDGanttCanvasView::slotScrollTimer() {
-    int mx = mousePos.x(); 
-    int my = mousePos.y();
-    int dx = 0;
-    int dy = 0;
-    if (mx < 0)
-        dx = -5;
-    else if (mx > visibleWidth())
-        dx = 5;
-    if (my < 0)
-        dy = -5;
-    else if (my > visibleHeight())
-        dy = 5;
-    if (dx != 0 || dy != 0)
-        scrollBy(dx, dy);
-}
 
-int KDGanttCanvasView::getItemArea(KDGanttViewItem *item, int x) {
-    // area can be: no area = 0, Start = 1, Finish = 2
-    // TODO: middle (move, dnd), front, back (resize)
-    KDTimeTableWidget *tt = dynamic_cast<KDTimeTableWidget *>(canvas());
-    if (!tt) {
-        qWarning("Cannot cast canvas to KDTimeTableWidget");
-        return 0;
-    }
-    int area = 0;
-    int start = tt->getCoordX(item->startTime());
-    int end = start;
-    if (item->type() == KDGanttViewItem::Event) {
-        x > start ? area = 2 : area = 1;
-    } else {
-        end = tt->getCoordX(item->endTime());
-        if ((end - start)/2 > (x - start))
-            area = 1;
-        else
-            area = 2;
-    }
-    return area;
-}
-
-int KDGanttCanvasView::getLinkType(int from, int to) {
-    // from, to should be Start = 1 or Finish = 2
-    if ((from == 1) && (to == 1)) {
-        return KDGanttViewTaskLink::StartStart;
-    }
-    if ((from == 1) && (to == 2)) {
-        return KDGanttViewTaskLink::StartFinish;
-    }
-    if ((from == 2) && (to == 1)) {
-        return KDGanttViewTaskLink::FinishStart;
-    }
-    if ((from == 2) && (to == 2)) {
-        return KDGanttViewTaskLink::FinishFinish;
-    }
-    return KDGanttViewTaskLink::None;
-}
+#include "KDGanttViewSubwidgets.moc"

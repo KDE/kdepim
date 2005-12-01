@@ -29,11 +29,11 @@
  **
  **********************************************************************/
 
+#include <KDGanttView.h>
 
 #include <KDGanttViewItemDrag.h>
 #include <KDGanttViewItem.h>
 #include <qpixmap.h>
-#include <KDGanttView.h>
 
 /*!
   \class KDGanttViewItemDrag KDGanttViewItemDrag.h
@@ -54,28 +54,38 @@
   \param source the source widget
   \param name the internal object name
 */
-KDGanttViewItemDrag::KDGanttViewItemDrag( KDGanttViewItem* item , QWidget *source,  const char * name  ) : Q3StoredDrag("x-application/x-KDGanttViewItemDrag", source,  name )
+#include <qbitmap.h>
+KDGanttViewItemDrag::KDGanttViewItemDrag( KDGanttViewItem* item , QWidget *source,  const char * name  ) : QStoredDrag("x-application/x-KDGanttViewItemDrag", source,  name )
 {
     myItem = item;
 
     QPixmap pix;
-    if (item->pixmap() )
-        pix = *(item->pixmap()) ;
+    if (item->pixmap() ) {
+        pix = QPixmap(*(item->pixmap())) ;
+    }
     else {
         KDGanttViewItem::Shape start,  middle, end;
         item->shapes( start, middle, end );
         QColor st, mi, en;
         item->colors( st, mi, en );
-        pix =item->myGanttView->getPixmap( start, st, item->myGanttView->lvBackgroundColor(), 11 );
+        pix = QPixmap(item->myGanttView->getPixmap( start, st, item->myGanttView->lvBackgroundColor(), 10 ));
     }
-    setPixmap( pix , QPoint( -10,-10 ));
+    int off = -pix.width()/2 -2;
+#ifdef Q_WS_WIN
+    if ( item->pixmap() )
+#endif
+    setPixmap( pix , QPoint( off, off ) );
     QDomDocument doc( "GanttView" );
     QString docstart = "<GanttView/>";
     doc.setContent( docstart );
     QDomElement itemsElement = doc.createElement( "Items" );
     doc.documentElement().appendChild( itemsElement );
     item->createNode( doc, itemsElement );
-    QDataStream s( &array, QIODevice::WriteOnly );
+#if QT_VERSION < 0x040000
+    QDataStream s( array, IO_WriteOnly );
+#else
+    QDataStream s( &array, IO_WriteOnly );
+#endif
     s << doc.toString();
 }
 
@@ -133,8 +143,15 @@ bool KDGanttViewItemDrag::decode (  const QMimeSource * e , QString &  string)
 {
     QByteArray arr;
     arr = e->encodedData( "x-application/x-KDGanttViewItemDrag");
-    QDataStream s( &arr, QIODevice::ReadOnly );
-    s >> string;
+    //qDebug("KDGanttViewItemDrag::decode lenght %d ", arr.count());
+    if ( arr.count() ) {
+#if QT_VERSION < 0x040000
+    QDataStream s( arr, IO_ReadOnly );
+#else
+    QDataStream s( &arr, IO_ReadOnly );
+#endif
+        s >> string;
+    }
     return true;
 }
 

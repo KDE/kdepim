@@ -54,10 +54,11 @@ public:
                          const QString& name = QString::null );
     virtual ~KDGanttViewEventItem();
 
+    virtual bool moveConnector( Connector, QPoint p );
+    virtual Connector getConnector( QPoint p );
     void setLeadTime( const QDateTime& leadTimeStart );
     void setStartTime( const QDateTime& start );
     QDateTime leadTime() const;
-
 private:
     void showItem( bool show = true, int coordY = 0 );
     QDateTime* myLeadTime;

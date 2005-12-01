@@ -35,9 +35,11 @@
 #ifndef KDGANTTVIEWTASKLINKGROUP_H
 #define KDGANTTVIEWTASKLINKGROUP_H
 
+
+#include "kdgantt_qt3_compat.h"
+
 #include "KDGanttViewTaskLink.h"
-#include <q3ptrlist.h>
-#include <q3dict.h>
+
 
 class KDTimeTableWidget;
 class KDGanttView;
@@ -68,21 +70,19 @@ public:
                      QDomElement& parentElement );
     static KDGanttViewTaskLinkGroup* createFromDomElement( QDomElement& );
 
-    void generateAndInsertName( const QString& name );
-
 private:
     friend class KDTimeTableWidget;
     friend class KDGanttViewTaskLink;
 
     bool isvisible,ishighlighted;
     QColor myColor, myColorHL;
-    Q3PtrList<KDGanttViewTaskLink> myTaskLinkList;
+    QPtrList<KDGanttViewTaskLink> myTaskLinkList;
     QString _name;
 
     void insertItem(KDGanttViewTaskLink*);
     void removeItem (KDGanttViewTaskLink*);
 
-    static Q3Dict<KDGanttViewTaskLinkGroup> sGroupDict;
+    static QDict<KDGanttViewTaskLinkGroup> sGroupDict;
 };
 
 #endif

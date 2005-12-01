@@ -1,12 +1,5 @@
-//Added by qt3to4:
-#include <QPaintEvent>
-#include <Q3PointArray>
-#include <QChildEvent>
-#include <QEvent>
-#include <QResizeEvent>
-#include <QMouseEvent>
 /* -*- Mode: C++ -*-
-   $Id$
+   $Id: KDGanttMinimizeSplitter.h,v 1.8 2005/10/11 13:59:02 lutz Exp $
 */
 
 /****************************************************************************
@@ -41,22 +34,28 @@
 #ifndef KDGANTTMINIMIZESPLITTER_H
 #define KDGANTTMINIMIZESPLITTER_H
 
+
 #ifndef QT_H
-#include "q3frame.h"
-#include "q3valuelist.h"
+#include "qframe.h"
 #endif // QT_H
 
+#include "kdgantt_qt3_compat.h"
+
 #ifndef QT_NO_SPLITTER
+
+#if QT_VERSION < 0x040000 
+
+#include "qvaluelist.h"
 
 class QSplitterData;
 class QSplitterLayoutStruct;
 
-class KDGanttMinimizeSplitter : public Q3Frame
+class KDGanttMinimizeSplitter : public QFrame
 {
     Q_OBJECT
-    Q_ENUMS( Qt::Orientation )
-    Q_PROPERTY( Qt::Orientation orientation READ orientation WRITE setOrientation )
-    Q_PROPERTY( Qt::Orientation minimizeDirection READ minimizeDirection WRITE setMinimizeDirection )
+    Q_ENUMS( Direction )
+    Q_PROPERTY( Orientation orientation READ orientation WRITE setOrientation )
+    Q_PROPERTY( Direction minimizeDirection READ minimizeDirection WRITE setMinimizeDirection )
 
 public:
     enum ResizeMode { Stretch, KeepSize, FollowSizeHint };
@@ -66,10 +65,10 @@ public:
     KDGanttMinimizeSplitter( Qt::Orientation, QWidget* parent=0, const char* name=0 );
     ~KDGanttMinimizeSplitter();
 
-    virtual void setOrientation( Qt::Orientation );
-    Qt::Orientation orientation() const { return orient; }
+    virtual void setOrientation( Orientation );
+    Orientation orientation() const { return orient; }
 
-    void setMinimizeDirection( Qt::Orientation );
+    void setMinimizeDirection( Direction );
     Direction minimizeDirection() const;
 
 #if QT_VERSION >= 300
@@ -84,8 +83,8 @@ public:
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
 
-    Q3ValueList<int> sizes() const;
-    void setSizes( Q3ValueList<int> );
+    QValueList<int> sizes() const;
+    void setSizes( QValueList<int> );
 
     void expandPos( int id, int* min, int* max );
 protected:
@@ -165,7 +164,7 @@ public:
     void setId( int i ) { myId = i; }
 
 protected:
-    Q3ValueList<Q3PointArray> buttonRegions();
+    QValueList<QPointArray> buttonRegions();
     void paintEvent( QPaintEvent * );
     void mouseMoveEvent( QMouseEvent * );
     void mousePressEvent( QMouseEvent * );
@@ -185,6 +184,15 @@ private:
 #endif
 };
 #endif
+
+#else  //QT_VERSION < 0x040000
+
+#include <QSplitter>
+
+#define KDGanttMinimizeSplitter QSplitter
+
+
+#endif // QT_VERSION < 0x040000
 
 #endif // QT_NO_SPLITTER
 

@@ -32,11 +32,12 @@
  **********************************************************************/
 
 
-#include "KDGanttViewTaskLinkGroup.h"
-#include "KDGanttXMLTools.h"
 #include "KDGanttView.h"
 
-Q3Dict<KDGanttViewTaskLinkGroup> KDGanttViewTaskLinkGroup::sGroupDict;
+#include "KDGanttViewTaskLinkGroup.h"
+#include "KDGanttXMLTools.h"
+
+QDict<KDGanttViewTaskLinkGroup> KDGanttViewTaskLinkGroup::sGroupDict;
 
 /*! \class KDGanttViewTaskLinkGroup KDGanttViewTaskLinkGroup.h
   A group of task links.
@@ -50,7 +51,7 @@ Q3Dict<KDGanttViewTaskLinkGroup> KDGanttViewTaskLinkGroup::sGroupDict;
 */
 KDGanttViewTaskLinkGroup::KDGanttViewTaskLinkGroup()
 {
-    generateAndInsertName(QString());
+
 }
 
 /*!
@@ -61,7 +62,17 @@ KDGanttViewTaskLinkGroup::KDGanttViewTaskLinkGroup()
 KDGanttViewTaskLinkGroup::~KDGanttViewTaskLinkGroup()
 {
     if (!myTaskLinkList.isEmpty()) {
-        myTaskLinkList.first()->from().first()->myGanttView->removeTaskLinkGroup(this);
+        KDGanttViewItem* item = myTaskLinkList.first()->from().first();
+        KDGanttView * gv = 0; 
+        if ( item )
+             gv = item->myGanttView;
+        KDGanttViewTaskLink * tl = myTaskLinkList.first();
+        while ( tl ) {
+            tl->resetGroup();
+            tl = myTaskLinkList.next();
+        }
+        if ( gv )
+            gv->removeTaskLinkGroup(this);
     }
 }
 
@@ -76,8 +87,10 @@ KDGanttViewTaskLinkGroup::~KDGanttViewTaskLinkGroup()
 */
 KDGanttViewTaskLinkGroup::KDGanttViewTaskLinkGroup( const QString& name )
 {
-    generateAndInsertName( name );
+    sGroupDict.insert( name, this );
+    _name = name;
 }
+
 
 /*!
   Adds a task link LINK to this group. If the task link is already a member of
@@ -121,7 +134,7 @@ bool KDGanttViewTaskLinkGroup::remove (KDGanttViewTaskLink* link)
 void KDGanttViewTaskLinkGroup::setVisible( bool show )
 {
     isvisible = show;
-    Q3PtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
+    QPtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
     for ( ; it.current(); ++it ) {
         it.current()->setVisible(show);
     }
@@ -151,7 +164,7 @@ bool KDGanttViewTaskLinkGroup::visible() const
 void KDGanttViewTaskLinkGroup::setHighlight( bool highlight )
 {
     ishighlighted=  highlight;
-    Q3PtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
+    QPtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
     for ( ; it.current(); ++it )
         it.current()->setHighlight(highlight );
 
@@ -182,7 +195,7 @@ bool KDGanttViewTaskLinkGroup::highlight() const
 void KDGanttViewTaskLinkGroup::setColor( const QColor& color )
 {
     myColor = color;
-    Q3PtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
+    QPtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
     for ( ; it.current(); ++it )
         it.current()->setColor(color);
 }
@@ -214,7 +227,7 @@ void KDGanttViewTaskLinkGroup::setHighlightColor( const QColor& color )
 {
 
     myColorHL = color;
-    Q3PtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
+    QPtrListIterator<KDGanttViewTaskLink> it(myTaskLinkList);
     for ( ; it.current(); ++it )
         it.current()->setHighlightColor(color);
 }
@@ -270,8 +283,6 @@ void KDGanttViewTaskLinkGroup::removeItem (KDGanttViewTaskLink* link)
 */
 KDGanttViewTaskLinkGroup* KDGanttViewTaskLinkGroup::find( const QString& name )
 {
-    if (name.isEmpty()) // avoid error msg from QDict
-        return 0;
     return sGroupDict.find( name );
 }
 
@@ -357,31 +368,3 @@ KDGanttViewTaskLinkGroup* KDGanttViewTaskLinkGroup::createFromDomElement( QDomEl
 
     return tlg;
 }
-
-/*!
-  Generates a unique name if necessary and inserts it into the group
-  dictionary.
-*/
-void KDGanttViewTaskLinkGroup::generateAndInsertName( const QString& name )
-{
-    // First check if we already had a name. This can be the case if
-    // the item was reconstructed from an XML file.
-    if( !_name.isEmpty() )
-        // We had a name, remove it
-        sGroupDict.remove( _name );
-    
-    QString newName;
-    if ( name.isEmpty() || sGroupDict.find( name ) ) {
-        // create unique name
-        newName.sprintf( "%p", (void* )this );
-        while( sGroupDict.find( newName ) ) {
-            newName += "_0";
-        }
-    } else {
-        newName = name;
-    }
-    sGroupDict.insert( newName, this );
-    _name = newName;
-    //qDebug("KDGanttViewTaskLinkGroup::generateAndInsertName: inserted '%s'",newName.latin1());
-}
-

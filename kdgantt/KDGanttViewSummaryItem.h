@@ -54,6 +54,8 @@ public:
                             const QString& name = QString::null );
     virtual ~KDGanttViewSummaryItem();
 
+    virtual bool moveConnector( Connector, QPoint p );
+    virtual Connector getConnector( QPoint p );
     void setMiddleTime( const QDateTime& );
     QDateTime middleTime() const;
     void setActualEndTime( const QDateTime& end );

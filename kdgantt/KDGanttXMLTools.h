@@ -36,15 +36,14 @@
 #define __KDGANTTXMLTOOLS_H__
 
 #include <qpen.h>
-#include <qdom.h>
 #include <qstring.h>
 #include <qcolor.h>
 #include <qrect.h>
 #include <qfont.h>
 #include <qstringlist.h>
 #include <qdatetime.h>
-//Added by qt3to4:
-#include <QPixmap>
+
+#include "kdgantt_qt3_compat.h"
 
 namespace KDGanttXML {
     QString penStyleToString( Qt::PenStyle style );
@@ -68,7 +67,7 @@ namespace KDGanttXML {
     void createBrushNode( QDomDocument& doc, QDomNode& parent,
                           const QString& elementName, const QBrush& brush );
     void createPixmapNode( QDomDocument& doc, QDomNode& parent,
-                           const QString& elementName, const QPixmap& pixmap );
+                           const QString& elementName, const QPixmap& pixmap, int id = 0 );
     void createRectNode( QDomDocument& doc, QDomNode& parent,
                          const QString& elementName, const QRect& rect );
     void createStringListNodes( QDomDocument& doc, QDomNode& parent,
@@ -99,5 +98,5 @@ namespace KDGanttXML {
     bool readDateTimeNode( const QDomElement& element, QDateTime& datetime );
     bool readDateNode( const QDomElement& element, QDate& date );
     bool readTimeNode( const QDomElement& element, QTime& time );
-}
+};
 #endif

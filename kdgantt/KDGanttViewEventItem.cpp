@@ -33,9 +33,11 @@
  **********************************************************************/
 
 
-#include "KDGanttViewEventItem.h"
 #include "KDGanttViewSubwidgets.h"
+#include "KDGanttViewEventItem.h"
+#if QT_VERSION < 0x040000
 #include "itemAttributeDialog.h"
+#endif
 
 /*!
   \class KDGanttViewEventItem KDGanttViewEventItem.h
@@ -120,13 +122,108 @@ KDGanttViewEventItem::KDGanttViewEventItem( KDGanttViewItem* parent,
 
 
 /*!
-  The destructor. Nothing done here.
+  The destructor. Delete the datetimes, if created.
 */
 KDGanttViewEventItem::~KDGanttViewEventItem()
 {
+    if ( myLeadTime ) 
+        delete myLeadTime;
+}
 
+/*!
+  Moves the connector c to point p.
+
+  \param  c the connector to move
+  \param  p point for connector where to move to
+  \return true if some value of the item was changed
+  \sa getConnector()
+*/
+bool KDGanttViewEventItem::moveConnector( KDGanttViewItem::Connector c, QPoint p )
+{
+ switch( c ) {
+    case Start:
+        setStartTime( myGanttView->myTimeHeader->getDateTimeForIndex( p.x() ) );
+        return true;
+        break;
+    case Lead:
+        if ( myLeadTime ) {
+            setLeadTime( myGanttView->myTimeHeader->getDateTimeForIndex( p.x() ) );
+            return true;
+        }
+        break;
+    case Move:
+        {
+            int secsLead = -1;
+            if ( myLeadTime )
+                secsLead = myLeadTime->secsTo( myStartTime );
+            myStartTime = myGanttView->myTimeHeader->getDateTimeForIndex( p.x() - mCurrentConnectorDiffX );
+            if ( secsLead >= 0 )
+                *myLeadTime = myStartTime.addSecs( -secsLead );
+            setStartTime( myStartTime  );
+            return true;
+        }
+        break;
+    case TaskLink:
+        // handled externally
+        break;
+    default:
+        qDebug( "Unsupported connector type in KDGanttViewTaskItem::moveConnector: %d", c );
+    }
+
+    return false;
 
 }
+
+
+
+/*!
+  Returns the region of the item for the position p.
+  A region is a connector and it is used for changing item in the gantt view.
+
+  \param  p point to check for a connector
+  \return Returns the connector for the point p
+*/
+
+KDGanttViewItem::Connector  KDGanttViewEventItem::getConnector( QPoint p )
+{
+
+    if (! enabled() || displaySubitemsAsGroup() )
+        return KDGanttViewItem::NoConnector;
+
+    mCurrentConnectorCoordX =  p.x();
+    mCurrentConnectorDiffX =  p.x() - startShape->x();
+
+    if ( startShape->boundingRect().contains( p ) )
+        return KDGanttViewItem::Start;
+    QPoint topleft = startShape->boundingRect().topLeft();
+    if ( myLeadTime ) {
+        if ( startLine->isVisible () ) {
+            topleft = startLine->boundingRect().topLeft();
+            int margin = 5;
+            int wid = startLine->boundingRect().width();
+            if ( wid < 0 ) wid = -wid;
+            if ( wid < 14 ) {
+                --margin;
+                if (  wid  < 10 )
+                    --margin;
+                if (  wid < 8 )
+                    --margin;
+            } else if ( wid > 50 ) {
+                margin = 10;
+            }
+            if (  p.x() < topleft.x() + margin ) {
+                return KDGanttViewItem::Lead;
+            }
+        }
+    }
+    QRect boundingRect = QRect(topleft, 
+                               startShape->boundingRect().bottomRight() );
+    if ( boundingRect.contains( p ) )
+        return KDGanttViewItem::Move;
+ 
+    return KDGanttViewItem::NoConnector;
+}
+
 /*!
   Specifies the start time of this item. The parameter must be valid
   and non-null. If the parameter is invalid or null, no value is set.
@@ -136,6 +233,10 @@ KDGanttViewEventItem::~KDGanttViewEventItem()
   \param start the start time
   \sa startTime()
 */
+
+
+
+
 void KDGanttViewEventItem::setStartTime( const QDateTime& start )
 {
   if (! start.isValid() ) {
@@ -143,7 +244,6 @@ void KDGanttViewEventItem::setStartTime( const QDateTime& start )
     return;
   }
     myStartTime = start;
-    myEndTime = start;
     if ( myStartTime < leadTime() )
       setLeadTime( myStartTime );
     else {
@@ -200,15 +300,15 @@ void KDGanttViewEventItem::hideMe()
     startShapeBack->hide();
     startLine->hide();
     startLineBack->hide();
-    textCanvas->hide();
-    floatStartShape->hide();
-    floatEndShape->hide();
+    if ( mTextCanvas )
+        mTextCanvas->hide();
 }
 
 
 void KDGanttViewEventItem::showItem(bool show, int coordY)
 {
   isVisibleInGanttView = show;
+    mCurrentCoord_Y = coordY;
   invalidateHeight () ;
   if (!show) {
     hideMe();
@@ -218,16 +318,16 @@ void KDGanttViewEventItem::showItem(bool show, int coordY)
   startShape->setZ( prio + 0.0055 );
   startShapeBack->setZ( prio + 0.003 );
   startLine->setZ( prio + 0.0015  );
-  floatStartShape->setZ(prio + 0.004);
-  floatStartShape->hide();
-  floatEndShape->setZ(prio + 0.004);
-  floatEndShape->hide();
-  textCanvas->setZ( prio + 0.006 );
+  if ( mTextCanvas )
+      mTextCanvas->setZ( prio + 0.006 );
   startLineBack->setZ( prio );
-
-  if ( displaySubitemsAsGroup() && firstChild() ) {
-    myStartTime = myChildStartTime();
-    myEndTime = myChildEndTime();
+  if ( displaySubitemsAsGroup() ) {
+      myStartTime = myChildStartTime();
+      myEndTime = myChildEndTime();
+  }
+  if ( !myStartTime.isValid() || !myEndTime.isValid() ) {
+      hideMe();
+      return;
   }
   int startX, endX, allY;
   if ( coordY )
@@ -236,7 +336,9 @@ void KDGanttViewEventItem::showItem(bool show, int coordY)
     allY = getCoordY();
   startX = myGanttView->myTimeHeader->getCoordX(myStartTime);
   if (myLeadTime) {
+    checkCoord( &startX );
     endX = myGanttView->myTimeHeader->getCoordX(*myLeadTime);
+    checkCoord( &endX );
     startLine->setPoints(startX,allY,endX,allY);
     startLine->show();
     startLineBack->setPoints(startX+1,allY,endX-1,allY);
@@ -250,45 +352,13 @@ void KDGanttViewEventItem::showItem(bool show, int coordY)
   startShape->show();
   startShapeBack->move(startX,allY);
   startShapeBack->show();
-  if (myFloatStartTime.isValid()) {
-    KDCanvasRectangle* floatStartTemp = (KDCanvasRectangle*) floatStartShape;
-    int floatStartX = myGanttView->myTimeHeader->getCoordX(myFloatStartTime);
-    int hei = startShape->boundingRect().height();
-    // FIXME: Configurable colors
-    QBrush b(startShape->brush().color(), Qt::Dense4Pattern);
-    floatStartTemp->setBrush(b);
-    floatStartTemp->setPen(QPen(gray));
-    if (floatStartX < startX) {
-        floatStartTemp->setSize(startX - floatStartX, hei/2);
-        floatStartTemp->move(floatStartX, allY-hei/4);
-    } else {
-        floatStartTemp->setSize(floatStartX - startX, hei/2);
-        floatStartTemp->move(startX, allY-hei/4);
-    }
-    floatStartShape->show();    
-  }
-  if (myFloatEndTime.isValid()) {
-    KDCanvasRectangle* floatEndTemp = (KDCanvasRectangle*) floatEndShape;
-    int floatEndX = myGanttView->myTimeHeader->getCoordX(myFloatEndTime);
-    int hei = startShape->boundingRect().height();
-    // FIXME: Configurable colors
-    QBrush b(startShape->brush().color(), Qt::Dense4Pattern);
-    floatEndTemp->setBrush(b);
-    floatEndTemp->setPen(QPen(gray));
-    if (floatEndX > startX) {
-        floatEndTemp->setSize(floatEndX - startX, hei/2);
-        floatEndTemp->move(startX, allY-hei/4);
-    } else {
-        floatEndTemp->setSize(startX - floatEndX, hei/2);
-        floatEndTemp->move(floatEndX, allY-hei/4);
-    }
-    floatEndShape->show();    
-   }
 
-  moveTextCanvas(startX,allY);
-  textCanvas->show();
-  if (textCanvas->text().isEmpty())
-    textCanvas->hide();
+  if ( mTextCanvas ) {
+      mTextCanvas->move(startX+2*myItemSize,allY-myItemSize/2 );
+      mTextCanvas->show();
+      if (mTextCanvas->text().isEmpty())
+          mTextCanvas->hide();
+  }
 }
 
 

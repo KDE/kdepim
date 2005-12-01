@@ -33,13 +33,12 @@
 #define KDGANTTVIEWITEMGRAG_H
 
 #include <qwidget.h>
-#include <q3cstring.h>
-#include <q3dragobject.h>
 
+#include "kdgantt_qt3_compat.h"
 
 class KDGanttViewItem;
 
-class KDGanttViewItemDrag :public Q3StoredDrag
+class KDGanttViewItemDrag :public QStoredDrag
 {
 public:
   KDGanttViewItemDrag(KDGanttViewItem* item, QWidget *source,  const char * name  ) ;

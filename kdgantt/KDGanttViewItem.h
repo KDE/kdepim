@@ -36,15 +36,16 @@
 #ifndef KDGANTTVIEWITEM_H
 #define KDGANTTVIEWITEM_H
 
+
 #include <qdatetime.h>
 #include <qstring.h>
 #include <qcolor.h>
 #include <qpixmap.h>
 #include <qfont.h>
-#include <q3listview.h>
-#include <q3canvas.h>
-#include <qdom.h>
-#include <q3dict.h>
+
+
+#include "kdgantt_qt3_compat.h"
+
 
 class KDGanttView;
 class KDTimeTableWidget;
@@ -55,11 +56,12 @@ class KDCanvasText;
 class KDCanvasPolygonItem;
 class KDGanttViewTaskLinkGroup;
 
-class KDGanttViewItem : public Q3ListViewItem
+class KDGanttViewItem : public QListViewItem
 {
 public:
-    enum Type { Event, Task, Summary };
+    enum Type { Event = 0, Task, Summary, UnknownType };
     enum Shape { TriangleDown, TriangleUp, Diamond, Square, Circle };
+    enum Connector { NoConnector = 0, Start, Middle, End, Move, TaskLink, ActualEnd, Lead };
 
 protected:
     KDGanttViewItem( Type type, KDGanttView* view,
@@ -76,31 +78,24 @@ protected:
                      const QString& lvtext = QString::null,
                      const QString& name = QString::null );
 
-  //bool _isCalendar;
+    void checkCoord( int * );
     bool isVisibleInGanttView;
     void updateCanvasItems();
     int getCoordY();
-    QDateTime myChildStartTime();
-    QDateTime myChildEndTime();
-    void generateAndInsertName( const QString& name );
     KDCanvasLine * startLine, *endLine,
       * startLineBack, *endLineBack, *actualEnd ;
-    KDCanvasPolygonItem* startShape,* midShape, *endShape, *progressShape,
-      * startShapeBack,* midShapeBack, *endShapeBack,
-      * floatStartShape, * floatEndShape;
+    KDCanvasPolygonItem* startShape,* midShape, *endShape,
+      * startShapeBack,* midShapeBack, *endShapeBack;
     KDGanttView* myGanttView;
-    KDCanvasText* textCanvas;
+    KDCanvasText* mTextCanvas;
     QString textCanvasText;
     QDateTime myStartTime, myEndTime;
     bool isHighlighted, isEditable;
     int myItemSize;
     bool blockUpdating;
-
-    void moveTextCanvas(int x, int y);
-    int myProgress;
-    QDateTime myFloatStartTime;
-    QDateTime myFloatEndTime;
-
+    QCanvasText* textcanvas();
+    void generateAndInsertName( const QString& name );
+    QString mUid;
 public:
     virtual ~KDGanttViewItem();
 
@@ -142,8 +137,6 @@ public:
     bool highlight() const;
 
     bool subitemIsCalendar() const;
-  //void setIsCalendar( bool );
-  //bool isCalendar( ) const;
 
     void setShapes( Shape start, Shape middle, Shape end );
     void shapes( Shape& start, Shape& middle, Shape& end ) const;
@@ -160,18 +153,13 @@ public:
     void setTextColor( const QColor& color );
     QColor textColor() const;
 
-    void setProgress(int percent);
-    void setFloatStartTime(const QDateTime &start);
-    void setFloatEndTime(const QDateTime &end);
-
     KDGanttViewItem* firstChild() const;
     KDGanttViewItem* nextSibling() const;
     KDGanttViewItem* parent() const;
     KDGanttViewItem* itemAbove();
     KDGanttViewItem* itemBelow( bool includeDisabled = true );
     KDGanttViewItem* getChildByName( const QString& name );
-    QString name() const;
-    static KDGanttViewItem* find( const QString& name );
+    KDGanttViewItem* getChildByUid( const QString& name );
 
     void createNode( QDomDocument& doc,
                      QDomElement& parentElement );
@@ -185,6 +173,29 @@ public:
     static KDGanttViewItem* createFromDomElement( KDGanttViewItem* parent,
                                                   KDGanttViewItem* previous,
                                                   QDomElement& element );
+    QString name() const;
+    static KDGanttViewItem* find( const QString& name );
+    virtual QString uid() const;
+    virtual void setUid( const QString& text );
+    unsigned int getChildTimeForTimespan( const QDateTime& start, const QDateTime& end );
+    unsigned int getAllSubChildTimeForTimespan( const QDateTime& start, const QDateTime& end );
+    virtual unsigned int getTimeForTimespan( const QDateTime& start, const QDateTime& end );
+    QPtrList <KDGanttViewItem> getChildListForTimespan( const QDateTime& start, const QDateTime& end );
+    QDateTime myChildStartTime();
+    QDateTime myChildEndTime();
+    virtual QString typeString() const;
+    virtual Connector getConnector( QPoint p );
+    virtual bool moveConnector( Connector, QPoint p );
+    void updateItemsOnCanvas( bool forceUpdate = false );
+
+protected:
+    int mCurrentCoord_Y;
+    int mCurrentConnectorCoordX;
+    int mCurrentConnectorDiffX;
+    virtual void userReadFromElement( QDomElement& element );
+    virtual void userWriteToElement( QDomDocument& doc,
+                                     QDomElement& parentElement );
+
 private:
     friend class KDGanttView;
     friend class KDTimeTableWidget;
@@ -199,8 +210,10 @@ private:
     static QString shapeToString( Shape shape );
     static Shape stringToShape( const QString& string );
     static QString typeToString( Type type );
+    static Type stringToType(  const QString& type );
 
     Type myType;
+    void setAllSubitemsExpanded ( bool );
     void initColorAndShapes(Type t);
     void resetSubitemVisibility();
     virtual void showItem( bool show = true, int coordY = 0 );
@@ -229,16 +242,10 @@ private:
     bool colorDefined,colorHLDefined;
     QPoint getTaskLinkStartCoord(QPoint);
     QPoint getTaskLinkEndCoord();
-    QPoint middleLeft();
-    QPoint middleRight();
-    void moveTextCanvas();
-    void setTextOffset(QPoint p);
-    bool isMyTextCanvas(Q3CanvasItem *tc);
-    QPoint myTextOffset;
     QString _name;
     bool shapeDefined;
     int _priority;
-    static Q3Dict<KDGanttViewItem> sItemDict;
+    static QDict<KDGanttViewItem> sItemDict;
 };
 
 

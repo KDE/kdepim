@@ -32,10 +32,12 @@
  **********************************************************************/
 
 
-#include "KDGanttViewSummaryItem.h"
 #include "KDGanttViewSubwidgets.h"
+#include "KDGanttViewSummaryItem.h"
 
+#if QT_VERSION < 0x040000
 #include "itemAttributeDialog.h"
+#endif
 
 /*!
   \class KDGanttViewSummaryItem KDGanttViewSummaryItem.h
@@ -120,11 +122,105 @@ KDGanttViewSummaryItem::KDGanttViewSummaryItem( KDGanttViewItem* parent,
 
 
 /*!
-  The destructor. Does nothing for the moment.
+  The destructor. Delete the datetimes, if created.
 */
 KDGanttViewSummaryItem::~KDGanttViewSummaryItem()
 {
+    if ( myActualEndTime )
+        delete myActualEndTime;
+    if ( myMiddleTime )
+        delete myMiddleTime;
+}
 
+
+/*!
+  Moves the connector c to point p.
+
+  \param  c the connector to move
+  \param  p point for connector where to move to
+  \return true if some value of the item was changed
+  \sa getConnector()
+*/
+bool KDGanttViewSummaryItem::moveConnector( KDGanttViewItem::Connector c, QPoint p )
+{
+
+    //qDebug("DIFF %d ",mCurrentConnectorDiffX );
+    switch( c ) {
+    case Start:
+        setStartTime( myGanttView->myTimeHeader->getDateTimeForIndex( p.x() ) );
+        return true;
+        break;
+    case End:
+        setEndTime( myGanttView->myTimeHeader->getDateTimeForIndex( p.x() ) );
+        return true;
+        break;
+    case Middle:
+        setMiddleTime( myGanttView->myTimeHeader->getDateTimeForIndex( p.x() ) );
+        return true;
+        break;
+    case ActualEnd:
+        setActualEndTime( myGanttView->myTimeHeader->getDateTimeForIndex( p.x() ) );
+        return true;
+        break;
+    case Move:
+        {
+            int secsEnd = myStartTime.secsTo( myEndTime );
+            int secsMid = -1;
+            if ( myMiddleTime )
+                secsMid = myStartTime.secsTo( *myMiddleTime );
+            myStartTime = myGanttView->myTimeHeader->getDateTimeForIndex( p.x() - mCurrentConnectorDiffX );
+            if ( secsMid >= 0 )
+                *myMiddleTime = myStartTime.addSecs( secsMid );
+            setEndTime( myStartTime.addSecs( secsEnd ) );
+            return true;
+        }
+        break;
+    case TaskLink:
+        // handled externally
+        break;
+    default:
+        qDebug( "Unsupported connector type in KDGanttViewTaskItem::moveConnector: %d", c );
+    }
+
+    return false;
+}
+
+
+
+/*!
+  Returns the region of the item for the position p.
+  A region is a connector and it is used for changing item in the gantt view.
+
+  \param  p point to check for a connector
+  \return Returns the connector for the point p
+*/
+
+KDGanttViewItem::Connector  KDGanttViewSummaryItem::getConnector( QPoint p )
+{
+
+    if (! enabled() || displaySubitemsAsGroup() )
+        return KDGanttViewItem::NoConnector;
+
+    mCurrentConnectorCoordX =  p.x();
+    mCurrentConnectorDiffX =  p.x() - startShape->x();
+
+    if ( startShape->boundingRect().contains( p ) )
+        return KDGanttViewItem::Start;
+    if ( endShape->boundingRect().contains( p ) )
+        return KDGanttViewItem::End;
+    if ( myMiddleTime )
+        if ( midShape->boundingRect().contains( p ) )
+            return KDGanttViewItem::Middle;
+    if ( actualEnd && actualEnd->isVisible () ) {
+        if ( actualEnd->boundingRect().contains( p ) )
+            return KDGanttViewItem::ActualEnd;
+    }
+    QRect boundingRect = QRect(startShape->boundingRect().topLeft (), 
+                               endShape->boundingRect().bottomRight() );
+    if ( boundingRect.contains( p ) )
+        return KDGanttViewItem::Move;
+   
+    return KDGanttViewItem::NoConnector;
 }
 
 
@@ -256,7 +352,8 @@ void KDGanttViewSummaryItem::hideMe()
     endShapeBack->hide();
     startLine->hide();
     endLine->hide();
-    textCanvas->hide();
+    if ( mTextCanvas )
+        mTextCanvas->hide();
     startLineBack->hide();
     endLineBack->hide();
     actualEnd->hide();
@@ -266,6 +363,7 @@ void KDGanttViewSummaryItem::hideMe()
 // if coordY >0, this is taken as the middle y-coordinate
 void KDGanttViewSummaryItem::showItem( bool show, int coordY )
 {
+    mCurrentCoord_Y = coordY;
   isVisibleInGanttView = show;
   invalidateHeight () ;
   if (!show) {
@@ -285,13 +383,18 @@ void KDGanttViewSummaryItem::showItem( bool show, int coordY )
   endShapeBack->setZ( prio + 0.003 );
   startLine->setZ( prio + 0.0015  );
   endLine->setZ( prio + 0.001 );
-  textCanvas->setZ( prio + 0.006 );
+  if ( mTextCanvas )
+      mTextCanvas->setZ( prio + 0.006 );
   startLineBack->setZ( prio );
   endLineBack->setZ( prio );
   actualEnd->setZ( prio  + 0.007 );
-  if ( displaySubitemsAsGroup() && firstChild() ) {
-    myStartTime = myChildStartTime();
-    myEndTime = myChildEndTime();
+  if ( displaySubitemsAsGroup() ) {
+      myStartTime = myChildStartTime();
+      myEndTime = myChildEndTime();
+  }
+  if ( !myStartTime.isValid() || !myEndTime.isValid() ) {
+      hideMe();
+      return;
   }
   int startX, endX, midX = 0,allY;
   if ( coordY )
@@ -299,12 +402,14 @@ void KDGanttViewSummaryItem::showItem( bool show, int coordY )
   else
     allY = getCoordY();
   startX = myGanttView->myTimeHeader->getCoordX(myStartTime);
+  checkCoord( &startX );
   endX = myGanttView->myTimeHeader->getCoordX(myEndTime);
   if (myMiddleTime)
     midX = myGanttView->myTimeHeader->getCoordX(*myMiddleTime);
   else
     midX = endX;
-
+  checkCoord( &midX );
+  //qDebug("START %d   END %d",startX ,midX);
   startLine->setPoints(startX,allY,midX,allY);
   startLine->show();
   startLineBack->setPoints(startX-1,allY,midX+1,allY);
@@ -314,13 +419,16 @@ void KDGanttViewSummaryItem::showItem( bool show, int coordY )
 
   endShape->move(endX,allY);
   endShapeBack->move(endX,allY);
-  moveTextCanvas(endX,allY);
+  if ( mTextCanvas )
+      mTextCanvas->move(endX+2*myItemSize,allY-myItemSize/2 );
   startShape->show();
   startShapeBack->show();
   endShape->show();
   endShapeBack->show();
-  textCanvas->show();
+  if ( mTextCanvas )
+      mTextCanvas->show();
   if (myMiddleTime) {
+      checkCoord( &endX );
     endLine->setPoints(midX,allY,endX,allY);
     endLine->show();
     endLineBack->setPoints(midX,allY,endX+1,allY);
@@ -353,7 +461,8 @@ void KDGanttViewSummaryItem::showItem( bool show, int coordY )
     {
       endShape->moveBy(myItemSize+4,0);
       endShapeBack->moveBy(myItemSize+4,0);
-      textCanvas->moveBy(myItemSize+4,0);
+      if ( mTextCanvas )
+          mTextCanvas->moveBy(myItemSize+4,0);
       midShape->hide();
       midShapeBack->hide();
       startLine->hide();
@@ -361,8 +470,9 @@ void KDGanttViewSummaryItem::showItem( bool show, int coordY )
       startLineBack->hide();
       endLineBack->hide();
     }
-  if (textCanvas->text().isEmpty())
-    textCanvas->hide();
+  if ( mTextCanvas )
+      if (mTextCanvas->text().isEmpty())
+          mTextCanvas->hide();
 }
 void KDGanttViewSummaryItem::initItem()
 {

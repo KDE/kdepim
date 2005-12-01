@@ -1,5 +1,5 @@
 /* -*- Mode: C++ -*-
-   $Id$
+   $Id: KDGanttSemiSizingControl.h,v 1.4 2005/10/11 11:44:04 lutz Exp $
 */
 
 /****************************************************************************
@@ -35,11 +35,11 @@
 #ifndef KDGANTTSEMISIZINGCONTROL_H
 #define KDGANTTSEMISIZINGCONTROL_H
 
-#include "KDGanttSizingControl.h"
 #include <qlayout.h>
-//Added by qt3to4:
-#include <QPixmap>
-#include <QBoxLayout>
+
+#include "kdgantt_qt3_compat.h"
+
+#include "KDGanttSizingControl.h"
 class QPushButton;
 class QBoxLayout;
 
@@ -77,9 +77,8 @@ public slots:
 protected:
     void setup();
     void init();
-    /** Direction; seems to be superceded by Qt::Orientation. */
     enum Direction {Left, Right, Up, Down };
-    QPixmap pixmap( Qt::Orientation );
+    QPixmap pixmap( Direction );
 
 private:
     Qt::Orientation _orient;
@@ -92,3 +91,4 @@ private:
 
 
 #endif
+

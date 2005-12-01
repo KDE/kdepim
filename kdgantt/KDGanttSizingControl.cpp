@@ -1,5 +1,5 @@
 /* -*- Mode: C++ -*-
-   $Id$
+   $Id: KDGanttSizingControl.cpp,v 1.4 2005/10/11 11:44:04 lutz Exp $
 */
 /****************************************************************************
  ** Copyright (C)  2002-2004 Klarälvdalens Datakonsult AB.  All rights reserved.
@@ -52,7 +52,6 @@
   base class.
   \param name the internal widget name. This parameter is passed to
   the base class.
-  \param f window flags. This parameter is passed to the base class.
 
 */
 
@@ -119,7 +118,6 @@ void KDGanttSizingControl::changeState()
     restore(_isMinimized);
 }
 
-
 /*!
   \fn void KDGanttSizingControl::minimized(  KDGanttSizingControl* )
 
@@ -145,6 +143,4 @@ void KDGanttSizingControl::changeState()
   test/semisizingcontrol
 */
 
-#ifndef KDGANTT_MASTER_CVS
 #include "KDGanttSizingControl.moc"
-#endif

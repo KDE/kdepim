@@ -1,5 +1,5 @@
 /* -*- Mode: C++ -*-
-   $Id$
+   $Id: KDGanttSemiSizingControl.cpp,v 1.6 2005/10/11 13:59:02 lutz Exp $
 */
 
 /****************************************************************************
@@ -34,16 +34,10 @@
 
 #include "KDGanttSemiSizingControl.h"
 #include <qpushbutton.h>
-#include <q3pointarray.h>
 #include <qpainter.h>
 #include <qbitmap.h>
 #include <qtooltip.h>
-#include <q3whatsthis.h>
-//Added by qt3to4:
-#include <QPixmap>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QBoxLayout>
+#include <qwhatsthis.h>
 /*!
   \class KDGanttSemiSizingControl KDGanttSemiSizingControl.h
   This class provides exactly one child widget with a button for
@@ -113,9 +107,9 @@ KDGanttSemiSizingControl::KDGanttSemiSizingControl( Qt::Orientation orientation,
 */
 
 KDGanttSemiSizingControl::KDGanttSemiSizingControl( ArrowPosition arrowPosition,
-                                          Qt::Orientation orientation,
-                                          QWidget* parent,
-                                          const char* name ) :
+                                                    Qt::Orientation orientation,
+                                                    QWidget* parent,
+                                                    const char* name ) :
     KDGanttSizingControl( parent, name ), _orient( orientation ), 
     _arrowPos( arrowPosition ), _minimizedWidget(0), _maximizedWidget(0)
 {
@@ -255,7 +249,7 @@ void KDGanttSemiSizingControl::init()
     _but->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     connect( _but, SIGNAL( clicked() ), this, SLOT(changeState()) );
     _layout = 0;
-    Q3WhatsThis::add( _but, "Click on this button to show the \nlegend at the bottom of the widget");
+    QWhatsThis::add( _but, "Click on this button to show the \nlegend at the bottom of the widget");
     QToolTip::add( _but, "Show / hide legend");
 
 
@@ -267,12 +261,12 @@ void KDGanttSemiSizingControl::setup()
     delete _layout;
     QBoxLayout* butLayout; // _layout will delete me
 
-    if ( _orient == Horizontal || isMinimized() )
+    if ( _orient == Qt::Horizontal || isMinimized() )
         _layout = new QHBoxLayout( this );
     else
         _layout = new QVBoxLayout( this );
 
-    if ( _orient == Vertical && !isMinimized() )
+    if ( _orient == Qt::Vertical && !isMinimized() )
         butLayout = new QHBoxLayout( _layout );
     else
         butLayout = new QVBoxLayout( _layout );
@@ -293,7 +287,7 @@ void KDGanttSemiSizingControl::setup()
     }
 
     //------------------------------ Setup the button at the correct possition
-    if ( _arrowPos == After && _orient == Vertical && !isMinimized() ) {
+    if ( _arrowPos == After && _orient == Qt::Vertical && !isMinimized() ) {
         butLayout->addStretch( 1 );
         butLayout->addWidget( _but, 0, Qt::AlignLeft );
     }
@@ -323,14 +317,14 @@ void KDGanttSemiSizingControl::setup()
     if ( isMinimized() ) {
        widget = _minimizedWidget;
        if( widget ) {
-	 if ( _arrowPos == Before  || _orient == Vertical && !isMinimized() )
+	 if ( _arrowPos == Before  || _orient == Qt::Vertical && !isMinimized() )
 	   _layout->addWidget( widget, 1 );
 	 else
 	   _layout->insertWidget( 0, widget, 1 );
        }
     }
     else {
-      if ( _arrowPos == Before  || _orient == Vertical && !isMinimized() )
+      if ( _arrowPos == Before  || _orient == Qt::Vertical && !isMinimized() )
 	_layout->addStretch( 1 );
       else
 	_layout->insertStretch( 0, 1 );
@@ -385,34 +379,46 @@ void KDGanttSemiSizingControl::minimize( bool minimize )
     }
 }
 
-QPixmap KDGanttSemiSizingControl::pixmap( Qt::Orientation direction ) {
+QPixmap KDGanttSemiSizingControl::pixmap( Direction direction ) {
     int s = 10;
     QPixmap pix( s, s );
     pix.fill( Qt::blue );
 
-    Q3PointArray arr;
+    QPointArray arr;
     switch ( direction ) {
     case Up:    arr.setPoints( 3,   0, s-1,   s-1, s-1,   0, s/2   ); ;break;
     case Down:  arr.setPoints( 3,   0, 0,     s-1, 0,     s/2, s-1 ); break;
-    case Qt::DockLeft:  arr.setPoints( 3,   s-1, 0,   s-1, s-1,   0, s/2   ); break;
-    case Qt::DockRight: arr.setPoints( 3,   0,0,      s-1, s/2,   0, s-1   ); break;
+    case Left:  arr.setPoints( 3,   s-1, 0,   s-1, s-1,   0, s/2   ); break;
+    case Right: arr.setPoints( 3,   0,0,      s-1, s/2,   0, s-1   ); break;
     }
-
+#if QT_VERSION < 0x040000
     QPainter p( &pix );
     p.setPen( Qt::black );
     p.setBrush( colorGroup().button() );
     p.drawPolygon( arr );
     QBitmap bit( s, s );
-    bit.fill( Qt::color0 );
+    bit.fill( color0 );
 
     QPainter p2( &bit );
-    p2.setPen( Qt::color1 );
-    p2.setBrush( Qt::color1 );
+    p2.setPen( color1 );
+    p2.setBrush( color1 );
     p2.drawPolygon( arr );
     pix.setMask( bit );
+#else
+    QPainter p( &pix );
+    p.setPen( Qt::black );
+    p.setBrush( colorGroup().button() );
+    p.drawPolygon( arr );
+    QBitmap bit( s, s );
+    bit.fill( Qt::blue );
+
+    QPainter p2( &bit );
+    p2.setPen( Qt::red );
+    p2.setBrush( Qt::red );
+    p2.drawPolygon( arr );
+    pix.setMask( bit );
+#endif
     return pix;
 }
 
-#ifndef KDGANTT_MASTER_CVS
 #include "KDGanttSemiSizingControl.moc"
-#endif

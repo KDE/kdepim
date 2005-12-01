@@ -36,9 +36,6 @@
 #include <qbrush.h>
 #include <qbuffer.h>
 #include <qimage.h>
-//Added by qt3to4:
-#include <QPixmap>
-#include <QImageIO>
 #include <zlib.h>
 
 namespace KDGanttXML {
@@ -133,22 +130,30 @@ void createBrushNode( QDomDocument& doc, QDomNode& parent,
 
 
 void createPixmapNode( QDomDocument& doc, QDomNode& parent,
-                       const QString& elementName, const QPixmap& pixmap )
+                       const QString& elementName, const QPixmap& pixmap, int id )
 {
     QDomElement pixmapElement = doc.createElement( elementName );
     parent.appendChild( pixmapElement );
-
+    pixmapElement.setAttribute( "ID", QString::number( id ) );
     // Convert the pixmap to an image, save that image to an in-memory
     // XPM representation and compress this representation. This
     // conforms to the file format Qt Designer uses.
     QByteArray ba;
+#if QT_VERSION < 0x040000
     QBuffer buffer( ba );
-    buffer.open( QIODevice::WriteOnly );
+    buffer.open( IO_WriteOnly );
     QImageIO imgio( &buffer, "XPM" );
     QImage image = pixmap.convertToImage();
     imgio.setImage( image );
     imgio.write();
     buffer.close();
+#else
+    QBuffer buffer( &ba );
+    buffer.open( IO_WriteOnly );
+    QImage image = pixmap.convertToImage();
+    image.save( &buffer,  "XPM" );
+    buffer.close();
+#endif
     ulong len = ba.size() * 2;
     QByteArray bazip( len );
     ::compress(  (uchar*) bazip.data(), &len, (uchar*) ba.data(), ba.size() );
@@ -442,7 +447,7 @@ bool readBrushNode( const QDomElement& element, QBrush& brush )
 bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
 {
     bool ok = true;
-    int tempLengthi;
+    int tempLength;
     QString tempData;
     QDomNode node = element.firstChild();
     while( !node.isNull() ) {
@@ -457,7 +462,7 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
                     qDebug( "Unsupported pixmap format in XML file" );
 #endif
             } else if( tagName == "Length" ) {
-                ok = ok & readIntNode( element, tempLengthi );
+                ok = ok & readIntNode( element, tempLength );
             } else if( tagName == "Data" ) {
                 ok = ok & readStringNode( element, tempData );
             } else {
@@ -468,7 +473,7 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
     }
 
     if( ok ) {
-	if( 0 < tempLengthi ) {
+	if( 0 < tempLength ) {
             // Decode the image file format in the same way Qt Designer does.
             char *ba = new char[ tempData.length() / 2 ];
             for ( int i = 0; i < (int)tempData.length() / 2; ++i ) {
@@ -487,11 +492,10 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
                 ba[ i ] = r;
             }
 
-            if( tempLengthi < (int)tempData.length() * 5 )
-                tempLengthi = tempData.length() * 5;
-            unsigned long tempLength = tempLengthi;
+            if( tempLength < (int)tempData.length() * 5 )
+                tempLength = tempData.length() * 5;
             QByteArray baunzip( tempLength );
-            ::uncompress( (uchar*) baunzip.data(), &tempLength,
+            ::uncompress( (uchar*) baunzip.data(), (ulong*)&tempLength,
                           (uchar*) ba, tempData.length()/2 );
             QImage image;
             image.loadFromData( (const uchar*)baunzip.data(), tempLength, "XPM" );
@@ -772,4 +776,4 @@ Qt::BrushStyle stringToBrushStyle( const QString& style )
         return Qt::SolidPattern;
 }
 
-}
+};

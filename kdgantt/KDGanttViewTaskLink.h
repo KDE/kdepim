@@ -37,8 +37,8 @@
 
 #include <qcolor.h>
 #include <qstring.h>
-#include <q3ptrlist.h>
-#include <q3canvas.h>
+
+#include "kdgantt_qt3_compat.h"
 
 #include "KDGanttViewItem.h"
 class KDGanttViewTaskLinkGroup;
@@ -48,25 +48,19 @@ class KDCanvasLine;
 class KDGanttViewTaskLink
 {
 public:
-    enum LinkType { None, FinishStart, StartStart, FinishFinish, StartFinish };
-    
-    KDGanttViewTaskLink( Q3PtrList<KDGanttViewItem> from,
-                         Q3PtrList<KDGanttViewItem> to,
-                         LinkType type=None );
+    KDGanttViewTaskLink( QPtrList<KDGanttViewItem> from,
+                         QPtrList<KDGanttViewItem> to );
     KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
-                         Q3PtrList<KDGanttViewItem> from,
-                         Q3PtrList<KDGanttViewItem> to,
-                         LinkType type=None );
+                         QPtrList<KDGanttViewItem> from,
+                         QPtrList<KDGanttViewItem> to );
     KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
                          KDGanttViewItem*  from,
-                         KDGanttViewItem* to,
-                         LinkType type=None );
+                         KDGanttViewItem* to );
     KDGanttViewTaskLink( KDGanttViewItem*  from,
-                         KDGanttViewItem* to,
-                         LinkType type=None );
+                         KDGanttViewItem* to );
     ~KDGanttViewTaskLink();
-    Q3PtrList<KDGanttViewItem> from() const;
-    Q3PtrList<KDGanttViewItem> to() const;
+    QPtrList<KDGanttViewItem> from() const;
+    QPtrList<KDGanttViewItem> to() const;
     void removeItemFromList( KDGanttViewItem* );
 
     void setVisible( bool );
@@ -91,25 +85,15 @@ public:
     void createNode( QDomDocument& doc,
                      QDomElement& parentElement );
     static KDGanttViewTaskLink* createFromDomElement( QDomElement& );
-
-    int linkType();
-    void setLinkType(int type);
-    
+    bool isFromToItem (KDGanttViewItem * item );
 private:
+    void resetGroup();
     friend class KDGanttViewTaskLinkGroup;
     friend class KDTimeTableWidget;
-    Q3PtrList<KDGanttViewItem> fromList,toList;
-    Q3PtrList<KDCanvasLine>* horLineList;
-    Q3PtrList<KDCanvasLine>* verLineList;
-    Q3PtrList<KDCanvasPolygon>* topList;
-
-    // also used when linkType != None    
-    Q3PtrList<KDCanvasLine>* horLineList2;
-    Q3PtrList<KDCanvasLine>* verLineList2;
-    Q3PtrList<KDCanvasLine>* horLineList3;
-    Q3PtrList<KDCanvasPolygon>* topLeftList;
-    Q3PtrList<KDCanvasPolygon>* topRightList;
-    
+    QPtrList<KDGanttViewItem> fromList,toList;
+    QPtrList<KDCanvasLine>* horLineList;
+    QPtrList<KDCanvasLine>* verLineList;
+    QPtrList<KDCanvasPolygon>* topList;
     KDGanttViewTaskLinkGroup* myGroup;
     bool isvisible,ishighlighted;
     QColor myColor, myColorHL;
@@ -117,13 +101,6 @@ private:
     KDTimeTableWidget*  myTimeTable;
     void initTaskLink();
     void showMe( bool );
-    void showMeType( bool );
-    void hide();    
-    int xOffset(KDGanttViewItem *item);
-    
-    LinkType myLinkType;
-    static QString linkTypeToString( LinkType type );
-    static LinkType stringToLinkType( const QString type );
 };
 
 #endif

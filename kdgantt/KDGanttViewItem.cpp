@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
- ** Copyright (C)  2002-2004 Klarï¿½vdalens Datakonsult AB.  All rights reserved.
+ ** Copyright (C)  2002-2004 Klarälvdalens Datakonsult AB.  All rights reserved.
  **
  ** This file is part of the KDGantt library.
  **
@@ -37,12 +37,11 @@
 #include "KDGanttViewTaskItem.h"
 #include "KDGanttViewSummaryItem.h"
 #include "KDGanttViewEventItem.h"
+#if QT_VERSION < 0x040000
 #include "itemAttributeDialog.h"
+#endif
 
 #include "qpainter.h"
-//Added by qt3to4:
-#include <QPixmap>
-#include <Q3PointArray>
 
 #include "KDGanttXMLTools.h"
 
@@ -160,7 +159,7 @@
 */
 
 
-Q3Dict<KDGanttViewItem> KDGanttViewItem::sItemDict;
+QDict<KDGanttViewItem> KDGanttViewItem::sItemDict;
 
 /*!
   Constructs an empty Gantt item.
@@ -174,10 +173,11 @@ Q3Dict<KDGanttViewItem> KDGanttViewItem::sItemDict;
 KDGanttViewItem::KDGanttViewItem( Type type, KDGanttView* view,
                                   const QString& lvtext,
                                   const QString& name ) :
-    Q3ListViewItem(view->myListView,lvtext)
+    QListViewItem(view->myListView,lvtext)
 {
     initColorAndShapes(type);
     generateAndInsertName( name );
+
 }
 
 
@@ -194,7 +194,7 @@ KDGanttViewItem::KDGanttViewItem( Type type, KDGanttView* view,
 KDGanttViewItem::KDGanttViewItem( Type type, KDGanttViewItem* parentItem,
                                   const QString& lvtext,
                                   const QString& name ) :
-    Q3ListViewItem(parentItem,lvtext)
+    QListViewItem(parentItem,lvtext)
 {
     initColorAndShapes(type);
     generateAndInsertName( name );
@@ -216,7 +216,7 @@ KDGanttViewItem::KDGanttViewItem( Type type, KDGanttView* view,
                                   KDGanttViewItem* after,
                                   const QString& lvtext,
                                   const QString& name ) :
-    Q3ListViewItem(view->myListView,after, lvtext)
+    QListViewItem(view->myListView,after, lvtext)
 {
     initColorAndShapes(type);
     generateAndInsertName( name );
@@ -238,7 +238,7 @@ KDGanttViewItem::KDGanttViewItem( Type type, KDGanttViewItem* parentItem,
                                   KDGanttViewItem* after,
                                   const QString& lvtext,
                                   const QString& name ) :
-    Q3ListViewItem( parentItem, after, lvtext )
+    QListViewItem( parentItem, after, lvtext )
 {
     initColorAndShapes(type);
     generateAndInsertName( name );
@@ -250,22 +250,21 @@ KDGanttViewItem::KDGanttViewItem( Type type, KDGanttViewItem* parentItem,
 */
 KDGanttViewItem::~KDGanttViewItem()
 {
-  myGanttView->notifyEditdialog( this );
+  myGanttView->itemAboutToBeDeleted( this );
   if ( startLine ) delete startLine;
   if ( endLine ) delete endLine  ;
   if ( startLineBack ) delete startLineBack  ;
   if ( endLineBack ) delete  endLineBack ;
   if ( actualEnd ) delete actualEnd  ;
-  if ( textCanvas  ) delete textCanvas   ;
+  if ( mTextCanvas  ) delete mTextCanvas   ;
   if ( startShape ) delete  startShape ;
   if ( midShape ) delete midShape  ;
   if ( endShape ) delete endShape  ;
   if ( startShapeBack ) delete startShapeBack  ;
   if ( midShapeBack ) delete midShapeBack   ;
   if ( endShapeBack ) delete endShapeBack  ;
-  if ( progressShape ) delete  progressShape ;
-  if ( floatStartShape ) delete  floatStartShape ;
-  if ( floatEndShape ) delete  floatEndShape ;
+  bool block = myGanttView->myTimeTable->blockUpdating();
+  myGanttView->myTimeTable->setBlockUpdating(); 
   myGanttView->myTimeTable->removeItemFromTasklinks( this );
   myGanttView->myCanvasView->resetCutPaste( this );
   if ( listView() ) {
@@ -275,12 +274,13 @@ KDGanttViewItem::~KDGanttViewItem()
           parent()->takeItem( this );
       else
           myGanttView->myListView->takeItem( this );
+      myGanttView->myTimeTable->setBlockUpdating( block );
       myGanttView->myTimeTable->updateMyContent();
-  }
-  // myGanttView->myTimeTable->removeItemFromTasklinks( this );
-  // myGanttView->myCanvasView->resetCutPaste( this );
+  } else
+    myGanttView->myTimeTable->setBlockUpdating( block );
+  if( !_name.isEmpty() )
+      sItemDict.remove( _name );
 }
-
 
 /*!
   Generates a unique name if necessary and inserts it into the item
@@ -293,26 +293,76 @@ void KDGanttViewItem::generateAndInsertName( const QString& name )
     if( !_name.isEmpty() )
         // We had a name, remove it
         sItemDict.remove( _name );
-    
     QString newName;
-    if ( name.isEmpty() || sItemDict.find( name ) ) {
+    if ( name.isEmpty() )
         // create unique name
         newName.sprintf( "%p", (void* )this );
-        while( sItemDict.find( newName ) ) {
-            newName += "_0";
+    else {
+        if ( sItemDict.find( name ) ) {
+            newName.sprintf( "%p", (void* )this );
         }
-    } else {
-        newName = name;
+        else 
+            newName = name;
     }
+    while (  sItemDict.find( newName ) )
+        newName += "_";
     sItemDict.insert( newName, this );
     _name = newName;
+
+}
+
+/*!
+  Moves the connector c to point p.
+  This virtual method is reimplemented in the subclasses.
+
+  \param  c the connector to move
+  \param  p point for connector where to move to
+  \return true if some value of the item was changed
+  \sa getConnector()
+*/
+bool KDGanttViewItem::moveConnector( KDGanttViewItem::Connector c, QPoint p )
+{
+
+    Q_UNUSED( p )
+    Q_UNUSED( c )
+    return false;
+}
+
+/*!
+  Returns the region of the item for the position p.
+  A region is a connector and it is used for changing item in the gantt view.
+  This virtual method is reimplemented in the subclasses.
+
+  \param  p point to check for a connector
+  \return This virtual method does nothing and returns NoConnector
+  \sa moveConnector()
+*/
+KDGanttViewItem::Connector  KDGanttViewItem::getConnector( QPoint p )
+{
+
+    Q_UNUSED( p )
+    return KDGanttViewItem::NoConnector;
+}
+/*!
+  Returns the item with the specified name.
+
+  \param name the name to search for
+  \return the item with the specified name; 0 if no item with that name exists
+  \sa name() uid()
+*/
+
+KDGanttViewItem* KDGanttViewItem::find( const QString& name )
+{
+    return sItemDict.find( name );
 }
 
 
 /*!
   Returns the unique name that can identify the item.
+  You can look up for an item with a specific unique name uName with find( uName ).
 
   \return the unique item name
+  \sa uid() find()
 */
 QString KDGanttViewItem::name() const
 {
@@ -321,20 +371,18 @@ QString KDGanttViewItem::name() const
 
 
 /*!
-  Returns the item with the specified name.
+  Returns the type of the item as string value.
+  This may be Event, Task, Summary.
+  Reimplement this virtual method in your subclass of a 
+  KDGanttViewTaskItem, KDGanttViewEventItem or KDGanttViewSummaryItem
+  to know what type your items is of.
 
-  \param name the name to search for
-  \return the item with the specified name; 0 if no group
-  with that name exists
+  \return the type of the item as string value
 */
-
-KDGanttViewItem* KDGanttViewItem::find( const QString& name )
+QString KDGanttViewItem::typeString() const
 {
-    if (name.isEmpty()) // avoid error msg from QDict
-        return 0;
-    return sItemDict.find( name );
+    return typeToString( myType );
 }
-
 
 
 /*!
@@ -348,8 +396,149 @@ KDGanttViewItem::Type KDGanttViewItem::type() const
 {
 
     return myType;
+
 }
 
+/*!
+  Computes a list of direct subitems of this item which do have some duration during the timespan.
+  It call for every direct subitem getTimeForTimespan() and appends it to the list 
+  if this call does not return 0. 
+  Please read getTimeForTimespan() for an example when a call of getTimeForTimespan() does not return 0.
+
+  \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall,
+                i.e. all items before the end datetime will be computed
+          end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall,
+                i.e. all items after the start datetime will be computed.
+                if start and end are invalid all items will be computed.
+  \return  a list of direct subitems of this item which do have some duration during the timespan
+  \sa getTimeForTimespan() getChildTimeForTimespan() getAllSubChildTimeForTimespan()
+*/
+
+
+QPtrList <KDGanttViewItem>  KDGanttViewItem::getChildListForTimespan( const QDateTime& start, const QDateTime& end )
+{
+    QPtrList <KDGanttViewItem> childList;
+    KDGanttViewItem* temp = (KDGanttViewItem*) firstChild();
+    while (temp != 0) {
+        if ( temp->getTimeForTimespan( start, end ) )
+            childList.append( temp );
+        temp = temp->nextSibling();
+    }
+    return childList;
+}
+
+/*!
+  The virtual method computes for this item the amount of time this item do have in the specified timespan.
+  (Specified by the items start datetime and end datetime).
+  The default implementation of this method returns 0.
+  This method is reimplemented in  the subclass KDGanttViewTaskItem only.
+  Example: Let eTask be a task item with 
+           start date time 24. March 2005 - 17:00 
+           and end date time 24. March 2005 - 19:30 
+           i.e. it has a duration of 2:30 hours , which are 9000 seconds.
+
+           eTask->getTimeForTimespan( QDateTime(),QDateTime() )
+                  returns the complete duration of 9000, because an open intervall was specified
+           eTask->getTimeForTimespan( QDateTime(),QDateTime( 24. March 2005 - 18:00 ) )
+                  returns 3600.
+           eTask->getTimeForTimespan( QDateTime( 24. March 2005 - 17:30 ),QDateTime( 24. March 2005 - 18:00 ) )
+                  returns 1800.
+           eTask->getTimeForTimespan( QDateTime( 24. March 2005 - 17:30 ),QDateTime( 28. April 2005 - 18:00 ) )
+                  returns 7200 ( 2 hours ).
+           eTask->getTimeForTimespan( QDateTime( 1. March 2005 - 0:30 ),QDateTime( 28. April 2005 - 18:00 ) )
+                  returns 9000 ( complete duration ).
+           eTask->getTimeForTimespan( QDateTime( 1. Jan 2004 - 12:30 ),QDateTime( 1. April 2004 - 1:00 ) )
+                  returns 0.
+
+  \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall.
+          end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall.
+                if start and end are invalid the duration (start time to end time in seconds) is returned.
+  \return the time of this item in the intervall in seconds 
+  \sa getChildTimeForTimespan()  getAllSubChildTimeForTimespan() getChildListForTimespan()
+*/ 
+unsigned int KDGanttViewItem::getTimeForTimespan( const QDateTime&, const QDateTime&)
+{
+    return 0;
+}
+
+/*!
+  Computes for a set of items recursively the amount of time each item do have in the specified timespan.
+  (Specified by the items start datetime and end datetime).
+  The set of items in this method is the list of all childs of this item.
+  I.e. all subchilds ( childs of childs ) are in this list.
+  The item itself is in the list as well.
+  It calls for each item getTimeForTimespan() and returns the sum of the computed times.
+  Please read getTimeForTimespan() for an example.
+
+  \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall,
+                i.e. all items before the end datetime will be computed
+          end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall,
+                i.e. all items after the start datetime will be computed.
+                if start and end are invalid all items will be computed.
+  \return the sum of times of computed items in seconds 
+  \sa getTimeForTimespan() getChildTimeForTimespan()  getChildListForTimespan()
+*/
+unsigned int KDGanttViewItem::getAllSubChildTimeForTimespan(  const QDateTime& start,  const QDateTime& end )
+{
+    unsigned int retval = 0;
+    KDGanttViewItem* temp = (KDGanttViewItem*) firstChild();
+    while (temp != 0) {
+        retval += temp->getAllSubChildTimeForTimespan( start, end );
+        temp = temp->nextSibling();
+    }
+    retval += getTimeForTimespan( start, end );
+    return retval;
+}
+
+/*!
+  Computes for a set of items the amount of time each item do have in the specified timespan.
+  (Specified by the items start datetime and end datetime).
+  The set of items in this method is the list of direct childs of this item.
+  No subchilds ( childs of childs ) are in this list.
+  The item itself is not in the list.
+  It calls for each item getTimeForTimespan() and returns the sum of the computed times.
+  Please read getTimeForTimespan() for an example.
+
+  \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall,
+                i.e. all items before the end datetime will be computed
+          end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open intervall,
+                i.e. all items after the start datetime will be computed.
+                if start and end are invalid all items will be computed.
+  \return the sum of times of computed items in seconds 
+  \sa getTimeForTimespan() getAllSubChildTimeForTimespan() getChildListForTimespan()
+*/
+
+unsigned int KDGanttViewItem::getChildTimeForTimespan(  const QDateTime& start,  const QDateTime& end )
+{
+    unsigned int retval = 0;
+    KDGanttViewItem* temp = (KDGanttViewItem*) firstChild();
+    while (temp != 0) {
+        retval += temp->getTimeForTimespan( start, end );
+        temp = temp->nextSibling();
+    }
+    return retval;
+}
+
+/*!
+  Sets this item and all subitems in the list view recursively to expanded
+  ( if parameter expand is true ) or to closed.
+
+  \param  expand pass true to set item and subitems to expanded
+                 pass false to set item and subitems to closed
+*/
+void KDGanttViewItem::setAllSubitemsExpanded ( bool expand )
+{
+    bool block = myGanttView->myTimeTable->blockUpdating();
+    myGanttView->myTimeTable->setBlockUpdating( true );
+    setOpen( expand );
+    KDGanttViewItem* temp = (KDGanttViewItem*) firstChild();
+    while (temp != 0) {
+        temp->setAllSubitemsExpanded(  expand );
+        temp = temp->nextSibling();
+    }
+    myGanttView->myTimeTable->setBlockUpdating( block );
+
+}
 
 /*!
   Specifies whether this item is enabled. If disabled, the item stays in the
@@ -372,7 +561,7 @@ void KDGanttViewItem::setEnabled( bool on )
       temp->setEnabled(  on );
       temp = temp->nextSibling();
     }
-    Q3ListViewItem::setEnabled( on );
+    QListViewItem::setEnabled( on );
     myGanttView->myTimeTable->dec_blockUpdating();
   }
   updateCanvasItems();
@@ -417,7 +606,7 @@ void KDGanttViewItem::setItemVisible( bool on )
 */
 bool KDGanttViewItem::itemVisible () const
 {
-  return Q3ListViewItem::isVisible();
+  return QListViewItem::isVisible();
 }
 
 
@@ -605,7 +794,7 @@ QDateTime KDGanttViewItem::endTime() const
 */
 void KDGanttViewItem::setText( const QString& text )
 {
-    textCanvas->setText(text);
+    textcanvas()->setText(text);
     textCanvasText = text;
     updateCanvasItems();
 }
@@ -629,7 +818,7 @@ QString KDGanttViewItem::text() const
 */
 void KDGanttViewItem::setListViewText( const QString& text, int column )
 {
-    Q3ListViewItem::setText( column, text );
+    QListViewItem::setText( column, text );
 }
 
 
@@ -642,7 +831,7 @@ void KDGanttViewItem::setListViewText( const QString& text, int column )
 */
 void KDGanttViewItem::setListViewText( int column, const QString& text )
 {
-    Q3ListViewItem::setText( column, text );
+    QListViewItem::setText( column, text );
 }
 
 
@@ -656,7 +845,7 @@ void KDGanttViewItem::setListViewText( int column, const QString& text )
 */
 QString KDGanttViewItem::listViewText( int column ) const
 {
-    return Q3ListViewItem::text( column );
+    return QListViewItem::text( column );
 }
 
 
@@ -668,7 +857,7 @@ QString KDGanttViewItem::listViewText( int column ) const
 */
 void KDGanttViewItem::setFont( const QFont& font )
 {
-    textCanvas->setFont(font);
+    textcanvas()->setFont(font);
     updateCanvasItems();
 }
 
@@ -681,7 +870,10 @@ void KDGanttViewItem::setFont( const QFont& font )
 */
 QFont KDGanttViewItem::font() const
 {
-    return textCanvas->font();
+
+    if (mTextCanvas) 
+        return mTextCanvas->font();
+    return myGanttView->font();
 }
 
 
@@ -748,6 +940,7 @@ QString KDGanttViewItem::whatsThisText() const
 */
 void KDGanttViewItem::setHighlight( bool highlight )
 {
+
     isHighlighted = highlight;
     if ( displaySubitemsAsGroup() ) {
       myGanttView->myTimeTable->inc_blockUpdating();
@@ -758,6 +951,7 @@ void KDGanttViewItem::setHighlight( bool highlight )
       }
       myGanttView->myTimeTable->dec_blockUpdating();
     }
+
     updateCanvasItems();
 }
 
@@ -822,25 +1016,25 @@ void KDGanttViewItem::createShape( KDCanvasPolygonItem* &itemShape,
     if (itemShape) delete itemShape;
     if (itemShapeBack) delete itemShapeBack;
 
-    Q3CanvasPolygonalItem * item;
-    Q3CanvasPolygonalItem * itemBack;
+    QCanvasPolygonalItem * item;
+    QCanvasPolygonalItem * itemBack;
     int size = myItemSize+2;
     int hei = (myItemSize/3)/2;
     switch (shape) {
     case TriangleDown:
         {
             item = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
-            Q3PointArray arr = Q3PointArray(3);
+            QPointArray arr = QPointArray(3);
             arr.setPoint(0,-size/2,-hei);
             arr.setPoint(1,size/2,-hei);
             arr.setPoint(2,0,((size/2)-hei));
-            ((Q3CanvasPolygon*)item)->setPoints(arr);
+            ((QCanvasPolygon*)item)->setPoints(arr);
             size += 4;hei +=1;
             itemBack = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
             arr.setPoint(0,-size/2,-hei);
             arr.setPoint(1,size/2,-hei);
             arr.setPoint(2,0,((size/2)-hei));
-            ((Q3CanvasPolygon*)itemBack)->setPoints(arr);
+            ((QCanvasPolygon*)itemBack)->setPoints(arr);
 
             break;
         }
@@ -850,17 +1044,17 @@ void KDGanttViewItem::createShape( KDCanvasPolygonItem* &itemShape,
             // of the same size as a TriangleDown-icon, if we increment the size by 2
             size+=2;
             item = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
-            Q3PointArray arr = Q3PointArray(3);
+            QPointArray arr = QPointArray(3);
             arr.setPoint(0,-size/2,hei);
             arr.setPoint(1,size/2,hei);
             arr.setPoint(2,0,(-size/2)+hei);
-            ((Q3CanvasPolygon*)item)->setPoints(arr);
+            ((QCanvasPolygon*)item)->setPoints(arr);
             size += 4;hei +=1;
             itemBack = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
             arr.setPoint(0,-size/2,hei);
             arr.setPoint(1,size/2,hei);
             arr.setPoint(2,0,(-size/2)+hei);
-            ((Q3CanvasPolygon*)itemBack)->setPoints(arr);
+            ((QCanvasPolygon*)itemBack)->setPoints(arr);
 
             break;
         }
@@ -868,19 +1062,19 @@ void KDGanttViewItem::createShape( KDCanvasPolygonItem* &itemShape,
     case Diamond:
         {
             item = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
-            Q3PointArray arr = Q3PointArray(4);
+            QPointArray arr = QPointArray(4);
             arr.setPoint(0,0,-size/2);
             arr.setPoint(1,size/2,0);
             arr.setPoint(2,0,size/2);
             arr.setPoint(3,-size/2,0);
-            ((Q3CanvasPolygon*)item)->setPoints(arr);
+            ((QCanvasPolygon*)item)->setPoints(arr);
             size += 2;hei +=1;
             itemBack = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
             arr.setPoint(0,0,-size/2);
             arr.setPoint(1,size/2,0);
             arr.setPoint(2,0,size/2);
             arr.setPoint(3,-size/2,0);
-            ((Q3CanvasPolygon*)itemBack)->setPoints(arr);
+            ((QCanvasPolygon*)itemBack)->setPoints(arr);
             break;
         }
 
@@ -888,19 +1082,19 @@ void KDGanttViewItem::createShape( KDCanvasPolygonItem* &itemShape,
         {
             size -=2;
             item = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
-            Q3PointArray arr = Q3PointArray(4);
+            QPointArray arr = QPointArray(4);
             arr.setPoint(0,-size/2,-size/2);
             arr.setPoint(1,size/2,-size/2);
             arr.setPoint(2,size/2,size/2);
             arr.setPoint(3,-size/2,size/2);
-            ((Q3CanvasPolygon*)item)->setPoints(arr);
+            ((QCanvasPolygon*)item)->setPoints(arr);
             size += 2;hei +=1;
             itemBack = new KDCanvasPolygon(myGanttView->myTimeTable, this,Type_is_KDGanttViewItem);
             arr.setPoint(0,-size/2,-size/2);
             arr.setPoint(1,size/2,-size/2);
             arr.setPoint(2,size/2,size/2);
             arr.setPoint(3,-size/2,size/2);
-            ((Q3CanvasPolygon*)itemBack)->setPoints(arr);
+            ((QCanvasPolygon*)itemBack)->setPoints(arr);
             break;
         }
 
@@ -968,8 +1162,9 @@ void KDGanttViewItem::setColors( const QColor& start, const QColor& middle,
       myGanttView->myTimeTable->inc_blockUpdating();
       KDGanttViewItem* temp = (KDGanttViewItem*) firstChild();
       while (temp != 0) {
-	temp->setColors( start, middle, end );
-	temp = temp->nextSibling();
+          if ( !temp->displaySubitemsAsGroup() )
+              temp->setColors( start, middle, end );
+          temp = temp->nextSibling();
       }
       myGanttView->myTimeTable->dec_blockUpdating();
     }
@@ -1020,8 +1215,9 @@ void KDGanttViewItem::setHighlightColors( const QColor& start, const QColor& mid
       myGanttView->myTimeTable->inc_blockUpdating();
       KDGanttViewItem* temp = (KDGanttViewItem*) firstChild();
       while (temp != 0) {
-	temp->setHighlightColors( start,  middle,  end );
-	temp = temp->nextSibling();
+          if ( !temp->displaySubitemsAsGroup() )
+              temp->setHighlightColors( start,  middle,  end );
+          temp = temp->nextSibling();
       }
       myGanttView->myTimeTable->dec_blockUpdating();
     }
@@ -1110,7 +1306,7 @@ QColor KDGanttViewItem::textColor() const
 */
 void KDGanttViewItem::setPixmap( int column, const QPixmap& pixmap )
 {
-    Q3ListViewItem::setPixmap( column, pixmap );
+    QListViewItem::setPixmap( column, pixmap );
 }
 
 /*!
@@ -1118,7 +1314,7 @@ void KDGanttViewItem::setPixmap( int column, const QPixmap& pixmap )
 */
 void KDGanttViewItem::setPixmap( const QPixmap& pixmap )
 {
-    Q3ListViewItem::setPixmap( 0, pixmap );
+    QListViewItem::setPixmap( 0, pixmap );
 }
 
 
@@ -1131,7 +1327,7 @@ void KDGanttViewItem::setPixmap( const QPixmap& pixmap )
 */
 const QPixmap* KDGanttViewItem::pixmap( int column ) const
 {
-    return Q3ListViewItem::pixmap( column );
+    return QListViewItem::pixmap( column );
 }
 
 
@@ -1234,7 +1430,7 @@ QColor KDGanttViewItem::defaultHighlightColor() const
 KDGanttViewItem* KDGanttViewItem::firstChild() const
 {
 
-    return (KDGanttViewItem* )Q3ListViewItem::firstChild();
+    return (KDGanttViewItem* )QListViewItem::firstChild();
 }
 
 
@@ -1246,7 +1442,7 @@ KDGanttViewItem* KDGanttViewItem::firstChild() const
 */
 KDGanttViewItem* KDGanttViewItem::nextSibling() const
 {
-    return (KDGanttViewItem* )Q3ListViewItem::nextSibling();
+    return (KDGanttViewItem* )QListViewItem::nextSibling();
 }
 
 
@@ -1258,7 +1454,7 @@ KDGanttViewItem* KDGanttViewItem::nextSibling() const
 */
 KDGanttViewItem* KDGanttViewItem::parent() const
 {
-    return (KDGanttViewItem*)Q3ListViewItem::parent();
+    return (KDGanttViewItem*)QListViewItem::parent();
 }
 
 
@@ -1269,7 +1465,7 @@ KDGanttViewItem* KDGanttViewItem::parent() const
 */
 KDGanttViewItem* KDGanttViewItem::itemAbove()
 {
-    return (KDGanttViewItem* )Q3ListViewItem::itemAbove();
+    return (KDGanttViewItem* )QListViewItem::itemAbove();
 }
 
 
@@ -1284,7 +1480,7 @@ KDGanttViewItem* KDGanttViewItem::itemAbove()
 KDGanttViewItem* KDGanttViewItem::itemBelow( bool includeDisabled )
 {
 
-  KDGanttViewItem*  retItem = (KDGanttViewItem* )Q3ListViewItem::itemBelow();
+  KDGanttViewItem*  retItem = (KDGanttViewItem* )QListViewItem::itemBelow();
   if ( !includeDisabled ) {
     return  retItem;
   }
@@ -1293,7 +1489,7 @@ KDGanttViewItem* KDGanttViewItem::itemBelow( bool includeDisabled )
       return retItem;
     }
   }
-  KDGanttViewItem*  Item2 = (KDGanttViewItem* )Q3ListViewItem::listView()->itemAt(QPoint (2, Q3ListViewItem::itemPos() + Q3ListViewItem::height() +2) );
+  KDGanttViewItem*  Item2 = (KDGanttViewItem* )QListViewItem::listView()->itemAt(QPoint (2, QListViewItem::itemPos() + QListViewItem::height() +2) );
   if ( Item2 != 0 )
     if (!Item2->enabled() )
       return Item2;
@@ -1310,59 +1506,85 @@ void KDGanttViewItem::updateCanvasItems()
     QPen p,pBack;
     QBrush b;
     b.setStyle(Qt::SolidPattern);
-    if ( enabled() ) {
-      textCanvas->setColor(myTextColor);
-      if (isHighlighted) {
-        b.setStyle(Qt::SolidPattern);
-        b.setColor(myStartColorHL);
-        startShape->setBrush(b);
-        b.setColor(myMiddleColorHL);
-        midShape->setBrush(b);
-        b.setColor(myEndColorHL);
-        endShape->setBrush(b);
-        p.setWidth(myItemSize/3 -1);
-        p.setColor(myStartColorHL);
-        startLine->setPen(p);
-        p.setColor(myEndColorHL);
-        endLine->setPen(p);
-      } else {
-        b.setStyle(Qt::SolidPattern);
-        b.setColor(myStartColor);
-	//  qDebug("update color  %s %s", listViewText().latin1(),myStartColor.name().latin1() );
-        startShape->setBrush(b);
-        b.setColor(myMiddleColor);
-        midShape->setBrush(b);
-        b.setColor(myEndColor);
-        endShape->setBrush(b);
-        p.setWidth(myItemSize/3-1);
-        p.setColor(myStartColor);
-        startLine->setPen(p);
-        p.setColor(myEndColor);
-        endLine->setPen(p);
-      }
+    if ( type() == Task ) {
+        if ( enabled() ) {
+            if ( mTextCanvas )
+                mTextCanvas->setColor(myTextColor);
+            if (isHighlighted) {
+                b.setStyle(Qt::SolidPattern);
+                b.setColor(myStartColorHL);
+                startShape->setBrush(b);
+            } else {
+                b.setStyle(Qt::SolidPattern);
+                b.setColor(myStartColor);
+                startShape->setBrush(b);
+            }
+        } else {
+            QColor discol = QColor(232,232,232);
+            if ( mTextCanvas )
+                mTextCanvas->setColor( QColor(150,150,150) );
+            b.setStyle(Qt::SolidPattern);
+            b.setColor(discol);
+            startShape->setBrush(b);
+        }
     } else {
-      //QColor discol = Qt::lightGray;
-        QColor discol = QColor(232,232,232);
-	textCanvas->setColor( QColor(150,150,150) );
-        b.setStyle(Qt::SolidPattern);
-        b.setColor(discol);
-        startShape->setBrush(b);
-        midShape->setBrush(b);
-        endShape->setBrush(b);
-        p.setWidth(myItemSize/3 -1);
-        p.setColor(discol);
-        startLine->setPen(p);
-        endLine->setPen(p);
+        if ( enabled() ) {
+            if ( mTextCanvas )
+                mTextCanvas->setColor(myTextColor);
+            if (isHighlighted) {
+                b.setStyle(Qt::SolidPattern);
+                b.setColor(myStartColorHL);
+                startShape->setBrush(b);
+                b.setColor(myMiddleColorHL);
+                midShape->setBrush(b);
+                b.setColor(myEndColorHL);
+                endShape->setBrush(b);
+                p.setWidth(myItemSize/3 -1);
+                p.setColor(myStartColorHL);
+                startLine->setPen(p);
+                p.setColor(myEndColorHL);
+                endLine->setPen(p);
+            } else {
+                b.setStyle(Qt::SolidPattern);
+                b.setColor(myStartColor);
+                //  qDebug("update color  %s %s", listViewText().latin1(),myStartColor.name().latin1() );
+                startShape->setBrush(b);
+                b.setColor(myMiddleColor);
+                midShape->setBrush(b);
+                b.setColor(myEndColor);
+                endShape->setBrush(b);
+                p.setWidth(myItemSize/3-1);
+                p.setColor(myStartColor);
+                startLine->setPen(p);
+                p.setColor(myEndColor);
+                endLine->setPen(p);
+            }
+        } else {
+            //QColor discol = Qt::lightGray;
+            QColor discol = QColor(232,232,232);
+            if ( mTextCanvas )
+                mTextCanvas->setColor( QColor(150,150,150) );
+            b.setStyle(Qt::SolidPattern);
+            b.setColor(discol);
+            startShape->setBrush(b);
+            midShape->setBrush(b);
+            endShape->setBrush(b);
+            p.setWidth(myItemSize/3 -1);
+            p.setColor(discol);
+            startLine->setPen(p);
+            endLine->setPen(p);
+        }
+    
+        pBack.setWidth((myItemSize/3-1)+2);
+        startLineBack->setPen(pBack);
+        endLineBack->setPen(pBack);
     }
-    pBack.setWidth((myItemSize/3-1)+2);
-    startLineBack->setPen(pBack);
-    endLineBack->setPen(pBack);
-    QFont f = textCanvas->font();
-    f.setPixelSize(myItemSize);
-    textCanvas->setFont(f);
-    //if (isvisible) {
-        myGanttView->myTimeTable->updateMyContent();
-	//}
+    if ( mTextCanvas ) {
+        QFont f = mTextCanvas->font();
+        f.setPixelSize(myItemSize);
+        mTextCanvas->setFont(f);
+    }
+    updateItemsOnCanvas();
 }
 
 
@@ -1383,7 +1605,7 @@ void KDGanttViewItem::setOpen( bool open )
 
   } else {
 
-    Q3ListViewItem::setOpen( open );
+    QListViewItem::setOpen( open );
   }
 }
 
@@ -1395,7 +1617,9 @@ void KDGanttViewItem::showItem( bool, int )
 
 QPoint KDGanttViewItem::getTaskLinkStartCoord(QPoint p)
 {
-    textCanvas->move(p.x()+myItemSize, itemPos() + height()/2-myItemSize/2);
+
+    if ( mTextCanvas )
+        mTextCanvas->move(p.x()+myItemSize, itemPos() + height()/2-myItemSize/2);
     return QPoint (myGanttView->myTimeHeader->getCoordX(myEndTime) +myItemSize/2,itemPos()+height()/2);
 }
 
@@ -1422,16 +1646,41 @@ void KDGanttViewItem::setCallListViewOnSetOpen( bool call )
 }
 
 
+QCanvasText* KDGanttViewItem::textcanvas()
+{
+    if ( !mTextCanvas ) {
+        mTextCanvas = new KDCanvasText(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
+        mTextCanvas->setText("");
+        mTextCanvas->setZ(10);
+        mTextCanvas->setFont(myGanttView->font());
+        // set default textcolor
+        setTextColor( myGanttView->textColor());
+    }
+    return (QCanvasText*) mTextCanvas;
+}
+
+void KDGanttViewItem::updateItemsOnCanvas( bool forceUpdate  )
+{
+    if ( !forceUpdate && myGanttView->myTimeTable->blockUpdating() )
+        return; 
+    showItem( isVisibleInGanttView, mCurrentCoord_Y );
+    KDGanttViewItem * par = parent();
+    while ( par ) {
+        par->showItem( par->isVisibleInGanttView, par->mCurrentCoord_Y );
+        par = par->parent();
+    }
+    myGanttView->myTimeTable->computeTaskLinksForItem( this );
+    myGanttView->myTimeTable->simpleUpdate();
+}
 void KDGanttViewItem::initColorAndShapes(Type t)
 {
-    setTextOffset(QPoint(0,0));
-  //_isCalendar = false;
+    //qDebug("KDGanttViewItem::initColorAndShapes ");
+    //_isCalendar = false;
+    mCurrentConnectorCoordX = -1;
+    mCurrentConnectorDiffX = 0;
+    mCurrentCoord_Y = 0;
     _callListViewOnSetOpen = true;
     myType = t;
-    myProgress = 0;
-    progressShape = 0;
-    floatStartShape = 0;
-    floatEndShape = 0;
     blockUpdating = true;
     isVisibleInGanttView = false;
     startShape = 0;
@@ -1440,53 +1689,47 @@ void KDGanttViewItem::initColorAndShapes(Type t)
     startShapeBack = 0;
     midShapeBack = 0;
     endShapeBack = 0;
-
+    startLine = 0;
+    endLine = 0;
+    startLineBack = 0;
+    endLineBack = 0;
+    actualEnd = 0; 
     myItemSize = 10;
+    mTextCanvas = 0;
     myGanttView = ((KDListView *)listView())->myGanttView;
     myGanttView->myTimeHeader->saveCenterDateTime();
     myStartTime = myGanttView->myTimeHeader->myCenterDateTime;
     myEndTime = myStartTime;
-    myToolTipText =Q3ListViewItem::text(0);
-    myWhatsThisText = Q3ListViewItem::text(0);
+    myToolTipText =QListViewItem::text(0);
+    myWhatsThisText = QListViewItem::text(0);
     isHighlighted = false;
     isEditable = true;
     _displaySubitemsAsGroup = myGanttView->displaySubitemsAsGroup();
-    startLine = new KDCanvasLine(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);//KDGanttViewItem );
-    endLine = new KDCanvasLine(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
-    startLine->setZ(2);endLine->setZ(2);
-    startLineBack = new KDCanvasLine(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);//KDGanttViewItem );
-    endLineBack = new KDCanvasLine(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
-    startLineBack->setZ(1);endLineBack->setZ(1);
-    actualEnd = new KDCanvasLine(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
-    actualEnd->setZ(5);
-    actualEnd->setPen( QPen ( Qt::red, 3 ) );
 
-    textCanvas = new KDCanvasText(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
-    textCanvas->setText("");
-    textCanvas->setZ(10);
-    // set textcolor
-    setTextColor( myGanttView->textColor());
     // set default color
     setDefaultColor( myGanttView->defaultColor(myType));
     // set default highlight color
     setDefaultHighlightColor(myGanttView->defaultHighlightColor(myType));
     // set shapes
-    if (!( shapeDefined = (myGanttView->shapes(myType,myStartShape,myMiddleShape,myEndShape)))) {
-
-        //qDebug("KDGantt::KDGanttViewItem created with not user defined shapes");
-    };
-
-    setShapes(myStartShape,myMiddleShape,myEndShape);
+    shapeDefined = (myGanttView->shapes(myType,myStartShape,myMiddleShape,myEndShape));
     if ( type() == Task ) {
-      //qDebug("new task %s ", listViewText().latin1());
-      if ( startShape )
-	delete startShape;
-      startShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
-      progressShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
+        //qDebug("new task %s ", listViewText().latin1());
+        if ( startShape )
+            delete startShape;
+        startShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
+    } else {
+        startLine = new KDCanvasLine(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);//KDGanttViewItem );
+        endLine = new KDCanvasLine(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
+        startLine->setZ(2);endLine->setZ(2);
+        startLineBack = new KDCanvasLine(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);//KDGanttViewItem );
+        endLineBack = new KDCanvasLine(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
+        startLineBack->setZ(1);endLineBack->setZ(1);
+        actualEnd = new KDCanvasLine(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
+        actualEnd->setZ(5);
+        actualEnd->setPen( QPen ( Qt::red, 3 ) );
+        //setShapes(myStartShape,myMiddleShape,myEndShape);
+        setShapes(myStartShape,myMiddleShape,myEndShape);
     }
-    floatStartShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
-    floatEndShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
-
     // set color of shapes
     if (!( colorDefined = (myGanttView->colors(myType,myStartColor,myMiddleColor,myEndColor)))) {
 
@@ -1497,7 +1740,6 @@ void KDGanttViewItem::initColorAndShapes(Type t)
 
     };
     setHighlightColors(defaultHighlightColor(),defaultHighlightColor(), defaultHighlightColor());
-    setFont(myGanttView->font());
     // if (type() ==  Task)
     //setText(QListViewItem::text(0)); // testing only
     //isvisible = true;
@@ -1542,7 +1784,34 @@ KDGanttViewItem::Shape KDGanttViewItem::stringToShape( const QString& string )
     else
         return TriangleDown;
 }
+/*!
+  This virtual method does nothing. 
+  Reimplement it to save your own data to the QDomElement.
+  The data can be read with userReadFromElement().
+  You should reimplement it in a subclass to make Drag&Drop working properly.
+  The body contains a small example to write an int value and a QString, 
+  which is commented out.
+  This method is automatically called from  KDGanttViewItem::createNode()
+  after a start Drag operation or if a configuration file is saved via KDGanttView::saveProject().
 
+  \param doc the DOM document to which the node belongs
+  \param parentElement the element into which to insert user defined data
+  \sa userReadFromElement() createNode() KDGanttView::saveProject()
+*/
+void KDGanttViewItem::userWriteToElement( QDomDocument& doc,
+                                  QDomElement& userElement )
+{
+    Q_UNUSED( doc );
+    Q_UNUSED( userElement );
+    // example for writing user defined data
+    /*
+    int userNumber = 815;
+    QString userData = "this is saved text from the user";
+    KDGanttXML::createStringNode( doc, userElement, "ExampleText", userData );
+    KDGanttXML::createIntNode( doc, userElement, "ExampleNumber", userNumber );
+    */
+
+}
 
 /*!
   Creates a DOM node that describes this item.
@@ -1555,22 +1824,28 @@ void KDGanttViewItem::createNode( QDomDocument& doc,
 {
     QDomElement itemElement = doc.createElement( "Item" );
     parentElement.appendChild( itemElement );
-    itemElement.setAttribute( "Type", typeToString( type() ) );
+    itemElement.setAttribute( "Type", typeString() );
 
     KDGanttXML::createDateTimeNode( doc, itemElement, "StartTime", startTime() );
     KDGanttXML::createDateTimeNode( doc, itemElement, "EndTime", endTime() );
     KDGanttXML::createFontNode( doc, itemElement, "Font", font() );
     KDGanttXML::createStringNode( doc, itemElement, "Text", text() );
     KDGanttXML::createStringNode( doc, itemElement, "TooltipText", tooltipText() );
-    KDGanttXML::createStringNode( doc, itemElement, "WhatsThisText",
-                             whatsThisText() );
-    if( pixmap() )
+    KDGanttXML::createStringNode( doc, itemElement, "WhatsThisText",whatsThisText() );
+    if( pixmap() ) {
         KDGanttXML::createPixmapNode( doc, itemElement, "Pixmap", *pixmap() );
-    if( !listViewText().isNull() )
-        KDGanttXML::createStringNode( doc, itemElement, "ListViewText",
-                                 listViewText() );
+    }
+    //PENDING save pixmaps for all clomuns with 
+    //KDGanttXML::createPixmapNode( doc, itemElement, "Pixmap", *pixmap(), column );
+    KDGanttXML::createStringNode( doc, itemElement, "ListViewText", listViewText() );
     KDGanttXML::createBoolNode( doc, itemElement, "Open", isOpen() );
+    KDGanttXML::createBoolNode( doc, itemElement, "Enabled", enabled() );
+    KDGanttXML::createBoolNode( doc, itemElement, "Visible", itemVisible() );
+    KDGanttXML::createBoolNode( doc, itemElement, "Editable", editable() );
+    KDGanttXML::createBoolNode( doc, itemElement, "ShowNoInformation", showNoInformation() );
     KDGanttXML::createBoolNode( doc, itemElement, "Highlight", highlight() );
+    KDGanttXML::createBoolNode( doc, itemElement, "DisplaySubitemsAsGroup", displaySubitemsAsGroup() );
+    KDGanttXML::createIntNode( doc, itemElement, "Priority", priority() );
     Shape startShape, middleShape, endShape;
     shapes( startShape, middleShape, endShape );
     KDGanttXML::createStringNode( doc, itemElement, "StartShape",
@@ -1595,6 +1870,10 @@ void KDGanttViewItem::createNode( QDomDocument& doc,
     KDGanttXML::createColorNode( doc, itemElement, "EndHighlightColor", endColor );
     KDGanttXML::createColorNode( doc, itemElement, "TextColor", textColor() );
     KDGanttXML::createStringNode( doc, itemElement, "Name", name() );
+    KDGanttXML::createStringNode( doc, itemElement, "Uid", uid() );
+    QDomElement userElement = doc.createElement( "UserSavedData" );
+    itemElement.appendChild( userElement );
+    userWriteToElement( doc, userElement );
     QDomElement itemsElement = doc.createElement( "Items" );
     itemElement.appendChild( itemsElement );
     KDGanttViewItem* currentItem = firstChild();
@@ -1604,7 +1883,6 @@ void KDGanttViewItem::createNode( QDomDocument& doc,
     }
 
 }
-
 
 
 /*!
@@ -1620,19 +1898,10 @@ KDGanttViewItem* KDGanttViewItem::createFromDomElement( KDGanttView* view,
 {
     QString typeString = element.attribute( "Type" );
     Q_ASSERT( !typeString.isEmpty() );
-    KDGanttViewItem* item;
-    if( typeString == "Task" )
-        item = new KDGanttViewTaskItem( view );
-    else if( typeString == "Summary" )
-        item = new KDGanttViewSummaryItem( view );
-    else if( typeString == "Event" )
-        item = new KDGanttViewEventItem( view );
-    else {
-        qDebug( "Unknown item type %s in KDGanttViewItem::createFromDomElement()", typeString.latin1() );
-        return 0;
-    }
-
-    item->loadFromDomElement( element );
+    KDGanttViewItem* item = view->createNewItem( typeString,
+                                                 0, 0 );
+    if ( item )
+        item->loadFromDomElement( element );
     return item;
 }
 
@@ -1644,7 +1913,7 @@ KDGanttViewItem* KDGanttViewItem::createFromDomElement( KDGanttView* view,
   \param view the view in which the item will be inserted
   \param previous to item behind this one should appear
   \param element the DOM element from which to read the specification
-  \return the newly created element
+  \return the newly created item
 */
 KDGanttViewItem* KDGanttViewItem::createFromDomElement( KDGanttView* view,
                                                         KDGanttViewItem* previous,
@@ -1652,19 +1921,11 @@ KDGanttViewItem* KDGanttViewItem::createFromDomElement( KDGanttView* view,
 {
     QString typeString = element.attribute( "Type" );
     Q_ASSERT( !typeString.isEmpty() );
-    KDGanttViewItem* item;
-    if( typeString == "Task" )
-        item = new KDGanttViewTaskItem( view, previous );
-    else if( typeString == "Summary" )
-        item = new KDGanttViewSummaryItem( view, previous );
-    else if( typeString == "Event" )
-        item = new KDGanttViewEventItem( view, previous );
-    else {
-        qDebug( "Unknown item type in KDGanttViewItem::createFromDomElement()" );
-        return 0;
-    }
-
-    item->loadFromDomElement( element );
+    KDGanttViewItem* item = view->createNewItem( typeString,
+                                                 0,
+                                                 previous );
+    if ( item )
+        item->loadFromDomElement( element );
     return item;
 }
 
@@ -1677,26 +1938,17 @@ KDGanttViewItem* KDGanttViewItem::createFromDomElement( KDGanttView* view,
 
   \param parent the parent item under which the item will be inserted
   \param element the DOM element from which to read the specification
-  \return the newly created element
+  \return the newly created item
 */
 KDGanttViewItem* KDGanttViewItem::createFromDomElement( KDGanttViewItem* parent,
                                                         QDomElement& element )
 {
     QString typeString = element.attribute( "Type" );
     Q_ASSERT( !typeString.isEmpty() );
-    KDGanttViewItem* item;
-    if( typeString == "Task" )
-        item = new KDGanttViewTaskItem( parent );
-    else if( typeString == "Summary" )
-        item = new KDGanttViewSummaryItem( parent );
-    else if( typeString == "Event" )
-        item = new KDGanttViewEventItem( parent );
-    else {
-        qDebug( "Unknown item type in KDGanttViewItem::createFromDomElement()" );
-        return 0;
-    }
-
-    item->loadFromDomElement( element );
+    KDGanttViewItem* item = parent->myGanttView->createNewItem( typeString,
+                                                 parent, 0 );
+    if ( item )
+        item->loadFromDomElement( element );
     return item;
 }
 
@@ -1708,7 +1960,7 @@ KDGanttViewItem* KDGanttViewItem::createFromDomElement( KDGanttViewItem* parent,
   \param parent the parent item under which the item will be inserted
   \param previous to item behind this one should appear
   \param element the DOM element from which to read the specification
-  \return the newly created element
+  \return the newly created item
 */
 KDGanttViewItem* KDGanttViewItem::createFromDomElement( KDGanttViewItem* parent,
                                                         KDGanttViewItem* previous,
@@ -1716,22 +1968,53 @@ KDGanttViewItem* KDGanttViewItem::createFromDomElement( KDGanttViewItem* parent,
 {
     QString typeString = element.attribute( "Type" );
     Q_ASSERT( !typeString.isEmpty() );
-    KDGanttViewItem* item;
-    if( typeString == "Task" )
-        item = new KDGanttViewTaskItem( parent, previous );
-    else if( typeString == "Summary" )
-        item = new KDGanttViewSummaryItem( parent, previous );
-    else if( typeString == "Event" )
-        item = new KDGanttViewEventItem( parent, previous );
-    else {
-        qDebug( "Unknown item type in KDGanttViewItem::createFromDomElement()" );
-        return 0;
-    }
-
-    item->loadFromDomElement( element );
+    KDGanttViewItem* item = parent->myGanttView->createNewItem( typeString,
+                                                 parent, previous );
+    if ( item )
+        item->loadFromDomElement( element );
     return item;
 }
 
+/*!
+  This virtual method does nothing. 
+  Reimplement it to read your own data from the QDomElement.
+  The data was written from userWriteToElement().
+  You should reimplement it in a subclass to make Drag&Drop working properly.
+  The body contains a small example to read  an int value and a QString, 
+  which is commented out.
+  This method is automatically called from createFromDomElement()=>loadFromDomElement()
+  after a Drop operation or if a configuration file is loaded via KDGanttView::loadProject().
+
+  \param doc the DOM document to which the node belongs
+  \param parentElement the element which contains user defined data
+  \sa userWriteToElement() createFromDomElement() loadFromDomElement()
+*/
+void KDGanttViewItem::userReadFromElement( QDomElement& element )
+{
+    Q_UNUSED( element );
+    // example for reading user defined data
+    /*
+    int userNumber = 0;
+    QString userData = "";
+    QDomNode node = element.firstChild();
+    while( !node.isNull() ) {
+        QDomElement userElement = node.toElement();
+        QString tagName = userElement.tagName();
+        if ( tagName == "ExampleNumber" ) {
+                int value;
+                if( KDGanttXML::readIntNode( userElement, value ) )
+                    userNumber = value;
+        } else if ( tagName == "ExampleText" ) {
+                QString value;
+                if( KDGanttXML::readStringNode( userElement, value ) )
+                    userData = value;
+
+        } 
+        node = node.nextSibling();
+    }
+    qDebug("User data read: %d  %s ", userNumber,userData.latin1() );
+    */
+}
 
 /*
   Fills in the values in the item by reading the DOM element.
@@ -1744,6 +2027,8 @@ void KDGanttViewItem::loadFromDomElement( QDomElement& element )
     QColor startColor, middleColor, endColor;
     QColor startHighlightColor, middleHighlightColor, endHighlightColor;
     QString tempName;
+    blockUpdating = true;
+    bool temp_visible = true;
     while( !node.isNull() ) {
         QDomElement element = node.toElement();
         if( !element.isNull() ) { // was really an element
@@ -1780,14 +2065,38 @@ void KDGanttViewItem::loadFromDomElement( QDomElement& element )
                 QString value;
                 if( KDGanttXML::readStringNode( element, value ) )
                     setListViewText( value );
+            } else if( tagName == "Editable" ) {
+                bool value;
+                if( KDGanttXML::readBoolNode( element, value ) )
+                    setEditable( value );
+            } else if( tagName == "ShowNoInformation" ) {
+                bool value;
+                if( KDGanttXML::readBoolNode( element, value ) )
+                    _showNoInformation = value;
+            } else if( tagName == "Visible" ) {
+                bool value;
+                if( KDGanttXML::readBoolNode( element, value ) )
+                    temp_visible = value;
+            } else if( tagName == "Enabled" ) {
+                bool value;
+                if( KDGanttXML::readBoolNode( element, value ) )
+                    _enabled = value;
             } else if( tagName == "Open" ) {
                 bool value;
                 if( KDGanttXML::readBoolNode( element, value ) )
                     setOpen( value );
+            } else if( tagName == "Priority" ) {
+                int value;
+                if( KDGanttXML::readIntNode( element, value ) )
+                    setPriority( value );
+            } else if( tagName == "DisplaySubitemsAsGroup" ) {
+                bool value;
+                if( KDGanttXML::readBoolNode( element, value ) )
+                    _displaySubitemsAsGroup = value;
             } else if( tagName == "Highlight" ) {
                 bool value;
                 if( KDGanttXML::readBoolNode( element, value ) )
-                    setHighlight( value );
+                    isHighlighted = value ;
             } else if( tagName == "StartShape" ) {
                 QString value;
                 if( KDGanttXML::readStringNode( element, value ) )
@@ -1836,10 +2145,16 @@ void KDGanttViewItem::loadFromDomElement( QDomElement& element )
                 QColor value;
                 if( KDGanttXML::readColorNode( element, value ) )
                     setTextColor( value );
+            } else if( tagName == "Uid" ) {
+                QString value;
+                if( KDGanttXML::readStringNode( element, value ) )
+                    setUid ( value );
             } else if( tagName == "Name" ) {
                 QString value;
                 if( KDGanttXML::readStringNode( element, value ) )
                     tempName = value;
+            }  else if( tagName == "UserSavedData" ) {
+                userReadFromElement( element );
             } else if( tagName == "Items" ) {
                 QDomNode node = element.firstChild();
                 KDGanttViewItem* previous = 0;
@@ -1858,7 +2173,8 @@ void KDGanttViewItem::loadFromDomElement( QDomElement& element )
                                 newItem =
                                     KDGanttViewItem::createFromDomElement( this,
                                                                            element );
-                            previous = newItem;
+                            if ( newItem )
+                                previous = newItem;
                         } else {
                             qDebug( "Unrecognized tag name: %s", tagName.latin1() );
                             Q_ASSERT( false );
@@ -1875,10 +2191,15 @@ void KDGanttViewItem::loadFromDomElement( QDomElement& element )
 
         node = node.nextSibling();
     }
-
-    setColors( startColor, middleColor, endColor );
-    setHighlightColors( startHighlightColor, middleHighlightColor,
-                        endHighlightColor );
+    QListViewItem::setVisible( temp_visible );
+    QListViewItem::setEnabled( _enabled );
+    myStartColor = startColor;
+    myMiddleColor = middleColor;
+    myEndColor = endColor;  
+    myStartColorHL = startHighlightColor ;
+    myMiddleColorHL = middleHighlightColor;
+    myEndColorHL = endHighlightColor;
+    blockUpdating = false;
     setShapes( startShape, middleShape, endShape );
     generateAndInsertName( tempName );
 }
@@ -1900,6 +2221,17 @@ QString KDGanttViewItem::typeToString( Type type )
     return "";
 }
 
+KDGanttViewItem::Type KDGanttViewItem::stringToType( const QString& type )
+{
+    if ( type == "Event")
+        return  Event;
+    if ( type == "Summary" )
+        return Summary;
+    if ( type == "Task" )
+        return Task;
+    //qDebug( "Unknown type in KDGanttViewItem::stringToType(). Returning type Task" );
+    return UnknownType;
+}
 
 /*!
   Returns the y coordinate of this item.
@@ -1945,70 +2277,84 @@ void KDGanttViewItem::showSubitemTree( int CoordY )
 
 
 /*!
-  Returns the start time of the children of this item.
+  Returns the earliest start time of the children of this item.
+  If for a child the displaySubitemsAsGroup() property is set
+  the start time of this child is computed recursively.
 
-  \return the start time of the children of this item
+  \return the earliest start time of the direct children of this item
+  \sa displaySubitemsAsGroup()
 */
 QDateTime KDGanttViewItem::myChildStartTime()
 {
-  QDateTime ret, tempTime;
-  bool set = true;
-  KDGanttViewItem* temp = (KDGanttViewItem*) firstChild();
-  if (temp) {
-    while (temp != 0) {
-      if ( !temp->displaySubitemsAsGroup() ) {
-	tempTime = temp->startTime();
-      } else {
-	tempTime = temp->myChildStartTime();
-      }
-      if ( set ) {
-	set = false;
-	ret = tempTime;
-      } else {
-	if ( tempTime < ret ) {
-	  ret = tempTime;
-	}
-      }
-      temp = temp->nextSibling();
+    QDateTime ret, tempTime;
+    bool set = true;
+    KDGanttViewItem* temp = (KDGanttViewItem*) firstChild();
+    if (temp) {
+        while (temp != 0) {
+            if ( !temp->displaySubitemsAsGroup() ) {
+                tempTime = temp->startTime();
+            } else {
+                tempTime = temp->myChildStartTime();
+            }
+            if ( tempTime.isValid() ) {
+                if ( set ) {
+                    set = false;
+                    ret = tempTime;
+                } else {
+                    if ( tempTime < ret ) {
+                        ret = tempTime;
+                    }
+                }
+            }
+            temp = temp->nextSibling();
+        }
+    } else {
+        if ( displaySubitemsAsGroup() && ( startTime() == endTime() || !endTime().isValid() ) )
+            return QDateTime();
+        ret = startTime();
     }
-  } else {
-    ret = startTime();
-  }
-  return ret;
+    return ret;
 }
 
 
 /*!
-  Returns the end time of the children of this item.
+  Returns the latest end time of the direct children of this item.
+  If for a child the displaySubitemsAsGroup() property is set
+  the end time of this child is computed recursively.
 
-  \return the end time of the children of this item
+  \return the latest end time of the direct children of this item
+  \sa displaySubitemsAsGroup()
 */
 QDateTime KDGanttViewItem::myChildEndTime()
 {
-  QDateTime ret, tempTime;
-  bool set = true;
-  KDGanttViewItem* temp = (KDGanttViewItem*) firstChild();
-  if (temp) {
-    while (temp != 0) {
-      if ( !temp->displaySubitemsAsGroup() ) {
-	tempTime = temp->endTime();
-      } else {
-	tempTime = temp->myChildEndTime();
-      }
-      if ( set ) {
-	set = false;
-	ret = tempTime;
-      } else {
-	if ( tempTime > ret ) {
-	  ret = tempTime;
-	}
-      }
-      temp = temp->nextSibling();
+    QDateTime ret, tempTime;
+    bool set = true;
+    KDGanttViewItem* temp = (KDGanttViewItem*) firstChild();
+    if (temp) {
+        while (temp != 0) {
+            if ( !temp->displaySubitemsAsGroup() ) {
+                tempTime = temp->endTime();
+            } else {
+                tempTime = temp->myChildEndTime();
+            }
+            if ( tempTime.isValid() ) {
+                if ( set ) {
+                    set = false;
+                    ret = tempTime;
+                } else {
+                    if ( tempTime > ret ) {
+                        ret = tempTime;
+                    }
+                }
+            }
+            temp = temp->nextSibling();
+        }
+    } else {
+        if ( displaySubitemsAsGroup() && ( startTime() == endTime() || !startTime().isValid() ) )
+            return QDateTime();
+        ret = endTime();
     }
-  } else {
-    ret = endTime();
-  }
-  return ret;
+    return ret;
 }
 
 
@@ -2064,6 +2410,31 @@ KDGanttViewItem* KDGanttViewItem::getChildByName( const QString& name )
 }
 
 
+/*!
+  If the uid of this item is \a uid (i.e. a user defined unique id),
+  the pointer to this item is returned.  Otherwise, it looks for an
+  item with uid \a uid in the set of children and subchildren of
+  this item. The uid of an item is not set automatically,
+  it has to be set by the programmer.
+
+  \param  uid the uid of the item
+  \return the pointer to the item with uid \a uid
+  \sa setUid() uid() KDGanttView::getItemByUid()
+*/
+KDGanttViewItem* KDGanttViewItem::getChildByUid( const QString& uid )
+{
+  if ( mUid == uid )
+    return this;
+  KDGanttViewItem* temp =  firstChild(),* ret;
+  while (temp != 0) {
+    if ( (ret = temp->getChildByUid( uid )))
+      return ret;
+    temp = temp->nextSibling();
+  }
+  return 0;
+}
+
+
 /*
 void  KDGanttViewItem::printinfo( QString s )
 {
@@ -2100,96 +2471,96 @@ bool KDGanttViewItem::subitemIsCalendar() const
 
 int  KDGanttViewItem::computeHeight()
 {
-  int hei = 0;
-  // if not visible, hide item and all subitems, return height = 0
-  if ( !isVisible() ) {
-    showItem( false );
-    if ( firstChild() )
-      firstChild()->hideSubtree();
-    // qDebug("KDGanttViewItem::computeHeight() %s returns 0  ", QListViewItem::text(0).latin1());
-    return 0;
-  }
-
-  KDGanttViewItem* temp;
-  bool show = true;
-
-  //  explanation of terms:
-  //    display opened item as usual:
-  //      display this item opened, display Gantt part on the timeline of this item.
-  //      the same for all subitems: display all subitems on its own timeline
-  //    display closed item as usual:
-  //      display this item closed, display Gantt part on the timeline of this item.
-  //      do not display any subitem.
-
-  //  desired behaviour:
-  //  if not in calendar mode( GanttView is NOT in calendar mode ):
-  //    opened:
-  //      display opened item as usual
-  //    closed:
-  //      if not displaySubitemsAsGroup()
-  //        display closed item as usual
-  //      else (  displaySubitemsAsGroup() == true )
-  //        display not this item, display subitems on the timeline of this item
-  //  else ( GanttView is in calendar mode )
-  //    4 cases:
-  //      opened && displaySubitemsAsGroup():
-  //        display not this item, display subitems on the timeline of this item,
-  //          which have the property displaySubitemsAsGroup() == false
-  //        display the other items,
-  //           which have the property displaySubitemsAsGroup() == true,
-  //           as usual below this item on their own timeline
-  //      opened && NOT displaySubitemsAsGroup():
-  //        display opened item as usual
-  //      closed && displaySubitemsAsGroup():
-  //        display not this item, display subitems on the timeline of this item,
-  //          which have the property displaySubitemsAsGroup() == false
-  //      closed && NOT displaySubitemsAsGroup():
-  //        display closed item as usual
-  //
-  if ( isOpen() ) {
-    //qDebug("KDGanttViewItem::computeHeight() %s is open  ", QListViewItem::text(0).latin1());
-    temp = firstChild();
-    // if item opened, iterate over all subitems
-    int tempHeight;
-    // introduced special for performance reasons
-    bool special = displaySubitemsAsGroup() && myGanttView->calendarMode();
-    while (temp != 0) {
-      tempHeight = temp->computeHeight();
-      if ( special ) {
-	if ( temp->displaySubitemsAsGroup() ) {
-	  hei += tempHeight;
-	  //qDebug(" hei added ");
-	} else {
-	  temp->showSubitemTree( getCoordY() );
-
-	}
-      } else {
-	hei += tempHeight;
-	//qDebug(" hei added ");
-      }
-      temp = temp->nextSibling();
-    }
-  } else { // closed!
-    //qDebug("KDGanttViewItem::computeHeight() %s is closed  ", QListViewItem::text(0).latin1());
-
-    if ( !displaySubitemsAsGroup() ) {
-      if ( firstChild() ) {
-	firstChild()->hideSubtree();
-      }
-    } else {
-      if ( firstChild() ) {
-	showSubitemTree( getCoordY() );
-	show =  false ;
-      }
+    int hei = 0;
+    // if not visible, hide item and all subitems, return height = 0
+    if ( !isVisible() ) {
+        showItem( false );
+        if ( firstChild() )
+            firstChild()->hideSubtree();
+        // qDebug("KDGanttViewItem::computeHeight() %s returns 0  ", QListViewItem::text(0).latin1());
+        return 0;
     }
 
-  }
-  if ( show )
-     showItem( true );
+    KDGanttViewItem* temp;
+    bool show = true;
 
-  hei += height();
-  //qDebug("KDGanttViewItem::computeHeight() %s returns:  %d  ", QListViewItem::text(0).latin1(), hei);
-  return hei;
+    //  explanation of terms:
+    //    display opened item as usual:
+    //      display this item opened, display Gantt part on the timeline of this item.
+    //      the same for all subitems: display all subitems on its own timeline
+    //    display closed item as usual:
+    //      display this item closed, display Gantt part on the timeline of this item.
+    //      do not display any subitem.
+
+    //  desired behaviour:
+    //  if not in calendar mode( GanttView is NOT in calendar mode ):
+    //    opened:
+    //      display opened item as usual
+    //    closed:
+    //      if not displaySubitemsAsGroup()
+    //        display closed item as usual
+    //      else (  displaySubitemsAsGroup() == true )
+    //        display not this item, display subitems on the timeline of this item
+    //  else ( GanttView is in calendar mode )
+    //    4 cases:
+    //      opened && displaySubitemsAsGroup():
+    //        display not this item, display subitems on the timeline of this item,
+    //          which have the property displaySubitemsAsGroup() == false
+    //        display the other items,
+    //           which have the property displaySubitemsAsGroup() == true,
+    //           as usual below this item on their own timeline
+    //      opened && NOT displaySubitemsAsGroup():
+    //        display opened item as usual
+    //      closed && displaySubitemsAsGroup():
+    //        display not this item, display subitems on the timeline of this item,
+    //          which have the property displaySubitemsAsGroup() == false
+    //      closed && NOT displaySubitemsAsGroup():
+    //        display closed item as usual
+    //
+    if ( isOpen() ) {
+        //qDebug("KDGanttViewItem::computeHeight() %s is open  ", QListViewItem::text(0).latin1());
+        temp = firstChild();
+        // if item opened, iterate over all subitems
+        int tempHeight;
+        // introduced special for performance reasons
+        bool special = displaySubitemsAsGroup() && myGanttView->calendarMode();
+        while (temp != 0) {
+            tempHeight = temp->computeHeight();
+            if ( special ) {
+                if ( temp->displaySubitemsAsGroup() ) {
+                    hei += tempHeight;
+                    //qDebug(" hei added ");
+                } else {
+                    temp->showSubitemTree( getCoordY() );
+
+                }
+            } else {
+                hei += tempHeight;
+                //qDebug(" hei added ");
+            }
+            temp = temp->nextSibling();
+        }
+    } else { // closed!
+        //qDebug("KDGanttViewItem::computeHeight() %s is closed  ", QListViewItem::text(0).latin1());
+
+        if ( !displaySubitemsAsGroup() ) {
+            if ( firstChild() ) {
+                firstChild()->hideSubtree();
+            }
+        } else {
+            if ( firstChild() ) {
+                showSubitemTree( getCoordY() );
+                show =  false ;
+            }
+        }
+
+    }
+    if ( show )
+        showItem( true );
+
+    hei += height();
+    //qDebug("KDGanttViewItem::computeHeight() %s returns:  %d  ", QListViewItem::text(0).latin1(), hei);
+    return hei;
 }
 
 
@@ -2213,7 +2584,7 @@ bool  KDGanttViewItem::showNoCross()
 void  KDGanttViewItem::paintBranches ( QPainter* p, const QColorGroup& cg,
                                        int w, int y, int h )
 {
-  Q3ListViewItem::paintBranches (  p,  cg, w,  y,  h);
+  QListViewItem::paintBranches (  p,  cg, w,  y,  h);
   if ( !myGanttView->calendarMode() )
     return;
   else {
@@ -2250,45 +2621,90 @@ void  KDGanttViewItem::paintBranches ( QPainter* p, const QColorGroup& cg,
 // resets the visibility os the subitems according to the setting of calendar mode
 void  KDGanttViewItem::resetSubitemVisibility()
 {
-  KDGanttViewItem* temp;
-  temp = firstChild();
-  bool allow = false;
-  if ( myGanttView->calendarMode() ) {
-    // in calendarmode only items can be opened which have subitems which have subitems
-    if ( ! temp ) {
-      if ( !parent() )
-	// has no parent, has no child : show!
-	setVisible( true );
-      else
-	// has parent, has no child : hide!
-	setVisible( false );
-      return;
+    KDGanttViewItem* temp;
+    temp = firstChild();
+    bool allow = false;
+    if ( myGanttView->calendarMode() ) {
+        // in calendarmode only items can be opened which have subitems which have subitems
+        if ( ! temp ) {
+            if ( !parent() )
+                // has no parent, has no child : show!
+                setVisible( true );
+            else
+                // has parent, has no child : hide!
+                setVisible( false );
+            return;
+        }
+        
+        setDisplaySubitemsAsGroup( true ); 
+        setVisible( true );
+        while (temp) {
+            if (temp->firstChild()) {
+                allow = true;
+                temp->resetSubitemVisibility();
+            }
+            else {
+                temp->setVisible(false);
+            }
+            temp = temp->nextSibling();
+        }
+    } else {
+        setVisible( true );
+        // all items can be opened
+        allow = true;
+        while (temp != 0) {
+            temp->resetSubitemVisibility();
+            temp = temp->nextSibling();
+        }
     }
-    setVisible( true );
-    while (temp) {
-      if (temp->firstChild()) {
-	allow = true;
-	temp->resetSubitemVisibility();
-      }
-      else {
-	temp->setVisible(false);
-      }
-      temp = temp->nextSibling();
-    }
-  } else {
-    setVisible( true );
-    // all items can be opened
-    allow = true;
-    while (temp != 0) {
-      temp->resetSubitemVisibility();
-      temp = temp->nextSibling();
-    }
-  }
-  if ( !allow && isOpen() )
-    setOpen( false );
+    if ( !allow && isOpen() )
+        setOpen( false );
 
 }
+void  KDGanttViewItem::checkCoord( int * co )
+{
+    if ( *co < -100 )
+        *co = -100;
+    else if ( *co > 31000 )
+        *co = 31000;
+}
+/*!
+  Sets the uid of this item (i.e. in general a user defined unique id).
+  The uid of an item is not set automatically,
+  it has to be set by the programmer.
+  Please read uid() for details.
 
+  \param  uid the uid of the item
+  \sa uid()  getChildByUid() KDGanttView::getItemByUid()
+*/
+void  KDGanttViewItem::setUid( const QString& text )
+{
+    mUid = text;
+}
+/*!
+  Returns the uid of this item (i.e. in general a user defined unique id)
+  The uid of an item is not set automatically,
+  it has to be set by the programmer.
+  Note that there may be more than one item in the gantt view with the same uid.
+  That depends on how the programmer handles the uid management.
+  You can look up for items with a specific uid with
+  getChildByUid() and KDGanttView::getItemByUid().
+  When there is more than one subitem with the same uid for an item then the
+  result of getChildByUid() and KDGanttView::getItemByUid() is not well defined.
+  Note that after a Drag&Drop (DnD) drop operation you may get another 
+  item somewhere in the gantt view with the same uid.
+  If you want to use a unique id which is unique in every case
+  (even after a DnD drop operation) please use KDGanttViewItem::name()
+  which is set automatically and which has a very fast lookup compared to 
+  KDGanttViewItem::getChildByUid().
+ 
+  \return the uid of the item
+  \sa  setUid() getChildByUid() KDGanttView::getItemByUid() name()
+*/
+QString  KDGanttViewItem::uid() const
+{
+    return mUid;
+}
 
 /*!
   Specifies whether this item should behave like a calendar.
@@ -2461,92 +2877,3 @@ bool KDGanttViewItem::isCalendar( ) const
   this instance variable is true if the item is visible in the Gantt
   view
 */
-
-
-/*!
-  Returns the coordinate of this items middle left point
-*/
-QPoint KDGanttViewItem::middleLeft()
-{
-    return QPoint(myGanttView->myTimeHeader->getCoordX(myStartTime), itemPos()+height()/2);
-}
-/*!
-  Returns the coordinate of this items middle right point
-*/
-QPoint KDGanttViewItem::middleRight()
-{
-    return QPoint(myGanttView->myTimeHeader->getCoordX(myEndTime), itemPos()+height()/2);
-}
-/*!
-  Moves this items text.
-*/
-void KDGanttViewItem::moveTextCanvas(int x, int y)
-{
-    int mx = x + myTextOffset.x();
-    int my = y + myTextOffset.y();
-    if (myTextOffset.x() != 0)
-        mx -= 2*myItemSize; // keep old behaviour
-        
-    textCanvas->move(mx+2*myItemSize,my-myItemSize/2);
-    //qDebug("%s: moveTextCanvas(%d,%d) offset: %d,%d moved to  %d,%d",listViewText(0).latin1(),x,y,myTextOffset.x(),myTextOffset.y(),mx+2*myItemSize,my-myItemSize/2);
-}
-
-/*!
-  Moves this items text relative to the middle right end of the item
-  Used to move text away from link.
-*/
-void KDGanttViewItem::moveTextCanvas() 
-{
-    QPoint m = myTextOffset+middleRight();
-    textCanvas->move(m.x(), m.y()-myItemSize/2);
-}
-
-/*!
-  Sets with how much the item text is offset.
-*/
-void KDGanttViewItem::setTextOffset(QPoint p) 
-{
-    //qDebug("%s: setTextOffset() offset: %d,%d",listViewText(0).latin1(),p.x(),p.y());
-    myTextOffset.setX(p.x());
-    myTextOffset.setY(p.y());
-}
-
-bool KDGanttViewItem::isMyTextCanvas(Q3CanvasItem *tc)
-{
-    return tc == textCanvas;
-}
-
-/*!
-  Specifies the progress of this item in percent.
-  Progress is limited to minimum 0, maximum 100.
-
-  \param percent the progress in percent.
-*/
-
-void KDGanttViewItem::setProgress(int percent)
-{
-    myProgress = qMax(0, percent);
-    myProgress = qMin(100, myProgress);
-}
-
-/*!
-  Specifies the float start time of this item.
-  If the time is invalid, the start float is not shown.
-
-  \param start the float start time
-*/
-void KDGanttViewItem::setFloatStartTime(const QDateTime &start)
-{
-    myFloatStartTime = start;
-}
-    
-/*!
-  Specifies the float end time of this item.
-  If the time is invalid, the end float is not shown.
-
-  \param end the float end time
-*/
-void KDGanttViewItem::setFloatEndTime(const QDateTime &end)
-{
-    myFloatEndTime = end;
-}

@@ -38,32 +38,16 @@
 
 
 #include <qwidget.h>
-#include <q3listview.h>
 #include <qsplitter.h>
 #include <qevent.h>
-#include <q3valuelist.h>
-#include <q3canvas.h>
-#include <q3whatsthis.h>
-#include <q3popupmenu.h>
-#include <qtooltip.h>
+#include <qwhatsthis.h>
 #include <qtimer.h>
-#include <q3groupbox.h>
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qbrush.h>
-#include <q3vbox.h>
-#include <q3dockwindow.h>
-#include <qtimer.h>
-//Added by qt3to4:
-#include <QPaintEvent>
-#include <QResizeEvent>
-#include <QMouseEvent>
-#include <QDragMoveEvent>
-#include <QDragLeaveEvent>
-#include <QDropEvent>
-#include <QDragEnterEvent>
-#include <Q3PtrList>
-#include <QPixmap>
+
+#include "kdgantt_qt3_compat.h"
+
 
 #include "KDGanttView.h"
 #include "KDGanttViewTaskLink.h"
@@ -97,9 +81,10 @@ public:
      Scale maxScaleView;
      //KDCanvasLine* canvasLine;
      KDCanvasRectangle* canvasRect;
+       int priority;
    };
-   typedef Q3ValueList<DateTimeColor> ColumnColorList;
-  typedef Q3ValueList<DateTimeColor> IntervalColorList;
+   typedef QValueList<DateTimeColor> ColumnColorList;
+  typedef QValueList<DateTimeColor> IntervalColorList;
    /*
      enum Scale { Minute, Hour, Day, Week, Month, Auto };
      enum YearFormat { FourDigit, TwoDigit, TwoDigitApostrophe };
@@ -112,7 +97,9 @@ public:
    QString getToolTipText(QPoint p);
    void zoomToFit();
    void zoom(double, bool absolute = true);
-   void zoomToSelection( QDateTime startTime, QDateTime endTime);
+   void zoomToSelection( const QDateTime& startTime, const QDateTime &endTime);
+   void performZoomToSelection( const QDateTime& startTime, const QDateTime &endTime);
+   void zoomToSelectionAndSetStartEnd( const QDateTime &start, const QDateTime &end);
    double zoomFactor();
    void setAutoScaleMinorTickCount( int count );
    int autoScaleMinorTickCount();
@@ -139,17 +126,18 @@ public:
    void setShowMajorTicks( bool );
    bool showMajorTicks() const;
    void setShowMinorTicks( bool );
-   void setScale( Scale unit);
+    void setScale( Scale unit, bool update = true );
    bool showMinorTicks() const;
    void setColumnBackgroundColor( const QDateTime& column,
 				  const QColor& color,
-				  Scale mini =  KDGanttView::Minute ,
+				  Scale mini =  KDGanttView::Second ,
 				  Scale maxi =  KDGanttView::Month);
-   void setIntervalBackgroundColor( const QDateTime& start,
-				    const QDateTime& end,
-				  const QColor& color,
-				  Scale mini =  KDGanttView::Minute ,
-				  Scale maxi =  KDGanttView::Month);
+    void setIntervalBackgroundColor( const QDateTime& start,
+                                     const QDateTime& end,
+                                     const QColor& color,
+                                     int priority = 0,
+                                     Scale mini =  KDGanttView::Second ,
+                                     Scale maxi =  KDGanttView::Month);
    bool changeBackgroundInterval( const QDateTime& oldstart,
 				  const QDateTime& oldend,
 				  const QDateTime& newstart,
@@ -177,13 +165,50 @@ public:
    ColumnColorList columnBackgroundColorList() const {
       return ccList;
     }
+   IntervalColorList intervalBackgroundColorList() const {
+      return icList;
+   }
    QColor weekdayColor[8];
    void repaintMe(int left, int wid, QPainter *p = 0);
 
-   void centerDateTime( const QDateTime& center );
+    void centerDateTime( const QDateTime& center, bool changeHorizon = false );
+
+    void setTooltipDateTimeFormat( const QString& fmt );
+    const QString tooltipDateTimeFormat();
+
+    const QString dateFormatMonth();
+    void setDateFormatMonth( const QString& fmt );
+    const QString dateFormatWeek();
+    void setDateFormatWeek( const QString& fmt );
+    const QString dateFormatDay();
+    void setDateFormatDay( const QString& fmt );
+    const QString datetimeFormatHour();
+    void setDatetimeFormatHour( const QString& fmt );
+    const QString datetimeFormatMinute();
+    void setDatetimeFormatMinute( const QString& fmt );
+    const QString datetimeFormatSecond();
+    void setDatetimeFormatSecond( const QString& fmt );
+
+    void setWeekStartsMonday( bool b );
+    bool weekStartsMonday();
+    void setWeekScaleShowNumber( bool b );
+    bool weekScaleShowNumber();
+
+    QDate yesterday() const;
+    QDate today() const;
+    QDate tomorrow() const;
+    QDate currentWeek() const;
+    QDate lastWeek() const;
+    QDate currentMonth() const;
+    QDate lastMonth() const;
+    QDate currentYear() const;
+    QDate lastYear() const;
+
+    void pendingPaint();
 
 public slots:
-    void setSettings(int);
+    void setTimeline( int );
+    void setSettings( int );
     void checkWidth( int );
     void addTickRight( int num = 1 );
     void addTickLeft( int num = 1 );
@@ -206,9 +231,9 @@ private:
     void moveTimeLineTo(int x);
     //void  mousePressEvent ( QMouseEvent * ) ;
     void resizeEvent ( QResizeEvent * ) ;
-    Q3ValueList<int> majorTicks;
-    Q3ValueList<QString> minorText;
-    Q3ValueList<QString> majorText;
+    QValueList<int> majorTicks;
+    QValueList<QString> minorText;
+    QValueList<QString> majorText;
     QDateTime myHorizonStart, myHorizonEnd, myRealEnd,myRealStart;
     QDateTime myCenterDateTime;
     void saveCenterDateTime();
@@ -229,12 +254,16 @@ private:
     bool flagDoNotRecomputeAfterChange,flagDoNotRepaintAfterChange;
     QString getYear(QDate);
     QString getHour(QTime);
+    QString getHourMinutes(QTime);
+    int  getMaxTextWidth( const QString& format, int mode );
+    QFont myFont();
+    int getWeekOfYear( const QDate& date );
     QDateTime getEvenTimeDate(QDateTime ,Scale);
     void computeRealScale(QDateTime start);
     int myGridMinorWidth;
     int myMajorGridHeight;
-    Q3PopupMenu * myPopupMenu, *scalePopupMenu, *timePopupMenu;
-    Q3PopupMenu * yearPopupMenu, *gridPopupMenu;
+    QPopupMenu * myPopupMenu, *scalePopupMenu, *timePopupMenu;
+    QPopupMenu * yearPopupMenu, *gridPopupMenu;
     KDGanttView* myGanttView;
     double myZoomFactor;
     int myAutoScaleMinorTickcount;
@@ -242,90 +271,116 @@ private:
     int mySizeHint;
     int myMinimumWidth;
     int getTickTime();
+    QDateTime addMajorTickTime( const QDateTime& dt, int fac );
     KDTimeHeaderToolTip* myToolTip;
     bool mouseDown;
     int beginMouseDown;
     int endMouseDown;
     bool autoComputeTimeLine;
     QPixmap paintPix;
+    QString mDateFormatMonth;
+    QString mDateFormatWeek;
+    QString mDateFormatDay;
+    QString mDatetimeFormatHour;
+    QString mDatetimeFormatMinute;
+    QString mDatetimeFormatSecond;
+    int mMaxWidFormatMonth;
+    int mMaxWidFormatWeek;
+    int mMaxWidFormatDay;
+    int mMaxWidtimeFormatHour;
+    int mMaxWidtimeFormatMinute;
+    int mMaxWidtimeFormatSecond;
+    QString mTooltipDateFormat;
+    bool mWeekStartsMonday;
+    bool mWeekScaleShowNumber;
+
 };
 
 /* KDTimeTableWidget */
 class KDListView ;
 
-class KDTimeTableWidget : public Q3Canvas
+class KDTimeTableWidget : public QCanvas
 {
    Q_OBJECT
 
 public:
    KDTimeTableWidget (QWidget* parent,KDGanttView* my);
-
+   ~KDTimeTableWidget ();
     void setBlockUpdating( bool block = true );
     bool blockUpdating();
     void inc_blockUpdating();
     void dec_blockUpdating();
     void setShowTaskLinks( bool show );
     bool showTaskLinks();
-    Q3PtrList<KDGanttViewTaskLink>taskLinks();
-    void clearTaskLinks();
-    void updateMyContent();
+    QPtrList<KDGanttViewTaskLink>taskLinks();
     void removeItemFromTasklinks( KDGanttViewItem * );
     void setHorBackgroundLines( int count, QBrush brush );
     int horBackgroundLines( QBrush& brush );
 
     void setNoInformationBrush( const QBrush& brush );
     QBrush noInformationBrush() const;
+    int minimumHeight();
+    void computeTaskLinksForItem( KDGanttViewItem * );
 
-    int getCoordX( QDateTime dt );
-    
 signals:
    void   heightComputed( int );
 
 public slots:
-  void expandItem(Q3ListViewItem * );
-  void collapseItem(Q3ListViewItem * );
-  void highlightItem(Q3ListViewItem * );
-  void resetWidth( int );
-  void checkHeight( int );
-private:
-   friend class KDGanttViewTaskLink;
-   friend class KDTimeHeaderWidget;
-   friend class KDGanttView;
-   friend class KDGanttViewTaskItem;
-   KDGanttView* myGanttView;
+void updateSlot();
+    void simpleUpdateSlot();
+    void updateMyContent();
+    void forceUpdate();
+    void simpleUpdate();
+#if QT_VERSION < 0x040000
+    void expandItem(QListViewItem * );
+    void collapseItem(QListViewItem * );
+#else
+    void expandItem(Q3ListViewItem * );
+    void collapseItem(Q3ListViewItem * );
+#endif
+    void resetWidth( int );
+    void checkHeight( int );
+private: 
+    friend class KDGanttViewTaskLink;
+    friend class KDTimeHeaderWidget;
+    friend class KDGanttView;
+    friend class KDGanttViewTaskItem;
+    KDGanttView* myGanttView;
 
-   bool taskLinksVisible;
+    bool taskLinksVisible;
 
-   Q3PtrList<KDGanttViewTaskLink> myTaskLinkList;
+    QPtrList<KDGanttViewTaskLink> myTaskLinkList;
 
-   Q3PtrList<KDCanvasLine> verGridList;
-   Q3PtrList<KDCanvasLine> horGridList;
-   Q3PtrList<KDCanvasRectangle> horDenseList;
-   Q3PtrList<KDCanvasRectangle> showNoInfoList;
-   int denseLineCount;
-   QBrush denseLineBrush, noInfoLineBrush;
-   Q3PtrList<KDCanvasRectangle> columnColorList;
+    QPtrList<KDCanvasLine> verGridList;
+    QPtrList<KDCanvasLine> horGridList;
+    QPtrList<KDCanvasRectangle> horDenseList;
+    QPtrList<KDCanvasRectangle> showNoInfoList;
+    int denseLineCount;
+    QBrush denseLineBrush, noInfoLineBrush;
+    QPtrList<KDCanvasRectangle> columnColorList;
 
-  int computeHeight();
-  void computeVerticalGrid();
-  void computeHorizontalGrid();
-  void computeDenseLines();
-  void computeShowNoInformation();
-  void computeTaskLinks();
-  void computeMinorGrid();
-  void computeMajorGrid();
+    int computeHeight();
+    void computeVerticalGrid();
+    void computeHorizontalGrid();
+    void computeDenseLines();
+    void computeShowNoInformation();
+    void computeTaskLinks();
+    void computeMinorGrid();
+    void computeMajorGrid();
 
-   void showMajorGrid();
-   void showMinorGrid();
-   void hideGrid();
+    void showMajorGrid();
+    void showMinorGrid();
+    void hideGrid();
 
-   QPen gridPen;
-   int maximumComputedGridHeight;
-  int minimumHeight;
-  int int_blockUpdating;
-  bool flag_blockUpdating;
-  int pendingHeight;
-  int pendingWidth;
+    QPen gridPen;
+    int maximumComputedGridHeight;
+    int mMinimumHeight;
+    int int_blockUpdating;
+    bool flag_blockUpdating;
+    int pendingHeight;
+    int pendingWidth;
+    QTimer *mUpdateTimer;
+    QTimer *mSimpleUpdateTimer;
 
 };
 
@@ -338,44 +393,47 @@ public:
   void showMe(bool);
   bool isShown();
   void addLegendItem( KDGanttViewItem::Shape shape, const QColor& shapeColor, const QString& text );
+    void addLegendItem( KDGanttViewItem::Shape shape, const QColor& shapeColor, const QString& text,
+                        KDGanttViewItem::Shape shape2, const QColor& shapeColor2,const QString& text2 );
   void clearLegend();
   void setFont( QFont );
   void drawToPainter( QPainter *p );
   void setAsDockwindow( bool dockwin );
   bool asDockwindow();
-  Q3DockWindow* dockwindow();
+  QDockWindow* dockwindow();
   QSize legendSize();
   QSize legendSizeHint();
  private:
-  Q3GroupBox * myLegend;
+  QGroupBox * myLegend;
   QLabel* myLabel;
-  Q3ScrollView * scroll;
-  Q3DockWindow* dock;
+  QScrollView * scroll;
+  QDockWindow* dock;
   KDGanttMinimizeSplitter* myLegendParent;
 };
 
 class KDGanttView;
-class KDListView : public Q3ListView
+class KDListView : public QListView
 {
    Q_OBJECT
 
 public:
    KDListView (QWidget* parent,KDGanttView* gv );
    KDGanttView* myGanttView;
+    QSize minimumSizeHint () const;
    void drawToPainter( QPainter *p );
    void setCalendarMode( bool mode );
   bool calendarMode() { return _calendarMode; };
   QString getWhatsThisText(QPoint p);
-  void setOpen ( Q3ListViewItem * item, bool open );
+  void setOpen ( QListViewItem * item, bool open );
   void dragEnterEvent ( QDragEnterEvent * );
   void dragMoveEvent ( QDragMoveEvent * );
   void dragLeaveEvent ( QDragLeaveEvent * );
   void dropEvent ( QDropEvent * );
-  Q3DragObject * dragObject ();
+  QDragObject * dragObject ();
   void startDrag ();
-  void paintemptyarea ( QPainter * p, const QRect & rect ){ Q3ListView::paintEmptyArea( p, rect );};
+  void paintemptyarea ( QPainter * p, const QRect & rect ){ QListView::paintEmptyArea( p, rect );};
 private slots:
-  void dragItem( Q3ListViewItem * );
+  void dragItem( QListViewItem * );
  private:
    void resizeEvent ( QResizeEvent * ) ;
   void contentsMouseDoubleClickEvent ( QMouseEvent * e );
@@ -386,69 +444,75 @@ private slots:
 };
 
 
-class KDCanvasText : public Q3CanvasText
+class KDCanvasText : public QCanvasText
 {
 public:
     KDCanvasText( KDTimeTableWidget* canvas, void* parentItem, int type );
     int myParentType;
     void* myParentItem;
+    void updateItem() { update(); }
 };
 
 
-class KDCanvasLine : public Q3CanvasLine
+class KDCanvasLine : public QCanvasLine
 {
 public:
     KDCanvasLine( KDTimeTableWidget* canvas, void* parentItem, int type );
     int myParentType;
     void* myParentItem;
+    void updateItem() { update(); }
 };
 
 
-class KDCanvasPolygonItem: public Q3CanvasPolygonalItem
+class KDCanvasPolygonItem: public QCanvasPolygonalItem
 {
 public:
     KDCanvasPolygonItem( KDTimeTableWidget* canvas, void* parentItem,
                          int type );
     int myParentType;
     void* myParentItem;
+    void updateItem() { update(); }
 };
 
 
-class KDCanvasPolygon: public Q3CanvasPolygon
+class KDCanvasPolygon: public QCanvasPolygon
 {
 public:
     KDCanvasPolygon( KDTimeTableWidget* canvas, void* parentItem, int type );
     int myParentType;
     void* myParentItem;
+    void updateItem() { update(); }
 };
 
 
-class KDCanvasEllipse: public Q3CanvasEllipse
+class KDCanvasEllipse: public QCanvasEllipse
 {
 public:
     KDCanvasEllipse( KDTimeTableWidget* canvas, void* parentItem, int type );
     int myParentType;
     void* myParentItem;
+    void updateItem() { update(); }
 };
 
 
-class KDCanvasRectangle: public Q3CanvasRectangle
+class KDCanvasRectangle: public QCanvasRectangle
 {
 public:
     KDCanvasRectangle( KDTimeTableWidget* canvas, void* parentItem, int type );
     int myParentType;
     void* myParentItem;
+    void updateItem() { update(); }
 };
 
 
 class KDCanvasToolTip;
 
-class KDGanttCanvasView : public Q3CanvasView
+class KDGanttCanvasView : public QCanvasView
 {
     Q_OBJECT
 
 public:
-    KDGanttCanvasView(KDGanttView* sender, Q3Canvas* canvas = 0, QWidget* parent = 0, const char* name = 0 );
+    KDGanttCanvasView(KDGanttView* sender, QCanvas* canvas = 0, QWidget* parent = 0, const char* name = 0 );
     ~KDGanttCanvasView();
     QString getToolTipText(QPoint p);
     QString getWhatsThisText(QPoint p);
@@ -460,6 +524,8 @@ public:
     void insertItemAsRoot( KDGanttViewItem* );
     void insertItemAsChild( KDGanttViewItem* , KDGanttViewItem* );
     void insertItemAfter( KDGanttViewItem* , KDGanttViewItem* );
+    void setMyVScrollBarMode ( ScrollBarMode );
+    ScrollBarMode myVScrollBarMode () const;
 protected:
     friend class KDGanttView;
     friend class KDListView;
@@ -473,21 +539,14 @@ protected:
     KDGanttView* mySignalSender;
     KDGanttViewItem* currentItem, *lastClickedItem, *cuttedItem;
     KDGanttViewTaskLink* currentLink;
-    int getType(Q3CanvasItem*);
-    KDGanttViewItem* getItem(Q3CanvasItem*);
-    KDGanttViewTaskLink* getLink(Q3CanvasItem*);
+    KDGanttViewItem::Connector currentConnector;
+    int getType(QCanvasItem*);
+    KDGanttViewItem* getItem(QCanvasItem*);
+    KDGanttViewTaskLink* getLink(QCanvasItem*);
     KDCanvasWhatsThis* myWhatsThis;
-    Q3PopupMenu* onItem;
+    QPopupMenu* onItem;
     bool _showItemAddPopupMenu;
     int myMyContentsHeight;
-    KDGanttViewItem *fromItem;
-    bool linkItemsEnabled;
-    Q3CanvasLine *linkLine;
-    int fromArea;
-    bool autoScrollEnabled;
-    int getItemArea(KDGanttViewItem *item, int x);
-    int getLinkType(int from, int to);
-
 signals:
   void heightResized( int );
   void widthResized( int );
@@ -496,23 +555,92 @@ public slots:
   void moveMyContent( int, int );
   void setMyContentsHeight( int );
 private slots:
+  void updateMyScrollBars();
+  void updateMyScrollBarsLater();
+  void resetScrollBars();
   void cutItem();
   void pasteItem( int );
   void newRootItem( int );
   void newChildItem( int );
-  void slotScrollTimer();
 
 private:
+    QTime mButtonDownTime;
+    bool currentItemChanged;
+    bool userCreateTaskLinksEnabled;
+    int mScrollBarCheckCounter;
+    ScrollBarMode myScrollBarMode;
+    QTimer * mScrollbarTimer;
   KDCanvasToolTip* myToolTip;
-  QTimer *myScrollTimer;
-  QPoint mousePos;
 };
 
+#if QT_VERSION >= 0x040000
+class KDTimeHeaderToolTip :public QObject
+{
+
+public:
+  KDTimeHeaderToolTip( QWidget *wid, KDTimeHeaderWidget* header ) : QObject( wid ), _wid(wid),_header (header) {
+
+};
+
+protected:
+ 
+private:
+  QWidget* _wid;
+  KDTimeHeaderWidget * _header;
+};
+
+class KDCanvasToolTip :public QObject
+{
+
+public:
+  KDCanvasToolTip( QWidget *wid, KDGanttCanvasView* canview ) :  QObject( wid ), _wid(wid),_canview (canview) {
+
+};
+
+protected:
+
+private:
+  QWidget* _wid;
+  KDGanttCanvasView * _canview;
+};
+class KDCanvasWhatsThis :public  QObject
+{
+public:
+  KDCanvasWhatsThis( QWidget *wid, KDGanttCanvasView* canview ) :  QObject( wid ), _wid(wid),_canview (canview) { };
+
+protected:
+  virtual QString text( const QPoint& p)
+  {
+    return _canview->getWhatsThisText(p) ;
+  }
+private:
+  QWidget* _wid;
+  KDGanttCanvasView * _canview;
+};
+
+class KDListViewWhatsThis :public  QObject
+{
+public:
+  KDListViewWhatsThis( QWidget *wid, KDListView* view ) :  QObject( wid ), _wid(wid),_view (view) { };
+
+protected:
+  virtual QString text( const QPoint& p)
+  {
+    return _view->getWhatsThisText(p) ;
+  }
+private:
+  QWidget* _wid;
+  KDListView * _view;
+};
+
+#else
 class KDTimeHeaderToolTip :public QToolTip
 {
 
 public:
-  KDTimeHeaderToolTip( QWidget *wid, KDTimeHeaderWidget* header ) : QToolTip( wid ), _wid(wid),_header (header) { }
+  KDTimeHeaderToolTip( QWidget *wid, KDTimeHeaderWidget* header ) : QToolTip( wid ), _wid(wid),_header (header) {
+
+};
 
 protected:
   virtual void maybeTip( const QPoint& p)
@@ -557,11 +685,10 @@ private:
   QWidget* _wid;
   KDGanttCanvasView * _canview;
 };
-
-class KDCanvasWhatsThis :public Q3WhatsThis
+class KDCanvasWhatsThis :public QWhatsThis
 {
 public:
-  KDCanvasWhatsThis( QWidget *wid, KDGanttCanvasView* canview ) : Q3WhatsThis( wid ), _wid(wid),_canview (canview) { };
+  KDCanvasWhatsThis( QWidget *wid, KDGanttCanvasView* canview ) : QWhatsThis( wid ), _wid(wid),_canview (canview) { };
 
 protected:
   virtual QString text( const QPoint& p)
@@ -573,10 +700,10 @@ private:
   KDGanttCanvasView * _canview;
 };
 
-class KDListViewWhatsThis :public Q3WhatsThis
+class KDListViewWhatsThis :public QWhatsThis
 {
 public:
-  KDListViewWhatsThis( QWidget *wid, KDListView* view ) : Q3WhatsThis( wid ), _wid(wid),_view (view) { };
+  KDListViewWhatsThis( QWidget *wid, KDListView* view ) : QWhatsThis( wid ), _wid(wid),_view (view) { };
 
 protected:
   virtual QString text( const QPoint& p)
@@ -587,6 +714,8 @@ private:
   QWidget* _wid;
   KDListView * _view;
 };
+
+#endif
 
 
 
