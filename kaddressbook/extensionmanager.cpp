@@ -58,7 +58,7 @@ void ExtensionManager::restoreSettings()
   for ( int index = 0; index < mExtensionList.size(); ++index ) {
     ExtensionData data = mExtensionList[ index ];
     if ( data.identifier == KABPrefs::instance()->currentExtension() ) {
-      KToggleAction *action = static_cast<KToggleAction*>( mActionList.at( index ) );
+      KToggleAction *action = mActionList.size() > index ? static_cast<KToggleAction*>( mActionList.at( index ) ) : 0;
       if ( action )
         action->setChecked( true );
       setActiveExtension( index );
