@@ -165,7 +165,7 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
                 return;
             }
             QString _tmp = input.data();
-            iFound = _tmp.contains(regexp);
+            iFound = _tmp.count(regexp);
             if(!iFound) {
                 iFound = _tmp.findRev("!");
                 if (iFound >= 0 && ((l-iFound) < 5) ) {

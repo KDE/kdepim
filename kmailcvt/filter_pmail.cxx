@@ -193,7 +193,7 @@ void FilterPMail::importMailFolder(const QString& file)
                         tempfile.unlink();
                         return;
                     }
-                    if(input[0] == 0x1a ) {
+                    if ( input.at( 0 ) == 0x1a ) {
                         break;
                     } else {
                         tempfile.file()->writeBlock( input, l );
