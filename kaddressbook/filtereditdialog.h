@@ -25,6 +25,7 @@
 #define FILTEREDITDIALOG_H
 
 class Q3ButtonGroup;
+class Q3ListBoxItem;
 class QString;
 class QToolButton;
 class QWidget;

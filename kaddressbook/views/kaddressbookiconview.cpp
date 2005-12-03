@@ -174,7 +174,7 @@ KABC::Field *KAddressBookIconView::sortField() const
   return KABC::Field::allFields()[ 2 ];
 }
 
-void KAddressBookIconView::readConfig( KConfig *config )
+void KAddressBookIconView::readConfig( KConfigGroup &config )
 {
   KAddressBookView::readConfig( config );
 

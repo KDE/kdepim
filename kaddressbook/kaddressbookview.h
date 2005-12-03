@@ -38,7 +38,7 @@
 #include "filter.h"
 #include "viewconfigurewidget.h"
 
-class KConfig;
+class KConfigGroup;
 class KXMLGUIClient;
 
 class QDropEvent;
@@ -84,7 +84,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
       @param config The KConfig object to read from. The group will already
       be set, so do not change the group.
      */
-    virtual void readConfig( KConfig *config );
+    virtual void readConfig( KConfigGroup &config );
 
     /**
       Called whenever this view should write the config. The view should not
@@ -97,7 +97,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
      */
     // The KConfig object is unused so we do not document it
     // else doxygen will complain.
-    virtual void writeConfig( KConfig * );
+    virtual void writeConfig( KConfigGroup& );
 
     /**
       Returns a QString with all the selected email addresses concatenated

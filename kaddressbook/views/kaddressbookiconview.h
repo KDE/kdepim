@@ -33,7 +33,7 @@
 #include "kaddressbookview.h"
 
 class Q3IconViewItem;
-class KConfig;
+class KConfigGroup;
 class AddresseeIconView;
 class AddresseeIconViewItem;
 
@@ -55,7 +55,7 @@ class KAddressBookIconView : public KAddressBookView
     virtual QStringList selectedUids();
     virtual QString type() const { return "Icon"; }
     virtual KABC::Field *sortField() const;
-    virtual void readConfig( KConfig *config );
+    virtual void readConfig( KConfigGroup &config );
 
     void scrollUp();
     void scrollDown();

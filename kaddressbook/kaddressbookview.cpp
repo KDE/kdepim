@@ -55,18 +55,18 @@ KAddressBookView::~KAddressBookView()
                 << name() << endl;
 }
 
-void KAddressBookView::readConfig( KConfig *config )
+void KAddressBookView::readConfig( KConfigGroup &config )
 {
-  mFieldList = KABC::Field::restoreFields( config, "KABCFields" );
+  mFieldList = KABC::Field::restoreFields( &config, "KABCFields" );
 
   if ( mFieldList.isEmpty() )
     mFieldList = KABC::Field::defaultFields();
 
-  mDefaultFilterType = (DefaultFilterType)config->readNumEntry( "DefaultFilterType", 1 );
-  mDefaultFilterName = config->readEntry( "DefaultFilterName" );
+  mDefaultFilterType = (DefaultFilterType)config.readNumEntry( "DefaultFilterType", 1 );
+  mDefaultFilterName = config.readEntry( "DefaultFilterName" );
 }
 
-void KAddressBookView::writeConfig( KConfig* )
+void KAddressBookView::writeConfig( KConfigGroup& )
 {
   // Most of writing the config is handled by the ConfigureViewDialog
 }

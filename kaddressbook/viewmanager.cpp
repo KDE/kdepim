@@ -38,7 +38,7 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kmultipledrag.h>
+#include <k3multipledrag.h>
 #include <ktempdir.h>
 #include <ktrader.h>
 
@@ -215,7 +215,7 @@ void ViewManager::setActiveView( const QString &name )
       view->setCaption( name );
       mViewDict.insert( name, view );
       mViewWidgetStack->addWidget( view );
-      view->readConfig( config );
+      view->readConfig( group );
 
       // The manager just relays the signals
       connect( view, SIGNAL( selected( const QString& ) ),
@@ -285,7 +285,7 @@ void ViewManager::editView()
 
     if ( dlg.exec() ) {
       dlg.saveSettings( mCore->config() );
-      mActiveView->readConfig( mCore->config() );
+      mActiveView->readConfig( group );
       // Set the proper filter in the view. By setting the combo
       // box, the activated slot will be called, which will push
       // the filter to the view and refresh it.
@@ -465,7 +465,7 @@ void ViewManager::startDrag()
   for ( it = uidList.begin(); it != uidList.end(); ++it )
     addrList.append( mCore->addressBook()->findByUid( *it ) );
 
-  KMultipleDrag *drag = new KMultipleDrag( this );
+  K3MultipleDrag *drag = new K3MultipleDrag( this );
 
   KABC::VCardConverter converter;
   QString vcards = converter.createVCards( addrList );
