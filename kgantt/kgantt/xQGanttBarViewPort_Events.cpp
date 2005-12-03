@@ -10,6 +10,10 @@
 #include "xQGanttBarView.h"
 
 #include <math.h>
+//Added by qt3to4:
+#include <QMouseEvent>
+#include <QKeyEvent>
+#include <QPaintEvent>
 
 KGanttItem* xQGanttBarViewPort::_currentItem;
 
@@ -43,7 +47,7 @@ xQGanttBarViewPort::mousePressEvent(QMouseEvent* e)
   _itemTextEdit->hide();
 
   //  right mousebutton & control -> popup menu
-  if(e->button() == RightButton && e->state() == ControlButton ) {
+  if(e->button() == Qt::RightButton && e->state() == Qt::ControlModifier ) {
     _menu->popup(e->globalPos());
     return;
   }
@@ -64,14 +68,14 @@ xQGanttBarViewPort::mousePressEvent(QMouseEvent* e)
   /*
    *  edit text
    */
-  if(e->button() == MidButton && _mode == Select) {
+  if(e->button() == Qt::MidButton && _mode == Select) {
 
     xQTaskPosition* tp = _gItemList.find(_currentItem);
     QPainter p(this);
 
     QRect rect = p.boundingRect(tp->_textPosX, 
 				tp->_textPosY, 200, 
-				tp->_screenH, AlignLeft, _currentItem->getText() );
+				tp->_screenH, Qt::AlignLeft, _currentItem->getText() );
 
     _itemTextEdit->setText(_currentItem->getText());
     _itemTextEdit->move(tp->_textPosX, tp->_screenY + _margin + 1);
@@ -91,7 +95,7 @@ xQGanttBarViewPort::mousePressEvent(QMouseEvent* e)
   /*
    *  open/close item, move start, end, item
    */
-  if(e->button() == LeftButton && _mode == Select) {
+  if(e->button() == Qt::LeftButton && _mode == Select) {
 
     _timediff = 0;
 
@@ -107,7 +111,7 @@ xQGanttBarViewPort::mousePressEvent(QMouseEvent* e)
       _changeEnd   = true;
       _changeStart = true;
       
-      if(e->state() == ShiftButton) {
+      if(e->state() == Qt::ShiftModifier) {
 
 	QString tmp; tmp.sprintf("%s\n", _currentItem->getText().latin1() );
 	
@@ -184,7 +188,7 @@ xQGanttBarViewPort::mouseReleaseEvent(QMouseEvent* e)
       if(_currentItem && _selectItem) {
 
 
-	if(e->state() & ControlButton) {
+	if(e->state() & Qt::ControlModifier) {
 	  _currentItem->select( !_currentItem->isSelected() );
 	}
 	else {
@@ -210,26 +214,27 @@ xQGanttBarViewPort::mouseReleaseEvent(QMouseEvent* e)
     
     if(!_Mousemoved) {
       
-      if(e->button() ==  LeftButton)
+      if(e->button() ==  Qt::LeftButton)
 	zoom(1.4, e->x(), e->y() );
       
       
-      if(e->button() ==  RightButton)
+      if(e->button() ==  Qt::RightButton)
 	zoom(0.7, e->x(), e->y() );
       
 
-      if(e->button() ==  MidButton)
+      if(e->button() ==  Qt::MidButton)
 	zoomAll();
 
     }
     else {
 
-      if(_currentMButton ==  LeftButton) {
+      if(_currentMButton ==  Qt::LeftButton) {
 
 	QPainter p(this);
-	QPen pen(DashLine);
-	pen.setColor(red);
-	p.setRasterOp(XorROP);      
+	QPen pen(Qt::DashLine);
+	pen.setColor(Qt::red);
+#warning Port me!
+//	p.setRasterOp(XorROP);      
 	p.setPen( pen );
 
 	p.drawRect(_startPoint->x(),
@@ -275,7 +280,7 @@ xQGanttBarViewPort::mouseMoveEvent(QMouseEvent* e)
      fabs((float)(_startPoint->y() - e->y())) < 2 )
     return;
 
-  static QPen _dashPen(QColor(255,0,0),DashLine);
+  static QPen _dashPen(QColor(255,0,0),Qt::DashLine);
   static QPen _solidPen(QColor(200,200,200));
 
   _Mousemoved = true;
@@ -284,10 +289,11 @@ xQGanttBarViewPort::mouseMoveEvent(QMouseEvent* e)
     
   case Select: {
     
-    if(_currentMButton == LeftButton && _currentItem) {
+    if(_currentMButton == Qt::LeftButton && _currentItem) {
 
       QPainter p(this);
-      p.setRasterOp(XorROP);
+#warning Port me!
+//      p.setRasterOp(XorROP);
       // QPen pen(DashLine);
       // pen.setColor(red);
       p.setPen( _dashPen );
@@ -372,7 +378,7 @@ xQGanttBarViewPort::mouseMoveEvent(QMouseEvent* e)
       if(oldx > 0) {
 	p.fillRect(oldx, _gItemList.find(_currentItem)->_screenY, 
 		   oldw, _gItemList.find(_currentItem)->_screenH,
-		   QBrush(QColor(50,50,50), Dense4Pattern));
+		   QBrush(QColor(50,50,50), Qt::Dense4Pattern));
 	p.drawRect(oldx, _gItemList.find(_currentItem)->_screenY, 
 		   oldw, _gItemList.find(_currentItem)->_screenH);
 
@@ -388,7 +394,7 @@ xQGanttBarViewPort::mouseMoveEvent(QMouseEvent* e)
       p.setPen(_dashPen);
       p.fillRect(x, _gItemList.find(_currentItem)->_screenY, 
 		 w, _gItemList.find(_currentItem)->_screenH,
-		 QBrush(QColor(50,50,50), Dense4Pattern) );
+		 QBrush(QColor(50,50,50), Qt::Dense4Pattern) );
       p.drawRect(x, _gItemList.find(_currentItem)->_screenY, 
 		 w, _gItemList.find(_currentItem)->_screenH);
 
@@ -416,23 +422,23 @@ xQGanttBarViewPort::mouseMoveEvent(QMouseEvent* e)
 	_pos = pos;
 	
 	if(pos == West || pos == East) {
-	  setCursor( splitHCursor );
+	  setCursor( Qt::splitHCursor );
 	  break;
 	}
 	if(pos == North || pos == South) {
-	  setCursor( splitVCursor );
+	  setCursor( Qt::splitVCursor );
 	  break;
 	}
 	if(pos == Center) {
-	  setCursor( upArrowCursor);
+	  setCursor( Qt::upArrowCursor);
 	  break;
 	}
 	if(pos == Handle) {
-	  setCursor(pointingHandCursor);
+	  setCursor(Qt::pointingHandCursor);
 	  break;
 	}
 	
-	setCursor(arrowCursor);
+	setCursor(Qt::arrowCursor);
 	
       }
     }
@@ -442,7 +448,7 @@ xQGanttBarViewPort::mouseMoveEvent(QMouseEvent* e)
 
   case Zoom: {
 
-    if(_currentMButton == LeftButton) {
+    if(_currentMButton == Qt::LeftButton) {
 
       static QString strpos;
 
@@ -461,10 +467,11 @@ xQGanttBarViewPort::mouseMoveEvent(QMouseEvent* e)
       emit message(strpos);
 
       QPainter p(this);
-      QPen pen(DashLine);
-      pen.setColor(red);
+      QPen pen(Qt::DashLine);
+      pen.setColor(Qt::red);
 
-      p.setRasterOp(XorROP);
+#warning Port me!
+//      p.setRasterOp(XorROP);
 
       p.setPen( pen );
             
@@ -473,7 +480,7 @@ xQGanttBarViewPort::mouseMoveEvent(QMouseEvent* e)
 		 _endPoint->x()-_startPoint->x(),
 		 _endPoint->y() - _startPoint->y());    
 
-      QBrush _selectedbrush( QColor(50,50,50), Dense4Pattern );
+      QBrush _selectedbrush( QColor(50,50,50), Qt::Dense4Pattern );
 
       p.fillRect( _startPoint->x(), _startPoint->y(), 
 		  _endPoint->x()-_startPoint->x(), _endPoint->y() - _startPoint->y(),
@@ -516,27 +523,27 @@ xQGanttBarViewPort::keyPressEvent(QKeyEvent* e)
 
   int dx = 15;
   
-  if(e->state() == ControlButton)
+  if(e->state() == Qt::ControlModifier)
     dx *= 10;
   
   switch(e->key()) {
     
-  case Key_Left:
+  case Qt::Key_Left:
     
     emit scroll(-dx,0);
     break;
     
-  case Key_Right:
+  case Qt::Key_Right:
     
     emit scroll(dx,0);
     break;
     
-  case Key_Up:
+  case Qt::Key_Up:
     
     emit scroll(0,-dx);
     break;
     
-  case Key_Down:
+  case Qt::Key_Down:
     
     emit scroll(0, dx);
     break;

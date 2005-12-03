@@ -11,11 +11,11 @@
 
 #include <qcolor.h>
 #include <qstylefactory.h>
-#include <qscrollview.h> 
+#include <q3scrollview.h> 
 
 
 KGantt::KGantt(KGanttItem* toplevelitem,
-	       QWidget* parent, const char * name, WFlags f)
+	       QWidget* parent, const char * name, Qt::WFlags f)
   : QWidget(parent,name,f)
 { 
 #ifdef _DEBUG_
@@ -34,7 +34,7 @@ KGantt::KGantt(KGanttItem* toplevelitem,
     _deleteItem = false;
   }
 
-  setBackgroundColor(QColor(white));
+  setBackgroundColor(QColor(Qt::white));
 
   _splitter = new QSplitter(this);
 /*

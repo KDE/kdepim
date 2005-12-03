@@ -35,11 +35,19 @@
 #include <qcursor.h>
 #include <qtimer.h>
 #include <qlabel.h>
+//Added by qt3to4:
+#include <QWheelEvent>
+#include <QPixmap>
+#include <QPaintEvent>
+#include <Q3PtrList>
+#include <QKeyEvent>
+#include <Q3Frame>
+#include <QMouseEvent>
 
 #include <kmenu.h> 
 #include <ktoolbar.h> 
 
-#include <qptrdict.h>
+#include <q3ptrdict.h>
 #include <qaction.h> 
 #include <qlineedit.h>
 
@@ -85,7 +93,7 @@ public :
  */
 
 /////////////////////////////////////////
-class KDE_EXPORT xQGanttBarViewPort : public QFrame
+class KDE_EXPORT xQGanttBarViewPort : public Q3Frame
 ////////////////////////////////////////
 {
 
@@ -104,7 +112,7 @@ public:
    *
    */
   xQGanttBarViewPort(KGanttItem* toplevelitem, xQGanttBarView* parent = 0,
-		     const char * name=0, WFlags f=0 );
+		     const char * name=0, Qt::WFlags f=0 );
 
 
   ///  Destructor.
@@ -123,7 +131,7 @@ public:
   
 
  
-  QPtrDict<xQTaskPosition> _gItemList;
+  Q3PtrDict<xQTaskPosition> _gItemList;
 
 
   ///  Add holiday.
@@ -154,7 +162,7 @@ public:
   /*!
    *
    */
-  KToolBar* toolbar(QMainWindow* mw = 0);
+  KToolBar* toolbar(Q3MainWindow* mw = 0);
 
 
   //  zoom by factor sfactor and move wx,wy to the center
@@ -164,7 +172,7 @@ public:
   void zoom(double sfactor);
 
 
-  void getSelectedItems(QPtrList<KGanttItem>& list) {
+  void getSelectedItems(Q3PtrList<KGanttItem>& list) {
     getSelectedItems(_toplevelitem, list);
   }
 
@@ -277,9 +285,9 @@ private:
 
   QPoint* _startPoint, *_endPoint;
 
-  QPtrList<QDate> _holidays;
+  Q3PtrList<QDate> _holidays;
 
-  QPtrList<KGanttItem> *_observedList;
+  Q3PtrList<KGanttItem> *_observedList;
 
 
   /// 
@@ -297,11 +305,11 @@ private:
 
   void selectItem(KGanttItem*,bool);
 
-  void getSelectedItems(KGanttItem*, QPtrList<KGanttItem>&);
+  void getSelectedItems(KGanttItem*, Q3PtrList<KGanttItem>&);
 
   void adjustSize();
 
-  void observeList(QPtrList<KGanttItem>*);
+  void observeList(Q3PtrList<KGanttItem>*);
 
   Position check(KGanttItem** founditem, int x, int y);
 

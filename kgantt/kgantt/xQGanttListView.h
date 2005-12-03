@@ -34,7 +34,9 @@
 #include "xQGanttBarView.h"
 #include "xQGanttListViewPort.h"
 
-#include <qscrollview.h>
+#include <q3scrollview.h>
+//Added by qt3to4:
+#include <QPaintEvent>
 
 
 
@@ -44,7 +46,7 @@
  */
 
 //////////////////////////////////////////////
-class xQGanttListView : public QScrollView
+class xQGanttListView : public Q3ScrollView
 //////////////////////////////////////////////
 {
 
@@ -59,7 +61,7 @@ public:
    *
    */
   xQGanttListView(KGanttItem* toplevelitem, QWidget* parent = 0,  
-		  const char * name=0, WFlags f=0 );
+		  const char * name=0, Qt::WFlags f=0 );
 
 
   ///  Destructor.

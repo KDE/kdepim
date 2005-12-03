@@ -10,6 +10,13 @@
 
 #include <qcolor.h>
 #include <qtoolbutton.h>
+//Added by qt3to4:
+#include <QPixmap>
+#include <Q3PointArray>
+#include <Q3PtrList>
+#include <Q3Frame>
+#include <QLabel>
+#include <Q3MainWindow>
 
 #include "lupe.xpm"
 #include "open.xpm"
@@ -23,8 +30,8 @@
 
 xQGanttBarViewPort::xQGanttBarViewPort(KGanttItem* toplevelitem, 
 				       xQGanttBarView* parent,
-				       const char * name, WFlags f)
-  : QFrame(parent,name,f)
+				       const char * name, Qt::WFlags f)
+  : Q3Frame(parent,name,f)
 /////////////////////////////////////////////////////////////////////////////
 {
   _parent = parent;
@@ -35,7 +42,7 @@ xQGanttBarViewPort::xQGanttBarViewPort(KGanttItem* toplevelitem,
   _observedList = NULL;
   _toolbar = NULL;
 
-  _gItemList = QPtrDict<xQTaskPosition>(449);
+  _gItemList = Q3PtrDict<xQTaskPosition>(449);
   _gItemList.setAutoDelete(true);
 
   _toplevelitem = toplevelitem;
@@ -59,7 +66,7 @@ xQGanttBarViewPort::xQGanttBarViewPort(KGanttItem* toplevelitem,
 
   initMenu();
 
-  setBackgroundColor(QColor(white));        
+  setBackgroundColor(QColor(Qt::white));        
   /*
     QPixmap back("background.png");
     setBackgroundPixmap ( back );
@@ -88,7 +95,7 @@ xQGanttBarViewPort::xQGanttBarViewPort(KGanttItem* toplevelitem,
 
   recalc(); adjustSize();
 
-  setFocusPolicy(QWidget::StrongFocus);
+  setFocusPolicy(Qt::StrongFocus);
   _mode = Init;
 
 }
@@ -103,11 +110,11 @@ xQGanttBarViewPort::~xQGanttBarViewPort()
 
 
 KToolBar*
-xQGanttBarViewPort::toolbar(QMainWindow* mw)
+xQGanttBarViewPort::toolbar(Q3MainWindow* mw)
 {
   if(_toolbar || mw == 0) return _toolbar;
 
-  _toolbar = new KToolBar(mw,QMainWindow::DockTop);
+  _toolbar = new KToolBar(mw,Qt::DockTop);
 
   mw->addToolBar(_toolbar);
 
@@ -322,9 +329,9 @@ xQGanttBarViewPort::drawGrid(QPainter* p, int x1, int y1, int x2, int y2)
   static QBrush _sat( QColor(200,200,200));
   static QBrush _sun( QColor(255,110,110));
   static QBrush _hol( QColor(200,200,250));
-  static QPen penDay( QColor(235,235,235), 0, DotLine);
-  static QPen penMonth( QColor(0,150,0), 3, DashDotLine);
-  static QPen penHour( QColor(0,0,150), 0, DashDotLine);
+  static QPen penDay( QColor(235,235,235), 0, Qt::DotLine);
+  static QPen penMonth( QColor(0,150,0), 3, Qt::DashDotLine);
+  static QPen penHour( QColor(0,0,150), 0, Qt::DashDotLine);
 
   QDate start( _toplevelitem->getStart().addSecs(worldX(x1)*60).date() );
 
@@ -338,7 +345,7 @@ xQGanttBarViewPort::drawGrid(QPainter* p, int x1, int y1, int x2, int y2)
 
   for(ptrDate = _holidays.first(); ptrDate != 0; ptrDate = _holidays.next() ) {
     if(*ptrDate > cmp) {
-      tmp = _toplevelitem->getStart().secsTo(*ptrDate)/60;
+      tmp = _toplevelitem->getStart().secsTo( QDateTime( *ptrDate ) )/60;
       a = screenX( tmp );
       p->fillRect( a, y1, w, y2, _hol );
     }
@@ -350,7 +357,7 @@ xQGanttBarViewPort::drawGrid(QPainter* p, int x1, int y1, int x2, int y2)
   for(int i=0; i<=end; i++, start = start.addDays(1) ) {
 
     int dayOfWeek = start.dayOfWeek();
-    tmp = _toplevelitem->getStart().secsTo(start)/60;
+    tmp = _toplevelitem->getStart().secsTo( QDateTime( start ) )/60;
     a = screenX( tmp );
    
     //  draw saturday
@@ -478,7 +485,7 @@ xQGanttBarViewPort::drawItem(KGanttItem* item, QPainter* p,
     p->drawLine(tpos->_screenX, tpos->_screenY,
 		tpos->_screenX, tpos->_screenY + tpos->_screenH );
 
-    QPointArray a(4);
+    Q3PointArray a(4);
     a.setPoint(0, tpos->_screenX, tpos->_screenY + _margin );
     a.setPoint(1, tpos->_screenX - tpos->_screenH / 2 + _margin, 
 	          tpos->_screenY + tpos->_screenH / 2 );
@@ -500,7 +507,7 @@ xQGanttBarViewPort::drawItem(KGanttItem* item, QPainter* p,
     
     if(style & KGanttItem::DrawBorder ) {
       
-      p->setBrush(NoBrush);
+      p->setBrush(Qt::NoBrush);
       p->drawRect(tpos->_screenX, tpos->_screenY + _margin,
 		  tpos->_screenW, tpos->_screenHS - 2 * _margin );
       
@@ -553,9 +560,9 @@ xQGanttBarViewPort::drawItem(KGanttItem* item, QPainter* p,
 
   if(item->isSelected()) {
 
-    p->setPen( QPen(QColor(red),1));
+    p->setPen( QPen(QColor(Qt::red),1));
 
-    p->setBrush(NoBrush);
+    p->setBrush(Qt::NoBrush);
     p->drawRect(tpos->_screenX - 2, tpos->_screenY,
 		tpos->_screenW + 4, tpos->_screenHS );
 
@@ -594,7 +601,7 @@ xQGanttBarViewPort::drawRelation(QPainter* p,
 
   p->setPen(rel->getPen());
 
-  QPointArray a(6);
+  Q3PointArray a(6);
 
   int x,y;
   int i=0;
@@ -638,7 +645,7 @@ xQGanttBarViewPort::drawRelation(QPainter* p,
   p->drawChord( a.point(0).x()-3, a.point(0).y()-3, 6, 6, 0, 5760 );
 
 
-  QPointArray b(3);
+  Q3PointArray b(3);
 
   b.setPoint(0, x,y);
   b.setPoint(1, x -5, y - 5);
@@ -670,11 +677,11 @@ xQGanttBarViewPort::drawHeader(QPainter* p, int /*x1*/, int /*y1*/, int /*x2*/, 
 
   end += 30; // add 30 days to draw last month
 
-  p->setPen( QPen(QColor(black)) );
+  p->setPen( QPen(QColor(Qt::black)) );
 
   for(int i=0; i<=end; i++, t = t.addDays(1) ) {
 
-    tmp = itemstart.secsTo(t)/60;
+    tmp = itemstart.secsTo( QDateTime( t ) )/60;
     a = screenX( tmp );
 
     if(t.dayOfWeek() == 1) {
@@ -737,7 +744,7 @@ xQGanttBarViewPort::setMode(int mode)
 
   default:
 
-    setCursor(arrowCursor);
+    setCursor(Qt::arrowCursor);
     setMouseTracking(false);
     break;
 
@@ -754,7 +761,7 @@ xQGanttBarViewPort::setSelect()
 ////////////////////////////////
 {
   _mode = Select;
-  setCursor(arrowCursor);
+  setCursor(Qt::arrowCursor);
   setMouseTracking(true);
 }
 
@@ -776,7 +783,7 @@ xQGanttBarViewPort::setMove()
 //////////////////////////////
 {
   _mode = Move;
-  setCursor( sizeAllCursor );
+  setCursor( Qt::sizeAllCursor );
   setMouseTracking(false);
 }
 
@@ -910,7 +917,7 @@ xQGanttBarViewPort::addHoliday(int y, int m, int d)
 xQGanttBarViewPort::Position 
 xQGanttBarViewPort::check(KGanttItem** founditem, int x, int y)
 {
-  QPtrDictIterator<xQTaskPosition> it(_gItemList); 
+  Q3PtrDictIterator<xQTaskPosition> it(_gItemList); 
 
   static int ty, ty2, tx, tx2, hx, hx2, hy, hy2;
   bool increased;
@@ -1006,7 +1013,7 @@ xQGanttBarViewPort::deleteSelectedItems()
   printf("-> xQGanttBarViewPort::deleteSelectedItems()\n");
 #endif
 
-  QPtrList<KGanttItem> list;
+  Q3PtrList<KGanttItem> list;
   observeList(&list);
   
   getSelectedItems(_toplevelitem,list);
@@ -1036,7 +1043,7 @@ xQGanttBarViewPort::deleteSelectedItems()
 
 
 void
-xQGanttBarViewPort::observeList(QPtrList<KGanttItem> *list)
+xQGanttBarViewPort::observeList(Q3PtrList<KGanttItem> *list)
 {
   _observedList = list;
 }
@@ -1053,7 +1060,7 @@ xQGanttBarViewPort::itemDestroyed(KGanttItem* item)
 
 void
 xQGanttBarViewPort::getSelectedItems (KGanttItem* item, 
-				      QPtrList<KGanttItem>& list)
+				      Q3PtrList<KGanttItem>& list)
 {
   if(item->isSelected()) list.append(item);
 
@@ -1071,7 +1078,7 @@ xQGanttBarViewPort::getSelectedItems (KGanttItem* item,
 void 
 xQGanttBarViewPort::insertIntoSelectedItem()
 {
-  QPtrList<KGanttItem> list;
+  Q3PtrList<KGanttItem> list;
 
   getSelectedItems(_toplevelitem,list);
 

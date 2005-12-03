@@ -8,16 +8,19 @@
 #include "xQGanttListView.h"
 
 #include <qcolor.h>
+//Added by qt3to4:
+#include <Q3Frame>
+#include <QPaintEvent>
 #include <klocale.h>
 
 xQGanttListView::xQGanttListView(KGanttItem* toplevelitem, QWidget* parent, 
-				 const char * name, WFlags f)
-  : QScrollView(parent,name,f)
+				 const char * name, Qt::WFlags f)
+  : Q3ScrollView(parent,name,f)
 /////////////////////////////////////////////////////////
 { 
   _toplevelitem = toplevelitem;
 
-  setFrameStyle(QFrame::Sunken);
+  setFrameStyle(Q3Frame::Sunken);
   setLineWidth(1);
 
   _headerBackBrush = QBrush(QColor(230,230,230));
@@ -29,7 +32,7 @@ xQGanttListView::xQGanttListView(KGanttItem* toplevelitem, QWidget* parent,
   _viewport = new xQGanttListViewPort(toplevelitem,viewport());
   addChild(_viewport);
  
-  viewport()->setBackgroundColor(QColor(white));
+  viewport()->setBackgroundColor(QColor(Qt::white));
 
 }
 
@@ -48,7 +51,7 @@ xQGanttListView::drawHeader()
   // printf("xQGanttListView::drawHeader()\n");
 
   QPainter p(this);
-  p.setPen( QPen(QColor(black)) );
+  p.setPen( QPen(QColor(Qt::black)) );
   p.fillRect(0,0,width(),TOPMARGIN, _headerBackBrush );
 
   p.drawText(5, (int)(0.8 * TOPMARGIN), i18n("Items"));

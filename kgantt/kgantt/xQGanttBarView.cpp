@@ -8,19 +8,22 @@
 
 #include "xQGanttBarView.h"
 #include "KGanttBarConfig.h"
+//Added by qt3to4:
+#include <Q3Frame>
+#include <QPaintEvent>
 
 
 
 xQGanttBarView::xQGanttBarView(KGanttItem* toplevelitem,
 			       QWidget* parent, 
-			       const char * name, WFlags f)
-  : QScrollView(parent,name,f)
+			       const char * name, Qt::WFlags f)
+  : Q3ScrollView(parent,name,f)
 {     
   _config = NULL;
 
   _toplevelitem = toplevelitem;
 
-  setFrameStyle(QFrame::Sunken);
+  setFrameStyle(Q3Frame::Sunken);
   setLineWidth(1);
 
   _headerBackBrush = QBrush(QColor(250,250,250));
@@ -67,7 +70,7 @@ void
 xQGanttBarView::drawHeader()
 ////////////////////////////////
 {
-  static QPen _dotPen( QColor(35,35,35), 0, DotLine);
+  static QPen _dotPen( QColor(35,35,35), 0, Qt::DotLine);
   static QPen _normalPen(QColor(0,0,0));
   static QPen _redPen(QColor(254,0,0));
   static QPen _greyPen(QColor(150,150,150));
@@ -100,7 +103,7 @@ xQGanttBarView::drawHeader()
 
   QDate t = startDate.addDays(-startDate.dayOfWeek()+1);    
    
-  tmp = _toplevelitem->getStart().secsTo(t)/60;
+  tmp = _toplevelitem->getStart().secsTo( QDateTime( t ) )/60;
   a = _viewport->screenX(tmp) - contentsX();
   
   p.fillRect(a, top, (int) (5. * dayWidth), height, QBrush(QColor(240,240,240))); 
@@ -110,7 +113,7 @@ xQGanttBarView::drawHeader()
 
   t = startDate.addDays(-startDate.day()+1);    
    
-  tmp = _toplevelitem->getStart().secsTo(t)/60;
+  tmp = _toplevelitem->getStart().secsTo( QDateTime( t ) )/60;
   a = _viewport->screenX(tmp) - contentsX();
 
   e = t.daysInMonth();
@@ -124,7 +127,7 @@ xQGanttBarView::drawHeader()
 
   //  draw snapgrid for first month
 
-  tmp = _toplevelitem->getStart().secsTo(startDate)/60;
+  tmp = _toplevelitem->getStart().secsTo( QDateTime( startDate ) )/60;
   a = _viewport->screenX(tmp) - contentsX()+1;
   double dx = (double) 
     ((_viewport->screenX(_viewport->_snapgrid*1000) - _viewport->screenX(0))/1000.);
@@ -143,10 +146,10 @@ xQGanttBarView::drawHeader()
 
   for(int i=0; i<end; i++, t = t.addDays(1) ) {          
 
-    tmp = _toplevelitem->getStart().secsTo(t)/60;
+    tmp = _toplevelitem->getStart().secsTo( QDateTime( t ) )/60;
     a = _viewport->screenX(tmp) - contentsX();
    
-    p.setPen( QPen(QColor(black)) );
+    p.setPen( QPen(QColor(Qt::black)) );
 
     if(t.dayOfWeek() == 1) {
 	
@@ -164,7 +167,7 @@ xQGanttBarView::drawHeader()
 
       QString str = t.shortDayName(t.dayOfWeek()) + " " + QString::number(t.day());
       QRect rect = p.boundingRect(a+5, (int)(0.8 * height), 
-				  (int) dayWidth, height, AlignLeft, str );
+				  (int) dayWidth, height, Qt::AlignLeft, str );
 
       if(t.dayOfWeek() > 5)
 	p.fillRect(rect.x(), rect.y(), rect.width(), -rect.height(), _headerBackBrush );

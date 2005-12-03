@@ -46,7 +46,7 @@ KGanttItem::init(KGanttItem* parentItem, const QString& text,
 
   _brush   = QBrush(QColor(140,140,255));
   _pen     = QPen(QColor(100,100,100));
-  _textPen = QPen(QColor(black));
+  _textPen = QPen(QColor(Qt::black));
 
   _height = 24;
 

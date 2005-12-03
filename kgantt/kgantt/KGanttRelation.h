@@ -31,7 +31,7 @@
 #include <qobject.h>
 #include <qdatetime.h> 
 #include <qtextstream.h> 
-#include <qptrlist.h> 
+#include <q3ptrlist.h> 
 #include <qpainter.h>
 
 

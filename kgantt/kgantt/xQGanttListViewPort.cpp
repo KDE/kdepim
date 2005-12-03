@@ -8,18 +8,20 @@
 #include "xQGanttListViewPort.h"
 
 #include <qcolor.h>
+//Added by qt3to4:
+#include <Q3Frame>
 
 
 int xQGanttListViewPort::_ListViewCounter = 0;
 
 
 xQGanttListViewPort::xQGanttListViewPort(KGanttItem* toplevelitem, QWidget* parent,
-					 const char * name, WFlags f )
-  : QFrame(parent,name,f)
+					 const char * name, Qt::WFlags f )
+  : Q3Frame(parent,name,f)
 {
   _toplevelitem = toplevelitem;
 
-  setBackgroundColor(QColor(white));
+  setBackgroundColor(QColor(Qt::white));
 
   _barviewport = NULL;
 
@@ -118,7 +120,7 @@ xQGanttListViewPort::drawItem(KGanttItem* item, QPainter* p, const QRect& rect,
       ((tpos->_screenY + tpos->_screenH)+5 >= rect.y() &&
        (tpos->_screenY + tpos->_screenH)-5 <= rect.y() + rect.height() ) ) {
 
-    p->setPen(QPen(QColor(black)));
+    p->setPen(QPen(QColor(Qt::black)));
     
     int y = tpos->_screenY;
     int h = tpos->_screenH;
@@ -149,7 +151,7 @@ xQGanttListViewPort::drawItem(KGanttItem* item, QPainter* p, const QRect& rect,
       
     }
     
-    p->setPen(QPen(QColor(blue),2));
+    p->setPen(QPen(QColor(Qt::blue),2));
     p->drawLine(offsetX + 3,  tpos->_textPosY + 3, 
 		offsetX + 3,  tpos->_screenY + tpos->_screenHS - 3);
 

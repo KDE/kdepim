@@ -33,7 +33,9 @@
 #define TOPMARGIN 45
 
 
-#include <qscrollview.h>
+#include <q3scrollview.h>
+//Added by qt3to4:
+#include <QPaintEvent>
 
 #include "xQGanttBarViewPort.h"
 
@@ -47,7 +49,7 @@ class KGanttBarConfig;
  */
 
 //////////////////////////////////////////
-class xQGanttBarView : public QScrollView
+class xQGanttBarView : public Q3ScrollView
 //////////////////////////////////////////
 {
 
@@ -62,7 +64,7 @@ public:
    *
    */
   xQGanttBarView(KGanttItem* toplevelitem, QWidget* parent = 0,  
-		 const char * name=0, WFlags f=0 );
+		 const char * name=0, Qt::WFlags f=0 );
 
 
   ///  Destructor.

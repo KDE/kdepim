@@ -35,7 +35,7 @@
 #include <qobject.h>
 #include <qdatetime.h> 
 #include <qtextstream.h> 
-#include <qptrlist.h> 
+#include <q3ptrlist.h> 
 #include <qpainter.h>
 
 #include <kdepimmacros.h>
@@ -417,7 +417,7 @@ public:
   /*!
    *
    */
-  QPtrList<KGanttItem>& getSubItems() {
+  Q3PtrList<KGanttItem>& getSubItems() {
     return _subitems;
   }
 
@@ -427,7 +427,7 @@ public:
   /*!
    *
    */
-  QPtrList<KGanttRelation>& getRelations() {
+  Q3PtrList<KGanttRelation>& getRelations() {
     return _relations;
   }
 
@@ -526,8 +526,8 @@ private:
 
 
   KGanttItem*            _parentItem;
-  QPtrList<KGanttItem>      _subitems;  
-  QPtrList<KGanttRelation>  _relations;
+  Q3PtrList<KGanttItem>      _subitems;  
+  Q3PtrList<KGanttRelation>  _relations;
 
 
   // start/end date. 

@@ -36,6 +36,9 @@
 
 #include <qwidget.h>
 #include <qsplitter.h> 
+//Added by qt3to4:
+#include <QResizeEvent>
+#include <Q3PtrList>
 
 #include <kmenu.h>
 #include <kdepimmacros.h>
@@ -102,7 +105,7 @@ public:
    *
    */
   KGantt(KGanttItem* toplevelitem = 0,
-	 QWidget* parent = 0, const char * name=0, WFlags f=0 );
+	 QWidget* parent = 0, const char * name=0, Qt::WFlags f=0 );
 
 
   ///  Destructor.
@@ -199,7 +202,7 @@ public:
    *   you want to access the pointer to a already created toolbar you
    *   can invoke this method without any parameter.
    */
-  KToolBar* toolbar(QMainWindow* mw = 0) {
+  KToolBar* toolbar(Q3MainWindow* mw = 0) {
     return _ganttbar->viewport()->toolbar(mw);
   }
 
@@ -217,7 +220,7 @@ public:
   /*!
    *   All selected KGanttItems will be added to the passed list. 
    */
-  void getSelectedItems(QPtrList<KGanttItem>& list) {
+  void getSelectedItems(Q3PtrList<KGanttItem>& list) {
     _ganttbar->viewport()->getSelectedItems(list);
   }
 

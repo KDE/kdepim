@@ -35,6 +35,11 @@
 
 
 #include <qcursor.h>
+//Added by qt3to4:
+#include <QMouseEvent>
+#include <Q3Frame>
+#include <Q3PopupMenu>
+#include <QPaintEvent>
 
 
 
@@ -44,7 +49,7 @@
  */
 
 ////////////////////////////////////////////
-class xQGanttListViewPort : public QFrame
+class xQGanttListViewPort : public Q3Frame
 ////////////////////////////////////////////
 {
 
@@ -61,7 +66,7 @@ public:
    *
    */
   xQGanttListViewPort(KGanttItem* toplevelitem, QWidget* parent = 0,
-		     const char * name=0, WFlags f=0 );
+		     const char * name=0, Qt::WFlags f=0 );
 
 
 
@@ -109,11 +114,11 @@ protected:
 	   e->rect().right(), e->rect().bottom() );
   }
 
-  QPopupMenu* _menu;
+  Q3PopupMenu* _menu;
 
   void mousePressEvent(QMouseEvent* e) {
 
-    if(e->button() == RightButton && e->state() == ControlButton ) {
+    if(e->button() == Qt::RightButton && e->state() == Qt::ControlModifier ) {
       _menu->popup(e->globalPos());
       return;
     }

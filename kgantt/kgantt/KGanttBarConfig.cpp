@@ -14,7 +14,7 @@
 
 KGanttBarConfig::KGanttBarConfig(xQGanttBarView* barview,
 				 QWidget* parent,  
-				 const char * name, WFlags f)
+				 const char * name, Qt::WFlags f)
   : QWidget(parent,name,f) 
 {
   _barview = barview;
