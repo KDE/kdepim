@@ -151,7 +151,7 @@ xQGanttBarViewPort::mousePressEvent(QMouseEvent* e)
 
   
     
-  } // if(e->button() == LeftButton && _mode == Select)
+  } // if(e->button() == Qt::LeftButton && _mode == Select)
   
 }
 

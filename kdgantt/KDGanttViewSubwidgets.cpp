@@ -4217,7 +4217,7 @@ void KDGanttCanvasView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
             }
             break;
             /*
-              case RightButton:
+              case Qt::RightButton:
               switch (getType(*it)) {
               case Type_is_KDGanttViewItem:
               mySignalSender->itemRightClicked(getItem(*it));
@@ -4229,7 +4229,7 @@ void KDGanttCanvasView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
               break;
               }
               break;
-              case MidButton:
+              case Qt::MidButton:
               switch (getType(*it)) {
               case Type_is_KDGanttViewItem:
               mySignalSender->itemMidClicked(getItem(*it));

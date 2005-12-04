@@ -95,7 +95,7 @@ void KDGanttSplitterHandle::setOrientation( Qt::Orientation o )
 void KDGanttSplitterHandle::mouseMoveEvent( QMouseEvent *e )
 {
     updateCursor( e->pos() );
-    if ( !(e->state()&LeftButton) )
+    if ( !(e->state()&Qt::LeftButton) )
 	return;
 
     if ( _activeButton != 0)
@@ -115,7 +115,7 @@ void KDGanttSplitterHandle::mouseMoveEvent( QMouseEvent *e )
 
 void KDGanttSplitterHandle::mousePressEvent( QMouseEvent *e )
 {
-    if ( e->button() == LeftButton ) {
+    if ( e->button() == Qt::LeftButton ) {
         _activeButton = onButton( e->pos() );
         mouseOffset = s->pick(e->pos());
         if ( _activeButton != 0)
@@ -169,7 +169,7 @@ void KDGanttSplitterHandle::mouseReleaseEvent( QMouseEvent *e )
         updateCursor( e->pos() );
     }
     else {
-        if ( !opaque() && e->button() == LeftButton ) {
+        if ( !opaque() && e->button() == Qt::LeftButton ) {
             QCOORD pos = s->pick(parentWidget()->mapFromGlobal(e->globalPos()))
                 - mouseOffset;
             s->setRubberband( -1 );
