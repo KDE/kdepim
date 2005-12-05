@@ -259,9 +259,8 @@ void KAddressBookTableView::refresh( const QString &uid )
   } else {
     // Only need to update on entry. Iterate through and try to find it
     ContactListViewItem *ceItem;
-    Q3PtrList<Q3ListViewItem> selectedItems( mListView->selectedItems() );
-    Q3ListViewItem *it;
-    for ( it = selectedItems.first(); it; it = selectedItems.next() ) {
+    QList<Q3ListViewItem*> selectedItems( mListView->selectedItems() );
+    Q_FOREACH( Q3ListViewItem *it, selectedItems ) {
       ceItem = dynamic_cast<ContactListViewItem*>( it );
       if ( ceItem && ceItem->addressee().uid() == uid ) {
         ceItem->refresh();
