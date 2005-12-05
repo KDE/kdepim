@@ -127,21 +127,18 @@ void KornSubjectsDlg::loadMessages()
 
 void KornSubjectsDlg::listSelectionChanged()
 {
-	Q3PtrList< Q3ListViewItem > list( _list->selectedItems() );
+	QList< Q3ListViewItem* > list( _list->selectedItems() );
 	
 	if (!_mailDrop)
 		return;
 	int selected = list.count();
 	bool enableDelete = selected > 0;
 
-	if(enableDelete)
-	{
-		KornSubjectsDlg::SubjectListViewItem* current = (SubjectListViewItem*)list.first();
-		KMailDrop *drop = current->getMailSubject()->getMailDrop();
-		enableDelete = drop->canDeleteMails();
-
-		while( enableDelete &&  ( current = (SubjectListViewItem*)list.next() ) )
-			enableDelete = current->getMailSubject()->getMailDrop()->canDeleteMails();
+	Q_FOREACH( Q3ListViewItem *it, list ) {
+		if ( ! enableDelete )
+			break;
+		KornSubjectsDlg::SubjectListViewItem* current = (SubjectListViewItem*)it;
+		enableDelete = current->getMailSubject()->getMailDrop()->canDeleteMails();
 	}
 
 	// eneable the show button if one is selected
@@ -186,7 +183,7 @@ void KornSubjectsDlg::showMessage()
 		return;
 	
 	// get selcted item
-	Q3PtrList<Q3ListViewItem> messages = _list->selectedItems();
+	QList<Q3ListViewItem*> messages = _list->selectedItems();
 	Q3ListViewItem * item = messages.first();
 	
 	// and show it
@@ -457,9 +454,9 @@ void KornSubjectsDlg::deleteDeleteStruct()
 void KornSubjectsDlg::fillDeleteMessageList()
 {
 	Q3ListViewItem *current;
-	Q3PtrList< Q3ListViewItem > list( _list->selectedItems() );
+	QList< Q3ListViewItem* > list( _list->selectedItems() );
 	
-	for( current = list.first(); current; current = list.next() )
+	Q_FOREACH( current, list )
 	{
 		KornMailSubject *item = ( ( KornSubjectsDlg::SubjectListViewItem * ) current )->getMailSubject();
 		_delete->messages->append( item );
