@@ -414,7 +414,7 @@ void kio_sieveProtocol::disconnect(bool forcibly)
 void kio_sieveProtocol::special(const QByteArray &data)
 {
 	int tmp;
-	QDataStream stream( const_cast<QByteArray*>( &data ), QIODevice::ReadOnly);
+	QDataStream stream( data );
 	KURL url;
 
 	stream >> tmp;
