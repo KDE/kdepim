@@ -17,7 +17,7 @@
 /** 
  * Portions adapted from the SMTP ioslave.
  * Copyright (c) 2000, 2001 Alex Zepeda <jazepeda@pacbell.net>
- * Copyright (c) 2001 Michael Häckel <Michael@Haeckel.Net>
+ * Copyright (c) 2001 Michael Hï¿½kel <Michael@Haeckel.Net>
  * All rights reserved.
  *
  * Policy: the function where the error occurs calls error(). A result of
@@ -208,13 +208,13 @@ void kio_sieveProtocol::setHost (const QString &host, int port, const QString &u
 {
 	if ( isConnectionValid() &&
 			( m_sServer != host ||
-				m_iPort != port ||
+				m_port != QString::number( port ) ||
 				m_sUser != user ||
 				m_sPass != pass ) ) {
 		disconnect();
 	}
 	m_sServer = host;
-	m_iPort = port ? port : m_iDefaultPort;
+	m_port = QString::number( port ? port : m_iDefaultPort );
 	m_sUser = user;
 	m_sPass = pass;
 	m_supportsTLS = false;
@@ -242,14 +242,14 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
 		ksDebug() << "Looping receive" << endl;
 		
 		if (r.getType() == kio_sieveResponse::ACTION) {
-			if ( r.getAction().contains("ok", false) != -1 ) {
+			if ( r.getAction().toLower().contains("ok") ) {
 				ksDebug() << "Sieve server ready & awaiting authentication." << endl;
 				break;
 			} else
 				ksDebug() << "Unknown action " << r.getAction() << "." << endl;
 
 		} else if (r.getKey() == "IMPLEMENTATION") {
-			if (r.getVal().contains("sieve", false) != -1) {
+			if (r.getVal().toLower().contains("sieve") ) {
 				ksDebug() << "Connected to Sieve server: " << r.getVal() << endl;
 				ret = true;
 				setMetaData("implementation", r.getVal());
@@ -337,7 +337,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 	
 	setBlockConnection(true);
 
-	if (!connectToHost(m_sServer, m_iPort, true)) {
+	if (!connectToHost(m_sServer, m_port, true)) {
 		return false;
 	}
 
@@ -414,7 +414,7 @@ void kio_sieveProtocol::disconnect(bool forcibly)
 void kio_sieveProtocol::special(const QByteArray &data)
 {
 	int tmp;
-	QDataStream stream(data, QIODevice::ReadOnly);
+	QDataStream stream( const_cast<QByteArray*>( &data ), QIODevice::ReadOnly);
 	KURL url;
 
 	stream >> tmp;
@@ -613,7 +613,7 @@ void kio_sieveProtocol::put(const KURL& url, int /*permissions*/, bool /*overwri
 			// send the extra message off for re-processing
 			receiveData(false, &extra);
 
-			if (r.getAction() == kio_sieveResponse::QUANTITY) {
+			if (r.getType() == kio_sieveResponse::QUANTITY) {
 				// length of the error message
 				uint len = r.getQuantity();
 
@@ -624,7 +624,7 @@ void kio_sieveProtocol::put(const KURL& url, int /*permissions*/, bool /*overwri
 				error(ERR_INTERNAL_SERVER,
 						i18n("The script did not upload successfully.\n"
 							"This is probably due to errors in the script.\n"
-							"The server responded:\n%1").arg(errmsg));
+							"The server responded:\n%1").arg( QString::fromLatin1( errmsg ) ));
 
 				// clear the rest of the incoming data
 				receiveData();
@@ -816,7 +816,7 @@ void kio_sieveProtocol::stat(const KURL& url)
 
 		while(receiveData()) {
 			if (r.getType() == kio_sieveResponse::ACTION) {
-				if (r.getAction().contains("OK", false) == 1) 
+				if (r.getAction().toLower().count("ok") == 1)
 					// Script list completed
 					break;
 
@@ -833,7 +833,7 @@ void kio_sieveProtocol::stat(const KURL& url)
 					else
 						entry.insert(KIO::UDS_ACCESS,0600);
 
-					entry.insert(KIO::UDS_MIME_TYPE,"application/sieve");
+					entry.insert( KIO::UDS_MIME_TYPE, QString::fromLatin1( "application/sieve" ) );
 
 					//setMetaData("active", (r.getExtra() == "ACTIVE") ? "yes" : "no");
 
@@ -860,7 +860,7 @@ void kio_sieveProtocol::listDir(const KURL& url)
 
 	while(receiveData()) {
 		if (r.getType() == kio_sieveResponse::ACTION) {
-			if (r.getAction().contains("OK", false) == 1)
+			if (r.getAction().toLower().count("ok") == 1)
 				// Script list completed.
 				break;
 
@@ -870,13 +870,12 @@ void kio_sieveProtocol::listDir(const KURL& url)
 
 			entry.insert(KIO::UDS_FILE_TYPE,S_IFREG);
 
-			atom.m_uds = KIO::UDS_ACCESS;
 			if ( r.getExtra() == "ACTIVE" )
 				entry.insert(KIO::UDS_ACCESS, 0700);// mark exec'able
 			else
 				entry.insert(KIO::UDS_ACCESS,0600);
 
-			entry.insert(KIO::UDS_MIME_TYPE, "application/sieve");
+			entry.insert( KIO::UDS_MIME_TYPE, QString::fromLatin1( "application/sieve" ) );
 
 			//asetMetaData("active", (r.getExtra() == "ACTIVE") ? "true" : "false");
 
@@ -958,7 +957,7 @@ bool kio_sieveProtocol::authenticate()
 	AuthInfo ai;
 	ai.url.setProtocol("sieve");
 	ai.url.setHost(m_sServer);
-	ai.url.setPort(m_iPort);
+	ai.url.setPort( m_port.toInt() );
 	ai.username = m_sUser;
 	ai.password = m_sPass;
 	ai.keepPassword = true;
@@ -1091,7 +1090,8 @@ bool kio_sieveProtocol::authenticate()
 		return true;
 	} else {
 		// Authentication failed.
-		error(ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server responded:\n%1").arg( r.getAction() ) );
+		error(ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server responded:\n%1")
+				.arg( QString::fromLatin1( r.getAction() ) ) );
 		return false;
 	}
 }
