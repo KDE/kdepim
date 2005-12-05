@@ -295,8 +295,11 @@ bool FilterPMail::parseFolderMatrix()
         return false;
     } else {
         QStringList tmpList;
-        QString tmpRead;
-        while ( !hierarch.atEnd() &&  hierarch.readLine(tmpRead,100)) {
+        QByteArray tmpRead;
+        while ( !hierarch.atEnd() ) {
+            tmpRead = hierarch.readLine();
+            if ( tmpRead.isEmpty() )
+                break;
             QString tmpArray[5];
             tmpRead.remove(tmpRead.length() -2,2);
             QStringList tmpList = QStringList::split(",", tmpRead, false);

@@ -203,7 +203,7 @@ bool Filter::endImport()
     if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
     KToolInvocation::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
 
-    DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call(  "dcopAddMessage", QString::null, QString::null);
+    DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call(  "dcopAddMessage", QString(), QString() );
     if ( !reply.isValid() ) return false;
 
     reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopResetAddMessage" );
