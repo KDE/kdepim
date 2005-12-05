@@ -29,7 +29,7 @@ libkmail_bodypartformatter_text_calendar_la_LIBADD  = $(LIB_QT) $(LIB_KABC) \
 
 libkmail_bodypartformatter_text_xdiff_la_SOURCES = text_xdiff.cpp
 libkmail_bodypartformatter_text_xdiff_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
-libkmail_bodypartformatter_text_xdiff_la_LIBADD  = $(LIB_QT)
+libkmail_bodypartformatter_text_xdiff_la_LIBADD  = $(LIB_QT) $(LIB_QT3SUPPORT)
 
 
 linkdir = $(kde_datadir)/kmail/plugins/bodypartformatter
