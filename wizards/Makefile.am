@@ -10,7 +10,7 @@ INCLUDES = -I$(top_srcdir)/libkpimidentities -I$(top_srcdir)/libkcal \
            $(all_includes)
 
 bin_PROGRAMS = groupwarewizard egroupwarewizard sloxwizard kolabwizard \
-               groupwisewizard
+#               groupwisewizard
 
 kde_module_LTLIBRARIES = libegroupwarewizard.la libsloxwizard.la \
                          libkolabwizard.la libgroupwisewizard.la
@@ -63,20 +63,20 @@ sloxwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 sloxwizard_SOURCES = sloxmain.cpp
 
 # GroupWise
-libgroupwisewizard_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
-libgroupwisewizard_la_SOURCES = groupwisewizard.cpp groupwiseconfig.kcfgc \
-  kmailchanges.cpp
-libgroupwisewizard_la_LIBADD = $(top_builddir)/kresources/groupwise/libkcal_groupwise.la \
-                          $(top_builddir)/kresources/groupwise/libkabc_groupwise.la \
-                          $(top_builddir)/libkdepim/libkdepim.la \
-                          $(top_builddir)/libkpimidentities/libkpimidentities.la
-libgroupwisewizard_la_COMPILE_FIRST = $(top_builddir)/kresources/groupwise/kabc_groupwiseprefs.h \
-                                      $(top_builddir)/kresources/groupwise/kcal_groupwiseprefsbase.h
+#libgroupwisewizard_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
+#libgroupwisewizard_la_SOURCES = groupwisewizard.cpp groupwiseconfig.kcfgc \
+#  kmailchanges.cpp
+#libgroupwisewizard_la_LIBADD = $(top_builddir)/kresources/groupwise/libkcal_groupwise.la \
+#                          $(top_builddir)/kresources/groupwise/libkabc_groupwise.la \
+#                          $(top_builddir)/libkdepim/libkdepim.la \
+#                          $(top_builddir)/libkpimidentities/libkpimidentities.la
+#libgroupwisewizard_la_COMPILE_FIRST = $(top_builddir)/kresources/groupwise/kabc_groupwiseprefs.h \
+#                                      $(top_builddir)/kresources/groupwise/kcal_groupwiseprefsbase.h
 
 
-groupwisewizard_LDADD = libgroupwisewizard.la
-groupwisewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-groupwisewizard_SOURCES = groupwisemain.cpp
+#groupwisewizard_LDADD = libgroupwisewizard.la
+#groupwisewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+#groupwisewizard_SOURCES = groupwisemain.cpp
 
 noinst_HEADERS = egroupwarewizard.h kmailchanges.h kolabwizard.h sloxwizard.h \
                  groupwisewizard.h

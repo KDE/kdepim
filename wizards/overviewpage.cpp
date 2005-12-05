@@ -117,8 +117,9 @@ void OverViewPage::showWizardSlox()
 
 void OverViewPage::showWizardGroupwise()
 {
-  GroupwiseWizard wizard;
-  wizard.exec();
+#warning Re-enable me as soon as we have the new GroupWise resource!
+//  GroupwiseWizard wizard;
+//  wizard.exec();
 }
 
 #include "overviewpage.moc"
