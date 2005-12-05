@@ -76,6 +76,9 @@ class KDE_EXPORT ResourceGroupwareBase : public ResourceCached
     bool addTodo( Todo *todo );
     bool addJournal( Journal *journal );
 
+  signals:
+    void leaveModality();
+
   protected:
     void init();
     

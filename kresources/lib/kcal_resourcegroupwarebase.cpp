@@ -211,16 +211,14 @@ bool ResourceGroupwareBase::doOpen()
 //     Copyright (C) 1998 Matthias Ettrich (ettrich@kde.org)
 //     Copyright (C) 1999 David Faure (faure@kde.org)
 // If a troll sees this, he kills me
-void qt_enter_modal( QWidget *widget );
-void qt_leave_modal( QWidget *widget );
+//
+// It's no longer a hack but still taken from KIO::NetAccess
 
 void ResourceGroupwareBase::enter_loop()
 {
-  QWidget dummy(0,0,Qt::WType_Dialog | Qt::WShowModal);
-  dummy.setFocusPolicy( Qt::NoFocus );
-  qt_enter_modal(&dummy);
-  qApp->enter_loop();
-  qt_leave_modal(&dummy);
+  QEventLoop eventLoop;
+  connect( this, SIGNAL( leaveModality() ), &eventLoop, SLOT( quit() ) );
+  eventLoop.exec( QEventLoop::ExcludeUserInputEvents );
 }
 // END:COPIED
 
@@ -228,7 +226,7 @@ void ResourceGroupwareBase::slotLoginJobResult( KIO::Job *job )
 {
   if ( !adaptor() ) return;
   mLoginFinished = adaptor()->interpretLoginJobResult( job );
-  qApp->exit_loop();
+  emit leaveModality();
 }
 
 void ResourceGroupwareBase::doClose()
@@ -251,7 +249,7 @@ void ResourceGroupwareBase::slotLogoffJobResult( KIO::Job *job )
   if ( !adaptor() ) return;
   adaptor()->interpretLogoffJobResult( job );
   // TODO: Do we really need to block while waiting for the job to return?
-  qApp->exit_loop();
+  emit leaveModality();
 }
 
 bool ResourceGroupwareBase::doLoad()
