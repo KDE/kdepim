@@ -3,7 +3,7 @@
      + Change license to GPL+QT exception
      + Search for other TODOs
      END TODO -->
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN"
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
 "dtd/kdex.dtd" [
 
   <!ENTITY konsolekalendar "<application>KonsoleKalendar</application>">
