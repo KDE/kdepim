@@ -342,7 +342,7 @@ public:
 
   ///  Get date of starting.
   /*!
-   *   If mode == ´Rubberband´ and this item contains
+   *   If mode == 'RubberbandÂ´ and this item contains
    *   subitems, start of the item is determined by the start of the
    *   earliest subitem. <br>
    */

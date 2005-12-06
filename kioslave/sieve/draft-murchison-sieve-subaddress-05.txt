@@ -351,7 +351,7 @@ Appendix A.  References
          Requirement Levels", Harvard University, RFC 2119, March 1997.
 
 
-     [SIEVE] Showalter, T., "Sieve: A Mail Filtering Language", Mira¡
+     [SIEVE] Showalter, T., "Sieve: A Mail Filtering Language", MiraÂ¡
          point, Inc., RFC 3028, January 2001.
 
 

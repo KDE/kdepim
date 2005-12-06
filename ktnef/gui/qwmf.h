@@ -39,11 +39,11 @@ struct WmfPlaceableHeader;
 /**
  * QWinMetaFile is a WMF viewer based on QT toolkit
  * How to use QWinMetaFile :
- * #include "qwmf.h"
+ * #include "qwmf.h"
  * QWinMetaFile wmf;
  * QPicture pic;     // or QImage pic;
  * if ( wmf.load( filename )
- *    wmf.paint( &pic );
+ *    wmf.paint( &pic );
  */
 
 

@@ -192,8 +192,8 @@ as a bookmark), and the fifth field means that all further hits after the
 25th will be ignored, too.
 
 8) In law texts, I use a regular expression
-+,\n *(ง\.? *\d+[a-z]?\.?) +, 1
-to search for all paragraphs starting like "ง. 15. " or "  ง23 ", and set
-a bookmark there using only the part from the ง to the last digit or the 
++,\n *(ยง\.? *\d+[a-z]?\.?) +, 1
+to search for all paragraphs starting like "ยง. 15. " or "  ยง23 ", and set
+a bookmark there using only the part from the ยง to the last digit or the 
 full stop after the last digit (the pattern between the (), in our two 
-cases the bookmark names will be "ง. 15." and "ง23" ).
+cases the bookmark names will be "ยง. 15." and "ยง23" ).

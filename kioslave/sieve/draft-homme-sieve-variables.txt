@@ -27,7 +27,7 @@ Status of this Memo
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
-   time.  It is inappropriate to use Internet-Drafts as reference mate­
+   time.  It is inappropriate to use Internet-Drafts as reference mateÂ­
    rial or to cite them other than as "work in progress."
 
    The list of current Internet-Drafts can be accessed at
@@ -41,7 +41,7 @@ Status of this Memo
 
 Abstract
 
-   In advanced filtering rule sets, it is useful to keep state or con­
+   In advanced filtering rule sets, it is useful to keep state or conÂ­
    figuration details across rules.  This extension adds an action to
    store data in variables, an action to retrieve the current time,
    changes the interpolation of strings, and supplies a new test so that
@@ -75,7 +75,7 @@ Internet Draft        Sieve -- Variables Extension           17 Apr 2003
    This draft and the Sieve language itself are being discussed on the
    MTA Filters mailing list at <ietf-mta-filters@imc.org>.  Subscription
    requests can be sent to <ietf-mta-filters-request@imc.org> (send an
-   email message with the word "subscribe" in the body).  More informa­
+   email message with the word "subscribe" in the body).  More informaÂ­
    tion on the mailing list along with a WWW archive of back messages is
    available at <http://www.imc.org/ietf-mta-filters/>.
 
@@ -95,10 +95,10 @@ c)   added a section on implementation limits.
 
 d)   clarified global scope so that it spans include.
 
-e)   clarified that this draft only affects scripts which require "vari­
+e)   clarified that this draft only affects scripts which require "variÂ­
      ables".
 
-f)   changed modifiers into being tagged arguments for SET, added prece­
+f)   changed modifiers into being tagged arguments for SET, added preceÂ­
      dence table.
 
 g)   added optional COMPARATOR to SET to solve the internationalisation
@@ -121,7 +121,7 @@ b)   this extension is particularily useful if fileinto creates new
      some implementations will create new folders automatically, others
      won't.
 
-c)   the NOTIFY draft has variables, too.  it would be nice if the syn­
+c)   the NOTIFY draft has variables, too.  it would be nice if the synÂ­
      tax for the two extensions agreed.  a changed NOTIFY can be used on
      its own without the variables extension, the user simply won't be
 
@@ -161,7 +161,7 @@ Internet Draft        Sieve -- Variables Extension           17 Apr 2003
 3.  Interpretation of strings
 
    This extension changes the semantics of quoted-string, multi-line-
-   literal and multi-line-dotstuff found in [SIEVE] to enable the inclu­
+   literal and multi-line-dotstuff found in [SIEVE] to enable the incluÂ­
    sion of the value of variables.  The syntax follows [ABNF].
 
       variable-ref        =  "${" variable-name "}"
@@ -215,7 +215,7 @@ Internet Draft        Sieve -- Variables Extension           17 Apr 2003
                                expansion of variable foo.
 
    If it is required to include a character sequence such as "${beep}"
-   verbatim in a text literal, the user can define a variable to circum­
+   verbatim in a text literal, the user can define a variable to circumÂ­
    vent expansion to the empty string.
 
    Example:
@@ -227,16 +227,16 @@ Internet Draft        Sieve -- Variables Extension           17 Apr 2003
 
    The decimal value of the numeric variable name will index the list of
    matching strings from the most recently evaluated match of type
-   ":matches" or ":regex".  The list is empty if the match was unsuc­
+   ":matches" or ":regex".  The list is empty if the match was unsucÂ­
    cessful.
 
    For ":matches", the list will contain one string for each wildcard in
    the match pattern.  Each string holds what the corresponding wildcard
-   expands to, possibly the empty string.  The wildcards expand greed­
+   expands to, possibly the empty string.  The wildcards expand greedÂ­
    ily.
 
    For ":regex", the list will contain the strings corresponding to the
-   group operators.  The groups are ordered by the position of the open­
+   group operators.  The groups are ordered by the position of the openÂ­
    ing parenthesis, from left to right.
 
    The first string in the list has index 1.  If the index is out of
@@ -358,7 +358,7 @@ Internet Draft        Sieve -- Variables Extension           17 Apr 2003
 
 4.1.1.1.  Modifier ":length"
 
-   The value is the decimal number of letters in the expansion, con­
+   The value is the decimal number of letters in the expansion, conÂ­
    verted to a string.
 
 
@@ -411,8 +411,8 @@ Internet Draft        Sieve -- Variables Extension           17 Apr 2003
 
    Syntax: setdate [ <time-zone: string> ]
 
-   The value of time-zone SHOULD be a well-known name, or an offset rel­
-   ative to UTC.  All implementations MUST support the time-offset syn­
+   The value of time-zone SHOULD be a well-known name, or an offset relÂ­
+   ative to UTC.  All implementations MUST support the time-offset synÂ­
    tax
 
            time-offset  =  ( "+" / "-" ) 4DIGIT
@@ -423,7 +423,7 @@ Internet Draft        Sieve -- Variables Extension           17 Apr 2003
      Note: There is currently no registry for time zones.  If IETF
      establishes one, its names SHOULD be used.  In the absence of
      such a registry, [TZ] is the most widespread collection of
-     time zone definitions and its use as a reference is RECOM­
+     time zone definitions and its use as a reference is RECOMÂ­
      MENDED.
 
    If the time-zone is left out or not recognised, the local time zone
@@ -479,9 +479,9 @@ Internet Draft        Sieve -- Variables Extension           17 Apr 2003
    the implementation supports MUST be treated as an error.
 
    Numeric variables ${1} through ${9} MUST be supported.  Referencing
-   higher indices than is supported is a syntax error which MUST be dis­
+   higher indices than is supported is a syntax error which MUST be disÂ­
    covered at compile-time.  If the string matching a wildcard or a
-   regex group operator exceeds the maximum variable size, the implemen­
+   regex group operator exceeds the maximum variable size, the implemenÂ­
    tation SHOULD truncate it and MUST NOT treat it as an error.
 
 
@@ -515,8 +515,8 @@ Internet Draft        Sieve -- Variables Extension           17 Apr 2003
 Appendix A.  References
 
 
-     [ABNF]     D. Crocker, Ed., "Augmented BNF for Syntax Specifica­
-                tions: ABNF", Internet Mail Consortium, RFC 2234, Novem­
+     [ABNF]     D. Crocker, Ed., "Augmented BNF for Syntax SpecificaÂ­
+                tions: ABNF", Internet Mail Consortium, RFC 2234, NovemÂ­
                 ber 1997
 
 
@@ -539,7 +539,7 @@ Internet Draft        Sieve -- Variables Extension           17 Apr 2003
                 Requirement Levels", Harvard University, RFC 2119, March
                 1997.
 
-     [SIEVE]    Showalter, T., "Sieve: A Mail Filtering Language", Mira­
+     [SIEVE]    Showalter, T., "Sieve: A Mail Filtering Language", MiraÂ­
                 point, RFC 3028, January 2001.
 
      [TZ]       Olson, A.D., et al, Time zone code and data,
@@ -556,10 +556,10 @@ Appendix B.  Full Copyright Statement
    or assist in its implementation may be prepared, copied, published
    and distributed, in whole or in part, without restriction of any
    kind, provided that the above copyright notice and this paragraph are
-   included on all such copies and derivative works.  However, this doc­
+   included on all such copies and derivative works.  However, this docÂ­
    ument itself may not be modified in any way, such as by removing the
    copyright notice or references to the Internet Society or other
-   Internet organizations, except as needed for the purpose of develop­
+   Internet organizations, except as needed for the purpose of developÂ­
    ing Internet standards in which case the procedures for copyrights
    defined in the Internet Standards process must be followed, or as
    required to translate it into languages other than English.
@@ -571,7 +571,7 @@ Appendix B.  Full Copyright Statement
    "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
    TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
    BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
-   HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MER­
+   HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERÂ­
    CHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
 
 

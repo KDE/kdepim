@@ -2,7 +2,7 @@
    $Id: KDGanttSizingControl.cpp,v 1.4 2005/10/11 11:44:04 lutz Exp $
 */
 /****************************************************************************
- ** Copyright (C)  2002-2004 Klar‰lvdalens Datakonsult AB.  All rights reserved.
+ ** Copyright (C)  2002-2004 Klar√§lvdalens Datakonsult AB.  All rights reserved.
  **
  ** This file is part of the KDGantt library.
  **

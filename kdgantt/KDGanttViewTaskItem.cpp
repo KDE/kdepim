@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
- ** Copyright (C)  2002-2004 Klarälvdalens Datakonsult AB.  All rights reserved.
+ ** Copyright (C)  2002-2004 KlarÃ¤lvdalens Datakonsult AB.  All rights reserved.
  **
  ** This file is part of the KDGantt library.
  **
@@ -51,7 +51,7 @@
   setColors( col, col, col )
   is important.
   If the start time is equal to the end time, the item is displayed as
-  ø, showing that there is no time interval set.
+  Ã¸, showing that there is no time interval set.
 
   For a KDGanttViewTaskItem, the text, setted by \a setText(),
   is shown in the item itself and the text is truncated automatically

@@ -1,6 +1,6 @@
 /*
     This file is part of KAddressBook.
-    Copyright (c) 2004 Klar‰lvdalens Datakonsult AB
+    Copyright (c) 2004 Klar√§lvdalens Datakonsult AB
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

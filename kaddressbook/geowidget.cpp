@@ -78,7 +78,7 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
   mLatitudeBox->setValue( 0 );
   mLatitudeBox->setDecimals( 6 );
   mLatitudeBox->setEnabled( false );
-  mLatitudeBox->setSuffix( "°" );
+  mLatitudeBox->setSuffix( QString::fromUtf8( "Â°" ) );
   topLayout->addWidget( mLatitudeBox, 1, 2 );
   label->setBuddy( mLatitudeBox );
 
@@ -92,7 +92,7 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
   mLongitudeBox->setValue( 0 );
   mLongitudeBox->setDecimals( 6 );
   mLongitudeBox->setEnabled( false );
-  mLongitudeBox->setSuffix( "°" );
+  mLongitudeBox->setSuffix( QString::fromUtf8( "Â°" ) );
   topLayout->addWidget( mLongitudeBox, 2, 2 );
   label->setBuddy( mLongitudeBox );
 
@@ -201,7 +201,7 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
   mLatDegrees->setMinimum( 0 );
   mLatDegrees->setMaximum( 90 );
   mLatDegrees->setValue( 1 );
-  mLatDegrees->setSuffix( "°" );
+  mLatDegrees->setSuffix( QString::fromUtf8( "Â°" ) );
   mLatDegrees->setWrapping( false );
   label->setBuddy( mLatDegrees );
   sexagesimalLayout->addWidget( mLatDegrees, 0, 1 );
@@ -233,7 +233,7 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
   mLongDegrees->setMinimum( 0 );
   mLongDegrees->setMaximum( 180 );
   mLongDegrees->setValue( 1 );
-  mLongDegrees->setSuffix( "°" );
+  mLongDegrees->setSuffix( QString::fromUtf8( "Â°" ) );
   label->setBuddy( mLongDegrees );
   sexagesimalLayout->addWidget( mLongDegrees, 1, 1 );
 
