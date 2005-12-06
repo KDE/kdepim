@@ -3,7 +3,7 @@
   CRYPTPLUG - an independent cryptography plug-in
   API. CryptPlugWrapperList holds any number of crypto plug-ins.
 
-  Copyright (C) 2001,2004 by Klar‰lvdalens Datakonsult AB
+  Copyright (C) 2001,2004 by Klar√§lvdalens Datakonsult AB
 
   CRYPTPLUG is free software; you can redistribute it and/or modify
   it under the terms of GNU General Public License as published by

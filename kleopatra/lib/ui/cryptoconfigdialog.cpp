@@ -2,7 +2,7 @@
     cryptoconfigdialog.h
 
     This file is part of kgpgcertmanager
-    Copyright (c) 2004 Klar‰lvdalens Datakonsult AB
+    Copyright (c) 2004 Klar√§lvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License,

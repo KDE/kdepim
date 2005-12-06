@@ -2,7 +2,7 @@
     backendconfigwidget.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2002,2004 Klar‰lvdalens Datakonsult AB
+    Copyright (c) 2002,2004 Klar√§lvdalens Datakonsult AB
     Copyright (c) 2002,2003 Marc Mutz <mutz@kde.org>
 
     Libkleopatra is free software; you can redistribute it and/or

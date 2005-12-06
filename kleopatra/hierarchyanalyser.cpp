@@ -2,7 +2,7 @@
     hierarchyanalyser.cpp
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2004 Klar‰lvdalens Datakonsult AB
+    Copyright (c) 2004 Klar√§lvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

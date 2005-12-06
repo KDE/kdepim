@@ -3,7 +3,7 @@
 */
 
 /****************************************************************************
-** Copyright (C) 2005 Klar‰lvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2005 Klar√§lvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KD Tools library.
 **

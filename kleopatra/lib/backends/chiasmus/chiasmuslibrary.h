@@ -2,7 +2,7 @@
     chiasmuslibrary.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2005 Klar‰lvdalens Datakonsult AB
+    Copyright (c) 2005 Klar√§lvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as

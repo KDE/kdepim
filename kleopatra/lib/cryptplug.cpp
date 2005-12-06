@@ -4,9 +4,9 @@
   GPGMEPLUG - an GPGME based cryptography plug-in following
               the common CRYPTPLUG specification.
 
-  Copyright (C) 2001 by Klar‰lvdalens Datakonsult AB
+  Copyright (C) 2001 by Klar√§lvdalens Datakonsult AB
   Copyright (C) 2002 g10 Code GmbH
-  Copyright (C) 2004 Klar‰lvdalens Datakonsult AB
+  Copyright (C) 2004 Klar√§lvdalens Datakonsult AB
 
   GPGMEPLUG is free software; you can redistribute it and/or modify
   it under the terms of GNU General Public License as published by
