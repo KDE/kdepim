@@ -2,7 +2,7 @@
     test_cryptoconfig.cpp
 
     This file is part of libkleopatra's test suite.
-    Copyright (c) 2004 Klar�lvdalens Datakonsult AB
+    Copyright (c) 2004 KlarÃ¤lvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License,
@@ -258,7 +258,7 @@ int main( int argc, char** argv ) {
       cout << "Log-file initially: " << val.local8Bit() << endl;
 
       // Test setting the option, sync'ing, then querying again
-      entry->setStringValue( "/tmp/test:%e5�" );
+      entry->setStringValue( QString::fromUtf8( "/tmp/test:%e5Ã¤" ) );
       assert( entry->isDirty() );
       config->sync( true );
 
@@ -273,7 +273,7 @@ int main( int argc, char** argv ) {
       assert( entry );
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_Path );
       cout << "Log-file now: " << entry->stringValue().local8Bit() << endl;
-      assert( entry->stringValue() == "/tmp/test:%e5�" ); // (or even with %e5 decoded)
+      assert( entry->stringValue() == QString::fromUtf8( "/tmp/test:%e5Ã¤" ) ); // (or even with %e5 decoded)
 
       // Reset old value
 #if 0
