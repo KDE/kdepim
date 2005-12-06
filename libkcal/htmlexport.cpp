@@ -604,15 +604,15 @@ QString HtmlExport::cleanChars(const QString &text)
   txt = txt.replace( "<", "&lt;" );
   txt = txt.replace( ">", "&gt;" );
   txt = txt.replace( "\"", "&quot;" );
-  txt = txt.replace( "ä", "&auml;" );
-  txt = txt.replace( "Ä", "&Auml;" );
-  txt = txt.replace( "ö", "&ouml;" );
-  txt = txt.replace( "Ö", "&Ouml;" );
-  txt = txt.replace( "ü", "&uuml;" );
-  txt = txt.replace( "Ü", "&Uuml;" );
-  txt = txt.replace( "ß", "&szlig;" );
-  txt = txt.replace( "¤", "&euro;" );
-  txt = txt.replace( "é", "&eacute;" );
+  txt = txt.replace( QString::fromUtf8( "Ã¤" ), "&auml;" );
+  txt = txt.replace( QString::fromUtf8( "Ã„" ), "&Auml;" );
+  txt = txt.replace( QString::fromUtf8( "Ã¶" ), "&ouml;" );
+  txt = txt.replace( QString::fromUtf8( "Ã–" ), "&Ouml;" );
+  txt = txt.replace( QString::fromUtf8( "Ã¼" ), "&uuml;" );
+  txt = txt.replace( QString::fromUtf8( "Ãœ" ), "&Uuml;" );
+  txt = txt.replace( QString::fromUtf8( "ÃŸ" ), "&szlig;" );
+  txt = txt.replace( QString::fromUtf8( "â‚¬" ), "&euro;" );
+  txt = txt.replace( QString::fromUtf8( "Ã©" ), "&eacute;" );
 
   return txt;
 }
