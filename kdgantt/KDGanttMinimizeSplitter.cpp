@@ -952,7 +952,7 @@ void KDGanttMinimizeSplitter::recalc( bool update )
     for ( int i = 0; i< n; i++ ) {
 	QSplitterLayoutStruct *s = data->list.at(i);
 	if ( !s->isSplitter ) {
-	    QSplitterLayoutStruct *p = (i > 0) ? p = data->list.at( i-1 ) : 0;
+	    QSplitterLayoutStruct *p = (i > 0) ? data->list.at( i-1 ) : 0;
 	    if ( p && p->isSplitter )
 		if ( first || s->wid->isHidden() )
 		    p->wid->hide(); //may trigger new recalc
