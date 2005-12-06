@@ -1,8 +1,6 @@
 /*
-    kngroupdialog.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -16,11 +14,11 @@
 
 #include <qlabel.h>
 #include <qlayout.h>
-#include <q3buttongroup.h>
 #include <qradiobutton.h>
 #include <qcheckbox.h>
 //Added by qt3to4:
 #include <QGridLayout>
+#include <QGroupBox>
 #include <QVBoxLayout>
 
 #include <kdebug.h>
@@ -287,9 +285,9 @@ void KNGroupDialog::slotUser2()
   QDate lastDate = a_ccount->lastNewFetch();
   KDialogBase *dlg = new KDialogBase( this, 0L, true, i18n("New Groups"), Ok | Cancel, Ok);
 
-  Q3ButtonGroup *btnGrp = new Q3ButtonGroup(i18n("Check for New Groups"),dlg);
+  QGroupBox *btnGrp = new QGroupBox( i18n("Check for New Groups"), dlg );
   dlg->setMainWidget(btnGrp);
-  QGridLayout *topL = new QGridLayout(btnGrp,4,2,25,10);
+  QGridLayout *topL = new QGridLayout( btnGrp );
 
   QRadioButton *takeLast = new QRadioButton( i18n("Created since last check:"), btnGrp );
   topL->addMultiCellWidget(takeLast, 0, 0, 0, 1);

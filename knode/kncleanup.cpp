@@ -18,10 +18,10 @@
 #include <QFile>
 #include <qlabel.h>
 #include <qlayout.h>
-#include <q3progressbar.h>
+#include <QProgressBar>
 //Added by qt3to4:
 #include <QVBoxLayout>
-#include <Q3Frame>
+#include <QFrame>
 #include <QTextStream>
 #include <QCloseEvent>
 
@@ -254,19 +254,16 @@ void KNCleanUp::compactFolder(KNFolder *f)
 //===============================================================================================
 
 
-KNCleanUp::ProgressDialog::ProgressDialog(int steps)
- : QDialog(knGlobals.topWidget, 0, true)
+KNCleanUp::ProgressDialog::ProgressDialog( int steps, QWidget *parent ) :
+  QDialog( parent, 0, true )
 {
   const int w=400,
             h=160;
 
-  p_rogress=0;
-  s_teps=steps;
-
   setCaption(kapp->makeStdCaption(i18n("Cleaning Up")));
 
   setFixedSize(w,h);
-  Q3Frame *top=new Q3Frame(this);
+  QFrame *top = new QFrame( this );
   top->setGeometry(0,0, w,h);
 
   QVBoxLayout *topL=new QVBoxLayout(top, 10);
@@ -280,10 +277,10 @@ KNCleanUp::ProgressDialog::ProgressDialog(int steps)
   m_sg=new QLabel(top);
   topL->addWidget(m_sg);
 
-  p_bar=new Q3ProgressBar(top);
-  topL->addWidget(p_bar);
-  p_bar->setTotalSteps(100*s_teps);
-  p_bar->setProgress(1);
+  mProgressBar = new QProgressBar( top );
+  topL->addWidget( mProgressBar );
+  mProgressBar->setRange( 0, steps );
+  mProgressBar->setValue( 0 );
 
 
   if(knGlobals.topWidget->isVisible()) {
@@ -314,8 +311,7 @@ void KNCleanUp::ProgressDialog::showMessage(const QString &s)
 
 void KNCleanUp::ProgressDialog::doProgress()
 {
-  p_rogress++;
-  p_bar->setProgress(p_rogress*100);
+  mProgressBar->setValue( mProgressBar->value() + 1 );
 }
 
 
@@ -323,5 +319,3 @@ void KNCleanUp::ProgressDialog::closeEvent(QCloseEvent *)
 {
   // do nothing => prevent that the user closes the window
 }
-
-// kate: space-indent on; indent-width 2;

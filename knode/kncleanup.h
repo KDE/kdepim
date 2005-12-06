@@ -17,7 +17,7 @@
 
 #include <QList>
 
-class Q3ProgressBar;
+class QProgressBar;
 class QCloseEvent;
 class QLabel;
 
@@ -54,19 +54,25 @@ class KNCleanUp {
     class ProgressDialog : public QDialog  {
 
       public:
-        ProgressDialog(int steps);
+        /** Creates a new progress dialog.
+         * @param steps The number of progress steps.
+         * @param parent The parent widget.
+         */
+        ProgressDialog( int steps, QWidget *parent = 0 );
         ~ProgressDialog();
 
+        /** Shows a message in the progress dialog.
+         * @param s The message to show.
+         */
         void showMessage(const QString &s);
+        /** Increments the progress counter by one. */
         void doProgress();
 
       protected:
         void closeEvent(QCloseEvent *e);
 
         QLabel *m_sg;
-        Q3ProgressBar *p_bar;
-
-        int s_teps, p_rogress;
+        QProgressBar *mProgressBar;
     };
 
     ProgressDialog *d_lg;

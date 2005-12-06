@@ -98,8 +98,8 @@ extern "C"
 KNode::AccountsPage::AccountsPage( KInstance *inst,QWidget *parent )
   : KCMTabContainer( inst,parent ) {
 
-  addTab( new NntpAccountListWidget( knGlobals.instance(), this ), i18n("Newsgroup Servers") );
-  addTab( new SmtpAccountWidget( knGlobals.instance(), this ), i18n("Mail Server (SMTP)") );
+  addTab( new NntpAccountListWidget( inst, this ), i18n("Newsgroup Servers") );
+  addTab( new SmtpAccountWidget( inst, this ), i18n("Mail Server (SMTP)") );
 }
 
 
@@ -133,12 +133,12 @@ extern "C"
 KNode::ReadNewsPage::ReadNewsPage( KInstance *inst,QWidget *parent )
   : KCMTabContainer( inst, parent )
 {
-  addTab( new ReadNewsGeneralWidget( knGlobals.instance(), this ), i18n("General") );
-  addTab( new ReadNewsNavigationWidget( knGlobals.instance(), this ), i18n("Navigation") );
-  addTab( new ScoringWidget( knGlobals.instance(), this ), i18n("Scoring") );
-  addTab( new FilterListWidget( knGlobals.instance(), this ), i18n("Filters") );
-  addTab( new DisplayedHeadersWidget( knGlobals.configManager()->displayedHeaders(), knGlobals.instance(), this ), i18n("Headers") );
-  addTab( new ReadNewsViewerWidget( knGlobals.instance(), this ), i18n("Viewer") );
+  addTab( new ReadNewsGeneralWidget( inst, this ), i18n("General") );
+  addTab( new ReadNewsNavigationWidget( inst, this ), i18n("Navigation") );
+  addTab( new ScoringWidget( inst, this ), i18n("Scoring") );
+  addTab( new FilterListWidget( inst, this ), i18n("Filters") );
+  addTab( new DisplayedHeadersWidget( knGlobals.configManager()->displayedHeaders(), inst, this ), i18n("Headers") );
+  addTab( new ReadNewsViewerWidget( inst, this ), i18n("Viewer") );
 }
 
 
@@ -158,9 +158,9 @@ extern "C"
 KNode::PostNewsPage::PostNewsPage( KInstance *inst, QWidget *parent )
   : KCMTabContainer( inst, parent )
 {
-  addTab( new PostNewsTechnicalWidget( knGlobals.configManager()->postNewsTechnical(), knGlobals.instance(), this ), i18n("Technical") );
-  addTab( new PostNewsComposerWidget( knGlobals.instance(), this ), i18n("Composer") );
-  addTab( new PostNewsSpellingWidget( knGlobals.instance(), this ), i18n("Spelling") );
+  addTab( new PostNewsTechnicalWidget( knGlobals.configManager()->postNewsTechnical(), inst, this ), i18n("Technical") );
+  addTab( new PostNewsComposerWidget( inst, this ), i18n("Composer") );
+  addTab( new PostNewsSpellingWidget( inst, this ), i18n("Spelling") );
 }
 
 
