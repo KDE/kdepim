@@ -161,7 +161,7 @@ void KXMLRPC::Server::call( const QString &method, const Q3ValueList<T> &arg,
   for ( ; it != end; ++it )
     args << QVariant( *it );
 
-  return call( method, args, id );
+  return call( method, args, faultObj, faultSlot, msgObj, messageSlot, id );
 }
 
 #endif
