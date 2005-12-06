@@ -1,5 +1,5 @@
 /* interface/progressprovider.h - Interface for progress reports
-   Copyright (C) 2003 Klar‰lvdalens Datakonsult AB
+   Copyright (C) 2003 Klar√§lvdalens Datakonsult AB
 
    This file is part of GPGME++.
  

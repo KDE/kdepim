@@ -1,5 +1,5 @@
 /* dataprovider.h
-   Copyright (C) 2004 Klar‰lvdalens Datakonsult AB
+   Copyright (C) 2004 Klar√§lvdalens Datakonsult AB
 
    This file is part of QGPGME.
  

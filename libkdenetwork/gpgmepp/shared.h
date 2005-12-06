@@ -1,5 +1,5 @@
 /* shared.h - internal tool for refcounting -*- c++ -*-
-   Copyright (C) 2003 Klar‰lvdalens Datakonsult AB
+   Copyright (C) 2003 Klar√§lvdalens Datakonsult AB
 
    This file is part of GPGME++.
  

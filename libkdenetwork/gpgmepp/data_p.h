@@ -1,5 +1,5 @@
 /* data_p.h - wraps a gpgme data object, private part -*- c++ -*-
-   Copyright (C) 2003,2004 Klar‰lvdalens Datakonsult AB
+   Copyright (C) 2003,2004 Klar√§lvdalens Datakonsult AB
 
    This file is part of GPGME++.
  

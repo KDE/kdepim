@@ -1,5 +1,5 @@
 /* result.h - base class for results
-   Copyright (C) 2004 Klar‰lvdalens Datakonsult AB
+   Copyright (C) 2004 Klar√§lvdalens Datakonsult AB
 
    This file is part of GPGME++.
  

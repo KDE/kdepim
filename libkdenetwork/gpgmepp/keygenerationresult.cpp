@@ -1,5 +1,5 @@
 /* keygenerationresult.cpp - wraps a gpgme keygen result
-   Copyright (C) 2004 Klar‰lvdalens Datakonsult AB
+   Copyright (C) 2004 Klar√§lvdalens Datakonsult AB
 
    This file is part of GPGME++.
  

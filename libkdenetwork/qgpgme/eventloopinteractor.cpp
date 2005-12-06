@@ -1,5 +1,5 @@
 /* qeventloopinteractor.cpp
-   Copyright (C) 2003 Klar‰lvdalens Datakonsult AB
+   Copyright (C) 2003 Klar√§lvdalens Datakonsult AB
 
    This file is part of QGPGME.
  

@@ -382,7 +382,7 @@
 
 	* gpgme-config.in (gpg_error_libs): Quote GPG_ERROR_CFLAGS and
 	GPG_ERROR_LIBS when setting the corresponding variables.
-	Reported by Stéphane Corthésy.
+	Reported by StÃ©phane CorthÃ©sy.
 
 2003-07-22  Marcus Brinkmann  <marcus@g10code.de>
 
@@ -2271,7 +2271,7 @@
 2002-09-28  Marcus Brinkmann  <marcus@g10code.de>
 
 	* conversion.c (_gpgme_hextobyte): Prevent superfluous
-	multiplication with base.  Reported by Stéphane Corthésy.
+	multiplication with base.  Reported by StÃ©phane CorthÃ©sy.
 
 	* keylist.c (gpgme_op_keylist_ext_start): Use private asynchronous
 	operation type in invocation of _gpgme_op_reset.
@@ -2384,7 +2384,7 @@
 	variables encrypt_info and encrypt_info_len.
 	* trustlist.c (gpgme_op_trustlist_start): Set colon line handler.
 	* posix-sema.c (sema_fatal): Remove function.
-	All these reported by Stéphane Corthésy.
+	All these reported by StÃ©phane CorthÃ©sy.
 
 2002-08-23  Werner Koch  <wk@gnupg.org>
 
@@ -2557,7 +2557,7 @@
 	* vasprintf.c: Update to more recent libiberty version.
 	* debug.h: Replace #elsif with #elif.
 
-	Submitted by Stéphane Corthésy:
+	Submitted by StÃ©phane CorthÃ©sy:
 	* util.h (vasprintf): Correct prototype.
 	* encrypt-sign.c: Include <stddef.h>.
 	(encrypt_sign_status_handler): Change type of ENCRYPT_INFO_LEN to
@@ -2567,14 +2567,14 @@
 
 2002-07-25  Marcus Brinkmann  <marcus@g10code.de>
 
-	* wait.c (fdt_global): Make static.  Reported by Stéphane
-	Corthésy.
+	* wait.c (fdt_global): Make static.  Reported by StÃ©phane
+	CorthÃ©sy.
 
 	* rungpg.c (_gpgme_gpg_op_keylist_ext): Skip empty string
-	patterns.  Reported by Stéphane Corthésy.
+	patterns.  Reported by StÃ©phane CorthÃ©sy.
 
 	* key.c (gpgme_key_get_as_xml): Add OTRUST attribute.  Requested
-	by Stéphane Corthésy.
+	by StÃ©phane CorthÃ©sy.
 	(gpgme_key_get_string_attr): Add GPGME_ATTR_SIG_SUMMARY case to
 	silence gcc warning.
 
@@ -3624,7 +3624,7 @@
 
 2001-12-19  Marcus Brinkmann  <marcus@g10code.de>
 
-	* engine.c: Include `string.h'.  Reported by Stéphane Corthésy.
+	* engine.c: Include `string.h'.  Reported by StÃ©phane CorthÃ©sy.
 
 	* version.c (get_engine_info): Remove prototype.
 
@@ -4161,7 +4161,7 @@
 	callers to use this function without a check for tmp_key.
 	
 	* keylist.c (gpgme_op_keylist_next): Reset the key_cond after
-	emptying the queue.  Bug reported by Stéphane Corthésy.
+	emptying the queue.  Bug reported by StÃ©phane CorthÃ©sy.
 
 2001-09-12  Werner Koch  <wk@gnupg.org>
 
@@ -4243,7 +4243,7 @@
 	* version.c (gpgme_check_engine): Stop version number parsing at
 	the opening angle and not the closing one.  By Tommy Reynolds.
 
-2001-05-01  José Carlos García Sogo <jose@jaimedelamo.eu.org>
+2001-05-01  JosÃ© Carlos GarcÃ­a Sogo <jose@jaimedelamo.eu.org>
 
 	* encrypt.c (gpgme_op_encrypt_start): Deleted the assert ( !c->gpg )
 	line, because it gave an error if another operation had been made 
@@ -4429,7 +4429,7 @@
 	* rungpg.c (_gpgme_gpg_spawn): Use new function to get GPG's path.
 
 	* signers.c (gpgme_signers_add): Ooops, one should test code and
-	not just write it; the newarr was not assigned.  Thanks to José
+	not just write it; the newarr was not assigned.  Thanks to JosÃ©
 	for pointing this out.  Hmmm, still not tested, why shoudl a coder
 	test his fix :-)
 

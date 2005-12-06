@@ -1,5 +1,5 @@
 /* key.h - wraps a gpgme key
-   Copyright (C) 2003, 2005 Klar‰lvdalens Datakonsult AB
+   Copyright (C) 2003, 2005 Klar√§lvdalens Datakonsult AB
 
    This file is part of GPGME++.
 

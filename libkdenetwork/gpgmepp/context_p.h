@@ -1,5 +1,5 @@
 /* context_p.h - wraps a gpgme key context (private part)
-   Copyright (C) 2003 Klar‰lvdalens Datakonsult AB
+   Copyright (C) 2003 Klar√§lvdalens Datakonsult AB
 
    This file is part of GPGME++.
  

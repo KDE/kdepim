@@ -1,5 +1,5 @@
 /* keylistresult.h - wraps a gpgme keylist result
-   Copyright (C) 2004 Klar‰lvdalens Datakonsult AB
+   Copyright (C) 2004 Klar√§lvdalens Datakonsult AB
 
    This file is part of GPGME++.
  

@@ -1,5 +1,5 @@
 /* gpgmefw.h - Forwards declarations for gpgme (0.3 and 0.4)
-   Copyright (C) 2004 Klar‰lvdalens Datakonsult AB
+   Copyright (C) 2004 Klar√§lvdalens Datakonsult AB
 
    This file is part of GPGME++.
  
