@@ -11,7 +11,7 @@ using indexlib::detail::get_tokenizer;
 void simple() {
 	std::auto_ptr<tokenizer> tokenizer = get_tokenizer( "latin-1:european" );
 	assert(tokenizer.get());
-	std::vector<std::string> tokens = tokenizer->string_to_words( "one     ,as, ''#`:ThReE,  ··‡ÁÈ" );
+	std::vector<std::string> tokens = tokenizer->string_to_words( "one     ,as, ''#`:ThReE,  √°√°√†√ß√©" );
 	std::vector<std::string> expected;
 	expected.push_back( "ONE" );
 	expected.push_back( "AS" );

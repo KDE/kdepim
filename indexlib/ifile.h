@@ -2,7 +2,7 @@
 #define _IFILE_INCLUDE_GUARD_LPC_56465465798732
 
 /* This file is part of indexlib.
- * Copyright (C) 2005 Luís Pedro Coelho <luis@luispedro.org>
+ * Copyright (C) 2005 LuÃ­s Pedro Coelho <luis@luispedro.org>
  *
  * Indexlib is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License, version 2, as
