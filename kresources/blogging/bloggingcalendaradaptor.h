@@ -26,7 +26,7 @@
 #include "API_Blog.h"
 #include <kurl.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 #include <Q3CString>
 
 namespace KIO {

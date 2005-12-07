@@ -25,7 +25,7 @@
 #include <q3ptrlist.h>
 #include <qstring.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 
 #include <kconfig.h>
 #include <kurl.h>
@@ -71,13 +71,13 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceNotes
     KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to );
 
   protected slots:
-    void loginFinished( const Q3ValueList<QVariant>&, const QVariant& );
-    void logoutFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void loginFinished( const QList<QVariant>&, const QVariant& );
+    void logoutFinished( const QList<QVariant>&, const QVariant& );
 
-    void listNotesFinished( const Q3ValueList<QVariant>&, const QVariant& );
-    void addNoteFinished( const Q3ValueList<QVariant>&, const QVariant& );
-    void updateNoteFinished( const Q3ValueList<QVariant>&, const QVariant& );
-    void deleteNoteFinished( const Q3ValueList<QVariant>&, const QVariant& );
+    void listNotesFinished( const QList<QVariant>&, const QVariant& );
+    void addNoteFinished( const QList<QVariant>&, const QVariant& );
+    void updateNoteFinished( const QList<QVariant>&, const QVariant& );
+    void deleteNoteFinished( const QList<QVariant>&, const QVariant& );
 
     void fault( int, const QString&, const QVariant& );
 

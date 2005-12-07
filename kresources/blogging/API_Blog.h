@@ -120,7 +120,7 @@ class APIBlog : public QObject
     };
 
     virtual QString getFunctionName( blogFunctions type ) = 0;
-    virtual Q3ValueList<QVariant> defaultArgs( const QString &id = QString::null );
+    virtual QList<QVariant> defaultArgs( const QString &id = QString::null );
 
     virtual KIO::Job *createUserInfoJob() = 0;
     virtual KIO::Job *createListFoldersJob() = 0;

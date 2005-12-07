@@ -20,7 +20,7 @@
 
 #include <qapplication.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 
 #include <kabc/addressee.h>
 #include <kabprefs.h>
@@ -158,7 +158,7 @@ bool ResourceXMLRPC::doOpen()
   args.insert( "password", mPrefs->password() );
 
   mServer->call( "system.login", QVariant( args ),
-                 this, SLOT( loginFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( loginFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   mSynchronizer->start();
@@ -173,7 +173,7 @@ void ResourceXMLRPC::doClose()
   args.insert( "kp3", mKp3 );
 
   mServer->call( "system.logout", QVariant( args ),
-                 this, SLOT( logoutFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( logoutFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   mSynchronizer->start();
@@ -205,15 +205,15 @@ bool ResourceXMLRPC::asyncLoad()
   args.insert( "include_users", "calendar" );
 
   mServer->call( SearchContactsCommand, args,
-                 this, SLOT( listContactsFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( listContactsFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   mServer->call( LoadCategoriesCommand, QVariant( false, 0 ),
-                 this, SLOT( loadCategoriesFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( loadCategoriesFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
-  mServer->call( LoadCustomFieldsCommand, QVariant( Q3ValueList<QVariant>() ),
-                 this, SLOT( loadCustomFieldsFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+  mServer->call( LoadCustomFieldsCommand, QVariant( QList<QVariant>() ),
+                 this, SLOT( loadCustomFieldsFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   return true;
@@ -253,7 +253,7 @@ void ResourceXMLRPC::addContact( const Addressee& addr )
   writeContact( addr, args );
 
   mServer->call( AddContactCommand, args,
-                 this, SLOT( addContactFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( addContactFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( addContactFault( int, const QString&, const QVariant& ) ),
                  QVariant( addr.uid() ) );
 }
@@ -270,7 +270,7 @@ void ResourceXMLRPC::updateContact( const Addressee& addr )
 
   args.insert( "id", idMapper().remoteId( addr.uid() ) );
   mServer->call( AddContactCommand, args,
-                 this, SLOT( updateContactFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( updateContactFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( updateContactFault( int, const QString&, const QVariant& ) ),
                  QVariant( addr.uid() ) );
 }
@@ -284,12 +284,12 @@ void ResourceXMLRPC::deleteContact( const Addressee& addr )
   }
 
   mServer->call( DeleteContactCommand, idMapper().remoteId( addr.uid() ),
-                 this, SLOT( deleteContactFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( deleteContactFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( deleteContactFault( int, const QString&, const QVariant& ) ),
                  QVariant( addr.uid() ) );
 }
 
-void ResourceXMLRPC::loginFinished( const Q3ValueList<QVariant> &variant,
+void ResourceXMLRPC::loginFinished( const QList<QVariant> &variant,
                                     const QVariant& )
 {
   QMap<QString, QVariant> map = variant[0].toMap();
@@ -310,7 +310,7 @@ void ResourceXMLRPC::loginFinished( const Q3ValueList<QVariant> &variant,
   mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::logoutFinished( const Q3ValueList<QVariant> &variant,
+void ResourceXMLRPC::logoutFinished( const QList<QVariant> &variant,
                                      const QVariant& )
 {
   QMap<QString, QVariant> map = variant[0].toMap();
@@ -327,11 +327,11 @@ void ResourceXMLRPC::logoutFinished( const Q3ValueList<QVariant> &variant,
   mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::listContactsFinished( const Q3ValueList<QVariant> &mapList,
+void ResourceXMLRPC::listContactsFinished( const QList<QVariant> &mapList,
                                            const QVariant& )
 {
-  const Q3ValueList<QVariant> contactList = mapList[ 0 ].toList();
-  Q3ValueList<QVariant>::ConstIterator contactIt;
+  const QList<QVariant> contactList = mapList[ 0 ].toList();
+  QList<QVariant>::ConstIterator contactIt;
 
   KABC::Addressee::List serverContacts;
   for ( contactIt = contactList.begin(); contactIt != contactList.end(); ++contactIt ) {
@@ -364,7 +364,7 @@ void ResourceXMLRPC::listContactsFinished( const Q3ValueList<QVariant> &mapList,
   emit loadingFinished( this );
 }
 
-void ResourceXMLRPC::addContactFinished( const Q3ValueList<QVariant> &list,
+void ResourceXMLRPC::addContactFinished( const QList<QVariant> &list,
                                          const QVariant &id )
 {
   clearChange( id.toString() );
@@ -373,7 +373,7 @@ void ResourceXMLRPC::addContactFinished( const Q3ValueList<QVariant> &list,
   saveCache();
 }
 
-void ResourceXMLRPC::updateContactFinished( const Q3ValueList<QVariant>&,
+void ResourceXMLRPC::updateContactFinished( const QList<QVariant>&,
                                             const QVariant &id )
 {
   clearChange( id.toString() );
@@ -381,7 +381,7 @@ void ResourceXMLRPC::updateContactFinished( const Q3ValueList<QVariant>&,
   saveCache();
 }
 
-void ResourceXMLRPC::deleteContactFinished( const Q3ValueList<QVariant>&,
+void ResourceXMLRPC::deleteContactFinished( const QList<QVariant>&,
                                             const QVariant &id )
 {
   clearChange( id.toString() );
@@ -739,7 +739,7 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
     addr.insertAddress( addrTwo );
 }
 
-void ResourceXMLRPC::loadCategoriesFinished( const Q3ValueList<QVariant> &mapList,
+void ResourceXMLRPC::loadCategoriesFinished( const QList<QVariant> &mapList,
                                              const QVariant& )
 {
   mCategoryMap.clear();
@@ -759,7 +759,7 @@ void ResourceXMLRPC::loadCategoriesFinished( const Q3ValueList<QVariant> &mapLis
   }
 }
 
-void ResourceXMLRPC::loadCustomFieldsFinished( const Q3ValueList<QVariant> &mapList,
+void ResourceXMLRPC::loadCustomFieldsFinished( const QList<QVariant> &mapList,
                                                const QVariant& )
 {
   mCustomFieldsMap.clear();

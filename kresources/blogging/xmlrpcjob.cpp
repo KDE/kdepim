@@ -29,7 +29,7 @@
 #include <qvariant.h>
 #include <qregexp.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 #include <QDateTime>
 
 #include <kdebug.h>
@@ -53,12 +53,12 @@ namespace KIO {
       bool success() const { return m_success; }
       int errorCode() const { return m_errorCode; }
       QString errorString() const { return m_errorString; }
-      Q3ValueList<QVariant> data() const { return m_data; }
+      QList<QVariant> data() const { return m_data; }
     private:
       bool m_success;
       int m_errorCode;
       QString m_errorString;
-      Q3ValueList<QVariant> m_data;
+      QList<QVariant> m_data;
   };
 }
 
@@ -70,7 +70,7 @@ public:
 
 
 XmlrpcJob::XmlrpcJob( const KURL& url, const QString& method,
-                      const Q3ValueList<QVariant> &params, bool showProgressInfo)
+                      const QList<QVariant> &params, bool showProgressInfo)
   : TransferJob( url, KIO::CMD_SPECIAL, QByteArray(), QByteArray(),
                  showProgressInfo )
 {
@@ -103,7 +103,7 @@ XmlrpcJob::~XmlrpcJob()
 }
 
 QString XmlrpcJob::markupCall( const QString &cmd,
-                               const Q3ValueList<QVariant> &args )
+                               const QList<QVariant> &args )
 {
 kdDebug()<<"XmlrpcJob::markupCall, cmd="<<cmd<<endl;
   QString markup = "<?xml version=\"1.0\" ?>\r\n<methodCall>\r\n";
@@ -113,8 +113,8 @@ kdDebug()<<"XmlrpcJob::markupCall, cmd="<<cmd<<endl;
   if ( !args.isEmpty() )
   {
     markup += "<params>\r\n";
-    Q3ValueList<QVariant>::ConstIterator it = args.begin();
-    Q3ValueList<QVariant>::ConstIterator end = args.end();
+    QList<QVariant>::ConstIterator it = args.begin();
+    QList<QVariant>::ConstIterator end = args.end();
     for ( ; it != end; ++it )
       markup += "<param>\r\n" + marshal( *it ) + "</param>\r\n";
     markup += "</params>\r\n";
@@ -269,9 +269,9 @@ QString XmlrpcJob::marshal( const QVariant &arg )
     case QVariant::List:
       {
         QString markup = "<value><array><data>\r\n";
-        const Q3ValueList<QVariant> args = arg.toList();
-        Q3ValueList<QVariant>::ConstIterator it = args.begin();
-        Q3ValueList<QVariant>::ConstIterator end = args.end();
+        const QList<QVariant> args = arg.toList();
+        QList<QVariant>::ConstIterator it = args.begin();
+        QList<QVariant>::ConstIterator end = args.end();
         for ( ; it != end; ++it )
           markup += marshal( *it );
         markup += "</data></array></value>\r\n";
@@ -349,7 +349,7 @@ kdDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
 
   } else if ( typeName == "array" ) {
 
-    Q3ValueList<QVariant> values;
+    QList<QVariant> values;
     QDomNode valueNode = typeElement.firstChild().firstChild();
     while ( !valueNode.isNull() ) {
       values << demarshal( valueNode.toElement() );
@@ -385,7 +385,7 @@ kdDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
 
 /* Convenience methods */
 
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const Q3ValueList<QVariant> &params, bool showProgressInfo )
+XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const QList<QVariant> &params, bool showProgressInfo )
 {
   if ( url.isEmpty() ) {
     kdWarning() << "Cannot execute call to " << method << ": empty server URL" << endl;
@@ -400,7 +400,7 @@ XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const Q3Valu
 XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method,
 		                        const QVariant &arg, bool showProgressInfo )
 {
-  Q3ValueList<QVariant> args;
+  QList<QVariant> args;
   args << arg;
   return KIO::xmlrpcCall( url, method, args, showProgressInfo );
 }
@@ -408,7 +408,7 @@ XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method,
 XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method,
 		                        const QStringList &arg, bool showProgressInfo )
 {
-  Q3ValueList<QVariant> args;
+  QList<QVariant> args;
   QStringList::ConstIterator it = arg.begin();
   QStringList::ConstIterator end = arg.end();
   for ( ; it != end; ++it )
@@ -418,12 +418,12 @@ XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method,
 
 template <typename T>
 XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method,
-		                        const Q3ValueList<T>&arg, bool showProgressInfo )
+		                        const QList<T>&arg, bool showProgressInfo )
 {
-  Q3ValueList<QVariant> args;
+  QList<QVariant> args;
 
-  typename Q3ValueList<T>::ConstIterator it = arg.begin();
-  typename Q3ValueList<T>::ConstIterator end = arg.end();
+  typename QList<T>::ConstIterator it = arg.begin();
+  typename QList<T>::ConstIterator end = arg.end();
   for ( ; it != end; ++it )
     args << QVariant( *it );
   return KIO::xmlrpcCall( url, method, args, showProgressInfo );

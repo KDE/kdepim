@@ -60,13 +60,13 @@ Q_OBJECT
      * KIO::xmlrpcSearch() to create a new XmlrpcJob.
      */
     XmlrpcJob( const KURL& url, const QString& method,
-				       const Q3ValueList<QVariant> &params, bool showProgressInfo );
+				       const QList<QVariant> &params, bool showProgressInfo );
     virtual ~XmlrpcJob();
     /**
      * Returns the response as a QDomDocument.
      * @return the response document
      */
-    Q3ValueList<QVariant> &response() { return m_response; }
+    QList<QVariant> &response() { return m_response; }
     /**
      * Returns the type of the response.
      * @return the type of the response
@@ -74,7 +74,7 @@ Q_OBJECT
     XMLRPCResponseType responseType() const { return m_responseType; }
 
     static QString markupCall( const QString &cmd,
-                               const Q3ValueList<QVariant> &args );
+                               const QList<QVariant> &args );
   protected slots:
     virtual void slotFinished();
     virtual void slotData( const QByteArray &data);
@@ -94,7 +94,7 @@ Q_OBJECT
     class XmlrpcJobPrivate;
     XmlrpcJobPrivate *d;
     QString m_str_response;
-    Q3ValueList<QVariant> m_response;
+    QList<QVariant> m_response;
     XMLRPCResponseType m_responseType;
 };
 
@@ -108,7 +108,7 @@ Q_OBJECT
  * @return the new XmlrpcJob
  */
 XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
-                       const Q3ValueList<QVariant> &params,
+                       const QList<QVariant> &params,
                        bool showProgressInfo = true );
 
 XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
@@ -117,7 +117,7 @@ XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
                        const QStringList &arg, bool showProgressInfo = true );
 template <typename T>
 XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
-                       const Q3ValueList<T>&arg,bool showProgressInfo = true );
+                       const QList<T>&arg,bool showProgressInfo = true );
 }
 
 #endif

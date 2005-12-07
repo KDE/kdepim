@@ -67,7 +67,7 @@ namespace GroupWise {
 class AddressBook
 {
   public:
-    typedef Q3ValueList<AddressBook> List;
+    typedef QList<AddressBook> List;
 
     AddressBook() : isPersonal( false ), isFrequentContacts( false ), isSystemAddressBook( false ) {}
 

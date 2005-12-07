@@ -28,7 +28,7 @@
 #include <qstringlist.h>
 #include <qtimer.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 
 #include <kabc/locknull.h>
 #include <kdebug.h>
@@ -196,7 +196,7 @@ bool ResourceXMLRPC::doOpen()
   args.insert( "password", mPrefs->password() );
 
   mServer->call( "system.login", QVariant( args ),
-                 this, SLOT( loginFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( loginFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   mSynchronizer->start();
@@ -213,7 +213,7 @@ void ResourceXMLRPC::doClose()
   args.insert( "kp3", mKp3 );
 
   mServer->call( "system.logout", QVariant( args ),
-                 this, SLOT( logoutFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( logoutFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   mSynchronizer->start();
@@ -242,7 +242,7 @@ bool ResourceXMLRPC::doLoad()
   args.insert( "end", QDateTime( QDate::currentDate().addDays( 12 ) ) );
 
   mServer->call( SearchEventsCommand, args,
-                 this, SLOT( listEventsFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( listEventsFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
   args.clear();
 
@@ -252,15 +252,15 @@ bool ResourceXMLRPC::doLoad()
   args.insert( "order", "id_parent" );
 
   mServer->call( SearchTodosCommand, args,
-                 this, SLOT( listTodosFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( listTodosFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   mServer->call( LoadEventCategoriesCommand, QVariant( QMap<QString, QVariant>() ),
-                 this, SLOT( loadEventCategoriesFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( loadEventCategoriesFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
   mServer->call( LoadTodoCategoriesCommand, QVariant( false, 0 ),
-                 this, SLOT( loadTodoCategoriesFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                 this, SLOT( loadTodoCategoriesFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
   return true;
 }
@@ -285,7 +285,7 @@ bool ResourceXMLRPC::doSave()
 
       args.insert( "id", idMapper().remoteId( (*evIt)->uid() ).toInt() );
       mServer->call( AddEventCommand, QVariant( args ),
-                     this, SLOT( updateEventFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                     this, SLOT( updateEventFinished( const QList<QVariant>&, const QVariant& ) ),
                      this, SLOT( fault( int, const QString&, const QVariant& ) ) );
       counter++;
     }
@@ -301,7 +301,7 @@ bool ResourceXMLRPC::doSave()
 
       args.insert( "id", idMapper().remoteId( (*todoIt)->uid() ).toInt() );
       mServer->call( AddTodoCommand, QVariant( args ),
-                     this, SLOT( updateTodoFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                     this, SLOT( updateTodoFinished( const QList<QVariant>&, const QVariant& ) ),
                      this, SLOT( fault( int, const QString&, const QVariant& ) ) );
       counter++;
     }
@@ -339,7 +339,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
       writeEvent( ev, args );
       args.insert( "id", idMapper().remoteId( ev->uid() ).toInt() );
       mServer->call( AddEventCommand, QVariant( args ),
-                     this, SLOT( updateEventFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                     this, SLOT( updateEventFinished( const QList<QVariant>&, const QVariant& ) ),
                      this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
       mCalendar.deleteIncidence( oldEvent );
@@ -349,7 +349,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
   } else { // new event
     writeEvent( ev, args );
     mServer->call( AddEventCommand, QVariant( args ),
-                   this, SLOT( addEventFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                   this, SLOT( addEventFinished( const QList<QVariant>&, const QVariant& ) ),
                    this, SLOT( fault( int, const QString&, const QVariant& ) ),
                    QVariant( ev->uid() ) );
 
@@ -368,7 +368,7 @@ bool ResourceXMLRPC::deleteEvent( Event* ev )
     return false;
 
   mServer->call( DeleteEventCommand, idMapper().remoteId( ev->uid() ).toInt(),
-                 this, SLOT( deleteEventFinished( const Q3ValueList<QVariant>&,
+                 this, SLOT( deleteEventFinished( const QList<QVariant>&,
                                                   const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ),
                  QVariant( ev->uid() ) );
@@ -419,7 +419,7 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
       writeTodo( todo, args );
       args.insert( "id", idMapper().remoteId( todo->uid() ).toInt() );
       mServer->call( AddTodoCommand, QVariant( args ),
-                     this, SLOT( updateTodoFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                     this, SLOT( updateTodoFinished( const QList<QVariant>&, const QVariant& ) ),
                      this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
       mCalendar.deleteIncidence( oldTodo );
@@ -429,7 +429,7 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
   } else { // new todo
     writeTodo( todo, args );
     mServer->call( AddTodoCommand, QVariant( args ),
-                   this, SLOT( addTodoFinished( const Q3ValueList<QVariant>&, const QVariant& ) ),
+                   this, SLOT( addTodoFinished( const QList<QVariant>&, const QVariant& ) ),
                    this, SLOT( fault( int, const QString&, const QVariant& ) ),
                    QVariant( todo->uid() ) );
 
@@ -448,7 +448,7 @@ bool ResourceXMLRPC::deleteTodo( Todo *todo )
     return false;
 
   mServer->call( DeleteTodoCommand, idMapper().remoteId( todo->uid() ).toInt(),
-                 this, SLOT( deleteTodoFinished( const Q3ValueList<QVariant>&,
+                 this, SLOT( deleteTodoFinished( const QList<QVariant>&,
                                                  const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ),
                  QVariant( todo->uid() ) );
@@ -512,7 +512,7 @@ void ResourceXMLRPC::reload()
 }
 
 
-void ResourceXMLRPC::loginFinished( const Q3ValueList<QVariant>& variant,
+void ResourceXMLRPC::loginFinished( const QList<QVariant>& variant,
                                     const QVariant& )
 {
   QMap<QString, QVariant> map = variant[ 0 ].toMap();
@@ -532,7 +532,7 @@ void ResourceXMLRPC::loginFinished( const Q3ValueList<QVariant>& variant,
   mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::logoutFinished( const Q3ValueList<QVariant>& variant,
+void ResourceXMLRPC::logoutFinished( const QList<QVariant>& variant,
                                      const QVariant& )
 {
   QMap<QString, QVariant> map = variant[ 0 ].toMap();
@@ -549,11 +549,11 @@ void ResourceXMLRPC::logoutFinished( const Q3ValueList<QVariant>& variant,
   mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::listEventsFinished( const Q3ValueList<QVariant>& list,
+void ResourceXMLRPC::listEventsFinished( const QList<QVariant>& list,
                                          const QVariant& )
 {
-  const Q3ValueList<QVariant> eventList = list[ 0 ].toList();
-  Q3ValueList<QVariant>::ConstIterator eventIt;
+  const QList<QVariant> eventList = list[ 0 ].toList();
+  QList<QVariant>::ConstIterator eventIt;
 
   disableChangeNotification();
 
@@ -610,7 +610,7 @@ void ResourceXMLRPC::listEventsFinished( const Q3ValueList<QVariant>& list,
   checkLoadingFinished();
 }
 
-void ResourceXMLRPC::deleteEventFinished( const Q3ValueList<QVariant>&,
+void ResourceXMLRPC::deleteEventFinished( const QList<QVariant>&,
                                           const QVariant& id )
 {
   idMapper().removeRemoteId( idMapper().remoteId( id.toString() ) );
@@ -625,13 +625,13 @@ void ResourceXMLRPC::deleteEventFinished( const Q3ValueList<QVariant>&,
   emit resourceChanged( this );
 }
 
-void ResourceXMLRPC::updateEventFinished( const Q3ValueList<QVariant>&,
+void ResourceXMLRPC::updateEventFinished( const QList<QVariant>&,
                                           const QVariant& )
 {
   mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::addEventFinished( const Q3ValueList<QVariant>& list,
+void ResourceXMLRPC::addEventFinished( const QList<QVariant>& list,
                                        const QVariant& id )
 {
   idMapper().setRemoteId( id.toString(), list[ 0 ].toString() );
@@ -639,7 +639,7 @@ void ResourceXMLRPC::addEventFinished( const Q3ValueList<QVariant>& list,
   emit resourceChanged( this );
 }
 
-void ResourceXMLRPC::loadEventCategoriesFinished( const Q3ValueList<QVariant> &mapList, const QVariant& )
+void ResourceXMLRPC::loadEventCategoriesFinished( const QList<QVariant> &mapList, const QVariant& )
 {
   mEventCategoryMap.clear();
 
@@ -660,11 +660,11 @@ void ResourceXMLRPC::loadEventCategoriesFinished( const Q3ValueList<QVariant> &m
   checkLoadingFinished();
 }
 
-void ResourceXMLRPC::listTodosFinished( const Q3ValueList<QVariant>& list,
+void ResourceXMLRPC::listTodosFinished( const QList<QVariant>& list,
                                         const QVariant& )
 {
-  const Q3ValueList<QVariant> todoList = list[ 0 ].toList();
-  Q3ValueList<QVariant>::ConstIterator todoIt;
+  const QList<QVariant> todoList = list[ 0 ].toList();
+  QList<QVariant>::ConstIterator todoIt;
 
   disableChangeNotification();
 
@@ -715,7 +715,7 @@ void ResourceXMLRPC::listTodosFinished( const Q3ValueList<QVariant>& list,
   checkLoadingFinished();
 }
 
-void ResourceXMLRPC::deleteTodoFinished( const Q3ValueList<QVariant>&,
+void ResourceXMLRPC::deleteTodoFinished( const QList<QVariant>&,
                                          const QVariant& id )
 {
   idMapper().removeRemoteId( idMapper().remoteId( id.toString() ) );
@@ -730,7 +730,7 @@ void ResourceXMLRPC::deleteTodoFinished( const Q3ValueList<QVariant>&,
   emit resourceChanged( this );
 }
 
-void ResourceXMLRPC::addTodoFinished( const Q3ValueList<QVariant>& list,
+void ResourceXMLRPC::addTodoFinished( const QList<QVariant>& list,
                                       const QVariant& id )
 {
   idMapper().setRemoteId( id.toString(), list[ 0 ].toString() );
@@ -738,13 +738,13 @@ void ResourceXMLRPC::addTodoFinished( const Q3ValueList<QVariant>& list,
   emit resourceChanged( this );
 }
 
-void ResourceXMLRPC::updateTodoFinished( const Q3ValueList<QVariant>&,
+void ResourceXMLRPC::updateTodoFinished( const QList<QVariant>&,
                                          const QVariant& )
 {
   mSynchronizer->stop();
 }
 
-void ResourceXMLRPC::loadTodoCategoriesFinished( const Q3ValueList<QVariant> &mapList, const QVariant& )
+void ResourceXMLRPC::loadTodoCategoriesFinished( const QList<QVariant> &mapList, const QVariant& )
 {
   mTodoCategoryMap.clear();
 
@@ -781,7 +781,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
   int rData = 0;
   int rights = 0;
   QDateTime rEndDate;
-  Q3ValueList<QDateTime> rExceptions;
+  QList<QDateTime> rExceptions;
 
   QMap<QString, QVariant>::ConstIterator it;
   for ( it = args.begin(); it != args.end(); ++it ) {
@@ -930,7 +930,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
     if ( rEndDate.date().isValid() )
       re->setEndDate( rEndDate.date() );
 
-    Q3ValueList<QDateTime>::ConstIterator exIt;
+    QList<QDateTime>::ConstIterator exIt;
     for ( exIt = rExceptions.begin(); exIt != rExceptions.end(); ++exIt )
       re->addExDateTime( *exIt );
   }
@@ -1033,8 +1033,8 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
     args.insert( "recur_enddate", rec->endDateTime() );
 
     //  TODO: Also use exception dates!
-    const Q3ValueList<QDateTime> dates = event->recurrence()->exDateTimes();
-    Q3ValueList<QDateTime>::ConstIterator dateIt;
+    const QList<QDateTime> dates = event->recurrence()->exDateTimes();
+    QList<QDateTime>::ConstIterator dateIt;
     QMap<QString, QVariant> exMap;
     int counter = 0;
     for ( dateIt = dates.begin(); dateIt != dates.end(); ++dateIt, ++counter )

@@ -21,7 +21,7 @@
 
 #include "bloggingglobals.h"
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 
 QString BloggingGlobals::mAppID = QString("20ffffffd7ffffffc5ffffffbdffffff87ffffffb72d39fffffffe5c4bffffffcfffffff80ffffffd4665cfffffff375ffffff88ffffff871a0cffffff8029");
 
@@ -41,9 +41,9 @@ QString BloggingGlobals::getFunctionName( blogFunctions type )
   }
 }
 
-Q3ValueList<QVariant> BloggingGlobals::defaultArgs( const QString &user, const QString &pw, const QString &id )
+QList<QVariant> BloggingGlobals::defaultArgs( const QString &user, const QString &pw, const QString &id )
 {
-  Q3ValueList<QVariant> args;
+  QList<QVariant> args;
   args << QVariant( mAppID );
   if ( !id.isNull() ) {
     args << QVariant( id );
