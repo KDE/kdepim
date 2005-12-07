@@ -35,13 +35,13 @@ public:
   ~MultiPart() {};
   
   bool parse();
-  Q3ValueList<Q3CString> parts()    { return p_arts; }
+  QList<Q3CString> parts()    { return p_arts; }
   Q3CString preamble()     { return p_reamble; }
   Q3CString epilouge()     { return e_pilouge; }
   
 protected:
   Q3CString s_rc, b_oundary, p_reamble, e_pilouge;
-  Q3ValueList<Q3CString> p_arts;
+  QList<Q3CString> p_arts;
 };
 
 
@@ -100,10 +100,10 @@ public:
   YENCEncoded(const Q3CString &src);  
 
   virtual bool parse();      
-  Q3ValueList<QByteArray> binaryParts()       { return b_ins; }
+  QList<QByteArray> binaryParts()       { return b_ins; }
     
 protected:
-  Q3ValueList<QByteArray> b_ins;
+  QList<QByteArray> b_ins;
   static bool yencMeta( Q3CString& src, const Q3CString& name, int* value);
 };
 

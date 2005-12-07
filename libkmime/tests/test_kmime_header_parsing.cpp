@@ -7,7 +7,7 @@
 #include <qfile.h>
 #include <q3cstring.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 //#include <qstring.h>
 
 //#include <stdio.h>
@@ -296,7 +296,7 @@ int main( int argc, char * argv[] ) {
       cout << ( ok ? "OK" : "BAD" ) << endl
 	   << "result.displayName:\n" << result.displayName << endl;
       int i = 0;
-      for ( Q3ValueList<KMime::Types::Mailbox>::ConstIterator
+      for ( QList<KMime::Types::Mailbox>::ConstIterator
 	      it = result.mailboxList.begin();
 	    it != result.mailboxList.end() ; ++it, ++i )
 	cout << "result.mailboxList[" << i << "].displayName:\n"
@@ -315,7 +315,7 @@ int main( int argc, char * argv[] ) {
       cout << ( ok ? "OK" : "BAD" ) << endl
 	   << "result.displayName:\n" << endl;
       int i = 0;
-      for ( Q3ValueList<KMime::Types::Mailbox>::ConstIterator
+      for ( QList<KMime::Types::Mailbox>::ConstIterator
 	      it = result.mailboxList.begin();
 	    it != result.mailboxList.end() ; ++it, ++i )
 	cout << "result.mailboxList[" << i << "].displayName:\n"
@@ -328,17 +328,17 @@ int main( int argc, char * argv[] ) {
     break;
   case 15:
     { // address-list
-      Q3ValueList<KMime::Types::Address> result;
+      QList<KMime::Types::Address> result;
       bool ok = parseAddressList( iit, iend, result, withCRLF );
 
       cout << ( ok ? "OK" : "BAD" ) << endl;
       int j = 0;
-      for ( Q3ValueList<KMime::Types::Address>::ConstIterator
+      for ( QList<KMime::Types::Address>::ConstIterator
 	      jt = result.begin() ; jt != result.end() ; ++jt, ++j ) {
 	cout << "result[" << j << "].displayName:\n"
 	     << (*jt).displayName << endl;
 	int i = 0;
-	for ( Q3ValueList<KMime::Types::Mailbox>::ConstIterator
+	for ( QList<KMime::Types::Mailbox>::ConstIterator
 		it = (*jt).mailboxList.begin();
 	      it != (*jt).mailboxList.end() ; ++it, ++i )
 	  cout << "result[" << j << "].mailboxList[" << i << "].displayName:\n"

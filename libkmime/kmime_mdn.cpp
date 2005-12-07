@@ -39,7 +39,7 @@
 
 #include <q3cstring.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 
 #include <unistd.h> // gethostname
 
@@ -159,7 +159,7 @@ namespace MDN {
   }
 
   static Q3CString dispositionField( DispositionType d, ActionMode a, SendingMode s,
-				    const Q3ValueList<DispositionModifier> & m ) {
+				    const QList<DispositionModifier> & m ) {
 
     // mandatory parts: Disposition: foo/baz; bar
     Q3CString result = "Disposition: ";
@@ -171,7 +171,7 @@ namespace MDN {
 
     // optional parts: Disposition: foo/baz; bar/mod1,mod2,mod3
     bool first = true;
-    for ( Q3ValueList<DispositionModifier>::const_iterator mt = m.begin() ;
+    for ( QList<DispositionModifier>::const_iterator mt = m.begin() ;
 	  mt != m.end() ; ++mt ) {
       if ( first ) {
 	result += "/";
@@ -222,7 +222,7 @@ namespace MDN {
 					       DispositionType d,
 					       ActionMode a,
 					       SendingMode s,
-					       const Q3ValueList<DispositionModifier> & m,
+					       const QList<DispositionModifier> & m,
 					       const QString & special )
   {
     // in Perl: chomp(special) 
@@ -251,7 +251,7 @@ namespace MDN {
   }
 
   QString descriptionFor( DispositionType d,
-			  const Q3ValueList<DispositionModifier> & ) {
+			  const QList<DispositionModifier> & ) {
     for ( int i = 0 ; i < numDispositionTypes ; ++i )
       if ( dispositionTypes[i].dispositionType == d )
 	return i18n( dispositionTypes[i].description );

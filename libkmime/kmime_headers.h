@@ -33,7 +33,7 @@
 #include <qmap.h>
 #include <q3ptrlist.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 #include <Q3CString>
 
 #include <time.h>
@@ -333,7 +333,7 @@ protected:
   bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
   /** The list of mailboxes */
-  Q3ValueList<Types::Mailbox> mMailboxList;
+  QList<Types::Mailbox> mMailboxList;
 };
 
 
@@ -357,7 +357,7 @@ protected:
   bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
   /** The list of addresses */
-  Q3ValueList<Types::Address> mAddressList;
+  QList<Types::Address> mAddressList;
 };
 
 /** Base class for headers which deal with a list of msg-id's */
@@ -375,7 +375,7 @@ protected:
   bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
   /** The list of msg-id's */
-  Q3ValueList<Types::AddrSpec> mMsgIdList;
+  QList<Types::AddrSpec> mMsgIdList;
 };
 
 /** Base class for headers which deal with a list of msg-id's */

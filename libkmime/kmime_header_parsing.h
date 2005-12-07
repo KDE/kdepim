@@ -61,19 +61,19 @@ namespace Types {
     QString localPart;
     QString domain;
   };
-  typedef Q3ValueList<AddrSpec> AddrSpecList;
+  typedef QList<AddrSpec> AddrSpecList;
 
   struct KDE_EXPORT Mailbox {
     QString displayName;
     AddrSpec addrSpec;
   };
-  typedef Q3ValueList<Mailbox> MailboxList;
+  typedef QList<Mailbox> MailboxList;
 
   struct KDE_EXPORT Address {
     QString displayName;
     MailboxList mailboxList;
   };
-  typedef Q3ValueList<Address> AddressList;
+  typedef QList<Address> AddressList;
 
   struct KDE_EXPORT DateTime {
     time_t time;            // secs since 1.1.1970, 0:00 UTC/GMT

@@ -186,13 +186,13 @@ namespace KMime {
 	       DispositionType disposition,
 	       ActionMode actionMode,
 	       SendingMode sendingMode,
-	       const Q3ValueList<DispositionModifier> & dispositionModifers
-				   =Q3ValueList<DispositionModifier>(),
+	       const QList<DispositionModifier> & dispositionModifers
+				   =QList<DispositionModifier>(),
 	       const QString & special=QString::null );
 
     KDE_EXPORT extern QString descriptionFor( DispositionType d,
-				   const Q3ValueList<DispositionModifier> & m
-				   =Q3ValueList<DispositionModifier>() );
+				   const QList<DispositionModifier> & m
+				   =QList<DispositionModifier>() );
 
     enum ReturnContent { Nothing, All, HeadersOnly };
 

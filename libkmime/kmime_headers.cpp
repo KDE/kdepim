@@ -137,14 +137,14 @@ bool MailboxList::parse( const char* & scursor, const char * const send,
   // sender := "Sender:" mailbox CRLF
 
   // parse an address-list:
-  Q3ValueList<Address> maybeAddressList;
+  QList<Address> maybeAddressList;
   if ( !parseAddressList( scursor, send, maybeAddressList, isCRLF ) )
     return false;
 
   mMailboxList.clear();
 
   // extract the mailboxes and complain if there are groups:
-  Q3ValueList<Address>::Iterator it;
+  QList<Address>::Iterator it;
   for ( it = maybeAddressList.begin(); it != maybeAddressList.end() ; ++it ) {
     if ( !(*it).displayName.isEmpty() ) {
       KMIME_WARN << "mailbox groups in header disallowing them! Name: \""
@@ -181,7 +181,7 @@ bool SingleMailbox::parse( const char* & scursor, const char * const send,
 bool AddressList::parse( const char* & scursor, const char * const send,
 			 bool isCRLF ) {
 
-  Q3ValueList<Address> maybeAddressList;
+  QList<Address> maybeAddressList;
   if ( !parseAddressList( scursor, send, maybeAddressList, isCRLF ) )
     return false;
 

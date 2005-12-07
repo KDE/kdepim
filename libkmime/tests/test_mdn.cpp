@@ -32,7 +32,7 @@ int main( int argc, char * argv[] ) {
   ActionMode actionMode = ManualAction;
   SendingMode sendingMode = SentManually;
   DispositionType dispositionType = Displayed;
-  Q3ValueList<DispositionModifier> dispositionModifiers;
+  QList<DispositionModifier> dispositionModifiers;
   QString special;
 
   while ( true ) {
