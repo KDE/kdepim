@@ -583,7 +583,7 @@ ICalTimezoneData::Phase *ICalTimezoneSourcePrivate::parsePhase(icalcomponent *c,
           RecurrenceRule *r = new RecurrenceRule();
 	  ICalFormat icf;
 	  ICalFormatImpl impl(&icf);
-#warning Check that icalproperty_get_rrule(p).until.zone is 0 (otherwise won't work)
+#warning Check that icalproperty_get_rrule(p).until.zone is 0 (otherwise it will not work)
           impl.readRecurrence(icalproperty_get_rrule(p), r);
           if (!phase->recur)
             phase->recur = new Recurrence();
