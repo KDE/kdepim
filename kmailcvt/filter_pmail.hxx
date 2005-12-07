@@ -60,8 +60,8 @@ private:
 	4. "ID:name" of parent folder
 	5. name of folder/archiv
     */
-    Q3ValueList<FolderStructure> folderMatrix;
-    typedef Q3ValueList<FolderStructure>::Iterator FolderStructureIterator;
+    QList<FolderStructure> folderMatrix;
+    typedef QList<FolderStructure>::Iterator FolderStructureIterator;
     
     bool folderParsed;
     

@@ -20,7 +20,7 @@
 
 #include "filters.hxx"
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 
 /**
  *imports outlook text messages into KMail
@@ -74,8 +74,8 @@ private: // Private methods
     */
     typedef FolderStructureBase<4> FolderStructure;
     /** matrix with information about the folder structure*/
-    Q3ValueList<FolderStructure> folderStructure;
-    typedef Q3ValueList<FolderStructure>::Iterator FolderStructureIterator;
+    QList<FolderStructure> folderStructure;
+    typedef QList<FolderStructure>::Iterator FolderStructureIterator;
 
     /** name of the current folder */
     QString folderName;

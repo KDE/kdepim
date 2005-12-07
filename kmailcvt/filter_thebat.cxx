@@ -145,7 +145,7 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
     int iFound = 0;
     int count = 0;
     long endOfEmail = 0;
-    Q3ValueList<long> offsets;
+    QList<long> offsets;
 
     if (!tbb.open(QIODevice::ReadOnly)) {
         info->alert(i18n("Unable to open %1, skipping").arg(FileName));
@@ -196,7 +196,7 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
             info->setTo(_path);
             info->setFrom("../" + _info + "/messages.tbb");
 
-            for(Q3ValueList<long>::Iterator it = offsets.begin() ; it != offsets.end() ; ++it) {
+            for(QList<long>::Iterator it = offsets.begin() ; it != offsets.end() ; ++it) {
                 if(info->shouldTerminate()) {
                     tbb.close();
                     return;
