@@ -24,7 +24,7 @@
 
 #include <q3buttongroup.h>
 #include <qcheckbox.h>
-#include <q3hbox.h>
+
 #include <qlabel.h>
 #include <qlayout.h>
 #include <q3listbox.h>
@@ -58,6 +58,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kseparator.h>
+#include <kvbox.h>
 
 #include "addresseditwidget.h"
 
@@ -335,7 +336,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   KSeparator *sep = new KSeparator( Qt::Horizontal, page );
   topLayout->addMultiCellWidget( sep, 9, 9, 0, 1 );
 
-  Q3HBox *buttonBox = new Q3HBox( page );
+  KHBox *buttonBox = new KHBox( page );
   buttonBox->setSpacing( spacingHint() );
   topLayout->addMultiCellWidget( buttonBox, 10, 10, 0, 1 );
 

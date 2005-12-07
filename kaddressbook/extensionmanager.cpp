@@ -29,6 +29,7 @@
 
 #include <qsignalmapper.h>
 #include <qtimer.h>
+#include <kvbox.h>
 
 #include "addresseeeditorextension.h"
 #include "core.h"
@@ -38,7 +39,7 @@
 
 ExtensionManager::ExtensionManager( KAB::Core *core, QWidget *parent,
                                     const char *name )
-  : Q3HBox( parent, name ), mCore( core ), mCurrentExtensionWidget( 0 ),
+  : KHBox( parent ), mCore( core ), mCurrentExtensionWidget( 0 ),
     mMapper( 0 )
 {
   createExtensionWidgets();

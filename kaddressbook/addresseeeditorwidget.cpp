@@ -22,7 +22,7 @@
 */
 
 #include <qcheckbox.h>
-#include <q3hbox.h>
+
 #include <qlabel.h>
 #include <qlayout.h>
 #include <q3listbox.h>
@@ -57,6 +57,7 @@
 #include <libkdepim/categoryeditdialog.h>
 #include <libkdepim/categoryselectdialog.h>
 #include <libkdepim/kdateedit.h>
+#include <kvbox.h>
 
 #include "addresseditwidget.h"
 #include "advancedcustomfields.h"
@@ -276,7 +277,7 @@ void AddresseeEditorWidget::setupTab1()
   layout->addMultiCellWidget( bar, 11, 11, 0, 6 );
 
   ///////////////////////////////////////
-  Q3HBox *categoryBox = new Q3HBox( tab1 );
+  KHBox *categoryBox = new KHBox( tab1 );
   categoryBox->setSpacing( KDialogBase::spacingHint() );
 
   // Categories

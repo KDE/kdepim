@@ -26,11 +26,12 @@
 #include <kcombobox.h>
 #include <kdialog.h>
 #include <klocale.h>
+#include <kvbox.h>
 
 #include "filterselectionwidget.h"
 
 FilterSelectionWidget::FilterSelectionWidget( QWidget *parent, const char *name )
-  : Q3HBox( parent, name )
+  : KHBox( parent )
 {
   setSpacing( KDialog::spacingHint() );
 

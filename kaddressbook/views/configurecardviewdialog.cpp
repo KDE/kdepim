@@ -80,7 +80,7 @@ void ConfigureCardViewWidget::saveSettings( KConfig *config )
 ////////////////////////
 // CardViewLookNFeelPage
 CardViewLookNFeelPage::CardViewLookNFeelPage( QWidget *parent, const char *name )
-  : Q3VBox( parent, name )
+  : KVBox( parent )
 {
   initGUI();
 }
@@ -199,7 +199,7 @@ void CardViewLookNFeelPage::initGUI()
   QTabWidget *tabs = new QTabWidget( this );
 
   // Layout
-  Q3VBox *loTab = new Q3VBox( this, "layouttab" );
+  KVBox *loTab = new KVBox( this );
 
   loTab->setSpacing( spacing );
   loTab->setMargin( margin );
@@ -208,19 +208,19 @@ void CardViewLookNFeelPage::initGUI()
 
   cbDrawSeps = new QCheckBox( i18n("Draw &separators"), gbGeneral );
 
-  Q3HBox *hbSW = new Q3HBox( gbGeneral );
+  KHBox *hbSW = new KHBox( gbGeneral );
   QLabel *lSW = new QLabel( i18n("Separator &width:"), hbSW );
   sbSepWidth = new QSpinBox( 1, 50, 1, hbSW );
   lSW->setBuddy( sbSepWidth);
 
-  Q3HBox *hbPadding = new Q3HBox( gbGeneral );
+  KHBox *hbPadding = new KHBox( gbGeneral );
   QLabel *lSpacing = new QLabel( i18n("&Padding:"), hbPadding );
   sbSpacing = new QSpinBox( 0, 100, 1, hbPadding );
   lSpacing->setBuddy( sbSpacing );
 
   Q3GroupBox *gbCards = new Q3GroupBox( 1, Qt::Horizontal, i18n("Cards"), loTab );
 
-  Q3HBox *hbMargin = new Q3HBox( gbCards );
+  KHBox *hbMargin = new KHBox( gbCards );
   QLabel *lMargin = new QLabel( i18n("&Margin:"), hbMargin );
   sbMargin = new QSpinBox( 0, 100, 1, hbMargin );
   lMargin->setBuddy( sbMargin );
@@ -247,7 +247,7 @@ void CardViewLookNFeelPage::initGUI()
   tabs->addTab( loTab, i18n("&Layout") );
 
   // Colors
-  Q3VBox *colorTab = new Q3VBox( this, "colortab" );
+  KVBox *colorTab = new KVBox( this );
   colorTab->setSpacing( spacing );
   colorTab->setMargin( spacing );
   cbEnableCustomColors = new QCheckBox( i18n("&Enable custom colors"), colorTab );
@@ -264,7 +264,7 @@ void CardViewLookNFeelPage::initGUI()
         ) );
 
   // Fonts
-  Q3VBox *fntTab = new Q3VBox( this, "fonttab" );
+  KVBox *fntTab = new KVBox( this );
 
   fntTab->setSpacing( spacing );
   fntTab->setMargin( spacing );
@@ -302,7 +302,7 @@ void CardViewLookNFeelPage::initGUI()
   tabs->addTab( fntTab, i18n("&Fonts") );
 
   // Behaviour
-  Q3VBox *behaviourTab = new Q3VBox( this );
+  KVBox *behaviourTab = new KVBox( this );
   behaviourTab->setMargin( margin );
   behaviourTab->setSpacing( spacing );
 

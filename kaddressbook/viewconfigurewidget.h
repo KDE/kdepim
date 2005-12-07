@@ -27,13 +27,14 @@
 #include <kdialogbase.h>
 #include <kdepimmacros.h>
 #include <qpixmap.h>
+#include <kvbox.h>
 
 #include "configurewidget.h"
 
 class KJanusWidget;
 
 class QString;
-class Q3VBox;
+class KVBox;
 
 class ViewConfigureFieldsPage;
 class ViewConfigureFilterPage;
