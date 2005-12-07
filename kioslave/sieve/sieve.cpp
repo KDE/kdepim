@@ -1035,7 +1035,7 @@ bool kio_sieveProtocol::authenticate()
 			return false;
 		}
 
-		uint qty = r.getQuantity();
+		int qty = r.getQuantity();
 
 		receiveData();
 
