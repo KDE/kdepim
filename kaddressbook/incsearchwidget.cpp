@@ -28,7 +28,7 @@
 #include <qtimer.h>
 #include <qtoolbutton.h>
 #include <qtooltip.h>
-#include <q3whatsthis.h>
+
 //Added by qt3to4:
 #include <QHBoxLayout>
 #include <QKeyEvent>
@@ -50,7 +50,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   button->setPixmap( SmallIcon( QApplication::isRightToLeft() ? "clear_left" : "locationbar_erase" ) );
   button->setAccel( QKeySequence( Qt::CTRL+Qt::ALT+Qt::Key_S ) );
   button->setAutoRaise( true );
-  QToolTip::add( button, i18n( "Reset" ) );
+  button->setToolTip( i18n( "Reset" ) );
   layout->addWidget( button );
 
   QLabel *label = new QLabel( i18n( "Search:" ), this, "kde toolbar widget" );
@@ -59,7 +59,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
 
   mSearchText = new KLineEdit( this );
   mSearchText->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
-  Q3WhatsThis::add( mSearchText, i18n( "The incremental search<p>Enter some text here will start the search for the contact, which matches the search pattern best. The part of the contact, which will be used for matching, depends on the field selection." ) );
+  mSearchText->setWhatsThis( i18n( "The incremental search<p>Enter some text here will start the search for the contact, which matches the search pattern best. The part of the contact, which will be used for matching, depends on the field selection." ) );
   label->setBuddy( mSearchText );
   layout->addWidget( mSearchText );
 
@@ -71,8 +71,8 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   layout->addWidget( mFieldCombo );
   label->setBuddy(mFieldCombo);
 
-  QToolTip::add( mFieldCombo, i18n( "Select incremental search field" ) );
-  Q3WhatsThis::add( mFieldCombo, i18n( "Here you can choose the field, which shall be used for incremental search." ) );
+  mFieldCombo->setToolTip( i18n( "Select incremental search field" ) );
+  mFieldCombo->setWhatsThis( i18n( "Here you can choose the field, which shall be used for incremental search." ) );
 
   mInputTimer = new QTimer( this );
 

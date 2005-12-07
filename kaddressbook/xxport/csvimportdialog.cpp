@@ -425,7 +425,7 @@ void CSVImportDialog::initGUI()
 
   mDatePatternEdit = new QLineEdit( mPage );
   mDatePatternEdit->setText( "Y-M-D" ); // ISO 8601 format as default
-  QToolTip::add( mDatePatternEdit, i18n( "<ul><li>y: year with 2 digits</li>"
+  mDatePatternEdit->setToolTip( i18n( "<ul><li>y: year with 2 digits</li>"
                                          "<li>Y: year with 4 digits</li>"
                                          "<li>m: month with 1 or 2 digits</li>"
                                          "<li>M: month with 2 digits</li>"
@@ -673,7 +673,7 @@ void CSVImportDialog::reloadCodecs()
   mCodecCombo->insertItem( i18n( "Unicode" ), Uni );
   mCodecCombo->insertItem( i18n( "Microsoft Unicode" ), MSBug );
 
-	for ( uint i = 0; i < mCodecs.count(); i++ )
+	for ( int i = 0; i < mCodecs.count(); i++ )
     mCodecCombo->insertItem( mCodecs.at( i )->name(), Codec + i );
 }
 

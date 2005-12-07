@@ -29,7 +29,7 @@
 #include <q3groupbox.h>
 #include <qspinbox.h>
 #include <qtabwidget.h>
-#include <q3whatsthis.h>
+
 //Added by qt3to4:
 #include <Q3Frame>
 #include <QGridLayout>
@@ -232,17 +232,17 @@ void CardViewLookNFeelPage::initGUI()
         "The item margin is the distance (in pixels) between the item edge and the item data. Most noticeably, "
         "incrementing the item margin will add space between the focus rectangle and the item data."
         );
-  Q3WhatsThis::add( sbMargin, text  );
-  Q3WhatsThis::add( lMargin, text );
+  sbMargin->setWhatsThis( text  );
+  lMargin->setWhatsThis( text );
   text = i18n(
         "The item spacing decides the distance (in pixels) between the items and anything else: the view "
         "borders, other items or column separators."
         );
-  Q3WhatsThis::add( sbSpacing, text );
-  Q3WhatsThis::add( lSpacing, text );
+  sbSpacing->setWhatsThis( text );
+  lSpacing->setWhatsThis( text );
   text = i18n("Sets the width of column separators");
-  Q3WhatsThis::add( sbSepWidth, text );
-  Q3WhatsThis::add( lSW, text );
+  sbSepWidth->setWhatsThis( text );
+  lSW->setWhatsThis( text );
 
   tabs->addTab( loTab, i18n("&Layout") );
 
@@ -255,11 +255,11 @@ void CardViewLookNFeelPage::initGUI()
   lbColors = new ColorListBox( colorTab );
   tabs->addTab( colorTab, i18n("&Colors") );
 
-  Q3WhatsThis::add( cbEnableCustomColors, i18n(
+  cbEnableCustomColors->setWhatsThis( i18n(
         "If custom colors is enabled, you may choose the colors for the view below. "
         "Otherwise colors from your current KDE color scheme are used."
         ) );
-  Q3WhatsThis::add( lbColors, i18n(
+  lbColors->setWhatsThis( i18n(
         "Double click or press RETURN on a item to select a color for the related strings in the view."
         ) );
 
@@ -293,7 +293,7 @@ void CardViewLookNFeelPage::initGUI()
 
   fntTab->setStretchFactor( new QWidget( fntTab ), 1 );
 
-  Q3WhatsThis::add( cbEnableCustomFonts, i18n(
+  cbEnableCustomFonts->setWhatsThis( i18n(
         "If custom fonts are enabled, you may choose which fonts to use for this view below. "
         "Otherwise the default KDE font will be used, in bold style for the header and "
         "normal style for the data."

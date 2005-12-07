@@ -36,7 +36,7 @@
 #include <qpushbutton.h>
 #include <qradiobutton.h>
 #include <qstringlist.h>
-#include <q3whatsthis.h>
+
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <Q3Frame>
@@ -201,31 +201,31 @@ void XXPortSelectDialog::initGUI()
 
   mUseWholeBook = new QRadioButton( i18n( "&All contacts" ), mButtonGroup );
   mUseWholeBook->setChecked( true );
-  Q3WhatsThis::add( mUseWholeBook, i18n( "Export the entire address book" ) );
+  mUseWholeBook->setWhatsThis( i18n( "Export the entire address book" ) );
   groupLayout->addWidget( mUseWholeBook, 0, 0 );
   mUseSelection = new QRadioButton( i18n("&Selected contact", "&Selected contacts (%n selected)", mCore->selectedUIDs().count() ), mButtonGroup );
-  Q3WhatsThis::add( mUseSelection, i18n( "Only export contacts selected in KAddressBook.\n"
+  mUseSelection->setWhatsThis( i18n( "Only export contacts selected in KAddressBook.\n"
                                         "This option is disabled if no contacts are selected." ) );
   groupLayout->addWidget( mUseSelection, 1, 0 );
 
   mUseFilters = new QRadioButton( i18n( "Contacts matching &filter" ), mButtonGroup );
-  Q3WhatsThis::add( mUseFilters, i18n( "Only export contacts matching the selected filter.\n"
+  mUseFilters->setWhatsThis( i18n( "Only export contacts matching the selected filter.\n"
                                      "This option is disabled if you have not defined any filters" ) );
   groupLayout->addWidget( mUseFilters, 2, 0 );
 
   mUseCategories = new QRadioButton( i18n( "Category &members" ), mButtonGroup );
-  Q3WhatsThis::add( mUseCategories, i18n( "Only export contacts who are members of a category that is checked on the list to the left.\n"
+  mUseCategories->setWhatsThis( i18n( "Only export contacts who are members of a category that is checked on the list to the left.\n"
                                        "This option is disabled if you have no categories." ) );
   groupLayout->addWidget( mUseCategories, 3, 0, Qt::AlignTop );
 
   mFiltersCombo = new QComboBox( false, mButtonGroup );
-  Q3WhatsThis::add( mFiltersCombo, i18n( "Select a filter to decide which contacts to export." ) );
+  mFiltersCombo->setWhatsThis( i18n( "Select a filter to decide which contacts to export." ) );
   groupLayout->addWidget( mFiltersCombo, 2, 1 );
 
   mCategoriesView = new Q3ListView( mButtonGroup );
   mCategoriesView->addColumn( "" );
   mCategoriesView->header()->hide();
-  Q3WhatsThis::add( mCategoriesView, i18n( "Check the categories whose members you want to export." ) );
+  mCategoriesView->setWhatsThis( i18n( "Check the categories whose members you want to export." ) );
   groupLayout->addWidget( mCategoriesView, 3, 1 );
 
   topLayout->addWidget( mButtonGroup );

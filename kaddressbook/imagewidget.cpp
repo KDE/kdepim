@@ -165,7 +165,7 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
 
   topLayout->addWidget( box );
 
-  QToolTip::add( mClearButton, i18n( "Reset" ) );
+  mClearButton->setToolTip( i18n( "Reset" ) );
 
   connect( mImageLabel, SIGNAL( changed() ),
            SIGNAL( changed() ) );

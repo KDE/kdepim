@@ -108,14 +108,14 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   grid->addWidget( label, 0, 0 );
 
   mPhoneHook = new QLineEdit( groupBox );
-  QToolTip::add( mPhoneHook, i18n( "<ul><li>%N: Phone Number</li></ul>" ) );
+  mPhoneHook->setToolTip( i18n( "<ul><li>%N: Phone Number</li></ul>" ) );
   grid->addWidget( mPhoneHook, 0, 1 );
 
   label = new QLabel( i18n( "Fax:" ), groupBox );
   grid->addWidget( label, 1, 0 );
 
   mFaxHook = new QLineEdit( groupBox );
-  QToolTip::add( mFaxHook, i18n( "<ul><li>%N: Fax Number</li></ul>" ) );
+  mFaxHook->setToolTip( i18n( "<ul><li>%N: Fax Number</li></ul>" ) );
   grid->addWidget( mFaxHook, 1, 1 );
 
 
@@ -123,7 +123,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   grid->addWidget( label, 2, 0 );
 
   mSMSHook = new QLineEdit( groupBox );
-  QToolTip::add( mSMSHook, i18n( "<ul><li>%N: Phone Number</li><li>%F: File containing the text message(s)</li></ul>" ) );
+  mSMSHook->setToolTip( i18n( "<ul><li>%N: Phone Number</li><li>%F: File containing the text message(s)</li></ul>" ) );
   grid->addWidget( mSMSHook, 2, 1 );
 
 
@@ -137,7 +137,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   mLocationMapURL = new QComboBox( true, groupBox );
   mLocationMapURL->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
-  QToolTip::add( mLocationMapURL, i18n( "<ul> <li>%s: Street</li>"
+  mLocationMapURL->setToolTip( i18n( "<ul> <li>%s: Street</li>"
                                  "<li>%r: Region</li>"
                                  "<li>%l: Location</li>"
                                  "<li>%z: Zip Code</li>"

@@ -29,7 +29,7 @@
 #include <qpushbutton.h>
 #include <qcheckbox.h>
 #include <qstring.h>
-#include <q3whatsthis.h>
+
 //Added by qt3to4:
 #include <QGridLayout>
 
@@ -68,7 +68,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   label->setBuddy( mPrefixCombo );
   layout->addMultiCellWidget( mPrefixCombo, 0, 0, 1, 2 );
 
-  Q3WhatsThis::add( mPrefixCombo, i18n( "The predefined honorific prefixes can be extended in the settings dialog." ) );
+  mPrefixCombo->setWhatsThis( i18n( "The predefined honorific prefixes can be extended in the settings dialog." ) );
 
   label = new QLabel( i18n( "Given name:" ), page );
   layout->addWidget( label, 1, 0 );
@@ -100,7 +100,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   label->setBuddy( mSuffixCombo );
   layout->addMultiCellWidget( mSuffixCombo, 4, 4, 1, 2 );
 
-  Q3WhatsThis::add( mSuffixCombo, i18n( "The predefined honorific suffixes can be extended in the settings dialog." ) );
+  mSuffixCombo->setWhatsThis( i18n( "The predefined honorific suffixes can be extended in the settings dialog." ) );
 
   label = new QLabel( i18n( "Formatted name:" ), page );
   layout->addWidget( label, 5, 0 );

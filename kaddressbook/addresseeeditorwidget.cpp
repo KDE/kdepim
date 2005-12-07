@@ -155,7 +155,7 @@ void AddresseeEditorWidget::setupTab1()
 
   // First name
   button = new QPushButton( i18n( "Edit Name..." ), tab1 );
-  QToolTip::add( button, i18n( "Edit the contact's name" ) );
+  button->setToolTip( i18n( "Edit the contact's name" ) );
   mNameEdit = new KLineEdit( tab1 );
   connect( mNameEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( nameTextChanged( const QString& ) ) );

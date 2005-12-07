@@ -35,7 +35,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
-#include <q3whatsthis.h>
+
 //Added by qt3to4:
 #include <QGridLayout>
 
@@ -79,8 +79,8 @@ SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *na
   connect( mPlayButton, SIGNAL( clicked() ),
            SLOT( playSound() ) );
 
-  Q3WhatsThis::add( this, i18n( "This field stores a sound file which contains the name of the contact to clarify the pronunciation." ) );
-  Q3WhatsThis::add( mUseSoundUrl, i18n( "Save only the URL to the sound file, not the whole object." ) );
+  this->setWhatsThis( i18n( "This field stores a sound file which contains the name of the contact to clarify the pronunciation." ) );
+  mUseSoundUrl->setWhatsThis( i18n( "Save only the URL to the sound file, not the whole object." ) );
 }
 
 SoundWidget::~SoundWidget()
