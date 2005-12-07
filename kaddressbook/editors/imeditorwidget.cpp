@@ -29,7 +29,7 @@
 #include <qfont.h>
 #include <qpainter.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 
 #include <kdialogbase.h>
 #include <kdebug.h>
@@ -173,8 +173,8 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM, con
 
   // order the protocols by putting them in a qmap, then sorting the set of keys and recreating the list
   QMap<QString, KPluginInfo *> protocolMap;
-  Q3ValueList<KPluginInfo *>::ConstIterator it;
-  Q3ValueList<KPluginInfo *> sorted;
+  QList<KPluginInfo *>::ConstIterator it;
+  QList<KPluginInfo *> sorted;
   for ( it = mProtocols.begin(); it != mProtocols.end(); ++it )
       protocolMap.insert( (*it)->name(), (*it) );
 
@@ -187,7 +187,7 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM, con
   mProtocols = sorted;
 }
 
-Q3ValueList<KPluginInfo *> IMEditorWidget::availableProtocols() const
+QList<KPluginInfo *> IMEditorWidget::availableProtocols() const
 {
   return mProtocols;
 }
@@ -233,7 +233,7 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
 {
   // for each changed protocol, write a new custom field containing the current set of
   // addresses
-  Q3ValueList<KPluginInfo *>::ConstIterator protocolIt;
+  QList<KPluginInfo *>::ConstIterator protocolIt;
   for ( protocolIt = mChangedProtocols.begin(); protocolIt != mChangedProtocols.end(); ++protocolIt ) {
     QStringList lst;
     Q3ListViewItemIterator addressIt( mWidget->lvAddresses );
@@ -463,7 +463,7 @@ QString IMEditorWidget::preferred() const
 
 KPluginInfo * IMEditorWidget::protocolFromString( const QString &fieldValue ) const
 {
-  Q3ValueList<KPluginInfo *>::ConstIterator it;
+  QList<KPluginInfo *>::ConstIterator it;
   KPluginInfo * protocol = 0;
   for ( it = mProtocols.begin(); it != mProtocols.end(); ++it ) {
     if ( (*it)->property( "X-KDE-InstantMessagingKABCField" ).toString() == fieldValue ) {

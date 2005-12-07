@@ -41,7 +41,7 @@
 #include <QEvent>
 #include <Q3Frame>
 #include <QBoxLayout>
-#include <Q3ValueList>
+#include <QList>
 #include <QVBoxLayout>
 
 #include <kacceleratormanager.h>
@@ -142,13 +142,13 @@ void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
   // Insert types for existing numbers.
   mTypeCombo->insertTypeList( list );
 
-  Q3ValueList<int> defaultTypes;
+  QList<int> defaultTypes;
   defaultTypes << KABC::Address::Home;
   defaultTypes << KABC::Address::Work;
 
   AddresseeConfig config( mAddressee );
-  const Q3ValueList<int> configList = config.noDefaultAddrTypes();
-  Q3ValueList<int>::ConstIterator it;
+  const QList<int> configList = config.noDefaultAddrTypes();
+  QList<int>::ConstIterator it;
   for ( it = configList.begin(); it != configList.end(); ++it )
     defaultTypes.remove( *it );
 
@@ -203,7 +203,7 @@ void AddressEditWidget::edit()
       }
 
       AddresseeConfig config( mAddressee );
-      Q3ValueList<int> configList;
+      QList<int> configList;
       if ( !hasHome )
         configList << KABC::Address::Home;
       if ( !hasWork )

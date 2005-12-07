@@ -57,7 +57,7 @@ class IMEditorWidget : public KDialogBase
     void loadContact( KABC::Addressee *addr );
     void storeContact( KABC::Addressee *addr );
     void setReadOnly( bool readOnly );
-    Q3ValueList<KPluginInfo *> availableProtocols() const;
+    QList<KPluginInfo *> availableProtocols() const;
     bool isModified() const;
     QString preferred() const;
 
@@ -87,8 +87,8 @@ class IMEditorWidget : public KDialogBase
     void setModified( bool modified );
 
     // Used to track changed protocols to reduce KABC writes
-    Q3ValueList<KPluginInfo *> mChangedProtocols;
-    Q3ValueList<KPluginInfo *> mProtocols;
+    QList<KPluginInfo *> mChangedProtocols;
+    QList<KPluginInfo *> mProtocols;
 };
 
 /**

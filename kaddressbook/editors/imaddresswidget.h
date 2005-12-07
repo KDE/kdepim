@@ -44,15 +44,15 @@ class IMAddressWidget : public IMAddressBase
   Q_OBJECT
 
   public:
-    IMAddressWidget( QWidget *parent, Q3ValueList<KPluginInfo *> protocols);
-    IMAddressWidget( QWidget *parent, Q3ValueList<KPluginInfo *> protocols,
+    IMAddressWidget( QWidget *parent, QList<KPluginInfo *> protocols);
+    IMAddressWidget( QWidget *parent, QList<KPluginInfo *> protocols,
                      KPluginInfo *protocol, const QString& address,
                      const IMContext& context = Any );
 
     KPluginInfo * protocol() const;
     IMContext context() const;
     QString address() const ;
-    Q3ValueList<KPluginInfo *> mProtocols;
+    QList<KPluginInfo *> mProtocols;
 
   signals:
     void inValidState( bool );

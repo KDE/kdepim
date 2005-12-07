@@ -31,7 +31,7 @@
 #include <QSplitter>
 //Added by qt3to4:
 #include <QVBoxLayout>
-#include <Q3ValueList>
+#include <QList>
 #include <QHBoxLayout>
 #include <Q3CString>
 
@@ -214,7 +214,7 @@ void KABCore::restoreSettings()
   updateIncSearchWidget();
   mIncSearchWidget->setCurrentItem( KABPrefs::instance()->currentIncSearchField() );
 
-  Q3ValueList<int> splitterSize = KABPrefs::instance()->extensionsSplitter();
+  QList<int> splitterSize = KABPrefs::instance()->extensionsSplitter();
   if ( splitterSize.count() == 0 ) {
     splitterSize.append( mDetailsSplitter->height() / 2 );
     splitterSize.append( mDetailsSplitter->height() / 2 );

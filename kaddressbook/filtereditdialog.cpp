@@ -220,8 +220,9 @@ void FilterDialog::edit()
   dlg.setFilter( mFilterList[ pos ] );
 
   if ( dlg.exec() ) {
-    mFilterList.remove( mFilterList.at( pos ) );
-    mFilterList.insert( mFilterList.at( pos ), dlg.filter() );
+    mFilterList.removeAt(  pos  );
+#warning "kde4: correct ?"	
+    mFilterList.insert( pos , dlg.filter() );
   }
 
   refresh();
@@ -231,7 +232,8 @@ void FilterDialog::edit()
 
 void FilterDialog::remove()
 {
-  mFilterList.remove( mFilterList.at( mFilterListBox->currentItem() ) );
+#warning "kde4: correct ?"
+  mFilterList.removeAt( mFilterListBox->currentItem()  );
 
   selectionChanged( 0 );
 

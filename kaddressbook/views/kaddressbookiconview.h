@@ -26,7 +26,7 @@
 
 #include <qstring.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 #include <QDropEvent>
 #include <Q3PtrList>
 #include <kiconview.h>
@@ -92,6 +92,6 @@ class AddresseeIconView : public KIconView
     virtual Q3DragObject *dragObject();
 
   protected slots:
-    void itemDropped( QDropEvent*, const Q3ValueList<Q3IconDragItem>& );
+    void itemDropped( QDropEvent*, const QList<Q3IconDragItem>& );
 };
 #endif

@@ -31,7 +31,7 @@
 #include <qrect.h>
 #include <q3valuelist.h>
 
-typedef Q3ValueList<QRect> QRectList;
+typedef QList<QRect> QRectList;
 
 class KABEntryPainter
 {

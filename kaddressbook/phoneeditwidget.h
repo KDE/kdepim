@@ -30,7 +30,7 @@
 #include "addresseeconfig.h"
 //Added by qt3to4:
 #include <QVBoxLayout>
-#include <Q3ValueList>
+#include <QList>
 #include <Q3PtrList>
 
 class Q3ButtonGroup;
@@ -63,7 +63,7 @@ class PhoneTypeCombo : public KComboBox
 
     int mType;
     int mLastSelected;
-    Q3ValueList<int> mTypeList;
+    QList<int> mTypeList;
 };
 
 class PhoneNumberWidget : public QWidget

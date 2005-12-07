@@ -39,7 +39,7 @@
 class Filter
 {
   public:
-    typedef Q3ValueList<Filter> List;
+    typedef QList<Filter> List;
 
     enum MatchRule { Matching = 0, NotMatching = 1 };
 

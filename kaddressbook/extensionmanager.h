@@ -27,7 +27,7 @@
 
 #include <q3ptrlist.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 #include <kvbox.h>
 
 #include "extensionwidget.h"
@@ -42,7 +42,7 @@ class KActionCollection;
 class ExtensionData
 {
   public:
-    typedef Q3ValueList<ExtensionData> List;
+    typedef QList<ExtensionData> List;
 
     KAB::ExtensionWidget *widget;
     QString identifier;

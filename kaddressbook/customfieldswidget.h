@@ -36,7 +36,7 @@
 //Added by qt3to4:
 #include <QLabel>
 #include <QVBoxLayout>
-#include <Q3ValueList>
+#include <QList>
 #include <Q3Frame>
 #include <QHBoxLayout>
 #include <QGridLayout>
@@ -63,7 +63,7 @@ typedef struct {
   QHBoxLayout *mLayout;
 } FieldRecord;
 
-typedef Q3ValueList<FieldRecord> FieldRecordList;
+typedef QList<FieldRecord> FieldRecordList;
 
 class AddFieldDialog : public KDialogBase
 {

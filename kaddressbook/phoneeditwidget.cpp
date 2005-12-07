@@ -33,7 +33,7 @@
 #include <qtooltip.h>
 //Added by qt3to4:
 #include <QVBoxLayout>
-#include <Q3ValueList>
+#include <QList>
 #include <QHBoxLayout>
 #include <QGridLayout>
 
@@ -92,7 +92,7 @@ void PhoneTypeCombo::update()
   blockSignals( true );
 
   clear();
-  Q3ValueList<int>::ConstIterator it;
+  QList<int>::ConstIterator it;
   for ( it = mTypeList.begin(); it != mTypeList.end(); ++it ) {
     if ( *it == -1 ) { // "Other..." entry
       insertItem( i18n( "Other..." ) );

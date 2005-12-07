@@ -176,7 +176,7 @@ void ContactEditorTabPage::updateLayout()
       mLayout->addMultiCellWidget( *it, row, row + (*it)->logicalHeight() - 1, 0, 1 );
       row += (*it)->logicalHeight();
 
-      if ( it != mWidgets.fromLast() ) {
+      if ( it != mWidgets.end() ) {
         Q3Frame *frame = new Q3Frame( this );
         frame->setFrameStyle( Q3Frame::HLine | Q3Frame::Sunken );
         mLayout->addMultiCellWidget( frame, row, row, 0, 1 );
@@ -188,7 +188,7 @@ void ContactEditorTabPage::updateLayout()
     // fill left side
     int leftHeight = (*it)->logicalHeight();
 
-    if ( it == mWidgets.fromLast() ) { // last widget gets full width
+    if ( it == mWidgets.end() ) { // last widget gets full width
       mLayout->addMultiCellWidget( *it, row, row + leftHeight - 1, 0, 1 );
       return;
     } else {
