@@ -28,12 +28,14 @@
 //Added by qt3to4:
 #include <QPixmap>
 #include <QLabel>
+#include <QListWidgetItem>
 
 class Q3ButtonGroup;
 class QCheckBox;
 class Q3GroupBox;
 class QRadioButton;
 class Q3TextEdit;
+class QListWidget;
 
 class KScoringEditorWidget;
 class KConfigBase;
@@ -209,7 +211,7 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
   Q_OBJECT
 
   public:
-    AppearanceWidget( KInstance *inst,QWidget *parent = 0 );
+    AppearanceWidget( KInstance *inst, QWidget *parent = 0 );
     ~AppearanceWidget();
 
     void load();
@@ -217,50 +219,60 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
     void defaults();
 
     //===================================================================================
-    // code taken from KMail, Copyright (C) 2000 Espen Sand, espen@kde.org
 
-    /** Color list box item. */
-    class KDE_EXPORT ColorListItem : public Q3ListBoxText {
+    /** Color list view item. */
+    class KDE_EXPORT ColorListItem : public QListWidgetItem {
 
       public:
-        ColorListItem( const QString &text, const QColor &color=Qt::black );
-        ~ColorListItem();
-        const QColor& color()                     { return mColor; }
-        void  setColor( const QColor &color )     { mColor = color; }
-
-      protected:
-        virtual void paint( QPainter * );
-        virtual int height( const Q3ListBox * ) const;
-        virtual int width( const Q3ListBox * ) const;
+        /** Create a new color list view item.
+         * @param text The item text.
+         * @param color The item color.
+         * @param parent The list widget this item is shown in.
+         */
+        ColorListItem( const QString &text, const QColor &color = Qt::black, QListWidget *parent = 0 );
+        /** Returns the current color. */
+        const QColor& color() { return mColor; }
+        /** Sets the current color. */
+        void  setColor( const QColor &color );
 
       private:
+        /// The current color.
         QColor mColor;
     };
 
     //===================================================================================
 
-    /** Font list box item. */
-    class KDE_EXPORT FontListItem : public Q3ListBoxText {
+    /** Font list view item. */
+    class KDE_EXPORT FontListItem : public QListWidgetItem {
 
       public:
-        FontListItem( const QString &name, const QFont & );
-        ~FontListItem();
-        const QFont& font()                     { return f_ont; }
-        void setFont( const QFont &);
-
-      protected:
-        virtual void paint( QPainter * );
-        virtual int width( const Q3ListBox * ) const;
+        /** Create a new font list view item.
+         * @param text The item text.
+         * @param font The selected font for this item.
+         * @param parent The list widget this item is shown in.
+         */
+        FontListItem( const QString &text, const QFont &font, QListWidget *parent = 0 );
+        /** Returns the current font. */
+        const QFont& font() { return mFont; }
+        /** Sets the current font.
+         * @param font The new font.
+         */
+        void setFont( const QFont &font );
 
       private:
-        QFont f_ont;
-        QString fontInfo;
+        /// The current font.
+        QFont mFont;
+        /// The item text.
+        QString mText;
     };
 
     //===================================================================================
 
-    KNDialogListBox *c_List,
-              *f_List;
+  protected:
+    /// The color selection list.
+    QListWidget *mColorList;
+    /// The font selection list.
+    QListWidget *mFontList;
     QCheckBox *c_olorCB,
               *f_ontCB;
     QPushButton *c_olChngBtn,
@@ -271,13 +283,19 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
   protected slots:
     //colors
     void slotColCheckBoxToggled(bool b);
-    void slotColItemSelected(Q3ListBoxItem *);   // show color dialog for the entry
+    /** Show color selection dialog for the given item.
+     * @param item The color list item that has been activated.
+     */
+    void slotColItemActivated( QListWidgetItem *item );
     void slotColChangeBtnClicked();
     void slotColSelectionChanged();
 
     //fonts
     void slotFontCheckBoxToggled(bool b);
-    void slotFontItemSelected(Q3ListBoxItem *);  // show font dialog for the entry
+    /** Show font selection dialog for the given item.
+     * @param item The font list item that has been activated.
+     */
+    void slotFontItemActivated( QListWidgetItem *item );
     void slotFontChangeBtnClicked();
     void slotFontSelectionChanged();
 

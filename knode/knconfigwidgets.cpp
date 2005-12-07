@@ -679,83 +679,46 @@ void KNode::SmtpAccountWidget::slotPasswordChanged()
 
 
 //===================================================================================
-// code taken from KMail, Copyright (C) 2000 Espen Sand, espen@kde.org
 
-KNode::AppearanceWidget::ColorListItem::ColorListItem( const QString &text, const QColor &color )
-  : Q3ListBoxText(text), mColor( color )
+KNode::AppearanceWidget::ColorListItem::ColorListItem( const QString &text, const QColor &color, QListWidget *parent ) :
+  QListWidgetItem( text, parent )
 {
+  setColor( color );
 }
 
 
-KNode::AppearanceWidget::ColorListItem::~ColorListItem()
+void KNode::AppearanceWidget::ColorListItem::setColor( const QColor &color )
 {
-}
-
-
-void KNode::AppearanceWidget::ColorListItem::paint( QPainter *p )
-{
-  QFontMetrics fm = p->fontMetrics();
-  int h = fm.height();
-
-  p->drawText( 30+3*2, fm.ascent() + fm.leading()/2, text() );
-
-  p->setPen( Qt::black );
-  p->drawRect( 3, 1, 30, h-1 );
-  p->fillRect( 4, 2, 28, h-3, mColor );
-}
-
-
-int KNode::AppearanceWidget::ColorListItem::height(const Q3ListBox *lb ) const
-{
-  return( lb->fontMetrics().lineSpacing()+1 );
-}
-
-
-int KNode::AppearanceWidget::ColorListItem::width(const Q3ListBox *lb ) const
-{
-  return( 30 + lb->fontMetrics().width( text() ) + 6 );
+  mColor = color;
+  int height = QFontMetrics( font() ).height();
+  QPixmap icon( height, height );
+  QPainter p( &icon );
+  p.setPen( Qt::black );
+  p.drawRect( 0, 0, height - 1, height - 1 );
+  p.fillRect( 1, 1, height - 2, height - 2, color );
+  setIcon( icon );
+  if ( listWidget() )
+    listWidget()->update();
 }
 
 
 //===================================================================================
 
 
-KNode::AppearanceWidget::FontListItem::FontListItem( const QString &name, const QFont &font )
-  : Q3ListBoxText(name), f_ont(font)
+KNode::AppearanceWidget::FontListItem::FontListItem( const QString &text, const QFont &font, QListWidget *parent ) :
+  QListWidgetItem( parent ),
+  mText( text )
 {
-  fontInfo = QString("[%1 %2]").arg(f_ont.family()).arg(f_ont.pointSize());
+  setFont( font );
 }
 
 
-KNode::AppearanceWidget::FontListItem::~FontListItem()
+void KNode::AppearanceWidget::FontListItem::setFont( const QFont &font )
 {
-}
-
-
-void KNode::AppearanceWidget::FontListItem::setFont(const QFont &font)
-{
-  f_ont = font;
-  fontInfo = QString("[%1 %2]").arg(f_ont.family()).arg(f_ont.pointSize());
-}
-
-
-void KNode::AppearanceWidget::FontListItem::paint( QPainter *p )
-{
-  QFont fnt = p->font();
-  fnt.setWeight(QFont::Bold);
-  p->setFont(fnt);
-  int fontInfoWidth = p->fontMetrics().width(fontInfo);
-  int h = p->fontMetrics().ascent() + p->fontMetrics().leading()/2;
-  p->drawText(2, h, fontInfo );
-  fnt.setWeight(QFont::Normal);
-  p->setFont(fnt);
-  p->drawText(5 + fontInfoWidth, h, text() );
-}
-
-
-int KNode::AppearanceWidget::FontListItem::width(const Q3ListBox *lb ) const
-{
-  return( lb->fontMetrics().width(fontInfo) + lb->fontMetrics().width(text()) + 20 );
+  mFont = font;
+  setText( QString("[%1 %2] %3").arg( mFont.family() ).arg( mFont.pointSize() ).arg( mText ) );
+  if ( listWidget() )
+    listWidget()->update();
 }
 
 
@@ -766,35 +729,37 @@ KNode::AppearanceWidget::AppearanceWidget( KInstance *inst, QWidget *parent ) :
   KCModule(inst, parent ),
   d_ata( knGlobals.configManager()->appearance() )
 {
-  QGridLayout *topL=new QGridLayout(this, 8,2, 5,5);
+  QGridLayout *topL = new QGridLayout( this );
 
   //color-list
-  c_List = new KNDialogListBox(false, this);
-  topL->addMultiCellWidget(c_List,1,3,0,0);
-  connect(c_List, SIGNAL(selected(Q3ListBoxItem*)),SLOT(slotColItemSelected(Q3ListBoxItem*)));
-  connect(c_List, SIGNAL(selectionChanged()), SLOT(slotColSelectionChanged()));
+  mColorList = new QListWidget( this );
+  topL->addWidget( mColorList, 1, 0, 3, 2 );
+  connect( mColorList, SIGNAL( itemActivated( QListWidgetItem* ) ), SLOT( slotColItemActivated( QListWidgetItem* ) ) );
+  connect( mColorList, SIGNAL( itemSelectionChanged() ), SLOT( slotColSelectionChanged() ) );
 
   c_olorCB = new QCheckBox(i18n("&Use custom colors"),this);
-  topL->addWidget(c_olorCB,0,0);
+  topL->addWidget( c_olorCB, 0, 0, 1, 3 );
   connect(c_olorCB, SIGNAL(toggled(bool)), this, SLOT(slotColCheckBoxToggled(bool)));
 
   c_olChngBtn=new QPushButton(i18n("Cha&nge..."), this);
   connect(c_olChngBtn, SIGNAL(clicked()), this, SLOT(slotColChangeBtnClicked()));
-  topL->addWidget(c_olChngBtn,1,1);
+  topL->addWidget( c_olChngBtn, 1, 2, 1, 1 );
 
   //font-list
-  f_List = new KNDialogListBox(false, this);
-  topL->addMultiCellWidget(f_List,5,7,0,0);
-  connect(f_List, SIGNAL(selected(Q3ListBoxItem*)),SLOT(slotFontItemSelected(Q3ListBoxItem*)));
-  connect(f_List, SIGNAL(selectionChanged()),SLOT(slotFontSelectionChanged()));
+  mFontList = new QListWidget( this );
+  topL->addWidget( mFontList, 5, 0, 3, 2 );
+  connect( mFontList, SIGNAL( itemActivated( QListWidgetItem* ) ), SLOT( slotFontItemActivated( QListWidgetItem* ) ) );
+  connect( mFontList, SIGNAL( itemSelectionChanged() ), SLOT( slotFontSelectionChanged() ) );
 
   f_ontCB = new QCheckBox(i18n("Use custom &fonts"),this);
-  topL->addWidget(f_ontCB,4,0);
+  topL->addWidget(f_ontCB , 4, 0, 1, 3 );
   connect(f_ontCB, SIGNAL(toggled(bool)), this, SLOT(slotFontCheckBoxToggled(bool)));
 
   f_ntChngBtn=new QPushButton(i18n("Chang&e..."), this);
   connect(f_ntChngBtn, SIGNAL(clicked()), this, SLOT(slotFontChangeBtnClicked()));
-  topL->addWidget(f_ntChngBtn,5,1);
+  topL->addWidget( f_ntChngBtn, 5, 2, 1, 1 );
+
+  topL->setColumnStretch( 0, 1 );
 
   load();
 }
@@ -809,15 +774,15 @@ void KNode::AppearanceWidget::load()
 {
   c_olorCB->setChecked(d_ata->u_seColors);
   slotColCheckBoxToggled(d_ata->u_seColors);
-  c_List->clear();
+  mColorList->clear();
   for(int i=0; i < d_ata->colorCount(); i++)
-    c_List->insertItem(new ColorListItem(d_ata->colorName(i), d_ata->color(i)));
+    mColorList->addItem( new ColorListItem( d_ata->colorName(i), d_ata->color(i) ) );
 
   f_ontCB->setChecked(d_ata->u_seFonts);
   slotFontCheckBoxToggled(d_ata->u_seFonts);
-  f_List->clear();
+  mFontList->clear();
   for(int i=0; i < d_ata->fontCount(); i++)
-    f_List->insertItem(new FontListItem(d_ata->fontName(i), d_ata->font(i)));
+    mFontList->addItem( new FontListItem( d_ata->fontName(i), d_ata->font(i) ) );
 }
 
 
@@ -825,11 +790,11 @@ void KNode::AppearanceWidget::save()
 {
   d_ata->u_seColors=c_olorCB->isChecked();
   for(int i=0; i<d_ata->colorCount(); i++)
-    d_ata->c_olors[i] = (static_cast<ColorListItem*>(c_List->item(i)))->color();
+    d_ata->c_olors[i] = ( static_cast<ColorListItem*>( mColorList->item(i) ) )->color();
 
   d_ata->u_seFonts=f_ontCB->isChecked();
   for(int i=0; i<d_ata->fontCount(); i++)
-    d_ata->f_onts[i] = (static_cast<FontListItem*>(f_List->item(i)))->font();
+    d_ata->f_onts[i] = ( static_cast<FontListItem*>( mFontList->item(i) ) )->font();
 
   d_ata->setDirty(true);
 
@@ -842,19 +807,16 @@ void KNode::AppearanceWidget::defaults()
   // default colors
   ColorListItem *colorItem;
   for(int i=0; i < d_ata->colorCount(); i++) {
-    colorItem=static_cast<ColorListItem*>(c_List->item(i));
+    colorItem = static_cast<ColorListItem*>( mColorList->item(i) );
     colorItem->setColor(d_ata->defaultColor(i));
   }
-  c_List->triggerUpdate(true);
-  c_List->repaint(true);
 
   // default fonts
   FontListItem *fontItem;
   for(int i=0; i < d_ata->fontCount(); i++) {
-    fontItem=static_cast<FontListItem*>(f_List->item(i));
+    fontItem = static_cast<FontListItem*>( mFontList->item(i) );
     fontItem->setFont(d_ata->defaultFont(i));
   }
-  f_List->triggerUpdate(false);
 
   emit changed(true);
 }
@@ -862,24 +824,23 @@ void KNode::AppearanceWidget::defaults()
 
 void KNode::AppearanceWidget::slotColCheckBoxToggled(bool b)
 {
-  c_List->setEnabled(b);
-  c_olChngBtn->setEnabled(b && (c_List->currentItem()!=-1));
-  if (b) c_List->setFocus();
+  mColorList->setEnabled( b );
+  c_olChngBtn->setEnabled( b && mColorList->currentItem() );
+  if (b) mColorList->setFocus();
   emit changed(true);
 }
 
 
 // show color dialog for the entry
-void KNode::AppearanceWidget::slotColItemSelected(Q3ListBoxItem *it)
+void KNode::AppearanceWidget::slotColItemActivated( QListWidgetItem *item )
 {
-  if (it) {
-    ColorListItem *colorItem = static_cast<ColorListItem*>(it);
+  if ( item ) {
+    ColorListItem *colorItem = static_cast<ColorListItem*>( item );
     QColor col = colorItem->color();
     int result = KColorDialog::getColor(col,this);
 
     if (result == KColorDialog::Accepted) {
       colorItem->setColor(col);
-      c_List->triggerUpdate(false);
     }
   }
   emit changed(true);
@@ -888,38 +849,36 @@ void KNode::AppearanceWidget::slotColItemSelected(Q3ListBoxItem *it)
 
 void KNode::AppearanceWidget::slotColChangeBtnClicked()
 {
-  if(c_List->currentItem()!=-1)
-    slotColItemSelected(c_List->item(c_List->currentItem()));
+  if ( mColorList->currentItem() )
+    slotColItemActivated( mColorList->currentItem() );
 }
 
 
 void KNode::AppearanceWidget::slotColSelectionChanged()
 {
-  c_olChngBtn->setEnabled(c_List->currentItem()!=-1);
+  c_olChngBtn->setEnabled( mColorList->currentItem() );
 }
 
 
 void KNode::AppearanceWidget::slotFontCheckBoxToggled(bool b)
 {
-  f_List->setEnabled(b);
-  f_ntChngBtn->setEnabled(b && (f_List->currentItem()!=-1));
-  if (b) f_List->setFocus();
+  mFontList->setEnabled( b );
+  f_ntChngBtn->setEnabled( b && mFontList->currentItem() );
+  if (b) mFontList->setFocus();
   emit changed(true);
 }
 
 
 // show font dialog for the entry
-void KNode::AppearanceWidget::slotFontItemSelected(Q3ListBoxItem *it)
+void KNode::AppearanceWidget::slotFontItemActivated( QListWidgetItem *item )
 {
-  if (it) {
-    FontListItem *fontItem = static_cast<FontListItem*>(it);
+  if ( item ) {
+    FontListItem *fontItem = static_cast<FontListItem*>( item );
     QFont font = fontItem->font();
     int result = KFontDialog::getFont(font,false,this);
 
-    if (result == KFontDialog::Accepted) {
+    if (result == KFontDialog::Accepted)
       fontItem->setFont(font);
-      f_List->triggerUpdate(false);
-    }
   }
   emit changed(true);
 }
@@ -927,14 +886,14 @@ void KNode::AppearanceWidget::slotFontItemSelected(Q3ListBoxItem *it)
 
 void KNode::AppearanceWidget::slotFontChangeBtnClicked()
 {
-  if(f_List->currentItem()!=-1)
-    slotFontItemSelected(f_List->item(f_List->currentItem()));
+  if ( mFontList->currentItem() )
+    slotFontItemActivated( mFontList->currentItem() );
 }
 
 
 void KNode::AppearanceWidget::slotFontSelectionChanged()
 {
-  f_ntChngBtn->setEnabled(f_List->currentItem()!=-1);
+  f_ntChngBtn->setEnabled( mFontList->currentItem() );
 }
 
 
