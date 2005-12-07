@@ -653,7 +653,7 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
       QStringList types = QStringList::split( ';', it.data().toString() );
 
       int type = Address::Work;
-      for ( uint i = 0; i < types.count(); ++i )
+      for ( int i = 0; i < types.count(); ++i )
         type += mAddrTypes[ types[ i ] ];
 
       addrOne.setType( type );
@@ -673,7 +673,7 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
       QStringList types = QStringList::split( ';', it.data().toString() );
 
       int type = Address::Home;
-      for ( uint i = 0; i < types.count(); ++i )
+      for ( int i = 0; i < types.count(); ++i )
         type += mAddrTypes[ types[ i ] ];
 
       addrTwo.setType( type );

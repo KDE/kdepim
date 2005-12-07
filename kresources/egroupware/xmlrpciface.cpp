@@ -12,7 +12,6 @@
 #include <QDateTime>
 //Added by qt3to4:
 #include <Q3CString>
-#include <Q3ValueList>
 
 #include <kdebug.h>
 #include <kio/job.h>
@@ -45,7 +44,7 @@ namespace KXMLRPC
       {
         return m_errorString;
       }
-      Q3ValueList<QVariant> data() const
+      QList<QVariant> data() const
       {
         return m_data;
       }
@@ -54,7 +53,7 @@ namespace KXMLRPC
       bool m_success;
       int m_errorCode;
       QString m_errorString;
-      Q3ValueList<QVariant> m_data;
+      QList<QVariant> m_data;
   };
 }
 
@@ -64,7 +63,7 @@ Query *Query::create( const QVariant &id, QObject *parent, const char *name )
 }
 
 void Query::call( const QString &server, const QString &method,
-                  const Q3ValueList<QVariant> &args, const QString &userAgent )
+                  const QList<QVariant> &args, const QString &userAgent )
 {
   const QString xmlMarkup = markupCall( method, args );
   DebugDialog::addMessage( xmlMarkup, DebugDialog::Output );
@@ -177,7 +176,7 @@ Result Query::parseFaultResponse( const QDomDocument &doc ) const
 }
 
 QString Query::markupCall( const QString &cmd,
-                           const Q3ValueList<QVariant> &args ) const
+                           const QList<QVariant> &args ) const
 {
   QString markup = "<?xml version=\"1.0\" ?>\r\n<methodCall>\r\n";
 
@@ -186,8 +185,8 @@ QString Query::markupCall( const QString &cmd,
   if ( !args.isEmpty() )
   {
     markup += "<params>\r\n";
-    Q3ValueList<QVariant>::ConstIterator it = args.begin();
-    Q3ValueList<QVariant>::ConstIterator end = args.end();
+    QList<QVariant>::ConstIterator it = args.begin();
+    QList<QVariant>::ConstIterator end = args.end();
     for ( ; it != end; ++it )
       markup += "<param>\r\n" + marshal( *it ) + "</param>\r\n";
     markup += "</params>\r\n";
@@ -224,9 +223,9 @@ QString Query::marshal( const QVariant &arg ) const
       case QVariant::List:
       {
         QString markup = "<value><array><data>\r\n";
-        const Q3ValueList<QVariant> args = arg.toList();
-        Q3ValueList<QVariant>::ConstIterator it = args.begin();
-        Q3ValueList<QVariant>::ConstIterator end = args.end();
+        const QList<QVariant> args = arg.toList();
+        QList<QVariant>::ConstIterator it = args.begin();
+        QList<QVariant>::ConstIterator end = args.end();
         for ( ; it != end; ++it )
           markup += marshal( *it );
         markup += "</data></array></value>\r\n";
@@ -280,7 +279,7 @@ QVariant Query::demarshal( const QDomElement &elem ) const
     return QVariant( QDateTime::fromString( typeElement.text(), Qt::ISODate ) );
   else if ( typeName == "array" )
   {
-    Q3ValueList<QVariant> values;
+    QList<QVariant> values;
     QDomNode valueNode = typeElement.firstChild().firstChild();
     while ( !valueNode.isNull() )
     {
@@ -314,7 +313,7 @@ Query::Query( const QVariant &id, QObject *parent, const char *name )
 
 Query::~Query()
 {
-  Q3ValueList<KIO::Job*>::Iterator it;
+  QList<KIO::Job*>::Iterator it;
   for ( it = m_pendingJobs.begin(); it != m_pendingJobs.end(); ++it )
     (*it)->kill();
 }
@@ -332,7 +331,7 @@ Server::Server( const KURL &url, QObject *parent, const char *name )
 
 Server::~Server()
 {
-  Q3ValueList<Query*>::Iterator it;
+  QList<Query*>::Iterator it;
   for ( it = mPendingQueries.begin(); it !=mPendingQueries.end(); ++it )
     (*it)->deleteLater();
 
@@ -350,7 +349,7 @@ void Server::setUrl( const KURL &url )
   m_url = url.isValid() ? url : KURL();
 }
 
-void Server::call( const QString &method, const Q3ValueList<QVariant> &args,
+void Server::call( const QString &method, const QList<QVariant> &args,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot, const QVariant &id )
 {
@@ -358,7 +357,7 @@ void Server::call( const QString &method, const Q3ValueList<QVariant> &args,
     kdWarning() << "Cannot execute call to " << method << ": empty server URL" << endl;
 
   Query *query = Query::create( id, this );
-  connect( query, SIGNAL( message( const Q3ValueList<QVariant> &, const QVariant& ) ), msgObj, messageSlot );
+  connect( query, SIGNAL( message( const QList<QVariant> &, const QVariant& ) ), msgObj, messageSlot );
   connect( query, SIGNAL( fault( int, const QString&, const QVariant& ) ), faultObj, faultSlot );
   connect( query, SIGNAL( finished( Query* ) ), this, SLOT( queryFinished( Query* ) ) );
   mPendingQueries.append( query );
@@ -371,7 +370,7 @@ void Server::call( const QString &method, const QVariant &arg,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
 {
-  Q3ValueList<QVariant> args;
+  QList<QVariant> args;
   args << arg ;
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
@@ -381,7 +380,7 @@ void Server::call( const QString &method, int arg,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
 {
-  Q3ValueList<QVariant> args;
+  QList<QVariant> args;
   args << QVariant( arg );
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
@@ -391,7 +390,7 @@ void Server::call( const QString &method, bool arg,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
 {
-  Q3ValueList<QVariant> args;
+  QList<QVariant> args;
   args << QVariant( arg );
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
@@ -401,7 +400,7 @@ void Server::call( const QString &method, double arg ,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
 {
-  Q3ValueList<QVariant> args;
+  QList<QVariant> args;
   args << QVariant( arg );
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
@@ -411,7 +410,7 @@ void Server::call( const QString &method, const QString &arg ,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
 {
-  Q3ValueList<QVariant> args;
+  QList<QVariant> args;
   args << QVariant( arg );
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
@@ -421,7 +420,7 @@ void Server::call( const QString &method, const Q3CString &arg,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
 {
-  Q3ValueList<QVariant> args;
+  QList<QVariant> args;
   args << QVariant( arg );
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
@@ -431,7 +430,7 @@ void Server::call( const QString &method, const QByteArray &arg ,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
 {
-  Q3ValueList<QVariant> args;
+  QList<QVariant> args;
   args << QVariant( arg );
   call( method, args, faultObj, faultSlot, msgObj, messageSlot, id );
 }
@@ -441,7 +440,7 @@ void Server::call( const QString &method, const QDateTime &arg,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
 {
-  Q3ValueList<QVariant> args;
+  QList<QVariant> args;
   args << QVariant( arg );
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
 }
@@ -451,7 +450,7 @@ void Server::call( const QString &method, const QStringList &arg,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )
 {
-  Q3ValueList<QVariant> args;
+  QList<QVariant> args;
   QStringList::ConstIterator it = arg.begin();
   QStringList::ConstIterator end = arg.end();
   for ( ; it != end; ++it )
