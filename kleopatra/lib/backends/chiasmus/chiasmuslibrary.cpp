@@ -96,7 +96,7 @@ namespace {
     char ** mArgv;
     int mArgc;
   public:
-    ArgvProvider( const Q3ValueVector<QByteArray> & args ) {
+    ArgvProvider( const QVector<QByteArray> & args ) {
       mArgv = new char * [args.size()];
       for ( unsigned int i = 0 ; i < args.size() ; ++i )
         mArgv[i] = strdup( args[i].data() );
@@ -109,7 +109,7 @@ namespace {
   };
 }
 
-int Kleo::ChiasmusLibrary::perform( const Q3ValueVector<QByteArray> & args ) const {
+int Kleo::ChiasmusLibrary::perform( const QVector<QByteArray> & args ) const {
   if ( main_func func = chiasmus() )
     return func( args.size(), ArgvProvider( args ).argv() );
   else

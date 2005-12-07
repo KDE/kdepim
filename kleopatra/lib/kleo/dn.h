@@ -76,7 +76,7 @@ namespace Kleo {
   class KDE_EXPORT DN  {
   public:
     class Attribute;
-    typedef Q3ValueVector<Attribute> AttributeList;
+    typedef QVector<Attribute> AttributeList;
     typedef AttributeList::const_iterator const_iterator;
 
     DN();

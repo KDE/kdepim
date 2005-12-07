@@ -59,7 +59,7 @@ public:
     KURL saveFileUrl() const;
 
     typedef QPair<QString, QLineEdit*> StringLEPair;
-    typedef Q3ValueVector< StringLEPair > AttrPairList;
+    typedef QVector< StringLEPair > AttrPairList;
 
 public:
     virtual void showPage( QWidget * page );

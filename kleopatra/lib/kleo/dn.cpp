@@ -231,9 +231,9 @@ parse_dn_part (DnPair *array, const unsigned char *string)
 static Kleo::DN::Attribute::List
 parse_dn( const unsigned char * string ) {
   if ( !string )
-    return Q3ValueVector<Kleo::DN::Attribute>();
+    return QVector<Kleo::DN::Attribute>();
 
-  Q3ValueVector<Kleo::DN::Attribute> result;
+  QVector<Kleo::DN::Attribute> result;
   while (*string)
     {
       while (*string == ' ')
@@ -261,18 +261,18 @@ parse_dn( const unsigned char * string ) {
   return result;
 
 failure:
-  return Q3ValueVector<Kleo::DN::Attribute>();
+  return QVector<Kleo::DN::Attribute>();
 }
 
-static Q3ValueVector<Kleo::DN::Attribute>
+static QVector<Kleo::DN::Attribute>
 parse_dn( const QString & dn ) {
   return parse_dn( (const unsigned char*)dn.utf8().data() );
 }
 
 static QString
-serialise( const Q3ValueVector<Kleo::DN::Attribute> & dn ) {
+serialise( const QVector<Kleo::DN::Attribute> & dn ) {
   QStringList result;
-  for ( Q3ValueVector<Kleo::DN::Attribute>::const_iterator it = dn.begin() ; it != dn.end() ; ++it )
+  for ( QVector<Kleo::DN::Attribute>::const_iterator it = dn.begin() ; it != dn.end() ; ++it )
     if ( !(*it).name().isEmpty() && !(*it).value().isEmpty() )
       result.push_back( (*it).name().trimmed() + '=' + (*it).value().trimmed() );
   return result.join( "," );
@@ -390,14 +390,14 @@ QString Kleo::DN::operator[]( const QString & attr ) const {
   if ( !d )
     return QString::null;
   const QString attrUpper = attr.upper();
-  for ( Q3ValueVector<Attribute>::const_iterator it = d->attributes.begin() ;
+  for ( QVector<Attribute>::const_iterator it = d->attributes.begin() ;
 	it != d->attributes.end() ; ++it )
     if ( (*it).name() == attrUpper )
       return (*it).value();
   return QString::null;
 }
 
-static Q3ValueVector<Kleo::DN::Attribute> empty;
+static QVector<Kleo::DN::Attribute> empty;
 
 Kleo::DN::const_iterator Kleo::DN::begin() const {
   return d ? d->attributes.begin() : empty.begin() ;

@@ -52,7 +52,7 @@ namespace Kleo {
     static const ChiasmusLibrary * instance();
     static void deleteInstance();
 
-    int perform( const Q3ValueVector<QByteArray> & args ) const;
+    int perform( const QVector<QByteArray> & args ) const;
   private:
     typedef int ( *main_func )( int, char** );
     main_func chiasmus( QString * reason=0 ) const;

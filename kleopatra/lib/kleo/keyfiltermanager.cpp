@@ -61,7 +61,7 @@ struct Kleo::KeyFilterManager::Private {
     filters.clear();
   }
 
-  Q3ValueVector<KeyFilter*> filters;
+  QVector<KeyFilter*> filters;
 };
 
 Kleo::KeyFilterManager * Kleo::KeyFilterManager::mSelf = 0;
@@ -91,7 +91,7 @@ Kleo::KeyFilterManager * Kleo::KeyFilterManager::instance() {
 }
 
 const Kleo::KeyFilter * Kleo::KeyFilterManager::filterMatching( const GpgME::Key & key ) const {
-  for ( Q3ValueVector<KeyFilter*>::const_iterator it = d->filters.begin() ; it != d->filters.end() ; ++it )
+  for ( QVector<KeyFilter*>::const_iterator it = d->filters.begin() ; it != d->filters.end() ; ++it )
     if ( (*it)->matches( key ) )
       return *it;
   return 0;
