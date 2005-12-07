@@ -53,7 +53,6 @@
 #include "kpgp.h"
 #include "kpgpui.h"
 #include "kpgpkey.h"
-#include <Q3HBox>
 #include <assert.h>
 #include <string.h> // for memcpy(3)
 #include <kvbox.h>
