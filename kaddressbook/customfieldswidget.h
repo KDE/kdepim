@@ -85,8 +85,8 @@ class AddFieldDialog : public KDialogBase
     KComboBox *mType;
     QCheckBox *mGlobal;
 
-    Q3ValueVector<QString> mTypeList;
-    Q3ValueVector<QString> mTypeName;
+    QVector<QString> mTypeList;
+    QVector<QString> mTypeName;
 };
 
 class FieldWidget : public QWidget
