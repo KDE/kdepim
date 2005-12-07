@@ -500,7 +500,7 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
 
   // list of lists of encryption keys (one list per recipient + one list
   // for the sender)
-  Q3ValueVector<KeyIDList> recipientKeyIds( recipients.count() + 1 );
+  QVector<KeyIDList> recipientKeyIds( recipients.count() + 1 );
   // add the sender's encryption key(s) to the list of recipient key IDs
   if( encryptToSelf() ) {
     recipientKeyIds[0] = KeyIDList( keyId );
@@ -524,7 +524,7 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
   }
 
   kdDebug(5100) << "recipientKeyIds = (\n";
-  Q3ValueVector<KeyIDList>::const_iterator kit;
+  QVector<KeyIDList>::const_iterator kit;
   for( kit = recipientKeyIds.begin(); kit != recipientKeyIds.end(); ++kit ) {
     kdDebug(5100) << "( 0x" << (*kit).toStringList().join( ", 0x" )
                   << " ),\n";
@@ -559,7 +559,7 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
 
   // flatten the list of lists of key IDs and count empty key ID lists
   int emptyListCount = 0;
-  for( Q3ValueVector<KeyIDList>::const_iterator it = recipientKeyIds.begin();
+  for( QVector<KeyIDList>::const_iterator it = recipientKeyIds.begin();
        it != recipientKeyIds.end(); ++it ) {
     if( (*it).isEmpty() ) {
       // only count empty key ID lists for the recipients

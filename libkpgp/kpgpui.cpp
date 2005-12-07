@@ -1319,7 +1319,7 @@ KeyIDList SecretKeyRequester::keyRequestHook( Module * pgp ) const {
 
 // ------------------------------------------------------------------------
 KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
-                                      const Q3ValueVector<KeyIDList>& keyIDs,
+                                      const QVector<KeyIDList>& keyIDs,
                                       const int allowedKeys,
                                       QWidget *parent, const char *name,
                                       bool modal )
@@ -1404,7 +1404,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   }
 
   QStringList::ConstIterator ait;
-  Q3ValueVector<KeyIDList>::const_iterator kit;
+  QVector<KeyIDList>::const_iterator kit;
   int i;
   for( ait = addresses.begin(), kit = keyIDs.begin(), i = 0;
        ( ait != addresses.end() ) && ( kit != keyIDs.end() );

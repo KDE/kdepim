@@ -298,13 +298,13 @@ class KDE_EXPORT KeyApprovalDialog: public KDialogBase
 
   public:
     KeyApprovalDialog( const QStringList&,
-                       const Q3ValueVector<KeyIDList>&,
+                       const QVector<KeyIDList>&,
                        const int allowedKeys,
                        QWidget *parent = 0, const char *name = 0,
                        bool modal = true );
     virtual ~KeyApprovalDialog() {};
 
-    Q3ValueVector<KeyIDList> keys() const { return mKeys; };
+    QVector<KeyIDList> keys() const { return mKeys; };
 
     bool preferencesChanged() const { return mPrefsChanged; }
 
@@ -315,7 +315,7 @@ class KDE_EXPORT KeyApprovalDialog: public KDialogBase
     virtual void slotCancel();
 
   private:
-    Q3ValueVector<KeyIDList> mKeys;
+    QVector<KeyIDList> mKeys;
     int mAllowedKeys;
     int mEncryptToSelf;
     bool mPrefsChanged;
