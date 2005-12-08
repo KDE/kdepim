@@ -13,7 +13,7 @@
 */
 
 #include <qlayout.h>
-#include <q3widgetstack.h>
+#include <QStackedWidget>
 #include <qlabel.h>
 #include <qcheckbox.h>
 //Added by qt3to4:
@@ -56,7 +56,7 @@ KNConvert::KNConvert(const QString &version)
 {
   setCaption(kapp->makeStdCaption(i18n("Conversion")));
   QVBoxLayout *topL=new QVBoxLayout(this, 5,5);
-  s_tack=new Q3WidgetStack(this);
+  s_tack=new QStackedWidget(this);
   topL->addWidget(s_tack, 1);
   topL->addWidget(new KSeparator(this));
 
@@ -72,7 +72,7 @@ KNConvert::KNConvert(const QString &version)
   connect(c_ancelBtn, SIGNAL(clicked()), this, SLOT(reject()));
 
   w_1=new QWidget(s_tack);
-  s_tack->addWidget(w_1, 1);
+  s_tack->insertWidget(1,w_1);
   QGridLayout *w1L=new QGridLayout(w_1, 5,3, 5,5);
 
   QLabel *l1=new QLabel(i18n(
@@ -104,10 +104,10 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
   w_2=new QLabel(s_tack);
   w_2->setText(i18n("<b>Converting, please wait...</b>"));
   w_2->setAlignment(Qt::AlignCenter);
-  s_tack->addWidget(w_2, 2);
+  s_tack->insertWidget(2,w_2);
 
   w_3=new QWidget(s_tack);
-  s_tack->addWidget(w_3, 3);
+  s_tack->insertWidget(3,w_3);
   QVBoxLayout *w3L=new QVBoxLayout(w_3, 5,5);
 
   r_esultLabel=new QLabel(w_3);
@@ -118,7 +118,7 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
   w3L->addWidget(l2);
   w3L->addWidget(l_ogList, 1);
 
-  s_tack->raiseWidget(w_1);
+  s_tack->setCurrentWidget(w_1);
   slotCreateBkupToggled(false);
 }
 
@@ -150,7 +150,7 @@ void KNConvert::convert()
   s_tartBtn->setEnabled(true);
   c_ancelBtn->setEnabled(true);
   l_ogList->insertStringList(l_og);
-  s_tack->raiseWidget(w_3);
+  s_tack->setCurrentWidget(w_3);
 
   c_onversionDone=true;
 }
@@ -165,7 +165,7 @@ void KNConvert::slotStart()
 
   s_tartBtn->setEnabled(false);
   c_ancelBtn->setEnabled(false);
-  s_tack->raiseWidget(w_2);
+  s_tack->setCurrentWidget(w_2);
 
   if(v_ersion.left(3)=="0.3" || v_ersion.left(7)=="0.4beta") {
     //Version 0.4

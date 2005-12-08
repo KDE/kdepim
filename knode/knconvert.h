@@ -26,7 +26,7 @@
 
 class Q3ListBox;
 class QLabel;
-class Q3WidgetStack;
+class QStackedWidget;
 class QCheckBox;
 
 class KLineEdit;
@@ -95,7 +95,7 @@ class KDE_EXPORT KNConvert : public QDialog {
 
     //------------ </Converter-classes> --------------
 
-    Q3WidgetStack  *s_tack;
+    QStackedWidget  *s_tack;
     QWidget       *w_1,
                   *w_3;
     QCheckBox     *c_reateBkup;
