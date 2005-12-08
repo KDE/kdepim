@@ -20,6 +20,7 @@
 
 #include "knwidgets.h"
 #include "nntpaccountdialog_base.h"
+#include "nntpaccountlistwidget_base.h"
 #include "postnewstechnicalwidget_base.h"
 #include "readnewsgeneralwidget_base.h"
 #include "smtpaccountwidget_base.h"
@@ -113,57 +114,63 @@ class KDE_EXPORT IdentityWidget : public KCModule {
 
 
 /** News server account list widget. */
-class KDE_EXPORT NntpAccountListWidget : public KCModule {
-
+class KDE_EXPORT NntpAccountListWidget : public KCModule, private Ui::NntpAccountListWidgetBase
+{
   Q_OBJECT
 
   public:
+    /** Create a new NNTP account list widget. */
     NntpAccountListWidget( KInstance *inst, QWidget *parent = 0 );
-    ~NntpAccountListWidget();
 
+    /** @reimplemented */
     void load();
 
   protected:
-    /** Account list box item. */
-    class LBoxItem : public KNListBoxItem {
+    /** Account list widget item. */
+    class AccountListItem : public QListWidgetItem {
       public:
-        LBoxItem(KNNntpAccount *a, const QString &t, QPixmap *p=0)
-          : KNListBoxItem(t, p) , account(a)  {}
-        ~LBoxItem() {}
-        KNNntpAccount *account;
+        /** Creates a new account list item.
+         * @param a The account.
+         */
+        AccountListItem( KNNntpAccount *a ) :  mAccount( a ) {}
+        /** Returns the account assiciated with this item. */
+        KNNntpAccount *account() const { return mAccount; }
+      private:
+        KNNntpAccount *mAccount;
     };
 
-    KNDialogListBox *l_box;
-    QPushButton *a_ddBtn,
-                *d_elBtn,
-                *e_ditBtn,
-                *s_ubBtn;
-    QPixmap     p_ixmap;
-    QLabel      *s_erverInfo,
-                *p_ortInfo;
-
-    KNAccountManager *a_ccManager;
-
-
   public slots:
-    void slotAddItem(KNNntpAccount *a);
-    void slotRemoveItem(KNNntpAccount *a);
+    /** Add an list view item for the given account.
+     * @param a The new account.
+     */
+    void slotAddItem( KNNntpAccount *a );
+    /** Remove the list view item of the given account.
+     * @param a The account.
+     */
+    void slotRemoveItem( KNNntpAccount *a );
+    /** Update the item of the given account.
+     * @param a The account.
+     */
     void slotUpdateItem(KNNntpAccount *a);
 
   protected slots:
+    /** Item selection has changed. */
     void slotSelectionChanged();
-    void slotItemSelected(int id);
+    /** Add account button has been clicked. */
     void slotAddBtnClicked();
+    /** Delete account button has been clicked. */
     void slotDelBtnClicked();
+    /** Edit account button has been clicked. */
     void slotEditBtnClicked();
+    /** Subscribe button has been clicked. */
     void slotSubBtnClicked();
 
 };
 
 
 /** News server configuration dialog. */
-class KDE_EXPORT NntpAccountConfDialog : public KDialogBase, private Ui::NntpAccountDialogBase  {
-
+class KDE_EXPORT NntpAccountConfDialog : public KDialogBase, private Ui::NntpAccountDialogBase
+{
   Q_OBJECT
 
   public:

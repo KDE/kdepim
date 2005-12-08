@@ -288,66 +288,37 @@ void KNode::IdentityWidget::slotSignatureEdit()
 //BEGIN: NNTP account configuration widgets ----------------------------------
 
 KNode::NntpAccountListWidget::NntpAccountListWidget( KInstance *inst, QWidget *parent ) :
-  KCModule( inst, parent ),
-  a_ccManager( knGlobals.accountManager() )
+  KCModule( inst, parent )
 {
-  p_ixmap = SmallIcon("server");
-
-  QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
+  setupUi( this );
 
   // account listbox
-  l_box=new KNDialogListBox(false, this);
-  connect(l_box, SIGNAL(selected(int)), this, SLOT(slotItemSelected(int)));
-  connect(l_box, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
-  topL->addMultiCellWidget(l_box, 0,4, 0,0);
-
-  // info box
-  Q3GroupBox *gb = new Q3GroupBox(2,Qt::Vertical,QString::null,this);
-  topL->addWidget(gb,5,0);
-
-  s_erverInfo = new QLabel(gb);
-  p_ortInfo = new QLabel(gb);
+  connect( mAccountList, SIGNAL( itemActivated( QListWidgetItem* ) ), SLOT( slotEditBtnClicked() ) );
+  connect( mAccountList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChanged() ) );
 
   // buttons
-  a_ddBtn=new QPushButton(i18n("&Add..."), this);
-  connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
-  topL->addWidget(a_ddBtn, 0,1);
-
-  e_ditBtn=new QPushButton(i18n("modify something","&Edit..."), this);
-  connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
-  topL->addWidget(e_ditBtn, 1,1);
-
-  d_elBtn=new QPushButton(i18n("&Delete"), this);
-  connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
-  topL->addWidget(d_elBtn, 2,1);
-
-  s_ubBtn=new QPushButton(i18n("&Subscribe..."), this);
-  connect(s_ubBtn, SIGNAL(clicked()), this, SLOT(slotSubBtnClicked()));
-  topL->addWidget(s_ubBtn, 3,1);
-
-  topL->setRowStretch(4,1);   // stretch the server listbox
+  connect( mAddButton, SIGNAL( clicked() ), SLOT( slotAddBtnClicked() ) );
+  connect( mEditButton, SIGNAL( clicked() ), SLOT( slotEditBtnClicked() ) );
+  connect( mDeleteButton, SIGNAL( clicked() ), SLOT( slotDelBtnClicked() ) );
+  connect( mSubscribeButton, SIGNAL( clicked() ), SLOT( slotSubBtnClicked() ) );
 
   load();
 
   // the settings dialog is non-modal, so we have to react to changes
   // made outside of the dialog
-  connect(a_ccManager, SIGNAL(accountAdded(KNNntpAccount*)), this, SLOT(slotAddItem(KNNntpAccount*)));
-  connect(a_ccManager, SIGNAL(accountRemoved(KNNntpAccount*)), this, SLOT(slotRemoveItem(KNNntpAccount*)));
-  connect(a_ccManager, SIGNAL(accountModified(KNNntpAccount*)), this, SLOT(slotUpdateItem(KNNntpAccount*)));
+  KNAccountManager *am = knGlobals.accountManager();
+  connect( am, SIGNAL( accountAdded( KNNntpAccount* ) ), SLOT( slotAddItem( KNNntpAccount* ) ) );
+  connect( am, SIGNAL( accountRemoved( KNNntpAccount* ) ), SLOT( slotRemoveItem( KNNntpAccount* ) ) );
+  connect( am, SIGNAL( accountModified( KNNntpAccount* ) ), SLOT( slotUpdateItem( KNNntpAccount* ) ) );
 
   slotSelectionChanged();     // disable Delete & Edit initially
 }
 
 
-KNode::NntpAccountListWidget::~NntpAccountListWidget()
-{
-}
-
-
 void KNode::NntpAccountListWidget::load()
 {
-  l_box->clear();
-  KNAccountManager::List list = a_ccManager->accounts();
+  mAccountList->clear();
+  KNAccountManager::List list = knGlobals.accountManager()->accounts();
   for ( KNAccountManager::List::Iterator it = list.begin(); it != list.end(); ++it )
     slotAddItem( *it );
 }
@@ -355,68 +326,58 @@ void KNode::NntpAccountListWidget::load()
 
 void KNode::NntpAccountListWidget::slotAddItem(KNNntpAccount *a)
 {
-  LBoxItem *it;
-  it=new LBoxItem(a, a->name(), &p_ixmap);
-  l_box->insertItem(it);
-  emit changed(true);
+  AccountListItem *item;
+  item = new AccountListItem( a );
+  item->setText( a->name() );
+  item->setIcon( SmallIcon( "server" ) );
+  mAccountList->addItem( item );
+  emit changed( true );
 }
 
 
 void KNode::NntpAccountListWidget::slotRemoveItem(KNNntpAccount *a)
 {
-  LBoxItem *it;
-  for(uint i=0; i<l_box->count(); i++) {
-    it=static_cast<LBoxItem*>(l_box->item(i));
-    if(it && it->account==a) {
-      l_box->removeItem(i);
+  AccountListItem *item;
+  for ( int i = 0; i < mAccountList->count(); ++i ) {
+    item = static_cast<AccountListItem*>( mAccountList->item( i ) );
+    if ( item && item->account() == a ) {
+      delete mAccountList->takeItem( i );
       break;
     }
   }
   slotSelectionChanged();
-  emit changed(true);
+  emit changed( true );
 }
 
 
 void KNode::NntpAccountListWidget::slotUpdateItem(KNNntpAccount *a)
 {
-  LBoxItem *it;
-  for(uint i=0; i<l_box->count(); i++) {
-    it=static_cast<LBoxItem*>(l_box->item(i));
-    if(it && it->account==a) {
-      it=new LBoxItem(a, a->name(), &p_ixmap);
-      l_box->changeItem(it, i);
-      break;
-    }
+  AccountListItem *item;
+  for ( int i = 0; i < mAccountList->count(); ++i ) {
+    item = static_cast<AccountListItem*>( mAccountList->item( i ) );
+    if ( item && item->account() == a )
+      item->setText( a->name() );
   }
   slotSelectionChanged();
-  emit changed(true);
+  emit changed( true );
 }
 
 
 
 void KNode::NntpAccountListWidget::slotSelectionChanged()
 {
-  int curr=l_box->currentItem();
-  d_elBtn->setEnabled(curr!=-1);
-  e_ditBtn->setEnabled(curr!=-1);
-  s_ubBtn->setEnabled(curr!=-1);
+  AccountListItem *item = static_cast<AccountListItem*>( mAccountList->currentItem() );
+  mDeleteButton->setEnabled( item );
+  mEditButton->setEnabled( item );
+  mSubscribeButton->setEnabled( item );
 
-  LBoxItem *it = static_cast<LBoxItem*>(l_box->item(curr));
-  if(it) {
-    s_erverInfo->setText(i18n("Server: %1").arg(it->account->server()));
-    p_ortInfo->setText(i18n("Port: %1").arg(it->account->port()));
+  if ( item ) {
+    mServerInfo->setText( i18n("Server: %1").arg( item->account()->server() ) );
+    mPortInfo->setText( i18n("Port: %1").arg( item->account()->port() ) );
+  } else {
+    mServerInfo->setText( i18n("Server: ") );
+    mPortInfo->setText( i18n("Port: ") );
   }
-  else {
-    s_erverInfo->setText(i18n("Server: "));
-    p_ortInfo->setText(i18n("Port: "));
-  }
-}
-
-
-
-void KNode::NntpAccountListWidget::slotItemSelected(int)
-{
-  slotEditBtnClicked();
 }
 
 
@@ -426,7 +387,7 @@ void KNode::NntpAccountListWidget::slotAddBtnClicked()
   KNNntpAccount *acc = new KNNntpAccount();
 
   if(acc->editProperties(this)) {
-    a_ccManager->newAccount(acc);
+    knGlobals.accountManager()->newAccount(acc);
     acc->saveInfo();
   }
   else
@@ -437,31 +398,28 @@ void KNode::NntpAccountListWidget::slotAddBtnClicked()
 
 void KNode::NntpAccountListWidget::slotDelBtnClicked()
 {
-  LBoxItem *it = static_cast<LBoxItem*>(l_box->item(l_box->currentItem()));
-
-  if(it)
-    a_ccManager->removeAccount(it->account);
+  AccountListItem *item = static_cast<AccountListItem*>( mAccountList->currentItem() );
+  if ( item )
+    knGlobals.accountManager()->removeAccount( item->account() );
 }
 
 
 
 void KNode::NntpAccountListWidget::slotEditBtnClicked()
 {
-  LBoxItem *it = static_cast<LBoxItem*>(l_box->item(l_box->currentItem()));
-
-  if(it) {
-    it->account->editProperties(this);
-    slotUpdateItem(it->account);
+  AccountListItem *item = static_cast<AccountListItem*>( mAccountList->currentItem() );
+  if ( item ) {
+    item->account()->editProperties( this );
+    slotUpdateItem( item->account() );
   }
 }
 
 
 void KNode::NntpAccountListWidget::slotSubBtnClicked()
 {
-  LBoxItem *it = static_cast<LBoxItem*>(l_box->item(l_box->currentItem()));
-
-  if(it)
-    knGlobals.groupManager()->showGroupDialog(it->account, this);
+  AccountListItem *item = static_cast<AccountListItem*>( mAccountList->currentItem() );
+  if( item )
+    knGlobals.groupManager()->showGroupDialog( item->account(), this );
 }
 
 
