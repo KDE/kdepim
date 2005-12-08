@@ -119,6 +119,9 @@ ContactEditorTabPage::ContactEditorTabPage( QWidget *parent, const char *name )
 
 void ContactEditorTabPage::addWidget( KAB::ContactEditorWidget *widget )
 {
+  if(!widget)
+	  return;
+
   if ( widget->logicalWidth() == 2 ) {
     mWidgets.prepend( widget );
     connect( widget, SIGNAL( changed() ), SIGNAL( changed() ) );
@@ -169,13 +172,16 @@ void ContactEditorTabPage::setReadOnly( bool readOnly )
 void ContactEditorTabPage::updateLayout()
 {
   KAB::ContactEditorWidget::List::ConstIterator it;
-
   int row = 0;
-  for ( it = mWidgets.begin(); it != mWidgets.end(); ++it ) {
+  if( mWidgets.isEmpty())
+	  return;
+  for ( it = mWidgets.begin(); it != mWidgets.end() ; ++it ) {
+	kdDebug()<<" *it :"<<*it<<endl;
+    if( !(*it) )
+	 break;
     if ( (*it)->logicalWidth() == 2 ) {
       mLayout->addMultiCellWidget( *it, row, row + (*it)->logicalHeight() - 1, 0, 1 );
       row += (*it)->logicalHeight();
-
       if ( it != mWidgets.end() ) {
         Q3Frame *frame = new Q3Frame( this );
         frame->setFrameStyle( Q3Frame::HLine | Q3Frame::Sunken );
