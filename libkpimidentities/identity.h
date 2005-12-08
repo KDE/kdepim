@@ -273,7 +273,7 @@ public:
   QString dictionary() const { return mDictionary; }
   void setDictionary( const QString& );
 
-  static Identity null;
+  static const Identity& null();
   bool isNull() const;
 protected:
   // if you add new members, make sure they have an operator= (or the
