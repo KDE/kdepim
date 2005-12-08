@@ -279,13 +279,13 @@ const Identity & IdentityManager::identityForName( const QString & name ) const
     << "deprecated method IdentityManager::identityForName() called!" << endl;
   for ( ConstIterator it = begin() ; it != end() ; ++it )
     if ( (*it).identityName() == name ) return (*it);
-  return Identity::null;
+  return Identity::null();
 }
 
 const Identity & IdentityManager::identityForUoid( uint uoid ) const {
   for ( ConstIterator it = begin() ; it != end() ; ++it )
     if ( (*it).uoid() == uoid ) return (*it);
-  return Identity::null;
+  return Identity::null();
 }
 
 const Identity & IdentityManager::identityForNameOrDefault( const QString & name ) const
@@ -321,7 +321,7 @@ const Identity & IdentityManager::identityForAddress( const QString & addresses 
       }
     }
   }
-  return Identity::null;
+  return Identity::null();
 }
 
 bool IdentityManager::thatIsMe( const QString & addressList ) const {
