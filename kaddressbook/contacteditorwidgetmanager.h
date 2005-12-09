@@ -26,7 +26,6 @@
 
 #include <qwidget.h>
 //Added by qt3to4:
-#include <Q3ValueList>
 #include <QGridLayout>
 
 #include "contacteditorwidget.h"
@@ -61,7 +60,7 @@ class ContactEditorWidgetManager : public QObject
   private:
     void reload();
 
-    Q3ValueList<KAB::ContactEditorWidgetFactory*> mFactories;
+    QList<KAB::ContactEditorWidgetFactory*> mFactories;
 
     static ContactEditorWidgetManager *mSelf;
 };
