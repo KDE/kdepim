@@ -107,8 +107,8 @@ const char * PassphraseDialog::passphrase()
 // ------------------------------------------------------------------------
 // Forbidden accels for KMail: AC GH OP
 //                  for KNode: ACE H O
-Config::Config( QWidget *parent, const char *name, bool encrypt )
-  : QWidget( parent, name ), pgp( Module::getKpgp() )
+Config::Config( QWidget *parent, bool encrypt )
+  : QWidget( parent ), pgp( Module::getKpgp() )
 {
   QGroupBox * group;
   QLabel    * label;
@@ -159,7 +159,7 @@ Config::Config( QWidget *parent, const char *name, bool encrypt )
   topLayout->addWidget( group );
 
   mpOptionsGroupBox = new QGroupBox( i18n("Options"), this );
-  lay = new QVBoxLayout(group);
+  lay = new QVBoxLayout( mpOptionsGroupBox );
   lay->setSpacing( KDialog::spacingHint() );
   storePass = new QCheckBox( i18n("&Keep passphrase in memory"),
                              mpOptionsGroupBox );

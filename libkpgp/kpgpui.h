@@ -72,7 +72,7 @@ class KDE_EXPORT PassphraseDialog : public KDialogBase
 
 
 // -------------------------------------------------------------------------
-/** a widget for configuring the pgp interface. Can be included into
+/** A widget for configuring the pgp interface. Can be included into
     a tabdialog. This widget by itself does not provide an apply/cancel
     button mechanism. */
 class KDE_EXPORT Config : public QWidget
@@ -80,7 +80,7 @@ class KDE_EXPORT Config : public QWidget
   Q_OBJECT
 
   public:
-    Config(QWidget *parent = 0, const char *name = 0, bool encrypt =true);
+    Config( QWidget *parent = 0, bool encrypt = true );
     virtual ~Config();
 
     virtual void setValues();
@@ -128,7 +128,7 @@ class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
     /** Returns the key ID of the selected key in single selection mode.
         Otherwise it returns a null string. */
     virtual KeyID key() const;
- 
+
     /** Returns a list of selected key IDs. */
     virtual KeyIDList keys() const
       { return mKeyIds; };
