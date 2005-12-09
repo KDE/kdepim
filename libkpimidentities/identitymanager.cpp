@@ -37,7 +37,6 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 #endif
 //Added by qt3to4:
 #include <QList>
-#include <Q3CString>
 
 #include "identitymanager.h"
 
