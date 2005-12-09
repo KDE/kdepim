@@ -36,7 +36,7 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 #include <config.h>
 #endif
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 #include <Q3CString>
 
 #include "identitymanager.h"
@@ -112,16 +112,16 @@ void IdentityManager::commit()
   // early out:
   if ( !hasPendingChanges() || mReadOnly ) return;
 
-  Q3ValueList<uint> seenUOIDs;
+  QList<uint> seenUOIDs;
   for ( QList<Identity>::ConstIterator it = mIdentities.begin() ;
 	it != mIdentities.end() ; ++it )
     seenUOIDs << (*it).uoid();
 
-  Q3ValueList<uint> changedUOIDs;
+  QList<uint> changedUOIDs;
   // find added and changed identities:
   for ( QList<Identity>::ConstIterator it = mShadowIdentities.begin() ;
 	it != mShadowIdentities.end() ; ++it ) {
-    Q3ValueList<uint>::Iterator uoid = seenUOIDs.find( (*it).uoid() );
+    QList<uint>::Iterator uoid = seenUOIDs.find( (*it).uoid() );
     if ( uoid != seenUOIDs.end() ) {
       const Identity & orig = identityForUoid( *uoid ); // look it up in mIdentities
       if ( *it != orig ) {
@@ -139,7 +139,7 @@ void IdentityManager::commit()
   }
 
   // what's left are deleted identities:
-  for ( Q3ValueList<uint>::ConstIterator it = seenUOIDs.begin() ;
+  for ( QList<uint>::ConstIterator it = seenUOIDs.begin() ;
 	it != seenUOIDs.end() ; ++it ) {
     kdDebug( 5006 ) << "emitting deleted() for identity " << (*it) << endl;
     emit deleted( *it );
@@ -150,7 +150,7 @@ void IdentityManager::commit()
 
   // now that mIdentities has all the new info, we can emit the added/changed
   // signals that ship a uoid. This is because the slots might use identityForUoid(uoid)...
-  for ( Q3ValueList<uint>::ConstIterator it = changedUOIDs.begin() ;
+  for ( QList<uint>::ConstIterator it = changedUOIDs.begin() ;
 	it != changedUOIDs.end() ; ++it )
     emit changed( *it );
 
@@ -475,7 +475,7 @@ int IdentityManager::newUoid()
   int uoid;
 
   // determine the UOIDs of all saved identities
-  Q3ValueList<uint> usedUOIDs;
+  QList<uint> usedUOIDs;
   for ( QList<Identity>::ConstIterator it = mIdentities.begin() ;
 	it != mIdentities.end() ; ++it )
     usedUOIDs << (*it).uoid();

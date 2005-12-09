@@ -15,7 +15,7 @@
 #include <q3cstring.h>
 #include <qstringlist.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 
 class KProcess;
 namespace KPIM {
@@ -98,7 +98,7 @@ class KDE_EXPORT Identity
   friend QDataStream & operator>>( QDataStream & stream, KPIM::Identity & ident );
 
 public:
-  typedef Q3ValueList<Identity> List;
+  typedef QList<Identity> List;
 
   /** used for comparison */
   bool operator==( const Identity & other ) const;

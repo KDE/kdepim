@@ -90,7 +90,7 @@ protected:
   void reloadUoidList();
 
 protected:
-  Q3ValueList<uint> mUoidList;
+  QList<uint> mUoidList;
   IdentityManager* mIdentityManager;
 };
 
