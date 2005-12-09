@@ -354,26 +354,32 @@ class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
 
   public:
     DisplayedHeadersWidget( DisplayedHeaders *d, KInstance *inst, QWidget *parent = 0 );
-    ~DisplayedHeadersWidget();
 
+    /** @reimplemented. */
     void load();
+    /** @reimplemented. */
     void save();
 
   protected:
 
-    /** Header list box item. */
-    class HdrItem : public Q3ListBoxText {
+    /** Header list view item. */
+    class HdrItem : public QListWidgetItem {
 
       public:
-        HdrItem( const QString &t, KNDisplayedHeader *h ) : Q3ListBoxText(t), hdr(h) {}
-        ~HdrItem() {}
-
-        KNDisplayedHeader *hdr;
+        /** Creates a new header list view item.
+         * @param text The text to display.
+         * @param header The associated header.
+         */
+        HdrItem( const QString &text, KNDisplayedHeader *header ) : QListWidgetItem( text ), mHdr( header ) {}
+        /** Returns the associated header. */
+        KNDisplayedHeader *header() const { return mHdr; }
+      private:
+        KNDisplayedHeader *mHdr;
     };
 
     HdrItem* generateItem(KNDisplayedHeader *);
 
-    KNDialogListBox *l_box;
+    QListWidget *mHeaderList;
     QPushButton *a_ddBtn,
                 *d_elBtn,
                 *e_ditBtn,
@@ -384,7 +390,6 @@ class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
     DisplayedHeaders *d_ata;
 
   protected slots:
-    void slotItemSelected(int);
     void slotSelectionChanged();
     void slotAddBtnClicked();
     void slotDelBtnClicked();
@@ -459,20 +464,28 @@ class KDE_EXPORT FilterListWidget : public KCModule {
 
 
   protected:
-    /** Filter list box item. */
-    class LBoxItem : public KNListBoxItem {
+    /** Filter list view item. */
+    class FilterListItem : public QListWidgetItem {
       public:
-        LBoxItem(KNArticleFilter *f, const QString &t, QPixmap *p=0)
-          : KNListBoxItem(t, p) , filter(f) {}
-        ~LBoxItem() {}
-
-        KNArticleFilter *filter;
+        /** Create new filter list item.
+         * @param filter The associated filter object.
+         * @param text The text to display in the item.
+         * */
+        FilterListItem( KNArticleFilter *filter, const QString &text ) : QListWidgetItem( text ), mFilter( filter ) {}
+        /** Returns the associated filter. */
+        KNArticleFilter* filter() const { return mFilter; }
+      private:
+        KNArticleFilter *mFilter;
     };
 
-    int findItem(Q3ListBox *l, KNArticleFilter *f);
+    /** Returns the index of the list view item associated with the given filter.
+     * @param l The list widget to search in.
+     * @param f The filter to search.
+     */
+    int findItem( QListWidget *l, KNArticleFilter *f );
 
-    KNDialogListBox *f_lb,
-                    *m_lb;
+    QListWidget *mFilterList;
+    QListWidget *mMenuList;
 
     QPushButton   *a_ddBtn,
                   *d_elBtn,
@@ -498,7 +511,6 @@ class KDE_EXPORT FilterListWidget : public KCModule {
     void slotDownBtnClicked();
     void slotSepAddBtnClicked();
     void slotSepRemBtnClicked();
-    void slotItemSelectedFilter(int);
     void slotSelectionChangedFilter();
     void slotSelectionChangedMenu();
 

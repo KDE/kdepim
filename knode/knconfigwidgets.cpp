@@ -928,10 +928,10 @@ KNode::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, KIns
   QGridLayout *topL=new QGridLayout(this, 7,2, 5,5);
 
   //listbox
-  l_box=new KNDialogListBox(false, this);
-  connect(l_box, SIGNAL(selected(int)), this, SLOT(slotItemSelected(int)));
-  connect(l_box, SIGNAL(selectionChanged()), this, SLOT(slotSelectionChanged()));
-  topL->addMultiCellWidget(l_box, 0,6, 0,0);
+  mHeaderList = new QListWidget( this );
+  connect( mHeaderList, SIGNAL( itemActivated(QListWidgetItem* ) ), SLOT( slotEditBtnClicked() ) );
+  connect( mHeaderList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChanged() ) );
+  topL->addMultiCellWidget( mHeaderList, 0,6, 0,0 );
 
   // buttons
   a_ddBtn=new QPushButton(i18n("&Add..."), this);
@@ -964,17 +964,12 @@ KNode::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, KIns
 
 
 
-KNode::DisplayedHeadersWidget::~DisplayedHeadersWidget()
-{
-}
-
-
 void KNode::DisplayedHeadersWidget::load()
 {
-  l_box->clear();
+  mHeaderList->clear();
   KNDisplayedHeader::List list = d_ata->headers();
   for ( KNDisplayedHeader::List::Iterator it = list.begin(); it != list.end(); ++it )
-    l_box->insertItem( generateItem( (*it) ) );
+    mHeaderList->addItem( generateItem( (*it) ) );
 }
 
 void KNode::DisplayedHeadersWidget::save()
@@ -1003,20 +998,13 @@ KNode::DisplayedHeadersWidget::HdrItem* KNode::DisplayedHeadersWidget::generateI
 
 
 
-void KNode::DisplayedHeadersWidget::slotItemSelected(int)
-{
-  slotEditBtnClicked();
-}
-
-
-
 void KNode::DisplayedHeadersWidget::slotSelectionChanged()
 {
-  int curr = l_box->currentItem();
+  int curr = mHeaderList->currentRow();
   d_elBtn->setEnabled(curr!=-1);
   e_ditBtn->setEnabled(curr!=-1);
   u_pBtn->setEnabled(curr>0);
-  d_ownBtn->setEnabled((curr!=-1)&&(curr+1!=(int)(l_box->count())));
+  d_ownBtn->setEnabled( ( curr != -1 )  && ( curr + 1 != mHeaderList->count() ) );
 }
 
 
@@ -1027,7 +1015,7 @@ void KNode::DisplayedHeadersWidget::slotAddBtnClicked()
 
   DisplayedHeaderConfDialog* dlg=new DisplayedHeaderConfDialog(h, this);
   if(dlg->exec()) {
-    l_box->insertItem(generateItem(h));
+    mHeaderList->addItem( generateItem( h ) );
     h->createTags();
     s_ave=true;
   } else
@@ -1039,13 +1027,13 @@ void KNode::DisplayedHeadersWidget::slotAddBtnClicked()
 
 void KNode::DisplayedHeadersWidget::slotDelBtnClicked()
 {
-  if(l_box->currentItem()==-1)
+  if ( !mHeaderList->currentItem() )
     return;
 
   if(KMessageBox::warningContinueCancel(this, i18n("Really delete this header?"),"",KGuiItem(i18n("&Delete"),"editdelete"))==KMessageBox::Continue) {
-    KNDisplayedHeader *h = (static_cast<HdrItem*>(l_box->item(l_box->currentItem())))->hdr;
+    KNDisplayedHeader *h = ( static_cast<HdrItem*>( mHeaderList->currentItem() ) )->header();
     d_ata->remove(h);
-    l_box->removeItem(l_box->currentItem());
+    delete mHeaderList->takeItem( mHeaderList->currentRow() );
     s_ave=true;
   }
   emit changed(true);
@@ -1055,12 +1043,16 @@ void KNode::DisplayedHeadersWidget::slotDelBtnClicked()
 
 void KNode::DisplayedHeadersWidget::slotEditBtnClicked()
 {
-  if (l_box->currentItem()==-1) return;
-  KNDisplayedHeader *h = (static_cast<HdrItem*>(l_box->item(l_box->currentItem())))->hdr;
+  if ( !mHeaderList->currentItem() )
+    return;
+  KNDisplayedHeader *h = ( static_cast<HdrItem*>( mHeaderList->currentItem() ) )->header();
 
   DisplayedHeaderConfDialog* dlg=new DisplayedHeaderConfDialog(h, this);
   if(dlg->exec()) {
-    l_box->changeItem(generateItem(h), l_box->currentItem());
+    int row = mHeaderList->currentRow();
+    delete mHeaderList->takeItem( row );
+    mHeaderList->insertItem( row, generateItem( h ) );
+    mHeaderList->setCurrentRow( row );
     h->createTags();
     s_ave=true;
   }
@@ -1071,15 +1063,15 @@ void KNode::DisplayedHeadersWidget::slotEditBtnClicked()
 
 void KNode::DisplayedHeadersWidget::slotUpBtnClicked()
 {
-  int c=l_box->currentItem();
-  if(c==0 || c==-1) return;
+  int row =  mHeaderList->currentRow();
+  if ( row <= 0 )
+    return;
 
-  KNDisplayedHeader *h = (static_cast<HdrItem*>(l_box->item(c)))->hdr;
+  KNDisplayedHeader *h = static_cast<HdrItem*>( mHeaderList->currentItem() )->header();
 
   d_ata->up(h);
-  l_box->insertItem(generateItem(h), c-1);
-  l_box->removeItem(c+1);
-  l_box->setCurrentItem(c-1);
+  mHeaderList->insertItem( row -1, mHeaderList->takeItem( row ) );
+  mHeaderList->setCurrentRow( row - 1 );
   s_ave=true;
   emit changed(true);
 }
@@ -1088,15 +1080,15 @@ void KNode::DisplayedHeadersWidget::slotUpBtnClicked()
 
 void KNode::DisplayedHeadersWidget::slotDownBtnClicked()
 {
-  int c=l_box->currentItem();
-  if(c==-1 || c==(int) l_box->count()-1) return;
+  int row = mHeaderList->currentRow();
+  if ( row < 0 || row >= mHeaderList->count() )
+    return;
 
-  KNDisplayedHeader *h = (static_cast<HdrItem*>(l_box->item(c)))->hdr;
+  KNDisplayedHeader *h = static_cast<HdrItem*>( mHeaderList->currentItem() )->header();
 
   d_ata->down(h);
-  l_box->insertItem(generateItem(h), c+2);
-  l_box->removeItem(c);
-  l_box->setCurrentItem(c+1);
+  mHeaderList->insertItem( row + 1, mHeaderList->takeItem( row ) );
+  mHeaderList->setCurrentRow( row + 1 );
   s_ave=true;
   emit changed(true);
 }
@@ -1265,12 +1257,12 @@ KNode::FilterListWidget::FilterListWidget( KInstance *inst, QWidget *parent ) :
 
   // == Filters =================================================
 
-  f_lb=new KNDialogListBox(false, this);
-  topL->addWidget(new QLabel(f_lb, i18n("&Filters:"),this),0,0);
+  mFilterList = new QListWidget( this );
+  topL->addWidget( new QLabel( mFilterList, i18n("&Filters:"), this ), 0, 0 );
 
-  connect(f_lb, SIGNAL(selectionChanged()), SLOT(slotSelectionChangedFilter()));
-  connect(f_lb, SIGNAL(selected(int)), SLOT(slotItemSelectedFilter(int)));
-  topL->addMultiCellWidget(f_lb,1,5,0,0);
+  connect( mFilterList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChangedFilter() ) );
+  connect( mFilterList, SIGNAL( itemActivated( QListWidgetItem* ) ), SLOT( slotEditBtnClicked() ) );
+  topL->addMultiCellWidget( mFilterList, 1, 5, 0, 0 );
 
   a_ddBtn=new QPushButton(i18n("&Add..."), this);
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
@@ -1290,11 +1282,11 @@ KNode::FilterListWidget::FilterListWidget( KInstance *inst, QWidget *parent ) :
 
   // == Menu ====================================================
 
-  m_lb=new KNDialogListBox(false, this);
-  topL->addWidget(new QLabel(m_lb, i18n("&Menu:"),this),6,0);
+  mMenuList = new QListWidget( this );
+  topL->addWidget( new QLabel( mMenuList, i18n("&Menu:"), this ), 6, 0 );
 
-  connect(m_lb, SIGNAL(selectionChanged()), SLOT(slotSelectionChangedMenu()));
-  topL->addMultiCellWidget(m_lb,7,11,0,0);
+  connect( mMenuList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChangedMenu() ) );
+  topL->addMultiCellWidget( mMenuList, 7, 11, 0, 0 );
 
   u_pBtn=new QPushButton(i18n("&Up"), this);
   connect(u_pBtn, SIGNAL(clicked()), this, SLOT(slotUpBtnClicked()));
@@ -1333,8 +1325,8 @@ KNode::FilterListWidget::~FilterListWidget()
 
 void KNode::FilterListWidget::load()
 {
-  f_lb->clear();
-  m_lb->clear();
+  mFilterList->clear();
+  mMenuList->clear();
   f_ilManager->startConfig(this);
 }
 
@@ -1346,10 +1338,12 @@ void KNode::FilterListWidget::save()
 
 void KNode::FilterListWidget::addItem(KNArticleFilter *f)
 {
+  FilterListItem *item = new FilterListItem( f , f->translatedName() );
   if(f->isEnabled())
-    f_lb->insertItem(new LBoxItem(f, f->translatedName(), &a_ctive));
+    item->setIcon( a_ctive );
   else
-    f_lb->insertItem(new LBoxItem(f, f->translatedName(), &d_isabled));
+    item->setIcon( d_isabled );
+  mFilterList->addItem( item );
   slotSelectionChangedFilter();
   emit changed(true);
 }
@@ -1357,8 +1351,9 @@ void KNode::FilterListWidget::addItem(KNArticleFilter *f)
 
 void KNode::FilterListWidget::removeItem(KNArticleFilter *f)
 {
-  int i=findItem(f_lb, f);
-  if (i!=-1) f_lb->removeItem(i);
+  int i = findItem( mFilterList, f );
+  if ( i >= 0 )
+    delete mFilterList->takeItem( i );
   slotSelectionChangedFilter();
   emit changed(true);
 }
@@ -1366,14 +1361,18 @@ void KNode::FilterListWidget::removeItem(KNArticleFilter *f)
 
 void KNode::FilterListWidget::updateItem(KNArticleFilter *f)
 {
-  int i=findItem(f_lb, f);
+  int i = findItem( mFilterList, f );
 
-  if(i!=-1) {
-    if(f->isEnabled()) {
-      f_lb->changeItem(new LBoxItem(f, f->translatedName(), &a_ctive), i);
-      m_lb->changeItem(new LBoxItem(f, f->translatedName()), findItem(m_lb, f));
+  if ( i >= 0 ) {
+    FilterListItem *item = static_cast<FilterListItem*>( mFilterList->item( i ) );
+    item->setText( f->translatedName() );
+    if ( f->isEnabled() ) {
+      item->setIcon( a_ctive );
+      i = findItem( mMenuList, f );
+      if ( i >= 0 )
+        mMenuList->item( i )->setText( f->translatedName() );
     } else
-      f_lb->changeItem(new LBoxItem(f, f->translatedName(), &d_isabled), i);
+      item->setIcon( d_isabled );
   }
   slotSelectionChangedFilter();
   emit changed(true);
@@ -1383,10 +1382,10 @@ void KNode::FilterListWidget::updateItem(KNArticleFilter *f)
 void KNode::FilterListWidget::addMenuItem(KNArticleFilter *f)
 {
   if (f) {
-    if (findItem(m_lb, f)==-1)
-      m_lb->insertItem(new LBoxItem(f, f->translatedName()));
+    if ( findItem( mMenuList, f) < 0 )
+      mMenuList->addItem( new FilterListItem( f, f->translatedName() ) );
   } else   // separator
-    m_lb->insertItem(new LBoxItem(0, "==="));
+    mMenuList->addItem( new FilterListItem( 0, "===" ) );
   slotSelectionChangedMenu();
   emit changed(true);
 }
@@ -1394,8 +1393,9 @@ void KNode::FilterListWidget::addMenuItem(KNArticleFilter *f)
 
 void KNode::FilterListWidget::removeMenuItem(KNArticleFilter *f)
 {
-  int i=findItem(m_lb, f);
-  if(i!=-1) m_lb->removeItem(i);
+  int i = findItem( mMenuList, f );
+  if ( i >= 0 )
+    delete mMenuList->takeItem( i );
   slotSelectionChangedMenu();
   emit changed(true);
 }
@@ -1406,9 +1406,9 @@ QList<int> KNode::FilterListWidget::menuOrder()
   KNArticleFilter *f;
   QList<int> lst;
 
-  for(uint i=0; i<m_lb->count(); i++) {
-    f= (static_cast<LBoxItem*>(m_lb->item(i)))->filter;
-    if(f)
+  for( int i = 0; i < mMenuList->count(); ++i ) {
+    f = static_cast<FilterListItem*>( mMenuList->item( i ) )->filter();
+    if ( f )
       lst << f->id();
     else
       lst << -1;
@@ -1417,16 +1417,12 @@ QList<int> KNode::FilterListWidget::menuOrder()
 }
 
 
-int KNode::FilterListWidget::findItem(Q3ListBox *l, KNArticleFilter *f)
+int KNode::FilterListWidget::findItem( QListWidget *l, KNArticleFilter *f )
 {
-  int idx=0;
-  bool found=false;
-  while(!found && idx < (int) l->count()) {
-    found=( (static_cast<LBoxItem*>(l->item(idx)))->filter==f );
-    if(!found) idx++;
-  }
-  if(found) return idx;
-  else return -1;
+  for ( int i = 0; i < l->count(); ++i )
+    if ( static_cast<FilterListItem*>( l->item( i ) )->filter() == f )
+      return i;
+  return -1;
 }
 
 
@@ -1438,62 +1434,50 @@ void KNode::FilterListWidget::slotAddBtnClicked()
 
 void KNode::FilterListWidget::slotDelBtnClicked()
 {
-  if (f_lb->currentItem()!=-1)
-    f_ilManager->deleteFilter( (static_cast<LBoxItem*>(f_lb->item(f_lb->currentItem())))->filter );
+  if ( mFilterList->currentItem() )
+    f_ilManager->deleteFilter( static_cast<FilterListItem*>( mFilterList->currentItem() )->filter() );
 }
 
 
 void KNode::FilterListWidget::slotEditBtnClicked()
 {
-  if (f_lb->currentItem()!=-1)
-    f_ilManager->editFilter( (static_cast<LBoxItem*>(f_lb->item(f_lb->currentItem())))->filter );
+  if ( mFilterList->currentItem() )
+    f_ilManager->editFilter( static_cast<FilterListItem*>( mFilterList->currentItem() )->filter() );
 }
 
 
 void KNode::FilterListWidget::slotCopyBtnClicked()
 {
-  if (f_lb->currentItem()!=-1)
-    f_ilManager->copyFilter( (static_cast<LBoxItem*>(f_lb->item(f_lb->currentItem())))->filter );
+  if ( mFilterList->currentItem() )
+    f_ilManager->copyFilter( static_cast<FilterListItem*>( mFilterList->currentItem() )->filter() );
 }
 
 
 void KNode::FilterListWidget::slotUpBtnClicked()
 {
-  int c=m_lb->currentItem();
-  KNArticleFilter *f=0;
-
-  if(c==0 || c==-1) return;
-  f=(static_cast<LBoxItem*>(m_lb->item(c)))->filter;
-  if(f)
-    m_lb->insertItem(new LBoxItem(f, f->translatedName()), c-1);
-  else
-    m_lb->insertItem(new LBoxItem(0, "==="), c-1);
-  m_lb->removeItem(c+1);
-  m_lb->setCurrentItem(c-1);
+  int row = mMenuList->currentRow();
+  if ( row <= 0)
+    return;
+  mMenuList->insertItem( row - 1, mMenuList->takeItem( row ) );
+  mMenuList->setCurrentRow( row - 1 );
   emit changed(true);
 }
 
 
 void KNode::FilterListWidget::slotDownBtnClicked()
 {
-  int c=m_lb->currentItem();
-  KNArticleFilter *f=0;
-
-  if(c==-1 || c+1==(int)m_lb->count()) return;
-  f=(static_cast<LBoxItem*>(m_lb->item(c)))->filter;
-  if(f)
-    m_lb->insertItem(new LBoxItem(f, f->translatedName()), c+2);
-  else
-    m_lb->insertItem(new LBoxItem(0, "==="), c+2);
-  m_lb->removeItem(c);
-  m_lb->setCurrentItem(c+1);
+  int row = mMenuList->currentRow();
+  if ( row < 0 || row > mMenuList->count() - 1 )
+    return;
+  mMenuList->insertItem( row + 1, mMenuList->takeItem( row ) );
+  mMenuList->setCurrentRow( row + 1 );
   emit changed(true);
 }
 
 
 void KNode::FilterListWidget::slotSepAddBtnClicked()
 {
-  m_lb->insertItem(new LBoxItem(0, "==="), m_lb->currentItem());
+  mMenuList->insertItem( mMenuList->currentRow(), new FilterListItem( 0, "===" ) );
   slotSelectionChangedMenu();
   emit changed(true);
 }
@@ -1501,38 +1485,31 @@ void KNode::FilterListWidget::slotSepAddBtnClicked()
 
 void KNode::FilterListWidget::slotSepRemBtnClicked()
 {
-  int c=m_lb->currentItem();
-
-  if( (c!=-1) && ( (static_cast<LBoxItem*>(m_lb->item(c)))->filter==0 ) )
-     m_lb->removeItem(c);
+  FilterListItem *item = static_cast<FilterListItem*>( mMenuList->currentItem() );
+  if ( item && item->filter() == 0 )
+    delete item;
   slotSelectionChangedMenu();
   emit changed(true);
 }
 
 
-void KNode::FilterListWidget::slotItemSelectedFilter(int)
-{
-  slotEditBtnClicked();
-}
-
-
 void KNode::FilterListWidget::slotSelectionChangedFilter()
 {
-  int curr = f_lb->currentItem();
+  QListWidgetItem *item = mFilterList->currentItem();
 
-  d_elBtn->setEnabled(curr!=-1);
-  e_ditBtn->setEnabled(curr!=-1);
-  c_opyBtn->setEnabled(curr!=-1);
+  d_elBtn->setEnabled( item );
+  e_ditBtn->setEnabled( item );
+  c_opyBtn->setEnabled( item );
 }
 
 
 void KNode::FilterListWidget::slotSelectionChangedMenu()
 {
-  int curr = m_lb->currentItem();
+  int current = mMenuList->currentRow();
 
-  u_pBtn->setEnabled(curr>0);
-  d_ownBtn->setEnabled((curr!=-1)&&(curr+1!=(int)m_lb->count()));
-  s_epRemBtn->setEnabled((curr!=-1) && ( (static_cast<LBoxItem*>(m_lb->item(curr)))->filter==0 ) );
+  u_pBtn->setEnabled( current > 0 );
+  d_ownBtn->setEnabled( current >= 0 && ( current < mMenuList->count() - 1 ) );
+  s_epRemBtn->setEnabled( current >= 0 && ( static_cast<FilterListItem*>( mMenuList->item( current ) )->filter() == 0 ) );
 }
 
 
@@ -1722,7 +1699,8 @@ KNode::PrivacyWidget::PrivacyWidget( KInstance *inst,QWidget *parent ) :
   KCModule(inst, parent )
 {
   QBoxLayout *topLayout = new QVBoxLayout(this, 5);
-  c_onf = new Kpgp::Config(this,"knode pgp config",false);
+  c_onf = new Kpgp::Config( this, false );
+  c_onf->setObjectName( "knode pgp config" );
   topLayout->addWidget(c_onf);
   connect(c_onf, SIGNAL(changed()), SLOT(changed()));
 
