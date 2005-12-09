@@ -56,7 +56,6 @@
 //Added by qt3to4:
 #include <QByteArray>
 #include <Q3PtrList>
-#include <Q3ValueList>
 
 // gpgme++
 #include <gpgmepp/data.h>
@@ -213,24 +212,24 @@ public:
     return _unknownAttrsHandlingChar;
   }
 
-  Q3ValueList< QPair<QString,QString> > reorder( const Q3ValueList< QPair<QString,QString> > & dn ) const
+  QList< QPair<QString,QString> > reorder( const QList< QPair<QString,QString> > & dn ) const
   {
     return reorder( dn, _attrOrder, _unknownAttrsHandling );
   }
 
 
-  static Q3ValueList< QPair<QString,QString> > reorder(
-    const Q3ValueList< QPair<QString,QString> > & dn,
+  static QList< QPair<QString,QString> > reorder(
+    const QList< QPair<QString,QString> > & dn,
     QStringList attrOrder,
     UnknownAttrsHandling unknownAttrsHandling )
   {
     if( !attrOrder.isEmpty() ){
       Q3PtrList<   QPair<QString,QString> > unknownEntries;
-      Q3ValueList< QPair<QString,QString> > dnNew;
+      QList< QPair<QString,QString> > dnNew;
 
       QPair<QString,QString>* unknownEntry;
       QStringList::ConstIterator itOrder;
-      Q3ValueList< QPair<QString,QString> >::ConstIterator itDN;
+      QList< QPair<QString,QString> >::ConstIterator itDN;
       bool bFound;
 
       if( unknownAttrsHandling != unknownAttrsHide ){
