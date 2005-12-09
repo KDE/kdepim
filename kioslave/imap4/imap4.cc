@@ -74,7 +74,7 @@ imap://server/folder/
 //Added by qt3to4:
 #include <Q3CString>
 #include <Q3PtrList>
-#include <Q3ValueList>
+#include <QList>
 
 #ifdef HAVE_LIBSASL2
 extern "C" {
@@ -468,13 +468,13 @@ IMAP4Protocol::listDir (const KURL & _url)
       if (myLType == "LSUB")
       {
         // fire the same command as LIST to check if the box really exists
-        Q3ValueList<imapList> listResponsesSave = listResponses;
+        QList<imapList> listResponsesSave = listResponses;
         doCommand (imapCommand::clientList ("", listStr, false));
-        for (Q3ValueListIterator < imapList > it = listResponsesSave.begin ();
+        for (QList< imapList >::Iterator it = listResponsesSave.begin ();
             it != listResponsesSave.end (); ++it)
         {
           bool boxOk = false;
-          for (Q3ValueListIterator < imapList > it2 = listResponses.begin ();
+          for (QList< imapList >::Iterator it2 = listResponses.begin ();
               it2 != listResponses.end (); ++it2)
           {
             if ((*it2).name() == (*it).name())
@@ -494,7 +494,7 @@ IMAP4Protocol::listDir (const KURL & _url)
       }
       else // LIST or LSUBNOCHECK
       {
-        for (Q3ValueListIterator < imapList > it = listResponses.begin ();
+        for (QList< imapList >::Iterator it = listResponses.begin ();
             it != listResponses.end (); ++it)
         {
           doListEntry (aURL, myBox, (*it), (mySection != "FOLDERONLY"));
@@ -1713,7 +1713,7 @@ IMAP4Protocol::stat (const KURL & _url)
       imapCommand *cmd = doCommand (imapCommand::clientList ("", aBox));
       if (cmd->result () == "OK")
       {
-        for (Q3ValueListIterator < imapList > it = listResponses.begin ();
+        for (QList< imapList >::Iterator it = listResponses.begin ();
              it != listResponses.end (); ++it)
         {
           if (aBox == (*it).name ()) found = true;
@@ -1980,7 +1980,7 @@ bool IMAP4Protocol::makeLogin ()
     cmd = doCommand( imapCommand::clientList("", "") );
     if (cmd->result () == "OK")
     {
-      Q3ValueListIterator < imapList > it = listResponses.begin();
+      QList< imapList >::Iterator it = listResponses.begin();
       if ( it != listResponses.end() )
       {
         namespaceToDelimiter[QString::null] = (*it).hierarchyDelimiter();
@@ -2248,7 +2248,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
           cmd = doCommand (imapCommand::clientList ("", _box));
           if (cmd->result () == "OK")
           {
-            for (Q3ValueListIterator < imapList > it = listResponses.begin ();
+            for (QList< imapList >::Iterator it = listResponses.begin ();
                 it != listResponses.end (); ++it)
             {
               //kdDebug(7116) << "IMAP4::parseURL - checking " << _box << " to " << (*it).name() << endl;
@@ -2437,7 +2437,7 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
       cmd = doCommand (imapCommand::clientList ("", aBox));
       if (cmd->result () == "OK")
       {
-        for (Q3ValueListIterator < imapList > it = listResponses.begin ();
+        for (QList< imapList >::Iterator it = listResponses.begin ();
              it != listResponses.end (); ++it)
         {
           if (aBox == (*it).name ()) found = true;

@@ -41,7 +41,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 #include <Q3CString>
 #include <Q3PtrList>
 
@@ -1948,9 +1948,9 @@ QString imapParser::namespaceForBox( const QString & box )
   QString myNamespace;
   if ( !box.isEmpty() )
   {
-    Q3ValueList<QString> list = namespaceToDelimiter.keys();
+    QList<QString> list = namespaceToDelimiter.keys();
     QString cleanPrefix;
-    for ( Q3ValueList<QString>::Iterator it = list.begin(); it != list.end(); ++it )
+    for ( QList<QString>::Iterator it = list.begin(); it != list.end(); ++it )
     {
       if ( !(*it).isEmpty() && box.find( *it ) != -1 )
         return (*it);

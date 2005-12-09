@@ -455,7 +455,7 @@ protected:
   QStringList imapCapabilities;
 
   /** @brief the results from list/lsub/listrights commands */
-  Q3ValueList < imapList > listResponses;
+  QList < imapList > listResponses;
 
   /** @brief queues handling the running commands */
   Q3PtrList < imapCommand > sentQueue;  // no autodelete
