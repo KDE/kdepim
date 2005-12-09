@@ -24,7 +24,7 @@
 
 #include <qstringlist.h>
 //Added by qt3to4:
-#include <Q3ValueList>
+#include <QList>
 #include <ksharedptr.h>
 #include "networkstatuscommon.h"
 
@@ -34,7 +34,7 @@ struct NetworkUsageStruct
 	QString host;
 };
 
-typedef Q3ValueList< NetworkUsageStruct > NetworkUsageList;
+typedef QList< NetworkUsageStruct > NetworkUsageList;
 
 class Network
 {

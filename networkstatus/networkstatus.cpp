@@ -44,7 +44,7 @@ extern "C" {
 // INTERNALLY USED STRUCTS AND TYPEDEFS
 
 //typedef QDict< Network > NetworkList;
-typedef Q3ValueList< Network * > NetworkList;
+typedef QList< Network * > NetworkList;
 
 class NetworkStatusModule::Private
 {
