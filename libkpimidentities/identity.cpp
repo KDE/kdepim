@@ -19,7 +19,7 @@
 
 #include <qfileinfo.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include <sys/types.h>
 #include <stdlib.h>
@@ -449,28 +449,28 @@ void Identity::setOrganization(const QString &str)
   mOrganization = str;
 }
 
-void Identity::setPGPSigningKey(const Q3CString &str)
+void Identity::setPGPSigningKey(const QByteArray &str)
 {
   mPGPSigningKey = str;
   if ( mPGPSigningKey.isNull() )
     mPGPSigningKey = "";
 }
 
-void Identity::setPGPEncryptionKey(const Q3CString &str)
+void Identity::setPGPEncryptionKey(const QByteArray &str)
 {
   mPGPEncryptionKey = str;
   if ( mPGPEncryptionKey.isNull() )
     mPGPEncryptionKey = "";
 }
 
-void Identity::setSMIMESigningKey(const Q3CString &str)
+void Identity::setSMIMESigningKey(const QByteArray &str)
 {
   mSMIMESigningKey = str;
   if ( mSMIMESigningKey.isNull() )
     mSMIMESigningKey = "";
 }
 
-void Identity::setSMIMEEncryptionKey(const Q3CString &str)
+void Identity::setSMIMEEncryptionKey(const QByteArray &str)
 {
   mSMIMEEncryptionKey = str;
   if ( mSMIMEEncryptionKey.isNull() )

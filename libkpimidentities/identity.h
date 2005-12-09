@@ -181,27 +181,27 @@ public:
   QString organization() const { return mOrganization; }
   void setOrganization(const QString&);
 
-  KDE_DEPRECATED Q3CString pgpIdentity() const { return pgpEncryptionKey(); }
-  KDE_DEPRECATED void setPgpIdentity( const Q3CString & key ) {
+  KDE_DEPRECATED QByteArray pgpIdentity() const { return pgpEncryptionKey(); }
+  KDE_DEPRECATED void setPgpIdentity( const QByteArray & key ) {
     setPGPEncryptionKey( key );
     setPGPSigningKey( key );
   }
 
   /** The user's OpenPGP encryption key */
-  Q3CString pgpEncryptionKey() const { return mPGPEncryptionKey; }
-  void setPGPEncryptionKey( const Q3CString & key );
+  QByteArray pgpEncryptionKey() const { return mPGPEncryptionKey; }
+  void setPGPEncryptionKey( const QByteArray & key );
 
   /** The user's OpenPGP signing key */
-  Q3CString pgpSigningKey() const { return mPGPSigningKey; }
-  void setPGPSigningKey( const Q3CString & key );
+  QByteArray pgpSigningKey() const { return mPGPSigningKey; }
+  void setPGPSigningKey( const QByteArray & key );
 
   /** The user's S/MIME encryption key */
-  Q3CString smimeEncryptionKey() const { return mSMIMEEncryptionKey; }
-  void setSMIMEEncryptionKey( const Q3CString & key );
+  QByteArray smimeEncryptionKey() const { return mSMIMEEncryptionKey; }
+  void setSMIMEEncryptionKey( const QByteArray & key );
 
   /** The user's S/MIME signing key */
-  Q3CString smimeSigningKey() const { return mSMIMESigningKey; }
-  void setSMIMESigningKey( const Q3CString & key );
+  QByteArray smimeSigningKey() const { return mSMIMESigningKey; }
+  void setSMIMESigningKey( const QByteArray & key );
 
   Kleo::CryptoMessageFormat preferredCryptoMessageFormat() const { return mPreferredCryptoMessageFormat; }
   void setPreferredCryptoMessageFormat( Kleo::CryptoMessageFormat format ) { mPreferredCryptoMessageFormat = format; }
@@ -293,7 +293,7 @@ protected:
   QString mReplyToAddr;
   QString mBcc;
   QString mVCardFile;
-  Q3CString mPGPEncryptionKey, mPGPSigningKey, mSMIMEEncryptionKey, mSMIMESigningKey;
+  QByteArray mPGPEncryptionKey, mPGPSigningKey, mSMIMEEncryptionKey, mSMIMESigningKey;
   QString mFcc, mDrafts, mTransport;
   QString mDictionary;
   QString mXFace;
