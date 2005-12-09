@@ -346,8 +346,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
 
   //attachment popup
-  a_ttPopup=static_cast<Q3PopupMenu*> (factory()->container("attachment_popup", this));
-  if(!a_ttPopup) a_ttPopup = new Q3PopupMenu();
+  a_ttPopup=static_cast<QMenu*> (factory()->container("attachment_popup", this));
+  if(!a_ttPopup) a_ttPopup = new QMenu();
   slotAttachmentSelected(0);
 
   //init
@@ -1426,8 +1426,8 @@ void KNComposer::slotNewToolbarConfig()
 {
   createGUI("kncomposerui.rc");
 
-  a_ttPopup=static_cast<Q3PopupMenu*> (factory()->container("attachment_popup", this));
-  if(!a_ttPopup) a_ttPopup = new Q3PopupMenu();
+  a_ttPopup=static_cast<QMenu*> (factory()->container("attachment_popup", this));
+  if(!a_ttPopup) a_ttPopup = new QMenu();
 
   KConfig *conf = knGlobals.config();
   conf->setGroup("composerWindow_options");

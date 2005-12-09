@@ -21,7 +21,7 @@
 #include <qfile.h>
 #include <qimage.h>
 #include <qlayout.h>
-#include <q3popupmenu.h>
+#include <QMenu>
 #include <qstringlist.h>
 #include <qtextcodec.h>
 #include <qtimer.h>
@@ -1175,7 +1175,7 @@ void ArticleWidget::slotURLPopup( const QString &url, const QPoint &point )
     return; // skip
   else
     popupName = "url_popup"; // all other URLs
-  Q3PopupMenu *popup = static_cast<Q3PopupMenu*>( mGuiClient->factory()->container( popupName, mGuiClient ) );
+  QMenu *popup = static_cast<QMenu*>( mGuiClient->factory()->container( popupName, mGuiClient ) );
   if ( popup )
     popup->popup( point );
 }

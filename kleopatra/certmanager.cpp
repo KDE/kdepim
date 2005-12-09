@@ -91,11 +91,10 @@
 
 // Qt
 #include <qfontmetrics.h>
-#include <q3popupmenu.h>
 //Added by qt3to4:
 #include <Q3PtrList>
 #include <QLabel>
-
+#include <QMenu>
 // other
 #include <algorithm>
 #include <assert.h>
@@ -619,7 +618,7 @@ void CertManager::slotKeyListResult( const GpgME::KeyListResult & res ) {
 void CertManager::slotContextMenu(Kleo::KeyListViewItem* item, const QPoint& point) {
   if ( !item )
     return;
-  if ( Q3PopupMenu * popup = static_cast<Q3PopupMenu*>(factory()->container("listview_popup",this)) )
+  if ( QMenu * popup = static_cast<QMenu*>(factory()->container("listview_popup",this)) )
     popup->exec( point );
 }
 

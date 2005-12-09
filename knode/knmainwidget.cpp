@@ -19,7 +19,7 @@
 #include <QDropEvent>
 #include <QLabel>
 #include <QVBoxLayout>
-#include <Q3PopupMenu>
+#include <QMenu>
 #include <QSplitter>
 #include <ktoolbar.h>
 
@@ -1163,11 +1163,11 @@ void KNMainWidget::slotArticleRMB(KListView*, Q3ListViewItem *i, const QPoint &p
     return;
 
   if(i) {
-    Q3PopupMenu *popup;
+    QMenu *popup;
     if( (static_cast<KNHdrViewItem*>(i))->art->type()==KMime::Base::ATremote) {
-     popup = static_cast<Q3PopupMenu *>(factory()->container("remote_popup", m_GUIClient));
+     popup = static_cast<QMenu *>(factory()->container("remote_popup", m_GUIClient));
     } else {
-     popup = static_cast<Q3PopupMenu *>(factory()->container("local_popup", m_GUIClient));
+     popup = static_cast<QMenu *>(factory()->container("local_popup", m_GUIClient));
     }
 
     if ( popup )
@@ -1183,21 +1183,21 @@ void KNMainWidget::slotCollectionRMB(KListView*, Q3ListViewItem *i, const QPoint
 
   if(i) {
     if( (static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTgroup) {
-      Q3PopupMenu *popup = static_cast<Q3PopupMenu *>(factory()->container("group_popup", m_GUIClient));
+      QMenu *popup = static_cast<QMenu *>(factory()->container("group_popup", m_GUIClient));
       if ( popup )
         popup->popup(p);
     } else if ((static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTfolder) {
       if (static_cast<KNFolder*>(static_cast<KNCollectionViewItem*>(i)->coll)->isRootFolder()) {
-        Q3PopupMenu *popup = static_cast<Q3PopupMenu *>(factory()->container("root_folder_popup", m_GUIClient));
+        QMenu *popup = static_cast<QMenu *>(factory()->container("root_folder_popup", m_GUIClient));
         if ( popup )
           popup->popup(p);
       } else {
-        Q3PopupMenu *popup  = static_cast<Q3PopupMenu *>(factory()->container("folder_popup", m_GUIClient));
+        QMenu *popup  = static_cast<QMenu *>(factory()->container("folder_popup", m_GUIClient));
         if ( popup )
           popup->popup(p);
       }
     } else {
-      Q3PopupMenu *popup = static_cast<Q3PopupMenu *>(factory()->container("account_popup", m_GUIClient));
+      QMenu *popup = static_cast<QMenu *>(factory()->container("account_popup", m_GUIClient));
       if ( popup )
         popup->popup( p );
     }

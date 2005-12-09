@@ -32,7 +32,7 @@
 #include <QLabel>
 #include <QList>
 #include <QContextMenuEvent>
-#include <Q3PopupMenu>
+#include <QMenu>
 #include <QDragEnterEvent>
 #include <QSplitter>
 
@@ -103,7 +103,7 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
 
     //GUI
     ComposerView *v_iew;
-    Q3PopupMenu *a_ttPopup;
+    QMenu *a_ttPopup;
 
     //Data
     composerResult r_esult;
