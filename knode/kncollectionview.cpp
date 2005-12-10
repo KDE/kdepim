@@ -18,7 +18,7 @@
 #include <QEvent>
 #include <QDropEvent>
 #include <QMouseEvent>
-
+#include <Q3DragObject>
 #include <kiconloader.h>
 #include <klistview.h>
 #include <klocale.h>
