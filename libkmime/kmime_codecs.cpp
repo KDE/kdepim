@@ -89,7 +89,7 @@ Codec * Codec::codecForName( const QByteArray & name ) {
   }
   QByteArray lowerName = name;
   KPIM::kAsciiToLower( lowerName.data() );
-  Codec * codec = (*all)[ name ];
+  Codec * codec = (*all)[ lowerName ];
 #if defined(QT_THREAD_SUPPORT)
   dictLock->unlock();
 #endif
