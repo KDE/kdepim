@@ -132,8 +132,19 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
           return true;
 
         KABC::AddresseeList::ConstIterator it;
+        uint counter = 0;
         for ( it = list.begin(); it != list.end(); ++it ) {
-          url = baseUrl.url() + "/" + (*it).givenName() + "_" + (*it).familyName() + ".vcf";
+          QString testUrl;
+          if ( (*it).givenName().isEmpty() && (*it).familyName().isEmpty() )
+            testUrl = baseUrl.url() + "/" + (*it).organization();
+          else
+            testUrl = baseUrl.url() + "/" + (*it).givenName() + "_" + (*it).familyName();
+
+          if ( KIO::NetAccess::exists( testUrl + (counter == 0 ? "" : QString::number( counter )) + ".vcf", false, parentWidget() ) ) {
+            counter++;
+            url = testUrl + QString::number( counter ) + ".vcf";
+          } else
+            url = testUrl + ".vcf";
 
           bool tmpOk;
           KABC::AddresseeList tmpList;
