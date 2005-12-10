@@ -25,14 +25,12 @@
 #define IMAGEWIDGET_H
 
 #include <qlabel.h>
+#include <qpushbutton.h>
 
 #include <kabc/picture.h>
 #include <kdialogbase.h>
 
 #include "contacteditorwidget.h"
-
-class KURLRequester;
-class QCheckBox;
 
 #include <librss/global.h>
 
@@ -46,14 +44,42 @@ using namespace RSS;
 /**
   Small helper class
  */
-class ImageLabel : public QLabel
+class ImageLoader : public QObject
 {
   Q_OBJECT
 
   public:
-    ImageLabel( const QString &title, QWidget *parent );
+    ImageLoader();
+
+    KABC::Picture loadPicture( const KURL &url, bool *ok );
+    KABC::Picture loadBlog( const KURL &url, bool *ok );
+
+  private slots:
+    void loadingComplete( Loader*, Document, Status );
+
+  private:
+    bool mIsLoadingBlog;
+    KABC::Picture mPicture;
+};
+
+/**
+  Small helper class
+ */
+class ImageButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+    ImageButton( const QString &title, QWidget *parent );
 
     void setReadOnly( bool readOnly );
+
+    void setPicture( const KABC::Picture &picture );
+    KABC::Picture picture() const;
+
+    void setImageLoader( ImageLoader *loader );
+
+    void setBlogFeed( const KURL &url );
 
   signals:
     void changed();
@@ -64,13 +90,25 @@ class ImageLabel : public QLabel
     virtual void dropEvent( QDropEvent *event );
     virtual void mouseMoveEvent( QMouseEvent *event );
     virtual void mousePressEvent( QMouseEvent *event );
+    virtual void contextMenuEvent( QContextMenuEvent *event );
+
+  private slots:
+    void load();
+    void loadBlog();
+    void clear();
 
   private:
     void startDrag();
+    void updateGUI();
 
     bool mReadOnly;
+    KURL mBlogFeed;
     QPoint mDragStartPos;
+    KABC::Picture mPicture;
+
+    ImageLoader *mImageLoader;
 };
+
 
 class ImageBaseWidget : public QWidget
 {
@@ -81,13 +119,8 @@ class ImageBaseWidget : public QWidget
     ~ImageBaseWidget();
 
     /**
-      Show/hide button for getting image from blog feed.
-    */
-    void showBlogButton( bool show );
-
-    /**
       Set URL of blog feed for getting the image.
-    */
+     */
     void setBlogFeed( const QString & );
 
     /**
@@ -105,32 +138,11 @@ class ImageBaseWidget : public QWidget
   signals:
     void changed();
 
-  public slots:
-    void urlDropped( const KURL& );
-
-  private slots:
-    void loadImage();
-    void updateGUI();
-    void clear();
-    void imageChanged();
-    void getPictureFromBlog();
-    void slotLoadingComplete( Loader *loader, Document doc, Status status );
-
   private:
-    QPixmap loadPixmap( const KURL &url );
-
-    ImageLabel *mImageLabel;
-    KURLRequester *mImageUrl;
-
-    QCheckBox *mUseImageUrl;
-    QPushButton *mClearButton;
-
-    QPushButton *mBlogButton;
-    QString mBlogFeed;
+    ImageButton *mImageButton;
+    ImageLoader *mImageLoader;
 
     bool mReadOnly;
-
-    RSS::Loader *mRssLoader;
 };
 
 class ImageWidget : public KAB::ContactEditorWidget
