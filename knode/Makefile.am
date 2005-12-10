@@ -81,7 +81,6 @@ libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   \
                   knscoring.cpp \
                   \
-                  knwidgets.cpp \
                   headerview.cpp \
 		  knmainwidget.cpp    \
 		  aboutdata.cpp \
@@ -159,7 +158,6 @@ noinst_HEADERS =  knconfigmanager.h \
                   \
                   knscoring.h \
                   \
-                  knwidgets.h \
                   headerview.h \
                   knode.h \
                   knapplication.h \

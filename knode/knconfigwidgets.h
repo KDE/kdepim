@@ -18,7 +18,6 @@
 #include <kdialogbase.h>
 #include <kcmodule.h>
 
-#include "knwidgets.h"
 #include "nntpaccountdialog_base.h"
 #include "nntpaccountlistwidget_base.h"
 #include "postnewstechnicalwidget_base.h"

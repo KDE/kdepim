@@ -13,7 +13,6 @@
 */
 #include "knode.h"
 #include "knglobals.h"
-#include "knwidgets.h"
 
 #include <kkeydialog.h>
 #include <kedittoolbar.h>

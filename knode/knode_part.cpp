@@ -27,7 +27,6 @@
 #include "knmainwidget.h"
 #include "aboutdata.h"
 #include "kncollectionview.h"
-#include "knwidgets.h"
 
 #include <kapplication.h>
 #include <kparts/genericfactory.h>

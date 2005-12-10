@@ -27,7 +27,6 @@
 #include "knscoring.h"
 #include "knmemorymanager.h"
 #include "knmainwidget.h"
-#include "knwidgets.h"
 #include "scheduler.h"
 #include "settings.h"
 

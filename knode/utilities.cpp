@@ -13,6 +13,7 @@
 */
 
 #include <qlayout.h>
+#include <QListWidget>
 #include <qregexp.h>
 #include <qapplication.h>
 #include <qcursor.h>
@@ -29,7 +30,6 @@
 #include <ktempfile.h>
 #include <kfiledialog.h>
 
-#include "knwidgets.h"
 #include "knglobals.h"
 #include "utilities.h"
 
@@ -216,23 +216,24 @@ int KNHelper::selectDialog(QWidget *parent, const QString &caption, const QStrin
   QFrame *page = dlg->plainPage();
   QHBoxLayout *pageL = new QHBoxLayout(page,8,5);
 
-  KNDialogListBox *list = new KNDialogListBox(true, page);
+  QListWidget *list = new QListWidget( page );
   pageL->addWidget(list);
 
   QString s;
   for ( QStringList::ConstIterator it = options.begin(); it != options.end(); ++it ) {
     s = (*it);
     s.replace(QRegExp("&"),"");   // remove accelerators
-    list->insertItem(s);
+    list->addItem( s );
   }
 
-  list->setCurrentItem(initialValue);
+  list->setCurrentRow( initialValue );
   list->setFocus();
+  QObject::connect( list, SIGNAL( itemActivated( QListWidgetItem* ) ), dlg, SLOT( accept() ) );
   restoreWindowSize("selectBox", dlg, QSize(247,174));
 
   int ret;
   if (dlg->exec())
-    ret = list->currentItem();
+    ret = list->currentRow();
   else
     ret = -1;
 

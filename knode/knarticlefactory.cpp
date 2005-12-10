@@ -14,6 +14,7 @@
 
 #include <QByteArray>
 #include <QList>
+#include <QListWidget>
 #include <qlayout.h>
 #include <qlabel.h>
 
@@ -1072,16 +1073,15 @@ void KNArticleFactory::slotSendErrorDialogDone()
 KNSendErrorDialog::KNSendErrorDialog()
   : KDialogBase(knGlobals.topWidget, 0, true, i18n("Errors While Sending"), Close, Close, true)
 {
-  p_ixmap=knGlobals.configManager()->appearance()->icon(KNode::Appearance::sendErr);
-
   KVBox *page = makeVBoxMainWidget();
 
   new QLabel(QString("<b>%1</b><br>%2").arg(i18n("Errors occurred while sending these articles:"))
                                        .arg(i18n("The unsent articles are stored in the \"Outbox\" folder.")), page);
-  j_obs=new KNDialogListBox(true, page);
-  e_rror=new QLabel(QString::null, page);
+  mErrorList = new QListWidget( page );
+  mError = new QLabel( QString::null, page );
+  mError->setWordWrap( true );
 
-  connect(j_obs, SIGNAL(highlighted(int)), this, SLOT(slotHighlighted(int)));
+  connect( mErrorList, SIGNAL( currentRowChanged( int ) ), SLOT( slotHighlighted( int ) ) );
 
   KNHelper::restoreWindowSize("sendDlg", this, QSize(320,250));
 }
@@ -1095,23 +1095,21 @@ KNSendErrorDialog::~KNSendErrorDialog()
 
 void KNSendErrorDialog::append(const QString &subject, const QString &error)
 {
-
-  LBoxItem *it=new LBoxItem(error, subject, &p_ixmap);
-  j_obs->insertItem(it);
-  j_obs->setCurrentItem(it);
+  ErrorListItem *item = new ErrorListItem( subject, error );
+  item->setIcon( knGlobals.configManager()->appearance()->icon(KNode::Appearance::sendErr) );
+  mErrorList->addItem( item );
+  mErrorList->setCurrentItem( item );
 }
 
 
 void KNSendErrorDialog::slotHighlighted(int idx)
 {
-  LBoxItem *it=static_cast<LBoxItem*>(j_obs->item(idx));
-  if(it) {
-    QString tmp=i18n("<b>Error message:</b><br>")+it->error;
-    e_rror->setText(tmp);
+  ErrorListItem *item = static_cast<ErrorListItem*>( mErrorList->item( idx ) );
+  if ( item ) {
+    QString tmp = i18n("<b>Error message:</b><br>") + item->error();
+    mError->setText( tmp );
   }
 }
 
 //-------------------------------
 #include "knarticlefactory.moc"
-
-// kate: space-indent on; indent-width 2;

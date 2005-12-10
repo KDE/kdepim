@@ -17,13 +17,13 @@
 
 #include <QByteArray>
 #include <QList>
+#include <QListWidgetItem>
 #include <QPixmap>
 
 #include <kdialogbase.h>
 
 #include "knjobdata.h"
 #include "knarticle.h"
-#include "knwidgets.h"
 
 class QLabel;
 
@@ -109,18 +109,25 @@ class KNSendErrorDialog : public KDialogBase  {
     void append(const QString &subject, const QString &error);
 
   protected:
-    class LBoxItem : public KNListBoxItem {
+    /** Error list widget item. */
+    class ErrorListItem : public QListWidgetItem {
       public:
-        LBoxItem(const QString &e, const QString &t, QPixmap *p=0)
-          : KNListBoxItem(t, p) , error(e)  {}
-        ~LBoxItem() {}
-
-        QString error;
+        /** Creates a new error list item.
+         * @param text The item text.
+         * @param error The error message.
+         */
+        ErrorListItem( const QString &text, const QString &error )
+          : QListWidgetItem( text ), mError( error )  {}
+        /** Returns the error message of this item. */
+        QString error() const { return mError; }
+      private:
+        QString mError;
     };
 
-    KNDialogListBox *j_obs;
-    QLabel *e_rror;
-    QPixmap p_ixmap;
+    /// Error list widget.
+    QListWidget *mErrorList;
+    /// Error message label.
+    QLabel *mError;
 
   protected slots:
     void slotHighlighted(int idx);
