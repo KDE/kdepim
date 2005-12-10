@@ -6,6 +6,7 @@ ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/meanwhile
 Comment=Meanwhile Protocol
 Comment[bg]=Протокол Meanwhile
+Comment[br]=Komenad Meanwhile
 Comment[ca]=Protocol Meanwhile
 Comment[cs]=Meanwhile protokol
 Comment[da]=Meanwhile Protokol
