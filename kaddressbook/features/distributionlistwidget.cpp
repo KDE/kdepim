@@ -36,7 +36,7 @@
 #include <QEvent>
 #include <QDragMoveEvent>
 #include <QDropEvent>
-#include <Q3Frame>
+#include <QFrame>
 #include <QBoxLayout>
 #include <QVBoxLayout>
 #include <QDragEnterEvent>

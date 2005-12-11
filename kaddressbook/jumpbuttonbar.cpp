@@ -31,7 +31,7 @@
 #include <QStyleOption>
 //Added by qt3to4:
 #include <QVBoxLayout>
-#include <Q3Frame>
+#include <QFrame>
 #include <QList>
 #include <QResizeEvent>
 
@@ -83,7 +83,7 @@ JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name
   mGroupBox->layout()->setSpacing( 0 );
   mGroupBox->layout()->setMargin( 0 );
   // FIXME port me
-  //mGroupBox->setFrameStyle( Q3Frame::NoFrame );
+  //mGroupBox->setFrameStyle( QFrame::NoFrame );
 }
 
 JumpButtonBar::~JumpButtonBar()

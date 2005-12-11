@@ -23,7 +23,7 @@
 
 #include <qlayout.h>
 //Added by qt3to4:
-#include <Q3Frame>
+#include <QFrame>
 #include <QGridLayout>
 
 #include <klocale.h>

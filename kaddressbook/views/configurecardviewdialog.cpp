@@ -31,7 +31,7 @@
 #include <qtabwidget.h>
 
 //Added by qt3to4:
-#include <Q3Frame>
+#include <QFrame>
 #include <QGridLayout>
 
 #include <kdebug.h>
@@ -279,14 +279,14 @@ void CardViewLookNFeelPage::initGUI()
   gFnts->setColStretch( 1, 1 );
   QLabel *lTFnt = new QLabel( i18n("&Text font:"), vbFonts );
   lTextFont = new QLabel( vbFonts );
-  lTextFont->setFrameStyle( Q3Frame::Panel|Q3Frame::Sunken );
+  lTextFont->setFrameStyle( QFrame::Panel|QFrame::Sunken );
   btnFont = new KPushButton( i18n("Choose..."), vbFonts );
   lTFnt->setBuddy( btnFont );
   connect( btnFont, SIGNAL(clicked()), this, SLOT(setTextFont()) );
 
   QLabel *lHFnt = new QLabel( i18n("&Header font:"), vbFonts );
   lHeaderFont = new QLabel( vbFonts );
-  lHeaderFont->setFrameStyle( Q3Frame::Panel|Q3Frame::Sunken );
+  lHeaderFont->setFrameStyle( QFrame::Panel|QFrame::Sunken );
   btnHeaderFont = new KPushButton( i18n("Choose..."), vbFonts );
   lHFnt->setBuddy( btnHeaderFont );
   connect( btnHeaderFont, SIGNAL(clicked()), this, SLOT(setHeaderFont()) );

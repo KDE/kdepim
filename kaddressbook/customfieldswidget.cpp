@@ -132,8 +132,8 @@ FieldWidget::FieldWidget( QWidget *parent, const char *name )
   mGlobalLayout = new QVBoxLayout( layout, KDialog::spacingHint() );
   mGlobalLayout->setAlignment( Qt::AlignTop );
 
-  mSeparator = new Q3Frame( this );
-  mSeparator->setFrameStyle( Q3Frame::HLine | Q3Frame::Sunken );
+  mSeparator = new QFrame( this );
+  mSeparator->setFrameStyle( QFrame::HLine | QFrame::Sunken );
   mSeparator->hide();
   layout->addWidget( mSeparator );
 

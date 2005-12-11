@@ -45,7 +45,7 @@
 #include <QTextStream>
 #include <QPaintEvent>
 #include <QGridLayout>
-#include <Q3Frame>
+#include <QFrame>
 #include <QMouseEvent>
 
 #include "geowidget.h"

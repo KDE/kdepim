@@ -29,7 +29,7 @@
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QCloseEvent>
-#include <Q3Frame>
+#include <QFrame>
 #include <QVBoxLayout>
 
 #include <addresseelineedit.h>

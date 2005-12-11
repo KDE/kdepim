@@ -37,7 +37,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QList>
-#include <Q3Frame>
+#include <QFrame>
 #include <QHBoxLayout>
 #include <QGridLayout>
 
@@ -118,7 +118,7 @@ class FieldWidget : public QWidget
 
     QVBoxLayout *mGlobalLayout;
     QVBoxLayout *mLocalLayout;
-    Q3Frame *mSeparator;
+    QFrame *mSeparator;
 
     FieldRecordList mFieldList;
 };

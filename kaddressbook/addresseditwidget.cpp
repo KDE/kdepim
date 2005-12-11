@@ -39,7 +39,7 @@
 #include <QGridLayout>
 #include <QKeyEvent>
 #include <QEvent>
-#include <Q3Frame>
+#include <QFrame>
 #include <QBoxLayout>
 #include <QList>
 #include <QVBoxLayout>
@@ -99,7 +99,7 @@ AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
   layout->addWidget( mTypeCombo );
 
   mAddressField = new QLabel( this );
-  mAddressField->setFrameStyle( Q3Frame::Panel | Q3Frame::Sunken );
+  mAddressField->setFrameStyle( QFrame::Panel | QFrame::Sunken );
   mAddressField->setMinimumHeight( 20 );
   mAddressField->setAlignment( Qt::AlignTop );
   mAddressField->setTextFormat( Qt::PlainText );

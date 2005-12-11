@@ -23,7 +23,7 @@
 
 #include <qlayout.h>
 //Added by qt3to4:
-#include <Q3Frame>
+#include <QFrame>
 #include <QGridLayout>
 
 #include <kapplication.h>
@@ -183,8 +183,8 @@ void ContactEditorTabPage::updateLayout()
       mLayout->addMultiCellWidget( *it, row, row + (*it)->logicalHeight() - 1, 0, 1 );
       row += (*it)->logicalHeight();
       if ( it != mWidgets.end() ) {
-        Q3Frame *frame = new Q3Frame( this );
-        frame->setFrameStyle( Q3Frame::HLine | Q3Frame::Sunken );
+        QFrame *frame = new QFrame( this );
+        frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
         mLayout->addMultiCellWidget( frame, row, row, 0, 1 );
         row++;
       }
@@ -199,8 +199,8 @@ void ContactEditorTabPage::updateLayout()
       return;
     } else {
       mLayout->addMultiCellWidget( *it, row, row + leftHeight - 1, 0, 0 );
-      Q3Frame *frame = new Q3Frame( this );
-      frame->setFrameStyle( Q3Frame::HLine | Q3Frame::Sunken );
+      QFrame *frame = new QFrame( this );
+      frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
       mLayout->addMultiCellWidget( frame, row + leftHeight, row + leftHeight, 0, 1 );
     }
 

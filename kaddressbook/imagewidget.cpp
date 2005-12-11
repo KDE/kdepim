@@ -47,7 +47,7 @@
 #include <qtooltip.h>
 //Added by qt3to4:
 #include <QGridLayout>
-#include <Q3Frame>
+#include <QFrame>
 #include <QHBoxLayout>
 #include <QDropEvent>
 #include <QDragEnterEvent>
@@ -140,7 +140,7 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
 
   mImageLabel = new ImageLabel( i18n( "Picture" ), box );
   mImageLabel->setFixedSize( 100, 140 );
-  mImageLabel->setFrameStyle( Q3Frame::Panel | Q3Frame::Sunken );
+  mImageLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
   boxLayout->addMultiCellWidget( mImageLabel, 0, 3, 0, 0, Qt::AlignTop );
 
   mImageUrl = new KURLRequester( box );

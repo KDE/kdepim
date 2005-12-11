@@ -39,7 +39,7 @@
 
 //Added by qt3to4:
 #include <QVBoxLayout>
-#include <Q3Frame>
+#include <QFrame>
 #include <QGridLayout>
 #include <ktoolinvocation.h>
 #include <kglobal.h>
