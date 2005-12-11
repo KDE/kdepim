@@ -171,14 +171,13 @@ void ContactEditorTabPage::setReadOnly( bool readOnly )
 
 void ContactEditorTabPage::updateLayout()
 {
-  KAB::ContactEditorWidget::List::ConstIterator it;
+  KAB::ContactEditorWidget::List::ConstIterator it, last;
   int row = 0;
-  if( mWidgets.isEmpty())
-	  return;
+  if( mWidgets.isEmpty() )
+    return;
+  last = mWidgets.end();
+  --last;
   for ( it = mWidgets.begin(); it != mWidgets.end() ; ++it ) {
-	kdDebug()<<" *it :"<<*it<<endl;
-    if( !(*it) )
-	 break;
     if ( (*it)->logicalWidth() == 2 ) {
       mLayout->addMultiCellWidget( *it, row, row + (*it)->logicalHeight() - 1, 0, 1 );
       row += (*it)->logicalHeight();
@@ -194,7 +193,7 @@ void ContactEditorTabPage::updateLayout()
     // fill left side
     int leftHeight = (*it)->logicalHeight();
 
-    if ( it == mWidgets.end() ) { // last widget gets full width
+    if ( it == last ) { // last widget gets full width
       mLayout->addMultiCellWidget( *it, row, row + leftHeight - 1, 0, 1 );
       return;
     } else {
@@ -207,14 +206,14 @@ void ContactEditorTabPage::updateLayout()
     // fill right side
     for ( int i = 0; i < leftHeight; ++i ) {
       ++it;
-      if ( it == mWidgets.end() )
+      if ( it == last )
         break;
 
       int rightHeight = (*it)->logicalHeight();
       if ( rightHeight + i <= leftHeight )
         mLayout->addMultiCellWidget( *it, row + i, row + i + rightHeight - 1, 1, 1 );
       else {
-        --i;
+        --it;
         break;
       }
     }
