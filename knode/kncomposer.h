@@ -382,7 +382,7 @@ protected:
     // Inherited. Always called by the parent when this widget is created.
     virtual void loadAddresses();
     void keyPressEvent(QKeyEvent *e);
-    virtual Q3PopupMenu *createPopupMenu();
+    virtual void contextMenuEvent( QContextMenuEvent*e );
 private slots:
     void editRecentAddresses();
 private:

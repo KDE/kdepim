@@ -61,7 +61,6 @@ using KRecentAddress::RecentAddresses;
 #include <kxmlguifactory.h>
 #include <kstatusbar.h>
 #include <klocale.h>
-#include <q3popupmenu.h>
 #include <spellingfilter.h>
 #include <kstdguiitem.h>
 
@@ -84,19 +83,14 @@ KNLineEdit::KNLineEdit( KNComposer::ComposerView *_composerView, bool useComplet
 {
 }
 
-
-Q3PopupMenu *KNLineEdit::createPopupMenu()
+void KNLineEdit::contextMenuEvent( QContextMenuEvent*e )
 {
-#warning Port me!
-    Q3PopupMenu *menu = 0;//KLineEdit::createPopupMenu();
-    if ( !menu )
-        return 0;
-
-    menu->insertSeparator();
-    menu->insertItem( i18n( "Edit Recent Addresses..." ),
-                      this, SLOT( editRecentAddresses() ) );
-
-    return menu;
+   QMenu *popup = KLineEdit::createStandardContextMenu();
+   popup->insertSeparator();
+   popup->insertItem( i18n( "Edit Recent Addresses..." ),
+		   this, SLOT( editRecentAddresses() ) );
+   popup->exec( e->globalPos() );
+   delete popup;
 }
 
 void KNLineEdit::editRecentAddresses()
