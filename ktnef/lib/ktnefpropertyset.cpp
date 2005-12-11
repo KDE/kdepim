@@ -50,7 +50,7 @@ QString KTNEFPropertySet::findProp(int key, const QString& fallback, bool upper)
 {
   QMap<int,KTNEFProperty*>::Iterator it = properties_.find( key );
   if( properties_.end() != it )
-    return upper ? KTNEFProperty::formatValue( (*it)->value(), false ).upper()
+    return upper ? KTNEFProperty::formatValue( (*it)->value(), false ).toUpper()
                  : KTNEFProperty::formatValue( (*it)->value(), false );
   else
     return fallback;
@@ -69,7 +69,7 @@ QString KTNEFPropertySet::findNamedProp(const QString& name, const QString& fall
       else
         s = QString().sprintf( "0X%04X", (*it)->name().asUInt() );
 
-      if( s.upper() == name.upper() ){
+      if( s.toUpper() == name.toUpper() ){
         QVariant value = ( *it )->value();
         if( value.type() == QVariant::List ){
           QList<QVariant> l = value.toList();
@@ -84,7 +84,7 @@ QString KTNEFPropertySet::findNamedProp(const QString& name, const QString& fall
         }else{
           s = KTNEFProperty::formatValue( value, false );
         }
-        return upper ? s.upper() : s;
+        return upper ? s.toUpper() : s;
       }
     }
   }
