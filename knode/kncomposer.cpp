@@ -1728,11 +1728,11 @@ void KNComposer::dropEvent(QDropEvent *ev)
   slotDropEvent(ev);
 }
 
-Q3PopupMenu * KNComposer::popupMenu( const QString& name )
+QMenu * KNComposer::popupMenu( const QString& name )
 {
     Q_ASSERT(factory());
     if ( factory() )
-        return ((Q3PopupMenu*)factory()->container( name, this ));
+        return ((QMenu*)factory()->container( name, this ));
     return 0L;
 }
 
@@ -2406,7 +2406,7 @@ void KNComposer::Editor::keyPressEvent ( QKeyEvent *e)
 void KNComposer::Editor::contentsContextMenuEvent( QContextMenuEvent */*e*/ )
 {
     QString selectWord = selectWordUnderCursor();
-    Q3PopupMenu* popup = 0L;
+    QMenu* popup = 0L;
     if ( selectWord.isEmpty())
     {
         popup = m_composer ? m_composer->popupMenu( "edit" ): 0;
@@ -2478,13 +2478,13 @@ void KNComposer::Editor::slotMisspelling (const QString &, const QStringList &ls
     int countAction = m_composer->listOfResultOfCheckWord( lst , selectWordUnderCursor());
     if ( countAction>0 )
     {
-        Q3PopupMenu* popup = m_composer ? m_composer->popupMenu( "edit_with_spell" ): 0;
+        QMenu* popup = m_composer ? m_composer->popupMenu( "edit_with_spell" ): 0;
         if ( popup )
             popup->popup(QCursor::pos());
     }
     else
     {
-        Q3PopupMenu* popup = m_composer ? m_composer->popupMenu( "edit" ): 0;
+        QMenu* popup = m_composer ? m_composer->popupMenu( "edit" ): 0;
         if ( popup )
             popup->popup(QCursor::pos());
     }

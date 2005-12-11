@@ -91,7 +91,7 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     /// ask for a filename, handle network urls
     void insertFile(bool clear=false, bool box=false);
 
-    Q3PopupMenu * popupMenu( const QString& name );
+    QMenu * popupMenu( const QString& name );
     int listOfResultOfCheckWord( const QStringList & lst , const QString & selectWord);
 
 //internal classes
