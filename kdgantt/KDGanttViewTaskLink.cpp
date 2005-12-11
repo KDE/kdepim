@@ -575,7 +575,7 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
                             if( KDGanttXML::readStringNode( element, value ) )
                                 fromList << value;
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -592,7 +592,7 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
                             if( KDGanttXML::readStringNode( element, value ) )
                                 toList << value;
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -627,7 +627,7 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
                 if( KDGanttXML::readStringNode( element, value ) )
                     group = value;
             } else {
-                qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                 Q_ASSERT( false );
             }
         }

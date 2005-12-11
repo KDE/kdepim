@@ -38,13 +38,13 @@ KGanttRelation::~KGanttRelation()
 /////////////////
 {
 #ifdef _DEBUG_
-  printf("-> delete Relation %s \n", getText().latin1() );
+  printf("-> delete Relation %s \n", getText().toLatin1() );
 #endif
 
   emit destroyed(this);
 
 #ifdef _DEBUG_
-  printf("<- delete Relation %s \n", getText().latin1() );
+  printf("<- delete Relation %s \n", getText().toLatin1() );
 #endif
 }
 
@@ -120,8 +120,8 @@ KGanttRelation::dump(QTextOStream& cout, const QString& pre)
 {
   cout << pre << "<Relation. text = [" << _text << "]>\n";
 
-  cout << pre << "|  from : " << getFrom()->getText().latin1() << endl;
-  cout << pre << "|  to   : " << getTo()->getText().latin1() << endl;
+  cout << pre << "|  from : " << getFrom()->getText().toLatin1() << endl;
+  cout << pre << "|  to   : " << getTo()->getText().toLatin1() << endl;
 
   if(_editable)
     cout << pre << "|    - editable " << endl;

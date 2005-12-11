@@ -196,12 +196,12 @@ void FilterEvolution_v2::importMBox(FilterInfo *info, const QString& mboxName, c
             QByteArray seperate;
 
             if(!first_msg)
-                tmp.file()->writeBlock( input, l );
+                tmp.file()->write( input, l );
             l = mbox.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
-            tmp.file()->writeBlock( input, l );
+            tmp.file()->write( input, l );
 
             while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
-                tmp.file()->writeBlock( input, l );
+                tmp.file()->write( input, l );
             }
             tmp.close();
             first_msg = false;

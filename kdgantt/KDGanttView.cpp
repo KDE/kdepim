@@ -326,7 +326,7 @@ KDGanttViewItem* KDGanttView::createUserDefinedItem( QString kdGanttViewItemType
     Q_UNUSED( after )
     Q_UNUSED( lvtext )
     Q_UNUSED( name )
-    qDebug("KDGanttView::createUserDefinedItem: Unknown type %s ", kdGanttViewItemTypeAsString.latin1() );
+    qDebug("KDGanttView::createUserDefinedItem: Unknown type %s ", kdGanttViewItemTypeAsString.toLatin1() );
     return 0;
 }
 /*!
@@ -1158,7 +1158,7 @@ bool KDGanttView::loadProject( QIODevice* device )
 	int errline, errcol;
 	if ( !doc.setContent( device, &err, &errline, &errcol ) ) {
 	  qDebug("KDGantt::Error parsing XML data at line %d. Message is:", errline );
-	  qDebug("%s ", err.latin1());
+	  qDebug("%s ", err.toLatin1());
 	  device->close();
 	  return false;
 	}
@@ -3185,7 +3185,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                             if( KDGanttXML::readColorNode( element, value ) )
                                 color = value;
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -3250,7 +3250,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         if ( value == "Undefined" )
                                             undefinedShape = true;
                                     } else {
-                                        qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                                        qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                                         Q_ASSERT( false );
                                     }
                                 }
@@ -3289,7 +3289,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         if ( value == "Undefined" )
                                             undefinedShape = true;
                                     } else {
-                                        qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                                        qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                                         Q_ASSERT( false );
                                     }
                                 }
@@ -3327,7 +3327,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         if ( value == "Undefined" )
                                             undefinedShape = true;
                                     } else {
-                                        qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                                        qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                                         Q_ASSERT( false );
                                     }
                                 }
@@ -3338,7 +3338,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                            middleShape, endShape, false );
                             undefinedShape = false;
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -3370,7 +3370,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         if( KDGanttXML::readColorNode( element, value ) )
                                             endColor = value;
                                     } else {
-                                        qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                                        qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                                         Q_ASSERT( false );
                                     }
                                 }
@@ -3398,7 +3398,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         if( KDGanttXML::readColorNode( element, value ) )
                                             endColor = value;
                                     } else {
-                                        qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                                        qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                                         Q_ASSERT( false );
                                     }
                                 }
@@ -3426,7 +3426,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         if( KDGanttXML::readColorNode( element, value ) )
                                             endColor = value;
                                     } else {
-                                        qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                                        qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                                         Q_ASSERT( false );
                                     }
                                 }
@@ -3435,7 +3435,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                             setColors( KDGanttViewItem::Summary, startColor,
                                        middleColor, endColor , false);
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -3463,7 +3463,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                 setDefaultColor( KDGanttViewItem::Summary,
                                                  value , false);
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -3496,7 +3496,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         if( KDGanttXML::readColorNode( element, value ) )
                                             endColor = value;
                                     } else {
-                                        qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                                        qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                                         Q_ASSERT( false );
                                     }
                                 }
@@ -3525,7 +3525,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         if( KDGanttXML::readColorNode( element, value ) )
                                             endColor = value;
                                     } else {
-                                        qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                                        qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                                         Q_ASSERT( false );
                                     }
                                 }
@@ -3554,7 +3554,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         if( KDGanttXML::readColorNode( element, value ) )
                                             endColor = value;
                                     } else {
-                                        qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                                        qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                                         Q_ASSERT( false );
                                     }
                                 }
@@ -3564,7 +3564,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                                 startColor,
                                                 middleColor, endColor, false );
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -3592,7 +3592,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                 setDefaultHighlightColor( KDGanttViewItem::Summary,
                                                           value, false );
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -3620,7 +3620,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                             if ( newItem )
                                 previous = newItem;
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -3636,7 +3636,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                         if( tagName == "TaskLink" )
                             KDGanttViewTaskLink::createFromDomElement( element );
                         else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -3652,7 +3652,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                         if( tagName == "TaskLinkGroup" )
                             KDGanttViewTaskLinkGroup::createFromDomElement( element );
                     } else {
-                        qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                        qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                         Q_ASSERT( false );
                     }
 
@@ -3693,7 +3693,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         if( KDGanttXML::readStringNode( element, value ) )
                                             maxi = stringToScale( value );
                                     } else {
-                                        qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                                        qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                                         Q_ASSERT( false );
                                     }
                                 }
@@ -3702,7 +3702,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                             }
                             setColumnBackgroundColor( dateTime, color, mini, maxi );
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -3753,7 +3753,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         if( KDGanttXML::readStringNode( element, value ) )
                                             maxi = stringToScale( value );
                                     } else {
-                                        qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                                        qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                                         Q_ASSERT( false );
                                     }
                                 }
@@ -3761,7 +3761,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                             }
                             setIntervalBackgroundColor( dateTime, ente, color, prio, mini, maxi );
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -3829,7 +3829,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                         else
                                             ok = false;
                                     } else {
-                                        qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                                        qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                                         Q_ASSERT( false );
                                     }
                                 }
@@ -3847,10 +3847,10 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                                     addLegendItem( tempLegendShape,
                                                    tempLegendColor,
                                                    tempLegendString );
-                                //qDebug( "Adding legend item %s", tempLegendString.latin1() );
+                                //qDebug( "Adding legend item %s", tempLegendString.toLatin1() );
                             }
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -3859,7 +3859,7 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
             } else if( tagName == "UserSavedData" ) {
                 userReadFromElement( element );
             } else {
-                qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                 Q_ASSERT( false );
             }
         }
@@ -4349,7 +4349,7 @@ void KDGanttView::userReadFromElement( QDomElement& element )
         } 
         node = node.nextSibling();
     }
-    qDebug("User data read: %d  %s ", userNumber,userData.latin1() );
+    qDebug("User data read: %d  %s ", userNumber,userData.toLatin1() );
     */
 }
 

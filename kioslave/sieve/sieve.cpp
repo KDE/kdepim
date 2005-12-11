@@ -295,7 +295,7 @@ void kio_sieveProtocol::changeCheck( const KURL &url )
 	QString auth;
 
 	if (!metaData("sasl").isEmpty())
-		auth = metaData("sasl").upper();
+		auth = metaData("sasl").toUpper();
 	else {
 		QString query = url.query();
 		if ( query.startsWith("?") ) query.remove( 0, 1 );
@@ -303,8 +303,8 @@ void kio_sieveProtocol::changeCheck( const KURL &url )
 		QStringList::iterator it;
   
 		for ( it = q.begin(); it != q.end(); ++it ) {
-			if ( ( (*it).section('=',0,0) ).lower() == "x-mech" ) {
-				auth = ( (*it).section('=',1) ).upper();
+			if ( ( (*it).section('=',0,0) ).toLower() == "x-mech" ) {
+				auth = ( (*it).section('=',1) ).toUpper();
 				break;
 			}
 		}
@@ -966,7 +966,7 @@ bool kio_sieveProtocol::authenticate()
 	  "(usually the same as your email password):");
 
   result = sasl_client_new( "sieve",
-                       m_sServer.latin1(),
+                       m_sServer.toLatin1(),
                        0, 0, NULL, 0, &conn );
 
   if ( result != SASL_OK ) {
@@ -984,7 +984,7 @@ bool kio_sieveProtocol::authenticate()
     strList = m_sasl_caps;
 
   do {
-    result = sasl_client_start(conn, strList.join(" ").latin1(), &client_interact,
+    result = sasl_client_start(conn, strList.join(" ").toLatin1(), &client_interact,
                        &out, &outlen, &mechusing);
 
     if (result == SASL_INTERACT) 
@@ -1014,7 +1014,7 @@ bool kio_sieveProtocol::authenticate()
   }
 
   ksDebug() << "firstCommand: " << firstCommand << endl;
-	if (!sendData( firstCommand.latin1() ))
+	if (!sendData( firstCommand.toLatin1() ))
 		return false;
 	
 	Q3CString command;

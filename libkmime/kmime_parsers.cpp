@@ -112,7 +112,7 @@ Q3CString NonMimeParser::guessMimeType(const Q3CString& fileName)
   if(!fileName.isEmpty()) {
     pos=fileName.findRev('.');
     if(pos++ != -1) {
-      tmp=fileName.mid(pos, fileName.length()-pos).upper();
+      tmp=fileName.mid(pos, fileName.length()-pos).toUpper();
       if(tmp=="JPG" || tmp=="JPEG")       mimeType="image/jpeg";
       else if(tmp=="GIF")                 mimeType="image/gif";
       else if(tmp=="PNG")                 mimeType="image/png";

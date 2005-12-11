@@ -708,7 +708,7 @@ void Kleo::KeySelectionDialog::slotCancel() {
 }
 
 void Kleo::KeySelectionDialog::slotSearch( const QString & text ) {
-  mSearchText = text.trimmed().upper();
+  mSearchText = text.trimmed().toUpper();
   slotSearch();
 }
 
@@ -744,7 +744,7 @@ void Kleo::KeySelectionDialog::filterByKeyID( const QString & keyID ) {
     showAllItems();
   else
     for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-      item->setVisible( item->text( 0 ).upper().startsWith( keyID ) );
+      item->setVisible( item->text( 0 ).toUpper().startsWith( keyID ) );
 }
 
 static bool anyUIDMatches( const Kleo::KeyListViewItem * item, QRegExp & rx ) {
@@ -765,7 +765,7 @@ void Kleo::KeySelectionDialog::filterByKeyIDOrUID( const QString & str ) {
   QRegExp rx( "\\b" + QRegExp::escape( str ), false );
 
   for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( item->text( 0 ).upper().startsWith( str ) || anyUIDMatches( item, rx ) );
+    item->setVisible( item->text( 0 ).toUpper().startsWith( str ) || anyUIDMatches( item, rx ) );
 
 }
 

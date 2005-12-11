@@ -899,7 +899,7 @@ void ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
 {
   TemporarySilencer t( this );
   for( QMap<quint32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it )
-    addIncidence( type.latin1(), it.data(), folder, it.key() );
+    addIncidence( type.toLatin1(), it.data(), folder, it.key() );
 }
 
 bool ResourceKolab::subresourceActive( const QString& subresource ) const

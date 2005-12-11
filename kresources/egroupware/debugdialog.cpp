@@ -90,11 +90,11 @@ void DebugDialog::save()
 
   QFile file( fileName );
   if ( !file.open( QIODevice::WriteOnly ) ) {
-    qWarning( "Couldn't open file %s", file.name().latin1() );
+    qWarning( "Couldn't open file %s", file.name().toLatin1() );
     return;
   }
 
-  file.writeBlock( mMessages.join( "\n\n" ).utf8() );
+  file.write( mMessages.join( "\n\n" ).utf8() );
   file.close();
 }
 

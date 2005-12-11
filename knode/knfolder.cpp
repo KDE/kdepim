@@ -121,7 +121,7 @@ bool KNFolder::readInfo(const QString &infoPath)
 
   if(i_d>-1) {
     QFileInfo fi(infoPath);
-    QString fname=fi.dirPath(true)+"/"+fi.baseName();
+    QString fname=fi.absolutePath()+"/"+fi.baseName();
     closeFiles();
     clear();
 
@@ -198,7 +198,7 @@ bool KNFolder::loadHdrs()
   while(!i_ndexFile.atEnd()) {
 
     //read index-data
-    byteCount=i_ndexFile.readBlock((char*)(&dynamic), sizeof(DynData));
+    byteCount=i_ndexFile.read((char*)(&dynamic), sizeof(DynData));
     if(byteCount!=sizeof(DynData))
       if( i_ndexFile.error() == QFile::NoError ) {
         kdWarning(5003) << "KNFolder::loadHeaders() : found broken entry in index-file: Ignored!" << endl;
@@ -347,7 +347,7 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
   unsigned int size=a->endOffset()-m_boxFile.at()-1;
   QByteArray buff;
   buff.resize( size + 10 );
-  int readBytes=m_boxFile.readBlock(buff.data(), size);
+  int readBytes=m_boxFile.read(buff.data(), size);
   closeFiles();
   if ( readBytes < (int)(size) && m_boxFile.error() != QFile::NoError ) {  // cannot read file
     kdError(5003) << "KNFolder::loadArticle(KNLocalArticle *a) : corrupted mbox file, IO-error!" << endl;
@@ -548,7 +548,7 @@ void KNFolder::syncIndex(bool force)
   for(int idx=0; idx<length(); idx++) {
     a=at(idx);
     d.setData(a);
-    i_ndexFile.writeBlock((char*)(&d), sizeof(DynData));
+    i_ndexFile.write((char*)(&d), sizeof(DynData));
   }
   closeFiles();
 

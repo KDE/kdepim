@@ -85,7 +85,7 @@ CryptPlugWrapper * KMail::CryptPlugFactory::active() const {
 }
 
 CryptPlugWrapper * KMail::CryptPlugFactory::createForProtocol( const QString & proto ) const {
-  QString p = proto.lower();
+  QString p = proto.toLower();
   if ( p == "application/pkcs7-signature" || p == "application/x-pkcs7-signature" )
     return smime();
   if ( p == "application/pgp-signature" || p == "application/x-pgp-signature" )

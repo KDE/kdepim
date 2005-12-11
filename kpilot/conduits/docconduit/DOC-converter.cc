@@ -219,7 +219,7 @@ int DOCConverter::findBmkEndtags(QString &text, bmkList&fBmks) {
 	int pos = text.length() - 1, nr=0;
 	bool doSearch=true;
 	while (pos >= 0/* && doSearch*/) {
-		DEBUGCONDUIT<<"Current character is \'"<<text[pos].latin1()<<"\'"<<endl;
+		DEBUGCONDUIT<<"Current character is \'"<<text[pos].toLatin1()<<"\'"<<endl;
 		// skip whitespace until we reach a >
 		while (text[pos].isSpace() && pos >= 0) {
 			DEBUGCONDUIT<<"Skipping whitespaces at the end of the file"<<endl;
@@ -227,7 +227,7 @@ int DOCConverter::findBmkEndtags(QString &text, bmkList&fBmks) {
 		}
 		// every other character than a > is assumed to belong to the text, so there are no more bookmarks.
 		if (pos < 0 || text[pos] != '>') {
-			DEBUGCONDUIT<<"Current character \'"<<text[pos].latin1()<<"\' at position "<<pos<<" is not and ending >. Finish searching for bookmarks."<<endl;
+			DEBUGCONDUIT<<"Current character \'"<<text[pos].toLatin1()<<"\' at position "<<pos<<" is not and ending >. Finish searching for bookmarks."<<endl;
 
 			pos=-1;
 			break;
@@ -238,7 +238,7 @@ int DOCConverter::findBmkEndtags(QString &text, bmkList&fBmks) {
 
 			// Search for the opening <. There must not be a newline in the bookmark text.
 			while (doSearch && pos > 0) {
-//				DEBUGCONDUIT<<"pos="<<pos<<", char="<<text[pos].latin1()<<endl;
+//				DEBUGCONDUIT<<"pos="<<pos<<", char="<<text[pos].toLatin1()<<endl;
 				pos--;
 				if (text[pos] == '\n') {
 					DEBUGCONDUIT<<"Found carriage return at position "<<pos<<" inside the bookmark text, assuming this is not a bookmark, and the text ends in a >"<<endl;
@@ -494,7 +494,7 @@ bool DOCConverter::convertTXTtoPDB() {
 
 		PilotDOCBookmark bmkEntry;
 		bmkEntry.pos=bmk->position;
-		strncpy(&bmkEntry.bookmarkName[0], bmk->bmkName.latin1(), 16);
+		strncpy(&bmkEntry.bookmarkName[0], bmk->bmkName.toLatin1(), 16);
 		PilotRecord*bmkRecord=bmkEntry.pack();
 		docdb->writeRecord(bmkRecord);
 		KPILOT_DELETE(bmkRecord);

@@ -1083,7 +1083,7 @@ void KeySelectionDialog::slotCancel()
 
 void KeySelectionDialog::slotSearch( const QString & text )
 {
-  mSearchText = text.trimmed().upper();
+  mSearchText = text.trimmed().toUpper();
   mStartSearchTimer->start( sCheckSelectionDelay, true /*single-shot*/ );
 }
 
@@ -1117,7 +1117,7 @@ void KeySelectionDialog::filterByKeyID( const QString & keyID )
     showAllItems();
   else
     for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
-      item->setVisible( item->text( 0 ).upper().startsWith( keyID ) );
+      item->setVisible( item->text( 0 ).toUpper().startsWith( keyID ) );
 }
 
 void KeySelectionDialog::filterByKeyIDOrUID( const QString & str )
@@ -1128,7 +1128,7 @@ void KeySelectionDialog::filterByKeyIDOrUID( const QString & str )
   QRegExp rx( "\\b" + QRegExp::escape( str ), false );
 
   for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( item->text( 0 ).upper().startsWith( str )
+    item->setVisible( item->text( 0 ).toUpper().startsWith( str )
 		      || rx.search( item->text( 1 ) ) >= 0
 		      || anyChildMatches( item, rx ) );
 

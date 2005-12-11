@@ -1555,7 +1555,7 @@ void KNode::PostNewsTechnicalWidget::load()
 
 void KNode::PostNewsTechnicalWidget::save()
 {
-  mData->c_harset = mCharset->currentText().latin1();
+  mData->c_harset = mCharset->currentText().toLatin1();
   knGlobals.settings()->setAllow8BitBody( mEncoding->currentItem() == 0 );
 
   mData->mXheaders.clear();

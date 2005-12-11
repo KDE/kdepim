@@ -184,7 +184,7 @@ mimeIOQString::inputLine (Q3CString & _str)
 
   if (i == -1)
     return 0;
-  _str = theString.left (i + 1).latin1 ();
+  _str = theString.left (i + 1).toLatin1 ();
   theString = theString.right (theString.length () - i - 1);
   return _str.length ();
 }

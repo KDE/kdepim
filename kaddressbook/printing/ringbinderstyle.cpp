@@ -193,17 +193,17 @@ bool RingBinderPrintStyle::printEntries( const KABC::Addressee::List &contacts,
         QChar nextchar;
         QChar nowchar;
         if ( !tmpl->reverseSorting() ) {
-          nextchar = ltgroups[ grpnum + 1 ].at( 0 ).upper();
+          nextchar = ltgroups[ grpnum + 1 ].at( 0 ).toUpper();
         } else {
           QString tmpstr = ltgroups[ grpnum + 1 ];
-          nextchar = tmpstr.at( tmpstr.length() - 1 ).upper();
+          nextchar = tmpstr.at( tmpstr.length() - 1 ).toUpper();
         }
 
         // determine nowchar depending on sorting criterion
         if ( sfield ) {
           QString tmpstr = sfield->value( addressee );
           if ( !tmpstr.isEmpty() ) {
-            nowchar = tmpstr.at( 0 ).upper();
+            nowchar = tmpstr.at( 0 ).toUpper();
           }
         }
 

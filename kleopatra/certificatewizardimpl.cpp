@@ -213,7 +213,7 @@ void CertificateWizardImpl::slotGenerateCertificate()
     QString email;
     QStringList rdns;
     for( AttrPairList::const_iterator it = _attrPairList.begin(); it != _attrPairList.end(); ++it ) {
-	  const QString attr = attributeFromKey( (*it).first.upper() );
+	  const QString attr = attributeFromKey( (*it).first.toUpper() );
 	  const QLineEdit * le = (*it).second;
 	  if ( !le )
 	    continue;
@@ -309,7 +309,7 @@ void CertificateWizardImpl::slotSetValuesFromWhoAmI()
     if ( !availForMod( le ) )
       continue;
 
-    const QString attr = attributeFromKey( (*it).first.upper() );
+    const QString attr = attributeFromKey( (*it).first.toUpper() );
     if ( attr == "CN" )
       le->setText( a.formattedName() );
     else if ( attr == "EMAIL" )
@@ -347,7 +347,7 @@ void CertificateWizardImpl::createPersonalDataPage()
   int row = 0;
 
   for ( QStringList::const_iterator it = attrOrder.begin() ; it != attrOrder.end() ; ++it, ++row ) {
-    const QString key = (*it).trimmed().upper();
+    const QString key = (*it).trimmed().toUpper();
     const QString attr = attributeFromKey( key );
     if ( attr.isEmpty() ) {
       --row;

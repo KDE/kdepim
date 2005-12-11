@@ -389,7 +389,7 @@ void Kleo::DN::append( const Attribute & attr ) {
 QString Kleo::DN::operator[]( const QString & attr ) const {
   if ( !d )
     return QString::null;
-  const QString attrUpper = attr.upper();
+  const QString attrUpper = attr.toUpper();
   for ( QVector<Attribute>::const_iterator it = d->attributes.begin() ;
 	it != d->attributes.end() ; ++it )
     if ( (*it).name() == attrUpper )
@@ -482,7 +482,7 @@ const Kleo::DNAttributeMapper * Kleo::DNAttributeMapper::instance() {
 
 QString Kleo::DNAttributeMapper::name2label( const QString & s ) const {
   const std::map<const char*,const char*,ltstr>::const_iterator it
-    = d->map.find( s.trimmed().upper().latin1() );
+    = d->map.find( s.trimmed().toUpper().toLatin1() );
   if ( it == d->map.end() )
     return QString::null;
   return i18n( it->second );

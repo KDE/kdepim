@@ -58,7 +58,7 @@ namespace Types {
     bool needsQuotes = false;
     QString result;
     for ( int i = 0 ; i < localPart.length() ; ++i ) {
-      const char ch = localPart[i].latin1();
+      const char ch = localPart[i].toLatin1();
       if ( ch == '.' || isAText( ch ) )
 	result += ch;
       else {
@@ -1103,7 +1103,7 @@ bool parseParameter( const char* & scursor, const char * const send,
 	"Chopping away \"*\"." << endl;
       maybeAttribute.truncate( maybeAttribute.length() - 1 );
     }
-    result = qMakePair( maybeAttribute.lower(), QStringOrQPair() );
+    result = qMakePair( maybeAttribute.toLower(), QStringOrQPair() );
     return true;
   }
 
@@ -1127,19 +1127,19 @@ bool parseParameter( const char* & scursor, const char * const send,
 
     if ( !parseGenericQuotedString( scursor, send, maybeValue.qstring, isCRLF ) ) {
       scursor = oldscursor;
-      result = qMakePair( maybeAttribute.lower(), QStringOrQPair() );
+      result = qMakePair( maybeAttribute.toLower(), QStringOrQPair() );
       return false; // this case needs further processing by upper layers!!
     }
   } else {
     // value is a token:
     if ( !parseToken( scursor, send, maybeValue.qpair, false /* no 8bit */ ) ) {
       scursor = oldscursor;
-      result = qMakePair( maybeAttribute.lower(), QStringOrQPair() );
+      result = qMakePair( maybeAttribute.toLower(), QStringOrQPair() );
       return false; // this case needs further processing by upper layers!!
     }
   }
 
-  result = qMakePair( maybeAttribute.lower(), maybeValue );
+  result = qMakePair( maybeAttribute.toLower(), maybeValue );
   return true;
 }
 

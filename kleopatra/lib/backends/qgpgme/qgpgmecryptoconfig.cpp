@@ -268,7 +268,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
         }
         line += '\n';
         QByteArray line8bit = line.utf8(); // encode with utf8, and KProcIO uses utf8 when reading.
-        tmpFile.file()->writeBlock( line8bit.data(), line8bit.size()-1 /*no 0*/ );
+        tmpFile.file()->write( line8bit.data(), line8bit.size()-1 /*no 0*/ );
         dirtyEntries.append( it.current() );
       }
     }
@@ -287,7 +287,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   commandLine += KProcess::quote( tmpFile.name() );
 
   //kdDebug(5150) << commandLine << endl;
-  //system( QCString( "cat " ) + tmpFile.name().latin1() ); // DEBUG
+  //system( QCString( "cat " ) + tmpFile.name().toLatin1() ); // DEBUG
 
   KProcess proc;
   proc.setUseShell( true );

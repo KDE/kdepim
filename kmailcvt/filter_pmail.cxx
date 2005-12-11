@@ -165,7 +165,7 @@ void FilterPMail::importMailFolder(const QString& file)
         inf->alert(i18n("Unable to open %1, skipping").arg(file));
     } else {
         // Get folder name
-        l = f.readBlock((char *) &pmm_head, sizeof(pmm_head));
+        l = f.read((char *) &pmm_head, sizeof(pmm_head));
         QString folder("PegasusMail-Import/");
         if(folderParsed) 
             folder.append(getFolderName((QString)pmm_head.id));
@@ -196,7 +196,7 @@ void FilterPMail::importMailFolder(const QString& file)
                     if ( input.at( 0 ) == 0x1a ) {
                         break;
                     } else {
-                        tempfile.file()->writeBlock( input, l );
+                        tempfile.file()->write( input, l );
                     }
             }
             tempfile.close();
@@ -235,7 +235,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
         inf->alert( i18n("Unable to open %1, skipping").arg( s ) );
         return;
     } else {
-        f.readBlock((char *) &pmg_head, sizeof(pmg_head));
+        f.read((char *) &pmg_head, sizeof(pmg_head));
         f.close();
         
          if(folderParsed) 
@@ -261,7 +261,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
             // this lopp, but this is ok, because this is the seperate line with
             // "From ???@???" and we can forget them
             while ( ! f.atEnd() &&  (l = f.readLine(line.data(),MAX_LINE)) && ((seperate = line.data()).left(5) != "From ")) {
-                tempfile.file()->writeBlock(line.data(), l);
+                tempfile.file()->write(line.data(), l);
                 if (inf->shouldTerminate()){
                     tempfile.close();
                     tempfile.unlink();

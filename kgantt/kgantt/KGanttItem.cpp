@@ -68,7 +68,7 @@ KGanttItem::~KGanttItem()
 /////////////////
 {
 #ifdef _DEBUG_
-  printf("-> delete %s \n", getText().latin1() );
+  printf("-> delete %s \n", getText().toLatin1() );
 #endif
 
   if(_parentItem)
@@ -80,7 +80,7 @@ KGanttItem::~KGanttItem()
   emit destroyed(this);
 
 #ifdef _DEBUG_
-  printf("<- delete %s \n", getText().latin1() );
+  printf("<- delete %s \n", getText().toLatin1() );
 #endif
 }
 

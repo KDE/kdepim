@@ -63,10 +63,10 @@ void DBFlagsEditor::slotOk()
 		strlcpy(dbi->name, PilotAppCategory::codec()->fromUnicode(widget->fDBName->text()), 33);
 
 		char buff[5];
-		strlcpy(buff, widget->fType->text().latin1(), 5);
+		strlcpy(buff, widget->fType->text().toLatin1(), 5);
 		dbi->type=get_long(buff);
 
-		strlcpy(buff, widget->fCreator->text().latin1(), 5);
+		strlcpy(buff, widget->fCreator->text().toLatin1(), 5);
 		dbi->creator=get_long(buff);
 
 

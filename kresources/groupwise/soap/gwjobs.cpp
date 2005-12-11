@@ -64,7 +64,7 @@ void ReadAddressBooksJob::run()
   mSoap->header->ngwt__session = mSession;
   _ngwm__getAddressBookListRequest addressBookListRequest;
   _ngwm__getAddressBookListResponse addressBookListResponse;
-  soap_call___ngw__getAddressBookListRequest( mSoap, mUrl.latin1(),
+  soap_call___ngw__getAddressBookListRequest( mSoap, mUrl.toLatin1(),
                                               NULL, &addressBookListRequest, &addressBookListResponse );
   soap_print_fault( mSoap, stderr );
 
@@ -104,7 +104,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 
   mSoap->header->ngwt__session = mSession;
   _ngwm__getItemsResponse itemsResponse;
-  int result = soap_call___ngw__getItemsRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ngw__getItemsRequest( mSoap, mUrl.toLatin1(), 0,
                                     &itemsRequest, &itemsResponse );
   if ( result != 0 ) {
     soap_print_fault( mSoap, stderr );
@@ -193,7 +193,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
   cursorRequest.filter->element = fe;
 
   mSoap->header->ngwt__session = mSession;
-  soap_call___ngw__createCursorRequest( mSoap, mUrl.latin1(), 0,
+  soap_call___ngw__createCursorRequest( mSoap, mUrl.toLatin1(), 0,
                                         &cursorRequest,
                                         &cursorResponse );
   if ( cursorResponse.cursor )
@@ -217,7 +217,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
     mSoap->header->ngwt__session = mSession;
     kdDebug() << "sending readCursorRequest with session: " << mSession.c_str() << endl;
     _ngwm__readCursorResponse readCursorResponse;
-    if ( soap_call___ngw__readCursorRequest( mSoap, mUrl.latin1(), 0,
+    if ( soap_call___ngw__readCursorRequest( mSoap, mUrl.toLatin1(), 0,
                                       &readCursorRequest,
                                       &readCursorResponse ) != SOAP_OK )
     {
@@ -283,7 +283,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
   destReq.container = id;
   destReq.cursor = cursor;
   mSoap->header->ngwt__session = mSession;
-  if ( soap_call___ngw__destroyCursorRequest( mSoap, mUrl.latin1(), 0,
+  if ( soap_call___ngw__destroyCursorRequest( mSoap, mUrl.toLatin1(), 0,
                                     &destReq,
                                     &destResp ) != SOAP_OK )
   {
@@ -327,7 +327,7 @@ void ReadCalendarJob::run()
   folderListReq.view = 0;
   folderListReq.recurse = true;
   _ngwm__getFolderListResponse folderListRes;
-  soap_call___ngw__getFolderListRequest( mSoap, mUrl.latin1(), 0,
+  soap_call___ngw__getFolderListRequest( mSoap, mUrl.toLatin1(), 0,
                                          &folderListReq,
                                          &folderListRes );
 
@@ -448,7 +448,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
 */
 
   _ngwm__getItemsResponse itemsResponse;
-  soap_call___ngw__getItemsRequest( mSoap, mUrl.latin1(), 0,
+  soap_call___ngw__getItemsRequest( mSoap, mUrl.toLatin1(), 0,
                                     &itemsRequest,
                                     &itemsResponse );
   kdDebug() << "Faults according to GSOAP:" << endl;
@@ -496,7 +496,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
 #endif
   cursorRequest.filter = 0;
 
-  soap_call___ngw__createCursorRequest( mSoap, mUrl.latin1(), 0,
+  soap_call___ngw__createCursorRequest( mSoap, mUrl.toLatin1(), 0,
                                         &cursorRequest,
                                         &cursorResponse );
   if ( cursorResponse.cursor )
@@ -525,7 +525,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
     mSoap->header->ngwt__session = mSession;
     kdDebug() << "sending readCursorRequest with session: " << mSession.c_str() << endl;
     _ngwm__readCursorResponse readCursorResponse;
-    if ( soap_call___ngw__readCursorRequest( mSoap, mUrl.latin1(), 0,
+    if ( soap_call___ngw__readCursorRequest( mSoap, mUrl.toLatin1(), 0,
                                       &readCursorRequest,
                                       &readCursorResponse ) != SOAP_OK )
     {
@@ -586,7 +586,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
   destReq.container = id;
   destReq.cursor = cursor;
   mSoap->header->ngwt__session = mSession;
-  if ( soap_call___ngw__destroyCursorRequest( mSoap, mUrl.latin1(), 0,
+  if ( soap_call___ngw__destroyCursorRequest( mSoap, mUrl.toLatin1(), 0,
                                     &destReq,
                                     &destResp ) != SOAP_OK )
   {
@@ -625,7 +625,7 @@ void UpdateAddressBooksJob::run()
   _ngwm__getDeltasResponse response;
 
   GWConverter conv( mSoap );
-  request.container.append( mAddressBookIds.first().latin1() );
+  request.container.append( mAddressBookIds.first().toLatin1() );
   request.deltaInfo = soap_new_ngwt__DeltaInfo( mSoap, -1 );
   request.deltaInfo->count = (int*)soap_malloc( mSoap, sizeof(int) );
   *( request.deltaInfo->count ) = -1;
@@ -638,7 +638,7 @@ void UpdateAddressBooksJob::run()
   //request.view = soap_new_std__string( mSoap, -1 );
   //request.view->append("id name version modified ItemChanges");
   request.view = 0;
-  soap_call___ngw__getDeltasRequest( mSoap, mUrl.latin1(),
+  soap_call___ngw__getDeltasRequest( mSoap, mUrl.toLatin1(),
                                               NULL, &request, &response);
   soap_print_fault( mSoap, stderr );
 

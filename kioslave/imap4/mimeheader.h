@@ -233,7 +233,7 @@ public:
   }
   void setTypeStr (const QString & _str)
   {
-    contentType = Q3CString (_str.latin1 ()) + "/" + subtypeStr ().latin1 ();
+    contentType = Q3CString (_str.toLatin1 ()) + "/" + subtypeStr ().toLatin1 ();
   }
   QString subtypeStr ()
   {
@@ -243,7 +243,7 @@ public:
   }
   void setSubtypeStr (const QString & _str)
   {
-    contentType = Q3CString (typeStr ().latin1 ()) + "/" + _str.latin1 ();
+    contentType = Q3CString (typeStr ().toLatin1 ()) + "/" + _str.toLatin1 ();
   }
   QString cteStr ()
   {
@@ -251,7 +251,7 @@ public:
   }
   void setCteStr (const QString & _str)
   {
-    setEncoding (_str.latin1 ());
+    setEncoding (_str.toLatin1 ());
   }
   QString contentDisposition ()
   {
@@ -287,7 +287,7 @@ public:
   }
   void setContentDescription (const QString & _str)
   {
-    _contentDescription = rfcDecoder::encodeRFC2047String (_str).latin1 ();
+    _contentDescription = rfcDecoder::encodeRFC2047String (_str).toLatin1 ();
   }
   QString msgIdMD5 ()
   {
@@ -305,7 +305,7 @@ public:
   }
   void setContentDisposition (const QString & _str)
   {
-    setDisposition (_str.latin1 ());
+    setDisposition (_str.toLatin1 ());
   }
 #endif
 

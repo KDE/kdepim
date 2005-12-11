@@ -104,7 +104,7 @@ QString AddFieldDialog::title() const
 
 QString AddFieldDialog::identifier() const
 {
-  QString id = mTitle->text().lower();
+  QString id = mTitle->text().toLower();
   return id.replace( ",", "_" ).replace( " ", "_" );
 }
 

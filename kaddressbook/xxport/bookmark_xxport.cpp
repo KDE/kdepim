@@ -52,7 +52,7 @@ bool BookmarkXXPort::exportContacts( const KABC::AddresseeList &list, const QStr
   for ( it = list.begin(); it != list.end(); ++it ) {
     if ( !(*it).url().isEmpty() ) {
       QString name = (*it).givenName() + " " + (*it).familyName();
-      emit newBookmark( name, (*it).url().url().latin1(), QString( "" ) );
+      emit newBookmark( name, (*it).url().url().toLatin1(), QString( "" ) );
     }
   }
   emit endFolder();

@@ -37,22 +37,22 @@ int main( int argc, char **argv )
   mapper.setRemoteId( "yes", "klar" );
   mapper.setRemoteId( "no", "nee" );
 
-  qDebug( "full:\n%s", mapper.asString().latin1() );
+  qDebug( "full:\n%s", mapper.asString().toLatin1() );
 
   mapper.save();
 
   mapper.clear();
-  qDebug( "empty:\n%s", mapper.asString().latin1() );
+  qDebug( "empty:\n%s", mapper.asString().toLatin1() );
 
   mapper.load();
-  qDebug( "full again:\n%s", mapper.asString().latin1() );
+  qDebug( "full again:\n%s", mapper.asString().toLatin1() );
 
   mapper.save();
 
   mapper.clear();
-  qDebug( "empty:\n%s", mapper.asString().latin1() );
+  qDebug( "empty:\n%s", mapper.asString().toLatin1() );
 
   mapper.load();
-  qDebug( "full again:\n%s", mapper.asString().latin1() );
+  qDebug( "full again:\n%s", mapper.asString().toLatin1() );
   return 0;
 }

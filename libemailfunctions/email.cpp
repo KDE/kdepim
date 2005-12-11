@@ -311,7 +311,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
   for ( unsigned int index=0; index < strlen; index++ ) {
     switch ( context ) {
     case TopLevel : {
-      switch ( aStr[index].latin1() ) {
+      switch ( aStr[index].toLatin1() ) {
         case '"' : inQuotedString = !inQuotedString;
           break;
         case '(' :
@@ -521,7 +521,7 @@ bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
 
   unsigned int strlen = localPart.length();
   for ( unsigned int index=0; index < strlen; index++ ) {
-    switch( localPart[ index ].latin1() ) {
+    switch( localPart[ index ].toLatin1() ) {
       case '"' : inQuotedString = !inQuotedString;
         break;
       case '@' :

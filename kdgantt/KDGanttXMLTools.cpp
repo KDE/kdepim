@@ -124,7 +124,7 @@ void createBrushNode( QDomDocument& doc, QDomNode& parent,
     createColorNode( doc, brushElement, "Color", brush.color() );
     createStringNode( doc, brushElement, "Style",
                       KDGanttXML::brushStyleToString( brush.style() ) );
-    if( brush.style() == Qt::CustomPattern && brush.pixmap() )
+    if( brush.style() == Qt::TexturePattern && brush.pixmap() )
         createPixmapNode( doc, brushElement, "Pixmap", *brush.pixmap() );
 }
 
@@ -477,8 +477,8 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
             // Decode the image file format in the same way Qt Designer does.
             char *ba = new char[ tempData.length() / 2 ];
             for ( int i = 0; i < (int)tempData.length() / 2; ++i ) {
-                char h = tempData[ 2 * i ].latin1();
-                char l = tempData[ 2 * i  + 1 ].latin1();
+                char h = tempData[ 2 * i ].toLatin1();
+                char l = tempData[ 2 * i  + 1 ].toLatin1();
                 uchar r = 0;
                 if ( h <= '9' )
                     r += h - '0';

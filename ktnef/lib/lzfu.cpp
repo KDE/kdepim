@@ -69,7 +69,7 @@ int lzfu_decompress(QIODevice *input, QIODevice *output)
 
 	memcpy(window, LZFU_INITDICT, LZFU_INITLENGTH);
 	wlength = LZFU_INITLENGTH;
-	if (input->readBlock((char*)&lzfuhdr, sizeof(lzfuhdr)) != sizeof(lzfuhdr))
+	if (input->read((char*)&lzfuhdr, sizeof(lzfuhdr)) != sizeof(lzfuhdr))
 	{
 		fprintf(stderr, "unexpected eof, cannot read LZFU header\n");
 		return -1;
@@ -85,7 +85,7 @@ int lzfu_decompress(QIODevice *input, QIODevice *output)
 
 	while (cursor < lzfuhdr.cbSize+4 && ocursor < lzfuhdr.cbRawSize && !input->atEnd())
 	{
-		if (input->readBlock(&bFlags, 1) != 1)
+		if (input->read(&bFlags, 1) != 1)
 		{
 			fprintf(stderr, "unexpected eof, cannot read chunk flag\n");
 			return -1;
@@ -104,7 +104,7 @@ int lzfu_decompress(QIODevice *input, QIODevice *output)
 			{
 				// compressed chunck
 				char c1, c2;
-				if (input->readBlock(&c1, 1) != 1 || input->readBlock(&c2, 1) != 1)
+				if (input->read(&c1, 1) != 1 || input->readBlock(&c2, 1) != 1)
 				{
 					fprintf(stderr, "unexpected eof, cannot read block header\n");
 					return -1;

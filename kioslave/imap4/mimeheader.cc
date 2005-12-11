@@ -400,7 +400,7 @@ mimeHeader::outputParameter (Q3Dict < QString > *aDict)
     Q3DictIterator < QString > it (*aDict);
     while (it.current ())
     {
-      retVal += (";\n\t" + it.currentKey () + "=").latin1 ();
+      retVal += (";\n\t" + it.currentKey () + "=").toLatin1 ();
       if (it.current ()->find (' ') > 0 || it.current ()->find (';') > 0)
       {
         retVal += '"' + it.current ()->utf8 () + '"';
@@ -423,7 +423,7 @@ mimeHeader::outputPart (mimeIO & useIO)
   Q3PtrListIterator < mimeHeader > nestedParts = getNestedIterator ();
   Q3CString boundary;
   if (!getTypeParm ("boundary").isEmpty ())
-    boundary = getTypeParm ("boundary").latin1 ();
+    boundary = getTypeParm ("boundary").toLatin1 ();
 
   outputHeader (useIO);
   if (!getPreBody ().isEmpty ())
@@ -504,13 +504,13 @@ mimeHeader::parseBody (mimeIO & useIO, Q3CString & messageBody,
   {
     //check for the end of all parts
     if (!partEnd.isEmpty ()
-        && !qstrnicmp (inputStr, partEnd.latin1 (), partEnd.length () - 1))
+        && !qstrnicmp (inputStr, partEnd.toLatin1 (), partEnd.length () - 1))
     {
       retVal = 0;               //end of these parts
       break;
     }
     else if (!partBoundary.isEmpty ()
-             && !qstrnicmp (inputStr, partBoundary.latin1 (),
+             && !qstrnicmp (inputStr, partBoundary.toLatin1 (),
                             partBoundary.length () - 1))
     {
       retVal = 1;               //continue with next part
@@ -694,7 +694,7 @@ mimeHeader::iconName ()
 
   // FIXME: bug?  Why throw away this data?
   fileName =
-    KMimeType::mimeType (contentType.lower ())->icon (QString::null, false);
+    KMimeType::mimeType (contentType.toLower ())->icon (QString::null, false);
   fileName =
     KGlobal::instance ()->iconLoader ()->iconPath (fileName, KIcon::Desktop);
 //  if (fileName.isEmpty())

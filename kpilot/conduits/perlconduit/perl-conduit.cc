@@ -159,10 +159,10 @@ void PerlThread::run()
 		CSL1("device=>\"%1\",").arg(fPath) +
 		CSL1("socket=%1,").arg(fSocket) +
 		// Add more data here in same style, don't forget " and ,
-		CSL1("version=%1);").arg(KPILOT_PLUGIN_API)).latin1(),
+		CSL1("version=%1);").arg(KPILOT_PLUGIN_API)).toLatin1(),
 		TRUE);
 
-	eval_pv(PerlConduitSettings::expression().latin1(),TRUE);
+	eval_pv(PerlConduitSettings::expression().toLatin1(),TRUE);
 
 	SV *retval = get_sv("a",FALSE);
 	if (retval)

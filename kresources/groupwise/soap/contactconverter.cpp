@@ -65,7 +65,7 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
     std::vector<ngwt__ContainerRef*>* container = soap_new_std__vectorTemplateOfPointerTongwt__ContainerRef( soap(), -1 );
     ngwt__ContainerRef* containerRef = soap_new_ngwt__ContainerRef( soap(), -1 );
     containerRef->deleted = 0;
-    containerRef->__item = addr.custom( "GWRESOURCE", "CONTAINER" ).latin1();
+    containerRef->__item = addr.custom( "GWRESOURCE", "CONTAINER" ).toLatin1();
     container->push_back( containerRef );
 
     contact->container = *container;
@@ -451,7 +451,7 @@ ngwt__PhoneNumber* ContactConverter::convertPhoneNumber( const KABC::PhoneNumber
     return 0;
 
   ngwt__PhoneNumber* phoneNumber = soap_new_ngwt__PhoneNumber( soap(), -1 );
-  phoneNumber->__item = number.number().latin1();
+  phoneNumber->__item = number.number().toLatin1();
 
   if ( number.type() & KABC::PhoneNumber::Fax ) {
     phoneNumber->type = Fax;

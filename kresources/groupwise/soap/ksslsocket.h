@@ -33,8 +33,8 @@ class KSSLSocket : public KExtendedSocket
 		KSSLSocket();
 		~KSSLSocket();
 
-		Q_LONG readBlock( char* data, Q_ULONG maxLen );
-		Q_LONG writeBlock( const char* data, Q_ULONG len );
+		Q_LONG read( char* data, Q_ULONG maxLen );
+		Q_LONG write( const char* data, Q_ULONG len );
 
 	signals:
 		void sslFailure();

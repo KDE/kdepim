@@ -101,7 +101,7 @@ public:
   void fromString(const QString &s)
   {
     clear();
-    data.duplicate(s.latin1(), s.length());
+    data.duplicate(s.toLatin1(), s.length());
   }
   QByteArray data;
   int pos;

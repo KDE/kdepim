@@ -53,7 +53,7 @@ public:
 		return QString::fromLatin1((const char *) fText.text());
 	};
 	void setText(QString newtext, bool compressed = false) {
-		fText.setText((const unsigned char *) newtext.latin1(),
+		fText.setText((const unsigned char *) newtext.toLatin1(),
 			newtext.length(), compressed);
 	};
 

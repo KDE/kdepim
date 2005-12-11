@@ -191,7 +191,7 @@ pabfields_t::pabfields_t(pabrec & R, QWidget * /*parent*/)
 
        /*
        {  char m[1024];
-          snprintf(m, sizeof(m), "%d %d %04x %08lx %d %s %d %d",i,k,literal(k),order(k),e,E.latin1(),E[0].latin1(),E.length());
+          snprintf(m, sizeof(m), "%d %d %04x %08lx %d %s %d %d",i,k,literal(k),order(k),e,E.toLatin1(),E[0].toLatin1(),E.length());
           info->addLog(m);
        }
        */

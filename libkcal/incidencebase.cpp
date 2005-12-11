@@ -245,7 +245,7 @@ void IncidenceBase::addAttendee(Attendee *a, bool doupdate)
 //  kdDebug(5800) << "IncidenceBase::addAttendee()" << endl;
   if (mReadOnly) return;
 //  kdDebug(5800) << "IncidenceBase::addAttendee() weiter" << endl;
-  if (a->name().left(7).upper() == "MAILTO:")
+  if (a->name().left(7).toUpper() == "MAILTO:")
     a->setName(a->name().remove(0,7));
 
   mAttendees.append(a);

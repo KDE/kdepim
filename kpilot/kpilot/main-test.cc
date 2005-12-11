@@ -315,12 +315,12 @@ int listConduits(KCmdLineArgs *)
 	{
 		KSharedPtr < KService > o = (*availList).service();
 
-		std::cout << o->desktopEntryName().latin1() << std::endl;
-		std::cout << "\t" << o->name().latin1()  << std::endl;
+		std::cout << o->desktopEntryName().toLatin1() << std::endl;
+		std::cout << "\t" << o->name().toLatin1()  << std::endl;
 		if (!o->library().isEmpty())
 		{
 			std::cout << "\tIn "
-				<< o->library().latin1()
+				<< o->library().toLatin1()
 				<< std::endl;
 		}
 

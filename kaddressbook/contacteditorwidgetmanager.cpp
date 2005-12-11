@@ -83,7 +83,7 @@ void ContactEditorWidgetManager::reload()
 
   KTrader::OfferList::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
-    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().latin1() );
+    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().toLatin1() );
     if ( !factory ) {
       kdDebug(5720) << "ContactEditorWidgetManager::reload(): Factory creation failed" << endl;
       continue;

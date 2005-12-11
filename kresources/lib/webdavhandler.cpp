@@ -172,7 +172,7 @@ QDateTime WebdavHandler::utcAsZone( const QDateTime& utc, const QString& timeZon
       icaltime_from_timet_with_zone( v, 0 /*is_date*/,
          icaltimezone_get_builtin_timezone( "UTC" ) );
   int offset = icaltimezone_get_utc_offset(
-    icaltimezone_get_builtin_timezone( timeZoneId.latin1() ),
+    icaltimezone_get_builtin_timezone( timeZoneId.toLatin1() ),
     &tt, &daylight );
 kdDebug() << "Calculated offset of: " << offset << " of timezone: " << timeZoneId << endl;
   return utc.addSecs( offset );
@@ -188,7 +188,7 @@ QDateTime WebdavHandler::zoneAsUtc( const QDateTime& zone, const QString& timeZo
   time_t v = epoch.secsTo( zone );
   struct icaltimetype tt = icaltime_from_timet( v, 0 ); // 0: is_date=false
   int offset = icaltimezone_get_utc_offset(
-    icaltimezone_get_builtin_timezone( timeZoneId.latin1() ),
+    icaltimezone_get_builtin_timezone( timeZoneId.toLatin1() ),
     &tt, &daylight );
   return zone.addSecs( - offset );
 }

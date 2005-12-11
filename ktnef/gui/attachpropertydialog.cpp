@@ -140,7 +140,7 @@ void saveProperty( Q3ListView *lv, KTNEFPropertySet *pSet, QWidget *parent )
 				switch ( prop.type() )
 				{
 					case QVariant::ByteArray:
-						f.writeBlock( prop.asByteArray().data(), prop.asByteArray().size() );
+						f.write( prop.asByteArray().data(), prop.asByteArray().size() );
 						break;
 					default:
 						{

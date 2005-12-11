@@ -767,8 +767,8 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
               // char is upper case then it's likely that the user id is
               // CP1251 encoded)
               if( ( uidString.length() >= 2 )
-                  && ( uidString[0].lower() == uidString[0] )
-                  && ( uidString[1].upper() == uidString[1] ) ) {
+                  && ( uidString[0].toLower() == uidString[0] )
+                  && ( uidString[1].toUpper() == uidString[1] ) ) {
                 // koi8-r decoded user id has inverted case, so assume
                 // CP1251 encoding
                 kdDebug(5100) << "No, it doesn't seem to be koi8-r. "

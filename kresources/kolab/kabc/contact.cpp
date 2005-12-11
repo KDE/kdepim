@@ -577,7 +577,7 @@ void Contact::saveDistrListMembers( QDomElement& element ) const
 bool Contact::loadAttribute( QDomElement& element )
 {
   const QString tagName = element.tagName();
-  switch ( tagName[0].latin1() ) {
+  switch ( tagName[0].toLatin1() ) {
   case 'a':
     if ( tagName == "address" )
       return loadAddressAttribute( element );

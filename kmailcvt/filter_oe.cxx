@@ -395,7 +395,7 @@ QString FilterOE::getFolderName(QString filename)
     QString folder;
     // we must do this because folder with more than one upper letter
     // at start have maybe not a file named like the folder !!!
-    QString search = filename.lower();
+    QString search = filename.toLower();
     
     while (!found)
     {
@@ -403,7 +403,7 @@ QString FilterOE::getFolderName(QString filename)
             FolderStructure tmp = *it;
             if(foundFilename == false) {
                 QString _tmpFileName = tmp[1];
-                _tmpFileName = _tmpFileName.lower();
+                _tmpFileName = _tmpFileName.toLower();
                 if(_tmpFileName == search) {
                     folder.prepend( tmp[0] + QString::fromLatin1("/") );
                     search = tmp[3];

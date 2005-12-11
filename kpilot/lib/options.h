@@ -157,7 +157,7 @@ protected:
 using namespace std;
 
 inline std::ostream& operator <<(std::ostream &o, const QString &s)
-	{ if (s.isEmpty()) return o<<"<empty>"; else return o<<s.latin1(); }
+	{ if (s.isEmpty()) return o<<"<empty>"; else return o<<s.toLatin1(); }
 inline std::ostream& operator <<(std::ostream &o, const Q3CString &s)
 	{ if (s.isEmpty()) return o<<"<empty>"; else return o << *s; }
 

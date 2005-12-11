@@ -296,7 +296,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
       Attendee *attIn = *inIt;
       for ( evIt = attendeesEv.begin(); evIt != attendeesEv.end(); ++evIt ) {
         Attendee *attEv = *evIt;
-        if (attIn->email().lower()==attEv->email().lower()) {
+        if (attIn->email().toLower()==attEv->email().toLower()) {
           //update attendee-info
           kdDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
           attEv->setStatus(attIn->status());

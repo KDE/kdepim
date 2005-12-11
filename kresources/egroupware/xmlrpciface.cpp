@@ -139,7 +139,7 @@ void Query::slotResult( KIO::Job *job )
 
 bool Query::isMessageResponse( const QDomDocument &doc ) const
 {
-  return doc.documentElement().firstChild().toElement().tagName().lower() == "params";
+  return doc.documentElement().firstChild().toElement().tagName().toLower() == "params";
 }
 
 Result Query::parseMessageResponse( const QDomDocument &doc ) const
@@ -159,7 +159,7 @@ Result Query::parseMessageResponse( const QDomDocument &doc ) const
 
 bool Query::isFaultResponse( const QDomDocument &doc ) const
 {
-  return doc.documentElement().firstChild().toElement().tagName().lower() == "fault";
+  return doc.documentElement().firstChild().toElement().tagName().toLower() == "fault";
 }
 
 Result Query::parseFaultResponse( const QDomDocument &doc ) const
@@ -255,10 +255,10 @@ QString Query::marshal( const QVariant &arg ) const
 
 QVariant Query::demarshal( const QDomElement &elem ) const
 {
-  Q_ASSERT( elem.tagName().lower() == "value" );
+  Q_ASSERT( elem.tagName().toLower() == "value" );
 
   const QDomElement typeElement = elem.firstChild().toElement();
-  const QString typeName = typeElement.tagName().lower();
+  const QString typeName = typeElement.tagName().toLower();
 
   if ( typeName == "string" )
     return QVariant( typeElement.text() );
@@ -268,13 +268,13 @@ QVariant Query::demarshal( const QDomElement &elem ) const
     return QVariant( typeElement.text().toDouble() );
   else if ( typeName == "boolean" )
   {
-    if ( typeElement.text().lower() == "true" || typeElement.text() == "1" )
+    if ( typeElement.text().toLower() == "true" || typeElement.text() == "1" )
       return QVariant( true );
     else
       return QVariant( false );
   }
   else if ( typeName == "base64" )
-    return QVariant( KCodecs::base64Decode( typeElement.text().latin1() ) );
+    return QVariant( KCodecs::base64Decode( typeElement.text().toLatin1() ) );
   else if ( typeName == "datetime" || typeName == "datetime.iso8601" )
     return QVariant( QDateTime::fromString( typeElement.text(), Qt::ISODate ) );
   else if ( typeName == "array" )

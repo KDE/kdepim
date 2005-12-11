@@ -541,7 +541,7 @@ void KNAttachment::attach(Content *c)
   Headers::CTEncoding *e=c_ontent->contentTransferEncoding();
   QByteArray data(f_ile->size());
 
-  int readBytes=f_ile->readBlock(data.data(), f_ile->size());
+  int readBytes=f_ile->read(data.data(), f_ile->size());
 
   if (readBytes<(int)f_ile->size() && f_ile->status()!=IO_Ok) {
     KNHelper::displayExternalFileError();

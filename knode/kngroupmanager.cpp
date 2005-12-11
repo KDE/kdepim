@@ -188,7 +188,7 @@ bool KNGroupListData::writeOut()
                                  break;
       }
       temp += i->description.utf8() + "\n";
-      f.writeBlock(temp.data(),temp.length());
+      f.write(temp.data(),temp.length());
     }
     f.close();
     return true;

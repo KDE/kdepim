@@ -121,7 +121,7 @@ namespace {
       }
 
       html += "</pre></div>";
-      //qDebug( "%s", html.latin1() );
+      //qDebug( "%s", html.toLatin1() );
       writer->queue( html );
 
       return Ok;

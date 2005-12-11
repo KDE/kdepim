@@ -829,8 +829,8 @@ CardViewItem *CardView::findItem( const QString &text, const QString &label,
   if ( compare & Q3ListBox::BeginsWith ) {
     QString value;
     for ( iter.toFirst(); iter.current(); ++iter ) {
-      value = (*iter)->fieldValue( label ).upper();
-      if ( value.startsWith( text.upper() ) )
+      value = (*iter)->fieldValue( label ).toUpper();
+      if ( value.startsWith( text.toUpper() ) )
         return *iter;
     }
   } else {

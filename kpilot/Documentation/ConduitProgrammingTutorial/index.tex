@@ -899,17 +899,17 @@ bool MALConduit::skip() {
   switch (eProxyType) {
     case eProxyHTTP:
         if (fProxyServer.isEmpty()) break;
-        setHttpProxy(fProxyServer.latin1());
+        setHttpProxy(fProxyServer.toLatin1());
         if (fProxyPort>0 && fProxyPort<65536) setHttpProxyPort( fProxyPort );
         else setHttpProxyPort(80);
       
         if (!fProxyUser.isEmpty()) {
-          setProxyUsername( fProxyUser.latin1() );
-          if (!fProxyPassword.isEmpty()) setProxyPassword( fProxyPassword.latin1() );
+          setProxyUsername( fProxyUser.toLatin1() );
+          if (!fProxyPassword.isEmpty()) setProxyPassword( fProxyPassword.toLatin1() );
         }
         break;
     case eProxySOCKS:
-        setSocksProxy( fProxyServer.latin1() );
+        setSocksProxy( fProxyServer.toLatin1() );
         if (fProxyPort>0 && fProxyPort<65536) setSocksProxyPort( fProxyPort );
         else setSocksProxyPort(1080);
         break; 

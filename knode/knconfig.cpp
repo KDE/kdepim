@@ -694,14 +694,14 @@ KNode::PostNewsTechnical::PostNewsTechnical()
     "iso-8859-9,iso-8859-10,iso-8859-13,iso-8859-14,iso-8859-15,koi8-r,koi8-u,"
     "iso-2022-jp,iso-2022-jp-2,iso-2022-kr,euc-jp,euc-kr,Big5,gb2312");
 
-  c_harset=conf->readEntry("Charset").latin1();
+  c_harset=conf->readEntry("Charset").toLatin1();
   if (c_harset.isEmpty()) {
     Q3CString localeCharset(QTextCodec::codecForLocale()->mimeName());
 
     // special logic for japanese users:
     // "euc-jp" is default encoding for them, but in the news
     // "iso-2022-jp" is used
-    if (localeCharset.lower() == "euc-jp")
+    if (localeCharset.toLower() == "euc-jp")
       localeCharset = "iso-2022-jp";
 
     c_harset=findComposerCharset(localeCharset);
@@ -767,7 +767,7 @@ int KNode::PostNewsTechnical::indexForCharset(const Q3CString &str)
   int i=0;
   bool found=false;
   for ( QStringList::Iterator it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
-    if ((*it).lower() == str.lower().data()) {
+    if ((*it).toLower() == str.toLower().data()) {
       found = true;
       break;
     }
@@ -776,7 +776,7 @@ int KNode::PostNewsTechnical::indexForCharset(const Q3CString &str)
   if (!found) {
     i=0;
     for ( QStringList::Iterator it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
-      if ((*it).lower() == c_harset.lower().data()) {
+      if ((*it).toLower() == c_harset.toLower().data()) {
         found = true;
         break;
       }
@@ -800,8 +800,8 @@ Q3CString KNode::PostNewsTechnical::findComposerCharset(Q3CString cs)
   QStringList::Iterator it;
   for( it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
     // match by name
-    if ((*it).lower()==cs.lower().data()) {
-      s = (*it).latin1();
+    if ((*it).toLower()==cs.toLower().data()) {
+      s = (*it).toLatin1();
       break;
     }
   }
@@ -809,13 +809,13 @@ Q3CString KNode::PostNewsTechnical::findComposerCharset(Q3CString cs)
   if (s.isEmpty()) {
     for( it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
     // match by charset, avoid to return "us-ascii" for iso-8859-1
-      if ((*it).lower()!="us-ascii") {
-        QTextCodec *composerCodec = QTextCodec::codecForName((*it).latin1());
+      if ((*it).toLower()!="us-ascii") {
+        QTextCodec *composerCodec = QTextCodec::codecForName((*it).toLatin1());
         QTextCodec *csCodec = QTextCodec::codecForName(cs);
         if ((composerCodec != 0) &&
             (csCodec != 0) &&
             (0 == strcmp(composerCodec->name(), csCodec->name()))) {
-      s = (*it).latin1();
+      s = (*it).toLatin1();
       break;
     }
   }

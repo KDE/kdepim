@@ -87,7 +87,7 @@ KABC::Addressee::List OperaXXPort::importContacts( const QString& ) const
 
     if ( parseContact == true ) {
       int sep = line.find( '=' );
-      key = line.left( sep ).lower();
+      key = line.left( sep ).toLower();
       value = line.mid( sep + 1 );
       if ( key == QString::fromLatin1( "name" ) )
         addr.setNameFromString( value );

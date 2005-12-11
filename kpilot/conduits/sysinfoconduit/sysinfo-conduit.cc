@@ -583,11 +583,11 @@ void SysInfoConduit::writeFile()
 	if (fOutputFile.isEmpty() || (!outfile.open(QIODevice::WriteOnly)) ) {
 		QFileInfo fi(QDir::home(), CSL1("KPilotSysInfo.")+QFileInfo(templatefile).extension() );
 		fOutputFile=fi.absoluteFilePath();
-		kdWarning()<<i18n("Unable to open output file, using %1 instead.").arg(fOutputFile).latin1()<<endl;
+		kdWarning()<<i18n("Unable to open output file, using %1 instead.").arg(fOutputFile).toLatin1()<<endl;
 		emit logMessage(i18n("Unable to open output file, using %1 instead.").arg(fOutputFile));
 		outfile.setName(fOutputFile);
 		if (!outfile.open(QIODevice::WriteOnly)) {
-			kdWarning()<<i18n("Unable to open %1").arg(fOutputFile).latin1()<<endl;
+			kdWarning()<<i18n("Unable to open %1").arg(fOutputFile).toLatin1()<<endl;
 			emit logError(i18n("Unable to open %1").arg(fOutputFile));
 			QTimer::singleShot(0, this, SLOT(cleanup()));
 			return;

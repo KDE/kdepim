@@ -138,7 +138,7 @@ bool LocalBackupAction::exec()
 ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	const QString &name,
 	const SyncAction::SyncMode &m) :
-	ConduitAction(p,name.latin1(),m.list()),
+	ConduitAction(p,name.toLatin1(),m.list()),
 	fDesktopName(name)
 {
 	FUNCTIONSETUP;

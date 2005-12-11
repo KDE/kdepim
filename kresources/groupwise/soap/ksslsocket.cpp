@@ -86,14 +86,14 @@ KSSLSocket::~KSSLSocket()
 	delete d;
 }
 
-Q_LONG KSSLSocket::readBlock( char* data, Q_ULONG maxLen )
+Q_LONG KSSLSocket::read( char* data, Q_ULONG maxLen )
 {
 	return d->kssl->read( data, maxLen );
 }
 
-Q_LONG KSSLSocket::writeBlock( const char* data, Q_ULONG len )
+Q_LONG KSSLSocket::write( const char* data, Q_ULONG len )
 {
-//  kdDebug() << "KSSLSocket::writeBlock() " << (void*)this  << endl;
+//  kdDebug() << "KSSLSocket::write() " << (void*)this  << endl;
 //  kdDebug() << "  d->kssl: " << (void*)d->kssl << endl;
 	return d->kssl->write( data, len );
 }

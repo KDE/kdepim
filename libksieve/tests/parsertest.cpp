@@ -397,7 +397,7 @@ public:
   }
   void numberArgument( unsigned long number, char quantifier ) {
     const QString txt = "number" + ( quantifier ? QString(" quantifier=\"%1\"").arg( quantifier ) : QString::null ) ;
-    write( txt.latin1(), QString::number( number ) );
+    write( txt.toLatin1(), QString::number( number ) );
   }
   void commandStart( const QString & identifier ) {
     write( "<command>" );
@@ -457,7 +457,7 @@ public:
 
   void error( const KSieve::Error & error ) {
     indent = 0;
-    write( ("Error: " + error.asString()).latin1() );
+    write( ("Error: " + error.asString()).toLatin1() );
   }
   void finished() {
     --indent;

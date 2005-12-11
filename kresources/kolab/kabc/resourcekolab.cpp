@@ -313,7 +313,7 @@ void AttachmentList::updateAttachment( const QByteArray& data, const QString& na
   assert( !name.isEmpty() );
   if ( !data.isNull() ) {
     KTempFile* tempFile = new KTempFile;
-    tempFile->file()->writeBlock( data );
+    tempFile->file()->write( data );
     tempFile->close();
     KURL url;
     url.setPath( tempFile->name() );

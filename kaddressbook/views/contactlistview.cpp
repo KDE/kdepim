@@ -194,7 +194,7 @@ QString ContactListViewItem::key(int column, bool ascending) const
   else
     return mFields[ column ]->sortKey( mAddressee );
 #else
-  return Q3ListViewItem::key( column, ascending ).lower();
+  return Q3ListViewItem::key( column, ascending ).toLower();
 #endif
 }
 

@@ -411,13 +411,13 @@ bool KTNEFParser::extractAttachmentTo(KTNEFAttach *att, const QString& dirname)
 	bool		ok(true);
 	while (ok && len > 0)
 	{
-		n = d->device_->readBlock(buf,qMin(sz,len));
+		n = d->device_->read(buf,qMin(sz,len));
 		if (n < 0)
 			ok = false;
 		else
 		{
 			len -= n;
-			if (outfile->writeBlock(buf,n) != n)
+			if (outfile->write(buf,n) != n)
 				ok = false;
 		}
 	}
@@ -484,7 +484,7 @@ void KTNEFParser::checkCurrent( int key )
 						int oldOffset = d->device_->at();
 						QByteArray buffer( qMin( 32, d->current_->size() ) );
 						d->device_->at( d->current_->offset() );
-						d->device_->readBlock( buffer.data(), buffer.size() );
+						d->device_->read( buffer.data(), buffer.size() );
 						mimetype = KMimeType::findByContent( buffer );
 						d->device_->at( oldOffset );
 					}

@@ -101,7 +101,7 @@ bool VCalFormat::save(Calendar *calendar, const QString &fileName)
   vcal = newVObject(VCCalProp);
 
   //  addPropValue(vcal,VCLocationProp, "0.0");
-  addPropValue(vcal,VCProdIdProp, productId().latin1());
+  addPropValue(vcal,VCProdIdProp, productId().toLatin1());
   addPropValue(vcal,VCVersionProp, _VCAL_VERSION);
 
   // TODO STUFF
@@ -178,7 +178,7 @@ QString VCalFormat::toString( Calendar *calendar )
 
   VObject *vcal = newVObject(VCCalProp);
 
-  addPropValue( vcal, VCProdIdProp, CalFormat::productId().latin1() );
+  addPropValue( vcal, VCProdIdProp, CalFormat::productId().toLatin1() );
   addPropValue( vcal, VCVersionProp, _VCAL_VERSION );
 
   // TODO: Use all data.
@@ -984,7 +984,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     QString tmpStr = (s = fakeCString(vObjectUStringZValue(vo)));
     deleteStr(s);
     tmpStr.simplified();
-    tmpStr = tmpStr.upper();
+    tmpStr = tmpStr.toUpper();
 // kdDebug() <<" We have a recurrence rule: " << tmpStr<< endl;
 
     // first, read the type of the recurrence
@@ -1338,13 +1338,13 @@ int vcaltime_utc_offset( QDateTime ictt, QString tzid )
 {
   // libical-0.23 stuff:
   //  struct icaltimetype tt = icaltime_from_timet( ictt.toTime_t(), false );
-  //  return icaltime_utc_offset( tt, tzid.latin1() );
+  //  return icaltime_utc_offset( tt, tzid.toLatin1() );
   int daylight;
   struct icaltimetype tt = icaltime_from_timet( ictt.toTime_t(), false );
   //source says this is DEPRECATED, but it doesn't say what to use instead
   //how to handle failure from icaltimezone_get_builtin_timezone_from_tzid()?
   return icaltimezone_get_utc_offset(
-    icaltimezone_get_builtin_timezone( tzid.latin1() ),
+    icaltimezone_get_builtin_timezone( tzid.toLatin1() ),
     &tt, &daylight );
 }
 
@@ -1567,7 +1567,7 @@ int VCalFormat::numFromDay(const QString &day)
 Attendee::PartStat VCalFormat::readStatus(const char *s) const
 {
   QString statStr = s;
-  statStr = statStr.upper();
+  statStr = statStr.toUpper();
   Attendee::PartStat status;
 
   if (statStr == "X-ACTION")

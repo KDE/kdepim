@@ -67,7 +67,7 @@ bool Kleo::SymCryptRunProcessBase::launch( const QByteArray & input, RunMode rm 
     KTempFile tempfile;
     tempfile.setAutoDelete( true );
     if ( QFile * file = tempfile.file() )
-      file->writeBlock( input );
+      file->write( input );
     else
       return false;
     tempfile.close();

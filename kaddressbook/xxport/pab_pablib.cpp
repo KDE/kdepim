@@ -270,7 +270,7 @@ content_t pab::read(void)
 {
 unsigned char mem[4];
 content_t A;
-  in.readBlock((char *) &mem, sizeof(A));	// WinTel unsigned long opslag
+  in.read((char *) &mem, sizeof(A));	// WinTel unsigned long opslag
   A=mem[3];
   A<<=8;A|=mem[2];
   A<<=8;A|=mem[1];
@@ -281,7 +281,7 @@ return A;
 void pab::read(word_t & w)
 {
 unsigned char mem[2];
-  in.readBlock((char *) &mem, sizeof(w));
+  in.read((char *) &mem, sizeof(w));
   w=mem[1];
   w<<=8;w|=mem[0];
 }
@@ -329,5 +329,5 @@ return c;
 
 void pab::read(unsigned char *mem,content_t size)
 {
-  in.readBlock((char *) mem, size);
+  in.read((char *) mem, size);
 }

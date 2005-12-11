@@ -182,7 +182,7 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
 
   int ret;
   while ( n > 0 ) {
-    ret = m_sock->writeBlock( s, n );
+    ret = m_sock->write( s, n );
     if ( ret < 0 ) {
       kdError() << "Send failed: " << strerror( m_sock->systemError() )
         << " " << m_sock->socketStatus() << " " << m_sock->fd() << endl;
@@ -218,7 +218,7 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
   }
 
 //   m_sock->open();
-  long ret = m_sock->readBlock( s, n );
+  long ret = m_sock->read( s, n );
   if ( ret < 0 ) {
     kdError() << "Receive failed: " << strerror( m_sock->systemError() )
       << " " << m_sock->socketStatus() << " " << m_sock->fd() << endl;
@@ -300,10 +300,10 @@ bool GroupwiseServer::login()
   kdDebug() << "GroupwiseServer::login() URL: " << mUrl << endl;
 
   int result = 1, maxTries = 3;
-  mBinding->endpoint = mUrl.latin1();
+  mBinding->endpoint = mUrl.toLatin1();
   
 //  while ( --maxTries && result ) {
-    result = soap_call___ngw__loginRequest( mSoap, mUrl.latin1(), NULL,
+    result = soap_call___ngw__loginRequest( mSoap, mUrl.toLatin1(), NULL,
       &loginReq, &loginResp );
     /*result = mBinding->__ngw__loginRequest( &loginReq, &loginResp );*/
 //  }
@@ -351,7 +351,7 @@ bool GroupwiseServer::getCategoryList()
   _ngwm__getCategoryListRequest catListReq;
   _ngwm__getCategoryListResponse catListResp;
   mSoap->header->ngwt__session = mSession;
-  int result = soap_call___ngw__getCategoryListRequest( mSoap, mUrl.latin1(),
+  int result = soap_call___ngw__getCategoryListRequest( mSoap, mUrl.toLatin1(),
     0, &catListReq, &catListResp);
   if ( !checkResponse( result, catListResp.status ) ) return false;
 
@@ -373,7 +373,7 @@ bool GroupwiseServer::dumpData()
   mSoap->header->ngwt__session = mSession;
   _ngwm__getAddressBookListRequest addressBookListRequest;
   _ngwm__getAddressBookListResponse addressBookListResponse;
-  soap_call___ngw__getAddressBookListRequest( mSoap, mUrl.latin1(),
+  soap_call___ngw__getAddressBookListRequest( mSoap, mUrl.toLatin1(),
                                               NULL, &addressBookListRequest, &addressBookListResponse );
   soap_print_fault(mSoap, stderr);
 
@@ -404,7 +404,7 @@ bool GroupwiseServer::dumpData()
 
       mSoap->header->ngwt__session = mSession;
       _ngwm__getItemsResponse itemsResponse;
-      soap_call___ngw__getItemsRequest( mSoap, mUrl.latin1(), 0,
+      soap_call___ngw__getItemsRequest( mSoap, mUrl.toLatin1(), 0,
                                         &itemsRequest,
                                         &itemsResponse );
 
@@ -426,7 +426,7 @@ bool GroupwiseServer::dumpData()
 
             mSoap->header->ngwt__session = mSession;
             _ngwm__getItemResponse itemResponse;
-            soap_call___ngw__getItemRequest( mSoap, mUrl.latin1(), 0,
+            soap_call___ngw__getItemRequest( mSoap, mUrl.toLatin1(), 0,
                                              &itemRequest,
                                              &itemResponse );
 
@@ -453,7 +453,7 @@ void GroupwiseServer::dumpFolderList()
   folderListReq.parent = "folders";
   folderListReq.recurse = true;
   _ngwm__getFolderListResponse folderListRes;
-  soap_call___ngw__getFolderListRequest( mSoap, mUrl.latin1(), 0,
+  soap_call___ngw__getFolderListRequest( mSoap, mUrl.toLatin1(), 0,
                                          &folderListReq,
                                          &folderListRes );
 
@@ -500,7 +500,7 @@ void GroupwiseServer::dumpCalendarFolder( const std::string &id )
 
   mSoap->header->ngwt__session = mSession;
   _ngwm__getItemsResponse itemsResponse;
-  soap_call___ngw__getItemsRequest( mSoap, mUrl.latin1(), 0,
+  soap_call___ngw__getItemsRequest( mSoap, mUrl.toLatin1(), 0,
                                     &itemsRequest,
                                     &itemsResponse );
   soap_print_fault(mSoap, stderr);
@@ -602,7 +602,7 @@ bool GroupwiseServer::logout()
   _ngwm__logoutRequest request;
   _ngwm__logoutResponse response;
 
-  int result = soap_call___ngw__logoutRequest( mSoap, mUrl.latin1(),
+  int result = soap_call___ngw__logoutRequest( mSoap, mUrl.toLatin1(),
                                                NULL, &request, &response);
   soap_print_fault( mSoap, stderr );
   if (!checkResponse( result, response.status ) )
@@ -635,9 +635,9 @@ GroupWise::DeltaInfo GroupwiseServer::getDeltaInfo( const QStringList & addressB
   _ngwm__getDeltaInfoResponse response;
 
   GWConverter conv( mSoap );
-  request.container.append( addressBookIds.first().latin1() );
+  request.container.append( addressBookIds.first().toLatin1() );
 
-  int result = soap_call___ngw__getDeltaInfoRequest( mSoap, mUrl.latin1(),
+  int result = soap_call___ngw__getDeltaInfoRequest( mSoap, mUrl.toLatin1(),
                                               NULL, &request, &response);
   soap_print_fault( mSoap, stderr );
   if (!checkResponse( result, response.status ) )
@@ -667,7 +667,7 @@ GroupWise::AddressBook::List GroupwiseServer::addressBookList()
   mSoap->header->ngwt__session = mSession;
   _ngwm__getAddressBookListRequest addressBookListRequest;
   _ngwm__getAddressBookListResponse addressBookListResponse;
-  int result = soap_call___ngw__getAddressBookListRequest( mSoap, mUrl.latin1(),
+  int result = soap_call___ngw__getAddressBookListRequest( mSoap, mUrl.toLatin1(),
     NULL, &addressBookListRequest, &addressBookListResponse );
   if ( !checkResponse( result, addressBookListResponse.status ) ) {
     return books;
@@ -736,7 +736,7 @@ std::string GroupwiseServer::getFullIDFor( const QString & gwRecordIDFromIcal )
   folderListReq.recurse = false;
 
   mSoap->header->ngwt__session = mSession;
-  soap_call___ngw__getFolderListRequest( mSoap, mUrl.latin1(), 0,
+  soap_call___ngw__getFolderListRequest( mSoap, mUrl.toLatin1(), 0,
                                          &folderListReq,
                                          &folderListRes );
 
@@ -766,7 +766,7 @@ std::string GroupwiseServer::getFullIDFor( const QString & gwRecordIDFromIcal )
 
   _ngwm__getItemsRequest getItemRequest;
   _ngwm__getItemsResponse getItemResponse;
-  //getItemRequest.id.append( gwRecordID.latin1() );
+  //getItemRequest.id.append( gwRecordID.toLatin1() );
   getItemRequest.view = 0;
   getItemRequest.filter = soap_new_ngwt__Filter( mSoap, -1 );
   ngwt__FilterEntry * fe = soap_new_ngwt__FilterEntry( mSoap, -1 );
@@ -774,7 +774,7 @@ std::string GroupwiseServer::getFullIDFor( const QString & gwRecordIDFromIcal )
   fe->field = soap_new_std__string( mSoap, -1 );
   fe->field->append( "id" );
   fe->value = soap_new_std__string( mSoap, -1 );
-  fe->value->append( gwRecordIDFromIcal.latin1() );
+  fe->value->append( gwRecordIDFromIcal.toLatin1() );
   fe->custom = 0;
   fe->date = 0;
   getItemRequest.filter->element = fe;
@@ -783,7 +783,7 @@ std::string GroupwiseServer::getFullIDFor( const QString & gwRecordIDFromIcal )
   getItemRequest.count = 1;
 
   mSoap->header->ngwt__session = mSession;
-  int result = soap_call___ngw__getItemsRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ngw__getItemsRequest( mSoap, mUrl.toLatin1(), 0,
                                                    &getItemRequest, &getItemResponse );
   if ( !checkResponse( result, getItemResponse.status ) ) return false;
 
@@ -825,7 +825,7 @@ bool GroupwiseServer::acceptIncidence( KCal::Incidence *incidence )
     gwUID = getFullIDFor( gwRecordIDFromIcal );
   }
   else
-    gwUID = qGwUid.latin1();
+    gwUID = qGwUid.toLatin1();
 
   if ( gwUID.empty() )
   {
@@ -845,7 +845,7 @@ bool GroupwiseServer::acceptIncidence( KCal::Incidence *incidence )
   request.items->item.push_back( gwUID );
 
   mSoap->header->ngwt__session = mSession;
-  int result = soap_call___ngw__acceptRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ngw__acceptRequest( mSoap, mUrl.toLatin1(), 0,
                                                    &request, &response );
   if ( !checkResponse( result, response.status ) ) return false;
 
@@ -862,7 +862,7 @@ bool GroupwiseServer::declineIncidence( KCal::Incidence *incidence )
 
   GWConverter conv( mSoap );
 
-  std::string gwUID = incidence->customProperty( "GWRESOURCE", "UID" ).latin1();
+  std::string gwUID = incidence->customProperty( "GWRESOURCE", "UID" ).toLatin1();
 
   if ( gwUID.empty() )
   {
@@ -889,7 +889,7 @@ bool GroupwiseServer::declineIncidence( KCal::Incidence *incidence )
   request.items->item.push_back( gwUID );
 
   mSoap->header->ngwt__session = mSession;
-  int result = soap_call___ngw__declineRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ngw__declineRequest( mSoap, mUrl.toLatin1(), 0,
                                                    &request, &response );
   if ( !checkResponse( result, response.status ) ) return false;
 
@@ -941,7 +941,7 @@ bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
   _ngwm__sendItemResponse response;
   mSoap->header->ngwt__session = mSession;
 
-  int result = soap_call___ngw__sendItemRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ngw__sendItemRequest( mSoap, mUrl.toLatin1(), 0,
                                                    &request, &response );
   if ( !checkResponse( result, response.status ) ) return false;
 
@@ -1034,7 +1034,7 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   _ngwm__modifyItemResponse response;
   mSoap->header->ngwt__session = mSession;
 
-  int result = soap_call___ngw__modifyItemRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ngw__modifyItemRequest( mSoap, mUrl.toLatin1(), 0,
                                                     &request, &response );
   return checkResponse( result, response.status );
 }
@@ -1108,7 +1108,7 @@ bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
   request.container = converter.qStringToString( incidence->customProperty( "GWRESOURCE", "CONTAINER" ) );
   request.id = std::string( incidence->customProperty( "GWRESOURCE", "UID" ).utf8() );
 
-  int result = soap_call___ngw__removeItemRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ngw__removeItemRequest( mSoap, mUrl.toLatin1(), 0,
                                                     &request, &response );
   return checkResponse( result, response.status );
 }
@@ -1133,7 +1133,7 @@ bool GroupwiseServer::retractRequest( KCal::Incidence *incidence, RetractCause c
   request.retractingAllInstances = true;
   request.retractType = allMailboxes;
 
-  int result = soap_call___ngw__retractRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ngw__retractRequest( mSoap, mUrl.toLatin1(), 0,
                                                     &request, &response );
   return checkResponse( result, response.status );
 }
@@ -1158,7 +1158,7 @@ bool GroupwiseServer::insertAddressee( const QString &addrBookId, KABC::Addresse
   mSoap->header->ngwt__session = mSession;
 
 
-  int result = soap_call___ngw__createItemRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ngw__createItemRequest( mSoap, mUrl.toLatin1(), 0,
                                                    &request, &response );
   if ( !checkResponse( result, response.status ) ) return false;
 
@@ -1194,7 +1194,7 @@ bool GroupwiseServer::changeAddressee( const KABC::Addressee &addr )
   _ngwm__modifyItemResponse response;
   mSoap->header->ngwt__session = mSession;
 
-  int result = soap_call___ngw__modifyItemRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ngw__modifyItemRequest( mSoap, mUrl.toLatin1(), 0,
                                                     &request, &response );
   return checkResponse( result, response.status );
 }
@@ -1218,7 +1218,7 @@ bool GroupwiseServer::removeAddressee( const KABC::Addressee &addr )
   request.container = converter.qStringToString( addr.custom( "GWRESOURCE", "CONTAINER" ) );
   request.id = std::string( addr.custom( "GWRESOURCE", "UID" ).utf8() );
 
-  int result = soap_call___ngw__removeItemRequest( mSoap, mUrl.latin1(), 0,
+  int result = soap_call___ngw__removeItemRequest( mSoap, mUrl.toLatin1(), 0,
                                                     &request, &response );
   return checkResponse( result, response.status );
 }
@@ -1277,7 +1277,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
   mSoap->header->ngwt__session = mSession;
 
   int result = soap_call___ngw__startFreeBusySessionRequest( mSoap,
-    mUrl.latin1(), NULL, &startSessionRequest, &startSessionResponse );
+    mUrl.toLatin1(), NULL, &startSessionRequest, &startSessionResponse );
   if ( !checkResponse( result, startSessionResponse.status ) ) return false;
 
   int fbSessionId = startSessionResponse.freeBusySessionId;
@@ -1298,7 +1298,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
   do {
     mSoap->header->ngwt__session = mSession;
     result = soap_call___ngw__getFreeBusyRequest( mSoap,
-      mUrl.latin1(), NULL, &getFreeBusyRequest, &getFreeBusyResponse );
+      mUrl.toLatin1(), NULL, &getFreeBusyRequest, &getFreeBusyResponse );
     if ( !checkResponse( result, getFreeBusyResponse.status ) ) {
       return false;
     }
@@ -1352,7 +1352,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
   mSoap->header->ngwt__session = mSession;
 
   result = soap_call___ngw__closeFreeBusySessionRequest( mSoap,
-    mUrl.latin1(), NULL, &closeSessionRequest, &closeSessionResponse );
+    mUrl.toLatin1(), NULL, &closeSessionRequest, &closeSessionResponse );
   if ( !checkResponse( result, closeSessionResponse.status ) ) return false;
 
   return true;
@@ -1401,7 +1401,7 @@ void GroupwiseServer::log( const QString &prefix, const char *s, size_t n )
     uint written = 0;
     while ( written < n ) {
       kdDebug() << "written: " << written << endl;
-      int w = f.writeBlock( s + written, n - written );
+      int w = f.write( s + written, n - written );
       kdDebug() << "w: " << w << endl;
       if ( w < 0 ) {
         kdError() << "Unable to write log '" << log << "'" << endl;
@@ -1435,7 +1435,7 @@ bool GroupwiseServer::readUserSettings( ngwt__Settings *&returnedSettings )
   _ngwm__getSettingsResponse response;
   mSoap->header->ngwt__session = mSession;
 
-  int result = soap_call___ngw__getSettingsRequest( mSoap, mUrl.latin1(), 0, &request, &response );
+  int result = soap_call___ngw__getSettingsRequest( mSoap, mUrl.toLatin1(), 0, &request, &response );
 
   if ( !checkResponse( result, response.status ) )
   {
@@ -1507,7 +1507,7 @@ bool GroupwiseServer::modifyUserSettings( QMap<QString, QString> & settings  )
 
   mSoap->header->ngwt__session = mSession;
 
-  int result = soap_call___ngw__modifySettingsRequest( mSoap, mUrl.latin1(), 0, &request, &response );
+  int result = soap_call___ngw__modifySettingsRequest( mSoap, mUrl.toLatin1(), 0, &request, &response );
   if ( !checkResponse( result, response.status ) )
   {
     kdDebug() << "GroupwiseServer::modifyUserSettings() - checkResponse() failed" << endl;

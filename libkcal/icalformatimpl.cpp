@@ -1197,14 +1197,14 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   
   p = icalproperty_get_first_parameter( attach, ICAL_X_PARAMETER );
   while (p) {
-    QString xname = QString( icalparameter_get_xname( p ) ).upper();
+    QString xname = QString( icalparameter_get_xname( p ) ).toUpper();
     QString xvalue = QString::fromUtf8( icalparameter_get_xvalue( p ) );
     if ( xname == "X-CONTENT-DISPOSITION" )
-      attachment->setShowInline( xvalue.lower() == "inline" );
+      attachment->setShowInline( xvalue.toLower() == "inline" );
     if ( xname == "X-LABEL" )
       attachment->setLabel( xvalue );
     if ( xname == "X-KONTACT-TYPE" )
-      attachment->setLocal( xvalue.lower() == "local" );
+      attachment->setLocal( xvalue.toLower() == "local" );
     p = icalproperty_get_next_parameter( attach, ICAL_X_PARAMETER );
   }
 
@@ -1755,7 +1755,7 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
   t.second = datetime.time().second();
 
   t.is_date = 0;
-  t.zone = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().latin1() );
+  t.zone = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().toLatin1() );
   t.is_utc = 0;
 
  // _dumpIcaltime( t );
@@ -1765,7 +1765,7 @@ icaltimetype ICalFormatImpl::writeICalDateTime(const QDateTime &datetime)
   if (mParent->timeZoneId().isEmpty())
     t = icaltime_convert_to_zone( t, 0 ); //make floating timezone
   else {
-    icaltimezone* tz = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().latin1() );
+    icaltimezone* tz = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().toLatin1() );
     icaltimezone* utc = icaltimezone_get_utc_timezone();
     if ( tz != utc ) {
       t.zone = tz;
@@ -1792,7 +1792,7 @@ QDateTime ICalFormatImpl::readICalDateTime( icaltimetype& t, icaltimezone* tz )
   // Convert to view time
   if ( !mParent->timeZoneId().isEmpty() && t.zone ) {
 //    kdDebug(5800) << "--- Converting time from: " << icaltimezone_get_tzid( const_cast<icaltimezone*>( t.zone ) ) << " (" << ICalDate2QDate(t) << ")." << endl;
-    icaltimezone* viewTimeZone = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().latin1() );
+    icaltimezone* viewTimeZone = icaltimezone_get_builtin_timezone ( mParent->timeZoneId().toLatin1() );
     icaltimezone_convert_time(  &t, const_cast<icaltimezone*>( t.zone ), viewTimeZone );
 //    kdDebug(5800) << "--- Converted to zone " << mParent->timeZoneId() << " (" << ICalDate2QDate(t) << ")." << endl;
   }

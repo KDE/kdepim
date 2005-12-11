@@ -92,7 +92,7 @@ bool KNGroup::readInfo(const QString &confPath)
   l_astNr = info.readNumEntry("lastMsg",0);
   d_ynDataFormat = info.readNumEntry("dynDataFormat",0);
   u_seCharset = info.readBoolEntry("useCharset", false);
-  d_efaultChSet = info.readEntry("defaultChSet").latin1();
+  d_efaultChSet = info.readEntry("defaultChSet").toLatin1();
   QString s = info.readEntry("status","unknown");
   if (s=="readOnly")
     s_tatus = readOnly;
@@ -308,9 +308,9 @@ bool KNGroup::loadHdrs()
     while(!f.atEnd()) {
 
       if (d_ynDataFormat==0)
-        byteCount = f.readBlock((char*)(&data0), dataSize);
+        byteCount = f.read((char*)(&data0), dataSize);
       else
-        byteCount = f.readBlock((char*)(&data1), dataSize);
+        byteCount = f.read((char*)(&data1), dataSize);
       if ((byteCount == -1)||(byteCount!=dataSize))
         if ( f.error() == QFile::NoError ) {
           kdWarning(5003) << "Found broken entry in dynamic-file: Ignored!" << endl;
@@ -607,7 +607,7 @@ void KNGroup::saveDynamicData(int cnt,bool ovr)
         art=at(idx);
         if(art->isExpired()) continue;
         data.setData(art);
-        f.writeBlock((char*)(&data), sizeof(data));
+        f.write((char*)(&data), sizeof(data));
         art->setChanged(false);
       }
       f.close();
@@ -642,7 +642,7 @@ void KNGroup::syncDynamicData()
 
           data.setData(art);
           f.at(i*sOfData);
-          f.writeBlock((char*) &data, sOfData);
+          f.write((char*) &data, sOfData);
           cnt++;
           art->setChanged(false);
         }

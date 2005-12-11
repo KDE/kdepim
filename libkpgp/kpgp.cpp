@@ -1114,7 +1114,7 @@ Module::haveTrustedEncryptionKey( const QString& person )
 
   readPublicKeys();
 
-  QString address = canonicalAddress( person ).lower();
+  QString address = canonicalAddress( person ).toLower();
 
   // First look for this person's address in the address data dictionary
   KeyIDList keyIds = keysForAddress( address );
@@ -1174,7 +1174,7 @@ Module::getEncryptionKeys( const QString& person )
 
   readPublicKeys();
 
-  QString address = canonicalAddress( person ).lower();
+  QString address = canonicalAddress( person ).toLower();
 
   // #### FIXME: Until we support encryption with untrusted keys only
   // ####        trusted keys are allowed
@@ -1695,7 +1695,7 @@ Module::keysForAddress( const QString& address )
   if( address.isEmpty() ) {
     return KeyIDList();
   }
-  QString addr = canonicalAddress( address ).lower();
+  QString addr = canonicalAddress( address ).toLower();
   if( addressDataDict.contains( addr ) ) {
     return addressDataDict[addr].keyIds;
   }
@@ -1710,7 +1710,7 @@ Module::setKeysForAddress( const QString& address, const KeyIDList& keyIds )
   if( address.isEmpty() ) {
     return;
   }
-  QString addr = canonicalAddress( address ).lower();
+  QString addr = canonicalAddress( address ).toLower();
   if( addressDataDict.contains( addr ) ) {
     addressDataDict[addr].keyIds = keyIds;
   }
@@ -1772,7 +1772,7 @@ Module::writeAddressData()
 EncryptPref
 Module::encryptionPreference( const QString& address )
 {
-  QString addr = canonicalAddress( address ).lower();
+  QString addr = canonicalAddress( address ).toLower();
   if( addressDataDict.contains( addr ) ) {
     return addressDataDict[addr].encrPref;
   }
@@ -1788,7 +1788,7 @@ Module::setEncryptionPreference( const QString& address,
   if( address.isEmpty() ) {
     return;
   }
-  QString addr = canonicalAddress( address ).lower();
+  QString addr = canonicalAddress( address ).toLower();
   if( addressDataDict.contains( addr ) ) {
     addressDataDict[addr].encrPref = pref;
   }

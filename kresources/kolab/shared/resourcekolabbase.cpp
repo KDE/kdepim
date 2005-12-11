@@ -53,7 +53,7 @@ ResourceKolabBase::ResourceKolabBase( const DCOPCString& objId )
 {
   KGlobal::locale()->insertCatalog( "kres_kolab" );
   KGlobal::locale()->insertCatalog( "libkcal" );
-  DCOPCString uniqueObjId = objId + QString::number( uniquifier++ ).latin1();
+  DCOPCString uniqueObjId = objId + QString::number( uniquifier++ ).toLatin1();
   mConnection = new KMailConnection( this, uniqueObjId );
 }
 

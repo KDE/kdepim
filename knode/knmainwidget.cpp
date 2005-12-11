@@ -417,7 +417,7 @@ void KNMainWidget::openURL(const KURL &url)
     // lets see if we already have an account for this host...
     KNAccountManager::List list = a_ccManager->accounts();
     for ( KNAccountManager::List::Iterator it = list.begin(); it != list.end(); ++it ) {
-      if ( (*it)->server().lower() == host.lower() && ( port==0 || (*it)->port() == port ) ) {
+      if ( (*it)->server().toLower() == host.toLower() && ( port==0 || (*it)->port() == port ) ) {
         acc = *it;
         break;
       }
@@ -487,10 +487,10 @@ void KNMainWidget::openURL(const KURL &url)
         g = g_rpManager->firstGroupOfAccount(acc);
 
       if (g) {
-        if ( !ArticleWindow::raiseWindowForArticle( groupname.latin1() ) ) { //article not yet opened
+        if ( !ArticleWindow::raiseWindowForArticle( groupname.toLatin1() ) ) { //article not yet opened
           KNRemoteArticle *a=new KNRemoteArticle(g);
           QString messageID = "<"+groupname+">";
-          a->messageID()->from7BitString(messageID.latin1());
+          a->messageID()->from7BitString(messageID.toLatin1());
           ArticleWindow *awin = new ArticleWindow( a );
           awin->show();
         }
@@ -729,13 +729,13 @@ bool KNMainWidget::firstStart()
   emailConf.setGroup(QString("PROFILE_%1").arg(group));
   KNode::Identity *id=knGlobals.configManager()->identity();
   id->setName(emailConf.readEntry("FullName"));
-  id->setEmail(emailConf.readEntry("EmailAddress").latin1());
+  id->setEmail(emailConf.readEntry("EmailAddress").toLatin1());
   id->setOrga(emailConf.readEntry("Organization"));
   id->setReplyTo(emailConf.readEntry("ReplyAddr"));
   id->save();
 
   KNServerInfo *smtp=knGlobals.accountManager()->smtp();
-  smtp->setServer(emailConf.readEntry("OutgoingServer").latin1());
+  smtp->setServer(emailConf.readEntry("OutgoingServer").toLatin1());
   smtp->setPort(25);
   conf->setGroup("MAILSERVER");
   smtp->saveConf(conf);
@@ -1823,9 +1823,9 @@ void KNMainWidget::slotFetchArticleWithID()
       if (id.find(QRegExp("<*>",false,true))==-1)   // add "<>" when necessary
         id = QString("<%1>").arg(id);
 
-      if ( !ArticleWindow::raiseWindowForArticle( id.latin1() ) ) { //article not yet opened
+      if ( !ArticleWindow::raiseWindowForArticle( id.toLatin1() ) ) { //article not yet opened
         KNRemoteArticle *a=new KNRemoteArticle(g_rpManager->currentGroup());
-        a->messageID()->from7BitString(id.latin1());
+        a->messageID()->from7BitString(id.toLatin1());
         ArticleWindow *awin = new ArticleWindow( a );
         awin->show();
       }

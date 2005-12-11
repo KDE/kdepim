@@ -156,7 +156,7 @@ protected:
 
   void outputLineStr (const QString & _str)
   {
-    outputLine (_str.latin1 (), _str.length());
+    outputLine (_str.toLatin1 (), _str.length());
   }
   void doListEntry (const KURL & _url, int stretch, imapCache * cache = NULL,
     bool withFlags = FALSE, bool withSubject = FALSE);

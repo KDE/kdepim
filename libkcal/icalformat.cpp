@@ -97,7 +97,7 @@ bool ICalFormat::load( Calendar *calendar, const QString &fileName)
   if ( text.trimmed().isEmpty() ) // empty files are valid
     return true;
   else
-    return fromRawString( calendar, text.latin1() );
+    return fromRawString( calendar, text.toLatin1() );
 }
 
 
@@ -125,7 +125,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
 
   // Convert to UTF8 and save
   QByteArray textUtf8 = text.toUtf8();
-  file.file()->writeBlock( textUtf8.data(), textUtf8.size() - 1 );
+  file.file()->write( textUtf8.data(), textUtf8.size() - 1 );
 
   if ( !file.close() ) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
@@ -306,7 +306,7 @@ bool ICalFormat::fromString( RecurrenceRule * recurrence, const QString& rrule )
   if ( !recurrence ) return false;
   bool success = true;
   icalerror_clear_errno();
-  struct icalrecurrencetype recur = icalrecurrencetype_from_string( rrule.latin1() );
+  struct icalrecurrencetype recur = icalrecurrencetype_from_string( rrule.toLatin1() );
   if ( icalerrno != ICAL_NO_ERROR ) {
     kdDebug(5800) << "Recurrence parsing error: " << icalerror_strerror( icalerrno ) << endl;
     success = false;

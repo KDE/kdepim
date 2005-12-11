@@ -114,7 +114,7 @@ static const Map & makeMap() { // return a reference to a static to avoid copyin
   static Map map;
   for ( unsigned int i = 0 ; i < sizeof tokens / sizeof *tokens ; ++i ) {
     assert( tokens[i].token );
-    const QString token = QString::fromLatin1( tokens[i].token ).lower();
+    const QString token = QString::fromLatin1( tokens[i].token ).toLower();
     for ( unsigned int j = 0 ; j < tokens[i].numDesc ; ++j ) {
       const Desc & desc = tokens[i].desc[j];
       assert( desc.display );
@@ -140,7 +140,7 @@ QString Kleo::QGpgMEProgressTokenMapper::map( const QString & token, int subtoke
 
   static const Map & tokenMap = makeMap();
 
-  const Map::const_iterator it1 = tokenMap.find( token.lower() );
+  const Map::const_iterator it1 = tokenMap.find( token.toLower() );
   if ( it1 == tokenMap.end() )
     return token;
   std::map<int,Desc>::const_iterator it2 = it1->second.find( subtoken );

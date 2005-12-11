@@ -321,7 +321,7 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
   if(dstIdx.exists() && dstIdx.size()>0) { //we are converting from 0.4beta*
     if( (filesOpen=filesOpen && dstIdx.open(QIODevice::ReadOnly)) ) {
       dstIdx.at( dstIdx.size()-sizeof(NewFolderIndex) ); //set filepointer to last entry
-      dstIdx.readBlock( (char*)(&newIdx), sizeof(NewFolderIndex) );
+      dstIdx.read( (char*)(&newIdx), sizeof(NewFolderIndex) );
       lastId=newIdx.id;
       dstIdx.close();
     }
@@ -342,7 +342,7 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
   while(!srcIdx.atEnd()) {
 
     //read index data
-    srcIdx.readBlock( (char*)(&oldIdx), sizeof(OldFolderIndex));
+    srcIdx.read( (char*)(&oldIdx), sizeof(OldFolderIndex));
     newIdx.id=++lastId;
     newIdx.sId=oldIdx.sId;
     newIdx.ti=oldIdx.ti;
@@ -408,7 +408,7 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
     unsigned int size=oldIdx.eo-oldIdx.so;
     Q3CString buff(size+10);
     srcMBox.at(oldIdx.so);
-    int readBytes=srcMBox.readBlock(buff.data(), size);
+    int readBytes=srcMBox.read(buff.data(), size);
     buff[readBytes] = '\0'; //terminate string;
 
     //remove "X-KNode-Overview"
@@ -429,7 +429,7 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
     ts << '\n';
 
     //write index-data
-    dstIdx.writeBlock((char*)(&newIdx), sizeof(NewFolderIndex));
+    dstIdx.write((char*)(&newIdx), sizeof(NewFolderIndex));
   }
 
   //close/remove files and return number of articles in the new folder

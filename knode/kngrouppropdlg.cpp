@@ -181,7 +181,7 @@ void KNGroupPropDlg::slotOk()
   mCleanupWidget->save();
 
   g_rp->setUseCharset(u_seCharset->isChecked());
-  g_rp->setDefaultCharset(c_harset->currentText().latin1());
+  g_rp->setDefaultCharset(c_harset->currentText().toLatin1());
 
   accept();
 }

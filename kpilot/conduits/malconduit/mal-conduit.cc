@@ -240,12 +240,12 @@ bool MALConduit::skip()
 				<<endl;
 #endif
 #ifdef LIBMAL20
-			setHttpProxy(const_cast<char *>(proxyServer.latin1()));
+			setHttpProxy(const_cast<char *>(proxyServer.toLatin1()));
 			if (proxyPort>0 && proxyPort<65536) setHttpProxyPort( proxyPort );
 			else setHttpProxyPort(80);
 #else
 			pInfo->httpProxy = new char[ proxyServer.length() + 1 ];
-			strlcpy( pInfo->httpProxy, proxyServer.latin1(), proxyServer.length() + 1);
+			strlcpy( pInfo->httpProxy, proxyServer.toLatin1(), proxyServer.length() + 1);
 			if (proxyPort>0 && proxyPort<65536) pInfo->httpProxyPort = proxyPort;
 			else pInfo->httpProxyPort = 80;
 #endif
@@ -253,15 +253,15 @@ bool MALConduit::skip()
 			if (!MALConduitSettings::proxyUser().isEmpty()) 
 			{
 #ifdef LIBMAL20
-				setProxyUsername( const_cast<char *>(MALConduitSettings::proxyUser().latin1()) );
-				if (!MALConduitSettings::proxyPassword().isEmpty()) setProxyPassword( const_cast<char *>(MALConduitSettings::proxyPassword().latin1()) );
+				setProxyUsername( const_cast<char *>(MALConduitSettings::proxyUser().toLatin1()) );
+				if (!MALConduitSettings::proxyPassword().isEmpty()) setProxyPassword( const_cast<char *>(MALConduitSettings::proxyPassword().toLatin1()) );
 #else
 				pInfo->proxyUsername = new char[ MALConduitSettings::proxyUser().length() + 1 ];
-				strlcpy( pInfo->proxyUsername, MALConduitSettings::proxyUser().latin1(), MALConduitSettings::proxyUser().length() + 1);
+				strlcpy( pInfo->proxyUsername, MALConduitSettings::proxyUser().toLatin1(), MALConduitSettings::proxyUser().length() + 1);
 				if (!MALConduitSettings::proxyPassword().isEmpty()) {
-//						pInfo->proxyPassword = MALConduitSettings::proxyPassword().latin1();
+//						pInfo->proxyPassword = MALConduitSettings::proxyPassword().toLatin1();
 					pInfo->proxyPassword = new char[ MALConduitSettings::proxyPassword().length() + 1 ];
-					strlcpy( pInfo->proxyPassword, MALConduitSettings::proxyPassword().latin1(), MALConduitSettings::proxyPassword().length() + 1);
+					strlcpy( pInfo->proxyPassword, MALConduitSettings::proxyPassword().toLatin1(), MALConduitSettings::proxyPassword().length() + 1);
 				}
 #endif
 			}
@@ -278,13 +278,13 @@ bool MALConduit::skip()
 			DEBUGCONDUIT<<" Using SOCKS proxy server \""<<proxyServer<<"\",  Port "<<proxyPort<<", User "<<MALConduitSettings::proxyUser()<<", Password "<<( (MALConduitSettings::proxyPassword().isEmpty())?QString("not "):QString() )<<"set"<<endl;
 #endif
 #ifdef LIBMAL20
-			setSocksProxy( const_cast<char *>(proxyServer.latin1()) );
+			setSocksProxy( const_cast<char *>(proxyServer.toLatin1()) );
 			if (proxyPort>0 && proxyPort<65536) setSocksProxyPort( proxyPort );
 			else setSocksProxyPort(1080);
 #else
-//			pInfo->socksProxy = proxyServer.latin1();
+//			pInfo->socksProxy = proxyServer.toLatin1();
 			pInfo->socksProxy = new char[ proxyServer.length() + 1 ];
-			strlcpy( pInfo->socksProxy, proxyServer.latin1(), proxyServer.length() + 1);
+			strlcpy( pInfo->socksProxy, proxyServer.toLatin1(), proxyServer.length() + 1);
 			if (proxyPort>0 && proxyPort<65536) pInfo->socksProxyPort = proxyPort;
 			else pInfo->socksProxyPort = 1080;
 #endif

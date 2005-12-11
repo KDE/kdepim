@@ -1233,7 +1233,7 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
     // Everything depends from property PR_MESSAGE_CLASS
     // (this is added by KTNEFParser):
     QString msgClass = tnefMsg->findProp( 0x001A, QString::null, true )
-      .upper();
+      .toUpper();
     if( !msgClass.isEmpty() ) {
       // Match the old class names that might be used by Outlook for
       // compatibility with Microsoft Mail for Windows for Workgroups 3.1.

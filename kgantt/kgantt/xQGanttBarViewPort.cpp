@@ -1022,7 +1022,7 @@ xQGanttBarViewPort::deleteSelectedItems()
       subitem != 0; 
       subitem =list.next() ) {
 #ifdef _DEBUG_
-    printf(" : %s \n", subitem->getText().latin1() );
+    printf(" : %s \n", subitem->getText().toLatin1() );
 #endif
     connect(subitem, SIGNAL(destroyed(KGanttItem*)),
 	    this, SLOT(itemDestroyed(KGanttItem*)));
@@ -1086,7 +1086,7 @@ xQGanttBarViewPort::insertIntoSelectedItem()
       subitem != 0; 
       subitem =list.next() ) {
 #ifdef _DEBUG_
-    printf(" : %s \n", subitem->getText().latin1() );
+    printf(" : %s \n", subitem->getText().toLatin1() );
 #endif 
     new KGanttItem(subitem, subitem->getText() + "_subitem",
 	       subitem->getStart(), subitem->getEnd());

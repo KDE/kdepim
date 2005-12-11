@@ -1547,7 +1547,7 @@ void KDGanttViewItem::updateCanvasItems()
             } else {
                 b.setStyle(Qt::SolidPattern);
                 b.setColor(myStartColor);
-                //  qDebug("update color  %s %s", listViewText().latin1(),myStartColor.name().latin1() );
+                //  qDebug("update color  %s %s", listViewText().toLatin1(),myStartColor.name().toLatin1() );
                 startShape->setBrush(b);
                 b.setColor(myMiddleColor);
                 midShape->setBrush(b);
@@ -1713,7 +1713,7 @@ void KDGanttViewItem::initColorAndShapes(Type t)
     // set shapes
     shapeDefined = (myGanttView->shapes(myType,myStartShape,myMiddleShape,myEndShape));
     if ( type() == Task ) {
-        //qDebug("new task %s ", listViewText().latin1());
+        //qDebug("new task %s ", listViewText().toLatin1());
         if ( startShape )
             delete startShape;
         startShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
@@ -2012,7 +2012,7 @@ void KDGanttViewItem::userReadFromElement( QDomElement& element )
         } 
         node = node.nextSibling();
     }
-    qDebug("User data read: %d  %s ", userNumber,userData.latin1() );
+    qDebug("User data read: %d  %s ", userNumber,userData.toLatin1() );
     */
 }
 
@@ -2176,7 +2176,7 @@ void KDGanttViewItem::loadFromDomElement( QDomElement& element )
                             if ( newItem )
                                 previous = newItem;
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -2184,7 +2184,7 @@ void KDGanttViewItem::loadFromDomElement( QDomElement& element )
                     node = node.nextSibling();
                 }
             } else {
-                qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                 Q_ASSERT( false );
             }
         }
@@ -2477,7 +2477,7 @@ int  KDGanttViewItem::computeHeight()
         showItem( false );
         if ( firstChild() )
             firstChild()->hideSubtree();
-        // qDebug("KDGanttViewItem::computeHeight() %s returns 0  ", QListViewItem::text(0).latin1());
+        // qDebug("KDGanttViewItem::computeHeight() %s returns 0  ", QListViewItem::text(0).toLatin1());
         return 0;
     }
 
@@ -2518,7 +2518,7 @@ int  KDGanttViewItem::computeHeight()
     //        display closed item as usual
     //
     if ( isOpen() ) {
-        //qDebug("KDGanttViewItem::computeHeight() %s is open  ", QListViewItem::text(0).latin1());
+        //qDebug("KDGanttViewItem::computeHeight() %s is open  ", QListViewItem::text(0).toLatin1());
         temp = firstChild();
         // if item opened, iterate over all subitems
         int tempHeight;
@@ -2541,7 +2541,7 @@ int  KDGanttViewItem::computeHeight()
             temp = temp->nextSibling();
         }
     } else { // closed!
-        //qDebug("KDGanttViewItem::computeHeight() %s is closed  ", QListViewItem::text(0).latin1());
+        //qDebug("KDGanttViewItem::computeHeight() %s is closed  ", QListViewItem::text(0).toLatin1());
 
         if ( !displaySubitemsAsGroup() ) {
             if ( firstChild() ) {
@@ -2559,7 +2559,7 @@ int  KDGanttViewItem::computeHeight()
         showItem( true );
 
     hei += height();
-    //qDebug("KDGanttViewItem::computeHeight() %s returns:  %d  ", QListViewItem::text(0).latin1(), hei);
+    //qDebug("KDGanttViewItem::computeHeight() %s returns:  %d  ", QListViewItem::text(0).toLatin1(), hei);
     return hei;
 }
 
@@ -2591,7 +2591,7 @@ void  KDGanttViewItem::paintBranches ( QPainter* p, const QColorGroup& cg,
     KDGanttViewItem * temp = firstChild();
     while ( temp ) {
       if ( temp->showNoCross() ) {
-	//qDebug("paintNoCross %s ", temp->listViewText(0).latin1());
+	//qDebug("paintNoCross %s ", temp->listViewText(0).toLatin1());
 	int y_coord = temp->itemPos() -height ()- itemPos();
 	int hei = temp->height();
 	//qDebug(" y %d w %d h %d ", y,w,h);

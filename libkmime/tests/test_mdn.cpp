@@ -138,7 +138,7 @@ int main( int argc, char * argv[] ) {
     usage( "too many arguments!" );
 
   Q3CString result = dispositionNotificationBodyContent( finalRecipient,
-						       originalRecipient.latin1(),
+						       originalRecipient.toLatin1(),
 						       originalMessageId,
 						       dispositionType,
 						       actionMode,

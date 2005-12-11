@@ -196,7 +196,7 @@ kdDebug() << m_str_response << endl;
 bool XmlrpcJob::isMessageResponse( const QDomDocument &doc )
 {
   return doc.documentElement().firstChild().toElement()
-            .tagName().lower() == "params";
+            .tagName().toLower() == "params";
 }
 
 XMLRPCResult XmlrpcJob::parseMessageResponse( const QDomDocument &doc )
@@ -220,7 +220,7 @@ XMLRPCResult XmlrpcJob::parseMessageResponse( const QDomDocument &doc )
 bool XmlrpcJob::isFaultResponse( const QDomDocument &doc )
 {
   return doc.documentElement().firstChild().toElement()
-            .tagName().lower() == "fault";
+            .tagName().toLower() == "fault";
 }
 
 XMLRPCResult XmlrpcJob::parseFaultResponse( const QDomDocument &doc )
@@ -302,7 +302,7 @@ QString XmlrpcJob::marshal( const QVariant &arg )
 
 QVariant XmlrpcJob::demarshal( const QDomElement &elem )
 {
-  Q_ASSERT( elem.tagName().lower() == "value" );
+  Q_ASSERT( elem.tagName().toLower() == "value" );
 
   if ( !elem.hasChildNodes() ) {
     // it doesn't have child nodes, so no explicit type name was given,
@@ -318,7 +318,7 @@ kdDebug()<<"XmlrpcJob::demarshal: No child nodes, assume type=string. Text: "<<e
 kdDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
 
   const QDomElement typeElement = elem.firstChild().toElement();
-  const QString typeName = typeElement.tagName().lower();
+  const QString typeName = typeElement.tagName().toLower();
 
   if ( typeName == "string" )
     return QVariant( typeElement.text() );
@@ -328,13 +328,13 @@ kdDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
     return QVariant( typeElement.text().toDouble() );
   else if ( typeName == "boolean" )
   {
-    if ( typeElement.text().lower() == "true" || typeElement.text() == "1" )
+    if ( typeElement.text().toLower() == "true" || typeElement.text() == "1" )
       return QVariant( true );
     else
       return QVariant( false );
   }
   else if ( typeName == "base64" )
-    return QVariant( KCodecs::base64Decode( typeElement.text().latin1() ) );
+    return QVariant( KCodecs::base64Decode( typeElement.text().toLatin1() ) );
 
   else if ( typeName == "datetime" || typeName == "datetime.iso8601" ) {
 

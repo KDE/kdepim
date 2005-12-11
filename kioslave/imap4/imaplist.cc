@@ -87,7 +87,7 @@ marked_ (false), unmarked_ (false), hasChildren_ (false),
 hasNoChildren_ (false)  
 {
   parseString s;
-  s.data.duplicate(inStr.latin1(), inStr.length());
+  s.data.duplicate(inStr.toLatin1(), inStr.length());
 
   if (s[0] != '(')
     return;                     //not proper format for us
@@ -113,7 +113,7 @@ void imapList::parseAttributes( parseString & str )
   {
     orig = imapParser::parseOneWordC(str);
     attributes_ << orig;
-    attribute = orig.lower();
+    attribute = orig.toLower();
     if (-1 != attribute.find ("\\noinferiors"))
       noInferiors_ = true;
     else if (-1 != attribute.find ("\\noselect"))

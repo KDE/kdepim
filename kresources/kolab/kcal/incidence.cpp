@@ -185,10 +185,10 @@ bool Incidence::loadAttendeeAttribute( QDomElement& element,
       else if ( tagName == "request-response" )
         // This sets reqResp to false, if the text is "false". Otherwise it
         // sets it to true. This means the default setting is true.
-        attendee.requestResponse = ( e.text().lower() != "false" );
+        attendee.requestResponse = ( e.text().toLower() != "false" );
       else if ( tagName == "invitation-sent" )
         // Like above, only this defaults to false
-        attendee.invitationSent = ( e.text().lower() != "true" );
+        attendee.invitationSent = ( e.text().toLower() != "true" );
       else if ( tagName == "role" )
         attendee.role = e.text();
       else
@@ -344,7 +344,7 @@ bool Incidence::loadAttribute( QDomElement& element )
         // Unhandled tag - save for later storage
         kdDebug() << "Saving unhandled tag " << element.tagName() << endl;
         Custom c;
-        c.key = QByteArray( "X-KDE-KolabUnhandled-" ) + element.tagName().latin1();
+        c.key = QByteArray( "X-KDE-KolabUnhandled-" ) + element.tagName().toLatin1();
         c.value = element.text();
         mCustomList.append( c );
     }
@@ -402,7 +402,7 @@ void Incidence::saveCustomAttributes( QDomElement& element ) const
 void Incidence::loadCustomAttributes( QDomElement& element )
 {
   Custom custom;
-  custom.key = element.attribute( "key" ).latin1();
+  custom.key = element.attribute( "key" ).toLatin1();
   custom.value = element.attribute( "value" );
   mCustomList.append( custom );
 }

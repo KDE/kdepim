@@ -214,7 +214,7 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
           QStringList::iterator end = addresses.end();
           for ( QStringList::ConstIterator it = addresses.begin(); it != end; ++it ) {
             IMAddressLVI *imaddresslvi = new IMAddressLVI( mWidget->lvAddresses, protocol, *it, Any/*, false*/ );
-            if ( !isSet && (*it).trimmed().lower() == mPreferred.trimmed().lower() ) {
+            if ( !isSet && (*it).trimmed().toLower() == mPreferred.trimmed().toLower() ) {
               imaddresslvi->setPreferred( true );
               isSet = true;  //Only set one item to be preferred
             }

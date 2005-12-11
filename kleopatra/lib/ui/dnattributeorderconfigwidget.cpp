@@ -161,7 +161,7 @@ void Kleo::DNAttributeOrderConfigWidget::load() {
   // fill the RHS listview:
   Q3ListViewItem * last = 0;
   for ( QStringList::const_iterator it = order.begin() ; it != order.end() ; ++it ) {
-    const QString attr = (*it).upper();
+    const QString attr = (*it).toUpper();
     if ( attr == "_X_" ) {
       takePlaceHolderItem();
       d->currentLV->insertItem( d->placeHolderItem );

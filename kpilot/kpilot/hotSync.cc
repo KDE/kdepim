@@ -214,7 +214,7 @@ static inline void initNoBackup(QStringList &dbnames,
 			}
 			else
 			{
-				Q3CString data =  s.mid(1,4).latin1();
+				Q3CString data =  s.mid(1,4).toLatin1();
 				unsigned long creator = pi_mktag(data[0],data[1],data[2],data[3]);
 				dbcreators.append(creator);
 			}

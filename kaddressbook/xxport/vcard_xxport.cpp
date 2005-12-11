@@ -208,7 +208,7 @@ KABC::Addressee::List VCardXXPort::importContacts( const QString& ) const
           QString text = i18n( "<qt>When trying to read the vCard, there was an error opening the file '%1': %2</qt>" );
           text = text.arg( (*it).url() );
           text = text.arg( kapp->translate( "QFile",
-                                            file.errorString().latin1() ) );
+                                            file.errorString().toLatin1() ) );
           KMessageBox::error( parentWidget(), text, caption );
           anyFailures = true;
         }
@@ -375,7 +375,7 @@ void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Types type )
 
   QGpgME::QByteArrayDataProvider dataProvider;
   GpgME::Data dataObj( &dataProvider );
-  GpgME::Error error = context->exportPublicKeys( fingerprint.latin1(), dataObj );
+  GpgME::Error error = context->exportPublicKeys( fingerprint.toLatin1(), dataObj );
 
   if ( error ) {
     kdError() << error.asString() << endl;

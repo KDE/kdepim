@@ -223,7 +223,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
 //  result = sasl_client_new( isSSL ? "imaps" : "imap",
   result = sasl_client_new( "imap", /* FIXME: with cyrus-imapd, even imaps' digest-uri
                                        must be 'imap'. I don't know if it's good or bad. */
-                       aFQDN.latin1(),
+                       aFQDN.toLatin1(),
                        0, 0, 0, 0, &conn );
 
   if ( result != SASL_OK ) {
@@ -233,7 +233,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   }
 
   do {
-    result = sasl_client_start(conn, aAuth.latin1(), &client_interact,
+    result = sasl_client_start(conn, aAuth.toLatin1(), &client_interact,
                        hasCapability("SASL-IR") ? &out : 0, &outlen, &mechusing);
 
     if ( result == SASL_INTERACT ) {
@@ -261,7 +261,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
     firstCommand += " ";
     firstCommand += QString::fromLatin1( challenge.data(), challenge.size() );
   }
-  cmd = sendCommand (new imapCommand ("AUTHENTICATE", firstCommand.latin1()));
+  cmd = sendCommand (new imapCommand ("AUTHENTICATE", firstCommand.toLatin1()));
 
   while ( true )
   {
@@ -584,7 +584,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
     return;
   }
 
-  switch (command[0].latin1 ())
+  switch (command[0].toLatin1 ())
   {
   case 'A':
     if (command == "AUTHENTICATE")
@@ -1021,7 +1021,7 @@ mimeHeader * imapParser::parseSimplePart (parseString & inWords,
     localPart->setLength (size);
 
   // type specific extensions
-  if (localPart->getType().upper() == "MESSAGE/RFC822")
+  if (localPart->getType().toUpper() == "MESSAGE/RFC822")
   {
     //envelope structure
     mailHeader *envelope = parseEnvelope (inWords);
@@ -1923,7 +1923,7 @@ bool imapParser::parseOneNumber (parseString & inWords, ulong & num)
 
 bool imapParser::hasCapability (const QString & cap)
 {
-  QString c = cap.lower();
+  QString c = cap.toLower();
 //  kdDebug(7116) << "imapParser::hasCapability - Looking for '" << cap << "'" << endl;
   for (QStringList::ConstIterator it = imapCapabilities.begin ();
        it != imapCapabilities.end (); ++it)
@@ -1939,7 +1939,7 @@ bool imapParser::hasCapability (const QString & cap)
 
 void imapParser::removeCapability (const QString & cap)
 {
-  imapCapabilities.remove(cap.lower());
+  imapCapabilities.remove(cap.toLower());
 }
 
 QString imapParser::namespaceForBox( const QString & box )

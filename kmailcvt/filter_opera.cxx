@@ -109,14 +109,14 @@ void FilterOpera::import(FilterInfo *info)
                         QByteArray seperate;
 
                         if(!first_msg)
-                            tmp.file()->writeBlock( input, l );
+                            tmp.file()->write( input, l );
                         l = operaArchiv.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
-                        tmp.file()->writeBlock( input, l );
+                        tmp.file()->write( input, l );
 
                         while ( ! operaArchiv.atEnd() &&  (l = operaArchiv.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
                             /** remove in KMail unneeded Flags from Opera (for example: X-Opera-Status)*/
                             if(seperate.left(8) != "X-Opera-")
-                                tmp.file()->writeBlock( input, l );
+                                tmp.file()->write( input, l );
                         }
                         tmp.close();
                         first_msg = false;

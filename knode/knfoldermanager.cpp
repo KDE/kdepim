@@ -325,7 +325,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
           file->at(artStart);    // seek the first character of the article
           int size=artEnd-artStart;
           Q3CString buff(size+10);
-          int readBytes=file->readBlock(buff.data(), size);
+          int readBytes=file->read(buff.data(), size);
 
           if (readBytes != -1) {
             buff[readBytes] = '\0'; //terminate string
@@ -344,7 +344,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
             file->at(artStart);    // seek the first character of the article
             int size=file->size()-artStart;
             Q3CString buff(size+10);
-            int readBytes=file->readBlock(buff.data(), size);
+            int readBytes=file->read(buff.data(), size);
 
             if (readBytes != -1) {
               buff[readBytes] = '\0'; //terminate string

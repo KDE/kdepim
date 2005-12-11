@@ -407,7 +407,7 @@ int main( int argc, char * argv[]  ) {
       Lexer::Token token = lexer.nextToken( result );
       if ( lexer.error() ) {
 	cout << "Error " << token2string( token ) << ": \""
-	     << lexer.error().asString().latin1() << "\" at ("
+	     << lexer.error().asString().toLatin1() << "\" at ("
 	     << lexer.error().line() << "," << lexer.error().column()
 	     << ")" << endl;
 	break;

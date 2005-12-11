@@ -85,10 +85,10 @@ void KABC2Mutt::loadingFinished()
         key = (*iaddr).givenName().left( 3 ) + (*iaddr).familyName().left( 3 );
       else
         if ( !(*iaddr).familyName().isEmpty() )
-          key = (*iaddr).givenName().left( 1 ).lower() +
-                (*iaddr).familyName().lower().replace( space, underscore );
+          key = (*iaddr).givenName().left( 1 ).toLower() +
+                (*iaddr).familyName().toLower().replace( space, underscore );
         else
-          key = (*iaddr).givenName().lower().replace( space, underscore );
+          key = (*iaddr).givenName().toLower().replace( space, underscore );
 
       while ( from != to ) {
         std::cout << "alias " << key;
@@ -101,7 +101,7 @@ void KABC2Mutt::loadingFinished()
 
       if ( !(*iaddr).nickName().isEmpty() ) {
         std::cout << "alias "
-                  << (*iaddr).nickName().lower().replace( space, underscore )
+                  << (*iaddr).nickName().toLower().replace( space, underscore )
                   << '\t' << name << " <"
                   << (*iaddr).preferredEmail() << '>' << std::endl;
       }

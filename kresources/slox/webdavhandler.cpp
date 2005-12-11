@@ -82,7 +82,7 @@ void WebdavHandler::log( const QString &text )
   }
 
   Q3CString textUtf8 = text.utf8();
-  file.writeBlock( textUtf8.data(), textUtf8.size() - 1 );
+  file.write( textUtf8.data(), textUtf8.size() - 1 );
 
   if ( ++mLogCount > 5 ) mLogCount = 0;
 }
@@ -261,7 +261,7 @@ void WebdavHandler::parseSloxAttribute( const QDomElement &e )
 //  kdDebug() << "parseSloxAttribute" << endl;
 
   QString tag = e.tagName();
-  QString text = QString::fromUtf8( e.text().latin1() );
+  QString text = QString::fromUtf8( e.text().toLatin1() );
   if ( text.isEmpty() ) return;
 
   if ( tag == "owner" ) {

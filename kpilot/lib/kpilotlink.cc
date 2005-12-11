@@ -345,7 +345,7 @@ bool KPilotDeviceLink::open(QString device)
 	if ( !KPilotDeviceLinkPrivate::self()->canBind( fRealPilotPath ) ) {
 		msg = i18n("Already listening on that device");
 		e=0;
-		kdWarning() << k_funcinfo <<": Pilot Path " << pilotPath().latin1() << " already connected." << endl;
+		kdWarning() << k_funcinfo <<": Pilot Path " << pilotPath().toLatin1() << " already connected." << endl;
 		goto errInit;
 	}
 
@@ -542,7 +542,7 @@ void KPilotDeviceLink::acceptDevice()
 
 #ifdef DEBUG
 	DEBUGDAEMON << fname
-		<< ": Found connection on device "<<pilotPath().latin1()<<endl;
+		<< ": Found connection on device "<<pilotPath().toLatin1()<<endl;
 	DEBUGDAEMON << fname
 		<< ": Current status "
 		<< statusString()

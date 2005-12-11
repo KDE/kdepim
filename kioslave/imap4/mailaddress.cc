@@ -236,7 +236,7 @@ mailAddress::isEmpty () const
 void
 mailAddress::setFullName (const QString & _str)
 {
-  rawFullName = rfcDecoder::encodeRFC2047String (_str).latin1 ();
+  rawFullName = rfcDecoder::encodeRFC2047String (_str).toLatin1 ();
 }
 const QString
 mailAddress::getFullName () const
@@ -253,7 +253,7 @@ mailAddress::setCommentRaw (const Q3CString & _str)
 void
 mailAddress::setComment (const QString & _str)
 {
-  rawComment = rfcDecoder::encodeRFC2047String (_str).latin1 ();
+  rawComment = rfcDecoder::encodeRFC2047String (_str).toLatin1 ();
 }
 const QString
 mailAddress::getComment () const

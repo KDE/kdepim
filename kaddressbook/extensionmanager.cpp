@@ -149,7 +149,7 @@ void ExtensionManager::createActions()
     ExtensionData data = *it;
     KToggleAction *action = new KToggleAction( data.title, 0, mMapper, SLOT( map() ),
                                                mActionCollection,
-                                               QString( data.identifier + "_extension" ).latin1() );
+                                               QString( data.identifier + "_extension" ).toLatin1() );
     action->setExclusiveGroup( "extensions" );
     mMapper->setMapping( action, actionCounter++ );
     mActionList.append( action );
@@ -206,7 +206,7 @@ void ExtensionManager::createExtensionWidgets()
 
   KTrader::OfferList::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
-    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().latin1() );
+    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().toLatin1() );
     if ( !factory ) {
       kdDebug(5720) << "ExtensionManager::loadExtensions(): Factory creation failed" << endl;
       continue;

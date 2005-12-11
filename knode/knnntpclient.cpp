@@ -612,7 +612,7 @@ bool KNNntpClient::openConnection()
 
   // logon now, some newsserver send a incomplete group list otherwise
   if (account.needsLogon() && !account.user().isEmpty()) {
-    //qDebug("knode: user: %s",account.user().latin1());
+    //qDebug("knode: user: %s",account.user().toLatin1());
 
     Q3CString command = "AUTHINFO USER ";
     command += account.user().local8Bit();
@@ -628,7 +628,7 @@ bool KNNntpClient::openConnection()
         return false;
       }
 
-      //qDebug("knode: pass: %s",account.pass().latin1());
+      //qDebug("knode: pass: %s",account.pass().toLatin1());
 
       command = "AUTHINFO PASS ";
       command += account.pass().local8Bit();

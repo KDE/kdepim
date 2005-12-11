@@ -304,19 +304,19 @@ int main( int argc, char *argv[] )
   if ( args->isSet( "export-type" ) ) {
     option = args->getOption( "export-type" );
 
-    if ( option.upper() == "HTML" ) {
+    if ( option.toUpper() == "HTML" ) {
       kdDebug() << "main | export-type | Export to HTML" << endl;
       variables.setExportType( ExportTypeHTML );
-    } else if ( option.upper() == "HTMLMONTH" ) {
+    } else if ( option.toUpper() == "HTMLMONTH" ) {
       kdDebug() << "main | export-type | Export to HTML by Month" << endl;
       variables.setExportType( ExportTypeMonthHTML );
-    } else if ( option.upper() == "CSV" ) {
+    } else if ( option.toUpper() == "CSV" ) {
       kdDebug() << "main | export-type | Export to CSV" << endl;
       variables.setExportType( ExportTypeCSV );
-    } else if ( option.upper() == "TEXT" ) {
+    } else if ( option.toUpper() == "TEXT" ) {
       kdDebug() << "main | export-type | Export to TEXT (default)" << endl;
       variables.setExportType( ExportTypeText );
-    } else if ( option.upper() == "SHORT" ) {
+    } else if ( option.toUpper() == "SHORT" ) {
       kdDebug() << "main | export-type | Export to TEXT-SHORT" << endl;
       variables.setExportType( ExportTypeTextShort );
     } else {
@@ -502,7 +502,7 @@ int main( int argc, char *argv[] )
               << "(" << option << ")"
               << endl;
 
-    if ( option.upper() != "FLOAT" ) {
+    if ( option.toUpper() != "FLOAT" ) {
       starttime = QTime::fromString( option, Qt::ISODate );
       if ( !starttime.isValid() ) {
         cout << i18n( "Invalid Start Time Specified: %1" ).
@@ -584,7 +584,7 @@ int main( int argc, char *argv[] )
               << "(" << option << ")"
               << endl;
 
-    if ( option.upper() != "FLOAT" ) {
+    if ( option.toUpper() != "FLOAT" ) {
       endtime = QTime::fromString( option, Qt::ISODate );
       if ( !endtime.isValid() ) {
         cout << i18n( "Invalid End Time Specified: %1" ).

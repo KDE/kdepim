@@ -338,7 +338,7 @@ void KDGanttViewTaskItem::hideMe()
 void KDGanttViewTaskItem::showItem(bool show, int coordY)
 {
 
-    //qDebug("KDGanttViewTaskItem::showItem() %d %s ", (int) show, listViewText().latin1());
+    //qDebug("KDGanttViewTaskItem::showItem() %d %s ", (int) show, listViewText().toLatin1());
     isVisibleInGanttView = show;
     mCurrentCoord_Y = coordY;
     invalidateHeight () ;
@@ -454,7 +454,7 @@ void KDGanttViewTaskItem::initItem()
     parent()->setVisible( true );
   } else
     showItem(true);
-  //qDebug("initItem  %s %s", listViewText().latin1(),startShape->brush().color().name().latin1() );
+  //qDebug("initItem  %s %s", listViewText().toLatin1(),startShape->brush().color().name().toLatin1() );
   myGanttView->myTimeTable->updateMyContent();
   setDragEnabled( myGanttView->dragEnabled() );
   setDropEnabled( myGanttView->dropEnabled() );

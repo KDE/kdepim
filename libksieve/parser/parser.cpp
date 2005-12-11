@@ -372,8 +372,8 @@ namespace KSieve {
         break;
       case Lexer::Special:
         assert( tokenValue().length() == 1 );
-        assert( tokenValue()[0].latin1() );
-        switch ( tokenValue()[0].latin1() ) {
+        assert( tokenValue()[0].toLatin1() );
+        switch ( tokenValue()[0].toLatin1() ) {
         case ')':
           consumeToken();
           if ( lastWasComma ) {
@@ -559,7 +559,7 @@ namespace KSieve {
         break;
       case Lexer::Special:
         assert( tokenValue().length() == 1 );
-        switch ( tokenValue()[0].latin1() ) {
+        switch ( tokenValue()[0].toLatin1() ) {
         case ']':
           consumeToken();
           if ( lastWasComma ) {
@@ -619,7 +619,7 @@ namespace KSieve {
     // number:
     unsigned long result = 0;
     int i = 0;
-    const QByteArray s = tokenValue().latin1();
+    const QByteArray s = tokenValue().toLatin1();
     for ( const int len = s.length() ; i < len && isdigit( s[i] ) ; ++i ) {
       const unsigned long digitValue = s[i] - '0' ;
       if ( willOverflowULong( result, digitValue ) ) {

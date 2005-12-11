@@ -220,7 +220,7 @@ void KNCleanUp::compactFolder(KNFolder *f)
   QFileInfo info(f->m_boxFile);
   QString oldName=info.fileName();
   QString newName=oldName+".new";
-  QFile newMBoxFile( info.dirPath( true ) + "/" + newName );
+  QFile newMBoxFile( info.absolutePath() + "/" + newName );
 
   if( (f->m_boxFile.open(QIODevice::ReadOnly)) && (newMBoxFile.open(QIODevice::WriteOnly)) ) {
     QTextStream ts(&newMBoxFile);

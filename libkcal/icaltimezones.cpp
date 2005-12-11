@@ -340,7 +340,7 @@ bool ICalTimezoneSource::parse(const QString &fileName, KTimezones &zones)
     return false;
   QTextStream ts(&file);
   ts.setEncoding(QTextStream::Latin1);
-  QByteArray text = ts.read().trimmed().latin1();
+  QByteArray text = ts.read().trimmed().toLatin1();
   file.close();
 
   bool result = false;

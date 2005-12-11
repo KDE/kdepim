@@ -151,7 +151,7 @@ public:
       _attrOrder =
         config->readListEntry( cfgAttributeOrderEntry );        // e.g. "DNAttributeOrder"
       _unknownAttrsHandlingChar =
-        config->readEntry( cfgUnknownAttrsEntry ).upper().latin1(); // e.g. "DNUnknownAttributes"
+        config->readEntry( cfgUnknownAttrsEntry ).toUpper().toLatin1(); // e.g. "DNUnknownAttributes"
       config->setGroup( oldGroup );
       if( _unknownAttrsHandlingChar == "HIDE" )
         _unknownAttrsHandling = unknownAttrsHide;
@@ -176,7 +176,7 @@ public:
            itOrder != _attrOrder.end();
            ++itOrder ){
         _attrOrderChar[ i ] = (char*)malloc( ((*itOrder).length()+1)*sizeof(char) );
-        strcpy( _attrOrderChar[ i ], (*itOrder).latin1() );
+        strcpy( _attrOrderChar[ i ], (*itOrder).toLatin1() );
         ++i;
       }
       _attrOrderChar[ i ] = NULL;
@@ -519,7 +519,7 @@ bool CryptPlugWrapper::initialize( InitStatus* initStatus, QString* errorMsg )
 
       if ( !_cp ) {
 	_initStatus = InitStatus_LoadError;
-	kdDebug(5150) << "Couldn't create '" << _libName.latin1() << "'" << endl;
+	kdDebug(5150) << "Couldn't create '" << _libName.toLatin1() << "'" << endl;
       } else {
 	/* now call the init function */
 	if( !_cp->initialize() ) {

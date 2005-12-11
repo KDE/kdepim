@@ -480,7 +480,7 @@ void DOCConduit::syncNextTXT()
 	// Include all "extensions" except the last. This allows full stops inside the database name (e.g. abbreviations)
 	// first fill everything with 0, so we won't have a buffer overflow.
 	memset(&dbinfo.name[0], 0, 33);
-	strncpy(&dbinfo.name[0], fl.baseName(TRUE).latin1(), 30);
+	strncpy(&dbinfo.name[0], fl.baseName(TRUE).toLatin1(), 30);
 
 	bool alreadySynced=fDBNames.contains(fl.baseName(TRUE));
 	if (!alreadySynced) {
@@ -545,7 +545,7 @@ void DOCConduit::checkPDBFiles() {
 			// Include all "extensions" except the last. This allows full stops inside the database name (e.g. abbreviations)
 			// first fill everything with 0, so we won't have a buffer overflow.
 			memset(&dbinfo.name[0], 0, 33);
-			strncpy(&dbinfo.name[0], dbname.latin1(), 30);
+			strncpy(&dbinfo.name[0], dbname.toLatin1(), 30);
 
 			docSyncInfo syncInfo(dbname, constructTXTFileName(dbname), pdbfilename, eSyncNone);
 			syncInfo.dbinfo=dbinfo;
@@ -578,7 +578,7 @@ void DOCConduit::checkDeletedDocs()
 
 			DBInfo dbinfo;
 			memset(&dbinfo.name[0], 0, 33);
-			strncpy(&dbinfo.name[0], dbname.latin1(), 30);
+			strncpy(&dbinfo.name[0], dbname.toLatin1(), 30);
 			syncInfo.dbinfo=dbinfo;
 
 			fSyncInfoList.append(syncInfo);
@@ -878,7 +878,7 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 		QDir dir( DOCConduitSettings::tXTDirectory() );
 		if (!dir.exists())
 		{
-			dir.mkdir(dir.absPath());
+			dir.mkdir(dir.absolutePath());
 		}
 	}
 
@@ -893,11 +893,11 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 
 				if (!dir.exists())
 				{
-					dir.mkdir(dir.absPath());
+					dir.mkdir(dir.absolutePath());
 				}
 #ifdef DEBUG
 				DEBUGCONDUIT<<"Need to fetch database "<<dbinfo.name<<
-					" to the directory "<<dir.absPath()<<endl;
+					" to the directory "<<dir.absolutePath()<<endl;
 #endif
 				dbinfo.flags &= ~dlpDBFlagOpen;
 
@@ -916,7 +916,7 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 				QDir dir(DOCConduitSettings::pDBDirectory());
 				if (!dir.exists())
 				{
-					dir.mkdir(dir.absPath());
+					dir.mkdir(dir.absolutePath());
 				}
 			}
 			break;

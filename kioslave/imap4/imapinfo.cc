@@ -154,7 +154,7 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
 
         kdDebug(7116) << "Checking permFlags from " << flagsStart << " to " << flagsEnd << endl;
         if ((-1 != flagsStart) && (-1 != flagsEnd) && flagsStart < flagsEnd)
-          setPermanentFlags (_flags (line.mid (flagsStart, flagsEnd).latin1()));
+          setPermanentFlags (_flags (line.mid (flagsStart, flagsEnd).toLatin1()));
 
       }
       else if (tokens[2] == "[READ-WRITE")
@@ -176,7 +176,7 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
       int flagsEnd = line.find (')');
 
       if ((-1 != flagsStart) && (-1 != flagsEnd) && flagsStart < flagsEnd)
-        setFlags (_flags (line.mid (flagsStart, flagsEnd).latin1() ));
+        setFlags (_flags (line.mid (flagsStart, flagsEnd).toLatin1() ));
     }
     else
     {
@@ -204,7 +204,7 @@ ulong imapInfo::_flags (const QByteArray & inFlags)
 
   while (!flagsString.isEmpty () && flagsString[0] != ')')
   {
-    Q3CString entry = imapParser::parseOneWordC(flagsString).upper();
+    Q3CString entry = imapParser::parseOneWordC(flagsString).toUpper();
 
     if (entry.isEmpty ())
       flagsString.clear();

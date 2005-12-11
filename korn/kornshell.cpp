@@ -77,7 +77,7 @@ void KornShell::readConfig()
 	static bool shownConfig = false;
 	
 	_config->setGroup( "korn" );
-	QChar layout = _config->readEntry( "layout", "Docked" )[0].upper();
+	QChar layout = _config->readEntry( "layout", "Docked" )[0].toUpper();
 	KOrnPassword::setUseWallet( _config->readBoolEntry( "usewallet", false ) );
 	
 	if( layout == 'H' )

@@ -248,7 +248,7 @@ IMAP4Protocol::get (const KURL & _url)
     // * Otherwise, it specifies the exact data items to request. In this case, all
     //        the logic is in the app.
 
-    QString aUpper = aSection.upper();
+    QString aUpper = aSection.toUpper();
     if (aUpper.find ("STRUCTURE") != -1)
     {
       aSection = "BODYSTRUCTURE";
@@ -350,7 +350,7 @@ IMAP4Protocol::get (const KURL & _url)
 
       cmd = sendCommand (imapCommand::clientFetch (aSequence, aSection));
       int res;
-      aUpper = aSection.upper();
+      aUpper = aSection.toUpper();
       do
       {
         while (!(res = parseLoop()));
@@ -608,7 +608,7 @@ IMAP4Protocol::listDir (const KURL & _url)
         bool withSubject = mySection.isEmpty();
         if (mySection.isEmpty()) mySection = "UID RFC822.SIZE ENVELOPE";
 
-        bool withFlags = mySection.upper().find("FLAGS") != -1;
+        bool withFlags = mySection.toUpper().find("FLAGS") != -1;
         imapCommand *fetch =
           sendCommand (imapCommand::
                        clientFetch (mySequence, mySection));
@@ -674,7 +674,7 @@ IMAP4Protocol::parseRelay (const QByteArray & buffer)
       outputBuffer.open(QIODevice::WriteOnly);
     }
     outputBuffer.seek( outputBufferIndex );
-    outputBuffer.writeBlock(buffer, buffer.size());
+    outputBuffer.write(buffer, buffer.size());
     outputBufferIndex += buffer.size();
   }
 }
@@ -716,7 +716,7 @@ bool IMAP4Protocol::parseRead(QByteArray & buffer, long len, long relay)
       QBuffer stream( &buffer );
       stream.open (QIODevice::WriteOnly);
       stream.at (buffer.size ());
-      stream.writeBlock (buf, readLen);
+      stream.write (buf, readLen);
       stream.close ();
     }
   }
@@ -751,7 +751,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
 
         stream.open (QIODevice::WriteOnly);
         stream.at (buffer.size ());
-        stream.writeBlock (readBuffer, copyLen);
+        stream.write (readBuffer, copyLen);
         stream.close ();
 //        kdDebug(7116) << "appended " << copyLen << "d got now " << buffer.size() << endl;
       }
@@ -2349,7 +2349,7 @@ IMAP4Protocol::outputLine (const Q3CString & _str, int len)
       outputBuffer.open(QIODevice::WriteOnly);
     }
     outputBuffer.seek( outputBufferIndex );
-    outputBuffer.writeBlock(_str.data(), len);
+    outputBuffer.write(_str.data(), len);
     outputBufferIndex += len;
     return 0;
   }

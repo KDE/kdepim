@@ -190,7 +190,7 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 
 		// make sure the dir for the backup db really exists!
 		QFileInfo fi(dbpath);
-		QString path(QFileInfo(dbpath).dir(TRUE).absPath());
+		QString path(QFileInfo(dbpath).dir(TRUE).absolutePath());
 		if (!path.endsWith(CSL1("/"))) path.append(CSL1("/"));
 		if (!KStandardDirs::exists(path))
 		{
@@ -397,9 +397,9 @@ bool PluginUtility::isModal(const QStringList &a)
 	QString symbol = CSL1("version_");
 	symbol.append(lib->name());
 
-	if (!lib->hasSymbol(symbol.latin1())) return 0;
+	if (!lib->hasSymbol(symbol.toLatin1())) return 0;
 
-	long *p = (long *)(lib->symbol(symbol.latin1()));
+	long *p = (long *)(lib->symbol(symbol.toLatin1()));
 	return *p;
 }
 
@@ -409,9 +409,9 @@ bool PluginUtility::isModal(const QStringList &a)
 	QString symbol= CSL1("id_");
 	symbol.append(lib->name());
 
-	if (!lib->hasSymbol(symbol.latin1())) return QString::null;
+	if (!lib->hasSymbol(symbol.toLatin1())) return QString::null;
 
-	return QString::fromLatin1(*((const char **)(lib->symbol(symbol.latin1()))));
+	return QString::fromLatin1(*((const char **)(lib->symbol(symbol.toLatin1()))));
 }
 
 

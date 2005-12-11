@@ -63,9 +63,9 @@ JumpButton::JumpButton( const QString &firstChar, const QString &lastChar,
 {
   setToggleButton( true );
   if ( !lastChar.isEmpty() )
-    setText( QString( "%1 - %2" ).arg( firstChar.upper() ).arg( lastChar.upper() ) );
+    setText( QString( "%1 - %2" ).arg( firstChar.toUpper() ).arg( lastChar.toUpper() ) );
   else
-    setText( firstChar.upper() );
+    setText( firstChar.toUpper() );
 }
 
 JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name )
@@ -129,7 +129,7 @@ void JumpButtonBar::updateButtons()
     if ( field ) {
       setEnabled( true );
       if ( !field->value( *it ).isEmpty() )
-        character = field->value( *it )[ 0 ].lower();
+        character = field->value( *it )[ 0 ].toLower();
     } else {
       setEnabled( false );
       return;

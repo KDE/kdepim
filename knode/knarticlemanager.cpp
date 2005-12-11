@@ -86,7 +86,7 @@ void KNArticleManager::saveContentToFile(KMime::Content *c, QWidget *parent)
 
   if (file) {
     QByteArray data=c->decodedContent();
-    if (file->writeBlock(data.data(), data.size()) == -1 )
+    if (file->write(data.data(), data.size()) == -1 )
       KNHelper::displayExternalFileError( parent );
   }
 }
@@ -110,7 +110,7 @@ void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
 
   if (file) {
     QByteArray tmp=a->encodedContent(false);
-    if ( file->writeBlock(tmp.data(), tmp.size()) == -1 )
+    if ( file->write(tmp.data(), tmp.size()) == -1 )
       KNHelper::displayExternalFileError( parent );
   }
 }
@@ -150,7 +150,7 @@ QString KNArticleManager::saveContentToTemp(KMime::Content *c)
   mTempFiles.append(tmpFile);
   QFile *f=tmpFile->file();
   QByteArray data=c->decodedContent();
-  f->writeBlock(data.data(), data.size());
+  f->write(data.data(), data.size());
   tmpFile->close();
   path=tmpFile->name();
   pathHdr=new KMime::Headers::Generic("X-KNode-Tempfile", c, path, "UTF-8");

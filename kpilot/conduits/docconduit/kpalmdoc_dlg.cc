@@ -176,10 +176,10 @@ void ConverterDlg::slotToText()
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>").arg(pdburl)
-				.arg(pdbinfo.dirPath(true)), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
+				.arg(pdbinfo.absolutePath()), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
 			if (res==KMessageBox::Yes)
 			{
-				pdburl=pdbinfo.dirPath(true);
+				pdburl=pdbinfo.absolutePath();
 				pdbinfo.setFile(pdburl);
 			}
 			else return;
@@ -212,9 +212,9 @@ void ConverterDlg::slotToText()
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>").arg(txturl)
-				.arg(txtinfo.dirPath(true)), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
+				.arg(txtinfo.absolutePath()), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
 			if (res==KMessageBox::Yes) {
-				txturl=txtinfo.dirPath(true);
+				txturl=txtinfo.absolutePath();
 				txtinfo.setFile(txturl);
 			}
 			else return;
@@ -233,8 +233,8 @@ void ConverterDlg::slotToText()
 
 
 		// Now that we have both directories, create the converter object
-		DEBUGCONDUIT<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
-		DEBUGCONDUIT<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
+		DEBUGCONDUIT<<"Pdbinfo.dir="<<pdbinfo.dir().absolutePath()<<endl;
+		DEBUGCONDUIT<<"txtinfo.dir="<<txtinfo.dir().absolutePath()<<endl;
 		QStringList pdbfiles(pdbinfo.dir().entryList(CSL1("*.pdb")));
 		QStringList converted_Files;
 
@@ -277,8 +277,8 @@ void ConverterDlg::slotToText()
 				"text is not a valid filename.</qt>").arg(txturl));
 			return;
 		}*/
-		if (convertPDBtoTXT(pdbinfo.dirPath(true), pdbinfo.fileName(),
-				txtinfo.dirPath(true), txtinfo.fileName(), &conv) )
+		if (convertPDBtoTXT(pdbinfo.absolutePath(), pdbinfo.fileName(),
+				txtinfo.absolutePath(), txtinfo.fileName(), &conv) )
 		{
 			KMessageBox::information(this, i18n("Conversion of file %1 successful.").arg(pdburl));
 		}
@@ -325,10 +325,10 @@ void ConverterDlg::slotToPDB()
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>").arg(txturl)
-				.arg(txtinfo.dirPath(true)), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
+				.arg(txtinfo.absolutePath()), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
 			if (res==KMessageBox::Yes)
 			{
-				txturl=txtinfo.dirPath(true);
+				txturl=txtinfo.absolutePath();
 				txtinfo.setFile(txturl);
 			}
 			else return;
@@ -351,9 +351,9 @@ void ConverterDlg::slotToPDB()
 				"but gave a filename instead (<em>%1</em>)."
 				"<br>Use folder <em>%2</em> instead?</qt>")
 				.arg(pdburl)
-				.arg(pdbinfo.dirPath(true)), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
+				.arg(pdbinfo.absolutePath()), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
 			if (res==KMessageBox::Yes) {
-				pdburl=pdbinfo.dirPath(true);
+				pdburl=pdbinfo.absolutePath();
 				pdbinfo.setFile(pdburl);
 			}
 			else return;
@@ -371,8 +371,8 @@ void ConverterDlg::slotToPDB()
 
 
 		// Now that we have both directories, create the converter object
-		DEBUGCONDUIT<<"Pdbinfo.dir="<<pdbinfo.dir().absPath()<<endl;
-		DEBUGCONDUIT<<"txtinfo.dir="<<txtinfo.dir().absPath()<<endl;
+		DEBUGCONDUIT<<"Pdbinfo.dir="<<pdbinfo.dir().absolutePath()<<endl;
+		DEBUGCONDUIT<<"txtinfo.dir="<<txtinfo.dir().absolutePath()<<endl;
 		QStringList txtfiles(txtinfo.dir().entryList(CSL1("*.txt")));
 		QStringList converted_Files;
 
@@ -407,8 +407,8 @@ void ConverterDlg::slotToPDB()
 			return;
 		}
 
-		if (convertTXTtoPDB(txtinfo.dirPath(true), txtinfo.fileName(),
-				pdbinfo.dirPath(true), pdbinfo.fileName(), &conv) )
+		if (convertTXTtoPDB(txtinfo.absolutePath(), txtinfo.fileName(),
+				pdbinfo.absolutePath(), pdbinfo.fileName(), &conv) )
 		{
 			KMessageBox::information(this, i18n("Conversion of file %1 successful.").arg(txturl));
 		}

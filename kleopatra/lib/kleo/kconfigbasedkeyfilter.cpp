@@ -54,14 +54,14 @@ static const struct {
 
 static GpgME::Key::OwnerTrust map2OwnerTrust( const QString & s ) {
   for ( unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof *ownerTrustAndValidityMap ; ++i )
-    if ( s.lower() == ownerTrustAndValidityMap[i].name )
+    if ( s.toLower() == ownerTrustAndValidityMap[i].name )
       return ownerTrustAndValidityMap[i].trust;
   return ownerTrustAndValidityMap[0].trust;
 }
 
 static GpgME::UserID::Validity map2Validity( const QString & s ) {
   for ( unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof *ownerTrustAndValidityMap ; ++i )
-    if ( s.lower() == ownerTrustAndValidityMap[i].name )
+    if ( s.toLower() == ownerTrustAndValidityMap[i].name )
       return ownerTrustAndValidityMap[i].validity;
   return ownerTrustAndValidityMap[0].validity;
 }

@@ -101,7 +101,7 @@ public:
    */
   void setSubject (const QString & _str)
   {
-    _subject = rfcDecoder::encodeRFC2047String(_str).latin1();
+    _subject = rfcDecoder::encodeRFC2047String(_str).toLatin1();
   }
   /** 
    * set a encoded subject

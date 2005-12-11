@@ -51,7 +51,7 @@ const char* cachedCharset(const Q3CString &name)
   if(idx>-1)
     return c_harsetCache.at(idx);
 
-  c_harsetCache.append(name.upper().data());
+  c_harsetCache.append(name.toUpper().data());
   //kdDebug() << "KNMimeBase::cachedCharset() number of cs " << c_harsetCache.count() << endl;
   return c_harsetCache.last();
 }
@@ -62,7 +62,7 @@ const char* cachedLanguage(const Q3CString &name)
   if(idx>-1)
     return l_anguageCache.at(idx);
 
-  l_anguageCache.append(name.upper().data());
+  l_anguageCache.append(name.toUpper().data());
   //kdDebug() << "KNMimeBase::cachedCharset() number of cs " << c_harsetCache.count() << endl;
   return l_anguageCache.last();
 }
@@ -71,7 +71,7 @@ bool isUsAscii(const QString &s)
 {
   uint sLength = s.length();
   for (uint i=0; i<sLength; i++)
-    if (s.at(i).latin1()<=0)    // c==0: non-latin1, c<0: non-us-ascii
+    if (s.at(i).toLatin1()<=0)    // c==0: non-latin1, c<0: non-us-ascii
       return false;
 
   return true;
@@ -364,7 +364,7 @@ Q3CString extractHeader(const Q3CString &src, const char *name)
   int pos1=-1, pos2=0, len=src.length()-1;
   bool folded(false);
 
-  if (n.lower() == src.left(n.length()).lower()) {
+  if (n.toLower() == src.left(n.length()).toLower()) {
     pos1 = 0;
   } else {
     n.prepend("\n");
@@ -551,7 +551,7 @@ DateFormatter::rfc2822(time_t otime) const
 
   tmp.setTime_t(otime);
 
-  ret = tmp.toString("ddd, dd MMM yyyy hh:mm:ss ").latin1();
+  ret = tmp.toString("ddd, dd MMM yyyy hh:mm:ss ").toLatin1();
   ret += zone(otime);
 
   return ret;

@@ -860,8 +860,8 @@ class KeyList : public KeyListBase
   int compareItems( Q3PtrCollection::Item s1, Q3PtrCollection::Item s2 )
     { 
       // sort case insensitively by the primary User IDs
-      return QString::compare((static_cast<Key*>(s1))->primaryUserID().lower(),
-                              (static_cast<Key*>(s2))->primaryUserID().lower());
+      return QString::compare((static_cast<Key*>(s1))->primaryUserID().toLower(),
+                              (static_cast<Key*>(s2))->primaryUserID().toLower());
     }
 };
 

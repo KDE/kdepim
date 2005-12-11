@@ -395,7 +395,7 @@ void ViewManager::createViewFactories()
     if ( !(*it)->hasServiceType( "KAddressBook/View" ) )
       continue;
 
-    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().latin1() );
+    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().toLatin1() );
 
     if ( !factory ) {
       kdDebug(5720) << "ViewManager::createViewFactories(): Factory creation failed" << endl;
@@ -485,7 +485,7 @@ void ViewManager::startDrag()
 
     QFile tempFile( tempDir.name() + "/" + fileName );
     if ( tempFile.open( QIODevice::WriteOnly ) ) {
-      tempFile.writeBlock( vcards.utf8() );
+      tempFile.write( vcards.utf8() );
       tempFile.close();
 
       K3URLDrag *urlDrag = new K3URLDrag( KURL( tempFile.name() ), this );

@@ -109,7 +109,7 @@ QString SloxBase::decodeText( const QString & text )
 {
   if ( mRes->type() == "ox" )
     return text;
-  return QString::fromUtf8( text.latin1() );
+  return QString::fromUtf8( text.toLatin1() );
 }
 
 QString SloxBase::fieldName( Field f )

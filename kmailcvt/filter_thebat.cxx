@@ -158,7 +158,7 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
         //      never get QFile::atEnd() == true in some cases. This looks
         //      like a bug in Qt3 maybe fixed in Qt4.
         //
-        while((l = tbb.readBlock(input.data(),50)) ) {
+        while((l = tbb.read(input.data(),50)) ) {
             if(info->shouldTerminate()) {
                 tbb.close();
                 return;
@@ -202,10 +202,10 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
                 }
                 endPos = *it;
                 QByteArray input(endPos-lastPos);
-                tbb.readBlock(input.data(), endPos-lastPos);
+                tbb.read(input.data(), endPos-lastPos);
 
                 KTempFile tmp;
-                tmp.file()->writeBlock( input, endPos-lastPos );
+                tmp.file()->write( input, endPos-lastPos );
                 tmp.close();
 
                 //KMessageBox::warningContinueCancel(info->parent(), "");

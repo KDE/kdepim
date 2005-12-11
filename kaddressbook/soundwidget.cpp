@@ -129,7 +129,7 @@ void SoundWidget::playSound()
 {
   KTempFile tmp;
 
-  tmp.file()->writeBlock( mSound.data() );
+  tmp.file()->write( mSound.data() );
   tmp.close();
 
   KAudioPlayer::play( tmp.name() );

@@ -309,7 +309,7 @@ void KNGroupBrowser::slotItemDoubleClicked(Q3ListViewItem *it)
 #define MIN_FOR_TREE 200
 void KNGroupBrowser::slotFilter(const QString &txt)
 {
-  QString filtertxt = txt.lower();
+  QString filtertxt = txt.toLower();
   QRegExp reg(filtertxt, false, false);
   CheckItem *cit=0;
 
@@ -412,7 +412,7 @@ KNGroupBrowser::CheckItem::CheckItem(Q3ListView *v, const KNGroupInfo &gi, KNGro
   QString des(gi.description);
   if (gi.status == KNGroup::moderated) {
     setText(0,gi.name+" (m)");
-    if (!des.upper().contains(i18n("moderated").upper()))
+    if (!des.toUpper().contains(i18n("moderated").toUpper()))
       des+=i18n(" (moderated)");
   }
   setText(1,des);
@@ -425,7 +425,7 @@ KNGroupBrowser::CheckItem::CheckItem(Q3ListViewItem *i, const KNGroupInfo &gi, K
   QString des(gi.description);
   if (gi.status == KNGroup::moderated) {
     setText(0,gi.name+" (m)");
-    if (!des.upper().contains(i18n("moderated").upper()))
+    if (!des.toUpper().contains(i18n("moderated").toUpper()))
       des+=i18n(" (moderated)");
   }
   setText(1,des);
