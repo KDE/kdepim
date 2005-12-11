@@ -52,7 +52,7 @@ static const char *addresswidget_id =
 #include <qlabel.h>
 #include <q3multilineedit.h>
 #include <qcombobox.h>
-#include <q3whatsthis.h>
+
 #include <q3textview.h>
 #include <qtextcodec.h>
 #include <qregexp.h>
@@ -230,7 +230,7 @@ void AddressWidget::setupWidget()
 	grid->addWidget(fCatList, 0, 1);
 	connect(fCatList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
-	Q3WhatsThis::add(fCatList,
+	fCatList->setWhatsThis(
 		i18n("<qt>Select the category of addresses to display here.</qt>"));
 
 	label = new QLabel(i18n("Category:"), this);
@@ -243,7 +243,7 @@ void AddressWidget::setupWidget()
 		this, SLOT(slotShowAddress(int)));
 	connect(fListBox, SIGNAL(selected(int)),
 		this, SLOT(slotEditRecord()));
-	Q3WhatsThis::add(fListBox,
+	fListBox->setWhatsThis(
 		i18n("<qt>This list displays all the addresses "
 			"in the selected category. Click on "
 			"one to display it to the right.</qt>"));
@@ -264,7 +264,7 @@ void AddressWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("<qt>You can edit an address when it is selected.</qt>") :
 		i18n("<qt><i>Editing is disabled by the 'internal editors' setting.</i></qt>");
-	Q3WhatsThis::add(fEditButton,wt);
+	fEditButton->setWhatsThis(wt);
 
 	button = new QPushButton(i18n("New Record..."), this);
 	grid->addWidget(button, 2, 1);
@@ -272,7 +272,7 @@ void AddressWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("<qt>Add a new address to the address book.</qt>") :
 		i18n("<qt><i>Adding is disabled by the 'internal editors' setting.</i></qt>") ;
-	Q3WhatsThis::add(button, wt);
+	button->setWhatsThis( wt);
 	button->setEnabled(KPilotSettings::internalEditors());
 
 
@@ -287,10 +287,10 @@ void AddressWidget::setupWidget()
 	button = new QPushButton(TODO_I18N("Export..."), this);
 	grid->addWidget(button, 3,1);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotExport()));
-	Q3WhatsThis::add(button,
+	button->setWhatsThis(
 		TODO_I18N("<qt>Export all addresses in the selected category to CSV format.</qt>") );
 
-	Q3WhatsThis::add(fDeleteButton,wt);
+	fDeleteButton->setWhatsThis(wt);
 }
 
 void AddressWidget::updateWidget()

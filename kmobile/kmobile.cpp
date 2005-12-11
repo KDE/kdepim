@@ -288,7 +288,7 @@ void KMobile::addDevice()
     item = new Q3IconViewItem( dialog->iconView, ptr->name(), pm );
 
     //if (!ptr->comment().isNull())
-    //	QToolTip::add(item->pixmap(), ptr->comment() );
+    //	item->pixmap()->setToolTip( ptr->comment() );
   }
 
   int index = -1;

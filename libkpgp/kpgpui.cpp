@@ -1190,7 +1190,7 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
 					    QSizePolicy::Minimum ) );
   mEraseButton->setPixmap( SmallIcon( "clear_left" ) );
-  QToolTip::add( mEraseButton, i18n("Clear") );
+  mEraseButton->setToolTip( i18n("Clear") );
 
   // the button to call the KeySelectionDialog:
   mDialogButton = new QPushButton( i18n("Change..."), this );
@@ -1228,7 +1228,7 @@ void KeyRequester::setKeyIDs( const KeyIDList & keyIDs ) {
 
   mLabel->setText( s );
   QToolTip::remove( mLabel );
-  QToolTip::add( mLabel, s );
+  mLabel->setToolTip( s );
 }
 
 void KeyRequester::slotDialogButtonClicked() {

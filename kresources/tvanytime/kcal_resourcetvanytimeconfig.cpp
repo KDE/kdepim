@@ -23,7 +23,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qspinbox.h>
-#include <q3whatsthis.h>
+
 //Added by qt3to4:
 #include <QGridLayout>
 
@@ -75,7 +75,7 @@ void ResourceTVAnytimeConfig::loadSettings( KRES::Resource *resource )
     KConfigSkeleton::ItemInt * daysItem = res->prefs()->daysItem();
     mDays->setMinValue( daysItem->minValue().toInt() );
     mDays->setMaxValue( daysItem->maxValue().toInt() );
-    Q3WhatsThis::add( mDays, daysItem->whatsThis() );
+    mDays->setWhatsThis( daysItem->whatsThis() );
     mUrl->setText( res->prefs()->url() );
     mDays->setValue( res->prefs()->days() );
     mReloadConfig->loadSettings( res );

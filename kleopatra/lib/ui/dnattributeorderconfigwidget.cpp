@@ -137,7 +137,7 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
     QToolButton * tb = d->navTB[i] = new QToolButton( this );
     tb->setIconSet( SmallIconSet( navButtons[i].icon ) );
     tb->setEnabled( false );
-    QToolTip::add( tb, i18n( navButtons[i].tooltip ) );
+    tb->setToolTip( i18n( navButtons[i].tooltip ) );
     xlay->addWidget( tb, navButtons[i].row, navButtons[i].col );
     connect( tb, SIGNAL(clicked()), navButtons[i].slot );
   }

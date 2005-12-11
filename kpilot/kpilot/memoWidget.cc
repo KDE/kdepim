@@ -47,7 +47,7 @@ static const char *memowidget_id =
 #include <qlayout.h>
 #include <qdom.h>
 #include <qtextstream.h>
-#include <q3whatsthis.h>
+
 #include <qlabel.h>
 #include <qtextcodec.h>
 #include <qdatetime.h>
@@ -239,7 +239,7 @@ void MemoWidget::setupWidget()
 	grid->addWidget(fCatList, 0, 1);
 	connect(fCatList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
-	Q3WhatsThis::add(fCatList,
+	fCatList->setWhatsThis(
 		i18n("Select the category of addresses\n"
 			"to display here."));
 
@@ -254,7 +254,7 @@ void MemoWidget::setupWidget()
 		this, SLOT(slotShowMemo(int)));
 	connect(fListBox, SIGNAL(selectionChanged()),
 		this,SLOT(slotUpdateButtons()));
-	Q3WhatsThis::add(fListBox,
+	fListBox->setWhatsThis(
 		i18n("This list displays all the memos\n"
 			"in the selected category. Click on\n"
 			"one to display it to the right."));
@@ -266,7 +266,7 @@ void MemoWidget::setupWidget()
 	fTextWidget->setWordWrap(KTextEdit::WidgetWidth);
 	fTextWidget->setTextFormat(Qt::PlainText);
 	grid->addMultiCellWidget(fTextWidget, 1, 4, 2, 2);
-	Q3WhatsThis::add(fTextWidget,
+	fTextWidget->setWhatsThis(
 		i18n("The text of the selected memo appears here."));
 	fTextWidget->setReadOnly(!KPilotSettings::internalEditors());
 
@@ -276,13 +276,13 @@ void MemoWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n	("Read a text file and add it to the Pilot's memo database.") :
 		i18n("<qt><i>Import is disabled by the 'internal editors' setting.</i></qt>");
-	Q3WhatsThis::add(button,wt);
+	button->setWhatsThis(wt);
 
 	fExportButton = new QPushButton(i18n("Export Memo..."), this);
 	grid->addWidget(fExportButton, 2, 1);
 	connect(fExportButton, SIGNAL(clicked()), this,
 		SLOT(slotExportMemo()));
-	Q3WhatsThis::add(fExportButton,
+	fExportButton->setWhatsThis(
 		i18n("Write the selected memo to a file."));
 
 	fDeleteButton = new QPushButton(i18n("Delete Memo"), this);
@@ -292,12 +292,12 @@ void MemoWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("Delete the selected memo.") :
 		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
-	Q3WhatsThis::add(fDeleteButton, wt);
+	fDeleteButton->setWhatsThis( wt);
 
 	button = new QPushButton(i18n("Add Memo"), this);
 	grid->addWidget(button, 3, 0);
 	connect(button, SIGNAL(clicked()), this, SLOT(slotAddMemo()));
-	Q3WhatsThis::add(button,i18n("Add a new memo to the database."));
+	button->setWhatsThis(i18n("Add a new memo to the database."));
 }
 
 void MemoWidget::slotUpdateButtons()

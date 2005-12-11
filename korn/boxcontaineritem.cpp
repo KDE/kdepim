@@ -283,7 +283,7 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	//label->setMovie( 0 ); //TODO: crash in KDE4!
 	
 	label->setText( "" );
-	//QToolTip::add( label, this->getTooltip() );
+	//label->setToolTip( this->getTooltip() );
 	
 	if( hasAnim )
 	{ //An animation can't have a foreground-colour and can't have a icon.

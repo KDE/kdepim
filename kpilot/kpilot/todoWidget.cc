@@ -41,7 +41,7 @@ static const char *todowidget_id =
 #include <qlabel.h>
 #include <q3textview.h>
 #include <qcombobox.h>
-#include <q3whatsthis.h>
+
 #include <qtextcodec.h>
 
 #include <kmessagebox.h>
@@ -223,7 +223,7 @@ void TodoWidget::setupWidget()
 	grid->addWidget(fCatList, 0, 1);
 	connect(fCatList, SIGNAL(activated(int)),
 		this, SLOT(slotSetCategory(int)));
-	Q3WhatsThis::add(fCatList,
+	fCatList->setWhatsThis(
 		i18n("<qt>Select the category of to-dos to display here.</qt>"));
 
 	label = new QLabel(i18n("Category:"), this);
@@ -248,7 +248,7 @@ void TodoWidget::setupWidget()
 		this, SLOT(slotItemChecked(Q3CheckListItem*, bool)));
 	connect(fListBox, SIGNAL(itemRenamed(Q3ListViewItem*, const QString &, int)),
 		this, SLOT(slotItemRenamed(Q3ListViewItem*, const QString &, int)));
-	Q3WhatsThis::add(fListBox,
+	fListBox->setWhatsThis(
 		i18n("<qt>This list displays all the to-dos "
 			"in the selected category. Click on "
 			"one to display it to the right.</qt>"));
@@ -270,7 +270,7 @@ void TodoWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("<qt>You can edit a to-do when it is selected.</qt>") :
 		i18n("<qt><i>Editing is disabled by the 'internal editors' setting.</i></qt>");
-	Q3WhatsThis::add(fEditButton,wt);
+	fEditButton->setWhatsThis(wt);
 
 	button = new QPushButton(i18n("New Record..."), this);
 	grid->addWidget(button, 2, 1);
@@ -278,7 +278,7 @@ void TodoWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("<qt>Add a new to-do to the to-do list.</qt>") :
 		i18n("<qt><i>Adding new to-dos is disabled by the 'internal editors' setting.</i></qt>");
-	Q3WhatsThis::add(button, wt);
+	button->setWhatsThis( wt);
 	button->setEnabled(KPilotSettings::internalEditors());
 
 	fDeleteButton = new QPushButton(i18n("Delete Record"), this);
@@ -288,7 +288,7 @@ void TodoWidget::setupWidget()
 	wt = KPilotSettings::internalEditors() ?
 		i18n("<qt>Delete the selected to-do from the to-do list.</qt>") :
 		i18n("<qt><i>Deleting is disabled by the 'internal editors' setting.</i></qt>") ;
-	Q3WhatsThis::add(fDeleteButton,wt);
+	fDeleteButton->setWhatsThis(wt);
 }
 
 void TodoWidget::updateWidget()

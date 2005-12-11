@@ -1246,7 +1246,7 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 	tipText.append( CSL1("</qt>") );
 
 	QToolTip::remove(fTray);
-	QToolTip::add(fTray,tipText);
+	fTray->setToolTip(tipText);
 	emitDCOPSignal( "kpilotDaemonStatusChanged()", QByteArray() );
 	// emit the same dcop signal but including the information needed by Kontact to update its kpilot summary widget
 	QByteArray data;

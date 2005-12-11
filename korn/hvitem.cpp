@@ -72,7 +72,7 @@ void HVItem::setCount( const int count, const bool newMessages )
 
 void HVItem::setTooltip( const QString& string )
 {
-	QToolTip::add( _label, string );
+	_label->setToolTip( string );
 }
 
 void HVItem::slotShowPassivePopup( QList< KornMailSubject >* list, int total, bool date, const QString& name )

@@ -70,7 +70,7 @@ void DockedItem::setCount( const int count, const bool newMessages )
 
 void DockedItem::setTooltip( const QString& tooltip )
 {
-	QToolTip::add( _systemtray, tooltip );
+	_systemtray->setToolTip( tooltip );
 }
 
 void DockedItem::slotShowPassivePopup( QList< KornMailSubject >* list, int total, bool date, const QString& name )

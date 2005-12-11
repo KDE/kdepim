@@ -36,7 +36,7 @@ static const char *logw_id =
 #include <qfile.h>
 #include <qlayout.h>
 #include <q3textedit.h>
-#include <q3whatsthis.h>
+
 #include <qdatetime.h>
 #include <qlabel.h>
 #include <qpixmap.h>
@@ -99,7 +99,7 @@ LogWidget::LogWidget(QWidget * parent) :
 	fLog->setTextFormat(Qt::LogText);
 #endif
 
-	Q3WhatsThis::add(fLog, i18n("<qt>This lists all the messages received "
+	fLog->setWhatsThis( i18n("<qt>This lists all the messages received "
 			"during the current HotSync</qt>"));
 	grid->addMultiCellWidget(fLog, 1, 1,1,2);
 
@@ -140,12 +140,12 @@ LogWidget::LogWidget(QWidget * parent) :
 	QPushButton *b = new QPushButton(
 		i18n("Clear the text of HotSync messages","Clear Log"),
 		h);
-	Q3WhatsThis::add(b,i18n("<qt>Clears the list of messages from the "
+	b->setWhatsThis(i18n("<qt>Clears the list of messages from the "
 		"current HotSync.</qt>"));
 	connect(b,SIGNAL(clicked()),this,SLOT(clearLog()));
 
 	b = new QPushButton(i18n("Save Log..."),h);
-	Q3WhatsThis::add(b,i18n("<qt>You can save the list of messages received "
+	b->setWhatsThis(i18n("<qt>You can save the list of messages received "
 		"during this HotSync to a file (for example for use in a "
 		"bug report) by clicking here.</qt>"));
 	connect(b,SIGNAL(clicked()),this,SLOT(saveLog()));
@@ -157,7 +157,7 @@ LogWidget::LogWidget(QWidget * parent) :
 	fLabel = new QLabel(i18n("Sync progress:"),this);
 	grid->addWidget(fLabel,3,1);
 	fProgress = new KProgress(this);
-	Q3WhatsThis::add(fProgress,i18n("<qt>The (estimated) percentage "
+	fProgress->setWhatsThis(i18n("<qt>The (estimated) percentage "
 		"completed in the current HotSync.</qt>"));
 	grid->addWidget(fProgress,3,2);
 

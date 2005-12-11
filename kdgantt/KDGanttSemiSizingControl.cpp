@@ -250,7 +250,7 @@ void KDGanttSemiSizingControl::init()
     connect( _but, SIGNAL( clicked() ), this, SLOT(changeState()) );
     _layout = 0;
     QWhatsThis::add( _but, "Click on this button to show the \nlegend at the bottom of the widget");
-    QToolTip::add( _but, "Show / hide legend");
+    _but->setToolTip( "Show / hide legend");
 
 
 }

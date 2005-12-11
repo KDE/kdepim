@@ -49,7 +49,7 @@ static const char *fileinstallwidget_id =
 #include <qlabel.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
-#include <q3whatsthis.h>
+
 #include <q3multilineedit.h>
 #include <qpixmap.h>
 #include <q3popupmenu.h>
@@ -86,20 +86,20 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
     abutton = addButton = new QPushButton(i18n("Add File..."), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotAddFile()));
 	grid->addWidget(abutton, 3, 1);
-	Q3WhatsThis::add(abutton,
+	abutton->setWhatsThis(
 		i18n("<qt>Choose a file to add to the list of files to install.</qt>"));
 
 	abutton = clearButton= new QPushButton(i18n("Clear List"), this);
 	connect(abutton, SIGNAL(clicked()), this, SLOT(slotClearButton()));
 	grid->addWidget(abutton, 4, 1);
-	Q3WhatsThis::add(abutton,
+	abutton->setWhatsThis(
 		i18n("<qt>Clear the list of files to install. No files will be installed.</qt>"));
 
 	fIconView = new KIconView(this);
 	connect(fIconView, SIGNAL(dropped(QDropEvent *, const Q3ValueList<Q3IconDragItem> &)),
 		this, SLOT(slotDropEvent(QDropEvent *, const Q3ValueList<Q3IconDragItem> &)));
 	grid->addMultiCellWidget(fIconView, 1, 4, 2, 3);
-	Q3WhatsThis::add(fIconView,
+	fIconView->setWhatsThis(
 		i18n
 		("<qt>This lists files that will be installed on the Pilot during the next HotSync. Drag files here or use the Add button.</qt>"));
 	fIconView->setAcceptDrops(true);

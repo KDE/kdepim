@@ -123,7 +123,7 @@ void Kleo::KeyRequester::init()
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
 					    QSizePolicy::Minimum ) );
   mEraseButton->setIconSet( SmallIconSet( QApplication::isRightToLeft() ? "locationbar_erase" : "clear_left" ) );
-  QToolTip::add( mEraseButton, i18n("Clear") );
+  mEraseButton->setToolTip( i18n("Clear") );
 
   // the button to call the KeySelectionDialog:
   mDialogButton = new QPushButton( i18n("Change..."), this );
@@ -224,7 +224,7 @@ void Kleo::KeyRequester::updateKeys() {
 
   mLabel->setText( labelTexts.join(", ") );
   QToolTip::remove( mLabel );
-  QToolTip::add( mLabel, toolTipText );
+  mLabel->setToolTip( toolTipText );
 }
 
 #ifndef __KLEO_UI_SHOW_KEY_LIST_ERROR_H__

@@ -98,9 +98,9 @@ void SystemTray::menuItemActivated(int id)
 void SystemTray::setToolTip(const QString &tip)
 {
     if (tip.isEmpty())
-        QToolTip::add(this, "KMobile");
+        this->setToolTip( "KMobile");
     else
-        QToolTip::add(this, tip);
+        this->setToolTip( tip);
 }
 
 #include "systemtray.moc"
