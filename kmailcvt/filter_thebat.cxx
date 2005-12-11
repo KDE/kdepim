@@ -20,7 +20,6 @@
 #include <config.h>
 
 #include <qregexp.h>
-#include <q3valuelist.h>
 
 #include <klocale.h>
 #include <kfiledialog.h>

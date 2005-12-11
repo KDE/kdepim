@@ -19,7 +19,6 @@
 #define FILTER_PMAIL_HXX
 
 #include <qdir.h>
-#include <q3valuelist.h>
 
 #include "filters.hxx"
 
