@@ -24,8 +24,6 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <ktempfile.h>
-//Added by qt3to4:
-#include <Q3CString>
 
 
 /** Default constructor. */
@@ -159,7 +157,7 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
             * (e.g. 8Bit). It also not help to convert the QTextStream to Unicode. By this you
             * get Unicode/UTF-email but KMail can't detect the correct charset.
             */
-            Q3CString seperate;
+            QByteArray seperate;
 
             if(!first_msg)
                 tmp.file()->writeBlock( input, l );

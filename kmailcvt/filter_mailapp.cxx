@@ -27,8 +27,6 @@
 #include <kdebug.h>
 
 #include "filter_mailapp.hxx"
-//Added by qt3to4:
-#include <Q3CString>
 
 FilterMailApp::FilterMailApp() :
         Filter( i18n("Import From OS X Mail"),
@@ -82,7 +80,7 @@ void FilterMailApp::import(FilterInfo *info)
                 * (e.g. 8Bit). It also not help to convert the QTextStream to Unicode. By this you
                 * get Unicode/UTF-email but KMail can't detect the correct charset.
                 */
-                Q3CString seperate;
+                QByteArray seperate;
 
                 if(!first_msg)
                     tmp.file()->writeBlock( input, l );
