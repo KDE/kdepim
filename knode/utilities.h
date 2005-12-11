@@ -56,21 +56,6 @@ public:
 #endif
 
 
-//==============================================================================
-
-
-/** @deprecated Use QFile instead. */
-class KNFile : public QFile {
-
-  public:
-    KNFile(const QString& fname=QString::null);
-    ~KNFile();
-    /** searches for the string from the current file position
-        returns -1 when the string wasn't found. */
-    int findString(const char *s);
-};
-
-
 //========================================================================================
 
 
@@ -109,19 +94,19 @@ public:
   ~KNLoadHelper();
 
   /** opens a file dialog and returns a file open for reading */
-  KNFile* getFile( const QString &dialogTitle );
+  QFile* getFile( const QString &dialogTitle );
   /** tries to access the file specified by the url and returns
       a file open for reading */
-  KNFile* setURL(KURL url);
+  QFile* setURL(KURL url);
   /** returns the file after getFile(QString) of setURL(url) was called */
-  KNFile* getFile()const { return f_ile; };
+  QFile* getFile()const { return f_ile; };
   KURL getURL() const    { return u_rl; };
 
 private:
 
   QWidget *p_arent;
   KURL u_rl;
-  KNFile *f_ile;
+  QFile *f_ile;
   QString t_empName;
   static QString l_astPath;
 
@@ -159,6 +144,11 @@ public:
   static void displayRemoteFileError(QWidget *w=0);
   /** use this for error on temporary files */
   static void displayTempFileError(QWidget *w=0);
+
+  /** Searches for the string from the current file position. Returns -1 if
+   * the string wasn't found.
+   */
+  static int findStringInFile( QFile *file, const char *str );
 
 };
 

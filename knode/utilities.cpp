@@ -12,6 +12,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include <QByteArray>
 #include <qlayout.h>
 #include <QListWidget>
 #include <qregexp.h>
@@ -20,7 +21,6 @@
 //Added by qt3to4:
 #include <Q3Frame>
 #include <QHBoxLayout>
-#include <Q3CString>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -34,51 +34,6 @@
 #include "utilities.h"
 
 
-
-//================================================================================
-
-KNFile::KNFile(const QString& fname)
- : QFile(fname)
-{
-}
-
-
-KNFile::~KNFile()
-{
-}
-
-
-int KNFile::findString(const char *s)
-{
-  Q3CString searchBuffer;
-  searchBuffer.resize(2048);
-  char *buffPtr = searchBuffer.data(), *pos;
-  int readBytes, currentFilePos;
-
-  while (!atEnd()) {
-    currentFilePos = at();
-    readBytes = readBlock(buffPtr, 2047);
-    if (readBytes == -1)
-      return -1;
-    else
-      buffPtr[readBytes] = 0;       // terminate string
-
-    pos = strstr(buffPtr,s);
-    if (pos == 0) {
-      if (!atEnd())
-        at(at()-strlen(s));
-      else
-        return -1;
-    } else {
-      return currentFilePos + (pos-buffPtr);
-    }
-  }
-
-  return -1;
-}
-
-
-//===============================================================================
 
 QString KNSaveHelper::lastPath;
 
@@ -158,7 +113,7 @@ KNLoadHelper::~KNLoadHelper()
 }
 
 
-KNFile* KNLoadHelper::getFile( const QString &dialogTitle )
+QFile* KNLoadHelper::getFile( const QString &dialogTitle )
 {
   if (f_ile)
     return f_ile;
@@ -175,7 +130,7 @@ KNFile* KNLoadHelper::getFile( const QString &dialogTitle )
 }
 
 
-KNFile* KNLoadHelper::setURL(KURL url)
+QFile* KNLoadHelper::setURL(KURL url)
 {
   if (f_ile)
     return f_ile;
@@ -195,7 +150,7 @@ KNFile* KNLoadHelper::setURL(KURL url)
   if (fileName.isEmpty())
     return 0;
 
-  f_ile = new KNFile(fileName);
+  f_ile = new QFile( fileName );
   if(!f_ile->open(QIODevice::ReadOnly)) {
     KNHelper::displayExternalFileError();
     delete f_ile;
@@ -425,4 +380,29 @@ void KNHelper::displayRemoteFileError(QWidget *w)
 void KNHelper::displayTempFileError(QWidget *w)
 {
   KMessageBox::error((w!=0)? w : knGlobals.topWidget, i18n("Unable to create temporary file."));
+}
+
+
+
+int KNHelper::findStringInFile( QFile * file, const char * str )
+{
+  QByteArray searchBuffer;
+  int readBytes, currentFilePos, pos;
+
+  while ( !file->atEnd() ) {
+    currentFilePos = file->at();
+    searchBuffer = file->read( 4096 );
+    if ( searchBuffer.isEmpty() )
+      return -1;
+
+    pos = searchBuffer.indexOf( str );
+    if ( pos < 0 ) {
+      if ( !file->atEnd() )
+        file->at( file->at() - strlen( str ) );
+      else
+        return -1;
+    } else
+      return currentFilePos + pos;
+  }
+  return -1;
 }
