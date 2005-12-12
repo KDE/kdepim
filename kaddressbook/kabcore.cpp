@@ -1189,12 +1189,12 @@ QStringList KABCore::allCategories() const
 {
   QStringList categories, allCategories;
   QStringList::ConstIterator catIt;
-  const QStringList::ConstIterator catEndIt( categories.end() );
 
   KABC::AddressBook::ConstIterator it;
   const KABC::AddressBook::ConstIterator endIt( mAddressBook->end() );
   for ( it = mAddressBook->begin(); it != endIt; ++it ) {
     categories = (*it).categories();
+    const QStringList::ConstIterator catEndIt( categories.end() );
     for ( catIt = categories.begin(); catIt != catEndIt; ++catIt )
       if ( !allCategories.contains( *catIt ) )
         allCategories.append( *catIt );
