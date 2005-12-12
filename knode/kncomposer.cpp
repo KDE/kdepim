@@ -17,7 +17,6 @@
 #include <qclipboard.h>
 #include <qapplication.h>
 //Added by qt3to4:
-#include <Q3Frame>
 #include <QGridLayout>
 #include <QKeyEvent>
 #include <QEvent>
@@ -1740,8 +1739,8 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   QWidget *main=new QWidget(this);
 
   //headers
-  Q3Frame *hdrFrame=new Q3Frame(main);
-  hdrFrame->setFrameStyle(Q3Frame::Box | Q3Frame::Sunken);
+  QFrame *hdrFrame=new QFrame(main);
+  hdrFrame->setFrameStyle(QFrame::Box | QFrame::Sunken);
   QGridLayout *hdrL=new QGridLayout(hdrFrame, 4,3, 7,5);
   hdrL->setColStretch(1,1);
 
@@ -2504,7 +2503,7 @@ void KNComposer::Editor::slotCorrectWord()
 KNComposer::AttachmentView::AttachmentView( QWidget *parent )
  : KListView( parent )
 {
-  setFrameStyle(Q3Frame::WinPanel | Q3Frame::Sunken);  // match the QMultiLineEdit style
+  setFrameStyle(QFrame::WinPanel | QFrame::Sunken);  // match the QMultiLineEdit style
   addColumn(i18n("File"), 115);
   addColumn(i18n("Type"), 91);
   addColumn(i18n("Size"), 55);

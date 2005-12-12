@@ -19,7 +19,6 @@
 #include <qapplication.h>
 #include <qcursor.h>
 //Added by qt3to4:
-#include <Q3Frame>
 #include <QHBoxLayout>
 
 #include <klocale.h>
