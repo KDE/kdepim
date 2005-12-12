@@ -16,8 +16,8 @@
 #define KNARTICLECOLLECTION_H
 
 #include "kncollection.h"
-//Added by qt3to4:
-#include <Q3CString>
+
+#include <QByteArray>
 
 class KNArticle;
 
@@ -59,10 +59,10 @@ class KNArticleVector {
     // article access
     KNArticle* at(int i)  { return ( (i>=0 && i<l_en) ? l_ist[i] : 0 ); }
     KNArticle* bsearch(int id);
-    KNArticle* bsearch(const Q3CString &id);
+    KNArticle* bsearch( const QByteArray &id );
 
     int indexForId(int id);
-    int indexForMsgId(const Q3CString &id);
+    int indexForMsgId( const QByteArray &id );
 
   protected:
     KNArticleVector *m_aster;
@@ -106,7 +106,7 @@ class KNArticleCollection : public KNCollection {
     // article access
     KNArticle* at(int i)          { return a_rticles.at(i); }
     KNArticle* byId(int id);
-    KNArticle* byMessageId(const Q3CString &mid);
+    KNArticle* byMessageId( const QByteArray &mid );
 
     // search index
     void syncSearchIndex();

@@ -31,9 +31,8 @@
 #include "headerview.h"
 #include "settings.h"
 
-//Added by qt3to4:
 #include <QTextStream>
-#include <Q3CString>
+#include <QByteArray>
 
 
 #define SORT_DEPTH 5
@@ -880,7 +879,7 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 KNRemoteArticle* KNGroup::findReference(KNRemoteArticle *a)
 {
   int found=false;
-  Q3CString ref_mid;
+  QByteArray ref_mid;
   int ref_nr=0;
   KNRemoteArticle *ref_art=0;
 

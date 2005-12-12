@@ -18,7 +18,7 @@
 #include <qcheckbox.h>
 //Added by qt3to4:
 #include <Q3CString>
-#include <Q3ListBox>
+#include <QListWidget>
 #include <QTextStream>
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -113,7 +113,7 @@ will be created before the conversion starts.").arg(KNODE_VERSION), w_1);
   r_esultLabel=new QLabel(w_3);
   w3L->addWidget(r_esultLabel);
   QLabel *l2=new QLabel(i18n("Processed tasks:"), w_3);
-  l_ogList=new Q3ListBox(w_3);
+  l_ogList = new QListWidget( w_3 );
   w3L->addSpacing(15);
   w3L->addWidget(l2);
   w3L->addWidget(l_ogList, 1);
@@ -149,7 +149,7 @@ void KNConvert::convert()
   s_tartBtn->setText(i18n("Start KNode"));
   s_tartBtn->setEnabled(true);
   c_ancelBtn->setEnabled(true);
-  l_ogList->insertStringList(l_og);
+  l_ogList->addItems( l_og );
   s_tack->setCurrentWidget(w_3);
 
   c_onversionDone=true;

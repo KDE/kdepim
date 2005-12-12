@@ -226,7 +226,7 @@ void KNHelper::restoreWindowSize(const QString &name, QWidget *d, const QSize &d
 const QString KNHelper::encryptStr(const QString& aStr)
 {
   uint i,val,len = aStr.length();
-  Q3CString result;
+  QString result;
 
   for (i=0; i<len; i++)
   {
@@ -386,7 +386,7 @@ void KNHelper::displayTempFileError(QWidget *w)
 int KNHelper::findStringInFile( QFile * file, const char * str )
 {
   QByteArray searchBuffer;
-  int readBytes, currentFilePos, pos;
+  int currentFilePos, pos;
 
   while ( !file->atEnd() ) {
     currentFilePos = file->at();

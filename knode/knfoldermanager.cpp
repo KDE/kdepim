@@ -12,10 +12,9 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qdir.h>
-//Added by qt3to4:
+#include <QByteArray>
+#include <QDir>
 #include <QTextStream>
-#include <Q3CString>
 
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -324,14 +323,13 @@ void KNFolderManager::importFromMBox(KNFolder *f)
         if (artEnd != -1) {
           file->at(artStart);    // seek the first character of the article
           int size=artEnd-artStart;
-          Q3CString buff(size+10);
-          int readBytes=file->read(buff.data(), size);
+          QByteArray buffer;
+          buffer = file->read( size);
 
-          if (readBytes != -1) {
-            buff[readBytes] = '\0'; //terminate string
+          if ( !buffer.isEmpty() ) {
             art = new KNLocalArticle(0);
             art->setEditDisabled(true);
-            art->setContent(buff);
+            art->setContent( buffer );
             art->parse();
             list.append(art);
           }
@@ -343,14 +341,13 @@ void KNFolderManager::importFromMBox(KNFolder *f)
           if ((int)file->size() > artStart) {
             file->at(artStart);    // seek the first character of the article
             int size=file->size()-artStart;
-            Q3CString buff(size+10);
-            int readBytes=file->read(buff.data(), size);
+            QByteArray buffer;
+            buffer = file->read( size );
 
-            if (readBytes != -1) {
-              buff[readBytes] = '\0'; //terminate string
+            if ( !buffer.isEmpty() ) {
               art = new KNLocalArticle(0);
               art->setEditDisabled(true);
-              art->setContent(buff);
+              art->setContent( buffer );
               art->parse();
               list.append(art);
             }

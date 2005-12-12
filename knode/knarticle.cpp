@@ -539,22 +539,22 @@ void KNAttachment::attach(Content *c)
   updateContentInfo();
   Headers::ContentType *type=c_ontent->contentType();
   Headers::CTEncoding *e=c_ontent->contentTransferEncoding();
-  QByteArray data(f_ile->size());
+  QByteArray data;
 
-  int readBytes=f_ile->read(data.data(), f_ile->size());
+  data = f_ile->readAll();
 
-  if (readBytes<(int)f_ile->size() && f_ile->status()!=IO_Ok) {
+  if ( data.size() < f_ile->size() && f_ile->error() != QFile::NoError ) {
     KNHelper::displayExternalFileError();
     delete c_ontent;
     c_ontent=0;
   } else {
     if (e_ncoding.cte()==Headers::CEbase64 || !type->isText()) { //encode base64
       c_ontent->setBody( KCodecs::base64Encode(data, true) + '\n' );
-	//      c_ontent->b_ody += '\n';
+      //      c_ontent->b_ody += '\n';
       e->setCte(Headers::CEbase64);
       e->setDecoded(false);
     } else  {
-      c_ontent->setBody( Q3CString(data.data(), data.size()+1) + '\n' );
+      c_ontent->setBody( data + '\n' );
       //      c_ontent->b_ody += '\n';
       e->setDecoded(true);
     }

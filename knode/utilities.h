@@ -22,8 +22,6 @@
 #include <qglobal.h>
 #include <q3ptrvector.h>
 #include <q3ptrlist.h>
-//Added by qt3to4:
-#include <Q3CString>
 
 class QWidget;
 class QString;

@@ -22,8 +22,6 @@
 #include <qcolor.h>
 #include <q3asciidict.h>
 #include <QList>
-//Added by qt3to4:
-#include <Q3CString>
 
 #include <kmime_headers.h>
 #include <kmime_newsarticle.h>

@@ -24,7 +24,7 @@
 
 #include <kdepimmacros.h>
 
-class Q3ListBox;
+class QListWidget;
 class QLabel;
 class QStackedWidget;
 class QCheckBox;
@@ -106,7 +106,7 @@ class KDE_EXPORT KNConvert : public QDialog {
     QPushButton   *b_rowseBtn,
                   *s_tartBtn,
                   *c_ancelBtn;
-    Q3ListBox      *l_ogList;
+    QListWidget   *l_ogList;
 
     QList<Converter*> mConverters;
     QStringList l_og;

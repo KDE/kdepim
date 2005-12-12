@@ -12,7 +12,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <q3groupbox.h>
+#include <qgroupbox.h>
 #include <qlayout.h>
 #include <q3vbox.h>
 #include <qcheckbox.h>
@@ -46,7 +46,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   QVBoxLayout *pageL = new QVBoxLayout(page, 3);
 
   // settings
-  Q3GroupBox *gb=new Q3GroupBox(i18n("Settings"), page);
+  QGroupBox *gb = new QGroupBox(i18n("Settings"), page);
   pageL->addWidget(gb);
   QGridLayout *grpL=new QGridLayout(gb, 3, 3, 15, 5);
 
@@ -74,7 +74,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   grpL->setColStretch(2,2);
 
   // group name & description
-  gb=new Q3GroupBox(i18n("Description"), page);
+  gb = new QGroupBox(i18n("Description"), page);
   pageL->addWidget(gb);
   grpL=new QGridLayout(gb, 4, 3, 15, 5);
 
@@ -110,7 +110,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   grpL->setColStretch(2,1);
 
   // statistics
-  gb=new Q3GroupBox(i18n("Statistics"), page);
+  gb = new QGroupBox(i18n("Statistics"), page);
   pageL->addWidget(gb);
   grpL=new QGridLayout(gb, 6, 3, 15, 5);
 

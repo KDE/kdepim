@@ -21,9 +21,8 @@
 #include "knglobals.h"
 #include "knarticlecollection.h"
 #include "knarticle.h"
-//Added by qt3to4:
-#include <Q3CString>
 
+#include <QByteArray>
 
 static const int sizeIncr=50;
 
@@ -198,7 +197,7 @@ int KNArticleVector::compareById(const void *p1, const void *p2)
 int KNArticleVector::compareByMsgId(const void *p1, const void *p2)
 {
   KNArticle *a1, *a2;
-  Q3CString mid1, mid2;
+  QByteArray mid1, mid2;
 
   a1=*(KNArticle**)(p1);
   a2=*(KNArticle**)(p2);
@@ -221,7 +220,7 @@ KNArticle* KNArticleVector::bsearch(int id)
 }
 
 
-KNArticle* KNArticleVector::bsearch(const Q3CString &id)
+KNArticle* KNArticleVector::bsearch( const QByteArray &id )
 {
   int idx=indexForMsgId(id);
 
@@ -261,12 +260,12 @@ int KNArticleVector::indexForId(int id)
 }
 
 
-int KNArticleVector::indexForMsgId(const Q3CString &id)
+int KNArticleVector::indexForMsgId( const QByteArray &id )
 {
   if(s_ortType!=STmsgId) return -1;
 
   int start=0, end=l_en, mid=0;
-  Q3CString currentMid=0;
+  QByteArray currentMid;
   bool found=false;
   KNArticle *current=0;
   int cnt=0;
@@ -368,7 +367,7 @@ KNArticle* KNArticleCollection::byId(int id)
 }
 
 
-KNArticle* KNArticleCollection::byMessageId(const Q3CString &mid)
+KNArticle* KNArticleCollection::byMessageId( const QByteArray &mid )
 {
   if(m_idIndex.isEmpty()) {
     m_idIndex.syncWithMaster();
