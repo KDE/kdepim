@@ -223,18 +223,17 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
   painter.begin( printer );
   printer->setFullPage( true ); // use whole page
 
-  Q3PaintDeviceMetrics metrics( printer );
 
   left = qMax( printer->margins().width(), marginLeft );
   top = qMax( printer->margins().height(), marginTop );
-  width = metrics.width() - left - qMax( printer->margins().width(), marginRight );
-  height = metrics.height() - top - qMax( printer->margins().height(), marginBottom );
+  width = printer->width() - left - qMax( printer->margins().width(), marginRight );
+  height = printer->height() - top - qMax( printer->margins().height(), marginBottom );
 
   painter.setViewport( left, top, width, height );
   progress->addMessage( i18n( "Printing" ) );
 
   printEntries( contacts, printer, &painter,
-                QRect( 0, 0, metrics.width(), metrics.height() ) );
+                QRect( 0, 0, printer->width(), printer->height() ) );
 
   progress->addMessage( i18n( "Done" ) );
   painter.end();
