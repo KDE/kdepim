@@ -22,7 +22,6 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <q3paintdevicemetrics.h>
 #include <qpainter.h>
 
 #include <kabc/addressee.h>
@@ -68,7 +67,6 @@ void MikesStyle::print( const KABC::Addressee::List &contacts, PrintProgress *pr
   mBoldFont = p.font();
   mBoldFont.setBold( true );
   QFontMetrics fm( mFont );
-  Q3PaintDeviceMetrics metrics( p.device() );
 
   int height = 0;
   KABC::Addressee::List::ConstIterator it;
@@ -82,9 +80,9 @@ void MikesStyle::print( const KABC::Addressee::List &contacts, PrintProgress *pr
 
     // Get the total height so we know if it will fit on the current page
     height = calcHeight( *it, mFont, mBoldFont );
-    if ( (yPos + spacingHint + height) > (metrics.height() - fm.height() - 5) ) {
+    if ( (yPos + spacingHint + height) > (p.device()->height() - fm.height() - 5) ) {
       p.save();
-      p.translate( 0, metrics.height() - fm.height() - 5 );
+      p.translate( 0, p.device()->height() - fm.height() - 5 );
       paintTagLine( p, mFont );
       p.restore();
 
@@ -106,7 +104,7 @@ void MikesStyle::print( const KABC::Addressee::List &contacts, PrintProgress *pr
 
   // print the tag line on the last page
   p.save();
-  p.translate( 0, metrics.height() - fm.height() - 5 );
+  p.translate( 0, p.device()->height() - fm.height() - 5 );
   paintTagLine( p, mFont );
   p.restore();
 
@@ -141,9 +139,8 @@ void MikesStyle::doPaint( QPainter &painter, const KABC::Addressee &addr,
 {
   QFontMetrics fm( font );
   QFontMetrics bfm( bFont );
-  Q3PaintDeviceMetrics metrics( painter.device() );
   int margin = 10;
-  int width = metrics.width() - 10;
+  int width = painter.device()->width() - 10;
   int xPos = 5;
   int yPos = 0;
   QBrush brush( Qt::lightGray );
