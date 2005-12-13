@@ -19,14 +19,10 @@
 #ifndef KPGPBLOCK_H
 #define KPGPBLOCK_H
 
-#include <q3cstring.h>
-#include <qstring.h>
-#include <q3strlist.h>
+#include <QStringList>
+#include <QString>
 
 #include <kdepimmacros.h>
-
-//#include <qstringlist.h>
-class QStringList;
 
 #include "kpgp.h"
 
@@ -105,7 +101,7 @@ class KDE_EXPORT Block
   int status() const;
   void setStatus( const int status );
 
-  BlockType type();
+  BlockType type() const;
 
   /** is the message encrypted ? */
   bool isEncrypted() const;
@@ -131,7 +127,7 @@ class KDE_EXPORT Block
   void setSignatureDate( const QByteArray& date );
 
   /** the persons who can decrypt the message */
-  const Q3StrList encryptedFor() const;
+  const QStringList encryptedFor() const;
 
   /** shows the secret key which is needed
     to decrypt the message */
@@ -185,10 +181,10 @@ class KDE_EXPORT Block
   QByteArray mSignatureDate;
   QByteArray mRequiredKey;
   QString mRequiredUserId;
-  Q3StrList mEncryptedFor;
+  QStringList mEncryptedFor;
   int mStatus;
   bool mHasBeenProcessed;
-  BlockType mType;
+  mutable BlockType mType;
 };
 
 // -- inlined member functions ---------------------------------------------
@@ -241,7 +237,7 @@ Block::setStatus( const int status )
 }
 
 inline BlockType
-Block::type()
+Block::type() const
 {
   if( mType == NoPgpBlock )
     mType = determineType();
@@ -308,7 +304,7 @@ Block::setRequiredUserId( const QString& userId )
   mRequiredUserId = userId;
 }
 
-inline const Q3StrList
+inline const QStringList
 Block::encryptedFor() const
 {
   return mEncryptedFor;

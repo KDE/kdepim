@@ -21,7 +21,6 @@
 
 #include <stdio.h>
 #include <qstring.h>
-#include <q3strlist.h>
 #include <qdialog.h>
 #include <qwidget.h>
 #include <qcombobox.h>
@@ -325,7 +324,7 @@ public:
       </pre>
   */
   static bool prepareMessageForDecryption( const QByteArray& msg,
-                                           Q3PtrList<Block>& pgpBlocks,
+                                           QList<Block>& pgpBlocks,
                                            QList<QByteArray>& nonPgpBlocks );
 
 private:

@@ -19,8 +19,7 @@
 #include "kpgpblock.h"
 #include "kpgp.h"
 
-#include <string.h>
-//Added by qt3to4:
+#include <QString>
 #include <QByteArray>
 
 namespace Kpgp {
@@ -31,7 +30,6 @@ Block::Block( const QByteArray& str )
     mRequiredKey(), mEncryptedFor(),
     mStatus(0), mHasBeenProcessed(false), mType(NoPgpBlock)
 {
-  mEncryptedFor.setAutoDelete( true );
 }
 
 Block::~Block()

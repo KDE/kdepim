@@ -33,10 +33,7 @@
 #include <qlabel.h>
 #include <qcursor.h>
 #include <qapplication.h>
-//Added by qt3to4:
-#include <Q3StrList>
 #include <QByteArray>
-#include <Q3PtrList>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -1025,14 +1022,13 @@ Module::getConfig()
 
 bool
 Module::prepareMessageForDecryption( const QByteArray& msg,
-                                     Q3PtrList<Block>& pgpBlocks,
+                                     QList<Block>& pgpBlocks,
                                      QList<QByteArray>& nonPgpBlocks )
 {
   BlockType pgpBlock = NoPgpBlock;
   int start = -1;   // start of the current PGP block
   int lastEnd = -1; // end of the last PGP block
 
-  pgpBlocks.setAutoDelete( true );
   pgpBlocks.clear();
   nonPgpBlocks.clear();
 
@@ -1080,13 +1076,13 @@ Module::prepareMessageForDecryption( const QByteArray& msg,
       lastEnd = msg.find( "\n", nextEnd + 14 );
       if( lastEnd == -1 )
       {
-        pgpBlocks.append( new Block( msg.mid( start ) ) );
+        pgpBlocks.append( Block( msg.mid( start ) ) );
         nonPgpBlocks.append( "" );
         break;
       }
       else
       {
-        pgpBlocks.append( new Block( msg.mid( start, lastEnd+1-start ) ) );
+        pgpBlocks.append( Block( msg.mid( start, lastEnd+1-start ) ) );
         if( ( nextStart != -1 ) && ( nextEnd > nextStart ) )
           nextStart = msg.find( "\n-----BEGIN PGP", lastEnd+1 );
       }
