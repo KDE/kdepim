@@ -40,7 +40,7 @@
 #include <qlayout.h>
 #include <qradiobutton.h>
 #include <qwhatsthis.h>
-#include <Q3ButtonGroup>
+#include <QGroupBox>
 
 class SetupLDAPSearchAccount : public KConfigPropagator::Change
 {
@@ -287,10 +287,14 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
 
   topLayout->setRowStretch( 4, 1 );
 
-  Q3ButtonGroup *bg = new Q3HButtonGroup(i18n("Server Version"), page );
+  QGroupBox *bg = new QGroupBox(i18n("Server Version"), page );
+  QHBoxLayout *hbl = new QHBoxLayout();
+  bg->setLayout( hbl );
   QWhatsThis::add( bg, i18n("Choose the version of the Kolab Server you are using.") );
   mKolab1 = new QRadioButton( i18n ( "Kolab 1" ), bg );
+  hbl->addWidget( mKolab1 );
   mKolab2 = new QRadioButton( i18n ( "Kolab 2" ), bg );
+  hbl->addWidget( mKolab2 );
   topLayout->addMultiCellWidget( bg, 5, 5, 0, 1 );
 
   setupRulesPage();

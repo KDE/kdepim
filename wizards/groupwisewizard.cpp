@@ -38,8 +38,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qspinbox.h>
-#include <qgroupbox.h>
-#include <Q3GroupBox>
+#include <QGroupBox>
 
 QString serverUrl()
 {
@@ -315,8 +314,7 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
   topLayout = new QGridLayout( mEmailPage );
   topLayout->setSpacing( spacingHint() );
 
-  mEmailBox = new Q3GroupBox( 1, Qt::Horizontal,
-    i18n("Create Mail Account"), mEmailPage );
+  mEmailBox = new QGroupBox( i18n("Create Mail Account"), mEmailPage );
   mEmailBox->setCheckable( true );
   topLayout->addWidget( mEmailBox, 0, 0 );
 
