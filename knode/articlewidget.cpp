@@ -28,7 +28,6 @@
 //Added by qt3to4:
 #include <Q3CString>
 #include <Q3StrList>
-#include <Q3PtrList>
 #include <QEvent>
 #include <QKeyEvent>
 #include <QHBoxLayout>
@@ -407,7 +406,7 @@ void ArticleWidget::displayArticle()
 
   // if the article is pgp signed and the user asked for verifying the
   // signature, we show a nice header:
-  Q3PtrList<Kpgp::Block> pgpBlocks;
+  QList<Kpgp::Block> pgpBlocks;
   QList<QByteArray> nonPgpBlocks;
   bool containsPGP = Kpgp::Module::prepareMessageForDecryption( mArticle->body(), pgpBlocks, nonPgpBlocks );
 
@@ -415,11 +414,11 @@ void ArticleWidget::displayArticle()
   html = QString();
 
   if ( containsPGP ) {
-    Q3PtrListIterator<Kpgp::Block> pbit( pgpBlocks );
+    QList<Kpgp::Block>::Iterator pbit = pgpBlocks.begin();
     QList<QByteArray>::Iterator npbit = nonPgpBlocks.begin();
     QTextCodec *codec = KGlobal::charsets()->codecForName( text->contentType()->charset() );
 
-    for( ; *pbit != 0; ++pbit, ++npbit ) {
+    for( ; pbit != pgpBlocks.end(); ++pbit, ++npbit ) {
       // handle non-pgp block
       QByteArray str = *npbit;
       if( !str.isEmpty() ) {
@@ -427,11 +426,11 @@ void ArticleWidget::displayArticle()
         displayBodyBlock( lines );
       }
       // handle pgp block
-      Kpgp::Block* block = *pbit;
-      if ( block->type() == Kpgp::ClearsignedBlock )
-        block->verify();
-      QStringList lines = QStringList::split( '\n', codec->toUnicode( block->text() ) );
-      if ( block->isSigned() ) {
+      Kpgp::Block block = *pbit;
+      if ( block.type() == Kpgp::ClearsignedBlock )
+        block.verify();
+      QStringList lines = QStringList::split( '\n', codec->toUnicode( block.text() ) );
+      if ( block.isSigned() ) {
         QString signClass = displaySigHeader( block );
         displayBodyBlock( lines );
         displaySigFooter( signClass );
@@ -722,11 +721,11 @@ void ArticleWidget::displayBodyBlock( const QStringList &lines )
 }
 
 
-QString ArticleWidget::displaySigHeader( Kpgp::Block* block )
+QString ArticleWidget::displaySigHeader( const Kpgp::Block &block )
 {
   QString signClass = "signErr";
-  QString signer = block->signatureUserId();
-  QString signerKey = block->signatureKeyId();
+  QString signer = block.signatureUserId();
+  QString signerKey = block.signatureKeyId();
   QString message;
   if ( signer.isEmpty() ) {
     message = i18n( "Message was signed with unknown key 0x%1." )
@@ -757,7 +756,7 @@ QString ArticleWidget::displaySigHeader( Kpgp::Block* block )
       message += i18n( "Message was signed by %1." ).arg( signer );
     message += "<br/>";
 
-    if( block->goodSignature() ) {
+    if( block.goodSignature() ) {
       if ( keyTrust < Kpgp::KPGP_VALIDITY_MARGINAL )
         signClass = "signOkKeyBad";
       else

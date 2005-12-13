@@ -143,7 +143,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
      */
     void displayBodyBlock( const QStringList &lines );
     /// displays a signature block header
-    QString displaySigHeader( Kpgp::Block* block );
+    QString displaySigHeader( const Kpgp::Block &block );
     /// displays a signature footer
     void displaySigFooter( const QString &signClass );
     /// displays the given attachment
