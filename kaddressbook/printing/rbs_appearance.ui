@@ -31,6 +31,7 @@
             </property>
             <property name="font">
                 <font>
+                  <pointSize>8</pointSize>
                 </font>
             </property>
             <property name="title">

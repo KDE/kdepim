@@ -54,6 +54,7 @@
             <property name="font">
                 <font>
                     <bold>1</bold>
+                    <pointSize>8</pointSize>
                 </font>
             </property>
             <property name="frameShape">
