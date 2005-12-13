@@ -79,7 +79,6 @@
 #include <qlabel.h>
 #include <qregexp.h>
 //Added by qt3to4:
-#include <Q3Frame>
 #include <QHBoxLayout>
 
 #include <assert.h>
@@ -115,7 +114,7 @@ void Kleo::KeyRequester::init()
 
   // the label where the key id is to be displayed:
   mLabel = new QLabel( this );
-  mLabel->setFrameStyle( Q3Frame::Panel | Q3Frame::Sunken );
+  mLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
 
   // the button to unset any key:
   mEraseButton = new KPushButton( this );
