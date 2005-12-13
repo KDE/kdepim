@@ -27,7 +27,6 @@
 #include <kmenu.h>
 
 #include "knglobals.h"
-#include "knconfigmanager.h"
 #include "headerview.h"
 #include "knhdrviewitem.h"
 #include "kngroupmanager.h"
@@ -118,13 +117,12 @@ void KNHeaderView::readConfig()
   mDateFormatter.setCustomFormat( knGlobals.settings()->customDateFormat() );
   mDateFormatter.setFormat( (KMime::DateFormatter::FormatType)knGlobals.settings()->dateFormat() );
 
-  KNode::Appearance *app = knGlobals.configManager()->appearance();
   QPalette p = palette();
-  p.setColor( QColorGroup::Base, app->backgroundColor() );
-  p.setColor( QColorGroup::Text, app->textColor() );
+  p.setColor( QColorGroup::Base, knGlobals.settings()->backgroundColor() );
+  p.setColor( QColorGroup::Text, knGlobals.settings()->textColor() );
   setPalette( p );
-  setAlternateBackground( app->alternateBackgroundColor() );
-  setFont( app->articleListFont() );
+  setAlternateBackground( knGlobals.settings()->alternateBackgroundColor() );
+  setFont( knGlobals.settings()->articleListFont() );
 }
 
 

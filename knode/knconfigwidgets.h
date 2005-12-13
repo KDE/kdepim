@@ -433,9 +433,6 @@ class KDE_EXPORT ScoringWidget : public KCModule
      */
     ScoringWidget( KInstance *inst, QWidget *parent = 0 );
 
-    virtual void load();
-    virtual void save();
-
   private:
     KScoringEditorWidget *mKsc;
     KIntSpinBox *mIgnored, *mWatched;

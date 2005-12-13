@@ -66,7 +66,7 @@ void KNArticle::setLocked(bool b)
 
 KNRemoteArticle::KNRemoteArticle(KNGroup *g)
  : KNArticle(g), a_rticleNumber(-1), i_dRef(-1), d_ref(0), t_hrLevel(0), s_core(0),
-   c_olor(knGlobals.configManager()->appearance()->unreadThreadColor()),
+   c_olor(knGlobals.settings()->unreadThreadColor()),
    u_nreadFups(0), n_ewFups(0), s_ubThreadChangeDate(0)
 {
   m_essageID.setParent(this);

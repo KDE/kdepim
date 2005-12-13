@@ -15,10 +15,11 @@
 #include <q3accel.h>
 
 #include <kapplication.h>
+#include <klocale.h>
 
 #include "knsourceviewwindow.h"
 #include "knglobals.h"
-#include "knconfigmanager.h"
+#include "settings.h"
 #include "utilities.h"
 
 
@@ -29,14 +30,13 @@ KNSourceViewWindow::KNSourceViewWindow( const QString &text )
   setAttribute( Qt::WA_DeleteOnClose );
   Q3Accel *accel = new Q3Accel( this, "browser close-accel" );
   accel->connectItem( accel->insertItem( Qt::Key_Escape ), this , SLOT( close() ));
-  KNode::Appearance *app=knGlobals.configManager()->appearance();
 
   setTextFormat( Qt::PlainText );
 
   setCaption(kapp->makeStdCaption(i18n("Article Source")));
-  setPaper( QBrush(app->backgroundColor()) );
-  setFont( app->articleFixedFont() );
-  setColor( app->textColor() );
+  setPaper( QBrush( knGlobals.settings()->backgroundColor()) );
+  setFont( knGlobals.settings()->articleFixedFont() );
+  setColor( knGlobals.settings()->textColor() );
   setWordWrap( KTextBrowser::NoWrap );
 
   setText( text );
@@ -48,8 +48,8 @@ KNSourceViewWindow::KNSourceViewWindow( const QString &text )
 void KNSourceViewWindow::setPalette( const QPalette &pal )
 {
   QPalette p = pal;
-  p.setColor( QColorGroup::Text, knGlobals.configManager()->appearance()->textColor() );
-  p.setColor( QColorGroup::Background, knGlobals.configManager()->appearance()->backgroundColor() );
+  p.setColor( QColorGroup::Text, knGlobals.settings()->textColor() );
+  p.setColor( QColorGroup::Background, knGlobals.settings()->backgroundColor() );
   KTextBrowser::setPalette( p );
 }
 

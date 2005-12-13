@@ -141,76 +141,29 @@ Q_OBJECT
 };
 
 
-/** Appearance settings. */
+/** Ex-Appearance settings.
+ * @deprecated Move the remaining parts either to their only users or to the
+ *  KConfigXT generated Settings class.
+ */
 class KDE_EXPORT Appearance : public ConfigBase {
 
-#define COL_CNT 16
-#define FNT_CNT 5
-#define HEX_CNT 4
 #define ICON_CNT 14
 
   friend class AppearanceWidget;
 
   public:
-    enum ColorIndex   { background=0, alternateBackground=1, normalText=2, quoted1=3,
-                        quoted2=4, quoted3=5, url=6, unreadThread=7, readThread=8,
-                        unreadArticle=9, readArticle=10, signOkKeyOk=11, signOkKeyBad=12,
-                        signWarn=13, signErr=14, htmlWarning=15 };
-
-    enum FontIndex    { article=0, articleFixed=1, composer=2, groupList=3, articleList=4 };
-
     enum IconIndex    { greyBall=0,        redBall=1,      greyBallChkd=2,
                         redBallChkd=3,     newFups=4,      eyes=5,
                         ignore=6,          mail=7,         posting=8,
                         canceledPosting=9, savedRemote=10, group=11,
                         sendErr=12,        null=13 };
     Appearance();
-    ~Appearance();
-
-    void save();
-
-    QColor backgroundColor() const;
-    QColor alternateBackgroundColor() const;
-    QColor textColor() const;
-    QColor quoteColor( int depth ) const;
-    QColor linkColor() const;
-    QColor unreadThreadColor() const;
-    QColor readThreadColor() const;
-    QColor unreadArticleColor() const;
-    QColor readArticleColor() const;
-    QColor signOkKeyOkColor() const { return u_seColors ? c_olors[signOkKeyOk] : defaultColor( signOkKeyOk ); }
-    QColor signOkKeyBadColor() const { return u_seColors ? c_olors[signOkKeyBad] : defaultColor( signOkKeyBad ); }
-    QColor signWarnColor() const { return u_seColors ? c_olors[signWarn] : defaultColor( signWarn ); }
-    QColor signErrColor() const { return u_seColors ? c_olors[signErr] : defaultColor( signErr ); }
-    QColor htmlWarningColor() const { return u_seColors ? c_olors[htmlWarning] : defaultColor( htmlWarning ); }
-
-    QFont articleFont() const;
-    QFont articleFixedFont() const;
-    QFont composerFont() const;
-    QFont groupListFont() const;
-    QFont articleListFont() const;
 
     const QPixmap& icon(IconIndex i)     { return i_cons[i]; }
 
   protected:
-    const QColor& color( int i ) const    { return c_olors[i]; }
-    const QString& colorName( int i ) const { return c_olorNames[i]; }
-    int colorCount() const               { return COL_CNT; }
-    QColor defaultColor(int i) const;
-
-    const QFont& font(int i) const       { return f_onts[i]; }
-    const QString& fontName(int i) const { return f_ontNames[i]; }
-    int fontCount() const                { return FNT_CNT; }
-    QFont defaultFont(int) const;
-
     void recreateLVIcons();
 
-    bool u_seColors,
-         u_seFonts;
-    QColor  c_olors[COL_CNT];
-    QString c_olorNames[COL_CNT];
-    QFont   f_onts[FNT_CNT];
-    QString f_ontNames[FNT_CNT];
     QPixmap i_cons[ICON_CNT];
 
 };

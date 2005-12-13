@@ -524,7 +524,7 @@ void KNComposer::setConfig(bool onlyFonts)
     a_ctPGPsign->setEnabled(pgp->usePGP());
   }
 
-  QFont fnt=knGlobals.configManager()->appearance()->composerFont();
+  QFont fnt = knGlobals.settings()->composerFont();
   v_iew->s_ubject->setFont(fnt);
   v_iew->t_o->setFont(fnt);
   v_iew->g_roups->setFont(fnt);

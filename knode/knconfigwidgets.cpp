@@ -696,6 +696,7 @@ KNode::AppearanceWidget::AppearanceWidget( KInstance *inst, QWidget *parent ) :
   connect( mColorList, SIGNAL( itemSelectionChanged() ), SLOT( slotColSelectionChanged() ) );
 
   c_olorCB = new QCheckBox(i18n("&Use custom colors"),this);
+  c_olorCB->setObjectName( "kcfg_useCustomColors" );
   topL->addWidget( c_olorCB, 0, 0, 1, 3 );
   connect(c_olorCB, SIGNAL(toggled(bool)), this, SLOT(slotColCheckBoxToggled(bool)));
 
@@ -710,6 +711,7 @@ KNode::AppearanceWidget::AppearanceWidget( KInstance *inst, QWidget *parent ) :
   connect( mFontList, SIGNAL( itemSelectionChanged() ), SLOT( slotFontSelectionChanged() ) );
 
   f_ontCB = new QCheckBox(i18n("Use custom &fonts"),this);
+  f_ontCB->setObjectName( "kcfg_useCustomFonts" );
   topL->addWidget(f_ontCB , 4, 0, 1, 3 );
   connect(f_ontCB, SIGNAL(toggled(bool)), this, SLOT(slotFontCheckBoxToggled(bool)));
 
@@ -719,6 +721,7 @@ KNode::AppearanceWidget::AppearanceWidget( KInstance *inst, QWidget *parent ) :
 
   topL->setColumnStretch( 0, 1 );
 
+  addConfig( knGlobals.settings(), this );
   load();
 }
 
@@ -730,50 +733,79 @@ KNode::AppearanceWidget::~AppearanceWidget()
 
 void KNode::AppearanceWidget::load()
 {
-  c_olorCB->setChecked(d_ata->u_seColors);
-  slotColCheckBoxToggled(d_ata->u_seColors);
-  mColorList->clear();
-  for(int i=0; i < d_ata->colorCount(); i++)
-    mColorList->addItem( new ColorListItem( d_ata->colorName(i), d_ata->color(i) ) );
+  KCModule::load();
 
-  f_ontCB->setChecked(d_ata->u_seFonts);
-  slotFontCheckBoxToggled(d_ata->u_seFonts);
+  slotColCheckBoxToggled( c_olorCB->isChecked() );
+  slotFontCheckBoxToggled( f_ontCB->isChecked() );
+
+  KConfigSkeletonItem::List items = knGlobals.settings()->items();
+  mColorList->clear();
+  for ( KConfigSkeletonItem::List::Iterator it = items.begin(); it != items.end(); ++it ) {
+    KConfigSkeleton::ItemColor *item = dynamic_cast<KConfigSkeleton::ItemColor*>( *it );
+    if ( item )
+      mColorList->addItem( new ColorListItem( item->label(), item->value() ) );
+  }
+
   mFontList->clear();
-  for(int i=0; i < d_ata->fontCount(); i++)
-    mFontList->addItem( new FontListItem( d_ata->fontName(i), d_ata->font(i) ) );
+  for ( KConfigSkeletonItem::List::Iterator it = items.begin(); it != items.end(); ++it ) {
+    KConfigSkeleton::ItemFont *item = dynamic_cast<KConfigSkeleton::ItemFont*>( *it );
+    if ( item )
+      mFontList->addItem( new FontListItem( item->label(), item->value() ) );
+  }
 }
 
 
 void KNode::AppearanceWidget::save()
 {
-  d_ata->u_seColors=c_olorCB->isChecked();
-  for(int i=0; i<d_ata->colorCount(); i++)
-    d_ata->c_olors[i] = ( static_cast<ColorListItem*>( mColorList->item(i) ) )->color();
+  KConfigSkeletonItem::List items = knGlobals.settings()->items();
+  int row = 0;
+  for ( KConfigSkeletonItem::List::Iterator it = items.begin(); it != items.end(); ++it ) {
+    KConfigSkeleton::ItemColor *item = dynamic_cast<KConfigSkeleton::ItemColor*>( *it );
+    if ( !item )
+      continue;
+    item->setValue( static_cast<ColorListItem*>( mColorList->item( row ) )->color() );
+    ++row;
+  }
 
-  d_ata->u_seFonts=f_ontCB->isChecked();
-  for(int i=0; i<d_ata->fontCount(); i++)
-    d_ata->f_onts[i] = ( static_cast<FontListItem*>( mFontList->item(i) ) )->font();
+  row = 0;
+  for ( KConfigSkeletonItem::List::Iterator it = items.begin(); it != items.end(); ++it ) {
+    KConfigSkeleton::ItemFont *item = dynamic_cast<KConfigSkeleton::ItemFont*>( *it );
+    if ( !item )
+      continue;
+    item->setValue( static_cast<FontListItem*>( mFontList->item( row ) )->font() );
+    ++row;
+  }
+
+  KCModule::save();
 
   d_ata->setDirty(true);
-
   d_ata->recreateLVIcons();
 }
 
 
 void KNode::AppearanceWidget::defaults()
 {
-  // default colors
-  ColorListItem *colorItem;
-  for(int i=0; i < d_ata->colorCount(); i++) {
-    colorItem = static_cast<ColorListItem*>( mColorList->item(i) );
-    colorItem->setColor(d_ata->defaultColor(i));
+  KCModule::defaults();
+
+  KConfigSkeletonItem::List items = knGlobals.settings()->items();
+  int row = 0;
+  for ( KConfigSkeletonItem::List::Iterator it = items.begin(); it != items.end(); ++it ) {
+    KConfigSkeleton::ItemColor *item = dynamic_cast<KConfigSkeleton::ItemColor*>( *it );
+    if ( !item )
+      continue;
+    item->setDefault();
+    static_cast<ColorListItem*>( mColorList->item( row ) )->setColor( item->value() );
+    ++row;
   }
 
-  // default fonts
-  FontListItem *fontItem;
-  for(int i=0; i < d_ata->fontCount(); i++) {
-    fontItem = static_cast<FontListItem*>( mFontList->item(i) );
-    fontItem->setFont(d_ata->defaultFont(i));
+  row = 0;
+  for ( KConfigSkeletonItem::List::Iterator it = items.begin(); it != items.end(); ++it ) {
+    KConfigSkeleton::ItemFont *item = dynamic_cast<KConfigSkeleton::ItemFont*>( *it );
+    if ( !item )
+      continue;
+    item->setDefault();
+    static_cast<FontListItem*>( mFontList->item( row ) )->setFont( item->value() );
+    ++row;
   }
 
   emit changed(true);
@@ -785,7 +817,6 @@ void KNode::AppearanceWidget::slotColCheckBoxToggled(bool b)
   mColorList->setEnabled( b );
   c_olChngBtn->setEnabled( b && mColorList->currentItem() );
   if (b) mColorList->setFocus();
-  emit changed(true);
 }
 
 
@@ -823,7 +854,6 @@ void KNode::AppearanceWidget::slotFontCheckBoxToggled(bool b)
   mFontList->setEnabled( b );
   f_ntChngBtn->setEnabled( b && mFontList->currentItem() );
   if (b) mFontList->setFocus();
-  emit changed(true);
 }
 
 
@@ -1216,33 +1246,21 @@ KNode::ScoringWidget::ScoringWidget( KInstance *inst, QWidget *parent ) :
   topL->addRowSpacing(1, 10);
 
   mIgnored = new KIntSpinBox( -100000, 100000, 1, 0, this );
+  mIgnored->setObjectName( "kcfg_ignoredThreshold" );
   QLabel *l = new QLabel( mIgnored, i18n("Default score for &ignored threads:"), this );
   topL->addWidget(l, 2, 0);
   topL->addWidget( mIgnored, 2, 1 );
-  connect( mIgnored, SIGNAL(valueChanged(int)), SLOT(changed()) );
 
   mWatched = new KIntSpinBox( -100000, 100000, 1, 0, this );
+  mWatched->setObjectName( "kcfg_watchedThreshold" );
   l = new QLabel( mWatched, i18n("Default score for &watched threads:"), this );
   topL->addWidget(l, 3, 0);
   topL->addWidget( mWatched, 3, 1);
-  connect( mWatched, SIGNAL(valueChanged(int)), SLOT(changed()) );
 
   topL->setColStretch(0, 1);
 
+  addConfig( knGlobals.settings(), this );
   load();
-}
-
-
-void KNode::ScoringWidget::load()
-{
-  mIgnored->setValue( knGlobals.settings()->ignoredThreshold() );
-  mWatched->setValue( knGlobals.settings()->watchedThreshold() );
-}
-
-void KNode::ScoringWidget::save()
-{
-  knGlobals.settings()->setIgnoredThreshold( mIgnored->value() );
-  knGlobals.settings()->setWatchedThreshold( mWatched->value() );
 }
 
 

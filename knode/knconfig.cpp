@@ -39,6 +39,7 @@
 #include "knglobals.h"
 #include "kngroupmanager.h"
 #include "utilities.h"
+#include "settings.h"
 
 
 
@@ -177,93 +178,6 @@ void KNode::Identity::slotReceiveStderr(KProcess *, char *buffer, int buflen)
 
 KNode::Appearance::Appearance()
 {
-  KConfig *c=knGlobals.config();
-  c->setGroup("VISUAL_APPEARANCE");
-
-  //colors
-  u_seColors=c->readBoolEntry("customColors", false);
-
-  QColor defCol = defaultColor( background );
-  c_olors[background] = c->readColorEntry( "backgroundColor", &defCol );
-  c_olorNames[background] = i18n("Background");
-
-  defCol = defaultColor( alternateBackground );
-  c_olors[alternateBackground] = c->readColorEntry("alternateBackgroundColor", &defCol );
-  c_olorNames[alternateBackground] = i18n("Alternate Background");
-
-  defCol = defaultColor( normalText );
-  c_olors[normalText] = c->readColorEntry( "textColor", &defCol );
-  c_olorNames[normalText] = i18n("Normal Text");
-
-  defCol = defaultColor( quoted1 );
-  c_olors[quoted1] = c->readColorEntry( "quote1Color", &defCol );
-  c_olorNames[quoted1] = i18n("Quoted Text - First level");
-
-  defCol = defaultColor( quoted2 );
-  c_olors[quoted2] = c->readColorEntry( "quote2Color", &defCol );
-  c_olorNames[quoted2] = i18n("Quoted Text - Second level");
-
-  defCol = defaultColor( quoted3 );
-  c_olors[quoted3] = c->readColorEntry( "quote3Color", &defCol );
-  c_olorNames[quoted3] = i18n("Quoted Text - Third level");
-
-  defCol = defaultColor( url );
-  c_olors[url] = c->readColorEntry( "URLColor", &defCol );
-  c_olorNames[url] = i18n("Link");
-
-  defCol = defaultColor( readThread );
-  c_olors[readThread] = c->readColorEntry( "readThreadColor", &defCol );
-  c_olorNames[readThread] = i18n("Read Thread");
-
-  defCol = defaultColor( unreadThread );
-  c_olors[unreadThread] = c->readColorEntry("unreadThreadColor", &defCol );
-  c_olorNames[unreadThread] = i18n("Unread Thread");
-
-  defCol = defaultColor( readThread );
-  c_olors[readArticle] = c->readColorEntry("readArtColor", &defCol );
-  c_olorNames[readArticle] = i18n("Read Article");
-
-  defCol = defaultColor( unreadArticle );
-  c_olors[unreadArticle] = c->readColorEntry("unreadArtColor", &defCol );
-  c_olorNames[unreadArticle] = i18n("Unread Article");
-
-  defCol = defaultColor( signOkKeyOk );
-  c_olors[signOkKeyOk] = c->readColorEntry("signOkKeyOk", &defCol );
-  defCol = defaultColor( signOkKeyBad );
-  c_olors[signOkKeyBad] = c->readColorEntry("signOkKeyBad", &defCol );
-  defCol = defaultColor( signWarn );
-  c_olors[signWarn] = c->readColorEntry("signWarn", &defCol );
-  defCol = defaultColor( signErr );
-  c_olors[signErr] = c->readColorEntry("signErr", &defCol );
-  defCol = defaultColor( htmlWarning );
-  c_olors[htmlWarning] = c->readColorEntry("htmlWarning", &defCol );
-
-  c_olorNames[signOkKeyOk] = i18n("Valid Signature with Trusted Key");
-  c_olorNames[signOkKeyBad] = i18n("Valid Signature with Untrusted Key");
-  c_olorNames[signWarn] = i18n("Unchecked Signature");
-  c_olorNames[signErr] = i18n("Bad Signature");
-  c_olorNames[htmlWarning] = i18n("HTML Message Warning");
-
-  //fonts
-  u_seFonts = c->readBoolEntry("customFonts", false);
-  QFont defFont=KGlobalSettings::generalFont();
-  f_onts[article]=c->readFontEntry("articleFont",&defFont);
-  f_ontNames[article]=i18n("Article Body");
-
-  defFont=KGlobalSettings::fixedFont();
-  f_onts[articleFixed]=c->readFontEntry("articleFixedFont",&defFont);
-  f_ontNames[articleFixed]=i18n("Article Body (Fixed)");
-
-  f_onts[composer]=c->readFontEntry("composerFont",&defFont);
-  f_ontNames[composer]=i18n("Composer");
-
-  defFont=KGlobalSettings::generalFont();
-  f_onts[groupList]=c->readFontEntry("groupListFont",&defFont);
-  f_ontNames[groupList]=i18n("Group List");
-
-  f_onts[articleList]=c->readFontEntry("articleListFont",&defFont);
-  f_ontNames[articleList]=i18n("Article List");
-
   //icons
   KGlobal::iconLoader()->addAppDir("knode");
   recreateLVIcons();
@@ -279,256 +193,26 @@ KNode::Appearance::Appearance()
 }
 
 
-KNode::Appearance::~Appearance()
-{
-}
-
-
-void KNode::Appearance::save()
-{
-  if(!d_irty)
-    return;
-
-  kdDebug(5003) << "KNConfig::Appearance::save()" << endl;
-
-  KConfig *c=knGlobals.config();
-  c->setGroup("VISUAL_APPEARANCE");
-
-  c->writeEntry("customColors", u_seColors);
-  c->writeEntry("backgroundColor", c_olors[background]);
-  c->writeEntry("alternateBackgroundColor", c_olors[alternateBackground]);
-  c->writeEntry("textColor", c_olors[normalText]);
-  c->writeEntry("quote1Color", c_olors[quoted1]);
-  c->writeEntry("quote2Color", c_olors[quoted2]);
-  c->writeEntry("quote3Color", c_olors[quoted3]);
-  c->writeEntry("URLColor", c_olors[url]);
-  c->writeEntry("readThreadColor", c_olors[readThread]);
-  c->writeEntry("unreadThreadColor", c_olors[unreadThread]);
-  c->writeEntry("readArtColor", c_olors[readArticle]);
-  c->writeEntry("unreadArtColor", c_olors[unreadArticle]);
-  c->writeEntry( "signOkKeyOk", c_olors[signOkKeyOk] );
-  c->writeEntry( "signOkKeyBad", c_olors[signOkKeyBad] );
-  c->writeEntry( "signWarn", c_olors[signWarn] );
-  c->writeEntry( "signErr", c_olors[signErr] );
-  c->writeEntry( "htmlWarning", c_olors[htmlWarning] );
-
-  c->writeEntry("customFonts", u_seFonts);
-  c->writeEntry("articleFont", f_onts[article]);
-  c->writeEntry("articleFixedFont", f_onts[articleFixed]);
-  c->writeEntry("composerFont", f_onts[composer]);
-  c->writeEntry("groupListFont", f_onts[groupList]);
-  c->writeEntry("articleListFont", f_onts[articleList]);
-  c->sync();
-  d_irty = false;
-}
-
-
-QColor KNode::Appearance::backgroundColor() const
-{
-  if(u_seColors)
-    return c_olors[background];
-  else
-    return defaultColor( background );
-}
-
-
-QColor KNode::Appearance::alternateBackgroundColor() const
-{
-  if(u_seColors)
-    return c_olors[alternateBackground];
-  else
-    return defaultColor( alternateBackground );
-}
-
-
-QColor KNode::Appearance::textColor() const
-{
-  if(u_seColors)
-    return c_olors[normalText];
-  else
-    return defaultColor( normalText );
-}
-
-
-QColor KNode::Appearance::quoteColor( int depth ) const
-{
-  if ( u_seColors )
-    return c_olors[quoted1 + depth];
-  else
-    return defaultColor( quoted1 + depth );
-}
-
-
-QColor KNode::Appearance::linkColor() const
-{
-  if(u_seColors)
-    return c_olors[url];
-  else
-    return defaultColor( url );
-
-}
-
-
-QColor KNode::Appearance::unreadThreadColor() const
-{
-  if(u_seColors)
-    return c_olors[unreadThread];
-  else
-    return defaultColor( unreadThread );
-}
-
-
-QColor KNode::Appearance::readThreadColor() const
-{
-  if(u_seColors)
-    return c_olors[readThread];
-  else
-    return defaultColor( readThread );
-}
-
-
-QColor KNode::Appearance::unreadArticleColor() const
-{
-  if(u_seColors)
-    return c_olors[unreadArticle];
-  else
-    return defaultColor( unreadArticle );
-}
-
-
-QColor KNode::Appearance::readArticleColor() const
-{
-  if(u_seColors)
-    return c_olors[readArticle];
-  else
-    return defaultColor( readArticle );
-}
-
-
-QFont KNode::Appearance::articleFont() const
-{
-  if(u_seFonts)
-    return f_onts[article];
-  else
-    return defaultFont( article );
-}
-
-
-QFont KNode::Appearance::articleFixedFont() const
-{
-  if(u_seFonts)
-    return f_onts[articleFixed];
-  else
-    return defaultFont( articleFixed );
-}
-
-
-QFont KNode::Appearance::composerFont() const
-{
-  if(u_seFonts)
-    return f_onts[composer];
-  else
-    return defaultFont( composer );
-}
-
-
-QFont KNode::Appearance::groupListFont() const
-{
-  if(u_seFonts)
-    return f_onts[groupList];
-  else
-    return defaultFont( groupList );
-}
-
-
-QFont KNode::Appearance::articleListFont() const
-{
-  if(u_seFonts)
-    return f_onts[articleList];
-  else
-    return defaultFont( articleList );
-}
-
-
-QColor KNode::Appearance::defaultColor(int i) const
-{
-  // defaults should match libkdepim/csshelper.cpp
-  switch(i) {
-
-    case background:
-      return kapp->palette().active().base();
-
-    case alternateBackground:
-      return KGlobalSettings::alternateBackgroundColor();
-
-    case quoted1:
-      return QColor( 0x00, 0x80, 0x00 );
-    case quoted2:
-      return QColor( 0x00, 0x70, 0x00 );
-    case quoted3:
-      return QColor( 0x00, 0x60, 0x00 );
-
-    case normalText:
-    case unreadThread:
-      return kapp->palette().active().text();
-
-    case url:
-      return KGlobalSettings::linkColor();
-
-    case readThread:
-      return kapp->palette().disabled().text();
-
-    case unreadArticle:
-      return QColor( 183, 154, 11 );
-
-    case readArticle:
-      return QColor( 136, 136, 136 );
-
-    case signOkKeyOk:
-      return QColor( 0x40, 0xFF, 0x00 );
-    case signOkKeyBad:
-    case signWarn:
-      return QColor( 0xFF, 0xFF, 0x40 );
-    case signErr:
-      return Qt::red;
-
-    case htmlWarning:
-      return QColor( 0xFF, 0x40, 0x40 );
-  }
-
-  return kapp->palette().disabled().text();
-}
-
-
-QFont KNode::Appearance::defaultFont(int i) const
-{
-  if ( i == articleFixed || i == composer )
-    return KGlobalSettings::fixedFont();
-  else
-    return KGlobalSettings::generalFont();
-}
-
-
 void KNode::Appearance::recreateLVIcons()
 {
   QPixmap tempPix = UserIcon("greyball");
 
   QImage tempImg=tempPix.convertToImage();
-  KIconEffect::colorize(tempImg, readArticleColor(), 1.0);
+  KIconEffect::colorize(tempImg, knGlobals.settings()->readArticleColor(), 1.0);
   i_cons[greyBall].convertFromImage(tempImg);
 
   tempImg=tempPix.convertToImage();
-  KIconEffect::colorize(tempImg, unreadArticleColor(), 1.0);
+  KIconEffect::colorize(tempImg, knGlobals.settings()->unreadArticleColor(), 1.0);
   i_cons[redBall].convertFromImage(tempImg);
 
   tempPix = UserIcon("greyballchk");
 
   tempImg=tempPix.convertToImage();
-  KIconEffect::colorize(tempImg, readArticleColor(), 1.0);
+  KIconEffect::colorize(tempImg, knGlobals.settings()->readArticleColor(), 1.0);
   i_cons[greyBallChkd].convertFromImage(tempImg);
 
   tempImg=tempPix.convertToImage();
-  KIconEffect::colorize(tempImg, unreadArticleColor(), 1.0);
+  KIconEffect::colorize(tempImg, knGlobals.settings()->unreadArticleColor(), 1.0);
   i_cons[redBallChkd].convertFromImage(tempImg);
 }
 

@@ -12,31 +12,28 @@
 */
 
 #include "csshelper.h"
-#include "knconfig.h"
-#include "knconfigmanager.h"
 #include "knglobals.h"
+#include "settings.h"
 
 
 KNode::CSSHelper::CSSHelper( const QPaintDevice *pd ) :
   KPIM::CSSHelper( pd )
 {
-  Appearance *app = knGlobals.configManager()->appearance();
-
-  mForegroundColor = app->textColor();
-  mLinkColor = app->linkColor();
-  mVisitedLinkColor = app->linkColor();
-  mBackgroundColor = app->backgroundColor();
+  mForegroundColor = knGlobals.settings()->textColor();
+  mLinkColor = knGlobals.settings()->linkColor();
+  mVisitedLinkColor = knGlobals.settings()->linkColor();
+  mBackgroundColor = knGlobals.settings()->backgroundColor();
   for ( int i = 0; i < 3; ++i )
-    mQuoteColor[i] = app->quoteColor( i );
+    mQuoteColor[i] = knGlobals.settings()->quoteColor( i );
 
-  cHtmlWarning = app->htmlWarningColor();
-  cPgpOk1H  = app->signOkKeyOkColor();
-  cPgpOk0H  = app->signOkKeyBadColor();
-  cPgpWarnH = app->signWarnColor();
-  cPgpErrH  = app->signErrColor();
+  cHtmlWarning = knGlobals.settings()->htmlWarningColor();
+  cPgpOk1H  = knGlobals.settings()->signOkKeyOkColor();
+  cPgpOk0H  = knGlobals.settings()->signOkKeyBadColor();
+  cPgpWarnH = knGlobals.settings()->signWarnColor();
+  cPgpErrH  = knGlobals.settings()->signErrColor();
 
-  mBodyFont = mPrintFont = app->articleFont();
-  mFixedFont = mFixedPrintFont = app->articleFixedFont();
+  mBodyFont = mPrintFont = knGlobals.settings()->articleFont();
+  mFixedFont = mFixedPrintFont = knGlobals.settings()->articleFixedFont();
 
   recalculatePGPColors();
 }

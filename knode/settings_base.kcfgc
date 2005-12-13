@@ -1,7 +1,8 @@
 File=knode.kcfg
 NameSpace=KNode
-ClassName=Settings
+ClassName=SettingsBase
 Mutators=true
 ItemAccessors=true
 SetUserTexts=true
 Visibility=KDE_EXPORT
+IncludeFiles=kapplication.h

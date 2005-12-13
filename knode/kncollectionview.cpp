@@ -26,7 +26,6 @@
 
 #include "knglobals.h"
 #include "knconfig.h"
-#include "knconfigmanager.h"
 #include "knnntpaccount.h"
 #include "knaccountmanager.h"
 #include "kngroup.h"
@@ -36,6 +35,7 @@
 #include "headerview.h"
 #include "kncollectionview.h"
 #include "kncollectionviewitem.h"
+#include "settings.h"
 
 KNCollectionView::KNCollectionView( QWidget *parent ) :
   KFolderTree( parent ),
@@ -120,18 +120,17 @@ void KNCollectionView::readConfig()
   }
 
   // font & color settings
-  KNode::Appearance *app = knGlobals.configManager()->appearance();
-  setFont( app->groupListFont() );
+  setFont( knGlobals.settings()->groupListFont() );
 
   QPalette p = palette();
-  p.setColor( QColorGroup::Base, app->backgroundColor() );
-  p.setColor( QColorGroup::Text, app->textColor() );
+  p.setColor( QColorGroup::Base, knGlobals.settings()->backgroundColor() );
+  p.setColor( QColorGroup::Text, knGlobals.settings()->textColor() );
   setPalette( p );
-  setAlternateBackground( app->backgroundColor() );
+  setAlternateBackground( knGlobals.settings()->backgroundColor() );
   // FIXME: make this configurable
   mPaintInfo.colUnread = QColor( "blue" );
-  mPaintInfo.colFore = app->textColor();
-  mPaintInfo.colBack = app->backgroundColor();
+  mPaintInfo.colFore = knGlobals.settings()->textColor();
+  mPaintInfo.colBack = knGlobals.settings()->backgroundColor();
 }
 
 

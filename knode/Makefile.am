@@ -30,7 +30,8 @@ libknodecommon_la_LIBADD = -lkdeprint -lkwalletclient $(top_builddir)/libkmime/l
 libknodecommon_la_SOURCES =   knconfigmanager.cpp \
                   knconfig.cpp \
                   knconfigwidgets.cpp \
-                  settings.kcfgc \
+                  settings_base.kcfgc \
+                  settings.cpp \
                   \
                   scheduler.cpp \
                   knjobdata.cpp \
@@ -108,6 +109,7 @@ libknodepart_la_SOURCES = knode_part.cpp
 noinst_HEADERS =  knconfigmanager.h \
                   knconfig.h \
                   knconfigwidgets.h \
+                  settings.h \
                   \
                   scheduler.h \
                   knjobdata.h \

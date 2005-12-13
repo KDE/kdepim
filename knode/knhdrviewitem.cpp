@@ -298,12 +298,12 @@ QColor KNHdrViewItem::normalColor()
   if (art->type()==KMime::Base::ATremote)
     return static_cast<KNRemoteArticle*>( art )->color();
   else
-    return knGlobals.configManager()->appearance()->unreadThreadColor();
+    return knGlobals.settings()->unreadThreadColor();
 }
 
 
 QColor KNHdrViewItem::greyColor()
 {
-  return knGlobals.configManager()->appearance()->readThreadColor();
+  return knGlobals.settings()->readThreadColor();
 }
 
