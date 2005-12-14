@@ -799,13 +799,12 @@ QString KABCore::getNameByPhone( const QString &phone )
 
   KABC::AddressBook::ConstIterator iter;
   const KABC::AddressBook::ConstIterator endIter( mAddressBook->end() );
-  KABC::PhoneNumber::List::Iterator phoneIter;
-  const KABC::PhoneNumber::List::Iterator phoneEndIter( phoneList.end() );
 
   for ( iter = mAddressBook->begin(); !found && ( iter != endIter ); ++iter ) {
     phoneList = (*iter).phoneNumbers();
-    for ( phoneIter = phoneList.begin(); !found && ( phoneIter != phoneEndIter );
-          ++phoneIter) {
+    KABC::PhoneNumber::List::Iterator phoneIter( phoneList.begin() );
+    const KABC::PhoneNumber::List::Iterator phoneEndIter( phoneList.end() );
+    for ( ; !found && ( phoneIter != phoneEndIter ); ++phoneIter) {
       // Get rid of separator chars so just the numbers are compared.
       if ( (*phoneIter).number().replace( r, "" ) == localPhone.replace( r, "" ) ) {
         ownerName = (*iter).realName();
@@ -1175,15 +1174,16 @@ QStringList KABCore::allCategories() const
 {
   QStringList categories, allCategories;
   QStringList::ConstIterator catIt;
-  const QStringList::ConstIterator catEndIt( categories.end() );
 
   KABC::AddressBook::ConstIterator it;
   const KABC::AddressBook::ConstIterator endIt( mAddressBook->end() );
   for ( it = mAddressBook->begin(); it != endIt; ++it ) {
     categories = (*it).categories();
-    for ( catIt = categories.begin(); catIt != catEndIt; ++catIt )
+    const QStringList::ConstIterator catEndIt( categories.end() );
+    for ( catIt = categories.begin(); catIt != catEndIt; ++catIt ) {
       if ( !allCategories.contains( *catIt ) )
         allCategories.append( *catIt );
+	}
   }
 
   return allCategories;
