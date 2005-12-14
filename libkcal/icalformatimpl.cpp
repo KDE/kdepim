@@ -813,7 +813,7 @@ kdDebug(5800) << " It's an audio action, file: " << alarm->audioFile() << endl;
       QStringList attachments = alarm->mailAttachments();
       if (attachments.count() > 0) {
         for (QStringList::Iterator at = attachments.begin();  at != attachments.end();  ++at) {
-          icalattach_new_from_url(QFile::encodeName( *at ).data());
+          attach = icalattach_new_from_url(QFile::encodeName( *at ).data());
           icalcomponent_add_property(a,icalproperty_new_attach(attach));
         }
       }
