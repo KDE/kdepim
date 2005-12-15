@@ -47,7 +47,6 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
   mAlarm = new QCheckBox(i18n("Set reminder"), this);
   topLayout->addWidget(mAlarm, 0, 0);
   QBoxLayout *alarmLayout = new QHBoxLayout(topLayout);
-  topLayout->addLayout(alarmLayout, 1, 0);
 
   mALabel = new QLabel(i18n("Reminder before (in days):"), this);
   alarmLayout->addWidget(mALabel);
