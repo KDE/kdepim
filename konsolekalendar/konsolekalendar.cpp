@@ -61,7 +61,6 @@ using namespace std;
 KonsoleKalendar::KonsoleKalendar( KonsoleKalendarVariables *variables )
 {
   m_variables = variables;
-  // m_Calendar =  new ResourceCalendar;
 }
 
 KonsoleKalendar::~KonsoleKalendar()
@@ -111,7 +110,6 @@ bool KonsoleKalendar::showInstance()
   bool status = true;
   QFile f;
   QString title;
-  Event::List *eventList;
   Event *event;
 
   if ( m_variables->isDryRun() ) {
@@ -160,21 +158,21 @@ bool KonsoleKalendar::showInstance()
 
 	  Event::List sortedList =
             m_variables->getCalendar()->events( EventSortStartDate );
-			if( sortedList.count()>0)
-			{
-          QDate dt, firstdate, lastdate;
-          firstdate = sortedList.first()->dtStart().date();
-          lastdate = sortedList.last()->dtStart().date();
-          for ( dt = firstdate;
-                dt <= lastdate && status != false;
-                dt = dt.addDays(1) ) {
-            Event::List events =
-              m_variables->getCalendar()->events( dt,
-                                                  EventSortStartDate,
-                                                  SortDirectionAscending );
-            status = printEventList( &ts, &events, dt );
+          if( sortedList.count() > 0 )
+          {
+            QDate dt, firstdate, lastdate;
+            firstdate = sortedList.first()->dtStart().date();
+            lastdate = sortedList.last()->dtStart().date();
+            for ( dt = firstdate;
+                  dt <= lastdate && status != false;
+                  dt = dt.addDays(1) ) {
+              Event::List events =
+                m_variables->getCalendar()->events( dt,
+                                                    EventSortStartDate,
+                                                    SortDirectionAscending );
+              status = printEventList( &ts, &events, dt );
+            }
           }
-			}
 
 	} else if ( m_variables->isUID() ) {
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
@@ -231,16 +229,17 @@ bool KonsoleKalendar::showInstance()
       } else {
 	QDate firstdate, lastdate;
 	if ( m_variables->getAll() ) {
-          // TODO: this is broken since the date on last() may not be last date
-          // (this is the case for me)
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "HTML view all events sorted list"
                     << endl;
-          eventList =
-            new Event::List ( m_variables->getCalendar()->rawEvents() );
-	  firstdate = eventList->first()->dtStart().date();
-	  lastdate = eventList->last()->dtStart().date();
-          delete eventList;
+          // sort the events for this date by start date
+          // in order to determine the date range.
+          Event::List *events =
+            new Event::List ( m_variables->getCalendar()->rawEvents(
+                                EventSortStartDate,
+                                SortDirectionAscending ) );
+	  firstdate = events->first()->dtStart().date();
+	  lastdate = events->last()->dtStart().date();
 	} else if ( m_variables->isUID() ) {
 	  // TODO
 	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
