@@ -33,14 +33,14 @@ using namespace KMime;
 namespace KMime {
 
 Content::Content()
- : c_ontents(0), h_eaders(0), f_orceDefaultCS(false)
+ : h_eaders(0), f_orceDefaultCS(false)
 {
   d_efaultCS = cachedCharset("ISO-8859-1");
 }
 
 
 Content::Content(const Q3CString &h, const Q3CString &b)
- : c_ontents(0), h_eaders(0), f_orceDefaultCS(false)
+ : h_eaders(0), f_orceDefaultCS(false)
 {
   d_efaultCS = cachedCharset("ISO-8859-1");
   h_ead=h.copy();
@@ -50,7 +50,8 @@ Content::Content(const Q3CString &h, const Q3CString &b)
 
 Content::~Content()
 {
-  delete c_ontents;
+  qDeleteAll( c_ontents );
+  c_ontents.clear();
   delete h_eaders;
 }
 
@@ -105,19 +106,19 @@ void Content::parse()
   //qDebug("void Content::parse() : start");
   delete h_eaders;
   h_eaders=0;
-  
+
   // check this part has already been partioned into subparts.
   // if this is the case, we will not try to reparse the body
   // of this part.
-  if ((b_ody.size() == 0) && (c_ontents != 0) && !c_ontents->isEmpty()) {
+  if ( b_ody.size() == 0 && !c_ontents.isEmpty() ) {
     // reparse all sub parts
-    for(Content *c=c_ontents->first(); c; c=c_ontents->next())
+    foreach ( Content *c, c_ontents )
       c->parse();
     return;
-  }    
-  
-  delete c_ontents;
-  c_ontents=0;
+  }
+
+  qDeleteAll( c_ontents );
+  c_ontents.clear();
 
   Headers::ContentType *ct=contentType();
   Q3CString tmp;
@@ -139,9 +140,6 @@ void Content::parse()
       Parser::MultiPart mpp(b_ody, tmp);
       if(mpp.parse()) { //at least one part found
 
-        c_ontents=new List();
-        c_ontents->setAutoDelete(true);
-
         if(ct->isSubtype("alternative")) //examine category for the sub-parts
           cat=Headers::CCalternativePart;
         else
@@ -154,7 +152,7 @@ void Content::parse()
           c->setContent(*it);
           c->parse();
           c->contentType()->setCategory(cat); //set category of the sub-part
-          c_ontents->append(c);
+          c_ontents.append( c );
           //qDebug("part:\n%s\n\n%s", c->h_ead.data(), c->b_ody.left(100).data());
         }
 
@@ -198,14 +196,14 @@ void Content::parse()
           addContent(c);
         }
 
-        if(c_ontents && c_ontents->first()) { //readd the plain text before the uuencoded part
-          c_ontents->first()->setContent("Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n"+uup.textPart());
-          c_ontents->first()->contentType()->setMimeType("text/plain");
+        if ( !c_ontents.isEmpty() && c_ontents.first() ) { //readd the plain text before the uuencoded part
+          c_ontents.first()->setContent("Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n"+uup.textPart());
+          c_ontents.first()->contentType()->setMimeType("text/plain");
         }
       }
     } else {
       Parser::YENCEncoded yenc(b_ody);
- 
+
       if ( yenc.parse()) {
         /* If it is partial, just assume there is exactly one decoded part,
          * and make this that part */
@@ -231,23 +229,23 @@ void Content::parse()
             tmp += yenc.filenames().at(i);
             tmp += "\"\n\n";
             c->setContent(tmp);
-            
-            // the bodies of yenc message parts are binary data, not null-terminated strings:            
+
+            // the bodies of yenc message parts are binary data, not null-terminated strings:
             QByteArray body = yenc.binaryParts()[i];
             Q3CString body_string(body.size());
             memcpy(body_string.data(), body.data(), body.size());
-            c->setBody(body_string);            
-    
+            c->setBody(body_string);
+
             addContent(c);
           }
 
-          if(c_ontents && c_ontents->first()) { //readd the plain text before the uuencoded part
-            c_ontents->first()->setContent("Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n"+yenc.textPart());
-            c_ontents->first()->contentType()->setMimeType("text/plain");
+          if( !c_ontents.isEmpty() && c_ontents.first() ) { //readd the plain text before the uuencoded part
+            c_ontents.first()->setContent("Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n"+yenc.textPart());
+            c_ontents.first()->contentType()->setMimeType("text/plain");
           }
         }
-      }    
-      else { //no, this doesn't look like uuencoded stuff => we treat it as "text/plain"        
+      }
+      else { //no, this doesn't look like uuencoded stuff => we treat it as "text/plain"
         ct->setMimeType("text/plain");
       }
     }
@@ -285,8 +283,8 @@ void Content::clear()
 {
   delete h_eaders;
   h_eaders=0;
-  delete c_ontents;
-  c_ontents=0;
+  qDeleteAll( c_ontents );
+  c_ontents.clear();
   h_ead.resize(0);
   b_ody.resize(0);
 }
@@ -298,11 +296,11 @@ Q3CString Content::encodedContent(bool useCrLf)
 
   // hack to convert articles with uuencoded or yencoded binaries into
   // proper mime-compliant articles
-  if(c_ontents && !c_ontents->isEmpty()) {
+  if ( !c_ontents.isEmpty() ) {
     bool convertNonMimeBinaries=false;
 
     // reencode non-mime binaries...
-    for(Content *c=c_ontents->first(); c; c=c_ontents->next()) {
+    foreach ( Content *c, c_ontents ) {
       if ((c->contentTransferEncoding(true)->cte()==Headers::CEuuenc) ||
           (c->contentTransferEncoding(true)->cte()==Headers::CEbinary)) {
         convertNonMimeBinaries=true;
@@ -355,12 +353,12 @@ Q3CString Content::encodedContent(bool useCrLf)
     else
       e+=b_ody;
   }
-  else if(c_ontents && !c_ontents->isEmpty()) { //this is a multipart message
+  else if( !c_ontents.isEmpty() ) { //this is a multipart message
     Headers::ContentType *ct=contentType();
     Q3CString boundary="--"+ct->boundary();
 
     //add all (encoded) contents separated by boundaries
-    for(Content *c=c_ontents->first(); c; c=c_ontents->next()) {
+    foreach ( Content *c, c_ontents ) {
       e+=boundary+"\n";
       e+=c->encodedContent(false);  // don't convert LFs here, we do that later!!!!!
     }
@@ -381,7 +379,7 @@ QByteArray Content::decodedContent()
   Headers::CTEncoding *ec=contentTransferEncoding();
   bool removeTrailingNewline=false;
   int size=ec->cte()==Headers::CEbinary ? b_ody.size() : b_ody.length();
-  
+
   if (size==0)
     return ret;
 
@@ -495,8 +493,8 @@ Content* Content::textContent()
   //return the first content with mimetype=text/*
   if(contentType()->isText())
     ret=this;
-  else if(c_ontents)
-    for(Content *c=c_ontents->first(); c; c=c_ontents->next())
+  else
+    foreach ( Content *c, c_ontents )
       if( (ret=c->textContent())!=0 )
         break;
 
@@ -504,14 +502,12 @@ Content* Content::textContent()
 }
 
 
-void Content::attachments(Content::List *dst, bool incAlternatives)
+void Content::attachments( Content::List &dst, bool incAlternatives )
 {
-  dst->setAutoDelete(false); //don't delete the contents
-
-  if(!c_ontents)
-    dst->append(this);
+  if ( c_ontents.isEmpty() )
+    dst.append(this);
   else {
-    for(Content *c=c_ontents->first(); c; c=c_ontents->next()) {
+    foreach ( Content *c, c_ontents ) {
       if( !incAlternatives && c->contentType()->category()==Headers::CCalternativePart)
         continue;
       else
@@ -522,16 +518,14 @@ void Content::attachments(Content::List *dst, bool incAlternatives)
   if(type()!=ATmimeContent) { // this is the toplevel article
     Content *text=textContent();
     if(text)
-      dst->removeRef(text);
+      dst.removeAll( text );
   }
 }
 
 
 void Content::addContent(Content *c, bool prepend)
 {
-  if(!c_ontents) { // this message is not multipart yet
-    c_ontents=new List();
-    c_ontents->setAutoDelete(true);
+  if ( c_ontents.isEmpty() ) { // this message is not multipart yet
 
     // first we convert the body to a content
     Content *main=new Content();
@@ -564,7 +558,7 @@ void Content::addContent(Content *c, bool prepend)
 
     //now we can copy the body and append the new content;
     main->b_ody=b_ody.copy();
-    c_ontents->append(main);
+    c_ontents.append( main );
     b_ody.resize(0); //not longer needed
 
 
@@ -578,28 +572,25 @@ void Content::addContent(Content *c, bool prepend)
   }
   //here we actually add the content
   if(prepend)
-    c_ontents->insert(0, c);
+    c_ontents.insert( 0, c );
   else
-    c_ontents->append(c);
+    c_ontents.append( c );
 }
 
 
 void Content::removeContent(Content *c, bool del)
 {
-  if(!c_ontents) // what the ..
+  if( c_ontents.isEmpty() ) // what the ..
     return;
 
   int idx=0;
+  c_ontents.removeAll( c );
   if(del)
-    c_ontents->removeRef(c);
-  else {
-    idx=c_ontents->findRef(c);
-    c_ontents->take(idx);
-  }
+    delete c;
 
   //only one content left => turn this message in a single-part
-  if(c_ontents->count()==1) {
-    Content *main=c_ontents->first();
+  if ( c_ontents.count() == 1 ) {
+    Content *main = c_ontents.first();
 
     //first we have to move the mime-headers
     if(main->h_eaders) {
@@ -627,8 +618,8 @@ void Content::removeContent(Content *c, bool del)
     b_ody=main->b_ody.copy();
 
     //finally we can delete the content list
-    delete c_ontents;
-    c_ontents=0;
+    qDeleteAll( c_ontents );
+    c_ontents.clear();
   }
 }
 
@@ -828,10 +819,10 @@ int Content::storageSize()
 {
   int s=h_ead.size();
 
-  if(!c_ontents)
+  if ( c_ontents.isEmpty() )
     s+=b_ody.size();
   else {
-    for(Content *c=c_ontents->first(); c; c=c_ontents->next())
+    foreach ( Content *c, c_ontents )
       s+=c->storageSize();
   }
 
@@ -846,9 +837,8 @@ int Content::lineCount()
     ret+=h_ead.count('\n');
   ret+=b_ody.count('\n');
 
-  if(c_ontents && !c_ontents->isEmpty())
-    for(Content *c=c_ontents->first(); c; c=c_ontents->next())
-      ret+=c->lineCount();
+  foreach ( Content *c, c_ontents )
+    ret+=c->lineCount();
 
   return ret;
 }
@@ -894,29 +884,27 @@ bool Content::decodeText()
 
 
 void Content::setDefaultCharset(const Q3CString &cs)
-{ 
-  d_efaultCS = KMime::cachedCharset(cs); 
-  
-  if(c_ontents && !c_ontents->isEmpty())
-    for(Content *c=c_ontents->first(); c; c=c_ontents->next())
-      c->setDefaultCharset(cs);
-      
+{
+  d_efaultCS = KMime::cachedCharset(cs);
+
+  foreach ( Content *c, c_ontents )
+    c->setDefaultCharset(cs);
+
   // reparse the part and its sub-parts in order
   // to clear cached header values
-  parse();      
+  parse();
 }
 
 
 void Content::setForceDefaultCS(bool b)
 {
   f_orceDefaultCS=b;
-  
-  if(c_ontents && !c_ontents->isEmpty())
-    for(Content *c=c_ontents->first(); c; c=c_ontents->next())
-      c->setForceDefaultCS(b);
-  
+
+  foreach ( Content *c, c_ontents )
+    c->setForceDefaultCS(b);
+
   // reparse the part and its sub-parts in order
-  // to clear cached header values    
+  // to clear cached header values
   parse();
 }
 

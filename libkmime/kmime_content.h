@@ -1,7 +1,3 @@
-//Added by qt3to4:
-#include <Q3StrList>
-#include <Q3CString>
-#include <Q3PtrList>
 /*
     kmime_content.h
 
@@ -34,6 +30,9 @@ class KMime::Headers::List;
 #include "kmime_headers.h"
 
 #include <qtextstream.h>
+//Added by qt3to4:
+#include <Q3StrList>
+#include <Q3CString>
 
 namespace KMime {
 
@@ -63,7 +62,7 @@ class Base {
 class KDE_EXPORT Content : public Base {
 
   public:
-    typedef Q3PtrList<KMime::Content> List;
+    typedef QList<KMime::Content*> List;
 
     Content();
     Content(const Q3CString &h, const Q3CString &b);
@@ -73,7 +72,7 @@ class KDE_EXPORT Content : public Base {
     virtual articleType type()      { return ATmimeContent; }
 
     //content handling
-    bool hasContent()               { return ( !h_ead.isEmpty() && (!b_ody.isEmpty() || (c_ontents && !c_ontents->isEmpty())) ); }
+    bool hasContent()               { return ( !h_ead.isEmpty() && (!b_ody.isEmpty() || !c_ontents.isEmpty()) ); }
     void setContent(Q3StrList *l);
     void setContent(const Q3CString &s);
     virtual void parse();
@@ -102,13 +101,13 @@ class KDE_EXPORT Content : public Base {
     Q3CString encodedContent(bool useCrLf=false);
     QByteArray decodedContent();
     void decodedText(QString &s, bool trimText=false,
-		     bool removeTrailingNewlines=false);
+                     bool removeTrailingNewlines=false);
     void decodedText(QStringList &s, bool trimText=false,
-		     bool removeTrailingNewlines=false);
+                     bool removeTrailingNewlines=false);
     void fromUnicodeString(const QString &s);
 
     Content* textContent();
-    void attachments(List *dst, bool incAlternatives=false);
+    void attachments(List &dst, bool incAlternatives=false);
     void addContent(Content *c, bool prepend=false);
     void removeContent(Content *c, bool del=false);
     void changeEncoding(Headers::contentEncoding e);
@@ -140,7 +139,7 @@ class KDE_EXPORT Content : public Base {
 
     Q3CString  h_ead,
               b_ody;
-    List *c_ontents;
+    List c_ontents;
     Headers::Base::List *h_eaders;
     const char *d_efaultCS;
     bool f_orceDefaultCS;

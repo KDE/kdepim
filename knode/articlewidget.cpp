@@ -452,7 +452,7 @@ void ArticleWidget::displayArticle()
   mAttachments.clear();
   mAttachementMap.clear();
   if( !text || ct->isMultipart() )
-    mArticle->attachments( &mAttachments, knGlobals.settings()->showAlternativeContents() );
+    mArticle->attachments( mAttachments, knGlobals.settings()->showAlternativeContents() );
 
   // partial message
   if(ct->isPartial()) {
@@ -497,7 +497,7 @@ void ArticleWidget::displayArticle()
   // display attachments
   if( !mAttachments.isEmpty() && !ct->isPartial() ) {
     int attCnt = 0;
-    for( KMime::Content *var = mAttachments.first(); var; var = mAttachments.next() ) {
+    foreach ( KMime::Content *var, mAttachments ) {
       displayAttachment( var, attCnt );
       attCnt++;
     }

@@ -958,11 +958,9 @@ void KNComposer::initData(const QString &text)
     v_iew->showAttachmentView();
     KMime::Content::List attList;
     AttachmentViewItem *item=0;
-    attList.setAutoDelete(false);
-    a_rticle->attachments(&attList);
-    for(KMime::Content *c=attList.first(); c; c=attList.next()) {
+    a_rticle->attachments( attList );
+    foreach ( KMime::Content *c, attList )
       item=new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(c));
-    }
   }
 }
 

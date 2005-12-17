@@ -339,10 +339,9 @@ void KNArticleFactory::createForward(KNArticle *a)
   if(incAtt) {
     KMime::Content::List al;
 
-    a->attachments(&al, false);
-    for(KMime::Content *c=al.first(); c; c=al.next()) {
+    a->attachments( al, false );
+    foreach ( KMime::Content *c, al )
       art->addContent( new KMime::Content(c->head(), c->body()) );
-    }
   }
 
   //------------------------ </Attachments> ------------------------
@@ -1053,7 +1052,7 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
   };
 
   if ( delCom ) {
-    mCompList.remove( com );
+    mCompList.removeAll( com );
     delete com;
   } else
     KWin::activateWindow(com->winId());
