@@ -88,9 +88,9 @@ void Content::setContent(Q3StrList *l)
 }
 
 
-void Content::setContent(const Q3CString &s)
+void Content::setContent( const QByteArray &s )
 {
-  int pos=s.find("\n\n", 0);
+  int pos = s.indexOf( "\n\n", 0 );
   if(pos>-1) {
     h_ead=s.left(++pos);  //header *must* end with "\n" !!
     b_ody=s.mid(pos+1, s.length()-pos-1);

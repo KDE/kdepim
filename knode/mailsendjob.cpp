@@ -17,7 +17,6 @@
 
 #include <kdebug.h>
 
-#include <Q3StrList>
 
 KNode::MailSendJob::MailSendJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
   KNJobData( KNJobData::JTmail, c, a, i )
@@ -32,10 +31,9 @@ void KNode::MailSendJob::execute()
   QStringList query;
   query << "headers=0";
   query << "from=" + KURL::encode_string( art->from()->email() );
-  Q3StrList emails;
-  art->to()->emails( &emails );
-  for ( char *e = emails.first(); e; e = emails.next() )
-    query << "to=" + KURL::encode_string( e );
+  QList<QByteArray> emails = art->to()->emails();
+  foreach ( QByteArray to, emails )
+    query << "to=" + KURL::encode_string( to );
 
   // create url
   KURL destination = baseUrl();

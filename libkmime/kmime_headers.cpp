@@ -23,15 +23,12 @@
 #include "kmime_header_parsing.h"
 #include "kmime_warning.h"
 
-#include "kqcstringsplitter.h"
-
 #include <qtextcodec.h>
 #include <qstring.h>
 #include <q3cstring.h>
 #include <qstringlist.h>
 #include <q3valuelist.h>
 //Added by qt3to4:
-#include <Q3StrList>
 #include <Q3PtrList>
 
 #include <kglobal.h>
@@ -260,7 +257,7 @@ bool GDotAtom::parse( const char* & scursor, const char * const send,
   QString maybeDotAtom;
   if ( !parseDotAtom( scursor, send, maybeDotAtom, isCRLF ) )
     return false;
-  
+
   mDotAtom = maybeDotAtom;
 
   eatCFWS( scursor, send, isCRLF );
@@ -301,7 +298,7 @@ bool GContentType::parse( const char* & scursor, const char * const send,
 
   //
   // type
-  // 
+  //
 
   QPair<const char*,int> maybeMimeType;
   if ( !parseToken( scursor, send, maybeMimeType, false /* no 8Bit */ ) )
@@ -331,10 +328,10 @@ bool GContentType::parse( const char* & scursor, const char * const send,
 
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) return true; // no parameters
-  
+
   if ( *scursor != ';' ) return false;
   scursor++;
-  
+
   if ( !parseParameterList( scursor, send, mParameterHash, isCRLF ) )
     return false;
 
@@ -359,7 +356,7 @@ bool GCISTokenWithParameterList::parse( const char* & scursor,
 
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) return false;
-  
+
   QPair<const char*,int> maybeToken;
   if ( !parseToken( scursor, send, maybeToken, false /* no 8Bit */ ) )
     return false;
@@ -372,10 +369,10 @@ bool GCISTokenWithParameterList::parse( const char* & scursor,
 
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) return true; // no parameters
-  
+
   if ( *scursor != ';' ) return false;
   scursor++;
-  
+
   if ( !parseParameterList( scursor, send, mParameterHash, isCRLF ) )
     return false;
 
@@ -448,7 +445,7 @@ bool GSingleIdent::parse( const char* & scursor, const char * const send, bool i
 //-----<ReturnPath>-------------------------
 
 bool ReturnPath::parse( const char* & scursor, const char * const send, bool isCRLF ) {
-  
+
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) return false;
 
@@ -463,7 +460,7 @@ bool ReturnPath::parse( const char* & scursor, const char * const send, bool isC
     eatCFWS( scursor, send, isCRLF );
     if ( scursor == send || *scursor != '>' ) return false;
     scursor++;
-    
+
     // prepare a Null mailbox:
     AddrSpec emptyAddrSpec;
     maybeMailbox.displayName = QString::null;
@@ -827,25 +824,14 @@ int Date::ageInDays()
 
 void To::from7BitString(const Q3CString &s)
 {
-  if(a_ddrList)
-    a_ddrList->clear();
-  else {
-    a_ddrList=new Q3PtrList<AddressField>;
-    a_ddrList->setAutoDelete(true);
-  }
+  qDeleteAll( a_ddrList );
+  a_ddrList.clear();
 
-  KQCStringSplitter split;
-  split.init(s, ",");
-  bool splitOk=split.first();
-  if(!splitOk)
-    a_ddrList->append( new AddressField(p_arent, s ));
-  else {
-    do {
-      a_ddrList->append( new AddressField(p_arent, split.string()) );
-    } while(split.next());
-  }
+  QList<QByteArray> split = s.split( ',' );
+  foreach ( QByteArray s, split )
+    a_ddrList.append( new AddressField( p_arent, s ) );
 
-  e_ncCS=cachedCharset(a_ddrList->first()->rfc2047Charset());
+  e_ncCS = cachedCharset( a_ddrList.first()->rfc2047Charset() );
 }
 
 
@@ -856,12 +842,12 @@ Q3CString To::as7BitString(bool incType)
   if(incType)
     ret+=typeIntro();
 
-  if (a_ddrList) {
-    AddressField *it=a_ddrList->first();
-    if (it)
-      ret+=it->as7BitString(false);
-    for (it=a_ddrList->next() ; it != 0; it=a_ddrList->next() )
-      ret+=","+it->as7BitString(false);
+  if ( !a_ddrList.isEmpty() ) {
+    ObsAddressList::Iterator it = a_ddrList.begin();
+    if ( *it )
+      ret += (*it)->as7BitString( false );
+    for ( ++it; it != a_ddrList.end(); ++it )
+      ret += "," + (*it)->as7BitString( false );
   }
 
   return ret;
@@ -870,18 +856,13 @@ Q3CString To::as7BitString(bool incType)
 
 void To::fromUnicodeString(const QString &s, const Q3CString &cs)
 {
-  if(a_ddrList)
-    a_ddrList->clear();
-  else  {
-    a_ddrList=new Q3PtrList<AddressField>;
-    a_ddrList->setAutoDelete(true);
-  }
+  qDeleteAll( a_ddrList );
+  a_ddrList.clear();
 
-  QStringList l=QStringList::split(",", s);
+  QStringList l = s.split( ',' );
 
-  QStringList::Iterator it=l.begin();
-  for(; it!=l.end(); ++it)
-    a_ddrList->append(new AddressField( p_arent, (*it), cs ));
+  for ( QStringList::Iterator it=l.begin(); it != l.end(); ++it )
+    a_ddrList.append( new AddressField( p_arent, (*it), cs ) );
 
   e_ncCS=cachedCharset(cs);
 }
@@ -889,40 +870,35 @@ void To::fromUnicodeString(const QString &s, const Q3CString &cs)
 
 QString To::asUnicodeString()
 {
-  if(!a_ddrList)
+  if ( a_ddrList.isEmpty() )
     return QString::null;
 
   QString ret;
-  AddressField *it=a_ddrList->first();
+  ObsAddressList::Iterator it = a_ddrList.begin();
 
-  if (it)
-    ret+=it->asUnicodeString();
-  for (it=a_ddrList->next() ; it != 0; it=a_ddrList->next() )
-    ret+=","+it->asUnicodeString();
+  if ( *it )
+    ret += (*it)->asUnicodeString();
+  for ( ++it; it != a_ddrList.end(); ++it )
+    ret += "," + (*it)->asUnicodeString();
   return ret;
 }
 
 
 void To::addAddress(const AddressField &a)
 {
-  if(!a_ddrList) {
-    a_ddrList=new Q3PtrList<AddressField>;
-    a_ddrList->setAutoDelete(true);
-  }
-
   AddressField *add=new AddressField(a);
   add->setParent(p_arent);
-  a_ddrList->append(add);
+  a_ddrList.append( add );
 }
 
 
-void To::emails(Q3StrList *l)
+QList<QByteArray> To::emails() const
 {
-  l->clear();
-
-  for (AddressField *it=a_ddrList->first(); it != 0; it=a_ddrList->next() )
-    if( it->hasEmail() )
-      l->append( it->email() );
+  QList<QByteArray> l;
+  for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it )
+    if ( (*it)->hasEmail() )
+      l.append( (*it)->email() );
+  return l;
 }
 
 //-----</To>-----------------------------------

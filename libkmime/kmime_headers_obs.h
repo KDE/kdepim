@@ -16,13 +16,12 @@
 #ifndef __KMIME_HEADERS_OBS_H__
 #define __KMIME_HEADERS_OBS_H__
 
-#if defined(KMIME_NEW_STYPE_CLASSTREE)
+#if defined(KMIME_NEW_STYLE_CLASSTREE)
 #error You cannot use this file with the new header classes!
 #endif
 
 #include <kdepimmacros.h>
 //Added by qt3to4:
-#include <Q3StrList>
 #include <Q3CString>
 #include <Q3PtrList>
 
@@ -99,7 +98,7 @@ class KDE_EXPORT AddressField : public Base {
     QString n_ame;
     Q3CString e_mail;
 };
-typedef Q3PtrList<AddressField> ObsAddressList;
+typedef QList<AddressField*> ObsAddressList;
 
 /** Represent a "From" header */
 class KDE_EXPORT From : public AddressField {
@@ -153,26 +152,25 @@ class KDE_EXPORT MailCopiesTo : public AddressField {
 class KDE_EXPORT To : public Base {
 
   public:
-    To() : Base(),a_ddrList(0)  {}
-    To(Content *p) : Base(p),a_ddrList(0)  {}
-    To(Content *p, const Q3CString &s) : Base(p),a_ddrList(0)  { from7BitString(s); }
-    To(Content *p, const QString &s, const Q3CString &cs) : Base(p),a_ddrList(0)  { fromUnicodeString(s,cs); }
-    ~To()  { delete a_ddrList; }
+    To() : Base()  {}
+    To(Content *p) : Base(p)  {}
+    To(Content *p, const Q3CString &s) : Base(p) { from7BitString(s); }
+    To(Content *p, const QString &s, const Q3CString &cs) : Base(p)  { fromUnicodeString(s,cs); }
+    ~To()  { qDeleteAll( a_ddrList ); a_ddrList.clear(); }
 
     virtual void from7BitString(const Q3CString &s);
     virtual Q3CString as7BitString(bool incType=true);
     virtual void fromUnicodeString(const QString &s, const Q3CString &cs);
     virtual QString asUnicodeString();
-    virtual void clear()            { delete a_ddrList; a_ddrList=0; }
-    virtual bool isEmpty()          { return (!a_ddrList || a_ddrList->isEmpty()
-                                              || a_ddrList->first()->isEmpty()); }
+    virtual void clear()            { qDeleteAll( a_ddrList ); a_ddrList.clear(); }
+    virtual bool isEmpty()          { return a_ddrList.isEmpty() || a_ddrList.first()->isEmpty(); }
     virtual const char* type()      { return "To"; }
 
     void addAddress(const AddressField &a);
-    void emails(Q3StrList *l);
+    QList<QByteArray> emails() const;
 
   protected:
-    ObsAddressList *a_ddrList;
+    ObsAddressList a_ddrList;
 
 };
 

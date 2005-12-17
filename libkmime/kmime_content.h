@@ -74,7 +74,7 @@ class KDE_EXPORT Content : public Base {
     //content handling
     bool hasContent()               { return ( !h_ead.isEmpty() && (!b_ody.isEmpty() || !c_ontents.isEmpty()) ); }
     void setContent(Q3StrList *l);
-    void setContent(const Q3CString &s);
+    void setContent( const QByteArray &s );
     virtual void parse();
     virtual void assemble();
     virtual void clear();
