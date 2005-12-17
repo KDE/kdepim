@@ -80,7 +80,7 @@ QString Attendee::statusName( Attendee::PartStat s )
       return i18n("Declined");
       break;
     case Tentative:
-      return i18n("Tentative");
+      return i18n("attendee status", "Tentative");
       break;
     case Delegated:
       return i18n("Delegated");
