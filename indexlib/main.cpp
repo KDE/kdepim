@@ -36,6 +36,8 @@
 #include "mempool.h"
 #include "compressed.h"
 #include "create.h"
+#include "tokenizer.h"
+#include <sstream>
 #include <map>
 #include <iostream>
 #include <cstdlib>
@@ -62,23 +64,46 @@ std::string read_string( std::string file ) {
 	return read_stream( in );
 }
 
-void usage( int argc, char* argv[] ) {
-	std::cout << argv[ 0 ] << " cmd [index]\n";
+void usage( int argc, char* argv[], const std::map<std::string, int (*)( int, char** )>& commands ) {
+	std::cout 
+		<< argv[ 0 ] 
+		<< " cmd [index]\n"
+		<< "Possible Commands:\n\n";
+
+	for ( std::map<std::string, int (*)( int, char** )>::const_iterator first = commands.begin(), past = commands.end(); first != past; ++first ) {
+		std::cout << '\t' << first->first << '\n';
+	}
+	std::cout << std::endl;
 }
 
 int debug( int argc, char* argv[] ) {
+	using namespace indexlib;
+	using namespace indexlib::detail;
 	std::string type = argv[ 2 ];
 	std::string argument = argv[ 3 ];
-	if ( type == "sa" ) {
+	if ( type == "print.sa" ) {
 		//nolog();
 		std::cout << "stringarray:\n";
 		stringarray sa( argument );
 		sa.print( std::cout );
-	} else if ( type == "compressed" ) {
+	} else if ( type == "print.compressed" ) {
 		compressed_file file( argument );
 		nolog();
 		std::cout << "compressed_file:\n";
 		file.print( std::cout );
+	} else if ( type == "break_up" ) {
+		std::auto_ptr<tokenizer> tok = get_tokenizer( "latin-1:european" );
+		if ( !tok.get() ) {
+			std::cerr << "Could not get tokenizer\n";
+			return 1;
+		}
+		nolog();
+		std::ostringstream whole_str;
+		whole_str << std::ifstream( argument.c_str() ).rdbuf();
+		std::vector<std::string> words = tok->string_to_words( whole_str.str().c_str() );
+		for ( std::vector<std::string>::const_iterator cur = words.begin(), past = words.end(); cur != past; ++cur ) {
+			std::cout << *cur << '\n';
+		}
 	} else {
 		std::cerr << "Unknown function\n";
 		return 1;
@@ -86,9 +111,9 @@ int debug( int argc, char* argv[] ) {
 	return 0;
 }
 
-int remove( int argc, char* argv[] ) {
+int remove_doc( int argc, char* argv[] ) {
 	if ( argc < 4 ) {
-		usage( argc, argv );
+		std::cerr << "Filename argument for remove_doc is required\n";
 		return 1;
 	}
 	index_smart t = get_index( argv[ 2 ] );
@@ -104,7 +129,9 @@ int maintenance( int argc, char* argv[] ) {
 
 int add( int argc, char* argv[] ) {
 	if ( argc < 4 ) {
-		usage( argc, argv ) ;
+		std::cerr <<
+			"Input file argument is required\n"
+			"Name is optional (defaults to filename)\n";
 		return 1;
 	}
 	index_smart t = get_index( argv[ 2 ] );
@@ -118,17 +145,14 @@ int add( int argc, char* argv[] ) {
 
 int search( int argc, char* argv[] ) {
 	if ( argc < 4 ) {
-		usage( argc, argv );
+		std::cerr << "Search string is required\n";
 		return 1;
 	}
 	index_smart t = get_index( argv[ 2 ]  );
 	std::vector<unsigned> files = t->search( argv[ 3 ] )->list();
-	if ( files.empty() ) std::cout << "Empty results\n";
-	else {
-		for ( std::vector<unsigned>::const_iterator first = files.begin(), past = files.end();
-				first != past; ++first ) {
-			std::cout << t->lookup_docname( *first ) << std::endl;
-		}
+	for ( std::vector<unsigned>::const_iterator first = files.begin(), past = files.end();
+			first != past; ++first ) {
+		std::cout << t->lookup_docname( *first ) << std::endl;
 	}
 	return 0;
 }
@@ -143,21 +167,28 @@ int list( int argc, char* argv[] ) {
 	return 0;
 }
 
+int remove( int argc, char* argv[] ) {
+	indexlib::remove( argv[ 2 ] );
+}
+
+	
 int main( int argc, char* argv[]) try {
 	//nolog();
-
-	if ( argc < 3 ) {
-		usage( argc, argv );
-		return 0;
-	}
 
 	std::map<std::string, int (*)( int, char* [] )> handlers;
 	handlers[ "debug" ] = &debug;
 	handlers[ "remove" ] = &remove;
+	handlers[ "remove_doc" ] = &remove_doc;
 	handlers[ "maintenance" ] = &maintenance;
 	handlers[ "add" ] = &add;
 	handlers[ "search" ] = &search;
 	handlers[ "list" ] = &list;
+
+	if ( argc < 3 ) {
+		usage( argc, argv, handlers );
+		return 0;
+	}
+
 
 	int ( *handle )( int, char*[] ) = handlers[ argv[ 1 ] ];
 
