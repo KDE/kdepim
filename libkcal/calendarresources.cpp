@@ -30,7 +30,7 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
-#include <q3ptrlist.h>
+#include <qlist.h>
 //Added by qt3to4:
 
 #include <kdebug.h>
@@ -65,7 +65,7 @@ ResourceCalendar
 ResourceCalendar
 *CalendarResources::AskDestinationPolicy::destination( Incidence * )
 {
-  Q3PtrList<KRES::Resource> list;
+  QList<KRES::Resource*> list;
 
   CalendarResourceManager::ActiveIterator it;
   for ( it = resourceManager()->activeBegin();
