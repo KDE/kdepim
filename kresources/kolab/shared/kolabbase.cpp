@@ -335,7 +335,7 @@ bool KolabBase::load( const QString& xml )
 
   if ( !ok ) {
     qWarning( "Error loading document: %s, line %d, column %d",
-              errorMsg.toLatin1(), errorLine, errorColumn );
+              qPrintable( errorMsg ), errorLine, errorColumn );
     return false;
   }
 
@@ -352,7 +352,7 @@ bool KolabBase::load( QFile& xml )
 
   if ( !ok ) {
     qWarning( "Error loading document: %s, line %d, column %d",
-              errorMsg.toLatin1(), errorLine, errorColumn );
+              qPrintable( errorMsg ), errorLine, errorColumn );
     return false;
   }
 
