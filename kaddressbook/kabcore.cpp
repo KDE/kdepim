@@ -25,7 +25,6 @@
 #include <qdir.h>
 #include <qfile.h>
 #include <qlayout.h>
-#include <q3ptrlist.h>
 #include <qregexp.h>
 #include <q3vbox.h>
 #include <QSplitter>
@@ -271,15 +270,13 @@ QStringList KABCore::selectedUIDs() const
 
 KABC::Resource *KABCore::requestResource( QWidget *parent )
 {
-  Q3PtrList<KABC::Resource> kabcResources = addressBook()->resources();
+  const QList<KABC::Resource*> kabcResources = addressBook()->resources();
 
-  Q3PtrList<KRES::Resource> kresResources;
-  Q3PtrListIterator<KABC::Resource> resIt( kabcResources );
-  KABC::Resource *resource;
-  while ( ( resource = resIt.current() ) != 0 ) {
-    ++resIt;
-    if ( !resource->readOnly() ) {
-      KRES::Resource *res = static_cast<KRES::Resource*>( resource );
+  QList<KRES::Resource*> kresResources;
+  QList<KABC::Resource*>::const_iterator resIt;
+  for ( resIt = kabcResources.begin(); resIt != kabcResources.end(); ++resIt) {
+    if ( (*resIt)->readOnly() ) {
+      KRES::Resource *res = static_cast<KRES::Resource*>( *resIt );
       if ( res )
         kresResources.append( res );
     }
@@ -724,14 +721,15 @@ void KABCore::storeContactIn( const QString &uid )
 
 void KABCore::save()
 {
-  Q3PtrList<KABC::Resource> resources = mAddressBook->resources();
-  Q3PtrListIterator<KABC::Resource> it( resources );
-  while ( it.current() && !it.current()->readOnly() ) {
-    KABC::Ticket *ticket = mAddressBook->requestSaveTicket( it.current() );
+  const QList<KABC::Resource*> resources = mAddressBook->resources();
+  QList<KABC::Resource*>::const_iterator it;
+
+  for(it = resources.begin(); it != resources.end(); ++it) {
+    KABC::Ticket *ticket = mAddressBook->requestSaveTicket( *it );
     if ( ticket ) {
       if ( !mAddressBook->save( ticket ) ) {
         KMessageBox::error( mWidget,
-                            i18n( "<qt>Unable to save address book <b>%1</b>.</qt>" ).arg( it.current()->resourceName() ) );
+                            i18n( "<qt>Unable to save address book <b>%1</b>.</qt>" ).arg( (*it)->resourceName() ) );
         mAddressBook->releaseSaveTicket( ticket );
       } else {
         setModified( false );
@@ -739,10 +737,8 @@ void KABCore::save()
     } else {
       KMessageBox::error( mWidget,
                           i18n( "<qt>Unable to get access for saving the address book <b>%1</b>.</qt>" )
-                          .arg( it.current()->resourceName() ) );
+                          .arg( (*it)->resourceName() ) );
     }
-
-    ++it;
   }
 }
 
@@ -925,11 +921,10 @@ bool KABCore::queryClose()
   saveSettings();
   KABPrefs::instance()->writeConfig();
 
-  Q3PtrList<KABC::Resource> resources = mAddressBook->resources();
-  Q3PtrListIterator<KABC::Resource> it( resources );
-  while ( it.current() ) {
-    it.current()->close();
-    ++it;
+  QList<KABC::Resource*> resources = mAddressBook->resources();
+  QList<KABC::Resource*>::iterator it;
+  for (it = resources.begin(); it != resources.end(); ++it ) {
+    (*it)->close();
   }
 
   return true;
