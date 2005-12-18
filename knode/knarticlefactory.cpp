@@ -18,6 +18,7 @@
 #include <qlayout.h>
 #include <qlabel.h>
 
+#include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kwin.h>
@@ -26,8 +27,8 @@
 #include <kvbox.h>
 
 #include "knarticlefactory.h"
-#include "knglobals.h"
 #include "knconfigmanager.h"
+#include "knglobals.h"
 #include "kngroupmanager.h"
 #include "knaccountmanager.h"
 #include "knfoldermanager.h"
@@ -1095,7 +1096,7 @@ KNSendErrorDialog::~KNSendErrorDialog()
 void KNSendErrorDialog::append(const QString &subject, const QString &error)
 {
   ErrorListItem *item = new ErrorListItem( subject, error );
-  item->setIcon( knGlobals.configManager()->appearance()->icon(KNode::Appearance::sendErr) );
+  item->setIcon( UserIcon("snderr") );
   mErrorList->addItem( item );
   mErrorList->setCurrentItem( item );
 }

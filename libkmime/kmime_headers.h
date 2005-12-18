@@ -65,7 +65,7 @@ enum contentDisposition { CDinline,
                           CDparallel };
 
 //often used charset
-static const Q3CString Latin1("ISO-8859-1");
+static const QByteArray Latin1("ISO-8859-1");
 
 #define mk_trivial_subclass_with_name( subclass, subclassName, baseclass ) \
 class subclass : public Generics::baseclass { \
@@ -80,7 +80,7 @@ public: \
   \
   const char * type() const { return #subclassName; } \
 }
- 
+
 #define mk_trivial_subclass( subclass, baseclass ) \
 mk_trivial_subclass_with_name( subclass, subclass, baseclass )
 
@@ -147,7 +147,7 @@ class KDE_EXPORT Base {
     void setRFC2047Charset(const Q3CString &cs);
 
     /** Return the default charset */
-    Q3CString defaultCS();
+    QByteArray defaultCS();
 
     /** Return if the default charset is mandatory */
     bool forceCS();
@@ -196,7 +196,7 @@ namespace Generics {
 
 /** Abstract base class for unstructured header fields
     (e.g. "Subject", "Comment", "Content-description").
-    
+
     Features: Decodes the header according to RFC2047, incl. RFC2231
     extensions to encoded-words.
 
@@ -260,7 +260,7 @@ private:
     Then there are the real composite tokens, which are made up of one
     or more of the basic tokens (and semantically invisible comments):
     phrases (rfc822 with rfc2047) and dot-atoms (rfc2822).
-    
+
     This finishes the list of supported token types. Subclasses will
     provide support for more higher-level tokens, where necessary,
     using these parsers.
@@ -279,7 +279,7 @@ public:
     : Base( p )  { fromUnicodeString( s, cs ); }
   ~GStructured()  {}
 
-  
+
 protected:
 #if 0
   // the assembly squad:
@@ -685,7 +685,7 @@ class KDE_EXPORT Date : public Base {
     void setUnixTime()              { t_ime=time(0); }
     QDateTime qdt();
     int ageInDays();
-    
+
   protected:
     time_t t_ime;
 
@@ -803,8 +803,8 @@ typedef Headers::Base* (*headerCreator)(void);
     If you are a header class author, you can register your class
     (let's call it Foo) so:
     <pre>
-    
-    </pre>    
+
+    </pre>
 
     @short Factory for KMime::Headers
     @author Marc Mutz <mutz@kde.org>

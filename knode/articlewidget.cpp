@@ -26,9 +26,6 @@
 #include <qtextcodec.h>
 #include <qtimer.h>
 //Added by qt3to4:
-#include <Q3CString>
-#include <QEvent>
-#include <QKeyEvent>
 #include <QHBoxLayout>
 
 #include <kaction.h>
@@ -924,12 +921,12 @@ bool ArticleWidget::inlinePossible( KMime::Content *c )
 }
 
 
-bool ArticleWidget::canDecodeText( const Q3CString &charset ) const
+bool ArticleWidget::canDecodeText( const QByteArray &charset ) const
 {
   if ( charset.isEmpty() )
     return false;
   bool ok = true;
-  KGlobal::charsets()->codecForName( charset,ok );
+  KGlobal::charsets()->codecForName( charset, ok );
   return ok;
 }
 

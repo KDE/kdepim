@@ -29,7 +29,7 @@ namespace KMime {
 
   /** Consult the charset cache. Only used for reducing mem usage by
       keeping strings in a common repository.*/
-  extern const char* cachedCharset(const Q3CString &name) KDE_EXPORT;
+  extern const char* cachedCharset( const QByteArray &name ) KDE_EXPORT;
 
   /** Consult the language cache. Only used for reducing mem usage by
       keeping strings in a common repository.*/

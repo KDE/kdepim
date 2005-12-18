@@ -16,8 +16,7 @@
 #include <QStackedWidget>
 #include <qlabel.h>
 #include <qcheckbox.h>
-//Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 #include <QListWidget>
 #include <QTextStream>
 #include <QGridLayout>
@@ -406,25 +405,26 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
 
     //read mbox-data
     unsigned int size=oldIdx.eo-oldIdx.so;
-    Q3CString buff(size+10);
+    QByteArray buffer;
     srcMBox.at(oldIdx.so);
-    int readBytes=srcMBox.read(buff.data(), size);
-    buff[readBytes] = '\0'; //terminate string;
+    buffer = srcMBox.read( size );
 
     //remove "X-KNode-Overview"
-    int pos=buff.find('\n');
-    if(pos>-1)
-      buff.remove(0, pos+1);
+    int pos = buffer.indexOf( '\n' );
+    if ( pos > -1 )
+      buffer.remove( 0, pos + 1 );
 
     //write mbox-data
     ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
+    ts.flush();
     newIdx.so=dstMBox.at(); //save start-offset
     ts << "X-KNode-Overview: ";
-    ts << KMime::extractHeader(buff, "Subject") << '\t';
-    ts << KMime::extractHeader(buff, "Newsgroups") << '\t';
-    ts << KMime::extractHeader(buff, "To") << '\t';
-    ts << KMime::extractHeader(buff, "Lines") << '\n';
-    ts << buff;
+    ts << KMime::extractHeader(buffer, "Subject") << '\t';
+    ts << KMime::extractHeader(buffer, "Newsgroups") << '\t';
+    ts << KMime::extractHeader(buffer, "To") << '\t';
+    ts << KMime::extractHeader(buffer, "Lines") << '\n';
+    ts << buffer;
+    ts.flush();
     newIdx.eo=dstMBox.at(); //save end-offset
     ts << '\n';
 

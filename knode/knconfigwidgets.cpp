@@ -684,8 +684,7 @@ void KNode::AppearanceWidget::FontListItem::setFont( const QFont &font )
 
 
 KNode::AppearanceWidget::AppearanceWidget( KInstance *inst, QWidget *parent ) :
-  KCModule(inst, parent ),
-  d_ata( knGlobals.configManager()->appearance() )
+  KCModule(inst, parent )
 {
   QGridLayout *topL = new QGridLayout( this );
 
@@ -723,11 +722,6 @@ KNode::AppearanceWidget::AppearanceWidget( KInstance *inst, QWidget *parent ) :
 
   addConfig( knGlobals.settings(), this );
   load();
-}
-
-
-KNode::AppearanceWidget::~AppearanceWidget()
-{
 }
 
 
@@ -778,8 +772,7 @@ void KNode::AppearanceWidget::save()
 
   KCModule::save();
 
-  d_ata->setDirty(true);
-  d_ata->recreateLVIcons();
+  knGlobals.configManager()->appearance()->recreateLVIcons();
 }
 
 

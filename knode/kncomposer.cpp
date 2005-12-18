@@ -2563,7 +2563,7 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, Q
   QVBoxLayout *topL=new QVBoxLayout(page);
 
   //file info
-  Q3GroupBox *fileGB=new Q3GroupBox(i18n("File"), page);
+  QGroupBox *fileGB = new QGroupBox( i18n("File"), page );
   QGridLayout *fileL=new QGridLayout(fileGB, 3,2, 15,5);
 
   fileL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
@@ -2576,7 +2576,7 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, Q
   topL->addWidget(fileGB);
 
   //mime info
-  Q3GroupBox *mimeGB=new Q3GroupBox(i18n("Mime"), page);
+  QGroupBox *mimeGB = new QGroupBox( i18n("Mime"), page );
   QGridLayout *mimeL=new QGridLayout(mimeGB, 4,2, 15,5);
 
   mimeL->addRowSpacing(0, fontMetrics().lineSpacing()-9);

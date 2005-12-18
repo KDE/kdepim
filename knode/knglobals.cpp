@@ -16,6 +16,7 @@
 
 #include <kapplication.h>
 #include <kconfig.h>
+#include <kiconloader.h>
 #include <kstaticdeleter.h>
 
 #include "knconfigmanager.h"
@@ -47,6 +48,9 @@ KNGlobals::KNGlobals() :
   mSettings( 0 )
 {
   kdDebug(5003) << k_funcinfo << endl;
+
+  // find knode icons even when running in kontact
+  KGlobal::iconLoader()->addAppDir("knode");
 }
 
 KNGlobals::~KNGlobals( )

@@ -119,8 +119,8 @@ class KDE_EXPORT Content : public Base {
 
     // this charset is used for all headers and the body
     // if the charset is not declared explictly
-    Q3CString defaultCharset()                  { return Q3CString(d_efaultCS); }
-    void setDefaultCharset(const Q3CString &cs);
+    QByteArray defaultCharset() const        { return QByteArray( d_efaultCS ); }
+    void setDefaultCharset( const QByteArray &cs );
 
     // use the default charset even if a different charset is
     // declared in the article

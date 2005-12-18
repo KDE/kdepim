@@ -14,12 +14,9 @@
 #ifndef KNODE_ARTICLEWIDGET_H
 #define KNODE_ARTICLEWIDGET_H
 
-#include <qmap.h>
-#include <qwidget.h>
-//Added by qt3to4:
-#include <QFocusEvent>
-#include <QEvent>
-#include <Q3CString>
+#include <QByteArray>
+#include <QMap>
+#include <QWidget>
 
 #include <kurl.h>
 
@@ -51,17 +48,18 @@ namespace KNode {
 class CSSHelper;
 
 /**
-  Widget to display a news article
+  Widget to display a news article.
 */
 class ArticleWidget : public QWidget, public KNJobConsumer {
 
   Q_OBJECT
 
   public:
-    /// Construct a new article widget
+    /// Construct a new article widget.
     ArticleWidget( QWidget *parent,
                    KXMLGUIClient *guiClient,
                    KActionCollection *actionCollection );
+    /// Destroy the article widget.
     ~ArticleWidget();
 
     /// read config settings
@@ -167,8 +165,10 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     static int quotingDepth( const QString &line, const QString &quoteChars );
     /// checks wether the given attachment can be shown inline
     bool inlinePossible( KMime::Content *c );
-    /// checks if the given charset is supported
-    bool canDecodeText( const Q3CString &charset ) const;
+    /** Checks if the given charset is supported.
+     * @param charset The charset to check.
+     */
+    bool canDecodeText( const QByteArray &charset ) const;
 
     /// regenerated viewer content without changing scrollbar position
     void updateContents();
@@ -241,7 +241,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     bool mShowHtml;
     bool mRot13;
     bool mForceCharset;
-    Q3CString mOverrideCharset;
+    QByteArray mOverrideCharset;
 
     /// mark as read timer
     QTimer *mTimer;

@@ -156,7 +156,7 @@ class KDE_EXPORT Appearance : public ConfigBase {
                         redBallChkd=3,     newFups=4,      eyes=5,
                         ignore=6,          mail=7,         posting=8,
                         canceledPosting=9, savedRemote=10, group=11,
-                        sendErr=12,        null=13 };
+                        null=12 };
     Appearance();
 
     const QPixmap& icon(IconIndex i)     { return i_cons[i]; }

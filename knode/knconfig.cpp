@@ -178,8 +178,6 @@ void KNode::Identity::slotReceiveStderr(KProcess *, char *buffer, int buflen)
 
 KNode::Appearance::Appearance()
 {
-  //icons
-  KGlobal::iconLoader()->addAppDir("knode");
   recreateLVIcons();
   i_cons[newFups]         = UserIcon("newsubs");
   i_cons[eyes]            = UserIcon("eyes");
@@ -189,7 +187,6 @@ KNode::Appearance::Appearance()
   i_cons[canceledPosting] = SmallIcon("editdelete");
   i_cons[savedRemote]     = SmallIcon("editcopy");
   i_cons[group]           = UserIcon("group");
-  i_cons[sendErr]         = UserIcon("snderr");
 }
 
 

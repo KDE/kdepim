@@ -68,7 +68,7 @@ bool Base::forceCS()
 }
 
 
-Q3CString Base::defaultCS()
+QByteArray Base::defaultCS()
 {
   return ( p_arent!=0 ? p_arent->defaultCharset() : Latin1 );
 }

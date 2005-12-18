@@ -883,7 +883,7 @@ bool Content::decodeText()
 }
 
 
-void Content::setDefaultCharset(const Q3CString &cs)
+void Content::setDefaultCharset( const QByteArray &cs )
 {
   d_efaultCS = KMime::cachedCharset(cs);
 

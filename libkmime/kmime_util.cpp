@@ -45,7 +45,7 @@ namespace KMime {
 Q3StrIList c_harsetCache;
 Q3StrIList l_anguageCache;
 
-const char* cachedCharset(const Q3CString &name)
+const char* cachedCharset( const QByteArray &name )
 {
   int idx=c_harsetCache.find(name.data());
   if(idx>-1)
@@ -405,7 +405,7 @@ Q3CString extractHeader(const Q3CString &src, const char *name)
         }
         hdrValue.remove( beg, end - beg );
       }
-      return hdrValue; 
+      return hdrValue;
     }
   }
   else {

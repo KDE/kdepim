@@ -212,17 +212,23 @@ Q_OBJECT
 
 
 /** Appearance configuration widget. */
-class KDE_EXPORT AppearanceWidget : public KCModule {
-
+class KDE_EXPORT AppearanceWidget : public KCModule
+{
   Q_OBJECT
 
   public:
+    /** Create a new appearance configuration widget.
+     * @param inst The KInstance.
+     * @param parent The parent widget.
+     */
     AppearanceWidget( KInstance *inst, QWidget *parent = 0 );
-    ~AppearanceWidget();
 
-    void load();
-    void save();
-    void defaults();
+    /** Reimplemented from KCModule. */
+    virtual void load();
+    /** Reimplemented from KCModule. */
+    virtual void save();
+    /** Reimplemented from KCModule. */
+    virtual void defaults();
 
     //===================================================================================
 
@@ -283,8 +289,6 @@ class KDE_EXPORT AppearanceWidget : public KCModule {
               *f_ontCB;
     QPushButton *c_olChngBtn,
                 *f_ntChngBtn;
-
-    Appearance *d_ata;
 
   protected slots:
     //colors
