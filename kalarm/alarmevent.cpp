@@ -1,7 +1,7 @@
 /*
  *  alarmevent.cpp  -  represents calendar alarms and events
  *  Program:  kalarm
- *  (C) 2001 - 2004 by David Jarvie <software@astrojar.org.uk>
+ *  Copyright (c) 2001 - 2005 by David Jarvie <software@astrojar.org.uk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -13,9 +13,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #include "kalarm.h"
@@ -629,7 +629,7 @@ void KAEvent::set(const QDateTime& dateTime, const QString& text, const QColor& 
 	mFgColour               = fg;
 	mFont                   = font;
 	mAlarmCount             = 1;
-	mLateCancel             = lateCancel;
+	mLateCancel             = lateCancel;     // do this before set(flags)
 	mDeferral               = NO_DEFERRAL;    // do this before set(flags)
 	set(flags);
 	mReminderMinutes        = 0;
@@ -3046,11 +3046,6 @@ KAAlarm::KAAlarm(const KAAlarm& alarm)
 	  mDeferred(alarm.mDeferred)
 { }
 
-void KAAlarm::set(int flags)
-{
-	mDeferred = flags & KAEvent::DEFERRAL;
-}
-
 int KAAlarm::flags() const
 {
 	return KAAlarmEventBase::flags()
@@ -3142,7 +3137,7 @@ void KAAlarmEventBase::set(int flags)
 	mBeep          = flags & KAEvent::BEEP;
 	mRepeatSound   = flags & KAEvent::REPEAT_SOUND;
 	mRepeatAtLogin = flags & KAEvent::REPEAT_AT_LOGIN;
-	mAutoClose     = flags & KAEvent::AUTO_CLOSE;
+	mAutoClose     = (flags & KAEvent::AUTO_CLOSE) && mLateCancel;
 	mEmailBcc      = flags & KAEvent::EMAIL_BCC;
 	mConfirmAck    = flags & KAEvent::CONFIRM_ACK;
 	mDisplaying    = flags & KAEvent::DISPLAYING_;

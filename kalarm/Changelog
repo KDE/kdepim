@@ -1,6 +1,7 @@
 KAlarm
 
-=== Version 1.2.11 --- 4 December 2005 ===
+=== Version 1.2.11 --- 19 December 2005 ===
+Make autoclose of message windows work.
 Fix toolbar configuration being lost after quitting KAlarm.
 
 === Version 1.2.10 --- 10 September 2005 ===
