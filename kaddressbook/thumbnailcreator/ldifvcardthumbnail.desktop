@@ -40,6 +40,6 @@ Name[uk]=файли електронних візитних карток
 Name[xx]=xxElectronic Business Card Filesxx
 Name[zh_CN]=电子名片文件
 ServiceTypes=ThumbCreator
-MimeTypes=text/x-vcard,text/x-ldif
+MimeTypes=text/directory;text/x-vcard,text/x-ldif
 X-KDE-Library=ldifvcardthumbnail
 CacheThumbnail=false
