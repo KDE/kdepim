@@ -223,6 +223,10 @@ void HtmlExport::createEventList (QTextStream *ts)
   *ts << "    <th class=\"sum\">" << i18n("Start Time") << "</th>\n";
   *ts << "    <th>" << i18n("End Time") << "</th>\n";
   *ts << "    <th>" << i18n("Event") << "</th>\n";
+  if ( mSettings->eventLocation() ) {
+    *ts << "    <th>" << i18n("Location") << "</th>\n";
+    ++columns;
+  }
   if ( mSettings->eventCategories() ) {
     *ts << "    <th>" << i18n("Categories") << "</th>\n";
     ++columns;
@@ -285,6 +289,12 @@ void HtmlExport::createEvent (QTextStream *ts, Event *event,
   }
   *ts << "    </td>\n";
 
+  if ( mSettings->eventLocation() ) {
+    *ts << "  <td>\n";
+    formatLocation( ts, event );
+    *ts << "  </td>\n";
+  }
+
   if ( mSettings->eventCategories() ) {
     *ts << "  <td>\n";
     formatCategories( ts, event );
@@ -344,6 +354,10 @@ void HtmlExport::createTodoList ( QTextStream *ts )
   *ts << "    <th>" << i18n("Completed") << "</th>\n";
   if ( mSettings->taskDueDate() ) {
     *ts << "    <th>" << i18n("Due Date") << "</th>\n";
+    ++columns;
+  }
+  if ( mSettings->taskLocation() ) {
+    *ts << "    <th>" << i18n("Location") << "</th>\n";
     ++columns;
   }
   if ( mSettings->taskCategories() ) {
@@ -451,6 +465,14 @@ void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
     *ts << "  </td>\n";
   }
 
+  if ( mSettings->taskLocation() ) {
+    *ts << "  <td";
+    if (completed) *ts << " class=\"done\"";
+    *ts << ">\n";
+    formatLocation(ts,todo);
+    *ts << "  </td>\n";
+  }
+
   if ( mSettings->taskCategories() ) {
     *ts << "  <td";
     if (completed) *ts << " class=\"done\"";
@@ -500,6 +522,15 @@ bool HtmlExport::checkSecrecy( Incidence *incidence )
     return true;
   }
   return false;
+}
+
+void HtmlExport::formatLocation (QTextStream *ts,Incidence *event)
+{
+  if (!event->location().isEmpty()) {
+    *ts << "    " << cleanChars(event->location()) << "\n";
+  } else {
+    *ts << "    &nbsp;\n";
+  }
 }
 
 void HtmlExport::formatCategories (QTextStream *ts,Incidence *event)

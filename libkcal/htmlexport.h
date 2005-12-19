@@ -69,17 +69,18 @@ class KDE_EXPORT HtmlExport
     void createFreeBusyView( QTextStream *ts );
 
     void createTodo( QTextStream *ts, Todo *todo);
-    void createEvent( QTextStream *ts, Event *event, QDate date, 
+    void createEvent( QTextStream *ts, Event *event, QDate date,
                       bool withDescription = true);
     void createFooter( QTextStream *ts );
 
     bool checkSecrecy( Incidence * );
 
+    void formatLocation( QTextStream *ts, Incidence *event );
     void formatCategories( QTextStream *ts, Incidence *event );
     void formatAttendees( QTextStream *ts, Incidence *event );
- 
+
     QString breakString( const QString &text );
-    
+
     QDate fromDate() const;
     QDate toDate() const;
     QString styleSheet() const;
