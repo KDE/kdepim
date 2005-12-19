@@ -25,7 +25,7 @@
 #define ADDRESSEEEDITORWIDGET_H
 
 #include <qdatetime.h>
-
+#include <Q3Dict>
 #include <kabc/addressee.h>
 #include <kdialogbase.h>
 #include <kjanuswidget.h>
