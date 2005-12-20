@@ -22,6 +22,7 @@
 #include <QBoxLayout>
 #include <QVBoxLayout>
 
+#include <kcharsets.h>
 #include <klocale.h>
 #include <knumvalidator.h>
 #include <kmessagebox.h>
@@ -1533,7 +1534,7 @@ KNode::PostNewsTechnicalWidget::PostNewsTechnicalWidget( PostNewsTechnical *d, K
 {
   setupUi( this );
 
-  mCharset->insertStringList( mData->composerCharsets() );
+  mCharset->insertStringList( KGlobal::charsets()->availableEncodingNames() );
   mEncoding->insertItem( i18n("Allow 8-bit") );
   mEncoding->insertItem( i18n("7-bit (Quoted-Printable)") );
 
@@ -1555,7 +1556,8 @@ void KNode::PostNewsTechnicalWidget::load()
 {
   KCModule::load();
 
-  mCharset->setCurrentItem( mData->indexForCharset( mData->charset() ) );
+  kdDebug(5003) << k_funcinfo << knGlobals.settings()->charset() << endl;
+  mCharset->setCurrentItem( mCharset->findText( knGlobals.settings()->charset() ) );
   mEncoding->setCurrentItem( knGlobals.settings()->allow8BitBody() ? 0 : 1 );
 
   mHeaderList->clear();
@@ -1566,7 +1568,7 @@ void KNode::PostNewsTechnicalWidget::load()
 
 void KNode::PostNewsTechnicalWidget::save()
 {
-  mData->c_harset = mCharset->currentText().toLatin1();
+  knGlobals.settings()->setCharset( mCharset->currentText() );
   knGlobals.settings()->setAllow8BitBody( mEncoding->currentItem() == 0 );
 
   mData->mXheaders.clear();

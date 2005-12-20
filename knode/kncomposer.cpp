@@ -21,7 +21,7 @@
 #include <QKeyEvent>
 #include <QEvent>
 #include <QTextStream>
-#include <Q3CString>
+#include <QByteArray>
 #include <QContextMenuEvent>
 #include <QVBoxLayout>
 #include <QDropEvent>
@@ -280,7 +280,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
                    SLOT(slotToggleDoMail()), actionCollection(), "send_mail");
 
   a_ctSetCharset = new KSelectAction(i18n("Set &Charset"), 0, actionCollection(), "set_charset");
-  a_ctSetCharset->setItems(knGlobals.configManager()->postNewsTechnical()->composerCharsets());
+  a_ctSetCharset->setItems( KGlobal::charsets()->availableEncodingNames() );
   a_ctSetCharset->setShortcutConfigurable(false);
   connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
   this, SLOT(slotSetCharset(const QString&)));
@@ -857,7 +857,7 @@ bool KNComposer::applyChanges()
           block.setText( codec->fromUnicode(tmpText) );
           kdDebug(5003) << "signing article from " << article()->from()->email() << endl;
           if( block.clearsign( signingKey, codec->name() ) == Kpgp::Ok ) {
-              Q3CString result = block.text();
+              QByteArray result = block.text();
               tmp = codec->toUnicode(result.data(), result.length() );
           } else {
               return false;
@@ -940,9 +940,9 @@ void KNComposer::initData(const QString &text)
   if(textContent)
     c_harset=textContent->contentType()->charset();
   else
-    c_harset=knGlobals.configManager()->postNewsTechnical()->charset();
+    c_harset = knGlobals.settings()->charset().toLatin1();
 
-  a_ctSetCharset->setCurrentItem(knGlobals.configManager()->postNewsTechnical()->indexForCharset(c_harset));
+  a_ctSetCharset->setCurrentItem( a_ctSetCharset->items().indexOf( c_harset ) );
 
   // initialize the message type select action
   if (a_rticle->doPost() && a_rticle->doMail())
@@ -1283,7 +1283,7 @@ void KNComposer::slotExternalEditor()
       tmp+="\n";
   }
 
-  Q3CString local = codec->fromUnicode(tmp);
+  QByteArray local = codec->fromUnicode(tmp);
   e_ditorTempfile->file()->writeBlock(local.data(),local.length());
   e_ditorTempfile->file()->flush();
 

@@ -20,8 +20,8 @@
 #include "utilities.h"
 #include "knarticle.h"
 #include "knarticlecollection.h"
-//Added by qt3to4:
-#include <Q3CString>
+
+#include <QByteArray>
 
 
 /** Representation of a folder. This includes:
@@ -62,7 +62,7 @@ class KNFolder : public KNArticleCollection  {
     //article access
     KNLocalArticle* at(int i)           { return static_cast<KNLocalArticle*>(KNArticleCollection::at(i)); }
     KNLocalArticle* byId(int id)        { return static_cast<KNLocalArticle*>(KNArticleCollection::byId(id)); }
-    KNLocalArticle* byMessageId(const Q3CString &mid)
+    KNLocalArticle* byMessageId( const QByteArray &mid )
                                         { return static_cast<KNLocalArticle*>(KNArticleCollection::byMessageId(mid)); }
 
     //parent

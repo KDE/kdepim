@@ -64,7 +64,7 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
     return;
 
   QString sig;
-  KNLocalArticle *art=newArticle(a, sig, knGlobals.configManager()->postNewsTechnical()->charset());
+  KNLocalArticle *art=newArticle( a, sig, knGlobals.settings()->charset().toLatin1() );
   if(!art)
     return;
 
@@ -88,7 +88,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   if (g->useCharset())
     chset = g->defaultCharset();
   else
-    chset = knGlobals.configManager()->postNewsTechnical()->charset();
+    chset = knGlobals.settings()->charset().toLatin1();
 
   QString sig;
   KNLocalArticle *art=newArticle(g, sig, chset);
@@ -120,9 +120,9 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
     if (g->useCharset())
       chset = g->defaultCharset();
     else
-      chset = knGlobals.configManager()->postNewsTechnical()->charset();
+      chset = knGlobals.settings()->charset().toLatin1();
   } else
-    chset = knGlobals.configManager()->postNewsTechnical()->findComposerCharset(a->contentType()->charset());
+    chset = a->contentType()->charset();
 
   //create new article
   QString sig;
@@ -292,9 +292,9 @@ void KNArticleFactory::createForward(KNArticle *a)
                 );
 
   if ( knGlobals.settings()->useOwnCharset() )
-    chset = knGlobals.configManager()->postNewsTechnical()->charset();
+    chset = knGlobals.settings()->charset().toLatin1();
   else
-    chset = knGlobals.configManager()->postNewsTechnical()->findComposerCharset(a->contentType()->charset());
+    chset = a->contentType()->charset();
 
   //create new article
   QString sig;
@@ -473,7 +473,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 
   //new article
   QString sig;
-  KNLocalArticle *art=newArticle(grp, sig, knGlobals.configManager()->postNewsTechnical()->findComposerCharset(a->contentType()->charset()));
+  KNLocalArticle *art = newArticle( grp, sig, a->contentType()->charset() );
   if(!art)
     return;
 
@@ -522,7 +522,7 @@ void KNArticleFactory::createMail(KMime::Headers::AddressField *address)
 
   //create new article
   QString sig;
-  KNLocalArticle *art=newArticle(knGlobals.groupManager()->currentGroup(), sig, knGlobals.configManager()->postNewsTechnical()->charset());
+  KNLocalArticle *art = newArticle( knGlobals.groupManager()->currentGroup(), sig, knGlobals.settings()->charset().toLatin1() );
   if(!art)
     return;
 
@@ -816,7 +816,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
 
   //From
   KMime::Headers::From *from=art->from();
-  from->setRFC2047Charset( knGlobals.configManager()->postNewsTechnical()->charset() );
+  from->setRFC2047Charset( knGlobals.settings()->charset().toLatin1() );
 
   //name
   if(id->hasName())
@@ -838,21 +838,21 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
 
   //Reply-To
   if(id->hasReplyTo()) {
-    art->replyTo()->fromUnicodeString( id->replyTo(), knGlobals.configManager()->postNewsTechnical()->charset() );
+    art->replyTo()->fromUnicodeString( id->replyTo(), knGlobals.settings()->charset().toLatin1() );
     if (!art->replyTo()->hasEmail())   // the header is invalid => drop it
       art->removeHeader("Reply-To");
   }
 
   //Mail-Copies-To
   if(id->hasMailCopiesTo()) {
-    art->mailCopiesTo()->fromUnicodeString( id->mailCopiesTo(), knGlobals.configManager()->postNewsTechnical()->charset() );
+    art->mailCopiesTo()->fromUnicodeString( id->mailCopiesTo(), knGlobals.settings()->charset().toLatin1() );
     if (!art->mailCopiesTo()->isValid())   // the header is invalid => drop it
       art->removeHeader("Mail-Copies-To");
   }
 
   //Organization
   if(id->hasOrga())
-    art->organization()->fromUnicodeString( id->orga(), knGlobals.configManager()->postNewsTechnical()->charset() );
+    art->organization()->fromUnicodeString( id->orga(), knGlobals.settings()->charset().toLatin1() );
 
   //Date
   art->date()->setUnixTime(); //set current date+time
@@ -890,7 +890,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
           continue;
 
       art->setHeader( new KMime::Headers::Generic( (*it).name().toLatin1(), art, value,
-                      knGlobals.configManager()->postNewsTechnical()->charset() ) );
+                      knGlobals.settings()->charset().toLatin1() ) );
     }
   }
 

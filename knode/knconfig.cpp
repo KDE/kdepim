@@ -20,7 +20,6 @@
 //Added by qt3to4:
 #include <QPixmap>
 #include <QTextStream>
-#include <Q3CString>
 
 #include <ksimpleconfig.h>
 #include <kmessagebox.h>
@@ -361,35 +360,7 @@ KNode::XHeader::XHeader(const QString &s)
 
 
 KNode::PostNewsTechnical::PostNewsTechnical()
- : findComposerCSCache(113)
 {
-  findComposerCSCache.setAutoDelete(true);
-
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("POSTNEWS");
-
-  c_omposerCharsets=conf->readListEntry("ComposerCharsets");
-  if (c_omposerCharsets.isEmpty())
-    c_omposerCharsets=QStringList::split(',',"us-ascii,utf-8,iso-8859-1,iso-8859-2,"
-    "iso-8859-3,iso-8859-4,iso-8859-5,iso-8859-6,iso-8859-7,iso-8859-8,"
-    "iso-8859-9,iso-8859-10,iso-8859-13,iso-8859-14,iso-8859-15,koi8-r,koi8-u,"
-    "iso-2022-jp,iso-2022-jp-2,iso-2022-kr,euc-jp,euc-kr,Big5,gb2312");
-
-  c_harset=conf->readEntry("Charset").toLatin1();
-  if (c_harset.isEmpty()) {
-    Q3CString localeCharset(QTextCodec::codecForLocale()->mimeName());
-
-    // special logic for japanese users:
-    // "euc-jp" is default encoding for them, but in the news
-    // "iso-2022-jp" is used
-    if (localeCharset.toLower() == "euc-jp")
-      localeCharset = "iso-2022-jp";
-
-    c_harset=findComposerCharset(localeCharset);
-    if (c_harset.isEmpty())
-      c_harset="iso-8859-1";  // shit
-  }
-
   QString dir(locateLocal("data","knode/"));
   if (!dir.isNull()) {
     QFile f(dir+"xheaders");
@@ -404,23 +375,12 @@ KNode::PostNewsTechnical::PostNewsTechnical()
 }
 
 
-KNode::PostNewsTechnical::~PostNewsTechnical()
-{
-}
-
-
 void KNode::PostNewsTechnical::save()
 {
   if(!d_irty)
     return;
 
   kdDebug(5003) << "KNConfig::PostNewsTechnical::save()" << endl;
-
-  KConfig *conf=knGlobals.config();
-  conf->setGroup("POSTNEWS");
-
-  conf->writeEntry("ComposerCharsets", c_omposerCharsets);
-  conf->writeEntry("Charset", QString::fromLatin1(c_harset));
 
   QString dir(locateLocal("data","knode/"));
   if (dir.isNull())
@@ -438,78 +398,9 @@ void KNode::PostNewsTechnical::save()
     else
       KNHelper::displayInternalFileError();
   }
-  conf->sync();
   d_irty = false;
 }
 
-
-int KNode::PostNewsTechnical::indexForCharset(const Q3CString &str)
-{
-  int i=0;
-  bool found=false;
-  for ( QStringList::Iterator it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
-    if ((*it).toLower() == str.toLower().data()) {
-      found = true;
-      break;
-    }
-    i++;
-  }
-  if (!found) {
-    i=0;
-    for ( QStringList::Iterator it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
-      if ((*it).toLower() == c_harset.toLower().data()) {
-        found = true;
-        break;
-      }
-      i++;
-    }
-    if (!found)
-      i=0;
-  }
-  return i;
-}
-
-
-Q3CString KNode::PostNewsTechnical::findComposerCharset(Q3CString cs)
-{
-  Q3CString *ret=findComposerCSCache.find(cs);
-  if (ret)
-    return *ret;
-
-  Q3CString s;
-
-  QStringList::Iterator it;
-  for( it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
-    // match by name
-    if ((*it).toLower()==cs.toLower().data()) {
-      s = (*it).toLatin1();
-      break;
-    }
-  }
-
-  if (s.isEmpty()) {
-    for( it = c_omposerCharsets.begin(); it != c_omposerCharsets.end(); ++it ) {
-    // match by charset, avoid to return "us-ascii" for iso-8859-1
-      if ((*it).toLower()!="us-ascii") {
-        QTextCodec *composerCodec = QTextCodec::codecForName((*it).toLatin1());
-        QTextCodec *csCodec = QTextCodec::codecForName(cs);
-        if ((composerCodec != 0) &&
-            (csCodec != 0) &&
-            (0 == strcmp(composerCodec->name(), csCodec->name()))) {
-      s = (*it).toLatin1();
-      break;
-    }
-  }
-    }
-  }
-
-  if (s.isEmpty())
-    s = "us-ascii";
-
-  findComposerCSCache.insert(cs, new Q3CString(s));
-
-  return s;
-}
 
 
 //==============================================================================================================

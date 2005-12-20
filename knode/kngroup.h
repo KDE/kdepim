@@ -23,8 +23,6 @@
 
 #include <QByteArray>
 #include <QList>
-//Added by qt3to4:
-#include <Q3CString>
 
 class KNProtocolClient;
 class KNNntpAccount;
@@ -117,7 +115,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     /** article access */
     KNRemoteArticle* at(int i)          { return static_cast<KNRemoteArticle*> (KNArticleCollection::at(i)); }
     KNRemoteArticle* byId(int id)       { return static_cast<KNRemoteArticle*> (KNArticleCollection::byId(id)); }
-    KNRemoteArticle* byMessageId(const Q3CString &mId)
+    KNRemoteArticle* byMessageId( const QByteArray &mId )
                                         { return static_cast<KNRemoteArticle*> (KNArticleCollection::byMessageId(mId)); }
 
     /** Load the stored headers from disk. */
@@ -143,9 +141,12 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
 
     QString prepareForExecution();
 
-    /** charset-handling */
-    const Q3CString defaultCharset()           { return d_efaultChSet; }
-    void setDefaultCharset(const Q3CString &s) { d_efaultChSet=s; }
+    /** Returns the default charset for this group. */
+    const QByteArray defaultCharset()           { return d_efaultChSet; }
+    /** Sets the default charset for this group.
+     * @param s The new default charset.
+     */
+    void setDefaultCharset( const QByteArray &s ) { d_efaultChSet = s; }
     bool useCharset()                         { return ( u_seCharset && !d_efaultChSet.isEmpty() ); }
     void setUseCharset(bool b)                { u_seCharset=b; }
 
@@ -191,7 +192,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
               d_ynDataFormat,
               f_irstNew;
 
-    Q3CString  d_efaultChSet;
+    /// The default charset of this group.
+    QByteArray d_efaultChSet;
     QString   g_roupname,
               d_escription;
 

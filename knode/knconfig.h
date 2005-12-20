@@ -15,16 +15,12 @@
 #ifndef KNCONFIG_H
 #define KNCONFIG_H
 
-#include <q3asciidict.h>
 #include <qcolor.h>
 #include <qdatetime.h>
 #include <qfont.h>
 #include <QList>
 #include <qobject.h>
 #include <qpixmap.h>
-
-//Added by qt3to4:
-#include <Q3CString>
 
 #include <kconfig.h>
 
@@ -218,31 +214,23 @@ class KDE_EXPORT XHeader
 typedef QList<XHeader> XHeaders;
 
 
-/** Technical posting settings. */
+/** Technical posting settings.
+ * @todo merge into Settings.
+ */
 class KDE_EXPORT PostNewsTechnical : public ConfigBase
 {
   friend class PostNewsTechnicalWidget;
 
   public:
     PostNewsTechnical();
-    ~PostNewsTechnical();
 
     void save();
-
-    Q3CString charset() const         { return c_harset; }
-    QStringList composerCharsets() { return c_omposerCharsets; }
-    int indexForCharset(const Q3CString &str);
-    Q3CString findComposerCharset(Q3CString cs);
 
     /** Returns a list of additional headers. */
     XHeaders xHeaders() const { return mXheaders; }
 
   protected:
-    Q3CString  c_harset;
-    QStringList c_omposerCharsets;
     XHeaders mXheaders;
-
-    Q3AsciiDict<Q3CString> findComposerCSCache;
 };
 
 

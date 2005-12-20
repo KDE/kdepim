@@ -23,7 +23,7 @@
 #include <qlineedit.h>
 #include <qregexp.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 #include <QCloseEvent>
 #include <Q3PtrList>
 #include <QKeyEvent>
@@ -109,7 +109,7 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     composerResult r_esult;
     KNLocalArticle *a_rticle;
     QString s_ignature, u_nwraped;
-    Q3CString c_harset;
+    QByteArray c_harset;
     MessageMode m_ode;
     bool n_eeds8Bit,    // false: fall back to us-ascii
          v_alidated,    // hasValidData was run and found no problems, n_eeds8Bit is valid

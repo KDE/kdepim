@@ -76,7 +76,7 @@ KNRemoteArticle::KNRemoteArticle(KNGroup *g)
   if (g && g->useCharset())
     setDefaultCharset( g->defaultCharset() );
   else
-    setDefaultCharset( knGlobals.configManager()->postNewsTechnical()->charset() );
+    setDefaultCharset( knGlobals.settings()->charset().toLatin1() );
 }
 
 
@@ -253,7 +253,7 @@ void KNRemoteArticle::setForceDefaultCS(bool b)
     if (g && g->useCharset())
       setDefaultCharset( g->defaultCharset() );
     else
-      setDefaultCharset( knGlobals.configManager()->postNewsTechnical()->charset() );
+      setDefaultCharset( knGlobals.settings()->charset().toLatin1() );
   }
   KNArticle::setForceDefaultCS(b);
   initListItem();
@@ -287,7 +287,7 @@ KNLocalArticle::KNLocalArticle(KNArticleCollection *c)
 {
   n_ewsgroups.setParent(this);
   t_o.setParent(this);
-  setDefaultCharset( knGlobals.configManager()->postNewsTechnical()->charset() );
+  setDefaultCharset( knGlobals.settings()->charset().toLatin1() );
 }
 
 
@@ -398,7 +398,7 @@ void KNLocalArticle::updateListItem()
 void KNLocalArticle::setForceDefaultCS(bool b)
 {
   if (!b)  // restore default
-    setDefaultCharset( knGlobals.configManager()->postNewsTechnical()->charset() );
+    setDefaultCharset( knGlobals.settings()->charset().toLatin1() );
   KNArticle::setForceDefaultCS(b);
   updateListItem();
 }

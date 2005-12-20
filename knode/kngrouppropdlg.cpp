@@ -21,6 +21,7 @@
 #include <QGridLayout>
 #include <QComboBox>
 
+#include <kcharsets.h>
 #include <klocale.h>
 #include <klineedit.h>
 #include <kvbox.h>
@@ -64,8 +65,8 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   grpL->addMultiCellWidget(u_seCharset,2,2,0,1);
 
   c_harset=new QComboBox(false, gb);
-  c_harset->insertStringList(knGlobals.configManager()->postNewsTechnical()->composerCharsets());
-  c_harset->setCurrentItem(knGlobals.configManager()->postNewsTechnical()->indexForCharset(g_rp->defaultCharset()));
+  c_harset->insertStringList( KGlobal::charsets()->availableEncodingNames() );
+  c_harset->setCurrentItem( c_harset->findText( g_rp->defaultCharset().toLower() ) );
   c_harset->setEnabled(g_rp->useCharset());
   connect(u_seCharset, SIGNAL(toggled(bool)), c_harset, SLOT(setEnabled(bool)));
   grpL->addWidget(c_harset, 2,2);

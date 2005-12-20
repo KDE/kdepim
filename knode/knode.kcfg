@@ -223,6 +223,9 @@
       <label>Allow 8-bit encoding</label>
       <default>true</default>
     </entry>
+    <entry name="Charset" type="String">
+      <label>Charset</label>
+    </entry>
     <!-- composer settings -->
     <entry name="wordWrap" type="Bool">
       <label>Word wrap at column</label>
