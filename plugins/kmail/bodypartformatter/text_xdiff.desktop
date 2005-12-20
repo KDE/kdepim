@@ -35,6 +35,7 @@ Comment[et]=Põhiosa vormindamisplugin (MIME tüübile text/x-diff)
 Comment[eu]=Testu/x-diff-en gorputz-zati formateatzaile bat
 Comment[fr]=Un formateur de partie de corps pour text/x-diff
 Comment[hu]=Formázómodul text/x-diff adatok kezeléséhez
+Comment[is]=Sniðmátstól fyrir text/x-diff
 Comment[it]=Un plugin per formattare il corpo di text/x-diff
 Comment[ja]=text/x-diff 用の bodypart フォーマッタプラグイン
 Comment[nb]=Et programtilllegg for text/x-diff for brødtekst-formatering

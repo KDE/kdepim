@@ -37,6 +37,7 @@ Comment[et]=Põhiosa vormindamisplugin (MIME tüübile text/vcard)
 Comment[eu]=Testu/vcard-en gorputz-zati formateatzaile bat
 Comment[fr]=Un formateur de partie de corps pour text/vcard
 Comment[hu]=Formázómodul text/vcard adatfolyamok kezeléséhez
+Comment[is]=Sniðmátstól fyrir text/vcard
 Comment[it]=Un plugin per formattare il corpo di text/vcard
 Comment[ja]=text/vcard 用の Bodypart フォーマッタ プラグイン
 Comment[nb]=Et programtilllegg for text/vcard for brødtekst-formatering
