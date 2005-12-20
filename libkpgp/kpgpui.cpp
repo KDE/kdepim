@@ -125,13 +125,13 @@ Config::Config( QWidget *parent, bool encrypt )
   label = new QLabel( i18n("Please check if encryption really "
   	"works before you start using it seriously. Also note that attachments "
 	"are not encrypted by the PGP/GPG module."), group );
+  label->setWordWrap( true );
   lay->addWidget( label );
   // 2. instead, set the font to bold:
   QFont labelFont = label->font();
   labelFont.setBold( true );
   label->setFont( labelFont );
   // 3. and activate wordwarp:
-  label->setAlignment( Qt::AlignLeft|Qt::TextWordWrap );
   // end; to remove the workaround, add <qt><b>..</b></qt> around the
   // text and remove lines QFont... -> label->setAlignment(...).
   topLayout->addWidget( group );
