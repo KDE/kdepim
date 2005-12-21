@@ -91,8 +91,8 @@ class PrintingWizard : public KWizard
     void slotStyleSelected(int);
 
   protected:
-    Q3PtrList<PrintStyleFactory> mStyleFactories;
-    Q3PtrList<PrintStyle> mStyleList;
+    QList<PrintStyleFactory*> mStyleFactories;
+    QList<PrintStyle*> mStyleList;
     Filter::List mFilters;
     KPrinter *mPrinter;
     KABC::AddressBook *mAddressBook;

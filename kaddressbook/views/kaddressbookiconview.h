@@ -28,7 +28,6 @@
 //Added by qt3to4:
 #include <QList>
 #include <QDropEvent>
-#include <Q3PtrList>
 #include <kiconview.h>
 #include "kaddressbookview.h"
 
@@ -72,7 +71,7 @@ class KAddressBookIconView : public KAddressBookView
 
   private:
     AddresseeIconView *mIconView;
-    Q3PtrList<AddresseeIconViewItem> mIconList;
+    QList<AddresseeIconViewItem*> mIconList;
 };
 
 

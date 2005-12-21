@@ -78,7 +78,7 @@ PrintingWizard *PrintStyle::wizard()
 
 void PrintStyle::addPage( QWidget *page, const QString &title )
 {
-  if ( mPageList.find( page ) == -1 ) { // not yet in the list
+  if ( mPageList.indexOf( page ) == -1 ) { // not yet in the list
     mPageList.append( page );
     mPageTitles.append( title );
   }
@@ -88,7 +88,7 @@ void PrintStyle::showPages()
 {
   QWidget *wdg = 0;
   int i = 0;
-  for ( wdg = mPageList.first(); wdg; wdg = mPageList.next(), ++i ) {
+  Q_FOREACH( wdg, mPageList ) {
     mWizard->addPage( wdg, mPageTitles[ i ] );
     if ( i == 0 )
       mWizard->setAppropriate( wdg, true );
@@ -100,7 +100,8 @@ void PrintStyle::showPages()
 
 void PrintStyle::hidePages()
 {
-  for ( QWidget *wdg = mPageList.first(); wdg; wdg = mPageList.next() )
+
+  Q_FOREACH( QWidget *wdg, mPageList )
     mWizard->removePage( wdg );
 }
 

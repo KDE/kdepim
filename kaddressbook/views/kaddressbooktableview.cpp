@@ -39,7 +39,6 @@
 #include <QVBoxLayout>
 #include <QKeyEvent>
 #include <QDropEvent>
-#include <Q3PtrList>
 
 #include <kabc/addressbook.h>
 #include <kapplication.h>
