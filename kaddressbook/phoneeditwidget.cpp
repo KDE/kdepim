@@ -202,10 +202,9 @@ void PhoneEditWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
 
-  Q3PtrListIterator<PhoneNumberWidget> it( mWidgets );
-  while ( it.current() ) {
-    it.current()->setReadOnly( readOnly );
-    ++it;
+  QListIterator<PhoneNumberWidget*> it( mWidgets );
+  while (it.hasNext()){
+    it.next()->setReadOnly( readOnly );
   }
 }
 
@@ -264,9 +263,8 @@ void PhoneEditWidget::remove()
 
 void PhoneEditWidget::updateWidgets()
 {
-  mWidgets.setAutoDelete( true );
+  qDeleteAll(mWidgets);
   mWidgets.clear();
-  mWidgets.setAutoDelete( false );
 
   KABC::PhoneNumber::List::ConstIterator it;
   int counter = 0;

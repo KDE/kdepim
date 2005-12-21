@@ -31,7 +31,6 @@
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QList>
-#include <Q3PtrList>
 
 class Q3ButtonGroup;
 class QCheckBox;
@@ -117,7 +116,7 @@ class PhoneEditWidget : public QWidget
     void updateButtons();
 
     KABC::PhoneNumber::List mPhoneNumberList;
-    Q3PtrList<PhoneNumberWidget> mWidgets;
+    QList<PhoneNumberWidget*> mWidgets;
 
     QPushButton *mAddButton;
     QPushButton *mRemoveButton;
