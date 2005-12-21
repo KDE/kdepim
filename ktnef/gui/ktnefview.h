@@ -35,7 +35,7 @@ public:
 	~KTNEFView();
 
 	void setAttachments(const QList<KTNEFAttach*> &list);
-	Q3PtrList<KTNEFAttach>* getSelection();
+	QList<KTNEFAttach*>* getSelection();
 
 signals:
 	void dragRequested( const QList<KTNEFAttach*>& list );
@@ -45,7 +45,7 @@ protected:
 	void startDrag();
 
 private:
-	Q3PtrList<KTNEFAttach>	attachments_;
+	QList<KTNEFAttach*>	attachments_;
 };
 
 #endif
