@@ -24,7 +24,6 @@
 //Added by qt3to4:
 #include <Q3Frame>
 #include <QResizeEvent>
-#include <Q3PtrList>
 
 #include <kapplication.h>
 #include <kiconloader.h>
@@ -69,7 +68,6 @@ Attachment::~Attachment()
 KTNEFView::KTNEFView( QWidget *parent )
 	: KListView( parent )
 {
-	attachments_.setAutoDelete(false);
 	addColumn(i18n("File Name"));
 	addColumn(i18n("File Type"));
 	addColumn(i18n("Size"));
@@ -102,7 +100,7 @@ void KTNEFView::resizeEvent(QResizeEvent *e)
 	if (e) Q3ListView::resizeEvent(e);
 }
 
-Q3PtrList<KTNEFAttach>* KTNEFView::getSelection()
+QList<KTNEFAttach*>* KTNEFView::getSelection()
 {
 	attachments_.clear();
 	Q3ListViewItem	*item = firstChild();

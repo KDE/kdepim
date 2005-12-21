@@ -28,7 +28,6 @@
 #include <q3popupmenu.h>
 //Added by qt3to4:
 #include <QTextStream>
-#include <Q3PtrList>
 #include <klistview.h>
 #include <klocale.h>
 #include <kapplication.h>
@@ -263,7 +262,7 @@ void KTNEFMain::optionDefaultDir()
 
 void KTNEFMain::viewSelectionChanged()
 {
-	Q3PtrList<KTNEFAttach>	*list = view_->getSelection();
+	QList<KTNEFAttach*>	*list = view_->getSelection();
 	bool	on1 = (list->count() == 1u), on2 = (list->count() > 0u);
 	actionCollection()->action("view_file")->setEnabled(on1);
 	actionCollection()->action("view_file_as")->setEnabled(on1);
@@ -302,12 +301,12 @@ void KTNEFMain::extractTo(const QString& dirname)
 {
 	QString	dir = dirname;
 	if (dir.right(1) != "/") dir.append("/");
-	Q3PtrList<KTNEFAttach>	*list = view_->getSelection();
-	Q3PtrListIterator<KTNEFAttach>	it(*list);
-	for (;it.current();++it)
-		if (!parser_->extractFileTo(it.current()->name(), dir))
+	QList<KTNEFAttach*>	*list = view_->getSelection();
+	QListIterator<KTNEFAttach*>	it(*list);
+	while (it.hasNext())
+		if (!parser_->extractFileTo(it.next()->name(), dir))
 		{
-			QString	msg = i18n("Unable to extract file \"%1\"").arg( it.current()->name() );
+			QString	msg = i18n("Unable to extract file \"%1\"").arg( it.next()->name() );
 			QMessageBox::critical(this,i18n("Error"),msg,QMessageBox::Ok|QMessageBox::Default,0);
 			return;
 		}
@@ -321,7 +320,7 @@ void KTNEFMain::extractTo(const QString& dirname)
 
 void KTNEFMain::viewRightButtonPressed(Q3ListViewItem*, const QPoint& p, int)
 {
-	Q3PtrList<KTNEFAttach>	*list = view_->getSelection();
+	QList<KTNEFAttach*>	*list = view_->getSelection();
 	Q3PopupMenu m;
 	if (list->count() > 0u)
 	{
