@@ -25,7 +25,7 @@
 #include "attachpropertydialog.h"
 #include "messagepropertydialog.h"
 
-#include <q3popupmenu.h>
+#include <QMenu>
 //Added by qt3to4:
 #include <QTextStream>
 #include <klistview.h>
@@ -321,21 +321,21 @@ void KTNEFMain::extractTo(const QString& dirname)
 void KTNEFMain::viewRightButtonPressed(Q3ListViewItem*, const QPoint& p, int)
 {
 	QList<KTNEFAttach*>	*list = view_->getSelection();
-	Q3PopupMenu m;
+	QMenu m;
 	if (list->count() > 0u)
 	{
 		if (list->count() == 1u)
 		{
-			m.insertItem(SmallIcon("viewmag"), i18n("View"), this, SLOT(viewFile()));
-			m.insertItem(SmallIcon("package_applications"), i18n("View With..."), this, SLOT(viewFileAs()));
-			m.insertSeparator();
+			m.addAction(SmallIcon("viewmag"), i18n("View"), this, SLOT(viewFile()));
+			m.addAction(SmallIcon("package_applications"), i18n("View With..."), this, SLOT(viewFileAs()));
+			m.addSeparator();
 		}
-		m.insertItem(i18n("Extract"), this, SLOT(extractFile()));
-		m.insertItem(SmallIcon("ktnef_extract_to"), i18n("Extract To..."), this, SLOT(extractFileTo()));
+		m.addAction(i18n("Extract"), this, SLOT(extractFile()));
+		m.addAction(SmallIcon("ktnef_extract_to"), i18n("Extract To..."), this, SLOT(extractFileTo()));
 		if (list->count() == 1u)
 		{
-			m.insertSeparator();
-			m.insertItem(SmallIcon("contents"), i18n("Properties"), this, SLOT(propertiesFile()));
+			m.addSeparator();
+			m.addAction(SmallIcon("contents"), i18n("Properties"), this, SLOT(propertiesFile()));
 		}
 	}
 	else if ( list->count() == 0 )
