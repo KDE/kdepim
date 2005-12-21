@@ -809,13 +809,12 @@ QString KABCore::getNameByPhone( const QString &phone )
 
   KABC::AddressBook::ConstIterator iter;
   const KABC::AddressBook::ConstIterator endIter( mAddressBook->end() );
-  KABC::PhoneNumber::List::Iterator phoneIter;
-  const KABC::PhoneNumber::List::Iterator phoneEndIter( phoneList.end() );
 
   for ( iter = mAddressBook->begin(); !found && ( iter != endIter ); ++iter ) {
     phoneList = (*iter).phoneNumbers();
-    for ( phoneIter = phoneList.begin(); !found && ( phoneIter != phoneEndIter );
-          ++phoneIter) {
+    KABC::PhoneNumber::List::Iterator phoneIter( phoneList.begin() );
+    const KABC::PhoneNumber::List::Iterator phoneEndIter( phoneList.end() );
+    for ( ; !found && ( phoneIter != phoneEndIter ); ++phoneIter) {
       // Get rid of separator chars so just the numbers are compared.
       if ( (*phoneIter).number().replace( r, "" ) == localPhone.replace( r, "" ) ) {
         ownerName = (*iter).realName();
