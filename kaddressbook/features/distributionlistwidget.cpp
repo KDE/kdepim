@@ -345,10 +345,6 @@ void DistributionListWidget::editList()
   mNameCombo->setCurrentText( newName );
   // Display the contents of the list we just selected
   updateContactView();
-
-#ifndef KDEPIM_NEW_DISTRLISTS
-  changed();
-#endif
 }
 
 void DistributionListWidget::removeList()
