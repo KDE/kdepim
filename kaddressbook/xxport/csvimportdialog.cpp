@@ -186,7 +186,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
       }
 
       QString value = mTable->text( row, col );
-      if ( 1 == row && static_cast<QTableItem *>(item)->text() == value )
+      if ( 1 == row && static_cast<Q3TableItem *>(item)->text() == value )
         // we are looking at a header row, stop now
         break;
 
