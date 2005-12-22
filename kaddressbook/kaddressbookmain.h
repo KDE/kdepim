@@ -24,7 +24,6 @@
 #ifndef KADDRESSBOOKMAIN_H
 #define KADDRESSBOOKMAIN_H
 
-#include <q3ptrlist.h>
 
 #include <kaction.h>
 #include <kapplication.h>

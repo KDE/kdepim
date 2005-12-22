@@ -26,7 +26,6 @@
 
 #include <qsizepolicy.h>
 #include <qwidget.h>
-#include <q3ptrlist.h>
 #include <qstringlist.h>
 //Added by qt3to4:
 #include <QResizeEvent>

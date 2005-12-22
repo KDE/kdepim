@@ -21,8 +21,6 @@
 #ifndef LDAPSEARCHDIALOG_H
 #define LDAPSEARCHDIALOG_H
 
-#include <q3ptrlist.h>
-//Added by qt3to4:
 #include <QCloseEvent>
 
 #include <kabc/addressbook.h>

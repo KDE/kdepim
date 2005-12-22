@@ -25,7 +25,6 @@
 #define EXTENSIONMANAGER_H
 
 
-#include <q3ptrlist.h>
 //Added by qt3to4:
 #include <QList>
 #include <kvbox.h>
