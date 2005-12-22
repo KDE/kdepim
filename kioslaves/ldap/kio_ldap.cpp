@@ -27,7 +27,7 @@
 using namespace KIO;
 using namespace KABC;
 
-extern "C" { int KDE_EXPORT kdemain(int argc, char **argv); }
+extern "C" { int kdemain(int argc, char **argv); }
 
 /**
  * The main program.
