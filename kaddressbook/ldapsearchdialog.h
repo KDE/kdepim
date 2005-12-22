@@ -78,7 +78,7 @@ class LDAPSearchDialog : public KDialogBase
     void cancelQuery();
 
     int mNumHosts;
-    Q3PtrList<KPIM::LdapClient> mLdapClientList;
+    QList<KPIM::LdapClient*> mLdapClientList;
     bool mIsOK;
     KABC::AddressBook *mAddressBook;
     KABCore *mCore;

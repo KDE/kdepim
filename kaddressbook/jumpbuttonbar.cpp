@@ -101,9 +101,8 @@ void JumpButtonBar::updateButtons()
   int currentButton = mGroupBox->selectedId();
 
   // the easiest way to remove all buttons ;)
-  mButtons.setAutoDelete( true );
+  qDeleteAll(mButtons);
   mButtons.clear();
-  mButtons.setAutoDelete( false );
 
   QStringList characters;
 

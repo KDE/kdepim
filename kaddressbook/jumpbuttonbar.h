@@ -77,7 +77,7 @@ class JumpButtonBar : public QWidget
     KAB::Core *mCore;
 
     Q3ButtonGroup *mGroupBox;
-    Q3PtrList<QPushButton> mButtons;
+    QList<QPushButton*> mButtons;
 };
 
 #endif

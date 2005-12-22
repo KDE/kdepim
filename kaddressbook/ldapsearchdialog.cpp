@@ -219,7 +219,7 @@ void LDAPSearchDialog::restoreSettings()
 
   // First clean the list to make sure it is empty at
   // the beginning of the process
-  mLdapClientList.setAutoDelete( true );
+  qDeleteAll(mLdapClientList);
   mLdapClientList.clear();
 
   KConfig kabConfig( "kaddressbookrc" );
@@ -296,7 +296,7 @@ void LDAPSearchDialog::saveSettings()
 
 void LDAPSearchDialog::cancelQuery()
 {
-  for ( KPIM::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
+  Q_FOREACH( KPIM::LdapClient* client , mLdapClientList ) {
     client->cancelQuery();
   }
 }
@@ -308,7 +308,7 @@ void LDAPSearchDialog::slotAddResult( const KPIM::LdapObject& obj )
 
 void LDAPSearchDialog::slotSetScope( bool rec )
 {
-  for ( KPIM::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
+    Q_FOREACH( KPIM::LdapClient* client , mLdapClientList ) {
     if ( rec )
       client->setScope( "sub" );
     else
@@ -369,7 +369,7 @@ void LDAPSearchDialog::slotStartSearch()
 
    // loop in the list and run the KPIM::LdapClients
   mResultListView->clear();
-  for ( KPIM::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() )
+  Q_FOREACH( KPIM::LdapClient* client , mLdapClientList ) 
     client->startQuery( filter );
 
   saveSettings();
@@ -384,7 +384,7 @@ void LDAPSearchDialog::slotStopSearch()
 void LDAPSearchDialog::slotSearchDone()
 {
   // If there are no more active clients, we are done.
-  for ( KPIM::LdapClient* client = mLdapClientList.first(); client; client = mLdapClientList.next() ) {
+  Q_FOREACH( KPIM::LdapClient* client , mLdapClientList ) {
     if ( client->isActive() )
       return;
   }
