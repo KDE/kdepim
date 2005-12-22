@@ -1,1 +1,1 @@
-SUBDIRS = kmail kabc
+SUBDIRS = kmail
