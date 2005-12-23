@@ -355,6 +355,9 @@ void ArticleWidget::clear()
 {
   disableActions();
   mViewer->begin();
+  mViewer->setUserStyleSheet( mCSSHelper->cssDefinitions( mFixedFontToggle->isChecked() ) );
+  mViewer->write( mCSSHelper->htmlHead( mFixedFontToggle->isChecked() ) );
+  mViewer->write( "</body></html>" );
   mViewer->end();
 }
 
