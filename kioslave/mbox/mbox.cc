@@ -58,7 +58,7 @@ int kdemain( int argc, char * argv[] )
 	return 0;
 }
 
-MBoxProtocol::MBoxProtocol( const Q3CString& arg1, const Q3CString& arg2 )
+MBoxProtocol::MBoxProtocol( const QByteArray& arg1, const QByteArray& arg2 )
 	: KIO::SlaveBase( "mbox2", arg1, arg2 ),
 	m_errorState( true )
 {
@@ -89,7 +89,7 @@ void MBoxProtocol::get( const KURL& url )
 	{
 		line = mbox.currentLine();
 		line += '\n';
-		ba_line = Q3CString( line.utf8() );
+		ba_line = QByteArray( line.utf8() );
 		ba_line.truncate( ba_line.size() - 1 ); //Removing training '\0'
 		data( ba_line );
 		mbox.nextLine();
