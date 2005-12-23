@@ -39,7 +39,6 @@
 #include <kiconloader.h>
 #include <kdialog.h>
 #include <kmessagebox.h>
-#include <kcalendarsystem.h>
 #include <kdebug.h>
 
 #include <libkcal/event.h>
@@ -77,6 +76,8 @@ const char* const ordinal[] = {
 };
 
 }
+
+static QString weekDayName(int day, const KLocale*);
 
 // Collect these widget labels together to ensure consistent wording and
 // translations across different modules.
@@ -410,11 +411,11 @@ void RecurrenceEdit::initWeekly()
 	// Save the first day of the week, just in case it changes while the dialog is open.
 	QWidget* box = new QWidget(mWeekRuleFrame);   // this is to control the QWhatsThis text display area
 	QGridLayout* dgrid = new QGridLayout(box, 4, 2, 0, KDialog::spacingHint());
-	const KCalendarSystem* calendar = KGlobal::locale()->calendar();
+	const KLocale* locale = KGlobal::locale();
 	for (int i = 0;  i < 7;  ++i)
 	{
 		int day = KAlarm::localeDayInWeek_to_weekDay(i);
-		mWeekRuleDayBox[i] = new CheckBox(calendar->weekDayName(day), box);
+		mWeekRuleDayBox[i] = new CheckBox(weekDayName(day, locale), box);
 		mWeekRuleDayBox[i]->setFixedSize(mWeekRuleDayBox[i]->sizeHint());
 		mWeekRuleDayBox[i]->setReadOnly(mReadOnly);
 		dgrid->addWidget(mWeekRuleDayBox[i], i%4, i/4, Qt::AlignAuto);
@@ -495,10 +496,21 @@ void RecurrenceEdit::initYearly()
 	// List the months of the year.
 	QWidget* box = new QWidget(mYearRuleButtonGroup);   // this is to control the QWhatsThis text display area
 	QGridLayout* mgrid = new QGridLayout(box, 4, 3, 0, KDialog::spacingHint());
-	const KCalendarSystem* calendar = KGlobal::locale()->calendar();
+	const KLocale* locale = KGlobal::locale();
+	mYearRuleMonthBox[0] = new CheckBox(locale->translate("January"), box);
+	mYearRuleMonthBox[1] = new CheckBox(locale->translate("February"), box);
+	mYearRuleMonthBox[2] = new CheckBox(locale->translate("March"), box);
+	mYearRuleMonthBox[3] = new CheckBox(locale->translate("April"), box);
+	mYearRuleMonthBox[4] = new CheckBox(locale->translate("May"), box);
+	mYearRuleMonthBox[5] = new CheckBox(locale->translate("June"), box);
+	mYearRuleMonthBox[6] = new CheckBox(locale->translate("July"), box);
+	mYearRuleMonthBox[7] = new CheckBox(locale->translate("August"), box);
+	mYearRuleMonthBox[8] = new CheckBox(locale->translate("September"), box);
+	mYearRuleMonthBox[9] = new CheckBox(locale->translate("October"), box);
+	mYearRuleMonthBox[10] = new CheckBox(locale->translate("November"), box);
+	mYearRuleMonthBox[11] = new CheckBox(locale->translate("December"), box);
 	for (int i = 0;  i < 12;  ++i)
 	{
-		mYearRuleMonthBox[i] = new CheckBox(calendar->monthName(i + 1, 2000), box);
 		mYearRuleMonthBox[i]->setFixedSize(mYearRuleMonthBox[i]->sizeHint());
 		mYearRuleMonthBox[i]->setReadOnly(mReadOnly);
 		mgrid->addWidget(mYearRuleMonthBox[i], i%4, i/4, Qt::AlignAuto);
@@ -596,11 +608,11 @@ void RecurrenceEdit::initWeekOfMonth(RadioButton** radio, ComboBox** weekCombo, 
 
 	*dayCombo = new ComboBox(false, parent);
 	ComboBox* dc = *dayCombo;
-	const KCalendarSystem* calendar = KGlobal::locale()->calendar();
+	const KLocale* locale = KGlobal::locale();
 	for (i = 0;  i < 7;  ++i)
 	{
 		int day = KAlarm::localeDayInWeek_to_weekDay(i);
-		dc->insertItem(calendar->weekDayName(day));
+		dc->insertItem(weekDayName(day, locale));
 	}
 	dc->setReadOnly(mReadOnly);
 	QWhatsThis::add(dc,
@@ -1542,3 +1554,19 @@ void RecurFrequency::setValue(int n)
 	if (mTimeSpinBox)
 		mTimeSpinBox->setValue(n);
 }
+
+QString weekDayName(int day, const KLocale* locale)
+{
+	switch (day)
+	{
+		case 1: return locale->translate("Monday");
+		case 2: return locale->translate("Tuesday");
+		case 3: return locale->translate("Wednesday");
+		case 4: return locale->translate("Thursday");
+		case 5: return locale->translate("Friday");
+		case 6: return locale->translate("Saturday");
+		case 7: return locale->translate("Sunday");
+	}
+	return QString();
+}
+
