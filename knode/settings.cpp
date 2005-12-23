@@ -11,10 +11,15 @@
 */
 
 #include "settings.h"
+#include "knconfig.h"
+#include "utilities.h"
 
 #include <klocale.h>
+#include <kstandarddirs.h>
 
+#include <QFile>
 #include <QTextCodec>
+#include <QTextStream>
 
 KNode::Settings::Settings() : SettingsBase()
 {
@@ -33,6 +38,41 @@ KNode::Settings::Settings() : SettingsBase()
   quoteColorItem( 0 )->setLabel( i18n("Quoted Text - First level") );
   quoteColorItem( 1 )->setLabel( i18n("Quoted Text - Second level") );
   quoteColorItem( 2 )->setLabel( i18n("Quoted Text - Third level") );
+}
+
+void KNode::Settings::usrReadConfig( )
+{
+  // read extra header configuration
+  QString dir = locateLocal( "data", "knode/" );
+  if ( !dir.isNull() ) {
+    QFile f( dir + "xheaders" );
+    if ( f.open( QIODevice::ReadOnly ) ) {
+      mXHeaders.clear();
+      QTextStream ts( &f );
+      while ( !ts.atEnd() )
+        mXHeaders.append( XHeader( ts.readLine() ) );
+      f.close();
+    }
+  }
+}
+
+void KNode::Settings::usrWriteConfig( )
+{
+  // write extra header configuration
+  QString dir = locateLocal( "data", "knode/" );
+  if ( dir.isNull() )
+    KNHelper::displayInternalFileError();
+  else {
+    QFile f( dir + "xheaders" );
+    if ( f.open( QIODevice::WriteOnly ) ) {
+      QTextStream ts( &f );
+      for ( XHeader::List::Iterator it = mXHeaders.begin(); it != mXHeaders.end(); ++it )
+        ts << (*it).header() << "\n";
+      ts.flush();
+      f.close();
+    } else
+      KNHelper::displayInternalFileError();
+  }
 }
 
 QColor KNode::Settings::effectiveColor( KConfigSkeleton::ItemColor * item ) const

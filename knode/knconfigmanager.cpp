@@ -35,7 +35,6 @@ KNConfigManager::KNConfigManager( QObject *parent )
   i_dentity           = new KNode::Identity();
   a_ppearance         = new KNode::Appearance();
   d_isplayedHeaders   = new KNode::DisplayedHeaders();
-  p_ostNewsTechnical  = new KNode::PostNewsTechnical();
   c_leanup            = new KNode::Cleanup();
 }
 
@@ -45,7 +44,6 @@ KNConfigManager::~KNConfigManager()
   delete i_dentity;
   delete a_ppearance;
   delete d_isplayedHeaders;
-  delete p_ostNewsTechnical;
   delete c_leanup;
 }
 
@@ -67,9 +65,7 @@ void KNConfigManager::syncConfig()
 {
   a_ppearance->save();
   d_isplayedHeaders->save();
-  p_ostNewsTechnical->save();
   c_leanup->save();
-  //c_ache->save();
   knGlobals.settings()->writeConfig();
 }
 

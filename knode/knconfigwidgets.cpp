@@ -1528,9 +1528,8 @@ void KNode::FilterListWidget::slotSelectionChangedMenu()
 //=============================================================================================
 
 
-KNode::PostNewsTechnicalWidget::PostNewsTechnicalWidget( PostNewsTechnical *d, KInstance *inst, QWidget *parent ) :
-  KCModule( inst, parent ),
-  mData( d )
+KNode::PostNewsTechnicalWidget::PostNewsTechnicalWidget( KInstance *inst, QWidget *parent ) :
+  KCModule( inst, parent )
 {
   setupUi( this );
 
@@ -1561,7 +1560,8 @@ void KNode::PostNewsTechnicalWidget::load()
   mEncoding->setCurrentItem( knGlobals.settings()->allow8BitBody() ? 0 : 1 );
 
   mHeaderList->clear();
-  for ( XHeaders::Iterator it = mData->mXheaders.begin(); it != mData->mXheaders.end(); ++it )
+  XHeader::List list = knGlobals.settings()->xHeaders();
+  for ( XHeader::List::Iterator it = list.begin(); it != list.end(); ++it )
     mHeaderList->addItem( (*it).header() );
 }
 
@@ -1571,11 +1571,11 @@ void KNode::PostNewsTechnicalWidget::save()
   knGlobals.settings()->setCharset( mCharset->currentText() );
   knGlobals.settings()->setAllow8BitBody( mEncoding->currentItem() == 0 );
 
-  mData->mXheaders.clear();
+  XHeader::List list;
   for ( int i = 0; i < mHeaderList->count(); ++i )
-    mData->mXheaders.append( XHeader( mHeaderList->item( i )->text() ) );
+    list.append( XHeader( mHeaderList->item( i )->text() ) );
+  knGlobals.settings()->setXHeaders( list );
 
-  mData->setDirty( true );
   KCModule::save();
 }
 

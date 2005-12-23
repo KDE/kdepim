@@ -359,53 +359,6 @@ KNode::XHeader::XHeader(const QString &s)
 //==============================================================================================================
 
 
-KNode::PostNewsTechnical::PostNewsTechnical()
-{
-  QString dir(locateLocal("data","knode/"));
-  if (!dir.isNull()) {
-    QFile f(dir+"xheaders");
-    if(f.open(QIODevice::ReadOnly)) {
-      QTextStream ts(&f);
-      while(!ts.atEnd())
-        mXheaders.append( XHeader( ts.readLine() ) );
-
-      f.close();
-    }
-  }
-}
-
-
-void KNode::PostNewsTechnical::save()
-{
-  if(!d_irty)
-    return;
-
-  kdDebug(5003) << "KNConfig::PostNewsTechnical::save()" << endl;
-
-  QString dir(locateLocal("data","knode/"));
-  if (dir.isNull())
-    KNHelper::displayInternalFileError();
-  else {
-    QFile f(dir+"xheaders");
-    if(f.open(QIODevice::WriteOnly)) {
-      QTextStream ts(&f);
-      XHeaders::Iterator it;
-      for ( it = mXheaders.begin(); it != mXheaders.end(); ++it )
-        ts << (*it).header() << "\n";
-      ts.flush();
-      f.close();
-    }
-    else
-      KNHelper::displayInternalFileError();
-  }
-  d_irty = false;
-}
-
-
-
-//==============================================================================================================
-
-
 
 //BEGIN: Cleanup configuration ===============================================
 

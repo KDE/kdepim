@@ -36,7 +36,6 @@ class KNConfigManager : QObject {
     KNode::Identity*             identity() const           { return i_dentity; }
     KNode::Appearance*           appearance()const          { return a_ppearance; }
     KNode::DisplayedHeaders*     displayedHeaders()const    { return d_isplayedHeaders; }
-    KNode::PostNewsTechnical*    postNewsTechnical()const   { return p_ostNewsTechnical; }
     KNode::Cleanup*              cleanup()const             { return c_leanup; }
 
     void configure();
@@ -46,7 +45,6 @@ class KNConfigManager : QObject {
     KNode::Identity             *i_dentity;
     KNode::Appearance           *a_ppearance;
     KNode::DisplayedHeaders     *d_isplayedHeaders;
-    KNode::PostNewsTechnical    *p_ostNewsTechnical;
     KNode::Cleanup              *c_leanup;
 
     KNConfigDialog  *d_ialog;

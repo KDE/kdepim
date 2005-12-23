@@ -121,8 +121,8 @@ class KDE_EXPORT NntpAccountListWidget : public KCModule, private Ui::NntpAccoun
     /** Create a new NNTP account list widget. */
     NntpAccountListWidget( KInstance *inst, QWidget *parent = 0 );
 
-    /** @reimplemented */
-    void load();
+    /** Reimplemented from KCModule. */
+    virtual void load();
 
   protected:
     /** Account list widget item. */
@@ -323,7 +323,9 @@ class KDE_EXPORT ReadNewsGeneralWidget : public KCModule, KNode::Ui::ReadNewsGen
      */
     ReadNewsGeneralWidget( KInstance *inst, QWidget *parent = 0 );
 
+    /** Reimplemented from KCModule. */
     virtual void load();
+    /** Reimplemented from KCModule. */
     virtual void save();
 };
 
@@ -358,10 +360,10 @@ class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
   public:
     DisplayedHeadersWidget( DisplayedHeaders *d, KInstance *inst, QWidget *parent = 0 );
 
-    /** @reimplemented. */
-    void load();
-    /** @reimplemented. */
-    void save();
+    /** Reimplemented from KCModule. */
+    virtual void load();
+    /** Reimplemented from KCModule. */
+    virtual void save();
 
   protected:
 
@@ -522,13 +524,13 @@ class KDE_EXPORT PostNewsTechnicalWidget : public KCModule, KNode::Ui::PostNewsT
 {
   Q_OBJECT
   public:
-    PostNewsTechnicalWidget( PostNewsTechnical *d, KInstance *inst, QWidget *parent = 0 );
+    /** Create a new configuration widget for technical posting settings. */
+    PostNewsTechnicalWidget( KInstance *inst, QWidget *parent = 0 );
 
-    void load();
-    void save();
-
-  protected:
-    PostNewsTechnical *mData;
+    /** Reimplemented from KCModule. */
+    virtual void load();
+    /** Reimplemented from KCModule. */
+    virtual void save();
 
   private slots:
     void slotSelectionChanged();

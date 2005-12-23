@@ -15,6 +15,9 @@
 
 #include "settings_base.h"
 
+// TODO: remove as soon as XHeader is in it's own file
+#include "knconfig.h"
+
 namespace KNode {
 
 /** Application settings.
@@ -70,8 +73,19 @@ class KDE_EXPORT Settings : public SettingsBase
     /// Returns the effective article list font.
     QFont articleListFont() { return effectiveFont( articleListFontItem() ); }
 
+    /** Returns a list of additional headers added to created articles. */
+    QList<XHeader> xHeaders() const { return mXHeaders; }
+    /** Sets the list of additional headers added to created articles.
+     * @param list The new list.
+     */
+    void setXHeaders( const QList<XHeader> &list ) { mXHeaders = list; }
+
 
   protected:
+    /** Reimplemented from KConfigSkeleton. */
+    virtual void usrReadConfig();
+    /** Reimplemented from KConfigSkeleton. */
+    virtual void usrWriteConfig();
     /** Returns the effective color value of the given config item.
      * @param item The KConfigSkeletonItem.
      */
@@ -80,6 +94,10 @@ class KDE_EXPORT Settings : public SettingsBase
      * @param item The KConfigSkeletonItem.
      */
     QFont effectiveFont( KConfigSkeleton::ItemFont *item ) const;
+
+  private:
+    /// The list of additional headers.
+    QList<XHeader> mXHeaders;
 };
 
 }

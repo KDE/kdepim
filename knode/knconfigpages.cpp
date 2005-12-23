@@ -158,7 +158,7 @@ extern "C"
 KNode::PostNewsPage::PostNewsPage( KInstance *inst, QWidget *parent )
   : KCMTabContainer( inst, parent )
 {
-  addTab( new PostNewsTechnicalWidget( knGlobals.configManager()->postNewsTechnical(), inst, this ), i18n("Technical") );
+  addTab( new PostNewsTechnicalWidget( inst, this ), i18n("Technical") );
   addTab( new PostNewsComposerWidget( inst, this ), i18n("Composer") );
   addTab( new PostNewsSpellingWidget( inst, this ), i18n("Spelling") );
 }

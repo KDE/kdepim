@@ -875,8 +875,8 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
 
   //X-Headers
   if(withXHeaders) {
-    KNode::XHeaders xhdr = knGlobals.configManager()->postNewsTechnical()->xHeaders();
-    for ( KNode::XHeaders::Iterator it = xhdr.begin(); it != xhdr.end(); ++it ) {
+    XHeader::List xhdr = knGlobals.settings()->xHeaders();
+    for ( XHeader::List::Iterator it = xhdr.begin(); it != xhdr.end(); ++it ) {
       QString value = (*it).value();
       if(origPost) {
         QString name(origPost->from()->name());

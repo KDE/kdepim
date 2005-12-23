@@ -20,6 +20,8 @@
 class BaseWidget;
 class IdentityWidget;
 
+class QTabWidget;
+
 namespace KNode {
 
 /**

@@ -198,6 +198,9 @@ class KDE_EXPORT XHeader
      */
     XHeader( const QString &s );
 
+    /// A list of additional headers.
+    typedef QList<XHeader> List;
+
     /** Returns the header name. */
     QString name() const { return mName; }
     /** Returns the header value. */
@@ -210,28 +213,6 @@ class KDE_EXPORT XHeader
     QString mValue;
 };
 
-/** A list of additional headers. */
-typedef QList<XHeader> XHeaders;
-
-
-/** Technical posting settings.
- * @todo merge into Settings.
- */
-class KDE_EXPORT PostNewsTechnical : public ConfigBase
-{
-  friend class PostNewsTechnicalWidget;
-
-  public:
-    PostNewsTechnical();
-
-    void save();
-
-    /** Returns a list of additional headers. */
-    XHeaders xHeaders() const { return mXheaders; }
-
-  protected:
-    XHeaders mXheaders;
-};
 
 
 //BEGIN: Cleanup configuration -----------------------------------------------
