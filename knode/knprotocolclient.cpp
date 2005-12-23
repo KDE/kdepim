@@ -34,7 +34,7 @@
 #include "knprotocolclient.h"
 //Added by qt3to4:
 #include <Q3StrList>
-#include <Q3CString>
+#include <QByteArray>
 
 
 KNProtocolClient::KNProtocolClient(int NfdPipeIn, int NfdPipeOut) :
@@ -244,7 +244,7 @@ void KNProtocolClient::closeConnection()
   int ret = KSocks::self()->select(FD_SETSIZE, NULL, &fdsW, NULL, &tv);
 
   if (ret > 0) {    // we can write...
-    Q3CString cmd = "QUIT\r\n";
+    QByteArray cmd = "QUIT\r\n";
     int todo = cmd.length();
     KSocks::self()->write(tcpSocket,&cmd.data()[0],todo);
   }
@@ -253,7 +253,7 @@ void KNProtocolClient::closeConnection()
 
 
 // sends a command (one line), return code is written to rep
-bool KNProtocolClient::sendCommand(const Q3CString &cmd, int &rep)
+bool KNProtocolClient::sendCommand(const QByteArray &cmd, int &rep)
 {
   if (!sendStr(cmd + "\r\n"))
     return false;
@@ -264,7 +264,7 @@ bool KNProtocolClient::sendCommand(const Q3CString &cmd, int &rep)
 
 
 // checks return code and calls handleErrors() if necessary
-bool KNProtocolClient::sendCommandWCheck(const Q3CString &cmd, int rep)
+bool KNProtocolClient::sendCommandWCheck(const QByteArray &cmd, int rep)
 {
   int code;
 
@@ -279,11 +279,11 @@ bool KNProtocolClient::sendCommandWCheck(const Q3CString &cmd, int rep)
 
 
 // sends a message (multiple lines)
-bool KNProtocolClient::sendMsg(const Q3CString &msg)
+bool KNProtocolClient::sendMsg(const QByteArray &msg)
 {
   const char *line = msg.data();
   const char *end;
-  Q3CString buffer;
+  QByteArray buffer;
   size_t length;
   char inter[10000];
 
@@ -588,7 +588,7 @@ void KNProtocolClient::closeSocket()
 
 
 // sends str to the server
-bool KNProtocolClient::sendStr(const Q3CString &str)
+bool KNProtocolClient::sendStr(const QByteArray &str)
 {
   int ret;
   int todo = str.length();

@@ -68,11 +68,11 @@ class KNProtocolClient : public QThread  {
     virtual void closeConnection();
 
     /** sends a command (one line), return code is written to rep */
-    virtual bool sendCommand(const Q3CString &cmd, int &rep);
+    virtual bool sendCommand(const QByteArray &cmd, int &rep);
     /** checks return code and calls handleErrors() if necessary */
-    bool sendCommandWCheck(const Q3CString &cmd, int rep);
+    bool sendCommandWCheck(const QByteArray &cmd, int rep);
     /** sends a message (multiple lines) */
-    bool sendMsg(const Q3CString &msg);
+    bool sendMsg(const QByteArray &msg);
 
     /** reads next complete line of input */
     bool getNextLine();
@@ -104,7 +104,7 @@ class KNProtocolClient : public QThread  {
     bool waitForWrite();
     void closeSocket();
     /** sends str to the server */
-    bool sendStr(const Q3CString &str);
+    bool sendStr(const QByteArray &str);
     /** removes start/stop signal */
     void clearPipe();
 

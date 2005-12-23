@@ -25,7 +25,7 @@
 #include "settings.h"
 
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 using namespace KMime;
 
@@ -87,7 +87,7 @@ KNRemoteArticle::~KNRemoteArticle()
 void KNRemoteArticle::parse()
 {
   KNArticle::parse();
-  Q3CString raw;
+  QByteArray raw;
   if( !(raw=rawHeader(m_essageID.type())).isEmpty() )
     m_essageID.from7BitString(raw);
 
@@ -298,7 +298,7 @@ KNLocalArticle::~KNLocalArticle()
 void KNLocalArticle::parse()
 {
   KNArticle::parse();
-  Q3CString raw;
+  QByteArray raw;
 
   if( !(raw=rawHeader(n_ewsgroups.type())).isEmpty() )
     n_ewsgroups.from7BitString(raw);

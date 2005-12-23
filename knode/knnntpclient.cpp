@@ -20,7 +20,7 @@
 #include <qmutex.h>
 //Added by qt3to4:
 #include <Q3StrList>
-#include <Q3CString>
+#include <QByteArray>
 
 #include "kngroupmanager.h"
 #include "knnntpclient.h"
@@ -226,7 +226,7 @@ void KNNntpClient::doCheckNewGroups()
   progressValue = 100;
   predictedLines = 30;     // rule of thumb ;-)
 
-  Q3CString cmd;
+  QByteArray cmd;
   cmd.sprintf("NEWGROUPS %.2d%.2d%.2d 000000",target->fetchSince.year()%100,target->fetchSince.month(),target->fetchSince.day());
   if (!sendCommandWCheck(cmd,231))      // 231 list of new newsgroups follows
     return;
@@ -335,7 +335,7 @@ void KNNntpClient::doFetchNewHeaders()
   KNGroup* target=static_cast<KNGroup*>(job->data());
   char* s;
   int first=0, last=0, oldlast=0, toFetch=0, rep=0;
-  Q3CString cmd;
+  QByteArray cmd;
 
   target->setLastFetchCount(0);
 
@@ -406,7 +406,7 @@ void KNNntpClient::doFetchNewHeaders()
   if ( sendCommand( cmd, rep ) && rep == 215 ) {
     Q3StrList tmp;
     if (getMsg(tmp)) {
-      for(Q3CString s = tmp.first(); s; s = tmp.next()) {
+      for(QByteArray s = tmp.first(); s; s = tmp.next()) {
         s = s.trimmed();
         // remove the mandatory xover header
         if (s == "Subject:" || s == "From:" || s == "Date:" || s == "Message-ID:"
@@ -452,7 +452,7 @@ void KNNntpClient::doFetchNewHeaders()
 void KNNntpClient::doFetchArticle()
 {
   KNRemoteArticle *target = static_cast<KNRemoteArticle*>(job->data());
-  Q3CString cmd;
+  QByteArray cmd;
 
   sendSignal(TSdownloadArticle);
   errorPrefix = i18n("Article could not be retrieved.\nThe following error occurred:\n");
@@ -512,7 +512,7 @@ void KNNntpClient::doPostArticle()
 
   if (art->messageID(false)!=0) {
     int rep;
-    if (!sendCommand(Q3CString("STAT ")+art->messageID(false)->as7BitString(false),rep))
+    if (!sendCommand(QByteArray("STAT ")+art->messageID(false)->as7BitString(false),rep))
       return;
 
     if (rep==223) {   // 223 n <a> article retrieved - request text separately
@@ -527,7 +527,7 @@ void KNNntpClient::doPostArticle()
     return;
 
   if (art->messageID(false)==0) {  // article has no message ID => search for a ID in the response
-    Q3CString s = getCurrentLine();
+    QByteArray s = getCurrentLine();
     int start = s.findRev(QRegExp("<[^\\s]*@[^\\s]*>"));
     if (start != -1) {        // post response includes a recommended id
       int end = s.find('>',start);
@@ -557,7 +557,7 @@ void KNNntpClient::doFetchSource()
   progressValue = 100;
   predictedLines = target->lines()->numberOfLines()+10;
 
-  Q3CString cmd = "ARTICLE " + target->messageID()->as7BitString(false);
+  QByteArray cmd = "ARTICLE " + target->messageID()->as7BitString(false);
   if (!sendCommandWCheck(cmd,220))      // 220 n <a> article retrieved - head and body follow
     return;
 
@@ -614,7 +614,7 @@ bool KNNntpClient::openConnection()
   if (account.needsLogon() && !account.user().isEmpty()) {
     //qDebug("knode: user: %s",account.user().toLatin1());
 
-    Q3CString command = "AUTHINFO USER ";
+    QByteArray command = "AUTHINFO USER ";
     command += account.user().local8Bit();
     if (!KNProtocolClient::sendCommand(command,rep))
       return false;
@@ -674,7 +674,7 @@ bool KNNntpClient::openConnection()
 
 
 // authentication on demand
-bool KNNntpClient::sendCommand(const Q3CString &cmd, int &rep)
+bool KNNntpClient::sendCommand(const QByteArray &cmd, int &rep)
 {
   if (!KNProtocolClient::sendCommand(cmd,rep))
     return false;
@@ -691,7 +691,7 @@ bool KNNntpClient::sendCommand(const Q3CString &cmd, int &rep)
 
     //qDebug("knode: user: %s",account.user().data());
 
-    Q3CString command = "AUTHINFO USER ";
+    QByteArray command = "AUTHINFO USER ";
     command += account.user().local8Bit();
     if (!KNProtocolClient::sendCommand(command,rep))
       return false;
