@@ -188,7 +188,7 @@ void kio_sieveResponse::clear()
 }
 
 /* ---------------------------------------------------------------------------------- */
-kio_sieveProtocol::kio_sieveProtocol(const Q3CString &pool_socket, const Q3CString &app_socket)
+kio_sieveProtocol::kio_sieveProtocol(const QByteArray &pool_socket, const QByteArray &app_socket)
 	: TCPSlaveBase( SIEVE_DEFAULT_PORT, "sieve", pool_socket, app_socket, false)
 	, m_connMode(NORMAL)
 	, m_supportsTLS(false)

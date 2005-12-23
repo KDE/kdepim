@@ -65,7 +65,7 @@ public:
 	enum connectionModes { NORMAL, CONNECTION_ORIENTED };
 	enum Results { OK, NO, BYE, OTHER };
 
-	kio_sieveProtocol(const Q3CString &pool_socket, const Q3CString &app_socket);
+	kio_sieveProtocol(const QByteArray &pool_socket, const QByteArray &app_socket);
 	virtual ~kio_sieveProtocol();
 
 	virtual void mimetype(const KURL& url);
