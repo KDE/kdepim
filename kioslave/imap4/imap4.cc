@@ -72,7 +72,7 @@ imap://server/folder/
 #include <sys/types.h>
 #include <sys/wait.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 #include <Q3PtrList>
 #include <QList>
 
@@ -179,7 +179,7 @@ sigchld_handler (int signo)
   }
 }
 
-IMAP4Protocol::IMAP4Protocol (const Q3CString & pool, const Q3CString & app, bool isSSL)
+IMAP4Protocol::IMAP4Protocol (const QByteArray & pool, const QByteArray & app, bool isSSL)
   :TCPSlaveBase ((isSSL ? 993 : 143), (isSSL ? IMAP_SSL_PROTOCOL : IMAP_PROTOCOL), pool, app, isSSL),
    imapParser (),
    mimeIO (),
@@ -1351,7 +1351,7 @@ IMAP4Protocol::special (const QByteArray & aData)
   {
     // status
     KURL _url;
-    Q3CString newFlags;
+    QByteArray newFlags;
     stream >> _url >> newFlags;
 
     QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
@@ -2007,7 +2007,7 @@ void
 IMAP4Protocol::parseWriteLine (const QString & aStr)
 {
   //kdDebug(7116) << "Writing: " << aStr << endl;
-  Q3CString writer = aStr.utf8();
+  QByteArray writer = aStr.utf8();
   int len = writer.length();
 
   // append CRLF if necessary
@@ -2337,7 +2337,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
 }
 
 int
-IMAP4Protocol::outputLine (const Q3CString & _str, int len)
+IMAP4Protocol::outputLine (const QByteArray & _str, int len)
 {
   if (len == -1) {
     len = _str.length();
