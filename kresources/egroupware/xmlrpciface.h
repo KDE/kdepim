@@ -18,7 +18,7 @@
 #include <qvariant.h>
 #include <q3valuelist.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 namespace KIO
 {
@@ -118,10 +118,6 @@ namespace KXMLRPC
         QObject* msgObj, const char* messageSlot,
         const QVariant &id = QVariant() );
       void call( const QString &method, const QString &arg,
-        QObject* faultObj, const char* faultSlot,
-        QObject* msgObj, const char* messageSlot,
-        const QVariant &id = QVariant() );
-      void call( const QString &method, const Q3CString &arg ,
         QObject* faultObj, const char* faultSlot,
         QObject* msgObj, const char* messageSlot,
         const QVariant &id = QVariant() );

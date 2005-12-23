@@ -28,7 +28,7 @@
 #include <kurl.h>
 #include <qstring.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 #include <libkcal/listbase.h>
 #include <qobject.h>
 #include <kdepimmacros.h>
@@ -224,7 +224,7 @@ Q_OBJECT
     virtual QString mimeType() const = 0;
     /** Identifier of the Resource. Used for the custom fields where
         resource-specific information is stored. */
-    virtual Q3CString identifier() const = 0;
+    virtual QByteArray identifier() const = 0;
 
     /** Returns whether the item with the given localId exists locally. */
     virtual bool localItemExists( const QString &localId ) = 0;

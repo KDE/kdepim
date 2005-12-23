@@ -24,7 +24,7 @@
 
 #include <kdebug.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 GWConverter::GWConverter( struct soap* soap )
   : mSoap( soap )
@@ -58,7 +58,7 @@ QString GWConverter::stringToQString( std::string *str )
 
 char* GWConverter::qStringToChar( const QString &string )
 {
-  Q3CString str = string.utf8();
+  QByteArray str = string.utf8();
 
   char* charStr = (char*)soap_malloc( mSoap, str.length() + 1 );
   memcpy( charStr, str, str.length() );

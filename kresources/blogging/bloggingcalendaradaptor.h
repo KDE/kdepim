@@ -27,7 +27,7 @@
 #include <kurl.h>
 //Added by qt3to4:
 #include <QList>
-#include <Q3CString>
+#include <QByteArray>
 
 namespace KIO {
 class Job;
@@ -63,7 +63,7 @@ Q_OBJECT
       return types;
     }
 
-    Q3CString identifier() const { return "KCalResourceBlogging"; }
+    QByteArray identifier() const { return "KCalResourceBlogging"; }
     long flags() const { return GWResNeedsLogon; }
 
     void setBaseURL( const KURL &url );

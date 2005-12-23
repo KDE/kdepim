@@ -45,7 +45,7 @@
 
 #include "groupwise.h"
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 namespace KABC {
 
@@ -83,8 +83,8 @@ int kdemain( int argc, char **argv )
   return 0;
 }
 
-Groupwise::Groupwise( const Q3CString &protocol, const Q3CString &pool,
-  const Q3CString &app )
+Groupwise::Groupwise( const QByteArray &protocol, const QByteArray &pool,
+  const QByteArray &app )
   : SlaveBase( protocol, pool, app )
 {
 }

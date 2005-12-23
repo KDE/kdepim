@@ -19,7 +19,7 @@
 
 #include <qsocketnotifier.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 #include <Q3PtrList>
 
 #include <dcopclient.h>
@@ -177,7 +177,7 @@ int KSSLSocket::messageBox( KIO::SlaveBase::MessageBoxType type, const QString &
 {
 	kdDebug(0) << "messageBox " << type << " " << text << " - " << caption << buttonYes << buttonNo << endl;
 	QByteArray data, result;
-	Q3CString returnType;
+	QByteArray returnType;
 	QDataStream arg( &data,QIODevice::WriteOnly);
 	arg.setVersion(QDataStream::Qt_3_1);
 	arg << (int)1 << (int)type << text << caption << buttonYes << buttonNo;

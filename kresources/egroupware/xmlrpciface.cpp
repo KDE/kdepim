@@ -11,7 +11,7 @@
 #include <QFile>
 #include <QDateTime>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include <kdebug.h>
 #include <kio/job.h>
@@ -406,16 +406,6 @@ void Server::call( const QString &method, double arg ,
 }
 
 void Server::call( const QString &method, const QString &arg ,
-                   QObject* msgObj, const char* messageSlot,
-                   QObject* faultObj, const char* faultSlot,
-                   const QVariant &id )
-{
-  QList<QVariant> args;
-  args << QVariant( arg );
-  call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );
-}
-
-void Server::call( const QString &method, const Q3CString &arg,
                    QObject* msgObj, const char* messageSlot,
                    QObject* faultObj, const char* faultSlot,
                    const QVariant &id )

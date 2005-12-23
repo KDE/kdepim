@@ -40,7 +40,7 @@
 #include <qnamespace.h>
 #include <qfile.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include "ksslsocket.h"
 #include "contactconverter.h"
@@ -1076,7 +1076,7 @@ bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
 
   // debug contents of message custom properties
   kdDebug() << "incidence custom properties BEGIN" << endl;
-  typedef QMap<Q3CString, QString> PropMap;
+  typedef QMap<QByteArray, QString> PropMap;
   PropMap customs = incidence->customProperties();
   PropMap::Iterator it;
   for ( it = customs.begin(); it != customs.end(); ++it )

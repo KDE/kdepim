@@ -24,15 +24,15 @@
 
 #include <qobject.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 class Groupwise : public QObject, public KIO::SlaveBase
 {
     Q_OBJECT
   public:
     void get( const KURL &url );
-    Groupwise( const Q3CString &protocol, const Q3CString &pool,
-      const Q3CString &app );
+    Groupwise( const QByteArray &protocol, const QByteArray &pool,
+      const QByteArray &app );
 
   protected:
     void debugMessage( const QString & );

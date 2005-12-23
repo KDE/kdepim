@@ -31,7 +31,7 @@
 #include <kurl.h>
 //Added by qt3to4:
 #include <QList>
-#include <Q3CString>
+#include <QByteArray>
 
 namespace KIO {
 class Job;
@@ -53,7 +53,7 @@ class GroupDavCalendarAdaptor : public DavCalendarAdaptor
     }
     void customAdaptDownloadUrl( KURL &url );
     void customAdaptUploadUrl( KURL &url );
-    Q3CString identifier() const { return "KCalResourceGroupDAV"; }
+    QByteArray identifier() const { return "KCalResourceGroupDAV"; }
     QString defaultNewItemName( KPIM::GroupwareUploadItem* /*item*/ ) { return "new.ics"; }
     long flags() const { return 0; }
 

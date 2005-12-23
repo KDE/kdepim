@@ -81,7 +81,7 @@ void WebdavHandler::log( const QString &text )
     return;
   }
 
-  Q3CString textUtf8 = text.utf8();
+  QByteArray textUtf8 = text.utf8();
   file.write( textUtf8.data(), textUtf8.size() - 1 );
 
   if ( ++mLogCount > 5 ) mLogCount = 0;
