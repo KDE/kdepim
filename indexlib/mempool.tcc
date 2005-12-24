@@ -3,6 +3,34 @@
 #include "logfile.h"
 #include "compat.h"
 
+/* BASIC ALGORITHM AND STRUCTURE
+ *
+ * This is a memory pool manager which works by dividing its memory into
+ * blocks (all blocks have a size which is a power-of-two). Each block is either
+ * in use or in its corresponding free list.
+ *
+ * The free lists are doubly linked and there are head-pointers in
+ * the first page of the pool. 
+ *
+ * POOL ORGANIZATION:
+ *
+ * FIRST PAGE
+ * max_order_: 32 bits
+ * [pseudo-order 0]: 32 bits
+ * [pseudo-order 1]: 32 bits
+ * [pseudo-order 2]: 32 bits
+ * [list order 3]: 32 bits
+ * [list order 4]: 32 bits
+ * [list order 5]: 32 bits
+ * [list order 5]: 32 bits
+ * ...
+ * [list order max_order_]: 32 bits
+ *
+ * SUBSEQUENT PAGES:
+ * nodes*
+ *
+ */
+
 template <typename Traits>
 mempool<Traits>::mempool( std::auto_ptr<memory_manager> source ):
 	manager_( source ),
