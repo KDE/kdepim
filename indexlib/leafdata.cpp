@@ -141,7 +141,7 @@ void leaf_data::grow() {
 
 void leaf_data::construct( void* m ) {
 	unsigned s = leaf_data::start_bytes();
-	bzero( m, s );
+	memset( m, 0, s );
 	byte_io::write<uint16_t>( reinterpret_cast<unsigned char*>( m ), ( s - data_offset ) );
 }
 

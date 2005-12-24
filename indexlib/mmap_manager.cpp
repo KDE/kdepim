@@ -77,7 +77,7 @@ void mmap_manager::resize( unsigned ns ) {
 	ftruncate( fd_, ns );
 	map( ns );
 	logfile() << format( "Going to bzero from %s to %s)\n" ) % old_size % size();
-	bzero( rw_base( old_size ), size() - old_size );
+	memset( rw_base( old_size ), 0, size() - old_size );
 }
 
 void mmap_manager::unmap() {
