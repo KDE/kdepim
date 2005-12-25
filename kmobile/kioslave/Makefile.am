@@ -12,7 +12,7 @@ kde_services_DATA = mobile.protocol cellphone.protocol \
 	organizer.protocol pda.protocol 
 # do not install the camera protocol now - we already have a 
 # camera kioslave !!
-#	camera.protocol
+#       phonecamera.protocol
 
 messages:
 	$(XGETTEXT) *.cpp -o $(podir)/kio_mobile.pot
