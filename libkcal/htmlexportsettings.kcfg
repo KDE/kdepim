@@ -78,6 +78,10 @@
       <default code="true">i18n("Calendar")</default>
     </entry>
 
+    <entry type="Bool" name="EventLocation" key="Export Location">
+      <label>Export location of the events</label>
+      <default>true</default>
+    </entry>
     <entry type="Bool" name="EventCategories" key="Export Categories">
       <label>Export categories of the events</label>
       <default>true</default>
@@ -101,6 +105,10 @@
 
     <entry type="Bool" name="TaskDueDate" key="Export Due Date">
       <label>Export due dates of the to-dos</label>
+      <default>true</default>
+    </entry>
+    <entry type="Bool" name="TaskLocation" key="Export Location">
+      <label>Export location of the to-dos</label>
       <default>true</default>
     </entry>
     <entry type="Bool" name="TaskCategories" key="Export Categories">

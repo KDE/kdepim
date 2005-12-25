@@ -77,6 +77,7 @@ class KDE_EXPORT HtmlExport
 
     bool checkSecrecy( Incidence * );
 
+    void formatLocation( QTextStream *ts, Incidence *event );
     void formatCategories( QTextStream *ts, Incidence *event );
     void formatAttendees( QTextStream *ts, Incidence *event );
  
