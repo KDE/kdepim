@@ -121,12 +121,12 @@ PilotAppInfoBase::PilotAppInfoBase(PilotDatabase *d) : fC(new struct CategoryApp
 
 	fLen = appLen = d->readAppBlock(buffer,appLen);
 	unpack_CategoryAppInfo(fC, buffer, appLen);
-} ;
+}
 
 PilotAppInfoBase::~PilotAppInfoBase()
 {
 	if (fOwn) delete fC;
-} ;
+}
 
 
 int PilotAppInfoBase::findCategory(const QString &selectedCategory,
