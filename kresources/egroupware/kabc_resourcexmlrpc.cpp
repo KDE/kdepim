@@ -562,12 +562,12 @@ void ResourceXMLRPC::writeContact( const Addressee &addr, QMap<QString, QVariant
 
   if ( !addr.preferredEmail().isEmpty() ) {
     args.insert( "email", addr.preferredEmail() );
-    args.insert( "email_type", "internet" );
+    args.insert( "email_type", "INTERNET" );
   }
 
   if ( addr.emails().count() > 1 ) {
     args.insert( "email_home", addr.emails()[ 1 ] );
-    args.insert( "email_home_type", "internet" );
+    args.insert( "email_home_type", "INTERNET" );
   }
 
 
