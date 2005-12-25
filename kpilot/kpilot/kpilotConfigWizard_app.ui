@@ -12,9 +12,6 @@
             <height>404</height>
         </rect>
     </property>
-    <property name="caption">
-        <string>ConfigWizard_base3</string>
-    </property>
     <grid>
         <property name="name">
             <cstring>unnamed</cstring>
@@ -49,9 +46,6 @@ Press "Finish" to setup KPilot according to the settings in this configuration W
                     </property>
                     <property name="text">
                         <string>&amp;KDE-PIM suite (Kontact)</string>
-                    </property>
-                    <property name="accel">
-                        <string>Alt+K</string>
                     </property>
                     <property name="checked">
                         <bool>true</bool>
