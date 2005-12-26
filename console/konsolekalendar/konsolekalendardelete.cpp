@@ -81,13 +81,8 @@ bool KonsoleKalendarDelete::deleteEvent()
         .arg( event->summary() ).data()
            << endl;
 
-      if ( !m_variables->isCalendarResources() ) {
-        status =
-          m_variables->getCalendar()->save( m_variables->getCalendarFile() );
-      } else {
-        m_variables->getCalendar()->save();
-        status = true;
-      }
+      m_variables->getCalendar()->save();
+      status = true;
     }
   }
 

@@ -37,11 +37,13 @@
 #include <qobject.h>
 
 #include <kdebug.h>
+#include <kstandarddirs.h>
 #include <klocale.h>
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendar.h>
 #include <libkcal/event.h>
+#include <libkdepim/kpimprefs.h>
 
 #include "konsolekalendaradd.h"
 
@@ -92,12 +94,7 @@ bool KonsoleKalendarAdd::addEvent()
         arg( m_variables->getSummary() ).local8Bit().data()
            << endl;
 
-      if ( !m_variables->isCalendarResources() ) {
-        status =
-          m_variables->getCalendar()->save( m_variables->getCalendarFile() );
-      } else {
         m_variables->getCalendar()->save();
-      }
 
     } else {
       cout << i18n( "Failure: \"%1\" not inserted" ).
@@ -114,27 +111,31 @@ bool KonsoleKalendarAdd::addEvent()
 bool KonsoleKalendarAdd::addImportedCalendar()
 {
 
-  if ( !m_variables->getCalendar()->load( m_variables->getImportFile() ) ) {
+// If --file specified, then import into that file
+// else, import into the standard calendar
+
+  QString fileName;
+  if ( m_variables->getCalendarFile().isEmpty() )
+    fileName = locateLocal( "data", "korganizer/std.ics" );
+  else
+    fileName = m_variables->getCalendarFile();
+
+  CalendarLocal *cal = new CalendarLocal( KPimPrefs::timezone() );
+  if ( !cal->load( fileName ) ||
+       !cal->load( m_variables->getImportFile() ) ||
+       !cal->save( fileName ) ) {
     kdDebug()
       << "konsolekalendaradd.cpp::importCalendar() | "
       << "Can't import file: "
       << m_variables->getImportFile()
       << endl;
     return false;
-  } else {
-    kdDebug()
-      << "konsolekalendaradd.cpp::importCalendar() | "
-      << "Successfully imported file: "
-      << m_variables->getImportFile()
-      << endl;
   }
-
-  if ( !m_variables->isCalendarResources() ) {
-    m_variables->getCalendar()->save( m_variables->getCalendarFile() );
-  } else {
-    m_variables->getCalendar()->save();
-  }
-
+  kdDebug()
+    << "konsolekalendaradd.cpp::importCalendar() | "
+    << "Successfully imported file: "
+    << m_variables->getImportFile()
+    << endl;
   return true;
 }
 

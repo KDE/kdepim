@@ -297,11 +297,7 @@ bool KonsoleKalendar::showInstance()
         htmlSettings.setDateEnd( QDateTime( lastdate ) ) ;
 
         KCal::HtmlExport *Export;
-        if ( !m_variables->isCalendarResources() ) {
-          Export = new HtmlExport( m_variables->getCalendar(), &htmlSettings );
-        } else {
-          Export = new HtmlExport( m_variables->getCalendarResources(), &htmlSettings );
-        }
+        Export = new HtmlExport( m_variables->getCalendar(), &htmlSettings );
 	status = Export->save( &ts );
         delete Export;
       }

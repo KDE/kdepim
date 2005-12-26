@@ -50,6 +50,7 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfig.h>
+#include <kstandarddirs.h>
 #include <kdebug.h>
 
 #include <libkcal/calformat.h>
@@ -58,10 +59,12 @@
 
 #include <qdatetime.h>
 #include <qfile.h>
+#include <qfileinfo.h>
 
 #include <stdlib.h>
 #include <iostream>
 
+#include "stdcalendar.h"
 #include "konsolekalendar.h"
 #include "konsolekalendarepoch.h"
 
@@ -189,23 +192,12 @@ int main( int argc, char *argv[] )
     0                                // home page or relevant link
     );
 
-
-
-  // KCmdLineArgs::init() final 'true' argument indicates no commandline options
-  // for QApplication/KApplication (no KDE or Qt options)
   KCmdLineArgs::init( argc, argv, &aboutData, KCmdLineArgs::CmdLineArgNone );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
-  KInstance ins( progName );
-
-// Replace the KApplication call below with the three lines above
-// will make this a pure non-GUI application
-//   -- thanks for the info Stephan Kulow.
-
-//  KApplication app(
-//      false, //do not allowstyles - disable the loading on plugin based styles
-//      false  //GUI is not enabled - disable all GUI stuff
-//      );
+  KApplication app(
+    false  //GUI is not enabled - disable all GUI stuff
+    );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
@@ -664,7 +656,20 @@ int main( int argc, char *argv[] )
      * All modes need to know if the calendar file exists
      * This must be done before we get to opening biz
      */
-    bool exists = QFile::exists( variables.getCalendarFile() );
+    bool exists, remote;
+    KURL url = KURL::fromPathOrURL( variables.getCalendarFile() );
+    if ( url.isLocalFile() ) {
+      variables.setCalendarFile( url.path() );
+      exists = QFile::exists( variables.getCalendarFile() );
+      remote = false;
+    } else if ( !variables.getCalendarFile().contains( '/' ) ) {
+      QFileInfo info( variables.getCalendarFile() );
+      variables.setCalendarFile( info.absFilePath() );
+      exists = QFile::exists( variables.getCalendarFile() );
+      remote = false;
+    } else {
+      remote = true;
+    }
 
     if ( create ) {
 
@@ -672,12 +677,20 @@ int main( int argc, char *argv[] )
                 << "check if calendar file already exists"
                 << endl;
 
+      if ( remote ) {
+        cout << i18n( "Attempting to create a remote file %1" ).
+          arg( variables.getCalendarFile() ).local8Bit().data()
+             << endl;
+        return 1;
+      }
+
       if ( exists ) {
         cout << i18n( "Calendar %1 already exists" ).
           arg( variables.getCalendarFile() ).local8Bit().data()
              << endl;
         return 1;
       }
+
       if ( konsolekalendar->createCalendar() ) {
         cout << i18n( "Calendar %1 successfully created" ).
           arg( variables.getCalendarFile() ).local8Bit().data()
@@ -693,7 +706,7 @@ int main( int argc, char *argv[] )
 
     if ( !exists ) {
       cout << i18n( "Calendar file not found %1" ).
-        arg( option ).local8Bit().data()
+        arg( variables.getCalendarFile() ).local8Bit().data()
            << endl;
       cout << i18n( "Try --create to create new calendar file" ).local8Bit().data()
            << endl;
@@ -702,21 +715,24 @@ int main( int argc, char *argv[] )
   }
 
   CalendarResources *calendarResource = NULL;
-  CalendarLocal *localCalendar = NULL;
-
   /*
    * Should we use local calendar or resource?
    */
-  variables.setTimeZoneId();
   if ( args->isSet( "file" ) ) {
-    localCalendar = new CalendarLocal( variables.getTimeZoneId() );
-    localCalendar->load( variables.getCalendarFile() );
-    variables.setCalendar( localCalendar );
+    calendarResource = new StdCalendar( variables.getCalendarFile(),
+                                        i18n( "Active Calendar" ) );
   } else {
-    calendarResource = new CalendarResources( variables.getTimeZoneId() );
-    calendarResource->readConfig();
+    // TODO: when certain resources (kolab) don't try to gain access to
+    // an X server, or dcopserver, then put back the following line which
+    // supports all resources, not just the standard resource.
+    // calendarResource = new StdCalendar();
+    calendarResource = new StdCalendar( locateLocal( "data",
+                                                     "korganizer/std.ics" ),
+                                        i18n( "Default Calendar" ) );
+  }
+  if ( !args->isSet( "import" ) ) {
+    variables.setCalendar( calendarResource );
     calendarResource->load();
-    variables.setCalendarResources( calendarResource );
   }
 
   /***************************************************************************
@@ -961,13 +977,8 @@ int main( int argc, char *argv[] )
 
   delete konsolekalendar;
 
-  if ( calendarFile ) {
-    localCalendar->close();
-    delete localCalendar;
-  } else {
-    calendarResource->close();
-    delete calendarResource;
-  }
+  calendarResource->close();
+  delete calendarResource;
 
   kdDebug() << "main | exiting"
             << endl;
