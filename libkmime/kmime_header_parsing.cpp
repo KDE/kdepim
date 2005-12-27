@@ -80,7 +80,7 @@ namespace HeaderParsing {
 
 // parse the encoded-word (scursor points to after the initial '=')
 bool parseEncodedWord( const char* & scursor, const char * const send,
-		       QString & result, Q3CString & language ) {
+		       QString & result, QByteArray & language ) {
 
   // make sure the caller already did a bit of the work.
   assert( *(scursor-1) == '=' );

@@ -104,7 +104,7 @@ namespace KMime {
       @return the randomized string.
       @see uniqueString
   */
-  extern Q3CString multiPartBoundary() KDE_EXPORT;
+  extern QByteArray multiPartBoundary() KDE_EXPORT;
 
   /** Tries to extract the header with name @p name from the string
       @p src, unfolding it if necessary.

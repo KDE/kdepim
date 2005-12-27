@@ -34,9 +34,6 @@
 
 #include <qstring.h>
 #include <qpair.h>
-#include <q3valuelist.h>
-//Added by qt3to4:
-#include <Q3CString>
 
 #include <time.h>
 
@@ -100,7 +97,7 @@ namespace HeaderParsing {
       @return the decoded string the encoded word represented.
   */
   bool parseEncodedWord( const char* & scursor, const char * const send,
-			 QString & result, Q3CString & language ) KDE_EXPORT;
+			 QString & result, QByteArray & language ) KDE_EXPORT;
   //
   // The parsing squad:
   //

@@ -351,9 +351,9 @@ Q3CString uniqueString()
 }
 
 
-Q3CString multiPartBoundary()
+QByteArray multiPartBoundary()
 {
-  Q3CString ret;
+  QByteArray ret;
   ret="nextPart"+uniqueString();
   return ret;
 }
