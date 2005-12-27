@@ -19,7 +19,6 @@
 #include "qdatetime.h"
 #include "qstring.h"
 #include "q3cstring.h"
-#include "q3valuelist.h"
 #include "time.h"
 #include <kdepimmacros.h>
 

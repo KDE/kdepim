@@ -3,7 +3,6 @@ using namespace KMime::MDN;
 
 #include <q3cstring.h>
 #include <qstring.h>
-#include <q3valuelist.h>
 
 #include <iostream>
 using std::cout;

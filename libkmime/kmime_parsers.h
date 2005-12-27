@@ -16,8 +16,6 @@
 #ifndef __KMIME_PARSERS__
 #define __KMIME_PARSERS__
 
-#include <q3valuelist.h>
-#include <q3cstring.h>
 #include <q3strlist.h>
 
 namespace KMime {
