@@ -43,6 +43,7 @@ ReadMBox::ReadMBox( const UrlInfo* info, MBoxProtocol* parent, bool onlynew, boo
 	m_stream( 0 ),
 	m_current_line( new QString( QString::null ) ),
 	m_current_id( new QString( QString::null ) ),
+	m_atend( true ),
 	m_prev_time( 0 ),
 	m_only_new( onlynew ),
 	m_savetime( savetime ),
@@ -83,15 +84,14 @@ bool ReadMBox::nextLine()
 	if( !m_stream )
 		return true;
 		
-	if( m_stream->atEnd() )
+	*m_current_line = m_stream->readLine();
+	m_atend = m_current_line->isNull();
+	if( m_atend ) // Cursor was at EOF
 	{
-		*m_current_line = QString::null;
 		*m_current_id = QString::null;
 		m_prev_status = m_status;
 		return true;
 	}
-
-	*m_current_line = m_stream->readLine();
 
 	//New message
 	if( m_current_line->left( 5 ) == "From " )
@@ -121,7 +121,7 @@ bool ReadMBox::searchMessage( const QString& id )
 	if( !m_stream )
 		return false;
 		
-	while( !m_stream->atEnd() && *m_current_id != id )
+	while( !m_atend && *m_current_id != id )
 		nextLine();
 
 	return *m_current_id == id;
@@ -144,6 +144,7 @@ void ReadMBox::rewind()
 {
 	if( m_stream )
 		m_stream->device()->reset();
+	m_atend = m_stream->atEnd();
 }
 
 bool ReadMBox::atEnd() const
@@ -151,7 +152,7 @@ bool ReadMBox::atEnd() const
 	if( !m_stream )
 		return true;
 	
-	return m_stream->atEnd() || ( m_info->type() == UrlInfo::message && *m_current_id != m_info->id() );
+	return m_atend || ( m_info->type() == UrlInfo::message && *m_current_id != m_info->id() );
 }
 
 bool ReadMBox::inListing() const
