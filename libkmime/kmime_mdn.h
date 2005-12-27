@@ -35,11 +35,11 @@
 #include <q3valuelist.h>
 #include <qstring.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 
 #include <kdepimmacros.h>
 
-class Q3CString;
+class QByteArray;
 
 namespace KMime {
 
@@ -180,9 +180,9 @@ namespace KMime {
 
     /** Main function. Generates the content of the
         message/disposition-notification body part. */
-    KDE_EXPORT extern Q3CString dispositionNotificationBodyContent( const QString & finalRecipient,
-	       const Q3CString & originalRecipient,
-	       const Q3CString & originalMsgID,
+    KDE_EXPORT extern QByteArray dispositionNotificationBodyContent( const QString & finalRecipient,
+	       const QByteArray & originalRecipient,
+	       const QByteArray & originalMsgID,
 	       DispositionType disposition,
 	       ActionMode actionMode,
 	       SendingMode sendingMode,

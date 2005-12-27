@@ -15,8 +15,6 @@
 */
 
 #include "kmime_message.h"
-//Added by qt3to4:
-#include <Q3CString>
 
 using namespace KMime;
 
@@ -34,7 +32,7 @@ void Message::parse()
 {
   Content::parse();
 
-  Q3CString raw;
+  QByteArray raw;
   if( !(raw=rawHeader(s_ubject.type())).isEmpty() )
     s_ubject.from7BitString(raw);
 
@@ -46,7 +44,7 @@ void Message::parse()
 void Message::assemble()
 {
   Headers::Base *h;
-  Q3CString newHead="";
+  QByteArray newHead="";
 
   //Message-ID
   if( (h=messageID(false))!=0 )

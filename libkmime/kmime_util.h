@@ -23,7 +23,7 @@
 #include "time.h"
 #include <kdepimmacros.h>
 
-typedef QList<Q3CString> QCStringList;
+typedef QList<QByteArray> QCStringList;
 
 namespace KMime {
 

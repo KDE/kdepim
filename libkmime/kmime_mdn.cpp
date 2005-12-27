@@ -158,11 +158,11 @@ namespace MDN {
     return 0;
   }
 
-  static Q3CString dispositionField( DispositionType d, ActionMode a, SendingMode s,
+  static QByteArray dispositionField( DispositionType d, ActionMode a, SendingMode s,
 				    const QList<DispositionModifier> & m ) {
 
     // mandatory parts: Disposition: foo/baz; bar
-    Q3CString result = "Disposition: ";
+    QByteArray result = "Disposition: ";
     result += stringFor( a );
     result += "/";
     result += stringFor( s );
@@ -184,41 +184,41 @@ namespace MDN {
     return result + "\n";
   }
 
-  static Q3CString finalRecipient( const QString & recipient ) {
+  static QByteArray finalRecipient( const QString & recipient ) {
     if ( recipient.isEmpty() )
-      return Q3CString();
+      return QByteArray();
     else
       return "Final-Recipient: rfc822; "
 	+ encodeRFC2047String( recipient, "utf-8" ) + "\n";
   }
 
-  static Q3CString orginalRecipient( const Q3CString & recipient ) {
+  static QByteArray orginalRecipient( const QByteArray & recipient ) {
     if ( recipient.isEmpty() )
-      return Q3CString();
+      return QByteArray();
     else
       return "Original-Recipient: " + recipient + "\n";
   }
 
-  static Q3CString originalMessageID( const Q3CString & msgid ) {
+  static QByteArray originalMessageID( const QByteArray & msgid ) {
     if ( msgid.isEmpty() )
-      return Q3CString();
+      return QByteArray();
     else
       return "Original-Message-ID: " + msgid + "\n";
   }
 
-  static Q3CString reportingUAField() {
+  static QByteArray reportingUAField() {
     char hostName[256];
     if ( gethostname( hostName, 255 ) )
       hostName[0] = '\0'; // gethostname failed: pretend empty string
     else
       hostName[255] = '\0'; // gethostname may have returned 255 chars (man page)
-    return Q3CString("Reporting-UA: ") + Q3CString( hostName )
-      + Q3CString( "; KMime " KMIME_VERSION_STRING "\n" );
+    return QByteArray("Reporting-UA: ") + QByteArray( hostName )
+      + QByteArray( "; KMime " KMIME_VERSION_STRING "\n" );
   }
 
-  Q3CString dispositionNotificationBodyContent( const QString & r,
-					       const Q3CString & o,
-					       const Q3CString & omid,
+  QByteArray dispositionNotificationBodyContent( const QString & r,
+					       const QByteArray & o,
+					       const QByteArray & omid,
 					       DispositionType d,
 					       ActionMode a,
 					       SendingMode s,
@@ -233,7 +233,7 @@ namespace MDN {
       spec = special;
 
     // std headers:
-    Q3CString result = reportingUAField();
+    QByteArray result = reportingUAField();
     result += orginalRecipient( o );
     result += finalRecipient( r );
     result += originalMessageID( omid );

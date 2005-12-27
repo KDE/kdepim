@@ -29,7 +29,7 @@ class KDE_EXPORT KQCStringSplitter {
         
     void reset()                  { start=0; end=0; sep=""; incSep=false;}
     
-    void init(const Q3CString &str, const char *s);
+    void init(const QByteArray &str, const char *s);
     void init(const char *str, const char *s);
     void setIncludeSep(bool inc)  { incSep=inc; }
     
@@ -39,11 +39,11 @@ class KDE_EXPORT KQCStringSplitter {
     bool next();
     bool prev();  
       
-    Q3CString& string()              { return dst; }
-    const Q3CString& source()        { return src; }
+    QByteArray& string()              { return dst; }
+    const QByteArray& source()        { return src; }
           
   private:
-    Q3CString src, dst, sep;
+    QByteArray src, dst, sep;
     int start,end;
     bool incSep;
       

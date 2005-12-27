@@ -16,7 +16,6 @@
 
 #include "kqcstringsplitter.h"
 //Added by qt3to4:
-#include <Q3CString>
 
 KQCStringSplitter::KQCStringSplitter()
 {
@@ -32,7 +31,7 @@ KQCStringSplitter::~KQCStringSplitter()
 
 
 
-void KQCStringSplitter::init(const Q3CString &str, const char *s)
+void KQCStringSplitter::init(const QByteArray &str, const char *s)
 {
   sep=s;
   src=str;

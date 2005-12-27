@@ -31,17 +31,17 @@ namespace Parser {
 class MultiPart {
   
 public:
-  MultiPart(const Q3CString &src, const Q3CString &boundary);
+  MultiPart(const QByteArray &src, const QByteArray &boundary);
   ~MultiPart() {};
   
   bool parse();
-  QList<Q3CString> parts()    { return p_arts; }
-  Q3CString preamble()     { return p_reamble; }
-  Q3CString epilouge()     { return e_pilouge; }
+  QList<QByteArray> parts()    { return p_arts; }
+  QByteArray preamble()     { return p_reamble; }
+  QByteArray epilouge()     { return e_pilouge; }
   
 protected:
-  Q3CString s_rc, b_oundary, p_reamble, e_pilouge;
-  QList<Q3CString> p_arts;
+  QByteArray s_rc, b_oundary, p_reamble, e_pilouge;
+  QList<QByteArray> p_arts;
 };
 
 
@@ -52,22 +52,22 @@ protected:
 class NonMimeParser {
 
 public:
-  NonMimeParser(const Q3CString &src);
+  NonMimeParser(const QByteArray &src);
   virtual ~NonMimeParser() {};
   virtual bool parse() = 0;
   bool isPartial()            { return (p_artNr>-1 && t_otalNr>-1 && t_otalNr!=1); }
   int partialNumber()         { return p_artNr; }
   int partialCount()          { return t_otalNr; }
   bool hasTextPart()          { return (t_ext.length()>1); }
-  Q3CString textPart()         { return t_ext; }
+  QByteArray textPart()         { return t_ext; }
   Q3StrList binaryParts()       { return b_ins; }
   Q3StrList filenames()         { return f_ilenames; }
   Q3StrList mimeTypes()         { return m_imeTypes; }
 
 protected:
-  static Q3CString guessMimeType(const Q3CString& fileName);
+  static QByteArray guessMimeType(const QByteArray& fileName);
 
-  Q3CString s_rc, t_ext;
+  QByteArray s_rc, t_ext;
   Q3StrList b_ins, f_ilenames, m_imeTypes;
   int p_artNr, t_otalNr;
 };
@@ -80,12 +80,12 @@ protected:
 class UUEncoded : public NonMimeParser {
 
 public:
-  UUEncoded(const Q3CString &src, const Q3CString &subject);  
+  UUEncoded(const QByteArray &src, const QByteArray &subject);  
 
   virtual bool parse();
 
 protected:
-  Q3CString s_ubject;  
+  QByteArray s_ubject;  
 };
 
 
@@ -97,14 +97,14 @@ protected:
 class YENCEncoded : public NonMimeParser {
 
 public:
-  YENCEncoded(const Q3CString &src);  
+  YENCEncoded(const QByteArray &src);  
 
   virtual bool parse();      
   QList<QByteArray> binaryParts()       { return b_ins; }
     
 protected:
   QList<QByteArray> b_ins;
-  static bool yencMeta( Q3CString& src, const Q3CString& name, int* value);
+  static bool yencMeta( QByteArray& src, const QByteArray& name, int* value);
 };
 
 
