@@ -33,7 +33,7 @@ namespace KMime {
 
   /** Consult the language cache. Only used for reducing mem usage by
       keeping strings in a common repository.*/
-  extern const char* cachedLanguage(const Q3CString &name) KDE_EXPORT;
+  extern const char* cachedLanguage(const QByteArray &name) KDE_EXPORT;
 
   /** checks whether @p s contains any non-us-ascii characters */
   extern bool isUsAscii(const QString &s) KDE_EXPORT;

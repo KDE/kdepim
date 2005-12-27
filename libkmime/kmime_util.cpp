@@ -56,7 +56,7 @@ const char* cachedCharset( const QByteArray &name )
   return c_harsetCache.last();
 }
 
-const char* cachedLanguage(const Q3CString &name)
+const char* cachedLanguage(const QByteArray &name)
 {
   int idx=l_anguageCache.find(name.data());
   if(idx>-1)
