@@ -23,7 +23,6 @@
 
 #include <q3dict.h>
 #include <qtimer.h>
-#include <q3valuelist.h>
 
 #include <dcopclient.h>
 #include <kapplication.h>

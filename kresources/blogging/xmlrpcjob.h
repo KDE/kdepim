@@ -26,7 +26,7 @@
 #include <kurl.h>
 
 #include <qstring.h>
-#include <q3valuelist.h>
+
 #include <qdom.h>
 
 #include <kio/jobclasses.h>

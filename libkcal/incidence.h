@@ -24,7 +24,7 @@
 
 #include <qdatetime.h>
 #include <qstringlist.h>
-#include <q3valuelist.h>
+
 
 #include "recurrence.h"
 #include "alarm.h"

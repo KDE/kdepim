@@ -16,7 +16,7 @@
 #include <qdom.h>
 #include <qobject.h>
 #include <qvariant.h>
-#include <q3valuelist.h>
+
 //Added by qt3to4:
 #include <QByteArray>
 

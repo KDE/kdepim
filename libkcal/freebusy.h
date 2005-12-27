@@ -23,7 +23,7 @@
 #define KCAL_FREEBUSY_H
 
 #include <qdatetime.h>
-#include <q3valuelist.h>
+
 #include <q3ptrlist.h>
 //Added by qt3to4:
 #include <QByteArray>

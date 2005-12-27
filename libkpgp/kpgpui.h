@@ -28,7 +28,7 @@
 #include <kdebug.h>       // used in inlined methods
 #include <q3cstring.h>     // used in return-by-value
 #include <qstring.h>      // is a member in KeyRequester
-#include <q3valuevector.h> // used in KeyApprovalDialog
+#include <QVector> // used in KeyApprovalDialog
 #include <q3ptrvector.h>
 #include "kpgp.h"
 

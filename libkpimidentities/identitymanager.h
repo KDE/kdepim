@@ -33,7 +33,7 @@
 
 #include <libkdepim/configmanager.h>
 
-#include <q3valuelist.h>
+
 //Added by qt3to4:
 #include <dcopobject.h>
 #include <kdepimmacros.h>

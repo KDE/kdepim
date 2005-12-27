@@ -28,7 +28,7 @@
 #include <qobject.h>
 #include <qstring.h>
 #include <qthread.h>
-#include <q3valuelist.h>
+
 
 #include <string>
 

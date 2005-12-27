@@ -24,7 +24,7 @@
 
 #include <qstring.h>
 #include <qstringlist.h>
-#include <q3valuelist.h>
+
 
 #include "customproperties.h"
 #include "duration.h"

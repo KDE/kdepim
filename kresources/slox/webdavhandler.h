@@ -20,7 +20,7 @@
 #ifndef WEBDAVHANDLER_H
 #define WEBDAVHANDLER_H
 
-#include <q3valuelist.h>
+
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qdom.h>

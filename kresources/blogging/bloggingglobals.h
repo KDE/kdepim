@@ -23,7 +23,7 @@
 
 #include <qstring.h>
 #include <qvariant.h>
-#include <q3valuelist.h>
+
 
 class BloggingGlobals
 {

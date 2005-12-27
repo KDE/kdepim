@@ -28,7 +28,7 @@
 #include <kurl.h>
 #include <kdepimmacros.h>
 
-#include <q3valuelist.h>
+
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qobject.h>
