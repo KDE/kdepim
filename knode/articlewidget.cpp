@@ -860,7 +860,7 @@ void ArticleWidget::displayAttachment( KMime::Content *att, int partNum )
       html += "</td></tr></table>";
     }
   } else { // icon
-    Q3CString mimetype = ct->mimeType();
+    QByteArray mimetype = ct->mimeType();
     KPIM::kAsciiToLower( mimetype.data() );
     QString iconName = KMimeType::mimeType( mimetype )->icon( QString::null, false );
     QString iconFile = KGlobal::instance()->iconLoader()->iconPath( iconName, KIcon::Desktop );
