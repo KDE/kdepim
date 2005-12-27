@@ -26,7 +26,7 @@
 
 #include <qstring.h>
 #include <qstringlist.h>
-#include <q3valuelist.h>
+
 
 #include <kabc/addressee.h>
 #include <kconfig.h>

@@ -34,7 +34,7 @@
 #include <qdialog.h>
 #include <q3tabdialog.h>
 #include <qstringlist.h>
-#include <q3valuelist.h>
+
 //Added by qt3to4:
 #include <QVBoxLayout>
 

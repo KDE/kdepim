@@ -25,7 +25,7 @@
 #ifndef IMEDITORWIDGET_H
 #define IMEDITORWIDGET_H
 
-#include <q3valuelist.h>
+
 #include <klistview.h>
 #include <kdialogbase.h>
 

@@ -29,7 +29,7 @@
 #include <qcolor.h>
 #include <qfont.h>
 #include <qrect.h>
-#include <q3valuelist.h>
+
 
 typedef QList<QRect> QRectList;
 

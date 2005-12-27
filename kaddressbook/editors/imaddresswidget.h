@@ -24,7 +24,7 @@
 #ifndef IMADDRESSWIDGET_H
 #define IMADDRESSWIDGET_H
 
-#include <q3valuelist.h>
+
 
 #include "imaddressbase.h"
 #include "imeditorwidget.h"
