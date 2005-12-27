@@ -37,19 +37,19 @@ public:
     mailAddress (const mailAddress &);
     mailAddress & operator = (const mailAddress &);
 
-  void setUser (const Q3CString & aUser)
+  void setUser (const QByteArray & aUser)
   {
     user = aUser;
   }
-  const Q3CString & getUser () const
+  const QByteArray & getUser () const
   {
     return user;
   }
-  void setHost (const Q3CString & aHost)
+  void setHost (const QByteArray & aHost)
   {
     host = aHost;
   }
-  const Q3CString & getHost () const
+  const QByteArray & getHost () const
   {
     return host;
   }
@@ -58,12 +58,12 @@ public:
   const QString getFullName () const;
 
   void setComment (const QString & aComment);
-  void setCommentRaw (const Q3CString &);
+  void setCommentRaw (const QByteArray &);
   const QString getComment () const;
-  const Q3CString & getCommentRaw () const;
+  const QByteArray & getCommentRaw () const;
 
   int parseAddress (const char *);
-  const Q3CString getStr ();
+  const QByteArray getStr ();
   bool isEmpty () const;
 
   static QString emailAddrAsAnchor (const mailAddress &, bool);
@@ -72,10 +72,10 @@ public:
   void clear();
 
 private:
-  Q3CString user;
-  Q3CString host;
-  Q3CString rawFullName;
-  Q3CString rawComment;
+  QByteArray user;
+  QByteArray host;
+  QByteArray rawFullName;
+  QByteArray rawComment;
 };
 
 #endif

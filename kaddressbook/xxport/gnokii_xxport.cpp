@@ -34,9 +34,6 @@
 #include "config.h"
 
 #include <qcursor.h>
-//Added by qt3to4:
-#include <Q3CString>
-
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -160,7 +157,7 @@ static QString businit(void)
 	data.revision = revision;
 	data.imei = imei;
 
-	Q3CString unknown(GN_TO(i18n("Unknown")));
+	QByteArray unknown(GN_TO(i18n("Unknown")));
 	qstrncpy(manufacturer, unknown, sizeof(manufacturer)-1);
 	qstrncpy(model, unknown, sizeof(model)-1);
 	qstrncpy(revision, unknown, sizeof(revision)-1);

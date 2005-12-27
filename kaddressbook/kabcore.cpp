@@ -32,7 +32,6 @@
 #include <QVBoxLayout>
 #include <QList>
 #include <QHBoxLayout>
-#include <Q3CString>
 
 #include <kabc/addresseelist.h>
 #include <kabc/errorhandler.h>
@@ -1279,14 +1278,14 @@ void KABCore::slotContactsUpdated()
 bool KABCore::handleCommandLine( KAddressBookIface* iface )
 {
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  Q3CString addrStr = args->getOption( "addr" );
-  Q3CString uidStr = args->getOption( "uid" );
+  QString addrStr = args->getOption( "addr" );
+  QString uidStr = args->getOption( "uid" );
 
   QString addr, uid, vcard;
   if ( !addrStr.isEmpty() )
-    addr = QString::fromLocal8Bit( addrStr );
+    addr = addrStr ;
   if ( !uidStr.isEmpty() )
-    uid = QString::fromLocal8Bit( uidStr );
+    uid = uidStr;
 
   bool doneSomething = false;
 

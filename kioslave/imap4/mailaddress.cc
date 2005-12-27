@@ -27,7 +27,7 @@
 #include "mimehdrline.h"
 #include <kmime_util.h>
 //Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 #include <Q3PtrList>
 
 mailAddress::mailAddress ()
@@ -96,15 +96,15 @@ mailAddress::parseAddress (const char *aCStr)
       {
       case '"':
         advance = mimeHdrLine::parseQuoted ('"', '"', aCStr);
-        rawFullName += Q3CString (aCStr, advance + 1);
+        rawFullName += QByteArray (aCStr, advance + 1);
         break;
       case '(':
         advance = mimeHdrLine::parseQuoted ('(', ')', aCStr);
-        rawComment += Q3CString (aCStr, advance + 1);
+        rawComment += QByteArray (aCStr, advance + 1);
         break;
       case '<':
         advance = mimeHdrLine::parseQuoted ('<', '>', aCStr);
-        user = Q3CString (aCStr, advance + 1); // copy it
+        user = QByteArray (aCStr, advance + 1); // copy it
         len = advance;
         user = user.mid (1, len - 2);  // strip <>
         len -= 2;
@@ -119,7 +119,7 @@ mailAddress::parseAddress (const char *aCStr)
         {
           if (*aCStr != ',')
           {
-            rawFullName += Q3CString (aCStr, advance + 1);
+            rawFullName += QByteArray (aCStr, advance + 1);
             if (mimeHdrLine::skipWS ((const char *) &aCStr[advance]) > 0)
             {
               rawFullName += ' ';
@@ -199,10 +199,10 @@ mailAddress::parseAddress (const char *aCStr)
   return retVal;
 }
 
-const Q3CString
+const QByteArray
 mailAddress::getStr ()
 {
-  Q3CString retVal(128); // Should be generally big enough
+  QByteArray retVal(128); // Should be generally big enough
 
   if (!rawFullName.isEmpty ())
   {
@@ -245,7 +245,7 @@ mailAddress::getFullName () const
 }
 
 void
-mailAddress::setCommentRaw (const Q3CString & _str)
+mailAddress::setCommentRaw (const QByteArray & _str)
 {
   rawComment = _str;
 }
@@ -261,7 +261,7 @@ mailAddress::getComment () const
   return rfcDecoder::decodeRFC2047String (rawComment);
 }
 
-const Q3CString &
+const QByteArray &
 mailAddress::getCommentRaw () const
 {
   return rawComment;

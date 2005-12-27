@@ -27,7 +27,6 @@
 
 #include <xxport.h>
 //Added by qt3to4:
-#include <Q3CString>
 
 class BookmarkXXPort : public KAB::XXPort
 {
@@ -46,7 +45,7 @@ class BookmarkXXPort : public KAB::XXPort
       The following signals are used for building a bookmarks file
       using KBookmarkDomBuilder.
      */
-    void newBookmark( const QString &text, const Q3CString &url, const QString &additionnalInfo );
+    void newBookmark( const QString &text, const QString &url, const QString &additionnalInfo );
     void newFolder( const QString &text, bool open, const QString &additionnalInfo );
     void newSeparator();
     void endFolder();

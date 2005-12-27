@@ -165,7 +165,7 @@ namespace KMime {
       @param str us-ascii string to work on.
       @param forceQuotes if @p true, always add quote characters.
   */
-  KDE_EXPORT extern void addQuotes(Q3CString &str, bool forceQuotes);
+  KDE_EXPORT extern void addQuotes(QByteArray &str, bool forceQuotes);
 
 
   /**

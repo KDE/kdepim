@@ -472,7 +472,7 @@ void removeQuots(QString &str)
 }
 
 
-void addQuotes(Q3CString &str, bool forceQuotes)
+void addQuotes(QByteArray &str, bool forceQuotes)
 {
   bool needsQuotes=false;
   for (int i=0; i < str.length(); i++) {
