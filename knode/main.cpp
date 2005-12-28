@@ -38,6 +38,7 @@ int main(int argc, char* argv[])
 
   KNApplication app;
   KGlobal::locale()->insertCatalogue("libkdenetwork");
+  KGlobal::locale()->insertCatalogue("libkdepim");
   return app.exec();
 }
 
