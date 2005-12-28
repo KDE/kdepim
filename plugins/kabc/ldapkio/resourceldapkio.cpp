@@ -380,7 +380,7 @@ void ResourceLDAPKIO::init()
     d->mLDAPUrl.setUser( mUser );
     d->mLDAPUrl.setPass( mPassword );
   }
-  d->mLDAPUrl.setProtocol( d->mSSL ? "newldaps" : "newldap");
+  d->mLDAPUrl.setProtocol( d->mSSL ? "ldaps" : "ldap");
   d->mLDAPUrl.setHost( mHost );
   d->mLDAPUrl.setPort( mPort );
   d->mLDAPUrl.setDn( mDn );
