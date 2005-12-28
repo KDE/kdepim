@@ -28,9 +28,9 @@ using namespace KABC;
 
 extern "C"
 {
-  void *init_kabc_ldapkio()
+  void *init_kabc_newldapkio()
   {
-    KGlobal::locale()->insertCatalogue("kabc_ldapkio");
+    KGlobal::locale()->insertCatalogue("kabc_newldapkio");
     return new KRES::PluginFactory<ResourceLDAPKIO, ResourceLDAPKIOConfig>();
   }
 }

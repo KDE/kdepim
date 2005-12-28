@@ -8,7 +8,7 @@ libkabc_newldapkio_la_SOURCES = resourceldapkio.cpp resourceldapkioconfig.cpp
 libkabc_newldapkio_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
 libkabc_newldapkio_la_LIBADD	= $(LIB_KABC) $(LIB_KIO)
 
-kde_module_LTLIBRARIES = kabc_ldapkio.la
+kde_module_LTLIBRARIES = kabc_newldapkio.la
 kabc_newldapkio_la_SOURCES = resourceldapkioplugin.cpp
 kabc_newldapkio_la_LDFLAGS	= $(all_libraries) -module $(KDE_PLUGIN)
 kabc_newldapkio_la_LIBADD	= libkabc_newldapkio.la
@@ -24,4 +24,4 @@ kabcincludedir = $(includedir)/kabc
 servicedir = $(kde_servicesdir)/kresources/kabc
 service_DATA = newldapkio.desktop
 
-resourceldapkioplugin.lo: $(kabcincludedir)/addressee.h
+#resourceldapkioplugin.lo: $(kabcincludedir)/addressee.h
