@@ -115,12 +115,12 @@ ArticleWidget::ArticleWidget( QWidget *parent,
   connect( mViewer, SIGNAL(popupMenu(const QString&, const QPoint&)),
            SLOT(slotURLPopup(const QString&, const QPoint&)) );
 
+  mTimer = new QTimer( this );
+  connect( mTimer, SIGNAL(timeout()), SLOT(slotTimeout()) );
+
   initActions();
   readConfig();
   clear();
-
-  mTimer = new QTimer( this );
-  connect( mTimer, SIGNAL(timeout()), SLOT(slotTimeout()) );
 }
 
 
