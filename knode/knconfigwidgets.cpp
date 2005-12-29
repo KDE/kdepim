@@ -21,6 +21,7 @@
 #include <QHBoxLayout>
 #include <QBoxLayout>
 #include <QVBoxLayout>
+#include <QTextEdit>
 
 #include <kcharsets.h>
 #include <klocale.h>
@@ -171,8 +172,7 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *pa
   b_uttonGroup->insert(s_igEdit, 1);
   topL->addMultiCellWidget(s_igEdit, 9, 9, 0, 2);
 
-  s_igEditor = new Q3TextEdit(this);
-  s_igEditor->setTextFormat(Qt::PlainText);
+  s_igEditor = new QTextEdit( this );
   topL->addMultiCellWidget(s_igEditor, 10, 10, 0, 2);
   connect( s_igEditor, SIGNAL(textChanged()), SLOT(changed()) );
 
@@ -208,7 +208,7 @@ void KNode::IdentityWidget::load()
   s_igningKey->setKeyIDs( Kpgp::KeyIDList() << d_ata->s_igningKey.toLatin1() );
   s_ig->setText(d_ata->s_igPath);
   s_igGenerator->setChecked(d_ata->useSigGenerator());
-  s_igEditor->setText(d_ata->s_igText);
+  s_igEditor->setPlainText( d_ata->s_igText );
   slotSignatureType(d_ata->useSigFile()? 0:1);
 }
 
@@ -223,7 +223,7 @@ void KNode::IdentityWidget::save()
   d_ata->u_seSigFile=s_igFile->isChecked();
   d_ata->u_seSigGenerator=s_igGenerator->isChecked();
   d_ata->s_igPath=c_ompletion->replacedPath(s_ig->text());
-  d_ata->s_igText=s_igEditor->text();
+  d_ata->s_igText = s_igEditor->toPlainText();
 
   if(d_ata->isGlobal())
     d_ata->save();
@@ -1146,7 +1146,7 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
 
   topL->addMultiCellWidget(nameW,0,0,0,1);
 
-  Q3GroupBox *ngb=new Q3GroupBox(i18n("Name"), page);
+  QGroupBox *ngb=new QGroupBox(i18n("Name"), page);
   // ### hide style settings for now, the new viewer doesn't support this yet
   ngb->hide();
   QVBoxLayout *ngbL = new QVBoxLayout(ngb, 8, 5);
@@ -1158,7 +1158,7 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
   n_ameCB[3]=new QCheckBox(i18n("&Underlined"), ngb);
   topL->addWidget(ngb,1,0);
 
-  Q3GroupBox *vgb=new Q3GroupBox(i18n("Value"), page);
+  QGroupBox *vgb=new QGroupBox(i18n("Value"), page);
   // ### hide style settings for now, the new viewer doen't support this yet
   vgb->hide();
   QVBoxLayout *vgbL = new QVBoxLayout(vgb, 8, 5);
@@ -1751,12 +1751,9 @@ KNode::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent )
     top->addWidget( mDefault );
   }
 
-  mExpGroup = new Q3GroupBox( i18n("Newsgroup Cleanup Settings"), this );
-  mExpGroup->setColumnLayout(0, Qt::Vertical );
-  mExpGroup->layout()->setSpacing( KDialog::spacingHint() );
-  mExpGroup->layout()->setMargin( KDialog::marginHint() );
+  mExpGroup = new QGroupBox( i18n("Newsgroup Cleanup Settings"), this );
   top->addWidget( mExpGroup );
-  QGridLayout *grid = new QGridLayout( mExpGroup->layout(), 7, 2 );
+  QGridLayout *grid = new QGridLayout( mExpGroup, 7, 2, KDialog::marginHint(), KDialog::spacingHint() );
 
   grid->setRowSpacing( 0, KDialog::spacingHint() );
 
@@ -1846,13 +1843,9 @@ KNode::CleanupWidget::CleanupWidget( KInstance *inst,QWidget *parent ) :
 
   // === folders =========================================================
 
-  Q3GroupBox *foldersB=new Q3GroupBox(i18n("Folders"), this);
-  foldersB->setColumnLayout(0, Qt::Vertical );
-  foldersB->layout()->setSpacing( KDialog::spacingHint() );
-  foldersB->layout()->setMargin( KDialog::marginHint() );
-
+  QGroupBox *foldersB = new QGroupBox( i18n("Folders"), this );
   topL->addWidget(foldersB);
-  QGridLayout *foldersL=new QGridLayout(foldersB->layout(), 3,2);
+  QGridLayout *foldersL = new QGridLayout( foldersB, 3, 2, KDialog::marginHint(), KDialog::spacingHint() );
 
   foldersL->setRowSpacing( 0, KDialog::spacingHint() );
 

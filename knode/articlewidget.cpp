@@ -926,6 +926,7 @@ bool ArticleWidget::inlinePossible( KMime::Content *c )
 
 bool ArticleWidget::canDecodeText( const QByteArray &charset ) const
 {
+  kdDebug( 5003 ) << k_funcinfo << charset << endl;
   if ( charset.isEmpty() )
     return false;
   bool ok = true;

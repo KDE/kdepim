@@ -32,9 +32,9 @@
 
 class Q3ButtonGroup;
 class QCheckBox;
-class Q3GroupBox;
+class QGroupBox;
 class QRadioButton;
-class Q3TextEdit;
+class QTextEdit;
 class QListWidget;
 
 class KScoringEditorWidget;
@@ -95,7 +95,7 @@ class KDE_EXPORT IdentityWidget : public KCModule {
     QCheckBox       *s_igGenerator;
     QPushButton     *c_hooseBtn,
                     *e_ditBtn;
-    Q3TextEdit       *s_igEditor;
+    QTextEdit       *s_igEditor;
     Q3ButtonGroup    *b_uttonGroup;
     Kpgp::SecretKeyRequester
                     *s_igningKey;
@@ -623,7 +623,7 @@ class KDE_EXPORT GroupCleanupWidget : public QWidget {
   private:
     QCheckBox *mDefault, *mExpEnabled, *mExpUnavailable, *mPreserveThreads;
     KIntSpinBox *mExpDays, *mExpReadDays, *mExpUnreadDays;
-    Q3GroupBox *mExpGroup;
+    QGroupBox *mExpGroup;
     Cleanup *mData;
 
   private slots:

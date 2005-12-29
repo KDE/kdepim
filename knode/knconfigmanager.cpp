@@ -19,8 +19,6 @@
 #include <klocale.h>
 #include <kwin.h>
 
-#include <q3hbox.h>
-
 #include "utilities.h"
 #include "knglobals.h"
 #include "articlewidget.h"
