@@ -59,7 +59,8 @@ KNodePart::KNodePart( QWidget *parentWidget, const char *widgetName,
   kdDebug(5003) << "KNodePart()..." << endl;
   kdDebug(5003) << "  InstanceName: " << kapp->instanceName() << endl;
 
-  KGlobal::locale()->insertCatalog("libkdenetwork");
+  KGlobal::locale()->insertCatalog("libkdepim");
+  KGlobal::locale()->insertCatalog("libkpgp");
   kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
   KGlobal::iconLoader()->addAppDir("knode");
   knGlobals.setInstance( KNodeFactory::instance() );

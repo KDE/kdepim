@@ -1,8 +1,6 @@
 /*
-    main.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2005 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -37,7 +35,7 @@ int main(int argc, char* argv[])
     return 0;
 
   KNApplication app;
-  KGlobal::locale()->insertCatalog("libkdenetwork");
+  KGlobal::locale()->insertCatalog("libkdepim");
+  KGlobal::locale()->insertCatalog("libkpgp");
   return app.exec();
 }
-
