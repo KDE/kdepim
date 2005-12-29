@@ -31,6 +31,8 @@ public:
 	Pop3_Protocol()  {}
 	virtual ~Pop3_Protocol() {}
 
+	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
+
 	virtual KIO_Protocol * clone() const { return new Pop3_Protocol; }
 
 	virtual bool connectionBased() const { return true; }

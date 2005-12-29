@@ -32,6 +32,8 @@ public:
 	MBox_Protocol() {}
 	virtual ~MBox_Protocol() {}
 
+	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
+
 	virtual QString protocol( bool ) const { return "mbox"; }
 	virtual QString configName() const { return "mbox"; }
 

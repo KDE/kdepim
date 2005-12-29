@@ -27,6 +27,8 @@ public:
 	Nntp_Protocol() { }
 	virtual ~Nntp_Protocol() { }
 
+	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
+
 	virtual KIO_Protocol * clone() const { return new Nntp_Protocol; }
 
 	virtual bool connectionBased() const { return true; }

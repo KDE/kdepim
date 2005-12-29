@@ -29,6 +29,8 @@ public:
 	QMail_Protocol() {}
 	virtual ~QMail_Protocol() {}
 
+	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
+
 	virtual KIO_Protocol * clone() const { return new QMail_Protocol; }
 
 	virtual bool connectionBased() const { return false; }

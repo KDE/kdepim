@@ -46,6 +46,15 @@ public:
 	virtual ~Imap_Protocol() {}
 
 	/**
+	 * This function is an implementation of Protocol::getProtocol()
+	 * In this class, it always returns a pointer to itself.
+	 *
+	 * @param config the configuration to read
+	 * @return a protocol; in this class always itself.
+	 */
+	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
+
+	/**
 	 * This function should return true if the protocol is connection-based.
 	 * imap is, so this return "true".
 	 *

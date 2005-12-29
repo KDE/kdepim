@@ -38,7 +38,7 @@ void Pop3_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 void Pop3_Protocol::configFields( QVector< QWidget* >* vector, const QObject* configDialog, QList< AccountInput* > * result ) const
 {
 	QMap< QString, QString > encrList;
-	encrList.insert( "ssl", i18n( "Secure Socket Layer" ) );
+	encrList.insert( "ssl", i18n( "SSL" ) );
 	encrList.insert( "tls=auto", i18n( "TLS if possible" ) );
 	encrList.insert( "tls=on", i18n( "Always TLS" ) );
 	encrList.insert( "tls=off", i18n( "Never TLS" ) );

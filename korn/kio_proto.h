@@ -19,11 +19,15 @@
 #ifndef MK_KIO_PROTO_H
 #define MK_KIO_PROTO_H
 
-/*
+/**
+ * @file
+ * 
  * KIO can handle multiple protocols. But some protocols have their own
  * manipulations of KURL or MetaData , and some protocols could do more then other
- * protocols. So, this class is the generic class of a class specified
- * by a protocol.
+ * protocols. So, this file defines a generic class for specifying the specific
+ * properties of a kio protocol.
+ *
+ * @author Mart Kelder <mart.kde@hccnet.nl>
  */
 
 class QString;
@@ -35,123 +39,316 @@ class QString;
 
 #include "kio.h"
 
+/**
+ * This class is the base protocol for all Protocol implementations using kio.
+ * It defines some kio-specific settings which are used while fetching emails.
+ */
 class KIO_Protocol : public Protocol
 {
 public:
-	/*
+	/**
 	 * Constuctor; empty
 	 */
 	KIO_Protocol() {}
 
-	/*
+	/**
 	 * Destructor; empty too
 	 */
 	virtual ~KIO_Protocol() {}
 
-	/*
-	 * Public enumeration
+	/**
+	 * Public enumeration of the delete type.
+	 * A file can be deleted using two methods: KIO::del and KIO::get.
+	 * The enumeration tells which method should be used.
+	 *
+	 * @param get KIO::get should be used if a file needs to be deleted
+	 * @param del KIO::del should be used if a file needs to be deleted
 	 */
 	enum DeleteTypeEnum { get, del };
-	/**
-	 * This are the implementation of the Protocol-functions
-	 */
-	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
 
+	/**
+	 * This is an implementation of Protocol::createMaildrop().
+	 * Because all kio-protocols uses this maildrop, this is defined in this class.
+	 */
 	virtual KMailDrop* createMaildrop( KConfigGroup* config ) const { return new KKioDrop( config ); }
 
+	/**
+	 * This is an implementation of Protocol::createConfig().
+	 * It reads the configuration out the configuration file and appends the value to a configuration mapping.
+	 *
+	 * @param group the configuration group containing the settings
+	 * @param password the password of the box (can come from a Wallet)
+	 * @return a mapping containing the configuration of a kio-account.
+	 */
 	virtual QMap< QString, QString >* createConfig( KConfigGroup *group, const QString& password ) const;
 
-	/*
-	 * @return: the name of the kio_slave
+	/**
+	 * This function defines a default for the protocolname.
+	 * The full description of this function is descripted in Protocol::protocol().
+	 *
+	 * If this function isn't reimplemented in a subclass, the "file"-kioslave is used.
+	 *
+	 * @param ssl if true, the ssl-version of the protocol (if any) should be returned
+	 * @return the kioslave which should be used
 	 */
 	virtual QString protocol( bool ) const { return "file"; }
 
-	/*
-	 * @return: the name of the protocol used by the configuration
+	/**
+	 * Some protocols use conncetions (such as pop3, imap); other don't (such as file).
+	 * This function should return true if the protocol is connection based.
+	 *
+	 * By default, it returns false.
+	 *
+	 * @return true if the protocol is connection based; false otherwise
 	 */
-	virtual QString configName() const { return "not specified"; }
-
 	virtual bool connectionBased() const { return false; }
 
-	/*
-	 * The next four functions return the [capebilities] of a protocol.
-	 * fullMessage means that by downloaden, the whole message is downloaded.
-	 * if it is false, only the headers should be downloaded.
+	/**
+	 * This function should return true if this protocol is able to read the subjects messages.
+	 *
+	 * Because there will never exist an instance of this class, a can override this method.
+	 * The default is false.
+	 * 
+	 * Normal, a maildrop is responsable for give this answer, but in the case of kio,
+	 * several kio-protocols have differents results for this function.
+	 *
+	 * @return true if this protocol is able to read message; false otherwise
 	 */
 	virtual bool  canReadSubjects() const { return false; }
+	/**
+	 * This function should return true is this protocol is able to delete messages.
+	 *
+	 * Because there will never exist an instance of this class, a can override this method.
+	 * The default is false.
+	 * 
+	 * Normal, a maildrop is responsable for give this answer, but in the case of kio,
+	 * several kio-protocols have different resultss for this function.
+	 *
+	 * @return true if this protocol is able to delete messages; false otherwise
+	 */
 	virtual bool  canDeleteMail() const { return false; }
+	/**
+	 * This function should return true if this protocol is able to read the full mail.
+	 *
+	 * Because there will never exist an instance of this class, a can override this method.
+	 * The default is false.
+	 *
+	 * Normal, a maildrop is responsable for give this answer, but in the case of kio,
+	 * several kio-protocols have different resultss for this function.
+	 *
+	 * @return true if this protocol is able to read messages; false otherwise
+	 */
 	virtual bool  canReadMail() const { return false; }
+	/**
+	 * This function should return true if this protocols always reads the full message.
+	 * Some protocols don't have a difference between reading a subject and reading a message.
+	 * A subclass is able to pass this to the kio maildrop.
+	 *
+	 * Because there will never exist an instance of this class, a can override this method.
+	 * The default is false.
+	 *
+	 * @return true if this protocol always reads the full message; false otherwise
+	 */
 	virtual bool  fullMessage() const { return false; }
 
-	/*
-	 * The following lines are the options in the configuration;
-	 * true means that an option is enabled;
-	 * false means that the option is disabled.
+	/**
+	 * This function returns the default port for this kio-slave.
+	 * 0 is the default value.
+	 *
+	 * @return The default port of this kio protocol.
 	 */
-	//virtual int fields() const { return server | port | username | password | mailbox; }
-	//virtual int urlFields() const { return no_fields; }
 	virtual unsigned short defaultPort() const { return 0; }
 
-	/*
-	 * This sets the string of such fields in Configuration
-	 */
-	virtual QString serverName() const { return i18n( "Server:" ); }
-	virtual QString portName() const { return i18n( "Port:" ); }
-	virtual QString usernameName() const { return i18n( "Username:" ); }
-	virtual QString mailboxName() const { return i18n( "Mailbox:" ); }
-	virtual QString passwordName() const { return i18n( "Password:" ); }
-	virtual QString savePasswordName() const { return i18n( "Save password" ); }
-	virtual QString authName() const { return i18n( "Authentication:" ); }
-
-	/*
-	 * The next function returns the method of deleting: some protoocols
-	 * like to delete files with KIO::get; other with KIO::del
+	/**
+	 * There are two possibilities to delete something: with a get command and with a del command.
+	 * This function should return del if KIO::del should be used, and get if KIO::get should be used.
+	 *
+	 * @return del if KIO::del should be used to delete a message; get if KIO::get should be used to delete a message
 	 */
 	virtual DeleteTypeEnum deleteFunction() const { return del; }
 
-	/*
+	/**
 	 * The next options are the input for the Authentication Combo, seperated by '|'.
 	 * The name should be the same as the auth-metadata.
+	 * The default value is a list with only "Plain" in it.
+	 *
+	 * @return a list of authentication strings.
 	 */
 	virtual QStringList authList() const { return QStringList::split( '|', "Plain", false ); }
 
-	/*
-	 * The next functions are manipulations of an KURL.
+	/**
+	 * This function can manipulate a KURL which is used after it for connecting.
+	 * 
+	 * This is one of the functions to manipulation a KURL.
 	 * At some points in the code, a KURL is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
 	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
 	 * By changing an option to the KURL path, this can be prevented.
 	 *
-	 * The most functions are recognized by name.
-	 * commitDelete return true if a protocol has to confirm a deletion.
-	 * It will be called after marking the messages for deletion.
-	 * deleteCommitKURL is the KURL manipulator; the KURL is as in the settings.
-	 * That KURL isn't retouch by deleteMailKURL.
+	 * This function is called before connecting.
+	 *
+	 * @param url the kurl to manipulate
+	 * @param metadata the metadata to manipulate
 	 */
 	virtual void recheckConnectKURL( KURL &, KIO::MetaData & ) const { }
+	/**
+	 * This function can manipulate a KURL which is used for checking for new emails.
+	 * 
+	 * This is one of the functions to manipulation a KURL.
+	 * At some points in the code, a KURL is used. But sometimes,
+	 * these have to had a little retouch. That is possible with these function.
+	 *
+	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
+	 * By changing an option to the KURL path, this can be prevented.
+	 *
+	 * This function is called before the email box is checked for new messages.
+	 *
+	 * @param url the kurl to manipulate
+	 * @param metadata the metadata to manipulate
+	 */
 	virtual void recheckKURL     ( KURL &, KIO::MetaData & ) const { };
+	/**
+	 * This function can manipulate a KURL which is used after it for connecting.
+	 * After connecting, the connection is used to check for new emails.
+	 * 
+	 * This is one of the functions to manipulation a KURL.
+	 * At some points in the code, a KURL is used. But sometimes,
+	 * these have to had a little retouch. That is possible with these function.
+	 *
+	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
+	 * By changing an option to the KURL path, this can be prevented.
+	 *
+	 * @param url the kurl to manipulate
+	 * @param metadata the metadata to manipulate
+	 */
 	virtual void readSubjectConnectKURL ( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
+	/**
+	 * This function can manipulate a KURL which is used before reading a subject.
+	 * 
+	 * This is one of the functions to manipulation a KURL.
+	 * At some points in the code, a KURL is used. But sometimes,
+	 * these have to had a little retouch. That is possible with these function.
+	 *
+	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
+	 * By changing an option to the KURL path, this can be prevented.
+	 *
+	 * This function is called before a particular subject is read.
+	 *
+	 * @param url the kurl to manipulate
+	 * @param metadata the metadata to manipulate
+	 */
 	virtual void readSubjectKURL ( KURL &, KIO::MetaData & ) const { } //For editing a kurl (adding extra options)
+	/**
+	 * This function can manipulate a KURL which is used after it for connecting.
+	 * After the connecting, the connection is used to delete emails.
+	 * 
+	 * This is one of the functions to manipulation a KURL.
+	 * At some points in the code, a KURL is used. But sometimes,
+	 * these have to had a little retouch. That is possible with these function.
+	 *
+	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
+	 * By changing an option to the KURL path, this can be prevented.
+	 *
+	 * @param url the kurl to manipulate
+	 * @param metadata the metadata to manipulate
+	 */
 	virtual void deleteMailConnectKURL( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
+	/**
+	 * This function can manipulate a KURL which is used to delete an email.
+	 * 
+	 * This is one of the functions to manipulation a KURL.
+	 * At some points in the code, a KURL is used. But sometimes,
+	 * these have to had a little retouch. That is possible with these function.
+	 *
+	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
+	 * By changing an option to the KURL path, this can be prevented.
+	 *
+	 * This function is called before an email is deleted.
+	 *
+	 * @param url the kurl to manipulate
+	 * @param metadata the metadata to manipulate
+	 */
 	virtual void deleteMailKURL  ( KURL &, KIO::MetaData & ) const { }
+	/**
+	 * This function should returns true if it is neccesairry to commit a delete operation.
+	 *
+	 * Some protocols needs a committing command after a delete command is execute.
+	 * This function can be used to determine if this protocol needs such a function.
+	 *
+	 * @return true if a commit command is neccesiary, false otherwise.
+	 */
 	virtual bool commitDelete() const { return false; }
+	/**
+	 * This function can manipulate a KURL which is used for committing after a deleting operation.
+	 * 
+	 * This is one of the functions to manipulation a KURL.
+	 * At some points in the code, a KURL is used. But sometimes,
+	 * these have to had a little retouch. That is possible with these function.
+	 *
+	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
+	 * By changing an option to the KURL path, this can be prevented.
+	 *
+	 * If a commit operation is neccesairry, this command can generate the kurl and metadata
+	 * for commit the delete operation.
+	 *
+	 * @param url the kurl to manipulate
+	 * @param metadata the metadata to manipulate
+	 */
 	virtual void deleteCommitKURL( KURL &, KIO::MetaData & ) const { }
+	/**
+	 * This function can manipulate a KURL which is used before reading an email.
+	 * 
+	 * This is one of the functions to manipulation a KURL.
+	 * At some points in the code, a KURL is used. But sometimes,
+	 * these have to had a little retouch. That is possible with these function.
+	 *
+	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
+	 * By changing an option to the KURL path, this can be prevented.
+	 *
+	 * This function is called before reading an email.
+	 *
+	 * @param url the kurl to manipulate
+	 * @param metadata the metadata to manipulate
+	 */
 	virtual void readMailKURL    ( KURL &, KIO::MetaData & ) const { }
 
 
+	/**
+	 * This function returns a KIO_Protocol. It is used to prevent a dynamic cast.
+	 *
+	 * @return a casted protocol.
+	 */
 	virtual const KIO_Protocol* getKIOProtocol() const { return this; }
 
-	virtual void readEntries( QMap< QString, QString >* ) const;
-	virtual void readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const = 0;
-
+	/**
+	 * This function is used to manipulate the settings before resing it.
+	 *
+	 * @param config the settings which can be manipulated.
+	 */
+	virtual void readEntries( QMap< QString, QString > *config ) const;
+	/**
+	 * This function is used to manipulate the settings before resing it.
+	 *
+	 * @param config the settings which can be manipulated.
+	 * @param metadata a mapping for metadata; it is merged at the other readEntries function
+	 * if that function isn't implemented.
+	 */
+	virtual void readEntries( QMap< QString, QString >* config, QMap< QString, QString >* metadata ) const = 0;
 protected:
-	/*
-	 * This enumeration is used when returning the capebilitys of a protocol
+	/**
+	 * This enumeration is used when returning the input fields of a protocol.
 	 */
 	enum Fields {	no_fields = 0, server = 1, port = 2, username = 4, password = 8,
 			mailbox = 16, save_password = 32, metadata = 64 };
 
+	/**
+	 * This function is used to remove some info from the settings.
+	 * It is used because most of the implementations of this class will use the code inside this function.
+	 *
+	 * @param map the configuration mapping.
+	 * @param fields the fields to clear (thus, the fields that are not used)
+	 */
 	void clearFields( QMap< QString, QString > *map, const Fields fields ) const;
 };
 
