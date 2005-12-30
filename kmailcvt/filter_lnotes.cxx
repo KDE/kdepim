@@ -30,12 +30,12 @@ FilterLNotes::FilterLNotes() :
         Filter( i18n("Import Lotus Notes Emails"),
                 "Robert Rockers",
                 i18n("<p><b>Lotus Notes Structured Text mail import filter</b></p>"
-                     "<p>This filter will import Structure Text files from an exported Lotus Notes email "
+                     "<p>This filter will import Structured Text files from an exported Lotus Notes email "
                      "client into KMail. Use this filter if you want to import mails from Lotus or other "
-                     "mailers that use Lotus Notes' Structured Text format.</p>"
+                     "mailers that use the Lotus Notes Structured Text format.</p>"
                      "<p><b>Note:</b> Since it is possible to recreate the folder structure, the imported "
-                     "messages will be stored in subfolders named by the files they ame from under: "
-                     "\"LNotes-Import\" in your local folder.</p>"))
+                     "messages will be stored in subfolders under: \"LNotes-Import\", in your local folder, "
+                     "named using the names of the files the messages came from.</p>"))
 {}
 
 /** Destructor. */

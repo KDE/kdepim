@@ -183,7 +183,7 @@ bool ResourceTVAnytime::doLoad()
            SLOT( slotJobResult( KIO::Job * ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
-    KPIM::ProgressManager::getUniqueID(), i18n("Downloading programme schedule") );
+    KPIM::ProgressManager::getUniqueID(), i18n("Downloading program schedule") );
 
   connect( mProgress,
            SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
