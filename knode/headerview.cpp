@@ -25,6 +25,7 @@
 #include <kdebug.h>
 #include <kdeversion.h>
 #include <kmenu.h>
+#include <QTextDocument>
 
 #include "knglobals.h"
 #include "headerview.h"
@@ -592,7 +593,7 @@ void KNHeaderViewToolTip::maybeTip( const QPoint &p )
     return;
 
   tip( QRect( headerRect.left(), itemRect.top(), headerRect.width(), itemRect.height() ),
-       Q3StyleSheet::escape( item->text( column ) ) );
+       Qt::escape( item->text( column ) ) );
 }
 #endif
 

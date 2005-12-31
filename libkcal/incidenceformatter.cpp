@@ -55,6 +55,7 @@
 #include <QList>
 
 #include <time.h>
+#include <QTextDocument>
 
 
 using namespace KCal;
@@ -525,7 +526,7 @@ QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 
 static QString string2HTML( const QString& str )
 {
-  return Q3StyleSheet::convertFromPlainText(str);
+  return Qt::convertFromPlainText(str);
 }
 
 static QString invitationRow( const QString &cell1, const QString &cell2 )
