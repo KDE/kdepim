@@ -141,7 +141,7 @@ void Alarm::setAudioFile(const QString &audioFile)
 
 QString Alarm::audioFile() const
 {
-  return (mType == Audio) ? mFile : QString::null;
+  return (mType == Audio) ? mFile : QString();
 }
 
 void Alarm::setProcedureAlarm(const QString &programFile, const QString &arguments)
@@ -162,7 +162,7 @@ void Alarm::setProgramFile(const QString &programFile)
 
 QString Alarm::programFile() const
 {
-  return (mType == Procedure) ? mFile : QString::null;
+  return (mType == Procedure) ? mFile : QString();
 }
 
 void Alarm::setProgramArguments(const QString &arguments)
@@ -175,7 +175,7 @@ void Alarm::setProgramArguments(const QString &arguments)
 
 QString Alarm::programArguments() const
 {
-  return (mType == Procedure) ? mDescription : QString::null;
+  return (mType == Procedure) ? mDescription : QString();
 }
 
 void Alarm::setEmailAlarm(const QString &subject, const QString &text,
@@ -229,7 +229,7 @@ void Alarm::setMailSubject(const QString &mailAlarmSubject)
 
 QString Alarm::mailSubject() const
 {
-  return (mType == Email) ? mMailSubject : QString::null;
+  return (mType == Email) ? mMailSubject : QString();
 }
 
 void Alarm::setMailAttachment(const QString &mailAttachFile)
@@ -272,7 +272,7 @@ void Alarm::setMailText(const QString &text)
 
 QString Alarm::mailText() const
 {
-  return (mType == Email) ? mDescription : QString::null;
+  return (mType == Email) ? mDescription : QString();
 }
 
 void Alarm::setDisplayAlarm(const QString &text)
@@ -293,7 +293,7 @@ void Alarm::setText(const QString &text)
 
 QString Alarm::text() const
 {
-  return (mType == Display) ? mDescription : QString::null;
+  return (mType == Display) ? mDescription : QString();
 }
 
 void Alarm::setTime(const QDateTime &alarmTime)

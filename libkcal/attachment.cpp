@@ -53,7 +53,7 @@ Attachment::Attachment(const QString& uri, const QString& mime)
   mBinary = false;
 	mShowInline = false;
 	mLocal = false;
-	mLabel = QString::null;
+	mLabel.clear();
 }
 
 Attachment::Attachment(const char *base64, const QString& mime)
@@ -63,7 +63,7 @@ Attachment::Attachment(const char *base64, const QString& mime)
   mData = QString::fromUtf8(base64);
   mBinary = true;
 	mShowInline = false;
-	mLabel = QString::null;
+	mLabel.clear();
 }
 
 Attachment::~Attachment()
@@ -81,7 +81,7 @@ QString Attachment::uri() const
   if (!mBinary)
     return mData;
   else
-    return QString::null;
+    return QString();
 }
 
 void Attachment::setUri(const QString& uri)

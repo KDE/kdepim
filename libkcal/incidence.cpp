@@ -160,7 +160,7 @@ void Incidence::recreate()
   setCreated(QDateTime::currentDateTime());
 
   setUid(CalFormat::createUniqueId());
-  setSchedulingID( QString::null );
+  setSchedulingID( QString() );
 
   setRevision(0);
 
@@ -303,7 +303,7 @@ void Incidence::setRelatedTo(Incidence *relatedTo)
     if ( mRelatedTo->uid() != mRelatedToUid )
       setRelatedToUid( mRelatedTo->uid() );
   } else {
-    setRelatedToUid( QString::null );
+    setRelatedToUid( QString() );
   }
 }
 
@@ -643,7 +643,7 @@ void Incidence::setStatus(Incidence::Status status)
 {
   if (mReadOnly || status == StatusX) return;
   mStatus = status;
-  mStatusString = QString::null;
+  mStatusString.clear();
   updated();
 }
 
@@ -680,7 +680,7 @@ QString Incidence::statusName(Incidence::Status status)
     case StatusFinal:        return i18n("Final");
     case StatusX:
     case StatusNone:
-    default:                 return QString::null;
+    default:                 return QString();
   }
 }
 

@@ -53,7 +53,7 @@ class LIBKCAL_EXPORT Attendee : public Person
     */
     Attendee( const QString &name, const QString &email,
               bool rsvp = false, PartStat status = NeedsAction,
-              Role role = ReqParticipant, const QString &u = QString::null );
+              Role role = ReqParticipant, const QString &u = QString() );
     /**
       Destruct Attendee.
     */

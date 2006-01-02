@@ -368,11 +368,11 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     /**
       A resource should call this function if a load error happens.
     */
-    void loadError( const QString &errorMessage = QString::null );
+    void loadError( const QString &errorMessage = QString() );
     /**
       A resource should call this function if a save error happens.
     */
-    void saveError( const QString &errorMessage = QString::null );
+    void saveError( const QString &errorMessage = QString() );
 
   private:
     bool mReceivedLoadError;

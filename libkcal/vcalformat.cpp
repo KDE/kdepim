@@ -184,7 +184,7 @@ QString VCalFormat::toString( Calendar *calendar )
   // TODO: Use all data.
   Event::List events = calendar->events();
   Event *event = events.first();
-  if ( !event ) return QString::null;
+  if ( !event ) return QString();
 
   VObject *vevent = eventToVEvent( event );
 

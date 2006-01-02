@@ -55,7 +55,7 @@ class KDE_EXPORT Attachment
       @param uri the uri this attachment refers to
       @param mime the mime type of the resource being linked to
     */
-    Attachment( const QString &uri, const QString &mime = QString::null );
+    Attachment( const QString &uri, const QString &mime = QString() );
 
     /**
       Create a binary attachment.
@@ -63,7 +63,7 @@ class KDE_EXPORT Attachment
       @param base64 the attachment in base64 format
       @param mime the mime type of the attachment
     */
-    Attachment( const char *base64, const QString &mime = QString::null );
+    Attachment( const char *base64, const QString &mime = QString() );
     ~Attachment();
 
     /** The VALUE parameter in iCal may represent a URI for the attachment. */

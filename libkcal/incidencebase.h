@@ -217,7 +217,7 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
       Return first Attendee with one of the given email addresses.
     */
     Attendee *attendeeByMails( const QStringList &,
-                               const QString &email = QString::null ) const;
+                               const QString &email = QString() ) const;
     /**
       Return attendee with given uid.
     */

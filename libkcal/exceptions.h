@@ -42,7 +42,7 @@ class Exception
     /**
       Construct exception with descriptive message \a message.
     */
-    Exception( const QString &message = QString::null );
+    Exception( const QString &message = QString() );
     virtual ~Exception();
 
     /**
@@ -74,7 +74,7 @@ class ErrorFormat : public Exception
     /**
       Create format error exception.
     */
-    ErrorFormat( ErrorCodeFormat code, const QString &message = QString::null );
+    ErrorFormat( ErrorCodeFormat code, const QString &message = QString() );
     
     /**
       Return format error message.

@@ -96,7 +96,7 @@ QString CustomProperties::nonKDECustomProperty(const QByteArray &name) const
 {
   QMap<QByteArray, QString>::ConstIterator it = mProperties.find(name);
   if (it == mProperties.end())
-    return QString::null;
+    return QString();
   return it.data();
 }
 

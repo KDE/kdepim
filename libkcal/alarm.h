@@ -90,7 +90,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       
       @param text text to display when the alarm is triggered.
     */
-    void setDisplayAlarm( const QString &text = QString::null );
+    void setDisplayAlarm( const QString &text = QString() );
     /**
       Set the text to be displayed when the alarm is triggered.
       Ignored if the alarm is not a display alarm.
@@ -106,7 +106,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       
       @param audioFile optional file to play when the alarm is triggered.
     */
-    void setAudioAlarm( const QString &audioFile = QString::null );
+    void setAudioAlarm( const QString &audioFile = QString() );
     /**
       Set the file to play when the audio alarm is triggered.
       Ignored if the alarm is not an audio alarm.
@@ -115,7 +115,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     /**
       Return the name of the audio file for the alarm.
       
-      @return The audio file for the alarm, or QString::null if not an audio alarm.
+      @return The audio file for the alarm, or QString() if not an audio alarm.
     */
     QString audioFile() const;
 
@@ -126,7 +126,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       @param arguments arguments to supply to programFile.
     */
     void setProcedureAlarm( const QString &programFile,
-                            const QString &arguments = QString::null );
+                            const QString &arguments = QString() );
     /**
       Set the program file to execute when the alarm is triggered.
       Ignored if the alarm is not a procedure alarm.
@@ -135,7 +135,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     /**
       Return the name of the program file to execute when the alarm is triggered.
       
-      @return the program file name, or QString::null if not a procedure alarm.
+      @return the program file name, or QString() if not a procedure alarm.
     */
     QString programFile() const;
     /**
@@ -146,7 +146,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     /**
       Return the arguments to the program to run when the alarm is triggered.
       
-      @return the program arguments, or QString::null if not a procedure alarm.
+      @return the program arguments, or QString() if not a procedure alarm.
     */
     QString programArguments() const;
 
@@ -220,7 +220,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     /**
       Return the email body text.
       
-      @return the body text, or QString::null if not an email alarm.
+      @return the body text, or QString() if not an email alarm.
     */
     QString mailText() const;
 

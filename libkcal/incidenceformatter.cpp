@@ -128,7 +128,7 @@ static QString linkPerson( const QString& email, QString name,
       uid = o.uid();
     } else
       // Email not found in the addressbook. Don't make a link
-      uid = QString::null;
+      uid.clear();
   }
   kdDebug(5850) << "formatAttendees: uid = " << uid << endl;
 
@@ -174,7 +174,7 @@ static QString eventViewerFormatAttendees( Incidence *event )
     tmpStr += eventViewerAddTag( "h3", i18n("Organizer") );
     tmpStr += "<ul>";
     tmpStr += linkPerson( event->organizer().email(),
-                          event->organizer().name(), QString::null, iconPath );
+                          event->organizer().name(), QString(), iconPath );
     tmpStr += "</ul>";
 
     // Add attendees links
@@ -212,8 +212,8 @@ static QString eventViewerFormatAttachments( Incidence *i )
 */
 static QString eventViewerFormatBirthday( Event *event )
 {
-  if ( !event) return  QString::null;
-  if ( event->customProperty("KABC","BIRTHDAY")!= "YES" ) return QString::null;
+  if ( !event) return  QString();
+  if ( event->customProperty("KABC","BIRTHDAY")!= "YES" ) return QString();
 
   QString uid_1 = event->customProperty("KABC","UID-1");
   QString name_1 = event->customProperty("KABC","NAME-1");
@@ -279,7 +279,7 @@ static QString eventViewerFormatHeader( Incidence *incidence )
 
 static QString eventViewerFormatEvent( Event *event )
 {
-  if ( !event ) return QString::null;
+  if ( !event ) return QString();
   QString tmpStr = eventViewerFormatHeader( event );
 
   tmpStr += "<table>";
@@ -376,7 +376,7 @@ static QString eventViewerFormatEvent( Event *event )
 
 static QString eventViewerFormatTodo( Todo *todo )
 {
-  if ( !todo ) return QString::null;
+  if ( !todo ) return QString();
   QString tmpStr = eventViewerFormatHeader( todo );
 
   if ( !todo->location().isEmpty() ) {
@@ -415,7 +415,7 @@ static QString eventViewerFormatTodo( Todo *todo )
 
 static QString eventViewerFormatJournal( Journal *journal )
 {
-  if ( !journal ) return QString::null;
+  if ( !journal ) return QString();
   QString tmpStr;
   if ( !journal->summary().isEmpty() )
     tmpStr+= eventViewerAddTag( "h1", journal->summary() );
@@ -427,7 +427,7 @@ static QString eventViewerFormatJournal( Journal *journal )
 
 static QString eventViewerFormatFreeBusy( FreeBusy *fb )
 {
-  if ( !fb ) return QString::null;
+  if ( !fb ) return QString();
   QString tmpStr( eventViewerAddTag( "h1", i18n("Free/Busy information for %1").arg( fb->organizer().fullName() ) ) );
   tmpStr += eventViewerAddTag( "h3", i18n("Busy times in date range %1 - %2:")
       .arg( KGlobal::locale()->formatDate( fb->dtStart().date(), true ) )
@@ -509,12 +509,12 @@ class IncidenceFormatter::EventViewerVisitor : public IncidenceBase::Visitor
 
 QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 {
-  if ( !incidence ) return QString::null;
+  if ( !incidence ) return QString();
   EventViewerVisitor v;
   if ( v.act( incidence ) ) {
     return v.result();
   } else
-    return QString::null;
+    return QString();
 }
 
 
@@ -538,7 +538,7 @@ static QString invitationDetailsEvent( Event* event )
 {
   // Meeting details are formatted into an HTML table
   if ( !event )
-    return QString::null;
+    return QString();
 
   QString html;
   QString tmp;
@@ -588,7 +588,7 @@ static QString invitationDetailsEvent( Event* event )
 
   // Meeting Duration Row
   if ( !event->doesFloat() && event->hasEndDate() ) {
-    tmp = QString::null;
+    tmp.clear();
     QTime sDuration(0,0,0), t;
     int secs = event->dtStart().secsTo( event->dtEnd() );
     t = sDuration.addSecs( secs );
@@ -612,7 +612,7 @@ static QString invitationDetailsTodo( Todo *todo )
 {
   // Task details are formatted into an HTML table
   if ( !todo )
-    return QString::null;
+    return QString();
 
   QString sSummary = i18n( "Summary unspecified" );
   QString sDescr = i18n( "Description unspecified" );
@@ -633,7 +633,7 @@ static QString invitationDetailsTodo( Todo *todo )
 static QString invitationDetailsJournal( Journal *journal )
 {
   if ( !journal )
-    return QString::null;
+    return QString();
 
   QString sSummary = i18n( "Summary unspecified" );
   QString sDescr = i18n( "Description unspecified" );
@@ -655,7 +655,7 @@ static QString invitationDetailsJournal( Journal *journal )
 static QString invitationDetailsFreeBusy( FreeBusy *fb )
 {
   if ( !fb )
-    return QString::null;
+    return QString();
   QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
 
   html += invitationRow( i18n("Person:"), fb->organizer().fullName() );
@@ -684,7 +684,7 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
       if ( dur > 0 ) {
         cont += i18n("1 second", "%n seconds", dur);
       }
-      html += invitationRow( QString::null, i18n("startDate for duration", "%1 for %2")
+      html += invitationRow( QString(), i18n("startDate for duration", "%1 for %2")
           .arg( KGlobal::locale()->formatDateTime( per.start(), false ) )
           .arg(cont) );
     } else {
@@ -700,7 +700,7 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
           .arg( KGlobal::locale()->formatDateTime( per.end(), false ) );
       }
 
-      html += invitationRow( QString::null, cont );
+      html += invitationRow( QString(), cont );
     }
   }
 
@@ -711,7 +711,7 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb )
 static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
 {
   if ( !msg || !event )
-    return QString::null;
+    return QString();
   switch ( msg->method() ) {
     case Scheduler::Publish:
         return i18n("This event has been published");
@@ -727,7 +727,7 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
         Attendee::List attendees = event->attendees();
         if( attendees.count() == 0 ) {
           kdDebug(5850) << "No attendees in the iCal reply!\n";
-          return QString::null;
+          return QString();
         }
         if( attendees.count() != 1 )
           kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
@@ -761,13 +761,13 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
         return i18n("Error: iMIP message with unknown method: '%1'")
             .arg( msg->method() );
   }
-  return QString::null;
+  return QString();
 }
 
 static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
 {
   if ( !msg || !todo )
-    return QString::null;
+    return QString();
   switch ( msg->method() ) {
     case Scheduler::Publish:
         return i18n("This task has been published");
@@ -783,7 +783,7 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
         Attendee::List attendees = todo->attendees();
         if( attendees.count() == 0 ) {
           kdDebug(5850) << "No attendees in the iCal reply!\n";
-          return QString::null;
+          return QString();
         }
         if( attendees.count() != 1 )
           kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
@@ -817,14 +817,14 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
         return i18n("Error: iMIP message with unknown method: '%1'")
             .arg( msg->method() );
   }
-  return QString::null;
+  return QString();
 }
 
 static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
 {
   // TODO: Several of the methods are not allowed for journals, so remove them.
   if ( !msg || !journal )
-    return QString::null;
+    return QString();
   switch ( msg->method() ) {
     case Scheduler::Publish:
         return i18n("This journal has been published");
@@ -840,7 +840,7 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
         Attendee::List attendees = journal->attendees();
         if( attendees.count() == 0 ) {
           kdDebug(5850) << "No attendees in the iCal reply!\n";
-          return QString::null;
+          return QString();
         }
         if( attendees.count() != 1 )
           kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
@@ -874,13 +874,13 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
         return i18n("Error: iMIP message with unknown method: '%1'")
             .arg( msg->method() );
   }
-  return QString::null;
+  return QString();
 }
 
 static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
 {
   if ( !msg || !fb )
-    return QString::null;
+    return QString();
   switch ( msg->method() ) {
     case Scheduler::Publish:
         return i18n("This free/busy list has been published");
@@ -975,7 +975,7 @@ QString InvitationFormatterHelper::makeLink( const QString &id, const QString &t
 QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *mCalendar,
     InvitationFormatterHelper *helper )
 {
-  if ( invitation.isEmpty() ) return QString::null;
+  if ( invitation.isEmpty() ) return QString();
 
   ICalFormat format;
   // parseScheduleMessage takes the tz from the calendar, no need to set it manually here for the format!
@@ -985,7 +985,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     kdDebug( 5850 ) << "Failed to parse the scheduling message" << endl;
     Q_ASSERT( format.exception() );
     kdDebug( 5850 ) << format.exception()->message() << endl;
-    return QString::null;
+    return QString();
   }
 
   IncidenceBase *incBase = msg->event();
@@ -1004,12 +1004,12 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   InvitationHeaderVisitor headerVisitor;
   // The InvitationHeaderVisitor returns false if the incidence is somehow invalid, or not handled
   if ( !headerVisitor.act( incBase, msg ) )
-    return QString::null;
+    return QString();
   html += "<h2>" + headerVisitor.result() + "</h2>";
 
   InvitationBodyVisitor bodyVisitor;
   if ( !bodyVisitor.act( incBase, msg ) )
-    return QString::null;
+    return QString();
   html += bodyVisitor.result();
 
   html += "<br>&nbsp;<br>&nbsp;<br>";
@@ -1091,14 +1091,14 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 //-----------------------------------------------------------------------------
 
 static QString stringProp( KTNEFMessage* tnefMsg, const quint32& key,
-                           const QString& fallback = QString::null)
+                           const QString& fallback = QString())
 {
   return tnefMsg->findProp( key < 0x10000 ? key & 0xFFFF : key >> 16,
                             fallback );
 }
 
 static QString sNamedProp( KTNEFMessage* tnefMsg, const QString& name,
-                           const QString& fallback = QString::null )
+                           const QString& fallback = QString() )
 {
   return tnefMsg->findNamedProp( name, fallback );
 }
@@ -1233,7 +1233,7 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
 
     // Everything depends from property PR_MESSAGE_CLASS
     // (this is added by KTNEFParser):
-    QString msgClass = tnefMsg->findProp( 0x001A, QString::null, true )
+    QString msgClass = tnefMsg->findProp( 0x001A, QString(), true )
       .toUpper();
     if( !msgClass.isEmpty() ) {
       // Match the old class names that might be used by Outlook for
@@ -1333,7 +1333,7 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
           // This must be old style, let us use the PR_SENDER_SEARCH_KEY.
           s = sSenderSearchKeyEmail;
           if( !s.isEmpty() ) {
-            Attendee *attendee = new Attendee( QString::null, QString::null,
+            Attendee *attendee = new Attendee( QString(), QString(),
                                                true );
             if( bIsReply ) {
               if( bCompatMethodAccepted )
@@ -1356,12 +1356,12 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
         if( !s.isEmpty() )
           event->setOrganizer( s );
 
-        s = tnefMsg->findProp( 0x8516 ).replace( QChar( '-' ), QString::null )
-          .replace( QChar( ':' ), QString::null );
+        s = tnefMsg->findProp( 0x8516 ).replace( QChar( '-' ), QString() )
+          .replace( QChar( ':' ), QString() );
         event->setDtStart( QDateTime::fromString( s ) ); // ## Format??
 
-        s = tnefMsg->findProp( 0x8517 ).replace( QChar( '-' ), QString::null )
-          .replace( QChar( ':' ), QString::null );
+        s = tnefMsg->findProp( 0x8517 ).replace( QChar( '-' ), QString() )
+          .replace( QChar( ':' ), QString() );
         event->setDtEnd( QDateTime::fromString( s ) );
 
         s = tnefMsg->findProp( 0x8208 );
@@ -1378,8 +1378,8 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
         // PENDING(khz): is this value in local timezone? Must it be
         // adjusted? Most likely this is a bug in the server or in
         // Outlook - we ignore it for now.
-        s = tnefMsg->findProp( 0x8202 ).replace( QChar( '-' ), QString::null )
-          .replace( QChar( ':' ), QString::null );
+        s = tnefMsg->findProp( 0x8202 ).replace( QChar( '-' ), QString() )
+          .replace( QChar( ':' ), QString() );
         // ### libkcal always uses currentDateTime()
         // event->setDtStamp(QDateTime::fromString(s));
 
@@ -1437,8 +1437,8 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
         addressee.insertCustom( "KADDRESSBOOK", "X-Profession", stringProp( tnefMsg, MAPI_TAG_PR_PROFESSION ) );
 
         QString s = tnefMsg->findProp( MAPI_TAG_PR_WEDDING_ANNIVERSARY )
-          .replace( QChar( '-' ), QString::null )
-          .replace( QChar( ':' ), QString::null );
+          .replace( QChar( '-' ), QString() )
+          .replace( QChar( ':' ), QString() );
         if( !s.isEmpty() )
           addressee.insertCustom( "KADDRESSBOOK", "X-Anniversary", s );
 
@@ -1504,8 +1504,8 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
         addressee.insertPhoneNumber( KABC::PhoneNumber( nr, KABC::PhoneNumber::Fax | KABC::PhoneNumber::Work ) );
 
         s = tnefMsg->findProp( MAPI_TAG_PR_BIRTHDAY )
-          .replace( QChar( '-' ), QString::null )
-          .replace( QChar( ':' ), QString::null );
+          .replace( QChar( '-' ), QString() )
+          .replace( QChar( ':' ), QString() );
         if( !s.isEmpty() )
           addressee.setBirthday( QDateTime::fromString( s ) );
 
@@ -1716,7 +1716,7 @@ QString IncidenceFormatter::toolTipString( IncidenceBase *incidence, bool richTe
   if ( v.act( incidence, richText ) ) {
     return v.result();
   } else
-    return QString::null;
+    return QString();
 }
 
 
@@ -1854,11 +1854,11 @@ bool IncidenceFormatter::MailBodyVisitor::visit( Journal *journal )
 QString IncidenceFormatter::mailBodyString( IncidenceBase *incidence )
 {
   if ( !incidence )
-    return QString::null;
+    return QString();
 
   MailBodyVisitor v;
   if ( v.act( incidence ) ) {
     return v.result();
   }
-  return QString::null;
+  return QString();
 }

@@ -53,7 +53,7 @@ class KDE_EXPORT HtmlExport
     /**
       Writes out the calendar in HTML format.
     */
-    bool save( const QString &fileName = QString::null );
+    bool save( const QString &fileName = QString() );
 
     /**
       Writes out calendar to text stream.

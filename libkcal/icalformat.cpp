@@ -266,7 +266,7 @@ QString ICalFormat::toString( Calendar *cal )
   if ( text.isNull() ) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
                  i18n("libical error")));
-    return QString::null;
+    return QString();
   }
 
   return text;
@@ -332,7 +332,7 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
       // We have a separation of scheduling ID and UID
       i = i->clone();
       i->setUid( i->schedulingID() );
-      i->setSchedulingID( QString::null );
+      i->setSchedulingID( QString() );
 
       // Build the message with the cloned incidence
       message = mImpl->createScheduleComponent( i, method );

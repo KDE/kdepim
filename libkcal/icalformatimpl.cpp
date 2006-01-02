@@ -1081,7 +1081,7 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
   QString email = QString::fromUtf8(icalproperty_get_attendee(attendee));
 
   QString name;
-  QString uid = QString::null;
+  QString uid = QString();
   p = icalproperty_get_first_parameter(attendee,ICAL_CN_PARAMETER);
   if (p) {
     name = QString::fromUtf8(icalparameter_get_cn(p));

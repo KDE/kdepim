@@ -50,7 +50,7 @@ CalendarLocal::CalendarLocal( const QString &timeZoneId )
 void CalendarLocal::init()
 {
   mDeletedIncidences.setAutoDelete( true );
-  mFileName = QString::null;
+  mFileName.clear();
 }
 
 
@@ -92,7 +92,7 @@ bool CalendarLocal::save( const QString &fileName, CalFormat *format )
 void CalendarLocal::close()
 {
   setObserversEnabled( false );
-  mFileName = QString::null;
+  mFileName.clear();
 
   deleteAllEvents();
   deleteAllTodos();

@@ -58,7 +58,7 @@ class LIBKCAL_EXPORT CustomProperties
       
       @param app   Application name as it appears in the custom property name.
       @param key   Property identifier specific to the application.
-      @param value The property's value. A call with a value of QString::null
+      @param value The property's value. A call with a value of QString()
                    will be ignored.
     */
     void setCustomProperty( const QByteArray &app, const QByteArray &key,
@@ -75,7 +75,7 @@ class LIBKCAL_EXPORT CustomProperties
       
       @param app Application name as it appears in the custom property name.
       @param key Property identifier specific to the application.
-      @return Property value, or QString::null if (and only if) the property
+      @return Property value, or QString() if (and only if) the property
               does not exist.
     */
     QString customProperty( const QByteArray &app, const QByteArray &key ) const;
@@ -84,7 +84,7 @@ class LIBKCAL_EXPORT CustomProperties
       Create or modify a non-KDE or non-standard custom calendar property.
       
       @param name Full property name
-      @param value The property's value. A call with a value of QString::null
+      @param value The property's value. A call with a value of QString()
                    will be ignored.
     */
     void setNonKDECustomProperty( const QByteArray &name, const QString &value );
@@ -98,7 +98,7 @@ class LIBKCAL_EXPORT CustomProperties
       Return the value of a non-KDE or non-standard custom calendar property.
       
       @param name Full property name
-      @return Property value, or QString::null if (and only if) the property
+      @return Property value, or QString() if (and only if) the property
               does not exist.
     */
     QString nonKDECustomProperty( const QByteArray& name ) const;

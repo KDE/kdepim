@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
  
     KApplication app;
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    QString type = QString::null;
+    QString type = QString();
     if ( args->getOption( "resource" ) )
       type = QString::fromLocal8Bit( args->getOption( "resource" ) );
     KConfig *config = 0;
@@ -133,9 +133,9 @@ void TestResource::runAll()
 bool TestResource::check(const QString& txt, QString a, QString b)
 {
     if (a.isEmpty())
-        a = QString::null;
+        a.clear();
     if (b.isEmpty())
-        b = QString::null;
+        b.clear();
     if (a == b) {
         kdDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "ok" << endl;
     }

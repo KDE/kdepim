@@ -32,7 +32,7 @@ class CalFormat;
 class LIBKCAL_EXPORT FileStorage : public CalStorage
 {
   public:
-    FileStorage( Calendar *, const QString &fileName = QString::null,
+    FileStorage( Calendar *, const QString &fileName = QString(),
                   CalFormat *format = 0 );
     virtual ~FileStorage();
 

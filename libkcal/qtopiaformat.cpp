@@ -312,5 +312,5 @@ bool QtopiaFormat::fromString( Calendar *, const QString & )
 
 QString QtopiaFormat::toString( Calendar * )
 {
-  return QString::null;
+  return QString();
 }
