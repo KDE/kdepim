@@ -55,7 +55,7 @@ Base::clear()
   input = QByteArray();
   output = QByteArray();
   error = QByteArray();
-  errMsg = QString::null;
+  errMsg.clear();
   status = OK;
 }
 

@@ -519,7 +519,7 @@ class Key
       @param secret Is this key secret?
   */
   Key( const KeyID& keyid = KeyID(),
-       const QString& uid = QString::null,
+       const QString& uid = QString(),
        const bool secret = false);
   ~Key();
 
@@ -787,7 +787,7 @@ inline QString Key::primaryUserID() const
   if (uid)
     return uid->text();
   else
-    return QString::null;
+    return QString();
 }
 
 inline KeyID Key::primaryKeyID() const 

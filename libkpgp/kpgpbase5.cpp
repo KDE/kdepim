@@ -305,7 +305,7 @@ Base5::decrypt( Block& block, const char *passphrase )
   {
     index = error.find("keyid: 0x",index) + 9;
     block.setSignatureKeyId( error.mid(index, 8) );
-    block.setSignatureUserId( QString::null );
+    block.setSignatureUserId( QString() );
     // FIXME: not a very good solution...
     status |= SIGNED;
     status |= GOODSIG;

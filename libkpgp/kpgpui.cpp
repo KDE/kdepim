@@ -1292,7 +1292,7 @@ PublicKeyRequester::~PublicKeyRequester() {
 
 KeyIDList PublicKeyRequester::keyRequestHook( Module * pgp ) const {
   assert( pgp );
-  return pgp->selectPublicKeys( mDialogCaption, mDialogMessage, mKeys, QString::null, mAllowedKeys );
+  return pgp->selectPublicKeys( mDialogCaption, mDialogMessage, mKeys, QString(), mAllowedKeys );
 }
 
 SecretKeyRequester::SecretKeyRequester( QWidget * parent, bool multi,

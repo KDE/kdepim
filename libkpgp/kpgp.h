@@ -261,7 +261,7 @@ public:
       corresponding key is selected.
   */
   KeyID selectSecretKey( const QString& title,
-                         const QString& text = QString::null,
+                         const QString& text = QString(),
                          const KeyID& keyId = KeyID() );
 
   /** Shows a key selection dialog with all public keys and the given title
@@ -271,9 +271,9 @@ public:
       <em>mode</em> specifies which keys can be selected.
   */
   KeyID selectPublicKey( const QString& title,
-                         const QString& text = QString::null,
+                         const QString& text = QString(),
                          const KeyID& oldKeyId = KeyID(),
-                         const QString& address = QString::null,
+                         const QString& address = QString(),
                          const unsigned int allowedKeys = AllKeys );
 
   /** Shows a key selection dialog with all public keys and the given title
@@ -283,9 +283,9 @@ public:
       <em>mode</em> specifies which keys can be selected.
   */
   KeyIDList selectPublicKeys( const QString& title,
-                              const QString& text = QString::null,
+                              const QString& text = QString(),
                               const KeyIDList& oldKeyIds = KeyIDList(),
-                              const QString& address = QString::null,
+                              const QString& address = QString(),
                               const unsigned int allowedKeys = AllKeys );
 
   // FIXME: key management
@@ -359,7 +359,7 @@ private:
    */
   KeyID selectKey( const KeyList& keys,
                    const QString& title,
-                   const QString& text = QString::null,
+                   const QString& text = QString(),
                    const KeyID& keyId = KeyID(),
                    const unsigned int allowedKeys = AllKeys );
 
@@ -367,7 +367,7 @@ private:
    */
   KeyIDList selectKeys( const KeyList& keys,
                         const QString& title,
-                        const QString& text = QString::null,
+                        const QString& text = QString(),
                         const KeyIDList& keyIds = KeyIDList(),
                         const unsigned int allowedKeys = AllKeys );
 
@@ -378,7 +378,7 @@ private:
   KeyID selectKey( bool& rememberChoice,
                    const KeyList& keys,
                    const QString& title,
-                   const QString& text = QString::null,
+                   const QString& text = QString(),
                    const KeyID& keyId = KeyID(),
                    const unsigned int allowedKeys = AllKeys );
 
@@ -389,7 +389,7 @@ private:
   KeyIDList selectKeys( bool& rememberChoice,
                         const KeyList& keys,
                         const QString& title,
-                        const QString& text = QString::null,
+                        const QString& text = QString(),
                         const KeyIDList& keyIds = KeyIDList(),
                         const unsigned int allowedKeys = AllKeys );
 

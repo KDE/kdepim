@@ -326,7 +326,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
     {
       status |= UNKNOWN_SIG;
       status |= GOODSIG;
-      block.setSignatureUserId( QString::null );
+      block.setSignatureUserId( QString() );
     }
     else if( error.find("Good signature", index) != -1 )
     {
@@ -359,7 +359,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
     else
     {
       status |= ERROR;
-      block.setSignatureUserId( QString::null );
+      block.setSignatureUserId( QString() );
     }
   }
   //kdDebug(5100) << "status = " << status << endl;

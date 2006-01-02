@@ -422,7 +422,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       status |= GOODSIG;
       int index3 = error.find("Key ID ", index2) + 7;
       block.setSignatureKeyId( error.mid(index3,8) );
-      block.setSignatureUserId( QString::null );
+      block.setSignatureUserId( QString() );
     }
     else if( (index2 = error.find("Good signature from", index)) != -1 )
     {

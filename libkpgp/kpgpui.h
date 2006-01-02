@@ -60,8 +60,8 @@ class KDE_EXPORT PassphraseDialog : public KDialogBase
   Q_OBJECT
 
   public:
-    PassphraseDialog( QWidget *parent=0, const QString &caption=QString::null,
-                      bool modal=true, const QString &keyID=QString::null);
+    PassphraseDialog( QWidget *parent=0, const QString &caption=QString(),
+                      bool modal=true, const QString &keyID=QString());
     virtual ~PassphraseDialog();
 
     const char * passphrase();
@@ -116,7 +116,7 @@ class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
      */
     KeySelectionDialog( const KeyList& keyList,
                         const QString& title,
-                        const QString& text = QString::null,
+                        const QString& text = QString(),
                         const KeyIDList& keyIds = KeyIDList(),
                         const bool rememberChoice = false,
                         const unsigned int allowedKeys = AllKeys,

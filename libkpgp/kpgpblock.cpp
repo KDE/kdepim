@@ -41,7 +41,7 @@ Block::reset()
 {
   mProcessedText = QByteArray();
   mError = QByteArray();
-  mSignatureUserId = QString::null;
+  mSignatureUserId.clear();
   mSignatureKeyId = QByteArray();
   mSignatureDate = QByteArray();
   mRequiredKey = QByteArray();

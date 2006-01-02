@@ -144,7 +144,7 @@ Base6::decrypt( Block& block, const char *passphrase )
     {
       index = error.find("KeyID:",index);
       block.setSignatureKeyId( error.mid(index+9,8) );
-      block.setSignatureUserId( QString::null );
+      block.setSignatureUserId( QString() );
       status |= UNKNOWN_SIG;
       status |= GOODSIG;
     }
@@ -176,7 +176,7 @@ Base6::decrypt( Block& block, const char *passphrase )
     else
     {
       status |= ERROR;
-      block.setSignatureUserId( QString::null );
+      block.setSignatureUserId( QString() );
       block.setSignatureKeyId( QByteArray() );
     }
   }
