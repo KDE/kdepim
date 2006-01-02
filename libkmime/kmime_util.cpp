@@ -533,7 +533,7 @@ DateFormatter::dateString( time_t otime , const QString& lang ,
     return custom( otime );
     break;
   }
-  return QString::null;
+  return QString();
 }
 
 QString
@@ -561,7 +561,7 @@ QString
 DateFormatter::custom(time_t t) const
 {
   if ( mCustomFormat.isEmpty() )
-    return QString::null;
+    return QString();
 
   int z = mCustomFormat.find("Z");
   QDateTime d;

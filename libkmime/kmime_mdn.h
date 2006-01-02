@@ -187,7 +187,7 @@ namespace KMime {
 	       SendingMode sendingMode,
 	       const QList<DispositionModifier> & dispositionModifers
 				   =QList<DispositionModifier>(),
-	       const QString & special=QString::null );
+	       const QString & special=QString() );
 
     KDE_EXPORT extern QString descriptionFor( DispositionType d,
 				   const QList<DispositionModifier> & m

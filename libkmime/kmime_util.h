@@ -218,12 +218,12 @@ namespace KMime {
      * @param shortFormat used <em>only</em> by the Localized format, is passed to KLocale::formatDateTime
      * @param includeSecs used <em>only</em> by the Localized format, is passed to KLocale::formatDateTime
      */
-    QString dateString(time_t otime, const QString& lang = QString::null,
+    QString dateString(time_t otime, const QString& lang = QString(),
 		       bool shortFormat = true, bool includeSecs=false) const;
     /**
      * overloaded, does exactly what #dateString does (it's slower)
      */
-    QString dateString(const QDateTime& dtime, const QString& lang = QString::null,
+    QString dateString(const QDateTime& dtime, const QString& lang = QString(),
 		       bool shortFormat = true, bool includeSecs=false) const;
 
 
@@ -259,7 +259,7 @@ namespace KMime {
      * @param includeSecs used <em>only</em> by the Localized format, is passed to KLocale::formatDateTime
      */
     static QString  formatDate( DateFormatter::FormatType t, time_t time,
-				const QString& data = QString::null,
+				const QString& data = QString(),
 				bool shortFormat = true, bool includeSecs=false);
 
     /** convenience function, same as #formatDate
@@ -271,7 +271,7 @@ namespace KMime {
      * @param includeSecs used <em>only</em> by the Localized format, is passed to KLocale::formatDateTime
      */
     static QString  formatCurrentDate( DateFormatter::FormatType t,
-				       const QString& data = QString::null,
+				       const QString& data = QString(),
 				       bool shortFormat = true, bool includeSecs=false);
 
     /** convenience function, same as #rfc2822 */
@@ -293,7 +293,7 @@ namespace KMime {
      * @internal
      */
     QString localized(time_t otime, bool shortFormat = true, bool includeSecs = false,
-		      const QString& localeLanguage=QString::null ) const;
+		      const QString& localeLanguage=QString() ) const;
     /**
      * returns string as formatted with ctime function
      * @internal

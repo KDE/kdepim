@@ -465,7 +465,7 @@ bool parseComment( const char* & scursor, const char * const send,
 	  result += cmntPart;
 	  if ( commentNestingDepth > 1 ) // don't add the outermost ')'...
 	    result += QChar(')');
-	  maybeCmnt = QString::null;
+	  maybeCmnt.clear();
 	}
 	afterLastClosingParenPos = scursor;
 	--commentNestingDepth;
@@ -526,7 +526,7 @@ bool parsePhrase( const char* & scursor, const char * const send,
       }
       break;
     case '"': // quoted-string
-      tmp = QString::null;
+      tmp.clear();
       if ( parseGenericQuotedString( scursor, send, tmp, isCRLF, '"', '"' ) ) {
 	successfullyParsed = scursor;
 	assert( *(scursor-1) == '"' );
@@ -561,7 +561,7 @@ bool parsePhrase( const char* & scursor, const char * const send,
       break;
     case '(': // comment
       // parse it, but ignore content:
-      tmp = QString::null;
+      tmp.clear();
       if ( parseComment( scursor, send, tmp, isCRLF,
 			 false /*don't bother with the content*/ ) ) {
 	successfullyParsed = scursor;
@@ -576,7 +576,7 @@ bool parsePhrase( const char* & scursor, const char * const send,
       }
       break;
     case '=': // encoded-word
-      tmp = QString::null;
+      tmp.clear();
       oldscursor = scursor;
       lang = 0;
       if ( parseEncodedWord( scursor, send, tmp, lang ) ) {
@@ -604,7 +604,7 @@ bool parsePhrase( const char* & scursor, const char * const send,
       // fall though...
 
     default: //atom
-      tmp = QString::null;
+      tmp.clear();
       scursor--;
       if ( parseAtom( scursor, send, tmp, true /* allow 8bit */ ) ) {
 	successfullyParsed = scursor;
@@ -774,14 +774,14 @@ bool parseObsRoute( const char* & scursor, const char* const send,
     // empty entry:
     if ( *scursor == ',' ) {
       scursor++;
-      if ( save ) result.append( QString::null );
+      if ( save ) result.append( QString() );
       continue;
     }
 
     // empty entry ending the list:
     if ( *scursor == ':' ) {
       scursor++;
-      if ( save ) result.append( QString::null );
+      if ( save ) result.append( QString() );
       return true;
     }
 
@@ -833,7 +833,7 @@ bool parseAddrSpec( const char* & scursor, const char * const send,
       break;
 
     case '"': // quoted-string
-      tmp = QString::null;
+      tmp.clear();
       if ( parseGenericQuotedString( scursor, send, tmp, isCRLF, '"', '"' ) )
 	maybeLocalPart += tmp;
       else
@@ -842,7 +842,7 @@ bool parseAddrSpec( const char* & scursor, const char * const send,
 
     default: // atom
       scursor--; // re-set scursor to point to ch again
-      tmp = QString::null;
+      tmp.clear();
       if ( parseAtom( scursor, send, tmp, false /* no 8bit */ ) )
 	maybeLocalPart += tmp;
       else
@@ -925,7 +925,7 @@ bool parseMailbox( const char* & scursor, const char * const send,
   // first, try if it's a vanilla addr-spec:
   const char * oldscursor = scursor;
   if ( parseAddrSpec( scursor, send, maybeAddrSpec, isCRLF ) ) {
-    result.displayName = QString::null;
+    result.displayName.clear();
     result.addrSpec = maybeAddrSpec;
     return true;
   }
@@ -935,7 +935,7 @@ bool parseMailbox( const char* & scursor, const char * const send,
   QString maybeDisplayName;
   if ( !parsePhrase( scursor, send, maybeDisplayName, isCRLF ) ) {
     // failed: reset cursor, note absent display-name
-    maybeDisplayName = QString::null;
+    maybeDisplayName.clear();
     scursor = oldscursor;
   } else {
     // succeeded: eat CFWS
@@ -1024,7 +1024,7 @@ bool parseAddress( const char* & scursor, const char * const send,
   const char * oldscursor = scursor;
   if ( parseMailbox( scursor, send, maybeMailbox, isCRLF ) ) {
     // yes, it is:
-    result.displayName = QString::null;
+    result.displayName.clear();
     result.mailboxList.append( maybeMailbox );
     return true;
   }
@@ -1324,7 +1324,7 @@ bool parseParameterList( const char* & scursor,	const char * const send,
       // store the last attribute/value pair in the result map now:
       if ( !attribute.isNull() ) result.insert( attribute, value );
       // and extract the information from the new raw attribute:
-      value = QString::null;
+      value.clear();
       attribute = it.key();
       mode = NoMode;
       // is the value encoded?
@@ -1360,7 +1360,7 @@ bool parseParameterList( const char* & scursor,	const char * const send,
 	// save result already:
 	result.insert( attribute, value );
 	// force begin of a new attribute:
-	attribute = QString::null;
+	attribute.clear();
       }
     } else /* it.key().startsWith( attribute ) */ {
       //

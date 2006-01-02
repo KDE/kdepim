@@ -257,7 +257,7 @@ namespace MDN {
 	return i18n( dispositionTypes[i].description );
     kdWarning() << "KMime::MDN::descriptionFor(): No such disposition type: "
 		<< (int)d << endl;
-    return QString::null;
+    return QString();
   }
 
 } // namespace MDN

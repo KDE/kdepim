@@ -462,7 +462,7 @@ bool ReturnPath::parse( const char* & scursor, const char * const send, bool isC
 
     // prepare a Null mailbox:
     AddrSpec emptyAddrSpec;
-    maybeMailbox.displayName = QString::null;
+    maybeMailbox.displayName.clear();
     maybeMailbox.addrSpec = emptyAddrSpec;
   } else
     // check that there was no display-name:
@@ -870,7 +870,7 @@ void To::fromUnicodeString(const QString &s, const Q3CString &cs)
 QString To::asUnicodeString()
 {
   if ( a_ddrList.isEmpty() )
-    return QString::null;
+    return QString();
 
   QString ret;
   ObsAddressList::Iterator it = a_ddrList.begin();
