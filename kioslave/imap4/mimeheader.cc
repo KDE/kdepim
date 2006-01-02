@@ -694,7 +694,7 @@ mimeHeader::iconName ()
 
   // FIXME: bug?  Why throw away this data?
   fileName =
-    KMimeType::mimeType (contentType.toLower ())->icon (QString::null, false);
+    KMimeType::mimeType (contentType.toLower ())->icon (QString(), false);
   fileName =
     KGlobal::instance ()->iconLoader ()->iconPath (fileName, KIcon::Desktop);
 //  if (fileName.isEmpty())

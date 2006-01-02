@@ -129,7 +129,7 @@ public:
   virtual int outputLine (const QByteArray & _str, int len = -1);
 
   /** @brief send out cached data to the application */
-  virtual void flushOutput(QString contentEncoding = QString::null);
+  virtual void flushOutput(QString contentEncoding = QString());
 
 protected:
 

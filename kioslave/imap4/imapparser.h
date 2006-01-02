@@ -265,7 +265,7 @@ public:
   void parseRecent (ulong value, parseString & result);
   /** @brief parse a RESULT line */
   void parseResult (QByteArray & result, parseString & rest,
-                    const QString & command = QString::null);
+                    const QString & command = QString());
   /** @brief parse a CAPABILITY line */
   void parseCapability (parseString & result);
   /** @brief parse a FLAGS line */

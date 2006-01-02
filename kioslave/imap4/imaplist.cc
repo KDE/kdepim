@@ -101,7 +101,7 @@ hasNoChildren_ (false)
 
   hierarchyDelimiter_ = imapParser::parseOneWordC(s);
   if (hierarchyDelimiter_ == "NIL")
-    hierarchyDelimiter_ = QString::null;
+    hierarchyDelimiter_.clear();
   name_ = rfcDecoder::fromIMAP (imapParser::parseOneWord (s));  // decode modified UTF7
 }
 

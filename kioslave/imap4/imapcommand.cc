@@ -58,7 +58,7 @@
 imapCommand::imapCommand ()
 {
   mComplete = false;
-  mId = QString::null;
+  mId.clear();
 }
 
 imapCommand::imapCommand (const QString & command, const QString & parameter)
@@ -69,7 +69,7 @@ imapCommand::imapCommand (const QString & command, const QString & parameter)
   mComplete = false;
   aCommand = command;
   aParameter = parameter;
-  mId = QString::null;
+  mId.clear();
 }
 
 bool

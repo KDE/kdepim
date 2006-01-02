@@ -316,7 +316,7 @@ IMAP4Protocol::get (const KURL & _url)
         }
       }
       outputLine ("\r\n", 2);
-      flushOutput(QString::null);
+      flushOutput(QString());
       cacheOutput = false;
     }
 
@@ -515,7 +515,7 @@ IMAP4Protocol::listDir (const KURL & _url)
       && myLType != "LIST" && myLType != "LSUB" && myLType != "LSUBNOCHECK")
   {
     KURL aURL = _url;
-    aURL.setQuery (QString::null);
+    aURL.setQuery (QString());
     const QString encodedUrl = aURL.url(0, 106); // utf-8
 
     if (!_url.query ().isEmpty ())
@@ -1658,7 +1658,7 @@ IMAP4Protocol::slave_status ()
 {
   bool connected = (getState() != ISTATE_NO) && isConnectionValid();
   kdDebug(7116) << "IMAP4::slave_status " << connected << endl;
-  slaveStatus ( connected ? myHost : QString::null, connected );
+  slaveStatus ( connected ? myHost : QString(), connected );
 }
 
 void
@@ -1833,7 +1833,7 @@ void IMAP4Protocol::closeConnection()
   completeQueue.clear();
   sentQueue.clear();
   lastHandled = 0;
-  currentBox = QString::null;
+  currentBox.clear();
   readBufferLen = 0;
 }
 
@@ -1983,7 +1983,7 @@ bool IMAP4Protocol::makeLogin ()
       QList< imapList >::Iterator it = listResponses.begin();
       if ( it != listResponses.end() )
       {
-        namespaceToDelimiter[QString::null] = (*it).hierarchyDelimiter();
+        namespaceToDelimiter[QString()] = (*it).hierarchyDelimiter();
         kdDebug(7116) << "makeLogin - delimiter for empty ns='" <<
           (*it).hierarchyDelimiter() << "'" << endl;
         if ( !hasCapability("NAMESPACE") )
@@ -2059,7 +2059,7 @@ IMAP4Protocol::doListEntry (const KURL & _url, int stretch, imapCache * cache,
   bool withFlags, bool withSubject)
 {
   KURL aURL = _url;
-  aURL.setQuery (QString::null);
+  aURL.setQuery (QString());
   const QString encodedUrl = aURL.url(0, 106); // utf-8
   doListEntry(encodedUrl, stretch, cache, withFlags, withSubject);
 }
@@ -2116,7 +2116,7 @@ IMAP4Protocol::doListEntry (const KURL & _url, const QString & myBox,
                             const imapList & item, bool appendPath)
 {
   KURL aURL = _url;
-  aURL.setQuery (QString::null);
+  aURL.setQuery (QString());
   UDSEntry entry;
   int hdLen = item.hierarchyDelimiter().length();
 

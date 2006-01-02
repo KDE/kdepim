@@ -37,7 +37,7 @@ class WebdavHandler
                                       const QString &tag );
     static QDomElement addSloxElement( QDomDocument &, QDomNode &,
                                        const QString &tag,
-                                       const QString &text = QString::null );
+                                       const QString &text = QString() );
     static QDomDocument createAllPropsRequest();
 };
 

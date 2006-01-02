@@ -42,8 +42,8 @@ ReadMBox::ReadMBox( const UrlInfo* info, MBoxProtocol* parent, bool onlynew, boo
 	: MBoxFile( info, parent ),
 	m_file( 0 ),
 	m_stream( 0 ),
-	m_current_line( new QString( QString::null ) ),
-	m_current_id( new QString( QString::null ) ),
+	m_current_line( new QString( QString() ) ),
+	m_current_id( new QString( QString() ) ),
 	m_atend( true ),
 	m_prev_time( 0 ),
 	m_only_new( onlynew ),
@@ -89,7 +89,7 @@ bool ReadMBox::nextLine()
 	m_atend = m_current_line->isNull();
 	if( m_atend ) // Cursor was at EOF
 	{
-		*m_current_id = QString::null;
+		*m_current_id = QString();
 		m_prev_status = m_status;
 		return true;
 	}

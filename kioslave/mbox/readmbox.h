@@ -55,14 +55,14 @@ public:
 
 	/**
 	 * This functions return the current line
-	 * @return The line last read, or QString::null if there wasn't such last line
+	 * @return The line last read, or QString() if there wasn't such last line
 	 */
 	QString currentLine() const;
 
 	/**
 	 * This function returns the current id. The id is the first line of an email,
 	 * and is used in filenaming. The id normally starts with "From ".
-	 * @return The current ID, or QString::null if no id was found yet.
+	 * @return The current ID, or QString() if no id was found yet.
 	 */
 	QString currentID() const;
 

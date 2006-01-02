@@ -111,7 +111,7 @@ imapParser::sendCommand (imapCommand * aCmd)
   else if (command == "CLOSE")
   {
      // we no longer have a box open
-    currentBox = QString::null;
+    currentBox.clear();
   }
   else if (command.find ("SEARCH") != -1
            || command == "GETACL"
@@ -460,7 +460,7 @@ imapParser::parseUntagged (parseString & result)
         case 'F':
           if (qstrncmp(what, "FETCH", what.size()) == 0)
           {
-            seenUid = QString::null;
+            seenUid.clear();
             parseFetch (number, result);
           }
           break;
@@ -468,7 +468,7 @@ imapParser::parseUntagged (parseString & result)
         case 'S':
           if (qstrncmp(what, "STORE", what.size()) == 0)  // deprecated store
           {
-            seenUid = QString::null;
+            seenUid.clear();
             parseFetch (number, result);
           }
           break;
@@ -607,7 +607,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
       {
         if (currentState == ISTATE_SELECT)
           currentState = ISTATE_LOGIN;
-        currentBox = QString::null;
+        currentBox.clear();
       }
       kdDebug(7116) << "imapParser::parseResult - current box is now " << currentBox << endl;
     }
@@ -622,7 +622,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
       {
         if (currentState == ISTATE_SELECT)
           currentState = ISTATE_LOGIN;
-        currentBox = QString::null;
+        currentBox.clear();
       }
       kdDebug(7116) << "imapParser::parseResult - current box is now " << currentBox << endl;
     }
@@ -1556,8 +1556,8 @@ void imapParser::parseNamespace (parseString & result)
     return;
 
   QString delimEmpty;
-  if ( namespaceToDelimiter.contains( QString::null ) )
-    delimEmpty = namespaceToDelimiter[QString::null];
+  if ( namespaceToDelimiter.contains( QString() ) )
+    delimEmpty = namespaceToDelimiter[QString()];
 
   namespaceToDelimiter.clear();
   imapNamespaces.clear();
@@ -1614,7 +1614,7 @@ void imapParser::parseNamespace (parseString & result)
   }
   if ( !delimEmpty.isEmpty() ) {
     // remember default delimiter
-    namespaceToDelimiter[QString::null] = delimEmpty;
+    namespaceToDelimiter[QString()] = delimEmpty;
     if ( !personalAvailable )
     {
       // at least one personal ns would be nice
