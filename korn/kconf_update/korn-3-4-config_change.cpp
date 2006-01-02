@@ -104,11 +104,11 @@ void printToprint( QTextStream &out, QMap<QString,QString> &to_printed, const QS
 
 int main( int, char**  )
 {
-	QString line = QString::null;
-	QString currentGroup1 = QString::null;
-	QString currentGroup2 = QString::null;
-	QString type = QString::null;
-	QString password = QString::null;
+	QString line = QString();
+	QString currentGroup1 = QString();
+	QString currentGroup2 = QString();
+	QString type = QString();
+	QString password = QString();
 	QRegExp interesting_group( "^\\[box-(\\d+)\\]" );
 	QRegExp key_value( "^(\\w*)=(.*)$" );
 	QList<QString> tobe_deleted;
@@ -168,7 +168,7 @@ int main( int, char**  )
 				printToprint( out, to_printed, type );
 			}
 			
-			currentGroup1 = QString::null;
+			currentGroup1.clear();
 		}
 		
 		if( interesting_group.indexIn( line ) >= 0 )

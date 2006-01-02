@@ -112,7 +112,7 @@ void KEditListBoxManager::readNames()
 	while( _config->hasGroup( _groupName->arg( number ) ) )
 	{
 		_config->setGroup( _groupName->arg( number ) );
-		this->insertItem( _config->readEntry( "name", QString::null ) );
+		this->insertItem( _config->readEntry( "name", QString() ) );
 		++number;
 	}
 
@@ -140,12 +140,12 @@ void KEditListBoxManager::slotChanged()
 	
 	_config->setGroup( _groupName->arg( this->currentItem() ) );
 	
-	if( this->currentItem() > 0 && this->text( this->currentItem() - 1 ) == _config->readEntry( "name", QString::null ) )
+	if( this->currentItem() > 0 && this->text( this->currentItem() - 1 ) == _config->readEntry( "name", QString() ) )
 		changeItem( this->currentItem() - 1, this->currentItem() ); //moved down
 	else if( this->currentItem() < this->count() - 1 &&
-		 this->text( this->currentItem() + 1 ) == _config->readEntry( "name", QString::null ) )
+		 this->text( this->currentItem() + 1 ) == _config->readEntry( "name", QString() ) )
 		changeItem( this->currentItem(), this->currentItem() + 1 );  //moved up
-	else if( this->currentText() != _config->readEntry( "name", QString::null ) )
+	else if( this->currentText() != _config->readEntry( "name", QString() ) )
 		changedText(); //changed
 }
 
@@ -186,7 +186,7 @@ void KEditListBoxManager::slotRemoved( const QString& name )
 			break;
 		}
 		_config->setGroup( _groupName->arg( number ) );
-		if( name == _config->readEntry( "name", QString::null ) )
+		if( name == _config->readEntry( "name", QString() ) )
 			break; //found
 		
 		++number; //Try next group

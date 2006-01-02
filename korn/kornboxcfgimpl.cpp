@@ -301,13 +301,13 @@ void KornBoxCfgImpl::slotSetDefaults( const QString& name, const int, KConfig* c
 {
 	config->writeEntry( "name", name );
 	config->writeEntry( "protocol", "mbox" );
-	config->writeEntry( "host", QString::null );
-	config->writeEntry( "port", QString::null );
-	config->writeEntry( "username", QString::null );
+	config->writeEntry( "host", QString() );
+	config->writeEntry( "port", QString() );
+	config->writeEntry( "username", QString() );
 	config->writeEntry( "mailbox", "/var/spool/mail/" );
 	config->writeEntry( "savepassword", 0 );
-	config->writeEntry( "password", QString::null );
-	config->writeEntry( "auth", QString::null );
+	config->writeEntry( "password", QString() );
+	config->writeEntry( "auth", QString() );
 	config->writeEntry( "interval", 300 );
 	config->writeEntry( "boxsettings", true );
 	config->writeEntry( "command", "" );

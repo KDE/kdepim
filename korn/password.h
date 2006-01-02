@@ -47,7 +47,7 @@ public:
 	 * @param box The boxnumber of the account
 	 * @param account The accountnumber of the account
 	 * @param fallbackConfig The configuration file if KWallet cannot be used.
-	 * @return The password, or QString::null if it failes.
+	 * @return The password, or QString() if it failes.
 	 */
 	static QString readKOrnPassword( int box, int account, const KConfigBase& fallbackConfig );
 	/**

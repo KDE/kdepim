@@ -187,8 +187,8 @@ void KMail_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, 
 	while( kmailconfig.hasGroup( QString( kmailGroupName ).arg( ++nummer ) ) )
 	{
 		kmailconfig.setGroup( QString( kmailGroupName ).arg( nummer ) );
-		type = kmailconfig.readEntry( kmailKeyType, QString::null );
-		name = kmailconfig.readEntry( kmailKeyName, QString::null );
+		type = kmailconfig.readEntry( kmailKeyType, QString() );
+		name = kmailconfig.readEntry( kmailKeyName, QString() );
 		if( type == "imap" || type == "cachedimap" || type == "pop3" || type == "local" )
 		{
 			accountList.insert( name, name );
@@ -226,7 +226,7 @@ QString KMail_Protocol::getTypeAndConfig( const QString& kmailname, KConfig &kma
 	while( kmailconfig.hasGroup( QString( kmailGroupName ).arg( ++nummer ) ) )
 	{
 		kmailconfig.setGroup( QString( kmailGroupName ).arg( nummer ) );
-		if( kmailconfig.readEntry( kmailKeyName, QString::null ) == kmailname )
+		if( kmailconfig.readEntry( kmailKeyName, QString() ) == kmailname )
 		{
 			id = kmailconfig.readNumEntry( kmailKeyId, 0 );	
 			found = true;
@@ -236,10 +236,10 @@ QString KMail_Protocol::getTypeAndConfig( const QString& kmailname, KConfig &kma
 	if( !found )
 	{
 		nummer = -1;
-		return QString::null;
+		return QString();
 	}
 
 	//The correct group is found, and kmailconfig.setGroup() is already called for the right group.
-	return kmailconfig.readEntry( kmailKeyType, QString::null );
+	return kmailconfig.readEntry( kmailKeyType, QString() );
 }
 
