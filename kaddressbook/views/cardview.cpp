@@ -145,7 +145,7 @@ class CardViewPrivate
        mCurrentItem( 0L ),
        mLastClickPos( QPoint(0, 0) ),
        mRubberBandAnchor( 0 ),
-       mCompText( QString::null )
+       mCompText( QString() )
     {};
 
     CardViewItemList mItemList;

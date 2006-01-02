@@ -164,7 +164,7 @@ static QString businit(void)
 	qstrncpy(imei, unknown, sizeof(imei)-1);
 
 	if (m_progressDlg->wasCancelled())
-		return QString::null;
+		return QString();
 	else
 		error = gn_sm_functions(GN_OP_Identify, &data, &state);
 	GNOKII_CHECK_ERROR(error);
@@ -174,7 +174,7 @@ static QString businit(void)
 
 	PhoneProductId = QString("%1-%2-%3-%4").arg(APP).arg(model).arg(revision).arg(imei);
 
-	return QString::null;
+	return QString();
 }
 
 

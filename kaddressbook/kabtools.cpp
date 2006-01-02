@@ -97,10 +97,10 @@ void KABTools::mailVCards( const QStringList &uids, KABC::AddressBook *ab )
     }
   }
 
-  KToolInvocation::invokeMailer( QString::null, QString::null, QString::null,
-                      QString::null,
-                      QString::null,
-                      QString::null,
+  KToolInvocation::invokeMailer( QString(), QString(), QString(),
+                      QString(),
+                      QString(),
+                      QString(),
                       urls.toStringList() );
 }
 

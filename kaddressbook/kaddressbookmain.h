@@ -46,7 +46,7 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
   Q_OBJECT
 
   public:
-    KAddressBookMain( const QString &file = QString::null );
+    KAddressBookMain( const QString &file = QString() );
     virtual ~KAddressBookMain();
 
   public slots:

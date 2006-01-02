@@ -29,7 +29,7 @@
 #include "filter.h"
 
 Filter::Filter()
-  : mName( QString::null ), mMatchRule( Matching ), mEnabled( true ),
+  : mName( QString() ), mMatchRule( Matching ), mEnabled( true ),
     mInternal( false ), mIsEmpty( true )
 {
 }

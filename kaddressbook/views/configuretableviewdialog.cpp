@@ -48,7 +48,7 @@ ConfigureTableViewWidget::ConfigureTableViewWidget( KABC::AddressBook *ab,
                                                     const char *name )
   : ViewConfigureWidget( ab, parent, name )
 {
-  QWidget *page = addPage( i18n( "Look & Feel" ), QString::null,
+  QWidget *page = addPage( i18n( "Look & Feel" ), QString(),
                            KGlobal::iconLoader()->loadIcon( "looknfeel",
                            KIcon::Panel ) );
 

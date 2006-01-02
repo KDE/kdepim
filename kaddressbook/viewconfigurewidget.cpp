@@ -51,7 +51,7 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
   topLayout->addWidget( mMainWidget );
 
   // Add the first page, the attributes
-  KVBox *page = addPage( i18n( "Fields" ), QString::null,
+  KVBox *page = addPage( i18n( "Fields" ), QString(),
                          KGlobal::iconLoader()->loadIcon( "view_detailed",
                          KIcon::Panel ) );
 
@@ -59,7 +59,7 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
   mFieldsPage = new ViewConfigureFieldsPage( addressBook(), page );
 
   // Add the second page, the filter selection
-  page = addPage( i18n( "Default Filter" ), QString::null,
+  page = addPage( i18n( "Default Filter" ), QString(),
                   KGlobal::iconLoader()->loadIcon( "filter",
                   KIcon::Panel ) );
 

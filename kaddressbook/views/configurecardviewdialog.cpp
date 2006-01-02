@@ -54,7 +54,7 @@ ConfigureCardViewWidget::ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget
                                                   const char *name )
   : ViewConfigureWidget( ab, parent, name )
 {
-  QWidget *page = addPage( i18n( "Look & Feel" ), QString::null,
+  QWidget *page = addPage( i18n( "Look & Feel" ), QString(),
                            DesktopIcon( "looknfeel" ) );
   mAdvancedPage = new CardViewLookNFeelPage( page );
 }

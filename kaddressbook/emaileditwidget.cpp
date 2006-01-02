@@ -256,7 +256,7 @@ void EmailEditDialog::add()
   bool ok = false;
 
   QString email = KInputDialog::getText( i18n( "Add Email" ), i18n( "New Email:" ),
-                                         QString::null, &ok, this, "EmailEditDialog",
+                                         QString(), &ok, this, "EmailEditDialog",
                                          validator );
 
   if ( !ok )

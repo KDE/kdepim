@@ -79,7 +79,7 @@ class KDE_EXPORT KABCore : public KAB::Core
 
   public:
     KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
-             const QString &file = QString::null, const char *name = 0 );
+             const QString &file = QString(), const char *name = 0 );
     ~KABCore();
 
     /**
@@ -309,16 +309,16 @@ class KDE_EXPORT KABCore : public KAB::Core
     void save();
 
     /**
-      Shows the edit dialog for the given uid. If the uid is QString::null,
+      Shows the edit dialog for the given uid. If the uid is QString(),
       the method will try to find a selected addressee in the view.
      */
-    void editContact( const QString &uid = QString::null );
+    void editContact( const QString &uid = QString() );
 
     /**
      * Let the user chose a different resource for the selected contacts.
      * If the adding to the new resource is successfull, the contact is
      * removed from the old one. */
-    void storeContactIn( const QString &uid = QString::null );
+    void storeContactIn( const QString &uid = QString() );
 
     /**
       Launches the ldap search dialog.

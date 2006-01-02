@@ -48,7 +48,7 @@ class LDAPItem : public Q3CheckListItem
 {
   public:
     LDAPItem( Q3ListView *parent, const KPIM::LdapServer &server, bool isActive = false )
-      : Q3CheckListItem( parent, parent->lastItem(), QString::null, Q3CheckListItem::CheckBox ),
+      : Q3CheckListItem( parent, parent->lastItem(), QString(), Q3CheckListItem::CheckBox ),
         mIsActive( isActive )
     {
       setServer( server );
@@ -79,7 +79,7 @@ LDAPOptionsWidget::LDAPOptionsWidget( QWidget* parent,  const char* name )
   mHostListView->setSorting( -1 );
   mHostListView->setAllColumnsShowFocus( true );
   mHostListView->setFullWidth( true );
-  mHostListView->addColumn( QString::null );
+  mHostListView->addColumn( QString() );
   mHostListView->header()->hide();
 
   connect( mHostListView, SIGNAL( selectionChanged( Q3ListViewItem* ) ),

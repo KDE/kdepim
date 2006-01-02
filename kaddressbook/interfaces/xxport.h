@@ -129,12 +129,12 @@ class KDE_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
     /**
       Create the import action. The identifier is passed in the import slot.
      */
-    void createImportAction( const QString &label, const QString &identifier = QString::null );
+    void createImportAction( const QString &label, const QString &identifier = QString() );
 
     /**
       Create the export action. The identifier is passed in the export slot.
      */
-    void createExportAction( const QString &label, const QString &identifier = QString::null );
+    void createExportAction( const QString &label, const QString &identifier = QString() );
 
     /**
       Returns a pointer to the address book object.

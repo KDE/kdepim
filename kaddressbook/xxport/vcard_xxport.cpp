@@ -129,7 +129,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
     QString msg = i18n( "You have selected a list of contacts, shall they be "
                         "exported to several files?" );
 
-    switch ( KMessageBox::questionYesNo( parentWidget(), msg, QString::null, i18n("Export to Several Files"), i18n("Export to One File") ) ) {
+    switch ( KMessageBox::questionYesNo( parentWidget(), msg, QString(), i18n("Export to Several Files"), i18n("Export to One File") ) ) {
       case KMessageBox::Yes: {
         KURL baseUrl = KFileDialog::getExistingURL();
         if ( baseUrl.isEmpty() )
@@ -179,7 +179,7 @@ KABC::Addressee::List VCardXXPort::importContacts( const QString& ) const
     addrList = parseVCard( XXPortManager::importData );
   else {
     if ( XXPortManager::importURL.isEmpty() )
-      urls = KFileDialog::getOpenURLs( QString::null, "*.vcf|vCards", parentWidget(),
+      urls = KFileDialog::getOpenURLs( QString(), "*.vcf|vCards", parentWidget(),
                                        i18n( "Select vCard to Import" ) );
     else
       urls.append( XXPortManager::importURL );

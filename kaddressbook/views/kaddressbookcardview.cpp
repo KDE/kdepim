@@ -287,7 +287,7 @@ void KAddressBookCardView::refresh( const QString &uid )
     mCardView->viewport()->update();
 
     // by default nothing is selected
-    emit selected( QString::null );
+    emit selected( QString() );
   } else {
     // Try to find the one to refresh
     bool found = false;
@@ -354,7 +354,7 @@ void KAddressBookCardView::addresseeSelected()
   }
 
   if ( !found )
-    emit selected( QString::null );
+    emit selected( QString() );
 }
 
 void KAddressBookCardView::rmbClicked( CardViewItem*, const QPoint &point )

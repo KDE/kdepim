@@ -94,7 +94,7 @@ void NamePartWidget::add()
   bool ok;
 
   QString namePart = KInputDialog::getText( i18n( "New" ), mLabel,
-                                            QString::null, &ok );
+                                            QString(), &ok );
   if ( ok && !namePart.isEmpty() ) {
     mBox->insertItem( namePart );
     emit modified();

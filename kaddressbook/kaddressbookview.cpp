@@ -84,7 +84,7 @@ QString KAddressBookView::selectedEmails()
     addr = mCore->addressBook()->findByUid( *it );
 
     if ( !addr.isEmpty() ) {
-      QString m = QString::null;
+      QString m = QString();
 
       if ( addr.emails().count() > 1 )
         m = KABC::EmailSelector::getEmail( addr.emails(), addr.preferredEmail(), this );
@@ -191,7 +191,7 @@ void KAddressBookView::updateView()
     if ( !contacts.isEmpty() )
       setSelected( contacts.first().uid(), true );
     else
-      emit selected( QString::null );
+      emit selected( QString() );
   }
 }
 

@@ -78,7 +78,7 @@ class CardViewItem
     virtual ~CardViewItem();
 
     /**
-      @return The caption of the card, or QString::null if none was ever set.
+      @return The caption of the card, or QString() if none was ever set.
      */
     const QString &caption() const;
 

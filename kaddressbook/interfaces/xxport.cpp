@@ -117,12 +117,12 @@ void XXPort::processEvents() const
 
 void XXPort::slotExportActivated( const QString &data )
 {
-  emit exportActivated( identifier(), ( data == "<empty>" ? QString::null : data ) );
+  emit exportActivated( identifier(), ( data == "<empty>" ? QString() : data ) );
 }
 
 void XXPort::slotImportActivated( const QString &data )
 {
-  emit importActivated( identifier(), ( data == "<empty>" ? QString::null : data ) );
+  emit importActivated( identifier(), ( data == "<empty>" ? QString() : data ) );
 }
 
 #include "xxport.moc"

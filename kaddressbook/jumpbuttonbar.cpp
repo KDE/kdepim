@@ -143,7 +143,7 @@ void JumpButtonBar::updateButtons()
   if ( characters.count() <= possibleButtons ) {
     // at first the easy case: all buttons fits in window
     for ( int i = 0; i < characters.count(); ++i ) {
-      JumpButton *button = new JumpButton( characters[ i ], QString::null,
+      JumpButton *button = new JumpButton( characters[ i ], QString(),
                                            mGroupBox );
       connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
       mButtons.append( button );
@@ -163,7 +163,7 @@ void JumpButtonBar::updateButtons()
         continue;
       if ( characters.count() - current <= possibleButtons - i ) {
         JumpButton *button = new JumpButton( characters[ current ],
-                                             QString::null, mGroupBox );
+                                             QString(), mGroupBox );
         connect( button, SIGNAL( clicked() ), this, SLOT( letterClicked() ) );
         mButtons.append( button );
         button->show();

@@ -240,7 +240,7 @@ void KAddressBookIconView::refresh( const QString &uid )
       }
     }
 
-    refresh( QString::null );
+    refresh( QString() );
   }
 }
 
@@ -298,7 +298,7 @@ void KAddressBookIconView::addresseeSelected()
   }
 
   if ( !found )
-    emit selected( QString::null );
+    emit selected( QString() );
 }
 
 void KAddressBookIconView::rmbClicked( Q3IconViewItem*, const QPoint &point )

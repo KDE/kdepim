@@ -49,7 +49,7 @@
 static QString asUtf8( const QByteArray &val )
 {
   if ( val.isEmpty() )
-    return QString::null;
+    return QString();
 
   const char *data = val.data();
 
@@ -343,7 +343,7 @@ QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr,
       result = result.arg( "telephoneNumber" ).arg( query );
     } else {
       // Error?
-      result = QString::null;
+      result.clear();
       return result;
     }
   }

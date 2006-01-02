@@ -121,7 +121,7 @@ class ContactItem : public Q3ListViewItem
 {
   public:
     ContactItem( DistributionListView *parent, const KABC::Addressee &addressee,
-               const QString &email = QString::null ) :
+               const QString &email = QString() ) :
       Q3ListViewItem( parent ),
       mAddressee( addressee ),
       mEmail( email )
@@ -276,7 +276,7 @@ void DistributionListWidget::createList()
 {
   QString newName = KInputDialog::getText( i18n( "New Distribution List" ),
                                            i18n( "Please enter name:" ),
-                                           QString::null, 0, this );
+                                           QString(), 0, this );
 
   if ( newName.isEmpty() ) return;
 
@@ -351,7 +351,7 @@ void DistributionListWidget::removeList()
 {
   int result = KMessageBox::warningContinueCancel( this,
       i18n( "<qt>Delete distribution list <b>%1</b>?</qt>" ) .arg( mNameCombo->currentText() ),
-      QString::null, KGuiItem( i18n("Delete"), "editdelete") );
+      QString(), KGuiItem( i18n("Delete"), "editdelete") );
 
   if ( result != KMessageBox::Continue )
     return;
@@ -658,7 +658,7 @@ QString EmailSelector::selected() const
   if ( button )
     return mEmailMap[ mButtonGroup->id( button ) ];
 
-  return QString::null;
+  return QString();
 }
 
 QString EmailSelector::getEmail( const QStringList &emails,

@@ -194,12 +194,12 @@ QString EudoraXXPort::get( const QString& line, const QString& key ) const
   // Find formatted key, return on error
   b = line.find( fd );
   if ( b == -1 )
-    return QString::null;
+    return QString();
 
   b += fd.length();
   e = line.find( '>', b );
   if ( e == -1 )
-    return QString::null;
+    return QString();
 
   e--;
   QString result = line.mid( b, e - b + 1 );

@@ -171,7 +171,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
     /**
       This method must be overloaded in subclasses. Select (highlight)
       the addressee matching <i>uid</i>. If uid
-      is equal to QString::null, then all addressees should be selected.
+      is equal to QString(), then all addressees should be selected.
      */
     virtual void setSelected( const QString &uid = QString(), bool selected = true ) = 0;
 

@@ -168,7 +168,7 @@ class KDE_EXPORT Core : public QObject
     /**
       Shows an edit dialog for the given uid.
      */
-    virtual void editContact( const QString &uid = QString::null ) = 0;
+    virtual void editContact( const QString &uid = QString() ) = 0;
 
   private:
     KXMLGUIClient *mGUIClient;

@@ -515,7 +515,7 @@ void ViewManager::setActiveFilter( int index )
   if ( mActiveView ) {
     mActiveView->setFilter( currentFilter );
     mActiveView->refresh();
-    emit selected( QString::null );
+    emit selected( QString() );
   }
 }
 

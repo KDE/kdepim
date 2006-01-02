@@ -266,7 +266,7 @@ void KAddressBookTableView::refresh( const QString &uid )
         return;
       }
     }
-    refresh( QString::null );
+    refresh( QString() );
   }
 }
 
@@ -334,7 +334,7 @@ void KAddressBookTableView::addresseeSelected()
   }
 
   if ( !found )
-      emit selected( QString::null );
+      emit selected( QString() );
 }
 
 void KAddressBookTableView::addresseeExecuted( Q3ListViewItem *item )
@@ -345,9 +345,9 @@ void KAddressBookTableView::addresseeExecuted( Q3ListViewItem *item )
     if ( ceItem )
       emit executed( ceItem->addressee().uid() );
     else
-      emit executed( QString::null );
+      emit executed( QString() );
   } else {
-    emit executed( QString::null );
+    emit executed( QString() );
   }
 }
 

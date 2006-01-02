@@ -390,7 +390,7 @@ void KABCore::browse( const QString& url )
 
 void KABCore::selectAllContacts()
 {
-  mViewManager->setSelected( QString::null, true );
+  mViewManager->setSelected( QString(), true );
 }
 
 void KABCore::deleteContacts()
@@ -414,14 +414,14 @@ void KABCore::deleteContacts( const QStringList &uids )
 
     if ( KMessageBox::warningContinueCancelList( mWidget, i18n( "Do you really want to delete this contact?",
                                                  "Do you really want to delete these %n contacts?", uids.count() ),
-                                                 names, QString::null, KStdGuiItem::del() ) == KMessageBox::Cancel )
+                                                 names, QString(), KStdGuiItem::del() ) == KMessageBox::Cancel )
       return;
 
     DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
     mCommandHistory->addCommand( command );
 
     // now if we deleted anything, refresh
-    setContactSelected( QString::null );
+    setContactSelected( QString() );
     setModified( true );
   }
 }
@@ -513,19 +513,19 @@ void KABCore::setWhoAmI()
   }
 
   QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>" ) );
-  if ( KMessageBox::questionYesNo( mWidget, text.arg( addrList[ 0 ].assembledName() ), QString::null, i18n("Use"), i18n("Do Not Use") ) == KMessageBox::Yes )
+  if ( KMessageBox::questionYesNo( mWidget, text.arg( addrList[ 0 ].assembledName() ), QString(), i18n("Use"), i18n("Do Not Use") ) == KMessageBox::Yes )
     static_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self( true ) )->setWhoAmI( addrList[ 0 ] );
 }
 
 void KABCore::incrementalTextSearch( const QString& text )
 {
-  setContactSelected( QString::null );
+  setContactSelected( QString() );
   mSearchManager->search( text, mIncSearchWidget->currentFields() );
 }
 
 void KABCore::incrementalJumpButtonSearch( const QString& character )
 {
-  mViewManager->setSelected( QString::null, false );
+  mViewManager->setSelected( QString(), false );
 
   KABC::AddresseeList list;
   // FIXME this conversion is only temporarily necessary, until 
@@ -793,7 +793,7 @@ void KABCore::extensionDeleted( const QStringList &uidList )
   mCommandHistory->addCommand( command );
 
   // now if we deleted anything, refresh
-  setContactSelected( QString::null );
+  setContactSelected( QString() );
   setModified( true );
 }
 
@@ -945,8 +945,8 @@ void KABCore::addressBookChanged()
     mJumpButtonBar->updateButtons();
 
   mSearchManager->reload();
-  mViewManager->setSelected( QString::null, false );
-  setContactSelected( QString::null );
+  mViewManager->setSelected( QString(), false );
+  setContactSelected( QString() );
 
   updateCategories();
 }
@@ -1214,7 +1214,7 @@ void KABCore::categoriesSelected( const QStringList &categories )
 {
   bool merge = false;
   QString msg = i18n( "Merge with existing categories?" );
-  if ( KMessageBox::questionYesNo( mWidget, msg, QString::null, i18n( "Merge" ), i18n( "Do Not Merge" ) ) == KMessageBox::Yes )
+  if ( KMessageBox::questionYesNo( mWidget, msg, QString(), i18n( "Merge" ), i18n( "Do Not Merge" ) ) == KMessageBox::Yes )
     merge = true;
 
   QStringList uids = mViewManager->selectedUids();

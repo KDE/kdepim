@@ -72,10 +72,10 @@ class ViewManager : public QWidget
     KABC::Field::List viewFields() const;
 
   public slots:
-    void setSelected( const QString &uid = QString::null, bool selected = true );
+    void setSelected( const QString &uid = QString(), bool selected = true );
     void setFirstSelected( bool selected = true );
 
-    void refreshView( const QString &uid = QString::null );
+    void refreshView( const QString &uid = QString() );
     void editView();
     void deleteView();
     void addView();

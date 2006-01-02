@@ -400,7 +400,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
       }
 
       line1 += QString::fromLatin1( ":" );
-      text = QString::null;
+      text.clear();
 
       if ( !address.extended().isEmpty() )
         text = address.extended().trimmed();
