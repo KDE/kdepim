@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -197,15 +197,15 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   //statusbar
   KStatusBar *sb=statusBar();
-  sb->insertItem(QString::null, 1,1);                 // type
+  sb->insertItem( QString(), 1, 1 );                 // type
   sb->setItemAlignment( 1, Qt::AlignLeft | Qt::AlignVCenter );
-  sb->insertItem(QString::null, 2,1);                 // charset
+  sb->insertItem( QString(), 2, 1 );                 // charset
   sb->setItemAlignment( 2, Qt::AlignLeft | Qt::AlignVCenter );
-  sb->insertItem(QString::null, 3,0);                 // column
+  sb->insertItem( QString(), 3, 0 );                 // column
   sb->setItemAlignment(3, Qt::AlignCenter | Qt::AlignVCenter );
-  sb->insertItem(QString::null, 4,0);                 // column
+  sb->insertItem( QString(), 4, 0 );                 // column
   sb->setItemAlignment(4, Qt::AlignCenter | Qt::AlignVCenter );
-  sb->insertItem(QString::null, 5,0);                 // line
+  sb->insertItem( QString(), 5, 0 );                 // line
   sb->setItemAlignment( 5, Qt::AlignCenter | Qt::AlignVCenter );
   connect(v_iew->e_dit, SIGNAL(CursorPositionChanged()), SLOT(slotUpdateCursorPos()));
   connect(v_iew->e_dit, SIGNAL(toggle_overwrite_signal()), SLOT(slotUpdateStatusBar()));
@@ -588,8 +588,8 @@ bool KNComposer::hasValidData()
     }
 
     if (groupCount>5)
-      if (!(KMessageBox::warningYesNo( this, i18n("You are crossposting to more than five newsgroups.\nPlease reconsider whether this is really useful\nand remove groups in which your article is off-topic.\nDo you want to re-edit the article or send it anyway?"),
-                                       QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
+      if ( KMessageBox::warningYesNo( this, i18n("You are crossposting to more than five newsgroups.\nPlease reconsider whether this is really useful\nand remove groups in which your article is off-topic.\nDo you want to re-edit the article or send it anyway?"),
+            QString(), i18n("&Send"), i18n("edit article","&Edit") ) != KMessageBox::Yes )
         return false;
 
     if ( !followUp && groupCount > 2 ) {
@@ -598,7 +598,7 @@ bool KNComposer::hasValidData()
                 "Please use the \"Followup-To\" header to direct the replies "
                 "to your article into one group.\n"
                 "Do you want to re-edit the article or send it anyway?"),
-           QString::null, i18n("&Send"), i18n("edit article","&Edit"), "missingFollowUpTo" )
+           QString(), i18n("&Send"), i18n("edit article","&Edit"), "missingFollowUpTo" )
            != KMessageBox::Yes )
         return false;
     }
@@ -609,8 +609,8 @@ bool KNComposer::hasValidData()
     }
 
     if (fupCount>5)
-      if (!(KMessageBox::warningYesNo( this, i18n("You are directing replies to more than five newsgroups.\nPlease reconsider whether this is really useful.\nDo you want to re-edit the article or send it anyway?"),
-                                       QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
+      if ( KMessageBox::warningYesNo( this, i18n("You are directing replies to more than five newsgroups.\nPlease reconsider whether this is really useful.\nDo you want to re-edit the article or send it anyway?"),
+            QString(), i18n("&Send"),i18n("edit article","&Edit") ) != KMessageBox::Yes )
         return false;
   }
 
@@ -679,8 +679,8 @@ bool KNComposer::hasValidData()
 
   if ((textLines>1)&&(notQuoted==1)) {
     if (hasAttributionLine)
-      if (!(KMessageBox::warningYesNo( this, i18n("Your article seems to consist entirely of quoted text;\ndo you want to re-edit the article or send it anyway?"),
-                                       QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
+      if ( KMessageBox::warningYesNo( this, i18n("Your article seems to consist entirely of quoted text;\ndo you want to re-edit the article or send it anyway?"),
+           QString(), i18n("&Send"), i18n("edit article","&Edit") ) != KMessageBox::Yes )
         return false;
   } else {
     if (notQuoted==0) {
@@ -691,21 +691,21 @@ bool KNComposer::hasValidData()
   }
 
   if (longLine)
-    if (!(KMessageBox::warningYesNo( this,
+    if ( KMessageBox::warningYesNo( this,
           i18n("Your article contains lines longer than 80 characters.\n"
-	       "Do you want to re-edit the article or send it anyway?"),
-          QString::null, i18n("&Send"),
-	  i18n("edit article","&Edit")) == KMessageBox::Yes))
+               "Do you want to re-edit the article or send it anyway?"),
+          QString(), i18n("&Send"),
+          i18n("edit article","&Edit") ) != KMessageBox::Yes )
       return false;
 
   if (sigLength>8) {
-    if (!(KMessageBox::warningYesNo( this, i18n("Your signature is more than 8 lines long.\nYou should shorten it to match the widely accepted limit of 4 lines.\nDo you want to re-edit the article or send it anyway?"),
-                                     QString::null, i18n("&Send"),i18n("edit article","&Edit")) == KMessageBox::Yes))
+    if ( KMessageBox::warningYesNo( this, i18n("Your signature is more than 8 lines long.\nYou should shorten it to match the widely accepted limit of 4 lines.\nDo you want to re-edit the article or send it anyway?"),
+         QString(), i18n("&Send"), i18n("edit article","&Edit") ) != KMessageBox::Yes )
       return false;
   } else
     if (sigLength>4)
-       KMessageBox::information(this, i18n("Your signature exceeds the widely-accepted limit of 4 lines:\nplease consider shortening your signature;\notherwise, you will probably annoy your readers."),
-                                QString::null,"longSignatureWarning");
+       KMessageBox::information( this, i18n("Your signature exceeds the widely-accepted limit of 4 lines:\nplease consider shortening your signature;\notherwise, you will probably annoy your readers."),
+                                QString(), "longSignatureWarning" );
 
   // check if article can be signed
   if ( a_ctPGPsign->isChecked() ) {
@@ -731,7 +731,7 @@ bool KNComposer::hasValidData()
                         "in the account properties or in the "
                         "group properties.\n"
                         "The article will be sent unsigned." ),
-                   QString::null, i18n( "Send Unsigned" ),
+                   QString(), i18n( "Send Unsigned" ),
                    "sendUnsignedDialog" )
                == KMessageBox::Cancel )
              return false;
@@ -886,7 +886,7 @@ void KNComposer::closeEvent(QCloseEvent *e)
   }
   else {
     switch ( KMessageBox::warningYesNoCancel( this, i18n("Do you want to save this article in the draft folder?"),
-                                              QString::null, KStdGuiItem::save(), KStdGuiItem::discard())) {
+                                              QString(), KStdGuiItem::save(), KStdGuiItem::discard() ) ) {
       case KMessageBox::Yes :
         r_esult=CRsave;
         break;
@@ -910,7 +910,7 @@ void KNComposer::initData(const QString &text)
 {
   //Subject
   if(a_rticle->subject()->isEmpty())
-    slotSubjectChanged(QString::null);
+    slotSubjectChanged( QString() );
   else
     v_iew->s_ubject->setText(a_rticle->subject()->asUnicodeString());
 
@@ -968,7 +968,7 @@ void KNComposer::initData(const QString &text)
 // inserts at cursor position if clear is false, replaces content otherwise
 // puts the file content into a box if box==true
 // "file" is already open for reading
-void KNComposer::insertFile(QFile *file, bool clear, bool box, QString boxTitle)
+void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &boxTitle )
 {
   QString temp;
   bool ok=true;
@@ -1172,8 +1172,8 @@ void KNComposer::slotToggleDoMail()
 {
   if (a_ctDoMail->isChecked()) {
     if (a_uthorDislikesMailCopies) {
-      if (!(KMessageBox::warningContinueCancel(this, i18n("The poster does not want a mail copy of your reply (Mail-Copies-To: nobody);\nplease respect their request."),
-                                               QString::null, i18n("&Send Copy")) == KMessageBox::Continue)) {
+      if ( KMessageBox::warningContinueCancel( this, i18n("The poster does not want a mail copy of your reply (Mail-Copies-To: nobody);\nplease respect their request."),
+                                               QString(), i18n("&Send Copy") ) != KMessageBox::Continue ) {
         a_ctDoMail->setChecked(false); //revert
         return;
       }

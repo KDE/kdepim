@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -365,7 +365,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
     if (!list.isEmpty())
       knGlobals.articleManager()->moveIntoFolder(list, f);
 
-    knGlobals.setStatusMsg(QString::null);
+    knGlobals.setStatusMsg( QString() );
     knGlobals.top->setCursorBusy(false);
   }
 
@@ -414,7 +414,7 @@ void KNFolderManager::exportToMBox(KNFolder *f)
         knGlobals.top->secureProcessEvents();
     }
 
-    knGlobals.setStatusMsg(QString::null);
+    knGlobals.setStatusMsg( QString() );
     knGlobals.top->setCursorBusy(false);
   }
 }

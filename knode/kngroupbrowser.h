@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -68,8 +68,8 @@ class KNGroupBrowser : public KDialogBase {
         KNGroupInfo info;
     };
 
-    KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAccount *a, int buttons=0,
-                   bool newCBact=false, const QString &user1=QString::null, const QString &user2=QString::null);
+    KNGroupBrowser( QWidget *parent, const QString &caption, KNNntpAccount *a, int buttons = 0,
+                    bool newCBact = false, const QString &user1 = QString(), const QString &user2 = QString() );
     ~KNGroupBrowser();
 
     KNNntpAccount* account()const      { return a_ccount; }

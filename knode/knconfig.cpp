@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -116,8 +116,8 @@ bool KNode::Identity::emailIsValid()
 
 QString KNode::Identity::getSignature()
 {
-  s_igContents = QString::null;      // don't cache file contents
-  s_igStdErr = QString::null;
+  s_igContents.clear();      // don't cache file contents
+  s_igStdErr.clear();
 
   if (u_seSigFile) {
     if(!s_igPath.isEmpty()) {

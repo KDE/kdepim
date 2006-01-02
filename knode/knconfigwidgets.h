@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -549,7 +549,7 @@ class KDE_EXPORT XHeaderConfDialog : public KDialogBase
      * @param h The header to edit.
      * @param parent The parent widget.
      */
-    XHeaderConfDialog( const QString &h = QString::null, QWidget *parent = 0 );
+    XHeaderConfDialog( const QString &h = QString(), QWidget *parent = 0 );
     /** Destructor. */
     ~XHeaderConfDialog();
 

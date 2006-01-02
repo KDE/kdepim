@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -251,7 +251,7 @@ void KNode::IdentityWidget::slotSignatureType(int type)
 
 void KNode::IdentityWidget::slotSignatureChoose()
 {
-  QString tmp=KFileDialog::getOpenFileName(c_ompletion->replacedPath(s_ig->text()),QString::null,this,i18n("Choose Signature"));
+  QString tmp = KFileDialog::getOpenFileName( c_ompletion->replacedPath( s_ig->text() ), QString(), this, i18n("Choose Signature") );
   if(!tmp.isEmpty()) s_ig->setText(tmp);
   emit changed( true );
 }
@@ -1589,7 +1589,7 @@ void KNode::PostNewsTechnicalWidget::slotSelectionChanged()
 
 void KNode::PostNewsTechnicalWidget::slotAddBtnClicked()
 {
-  XHeaderConfDialog *dlg = new XHeaderConfDialog( QString::null, this );
+  XHeaderConfDialog *dlg = new XHeaderConfDialog( QString(), this );
   if ( dlg->exec() )
     mHeaderList->addItem( dlg->result() );
 

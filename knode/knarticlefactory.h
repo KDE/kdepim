@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -53,14 +53,14 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     //factory methods
     void createPosting(KNNntpAccount *a);
     void createPosting(KNGroup *g);
-    void createReply(KNRemoteArticle *a, QString selectedText=QString::null, bool post=true, bool mail=false);
+    void createReply( KNRemoteArticle *a, QString selectedText = QString(), bool post = true, bool mail = false );
     void createForward(KNArticle *a);
     void createCancel(KNArticle *a);
     void createSupersede(KNArticle *a);
     void createMail(KMime::Headers::AddressField *address);
 
     /// Send a mail via an external program.
-    void sendMailExternal(const QString &address=QString::null, const QString &subject=QString::null, const QString &body=QString::null);
+    void sendMailExternal( const QString &address = QString(), const QString &subject = QString(), const QString &body = QString() );
 
     //article handling
     void edit(KNLocalArticle *a);

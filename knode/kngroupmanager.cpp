@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -120,7 +120,7 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
 
       if (sepPos1==-1) {        // no description
         name = QString::fromUtf8(line);
-        description = QString::null;
+        description.clear();
         status = KNGroup::unknown;
       } else {
         name = QString::fromUtf8(line.left(sepPos1));
@@ -414,7 +414,7 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
     gDialog->toUnsubscribe(&lst);
     if (lst.count()>0) {
       if (KMessageBox::Yes == KMessageBox::questionYesNoList((parent!=0)? parent:knGlobals.topWidget,i18n("Do you really want to unsubscribe\nfrom these groups?"),
-                                                              lst, QString::null, i18n("Unsubscribe"), KStdGuiItem::cancel())) {
+                                                              lst, QString(), i18n("Unsubscribe"), KStdGuiItem::cancel())) {
         for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
           if((g=group(*it, a)))
             unsubscribeGroup(g);
@@ -654,7 +654,7 @@ void KNGroupManager::slotLoadGroupList(KNNntpAccount *a)
   d->path = a->path();
 
   if(!QFileInfo(d->path+"groups").exists()) {
-    if (KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,i18n("You do not have any groups for this account;\ndo you want to fetch a current list?"), QString::null, i18n("Fetch List"), i18n("Do Not Fetch"))) {
+    if (KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,i18n("You do not have any groups for this account;\ndo you want to fetch a current list?"), QString(), i18n("Fetch List"), i18n("Do Not Fetch"))) {
       delete d;
       slotFetchGroupList(a);
       return;

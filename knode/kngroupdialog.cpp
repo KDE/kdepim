@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -138,8 +138,9 @@ void KNGroupDialog::toSubscribe(Q3SortedList<KNGroupInfo> *l)
       moderated=true;
   }
   if (moderated)   // warn the user
-     KMessageBox::information(knGlobals.topWidget,i18n("You have subscribed to a moderated newsgroup.\nYour articles will not appear in the group immediately.\nThey have to go through a moderation process."),
-                              QString::null,"subscribeModeratedWarning");
+     KMessageBox::information( knGlobals.topWidget,
+       i18n("You have subscribed to a moderated newsgroup.\nYour articles will not appear in the group immediately.\nThey have to go through a moderation process."),
+       QString(), "subscribeModeratedWarning" );
 }
 
 

@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -67,7 +67,9 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
 
     // unwraped == original, not rewraped text
     // firstEdit==true: place the cursor at the end of the article
-    KNComposer(KNLocalArticle *a, const QString &text=QString::null, const QString &sig=QString::null, const QString &unwraped=QString::null, bool firstEdit=false, bool dislikesCopies=false, bool createCopy=false);
+    KNComposer( KNLocalArticle *a, const QString &text = QString(), const QString &sig = QString(),
+                const QString &unwraped = QString(), bool firstEdit = false,
+                bool dislikesCopies = false, bool createCopy = false );
     ~KNComposer();
     void setConfig(bool onlyFonts);
     void setMessageMode(MessageMode mode);
@@ -83,10 +85,11 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
     //set data from the given article
     void initData(const QString &text);
 
-    // inserts at cursor position if clear is false, replaces content otherwise
-    // puts the file content into a box if box==true
-    // "file" is already open for reading
-    void insertFile(QFile *file, bool clear=false, bool box=false, QString boxTitle=QString::null);
+    /** Inserts at cursor position if clear is false, replaces content otherwise
+     * puts the file content into a box if box==true
+     * "file" is already open for reading
+     */
+    void insertFile( QFile *file, bool clear = false, bool box = false, const QString &boxTitle = QString() );
 
     /// ask for a filename, handle network urls
     void insertFile(bool clear=false, bool box=false);

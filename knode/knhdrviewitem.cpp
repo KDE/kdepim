@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
     Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
 
@@ -217,7 +217,7 @@ int KNHdrViewItem::width( const QFontMetrics &fm, const Q3ListView *, int column
 QString KNHdrViewItem::text( int col ) const
 {
   if ( !art )
-    return QString::null;
+    return QString();
   KNHeaderView *hv = static_cast<KNHeaderView*>( listView() );
 
   if ( col == hv->paintInfo()->subCol ) {
@@ -228,14 +228,14 @@ QString KNHdrViewItem::text( int col ) const
     if ( art->lines()->numberOfLines() != -1 )
       return QString::number( art->lines()->numberOfLines() );
     else
-      return QString::null;
+      return QString();
   }
 
   if ( col == hv->paintInfo()->scoreCol ) {
     if ( art->type() == KMime::Base::ATremote )
       return QString::number( static_cast<KNRemoteArticle*>( art )->score() );
     else
-      return QString::null;
+      return QString();
   }
 
   if ( col == hv->paintInfo()->dateCol ) {

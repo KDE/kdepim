@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -144,7 +144,7 @@ QString KNArticleManager::saveContentToTemp(KMime::Content *c)
   if (tmpFile->status()!=0) {
     KNHelper::displayTempFileError();
     delete tmpFile;
-    return QString::null;
+    return QString();
   }
 
   mTempFiles.append(tmpFile);
@@ -328,7 +328,7 @@ void KNArticleManager::showHdrs(bool clear)
     knGlobals.top->articleViewer()->setArticle( 0 );
   }
 
-  knGlobals.setStatusMsg(QString::null);
+  knGlobals.setStatusMsg( QString() );
   updateStatusString();
   knGlobals.top->setCursorBusy(false);
 }
@@ -1016,7 +1016,7 @@ void KNArticleManager::updateStatusString()
     if(f_ilter)
       knGlobals.setStatusMsg(i18n(" Filter: %1").arg(f_ilter->translatedName()), SB_FILTER);
     else
-      knGlobals.setStatusMsg(QString::null, SB_FILTER);
+      knGlobals.setStatusMsg( QString(), SB_FILTER );
   }
   else if(f_older) {
     if(f_ilter)
@@ -1025,10 +1025,10 @@ void KNArticleManager::updateStatusString()
       displCnt=f_older->count();
     knGlobals.setStatusMsg(i18n(" %1: %2 displayed")
       .arg(f_older->name()).arg(displCnt), SB_GROUP);
-    knGlobals.setStatusMsg(QString::null, SB_FILTER);
+    knGlobals.setStatusMsg( QString(), SB_FILTER );
   } else {
-    knGlobals.setStatusMsg(QString::null, SB_GROUP);
-    knGlobals.setStatusMsg(QString::null, SB_FILTER);
+    knGlobals.setStatusMsg( QString(), SB_GROUP );
+    knGlobals.setStatusMsg( QString(), SB_FILTER );
   }
 }
 

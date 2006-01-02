@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -72,7 +72,7 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
   art->setDoPost(true);
   art->setDoMail(false);
 
-  KNComposer *c = new KNComposer( art, QString::null, sig, QString::null, true );
+  KNComposer *c = new KNComposer( art, QString(), sig, QString(), true );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -101,7 +101,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   art->setDoMail(false);
   art->newsgroups()->fromUnicodeString(g->groupname(), art->defaultCharset());
 
-  KNComposer *c=new KNComposer(art, QString::null, sig, QString::null, true);
+  KNComposer *c = new KNComposer( art, QString(), sig, QString(), true );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -149,7 +149,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
       if( post && // user wanted to reply by public posting?
           // ask the user if she wants to ignore this F'up-To: poster
           ( KMessageBox::Yes != KMessageBox::questionYesNo(knGlobals.topWidget,
-                i18n("The author has requested a reply by email instead\nof a followup to the newsgroup. (Followup-To: poster)\nDo you want to reply in public anyway?"), QString::null, i18n("Reply Public"), i18n("Reply by Email")) ))
+            i18n("The author has requested a reply by email instead\nof a followup to the newsgroup. (Followup-To: poster)\nDo you want to reply in public anyway?"), QString(), i18n("Reply Public"), i18n("Reply by Email")) ))
       {
         art->setDoPost(false);
         art->setDoMail(true);
@@ -200,8 +200,8 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
     authorDislikesMailCopies = mailCopiesTo->neverCopy();
     authorWantsMailCopies = mailCopiesTo->alwaysCopy();
     if (authorWantsMailCopies)         // warn the user
-      KMessageBox::information(knGlobals.topWidget,i18n("The author requested a mail copy of your reply. (Mail-Copies-To header)"),
-                               QString::null,"mailCopiesToWarning");
+      KMessageBox::information( knGlobals.topWidget, i18n("The author requested a mail copy of your reply. (Mail-Copies-To header)"),
+                                QString(), "mailCopiesToWarning" );
     if (authorWantsMailCopies && mailCopiesTo->hasEmail()) {
       address.setName(mailCopiesTo->name());
       address.setEmail(mailCopiesTo->email());
@@ -228,7 +228,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   attribution+="\n\n";
 
   QString quoted=attribution;
-  QString notRewraped=QString::null;
+  QString notRewraped;
   QStringList text;
   QStringList::Iterator line;
   bool incSig = knGlobals.settings()->includeSignature();
@@ -288,7 +288,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   bool incAtt = ( !knGlobals.settings()->useExternalMailer() &&
                   ct->isMultipart() && ct->isSubtype("mixed") &&
                   KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget,
-                  i18n("This article contains attachments. Do you want them to be forwarded as well?"), QString::null, i18n("Forward"), i18n("Do Not Forward"))
+                  i18n("This article contains attachments. Do you want them to be forwarded as well?"), QString(), i18n("Forward"), i18n("Do Not Forward"))
                 );
 
   if ( knGlobals.settings()->useOwnCharset() )
@@ -349,13 +349,13 @@ void KNArticleFactory::createForward(KNArticle *a)
 
 
   if ( knGlobals.settings()->useExternalMailer() ) {
-    sendMailExternal(QString::null, subject, fwd);
+    sendMailExternal( QString(), subject, fwd );
     delete art;
     return;
   }
 
   //open composer
-  KNComposer *c=new KNComposer(art, fwd, sig, QString::null, true);
+  KNComposer *c = new KNComposer( art, fwd, sig, QString(), true );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -367,8 +367,8 @@ void KNArticleFactory::createCancel(KNArticle *a)
   if(!cancelAllowed(a))
     return;
 
-  if(KMessageBox::No==KMessageBox::questionYesNo(knGlobals.topWidget,
-    i18n("Do you really want to cancel this article?"), QString::null, i18n("Cancel Article"), KStdGuiItem::cancel()))
+  if( KMessageBox::No == KMessageBox::questionYesNo( knGlobals.topWidget,
+      i18n("Do you really want to cancel this article?"), QString(), i18n("Cancel Article"), KStdGuiItem::cancel() ) )
     return;
 
   bool sendNow;
@@ -447,8 +447,8 @@ void KNArticleFactory::createSupersede(KNArticle *a)
   if(!cancelAllowed(a))
     return;
 
-  if(KMessageBox::No==KMessageBox::questionYesNo(knGlobals.topWidget,
-    i18n("Do you really want to supersede this article?"), QString::null, i18n("Supersede"), KStdGuiItem::cancel()))
+  if ( KMessageBox::No==KMessageBox::questionYesNo( knGlobals.topWidget,
+       i18n("Do you really want to supersede this article?"), QString(), i18n("Supersede"), KStdGuiItem::cancel() ) )
     return;
 
   KNGroup *grp;
@@ -531,7 +531,7 @@ void KNArticleFactory::createMail(KMime::Headers::AddressField *address)
   art->to()->addAddress((*address));
 
   //open composer
-  KNComposer *c=new KNComposer(art, QString::null, sig, QString::null, true);
+  KNComposer *c = new KNComposer( art, QString(), sig, QString(), true );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -542,7 +542,7 @@ void KNArticleFactory::sendMailExternal(const QString &address, const QString &s
 {
   KURL mailtoURL;
   QStringList queries;
-  QString query=QString::null;
+  QString query;
   mailtoURL.setProtocol("mailto");
 
   if (!address.isEmpty())
@@ -604,7 +604,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
     knGlobals.articleManager()->loadArticle(a);
 
   //open composer
-  com=new KNComposer(a, QString::null, id->getSignature());
+  com = new KNComposer( a, QString(), id->getSignature() );
   if(id->useSigGenerator() && !id->getSigGeneratorStdErr().isEmpty())
   KMessageBox::information(knGlobals.topWidget,
                             i18n("<qt>The signature generator program produced the "
@@ -905,7 +905,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
                                    .arg(id->getSigGeneratorStdErr()));
   }
   else
-    sig=QString::null;
+    sig.clear();
 
   return art;
 }
@@ -1078,7 +1078,7 @@ KNSendErrorDialog::KNSendErrorDialog()
   new QLabel(QString("<b>%1</b><br>%2").arg(i18n("Errors occurred while sending these articles:"))
                                        .arg(i18n("The unsent articles are stored in the \"Outbox\" folder.")), page);
   mErrorList = new QListWidget( page );
-  mError = new QLabel( QString::null, page );
+  mError = new QLabel( QString(), page );
   mError->setWordWrap( true );
 
   connect( mErrorList, SIGNAL( currentRowChanged( int ) ), SLOT( slotHighlighted( int ) ) );

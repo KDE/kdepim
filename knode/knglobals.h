@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -96,7 +96,7 @@ class KDE_EXPORT KNGlobals
     KNode::Settings *settings();
 
     /** forwarded to top->setStatusMsg() if available */
-    void setStatusMsg(const QString& text = QString::null, int id = SB_MAIN);
+    void setStatusMsg(const QString& text = QString(), int id = SB_MAIN);
 
   private:
     /// Create a new KNGlobals object, should only be called by self().

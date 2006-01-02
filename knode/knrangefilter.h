@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -74,7 +74,7 @@ class RangeFilterWidget : public QGroupBox
      * @param unit Unit of the filtered value.
      */
     RangeFilterWidget( const QString& value, int min, int max, QWidget* parent,
-                       const QString &unit = QString::null );
+                       const QString &unit = QString() );
     ~RangeFilterWidget();
 
     RangeFilter filter();

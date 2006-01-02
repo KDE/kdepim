@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -946,7 +946,7 @@ void KNGroup::scoreArticles(bool onlynew)
         incReadCount();
     }
 
-    knGlobals.setStatusMsg(QString::null);
+    knGlobals.setStatusMsg( QString() );
     knGlobals.top->setCursorBusy(false);
 
     //kdDebug(5003) << KNScorableArticle::notifyC->collection() << endl;
@@ -975,7 +975,7 @@ void KNGroup::reorganize()
   saveStaticData(length(), true);
   saveDynamicData(length(), true);
   knGlobals.top->headerView()->repaint();
-  knGlobals.setStatusMsg(QString::null);
+  knGlobals.setStatusMsg( QString() );
   knGlobals.top->setCursorBusy(false);
 }
 
@@ -1060,7 +1060,7 @@ int KNGroup::statThrWithUnread()
 QString KNGroup::prepareForExecution()
 {
   if (knGlobals.groupManager()->loadHeaders(this))
-    return QString::null;
+    return QString();
   else
     return i18n("Cannot load saved headers: %1").arg(groupname());
 }

@@ -1,8 +1,6 @@
 /*
-    kngroupselectdialog.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2001 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -31,7 +29,7 @@ KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, cons
   KNGroupBrowser(parent, i18n("Select Destinations"), a)
 {
   selView=new Q3ListView(page);
-  selView->addColumn(QString::null);
+  selView->addColumn( QString() );
   selView->header()->hide();
   listL->addWidget(selView, 1,2);
   rightLabel->setText(i18n("Groups for this article:"));
@@ -105,7 +103,7 @@ QString KNGroupSelectDialog::selectedGroups()const
 
   if (moderated && (count>=2))   // warn the user
      KMessageBox::information(parentWidget(),i18n("You are crossposting to a moderated newsgroup.\nPlease be aware that your article will not appear in any group\nuntil it has been approved by the moderators of the moderated group."),
-                              QString::null,"crosspostModeratedWarning");
+                              QString(),"crosspostModeratedWarning");
 
   return ret;
 }

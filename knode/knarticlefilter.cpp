@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -311,7 +311,7 @@ QString KNArticleFilter::translatedName()
       else
         return n_ame;
     } else
-      return QString::null;
+      return QString();
   } else
     return n_ame;
 }

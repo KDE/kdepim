@@ -1,7 +1,7 @@
 /*
     KNode, the KDE newsreader
     Copyright (c) 2003 Zack Rusin <zack@kde.org>
-    Copyright (c) 2004-2005 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2004-2006 Volker Krause <volker.krause@rwth-aachen.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -279,9 +279,9 @@ void KNMainWidget::initStatusBar()
   //statusbar
   KMainWindow *mainWin = dynamic_cast<KMainWindow*>(topLevelWidget());
   KStatusBar *sb =  mainWin ? mainWin->statusBar() : 0;
-  s_tatusFilter = new KRSqueezedTextLabel( QString::null, sb );
+  s_tatusFilter = new KRSqueezedTextLabel( QString(), sb );
   s_tatusFilter->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
-  s_tatusGroup = new KRSqueezedTextLabel( QString::null, sb );
+  s_tatusGroup = new KRSqueezedTextLabel( QString(), sb );
   s_tatusGroup->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
 }
 
@@ -639,7 +639,7 @@ void KNMainWidget::initActions()
   a_ctArtSortHeaders->setItems(items);
   a_ctArtSortHeaders->setShortcutConfigurable(false);
   connect(a_ctArtSortHeaders, SIGNAL(activated(int)), this, SLOT(slotArtSortHeaders(int)));
-  a_ctArtSortHeadersKeyb   = new KAction(i18n("Sort"), QString::null, Qt::Key_F7 , this,
+  a_ctArtSortHeadersKeyb   = new KAction(i18n("Sort"), QString(), Qt::Key_F7 , this,
                              SLOT(slotArtSortHeadersKeyb()), actionCollection(), "view_Sort_Keyb");
   a_ctArtSortHeadersKeyb->plugAccel(a_ccel);
   a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
@@ -786,7 +786,7 @@ bool KNMainWidget::requestShutdown()
   if( a_rtFactory->jobsPending() &&
       KMessageBox::No==KMessageBox::warningYesNo(this, i18n(
 "KNode is currently sending articles. If you quit now you might lose these \
-articles.\nDo you want to quit anyway?"), QString::null, KStdGuiItem::quit(), KStdGuiItem::cancel())
+    articles.\nDo you want to quit anyway?"), QString(), KStdGuiItem::quit(), KStdGuiItem::cancel())
     )
     return false;
 
@@ -1384,7 +1384,7 @@ void KNMainWidget::slotGrpUnsubscribe()
   kdDebug(5003) << "KNMainWidget::slotGrpUnsubscribe()" << endl;
   if(g_rpManager->currentGroup()) {
     if(KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,
-      i18n("Do you really want to unsubscribe from %1?").arg(g_rpManager->currentGroup()->groupname()), QString::null, i18n("Unsubscribe"), KStdGuiItem::cancel()))
+       i18n("Do you really want to unsubscribe from %1?").arg(g_rpManager->currentGroup()->groupname()), QString(), i18n("Unsubscribe"), KStdGuiItem::cancel()))
       if (g_rpManager->unsubscribeGroup(g_rpManager->currentGroup()))
         slotCollectionSelected(0);
   }

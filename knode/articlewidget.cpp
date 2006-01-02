@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 2005 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2005-2006 Volker Krause <volker.krause@rwth-aachen.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -862,7 +862,7 @@ void ArticleWidget::displayAttachment( KMime::Content *att, int partNum )
   } else { // icon
     QByteArray mimetype = ct->mimeType();
     KPIM::kAsciiToLower( mimetype.data() );
-    QString iconName = KMimeType::mimeType( mimetype )->icon( QString::null, false );
+    QString iconName = KMimeType::mimeType( mimetype )->icon( QString(), false );
     QString iconFile = KGlobal::instance()->iconLoader()->iconPath( iconName, KIcon::Desktop );
     html += "<div><a href=\"" + href + "\"><img src=\"" +
             iconFile + "\" border=\"0\">" + label +
@@ -953,7 +953,7 @@ void ArticleWidget::updateContents()
 QString ArticleWidget::writeAttachmentToTempFile( KMime::Content *att, int partNum )
 {
   // more or less KMail code
-  KTempFile *tempFile = new KTempFile( QString::null, "." + QString::number( partNum ) );
+  KTempFile *tempFile = new KTempFile( QString(), "." + QString::number( partNum ) );
   tempFile->setAutoDelete( true );
   QString fname = tempFile->name();
   delete tempFile;
@@ -962,7 +962,7 @@ QString ArticleWidget::writeAttachmentToTempFile( KMime::Content *att, int partN
     // Not there or not writable
     if( ::mkdir( QFile::encodeName( fname ), 0 ) != 0
         || ::chmod( QFile::encodeName( fname ), S_IRWXU ) != 0 )
-      return QString::null; //failed create
+      return QString(); //failed create
 
   Q_ASSERT( !fname.isNull() );
 
@@ -980,7 +980,7 @@ QString ArticleWidget::writeAttachmentToTempFile( KMime::Content *att, int partN
   QByteArray data = att->decodedContent();
   // ### KMail does crlf2lf conversion here before writing the file
   if( !KPIM::kByteArrayToFile( data, fname, false, false, false ) )
-    return QString::null;
+    return QString();
 
   mTempFiles.append( fname );
   // make file read-only so that nobody gets the impression that he might

@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -187,7 +187,7 @@ void Scheduler::slotJobFinished( KNJobData * job )
         account->setNeedsLogon( true );
         account->setUser( user );
         account->setPass( pass );
-        job->setError( 0, QString::null );
+        job->setError( 0, QString() );
         // restart job
         job->execute();
         return;

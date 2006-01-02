@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -104,7 +104,7 @@ void KNMainWindow::setupStatusBar()
 
   statusBar()->addWidget( mLittleProgress, 0 , true );
 
-  mStatusMsgLabel = new KRSqueezedTextLabel( QString::null, statusBar() );
+  mStatusMsgLabel = new KRSqueezedTextLabel( QString(), statusBar() );
   mStatusMsgLabel->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
   statusBar()->addWidget( mStatusMsgLabel, 2 );
   statusBar()->addWidget(m_mainWidget->statusBarLabelFilter(), 2);

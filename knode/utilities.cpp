@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -59,7 +59,7 @@ KNSaveHelper::~KNSaveHelper()
 
 QFile* KNSaveHelper::getFile(const QString &dialogTitle)
 {
-  url = KFileDialog::getSaveURL(lastPath + s_aveName, QString::null, p_arent, dialogTitle);
+  url = KFileDialog::getSaveURL(lastPath + s_aveName, QString(), p_arent, dialogTitle);
 
   if (url.isEmpty())
     return 0;
@@ -117,7 +117,7 @@ QFile* KNLoadHelper::getFile( const QString &dialogTitle )
   if (f_ile)
     return f_ile;
 
-  KURL url = KFileDialog::getOpenURL(l_astPath,QString::null,p_arent,dialogTitle);
+  KURL url = KFileDialog::getOpenURL( l_astPath,QString(), p_arent, dialogTitle );
 
   if (url.isEmpty())
     return 0;
@@ -294,7 +294,7 @@ void appendTextWPrefix(QString &result, const QString &text, int wrapAt, const Q
       txt.remove(0,breakPos+1);
     } else {
       result+=(prefix+txt+"\n");
-      txt=QString::null;
+      txt.clear();
     }
   }
 }
@@ -316,7 +316,7 @@ QString KNHelper::rewrapStringList(QStringList text, int wrapAt, QChar quoteChar
     else
       thisLine.prepend( quoteChar + QString( ' ' ) );
 
-    thisPrefix=QString::null;
+    thisPrefix.clear();
     QChar c;
     for(int idx=0; idx<(int)(thisLine.length()); idx++) {
       c=thisLine.at(idx);
@@ -335,7 +335,7 @@ QString KNHelper::rewrapStringList(QStringList text, int wrapAt, QChar quoteChar
         appendTextWPrefix(quoted, leftover, wrapAt, lastPrefix);
       else
         thisLine.prepend(leftover+" ");
-      leftover=QString::null;
+      leftover.clear();
     }
 
     if((int)(thisPrefix.length()+thisLine.length()) > wrapAt) {

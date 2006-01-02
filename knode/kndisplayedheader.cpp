@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -121,7 +121,7 @@ QString KNDisplayedHeader::translatedName()
       else
         return n_ame;
     } else
-      return QString::null;
+      return QString();
   } else
     return n_ame;
 }
@@ -163,7 +163,8 @@ void  KNDisplayedHeader::createTags()
   const char *tokens[] = {  "<big>","</big>","<b>","</b>",
                             "<i>","</i>","<u>","</u>" };
 
-  for(int i=0; i<4; i++) t_ags[i]=QString::null;
+  for ( int i = 0; i < 4; i++ )
+    t_ags[i].clear();
 
   if(f_lags.at(0)) {    // <big>
     t_ags[0]=tokens[0];

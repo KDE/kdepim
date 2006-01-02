@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -72,7 +72,7 @@ class KNJobItem {
     virtual bool isLocked()         { return false; }
     virtual void setLocked(bool)    { }
 
-    virtual QString prepareForExecution() { return QString::null; }
+    virtual QString prepareForExecution() { return QString(); }
 
 };
 

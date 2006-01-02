@@ -1,8 +1,6 @@
 /*
-    kncollectionviewitem.cpp
-
     KNode, the KDE newsreader
-    Copyright (c) 1999-2004 the KNode authors.
+    Copyright (c) 1999-2006 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -36,14 +34,14 @@
 
 
 KNCollectionViewItem::KNCollectionViewItem( KFolderTree *parent, Protocol protocol, Type type) :
-  KFolderTreeItem(parent, QString::null, protocol, type), coll(0)
+  KFolderTreeItem(parent, QString(), protocol, type), coll(0)
 {
   setIcon();
 }
 
 
 KNCollectionViewItem::KNCollectionViewItem( KFolderTreeItem *it, Protocol protocol, Type type, int unread, int total ) :
-  KFolderTreeItem(it, QString::null, protocol, type, unread, total), coll(0)
+  KFolderTreeItem(it, QString(), protocol, type, unread, total), coll(0)
 {
   setIcon();
 }
