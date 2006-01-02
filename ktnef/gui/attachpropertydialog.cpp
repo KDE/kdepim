@@ -131,7 +131,7 @@ void saveProperty( Q3ListView *lv, KTNEFPropertySet *pSet, QWidget *parent )
 		QString tag = item->text( 2 );
 		int key = tag.mid( 5 ).toInt();
 		QVariant prop = ( tag.startsWith( "attr_" ) ? pSet->attribute( key ) : pSet->property( key ) );
-		QString filename = KFileDialog::getSaveFileName( tag, QString::null, parent );
+		QString filename = KFileDialog::getSaveFileName( tag, QString(), parent );
 		if ( !filename.isEmpty() )
 		{
 			QFile f( filename );

@@ -396,7 +396,7 @@ void KTNEFMain::slotShowMessageText()
 void KTNEFMain::slotSaveMessageText()
 {
 	QString rtf = parser_->message()->rtfString();
-	QString filename = KFileDialog::getSaveFileName( QString::null, QString::null, this );
+	QString filename = KFileDialog::getSaveFileName( QString(), QString(), this );
 	if ( !filename.isEmpty() )
 	{
 		QFile f( filename );

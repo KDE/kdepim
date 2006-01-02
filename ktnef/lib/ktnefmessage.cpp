@@ -82,7 +82,7 @@ QString KTNEFMessage::rtfString()
 {
 	QVariant prop = property( 0x1009 );
 	if ( prop.isNull() || prop.type() != QVariant::ByteArray)
-		return QString::null;
+		return QString();
 	else
 	{
 		QByteArray rtf;
