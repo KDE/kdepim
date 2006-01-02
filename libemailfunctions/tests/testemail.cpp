@@ -159,10 +159,10 @@ int main(int argc, char *argv[])
   KApplication app( false, false );
 
   // Empty input
-  checkGetNameAndEmail( QString::null, QString::null, QString::null, false );
+  checkGetNameAndEmail( QString(), QString(), QString(), false );
 
   // Email only
-  checkGetNameAndEmail( "faure@kde.org", QString::null, "faure@kde.org", false );
+  checkGetNameAndEmail( "faure@kde.org", QString(), "faure@kde.org", false );
 
   // Normal case
   checkGetNameAndEmail( "David Faure <faure@kde.org>", "David Faure", "faure@kde.org", true );
@@ -196,8 +196,8 @@ int main(int argc, char *argv[])
   //checkGetNameAndEmail( "\"a@b\" <faure@kde.org>", "a@b", "faure@kde.org", true );
 
   // While typing, when there's no '@' yet
-  checkGetNameAndEmail( "foo", "foo", QString::null, false );
-  checkGetNameAndEmail( "foo <", "foo", QString::null, false );
+  checkGetNameAndEmail( "foo", "foo", QString(), false );
+  checkGetNameAndEmail( "foo <", "foo", QString(), false );
   checkGetNameAndEmail( "foo <b", "foo", "b", true );
 
   // If multiple emails are there, only return the first one
@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
   checkIsValidEmailAddress( "mattfruitsalad.org", "TooFewAts" );
 
   // An empty string
-  checkIsValidEmailAddress( QString::null , "AddressEmpty" );
+  checkIsValidEmailAddress( QString() , "AddressEmpty" );
 
   // email address starting with a @
   checkIsValidEmailAddress( "@mattfruitsalad.org", "MissingLocalPart" );
@@ -423,7 +423,7 @@ int main(int argc, char *argv[])
   checkIsValidSimpleEmailAddress( "matt@123.123.123.123]", "false" );
   checkIsValidSimpleEmailAddress( "\"matt@fruitsalad.org", "false" );
   checkIsValidSimpleEmailAddress( "matt\"@fruitsalad.org", "false" );
-  checkIsValidSimpleEmailAddress( QString::null, "false" );
+  checkIsValidSimpleEmailAddress( QString(), "false" );
 
   // and here some insane but still valid cases
   checkIsValidSimpleEmailAddress( "\"m@tt\"@fruitsalad.org", "true" );

@@ -140,7 +140,7 @@ QString IdMapper::remoteId( const QString &localId ) const
   if ( it != mIdMap.end() )
     return it.data().toString();
   else
-    return QString::null;
+    return QString();
 }
 
 QString IdMapper::localId( const QString &remoteId ) const
@@ -150,7 +150,7 @@ QString IdMapper::localId( const QString &remoteId ) const
     if ( it.data().toString() == remoteId )
       return it.key();
 
-  return QString::null;
+  return QString();
 }
 
 QString IdMapper::asString() const
@@ -178,7 +178,7 @@ QString IdMapper::fingerprint( const QString &localId ) const
   if ( mFingerprintMap.contains( localId ) )
     return mFingerprintMap[ localId ];
   else 
-    return QString::null;
+    return QString();
 }
 
 QMap<QString, QString> IdMapper::remoteIdMap() const

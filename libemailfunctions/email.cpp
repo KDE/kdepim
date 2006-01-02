@@ -608,8 +608,8 @@ QString KPIM::getFirstEmailAddress( const QString & addresses )
 //-----------------------------------------------------------------------------
 bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
 {
-  name = QString::null;
-  mail = QString::null;
+  name.clear();
+  mail.clear();
 
   const int len=aStr.length();
   const char cQuotes = '"';
@@ -820,7 +820,7 @@ QString KPIM::decodeIDN( const QString & addrSpec )
 
   QString idn = KIDNA::toUnicode( addrSpec.mid( atPos + 1 ) );
   if ( idn.isEmpty() )
-    return QString::null;
+    return QString();
 
   return addrSpec.left( atPos + 1 ) + idn;
 }
