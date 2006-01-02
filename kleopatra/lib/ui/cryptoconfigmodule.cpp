@@ -91,7 +91,7 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
     if ( comp->groupList().empty() )
       continue;
     if ( face() != Plain ) {
-      vbox = addVBoxPage( comp->description(), QString::null, loadIcon( comp->iconName() ) );
+      vbox = addVBoxPage( comp->description(), QString(), loadIcon( comp->iconName() ) );
     }
     CryptoConfigComponentGUI* compGUI =
       new CryptoConfigComponentGUI( this, comp, vbox, (*it).local8Bit() );

@@ -110,7 +110,7 @@ void LineEditAction::setText( const QString & txt ) {
 
 ComboAction::ComboAction( const QStringList & lst,  KActionCollection * parent,
 			  QObject * receiver, const char * member, const char * name )
-  : KAction( QString::null, QIcon(), KShortcut(), 0, 0, parent, name ),
+  : KAction( QString(), QIcon(), KShortcut(), 0, 0, parent, name ),
     _lst(lst), _receiver(receiver), _member(member)
 {
 

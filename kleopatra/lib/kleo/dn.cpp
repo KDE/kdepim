@@ -358,14 +358,14 @@ const Kleo::DN & Kleo::DN::operator=( const DN & that ) {
 
 QString Kleo::DN::prettyDN() const {
   if ( !d )
-    return QString::null;
+    return QString();
   if ( d->reorderedAttributes.empty() )
     d->reorderedAttributes = reorder_dn( d->attributes );
   return serialise( d->reorderedAttributes );
 }
 
 QString Kleo::DN::dn() const {
-  return d ? serialise( d->attributes ) : QString::null ;
+  return d ? serialise( d->attributes ) : QString() ;
 }
 
 void Kleo::DN::detach() {
@@ -388,13 +388,13 @@ void Kleo::DN::append( const Attribute & attr ) {
 
 QString Kleo::DN::operator[]( const QString & attr ) const {
   if ( !d )
-    return QString::null;
+    return QString();
   const QString attrUpper = attr.toUpper();
   for ( QVector<Attribute>::const_iterator it = d->attributes.begin() ;
 	it != d->attributes.end() ; ++it )
     if ( (*it).name() == attrUpper )
       return (*it).value();
-  return QString::null;
+  return QString();
 }
 
 static QVector<Kleo::DN::Attribute> empty;
@@ -484,7 +484,7 @@ QString Kleo::DNAttributeMapper::name2label( const QString & s ) const {
   const std::map<const char*,const char*,ltstr>::const_iterator it
     = d->map.find( s.trimmed().toUpper().toLatin1() );
   if ( it == d->map.end() )
-    return QString::null;
+    return QString();
   return i18n( it->second );
 }
 

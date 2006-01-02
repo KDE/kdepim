@@ -112,7 +112,7 @@ public:
   ~QGpgMECryptoConfigGroup() {}
 
   QString name() const { return mName; }
-  QString iconName() const { return QString::null; }
+  QString iconName() const { return QString(); }
   QString description() const { return mDescription; }
   Kleo::CryptoConfigEntry::Level level() const { return mLevel; }
   QStringList entryList() const;

@@ -440,7 +440,7 @@ void Kleo::KeyListViewItem::setKey( const GpgME::Key & key ) {
 QString Kleo::KeyListViewItem::toolTip( int col ) const {
   return listView() && listView()->columnStrategy()
     ? listView()->columnStrategy()->toolTip( key(), col )
-    : QString::null ;
+    : QString() ;
 }
 
 int Kleo::KeyListViewItem::compare( Q3ListViewItem * item, int col, bool ascending ) const {
@@ -521,13 +521,13 @@ void Kleo::SubkeyKeyListViewItem::setSubkey( const GpgME::Subkey & subkey ) {
 QString Kleo::SubkeyKeyListViewItem::text( int col ) const {
   return listView() && listView()->columnStrategy()
     ? listView()->columnStrategy()->subkeyText( subkey(), col )
-    : QString::null ;
+    : QString() ;
 }
 
 QString Kleo::SubkeyKeyListViewItem::toolTip( int col ) const {
   return listView() && listView()->columnStrategy()
     ? listView()->columnStrategy()->subkeyToolTip( subkey(), col )
-    : QString::null ;
+    : QString() ;
 }
 
 const QPixmap * Kleo::SubkeyKeyListViewItem::pixmap( int col ) const {
@@ -599,13 +599,13 @@ void Kleo::UserIDKeyListViewItem::setUserID( const GpgME::UserID & userID ) {
 QString Kleo::UserIDKeyListViewItem::text( int col ) const {
   return listView() && listView()->columnStrategy()
     ? listView()->columnStrategy()->userIDText( userID(), col )
-    : QString::null ;
+    : QString() ;
 }
 
 QString Kleo::UserIDKeyListViewItem::toolTip( int col ) const {
   return listView() && listView()->columnStrategy()
     ? listView()->columnStrategy()->userIDToolTip( userID(), col )
-    : QString::null ;
+    : QString() ;
 }
 
 const QPixmap * Kleo::UserIDKeyListViewItem::pixmap( int col ) const {
@@ -678,13 +678,13 @@ void Kleo::SignatureKeyListViewItem::setSignature( const GpgME::UserID::Signatur
 QString Kleo::SignatureKeyListViewItem::text( int col ) const {
   return listView() && listView()->columnStrategy()
     ? listView()->columnStrategy()->signatureText( signature(), col )
-    : QString::null ;
+    : QString() ;
 }
 
 QString Kleo::SignatureKeyListViewItem::toolTip( int col ) const {
   return listView() && listView()->columnStrategy()
     ? listView()->columnStrategy()->signatureToolTip( signature(), col )
-    : QString::null ;
+    : QString() ;
 }
 
 const QPixmap * Kleo::SignatureKeyListViewItem::pixmap( int col ) const {

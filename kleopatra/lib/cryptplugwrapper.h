@@ -545,9 +545,9 @@ public:
         \sa ~CryptPlugWrapper, setActive, active, initialize, deinitialize
         \sa initStatus
     */
-    CryptPlugWrapper( const QString& name=QString::null,
-                      const QString& libName=QString::null,
-                      const QString& update=QString::null,
+    CryptPlugWrapper( const QString& name=QString(),
+                      const QString& libName=QString(),
+                      const QString& update=QString(),
                       bool           active = false );
 
     /*! \ingroup groupAdmin

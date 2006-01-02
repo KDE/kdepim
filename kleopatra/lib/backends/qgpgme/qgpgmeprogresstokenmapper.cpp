@@ -126,17 +126,17 @@ static const Map & makeMap() { // return a reference to a static to avoid copyin
 
 QString Kleo::QGpgMEProgressTokenMapper::map( const char * tokenUtf8, int subtoken, int cur, int tot ) const {
   if ( !tokenUtf8 || !*tokenUtf8 )
-    return QString::null;
+    return QString();
 
   if ( qstrcmp( tokenUtf8, "file:" ) == 0 )
-    return QString::null; // gpgme's job
+    return QString(); // gpgme's job
 
   return map( QString::fromUtf8( tokenUtf8 ), subtoken, cur, tot );
 }
 
 QString Kleo::QGpgMEProgressTokenMapper::map( const QString & token, int subtoken, int cur, int tot ) const {
   if ( token.startsWith( "file:" ) )
-    return QString::null; // gpgme's job
+    return QString(); // gpgme's job
 
   static const Map & tokenMap = makeMap();
 

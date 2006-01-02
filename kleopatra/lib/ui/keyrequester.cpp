@@ -173,7 +173,7 @@ void Kleo::KeyRequester::setKey( const GpgME::Key & key ) {
 
 QString Kleo::KeyRequester::fingerprint() const {
   if ( mKeys.empty() )
-    return QString::null;
+    return QString();
   else
     return mKeys.front().primaryFingerprint();
 }

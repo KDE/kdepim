@@ -195,7 +195,7 @@ namespace {
     switch ( col ) {
     case 0: return i18n("Key ID");
     case 1: return i18n("User ID");
-    default: return QString::null;
+    default: return QString();
     }
   }
 
@@ -224,12 +224,12 @@ namespace {
       {
 	const char * uid = key.userID(0).id();
 	if ( key.protocol() == GpgME::Context::OpenPGP )
-	  return uid && *uid ? QString::fromUtf8( uid ) : QString::null ;
+	  return uid && *uid ? QString::fromUtf8( uid ) : QString() ;
 	else // CMS
 	  return Kleo::DN( uid ).prettyDN();
       }
       break;
-    default: return QString::null;
+    default: return QString();
     }
   }
 
@@ -308,7 +308,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mKeyUsage( keyUsage ),
     mCurrentContextMenuItem( 0 )
 {
-  init( rememberChoice, extendedSelection, text, QString::null );
+  init( rememberChoice, extendedSelection, text, QString() );
 }
 
 Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,

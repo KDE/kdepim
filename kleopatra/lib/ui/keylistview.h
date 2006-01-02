@@ -219,17 +219,17 @@ namespace Kleo {
       virtual const QPixmap * pixmap( const GpgME::Key &, int ) const { return 0; }
       virtual int compare( const GpgME::Key & key1, const GpgME::Key & key2, const int column ) const;
 
-      virtual QString subkeyText( const GpgME::Subkey &, int ) const { return QString::null; }
+      virtual QString subkeyText( const GpgME::Subkey &, int ) const { return QString(); }
       virtual QString subkeyToolTip( const GpgME::Subkey & subkey, int column ) const;
       virtual const QPixmap * subkeyPixmap( const GpgME::Subkey &, int ) const { return 0; }
       virtual int subkeyCompare( const GpgME::Subkey & subkey1, const GpgME::Subkey & subkey2, const int column ) const;
 
-      virtual QString userIDText( const GpgME::UserID &, int ) const { return QString::null; }
+      virtual QString userIDText( const GpgME::UserID &, int ) const { return QString(); }
       virtual QString userIDToolTip( const GpgME::UserID & userID, int column ) const;
       virtual const QPixmap * userIDPixmap( const GpgME::UserID &, int ) const { return 0; }
       virtual int userIDCompare( const GpgME::UserID & userID1, const GpgME::UserID & userID2, const int column ) const;
 
-      virtual QString signatureText( const GpgME::UserID::Signature &, int ) const { return QString::null; }
+      virtual QString signatureText( const GpgME::UserID::Signature &, int ) const { return QString(); }
       virtual QString signatureToolTip( const GpgME::UserID::Signature & sig, int column ) const;
       virtual const QPixmap * signaturePixmap( const GpgME::UserID::Signature &, int ) const { return 0; }
       virtual int signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, const int column ) const;

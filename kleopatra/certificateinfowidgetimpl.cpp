@@ -189,7 +189,7 @@ static void showChainListError( QWidget * parent, const GpgME::Error & err, cons
   const QString msg = i18n("<qt><p>An error occurred while fetching "
 			   "the certificate <b>%1</b> from the backend:</p>"
 			   "<p><b>%2</b></p></qt>")
-    .arg( subject ? QString::fromUtf8( subject ) : QString::null,
+    .arg( subject ? QString::fromUtf8( subject ) : QString(),
 	  QString::fromLocal8Bit( err.asString() ) );
   KMessageBox::error( parent, msg, i18n("Certificate Listing Failed" ) );
 }

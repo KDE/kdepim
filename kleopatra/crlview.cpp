@@ -101,7 +101,7 @@ void CRLView::slotUpdateView()
 {
   _updateButton->setEnabled( false );
   _textView->clear();
-  _buffer = QString::null;
+  _buffer.clear();
   if( _process == 0 ) {
     _process = new KProcess();
     *_process << "gpgsm" << "--call-dirmngr" << "listcrls";
@@ -125,7 +125,7 @@ void CRLView::slotReadStdout( KProcess*, char* buf, int len)
 
 void CRLView::slotAppendBuffer() {
   _textView->append( _buffer );
-  _buffer = QString::null;
+  _buffer.clear();
 }
 
 void CRLView::slotProcessExited()

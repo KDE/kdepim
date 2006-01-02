@@ -217,7 +217,7 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut( KProcIO* proc )
       } else {
         // normal entry
         if ( !mCurrentGroup ) {  // first toplevel entry -> create toplevel group
-          mCurrentGroup = new QGpgMECryptoConfigGroup( "<nogroup>", QString::null, 0 );
+          mCurrentGroup = new QGpgMECryptoConfigGroup( "<nogroup>", QString(), 0 );
           mCurrentGroupName = "<nogroup>";
         }
         mCurrentGroup->mEntries.insert( lst[0], new QGpgMECryptoConfigEntry( lst ) );
@@ -455,7 +455,7 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
       QString val = *valit;
       if ( isString ) {
         if ( val.isEmpty() ) {
-          lst << QVariant( QString::null );
+          lst << QVariant( QString() );
           continue;
         }
         else if ( unescape ) {
@@ -471,7 +471,7 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
     QString val( str );
     if ( isString ) {
       if ( val.isEmpty() )
-        return QVariant( QString::null ); // not set  [ok with lists too?]
+        return QVariant( QString() ); // not set  [ok with lists too?]
       else if ( unescape ) {
         Q_ASSERT( val[0] == '"' ); // see README.gpgconf
         val = val.mid( 1 );
@@ -772,7 +772,7 @@ QString QGpgMECryptoConfigEntry::toString( bool escape ) const
   // Basically the opposite of stringToValue
   if ( isStringType() ) {
     if ( mValue.isNull() )
-      return QString::null;
+      return QString();
     else if ( isList() ) { // string list
       QStringList lst = mValue.toStringList();
       if ( escape ) {
@@ -794,7 +794,7 @@ QString QGpgMECryptoConfigEntry::toString( bool escape ) const
   if ( !isList() ) // non-list non-string
   {
     if ( mArgType == ArgType_None ) {
-      return mValue.toBool() ? QString::fromLatin1( "1" ) : QString::null;
+      return mValue.toBool() ? QString::fromLatin1( "1" ) : QString();
     } else { // some int
       Q_ASSERT( mArgType == ArgType_Int || mArgType == ArgType_UInt );
       return mValue.toString(); // int to string conversion

@@ -475,7 +475,7 @@ QString CryptPlugWrapper::protocol() const
     return "SMIME";
   if ( _libName.contains( "openpgp" ) )
     return "OpenPGP";
-  return QString::null;
+  return QString();
 }
 
 void CryptPlugWrapper::setDisplayName( const QString& name )

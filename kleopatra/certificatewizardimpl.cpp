@@ -86,7 +86,7 @@ static const unsigned int numKeyLengths = sizeof keyLengths / sizeof *keyLengths
 
 static QString attributeLabel( const QString & attr, bool required ) {
   if ( attr.isEmpty() )
-    return QString::null;
+    return QString();
   const QString label = Kleo::DNAttributeMapper::instance()->name2label( attr );
   if ( !label.isEmpty() )
     if ( required )
@@ -424,8 +424,8 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
   QString error;
   DCOPCString dcopService;
   int result = KDCOPServiceStarter::self()->
-    findServiceFor( "DCOP/Mailer", QString::null,
-                    QString::null, &error, &dcopService );
+    findServiceFor( "DCOP/Mailer", QString(),
+                    QString(), &error, &dcopService );
   if ( result != 0 ) {
     kdDebug() << "Couldn't connect to KMail\n";
     KMessageBox::error( this,

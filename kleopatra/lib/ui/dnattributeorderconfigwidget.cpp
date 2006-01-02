@@ -72,7 +72,7 @@ static void prepare( Q3ListView * lv ) {
   lv->setAllColumnsShowFocus( true );
   lv->setResizeMode( Q3ListView::LastColumn );
   lv->header()->setClickEnabled( false );
-  lv->addColumn( QString::null );
+  lv->addColumn( QString() );
   lv->addColumn( i18n("Description") );
 }
 

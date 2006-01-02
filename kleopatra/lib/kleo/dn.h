@@ -111,7 +111,7 @@ namespace Kleo {
   public:
     typedef DN::AttributeList List;
 
-    Attribute( const QString & name=QString::null, const QString & value=QString::null )
+    Attribute( const QString & name=QString(), const QString & value=QString() )
       : mName( name.toUpper() ), mValue( value ) {}
     Attribute( const Attribute & other )
       : mName( other.name() ), mValue( other.value() ) {}

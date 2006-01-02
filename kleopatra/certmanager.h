@@ -81,8 +81,8 @@ namespace GpgME {
 class KDE_EXPORT CertManager : public KMainWindow {
   Q_OBJECT
 public:
-    CertManager( bool remote = false, const QString& query = QString::null,
-		 const QString& import=QString::null,
+    CertManager( bool remote = false, const QString& query = QString(),
+		 const QString& import=QString(),
 		 QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
     ~CertManager();
 

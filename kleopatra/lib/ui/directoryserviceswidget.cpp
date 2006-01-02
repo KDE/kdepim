@@ -63,7 +63,7 @@ public:
 
   void setPassword( const QString& pass ) {
     mPassword = pass;
-    setText( 4, pass.isEmpty() ? QString::null : QString::fromLatin1( "******" ) );
+    setText( 4, pass.isEmpty() ? QString() : QString::fromLatin1( "******" ) );
   }
 
   const QString& password() const { return mPassword; }

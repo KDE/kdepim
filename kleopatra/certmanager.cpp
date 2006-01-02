@@ -137,7 +137,7 @@ namespace {
     case 0: return i18n("Subject");
     case 1: return i18n("Issuer");
     case 2: return i18n("Serial");
-    default: return QString::null;
+    default: return QString();
     }
   }
 
@@ -145,8 +145,8 @@ namespace {
     switch ( col ) {
     case 0: return Kleo::DN( key.userID(0).id() ).prettyDN();
     case 1: return Kleo::DN( key.issuerName() ).prettyDN();
-    case 2: return key.issuerSerial() ? QString::fromUtf8( key.issuerSerial() ) : QString::null ;
-    default: return QString::null;
+    case 2: return key.issuerSerial() ? QString::fromUtf8( key.issuerSerial() ) : QString() ;
+    default: return QString();
     }
   }
 
@@ -351,7 +351,7 @@ void CertManager::createActions() {
 
   (void)new LabelAction( i18n("Search:"), actionCollection(), "label_action" );
 
-  mLineEditAction = new LineEditAction( QString::null, actionCollection(), this,
+  mLineEditAction = new LineEditAction( QString(), actionCollection(), this,
 					SLOT(slotSearch()),
 					"query_lineedit_action");
 
@@ -664,7 +664,7 @@ void CertManager::slotImportCertFromFile()
 {
   const QString filter = "application/x-x509-ca-cert application/x-pkcs12 application/pkcs7-mime";
   //const QString filter = QString("*.pem *.der *.p7c *.p12|") + i18n("Certificates (*.pem *.der *.p7c *.p12)");
-  slotImportCertFromFile( KFileDialog::getOpenURL( QString::null, filter, this,
+  slotImportCertFromFile( KFileDialog::getOpenURL( QString(), filter, this,
                                                    i18n( "Select Certificate File" ) ) );
 }
 
@@ -849,7 +849,7 @@ void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res )
     KMessageBox::information( this,
 			      i18n( "<qt><p>Detailed results of importing %1:</p>"
 				    "<table>%2</table></qt>" )
-			      .arg( displayName ).arg( lines.join( QString::null ) ),
+			      .arg( displayName ).arg( lines.join( QString() ) ),
 			      i18n( "Certificate Import Result" ) );
 
     disconnectJobFromStatusBarProgress( res.error() );
@@ -886,7 +886,7 @@ void CertManager::slotDirmngrExited() {
 */
 void CertManager::importCRLFromFile() {
   QString filter = QString("*.crl *.arl *-crl.der *-arl.der|") + i18n("Certificate Revocation List (*.crl *.arl *-crl.der *-arl.der)");
-  KURL url = KFileDialog::getOpenURL( QString::null,
+  KURL url = KFileDialog::getOpenURL( QString(),
                                       filter,
                                       this,
                                       i18n( "Select CRL File" ) );
@@ -924,7 +924,7 @@ bool CertManager::connectAndStartDirmngr( const char * slot, const char * proces
   assert( slot );
   assert( processname );
   assert( mDirmngrProc );
-  mErrorbuffer = QString::null;
+  mErrorbuffer.clear();
   connect( mDirmngrProc, SIGNAL(processExited(KProcess*)), slot );
   connect( mDirmngrProc, SIGNAL(receivedStderr(KProcess*,char*,int) ),
            this, SLOT(slotStderr(KProcess*,char*,int)) );
@@ -939,7 +939,7 @@ bool CertManager::connectAndStartDirmngr( const char * slot, const char * proces
 void CertManager::startImportCRL( const QString& filename, bool isTempFile )
 {
   assert( !mDirmngrProc );
-  mImportCRLTempFile = isTempFile ? filename : QString::null;
+  mImportCRLTempFile = isTempFile ? filename : QString();
   mDirmngrProc = new KProcess();
   *mDirmngrProc << "gpgsm" << "--call-dirmngr" << "loadcrl" << filename;
   if ( !connectAndStartDirmngr( SLOT(slotDirmngrExited()), "gpgsm" ) ) {
@@ -1253,7 +1253,7 @@ void CertManager::slotCertificateExportResult( const GpgME::Error & err, const Q
   kdDebug() << "CertManager::slotCertificateExportResult(): got " << data.size() << " bytes" << endl;
 
   const QString filter = QString("*.pem|") + i18n("ASCII Armored Certificate Bundles (*.pem)");
-  const KURL url = KFileDialog::getOpenURL( QString::null,
+  const KURL url = KFileDialog::getOpenURL( QString(),
                                       filter,
                                       this,
                                       i18n( "Save Certificate" ) );
@@ -1327,7 +1327,7 @@ void CertManager::slotSecretKeyExportResult( const GpgME::Error & err, const QBy
 
   kdDebug() << "CertManager::slotSecretKeyExportResult(): got " << data.size() << " bytes" << endl;
   QString filter = QString("*.p12|") + i18n("PKCS#12 Key Bundle (*.p12)");
-  KURL url = KFileDialog::getOpenURL( QString::null,
+  KURL url = KFileDialog::getOpenURL( QString(),
                                       filter,
                                       this,
                                       i18n( "Save Certificate" ) );

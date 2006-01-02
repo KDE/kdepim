@@ -148,7 +148,7 @@ void KWatchGnuPGMainWindow::startWatcher()
   *mWatcher << config->readEntry("Executable", WATCHGNUPGBINARY);
   *mWatcher << "--force";
   *mWatcher << config->readEntry("Socket", WATCHGNUPGSOCKET);
-  config->setGroup(QString::null);
+  config->setGroup(QString());
   if( !mWatcher->start() ) {
 	KMessageBox::sorry( this, i18n("The watchgnupg logging process could not be started.\nPlease install watchgnupg somewhere in your $PATH.\nThis log window is now completely useless." ) );
   } else {
@@ -197,7 +197,7 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
 
 void KWatchGnuPGMainWindow::slotWatcherExited()
 {
-  if( KMessageBox::questionYesNo( this, i18n("The watchgnupg logging process died.\nDo you want to try to restart it?"), QString::null, i18n("Try Restart"), i18n("Do Not Try") ) == KMessageBox::Yes ) {
+  if( KMessageBox::questionYesNo( this, i18n("The watchgnupg logging process died.\nDo you want to try to restart it?"), QString(), i18n("Try Restart"), i18n("Do Not Try") ) == KMessageBox::Yes ) {
 	mCentralWidget->append( i18n("====== Restarting logging process =====") );
 	startWatcher();
   } else {
@@ -234,7 +234,7 @@ void KWatchGnuPGMainWindow::show()
 
 void KWatchGnuPGMainWindow::slotSaveAs()
 {
-  QString filename = KFileDialog::getSaveFileName( QString::null, QString::null,
+  QString filename = KFileDialog::getSaveFileName( QString(), QString(),
 												   this, i18n("Save Log to File") );
   if( filename.isEmpty() ) return;
   QFile file(filename);

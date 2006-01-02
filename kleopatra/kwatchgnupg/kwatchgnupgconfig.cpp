@@ -171,7 +171,7 @@ void KWatchGnuPGConfig::loadConfig()
   mLoglenSB->setValue( config->readNumEntry( "MaxLogLen", 10000 ) );
   mWordWrapCB->setChecked( config->readBoolEntry("WordWrap", false ) );
 
-  config->setGroup( QString::null );
+  config->setGroup( QString() );
   enableButtonOK( false );
   enableButtonApply( false );
 }
@@ -188,7 +188,7 @@ void KWatchGnuPGConfig::saveConfig()
   config->writeEntry( "MaxLogLen", mLoglenSB->value() );
   config->writeEntry( "WordWrap", mWordWrapCB->isChecked() );
 
-  config->setGroup( QString::null );
+  config->setGroup( QString() );
   config->sync();
   enableButtonOK( false );
   enableButtonApply( false );

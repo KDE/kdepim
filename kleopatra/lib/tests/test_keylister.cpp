@@ -68,7 +68,7 @@ namespace {
     case 3: return "Serial";
     case 4: return "Protocol";
     case 5: return "Validity";
-    default: return QString::null;
+    default: return QString();
     }
   }
 
@@ -86,7 +86,7 @@ namespace {
     case 3: return key.issuerSerial();
     case 4: return key.protocolAsString();
     case 5: return QChar( key.userID(0).validityAsString() );
-    default: return QString::null;
+    default: return QString();
     }
   }
 }

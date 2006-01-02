@@ -57,7 +57,7 @@ namespace Kleo {
     Q_OBJECT
   public:
     PassphraseDialog( const QString & description,
-		      const QString & caption=QString::null,
+		      const QString & caption=QString(),
 		      QWidget * parent=0, const char * name=0,
                       bool modal=true );
     ~PassphraseDialog();

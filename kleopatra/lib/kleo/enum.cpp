@@ -81,7 +81,7 @@ QString Kleo::cryptoMessageFormatToLabel( Kleo::CryptoMessageFormat f ) {
   for ( unsigned int i = 0 ; i < numCryptoMessageFormats ; ++i )
     if ( f == cryptoMessageFormats[i].format )
       return i18n( cryptoMessageFormats[i].displayName );
-  return QString::null;
+  return QString();
 }
 
 Kleo::CryptoMessageFormat Kleo::stringToCryptoMessageFormat( const QString & s ) {

@@ -79,7 +79,7 @@ static QStringList split( char * buffer, int buflen, QString & old ) {
   if ( l.empty() )
     return l;
   if ( str.endsWith( "\n" ) ) {
-    old = QString::null;
+    old.clear();
   } else {
     old = l.back();
     l.pop_back();

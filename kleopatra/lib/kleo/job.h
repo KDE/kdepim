@@ -64,7 +64,7 @@ namespace Kleo {
   public:
     ~Job();
 
-    virtual void showErrorDialog( QWidget * parent=0, const QString & caption=QString::null ) const;
+    virtual void showErrorDialog( QWidget * parent=0, const QString & caption=QString() ) const;
 
   public slots:
     virtual void slotCancel() = 0;

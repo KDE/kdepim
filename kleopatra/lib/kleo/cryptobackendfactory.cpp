@@ -194,7 +194,7 @@ void Kleo::CryptoBackendFactory::setOpenPGPBackend( const CryptoBackend* backend
 }
 
 void Kleo::CryptoBackendFactory::setProtocolBackend( const char * protocol, const CryptoBackend * backend ) {
-  const QString name = backend ? backend->name() : QString::null ;
+  const QString name = backend ? backend->name() : QString() ;
   KConfigGroup group( configObject(), "Backends" );
   group.writeEntry( protocol, name );
   configObject()->sync();
