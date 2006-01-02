@@ -175,7 +175,7 @@ void KNProtocolClient::waitForWork()
         if (isConnected())         // connection is ready
           processJob();
       }
-      errorPrefix = QString::null;
+      errorPrefix.clear();
 
       clearPipe();
     }

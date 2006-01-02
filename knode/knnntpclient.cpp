@@ -135,7 +135,7 @@ void KNNntpClient::doFetchGroups()
         default  : status = KNGroup::unknown;
       }
 
-      target->groups->append(new KNGroupInfo(name,QString::null,false,subscribed,status));
+      target->groups->append(new KNGroupInfo(name,QString(),false,subscribed,status));
     }
     doneLines++;
   }
@@ -266,7 +266,7 @@ void KNNntpClient::doCheckNewGroups()
         default  : status = KNGroup::unknown;
       }
 
-      tmpList.append(new KNGroupInfo(name,QString::null,true,false,status));
+      tmpList.append(new KNGroupInfo(name,QString(),true,false,status));
     }
     doneLines++;
   }
@@ -574,7 +574,7 @@ void KNNntpClient::doFetchSource()
 
 bool KNNntpClient::openConnection()
 {
-  currentGroup = QString::null;
+  currentGroup.clear();
 
   QString oldPrefix = errorPrefix;
   errorPrefix=i18n("Unable to connect.\nThe following error occurred:\n");

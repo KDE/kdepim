@@ -410,7 +410,7 @@ void ArticleWidget::displayArticle()
   bool containsPGP = Kpgp::Module::prepareMessageForDecryption( mArticle->body(), pgpBlocks, nonPgpBlocks );
 
   mViewer->write ( html );
-  html = QString();
+  html.clear();
 
   if ( containsPGP ) {
     QList<Kpgp::Block>::Iterator pbit = pgpBlocks.begin();
