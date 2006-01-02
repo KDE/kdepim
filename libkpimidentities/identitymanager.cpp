@@ -453,7 +453,7 @@ void IdentityManager::createDefaultIdentity() {
             emailAddress += '@' + defaultdomain;
           }
           else {
-            emailAddress = QString::null;
+            emailAddress.clear();
           }
         }
       }

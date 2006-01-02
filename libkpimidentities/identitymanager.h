@@ -176,7 +176,7 @@ public:
   Identity & newFromScratch( const QString & name );
   Identity & newFromControlCenter( const QString & name );
   Identity & newFromExisting( const Identity & other,
-				const QString & name=QString::null );
+				const QString & name=QString() );
 
   /** Returns the list of all email addresses (only name@host) from all identities */
   QStringList allEmails() const;

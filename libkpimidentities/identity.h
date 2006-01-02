@@ -126,11 +126,11 @@ public:
   }
 
   /** Constructor */
-  explicit Identity( const QString & id=QString::null,
-		     const QString & realName=QString::null,
-		     const QString & emailAddr=QString::null,
-		     const QString & organization=QString::null,
-		     const QString & replyToAddress=QString::null );
+  explicit Identity( const QString & id=QString(),
+		     const QString & realName=QString(),
+		     const QString & emailAddr=QString(),
+		     const QString & organization=QString(),
+		     const QString & replyToAddress=QString() );
 
   /** Destructor */
   ~Identity();

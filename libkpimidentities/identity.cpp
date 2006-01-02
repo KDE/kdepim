@@ -65,7 +65,7 @@ QString Signature::rawText( bool * ok ) const
   switch ( mType ) {
   case Disabled:
     if ( ok ) *ok = true;
-    return QString::null;
+    return QString();
   case Inlined:
     if ( ok ) *ok = true;
     return mText;
@@ -75,7 +75,7 @@ QString Signature::rawText( bool * ok ) const
     return textFromCommand( ok );
   };
   kdFatal( 5006 ) << "Signature::type() returned unknown value!" << endl;
-  return QString::null; // make compiler happy
+  return QString(); // make compiler happy
 }
 
 QString Signature::textFromCommand( bool * ok ) const
@@ -85,7 +85,7 @@ QString Signature::textFromCommand( bool * ok ) const
   // handle pathological cases:
   if ( mUrl.isEmpty() ) {
     if ( ok ) *ok = true;
-    return QString::null;
+    return QString();
   }
 
   // create a shell process:
@@ -106,7 +106,7 @@ QString Signature::textFromCommand( bool * ok ) const
     QString wmsg = i18n("<qt>Failed to execute signature script<br><b>%1</b>:<br>%2</qt>")
       .arg( mUrl ).arg( strerror(rc) );
     KMessageBox::error(0, wmsg);
-    return QString::null;
+    return QString();
   }
 
   // no errors:
@@ -128,7 +128,7 @@ QString Signature::textFromFile( bool * ok ) const
                                       && QFileInfo(mUrl).exists()) ) {
     kdDebug( 5006 ) << "Signature::textFromFile: non-local URLs are unsupported" << endl;
     if ( ok ) *ok = false;
-    return QString::null;
+    return QString();
   }
   if ( ok ) *ok = true;
   // ### hmm, should we allow other encodings, too?
@@ -142,7 +142,7 @@ QString Signature::withSeparator( bool * ok ) const
   QString signature = rawText( &internalOK );
   if ( !internalOK ) {
     if ( ok ) *ok = false;
-    return QString::null;
+    return QString();
   }
   if ( ok ) *ok = true;
   if ( signature.isEmpty() ) return signature; // don't add a separator in this case
@@ -608,7 +608,7 @@ QString Identity::signatureText( bool * ok ) const
   // Signature::withSeparator() failed, so we should probably fix the
   // cause:
   if ( ok ) *ok = false;
-  return QString::null;
+  return QString();
 
 #if 0 // ### FIXME: error handling
   if (mSignatureFile.endsWith("|"))
@@ -619,5 +619,5 @@ QString Identity::signatureText( bool * ok ) const
   }
 #endif
 
-  return QString::null;
+  return QString();
 }
