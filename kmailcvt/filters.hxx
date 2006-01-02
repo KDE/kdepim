@@ -61,7 +61,7 @@ class Filter
 {
   public:
     Filter( const QString& name, const QString& author,
-            const QString& info = QString::null );
+            const QString& info = QString() );
     virtual ~Filter() {}
     virtual void import( FilterInfo* ) = 0;
     QString author() const { return m_author; }
@@ -126,7 +126,7 @@ public:
 	*/
 	const QString operator [](unsigned int i) const
 	{
-	    if (i<size) return d[i]; else return QString::null;
+	    if (i<size) return d[i]; else return QString();
 	} ;
 
 	/** Access the different fields, for writing. */

@@ -94,8 +94,8 @@ void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc
         inf->setFrom(mailfileinfo.fileName());
 
         // Clear the other fields
-        inf->setTo(QString::null);
-        inf->setCurrent(QString::null);
+        inf->setTo(QString());
+        inf->setCurrent(QString());
         inf->setCurrent(-1);
 
         // call worker function, increase progressbar

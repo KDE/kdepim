@@ -92,7 +92,7 @@ void FilterThunderbird::import(FilterInfo *info)
             if (temp_mailfile.endsWith(".msf") || temp_mailfile.endsWith("msgFilterRules.dat")) {}
             else {
                 info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
-                importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString::null);
+                importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString());
             }
         }
 

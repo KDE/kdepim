@@ -70,7 +70,7 @@ void FilterEvolution::import(FilterInfo *info)
         QStringList rootSubDirs = dir.entryList("[^\\.]*", QDir::Dirs, QDir::Name); // Removal of . and ..
         int currentDir = 1, numSubDirs = rootSubDirs.size();
         for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
-            importDirContents(info, dir.filePath(*filename), *filename, QString::null);
+            importDirContents(info, dir.filePath(*filename), *filename, QString());
             info->setOverall((int) ((float) currentDir / numSubDirs * 100));
         }
     }

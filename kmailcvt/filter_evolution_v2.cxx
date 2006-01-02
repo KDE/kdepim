@@ -94,7 +94,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
                 temp_mailfile.endsWith(".ibex.index") || temp_mailfile.endsWith(".ibex.index.data") ) {}
             else {
                 info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
-                importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString::null);
+                importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString());
             }
         }
 
