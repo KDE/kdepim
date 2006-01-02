@@ -333,7 +333,7 @@ namespace KSieve {
       return true;
     } else if ( isStringToken() ) {
       if ( scriptBuilder() )
-        scriptBuilder()->stringArgument( tokenValue(), token() == Lexer::MultiLineString, QString::null );
+        scriptBuilder()->stringArgument( tokenValue(), token() == Lexer::MultiLineString, QString() );
       consumeToken();
       return true;
     } else if ( token() == Lexer::Special && tokenValue() == "[" ) {
@@ -591,7 +591,7 @@ namespace KSieve {
         }
         lastWasComma = false;
         if ( scriptBuilder() )
-          scriptBuilder()->stringListEntry( tokenValue(), token() == Lexer::MultiLineString, QString::null );
+          scriptBuilder()->stringListEntry( tokenValue(), token() == Lexer::MultiLineString, QString() );
         consumeToken();
         break;
 

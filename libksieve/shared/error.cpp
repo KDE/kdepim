@@ -103,7 +103,7 @@ namespace KSieve {
     QString err;
     switch( type() ) {
     case None:
-      return QString::null;
+      return QString();
     case Custom:
       return mStringOne;
 

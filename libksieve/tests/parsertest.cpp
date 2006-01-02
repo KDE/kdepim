@@ -396,7 +396,7 @@ public:
     write( multiLine ? "string type=\"multiline\"" : "string type=\"quoted\"", string );
   }
   void numberArgument( unsigned long number, char quantifier ) {
-    const QString txt = "number" + ( quantifier ? QString(" quantifier=\"%1\"").arg( quantifier ) : QString::null ) ;
+    const QString txt = "number" + ( quantifier ? QString(" quantifier=\"%1\"").arg( quantifier ) : QString() ) ;
     write( txt.toLatin1(), QString::number( number ) );
   }
   void commandStart( const QString & identifier ) {

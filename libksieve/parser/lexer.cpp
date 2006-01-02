@@ -192,7 +192,7 @@ namespace KSieve {
 
   Lexer::Token Lexer::Impl::nextToken( QString & result ) {
     assert( !atEnd() );
-    result = QString::null;
+    result.clear();
     //clearErrors();
 
     const int oldLine = line();
@@ -592,7 +592,7 @@ namespace KSieve {
 	if ( line == "." )
 	  break;
       } else {
-	lines.push_back( QString::null );
+	lines.push_back( QString() );
       }
     }
 

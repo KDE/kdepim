@@ -90,7 +90,7 @@ namespace KSieve {
     bool obtainToken();
     void consumeToken() {
       mToken = Lexer::None;
-      mTokenValue = QString::null;
+      mTokenValue = QString();
     }
     void makeError( Error::Type e, int line, int col ) {
       mError = Error( e, line, col );
