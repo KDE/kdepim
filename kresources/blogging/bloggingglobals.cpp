@@ -37,7 +37,7 @@ QString BloggingGlobals::getFunctionName( blogFunctions type )
     case bloggerGetPost:        return "blogger.getPost";
     case bloggerGetTemplate:    return "blogger.getTemplate";
     case bloggerSetTemplate:    return "blogger.setTemplate";
-    default: return QString::null;
+    default: return QString();
   }
 }
 

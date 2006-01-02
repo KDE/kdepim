@@ -309,7 +309,7 @@ Q_OBJECT
     /** Return the default file name for a new item. */
     virtual QString defaultNewItemName( GroupwareUploadItem * )
     {
-      return QString::null; 
+      return QString(); 
     }
     virtual QString uidFromJob( KIO::Job *job ) const;
     virtual void setUidForJob( KIO::Job *job, const QString &uid );

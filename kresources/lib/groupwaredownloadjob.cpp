@@ -102,7 +102,7 @@ void GroupwareDownloadJob::listItems()
 
     kdDebug(5800) << "OpenGroupware::listIncidences(): " << url << endl;
 
-    mListItemsData = QString::null;
+    mListItemsData.clear();
     mListEventsJob = adaptor()->createListItemsJob( url );
 
     connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
@@ -135,7 +135,7 @@ void GroupwareDownloadJob::slotListItemsResult( KIO::Job *job )
     adaptor()->interpretListItemsJob( job, mListItemsData );
   }
 
-  mListItemsData = QString::null;
+  mListItemsData.clear();
   mListEventsJob = 0;
 
   listItems();
@@ -170,7 +170,7 @@ void GroupwareDownloadJob::downloadItem()
     success();
   } else {
     if ( adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResBatchRequest ) {
-      mDownloadItemsData = QString::null;
+      mDownloadItemsData.clear();
       mDownloadJob = adaptor()->createDownloadJob( mItemsForDownload );
       mItemsDownloading = mItemsForDownload;
       mItemsForDownload.clear();
@@ -183,7 +183,7 @@ void GroupwareDownloadJob::downloadItem()
       mItemsForDownload.remove( it.key() );
  
       adaptor()->adaptDownloadUrl( href );
-      mDownloadItemsData = QString::null;
+      mDownloadItemsData.clear();
 
       mDownloadJob = adaptor()->createDownloadJob( href, ctype );
     }
@@ -211,7 +211,7 @@ void GroupwareDownloadJob::slotDownloadItemResult( KIO::Job *job )
     mProgress->incCompletedItems();
     mProgress->updateProgress();
   }
-  mDownloadItemsData = QString::null;
+  mDownloadItemsData.clear();
   mDownloadJob = 0;
 
   downloadItem();

@@ -56,7 +56,7 @@ QString FolderLister::writeDestinationId( KPIM::FolderLister::ContentType type )
     return mWriteDestinationId[ KPIM::FolderLister::All ];
   } else if ( mWriteDestinationId.contains( KPIM::FolderLister::Unknown ) ) {
     return mWriteDestinationId[ KPIM::FolderLister::Unknown ];
-  } else return QString::null;
+  } else return QString();
 }
 
 
@@ -198,7 +198,7 @@ void FolderLister::writeConfig( GroupwarePrefsBase *newprefs )
   #define writeDestination(type) \
     if ( mWriteDestinationId.contains( type ) ) \
       defaultFolders << mWriteDestinationId[type]; \
-    else defaultFolders << QString::null;
+    else defaultFolders << QString();
   writeDestination( KPIM::FolderLister::Event );
   writeDestination( KPIM::FolderLister::Todo );
   writeDestination( KPIM::FolderLister::Journal );
@@ -230,8 +230,8 @@ void FolderLister::folderSubitemRetrieved( const KURL &url, bool isFolder )
     doRetrieveFolder( url );
   else {
     KURL u( url ) ;
-    u.setUser( QString::null );
-    u.setPass( QString::null );
+    u.setUser( QString() );
+    u.setPass( QString() );
     mProcessedPathes.append( url.path(-1) );
   }
 }

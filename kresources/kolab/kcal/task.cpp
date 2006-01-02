@@ -305,7 +305,7 @@ void Task::setFields( const KCal::Todo* task )
   else if ( !task->relatedToUid().isEmpty() )
     setParent( task->relatedToUid() );
   else
-    setParent( QString::null );
+    setParent( QString() );
 
   if ( task->hasCompletedDate() && task->percentComplete() == 100 )
     setCompletedDate( localToUTC( task->completed() ) );

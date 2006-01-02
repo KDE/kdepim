@@ -239,7 +239,7 @@ bool ResourceGroupware::asyncLoad()
 
   kdDebug() << "Download URL: " << url << endl;
 
-  mJobData = QString::null;
+  mJobData.clear();
 
   mDownloadJob = KPIM::GroupwareJob::getAddressBook( url );
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),

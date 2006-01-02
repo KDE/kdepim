@@ -201,7 +201,7 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
   if ( possible.isEmpty() ) { // None found!!
     kdWarning(5650) << "No writable resource found!" << endl;
     KMessageBox::error( 0, i18n( "No writable resource was found, saving will not be possible. Reconfigure KMail first." ) );
-    return QString::null;
+    return QString();
   }
   if ( possible.count() == 1 )
     // Just one found
@@ -213,7 +213,7 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
                                                      "Please select the one you want to write to." ),
                                                possible.keys() );
   if ( chosenLabel.isEmpty() ) // cancelled
-    return QString::null;
+    return QString();
   return possible[chosenLabel];
 }
 

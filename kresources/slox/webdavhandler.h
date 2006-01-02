@@ -67,7 +67,7 @@ class KDE_EXPORT WebdavHandler
     static QDomElement addSloxElement( SloxBase *res,
                                        QDomDocument &, QDomNode &,
                                        const QString &tag,
-                                       const QString &text = QString::null );
+                                       const QString &text = QString() );
 
     static QDateTime sloxToQDateTime( const QString &str );
     static QDateTime sloxToQDateTime( const QString &str,

@@ -549,7 +549,7 @@ bool ResourceKolab::addEvent( KCal::Event* event )
   if ( mUidMap.contains( event->uid() ) ) 
     return true; //noop
   else
-    return addIncidence( event, QString::null, 0 );
+    return addIncidence( event, QString(), 0 );
 }
 
 void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
@@ -621,7 +621,7 @@ bool ResourceKolab::addTodo( KCal::Todo* todo )
   if ( mUidMap.contains( todo->uid() ) ) 
     return true; //noop
   else
-    return addIncidence( todo, QString::null, 0 );
+    return addIncidence( todo, QString(), 0 );
 }
 
 void ResourceKolab::addTodo( const QString& xml, const QString& subresource,
@@ -658,7 +658,7 @@ bool ResourceKolab::addJournal( KCal::Journal* journal )
   if ( mUidMap.contains( journal->uid() ) ) 
     return true; //noop
   else
-    return addIncidence( journal, QString::null, 0 );
+    return addIncidence( journal, QString(), 0 );
 }
 
 void ResourceKolab::addJournal( const QString& xml, const QString& subresource,

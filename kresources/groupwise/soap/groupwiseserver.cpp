@@ -117,7 +117,7 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
   } else {
     m_sock = new KExtendedSocket();
   }
-  mError = QString::null;
+  mError.clear();
 
   m_sock->reset();
   m_sock->setBlockingMode( false );

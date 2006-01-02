@@ -45,7 +45,7 @@ QString GroupwareJob::errorString() const
 
 void GroupwareJob::success()
 {
-  mErrorString = QString::null;
+  mErrorString.clear();
   emit( result( this ) );
 }
 

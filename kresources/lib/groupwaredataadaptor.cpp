@@ -203,8 +203,8 @@ bool GroupwareDataAdaptor::interpretRemoveJob( KIO::Job *job, const QString &/*j
       if ( error ) {
         emit itemDeletionError( *it, err );
       } else {
-        // FIXME: Don't use QString::null here
-        emit itemDeleted( QString::null, *it );
+        // FIXME: Don't use QString() here
+        emit itemDeleted( QString(), *it );
       }
     }
     return true;
@@ -266,7 +266,7 @@ kdDebug()<<"GroupwareDataAdaptor::uidFromJob( "<<job<<")"<<endl;
     kdDebug()<<"  Contained: "<< mJobUIDMap[job] << endl;
     return mJobUIDMap[ job ];
   } else {
-    return QString::null;
+    return QString();
   }
 }
 

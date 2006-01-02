@@ -641,7 +641,7 @@ void Incidence::setFields( const KCal::Incidence* incidence )
   // Handle the scheduling ID
   if ( incidence->schedulingID() == incidence->uid() )
     // There is no scheduling ID
-    setSchedulingID( QString::null );
+    setSchedulingID( QString() );
   else
     setSchedulingID( incidence->schedulingID() );
 

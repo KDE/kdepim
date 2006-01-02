@@ -157,7 +157,7 @@ bool ResourceKolab::save()
 
 bool ResourceKolab::addNote( KCal::Journal* journal )
 {
-  return addNote( journal, QString::null, 0 );
+  return addNote( journal, QString(), 0 );
 }
 
 KCal::Journal* ResourceKolab::addNote( const QString& data, const QString& subresource,

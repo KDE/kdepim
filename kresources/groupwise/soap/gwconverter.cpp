@@ -52,7 +52,7 @@ QString GWConverter::stringToQString( const std::string &str )
 
 QString GWConverter::stringToQString( std::string *str )
 {
-  if ( !str ) return QString::null;
+  if ( !str ) return QString();
   return QString::fromUtf8( str->c_str() );
 }
 

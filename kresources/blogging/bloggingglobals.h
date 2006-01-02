@@ -43,7 +43,7 @@ class BloggingGlobals
     };
     
     static QString getFunctionName( blogFunctions type );
-    static QList<QVariant> defaultArgs( const QString &user, const QString &pw, const QString &id = QString::null );
+    static QList<QVariant> defaultArgs( const QString &user, const QString &pw, const QString &id = QString() );
     static QString mAppID;
 };
 

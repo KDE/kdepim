@@ -79,7 +79,7 @@ static const char* s_inlineMimeType = "text/x-vcard";
 KABC::ResourceKolab::ResourceKolab( const KConfig *config )
   : KPIM::ResourceABC( config ),
     Kolab::ResourceKolabBase( "ResourceKolab-KABC" ),
-    mCachedSubresource( QString::null ), mLocked( false )
+    mCachedSubresource( QString() ), mLocked( false )
 {
   setType( "imap" );
 }
@@ -148,7 +148,7 @@ KABC::Ticket * KABC::ResourceKolab::requestSaveTicket()
 void KABC::ResourceKolab::releaseSaveTicket( Ticket* ticket )
 {
   mLocked = false;
-  mCachedSubresource = QString::null;
+  mCachedSubresource.clear();
   delete ticket;
 }
 
@@ -616,7 +616,7 @@ QString KABC::ResourceKolab::subresourceLabel( const QString& subresource ) cons
   }
 
   kdDebug(5650) << "subresourceLabel( " << subresource << " ): not found!\n";
-  return QString::null;
+  return QString();
 }
 
 void KABC::ResourceKolab::setSubresourceCompletionWeight( const QString& subresource, int completionWeight )

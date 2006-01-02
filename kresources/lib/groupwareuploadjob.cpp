@@ -101,7 +101,7 @@ kdDebug() << "Not using batch delete " << endl;
     }
 
     if ( mDeletionJob ) {
-      mDeletionJobData = QString::null;
+      mDeletionJobData.clear();
       connect( mDeletionJob, SIGNAL( result( KIO::Job* ) ),
                SLOT( slotDeletionJobResult( KIO::Job* ) ) );
 //       connect( mDeletionJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
@@ -158,7 +158,7 @@ kdDebug() << "Not using batch upload " << endl;
     }
 
     if ( mUploadJob ) {
-      mUploadJobData = QString::null;
+      mUploadJobData.clear();
       connect( mUploadJob, SIGNAL( result( KIO::Job* ) ),
                SLOT( slotUploadJobResult( KIO::Job* ) ) );
       connect( mUploadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
@@ -216,7 +216,7 @@ kdDebug() << "Not using batch create to " << url.url() << " for item of type " <
     }
 
     if ( mUploadJob ) {
-      mUploadNewJobData = QString::null;
+      mUploadNewJobData.clear();
       connect( mUploadJob, SIGNAL( result( KIO::Job* ) ),
                SLOT( slotUploadNewJobResult( KIO::Job* ) ) );
       connect( mUploadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),

@@ -289,7 +289,7 @@ bool ResourceGroupwise::asyncLoad()
 
   kdDebug() << "Download URL: " << url << endl;
 
-  mJobData = QString::null;
+  mJobData.clear();
 
   mDownloadJob = KIO::get( url, false, false );
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
@@ -448,7 +448,7 @@ bool ResourceGroupwise::updateAddressBooks()
 
   kdDebug() << "Update URL: " << url << endl;
 
-  mJobData = QString::null;
+  mJobData.clear();
 
   mDownloadJob = KIO::get( url, false, false );
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
@@ -499,7 +499,7 @@ void ResourceGroupwise::slotReadJobData( KIO::Job *, const QByteArray &data )
       clearChange( addr );
     }
   }
-  mJobData = QString::null;
+  mJobData.clear();
 }
 
 void ResourceGroupwise::slotUpdateJobData( KIO::Job *, const QByteArray &data )

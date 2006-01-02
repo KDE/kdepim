@@ -152,7 +152,7 @@ bool ResourceGroupware::doLoad()
 
   kdDebug() << "Download URL: " << url << endl;
 
-  mJobData = QString::null;
+  mJobData.clear();
 
   mDownloadJob = KPIM::GroupwareJob::getCalendar( url );
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),

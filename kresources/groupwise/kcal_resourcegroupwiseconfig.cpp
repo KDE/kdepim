@@ -156,7 +156,7 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
             locked = *((*it2)->locked);
 
           kdDebug() << "  SETTING: " << setting  << "   value : " << value <<  (locked ? "locked" : " not locked " ) << endl;
-          KListViewItem * settingLVI = new KListViewItem( groupLVI, QString::null, setting, value, (locked ? "locked" : " not locked " ) ); 
+          KListViewItem * settingLVI = new KListViewItem( groupLVI, QString(), setting, value, (locked ? "locked" : " not locked " ) ); 
           if ( !locked )
             settingLVI->setRenameEnabled( 2, true );
         }

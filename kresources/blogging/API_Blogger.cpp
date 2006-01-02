@@ -39,7 +39,7 @@ QString APIBlogger::getFunctionName( blogFunctions type )
     case bloggerGetPost:        return "blogger.getPost";
     case bloggerGetTemplate:    return "blogger.getTemplate";
     case bloggerSetTemplate:    return "blogger.setTemplate";
-    default: return QString::null;
+    default: return QString();
   }
 }
 
@@ -261,7 +261,7 @@ bool APIBlogger::readPostingFromMap( BlogPosting *post, const QMap<QString, QVar
   QStringList mapkeys = postInfo.keys();
   kdDebug() << endl << "Keys: " << mapkeys.join(", ") << endl << endl;
 
-  QString fp( QString::null );
+  QString fp = QString() ;
   
   QDateTime dt( postInfo[ "dateCreated" ].toDateTime() );
   if ( dt.isValid() && !dt.isNull() ) {

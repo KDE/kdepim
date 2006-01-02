@@ -250,7 +250,7 @@ QString Query::marshal( const QVariant &arg ) const
       default:
       kdWarning() << "Failed to marshal unknown variant type: " << arg.type() << endl;
   };
-  return QString::null;
+  return QString();
 }
 
 QVariant Query::demarshal( const QDomElement &elem ) const

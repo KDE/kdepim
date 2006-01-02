@@ -161,7 +161,7 @@ QString KSSLSocket::metaData( const QString &key )
 {
 	if( d->metaData.contains(key) )
 		return d->metaData[key];
-	return QString::null;
+	return QString();
 }
 
 /*

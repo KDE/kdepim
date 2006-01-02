@@ -279,7 +279,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
     if ( fullName->displayName )
       addr.setFormattedName( stringToQString( fullName->displayName ) );
     else
-      addr.setFormattedName( QString::null );
+      addr.setFormattedName( QString() );
     
     if ( fullName->namePrefix )
       addr.setPrefix( stringToQString( fullName->namePrefix ) );

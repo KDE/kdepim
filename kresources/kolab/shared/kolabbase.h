@@ -54,8 +54,8 @@ class KolabBase {
 public:
   struct Email {
   public:
-    Email( const QString& name = QString::null,
-           const QString& email = QString::null )
+    Email( const QString& name = QString(),
+           const QString& email = QString() )
       : displayName( name ), smtpAddress( email )
     {
     }
@@ -66,7 +66,7 @@ public:
 
   enum Sensitivity { Public = 0, Private = 1, Confidential = 2 };
 
-  explicit KolabBase( const QString& timezone = QString::null );
+  explicit KolabBase( const QString& timezone = QString() );
   virtual ~KolabBase();
 
   // Return a string identifying this type

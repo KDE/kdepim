@@ -155,7 +155,7 @@ bool ResourceGroupwise::doLoad()
 
   kdDebug() << "Download URL: " << url << endl;
 
-  mJobData = QString::null;
+  mJobData.clear();
 
   mDownloadJob = KIO::get( url, false, false );
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),

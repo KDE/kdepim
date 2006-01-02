@@ -297,7 +297,7 @@ QString XmlrpcJob::marshal( const QVariant &arg )
       kdWarning() << "Failed to marshal unknown variant type: "
                   << arg.type() << endl;
   };
-  return QString::null;
+  return QString();
 }
 
 QVariant XmlrpcJob::demarshal( const QDomElement &elem )

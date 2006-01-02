@@ -64,7 +64,7 @@ class IncidenceConverter : public GWConverter
     QBitArray getDayBitArray( ngwt__DayOfWeekList * );
 
     ngwt__Recipient *createRecipient( const QString &name,
-      const QString &email, const QString &uuid = QString::null );
+      const QString &email, const QString &uuid = QString() );
 
     QString mTimezone;
 

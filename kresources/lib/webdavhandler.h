@@ -39,11 +39,11 @@ class KDE_EXPORT WebdavHandler
 
     static QDomElement addElementNS( QDomDocument &doc, QDomNode &node,
                                      const QString &ns, const QString &tag,
-                                     const QString &value = QString::null );
+                                     const QString &value = QString() );
     static QDomElement addElement( QDomDocument &, QDomNode &,
-                         const QString &tag, const QString &value = QString::null );
+                         const QString &tag, const QString &value = QString() );
     static QDomElement addDavElement( QDomDocument &, QDomNode &,
-                         const QString &tag, const QString &value = QString::null );
+                         const QString &tag, const QString &value = QString() );
 
     static bool extractBool( const QDomElement &node, 
                          const QString &entry, bool &value );

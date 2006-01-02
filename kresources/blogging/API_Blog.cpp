@@ -16,7 +16,7 @@ using namespace KBlog;
 
 APIBlog::APIBlog( const KURL &url, QObject *parent, const char *name ) :
     QObject( parent, name ),
-    mServerURL( url ), mAppID( QString::null ), mDownloadCount( 20 )
+    mServerURL( url ), mAppID( QString() ), mDownloadCount( 20 )
 {}
 
 APIBlog::~APIBlog()
