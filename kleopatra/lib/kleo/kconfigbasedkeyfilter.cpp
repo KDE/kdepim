@@ -137,7 +137,7 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigBase & config )
     const QString key = QString( prefixMap[i].prefix ) + "ownertrust";
     if ( config.hasKey( key ) ) {
       mOwnerTrust = prefixMap[i].state;
-      mOwnerTrustReferenceLevel = map2OwnerTrust( config.readEntry( key ) );
+      mOwnerTrustReferenceLevel = map2OwnerTrust( config.readEntry( key, QString() ) );
       ++mSpecificity;
       break;
     }
@@ -146,7 +146,7 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigBase & config )
     const QString key = QString( prefixMap[i].prefix ) + "validity";
     if ( config.hasKey( key ) ) {
       mValidity = prefixMap[i].state;
-      mValidityReferenceLevel = map2Validity( config.readEntry( key ) );
+      mValidityReferenceLevel = map2Validity( config.readEntry( key, QString() ) );
       ++mSpecificity;
       break;
     }

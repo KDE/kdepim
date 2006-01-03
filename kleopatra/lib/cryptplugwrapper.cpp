@@ -151,7 +151,7 @@ public:
       _attrOrder =
         config->readListEntry( cfgAttributeOrderEntry );        // e.g. "DNAttributeOrder"
       _unknownAttrsHandlingChar =
-        config->readEntry( cfgUnknownAttrsEntry ).toUpper().toLatin1(); // e.g. "DNUnknownAttributes"
+        config->readEntry( cfgUnknownAttrsEntry, QString() ).toUpper().toLatin1(); // e.g. "DNUnknownAttributes"
       config->setGroup( oldGroup );
       if( _unknownAttrsHandlingChar == "HIDE" )
         _unknownAttrsHandling = unknownAttrsHide;

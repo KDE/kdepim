@@ -353,7 +353,7 @@ void CertificateWizardImpl::createPersonalDataPage()
       --row;
       continue;
     }
-    const QString preset = config.readEntry( attr );
+    const QString preset = config.readEntry( attr, QString() );
     const QString label = config.readEntry( attr + "_label",
 					    attributeLabel( attr, key.endsWith("!") ) );
 
