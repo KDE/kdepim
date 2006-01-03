@@ -1,8 +1,10 @@
 KAlarm
 
-=== Version 1.2.11 --- 19 December 2005 ===
+=== Version 1.2.11 --- 3 January 2006 ===
 Make autoclose of message windows work.
 Fix toolbar configuration being lost after quitting KAlarm.
+Ensure that day and month names translations are independent of locale calendar.
+Display alarm message windows within current screen in multi-head systems.
 
 === Version 1.2.10 --- 10 September 2005 ===
 Prevent session restoration displaying main windows which should be hidden.
