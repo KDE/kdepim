@@ -81,7 +81,7 @@ class SetupLDAPSearchAccount : public KConfigPropagator::Change
       bool hasMyServer = false;
       uint selHosts = c.readNumEntry("NumSelectedHosts", 0);
       for ( uint i = 0 ; i < selHosts && !hasMyServer; ++i )
-        if ( c.readEntry( QString("SelectedHost%1").arg(i) ) == host )
+        if ( c.readEntry( QString("SelectedHost%1").arg(i), QString() ) == host )
           hasMyServer = true;
       if ( !hasMyServer ) {
         c.writeEntry( "NumSelectedHosts", selHosts + 1 );
