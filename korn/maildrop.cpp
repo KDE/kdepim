@@ -77,24 +77,24 @@ void KMailDrop::readGeneralConfigGroup( const KConfigBase& cfg )
 {
   _passivePopup = cfg.readBoolEntry(fu(PassivePopupConfigKey), false );
   _passiveDate = cfg.readBoolEntry(fu(PassiveDateConfigKey), false );
-  _soundFile = cfg.readEntry(fu(SoundFileConfigKey),"");
-  _nMailCmd = cfg.readEntry(fu(NewMailConfigKey),"");
+  _soundFile = cfg.readEntry(fu(SoundFileConfigKey), QString());
+  _nMailCmd = cfg.readEntry(fu(NewMailConfigKey), QString());
 
   emit(configChanged());
 }
 
 bool KMailDrop::readConfigGroup(const KConfigBase & c)
 {
-  _caption    = c.readEntry(fu(CaptionConfigKey));
+  _caption    = c.readEntry(fu(CaptionConfigKey), QString());
   _clickCmd   = c.readPathEntry(fu(ClickConfigKey));
   _style      = Style(c.readUnsignedNumEntry(fu(DisplayStyleConfigKey), Plain));
   _bgColour   = c.readColorEntry(fu(BgColourConfigKey), &QApplication::palette().active().background());
   _fgColour   = c.readColorEntry(fu(FgColourConfigKey), &QApplication::palette().active().text());
   _nbgColour  = c.readColorEntry(fu(NBgColourConfigKey), &QApplication::palette().active().background());
   _nfgColour  = c.readColorEntry(fu(NFgColourConfigKey), &QApplication::palette().active().text());
-  _icon       = c.readEntry(fu(IconConfigKey));
-  _nIcon      = c.readEntry(fu(NewMailIconConfigKey));
-  _realName   = c.readEntry(fu(RealNameConfigKey));
+  _icon       = c.readEntry(fu(IconConfigKey), QString());
+  _nIcon      = c.readEntry(fu(NewMailIconConfigKey), QString());
+  _realName   = c.readEntry(fu(RealNameConfigKey), QString());
 
   if( !c.readBoolEntry(fu(UseBoxSettingsConfigKey), true ) )
   	readGeneralConfigGroup( c );
