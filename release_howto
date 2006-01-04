@@ -120,3 +120,9 @@ rm -rf cache/kdepim
 # But if all goes well, "pack" will have done it all.
 
 # You can find the resulting tar.bz2 in sources/, scp it somewhere.
+
+# To make sure that snapshots display a useful version number,
+# change them after release to reflect development status in the branch.
+# ./kmail/kmversion.h:#define KMAIL_VERSION "1.7 (proko2 branch after 2.0.4)"
+# ./kontact/src/main.cpp:static const char version[] = "1.0 (proko2 branch after 2.0.4)";
+# ./korganizer/version.h:static const char korgVersion[] = "3.3 (proko2 branch after 2.0.4)";
