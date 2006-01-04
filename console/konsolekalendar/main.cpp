@@ -192,7 +192,7 @@ int main( int argc, char *argv[] )
     0                                // home page or relevant link
     );
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
+  KCmdLineArgs::init( argc, argv, &aboutData, KCmdLineArgs::CmdLineArgNone );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
   KApplication app(
