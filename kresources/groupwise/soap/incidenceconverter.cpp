@@ -563,6 +563,8 @@ void IncidenceConverter::setItemDescription( KCal::Incidence *incidence,
     data.__ptr =
       (unsigned char*)qStringToChar( incidence->description().utf8() );
     data.__size = incidence->description().utf8().length();
+    data.id = data.type = data.option = 0;
+    data.soap = 0;
 
     part->id = 0;
     part->__item = data;
