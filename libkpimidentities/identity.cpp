@@ -315,7 +315,7 @@ Identity::~Identity()
 
 void Identity::readConfig( const KConfigBase * config )
 {
-  mUoid = config->readUnsignedNumEntry("uoid",0);
+  mUoid = config->readEntry("uoid",QVariant(0)).toUInt();
 
   mIdentity = config->readEntry("Identity");
   mFullName = config->readEntry("Name");
@@ -338,7 +338,7 @@ void Identity::readConfig( const KConfigBase * config )
   mTransport = config->readEntry("Transport");
   mDictionary = config->readEntry( "Dictionary" );
   mXFace = config->readEntry( "X-Face" );
-  mXFaceEnabled = config->readBoolEntry( "X-FaceEnabled", false );
+  mXFaceEnabled = config->readEntry( "X-FaceEnabled", QVariant(false) ).toBool();
 
   mSignature.readConfig( config );
   kdDebug(5006) << "Identity::readConfig(): UOID = " << mUoid
