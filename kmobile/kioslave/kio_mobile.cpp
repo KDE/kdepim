@@ -81,13 +81,15 @@ KMobileProtocol::~KMobileProtocol()
  * getDeviceAndRessource("mobile:/<devicename>/<resource>/...") - split
  */
 int KMobileProtocol::getDeviceAndRessource(const QString &_path,
-	QString &devName, QString &resource, QString &devPath, 
+	QString &devName, QString &resource, QString &devPath,
 	KMobileDevice::Capabilities &devCaps)
 {
 //  PRINT_DEBUG << QString("###getDeviceAndRessource### %1\n").arg(_path);
   QStringList path = QStringList::split('/', _path, false);
 
-  devName = resource = devPath = QString::null;
+  devName.clear();
+  resource.clear();
+  devPath.clear();
   devCaps = KMobileDevice::hasNothing;
 
   if (path.count() >= 1)  { devName = path[0];  path.pop_front(); };
@@ -146,7 +148,7 @@ void createDirEntry(KIO::UDSEntry& entry, const QString& name, const QString& ur
 }
 
 static
-void createFileEntry(KIO::UDSEntry& entry, const QString& name, const QString& url, const QString& mime, 
+void createFileEntry(KIO::UDSEntry& entry, const QString& name, const QString& url, const QString& mime,
 		const unsigned long size = 0)
 {
 	entry.clear();
@@ -184,7 +186,7 @@ void KMobileProtocol::get(const KURL &url)
 	error(KIO::ERR_DOES_NOT_EXIST, url.path());
 	return;
   }
-  
+
   // collect the result
   QCString result;
   QString mime;
@@ -253,11 +255,11 @@ void KMobileProtocol::listRoot(const KURL& url)
 
 	QString devName = deviceNames[i];
 
-	if (classMask != KMobileDevice::Unclassified && 
+	if (classMask != KMobileDevice::Unclassified &&
 	    m_dev.classType(devName) != classMask)
-		continue;	
+		continue;
 
-        createDirEntry(entry, devName, "mobile:/"+devName, 
+        createDirEntry(entry, devName, "mobile:/"+devName,
 			KMOBILE_MIMETYPE_DEVICE_KONQUEROR(devName));
         listEntry(entry, false);
 
@@ -324,7 +326,7 @@ void KMobileProtocol::listTopDeviceDir(const QString &devName)
 
 	QString filename = m_dev.nameForCap(devName, cap);
 	QString mimetype = folderMimeType(cap);
-	
+
         createDirEntry(entry, filename, QString("mobile:/%1/%2/").arg(devName).arg(filename), mimetype);
         listEntry(entry, false);
   }
@@ -336,7 +338,7 @@ void KMobileProtocol::listTopDeviceDir(const QString &devName)
 /*
  * listEntries("mobile:/<devicename>/<resource>") - resources of a device
  */
-void KMobileProtocol::listEntries(const QString &devName, 
+void KMobileProtocol::listEntries(const QString &devName,
 	const QString &resource, const QString &devPath,
 	const KMobileDevice::Capabilities devCaps)
 {
@@ -361,12 +363,12 @@ void KMobileProtocol::listEntries(const QString &devName,
 void KMobileProtocol::listAddressBook(const QString &devName, const QString &resource)
 {
   PRINT_DEBUG << QString("listAddressBook(%1)\n").arg(devName);
-  
+
   KIO::UDSEntry entry;
 
   int fieldwidth;
   int entries = m_dev.numAddresses(devName);
-  if (entries>=1000) fieldwidth=4; else 
+  if (entries>=1000) fieldwidth=4; else
    if (entries>=100) fieldwidth=3; else
     if (entries>=10) fieldwidth=2; else fieldwidth=1;
   totalSize(entries);
@@ -383,8 +385,8 @@ void KMobileProtocol::listAddressBook(const QString &devName, const QString &res
 #endif
 
 	QString filename = QString("%1%2.vcf").arg(i,fieldwidth).arg(name);
-	for (int p=0; p<fieldwidth; p++) { 
-		if (filename[p]==' ') filename[p]='0'; else break; 
+	for (int p=0; p<fieldwidth; p++) {
+		if (filename[p]==' ') filename[p]='0'; else break;
 	}
 	QString url = QString("mobile:/%1/%2/%3").arg(devName).arg(resource).arg(filename);
 
@@ -426,7 +428,7 @@ int KMobileProtocol::getVCard( const QString &devName, QCString &result, QString
 void KMobileProtocol::listCalendar( const QString &devName, const QString &resource)
 {
   PRINT_DEBUG << QString("listCalendar(%1)\n").arg(devName);
-  
+
   KIO::UDSEntry entry;
 
   int entries = m_dev.numCalendarEntries(devName);
@@ -465,7 +467,7 @@ int KMobileProtocol::getCalendar( const QString &devName, QCString &result, QStr
 void KMobileProtocol::listNotes( const QString &devName, const QString &resource)
 {
   PRINT_DEBUG << QString("listNotes(%1)\n").arg(devName);
-  
+
   KIO::UDSEntry entry;
 
   int entries = m_dev.numNotes(devName);
@@ -515,7 +517,7 @@ int KMobileProtocol::getNote( const QString &devName, QCString &result, QString 
 void KMobileProtocol::listFileStorage(const QString &devName, const QString &resource, const QString &devPath)
 {
   PRINT_DEBUG << QString("listFileStorage(%1,%2)\n").arg(devName).arg(devPath);
-  
+
   /* TODO */
   error( KIO::ERR_DOES_NOT_EXIST, QString("/%1/%2/%3").arg(devName).arg(resource).arg(devPath) );
 }
@@ -620,7 +622,7 @@ void KMobileProtocol::listDir(const KURL &url)
 	return;
   }
 
-#if 0  
+#if 0
   if (!dev) {
 	error( KIO::ERR_DOES_NOT_EXIST, QString("/%1").arg(devName) );
 	return;

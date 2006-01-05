@@ -267,7 +267,7 @@ void KMobileDevice::createFileEntry(KIO::UDSEntry& entry, const QString& name, c
 	entry.insert( KIO::UDS_URL, url);
 	entry.insert(KIO::UDS_ACCESS, 0400);
 	entry.insert( KIO::UDS_MIME_TYPE, mime);
-	if (size) 
+	if (size)
 			entry.insert( KIO::UDS_SIZE, size);
 	entry.insert( KIO::UDS_GUESSED_MIME_TYPE, mime);
 	PRINT_DEBUG << QString("createFileEntry: File: %1, Size: %2,  MIME: %3\n").arg(name).arg(size).arg(mime);
@@ -435,7 +435,7 @@ bool KMobileDevice::lockDevice(const QString &device, QString &err_reason)
   PRINT_DEBUG << QString("%1: Device %2 locked with lockfile %3.\n")
 	.arg(deviceName()).arg(device).arg(lockName);
 
-  err_reason = QString::null;
+  err_reason.clear();
 
   return true;
 # endif
