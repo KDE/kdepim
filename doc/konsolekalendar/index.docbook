@@ -3,7 +3,7 @@
      + Change license to GPL+QT exception
      + Search for other TODOs
      END TODO -->
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN"
 "dtd/kdex.dtd" [
 
   <!ENTITY konsolekalendar "<application>KonsoleKalendar</application>">
@@ -441,10 +441,10 @@ room with the entire staff.,&konsolekalendar;-1128954167.1013
 </sect2>
 
 <sect2 id="html-format">
-<title>&HTML; Format</title>
+<title><acronym>HTML</acronym> Format</title>
 
-<para>The &HTML; export format will produce a valid
-&HTML; file that can be published to the <acronym>WWW</acronym>.
+<para>The <acronym>HTML</acronym> export format will produce a valid
+<acronym>HTML</acronym> file that can be published to the <acronym>WWW</acronym>.
 This export format is not suitable for follow-on script parsing, but is
 very nice for publishing calendars for easy public viewing.</para>
 
@@ -455,7 +455,7 @@ very nice for publishing calendars for easy public viewing.</para>
 <sect2 id="html-month-format">
 <title><acronym>HTMLmonth</acronym> Format</title>
 
-<para>This format produces an &HTML; file showing 
+<para>This format produces an <acronym>HTML</acronym> file showing 
 all appointments in the months specified by the date range.
 This export format is not suitable for follow-on script parsing, but is
 very nice for publishing calendars for easy public viewing.</para>
