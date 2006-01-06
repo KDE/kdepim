@@ -45,6 +45,7 @@ static char lMonth[12][4]
        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 extern "C" int ParseRfc822Date(const char *str, struct tm *tms, int *z);
+extern "C" int ParseDate(const char *str, struct tm *tms, int *z);
 static DwInt32 ymd_to_jdnl(int year, int mon, int day, int julian);
 static void jdnl_to_ymd(DwInt32 jdn, int *year, int *mon, int *day, int julian);
 static DwUint32 my_inv_gmtime(struct tm* ptms);
@@ -282,6 +283,8 @@ void DwDateTime::Parse()
     struct tm tms;
     int zone;
     int err = ParseRfc822Date(str, &tms, &zone);
+    if ( err == -1 )  // try another format
+        err = ParseDate(str, &tms, &zone);
     if (!err) {
         mYear   = tms.tm_year + 1900;
         mMonth  = tms.tm_mon+1;
