@@ -129,14 +129,13 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *pa
   s_igningKey->setWhatsThis( msg );
   connect( s_igningKey, SIGNAL(changed()), SLOT(changed()) );
 
-  b_uttonGroup = new Q3ButtonGroup(this);
-  connect( b_uttonGroup, SIGNAL(clicked(int)),
-           this, SLOT(slotSignatureType(int)) );
-  b_uttonGroup->setExclusive(true);
-  b_uttonGroup->hide();
+  b_uttonGroup = new QButtonGroup( this );
+  connect( b_uttonGroup, SIGNAL( buttonClicked( int ) ),
+           this, SLOT( slotSignatureType( int ) ) );
+  b_uttonGroup->setExclusive( true );
 
   s_igFile = new QRadioButton( i18n("&Use a signature from file"), this );
-  b_uttonGroup->insert(s_igFile, 0);
+  b_uttonGroup->addButton( s_igFile, 0 );
   topL->addMultiCellWidget(s_igFile, 6, 6, 0, 2);
   s_igFile->setWhatsThis(
                    i18n( "<qt><p>Mark this to let KNode read the signature from a file.</p></qt>" ) );
@@ -169,7 +168,7 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *pa
   connect( s_igGenerator, SIGNAL(toggled(bool)), SLOT(changed()) );
 
   s_igEdit = new QRadioButton( i18n("Specify signature &below"), this);
-  b_uttonGroup->insert(s_igEdit, 1);
+  b_uttonGroup->addButton( s_igEdit, 1 );
   topL->addMultiCellWidget(s_igEdit, 9, 9, 0, 2);
 
   s_igEditor = new QTextEdit( this );
@@ -233,7 +232,7 @@ void KNode::IdentityWidget::slotSignatureType(int type)
 {
   bool sigFromFile = (type==0);
 
-  b_uttonGroup->setButton(type);
+  b_uttonGroup->button( type )->setChecked( true );
   f_ileName->setEnabled(sigFromFile);
   s_ig->setEnabled(sigFromFile);
   c_hooseBtn->setEnabled(sigFromFile);

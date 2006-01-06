@@ -1685,9 +1685,9 @@ void KNComposer::slotDragEnterEvent(QDragEnterEvent *ev)
 
 void KNComposer::slotDropEvent(QDropEvent *ev)
 {
-  KURL::List urls;
+  KURL::List urls = KURL::List::fromMimeData( ev->mimeData() );
 
-  if (!K3URLDrag::decode(ev, urls))
+  if ( urls.isEmpty() )
     return;
 
   for (KURL::List::ConstIterator it = urls.begin(); it != urls.end(); ++it) {
@@ -2319,7 +2319,7 @@ void KNComposer::Editor::slotRot13()
 
 void KNComposer::Editor::contentsDragEnterEvent(QDragEnterEvent *ev)
 {
-  if (K3URLDrag::canDecode(ev))
+  if ( KURL::List::canDecode( ev->mimeData() ) )
     emit(sigDragEnterEvent(ev));
   else
     KEdit::dragEnterEvent(ev);

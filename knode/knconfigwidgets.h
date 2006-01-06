@@ -30,7 +30,7 @@
 #include <QLabel>
 #include <QListWidgetItem>
 
-class Q3ButtonGroup;
+class QButtonGroup;
 class QCheckBox;
 class QGroupBox;
 class QRadioButton;
@@ -96,7 +96,7 @@ class KDE_EXPORT IdentityWidget : public KCModule {
     QPushButton     *c_hooseBtn,
                     *e_ditBtn;
     QTextEdit       *s_igEditor;
-    Q3ButtonGroup    *b_uttonGroup;
+    QButtonGroup    *b_uttonGroup;
     Kpgp::SecretKeyRequester
                     *s_igningKey;
     KURLCompletion  *c_ompletion;
