@@ -27,8 +27,6 @@
 #include <qstring.h>
 #include <q3cstring.h>
 #include <qstringlist.h>
-//Added by qt3to4:
-#include <Q3PtrList>
 
 #include <kglobal.h>
 #include <kcharsets.h>

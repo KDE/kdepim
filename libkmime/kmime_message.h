@@ -19,15 +19,13 @@
 #include "kmime_content.h"
 #include "kmime_headers.h"
 #include "boolflags.h"
-//Added by qt3to4:
-#include <Q3PtrList>
 
 namespace KMime {
 
 class KDE_EXPORT Message : public Content {
 
 public:
-  typedef Q3PtrList<Message> List;
+  typedef QList<KMime::Message*> List;
 
   /** Constructor. Creates an empty message. */
   Message();

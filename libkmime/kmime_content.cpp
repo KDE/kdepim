@@ -52,6 +52,8 @@ Content::~Content()
 {
   qDeleteAll( c_ontents );
   c_ontents.clear();
+  qDeleteAll( *h_eaders );
+  h_eaders->clear();
   delete h_eaders;
 }
 
@@ -104,6 +106,8 @@ void Content::setContent( const QByteArray &s )
 void Content::parse()
 {
   //qDebug("void Content::parse() : start");
+  qDeleteAll( *h_eaders );
+  h_eaders->clear();
   delete h_eaders;
   h_eaders=0;
 
@@ -281,6 +285,8 @@ void Content::assemble()
 
 void Content::clear()
 {
+  qDeleteAll( *h_eaders );
+  h_eaders->clear();
   delete h_eaders;
   h_eaders=0;
   qDeleteAll( c_ontents );
@@ -534,19 +540,17 @@ void Content::addContent(Content *c, bool prepend)
     if(h_eaders) {
 
       main->h_eaders=new Headers::Base::List();
-      main->h_eaders->setAutoDelete(true);
 
-      Headers::Base::List srcHdrs=(*h_eaders);
-      srcHdrs.setAutoDelete(false);
-      int idx=0;
-      for(Headers::Base *h=srcHdrs.first(); h; h=srcHdrs.next()) {
-        if(h->isMimeHeader()) {
-          //remove from this content
-          idx=h_eaders->findRef(h);
-          h_eaders->take(idx);
-          //append to new content
-          main->h_eaders->append(h);
+      for ( Headers::Base::List::iterator it = h_eaders->begin();
+            it != h_eaders->end(); ) {
+        if ( (*it)->isMimeHeader() ) {
+          // append to new content
+          main->h_eaders->append( *it );
+          // and remove from this content
+          h_eaders->erase( it );
         }
+        else
+          ++it;
       }
     }
 
@@ -583,7 +587,6 @@ void Content::removeContent(Content *c, bool del)
   if( c_ontents.isEmpty() ) // what the ..
     return;
 
-  int idx=0;
   c_ontents.removeAll( c );
   if(del)
     delete c;
@@ -596,21 +599,22 @@ void Content::removeContent(Content *c, bool del)
     if(main->h_eaders) {
       if(!h_eaders) {
         h_eaders=new Headers::Base::List();
-        h_eaders->setAutoDelete(true);
       }
 
-      Headers::Base::List mainHdrs=(*(main->h_eaders));
-      mainHdrs.setAutoDelete(false);
-
-      for(Headers::Base *h=mainHdrs.first(); h; h=mainHdrs.next()) {
-        if(h->isMimeHeader()) {
-          removeHeader(h->type()); //remove the old header first
-          h_eaders->append(h); //now append the new one
-          idx=main->h_eaders->findRef(h);
-          main->h_eaders->take(idx); //remove from the old content
+      for ( Headers::Base::List::iterator it = main->h_eaders->begin();
+            it != main->h_eaders->end(); ) {
+        if ( (*it)->isMimeHeader() ) {
           kdDebug(5003) << "Content::removeContent(Content *c, bool del) : mime-header moved: "
-                        << h->as7BitString() << endl;
+                        << (*it)->as7BitString() << endl;
+          // first remove the old header
+          removeHeader( (*it)->type() );
+          // then append to new content
+          h_eaders->append( *it );
+          // and finally remove from this content
+          main->h_eaders->erase( it );
         }
+        else
+          ++it;
       }
     }
 
@@ -719,13 +723,14 @@ Headers::Base* Content::getHeaderByType(const char *type)
   if(!type)
     return 0;
 
-  Headers::Base *h=0;
   //first we check if the requested header is already cached
   if(h_eaders)
-    for(h=h_eaders->first(); h; h=h_eaders->next())
-      if(h->is(type)) return h; //found
+    foreach ( Headers::Base *h, *h_eaders )
+      if ( h->is( type ) )
+        return h; //found
 
   //now we look for it in the article head
+  Headers::Base *h = 0;
   Q3CString raw=rawHeader(type);
   if(!raw.isEmpty()) { //ok, we found it
     //choose a suitable header class
@@ -770,7 +775,6 @@ Headers::Base* Content::getHeaderByType(const char *type)
 
     if(!h_eaders) {
       h_eaders=new Headers::Base::List();
-      h_eaders->setAutoDelete(true);
     }
 
     h_eaders->append(h);  //add to cache
@@ -787,7 +791,6 @@ void Content::setHeader(Headers::Base *h)
   removeHeader(h->type());
   if(!h_eaders) {
     h_eaders=new Headers::Base::List();
-    h_eaders->setAutoDelete(true);
   }
   h_eaders->append(h);
 }
@@ -796,9 +799,13 @@ void Content::setHeader(Headers::Base *h)
 bool Content::removeHeader(const char *type)
 {
   if(h_eaders)
-    for(Headers::Base *h=h_eaders->first(); h; h=h_eaders->next())
-      if(h->is(type))
-        return h_eaders->remove();
+    for ( Headers::Base::List::iterator it = h_eaders->begin();
+          it != h_eaders->end(); ++it )
+      if ( (*it)->is(type) ) {
+        delete (*it);
+        h_eaders->erase( it );
+        return true;
+      }
 
   return false;
 }

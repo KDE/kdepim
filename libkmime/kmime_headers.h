@@ -114,7 +114,7 @@ mk_parsing_subclass_with_name( subclass, subclass, baseclass )
 class KDE_EXPORT Base {
 
   public:
-    typedef Q3PtrList<Base> List;
+    typedef QList<KMime::Headers::Base*> List;
 
     /** Create an empty header. */
     Base() : e_ncCS(0), p_arent(0) {}

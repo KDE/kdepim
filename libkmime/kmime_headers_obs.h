@@ -23,7 +23,6 @@
 #include <kdepimmacros.h>
 //Added by qt3to4:
 #include <Q3CString>
-#include <Q3PtrList>
 
 /** Represents a "Message-Id" header */
 class KDE_EXPORT MessageID : public Base {

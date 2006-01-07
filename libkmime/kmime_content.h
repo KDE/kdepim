@@ -158,7 +158,6 @@ template <class T> T* Content::getHeaderInstance(T *ptr, bool create)
     ptr=new T(this);
     if(!(h_eaders)) {
       h_eaders=new Headers::Base::List();
-      h_eaders->setAutoDelete(true);
     }
     h_eaders->append(ptr);
   }
