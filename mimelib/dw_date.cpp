@@ -526,20 +526,12 @@ int ParseRfc822Date(const char *str, struct tm *tms, int *z)
         if (str[pos+1] == 'T' || str[pos+1] == 't') {
             zone = 0;
         }
-        else {
-            /* Military time zone */
-            zone = 480;
-        }
         break;
     case 'G':
     case 'g':
         if ((str[pos+1] == 'M' || str[pos+1] == 'm')
             && (str[pos+2] == 'T' || str[pos+2] == 't')) {
             zone = 0;
-        }
-        else {
-            /* Military time zone */
-            zone = -420;
         }
         break;
     case 'E':
@@ -552,10 +544,6 @@ int ParseRfc822Date(const char *str, struct tm *tms, int *z)
             && (str[pos+2] == 'T' || str[pos+2] == 't')) {
             zone = -240;
         }
-        else {
-            /* Military time zone */
-            zone = -300;
-        }
         break;
     case 'C':
     case 'c':
@@ -567,9 +555,14 @@ int ParseRfc822Date(const char *str, struct tm *tms, int *z)
             && (str[pos+2] == 'T' || str[pos+2] == 't')) {
             zone = -300;
         }
-        else {
-            /* Military time zone */
-            zone = -180;
+        else if ((str[pos+1] == 'E' || str[pos+1] == 'e')    // allow non-RFC822 "CET"
+            && (str[pos+2] == 'T' || str[pos+2] == 't')) {
+            zone = 60;
+        }
+        else if ((str[pos+1] == 'E' || str[pos+1] == 'e')    // allow non-RFC822 "CEST"
+            && (str[pos+2] == 'S' || str[pos+2] == 's')
+            && (str[pos+3] == 'T' || str[pos+3] == 't')) {
+            zone = 120;
         }
         break;
     case 'M':
@@ -582,10 +575,6 @@ int ParseRfc822Date(const char *str, struct tm *tms, int *z)
             && (str[pos+2] == 'T' || str[pos+2] == 't')) {
             zone = -360;
         }
-        else {
-            /* Military time zone */
-            zone = -720;
-        }
         break;
     case 'P':
     case 'p':
@@ -596,10 +585,6 @@ int ParseRfc822Date(const char *str, struct tm *tms, int *z)
         else if ((str[pos+1] == 'D' || str[pos+1] == 'd')
             && (str[pos+2] == 'T' || str[pos+2] == 't')) {
             zone = -420;
-        }
-        else {
-            /* Military time zone */
-            zone = 180;
         }
         break;
     case 'Z':
@@ -653,6 +638,15 @@ int ParseRfc822Date(const char *str, struct tm *tms, int *z)
     return isValid ? 0 : -1;
 }
 
+const char* wdays[] = {
+    "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+};
+
+const char* months[] = {
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+};
+
 
 #ifdef DW_TESTING_DATEPARSER
 
@@ -662,15 +656,6 @@ int ParseRfc822Date(const char *str, struct tm *tms, int *z)
 
 const char* testStr[] = {
     ""
-};
-
-const char* wdays[] = {
-    "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
-};
-
-const char* months[] = {
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
 
 int main()
@@ -723,3 +708,89 @@ int main()
 }
 
 #endif
+
+// try to parse a date/time string given in a format not
+// correctly specified in RFC822 format
+// Here we detect the following format:
+// "WWW MMM dd HH:MM:SS [Z] YYYY"  zone is optional
+// e.g.: Fri Oct 14 09:21:49 CEST 2005
+// or:   Tue Mar 23 18:00:02 2004
+
+#include <string.h>
+#include <stdio.h>
+
+#ifdef __cplusplus
+extern "C"
+#endif
+int ParseDate(const char *str, struct tm *tms, int *z)
+{
+    if ( !str )
+      return -1;
+
+    size_t len = strlen(str);
+
+    if ( len < 24 )  // at least "WWW MMM dd HH:MM:SS YYYY"
+      return -1;
+
+    int day=1, month=0, year=1970, hour=0, minute=0, second=0, zone=0;
+    int i;
+
+    for (i = 0; i < 7; i++)
+      if ( strncmp(str, wdays[i], 3) == 0 )
+        break;
+
+    if ( i == 7 )
+      return -1;
+
+    for (i = 0; i < 12; i++)
+      if ( strncmp(str+4, months[i], 3) == 0 )
+        break;
+
+    if ( i == 12 )
+      return -1;
+
+    month = i;
+
+    if ( sscanf(str+8, "%d %d:%d:%d", &day, &hour, &minute, &second) != 4 )
+      return -1;
+
+    if ( isdigit(str[20]) ) {   // year without zone info, as in ctime()
+      if ( sscanf(str+20, "%d", &year) != 1 )
+        return -1;
+    }
+    else {
+      if ( sscanf(str+20, "%*s %d", &year) != 1 )
+        return -1;
+
+      if      ( strncmp(str+20, "EST" , 3) == 0 ) zone = -5 * 60;
+      else if ( strncmp(str+20, "EDT" , 3) == 0 ) zone = -4 * 60;
+      else if ( strncmp(str+20, "CST" , 3) == 0 ) zone = -6 * 60;
+      else if ( strncmp(str+20, "CDT" , 3) == 0 ) zone = -5 * 60;
+      else if ( strncmp(str+20, "MST" , 3) == 0 ) zone = -7 * 60;
+      else if ( strncmp(str+20, "MDT" , 3) == 0 ) zone = -6 * 60;
+      else if ( strncmp(str+20, "PST" , 3) == 0 ) zone = -8 * 60;
+      else if ( strncmp(str+20, "PDT" , 3) == 0 ) zone = -7 * 60;
+      else if ( strncmp(str+20, "CET" , 3) == 0 ) zone = 60;
+      else if ( strncmp(str+20, "CEST", 4) == 0 ) zone = 120;
+    }
+
+    if ( (day    < 1) || (day    > 31) ||
+         (hour   < 0) || (hour   > 23) ||
+         (minute < 0) || (minute > 59) ||
+         (second < 0) || (second > 59) ||
+         (year   < 1900) )
+      return -1;
+
+    if ( tms ) {
+      tms->tm_year = year - 1900;
+      tms->tm_mon  = month;
+      tms->tm_mday = day;
+      tms->tm_hour = hour;
+      tms->tm_min  = minute;
+      tms->tm_sec  = second;
+    }
+
+    if ( z ) *z = zone;
+
+    return 0;
+}
