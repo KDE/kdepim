@@ -1,10 +1,8 @@
 if test -z "$GPGME_LIBS" || test -n "$kdepim_needs_gpgme_copy" ; then
    echo
    echo "You are missing gpgme 0.4.5 or higher."
-   echo "Gpgme will be built statically from libkdenetwork/libgpgme-copy."
-   echo "If you are a packager, we most strongly recommend to build against"
-   echo "the system's shared gpgme."
-   echo "Consider downloading gpgme >= 0.4.5 from ftp://ftp.gnupg.org/gcrypt/alpha/gpgme"
+   echo "Download gpgme >= 0.4.5 from ftp://ftp.gnupg.org/gcrypt/alpha/gpgme"
    echo "or use the --with-gpgme-prefix=/path/where/gpgme/is/installed option."
    echo
+   all_tests=bad
 fi
