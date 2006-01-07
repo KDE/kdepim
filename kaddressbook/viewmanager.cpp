@@ -312,7 +312,7 @@ void ViewManager::deleteView()
                      .arg( mActiveView->caption() );
   QString caption = i18n( "Confirm Delete" );
 
-  if ( KMessageBox::warningContinueCancel( this, text, caption, KGuiItem( i18n("&Delete"), "editdelete") ) == KMessageBox::Continue ) {
+  if ( KMessageBox::warningContinueCancel( this, text, caption, KGuiItem( i18n( "&Delete" ), "editdelete" ) ) == KMessageBox::Continue ) {
     mViewNameList.remove( mActiveView->caption() );
 
     // remove the view from the config file
@@ -428,7 +428,7 @@ void ViewManager::dropped( QDropEvent *e )
     int c = urls.count();
     if ( c > 1 ) {
       QString questionString = i18n( "Import one contact into your addressbook?", "Import %n contacts into your addressbook?", c );
-      if ( KMessageBox::questionYesNo( this, questionString, i18n( "Import Contacts?" ), i18n("Import"), i18n("Do Not Import") ) == KMessageBox::Yes ) {
+      if ( KMessageBox::questionYesNo( this, questionString, i18n( "Import Contacts?" ), i18n( "Import" ), i18n( "Do Not Import" ) ) == KMessageBox::Yes ) {
         for ( ; it != urls.end(); ++it )
           emit urlDropped( *it );
       }

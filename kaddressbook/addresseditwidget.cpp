@@ -244,10 +244,10 @@ void AddressEditWidget::updateAddressEdit()
       if ( !a.postOfficeBox().isEmpty() )
         text += a.postOfficeBox() + "\n";
 
-      text += a.locality() + QString(" ") + a.region();
+      text += a.locality() + QString( " " ) + a.region();
 
       if ( !a.postalCode().isEmpty() )
-        text += QString(", ") + a.postalCode();
+        text += QString( ", " ) + a.postalCode();
 
       text += "\n";
 

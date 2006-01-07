@@ -57,7 +57,7 @@ PhoneTypeCombo::PhoneTypeCombo( QWidget *parent )
     mLastSelected( 0 ),
     mTypeList( KABC::PhoneNumber::typeList() )
 {
-  setObjectName("TypeCombo" );
+  setObjectName( "TypeCombo" );
   mTypeList.append( -1 ); // Others...
 
   update();

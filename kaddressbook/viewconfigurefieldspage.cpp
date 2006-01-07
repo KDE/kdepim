@@ -205,7 +205,7 @@ void ViewConfigureFieldsPage::slotMoveDown()
 
 void ViewConfigureFieldsPage::initGUI()
 {
-  setCaption( i18n("Select Fields to Display") );
+  setCaption( i18n( "Select Fields to Display" ) );
 
   QGridLayout *gl = new QGridLayout( this , 6, 4, 0, KDialog::spacingHint() );
 

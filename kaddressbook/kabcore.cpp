@@ -108,7 +108,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
     mAddressBook = new KABC::AddressBook;
     mAddressBook->addResource( new KABC::ResourceFile( file ) );
     if ( !mAddressBook->load() ) {
-      KMessageBox::error( parent, i18n("Unable to load '%1'.").arg( file ) );
+      KMessageBox::error( parent, i18n( "Unable to load '%1'." ).arg( file ) );
     }
   }
   mAddressBook->setErrorHandler( new KABC::GuiErrorHandler( mWidget ) );
@@ -513,7 +513,7 @@ void KABCore::setWhoAmI()
   }
 
   QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>" ) );
-  if ( KMessageBox::questionYesNo( mWidget, text.arg( addrList[ 0 ].assembledName() ), QString(), i18n("Use"), i18n("Do Not Use") ) == KMessageBox::Yes )
+  if ( KMessageBox::questionYesNo( mWidget, text.arg( addrList[ 0 ].assembledName() ), QString(), i18n( "Use" ), i18n( "Do Not Use" ) ) == KMessageBox::Yes )
     static_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self( true ) )->setWhoAmI( addrList[ 0 ] );
 }
 
@@ -869,7 +869,7 @@ void KABCore::print()
   printer.setDocName( i18n( "Address Book" ) );
   printer.setDocFileName( "addressbook" );
 
-  if ( !printer.setup( mWidget, i18n("Print Addresses") ) )
+  if ( !printer.setup( mWidget, i18n( "Print Addresses" ) ) )
     return;
 
   KABPrinting::PrintingWizard wizard( &printer, mAddressBook,
@@ -980,9 +980,9 @@ void KABCore::slotEditorDestroyed( const QString &uid )
 void KABCore::initGUI()
 {
   QVBoxLayout *topLayout = new QVBoxLayout( mWidget, 0, 0 );
-  KToolBar* searchTB = new KToolBar( mWidget, "search toolbar");
+  KToolBar* searchTB = new KToolBar( mWidget, "search toolbar" );
   searchTB->boxLayout()->setSpacing( KDialog::spacingHint() );
-  mIncSearchWidget = new IncSearchWidget( searchTB, "kde toolbar widget");
+  mIncSearchWidget = new IncSearchWidget( searchTB, "kde toolbar widget" );
   searchTB->setStretchableWidget( mIncSearchWidget );
   connect( mIncSearchWidget, SIGNAL( doSearch( const QString& ) ),
            SLOT( incrementalTextSearch( const QString& ) ) );
@@ -1058,12 +1058,12 @@ void KABCore::initActions()
                SLOT( newContact() ), actionCollection(), "file_new_contact" );
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers." ) );
 
-  mActionMailVCard = new KAction( i18n("Send &Contact..."), "mail_post_to", 0,
+  mActionMailVCard = new KAction( i18n( "Send &Contact..." ), "mail_post_to", 0,
                                   this, SLOT( mailVCard() ),
                                   actionCollection(), "file_mail_vcard" );
   mActionMailVCard->setWhatsThis( i18n( "Send a mail with the selected contact as attachment." ) );
 
-  mActionChat = new KAction( i18n("Chat &With..."), 0,
+  mActionChat = new KAction( i18n( "Chat &With..." ), 0,
                                   this, SLOT( startChat() ),
                                   actionCollection(), "file_chat" );
   mActionChat->setWhatsThis( i18n( "Start a chat with the selected contact." ) );
@@ -1104,13 +1104,13 @@ void KABCore::initActions()
   mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,
                                       actionCollection(), "options_show_jump_bar" );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
-  mActionJumpBar->setCheckedState( i18n( "Hide Jump Bar") );
+  mActionJumpBar->setCheckedState( i18n( "Hide Jump Bar" ) );
   connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );
 
   mActionDetails = new KToggleAction( i18n( "Show Details" ), 0, 0,
                                       actionCollection(), "options_show_details" );
   mActionDetails->setWhatsThis( i18n( "Toggle whether the details page shall be visible." ) );
-  mActionDetails->setCheckedState( i18n( "Hide Details") );
+  mActionDetails->setCheckedState( i18n( "Hide Details" ) );
   connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
 
   if ( mIsPart )

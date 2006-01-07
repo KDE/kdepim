@@ -112,7 +112,7 @@ void JumpButtonBar::updateButtons()
   btn->hide();
   QStyleOption opt;
   QSize buttonSize = style()->sizeFromContents( QStyle::CT_PushButton, &opt,
-                     fm.size( Qt::TextShowMnemonic, "X - X").expandedTo( QApplication::globalStrut() ),
+                     fm.size( Qt::TextShowMnemonic, "X - X" ).expandedTo( QApplication::globalStrut() ),
                      btn );
   delete btn;
 

@@ -86,7 +86,7 @@ static QMap<QString, QString>& adrbookattr2ldap()
     keys[ i18n( "Mobile Number" ) ] = "mobile";
     keys[ i18n( "Fax Number" ) ] = "facsimileTelephoneNumber";
     keys[ i18n( "Pager" ) ] = "pager";
-    keys[ i18n( "Street") ] = "street";
+    keys[ i18n( "Street" ) ] = "street";
     keys[ i18n( "State" ) ] = "st";
     keys[ i18n( "Country" ) ] = "co";
     keys[ i18n( "City" ) ] = "l";
@@ -243,17 +243,17 @@ void LDAPSearchDialog::restoreSettings()
       ldapClient->setServer( ldapServer );
       QStringList attrs;
 
-      for ( QMap<QString,QString>::ConstIterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )
+      for ( QMap<QString, QString>::ConstIterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )
         attrs << *it;
 
       ldapClient->setAttrs( attrs );
 
       connect( ldapClient, SIGNAL( result( const KPIM::LdapObject& ) ),
-	       this, SLOT( slotAddResult( const KPIM::LdapObject& ) ) );
+               this, SLOT( slotAddResult( const KPIM::LdapObject& ) ) );
       connect( ldapClient, SIGNAL( done() ),
-	       this, SLOT( slotSearchDone() ) );
+               this, SLOT( slotSearchDone() ) );
       connect( ldapClient, SIGNAL( error( const QString& ) ),
-	       this, SLOT( slotError( const QString& ) ) );
+               this, SLOT( slotError( const QString& ) ) );
 
       mLdapClientList.append( ldapClient );
     }
@@ -480,7 +480,7 @@ void LDAPSearchDialog::slotUser1()
       if ( addr.organization().isEmpty() )
          addr.setOrganization( asUtf8( cli->mAttrs[ "Company" ].first() ) );
 
-      addr.insertCustom("KADDRESSBOOK", "X-Department", asUtf8( cli->mAttrs[ "department" ].first() ) );
+      addr.insertCustom( "KADDRESSBOOK", "X-Department", asUtf8( cli->mAttrs[ "department" ].first() ) );
 
       // Address
       KABC::Address workAddr( KABC::Address::Work );
