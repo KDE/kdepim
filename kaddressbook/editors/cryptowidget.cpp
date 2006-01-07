@@ -22,10 +22,10 @@
 */
 
 #include <config.h>
-#include "certmanager/lib/ui/keyrequester.h"
-#include "certmanager/lib/cryptplugfactory.h"
-#include "certmanager/lib/cryptplugwrapper.h"
-#include "certmanager/lib/kleo/enum.h"
+#include "kleopatra/lib/ui/keyrequester.h"
+#include "kleopatra/lib/cryptplugfactory.h"
+#include "kleopatra/lib/cryptplugwrapper.h"
+#include "kleopatra/lib/kleo/enum.h"
 
 #include "gpgmepp/data.h"
 #include "gpgmepp/key.h"
@@ -106,7 +106,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   topLayout->addMultiCellWidget( box, 3, 3, 0, 1 );
 
 
-  // Send preferences/sign (see certmanager/lib/kleo/enum.h)
+  // Send preferences/sign (see kleopatra/lib/kleo/enum.h)
   KHBox* hbox = new KHBox( box );
 
   l = new QLabel( i18n( "Sign:" ), hbox );
@@ -116,7 +116,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
     mSignPref->insertItem( Kleo::signingPreferenceToLabel(
                            static_cast<Kleo::SigningPreference>( i ) ) );
 
-  // Send preferences/encrypt (see certmanager/lib/kleo/enum.h)
+  // Send preferences/encrypt (see kleopatra/lib/kleo/enum.h)
   hbox = new KHBox( box );
 
   l = new QLabel( i18n("Encrypt:"), hbox );

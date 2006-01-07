@@ -1,6 +1,6 @@
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook/interfaces \
            -I$(top_srcdir)/kaddressbook \
-           -I$(top_srcdir)/certmanager/lib \
+           -I$(top_srcdir)/kleopatra/lib \
            -I$(top_srcdir)/libkdenetwork \
            -I$(top_builddir)/kaddressbook/editors \
            $(GPGME_CFLAGS) \
@@ -9,7 +9,7 @@ INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kaddressbook/interfaces \
 kde_module_LTLIBRARIES = libkaddrbk_cryptosettings.la
 
 XXLIBS = $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
-         $(top_builddir)/certmanager/lib/libkleopatra.la
+         $(top_builddir)/kleopatra/lib/libkleopatra.la
 
 libkaddrbk_cryptosettings_la_SOURCES = cryptowidget.cpp
 libkaddrbk_cryptosettings_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) # -no-undefined
