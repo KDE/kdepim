@@ -147,7 +147,7 @@ void Todo::setHasStartDate(bool f)
   if (mReadOnly) return;
 
   if ( doesRecur() && !f ) {
-    if ( !comments().grep("NoStartDate").count() )
+    if ( !comments().filter("NoStartDate").count() )
       addComment("NoStartDate"); //TODO: --> custom flag?
   } else {
     QString s("NoStartDate");

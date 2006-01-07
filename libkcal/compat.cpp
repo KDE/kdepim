@@ -39,15 +39,15 @@ Compat *CompatFactory::createCompat( const QString &productId )
 
   Compat *compat = 0;
 
-  int korg = productId.find( "KOrganizer" );
-  int outl9 = productId.find( "Outlook 9.0" );
+  int korg = productId.indexOf( "KOrganizer" );
+  int outl9 = productId.indexOf( "Outlook 9.0" );
 //   int kcal = productId.find( "LibKCal" );
 
   // TODO: Use the version of LibKCal to determine the compat class...
   if ( korg >= 0 ) {
-    int versionStart = productId.find( " ", korg );
+    int versionStart = productId.indexOf( " ", korg );
     if ( versionStart >= 0 ) {
-      int versionStop = productId.find( QRegExp( "[ /]" ), versionStart + 1 );
+      int versionStop = productId.indexOf( QRegExp( "[ /]" ), versionStart + 1 );
       if ( versionStop >= 0 ) {
         QString version = productId.mid( versionStart + 1,
                                          versionStop - versionStart - 1 );
@@ -56,7 +56,7 @@ Compat *CompatFactory::createCompat( const QString &productId )
         int versionNum = version.section( ".", 0, 0 ).toInt() * 10000 +
                          version.section( ".", 1, 1 ).toInt() * 100 +
                          version.section( ".", 2, 2 ).toInt();
-        int releaseStop = productId.find( "/", versionStop );
+        int releaseStop = productId.indexOf( "/", versionStop );
         QString release;
         if ( releaseStop > versionStop ) {
           release = productId.mid( versionStop+1, releaseStop-versionStop-1 );

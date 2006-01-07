@@ -151,7 +151,7 @@ void IncidenceBase::setOrganizer( const Person &o )
 void IncidenceBase::setOrganizer(const QString &o)
 {
   QString mail( o );
-  if ( mail.startsWith("MAILTO:", false) )
+  if ( mail.startsWith("MAILTO:", Qt::CaseInsensitive) )
     mail = mail.remove( 0, 7 );
   // split the string into full name plus email.
   Person organizer( mail );
@@ -222,7 +222,7 @@ bool IncidenceBase::removeComment( const QString& comment)
   for ( i = mComments.begin(); !found && i != mComments.end(); ++i ) {
     if ( (*i) == comment ) {
       found = true;
-      mComments.remove(i);
+      mComments.erase(i);
     }
   }
 

@@ -55,7 +55,7 @@ void CalFilter::apply( Event::List *eventlist ) const
   Event::List::Iterator it = eventlist->begin();
   while( it != eventlist->end() ) {
     if ( !filterIncidence( *it ) ) {
-      it = eventlist->remove( it );
+      it = eventlist->erase( it );
     } else {
       ++it;
     }
@@ -74,7 +74,7 @@ void CalFilter::apply( Todo::List *todolist ) const
   Todo::List::Iterator it = todolist->begin();
   while( it != todolist->end() ) {
     if ( !filterIncidence( *it ) ) {
-      it = todolist->remove( it );
+      it = todolist->erase( it );
     } else {
       ++it;
     }
@@ -90,7 +90,7 @@ void CalFilter::apply( Journal::List *journallist ) const
   Journal::List::Iterator it = journallist->begin();
   while( it != journallist->end() ) {
     if ( !filterIncidence( *it ) ) {
-      it = journallist->remove( it );
+      it = journallist->erase( it );
     } else {
       ++it;
     }
@@ -125,7 +125,7 @@ bool CalFilter::filterIncidence(Incidence *incidence) const
       if ( !todo->attendees().isEmpty() ) {
         Attendee::List::ConstIterator it;
         for( it = attendees.begin(); it != attendees.end(); ++it ) {
-          if ( mEmailList.find( (*it)->email() ) != mEmailList.end() ) {
+          if ( mEmailList.contains( (*it)->email() ) ) {
             iAmOneOfTheAttendees = true;
             break;
           }

@@ -260,7 +260,7 @@ void Incidence::setCategories(const QString &catStr)
 
   if (catStr.isEmpty()) return;
 
-  mCategories = QStringList::split(",",catStr);
+  mCategories = catStr.split(",");
 
   QStringList::Iterator it;
   for(it = mCategories.begin();it != mCategories.end(); ++it) {
@@ -319,9 +319,8 @@ Incidence::List Incidence::relations() const
 
 void Incidence::addRelation( Incidence *event )
 {
-  if ( mRelations.find( event ) == mRelations.end() ) {
+  if ( !mRelations.contains( event ) )
     mRelations.append( event );
-  }
 }
 
 void Incidence::removeRelation(Incidence *event)
@@ -588,7 +587,7 @@ void Incidence::deleteAttachments( const QString &mime )
 {
   Attachment::List::Iterator it = mAttachments.begin();
   while( it != mAttachments.end() ) {
-    if ( (*it)->mimeType() == mime ) mAttachments.remove( it );
+    if ( (*it)->mimeType() == mime ) mAttachments.erase( it );
     else ++it;
   }
 }

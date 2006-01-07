@@ -122,7 +122,7 @@ void Recurrence::addObserver( Observer *observer )
 void Recurrence::removeObserver( Observer *observer )
 {
   if ( mObservers.contains( observer ) )
-    mObservers.remove( observer );
+    mObservers.removeAll( observer );
 }
 
 
@@ -765,7 +765,7 @@ TimeList Recurrence::recurTimesOn( const QDate &date ) const
   qSortUnique( extimes );
 
   for ( TimeList::Iterator it = extimes.begin(); it != extimes.end(); ++it ) {
-    times.remove( (*it) );
+    times.removeAll( (*it) );
   }
   return times;
 }
@@ -922,7 +922,7 @@ void Recurrence::addRRule( RecurrenceRule *rrule )
 void Recurrence::removeRRule( RecurrenceRule *rrule )
 {
   if (mRecurReadOnly) return;
-  mRRules.remove( rrule );
+  mRRules.removeAll( rrule );
   rrule->removeObserver( this );
   updated();
 }
@@ -944,7 +944,7 @@ void Recurrence::addExRule( RecurrenceRule *exrule )
 void Recurrence::removeExRule( RecurrenceRule *exrule )
 {
   if (mRecurReadOnly) return;
-  mExRules.remove( exrule );
+  mExRules.removeAll( exrule );
   exrule->removeObserver( this );
   updated();
 }

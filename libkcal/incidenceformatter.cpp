@@ -84,7 +84,7 @@ static QString eventViewerAddTag( const QString & tag, const QString & text )
       int pos = 0;
       QString tmp;
       for( int i = 0; i <= numLineBreaks; i++ ) {
-        pos = tmpText.find( "\n" );
+        pos = tmpText.indexOf( "\n" );
         tmp = tmpText.left( pos );
         tmpText = tmpText.right( tmpText.length() - pos - 1 );
         tmpStr += tmp + "<br>";
@@ -1297,20 +1297,20 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
         QString sSenderSearchKeyEmail( tnefMsg->findProp( 0x0C1D ) );
 
         if( !sSenderSearchKeyEmail.isEmpty() ) {
-          int colon = sSenderSearchKeyEmail.find( ':' );
+          int colon = sSenderSearchKeyEmail.indexOf( ':' );
           // May be e.g. "SMTP:KHZ@KDE.ORG"
-          if( sSenderSearchKeyEmail.find( ':' ) == -1 )
+          if( sSenderSearchKeyEmail.indexOf( ':' ) == -1 )
             sSenderSearchKeyEmail.remove( 0, colon+1 );
         }
 
         QString s( tnefMsg->findProp( 0x0e04 ) );
-        QStringList attendees = QStringList::split( ';', s );
+        QStringList attendees = s.split( ';' );
         if( attendees.count() ) {
           for( QStringList::Iterator it = attendees.begin();
                it != attendees.end(); ++it ) {
             // Skip all entries that have no '@' since these are
             // no mail addresses
-            if( (*it).find('@') == -1 ) {
+            if( (*it).indexOf('@') == -1 ) {
               s = (*it).trimmed();
 
               Attendee *attendee = new Attendee( s, s, true );

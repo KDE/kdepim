@@ -206,7 +206,7 @@ void FreeBusy::sortList()
     //Move tmpPeriod to sortedList
     Period tmpPeriod = (*earlyPeriod);
     sortedList.append( tmpPeriod );
-    mBusyPeriods.remove( earlyPeriod );
+    mBusyPeriods.erase( earlyPeriod );
   }
   mBusyPeriods=sortedList;
 }

@@ -548,7 +548,7 @@ void RecurrenceRule::addObserver( Observer *observer )
 void RecurrenceRule::removeObserver( Observer *observer )
 {
   if ( mObservers.contains( observer ) )
-    mObservers.remove( observer );
+    mObservers.removeAll( observer );
 }
 
 
@@ -879,7 +879,7 @@ void RecurrenceRule::buildConstraints()
     if ( (*conit).isConsistent( mPeriod ) ) {
       ++conit;
     } else {
-      conit = mConstraints.remove( conit );
+      conit = mConstraints.erase( conit );
     }
   }
 }
@@ -897,7 +897,7 @@ kdDebug(5800) << "         RecurrenceRule::buildCache: " << endl;
   // Only use dates after the event has started (start date is only included
   // if it matches)
   while ( it != dts.end() ) {
-    if ( (*it) < startDt() ) it =  dts.remove( it );
+    if ( (*it) < startDt() ) it =  dts.erase( it );
     else ++it;
   }
 //  dts.prepend( startDt() ); // the start date is always the first occurrence

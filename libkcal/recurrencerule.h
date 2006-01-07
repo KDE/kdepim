@@ -44,7 +44,7 @@ template <class T>
   T newlast;
   while ( it != lst.end() ) {
     newlast = (*it);
-    if ( newlast == last ) it = lst.remove( it );
+    if ( newlast == last ) it = lst.erase( it );
     else {
       last = newlast;
       ++it;

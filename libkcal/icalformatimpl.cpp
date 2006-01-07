@@ -509,7 +509,7 @@ void ICalFormatImpl::writeCustomProperties(icalcomponent *parent,CustomPropertie
 {
   QMap<QByteArray, QString> custom = properties->customProperties();
   for (QMap<QByteArray, QString>::Iterator c = custom.begin();  c != custom.end();  ++c) {
-    icalproperty *p = icalproperty_new_x(c.data().toUtf8());
+    icalproperty *p = icalproperty_new_x(c.value().toUtf8());
     icalproperty_set_x_name(p,c.key());
     icalcomponent_add_property(parent,p);
   }
@@ -860,7 +860,7 @@ kdDebug(5800) << " It's an audio action, file: " << alarm->audioFile() << endl;
   // Custom properties
   QMap<QByteArray, QString> custom = alarm->customProperties();
   for (QMap<QByteArray, QString>::Iterator c = custom.begin();  c != custom.end();  ++c) {
-    icalproperty *p = icalproperty_new_x(c.data().toUtf8());
+    icalproperty *p = icalproperty_new_x(c.value().toUtf8());
     icalproperty_set_x_name(p,c.key());
     icalcomponent_add_property(a,p);
   }
@@ -912,7 +912,7 @@ Todo *ICalFormatImpl::readTodo(icalcomponent *vtodo)
 
       case ICAL_DTSTART_PROPERTY: {
         // Flag that todo has start date. Value is read in by readIncidence().
-        if ( todo->comments().grep("NoStartDate").count() )
+        if ( todo->comments().filter("NoStartDate").count() )
           todo->setHasStartDate( false );
         else
           todo->setHasStartDate( true );
@@ -1162,7 +1162,7 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
 Person ICalFormatImpl::readOrganizer( icalproperty *organizer )
 {
   QString email = QString::fromUtf8(icalproperty_get_organizer(organizer));
-  if ( email.startsWith("mailto:", false ) ) {
+  if ( email.startsWith("mailto:", Qt::CaseInsensitive ) ) {
     email = email.mid( 7 );
   }
   QString cn;

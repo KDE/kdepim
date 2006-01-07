@@ -67,12 +67,11 @@ class ListBase : public QList<T *>
 
     bool removeRef( T *t )
     {
-      typename QList<T *>::Iterator it = find( t );
-      if ( it == QList<T*>::end() ) {
+      if ( !contains( t ) ) {
         return false;
       } else {
         if ( mAutoDelete ) delete t;
-        this->remove( it );
+        this->removeAll( t );
         return true;
       }
     }

@@ -133,7 +133,7 @@ QStringList Calendar::categories()
     thisCats = (*i)->categories();
     for ( QStringList::ConstIterator si = thisCats.constBegin();
           si != thisCats.constEnd(); ++si ) {
-      if ( cats.find( *si ) == cats.end() ) {
+      if ( !cats.contains( *si ) ) {
         cats.append( *si );
       }
     }

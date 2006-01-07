@@ -269,7 +269,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   if (!anEvent->description().isEmpty()) {
     VObject *d = addPropValue(vtodo, VCDescriptionProp,
                               anEvent->description().toLocal8Bit());
-    if (anEvent->description().find('\n') != -1)
+    if (anEvent->description().indexOf('\n') != -1)
       addPropValue(d, VCEncodingProp, VCQuotedPrintableProp);
   }
 
@@ -529,7 +529,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   if (!anEvent->description().isEmpty()) {
     VObject *d = addPropValue(vevent, VCDescriptionProp,
                               anEvent->description().toLocal8Bit());
-    if (anEvent->description().find('\n') != -1)
+    if (anEvent->description().indexOf('\n') != -1)
       addPropValue(d, VCEncodingProp, VCQuotedPrintableProp);
   }
 
@@ -700,13 +700,13 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
       deleteStr(s);
       tmpStr = tmpStr.simplified();
       int emailPos1, emailPos2;
-      if ((emailPos1 = tmpStr.find('<')) > 0) {
+      if ((emailPos1 = tmpStr.indexOf('<')) > 0) {
         // both email address and name
         emailPos2 = tmpStr.lastIndexOf('>');
         a = new Attendee(tmpStr.left(emailPos1 - 1),
                          tmpStr.mid(emailPos1 + 1,
                                     emailPos2 - (emailPos1 + 1)));
-      } else if (tmpStr.find('@') > 0) {
+      } else if (tmpStr.indexOf('@') > 0) {
         // just an email address
         a = new Attendee(0, tmpStr);
       } else {
@@ -831,7 +831,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
     s = fakeCString(vObjectUStringZValue(vo));
     QString categories = QString::fromLocal8Bit(s);
     deleteStr(s);
-    QStringList tmpStrList = QStringList::split( ';', categories );
+    QStringList tmpStrList = categories.split( ';' );
     anEvent->setCategories(tmpStrList);
   }
 
@@ -916,13 +916,13 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       deleteStr(s);
       tmpStr = tmpStr.simplified();
       int emailPos1, emailPos2;
-      if ((emailPos1 = tmpStr.find('<')) > 0) {
+      if ((emailPos1 = tmpStr.indexOf('<')) > 0) {
         // both email address and name
         emailPos2 = tmpStr.lastIndexOf('>');
         a = new Attendee(tmpStr.left(emailPos1 - 1),
                          tmpStr.mid(emailPos1 + 1,
                                     emailPos2 - (emailPos1 + 1)));
-      } else if (tmpStr.find('@') > 0) {
+      } else if (tmpStr.indexOf('@') > 0) {
         // just an email address
         a = new Attendee(0, tmpStr);
       } else {
@@ -1011,7 +1011,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
 // kdDebug() << " It's a supported type " << endl;
 
       // Immediately after the type is the frequency
-      int index = tmpStr.find(' ');
+      int index = tmpStr.indexOf(' ');
       int last = tmpStr.lastIndexOf(' ') + 1; // find last entry
       int rFreq = tmpStr.mid(typelen, (index-1)).toInt();
       ++index; // advance to beginning of stuff after freq
@@ -1085,7 +1085,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
              else {
                // e.g. MD1 3 #0
                while (index < last) {
-                 int index2 = tmpStr.find(' ', index);
+                 int index2 = tmpStr.indexOf(' ', index);
                  short tmpDay = tmpStr.mid(index, (index2-index)).toShort();
                  index = index2-1;
                  if (tmpStr.mid(index, 1) == "-")
@@ -1107,7 +1107,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
              else {
                // e.g. YM1 3 #0
                while (index < last) {
-                 int index2 = tmpStr.find(' ', index);
+                 int index2 = tmpStr.indexOf(' ', index);
                  short tmpMonth = tmpStr.mid(index, (index2-index)).toShort();
                  index = index2 + 1;
                  anEvent->recurrence()->addYearlyMonth( tmpMonth );
@@ -1126,7 +1126,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
              else {
                // e.g. YD1 123 #0
                while (index < last) {
-                 int index2 = tmpStr.find(' ', index);
+                 int index2 = tmpStr.indexOf(' ', index);
                  short tmpDay = tmpStr.mid(index, (index2-index)).toShort();
                  index = index2+1;
                  anEvent->recurrence()->addYearlyDay( tmpDay );
@@ -1145,7 +1145,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
         int rDuration = tmpStr.mid(index, tmpStr.length()-index).toInt();
         if ( rDuration > 0 )
           anEvent->recurrence()->setDuration( rDuration );
-      } else if ( tmpStr.find('T', index) != -1 ) {
+      } else if ( tmpStr.indexOf('T', index) != -1 ) {
         QDate rEndDate = (ISOToQDateTime(tmpStr.mid(index, tmpStr.length()-index))).date();
         anEvent->recurrence()->setEndDateTime( QDateTime( rEndDate ) );
       }
@@ -1160,7 +1160,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   // recurrence exceptions
   if ((vo = isAPropertyOf(vevent, VCExDateProp)) != 0) {
     s = fakeCString(vObjectUStringZValue(vo));
-    QStringList exDates = QStringList::split(",",s);
+    QStringList exDates = QString::fromLocal8Bit(s).split(",");
     QStringList::ConstIterator it;
     for(it = exDates.begin(); it != exDates.end(); ++it ) {
       anEvent->recurrence()->addExDate(ISOToQDate(*it));
@@ -1233,7 +1233,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     s = fakeCString(vObjectUStringZValue(vo));
     QString categories = QString::fromLocal8Bit(s);
     deleteStr(s);
-    QStringList tmpStrList = QStringList::split( ',', categories );
+    QStringList tmpStrList = categories.split( ',' );
     anEvent->setCategories(tmpStrList);
   }
 
@@ -1252,7 +1252,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   if ((vo = isAPropertyOf(vevent, VCResourcesProp)) != 0) {
     QString resources = (s = fakeCString(vObjectUStringZValue(vo)));
     deleteStr(s);
-    QStringList tmpStrList = QStringList::split( ';', resources );
+    QStringList tmpStrList = resources.split( ';' );
     anEvent->setResources(tmpStrList);
   }
 

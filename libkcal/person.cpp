@@ -64,7 +64,7 @@ QString Person::fullName() const
       // Taken from KABC::Addressee::fullEmail
       QString name = mName;
       QRegExp needQuotes( "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
-      bool weNeedToQuote = name.find( needQuotes ) != -1;
+      bool weNeedToQuote = name.indexOf( needQuotes ) != -1;
       if ( weNeedToQuote ) {
           if ( name[0] != '"' )
               name.prepend( '"' );
@@ -88,7 +88,7 @@ void Person::setName(const QString &name)
 
 void Person::setEmail(const QString &email)
 {
-  if ( email.startsWith( "mailto:", false ) ) {
+  if ( email.startsWith( "mailto:", Qt::CaseInsensitive ) ) {
     mEmail = email.mid(7);
   } else {
     mEmail = email;

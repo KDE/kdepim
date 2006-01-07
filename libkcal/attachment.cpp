@@ -108,10 +108,8 @@ QByteArray &Attachment::decodedData() const
   if ( d->mDataCache.isNull() ) {
     QByteArray in;
     const QByteArray data = mData.toUtf8();
-    in.setRawData( data.data(), data.size() );
     KMime::Codec * codec = KMime::Codec::codecForName( "base64" );
-    d->mDataCache = codec->decode( in );
-    in.resetRawData( data.data(), data.size() );
+    d->mDataCache = codec->decode( data );
   }
   
   return d->mDataCache;

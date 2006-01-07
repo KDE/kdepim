@@ -90,8 +90,8 @@ bool ICalFormat::load( Calendar *calendar, const QString &fileName)
     return false;
   }
   QTextStream ts( &file );
-  ts.setEncoding( QTextStream::Latin1 );
-  QString text = ts.read();
+  ts.setCodec( "ISO 8859-1" );
+  QString text = ts.readAll();
   file.close();
 
   if ( text.trimmed().isEmpty() ) // empty files are valid

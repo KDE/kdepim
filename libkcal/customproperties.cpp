@@ -51,7 +51,7 @@ bool CustomProperties::operator==( const CustomProperties &other ) const
     if ( itOther == other.mProperties.end() ) {
       return false;
     }
-    if ( itOther.data() != it.data() ) return false;
+    if ( itOther.value() != it.value() ) return false;
   }
 
   return true;
@@ -89,7 +89,7 @@ void CustomProperties::removeNonKDECustomProperty(const QByteArray &name)
 {
   QMap<QByteArray, QString>::Iterator it = mProperties.find(name);
   if (it != mProperties.end())
-    mProperties.remove(it);
+    mProperties.erase(it);
 }
 
 QString CustomProperties::nonKDECustomProperty(const QByteArray &name) const
@@ -97,7 +97,7 @@ QString CustomProperties::nonKDECustomProperty(const QByteArray &name) const
   QMap<QByteArray, QString>::ConstIterator it = mProperties.find(name);
   if (it == mProperties.end())
     return QString();
-  return it.data();
+  return it.value();
 }
 
 void CustomProperties::setCustomProperties(const QMap<QByteArray, QString> &properties)
@@ -105,7 +105,7 @@ void CustomProperties::setCustomProperties(const QMap<QByteArray, QString> &prop
   for (QMap<QByteArray, QString>::ConstIterator it = properties.begin();  it != properties.end();  ++it) {
     // Validate the property name and convert any null string to empty string
     if (checkName(it.key())) {
-      mProperties[it.key()] = it.data().isNull() ? QString("") : it.data();
+      mProperties[it.key()] = it.value().isNull() ? QString("") : it.value();
     }
   }
 }
