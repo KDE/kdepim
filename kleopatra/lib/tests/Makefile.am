@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/certmanager/lib \
+INCLUDES = -I$(top_srcdir)/kleopatra/lib \
 	-I$(top_srcdir)/libkdenetwork \
 	$(GPGME_CFLAGS) $(all_includes)
 

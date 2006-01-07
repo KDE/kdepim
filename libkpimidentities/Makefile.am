@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/certmanager/lib $(all_includes)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kleopatra/lib $(all_includes)
 
 lib_LTLIBRARIES = libkpimidentities.la
 libkpimidentities_la_SOURCES = \

@@ -3,7 +3,7 @@ METASOURCES = AUTO
 INCLUDES = -I$(top_srcdir)/libkpimidentities -I$(top_srcdir)/libkcal \
            -I$(top_srcdir)/kresources/kolab/shared -I$(top_srcdir) \
            -I$(top_srcdir)/knotes \
-           -I$(top_srcdir)/certmanager/lib \
+           -I$(top_srcdir)/kleopatra/lib \
            -I$(top_builddir)/kresources/groupwise \
 	   -I$(top_builddir)/kresources/lib \
            -I$(top_srcdir)/kresources/lib \
