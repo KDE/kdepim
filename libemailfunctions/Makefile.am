@@ -1,4 +1,5 @@
 INCLUDES = $(all_includes)
+KDE_CXXFLAGS = -UQT3_SUPPORT
 
 noinst_LTLIBRARIES = libemailfunctions.la
 libemailfunctions_la_SOURCES = email.cpp idmapper.cpp kasciistricmp.cpp \

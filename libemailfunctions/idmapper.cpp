@@ -76,7 +76,7 @@ bool IdMapper::load()
   QString line;
   while ( !ts.atEnd() ) {
     line = ts.readLine( 1024 );
-    QStringList parts = QStringList::split( "\x02\x02", line, true );
+    QStringList parts = line.split( "\x02\x02", QString::KeepEmptyParts );
     mIdMap.insert( parts[ 0 ], parts[ 1 ] );
     mFingerprintMap.insert( parts[ 0 ], parts[ 2 ] );
   }
@@ -101,7 +101,7 @@ bool IdMapper::save()
     QString fingerprint;
     if ( mFingerprintMap.contains( it.key() ) )
       fingerprint = mFingerprintMap[ it.key() ];
-    content += it.key() + "\x02\x02" + it.data().toString() + "\x02\x02" + fingerprint + "\r\n";
+    content += it.key() + "\x02\x02" + it.value().toString() + "\x02\x02" + fingerprint + "\r\n";
   }
   QTextStream ts(&file);
   ts << content;
@@ -118,15 +118,15 @@ void IdMapper::clear()
 
 void IdMapper::setRemoteId( const QString &localId, const QString &remoteId )
 {
-  mIdMap.replace( localId, remoteId );
+  mIdMap.insert( localId, remoteId );
 }
 
 void IdMapper::removeRemoteId( const QString &remoteId )
 {
   QMap<QString, QVariant>::Iterator it;
   for ( it = mIdMap.begin(); it != mIdMap.end(); ++it )
-    if ( it.data().toString() == remoteId ) {
-      mIdMap.remove( it );
+    if ( it.value().toString() == remoteId ) {
+      mIdMap.erase( it );
       mFingerprintMap.remove( it.key() );
       return;
     }
@@ -138,7 +138,7 @@ QString IdMapper::remoteId( const QString &localId ) const
   it = mIdMap.find( localId );
 
   if ( it != mIdMap.end() )
-    return it.data().toString();
+    return it.value().toString();
   else
     return QString();
 }
@@ -147,7 +147,7 @@ QString IdMapper::localId( const QString &remoteId ) const
 {
   QMap<QString, QVariant>::ConstIterator it;
   for ( it = mIdMap.begin(); it != mIdMap.end(); ++it )
-    if ( it.data().toString() == remoteId )
+    if ( it.value().toString() == remoteId )
       return it.key();
 
   return QString();
@@ -162,7 +162,7 @@ QString IdMapper::asString() const
     QString fp;
     if ( mFingerprintMap.contains( it.key() ) )
       fp = mFingerprintMap[ it.key() ];
-    content += it.key() + "\t" + it.data().toString() + "\t" + fp + "\r\n";
+    content += it.key() + "\t" + it.value().toString() + "\t" + fp + "\r\n";
   }
 
   return content;
@@ -186,7 +186,7 @@ QMap<QString, QString> IdMapper::remoteIdMap() const
   QMap<QString, QString> reverseMap;
   QMap<QString, QVariant>::ConstIterator it;
   for ( it = mIdMap.begin(); it != mIdMap.end(); ++it ) {
-    reverseMap.insert( it.data().toString(), it.key() );
+    reverseMap.insert( it.value().toString(), it.key() );
   }
   return reverseMap;
 }

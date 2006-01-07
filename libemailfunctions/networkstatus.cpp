@@ -33,7 +33,7 @@ static KStaticDeleter<NetworkStatus> networkStatusDeleter;
 NetworkStatus *NetworkStatus::mSelf = 0;
 
 NetworkStatus::NetworkStatus()
-  : QObject( 0, "NetworkStatus" ), DCOPObject( "NetworkStatus" )
+  : QObject( 0 ), DCOPObject( "NetworkStatus" )
 {
   KConfigGroup group( KGlobal::config(), "NetworkStatus" );
   if ( group.readBoolEntry( "Online", true ) == true )

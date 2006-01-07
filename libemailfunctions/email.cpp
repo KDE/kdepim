@@ -264,7 +264,7 @@ KPIM::EmailParseResult KPIM::splitAddress( const QString & address,
                                            QString & comment )
 {
   QByteArray d, a, c;
-  KPIM::EmailParseResult result = splitAddress( address.utf8(), d, a, c );
+  KPIM::EmailParseResult result = splitAddress( address.toUtf8(), d, a, c );
   if ( result == AddressOk ) {
     displayName = QString::fromUtf8( d );
     addrSpec = QString::fromUtf8( a );
@@ -512,7 +512,7 @@ bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
     return false;
   }
 
-  int atChar = aStr.findRev( '@' );
+  int atChar = aStr.lastIndexOf( '@' );
   QString domainPart = aStr.mid( atChar + 1);
   QString localPart = aStr.left( atChar );
   bool tooManyAtsFlag = false;
@@ -576,7 +576,7 @@ QByteArray KPIM::getEmailAddress( const QByteArray & address )
 //-----------------------------------------------------------------------------
 QString KPIM::getEmailAddress( const QString & address )
 {
-  return QString::fromUtf8( getEmailAddress( address.utf8() ) );
+  return QString::fromUtf8( getEmailAddress( address.toUtf8() ) );
 }
 
 
@@ -601,7 +601,7 @@ QByteArray KPIM::getFirstEmailAddress( const QByteArray & addresses )
 //-----------------------------------------------------------------------------
 QString KPIM::getFirstEmailAddress( const QString & addresses )
 {
-  return QString::fromUtf8( getFirstEmailAddress( addresses.utf8() ) );
+  return QString::fromUtf8( getFirstEmailAddress( addresses.toUtf8() ) );
 }
 
 
@@ -814,7 +814,7 @@ QString KPIM::normalizedAddress( const QString & displayName,
 //-----------------------------------------------------------------------------
 QString KPIM::decodeIDN( const QString & addrSpec )
 {
-  const int atPos = addrSpec.findRev( '@' );
+  const int atPos = addrSpec.lastIndexOf( '@' );
   if ( atPos == -1 )
     return addrSpec;
 
@@ -829,7 +829,7 @@ QString KPIM::decodeIDN( const QString & addrSpec )
 //-----------------------------------------------------------------------------
 QString KPIM::encodeIDN( const QString & addrSpec )
 {
-  const int atPos = addrSpec.findRev( '@' );
+  const int atPos = addrSpec.lastIndexOf( '@' );
   if ( atPos == -1 )
     return addrSpec;
 
@@ -858,7 +858,7 @@ QString KPIM::normalizeAddressesAndDecodeIDNs( const QString & str )
        ( it != addressList.end() );
        ++it ) {
     if( !(*it).isEmpty() ) {
-      if ( KPIM::splitAddress( (*it).utf8(), displayName, addrSpec, comment )
+      if ( KPIM::splitAddress( (*it).toUtf8(), displayName, addrSpec, comment )
            == AddressOk ) {
 
         normalizedAddressList <<
@@ -896,7 +896,7 @@ QString KPIM::normalizeAddressesAndEncodeIDNs( const QString & str )
        ( it != addressList.end() );
        ++it ) {
     if( !(*it).isEmpty() ) {
-      if ( KPIM::splitAddress( (*it).utf8(), displayName, addrSpec, comment )
+      if ( KPIM::splitAddress( (*it).toUtf8(), displayName, addrSpec, comment )
            == AddressOk ) {
 
         normalizedAddressList <<
@@ -958,7 +958,7 @@ QString KPIM::quoteNameIfNecessary( const QString &str )
   if ( ( quoted[0] == '"' ) && ( quoted[quoted.length() - 1] == '"' ) ) {
     quoted = "\"" + escapeQuotes( quoted.mid( 1, quoted.length() - 2 ) ) + "\"";
   }
-  else if ( quoted.find( needQuotes ) != -1 ) {
+  else if ( quoted.indexOf( needQuotes ) != -1 ) {
     quoted = "\"" + escapeQuotes( quoted ) + "\"";
   }
 
