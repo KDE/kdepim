@@ -22,17 +22,15 @@
 #include "time.h"
 #include <kdepimmacros.h>
 
-typedef QList<QByteArray> QCStringList;
-
 namespace KMime {
 
   /** Consult the charset cache. Only used for reducing mem usage by
       keeping strings in a common repository.*/
-  extern const char* cachedCharset( const QByteArray &name ) KDE_EXPORT;
+  extern QByteArray cachedCharset( const QByteArray &name ) KDE_EXPORT;
 
   /** Consult the language cache. Only used for reducing mem usage by
       keeping strings in a common repository.*/
-  extern const char* cachedLanguage(const QByteArray &name) KDE_EXPORT;
+  extern QByteArray cachedLanguage( const QByteArray &name ) KDE_EXPORT;
 
   /** checks whether @p s contains any non-us-ascii characters */
   extern bool isUsAscii(const QString &s) KDE_EXPORT;

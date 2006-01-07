@@ -28,7 +28,6 @@
 #include <kcalendarsystem.h>
 
 #include <qtextcodec.h>
-#include <q3strlist.h> // for QStrIList
 #include <qregexp.h>
 //Added by qt3to4:
 #include <Q3CString>
@@ -42,27 +41,27 @@ using namespace KMime;
 
 namespace KMime {
 
-Q3StrIList c_harsetCache;
-Q3StrIList l_anguageCache;
+QList<QByteArray> c_harsetCache;
+QList<QByteArray> l_anguageCache;
 
-const char* cachedCharset( const QByteArray &name )
+QByteArray cachedCharset( const QByteArray &name )
 {
-  int idx=c_harsetCache.find(name.data());
-  if(idx>-1)
-    return c_harsetCache.at(idx);
+  foreach ( QByteArray charset, c_harsetCache )
+    if ( qstricmp( name.data(), charset.data() ) == 0 )
+      return charset;
 
-  c_harsetCache.append(name.toUpper().data());
+  c_harsetCache.append( name.toUpper() );
   //kdDebug() << "KNMimeBase::cachedCharset() number of cs " << c_harsetCache.count() << endl;
   return c_harsetCache.last();
 }
 
-const char* cachedLanguage(const QByteArray &name)
+QByteArray cachedLanguage( const QByteArray &name )
 {
-  int idx=l_anguageCache.find(name.data());
-  if(idx>-1)
-    return l_anguageCache.at(idx);
+  foreach ( QByteArray language, l_anguageCache )
+    if ( qstricmp( name.data(), language.data() ) == 0 )
+      return language;
 
-  l_anguageCache.append(name.toUpper().data());
+  l_anguageCache.append( name.toUpper() );
   //kdDebug() << "KNMimeBase::cachedCharset() number of cs " << c_harsetCache.count() << endl;
   return l_anguageCache.last();
 }

@@ -31,8 +31,8 @@ class KMime::Headers::List;
 
 #include <qtextstream.h>
 //Added by qt3to4:
-#include <Q3StrList>
 #include <Q3CString>
+#include <QList>
 
 namespace KMime {
 
@@ -73,7 +73,7 @@ class KDE_EXPORT Content : public Base {
 
     //content handling
     bool hasContent()               { return ( !h_ead.isEmpty() && (!b_ody.isEmpty() || !c_ontents.isEmpty()) ); }
-    void setContent(Q3StrList *l);
+    void setContent( const QList<QByteArray> & l );
     void setContent( const QByteArray &s );
     virtual void parse();
     virtual void assemble();

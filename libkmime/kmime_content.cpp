@@ -24,7 +24,6 @@
 
 #include <qtextcodec.h>
 //Added by qt3to4:
-#include <Q3StrList>
 #include <QTextStream>
 #include <Q3CString>
 
@@ -58,9 +57,9 @@ Content::~Content()
 }
 
 
-void Content::setContent(Q3StrList *l)
+void Content::setContent( const QList<QByteArray> & l )
 {
-  //qDebug("Content::setContent(QStrList *l) : start");
+  //qDebug("Content::setContent( const QList<QByteArray> & l ) : start");
   h_ead.resize(0);
   b_ody.resize(0);
 
@@ -71,8 +70,8 @@ void Content::setContent(Q3StrList *l)
   bts.setEncoding(QTextStream::Latin1);
 
   bool isHead=true;
-  for(char *line=l->first(); line; line=l->next()) {
-    if(isHead && line[0]=='\0') {
+  foreach ( QByteArray line, l ) {
+    if ( isHead && line.isEmpty() ) {
       isHead=false;
       continue;
     }
@@ -86,7 +85,7 @@ void Content::setContent(Q3StrList *l)
   hts << '\0';
   bts << '\0';
 
-  //qDebug("Content::setContent(QStrList *l) : finished");
+  //qDebug("Content::setContent( const QList<QByteArray> & l ) : finished");
 }
 
 
@@ -149,8 +148,8 @@ void Content::parse()
         else
           cat=Headers::CCmixedPart;  //default to "mixed"
 
-        QCStringList parts=mpp.parts();
-        QCStringList::Iterator it;
+        QList<QByteArray> parts=mpp.parts();
+        QList<QByteArray>::Iterator it;
         for(it=parts.begin(); it!=parts.end(); ++it) { //create a new Content for every part
           c=new Content();
           c->setContent(*it);
@@ -185,7 +184,7 @@ void Content::parse()
         b_ody.resize(0);
 
         //binary parts
-        for (unsigned int i=0;i<uup.binaryParts().count();i++) {
+        for ( int i = 0; i < uup.binaryParts().count(); ++i ) {
           c=new Content();
           //generate content with mime-compliant headers
           tmp="Content-Type: ";

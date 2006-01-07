@@ -16,7 +16,8 @@
 #ifndef __KMIME_PARSERS__
 #define __KMIME_PARSERS__
 
-#include <q3strlist.h>
+#include<QByteArray>
+#include<QList>
 
 namespace KMime {
 
@@ -58,15 +59,15 @@ public:
   int partialCount()          { return t_otalNr; }
   bool hasTextPart()          { return (t_ext.length()>1); }
   QByteArray textPart()         { return t_ext; }
-  Q3StrList binaryParts()       { return b_ins; }
-  Q3StrList filenames()         { return f_ilenames; }
-  Q3StrList mimeTypes()         { return m_imeTypes; }
+  QList<QByteArray> binaryParts()       { return b_ins; }
+  QList<QByteArray> filenames()         { return f_ilenames; }
+  QList<QByteArray> mimeTypes()         { return m_imeTypes; }
 
 protected:
   static QByteArray guessMimeType(const QByteArray& fileName);
 
   QByteArray s_rc, t_ext;
-  Q3StrList b_ins, f_ilenames, m_imeTypes;
+  QList<QByteArray> b_ins, f_ilenames, m_imeTypes;
   int p_artNr, t_otalNr;
 };
 

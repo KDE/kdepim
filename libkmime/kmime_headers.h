@@ -25,13 +25,11 @@
 #include "kmime_header_parsing.h"
 
 #include <qstring.h>
-#include <q3strlist.h>
 #include <qstringlist.h>
 #include <qregexp.h>
 #include <qdatetime.h>
 #include <q3asciidict.h>
 #include <qmap.h>
-#include <q3ptrlist.h>
 //Added by qt3to4:
 #include <QList>
 #include <Q3CString>
