@@ -68,7 +68,7 @@ AC_DEFUN([KDEPIM_PATH_GPGME],
   else
     GPGME_CFLAGS=""
     GPGME_LIBS=""
-    AC_MSG_RESULT([no, will use local libgpgme-copy])
+    AC_MSG_RESULT([no])
     ifelse([$3], , :, [$3])
   fi
   AC_SUBST(GPGME_CFLAGS)
@@ -85,7 +85,6 @@ dnl END inline of gpgme.m4
 # It was the first useable one for C++ (class keyword) and KDE (largefile support).
 # If you change this minimum version here, update also configure.in.bot
 
-kdepim_needs_gpgme_copy=""
 KDEPIM_PATH_GPGME(0.4.5,[
 	AC_LANG_SAVE
 	AC_LANG_C
@@ -176,19 +175,11 @@ KDEPIM_PATH_GPGME(0.4.5,[
 	AC_LANG_RESTORE
 	
 ],[
-	kdepim_needs_gpgme_copy="true"
-	GPGME_CFLAGS='-I$(top_srcdir)/libkdenetwork/libgpgme-copy/gpgme -I$(top_srcdir)/libkdenetwork/libgpg-error-copy -I$(top_builddir)/libkdenetwork/libgpg-error-copy'
-	GPGME_LIBS='$(top_builddir)/libkdenetwork/libgpgme-copy/gpgme/libgpgme.la'
-	GPGME_LIBS_DEP='$(GPGME_LIBS)'
-	# All of this is in gpgme-copy
-	AC_DEFINE(HAVE_GPGME_KEYLIST_MODE_VALIDATE, 1, [Define to 1 if your gpgme supports GPGME_KEYLIST_MODE_VALIDATE])
-	AC_DEFINE(HAVE_GPGME_KEY_T_KEYLIST_MODE, 1, [Define to 1 if your gpgme's gpgme_key_t has the keylist_mode member])
-	AC_DEFINE(HAVE_GPGME_CANCEL, 1, [Define to 1 if your gpgme supports gpgme_cancel()])
+	AC_MSG_RESULT([no])
+	DO_NOT_COMPILE="$DO_NOT_COMPILE kmail certmanager"
 ])
 
 AC_SUBST(GPGME_LIBS_DEP)
-
-AM_CONDITIONAL(needs_gpgme_copy, test -n "$kdepim_needs_gpgme_copy")
 
 dnl Always true - either from the local copy or from the system lib.
 dnl Still used in gpgmepp/gpgmefw.h for some reason.
