@@ -176,7 +176,7 @@ KDEPIM_PATH_GPGME(0.4.5,[
 	
 ],[
 	AC_MSG_RESULT([no])
-	DO_NOT_COMPILE="$DO_NOT_COMPILE kmail certmanager"
+	DO_NOT_COMPILE="$DO_NOT_COMPILE kmail kleopatra"
 ])
 
 AC_SUBST(GPGME_LIBS_DEP)
