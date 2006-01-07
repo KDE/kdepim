@@ -175,8 +175,11 @@ KDEPIM_PATH_GPGME(0.4.5,[
 	AC_LANG_RESTORE
 	
 ],[
-	AC_MSG_RESULT([no])
-	DO_NOT_COMPILE="$DO_NOT_COMPILE kmail kleopatra"
+	AC_MSG_ERROR([
+  You are missing gpgme 0.4.5 or higher.
+  Download gpgme >= 0.4.5 from ftp://ftp.gnupg.org/gcrypt/alpha/gpgme
+  or use the --with-gpgme-prefix=/path/where/gpgme/is/installed option.
+                     ])
 ])
 
 AC_SUBST(GPGME_LIBS_DEP)
