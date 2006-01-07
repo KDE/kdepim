@@ -1,0 +1,21 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=looknfeel
+Type=Service
+ServiceTypes=KCModule
+DocPath=kleopatra/configuration-dn-order.html
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kleopatra
+X-KDE-FactoryName=kleopatra_config_dnorder
+X-KDE-HasReadOnlyMode=false
+X-KDE-ParentApp=kleopatra
+X-KDE-ParentComponents=kleopatra
+X-KDE-CfgDlgHierarchy=Kleopatra
+
+Name=DN-Attribute Order
+Name[x-test]=xxDN-Attribute Orderxx
+Comment=Configure the order in which DN attributes are shown
+Comment[x-test]=xxConfigure the order in which DN attributes are shownxx
+Keywords=DN,order,RDN,attribute
+Keywords[x-test]=xxDN,order,RDN,attributexx

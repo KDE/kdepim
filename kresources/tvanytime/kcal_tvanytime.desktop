@@ -1,12 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=TV Schedules
-Name[cs]=TV programy
-Name[es]=Programación de TV
-Name[et]=Telekavad
-Name[fr]=Programmes TV
-Name[ga]=Sceidil Teilifíse
-Name[zh_CN]=电视日程安排
+Name[x-test]=xxTV Schedulesxx
 X-KDE-Library=kcal_tvanytime
 Type=Service
 ServiceTypes=KResources/Plugin

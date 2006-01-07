@@ -1,0 +1,21 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=network
+Type=Service
+ServiceTypes=KCModule
+DocPath=kleopatra/configuration.html#configuration-directory-services
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kleopatra
+X-KDE-FactoryName=kleopatra_config_dirserv
+X-KDE-HasReadOnlyMode=false
+X-KDE-ParentApp=kleopatra
+X-KDE-ParentComponents=kleopatra
+X-KDE-CfgDlgHierarchy=Kleopatra
+
+Name=Directory Services
+Name[x-test]=xxDirectory Servicesxx
+Comment=Configuration of LDAP directory services
+Comment[x-test]=xxConfiguration of LDAP directory servicesxx
+Keywords=ldap,directory,services
+Keywords[x-test]=xxldap,directory,servicesxx

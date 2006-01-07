@@ -1,25 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=XML Feature Plan
-Name[cs]=XML plán vlastností
-Name[da]=XML Funktionsplan
-Name[el]=Σχέδιο χαρακτηριστικών XML
-Name[es]=Plan de características XML
-Name[et]=XML võimaluste plaan
-Name[fr]=Plan de fonctionnalités XML
-Name[hu]=XML FeaturePlan
-Name[it]=Piano caratteristiche XML
-Name[nl]=Functionaliteitsplanning in XML
-Name[pl]=Plan funkcjonalności XML
-Name[pt]=Plano de Funcionalidades em XML
-Name[pt_BR]=Plano de Funcionalidades XML
-Name[sl]=Načrt zmožnosti v XML
-Name[sr]=XML план могућности
-Name[sr@Latn]=XML plan mogućnosti
-Name[ta]=XML பண்பு திட்டம்
-Name[tr]=XML Özellik Planı
-Name[xx]=xxXML Feature Planxx
-Name[zh_CN]=XML 特性计划
+Name[x-test]=xxXML Feature Planxx
 X-KDE-Library=kcal_resourcefeatureplan
 Type=Service
 ServiceTypes=KResources/Plugin

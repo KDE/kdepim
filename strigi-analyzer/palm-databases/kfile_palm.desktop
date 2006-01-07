@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=PalmOS Database Info
+Name[x-test]=xxPalmOS Database Infoxx
+ServiceTypes=KFilePlugin
+X-KDE-Library=kfile_palm
+MimeType=application/vnd.palm
+PreferredGroups=General
+PreferredItems=Name,DBType,TypeID,CreatorID,NrRecords,Size

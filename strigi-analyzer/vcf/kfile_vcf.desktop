@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=vCard Info
+Name[x-test]=xxvCard Infoxx
+ServiceTypes=KFilePlugin
+X-KDE-Library=kfile_vcf
+MimeType=text/x-vcard
+PreferredGroups=Technical
+PreferredItems=Name,Email,Telephone
