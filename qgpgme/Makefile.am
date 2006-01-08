@@ -16,3 +16,5 @@ METASOURCES = AUTO
 messages:
 	$(XGETTEXT) *.cpp *.h -o $(podir)/libqgpgme.pot
 
+include $(top_srcdir)/admin/Doxyfile.am
+

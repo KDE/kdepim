@@ -50,3 +50,4 @@ libgpgme___la_LDFLAGS = -no-undefined -version-info 2:0:2
 libgpgme___la_LIBADD = $(GPGME_LIBS)
 libgpgme___la_DEPENDENCIES = $(GPGME_LIBS_DEP)
 
+include $(top_srcdir)/admin/Doxyfile.am
