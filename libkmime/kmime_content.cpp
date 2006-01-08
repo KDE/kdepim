@@ -32,14 +32,14 @@ using namespace KMime;
 namespace KMime {
 
 Content::Content()
- : h_eaders(0), f_orceDefaultCS(false)
+ : f_orceDefaultCS( false )
 {
   d_efaultCS = cachedCharset("ISO-8859-1");
 }
 
 
 Content::Content(const Q3CString &h, const Q3CString &b)
- : h_eaders(0), f_orceDefaultCS(false)
+ : f_orceDefaultCS( false )
 {
   d_efaultCS = cachedCharset("ISO-8859-1");
   h_ead=h.copy();
@@ -51,9 +51,8 @@ Content::~Content()
 {
   qDeleteAll( c_ontents );
   c_ontents.clear();
-  qDeleteAll( *h_eaders );
-  h_eaders->clear();
-  delete h_eaders;
+  qDeleteAll( h_eaders );
+  h_eaders.clear();
 }
 
 
@@ -105,10 +104,8 @@ void Content::setContent( const QByteArray &s )
 void Content::parse()
 {
   //qDebug("void Content::parse() : start");
-  qDeleteAll( *h_eaders );
-  h_eaders->clear();
-  delete h_eaders;
-  h_eaders=0;
+  qDeleteAll( h_eaders );
+  h_eaders.clear();
 
   // check this part has already been partioned into subparts.
   // if this is the case, we will not try to reparse the body
@@ -284,10 +281,8 @@ void Content::assemble()
 
 void Content::clear()
 {
-  qDeleteAll( *h_eaders );
-  h_eaders->clear();
-  delete h_eaders;
-  h_eaders=0;
+  qDeleteAll( h_eaders );
+  h_eaders.clear();
   qDeleteAll( c_ontents );
   c_ontents.clear();
   h_ead.resize(0);
@@ -536,21 +531,16 @@ void Content::addContent(Content *c, bool prepend)
     Content *main=new Content();
 
     //the Mime-Headers are needed, so we move them to the new content
-    if(h_eaders) {
-
-      main->h_eaders=new Headers::Base::List();
-
-      for ( Headers::Base::List::iterator it = h_eaders->begin();
-            it != h_eaders->end(); ) {
-        if ( (*it)->isMimeHeader() ) {
-          // append to new content
-          main->h_eaders->append( *it );
-          // and remove from this content
-          h_eaders->erase( it );
-        }
-        else
-          ++it;
+    for ( Headers::Base::List::iterator it = h_eaders.begin();
+            it != h_eaders.end(); ) {
+      if ( (*it)->isMimeHeader() ) {
+        // append to new content
+        main->h_eaders.append( *it );
+        // and remove from this content
+        h_eaders.erase( it );
       }
+      else
+        ++it;
     }
 
     //"main" is now part of a multipart/mixed message
@@ -595,26 +585,20 @@ void Content::removeContent(Content *c, bool del)
     Content *main = c_ontents.first();
 
     //first we have to move the mime-headers
-    if(main->h_eaders) {
-      if(!h_eaders) {
-        h_eaders=new Headers::Base::List();
+    for ( Headers::Base::List::iterator it = main->h_eaders.begin();
+          it != main->h_eaders.end(); ) {
+      if ( (*it)->isMimeHeader() ) {
+        kdDebug(5003) << "Content::removeContent(Content *c, bool del) : mime-header moved: "
+                      << (*it)->as7BitString() << endl;
+        // first remove the old header
+        removeHeader( (*it)->type() );
+        // then append to new content
+        h_eaders.append( *it );
+        // and finally remove from this content
+        main->h_eaders.erase( it );
       }
-
-      for ( Headers::Base::List::iterator it = main->h_eaders->begin();
-            it != main->h_eaders->end(); ) {
-        if ( (*it)->isMimeHeader() ) {
-          kdDebug(5003) << "Content::removeContent(Content *c, bool del) : mime-header moved: "
-                        << (*it)->as7BitString() << endl;
-          // first remove the old header
-          removeHeader( (*it)->type() );
-          // then append to new content
-          h_eaders->append( *it );
-          // and finally remove from this content
-          main->h_eaders->erase( it );
-        }
-        else
-          ++it;
-      }
+      else
+        ++it;
     }
 
     //now we can copy the body
@@ -723,10 +707,9 @@ Headers::Base* Content::getHeaderByType(const char *type)
     return 0;
 
   //first we check if the requested header is already cached
-  if(h_eaders)
-    foreach ( Headers::Base *h, *h_eaders )
-      if ( h->is( type ) )
-        return h; //found
+  foreach ( Headers::Base *h, h_eaders )
+    if ( h->is( type ) )
+      return h; //found
 
   //now we look for it in the article head
   Headers::Base *h = 0;
@@ -772,11 +755,7 @@ Headers::Base* Content::getHeaderByType(const char *type)
     else
       h=new Headers::Generic(type, this, raw);
 
-    if(!h_eaders) {
-      h_eaders=new Headers::Base::List();
-    }
-
-    h_eaders->append(h);  //add to cache
+    h_eaders.append( h );  //add to cache
     return h;
   }
   else
@@ -788,23 +767,19 @@ void Content::setHeader(Headers::Base *h)
 {
   if(!h) return;
   removeHeader(h->type());
-  if(!h_eaders) {
-    h_eaders=new Headers::Base::List();
-  }
-  h_eaders->append(h);
+  h_eaders.append( h );
 }
 
 
 bool Content::removeHeader(const char *type)
 {
-  if(h_eaders)
-    for ( Headers::Base::List::iterator it = h_eaders->begin();
-          it != h_eaders->end(); ++it )
-      if ( (*it)->is(type) ) {
-        delete (*it);
-        h_eaders->erase( it );
-        return true;
-      }
+  for ( Headers::Base::List::iterator it = h_eaders.begin();
+        it != h_eaders.end(); ++it )
+    if ( (*it)->is(type) ) {
+      delete (*it);
+      h_eaders.erase( it );
+      return true;
+    }
 
   return false;
 }

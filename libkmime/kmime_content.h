@@ -140,7 +140,7 @@ class KDE_EXPORT Content : public Base {
     Q3CString  h_ead,
               b_ody;
     List c_ontents;
-    Headers::Base::List *h_eaders;
+    Headers::Base::List h_eaders;
     const char *d_efaultCS;
     bool f_orceDefaultCS;
 
@@ -156,10 +156,7 @@ template <class T> T* Content::getHeaderInstance(T *ptr, bool create)
   ptr=static_cast <T*> (getHeaderByType(dummy.type()));
   if(!ptr && create) { //no such header found, but we need one => create it
     ptr=new T(this);
-    if(!(h_eaders)) {
-      h_eaders=new Headers::Base::List();
-    }
-    h_eaders->append(ptr);
+    h_eaders.append( ptr );
   }
 
   return ptr;
