@@ -45,7 +45,7 @@ ResourceLocalDirConfig::ResourceLocalDirConfig( QWidget* parent,  const char* na
 {
   setObjectName(name);
   resize( 245, 115 ); 
-  QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
+  QGridLayout *mainLayout = new QGridLayout( this );
 
   QLabel *label = new QLabel( i18n( "Location:" ), this );
   mURL = new KURLRequester( this );

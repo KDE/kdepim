@@ -552,19 +552,19 @@ void ResourceCached::clearChange( const QString &uid )
 
   for ( it = mAddedIncidences.begin(); it != mAddedIncidences.end(); ++it )
     if ( it.key()->uid() == uid ) {
-      mAddedIncidences.remove( it );
+      mAddedIncidences.erase( it );
       break;
     }
 
   for ( it = mChangedIncidences.begin(); it != mChangedIncidences.end(); ++it )
     if ( it.key()->uid() == uid ) {
-      mChangedIncidences.remove( it );
+      mChangedIncidences.erase( it );
       break;
     }
 
   for ( it = mDeletedIncidences.begin(); it != mDeletedIncidences.end(); ++it )
     if ( it.key()->uid() == uid ) {
-      mDeletedIncidences.remove( it );
+      mDeletedIncidences.erase( it );
       break;
     }
 }
@@ -601,11 +601,13 @@ void ResourceCached::checkForAutomaticSave()
 {
   if ( mSavePolicy == SaveAlways )  {
     kdDebug(5800) << "ResourceCached::checkForAutomaticSave(): save now" << endl;
-    mSaveTimer.start( 1 * 1000, true ); // 1 second
+    mSaveTimer.setSingleShot( true );
+    mSaveTimer.start( 1 * 1000 ); // 1 second
   } else if ( mSavePolicy == SaveDelayed ) {
     kdDebug(5800) << "ResourceCached::checkForAutomaticSave(): save delayed"
               << endl;
-    mSaveTimer.start( 15 * 1000, true ); // 15 seconds
+    mSaveTimer.setSingleShot( true );
+    mSaveTimer.start( 15 * 1000 ); // 15 seconds
   }
 }
 

@@ -20,12 +20,12 @@
 #ifndef KCAL_CONFIRMSAVEDIALOG_H
 #define KCAL_CONFIRMSAVEDIALOG_H
 
+#include <QTreeWidget>
+
 #include <libkcal/incidence.h>
 
 #include <kdialogbase.h>
 #include <kdepimmacros.h>
-
-class KListView;
 
 namespace KCal {
 
@@ -39,7 +39,7 @@ class KDE_EXPORT ConfirmSaveDialog : public KDialogBase
                         const QString &operation );
 
   private:
-    KListView *mListView;
+    QTreeWidget *mListView;
 };
 
 }

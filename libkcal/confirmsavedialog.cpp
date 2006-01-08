@@ -20,15 +20,11 @@
 
 #include "confirmsavedialog.h"
 
-#include <klistview.h>
 #include <klocale.h>
 
-#include <qlayout.h>
-#include <q3frame.h>
-#include <qlabel.h>
-//Added by qt3to4:
-#include <QVBoxLayout>
 #include <QBoxLayout>
+#include <QLabel>
+#include <QVBoxLayout>
 
 using namespace KCal;
 
@@ -46,11 +42,13 @@ ConfirmSaveDialog::ConfirmSaveDialog( const QString &destination,
       .arg( destination ), topFrame );
   topLayout->addWidget( label );
 
-  mListView = new KListView( topFrame );
-  mListView->addColumn( i18n("Operation") );
-  mListView->addColumn( i18n("Type") );
-  mListView->addColumn( i18n("Summary") );
-  mListView->addColumn( i18n("UID") );
+  QStringList headers;
+  headers << i18n("Operation") << i18n("Type") << i18n("Summary") << i18n("UID");
+
+  mListView = new QTreeWidget( topFrame );
+  mListView->setColumnCount( 4 );
+  mListView->setHeaderLabels( headers );
+
   topLayout->addWidget( mListView );
 }
 
@@ -60,7 +58,7 @@ void ConfirmSaveDialog::addIncidences( const Incidence::List &incidences,
   Incidence::List::ConstIterator it;
   for( it = incidences.begin(); it != incidences.end(); ++it ) {
     Incidence *i = *it;
-    KListViewItem *item = new KListViewItem( mListView );
+    QTreeWidgetItem *item = new QTreeWidgetItem( mListView );
     item->setText( 0, operation );
     item->setText( 1, i->type() );
     item->setText( 2, i->summary() );

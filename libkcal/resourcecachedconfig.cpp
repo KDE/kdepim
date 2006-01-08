@@ -40,8 +40,8 @@
 using namespace KCal;
 
 ResourceCachedReloadConfig::ResourceCachedReloadConfig( QWidget *parent,
-                                                        const char *name )
-  : QWidget( parent, name )
+                                                        const char* )
+  : QWidget( parent )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
 
@@ -74,14 +74,13 @@ void ResourceCachedReloadConfig::saveSettings( ResourceCached *resource )
 
 void ResourceCachedReloadConfig::slotIntervalStateChanged( int state )
 {
-  if ( state == QCheckBox::On ) mIntervalSpin->setEnabled( true );
+  if ( state == Qt::Checked ) mIntervalSpin->setEnabled( true );
   else mIntervalSpin->setEnabled( false );
 }
 
 
-ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent,
-                                                        const char *name )
-  : QWidget( parent, name )
+ResourceCachedSaveConfig::ResourceCachedSaveConfig( QWidget *parent, const char* )
+  : QWidget( parent )
 {
   QBoxLayout *topLayout = new QVBoxLayout( this );
 
@@ -117,7 +116,7 @@ void ResourceCachedSaveConfig::saveSettings( ResourceCached *resource )
 
 void ResourceCachedSaveConfig::slotIntervalStateChanged( int state )
 {
-  if ( state == QCheckBox::On ) mIntervalSpin->setEnabled( true );
+  if ( state == Qt::Checked ) mIntervalSpin->setEnabled( true );
   else mIntervalSpin->setEnabled( false );
 }
 

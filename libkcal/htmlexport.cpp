@@ -70,7 +70,7 @@ bool HtmlExport::save( const QString &fileName )
 bool HtmlExport::save(QTextStream *ts)
 {
   if ( !mSettings ) return false;
-  ts->setEncoding( QTextStream::UnicodeUTF8 );
+  ts->setCodec( "UTF-8" );
 
   // Write HTML header
   *ts << "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" ";
@@ -314,25 +314,25 @@ void HtmlExport::createTodoList ( QTextStream *ts )
 {
   Todo::List rawTodoList = mCalendar->todos();
 
-  Todo::List::Iterator it = rawTodoList.begin();
-  while ( it != rawTodoList.end() ) {
-    Todo *ev = *it;
+  int index = 0;
+  while ( index < rawTodoList.count() ) {
+    Todo *ev = rawTodoList[ index ];
     Todo *subev = ev;
     if ( ev->relatedTo() ) {
       if ( ev->relatedTo()->type()=="Todo" ) {
-        if ( rawTodoList.find( static_cast<Todo *>( ev->relatedTo() ) ) ==
-             rawTodoList.end() ) {
+        if ( !rawTodoList.contains( static_cast<Todo *>( ev->relatedTo() ) ) ) {
           rawTodoList.append( static_cast<Todo *>( ev->relatedTo() ) );
         }
       }
     }
-    it = rawTodoList.find( subev );
-    ++it;
+    index = rawTodoList.indexOf( subev );
+    ++index;
   }
 
   // FIXME: Sort list by priorities. This is brute force and should be
   // replaced by a real sorting algorithm.
   Todo::List todoList;
+  Todo::List::ConstIterator it;
   for ( int i = 1; i <= 9; ++i ) {
     for( it = rawTodoList.begin(); it != rawTodoList.end(); ++it ) {
       if ( (*it)->priority() == i && checkSecrecy( *it ) ) {
@@ -589,7 +589,7 @@ QString HtmlExport::breakString(const QString &text)
     int pos = 0;
     QString tmp;
     for(int i=0;i<=number;i++) {
-      pos = tmpText.find("\n");
+      pos = tmpText.indexOf("\n");
       tmp = tmpText.left(pos);
       tmpText = tmpText.right(tmpText.length() - pos - 1);
       out += tmp + "<br />";

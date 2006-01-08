@@ -339,8 +339,8 @@ bool ICalTimezoneSource::parse(const QString &fileName, KTimezones &zones)
   if (!file.open(QIODevice::ReadOnly))
     return false;
   QTextStream ts(&file);
-  ts.setEncoding(QTextStream::Latin1);
-  QByteArray text = ts.read().trimmed().toLatin1();
+  ts.setCodec( "ISO 8859-1" );
+  QByteArray text = ts.readAll().trimmed().toLatin1();
   file.close();
 
   bool result = false;

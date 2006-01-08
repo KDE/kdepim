@@ -47,7 +47,7 @@ ResourceLocalConfig::ResourceLocalConfig( QWidget* parent,  const char* name )
 {
 setObjectName(name);
   resize( 245, 115 ); 
-  QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
+  QGridLayout *mainLayout = new QGridLayout( this );
 
   QLabel *label = new QLabel( i18n( "Location:" ), this );
   mURL = new KURLRequester( this );
@@ -91,11 +91,11 @@ void ResourceLocalConfig::saveSettings( KRES::Resource *resource )
     
     // find a non-existent name
     for( int i = 0; file.exists(); ++i )
-      file.setName( saveFolder + "/std" + QString::number(i) + ".ics" );
+      file.setFileName( saveFolder + "/std" + QString::number(i) + ".ics" );
     
-    KMessageBox::information( this, i18n( "You did not specify a URL for this resource. Therefore, the resource will be saved in %1. It is still possible to change this location by editing the resource properties." ).arg( file.name() ) );
+    KMessageBox::information( this, i18n( "You did not specify a URL for this resource. Therefore, the resource will be saved in %1. It is still possible to change this location by editing the resource properties." ).arg( file.fileName() ) );
     
-    url = file.name();
+    url = file.fileName();
   }
 
   ResourceLocal* res = static_cast<ResourceLocal*>( resource );
@@ -103,7 +103,7 @@ void ResourceLocalConfig::saveSettings( KRES::Resource *resource )
     res->mURL = url;
 
     delete res->mFormat;
-    if ( icalButton->isOn() ) {
+    if ( icalButton->isDown() ) {
       res->mFormat = new ICalFormat();
     } else {
       res->mFormat = new VCalFormat();

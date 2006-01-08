@@ -140,7 +140,7 @@ class QtopiaParser : public QXmlDefaultHandler
         todo->setUid( uid );
         
         QString description = attributes.value( "Description" );
-        int pos = description.find( '\n' );
+        int pos = description.indexOf( '\n' );
         if ( pos > 0 ) {
           QString summary = description.left( pos );
           todo->setSummary( summary );
@@ -228,7 +228,7 @@ class QtopiaParser : public QXmlDefaultHandler
 
     QStringList lookupCategories( const QString &categoryList )
     {
-      QStringList categoryIds = QStringList::split( ";", categoryList );
+      QStringList categoryIds = categoryList.split( ";" );
       QStringList categories;
       QStringList::ConstIterator it;
       for( it = categoryIds.begin(); it != categoryIds.end(); ++it ) {
@@ -273,7 +273,7 @@ bool QtopiaFormat::load( Calendar *calendar, const QString &fileName)
 
   QtopiaParser handler( calendar );
   QFile xmlFile( fileName );
-  QXmlInputSource source( xmlFile );
+  QXmlInputSource source( &xmlFile );
   QXmlSimpleReader reader;
   reader.setContentHandler( &handler );
   return reader.parse( source );
