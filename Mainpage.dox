@@ -11,8 +11,8 @@
 	* <table width="100%">
 	* <tr><th>Applications</th><th>Libraries</th></tr>
 	* <tr><td valign="top">
-        * - <a href="certmanager/html/index.html"><b>certmanager</b></a>
-        *   (<a href="certmanager/html/classes.html">classes</a>)\n
+        * - <a href="kleopatra/html/index.html"><b>kleopatra</b></a>
+        *   (<a href="kleopatra/html/classes.html">classes</a>)\n
         *   <i>KDE Key Manager.</i>
         * - <a href="kaddressbook/html/index.html"><b>kaddressbook</b></a>
         *   (<a href="kaddressbook/html/classes.html">classes</a>)\n
@@ -34,9 +34,6 @@
         * - <a href="kgantt/html/index.html"><b>kgantt</b></a>
         *   (<a href="kgantt/html/classes.html">classes</a>)\n
         *   <i></i>
-        * - <a href="kitchensync/html/index.html"><b>kitchensync</b></a>
-        *   (<a href="kitchensync/html/classes.html">classes</a>)\n
-        *   <i>Generic Syncing.</i>
         * - <a href="kmail/html/index.html"><b>kmail</b></a>
         *   (<a href="kmail/html/classes.html">classes</a>)\n
         *   <i>A fully-featured email client.</i>
@@ -64,12 +61,11 @@
 	* </td>
 	* <td valign="top">
         * - <a href="libemailfunctions/html/index.html"><b>libemailfunctions</b></a>
+        *   (<a href="libemailfunctions/html/classes.html">classes</a>)\n
         *   <i>A library for general purpose email handling.</i>
         * - <a href="libkcal/html/index.html"><b>libkcal</b></a>
         *   (<a href="libkcal/html/classes.html">classes</a>)\n
         *   <i>A library of calendaring classes.</i>
-        * - <a href="libkdenetwork/html/index.html"><b>libkdenetwork</b></a>
-        *   <i>A library of networkworking classes.</i>
         * - <a href="libkdepim/html/index.html"><b>libkdepim</b></a>
         *   (<a href="libkdepim/html/classes.html">classes</a>)\n
         *   <i>A library of widgets and other goodies for pim.</i>
@@ -78,12 +74,16 @@
         *   <i>A library for handling holidays.</i>
         * - <a href="libkmime/html/index.html"><b>libkmime</b></a>
         *   (<a href="libkmime/html/classes.html">classes</a>)\n
+        *   <i>A library for encryption handling.</i>
+        * - <a href="gpgmepp/html/index.html"><b>GpgME++</b></a>
+        *   (<a href="gpgmepp/html/classes.html">classes</a>)\n
+        *   <i>Qt eventloop integration for gpgme.</i>
+        * - <a href="qgpgme/html/index.html"><b>QGpgME</b></a>
+        *   (<a href="qgpgme/html/classes.html">classes</a>)\n
         *   <i>A library for MIME handling.</i>
         * - <a href="libkpgp/html/index.html"><b>libkpgp</b></a>
         *   (<a href="libkpgp/html/classes.html">classes</a>)\n
         *   <i>A PGP abstraction layer.</i>
-        * - <a href="libkpimexchange/html/index.html"><b>libkpimexchange</b></a>
-        *   <i></i>
         * - <a href="libkpimidentities/html/index.html"><b>libkpimidentities</b></a>
         *   (<a href="libkpimidentities/html/classes.html">classes</a>)\n
         *   <i>A library for managing identities.</i>
