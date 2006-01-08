@@ -226,8 +226,8 @@ public:
     UnknownAttrsHandling unknownAttrsHandling )
   {
     if( !attrOrder.isEmpty() ){
-      QList< QPair<QString,QString>* > unknownEntries;
-      QPair<QString,QString>* unknownEntry; // for Q_FOREACH
+      QList< QPair<QString,QString> > unknownEntries;
+      QPair<QString,QString> unknownEntry; // for Q_FOREACH
 
       QList< QPair<QString,QString> > dnNew;
 
@@ -246,14 +246,14 @@ public:
             }
           }
           if( !bFound )
-            unknownEntries.append( const_cast< QPair< QString, QString >* >(&(*itDN)) );
+            unknownEntries.append( (*itDN) );
         }
       }
 
       // prepend the unknown attrs (if desired)
       if( unknownAttrsHandling == unknownAttrsPrefix ){
         Q_FOREACH( unknownEntry, unknownEntries ) {
-          dnNew << *unknownEntry;
+          dnNew << unknownEntry;
         }
       }
 
@@ -265,7 +265,7 @@ public:
           // insert the unknown attrs (if desired)
           if( unknownAttrsHandling == unknownAttrsInfix ){
             Q_FOREACH( unknownEntry, unknownEntries ) {
-              dnNew << *unknownEntry;
+              dnNew << unknownEntry;
             }
           }
         }else{
@@ -282,7 +282,7 @@ public:
       if( unknownAttrsHandling == unknownAttrsPostfix ||
           ( unknownAttrsHandling == unknownAttrsInfix && ! b_X_declared ) ){
         Q_FOREACH( unknownEntry, unknownEntries ) {
-          dnNew << *unknownEntry;
+          dnNew << unknownEntry;
         }
       }
 
