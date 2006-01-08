@@ -1,5 +1,5 @@
-AM_CPPFLAGS = -DLIBKLEOPATRA_NO_COMPAT -I$(srcdir)/../lib -I$(srcdir)/../lib/ui -I../lib/ui \
-   -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
+AM_CPPFLAGS = -DLIBKLEOPATRA_NO_COMPAT -I$(top_srcdir)/libkleo -I$(top_srcdir)/libkleo/ui \
+   -I$(top_builddir)libkleo/ui -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
 
 METASOURCES = AUTO
 
@@ -16,7 +16,7 @@ kcm_kleopatra_la_SOURCES = dirservconfigpage.cpp \
 	dnorderconfigpage.cpp
 
 kcm_kleopatra_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
-kcm_kleopatra_la_LIBADD = ../lib/libkleopatra.la $(LIB_KDEUI)
+kcm_kleopatra_la_LIBADD = ../../libkleo/libkleopatra.la $(LIB_KDEUI)
 
 kde_services_DATA = \
 	kleopatra_config_dirserv.desktop \

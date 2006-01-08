@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir)/libkdenetwork \
-	-I$(top_srcdir)/kleopatra/lib \
+	-I$(top_srcdir)/libkleo \
 	$(GPGME_CFLAGS) $(all_includes)
 
 noinst_LTLIBRARIES = libkleopatra_core.la

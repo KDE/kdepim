@@ -1,8 +1,8 @@
-SUBDIRS = lib conf kwatchgnupg .
+SUBDIRS = conf kwatchgnupg .
 
 KDE_CXXFLAGS = -DLIBKLEOPATRA_NO_COMPAT
 
-INCLUDES = -I$(srcdir)/lib -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
+INCLUDES = -I$(top_srcdir)/libkleo -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
 
 bin_PROGRAMS = kleopatra
 
@@ -18,7 +18,7 @@ kleopatra_SOURCES = \
 METASOURCES = AUTO
 
 kleopatra_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-kleopatra_LDADD   = conf/libconf.la lib/libkleopatra.la $(LIB_KUTILS) $(LIB_KABC)
+kleopatra_LDADD   = conf/libconf.la ../libkleo/libkleopatra.la $(LIB_KUTILS) $(LIB_KABC)
 
 rcdir = $(kde_datadir)/kleopatra
 rc_DATA = kleopatraui.rc

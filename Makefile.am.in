@@ -18,7 +18,7 @@ COMPILE_AFTER_libksieve = kmail
 # Applications and their downward dependencies (ie. the libs they use)
 #
 COMPILE_BEFORE_libkpimidentities = libkdepim kleopatra
-COMPILE_BEFORE_kleopatra = libkdenetwork libkpgp
+COMPILE_BEFORE_kleopatra = libkdenetwork libkpgp libkleo 
 COMPILE_BEFORE_korganizer = libkdepim libkpimidentities kgantt
 COMPILE_BEFORE_kaddressbook = libkdepim kleopatra akregator
 COMPILE_BEFORE_kandy = libkdepim
