@@ -1,4 +1,4 @@
-INCLUDES =  $(GPGME_CFLAGS) $(all_includes)
+INCLUDES = -I$(top_srcdir) $(GPGME_CFLAGS) $(all_includes)
 
 check_PROGRAMS = dataprovidertest
 
