@@ -2,9 +2,10 @@
 digraph "inter-dependency graph for kdepim" {
         "akregator" -> "kaddressbook";
         "akregator" -> "kontact";
-        "kleopatra" -> "kaddressbook";
-        "kleopatra" -> "kmail";
-        "kleopatra" -> "libkpimidentities";
+        "libkleo" -> "kleopatra";
+        "libkleo" -> "kaddressbook";
+        "libkleo" -> "kmail";
+        "libkleo" -> "libkpimidentities";
         "kaddressbook" -> "kontact";
         "kaddressbook" -> "kresources";
         "kaddressbook" -> "wizards";
@@ -37,10 +38,11 @@ digraph "inter-dependency graph for kdepim" {
         "libkcal" -> "libkdepim";
         "libkcal" -> "libkpimexchange";
         "libkcal" -> "plugins";
-        "libkdenetwork" -> "kleopatra";
-        "libkdenetwork" -> "kmail";
-        "libkdenetwork" -> "knode";
-        "libkdenetwork" -> "korn";
+        "qgpgme" -> "kleopatra";
+        "qgpgme" -> "kmail";
+        "qgpgme" -> "knode";
+        "qgpgme" -> "korn";
+        "gpgmepp" -> "qgpgme";
         "libkdepim" -> "akregator";
         "libkdepim" -> "kaddressbook";
         "libkdepim" -> "kalarm";
