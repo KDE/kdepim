@@ -26,7 +26,7 @@ libkaddrbk_csv_xxport_la_LIBADD = $(XXLIBS)
 libkaddrbk_vcard_xxport_la_SOURCES = vcard_xxport.cpp
 libkaddrbk_vcard_xxport_la_LIBADD = $(XXLIBS) \
                                     $(top_builddir)/kaddressbook/libkaddressbook.la \
-                                    $(top_builddir)/libkdenetwork/qgpgme/libqgpgme.la
+                                    $(top_builddir)/qgpgme/libqgpgme.la
 
 libkaddrbk_kde2_xxport_la_SOURCES = kde2_xxport.cpp
 libkaddrbk_kde2_xxport_la_LIBADD = $(XXLIBS)
