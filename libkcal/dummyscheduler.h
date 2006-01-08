@@ -22,8 +22,7 @@
 #define DUMMYSCHEDULER_H
 
 #include "scheduler.h"
-//Added by qt3to4:
-#include <Q3PtrList>
+#include <QList>
 
 namespace KCal {
 
@@ -42,7 +41,7 @@ class DummyScheduler : public Scheduler
     bool publish (IncidenceBase *incidence,const QString &recipients);
     bool performTransaction(IncidenceBase *incidence,Method method);
     bool performTransaction(IncidenceBase *incidence,Method method,const QString &recipients);
-    Q3PtrList<ScheduleMessage> retrieveTransactions();
+    QList<ScheduleMessage*> retrieveTransactions();
 
     virtual QString freeBusyDir();
   

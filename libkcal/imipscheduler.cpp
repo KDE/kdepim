@@ -53,9 +53,9 @@ bool IMIPScheduler::performTransaction(IncidenceBase *incidence,Method method)
   return false;
 }
 
-Q3PtrList<ScheduleMessage> IMIPScheduler::retrieveTransactions()
+QList<ScheduleMessage*> IMIPScheduler::retrieveTransactions()
 {
-  Q3PtrList<ScheduleMessage> messageList;
+  QList<ScheduleMessage*> messageList;
 
   return messageList;
 }

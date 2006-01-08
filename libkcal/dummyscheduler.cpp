@@ -25,8 +25,6 @@
 
 #include <qfile.h>
 #include <qtextstream.h>
-//Added by qt3to4:
-#include <Q3PtrList>
 
 #include <kdebug.h>
 #include <kstandarddirs.h>
@@ -82,9 +80,9 @@ bool DummyScheduler::saveMessage(const QString &message)
   }
 }
 
-Q3PtrList<ScheduleMessage> DummyScheduler::retrieveTransactions()
+QList<ScheduleMessage*> DummyScheduler::retrieveTransactions()
 {
-  Q3PtrList<ScheduleMessage> messageList;
+  QList<ScheduleMessage*> messageList;
 
   QFile f("dummyscheduler.store");
   if (!f.open(QIODevice::ReadOnly)) {
