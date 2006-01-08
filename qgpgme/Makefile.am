@@ -1,6 +1,6 @@
 SUBDIRS = . tests
 
-INCLUDES = -I$(top_srcdir)/libkdenetwork $(all_includes)
+INCLUDES =  -I$(top_srcdir) $(all_includes)
 
 lib_LTLIBRARIES = libqgpgme.la
 

@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)/libkdenetwork \
+INCLUDES =  \
 	-I$(top_srcdir)/libkleo \
 	-I$(top_srcdir)/libkpgp \
 	$(GPGME_CFLAGS) $(all_includes)

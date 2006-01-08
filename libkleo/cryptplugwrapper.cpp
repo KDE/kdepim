@@ -53,9 +53,6 @@
 
 // qgpgme
 #include <qgpgme/dataprovider.h>
-//Added by qt3to4:
-#include <QByteArray>
-#include <Q3PtrList>
 
 // gpgme++
 #include <gpgmepp/data.h>
@@ -68,6 +65,11 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfig.h>
+
+// Qt
+#include <QByteArray>
+#include <QList>
+
 
 // other
 #include <memory>
@@ -224,10 +226,11 @@ public:
     UnknownAttrsHandling unknownAttrsHandling )
   {
     if( !attrOrder.isEmpty() ){
-      Q3PtrList<   QPair<QString,QString> > unknownEntries;
+      QList< QPair<QString,QString>* > unknownEntries;
+      QPair<QString,QString>* unknownEntry; // for Q_FOREACH
+
       QList< QPair<QString,QString> > dnNew;
 
-      QPair<QString,QString>* unknownEntry;
       QStringList::ConstIterator itOrder;
       QList< QPair<QString,QString> >::ConstIterator itDN;
       bool bFound;
@@ -243,13 +246,13 @@ public:
             }
           }
           if( !bFound )
-            unknownEntries.append( &(*itDN) );
+            unknownEntries.append( const_cast< QPair< QString, QString >* >(&(*itDN)) );
         }
       }
 
       // prepend the unknown attrs (if desired)
       if( unknownAttrsHandling == unknownAttrsPrefix ){
-        for( unknownEntry = unknownEntries.first(); unknownEntry; unknownEntry = unknownEntries.next() ){
+        Q_FOREACH( unknownEntry, unknownEntries ) {
           dnNew << *unknownEntry;
         }
       }
@@ -261,7 +264,7 @@ public:
           b_X_declared = true;
           // insert the unknown attrs (if desired)
           if( unknownAttrsHandling == unknownAttrsInfix ){
-            for( unknownEntry = unknownEntries.first(); unknownEntry; unknownEntry = unknownEntries.next() ){
+            Q_FOREACH( unknownEntry, unknownEntries ) {
               dnNew << *unknownEntry;
             }
           }
@@ -278,7 +281,7 @@ public:
       // append the unknown attrs (if desired)
       if( unknownAttrsHandling == unknownAttrsPostfix ||
           ( unknownAttrsHandling == unknownAttrsInfix && ! b_X_declared ) ){
-        for( unknownEntry = unknownEntries.first(); unknownEntry; unknownEntry = unknownEntries.next() ){
+        Q_FOREACH( unknownEntry, unknownEntries ) {
           dnNew << *unknownEntry;
         }
       }

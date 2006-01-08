@@ -1,6 +1,6 @@
 #KDE_OPTIONS = nofinal
 
-INCLUDES = -I$(top_srcdir)/libkdenetwork \
+INCLUDES =  -I$(top_srcdir) \
 	-I$(top_srcdir)/libkleo \
 	$(GPGME_CFLAGS) $(all_includes)
 

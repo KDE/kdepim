@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir)/libkleo \
-	-I$(top_srcdir)/libkdenetwork \
+	 \
 	$(GPGME_CFLAGS) $(all_includes)
 
 check_PROGRAMS = test_keylister test_keygen test_keyselectiondialog \

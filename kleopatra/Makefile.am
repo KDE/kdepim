@@ -2,7 +2,7 @@ SUBDIRS = conf kwatchgnupg .
 
 KDE_CXXFLAGS = -DLIBKLEOPATRA_NO_COMPAT
 
-INCLUDES = -I$(top_srcdir)/libkleo -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
+INCLUDES = -I$(top_srcdir)/libkleo -I$(top_srcdir) $(GPGME_CFLAGS) $(all_includes)
 
 bin_PROGRAMS = kleopatra
 

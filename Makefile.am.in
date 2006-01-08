@@ -12,13 +12,13 @@ COMPILE_AFTER_libemailfunctions = libkcal libkpimidentities kmail korganizer
 COMPILE_AFTER_libkholidays = korganizer kontact
 COMPILE_AFTER_libkcal = kalarm konsolekalendar korganizer kpilot libkdepim karm knotes kresources kfile-plugins
 COMPILE_AFTER_mimelib = korn kmail
-COMPILE_AFTER_libkdenetwork = kmail knode
+COMPILE_AFTER_qgpgme = kmail knode
 COMPILE_AFTER_libksieve = kmail
 #
 # Applications and their downward dependencies (ie. the libs they use)
 #
 COMPILE_BEFORE_libkpimidentities = libkdepim kleopatra
-COMPILE_BEFORE_kleopatra = libkdenetwork libkpgp libkleo 
+COMPILE_BEFORE_kleopatra = qgpgme libkpgp libkleo 
 COMPILE_BEFORE_korganizer = libkdepim libkpimidentities kgantt
 COMPILE_BEFORE_kaddressbook = libkdepim kleopatra akregator
 COMPILE_BEFORE_kandy = libkdepim
@@ -31,10 +31,11 @@ COMPILE_BEFORE_kioslave = libkmime libkdepim
 COMPILE_BEFORE_kalarm = libkdepim libkmime
 COMPILE_BEFORE_kresources = knotes kaddressbook kode
 COMPILE_BEFORE_wizards = libkdepim kresources korganizer kaddressbook kmail
-COMPILE_BEFORE_korn = libkdenetwork
+COMPILE_BEFORE_korn = qgpgme
 COMPILE_BEFORE_akregator = libkdepim
 COMPILE_BEFORE_knotes = libkdepim
 COMPILE_BEFORE_konsolekalendar = libkdepim
+COMPILE_BEFORE_qgpgme = gpgmepp 
 
 AUTOMAKE_OPTIONS = foreign 1.5
 DISTCLEANFILES = inst-apps
