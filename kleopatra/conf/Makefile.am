@@ -1,5 +1,5 @@
 AM_CPPFLAGS = -DLIBKLEOPATRA_NO_COMPAT -I$(top_srcdir)/libkleo -I$(top_srcdir)/libkleo/ui \
-   -I$(top_builddir)libkleo/ui -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
+   -I$(top_builddir)/libkleo/ui -I$(top_srcdir)/libkdenetwork $(GPGME_CFLAGS) $(all_includes)
 
 METASOURCES = AUTO
 
