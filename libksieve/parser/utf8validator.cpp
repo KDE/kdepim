@@ -33,7 +33,6 @@
 #include <impl/utf8validator.h>
 
 #include <qglobal.h>
-#include <q3cstring.h>
 
 static inline bool is8Bit( signed char ch ) {
     return ch < 0;
