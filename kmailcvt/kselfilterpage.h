@@ -19,11 +19,9 @@
 #define KSELFILTERPAGE_H
 
 #include "kselfilterpagedlg.h"
-//Added by qt3to4:
-#include <Q3PtrList>
+#include <QList>
 class Filter;
 
-template <class T> class Q3PtrList;
 
 class KSelFilterPage : public KSelFilterPageDlg  {
 	Q_OBJECT
@@ -35,7 +33,7 @@ public:
 	Filter *getSelectedFilter(void);
         bool removeDupMsg_checked();
 private:
-	Q3PtrList<Filter> mFilterList;
+	QList<Filter*> mFilterList;
 private slots:
 	void filterSelected(int i);
 };
