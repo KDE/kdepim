@@ -15,7 +15,7 @@
 #ifndef __KMIME_CHARFREQ_H__
 #define __KMIME_CHARFREQ_H__
 
-#include <q3cstring.h>
+#include <QByteArray>
 #include <kdepimmacros.h>
 #undef None
 

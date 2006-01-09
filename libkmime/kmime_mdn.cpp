@@ -37,8 +37,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <q3cstring.h>
-//Added by qt3to4:
+#include <QByteArray>
 #include <QList>
 
 #include <unistd.h> // gethostname

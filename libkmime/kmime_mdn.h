@@ -33,8 +33,7 @@
 #define __KMIME_MDN_H__
 
 #include <qstring.h>
-//Added by qt3to4:
-#include <QByteArray>
+//#include <QByteArray>
 #include <QList>
 #include <kdepimmacros.h>
 

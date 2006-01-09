@@ -29,8 +29,7 @@
 
 #include <qtextcodec.h>
 #include <qregexp.h>
-//Added by qt3to4:
-#include <Q3CString>
+#include <QTextStream>
 
 #include <stdlib.h>
 #include <ctype.h>
@@ -120,11 +119,11 @@ const uchar eTextMap[16] = {
 #undef truncate
 #endif
 
-QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
-			    const Q3CString &defaultCS, bool forceCS)
+QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
+                             const QByteArray &defaultCS, bool forceCS )
 {
-  Q3CString result, str;
-  Q3CString declaredCS;
+  QByteArray result, str;
+  QByteArray declaredCS;
   int pos = 0, dest = 0, beg = 0, end = 0, mid = 0, endOfLastEncWord = 0;
   char encoding = '\0';
   bool valid, onlySpacesSinceLastWord=false;
@@ -132,10 +131,10 @@ QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
   int i;
 
   if ( !src.contains( "=?" ) )
-    result = src.copy();
+    result = src;
   else {
-    result.truncate(src.length());
-    for (pos = 0, dest = 0; pos < src.size(); pos++)
+    result.resize( src.length() );
+    for (pos = 0, dest = 0; pos < src.length(); pos++)
     {
       if ( src[pos] != '=' || src[pos + 1] != '?' )
       {
@@ -148,12 +147,13 @@ QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
       end = beg;
       valid = true;
       // parse charset name
-      declaredCS="";
+      declaredCS.clear();
       for ( i = 2, pos += 2; i < maxLen && (src[pos] != '?' && (ispunct(src[pos]) || isalnum(src[pos]))); i++ ) {
         declaredCS += src[pos];
         pos++;
       }
-      if ( src[pos] != '?' || i < 4 || i >= maxLen) valid = false;
+      if ( src[pos] != '?' || i < 4 || i >= maxLen)
+        valid = false;
       else
       {
         // get encoding and check delimiting question marks
@@ -167,13 +167,14 @@ QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
       {
         mid = pos;
         // search for end of encoded part
-        while ( i < maxLen && pos < src.size() && ! ( src[pos] == '?' && src[pos + 1] == '=' ) )
+        while ( i < maxLen && pos < src.length() && ! ( src[pos] == '?' && src[pos + 1] == '=' ) )
         {
           i++;
           pos++;
         }
         end = pos+2;//end now points to the first char after the encoded string
-        if ( i >= maxLen || src.size() <= pos ) valid = false;
+        if ( i >= maxLen || src.length() <= pos )
+          valid = false;
       }
 
       if (valid) {
@@ -219,26 +220,26 @@ QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
   bool ok=true;
   if (forceCS || declaredCS.isEmpty()) {
     codec=KGlobal::charsets()->codecForName(defaultCS);
-    (*usedCS)=cachedCharset(defaultCS);
+    usedCS=cachedCharset(defaultCS);
   }
   else {
     codec=KGlobal::charsets()->codecForName(declaredCS, ok);
     if(!ok) {     //no suitable codec found => use default charset
       codec=KGlobal::charsets()->codecForName(defaultCS);
-      (*usedCS)=cachedCharset(defaultCS);
+      usedCS=cachedCharset(defaultCS);
     }
     else
-      (*usedCS)=cachedCharset(declaredCS);
+      usedCS=cachedCharset(declaredCS);
   }
 
-  return codec->toUnicode(result.data(), result.length());
+  return codec->toUnicode( result.data(), result.length() );
 }
 
 
-Q3CString encodeRFC2047String(const QString &src, const char *charset,
-			     bool addressHeader, bool allow8BitHeaders)
+QByteArray encodeRFC2047String( const QString &src, const QByteArray &charset,
+                                bool addressHeader, bool allow8BitHeaders )
 {
-  Q3CString encoded8Bit, result, usedCS;
+  QByteArray encoded8Bit, result, usedCS;
   int start=0,end=0;
   bool nonAscii=false, ok=true, useQEncoding=false;
   QTextCodec *codec=0;
@@ -252,7 +253,7 @@ Q3CString encodeRFC2047String(const QString &src, const char *charset,
     codec=KGlobal::charsets()->codecForName(usedCS, ok);
   }
 
-  if (usedCS.find("8859-")>=0)  // use "B"-Encoding for non iso-8859-x charsets
+  if ( usedCS.contains("8859-") )  // use "B"-Encoding for non iso-8859-x charsets
     useQEncoding=true;
 
   encoded8Bit=codec->fromUnicode(src);
@@ -303,7 +304,7 @@ Q3CString encodeRFC2047String(const QString &src, const char *charset,
               ((c>='0')&&(c<='9')))
             result+=c;
           else {
-            result += "=";                 // "stolen" from KMail ;-)
+            result += '=';                 // "stolen" from KMail ;-)
             hexcode = ((c & 0xF0) >> 4) + 48;
             if (hexcode >= 58) hexcode += 7;
             result += hexcode;
@@ -325,11 +326,10 @@ Q3CString encodeRFC2047String(const QString &src, const char *charset,
   return result;
 }
 
-Q3CString uniqueString()
+QByteArray uniqueString()
 {
   static char chars[] = "0123456789abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   time_t now;
-  Q3CString ret;
   char p[11];
   int pos, ran;
   unsigned int timeval;
@@ -344,7 +344,11 @@ Q3CString uniqueString()
     //kdDebug(5003) << pos << endl;
     p[i]=chars[pos];
   }
-  ret.sprintf("%d.%s", timeval, p);
+
+  QByteArray ret;
+  ret.setNum( timeval );
+  ret += '.';
+  ret += p;
 
   return ret;
 }
@@ -352,31 +356,31 @@ Q3CString uniqueString()
 
 QByteArray multiPartBoundary()
 {
-  QByteArray ret;
-  ret="nextPart"+uniqueString();
-  return ret;
+  return "nextPart" + uniqueString();
 }
 
-Q3CString extractHeader(const Q3CString &src, const char *name)
+QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
 {
-  Q3CString n=Q3CString(name)+": ";
-  int pos1=-1, pos2=0, len=src.length()-1;
-  bool folded(false);
+  QByteArray n = name + ": ";
+  int pos1=-1;
 
-  if (n.toLower() == src.left(n.length()).toLower()) {
+  if ( qstrnicmp( n.data(), src.data(), n.length() ) == 0 ) {
     pos1 = 0;
   } else {
-    n.prepend("\n");
+    n.prepend('\n');
+    // TODO Possible optimization: Avoid using QString
     pos1 = QString(src).indexOf(n,0,Qt::CaseInsensitive);
   }
 
   if (pos1>-1) {    //there is a header with the given name
     pos1+=n.length(); //skip the name
-    pos2=pos1;
+    int pos2=pos1;
+    int len=src.length()-1;
+    bool folded = false;
 
     if (src[pos2]!='\n') {  // check if the header is not empty
-      while(1) {
-        pos2=src.find("\n", pos2+1);
+      while ( true ) {
+        pos2=src.indexOf('\n', pos2+1);
         if(pos2==-1 || pos2==len || ( src[pos2+1]!=' ' && src[pos2+1]!='\t') ) //break if we reach the end of the string, honor folded lines
           break;
         else
@@ -389,6 +393,7 @@ Q3CString extractHeader(const Q3CString &src, const char *name)
     if (!folded)
       return src.mid(pos1, pos2-pos1);
     else {
+      // TODO Optimization: Copy to new string instead of removing in-string
       QByteArray hdrValue = src.mid( pos1, pos2 - pos1 );
       // unfold header
       int beg = 0, mid = 0, end = 0;
@@ -408,66 +413,53 @@ Q3CString extractHeader(const Q3CString &src, const char *name)
     }
   }
   else {
-    return Q3CString(0); //header not found
+    return QByteArray(); //header not found
   }
 }
 
 
-Q3CString CRLFtoLF(const Q3CString &s)
+QByteArray CRLFtoLF( const QByteArray &s )
 {
-  Q3CString ret=s.copy();
+  QByteArray ret = s;
   ret.replace( "\r\n", "\n" );
   return ret;
 }
 
 
-Q3CString CRLFtoLF(const char *s)
+QByteArray LFtoCRLF( const QByteArray &s )
 {
-  Q3CString ret=s;
-  ret.replace( "\r\n", "\n");
+  QByteArray ret = s;
+  ret.replace( "\n", "\r\n" );
   return ret;
 }
 
 
-Q3CString LFtoCRLF(const Q3CString &s)
-{
-  Q3CString ret=s.copy();
-  ret.replace( "\n", "\r\n");
-  return ret;
-}
-
-
-void removeQuots(Q3CString &str)
-{
-  bool inQuote=false;
-
-  for (int i=0; i < (int)str.length(); i++) {
-    if (str[i] == '"') {
-      str.remove(i,1);
-      i--;
-      inQuote = !inQuote;
-    } else {
-      if (inQuote && (str[i] == '\\'))
-        str.remove(i,1);
+namespace {
+  template < typename T > void removeQuotesGeneric( T & str )
+  {
+    bool inQuote = false;
+    for ( int i = 0; i < str.length(); ++i ) {
+      if ( str[i] == '"' ) {
+        str.remove( i, 1 );
+        i--;
+        inQuote = !inQuote;
+      } else {
+        if ( inQuote && ( str[i] == '\\' ) )
+          str.remove( i, 1 );
+      }
     }
   }
 }
 
-
-void removeQuots(QString &str)
+void removeQuots( QByteArray &str )
 {
-  bool inQuote=false;
+  removeQuotesGeneric( str );
+}
 
-  for (int i=0; i < (int)str.length(); i++) {
-    if (str[i] == '"') {
-      str.remove(i,1);
-      i--;
-      inQuote = !inQuote;
-    } else {
-      if (inQuote && (str[i] == '\\'))
-        str.remove(i,1);
-    }
-  }
+
+void removeQuots( QString &str )
+{
+  removeQuotesGeneric( str );
 }
 
 
@@ -542,11 +534,11 @@ DateFormatter::dateString(const QDateTime& dtime, const QString& lang,
   return DateFormatter::dateString( qdateToTimeT(dtime), lang, shortFormat, includeSecs );
 }
 
-Q3CString
+QByteArray
 DateFormatter::rfc2822(time_t otime) const
 {
   QDateTime tmp;
-  Q3CString  ret;
+  QByteArray  ret;
 
   tmp.setTime_t(otime);
 
@@ -562,7 +554,7 @@ DateFormatter::custom(time_t t) const
   if ( mCustomFormat.isEmpty() )
     return QString();
 
-  int z = mCustomFormat.find("Z");
+  int z = mCustomFormat.indexOf('Z');
   QDateTime d;
   QString ret = mCustomFormat;
 
@@ -590,10 +582,9 @@ DateFormatter::getCustomFormat() const
 }
 
 
-Q3CString
+QByteArray
 DateFormatter::zone(time_t otime) const
 {
-  Q3CString ret;
 #if defined(HAVE_TIMEZONE) || defined(HAVE_TM_GMTOFF)
   struct tm *local = localtime( &otime );
 #endif
@@ -616,8 +607,6 @@ DateFormatter::zone(time_t otime) const
   } else
       mDaylight = 0;
 
-  ret.sprintf("%c%.2d%.2d",(neg)?'-':'+', hours, mins);
-
 #elif defined(HAVE_TM_GMTOFF)
 
   int secs = abs( local->tm_gmtoff );
@@ -630,8 +619,6 @@ DateFormatter::zone(time_t otime) const
   else
       mDaylight = 0;
 
-  ret.sprintf("%c%.2d%.2d",(neg)?'-':'+', hours, mins);
-
 #else
 
   QDateTime d1 = QDateTime::fromString( asctime(gmtime(&otime)) );
@@ -642,9 +629,14 @@ DateFormatter::zone(time_t otime) const
   int hours = secs/3600;
   int mins  = (secs - hours*3600)/60;
   // daylight should be already taken care of here
-  ret.sprintf("%c%.2d%.2d",(neg)?'-':'+', hours, mins);
 
 #endif /* HAVE_TIMEZONE */
+
+  QByteArray ret;
+  QTextStream s( &ret, QIODevice::WriteOnly );
+  s << ( neg ? '-' : '+' )
+    << qSetFieldWidth(2) << qSetPadChar('0') << right << hours << mins;
+  //old code: ret.sprintf("%c%.2d%.2d",(neg)?'-':'+', hours, mins);
 
   return ret;
 }
@@ -738,7 +730,7 @@ DateFormatter::localized(time_t otime, bool shortFormat, bool includeSecs,
 QString
 DateFormatter::cTime(time_t otime) const
 {
-  return QString::fromLatin1( ctime(  &otime ) ).trimmed() ;
+  return QString::fromLatin1( ctime(  &otime ) ).trimmed();
 }
 
 QString
@@ -778,7 +770,7 @@ DateFormatter::formatCurrentDate( DateFormatter::FormatType t, const QString& da
   return f.dateString( time(0), data, shortFormat, includeSecs );
 }
 
-Q3CString
+QByteArray
 DateFormatter::rfc2822FormatDate( time_t t )
 {
   DateFormatter f;

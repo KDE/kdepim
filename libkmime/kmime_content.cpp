@@ -23,9 +23,8 @@
 #include <kdebug.h>
 
 #include <qtextcodec.h>
-//Added by qt3to4:
 #include <QTextStream>
-#include <Q3CString>
+#include <QByteArray>
 
 using namespace KMime;
 
@@ -38,12 +37,12 @@ Content::Content()
 }
 
 
-Content::Content(const Q3CString &h, const Q3CString &b)
+Content::Content( const QByteArray &h, const QByteArray &b )
  : f_orceDefaultCS( false )
 {
   d_efaultCS = cachedCharset("ISO-8859-1");
-  h_ead=h.copy();
-  b_ody=b.copy();
+  h_ead = h;
+  b_ody = b;
 }
 
 
@@ -59,14 +58,14 @@ Content::~Content()
 void Content::setContent( const QList<QByteArray> & l )
 {
   //qDebug("Content::setContent( const QList<QByteArray> & l ) : start");
-  h_ead.resize(0);
-  b_ody.resize(0);
+  h_ead.clear();
+  b_ody.clear();
 
   //usage of textstreams is much faster than simply appending the strings
-  QTextStream hts(h_ead, QIODevice::WriteOnly),
-              bts(b_ody, QIODevice::WriteOnly);
-  hts.setEncoding(QTextStream::Latin1);
-  bts.setEncoding(QTextStream::Latin1);
+  QTextStream hts(&h_ead, QIODevice::WriteOnly),
+              bts(&b_ody, QIODevice::WriteOnly);
+  hts.setCodec( "ISO 8859-1" );
+  bts.setCodec( "ISO 8859-1" );
 
   bool isHead=true;
   foreach ( QByteArray line, l ) {
@@ -121,7 +120,7 @@ void Content::parse()
   c_ontents.clear();
 
   Headers::ContentType *ct=contentType();
-  Q3CString tmp;
+  QByteArray tmp;
   Content *c;
   Headers::contentCategory cat;
 
@@ -157,7 +156,7 @@ void Content::parse()
         }
 
         //the whole content is now split into single parts, so it's safe delete the message-body
-        b_ody.resize(0);
+        b_ody.clear();
       }
       else { //sh*t, the parsing failed so we have to treat the message as "text/plain" instead
         ct->setMimeType("text/plain");
@@ -178,7 +177,7 @@ void Content::parse()
       }
       else { //it's a complete message => treat as "multipart/mixed"
         //the whole content is now split into single parts, so it's safe to delete the message-body
-        b_ody.resize(0);
+        b_ody.clear();
 
         //binary parts
         for ( int i = 0; i < uup.binaryParts().count(); ++i ) {
@@ -215,7 +214,7 @@ void Content::parse()
         }
         else { //it's a complete message => treat as "multipart/mixed"
           //the whole content is now split into single parts, so it's safe to delete the message-body
-          b_ody.resize(0);
+          b_ody.clear();
 
           //binary parts
           for (int i=0;i<yenc.binaryParts().count();i++) {
@@ -231,10 +230,7 @@ void Content::parse()
             c->setContent(tmp);
 
             // the bodies of yenc message parts are binary data, not null-terminated strings:
-            QByteArray body = yenc.binaryParts()[i];
-            Q3CString body_string(body.size());
-            memcpy(body_string.data(), body.data(), body.size());
-            c->setBody(body_string);
+            c->setBody(yenc.binaryParts()[i]);
 
             addContent(c);
           }
@@ -257,13 +253,13 @@ void Content::parse()
 
 void Content::assemble()
 {
-  Q3CString newHead="";
+  QByteArray newHead="";
 
   //Content-Type
-  newHead+=contentType()->as7BitString()+"\n";
+  newHead+=contentType()->as7BitString()+'\n';
 
   //Content-Transfer-Encoding
-  newHead+=contentTransferEncoding()->as7BitString()+"\n";
+  newHead+=contentTransferEncoding()->as7BitString()+'\n';
 
   //Content-Description
   Headers::Base *h=contentDescription(false);
@@ -285,14 +281,14 @@ void Content::clear()
   h_eaders.clear();
   qDeleteAll( c_ontents );
   c_ontents.clear();
-  h_ead.resize(0);
-  b_ody.resize(0);
+  h_ead.clear();
+  b_ody.clear();
 }
 
 
-Q3CString Content::encodedContent(bool useCrLf)
+QByteArray Content::encodedContent(bool useCrLf)
 {
-  Q3CString e;
+  QByteArray e;
 
   // hack to convert articles with uuencoded or yencoded binaries into
   // proper mime-compliant articles
@@ -333,8 +329,8 @@ Q3CString Content::encodedContent(bool useCrLf)
   }
 
   //head
-  e=h_ead.copy();
-  e+="\n";
+  e=h_ead;
+  e+='\n';
 
   //body
   if(!b_ody.isEmpty()) { //this message contains only one part
@@ -342,9 +338,7 @@ Q3CString Content::encodedContent(bool useCrLf)
 
     if(enc->needToEncode()) {
       if(enc->cte()==Headers::CEquPr) {
-        QByteArray temp(b_ody.length());
-        memcpy(temp.data(), b_ody.data(), b_ody.length());
-        e+=KCodecs::quotedPrintableEncode(temp, false);
+        e+=KCodecs::quotedPrintableEncode(b_ody, false);
       } else {
         e+=KCodecs::base64Encode(b_ody, true);
         e+="\n";
@@ -355,7 +349,7 @@ Q3CString Content::encodedContent(bool useCrLf)
   }
   else if( !c_ontents.isEmpty() ) { //this is a multipart message
     Headers::ContentType *ct=contentType();
-    Q3CString boundary="--"+ct->boundary();
+    QByteArray boundary="--"+ct->boundary();
 
     //add all (encoded) contents separated by boundaries
     foreach ( Content *c, c_ontents ) {
@@ -378,7 +372,7 @@ QByteArray Content::decodedContent()
   QByteArray temp, ret;
   Headers::CTEncoding *ec=contentTransferEncoding();
   bool removeTrailingNewline=false;
-  int size=ec->cte()==Headers::CEbinary ? b_ody.size() : b_ody.length();
+  int size = b_ody.length();
 
   if (size==0)
     return ret;
@@ -466,7 +460,7 @@ void Content::decodedText(QStringList &l, bool trimText,
       unicode.truncate(unicode.length()-1);    // remove trailing new-line
   }
 
-  l=QStringList::split('\n', unicode, true); //split the string at linebreaks
+  l = unicode.split( '\n' ); //split the string at linebreaks
 }
 
 
@@ -477,7 +471,7 @@ void Content::fromUnicodeString(const QString &s)
 
   if(!ok) { // no suitable codec found => try local settings and hope the best ;-)
     codec=KGlobal::locale()->codecForEncoding();
-    Q3CString chset=KGlobal::locale()->encoding();
+    QByteArray chset = KGlobal::locale()->encoding();
     contentType()->setCharset(chset);
   }
 
@@ -550,9 +544,9 @@ void Content::addContent(Content *c, bool prepend)
     main->assemble();
 
     //now we can copy the body and append the new content;
-    main->b_ody=b_ody.copy();
+    main->b_ody = b_ody;
     c_ontents.append( main );
-    b_ody.resize(0); //not longer needed
+    b_ody.clear(); //not longer needed
 
 
     //finally we have to convert this article to "multipart/mixed"
@@ -602,7 +596,7 @@ void Content::removeContent(Content *c, bool del)
     }
 
     //now we can copy the body
-    b_ody=main->b_ody.copy();
+    b_ody = main->b_ody;
 
     //finally we can delete the content list
     qDeleteAll( c_ontents );
@@ -638,29 +632,32 @@ void Content::changeEncoding(Headers::contentEncoding e)
 
 void Content::toStream(QTextStream &ts, bool scrambleFromLines)
 {
-  Q3CString ret=encodedContent(false);
+  QByteArray ret=encodedContent(false);
 
   if (scrambleFromLines)
+    // FIXME Why are only From lines with a preceding empty line considered?
+    //       And, of course, all lines starting with >*From have to be escaped
+    //       because otherwise the transformation is not revertable.
     ret.replace( "\n\nFrom ", "\n\n>From ");
 
   ts << ret;
 }
 
 
-Headers::Generic*  Content::getNextHeader(Q3CString &head)
+Headers::Generic*  Content::getNextHeader(QByteArray &head)
 {
   int pos1=-1, pos2=0, len=head.length()-1;
   bool folded(false);
   Headers::Generic *header=0;
 
-  pos1 = head.find(": ");
+  pos1 = head.indexOf(": ");
 
   if (pos1>-1) {    //there is another header
     pos2=pos1+=2; //skip the name
 
     if (head[pos2]!='\n') {  // check if the header is not empty
       while(1) {
-        pos2=head.find("\n", pos2+1);
+        pos2=head.indexOf('\n', pos2+1);
         if(pos2==-1 || pos2==len || ( head[pos2+1]!=' ' && head[pos2+1]!='\t') ) //break if we reach the end of the string, honor folded lines
           break;
         else
@@ -713,7 +710,7 @@ Headers::Base* Content::getHeaderByType(const char *type)
 
   //now we look for it in the article head
   Headers::Base *h = 0;
-  Q3CString raw=rawHeader(type);
+  QByteArray raw=rawHeader(type);
   if(!raw.isEmpty()) { //ok, we found it
     //choose a suitable header class
     if(strcasecmp("Message-Id", type)==0)
@@ -825,9 +822,9 @@ int Content::lineCount()
 }
 
 
-Q3CString Content::rawHeader(const char *name)
+QByteArray Content::rawHeader(const char *name)
 {
-  return extractHeader(h_ead, name);
+  return KMime::extractHeader(h_ead, name);
 }
 
 
@@ -853,7 +850,7 @@ bool Content::decodeText()
       b_ody.append("\n");
     break;
     case Headers::CEbinary :
-      b_ody=Q3CString(b_ody.data(), b_ody.size()+1);
+      // nothing to decode
       b_ody.append("\n");
     default :
     break;

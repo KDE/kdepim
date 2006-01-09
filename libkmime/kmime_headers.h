@@ -28,11 +28,9 @@
 #include <qstringlist.h>
 #include <qregexp.h>
 #include <qdatetime.h>
-#include <q3asciidict.h>
 #include <qmap.h>
-//Added by qt3to4:
 #include <QList>
-#include <Q3CString>
+#include <QByteArray>
 
 #include <time.h>
 
@@ -70,9 +68,9 @@ class subclass : public Generics::baseclass { \
 public: \
   subclass() : Generics::baseclass() {} \
   subclass( Content * p ) : Generics::baseclass( p ) {} \
-  subclass( Content * p, const Q3CString & s ) \
+  subclass( Content * p, const QByteArray & s ) \
     : Generics::baseclass( p ) { from7BitString( s ); } \
-  subclass( Content * p, const QString & s, const Q3CString & cs ) \
+  subclass( Content * p, const QString & s, const QByteArray & cs ) \
     : Generics::baseclass( p ) { fromUnicodeString( s, cs ); } \
   ~subclass() {} \
   \
@@ -87,9 +85,9 @@ class subclass : public Generics::baseclass { \
 public: \
   subclass() : Generics::baseclass() {} \
   subclass( Content * p ) : Generics::baseclass( p ) {} \
-  subclass( Content * p, const Q3CString & s ) \
+  subclass( Content * p, const QByteArray & s ) \
     : Generics::baseclass( p ) { from7BitString( s ); } \
-  subclass( Content * p, const QString & s, const Q3CString & cs ) \
+  subclass( Content * p, const QString & s, const QByteArray & cs ) \
     : Generics::baseclass( p ) { fromUnicodeString( s, cs ); } \
   ~subclass() {} \
   \
@@ -132,17 +130,17 @@ class KDE_EXPORT Base {
     /** Parse the given string. Take care of RFC2047-encoded
 	strings. A default charset is given. If the last parameter
 	is true the default charset is used in any case */
-    virtual void from7BitString(const Q3CString&)  {}
+    virtual void from7BitString(const QByteArray&)  {}
 
     /** Return the encoded header. The parameter specifies
 	whether the header-type should be included. */
-    virtual Q3CString as7BitString(bool=true)  { return Q3CString(); }
+    virtual QByteArray as7BitString(bool=true)  { return QByteArray(); }
 
     /** Return the charset that is used for RFC2047-encoding */
-    Q3CString rfc2047Charset();
+    QByteArray rfc2047Charset();
 
     /** Set the charset for RFC2047-encoding */
-    void setRFC2047Charset(const Q3CString &cs);
+    void setRFC2047Charset(const QByteArray &cs);
 
     /** Return the default charset */
     QByteArray defaultCS();
@@ -151,7 +149,7 @@ class KDE_EXPORT Base {
     bool forceCS();
 
     /** Parse the given string and set the charset. */
-    virtual void fromUnicodeString(const QString&, const Q3CString&)  {}
+    virtual void fromUnicodeString(const QString&, const QByteArray&)  {}
 
     /** Return the decoded content of the header without
        the header-type. */
@@ -176,9 +174,9 @@ class KDE_EXPORT Base {
     bool isXHeader()  { return (strncmp(type(), "X-", 2)==0); }
 
   protected:
-    Q3CString typeIntro()  { return (Q3CString(type())+": "); }
+    QByteArray typeIntro()  { return (QByteArray(type())+": "); }
 
-    const char *e_ncCS;
+    QByteArray e_ncCS;
     Content *p_arent;
 
 };
@@ -219,17 +217,17 @@ class KDE_EXPORT GUnstructured : public Base {
 public:
   GUnstructured() : Base()  {}
   GUnstructured( Content * p ) : Base( p ) {}
-  GUnstructured( Content * p, const Q3CString & s )
+  GUnstructured( Content * p, const QByteArray & s )
     : Base( p ) { from7BitString(s); }
-  GUnstructured( Content * p, const QString & s, const Q3CString & cs )
+  GUnstructured( Content * p, const QString & s, const QByteArray & cs )
     : Base( p )  { fromUnicodeString( s, cs ); }
   ~GUnstructured()  {}
 
-  virtual void from7BitString( const Q3CString& str );
-  virtual Q3CString as7BitString( bool withHeaderType=true );
+  virtual void from7BitString( const QByteArray& str );
+  virtual QByteArray as7BitString( bool withHeaderType=true );
 
   virtual void fromUnicodeString( const QString & str,
-				  const Q3CString & suggestedCharset);
+				  const QByteArray & suggestedCharset);
   virtual QString asUnicodeString();
 
   virtual void clear()            { d_ecoded.truncate(0); }
@@ -271,9 +269,9 @@ class KDE_EXPORT GStructured : public Base {
 public:
   GStructured() : Base()  {}
   GStructured( Content * p ) : Base( p ) {}
-  GStructured( Content * p, const Q3CString & s )
+  GStructured( Content * p, const QByteArray & s )
     : Base( p ) { from7BitString(s); }
-  GStructured( Content * p, const QString & s, const Q3CString & cs )
+  GStructured( Content * p, const QString & s, const QByteArray & cs )
     : Base( p )  { fromUnicodeString( s, cs ); }
   ~GStructured()  {}
 
@@ -305,9 +303,9 @@ class KDE_EXPORT GAddress : public GStructured {
 public:
   GAddress() : GStructured()  {}
   GAddress( Content * p ) : GStructured( p ) {}
-  GAddress( Content * p, const Q3CString & s )
+  GAddress( Content * p, const QByteArray & s )
     : GStructured( p ) { from7BitString(s); }
-  GAddress( Content * p, const QString & s, const Q3CString & cs )
+  GAddress( Content * p, const QString & s, const QByteArray & cs )
     : GStructured( p )  { fromUnicodeString( s, cs ); }
   ~GAddress()  {}
 
@@ -321,9 +319,9 @@ class KDE_EXPORT MailboxList : public GAddress {
 public:
   MailboxList() : GAddress()  {}
   MailboxList( Content * p ) : GAddress( p ) {}
-  MailboxList( Content * p, const Q3CString & s )
+  MailboxList( Content * p, const QByteArray & s )
     : GAddress( p ) { from7BitString(s); }
-  MailboxList( Content * p, const QString & s, const Q3CString & cs )
+  MailboxList( Content * p, const QString & s, const QByteArray & cs )
     : GAddress( p )  { fromUnicodeString( s, cs ); }
   ~MailboxList()  {}
 
@@ -345,9 +343,9 @@ class KDE_EXPORT AddressList : public GAddress {
 public:
   AddressList() : GAddress()  {}
   AddressList( Content * p ) : GAddress( p ) {}
-  AddressList( Content * p, const Q3CString & s )
+  AddressList( Content * p, const QByteArray & s )
     : GAddress( p ) { from7BitString(s); }
-  AddressList( Content * p, const QString & s, const Q3CString & cs )
+  AddressList( Content * p, const QString & s, const QByteArray & cs )
     : GAddress( p )  { fromUnicodeString( s, cs ); }
   ~AddressList()  {}
 
@@ -363,9 +361,9 @@ class KDE_EXPORT GIdent : public GAddress {
 public:
   GIdent() : GAddress()  {}
   GIdent( Content * p ) : GAddress( p ) {}
-  GIdent( Content * p, const Q3CString & s )
+  GIdent( Content * p, const QByteArray & s )
     : GAddress( p ) { from7BitString(s); }
-  GIdent( Content * p, const QString & s, const Q3CString & cs )
+  GIdent( Content * p, const QString & s, const QByteArray & cs )
     : GAddress( p )  { fromUnicodeString( s, cs ); }
   ~GIdent()  {}
 
@@ -384,16 +382,16 @@ class KDE_EXPORT GToken : public GStructured {
 public:
   GToken() : GStructured()  {}
   GToken( Content * p ) : GStructured( p ) {}
-  GToken( Content * p, const Q3CString & s )
+  GToken( Content * p, const QByteArray & s )
     : GStructured( p ) { from7BitString(s); }
-  GToken( Content * p, const QString & s, const Q3CString & cs )
+  GToken( Content * p, const QString & s, const QByteArray & cs )
     : GStructured( p )  { fromUnicodeString( s, cs ); }
   ~GToken()  {}
 
 protected:
   bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
-  Q3CString mToken;
+  QByteArray mToken;
 };
 
 
@@ -401,9 +399,9 @@ class KDE_EXPORT GPhraseList : public GStructured {
 public:
   GPhraseList() : GStructured()  {}
   GPhraseList( Content * p ) : GStructured( p ) {}
-  GPhraseList( Content * p, const Q3CString & s )
+  GPhraseList( Content * p, const QByteArray & s )
     : GStructured( p ) { from7BitString(s); }
-  GPhraseList( Content * p, const QString & s, const Q3CString & cs )
+  GPhraseList( Content * p, const QString & s, const QByteArray & cs )
     : GStructured( p )  { fromUnicodeString( s, cs ); }
   ~GPhraseList()  {}
 
@@ -417,9 +415,9 @@ class KDE_EXPORT GDotAtom : public GStructured {
 public:
   GDotAtom() : GStructured()  {}
   GDotAtom( Content * p ) : GStructured( p ) {}
-  GDotAtom( Content * p, const Q3CString & s )
+  GDotAtom( Content * p, const QByteArray & s )
     : GStructured( p ) { from7BitString(s); }
-  GDotAtom( Content * p, const QString & s, const Q3CString & cs )
+  GDotAtom( Content * p, const QString & s, const QByteArray & cs )
     : GStructured( p )  { fromUnicodeString( s, cs ); }
   ~GDotAtom()  {}
 
@@ -433,9 +431,9 @@ class KDE_EXPORT GParametrized : public GStructured {
 public:
   GParametrized() : GStructured()  {}
   GParametrized( Content * p ) : GStructured( p ) {}
-  GParametrized( Content * p, const Q3CString & s )
+  GParametrized( Content * p, const QByteArray & s )
     : GStructured( p ) { from7BitString(s); }
-  GParametrized( Content * p, const QString & s, const Q3CString & cs )
+  GParametrized( Content * p, const QString & s, const QByteArray & cs )
     : GStructured( p )  { fromUnicodeString( s, cs ); }
   ~GParametrized()  {}
 
@@ -449,17 +447,17 @@ class KDE_EXPORT GContentType : public GParametrized {
 public:
   GContentType() : GParametrized()  {}
   GContentType( Content * p ) : GParametrized( p ) {}
-  GContentType( Content * p, const Q3CString & s )
+  GContentType( Content * p, const QByteArray & s )
     : GParametrized( p ) { from7BitString(s); }
-  GContentType( Content * p, const QString & s, const Q3CString & cs )
+  GContentType( Content * p, const QString & s, const QByteArray & cs )
     : GParametrized( p )  { fromUnicodeString( s, cs ); }
   ~GContentType()  {}
 
 protected:
   bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
-  Q3CString mMimeType;
-  Q3CString mMimeSubType;
+  QByteArray mMimeType;
+  QByteArray mMimeSubType;
 };
 
 
@@ -467,16 +465,16 @@ class KDE_EXPORT GCISTokenWithParameterList : public GParametrized {
 public:
   GCISTokenWithParameterList() : GParametrized()  {}
   GCISTokenWithParameterList( Content * p ) : GParametrized( p ) {}
-  GCISTokenWithParameterList( Content * p, const Q3CString & s )
+  GCISTokenWithParameterList( Content * p, const QByteArray & s )
     : GParametrized( p ) { from7BitString(s); }
-  GCISTokenWithParameterList( Content * p, const QString & s, const Q3CString & cs )
+  GCISTokenWithParameterList( Content * p, const QString & s, const QByteArray & cs )
     : GParametrized( p )  { fromUnicodeString( s, cs ); }
   ~GCISTokenWithParameterList()  {}
 
 protected:
   bool parse( const char* & scursor, const char * const send, bool isCRLF=false );
 
-  Q3CString mToken;
+  QByteArray mToken;
 };
 
 
@@ -494,9 +492,9 @@ class KDE_EXPORT ReturnPath : public Generics::GAddress {
 public:
   ReturnPath() : Generics::GAddress()  {}
   ReturnPath( Content * p ) : Generics::GAddress( p ) {}
-  ReturnPath( Content * p, const Q3CString & s )
+  ReturnPath( Content * p, const QByteArray & s )
     : Generics::GAddress( p ) { from7BitString(s); }
-  ReturnPath( Content * p, const QString & s, const Q3CString & cs )
+  ReturnPath( Content * p, const QString & s, const QByteArray & cs )
     : Generics::GAddress( p )  { fromUnicodeString( s, cs ); }
   ~ReturnPath()  {}
 
@@ -574,9 +572,9 @@ class KDE_EXPORT Generic : public Generics::GUnstructured {
       : Generics::GUnstructured(), t_ype(0) { setType(t); }
     Generic(const char *t, Content *p)
       : Generics::GUnstructured( p ), t_ype(0) { setType(t); }
-    Generic(const char *t, Content *p, const Q3CString &s)
+    Generic(const char *t, Content *p, const QByteArray &s)
       : Generics::GUnstructured( p, s ), t_ype(0) { setType(t); }
-    Generic(const char *t, Content *p, const QString &s, const Q3CString &cs)
+    Generic(const char *t, Content *p, const QString &s, const QByteArray &cs)
       : Generics::GUnstructured( p, s, cs ), t_ype(0) { setType(t); }
     ~Generic() { delete[] t_ype; }
 
@@ -597,16 +595,16 @@ class KDE_EXPORT Subject : public Generics::GUnstructured {
   public:
     Subject() : Generics::GUnstructured()  {}
     Subject( Content * p ) : Generics::GUnstructured( p )  {}
-    Subject( Content * p, const Q3CString & s )
+    Subject( Content * p, const QByteArray & s )
       : Generics::GUnstructured( p, s ) {}
-    Subject( Content * p, const QString & s, const Q3CString & cs )
+    Subject( Content * p, const QString & s, const QByteArray & cs )
       : Generics::GUnstructured( p, s, cs ) {}
     ~Subject()  {}
 
     virtual const char* type() { return "Subject"; }
 
     bool isReply() {
-      return ( asUnicodeString().find( QString("Re:"), 0, false ) == 0 );
+      return ( asUnicodeString().indexOf( "Re:", 0, Qt::CaseInsensitive ) == 0 );
     }
 };
 
@@ -616,9 +614,9 @@ class KDE_EXPORT Organization : public Generics::GUnstructured {
   public:
     Organization() : Generics::GUnstructured() {}
     Organization( Content * p ) : Generics::GUnstructured( p ) {}
-    Organization( Content * p, const Q3CString & s )
+    Organization( Content * p, const QByteArray & s )
       : Generics::GUnstructured( p, s ) {};
-    Organization( Content * p, const QString & s, const Q3CString & cs)
+    Organization( Content * p, const QString & s, const QByteArray & cs)
       : Generics::GUnstructured( p, s, cs ) {}
     ~Organization()  {}
 
@@ -640,13 +638,13 @@ class KDE_EXPORT Control : public Base {
   public:
     Control() : Base()  {}
     Control(Content *p) : Base(p)  {}
-    Control(Content *p, const Q3CString &s) : Base(p) { from7BitString(s); }
+    Control(Content *p, const QByteArray &s) : Base(p) { from7BitString(s); }
     Control(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
     ~Control()  {}
 
-    virtual void from7BitString(const Q3CString &s);
-    virtual Q3CString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const Q3CString&);
+    virtual void from7BitString(const QByteArray &s);
+    virtual QByteArray as7BitString(bool incType=true);
+    virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
     virtual void clear()            { c_trlMsg.truncate(0); }
     virtual bool isEmpty()          { return (c_trlMsg.isEmpty()); }
@@ -655,7 +653,7 @@ class KDE_EXPORT Control : public Base {
     bool isCancel()                 { return QString(c_trlMsg).contains("cancel", Qt::CaseInsensitive); }
 
   protected:
-    Q3CString c_trlMsg;
+    QByteArray c_trlMsg;
 
 };
 
@@ -666,13 +664,13 @@ class KDE_EXPORT Date : public Base {
     Date() : Base(), t_ime(0)  {}
     Date(Content *p) : Base(p), t_ime(0)  {}
     Date(Content *p, time_t t) : Base(p), t_ime(t)  {}
-    Date(Content *p, const Q3CString &s) : Base(p)  { from7BitString(s); }
+    Date(Content *p, const QByteArray &s) : Base(p)  { from7BitString(s); }
     Date(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
     ~Date()  {}
 
-    virtual void from7BitString(const Q3CString &s);
-    virtual Q3CString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const Q3CString&);
+    virtual void from7BitString(const QByteArray &s);
+    virtual QByteArray as7BitString(bool incType=true);
+    virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
     virtual void clear()            { t_ime=0; }
     virtual bool isEmpty()          { return (t_ime==0); }
@@ -696,24 +694,24 @@ class KDE_EXPORT Newsgroups : public Base {
   public:
     Newsgroups() : Base()  {}
     Newsgroups(Content *p) : Base(p)  {}
-    Newsgroups(Content *p, const Q3CString &s) : Base(p)  { from7BitString(s); }
+    Newsgroups(Content *p, const QByteArray &s) : Base(p)  { from7BitString(s); }
     Newsgroups(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
     ~Newsgroups()  {}
 
-    virtual void from7BitString(const Q3CString &s);
-    virtual Q3CString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const Q3CString&);
+    virtual void from7BitString(const QByteArray &s);
+    virtual QByteArray as7BitString(bool incType=true);
+    virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
-    virtual void clear()            { g_roups.resize(0); }
+    virtual void clear()            { g_roups.clear(); }
     virtual bool isEmpty()          { return g_roups.isEmpty(); }
     virtual const char* type()      { return "Newsgroups"; }
 
-    Q3CString firstGroup();
-    bool isCrossposted()            { return ( g_roups.find(',')>-1 ); }
+    QByteArray firstGroup();
+    bool isCrossposted()            { return g_roups.contains(','); }
     QStringList getGroups();
 
   protected:
-    Q3CString g_roups;
+    QByteArray g_roups;
 
 };
 
@@ -724,7 +722,7 @@ class KDE_EXPORT FollowUpTo : public Newsgroups {
   public:
     FollowUpTo() : Newsgroups()  {}
     FollowUpTo(Content *p) : Newsgroups(p)  {}
-    FollowUpTo(Content *p, const Q3CString &s) : Newsgroups(p,s)  {}
+    FollowUpTo(Content *p, const QByteArray &s) : Newsgroups(p,s)  {}
     FollowUpTo(Content *p, const QString &s) : Newsgroups(p,s)  {}
     ~FollowUpTo()  {}
 
@@ -740,13 +738,13 @@ class KDE_EXPORT Lines : public Base {
     Lines() : Base(),l_ines(-1)  {}
     Lines(Content *p) : Base(p),l_ines(-1)  {}
     Lines(Content *p, unsigned int i) : Base(p),l_ines(i)  {}
-    Lines(Content *p, const Q3CString &s) : Base(p)  { from7BitString(s); }
+    Lines(Content *p, const QByteArray &s) : Base(p)  { from7BitString(s); }
     Lines(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
     ~Lines()                 {}
 
-    virtual void from7BitString(const Q3CString &s);
-    virtual Q3CString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const Q3CString&);
+    virtual void from7BitString(const QByteArray &s);
+    virtual QByteArray as7BitString(bool incType=true);
+    virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
     virtual void clear()            { l_ines=-1; }
     virtual bool isEmpty()          { return (l_ines==-1); }
@@ -768,20 +766,20 @@ class KDE_EXPORT UserAgent : public Base {
   public:
     UserAgent() : Base()  {}
     UserAgent(Content *p) : Base(p)  {}
-    UserAgent(Content *p, const Q3CString &s) : Base(p)  { from7BitString(s); }
+    UserAgent(Content *p, const QByteArray &s) : Base(p)  { from7BitString(s); }
     UserAgent(Content *p, const QString &s) : Base(p)  { fromUnicodeString(s, Latin1); }
     ~UserAgent()  {}
 
-    virtual void from7BitString(const Q3CString &s);
-    virtual Q3CString as7BitString(bool incType=true);
-    virtual void fromUnicodeString(const QString &s, const Q3CString&);
+    virtual void from7BitString(const QByteArray &s);
+    virtual QByteArray as7BitString(bool incType=true);
+    virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
     virtual void clear()            { u_agent.resize(0); }
     virtual bool isEmpty()          { return (u_agent.isEmpty()); }
     virtual const char* type()      { return "User-Agent"; }
 
   protected:
-    Q3CString u_agent;
+    QByteArray u_agent;
 
 };
 
@@ -835,7 +833,7 @@ public:
       convenience. It differs from the above only in what arguments it
       takes.
   */
-  static Headers::Base* create( const Q3CString& aType )
+  static Headers::Base* create( const QByteArray& aType )
   {
     return create( aType.data() );
   }

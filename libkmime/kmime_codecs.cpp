@@ -45,6 +45,7 @@
 
 #include <cassert>
 #include <cstring>
+#include <string.h>
 
 using namespace KMime;
 using namespace KPIM;
@@ -130,7 +131,8 @@ bool Codec::encode( const char* & scursor, const char * const send,
 QByteArray Codec::encode( const QByteArray & src, bool withCRLF ) const
 {
   // allocate buffer for the worst case:
-  QByteArray result( maxEncodedSizeFor( src.size(), withCRLF ) );
+  QByteArray result;
+  result.resize( maxEncodedSizeFor( src.size(), withCRLF ) );
 
   // set up iterators:
   QByteArray::ConstIterator iit = src.begin();
@@ -152,7 +154,8 @@ QByteArray Codec::encode( const QByteArray & src, bool withCRLF ) const
 QByteArray Codec::decode( const QByteArray & src, bool withCRLF ) const
 {
   // allocate buffer for the worst case:
-  QByteArray result( maxDecodedSizeFor( src.size(), withCRLF ) );
+  QByteArray result;
+  result.resize( maxDecodedSizeFor( src.size(), withCRLF ) );
 
   // set up iterators:
   QByteArray::ConstIterator iit = src.begin();
@@ -210,7 +213,7 @@ bool Encoder::flushOutputBuffer( char* & dcursor, const char * const dend ) {
   int numCharsLeft = mOutputBufferCursor - i;
   // push the remaining chars to the begin of the buffer:
   if ( numCharsLeft )
-    qmemmove( mOutputBuffer, mOutputBuffer + i, numCharsLeft );
+    ::memmove( mOutputBuffer, mOutputBuffer + i, numCharsLeft );
   // adjust cursor:
   mOutputBufferCursor = numCharsLeft;
 

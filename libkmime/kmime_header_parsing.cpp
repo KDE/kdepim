@@ -41,7 +41,6 @@
 
 #include <qtextcodec.h>
 #include <qmap.h>
-#include <q3cstring.h>
 #include <qstringlist.h>
 
 #include <ctype.h> // for isdigit
@@ -108,7 +107,7 @@ bool parseEncodedWord( const char* & scursor, const char * const send,
   for ( ; scursor != send ; scursor++ )
     if ( *scursor == '?')
       break;
-    else if ( *scursor == '*' && !languageStart )
+    else if ( *scursor == '*' && languageStart == 0 )
       languageStart = scursor + 1;
 
   // not found? can't be an encoded-word!
@@ -120,10 +119,10 @@ bool parseEncodedWord( const char* & scursor, const char * const send,
 
   // extract the language information, if any (if languageStart is 0,
   // language will be null, too):
-  Q3CString maybeLanguage( languageStart, scursor - languageStart + 1 /*for NUL*/);
+  QByteArray maybeLanguage( languageStart, scursor - languageStart );
   // extract charset information (keep in mind: the size given to the
   // ctor is one off due to the \0 terminator):
-  Q3CString maybeCharset( charsetStart, ( languageStart ? languageStart : scursor + 1 ) - charsetStart );
+  QByteArray maybeCharset( charsetStart, ( languageStart > 0 ? languageStart - 1 : scursor ) - charsetStart );
 
   //
   // STEP 2:
@@ -147,7 +146,7 @@ bool parseEncodedWord( const char* & scursor, const char * const send,
   }
 
   // extract the encoding information:
-  Q3CString maybeEncoding( encodingStart, scursor - encodingStart + 1 );
+  QByteArray maybeEncoding( encodingStart, scursor - encodingStart );
 
 
   kdDebug() << "parseEncodedWord: found charset == \"" << maybeCharset
@@ -215,11 +214,12 @@ bool parseEncodedWord( const char* & scursor, const char * const send,
     return false;
   };
 
-  kdDebug() << "mimeName(): \"" << textCodec->mimeName() << "\"" << endl;
+  kdDebug() << "mimeName(): \"" << textCodec->name() << "\"" << endl;
 
   // allocate a temporary buffer to store the 8bit text:
   int encodedTextLength = encodedTextEnd - encodedTextStart;
-  QByteArray buffer( codec->maxDecodedSizeFor( encodedTextLength ) );
+  QByteArray buffer;
+  buffer.resize( codec->maxDecodedSizeFor( encodedTextLength ) );
   QByteArray::Iterator bit = buffer.begin();
   QByteArray::ConstIterator bend = buffer.end();
 
@@ -502,7 +502,7 @@ bool parsePhrase( const char* & scursor, const char * const send,
 {
   enum { None, Phrase, Atom, EncodedWord, QuotedString } found = None;
   QString tmp;
-  Q3CString lang;
+  QByteArray lang;
   const char * successfullyParsed = 0;
   // only used by the encoded-word branch
   const char * oldscursor;
@@ -578,7 +578,7 @@ bool parsePhrase( const char* & scursor, const char * const send,
     case '=': // encoded-word
       tmp.clear();
       oldscursor = scursor;
-      lang = 0;
+      lang.clear();
       if ( parseEncodedWord( scursor, send, tmp, lang ) ) {
 	successfullyParsed = scursor;
 	switch ( found ) {
@@ -1226,7 +1226,7 @@ static void decodeRFC2231Value( Codec* & rfc2231Codec,
       return;
     }
 
-    Q3CString charset( decBegin, decCursor - decBegin + 1 );
+    QByteArray charset( decBegin, decCursor - decBegin );
 
     const char * oldDecCursor = ++decCursor;
     // find the second single quote (we ignore the language tag):
@@ -1273,7 +1273,8 @@ static void decodeRFC2231Value( Codec* & rfc2231Codec,
   // do the decoding:
   //
 
-  QByteArray buffer( rfc2231Codec->maxDecodedSizeFor( decEnd - decCursor ) );
+  QByteArray buffer;
+  buffer.resize( rfc2231Codec->maxDecodedSizeFor( decEnd - decCursor ) );
   QByteArray::Iterator bit = buffer.begin();
   QByteArray::ConstIterator bend = buffer.end();
 
@@ -1503,7 +1504,7 @@ static bool parseAlphaNumericTimeZone( const char* & scursor,
     }
 
   // don't choke just because we don't happen to know the time zone
-  KMIME_WARN_UNKNOWN(time zone,Q3CString( maybeTimeZone.first, maybeTimeZone.second+1 ));
+  KMIME_WARN_UNKNOWN(time zone,QByteArray( maybeTimeZone.first, maybeTimeZone.second ));
   secsEastOfGMT = 0;
   timeZoneKnown = false;
   return true;

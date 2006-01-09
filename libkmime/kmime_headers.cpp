@@ -25,7 +25,6 @@
 
 #include <qtextcodec.h>
 #include <qstring.h>
-#include <q3cstring.h>
 #include <qstringlist.h>
 
 #include <kglobal.h>
@@ -44,16 +43,16 @@ namespace KMime {
 namespace Headers {
 //-----<Base>----------------------------------
 
-Q3CString Base::rfc2047Charset()
+QByteArray Base::rfc2047Charset()
 {
-  if( (e_ncCS==0) || forceCS() )
+  if ( e_ncCS.isEmpty() || forceCS() )
     return defaultCS();
   else
-    return Q3CString(e_ncCS);
+    return e_ncCS;
 }
 
 
-void Base::setRFC2047Charset(const Q3CString &cs)
+void Base::setRFC2047Charset( const QByteArray &cs )
 {
   e_ncCS=cachedCharset(cs);
 }
@@ -77,14 +76,14 @@ namespace Generics {
 
 //-----<GUnstructured>-------------------------
 
-void GUnstructured::from7BitString( const Q3CString & str )
+void GUnstructured::from7BitString( const QByteArray & str )
 {
-  d_ecoded = decodeRFC2047String( str, &e_ncCS, defaultCS(), forceCS() );
+  d_ecoded = decodeRFC2047String( str, e_ncCS, defaultCS(), forceCS() );
 }
 
-Q3CString GUnstructured::as7BitString( bool withHeaderType )
+QByteArray GUnstructured::as7BitString( bool withHeaderType )
 {
-  Q3CString result;
+  QByteArray result;
   if ( withHeaderType )
     result = typeIntro();
   result += encodeRFC2047String( d_ecoded, e_ncCS ) ;
@@ -93,7 +92,7 @@ Q3CString GUnstructured::as7BitString( bool withHeaderType )
 }
 
 void GUnstructured::fromUnicodeString( const QString & str,
-				       const Q3CString & suggestedCharset )
+				       const QByteArray & suggestedCharset )
 {
   d_ecoded = str;
   e_ncCS = cachedCharset( suggestedCharset );
@@ -199,7 +198,7 @@ bool GToken::parse( const char* & scursor, const char * const send,
   QPair<const char*,int> maybeToken;
   if ( !parseToken( scursor, send, maybeToken, false /* no 8bit chars */ ) )
     return false;
-  mToken = Q3CString( maybeToken.first, maybeToken.second );
+  mToken = QByteArray( maybeToken.first, maybeToken.second );
 
   // complain if trailing garbage is found:
   eatCFWS( scursor, send, isCRLF );
@@ -301,7 +300,7 @@ bool GContentType::parse( const char* & scursor, const char * const send,
   if ( !parseToken( scursor, send, maybeMimeType, false /* no 8Bit */ ) )
     return false;
 
-  mMimeType = Q3CString( maybeMimeType.first, maybeMimeType.second ).lower();
+  mMimeType = QByteArray( maybeMimeType.first, maybeMimeType.second ).toLower();
 
   //
   // subtype
@@ -317,7 +316,7 @@ bool GContentType::parse( const char* & scursor, const char * const send,
   if ( !parseToken( scursor, send, maybeSubType, false /* no 8bit */ ) )
     return false;
 
-  mMimeSubType = Q3CString( maybeSubType.first, maybeSubType.second ).lower();
+  mMimeSubType = QByteArray( maybeSubType.first, maybeSubType.second ).toLower();
 
   //
   // parameter list
@@ -358,7 +357,7 @@ bool GCISTokenWithParameterList::parse( const char* & scursor,
   if ( !parseToken( scursor, send, maybeToken, false /* no 8Bit */ ) )
     return false;
 
-  mToken = Q3CString( maybeToken.first, maybeToken.second ).lower();
+  mToken = QByteArray( maybeToken.first, maybeToken.second ).toLower();
 
   //
   // parameter list
@@ -503,13 +502,13 @@ void Generic::setType(const char *type)
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<MessageID>-----------------------------
 
-void MessageID::from7BitString(const Q3CString &s)
+void MessageID::from7BitString(const QByteArray &s)
 {
   m_id=s;
 }
 
 
-Q3CString MessageID::as7BitString(bool incType)
+QByteArray MessageID::as7BitString(bool incType)
 {
   if(incType)
     return ( typeIntro()+m_id );
@@ -518,9 +517,9 @@ Q3CString MessageID::as7BitString(bool incType)
 }
 
 
-void MessageID::fromUnicodeString(const QString &s, const Q3CString&)
+void MessageID::fromUnicodeString(const QString &s, const QByteArray&)
 {
-  m_id=s.latin1(); //Message-Ids can only contain us-ascii chars
+  m_id=s.toLatin1(); //Message-Ids can only contain us-ascii chars
 }
 
 
@@ -530,7 +529,7 @@ QString MessageID::asUnicodeString()
 }
 
 
-void MessageID::generate(const Q3CString &fqdn)
+void MessageID::generate(const QByteArray &fqdn)
 {
   m_id="<"+uniqueString()+"@"+fqdn+">";
 }
@@ -541,13 +540,13 @@ void MessageID::generate(const Q3CString &fqdn)
 
 //-----<Control>-------------------------------
 
-void Control::from7BitString(const Q3CString &s)
+void Control::from7BitString(const QByteArray &s)
 {
   c_trlMsg=s;
 }
 
 
-Q3CString Control::as7BitString(bool incType)
+QByteArray Control::as7BitString(bool incType)
 {
   if(incType)
     return ( typeIntro()+c_trlMsg );
@@ -556,9 +555,9 @@ Q3CString Control::as7BitString(bool incType)
 }
 
 
-void Control::fromUnicodeString(const QString &s, const Q3CString&)
+void Control::fromUnicodeString(const QString &s, const QByteArray&)
 {
-  c_trlMsg=s.latin1();
+  c_trlMsg=s.toLatin1();
 }
 
 
@@ -573,33 +572,36 @@ QString Control::asUnicodeString()
 
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<AddressField>--------------------------
-void AddressField::from7BitString(const Q3CString &s)
+void AddressField::from7BitString(const QByteArray &s)
 {
   int pos1=0, pos2=0, type=0;
-  Q3CString n;
+  QByteArray n;
 
   //so what do we have here ?
-  if(QString(s).contains( QRegExp("*@*(*)", false, true) )) type=2;       // From: foo@bar.com (John Doe)
-  else if(QString(s).contains( QRegExp("*<*@*>", false, true) )) type=1;  // From: John Doe <foo@bar.com>
-  else if(QString(s).contains( QRegExp("*@*", false, true) )) type=0;     // From: foo@bar.com
+  if(QString(s).contains( QRegExp("*@*(*)", Qt::CaseInsensitive, QRegExp::Wildcard) ))
+    type=2;       // From: foo@bar.com (John Doe)
+  else if(QString(s).contains( QRegExp("*<*@*>", Qt::CaseInsensitive, QRegExp::Wildcard) ))
+    type=1;  // From: John Doe <foo@bar.com>
+  else if(QString(s).contains( QRegExp("*@*", Qt::CaseInsensitive, QRegExp::Wildcard) ))
+    type=0;     // From: foo@bar.com
   else { //broken From header => just decode it
-    n_ame=decodeRFC2047String(s, &e_ncCS, defaultCS(), forceCS());
+    n_ame=decodeRFC2047String(s, e_ncCS, defaultCS(), forceCS());
     return;
   }
 
   switch(type) {
 
     case 0:
-      e_mail=s.copy();
+      e_mail=s;
     break;
 
     case 1:
       pos1=0;
-      pos2=s.find('<');
+      pos2=s.indexOf('<');
       if(pos2!=-1) {
         n=s.mid(pos1, pos2-pos1).trimmed();
         pos1=pos2+1;
-        pos2=s.find('>', pos1);
+        pos2=s.indexOf('>', pos1);
         if(pos2!=-1)
           e_mail=s.mid(pos1, pos2-pos1);
       }
@@ -608,11 +610,11 @@ void AddressField::from7BitString(const Q3CString &s)
 
     case 2:
       pos1=0;
-      pos2=s.find('(');
+      pos2=s.indexOf('(');
       if(pos2!=-1) {
         e_mail=s.mid(pos1, pos2-pos1).trimmed();
         pos1=pos2+1;
-        pos2=s.find(')', pos1);
+        pos2=s.indexOf(')', pos1);
         if(pos2!=-1)
           n=s.mid(pos1, pos2-pos1).trimmed();
       }
@@ -623,14 +625,14 @@ void AddressField::from7BitString(const Q3CString &s)
 
   if(!n.isEmpty()) {
     removeQuots(n);
-    n_ame=decodeRFC2047String(n, &e_ncCS, defaultCS(), forceCS());
+    n_ame=decodeRFC2047String(n, e_ncCS, defaultCS(), forceCS());
   }
 }
 
 
-Q3CString AddressField::as7BitString(bool incType)
+QByteArray AddressField::as7BitString(bool incType)
 {
-  Q3CString ret;
+  QByteArray ret;
 
   if(incType && type()[0]!='\0')
     ret=typeIntro();
@@ -639,7 +641,7 @@ Q3CString AddressField::as7BitString(bool incType)
     ret+=e_mail;
   else {
     if (isUsAscii(n_ame)) {
-      Q3CString tmp(n_ame.latin1());
+      QByteArray tmp = n_ame.toLatin1();
       addQuotes(tmp, false);
       ret+=tmp;
     } else {
@@ -653,17 +655,20 @@ Q3CString AddressField::as7BitString(bool incType)
 }
 
 
-void AddressField::fromUnicodeString(const QString &s, const Q3CString &cs)
+void AddressField::fromUnicodeString(const QString &s, const QByteArray &cs)
 {
   int pos1=0, pos2=0, type=0;
-  Q3CString n;
+  QByteArray n;
 
   e_ncCS=cachedCharset(cs);
 
   //so what do we have here ?
-  if(s.find( QRegExp("*@*(*)", false, true) )!=-1) type=2;       // From: foo@bar.com (John Doe)
-  else if(s.find( QRegExp("*<*@*>", false, true) )!=-1) type=1;  // From: John Doe <foo@bar.com>
-  else if(s.find( QRegExp("*@*", false, true) )!=-1) type=0;     // From: foo@bar.com
+  if(s.contains( QRegExp("*@*(*)", Qt::CaseInsensitive, QRegExp::Wildcard) ) )
+    type=2;       // From: foo@bar.com (John Doe)
+  else if(s.contains( QRegExp("*<*@*>", Qt::CaseInsensitive, QRegExp::Wildcard) ) )
+    type=1;  // From: John Doe <foo@bar.com>
+  else if(s.contains( QRegExp("*@*", Qt::CaseInsensitive, QRegExp::Wildcard) ) )
+    type=0;     // From: foo@bar.com
   else { //broken From header => just copy it
     n_ame=s;
     return;
@@ -672,29 +677,29 @@ void AddressField::fromUnicodeString(const QString &s, const Q3CString &cs)
   switch(type) {
 
     case 0:
-      e_mail=s.latin1();
+      e_mail=s.toLatin1();
     break;
 
     case 1:
       pos1=0;
-      pos2=s.find('<');
+      pos2=s.indexOf('<');
       if(pos2!=-1) {
         n_ame=s.mid(pos1, pos2-pos1).trimmed();
         pos1=pos2+1;
-        pos2=s.find('>', pos1);
+        pos2=s.indexOf('>', pos1);
         if(pos2!=-1)
-          e_mail=s.mid(pos1, pos2-pos1).latin1();
+          e_mail=s.mid(pos1, pos2-pos1).toLatin1();
       }
       else return;
     break;
 
     case 2:
       pos1=0;
-      pos2=s.find('(');
+      pos2=s.indexOf('(');
       if(pos2!=-1) {
-        e_mail=s.mid(pos1, pos2-pos1).trimmed().latin1();
+        e_mail=s.mid(pos1, pos2-pos1).trimmed().toLatin1();
         pos1=pos2+1;
-        pos2=s.find(')', pos1);
+        pos2=s.indexOf(')', pos1);
         if(pos2!=-1)
           n_ame=s.mid(pos1, pos2-pos1).trimmed();
       }
@@ -721,15 +726,15 @@ QString AddressField::asUnicodeString()
 }
 
 
-Q3CString AddressField::nameAs7Bit()
+QByteArray AddressField::nameAs7Bit()
 {
   return encodeRFC2047String(n_ame, e_ncCS);
 }
 
 
-void AddressField::setNameFrom7Bit(const Q3CString &s)
+void AddressField::setNameFrom7Bit(const QByteArray &s)
 {
-  n_ame=decodeRFC2047String(s, &e_ncCS, defaultCS(), forceCS());
+  n_ame=decodeRFC2047String(s, e_ncCS, defaultCS(), forceCS());
 }
 
 //-----</AddressField>-------------------------
@@ -771,24 +776,24 @@ bool MailCopiesTo::neverCopy()
 
 //-----<Date>----------------------------------
 
-void Date::from7BitString(const Q3CString &s)
+void Date::from7BitString(const QByteArray &s)
 {
   t_ime=KRFCDate::parseDate(s);
 }
 
 
-Q3CString Date::as7BitString(bool incType)
+QByteArray Date::as7BitString(bool incType)
 {
   if(incType)
     return ( typeIntro()+KRFCDate::rfc2822DateString(t_ime) );
   else
-    return Q3CString(KRFCDate::rfc2822DateString(t_ime));
+    return KRFCDate::rfc2822DateString(t_ime);
 }
 
 
-void Date::fromUnicodeString(const QString &s, const Q3CString&)
+void Date::fromUnicodeString(const QString &s, const QByteArray&)
 {
-  from7BitString( Q3CString(s.latin1()) );
+  from7BitString( s.toLatin1() );
 }
 
 
@@ -819,7 +824,7 @@ int Date::ageInDays()
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<To>------------------------------------
 
-void To::from7BitString(const Q3CString &s)
+void To::from7BitString(const QByteArray &s)
 {
   qDeleteAll( a_ddrList );
   a_ddrList.clear();
@@ -832,9 +837,9 @@ void To::from7BitString(const Q3CString &s)
 }
 
 
-Q3CString To::as7BitString(bool incType)
+QByteArray To::as7BitString(bool incType)
 {
-  Q3CString ret;
+  QByteArray ret;
 
   if(incType)
     ret+=typeIntro();
@@ -851,7 +856,7 @@ Q3CString To::as7BitString(bool incType)
 }
 
 
-void To::fromUnicodeString(const QString &s, const Q3CString &cs)
+void To::fromUnicodeString(const QString &s, const QByteArray &cs)
 {
   qDeleteAll( a_ddrList );
   a_ddrList.clear();
@@ -904,14 +909,14 @@ QList<QByteArray> To::emails() const
 
 //-----<Newsgroups>----------------------------
 
-void Newsgroups::from7BitString(const Q3CString &s)
+void Newsgroups::from7BitString(const QByteArray &s)
 {
   g_roups=s;
   e_ncCS=cachedCharset("UTF-8");
 }
 
 
-Q3CString Newsgroups::as7BitString(bool incType)
+QByteArray Newsgroups::as7BitString(bool incType)
 {
   if(incType)
     return (typeIntro()+g_roups);
@@ -920,9 +925,9 @@ Q3CString Newsgroups::as7BitString(bool incType)
 }
 
 
-void Newsgroups::fromUnicodeString(const QString &s, const Q3CString&)
+void Newsgroups::fromUnicodeString(const QString &s, const QByteArray&)
 {
-  g_roups=s.utf8();
+  g_roups=s.toUtf8();
   e_ncCS=cachedCharset("UTF-8");
 }
 
@@ -933,30 +938,29 @@ QString Newsgroups::asUnicodeString()
 }
 
 
-Q3CString Newsgroups::firstGroup()
+QByteArray Newsgroups::firstGroup()
 {
   int pos=0;
   if(!g_roups.isEmpty()) {
-    pos=g_roups.find(',');
+    pos=g_roups.indexOf(',');
     if(pos==-1)
       return g_roups;
     else
       return g_roups.left(pos);
   }
   else
-    return Q3CString();
+    return QByteArray();
 }
 
 
 QStringList Newsgroups::getGroups()
 {
-  QStringList temp = QStringList::split(',', g_roups);
+  QList<QByteArray> temp = g_roups.split(',');
   QStringList ret;
   QString s;
 
-  for (QStringList::Iterator it = temp.begin(); it != temp.end(); ++it ) {
-    s = (*it).simplified();
-    ret.append(s);
+  foreach ( QByteArray group, temp ) {
+    ret.append( group.simplified() );
   }
 
   return ret;
@@ -968,16 +972,16 @@ QStringList Newsgroups::getGroups()
 
 //-----<Lines>---------------------------------
 
-void Lines::from7BitString(const Q3CString &s)
+void Lines::from7BitString(const QByteArray &s)
 {
   l_ines=s.toInt();
   e_ncCS=cachedCharset(Latin1);
 }
 
 
-Q3CString Lines::as7BitString(bool incType)
+QByteArray Lines::as7BitString(bool incType)
 {
-  Q3CString num;
+  QByteArray num;
   num.setNum(l_ines);
 
   if(incType)
@@ -987,7 +991,7 @@ Q3CString Lines::as7BitString(bool incType)
 }
 
 
-void Lines::fromUnicodeString(const QString &s, const Q3CString&)
+void Lines::fromUnicodeString(const QString &s, const QByteArray&)
 {
   l_ines=s.toInt();
   e_ncCS=cachedCharset(Latin1);
@@ -1009,14 +1013,14 @@ QString Lines::asUnicodeString()
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<References>----------------------------
 
-void References::from7BitString(const Q3CString &s)
+void References::from7BitString(const QByteArray &s)
 {
   r_ef=s;
   e_ncCS=cachedCharset(Latin1);
 }
 
 
-Q3CString References::as7BitString(bool incType)
+QByteArray References::as7BitString(bool incType)
 {
   if(incType)
     return ( typeIntro()+r_ef );
@@ -1025,9 +1029,9 @@ Q3CString References::as7BitString(bool incType)
 }
 
 
-void References::fromUnicodeString(const QString &s, const Q3CString&)
+void References::fromUnicodeString(const QString &s, const QByteArray&)
 {
-  r_ef=s.latin1();
+  r_ef=s.toLatin1();
   e_ncCS=cachedCharset(Latin1);
 }
 
@@ -1053,23 +1057,23 @@ int References::count()
 }
 
 
-Q3CString References::first()
+QByteArray References::first()
 {
   p_os=-1;
   return next();
 }
 
 
-Q3CString References::next()
+QByteArray References::next()
 {
   int pos1=0, pos2=0;
-  Q3CString ret;
+  QByteArray ret;
 
   if(p_os!=0) {
-    pos2=r_ef.findRev('>', p_os);
+    pos2=r_ef.lastIndexOf('>', p_os);
     p_os=0;
     if(pos2!=-1) {
-      pos1=r_ef.findRev('<', pos2);
+      pos1=r_ef.lastIndexOf('<', pos2);
       if(pos1!=-1) {
         ret=r_ef.mid(pos1, pos2-pos1+1);
         p_os=pos1;
@@ -1080,20 +1084,20 @@ Q3CString References::next()
 }
 
 
-Q3CString References::at(unsigned int i)
+QByteArray References::at(unsigned int i)
 {
-  Q3CString ret;
+  QByteArray ret;
   int pos1=0, pos2=0;
   unsigned int cnt=0;
 
   while(pos1!=-1 && cnt < i+1) {
     pos2=pos1-1;
-    pos1=r_ef.findRev('<', pos2);
+    pos1=r_ef.lastIndexOf('<', pos2);
     cnt++;
   }
 
   if(pos1!=-1) {
-    pos2=r_ef.find('>', pos1);
+    pos2=r_ef.indexOf('>', pos1);
     if(pos2!=-1)
       ret=r_ef.mid(pos1, pos2-pos1+1);
   }
@@ -1102,39 +1106,39 @@ Q3CString References::at(unsigned int i)
 }
 
 
-void References::append(const Q3CString &s)
+void References::append(const QByteArray &s)
 {
   QString temp=r_ef.data();
   temp += " ";
   temp += s.data();
-  QStringList lst=QStringList::split(' ',temp);
+  QStringList lst = temp.split(' ');
   QRegExp exp("^<.+@.+>$");
 
   // remove bogus references
   QStringList::Iterator it = lst.begin();
   while (it != lst.end()) {
-    if (-1==(*it).find(exp))
-      it = lst.remove(it);
+    if (-1==(*it).indexOf(exp))
+      it = lst.erase(it);
     else
       it++;
   }
 
   if (lst.isEmpty()) {
-    r_ef = s.copy();    // shouldn't happen...
+    r_ef = s;    // shouldn't happen...
     return;
   } else
     r_ef = "";
 
   temp = lst.first();    // include the first id
-  r_ef = temp.latin1();
-  lst.remove(temp);         // avoids duplicates
+  r_ef = temp.toLatin1();
+  lst.removeAll(temp);         // avoids duplicates
   int insPos = r_ef.length();
 
   for (int i=1;i<=3;i++) {    // include the last three ids
     if (!lst.isEmpty()) {
       temp = lst.last();
-      r_ef.insert(insPos,(QString(" %1").arg(temp)).latin1());
-      lst.remove(temp);
+      r_ef.insert(insPos,(QString(" %1").arg(temp)).toLatin1());
+      lst.removeAll(temp);
     } else
       break;
   }
@@ -1142,8 +1146,8 @@ void References::append(const Q3CString &s)
   while (!lst.isEmpty()) {   // now insert the rest, up to 1000 characters
     temp = lst.last();
     if ((15+r_ef.length()+temp.length())<1000) {
-      r_ef.insert(insPos,(QString(" %1").arg(temp)).latin1());
-      lst.remove(temp);
+      r_ef.insert(insPos,(QString(" %1").arg(temp)).toLatin1());
+      lst.removeAll(temp);
     } else
       return;
   }
@@ -1155,14 +1159,14 @@ void References::append(const Q3CString &s)
 
 //-----<UserAgent>-----------------------------
 
-void UserAgent::from7BitString(const Q3CString &s)
+void UserAgent::from7BitString(const QByteArray &s)
 {
   u_agent=s;
   e_ncCS=cachedCharset(Latin1);
 }
 
 
-Q3CString UserAgent::as7BitString(bool incType)
+QByteArray UserAgent::as7BitString(bool incType)
 {
   if(incType)
     return ( typeIntro()+u_agent );
@@ -1171,9 +1175,9 @@ Q3CString UserAgent::as7BitString(bool incType)
 }
 
 
-void UserAgent::fromUnicodeString(const QString &s, const Q3CString&)
+void UserAgent::fromUnicodeString(const QString &s, const QByteArray&)
 {
-  u_agent=s.latin1();
+  u_agent=s.toLatin1();
   e_ncCS=cachedCharset(Latin1);
 }
 
@@ -1190,9 +1194,9 @@ QString UserAgent::asUnicodeString()
 #if !defined(KMIME_NEW_STYLE_CLASSTREE)
 //-----<Content-Type>--------------------------
 
-void ContentType::from7BitString(const Q3CString &s)
+void ContentType::from7BitString(const QByteArray &s)
 {
-  int pos=s.find(';');
+  int pos=s.indexOf(';');
 
   if(pos==-1)
     m_imeType=s.simplified();
@@ -1210,7 +1214,7 @@ void ContentType::from7BitString(const Q3CString &s)
 }
 
 
-Q3CString ContentType::as7BitString(bool incType)
+QByteArray ContentType::as7BitString(bool incType)
 {
   if(incType)
     return (typeIntro()+m_imeType+p_arams);
@@ -1219,9 +1223,9 @@ Q3CString ContentType::as7BitString(bool incType)
 }
 
 
-void ContentType::fromUnicodeString(const QString &s, const Q3CString&)
+void ContentType::fromUnicodeString(const QString &s, const QByteArray&)
 {
-  from7BitString( Q3CString(s.latin1()) );
+  from7BitString( s.toLatin1() );
 }
 
 
@@ -1231,9 +1235,9 @@ QString ContentType::asUnicodeString()
 }
 
 
-Q3CString ContentType::mediaType()
+QByteArray ContentType::mediaType()
 {
-  int pos=m_imeType.find('/');
+  int pos=m_imeType.indexOf('/');
   if(pos==-1)
     return m_imeType;
   else
@@ -1241,17 +1245,17 @@ Q3CString ContentType::mediaType()
 }
 
 
-Q3CString ContentType::subType()
+QByteArray ContentType::subType()
 {
-  int pos=m_imeType.find('/');
+  int pos=m_imeType.indexOf('/');
   if(pos==-1)
-    return Q3CString();
+    return QByteArray();
   else
     return m_imeType.mid(pos, m_imeType.length()-pos);
 }
 
 
-void ContentType::setMimeType(const Q3CString &s)
+void ContentType::setMimeType(const QByteArray &s)
 {
   p_arams.resize(0);
   m_imeType=s;
@@ -1316,9 +1320,9 @@ bool ContentType::isPartial()
 }
 
 
-Q3CString ContentType::charset()
+QByteArray ContentType::charset()
 {
-  Q3CString ret=getParameter("charset");
+  QByteArray ret=getParameter("charset");
   if( ret.isEmpty() || forceCS() ) { //we return the default-charset if necessary
     ret=defaultCS();
   }
@@ -1326,19 +1330,19 @@ Q3CString ContentType::charset()
 }
 
 
-void ContentType::setCharset(const Q3CString &s)
+void ContentType::setCharset(const QByteArray &s)
 {
   setParameter("charset", s);
 }
 
 
-Q3CString ContentType::boundary()
+QByteArray ContentType::boundary()
 {
   return getParameter("boundary");
 }
 
 
-void ContentType::setBoundary(const Q3CString &s)
+void ContentType::setBoundary(const QByteArray &s)
 {
   setParameter("boundary", s, true);
 }
@@ -1346,17 +1350,17 @@ void ContentType::setBoundary(const Q3CString &s)
 
 QString ContentType::name()
 {
-  const char *dummy=0;
-  return ( decodeRFC2047String(getParameter("name"), &dummy, defaultCS(), forceCS()) );
+  QByteArray dummy;
+  return ( decodeRFC2047String(getParameter("name"), dummy, defaultCS(), forceCS()) );
 }
 
 
-void ContentType::setName(const QString &s, const Q3CString &cs)
+void ContentType::setName(const QString &s, const QByteArray &cs)
 {
   e_ncCS=cs;
 
   if (isUsAscii(s)) {
-    Q3CString tmp(s.latin1());
+    QByteArray tmp = s.toLatin1();
     addQuotes(tmp, true);
     setParameter("name", tmp, false);
   } else {
@@ -1366,13 +1370,13 @@ void ContentType::setName(const QString &s, const Q3CString &cs)
 }
 
 
-Q3CString ContentType::id()
+QByteArray ContentType::id()
 {
   return (getParameter("id"));
 }
 
 
-void ContentType::setId(const Q3CString &s)
+void ContentType::setId(const QByteArray &s)
 {
   setParameter("id", s, true);
 }
@@ -1380,7 +1384,7 @@ void ContentType::setId(const Q3CString &s)
 
 int ContentType::partialNumber()
 {
-  Q3CString p=getParameter("number");
+  QByteArray p=getParameter("number");
   if(!p.isEmpty())
     return p.toInt();
   else
@@ -1390,7 +1394,7 @@ int ContentType::partialNumber()
 
 int ContentType::partialCount()
 {
-  Q3CString p=getParameter("total");
+  QByteArray p=getParameter("total");
   if(!p.isEmpty())
     return p.toInt();
   else
@@ -1400,7 +1404,7 @@ int ContentType::partialCount()
 
 void ContentType::setPartialParams(int total, int number)
 {
-  Q3CString num;
+  QByteArray num;
   num.setNum(number);
   setParameter("number", num);
   num.setNum(total);
@@ -1408,9 +1412,9 @@ void ContentType::setPartialParams(int total, int number)
 }
 
 
-Q3CString ContentType::getParameter(const char *name)
+QByteArray ContentType::getParameter(const char *name)
 {
-  Q3CString ret;
+  QByteArray ret;
   int pos1=0, pos2=0;
   pos1=QString(p_arams).indexOf(name, 0, Qt::CaseInsensitive);
   if(pos1!=-1) {
@@ -1424,7 +1428,7 @@ Q3CString ContentType::getParameter(const char *name)
 }
 
 
-void ContentType::setParameter(const Q3CString &name, const Q3CString &value, bool doubleQuotes)
+void ContentType::setParameter(const QByteArray &name, const QByteArray &value, bool doubleQuotes)
 {
   int pos1=0, pos2=0;
   QByteArray param;
@@ -1439,7 +1443,7 @@ void ContentType::setParameter(const Q3CString &name, const Q3CString &value, bo
     p_arams+="; "+param;
   }
   else {
-    pos2=p_arams.find(';', pos1);
+    pos2=p_arams.indexOf(';', pos1);
     if(pos2==-1)
       pos2=p_arams.length();
     p_arams.remove(pos1, pos2-pos1);
@@ -1464,9 +1468,9 @@ static const encTableType encTable[] = {  { "7Bit", CE7Bit },
                                           { 0, 0} };
 
 
-void CTEncoding::from7BitString(const Q3CString &s)
+void CTEncoding::from7BitString(const QByteArray &s)
 {
-  Q3CString stripped(s.simplified());
+  QByteArray stripped = s.simplified();
   c_te=CE7Bit;
   for(int i=0; encTable[i].s!=0; i++)
     if(strcasecmp(stripped.data(), encTable[i].s)==0) {
@@ -1479,9 +1483,9 @@ void CTEncoding::from7BitString(const Q3CString &s)
 }
 
 
-Q3CString CTEncoding::as7BitString(bool incType)
+QByteArray CTEncoding::as7BitString(bool incType)
 {
-  Q3CString str;
+  QByteArray str;
   for(int i=0; encTable[i].s!=0; i++)
     if(c_te==encTable[i].e) {
       str=encTable[i].s;
@@ -1495,9 +1499,9 @@ Q3CString CTEncoding::as7BitString(bool incType)
 }
 
 
-void CTEncoding::fromUnicodeString(const QString &s, const Q3CString&)
+void CTEncoding::fromUnicodeString(const QString &s, const QByteArray&)
 {
-  from7BitString( Q3CString(s.latin1()) );
+  from7BitString( s.toLatin1() );
 }
 
 
@@ -1512,26 +1516,26 @@ QString CTEncoding::asUnicodeString()
 
 //-----<CDisposition>--------------------------
 
-void CDisposition::from7BitString(const Q3CString &s)
+void CDisposition::from7BitString(const QByteArray &s)
 {
   if(strncasecmp(s.data(), "attachment", 10)==0)
     d_isp=CDattachment;
   else d_isp=CDinline;
 
   int pos=QString(s).indexOf("filename=", 0, Qt::CaseInsensitive);
-  Q3CString fn;
+  QByteArray fn;
   if(pos>-1) {
     pos+=9;
     fn=s.mid(pos, s.length()-pos);
     removeQuots(fn);
-    f_ilename=decodeRFC2047String(fn, &e_ncCS, defaultCS(), forceCS());
+    f_ilename=decodeRFC2047String(fn, e_ncCS, defaultCS(), forceCS());
   }
 }
 
 
-Q3CString CDisposition::as7BitString(bool incType)
+QByteArray CDisposition::as7BitString(bool incType)
 {
-  Q3CString ret;
+  QByteArray ret;
   if(d_isp==CDattachment)
     ret="attachment";
   else
@@ -1539,7 +1543,7 @@ Q3CString CDisposition::as7BitString(bool incType)
 
   if(!f_ilename.isEmpty()) {
     if (isUsAscii(f_ilename)) {
-      Q3CString tmp(f_ilename.latin1());
+      QByteArray tmp = f_ilename.toLatin1();
       addQuotes(tmp, true);
       ret+="; filename="+tmp;
     } else {
@@ -1555,13 +1559,13 @@ Q3CString CDisposition::as7BitString(bool incType)
 }
 
 
-void CDisposition::fromUnicodeString(const QString &s, const Q3CString &cs)
+void CDisposition::fromUnicodeString(const QString &s, const QByteArray &cs)
 {
-  if(strncasecmp(s.latin1(), "attachment", 10)==0)
+  if(strncasecmp(s.toLatin1(), "attachment", 10)==0)
     d_isp=CDattachment;
   else d_isp=CDinline;
 
-  int pos=s.find("filename=", 0, false);
+  int pos=s.indexOf("filename=", 0, Qt::CaseInsensitive);
   if(pos>-1) {
     pos+=9;
     f_ilename=s.mid(pos, s.length()-pos);

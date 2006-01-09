@@ -88,7 +88,7 @@ void Message::assemble()
   newHead+=contentTransferEncoding()->as7BitString()+"\n";
 
   //X-Headers
-  int pos=h_ead.find("\nX-");
+  int pos=h_ead.indexOf("\nX-");
   if(pos>-1) //we already have some x-headers => "recycle" them
     newHead+=h_ead.mid(pos+1, h_ead.length()-pos-1);
   else

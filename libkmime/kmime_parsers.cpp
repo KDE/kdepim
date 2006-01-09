@@ -16,7 +16,6 @@
 #include "kmime_parsers.h"
 
 #include <qregexp.h>
-//Added by qt3to4:
 #include <QByteArray>
 
 using namespace KMime::Parser;
@@ -41,7 +40,7 @@ bool MultiPart::parse()
 
   //find the first valid boundary
   while(1) {
-    if( (pos1=s_rc.find(b, pos1))==-1 || pos1==0 || s_rc[pos1-1]=='\n' ) //valid boundary found or no boundary at all
+    if( (pos1=s_rc.indexOf(b, pos1))==-1 || pos1==0 || s_rc[pos1-1]=='\n' ) //valid boundary found or no boundary at all
       break;
     pos1+=blen; //boundary found but not valid => skip it;
   }
@@ -58,11 +57,11 @@ bool MultiPart::parse()
   while(pos1>-1 && pos2>-1) {
 
     //skip the rest of the line for the first boundary - the message-part starts here
-    if( (pos1=s_rc.find('\n', pos1))>-1 ) { //now search the next linebreak
+    if( (pos1=s_rc.indexOf('\n', pos1))>-1 ) { //now search the next linebreak
       //now find the next valid boundary
       pos2=++pos1; //pos1 and pos2 point now to the beginning of the next line after the boundary
       while(1) {
-        if( (pos2=s_rc.find(b, pos2))==-1 || s_rc[pos2-1]=='\n' ) //valid boundary or no more boundaries found
+        if( (pos2=s_rc.indexOf(b, pos2))==-1 || s_rc[pos2-1]=='\n' ) //valid boundary or no more boundaries found
           break;
         pos2+=blen; //boundary is invalid => skip it;
       }
@@ -79,7 +78,7 @@ bool MultiPart::parse()
         pos2+=blen; //pos2 points now to the first charakter after the boundary
         if(s_rc[pos2]=='-' && s_rc[pos2+1]=='-') { //end-boundary
           pos1=pos2+2; //pos1 points now to the character directly after the end-boundary
-          if( (pos1=s_rc.find('\n', pos1))>-1 ) //skipt the rest of this line
+          if( (pos1=s_rc.indexOf('\n', pos1))>-1 ) //skipt the rest of this line
             e_pilouge=s_rc.mid(pos1+1, s_rc.length()-pos1-1); //everything after the end-boundary is considered as the epilouge
           pos1=-1;
           pos2=-1; //break
@@ -110,7 +109,7 @@ QByteArray NonMimeParser::guessMimeType(const QByteArray& fileName)
   int pos;
 
   if(!fileName.isEmpty()) {
-    pos=fileName.findRev('.');
+    pos=fileName.lastIndexOf('.');
     if(pos++ != -1) {
       tmp=fileName.mid(pos, fileName.length()-pos).toUpper();
       if(tmp=="JPG" || tmp=="JPEG")       mimeType="image/jpeg";
@@ -154,9 +153,9 @@ bool UUEncoded::parse()
     bool containsBegin=false, containsEnd=false;
     QByteArray tmp,fileName;
 
-    if( (beginPos=QString(s_rc).find(QRegExp("begin [0-9][0-9][0-9]"),currentPos))>-1 && (beginPos==0 || s_rc.at(beginPos-1)=='\n') ) {
+    if( (beginPos=QString(s_rc).indexOf(QRegExp("begin [0-9][0-9][0-9]"),currentPos))>-1 && (beginPos==0 || s_rc.at(beginPos-1)=='\n') ) {
       containsBegin=true;
-      uuStart=s_rc.find('\n', beginPos);
+      uuStart=s_rc.indexOf('\n', beginPos);
       if(uuStart==-1) {//no more line breaks found, we give up
         success = false;
         break;
@@ -165,7 +164,7 @@ bool UUEncoded::parse()
     }
       else beginPos=currentPos;
 
-    if ( (endPos=s_rc.find("\nend",(uuStart>0)? uuStart-1:0))==-1 )
+    if ( (endPos=s_rc.indexOf("\nend",(uuStart>0)? uuStart-1:0))==-1 )
       endPos=s_rc.length(); //no end found
     else
       containsEnd=true;
@@ -192,11 +191,11 @@ bool UUEncoded::parse()
 
       if( (!containsBegin || !containsEnd) && !s_ubject.isNull()) {  // message may be split up => parse subject
 	QRegExp rx("[0-9]+/[0-9]+");
-	pos=rx.search(QString(s_ubject), 0);
+	pos=rx.indexIn(QString(s_ubject), 0);
 	len=rx.matchedLength();
         if(pos!=-1) {
           tmp=s_ubject.mid(pos, len);
-          pos=tmp.find('/');
+          pos=tmp.indexOf('/');
           p_artNr=tmp.left(pos).toInt();
           t_otalNr=tmp.right(tmp.length()-pos-1).toInt();
         } else {
@@ -218,7 +217,7 @@ bool UUEncoded::parse()
       m_imeTypes.append(guessMimeType(fileName));
       firstIteration=false;
 
-      int next = s_rc.find('\n', endPos+1);
+      int next = s_rc.indexOf('\n', endPos+1);
       if(next==-1) { //no more line breaks found, we give up
         success = false;
         break;
@@ -251,19 +250,19 @@ bool YENCEncoded::yencMeta(QByteArray& src, const QByteArray& name, int* value)
   bool found = false;
   QByteArray sought=name + "=";
 
-  int iPos=src.find( sought);
+  int iPos=src.indexOf( sought);
   if (iPos>-1) {
-    int pos1=src.find(' ', iPos);
-    int pos2=src.find('\r', iPos);
-    int pos3=src.find('\t', iPos);
-    int pos4=src.find('\n', iPos);
+    int pos1=src.indexOf(' ', iPos);
+    int pos2=src.indexOf('\r', iPos);
+    int pos3=src.indexOf('\t', iPos);
+    int pos4=src.indexOf('\n', iPos);
     if (pos2>=0 && (pos1<0 || pos1>pos2))
       pos1=pos2;
     if (pos3>=0 && (pos1<0 || pos1>pos3))
       pos1=pos3;
     if (pos4>=0 && (pos1<0 || pos1>pos4))
       pos1=pos4;
-    iPos=src.findRev( '=', pos1)+1;
+    iPos=src.lastIndexOf( '=', pos1)+1;
     if (iPos<pos1) {
       char c=src.at( iPos);
       if ( c>='0' && c<='9') {
@@ -286,16 +285,16 @@ bool YENCEncoded::parse()
     bool containsPart=false;
     QByteArray fileName,mimeType;
 
-    if ((beginPos=s_rc.find("=ybegin ", currentPos))>-1 && ( beginPos==0 || s_rc.at( beginPos-1)=='\n') ) {
-      yencStart=s_rc.find( '\n', beginPos);
+    if ((beginPos=s_rc.indexOf("=ybegin ", currentPos))>-1 && ( beginPos==0 || s_rc.at( beginPos-1)=='\n') ) {
+      yencStart=s_rc.indexOf( '\n', beginPos);
       if (yencStart==-1) { // no more line breaks found, give up
         success = false;
         break;
       } else {
         yencStart++;
-        if (s_rc.find("=ypart", yencStart)==yencStart) {
+        if (s_rc.indexOf("=ypart", yencStart)==yencStart) {
           containsPart=true;
-          yencStart=s_rc.find( '\n', yencStart);
+          yencStart=s_rc.indexOf( '\n', yencStart);
           if ( yencStart== -1) {
             success=false;
             break;
@@ -307,14 +306,14 @@ bool YENCEncoded::parse()
 
       // Filenames can contain any embedded chars until end of line
       QByteArray meta=s_rc.mid(beginPos, yencStart-beginPos);
-      int namePos=meta.find("name=");
+      int namePos=meta.indexOf("name=");
       if (namePos== -1) {
         success=false;
         break;
       }
-      int eolPos=meta.find('\r', namePos);
+      int eolPos=meta.indexOf('\r', namePos);
       if (eolPos== -1)
-      eolPos=meta.find('\n', namePos);    
+      eolPos=meta.indexOf('\n', namePos);
       if (eolPos== -1) {
         success=false;
         break;
@@ -358,7 +357,8 @@ bool YENCEncoded::parse()
       bool lineStart=true;
       int lineLength=0;
       bool containsEnd=false;
-      QByteArray binary = QByteArray(yencSize);
+      QByteArray binary;
+      binary.resize(yencSize);
       while (pos<len) {
         int ch=s_rc.at(pos);
         if (ch<0)
@@ -426,7 +426,7 @@ bool YENCEncoded::parse()
       }
 
       // pos now points to =yend; get end data
-      eolPos=s_rc.find('\n', pos);
+      eolPos=s_rc.indexOf('\n', pos);
       if (eolPos== -1)
       {
         success=false;

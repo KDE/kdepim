@@ -18,7 +18,6 @@
 
 #include "qdatetime.h"
 #include "qstring.h"
-#include "q3cstring.h"
 #include "time.h"
 #include <kdepimmacros.h>
 
@@ -71,8 +70,8 @@ namespace KMime {
       @param forceCS   force the use of the default charset.
       @return the decoded string.
   */
-  extern QString decodeRFC2047String(const Q3CString &src, const char **usedCS,
-				     const Q3CString &defaultCS, bool forceCS) KDE_EXPORT;
+  extern QString decodeRFC2047String(const QByteArray &src, QByteArray &usedCS,
+				     const QByteArray &defaultCS, bool forceCS) KDE_EXPORT;
 
   /** Encode string @p src according to RFC2047 using charset
       @p charset.
@@ -84,8 +83,8 @@ namespace KMime {
                            are allowed.
       @return the encoded string.
   */
-  extern Q3CString encodeRFC2047String(const QString &src, const char *charset,
-				      bool addressHeader=false, bool allow8bitHeaders=false) KDE_EXPORT;
+  extern QByteArray encodeRFC2047String(const QString &src, const QByteArray &charset,
+                                        bool addressHeader=false, bool allow8bitHeaders=false) KDE_EXPORT;
 
   /** Uses current time, pid and random numbers to construct a string
       that aims to be unique on a per-host basis (ie. for the local
@@ -93,7 +92,7 @@ namespace KMime {
       @return the unique string.
       @see multiPartBoundary
   */
-  extern Q3CString uniqueString() KDE_EXPORT;
+  extern QByteArray uniqueString() KDE_EXPORT;
 
   /** Constructs a random string (sans leading/trailing "--") that can
       be used as a multipart delimiter (ie. as @p boundary parameter
@@ -110,7 +109,7 @@ namespace KMime {
       @return the first instance of the header @p name in @p src
               or a null QCString if no such header was found.
   */
-  extern Q3CString extractHeader(const Q3CString &src, const char *name) KDE_EXPORT;
+  extern QByteArray extractHeader(const QByteArray &src, const QByteArray &name) KDE_EXPORT;
   /** Converts all occurrences of "\r\n" (CRLF) in @p s to "\n" (LF).
 
       This function is expensive and should be used only if the mail
@@ -120,7 +119,7 @@ namespace KMime {
       @return the string with CRLF's substitued for LF's
       @see CRLFtoLF(const char*) LFtoCRLF
   */
-  extern Q3CString CRLFtoLF(const Q3CString &s) KDE_EXPORT;
+  extern QByteArray CRLFtoLF(const QByteArray &s) KDE_EXPORT;
   /** Converts all occurrences of "\r\n" (CRLF) in @p s to "\n" (LF).
 
       This function is expensive and should be used only if the mail
@@ -130,7 +129,7 @@ namespace KMime {
       @return the string with CRLF's substitued for LF's
       @see CRLFtoLF(const QCString&) LFtoCRLF
   */
-  extern Q3CString CRLFtoLF(const char *s) KDE_EXPORT;
+  extern QByteArray CRLFtoLF(const char *s) KDE_EXPORT;
   /** Converts all occurrences of "\n" (LF) in @p s to "\r\n" (CRLF).
 
       This function is expensive and should be used only if the mail
@@ -142,14 +141,14 @@ namespace KMime {
       @return the string with CRLF's substitued for LF's
       @see CRLFtoLF(const QCString&) LFtoCRLF
   */
-  extern Q3CString LFtoCRLF(const Q3CString &s) KDE_EXPORT;
+  extern QByteArray LFtoCRLF(const QByteArray &s) KDE_EXPORT;
 
   /** Removes quote (DQUOTE) characters and decodes "quoted-pairs"
       (ie. backslash-escaped characters)
       @param str the string to work on.
       @see addQuotes
   */
-  KDE_EXPORT extern void removeQuots(Q3CString &str);
+  KDE_EXPORT extern void removeQuots(QByteArray &str);
   /** Removes quote (DQUOTE) characters and decodes "quoted-pairs"
       (ie. backslash-escaped characters)
       @param str the string to work on.
@@ -241,7 +240,7 @@ namespace KMime {
      * returns rfc2822 formatted string
      * @param otime time to use for formatting
      */
-    Q3CString rfc2822(time_t otime) const;
+    QByteArray rfc2822(time_t otime) const;
     /**
      * resets the internal clock
      */
@@ -273,7 +272,7 @@ namespace KMime {
 				       bool shortFormat = true, bool includeSecs=false);
 
     /** convenience function, same as #rfc2822 */
-    static Q3CString rfc2822FormatDate( time_t time );
+    static QByteArray rfc2822FormatDate( time_t time );
     static bool     isDaylight();
   protected:
     /**
@@ -314,7 +313,7 @@ namespace KMime {
      * returns a string identifying the timezone (eg."-0500")
      * @internal
      */
-    Q3CString zone(time_t otime) const;
+    QByteArray zone(time_t otime) const;
 
     time_t qdateToTimeT(const QDateTime& dt) const;
   private:

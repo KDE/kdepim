@@ -30,8 +30,7 @@ class KMime::Headers::List;
 #include "kmime_headers.h"
 
 #include <qtextstream.h>
-//Added by qt3to4:
-#include <Q3CString>
+#include <QByteArray>
 #include <QList>
 
 namespace KMime {
@@ -65,7 +64,7 @@ class KDE_EXPORT Content : public Base {
     typedef QList<KMime::Content*> List;
 
     Content();
-    Content(const Q3CString &h, const Q3CString &b);
+    Content( const QByteArray &h, const QByteArray &b );
     virtual ~Content();
 
     //type
@@ -80,9 +79,9 @@ class KDE_EXPORT Content : public Base {
     virtual void clear();
 
     //header access
-    Q3CString head()       { return h_ead; }
+    QByteArray head()       { return h_ead; }
     // extracts and removes the next header from head. The caller has to delete the returned header;
-    Headers::Generic*  getNextHeader(Q3CString &head);
+    Headers::Generic*  getNextHeader(QByteArray &head);
     virtual Headers::Base* getHeaderByType(const char *type);
     virtual void setHeader(Headers::Base *h);
     virtual bool removeHeader(const char *type);
@@ -96,9 +95,9 @@ class KDE_EXPORT Content : public Base {
     int size();
     int storageSize();
     int lineCount();
-    Q3CString body()       { return b_ody; }
-    void setBody( const Q3CString & str ) { b_ody = str; }
-    Q3CString encodedContent(bool useCrLf=false);
+    QByteArray body()       { return b_ody; }
+    void setBody( const QByteArray & str ) { b_ody = str; }
+    QByteArray encodedContent(bool useCrLf=false);
     QByteArray decodedContent();
     void decodedText(QString &s, bool trimText=false,
                      bool removeTrailingNewlines=false);
@@ -119,7 +118,7 @@ class KDE_EXPORT Content : public Base {
 
     // this charset is used for all headers and the body
     // if the charset is not declared explictly
-    QByteArray defaultCharset() const        { return QByteArray( d_efaultCS ); }
+    QByteArray defaultCharset() const        { return d_efaultCS; }
     void setDefaultCharset( const QByteArray &cs );
 
     // use the default charset even if a different charset is
@@ -133,17 +132,16 @@ class KDE_EXPORT Content : public Base {
 
 
   protected:
-    Q3CString rawHeader(const char *name);
+    QByteArray rawHeader(const char *name);
     bool decodeText();
     template <class T> T* getHeaderInstance(T *ptr, bool create);
 
-    Q3CString  h_ead,
-              b_ody;
+    QByteArray h_ead,
+               b_ody;
     List c_ontents;
     Headers::Base::List h_eaders;
-    const char *d_efaultCS;
+    QByteArray d_efaultCS;
     bool f_orceDefaultCS;
-
 };
 
 // some compilers (for instance Compaq C++) need template inline functions
