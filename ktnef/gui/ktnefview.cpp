@@ -21,8 +21,7 @@
 
 #include <q3header.h>
 #include <qpixmap.h>
-//Added by qt3to4:
-#include <Q3Frame>
+#include <QFrame>
 #include <QResizeEvent>
 
 #include <kapplication.h>
@@ -71,7 +70,7 @@ KTNEFView::KTNEFView( QWidget *parent )
 	addColumn(i18n("File Name"));
 	addColumn(i18n("File Type"));
 	addColumn(i18n("Size"));
-	setFrameStyle(Q3Frame::WinPanel|Q3Frame::Sunken);
+	setFrameStyle(QFrame::WinPanel|QFrame::Sunken);
 	setLineWidth(1);
 	setSelectionMode(Q3ListView::Extended);
 	setHScrollBarMode(Q3ScrollView::AlwaysOff);
