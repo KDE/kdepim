@@ -75,7 +75,7 @@ bool ArticleWindow::raiseWindowForArticle( const QByteArray &mid )
 {
   for ( ArticleWindow::List::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
     if ( (*it)->mArticleWidget->article() &&
-           (*it)->mArticleWidget->article()->messageID()->as7BitString( false ) == Q3CString( mid ) ) {
+           (*it)->mArticleWidget->article()->messageID()->as7BitString( false ) == mid ) {
       KWin::activateWindow( (*it)->winId() );
       return true;
     }

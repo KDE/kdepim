@@ -1446,17 +1446,13 @@ void KNComposer::slotSubjectChanged(const QString &t)
 
 void KNComposer::slotGroupsChanged(const QString &t)
 {
-  KQCStringSplitter split;
-  bool splitOk;
   QString currText=v_iew->f_up2->currentText();
 
   v_iew->f_up2->clear();
 
-  split.init(t.latin1(), ",");
-  splitOk=split.first();
-  while(splitOk) {
-    v_iew->f_up2->insertItem(QString::fromLatin1(split.string()));
-    splitOk=split.next();
+  QStringList groups = t.split(',');
+  foreach ( QString s, groups ) {
+    v_iew->f_up2->insertItem( s );
   }
   v_iew->f_up2->insertItem("");
 

@@ -169,14 +169,14 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
     if(replyTo->hasName())
       address.setName(replyTo->name());
     if(replyTo->hasEmail())
-      address.setEmail(replyTo->email().copy());
+      address.setEmail(replyTo->email());
   }
   else {
     KMime::Headers::From *from=a->from();
     if(from->hasName())
       address.setName(from->name());
     if(from->hasEmail())
-      address.setEmail(from->email().copy());
+      address.setEmail(from->email());
   }
   art->to()->addAddress(address);
 
