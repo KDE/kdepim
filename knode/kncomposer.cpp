@@ -52,7 +52,6 @@ using KRecentAddress::RecentAddresses;
 #include <kpgp.h>
 #include <kpgpblock.h>
 #include <kprocess.h>
-#include <kqcstringsplitter.h>
 #include <ksyntaxhighlighter.h>
 #include <qcursor.h>
 #include <k3urldrag.h>
