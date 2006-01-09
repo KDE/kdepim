@@ -28,26 +28,25 @@ QTTEST_KDEMAIN( RFC2047Test, NoGUI )
 void RFC2047Test::testRFC2047decode()
 {
   qDebug( "Testing RFC2047 decoding" );
-  const char *encCharset = 0;
+  QByteArray encCharset;
   // empty
-  QCOMPARE( KMime::decodeRFC2047String( "", &encCharset, "utf-8", false ), QString() );
+  QCOMPARE( KMime::decodeRFC2047String( QByteArray(), encCharset, "utf-8", false ), QString() );
   // identity
-  QCOMPARE( KMime::decodeRFC2047String( "bla", &encCharset, "utf-8", false ), QString( "bla" ) );
+  QCOMPARE( KMime::decodeRFC2047String( "bla", encCharset, "utf-8", false ), QString( "bla" ) );
   // utf-8
-  QCOMPARE( KMime::decodeRFC2047String( "=?utf-8?q?Ingo=20Kl=C3=B6cker?= <kloecker@kde.org>", &encCharset, "utf-8", false ),
+  QCOMPARE( KMime::decodeRFC2047String( "=?utf-8?q?Ingo=20Kl=C3=B6cker?= <kloecker@kde.org>", encCharset, "utf-8", false ),
             QString::fromUtf8( "Ingo Klöcker <kloecker@kde.org>" ) );
-  QCOMPARE( KMime::decodeRFC2047String( "=?utf-8?q?Ingo=20Kl=C3=B6cker?= <kloecker@kde.org>", &encCharset, "iso8859-1", false ),
+  QCOMPARE( KMime::decodeRFC2047String( "=?utf-8?q?Ingo=20Kl=C3=B6cker?= <kloecker@kde.org>", encCharset, "iso8859-1", false ),
             QString::fromUtf8( "Ingo Klöcker <kloecker@kde.org>" ) );
-  qDebug( "%s", encCharset );
 }
 
 void RFC2047Test::testRFC2047encode()
 {
   qDebug( "Testing RFC2047 encoding" );
   // empty
-  QCOMPARE( KMime::encodeRFC2047String( "", "utf-8" ), Q3CString() );
+  QCOMPARE( KMime::encodeRFC2047String( QString(), "utf-8" ), QByteArray() );
   // identity
-  QCOMPARE( KMime::encodeRFC2047String( "bla", "utf-8" ), Q3CString( "bla" ) );
+  QCOMPARE( KMime::encodeRFC2047String( "bla", "utf-8" ), QByteArray( "bla" ) );
   // utf-8
   // expected value is probably wrong, libkmime will chose 'B' instead of 'Q' encoding
   QCOMPARE( KMime::encodeRFC2047String( QString::fromUtf8( "Ingo Klöcker <kloecker@kde.org>" ), "utf-8" ).constData(),
