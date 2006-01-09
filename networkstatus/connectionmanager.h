@@ -48,7 +48,7 @@ class ConnectionManager : public QObject, virtual public DCOPObject
 	k_dcop:
 			void slotStatusChanged( QString host, int status );
 	private:
-		ConnectionManager( QObject *parent, const char * name );
+		ConnectionManager( QObject *parent );
 		ConnectionManagerPrivate *d;
 		static ConnectionManager * s_self;
 };

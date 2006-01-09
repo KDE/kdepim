@@ -1,6 +1,7 @@
 #SUBDIRS = networkstatustray
 
 METASOURCES = AUTO
+KDE_CXXFLAGS = -UQT3_SUPPORT
 
 kde_module_LTLIBRARIES = kded_networkstatus.la 
 noinst_LTLIBRARIES = libnetworkstatus.la libconnectionmanager.la

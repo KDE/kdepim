@@ -40,7 +40,7 @@ class ConnectionManagerPrivate
 };
 
 // Connection manager itself
-ConnectionManager::ConnectionManager( QObject * parent, const char * name ) : DCOPObject( "ConnectionManager" ),QObject( parent, name )
+ConnectionManager::ConnectionManager( QObject * parent ) : DCOPObject( "ConnectionManager" ), QObject( parent )
 {
 	d = new ConnectionManagerPrivate;
 	
@@ -56,8 +56,10 @@ ConnectionManager *ConnectionManager::s_self = 0L;
 ConnectionManager *ConnectionManager::self()
 {
 	static KStaticDeleter<ConnectionManager> deleter;
-	if(!s_self)
-		deleter.setObject( s_self, new ConnectionManager( 0, "connection_manager" ) );
+	if(!s_self) {
+		deleter.setObject( s_self, new ConnectionManager( 0 ) );
+		s_self->setObjectName( "connection_manager" );
+	}
 	return s_self;	
 }
 

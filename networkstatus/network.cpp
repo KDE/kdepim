@@ -76,7 +76,7 @@ void Network::unregisterUsage( const QByteArray appId, const QString host )
 		if ( (*it).appId == appId && (*it).host == host )
 		{
 			kdDebug() << k_funcinfo << "unregistering " << appId << "'s usage of " << m_name << " for " << host << endl;
-			m_usage.remove( it );
+			m_usage.erase( it );
 			break;
 		}
 	}

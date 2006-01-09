@@ -21,7 +21,6 @@
 
 #include "networkstatus.h"
 
-#include <q3dict.h>
 #include <qtimer.h>
 
 #include <dcopclient.h>
@@ -170,7 +169,7 @@ void NetworkStatusModule::relinquish( const QString & host )
 			if ( (*usageIt).appId == appId && (*usageIt).host == host )
 			{
 				// remove host usage record
-				usage.remove( usageIt );
+				usage.erase( usageIt );
 				// if requested shutdown flagged for network
 				//  check if all hosts have relinquished
 				//   call confirmShutDown on Service
@@ -227,7 +226,7 @@ void NetworkStatusModule::unregisteredFromDCOP( const QByteArray & appId )
 		if ( (*it)->service() == appId)
 		{
 			kdDebug() << k_funcinfo << "removing '" << (*it)->name() << "', registered by " << appId << endl;
-			d->networks.remove( it );
+			d->networks.erase( it );
 			break;
 		}
 	}
