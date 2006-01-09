@@ -301,7 +301,7 @@ void KNGroupDialog::slotUser2()
   QRadioButton *takeCustom = new QRadioButton( i18n("Created since this date:"), btnGrp );
   topL->addMultiCellWidget(takeCustom, 2, 2, 0, 1);
 
-  KDatePicker *dateSel = new KDatePicker(btnGrp, lastDate);
+  KDatePicker *dateSel = new KDatePicker( lastDate, btnGrp );
   dateSel->setMinimumSize(dateSel->sizeHint());
   topL->addWidget(dateSel, 3, 1, Qt::AlignLeft);
 
