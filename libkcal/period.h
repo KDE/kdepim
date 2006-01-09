@@ -39,6 +39,9 @@ class KDE_EXPORT Period
     Period( const QDateTime &start, const QDateTime &end );
     Period( const QDateTime &start, const Duration &duration );
 
+    /** Returns true if this element is smaller than the @param other one */
+    bool operator<( const Period& other ) const;
+
     QDateTime start() const;
     QDateTime end() const;
     Duration duration();

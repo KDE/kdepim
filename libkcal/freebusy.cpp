@@ -147,7 +147,7 @@ QDateTime FreeBusy::dtEnd() const
   return mDtEnd;
 }
 
-QList<Period> FreeBusy::busyPeriods() const
+PeriodList FreeBusy::busyPeriods() const
 {
   return mBusyPeriods;
 }
@@ -182,48 +182,32 @@ bool FreeBusy::addLocalPeriod(const QDateTime &eventStart, const QDateTime &even
   return true;
 }
 
-FreeBusy::FreeBusy(QList<Period> busyPeriods)
+FreeBusy::FreeBusy( const PeriodList& busyPeriods)
 {
   mBusyPeriods = busyPeriods;
 }
 
 void FreeBusy::sortList()
 {
-  typedef QList<Period> PeriodList;
+  qSort( mBusyPeriods );
+  return;
+}
 
-  PeriodList::Iterator tmpPeriod, earlyPeriod;
-  PeriodList sortedList;
-  QDateTime earlyTime;
-
-  while( mBusyPeriods.count() > 0 ) {
-    earlyTime=(*mBusyPeriods.begin()).start();
-    for ( tmpPeriod = mBusyPeriods.begin(); tmpPeriod != mBusyPeriods.end(); ++tmpPeriod ) {
-      if (earlyTime.secsTo((*tmpPeriod).start()) <= 0) {
-        earlyTime=(*tmpPeriod).start();
-        earlyPeriod=tmpPeriod;
-      }
-    }
-    //Move tmpPeriod to sortedList
-    Period tmpPeriod = (*earlyPeriod);
-    sortedList.append( tmpPeriod );
-    mBusyPeriods.erase( earlyPeriod );
-  }
-  mBusyPeriods=sortedList;
+void FreeBusy::addPeriods(const PeriodList &list )
+{
+  mBusyPeriods += list;
+  sortList();
 }
 
 void FreeBusy::addPeriod(const QDateTime &start, const QDateTime &end)
 {
-  Period p(start, end);
-  mBusyPeriods.append( p );
-
+  mBusyPeriods.append( Period(start, end) );
   sortList();
 }
 
 void FreeBusy::addPeriod( const QDateTime &start, const Duration &dur )
 {
-  Period p(start, dur);
-  mBusyPeriods.append( p );
-
+  mBusyPeriods.append( Period(start, dur) );
   sortList();
 }
 
