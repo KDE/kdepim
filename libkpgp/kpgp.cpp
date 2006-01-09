@@ -1759,7 +1759,7 @@ Module::writeAddressData()
     KConfigGroup addrGroup( config, QString("Address #%1").arg(i).toLocal8Bit() );
     addrGroup.writeEntry( "Address", it.key() );
     addrGroup.writeEntry( "Key IDs", it.data().keyIds.toStringList() );
-    addrGroup.writeEntry( "EncryptionPreference", it.data().encrPref );
+    addrGroup.writeEntry( "EncryptionPreference", (int)it.data().encrPref );
   }
 
   config->sync();
