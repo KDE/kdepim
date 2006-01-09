@@ -81,7 +81,7 @@ void WebdavHandler::log( const QString &text )
     return;
   }
 
-  QByteArray textUtf8 = text.utf8();
+  QByteArray textUtf8 = text.toUtf8();
   file.write( textUtf8.data(), textUtf8.size() - 1 );
 
   if ( ++mLogCount > 5 ) mLogCount = 0;
@@ -201,7 +201,8 @@ QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
   QDateTime dt;
 
   if (preEpoch) {
-    dt.setTime_t( 0, Qt::UTC );
+    dt.setTime_t( 0 );
+    dt.setTimeSpec( Qt::UTC );
     if (ticks > INT_MAX) {
       dt = dt.addSecs(-INT_MAX);
       ticks -= INT_MAX;
@@ -210,7 +211,8 @@ QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
   }
   else
   {
-    dt.setTime_t( ticks, Qt::UTC );
+    dt.setTime_t( ticks );
+    dt.setTimeSpec( Qt::UTC );
   }
 
   return dt;

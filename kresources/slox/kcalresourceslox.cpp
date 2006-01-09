@@ -811,7 +811,7 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
       yearlyMonth = text.toInt() + 1; // starts at 0
       yearly2Month = text.toInt() + 1;
     } else if ( tag == fieldName( RecurrenceDelEx ) ) {
-      QStringList exdates = QStringList::split( ",", text );
+      QStringList exdates = text.split( "," );
       QStringList::Iterator it;
       for ( it = exdates.begin(); it != exdates.end(); ++it )
         deleteExceptions.append( WebdavHandler::sloxToQDateTime( *it ).date() );

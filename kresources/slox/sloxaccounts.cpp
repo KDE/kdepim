@@ -48,7 +48,7 @@ SloxAccounts::SloxAccounts( SloxBase *res, const KURL &baseUrl )
 
   QString server = mBaseUrl.host();
 
-  QStringList l = QStringList::split( '.', server );
+  QStringList l = server.split( '.' );
 
   if ( l.count() < 2 ) mDomain = server;
   else mDomain = l[ l.count() - 2 ] + "." + l[ l.count() - 1 ];
@@ -67,7 +67,7 @@ void SloxAccounts::insertUser( const QString &id, const KABC::Addressee &a )
 {
   kdDebug() << "SloxAccount::insertUser() " << id << endl;
 
-  mUsers.replace( id, a );
+  mUsers.insert( id, a );
 
   QString email = a.preferredEmail();
 
@@ -101,7 +101,7 @@ QString SloxAccounts::lookupId( const QString &email )
   }
   requestAccounts();
 
-  int pos = email.find( '@' );
+  int pos = email.indexOf( '@' );
   if ( pos < 0 ) return email;
   else return email.left( pos );
 }
@@ -209,7 +209,7 @@ void SloxAccounts::readAccounts()
       QDomElement e = n.toElement();
       QString tag = e.tagName();
       // remove XML namespace
-      tag = tag.right( tag.length() - ( tag.find( ':' ) + 1 ) );
+      tag = tag.right( tag.length() - ( tag.indexOf( ':' ) + 1 ) );
       QString value = e.text();
       if ( tag == "uid" ) id = value;
       else if ( tag == "mail" ) a.insertEmail( value, true );

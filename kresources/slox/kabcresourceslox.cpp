@@ -246,7 +246,7 @@ void ResourceSlox::slotResult( KIO::Job *job )
         QMap<QString,Addressee>::Iterator it;
         it = mAddrMap.find( uid );
         if ( it != mAddrMap.end() ) {
-          mAddrMap.remove( it );
+          mAddrMap.erase( it );
           changed = true;
         }
       } else if ( item.status == SloxItem::Create ) {
@@ -267,7 +267,7 @@ void ResourceSlox::slotResult( KIO::Job *job )
         a.setResource( this );
         a.setChanged( false );
 
-        mAddrMap.replace( a.uid(), a );
+        mAddrMap.insert( a.uid(), a );
 
         // TODO: Do we need to try to associate addressees with slox accounts?
 
@@ -314,11 +314,11 @@ void ResourceSlox::slotUploadResult( KIO::Job *job )
         if ( search_res != mAddrMap.end() ) {
           // use the id provided by the server
           Addressee a = *search_res;
-          mAddrMap.remove( search_res );
+          mAddrMap.erase( search_res );
           a.setUid( "kresources_slox_kabc_" + item.sloxId );
           a.setResource( this );
           a.setChanged( false );
-          mAddrMap.replace( a.uid(), a );
+          mAddrMap.insert( a.uid(), a );
           saveCache();
         }
       }
@@ -377,8 +377,8 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
     a.setUrl( text );
   } else if ( tag == fieldName( Image ) ) {
     QByteArray decodedPicture;
-    KCodecs::base64Decode( text.utf8(), decodedPicture );
-    a.setPhoto( Picture( QImage( decodedPicture ) ) );
+    KCodecs::base64Decode( text.toUtf8(), decodedPicture );
+    a.setPhoto( Picture( QImage( decodedPicture.constData() ) ) );
   } else if ( tag == fieldName( NickName ) ) {
     a.setNickName( text );
   } else if ( tag == fieldName( InstantMsg ) ) {
@@ -430,7 +430,7 @@ int ResourceSlox::phoneNumberType( const QString &fieldName ) const
     pnmap = mPhoneNumberSloxMap;
   QMap<int, QStringList>::ConstIterator it;
   for ( it = pnmap.begin(); it != pnmap.end(); ++it ) {
-    QStringList l = it.data();
+    QStringList l = it.value();
     QStringList::ConstIterator it2;
     for ( it2 = l.begin(); it2 != l.end(); ++it2 )
       if ( (*it2) == fieldName )
@@ -592,7 +592,7 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
     if ( pnSaveMap.contains( (*it).type() ) ) {
       QStringList l = pnSaveMap[(*it).type()];
       QString fn = l.first();
-      l.remove( l.begin() );
+      l.erase( l.begin() );
       if ( !l.isEmpty() )
         pnSaveMap[(*it).type()] = l;
       else
@@ -604,7 +604,7 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
   // send empty fields for the remaining ohone number fields
   // it's not possible to delete phone numbers otherwise
   for ( QMap<int, QStringList>::ConstIterator it = pnSaveMap.begin(); it != pnSaveMap.end(); ++it ) {
-    QStringList l = it.data();
+    QStringList l = it.value();
     for ( QStringList::ConstIterator it2 = l.begin(); it2 != l.end(); ++it2 )
       WebdavHandler::addSloxElement( this, doc, prop, (*it2) );
   }
