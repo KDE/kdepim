@@ -1,4 +1,5 @@
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/libkleo $(all_includes)
+KDE_CXXFLAGS = -UQT3_SUPPORT
 
 lib_LTLIBRARIES = libkpimidentities.la
 libkpimidentities_la_SOURCES = \

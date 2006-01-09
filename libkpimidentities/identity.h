@@ -12,7 +12,6 @@
 #include <kdepimmacros.h>
 
 #include <qstring.h>
-#include <q3cstring.h>
 #include <qstringlist.h>
 //Added by qt3to4:
 #include <QList>

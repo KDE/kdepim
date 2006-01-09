@@ -120,16 +120,17 @@ void IdentityManager::commit()
   // find added and changed identities:
   for ( QList<Identity>::ConstIterator it = mShadowIdentities.begin() ;
 	it != mShadowIdentities.end() ; ++it ) {
-    QList<uint>::Iterator uoid = seenUOIDs.find( (*it).uoid() );
-    if ( uoid != seenUOIDs.end() ) {
-      const Identity & orig = identityForUoid( *uoid ); // look it up in mIdentities
+    int index = seenUOIDs.indexOf( (*it).uoid() );
+    if ( index != -1 ) {
+      uint uoid = seenUOIDs.at( index );
+      const Identity & orig = identityForUoid( uoid ); // look it up in mIdentities
       if ( *it != orig ) {
         // changed identity
-        kdDebug( 5006 ) << "emitting changed() for identity " << *uoid << endl;
+        kdDebug( 5006 ) << "emitting changed() for identity " << uoid << endl;
         emit changed( *it );
-        changedUOIDs << *uoid;
+        changedUOIDs << uoid;
       }
-      seenUOIDs.remove( uoid );
+      seenUOIDs.removeAll( uoid );
     } else {
       // new identity
       kdDebug( 5006 ) << "emitting added() for identity " << (*it).uoid() << endl;
@@ -253,7 +254,7 @@ void IdentityManager::readConfig(KConfigBase* config) {
 }
 
 QStringList IdentityManager::groupList(KConfigBase* config) const {
-  return config->groupList().grep( QRegExp("^Identity #\\d+$") );
+  return config->groupList().filter( QRegExp("^Identity #\\d+$") );
 }
 
 IdentityManager::ConstIterator IdentityManager::begin() const {
@@ -356,7 +357,7 @@ const Identity & IdentityManager::defaultIdentity() const {
 bool IdentityManager::setAsDefault( const QString & name ) {
   // First, check if the identity actually exists:
   QStringList names = shadowIdentities();
-  if ( names.find( name ) == names.end() ) return false;
+  if ( names.indexOf( name ) == -1 ) return false;
   // Then, change the default as requested:
   for ( Iterator it = modifyBegin() ; it != modifyEnd() ; ++it )
     (*it).setIsDefault( (*it).identityName() == name );
@@ -388,7 +389,7 @@ bool IdentityManager::removeIdentity( const QString & name ) {
   for ( Iterator it = modifyBegin() ; it != modifyEnd() ; ++it )
     if ( (*it).identityName() == name ) {
       bool removedWasDefault = (*it).isDefault();
-      mShadowIdentities.remove( it );
+      mShadowIdentities.erase( it );
       if ( removedWasDefault )
 	mShadowIdentities.first().setIsDefault( true );
       return true;
@@ -493,7 +494,7 @@ int IdentityManager::newUoid()
 
   do {
     uoid = KRandom::random();
-  } while ( usedUOIDs.find( uoid ) != usedUOIDs.end() );
+  } while ( usedUOIDs.indexOf( uoid ) != -1 );
 
   return uoid;
 }

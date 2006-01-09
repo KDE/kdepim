@@ -51,7 +51,7 @@ class Identity;
 class KDE_EXPORT IdentityCombo : public QComboBox {
   Q_OBJECT
 public:
-  IdentityCombo( IdentityManager* manager, QWidget * parent=0, const char * name=0 );
+  IdentityCombo( IdentityManager* manager, QWidget * parent=0 );
 
   QString currentIdentityName() const;
   uint currentIdentity() const;
