@@ -41,7 +41,7 @@
 #include <knuminput.h>
 #include <kdialog.h>
 
-#include <q3hbox.h>
+#include <khbox.h>
 #include <qlabel.h>
 #include <q3datetimeedit.h>
 #include <qcheckbox.h>
@@ -151,7 +151,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( KInstanc
   connect( mWidget, SIGNAL( changed() ), this, SLOT( slotChanged() ) );
 
   // LDAP timeout
-  Q3HBox* box = new Q3HBox( this );
+  KHBox* box = new KHBox( this );
   box->setSpacing( KDialog::spacingHint() );
   lay->addWidget( box );
   QLabel* label = new QLabel( i18n( "LDAP &timeout (minutes:seconds)" ), box );
@@ -163,7 +163,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( KInstanc
   box->setStretchFactor( stretch, 2 );
 
   // Max number of items returned by queries
-  box = new Q3HBox( this );
+  box = new KHBox( this );
   box->setSpacing( KDialog::spacingHint() );
   lay->addWidget( box );
   mMaxItems = new KIntNumInput( box );
