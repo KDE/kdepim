@@ -5,8 +5,7 @@
 #include <kinstance.h>
 
 #include <qfile.h>
-#include <q3cstring.h>
-//Added by qt3to4:
+#include <QByteArray>
 #include <QList>
 //#include <qstring.h>
 
@@ -68,7 +67,7 @@ void usage( const char * msg=0 ) {
 }
 
 ostream & operator<<( ostream & stream, const QString & str ) {
-  return stream << str.utf8().data();
+  return stream << str.toUtf8().data();
 }
 
 int main( int argc, char * argv[] ) {
@@ -125,7 +124,7 @@ int main( int argc, char * argv[] ) {
   KInstance instance( "test_kmime_header_parsing" );
 
   QFile stdIn;
-  stdIn.open( QIODevice::ReadOnly, stdin );
+  stdIn.open( stdin, QIODevice::ReadOnly );
   const QByteArray indata = stdIn.readAll();
   stdIn.close();
   QByteArray::ConstIterator iit = indata.begin();
@@ -135,7 +134,7 @@ int main( int argc, char * argv[] ) {
   case 0:
     { // encoded-word 
       QString result;
-      Q3CString language;
+      QByteArray language;
       // must have checked for initial '=' already:
       bool ok = indata.size() >= 1 && *iit++ == '=' &&
 	parseEncodedWord( iit, iend, result, language );
@@ -359,7 +358,7 @@ int main( int argc, char * argv[] ) {
 	   << "result.first (attribute):\n" << result.first << endl
 	   << "result.second.qstring (value):\n" << result.second.qstring << endl
 	   << "result.second.qpair (value):\n"
-	   << Q3CString( result.second.qpair.first,
+	   << QByteArray( result.second.qpair.first,
 			result.second.qpair.second+1 ).data() << endl;
     }
     break;
@@ -376,10 +375,10 @@ int main( int argc, char * argv[] ) {
 	cout << "result[" << i << "].key() (attribute):\n"
 	     << it.key() << endl
 	     << "result[" << i << "].data().qstring (value):\n"
-	     << it.data().qstring << endl
+	     << it.value().qstring << endl
 	     << "result[" << i << "].data().qpair (value):\n"
-	     << Q3CString( it.data().qpair.first,
-			  it.data().qpair.second+1 ).data() << endl;
+	     << QByteArray( it.value().qpair.first,
+			  it.value().qpair.second+1 ).data() << endl;
     }
     break;
   case 18:
@@ -395,7 +394,7 @@ int main( int argc, char * argv[] ) {
 	cout << "result[" << i << "].key() (attribute):\n"
 	     << it.key() << endl
 	     << "result[" << i << "].data() (value):\n"
-	     << it.data() << endl;
+	     << it.value() << endl;
     }
     break;
   case 19:

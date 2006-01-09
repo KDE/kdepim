@@ -2,6 +2,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/libkmime $(all_includes)
 LDADD = ../libkmime.la -lQtTest_debug
 
 METASOURCES = AUTO
+KDE_CXXFLAGS = -UQT3_SUPPORT
 
 # test programs:
 check_PROGRAMS = test_kmime_header_parsing \

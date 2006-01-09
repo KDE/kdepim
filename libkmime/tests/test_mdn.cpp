@@ -1,7 +1,7 @@
 #include <kmime_mdn.h>
 using namespace KMime::MDN;
 
-#include <q3cstring.h>
+#include <QByteArray>
 #include <qstring.h>
 
 #include <iostream>
@@ -27,7 +27,7 @@ int main( int argc, char * argv[] ) {
 
   QString finalRecipient;
   QString originalRecipient;
-  Q3CString originalMessageId;
+  QByteArray originalMessageId;
   ActionMode actionMode = ManualAction;
   SendingMode sendingMode = SentManually;
   DispositionType dispositionType = Displayed;
@@ -136,7 +136,7 @@ int main( int argc, char * argv[] ) {
   if ( optind < argc )
     usage( "too many arguments!" );
 
-  Q3CString result = dispositionNotificationBodyContent( finalRecipient,
+  QByteArray result = dispositionNotificationBodyContent( finalRecipient,
 						       originalRecipient.toLatin1(),
 						       originalMessageId,
 						       dispositionType,
