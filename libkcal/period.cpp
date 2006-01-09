@@ -45,7 +45,7 @@ Period::Period( const QDateTime &start, const Duration &duration )
 }
 
 
-bool Period::operator<( const Period& other )
+bool Period::operator<( const Period& other ) const
 {
   return start() < other.start();
 }
