@@ -1320,6 +1320,7 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
   icaltimetype icaltime;
   icalperiodtype icalperiod;
   QDateTime period_start, period_end;
+  PeriodList periods;
 
   while (p) {
     icalproperty_kind kind = icalproperty_isa(p);
@@ -1343,7 +1344,7 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
         readTzidParameter(p,icalperiod.end);
         period_start = readICalDateTime(icalperiod.start);
         period_end = readICalDateTime(icalperiod.end);
-        freebusy->addPeriod(period_start, period_end);
+        periods.append( Period(period_start, period_end) );
         break;
 
       default:
@@ -1353,6 +1354,7 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
     }
     p = icalcomponent_get_next_property(vfreebusy,ICAL_ANY_PROPERTY);
   }
+  freebusy->addPeriods( periods );
 
   return freebusy;
 }

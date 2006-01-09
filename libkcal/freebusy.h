@@ -32,6 +32,7 @@
 
 namespace KCal {
 
+  typedef QValueList<Period> PeriodList;
 /**
   This class provides information about free/busy time of a calendar user.
 */
@@ -42,7 +43,7 @@ class FreeBusy : public IncidenceBase
     FreeBusy( const QDateTime &start, const QDateTime &end );
     FreeBusy( Calendar *calendar, const QDateTime &start,
               const QDateTime &end );
-    FreeBusy( QValueList<Period> busyPeriods );
+    FreeBusy( PeriodList busyPeriods );
 
     ~FreeBusy();
     
@@ -51,9 +52,14 @@ class FreeBusy : public IncidenceBase
     virtual QDateTime dtEnd() const;
     bool setDtEnd( const QDateTime &end );
 
-    QValueList<Period> busyPeriods() const;
+    PeriodList busyPeriods() const;
 
+    /** Adds a period to the freebusy list and sorts the list.  */
     void addPeriod( const QDateTime &start, const QDateTime &end );
+    /** Adds a list of periods to the freebusy object and then sorts
+     * that list. Use this if you are adding many items, instead of the
+     * addPeriod method, to avoid sorting repeatedly.  */
+    void addPeriods( const PeriodList & );
     void sortList();
     
   private:
@@ -61,7 +67,7 @@ class FreeBusy : public IncidenceBase
     bool addLocalPeriod( const QDateTime &start, const QDateTime &end );
 
     QDateTime mDtEnd;
-    QValueList<Period> mBusyPeriods;
+    PeriodList mBusyPeriods;
     Calendar *mCalendar;
 
     class Private;
