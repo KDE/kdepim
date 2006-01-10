@@ -40,10 +40,11 @@
 #include <qtooltip.h>
 
 KWatchGnuPGTray::KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin )
-  : KSystemTray( mainwin, "KWatchGnuPG Tray Window" )
+  : KSystemTray( mainwin )
 {
   kdDebug() << "KWatchGnuPGTray::KWatchGnuPGTray" << endl;
 
+  setObjectName( "KWatchGnuPG Tray Window" );
   KGlobal::iconLoader()->addAppDir( "kwatchgnupg" );
   
   mNormalPix = loadIcon("kwatchgnupg");
