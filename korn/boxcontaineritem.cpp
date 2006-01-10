@@ -218,7 +218,8 @@ void BoxContainerItem::fillKMenu( KMenu* popupMenu, KActionCollection* actions )
 void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject >* list, int total,
 					 const QString &accountName, bool date )
 {
-	KPassivePopup *popup = new KPassivePopup( parent, "Passive popup" );
+	KPassivePopup *popup = new KPassivePopup( parent );
+	popup->setObjectName( "Passive popup" );
 		
 	KVBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( objId().data() ).arg( accountName )
 			.arg( total ), "", QPixmap(), 0 );
@@ -425,7 +426,7 @@ void BoxContainerItem::reportBug()
 
 void BoxContainerItem::about()
 {
-	KAboutApplication about( 0, "KOrn About", true );
+	KAboutApplication about( KGlobal::instance()->aboutData(), 0, true );
 	about.exec();  //modal: it doesn't recheck anymore
 } 
 

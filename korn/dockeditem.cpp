@@ -37,8 +37,9 @@
 
 DockedItem::DockedItem( QWidget * parent, const char * name )
 	: BoxContainerItem( parent, name ),
-	_systemtray( new SystemTray( parent, "System tray" ) )	
+	_systemtray( new SystemTray( parent ) )	
 {
+	_systemtray->setObjectName( "System tray" );
 	this->fillKMenu( _systemtray->contextMenu(), _systemtray->actionCollection() );
 	
 	connect( _systemtray, SIGNAL( quitSelected() ), kapp, SLOT( quit() ) );
@@ -80,7 +81,7 @@ void DockedItem::slotShowPassivePopup( QList< KornMailSubject >* list, int total
 
 void DockedItem::slotShowPassivePopup( const QString& message, const QString& name )
 {
-	KPassivePopup::message( QString( "Korn - %1/%2" ).arg( objId().constData() ).arg( name ), message, _systemtray, "Passive error message" );
+	KPassivePopup::message( QString( "Korn - %1/%2" ).arg( objId().constData() ).arg( name ), message, _systemtray );
 }
 
 void DockedItem::doPopup()

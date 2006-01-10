@@ -137,8 +137,8 @@ void KornCfgImpl::slotSetDefaults( const QString& name, const int index, KConfig
 	config->writeEntry( "hasnewicon", false );
 	config->writeEntry( "hasnormalanim", false );
 	config->writeEntry( "hasnewanim", false );
-	config->writeEntry( "normalfgcolour", Qt::black );
-	config->writeEntry( "newfgcolour", Qt::black );
+	config->writeEntry( "normalfgcolour", QColor(Qt::black) );
+	config->writeEntry( "newfgcolour", QColor(Qt::black) );
 	config->writeEntry( "normalbgcolour", QString() );
 	config->writeEntry( "newbgcolour", QString() );
 	config->writeEntry( "normalicon", QString() );

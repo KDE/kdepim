@@ -70,7 +70,7 @@ void KMailCVT::reject() {
 
 void KMailCVT::help()
 {
-	KAboutApplication a( this );
+	KAboutApplication a( KGlobal::instance()->aboutData(), this );
 	a.exec();
 }
 

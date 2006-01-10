@@ -111,7 +111,7 @@ bool KMailDrop::writeConfigGroup(KConfigBase & c) const
   c.writePathEntry(fu(ClickConfigKey),        clickCmd());
   c.writePathEntry(fu(NewMailConfigKey),      newMailCmd());
   c.writePathEntry(fu(SoundFileConfigKey),    soundFile());
-  c.writeEntry(fu(DisplayStyleConfigKey), _style);
+  c.writeEntry(fu(DisplayStyleConfigKey), (int)_style);
   c.writeEntry(fu(BgColourConfigKey),     _bgColour);
   c.writeEntry(fu(FgColourConfigKey),     _fgColour);
   c.writeEntry(fu(NBgColourConfigKey),    _nbgColour);

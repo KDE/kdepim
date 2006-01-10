@@ -26,8 +26,8 @@
 //Added by qt3to4:
 #include <QMouseEvent>
 
-SystemTray::SystemTray( QWidget * parent, const char * name )
-	: KSystemTray( parent, name )	
+SystemTray::SystemTray( QWidget * parent )
+	: KSystemTray( parent )	
 {
 }
 

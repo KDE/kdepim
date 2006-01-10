@@ -195,7 +195,7 @@ void KEditListBoxManager::slotRemoved( const QString& name )
 	if( number < 0 ) //failure
 		return; //do nothing
 	
-	_config->deleteGroup( _groupName->arg( number ), true, false );
+	_config->deleteGroup( _groupName->arg( number ), KConfig::NLS );
 	emit elementDeleted( number );
 	while( _subGroupName && _config->hasGroup( _subGroupName->arg( number ).arg( subnumber ) ) )
 	{
