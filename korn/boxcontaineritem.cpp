@@ -51,8 +51,8 @@
 #include <q3vbox.h>
 #include <QMovie>
 
-BoxContainerItem::BoxContainerItem( QObject * parent, const char * name )
-	: AccountManager( parent, name ),
+BoxContainerItem::BoxContainerItem( QObject * parent )
+	: AccountManager( parent ),
 	DCOPObject(),
 	_command( new QString )
 {
@@ -172,7 +172,7 @@ void BoxContainerItem::runCommand( const QString& cmd )
 	process->start();
 }
 
-void BoxContainerItem::mouseButtonPressed( Qt::ButtonState state )
+void BoxContainerItem::mouseButtonPressed( Qt::MouseButton state )
 {
 	int button;
 	if( state & Qt::LeftButton )

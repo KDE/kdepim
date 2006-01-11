@@ -31,8 +31,8 @@
 #include "progress_dialog_impl.h"
 #include <QProgressBar>
 
-DoubleProgressDialog::DoubleProgressDialog( QWidget *parent, const char* name )
-	: QDialog( parent, name ),
+DoubleProgressDialog::DoubleProgressDialog( QWidget *parent )
+	: QDialog( parent ),
 	Ui_DoubleProgressDialog()
 {
 	setupUi( this );

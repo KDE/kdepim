@@ -33,8 +33,8 @@
 
 #include <qstring.h>
 
-KIO_Count::KIO_Count( QObject * parent, const char * name )
-	: QObject ( parent, name ),
+KIO_Count::KIO_Count( QObject * parent )
+	: QObject ( parent ),
 	_kurl( 0 ),
 	_metadata( 0 ),
 	_protocol( 0 ),
@@ -171,7 +171,7 @@ void KIO_Count::showPassive( const QString& id )
 	if( kurl.port() == 0 )
 		kurl.setPort( _kio->_protocol->defaultPort() );
 
-	KIO_Single_Subject *subject = new KIO_Single_Subject( this, id.toLatin1(), kurl, metadata, _kio->_protocol, _slave, id, 0 );
+	KIO_Single_Subject *subject = new KIO_Single_Subject( this, kurl, metadata, _kio->_protocol, _slave, id, 0 );
 
 	_subjects_pending++;
 

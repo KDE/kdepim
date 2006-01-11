@@ -21,6 +21,11 @@
 
 #include "boxcontainer.h"
 
+/**
+ * @file
+ *
+ * This file has only one class, named DockedContainer.
+ */
 class BoxContainerItem;
 
 /**
@@ -30,13 +35,22 @@ class BoxContainerItem;
 class DockedContainer : public BoxContainer
 { Q_OBJECT
 public:
-	DockedContainer( QObject * parent = 0, const char * name = 0 );
+	/**
+	 * Empty onstructor.
+	 *
+	 * @param parent the parent of this container
+	 */
+	DockedContainer( QObject * parent = 0 );
+	/**
+	 * Empty destructor
+	 */
 	~DockedContainer();
 	
 protected:
-	//virtual void addItem( BoxContainerItem* ); //Overiding not neccesairy
-
 	/**
+	 * This function implements the BoxContainer::newBoxInstance() function,
+	 * and is used to get a new DocketItem.
+	 * 
 	 * @return A new instance to a DocketItem.
 	 */
 	virtual BoxContainerItem* newBoxInstance() const;

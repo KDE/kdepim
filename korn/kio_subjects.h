@@ -37,7 +37,7 @@ class QString;
 class KIO_Subjects : public QObject
 { Q_OBJECT
 public:
-	KIO_Subjects( QObject * parent, const char * name );
+	KIO_Subjects( QObject * parent );
 	~KIO_Subjects( );
 	
 	//This function let it start fetching headers.

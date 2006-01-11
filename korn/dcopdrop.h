@@ -19,12 +19,17 @@
 #ifndef DCOPDROP_H
 #define DCOPDROP_H
 
+/**
+ * @file
+ *
+ * This file contains the DCOPDrop class.
+ */
+
 #include "maildrop.h"
 
 #include <dcopobject.h>
 
 class DCOPDropInterface;
-//class KDropCfgDialog;
 class KornMailId;
 class KornMailSubject;
 
@@ -79,11 +84,11 @@ public:
 	virtual bool stopMonitor();
 	/**
 	 * Return true is the monitor has been started before.
+	 *
 	 * @return true is it is 'running'.
 	 */
 	virtual bool running() { return _isRunning; }
 	
-	//virtual void addConfigPage( KDropCfgDialog* ) ;
 	/**
 	 * This function gives a new instance of a DCOPDrop.
 	 *
@@ -180,12 +185,39 @@ private slots:
 	void doReadSubjectsASync( void );
 	
 public: //accessed by DCOPDropInterface
+	/**
+	 * This function append a message to the box.
+	 * This function is called from DCOPDropInterface.
+	 *
+	 * @param subject the subject of the message
+	 * @param message the content of the message
+	 * @return the message id
+	 */
 	int addMessage( const QString& subject, const QString& message );
+	/**
+	 * This function removes a messages from the box.
+	 * This function is called from DCOPDropInterface.
+	 *
+	 * @param id the message id to be removed
+	 * @return true if succesfull, false otherwise
+	 */
 	bool removeMessage( int id );
 	
 	//accessed by DCOPDropCfg
+	/**
+	 * This function returns the dcop name.
+	 * This function is accessed by DCOPDropCfg.
+	 *
+	 * @return the dcop name
+	 */
 	QString DCOPName() const;
-	void setDCOPName( const QString& );
+	/**
+	 * This function sets the dcop name.
+	 * This function is accessed by DCOPDropCfg.
+	 *
+	 * @param name the new dcop name
+	 */
+	void setDCOPName( const QString& name );
 };
 
-#endif
+#endif //DCOPDROP_H

@@ -32,7 +32,7 @@ class QString;
 class KornCfgImpl : public QWidget, public Ui_KornCfgWidget
 { Q_OBJECT
 public:
-	KornCfgImpl( QWidget * parent = 0, const char * name = 0 );
+	KornCfgImpl( QWidget * parent = 0 );
 	virtual ~KornCfgImpl();
 
 private slots:

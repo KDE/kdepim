@@ -38,7 +38,7 @@ public:
 	 *
 	 * @param orientation The orientation of the box: it is a vertical or horizontal box?
 	 */
-	HVContainer( Qt::Orientation orientation, QObject * parent = 0 , const char * name = 0 );
+	HVContainer( Qt::Orientation orientation, QObject * parent = 0 );
 	~HVContainer();
 	
 	/**

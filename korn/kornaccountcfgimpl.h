@@ -43,7 +43,7 @@ template< class T > class QVector;
 class KornAccountCfgImpl : public QWidget, public Ui_KornAccountCfg
 { Q_OBJECT
 public:
-	KornAccountCfgImpl( QWidget * parent = 0, const char * name = 0 );
+	KornAccountCfgImpl( QWidget * parent = 0 );
 	~KornAccountCfgImpl();
 	
 	void readConfig( KConfigGroup *config, QMap< QString, QString > *entries, int boxnr, int accountnr );

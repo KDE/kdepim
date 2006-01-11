@@ -44,7 +44,7 @@ public:
 	/**
 	 * Constructor, parameters are directed to QObject.
 	 */
-	AccountManager( QObject * parent = 0, const char * name = 0 );
+	AccountManager( QObject * parent = 0 );
 
 	/**
 	 * Destructor

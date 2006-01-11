@@ -24,8 +24,8 @@
 
 #include <qlist.h>
 
-BoxContainer::BoxContainer( QObject * parent, const char * name )
-	: QObject( parent, name ),
+BoxContainer::BoxContainer( QObject * parent )
+	: QObject( parent ),
 	_items( new QList< BoxContainerItem* > )
 {
 }

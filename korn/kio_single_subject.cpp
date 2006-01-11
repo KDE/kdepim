@@ -36,10 +36,10 @@
 //Added by qt3to4:
 #include <QTextStream>
 
-KIO_Single_Subject::KIO_Single_Subject( QObject * parent, const char * name,
+KIO_Single_Subject::KIO_Single_Subject( QObject * parent,
 		    KURL &kurl, KIO::MetaData &metadata, const KIO_Protocol * protocol, KIO::Slave *& slave,
 		    const QString &url, const long size )
-		: QObject( parent, name )
+		: QObject( parent )
 {
 	_kurl = new KURL( kurl );
 	_metadata = new KIO::MetaData( metadata );

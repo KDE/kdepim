@@ -37,7 +37,6 @@ public:
 	/**
 	 * This contructor gives all it parameters to its parents.
 	 * @param parant The parent window
-	 * @param name The name of the QObject's parents.
 	 */
 	SystemTray( QWidget * parent = 0 );
 	/**
@@ -54,7 +53,7 @@ protected:
 	virtual void mousePressEvent( QMouseEvent* me );
 	
 signals:
-	void mouseButtonPressed( Qt::ButtonState );
+	void mouseButtonPressed( Qt::MouseButton );
 };
 
 #endif //MK_SYSTEMTRAY_H

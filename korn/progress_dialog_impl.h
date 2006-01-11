@@ -37,7 +37,7 @@
 class DoubleProgressDialog : public QDialog, public Ui_DoubleProgressDialog
 { Q_OBJECT
 public:
-	DoubleProgressDialog( QWidget *widget, const char* name );
+	DoubleProgressDialog( QWidget *widget );
 	virtual ~DoubleProgressDialog();
 
 	void setText( const QString& str );

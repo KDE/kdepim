@@ -43,7 +43,7 @@ class QString;
 class KIO_Count : public QObject
 { Q_OBJECT
 public:
-	KIO_Count( QObject * parent = 0, const char * name = 0 );
+	KIO_Count( QObject * parent = 0 );
 	~KIO_Count();
 	
 	//This function starts counting

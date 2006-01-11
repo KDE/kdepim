@@ -32,7 +32,7 @@ class KConfig;
 class KornShell : public QWidget
 { Q_OBJECT
 public:
-	KornShell( QWidget * parent = 0, const char * name = 0 );
+	KornShell( QWidget * parent = 0 );
 	~KornShell();
 
 	void show();	

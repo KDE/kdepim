@@ -35,16 +35,16 @@
 #include <qpixmap.h>
 #include <qmovie.h>
 
-DockedItem::DockedItem( QWidget * parent, const char * name )
-	: BoxContainerItem( parent, name ),
+DockedItem::DockedItem( QWidget * parent )
+	: BoxContainerItem( parent ),
 	_systemtray( new SystemTray( parent ) )	
 {
 	_systemtray->setObjectName( "System tray" );
 	this->fillKMenu( _systemtray->contextMenu(), _systemtray->actionCollection() );
 	
 	connect( _systemtray, SIGNAL( quitSelected() ), kapp, SLOT( quit() ) );
-	connect( _systemtray, SIGNAL( mouseButtonPressed( Qt::ButtonState ) ),
-		 this, SLOT( mouseButtonPressed( Qt::ButtonState ) ) );
+	connect( _systemtray, SIGNAL( mouseButtonPressed( Qt::MouseButton ) ),
+		 this, SLOT( mouseButtonPressed( Qt::MouseButton ) ) );
 }
 
 DockedItem::~DockedItem()

@@ -97,16 +97,16 @@ KKioDrop::KKioDrop()
 
 	//Creating children and connect them to the outside world; this class passes the messages for them...
 	//This class handles all the counting.
-	_count = new KIO_Count( this, "kio_count" );
+	_count = new KIO_Count( this );
 		
 	//This class is responsible for providing the available subjects
-	_subjects = new KIO_Subjects( this, "kio_subjects" );
+	_subjects = new KIO_Subjects( this );
 			
 	//This class is used when a full message has to be read.
-	_read = new KIO_Read( this, "kio_read" );
+	_read = new KIO_Read( this );
 	
 	//This class can delete mails.
-	_delete = new KIO_Delete( this, "kio_delete" );
+	_delete = new KIO_Delete( this );
 	
 	_mailurls = new QList<FileInfo>;
 }
@@ -134,16 +134,16 @@ KKioDrop::KKioDrop( KConfigGroup* )
 		
 	//Creating children and connect them to the outside world; this class passes the messages for them...
 	//This class handles all the counting.
-	_count = new KIO_Count( this, "kio_count" );
+	_count = new KIO_Count( this );
 	
 	//This class is responsible for providing the available subjects
-	_subjects = new KIO_Subjects( this, "kio_subjects" );
+	_subjects = new KIO_Subjects( this );
 	
 	//This class is used when a full message has to be read.
-	_read = new KIO_Read( this, "kio_read" );
+	_read = new KIO_Read( this );
 	
 	//This class can delete mails.
-	_delete = new KIO_Delete( this, "kio_delete" );
+	_delete = new KIO_Delete( this );
 	
 	_mailurls = new QList<FileInfo>;
 

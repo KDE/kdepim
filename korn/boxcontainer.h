@@ -19,6 +19,12 @@
 #ifndef MK_BOXCONTAINER_H
 #define MK_BOXCONTAINER_H
 
+/**
+ * @file
+ *
+ * This file contains a class BoxContainer
+ */
+
 #include <qobject.h>
 
 class BoxContainerItem;
@@ -38,9 +44,8 @@ public:
 	 * Constructor: everything is passed to QObject.
 	 *
 	 * @param parent The parent of this object
-	 * @param name The name of this object
 	 */
-	BoxContainer( QObject *parent = 0, const char * name = 0 );
+	BoxContainer( QObject *parent = 0 );
 	/**
 	 * Destructor
 	 */

@@ -22,6 +22,12 @@
 #ifndef MK_ACCOUNT_INPUT
 #define MK_ACCOUNT_INPUT
 
+/**
+ * @file
+ *
+ * This file contains the class AccountInput and several implementation of that class.
+ */
+
 class QWidget;
 class QString;
 class QStringList;

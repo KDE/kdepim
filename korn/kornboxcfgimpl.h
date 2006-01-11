@@ -33,7 +33,7 @@ class QWidget;
 class KornBoxCfgImpl : public QWidget, public Ui_KornBoxCfg
 { Q_OBJECT
 public:
-	KornBoxCfgImpl( QWidget *parent, const char * name );
+	KornBoxCfgImpl( QWidget *parent );
 	~KornBoxCfgImpl();
 	
 	/**

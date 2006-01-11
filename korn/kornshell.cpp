@@ -29,8 +29,8 @@
 #include <kdialogbase.h>
 #include <klocale.h>
 
-KornShell::KornShell( QWidget * parent, const char * name )
-	: QWidget( parent, name ),
+KornShell::KornShell( QWidget * parent )
+	: QWidget( parent ),
 	_config( new KConfig( "kornrc" ) ),
 	_box( 0 ),
 	_configDialog( 0 )
@@ -63,7 +63,7 @@ void KornShell::optionDlg()
 	_configDialog = new KDialogBase( 0, "Configuration Dialog", false, i18n( "Korn Configuration" ),
 					 KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply, KDialogBase::Ok, true );
 	
-	KornCfgImpl *widget = new KornCfgImpl( _configDialog, "Configuration widget" );
+	KornCfgImpl *widget = new KornCfgImpl( _configDialog );
 	_configDialog->setMainWidget( widget );
 	
 	connect( _configDialog, SIGNAL( finished() ), this, SLOT( slotDialogClosed() ) );
@@ -81,11 +81,11 @@ void KornShell::readConfig()
 	KOrnPassword::setUseWallet( _config->readEntry( "usewallet", false ) );
 	
 	if( layout == 'H' )
-		_box = new HVContainer( Qt::Horizontal, this, "horizontal container" );
+		_box = new HVContainer( Qt::Horizontal, this );
 	else if( layout == 'V' )
-		_box = new HVContainer( Qt::Vertical, this, "vertical container" );
+		_box = new HVContainer( Qt::Vertical, this );
 	else
-		_box = new DockedContainer( this, "docked container" );
+		_box = new DockedContainer( this );
 
 	connect( _box, SIGNAL( showConfiguration() ), this, SLOT( optionDlg() ) );
 			

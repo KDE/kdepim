@@ -34,8 +34,8 @@
 
 KornSubjectsDlg* AccountManager::_subjectsDlg = 0;
 
-AccountManager::AccountManager( QObject * parent, const char * name )
-	: QObject( parent, name ),
+AccountManager::AccountManager( QObject * parent )
+	: QObject( parent ),
 	_kioList( new QList< KMailDrop* > ),
 	_dcopList( new QList< DCOPDrop* > ),
 	_dropInfo( new QMap< KMailDrop*, Dropinfo* > )

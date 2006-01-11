@@ -42,8 +42,8 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 
-KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent, const char * name )
-	: QWidget( parent, name ),
+KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent )
+	: QWidget( parent ),
 	Ui_KornAccountCfg(),
 	_config( 0 ),
 	_fields( 0 ),

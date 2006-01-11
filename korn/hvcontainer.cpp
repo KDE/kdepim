@@ -23,10 +23,11 @@
 #include <kdebug.h>
 
 #include <qboxlayout.h>
+#include <qlabel.h>
 #include <qwidget.h>
 
-HVContainer::HVContainer( Qt::Orientation orientation, QObject * parent, const char * name )
-	: BoxContainer( parent, name ),
+HVContainer::HVContainer( Qt::Orientation orientation, QObject * parent )
+	: BoxContainer( parent ),
 	widget( 0 ),
 	layout( 0 )	
 {
@@ -52,7 +53,7 @@ void HVContainer::showBox()
 	
 BoxContainerItem* HVContainer::newBoxInstance() const
 {
-	HVItem *item = new HVItem( widget, "horizontal/vertical item" );
+	HVItem *item = new HVItem( widget );
 	layout->addWidget( item->getLabel(), 0 );
 	
 	return item;

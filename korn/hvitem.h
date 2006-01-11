@@ -33,7 +33,7 @@ template< class T > class QList;
 class HVItem : public BoxContainerItem
 { Q_OBJECT
 public:
-	HVItem( QWidget *parent = 0, const char *name = 0 );
+	HVItem( QWidget *parent = 0 );
 	~HVItem();
 	
 	/**

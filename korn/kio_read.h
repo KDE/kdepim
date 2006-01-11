@@ -35,7 +35,7 @@ class QString;
 class KIO_Read : public QObject
 { Q_OBJECT
 public:
-	KIO_Read( QObject * parent = 0, const char * name = 0 );
+	KIO_Read( QObject * parent = 0 );
 	~KIO_Read();
 
 public slots:

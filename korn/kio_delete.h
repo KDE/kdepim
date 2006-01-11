@@ -39,7 +39,7 @@ class KIO_Delete : public QObject
 { Q_OBJECT
 public:
 	//constructors
-	KIO_Delete( QObject * parent = 0, const char * name = 0 );
+	KIO_Delete( QObject * parent = 0 );
 	~KIO_Delete( );
 	
 	//This function should be called if there are messages to be deleted.

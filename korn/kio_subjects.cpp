@@ -30,8 +30,8 @@
 #include <qlist.h>
 #include <qstring.h>
 
-KIO_Subjects::KIO_Subjects( QObject * parent, const char * name )
-	: QObject( parent, name ),
+KIO_Subjects::KIO_Subjects( QObject * parent )
+	: QObject( parent ),
 	_protocol( 0 ),
 	_slave( 0 ),
 	_valid( true )
@@ -125,7 +125,7 @@ void KIO_Subjects::startJob( const QString &name, const long size )
 	if( kurl.port() == 0 )
 		kurl.setPort( _protocol->defaultPort() );
 	
-	subject = new KIO_Single_Subject( this, name.toLatin1(), kurl, metadata, _protocol, _slave, name, size );
+	subject = new KIO_Single_Subject( this, kurl, metadata, _protocol, _slave, name, size );
 	
 	connect( subject, SIGNAL( readSubject( KornMailSubject* ) ), this, SLOT( slotReadSubject( KornMailSubject* ) ) );
 	connect( subject, SIGNAL( finished( KIO_Single_Subject* ) ), this, SLOT( slotFinished( KIO_Single_Subject* ) ) );

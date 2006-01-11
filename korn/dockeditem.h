@@ -19,9 +19,13 @@
 #ifndef MK_DOCKEDITEM_H
 #define MK_DOCKEDITEM_H
 
+/**
+ * @file
+ *
+ * This file contains the class DocketItem.
+ */
+
 #include "boxcontaineritem.h"
-//Added by qt3to4:
-#include <QPixmap>
 
 class SystemTray;
 
@@ -42,10 +46,10 @@ class DockedItem : public BoxContainerItem
 public:
 	/**
 	 * This contructor gives all it parameters to its parents.
-	 * @param parant The parent window
-	 * @param name The name of the QObject's parents.
+	 *
+	 * @param parent the parent window
 	 */
-	DockedItem( QWidget * parent = 0, const char * name = 0 );
+	DockedItem( QWidget * parent = 0 );
 	/**
 	 * Empty destructor; does nothing at the moment
 	 */
@@ -60,6 +64,7 @@ public:
 	 * This functions reads the config. It used the parent
 	 * version for the main things, but it is possible to
 	 * add some configurations over here.
+	 *
 	 * @param config The KConfig-instance which contains the settings of this tray-item.
 	 * @param index The index of the box in the configuration file
 	 */
@@ -68,6 +73,7 @@ public:
 public slots:	
 	/**
 	 * This functions sets the number of messages to be displayed, and warns if there are new messages waiting.
+	 *
 	 * @param count The number of messages waiting
 	 * @param newMessages if true than the settings for displaying new messages will be used.
 	 */
@@ -75,13 +81,28 @@ public slots:
 	
 	/**
 	 * This function sets the tooltip @p string to a box.
+	 *
 	 * @param string The tooltip to be added.
 	 */
 	virtual void setTooltip( const QString& string );
-	
-	void slotShowPassivePopup( QList< KornMailSubject >* list, int total, bool date, const QString& );
 
-	void slotShowPassivePopup( const QString& error, const QString& );
+	/**
+	 * This function displays a passive popup containing some headers of a number of messages.
+	 *
+	 * @param list the list which contains some headers of the new messages
+	 * @param total the total number of messages
+	 * @param date true is the date should also be printed; false otherwise
+	 * @param name the name of the account
+	 */
+	void slotShowPassivePopup( QList< KornMailSubject >* list, int total, bool date, const QString& name );
+
+	/**
+	 * This function displays an error message in a passive popup.
+	 *
+	 * @param error the error string
+	 * @param name the name of the account
+	 */
+	void slotShowPassivePopup( const QString& error, const QString& name );
 	
 protected:
 	/**

@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 	}
 
 	KornApp *app = new KornApp();
-	KornShell *korn = new KornShell( 0, "shell" );
+	KornShell *korn = new KornShell( 0 );
 	app->setShell( korn );
 
 	//app->enableSessionManagement( true );

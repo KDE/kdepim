@@ -37,8 +37,8 @@
 /*
  * parent should be of type KDialogBase
  */
-KornCfgImpl::KornCfgImpl( QWidget * parent, const char * name )
-	: QWidget( parent, name ),
+KornCfgImpl::KornCfgImpl( QWidget * parent )
+	: QWidget( parent ),
 	Ui_KornCfgWidget(),	
 	_config( new KConfig( "kornrc" ) ),
 	_base( 0 )
@@ -78,7 +78,7 @@ void KornCfgImpl::slotEditBox()
 	
 	_base = new KDialogBase( this, "Box Dialog", false, "Box Configuration",
 					     KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok, true );
-	KornBoxCfgImpl *widget = new KornBoxCfgImpl( _base, "Box Widget" );
+	KornBoxCfgImpl *widget = new KornBoxCfgImpl( _base );
 	
 	connect( _base, SIGNAL( finished() ), this, SLOT( slotDialogDestroyed() ) );
 	

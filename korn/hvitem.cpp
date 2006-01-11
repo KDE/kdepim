@@ -36,9 +36,9 @@
 //Added by qt3to4:
 #include <kiconloader.h>
 
-HVItem::HVItem( QWidget *parent, const char *name )
-	: BoxContainerItem( 0, name ),
-	_label( new Label( parent, "label" ) ),
+HVItem::HVItem( QWidget *parent )
+	: BoxContainerItem( 0 ),
+	_label( new Label( parent ) ),
 	_popup( new KMenu( _label ) ),
 	_actions( new KActionCollection( _popup ) )
 {
@@ -47,7 +47,7 @@ HVItem::HVItem( QWidget *parent, const char *name )
 	_popup->insertSeparator();
 	KStdAction::quit( kapp, SLOT( quit() ), _actions )->plug( _popup );
 	
-	connect( _label, SIGNAL( mouseButtonPressed( Qt::ButtonState ) ), this, SLOT( mouseButtonPressed( Qt::ButtonState ) ) );
+	connect( _label, SIGNAL( mouseButtonPressed( Qt::MouseButton ) ), this, SLOT( mouseButtonPressed( Qt::MouseButton ) ) );
 }
 
 HVItem::~HVItem()

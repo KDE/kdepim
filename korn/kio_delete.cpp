@@ -32,7 +32,7 @@
 
 #include <qlist.h>
 
-KIO_Delete::KIO_Delete( QObject * parent, const char * name ) : QObject( parent, name ),
+KIO_Delete::KIO_Delete( QObject * parent ) : QObject( parent ),
 	_kio( 0 ),
 	_total( 0 ),
 	_jobs( 0 ),

@@ -20,7 +20,7 @@
 
 #include "dcopdrop.h"
 
-DCOPDropInterface::DCOPDropInterface( DCOPDrop* drop, const char* name )
+DCOPDropInterface::DCOPDropInterface( DCOPDrop* drop, const char * name )
 	: DCOPObject( name ),
 	_drop( drop )
 {

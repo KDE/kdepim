@@ -295,7 +295,7 @@ bool KornSubjectsDlg::makeSubjectsStruct()
 	_subjects = new SubjectsData;
 	_subjects->maildrop_index = 0;
 	_subjects->subjects = new QVector< KornMailSubject >;
-	_subjects->progress = new DoubleProgressDialog( this, "progress" );
+	_subjects->progress = new DoubleProgressDialog( this );
 	_subjects->atRechecking = true;
 	
 	connect( _subjects->progress, SIGNAL( cancelPressed() ), this, SLOT( slotSubjectsCanceled() ) );

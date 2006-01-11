@@ -32,8 +32,8 @@
 
 #include <qstring.h>
 
-KIO_Read::KIO_Read( QObject * parent, const char * name )
-	: QObject( parent, name ),
+KIO_Read::KIO_Read( QObject * parent )
+	: QObject( parent ),
 	_job( 0 ),
 	_message( 0 )
 {

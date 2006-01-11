@@ -19,9 +19,13 @@
 #ifndef MK_LABEL_H
 #define MK_LABEL_H
 
+/**
+ * @file 
+ *
+ * This file contains a class which adds a signal to a QLabel.
+ */
+
 #include <qlabel.h>
-#include <qevent.h>
-//Added by qt3to4:
 #include <QMouseEvent>
 
 /**
@@ -30,16 +34,34 @@
 class Label : public QLabel
 { Q_OBJECT
 public:
-	Label( QWidget * parent = 0, const char * name = 0 ) : QLabel( parent, name ) {}
+	/**
+	 * Constructor.
+	 * It just calls the QLabel constructor.
+	 *
+	 * @param parent the parent of the Label
+	 */
+	Label( QWidget * parent = 0 ) : QLabel( parent ) {}
+	/**
+	 * Empty destructor
+	 */
 	virtual ~Label() {}
 	
 protected:
+	/**
+	 * This function is called when the user clicks on the label.
+	 * After this function function is called, it emits the signal mouseButtonPressed.
+	 * Overloaded from QWidget::mousePressEvent().
+	 *
+	 * @param e the mouseevent used to determine the button
+	 */
 	virtual void mousePressEvent( QMouseEvent *e ) { emit mouseButtonPressed( e->button() ); }
 signals:
 	/**
 	 * Emitted when a button is pressed.
+	 * 
+	 * @param button the button which is clicked
 	 */
-	void mouseButtonPressed( Qt::ButtonState );
+	void mouseButtonPressed( Qt::MouseButton button );
 };
 
 #endif //MK_LABEL_H

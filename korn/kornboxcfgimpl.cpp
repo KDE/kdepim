@@ -38,8 +38,8 @@ class KConfig;
 #include <qlabel.h>
 #include <qstring.h>
 
-KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent, const char * name )
-	: QWidget( parent, name ),
+KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent )
+	: QWidget( parent ),
 	Ui_KornBoxCfg(),
 	_config( 0 ),
 	_base( 0 ),
@@ -270,7 +270,7 @@ void KornBoxCfgImpl::slotEditBox()
 	
 	_base = new KDialogBase( this, "Account Dialog", false, i18n("Box Configuration"),
 					     KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok, true );
-	KornAccountCfgImpl *widget = new KornAccountCfgImpl( _base, "Account Widget" );
+	KornAccountCfgImpl *widget = new KornAccountCfgImpl( _base );
 
 	_base->setMainWidget( widget );
 	

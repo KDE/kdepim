@@ -19,11 +19,15 @@
 #ifndef MK_BOXCONTAINERITEM_H
 #define MK_BOXCONTAINERITEM_H
 
+/**
+ * @file
+ * 
+ * This class contains a class BoxContainerItem
+ */
+
 #include "accountmanager.h"
 #include <dcopobject.h>
-//Added by qt3to4:
 #include <QPixmap>
-#include <QLabel>
 
 class KornMailSubject;
 
@@ -34,6 +38,7 @@ class KProcess;
 
 class QColor;
 class QLabel;
+class QPixmap;
 class QString;
 template< class T > class QList;
 
@@ -41,6 +46,7 @@ template< class T > class QList;
  * This class provide a base for an item. This item should be
  * shown in a BoxContainer, and represent one number somewhere.
  * This also is the DCOP-interface for such a box.
+ *
  * @author Mart Kelder <mart.kde@hccnet.nl>
  */
 class BoxContainerItem : public AccountManager, public DCOPObject
@@ -52,11 +58,11 @@ public:
 	 * This constructor implements the default arguments for any QObject.
 	 * Note that is does not give a name to DCOPObject; that name
 	 * is set in the readConfig-function.
+	 *
 	 * @param parent The parent of this object, See Object::QObject
-	 * @param name The name of this object, See QObject::QObject
 	 * @see BoxContainerItem::readConfig
 	 */
-	BoxContainerItem( QObject * parent = 0, const char * name = 0 );
+	BoxContainerItem( QObject * parent = 0 );
 	
 	/**
 	 * The default destructor. This only removes _command-pointer.
@@ -71,6 +77,7 @@ public:
 	/**
 	 * This function reads the config. It stores the readed values in the class.
 	 * It also sets the DCOPObject-name.
+	 *
 	 * @param config The KConfigGroup-object which contains the configuration of this box.
 	 * @param index The index of the box used in the config-file
 	 */
@@ -108,9 +115,9 @@ public slots:
 	 * This functions should be called if a mouse-button has been pressed.
 	 * This handles the connected events of it.
 	 * 
-	 * @param button The button that was pressed, See Qt::ButtonState
+	 * @param button The button that was pressed, See Qt::MouseButton
 	 */
-	void mouseButtonPressed( Qt::ButtonState button );
+	void mouseButtonPressed( Qt::MouseButton button );
 protected:
 	/**
 	 * This function filles a KMenu-reference. The target is
@@ -166,11 +173,29 @@ private:
 	void setAnimIcon( QLabel* label, const QString& anim );
 	
 private slots:
+	/**
+	 * This slot calls recheck()
+	 */
 	void slotRecheck() { recheck(); }
+	/**
+	 * This slot calls reset()
+	 */
 	void slotReset() { reset(); }
+	/**
+	 * This slot calls view()
+	 */
 	void slotView() { view(); }
+	/**
+	 * This slot calls runCommand()
+	 */
 	void slotRunCommand() { runCommand(); }
+	/**
+	 * This slot calls popup()
+	 */
 	void slotPopup() { popup(); }
+	/**
+	 * This slot calls showConfig()
+	 */
 	void slotConfigure() { showConfig(); }
 public:
 k_dcop:

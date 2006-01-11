@@ -35,7 +35,7 @@ class QByteArray;
 class KIO_Single_Subject : public QObject
 { Q_OBJECT
 public:
-	KIO_Single_Subject( QObject * parent, const char * name, KURL &, KIO::MetaData &, const KIO_Protocol *,
+	KIO_Single_Subject( QObject * parent, KURL &, KIO::MetaData &, const KIO_Protocol *,
 	                    KIO::Slave *&, const QString &, const long );
 	~KIO_Single_Subject( );
 	
