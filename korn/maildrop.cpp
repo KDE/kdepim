@@ -87,11 +87,11 @@ bool KMailDrop::readConfigGroup(const KConfigBase & c)
 {
   _caption    = c.readEntry(fu(CaptionConfigKey), QString());
   _clickCmd   = c.readPathEntry(fu(ClickConfigKey));
-  _style      = Style(c.readUnsignedNumEntry(fu(DisplayStyleConfigKey), Plain));
-  _bgColour   = c.readColorEntry(fu(BgColourConfigKey), &QApplication::palette().active().background());
-  _fgColour   = c.readColorEntry(fu(FgColourConfigKey), &QApplication::palette().active().text());
-  _nbgColour  = c.readColorEntry(fu(NBgColourConfigKey), &QApplication::palette().active().background());
-  _nfgColour  = c.readColorEntry(fu(NFgColourConfigKey), &QApplication::palette().active().text());
+  _style      = Style(c.readEntry(fu(DisplayStyleConfigKey), (unsigned int)Plain));
+  _bgColour   = c.readEntry(fu(BgColourConfigKey), QApplication::palette().active().background());
+  _fgColour   = c.readEntry(fu(FgColourConfigKey), QApplication::palette().active().text());
+  _nbgColour  = c.readEntry(fu(NBgColourConfigKey), QApplication::palette().active().background());
+  _nfgColour  = c.readEntry(fu(NFgColourConfigKey), QApplication::palette().active().text());
   _icon       = c.readEntry(fu(IconConfigKey), QString());
   _nIcon      = c.readEntry(fu(NewMailIconConfigKey), QString());
   _realName   = c.readEntry(fu(RealNameConfigKey), QString());

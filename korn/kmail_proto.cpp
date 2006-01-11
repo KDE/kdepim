@@ -228,7 +228,7 @@ QString KMail_Protocol::getTypeAndConfig( const QString& kmailname, KConfig &kma
 		kmailconfig.setGroup( QString( kmailGroupName ).arg( nummer ) );
 		if( kmailconfig.readEntry( kmailKeyName, QString() ) == kmailname )
 		{
-			id = kmailconfig.readNumEntry( kmailKeyId, 0 );	
+			id = kmailconfig.readEntry( kmailKeyId, 0 );	
 			found = true;
 			break;
 		}

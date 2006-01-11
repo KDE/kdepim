@@ -123,17 +123,14 @@ void KornBoxCfgImpl::writeConfig( KConfig * config, const int index )
 //private
 void KornBoxCfgImpl::readViewConfig()
 {
-	QColor black( Qt::black );
-	QColor white( Qt::white );
-	
 	this->chNormalText->setChecked(_config->readEntry ( "hasnormalfgcolour", true ) );
-	this->cbNormalText->setColor(  _config->readColorEntry( "normalfgcolour", &black ) );
+	this->cbNormalText->setColor(  _config->readEntry( "normalfgcolour", QColor( Qt::black ) ) );
 	this->chNewText->setChecked(   _config->readEntry ( "hasnewfgcolour", true ) );
-	this->cbNewText->setColor(     _config->readColorEntry( "newfgcolour", &black ) );
+	this->cbNewText->setColor(     _config->readEntry( "newfgcolour", QColor( Qt::black ) ) );
 	this->chNormalBack->setChecked(_config->readEntry ( "hasnormalbgcolour", false ) );
-	this->cbNormalBack->setColor(  _config->readColorEntry( "normalbgcolour", &white ) );
+	this->cbNormalBack->setColor(  _config->readEntry( "normalbgcolour", QColor( Qt::white ) ) );
 	this->chNewBack->setChecked(   _config->readEntry ( "hasnewbgcolour", false ) );
-	this->cbNewBack->setColor(     _config->readColorEntry( "newbgcolour", &white ) );
+	this->cbNewBack->setColor(     _config->readEntry( "newbgcolour", QColor( Qt::white ) ) );
 	
 	this->chNormalIcon->setChecked(_config->readEntry( "hasnormalicon", false ) );
 	this->ibNormalIcon->setIcon(   _config->readEntry    ( "normalicon", "" ) );
@@ -144,8 +141,8 @@ void KornBoxCfgImpl::readViewConfig()
 	this->chNewFont->setChecked   (_config->readEntry( "hasnewfont", false ) );
 	this->chNormalAnim->setChecked(_config->readEntry( "hasnormalanim", false ) );
 	this->chNewAnim->setChecked(   _config->readEntry( "hasnewanim", false ) );
-	*_fonts[ 0 ] = _config->readFontEntry( "normalfont" );
-	*_fonts[ 1 ] = _config->readFontEntry( "newfont" );
+	*_fonts[ 0 ] = _config->readEntry( "normalfont", QFont() );
+	*_fonts[ 1 ] = _config->readEntry( "newfont", QFont() );
 	*_anims[ 0 ] = _config->readEntry    ( "normalanim", "" );
 	*_anims[ 1 ] = _config->readEntry    ( "newanim", "" );
 }
@@ -251,7 +248,7 @@ void KornBoxCfgImpl::writeEventConfig( KConfig *config )
 	config->writeEntry( "passivedate", this->chPassiveDate->isChecked() );
 }
 
-void KornBoxCfgImpl::writeAccountsConfig( KConfig */*config */)
+void KornBoxCfgImpl::writeAccountsConfig( KConfig * /*config */)
 {
 }
 

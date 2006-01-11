@@ -61,7 +61,7 @@ bool KPollableDrop::readConfigGroup( const KConfigBase& cfg )
 {
 	KMailDrop::readConfigGroup( cfg );
 
-	setFreq( cfg.readNumEntry(fu(PollConfigKey), DefaultPoll ) );
+	setFreq( cfg.readEntry(fu(PollConfigKey), DefaultPoll ) );
 
 	return true;
 }

@@ -105,28 +105,28 @@ void BoxContainerItem::readConfig( KConfig* config, const int index )
 		_anims[ 1 ] = 0;
 	
 	if( config->readEntry( "hasnormalfgcolour", false ) )
-		_fgColour[ 0 ] = new QColor( config->readColorEntry( "normalfgcolour" ) );
+		_fgColour[ 0 ] = new QColor( config->readEntry( "normalfgcolour", QColor() ) );
 	else
 		_fgColour[ 0 ] = 0;
 	if( config->readEntry( "hasnewfgcolour", false ) )
-		_fgColour[ 1 ] = new QColor( config->readColorEntry( "newfgcolour" ) );
+		_fgColour[ 1 ] = new QColor( config->readEntry( "newfgcolour", QColor() ) );
 	else
 		_fgColour[ 1 ] = 0;
 	
 	if( config->readEntry( "hasnormalbgcolour", false ) )
-		_bgColour[ 0 ] = new QColor( config->readColorEntry( "normalbgcolour" ) );
+		_bgColour[ 0 ] = new QColor( config->readEntry( "normalbgcolour", QColor() ) );
 	else
 		_bgColour[ 0 ] = 0;
 	if( config->readEntry( "hasnewbgcolour", false ) )
-		_bgColour[ 1 ] = new QColor( config->readColorEntry( "newbgcolour" ) );
+		_bgColour[ 1 ] = new QColor( config->readEntry( "newbgcolour", QColor() ) );
 	else
 		_bgColour[ 1 ] = 0;
 	if( config->readEntry( "hasnormalfont", false ) )
-		_fonts[ 0 ] = new QFont( config->readFontEntry( "normalfont" ) );
+		_fonts[ 0 ] = new QFont( config->readEntry( "normalfont", QFont() ) );
 	else
 		_fonts[ 0 ] = 0;
 	if( config->readEntry( "hasnewfont", false ) )
-		_fonts[ 1 ] = new QFont( config->readFontEntry( "newfont" ) );
+		_fonts[ 1 ] = new QFont( config->readEntry( "newfont", QFont() ) );
 	else
 		_fonts[ 1 ] = 0;
 	

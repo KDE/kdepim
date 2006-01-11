@@ -104,7 +104,7 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		_kioList->append( kiodrop );
 		
 		info->index = counter;
-		info->reset = accountGroup->readNumEntry( "reset", 0 );
+		info->reset = accountGroup->readEntry( "reset", 0 );
 		info->msgnr = info->reset;
 		info->newMessages = false;
 		
