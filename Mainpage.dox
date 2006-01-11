@@ -60,6 +60,9 @@
         *   <i>Synchronizes data with your PalmOS-based handheld.</i>
 	* </td>
 	* <td valign="top">
+        * - <a href="libakonadi/html/index.html"><b>libakonadi</b></a>
+        *   (<a href="libakonadi/html/classes.html">classes</a>)\n
+        *   <i>Client library for accessing Akonadi, the PIM storage service.</i>
         * - <a href="libemailfunctions/html/index.html"><b>libemailfunctions</b></a>
         *   (<a href="libemailfunctions/html/classes.html">classes</a>)\n
         *   <i>A library for general purpose email handling.</i>
@@ -74,13 +77,16 @@
         *   <i>A library for handling holidays.</i>
         * - <a href="libkmime/html/index.html"><b>libkmime</b></a>
         *   (<a href="libkmime/html/classes.html">classes</a>)\n
+        *   <i>A library for MIME handling.</i>
+        * - <a href="libkleo/html/index.html"><b>libkleo</b></a>
+        *   (<a href="libkleo/html/classes.html">classes</a>)\n
         *   <i>A library for encryption handling.</i>
         * - <a href="gpgmepp/html/index.html"><b>GpgME++</b></a>
         *   (<a href="gpgmepp/html/classes.html">classes</a>)\n
-        *   <i>Qt eventloop integration for gpgme.</i>
+        *   <i>A C++ wrapper for gpgme.</i>
         * - <a href="qgpgme/html/index.html"><b>QGpgME</b></a>
         *   (<a href="qgpgme/html/classes.html">classes</a>)\n
-        *   <i>A library for MIME handling.</i>
+        *   <i>Qt eventloop integration for gpgme.</i>
         * - <a href="libkpgp/html/index.html"><b>libkpgp</b></a>
         *   (<a href="libkpgp/html/classes.html">classes</a>)\n
         *   <i>A PGP abstraction layer.</i>

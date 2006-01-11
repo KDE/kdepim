@@ -41,6 +41,12 @@ by KNode and (partly) KMail.
 
 */
 
+/** @namespace PIM
+
+The PIM namespace contains the classes of Akonadi, the PIM storage service.
+
+*/
+
 //
 //--------- generic namespaces from kdelibs
 //
