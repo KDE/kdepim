@@ -491,10 +491,10 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent,
   KConfig config( "kaddressbookrc" );
   config.setGroup( "XXPortVCard" );
 
-  mPrivateBox->setChecked( config.readBoolEntry( "ExportPrivateFields", true ) );
-  mBusinessBox->setChecked( config.readBoolEntry( "ExportBusinessFields", false ) );
-  mOtherBox->setChecked( config.readBoolEntry( "ExportOtherFields", false ) );
-  mEncryptionKeys->setChecked( config.readBoolEntry( "ExportEncryptionKeys", false ) );
+  mPrivateBox->setChecked( config.readEntry( "ExportPrivateFields", true ) );
+  mBusinessBox->setChecked( config.readEntry( "ExportBusinessFields", false ) );
+  mOtherBox->setChecked( config.readEntry( "ExportOtherFields", false ) );
+  mEncryptionKeys->setChecked( config.readEntry( "ExportEncryptionKeys", false ) );
 }
 
 VCardExportSelectionDialog::~VCardExportSelectionDialog()

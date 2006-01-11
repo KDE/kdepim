@@ -86,16 +86,16 @@ LookAndFeelPage::LookAndFeelPage(QWidget *parent, const char *name)
 
 void LookAndFeelPage::restoreSettings( KConfig *config )
 {
-  mAlternateButton->setChecked(config->readBoolEntry("ABackground", true));
-  mLineButton->setChecked(config->readBoolEntry("SingleLine", false));
-  mToolTipBox->setChecked(config->readBoolEntry("ToolTips", true));
+  mAlternateButton->setChecked(config->readEntry("ABackground", true));
+  mLineButton->setChecked(config->readEntry("SingleLine", false));
+  mToolTipBox->setChecked(config->readEntry("ToolTips", true));
 
   if (!mAlternateButton->isChecked() && !mLineButton->isChecked())
     mNoneButton->setChecked(true);
 
-  mBackgroundBox->setChecked(config->readBoolEntry("Background", false));
+  mBackgroundBox->setChecked(config->readEntry("Background", false));
   mBackgroundName->lineEdit()->setText(config->readPathEntry("BackgroundName"));
-  mIMPresenceBox->setChecked( config->readBoolEntry( "InstantMessagingPresence", false ) );
+  mIMPresenceBox->setChecked( config->readEntry( "InstantMessagingPresence", false ) );
 }
 
 void LookAndFeelPage::saveSettings( KConfig *config )

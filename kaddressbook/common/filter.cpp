@@ -132,7 +132,7 @@ void Filter::save( KConfigGroup &cfg )
 void Filter::restore( KConfigGroup &cfg )
 {
   mName = cfg.readEntry( "Name", "<internal error>" );
-  mEnabled = cfg.readBoolEntry( "Enabled", true );
+  mEnabled = cfg.readEntry( "Enabled", true );
   mCategoryList = cfg.readListEntry( "Categories" );
   mMatchRule = (MatchRule)cfg.readNumEntry( "MatchRule", Matching );
 

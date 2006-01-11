@@ -181,8 +181,8 @@ void KABConfigWidget::restoreSettings()
 
   KConfig config( "kabcrc", false, false );
   config.setGroup( "General" );
-  mTradeAsFamilyName->setChecked( config.readBoolEntry( "TradeAsFamilyName", true ) );
-  mLimitContactDisplay->setChecked( config.readBoolEntry( "LimitContactDisplay", true ) );
+  mTradeAsFamilyName->setChecked( config.readEntry( "TradeAsFamilyName", true ) );
+  mLimitContactDisplay->setChecked( config.readEntry( "LimitContactDisplay", true ) );
 
   blockSignals( blocked );
 

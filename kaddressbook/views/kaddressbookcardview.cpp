@@ -188,7 +188,7 @@ void KAddressBookCardView::readConfig( KConfigGroup &cfg )
   KAddressBookView::readConfig( cfg );
 
   // costum colors?
-  if ( cfg.readBoolEntry( "EnableCustomColors", false ) ) {
+  if ( cfg.readEntry( "EnableCustomColors", false ) ) {
     QPalette p( mCardView->palette() );
     QColor c = p.color( QPalette::Normal, QColorGroup::Base );
     p.setColor( QPalette::Normal, QColorGroup::Base, cfg.readColorEntry( "BackgroundColor", &c ) );
@@ -210,7 +210,7 @@ void KAddressBookCardView::readConfig( KConfigGroup &cfg )
 
   //custom fonts?
   QFont f( font() );
-  if ( cfg.readBoolEntry( "EnableCustomFonts", false ) ) {
+  if ( cfg.readEntry( "EnableCustomFonts", false ) ) {
     mCardView->setFont( cfg.readFontEntry( "TextFont", &f ) );
     f.setBold( true );
     mCardView->setHeaderFont( cfg.readFontEntry( "HeaderFont", &f ) );
@@ -220,10 +220,10 @@ void KAddressBookCardView::readConfig( KConfigGroup &cfg )
     mCardView->setHeaderFont( f );
   }
 
-  mCardView->setDrawCardBorder( cfg.readBoolEntry( "DrawBorder", true ) );
-  mCardView->setDrawColSeparators( cfg.readBoolEntry( "DrawSeparators", true ) );
-  mCardView->setDrawFieldLabels( cfg.readBoolEntry( "DrawFieldLabels", false ) );
-  mShowEmptyFields = cfg.readBoolEntry( "ShowEmptyFields", false );
+  mCardView->setDrawCardBorder( cfg.readEntry( "DrawBorder", true ) );
+  mCardView->setDrawColSeparators( cfg.readEntry( "DrawSeparators", true ) );
+  mCardView->setDrawFieldLabels( cfg.readEntry( "DrawFieldLabels", false ) );
+  mShowEmptyFields = cfg.readEntry( "ShowEmptyFields", false );
 
   mCardView->setShowEmptyFields( mShowEmptyFields );
 

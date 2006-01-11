@@ -70,12 +70,12 @@ RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent, const char* 
   // applying previous settings
   KConfig * config = KGlobal::config();
   config->setGroup( RingBinderConfigSectionName );
-  mPageAppearance->cbPhoneNumbers->setChecked( config->readBoolEntry( ShowPhoneNumbers, true ) );
-  mPageAppearance->cbEmails->setChecked( config->readBoolEntry( ShowEmailAddresses, true ) );
-  mPageAppearance->cbStreetAddresses->setChecked( config->readBoolEntry( ShowStreetAddresses, true ) );
-  mPageAppearance->cbOrganization->setChecked( config->readBoolEntry( ShowOrganization, true ) );
-  mPageAppearance->cbBirthday->setChecked( config->readBoolEntry( ShowBirthday, false ) );
-  mPageAppearance->cbFillEmpty->setChecked( config->readBoolEntry( FillWithEmptyFields, true ) );
+  mPageAppearance->cbPhoneNumbers->setChecked( config->readEntry( ShowPhoneNumbers, true ) );
+  mPageAppearance->cbEmails->setChecked( config->readEntry( ShowEmailAddresses, true ) );
+  mPageAppearance->cbStreetAddresses->setChecked( config->readEntry( ShowStreetAddresses, true ) );
+  mPageAppearance->cbOrganization->setChecked( config->readEntry( ShowOrganization, true ) );
+  mPageAppearance->cbBirthday->setChecked( config->readEntry( ShowBirthday, false ) );
+  mPageAppearance->cbFillEmpty->setChecked( config->readEntry( FillWithEmptyFields, true ) );
   mPageAppearance->sbMinNumFill->setValue( config->readUnsignedNumEntry( MinNumberOfEmptyFields, 0 ) );
 
   QStringList tabNames = config->readListEntry( LetterGroups, ',' );

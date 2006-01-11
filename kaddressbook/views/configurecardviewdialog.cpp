@@ -92,7 +92,7 @@ CardViewLookNFeelPage::~CardViewLookNFeelPage()
 void CardViewLookNFeelPage::restoreSettings( KConfig *config )
 {
   // colors
-  cbEnableCustomColors->setChecked( config->readBoolEntry( "EnableCustomColors", false ) );
+  cbEnableCustomColors->setChecked( config->readEntry( "EnableCustomColors", false ) );
   QColor c;
   c = KGlobalSettings::baseColor();
   lbColors->insertItem( new ColorListItem( i18n("Background Color"),
@@ -120,19 +120,19 @@ void CardViewLookNFeelPage::restoreSettings( KConfig *config )
   updateFontLabel( config->readFontEntry( "TextFont", &fnt ), (QLabel*)lTextFont );
   fnt.setBold( true );
   updateFontLabel( config->readFontEntry( "HeaderFont",  &fnt ), (QLabel*)lHeaderFont );
-  cbEnableCustomFonts->setChecked( config->readBoolEntry( "EnableCustomFonts", false ) );
+  cbEnableCustomFonts->setChecked( config->readEntry( "EnableCustomFonts", false ) );
   enableFonts();
 
   // layout
   sbMargin->setValue( config->readNumEntry( "ItemMargin", 0 ) );
   sbSpacing->setValue( config->readNumEntry( "ItemSpacing", 10 ) );
   sbSepWidth->setValue( config->readNumEntry( "SeparatorWidth", 2 ) );
-  cbDrawSeps->setChecked( config->readBoolEntry( "DrawSeparators", true ) );
-  cbDrawBorders->setChecked( config->readBoolEntry( "DrawBorder", true ) );
+  cbDrawSeps->setChecked( config->readEntry( "DrawSeparators", true ) );
+  cbDrawBorders->setChecked( config->readEntry( "DrawBorder", true ) );
 
   // behaviour
-  cbShowFieldLabels->setChecked( config->readBoolEntry( "DrawFieldLabels", false ) );
-  cbShowEmptyFields->setChecked( config->readBoolEntry( "ShowEmptyFields", false ) );
+  cbShowFieldLabels->setChecked( config->readEntry( "DrawFieldLabels", false ) );
+  cbShowEmptyFields->setChecked( config->readEntry( "ShowEmptyFields", false ) );
 }
 
 void CardViewLookNFeelPage::saveSettings( KConfig *config )

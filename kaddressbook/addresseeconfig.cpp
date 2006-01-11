@@ -60,7 +60,7 @@ bool AddresseeConfig::automaticNameParsing()
 {
   KConfig config( "kaddressbook_addrconfig" );
   config.setGroup( mAddressee.uid() );
-  return config.readBoolEntry( "AutomaticNameParsing",
+  return config.readEntry( "AutomaticNameParsing",
                                KABPrefs::instance()->automaticNameParsing() );
 }
 

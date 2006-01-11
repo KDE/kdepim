@@ -188,7 +188,7 @@ void KAddressBookTableView::readConfig( KConfigGroup &cfg )
 {
   KAddressBookView::readConfig( cfg );
 
-  if ( cfg.readBoolEntry( "InstantMessagingPresence", false ) ) {
+  if ( cfg.readEntry( "InstantMessagingPresence", false ) ) {
     if ( !mIMProxy ) {
       mIMProxy = KIMProxy::instance( kapp->dcopClient() );
       connect( mIMProxy, SIGNAL( sigContactPresenceChanged( const QString& ) ),
@@ -207,11 +207,11 @@ void KAddressBookTableView::readConfig( KConfigGroup &cfg )
   reconstructListView();
 
   // Set the list view options
-  mListView->setAlternateBackgroundEnabled( cfg.readBoolEntry( "ABackground", true ) );
-  mListView->setSingleLineEnabled( cfg.readBoolEntry( "SingleLine", false ) );
-  mListView->setToolTipsEnabled( cfg.readBoolEntry( "ToolTips", true ) );
+  mListView->setAlternateBackgroundEnabled( cfg.readEntry( "ABackground", true ) );
+  mListView->setSingleLineEnabled( cfg.readEntry( "SingleLine", false ) );
+  mListView->setToolTipsEnabled( cfg.readEntry( "ToolTips", true ) );
 
-  if ( cfg.readBoolEntry( "Background", false ) )
+  if ( cfg.readEntry( "Background", false ) )
     mListView->setBackgroundPixmap( cfg.readPathEntry( "BackgroundName" ) );
 
   // Restore the layout of the listview

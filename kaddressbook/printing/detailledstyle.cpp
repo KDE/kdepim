@@ -83,7 +83,7 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent, const char *na
   config = KGlobal::config();
   config->setGroup( ConfigSectionName );
 
-  kdeFonts = config->readBoolEntry( UseKDEFonts, true );
+  kdeFonts = config->readEntry( UseKDEFonts, true );
   mPageAppearance->cbStandardFonts->setChecked( kdeFonts );
 
   font = config->readFontEntry( HeaderFont, &standard );
@@ -107,7 +107,7 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent, const char *na
   mPageAppearance->kisbFixedFontSize->setValue( font.pointSize() );
 
   mPageAppearance->cbBackgroundColor->setChecked(
-      config->readBoolEntry( ColoredContactHeaders, true ) );
+      config->readEntry( ColoredContactHeaders, true ) );
   QColor col(Qt::black);
   mPageAppearance->kcbHeaderBGColor->setColor(
       config->readColorEntry( ContactHeaderBGColor, &col ) );
