@@ -212,7 +212,7 @@ void KornCfgImpl::readConfig()
 	else
 		rbDocked->setChecked( true );
 
-	chUseWallet->setChecked( _config->readBoolEntry( "usewallet", true ) );
+	chUseWallet->setChecked( _config->readEntry( "usewallet", true ) );
 }
 
 void KornCfgImpl::writeConfig()
@@ -227,7 +227,7 @@ void KornCfgImpl::writeConfig()
 		_config->writeEntry( "layout", "Docked" );
 
 	//Default is 'false' here, because if no option is set, KWallet isn't used.
-	if( _config->readBoolEntry( "usewallet", false ) != chUseWallet->isChecked() )
+	if( _config->readEntry( "usewallet", false ) != chUseWallet->isChecked() )
 		//Configuration box changed => setting over configuration
 		rewritePasswords();
 

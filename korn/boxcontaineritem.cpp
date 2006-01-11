@@ -86,70 +86,70 @@ void BoxContainerItem::readConfig( KConfig* config, const int index )
 {
 	//Read information about how the thing have to look like
 	config->setGroup( QString( "korn-%1" ).arg( index ) );
-	if( config->readBoolEntry( "hasnormalicon", false ) )
+	if( config->readEntry( "hasnormalicon", false ) )
 		_icons[ 0 ] = new QString( config->readEntry( "normalicon", "" ) );
 	else
 		_icons[ 0 ] = 0;
-	if( config->readBoolEntry( "hasnewicon", false ) )
+	if( config->readEntry( "hasnewicon", false ) )
 		_icons[ 1 ] = new QString( config->readEntry( "newicon", "" ) );
 	else
 		_icons[ 1 ] = 0;
 	
-	if( config->readBoolEntry( "hasnormalanim", false ) )
+	if( config->readEntry( "hasnormalanim", false ) )
 		_anims[ 0 ] = new QString( config->readEntry( "normalanim", "" ) );
 	else
 		_anims[ 0 ] = 0;
-	if( config->readBoolEntry( "hasnewanim", false ) )
+	if( config->readEntry( "hasnewanim", false ) )
 		_anims[ 1 ] = new QString( config->readEntry( "newanim", "" ) );
 	else
 		_anims[ 1 ] = 0;
 	
-	if( config->readBoolEntry( "hasnormalfgcolour", false ) )
+	if( config->readEntry( "hasnormalfgcolour", false ) )
 		_fgColour[ 0 ] = new QColor( config->readColorEntry( "normalfgcolour" ) );
 	else
 		_fgColour[ 0 ] = 0;
-	if( config->readBoolEntry( "hasnewfgcolour", false ) )
+	if( config->readEntry( "hasnewfgcolour", false ) )
 		_fgColour[ 1 ] = new QColor( config->readColorEntry( "newfgcolour" ) );
 	else
 		_fgColour[ 1 ] = 0;
 	
-	if( config->readBoolEntry( "hasnormalbgcolour", false ) )
+	if( config->readEntry( "hasnormalbgcolour", false ) )
 		_bgColour[ 0 ] = new QColor( config->readColorEntry( "normalbgcolour" ) );
 	else
 		_bgColour[ 0 ] = 0;
-	if( config->readBoolEntry( "hasnewbgcolour", false ) )
+	if( config->readEntry( "hasnewbgcolour", false ) )
 		_bgColour[ 1 ] = new QColor( config->readColorEntry( "newbgcolour" ) );
 	else
 		_bgColour[ 1 ] = 0;
-	if( config->readBoolEntry( "hasnormalfont", false ) )
+	if( config->readEntry( "hasnormalfont", false ) )
 		_fonts[ 0 ] = new QFont( config->readFontEntry( "normalfont" ) );
 	else
 		_fonts[ 0 ] = 0;
-	if( config->readBoolEntry( "hasnewfont", false ) )
+	if( config->readEntry( "hasnewfont", false ) )
 		_fonts[ 1 ] = new QFont( config->readFontEntry( "newfont" ) );
 	else
 		_fonts[ 1 ] = 0;
 	
 	//Read information about the mappings.
-	_recheckSettings[ 0 ] = config->readBoolEntry( "leftrecheck", true );
-	_recheckSettings[ 1 ] = config->readBoolEntry( "middlerecheck", false );
-	_recheckSettings[ 2 ] = config->readBoolEntry( "rightrecheck", false );
+	_recheckSettings[ 0 ] = config->readEntry( "leftrecheck", true );
+	_recheckSettings[ 1 ] = config->readEntry( "middlerecheck", false );
+	_recheckSettings[ 2 ] = config->readEntry( "rightrecheck", false );
 	
-	_resetSettings[ 0 ] = config->readBoolEntry( "leftreset", false );
-	_resetSettings[ 1 ] = config->readBoolEntry( "middlereset", false );
-	_resetSettings[ 2 ] = config->readBoolEntry( "rightreset", false );
+	_resetSettings[ 0 ] = config->readEntry( "leftreset", false );
+	_resetSettings[ 1 ] = config->readEntry( "middlereset", false );
+	_resetSettings[ 2 ] = config->readEntry( "rightreset", false );
 	
-	_viewSettings[ 0 ] = config->readBoolEntry( "leftview", false );
-	_viewSettings[ 1 ] = config->readBoolEntry( "middleview", false );
-	_viewSettings[ 2 ] = config->readBoolEntry( "rightview", false );
+	_viewSettings[ 0 ] = config->readEntry( "leftview", false );
+	_viewSettings[ 1 ] = config->readEntry( "middleview", false );
+	_viewSettings[ 2 ] = config->readEntry( "rightview", false );
 	
-	_runSettings[ 0 ] = config->readBoolEntry( "leftrun", false );
-	_runSettings[ 1 ] = config->readBoolEntry( "middlerun", false );
-	_runSettings[ 2 ] = config->readBoolEntry( "rightrun", false );
+	_runSettings[ 0 ] = config->readEntry( "leftrun", false );
+	_runSettings[ 1 ] = config->readEntry( "middlerun", false );
+	_runSettings[ 2 ] = config->readEntry( "rightrun", false );
 	
-	_popupSettings[ 0 ] = config->readBoolEntry( "leftpopup", false );
-	_popupSettings[ 1 ] = config->readBoolEntry( "middlepopup", false );
-	_popupSettings[ 2 ] = config->readBoolEntry( "rightpopup", true );
+	_popupSettings[ 0 ] = config->readEntry( "leftpopup", false );
+	_popupSettings[ 1 ] = config->readEntry( "middlepopup", false );
+	_popupSettings[ 2 ] = config->readEntry( "rightpopup", true );
 	
 	//Read the command
 	*_command = config->readEntry( "command", "" );

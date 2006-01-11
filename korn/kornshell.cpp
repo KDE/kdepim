@@ -78,7 +78,7 @@ void KornShell::readConfig()
 	
 	_config->setGroup( "korn" );
 	QChar layout = _config->readEntry( "layout", "Docked" )[0].toUpper();
-	KOrnPassword::setUseWallet( _config->readBoolEntry( "usewallet", false ) );
+	KOrnPassword::setUseWallet( _config->readEntry( "usewallet", false ) );
 	
 	if( layout == 'H' )
 		_box = new HVContainer( Qt::Horizontal, this, "horizontal container" );

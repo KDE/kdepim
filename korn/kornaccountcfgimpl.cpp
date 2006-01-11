@@ -94,11 +94,11 @@ void KornAccountCfgImpl::readConfig( KConfigGroup *config, QMap< QString, QStrin
 	
 	this->edInterval->setText( _config->readEntry( "interval", "300" ) );
 	
-	this->chUseBox->setChecked( _config->readBoolEntry( "boxsettings", true ) );
+	this->chUseBox->setChecked( _config->readEntry( "boxsettings", true ) );
 	this->edRunCommand->setURL( _config->readEntry( "newcommand", "" ) );
 	this->edPlaySound->setURL( _config->readEntry( "sound", "" ) );
-	this->chPassivePopup->setChecked( _config->readBoolEntry( "passivepopup", false ) );
-	this->chPassiveDate->setChecked( _config->readBoolEntry( "passivedate", false ) );
+	this->chPassivePopup->setChecked( _config->readEntry( "passivepopup", false ) );
+	this->chPassiveDate->setChecked( _config->readEntry( "passivedate", false ) );
 
 	_boxnr = boxnr;
 	_accountnr = accountnr;

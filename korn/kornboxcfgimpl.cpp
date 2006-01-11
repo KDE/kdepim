@@ -126,24 +126,24 @@ void KornBoxCfgImpl::readViewConfig()
 	QColor black( Qt::black );
 	QColor white( Qt::white );
 	
-	this->chNormalText->setChecked(_config->readBoolEntry ( "hasnormalfgcolour", true ) );
+	this->chNormalText->setChecked(_config->readEntry ( "hasnormalfgcolour", true ) );
 	this->cbNormalText->setColor(  _config->readColorEntry( "normalfgcolour", &black ) );
-	this->chNewText->setChecked(   _config->readBoolEntry ( "hasnewfgcolour", true ) );
+	this->chNewText->setChecked(   _config->readEntry ( "hasnewfgcolour", true ) );
 	this->cbNewText->setColor(     _config->readColorEntry( "newfgcolour", &black ) );
-	this->chNormalBack->setChecked(_config->readBoolEntry ( "hasnormalbgcolour", false ) );
+	this->chNormalBack->setChecked(_config->readEntry ( "hasnormalbgcolour", false ) );
 	this->cbNormalBack->setColor(  _config->readColorEntry( "normalbgcolour", &white ) );
-	this->chNewBack->setChecked(   _config->readBoolEntry ( "hasnewbgcolour", false ) );
+	this->chNewBack->setChecked(   _config->readEntry ( "hasnewbgcolour", false ) );
 	this->cbNewBack->setColor(     _config->readColorEntry( "newbgcolour", &white ) );
 	
-	this->chNormalIcon->setChecked(_config->readBoolEntry( "hasnormalicon", false ) );
+	this->chNormalIcon->setChecked(_config->readEntry( "hasnormalicon", false ) );
 	this->ibNormalIcon->setIcon(   _config->readEntry    ( "normalicon", "" ) );
-	this->chNewIcon->setChecked(   _config->readBoolEntry( "hasnewicon", false ) );
+	this->chNewIcon->setChecked(   _config->readEntry( "hasnewicon", false ) );
 	this->ibNewIcon->setIcon(      _config->readEntry    ( "newicon", "" ) );
 	
-	this->chNormalFont->setChecked(_config->readBoolEntry( "hasnormalfont", false ) );
-	this->chNewFont->setChecked   (_config->readBoolEntry( "hasnewfont", false ) );
-	this->chNormalAnim->setChecked(_config->readBoolEntry( "hasnormalanim", false ) );
-	this->chNewAnim->setChecked(   _config->readBoolEntry( "hasnewanim", false ) );
+	this->chNormalFont->setChecked(_config->readEntry( "hasnormalfont", false ) );
+	this->chNewFont->setChecked   (_config->readEntry( "hasnewfont", false ) );
+	this->chNormalAnim->setChecked(_config->readEntry( "hasnormalanim", false ) );
+	this->chNewAnim->setChecked(   _config->readEntry( "hasnewanim", false ) );
 	*_fonts[ 0 ] = _config->readFontEntry( "normalfont" );
 	*_fonts[ 1 ] = _config->readFontEntry( "newfont" );
 	*_anims[ 0 ] = _config->readEntry    ( "normalanim", "" );
@@ -152,32 +152,32 @@ void KornBoxCfgImpl::readViewConfig()
 
 void KornBoxCfgImpl::readEventConfig()
 {
-	this->chLeftRecheck  ->setChecked( _config->readBoolEntry( "leftrecheck", true ) );
-	this->chMiddleRecheck->setChecked( _config->readBoolEntry( "middlerecheck", false ) );
-	this->chRightRecheck ->setChecked( _config->readBoolEntry( "rightrecheck", false ) );
+	this->chLeftRecheck  ->setChecked( _config->readEntry( "leftrecheck", true ) );
+	this->chMiddleRecheck->setChecked( _config->readEntry( "middlerecheck", false ) );
+	this->chRightRecheck ->setChecked( _config->readEntry( "rightrecheck", false ) );
 	
-	this->chLeftReset  ->setChecked( _config->readBoolEntry( "leftreset", false ) );
-	this->chMiddleReset->setChecked( _config->readBoolEntry( "middlereset", false ) );
-	this->chRightReset ->setChecked( _config->readBoolEntry( "rightreset", false ) );
+	this->chLeftReset  ->setChecked( _config->readEntry( "leftreset", false ) );
+	this->chMiddleReset->setChecked( _config->readEntry( "middlereset", false ) );
+	this->chRightReset ->setChecked( _config->readEntry( "rightreset", false ) );
 	
-	this->chLeftView  ->setChecked( _config->readBoolEntry( "leftview", false ) );
-	this->chMiddleView->setChecked( _config->readBoolEntry( "middleview", false ) );
-	this->chRightView ->setChecked( _config->readBoolEntry( "rightview", false ) );
+	this->chLeftView  ->setChecked( _config->readEntry( "leftview", false ) );
+	this->chMiddleView->setChecked( _config->readEntry( "middleview", false ) );
+	this->chRightView ->setChecked( _config->readEntry( "rightview", false ) );
 	
-	this->chLeftRun  ->setChecked( _config->readBoolEntry( "leftrun", false ) );
-	this->chMiddleRun->setChecked( _config->readBoolEntry( "middlerun", false ) );
-	this->chRightRun ->setChecked( _config->readBoolEntry( "rightrun", false ) );
+	this->chLeftRun  ->setChecked( _config->readEntry( "leftrun", false ) );
+	this->chMiddleRun->setChecked( _config->readEntry( "middlerun", false ) );
+	this->chRightRun ->setChecked( _config->readEntry( "rightrun", false ) );
 	
-	this->chLeftPopup  ->setChecked( _config->readBoolEntry( "leftpopup", false ) );
-	this->chMiddlePopup->setChecked( _config->readBoolEntry( "middlepopup", false ) );
-	this->chRightPopup ->setChecked( _config->readBoolEntry( "rightpopup", true ) );
+	this->chLeftPopup  ->setChecked( _config->readEntry( "leftpopup", false ) );
+	this->chMiddlePopup->setChecked( _config->readEntry( "middlepopup", false ) );
+	this->chRightPopup ->setChecked( _config->readEntry( "rightpopup", true ) );
 	
 	this->edCommand->setURL( _config->readEntry( "command", "" ) );
 	
 	this->edNewRun->setURL( _config->readEntry( "newcommand", "" ) );
 	this->edPlaySound->setURL( _config->readEntry( "sound", "" ) );
-	this->chShowPassive->setChecked( _config->readBoolEntry( "passivepopup", false ) );
-	this->chPassiveDate->setChecked( _config->readBoolEntry( "passivedate", false ) );
+	this->chShowPassive->setChecked( _config->readEntry( "passivepopup", false ) );
+	this->chPassiveDate->setChecked( _config->readEntry( "passivedate", false ) );
 }
 
 void KornBoxCfgImpl::readAccountsConfig()

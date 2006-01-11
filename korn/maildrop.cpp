@@ -75,8 +75,8 @@ void KMailDrop::forceCountZero()
 
 void KMailDrop::readGeneralConfigGroup( const KConfigBase& cfg )
 {
-  _passivePopup = cfg.readBoolEntry(fu(PassivePopupConfigKey), false );
-  _passiveDate = cfg.readBoolEntry(fu(PassiveDateConfigKey), false );
+  _passivePopup = cfg.readEntry(fu(PassivePopupConfigKey), false );
+  _passiveDate = cfg.readEntry(fu(PassiveDateConfigKey), false );
   _soundFile = cfg.readEntry(fu(SoundFileConfigKey), QString());
   _nMailCmd = cfg.readEntry(fu(NewMailConfigKey), QString());
 
@@ -96,7 +96,7 @@ bool KMailDrop::readConfigGroup(const KConfigBase & c)
   _nIcon      = c.readEntry(fu(NewMailIconConfigKey), QString());
   _realName   = c.readEntry(fu(RealNameConfigKey), QString());
 
-  if( !c.readBoolEntry(fu(UseBoxSettingsConfigKey), true ) )
+  if( !c.readEntry(fu(UseBoxSettingsConfigKey), true ) )
   	readGeneralConfigGroup( c );
 
   emit(configChanged());

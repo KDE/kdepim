@@ -103,7 +103,7 @@ QMap< QString, QString > * KMail_Protocol::createConfig( KConfigGroup* config, c
 			metadata += "tls=auto";
 		else
 		{
-			if( kmailconfig.readBoolEntry( "use-tls", false ) )
+			if( kmailconfig.readEntry( "use-tls", false ) )
 				metadata += "tls=on";
 			else
 				metadata += "tls=off";
@@ -116,7 +116,7 @@ QMap< QString, QString > * KMail_Protocol::createConfig( KConfigGroup* config, c
 		result->insert( "metadata", metadata );
 		result->insert( "username", kmailconfig.readEntry( "login", "" ) );
 		result->insert( "mailbox", "INBOX" ); //Didn't find a good way to get this out of the configuration yet.
-		result->insert( "password", readPassword( kmailconfig.readBoolEntry( "store-passwd", false ), kmailconfig, id ) );
+		result->insert( "password", readPassword( kmailconfig.readEntry( "store-passwd", false ), kmailconfig, id ) );
 		result->insert( "savepassword", kmailconfig.readEntry( "store-passwd", "false" ) );
 	}
 	if( type == "pop3" )
@@ -128,7 +128,7 @@ QMap< QString, QString > * KMail_Protocol::createConfig( KConfigGroup* config, c
 			metadata += "tls=auto";
 		else
 		{
-			if( kmailconfig.readBoolEntry( "use-tls", false ) )
+			if( kmailconfig.readEntry( "use-tls", false ) )
 				metadata += "tls=on";
 			else
 				metadata += "tls=off";
@@ -140,7 +140,7 @@ QMap< QString, QString > * KMail_Protocol::createConfig( KConfigGroup* config, c
 		result->insert( "metadata", metadata );
 		result->insert( "username", kmailconfig.readEntry( "login", "" ) );
 		result->insert( "mailbox", "" );
-		result->insert( "password", readPassword( kmailconfig.readBoolEntry( "store-passwd", false ), kmailconfig, id ) );
+		result->insert( "password", readPassword( kmailconfig.readEntry( "store-passwd", false ), kmailconfig, id ) );
 		result->insert( "savepassword", kmailconfig.readEntry( "store-password", "false" ) );
 	}
 	if( type == "local" ) //mbox
