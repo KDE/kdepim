@@ -49,17 +49,17 @@ KNode::StatusFilter::~StatusFilter()
 
 void KNode::StatusFilter::load( KSimpleConfig *conf )
 {
-  data.setBit(EN_R, conf->readBoolEntry("EN_R", false));
-  data.setBit(DAT_R, conf->readBoolEntry("DAT_R", false));
+  data.setBit(EN_R, conf->readEntry("EN_R", false));
+  data.setBit(DAT_R, conf->readEntry("DAT_R", false));
 
-  data.setBit(EN_N, conf->readBoolEntry("EN_N", false));
-  data.setBit(DAT_N, conf->readBoolEntry("DAT_N", false));
+  data.setBit(EN_N, conf->readEntry("EN_N", false));
+  data.setBit(DAT_N, conf->readEntry("DAT_N", false));
 
-  data.setBit(EN_US, conf->readBoolEntry("EN_US", false));
-  data.setBit(DAT_US, conf->readBoolEntry("DAT_US", false));
+  data.setBit(EN_US, conf->readEntry("EN_US", false));
+  data.setBit(DAT_US, conf->readEntry("DAT_US", false));
 
-  data.setBit(EN_NS, conf->readBoolEntry("EN_NS", false));
-  data.setBit(DAT_NS, conf->readBoolEntry("DAT_NS", false));
+  data.setBit(EN_NS, conf->readEntry("EN_NS", false));
+  data.setBit(DAT_NS, conf->readEntry("DAT_NS", false));
 
 }
 

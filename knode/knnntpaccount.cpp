@@ -96,11 +96,11 @@ bool KNNntpAccount::readInfo(const QString &confPath)
 
   n_ame = conf.readEntry("name");
   //u_nsentCount = conf.readNumEntry("unsentCnt", 0);
-  f_etchDescriptions = conf.readBoolEntry("fetchDescriptions", true);
+  f_etchDescriptions = conf.readEntry("fetchDescriptions", true);
   l_astNewFetch = conf.readDateTimeEntry("lastNewFetch").date();
-  w_asOpen = conf.readBoolEntry("listItemOpen", false);
-  u_seDiskCache = conf.readBoolEntry("useDiskCache", false);
-  i_ntervalChecking=conf.readBoolEntry("intervalChecking", false);
+  w_asOpen = conf.readEntry("listItemOpen", false);
+  u_seDiskCache = conf.readEntry("useDiskCache", false);
+  i_ntervalChecking=conf.readEntry("intervalChecking", false);
   c_heckInterval=conf.readNumEntry("checkInterval", 10);
   KNServerInfo::readConf(&conf);
 

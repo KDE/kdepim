@@ -117,7 +117,7 @@ bool KNFolder::readInfo(const QString &infoPath)
     i_d=info.readNumEntry("id", -1);
     p_arentId=info.readNumEntry("parentId", -1);
   }
-  w_asOpen=info.readBoolEntry("wasOpen", true);
+  w_asOpen=info.readEntry("wasOpen", true);
 
   if(i_d>-1) {
     QFileInfo fi(infoPath);

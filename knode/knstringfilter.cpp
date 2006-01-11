@@ -79,9 +79,9 @@ void KNode::StringFilter::expand( KNGroup *g )
 
 void KNode::StringFilter::load( KSimpleConfig *conf )
 {
-  con=conf->readBoolEntry("contains", true);
+  con=conf->readEntry("contains", true);
   data=conf->readEntry("Data");
-  regExp=conf->readBoolEntry("regX", false);
+  regExp=conf->readEntry("regX", false);
 }
 
 

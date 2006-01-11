@@ -65,8 +65,8 @@ void KNode::Identity::loadConfig(KConfigBase *c)
   m_ailCopiesTo=c->readEntry("Mail-Copies-To");
   o_rga=c->readEntry("Org");
   s_igningKey = c->readEntry("SigningKey").local8Bit();
-  u_seSigFile=c->readBoolEntry("UseSigFile",false);
-  u_seSigGenerator=c->readBoolEntry("UseSigGenerator",false);
+  u_seSigFile=c->readEntry("UseSigFile",false);
+  u_seSigGenerator=c->readEntry("UseSigGenerator",false);
   s_igPath=c->readPathEntry("sigFile");
   s_igText=c->readEntry("sigText");
 }
@@ -234,7 +234,7 @@ KNode::DisplayedHeaders::DisplayedHeaders()
       h=createNewHeader();
       headerConf.setGroup((*it));
       h->setName(headerConf.readEntry("Name"));
-      h->setTranslateName(headerConf.readBoolEntry("Translate_Name",true));
+      h->setTranslateName(headerConf.readEntry("Translate_Name",true));
       h->setHeader(headerConf.readEntry("Header"));
       flags=headerConf.readIntListEntry("Flags");
       if(h->name().isNull() || h->header().isNull() || (flags.count()!=8)) {
@@ -380,9 +380,9 @@ KNode::Cleanup::Cleanup( bool global ) :
 void KNode::Cleanup::loadConfig(KConfigBase *conf)
 {
   // group expire settings
-  d_oExpire = conf->readBoolEntry( "doExpire", true );
-  r_emoveUnavailable = conf->readBoolEntry( "removeUnavailable", true );
-  p_reserveThr = conf->readBoolEntry( "saveThreads", true );
+  d_oExpire = conf->readEntry( "doExpire", true );
+  r_emoveUnavailable = conf->readEntry( "removeUnavailable", true );
+  p_reserveThr = conf->readEntry( "saveThreads", true );
   e_xpireInterval = conf->readNumEntry( "expInterval", 5 );
   r_eadMaxAge = conf->readNumEntry( "readDays", 10 );
   u_nreadMaxAge = conf->readNumEntry( "unreadDays", 15 );
@@ -390,13 +390,13 @@ void KNode::Cleanup::loadConfig(KConfigBase *conf)
 
   // folder compaction settings (only available globally)
   if (mGlobal) {
-    d_oCompact = conf->readBoolEntry( "doCompact", true );
+    d_oCompact = conf->readEntry( "doCompact", true );
     c_ompactInterval = conf->readNumEntry( "comInterval", 5 );
     mLastCompDate = conf->readDateTimeEntry( "lastCompact" ).date();
   }
 
   if (!mGlobal)
-    mDefault = conf->readBoolEntry( "UseDefaultExpConf", true );
+    mDefault = conf->readEntry( "UseDefaultExpConf", true );
 }
 
 

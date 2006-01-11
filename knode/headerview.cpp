@@ -106,7 +106,7 @@ void KNHeaderView::readConfig()
   if ( !mInitDone ) {
     KConfig *conf = knGlobals.config();
     conf->setGroup( "HeaderView" );
-    mSortByThreadChangeDate = conf->readBoolEntry( "sortByThreadChangeDate", false );
+    mSortByThreadChangeDate = conf->readEntry( "sortByThreadChangeDate", false );
     restoreLayout( conf, "HeaderView" );
     mInitDone = true;
   }

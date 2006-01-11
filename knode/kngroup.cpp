@@ -90,7 +90,7 @@ bool KNGroup::readInfo(const QString &confPath)
   f_irstNr = info.readNumEntry("firstMsg",0);
   l_astNr = info.readNumEntry("lastMsg",0);
   d_ynDataFormat = info.readNumEntry("dynDataFormat",0);
-  u_seCharset = info.readBoolEntry("useCharset", false);
+  u_seCharset = info.readEntry("useCharset", false);
   d_efaultChSet = info.readEntry("defaultChSet").toLatin1();
   QString s = info.readEntry("status","unknown");
   if (s=="readOnly")

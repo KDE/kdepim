@@ -71,7 +71,7 @@ bool KNode::RangeFilter::matchesOp( int v1, Op o, int v2 )
 
 void KNode::RangeFilter::load( KSimpleConfig *conf )
 {
-  enabled=conf->readBoolEntry("enabled", false);
+  enabled=conf->readEntry("enabled", false);
   val1=conf->readNumEntry("val1",0);
   op1=(Op) conf->readNumEntry("op1",0);
   val2=conf->readNumEntry("val2",0);

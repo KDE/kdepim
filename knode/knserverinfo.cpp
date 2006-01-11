@@ -55,7 +55,7 @@ void KNServerInfo::readConf(KConfig *conf)
   if(t_ype==STnntp)
     i_d=conf->readNumEntry("id", -1);
 
-  n_eedsLogon=conf->readBoolEntry("needsLogon",false);
+  n_eedsLogon=conf->readEntry("needsLogon",false);
   u_ser=conf->readEntry("user");
   p_ass = KNHelper::decryptStr(conf->readEntry("pass"));
 

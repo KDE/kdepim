@@ -752,7 +752,7 @@ void KNMainWidget::readOptions()
   KConfig *conf=knGlobals.config();
   conf->setGroup("APPEARANCE");
 
-  if (conf->readBoolEntry("quicksearch", true))
+  if (conf->readEntry("quicksearch", true))
     a_ctToggleQuickSearch->setChecked(true);
   else
     q_uicksearch->hide();
