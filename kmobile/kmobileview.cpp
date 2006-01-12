@@ -79,7 +79,7 @@ void KMobileView::saveAll()
 void KMobileView::restoreAll()
 {
    m_config->setGroup( "Main" );
-   int num = m_config->readNumEntry( "Entries" );
+   int num = m_config->readEntry( "Entries" );
    for (int i=0; i<num; ++i) {
 	KMobileItem *it;
 	it = new KMobileItem(this, m_config, i);

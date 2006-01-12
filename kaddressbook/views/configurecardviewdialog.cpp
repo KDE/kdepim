@@ -124,9 +124,9 @@ void CardViewLookNFeelPage::restoreSettings( KConfig *config )
   enableFonts();
 
   // layout
-  sbMargin->setValue( config->readNumEntry( "ItemMargin", 0 ) );
-  sbSpacing->setValue( config->readNumEntry( "ItemSpacing", 10 ) );
-  sbSepWidth->setValue( config->readNumEntry( "SeparatorWidth", 2 ) );
+  sbMargin->setValue( config->readEntry( "ItemMargin", 0 ) );
+  sbSpacing->setValue( config->readEntry( "ItemSpacing", 10 ) );
+  sbSepWidth->setValue( config->readEntry( "SeparatorWidth", 2 ) );
   cbDrawSeps->setChecked( config->readEntry( "DrawSeparators", true ) );
   cbDrawBorders->setChecked( config->readEntry( "DrawBorder", true ) );
 

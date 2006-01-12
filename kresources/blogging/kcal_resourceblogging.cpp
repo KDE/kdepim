@@ -65,7 +65,7 @@ void ResourceBlogging::readConfig( const KConfig *config )
 //   QString url = config->readEntry( "URL" );
 //   mUrl = KURL( url );
   
-//   mServerAPI = config->readNumEntry( "ServerAPI" );
+//   mServerAPI = config->readEntry( "ServerAPI" );
 //   mTemplate.setCategoryTagOpen( config->readEntry( "CategoryTagOpen", "<CATEGORY>" ) ); 
 //   mTemplate.setCategoryTagClose( config->readEntry( "CategoryTagClose", "</CATEGORY>" ) );
 //   mTemplate.setTitleTagOpen( config->readEntry( "TitleTagOpen", "<TITLE>" ) );

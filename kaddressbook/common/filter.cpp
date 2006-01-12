@@ -134,7 +134,7 @@ void Filter::restore( KConfigGroup &cfg )
   mName = cfg.readEntry( "Name", "<internal error>" );
   mEnabled = cfg.readEntry( "Enabled", true );
   mCategoryList = cfg.readListEntry( "Categories" );
-  mMatchRule = (MatchRule)cfg.readNumEntry( "MatchRule", Matching );
+  mMatchRule = (MatchRule)cfg.readEntry( "MatchRule", int(Matching) );
 
   mIsEmpty = false;
 }
@@ -145,7 +145,7 @@ void Filter::save( KConfig *config, const QString &baseGroup, Filter::List &list
     KConfigGroup s( config, baseGroup );
 
     // remove the old filters
-    uint count = s.readNumEntry( "Count" );
+    uint count = s.readEntry( "Count", 0 );
     for ( uint i = 0; i < count; ++i )
       config->deleteGroup( QString( "%1_%2" ).arg( baseGroup ).arg( i ) );
 
@@ -174,7 +174,7 @@ Filter::List Filter::restore( KConfig *config, const QString &baseGroup )
 
   {
     KConfigGroup s( config, baseGroup );
-    count = s.readNumEntry( "Count", 0 );
+    count = s.readEntry( "Count", 0 );
   }
 
   for ( int i = 0; i < count; i++ ) {

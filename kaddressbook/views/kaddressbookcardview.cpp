@@ -227,10 +227,10 @@ void KAddressBookCardView::readConfig( KConfigGroup &cfg )
 
   mCardView->setShowEmptyFields( mShowEmptyFields );
 
-  mCardView->setItemWidth( cfg.readNumEntry( "ItemWidth", 200 ) );
-  mCardView->setItemMargin( cfg.readNumEntry( "ItemMargin", 0 ) );
-  mCardView->setItemSpacing( cfg.readNumEntry( "ItemSpacing", 10 ) );
-  mCardView->setSeparatorWidth( cfg.readNumEntry( "SeparatorWidth", 2 ) );
+  mCardView->setItemWidth( cfg.readEntry( "ItemWidth", 200 ) );
+  mCardView->setItemMargin( cfg.readEntry( "ItemMargin", 0 ) );
+  mCardView->setItemSpacing( cfg.readEntry( "ItemSpacing", 10 ) );
+  mCardView->setSeparatorWidth( cfg.readEntry( "SeparatorWidth", 2 ) );
 
   disconnect( mCardView, SIGNAL( executed( CardViewItem* ) ),
               this, SLOT( addresseeExecuted( CardViewItem* ) ) );

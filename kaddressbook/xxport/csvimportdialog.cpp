@@ -826,16 +826,16 @@ void CSVImportDialog::applyTemplate()
   mDatePatternEdit->setText( config.readEntry( "DatePattern", "Y-M-D" ) );
   uint numColumns = config.readUnsignedNumEntry( "Columns" );
   mDelimiterEdit->setText( config.readEntry( "DelimiterOther" ) );
-  mDelimiterBox->setButton( config.readNumEntry( "DelimiterType" ) );
-  delimiterClicked( config.readNumEntry( "DelimiterType" ) );
-  int quoteType = config.readNumEntry( "QuoteType" );
+  mDelimiterBox->setButton( config.readEntry( "DelimiterType", 0) );
+  delimiterClicked( config.readEntry( "DelimiterType",0 ) );
+  int quoteType = config.readEntry( "QuoteType", 0 );
   mComboQuote->setCurrentItem( quoteType );
   textquoteSelected( mComboQuote->currentText() );
 
   // create the column map
   config.setGroup( "csv column map" );
   for ( uint i = 0; i < numColumns; ++i ) {
-    int col = config.readNumEntry( QString::number( i ) );
+    int col = config.readEntry( QString::number( i ),0 );
     columnMap.insert( i, col );
   }
 

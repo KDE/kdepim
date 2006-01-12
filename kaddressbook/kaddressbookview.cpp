@@ -62,7 +62,7 @@ void KAddressBookView::readConfig( KConfigGroup &config )
   if ( mFieldList.isEmpty() )
     mFieldList = KABC::Field::defaultFields();
 
-  mDefaultFilterType = (DefaultFilterType)config.readNumEntry( "DefaultFilterType", 1 );
+  mDefaultFilterType = (DefaultFilterType)config.readEntry( "DefaultFilterType", 1 );
   mDefaultFilterName = config.readEntry( "DefaultFilterName" );
 }
 

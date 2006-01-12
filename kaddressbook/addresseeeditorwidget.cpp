@@ -513,7 +513,7 @@ void AddresseeEditorWidget::load()
   if ( mAddressee.formattedName().isEmpty() ) {
     KConfig config( "kaddressbookrc" );
     config.setGroup( "General" );
-    mFormattedNameType = config.readNumEntry( "FormattedNameType", 1 );
+    mFormattedNameType = config.readEntry( "FormattedNameType", 1 );
     mAddressee.setFormattedName( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
   } else {
     if ( mAddressee.formattedName() == NameEditDialog::formattedName( mAddressee, NameEditDialog::SimpleName ) )

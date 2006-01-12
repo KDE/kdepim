@@ -102,8 +102,8 @@ void KNCollectionView::readConfig()
   static bool initDone = false;
   if (!initDone) {
     initDone = true;
-    const int unreadColumn = conf->readNumEntry("UnreadColumn", 1);
-    const int totalColumn = conf->readNumEntry("TotalColumn", 2);
+    const int unreadColumn = conf->readEntry("UnreadColumn", 1);
+    const int totalColumn = conf->readEntry("TotalColumn", 2);
 
     // we need to _activate_ them in the correct order
     // this is ugly because we can't use header()->moveSection

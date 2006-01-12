@@ -101,11 +101,11 @@ int ResourceCached::saveInterval() const
 
 void ResourceCached::readConfig( const KConfig *config )
 {
-  mReloadPolicy = config->readNumEntry( "ReloadPolicy", ReloadNever );
-  mReloadInterval = config->readNumEntry( "ReloadInterval", 10 );
+  mReloadPolicy = config->readEntry( "ReloadPolicy", int(ReloadNever) );
+  mReloadInterval = config->readEntry( "ReloadInterval", 10 );
 
-  mSaveInterval = config->readNumEntry( "SaveInterval", 10 );
-  mSavePolicy = config->readNumEntry( "SavePolicy", SaveNever );
+  mSaveInterval = config->readEntry( "SaveInterval", 10 );
+  mSavePolicy = config->readEntry( "SavePolicy", int(SaveNever) );
 
   mLastLoad = config->readDateTimeEntry( "LastLoad" );
   mLastSave = config->readDateTimeEntry( "LastSave" );

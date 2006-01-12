@@ -114,8 +114,8 @@ bool KNFolder::readInfo(const QString &infoPath)
   KSimpleConfig info(i_nfoPath);
   if (!isRootFolder() && !isStandardFolder()) {
     n_ame=info.readEntry("name");
-    i_d=info.readNumEntry("id", -1);
-    p_arentId=info.readNumEntry("parentId", -1);
+    i_d=info.readEntry("id", -1);
+    p_arentId=info.readEntry("parentId", -1);
   }
   w_asOpen=info.readEntry("wasOpen", true);
 

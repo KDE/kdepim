@@ -127,7 +127,7 @@ void CreateDisconnectedImapAccount::apply()
   c.setGroup( "General" );
   int accountId;
   if ( mExistingAccountId < 0 ) {
-    uint accCnt = c.readNumEntry( "accounts", 0 );
+    uint accCnt = c.readEntry( "accounts", 0 );
     accountId = accCnt + 1;
     c.writeEntry( "accounts", accountId );
   } else {
@@ -135,7 +135,7 @@ void CreateDisconnectedImapAccount::apply()
   }
   int transportId;
   if ( mExistingTransportId < 0 ) {
-    uint transCnt = c.readNumEntry( "transports", 0 );
+    uint transCnt = c.readEntry( "transports", 0 );
     transportId = transCnt + 1;
     c.writeEntry( "transports", transportId );
   } else {
@@ -148,7 +148,7 @@ void CreateDisconnectedImapAccount::apply()
     uid = KRandom::random();
     c.writeEntry( "Folder", uid );
   } else {
-    uid = c.readNumEntry( "Folder" );
+    uid = c.readEntry( "Folder",0 );
   }
   c.writeEntry( "Id", uid );
   c.writeEntry( "Type", "cachedimap");

@@ -84,12 +84,12 @@ bool KNGroup::readInfo(const QString &confPath)
   g_roupname = info.readEntry("groupname");
   d_escription = info.readEntry("description");
   n_ame = info.readEntry("name");
-  c_ount = info.readNumEntry("count",0);
-  r_eadCount = info.readNumEntry("read",0);
+  c_ount = info.readEntry("count",0);
+  r_eadCount = info.readEntry("read",0);
   if (r_eadCount > c_ount) r_eadCount = c_ount;
-  f_irstNr = info.readNumEntry("firstMsg",0);
-  l_astNr = info.readNumEntry("lastMsg",0);
-  d_ynDataFormat = info.readNumEntry("dynDataFormat",0);
+  f_irstNr = info.readEntry("firstMsg",0);
+  l_astNr = info.readEntry("lastMsg",0);
+  d_ynDataFormat = info.readEntry("dynDataFormat",0);
   u_seCharset = info.readEntry("useCharset", false);
   d_efaultChSet = info.readEntry("defaultChSet").toLatin1();
   QString s = info.readEntry("status","unknown");

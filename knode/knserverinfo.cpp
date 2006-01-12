@@ -48,12 +48,12 @@ void KNServerInfo::readConf(KConfig *conf)
   s_erver=conf->readEntry("server", "localhost");
 
   if(t_ype==STnntp)
-    p_ort=conf->readNumEntry("port", 119);
+    p_ort=conf->readEntry("port", 119);
   else
-    p_ort=conf->readNumEntry("port", 25);
+    p_ort=conf->readEntry("port", 25);
 
   if(t_ype==STnntp)
-    i_d=conf->readNumEntry("id", -1);
+    i_d=conf->readEntry("id", -1);
 
   n_eedsLogon=conf->readEntry("needsLogon",false);
   u_ser=conf->readEntry("user");

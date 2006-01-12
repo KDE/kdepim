@@ -280,7 +280,7 @@ void KWatchGnuPGMainWindow::slotReadConfig()
   mCentralWidget->setWordWrap( config->readEntry("WordWrap", false)
 							   ?Q3TextEdit::WidgetWidth
 							   :Q3TextEdit::NoWrap );
-  mCentralWidget->setMaxLogLines( config->readNumEntry( "MaxLogLen", 10000 ) );
+  mCentralWidget->setMaxLogLines( config->readEntry( "MaxLogLen", 10000 ) );
   setGnuPGConfig();
   startWatcher();
 }

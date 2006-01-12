@@ -93,7 +93,7 @@ void ViewConfigureFilterPage::restoreSettings( KConfig *config )
   for ( it = list.begin(); it != list.end(); ++it )
     mFilterCombo->insertItem( (*it).name() );
 
-  int id = config->readNumEntry( "DefaultFilterType", 1 );
+  int id = config->readEntry( "DefaultFilterType", 1 );
   mFilterGroup->setButton( id );
   buttonClicked( id );
 

@@ -58,8 +58,8 @@ ConfigureDialog::ConfigureDialog( QWidget *parent, const char *name, bool modal 
   // the largest one. This way at least after the first showing of
   // the largest kcm the size is kept.
   const KConfigGroup geometry( KGlobal::config(), "Geometry" );
-  const int width = geometry.readNumEntry( "ConfigureDialogWidth" );
-  const int height = geometry.readNumEntry( "ConfigureDialogHeight" );
+  const int width = geometry.readEntry( "ConfigureDialogWidth", 0);
+  const int height = geometry.readEntry( "ConfigureDialogHeight", 0 );
   if ( width != 0 && height != 0 ) {
      setMinimumSize( width, height );
   }

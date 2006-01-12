@@ -449,7 +449,7 @@ We only have to set the correct configuration group name (I suggest, you
 store the name of the configuration group for you conduit in a \code{static 
 char*} variable of the conduit factory class), and then we can use the methods
 \begin{itemize}
-\item \code{fConfig->readNumEntry("entryname", \em{defaultNumericValue})}
+\item \code{fConfig->readEntry("entryname", \em{defaultNumericValue})}
 \item \code{fConfig->readEntry("entryname", \em{defaultstring})}
 \item \code{fConfig->readBoolEntry("entryname", \em{defaultBoolValue})}
 \end{itemize}
@@ -463,14 +463,14 @@ to retrieve the settings from the configuration file. We then use the methods of
     if (!fConfig) return;
     KConfigGroupSaver s(fConfig,MALConduitFactory::group());
     
-    fConfigWidget->syncTime->setButton(fConfig->readNumEntry(MALConduitFactory::syncTime(), 0));
+    fConfigWidget->syncTime->setButton(fConfig->readEntry(MALConduitFactory::syncTime(), 0));
     
     // Proxy settings
     fConfigWidget->proxyType->setButton(
-        fConfig->readNumEntry(MALConduitFactory::proxyType(), 0));
+        fConfig->readEntry(MALConduitFactory::proxyType(), 0));
     fConfigWidget->proxyServerName->setEditText(
         fConfig->readEntry(MALConduitFactory::proxyServer(), ""));
-    int proxyPortNr=fConfig->readNumEntry(MALConduitFactory::proxyPort(), 0);
+    int proxyPortNr=fConfig->readEntry(MALConduitFactory::proxyPort(), 0);
     if (proxyPortNr>0 && proxyPortNr<65536) 
     {
         fConfigWidget->proxyCustomPortCheck->setChecked(true);
@@ -832,13 +832,13 @@ void MALConduit::readConfig() {
   fLastSync = fConfig->readDateTimeEntry(MALConduitFactory::lastSync(), &dt);
   DEBUGCONDUIT<<"Last sync was "<<fLastSync.toString()<<endl;
 
-  eSyncTime=fConfig->readNumEntry(MALConduitFactory::syncTime(), 0);
+  eSyncTime=fConfig->readEntry(MALConduitFactory::syncTime(), 0);
   
   // Proxy settings
-  eProxyType=fConfig->readNumEntry(MALConduitFactory::proxyType(), 0);
+  eProxyType=fConfig->readEntry(MALConduitFactory::proxyType(), 0);
   fProxyServer=fConfig->readEntry(MALConduitFactory::proxyServer(), "");
 
-  fProxyPort=fConfig->readNumEntry(MALConduitFactory::proxyPort(), 0);
+  fProxyPort=fConfig->readEntry(MALConduitFactory::proxyPort(), 0);
   fProxyUser=fConfig->readEntry(MALConduitFactory::proxyUser(), "");
   fProxyPassword=fConfig->readEntry(MALConduitFactory::proxyPassword(), "");
 }

@@ -84,7 +84,7 @@ bool KNArticleFilter::loadInfo()
     n_ame=conf.readEntry("name");
     translateName = conf.readEntry("Translate_Name",true);
     e_nabled=conf.readEntry("enabled", true);
-    apon=(ApOn) conf.readNumEntry("applyOn", 0);
+    apon=(ApOn) conf.readEntry("applyOn", 0);
     return true;
   }
   return false;

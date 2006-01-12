@@ -68,7 +68,7 @@ KNFilterManager::KNFilterManager( QObject * parent )
 
   KConfig *conf=knGlobals.config();
   conf->setGroup("READNEWS");
-  setFilter(conf->readNumEntry("lastFilterID", 1));
+  setFilter(conf->readEntry("lastFilterID", 1));
 }
 
 
