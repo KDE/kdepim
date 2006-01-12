@@ -97,7 +97,7 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigBase & config )
   mIcon = config.readEntry( "icon" );
   if ( config.hasKey( "font" ) ) {
     mUseFullFont = true;
-    mFont = config.readFontEntry( "font" );
+    mFont = config.readEntry( "font" );
   } else {
     mItalic = config.readEntry( "font-italic", false );
     mBold = config.readEntry( "font-bold", false );

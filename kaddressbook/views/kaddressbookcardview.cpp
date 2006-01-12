@@ -211,9 +211,9 @@ void KAddressBookCardView::readConfig( KConfigGroup &cfg )
   //custom fonts?
   QFont f( font() );
   if ( cfg.readEntry( "EnableCustomFonts", false ) ) {
-    mCardView->setFont( cfg.readFontEntry( "TextFont", &f ) );
+    mCardView->setFont( cfg.readEntry( "TextFont", f ) );
     f.setBold( true );
-    mCardView->setHeaderFont( cfg.readFontEntry( "HeaderFont", &f ) );
+    mCardView->setHeaderFont( cfg.readEntry( "HeaderFont", f ) );
   } else {
     mCardView->setFont( f );
     f.setBold( true );

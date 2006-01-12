@@ -74,7 +74,7 @@ public:
     mBackgroundColor = config.readEntry( "background-color" );
     mHasFont = config.hasKey( "font" );
     if ( mHasFont ) {
-      setFont( config.readFontEntry( "font" ) ); // sets mItalic and mBold
+      setFont( config.readEntry( "font" ) ); // sets mItalic and mBold
     }
     else {
       mItalic = config.readEntry( "font-italic", false );

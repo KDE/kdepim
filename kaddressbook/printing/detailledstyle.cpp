@@ -86,23 +86,23 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent, const char *na
   kdeFonts = config->readEntry( UseKDEFonts, true );
   mPageAppearance->cbStandardFonts->setChecked( kdeFonts );
 
-  font = config->readFontEntry( HeaderFont, &standard );
+  font = config->readEntry( HeaderFont, standard );
   mPageAppearance->kfcHeaderFont->setCurrentFont( font.family() );
   mPageAppearance->kisbHeaderFontSize->setValue( font.pointSize() );
 
-  font = config->readFontEntry( HeadlinesFont, &standard );
+  font = config->readEntry( HeadlinesFont, standard );
   mPageAppearance->kfcHeadlineFont->setCurrentFont( font.family() );
   mPageAppearance->kisbHeadlineFontSize->setValue( font.pointSize() );
 
-  font = config->readFontEntry( BodyFont, &standard );
+  font = config->readEntry( BodyFont, standard );
   mPageAppearance->kfcBodyFont->setCurrentFont( font.family() );
   mPageAppearance->kisbBodyFontSize->setValue( font.pointSize() );
 
-  font = config->readFontEntry( DetailsFont, &standard );
+  font = config->readEntry( DetailsFont, standard );
   mPageAppearance->kfcDetailsFont->setCurrentFont( font.family() );
   mPageAppearance->kisbDetailsFontSize->setValue( font.pointSize() );
 
-  font = config->readFontEntry( FixedFont, &fixed );
+  font = config->readEntry( FixedFont, fixed );
   mPageAppearance->kfcFixedFont->setCurrentFont( font.family() );
   mPageAppearance->kisbFixedFontSize->setValue( font.pointSize() );
 

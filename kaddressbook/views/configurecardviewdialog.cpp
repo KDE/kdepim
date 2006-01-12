@@ -117,9 +117,9 @@ void CardViewLookNFeelPage::restoreSettings( KConfig *config )
 
   // fonts
   QFont fnt = font();
-  updateFontLabel( config->readFontEntry( "TextFont", &fnt ), (QLabel*)lTextFont );
+  updateFontLabel( config->readEntry( "TextFont", fnt ), (QLabel*)lTextFont );
   fnt.setBold( true );
-  updateFontLabel( config->readFontEntry( "HeaderFont",  &fnt ), (QLabel*)lHeaderFont );
+  updateFontLabel( config->readEntry( "HeaderFont",  fnt ), (QLabel*)lHeaderFont );
   cbEnableCustomFonts->setChecked( config->readEntry( "EnableCustomFonts", false ) );
   enableFonts();
 
