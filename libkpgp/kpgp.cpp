@@ -108,14 +108,14 @@ Module::init()
 void
 Module::readConfig()
 {
-  storePass = config->readBoolEntry("storePass", false);
-  showEncryptionResult = config->readBoolEntry("showEncryptionResult", true);
-  mShowKeyApprovalDlg = config->readBoolEntry( "showKeysForApproval", true );
+  storePass = config->readEntry("storePass", false);
+  showEncryptionResult = config->readEntry("showEncryptionResult", true);
+  mShowKeyApprovalDlg = config->readEntry( "showKeysForApproval", true );
   // We have no config GUI for this key anymore, and the KPGP backend isn't ported,
   // so let's just use Auto all the time.  See #92619.
   ///pgpType = (Module::PGPType) config->readNumEntry("pgpType", tAuto);
   pgpType = tAuto;
-  flagEncryptToSelf = config->readBoolEntry("encryptToSelf", true);
+  flagEncryptToSelf = config->readEntry("encryptToSelf", true);
 }
 
 void
