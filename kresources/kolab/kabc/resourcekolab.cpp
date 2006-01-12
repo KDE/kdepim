@@ -99,8 +99,8 @@ void KABC::ResourceKolab::loadSubResourceConfig( KConfig& config,
                                                  bool writable )
 {
   KConfigGroup group( &config, name );
-  bool active = group.readBoolEntry( "Active", true );
-  int completionWeight = group.readNumEntry( "CompletionWeight", 80 );
+  bool active = group.readEntry( "Active", true );
+  int completionWeight = group.readEntry( "CompletionWeight", 80 );
   mSubResources.insert( name, Kolab::SubResource( active, writable, label,
                                                   completionWeight ) );
 }

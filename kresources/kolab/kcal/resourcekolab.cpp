@@ -90,7 +90,7 @@ void ResourceKolab::loadSubResourceConfig( KConfig& config,
                                            ResourceMap& subResource )
 {
   KConfigGroup group( &config, name );
-  bool active = group.readBoolEntry( "Active", true );
+  bool active = group.readEntry( "Active", true );
   subResource.insert( name, Kolab::SubResource( active, writable, label ) );
 }
 
@@ -813,7 +813,7 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
   KConfig config( configFile() );
   config.setGroup( subResource );
 
-  bool active = config.readBoolEntry( subResource, true );
+  bool active = config.readEntry( subResource, true );
   (*map)[ subResource ] = Kolab::SubResource( active, writable, label );
   loadSubResource( subResource, mimetype );
   emit signalSubresourceAdded( this, type, subResource, label );

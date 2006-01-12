@@ -99,16 +99,16 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigBase & config )
     mUseFullFont = true;
     mFont = config.readFontEntry( "font" );
   } else {
-    mItalic = config.readBoolEntry( "font-italic", false );
-    mBold = config.readBoolEntry( "font-bold", false );
+    mItalic = config.readEntry( "font-italic", false );
+    mBold = config.readEntry( "font-bold", false );
   }
-  mStrikeOut = config.readBoolEntry( "font-strikeout", false );
+  mStrikeOut = config.readEntry( "font-strikeout", false );
 #ifdef SET
 #undef SET
 #endif
 #define SET(member,key) \
   if ( config.hasKey( key ) ) { \
-    member = config.readBoolEntry( key ) ? Set : NotSet ; \
+    member = config.readEntry( key, false ) ? Set : NotSet ; \
     ++mSpecificity; \
   }
   SET( mRevoked, "is-revoked" );

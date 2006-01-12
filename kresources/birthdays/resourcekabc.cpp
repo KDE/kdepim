@@ -100,10 +100,10 @@ void ResourceKABC::init()
 
 void ResourceKABC::readConfig( const KConfig *config )
 {
-  mAlarmDays = config->readNumEntry( "AlarmDays", 0 );
-  mAlarm = config->readBoolEntry( "Alarm", true );
+  mAlarmDays = config->readEntry( "AlarmDays", 0 );
+  mAlarm = config->readEntry( "Alarm", true );
   mCategories = config->readListEntry( "Categories" );
-  mUseCategories = config->readBoolEntry( "UseCategories", false );
+  mUseCategories = config->readEntry( "UseCategories", false );
 }
 
 void ResourceKABC::writeConfig( KConfig *config )

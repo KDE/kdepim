@@ -36,7 +36,7 @@ NetworkStatus::NetworkStatus()
   : QObject( 0 ), DCOPObject( "NetworkStatus" )
 {
   KConfigGroup group( KGlobal::config(), "NetworkStatus" );
-  if ( group.readBoolEntry( "Online", true ) == true )
+  if ( group.readEntry( "Online", true ) == true )
     mStatus = Online;
   else
     mStatus = Offline;

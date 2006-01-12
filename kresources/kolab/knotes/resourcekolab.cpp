@@ -76,7 +76,7 @@ bool ResourceKolab::doOpen()
   mSubResources.clear();
   for ( it = subResources.begin(); it != subResources.end(); ++it ) {
     const QString subResource = (*it).location;
-    const bool active = config.readBoolEntry( subResource, true );
+    const bool active = config.readEntry( subResource, true );
     mSubResources[ subResource ] = Kolab::SubResource( active, (*it).writable, (*it).label );
   }
 
@@ -342,7 +342,7 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
   KConfig config( configFile() );
   config.setGroup( configGroupName );
 
-  bool active = config.readBoolEntry( subResource, true );
+  bool active = config.readEntry( subResource, true );
   mSubResources[ subResource ] = Kolab::SubResource( active, writable, subResource );
   loadSubResource( subResource, mimetype );
   emit signalSubresourceAdded( this, type, subResource );
