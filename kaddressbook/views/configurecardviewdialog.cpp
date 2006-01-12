@@ -96,22 +96,22 @@ void CardViewLookNFeelPage::restoreSettings( KConfig *config )
   QColor c;
   c = KGlobalSettings::baseColor();
   lbColors->insertItem( new ColorListItem( i18n("Background Color"),
-        config->readColorEntry( "BackgroundColor", &c ) ) );
+        config->readEntry( "BackgroundColor", c ) ) );
   c = colorGroup().foreground();
   lbColors->insertItem( new ColorListItem( i18n("Text Color"),
-        config->readColorEntry( "TextColor", &c ) ) );
+        config->readEntry( "TextColor", c ) ) );
   c = colorGroup().button();
   lbColors->insertItem( new ColorListItem( i18n("Header, Border & Separator Color"),
-        config->readColorEntry( "HeaderColor", &c ) ) );
+        config->readEntry( "HeaderColor", c ) ) );
   c = colorGroup().buttonText();
   lbColors->insertItem( new ColorListItem( i18n("Header Text Color"),
-        config->readColorEntry( "HeaderTextColor", &c ) ) );
+        config->readEntry( "HeaderTextColor", c ) ) );
   c = colorGroup().highlight();
   lbColors->insertItem( new ColorListItem( i18n("Highlight Color"),
-        config->readColorEntry( "HighlightColor", &c ) ) );
+        config->readEntry( "HighlightColor", c ) ) );
   c = colorGroup().highlightedText();
   lbColors->insertItem( new ColorListItem( i18n("Highlighted Text Color"),
-        config->readColorEntry( "HighlightedTextColor", &c ) ) );
+        config->readEntry( "HighlightedTextColor", c ) ) );
 
   enableColors();
 

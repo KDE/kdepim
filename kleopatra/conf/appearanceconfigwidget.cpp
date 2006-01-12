@@ -70,8 +70,8 @@ public:
     : Q3ListViewItem( lv, prev ) {
 
     setName( config.readEntry( "Name", i18n("<unnamed>") ) );
-    mForegroundColor = config.readColorEntry( "foreground-color" );
-    mBackgroundColor = config.readColorEntry( "background-color" );
+    mForegroundColor = config.readEntry( "foreground-color" );
+    mBackgroundColor = config.readEntry( "background-color" );
     mHasFont = config.hasKey( "font" );
     if ( mHasFont ) {
       setFont( config.readFontEntry( "font" ) ); // sets mItalic and mBold

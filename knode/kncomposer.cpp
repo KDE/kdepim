@@ -1786,13 +1786,13 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   QColor defaultColor2( kapp->palette().active().text() );
   QColor defaultColor3( kapp->palette().active().text() );
   QColor defaultForeground( kapp->palette().active().text() );
-  QColor col1 = config.readColorEntry( "ForegroundColor", &defaultForeground );
-  QColor col2 = config.readColorEntry( "quote3Color", &defaultColor3 );
-  QColor col3 = config.readColorEntry( "quote2Color", &defaultColor2 );
-  QColor col4 = config.readColorEntry( "quote1Color", &defaultColor1 );
+  QColor col1 = config.readEntry( "ForegroundColor", defaultForeground );
+  QColor col2 = config.readEntry( "quote3Color", defaultColor3 );
+  QColor col3 = config.readEntry( "quote2Color", defaultColor2 );
+  QColor col4 = config.readEntry( "quote1Color", defaultColor1 );
   QColor c = QColor("red");
   mSpellChecker = new KDictSpellingHighlighter(e_dit, /*active*/ true, /*autoEnabled*/ true,
-                                       /*spellColor*/ config.readColorEntry("NewMessage", &c),
+                                       /*spellColor*/ config.readEntry("NewMessage", c),
                                        /*colorQuoting*/ true, col1, col2, col3, col4);
   connect( mSpellChecker, SIGNAL(newSuggestions(const QString&, const QStringList&, unsigned int)), e_dit,
            SLOT(slotAddSuggestion(const QString&, const QStringList&, unsigned int)) );

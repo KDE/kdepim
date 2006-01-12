@@ -191,17 +191,17 @@ void KAddressBookCardView::readConfig( KConfigGroup &cfg )
   if ( cfg.readEntry( "EnableCustomColors", false ) ) {
     QPalette p( mCardView->palette() );
     QColor c = p.color( QPalette::Normal, QColorGroup::Base );
-    p.setColor( QPalette::Normal, QColorGroup::Base, cfg.readColorEntry( "BackgroundColor", &c ) );
+    p.setColor( QPalette::Normal, QColorGroup::Base, cfg.readEntry( "BackgroundColor", c ) );
     c = p.color( QPalette::Normal, QColorGroup::Text );
-    p.setColor( QPalette::Normal, QColorGroup::Text, cfg.readColorEntry( "TextColor", &c ) );
+    p.setColor( QPalette::Normal, QColorGroup::Text, cfg.readEntry( "TextColor", c ) );
     c = p.color( QPalette::Normal, QColorGroup::Button );
-    p.setColor( QPalette::Normal, QColorGroup::Button, cfg.readColorEntry( "HeaderColor", &c ) );
+    p.setColor( QPalette::Normal, QColorGroup::Button, cfg.readEntry( "HeaderColor", c ) );
     c = p.color( QPalette::Normal, QColorGroup::ButtonText );
-    p.setColor( QPalette::Normal, QColorGroup::ButtonText, cfg.readColorEntry( "HeaderTextColor", &c ) );
+    p.setColor( QPalette::Normal, QColorGroup::ButtonText, cfg.readEntry( "HeaderTextColor", c ) );
     c = p.color( QPalette::Normal, QColorGroup::Highlight );
-    p.setColor( QPalette::Normal, QColorGroup::Highlight, cfg.readColorEntry( "HighlightColor", &c ) );
+    p.setColor( QPalette::Normal, QColorGroup::Highlight, cfg.readEntry( "HighlightColor", c ) );
     c = p.color( QPalette::Normal, QColorGroup::HighlightedText );
-    p.setColor( QPalette::Normal, QColorGroup::HighlightedText, cfg.readColorEntry( "HighlightedTextColor", &c ) );
+    p.setColor( QPalette::Normal, QColorGroup::HighlightedText, cfg.readEntry( "HighlightedTextColor", c ) );
     mCardView->viewport()->setPalette( p );
   } else {
     // needed if turned off during a session.

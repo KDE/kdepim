@@ -110,10 +110,10 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent, const char *na
       config->readEntry( ColoredContactHeaders, true ) );
   QColor col(Qt::black);
   mPageAppearance->kcbHeaderBGColor->setColor(
-      config->readColorEntry( ContactHeaderBGColor, &col ) );
+      config->readEntry( ContactHeaderBGColor, col ) );
   col = QColor(Qt::white);
   mPageAppearance->kcbHeaderTextColor->setColor(
-      config->readColorEntry( ContactHeaderForeColor, &col ) );
+      config->readEntry( ContactHeaderForeColor, col ) );
 
   mPageAppearance->layout()->setMargin( KDialog::marginHint() );
   mPageAppearance->layout()->setSpacing( KDialog::spacingHint() );

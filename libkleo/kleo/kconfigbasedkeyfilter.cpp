@@ -91,8 +91,8 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigBase & config )
     mValidity( LevelDoesNotMatter ),
     mValidityReferenceLevel( GpgME::UserID::Unknown )
 {
-  mFgColor = config.readColorEntry( "foreground-color" );
-  mBgColor = config.readColorEntry( "background-color" );
+  mFgColor = config.readEntry( "foreground-color" );
+  mBgColor = config.readEntry( "background-color" );
   mName = config.readEntry( "name", i18n("<unnamed>") );
   mIcon = config.readEntry( "icon" );
   if ( config.hasKey( "font" ) ) {
