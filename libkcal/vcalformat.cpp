@@ -23,7 +23,6 @@
 #include <qapplication.h>
 #include <qdatetime.h>
 #include <qstring.h>
-#include <q3ptrlist.h>
 #include <qregexp.h>
 #include <qclipboard.h>
 #include <qdialog.h>

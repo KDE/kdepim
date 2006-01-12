@@ -29,7 +29,6 @@
 #ifndef KCAL_CALENDARRESOURCES_H
 #define KCAL_CALENDARRESOURCES_H
 
-#include <q3intdict.h>
 #include <qmap.h>
 
 #include "calendar.h"

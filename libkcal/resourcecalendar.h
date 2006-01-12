@@ -27,7 +27,6 @@
 
 #include <qstring.h>
 #include <qdatetime.h>
-#include <q3ptrlist.h>
 
 #include <kconfig.h>
 

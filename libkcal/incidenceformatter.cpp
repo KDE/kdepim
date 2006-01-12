@@ -49,7 +49,6 @@
 #include <kiconloader.h>
 
 #include <qbuffer.h>
-#include <q3stylesheet.h>
 #include <qdatetime.h>
 //Added by qt3to4:
 #include <QList>

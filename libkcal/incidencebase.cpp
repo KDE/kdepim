@@ -368,17 +368,13 @@ void IncidenceBase::registerObserver( IncidenceBase::Observer *observer )
 
 void IncidenceBase::unRegisterObserver( IncidenceBase::Observer *observer )
 {
-  mObservers.remove( observer );
+  mObservers.removeAll( observer );
 }
 
 void IncidenceBase::updated()
 {
-  Q3PtrListIterator<Observer> it(mObservers);
-  while( it.current() ) {
-    Observer *o = it.current();
-    ++it;
+  foreach ( Observer *o, mObservers )
     o->incidenceUpdated( this );
-  }
 }
 
 KURL IncidenceBase::uri() const

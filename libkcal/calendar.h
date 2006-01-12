@@ -34,8 +34,8 @@
 #include <qobject.h>
 #include <qstring.h>
 #include <qdatetime.h>
-#include <q3ptrlist.h>
-#include <q3dict.h>
+#include <qlist.h>
+#include <QMultiHash>
 #include <kdepimmacros.h>
 
 #include "customproperties.h"
@@ -929,13 +929,13 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
     CalFilter *mFilter;
     CalFilter *mDefaultFilter;
 
-    Q3PtrList<Observer> mObservers;
+    QList<Observer*> mObservers;
     bool mNewObserver;
     bool mObserversEnabled;
 
     // This list is used to put together related Todos
-    Q3Dict<Incidence> mOrphans;
-    Q3Dict<Incidence> mOrphanUids;
+    QMultiHash<QString, Incidence*> mOrphans;
+    QMultiHash<QString, Incidence*> mOrphanUids;
 
     class Private;
     Private *d;

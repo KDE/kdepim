@@ -24,8 +24,6 @@
 
 #include <qdatetime.h>
 
-#include <q3ptrlist.h>
-//Added by qt3to4:
 #include <QByteArray>
 #include <QList>
 

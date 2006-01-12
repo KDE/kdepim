@@ -23,7 +23,7 @@
 #define KCAL_CALENDARLOCAL_H
 
 #include "calendar.h"
-#include <q3dict.h>
+#include <qhash.h>
 #include <kdepimmacros.h>
 
 namespace KCal {
@@ -190,7 +190,7 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
      * user is asked whether he wants to do that, or keep the timezone as is.
      */
     void setTimeZoneIdViewOnly( const QString& tz );
-  
+
   protected:
 
     /** inserts an event into its "proper place" in the calendar. */
@@ -207,14 +207,12 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
   private:
     void init();
 
-    typedef Q3Dict<Event> EventDict;
-    typedef Q3DictIterator<Event> EventDictIterator;
-    EventDict mEvents;
+    QHash<QString, Event*> mEvents;
     Todo::List mTodoList;
     Journal::List mJournalList;
 
     Incidence::List mDeletedIncidences;
-		QString mFileName;
+    QString mFileName;
 
     class Private;
     Private *d;

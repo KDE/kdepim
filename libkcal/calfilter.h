@@ -23,7 +23,6 @@
 #define KCAL_CALFILTER_H
 
 #include <qstring.h>
-#include <q3ptrlist.h>
 
 #include "event.h"
 #include "todo.h"

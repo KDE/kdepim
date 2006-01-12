@@ -627,8 +627,9 @@ void Calendar::setupRelations( Incidence *forincidence )
   QString uid = forincidence->uid();
 
   // First, go over the list of orphans and see if this is their parent
-  while ( Incidence* i = mOrphans[ uid ] ) {
-    mOrphans.remove( uid );
+  QList<Incidence*> l = mOrphans.values( uid );
+  mOrphans.remove( uid );
+  foreach ( Incidence *i, l ) {
     i->setRelatedTo( forincidence );
     forincidence->addRelation( i );
     mOrphanUids.remove( i->uid() );
@@ -668,7 +669,7 @@ void Calendar::removeRelations( Incidence *incidence )
   Incidence::List::ConstIterator it;
   for ( it = relations.begin(); it != relations.end(); ++it ) {
     Incidence *i = *it;
-    if ( !mOrphanUids.find( i->uid() ) ) {
+    if ( !mOrphanUids.contains( i->uid() ) ) {
       mOrphans.insert( uid, i );
       mOrphanUids.insert( i->uid(), i );
       i->setRelatedTo( 0 );
@@ -694,9 +695,9 @@ void Calendar::removeRelations( Incidence *incidence )
     QStringList relatedToUids;
     // First get the list of all keys in the mOrphans list that point to the removed item
     relatedToUids << incidence->relatedToUid();
-    for ( Q3DictIterator<Incidence> it( mOrphans ); it.current(); ++it ) {
-      if ( it.current()->uid() == uid ) {
-        relatedToUids << it.currentKey();
+    for ( QMultiHash<QString, Incidence*>::Iterator it = mOrphans.begin(); it != mOrphans.end(); it++ ) {
+      if ( it.value()->uid() == uid ) {
+        relatedToUids << it.key();
       }
     }
 
@@ -705,8 +706,9 @@ void Calendar::removeRelations( Incidence *incidence )
           uidit != relatedToUids.end(); ++uidit ) {
       Incidence::List tempList;
       // Remove all to get access to the remaining entries
-      while( Incidence* i = mOrphans[ *uidit ] ) {
-        mOrphans.remove( *uidit );
+      QList<Incidence*> l = mOrphans.values( *uidit );
+      mOrphans.remove( *uidit );
+      foreach ( Incidence* i, l ) {
         if ( i != incidence ) tempList.append( i );
       }
       // Readd those that point to a different orphan incidence
@@ -727,18 +729,15 @@ void Calendar::registerObserver( Observer *observer )
 
 void Calendar::unregisterObserver( Observer *observer )
 {
-  mObservers.remove( observer );
+  mObservers.removeAll( observer );
 }
 
 void Calendar::setModified( bool modified )
 {
   if ( modified != mModified || mNewObserver ) {
     mNewObserver = false;
-    Observer *observer;
-    for ( observer = mObservers.first(); observer;
-          observer = mObservers.next() ) {
+    foreach ( Observer *observer, mObservers )
       observer->calendarModified( modified, this );
-    }
     mModified = modified;
   }
 }
@@ -762,11 +761,8 @@ void Calendar::notifyIncidenceAdded( Incidence *i )
   if ( !mObserversEnabled )
     return;
 
-  Observer *observer;
-  for ( observer = mObservers.first(); observer;
-        observer = mObservers.next() ) {
+  foreach ( Observer *observer, mObservers )
     observer->calendarIncidenceAdded( i );
-  }
 }
 
 void Calendar::notifyIncidenceChanged( Incidence *i )
@@ -774,11 +770,8 @@ void Calendar::notifyIncidenceChanged( Incidence *i )
   if ( !mObserversEnabled )
     return;
 
-  Observer *observer;
-  for ( observer = mObservers.first(); observer;
-        observer = mObservers.next() ) {
+  foreach ( Observer *observer, mObservers )
     observer->calendarIncidenceChanged( i );
-  }
 }
 
 void Calendar::notifyIncidenceDeleted( Incidence *i )
@@ -786,11 +779,8 @@ void Calendar::notifyIncidenceDeleted( Incidence *i )
   if ( !mObserversEnabled )
     return;
 
-  Observer *observer;
-  for ( observer = mObservers.first(); observer;
-        observer = mObservers.next() ) {
+  foreach ( Observer *observer, mObservers )
     observer->calendarIncidenceDeleted( i );
-  }
 }
 
 void Calendar::setProductId( const QString &productId )

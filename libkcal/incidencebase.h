@@ -26,9 +26,8 @@
 #include <qdatetime.h>
 #include <qstringlist.h>
 
-#include <q3ptrlist.h>
-//Added by qt3to4:
 #include <QByteArray>
+#include <QList>
 
 #include "customproperties.h"
 #include "attendee.h"
@@ -281,7 +280,7 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     unsigned long mPilotId;                         // unique id for pilot sync
     int mSyncStatus;                      // status (for sync)
 
-    Q3PtrList<Observer> mObservers;
+    QList<Observer*> mObservers;
 
     class Private;
     Private *d;

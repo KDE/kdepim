@@ -23,7 +23,6 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
-#include <q3ptrlist.h>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -42,7 +41,7 @@
 using namespace KCal;
 
 CalendarLocal::CalendarLocal( const QString &timeZoneId )
-  : Calendar( timeZoneId ), mEvents( 47 )
+  : Calendar( timeZoneId )
 {
   init();
 }
@@ -136,15 +135,11 @@ bool CalendarLocal::deleteEvent( Event *event )
 void CalendarLocal::deleteAllEvents()
 {
   // kdDebug(5800) << "CalendarLocal::deleteAllEvents" << endl;
-  Q3DictIterator<Event> it( mEvents );
-  while( it.current() ) {
-    notifyIncidenceDeleted( it.current() );
-    ++it;
-  }
+  foreach ( Event *e, mEvents )
+    notifyIncidenceDeleted( e );
 
-  mEvents.setAutoDelete( true );
+  qDeleteAll( mEvents );
   mEvents.clear();
-  mEvents.setAutoDelete( false );
 }
 
 Event *CalendarLocal::event( const QString &uid )
@@ -241,9 +236,7 @@ Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
 
   Alarm::List alarms;
 
-  EventDictIterator it( mEvents );
-  for( ; it.current(); ++it ) {
-    Event *e = *it;
+  foreach ( Event *e, mEvents ) {
     if ( e->doesRecur() ) appendRecurringAlarms( alarms, e, from, to );
     else appendAlarms( alarms, e, from, to );
   }
@@ -369,9 +362,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
 {
   Event::List eventList;
 
-  EventDictIterator it( mEvents );
-  for( ; it.current(); ++it ) {
-    Event *event = *it;
+  foreach ( Event *event, mEvents ) {
 
     if ( event->doesRecur() ) {
       if ( event->isMultiDay() ) {
@@ -403,9 +394,7 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
   Event::List eventList;
 
   // Get non-recurring events
-  EventDictIterator it( mEvents );
-  for( ; it.current(); ++it ) {
-    Event *event = *it;
+  foreach ( Event *event, mEvents ) {
     if ( event->doesRecur() ) {
       QDate rStart = event->dtStart().date();
       bool found = false;
@@ -470,9 +459,8 @@ Event::List CalendarLocal::rawEventsForDate( const QDateTime &qdt )
 Event::List CalendarLocal::rawEvents( EventSortField sortField, SortDirection sortDirection )
 {
   Event::List eventList;
-  EventDictIterator it( mEvents );
-  for( ; it.current(); ++it )
-    eventList.append( *it );
+  foreach ( Event *e, mEvents )
+    eventList.append( e );
   return sortEvents( &eventList, sortField, sortDirection );
 }
 

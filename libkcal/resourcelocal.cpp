@@ -25,7 +25,6 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
-#include <q3ptrlist.h>
 
 #include <kdebug.h>
 #include <klocale.h>

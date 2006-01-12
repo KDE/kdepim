@@ -24,7 +24,6 @@
 #include "listbase.h"
 #include "libkcal_export.h"
 
-#include <q3cstring.h>
 #include <qstring.h>
 
 
