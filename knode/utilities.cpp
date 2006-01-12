@@ -211,7 +211,7 @@ void KNHelper::restoreWindowSize(const QString &name, QWidget *d, const QSize &d
   KConfig *c=knGlobals.config();
   c->setGroup("WINDOW_SIZES");
 
-  QSize s=c->readSizeEntry(name,&defaultSize);
+  QSize s=c->readEntry(name,defaultSize);
 
   if(s.isValid()) {
     QRect max = KGlobalSettings::desktopGeometry(QCursor::pos());

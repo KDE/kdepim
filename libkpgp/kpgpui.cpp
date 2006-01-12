@@ -311,7 +311,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   KConfigGroup dialogConfig( config, "Key Selection Dialog" );
 
   QSize defaultSize( 580, 400 );
-  QSize dialogSize = dialogConfig.readSizeEntry( "Dialog size", &defaultSize );
+  QSize dialogSize = dialogConfig.readEntry( "Dialog size", defaultSize );
 
   resize( dialogSize );
 

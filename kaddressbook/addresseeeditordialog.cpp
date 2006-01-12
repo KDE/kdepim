@@ -66,7 +66,7 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core * /*core*/,
   KConfig config( "kaddressbookrc" );
   config.setGroup( "AddresseeEditor" );
   QSize defaultSize( 750, 570 );
-  resize( config.readSizeEntry( "Size", &defaultSize ) );
+  resize( config.readEntry( "Size", defaultSize ) );
 }
 
 AddresseeEditorDialog::~AddresseeEditorDialog()
