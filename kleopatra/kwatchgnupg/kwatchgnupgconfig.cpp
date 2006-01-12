@@ -169,7 +169,7 @@ void KWatchGnuPGConfig::loadConfig()
 
   config->setGroup("LogWindow");
   mLoglenSB->setValue( config->readNumEntry( "MaxLogLen", 10000 ) );
-  mWordWrapCB->setChecked( config->readBoolEntry("WordWrap", false ) );
+  mWordWrapCB->setChecked( config->readEntry("WordWrap", false ) );
 
   config->setGroup( QString() );
   enableButtonOK( false );

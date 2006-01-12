@@ -221,7 +221,7 @@ CertManager::~CertManager() {
 void CertManager::readConfig() {
   KConfig config( "kleopatrarc" );
   config.setGroup( "Display Options" );
-  slotToggleHierarchicalView( config.readBoolEntry( "hierarchicalView", false ) );
+  slotToggleHierarchicalView( config.readEntry( "hierarchicalView", false ) );
 }
 
 void CertManager::writeConfig() {

@@ -77,11 +77,11 @@ public:
       setFont( config.readFontEntry( "font" ) ); // sets mItalic and mBold
     }
     else {
-      mItalic = config.readBoolEntry( "font-italic", false );
-      mBold = config.readBoolEntry( "font-bold", false );
+      mItalic = config.readEntry( "font-italic", false );
+      mBold = config.readEntry( "font-bold", false );
     }
-    mStrikeOut = config.readBoolEntry( "font-strikeout", false );
-    mIsExpired = config.readBoolEntry( "is-expired", false );
+    mStrikeOut = config.readEntry( "font-strikeout", false );
+    mIsExpired = config.readEntry( "is-expired", false );
     mDirty = false;
   }
 

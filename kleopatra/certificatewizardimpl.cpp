@@ -373,7 +373,7 @@ void CertificateWizardImpl::createPersonalDataPage()
 
   // enable button only if administrator wants to allow it
   if (KABC::StdAddressBook::self( true )->whoAmI().isEmpty() ||
-      !config.readBoolEntry("ShowSetWhoAmI", true))
+      !config.readEntry("ShowSetWhoAmI", true))
     insertAddressButton->setEnabled( false );
 
   slotEnablePersonalDataPageExit();

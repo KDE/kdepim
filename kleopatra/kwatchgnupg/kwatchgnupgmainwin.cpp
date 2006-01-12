@@ -277,7 +277,7 @@ void KWatchGnuPGMainWindow::slotReadConfig()
 {
   KConfig* config = KGlobal::config();
   config->setGroup("LogWindow");
-  mCentralWidget->setWordWrap( config->readBoolEntry("WordWrap", false)
+  mCentralWidget->setWordWrap( config->readEntry("WordWrap", false)
 							   ?Q3TextEdit::WidgetWidth
 							   :Q3TextEdit::NoWrap );
   mCentralWidget->setMaxLogLines( config->readNumEntry( "MaxLogLen", 10000 ) );
