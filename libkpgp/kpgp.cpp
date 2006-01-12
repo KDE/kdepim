@@ -113,7 +113,7 @@ Module::readConfig()
   mShowKeyApprovalDlg = config->readEntry( "showKeysForApproval", true );
   // We have no config GUI for this key anymore, and the KPGP backend isn't ported,
   // so let's just use Auto all the time.  See #92619.
-  ///pgpType = (Module::PGPType) config->readNumEntry("pgpType", tAuto);
+  ///pgpType = (Module::PGPType) config->readEntry("pgpType", tAuto);
   pgpType = tAuto;
   flagEncryptToSelf = config->readEntry("encryptToSelf", true);
 }
@@ -1727,15 +1727,15 @@ Module::readAddressData()
   AddressData data;
 
   KConfigGroup general( config, "General" );
-  int num = general.readNumEntry( "addressEntries", 0 );
+  int num = general.readEntry( "addressEntries", 0 );
 
   addressDataDict.clear();
   for( int i=1; i<=num; i++ ) {
     KConfigGroup addrGroup( config, QString("Address #%1").arg(i).toLocal8Bit() );
     address = addrGroup.readEntry( "Address" );
     data.keyIds = KeyIDList::fromStringList( addrGroup.readListEntry( "Key IDs" ) );
-    data.encrPref = (EncryptPref) addrGroup.readNumEntry( "EncryptionPreference",
-                                                          UnknownEncryptPref );
+    data.encrPref = (EncryptPref) addrGroup.readEntry( "EncryptionPreference",
+                                                          int(UnknownEncryptPref ));
 //     kdDebug(5100) << "Read address " << i << ": " << address
 //                   << "\nKey IDs: 0x" << data.keyIds.toStringList().join(", 0x")
 //                   << "\nEncryption preference: " << data.encrPref << endl;
