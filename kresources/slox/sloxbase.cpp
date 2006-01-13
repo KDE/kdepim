@@ -32,6 +32,7 @@ static QString mFieldNameMap[][2] =
   {"objecttype", "objectmode"},
   {"sloxstatus", "object_status"},
   {"createfrom", "created_by"},
+  {"categories", "categories"},
   // incidence fields
   {"title", "title"},
   {"description", "note"},

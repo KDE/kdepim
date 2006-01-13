@@ -396,6 +396,8 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
   } else if ( tag == fieldName( Anniversary ) ) {
     QDateTime dt = WebdavHandler::sloxToQDateTime( text );
     a.insertCustom( "KADDRESSBOOK", "X-Anniversary", dt.toString( Qt::ISODate ) );
+  } else if ( tag == fieldName( Categories ) ) {
+    a.setCategories( text.split( QRegExp(",\\s*") ) );
   } else if ( type() == "ox" ) { // FIXME: Address reading is missing for SLOX
     // read addresses
     Address addr;
@@ -570,6 +572,7 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
 
   WebdavHandler::addSloxElement( this, doc, prop, fieldName( Url ), a.url().url() );
   WebdavHandler::addSloxElement( this, doc, prop, fieldName( Comment ), a.note() );
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( Categories ), a.categories().join( ", " ) );
 
   // emails
   QStringList email_list = a.emails();
