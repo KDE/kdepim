@@ -65,7 +65,7 @@ public:
 
     KURL::List lst;
     // stolen from kabc/ldapclient.cpp
-    const uint numHosts = mConfig.readUnsignedNumEntry( "NumSelectedHosts" );
+    const uint numHosts = mConfig.readEntry( "NumSelectedHosts" );
     for ( uint j = 0; j < numHosts; j++ ) {
       const QString num = QString::number( j );
 
@@ -75,7 +75,7 @@ public:
       const QString host = mConfig.readEntry( QString( "SelectedHost" ) + num ).trimmed();
       url.setHost( host );
 
-      const int port = mConfig.readUnsignedNumEntry( QString( "SelectedPort" ) + num );
+      const int port = mConfig.readEntry( QString( "SelectedPort" ) + num );
       if ( port != 0 )
         url.setPort( port );
 
