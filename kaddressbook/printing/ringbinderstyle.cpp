@@ -76,7 +76,7 @@ RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent, const char* 
   mPageAppearance->cbOrganization->setChecked( config->readEntry( ShowOrganization, true ) );
   mPageAppearance->cbBirthday->setChecked( config->readEntry( ShowBirthday, false ) );
   mPageAppearance->cbFillEmpty->setChecked( config->readEntry( FillWithEmptyFields, true ) );
-  mPageAppearance->sbMinNumFill->setValue( config->readUnsignedNumEntry( MinNumberOfEmptyFields, 0 ) );
+  mPageAppearance->sbMinNumFill->setValue( config->readEntry( MinNumberOfEmptyFields, 0 ) );
 
   QStringList tabNames = config->readListEntry( LetterGroups, ',' );
   if ( tabNames.isEmpty() )

@@ -824,7 +824,7 @@ void CSVImportDialog::applyTemplate()
   KSimpleConfig config( fileMap[ tmp ], true );
   config.setGroup( "General" );
   mDatePatternEdit->setText( config.readEntry( "DatePattern", "Y-M-D" ) );
-  uint numColumns = config.readUnsignedNumEntry( "Columns" );
+  uint numColumns = config.readEntry( "Columns", 0 );
   mDelimiterEdit->setText( config.readEntry( "DelimiterOther" ) );
   mDelimiterBox->setButton( config.readEntry( "DelimiterType", 0) );
   delimiterClicked( config.readEntry( "DelimiterType",0 ) );

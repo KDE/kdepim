@@ -204,7 +204,7 @@ void LDAPOptionsWidget::restoreSettings()
 
   QString host;
 
-  uint count = group.readUnsignedNumEntry( "NumSelectedHosts");
+  uint count = group.readEntry( "NumSelectedHosts", 0);
   for ( uint i = 0; i < count; ++i ) {
     KPIM::LdapServer server;
     KPIM::LdapSearch::readConfig( server, config, i, true );
@@ -212,7 +212,7 @@ void LDAPOptionsWidget::restoreSettings()
     item->setOn( true );
   }
 
-  count = group.readUnsignedNumEntry( "NumHosts" );
+  count = group.readEntry( "NumHosts",0 );
   for ( uint i = 0; i < count; ++i ) {
     KPIM::LdapServer server;
     KPIM::LdapSearch::readConfig( server, config, i, false );
