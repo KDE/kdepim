@@ -162,10 +162,12 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
                       : mimetype == "application/x-vnd.kolab.journal" ? i18n( "Loading journals..." )
                       : i18n( "Loading events..." );
 
-  (void)::Observer::self(); // ensure kio_uiserver is running
+  const bool useProgress = qApp && qApp->type() != QApplication::Tty && count > 200;
+  if ( useProgress )
+    (void)::Observer::self(); // ensure kio_uiserver is running
   UIServer_stub uiserver( "kio_uiserver", "UIServer" );
   int progressId = 0;
-  if ( count > 200 ) {
+  if ( useProgress ) {
     progressId = uiserver.newJob( kapp->dcopClient()->appId(), true );
     uiserver.totalFiles( progressId, count );
     uiserver.infoMessage( progressId, labelTxt );
@@ -311,7 +313,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
 
 void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subresource, Q_UINT32 sernum )
 {
-  kdDebug() << k_funcinfo << subresource << " " << sernum << endl;
+  kdDebug() << k_funcinfo << subresource << " " << sernum << " uid=" << inc->uid() << endl;
     if ( ! inc )
         return;
     if ( ! mResolveConflict ) {
@@ -348,7 +350,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
       mSilent = false;
       deleteIncidence( local ); // remove local from kmail
       kmailDeleteIncidence( subresource, sernum );// remove new from kmail
-      if ( localIncidence ) { 
+      if ( localIncidence ) {
         addIncidence( localIncidence, subresource, 0  );
         mUidsPendingAdding.remove( localIncidence->uid() ); // we do want to inform KOrg also
       }
@@ -938,8 +940,8 @@ void ResourceKolab::setSubresourceActive( const QString &subresource, bool v )
 void ResourceKolab::slotEmitResourceChanged()
 {
    kdDebug(5650) << "KCal Kolab resource: emitting resource changed " << endl;
-   emit resourceChanged( this );
    mResourceChangedTimer.stop();
+   emit resourceChanged( this );
 }
 
 KABC::Lock* ResourceKolab::lock()
