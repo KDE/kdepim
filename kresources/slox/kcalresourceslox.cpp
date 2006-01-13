@@ -26,6 +26,7 @@
 #include <qstring.h>
 #include <qptrlist.h>
 #include <qfile.h>
+#include <qregexp.h>
 
 #include <kdebug.h>
 #include <kurl.h>
@@ -437,6 +438,8 @@ void KCalResourceSlox::createIncidenceAttributes( QDomDocument &doc,
   else
     WebdavHandler::addSloxElement( this, doc, parent, fieldName( Reminder ), "0" );
 
+  // categories
+  WebdavHandler::addSloxElement( this, doc, parent, fieldName( Categories ), incidence->categories().join( ", " ) );
 }
 
 void KCalResourceSlox::createEventAttributes( QDomDocument &doc,
@@ -687,6 +690,8 @@ void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
     parseMembersAttribute( e, incidence );
   } else if ( tag == "readrights" ) {
     parseReadRightsAttribute( e, incidence );
+  } else if ( tag == fieldName( Categories ) ) {
+    incidence->setCategories( QStringList::split( QRegExp(",\\s*"), text ) );
   }
 }
 
