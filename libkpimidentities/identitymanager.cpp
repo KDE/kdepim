@@ -231,7 +231,7 @@ void IdentityManager::readConfig(KConfigBase* config) {
   if ( identities.isEmpty() ) return; // nothing to be done...
 
   KConfigGroup general( config, "General" );
-  uint defaultIdentity = general.readUnsignedNumEntry( configKeyDefaultIdentity );
+  uint defaultIdentity = general.readEntry( configKeyDefaultIdentity,0 );
   bool haveDefault = false;
 
   for ( QStringList::Iterator group = identities.begin() ;
