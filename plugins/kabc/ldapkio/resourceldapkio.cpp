@@ -498,6 +498,9 @@ void ResourceLDAPKIO::activateCache()
 KIO::Job *ResourceLDAPKIO::loadFromCache()
 {
   KIO::Job *job = NULL;
+  kdDebug(7125) << "ResourceLDAPKIO::loadFromCache()" << endl;
+  kdDebug(7125) << "   cachePolicy: " << d->mCachePolicy << endl;
+  kdDebug(7125) << "   error: " << d->mError << endl;
   if ( d->mCachePolicy == Cache_Always || 
      ( d->mCachePolicy == Cache_NoConnection && 
       d->mError == KIO::ERR_COULD_NOT_CONNECT ) ) {
