@@ -40,9 +40,26 @@ void RFC2047Test::testRFC2047decode()
             QString::fromUtf8( "Ingo Klöcker <kloecker@kde.org>" ) );
   QCOMPARE( KMime::decodeRFC2047String( "=?utf-8?q?Ingo=20Kl=C3=B6cker?=", encCharset, "utf-8", false ),
             QString::fromUtf8( "Ingo Klöcker" ) );
+  QCOMPARE( encCharset, QByteArray( "UTF-8" ) );
   // whitespaces between two encoded words
   QCOMPARE( KMime::decodeRFC2047String( "=?utf-8?q?Ingo=20Kl=C3=B6cker?=       =?utf-8?q?Ingo=20Kl=C3=B6cker?=", encCharset, "utf-8", false ),
             QString::fromUtf8( "Ingo KlöckerIngo Klöcker" ) );
+  // iso-8859-x
+  QCOMPARE( KMime::decodeRFC2047String( "=?ISO-8859-1?Q?Andr=E9s_Ot=F3n?=", encCharset, "utf-8", false ),
+            QString::fromUtf8( "Andrés Otón" ) );
+  QCOMPARE( encCharset, QByteArray( "ISO-8859-1" ) );
+  QCOMPARE( KMime::decodeRFC2047String( "=?iso-8859-2?q?Rafa=B3_Rzepecki?=", encCharset, "utf-8", false ),
+            QString::fromUtf8( "Rafał Rzepecki" ) );
+  QCOMPARE( encCharset, QByteArray( "ISO-8859-2" ) );
+  QCOMPARE( KMime::decodeRFC2047String( "=?iso-8859-9?Q?S=2E=C7a=F0lar?= Onur", encCharset, "utf-8", false ),
+            QString::fromUtf8( "S.Çağlar Onur" ) );
+  QCOMPARE( encCharset, QByteArray( "ISO-8859-9" ) );
+  QCOMPARE( KMime::decodeRFC2047String( "Rafael =?iso-8859-15?q?Rodr=EDguez?=", encCharset, "utf-8", false ),
+            QString::fromUtf8( "Rafael Rodríguez" ) );
+  QCOMPARE( encCharset, QByteArray( "ISO-8859-15" ) );
+  // wrong charset + charset overwrite
+  QCOMPARE( KMime::decodeRFC2047String( "=?iso-8859-1?q?Ingo=20Kl=C3=B6cker?=", encCharset, "utf-8", true ),
+            QString::fromUtf8( "Ingo Klöcker" ) );
 }
 
 void RFC2047Test::testRFC2047encode()
