@@ -1236,7 +1236,7 @@ void ArticleWidget::slotViewSource()
       a->messageID( true )->from7BitString( mArticle->messageID()->as7BitString( false ) );
       a->lines( true )->from7BitString( mArticle->lines( true )->as7BitString( false ) );
       a->setArticleNumber( static_cast<KNRemoteArticle*>( mArticle)->articleNumber() );
-      emitJob( new ArticleFetchJob( this, g->account(), a) );
+      emitJob( new ArticleFetchJob( this, g->account(), a, false ) );
     }
   }
 }

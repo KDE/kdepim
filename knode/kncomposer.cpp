@@ -1674,7 +1674,7 @@ void KNComposer::slotSpellFinished()
 void KNComposer::slotDragEnterEvent(QDragEnterEvent *ev)
 {
   QStringList files;
-  ev->accept(K3URLDrag::canDecode(ev));
+  ev->accept( KURL::List::canDecode( ev->mimeData() ) );
 }
 
 
@@ -2323,7 +2323,7 @@ void KNComposer::Editor::contentsDragEnterEvent(QDragEnterEvent *ev)
 
 void KNComposer::Editor::contentsDropEvent(QDropEvent *ev)
 {
-  if (K3URLDrag::canDecode(ev))
+  if ( KURL::List::canDecode( ev->mimeData() ) )
     emit(sigDropEvent(ev));
   else
     KEdit::dropEvent(ev);

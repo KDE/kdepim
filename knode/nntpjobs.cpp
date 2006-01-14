@@ -195,8 +195,9 @@ void KNode::ArticleListJob::slotResult( KIO::Job * job )
 
 
 
-KNode::ArticleFetchJob::ArticleFetchJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
-    KNJobData( JTfetchArticle, c, a, i )
+KNode::ArticleFetchJob::ArticleFetchJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i, bool parse ) :
+    KNJobData( JTfetchArticle, c, a, i ),
+    mParseArticle( parse )
 {
 }
 
@@ -225,6 +226,8 @@ void KNode::ArticleFetchJob::slotResult( KIO::Job * job )
     QByteArray buffer = j->data();
     buffer.replace( "\r\n", "\n" ); // TODO: do this in the io-slave?
     target->setContent( buffer );
+    if ( mParseArticle )
+      target->parse();
   }
 
   emitFinished();

@@ -83,12 +83,15 @@ class ArticleFetchJob : public KNJobData
 {
   Q_OBJECT
   public:
-    ArticleFetchJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
+    ArticleFetchJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i, bool parse = true );
 
     virtual void execute();
 
   private slots:
     void slotResult( KIO::Job *job );
+
+  private:
+    bool mParseArticle;
 };
 
 
