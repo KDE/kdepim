@@ -124,7 +124,7 @@ QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
 {
   QByteArray result, str;
   QByteArray declaredCS;
-  int pos = 0, dest = 0, beg = 0, end = 0, mid = 0, endOfLastEncWord = 0;
+  int pos = 0, beg = 0, end = 0, mid = 0, endOfLastEncWord = 0;
   char encoding = '\0';
   bool valid, onlySpacesSinceLastWord=false;
   const int maxLen=400;
@@ -133,12 +133,11 @@ QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
   if ( !src.contains( "=?" ) )
     result = src;
   else {
-    result.resize( src.length() );
-    for (pos = 0, dest = 0; pos < src.length(); pos++)
+    for (pos = 0; pos < src.length(); pos++)
     {
       if ( src[pos] != '=' || src[pos + 1] != '?' )
       {
-        result[dest++] = src[pos];
+        result += src[pos];
         if (onlySpacesSinceLastWord)
           onlySpacesSinceLastWord = (src[pos]==' ' || src[pos]=='\t');
         continue;
@@ -180,10 +179,10 @@ QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
       if (valid) {
         // cut all linear-white space between two encoded words
         if (onlySpacesSinceLastWord)
-          dest=endOfLastEncWord;
+          result = result.left( endOfLastEncWord );
 
         if (mid < pos) {
-          str = src.mid( mid, (int)(pos - mid + 1) );
+          str = src.mid( mid, pos - mid );
           if (encoding == 'Q')
           {
             // decode quoted printable text
@@ -195,12 +194,10 @@ QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
           {
             str = KCodecs::base64Decode(str);
           }
-          for (i=0; str[i]; i++) {
-            result[dest++] = str[i];
-          }
+          result += str;
         }
 
-        endOfLastEncWord=dest;
+        endOfLastEncWord = result.length();
         onlySpacesSinceLastWord=true;
 
         pos = end -1;
@@ -208,11 +205,10 @@ QString decodeRFC2047String( const QByteArray &src, QByteArray &usedCS,
       else
       {
         pos = beg - 2;
-        result[dest++] = src[pos++];
-        result[dest++] = src[pos];
+        result += src[pos++];
+        result += src[pos];
       }
     }
-    result.resize( dest );
   }
 
   //find suitable QTextCodec
