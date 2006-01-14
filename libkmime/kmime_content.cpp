@@ -671,21 +671,7 @@ Headers::Generic*  Content::getNextHeader(QByteArray &head)
       header = new Headers::Generic(head.left(pos1-2), this, head.mid(pos1, pos2-pos1));
     else {
       QByteArray hdrValue = head.mid( pos1, pos2 - pos1 );
-      // unfold header
-      int beg = 0, mid = 0, end = 0;
-      while ( (mid = hdrValue.indexOf( '\n' )) >= 0 ) {
-        beg = end = mid;
-        while ( beg > 0 ) {
-          if ( !QChar( hdrValue[beg] ).isSpace() ) break;
-          --beg;
-        }
-        while ( end < hdrValue.length() - 1 ) {
-          if ( !QChar( hdrValue[end] ).isSpace() ) break;
-          ++end;
-        }
-        hdrValue.remove( beg, end - beg );
-      }
-      header = new Headers::Generic( head.left( pos1 - 2 ), this, hdrValue );
+      header = new Headers::Generic( head.left( pos1 - 2 ), this, unfoldHeader( hdrValue ) );
     }
 
     head.remove(0,pos2+1);

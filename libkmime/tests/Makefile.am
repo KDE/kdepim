@@ -10,7 +10,8 @@ check_PROGRAMS = test_kmime_header_parsing \
 		test_mdn \
 		test_dates \
 		test_kmime_codec \
-		rfc2047test
+		rfc2047test \
+		kmime_util_test
 
 test_kmime_codec_SOURCES = test_kmime_codec.cpp
 test_charfreq_SOURCES = test_charfreq.cpp
@@ -18,6 +19,7 @@ test_mdn_SOURCES = test_mdn.cpp
 test_dates_SOURCES = test_dates.cpp
 test_kmime_header_parsing_SOURCES = test_kmime_header_parsing.cpp
 rfc2047test_SOURCES = rfc2047test.cpp
+kmime_util_test_SOURCES = kmime_util_test.cpp
 
-TESTS = rfc2047test
+TESTS = rfc2047test kmime_util_test
 

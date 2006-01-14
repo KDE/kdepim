@@ -355,6 +355,30 @@ QByteArray multiPartBoundary()
   return "nextPart" + uniqueString();
 }
 
+QByteArray unfoldHeader( const QByteArray &header )
+{
+  QByteArray result;
+  int pos = 0, foldBegin = 0, foldMid = 0, foldEnd = 0;
+  while ( ( foldMid = header.indexOf( '\n', pos ) ) >= 0 ) {
+    foldBegin = foldEnd = foldMid;
+    // find the first space before the line-break
+    while ( foldBegin > 0 ) {
+      if ( !QChar( header[foldBegin - 1] ).isSpace() ) break;
+      --foldBegin;
+    }
+    // find the first non-space after the line-break
+    while ( foldEnd < header.length() - 1 ) {
+      if ( !QChar( header[foldEnd] ).isSpace() ) break;
+      ++foldEnd;
+    }
+    result += header.mid( pos, foldBegin - pos );
+    result += " ";
+    pos = foldEnd;
+  }
+  result += header.mid( pos, header.length() - pos );
+  return result;
+}
+
 QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
 {
   QByteArray n = name + ": ";
@@ -389,23 +413,8 @@ QByteArray extractHeader( const QByteArray &src, const QByteArray &name )
     if (!folded)
       return src.mid(pos1, pos2-pos1);
     else {
-      // TODO Optimization: Copy to new string instead of removing in-string
       QByteArray hdrValue = src.mid( pos1, pos2 - pos1 );
-      // unfold header
-      int beg = 0, mid = 0, end = 0;
-      while ( (mid = hdrValue.indexOf( '\n' )) >= 0 ) {
-        beg = end = mid;
-        while ( beg > 0 ) {
-          if ( !QChar( hdrValue[beg] ).isSpace() ) break;
-          --beg;
-        }
-        while ( end < hdrValue.length() - 1 ) {
-          if ( !QChar( hdrValue[end] ).isSpace() ) break;
-          ++end;
-        }
-        hdrValue.remove( beg, end - beg );
-      }
-      return hdrValue;
+      return unfoldHeader( hdrValue );
     }
   }
   else {

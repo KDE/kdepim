@@ -102,6 +102,11 @@ namespace KMime {
   */
   extern QByteArray multiPartBoundary() KDE_EXPORT;
 
+  /** Unfolds the given header if necessary.
+      @param header The header to unfold.
+  */
+  extern QByteArray unfoldHeader( const QByteArray &header ) KDE_EXPORT;
+
   /** Tries to extract the header with name @p name from the string
       @p src, unfolding it if necessary.
       @param src  the source string.
