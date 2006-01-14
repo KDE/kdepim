@@ -16,14 +16,14 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qttest_kde.h>
+#include <qtest_kde.h>
 
 #include "rfc2047test.h"
 #include "rfc2047test.moc"
 
 #include <kmime_util.h>
 
-QTTEST_KDEMAIN( RFC2047Test, NoGUI )
+QTEST_KDEMAIN( RFC2047Test, NoGUI )
 
 void RFC2047Test::testRFC2047decode()
 {
@@ -38,6 +38,11 @@ void RFC2047Test::testRFC2047decode()
             QString::fromUtf8( "Ingo Klöcker <kloecker@kde.org>" ) );
   QCOMPARE( KMime::decodeRFC2047String( "=?utf-8?q?Ingo=20Kl=C3=B6cker?= <kloecker@kde.org>", encCharset, "iso8859-1", false ),
             QString::fromUtf8( "Ingo Klöcker <kloecker@kde.org>" ) );
+  QCOMPARE( KMime::decodeRFC2047String( "=?utf-8?q?Ingo=20Kl=C3=B6cker?=", encCharset, "utf-8", false ),
+            QString::fromUtf8( "Ingo Klöcker" ) );
+  // whitespaces between two encoded words
+  QCOMPARE( KMime::decodeRFC2047String( "=?utf-8?q?Ingo=20Kl=C3=B6cker?=       =?utf-8?q?Ingo=20Kl=C3=B6cker?=", encCharset, "utf-8", false ),
+            QString::fromUtf8( "Ingo KlöckerIngo Klöcker" ) );
 }
 
 void RFC2047Test::testRFC2047encode()
