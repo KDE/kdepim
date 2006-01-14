@@ -162,7 +162,9 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
                            : mimetype == "application/x-vnd.kolab.journal" ? i18n( "Loading journals..." )
                            : i18n( "Loading events..." );
   const bool useProgress = qApp && qApp->type() != QApplication::Tty && count > 200;
-  (void)::Observer::self(); // ensure kio_uiserver is running
+  const bool useProgress = qApp && qApp->type() != QApplication::Tty && count > 200;
+  if ( useProgress )
+    (void)::Observer::self(); // ensure kio_uiserver is running
   UIServer_stub uiserver( "kio_uiserver", "UIServer" );
   int progressId = 0;
   if ( useProgress ) {
@@ -941,8 +943,8 @@ void ResourceKolab::setSubresourceActive( const QString &subresource, bool v )
 void ResourceKolab::slotEmitResourceChanged()
 {
    kdDebug(5650) << "KCal Kolab resource: emitting resource changed " << endl;
-   emit resourceChanged( this );
    mResourceChangedTimer.stop();
+   emit resourceChanged( this );
 }
 
 KABC::Lock* ResourceKolab::lock()
