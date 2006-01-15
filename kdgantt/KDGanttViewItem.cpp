@@ -1483,6 +1483,7 @@ void KDGanttViewItem::initColorAndShapes(Type t)
     //isvisible = true;
     _priority = 150;
     _showNoInformation = false;
+    _showNoInformationBeforeAndAfter = false;
     _enabled = true;
     blockUpdating = false;
     updateCanvasItems();
@@ -2003,6 +2004,17 @@ bool KDGanttViewItem::showNoInformation()
   return _showNoInformation;
 }
 
+/*!
+  Returns whether the 'showNoInformation' line  should be shown for the time 
+  periods before and after this item
+
+  \return true if showNoInformation line should be shown
+  \sa setShowNoInformationBeforeAndAfter(),  KDGanttView::setNoInformationBrush(), KDGanttView::noInformationBrush()
+*/
+bool KDGanttViewItem::showNoInformationBeforeAndAfter()
+{
+  return _showNoInformationBeforeAndAfter;
+}
 
 /*!
   Specifies whether the 'showNoInformation' line  should be shown for
@@ -2021,6 +2033,21 @@ void KDGanttViewItem::setShowNoInformation( bool show )
   myGanttView->myTimeTable->updateMyContent();
 }
 
+/*!
+  Specifies whether the 'showNoInformation' line  should be shown for
+  periods before and after this item.
+  The height of the line is the height of the item.
+  The brush of the line is specified by KDGanttView::setNoInformationBrush().
+  (i.e. the same brush for all items of the Gantt view).
+  The default brush is QBrush(  QColor ( 100,100,100 ), Qt::FDiagPattern );
+  \param show if true, the 'showNoInformation' line  is shown for this item
+  \sa  showNoInformationBeforeAndAfter(), KDGanttView::setNoInformationBrush(), KDGanttView::noInformationBrush()
+*/
+void KDGanttViewItem::setShowNoInformationBeforeAndAfter( bool show )
+{
+  _showNoInformationBeforeAndAfter = show;
+  myGanttView->myTimeTable->updateMyContent();
+}
 
 /*!
   If the name of this item is \a name (i.e., listViewText() == name),

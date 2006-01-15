@@ -528,7 +528,8 @@ void KDTimeTableWidget::computeShowNoInformation()
     QPtrListIterator<KDCanvasRectangle> itnoinfo(showNoInfoList);
     KDCanvasRectangle* noInfoLine;
     while ( temp ) {
-        if ( temp->showNoInformation() ) {
+        bool noInfoBeforeAndAfter = temp->showNoInformationBeforeAndAfter();
+        if ( temp->showNoInformation() || noInfoBeforeAndAfter  ) {
             if ( itnoinfo.current() ) {
                 noInfoLine = itnoinfo.current();
                 ++itnoinfo;
@@ -538,10 +539,30 @@ void KDTimeTableWidget::computeShowNoInformation()
                 noInfoLine->setZ(-1);
             }
             noInfoLine->move( 0, temp->itemPos() );
-            noInfoLine->setSize( wid, temp->height());
+            int width = noInfoBeforeAndAfter ?
+                myGanttView->myTimeHeader->getCoordX( temp->startTime() ) : wid;
+            noInfoLine->setSize( width, temp->height());
             noInfoLine->setPen( QPen(  Qt::NoPen ) );
             noInfoLine->setBrush( noInfoLineBrush);
             noInfoLine->show();
+            if ( noInfoBeforeAndAfter ) {
+                if ( itnoinfo.current() ) {
+                    noInfoLine = itnoinfo.current();
+                    ++itnoinfo;
+                } else {
+                    noInfoLine =new KDCanvasRectangle(this,0,Type_is_KDGanttGridItem);
+                    showNoInfoList.append( noInfoLine );
+                    noInfoLine->setZ(-1);
+                }
+
+                int startX = myGanttView->myTimeHeader->getCoordX( temp->endTime() );
+                noInfoLine->move( startX, temp->itemPos() );
+                int width = wid - startX;
+                noInfoLine->setSize( width, temp->height());
+                noInfoLine->setPen( QPen(  Qt::NoPen ) );
+                noInfoLine->setBrush( noInfoLineBrush);
+                noInfoLine->show();
+            }
         }
         temp = temp->itemBelow ();
     }
