@@ -209,6 +209,7 @@ bool KNFolder::loadHdrs()
         kdError(5003) << "KNFolder::loadHeaders() : corrupted index-file, IO-error!" << endl;
         closeFiles();
         clear();
+        knGlobals.top->setCursorBusy( false );
         return false;
       }
 
@@ -222,6 +223,7 @@ bool KNFolder::loadHdrs()
       kdError(5003) << "KNFolder::loadHdrs() : cannot set mbox file-pointer!" << endl;
       closeFiles();
       clear();
+      knGlobals.top->setCursorBusy( false );
       return false;
     }
     tmp=m_boxFile.readLine(); //KNFile::readLine()
@@ -235,6 +237,7 @@ bool KNFolder::loadHdrs()
         kdError(5003) << "KNFolder::loadHdrs() : corrupted mbox-file, IO-error!"<< endl;
         closeFiles();
         clear();
+        knGlobals.top->setCursorBusy( false );
         return false;
       }
     }
