@@ -24,7 +24,7 @@
 
 #include <kconfig.h>
 #include <kdebug.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <klocale.h>
 
 #include <qcolor.h>
@@ -35,7 +35,7 @@
 
 
 /*
- * parent should be of type KDialogBase
+ * parent should be of type KDialog
  */
 KornCfgImpl::KornCfgImpl( QWidget * parent )
 	: QWidget( parent ),
@@ -76,8 +76,9 @@ void KornCfgImpl::slotEditBox()
 		return; //No item selected
 	elbBoxes->setEnabled( false );
 	
-	_base = new KDialogBase( this, "Box Dialog", false, "Box Configuration",
-					     KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok, true );
+	_base = new KDialog( this, "Box Configuration", KDialog::Ok | KDialog::Cancel );
+	_base->setModal( false );
+	_base->enableButtonSeparator( true );
 	KornBoxCfgImpl *widget = new KornBoxCfgImpl( _base );
 	
 	connect( _base, SIGNAL( finished() ), this, SLOT( slotDialogDestroyed() ) );

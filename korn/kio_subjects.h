@@ -19,7 +19,9 @@
 #ifndef MK_KIO_SUBJECTS_H
 #define MK_KIO_SUBJECTS_H
 
-//This class calls other class to read all the subjects
+/**
+ * This file defines the class KIO_Subjects
+ */
 
 #include <qobject.h>
 
@@ -34,16 +36,33 @@ class KURL;
 template<class T> class QList;
 class QString;
 
+/**
+ * This class calls other class to read all the subjects
+ */
 class KIO_Subjects : public QObject
 { Q_OBJECT
 public:
+	/**
+	 * Constructor
+	 */
 	KIO_Subjects( QObject * parent );
+	/**
+	 * Destructor
+	 */
 	~KIO_Subjects( );
 	
-	//This function let it start fetching headers.
-	void doReadSubjects( KKioDrop* );
+	/**
+	 * This function let it start fetching headers.
+	 *
+	 * @param drop the drop to take of the list of message which have to be fetched
+	 */
+	void doReadSubjects( KKioDrop* drop );
 	
-	//This function should return true then and only then of no error occurred.
+	/**
+	 * This function can be used to find out if this class is still valid.
+	 * 
+	 * @return false if an error occured; true otherwise
+	 */
 	bool valid( ) { return _valid; }
 	
 private:
@@ -63,7 +82,9 @@ private:
 	void disConnect( bool );
 	
 public slots:
-	//This function called the fetching of headers.
+	/**
+	 * This slot is called when the fetching of messages is canceled (by the user).
+	 */
 	void cancelled( );
 	
 private slots:
@@ -71,4 +92,4 @@ private slots:
 	void slotFinished( KIO_Single_Subject* );
 };
 
-#endif
+#endif //MK_KIO_SUBJECTS_H

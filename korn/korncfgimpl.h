@@ -24,7 +24,7 @@
 class KConfig;
 #include "korncfg.h"
 
-class KDialogBase;
+class KDialog;
 
 class QObject;
 class QString;
@@ -56,7 +56,7 @@ private:
 	void rewritePasswords();
 	
 	KConfig *_config;
-	KDialogBase *_base;
+	KDialog *_base;
 };
 
 

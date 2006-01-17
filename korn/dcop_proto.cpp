@@ -43,6 +43,11 @@ QMap< QString, QString > * DCOP_Protocol::createConfig( KConfigGroup* config, co
 	return result;
 }
 
+QString DCOP_Protocol::configName() const
+{
+	return "dcop";
+}
+
 void DCOP_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 {
 	groupBoxes->append( "DCOP" );

@@ -19,6 +19,12 @@
 #ifndef KIO_CONNECTION
 #define KIO_CONNECTION
 
+/**
+ * @file
+ *
+ * This file defines the class KIO_Connection
+ */
+
 class KIO_Protocol;
 
 class KURL;
@@ -26,6 +32,11 @@ namespace KIO { class Slave; class MetaData; }
 
 template< class T, class S > class QMap;
 
+/**
+ * This class is used to keep track of several connection.
+ * The target is to prevent that multiple connections are opened
+ * to the save host.
+ */
 class KIO_Connection
 {
 public:

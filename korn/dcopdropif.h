@@ -19,6 +19,12 @@
 #ifndef DCOPDROPIF_H
 #define DCOPDROPIF_H
 
+/**
+ * @file
+ *
+ * This file defines the class DCOPDropInterface
+ */
+
 #include <dcopobject.h>
 
 class DCOPDrop;
@@ -61,6 +67,7 @@ k_dcop:
 	 *
 	 * @param id The id of the message to be deleted. The id can be obtained in
 	 * 	the "addMessage" dcop call.
+	 * @return true if the operation was succesfull, false otherwise
 	 */
 	bool removeMessage( int id );
 	
@@ -68,4 +75,4 @@ private:
 	DCOPDrop *_drop;
 };
 
-#endif
+#endif //DCOPDROPIF_H

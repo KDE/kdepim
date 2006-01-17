@@ -24,7 +24,7 @@
 
 class KConfig;
 class KConfigGroup;
-class KDialogBase;
+class KDialog;
 
 class QFont;
 class QString;
@@ -65,7 +65,7 @@ private:
 	
 	KConfig* _config;
 	KConfigGroup *_group;
-	KDialogBase *_base;
+	KDialog *_base;
 	int _index;
 	QString *_anims[ 2 ];
 	QFont *_fonts[ 2 ];

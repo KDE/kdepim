@@ -20,6 +20,10 @@
 #ifndef DCOP_PROTO_H
 #define DCOP_PROTO_H
 
+/**
+ * @file This file only have one class: DCOP_Protocol
+ */
+
 #include "protocol.h"
 
 class AccountInput;
@@ -30,13 +34,14 @@ class Protocol;
 
 class QObject;
 class QStringList;
+class QString;
 class QWidget;
 
 template< class T> class QList;
 template< class T> class QVector;
 template< class T, class S> class QMap;
 
-#include <qstring.h>
+//#include <qstring.h>
 
 /**
  * This class implements a DCOP-protocol.
@@ -76,7 +81,7 @@ public:
 	 * This return the name of this protocol. It is always "dcop".
 	 * @return The name of this protocol: "dcop"
 	 */
-	virtual QString configName() const { return "dcop"; }
+	virtual QString configName() const;
 
 	/**
 	 * This function sets into the list the groupboxes.

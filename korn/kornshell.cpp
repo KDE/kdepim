@@ -26,7 +26,7 @@
 
 #include <kapplication.h>
 #include <kconfig.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <klocale.h>
 
 KornShell::KornShell( QWidget * parent )
@@ -60,8 +60,9 @@ void KornShell::optionDlg()
 		return;
 	}
 	
-	_configDialog = new KDialogBase( 0, "Configuration Dialog", false, i18n( "Korn Configuration" ),
-					 KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply, KDialogBase::Ok, true );
+	_configDialog = new KDialog( (QWidget*)0, i18n( "Korn Configuration" ), KDialog::Ok | KDialog::Cancel | KDialog::Apply );
+	_configDialog->setModal( false );
+	_configDialog->enableButtonSeparator( true );
 	
 	KornCfgImpl *widget = new KornCfgImpl( _configDialog );
 	_configDialog->setMainWidget( widget );

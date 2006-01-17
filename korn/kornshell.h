@@ -20,7 +20,7 @@
 #define MK_KORNSHELL_H
 
 class BoxContainer;
-class KDialogBase;
+class KDialog;
 
 class KConfig;
 
@@ -51,7 +51,7 @@ private:
 	
 	KConfig *_config;
 	BoxContainer *_box;
-	KDialogBase *_configDialog;
+	KDialog *_configDialog;
 };
 
 #endif //MK_KORNSHELL_H

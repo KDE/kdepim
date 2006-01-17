@@ -265,8 +265,9 @@ void KornBoxCfgImpl::slotEditBox()
 		return; //No item selected
 	elbAccounts->setEnabled( false );
 	
-	_base = new KDialogBase( this, "Account Dialog", false, i18n("Box Configuration"),
-					     KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok, true );
+	_base = new KDialog( this, i18n("Box Configuration"), KDialog::Ok | KDialog::Cancel );
+	_base->setModal( false );
+	_base->enableButtonSeparator( true );
 	KornAccountCfgImpl *widget = new KornAccountCfgImpl( _base );
 
 	_base->setMainWidget( widget );

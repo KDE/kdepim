@@ -19,6 +19,12 @@
 #ifndef MK_ACCOUNTMANAGER_H
 #define MK_ACCOUNTMANAGER_H
 
+/**
+ * @file
+ *
+ * This file defines the class AccountManager
+ */
+
 #include <qobject.h>
 
 class DCOPDrop;
