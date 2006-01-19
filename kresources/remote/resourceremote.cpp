@@ -168,7 +168,7 @@ bool ResourceRemote::doLoad()
   if ( mDownloadJob ) {
     kdWarning() << "ResourceRemote::load(): download still in progress."
                 << endl;
-    return false;
+    return true;
   }
   if ( mUploadJob ) {
     kdWarning() << "ResourceRemote::load(): upload still in progress."
