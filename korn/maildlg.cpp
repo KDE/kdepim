@@ -11,9 +11,11 @@
 #include "maildrop.h"
 
 KornMailDlg::KornMailDlg( QWidget *parent )
-   : KDialogBase( parent, "maildialog", true, i18n("Mail Details"), User1|Close, Close, true, KGuiItem(i18n("&Full Message"))),
+   : KDialog( parent, i18n("Mail Details"), KDialog::User1|KDialog::Close, 0, KGuiItem(i18n("&Full Message"))),
    _progress( 0 )
 {
+	setModal( true );
+	enableButtonSeparator( true );
 	QWidget * page = new QWidget( this );
 	setMainWidget(page);
 	QVBoxLayout * topLayout = new QVBoxLayout( page, 0, spacingHint() );

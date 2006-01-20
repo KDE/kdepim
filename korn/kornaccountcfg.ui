@@ -52,7 +52,7 @@
        </property>
       </widget>
      </widget>
-     <widget class="QWidget" name="TabPage" >
+     <widget class="QWidget" name="account_tab" >
       <attribute name="title" >
        <string>&amp;Account</string>
       </attribute>
@@ -88,7 +88,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage" >
+     <widget class="QWidget" name="event_tab" >
       <attribute name="title" >
        <string>&amp;Events</string>
       </attribute>

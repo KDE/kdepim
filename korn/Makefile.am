@@ -101,12 +101,9 @@ noinst_HEADERS = \
   kio_read.h \
   kio_delete.h \
   imap_proto.h \
-  imaps_proto.h \
   kio_proto.h \
-  maildir_proto.h \
   nntp_proto.h \
   pop3_proto.h \
-  pop3s_proto.h \
   password.h \
   process_proto.h \
   progress_dialog_impl.h \

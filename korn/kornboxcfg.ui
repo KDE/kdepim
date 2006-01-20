@@ -21,7 +21,7 @@
    </property>
    <item>
     <widget class="QTabWidget" name="tabWidget3" >
-     <widget class="QWidget" name="tab" >
+     <widget class="QWidget" name="tabView" >
       <attribute name="title" >
        <string>&amp;View</string>
       </attribute>
@@ -361,7 +361,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab" >
+     <widget class="QWidget" name="tabEvents" >
       <attribute name="title" >
        <string>&amp;Events</string>
       </attribute>
@@ -1289,7 +1289,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage" >
+     <widget class="QWidget" name="tabAccounts" >
       <attribute name="title" >
        <string>Acco&amp;unts</string>
       </attribute>
@@ -1312,7 +1312,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="TabPage" >
+     <widget class="QWidget" name="tabDCOP" >
       <attribute name="title" >
        <string>&amp;DCOP</string>
       </attribute>
@@ -1340,10 +1340,24 @@
  <pixmapfunction></pixmapfunction>
  <customwidgets>
   <customwidget>
+   <class>KIconButton</class>
+   <extends>QWidget</extends>
+   <header>kicondialog.h</header>
+   <container>1</container>
+   <pixmap></pixmap>
+  </customwidget>
+  <customwidget>
    <class>KURLRequester</class>
    <extends>QWidget</extends>
    <header>kurlrequester.h</header>
    <container>1</container>
+   <pixmap></pixmap>
+  </customwidget>
+  <customwidget>
+   <class>Q3ListBox</class>
+   <extends></extends>
+   <header>q3listbox.h</header>
+   <container>0</container>
    <pixmap></pixmap>
   </customwidget>
   <customwidget>
@@ -1365,13 +1379,6 @@
    <extends>Q3ListBox</extends>
    <header>keditlistbox.h</header>
    <container>0</container>
-   <pixmap></pixmap>
-  </customwidget>
-  <customwidget>
-   <class>KIconButton</class>
-   <extends>QWidget</extends>
-   <header>kicondialog.h</header>
-   <container>1</container>
    <pixmap></pixmap>
   </customwidget>
  </customwidgets>

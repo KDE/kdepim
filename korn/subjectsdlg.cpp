@@ -59,11 +59,12 @@ int KornSubjectsDlg::SubjectListViewItem::compare( Q3ListViewItem* item, int col
 }
 
 KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
-   : KDialogBase( parent, "urldialog", true, "test", Close, Close, true), _mailDrop( new QList< KMailDrop* > ), 
+   : KDialog( parent, i18n( "Messages" ), KDialog::Close ), _mailDrop( new QList< KMailDrop* > ), 
  	_subjects(0), _delete(0), mailDlg(0), _canDeleteMaildrop( true )
 {
 	_loadSubjectsCanceled = false;
 	setModal( true );
+	enableButtonSeparator( true );
 
 	// The dialog contains a list view and several buttons.
 	// Two box layouts hol dthem.

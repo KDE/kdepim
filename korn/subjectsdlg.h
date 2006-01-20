@@ -1,7 +1,7 @@
 #ifndef KornSubjectsDlg_h
 #define KornSubjectsDlg_h
 
-#include<kdialogbase.h>
+#include <kdialog.h>
 #include <klistview.h>
 #include <QVector>
 #include <kpushbutton.h>
@@ -21,7 +21,7 @@ template< class T > class QList;
  * Buttons allow the user to select several mails, delete them or to show one
  * of the mails.
  */
-class KornSubjectsDlg: public KDialogBase
+class KornSubjectsDlg: public KDialog
 {
 	Q_OBJECT
 

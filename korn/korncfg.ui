@@ -24,7 +24,7 @@
    </property>
    <item row="0" column="0" >
     <widget class="QTabWidget" name="tabKornCfg" >
-     <widget class="QWidget" name="tab" >
+     <widget class="QWidget" name="tabBoxes" >
       <attribute name="title" >
        <string>&amp;Boxes</string>
       </attribute>
@@ -57,7 +57,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab" >
+     <widget class="QWidget" name="tabView" >
       <attribute name="title" >
        <string>&amp;View</string>
       </attribute>

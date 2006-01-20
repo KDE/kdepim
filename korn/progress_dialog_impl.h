@@ -59,6 +59,7 @@ public:
 	 */
 	virtual ~DoubleProgressDialog();
 
+public slots:
 	/**
 	 * This function sets the text above the progress bars.
 	 *
@@ -91,6 +92,8 @@ public:
 	 * @param number the progress of the minor progress bar
 	 */
 	void setProgress( int number );
+
+private slots:
 	/**
 	 * This function is called when the user press the cancel button.
 	 */

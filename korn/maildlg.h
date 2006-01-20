@@ -1,7 +1,7 @@
 #ifndef KornMailDlg_h
 #define KornMailDlg_h
 
-#include<kdialogbase.h>
+#include <kdialog.h>
 #include <keditcl.h>
 
 class KornMailSubject;
@@ -14,7 +14,7 @@ class QString;
  * KornMailDlg shows the header and (if available) the body of a mail. 
  * If the mails body is not available a button allows the user to load it.
  */
-class KornMailDlg : public KDialogBase
+class KornMailDlg : public KDialog
 {
 	Q_OBJECT
 
