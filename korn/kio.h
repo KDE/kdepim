@@ -89,45 +89,124 @@ private:
 	friend class KIO_Delete;
 	friend class KIO_Single_Subjects;
 public:
+	/** The name of the config key for the protocol */
 	static const char *ProtoConfigKey;
+	/** The name of the config key for the hostname */
 	static const char *HostConfigKey;
+	/** The name of the config key for the port */
 	static const char *PortConfigKey;
+	/** The name of the config key for the username */
 	static const char *UserConfigKey;
+	/** The name of the config key for the mailbox */
 	static const char *MailboxConfigKey;
+	/** The name of the config key for the password */
 	static const char *PassConfigKey;
+	/** The name of the config key for the savepassword (true/false) setting */
 	static const char *SavePassConfigKey;
+	/** The name of the config key for the metadata */
 	static const char *MetadataConfigKey;
 
 public:
 	/**
-	* KKioDrop Constructor
-	*/
+	 * KKioDrop Constructor
+	 */
 	KKioDrop();
+	/**
+	 * Constructor
+	 *
+	 * @param config a configuration group for reading settings out
+	 */
 	KKioDrop( KConfigGroup* );
 
 	/** 
-	  * Set the server that will be checked for new mail.
+	 * Set the server that will be checked for new mail.
+	 *
+	 * @param proto the protocol
+	 * @param server the serer or host
+	 * @param port the port number
 	 */
 	void setKioServer( const QString & proto, const QString & server, int port = -1 );
+	/** 
+	 * Set the server that will be checked for new mail.
+	 *
+	 * @param proto the protocol for this account
+	 * @param server the serer or host for this account
+	 * @param port the port number for this account
+	 * @param metadata the metadata for this account
+	 * @param ssl true if ssl should used; false otherwise
+	 * @param setProtocol true if _protocol should be initialized
+	 */
 	void setKioServer( const QString & proto, const QString & server, int port,
 	                   const KIO::MetaData metadata, bool ssl, bool setProtocol = true ); //Last argument inits _protocol
 
-	/** Set the account information for the PROTO server. */
+	/**
+	 * Set the account information for the PROTO server.
+	 *
+	 * @param user the username of this account
+	 * @param password the password for this account
+	 * @param mailbox the mailbox setting for this account
+	 * @param auth the autentication for this account
+	 */
 	void setUser( const QString & user, const QString & password, const QString & mailbox, const QString & auth );
 
-	// The next functions return settings
+	/**
+	 * This function returns the name of the protocol of this account
+	 *
+	 * @return the name of the protocol for this account
+	 */
 	QString protocol() const;
+	/**
+	 * This function returns the hostname.
+	 *
+	 * @return the hostname of the account
+	 */
 	QString server() const;
+	/**
+	 * This function returns the port
+	 *
+	 * @return the port of this account
+	 */
 	int port() const;
 
+	/**
+	 * This function returns the username.
+	 *
+	 * @return the username of this account
+	 */
 	QString user() const;
+	/**
+	 * This function returns the password.
+	 *
+	 * @return the password of this account
+	 */
 	QString password() const;
+	/**
+	 * This function returns the mailbox.
+	 *
+	 * @return the mailbox of this account
+	 */
 	QString mailbox() const;
+	/**
+	 * This function returns the authentication string.
+	 *
+	 * @return the authentication method of this account
+	 */
 	QString auth() const;
 
+	/**
+	 * This function rechecks the mailbox: it count the number of emails.
+	 */
 	virtual void recheck();
+	/**
+	 * This function always rechecks the mailbox, but it cancelled a pending count.
+	 */
 	virtual void forceRecheck();
 
+	/**
+	 * This function returns false if an errors occured.
+	 *
+	 * @return false if an errors occured; true otherwise
+	 */
 	virtual bool valid();
 
 	/**
@@ -135,24 +214,99 @@ public:
 	*/
 	virtual ~KKioDrop();
 
+	/**
+	 * This function checks if it is possible to read subjects.
+	 *
+	 * @return true if it is possible to read subjects; false otherwise
+	 */
 	virtual bool canReadSubjects(void);
+	/**
+	 * This function reads the subjects of a mail box.
+	 *
+	 * @param stop a pointer to a boolean to cancel the function
+	 * @return a list of subjects, of 0 is asynchrone
+	 */
 	virtual QVector<KornMailSubject> * doReadSubjects(bool * stop); 
 	
+	/**
+	 * This function checks if it is possible to delete emails.
+	 * 
+	 * @return true if it is possible to delete emails; false otherwise
+	 */
 	virtual bool canDeleteMails();
+	/**
+	 * This function deletes a list of emails
+	 * 
+	 * @param ids a list of emails id's to delete
+	 * @param stop a pointer to a boolean to cancel the operation
+	 * @return true if succesfull; false otherwise
+	 */
 	virtual bool deleteMails(QList<const KornMailId*> * ids, bool * stop);
 
+	/**
+	 * This function checks if it is possible to read emails.
+	 *
+	 * @return true if it is possible to read emails; false otherwise
+	 */
 	virtual bool canReadMail ();
+	/**
+	 * This function reads a certain email.
+	 * The email can be specified with a KornMailId (more specific: a KornStringId)
+	 *
+	 * @param id the id of the email which must be read
+	 * @param stop a pointer to a boolean to cancel the reading
+	 * @return the message which is read
+	 */
 	virtual QString readMail(const KornMailId * id, bool * stop);
+	//TODO: remove *stop from parameter, and the return parameter
 	
+	/**
+	 * This function returns a clone of the maildrop.
+	 *
+	 * @return a clone of this maildrop
+	 */
 	virtual KMailDrop* clone () const ;
+	/**
+	 * This function reads the configuration from a configuration mapping.
+	 * The mapping is constructed from the configuration file.
+	 *
+	 * @param map the configuration mapping containing the settings of the account
+	 * @param protocol a pointer to a Protocol class containing information about the protocol
+	 * @return true if succesfull; false otherwise
+	 */
 	virtual bool readConfigGroup ( const QMap< QString, QString >& map, const Protocol * protocol );
+	/**
+	 * This function writes the configuration to a file
+	 *
+	 * @param cfg the configuration mapping: the settings are written to this group
+	 * @return true if succesfull; false otherwise
+	 */
+	//TODO: delete this function (because writing is done during configuration). Note: resetcounter should be written
 	virtual bool writeConfigGroup ( KConfigBase& cfg ) const;
+	
+	/**
+	 * This function returns the typename of this maildrop.
+	 * For this class, it always return "kio".
+	 *
+	 * @return the type of the Maildrop, for this class always "kio"
+	 */
 	virtual QString type() const { return QString::fromUtf8("kio"); }
 	
+	//TODO: synchrone or asynchrone; not both. Delete synchone, asynchrone of both
+	/**
+	 * This function returns if this protocol is synchrone (blocks when checking)
+	 * kio never blocks, so this function returns false
+	 *
+	 * @return true if the maildrop is synchrone; false otherwise
+	 */
 	virtual bool synchrone() const { return false; } //class is not synchrone
 
-	//virtual void addConfigPage( KDropCfgDialog * );
-
+	/**
+	 * This function returns if this protocol is synchrone (blocks when checking)
+	 * kio never blocks, so this function returns true
+	 *
+	 * @return true if the maildrop is asynchrone; false otherwise
+	 */
 	virtual bool asynchrone() const { return true; }
 
 private:
@@ -190,8 +344,17 @@ private slots:
 	void slotConnectionInfoMessage( const QString& );
 	
 public slots:
+	/**
+	 * If this slot is called, a pending readSubjects is cancelled
+	 */
 	virtual void readSubjectsCanceled();
+	/**
+	 * If this slot is called, a pending readMail is cancelled
+	 */
 	virtual void readMailCanceled();
+	/**
+	 * If this slot is called, a pending deleteMail is cancelled
+	 */
 	virtual void deleteMailsCanceled();
 };
 #endif // KEG_KIODROP_H

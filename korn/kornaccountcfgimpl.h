@@ -19,6 +19,12 @@
 #ifndef MK_KORNACCOUNTCFGIMPL_H
 #define MK_KORNACCOUNTCFGIMPL_H
 
+/**
+ * @file
+ *
+ * This file contains the class KornAccountCfgImpl
+ */
+
 #include "kornaccountcfg.h"
 #include <QWidget>
 //Added by qt3to4:
@@ -40,20 +46,54 @@ class AccountInput;
 template< class T > class QList;
 template< class T > class QVector;
 
+/**
+ * This class contains the configuration for the accounts.
+ * The class is construated from a ui-file and the Protocol* classes.
+ */
 class KornAccountCfgImpl : public QWidget, public Ui_KornAccountCfg
 { Q_OBJECT
 public:
+	/**
+	 * Constructor
+	 *
+	 * @param parent the parent of this object
+	 */
 	KornAccountCfgImpl( QWidget * parent = 0 );
+	/**
+	 * Destructor
+	 */
 	~KornAccountCfgImpl();
 	
+	/**
+	 * This function is called to read the config from a configuration file.
+	 * The boxnr and accountnr is used to read and save the password
+	 *
+	 * @param config the configuration group
+	 * @param entries the configuration entries
+	 * @param boxnr the number of this box
+	 * @param accountnr the number of this account
+	 */
 	void readConfig( KConfigGroup *config, QMap< QString, QString > *entries, int boxnr, int accountnr );
+	/**
+	 * This function writes the configuration to the configuration group.
+	 * The configuration group is stored after reading.
+	 */
 	void writeConfig();
 
 public slots:
+	/**
+	 * This slot should be called if the ssl-function changes.
+	 * This function finds out what the new value is, and change the port-value if neccesairy.
+	 */
 	void slotSSLChanged();
 
 protected slots:
-	virtual void slotProtocolChanged( const QString& );
+	/**
+	 * This function should be called if the protocol changes.
+	 *
+	 * @param protocol the name of the protocol as is selected
+	 */
+	virtual void slotProtocolChanged( const QString& protocol );
 	
 private slots:
 	void slotOK();

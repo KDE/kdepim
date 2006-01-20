@@ -1,22 +1,20 @@
-//Added by qt3to4:
-#include <QLabel>
 /*
-* Copyright (C) 2005, Mart Kelder (mart.kde@hccnet.nl)
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+ * Copyright (C) 2005, Mart Kelder (mart.kde@hccnet.nl)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 
 
 #ifndef MK_ACCOUNT_INPUT
@@ -92,7 +90,7 @@ public:
 	 * @param value The value that the object must get.
 	 */
 	virtual void setValue( const QString& value ) = 0;
-protected:
+private:
 	QString *_configName;
 };
 
@@ -222,7 +220,7 @@ public:
 	 * @param title The title next to the combo box
 	 * @param list A mapping which maps a value in the configuration to a (translated) entry in the
 	 *             combo box.
-	 * @param default The default value of the combo box.
+	 * @param defaul The default value of the combo box.
 	 * @param configName The name in which the option is saved.
 	 */
 	ComboInput( QWidget *parent, const QString& title, const QMap<QString,QString>& list,

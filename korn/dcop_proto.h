@@ -21,7 +21,9 @@
 #define DCOP_PROTO_H
 
 /**
- * @file This file only have one class: DCOP_Protocol
+ * @file 
+ *
+ * This file only have one class: DCOP_Protocol
  */
 
 #include "protocol.h"
@@ -73,10 +75,11 @@ public:
 	/**
 	 * The function converts the information of the configuration file into a mapping.
 	 *
-	 * @param config The configuration instance to be mapped
-	 * @return The keys and values of the configuration in a mapping
+	 * @param config the configuration instance to be mapped
+	 * @param password the password as obtained from the KWallet
+	 * @return the keys and values of the configuration in a mapping
 	 */
-	virtual QMap< QString, QString > * createConfig( KConfigGroup* config, const QString& passwd ) const;
+	virtual QMap< QString, QString > * createConfig( KConfigGroup* config, const QString& password ) const;
 	/**
 	 * This return the name of this protocol. It is always "dcop".
 	 * @return The name of this protocol: "dcop"

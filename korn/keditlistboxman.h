@@ -34,14 +34,26 @@ class QWidget;
 class KEditListBoxManager : public KEditListBox
 { Q_OBJECT
 public:
+	//TODO: remove the argument
 	/**
-	 * Constructor: @see KEditListBoxManager::KEditListBoxManager( const QString&, QWidget, const char * name, bool, int )
+	 * Constructor: @see KEditListBox::KEditListBox( const QString&, QWidget, const char * name, bool, int )
+	 *
+	 * @param parent the parent of this object
+	 * @param name argument to be removed in future
+	 * @param checkAtEntering the characters are checked when the name is entered
+	 * @param buttons A list of buttons in the KEditListBox
 	 */
 	KEditListBoxManager(	QWidget *parent = 0, const char *name = 0,
 			bool checkAtEntering=true, int buttons = All );
 			
 	/**
 	 * The save as above, but with other options for KEditListBox.
+	 *
+	 * @param title title for the listbox
+	 * @param parent the parent of this object
+	 * @param name argument to be removed in future
+	 * @param checkAtEntering the characters are checked when the name is entered
+	 * @param buttons A list of buttons in the KEditListBox
 	 */
 	KEditListBoxManager(	const QString& title, QWidget *parent = 0,
 			const char *name = 0, bool checkAtEntering=true,
@@ -139,8 +151,19 @@ signals:
 	 */
 	void setDefaults( const QString& name, const int index, KConfig* config );
 
-	void elementsSwapped( int, int );
-	void elementDeleted( int );
+	/**
+	 * This signal is emitted when two elements are swapped.
+	 *
+	 * @param elem1 the index of one of the elements which is swapped
+	 * @param elem2 the index of the other element which is swapped
+	 */
+	void elementsSwapped( int elem1, int elem2 );
+	/**
+	 * This signal is emitted when an element is deleted
+	 *
+	 * @param elem the index of the element which is deleted
+	 */
+	void elementDeleted( int elem );
 	
 };
 

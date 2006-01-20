@@ -19,7 +19,11 @@
 #ifndef MK_KIOCOUNT_H
 #define MK_KIOCOUNT_H
 
-//This class count the number of message available.
+/**
+ * @file
+ *
+ * This file contains the class KIO_Count
+ */
 
 #include <qobject.h>
 
@@ -40,18 +44,42 @@ class KURL;
 
 class QString;
 
+/**
+ * This class count the number of message available in a mailbox.
+ * This class have access to the KKioDrop drop throught friend classes.
+ */
 class KIO_Count : public QObject
 { Q_OBJECT
 public:
+	/**
+	 * Constructor.
+	 *
+	 * @param parent the parent of this object
+	 */
 	KIO_Count( QObject * parent = 0 );
+	/**
+	 * Destructor
+	 */
 	~KIO_Count();
 	
-	//This function starts counting
-	void count( KKioDrop* );
+	/**
+	 * This function start counting.
+	 * This infomration needed for counting are retrieved through the drop parameter.
+	 *
+	 * @param drop the KKioDrop of the account to check
+	 */
+	void count( KKioDrop* drop );
 	
-	//This functions returns true of no error has occurred.
+	/**
+	 * This function returns true if no errors occured.
+	 *
+	 * @return false if an error occured; true otherwise
+	 */
 	bool valid( ) { return _valid; }
 	
+	/**
+	 * This function stops the pending counting.
+	 */
 	void stopActiveCount();
 private:
 	KKioDrop *_kio;
@@ -77,4 +105,4 @@ private slots:
 	void deleteSingleSubject( KIO_Single_Subject* );
 };
 
-#endif
+#endif //MK_KIOCOUNT_H

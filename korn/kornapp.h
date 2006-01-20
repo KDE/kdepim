@@ -29,7 +29,18 @@ public:
 	*/
 	virtual ~KornApp(){}
 
+	/**
+	 * This function handles a new instance of KOrn.
+	 * If KOrn already is started, it displays the option dialog; elsewise it starts KOrn.
+	 *
+	 * @return always 0
+	 */
 	virtual int newInstance();
+	/**
+	 * This function sets the KornShell.
+	 *
+	 * @param shell the new KornShell
+	 */
 	void setShell( KornShell *shell ){ _shell = shell; };
 	
 private:

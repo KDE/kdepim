@@ -45,9 +45,10 @@ public:
 	 * It uses another slave if that is already available.
 	 * A slave getted with this function should always be deleted with removeSlave of this class.
 	 *
-	 * @param kurl The kurl of the connection.
-	 * @param protocol The used protocol.
-	 * @return A slave which can be used for jobs, 0 if it fails to open one.
+	 * @param kurl the kurl of the connection
+	 * @param metadata the metadata for the kurl
+	 * @param protocol the used protocol
+	 * @return a slave which can be used for jobs, 0 if it fails to open one
 	 */
 	static KIO::Slave* getSlave( const KURL& kurl, const KIO::MetaData& metadata, const KIO_Protocol* protocol );
 

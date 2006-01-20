@@ -37,8 +37,13 @@ public:
 	 * Constructor: all elements are passed to BoxContainer, except orientation.
 	 *
 	 * @param orientation The orientation of the box: it is a vertical or horizontal box?
+	 * @param parent the parent of this object
 	 */
 	HVContainer( Qt::Orientation orientation, QObject * parent = 0 );
+
+	/**
+	 * Destructor
+	 */
 	~HVContainer();
 	
 	/**

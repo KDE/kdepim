@@ -19,27 +19,61 @@
 #ifndef MK_STRINGID_H
 #define MK_STRINGID_H
 
-/*
- * This class provides a identification with string,
- * because in KIO, I don't know if emails return in the same order.
- * Author Mart Kelder
+/**
+ * @file
+ *
+ * This file contains the class KornStringId
  */
 
 #include<qstring.h>
 #include"mailid.h"
 
+/**
+ * This class provides a identification with string.
+ * 
+ * @author Mart Kelder <mart.kde@hccnet.nl>
+ */
 class KornStringId : public KornMailId
 {
 private:
 	QString _id;
 public:
+	/**
+	 * Constructor, where the id is given with a parameter
+	 *
+	 * @param id the name for this identification
+	 */
 	KornStringId( const QString & id );
+	/**
+	 * Constructor, where the id is obtained from another KornStringId
+	 * 
+	 * @param src another KornStringId containing the name of the identification
+	 */
 	KornStringId( const KornStringId & src );
+	/**
+	 * Empty destructor
+	 */
 	~KornStringId() {}
-
+	
+	/**
+	 * Returns the id as given to the class in the constructor
+	 *
+	 * @return the id
+	 */
 	QString getId() const { return _id; }
+	/**
+	 * Return the id, but converted to a QString.
+	 * Because this id already is a QString, convertion is easy.
+	 *
+	 * @return the id
+	 */
 	virtual QString toString() const { return _id; }
 
+	/**
+	 * This function clones the id.
+	 *
+	 * @return a new KornStringId containing the same id
+	 */
 	virtual KornMailId *clone() const;
 };
 

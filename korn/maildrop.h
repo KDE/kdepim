@@ -33,6 +33,10 @@ class KMailDrop : public QObject
 
   public:
 
+    //TODO: still used?
+    /**
+     * This enum is used to determe the type of the email box
+     */
     enum  Style { Plain, Colour, Icon };
 
   private:
@@ -55,22 +59,39 @@ class KMailDrop : public QObject
 
   public:
 
+    /** The name of the config key for the type of the mailbox */
     static const char *TypeConfigKey;
+    /** The name of the config key for the caption (name) of the mailbox */
     static const char *CaptionConfigKey;
+    /** The name of the config key for the "on click command" of the mailbox */
     static const char *ClickConfigKey;
+    /** The name of the config key for the new mail command of the mailbox */
     static const char *NewMailConfigKey;
+    /** The name of the config key for the sound file of the mailbox */
     static const char *SoundFileConfigKey;
+    /** The name of the config key for the display style of the mailbox */
     static const char *DisplayStyleConfigKey;
+    /** The name of the config key for the new text color of the mailbox */
     static const char *NFgColourConfigKey;
+    /** The name of the config key for the new background color of the mailbox */
     static const char *NBgColourConfigKey;
+    /** The name of the config key for the text color of the mailbox (if there are no new messages) */
     static const char *FgColourConfigKey;
+    /** The name of the config key for the background color of the mailbox (if there are no new messages) */
     static const char *BgColourConfigKey;
+    /** The name of the config key for the name of icon file of the mailbox (if there are no new messages) */
     static const char *IconConfigKey;
+    /** The name of the config key for the name of the icon file of the mailbox (if there are new messages) */
     static const char *NewMailIconConfigKey;
+    /** The name of the config key for the number of resetted messages of the mailbox. */
     static const char *ResetCounterConfigKey;
+    /** The name of the config key for the passive popup setting (true/false) of the mailbox */
     static const char *PassivePopupConfigKey;
+    /** The name of the config key for the passive date setting (true/false) of the mailbox. True means that dates are also printed */
     static const char *PassiveDateConfigKey; //Enabled date in Passive popup
+    /** The name of the config key for the settings of using the parent box of the mailbox */
     static const char *UseBoxSettingsConfigKey;
+    /** The name of the config key for the name of the mailbox */
     static const char *RealNameConfigKey;
     
     /**
@@ -108,10 +129,16 @@ class KMailDrop : public QObject
     virtual void forceRecheck() { recheck(); }
 
     /** 
+     * This function starts the monitor
+     *
+     * @return true if succesfull; false otherwise
      */
     virtual bool startMonitor()=0;
 
-    /** 
+    /**
+     * This function stops the monitor.
+     *
+     * @return true if succesfull; false otherwise
      */
     virtual bool stopMonitor()=0;
 
@@ -160,6 +187,13 @@ class KMailDrop : public QObject
      * @return true if read was successful, false otherwise.
      */
     virtual bool readConfigGroup( const KConfigBase& cfg );
+    /**
+     * This function have a mapping to the configuration, and a protocol for the type of protocol.
+     *
+     * @param map the configuration mapping containing the configuration entries of this account
+     * @param protocol a pointer to a class which contains the information about the used type of protocol
+     * @return true if succesfull; false otherwise
+     */
     virtual bool readConfigGroup( const QMap< QString, QString > &, const Protocol * ) { return true; }
 
     /** 
@@ -183,7 +217,7 @@ class KMailDrop : public QObject
      * Return if the maildrop is synchrone (true) or asynchrone (false).
      * This way, classes like KornSubjectDlg know if functions like
      * readSubject() return a result immediately.
-     * @param true by a synchrone type; false by an asynchrone (like KKkioDrop) type.
+     * @return true by a synchrone type; false by an asynchrone (like KKkioDrop) type.
      */
     virtual bool synchrone() const { return true; }
     
@@ -263,41 +297,187 @@ class KMailDrop : public QObject
     virtual QString readMail(const KornMailId * id, bool * stop);
 
     // data that belongs in every monitor
+    //TODO: replace them by a settings class?
 
+    /**
+     * Get-function for the caption setting
+     *
+     * @return the caption of this Maildrop
+     */
     QString       caption()       const { return _caption; }
+    /**
+     * Get-function for the click command setting
+     *
+     * @return the click command of this Maildrop
+     */
     QString       clickCmd()      const { return _clickCmd; }
+    /**
+     * Get-function for the new mail command setting
+     *
+     * @return the new mail command of this Maildrop
+     */
     QString       newMailCmd()    const { return _nMailCmd; }
+    /**
+     * Get-function for the sound file setting
+     *
+     * @return the sound file of this Maildrop
+     */
     QString       soundFile()     const { return _soundFile;}
+    /**
+     * Get-function for the back color setting
+     *
+     * @return the back color of this Maildrop
+     */
     QColor        bgColour()      const { return _bgColour; }
+    /**
+     * Get-function for the text-color setting
+     *
+     * @return the text color (foreground color) of this Maildrop
+     */
     QColor        fgColour()      const { return _fgColour; }
+    /**
+     * Get-function for the new background color setting
+     *
+     * @return the new background color of this Maildrop
+     */
     QColor        newBgColour()   const { return _nbgColour; }
+    /**
+     * Get-function for the new text color setting
+     *
+     * @return the new text color of this Maildrop
+     */
     QColor        newFgColour()   const { return _nfgColour; }
+    /**
+     * Get-function for the icon setting
+     *
+     * @return the icon of this Maildrop
+     */
     QString       icon()          const { return _icon; }
+    /**
+     * Get-function for the new icon setting
+     *
+     * @return the 'icon if there are new messages' setting of this Maildrop
+     */
     QString       newIcon()       const { return _nIcon; }
+    /**
+     * Get-function for the style setting
+     *
+     * @return the display style of this Maildrop
+     */
     Style         displayStyle()  const { return _style; }
+    /**
+     * Get-function for the passive popup setting
+     *
+     * @return true if this maildrop prints a passive popup on new email; false otherwise
+     */
     bool          passivePopup()  const { return _passivePopup; }
+    /**
+     * Get-function for the passive date setting
+     *
+     * @return true if this maildrop prints dates in the passive popup; false otherwise
+     */
     bool	  passiveDate()   const { return _passiveDate; }
+    /**
+     * Get-function for the name setting
+     *
+     * @return the real name of this maildrop
+     */
     QString       realName()      const { return _realName; }
-;
-    void setCaption(QString);
-    void setClickCmd(QString);
-    void setNewMailCmd(QString);
-    void setSoundFile(QString);
-    void setDisplayStyle(Style);
-    void setBgColour(QColor);
-    void setFgColour(QColor);
-    void setNewBgColour(QColor);
-    void setNewFgColour(QColor);
-    void setIcon(QString);
-    void setNewIcon(QString);
-    void setResetCounter(int);
-    void setPassivePopup(bool);
-    void setPassiveDate(bool);
-    void setRealName(QString);
+
+    /**
+     * Set function for caption.
+     *
+     * @param val the new value for this setting
+     */
+    void setCaption(QString val);
+    /**
+     * Set function for click command.
+     *
+     * @param val the new value for this setting
+     */
+    void setClickCmd(QString val);
+    /**
+     * Set function for new mail command.
+     *
+     * @param val the new value for this setting
+     */
+    void setNewMailCmd(QString val);
+    /**
+     * Set function for sound file.
+     *
+     * @param val the new value for this setting
+     */
+    void setSoundFile(QString val);
+    /**
+     * Set function for display style.
+     *
+     * @param val the new value for this setting
+     */
+    void setDisplayStyle(Style val);
+    /**
+     * Set function for background color (when there are no new messages).
+     *
+     * @param val the new value for this setting
+     */
+    void setBgColour(QColor val);
+    /**
+     * Set function for text colour (when there are no new messages).
+     *
+     * @param val the new value for this setting
+     */
+    void setFgColour(QColor val);
+    /**
+     * Set function for background color (when there are new messages).
+     *
+     * @param val the new value for this setting
+     */
+    void setNewBgColour(QColor val);
+    /**
+     * Set function for foreground color (when there are new messages).
+     *
+     * @param val the new value for this setting
+     */
+    void setNewFgColour(QColor val);
+    /**
+     * Set function for icon (when there are no new messages).
+     *
+     * @param val the new value for this setting
+     */
+    void setIcon(QString val);
+    /**
+     * Set function for icon (when there are new messages).
+     *
+     * @param val the new value for this setting
+     */
+    void setNewIcon(QString val);
+    /**
+     * Set function for reset counter.
+     *
+     * @param val the new value for this setting
+     */
+    void setResetCounter(int val);
+    /**
+     * Set function for passive popup.
+     *
+     * @param val the new value for this setting
+     */
+    void setPassivePopup(bool val);
+    /**
+     * Set function for passive date.
+     *
+     * @param val the new value for this setting
+     */
+    void setPassiveDate(bool val);
+    /**
+     * Set function for name.
+     *
+     * @param val the new value for this setting
+     */
+    void setRealName(QString val);
 
     /** 
      * This is called by the manager when it wishes to delete
-     * a monitor. Clients should connect to the @ref ::notifyDisconnect
+     * a monitor. Clients should connect to the notifyDisconnect()
      * signal and ensure that the monitor is not accessed after
      * the signal has been received.
      *
@@ -312,25 +492,43 @@ class KMailDrop : public QObject
      */
     virtual void forceCountZero();
     
-    /*
-     * The next slots are used by kio; the present at this places
+    /**
+     * The next slots are used by the kio maildrop; the present at this places
      * prevent warnings at runtime.
      */
     virtual void readSubjectsCanceled() {}
+    /**
+     * The next slots are used by the kio maildrop; the present at this places
+     * prevent warnings at runtime.
+     */
     virtual void readMailCanceled() {}
+    /**
+     * The next slots are used by the kio maildrop; the present at this places
+     * prevent warnings at runtime.
+     */
     virtual void deleteMailsCanceled() {}
 
-    protected slots:
+protected slots:
 
-      void setCount( int, KMailDrop* );
+    /**
+     * This function sets the number of messages and the maildrop.
+     * This function is called when changed is called.
+     *
+     * @param count the number of messages
+     * @param drop the maildrop
+     */
+    void setCount( int count, KMailDrop* drop );
       
 signals:
 
     /** 
      * This signal is emitted when the mailbox discovers 
      * new messages in the maildrop.
+     *
+     * @param count the number of messages found
+     * @param drop the MailDrop which found the messages
      */
-    void changed( int, KMailDrop* );
+    void changed( int count, KMailDrop* drop );
 
     /**
      * This signal is emitted when the valid-status changes.
@@ -367,7 +565,7 @@ signals:
      * This signal is emitted when a passive error message should be displayed.
      *
      * @param error The error message
-     * @param realName The real name of this object.
+     * @param realname The real name of this object.
      */
     void showPassivePopup( const QString& error, const QString& realname );
     
@@ -375,9 +573,9 @@ signals:
      * readSubjects() might signal readSubject() if
      * an subject is received. This is only useful in
      * asynchrone situations.
-     * @param the subject structure which is read
+     * @param subject the subject structure which is read
      */
-    void readSubject( KornMailSubject * );
+    void readSubject( KornMailSubject * subject );
     
     /**
      * readSubjects() might signal readSubjectsTotalSteps() to
@@ -391,14 +589,14 @@ signals:
      * readSubjects() might signal readSubjectsProgress() to
      * send the current progress in relation to the
      * expected total number of steps (see readSubjectsTotalSteps()).
-     * @param curent progress.
+     * @param progress current progress
      */
     void readSubjectsProgress(int progress);
     
     /**
      * readSubjects() might signal readSubjectsReady() to
      * remove the progress bar in asynchrone situations.
-     * @param: true if succes, false if cancelled
+     * @param success true if succes, false if cancelled
      */
     void readSubjectsReady( bool success );
 
@@ -414,7 +612,7 @@ signals:
      * deleteMails() might signal deleteMailsProgress() to
      * send the current progress in relation to the
      * expected total number of steps (see deleteMailsTotalSteps()).
-     * @param curent progress.
+     * @param progress current progress
      */
     void deleteMailsProgress(int progress);
 
@@ -424,9 +622,9 @@ signals:
      * This could be the case when an email has been succesfully
      * removed, or when the deletions failed. This is useful
      * in asynchrone situations.
-     * @param: true if deletion was succesful; elsewise false.
+     * @param ret true if deletion was succesful; elsewise false.
      */
-    void deleteMailsReady( bool );
+    void deleteMailsReady( bool ret );
     
     /**
      * readMail() might signal readMailTotalSteps() to
@@ -440,7 +638,7 @@ signals:
      * readMail() might signal readMailProgress() to
      * send the current progress in relation to the
      * expected total number of steps (see readMailTotalSteps()).
-     * @param curent progress.
+     * @param progress current progress.
      */
     void readMailProgress(int progress);
     
@@ -448,9 +646,9 @@ signals:
      * readMail() might signal readMailReady() if
      * a email is totally read. This is useful
      * in asynchrone situations.
-     * @param pointer to the full email-message.
+     * @param msg pointer to the full email-message.
      */
-    void readMailReady( QString* );
+    void readMailReady( QString* msg );
 };
 
 #endif // SSK_MAILDROP_H

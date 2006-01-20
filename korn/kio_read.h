@@ -19,7 +19,12 @@
 #ifndef MK_KIO_READ_H
 #define MK_KIO_READ_H
 
-//This class should be used if someone wants to read the Full Message
+/*
+ * @file
+ *
+ * This file contains the class KIO_Read
+ * This class should be used if someone wants to read the Full Message
+ */
 
 #include <qobject.h>
 
@@ -32,16 +37,37 @@ class KIO_Protocol;
 
 class QString;
 
+/**
+ * This class is used to read full messages.
+ * This class can access the private members of KKioDrop, because KKioDrop is friend of this class.
+ */
 class KIO_Read : public QObject
 { Q_OBJECT
 public:
+	/**
+	 * Constructor
+	 * 
+	 * @param parent the parent of this object
+	 */
 	KIO_Read( QObject * parent = 0 );
+	/**
+	 * Destructor
+	 */
 	~KIO_Read();
 
 public slots:
-	//This is the function which makes the nessesairy slaves for reading a message
-	void readMail( const KornMailId *, KKioDrop* );
-	//This function should be called if the user presses canceled.
+	/**
+	 * This function makes this class start downloading the messages.
+	 * This is the function which makes the nessesairy slaves for reading a message.
+	 *
+	 * @param id the message to be downloaded
+	 * @param drop the maildrop of the account of the message
+	 */
+	void readMail( const KornMailId *id, KKioDrop* drop );
+	/**
+	 * This function cancels a pending download.
+	 * Normally, this slot is connected to a "Cancel"-button.
+	 */
 	void canceled();
 private:
 	KKioDrop *_kio;
@@ -49,8 +75,14 @@ private:
 	QString *_message;
 	
 signals:
-	//This signal is emitted when the whole message is read; the message got passed as QString*
-	void ready( QString* );
+	/**
+	 * This signal is emitted when the whole message is read; the message got passed as QString*
+	 *
+	 * @param msg a pointer to the full message
+	 *
+	 * @todo QString* -> const QString&
+	 */
+	void ready( QString *msg );
 	
 private slots:
 	void slotResult( KIO::Job* );

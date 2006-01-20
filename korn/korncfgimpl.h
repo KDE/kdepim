@@ -19,6 +19,12 @@
 #ifndef MK_KORNCFGIMPL_H
 #define MK_KORNCFGIMPL_H
 
+/**
+ * @file
+ *
+ * This file contains the class KornCfgImpl
+ */
+
 #include <QWidget>
 
 class KConfig;
@@ -29,25 +35,37 @@ class KDialog;
 class QObject;
 class QString;
 
+/**
+ * This class implements the KOrn's configuration dialog.
+ * The dialog itself is created form a ui-file.
+ */
 class KornCfgImpl : public QWidget, public Ui_KornCfgWidget
 { Q_OBJECT
 public:
+	/**
+	 * Constructor
+	 *
+	 * @param parent the parent of this object
+	 */
 	KornCfgImpl( QWidget * parent = 0 );
+	/**
+	 * Destructor
+	 */
 	virtual ~KornCfgImpl();
 
 private slots:
-	virtual void slotDialogDestroyed();
+	void slotDialogDestroyed();
 	void slotElementsSwapped( int box1, int box2 );
 	void slotElementDeleted( int box );
-protected slots:
-	virtual void slotEditBox();
-	virtual void slotActivated( const QString& );
-	virtual void slotActivated( const int );
-	virtual void slotSetDefaults( const QString&, const int, KConfig* );
-public slots:
-	virtual void slotOK();
-	virtual void slotCancel();
-	virtual void slotApply();
+	
+	void slotEditBox();
+	void slotActivated( const QString& );
+	void slotActivated( const int );
+	void slotSetDefaults( const QString&, const int, KConfig* );
+
+	void slotOK();
+	void slotCancel();
+	void slotApply();
 	
 private:
 	void readConfig();

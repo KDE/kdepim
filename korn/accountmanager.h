@@ -127,9 +127,12 @@ protected:
 	void doView();
 
 	/**
-	 * These functions are called if the user wants to start or stop the account being triggered.
+	 * This function is called if the user want to start the account.
 	 */
 	void doStartTimer();
+	/**
+	 * This function is called if the user want to stop the account.
+	 */
 	void doStopTimer();
 	
 private:

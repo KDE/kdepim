@@ -19,9 +19,10 @@
 #ifndef MK_KIO_DELETE_H
 #define MK_KIO_DELETE_H
 
-/*
- * This class handles removing of selected messages.
- * This class starts working when deleteMails() is called.
+/**
+ * @file
+ *
+ * This file contains the class KIO_Delete
  */
 
 #include <qobject.h>
@@ -35,21 +36,44 @@ namespace KIO { class MetaData; class Job; class Slave; }
 
 template<class T> class QList;
 
+/**
+ * This class handles removing of selected messages.
+ * This class starts working when deleteMails() is called.
+ */
 class KIO_Delete : public QObject
 { Q_OBJECT
 public:
-	//constructors
+	/**
+	 * Constructor
+	 *
+	 * @param parent the parent of this object
+	 */
 	KIO_Delete( QObject * parent = 0 );
+	/**
+	 * Destructor
+	 */
 	~KIO_Delete( );
 	
-	//This function should be called if there are messages to be deleted.
-	bool deleteMails( QList< const KornMailId* > *, KKioDrop* );
+	/**
+	 * This function should be called if there are messages to be deleted.
+	 *
+	 * @param list a list of messages which should be deleted
+	 * @param drop the maildrop of the account
+	 * @return true if succesfull, false otherwise
+	 */
+	bool deleteMails( QList< const KornMailId* > *list, KKioDrop* drop );
 	
-	//This function should return false then and only then if an error occurred.
+	/**
+	 * This function should return false then and only then if an error occurred.
+	 *
+	 * @return false if an error occured; true otherwise
+	 */
 	bool valid( ) { return _valid; }
 	
 public slots:
-	//If this slot is called, the whole deletion is canceled.
+	/**
+	 * If this slot is called, the whole deletion is canceled.
+	 */
 	void canceled( );
 private slots:
 	void slotResult( KIO::Job* );

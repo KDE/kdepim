@@ -226,9 +226,12 @@ k_dcop:
 	void showConfig();
 
 	/**
-	 * With these DCOP-calls, a user can start and stop the accounts.
+	 * With this DCOP-call, a user can start the account.
 	 */
 	void startTimer();
+	/**
+	 * With this DCOP-call, a user can stop the account.
+	 */
 	void stopTimer();
 signals:
 	/**
@@ -246,10 +249,25 @@ private slots:
 
 protected:
 	//This settings are stored here because every implementation needs them.
+	/**
+	 * This QString contains the path of the icons (old, new)
+	 */
 	QString *_icons[ 2 ];
+	/**
+	 * This QString contains the path of the animations (old, new)
+	 */
 	QString *_anims[ 2 ];
+	/**
+	 * This QColor contains the text color of the box (old, new)
+	 */
 	QColor *_fgColour[ 2 ];
+	/**
+	 * This QColor contains the background color of the box (old, new)
+	 */
 	QColor *_bgColour[ 2 ];
+	/**
+	 * This QFont contains the font of the box (old, new)
+	 */
 	QFont *_fonts[ 2 ];
 	
 private:

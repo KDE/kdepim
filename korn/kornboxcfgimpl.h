@@ -19,6 +19,12 @@
 #ifndef MK_KORNBOXCFGIMPL_H
 #define MK_KORNBOXCFGIMPL_H
 
+/**
+ * @file
+ *
+ * This file the class KornBoxCfgImpl
+ */
+
 #include <QWidget>
 #include "kornboxcfg.h"
 
@@ -30,10 +36,22 @@ class QFont;
 class QString;
 class QWidget;
 
+/**
+ * This file is the implementation of the KornBoxCfg class, which is created by uic.
+ * It contains the configuration for the boxes.
+ */
 class KornBoxCfgImpl : public QWidget, public Ui_KornBoxCfg
 { Q_OBJECT
 public:
+	/**
+	 * Constructor
+	 *
+	 * @param parent the parent of this object, usually of type KDialog*
+	 */
 	KornBoxCfgImpl( QWidget *parent );
+	/**
+	 * Destructor
+	 */
 	~KornBoxCfgImpl();
 	
 	/**
@@ -47,7 +65,8 @@ public:
 	/**
 	 * This method write the current configuration to a specified KConfig-object.
 	 *
-	 * @param config The config where in which the configuration should be added. Note that this object is stored locally until the object is destroyed.
+	 * @param config The config where in which the configuration should be added.
+	 * 		Note that this object is stored locally until the object is destroyed.
 	 * @param index The index of the selected config. This is the group-number.
 	 */
 	void readConfig( KConfig * config, const int index );
@@ -70,19 +89,18 @@ private:
 	QString *_anims[ 2 ];
 	QFont *_fonts[ 2 ];
 	
-protected slots:
-	virtual void slotEditBox();
-	virtual void slotActivated( const QString& );
-	virtual void slotActivated( const int );
-	virtual void slotSetDefaults( const QString&, const int, KConfig* );
-	virtual void slotChangeNormalAnim();
-	virtual void slotChangeNewAnim();
-	virtual void slotChangeNormalFont();
-	virtual void slotChangeNewFont();
-	virtual void slotNormalAnimToggled( bool enabled );
-	virtual void slotNewAnimToggled( bool enabled );
-	
 private slots:
+	void slotEditBox();
+	void slotActivated( const QString& );
+	void slotActivated( const int );
+	void slotSetDefaults( const QString&, const int, KConfig* );
+	void slotChangeNormalAnim();
+	void slotChangeNewAnim();
+	void slotChangeNormalFont();
+	void slotChangeNewFont();
+	void slotNormalAnimToggled( bool enabled );
+	void slotNewAnimToggled( bool enabled );
+	
 	void slotOK();
 	void slotCancel();
 	void slotDialogDestroyed();

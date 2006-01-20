@@ -31,23 +31,76 @@
 #ifndef PROGRESS_DIALOG_IMPL_H
 #define PROGRESS_DIALOG_IMPL_H
 
+/**
+ * @file
+ *
+ * This file contains the class DoubleProgressDialog.
+ * That is just a progress dialog with two bars
+ */
+
 #include "progress_dialog.h"
 #include <QDialog>
 
+/**
+ * This class is used for putting two progress bars into one dialog.
+ * It is possible to add a text to the dialog
+ */
 class DoubleProgressDialog : public QDialog, public Ui_DoubleProgressDialog
 { Q_OBJECT
 public:
-	DoubleProgressDialog( QWidget *widget );
+	/**
+	 * The constructor.
+	 *
+	 * @param parent the parent of the dialog
+	 */
+	DoubleProgressDialog( QWidget *parent );
+	/**
+	 * Virtual destructor
+	 */
 	virtual ~DoubleProgressDialog();
 
+	/**
+	 * This function sets the text above the progress bars.
+	 *
+	 * @param str new text to put above the progress bars
+	 */
 	void setText( const QString& str );
-	void setNumberOfBoxes( int numer );
+	/**
+	 * This function sets the total number of items for the major progress bar.
+	 * In this program, the major progress bar is always used for boxes.
+	 *
+	 * @param number the total number of boxes
+	 */
+	void setNumberOfBoxes( int number );
+	/**
+	 * This function sets the progress of the major progress bar.
+	 * In this program, the major progress bar is always used for boxes.
+	 *
+	 * @param number the progress of the major progress bar
+	 */
 	void setProgressOfBoxes( int number );
+	/**
+	 * This function sets the total number of items for the minor progress bar.
+	 * 
+	 * @param number the total number of steps in the minor progress bar
+	 */
 	void setNumberOfSteps( int number );
+	/**
+	 * This function sets the progress for the minor progress bar.
+	 *
+	 * @param number the progress of the minor progress bar
+	 */
 	void setProgress( int number );
+	/**
+	 * This function is called when the user press the cancel button.
+	 */
 	void cancelbutton();
 
 signals:
+	/**
+	 * This signal is emitted when the user press the cancel button.
+	 * The pending operation should be cancelled.
+	 */
 	void cancelPressed();
 };
 

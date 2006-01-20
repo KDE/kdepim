@@ -33,7 +33,15 @@ template< class T > class QList;
 class HVItem : public BoxContainerItem
 { Q_OBJECT
 public:
+	/**
+	 * Constructor
+	 *
+	 * @param parent the parent of this object
+	 */
 	HVItem( QWidget *parent = 0 );
+	/**
+	 * Destructor
+	 */
 	~HVItem();
 	
 	/**

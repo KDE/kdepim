@@ -109,7 +109,7 @@ public:
 
 	/**
 	 * Set the size of the full mail.
-	 * @param the mails full size.
+	 * @param size the mails full size.
 	 */
 	void setSize(int size) {_size = size;}
 
@@ -148,7 +148,15 @@ public:
 	 */
 	KMailDrop* getMailDrop() const { return _drop; }
 
-	friend bool operator<( const KornMailSubject&, const KornMailSubject& );
+	/**
+	 * This function defines an arrangement for MailSubject.
+	 * It is used to sort the subjects on date
+	 *
+	 * @param elem1 the first mail subject to be compaired
+	 * @param elem2 the second mail subject to be compaired
+	 * @return true if elem1 is send before elem2; false otherwise
+	 */
+	friend bool operator<( const KornMailSubject& elem1, const KornMailSubject& elem2 );
 };
 
 #endif

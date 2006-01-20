@@ -36,7 +36,7 @@ class SystemTray : public KSystemTray
 public:
 	/**
 	 * This contructor gives all it parameters to its parents.
-	 * @param parant The parent window
+	 * @param parent The parent window
 	 */
 	SystemTray( QWidget * parent = 0 );
 	/**
@@ -53,7 +53,12 @@ protected:
 	virtual void mousePressEvent( QMouseEvent* me );
 	
 signals:
-	void mouseButtonPressed( Qt::MouseButton );
+	/**
+	 * This signal is emitted when the mouse button is pressed.
+	 * 
+	 * @param button the button which is pressed
+	 */
+	void mouseButtonPressed( Qt::MouseButton button );
 };
 
 #endif //MK_SYSTEMTRAY_H

@@ -108,12 +108,31 @@ public:
 	//Could not test did, my server don't support other authentication methods.
 
 	/**
-	 * These function change the kurl and the metadata.
-	 * In this case, "unseen" is added to the query to only list unlees kurls.
+	 * This function change the kurl and the metadata.
+	 * In this case, "unseen" is added to the query to only list unread kurls.
 	 * These function are called in kio_*.cpp
+	 *
+	 * @param kurl the kurl to be changed
+	 * @param metadata the metadata to be changed
 	 */
 	virtual void recheckKURL    ( KURL &kurl, KIO::MetaData & ) const { kurl.setQuery( "unseen" ); }
+	/**
+	 * This function change the kurl and the metadata.
+	 * In this case, it is added that it should only download the header.
+	 * These function are called in kio_*.cpp
+	 *
+	 * @param kurl the kurl to be changed
+	 * @param metadata the metadata to be changed
+	 */
 	virtual void readSubjectKURL( KURL &kurl, KIO::MetaData & ) const { kurl.setPath( kurl.path() + ";section=ENVELOPE" ); }
+	/**
+	 * This function change the kurl and the metadata.
+	 * In this case, expunge=auto is added to the metadata.
+	 * These function are called in kio_*.cpp
+	 *
+	 * @param kurl the kurl to be changed
+	 * @param metadata the metadata to be changed
+	 */
 	virtual void deleteMailConnectKURL( KURL &, KIO::MetaData & metadata ) const { metadata.insert( "expunge", "auto" ); }
 	
 	/**

@@ -32,9 +32,21 @@ class KConfig;
 class KornShell : public QWidget
 { Q_OBJECT
 public:
+	/**
+	 * Constructor
+	 *
+	 * @param parent the parent of this object
+	 */
 	KornShell( QWidget * parent = 0 );
+	/**
+	 * Destructor
+	 */
 	~KornShell();
 
+	/**
+	 * This function shows the boxes.
+	 * It calls BoxContainer::showBox()
+	 */
 	void show();	
 public slots:
 	/**

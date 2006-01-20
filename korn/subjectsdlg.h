@@ -170,6 +170,9 @@ private slots:
 	
 	//Functions for the subjects
 public slots:
+	/**
+	 * This function reloads the subjects
+	 */
 	void reloadSubjects();
 private:
 	void prepareStep1Subjects( KMailDrop* );
@@ -185,7 +188,12 @@ private slots:
 	void subjectsReady( bool );
 	
 	//Functions neccesairy for delete
+	//TODO: public, when fillDeleteMessageList is private?
 public slots:
+	/**
+	 * This function ask to delete a number of messages and delete the message if the answer was yes.
+	 * Which files should be deleted can be set in the function fillDeleteMessageList()
+	 */
 	void deleteMessage();
 private:
 	void makeDeleteStruct();

@@ -219,7 +219,7 @@ public:
 	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
 	 * By changing an option to the KURL path, this can be prevented.
 	 *
-	 * @param url the kurl to manipulate
+	 * @param kurl the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
 	virtual void readSubjectConnectKURL ( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
@@ -250,7 +250,7 @@ public:
 	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
 	 * By changing an option to the KURL path, this can be prevented.
 	 *
-	 * @param url the kurl to manipulate
+	 * @param kurl the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
 	virtual void deleteMailConnectKURL( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
