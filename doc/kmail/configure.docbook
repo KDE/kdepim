@@ -1906,7 +1906,37 @@ option is selected.</para>
 </variablelist>
 </sect2>
 
+<sect2 id="configure-non-gui-options">
+<title>Options without a user interface representation</title>
+<para>
+Apart from the options presented in the configuration dialog, some options 
+can only be set directly in the configuration file ($KDEHOME/share/config/kmailrc)
+or through KIOSK.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Send Message Distribution Notifications with an empty sender string (SendMDNsWithEmptySender)</guilabel></term>
+<listitem>
+<para>
+Send Message Disposition Notifications with an empty sender string. Some servers might be configured to reject 
+such messages, so if you are experiencing problems sending MDNs, make sure this option is set to false. To
+enable this feature, add a line reading:
+
+SendMDNsWithEmptySender=true
+
+to the [MDN] section of the kmail configuration file. If there is no such section, simply add "[MDN]" on 
+a line by itself just above the option.
+
+Note that the default setting of "false" strictly speaking violates internet standards, but is
+set that way for practical reasons, to avoid servers rejecting MDNs that KMail generates because they
+think they are SPAM.
+</listitem>
+</varlistentry>
+
+</variablelist>
+</sect2>
 
 </sect1>
-
 </chapter>
