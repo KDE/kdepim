@@ -108,7 +108,9 @@ public:
     void setEditable( bool editable );
     bool editable() const;
     void setShowNoInformation( bool show );
+    void setShowNoInformationBeforeAndAfter( bool show );
     bool showNoInformation();
+    bool showNoInformationBeforeAndAfter();
     void setDisplaySubitemsAsGroup( bool show );
     bool displaySubitemsAsGroup() const;
     void setPriority( int prio );
@@ -232,6 +234,7 @@ private:
     void paintBranches ( QPainter * p, const QColorGroup & cg, int w, int y, int h );
     bool _displaySubitemsAsGroup;
     bool _showNoInformation;
+    bool _showNoInformationBeforeAndAfter;
     bool _enabled;
     bool _callListViewOnSetOpen;
     Shape myStartShape,myMiddleShape,myEndShape;
