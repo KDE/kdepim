@@ -1934,6 +1934,7 @@ a line by itself just above the option.
 Note that the default setting of "false" strictly speaking violates internet standards, but is
 set that way for practical reasons, to avoid servers rejecting MDNs that KMail generates because they
 think they are SPAM.
+</para>
 </listitem>
 </varlistentry>
 
