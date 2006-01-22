@@ -108,8 +108,8 @@ void KNFilterManager::loadFilters()
   if (!fname.isNull()) {
     KSimpleConfig conf(fname,true);
 
-    QList<int> activeFilters = conf.readIntListEntry("Active");
-    menuOrder = conf.readIntListEntry("Menu");
+    QList<int> activeFilters = conf.readEntry("Active",QList<int>());
+    menuOrder = conf.readEntry("Menu",QList<int>());
 
     for ( QList<int>::Iterator it = activeFilters.begin(); it != activeFilters.end(); ++it ) {
       KNArticleFilter *f = new KNArticleFilter( (*it) );

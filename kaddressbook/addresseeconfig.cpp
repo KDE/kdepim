@@ -76,7 +76,7 @@ QList<int> AddresseeConfig::noDefaultAddrTypes() const
 {
   KConfig config( "kaddressbook_addrconfig" );
   config.setGroup( mAddressee.uid() );
-  return config.readIntListEntry( "NoDefaultAddrTypes" );
+  return config.readEntry( "NoDefaultAddrTypes",QList<int>() );
 }
 
 void AddresseeConfig::setCustomFields( const QStringList &fields )

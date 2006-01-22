@@ -1948,12 +1948,12 @@ void KNComposer::ComposerView::showAttachmentView()
     KConfig *conf=knGlobals.config();
     conf->setGroup("POSTNEWS");
 
-    QList<int> lst = conf->readIntListEntry("Att_Splitter");
+    QList<int> lst = conf->readEntry("Att_Splitter",QList<int>());
     if(lst.count()!=2)
       lst << 267 << 112;
     setSizes(lst);
 
-    lst=conf->readIntListEntry("Att_Headers");
+    lst=conf->readEntry("Att_Headers",QList<int>());
     if(lst.count()==5) {
       QList<int>::Iterator it = lst.begin();
 

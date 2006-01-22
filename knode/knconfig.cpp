@@ -236,7 +236,7 @@ KNode::DisplayedHeaders::DisplayedHeaders()
       h->setName(headerConf.readEntry("Name"));
       h->setTranslateName(headerConf.readEntry("Translate_Name",true));
       h->setHeader(headerConf.readEntry("Header"));
-      flags=headerConf.readIntListEntry("Flags");
+      flags=headerConf.readEntry("Flags",QList<int>());
       if(h->name().isNull() || h->header().isNull() || (flags.count()!=8)) {
         kdDebug(5003) << "KNConfig::DisplayedHeaders::DisplayedHeaders() : ignoring invalid/incomplete Header" << endl;
         remove(h);
