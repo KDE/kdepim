@@ -40,7 +40,7 @@ KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString &data 
 {
   KABC::VCardConverter converter;
 
-  return converter.parseVCards( data );
+  return converter.parseVCards( data.toAscii() );
 }
 
 QString AddresseeUtil::addresseesToEmails( const KABC::Addressee::List &addrList )

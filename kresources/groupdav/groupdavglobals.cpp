@@ -266,7 +266,7 @@ kdDebug(5800) << jobData << endl;
   if ( !adaptor || !job ) return false;
 
   KABC::VCardConverter conv;
-  KABC::Addressee::List addrs( conv.parseVCards( jobData ) );
+  KABC::Addressee::List addrs( conv.parseVCards( jobData.toAscii()) );
 
   if ( addrs.count() != 1 ) {
     kdError() << "Parsed vCard does not contain exactly one addressee." << endl;

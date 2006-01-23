@@ -163,7 +163,7 @@ QString KABC::ResourceKolab::loadContact( const QString& contactData,
     contact.saveTo( &addr );
   } else {
     KABC::VCardConverter converter;
-    addr = converter.parseVCard( contactData );
+    addr = converter.parseVCard( contactData.toAscii() );
   }
 
   addr.setResource( this );
