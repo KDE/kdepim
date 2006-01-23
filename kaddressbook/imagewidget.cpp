@@ -143,7 +143,7 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
   mImageLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
   boxLayout->addMultiCellWidget( mImageLabel, 0, 3, 0, 0, Qt::AlignTop );
 
-  mImageUrl = new KURLRequester( box );
+  mImageUrl = new KUrlRequester( box );
   mImageUrl->setFilter( KImageIO::pattern() );
   mImageUrl->setMode( KFile::File );
   boxLayout->addWidget( mImageUrl, 0, 1 );

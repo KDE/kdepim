@@ -24,7 +24,7 @@
 #include <qstringlist.h>
 
 class KDESasl;
-class KURL;
+class KUrl;
 
 
 class kio_sieveResponse

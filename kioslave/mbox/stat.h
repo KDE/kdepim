@@ -24,7 +24,7 @@
 class ReadMBox;
 class UrlInfo;
 
-class KURL;
+class KUrl;
 
 class QString;
 

@@ -122,7 +122,7 @@
                                     <string>&lt;qt&gt;Select this option to use a specific calendar file, instead of the standard KDE calendar. This file must be in the in the vCalendar or iCalendar format. Enter the location of this file in the edit box or select it clicking the file picker button.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
-                            <widget class="KURLRequester" row="1" column="1">
+                            <widget class="KUrlRequester" row="1" column="1">
                                 <property name="name">
                                     <cstring>fCalendarFile</cstring>
                                 </property>

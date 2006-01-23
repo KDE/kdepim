@@ -24,7 +24,7 @@
 #include <QByteArray>
 
 class QByteArray;
-class KURL;
+class KUrl;
 
 /**
  * This class is the main class and implements all function

@@ -31,7 +31,7 @@ class Q3ListViewItem;
 class QLineEdit;
 class QSplitter;
 
-class KURL;
+class KUrl;
 class KAccel;
 class KAction;
 class KToggleAction;

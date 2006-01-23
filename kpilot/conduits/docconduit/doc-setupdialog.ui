@@ -74,7 +74,7 @@
                             <string>&lt;qt&gt;Check this box if you want to save a copy of the Palm DOC databases (.pdb files) on your PC.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget class="KURLRequester" row="0" column="1">
+                    <widget class="KUrlRequester" row="0" column="1">
                         <property name="name">
                             <cstring>fTXTDir</cstring>
                         </property>
@@ -160,7 +160,7 @@
                             </size>
                         </property>
                     </spacer>
-                    <widget class="KURLRequester" row="1" column="1">
+                    <widget class="KUrlRequester" row="1" column="1">
                         <property name="name">
                             <cstring>fPDBDir</cstring>
                         </property>

@@ -31,7 +31,7 @@ class KAction;
 class KActionCollection;
 class KActionMenu;
 class KHTMLPart;
-class KURL;
+class KUrl;
 class KSelectAction;
 class KToggleAction;
 class KXMLGUIClient;

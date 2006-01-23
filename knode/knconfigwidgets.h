@@ -43,7 +43,7 @@ class KLineEdit;
 class KComboBox;
 class KIntSpinBox;
 class KSpellConfig;
-class KURLCompletion;
+class KUrlCompletion;
 
 namespace Kpgp {
   class Config;
@@ -99,7 +99,7 @@ class KDE_EXPORT IdentityWidget : public KCModule {
     QButtonGroup    *b_uttonGroup;
     Kpgp::SecretKeyRequester
                     *s_igningKey;
-    KURLCompletion  *c_ompletion;
+    KUrlCompletion  *c_ompletion;
 
     Identity        *d_ata;
 

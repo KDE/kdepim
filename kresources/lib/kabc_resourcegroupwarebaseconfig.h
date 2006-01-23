@@ -26,7 +26,7 @@
 #include <kdepimmacros.h>
 
 class KLineEdit;
-class KURLRequester;
+class KUrlRequester;
 
 namespace KPIM {
 class FolderConfig;
@@ -51,7 +51,7 @@ class KDE_EXPORT ResourceGroupwareBaseConfig : public KRES::ConfigWidget
     void updateFolders();
 
   private:
-    KURLRequester *mURL;
+    KUrlRequester *mURL;
     KLineEdit *mUser;
     KLineEdit *mPassword;
     KPIM::FolderConfig *mFolderConfig;

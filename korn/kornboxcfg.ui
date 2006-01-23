@@ -1211,7 +1211,7 @@
           </widget>
          </item>
          <item>
-          <widget class="KURLRequester" name="edCommand" >
+          <widget class="KUrlRequester" name="edCommand" >
            <property name="enabled" >
             <bool>true</bool>
            </property>
@@ -1240,7 +1240,7 @@
              <number>6</number>
             </property>
             <item row="0" column="1" >
-             <widget class="KURLRequester" name="edNewRun" />
+             <widget class="KUrlRequester" name="edNewRun" />
             </item>
             <item row="0" column="0" >
              <widget class="QLabel" name="lbNewRun" >
@@ -1253,7 +1253,7 @@
              </widget>
             </item>
             <item row="1" column="1" >
-             <widget class="KURLRequester" name="edPlaySound" />
+             <widget class="KUrlRequester" name="edPlaySound" />
             </item>
             <item row="1" column="0" >
              <widget class="QLabel" name="lbPlaySound" >
@@ -1347,7 +1347,7 @@
    <pixmap></pixmap>
   </customwidget>
   <customwidget>
-   <class>KURLRequester</class>
+   <class>KUrlRequester</class>
    <extends>QWidget</extends>
    <header>kurlrequester.h</header>
    <container>1</container>

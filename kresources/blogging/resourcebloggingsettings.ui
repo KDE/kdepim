@@ -112,7 +112,7 @@
                         <string>Password:</string>
                     </property>
                 </widget>
-                <widget class="KURLRequester" row="0" column="1">
+                <widget class="KUrlRequester" row="0" column="1">
                     <property name="name">
                         <cstring>mURL</cstring>
                     </property>

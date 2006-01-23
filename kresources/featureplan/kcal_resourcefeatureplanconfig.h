@@ -26,7 +26,7 @@
 #include <kdepimmacros.h>
 
 class KLineEdit;
-class KURLRequester;
+class KUrlRequester;
 class QCheckBox;
 
 namespace KCal {
@@ -43,7 +43,7 @@ class KDE_EXPORT ResourceFeaturePlanConfig : public KRES::ConfigWidget
     void saveSettings( KRES::Resource * );
 
   private:
-    KURLRequester *mFilename;
+    KUrlRequester *mFilename;
     KLineEdit *mFilterEmail;
     QCheckBox *mCvsCheck;
 };

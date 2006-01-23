@@ -57,7 +57,7 @@ SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *na
   mPlayButton->setEnabled( false );
   topLayout->addWidget( mPlayButton, 0, 1 );
 
-  mSoundUrl = new KURLRequester( this );
+  mSoundUrl = new KUrlRequester( this );
   topLayout->addWidget( mSoundUrl, 0, 2 );
 
   mUseSoundUrl = new QCheckBox( i18n( "Store as URL" ), this );

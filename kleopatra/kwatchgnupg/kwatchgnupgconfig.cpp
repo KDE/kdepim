@@ -93,13 +93,13 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   int row = -1;
 
   ++row;
-  mExeED = new KURLRequester( w );
+  mExeED = new KUrlRequester( w );
   glay->addWidget( new QLabel( mExeED, i18n("&Executable:"), w ), row, 0 );
   glay->addWidget( mExeED, row, 1 );
   connect( mExeED, SIGNAL(textChanged(const QString&)), SLOT(slotChanged()) );
 
   ++row;
-  mSocketED = new KURLRequester( w );
+  mSocketED = new KUrlRequester( w );
   glay->addWidget( new QLabel( mSocketED, i18n("&Socket:"), w ), row, 0 );
   glay->addWidget( mSocketED, row, 1 );
   connect( mSocketED, SIGNAL(textChanged(const QString&)), SLOT(slotChanged()) );

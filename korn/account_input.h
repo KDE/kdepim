@@ -32,7 +32,7 @@ class QStringList;
 
 class QLabel;
 class KLineEdit;
-class KURLRequester;
+class KUrlRequester;
 class QComboBox;
 class QCheckBox;
 
@@ -204,7 +204,7 @@ public:
 
 private:
 	QLabel *_left;
-	KURLRequester *_right;
+	KUrlRequester *_right;
 };
 
 /**

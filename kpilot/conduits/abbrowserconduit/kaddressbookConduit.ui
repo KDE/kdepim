@@ -94,7 +94,7 @@
                                     <string>&lt;qt&gt;Select this option to use a specific address book file, instead of the standard KDE address book. This file must be in the vCard format (.vcf). Type the location of this file in the edit box or select it clicking the file picker button.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
-                            <widget class="KURLRequester" row="1" column="1">
+                            <widget class="KUrlRequester" row="1" column="1">
                                 <property name="name">
                                     <cstring>fAbookFile</cstring>
                                 </property>

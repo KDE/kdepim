@@ -31,7 +31,7 @@
 class KKioDrop;
 class KornMailId;
 
-class KURL;
+class KUrl;
 namespace KIO { class MetaData; class Job; }
 class KIO_Protocol;
 

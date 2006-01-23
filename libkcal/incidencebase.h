@@ -32,7 +32,7 @@
 #include "customproperties.h"
 #include "attendee.h"
 
-class KURL;
+class KUrl;
 
 namespace KCal {
 
@@ -117,7 +117,7 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     /** Return the unique id for the event */
     QString uid() const;
     /** Return the uri for the event, of form urn:x-ical:<uid> */
-    KURL uri() const;
+    KUrl uri() const;
 
     /** Sets the time the incidence was last modified. */
     void setLastModified( const QDateTime &lm );

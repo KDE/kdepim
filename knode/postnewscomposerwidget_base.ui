@@ -134,7 +134,7 @@
        </widget>
       </item>
       <item row="0" column="1" >
-       <widget class="KURLRequester" name="kcfg_externalEditor" />
+       <widget class="KUrlRequester" name="kcfg_externalEditor" />
       </item>
       <item row="0" column="0" >
        <widget class="QLabel" name="label" >
@@ -165,7 +165,7 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
-   <class>KURLRequester</class>
+   <class>KUrlRequester</class>
    <extends></extends>
    <header>kurlrequester.h</header>
    <container>0</container>

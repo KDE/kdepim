@@ -379,7 +379,7 @@ void CSVImportDialog::initGUI()
   QLabel *label = new QLabel( i18n( "File to import:" ), mPage );
   hbox->addWidget( label );
 
-  mUrlRequester = new KURLRequester( mPage );
+  mUrlRequester = new KUrlRequester( mPage );
   mUrlRequester->setFilter( "*.csv" );
   hbox->addWidget( mUrlRequester );
 

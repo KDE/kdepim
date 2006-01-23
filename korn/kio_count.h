@@ -40,7 +40,7 @@ class KornMailSubject;
 template<class T> class QList;
 namespace KIO { class Job; class ListJob; class MetaData; class Slave; }
 
-class KURL;
+class KUrl;
 
 class QString;
 

@@ -42,7 +42,7 @@
 #include <kmail/kmailicalIface.h>
 
 class QString;
-class KURL;
+class KUrl;
 
 namespace Kolab {
 

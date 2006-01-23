@@ -42,7 +42,7 @@ class FreeBusyWidget : public KAB::ContactEditorWidget
     void setReadOnly( bool readOnly );
 
   private:
-    KURLRequester *mURL;
+    KUrlRequester *mURL;
 
     bool mReadOnly;
 };

@@ -36,7 +36,7 @@ class KIO_Subjects;
 class KIO_Read;
 class KIO_Delete;
 class KConfigGroup;
-class KURL;
+class KUrl;
 template<class> class QList;
 template<class> class QVector;
 namespace KIO { class Job; class MetaData; class Slave; class TransferJob; }

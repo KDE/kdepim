@@ -98,7 +98,7 @@
                             <string>&lt;qt&gt;If you want to add a signature file, enter the location of your signature file (usually, &lt;i&gt;.signature&lt;/i&gt;, located in your home folder) here, or select it clicking the file picker button. The signature file contains the text that is added to the end of your outgoing mail messages.&lt;/qt&gt;</string>
                         </property>
                     </widget>
-                    <widget class="KURLRequester" row="2" column="1">
+                    <widget class="KUrlRequester" row="2" column="1">
                         <property name="name">
                             <cstring>fSignature</cstring>
                         </property>

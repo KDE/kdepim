@@ -89,7 +89,7 @@ URLInput::URLInput( QWidget *parent, const QString& title, const QString& defaul
 	: AccountInput( configName )
 {
 	_left = new QLabel( title, parent, "label" );
-	_right = new KURLRequester( "", parent );
+	_right = new KUrlRequester( "", parent );
 	setValue( defaul );
 }
 

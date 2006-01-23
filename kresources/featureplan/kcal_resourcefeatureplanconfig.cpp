@@ -45,7 +45,7 @@ ResourceFeaturePlanConfig::ResourceFeaturePlanConfig( QWidget *parent,
                                             KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Filename:" ), this );
-  mFilename = new KURLRequester( this );
+  mFilename = new KUrlRequester( this );
 
   topLayout->addWidget( label, 0, 0 );
   topLayout->addWidget( mFilename, 0, 1 );

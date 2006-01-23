@@ -48,7 +48,7 @@ ResourceLocalDirConfig::ResourceLocalDirConfig( QWidget* parent,  const char* na
   QGridLayout *mainLayout = new QGridLayout( this );
 
   QLabel *label = new QLabel( i18n( "Location:" ), this );
-  mURL = new KURLRequester( this );
+  mURL = new KUrlRequester( this );
   mURL->setMode( KFile::Directory | KFile::LocalOnly );
   mainLayout->addWidget( label, 1, 0 );
   mainLayout->addWidget( mURL, 1, 1 );

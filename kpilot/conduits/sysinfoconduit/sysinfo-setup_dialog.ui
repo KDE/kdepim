@@ -55,7 +55,7 @@
                             </size>
                         </property>
                     </spacer>
-                    <widget class="KURLRequester" row="0" column="1">
+                    <widget class="KUrlRequester" row="0" column="1">
                         <property name="name">
                             <cstring>fOutputFile</cstring>
                         </property>
@@ -113,7 +113,7 @@
                                     <string>&lt;qt&gt;Select this option to output the system information data as a text document.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
-                            <widget class="KURLRequester" row="2" column="1">
+                            <widget class="KUrlRequester" row="2" column="1">
                                 <property name="name">
                                     <cstring>fTemplateFile</cstring>
                                 </property>

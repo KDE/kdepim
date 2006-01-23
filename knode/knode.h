@@ -25,7 +25,7 @@
 
 #include <qglobal.h>
 
-class KURL;
+class KUrl;
 
 namespace KPIM {
   class StatusbarProgressWidget;

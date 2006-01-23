@@ -26,7 +26,7 @@
 
 class KIntSpinBox;
 class KLineEdit;
-class KURLRequester;
+class KUrlRequester;
 
 namespace KCal {
 
@@ -42,7 +42,7 @@ class KDE_EXPORT ResourceXMLRPCConfig : public KRES::ConfigWidget
     void saveSettings( KRES::Resource* );
 
   private:
-    KURLRequester *mURL;
+    KUrlRequester *mURL;
     KLineEdit *mDomain;
     KLineEdit *mUser;
     KLineEdit *mPassword;

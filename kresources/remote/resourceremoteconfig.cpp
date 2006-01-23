@@ -49,13 +49,13 @@ ResourceRemoteConfig::ResourceRemoteConfig( QWidget* parent )
 
   QLabel *label = new QLabel( i18n( "Download from:" ), this );
 
-  mDownloadUrl = new KURLRequester( this );
+  mDownloadUrl = new KUrlRequester( this );
   mDownloadUrl->setMode( KFile::File );
   mainLayout->addWidget( label, 1, 0 );
   mainLayout->addWidget( mDownloadUrl, 1, 1 );
 
   label = new QLabel( i18n( "Upload to:" ), this );
-  mUploadUrl = new KURLRequester( this );
+  mUploadUrl = new KUrlRequester( this );
   mUploadUrl->setMode( KFile::File );
   mainLayout->addWidget( label, 2, 0 );
   mainLayout->addWidget( mUploadUrl, 2, 1 );

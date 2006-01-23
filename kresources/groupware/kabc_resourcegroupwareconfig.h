@@ -27,7 +27,7 @@
 class KComboBox;
 class KLineEdit;
 class KListView;
-class KURLRequester;
+class KUrlRequester;
 
 namespace KABC {
 
@@ -53,7 +53,7 @@ class ResourceGroupwareConfig : public KRES::ConfigWidget
     void loadAddressBookSettings();
     void saveServerSettings( ResourceGroupware *resource );
 
-    KURLRequester *mURL;
+    KUrlRequester *mURL;
     KLineEdit *mUser;
     KLineEdit *mPassword;
 

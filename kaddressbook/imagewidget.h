@@ -36,7 +36,7 @@
 
 #include "contacteditorwidget.h"
 
-class KURLRequester;
+class KUrlRequester;
 class QCheckBox;
 
 #include <librss/global.h>
@@ -125,7 +125,7 @@ class ImageBaseWidget : public QWidget
     QPixmap loadPixmap( const KURL &url );
 
     ImageLabel *mImageLabel;
-    KURLRequester *mImageUrl;
+    KUrlRequester *mImageUrl;
 
     QCheckBox *mUseImageUrl;
     QPushButton *mClearButton;

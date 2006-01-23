@@ -38,7 +38,7 @@
 class QCheckBox;
 class QComboBox;
 class QSpinBox;
-class KURLRequester;
+class KUrlRequester;
 
 class KWatchGnuPGConfig : public KDialogBase {
   Q_OBJECT
@@ -57,8 +57,8 @@ private slots:
   void slotSetHistorySizeUnlimited();
 
 private:
-  KURLRequester* mExeED;
-  KURLRequester* mSocketED;
+  KUrlRequester* mExeED;
+  KUrlRequester* mSocketED;
   QComboBox* mLogLevelCB;
   QSpinBox* mLoglenSB;
   QCheckBox* mWordWrapCB;

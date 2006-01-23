@@ -37,7 +37,7 @@ void QMail_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 void QMail_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, QList< AccountInput* > *result ) const
 {
 	result->append( new URLInput( vector->at( 0 ), i18n( "Path:" ), "", "mailbox" ) );
-	dynamic_cast<KURLRequester*>(result->last()->rightWidget())->setMode( KFile::Directory );
+	dynamic_cast<KUrlRequester*>(result->last()->rightWidget())->setMode( KFile::Directory );
 }
 
 void QMail_Protocol::readEntries( QMap< QString, QString >*, QMap< QString, QString >* ) const

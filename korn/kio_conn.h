@@ -27,7 +27,7 @@
 
 class KIO_Protocol;
 
-class KURL;
+class KUrl;
 namespace KIO { class Slave; class MetaData; }
 
 template< class T, class S > class QMap;

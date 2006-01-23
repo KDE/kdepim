@@ -37,7 +37,7 @@
 #include <dcopobject.h>
 #include <kmail/kmailicalIface.h>
 
-class KURL;
+class KUrl;
 class DCOPClient;
 class DCOPCString;
 class KMailICalIface_stub;

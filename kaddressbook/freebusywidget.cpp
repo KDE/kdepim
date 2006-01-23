@@ -43,7 +43,7 @@ FreeBusyWidget::FreeBusyWidget( KABC::AddressBook *ab, QWidget *parent, const ch
   QLabel *label = new QLabel( i18n( "Location of Free/Busy information:" ), this );
   layout->addWidget( label );
 
-  mURL = new KURLRequester( this );
+  mURL = new KUrlRequester( this );
   label->setBuddy( mURL );
   layout->addWidget( mURL );
 

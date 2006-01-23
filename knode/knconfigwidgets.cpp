@@ -144,7 +144,7 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *pa
   f_ileName = new QLabel(s_ig, i18n("Signature &file:"), this);
   topL->addWidget(f_ileName, 7, 0 );
   topL->addWidget(s_ig, 7, 1 );
-  c_ompletion = new KURLCompletion();
+  c_ompletion = new KUrlCompletion();
   s_ig->setCompletionObject(c_ompletion);
   msg = i18n( "<qt><p>The file from which the signature will be read.</p>"
       "<p>Ex: <b>/home/robt/.sig</b>.</p></qt>" );

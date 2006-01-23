@@ -37,7 +37,7 @@
 #include <QHBoxLayout>
 
 #include <klocale.h>
-#include <kpassdlg.h>
+#include <kpassworddialog.h>
 #include <kcharsets.h>
 #include <kseparator.h>
 #include <kiconloader.h>
@@ -154,7 +154,7 @@ Config::Config( QWidget *parent, bool encrypt )
   hbox->setStretchFactor( toolCombo, 1 );
   connect( toolCombo, SIGNAL( activated( int ) ),
            this, SIGNAL( changed( void ) ) );
-  // This is the place to add a KURLRequester to be used for asking
+  // This is the place to add a KUrlRequester to be used for asking
   // the user for the path to the executable...
   topLayout->addWidget( group );
 

@@ -33,7 +33,7 @@
 #include <QHBoxLayout>
 
 class KConfigGroup;
-class KURLRequester;
+class KUrlRequester;
 
 class QVBoxLayout;
 class QHBoxLayout;

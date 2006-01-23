@@ -30,7 +30,7 @@ class QString;
 class QWidget;
 class QRadioButton;
 class QCheckBox;
-class KURLRequester;
+class KUrlRequester;
 class KConfig;
 
 namespace KABC { class AddressBook; }
@@ -81,7 +81,7 @@ class LookAndFeelPage : public QWidget
     QRadioButton *mLineButton;
     QRadioButton *mNoneButton;
     QCheckBox *mToolTipBox;
-    KURLRequester *mBackgroundName;
+    KUrlRequester *mBackgroundName;
     QCheckBox *mBackgroundBox;
     QCheckBox *mIMPresenceBox;
 };

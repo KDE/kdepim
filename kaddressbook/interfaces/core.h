@@ -46,7 +46,7 @@ class QWidget;
 
 class KActionCollection;
 class KConfig;
-class KURL;
+class KUrl;
 
 namespace KAB {
 

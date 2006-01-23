@@ -28,7 +28,7 @@
 
 #include "contacteditorwidget.h"
 
-class KURLRequester;
+class KUrlRequester;
 
 class QCheckBox;
 class QPushButton;
@@ -52,7 +52,7 @@ class SoundWidget : public KAB::ContactEditorWidget
     void urlChanged( const QString& );
 
   private:
-    KURLRequester *mSoundUrl;
+    KUrlRequester *mSoundUrl;
 
     QCheckBox *mUseSoundUrl;
     QPushButton *mPlayButton;

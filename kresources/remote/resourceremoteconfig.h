@@ -53,8 +53,8 @@ class KDE_EXPORT ResourceRemoteConfig : public KRES::ConfigWidget
     virtual void saveSettings( KRES::Resource *resource );
 
   private:
-    KURLRequester *mDownloadUrl;
-    KURLRequester *mUploadUrl;
+    KUrlRequester *mDownloadUrl;
+    KUrlRequester *mUploadUrl;
 
     ResourceCachedReloadConfig *mReloadConfig;
     ResourceCachedSaveConfig *mSaveConfig;

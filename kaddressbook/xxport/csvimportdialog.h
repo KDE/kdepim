@@ -28,7 +28,7 @@
 
 #include <QList>
 
-class KURLRequester;
+class KUrlRequester;
 
 class Q3ButtonGroup;
 class QComboBox;
@@ -92,7 +92,7 @@ class CSVImportDialog : public KDialogBase
     QCheckBox* mIgnoreDuplicates;
     QComboBox* mCodecCombo;
     QWidget* mPage;
-    KURLRequester* mUrlRequester;
+    KUrlRequester* mUrlRequester;
 
     void initGUI();
     void fillTable();

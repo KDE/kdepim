@@ -52,7 +52,7 @@
 
 #include "passphrasedialog.h"
 
-#include <kpassdlg.h>
+#include <kpassworddialog.h>
 #include <kiconloader.h>
 #include <klocale.h>
 

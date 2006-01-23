@@ -40,7 +40,7 @@
 
 #include <kcombobox.h>
 #include <knuminput.h>
-#include <kpassdlg.h>
+#include <kpassworddialog.h>
 
 #include <kapplication.h>
 #include <kconfig.h>

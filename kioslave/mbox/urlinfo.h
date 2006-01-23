@@ -18,7 +18,7 @@
  */
 #ifndef URLINFO_H
 #define URLINFO_H
-class KURL;
+class KUrl;
 
 class QString;
 

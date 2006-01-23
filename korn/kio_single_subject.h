@@ -29,7 +29,7 @@
 
 class KornMailSubject;
 
-class KURL;
+class KUrl;
 namespace KIO { class MetaData; class Job; class TransferJob; class Slave; }
 class KIO_Protocol;
 

@@ -25,7 +25,7 @@
 
 class QCheckBox;
 class KLineEdit;
-class KURLRequester;
+class KUrlRequester;
 class KPushButton;
 
 class SloxBase;
@@ -47,7 +47,7 @@ class KDE_EXPORT ResourceSloxConfig : public KRES::ConfigWidget
     void selectAddressFolder();
 
   private:
-    KURLRequester *mURL;
+    KUrlRequester *mURL;
     KLineEdit *mUser;
     KLineEdit *mPassword;
     QCheckBox *mLastSyncCheck;

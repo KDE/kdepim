@@ -355,7 +355,7 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
   : CryptoConfigEntryGUI( module, entry, entryName, name )
 {
   const int row = glay->numRows();
-  mUrlRequester = new KURLRequester( widget );
+  mUrlRequester = new KUrlRequester( widget );
   mUrlRequester->setMode( KFile::File | KFile::ExistingOnly | KFile::LocalOnly );
   glay->addWidget( new QLabel( mUrlRequester, description(), widget ), row, 1 );
   glay->addWidget( mUrlRequester, row, 2 );
@@ -383,7 +383,7 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
   : CryptoConfigEntryGUI( module, entry, entryName, name )
 {
   const int row = glay->numRows();
-  mUrlRequester = new KURLRequester( widget );
+  mUrlRequester = new KUrlRequester( widget );
   mUrlRequester->setMode( KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly );
   glay->addWidget( new QLabel( mUrlRequester, description(), widget ), row, 1 );
   glay->addWidget( mUrlRequester, row, 2 );
@@ -412,7 +412,7 @@ Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
   : CryptoConfigEntryGUI( module, entry, entryName, name )
 {
   const int row = glay->numRows();
-  mUrlRequester = new KURLRequester( widget );
+  mUrlRequester = new KUrlRequester( widget );
   mUrlRequester->setMode( KFile::File | KFile::ExistingOnly );
   glay->addWidget( new QLabel( mUrlRequester, description(), widget ), row, 1 );
   glay->addWidget( mUrlRequester, row, 2 );

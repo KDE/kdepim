@@ -77,7 +77,7 @@
                             <string>Convert whole &amp;folders</string>
                         </property>
                     </widget>
-                    <widget class="KURLRequester" row="1" column="1" rowspan="1" colspan="2">
+                    <widget class="KUrlRequester" row="1" column="1" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>fPDBDir</cstring>
                         </property>
@@ -134,7 +134,7 @@
                             </size>
                         </property>
                     </spacer>
-                    <widget class="KURLRequester" row="0" column="1" rowspan="1" colspan="2">
+                    <widget class="KUrlRequester" row="0" column="1" rowspan="1" colspan="2">
                         <property name="name">
                             <cstring>fTXTDir</cstring>
                         </property>

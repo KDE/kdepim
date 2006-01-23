@@ -64,7 +64,7 @@ ResourceGroupwareConfig::ResourceGroupwareConfig( QWidget* parent,  const char* 
   QGridLayout *mainLayout = new QGridLayout( this, 7, 2, 0, KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "URL:" ), this );
-  mURL = new KURLRequester( this );
+  mURL = new KUrlRequester( this );
 
   mainLayout->addWidget( label, 0, 0 );
   mainLayout->addWidget( mURL, 0, 1 );

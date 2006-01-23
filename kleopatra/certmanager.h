@@ -66,7 +66,7 @@ class HierarchyAnalyser;
 class LineEditAction;
 class ComboAction;
 
-class KURL;
+class KUrl;
 class QFile;
 class QStringList;
 class QLabel;

@@ -52,7 +52,7 @@ class LIBKCAL_EXPORT ResourceLocalDirConfig : public KRES::ConfigWidget
     virtual void saveSettings( KRES::Resource *resource );
 
   private:
-    KURLRequester *mURL;
+    KUrlRequester *mURL;
     Q3ButtonGroup *formatGroup;
     QRadioButton *icalButton;
     QRadioButton *vcalButton;

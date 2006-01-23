@@ -57,7 +57,7 @@ class KDE_EXPORT KCalResourceSloxConfig : public KRES::ConfigWidget
     void selectTaskFolder();
 
   private:
-    KURLRequester *mDownloadUrl;
+    KUrlRequester *mDownloadUrl;
     KLineEdit *mUserEdit;
     KLineEdit *mPasswordEdit;
     QCheckBox *mLastSyncCheck;

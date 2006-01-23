@@ -43,7 +43,7 @@
 
 class KLineEdit;
 class KIntNumInput;
-class KURLRequester;
+class KUrlRequester;
 class QPushButton;
 class QGridLayout;
 
@@ -179,7 +179,7 @@ namespace Kleo {
     virtual void doSave();
     virtual void doLoad();
   private:
-    KURLRequester* mUrlRequester;
+    KUrlRequester* mUrlRequester;
   };
 
   /**
@@ -198,7 +198,7 @@ namespace Kleo {
     virtual void doSave();
     virtual void doLoad();
   private:
-    KURLRequester* mUrlRequester;
+    KUrlRequester* mUrlRequester;
   };
 
   /**
@@ -217,7 +217,7 @@ namespace Kleo {
     virtual void doSave();
     virtual void doLoad();
   private:
-    KURLRequester * mUrlRequester;
+    KUrlRequester * mUrlRequester;
   };
 
   /**

@@ -40,7 +40,7 @@
 
 #include "mailheader.h"
 
-class KURL;
+class KUrl;
 class QString;
 class mailAddress;
 class mimeHeader;

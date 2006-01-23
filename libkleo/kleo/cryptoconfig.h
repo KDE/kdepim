@@ -67,10 +67,10 @@ namespace Kleo {
        @li ArgType_UInt	An unsigned integer number.
        @li ArgType_Path	A string that describes the pathname of a file.
        The file does not necessarily need to exist.
-       Separated from string so that e.g. a KURLRequester can be used.
+       Separated from string so that e.g. a KUrlRequester can be used.
        @li ArgType_DirPath	A string that describes the pathname of a directory.
        The directory does not necessarily need to exist.
-       Separated from path so that e.g. a KURLRequester can be used which only
+       Separated from path so that e.g. a KUrlRequester can be used which only
        allows directories to be selected.
        @li ArgType_URL		A URL
        @li ArgType_LDAPURL	A LDAP URL

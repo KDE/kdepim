@@ -51,7 +51,7 @@ KCalResourceSloxConfig::KCalResourceSloxConfig( QWidget* parent,  const char* na
 
   QLabel *label = new QLabel( i18n( "Download from:" ), this );
 
-  mDownloadUrl = new KURLRequester( this );
+  mDownloadUrl = new KUrlRequester( this );
   mDownloadUrl->setMode( KFile::File );
   mainLayout->addWidget( label, 1, 0 );
   mainLayout->addWidget( mDownloadUrl, 1, 1 );

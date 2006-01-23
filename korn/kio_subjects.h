@@ -31,7 +31,7 @@ class KIO_Protocol;
 class KornMailSubject;
 
 namespace KIO { class MetaData; class Slave; }
-class KURL;
+class KUrl;
 
 template<class T> class QList;
 class QString;

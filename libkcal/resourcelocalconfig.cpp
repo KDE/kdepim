@@ -50,7 +50,7 @@ setObjectName(name);
   QGridLayout *mainLayout = new QGridLayout( this );
 
   QLabel *label = new QLabel( i18n( "Location:" ), this );
-  mURL = new KURLRequester( this );
+  mURL = new KUrlRequester( this );
   mainLayout->addWidget( label, 1, 0 );
   mainLayout->addWidget( mURL, 1, 1 );
 
