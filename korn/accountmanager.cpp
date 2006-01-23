@@ -56,7 +56,7 @@ AccountManager::~AccountManager()
 void AccountManager::readConfig( KConfig* config, const int index )
 {
 	KConfigGroup *masterGroup = new KConfigGroup( config, QString( "korn-%1" ).arg( index ) );
-	QStringList dcop = masterGroup->readListEntry( "dcop", ',' );
+	QStringList dcop = masterGroup->readEntry( "dcop", QStringList(), ',' );
 	KConfigGroup *accountGroup;
 	int counter = 0;
 		

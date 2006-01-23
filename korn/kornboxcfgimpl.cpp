@@ -186,7 +186,7 @@ void KornBoxCfgImpl::readAccountsConfig()
 void KornBoxCfgImpl::readDCOPConfig()
 {
 	elbDCOP->clear();
-	elbDCOP->insertStringList( _config->readListEntry( "dcop", ',' ) );
+	elbDCOP->insertStringList( _config->readEntry( "dcop", QStringList(), ',' ) );
 }
 	
 void KornBoxCfgImpl::writeViewConfig( KConfig* config )
