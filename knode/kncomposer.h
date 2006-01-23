@@ -46,7 +46,7 @@ class Q3GroupBox;
 
 class KProcess;
 class KSpell;
-class KDictSpellingHighlighter;
+class K3DictSpellingHighlighter;
 class KSelectAction;
 class KToggleAction;
 
@@ -260,7 +260,7 @@ class KNComposer::ComposerView  : public QSplitter {
     QPushButton     *a_ttAddBtn,
                     *a_ttRemoveBtn,
                     *a_ttEditBtn;
-    KDictSpellingHighlighter *mSpellChecker;
+    K3DictSpellingHighlighter *mSpellChecker;
 
     bool v_iewOpen;
 };

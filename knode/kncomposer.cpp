@@ -1637,7 +1637,7 @@ void KNComposer::slotSpellDone(const QString &newtext)
         }
     }
     s_pellChecker->cleanUp();
-    KDictSpellingHighlighter::dictionaryChanged();
+    K3DictSpellingHighlighter::dictionaryChanged();
 }
 
 
@@ -1791,7 +1791,7 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   QColor col3 = config.readEntry( "quote2Color", defaultColor2 );
   QColor col4 = config.readEntry( "quote1Color", defaultColor1 );
   QColor c = QColor("red");
-  mSpellChecker = new KDictSpellingHighlighter(e_dit, /*active*/ true, /*autoEnabled*/ true,
+  mSpellChecker = new K3DictSpellingHighlighter(e_dit, /*active*/ true, /*autoEnabled*/ true,
                                        /*spellColor*/ config.readEntry("NewMessage", c),
                                        /*colorQuoting*/ true, col1, col2, col3, col4);
   connect( mSpellChecker, SIGNAL(newSuggestions(const QString&, const QStringList&, unsigned int)), e_dit,

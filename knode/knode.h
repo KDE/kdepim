@@ -47,7 +47,7 @@ class KNMainWindow : public KMainWindow
 public:
   KNMainWindow( QWidget* parent = 0 );
   ~KNMainWindow();
-  void openURL( const KURL& );
+  void openURL( const KUrl& );
   KNMainWidget *mainWidget() { return m_mainWidget; }
 
 public slots:
