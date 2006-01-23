@@ -74,7 +74,7 @@ namespace {
        VCardConverter vcc;
        const QString vCard = bodyPart->asText();
        if ( vCard.isEmpty() ) return AsIcon;
-       Addressee::List al = vcc.parseVCards(  vCard );
+       Addressee::List al = vcc.parseVCards(  vCard.toAscii() );
        if ( al.empty() ) return AsIcon;
 
        writer->queue (
