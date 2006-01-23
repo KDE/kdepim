@@ -52,7 +52,7 @@ class KKioDrop : public KPollableDrop
 {
  Q_OBJECT
 private:
-	KURL *_kurl;
+	KUrl *_kurl;
 	KIO::MetaData *_metadata;
 
 	QString _password;

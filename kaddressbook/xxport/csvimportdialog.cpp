@@ -36,6 +36,7 @@
 #include <QGridLayout>
 #include <QHBoxLayout>
 
+#include <kprogressdialog.h>
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kdialogbase.h>
@@ -166,7 +167,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
 
   KProgressDialog progressDialog( mPage );
   progressDialog.setAutoClose( true );
-  progressDialog.progressBar()->setTotalSteps( mTable->numRows() );
+  progressDialog.progressBar()->setMaximum( mTable->numRows() );
   progressDialog.setLabel( i18n( "Importing contacts" ) );
   progressDialog.show();
 

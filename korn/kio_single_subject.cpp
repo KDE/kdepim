@@ -41,7 +41,7 @@ KIO_Single_Subject::KIO_Single_Subject( QObject * parent,
 		    const QString &url, const long size )
 		: QObject( parent )
 {
-	_kurl = new KURL( kurl );
+	_kurl = new KUrl( kurl );
 	_metadata = new KIO::MetaData( metadata );
 	_protocol = protocol;
 	_name = new QString( url );

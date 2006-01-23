@@ -80,9 +80,9 @@ private slots:
 	
 private:
 	void disConnect( );
-	bool setupSlave( KURL kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol );
-	void deleteItem( const KornMailId *item, KURL, KIO::MetaData, const KIO_Protocol *&);
-	void commitDelete( KURL, KIO::MetaData, const KIO_Protocol *& );
+	bool setupSlave( KUrl kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol );
+	void deleteItem( const KornMailId *item, KUrl, KIO::MetaData, const KIO_Protocol *&);
+	void commitDelete( KUrl, KIO::MetaData, const KIO_Protocol *& );
 
 	KKioDrop *_kio;
 	unsigned int _total;

@@ -67,7 +67,7 @@ public:
 	
 private:
 	KKioDrop *_kio;
-	KURL *_kurl;
+	KUrl *_kurl;
 	KIO::MetaData *_metadata;
 	const KIO_Protocol *_protocol;
 	QList<KIO_Single_Subject*> *_jobs;

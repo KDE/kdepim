@@ -85,7 +85,7 @@ private:
 	KKioDrop *_kio;
 	KIO::ListJob *_job;
 	KIO::Slave *_slave;
-	KURL *_kurl;
+	KUrl *_kurl;
 	KIO::MetaData *_metadata;
 	const KIO_Protocol *_protocol;
 	bool _valid;

@@ -437,7 +437,7 @@ void ViewManager::dropped( QDropEvent *e )
   } else if ( KVCardDrag::decode( e, vcards ) ) {
     KABC::VCardConverter converter;
 
-    const KABC::Addressee::List list = converter.parseVCards( vcards );
+    const KABC::Addressee::List list = converter.parseVCards( vcards.toAscii() );
     KABC::Addressee::List::ConstIterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
       KABC::Addressee a = mCore->addressBook()->findByUid( (*it).uid() );

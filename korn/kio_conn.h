@@ -50,7 +50,7 @@ public:
 	 * @param protocol the used protocol
 	 * @return a slave which can be used for jobs, 0 if it fails to open one
 	 */
-	static KIO::Slave* getSlave( const KURL& kurl, const KIO::MetaData& metadata, const KIO_Protocol* protocol );
+	static KIO::Slave* getSlave( const KUrl& kurl, const KIO::MetaData& metadata, const KIO_Protocol* protocol );
 
 	/**
 	 * This function must be called if a job is finished.

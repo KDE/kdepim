@@ -115,7 +115,7 @@ namespace {
        const QString vCard = bodyPart->asText();
        if ( vCard.isEmpty() ) return true;
        VCardConverter vcc;
-       Addressee::List al = vcc.parseVCards(  vCard );
+       Addressee::List al = vcc.parseVCards(  vCard.toAscii() );
        int index = path.right( path.length() - path.findRev( ":" ) - 1 ).toInt();
        if ( index == -1 ) return true;
        KABC::Addressee a = al[index];

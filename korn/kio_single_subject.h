@@ -54,7 +54,7 @@ public:
 	 * @param name the name of the message to fetch
 	 * @param size the size the size of the full message
 	 */
-	KIO_Single_Subject( QObject * parent, KURL &url, KIO::MetaData &metadata, const KIO_Protocol * protocol,
+	KIO_Single_Subject( QObject * parent, KUrl &url, KIO::MetaData &metadata, const KIO_Protocol * protocol,
 	                    KIO::Slave *& slave, const QString &name, const long size );
 	/**
 	 * Destructor
@@ -73,7 +73,7 @@ public:
 private:
 	QString *_message;
 	QString *_name;
-	KURL *_kurl;
+	KUrl *_kurl;
 	const KIO_Protocol *_protocol;
 	KIO::MetaData *_metadata;
 	KIO::TransferJob* _job;
