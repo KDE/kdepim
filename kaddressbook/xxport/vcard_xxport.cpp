@@ -242,7 +242,7 @@ KABC::Addressee::List VCardXXPort::parseVCard( const QString &data ) const
 {
   KABC::VCardConverter converter;
 
-  return converter.parseVCards( data );
+  return converter.parseVCards( data.toAscii() );
 }
 
 bool VCardXXPort::doExport( const KURL &url, const QString &data )
@@ -408,7 +408,7 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list,
 
   mView = new KPIM::AddresseeView( page );
   mView->enableLinks( 0 );
-  mView->setVScrollBarMode( Q3ScrollView::Auto );
+  mView->setVerticalScrollBarPolicy ( Qt::ScrollBarAsNeeded );
   layout->addWidget( mView );
 
   setButtonText( Apply, i18n( "Import All..." ) );

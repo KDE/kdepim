@@ -549,7 +549,7 @@ void DistributionListWidget::dropEvent( QDropEvent *e )
   QString vcards;
   if ( KVCardDrag::decode( e, vcards ) ) {
     KABC::VCardConverter converter;
-    const KABC::Addressee::List lst = converter.parseVCards( vcards );
+    const KABC::Addressee::List lst = converter.parseVCards( vcards.toAscii() );
     for ( KABC::Addressee::List::ConstIterator it = lst.begin(); it != lst.end(); ++it )
       dist.insertEntry( *it );
 

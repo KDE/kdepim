@@ -39,7 +39,7 @@
 #include <kmessagebox.h>
 #include <kprogressbar.h>
 #include <kguiitem.h>
-
+#include <kprogressdialog.h>
 #ifdef HAVE_GNOKII_H
 extern "C" {
 #include <gnokii.h>
@@ -269,9 +269,9 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
   if (m_progressDlg->wasCancelled())
 	return GN_ERR_NONE;
 
-  KProgress* progress = (KProgress*)m_progressDlg->progressBar();
+  KProgressBar* progress = (KProgressBar*)m_progressDlg->progressBar();
 
-  progress->setProgress(0);
+  progress->setValue(0);
   this_filter->processEvents();
 
   // get number of entries in this phone memory type (internal/SIM-card)
@@ -283,7 +283,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
   KABC::Address *addr;
   QString s, country;
 
-  progress->setTotalSteps(memstat.used);
+  progress->setMaximum(memstat.used);
   m_progressDlg->setLabel(i18n("<qt>Importing <b>%1</b> contacts from <b>%2</b> of the Mobile Phone.<br><br>%3</qt>")
 		.arg(memstat.used)
 		.arg(buildMemoryTypeString(memtype))
@@ -294,7 +294,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
   for (int i = 1; !m_progressDlg->wasCancelled() && i <= memstat.used + memstat.free; i++) {
 	error = read_phone_entry( i, memtype, &entry );
 
-	progress->setProgress(num_read);
+	progress->setValue(num_read);
   	this_filter->processEvents();
 
 	if (error == GN_ERR_EMPTYLOCATION)
@@ -468,13 +468,13 @@ KABC::Addressee::List GNOKIIXXPort::importContacts( const QString& ) const
                      "KAddressbook will behave unresponsively.</qt>") ))
 	  return addrList;
 
-	m_progressDlg = new KProgressDialog( parentWidget(), "importwidget",
+	m_progressDlg = new KProgressDialog( parentWidget(), 
 		i18n("Mobile Phone Import"),
 		i18n("<qt><center>Establishing connection to the Mobile Phone.<br><br>"
 		     "Please wait...</center></qt>") );
 	m_progressDlg->setAllowCancel(true);
-	m_progressDlg->progressBar()->setProgress(0);
-	m_progressDlg->progressBar()->setCenterIndicator(true);
+	m_progressDlg->progressBar()->setValue(0);
+	m_progressDlg->progressBar()->setAlignment(Qt::AlignCenter);
 	m_progressDlg->setModal(true);
 	m_progressDlg->setInitialSize(QSize(450,350));
 	m_progressDlg->show();
@@ -716,19 +716,19 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 		     "KAddressbook will behave unresponsively.</qt>") ))
 	  return false;
 
-	m_progressDlg = new KProgressDialog( parentWidget(), "importwidget",
+	m_progressDlg = new KProgressDialog( parentWidget(),
 		i18n("Mobile Phone Export"),
 		i18n("<qt><center>Establishing connection to the Mobile Phone.<br><br>"
 		     "Please wait...</center></qt>") );
 	m_progressDlg->setAllowCancel(true);
-	m_progressDlg->progressBar()->setProgress(0);
-	m_progressDlg->progressBar()->setCenterIndicator(true);
+	m_progressDlg->progressBar()->setValue(0);
+	m_progressDlg->progressBar()->setAlignment(Qt::AlignCenter);
 	m_progressDlg->setModal(true);
 	m_progressDlg->setInitialSize(QSize(450,350));
 	m_progressDlg->show();
   	processEvents();
 
-	KProgress* progress = (KProgress*)m_progressDlg->progressBar();
+	KProgressBar* progress = (KProgressBar*)m_progressDlg->progressBar();
 
 	KABC::AddresseeList::ConstIterator it;
 	QStringList failedList;
@@ -785,9 +785,9 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 				overwrite_phone_entries = true;
 	}
 
-  	progress->setTotalSteps(list.count());
+  	progress->setMaximum(list.count());
 	entries_written = 0;
-	progress->setProgress(entries_written);
+	progress->setValue(entries_written);
 	m_progressDlg->setButtonText(i18n("&Stop Export"));
 	m_progressDlg->setLabel(i18n("<qt>Exporting <b>%1</b> contacts to the <b>%2</b> "
 			"of the Mobile Phone.<br><br>%3</qt>")
@@ -805,7 +805,7 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 		if (addr->custom(APP, "X_GSM_STORE_AT").startsWith("SM"))
 			continue;
 
-		progress->setProgress(entries_written++);
+		progress->setValue(entries_written++);
 
 try_next_phone_entry:
   		this_filter->processEvents();
@@ -863,9 +863,9 @@ try_next_phone_entry:
 				     "the Mobile Phone have been deleted.</center></qt>") );
 			m_progressDlg->setButtonText(i18n("&Stop Delete"));
 			deleteLabelInitialized = true;
-  			progress->setTotalSteps(phone_count);
+  			progress->setMaximum(phone_count);
 			entries_written = 0;
-			progress->setProgress(entries_written);
+			progress->setValue(entries_written);
   			this_filter->processEvents();
 		}
 		if (phone_entry_no > (memstat.used + memstat.free))
@@ -874,7 +874,7 @@ try_next_phone_entry:
 		if (!entry_empty) {
 			error = xxport_phone_delete_entry(phone_entry_no, memtype);
 			phone_count--;
-			progress->setProgress(++entries_written);
+			progress->setValue(++entries_written);
   			this_filter->processEvents();
 		}
 		phone_entry_no++;
