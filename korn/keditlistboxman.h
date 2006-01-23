@@ -44,7 +44,7 @@ public:
 	 * @param buttons A list of buttons in the KEditListBox
 	 */
 	KEditListBoxManager(	QWidget *parent = 0, const char *name = 0,
-			bool checkAtEntering=true, int buttons = All );
+			bool checkAtEntering=true, KEditListBox::Buttons buttons = All );
 			
 	/**
 	 * The save as above, but with other options for KEditListBox.
@@ -57,7 +57,7 @@ public:
 	 */
 	KEditListBoxManager(	const QString& title, QWidget *parent = 0,
 			const char *name = 0, bool checkAtEntering=true,
-			int buttons = All );
+			KEditListBox::Buttons buttons = All );
 		
 	/**
 	 * The save as above, but with other options for KEditListBox.
@@ -65,7 +65,7 @@ public:
 	KEditListBoxManager(	const QString& title,
 			const KEditListBox::CustomEditor &customEditor,
 			QWidget *parent = 0, const char *name = 0,
-			bool checkAtEntering = true, int buttons = All );
+			bool checkAtEntering = true, KEditListBox::Buttons buttons = All );
 	
 	/**
 	 * Destructor

@@ -25,7 +25,7 @@
 #include <qstring.h>
 
 KEditListBoxManager::KEditListBoxManager(	QWidget *parent, const char *name,
-						bool checkAtEntering, int buttons )
+						bool checkAtEntering, KEditListBox::Buttons buttons )
 	: KEditListBox( parent, name, checkAtEntering, buttons ),
 	_config( 0 ),
 	_groupName( 0 ),
@@ -37,7 +37,7 @@ KEditListBoxManager::KEditListBoxManager(	QWidget *parent, const char *name,
 
 KEditListBoxManager::KEditListBoxManager(	const QString& title, QWidget *parent,
 						const char *name, bool checkAtEntering,
-						int buttons)
+						KEditListBox::Buttons buttons)
 	: KEditListBox( title, parent, name, checkAtEntering, buttons ),
 	_config( 0 ),
 	_groupName( 0 ),
@@ -50,7 +50,7 @@ KEditListBoxManager::KEditListBoxManager(	const QString& title, QWidget *parent,
 KEditListBoxManager::KEditListBoxManager(	const QString& title,
 						const KEditListBox::CustomEditor &customEditor,
 						QWidget *parent, const char *name,
-						bool checkAtEntering, int buttons )
+						bool checkAtEntering, KEditListBox::Buttons buttons )
 	: KEditListBox( title, customEditor, parent, name, checkAtEntering, buttons ),
 	_config( 0 ),
 	_groupName( 0 ),
