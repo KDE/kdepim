@@ -44,7 +44,8 @@
 #include <klistview.h>
 #include <kconfigbase.h>
 #include <kconfig.h>
-#include <kprogress.h>
+#include <kprogressbar.h>
+#include <kprogressdialog.h>
 #include <kapplication.h>
 #include <kwin.h>
 #include <kpushbutton.h>

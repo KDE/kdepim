@@ -65,7 +65,7 @@ static const char *kpilot_id =
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
 #include <kcmultidialog.h>
-#include <kprogress.h>
+#include <kprogressbar.h>
 #include <klibloader.h>
 #include <ktoolinvocation.h>
 

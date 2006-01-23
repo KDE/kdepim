@@ -44,7 +44,7 @@
 #include <klocale.h>
 #include <kconfigskeleton.h>
 #include <kapplication.h>
-#include <kprogress.h>
+#include <kprogressbar.h>
 
 #include "kpilotConfig.h"
 #include "pilotUser.h"

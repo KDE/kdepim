@@ -48,7 +48,7 @@ static const char *logw_id =
 
 #include <kglobal.h>
 #include <kstandarddirs.h>
-#include <kprogress.h>
+#include <kprogressbar.h>
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 

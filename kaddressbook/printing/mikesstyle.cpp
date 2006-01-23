@@ -30,7 +30,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kprinter.h>
-#include <kprogress.h>
+#include <kprogressbar.h>
 
 #include "printingwizard.h"
 #include "printprogress.h"

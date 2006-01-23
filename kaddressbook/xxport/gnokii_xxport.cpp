@@ -37,7 +37,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kprogress.h>
+#include <kprogressbar.h>
 #include <kguiitem.h>
 
 #ifdef HAVE_GNOKII_H
