@@ -36,6 +36,7 @@
 #include <kurlrequester.h>
 #include <kconfig.h>
 #include <kapplication.h>
+#include <Q3GroupBox>
 
 #include <q3frame.h>
 #include <qlayout.h>
