@@ -52,7 +52,7 @@ using KRecentAddress::RecentAddresses;
 #include <kpgp.h>
 #include <kpgpblock.h>
 #include <kprocess.h>
-#include <ksyntaxhighlighter.h>
+#include <k3syntaxhighlighter.h>
 #include <qcursor.h>
 #include <k3urldrag.h>
 #include <kcompletionbox.h>
@@ -1335,7 +1335,7 @@ void KNComposer::slotSpellcheck()
   a_ctSpellCheck->setEnabled(false);
 
   s_pellChecker = new KSpell(this, i18n("Spellcheck"), this, SLOT(slotSpellStarted(KSpell *)));
-  QStringList l = KSpellingHighlighter::personalWords();
+  QStringList l = K3SpellingHighlighter::personalWords();
   for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
       s_pellChecker->addPersonal( *it );
   }
@@ -2402,7 +2402,7 @@ void KNComposer::Editor::contentsContextMenuEvent( QContextMenuEvent */*e*/ )
     else
     {
         spell = new KSpell(this, i18n("Spellcheck"), this, SLOT(slotSpellStarted(KSpell *)));
-        QStringList l = KSpellingHighlighter::personalWords();
+        QStringList l = K3SpellingHighlighter::personalWords();
         for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
             spell->addPersonal( *it );
         }

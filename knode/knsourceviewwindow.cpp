@@ -34,10 +34,12 @@ KNSourceViewWindow::KNSourceViewWindow( const QString &text )
   setTextFormat( Qt::PlainText );
 
   setCaption(kapp->makeStdCaption(i18n("Article Source")));
-  setPaper( QBrush( knGlobals.settings()->backgroundColor()) );
+#warning "kde4: porting\n";  
+  //setPaper( QBrush( knGlobals.settings()->backgroundColor()) );
   setFont( knGlobals.settings()->articleFixedFont() );
   setColor( knGlobals.settings()->textColor() );
-  setWordWrap( KTextBrowser::NoWrap );
+#warning "kde4: porting\n";  
+  //setWordWrap( KTextBrowser::NoWrap );
 
   setText( text );
   KNHelper::restoreWindowSize("sourceWindow", this, QSize(500,300));
