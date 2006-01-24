@@ -24,7 +24,7 @@
 #include <qfileinfo.h>
 #include <qstring.h>
 
-UrlInfo::UrlInfo( const KURL& url, const UrlType type )
+UrlInfo::UrlInfo( const KUrl& url, const UrlType type )
 	: m_type( invalid ),
 	m_filename( new QString ),
 	m_id( new QString )
@@ -68,7 +68,7 @@ QString UrlInfo::url() const
 }
 
 
-void UrlInfo::calculateInfo( const KURL& url, const UrlType type )
+void UrlInfo::calculateInfo( const KUrl& url, const UrlType type )
 {
 	bool found = false;
 
@@ -84,7 +84,7 @@ void UrlInfo::calculateInfo( const KURL& url, const UrlType type )
 	}
 }
 
-bool UrlInfo::isDirectory( const KURL& url )
+bool UrlInfo::isDirectory( const KUrl& url )
 {
 	//Check is url is in the form mbox://{filename}
 	QString filename = url.path();
@@ -107,7 +107,7 @@ bool UrlInfo::isDirectory( const KURL& url )
 	return true;
 }
 
-bool UrlInfo::isMessage( const KURL& url )
+bool UrlInfo::isMessage( const KUrl& url )
 {
 	QString path = url.path();
 	QFileInfo info;

@@ -133,7 +133,7 @@ Filter::Filter( const QString& name, const QString& author,
 bool Filter::addMessage( FilterInfo* info, const QString& folderName,
                          const QString& msgPath, const QString &  msgStatusFlags)
 {
-  KURL msgURL;
+  KUrl msgURL;
   msgURL.setPath( msgPath );
   
   if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
@@ -169,7 +169,7 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
 bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
                          	        const QString& msgPath, const QString& msgStatusFlags )
 {
-  KURL msgURL;
+  KUrl msgURL;
   msgURL.setPath( msgPath );
   
   if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )

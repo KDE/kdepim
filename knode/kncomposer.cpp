@@ -1014,7 +1014,7 @@ void KNComposer::insertFile(bool clear, bool box)
 {
   KNLoadHelper helper(this);
   QFile *file = helper.getFile(i18n("Insert File"));
-  KURL url;
+  KUrl url;
   QString boxName;
 
   if (file) {
@@ -1674,19 +1674,19 @@ void KNComposer::slotSpellFinished()
 void KNComposer::slotDragEnterEvent(QDragEnterEvent *ev)
 {
   QStringList files;
-  ev->accept( KURL::List::canDecode( ev->mimeData() ) );
+  ev->accept( KUrl::List::canDecode( ev->mimeData() ) );
 }
 
 
 void KNComposer::slotDropEvent(QDropEvent *ev)
 {
-  KURL::List urls = KURL::List::fromMimeData( ev->mimeData() );
+  KUrl::List urls = KUrl::List::fromMimeData( ev->mimeData() );
 
   if ( urls.isEmpty() )
     return;
 
-  for (KURL::List::ConstIterator it = urls.begin(); it != urls.end(); ++it) {
-    const KURL &url = *it;
+  for (KUrl::List::ConstIterator it = urls.begin(); it != urls.end(); ++it) {
+    const KUrl &url = *it;
     KNLoadHelper *helper = new KNLoadHelper(this);
 
     if (helper->setURL(url)) {
@@ -2314,7 +2314,7 @@ void KNComposer::Editor::slotRot13()
 
 void KNComposer::Editor::contentsDragEnterEvent(QDragEnterEvent *ev)
 {
-  if ( KURL::List::canDecode( ev->mimeData() ) )
+  if ( KUrl::List::canDecode( ev->mimeData() ) )
     emit(sigDragEnterEvent(ev));
   else
     KEdit::dragEnterEvent(ev);
@@ -2323,7 +2323,7 @@ void KNComposer::Editor::contentsDragEnterEvent(QDragEnterEvent *ev)
 
 void KNComposer::Editor::contentsDropEvent(QDropEvent *ev)
 {
-  if ( KURL::List::canDecode( ev->mimeData() ) )
+  if ( KUrl::List::canDecode( ev->mimeData() ) )
     emit(sigDropEvent(ev));
   else
     KEdit::dropEvent(ev);

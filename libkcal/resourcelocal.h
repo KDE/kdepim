@@ -88,7 +88,7 @@ class LIBKCAL_EXPORT ResourceLocal : public ResourceCached
   private:
     void init();
 
-    KURL mURL;
+    KUrl mURL;
     CalFormat *mFormat;
 
     KDirWatch mDirWatch;

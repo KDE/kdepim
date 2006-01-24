@@ -114,7 +114,7 @@ public:
 	 *
 	 * @param kurl the url to be changed
 	 */
-	virtual void recheckKURL( KURL &kurl, KIO::MetaData& ) const
+	virtual void recheckKURL( KUrl &kurl, KIO::MetaData& ) const
 		{ if( kurl.path().right( 1 ) == "/" )
 		  	kurl.setPath( kurl.path() +  "new" );
 		  else
@@ -135,7 +135,7 @@ public:
 	 */
 	virtual void configFillGroupBoxes( QStringList* list ) const;
 	/**
-	 * This function adds a KURL widget to the first vector.
+	 * This function adds a KUrl widget to the first vector.
 	 * The value is used to get the path value for the mail box.
 	 *
 	 * @param vector a vector with the first groupbox

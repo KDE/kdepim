@@ -80,7 +80,7 @@ class ScheduleEvent {
 class Service {
   public:
     Service();
-    Service( bool active, const QString & name, const QString & owner, const KURL & serviceUrl, const KURL & logo, const QStringList & genres );
+    Service( bool active, const QString & name, const QString & owner, const KUrl & serviceUrl, const KUrl & logo, const QStringList & genres );
     virtual ~Service() {}
   
     void setId( const QString & id ) { mId = id; }
@@ -102,8 +102,8 @@ class Service {
     bool mActive;
     QString mName;
     QString mOwner;
-    KURL mServiceUrl;
-    KURL mLogo;
+    KUrl mServiceUrl;
+    KUrl mLogo;
     QStringList mGenres;
     ProgramInformationMap mProgInfo;
 };

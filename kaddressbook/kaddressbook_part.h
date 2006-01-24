@@ -56,7 +56,7 @@ class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBook
     virtual QString getNameByPhone( QString phone );
     virtual void save();
     virtual void exit();
-    virtual bool openURL( const KURL &url );
+    virtual bool openURL( const KUrl &url );
     virtual bool handleCommandLine();
 
   protected:

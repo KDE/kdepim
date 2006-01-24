@@ -103,7 +103,7 @@ private slots:
     void slotUploadResult( KIO::Job* job );
 
     void slotImportCertFromFile();
-    void slotImportCertFromFile( const KURL & filename );
+    void slotImportCertFromFile( const KUrl & filename );
     void slotImportResult( KIO::Job* );
 
     void slotCertificateImportResult( const GpgME::ImportResult & result );
@@ -137,7 +137,7 @@ private slots:
     void slotShowConfigurationDialog();
     void slotConfigureGpgME();
     void slotContextMenu(Kleo::KeyListViewItem*, const QPoint& point);
-    void slotDropped(const KURL::List&);
+    void slotDropped(const KUrl::List&);
     /** Schedule a repaint for the listview items. E.g. when the
 	colour config has changed */
     void slotRepaint();
@@ -186,7 +186,7 @@ private:
     KProcess * mDirmngrProc;
     QString mErrorbuffer;
     Q3PtrList<Kleo::KeyListViewItem> mItemsToDelete;
-    KURL::List mURLsToImport;
+    KUrl::List mURLsToImport;
     typedef QMap<const Kleo::Job *, QString> JobsDisplayNameMap;
     JobsDisplayNameMap mJobsDisplayNameMap;
     HierarchyAnalyser * mHierarchyAnalyser;

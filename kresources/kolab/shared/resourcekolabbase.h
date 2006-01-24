@@ -127,7 +127,7 @@ public: // for Contact
   /// Get an attachment from a mail. Returns a URL to it. This can
   /// be called by the resource after obtaining the incidence.
   /// The resource must delete the temp file.
-  bool kmailGetAttachment( KURL& url, const QString& resource,
+  bool kmailGetAttachment( KUrl& url, const QString& resource,
                            quint32 sernum,
                            const QString& filename ) const;
 

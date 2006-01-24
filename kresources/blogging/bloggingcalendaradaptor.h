@@ -41,9 +41,9 @@ class BloggingUploadItem : public KPIM::GroupwareUploadItem
     BloggingUploadItem( KBlog::APIBlog *api, CalendarAdaptor *adaptor, KCal::Incidence *incidence, UploadType type );
     virtual ~BloggingUploadItem();
     virtual KIO::TransferJob *createUploadNewJob(
-            KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl );
+            KPIM::GroupwareDataAdaptor *adaptor, const KUrl &baseurl );
     virtual KIO::TransferJob *createUploadJob(
-            KPIM::GroupwareDataAdaptor *adaptor, const KURL &url );
+            KPIM::GroupwareDataAdaptor *adaptor, const KUrl &url );
 
   protected:
     BloggingUploadItem( UploadType type ) : KPIM::GroupwareUploadItem( type ) {}
@@ -66,22 +66,22 @@ Q_OBJECT
     QByteArray identifier() const { return "KCalResourceBlogging"; }
     long flags() const { return GWResNeedsLogon; }
 
-    void setBaseURL( const KURL &url );
+    void setBaseURL( const KUrl &url );
     void setUser( const QString &user );
     void setPassword( const QString &password );
     // We don't want to set the username / pw for the URL!
-    void setUserPassword( KURL &url );
+    void setUserPassword( KUrl &url );
 
     KBlog::APIBlog *api() const;
     void setAPI( KBlog::APIBlog *api );
 
-    KIO::Job *createLoginJob( const KURL &url, const QString &user,
+    KIO::Job *createLoginJob( const KUrl &url, const QString &user,
                               const QString &password  );
-    KIO::Job *createListFoldersJob( const KURL &url );
-    KIO::TransferJob *createListItemsJob( const KURL &url );
-    KIO::TransferJob *createDownloadJob( const KURL &url,
+    KIO::Job *createListFoldersJob( const KUrl &url );
+    KIO::TransferJob *createListItemsJob( const KUrl &url );
+    KIO::TransferJob *createDownloadJob( const KUrl &url,
                                     KPIM::FolderLister::ContentType ctype );
-    KIO::Job *createRemoveJob( const KURL &url, KPIM::GroupwareUploadItem *deleteItem );
+    KIO::Job *createRemoveJob( const KUrl &url, KPIM::GroupwareUploadItem *deleteItem );
 
     bool interpretLoginJob( KIO::Job *job );
     void interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister * );

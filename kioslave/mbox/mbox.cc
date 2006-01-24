@@ -69,7 +69,7 @@ MBoxProtocol::~MBoxProtocol()
 {
 }
 
-void MBoxProtocol::get( const KURL& url )
+void MBoxProtocol::get( const KUrl& url )
 {
 	m_errorState = false;
 	
@@ -102,7 +102,7 @@ void MBoxProtocol::get( const KURL& url )
 	}
 }
 
-void MBoxProtocol::listDir( const KURL& url )
+void MBoxProtocol::listDir( const KUrl& url )
 {
 	m_errorState = false;
 	
@@ -130,7 +130,7 @@ void MBoxProtocol::listDir( const KURL& url )
 	finished();
 }
 
-void MBoxProtocol::stat( const KURL& url )
+void MBoxProtocol::stat( const KUrl& url )
 {
 	UrlInfo info( url );
 	if( info.type() == UrlInfo::invalid )
@@ -144,7 +144,7 @@ void MBoxProtocol::stat( const KURL& url )
 	finished();
 }
 
-void MBoxProtocol::mimetype( const KURL& url )
+void MBoxProtocol::mimetype( const KUrl& url )
 {	
 	m_errorState = false;
 	

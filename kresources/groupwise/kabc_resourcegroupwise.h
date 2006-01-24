@@ -45,7 +45,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
 
   public:
     ResourceGroupwise( const KConfig * );
-    ResourceGroupwise( const KURL &url,
+    ResourceGroupwise( const KUrl &url,
                        const QString &user, const QString &password,
                        const QStringList &readAddressBooks,
                        const QString &writeAddressBook );

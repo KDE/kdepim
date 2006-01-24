@@ -85,7 +85,7 @@ public:
                         int startIndex,
                         int nbMessages );
 
-  bool kmailGetAttachment( KURL& url, const QString& resource, quint32 sernum,
+  bool kmailGetAttachment( KUrl& url, const QString& resource, quint32 sernum,
                            const QString& filename );
   bool kmailDeleteIncidence( const QString& resource, quint32 sernum );
   bool kmailUpdate( const QString& resource,

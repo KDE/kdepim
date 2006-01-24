@@ -47,7 +47,7 @@ ResourceGroupwise::ResourceGroupwise( const KConfig *config )
   initGroupwise();
 }
 
-ResourceGroupwise::ResourceGroupwise( const KURL &url,
+ResourceGroupwise::ResourceGroupwise( const KUrl &url,
                                       const QString &user,
                                       const QString &password,
                                       const QStringList &readAddressBooks,
@@ -267,7 +267,7 @@ bool ResourceGroupwise::asyncLoad()
     }
   }
 
-  KURL url( prefs()->url() );
+  KUrl url( prefs()->url() );
   if ( url.protocol() == "http" ) 
     url.setProtocol( "groupwise" );
   else 
@@ -425,7 +425,7 @@ bool ResourceGroupwise::updateAddressBooks()
   QStringList ids;
   ids.append( mPrefs->systemAddressBook() );
 
-  KURL url( prefs()->url() );
+  KUrl url( prefs()->url() );
   if ( url.protocol() == "http" ) 
     url.setProtocol( "groupwise" );
   else 

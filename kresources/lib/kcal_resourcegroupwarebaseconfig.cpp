@@ -125,7 +125,7 @@ void ResourceGroupwareBaseConfig::saveSettings( KRES::Resource *resource )
 
 void ResourceGroupwareBaseConfig::updateFolders()
 {
-  KURL url = mUrl->text();
+  KUrl url = mUrl->text();
   url.setUser( mUserEdit->text() );
   url.setPass( mPasswordEdit->text() );
 

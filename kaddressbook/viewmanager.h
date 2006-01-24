@@ -117,7 +117,7 @@ class ViewManager : public QWidget
     /**
       Emitted whenever a url is dragged on a view.
      */
-    void urlDropped( const KURL& );
+    void urlDropped( const KUrl& );
 
     /**
       Emitted whenever the sort field of a view has changed.

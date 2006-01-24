@@ -146,7 +146,7 @@ bool ResourceGroupware::doLoad()
 
   clearChanges();
 
-  KURL url( prefs()->url() );
+  KUrl url( prefs()->url() );
   url.setUser( prefs()->user() );
   url.setPass( prefs()->password() );
 

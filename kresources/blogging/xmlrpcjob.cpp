@@ -69,7 +69,7 @@ public:
 };
 
 
-XmlrpcJob::XmlrpcJob( const KURL& url, const QString& method,
+XmlrpcJob::XmlrpcJob( const KUrl& url, const QString& method,
                       const QList<QVariant> &params, bool showProgressInfo)
   : TransferJob( url, KIO::CMD_SPECIAL, QByteArray(), QByteArray(),
                  showProgressInfo )
@@ -145,7 +145,7 @@ kdDebug() << m_str_response << endl;
 /*  if (! m_redirectionURL.isEmpty() && m_redirectionURL.isValid() ) {
     QDataStream istream( m_packedArgs, QIODevice::ReadOnly );
     int s_cmd, s_method;
-    KURL s_url;
+    KUrl s_url;
     istream >> s_cmd;
     istream >> s_url;
     istream >> s_method;
@@ -385,7 +385,7 @@ kdDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
 
 /* Convenience methods */
 
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const QList<QVariant> &params, bool showProgressInfo )
+XmlrpcJob* KIO::xmlrpcCall( const KUrl& url, const QString &method, const QList<QVariant> &params, bool showProgressInfo )
 {
   if ( url.isEmpty() ) {
     kdWarning() << "Cannot execute call to " << method << ": empty server URL" << endl;
@@ -397,7 +397,7 @@ XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method, const QList<
   return job;
 }
 
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method,
+XmlrpcJob* KIO::xmlrpcCall( const KUrl& url, const QString &method,
 		                        const QVariant &arg, bool showProgressInfo )
 {
   QList<QVariant> args;
@@ -405,7 +405,7 @@ XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method,
   return KIO::xmlrpcCall( url, method, args, showProgressInfo );
 }
 
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method,
+XmlrpcJob* KIO::xmlrpcCall( const KUrl& url, const QString &method,
 		                        const QStringList &arg, bool showProgressInfo )
 {
   QList<QVariant> args;
@@ -417,7 +417,7 @@ XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method,
 }
 
 template <typename T>
-XmlrpcJob* KIO::xmlrpcCall( const KURL& url, const QString &method,
+XmlrpcJob* KIO::xmlrpcCall( const KUrl& url, const QString &method,
 		                        const QList<T>&arg, bool showProgressInfo )
 {
   QList<QVariant> args;

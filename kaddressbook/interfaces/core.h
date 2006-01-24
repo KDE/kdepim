@@ -147,7 +147,7 @@ class KDE_EXPORT Core : public QObject
     /**
       DCOP METHOD: Imports the vCard, located at the given url.
      */
-    virtual void importVCard( const KURL& url ) = 0;
+    virtual void importVCard( const KUrl& url ) = 0;
 
     /**
       DCOP METHOD: Imports the given vCard.

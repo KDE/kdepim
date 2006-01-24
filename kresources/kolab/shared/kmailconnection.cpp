@@ -214,7 +214,7 @@ bool KMailConnection::kmailIncidences( QMap<quint32, QString>& lst,
 }
 
 
-bool KMailConnection::kmailGetAttachment( KURL& url,
+bool KMailConnection::kmailGetAttachment( KUrl& url,
                                           const QString& resource,
                                           quint32 sernum,
                                           const QString& filename )

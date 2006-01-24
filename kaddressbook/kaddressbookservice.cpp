@@ -35,7 +35,7 @@ void KAddressBookService::importVCard( const QString& vCard )
   mCore->importVCard( vCard );
 }
 
-void KAddressBookService::importVCard( const KURL& url )
+void KAddressBookService::importVCard( const KUrl& url )
 {
   mCore->importVCard( url );
 }

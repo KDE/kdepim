@@ -51,21 +51,21 @@ class GroupDavCalendarAdaptor : public DavCalendarAdaptor
       types << KPIM::FolderLister::Todo;
       return types;
     }
-    void customAdaptDownloadUrl( KURL &url );
-    void customAdaptUploadUrl( KURL &url );
+    void customAdaptDownloadUrl( KUrl &url );
+    void customAdaptUploadUrl( KUrl &url );
     QByteArray identifier() const { return "KCalResourceGroupDAV"; }
     QString defaultNewItemName( KPIM::GroupwareUploadItem* /*item*/ ) { return "new.ics"; }
     long flags() const { return 0; }
 
 
     // Creating Jobs
-    KIO::Job *createListFoldersJob( const KURL &url )
+    KIO::Job *createListFoldersJob( const KUrl &url )
         { return GroupDavGlobals::createListFoldersJob( url ); }
-    KIO::TransferJob *createListItemsJob( const KURL &url )
+    KIO::TransferJob *createListItemsJob( const KUrl &url )
         { return GroupDavGlobals::createListItemsJob( url ); }
-    KIO::TransferJob *createDownloadJob( const KURL &url, KPIM::FolderLister::ContentType ctype )
+    KIO::TransferJob *createDownloadJob( const KUrl &url, KPIM::FolderLister::ContentType ctype )
         { return GroupDavGlobals::createDownloadJob( this, url, ctype ); }
-    KIO::Job *createRemoveJob( const KURL &uploadurl, KPIM::GroupwareUploadItem *deletedItem )
+    KIO::Job *createRemoveJob( const KUrl &uploadurl, KPIM::GroupwareUploadItem *deletedItem )
         { return GroupDavGlobals::createRemoveJob( this, uploadurl, deletedItem ); }
 
 

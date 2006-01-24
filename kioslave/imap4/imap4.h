@@ -72,16 +72,16 @@ public:
    * if you want the slave to decode the content (e.g. for attachments)
    * then append an additional INFO=DECODE to the URL
    */
-  virtual void get (const KURL & _url);
+  virtual void get (const KUrl & _url);
   /**
    * @brief stat a mailbox, message, attachment
    */
-  virtual void stat (const KURL & _url);
+  virtual void stat (const KUrl & _url);
   virtual void slave_status ();
   /**
    * @brief delete a mailbox
    */
-  virtual void del (const KURL & _url, bool isFile);
+  virtual void del (const KUrl & _url, bool isFile);
   /**
    * @brief Capabilites, NOOP, (Un)subscribe, Change status,
    * Change ACL
@@ -90,17 +90,17 @@ public:
   /**
    * @brief list a directory/mailbox
    */
-  virtual void listDir (const KURL & _url);
-  virtual void setSubURL (const KURL & _url);
+  virtual void listDir (const KUrl & _url);
+  virtual void setSubURL (const KUrl & _url);
   virtual void dispatch (int command, const QByteArray & data);
   /**
    * @brief create a mailbox
    */
-  virtual void mkdir (const KURL & url, int permissions);
-  virtual void put (const KURL & url, int permissions, bool overwrite,
+  virtual void mkdir (const KUrl & url, int permissions);
+  virtual void put (const KUrl & url, int permissions, bool overwrite,
     bool resume);
-  virtual void rename (const KURL & src, const KURL & dest, bool overwrite);
-  virtual void copy (const KURL & src, const KURL & dest, int permissions,
+  virtual void rename (const KUrl & src, const KUrl & dest, bool overwrite);
+  virtual void copy (const KUrl & src, const KUrl & dest, int permissions,
     bool overwrite);
 
   /** @brief reimplement the parser
@@ -146,7 +146,7 @@ protected:
    * set to ITYPE_DIR_AND_BOX
    */
   enum IMAP_TYPE
-  parseURL (const KURL & _url, QString & _box, QString & _section,
+  parseURL (const KUrl & _url, QString & _box, QString & _section,
             QString & _type, QString & _uid, QString & _validity,
             QString & _hierarchyDelimiter, QString & _info,
             bool cache = false);
@@ -158,7 +158,7 @@ protected:
   {
     outputLine (_str.toLatin1 (), _str.length());
   }
-  void doListEntry (const KURL & _url, int stretch, imapCache * cache = NULL,
+  void doListEntry (const KUrl & _url, int stretch, imapCache * cache = NULL,
     bool withFlags = FALSE, bool withSubject = FALSE);
 
   /**
@@ -166,7 +166,7 @@ protected:
    * If @p appendPath is true the foldername will be appended
    * to the path of @p url
    */
-  void doListEntry (const KURL & url, const QString & myBox,
+  void doListEntry (const KUrl & url, const QString & myBox,
                     const imapList & item, bool appendPath = true);
 
   /** Send an ACL command which is identified by @p command */
@@ -181,7 +181,7 @@ protected:
 private:
 
   // This method behaves like the above method but takes an already encoded url,
-  // so you don't have to call KURL::url() for every mail.
+  // so you don't have to call KUrl::url() for every mail.
   void doListEntry (const QString & encodedUrl, int stretch, imapCache * cache = NULL,
     bool withFlags = FALSE, bool withSubject = FALSE);
 

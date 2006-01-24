@@ -23,7 +23,7 @@
  * @file
  * 
  * KIO can handle multiple protocols. But some protocols have their own
- * manipulations of KURL or MetaData , and some protocols could do more then other
+ * manipulations of KUrl or MetaData , and some protocols could do more then other
  * protocols. So, this file defines a generic class for specifying the specific
  * properties of a kio protocol.
  *
@@ -177,99 +177,99 @@ public:
 	virtual QStringList authList() const { return QStringList::split( '|', "Plain", false ); }
 
 	/**
-	 * This function can manipulate a KURL which is used after it for connecting.
+	 * This function can manipulate a KUrl which is used after it for connecting.
 	 * 
 	 * This is one of the functions to manipulation a KURL.
-	 * At some points in the code, a KURL is used. But sometimes,
+	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
 	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
-	 * By changing an option to the KURL path, this can be prevented.
+	 * By changing an option to the KUrl path, this can be prevented.
 	 *
 	 * This function is called before connecting.
 	 *
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void recheckConnectKURL( KURL &, KIO::MetaData & ) const { }
+	virtual void recheckConnectKURL( KUrl &, KIO::MetaData & ) const { }
 	/**
-	 * This function can manipulate a KURL which is used for checking for new emails.
+	 * This function can manipulate a KUrl which is used for checking for new emails.
 	 * 
 	 * This is one of the functions to manipulation a KURL.
-	 * At some points in the code, a KURL is used. But sometimes,
+	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
 	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
-	 * By changing an option to the KURL path, this can be prevented.
+	 * By changing an option to the KUrl path, this can be prevented.
 	 *
 	 * This function is called before the email box is checked for new messages.
 	 *
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void recheckKURL     ( KURL &, KIO::MetaData & ) const { };
+	virtual void recheckKURL     ( KUrl &, KIO::MetaData & ) const { };
 	/**
-	 * This function can manipulate a KURL which is used after it for connecting.
+	 * This function can manipulate a KUrl which is used after it for connecting.
 	 * After connecting, the connection is used to check for new emails.
 	 * 
 	 * This is one of the functions to manipulation a KURL.
-	 * At some points in the code, a KURL is used. But sometimes,
+	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
 	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
-	 * By changing an option to the KURL path, this can be prevented.
+	 * By changing an option to the KUrl path, this can be prevented.
 	 *
 	 * @param kurl the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void readSubjectConnectKURL ( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
+	virtual void readSubjectConnectKURL ( KUrl & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
 	/**
-	 * This function can manipulate a KURL which is used before reading a subject.
+	 * This function can manipulate a KUrl which is used before reading a subject.
 	 * 
 	 * This is one of the functions to manipulation a KURL.
-	 * At some points in the code, a KURL is used. But sometimes,
+	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
 	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
-	 * By changing an option to the KURL path, this can be prevented.
+	 * By changing an option to the KUrl path, this can be prevented.
 	 *
 	 * This function is called before a particular subject is read.
 	 *
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void readSubjectKURL ( KURL &, KIO::MetaData & ) const { } //For editing a kurl (adding extra options)
+	virtual void readSubjectKURL ( KUrl &, KIO::MetaData & ) const { } //For editing a kurl (adding extra options)
 	/**
-	 * This function can manipulate a KURL which is used after it for connecting.
+	 * This function can manipulate a KUrl which is used after it for connecting.
 	 * After the connecting, the connection is used to delete emails.
 	 * 
 	 * This is one of the functions to manipulation a KURL.
-	 * At some points in the code, a KURL is used. But sometimes,
+	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
 	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
-	 * By changing an option to the KURL path, this can be prevented.
+	 * By changing an option to the KUrl path, this can be prevented.
 	 *
 	 * @param kurl the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void deleteMailConnectKURL( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
+	virtual void deleteMailConnectKURL( KUrl & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
 	/**
-	 * This function can manipulate a KURL which is used to delete an email.
+	 * This function can manipulate a KUrl which is used to delete an email.
 	 * 
 	 * This is one of the functions to manipulation a KURL.
-	 * At some points in the code, a KURL is used. But sometimes,
+	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
 	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
-	 * By changing an option to the KURL path, this can be prevented.
+	 * By changing an option to the KUrl path, this can be prevented.
 	 *
 	 * This function is called before an email is deleted.
 	 *
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void deleteMailKURL  ( KURL &, KIO::MetaData & ) const { }
+	virtual void deleteMailKURL  ( KUrl &, KIO::MetaData & ) const { }
 	/**
 	 * This function should returns true if it is neccesairry to commit a delete operation.
 	 *
@@ -280,14 +280,14 @@ public:
 	 */
 	virtual bool commitDelete() const { return false; }
 	/**
-	 * This function can manipulate a KURL which is used for committing after a deleting operation.
+	 * This function can manipulate a KUrl which is used for committing after a deleting operation.
 	 * 
 	 * This is one of the functions to manipulation a KURL.
-	 * At some points in the code, a KURL is used. But sometimes,
+	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
 	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
-	 * By changing an option to the KURL path, this can be prevented.
+	 * By changing an option to the KUrl path, this can be prevented.
 	 *
 	 * If a commit operation is neccesairry, this command can generate the kurl and metadata
 	 * for commit the delete operation.
@@ -295,23 +295,23 @@ public:
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void deleteCommitKURL( KURL &, KIO::MetaData & ) const { }
+	virtual void deleteCommitKURL( KUrl &, KIO::MetaData & ) const { }
 	/**
-	 * This function can manipulate a KURL which is used before reading an email.
+	 * This function can manipulate a KUrl which is used before reading an email.
 	 * 
 	 * This is one of the functions to manipulation a KURL.
-	 * At some points in the code, a KURL is used. But sometimes,
+	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
 	 * For example, by imap, by default, the whole message is downloaded and marked as reed.
-	 * By changing an option to the KURL path, this can be prevented.
+	 * By changing an option to the KUrl path, this can be prevented.
 	 *
 	 * This function is called before reading an email.
 	 *
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void readMailKURL    ( KURL &, KIO::MetaData & ) const { }
+	virtual void readMailKURL    ( KUrl &, KIO::MetaData & ) const { }
 
 
 	/**

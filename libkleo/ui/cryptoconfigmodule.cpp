@@ -364,7 +364,7 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
 
 void Kleo::CryptoConfigEntryPath::doSave()
 {
-  KURL url;
+  KUrl url;
   url.setPath( mUrlRequester->url() );
   mEntry->setURLValue( url );
 }
@@ -392,7 +392,7 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
 
 void Kleo::CryptoConfigEntryDirPath::doSave()
 {
-  KURL url;
+  KUrl url;
   url.setPath( mUrlRequester->url() );
   mEntry->setURLValue( url );
 
@@ -566,7 +566,7 @@ void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
   }
 }
 
-void Kleo::CryptoConfigEntryLDAPURL::setURLList( const KURL::List& urlList )
+void Kleo::CryptoConfigEntryLDAPURL::setURLList( const KUrl::List& urlList )
 {
   mURLList = urlList;
   if ( mURLList.isEmpty() )

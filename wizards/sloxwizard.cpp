@@ -61,7 +61,7 @@ class CreateSloxKcalResource : public KConfigPropagator::Change
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
 
-      KURL url( sloxUrl() );
+      KUrl url( sloxUrl() );
 
       KCalResourceSlox *r = new KCalResourceSlox( url );
       r->setResourceName( i18n("Openexchange Server") );
@@ -90,7 +90,7 @@ class UpdateSloxKcalResource : public KConfigPropagator::Change
       KCal::CalendarResourceManager m( "calendar" );
       m.readConfig();
 
-      KURL url( sloxUrl() );
+      KUrl url( sloxUrl() );
 
       KCal::CalendarResourceManager::Iterator it;
       for ( it = m.begin(); it != m.end(); ++it ) {
@@ -121,7 +121,7 @@ class CreateSloxKabcResource : public KConfigPropagator::Change
       KRES::Manager<KABC::Resource> m( "contact" );
       m.readConfig();
 
-      KURL url( sloxUrl() );
+      KUrl url( sloxUrl() );
       QString user( SloxConfig::self()->user() );
       QString password( SloxConfig::self()->password() );
 
@@ -147,7 +147,7 @@ class UpdateSloxKabcResource : public KConfigPropagator::Change
       KRES::Manager<KABC::Resource> m( "contact" );
       m.readConfig();
 
-      KURL url( sloxUrl() );
+      KUrl url( sloxUrl() );
 
       KRES::Manager<KABC::Resource>::Iterator it;
       for ( it = m.begin(); it != m.end(); ++it ) {
@@ -263,7 +263,7 @@ SloxWizard::~SloxWizard()
 
 QString SloxWizard::validate()
 {
-  KURL server( mServerEdit->text() );
+  KUrl server( mServerEdit->text() );
   if ( !server.protocol().isEmpty() ||
       mServerEdit->text().isEmpty() ||
       mUserEdit->text().isEmpty() ||

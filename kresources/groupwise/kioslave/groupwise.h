@@ -30,7 +30,7 @@ class Groupwise : public QObject, public KIO::SlaveBase
 {
     Q_OBJECT
   public:
-    void get( const KURL &url );
+    void get( const KUrl &url );
     Groupwise( const QByteArray &protocol, const QByteArray &pool,
       const QByteArray &app );
 
@@ -38,12 +38,12 @@ class Groupwise : public QObject, public KIO::SlaveBase
     void debugMessage( const QString & );
     void errorMessage( const QString & );
 
-    void getFreeBusy( const KURL &url );
-    void getCalendar( const KURL &url );
-    void getAddressbook( const KURL &url );
-    void updateAddressbook( const KURL &url );
+    void getFreeBusy( const KUrl &url );
+    void getCalendar( const KUrl &url );
+    void getAddressbook( const KUrl &url );
+    void updateAddressbook( const KUrl &url );
 
-    QString soapUrl( const KURL &url );
+    QString soapUrl( const KUrl &url );
 
   protected slots:
     void slotReadAddressBookTotalSize( int );

@@ -110,8 +110,8 @@ ArticleWidget::ArticleWidget( QWidget *parent,
   mViewer->setMetaRefreshEnabled( false );
   mViewer->setOnlyLocalReferences( true );
   mViewer->view()->setFocusPolicy( Qt::WheelFocus );
-  connect( mViewer->browserExtension(), SIGNAL(openURLRequestDelayed(const KURL&, const KParts::URLArgs&)),
-           SLOT(slotURLClicked(const KURL&)) );
+  connect( mViewer->browserExtension(), SIGNAL(openURLRequestDelayed(const KUrl&, const KParts::URLArgs&)),
+           SLOT(slotURLClicked(const KUrl&)) );
   connect( mViewer, SIGNAL(popupMenu(const QString&, const QPoint&)),
            SLOT(slotURLPopup(const QString&, const QPoint&)) );
 
@@ -830,7 +830,7 @@ void ArticleWidget::displayAttachment( KMime::Content *att, int partNum )
   if ( fileName.isEmpty() ) {
     href = "part://" + QString::number( partNum );
   } else {
-    href = "file:" + KURL::encode_string( fileName );
+    href = "file:" + KUrl::encode_string( fileName );
     mAttachementMap[fileName] = partNum;
   }
 
@@ -1111,7 +1111,7 @@ void ArticleWidget::scrollNext()
 
 
 
-void ArticleWidget::slotURLClicked( const KURL &url, bool forceOpen)
+void ArticleWidget::slotURLClicked( const KUrl &url, bool forceOpen)
 {
   // internal URLs
   if ( url.protocol() == "knode" ) {

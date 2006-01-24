@@ -90,7 +90,7 @@ OpenGroupware::OpenGroupware( const QCString &protocol, const QCString &pool,
 {
 }
 
-void OpenGroupware::get( const KURL &url )
+void OpenGroupware::get( const KUrl &url )
 {
   kdDebug(7000) << "OpenGroupware::get()" << endl;
   kdDebug(7000) << " URL: " << url.url() << endl;
@@ -121,7 +121,7 @@ void OpenGroupware::get( const KURL &url )
   kdDebug(7000) << "OpenGroupwareCgiProtocol::get() done" << endl;
 }
 
-void OpenGroupware::getFreeBusy( const KURL &url )
+void OpenGroupware::getFreeBusy( const KUrl &url )
 {
   QString file = url.filename();
   if ( file.right( 4 ) != ".ifb" ) {
@@ -174,10 +174,10 @@ void OpenGroupware::getFreeBusy( const KURL &url )
 }
 
 
-void OpenGroupware::getCalendar( const KURL &_url )
+void OpenGroupware::getCalendar( const KUrl &_url )
 {
 
-  KURL url( _url ); // we'll be changing it
+  KUrl url( _url ); // we'll be changing it
   QString user = url.user();
   QString pass = url.pass();
 
@@ -198,7 +198,7 @@ void OpenGroupware::getCalendar( const KURL &_url )
            SLOT( slotGetCalendarListingResult( KIO::Job * ) ) );
 }
 
-void OpenGroupware::getAddressbook( const KURL &url )
+void OpenGroupware::getAddressbook( const KUrl &url )
 {
   
 }

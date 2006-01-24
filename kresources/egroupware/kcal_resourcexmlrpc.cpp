@@ -160,7 +160,7 @@ void ResourceXMLRPC::init()
 
 void ResourceXMLRPC::initEGroupware()
 {
-  KURL url( mPrefs->url() );
+  KUrl url( mPrefs->url() );
 }
 
 void ResourceXMLRPC::readConfig( const KConfig* config )
@@ -517,7 +517,7 @@ void ResourceXMLRPC::loginFinished( const QList<QVariant>& variant,
 {
   QMap<QString, QVariant> map = variant[ 0 ].toMap();
 
-  KURL url = KURL( mPrefs->url() );
+  KUrl url = KURL( mPrefs->url() );
   if ( map[ "GOAWAY" ].toString() == "XOXO" ) { // failed
     mSessionID = mKp3 = "";
   } else {
@@ -540,7 +540,7 @@ void ResourceXMLRPC::logoutFinished( const QList<QVariant>& variant,
   if ( map[ "GOODBYE" ].toString() != "XOXO" )
     kdError() << "logout failed" << endl;
 
-  KURL url = KURL( mPrefs->url() );
+  KUrl url = KURL( mPrefs->url() );
   mSessionID = mKp3 = "";
   url.setUser( mSessionID );
   url.setPass( mKp3 );

@@ -37,7 +37,7 @@
 #include <QTextStream>
 
 KIO_Single_Subject::KIO_Single_Subject( QObject * parent,
-		    KURL &kurl, KIO::MetaData &metadata, const KIO_Protocol * protocol, KIO::Slave *& slave,
+		    KUrl &kurl, KIO::MetaData &metadata, const KIO_Protocol * protocol, KIO::Slave *& slave,
 		    const QString &url, const long size )
 		: QObject( parent )
 {

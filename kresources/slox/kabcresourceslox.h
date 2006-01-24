@@ -50,7 +50,7 @@ class KDE_EXPORT ResourceSlox : public ResourceCached, public SloxBase
     Q_OBJECT
   public:
     ResourceSlox( const KConfig * );
-    ResourceSlox( const KURL &url,
+    ResourceSlox( const KUrl &url,
                   const QString &user, const QString &password );
     ~ResourceSlox();
 

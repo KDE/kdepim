@@ -318,7 +318,7 @@ Query::~Query()
     (*it)->kill();
 }
 
-Server::Server( const KURL &url, QObject *parent, const char *name )
+Server::Server( const KUrl &url, QObject *parent, const char *name )
     : QObject( parent, name )
 {
   if ( url.isValid() )
@@ -344,7 +344,7 @@ void Server::queryFinished( Query *query )
   query->deleteLater();
 }
 
-void Server::setUrl( const KURL &url )
+void Server::setUrl( const KUrl &url )
 {
   m_url = url.isValid() ? url : KURL();
 }

@@ -83,7 +83,7 @@ namespace {
 
   template <>
   class to<KURL> {
-    KURL m;
+    KUrl m;
   public:
     to( const QVariant & v ) {
       m.setPath( v.toString() );
@@ -104,14 +104,14 @@ namespace {
   };
 
   template <>
-  class to<KURL::List> {
-    KURL::List m;
+  class to<KUrl::List> {
+    KUrl::List m;
   public:
     to( const QVariant & v ) {
-      // wow, KURL::List is broken... it lacks conversion from and to QVL<KURL>...
+      // wow, KUrl::List is broken... it lacks conversion from and to QVL<KURL>...
       m += to< QList<KURL> >( v );
     }
-    operator KURL::List() const { return m; }
+    operator KUrl::List() const { return m; }
   };
 
 
@@ -132,7 +132,7 @@ namespace {
     from_helper( bool b ) : QVariant( b, int() ) {}
   };
   template <> struct from_helper<KURL> : public QVariant {
-    from_helper( const KURL & url ) : QVariant( url.path() ) {}
+    from_helper( const KUrl & url ) : QVariant( url.path() ) {}
   };
   template <typename T> struct from_helper< QList<T> > : public QVariant {
     from_helper( const QList<T> & l ) {
@@ -142,8 +142,8 @@ namespace {
       QVariant::operator=( result );
     }
   };
-  template <> struct from_helper<KURL::List> : public from_helper< QList<KURL> > {
-    from_helper( const KURL::List & l ) : from_helper< QList<KURL> >( l ) {}
+  template <> struct from_helper<KUrl::List> : public from_helper< QList<KURL> > {
+    from_helper( const KUrl::List & l ) : from_helper< QList<KURL> >( l ) {}
   };
 
   class ChiasmusConfigEntry : public Kleo::CryptoConfigEntry {
@@ -169,23 +169,23 @@ namespace {
     QString stringValue() const { return mValue.toString(); }
     int intValue() const { return mValue.toInt(); }
     unsigned int uintValue() const { return mValue.toUInt(); }
-    KURL urlValue() const {
+    KUrl urlValue() const {
       if ( argType() != ArgType_Path && argType() != ArgType_DirPath ) return KURL( mValue.toString() );
-      KURL u; u.setPath( mValue.toString() ); return u;
+      KUrl u; u.setPath( mValue.toString() ); return u;
     }
     unsigned int numberOfTimesSet() const { return 0; }
     QStringList stringValueList() const { return mValue.toStringList(); }
     QList<int> intValueList() const { return to< QList<int> >( mValue ); }
     QList<unsigned int> uintValueList() const { return to< QList<unsigned int> >( mValue ); }
-    KURL::List urlValueList() const {
+    KUrl::List urlValueList() const {
       if ( argType() != ArgType_Path && argType()!= ArgType_DirPath ) return mValue.toStringList();
-      else return to<KURL::List>( mValue ); }
+      else return to<KUrl::List>( mValue ); }
     void resetToDefault() { mValue = defaultValue(); mDirty = false; }
     void setBoolValue( bool value ) { setValue( QVariant( value, int() ) ); }
     void setStringValue( const QString & value ) { setValue( value ); }
     void setIntValue( int value ) { setValue( value ); }
     void setUIntValue( unsigned int value ) { setValue( value ); }
-    void setURLValue( const KURL & value ) {
+    void setURLValue( const KUrl & value ) {
       if ( argType() != ArgType_Path && argType()!= ArgType_DirPath ) setValue( value.url() );
       else setValue( value.path() );
     }
@@ -193,7 +193,7 @@ namespace {
     void setStringValueList( const QStringList & value ) { setValue( value ); }
     void setIntValueList( const QList<int> & l ) { setValue( from( l ) ); }
     void setUIntValueList( const QList<unsigned int> & l ) { setValue( from( l ) ); }
-    void setURLValueList( const KURL::List & l ) { setValue( from( l ) ); }
+    void setURLValueList( const KUrl::List & l ) { setValue( from( l ) ); }
     bool isDirty() const { return mDirty; }
 
     QVariant value() const { return mValue; }

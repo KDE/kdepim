@@ -39,12 +39,12 @@ GroupDavAddressBookAdaptor::GroupDavAddressBookAdaptor() : DavAddressBookAdaptor
 {
 }
 
-void GroupDavAddressBookAdaptor::customAdaptDownloadUrl( KURL &url )
+void GroupDavAddressBookAdaptor::customAdaptDownloadUrl( KUrl &url )
 {
   url = WebdavHandler::toDAV( url );
 }
 
-void GroupDavAddressBookAdaptor::customAdaptUploadUrl( KURL &url )
+void GroupDavAddressBookAdaptor::customAdaptUploadUrl( KUrl &url )
 {
 kdDebug()<<"GroupDavAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
   url = WebdavHandler::toDAV( url );

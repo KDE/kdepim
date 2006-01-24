@@ -59,7 +59,7 @@ Q_OBJECT
      * Use KIO::xmlrpcPropFind(), KIO::xmlrpcPropPatch() and
      * KIO::xmlrpcSearch() to create a new XmlrpcJob.
      */
-    XmlrpcJob( const KURL& url, const QString& method,
+    XmlrpcJob( const KUrl& url, const QString& method,
 				       const QList<QVariant> &params, bool showProgressInfo );
     virtual ~XmlrpcJob();
     /**
@@ -107,16 +107,16 @@ Q_OBJECT
  * @param showProgressInfo true to show progress information
  * @return the new XmlrpcJob
  */
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
+XmlrpcJob* xmlrpcCall( const KUrl& url, const QString &method,
                        const QList<QVariant> &params,
                        bool showProgressInfo = true );
 
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
+XmlrpcJob* xmlrpcCall( const KUrl& url, const QString &method,
                        const QVariant &arg, bool showProgressInfo = true );
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
+XmlrpcJob* xmlrpcCall( const KUrl& url, const QString &method,
                        const QStringList &arg, bool showProgressInfo = true );
 template <typename T>
-XmlrpcJob* xmlrpcCall( const KURL& url, const QString &method,
+XmlrpcJob* xmlrpcCall( const KUrl& url, const QString &method,
                        const QList<T>&arg,bool showProgressInfo = true );
 }
 

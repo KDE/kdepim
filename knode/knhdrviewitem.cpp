@@ -248,13 +248,13 @@ QString KNHdrViewItem::text( int col ) const
 Q3DragObject* KNHdrViewItem::dragObject()
 {
   K3MultipleDrag *d = new K3MultipleDrag( listView()->viewport() );
-  KURL::List list;
+  KUrl::List list;
   QString mid = art->messageID()->asUnicodeString();
   // for some obscure reason it returns messageid in <>s
   mid = mid.mid( 1, mid.length() - 2 );
   list.append( KDEPIMPROTOCOL_NEWSARTICLE + mid );
   QMap<QString,QString> metadata;
-  metadata["labels"] = KURL::encode_string( art->subject()->asUnicodeString() );
+  metadata["labels"] = KUrl::encode_string( art->subject()->asUnicodeString() );
   d->addDragObject( new K3URLDrag( list, metadata, 0L ) );
   d->addDragObject( new Q3StoredDrag( "x-knode-drag/article" , 0L ) );
   d->setPixmap( knGlobals.configManager()->appearance()->icon( KNode::Appearance::posting ) );

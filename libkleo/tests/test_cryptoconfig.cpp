@@ -122,7 +122,7 @@ int main( int argc, char** argv ) {
           case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
           case Kleo::CryptoConfigEntry::ArgType_URL: {
               assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
-              KURL::List urls = entry->urlValueList();
+              KUrl::List urls = entry->urlValueList();
               cout << " url values=" << urls.toStringList().join(" ").local8Bit() << "\n    ";
           }
             // fallthrough
@@ -302,15 +302,15 @@ int main( int argc, char** argv ) {
     if ( entry ) {
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL );
       assert( entry->isList() );
-      KURL::List val = entry->urlValueList();
+      KUrl::List val = entry->urlValueList();
       cout << "URL list initially: " << val.toStringList().join(", ").local8Bit() << endl;
 
       // Test setting the option, sync'ing, then querying again
-      KURL::List lst;
-      // We use non-empty paths to workaround a bug in KURL (kdelibs-3.2)
+      KUrl::List lst;
+      // We use non-empty paths to workaround a bug in KUrl (kdelibs-3.2)
       lst << KURL( "ldap://a:389/?b" );
-      // Test with query containing a litteral ':' (KURL supports this)
-      // and a ' ' (KURL will escape it, see issue119)
+      // Test with query containing a litteral ':' (KUrl supports this)
+      // and a ' ' (KUrl will escape it, see issue119)
       lst << KURL( "ldap://foo:389/?a:b c" );
       lst << KURL( "ldap://server:389/?a%3db,c=DE" ); // the query contains a litteral ','
       //cout << " trying to set: " << lst.toStringList().join(", ").local8Bit() << endl;
@@ -340,8 +340,8 @@ int main( int argc, char** argv ) {
       assert( asStringList[0] == "a:389:::b" );
       assert( asStringList[1] == "foo:389:::a%3ab c" ); // the space must be decoded (issue119)
       assert( asStringList[2] == "server:389:::a=b,c=DE" ); // all decoded
-      // Get KURL form
-      KURL::List newlst = entry->urlValueList();
+      // Get KUrl form
+      KUrl::List newlst = entry->urlValueList();
       cout << "URL list now: " << newlst.toStringList().join(", ").local8Bit() << endl;
       assert( newlst.count() == 3 );
       //cout << "newlst[0]=" << newlst[0].url().local8Bit() << endl;

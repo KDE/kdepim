@@ -89,7 +89,7 @@ Groupwise::Groupwise( const QByteArray &protocol, const QByteArray &pool,
 {
 }
 
-void Groupwise::get( const KURL &url )
+void Groupwise::get( const KUrl &url )
 {
   kdDebug(7000) << "Groupwise::get()" << endl;
   kdDebug(7000) << " URL: " << url.url() << endl;
@@ -123,7 +123,7 @@ void Groupwise::get( const KURL &url )
   kdDebug(7000) << "Groupwise::get() done" << endl;
 }
 
-QString Groupwise::soapUrl( const KURL &url )
+QString Groupwise::soapUrl( const KUrl &url )
 {
   // FIXME: Get SSL from parameter
   bool useSsl = url.protocol() == "groupwises";
@@ -157,7 +157,7 @@ QString Groupwise::soapUrl( const KURL &url )
   return u;
 }
 
-void Groupwise::getFreeBusy( const KURL &url )
+void Groupwise::getFreeBusy( const KUrl &url )
 {
   QString file = url.fileName();
   if ( file.right( 4 ) != ".ifb" ) {
@@ -222,7 +222,7 @@ void Groupwise::getFreeBusy( const KURL &url )
   }
 }
 
-void Groupwise::getCalendar( const KURL &url )
+void Groupwise::getCalendar( const KUrl &url )
 {
   QString u = soapUrl( url );
 
@@ -258,7 +258,7 @@ void Groupwise::getCalendar( const KURL &url )
   finished();
 }
 
-void Groupwise::getAddressbook( const KURL &url )
+void Groupwise::getAddressbook( const KUrl &url )
 {
   QString u = soapUrl( url );
 
@@ -323,7 +323,7 @@ void Groupwise::slotReadReceiveAddressees( const KABC::Addressee::List addressee
     data( vcard.utf8() );
 }
 
-void Groupwise::updateAddressbook( const KURL &url )
+void Groupwise::updateAddressbook( const KUrl &url )
 {
   QString u = soapUrl( url );
 

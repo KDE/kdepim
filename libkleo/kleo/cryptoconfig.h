@@ -152,7 +152,7 @@ namespace Kleo {
     /**
      * Return value as a URL (only meaningful for Path and URL argtypes)
      */
-    virtual KURL urlValue() const = 0;
+    virtual KUrl urlValue() const = 0;
 
     /**
      * Return number of times the option is set (only valid for ArgType_None, if isList())
@@ -177,7 +177,7 @@ namespace Kleo {
     /**
      * Return value as a list of URLs (only meaningful for Path and URL argtypes, if isList())
      */
-    virtual KURL::List urlValueList() const = 0;
+    virtual KUrl::List urlValueList() const = 0;
 
     /**
      * Reset an option to its default value
@@ -208,7 +208,7 @@ namespace Kleo {
     /**
      * Set value as a URL (only meaningful for Path (if local) and URL argtypes)
      */
-    virtual void setURLValue( const KURL& ) = 0;
+    virtual void setURLValue( const KUrl& ) = 0;
 
     /**
      * Set the number of times the option is set (only valid for ArgType_None, if isList())
@@ -233,7 +233,7 @@ namespace Kleo {
     /**
      * Set value as a URL list (only meaningful for Path (if all URLs are local) and URL argtypes, if isList())
      */
-    virtual void setURLValueList( const KURL::List& ) = 0;
+    virtual void setURLValueList( const KUrl::List& ) = 0;
 
     /**
      * @return true if the value was changed

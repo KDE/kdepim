@@ -28,7 +28,7 @@
 
 QMap< KIO::Slave*, int >* KIO_Connection::m_slaves = 0;
 
-KIO::Slave* KIO_Connection::getSlave( const KURL& kurl, const KIO::MetaData& metadata, const KIO_Protocol* protocol )
+KIO::Slave* KIO_Connection::getSlave( const KUrl& kurl, const KIO::MetaData& metadata, const KIO_Protocol* protocol )
 {
 	KIO::Slave *slave;
 	if( m_slaves == 0 )

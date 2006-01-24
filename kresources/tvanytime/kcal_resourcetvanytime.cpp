@@ -170,9 +170,9 @@ bool ResourceTVAnytime::doLoad()
   clearChanges();
 
   mDestination = new KTempFile;
-  KURL url( prefs()->url() );
+  KUrl url( prefs()->url() );
 
-  KURL destination = KURL( mDestination->name() );
+  KUrl destination = KURL( mDestination->name() );
 
   kdDebug(5850) << "  SOURCE: " << url.url() << endl;
   kdDebug(5850) << "  DESTINATION: " << destination.url() << endl;

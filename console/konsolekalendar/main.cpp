@@ -657,7 +657,7 @@ int main( int argc, char *argv[] )
      * This must be done before we get to opening biz
      */
     bool exists, remote;
-    KURL url = KURL::fromPathOrURL( variables.getCalendarFile() );
+    KUrl url = KUrl::fromPathOrURL( variables.getCalendarFile() );
     if ( url.isLocalFile() ) {
       variables.setCalendarFile( url.path() );
       exists = QFile::exists( variables.getCalendarFile() );

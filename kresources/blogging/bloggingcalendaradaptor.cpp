@@ -62,7 +62,7 @@ BloggingUploadItem::~BloggingUploadItem()
   delete mPosting;
 }
 
-KIO::TransferJob *BloggingUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl )
+KIO::TransferJob *BloggingUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KUrl &baseurl )
 {
 kdDebug()<<"BloggingUploadItem::createUploadJob, adaptor="<<adaptor<<", URL="<<baseurl.url()<<endl;
   Q_ASSERT( adaptor );
@@ -72,7 +72,7 @@ kdDebug()<<"BloggingUploadItem::createUploadJob, adaptor="<<adaptor<<", URL="<<b
   return mAPI->createUploadJob( url(), mPosting );
 }
 
-KIO::TransferJob *BloggingUploadItem::createUploadNewJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &baseurl )
+KIO::TransferJob *BloggingUploadItem::createUploadNewJob( KPIM::GroupwareDataAdaptor *adaptor, const KUrl &baseurl )
 {
 kdDebug()<<"BloggingUploadItem::createUploadNewJob"<<endl;
   Q_ASSERT( adaptor );
@@ -108,12 +108,12 @@ void BloggingCalendarAdaptor::setAPI( KBlog::APIBlog *api )
                                     const QString & ) ) );
   connect( api, SIGNAL( folderInfoRetrieved( const QString &, const QString & ) ),
            SLOT( slotFolderInfoRetrieved( const QString&, const QString & ) ) );
-  connect( api, SIGNAL( itemOnServer( const KURL & ) ),
-           SIGNAL( itemOnServer( const KURL & ) ) );
+  connect( api, SIGNAL( itemOnServer( const KUrl & ) ),
+           SIGNAL( itemOnServer( const KUrl & ) ) );
   connect( api, SIGNAL( itemDownloaded( KCal::Incidence *, const QString &,
-                                        const KURL &, const QString &, const QString & ) ),
+                                        const KUrl &, const QString &, const QString & ) ),
            SLOT( calendarItemDownloaded( KCal::Incidence *, const QString &,
-                                         const KURL &, const QString &, const QString & ) ) );
+                                         const KUrl &, const QString &, const QString & ) ) );
 
 }
 
@@ -137,7 +137,7 @@ kdDebug() << "BloggingCalendarAdaptor::slotUserInfoRetrieved"<<endl;
   mAuthenticated = true;
 }
 
-void BloggingCalendarAdaptor::setBaseURL( const KURL &url )
+void BloggingCalendarAdaptor::setBaseURL( const KUrl &url )
 {
   if ( mAPI ) {
     mAPI->setURL( url );
@@ -160,14 +160,14 @@ void BloggingCalendarAdaptor::setPassword( const QString &password )
   }
 }
 
-void BloggingCalendarAdaptor::setUserPassword( KURL & )
+void BloggingCalendarAdaptor::setUserPassword( KUrl & )
 {
   kdDebug(5800) << "BloggingCalendarAdaptor::setUserPassword" << endl;
 }
 
 
 
-KIO::Job *BloggingCalendarAdaptor::createLoginJob( const KURL &url,
+KIO::Job *BloggingCalendarAdaptor::createLoginJob( const KUrl &url,
                                                    const QString &user,
                                                    const QString &password )
 {
@@ -179,21 +179,21 @@ KIO::Job *BloggingCalendarAdaptor::createLoginJob( const KURL &url,
   } else return 0;
 }
 
-KIO::Job *BloggingCalendarAdaptor::createListFoldersJob( const KURL &/*url*/ )
+KIO::Job *BloggingCalendarAdaptor::createListFoldersJob( const KUrl &/*url*/ )
 {
   if ( mAPI ) {
     return mAPI->createListFoldersJob();
   } else return 0;
 }
 
-KIO::TransferJob *BloggingCalendarAdaptor::createListItemsJob( const KURL &url )
+KIO::TransferJob *BloggingCalendarAdaptor::createListItemsJob( const KUrl &url )
 {
   if ( mAPI ) {
     return mAPI->createListItemsJob( url );
   } else return 0;
 }
 
-KIO::TransferJob *BloggingCalendarAdaptor::createDownloadJob( const KURL &url,
+KIO::TransferJob *BloggingCalendarAdaptor::createDownloadJob( const KUrl &url,
                                      KPIM::FolderLister::ContentType ctype )
 {
   if ( mAPI && (ctype & KPIM::FolderLister::Journal) ) {
@@ -201,7 +201,7 @@ KIO::TransferJob *BloggingCalendarAdaptor::createDownloadJob( const KURL &url,
   } else return 0;
 }
 
-KIO::Job *BloggingCalendarAdaptor::createRemoveJob( const KURL &url,
+KIO::Job *BloggingCalendarAdaptor::createRemoveJob( const KUrl &url,
                          KPIM::GroupwareUploadItem *deleteItem )
 {
 kdDebug()<<"BloggingCalendarAdaptor::createRemoveJob( " << url.url() << ", ..)" << endl;

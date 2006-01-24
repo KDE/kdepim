@@ -47,25 +47,25 @@ public:
 	 * get a file from a mbox-file
 	 * @param url The url which points to the virtual file to get
 	 */
-	virtual void get( const KURL& url );
+	virtual void get( const KUrl& url );
 
 	/**
 	 * This functions gives a listing back.
 	 * @param url The url to the mbox-file.
 	 */
-	virtual void listDir( const KURL& url );
+	virtual void listDir( const KUrl& url );
 
 	/**
 	 * This functions gives general properties about a mbox-file,
 	 * or mbox-email back.
 	 */
-	virtual void stat( const KURL& url );
+	virtual void stat( const KUrl& url );
 
 	/**
 	 * This functions determinate the mimetype of a given mbox-file or mbox-email.
 	 * @param url The url to get the mimetype from
 	 */
-	virtual void mimetype( const KURL& url );
+	virtual void mimetype( const KUrl& url );
 
 	/**
 	 * Through this functions, other class which have an instance to this

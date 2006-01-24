@@ -422,9 +422,9 @@ void ViewManager::dropped( QDropEvent *e )
     return;
 
   QString clipText, vcards;
-	KURL::List urls = KURL::List::fromMimeData( e->mimeData() );
+	KUrl::List urls = KUrl::List::fromMimeData( e->mimeData() );
   if ( !urls.isEmpty() ) {
-    KURL::List::ConstIterator it = urls.begin();
+    KUrl::List::ConstIterator it = urls.begin();
     int c = urls.count();
     if ( c > 1 ) {
       QString questionString = i18n( "Import one contact into your addressbook?", "Import %n contacts into your addressbook?", c );

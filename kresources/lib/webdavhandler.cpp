@@ -37,9 +37,9 @@ WebdavHandler::WebdavHandler()
 }
 
 
-KURL WebdavHandler::toDAV( const KURL& url )
+KUrl WebdavHandler::toDAV( const KUrl& url )
 {
-  KURL result( url );
+  KUrl result( url );
 
   if ( result.protocol() == "http" ) {
     if ( result.port() == 443 ) {

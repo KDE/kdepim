@@ -278,7 +278,7 @@ static void listResources(KCal::CalendarResources *p)
 				i18n("Using local time zone: %1").arg(tz) :
 				i18n("Using non-local time zone: %1").arg(tz) );
 
-			KURL kurl(config()->calendarFile());
+			KUrl kurl(config()->calendarFile());
 			if(!KIO::NetAccess::download(config()->calendarFile(), fCalendarFile, 0L) &&
 				!kurl.isLocalFile())
 			{
@@ -579,7 +579,7 @@ void VCalConduitBase::cleanup()
 	KPILOT_DELETE(fLocalDatabase);
 	if (fCalendar)
 	{
-		KURL kurl(config()->calendarFile());
+		KUrl kurl(config()->calendarFile());
 		switch(config()->calendarType())
 		{
 			case VCalConduitSettings::eCalendarLocal:

@@ -119,9 +119,9 @@ void FileInstaller::deleteFiles(const QStringList &files)
 	DEBUGDAEMON << fname << ": Copying " << s << endl;
 #endif
 
-	KURL srcName;
+	KUrl srcName;
 	srcName.setPath(s);
-	KURL destDir(fDirName + CSL1("/") + srcName.fileName());
+	KUrl destDir(fDirName + CSL1("/") + srcName.fileName());
 
 	return KIO::NetAccess::copy(srcName, destDir, w);
 }

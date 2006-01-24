@@ -72,7 +72,7 @@ KCalResourceSlox::KCalResourceSlox( const KConfig *config )
   }
 }
 
-KCalResourceSlox::KCalResourceSlox( const KURL &url )
+KCalResourceSlox::KCalResourceSlox( const KUrl &url )
   : ResourceCached( 0 ), SloxBase( this )
 {
   init();
@@ -127,7 +127,7 @@ void KCalResourceSlox::readConfig( const KConfig *config )
 
   ResourceCached::readConfig( config );
 
-  KURL url = mPrefs->url();
+  KUrl url = mPrefs->url();
   url.setUser( mPrefs->user() );
   url.setPass( mPrefs->password() );
 
@@ -194,7 +194,7 @@ bool KCalResourceSlox::doLoad()
 
 void KCalResourceSlox::requestEvents()
 {
-  KURL url = mPrefs->url();
+  KUrl url = mPrefs->url();
   url.setPath( "/servlet/webdav.calendar/" );
   url.setUser( mPrefs->user() );
   url.setPass( mPrefs->password() );
@@ -239,7 +239,7 @@ void KCalResourceSlox::requestEvents()
 
 void KCalResourceSlox::requestTodos()
 {
-  KURL url = mPrefs->url();
+  KUrl url = mPrefs->url();
   url.setPath( "/servlet/webdav.tasks/" );
   url.setUser( mPrefs->user() );
   url.setPass( mPrefs->password() );
@@ -317,7 +317,7 @@ void KCalResourceSlox::uploadIncidences()
     return;
   }
 
-  KURL url = mPrefs->url();
+  KUrl url = mPrefs->url();
 
   QString sloxId = mUploadedIncidence->customProperty( "SLOX", "ID" );
   if ( !sloxId.isEmpty() ) {

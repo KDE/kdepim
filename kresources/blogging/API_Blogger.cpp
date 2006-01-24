@@ -66,7 +66,7 @@ KIO::Job *APIBlogger::createListFoldersJob()
 //   }
 }
 
-KIO::TransferJob *APIBlogger::createListItemsJob( const KURL &url )
+KIO::TransferJob *APIBlogger::createListItemsJob( const KUrl &url )
 {
   // TODO: Check if we're already authenticated. If not, do it!
 //   if ( isValid() ) {
@@ -80,7 +80,7 @@ KIO::TransferJob *APIBlogger::createListItemsJob( const KURL &url )
 //   }
 }
 
-KIO::TransferJob *APIBlogger::createDownloadJob( const KURL &url )
+KIO::TransferJob *APIBlogger::createDownloadJob( const KUrl &url )
 {
 //   if ( isValid() ){
     kdDebug() << "Fetch Posting with url " << url.url() << endl;
@@ -92,7 +92,7 @@ KIO::TransferJob *APIBlogger::createDownloadJob( const KURL &url )
 //   }
 }
 
-KIO::TransferJob *APIBlogger::createUploadJob( const KURL &url, KBlog::BlogPosting *posting )
+KIO::TransferJob *APIBlogger::createUploadJob( const KUrl &url, KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
     kdDebug() << "APIBlogger::createUploadJob: posting=0" << endl;
@@ -128,7 +128,7 @@ KIO::TransferJob *APIBlogger::createUploadNewJob( KBlog::BlogPosting *posting )
 //   }
 }
 
-KIO::Job *APIBlogger::createRemoveJob( const KURL &/*url*/, const QString &postid )
+KIO::Job *APIBlogger::createRemoveJob( const KUrl &/*url*/, const QString &postid )
 {
 kdDebug() << "APIBlogger::createRemoveJob: postid=" << postid << endl;
 //   if ( isValid() ){

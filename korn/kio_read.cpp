@@ -49,7 +49,7 @@ KIO_Read::~KIO_Read()
 void KIO_Read::readMail( const KornMailId * mailid, KKioDrop* drop )
 {
 	_kio = drop;
-	KURL kurl = *_kio->_kurl;
+	KUrl kurl = *_kio->_kurl;
 	KIO::MetaData metadata = *_kio->_metadata;
 	
 	kurl = dynamic_cast<const KornStringId*>(mailid)->getId( );

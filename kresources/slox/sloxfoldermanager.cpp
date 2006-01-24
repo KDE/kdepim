@@ -35,7 +35,7 @@
 #include "webdavhandler.h"
 
 
-SloxFolderManager::SloxFolderManager( SloxBase *res, const KURL & baseUrl ) :
+SloxFolderManager::SloxFolderManager( SloxBase *res, const KUrl & baseUrl ) :
   mDownloadJob( 0 ),
   mBaseUrl( baseUrl ),
   mRes( res )
@@ -63,7 +63,7 @@ void SloxFolderManager::requestFolders()
     return;
   }
 
-  KURL url = mBaseUrl;
+  KUrl url = mBaseUrl;
   url.setPath( "/servlet/webdav.folders/file.xml" );
 
   QDomDocument doc;

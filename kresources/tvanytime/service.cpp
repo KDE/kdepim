@@ -25,7 +25,7 @@ Service::Service() : mActive( true )
 
 }
 
-Service::Service( bool active, const QString & name, const QString & owner, const KURL & serviceUrl, const KURL & logo, const QStringList & genres )
+Service::Service( bool active, const QString & name, const QString & owner, const KUrl & serviceUrl, const KUrl & logo, const QStringList & genres )
 : mActive( active ), mName( name ), mOwner( owner ), mServiceUrl( serviceUrl ), mLogo( logo ), mGenres( genres )
 {
 }

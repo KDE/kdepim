@@ -32,12 +32,12 @@ GroupDavCalendarAdaptor::GroupDavCalendarAdaptor() : DavCalendarAdaptor()
 {
 }
 
-void GroupDavCalendarAdaptor::customAdaptDownloadUrl( KURL &url )
+void GroupDavCalendarAdaptor::customAdaptDownloadUrl( KUrl &url )
 {
   url = WebdavHandler::toDAV( url );
 }
 
-void GroupDavCalendarAdaptor::customAdaptUploadUrl( KURL &url )
+void GroupDavCalendarAdaptor::customAdaptUploadUrl( KUrl &url )
 {
   url = WebdavHandler::toDAV( url );
   // FIXME: Find a good place where we can obtain the path for a new item

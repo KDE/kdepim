@@ -117,7 +117,7 @@ QFile* KNLoadHelper::getFile( const QString &dialogTitle )
   if (f_ile)
     return f_ile;
 
-  KURL url = KFileDialog::getOpenURL( l_astPath,QString(), p_arent, dialogTitle );
+  KUrl url = KFileDialog::getOpenURL( l_astPath,QString(), p_arent, dialogTitle );
 
   if (url.isEmpty())
     return 0;
@@ -129,7 +129,7 @@ QFile* KNLoadHelper::getFile( const QString &dialogTitle )
 }
 
 
-QFile* KNLoadHelper::setURL(KURL url)
+QFile* KNLoadHelper::setURL(KUrl url)
 {
   if (f_ile)
     return f_ile;

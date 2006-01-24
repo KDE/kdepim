@@ -405,7 +405,7 @@ QSize KNMainWidget::sizeHint() const
 }
 
 
-void KNMainWidget::openURL(const KURL &url)
+void KNMainWidget::openURL(const KUrl &url)
 {
   kdDebug(5003) << k_funcinfo << url << endl;
   QString host = url.host();
@@ -452,7 +452,7 @@ void KNMainWidget::openURL(const KURL &url)
   }
 
   if (acc) {
-    QString decodedUrl = KURL::decode_string( url.url() );
+    QString decodedUrl = KUrl::decode_string( url.url() );
     bool isMID=( decodedUrl.contains('@')==1 );
 
     if (!isMID) {
@@ -2024,7 +2024,7 @@ bool KNMainWidget::handleCommandLine()
   bool doneSomething = false;
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   if (args->count()>0) {
-    KURL url=args->url(0);    // we take only one URL
+    KUrl url=args->url(0);    // we take only one URL
     openURL(url);
     doneSomething = true;
   }

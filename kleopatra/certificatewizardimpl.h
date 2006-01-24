@@ -56,7 +56,7 @@ public:
 
     bool sendToCA() const;
     QString caEMailAddress() const;
-    KURL saveFileUrl() const;
+    KUrl saveFileUrl() const;
 
     typedef QPair<QString, QLineEdit*> StringLEPair;
     typedef QVector< StringLEPair > AttrPairList;

@@ -113,7 +113,7 @@ void CalendarAdaptor::addItem( KCal::Incidence *i)
 
 
 void CalendarAdaptor::calendarItemDownloaded( KCal::Incidence *inc,
-    const QString &newLocalId, const KURL &remoteId, const QString &fingerprint,
+    const QString &newLocalId, const KUrl &remoteId, const QString &fingerprint,
     const QString &storagelocation )
 {
 kdDebug() << "CalendarAdaptor::calendarItemDownloaded, inc=" << inc->summary() << ", local=" << newLocalId << ", remote=" << remoteId.url() << ", fpr=" << fingerprint << ", storagelocation="<< storagelocation << endl;

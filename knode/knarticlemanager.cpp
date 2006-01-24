@@ -166,8 +166,8 @@ void KNArticleManager::openContent(KMime::Content *c)
   if(path.isNull()) return;
 
   KService::Ptr offer = KServiceTypeProfile::preferredService(c->contentType()->mimeType(), "Application");
-  KURL::List lst;
-  KURL url;
+  KUrl::List lst;
+  KUrl url;
   url.setPath(path);
   lst.append(url);
 

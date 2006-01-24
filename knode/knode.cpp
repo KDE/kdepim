@@ -64,7 +64,7 @@ KNMainWindow::~KNMainWindow()
   saveMainWindowSettings(knGlobals.config(),"mainWindow_options");
 }
 
-void KNMainWindow::openURL( const KURL& url )
+void KNMainWindow::openURL( const KUrl& url )
 {
   m_mainWidget->openURL( url );
 }

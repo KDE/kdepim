@@ -48,11 +48,11 @@ class KDE_EXPORT XXPortManager : public QObject
     void restoreSettings();
     void saveSettings();
 
-    static KURL importURL;
+    static KUrl importURL;
     static QString importData;
 
   public slots:
-    void importVCard( const KURL &url );
+    void importVCard( const KUrl &url );
     void importVCard( const QString &vCard );
 
   signals:

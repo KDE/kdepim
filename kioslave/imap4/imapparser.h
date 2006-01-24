@@ -383,7 +383,7 @@ public:
   static bool parseOneNumber (parseString & inWords, ulong & num);
 
   /** extract the box,section,list type, uid, uidvalidity,info from an url */
-  static void parseURL (const KURL & _url, QString & _box, QString & _section,
+  static void parseURL (const KUrl & _url, QString & _box, QString & _section,
                         QString & _type, QString & _uid, QString & _validity, 
                         QString & _info);
 

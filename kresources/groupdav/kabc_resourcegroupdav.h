@@ -33,7 +33,7 @@ class KDE_EXPORT ResourceGroupDav : public ResourceGroupwareBase
 
   public:
     ResourceGroupDav( const KConfig * );
-//     ResourceGroupDav( const KURL &url,
+//     ResourceGroupDav( const KUrl &url,
 //             const QString &user, const QString &password );
   protected:
     void init();

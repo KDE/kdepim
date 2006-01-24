@@ -55,19 +55,19 @@ void GroupwareUploadJob::run()
     SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
     SLOT( cancelSave() ) );
 
-  connect( adaptor(), SIGNAL( itemDeletionError( const KURL &, const QString & ) ),
-           SLOT( slotItemDeleteError( const KURL &, const QString & ) ) );
-  connect( adaptor(), SIGNAL( itemUploadError( const KURL &, const QString & ) ),
-           SLOT( slotItemUploadError( const KURL &, const QString & ) ) );
+  connect( adaptor(), SIGNAL( itemDeletionError( const KUrl &, const QString & ) ),
+           SLOT( slotItemDeleteError( const KUrl &, const QString & ) ) );
+  connect( adaptor(), SIGNAL( itemUploadError( const KUrl &, const QString & ) ),
+           SLOT( slotItemUploadError( const KUrl &, const QString & ) ) );
   connect( adaptor(), SIGNAL( itemUploadNewError( const QString &, const QString & ) ),
            SLOT( slotItemUploadNewError( const QString &, const QString & ) ) );
 
-  connect( adaptor(), SIGNAL( itemDeleted( const QString &, const KURL & ) ),
-           SLOT( slotItemDeleted( const QString &, const KURL & ) ) );
-  connect( adaptor(), SIGNAL( itemUploaded( const QString &, const KURL & ) ),
-           SLOT( slotItemUploaded( const QString &, const KURL & ) ) );
-  connect( adaptor(), SIGNAL( itemUploadedNew( const QString &, const KURL& ) ),
-           SLOT( slotItemUploadedNew( const QString &, const KURL & ) ) );
+  connect( adaptor(), SIGNAL( itemDeleted( const QString &, const KUrl & ) ),
+           SLOT( slotItemDeleted( const QString &, const KUrl & ) ) );
+  connect( adaptor(), SIGNAL( itemUploaded( const QString &, const KUrl & ) ),
+           SLOT( slotItemUploaded( const QString &, const KUrl & ) ) );
+  connect( adaptor(), SIGNAL( itemUploadedNew( const QString &, const KUrl& ) ),
+           SLOT( slotItemUploadedNew( const QString &, const KUrl & ) ) );
 
 
   mUploadProgress->setTotalItems( mAddedItems.size() + mChangedItems.size() +
@@ -85,7 +85,7 @@ void GroupwareUploadJob::deleteItem()
   } else {
     kdDebug(7000) << " Deleting " << mDeletedItems.size() << " items from the server " << endl;
 
-    KURL url( adaptor()->baseURL() );
+    KUrl url( adaptor()->baseURL() );
     adaptor()->adaptUploadUrl( url );
     if ( adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResBatchDelete ) {
 kdDebug() << "Using batch delete " << endl;
@@ -142,7 +142,7 @@ void GroupwareUploadJob::uploadItem()
   } else {
     kdDebug(5800)<<"We still have "<<mChangedItems.count()<<" changed items to upload"<<endl;
 
-    KURL url( adaptor()->baseURL() );
+    KUrl url( adaptor()->baseURL() );
     adaptor()->adaptUploadUrl( url );
     if ( adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResBatchModify ) {
 kdDebug() << "Using batch upload " << endl;
@@ -197,7 +197,7 @@ void GroupwareUploadJob::uploadNewItem()
   if ( !mAddedItems.isEmpty() ) {
     
     if ( adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResBatchCreate ) {
-      KURL url( adaptor()->folderLister()->writeDestinationId( FolderLister::All ) );
+      KUrl url( adaptor()->folderLister()->writeDestinationId( FolderLister::All ) );
       adaptor()->adaptUploadUrl( url );
 kdDebug() << "Using batch create to " << url.url() << endl;
       mUploadJob = adaptor()->createUploadNewJob( url, mAddedItems );
@@ -205,7 +205,7 @@ kdDebug() << "Using batch create to " << url.url() << endl;
       mAddedItems.clear();
     } else {
       KPIM::GroupwareUploadItem *item = mAddedItems.front();
-      KURL url( adaptor()->folderLister()->writeDestinationId( item->itemType() ) );
+      KUrl url( adaptor()->folderLister()->writeDestinationId( item->itemType() ) );
       adaptor()->adaptUploadUrl( url );
 kdDebug() << "Not using batch create to " << url.url() << " for item of type " << item->itemType() << endl;
       if ( !url.isEmpty() ) {
@@ -255,7 +255,7 @@ void GroupwareUploadJob::kill()
   cancelSave();
 }
 
-void GroupwareUploadJob::slotItemDeleted( const QString &/*localId*/, const KURL &remoteURL )
+void GroupwareUploadJob::slotItemDeleted( const QString &/*localId*/, const KUrl &remoteURL )
 {
   kdDebug() << "GroupwareUploadJob::slotItemDeleted, removal successful: "<< remoteURL.url() << endl;
 
@@ -290,7 +290,7 @@ kdDebug()<<"Found it in the list!"<<endl;
 
 
 
-void GroupwareUploadJob::slotItemUploaded( const QString &/*localId*/, const KURL &remoteURL )
+void GroupwareUploadJob::slotItemUploaded( const QString &/*localId*/, const KUrl &remoteURL )
 {
   kdDebug() << "GroupwareUploadJob::slotItemUploaded, upload successful: "<< remoteURL.url() << endl;
 
@@ -327,7 +327,7 @@ kdDebug()<<"Found it in the list!"<<endl;
 }
 
 
-void GroupwareUploadJob::slotItemUploadedNew( const QString &localId, const KURL &remoteURL )
+void GroupwareUploadJob::slotItemUploadedNew( const QString &localId, const KUrl &remoteURL )
 {
   kdDebug() << "GroupwareUploadJob::slotItemUploadedNew, upload successful: "<< remoteURL.url() << endl;
 
@@ -367,7 +367,7 @@ kdDebug()<<"Found it in the list!"<<endl;
   }
 }
 
-void GroupwareUploadJob::slotItemDeleteError( const KURL &remoteURL, const QString &/*error*/ )
+void GroupwareUploadJob::slotItemDeleteError( const KUrl &remoteURL, const QString &/*error*/ )
 {
   // TODO: Add to error list, remove from uploading and toUpload list
   kdDebug() << "GroupwareUploadJob::slotItemDeleteError, removal not successful: "<< remoteURL.url() << endl;
@@ -393,7 +393,7 @@ kdDebug()<<"Found it in the list!"<<endl;
   }
 }
 
-void GroupwareUploadJob::slotItemUploadError( const KURL &remoteURL, const QString &/*error*/ )
+void GroupwareUploadJob::slotItemUploadError( const KUrl &remoteURL, const QString &/*error*/ )
 {
   // TODO: Add to error list, remove from uploading and toUpload list
   kdDebug() << "GroupwareUploadJob::slotItemUploadError, removal not successful: "<< remoteURL.url() << endl;
@@ -425,7 +425,7 @@ void GroupwareUploadJob::slotItemUploadNewError( const QString &/*localID*/, con
   KPIM::GroupwareUploadItem::List allit( mAddedItems );
   allit += mItemsUploading;
   allit += mItemsUploaded;
-  const KURL &url( remoteURL );
+  const KUrl &url( remoteURL );
 
   KPIM::GroupwareUploadItem::List::Iterator it = allit.begin();
   for ( ; it != allit.end(); ++it ) {

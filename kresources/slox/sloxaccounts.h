@@ -34,7 +34,7 @@ class KDE_EXPORT SloxAccounts : public QObject
 {
     Q_OBJECT
   public:
-    SloxAccounts( SloxBase *res, const KURL &baseUrl );
+    SloxAccounts( SloxBase *res, const KUrl &baseUrl );
     ~SloxAccounts();
 
     void insertUser( const QString &id, const KABC::Addressee &a );
@@ -59,7 +59,7 @@ class KDE_EXPORT SloxAccounts : public QObject
 
     QMap<QString, KABC::Addressee> mUsers; // map users ids to addressees.
 
-    KURL mBaseUrl;
+    KUrl mBaseUrl;
     SloxBase *mRes;
 };
 

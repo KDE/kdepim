@@ -32,10 +32,10 @@ public:
   KMobileProtocol( const QCString &pool, const QCString &app );
   ~KMobileProtocol();
 
-  void get( const KURL& url );
-  void stat( const KURL& url );
-  void mimetype( const KURL& url );
-  void listDir( const KURL& url );
+  void get( const KUrl& url );
+  void stat( const KUrl& url );
+  void mimetype( const KUrl& url );
+  void listDir( const KUrl& url );
 
 protected:
   int  getDeviceAndRessource(const QString &_path,
@@ -45,7 +45,7 @@ protected:
   QString folderMimeType(int cap);
   QString entryMimeType(int cap);
 
-  void listRoot(const KURL& url);
+  void listRoot(const KUrl& url);
   void listTopDeviceDir(const QString &devName);
   void listEntries(const QString &devName,
 	const QString &resource, const QString &devPath,

@@ -30,13 +30,13 @@ void KNode::MailSendJob::execute()
   // create url query part
   QStringList query;
   query << "headers=0";
-  query << "from=" + KURL::encode_string( art->from()->email() );
+  query << "from=" + KUrl::encode_string( art->from()->email() );
   QList<QByteArray> emails = art->to()->emails();
   foreach ( QByteArray to, emails )
-    query << "to=" + KURL::encode_string( to );
+    query << "to=" + KUrl::encode_string( to );
 
   // create url
-  KURL destination = baseUrl();
+  KUrl destination = baseUrl();
   if ( account()->encryption() == KNServerInfo::SSL )
     destination.setProtocol( "smtps" );
   else

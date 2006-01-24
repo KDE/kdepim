@@ -38,7 +38,7 @@ class ResourceGroupware : public ResourceCached
 
   public:
     ResourceGroupware( const KConfig * );
-    ResourceGroupware( const KURL &url,
+    ResourceGroupware( const KUrl &url,
                        const QString &user, const QString &password );
     ~ResourceGroupware();
 

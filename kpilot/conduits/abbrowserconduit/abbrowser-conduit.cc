@@ -240,7 +240,7 @@ bool AbbrowserConduit::_loadAddressBook()
 		case AbbrowserSettings::eAbookFile:
 		{ // initialize the abook with the given file
 			DEBUGCONDUIT<<"Loading custom addressbook"<<endl;
-			KURL kurl(AbbrowserSettings::fileName());
+			KUrl kurl(AbbrowserSettings::fileName());
 			if(!KIO::NetAccess::download(AbbrowserSettings::fileName(), fABookFile, 0L) &&
 				!kurl.isLocalFile())
 			{
@@ -342,7 +342,7 @@ bool AbbrowserConduit::_saveAddressBook()
 	}
 	if ( AbbrowserSettings::addressbookType()!= AbbrowserSettings::eAbookResource )
 	{
-		KURL kurl(AbbrowserSettings::fileName());
+		KUrl kurl(AbbrowserSettings::fileName());
 		if(!kurl.isLocalFile())
 		{
 #ifdef DEBUG

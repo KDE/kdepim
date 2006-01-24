@@ -168,7 +168,7 @@ void createFileEntry(KIO::UDSEntry& entry, const QString& name, const QString& u
 /**
  * Get the information contained in the URL.
  */
-void KMobileProtocol::get(const KURL &url)
+void KMobileProtocol::get(const KUrl &url)
 {
   PRINT_DEBUG << "###############################\n";
   PRINT_DEBUG << QString("get(%1)\n").arg(url.path());
@@ -231,7 +231,7 @@ void KMobileProtocol::get(const KURL &url)
 /*
  * listRoot() - gives listing of all devices
  */
-void KMobileProtocol::listRoot(const KURL& url)
+void KMobileProtocol::listRoot(const KUrl& url)
 {
   PRINT_DEBUG << QString("########## listRoot(%1) for %2:/\n").arg(url.path()).arg(url.protocol());
 
@@ -540,7 +540,7 @@ int KMobileProtocol::getFileStorage(const QString &devName, QCString &result, QS
 /**
  * Test if the url contains a directory or a file.
  */
-void KMobileProtocol::stat( const KURL &url )
+void KMobileProtocol::stat( const KUrl &url )
 {
   PRINT_DEBUG << "###############################\n";
   PRINT_DEBUG << QString("stat(%1)\n").arg(url.path());
@@ -576,7 +576,7 @@ void KMobileProtocol::stat( const KURL &url )
 /**
  * Get the mimetype.
  */
-void KMobileProtocol::mimetype(const KURL &url)
+void KMobileProtocol::mimetype(const KUrl &url)
 {
   PRINT_DEBUG << "###############################\n";
   PRINT_DEBUG << QString("mimetype(%1)\n").arg(url.path());
@@ -598,7 +598,7 @@ void KMobileProtocol::mimetype(const KURL &url)
 /**
  * List the contents of a directory.
  */
-void KMobileProtocol::listDir(const KURL &url)
+void KMobileProtocol::listDir(const KUrl &url)
 {
   PRINT_DEBUG << "###############################\n";
   PRINT_DEBUG << QString("listDir(%1)\n").arg(url.path());

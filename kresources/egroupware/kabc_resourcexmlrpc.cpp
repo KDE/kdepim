@@ -99,7 +99,7 @@ void ResourceXMLRPC::init()
 
 void ResourceXMLRPC::initEGroupware()
 {
-  KURL url( mPrefs->url() );
+  KUrl url( mPrefs->url() );
 
   mAddrTypes.insert( "dom", Address::Dom );
   mAddrTypes.insert( "intl", Address::Intl );
@@ -293,7 +293,7 @@ void ResourceXMLRPC::loginFinished( const QList<QVariant> &variant,
 {
   QMap<QString, QVariant> map = variant[0].toMap();
 
-  KURL url( mPrefs->url() );
+  KUrl url( mPrefs->url() );
   if ( map[ "GOAWAY" ].toString() == "XOXO" ) { // failed
     mSessionID = mKp3 = "";
     addressBook()->error( i18n( "Login failed, please check your username and password." ) );
@@ -317,7 +317,7 @@ void ResourceXMLRPC::logoutFinished( const QList<QVariant> &variant,
   if ( map[ "GOODBYE" ].toString() != "XOXO" )
     addressBook()->error( i18n( "Logout failed, please check your username and password." ) );
 
-  KURL url( mPrefs->url() );
+  KUrl url( mPrefs->url() );
   mSessionID = mKp3 = "";
   url.setUser( mSessionID );
   url.setPass( mKp3 );

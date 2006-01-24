@@ -50,7 +50,7 @@ KIO_Delete::~KIO_Delete( )
 
 bool KIO_Delete::deleteMails( QList< const KornMailId* > * ids, KKioDrop *drop )
 {
-	KURL kurl = *drop->_kurl;
+	KUrl kurl = *drop->_kurl;
 	KIO::MetaData metadata = *drop->_metadata;
 		
 	_kio = drop;
@@ -98,7 +98,7 @@ void KIO_Delete::disConnect( )
 	}
 }
 
-bool KIO_Delete::setupSlave( KURL kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol )
+bool KIO_Delete::setupSlave( KUrl kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol )
 {
 	protocol->deleteMailConnectKURL( kurl, metadata );
 	
@@ -115,7 +115,7 @@ bool KIO_Delete::setupSlave( KURL kurl, KIO::MetaData metadata, const KIO_Protoc
 	return true;
 }
 
-void KIO_Delete::deleteItem( const KornMailId *item, KURL kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol )
+void KIO_Delete::deleteItem( const KornMailId *item, KUrl kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol )
 {
 	KIO::Job* job = 0;
 
@@ -152,7 +152,7 @@ void KIO_Delete::deleteItem( const KornMailId *item, KURL kurl, KIO::MetaData me
 /*
  * Some protocols needs to a command to commit protocols.
  */
-void KIO_Delete::commitDelete( KURL kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol )
+void KIO_Delete::commitDelete( KUrl kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol )
 {
 	protocol->deleteCommitKURL( kurl, metadata );
 	

@@ -60,7 +60,7 @@ ResourceRemote::ResourceRemote( const KConfig *config )
   init();
 }
 
-ResourceRemote::ResourceRemote( const KURL &downloadUrl, const KURL &uploadUrl )
+ResourceRemote::ResourceRemote( const KUrl &downloadUrl, const KUrl &uploadUrl )
   : ResourceCached( 0 ), mUseProgressManager( false ), mUseCacheFile( false )
 {
   mDownloadUrl = downloadUrl;
@@ -121,22 +121,22 @@ void ResourceRemote::writeConfig( KConfig *config )
   ResourceCached::writeConfig( config );
 }
 
-void ResourceRemote::setDownloadUrl( const KURL &url )
+void ResourceRemote::setDownloadUrl( const KUrl &url )
 {
   mDownloadUrl = url;
 }
 
-KURL ResourceRemote::downloadUrl() const
+KUrl ResourceRemote::downloadUrl() const
 {
   return mDownloadUrl;
 }
 
-void ResourceRemote::setUploadUrl( const KURL &url )
+void ResourceRemote::setUploadUrl( const KUrl &url )
 {
   mUploadUrl = url;
 }
 
-KURL ResourceRemote::uploadUrl() const
+KUrl ResourceRemote::uploadUrl() const
 {
   return mUploadUrl;
 }

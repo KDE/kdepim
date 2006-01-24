@@ -31,7 +31,7 @@ void KNode::GroupListJob::execute()
 
   KNGroupListData *target = static_cast<KNGroupListData *>( data() );
 
-  KURL destination = baseUrl();
+  KUrl destination = baseUrl();
   QStringList query;
   if ( target->getDescriptions )
     query << "desc=true";
@@ -146,7 +146,7 @@ void KNode::ArticleListJob::execute()
 
   KNGroup* target = static_cast<KNGroup*>( data() );
 
-  KURL destination = baseUrl();
+  KUrl destination = baseUrl();
   destination.setPath( target->groupname() );
   QStringList query;
   query << "first=" + QString::number( target->lastNr() + 1 );
@@ -206,7 +206,7 @@ void KNode::ArticleFetchJob::execute()
   KNRemoteArticle *target = static_cast<KNRemoteArticle*>( data() );
   QString path = static_cast<KNGroup*>( target->collection() )->groupname();
 
-  KURL url = baseUrl();
+  KUrl url = baseUrl();
   path += QDir::separator();
   path += target->messageID()->as7BitString( false );
   url.setPath( path );
@@ -244,7 +244,7 @@ void KNode::ArticlePostJob::execute( )
 {
   KNLocalArticle *target = static_cast<KNLocalArticle*>( data() );
 
-  KURL url = baseUrl();
+  KUrl url = baseUrl();
 
   KIO::Job* job = KIO::storedPut( target->encodedContent( true ), url, -1, true, false, false );
   connect( job, SIGNAL( result(KIO::Job*) ), SLOT( slotResult(KIO::Job*) ) );

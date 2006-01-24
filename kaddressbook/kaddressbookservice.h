@@ -47,7 +47,7 @@ class KAddressBookService : virtual public KPIM::AddressBookServiceIface
 
       @param url The url where the vcard is located.
      */
-    void importVCard( const KURL& url );
+    void importVCard( const KUrl& url );
 
   private:
     KAB::Core *mCore;

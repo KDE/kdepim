@@ -39,7 +39,7 @@ class KDE_EXPORT SloxFolderManager : public QObject
 {
     Q_OBJECT
   public:
-    SloxFolderManager( SloxBase *res, const KURL &baseUrl );
+    SloxFolderManager( SloxBase *res, const KUrl &baseUrl );
     ~SloxFolderManager();
 
     QMap<QString, SloxFolder*> folders() const { return mFolders; }
@@ -58,7 +58,7 @@ class KDE_EXPORT SloxFolderManager : public QObject
 
   private:
     KIO::DavJob *mDownloadJob;
-    KURL mBaseUrl;
+    KUrl mBaseUrl;
     QMap<QString, SloxFolder*> mFolders;
     SloxBase *mRes;
 };

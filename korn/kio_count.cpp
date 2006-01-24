@@ -72,7 +72,7 @@ void KIO_Count::count( KKioDrop *drop )
 	_metadata = new KIO::MetaData( *_kio->_metadata );
 	_protocol = _kio->_protocol;
 
-	KURL kurl = *_kurl;
+	KUrl kurl = *_kurl;
 	KIO::MetaData metadata = *_metadata;
 
 	// Serup a connection
@@ -100,7 +100,7 @@ void KIO_Count::count( KKioDrop *drop )
 		connect( _slave, SIGNAL( infoMessage( const QString& ) ), _kio, SLOT( slotConnectionInfoMessage( const QString& ) ) );
 
 		/*
-		 * _protocol->recheckConnectKURL could have change kurl and metadata in order to have the right
+		 * _protocol->recheckConnectKUrl could have change kurl and metadata in order to have the right
 		 * settings to connect. But some other functions assumed unmodified settings,
 		 * so the settings are set back to his originals.
 		 */
@@ -162,7 +162,7 @@ void KIO_Count::stopActiveCount()
 
 void KIO_Count::showPassive( const QString& id )
 {
-	KURL kurl = *_kio->_kurl;
+	KUrl kurl = *_kio->_kurl;
 	KIO::MetaData metadata = *_kio->_metadata;
 	kurl = id;
 	//KIO::Slave *slave = 0;
@@ -247,7 +247,7 @@ void KIO_Count::entries( KIO::Job* job, const KIO::UDSEntryList &list )
 	KIO::UDSEntryList::ConstIterator  it1 ;
 	//KIO::UDSEntry::ConstIterator it2 ;
 	KIO::MetaData metadata;
-	KURL kurl;
+	KUrl kurl;
 	bool isFile;
 
 	//job should be the latest job

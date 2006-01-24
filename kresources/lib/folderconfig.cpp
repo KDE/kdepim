@@ -88,7 +88,7 @@ void FolderConfig::setFolderLister( FolderLister *f )
   connect( mFolderLister, SIGNAL( foldersRead() ), SLOT( updateFolderList() ) );
 }
 
-void FolderConfig::retrieveFolderList( const KURL &url )
+void FolderConfig::retrieveFolderList( const KUrl &url )
 {
   kdDebug(7000) << "FolderConfig::retrieveFolderList()" << endl;
   if ( !mOldFolderListerURL.isEmpty() ) return;

@@ -206,11 +206,11 @@ void DirectoryServicesWidget::slotDeleteService()
 }
 
 
-void DirectoryServicesWidget::setInitialServices( const KURL::List& urls )
+void DirectoryServicesWidget::setInitialServices( const KUrl::List& urls )
 {
     x500LV->clear();
-    for( KURL::List::const_iterator it = urls.begin(); it != urls.end(); ++it ) {
-        QString dn = KURL::decode_string( (*it).query().mid( 1 ) ); // decode query and skip leading '?'
+    for( KUrl::List::const_iterator it = urls.begin(); it != urls.end(); ++it ) {
+        QString dn = KUrl::decode_string( (*it).query().mid( 1 ) ); // decode query and skip leading '?'
         (void)new QX500ListViewItem( x500LV, x500LV->lastItem(),
                                      (*it).host(),
                                      QString::number( (*it).port() ),
@@ -220,17 +220,17 @@ void DirectoryServicesWidget::setInitialServices( const KURL::List& urls )
     }
 }
 
-KURL::List DirectoryServicesWidget::urlList() const
+KUrl::List DirectoryServicesWidget::urlList() const
 {
-    KURL::List lst;
+    KUrl::List lst;
     Q3ListViewItemIterator it( x500LV );
     for ( ; it.current() ; ++it ) {
         Q3ListViewItem* item = it.current();
-        KURL url;
+        KUrl url;
         url.setProtocol( "ldap" );
         url.setHost( item->text( 0 ) );
         url.setPort( item->text( 1 ).toInt() );
-        url.setPath( "/" ); // workaround KURL parsing bug
+        url.setPath( "/" ); // workaround KUrl parsing bug
         url.setQuery( item->text( 2 ) );
         url.setUser( item->text( 3 ) );
         url.setPass( static_cast<QX500ListViewItem *>( item )->password() );

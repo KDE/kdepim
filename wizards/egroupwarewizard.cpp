@@ -42,7 +42,7 @@
 
 static QString createURL( const QString &server, bool useSSL, const QString &location )
 {
-  KURL url;
+  KUrl url;
 
   if ( useSSL )
     url.setProtocol( "https" );

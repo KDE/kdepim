@@ -19,7 +19,7 @@ public:
                    QWidget * parent=0, Qt::WFlags f=0 );
 
 signals:
-  void dropped( const KURL::List& urls );
+  void dropped( const KUrl::List& urls );
 
 protected:
   virtual void contentsDragEnterEvent ( QDragEnterEvent * );

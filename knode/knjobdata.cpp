@@ -163,9 +163,9 @@ void KNJobData::slotEmitFinished( )
   emit finished( this );
 }
 
-KURL KNJobData::baseUrl() const
+KUrl KNJobData::baseUrl() const
 {
-  KURL url;
+  KUrl url;
   if ( account()->encryption() == KNServerInfo::SSL )
     url.setProtocol( "nntps" );
   else

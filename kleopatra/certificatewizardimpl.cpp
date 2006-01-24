@@ -389,12 +389,12 @@ QString CertificateWizardImpl::caEMailAddress() const {
 
 void CertificateWizardImpl::slotURLSelected( const QString& _url )
 {
-  KURL url = KURL::fromPathOrURL( _url.trimmed() );
+  KUrl url = KUrl::fromPathOrURL( _url.trimmed() );
   storeUR->setURL( url.prettyURL() );
 }
 
-KURL CertificateWizardImpl::saveFileUrl() const {
-  return KURL::fromPathOrURL( storeUR->url().trimmed() );
+KUrl CertificateWizardImpl::saveFileUrl() const {
+  return KUrl::fromPathOrURL( storeUR->url().trimmed() );
 }
 
 void CertificateWizardImpl::showPage( QWidget * page )
@@ -470,7 +470,7 @@ void CertificateWizardImpl::accept()
     sendCertificate( caEMailAddress(), _keyData );
   } else {
     // Save in file/URL
-    KURL url = saveFileUrl();
+    KUrl url = saveFileUrl();
     bool overwrite = false;
     if ( KIO::NetAccess::exists( url, false /*dest*/, this ) ) {
       if ( KMessageBox::Cancel == KMessageBox::warningContinueCancel(

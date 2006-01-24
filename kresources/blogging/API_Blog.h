@@ -85,7 +85,7 @@ class APIBlog : public QObject
 {
     Q_OBJECT
   public:
-    APIBlog( const KURL &server, QObject *parent = 0L, const char *name = 0L );
+    APIBlog( const KUrl &server, QObject *parent = 0L, const char *name = 0L );
     virtual ~APIBlog();
     virtual QString interfaceName() const = 0;
 
@@ -98,8 +98,8 @@ class APIBlog : public QObject
     void setUsername( const QString &uname ) { mUsername = uname; }
     QString username() const { return mUsername; }
 
-    void setURL( const KURL& url ) { mServerURL = url; }
-    KURL url() const { return mServerURL; }
+    void setURL( const KUrl& url ) { mServerURL = url; }
+    KUrl url() const { return mServerURL; }
 
     void setDownloadCount( int nr ) { mDownloadCount = nr; }
     int downloadCount() const { return mDownloadCount; }
@@ -124,11 +124,11 @@ class APIBlog : public QObject
 
     virtual KIO::Job *createUserInfoJob() = 0;
     virtual KIO::Job *createListFoldersJob() = 0;
-    virtual KIO::TransferJob *createListItemsJob( const KURL &url ) = 0;
-    virtual KIO::TransferJob *createDownloadJob( const KURL &url ) = 0;
-    virtual KIO::TransferJob *createUploadJob( const KURL &url, KBlog::BlogPosting *posting ) = 0;
+    virtual KIO::TransferJob *createListItemsJob( const KUrl &url ) = 0;
+    virtual KIO::TransferJob *createDownloadJob( const KUrl &url ) = 0;
+    virtual KIO::TransferJob *createUploadJob( const KUrl &url, KBlog::BlogPosting *posting ) = 0;
     virtual KIO::TransferJob *createUploadNewJob( KBlog::BlogPosting *posting ) = 0;
-    virtual KIO::Job *createRemoveJob( const KURL &url, const QString &postid ) = 0;
+    virtual KIO::Job *createRemoveJob( const KUrl &url, const QString &postid ) = 0;
 
     virtual bool interpretUserInfoJob( KIO::Job *job ) = 0;
     virtual void interpretListFoldersJob( KIO::Job *job ) = 0;
@@ -143,15 +143,15 @@ class APIBlog : public QObject
     void userInfoRetrieved( const QString &nickname, const QString &userid, const QString &email );
     void folderInfoRetrieved( const QString &id, const QString &name );
 
-    void itemOnServer( const KURL &remoteURL );
+    void itemOnServer( const KUrl &remoteURL );
     void itemDownloaded( KCal::Incidence *j, const QString &localID,
-                         const KURL &remoteURL, const QString &fingerprint,
+                         const KUrl &remoteURL, const QString &fingerprint,
                          const QString &storageLocation );
     
 
   protected:
 
-    KURL mServerURL;
+    KUrl mServerURL;
     QString mPassword;
     QString mUsername;
     QString mAppID;

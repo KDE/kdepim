@@ -182,7 +182,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
 
   private slots:
     /// called if the user clicked on an URL
-    void slotURLClicked( const KURL &url, bool forceOpen = false );
+    void slotURLClicked( const KUrl &url, bool forceOpen = false );
     /// called if the user RMB clicked on an URL
     void slotURLPopup( const QString &url, const QPoint &point );
 
@@ -247,7 +247,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     QTimer *mTimer;
 
     /// the last RMB clicked URL
-    KURL mCurrentURL;
+    KUrl mCurrentURL;
 
     /// list of all instances of this class
     static QList<ArticleWidget*> mInstances;

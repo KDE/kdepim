@@ -203,7 +203,7 @@ IMAP4Protocol::~IMAP4Protocol ()
 }
 
 void
-IMAP4Protocol::get (const KURL & _url)
+IMAP4Protocol::get (const KUrl & _url)
 {
   if (!makeLogin()) return;
   kdDebug(7116) << "IMAP4::get -  " << _url.prettyURL() << endl;
@@ -415,13 +415,13 @@ IMAP4Protocol::get (const KURL & _url)
 }
 
 void
-IMAP4Protocol::listDir (const KURL & _url)
+IMAP4Protocol::listDir (const KUrl & _url)
 {
   kdDebug(7116) << " IMAP4::listDir - " << _url.prettyURL() << endl;
 
   if (_url.path().isEmpty())
   {
-    KURL url = _url;
+    KUrl url = _url;
     url.setPath("/");
     redirection( url );
     finished();
@@ -459,7 +459,7 @@ IMAP4Protocol::listDir (const KURL & _url)
     {
       QString mailboxName;
       UDSEntry entry;
-      KURL aURL = _url;
+      KUrl aURL = _url;
       if (aURL.path().find(';') != -1)
         aURL.setPath(aURL.path().left(aURL.path().find(';')));
 
@@ -514,13 +514,13 @@ IMAP4Protocol::listDir (const KURL & _url)
   if ((myType == ITYPE_BOX || myType == ITYPE_DIR_AND_BOX)
       && myLType != "LIST" && myLType != "LSUB" && myLType != "LSUBNOCHECK")
   {
-    KURL aURL = _url;
+    KUrl aURL = _url;
     aURL.setQuery (QString());
     const QString encodedUrl = aURL.url(0, 106); // utf-8
 
     if (!_url.query ().isEmpty ())
     {
-      QString query = KURL::decode_string (_url.query ());
+      QString query = KUrl::decode_string (_url.query ());
       query = query.right (query.length () - 1);
       if (!query.isEmpty())
       {
@@ -583,7 +583,7 @@ IMAP4Protocol::listDir (const KURL & _url)
           && selectInfo.uidValidity () != myValidity.toULong ())
       {
         //redirect
-        KURL newUrl = _url;
+        KUrl newUrl = _url;
 
         newUrl.setPath ("/" + myBox + ";UIDVALIDITY=" +
                         QString::number(selectInfo.uidValidity ()));
@@ -789,14 +789,14 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
 }
 
 void
-IMAP4Protocol::setSubURL (const KURL & _url)
+IMAP4Protocol::setSubURL (const KUrl & _url)
 {
   kdDebug(7116) << "IMAP4::setSubURL - " << _url.prettyURL() << endl;
   KIO::TCPSlaveBase::setSubURL (_url);
 }
 
 void
-IMAP4Protocol::put (const KURL & _url, int, bool, bool)
+IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
 {
   kdDebug(7116) << "IMAP4::put - " << _url.prettyURL() << endl;
 //  KIO::TCPSlaveBase::put(_url,permissions,overwrite,resume);
@@ -932,7 +932,7 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
 }
 
 void
-IMAP4Protocol::mkdir (const KURL & _url, int)
+IMAP4Protocol::mkdir (const KUrl & _url, int)
 {
   kdDebug(7116) << "IMAP4::mkdir - " << _url.prettyURL() << endl;
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
@@ -982,7 +982,7 @@ IMAP4Protocol::mkdir (const KURL & _url, int)
 }
 
 void
-IMAP4Protocol::copy (const KURL & src, const KURL & dest, int, bool overwrite)
+IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
 {
   kdDebug(7116) << "IMAP4::copy - [" << (overwrite ? "Overwrite" : "NoOverwrite") << "] " << src.prettyURL() << " -> " << dest.prettyURL() << endl;
   QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter, sInfo;
@@ -1001,7 +1001,7 @@ IMAP4Protocol::copy (const KURL & src, const KURL & dest, int, bool overwrite)
     // might be moving to upper folder
     if (sub > 0)
     {
-      KURL testDir = dest;
+      KUrl testDir = dest;
 
       QString subDir = dBox.right (dBox.length () - dBox.findRev ('/'));
       QString topDir = dBox.left (sub);
@@ -1092,7 +1092,7 @@ IMAP4Protocol::copy (const KURL & src, const KURL & dest, int, bool overwrite)
 }
 
 void
-IMAP4Protocol::del (const KURL & _url, bool isFile)
+IMAP4Protocol::del (const KUrl & _url, bool isFile)
 {
   kdDebug(7116) << "IMAP4::del - [" << (isFile ? "File" : "NoFile") << "] " << _url.prettyURL() << endl;
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
@@ -1245,8 +1245,8 @@ IMAP4Protocol::special (const QByteArray & aData)
   case 'C':
   {
     // copy
-    KURL src;
-    KURL dest;
+    KUrl src;
+    KUrl dest;
     stream >> src >> dest;
     copy(src, dest, 0, FALSE);
     break;
@@ -1284,7 +1284,7 @@ IMAP4Protocol::special (const QByteArray & aData)
   case 'U':
   {
     // unsubscribe
-    KURL _url;
+    KUrl _url;
     stream >> _url;
     QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
     parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
@@ -1305,7 +1305,7 @@ IMAP4Protocol::special (const QByteArray & aData)
   case 'u':
   {
     // subscribe
-    KURL _url;
+    KUrl _url;
     stream >> _url;
     QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
     parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
@@ -1350,7 +1350,7 @@ IMAP4Protocol::special (const QByteArray & aData)
   case 'S':
   {
     // status
-    KURL _url;
+    KUrl _url;
     QByteArray newFlags;
     stream >> _url >> newFlags;
 
@@ -1401,7 +1401,7 @@ void
 IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
 {
   // All commands start with the URL to the box
-  KURL _url;
+  KUrl _url;
   stream >> _url;
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
@@ -1503,7 +1503,7 @@ void
 IMAP4Protocol::specialSearchCommand( QDataStream& stream )
 {
   kdDebug(7116) << "IMAP4Protocol::specialSearchCommand" << endl;
-  KURL _url;
+  KUrl _url;
   stream >> _url;
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
@@ -1531,7 +1531,7 @@ void
 IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
 {
   // All commands start with the URL to the box
-  KURL _url;
+  KUrl _url;
   stream >> _url;
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
@@ -1540,7 +1540,7 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
   case 'S': // SETANNOTATION
   {
     // Params:
-    //  KURL URL of the mailbox
+    //  KUrl URL of the mailbox
     //  QString entry (should be an actual entry name, no % or *; empty for server entries)
     //  QMap<QString,QString> attributes (name and value)
     QString entry;
@@ -1564,7 +1564,7 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
   case 'G': // GETANNOTATION.
   {
     // Params:
-    //  KURL URL of the mailbox
+    //  KUrl URL of the mailbox
     //  QString entry (should be an actual entry name, no % or *; empty for server entries)
     //  QStringList attributes (list of attributes to be retrieved, possibly with % or *)
     QString entry;
@@ -1596,7 +1596,7 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
 }
 
 void
-IMAP4Protocol::rename (const KURL & src, const KURL & dest, bool overwrite)
+IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, bool overwrite)
 {
   kdDebug(7116) << "IMAP4::rename - [" << (overwrite ? "Overwrite" : "NoOverwrite") << "] " << src.prettyURL() << " -> " << dest.prettyURL() << endl;
   QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter, sInfo;
@@ -1669,7 +1669,7 @@ IMAP4Protocol::dispatch (int command, const QByteArray & data)
 }
 
 void
-IMAP4Protocol::stat (const KURL & _url)
+IMAP4Protocol::stat (const KUrl & _url)
 {
   kdDebug(7116) << "IMAP4::stat - " << _url.prettyURL() << endl;
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
@@ -1758,7 +1758,7 @@ IMAP4Protocol::stat (const KURL & _url)
       if (validity > 0 && validity != aValidity.toULong ())
       {
         //redirect
-        KURL newUrl = _url;
+        KUrl newUrl = _url;
 
         newUrl.setPath ("/" + aBox + ";UIDVALIDITY=" +
                         QString::number(validity));
@@ -2055,10 +2055,10 @@ IMAP4Protocol::getMimeType (enum IMAP_TYPE aType)
 
 
 void
-IMAP4Protocol::doListEntry (const KURL & _url, int stretch, imapCache * cache,
+IMAP4Protocol::doListEntry (const KUrl & _url, int stretch, imapCache * cache,
   bool withFlags, bool withSubject)
 {
-  KURL aURL = _url;
+  KUrl aURL = _url;
   aURL.setQuery (QString());
   const QString encodedUrl = aURL.url(0, 106); // utf-8
   doListEntry(encodedUrl, stretch, cache, withFlags, withSubject);
@@ -2112,10 +2112,10 @@ IMAP4Protocol::doListEntry (const QString & encodedUrl, int stretch, imapCache *
 }
 
 void
-IMAP4Protocol::doListEntry (const KURL & _url, const QString & myBox,
+IMAP4Protocol::doListEntry (const KUrl & _url, const QString & myBox,
                             const imapList & item, bool appendPath)
 {
-  KURL aURL = _url;
+  KUrl aURL = _url;
   aURL.setQuery (QString());
   UDSEntry entry;
   int hdLen = item.hierarchyDelimiter().length();
@@ -2207,7 +2207,7 @@ IMAP4Protocol::doListEntry (const KURL & _url, const QString & myBox,
 }
 
 enum IMAP_TYPE
-IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
+IMAP4Protocol::parseURL (const KUrl & _url, QString & _box,
                          QString & _section, QString & _type, QString & _uid,
                          QString & _validity, QString & _hierarchyDelimiter,
                          QString & _info, bool cache)
@@ -2216,7 +2216,7 @@ IMAP4Protocol::parseURL (const KURL & _url, QString & _box,
   retVal = ITYPE_UNKNOWN;
 
   imapParser::parseURL (_url, _box, _section, _type, _uid, _validity, _info);
-//  kdDebug(7116) << "URL: query - '" << KURL::decode_string(_url.query()) << "'" << endl;
+//  kdDebug(7116) << "URL: query - '" << KUrl::decode_string(_url.query()) << "'" << endl;
 
   // get the delimiter
   QString myNamespace = namespaceForBox( _box );

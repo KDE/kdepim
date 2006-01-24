@@ -51,7 +51,7 @@ void DavAddressBookAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::Folder
     QDomNode n2 = n.namedItem( "propstat" );
     QDomNode n3 = n2.namedItem( "prop" );
     
-    KURL href( n.namedItem( "href" ).toElement().text() );
+    KUrl href( n.namedItem( "href" ).toElement().text() );
     QString displayName = n3.namedItem( "displayname" ).toElement().text();
     KPIM::FolderLister::ContentType type = getContentType( n3 );
 

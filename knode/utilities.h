@@ -72,7 +72,7 @@ private:
 
   QWidget *p_arent;
   QString s_aveName;
-  KURL url;
+  KUrl url;
   QFile* file;
   KTempFile* tmpFile;
   static QString lastPath;
@@ -95,15 +95,15 @@ public:
   QFile* getFile( const QString &dialogTitle );
   /** tries to access the file specified by the url and returns
       a file open for reading */
-  QFile* setURL(KURL url);
+  QFile* setURL(KUrl url);
   /** returns the file after getFile(QString) of setURL(url) was called */
   QFile* getFile()const { return f_ile; };
-  KURL getURL() const    { return u_rl; };
+  KUrl getURL() const    { return u_rl; };
 
 private:
 
   QWidget *p_arent;
-  KURL u_rl;
+  KUrl u_rl;
   QFile *f_ile;
   QString t_empName;
   static QString l_astPath;

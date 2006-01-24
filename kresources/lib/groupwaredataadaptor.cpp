@@ -32,14 +32,14 @@ GroupwareUploadItem::GroupwareUploadItem( UploadType type ) : mItemType( KPIM::F
 {
 }
 
-KURL GroupwareUploadItem::adaptNewItemUrl( GroupwareDataAdaptor *adaptor,
-                                           const KURL &baseurl )
+KUrl GroupwareUploadItem::adaptNewItemUrl( GroupwareDataAdaptor *adaptor,
+                                           const KUrl &baseurl )
 {
 kdDebug()<<"GroupwareUploadItem::adaptNewItemUrl, baseurl=" << baseurl.url() << endl;
   if ( adaptor ) {
     QString path( adaptor->defaultNewItemName( this ) );
 kdDebug() << "path=" << path << endl;
-    KURL u( baseurl );
+    KUrl u( baseurl );
     if ( path.isEmpty() ) return u;
     else {
       u.addPath( path );
@@ -50,13 +50,13 @@ kdDebug() << "Final Path for new item: " << u.url() << endl;
 }
 
 KIO::TransferJob *GroupwareUploadItem::createRawUploadJob(
-                       GroupwareDataAdaptor *adaptor, const KURL &/*baseurl*/ )
+                       GroupwareDataAdaptor *adaptor, const KUrl &/*baseurl*/ )
 {
   Q_ASSERT( adaptor );
   if ( !adaptor ) return 0;
   const QString dta = data();
   //kdDebug(7000) << "Uploading: " << data << endl;
-  KURL upUrl( url() );
+  KUrl upUrl( url() );
   if ( adaptor )
     adaptor->adaptUploadUrl( upUrl );
   kdDebug(7000) << "Uploading to: " << upUrl.prettyURL() << endl;
@@ -70,7 +70,7 @@ KIO::TransferJob *GroupwareUploadItem::createRawUploadJob(
 }
 
 KIO::TransferJob *GroupwareUploadItem::createUploadNewJob(
-      GroupwareDataAdaptor *adaptor, const KURL &baseurl )
+      GroupwareDataAdaptor *adaptor, const KUrl &baseurl )
 {
 kdDebug()<<"GroupwareUploadItem::createUploadNewJob, baseurl=" << baseurl.url() << endl;
   setUrl( adaptNewItemUrl( adaptor, baseurl ) );
@@ -89,7 +89,7 @@ kdDebug()<<"GroupwareUploadItem::createUploadNewJob, baseurl=" << baseurl.url() 
 }
 
 KIO::TransferJob *GroupwareUploadItem::createUploadJob(
-                           GroupwareDataAdaptor *adaptor, const KURL &baseurl )
+                           GroupwareDataAdaptor *adaptor, const KUrl &baseurl )
 {
 kdDebug()<<"GroupwareUploadItem::createUploadJob" << endl;
   KIO::TransferJob *job = createRawUploadJob( adaptor, baseurl );
@@ -118,7 +118,7 @@ GroupwareDataAdaptor::~GroupwareDataAdaptor()
 {
 }
 
-void GroupwareDataAdaptor::setUserPassword( KURL &url )
+void GroupwareDataAdaptor::setUserPassword( KUrl &url )
 {
   kdDebug(5800) << "GroupwareDataAdaptor::setUserPassword, mUser="
                 << mUser << endl;
@@ -131,7 +131,7 @@ FolderLister::Entry::List GroupwareDataAdaptor::defaultFolders()
   return FolderLister::Entry::List();
 }
 
-KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KURL &url,
+KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KUrl &url,
                                                      GroupwareUploadItem *item )
 {
   if ( item ) {
@@ -141,7 +141,7 @@ KIO::TransferJob *GroupwareDataAdaptor::createUploadJob( const KURL &url,
   } else return 0;
 }
 
-KIO::TransferJob *GroupwareDataAdaptor::createUploadNewJob( const KURL &url,
+KIO::TransferJob *GroupwareDataAdaptor::createUploadNewJob( const KUrl &url,
                                                      GroupwareUploadItem *item )
 {
 kdDebug()<<"GroupwareDataAdaptor::createUploadNewJob, url=" << url.url() << endl;
@@ -152,7 +152,7 @@ kdDebug()<<"GroupwareDataAdaptor::createUploadNewJob, url=" << url.url() << endl
   } else return 0;
 }
 
-void GroupwareDataAdaptor::processDownloadListItem( const KURL &entry,
+void GroupwareDataAdaptor::processDownloadListItem( const KUrl &entry,
         const QString &newFingerprint, KPIM::FolderLister::ContentType type )
 {
   bool download = false;
@@ -198,8 +198,8 @@ bool GroupwareDataAdaptor::interpretRemoveJob( KIO::Job *job, const QString &/*j
   const QString err = job->errorString();
 
   if ( deljob ) {
-    KURL::List urls( deljob->urls() );
-    for ( KURL::List::Iterator it = urls.begin(); it != urls.end(); ++it ) {
+    KUrl::List urls( deljob->urls() );
+    for ( KUrl::List::Iterator it = urls.begin(); it != urls.end(); ++it ) {
       if ( error ) {
         emit itemDeletionError( *it, err );
       } else {
@@ -222,7 +222,7 @@ bool GroupwareDataAdaptor::interpretUploadJob( KIO::Job *job, const QString &/*j
   const QString err = job->errorString();
 
   if ( trfjob ) {
-    KURL url( trfjob->url() );
+    KUrl url( trfjob->url() );
     if ( error ) {
       emit itemUploadError( url, err );
     } else {
@@ -245,7 +245,7 @@ bool GroupwareDataAdaptor::interpretUploadNewJob( KIO::Job *job, const QString &
   const QString err = job->errorString();
 
   if ( trfjob ) {
-    KURL url( trfjob->url() );
+    KUrl url( trfjob->url() );
     if ( error ) {
       emit itemUploadNewError( idMapper()->localId( url.path() ), err );
     } else {

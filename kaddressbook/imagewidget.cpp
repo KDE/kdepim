@@ -101,7 +101,7 @@ void ImageLabel::dropEvent( QDropEvent *event )
     }
   }
 
-	KURL::List urls = KURL::List::fromMimeData( event->mimeData() );
+	KUrl::List urls = KUrl::List::fromMimeData( event->mimeData() );
     if ( urls.isEmpty() ) { // oops, no data
         event->accept( false );
         return;
@@ -169,8 +169,8 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
 
   connect( mImageLabel, SIGNAL( changed() ),
            SIGNAL( changed() ) );
-  connect( mImageLabel, SIGNAL( urlDropped( const KURL& ) ),
-           SLOT( urlDropped( const KURL& ) ) );
+  connect( mImageLabel, SIGNAL( urlDropped( const KUrl& ) ),
+           SLOT( urlDropped( const KUrl& ) ) );
   connect( mImageUrl, SIGNAL( textChanged( const QString& ) ),
            SIGNAL( changed() ) );
   connect( mImageUrl, SIGNAL( urlSelected( const QString& ) ),
@@ -256,7 +256,7 @@ KABC::Picture ImageBaseWidget::image() const
   return photo;
 }
 
-void ImageBaseWidget::urlDropped( const KURL &url )
+void ImageBaseWidget::urlDropped( const KUrl &url )
 {
   mImageUrl->setURL( url.url() );
   loadImage();
@@ -298,7 +298,7 @@ void ImageBaseWidget::imageChanged()
   emit changed();
 }
 
-QPixmap ImageBaseWidget::loadPixmap( const KURL &url )
+QPixmap ImageBaseWidget::loadPixmap( const KUrl &url )
 {
   QString tempFile;
   QPixmap pixmap;

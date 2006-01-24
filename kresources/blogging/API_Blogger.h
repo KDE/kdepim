@@ -32,18 +32,18 @@ namespace KBlog {
 class APIBlogger : public APIBlog
 {
   public:
-    APIBlogger( const KURL &server, QObject *parent = 0L, const char *name = 0L ) : APIBlog( server, parent, name ) {}
+    APIBlogger( const KUrl &server, QObject *parent = 0L, const char *name = 0L ) : APIBlog( server, parent, name ) {}
     QString getFunctionName( blogFunctions type );
     QString interfaceName() const { return "Blogger API 1.0"; }
 
 
     KIO::Job *createUserInfoJob();
     KIO::Job *createListFoldersJob();
-    KIO::TransferJob *createListItemsJob( const KURL &url );
-    KIO::TransferJob *createDownloadJob( const KURL &url );
-    KIO::TransferJob *createUploadJob( const KURL &url, KBlog::BlogPosting *posting );
+    KIO::TransferJob *createListItemsJob( const KUrl &url );
+    KIO::TransferJob *createDownloadJob( const KUrl &url );
+    KIO::TransferJob *createUploadJob( const KUrl &url, KBlog::BlogPosting *posting );
     KIO::TransferJob *createUploadNewJob( KBlog::BlogPosting *posting );
-    KIO::Job *createRemoveJob( const KURL &url, const QString &postid );
+    KIO::Job *createRemoveJob( const KUrl &url, const QString &postid );
 
     bool interpretUserInfoJob( KIO::Job *job );
     void interpretListFoldersJob( KIO::Job *job );

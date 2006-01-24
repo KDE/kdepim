@@ -540,7 +540,7 @@ void KNArticleFactory::createMail(KMime::Headers::AddressField *address)
 
 void KNArticleFactory::sendMailExternal(const QString &address, const QString &subject, const QString &body)
 {
-  KURL mailtoURL;
+  KUrl mailtoURL;
   QStringList queries;
   QString query;
   mailtoURL.setProtocol("mailto");
@@ -548,9 +548,9 @@ void KNArticleFactory::sendMailExternal(const QString &address, const QString &s
   if (!address.isEmpty())
     mailtoURL.setPath(address);
   if (!subject.isEmpty())
-    queries.append("subject="+KURL::encode_string(subject));
+    queries.append("subject="+KUrl::encode_string(subject));
   if (!body.isEmpty())
-    queries.append("body="+KURL::encode_string(body));
+    queries.append("body="+KUrl::encode_string(body));
 
   if (queries.count() > 0) {
     query = "?";

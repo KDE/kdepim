@@ -53,11 +53,11 @@ class GroupDavGlobals
     static bool getFolderHasSubs( const QDomNode &folderNode );
 
 
-    static KIO::Job *createListFoldersJob( const KURL &url );
-    static KIO::TransferJob *createListItemsJob( const KURL &url );
+    static KIO::Job *createListFoldersJob( const KUrl &url );
+    static KIO::TransferJob *createListItemsJob( const KUrl &url );
     static KIO::TransferJob *createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor,
-                       const KURL &url, KPIM::FolderLister::ContentType ctype );
-    static KIO::Job *createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &uploadurl,
+                       const KUrl &url, KPIM::FolderLister::ContentType ctype );
+    static KIO::Job *createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor, const KUrl &uploadurl,
                           KPIM::GroupwareUploadItem *deletedItems );
 
 

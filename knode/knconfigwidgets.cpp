@@ -272,7 +272,7 @@ void KNode::IdentityWidget::slotSignatureEdit()
   }
 
   KService::Ptr offer = KServiceTypeProfile::preferredService("text/plain", "Application");
-  KURL u(fileName);
+  KUrl u(fileName);
 
   if (offer)
     KRun::run(*offer, u);

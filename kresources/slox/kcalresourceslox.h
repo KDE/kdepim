@@ -76,7 +76,7 @@ class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached, public SloxBase
       Create resource from configuration information stored in KConfig object.
     */
     KCalResourceSlox( const KConfig * );
-    KCalResourceSlox( const KURL &url );
+    KCalResourceSlox( const KUrl &url );
     ~KCalResourceSlox();
 
     void readConfig( const KConfig *config );

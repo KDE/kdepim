@@ -83,7 +83,7 @@ void KIO_Subjects::doReadSubjects( KKioDrop *drop )
 
 void KIO_Subjects::getConnection( )
 {
-	KURL kurl = *_kurl;
+	KUrl kurl = *_kurl;
 	KIO::MetaData metadata = *_metadata;
 
 	if( _slave )
@@ -114,7 +114,7 @@ void KIO_Subjects::getConnection( )
 
 void KIO_Subjects::startJob( const QString &name, const long size )
 {
-	KURL kurl = *_kurl;
+	KUrl kurl = *_kurl;
 	KIO::MetaData metadata = *_metadata;
 	KIO_Single_Subject *subject;
 	

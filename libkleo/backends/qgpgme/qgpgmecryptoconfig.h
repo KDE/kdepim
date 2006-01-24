@@ -143,23 +143,23 @@ public:
   QString stringValue() const;
   int intValue() const;
   unsigned int uintValue() const;
-  KURL urlValue() const;
+  KUrl urlValue() const;
   unsigned int numberOfTimesSet() const;
   QStringList stringValueList() const;
   QList<int> intValueList() const;
   QList<unsigned int> uintValueList() const;
-  KURL::List urlValueList() const;
+  KUrl::List urlValueList() const;
   void resetToDefault();
   void setBoolValue( bool );
   void setStringValue( const QString& );
   void setIntValue( int );
   void setUIntValue( unsigned int );
-  void setURLValue( const KURL& );
+  void setURLValue( const KUrl& );
   void setNumberOfTimesSet( unsigned int );
   void setStringValueList( const QStringList& );
   void setIntValueList( const QList<int>& );
   void setUIntValueList( const QList<unsigned int>& );
-  void setURLValueList( const KURL::List& );
+  void setURLValueList( const KUrl::List& );
   bool isDirty() const { return mDirty; }
 
   void setDirty( bool b );

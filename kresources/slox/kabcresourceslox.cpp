@@ -52,7 +52,7 @@ ResourceSlox::ResourceSlox( const KConfig *config )
   }
 }
 
-ResourceSlox::ResourceSlox( const KURL &url,
+ResourceSlox::ResourceSlox( const KUrl &url,
                             const QString &user, const QString &password )
   : ResourceCached( 0 ), SloxBase( this )
 {
@@ -179,7 +179,7 @@ bool ResourceSlox::asyncLoad()
   loadCache();
   clearChanges();
 
-  KURL url = mPrefs->url();
+  KUrl url = mPrefs->url();
   url.setPath( "/servlet/webdav.contacts/" );
   url.setUser( mPrefs->user() );
   url.setPass( mPrefs->password() );
@@ -508,7 +508,7 @@ void ResourceSlox::uploadContacts()
 
   kdDebug() << k_funcinfo << doc.toString() << endl;
 
-  KURL url = mPrefs->url();
+  KUrl url = mPrefs->url();
   url.setPath( "/servlet/webdav.contacts/" );
   url.setUser( mPrefs->user() );
   url.setPass( mPrefs->password() );

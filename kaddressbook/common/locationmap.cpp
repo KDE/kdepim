@@ -55,7 +55,7 @@ LocationMap *LocationMap::instance()
 
 void LocationMap::showAddress( const KABC::Address &addr )
 {
-  KURL url( createUrl( addr ) );
+  KUrl url( createUrl( addr ) );
   if ( url.isEmpty() )
     return;
 

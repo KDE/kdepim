@@ -168,10 +168,10 @@ class KNJobData : public QObject
     /** Emits the finished() signal via a single-shot timer. */
     void emitFinished();
 
-    /** Returns a correctly set up KURL according to the encryption and
+    /** Returns a correctly set up KUrl according to the encryption and
      *  authentication settings for KIO slave operations.
      */
-    KURL baseUrl() const;
+    KUrl baseUrl() const;
 
     /** Sets TLS metadata and connects the given KIO job to the progress item.
      *  @param job The KIO job to setup.

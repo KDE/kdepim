@@ -60,9 +60,9 @@ QString FolderLister::writeDestinationId( KPIM::FolderLister::ContentType type )
 }
 
 
-KURL::List FolderLister::activeFolderIds() const
+KUrl::List FolderLister::activeFolderIds() const
 {
-  KURL::List ids;
+  KUrl::List ids;
 
   FolderLister::Entry::List::ConstIterator it;
   for( it = mFolders.begin(); it != mFolders.end(); ++it ) {
@@ -216,27 +216,27 @@ void FolderLister::setAdaptor( KPIM::GroupwareDataAdaptor *adaptor )
     disconnect( mAdaptor, 0, this, 0 );
   }
   mAdaptor = adaptor;
-  connect( mAdaptor, SIGNAL( folderInfoRetrieved( const KURL &,
+  connect( mAdaptor, SIGNAL( folderInfoRetrieved( const KUrl &,
                             const QString &, KPIM::FolderLister::ContentType ) ),
-           this, SLOT( processFolderResult( const KURL &, const QString &,
+           this, SLOT( processFolderResult( const KUrl &, const QString &,
                                            KPIM::FolderLister::ContentType ) ) );
-  connect( mAdaptor, SIGNAL( folderSubitemRetrieved( const KURL &, bool ) ),
-           this, SLOT( folderSubitemRetrieved( const KURL &, bool ) ) );
+  connect( mAdaptor, SIGNAL( folderSubitemRetrieved( const KUrl &, bool ) ),
+           this, SLOT( folderSubitemRetrieved( const KUrl &, bool ) ) );
 }
 
-void FolderLister::folderSubitemRetrieved( const KURL &url, bool isFolder )
+void FolderLister::folderSubitemRetrieved( const KUrl &url, bool isFolder )
 {
   if ( isFolder )
     doRetrieveFolder( url );
   else {
-    KURL u( url ) ;
+    KUrl u( url ) ;
     u.setUser( QString() );
     u.setPass( QString() );
     mProcessedPathes.append( url.path(-1) );
   }
 }
 
-void FolderLister::retrieveFolders( const KURL &u )
+void FolderLister::retrieveFolders( const KUrl &u )
 {
 kdDebug()<<"FolderLister::retrieveFolders( "<<u.url()<<" )"<<endl;
   mUrls.clear();
@@ -256,11 +256,11 @@ kdDebug()<<"FolderLister::retrieveFolders( "<<u.url()<<" )"<<endl;
   doRetrieveFolder( u );
 }
 
-void FolderLister::doRetrieveFolder( const KURL &u )
+void FolderLister::doRetrieveFolder( const KUrl &u )
 {
   kdDebug(7000) << "FolderLister::doRetrieveFolder: " << u.prettyURL() << endl;
 
-  KURL url( u );
+  KUrl url( u );
   if ( adaptor() ) adaptor()->adaptDownloadUrl( url );
   if ( mUrls.contains( url ) || mProcessedPathes.contains( url.path(-1) ) ) {
     kdDebug()<<"Item "<<u.path(-1)<<" is already being downloaded "<<endl;
@@ -295,7 +295,7 @@ FolderLister::Entry::List FolderLister::defaultFolders()
   }
 }
 
-void FolderLister::processFolderResult( const KURL &href, 
+void FolderLister::processFolderResult( const KUrl &href, 
                                         const QString &displayName, 
                                         ContentType type )
 {
@@ -357,7 +357,7 @@ void FolderLister::interpretListFoldersJob( KIO::Job *job )
   }
 }
 
-KIO::Job *FolderLister::createListFoldersJob( const KURL &url )
+KIO::Job *FolderLister::createListFoldersJob( const KUrl &url )
 {
   if ( adaptor() ) {
     return adaptor()->createListFoldersJob( url );

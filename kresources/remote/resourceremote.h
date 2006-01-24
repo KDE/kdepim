@@ -65,17 +65,17 @@ class KDE_EXPORT ResourceRemote : public ResourceCached
       @param downloadUrl URL used to download iCalendar file
       @param uploadUrl   URL used to upload iCalendar file
     */
-    ResourceRemote( const KURL &downloadUrl, const KURL &uploadUrl = KURL() );
+    ResourceRemote( const KUrl &downloadUrl, const KUrl &uploadUrl = KURL() );
     virtual ~ResourceRemote();
 
     void readConfig( const KConfig *config );
     void writeConfig( KConfig *config );
 
-    void setDownloadUrl( const KURL & );
-    KURL downloadUrl() const;
+    void setDownloadUrl( const KUrl & );
+    KUrl downloadUrl() const;
 
-    void setUploadUrl( const KURL & );
-    KURL uploadUrl() const;
+    void setUploadUrl( const KUrl & );
+    KUrl uploadUrl() const;
 
     void setUseProgressManager( bool useProgressManager );
     bool useProgressManager() const;
@@ -107,8 +107,8 @@ class KDE_EXPORT ResourceRemote : public ResourceCached
   private:
     void init();
 
-    KURL mDownloadUrl;
-    KURL mUploadUrl;
+    KUrl mDownloadUrl;
+    KUrl mUploadUrl;
 
     bool mUseProgressManager;
     bool mUseCacheFile;

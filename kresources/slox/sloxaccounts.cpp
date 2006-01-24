@@ -39,7 +39,7 @@
 //Added by qt3to4:
 #include <QTextStream>
 
-SloxAccounts::SloxAccounts( SloxBase *res, const KURL &baseUrl )
+SloxAccounts::SloxAccounts( SloxBase *res, const KUrl &baseUrl )
   : mBaseUrl( baseUrl ), mRes( res )
 {
   kdDebug() << "SloxAccounts(): " << baseUrl << endl;
@@ -117,7 +117,7 @@ void SloxAccounts::requestAccounts()
   }
 
   if ( mRes->resType() == "slox" ) {
-    KURL url = mBaseUrl;
+    KUrl url = mBaseUrl;
     url.addPath( "/servlet/webdav.groupuser" );
     url.setQuery( "?user=*&group=*&groupres=*&res=*&details=t" );
 
@@ -125,7 +125,7 @@ void SloxAccounts::requestAccounts()
 
     mDownloadJob = KIO::file_copy( url, cacheFile(), -1, true, false, false );
   } else if ( mRes->resType() == "ox" ) {
-    KURL url = mBaseUrl;
+    KUrl url = mBaseUrl;
     url.setPath( "/servlet/webdav.groupuser/" );
 
     QDomDocument doc;

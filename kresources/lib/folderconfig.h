@@ -48,7 +48,7 @@ class KDE_EXPORT FolderConfig : public QWidget
 
   public slots:
     void updateFolderList();
-    void retrieveFolderList( const KURL & );
+    void retrieveFolderList( const KUrl & );
 
   signals:
     void updateFoldersClicked();
@@ -57,7 +57,7 @@ class KDE_EXPORT FolderConfig : public QWidget
     FolderListView *mFolderList;
 
     FolderLister *mFolderLister;
-    KURL mOldFolderListerURL;
+    KUrl mOldFolderListerURL;
 };
 
 }

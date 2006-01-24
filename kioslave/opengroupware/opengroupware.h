@@ -37,15 +37,15 @@ class OpenGroupware : public QObject, public KIO::SlaveBase
     OpenGroupware( const QCString &protocol, const QCString &pool,
                    const QCString &app );
 
-    void get( const KURL &url );
+    void get( const KUrl &url );
 
   protected:
     void debugMessage( const QString & );
     void errorMessage( const QString & );
 
-    void getFreeBusy( const KURL &url );
-    void getCalendar( const KURL &url );
-    void getAddressbook( const KURL &url );
+    void getFreeBusy( const KUrl &url );
+    void getCalendar( const KUrl &url );
+    void getAddressbook( const KUrl &url );
   protected slots:
     void slotGetCalendarListingResult( KIO::Job* );
     void slotGetCalendarResult( KIO::Job* );

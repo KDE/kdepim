@@ -110,12 +110,12 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 {
 	FUNCTIONSETUP;
 
-	KURL::List list;
+	KUrl::List list;
 
 	KURLDrag::decode(e, list);
 
 	QStringList files;
-	for(KURL::List::ConstIterator it = list.begin(); it != list.end(); ++it)
+	for(KUrl::List::ConstIterator it = list.begin(); it != list.end(); ++it)
 	{
 	   if ((*it).isLocalFile())
 	      files << (*it).path();

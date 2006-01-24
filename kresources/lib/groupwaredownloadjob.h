@@ -62,18 +62,18 @@ class GroupwareDownloadJob : public GroupwareJob
     void slotDownloadItemResult( KIO::Job * );
     void slotDownloadItemData( KIO::Job *, const QByteArray & );
     
-    void slotItemToDownload( const KURL &remoteURL,
+    void slotItemToDownload( const KUrl &remoteURL,
                              KPIM::FolderLister::ContentType type );
-    void slotItemOnServer( const KURL &remoteURL );
-    void slotItemDownloaded( const QString &localID, const KURL &remoteURL,
+    void slotItemOnServer( const KUrl &remoteURL );
+    void slotItemDownloaded( const QString &localID, const KUrl &remoteURL,
                              const QString &fingerprint );
-    void slotItemDownloadError( const KURL &remoteURL, const QString &error );
+    void slotItemDownloadError( const KUrl &remoteURL, const QString &error );
 
   private:
-    KURL::List mFoldersForDownload;
+    KUrl::List mFoldersForDownload;
     /** mCurrentlyOnServer is the list of pathes of all items on the server.
         These pathes don't contain the server name! */
-    KURL::List mCurrentlyOnServer;
+    KUrl::List mCurrentlyOnServer;
 
     QMap<KURL,KPIM::FolderLister::ContentType> mItemsForDownload;
     QMap<KURL,KPIM::FolderLister::ContentType> mItemsDownloading;

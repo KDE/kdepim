@@ -116,7 +116,7 @@ void KeyWidget::addKey()
   if ( !keyTypeNames.contains( name ) )
     type = KABC::Key::Custom;
 
-  KURL url = KFileDialog::getOpenURL();
+  KUrl url = KFileDialog::getOpenURL();
   if ( url.isEmpty() )
     return;
 
@@ -170,7 +170,7 @@ void KeyWidget::exportKey()
 {
   KABC::Key key = mKeyList.at( mKeyCombo->currentItem() );
 
-  KURL url = KFileDialog::getSaveURL();
+  KUrl url = KFileDialog::getSaveURL();
 
   KTempFile tempFile;
   QTextStream *s = tempFile.textStream();

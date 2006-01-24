@@ -93,7 +93,7 @@ bool GroupDavGlobals::getFolderHasSubs( const QDomNode &folderNode )
 
 
 
-KIO::Job *GroupDavGlobals::createListFoldersJob( const KURL &url )
+KIO::Job *GroupDavGlobals::createListFoldersJob( const KUrl &url )
 {
   QDomDocument doc;
   QDomElement root = WebdavHandler::addDavElement(  doc, doc, "d:propfind" );
@@ -107,7 +107,7 @@ KIO::Job *GroupDavGlobals::createListFoldersJob( const KURL &url )
 }
 
 
-KIO::TransferJob *GroupDavGlobals::createListItemsJob( const KURL &url )
+KIO::TransferJob *GroupDavGlobals::createListItemsJob( const KUrl &url )
 {
   QDomDocument doc;
   QDomElement root = WebdavHandler::addDavElement(  doc, doc, "propfind" );
@@ -125,7 +125,7 @@ KIO::TransferJob *GroupDavGlobals::createListItemsJob( const KURL &url )
 
 
 KIO::TransferJob *GroupDavGlobals::createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor,
-                    const KURL &url, KPIM::FolderLister::ContentType /*ctype*/ )
+                    const KUrl &url, KPIM::FolderLister::ContentType /*ctype*/ )
 {
 kdDebug()<<"GroupDavGlobals::createDownloadJob, url="<<url.url()<<endl;
   KIO::TransferJob *job = KIO::get( url, false, false );
@@ -138,12 +138,12 @@ kdDebug()<<"GroupDavGlobals::createDownloadJob, url="<<url.url()<<endl;
 }
 
 
-KIO::Job *GroupDavGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor, const KURL &/*uploadurl*/,
+KIO::Job *GroupDavGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor, const KUrl &/*uploadurl*/,
        KPIM::GroupwareUploadItem *deletedItem )
 {
   if ( !deletedItem ) return 0;
   //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
-  KURL url( deletedItem->url() );
+  KUrl url( deletedItem->url() );
   if ( adaptor ) {
     adaptor->adaptUploadUrl( url );
   }
@@ -163,11 +163,11 @@ KIO::Job *GroupDavGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor,
   kdDebug(5800) << " GroupDavGlobals::createRemoveJob, BaseURL="<<uploadurl.url()<<endl;
   for ( it = deletedItems.constBegin(); it != deletedItems.constEnd(); ++it ) {
     //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
-    KURL url( (*it)->url() );
+    KUrl url( (*it)->url() );
     if ( adaptor ) {
       adaptor->adaptUploadUrl( url );
     }*/
-/*    KURL url( uploadurl );
+/*    KUrl url( uploadurl );
     url.setPath( (*it)->url().path() );
     if ( !(*it)->url().isEmpty() )*/
 /*    if ( !url.isEmpty() ) {
@@ -203,7 +203,7 @@ bool GroupDavGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor
     if ( e.isNull() )
       continue;
 
-    const KURL &entry( e.namedItem("href").toElement().text() );
+    const KUrl &entry( e.namedItem("href").toElement().text() );
     QDomElement propstat = e.namedItem("propstat").toElement();
     if ( propstat.isNull() )
       continue;
@@ -245,7 +245,7 @@ kdDebug(5800) << jobData << endl;
     KCal::Incidence *inc = (raw.front())->clone();
     if ( !inc ) return false;
     KIO::SimpleJob *sjob = dynamic_cast<KIO::SimpleJob *>(job);
-    KURL remoteId;
+    KUrl remoteId;
     if ( sjob ) remoteId = sjob->url();
     QString fingerprint = extractFingerprint( job, jobData );
     adaptor->calendarItemDownloaded( inc, inc->uid(), remoteId, fingerprint,
@@ -276,7 +276,7 @@ kdDebug(5800) << jobData << endl;
   KABC::Addressee a = addrs.first();
 
   KIO::SimpleJob *sjob = dynamic_cast<KIO::SimpleJob*>(job);
-  KURL remoteId;
+  KUrl remoteId;
   if ( sjob ) remoteId = sjob->url();
   QString fingerprint = extractFingerprint( job, jobData );
   adaptor->addressbookItemDownloaded( a, a.uid(), remoteId, fingerprint,

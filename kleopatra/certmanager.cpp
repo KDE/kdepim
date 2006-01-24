@@ -197,8 +197,8 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
   connect( mKeyListView, SIGNAL(contextMenu(Kleo::KeyListViewItem*, const QPoint&)),
            SLOT(slotContextMenu(Kleo::KeyListViewItem*, const QPoint&)) );
 
-  connect( mKeyListView, SIGNAL(dropped(const KURL::List&) ),
-           SLOT( slotDropped(const KURL::List&) ) );
+  connect( mKeyListView, SIGNAL(dropped(const KUrl::List&) ),
+           SLOT( slotDropped(const KUrl::List&) ) );
 
   mLineEditAction->setText(query);
   if ( !mRemote || !query.isEmpty() )
@@ -668,7 +668,7 @@ void CertManager::slotImportCertFromFile()
                                                    i18n( "Select Certificate File" ) ) );
 }
 
-void CertManager::slotImportCertFromFile( const KURL & certURL )
+void CertManager::slotImportCertFromFile( const KUrl & certURL )
 {
   if ( !certURL.isValid() ) // empty or malformed
     return;
@@ -886,7 +886,7 @@ void CertManager::slotDirmngrExited() {
 */
 void CertManager::importCRLFromFile() {
   QString filter = QString("*.crl *.arl *-crl.der *-arl.der|") + i18n("Certificate Revocation List (*.crl *.arl *-crl.der *-arl.der)");
-  KURL url = KFileDialog::getOpenURL( QString(),
+  KUrl url = KFileDialog::getOpenURL( QString(),
                                       filter,
                                       this,
                                       i18n( "Select CRL File" ) );
@@ -897,7 +897,7 @@ void CertManager::importCRLFromFile() {
       updateImportActions( true );
     } else {
       KTempFile tempFile;
-      KURL destURL;
+      KUrl destURL;
       destURL.setPath( tempFile.name() );
       KIO::Job* copyJob = KIO::file_copy( url, destURL, 0600, true, false );
       copyJob->setWindow( this );
@@ -1227,7 +1227,7 @@ void CertManager::startCertificateExport( const QStringList & fingerprints ) {
 }
 
 // return true if we should proceed, false if we should abort
-static bool checkOverwrite( const KURL& url, bool& overwrite, QWidget* w )
+static bool checkOverwrite( const KUrl& url, bool& overwrite, QWidget* w )
 {
   if ( KIO::NetAccess::exists( url, false /*dest*/, w ) ) {
     if ( KMessageBox::Cancel ==
@@ -1253,7 +1253,7 @@ void CertManager::slotCertificateExportResult( const GpgME::Error & err, const Q
   kdDebug() << "CertManager::slotCertificateExportResult(): got " << data.size() << " bytes" << endl;
 
   const QString filter = QString("*.pem|") + i18n("ASCII Armored Certificate Bundles (*.pem)");
-  const KURL url = KFileDialog::getOpenURL( QString(),
+  const KUrl url = KFileDialog::getOpenURL( QString(),
                                       filter,
                                       this,
                                       i18n( "Save Certificate" ) );
@@ -1327,7 +1327,7 @@ void CertManager::slotSecretKeyExportResult( const GpgME::Error & err, const QBy
 
   kdDebug() << "CertManager::slotSecretKeyExportResult(): got " << data.size() << " bytes" << endl;
   QString filter = QString("*.p12|") + i18n("PKCS#12 Key Bundle (*.p12)");
-  KURL url = KFileDialog::getOpenURL( QString(),
+  KUrl url = KFileDialog::getOpenURL( QString(),
                                       filter,
                                       this,
                                       i18n( "Save Certificate" ) );
@@ -1350,7 +1350,7 @@ void CertManager::slotUploadResult( KIO::Job* job )
     job->showErrorDialog();
 }
 
-void CertManager::slotDropped(const KURL::List& lst)
+void CertManager::slotDropped(const KUrl::List& lst)
 {
   mURLsToImport = lst;
   if ( !lst.empty() )
@@ -1361,7 +1361,7 @@ void CertManager::importNextURLOrRedisplay()
 {
   if ( !mURLsToImport.empty() ) {
     // We can only import them one by one, otherwise the jobs would run into each other
-    KURL url = mURLsToImport.front();
+    KUrl url = mURLsToImport.front();
     mURLsToImport.pop_front();
     slotImportCertFromFile( url );
   } else {

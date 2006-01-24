@@ -115,7 +115,7 @@ public:
 	 * @param kurl the kurl to be changed
 	 * @param metadata the metadata to be changed
 	 */
-	virtual void recheckKURL    ( KURL &kurl, KIO::MetaData & ) const { kurl.setQuery( "unseen" ); }
+	virtual void recheckKUrl    ( KUrl &kurl, KIO::MetaData & ) const { kurl.setQuery( "unseen" ); }
 	/**
 	 * This function change the kurl and the metadata.
 	 * In this case, it is added that it should only download the header.
@@ -124,7 +124,7 @@ public:
 	 * @param kurl the kurl to be changed
 	 * @param metadata the metadata to be changed
 	 */
-	virtual void readSubjectKURL( KURL &kurl, KIO::MetaData & ) const { kurl.setPath( kurl.path() + ";section=ENVELOPE" ); }
+	virtual void readSubjectKURL( KUrl &kurl, KIO::MetaData & ) const { kurl.setPath( kurl.path() + ";section=ENVELOPE" ); }
 	/**
 	 * This function change the kurl and the metadata.
 	 * In this case, expunge=auto is added to the metadata.
@@ -133,7 +133,7 @@ public:
 	 * @param kurl the kurl to be changed
 	 * @param metadata the metadata to be changed
 	 */
-	virtual void deleteMailConnectKURL( KURL &, KIO::MetaData & metadata ) const { metadata.insert( "expunge", "auto" ); }
+	virtual void deleteMailConnectKURL( KUrl &, KIO::MetaData & metadata ) const { metadata.insert( "expunge", "auto" ); }
 	
 	/**
 	 * This functions gives a list of names of groupboxes which are to be set in the configuration.

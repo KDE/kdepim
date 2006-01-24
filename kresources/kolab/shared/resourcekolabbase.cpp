@@ -91,7 +91,7 @@ bool ResourceKolabBase::kmailIncidences( QMap<quint32, QString>& lst,
   return mConnection->kmailIncidences( lst, mimetype, resource, startIndex, nbMessages );
 }
 
-bool ResourceKolabBase::kmailGetAttachment( KURL& url, const QString& resource,
+bool ResourceKolabBase::kmailGetAttachment( KUrl& url, const QString& resource,
                                             quint32 sernum,
                                             const QString& filename ) const
 {
@@ -153,7 +153,7 @@ bool ResourceKolabBase::kmailUpdate( const QString& resource,
     QStringList attachmentURLs = _attachmentURLs;
     QStringList attachmentMimeTypes = _attachmentMimetypes;
     QStringList attachmentNames = _attachmentNames;
-    KURL url;
+    KUrl url;
     url.setPath( file.name() );
     url.setFileEncoding( "UTF-8" );
     attachmentURLs.prepend( url.url() );

@@ -151,7 +151,7 @@ k_dcop:
   /**
    * Open a 'news:' URL.
    */
-  virtual void openURL( const KURL &url ) = 0;
+  virtual void openURL( const KUrl &url ) = 0;
 };
 
 #endif

@@ -121,7 +121,7 @@ void KAddressbookPart::exit()
   delete this;
 }
 
-bool KAddressbookPart::openURL( const KURL &url )
+bool KAddressbookPart::openURL( const KUrl &url )
 {
   kdDebug(5720) << "KAddressbookPart:openFile()" << endl;
 

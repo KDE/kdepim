@@ -86,7 +86,7 @@ class LIBKCAL_EXPORT ResourceLocalDir : public ResourceCached
     void init();
     bool deleteIncidenceFile(Incidence *incidence);
 
-    KURL mURL;
+    KUrl mURL;
 //     ICalFormat mFormat;
 
     KDirWatch mDirWatch;

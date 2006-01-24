@@ -77,7 +77,7 @@ class KDE_EXPORT FolderLister : public QObject
     FolderLister( Type );
 
     /** Initialize the retrieval with given root URL */
-    virtual void retrieveFolders( const KURL & );
+    virtual void retrieveFolders( const KUrl & );
 
     void setFolders( const Entry::List & );
     Entry::List folders() const { return mFolders; }
@@ -85,7 +85,7 @@ class KDE_EXPORT FolderLister : public QObject
     void setAdaptor( KPIM::GroupwareDataAdaptor *adaptor );
     GroupwareDataAdaptor* adaptor() const { return mAdaptor; }
 
-    KURL::List activeFolderIds() const;
+    KUrl::List activeFolderIds() const;
     bool isActive( const QString &id ) const;
 
     void setWriteDestinationId( KPIM::FolderLister::ContentType type, const QString &dest );
@@ -102,21 +102,21 @@ class KDE_EXPORT FolderLister : public QObject
     void slotListJobResult( KIO::Job * );
     /** Adds the folder with the given url and display name to the folder
      *  tree (if is has an appropriate type) */
-    virtual void processFolderResult( const KURL &href,
+    virtual void processFolderResult( const KUrl &href,
                                       const QString &displayName,
                                       KPIM::FolderLister::ContentType  type );
     /** Retrieve information about the folder u. If it has sub-folders, it
         descends into the hierarchy */
-    virtual void doRetrieveFolder( const KURL &u );
+    virtual void doRetrieveFolder( const KUrl &u );
     /** A subitem was detected. If it's a folder, we need to descend, otherwise
         we just add the url to the list of processed URLs. */
-    void folderSubitemRetrieved( const KURL &url, bool isFolder );
+    void folderSubitemRetrieved( const KUrl &url, bool isFolder );
 
   protected:
     /** Creates the job to retrieve information about the folder at the given
         url. It's results will be interpreted by interpretFolderResult
     */
-    virtual KIO::Job *createListFoldersJob( const KURL &url );
+    virtual KIO::Job *createListFoldersJob( const KUrl &url );
     /** Interprets the results returned by the liste job (created by
      *  createJob(url) ). The default implementation calls
      *  interpretFolderListJob of the GroupwareDataAdaptor. Typically,
@@ -135,14 +135,14 @@ class KDE_EXPORT FolderLister : public QObject
 
   protected:
     Type mType;
-    KURL::List mUrls;
+    KUrl::List mUrls;
     QStringList mProcessedPathes;
     Entry::List mFolders;
     GroupwareDataAdaptor *mAdaptor;
   private:
     // TODO: We need multiple destinations for Events, Tasks and Journals
     QMap<KPIM::FolderLister::ContentType, QString> mWriteDestinationId;
-    KURL mOldURL;
+    KUrl mOldURL;
 };
 
 }

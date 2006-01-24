@@ -47,7 +47,7 @@ CSVXXPort::CSVXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
 
 bool CSVXXPort::exportContacts( const KABC::AddresseeList &list, const QString& )
 {
-  KURL url = KFileDialog::getSaveURL( "addressbook.csv" );
+  KUrl url = KFileDialog::getSaveURL( "addressbook.csv" );
   if ( url.isEmpty() )
       return true;
 

@@ -46,7 +46,7 @@ ResourceGroupware::ResourceGroupware( const KConfig *config )
   }
 }
 
-ResourceGroupware::ResourceGroupware( const KURL &url,
+ResourceGroupware::ResourceGroupware( const KUrl &url,
                                       const QString &user,
                                       const QString &password )
   : ResourceCached( 0 )
@@ -222,7 +222,7 @@ bool ResourceGroupware::asyncLoad()
   }
 #endif
 
-  KURL url( prefs()->url() );
+  KUrl url( prefs()->url() );
   url.setUser( prefs()->user() );
   url.setPass( prefs()->password() );
 

@@ -68,14 +68,14 @@ public:
 	kio_sieveProtocol(const QByteArray &pool_socket, const QByteArray &app_socket);
 	virtual ~kio_sieveProtocol();
 
-	virtual void mimetype(const KURL& url);
-	virtual void get(const KURL& url);
-	virtual void put(const KURL& url, int permissions, bool overwrite, bool resume);
-	virtual void del(const KURL &url, bool isfile);
+	virtual void mimetype(const KUrl& url);
+	virtual void get(const KUrl& url);
+	virtual void put(const KUrl& url, int permissions, bool overwrite, bool resume);
+	virtual void del(const KUrl &url, bool isfile);
 
-	virtual void listDir(const KURL& url);
-	virtual void chmod(const KURL& url, int permissions);
-	virtual void stat(const KURL& url);
+	virtual void listDir(const KUrl& url);
+	virtual void chmod(const KUrl& url, int permissions);
+	virtual void stat(const KUrl& url);
 
 	virtual void setHost(const QString &host, int port, const QString &user, const QString &pass);
 	virtual void openConnection();
@@ -89,14 +89,14 @@ public:
 	 * 3 - request capabilities, returned as metadata
 	 */
 	virtual void special(const QByteArray &data);
-	bool activate(const KURL& url);
+	bool activate(const KUrl& url);
 	bool deactivate();
 
 protected:
 	bool connect(bool useTLSIfAvailable = true);
 	bool authenticate();
 	void disconnect(bool forcibly = false);
-	void changeCheck( const KURL &url );
+	void changeCheck( const KUrl &url );
 
 	bool sendData(const Q3CString &data);
 	bool receiveData(bool waitForData = true, Q3CString *reparse = 0);

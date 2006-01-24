@@ -152,8 +152,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
            SLOT( editContact( const QString& ) ) );
   connect( mViewManager, SIGNAL( modified() ),
            SLOT( setModified() ) );
-  connect( mViewManager, SIGNAL( urlDropped( const KURL& ) ),
-           mXXPortManager, SLOT( importVCard( const KURL& ) ) );
+  connect( mViewManager, SIGNAL( urlDropped( const KUrl& ) ),
+           mXXPortManager, SLOT( importVCard( const KUrl& ) ) );
   connect( mViewManager, SIGNAL( viewFieldsChanged() ),
            SLOT( updateIncSearchWidget() ) );
   connect( mExtensionManager, SIGNAL( modified( const KABC::Addressee::List& ) ),
@@ -640,7 +640,7 @@ void KABCore::addEmail( const QString &aStr )
   }
 }
 
-void KABCore::importVCard( const KURL &url )
+void KABCore::importVCard( const KUrl &url )
 {
   mXXPortManager->importVCard( url );
 }

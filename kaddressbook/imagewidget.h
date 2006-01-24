@@ -62,7 +62,7 @@ class ImageLabel : public QLabel
 
   signals:
     void changed();
-    void urlDropped( const KURL& );
+    void urlDropped( const KUrl& );
 
   protected:
     virtual void dragEnterEvent( QDragEnterEvent *event );
@@ -111,7 +111,7 @@ class ImageBaseWidget : public QWidget
     void changed();
 
   public slots:
-    void urlDropped( const KURL& );
+    void urlDropped( const KUrl& );
 
   private slots:
     void loadImage();
@@ -122,7 +122,7 @@ class ImageBaseWidget : public QWidget
     void slotLoadingComplete( Loader *loader, Document doc, Status status );
 
   private:
-    QPixmap loadPixmap( const KURL &url );
+    QPixmap loadPixmap( const KUrl &url );
 
     ImageLabel *mImageLabel;
     KUrlRequester *mImageUrl;

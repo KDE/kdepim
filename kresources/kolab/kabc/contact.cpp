@@ -1226,7 +1226,7 @@ void Contact::saveTo( KABC::Addressee* addressee )
 QImage Contact::loadPictureFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, quint32 sernum )
 {
   QImage img;
-  KURL url;
+  KUrl url;
   if ( resource->kmailGetAttachment( url, subResource, sernum, attachmentName ) && !url.isEmpty() ) {
     const QString path = url.path();
     img.load( path );
@@ -1252,7 +1252,7 @@ QImage Contact::loadPictureFromAddressee( const KABC::Picture& picture )
 QByteArray Kolab::Contact::loadDataFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, quint32 sernum )
 {
   QByteArray data;
-  KURL url;
+  KUrl url;
   if ( resource->kmailGetAttachment( url, subResource, sernum, attachmentName ) && !url.isEmpty() ) {
     QFile f( url.path() );
     if ( f.open( QIODevice::ReadOnly ) ) {

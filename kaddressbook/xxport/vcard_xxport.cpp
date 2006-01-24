@@ -108,7 +108,7 @@ VCardXXPort::VCardXXPort( KABC::AddressBook *ab, QWidget *parent, const char *na
 bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QString &data )
 {
   KABC::VCardConverter converter;
-  KURL url;
+  KUrl url;
   KABC::AddresseeList list;
 
   list = filterContacts( addrList );
@@ -131,7 +131,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
 
     switch ( KMessageBox::questionYesNo( parentWidget(), msg, QString(), i18n("Export to Several Files"), i18n("Export to One File") ) ) {
       case KMessageBox::Yes: {
-        KURL baseUrl = KFileDialog::getExistingURL();
+        KUrl baseUrl = KFileDialog::getExistingURL();
         if ( baseUrl.isEmpty() )
           return true;
 
@@ -173,7 +173,7 @@ KABC::Addressee::List VCardXXPort::importContacts( const QString& ) const
 {
   QString fileName;
   KABC::Addressee::List addrList;
-  KURL::List urls;
+  KUrl::List urls;
 
   if ( !XXPortManager::importData.isEmpty() )
     addrList = parseVCard( XXPortManager::importData );
@@ -189,7 +189,7 @@ KABC::Addressee::List VCardXXPort::importContacts( const QString& ) const
 
     QString caption( i18n( "vCard Import Failed" ) );
     bool anyFailures = false;
-    KURL::List::Iterator it;
+    KUrl::List::Iterator it;
     for ( it = urls.begin(); it != urls.end(); ++it ) {
       if ( KIO::NetAccess::download( *it, fileName, parentWidget() ) ) {
 
@@ -245,7 +245,7 @@ KABC::Addressee::List VCardXXPort::parseVCard( const QString &data ) const
   return converter.parseVCards( data.toAscii() );
 }
 
-bool VCardXXPort::doExport( const KURL &url, const QString &data )
+bool VCardXXPort::doExport( const KUrl &url, const QString &data )
 {
   KTempFile tmpFile;
   tmpFile.setAutoDelete( true );

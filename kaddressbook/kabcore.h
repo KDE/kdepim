@@ -278,7 +278,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     /**
       DCOP METHOD: Imports the vCard, located at the given url.
      */
-    virtual void importVCard( const KURL& url );
+    virtual void importVCard( const KUrl& url );
 
     /**
       DCOP METHOD: Imports the given vCard.

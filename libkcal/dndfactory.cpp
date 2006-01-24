@@ -60,7 +60,7 @@ K3MultipleDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
   K3MultipleDrag *kmd = new K3MultipleDrag( owner );
   kmd->addDragObject( new ICalDrag( &cal, 0 ) );
   QMap<QString, QString> metadata;
-  metadata["labels"] = KURL::encode_string( i->summary() );
+  metadata["labels"] = KUrl::encode_string( i->summary() );
   kmd->addDragObject( new K3URLDrag( i->uri(), metadata, 0 ) );
   
   if ( i->type() == "Event" )

@@ -75,7 +75,7 @@ void StdCalendar::addFileResource( const QString &fileName,
   KCal::ResourceCalendar *resource = 0;
 
   if ( !fileName.isEmpty() ) {
-    KURL url( fileName );
+    KUrl url( fileName );
     if ( url.isLocalFile() ) {
       kdDebug() << "Local resource at " << url << endl;
       resource = mManager->createResource( "file" );

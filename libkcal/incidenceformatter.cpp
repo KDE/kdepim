@@ -149,7 +149,7 @@ static QString linkPerson( const QString& email, QString name,
   // Make the mailto link
   if ( !email.isEmpty() && !iconPath.isNull() ) {
     KCal::Person person( name, email );
-    KURL mailto;
+    KUrl mailto;
     mailto.setProtocol( "mailto" );
     mailto.setPath( person.fullName() );
     tmpString += eventViewerAddLink( mailto.url(),

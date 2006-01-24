@@ -40,7 +40,7 @@ void CertKeyListView::contentsDragLeaveEvent( QDragLeaveEvent * )
 
 void CertKeyListView::contentsDropEvent( QDropEvent * event )
 {
-  KURL::List lst = KURL::List::fromMimeData( event->mimeData() );
+  KUrl::List lst = KUrl::List::fromMimeData( event->mimeData() );
   if ( !lst.isEmpty() ) {
     event->accept();
     emit dropped( lst );

@@ -510,9 +510,9 @@ void StartExitConfigPage::load()
 	{
 		if (!location.isEmpty())
 		{
-			KURL src;
+			KUrl src;
 			src.setPath(location);
-			KURL dst;
+			KUrl dst;
 			dst.setPath(autostart+desktopfile);
 			KIO::NetAccess::file_copy(src,dst,-1 /* 0666? */,true /* overwrite */);
 		}

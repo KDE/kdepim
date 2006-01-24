@@ -80,12 +80,12 @@ namespace KXMLRPC
   {
     Q_OBJECT
     public:
-      Server( const KURL &url = KURL(),
+      Server( const KUrl &url = KURL(),
               QObject *parent = 0, const char *name = 0 );
       ~Server();
 
-      const KURL &url() const { return m_url; }
-      void setUrl( const KURL &url );
+      const KUrl &url() const { return m_url; }
+      void setUrl( const KUrl &url );
 
       QString userAgent() const { return m_userAgent; }
       void setUserAgent( const QString &userAgent ) { m_userAgent = userAgent; }
@@ -138,7 +138,7 @@ namespace KXMLRPC
       void queryFinished( Query* );
 
     private:
-      KURL m_url;
+      KUrl m_url;
       QString m_userAgent;
 
       QList<Query*> mPendingQueries;

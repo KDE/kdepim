@@ -146,7 +146,7 @@ bool ResourceGroupwise::doLoad()
 
   clearChanges();
 
-  KURL url( prefs()->url() );
+  KUrl url( prefs()->url() );
   if ( url.protocol() == "http" ) url.setProtocol( "groupwise" );
   else url.setProtocol( "groupwises" );
   url.setPath( "/calendar/" );

@@ -34,7 +34,7 @@ class KDE_EXPORT WebdavHandler
   public:
     WebdavHandler();
 
-    static KURL toDAV( const KURL& url );
+    static KUrl toDAV( const KUrl& url );
 
 
     static QDomElement addElementNS( QDomDocument &doc, QDomNode &node,

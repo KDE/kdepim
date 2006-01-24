@@ -56,7 +56,7 @@ static QString uniqueFileName( const KABC::Addressee &addressee, QStringList &ex
 
 void KABTools::mailVCards( const QStringList &uids, KABC::AddressBook *ab )
 {
-  KURL::List urls;
+  KUrl::List urls;
 
   KTempDir tempDir;
   if ( tempDir.status() != 0 ) {
@@ -91,7 +91,7 @@ void KABTools::mailVCards( const QStringList &uids, KABC::AddressBook *ab )
 
       file.close();
 
-      KURL url( path );
+      KUrl url( path );
       url.setFileEncoding( "UTF-8" );
       urls.append( url );
     }

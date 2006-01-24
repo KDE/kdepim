@@ -299,7 +299,7 @@ void AttachmentList::updatePictureAttachment( const QImage& image, const QString
     KTempFile* tempFile = new KTempFile;
     image.save( tempFile->file(), "PNG" );
     tempFile->close();
-    KURL url;
+    KUrl url;
     url.setPath( tempFile->name() );
     kdDebug(5650) << "picture saved to " << url.path() << endl;
     addAttachment( url.url(), name, "image/png" );
@@ -315,7 +315,7 @@ void AttachmentList::updateAttachment( const QByteArray& data, const QString& na
     KTempFile* tempFile = new KTempFile;
     tempFile->file()->write( data );
     tempFile->close();
-    KURL url;
+    KUrl url;
     url.setPath( tempFile->name() );
     kdDebug(5650) << "data saved to " << url.path() << endl;
     addAttachment( url.url(), name, mimetype );

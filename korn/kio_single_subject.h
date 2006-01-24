@@ -47,7 +47,7 @@ public:
 	 * Constructor.
 	 * 
 	 * @param parent the parent of this object
-	 * @param url the base KURL used to make a url
+	 * @param url the base KUrl used to make a url
 	 * @param metadata the metadata used for the job
 	 * @param protocol the class containing information about the protocol
 	 * @param slave the slave which is to be used (only if the protocol is connection based)

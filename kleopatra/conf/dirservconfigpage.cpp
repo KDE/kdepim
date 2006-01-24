@@ -61,17 +61,17 @@ public:
     mConfig.setGroup( "LDAP" );
   }
 
-  KURL::List readCurrentList() const {
+  KUrl::List readCurrentList() const {
 
-    KURL::List lst;
+    KUrl::List lst;
     // stolen from kabc/ldapclient.cpp
     const uint numHosts = mConfig.readEntry( "NumSelectedHosts" );
     for ( uint j = 0; j < numHosts; j++ ) {
       const QString num = QString::number( j );
 
-      KURL url;
+      KUrl url;
       url.setProtocol( "ldap" );
-      url.setPath( "/" ); // workaround KURL parsing bug
+      url.setPath( "/" ); // workaround KUrl parsing bug
       const QString host = mConfig.readEntry( QString( "SelectedHost" ) + num ).trimmed();
       url.setHost( host );
 
@@ -92,24 +92,24 @@ public:
     return lst;
   }
 
-  void writeList( const KURL::List& lst ) {
+  void writeList( const KUrl::List& lst ) {
 
     mConfig.writeEntry( "NumSelectedHosts", lst.count() );
 
-    KURL::List::const_iterator it = lst.begin();
-    KURL::List::const_iterator end = lst.end();
+    KUrl::List::const_iterator it = lst.begin();
+    KUrl::List::const_iterator end = lst.end();
     unsigned j = 0;
     for( ; it != end; ++it, ++j ) {
       const QString num = QString::number( j );
-      KURL url = *it;
+      KUrl url = *it;
 
       Q_ASSERT( url.protocol() == "ldap" );
       mConfig.writeEntry( QString( "SelectedHost" ) + num, url.host() );
       mConfig.writeEntry( QString( "SelectedPort" ) + num, url.port() );
 
-      // KURL automatically encoded the query (e.g. for spaces inside it),
+      // KUrl automatically encoded the query (e.g. for spaces inside it),
       // so decode it before writing it out
-      const QString base = KURL::decode_string( url.query().mid(1) );
+      const QString base = KUrl::decode_string( url.query().mid(1) );
       mConfig.writeEntry( QString( "SelectedBase" ) + num, base );
       mConfig.writeEntry( QString( "SelectedBind" ) + num, url.user() );
       mConfig.writeEntry( QString( "SelectedPwdBind" ) + num, url.pass() );
@@ -230,11 +230,11 @@ void DirectoryServicesConfigurationPage::save()
 #if 0
   // Also write the LDAP URLs to kabldaprc so that they are used by kaddressbook
   KABSynchronizer sync;
-  const KURL::List toAdd = mWidget->urlList();
-  KURL::List currentList = sync.readCurrentList();
+  const KUrl::List toAdd = mWidget->urlList();
+  KUrl::List currentList = sync.readCurrentList();
 
-  KURL::List::const_iterator it = toAdd.begin();
-  KURL::List::const_iterator end = toAdd.end();
+  KUrl::List::const_iterator it = toAdd.begin();
+  KUrl::List::const_iterator end = toAdd.end();
   for( ; it != end; ++it ) {
     // check if the URL is already in currentList
     if ( currentList.find( *it ) == currentList.end() )

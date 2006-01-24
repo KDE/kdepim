@@ -1729,7 +1729,7 @@ imapParser::parseWriteLine (const QString & str)
 }
 
 void
-imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
+imapParser::parseURL (const KUrl & _url, QString & _box, QString & _section,
                       QString & _type, QString & _uid, QString & _validity, QString & _info)
 {
   QStringList parameters;

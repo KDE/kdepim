@@ -142,7 +142,7 @@ void SoundWidget::loadSound()
 {
   QString fileName;
 
-  KURL url( mSoundUrl->url() );
+  KUrl url( mSoundUrl->url() );
 
   if ( url.isEmpty() )
     return;

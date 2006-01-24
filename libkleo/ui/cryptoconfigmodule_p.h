@@ -274,10 +274,10 @@ namespace Kleo {
   private slots:
     void slotOpenDialog();
   private:
-    void setURLList( const KURL::List& urlList );
+    void setURLList( const KUrl::List& urlList );
     QLabel* mLabel;
     QPushButton* mPushButton;
-    KURL::List mURLList;
+    KUrl::List mURLList;
   };
 }
 

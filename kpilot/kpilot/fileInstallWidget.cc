@@ -133,13 +133,13 @@ void FileInstallWidget::dragEnterEvent(QDragEnterEvent *event)
 {
 	FUNCTIONSETUP;
 
-	KURL::List urls;
+	KUrl::List urls;
 	if(!KURLDrag::decode(event, urls)) {
 		event->accept(false);
 		return;
 	}
 
-	KURL::List::const_iterator it;
+	KUrl::List::const_iterator it;
 	QString filename;
     for ( it = urls.begin(); it != urls.end(); ++it ) {
 		filename = (*it).fileName();
@@ -181,7 +181,7 @@ void FileInstallWidget::dropEvent(QDropEvent * drop)
 	FUNCTIONSETUP;
 	if (!shown) return;
 
-	KURL::List list;
+	KUrl::List list;
 
 	if (!KURLDrag::decode(drop, list) || list.isEmpty())
 		return;
@@ -191,7 +191,7 @@ void FileInstallWidget::dropEvent(QDropEvent * drop)
 #endif
 
 	QStringList files;
-	for(KURL::List::ConstIterator it = list.begin(); it != list.end(); ++it)
+	for(KUrl::List::ConstIterator it = list.begin(); it != list.end(); ++it)
 	{
 	   if ((*it).isLocalFile())
 	      files << (*it).path();
