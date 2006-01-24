@@ -199,8 +199,8 @@ QString KTNEFMain::extractTemp(KTNEFAttach *att)
 
 void KTNEFMain::viewFileAs()
 {
-	KURL::List	list;
-	list.append(KURL::fromPathOrURL( extractTemp(view_->getSelection()->first()) ));
+	KUrl::List	list;
+	list.append(KUrl::fromPathOrURL( extractTemp(view_->getSelection()->first()) ));
 
 	KRun::displayOpenWithDialog(list);
 }
@@ -351,7 +351,7 @@ void KTNEFMain::viewDoubleClicked(Q3ListViewItem *item)
 
 void KTNEFMain::viewDragRequested( const QList<KTNEFAttach*>& list )
 {
-	KURL::List urlList;
+	KUrl::List urlList;
 	for ( QList<KTNEFAttach*>::ConstIterator it=list.constBegin(); it!=list.constEnd(); ++it )
 		urlList << KURL( extractTemp( *it ) );
 	if ( !list.isEmpty() )
@@ -390,7 +390,7 @@ void KTNEFMain::slotShowMessageText()
 	*( tmpFile.textStream() ) << rtf;
 	tmpFile.close();
 
-	KRun::runURL( KURL::fromPathOrURL( tmpFile.name() ), "text/rtf", true );
+	KRun::runURL( KUrl::fromPathOrURL( tmpFile.name() ), "text/rtf", true );
 }
 
 void KTNEFMain::slotSaveMessageText()
