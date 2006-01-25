@@ -386,7 +386,11 @@ void ResourceLDAPKIO::init()
     d->mLDAPUrl.setUser( mUser );
     d->mLDAPUrl.setPass( mPassword );
   }
+#if ! (KDE_IS_VERSION(3,2,90))
   d->mLDAPUrl.setProtocol( d->mSSL ? "newldaps" : "newldap");
+#else
+  d->mLDAPUrl.setProtocol( d->mSSL ? "ldaps" : "ldap");
+#endif
   d->mLDAPUrl.setHost( mHost );
   d->mLDAPUrl.setPort( mPort );
   d->mLDAPUrl.setDn( mDn );
