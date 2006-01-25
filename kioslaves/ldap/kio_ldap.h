@@ -10,7 +10,7 @@
 #define LDAP_DEPRECATED 1 /* Needed for ldap_simple_bind_s with openldap >= 2.3.x */
 #include <lber.h>
 #include <ldap.h>
-#include <kabc/ldapurl.h>
+#include <ldapurl.h>
 
 class LDAPProtocol : public KIO::SlaveBase
 {

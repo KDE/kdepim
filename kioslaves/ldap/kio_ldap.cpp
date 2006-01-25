@@ -20,7 +20,7 @@
 #include <sasl.h>
 #endif
 #endif
-#include <kabc/ldif.h>
+#include <ldif.h>
 
 #include "kio_ldap.h"
 
@@ -55,7 +55,7 @@ int kdemain( int argc, char **argv )
  * Initialize the ldap slave
  */
 LDAPProtocol::LDAPProtocol( const QCString &protocol, const QCString &pool, 
-  const QCString &app ) : SlaveBase( protocol, pool, app )
+  const QCString &app ) : SlaveBase( protocol == "newldaps"?"ldaps":"ldap", pool, app )
 {
   mLDAP = 0; mTLS = 0; mVer = 3; mAuthSASL = false;
   mRealm = ""; mBindName = "";
@@ -942,14 +942,14 @@ void LDAPProtocol::put( const KURL &_url, int, bool overwrite, bool )
               FREELDAPMEM;
               return;
             case LDIF::Entry_Del:
-              kdDebug(7125) << "kio_ldap_del" << endl;
+              kdDebug(7125) << "kio_newldap_del" << endl;
               controlsFromMetaData( &serverctrls, &clientctrls );
               ldaperr = ldap_delete_ext_s( mLDAP, ldif.dn().utf8(), 
                 serverctrls, clientctrls );
               FREELDAPMEM;
               break;
             case LDIF::Entry_Modrdn:
-              kdDebug(7125) << "kio_ldap_modrdn olddn:" << ldif.dn() << 
+              kdDebug(7125) << "kio_newldap_modrdn olddn:" << ldif.dn() << 
                 " newRdn: " <<  ldif.newRdn() << 
                 " newSuperior: " << ldif.newSuperior() << 
                 " deloldrdn: " << ldif.delOldRdn() << endl;
@@ -961,7 +961,7 @@ void LDAPProtocol::put( const KURL &_url, int, bool overwrite, bool )
               FREELDAPMEM;
               break;
             case LDIF::Entry_Mod:
-              kdDebug(7125) << "kio_ldap_mod"  << endl;
+              kdDebug(7125) << "kio_newldap_mod"  << endl;
               if ( lmod ) {
                 controlsFromMetaData( &serverctrls, &clientctrls );
                 ldaperr = ldap_modify_ext_s( mLDAP, ldif.dn().utf8(), lmod,
@@ -970,7 +970,7 @@ void LDAPProtocol::put( const KURL &_url, int, bool overwrite, bool )
               }
               break;
             case LDIF::Entry_Add:
-              kdDebug(7125) << "kio_ldap_add " << ldif.dn() << endl;
+              kdDebug(7125) << "kio_newldap_add " << ldif.dn() << endl;
               if ( lmod ) {
                 controlsFromMetaData( &serverctrls, &clientctrls );
                 ldaperr = ldap_add_ext_s( mLDAP, ldif.dn().utf8(), lmod,

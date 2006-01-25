@@ -108,4 +108,4 @@ AC_SUBST(LDAP_INCS)
 AC_SUBST(LDAP_LIBS)
 AC_SUBST(LDAP_RPATH)
 
-AM_CONDITIONAL(include_kioslave_newldap, test -n "$LDAP_SUBDIR")
+AM_CONDITIONAL(include_kioslave_ldap, test -n "$LDAP_SUBDIR")
