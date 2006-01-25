@@ -37,6 +37,7 @@ namespace KMime {
   class Content;
 }
 
+class KXMLGUIClient;
 
 class KNSourceViewWindow : public KTextBrowser {
 
