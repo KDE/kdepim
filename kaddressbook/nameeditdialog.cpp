@@ -138,7 +138,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   sTitle += i18n( "Mrs." );
   sTitle += i18n( "Ms." );
   sTitle += i18n( "Prof." );
-  sTitle += config.readListEntry( "Prefixes" );
+  sTitle += config.readEntry( "Prefixes" , QStringList() );
   sTitle.sort();
 
   QStringList sSuffix;
@@ -148,7 +148,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   sSuffix += i18n( "III" );
   sSuffix += i18n( "Jr." );
   sSuffix += i18n( "Sr." );
-  sSuffix += config.readListEntry( "Suffixes" );
+  sSuffix += config.readEntry( "Suffixes" , QStringList() );
   sSuffix.sort();
 
   mPrefixCombo->insertStringList( sTitle );

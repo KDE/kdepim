@@ -1733,7 +1733,7 @@ Module::readAddressData()
   for( int i=1; i<=num; i++ ) {
     KConfigGroup addrGroup( config, QString("Address #%1").arg(i).toLocal8Bit() );
     address = addrGroup.readEntry( "Address" );
-    data.keyIds = KeyIDList::fromStringList( addrGroup.readListEntry( "Key IDs" ) );
+    data.keyIds = KeyIDList::fromStringList( addrGroup.readEntry( "Key IDs" , QStringList() ) );
     data.encrPref = (EncryptPref) addrGroup.readEntry( "EncryptionPreference",
                                                           int(UnknownEncryptPref ));
 //     kdDebug(5100) << "Read address " << i << ": " << address

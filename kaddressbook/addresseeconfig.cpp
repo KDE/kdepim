@@ -91,7 +91,7 @@ QStringList AddresseeConfig::customFields() const
 {
   KConfig config( "kaddressbook_addrconfig" );
   config.setGroup( mAddressee.uid() );
-  return config.readListEntry( "LocalCustomFields" );
+  return config.readEntry( "LocalCustomFields" , QStringList() );
 }
 
 void AddresseeConfig::remove()

@@ -102,7 +102,7 @@ void ResourceKABC::readConfig( const KConfig *config )
 {
   mAlarmDays = config->readEntry( "AlarmDays", 0 );
   mAlarm = config->readEntry( "Alarm", true );
-  mCategories = config->readListEntry( "Categories" );
+  mCategories = config->readEntry( "Categories" , QStringList() );
   mUseCategories = config->readEntry( "UseCategories", false );
 }
 

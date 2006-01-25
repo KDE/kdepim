@@ -460,7 +460,7 @@ Kleo::DNAttributeMapper::Private::Private()
 Kleo::DNAttributeMapper::DNAttributeMapper() {
   d = new Private();
   const KConfigGroup config( KGlobal::config(), "DN" );
-  d->attributeOrder = config.readListEntry( "AttributeOrder" );
+  d->attributeOrder = config.readEntry( "AttributeOrder" , QStringList() );
   if ( d->attributeOrder.empty() )
     std::copy( defaultOrder, defaultOrder + sizeof defaultOrder / sizeof *defaultOrder,
 	       std::back_inserter( d->attributeOrder ) );

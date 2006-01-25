@@ -137,7 +137,7 @@ void FolderLister::readConfig( KPIM::GroupwarePrefsBase *newprefs )
 
   for ( int i=0; i<nr; ++i ) {
     QStringList l( newprefs->folder( i ) );
-//     QStringList l( cfgg.readListEntry( QString("Folder%1").arg( i ) ) );
+//     QStringList l( cfgg.readEntry( QString("Folder%1", QStringList() ).arg( i ) ) );
     Entry e;
     if ( l.count()>0 ) {
       e.id = l.first();

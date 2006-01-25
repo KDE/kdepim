@@ -341,7 +341,7 @@ void CertificateWizardImpl::createPersonalDataPage()
 				       KDialog::marginHint(), KDialog::spacingHint() );
 
   KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
-  QStringList attrOrder = config.readListEntry( "DNAttributeOrder" );
+  QStringList attrOrder = config.readEntry( "DNAttributeOrder" , QStringList() );
   if ( attrOrder.empty() )
     attrOrder << "CN!" << "L" << "OU" << "O!" << "C!" << "EMAIL!";
   int row = 0;

@@ -151,7 +151,7 @@ public:
       const QString oldGroup( config->group() );
       config->setGroup( cfgGroup );                             // e.g. "General"
       _attrOrder =
-        config->readListEntry( cfgAttributeOrderEntry );        // e.g. "DNAttributeOrder"
+        config->readEntry( cfgAttributeOrderEntry , QStringList() );        // e.g. "DNAttributeOrder"
       _unknownAttrsHandlingChar =
         config->readEntry( cfgUnknownAttrsEntry, QString() ).toUpper().toLatin1(); // e.g. "DNUnknownAttributes"
       config->setGroup( oldGroup );

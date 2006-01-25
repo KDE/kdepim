@@ -175,9 +175,9 @@ void AddresseeWidget::restoreSettings()
   KConfig config( "kabcrc" );
   config.setGroup( "General" );
 
-  mPrefix->setNameParts( config.readListEntry( "Prefixes" ) );
-  mInclusion->setNameParts( config.readListEntry( "Inclusions" ) );
-  mSuffix->setNameParts( config.readListEntry( "Suffixes" ) );
+  mPrefix->setNameParts( config.readEntry( "Prefixes" , QStringList() ) );
+  mInclusion->setNameParts( config.readEntry( "Inclusions" , QStringList() ) );
+  mSuffix->setNameParts( config.readEntry( "Suffixes" , QStringList() ) );
 
   KConfig cfg( "kaddressbookrc" );
   cfg.setGroup( "General" );

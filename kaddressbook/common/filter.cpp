@@ -133,7 +133,7 @@ void Filter::restore( KConfigGroup &cfg )
 {
   mName = cfg.readEntry( "Name", "<internal error>" );
   mEnabled = cfg.readEntry( "Enabled", true );
-  mCategoryList = cfg.readListEntry( "Categories" );
+  mCategoryList = cfg.readEntry( "Categories" , QStringList() );
   mMatchRule = (MatchRule)cfg.readEntry( "MatchRule", int(Matching) );
 
   mIsEmpty = false;

@@ -112,7 +112,7 @@ void ResourceTVAnytime::readConfig( const KConfig *config )
 
   QStringList defaultActive;
   defaultActive << "BBCOne" << "BBCTwo" << "BBCThree" << "BBCROne" << "BBCRTwo" << "BBCRThree" << "BBCRFour";
-  mActiveServices = config->readListEntry( "ActiveServices", defaultActive );
+  mActiveServices = config->readEntry( "ActiveServices", defaultActive , QStringList() );
   
 }
 

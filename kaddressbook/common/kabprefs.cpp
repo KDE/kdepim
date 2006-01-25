@@ -67,7 +67,7 @@ void KABPrefs::setCategoryDefaults()
 void KABPrefs::usrReadConfig()
 {
   config()->setGroup( "General" );
-  mCustomCategories = config()->readListEntry( "Custom Categories" );
+  mCustomCategories = config()->readEntry( "Custom Categories" , QStringList() );
   if ( mCustomCategories.isEmpty() )
     setCategoryDefaults();
 
