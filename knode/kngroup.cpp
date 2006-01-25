@@ -101,7 +101,7 @@ bool KNGroup::readInfo(const QString &confPath)
     s_tatus = moderated;
   else
     s_tatus = unknown;
-  c_rosspostIDBuffer = info.readListEntry("crosspostIDBuffer");
+  c_rosspostIDBuffer = info.readEntry("crosspostIDBuffer", QStringList() );
 
   i_dentity=new KNode::Identity(false);
   i_dentity->loadConfig(&info);
