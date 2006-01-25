@@ -23,7 +23,6 @@
 #define KABC_RESOURCELDAP_H
 
 #include <kabc/resource.h>
-#include <kabc/ldif.h>
 #include <kio/job.h>
 
 class KConfig;

@@ -28,8 +28,15 @@
 
 #include <kdialogbase.h>
 #include <kresources/configwidget.h>
-#include <kabc/ldif.h>
+
+#include <kdeversion.h>
+#if ! (KDE_IS_VERSION(3,2,90))
+#include "ldapconfigwidget.h"
+#else
 #include <kabc/ldapconfigwidget.h>
+#endif
+
+
 
 
 class QCheckBox;

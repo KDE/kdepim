@@ -1,12 +1,19 @@
-INCLUDES = -I$(top_srcdir)/kabc -I$(top_builddir)/kabc $(all_includes)
 
 # these are the headers for your project
 noinst_HEADERS = resourceldapkioconfig.h
 
 lib_LTLIBRARIES = libkabc_newldapkio.la
+
+if need_kde32_compatibility
+newldapkio_extra_libs = -L$(top_builddir)/libpimldaptools -lpimldaptools
+newldapkio_extra_includes = -I$(top_srcdir)/libpimldaptools
+endif
+
+INCLUDES = -I$(top_srcdir)/kabc -I$(top_builddir)/kabc $(all_includes) $(newldapkio_extra_includes)
+
 libkabc_newldapkio_la_SOURCES = resourceldapkio.cpp resourceldapkioconfig.cpp
 libkabc_newldapkio_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
-libkabc_newldapkio_la_LIBADD	= $(LIB_KABC) $(LIB_KIO)
+libkabc_newldapkio_la_LIBADD	= $(LIB_KABC) $(LIB_KIO) $(newldapkio_extra_libs)
 
 kde_module_LTLIBRARIES = kabc_newldapkio.la
 kabc_newldapkio_la_SOURCES = resourceldapkioplugin.cpp
