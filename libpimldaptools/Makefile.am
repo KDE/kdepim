@@ -10,4 +10,5 @@ libpimldaptools_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 1:0:0
 
 METASOURCES = AUTO
 
-# No messages target. Those files are part of libkdepim.pot.
+messages:
+	·       $(XGETTEXT) *.cpp -o $(podir)/pimldaptools.pot
