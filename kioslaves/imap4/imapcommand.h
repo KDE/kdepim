@@ -358,6 +358,13 @@ public:
    */
   static imapCommand *clientGetAnnotation ( const QString& box, const QString& entry, const QStringList& attributeNames );
 
+  /**
+   * @brief Create a GETQUOTAROOT command
+   * @param box mailbox name
+   * @return a GETQUOTAROOT imapCommand
+   */
+  static imapCommand *clientGetQuotaroot ( const QString& box );
+
 protected:
   QString aCommand;
   QString mId;

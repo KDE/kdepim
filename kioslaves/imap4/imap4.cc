@@ -1136,6 +1136,7 @@ IMAP4Protocol::del (const KURL & _url, bool isFile)
  * Change the status: data = 'S' + URL (KURL) + Flags (QCString)
  * ACL commands: data = 'A' + command + URL (KURL) + command-dependent args
  * AnnotateMore commands: data = 'M' + 'G'et/'S'et + URL + entry + command-dependent args
+ * Quota commands: data = 'Q' + 'R'oot/'G'et/'S'et + URL + entry + command-dependent args
  */
 void
 IMAP4Protocol::special (const QByteArray & aData)
@@ -1229,6 +1230,17 @@ IMAP4Protocol::special (const QByteArray & aData)
       specialAnnotateMoreCommand( cmd, stream );
     } else {
       error( ERR_UNSUPPORTED_ACTION, "ANNOTATEMORE" );
+    }
+    break;
+  }
+  case 'Q': // quota
+  {
+    int cmd;
+    stream >> cmd;
+    if ( hasCapability( "QUOTA" ) ) {
+      specialQuotaCommand( cmd, stream );
+    } else {
+      error( ERR_UNSUPPORTED_ACTION, "QUOTA" );
     }
     break;
   }
@@ -1440,6 +1452,50 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
   default:
     kdWarning(7116) << "Unknown special annotate command:" << command << endl;
     error( ERR_UNSUPPORTED_ACTION, QString(QChar(command)) );
+  }
+}
+
+void
+IMAP4Protocol::specialQuotaCommand( int command, QDataStream& stream )
+{
+  // All commands start with the URL to the box
+  KURL _url;
+  stream >> _url;
+  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
+  parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
+
+  switch( command ) {
+    case 'R': // GETQUOTAROOT
+      {
+        kdDebug(7116) << "QUOTAROOT " << aBox << endl;
+        imapCommand *cmd = doCommand(imapCommand::clientGetQuotaroot( aBox ) );
+        if (cmd->result () != "OK")
+        {
+          error(ERR_SLAVE_DEFINED, i18n("Retrieving the quota root inormation on folder %1 "
+                "failed. The server returned: %2")
+              .arg(_url.prettyURL())
+              .arg(cmd->resultInfo()));
+          return;
+        }
+        infoMessage(getResults().join( "\r" ));
+        finished();
+        break;
+      }
+    case 'G': // GETQUOTA
+      {
+        kdDebug(7116) << "GETQUOTA command" << endl;
+        kdWarning(7116) << "UNIMPLEMENTED" << endl;
+        break;
+      }
+    case 'S': // SETQUOTA
+      {
+        kdDebug(7116) << "SETQUOTA command" << endl;
+        kdWarning(7116) << "UNIMPLEMENTED" << endl;
+        break;
+      }
+    default:
+      kdWarning(7116) << "Unknown special quota command:" << command << endl;
+      error( ERR_UNSUPPORTED_ACTION, QString(QChar(command)) );
   }
 }
 

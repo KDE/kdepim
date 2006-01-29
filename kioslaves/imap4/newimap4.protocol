@@ -24,7 +24,7 @@ moving=false
 source=true
 
 # List of capabilities (e.g. special() commands)
-Capabilities=Subscription,ACL
+Capabilities=Subscription,ACL,Quota
 
 Icon=folder_inbox
 DocPath=kioslave/imap.html

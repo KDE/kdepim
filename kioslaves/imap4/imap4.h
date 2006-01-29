@@ -165,6 +165,7 @@ protected:
 
   void specialACLCommand( int command, QDataStream& stream );
   void specialAnnotateMoreCommand( int command, QDataStream& stream );
+  void specialQuotaCommand( int command, QDataStream& stream );
 
 private:
 

@@ -275,6 +275,11 @@ public:
   void parseAcl (parseString & result);
   /** @brief parse a ANNOTATION line */
   void parseAnnotation (parseString & result);
+  /** @brief parse a QUOTAROOT line */
+  void parseQuotaRoot (parseString & result);
+  /** @brief parse a QUOTA line */
+  void parseQuota (parseString & result);
+
 
   /**
    * parses the results of a fetch command
