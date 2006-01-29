@@ -1,9 +1,9 @@
 /*
  *  alarmdaemoniface.h  -  DCOP request interface
  *  Program:  KAlarm's alarm daemon (kalarmd)
- *  (C) 2001, 2004 by David Jarvie <software@astrojar.org.uk>
+ *  Copyright (c) 2001, 2004, 2006 by David Jarvie <software@astrojar.org.uk>
  *  Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
- *  Copyright (c) 1997-1999 Preston Brown
+ *  Copyright (c) 1997-1999 Preston Brown <pbrown@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #ifndef ALARMDAEMONIFACE_H
@@ -37,6 +37,7 @@ class AlarmDaemonIface : virtual public DCOPObject
     virtual ASYNC registerApp(const QCString& appName, const QString& appTitle,
                               const QCString& dcopObject, const QString& calendarUrl, bool startClient) = 0;
     virtual ASYNC registerChange(const QCString& appName, bool startClient) = 0;
+    virtual ASYNC eventHandled(const QCString& appname, const QString& calendarURL, const QString& eventID, bool reload) = 0;
     virtual ASYNC quit() = 0;
 };
 

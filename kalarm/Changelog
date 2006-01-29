@@ -1,7 +1,9 @@
 KAlarm
 
-=== Version 1.2.11 --- 24 January 2006 ===
+=== Version 1.2.11 --- 29 January 2006 ===
 Fix kalarmd hang when triggering late alarm and KAlarm run mode is on-demand.
+Notify daemon by DCOP that alarm has been processed: to prevent alarm loss, and
+    to prevent defunct kalarm processes when run mode is on-demand.
 Make autoclose of message windows work.
 Fix toolbar configuration being lost after quitting KAlarm.
 Ensure that day and month names translations are independent of locale calendar.

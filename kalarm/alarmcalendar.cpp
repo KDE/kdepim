@@ -1,7 +1,7 @@
 /*
  *  alarmcalendar.cpp  -  KAlarm calendar file access
  *  Program:  kalarm
- *  Copyright (C) 2001 - 2005 by David Jarvie <software@astrojar.org.uk>
+ *  Copyright (c) 2001-2006 by David Jarvie <software@astrojar.org.uk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -13,9 +13,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #include "kalarm.h"
@@ -47,6 +47,7 @@ extern "C" {
 #include <libkcal/vcalformat.h>
 #include <libkcal/icalformat.h>
 
+#include "daemon.h"
 #include "kalarmapp.h"
 #include "mainwindow.h"
 #include "preferences.h"
@@ -615,8 +616,13 @@ void AlarmCalendar::updateEvent(const KAEvent& evnt)
 		{
 			evnt.updateKCalEvent(*kcalEvent);
 			evnt.clearUpdated();
+			if (mType == KAEvent::ACTIVE)
+				Daemon::savingEvent(evnt.id());
+			return;
 		}
 	}
+	if (mType == KAEvent::ACTIVE)
+		Daemon::eventHandled(evnt.id(), false);
 }
 
 /******************************************************************************
@@ -631,10 +637,15 @@ void AlarmCalendar::deleteEvent(const QString& eventID, bool saveit)
 		if (kcalEvent)
 		{
 			mCalendar->deleteEvent(kcalEvent);
+			if (mType == KAEvent::ACTIVE)
+				Daemon::savingEvent(eventID);
 			if (saveit)
 				save();
+			return;
 		}
 	}
+	if (mType == KAEvent::ACTIVE)
+		Daemon::eventHandled(eventID, false);
 }
 
 /******************************************************************************
