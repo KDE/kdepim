@@ -29,18 +29,18 @@
 
 #include "addresseeutil.h"
 
-QString AddresseeUtil::addresseesToClipboard( const KABC::Addressee::List &list )
+QByteArray AddresseeUtil::addresseesToClipboard( const KABC::Addressee::List &list )
 {
   KABC::VCardConverter converter;
 
   return converter.createVCards( list );
 }
 
-KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QString &data )
+KABC::Addressee::List AddresseeUtil::clipboardToAddressees( const QByteArray &data )
 {
   KABC::VCardConverter converter;
 
-  return converter.parseVCards( data.toAscii() );
+  return converter.parseVCards( data );
 }
 
 QString AddresseeUtil::addresseesToEmails( const KABC::Addressee::List &addrList )

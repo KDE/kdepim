@@ -299,7 +299,7 @@ QString KMobileView::readAddress( QString deviceName, int index )
 	return QString::null;
 
    KABC::VCardConverter converter;
-   QString str = converter.createVCard(adr);
+   QString str = QString::fromUtf8( converter.createVCard(adr) );
    if (str.isEmpty())
         return QString::null;
 
@@ -316,7 +316,7 @@ bool KMobileView::storeAddress( QString deviceName, int index, QString vcard, bo
 	return false;
 
    KABC::VCardConverter converter;
-   KABC::Addressee adr = converter.parseVCard(vcard);
+   KABC::Addressee adr = converter.parseVCard(vcard.toUtf8());
    if (adr.isEmpty())
         return false;
 

@@ -74,7 +74,7 @@ namespace {
        VCardConverter vcc;
        const QString vCard = bodyPart->asText();
        if ( vCard.isEmpty() ) return AsIcon;
-       Addressee::List al = vcc.parseVCards(  vCard.toAscii() );
+       Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
        if ( al.empty() ) return AsIcon;
 
        writer->queue (
@@ -115,7 +115,7 @@ namespace {
        const QString vCard = bodyPart->asText();
        if ( vCard.isEmpty() ) return true;
        VCardConverter vcc;
-       Addressee::List al = vcc.parseVCards(  vCard.toAscii() );
+       Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
        int index = path.right( path.length() - path.findRev( ":" ) - 1 ).toInt();
        if ( index == -1 ) return true;
        KABC::Addressee a = al[index];

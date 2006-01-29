@@ -42,7 +42,7 @@ AddressBookUploadItem::AddressBookUploadItem(
   setUrl( addr.custom( adaptor->identifier(), "storagelocation" ) );
   setUid( addr.uid() );
   KABC::VCardConverter vcard;
-  setData( vcard.createVCard( addr ) );
+  setData( QString::fromUtf8( vcard.createVCard( addr ) ) );
 }
 
 

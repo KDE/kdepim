@@ -21,16 +21,13 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qcheckbox.h>
-#include <qfile.h>
-#include <qfont.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
-//Added by qt3to4:
-#include <QVBoxLayout>
+#include <QCheckBox>
+#include <QFile>
 #include <QFrame>
-#include <QTextStream>
+#include <QFont>
+#include <QLabel>
+#include <QLayout>
+#include <QPushButton>
 
 #include <kabc/vcardconverter.h>
 #include <kdialogbase.h>
@@ -43,7 +40,6 @@
 #include <kapplication.h>
 #include <libkdepim/addresseeview.h>
 #include <kpushbutton.h>
-#include "config.h" // ??
 
 #include "gpgmepp/context.h"
 #include "gpgmepp/data.h"
@@ -105,7 +101,7 @@ VCardXXPort::VCardXXPort( KABC::AddressBook *ab, QWidget *parent, const char *na
   createExportAction( i18n( "Export vCard 3.0..." ), "v30" );
 }
 
-bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QString &data )
+bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QString &identifier )
 {
   KABC::VCardConverter converter;
   KUrl url;
@@ -121,7 +117,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
     if ( url.isEmpty() )
       return true;
 
-    if ( data == "v21" )
+    if ( identifier == "v21" )
       ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v2_1 ) );
     else
       ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v3_0 ) );
@@ -196,10 +192,9 @@ KABC::Addressee::List VCardXXPort::importContacts( const QString& ) const
         QFile file( fileName );
 
         if ( file.open( QIODevice::ReadOnly ) ) {
-          QByteArray rawData = file.readAll();
+          const QByteArray data = file.readAll();
           file.close();
-          if ( rawData.size() > 0 ) {
-            const QString data = QString::fromUtf8( rawData.data(), rawData.size() );
+          if ( data.size() > 0 ) {
             addrList += parseVCard( data );
           }
 
@@ -238,22 +233,19 @@ KABC::Addressee::List VCardXXPort::importContacts( const QString& ) const
   return addrList;
 }
 
-KABC::Addressee::List VCardXXPort::parseVCard( const QString &data ) const
+KABC::Addressee::List VCardXXPort::parseVCard( const QByteArray &data ) const
 {
   KABC::VCardConverter converter;
 
   return converter.parseVCards( data.toAscii() );
 }
 
-bool VCardXXPort::doExport( const KUrl &url, const QString &data )
+bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data )
 {
   KTempFile tmpFile;
   tmpFile.setAutoDelete( true );
 
-  QTextStream stream( tmpFile.file() );
-  stream.setEncoding( QTextStream::UnicodeUTF8 );
-
-  stream << data;
+  tmpFile.write( data );
   tmpFile.close();
 
   return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );

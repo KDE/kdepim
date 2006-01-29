@@ -58,7 +58,6 @@ typedef KPIM::DistributionList DistributionList;
 typedef KABC::DistributionList DistributionList;
 #endif
 #include <kabc/stdaddressbook.h>
-#include <kabc/vcardconverter.h>
 #include <libkdepim/kvcarddrag.h>
 
 #include "core.h"
@@ -546,10 +545,10 @@ void DistributionListWidget::dropEvent( QDropEvent *e )
   KABC::DistributionList& dist = *list;
 #endif
 
-  QString vcards;
-  if ( KVCardDrag::decode( e, vcards ) ) {
-    KABC::VCardConverter converter;
-    const KABC::Addressee::List lst = converter.parseVCards( vcards.toAscii() );
+  if ( KVCardDrag::canDecode( e ) ) {
+    KABC::Addressee::List lst;
+    KVCardDrag::decode( e, lst );
+
     for ( KABC::Addressee::List::ConstIterator it = lst.begin(); it != lst.end(); ++it )
       dist.insertEntry( *it );
 

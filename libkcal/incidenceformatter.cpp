@@ -1222,7 +1222,6 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
   QBuffer buf( &b );
   CalendarLocal cal ( QLatin1String( "UTC" ) );
   KABC::Addressee addressee;
-  KABC::VCardConverter cardConv;
   ICalFormat calFormat;
   Event* event = new Event();
 
@@ -1523,7 +1522,7 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
 
   // Not an iCal - try a vCard
   KABC::VCardConverter converter;
-  return converter.createVCard( addressee );
+  return QString::fromUtf8( converter.createVCard( addressee ) );
 }
 
 

@@ -24,7 +24,7 @@
 #ifndef ADDRESSEEUTIL_H
 #define ADDRESSEEUTIL_H
 
-#include <qstring.h>
+#include <QString>
 #include <kabc/addressee.h>
 
 /**
@@ -44,14 +44,14 @@ class AddresseeUtil
       Same as above function, except that an entire list of KABC::Addressee
       objects will be converted to vCard and put in the string.
      */
-    static QString addresseesToClipboard( const KABC::Addressee::List &addrList );
+    static QByteArray addresseesToClipboard( const KABC::Addressee::List &addrList );
 
     /**
       Convert a string from the clipboard into a list of addressee objects.
       If the clipboard text was not a valid vcard, an empty list
       will be returned.
      */
-    static KABC::Addressee::List clipboardToAddressees( const QString &clipboard );
+    static KABC::Addressee::List clipboardToAddressees( const QByteArray &clipboard );
 
     /**
       Converts the list of addressee objects into a list of email addresses.

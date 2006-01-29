@@ -36,12 +36,13 @@ class VCardXXPort : public KAB::XXPort
     QString identifier() const { return "vcard"; }
 
   public slots:
-    bool exportContacts( const KABC::AddresseeList &list, const QString &data );
-    KABC::Addressee::List importContacts( const QString &data ) const;
+    bool exportContacts( const KABC::AddresseeList &list, const QString &identifier );
+    KABC::Addressee::List importContacts( const QString& ) const;
 
   private:
-    KABC::Addressee::List parseVCard( const QString &data ) const;
-    bool doExport( const KUrl &url, const QString &data );
+    KABC::Addressee::List parseVCard( const QByteArray &data ) const;
+    bool doExport( const KUrl &url, const QByteArray &data );
+
     void addKey( KABC::Addressee &addr, KABC::Key::Types type );
 
     KABC::AddresseeList filterContacts( const KABC::AddresseeList& );

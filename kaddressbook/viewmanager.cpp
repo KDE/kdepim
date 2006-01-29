@@ -434,10 +434,11 @@ void ViewManager::dropped( QDropEvent *e )
       }
     } else if ( c == 1 )
       emit urlDropped( *it );
-  } else if ( KVCardDrag::decode( e, vcards ) ) {
-    KABC::VCardConverter converter;
+  } else if ( KVCardDrag::canDecode( e ) ) {
+    KABC::Addressee::List list;
 
-    const KABC::Addressee::List list = converter.parseVCards( vcards.toAscii() );
+    KVCardDrag::decode( e, list );
+
     KABC::Addressee::List::ConstIterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
       KABC::Addressee a = mCore->addressBook()->findByUid( (*it).uid() );
@@ -468,7 +469,7 @@ void ViewManager::startDrag()
   K3MultipleDrag *drag = new K3MultipleDrag( this );
 
   KABC::VCardConverter converter;
-  QString vcards = converter.createVCards( addrList );
+  QByteArray vcards = converter.createVCards( addrList );
 
   // Best text representation is given by textdrag, so it must be first
   drag->addDragObject( new Q3TextDrag( AddresseeUtil::addresseesToEmails( addrList ), this ) );

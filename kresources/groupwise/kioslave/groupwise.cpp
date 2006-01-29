@@ -318,9 +318,9 @@ void Groupwise::slotReadReceiveAddressees( const KABC::Addressee::List addressee
     kdDebug() << "Groupwise::slotReadReceiveAddressees() - passing " << addressees.count() << " contacts back to application" << endl;
     KABC::VCardConverter conv;
 
-    QString vcard = conv.createVCards( addressees );
+    const QByteArray vcard = conv.createVCards( addressees );
 
-    data( vcard.utf8() );
+    data( vcard );
 }
 
 void Groupwise::updateAddressbook( const KUrl &url )
