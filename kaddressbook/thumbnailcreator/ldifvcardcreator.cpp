@@ -82,7 +82,7 @@ bool VCard_LDIFCreator::readContents( const QString &path )
   KABC::Addressee addr;
   KABC::VCardConverter converter;
 
-  addrList = converter.parseVCards( contents.toAscii() );
+  addrList = converter.parseVCards( contents);
   if ( addrList.count() == 0 ) {
     KABC::AddresseeList l; // FIXME porting
     if ( !KABC::LDIFConverter::LDIFToAddressee( contents, l ) )
