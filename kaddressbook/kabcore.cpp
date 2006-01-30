@@ -338,7 +338,7 @@ void KABCore::setContactSelected( const QString &uid )
     mActionCut->setEnabled( selected );
 
     QClipboard *cb = QApplication::clipboard();
-    QMimeData *data = cb->mimeData( QClipboard::Clipboard );
+    const QMimeData *data = cb->mimeData( QClipboard::Clipboard );
     KABC::Addressee::List list = AddresseeUtil::clipboardToAddressees( data->data( "text/x-vcard" ) );
     mActionPaste->setEnabled( !list.isEmpty() );
   }
@@ -454,7 +454,7 @@ void KABCore::cutContacts()
 void KABCore::pasteContacts()
 {
   QClipboard *cb = QApplication::clipboard();
-  QMimeData *data = cb->mimeData( QClipboard::Clipboard );
+  const QMimeData *data = cb->mimeData( QClipboard::Clipboard );
   KABC::Addressee::List list = AddresseeUtil::clipboardToAddressees( data->data( "text/x-vcard" ) );
 
   pasteContacts( list );
