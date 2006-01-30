@@ -486,7 +486,7 @@ void ViewManager::startDrag()
 
     QFile tempFile( tempDir.name() + "/" + fileName );
     if ( tempFile.open( QIODevice::WriteOnly ) ) {
-      tempFile.write( vcards.utf8() );
+      tempFile.write( vcards );
       tempFile.close();
 
       K3URLDrag *urlDrag = new K3URLDrag( KURL( tempFile.name() ), this );
