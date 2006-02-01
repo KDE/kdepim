@@ -41,6 +41,7 @@
 #include <libkdepim/addresseeview.h>
 #include <kpushbutton.h>
 
+#include "config.h" // needed for gpgmepp
 #include "gpgmepp/context.h"
 #include "gpgmepp/data.h"
 #include "gpgmepp/key.h"
@@ -139,7 +140,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
           KABC::AddresseeList tmpList;
           tmpList.append( *it );
 
-          if ( data == "v21" )
+          if ( identifier == "v21" )
             tmpOk = doExport( url, converter.createVCards( tmpList, KABC::VCardConverter::v2_1 ) );
           else
             tmpOk = doExport( url, converter.createVCards( tmpList, KABC::VCardConverter::v3_0 ) );
@@ -154,7 +155,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
         if ( url.isEmpty() )
           return true;
 
-        if ( data == "v21" )
+        if ( identifier == "v21" )
           ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v2_1 ) );
         else
           ok = doExport( url, converter.createVCards( list, KABC::VCardConverter::v3_0 ) );
@@ -172,7 +173,7 @@ KABC::Addressee::List VCardXXPort::importContacts( const QString& ) const
   KUrl::List urls;
 
   if ( !XXPortManager::importData.isEmpty() )
-    addrList = parseVCard( XXPortManager::importData );
+    addrList = parseVCard( XXPortManager::importData.toAscii() );
   else {
     if ( XXPortManager::importURL.isEmpty() )
       urls = KFileDialog::getOpenURLs( QString(), "*.vcf|vCards", parentWidget(),
@@ -237,7 +238,7 @@ KABC::Addressee::List VCardXXPort::parseVCard( const QByteArray &data ) const
 {
   KABC::VCardConverter converter;
 
-  return converter.parseVCards( data.toAscii() );
+  return converter.parseVCards( data );
 }
 
 bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data )
@@ -245,7 +246,7 @@ bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data )
   KTempFile tmpFile;
   tmpFile.setAutoDelete( true );
 
-  tmpFile.write( data );
+  tmpFile.file()->write( data );
   tmpFile.close();
 
   return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
