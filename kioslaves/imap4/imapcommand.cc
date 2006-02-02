@@ -390,7 +390,8 @@ imapCommand::clientGetAnnotation( const QString& box, const QString& entry, cons
 imapCommand *
 imapCommand::clientGetQuotaroot( const QString& box )
 {
-  QString parameter = rfcDecoder::toIMAP (box);
+  QString parameter = QString("\"") + rfcDecoder::toIMAP (box)
+                          + "\"";
   return new imapCommand ("GETQUOTAROOT", parameter);
 }
 
