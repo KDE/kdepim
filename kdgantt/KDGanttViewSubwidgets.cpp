@@ -2623,9 +2623,7 @@ QSize KDLegendWidget::legendSize()
 
 QSize KDLegendWidget::legendSizeHint()
 {
-    // ###### this should probably be something like  QApplication::sendPostedEvents(0, QEvent::LayoutHint); or something,
-    // but certainly not processEvents.
-    //qApp->processEvents();
+    QApplication::sendPostedEvents( 0, QEvent::LayoutHint );
     return QSize( myLegend->sizeHint().width(), myLegend->sizeHint().height()+scroll->horizontalScrollBar()->height());
 }
 
@@ -3074,6 +3072,7 @@ void KDGanttCanvasView::setMyContentsHeight( int hei )
 {
     //mySignalSender->closingBlocked = true;
     //qApp->processEvents();
+    QApplication::sendPostedEvents( 0, QEvent::LayoutHint );
     //mySignalSender->closingBlocked = false;
     //qDebug("setMyContentsHeight %d %d ", hei,  myMyContentsHeight);
     if ( hei > 0 )
