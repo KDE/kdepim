@@ -1,8 +1,0 @@
-?package(kontact):\
-	needs="X11"\
-	section="Apps/Tools"\
-	hints="KDE"\
-	title="Kontact"\
-	icon32x32="/usr/share/pixmaps/kontact.xpm"\
-	icon16x16="/usr/share/pixmaps/kontact-16.xpm"\
-	command="/usr/bin/kontact"

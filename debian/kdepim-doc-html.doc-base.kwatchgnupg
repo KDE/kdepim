@@ -1,9 +1,0 @@
-Document: kdepim-doc-html-kwatchgnupg
-Title: The KWatchGnuPG Handbook
-Author: Marc Mutz
-Abstract: KWatchGnuPG is a simple GnuPG log viewer.
-Section: Apps/Tools
-
-Format: HTML
-Index: /usr/share/doc/kde/HTML/en/kwatchgnupg/index.html
-Files: /usr/share/doc/kde/HTML/en/kwatchgnupg/*.html

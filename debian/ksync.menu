@@ -1,8 +1,0 @@
-?package(ksync):\
-	needs="X11"\
-	section="Apps/Tools"\
-	hints="KDE"\
-	title="KSync"\
-	icon32x32="/usr/share/pixmaps/ksync.xpm"\
-	icon16x16="/usr/share/pixmaps/ksync-16.xpm"\
-	command="/usr/bin/ksync"

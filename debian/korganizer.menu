@@ -1,8 +1,0 @@
-?package(korganizer):\
-	needs="X11"\
-	section="Apps/Tools"\
-	hints="KDE"\
-	title="KOrganizer"\
-	icon32x32="/usr/share/pixmaps/korganizer.xpm"\
-	icon16x16="/usr/share/pixmaps/korganizer-16.xpm"\
-	command="/usr/bin/korganizer"

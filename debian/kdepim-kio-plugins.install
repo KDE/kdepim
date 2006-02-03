@@ -1,8 +1,0 @@
-debian/tmp/usr/lib/kde3/kio_imap4.la
-debian/tmp/usr/lib/kde3/kio_imap4.so
-debian/tmp/usr/lib/kde3/kio_sieve.la
-debian/tmp/usr/lib/kde3/kio_sieve.so
-debian/tmp/usr/share/services/imap4.protocol
-debian/tmp/usr/share/services/imaps.protocol
-debian/tmp/usr/share/services/overview.desktop
-debian/tmp/usr/share/services/sieve.protocol

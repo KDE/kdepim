@@ -1,8 +1,0 @@
-?package(korn):\
-	needs="X11"\
-	section="Apps/Net"\
-	hints="KDE"\
-	title="KOrn"\
-	icon32x32="/usr/share/pixmaps/korn.xpm"\
-	icon16x16="/usr/share/pixmaps/korn-16.xpm"\
-	command="/usr/bin/korn"

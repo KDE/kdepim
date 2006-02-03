@@ -1,9 +1,0 @@
-Document: kdepim-doc-html-konsolekalendar
-Title: The KonsoleKalendar Handbook
-Author: Tuukka Pasanen, Allen Winter
-Abstract: KonsoleKalendar is a command line interface to KDE calendars.
-Section: Apps/Tools
-
-Format: HTML
-Index: /usr/share/doc/kde/HTML/en/konsolekalendar/index.html
-Files: /usr/share/doc/kde/HTML/en/konsolekalendar/*.html
