@@ -1,8 +1,0 @@
-?package(ktnef):\
-	needs="X11"\
-	section="Apps/Tools"\
-	hints="KDE"\
-	title="KTnef"\
-	icon32x32="/usr/share/pixmaps/ktnef.xpm"\
-	icon16x16="/usr/share/pixmaps/ktnef-16.xpm"\
-	command="/usr/bin/ktnef"

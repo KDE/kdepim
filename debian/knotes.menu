@@ -1,8 +1,0 @@
-?package(knotes):\
-	needs="X11"\
-	section="Apps/Tools"\
-	hints="KDE"\
-	title="KNotes"\
-	icon32x32="/usr/share/pixmaps/knotes.xpm"\
-	icon16x16="/usr/share/pixmaps/knotes-16.xpm"\
-	command="/usr/bin/knotes"

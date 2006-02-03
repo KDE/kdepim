@@ -1,9 +1,0 @@
-Document: kdepim-doc-html-knotes
-Title: The KNotes Handbook
-Author: Fabian Dal Santo, Grep M. Holmes
-Abstract: KNotes is a sticky notes application for the desktop.
-Section: Apps/Tools
-
-Format: HTML
-Index: /usr/share/doc/kde/HTML/en/knotes/index.html
-Files: /usr/share/doc/kde/HTML/en/knotes/*.html

@@ -1,9 +1,0 @@
-Document: kdepim-doc-html-korganizer
-Title: The KOrganizer Handbook
-Author: Milos Prudek, Paul E. Ahlquist Jr., Jürgen Nagel
-Abstract: KOrganizer is an easy to use personal information manager.
-Section: Apps/Tools
-
-Format: HTML
-Index: /usr/share/doc/kde/HTML/en/korganizer/index.html
-Files: /usr/share/doc/kde/HTML/en/korganizer/*.html

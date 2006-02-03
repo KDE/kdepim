@@ -1,9 +1,0 @@
-Document: kdepim-doc-html-korn
-Title: The KOrn Handbook
-Author: Nick Betcher
-Abstract: KOrn is a mail monitor.
-Section: Apps/Net
-
-Format: HTML
-Index: /usr/share/doc/kde/HTML/en/korn/index.html
-Files: /usr/share/doc/kde/HTML/en/korn/*.html

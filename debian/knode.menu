@@ -1,8 +1,0 @@
-?package(knode):\
-	needs="X11"\
-	section="Apps/Net"\
-	hints="KDE,News"\
-	title="KNode"\
-	icon32x32="/usr/share/pixmaps/knode.xpm"\
-	icon16x16="/usr/share/pixmaps/knode-16.xpm"\
-	command="/usr/bin/knode"

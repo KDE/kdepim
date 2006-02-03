@@ -1,6 +1,0 @@
-?package(kandy):\
-	needs="X11"\
-	section="Apps/Tools"\
-	hints="KDE"\
-	title="Kandy"\
-	command="/usr/bin/kandy"

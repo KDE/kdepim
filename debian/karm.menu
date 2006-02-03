@@ -1,8 +1,0 @@
-?package(karm):\
-	needs="X11"\
-	section="Apps/Tools"\
-	hints="KDE"\
-	title="KArm"\
-	icon32x32="/usr/share/pixmaps/karm.xpm"\
-	icon16x16="/usr/share/pixmaps/karm-16.xpm"\
-	command="/usr/bin/karm"

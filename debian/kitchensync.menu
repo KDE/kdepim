@@ -1,6 +1,0 @@
-?package(kitchensync):\
-	needs="X11"\
-	section="Apps/Tools"\
-	hints="KDE"\
-	title="KitchenSync"\
-	command="/usr/bin/kitchensync"

@@ -1,8 +1,0 @@
-.TH KMAIL_CLAMAV.SH 1
-.SH NAME
-kmail_clamav.sh \- Clam Anti-Virus backend for KMail
-.SH DESCRIPTION
-This shell script is used internally by \fBkmail\fP. Users should not run it
-directly.
-.SH SEE ALSO
-.BR kmail (1).

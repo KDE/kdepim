@@ -1,8 +1,0 @@
-.TH KMAIL_SAV.SH 1
-.SH NAME
-kmail_sav.sh \- Sophos Anti-Virus backend for KMail
-.SH DESCRIPTION
-This shell script is used internally by \fBkmail\fP. Users should not run it
-directly.
-.SH SEE ALSO
-.BR kmail (1).

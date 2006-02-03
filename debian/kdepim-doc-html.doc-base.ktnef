@@ -1,9 +1,0 @@
-Document: kdepim-doc-html-ktnef
-Title: The TNEF File Viewer Handbook
-Author: Michael Goffioul
-Abstract: The TNEF File Viewer is an application for TNEF mail attachments.
-Section: Apps/Tools
-
-Format: HTML
-Index: /usr/share/doc/kde/HTML/en/ktnef/index.html
-Files: /usr/share/doc/kde/HTML/en/ktnef/*.html

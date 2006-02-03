@@ -1,6 +1,0 @@
-?package(kmailcvt):\
-	needs="X11"\
-	section="Apps/Net"\
-	hints="KDE,Mail"\
-	title="KMail/KAB Import Tool"\
-	command="/usr/bin/kmailcvt"
