@@ -421,14 +421,14 @@ void ArticleWidget::displayArticle()
       // handle non-pgp block
       QByteArray str = *npbit;
       if( !str.isEmpty() ) {
-        QStringList lines = QStringList::split( '\n', codec->toUnicode( str ) );
+        QStringList lines = QStringList::split( '\n', codec->toUnicode( str ), true );
         displayBodyBlock( lines );
       }
       // handle pgp block
       Kpgp::Block block = *pbit;
       if ( block.type() == Kpgp::ClearsignedBlock )
         block.verify();
-      QStringList lines = QStringList::split( '\n', codec->toUnicode( block.text() ) );
+      QStringList lines = QStringList::split( '\n', codec->toUnicode( block.text() ), true );
       if ( block.isSigned() ) {
         QString signClass = displaySigHeader( block );
         displayBodyBlock( lines );
@@ -440,7 +440,7 @@ void ArticleWidget::displayArticle()
     // deal with the last non-pgp block
     QByteArray str = *npbit;
     if( !str.isEmpty() ) {
-      QStringList lines = QStringList::split( '\n', codec->toUnicode( str ) );
+      QStringList lines = QStringList::split( '\n', codec->toUnicode( str ), true );
       displayBodyBlock( lines );
     }
   }
