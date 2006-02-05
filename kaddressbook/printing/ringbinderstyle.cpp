@@ -78,7 +78,7 @@ RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent, const char* 
   mPageAppearance->cbFillEmpty->setChecked( config->readEntry( FillWithEmptyFields, true ) );
   mPageAppearance->sbMinNumFill->setValue( config->readEntry( MinNumberOfEmptyFields, 0 ) );
 
-  QStringList tabNames = config->readListEntry( LetterGroups, ',' );
+  QStringList tabNames = config->readEntry( LetterGroups, QStringList(),',' );
   if ( tabNames.isEmpty() )
     tabNames = QStringList::split( ',', QString( "AB,CD,EF,GH,IJK,LM,NO,PQR,S,TU,VW,XYZ" ) );
 
