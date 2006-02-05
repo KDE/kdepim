@@ -3024,6 +3024,11 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     myMyContentsHeight = 0;
     _showItemAddPopupMenu = false;
     
+    QObject* scrollViewTimer = child( "scrollview scrollbar timer", "QTimer", false );
+    Q_ASSERT( scrollViewTimer );
+    if ( scrollViewTimer )
+        disconnect( scrollViewTimer, SIGNAL(timeout()), this, SLOT(updateScrollBars() ) );
+    
     myScrollTimer = new QTimer( this );
     connect( myScrollTimer, SIGNAL( timeout() ), SLOT( slotScrollTimer() ) );
     autoScrollEnabled = false;
@@ -3070,14 +3075,10 @@ void KDGanttCanvasView::resizeEvent ( QResizeEvent * e )
 }
 void KDGanttCanvasView::setMyContentsHeight( int hei )
 {
-    //mySignalSender->closingBlocked = true;
-    //qApp->processEvents();
-    QApplication::sendPostedEvents( 0, QEvent::LayoutHint );
-    //mySignalSender->closingBlocked = false;
     //qDebug("setMyContentsHeight %d %d ", hei,  myMyContentsHeight);
     if ( hei > 0 )
         myMyContentsHeight = hei;
-    verticalScrollBar()->setUpdatesEnabled( true );
+    verticalScrollBar()->setUpdatesEnabled( true ); // set false in resizeEvent()
     if ( viewport()->height() <= myMyContentsHeight )
         verticalScrollBar()->setRange( 0, myMyContentsHeight- viewport()->height()+1);
     else
