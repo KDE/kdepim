@@ -315,7 +315,7 @@ bool KDGanttView::close ( bool alsoDelete )
   height() of TimeHeader + height() of TimeTable + height() of Legend (if shown)
 */
 
-QSize KDGanttView::sizeHint()
+QSize KDGanttView::sizeHint() const
 {
   bool block = myTimeTable->blockUpdating();
   myTimeTable->setBlockUpdating( false );

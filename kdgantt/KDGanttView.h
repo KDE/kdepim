@@ -324,7 +324,7 @@ public:
     virtual void lvStartDrag (KDGanttViewItem*);
     virtual bool lvDragMoveEvent (QDragMoveEvent * e,KDGanttViewItem*, KDGanttViewItem*);
     virtual void lvDragEnterEvent (QDragEnterEvent * e );
-    QSize sizeHint();
+    virtual QSize sizeHint() const;
     KDGanttViewItem* getItemByName( const QString& name ) const;
     QDateTime getDateTimeForCoordX(int coordX, bool global = true ) const;
     KDGanttViewItem* getItemByListViewPos( const QPoint& pos ) const;
