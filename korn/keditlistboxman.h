@@ -23,6 +23,7 @@
 
 class KConfig;
 
+class Q3ListBoxItem;
 class QString;
 class QWidget;
 

@@ -72,8 +72,9 @@ void KornCfgImpl::slotEditBox()
 {
 	if( _base )
 		return; //Already a dialog open
-	if( elbBoxes->listBox()->currentItem() < 0 )
-		return; //No item selected
+#warning Port me!
+//	if( elbBoxes->listBox()->currentItem() < 0 )
+//		return; //No item selected
 	elbBoxes->setEnabled( false );
 	
 	_base = new KDialog( this, "Box Configuration", KDialog::Ok | KDialog::Cancel );
@@ -84,7 +85,8 @@ void KornCfgImpl::slotEditBox()
 	connect( _base, SIGNAL( finished() ), this, SLOT( slotDialogDestroyed() ) );
 	
 	_base->setMainWidget( widget );
-	widget->readConfig( _config, elbBoxes->listBox()->currentItem() );
+#warning Port me!
+//	widget->readConfig( _config, elbBoxes->listBox()->currentItem() );
 	
 	_base->show();
 }

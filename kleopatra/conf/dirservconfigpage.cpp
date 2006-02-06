@@ -168,7 +168,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( KInstanc
   lay->addWidget( box );
   mMaxItems = new KIntNumInput( box );
   mMaxItems->setLabel( i18n( "&Maximum number of items returned by query" ), Qt::AlignLeft | Qt::AlignVCenter );
-  mMaxItems->setMinValue( 0 );
+  mMaxItems->setMinimum( 0 );
   connect( mMaxItems, SIGNAL( valueChanged(int) ), this, SLOT( slotChanged() ) );
   stretch = new QWidget( box );
   box->setStretchFactor( stretch, 2 );

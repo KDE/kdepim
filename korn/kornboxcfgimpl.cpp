@@ -261,8 +261,9 @@ void KornBoxCfgImpl::slotEditBox()
 {
 	if( _base )
 		return; //Already a dialog open
-	if( elbAccounts->listBox()->currentItem() < 0 )
-		return; //No item selected
+#warning Port me!
+//	if( elbAccounts->listBox()->currentItem() < 0 )
+//		return; //No item selected
 	elbAccounts->setEnabled( false );
 	
 	_base = new KDialog( this, i18n("Box Configuration"), KDialog::Ok | KDialog::Cancel );
@@ -274,13 +275,14 @@ void KornBoxCfgImpl::slotEditBox()
 	
 	connect( _base, SIGNAL( finished() ), this, SLOT( slotDialogDestroyed() ) );
 
-	_group = new KConfigGroup( _config, QString( "korn-%1-%2" ).
-			arg( _index ).arg(elbAccounts->listBox()->currentItem() ) );
+#warning Port me!
+//	_group = new KConfigGroup( _config, QString( "korn-%1-%2" ).
+//			arg( _index ).arg(elbAccounts->listBox()->currentItem() ) );
 	
-	QMap< QString, QString > *map = new QMap< QString, QString >( _config->entryMap( QString( "korn-%1-%2" ).
-			                        arg( _index ).arg(elbAccounts->listBox()->currentItem() ) ) );
-	widget->readConfig( _group, map, _index, elbAccounts->listBox()->currentItem() );
-	delete map;
+//	QMap< QString, QString > *map = new QMap< QString, QString >( _config->entryMap( QString( "korn-%1-%2" ).
+//			                        arg( _index ).arg(elbAccounts->listBox()->currentItem() ) ) );
+//	widget->readConfig( _group, map, _index, elbAccounts->listBox()->currentItem() );
+//	delete map;
 
 	_base->show();
 }

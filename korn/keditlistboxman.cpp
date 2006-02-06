@@ -21,6 +21,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
+#include <Q3ListBoxItem>
 #include <qmap.h>
 #include <qstring.h>
 
@@ -99,9 +100,10 @@ void KEditListBoxManager::init()
 	connect( this, SIGNAL( changed() ), this, SLOT( slotChanged() ) );
 	connect( this, SIGNAL( added( const QString& ) ), this, SLOT( slotAdded( const QString& ) ) );
 	connect( this, SIGNAL( removed( const QString& ) ), this, SLOT( slotRemoved( const QString& ) ) );
-	
-	connect( this->listBox(), SIGNAL( doubleClicked( Q3ListBoxItem * ) ), this, SLOT( slotActivated( Q3ListBoxItem * ) ) );
-	connect( this->listBox(), SIGNAL( returnPressed( Q3ListBoxItem * ) ), this, SLOT( slotActivated( Q3ListBoxItem * ) ) );
+
+#warning Port me!	
+//	connect( this->listBox(), SIGNAL( doubleClicked( Q3ListBoxItem * ) ), this, SLOT( slotActivated( Q3ListBoxItem * ) ) );
+//	connect( this->listBox(), SIGNAL( returnPressed( Q3ListBoxItem * ) ), this, SLOT( slotActivated( Q3ListBoxItem * ) ) );
 }
 
 void KEditListBoxManager::readNames()
