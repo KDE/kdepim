@@ -3,7 +3,7 @@
  <comment></comment>
  <exportmacro></exportmacro>
  <class>KNode::SmtpAccountWidgetBase</class>
- <widget class="KCModule" name="SmtpAccountWidgetBase" >
+ <widget class="KCModule" name="KNode::SmtpAccountWidgetBase" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -40,10 +40,10 @@
      <property name="value" >
       <number>25</number>
      </property>
-     <property name="minValue" >
+     <property name="minimum" >
       <number>0</number>
      </property>
-     <property name="maxValue" >
+     <property name="maximum" >
       <number>65536</number>
      </property>
     </widget>
@@ -166,13 +166,6 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
-   <class>KLineEdit</class>
-   <extends></extends>
-   <header>klineedit.h</header>
-   <container>0</container>
-   <pixmap></pixmap>
-  </customwidget>
-  <customwidget>
    <class>KIntNumInput</class>
    <extends></extends>
    <header>knuminput.h</header>
@@ -186,13 +179,20 @@
    <container>1</container>
    <pixmap></pixmap>
   </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends></extends>
+   <header>klineedit.h</header>
+   <container>0</container>
+   <pixmap></pixmap>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections>
   <connection>
    <sender>mUseExternalMailer</sender>
    <signal>toggled(bool)</signal>
-   <receiver>SmtpAccountWidgetBase</receiver>
+   <receiver>KNode::SmtpAccountWidgetBase</receiver>
    <slot>changed()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -208,7 +208,7 @@
   <connection>
    <sender>mPort</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>SmtpAccountWidgetBase</receiver>
+   <receiver>KNode::SmtpAccountWidgetBase</receiver>
    <slot>changed()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -224,7 +224,7 @@
   <connection>
    <sender>mServer</sender>
    <signal>textChanged(QString)</signal>
-   <receiver>SmtpAccountWidgetBase</receiver>
+   <receiver>KNode::SmtpAccountWidgetBase</receiver>
    <slot>changed()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -240,7 +240,7 @@
   <connection>
    <sender>mLogin</sender>
    <signal>toggled(bool)</signal>
-   <receiver>SmtpAccountWidgetBase</receiver>
+   <receiver>KNode::SmtpAccountWidgetBase</receiver>
    <slot>changed()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -256,7 +256,7 @@
   <connection>
    <sender>mUser</sender>
    <signal>textChanged(QString)</signal>
-   <receiver>SmtpAccountWidgetBase</receiver>
+   <receiver>KNode::SmtpAccountWidgetBase</receiver>
    <slot>changed()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -272,7 +272,7 @@
   <connection>
    <sender>mPassword</sender>
    <signal>textChanged(QString)</signal>
-   <receiver>SmtpAccountWidgetBase</receiver>
+   <receiver>KNode::SmtpAccountWidgetBase</receiver>
    <slot>changed()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -288,7 +288,7 @@
   <connection>
    <sender>mEncNone</sender>
    <signal>toggled(bool)</signal>
-   <receiver>SmtpAccountWidgetBase</receiver>
+   <receiver>KNode::SmtpAccountWidgetBase</receiver>
    <slot>changed()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -304,7 +304,7 @@
   <connection>
    <sender>mEncSSL</sender>
    <signal>toggled(bool)</signal>
-   <receiver>SmtpAccountWidgetBase</receiver>
+   <receiver>KNode::SmtpAccountWidgetBase</receiver>
    <slot>changed()</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -320,7 +320,7 @@
   <connection>
    <sender>mEncTLS</sender>
    <signal>toggled(bool)</signal>
-   <receiver>SmtpAccountWidgetBase</receiver>
+   <receiver>KNode::SmtpAccountWidgetBase</receiver>
    <slot>changed()</slot>
    <hints>
     <hint type="sourcelabel" >

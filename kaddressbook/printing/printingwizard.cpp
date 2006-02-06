@@ -57,7 +57,7 @@ using namespace KABPrinting;
 PrintingWizard::PrintingWizard( KPrinter *printer, KABC::AddressBook* ab,
                                 const QStringList& selection, QWidget *parent,
                                 const char* name )
-  : KWizard( parent, name ), mPrinter( printer ), mAddressBook( ab ),
+  : K3Wizard( parent, name ), mPrinter( printer ), mAddressBook( ab ),
     mSelection( selection ), mStyle( 0 )
 {
   mSelectionPage = new SelectionPage( this );

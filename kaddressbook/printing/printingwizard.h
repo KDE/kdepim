@@ -30,7 +30,7 @@
 //Added by qt3to4:
 #include <QVBoxLayout>
 
-#include <kwizard.h>
+#include <k3wizard.h>
 
 #include "common/filter.h"
 #include "kabc/addressbook.h"
@@ -49,7 +49,7 @@ namespace KABPrinting {
   The PrintingWizard combines pages common for all print styles
   and those provided by the respective style.
 */
-class PrintingWizard : public KWizard
+class PrintingWizard : public K3Wizard
 {
   Q_OBJECT
 

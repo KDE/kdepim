@@ -453,7 +453,7 @@ Kleo::CryptoConfigEntrySpinBox::CryptoConfigEntrySpinBox(
   glay->addWidget( mNumInput, row, 2 );
 
   if ( mKind == UInt || mKind == ListOfNone )
-    mNumInput->setMinValue( 0 );
+    mNumInput->setMinimum( 0 );
   connect( mNumInput, SIGNAL( valueChanged(int) ), SLOT( slotChanged() ) );
 }
 
