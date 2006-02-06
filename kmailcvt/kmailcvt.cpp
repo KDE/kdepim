@@ -22,7 +22,7 @@
 #include "filters.hxx"
 
 KMailCVT::KMailCVT(QWidget *parent, const char *name)
-	: KWizard(parent, name, true) {
+	: K3Wizard(parent, name, true) {
 
 	setCaption( i18n( "KMailCVT Import Tool" ) );
 
@@ -45,7 +45,7 @@ void KMailCVT::next() {
 		if (!selectedFilter)
 			return;
 		// Goto next page
-		KWizard::next();
+		K3Wizard::next();
 		// Disable back & finish
 		setBackEnabled( currentPage(), false );
 		setFinishEnabled( currentPage(), false );
@@ -60,12 +60,12 @@ void KMailCVT::next() {
 		// Enable finish & back buttons
 		setFinishEnabled( currentPage(), true );
 		setBackEnabled( currentPage(), true );
-	} else KWizard::next();
+	} else K3Wizard::next();
 }
 
 void KMailCVT::reject() {
 	if ( currentPage() == importpage && ! finishButton()->isEnabled() ) FilterInfo::terminateASAP(); // ie. import in progress
-	else KWizard::reject();
+	else K3Wizard::reject();
 }
 
 void KMailCVT::help()

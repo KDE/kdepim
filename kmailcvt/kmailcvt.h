@@ -19,13 +19,13 @@
 #endif
 
 #include <kapplication.h>
-#include <kwizard.h>
+#include <k3wizard.h>
 
 #include "kimportpage.h"
 #include "kselfilterpage.h"
   
 /** KMailCVT is the base class of the project */
-class KMailCVT : public KWizard {
+class KMailCVT : public K3Wizard {
 	Q_OBJECT
 public:
 	KMailCVT(QWidget* parent=0, const char *name=0);

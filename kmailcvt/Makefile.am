@@ -8,7 +8,7 @@ kmailcvt_SOURCES = kimportpagedlg.ui kimportpage.cpp kselfilterpagedlg.ui \
                    filter_kmail_maildir.cxx filter_sylpheed.cxx filter_thebat.cxx \
                    filter_lnotes.cxx
                 
-kmailcvt_LDADD   = $(LIB_KFILE)
+kmailcvt_LDADD   = $(LIB_KFILE) $(LIB_KDE3SUPPORT)
 
 EXTRA_DIST = main.cpp kmailcvt.cpp kimportpage.cpp kimportpage.h \
              kselfilterpage.cpp kselfilterpage.h kmailcvt.h \
