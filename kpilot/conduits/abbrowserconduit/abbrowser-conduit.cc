@@ -280,7 +280,7 @@ bool AbbrowserConduit::_loadAddressBook()
 	{
 		// Something went wrong, so tell the user and return false to exit the conduit
 		emit logError(i18n("Unable to initialize and load the addressbook for the sync.") );
-		kdWarning()<<k_funcinfo<<": Unable to initialize the addressbook for the sync."<<endl;
+		kWarning()<<k_funcinfo<<": Unable to initialize the addressbook for the sync."<<endl;
 		KPILOT_DELETE(aBook);
 		stopTickle();
 		return false;
@@ -289,7 +289,7 @@ bool AbbrowserConduit::_loadAddressBook()
 	ticket=aBook->requestSaveTicket();
 	if (!ticket)
 	{
-		kdWarning()<<k_funcinfo<<": Unable to lock addressbook for writing "<<endl;
+		kWarning()<<k_funcinfo<<": Unable to lock addressbook for writing "<<endl;
 		KPILOT_DELETE(aBook);
 		stopTickle();
 		return false;
@@ -337,7 +337,7 @@ bool AbbrowserConduit::_saveAddressBook()
 	}
 	else
 	{
-		kdWarning()<<k_funcinfo<<": No ticket available to save the "
+		kWarning()<<k_funcinfo<<": No ticket available to save the "
 		<<"addressbook."<<endl;
 	}
 	if ( AbbrowserSettings::addressbookType()!= AbbrowserSettings::eAbookResource )
@@ -2007,7 +2007,7 @@ bool AbbrowserConduit::_applyResolutionTable(ResolutionTable*tab, Addressee &pcA
 #ifdef DEBUG
 		DEBUGCONDUIT<<"Empty palmAddr after conf res. ERROR!!!!"<<endl;
 #endif
-		kdWarning()<<"Empty palmAddr after conf res. ERROR!!!!"<<endl;
+		kWarning()<<"Empty palmAddr after conf res. ERROR!!!!"<<endl;
 		return false;
 	}
 

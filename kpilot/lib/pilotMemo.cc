@@ -49,7 +49,7 @@ PilotMemo::PilotMemo(const PilotRecord * rec) : PilotAppCategory(rec)
 void PilotMemo::unpack(const void *text, int /* firstTime */)
 {
 	FUNCTIONSETUP;
-	kdWarning() << k_funcinfo << ": deprecated and broken function." << endl;
+	kWarning() << k_funcinfo << ": deprecated and broken function." << endl;
 	fText = codec()->toUnicode((const char *)text);
 }
 

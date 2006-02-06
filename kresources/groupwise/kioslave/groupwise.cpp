@@ -70,7 +70,7 @@ int kdemain( int argc, char **argv )
 {
   KInstance instance( "kio_groupwise" );
   
-  kdDebug(7000) << "Starting kio_groupwise(pid:  " << getpid() << ")" << endl;
+  kDebug(7000) << "Starting kio_groupwise(pid:  " << getpid() << ")" << endl;
   
   if (argc != 4) {
     fprintf( stderr, "Usage: kio_groupwise protocol domain-socket1 domain-socket2\n");
@@ -91,13 +91,13 @@ Groupwise::Groupwise( const QByteArray &protocol, const QByteArray &pool,
 
 void Groupwise::get( const KUrl &url )
 {
-  kdDebug(7000) << "Groupwise::get()" << endl;
-  kdDebug(7000) << " URL: " << url.url() << endl;
+  kDebug(7000) << "Groupwise::get()" << endl;
+  kDebug(7000) << " URL: " << url.url() << endl;
   #if 1
-  kdDebug(7000) << " Path: " << url.path() << endl;
-  kdDebug(7000) << " Query: " << url.query() << endl;
-  kdDebug(7000) << " Protocol: " << url.protocol() << endl;
-  kdDebug(7000) << " Filename: " << url.fileName() << endl;
+  kDebug(7000) << " Path: " << url.path() << endl;
+  kDebug(7000) << " Query: " << url.query() << endl;
+  kDebug(7000) << " Protocol: " << url.protocol() << endl;
+  kDebug(7000) << " Filename: " << url.fileName() << endl;
   #endif
 
   mimeType( "text/plain" );
@@ -120,7 +120,7 @@ void Groupwise::get( const KUrl &url )
     errorMessage( error );
   }
   
-  kdDebug(7000) << "Groupwise::get() done" << endl;
+  kDebug(7000) << "Groupwise::get() done" << endl;
 }
 
 QString Groupwise::soapUrl( const KUrl &url )
@@ -190,16 +190,16 @@ void Groupwise::getFreeBusy( const KUrl &url )
       fb->setDtStart( QDateTime( start ) );
       fb->setDtEnd( QDateTime( end ) );
 
-      kdDebug() << "Login" << endl;
+      kDebug() << "Login" << endl;
 
       if ( !server.login() ) {
         errorMessage( i18n("Unable to login: ") + server.error() );
       } else {
-        kdDebug() << "Read free/busy" << endl;
+        kDebug() << "Read free/busy" << endl;
         if ( !server.readFreeBusy( email, start, end, fb ) ) {
           errorMessage( i18n("Unable to read free/busy data: ") + server.error() );
         }
-        kdDebug() << "Read free/busy" << endl;
+        kDebug() << "Read free/busy" << endl;
         server.logout();
       }
     }
@@ -237,15 +237,15 @@ void Groupwise::getCalendar( const KUrl &url )
 
   KCal::CalendarLocal calendar( QString::fromLatin1("UTC"));
 
-  kdDebug() << "Login" << endl;
+  kDebug() << "Login" << endl;
   if ( !server.login() ) {
     errorMessage( i18n("Unable to login: ") + server.error() );
   } else {
-    kdDebug() << "Read calendar" << endl;
+    kDebug() << "Read calendar" << endl;
     if ( !server.readCalendarSynchronous( &calendar ) ) {
       errorMessage( i18n("Unable to read calendar data: ") + server.error() );
     }
-    kdDebug() << "Logout" << endl;
+    kDebug() << "Logout" << endl;
     server.logout();
   }
 
@@ -298,15 +298,15 @@ void Groupwise::getAddressbook( const KUrl &url )
     connect( &server, SIGNAL( gotAddressees( const KABC::Addressee::List ) ),
       SLOT( slotReadReceiveAddressees( const KABC::Addressee::List ) ) );
 
-    kdDebug() << "Login" << endl;
+    kDebug() << "Login" << endl;
     if ( !server.login() ) {
       errorMessage( i18n("Unable to login: ") + server.error() );
     } else {
-      kdDebug() << "Read Addressbook" << endl;
+      kDebug() << "Read Addressbook" << endl;
       if ( !server.readAddressBooksSynchronous( ids ) ) {
         errorMessage( i18n("Unable to read addressbook data: ") + server.error() );
       }
-      kdDebug() << "Logout" << endl;
+      kDebug() << "Logout" << endl;
       server.logout();
       finished();
     }
@@ -315,7 +315,7 @@ void Groupwise::getAddressbook( const KUrl &url )
 
 void Groupwise::slotReadReceiveAddressees( const KABC::Addressee::List addressees )
 {
-    kdDebug() << "Groupwise::slotReadReceiveAddressees() - passing " << addressees.count() << " contacts back to application" << endl;
+    kDebug() << "Groupwise::slotReadReceiveAddressees() - passing " << addressees.count() << " contacts back to application" << endl;
     KABC::VCardConverter conv;
 
     const QByteArray vcard = conv.createVCards( addressees );
@@ -364,15 +364,15 @@ void Groupwise::updateAddressbook( const KUrl &url )
     connect( &server, SIGNAL( gotAddressees( const KABC::Addressee::List ) ),
       SLOT( slotReadReceiveAddressees( const KABC::Addressee::List ) ) );
 
-    kdDebug() << "Login" << endl;
+    kDebug() << "Login" << endl;
     if ( !server.login() ) {
       errorMessage( i18n("Unable to login: ") + server.error() );
     } else {
-      kdDebug() << "Update Addressbook" << endl;
+      kDebug() << "Update Addressbook" << endl;
       if ( !server.updateAddressBooks( ids, lastSequenceNumber ) ) {
         errorMessage( i18n("Unable to update addressbook data: ") + server.error() );
       }
-      kdDebug() << "Logout" << endl;
+      kDebug() << "Logout" << endl;
       server.logout();
       finished();
     }
@@ -400,13 +400,13 @@ void Groupwise::slotReadAddressBookTotalSize( int size )
 
 void Groupwise::slotReadAddressBookProcessedSize( int size )
 {
-  kdDebug() << "Groupwise::processedSize(): " << size << endl;
+  kDebug() << "Groupwise::processedSize(): " << size << endl;
   processedSize( size );
 }
 
 void Groupwise::slotServerErrorMessage( const QString & serverErrorMessage, bool fatal )
 {
-  kdDebug() << "Groupwise::slotJobErrorMessage()" << serverErrorMessage << ( fatal ? ", FATAL!" : ", proceeding" ) << endl;
+  kDebug() << "Groupwise::slotJobErrorMessage()" << serverErrorMessage << ( fatal ? ", FATAL!" : ", proceeding" ) << endl;
   errorMessage( i18n( "An error occurred while communicating with the GroupWise server:\n%1" ).arg( serverErrorMessage ) );
 }
 

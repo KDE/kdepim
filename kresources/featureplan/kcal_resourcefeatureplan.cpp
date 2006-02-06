@@ -74,7 +74,7 @@ void ResourceFeaturePlan::writeConfig( KConfig *config )
 
 bool ResourceFeaturePlan::doLoad()
 {
-  kdDebug() << "ResourceFeaturePlan::load()" << endl;
+  kDebug() << "ResourceFeaturePlan::load()" << endl;
 
   mCalendar.close();
 

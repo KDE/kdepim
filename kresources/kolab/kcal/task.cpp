@@ -260,9 +260,9 @@ bool Task::loadXML( const QDomDocument& document )
       QDomElement e = n.toElement();
       if ( !loadAttribute( e ) )
         // TODO: Unhandled tag - save for later storage
-        kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+        kDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
     } else
-      kdDebug() << "Node is not a comment or an element???" << endl;
+      kDebug() << "Node is not a comment or an element???" << endl;
   }
 
 

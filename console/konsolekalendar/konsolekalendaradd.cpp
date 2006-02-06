@@ -67,7 +67,7 @@ bool KonsoleKalendarAdd::addEvent()
 {
   bool status = true;
 
-  kdDebug() << "konsolekalendaradd.cpp::addEvent()" << endl;
+  kDebug() << "konsolekalendaradd.cpp::addEvent()" << endl;
 
   if ( m_variables->isDryRun() ) {
     cout << i18n( "Insert Event <Dry Run>:" ).local8Bit().data()
@@ -104,7 +104,7 @@ bool KonsoleKalendarAdd::addEvent()
     }
   }
 
-  kdDebug() << "konsolekalendaradd.cpp::addEvent() | Done " << endl;
+  kDebug() << "konsolekalendaradd.cpp::addEvent() | Done " << endl;
   return status;
 }
 
@@ -124,14 +124,14 @@ bool KonsoleKalendarAdd::addImportedCalendar()
   if ( !cal->load( fileName ) ||
        !cal->load( m_variables->getImportFile() ) ||
        !cal->save( fileName ) ) {
-    kdDebug()
+    kDebug()
       << "konsolekalendaradd.cpp::importCalendar() | "
       << "Can't import file: "
       << m_variables->getImportFile()
       << endl;
     return false;
   }
-  kdDebug()
+  kDebug()
     << "konsolekalendaradd.cpp::importCalendar() | "
     << "Successfully imported file: "
     << m_variables->getImportFile()

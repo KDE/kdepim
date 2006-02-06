@@ -55,14 +55,14 @@ extern "C" {
 #define APP "GNOKII_XXPORT"
 
 #if 1 // !defined(NDEBUG)
- #define GNOKII_DEBUG(x)	do { kdWarning() << (x); } while (0)
+ #define GNOKII_DEBUG(x)	do { kWarning() << (x); } while (0)
 #else
  #define GNOKII_DEBUG(x)	do { } while (0)
 #endif
 #define GNOKII_CHECK_ERROR(error) \
 	do { \
 		if (error) \
-			kdError() << QString("ERROR %1: %2\n").arg(error).arg(gn_error_print(error));\
+			kError() << QString("ERROR %1: %2\n").arg(error).arg(gn_error_print(error));\
 	} while (0)
 
 // Locale conversion routines:

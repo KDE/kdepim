@@ -104,7 +104,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   if ( file.isEmpty() ) {
     mAddressBook = KABC::StdAddressBook::self( true );
   } else {
-    kdDebug(5720) << "KABCore(): document '" << file << "'" << endl;
+    kDebug(5720) << "KABCore(): document '" << file << "'" << endl;
     mAddressBook = new KABC::AddressBook;
     mAddressBook->addResource( new KABC::ResourceFile( file ) );
     if ( !mAddressBook->load() ) {

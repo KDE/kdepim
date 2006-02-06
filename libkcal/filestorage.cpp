@@ -78,7 +78,7 @@ bool FileStorage::open()
 
 bool FileStorage::load()
 {
-//  kdDebug(5800) << "FileStorage::load(): '" << mFileName << "'" << endl;
+//  kDebug(5800) << "FileStorage::load(): '" << mFileName << "'" << endl;
 
   // do we want to silently accept this, or make some noise?  Dunno...
   // it is a semantical thing vs. a practical thing.
@@ -97,10 +97,10 @@ bool FileStorage::load()
 
     if ( !success ) {
       if ( iCal.exception() ) {
-//        kdDebug(5800) << "---Error: " << mFormat->exception()->errorCode() << endl;
+//        kDebug(5800) << "---Error: " << mFormat->exception()->errorCode() << endl;
         if ( iCal.exception()->errorCode() == ErrorFormat::CalVersion1 ) {
           // Expected non vCalendar file, but detected vCalendar
-          kdDebug(5800) << "FileStorage::load() Fallback to VCalFormat" << endl;
+          kDebug(5800) << "FileStorage::load() Fallback to VCalFormat" << endl;
           VCalFormat vCal;
           success = vCal.load( calendar(), mFileName );
           calendar()->setProductId( vCal.productId() );
@@ -108,11 +108,11 @@ bool FileStorage::load()
           return false;
         }
       } else {
-        kdDebug(5800) << "Warning! There should be set an exception." << endl;
+        kDebug(5800) << "Warning! There should be set an exception." << endl;
         return false;
       }
     } else {
-//     kdDebug(5800) << "---Success" << endl;
+//     kDebug(5800) << "---Success" << endl;
       calendar()->setProductId( iCal.loadedProductId() );
     }
   }
@@ -136,10 +136,10 @@ bool FileStorage::save()
     calendar()->setModified( false );
   } else {
     if ( !format->exception() ) {
-      kdDebug(5800) << "FileStorage::save(): Error. There should be set an expection."
+      kDebug(5800) << "FileStorage::save(): Error. There should be set an expection."
                 << endl;
     } else {
-      kdDebug(5800) << "FileStorage::save(): " << format->exception()->message()
+      kDebug(5800) << "FileStorage::save(): " << format->exception()->message()
                 << endl;
     }
   }

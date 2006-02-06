@@ -154,14 +154,14 @@ int PopMailConduit::sendPendingMail(int mode)
 
 	if (count == 0)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Mail was not sent at all!"
 			<< endl;
 		emit logError(i18n("No mail was sent."));
 	}
 	else if (count < 0)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Mail sending returned error " << count
 			<< endl;
 		emit logError(i18n("No mail could be sent."));
@@ -213,7 +213,7 @@ int PopMailConduit::sendViaKMail()
 	DCOPClient *dcopptr = KApplication::kApplication()->dcopClient();
 	if (!dcopptr)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Cannot get DCOP client."
 			<< endl;
 		KMessageBox::error(0L,
@@ -254,7 +254,7 @@ int PopMailConduit::sendViaKMail()
 
 		if (t.status())
 		{
-			kdWarning() << k_funcinfo
+			kWarning() << k_funcinfo
 				<< ": Cannot open temp file."
 				<< endl;
 			KMessageBox::error(0L,
@@ -268,7 +268,7 @@ int PopMailConduit::sendViaKMail()
 
 		if (!sendf)
 		{
-			kdWarning() << k_funcinfo
+			kWarning() << k_funcinfo
 				<< ": Cannot open temporary file for writing!"
 				<< endl;
 			KMessageBox::error(0L,
@@ -298,7 +298,7 @@ int PopMailConduit::sendViaKMail()
 			returnValue,
 			true))
 		{
-			kdWarning() << k_funcinfo
+			kWarning() << k_funcinfo
 				<< ": DCOP call failed."
 				<< endl;
 
@@ -334,7 +334,7 @@ int PopMailConduit::sendViaKMail()
 		QByteArray data;
 		if (dcopptr->send("kmail","KMailIface","sendQueued",data))
 		{
-			kdWarning() << k_funcinfo
+			kWarning() << k_funcinfo
 				<< ": Could not flush queue."
 				<< endl;
 		}

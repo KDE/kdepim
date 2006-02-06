@@ -63,7 +63,7 @@ bool TodoStateMapper::load()
 {
   QFile file( filename() );
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    kdError() << "Can't read uid map file '" << filename() << "'" << endl;
+    kError() << "Can't read uid map file '" << filename() << "'" << endl;
     return false;
   }
 
@@ -83,7 +83,7 @@ bool TodoStateMapper::save()
 {
   QFile file( filename() );
   if ( !file.open( QIODevice::WriteOnly ) ) {
-    kdError() << "Can't write uid map file '" << filename() << "'" << endl;
+    kError() << "Can't write uid map file '" << filename() << "'" << endl;
     return false;
   }
 
@@ -115,7 +115,7 @@ void TodoStateMapper::addTodoState( const QString &uid, int localState, const QS
 QString TodoStateMapper::remoteState( const QString &uid, int localState )
 {
   if ( mTodoStateMap.find( uid ) == mTodoStateMap.end() )
-    kdError() << "TodoStateMapper: no entry for " << uid << " found" << endl;
+    kError() << "TodoStateMapper: no entry for " << uid << " found" << endl;
 
   TodoStateMapEntry entry = mTodoStateMap[ uid ];
   if ( entry.localState == localState )

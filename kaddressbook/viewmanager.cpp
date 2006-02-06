@@ -205,7 +205,7 @@ void ViewManager::setActiveView( const QString &name )
     KConfigGroup group( config, name );
     QString type = group.readEntry( "Type", "Table" );
 
-    kdDebug(5720) << "ViewManager::setActiveView: creating view - " << name << endl;
+    kDebug(5720) << "ViewManager::setActiveView: creating view - " << name << endl;
 
     ViewFactory *factory = mViewFactoryDict.find( type );
     if ( factory )
@@ -253,7 +253,7 @@ void ViewManager::setActiveView( const QString &name )
     mActiveView->refresh();
 
   } else
-    kdDebug(5720) << "ViewManager::setActiveView: unable to find view\n";
+    kDebug(5720) << "ViewManager::setActiveView: unable to find view\n";
 }
 
 void ViewManager::refreshView( const QString &uid )
@@ -398,14 +398,14 @@ void ViewManager::createViewFactories()
     KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().toLatin1() );
 
     if ( !factory ) {
-      kdDebug(5720) << "ViewManager::createViewFactories(): Factory creation failed" << endl;
+      kDebug(5720) << "ViewManager::createViewFactories(): Factory creation failed" << endl;
       continue;
     }
 
     ViewFactory *viewFactory = static_cast<ViewFactory*>( factory );
 
     if ( !viewFactory ) {
-      kdDebug(5720) << "ViewManager::createViewFactories(): Cast failed" << endl;
+      kDebug(5720) << "ViewManager::createViewFactories(): Cast failed" << endl;
       continue;
     }
 
@@ -415,7 +415,7 @@ void ViewManager::createViewFactories()
 
 void ViewManager::dropped( QDropEvent *e )
 {
-  kdDebug(5720) << "ViewManager::dropped: got a drop event" << endl;
+  kDebug(5720) << "ViewManager::dropped: got a drop event" << endl;
 
   // don't allow drops from our own drags
   if ( e->source() == this )
@@ -460,7 +460,7 @@ void ViewManager::startDrag()
   if (  uidList.isEmpty() )
     return;
 
-  kdDebug(5720) << "ViewManager::startDrag: starting to drag" << endl;
+  kDebug(5720) << "ViewManager::startDrag: starting to drag" << endl;
 
   QStringList::ConstIterator it;
   for ( it = uidList.begin(); it != uidList.end(); ++it )

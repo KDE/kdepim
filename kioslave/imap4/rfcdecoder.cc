@@ -379,7 +379,7 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
         valid = FALSE;
       pos += 3;
       i += 3;
-//    kdDebug(7116) << "rfcDecoder::decodeRFC2047String - charset " << charset << " - language " << language << " - '" << pos << "'" << endl;
+//    kDebug(7116) << "rfcDecoder::decodeRFC2047String - charset " << charset << " - language " << language << " - '" << pos << "'" << endl;
     }
     if (valid)
     {
@@ -405,10 +405,10 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
         for (i = str.length () - 1; i >= 0; i--)
           if (str[i] == '_')
             str[i] = ' ';
-//    kdDebug(7116) << "rfcDecoder::decodeRFC2047String - before QP '" << str << "'" << endl;
+//    kDebug(7116) << "rfcDecoder::decodeRFC2047String - before QP '" << str << "'" << endl;
 
         str = KCodecs::quotedPrintableDecode(str);
-//    kdDebug(7116) << "rfcDecoder::decodeRFC2047String - after QP '" << str << "'" << endl;
+//    kDebug(7116) << "rfcDecoder::decodeRFC2047String - after QP '" << str << "'" << endl;
       }
       else
       {
@@ -424,7 +424,7 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
     }
     else
     {
-//    kdDebug(7116) << "rfcDecoder::decodeRFC2047String - invalid" << endl;
+//    kDebug(7116) << "rfcDecoder::decodeRFC2047String - invalid" << endl;
       //result += "=?";
       //pos = beg -1; // because pos gets increased shortly afterwards
       pos = beg - 2;
@@ -437,7 +437,7 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
     QTextCodec *aCodec = codecForName (charset.ascii ());
     if (aCodec)
     {
-//    kdDebug(7116) << "Codec is " << aCodec->name() << endl;
+//    kDebug(7116) << "Codec is " << aCodec->name() << endl;
       return aCodec->toUnicode (result);
     }
   }
@@ -635,7 +635,7 @@ rfcDecoder::decodeRFC2231String (const QString & _str)
   QString st = _str.mid (l + 1);
   QString language = _str.mid (p + 1, l - p - 1);
 
-  //kdDebug(7116) << "Charset: " << charset << " Language: " << language << endl;
+  //kDebug(7116) << "Charset: " << charset << " Language: " << language << endl;
 
   char ch, ch2;
   p = 0;

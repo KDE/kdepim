@@ -49,7 +49,7 @@ void FilterMailApp::import(FilterInfo *info)
     QString directory = KFileDialog::getExistingDirectory( QDir::homePath(), info->parent() );
     info->setOverall(0);
 
-    //   kdDebug() << "starting by looking in directory " << directory << endl;
+    //   kDebug() << "starting by looking in directory " << directory << endl;
     traverseDirectory(directory);
 
     for ( QStringList::Iterator filename = mMboxFiles.begin(); filename != mMboxFiles.end(); ++filename, ++currentFile) {
@@ -59,7 +59,7 @@ void FilterMailApp::import(FilterInfo *info)
             info->alert( i18n("Unable to open %1, skipping").arg( *filename ) );
         } else {
             QFileInfo filenameInfo( *filename );
-            kdDebug() << "importing filename " << *filename << endl;
+            kDebug() << "importing filename " << *filename << endl;
             QStringList name = QStringList::split("/", *filename);
             QString folderName(name[name.count() - 2]);
 
@@ -140,7 +140,7 @@ void FilterMailApp::traverseDirectory(const QString &dirName)
             traverseDirectory(fi.filePath());
         } else {
             if (!fi.isDir() && fi.fileName() == "mbox") {
-                kdDebug() << "adding the file " << fi.filePath() << endl;
+                kDebug() << "adding the file " << fi.filePath() << endl;
                 mMboxFiles.append(fi.filePath());
             }
         }

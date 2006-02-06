@@ -118,7 +118,7 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 			++nr;
 		}
 	} else {
-		kdWarning()<<"The list of text files is not available to the resolution "
+		kWarning()<<"The list of text files is not available to the resolution "
 			"dialog. Something must have gone wrong ..."<<endl;
 	}
 

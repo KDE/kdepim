@@ -102,7 +102,7 @@ void ResourceGroupware::readAddressBooks()
 
   if ( ids.count() != names.count() || ids.count() != personals.count() ||
     ids.count() != frequents.count() ) {
-    kdError() << "Corrupt addressbook configuration" << endl;
+    kError() << "Corrupt addressbook configuration" << endl;
     return;
   }
 
@@ -175,7 +175,7 @@ void ResourceGroupware::retrieveAddressBooks()
 Ticket *ResourceGroupware::requestSaveTicket()
 {
   if ( !addressBook() ) {
-    kdDebug(5700) << "no addressbook" << endl;
+    kDebug(5700) << "no addressbook" << endl;
     return 0;
   }
 
@@ -194,7 +194,7 @@ bool ResourceGroupware::doOpen()
 
 void ResourceGroupware::doClose()
 {
-  kdDebug() << "ResourceGroupware::doClose()" << endl;
+  kDebug() << "ResourceGroupware::doClose()" << endl;
 
   cancelLoad();
 }
@@ -207,7 +207,7 @@ bool ResourceGroupware::load()
 bool ResourceGroupware::asyncLoad()
 {
   if ( mDownloadJob ) {
-    kdWarning() << "Download still in progress" << endl;
+    kWarning() << "Download still in progress" << endl;
     return false;
   }
 
@@ -216,7 +216,7 @@ bool ResourceGroupware::asyncLoad()
 
 #if 0
   if ( addressBooks().isEmpty() ) {
-    kdDebug() << "Retrieving default addressbook list." << endl;
+    kDebug() << "Retrieving default addressbook list." << endl;
     retrieveAddressBooks();
     writeAddressBooks();
   }
@@ -237,7 +237,7 @@ bool ResourceGroupware::asyncLoad()
   url.setQuery( query );
 #endif
 
-  kdDebug() << "Download URL: " << url << endl;
+  kDebug() << "Download URL: " << url << endl;
 
   mJobData.clear();
 
@@ -300,10 +300,10 @@ bool ResourceGroupware::asyncSave( Ticket* )
 
 void ResourceGroupware::slotJobResult( KIO::Job *job )
 {
-  kdDebug() << "ResourceGroupware::slotJobResult(): " << endl;
+  kDebug() << "ResourceGroupware::slotJobResult(): " << endl;
 
   if ( job->error() ) {
-    kdError() << job->errorString() << endl;
+    kError() << job->errorString() << endl;
     emit loadingError( this, job->errorString() );
   } else {
     mAddrMap.clear();
@@ -341,14 +341,14 @@ void ResourceGroupware::slotJobResult( KIO::Job *job )
 
 void ResourceGroupware::slotJobData( KIO::Job *, const QByteArray &data )
 {
-//  kdDebug() << "ResourceGroupware::slotJobData()" << endl;
+//  kDebug() << "ResourceGroupware::slotJobData()" << endl;
 
   mJobData.append( data.data() );
 }
 
 void ResourceGroupware::slotJobPercent( KIO::Job *, unsigned long percent )
 {
-  kdDebug() << "ResourceGroupware::slotJobPercent() " << percent << endl;
+  kDebug() << "ResourceGroupware::slotJobPercent() " << percent << endl;
   if ( mProgress ) mProgress->setProgress( percent );
 }
 

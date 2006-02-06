@@ -201,7 +201,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 			, "0" /* no notify */
 		))
 	{
-		kdError() << k_funcinfo
+		kError() << k_funcinfo
 			<< ": Can't start daemon : " << daemonError << endl;
 		if (fLogWidget)
 		{
@@ -365,21 +365,21 @@ void KPilotInstaller::slotSelectComponent(PilotComponent * c)
 	FUNCTIONSETUP;
 	if (!c)
 	{
-		kdWarning() << k_funcinfo << ": Not a widget." << endl;
+		kWarning() << k_funcinfo << ": Not a widget." << endl;
 		return;
 	}
 
 	QObject *o = c->parent();
 	if (!o)
 	{
-		kdWarning() << k_funcinfo << ": No parent." << endl;
+		kWarning() << k_funcinfo << ": No parent." << endl;
 		return;
 	}
 
 	QWidget *parent = dynamic_cast<QWidget *>(o);
 	if (!parent)
 	{
-		kdWarning() << k_funcinfo << ": No widget parent." << endl;
+		kWarning() << k_funcinfo << ": No widget parent." << endl;
 		return;
 	}
 
@@ -387,7 +387,7 @@ void KPilotInstaller::slotSelectComponent(PilotComponent * c)
 
 	if (index < 0)
 	{
-		kdWarning() << k_funcinfo << ": Index " << index << endl;
+		kWarning() << k_funcinfo << ": Index " << index << endl;
 		return;
 	}
 
@@ -491,7 +491,7 @@ void KPilotInstaller::slotPCtoHHRequested()
 		fAppStatus=WaitingForDaemon;
 		break;
 	case KPilotDCOP::None :
-		kdWarning() << k_funcinfo << ": Unhandled status message " << i << endl;
+		kWarning() << k_funcinfo << ": Unhandled status message " << i << endl;
 		break;
 	}
 }
@@ -709,7 +709,7 @@ void KPilotInstaller::quit()
 		QString reason;
 		if (!fP->list().current()->preHotSync(reason))
 		{
-			kdWarning() << k_funcinfo
+			kWarning() << k_funcinfo
 				<< ": Couldn't save "
 				<< fP->list().current()->name()
 				<< endl;
@@ -727,7 +727,7 @@ void KPilotInstaller::addComponentPage(PilotComponent * p,
 
 	if (!p)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Adding NULL component?" << endl;
 		return;
 	}
@@ -849,7 +849,7 @@ static bool runConfigure(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 
 	if (!options)
 	{
-		kdError() << k_funcinfo
+		kError() << k_funcinfo
 			<< ": Can't allocate KPilotOptions object" << endl;
 		daemon.requestSync(rememberedSync);
 		return false;
@@ -908,7 +908,7 @@ static WizardResult runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 
 	if (!l)
 	{
-		kdWarning() << k_funcinfo << ": Couldn't load library!" << endl;
+		kWarning() << k_funcinfo << ": Couldn't load library!" << endl;
 		goto sorry;
 	}
 
@@ -919,14 +919,14 @@ static WizardResult runWizard(PilotDaemonDCOP_stub &daemon,QWidget *parent)
 
 	if (!f)
 	{
-		kdWarning() << k_funcinfo << ": No create_wizard() in library." << endl;
+		kWarning() << k_funcinfo << ": No create_wizard() in library." << endl;
 		goto sorry;
 	}
 
 	w = f(parent,ConfigWizard::Standalone);
 	if (!w)
 	{
-		kdWarning() << k_funcinfo << ": Can't create wizard." << endl;
+		kWarning() << k_funcinfo << ": Can't create wizard." << endl;
 		goto sorry;
 	}
 
@@ -1164,7 +1164,7 @@ int main(int argc, char **argv)
 	}
 	else if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 	{
-		kdWarning() << ": KPilot configuration version "
+		kWarning() << ": KPilot configuration version "
 			<< KPilotConfig::ConfigurationVersion
 			<< " newer than stored version "
 			<< KPilotSettings::configVersion() << endl;
@@ -1206,7 +1206,7 @@ int main(int argc, char **argv)
 
 	if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 	{
-		kdWarning() << k_funcinfo <<
+		kWarning() << k_funcinfo <<
 			": Is still not configured for use." << endl;
 		KPilotConfig::sorryVersionOutdated( KPilotSettings::configVersion());
 		return 1;

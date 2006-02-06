@@ -71,7 +71,7 @@ int kdemain( int argc, char **argv )
 {
   KInstance instance( "kio_OpenGroupware" );
   
-  kdDebug(7000) << "Starting kio_OpenGroupware(pid:  " << getpid() << ")" << endl;
+  kDebug(7000) << "Starting kio_OpenGroupware(pid:  " << getpid() << ")" << endl;
   
   if (argc != 4) {
     fprintf( stderr, "Usage: kio_OpenGroupware protocol domain-socket1 domain-socket2\n");
@@ -92,13 +92,13 @@ OpenGroupware::OpenGroupware( const QCString &protocol, const QCString &pool,
 
 void OpenGroupware::get( const KUrl &url )
 {
-  kdDebug(7000) << "OpenGroupware::get()" << endl;
-  kdDebug(7000) << " URL: " << url.url() << endl;
+  kDebug(7000) << "OpenGroupware::get()" << endl;
+  kDebug(7000) << " URL: " << url.url() << endl;
   #if 1
-  kdDebug(7000) << " Path: " << url.path() << endl;
-  kdDebug(7000) << " Query: " << url.query() << endl;
-  kdDebug(7000) << " Protocol: " << url.protocol() << endl;
-  kdDebug(7000) << " Filename: " << url.filename() << endl;
+  kDebug(7000) << " Path: " << url.path() << endl;
+  kDebug(7000) << " Query: " << url.query() << endl;
+  kDebug(7000) << " Protocol: " << url.protocol() << endl;
+  kDebug(7000) << " Filename: " << url.filename() << endl;
   #endif
 
   mimeType( "text/plain" );
@@ -118,7 +118,7 @@ void OpenGroupware::get( const KUrl &url )
     errorMessage( error );
   }
   
-  kdDebug(7000) << "OpenGroupwareCgiProtocol::get() done" << endl;
+  kDebug(7000) << "OpenGroupwareCgiProtocol::get() done" << endl;
 }
 
 void OpenGroupware::getFreeBusy( const KUrl &url )
@@ -152,7 +152,7 @@ void OpenGroupware::getFreeBusy( const KUrl &url )
       fb->setDtStart( start );
       fb->setDtEnd( end );
 
-      kdDebug() << "Login" << endl;
+      kDebug() << "Login" << endl;
 
     }
 
@@ -190,7 +190,7 @@ void OpenGroupware::getCalendar( const KUrl &_url )
   url.setProtocol( "webdav" );
   url.setPath ( "/zidestore/dav/till/" );
 
-  kdDebug(7000) << "getCalendar: " << url.prettyURL() << endl;
+  kDebug(7000) << "getCalendar: " << url.prettyURL() << endl;
 
   // FIXME do progress handling
   mListEventsJob = KIO::davPropFind( url, props, "0", false );
@@ -221,12 +221,12 @@ void OpenGroupware::debugMessage( const QString &msg )
 void OpenGroupware::slotGetCalendarListingResult( KIO::Job *job )
 {
   
-  kdDebug(7000) << k_funcinfo << endl;
+  kDebug(7000) << k_funcinfo << endl;
 
   if (  job->error() ) {
     job->showErrorDialog(  0 );
   } else {
-    kdDebug() << "ResourceSlox::slotResult() success" << endl;
+    kDebug() << "ResourceSlox::slotResult() success" << endl;
 
     QDomDocument doc = mListEventsJob->response();
 

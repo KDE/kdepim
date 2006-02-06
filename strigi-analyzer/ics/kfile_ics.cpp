@@ -62,7 +62,7 @@ bool ICSPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
 
   CalendarLocal cal ( QString::fromLatin1( "UTC" ) );
   if( !cal.load( info.path() ) ) {
-    kdDebug() << "Could not load calendar" << endl;
+    kDebug() << "Could not load calendar" << endl;
     return false;
   }
 

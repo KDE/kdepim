@@ -68,7 +68,7 @@ void MainWindow::fileOpen()
 
 void MainWindow::loadAddressBook( const QString &fileName )
 {
-  kdDebug() << "loadAddressBook(): '" << fileName << "'" << endl;
+  kDebug() << "loadAddressBook(): '" << fileName << "'" << endl;
 
   mAddresseeList->clear();
   mCurrentItem = 0;
@@ -103,7 +103,7 @@ void MainWindow::updateAddressee( QListViewItem *item )
 
 void MainWindow::readAddressee( const KABC::Addressee &a )
 {
-  kdDebug() << "MainWindow::readAddressee(): " << a.name() << endl;  
+  kDebug() << "MainWindow::readAddressee(): " << a.name() << endl;  
     
   mNameEdit->setText( a.name() );
   mUrlEdit->setText( a.url().url() );
@@ -191,7 +191,7 @@ KABC::Addressee MainWindow::writeAddressee( const KABC::Addressee &addressee )
   a.setNote( mNoteEdit->text() );
 //  a.setLabel( mLabelEdit->text() );
 
-  kdDebug() << "MainWindow::writeAddressee()" << endl;
+  kDebug() << "MainWindow::writeAddressee()" << endl;
   a.dump();
 
   return a;
@@ -643,12 +643,12 @@ void MainWindow::addressBookChanged()
 
 void MainWindow::addressBookLocked()
 {
-  kdDebug() << "AddressBook locked()" << endl;
+  kDebug() << "AddressBook locked()" << endl;
 }
 
 void MainWindow::addressBookUnlocked()
 {
-  kdDebug() << "AddressBook unlocked()" << endl;
+  kDebug() << "AddressBook unlocked()" << endl;
 }
 
 

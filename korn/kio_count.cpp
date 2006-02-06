@@ -86,7 +86,7 @@ void KIO_Count::count( KKioDrop *drop )
 		//if( ! ( _slave = KIO::Scheduler::getConnectedSlave( kurl, metadata ) ) ) //Forcing reload
 		if( ! ( _slave = KIO_Connection::getSlave( kurl, metadata, _protocol ) ) ) //Reusing connection
 		{
-			kdWarning() << i18n( "Not able to open a kio slave for %1." ).arg( _protocol->configName() ) << endl;
+			kWarning() << i18n( "Not able to open a kio slave for %1." ).arg( _protocol->configName() ) << endl;
 			_kio->emitShowPassivePopup( i18n( "Not able to open a kio slave for %1." ).arg( _protocol->configName() ) );
 			_valid = false;
 			_kio->emitValidChanged();
@@ -202,13 +202,13 @@ void KIO_Count::result( KIO::Job* job )
 {
 	//job should be the latest job; elsewise: print an error.
 	if( job != _job )
-		kdError() << i18n( "Got unknown job; something must be wrong..." ) << endl;
+		kError() << i18n( "Got unknown job; something must be wrong..." ) << endl;
 
 	//look of an error occurred. If there is, print the error.
 	//This could be very useful by resolving bugs.
 	if( job->error() )
 	{
-		kdError() << i18n( "The next KIO-error occurred by counting: %1" ).arg( job->errorString() ) << endl;
+		kError() << i18n( "The next KIO-error occurred by counting: %1" ).arg( job->errorString() ) << endl;
 		_kio->emitShowPassivePopup( i18n( "The next KIO-error occurred by counting: %1" ).arg( job->errorString() ) );
 		_valid = false;
 		_kio->emitValidChanged();
@@ -252,7 +252,7 @@ void KIO_Count::entries( KIO::Job* job, const KIO::UDSEntryList &list )
 
 	//job should be the latest job
 	if( job != _job )
-		kdError() << i18n( "Got unknown job; something must be wrong..." ) << endl;
+		kError() << i18n( "Got unknown job; something must be wrong..." ) << endl;
 
 	for( QList<KKioDrop::FileInfo>::ConstIterator it = _kio->_mailurls->begin(); it != _kio->_mailurls->end(); ++it )
 		old_list.append( (*it).name );

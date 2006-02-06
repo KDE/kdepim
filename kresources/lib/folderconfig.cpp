@@ -90,7 +90,7 @@ void FolderConfig::setFolderLister( FolderLister *f )
 
 void FolderConfig::retrieveFolderList( const KUrl &url )
 {
-  kdDebug(7000) << "FolderConfig::retrieveFolderList()" << endl;
+  kDebug(7000) << "FolderConfig::retrieveFolderList()" << endl;
   if ( !mOldFolderListerURL.isEmpty() ) return;
 
   if ( mFolderLister->adaptor() ) {

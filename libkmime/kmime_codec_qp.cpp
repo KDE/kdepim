@@ -250,7 +250,7 @@ int Rfc2231EncodingCodec::maxDecodedSizeFor( int insize, bool withCRLF ) const {
 bool QuotedPrintableDecoder::decode( const char* & scursor, const char * const send,
 				     char* & dcursor, const char * const dend ) {
   if ( mWithCRLF )
-    kdWarning() << "CRLF output for decoders isn't yet supported!" << endl;
+    kWarning() << "CRLF output for decoders isn't yet supported!" << endl;
 
   while ( scursor != send && dcursor != dend ) {
     if ( mFlushing ) {
@@ -292,7 +292,7 @@ bool QuotedPrintableDecoder::decode( const char* & scursor, const char * const s
     uchar value = 255;
 
     if ( mExpectLF && ch != '\n' ) {
-      kdWarning() << "QuotedPrintableDecoder: "
+      kWarning() << "QuotedPrintableDecoder: "
 	"illegally formed soft linebreak or lonely CR!" << endl;
       mInsideHexChar = false;
       mExpectLF = false;
@@ -318,7 +318,7 @@ bool QuotedPrintableDecoder::decode( const char* & scursor, const char * const s
 	    }
 	    // else fall through
 	  default:
-	    kdWarning() << "QuotedPrintableDecoder: "
+	    kWarning() << "QuotedPrintableDecoder: "
 	      "illegally formed hex char! Outputting verbatim." << endl;
 	    mBadChar = ch;
 	    mFlushing = true;
@@ -374,7 +374,7 @@ bool QuotedPrintableDecoder::decode( const char* & scursor, const char * const s
       } else if ( ch == '\r' ) {
 	mExpectLF = true;
       } else {
-	kdWarning() << "QuotedPrintableDecoder: " << ch <<
+	kWarning() << "QuotedPrintableDecoder: " << ch <<
 	  " illegal character in input stream! Ignoring." << endl;
       }
     }

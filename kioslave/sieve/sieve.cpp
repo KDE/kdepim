@@ -52,11 +52,11 @@ static const int debugArea = 7122;
 
 static inline
 #ifdef NDEBUG
-  kndbgstream ksDebug() { return kdDebug( debugArea ); }
-  kndbgstream ksDebug( bool cond ) { return kdDebug( cond, debugArea ); }
+  kndbgstream ksDebug() { return kDebug( debugArea ); }
+  kndbgstream ksDebug( bool cond ) { return kDebug( cond, debugArea ); }
 #else
-  kdbgstream ksDebug() { return kdDebug( debugArea ); }
-  kdbgstream ksDebug( bool cond ) { return kdDebug( cond, debugArea ); }
+  kdbgstream ksDebug() { return kDebug( debugArea ); }
+  kdbgstream ksDebug( bool cond ) { return kDebug( cond, debugArea ); }
 #endif
 
 #define SIEVE_DEFAULT_PORT 2000

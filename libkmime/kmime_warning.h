@@ -1,6 +1,6 @@
 #ifndef KMIME_NO_WARNING
 #  include <kdebug.h>
-#  define KMIME_WARN kdWarning(5100) << "Tokenizer Warning: "
+#  define KMIME_WARN kWarning(5100) << "Tokenizer Warning: "
 #  define KMIME_WARN_UNKNOWN(x,y) KMIME_WARN << "unknown " #x ": \"" \
           << y << "\"" << endl;
 #  define KMIME_WARN_UNKNOWN_ENCODING KMIME_WARN << "unknown encoding in " \

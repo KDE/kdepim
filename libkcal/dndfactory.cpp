@@ -73,7 +73,7 @@ K3MultipleDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
 
 Event *DndFactory::createDrop(QDropEvent *de)
 {
-  kdDebug(5800) << "DndFactory::createDrop()" << endl;
+  kDebug(5800) << "DndFactory::createDrop()" << endl;
 
   CalendarLocal cal( mCalendar->timeZoneId() );
 
@@ -92,7 +92,7 @@ Event *DndFactory::createDrop(QDropEvent *de)
 
 Todo *DndFactory::createDropTodo(QDropEvent *de)
 {
-  kdDebug(5800) << "VCalFormat::createDropTodo()" << endl;
+  kDebug(5800) << "VCalFormat::createDropTodo()" << endl;
 
   CalendarLocal cal( mCalendar->timeZoneId() );
 
@@ -133,7 +133,7 @@ bool DndFactory::copyIncidence( Incidence *selectedInc )
 
 Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime)
 {
-//  kdDebug(5800) << "DnDFactory::pasteEvent()" << endl;
+//  kDebug(5800) << "DnDFactory::pasteEvent()" << endl;
 
   CalendarLocal cal( mCalendar->timeZoneId() );
 
@@ -141,7 +141,7 @@ Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime
 
   if ( !ICalDrag::decode( cb->data(), &cal ) &&
        !VCalDrag::decode( cb->data(), &cal ) ) {
-    kdDebug(5800) << "Can't parse clipboard" << endl;
+    kDebug(5800) << "Can't parse clipboard" << endl;
     return 0;
   }
 
@@ -187,7 +187,7 @@ Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime
         anJournal->setDtStart( QDateTime( newDate ) );
       }
     } else {
-      kdDebug(5850) << "Trying to paste unknown incidence of type " << inc->type() << endl;
+      kDebug(5850) << "Trying to paste unknown incidence of type " << inc->type() << endl;
     }
 
     return inc;

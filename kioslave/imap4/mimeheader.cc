@@ -451,7 +451,7 @@ mimeHeader::parsePart (mimeIO & useIO, const QString& boundary)
   Q3CString preNested, postNested;
   mbox = parseHeader (useIO);
 
-  kdDebug(7116) << "mimeHeader::parsePart - parsing part '" << getType () << "'" << endl;
+  kDebug(7116) << "mimeHeader::parsePart - parsing part '" << getType () << "'" << endl;
   if (!qstrnicmp (getType (), "Multipart", 9))
   {
     retVal = parseBody (useIO, preNested, getTypeParm ("boundary"));  //this is a message in mime format stuff
@@ -541,7 +541,7 @@ mimeHeader::parseHeader (mimeIO & useIO)
   mimeHdrLine my_line;
   Q3CString inputStr;
 
-  kdDebug(7116) << "mimeHeader::parseHeader - starting parsing" << endl;
+  kDebug(7116) << "mimeHeader::parseHeader - starting parsing" << endl;
   while (useIO.inputLine (inputStr))
   {
     int appended;
@@ -565,7 +565,7 @@ mimeHeader::parseHeader (mimeIO & useIO)
     inputStr = (const char *) NULL;
   }
 
-  kdDebug(7116) << "mimeHeader::parseHeader - finished parsing" << endl;
+  kDebug(7116) << "mimeHeader::parseHeader - finished parsing" << endl;
   return mbox;
 }
 
@@ -582,12 +582,12 @@ mimeHeader::bodyPart (const QString & _str)
     tempStr = _str.right (_str.length () - pt - 1);
     if (nestedMessage)
     {
-      kdDebug(7116) << "mimeHeader::bodyPart - recursing message" << endl;
+      kDebug(7116) << "mimeHeader::bodyPart - recursing message" << endl;
       tempPart = nestedMessage->nestedParts.at (_str.left(pt).toULong() - 1);
     }
     else
     {
-      kdDebug(7116) << "mimeHeader::bodyPart - recursing mixed" << endl;
+      kDebug(7116) << "mimeHeader::bodyPart - recursing mixed" << endl;
       tempPart = nestedParts.at (_str.left(pt).toULong() - 1);
     }
     if (tempPart)
@@ -595,14 +595,14 @@ mimeHeader::bodyPart (const QString & _str)
     return tempPart;
   }
 
-  kdDebug(7116) << "mimeHeader::bodyPart - returning part " << _str << endl;
+  kDebug(7116) << "mimeHeader::bodyPart - returning part " << _str << endl;
   // or pick just the plain part
   if (nestedMessage)
   {
-    kdDebug(7116) << "mimeHeader::bodyPart - message" << endl;
+    kDebug(7116) << "mimeHeader::bodyPart - message" << endl;
     return nestedMessage->nestedParts.at (_str.toULong () - 1);
   }
-  kdDebug(7116) << "mimeHeader::bodyPart - mixed" << endl;
+  kDebug(7116) << "mimeHeader::bodyPart - mixed" << endl;
   return nestedParts.at (_str.toULong () - 1);
 }
 
@@ -641,7 +641,7 @@ void mimeHeader::serialize(QDataStream& stream)
 QString
 mimeHeader::bodyDecoded ()
 {
-  kdDebug(7116) << "mimeHeader::bodyDecoded" << endl;
+  kDebug(7116) << "mimeHeader::bodyDecoded" << endl;
   QByteArray temp;
 
   temp = bodyDecodedBinary ();
@@ -659,7 +659,7 @@ mimeHeader::bodyDecodedBinary ()
     KCodecs::base64Decode(postMultipartBody, retVal);
   else retVal = postMultipartBody;
 
-  kdDebug(7116) << "mimeHeader::bodyDecodedBinary - size is " << retVal.size () << endl;
+  kDebug(7116) << "mimeHeader::bodyDecodedBinary - size is " << retVal.size () << endl;
   return retVal;
 }
 
@@ -674,17 +674,17 @@ mimeHeader::setBodyEncoded (const QByteArray & _arr)
 {
   QByteArray setVal;
 
-  kdDebug(7116) << "mimeHeader::setBodyEncoded - in size " << _arr.size () << endl;
+  kDebug(7116) << "mimeHeader::setBodyEncoded - in size " << _arr.size () << endl;
   if (contentEncoding.find ("quoted-printable", 0, false) == 0)
     setVal = KCodecs::quotedPrintableEncode(_arr);
   else if (contentEncoding.find ("base64", 0, false) == 0)
     KCodecs::base64Encode(_arr, setVal);
   else
     setVal.duplicate (_arr);
-  kdDebug(7116) << "mimeHeader::setBodyEncoded - out size " << setVal.size () << endl;
+  kDebug(7116) << "mimeHeader::setBodyEncoded - out size " << setVal.size () << endl;
 
   postMultipartBody.duplicate (setVal);
-  kdDebug(7116) << "mimeHeader::setBodyEncoded - out size " << postMultipartBody.size () << endl;
+  kDebug(7116) << "mimeHeader::setBodyEncoded - out size " << postMultipartBody.size () << endl;
 }
 
 QString

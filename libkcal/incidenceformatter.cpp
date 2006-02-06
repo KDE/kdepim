@@ -129,7 +129,7 @@ static QString linkPerson( const QString& email, QString name,
       // Email not found in the addressbook. Don't make a link
       uid.clear();
   }
-  kdDebug(5850) << "formatAttendees: uid = " << uid << endl;
+  kDebug(5850) << "formatAttendees: uid = " << uid << endl;
 
   // Show the attendee
   QString tmpString = "<li>";
@@ -725,11 +725,11 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     case Scheduler::Reply: {
         Attendee::List attendees = event->attendees();
         if( attendees.count() == 0 ) {
-          kdDebug(5850) << "No attendees in the iCal reply!\n";
+          kDebug(5850) << "No attendees in the iCal reply!\n";
           return QString();
         }
         if( attendees.count() != 1 )
-          kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
+          kDebug(5850) << "Warning: attendeecount in the reply should be 1 "
                         << "but is " << attendees.count() << endl;
         Attendee* attendee = *attendees.begin();
 
@@ -781,11 +781,11 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
     case Scheduler::Reply: {
         Attendee::List attendees = todo->attendees();
         if( attendees.count() == 0 ) {
-          kdDebug(5850) << "No attendees in the iCal reply!\n";
+          kDebug(5850) << "No attendees in the iCal reply!\n";
           return QString();
         }
         if( attendees.count() != 1 )
-          kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
+          kDebug(5850) << "Warning: attendeecount in the reply should be 1 "
                         << "but is " << attendees.count() << endl;
         Attendee* attendee = *attendees.begin();
 
@@ -838,11 +838,11 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
     case Scheduler::Reply: {
         Attendee::List attendees = journal->attendees();
         if( attendees.count() == 0 ) {
-          kdDebug(5850) << "No attendees in the iCal reply!\n";
+          kDebug(5850) << "No attendees in the iCal reply!\n";
           return QString();
         }
         if( attendees.count() != 1 )
-          kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
+          kDebug(5850) << "Warning: attendeecount in the reply should be 1 "
                         << "but is " << attendees.count() << endl;
         Attendee* attendee = *attendees.begin();
 
@@ -981,9 +981,9 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   ScheduleMessage *msg = format.parseScheduleMessage( mCalendar, invitation );
 
   if( !msg ) {
-    kdDebug( 5850 ) << "Failed to parse the scheduling message" << endl;
+    kDebug( 5850 ) << "Failed to parse the scheduling message" << endl;
     Q_ASSERT( format.exception() );
-    kdDebug( 5850 ) << format.exception()->message() << endl;
+    kDebug( 5850 ) << format.exception()->message() << endl;
     return QString();
   }
 
@@ -1114,7 +1114,7 @@ static struct save_tz set_tz( const char* _tc )
   rv.old_tz = 0;
   rv.tz_env_str = 0;
 
-  //kdDebug(5006) << "set_tz(), timezone before = " << timezone << endl;
+  //kDebug(5006) << "set_tz(), timezone before = " << timezone << endl;
 
   char* tz_env = 0;
   if( getenv( "TZ" ) ) {
@@ -1131,7 +1131,7 @@ static struct save_tz set_tz( const char* _tc )
   /* tmp_env is not free'ed -- it is part of the environment */
 
   tzset();
-  //kdDebug(5006) << "set_tz(), timezone after = " << timezone << endl;
+  //kDebug(5006) << "set_tz(), timezone after = " << timezone << endl;
 
   return rv;
 }

@@ -385,7 +385,7 @@ bool Incidence::recursAt(const QDateTime &qdt) const
 */
 QList<QDateTime> Incidence::startDateTimesForDate( const QDate &date ) const
 {
-//kdDebug(5800) << "Incidence::startDateTimesForDate " << date << ", incidence=" << summary() << endl;
+//kDebug(5800) << "Incidence::startDateTimesForDate " << date << ", incidence=" << summary() << endl;
   QDateTime start = dtStart();
   QDateTime end = endDateRecurrenceBase();
 
@@ -432,7 +432,7 @@ QList<QDateTime> Incidence::startDateTimesForDate( const QDate &date ) const
 */
 QList<QDateTime> Incidence::startDateTimesForDateTime( const QDateTime &datetime ) const
 {
-// kdDebug(5800) << "Incidence::startDateTimesForDateTime " << datetime << ", incidence=" << summary() << endl;
+// kDebug(5800) << "Incidence::startDateTimesForDateTime " << datetime << ", incidence=" << summary() << endl;
   QDateTime start = dtStart();
   QDateTime end = endDateRecurrenceBase();
 

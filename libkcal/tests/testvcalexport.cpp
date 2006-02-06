@@ -64,8 +64,8 @@ int main( int argc, char **argv )
   QFileInfo outputFileInfo( output );
   output = outputFileInfo.absoluteFilePath();
 
-  kdDebug(5800) << "Input file: " << input << endl;
-  kdDebug(5800) << "Output file: " << output << endl;
+  kDebug(5800) << "Input file: " << input << endl;
+  kDebug(5800) << "Output file: " << output << endl;
 
 
   CalendarLocal cal( QLatin1String("UTC") );

@@ -77,7 +77,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
     cmd = PGP2 " +batchmode +language=en +verbose=1 -sat";
   else
   {
-    kdDebug(5100) << "kpgpbase: Neither recipients nor passphrase specified." << endl;
+    kDebug(5100) << "kpgpbase: Neither recipients nor passphrase specified." << endl;
     return OK;
   }
 
@@ -190,7 +190,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
   {
     if(error.find("Pass phrase is good") != -1)
     {
-      //kdDebug(5100) << "Base: Good Passphrase!" << endl;
+      //kDebug(5100) << "Base: Good Passphrase!" << endl;
       status |= SIGNED;
     }
     if( error.find("Bad pass phrase") != -1)
@@ -218,7 +218,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
     status |= ERROR;
   }
 
-  //kdDebug(5100) << "status = " << status << endl;
+  //kDebug(5100) << "status = " << status << endl;
   block.setStatus( status );
   return status;
 }
@@ -241,7 +241,7 @@ Base2::decrypt( Block& block, const char *passphrase )
   // this hack can solve parts of the problem
   if(error.find("ASCII armor corrupted.") != -1)
   {
-    kdDebug(5100) << "removing ASCII armor header" << endl;
+    kDebug(5100) << "removing ASCII armor header" << endl;
     int index1 = input.find("-----BEGIN PGP SIGNED MESSAGE-----");
     if(index1 != -1)
       index1 = input.find("-----BEGIN PGP SIGNATURE-----", index1);
@@ -285,7 +285,7 @@ Base2::decrypt( Block& block, const char *passphrase )
    */
   if(error.find("File is encrypted.") != -1)
   {
-    //kdDebug(5100) << "kpgpbase: message is encrypted" << endl;
+    //kDebug(5100) << "kpgpbase: message is encrypted" << endl;
     status |= ENCRYPTED;
     if((index = error.find("Key for user ID:")) != -1)
     {
@@ -293,12 +293,12 @@ Base2::decrypt( Block& block, const char *passphrase )
       index  += 17;
       index2 = error.find('\n', index);
       block.setRequiredUserId( error.mid(index, index2 - index) );
-      //kdDebug(5100) << "Base: key needed is \"" << block.requiredUserId() << "\"!\n";
+      //kDebug(5100) << "Base: key needed is \"" << block.requiredUserId() << "\"!\n";
 
       if((passphrase != 0) && (error.find("Bad pass phrase") != -1))
       {
         errMsg = i18n("Bad passphrase; could not decrypt.");
-        kdDebug(5100) << "Base: passphrase is bad" << endl;
+        kDebug(5100) << "Base: passphrase is bad" << endl;
         status |= BADPHRASE;
         status |= ERROR;
       }
@@ -309,7 +309,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       status |= NO_SEC_KEY;
       status |= ERROR;
       errMsg = i18n("You do not have the secret key needed to decrypt this message.");
-      kdDebug(5100) << "Base: no secret key for this message" << endl;
+      kDebug(5100) << "Base: no secret key for this message" << endl;
     }
     // check for persons
 #if 0
@@ -397,17 +397,17 @@ Base2::decrypt( Block& block, const char *passphrase )
   {
     // move index to start of next line
     index = error.find('\n', index+18) + 1;
-    //kdDebug(5100) << "Base: message is signed" << endl;
+    //kDebug(5100) << "Base: message is signed" << endl;
     status |= SIGNED;
     // get signature date and signature key ID
     if ((index2 = error.find("Signature made", index)) != -1) {
       index2 += 15;
       int index3 = error.find("using", index2);
       block.setSignatureDate( error.mid(index2, index3-index2-1) );
-      kdDebug(5100) << "Message was signed on '" << block.signatureDate() << "'\n";
+      kDebug(5100) << "Message was signed on '" << block.signatureDate() << "'\n";
       index3 = error.find("key ID ", index3) + 7;
       block.setSignatureKeyId( error.mid(index3,8) );
-      kdDebug(5100) << "Message was signed with key '" << block.signatureKeyId() << "'\n";
+      kDebug(5100) << "Message was signed with key '" << block.signatureKeyId() << "'\n";
     }
     else {
       // if pgp can't find the keyring it unfortunately doesn't print
@@ -457,7 +457,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       block.setSignatureUserId( i18n("Unknown error") );
     }
   }
-  //kdDebug(5100) << "status = " << status << endl;
+  //kDebug(5100) << "status = " << status << endl;
   block.setStatus( status );
   return status;
 }
@@ -693,7 +693,7 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
         key->setExpired( true );
         break;
       default:
-        kdDebug(5100) << "Unknown key flag.\n";
+        kDebug(5100) << "Unknown key flag.\n";
       }
 
       // Key Length
@@ -811,7 +811,7 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
     index = index2 + 1;
   }
 
-  //kdDebug(5100) << "finished parsing key data\n";
+  //kDebug(5100) << "finished parsing key data\n";
 
   return key;
 }
@@ -880,7 +880,7 @@ Base2::parseTrustDataForKey( Key* key, const QByteArray& str )
       for( UserIDListIterator it( userIDs ); it.current(); ++it )
         if( (*it)->text() == uid )
         {
-          kdDebug(5100)<<"Setting the validity of "<<uid<<" to "<<validity<<endl;
+          kDebug(5100)<<"Setting the validity of "<<uid<<" to "<<validity<<endl;
           (*it)->setValidity( validity );
           break;
         }
@@ -895,7 +895,7 @@ Base2::parseTrustDataForKey( Key* key, const QByteArray& str )
 KeyList
 Base2::parseKeyList( const QByteArray& output, bool secretKeys )
 {
-  kdDebug(5100) << "Kpgp::Base2::parseKeyList()" << endl;
+  kDebug(5100) << "Kpgp::Base2::parseKeyList()" << endl;
   KeyList keys;
   Key *key = 0;
   Subkey *subkey = 0;
@@ -972,7 +972,7 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
         key->setExpired( true );
         break;
       default:
-        kdDebug(5100) << "Unknown key flag.\n";
+        kDebug(5100) << "Unknown key flag.\n";
       }
 
       // Key Length
@@ -1096,7 +1096,7 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
   if (key != 0) // store the last key in the key list
     keys.append( key );
 
-  //kdDebug(5100) << "finished parsing keys" << endl;
+  //kDebug(5100) << "finished parsing keys" << endl;
 
   return keys;
 }

@@ -114,7 +114,7 @@ KPIM::GroupwarePrefsBase *ResourceGroupwareBase::createPrefs()
 
 void ResourceGroupwareBase::readConfig( const KConfig */*config*/ )
 {
-  kdDebug(5700) << "KABC::ResourceGroupwareBase::readConfig()" << endl;
+  kDebug(5700) << "KABC::ResourceGroupwareBase::readConfig()" << endl;
 //   ResourceCached::readConfig( config );
   if ( mPrefs ) {
     mPrefs->readConfig();
@@ -137,7 +137,7 @@ void ResourceGroupwareBase::writeConfig( KConfig *config )
 Ticket *ResourceGroupwareBase::requestSaveTicket()
 {
   if ( !addressBook() ) {
-    kdDebug(5700) << "no addressbook" << endl;
+    kDebug(5700) << "no addressbook" << endl;
     return 0;
   }
 
@@ -156,7 +156,7 @@ bool ResourceGroupwareBase::doOpen()
 
 void ResourceGroupwareBase::doClose()
 {
-  kdDebug(5800) << "ResourceGroupwareBase::doClose()" << endl;
+  kDebug(5800) << "ResourceGroupwareBase::doClose()" << endl;
 
   if ( mDownloadJob ) mDownloadJob->kill();
 }
@@ -169,7 +169,7 @@ bool ResourceGroupwareBase::load()
 bool ResourceGroupwareBase::asyncLoad()
 {
   if ( mDownloadJob ) {
-    kdWarning() << "Download still in progress" << endl;
+    kWarning() << "Download still in progress" << endl;
     return false;
   }
 
@@ -185,10 +185,10 @@ bool ResourceGroupwareBase::asyncLoad()
 
 void ResourceGroupwareBase::slotDownloadJobResult( KPIM::GroupwareJob *job )
 {
-  kdDebug(5800) << "ResourceGroupwareBase::slotJobResult(): " << endl;
+  kDebug(5800) << "ResourceGroupwareBase::slotJobResult(): " << endl;
 
   if ( job->error() ) {
-    kdError() << "job failed: " << job->errorString() << endl;
+    kError() << "job failed: " << job->errorString() << endl;
   } else {
     emit loadingFinished( this );
     if ( addressBook() )
@@ -207,7 +207,7 @@ bool ResourceGroupwareBase::asyncSave( Ticket* )
 {
   if ( mUploadJob ) {
     // FIXME: If the user cancels, need to reset the mUploadJob variable to 0.
-    kdWarning() << "Upload still in progress." << endl;
+    kWarning() << "Upload still in progress." << endl;
     return false;
   }
 
@@ -247,10 +247,10 @@ bool ResourceGroupwareBase::asyncSave( Ticket* )
 
 void ResourceGroupwareBase::slotUploadJobResult( KPIM::GroupwareJob *job )
 {
-  kdDebug(5800) << "ResourceGroupwareBase::slotJobResult(): " << endl;
+  kDebug(5800) << "ResourceGroupwareBase::slotJobResult(): " << endl;
 
   if ( job->error() ) {
-    kdError() << "job failed: " << job->errorString() << endl;
+    kError() << "job failed: " << job->errorString() << endl;
   } else {
     // FIXME
   }

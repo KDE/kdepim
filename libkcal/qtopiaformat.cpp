@@ -119,7 +119,7 @@ class QtopiaParser : public QXmlDefaultHandler
 
         QString alarmStr = attributes.value( "alarm" );
         if ( !alarmStr.isEmpty() ) {
-          kdDebug(5800) << "Alarm: " << alarmStr << endl;
+          kDebug(5800) << "Alarm: " << alarmStr << endl;
           Alarm *alarm = new Alarm( event );
           alarm->setType( Alarm::Display );
           alarm->setEnabled( true );
@@ -183,21 +183,21 @@ class QtopiaParser : public QXmlDefaultHandler
 
     bool warning ( const QXmlParseException &exception )
     {
-      kdDebug(5800) << "WARNING" << endl;
+      kDebug(5800) << "WARNING" << endl;
       printException( exception );
       return true;
     }
  
     bool error ( const QXmlParseException &exception )
     {
-      kdDebug(5800) << "ERROR" << endl;
+      kDebug(5800) << "ERROR" << endl;
       printException( exception );
       return false;
     }
  
     bool fatalError ( const QXmlParseException &exception )
     {
-      kdDebug(5800) << "FATALERROR" << endl;
+      kDebug(5800) << "FATALERROR" << endl;
       printException( exception );
       return false;
     }
@@ -210,7 +210,7 @@ class QtopiaParser : public QXmlDefaultHandler
   protected:
     void printException( const QXmlParseException &exception )
     {
-      kdError() << "XML Parse Error (line " << exception.lineNumber()
+      kError() << "XML Parse Error (line " << exception.lineNumber()
                 << ", col " << exception.columnNumber() << "): "
                 << exception.message() << "(public ID: '"
                 << exception.publicId() << "' system ID: '"
@@ -266,7 +266,7 @@ QtopiaFormat::~QtopiaFormat()
 
 bool QtopiaFormat::load( Calendar *calendar, const QString &fileName)
 {
-  kdDebug(5800) << "QtopiaFormat::load() " << fileName << endl;
+  kDebug(5800) << "QtopiaFormat::load() " << fileName << endl;
 
   clearException();
 
@@ -280,7 +280,7 @@ bool QtopiaFormat::load( Calendar *calendar, const QString &fileName)
 
 bool QtopiaFormat::save( Calendar *calendar, const QString &fileName )
 {
-  kdDebug(5800) << "QtopiaFormat::save(): " << fileName << endl;
+  kDebug(5800) << "QtopiaFormat::save(): " << fileName << endl;
 
   clearException();
 
@@ -305,7 +305,7 @@ bool QtopiaFormat::save( Calendar *calendar, const QString &fileName )
 
 bool QtopiaFormat::fromString( Calendar *, const QString & )
 {
-  kdDebug(5800) << "QtopiaFormat::fromString() not yet implemented." << endl;
+  kDebug(5800) << "QtopiaFormat::fromString() not yet implemented." << endl;
   return false;
 }
 

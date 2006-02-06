@@ -48,7 +48,7 @@ QString APIBlogger::getFunctionName( blogFunctions type )
 
 KIO::Job *APIBlogger::createUserInfoJob()
 {
-  kdDebug() << "read user info..." << endl;
+  kDebug() << "read user info..." << endl;
   QList<QVariant> args( defaultArgs() );
   return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerGetUserInfo ), args, false );
 }
@@ -57,7 +57,7 @@ KIO::Job *APIBlogger::createListFoldersJob()
 {
   // TODO: Check if we're already authenticated. If not, do it!
 //   if ( isValid() ) {
-    kdDebug() << "Fetch List of Blogs..." << endl;
+    kDebug() << "Fetch List of Blogs..." << endl;
     QList<QVariant> args( defaultArgs() );
     return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerGetUsersBlogs ), args, false );
 //   } else {
@@ -70,7 +70,7 @@ KIO::TransferJob *APIBlogger::createListItemsJob( const KUrl &url )
 {
   // TODO: Check if we're already authenticated. If not, do it!
 //   if ( isValid() ) {
-    kdDebug() << "Fetch List of Posts..." << endl;
+    kDebug() << "Fetch List of Posts..." << endl;
     QList<QVariant> args( defaultArgs( url.url() ) );
     args << QVariant( mDownloadCount );
     return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerGetRecentPosts ), args, false );
@@ -83,7 +83,7 @@ KIO::TransferJob *APIBlogger::createListItemsJob( const KUrl &url )
 KIO::TransferJob *APIBlogger::createDownloadJob( const KUrl &url )
 {
 //   if ( isValid() ){
-    kdDebug() << "Fetch Posting with url " << url.url() << endl;
+    kDebug() << "Fetch Posting with url " << url.url() << endl;
     QList<QVariant> args( defaultArgs( url.url() ) );
     return KIO::xmlrpcCall( mServerURL, getFunctionName( bloggerGetPost ), args, false );
 //   } else {
@@ -95,11 +95,11 @@ KIO::TransferJob *APIBlogger::createDownloadJob( const KUrl &url )
 KIO::TransferJob *APIBlogger::createUploadJob( const KUrl &url, KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
-    kdDebug() << "APIBlogger::createUploadJob: posting=0" << endl;
+    kDebug() << "APIBlogger::createUploadJob: posting=0" << endl;
     return 0;
   }
 //   if ( isValid() ){
-    kdDebug() << "Uploading Posting with url " << url.url() << endl;
+    kDebug() << "Uploading Posting with url " << url.url() << endl;
     QList<QVariant> args( defaultArgs( posting->postID() ) );
     args << QVariant( posting->content() );
     args << QVariant( /*publish=*/true, 0 );
@@ -113,11 +113,11 @@ KIO::TransferJob *APIBlogger::createUploadJob( const KUrl &url, KBlog::BlogPosti
 KIO::TransferJob *APIBlogger::createUploadNewJob( KBlog::BlogPosting *posting )
 {
   if ( !posting ) {
-    kdDebug() << "APIBlogger::createUploadNewJob: posting=0" << endl;
+    kDebug() << "APIBlogger::createUploadNewJob: posting=0" << endl;
     return 0;
   }
 //   if ( isValid() ){
-    kdDebug() << "Creating new Posting with blogid " << posting->blogID() << " at url " << mServerURL << endl;
+    kDebug() << "Creating new Posting with blogid " << posting->blogID() << " at url " << mServerURL << endl;
     QList<QVariant> args( defaultArgs( posting->blogID() ) );
     args << QVariant( posting->content() );
     args << QVariant( /*publish=*/true, 0 );
@@ -130,7 +130,7 @@ KIO::TransferJob *APIBlogger::createUploadNewJob( KBlog::BlogPosting *posting )
 
 KIO::Job *APIBlogger::createRemoveJob( const KUrl &/*url*/, const QString &postid )
 {
-kdDebug() << "APIBlogger::createRemoveJob: postid=" << postid << endl;
+kDebug() << "APIBlogger::createRemoveJob: postid=" << postid << endl;
 //   if ( isValid() ){
     QList<QVariant> args( defaultArgs( postid ) );
     args << QVariant( /*publish=*/true, 0 );
@@ -155,17 +155,17 @@ bool APIBlogger::interpretUserInfoJob( KIO::Job *job )
   } else if ( trfjob ) {
     QList<QVariant> message( trfjob->response() );
 
-    kdDebug () << "TOP: " << message[ 0 ].typeName() << endl;
+    kDebug () << "TOP: " << message[ 0 ].typeName() << endl;
     const QList<QVariant> posts = message;
     QList<QVariant>::ConstIterator it = posts.begin();
     QList<QVariant>::ConstIterator end = posts.end();
     for ( ; it != end; ++it ) {
-      kdDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
+      kDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
       const QString nickname = postInfo[ "nickname" ].toString();
       const QString userid = postInfo[ "userid" ].toString();
       const QString email = postInfo[ "email" ].toString();
-      kdDebug() << "Post " << nickname << " " << userid << " " << email << endl;
+      kDebug() << "Post " << nickname << " " << userid << " " << email << endl;
       // FIXME: How about a BlogUserInfo class???
       emit userInfoRetrieved( nickname, userid, email );
     }
@@ -176,20 +176,20 @@ bool APIBlogger::interpretUserInfoJob( KIO::Job *job )
 
 void APIBlogger::interpretListFoldersJob( KIO::Job *job )
 {
-kdDebug() << "APIBlogger::interpretListFoldersJob" << endl;
+kDebug() << "APIBlogger::interpretListFoldersJob" << endl;
   KIO::XmlrpcJob *trfjob = dynamic_cast<KIO::XmlrpcJob*>(job);
   if ( job->error() || !trfjob ) {
     // TODO: Error handling
   } else {
-kdDebug() << "APIBlogger::interpretListFoldersJob, no error!" << endl;
+kDebug() << "APIBlogger::interpretListFoldersJob, no error!" << endl;
     QList<QVariant> message( trfjob->response() );
-    kdDebug () << "TOP: " << message[ 0 ].typeName() << endl;
+    kDebug () << "TOP: " << message[ 0 ].typeName() << endl;
 
     const QList<QVariant> posts = message[ 0 ].toList();
     QList<QVariant>::ConstIterator it = posts.begin();
     QList<QVariant>::ConstIterator end = posts.end();
     for ( ; it != end; ++it ) {
-      kdDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
+      kDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
 
       const QString id( postInfo[ "blogid" ].toString() );
@@ -200,7 +200,7 @@ kdDebug() << "APIBlogger::interpretListFoldersJob, no error!" << endl;
       // URL for all calls will be the XML-RPC interface, anyway.
       if ( !id.isEmpty() && !name.isEmpty() ) {
         emit folderInfoRetrieved( id, name );
-kdDebug()<< "Emitting folderInfoRetrieved( id=" << id << ", name=" << name << "); " << endl;
+kDebug()<< "Emitting folderInfoRetrieved( id=" << id << ", name=" << name << "); " << endl;
       }
     }
   }
@@ -213,7 +213,7 @@ bool APIBlogger::interpretListItemsJob( KIO::Job *job )
 
 bool APIBlogger::interpretDownloadItemsJob( KIO::Job *job )
 {
-  kdDebug(5800)<<"APIBlogger::interpretDownloadItemJob"<<endl;
+  kDebug(5800)<<"APIBlogger::interpretDownloadItemJob"<<endl;
   KIO::XmlrpcJob *trfjob = dynamic_cast<KIO::XmlrpcJob*>(job);
   bool success = false;
   if ( job->error() || !trfjob ) {
@@ -223,7 +223,7 @@ bool APIBlogger::interpretDownloadItemsJob( KIO::Job *job )
     //array of structs containing ISO.8601 dateCreated, String userid, String postid, String content;
     // TODO: Time zone for the dateCreated!
     QList<QVariant> message( trfjob->response() );
-    kdDebug () << "TOP: " << message[ 0 ].typeName() << endl;
+    kDebug () << "TOP: " << message[ 0 ].typeName() << endl;
 
     const QList<QVariant> postReceived = message[ 0 ].toList();
     QList<QVariant>::ConstIterator it = postReceived.begin();
@@ -231,20 +231,20 @@ bool APIBlogger::interpretDownloadItemsJob( KIO::Job *job )
     success = true;
     for ( ; it != end; ++it ) {
       BlogPosting posting;
-      kdDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
+      kDebug () << "MIDDLE: " << ( *it ).typeName() << endl;
       const QMap<QString, QVariant> postInfo = ( *it ).toMap();
       if ( readPostingFromMap( &posting, postInfo ) ) {
         KCal::Journal *j = journalFromPosting( &posting );
 //         dumpBlog( &posting );
-        kdDebug() << "Emitting itemOnServer( posting.postID()="<<posting.postID() << "); " << endl;
+        kDebug() << "Emitting itemOnServer( posting.postID()="<<posting.postID() << "); " << endl;
         emit itemOnServer( KURL( posting.postID() ) );
-        kdDebug() << "Emitting itemDownloaded( j=" << j << ", uid=" << j->uid()
+        kDebug() << "Emitting itemDownloaded( j=" << j << ", uid=" << j->uid()
                   << ", postID=" << posting.postID() << ", fpr="
                   << posting.fingerprint() << "); " << endl;
         emit itemDownloaded( j, j->uid(), KURL( posting.postID() ),
                              posting.fingerprint(), posting.postID() );
       } else {
-        kdDebug() << "readPostingFromMap failed! " << endl;
+        kDebug() << "readPostingFromMap failed! " << endl;
         success = false;
         // TODO: Error handling
       }
@@ -259,7 +259,7 @@ bool APIBlogger::readPostingFromMap( BlogPosting *post, const QMap<QString, QVar
   // FIXME:
   if ( !post ) return false;
   QStringList mapkeys = postInfo.keys();
-  kdDebug() << endl << "Keys: " << mapkeys.join(", ") << endl << endl;
+  kDebug() << endl << "Keys: " << mapkeys.join(", ") << endl << endl;
 
   QString fp = QString() ;
   
@@ -294,7 +294,7 @@ bool APIBlogger::readPostingFromMap( BlogPosting *post, const QMap<QString, QVar
     // we don't have both title and description, so use the content (ie. it's an
     // old-style blogger api, not the extended drupal api.
 
-    kdDebug() << "No title and description given, so it's an old-style "
+    kDebug() << "No title and description given, so it's an old-style "
                  "Blogger API without extensions" << endl;
     QString catTagOpen = mTemplate.categoryTagOpen();
     QString catTagClose = mTemplate.categoryTagClose();
@@ -303,23 +303,23 @@ bool APIBlogger::readPostingFromMap( BlogPosting *post, const QMap<QString, QVar
 
     int catStart = contents.find( catTagOpen, 0, false ) + catTagOpen.length();
     int catEnd = contents.find( catTagClose, 0, false );
-kdDebug() << "  catTagOpen = " << catTagOpen << ", catTagClose = " << catTagClose << ", start - end : " << catStart <<" - " << catEnd << endl;
+kDebug() << "  catTagOpen = " << catTagOpen << ", catTagClose = " << catTagClose << ", start - end : " << catStart <<" - " << catEnd << endl;
     if ( catEnd > catStart ) {
       category = contents.mid( catStart, catEnd - catStart );
-      kdDebug() << "Found a category \"" << category << "\"" << endl;
+      kDebug() << "Found a category \"" << category << "\"" << endl;
       contents = contents.remove( catStart - catTagOpen.length(),
               catEnd - catStart + catTagClose.length() + catTagOpen.length() );
     }
     int titleStart = contents.find( titleTagOpen, 0, false ) + titleTagOpen.length();
     int titleEnd = contents.find( titleTagClose, 0, false );
-kdDebug() << "  titleTagOpen = " << titleTagOpen << ", titleTagClose = " << titleTagClose << ", start - end : " << titleStart <<" - " << titleEnd << endl;
-    kdDebug() << "Title start and end: " << titleStart << ", " << titleEnd << endl;
+kDebug() << "  titleTagOpen = " << titleTagOpen << ", titleTagClose = " << titleTagClose << ", start - end : " << titleStart <<" - " << titleEnd << endl;
+    kDebug() << "Title start and end: " << titleStart << ", " << titleEnd << endl;
     if ( titleEnd > titleStart ) {
       title = contents.mid( titleStart, titleEnd - titleStart );
       contents = contents.remove( titleStart - titleTagOpen.length(),
               titleEnd - titleStart + titleTagClose.length() + titleTagOpen.length() );
     }
-    kdDebug() << endl << endl << endl << "After treatment of the special tags, we have a content of: "<< endl << contents << endl;
+    kDebug() << endl << endl << endl << "After treatment of the special tags, we have a content of: "<< endl << contents << endl;
   }
 */
 

@@ -76,7 +76,7 @@ void ResourceRemoteConfig::loadSettings( KRES::Resource *resource )
     mReloadConfig->loadSettings( res );
     mSaveConfig->loadSettings( res );
   } else {
-    kdError(5700) << "ResourceRemoteConfig::loadSettings(): no ResourceRemote, cast failed" << endl;
+    kError(5700) << "ResourceRemoteConfig::loadSettings(): no ResourceRemote, cast failed" << endl;
   }
 }
 
@@ -96,7 +96,7 @@ void ResourceRemoteConfig::saveSettings( KRES::Resource *resource )
       resource->setReadOnly( true );
     }
   } else {
-    kdError(5700) << "ResourceRemoteConfig::saveSettings(): no ResourceRemote, cast failed" << endl;
+    kError(5700) << "ResourceRemoteConfig::saveSettings(): no ResourceRemote, cast failed" << endl;
   }
 }
 

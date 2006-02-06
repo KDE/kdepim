@@ -95,7 +95,7 @@ FreeBusyCache *Scheduler::freeBusyCache() const
 
 bool Scheduler::acceptTransaction(IncidenceBase *incidence,Method method,ScheduleMessage::Status status)
 {
-  kdDebug(5800) << "Scheduler::acceptTransaction, method="
+  kDebug(5800) << "Scheduler::acceptTransaction, method="
                 << methodName( method ) << endl;
 
   switch (method) {
@@ -183,7 +183,7 @@ bool Scheduler::acceptPublish( IncidenceBase *newIncBase,
   }
 
   bool res = false;
-  kdDebug(5800) << "Scheduler::acceptPublish, status="
+  kDebug(5800) << "Scheduler::acceptPublish, status="
             << ScheduleMessage::statusName( status ) << endl;
   Incidence *newInc = static_cast<Incidence *>( newIncBase );
   Incidence *calInc = mCalendar->incidence( newIncBase->uid() );
@@ -285,7 +285,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
   Todo *to = mCalendar->todo(incidence->uid());
   if (ev || to) {
     //get matching attendee in calendar
-    kdDebug(5800) << "Scheduler::acceptTransaction match found!" << endl;
+    kDebug(5800) << "Scheduler::acceptTransaction match found!" << endl;
     Attendee::List attendeesIn = incidence->attendees();
     Attendee::List attendeesEv;
     if (ev) attendeesEv = ev->attendees();
@@ -298,7 +298,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
         Attendee *attEv = *evIt;
         if (attIn->email().toLower()==attEv->email().toLower()) {
           //update attendee-info
-          kdDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
+          kDebug(5800) << "Scheduler::acceptTransaction update attendee" << endl;
           attEv->setStatus(attIn->status());
           ret = true;
         }
@@ -323,7 +323,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
       }
     }
   } else
-    kdError(5800) << "No incidence for scheduling\n";
+    kError(5800) << "No incidence for scheduling\n";
   if (ret) deleteTransaction(incidence);
   return ret;
 }
@@ -344,13 +344,13 @@ bool Scheduler::acceptCounter(IncidenceBase *incidence,ScheduleMessage::Status /
 bool Scheduler::acceptFreeBusy(IncidenceBase *incidence, Method method)
 {
   if ( !d->mFreeBusyCache ) {
-    kdError() << "KCal::Scheduler: no FreeBusyCache." << endl;
+    kError() << "KCal::Scheduler: no FreeBusyCache." << endl;
     return false;
   }
 
   FreeBusy *freebusy = static_cast<FreeBusy *>(incidence);
 
-  kdDebug(5800) << "acceptFreeBusy:: freeBusyDirName: " << freeBusyDir() << endl;
+  kDebug(5800) << "acceptFreeBusy:: freeBusyDirName: " << freeBusyDir() << endl;
 
   Person from;
   if(method == Scheduler::Publish) {

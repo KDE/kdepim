@@ -89,44 +89,44 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
 
   if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys ) {
     if ( key.isInvalid() )
-      kdDebug() << "key is invalid - ignoring" << endl;
+      kDebug() << "key is invalid - ignoring" << endl;
     if ( key.isExpired() ) {
-      kdDebug() << "key is expired" << endl;
+      kDebug() << "key is expired" << endl;
       return false;
     } else if ( key.isRevoked() ) {
-      kdDebug() << "key is revoked" << endl;
+      kDebug() << "key is revoked" << endl;
       return false;
     } else if ( key.isDisabled() ) {
-      kdDebug() << "key is disabled" << endl;
+      kDebug() << "key is disabled" << endl;
       return false;
     }
   }
 
   if ( keyUsage & Kleo::KeySelectionDialog::EncryptionKeys &&
        !key.canEncrypt() ) {
-    kdDebug() << "key can't encrypt" << endl;
+    kDebug() << "key can't encrypt" << endl;
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::SigningKeys &&
        !key.canSign() ) {
-    kdDebug() << "key can't sign" << endl;
+    kDebug() << "key can't sign" << endl;
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::CertificationKeys &&
        !key.canCertify() ) {
-    kdDebug() << "key can't certify" << endl;
+    kDebug() << "key can't certify" << endl;
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::AuthenticationKeys &&
        !key.canAuthenticate() ) {
-    kdDebug() << "key can't authenticate" << endl;
+    kDebug() << "key can't authenticate" << endl;
     return false;
   }
 
   if ( keyUsage & Kleo::KeySelectionDialog::SecretKeys &&
        !( keyUsage & Kleo::KeySelectionDialog::PublicKeys ) &&
        !key.isSecret() ) {
-    kdDebug() << "key isn't secret" << endl;
+    kDebug() << "key isn't secret" << endl;
     return false;
   }
 
@@ -139,7 +139,7 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
     for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != uids.end() ; ++it )
       if ( !it->isRevoked() && it->validity() >= GpgME::UserID::Marginal )
 	return true;
-    kdDebug() << "key has no UIDs with validity >= Marginal" << endl;
+    kDebug() << "key has no UIDs with validity >= Marginal" << endl;
     return false;
   }
   // X.509 keys are always trusted, else they won't be the keybox.
@@ -187,7 +187,7 @@ namespace {
       mKeyValidPix( UserIcon( "key" ) ),
       mKeyUsage( keyUsage )
   {
-    kdWarning( keyUsage == 0, 5150 )
+    kWarning( keyUsage == 0, 5150 )
       << "KeySelectionDialog: keyUsage == 0. You want to use AllKeys instead." << endl;
   }
 
@@ -590,7 +590,7 @@ void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & r
 }
 
 void Kleo::KeySelectionDialog::slotSelectionChanged() {
-  kdDebug(5150) << "KeySelectionDialog::slotSelectionChanged()" << endl;
+  kDebug(5150) << "KeySelectionDialog::slotSelectionChanged()" << endl;
 
   // (re)start the check selection timer. Checking the selection is delayed
   // because else drag-selection doesn't work very good (checking key trust
@@ -607,7 +607,7 @@ namespace {
 }
 
 void Kleo::KeySelectionDialog::slotCheckSelection( KeyListViewItem * item ) {
-  kdDebug(5150) << "KeySelectionDialog::slotCheckSelection()\n";
+  kDebug(5150) << "KeySelectionDialog::slotCheckSelection()\n";
 
   mCheckSelectionTimer->stop();
 

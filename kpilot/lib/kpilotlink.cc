@@ -332,7 +332,7 @@ bool KPilotDeviceLink::open(QString device)
 	}
 	if (device.isEmpty())
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": No point in trying empty device."
 			<< endl;
 
@@ -345,7 +345,7 @@ bool KPilotDeviceLink::open(QString device)
 	if ( !KPilotDeviceLinkPrivate::self()->canBind( fRealPilotPath ) ) {
 		msg = i18n("Already listening on that device");
 		e=0;
-		kdWarning() << k_funcinfo <<": Pilot Path " << pilotPath().toLatin1() << " already connected." << endl;
+		kWarning() << k_funcinfo <<": Pilot Path " << pilotPath().toLatin1() << " already connected." << endl;
 		goto errInit;
 	}
 
@@ -500,10 +500,10 @@ errInit:
 	// number as well, right?
 	//
 	//
-	kdError() << k_funcinfo << ": " << msg << endl;
+	kError() << k_funcinfo << ": " << msg << endl;
 	if (e)
 	{
-		kdError() << k_funcinfo
+		kError() << k_funcinfo
 			<< ": (" << strerror(e) << ")" << endl;
 	}
 
@@ -522,7 +522,7 @@ void KPilotDeviceLink::acceptDevice()
 	{
 		if (!fAcceptedCount)
 		{
-		kdWarning() << k_funcinfo << ": Accidentally in acceptDevice()"
+		kWarning() << k_funcinfo << ": Accidentally in acceptDevice()"
 			<< endl;
 		}
 		fAcceptedCount++;
@@ -554,7 +554,7 @@ void KPilotDeviceLink::acceptDevice()
 	{
 		char *s = strerror(errno);
 
-		kdWarning() << "pi_listen: " << s << endl;
+		kWarning() << "pi_listen: " << s << endl;
 
 		// Presumably, strerror() returns things in
 		// local8Bit and not latin1.
@@ -574,7 +574,7 @@ void KPilotDeviceLink::acceptDevice()
 	{
 		char *s = strerror(errno);
 
-		kdWarning() << "pi_accept: " << s << endl;
+		kWarning() << "pi_accept: " << s << endl;
 
 		emit logError(i18n("Cannot accept Pilot (%1)")
 			.arg(QString::fromLocal8Bit(s)));
@@ -587,7 +587,7 @@ void KPilotDeviceLink::acceptDevice()
 	if ((fLinkStatus != DeviceOpen) || (fPilotMasterSocket == -1))
 	{
 		fLinkStatus = PilotLinkError;
-		kdError() << k_funcinfo
+		kError() << k_funcinfo
 			<< ": Already connected or unable to connect!"
 			<< endl;
 		emit logError(i18n("Cannot accept Pilot (%1)")
@@ -742,7 +742,7 @@ void TickleThread::run()
 		if (!(--subseconds))
 		{
 #ifdef DEBUG_CERR
-// Don't dare use kdDebug() here, we're in a separate thread
+// Don't dare use kDebug() here, we're in a separate thread
 			DEBUGDAEMON << fname << ": One second." << endl;
 #endif
 			if (timeout)
@@ -866,7 +866,7 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 
 	if (!f.isEmpty())
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Cannot open file " << f << endl;
 		emit logError(i18n
 			("<qt>Cannot install the file &quot;%1&quot;.</qt>").
@@ -880,7 +880,7 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 	if (pi_file_install(pf, fCurrentPilotSocket, 0, 0L) < 0)
 #endif
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Cannot pi_file_install " << f << endl;
 		emit logError(i18n
 			("<qt>Cannot install the file &quot;%1&quot;.</qt>").
@@ -1036,7 +1036,7 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 
 	if (f == 0)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Failed, unable to create file" << endl;
 		return false;
 	}
@@ -1047,7 +1047,7 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 	if (pi_file_retrieve(f, pilotSocket(), 0, 0L) < 0)
 #endif
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Failed, unable to back up database" << endl;
 
 		pi_file_close(f);
@@ -1115,7 +1115,7 @@ KPilotCard *KPilotDeviceLink::getCardInfo(int card)
 	KPilotCard *cardinfo=new KPilotCard();
 	if (dlp_ReadStorageInfo(pilotSocket(), card, cardinfo->cardInfo())<0)
 	{
-		kdWarning() << k_funcinfo << ": Could not get info for card "
+		kWarning() << k_funcinfo << ": Could not get info for card "
 			<< card << endl;
 
 		KPILOT_DELETE(cardinfo);

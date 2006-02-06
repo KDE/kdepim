@@ -95,7 +95,7 @@ void PilotDateEntry::_copyExceptions(const PilotDateEntry & e)
 		}
 		else
 		{
-			kdError() << __FUNCTION__
+			kError() << __FUNCTION__
 				<< ": malloc() failed, exceptions not copied"
 				<< endl;
 			fAppointmentInfo.exceptions = 0;
@@ -367,7 +367,7 @@ void PilotDateEntry::setDescriptionP(const char *desc, int l)
 		}
 		else
 		{
-			kdError() << __FUNCTION__
+			kError() << __FUNCTION__
 				<< ": malloc() failed, description not set"
 				<< endl;
 		}
@@ -393,7 +393,7 @@ void PilotDateEntry::setNoteP(const char *note, int l)
 		}
 		else
 		{
-			kdError() << __FUNCTION__
+			kError() << __FUNCTION__
 				<< ": malloc() failed, note not set" << endl;
 		}
 	}

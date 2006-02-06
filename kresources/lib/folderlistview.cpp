@@ -51,7 +51,7 @@ FolderListView::FolderListView( QWidget *parent, const QList<Property> &types )
 
 void FolderListView::setEnabledTypes( const QList<Property> &types )
 {
-kdDebug() << "FolderListView::setEnabledTypes" << endl;
+kDebug() << "FolderListView::setEnabledTypes" << endl;
   for ( int i = 0; i< columns(); ++i ) removeColumn( i );
   mTypes = types;
   if ( !mTypes.contains( FolderName ) ) mTypes.prepend( FolderName );
@@ -190,9 +190,9 @@ void FolderListItem::activate( int column, const QPoint &localPos )
 
 void FolderListItem::changeProperty( FolderListView::Property p )
 {
-kdDebug() << "FolderListItem::changeProperty( " << p << ")" << endl;
+kDebug() << "FolderListItem::changeProperty( " << p << ")" << endl;
   if ( p == FolderListView::FolderName ) {
-kdDebug() << "it's folderName" << endl;
+kDebug() << "it's folderName" << endl;
     setOn( !isOn() );
   } else if ( typeSupported( p ) ) {
     Q3ListViewItemIterator it( listView() );

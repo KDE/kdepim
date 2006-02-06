@@ -134,7 +134,7 @@ public:
 	// since the copy constructor is private!
 #ifndef DEBUG_CERR
 	inline kdbgstream debug(int area=0)
-	{ return kdDebug(debug_level >= fLevel, area); }
+	{ return kDebug(debug_level >= fLevel, area); }
 #endif
 
 protected:

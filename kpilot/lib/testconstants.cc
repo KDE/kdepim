@@ -39,12 +39,12 @@ int main(int argc, char **argv)
 {
 	PilotAppInfoBase info;
 
-	kdDebug() << "*** Sizes of structures" << endl;
-	kdDebug() << "AppInfoBase: " << sizeof(PilotAppInfoBase) << endl;
-	kdDebug() << "CategoryInfo: " << sizeof(info.categoryInfo()) << endl;
-	kdDebug() << "CategoryInfo: " << sizeof(*info.categoryInfo()) << endl;
-	kdDebug() << "Category names: " << sizeof(info.categoryInfo()->name) << endl;
-	kdDebug() << "Single category: " << sizeof(info.categoryInfo()->name[0]) << endl;
+	kDebug() << "*** Sizes of structures" << endl;
+	kDebug() << "AppInfoBase: " << sizeof(PilotAppInfoBase) << endl;
+	kDebug() << "CategoryInfo: " << sizeof(info.categoryInfo()) << endl;
+	kDebug() << "CategoryInfo: " << sizeof(*info.categoryInfo()) << endl;
+	kDebug() << "Category names: " << sizeof(info.categoryInfo()->name) << endl;
+	kDebug() << "Single category: " << sizeof(info.categoryInfo()->name[0]) << endl;
 
 	if ( sizeof(info.categoryInfo()->name[0]) != 16 ) return 1;
 	if ( sizeof(info.categoryInfo()->name) / sizeof(info.categoryInfo()->name[0]) != 16 ) return 1;

@@ -234,7 +234,7 @@ KUrl::List DirectoryServicesWidget::urlList() const
         url.setQuery( item->text( 2 ) );
         url.setUser( item->text( 3 ) );
         url.setPass( static_cast<QX500ListViewItem *>( item )->password() );
-        kdDebug() << url << endl;
+        kDebug() << url << endl;
         lst << url;
     }
     return lst;

@@ -246,7 +246,7 @@ int PilotLocalDatabase::readAppBlock(unsigned char *buffer, int size)
 
 	if (!isDBOpen())
 	{
-		kdError() << k_funcinfo << ": DB not open!" << endl;
+		kError() << k_funcinfo << ": DB not open!" << endl;
 		memset(buffer,0,m);
 		return -1;
 	}
@@ -261,7 +261,7 @@ int PilotLocalDatabase::writeAppBlock(unsigned char *buffer, int len)
 
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open!" << endl;
+		kError() << k_funcinfo << ": DB not open!" << endl;
 		return -1;
 	}
 	delete[]fAppInfo;
@@ -304,7 +304,7 @@ PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 	d->pending = -1;
 	if (isDBOpen() == false)
 	{
-		kdWarning() << k_funcinfo << fDBName << ": DB not open!" << endl;
+		kWarning() << k_funcinfo << fDBName << ": DB not open!" << endl;
 		return 0L;
 	}
 
@@ -328,7 +328,7 @@ PilotRecord *PilotLocalDatabase::readRecordByIndex(int index)
 	d->pending = -1;
 	if (isDBOpen() == false)
 	{
-		kdWarning() << k_funcinfo << ": DB not open!" << endl;
+		kWarning() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
 #ifdef DEBUG
@@ -349,7 +349,7 @@ PilotRecord *PilotLocalDatabase::readNextRecInCategory(int category)
 	d->pending  = -1;
 	if (isDBOpen() == false)
 	{
-		kdWarning() << k_funcinfo << ": DB not open!" << endl;
+		kWarning() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
 
@@ -373,7 +373,7 @@ const PilotRecord *PilotLocalDatabase::findNextNewRecord()
 
 	if (isDBOpen() == false)
 	{
-		kdWarning() << k_funcinfo << ": DB not open!" << endl;
+		kWarning() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
 #ifdef DEBUG
@@ -400,7 +400,7 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 
 	if (isDBOpen() == false)
 	{
-		kdWarning() << k_funcinfo << ": DB not open!" << endl;
+		kWarning() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
 
@@ -429,12 +429,12 @@ recordid_t PilotLocalDatabase::updateID(recordid_t id)
 
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open!" << endl;
+		kError() << k_funcinfo << ": DB not open!" << endl;
 		return 0;
 	}
 	if (d->pending  < 0)
 	{
-		kdError() << k_funcinfo <<
+		kError() << k_funcinfo <<
 			": Last call was _NOT_ readNextModifiedRec()" << endl;
 		return 0;
 	}
@@ -450,14 +450,14 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open!" << endl;
+		kError() << k_funcinfo << ": DB not open!" << endl;
 		return 0;
 	}
 
 	d->pending = -1;
 	if (!newRecord)
 	{
-		kdError() << k_funcinfo << ": Record to be written is invalid!" << endl;
+		kError() << k_funcinfo << ": Record to be written is invalid!" << endl;
 		return 0;
 	}
 
@@ -490,7 +490,7 @@ int PilotLocalDatabase::deleteRecord(recordid_t id, bool all)
 	FUNCTIONSETUP;
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo <<": DB not open"<<endl;
+		kError() << k_funcinfo <<": DB not open"<<endl;
 		return -1;
 	}
 	d->resetIndex();
@@ -528,7 +528,7 @@ int PilotLocalDatabase::resetSyncFlags()
 
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open!" << endl;
+		kError() << k_funcinfo << ": DB not open!" << endl;
 		return -1;
 	}
 	d->pending = -1;
@@ -545,7 +545,7 @@ int PilotLocalDatabase::resetDBIndex()
 	FUNCTIONSETUP;
 	if (isDBOpen() == false)
 	{
-		kdWarning() << k_funcinfo << ": DB not open!" << endl;
+		kWarning() << k_funcinfo << ": DB not open!" << endl;
 		return -1;
 	}
 	d->resetIndex();
@@ -558,7 +558,7 @@ int PilotLocalDatabase::cleanup()
 	FUNCTIONSETUP;
 	if (isDBOpen() == false)
 	{
-		kdWarning() << k_funcinfo << ": DB not open!" << endl;
+		kWarning() << k_funcinfo << ": DB not open!" << endl;
 		return -1;
 	}
 	d->resetIndex();

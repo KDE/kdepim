@@ -98,18 +98,18 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   // Get the list of journals
   int count = 0;
   if ( !kmailIncidencesCount( count, mimetype, subResource ) ) {
-    kdError() << "Communication problem in ResourceKolab::load()\n";
+    kError() << "Communication problem in ResourceKolab::load()\n";
     return false;
   }
 
   QMap<quint32, QString> lst;
   if( !kmailIncidences( lst, mimetype, subResource, 0, count ) ) {
-    kdError(5500) << "Communication problem in "
+    kError(5500) << "Communication problem in "
                   << "ResourceKolab::getIncidenceList()\n";
     return false;
   }
 
-  kdDebug(5500) << "Notes kolab resource: got " << lst.count() << " notes in " << subResource << endl;
+  kDebug(5500) << "Notes kolab resource: got " << lst.count() << " notes in " << subResource << endl;
 
   // Populate with the new entries
   const bool silent = mSilent;
@@ -118,7 +118,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   for ( it = lst.begin(); it != lst.end(); ++it ) {
     KCal::Journal* journal = addNote( it.data(), subResource, it.key(), mimetype );
     if ( !journal )
-      kdDebug(5500) << "loading note " << it.key() << " failed" << endl;
+      kDebug(5500) << "loading note " << it.key() << " failed" << endl;
     else
       manager()->registerNote( this, journal );
   }
@@ -183,7 +183,7 @@ KCal::Journal* ResourceKolab::addNote( const QString& data, const QString& subre
 bool ResourceKolab::addNote( KCal::Journal* journal,
                              const QString& subresource, quint32 sernum )
 {
-  kdDebug(5500) << "ResourceKolab::addNote( KCal::Journal*, '" << subresource << "', " << sernum << " )\n";
+  kDebug(5500) << "ResourceKolab::addNote( KCal::Journal*, '" << subresource << "', " << sernum << " )\n";
 
   journal->registerObserver( this );
 
@@ -198,10 +198,10 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
 
   if ( !mSilent ) {
     QString xml = Note::journalToXML( journal );
-    kdDebug(5500) << k_funcinfo << "XML string:\n" << xml << endl;
+    kDebug(5500) << k_funcinfo << "XML string:\n" << xml << endl;
 
     if( !kmailUpdate( resource, sernum, xml, attachmentMimeType, journal->uid() ) ) {
-      kdError(5500) << "Communication problem in ResourceKolab::addNote()\n";
+      kError(5500) << "Communication problem in ResourceKolab::addNote()\n";
       return false;
     }
   }
@@ -308,7 +308,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
   // Check if this is a note
   if( type != kmailContentsType ) return;
 
-  kdDebug(5500) << "ResourceKolab::fromKMailDelIncidence( " << type << ", " << uid
+  kDebug(5500) << "ResourceKolab::fromKMailDelIncidence( " << type << ", " << uid
                 << " )" << endl;
 
   const bool silent = mSilent;
@@ -408,7 +408,7 @@ void ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
   for( QMap<quint32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
     KCal::Journal* journal = addNote( it.data(), folder, it.key(), mimetype );
     if ( !journal )
-      kdDebug(5500) << "loading note " << it.key() << " failed" << endl;
+      kDebug(5500) << "loading note " << it.key() << " failed" << endl;
     else
       manager()->registerNote( this, journal );
   }
@@ -428,7 +428,7 @@ bool ResourceKolab::subresourceActive( const QString& res ) const
   }
 
   // Safe default bet:
-  kdDebug(5650) << "subresourceActive( " << res << " ): Safe bet\n";
+  kDebug(5650) << "subresourceActive( " << res << " ): Safe bet\n";
 
   return true;
 }

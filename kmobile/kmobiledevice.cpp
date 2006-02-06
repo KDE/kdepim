@@ -43,7 +43,7 @@
 #include <klocale.h>
 
 #define KMOBILEDEVICE_DEBUG_AREA 5730
-#define PRINT_DEBUG kdDebug(KMOBILEDEVICE_DEBUG_AREA) << "KMobileDevice: "
+#define PRINT_DEBUG kDebug(KMOBILEDEVICE_DEBUG_AREA) << "KMobileDevice: "
 
 /**
  *  The base plugin class of all mobile device drivers.

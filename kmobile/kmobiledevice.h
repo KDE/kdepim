@@ -355,9 +355,9 @@ signals:
      * KIO::AuthInfo authInfo;
      * if ( openPassDlg( authInfo ) )
      * {
-     *    kdDebug() << QString::fromLatin1("User: ")
+     *    kDebug() << QString::fromLatin1("User: ")
      *              << authInfo.username << endl;
-     *    kdDebug() << QString::fromLatin1("Password: ")
+     *    kDebug() << QString::fromLatin1("Password: ")
      *              << QString::fromLatin1("Not displayed here!") << endl;
      * }
      * </pre>
@@ -372,9 +372,9 @@ signals:
      * QString errorMsg = "You entered an incorrect password.";
      * if ( openPassDlg( authInfo, errorMsg ) )
      * {
-     *    kdDebug() << QString::fromLatin1("User: ")
+     *    kDebug() << QString::fromLatin1("User: ")
      *              << authInfo.username << endl;
-     *    kdDebug() << QString::fromLatin1("Password: ")
+     *    kDebug() << QString::fromLatin1("Password: ")
      *              << QString::fromLatin1("Not displayed here!") << endl;
      * }
      * </pre>

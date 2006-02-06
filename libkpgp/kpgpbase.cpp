@@ -92,15 +92,15 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
     ::setenv("PGPPASSFD",tmp.toUtf8()/*.data()*/,1);
 
     //Uncomment these lines for testing only! Doing so will decrease security!
-    //kdDebug(5100) << "pgp PGPPASSFD = " << tmp << endl;
-    //kdDebug(5100) << "pgp pass = " << passphrase << endl;
+    //kDebug(5100) << "pgp PGPPASSFD = " << tmp << endl;
+    //kDebug(5100) << "pgp pass = " << passphrase << endl;
   }
   else
     ::unsetenv("PGPPASSFD");
 
   //Uncomment these lines for testing only! Doing so will decrease security!
-  kdDebug(5100) << "pgp cmd = " << cmd << endl;
-  //kdDebug(5100) << "pgp input = " << QString(input)
+  kDebug(5100) << "pgp cmd = " << cmd << endl;
+  //kDebug(5100) << "pgp input = " << QString(input)
   //          << "input length = " << input.length() << endl;
 
   error = "";
@@ -152,12 +152,12 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
         len2 = 0;
 
         // check if writing now to pin[1] will not block (5 ms timeout)
-        //kdDebug(5100) << "Polling pin[1]..." << endl;
+        //kDebug(5100) << "Polling pin[1]..." << endl;
         pollstatus = poll(&pollin, 1, 5);
         if (pollstatus == 1) {
-          //kdDebug(5100) << "Status for polling pin[1]: " << pollin.revents << endl;
+          //kDebug(5100) << "Status for polling pin[1]: " << pollin.revents << endl;
           if (pollin.revents & POLLERR) {
-            kdDebug(5100) << "PGP seems to have hung up" << endl;
+            kDebug(5100) << "PGP seems to have hung up" << endl;
             break;
           }
           else if (pollin.revents & POLLOUT) {
@@ -167,31 +167,31 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
             else
               len2 = len2-i+1;
 
-            //kdDebug(5100) << "Trying to write " << len2 << " bytes to pin[1] ..." << endl;
+            //kDebug(5100) << "Trying to write " << len2 << " bytes to pin[1] ..." << endl;
             len2 = write(pin[1], input.mid(i,len2).data(), len2);
-            //kdDebug(5100) << "Wrote " << len2 << " bytes to pin[1] ..." << endl;
+            //kDebug(5100) << "Wrote " << len2 << " bytes to pin[1] ..." << endl;
           }
         }
         else if (!pollstatus) {
-          //kdDebug(5100) << "Timeout while polling pin[1]: "
+          //kDebug(5100) << "Timeout while polling pin[1]: "
           //              << pollin.revents << endl;
         }
         else if (pollstatus == -1) {
-          kdDebug(5100) << "Error while polling pin[1]: "
+          kDebug(5100) << "Error while polling pin[1]: "
                         << pollin.revents << endl;
         }
 
         if (pout[0] >= 0) {
           do {
             // check if there is data to read from pout[0]
-            //kdDebug(5100) << "Polling pout[0]..." << endl;
+            //kDebug(5100) << "Polling pout[0]..." << endl;
             pollstatus = poll(&pollout, 1, 0);
             if (pollstatus == 1) {
-              //kdDebug(5100) << "Status for polling pout[0]: " << pollout.revents << endl;
+              //kDebug(5100) << "Status for polling pout[0]: " << pollout.revents << endl;
               if (pollout.revents & POLLIN) {
-                //kdDebug(5100) << "Trying to read " << 1024 << " bytes from pout[0]" << endl;
+                //kDebug(5100) << "Trying to read " << 1024 << " bytes from pout[0]" << endl;
                 if ((len = read(pout[0],str,1024))>0) {
-                  //kdDebug(5100) << "Read " << len << " bytes from pout[0]" << endl;
+                  //kDebug(5100) << "Read " << len << " bytes from pout[0]" << endl;
                   str[len] ='\0';
                   output += str;
                 }
@@ -200,7 +200,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
               }
             }
             else if (pollstatus == -1) {
-              kdDebug(5100) << "Error while polling pout[0]: "
+              kDebug(5100) << "Error while polling pout[0]: "
                             << pollout.revents << endl;
             }
           } while ((pollstatus == 1) && (pollout.revents & POLLIN));
@@ -209,14 +209,14 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
         if (perr[0] >= 0) {
           do {
             // check if there is data to read from perr[0]
-            //kdDebug(5100) << "Polling perr[0]..." << endl;
+            //kDebug(5100) << "Polling perr[0]..." << endl;
             pollstatus = poll(&pollerr, 1, 0);
             if (pollstatus == 1) {
-              //kdDebug(5100) << "Status for polling perr[0]: " << pollerr.revents << endl;
+              //kDebug(5100) << "Status for polling perr[0]: " << pollerr.revents << endl;
               if (pollerr.revents & POLLIN) {
-                //kdDebug(5100) << "Trying to read " << 1024 << " bytes from perr[0]" << endl;
+                //kDebug(5100) << "Trying to read " << 1024 << " bytes from perr[0]" << endl;
                 if ((len = read(perr[0],str,1024))>0) {
-                  //kdDebug(5100) << "Read " << len << " bytes from perr[0]" << endl;
+                  //kDebug(5100) << "Read " << len << " bytes from perr[0]" << endl;
                   str[len] ='\0';
                   error += str;
                 }
@@ -225,7 +225,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
               }
             }
             else if (pollstatus == -1) {
-              kdDebug(5100) << "Error while polling perr[0]: "
+              kDebug(5100) << "Error while polling perr[0]: "
                             << pollerr.revents << endl;
             }
           } while ((pollstatus == 1) && (pollerr.revents & POLLIN));
@@ -234,35 +234,35 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
         // abort writing to PGP if PGP hung up
         if ((pollstatus == 1) &&
             ((pollout.revents & POLLHUP) || (pollerr.revents & POLLHUP))) {
-          kdDebug(5100) << "PGP hung up" << endl;
+          kDebug(5100) << "PGP hung up" << endl;
           break;
         }
       }
     }
     else // if input.isEmpty()
       write(pin[1], "\n", 1);
-    //kdDebug(5100) << "All input was written to pin[1]" << endl;
+    //kDebug(5100) << "All input was written to pin[1]" << endl;
   }
   close(pin[1]);
 
   pid_t waitpidRetVal;
 
   do {
-    //kdDebug(5100) << "Checking if PGP is still running..." << endl;
+    //kDebug(5100) << "Checking if PGP is still running..." << endl;
     childExitStatus = 0;
     waitpidRetVal = waitpid(child_pid, &childExitStatus, WNOHANG);
-    //kdDebug(5100) << "waitpid returned " << waitpidRetVal << endl;
+    //kDebug(5100) << "waitpid returned " << waitpidRetVal << endl;
     if (pout[0] >= 0) {
       do {
         // check if there is data to read from pout[0]
-        //kdDebug(5100) << "Polling pout[0]..." << endl;
+        //kDebug(5100) << "Polling pout[0]..." << endl;
         pollstatus = poll(&pollout, 1, 0);
         if (pollstatus == 1) {
-          //kdDebug(5100) << "Status for polling pout[0]: " << pollout.revents << endl;
+          //kDebug(5100) << "Status for polling pout[0]: " << pollout.revents << endl;
           if (pollout.revents & POLLIN) {
-            //kdDebug(5100) << "Trying to read " << 1024 << " bytes from pout[0]" << endl;
+            //kDebug(5100) << "Trying to read " << 1024 << " bytes from pout[0]" << endl;
             if ((len = read(pout[0],str,1024))>0) {
-              //kdDebug(5100) << "Read " << len << " bytes from pout[0]" << endl;
+              //kDebug(5100) << "Read " << len << " bytes from pout[0]" << endl;
               str[len] ='\0';
               output += str;
             } else {
@@ -290,7 +290,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
           }
         }
         else if (pollstatus == -1) {
-          kdDebug(5100) << "Error while polling pout[0]: "
+          kDebug(5100) << "Error while polling pout[0]: "
                         << pollout.revents << endl;
         }
       } while ((pollstatus == 1) && (pollout.revents & POLLIN));
@@ -299,14 +299,14 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
     if (perr[0] >= 0) {
       do {
         // check if there is data to read from perr[0]
-        //kdDebug(5100) << "Polling perr[0]..." << endl;
+        //kDebug(5100) << "Polling perr[0]..." << endl;
         pollstatus = poll(&pollerr, 1, 0);
         if (pollstatus == 1) {
-          //kdDebug(5100) << "Status for polling perr[0]: " << pollerr.revents << endl;
+          //kDebug(5100) << "Status for polling perr[0]: " << pollerr.revents << endl;
           if (pollerr.revents & POLLIN) {
-            //kdDebug(5100) << "Trying to read " << 1024 << " bytes from perr[0]" << endl;
+            //kDebug(5100) << "Trying to read " << 1024 << " bytes from perr[0]" << endl;
             if ((len = read(perr[0],str,1024))>0) {
-              //kdDebug(5100) << "Read " << len << " bytes from perr[0]" << endl;
+              //kDebug(5100) << "Read " << len << " bytes from perr[0]" << endl;
               str[len] ='\0';
               error += str;
             } else {
@@ -334,7 +334,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
           }
         }
         else if (pollstatus == -1) {
-          kdDebug(5100) << "Error while polling perr[0]: "
+          kDebug(5100) << "Error while polling perr[0]: "
                         << pollerr.revents << endl;
         }
       } while ((pollstatus == 1) && (pollerr.revents & POLLIN));
@@ -352,22 +352,22 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
   if (WIFEXITED(childExitStatus) != 0) {
     // Get the return code of the child
     childExitStatus = WEXITSTATUS(childExitStatus);
-    kdDebug(5100) << "PGP exited with exit status " << childExitStatus 
+    kDebug(5100) << "PGP exited with exit status " << childExitStatus 
                   << endl;
   }
   else {
     childExitStatus = -1;
-    kdDebug(5100) << "PGP exited abnormally!" << endl;
+    kDebug(5100) << "PGP exited abnormally!" << endl;
   }
 
   //Uncomment these lines for testing only! Doing so will decrease security!
-  //kdDebug(5100) << "pgp output = " << QString(output) << endl;
-  //kdDebug(5100) << "pgp error = " << error << endl;
+  //kDebug(5100) << "pgp output = " << QString(output) << endl;
+  //kDebug(5100) << "pgp error = " << error << endl;
 
   /* Make the information visible, so that a user can
    * get to know what's going on during the pgp calls.
    */
-  kdDebug(5100) << error << endl;
+  kDebug(5100) << error << endl;
 
   return childExitStatus;
 }
@@ -405,12 +405,12 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
     close(ppass[1]);
 
     //Uncomment these lines for testing only! Doing so will decrease security!
-    //kdDebug(5100) << "pass = " << passphrase << endl;
+    //kDebug(5100) << "pass = " << passphrase << endl;
   }
 
   //Uncomment these lines for testing only! Doing so will decrease security!
-  //kdDebug(5100) << "pgp cmd = " << cmd << endl;
-  //kdDebug(5100) << "pgp input = " << QString(input)
+  //kDebug(5100) << "pgp cmd = " << cmd << endl;
+  //kDebug(5100) << "pgp input = " << QString(input)
   //          << "input length = " << input.length() << endl;
 
   error = "";
@@ -492,7 +492,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
       snprintf(gpgcmd, 1023, "LANGUAGE=C gpg %s",cmd);
     }
 
-    kdDebug(5100) << "pgp cmd = " << gpgcmd << endl;
+    kDebug(5100) << "pgp cmd = " << gpgcmd << endl;
 
     execl("/bin/sh", "sh", "-c", gpgcmd,  (void *)0);
     _exit(127);
@@ -525,19 +525,19 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
   int input_pos = 0;
 
   do {
-    //kdDebug(5100) << "Checking if GnuPG is still running..." << endl;
+    //kDebug(5100) << "Checking if GnuPG is still running..." << endl;
     childExitStatus = 0;
     waitpidRetVal = waitpid(child_pid, &childExitStatus, WNOHANG);
-    //kdDebug(5100) << "waitpid returned " << waitpidRetVal << endl;
+    //kDebug(5100) << "waitpid returned " << waitpidRetVal << endl;
     do {
       // poll the pipes
       pollstatus = poll(poller, num_pollers, 10);
       if( 0 < pollstatus ) {
         // Check stdout.
         if (poller[STD_OUT].revents & POLLIN) {
-          //kdDebug(5100) << "Trying to read " << 1024 << " bytes from pout[0]" << endl;
+          //kDebug(5100) << "Trying to read " << 1024 << " bytes from pout[0]" << endl;
           if ((len = read(pout[0],str,1024))>0) {
-            //kdDebug(5100) << "Read " << len << " bytes from pout[0]" << endl;
+            //kDebug(5100) << "Read " << len << " bytes from pout[0]" << endl;
             str[len] ='\0';
             output += str;
           }
@@ -569,9 +569,9 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
 
         // Check stderr.
         if (poller[STD_ERR].revents & POLLIN) {
-          //kdDebug(5100) << "Trying to read " << 1024 << " bytes from perr[0]" << endl;
+          //kDebug(5100) << "Trying to read " << 1024 << " bytes from perr[0]" << endl;
           if ((len = read(poller[STD_ERR].fd,str,1024))>0) {
-            //kdDebug(5100) << "Read " << len << " bytes from perr[0]" << endl;
+            //kDebug(5100) << "Read " << len << " bytes from perr[0]" << endl;
             str[len] ='\0';
             error += str;
           }
@@ -587,7 +587,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
         
         if (num_pollers > 2) {
           if (poller[STD_IN].revents & ( POLLERR | POLLHUP ) ) {
-            kdDebug(5100) << "GnuPG seems to have hung up" << endl;
+            kDebug(5100) << "GnuPG seems to have hung up" << endl;
             close (pin[1]);
             pin[1] = -1;
             --num_pollers;
@@ -600,14 +600,14 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
               else
                 len2 = len2-input_pos+1;
 
-              //kdDebug(5100) << "Trying to write " << len2 << " bytes to pin[1] ..." << endl;
+              //kDebug(5100) << "Trying to write " << len2 << " bytes to pin[1] ..." << endl;
               len2 = write(pin[1], input.mid(input_pos,len2).data(), len2);
-              //kdDebug(5100) << "Wrote " << len2 << " bytes to pin[1] ..." << endl;
+              //kDebug(5100) << "Wrote " << len2 << " bytes to pin[1] ..." << endl;
               input_pos += len2;
 
               // We are done.
               if (input_pos >= input.length()) {
-                //kdDebug(5100) << "All input was written to pin[1]" << endl;
+                //kDebug(5100) << "All input was written to pin[1]" << endl;
                 close (pin[1]);
                 pin[1] = -1;
                 --num_pollers;
@@ -615,7 +615,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
             }
             else { // if input.isEmpty()
               write(pin[1], "\n", 1);
-              //kdDebug(5100) << "All input was written to pin[1]" << endl;
+              //kDebug(5100) << "All input was written to pin[1]" << endl;
               close (pin[1]);
               pin[1] = -1;
               --num_pollers;
@@ -628,7 +628,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
                                     || (poller[STD_ERR].events != 0) ) );
 
     if (pollstatus == -1) {
-      kdDebug(5100) << "GnuPG poll failed, errno: " << errno << endl;
+      kDebug(5100) << "GnuPG poll failed, errno: " << errno << endl;
     }
 
   } while(waitpidRetVal == 0);
@@ -645,20 +645,20 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
   if (WIFEXITED(childExitStatus) != 0) {
     // Get the return code of the child
     childExitStatus = WEXITSTATUS(childExitStatus);
-    kdDebug(5100) << "GnuPG exited with exit status " << childExitStatus 
+    kDebug(5100) << "GnuPG exited with exit status " << childExitStatus 
                   << endl;
   }
   else {
     childExitStatus = -1;
-    kdDebug(5100) << "GnuPG exited abnormally!" << endl;
+    kDebug(5100) << "GnuPG exited abnormally!" << endl;
   }
 
   //Uncomment these lines for testing only! Doing so will decrease security!
-  //kdDebug(5100) << "gpg stdout:\n" << QString(output) << endl;
+  //kDebug(5100) << "gpg stdout:\n" << QString(output) << endl;
 
   // Make the information visible, so that a user can
   // get to know what's going on during the gpg calls.
-  kdDebug(5100) << "gpg stderr:\n" << error << endl;
+  kDebug(5100) << "gpg stderr:\n" << error << endl;
 
   return childExitStatus;
 }

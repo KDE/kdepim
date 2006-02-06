@@ -129,14 +129,14 @@ void XXPortManager::loadPlugins()
 
     KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().toLatin1() );
     if ( !factory ) {
-      kdDebug(5720) << "XXPortManager::loadExtensions(): Factory creation failed" << endl;
+      kDebug(5720) << "XXPortManager::loadExtensions(): Factory creation failed" << endl;
       continue;
     }
 
     KAB::XXPortFactory *xxportFactory = static_cast<KAB::XXPortFactory*>( factory );
 
     if ( !xxportFactory ) {
-      kdDebug(5720) << "XXPortManager::loadExtensions(): Cast failed" << endl;
+      kDebug(5720) << "XXPortManager::loadExtensions(): Cast failed" << endl;
       continue;
     }
 

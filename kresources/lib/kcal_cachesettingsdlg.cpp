@@ -58,12 +58,12 @@ CacheSettingsDialog::CacheSettingsDialog( QWidget* parent, const char* name )
 
 void CacheSettingsDialog::loadSettings( KRES::Resource *resource )
 {
-  kdDebug(7000) << "KCal::CacheSettingsDialog::loadSettings()" << endl;
+  kDebug(7000) << "KCal::CacheSettingsDialog::loadSettings()" << endl;
 
   ResourceGroupwareBase *res = static_cast<ResourceGroupwareBase *>( resource );
   if ( res ) {
     if ( !res->prefs() ) {
-      kdError() << "No PREF" << endl;
+      kError() << "No PREF" << endl;
       return;
     }
     
@@ -71,7 +71,7 @@ void CacheSettingsDialog::loadSettings( KRES::Resource *resource )
     mSaveConfig->loadSettings( res );
     
   } else {
-    kdError(5700) << "CacheSettingsDialog::loadSettings(): "
+    kError(5700) << "CacheSettingsDialog::loadSettings(): "
                      "no ResourceGroupwareBase, cast failed" << endl;
   }
 }
@@ -83,7 +83,7 @@ void CacheSettingsDialog::saveSettings( KRES::Resource *resource )
     mReloadConfig->saveSettings( res );
     mSaveConfig->saveSettings( res );
   } else {
-    kdError(5700) << "CacheSettingsDialog::saveSettings(): "
+    kError(5700) << "CacheSettingsDialog::saveSettings(): "
                      "no ResourceGroupwareBase, cast failed" << endl;
   }
 }

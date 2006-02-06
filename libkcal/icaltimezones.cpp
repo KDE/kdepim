@@ -405,7 +405,7 @@ ICalTimezone *ICalTimezoneSource::parse(icalcomponent *vtimezone)
         if (t.is_utc) {
           data->lastModified = toQDateTime(t);
         } else {
-          kdDebug(5800) << "ICalTimezoneSource::parse(): LAST-MODIFIED not UTC" << endl;
+          kDebug(5800) << "ICalTimezoneSource::parse(): LAST-MODIFIED not UTC" << endl;
         }
         break;
 		}
@@ -416,13 +416,13 @@ ICalTimezone *ICalTimezoneSource::parse(icalcomponent *vtimezone)
   }
 
   if (name.isEmpty()) {
-    kdDebug(5800) << "ICalTimezoneSource::parse(): TZID missing" << endl;
+    kDebug(5800) << "ICalTimezoneSource::parse(): TZID missing" << endl;
     delete data;
     return 0;
   }
   if (data->location.isEmpty()  &&  !xlocation.isEmpty())
     data->location = xlocation;
-  kdDebug(5800) << "---zoneId: \"" << name << '"' << endl;
+  kDebug(5800) << "---zoneId: \"" << name << '"' << endl;
 
   /*
    * Iterate through all time zone rules for this VTIMEZONE,
@@ -436,17 +436,17 @@ ICalTimezone *ICalTimezoneSource::parse(icalcomponent *vtimezone)
     switch (kind) {
 
       case ICAL_XSTANDARD_COMPONENT:
-        kdDebug(5800) << "---standard phase: found" << endl;
+        kDebug(5800) << "---standard phase: found" << endl;
         phase = ICalTimezoneSourcePrivate::parsePhase(c, data, false);
         break;
 
       case ICAL_XDAYLIGHT_COMPONENT:
-        kdDebug(5800) << "---daylight phase: found" << endl;
+        kDebug(5800) << "---daylight phase: found" << endl;
         phase = ICalTimezoneSourcePrivate::parsePhase(c, data, true);
         break;
 
       default:
-        kdDebug(5800) << "ICalTimezoneSource::parse(): Unknown component: " << kind << endl;
+        kDebug(5800) << "ICalTimezoneSource::parse(): Unknown component: " << kind << endl;
         break;
     }
     if (phase)
@@ -530,7 +530,7 @@ ICalTimezoneData::Phase *ICalTimezoneSourcePrivate::parsePhase(icalcomponent *c,
         break;
 
       default:
-        kdDebug(5800) << "ICalTimezoneSource::readPhase(): Unknown property: " << kind << endl;
+        kDebug(5800) << "ICalTimezoneSource::readPhase(): Unknown property: " << kind << endl;
         break;
     }
     p = icalcomponent_get_next_property(c, ICAL_ANY_PROPERTY);
@@ -538,7 +538,7 @@ ICalTimezoneData::Phase *ICalTimezoneSourcePrivate::parsePhase(icalcomponent *c,
 
   // Validate the phase data
   if (!found_dtstart || !found_tzoffsetfrom || !found_tzoffsetto) {
-    kdDebug(5800) << "ICalTimezoneSource::readPhase(): DTSTART/TZOFFSETFROM/TZOFFSETTO missing" << endl;
+    kDebug(5800) << "ICalTimezoneSource::readPhase(): DTSTART/TZOFFSETFROM/TZOFFSETTO missing" << endl;
     delete phase;
     return 0;
   }

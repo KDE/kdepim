@@ -130,60 +130,60 @@ bool KTNEFParser::decodeMessage()
 		case attAIDOWNER:
 			d->stream_ >> value.asUInt();
 			d->message_->addProperty( 0x0062, MAPI_TYPE_ULONG, value );
-			kdDebug() << "Message Owner Appointment ID" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message Owner Appointment ID" << " (length=" << i2 << ")" << endl;
 			break;
 		case attREQUESTRES:
 			d->stream_ >> u;
 			d->message_->addProperty( 0x0063, MAPI_TYPE_UINT16, u );
 			value = ( bool )u;
-			kdDebug() << "Message Request Response" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message Request Response" << " (length=" << i2 << ")" << endl;
 			break;
 		case attDATERECD:
 			value = readTNEFDate( d->stream_ );
 			d->message_->addProperty( 0x0E06, MAPI_TYPE_TIME, value );
-			kdDebug() << "Message Receive Date" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message Receive Date" << " (length=" << i2 << ")" << endl;
 			break;
 		case attMSGCLASS:
 			value = readMAPIString( d->stream_, false, false, i2 );
 			d->message_->addProperty( 0x001A, MAPI_TYPE_STRING8, value );
-			kdDebug() << "Message Class" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message Class" << " (length=" << i2 << ")" << endl;
 			break;
 		case attMSGPRIORITY:
 			d->stream_ >> u;
 			d->message_->addProperty( 0x0026, MAPI_TYPE_ULONG, 2-u );
 			value = u;
-			kdDebug() << "Message Priority" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message Priority" << " (length=" << i2 << ")" << endl;
 			break;
 		case attMAPIPROPS:
-			kdDebug() << "Message MAPI Properties" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message MAPI Properties" << " (length=" << i2 << ")" << endl;
 			{
 				int nProps = d->message_->properties().count();
 				i2 += d->device_->at();
 				readMAPIProperties( d->message_->properties(), 0 );
 				d->device_->at( i2 );
-				kdDebug() << "Properties: " << d->message_->properties().count() << endl;
+				kDebug() << "Properties: " << d->message_->properties().count() << endl;
 				value = QString( "< %1 properties >" ).arg( d->message_->properties().count() - nProps );
 			}
 			break;
 		case attTNEFVERSION:
 			d->stream_ >> value.asUInt();
-			kdDebug() << "Message TNEF Version" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message TNEF Version" << " (length=" << i2 << ")" << endl;
 			break;
 		case attFROM:
 			d->message_->addProperty( 0x0024, MAPI_TYPE_STRING8, readTNEFAddress( d->stream_ ) );
 			d->device_->at( d->device_->at() - i2 );
 			value = readTNEFData( d->stream_, i2 );
-			kdDebug() << "Message From" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message From" << " (length=" << i2 << ")" << endl;
 			break;
 		case attSUBJECT:
 			value = readMAPIString( d->stream_, false, false, i2 );
 			d->message_->addProperty( 0x0037, MAPI_TYPE_STRING8, value );
-			kdDebug() << "Message Subject" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message Subject" << " (length=" << i2 << ")" << endl;
 			break;
 		case attDATESENT:
 			value = readTNEFDate( d->stream_ );
 			d->message_->addProperty( 0x0039, MAPI_TYPE_TIME, value );
-			kdDebug() << "Message Date Sent" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message Date Sent" << " (length=" << i2 << ")" << endl;
 			break;
 		case attMSGSTATUS:
 			{
@@ -198,7 +198,7 @@ bool KTNEFParser::decodeMessage()
 				d->message_->addProperty( 0x0E07, MAPI_TYPE_ULONG, flag );
 				value = c;
 			}
-			kdDebug() << "Message Status" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message Status" << " (length=" << i2 << ")" << endl;
 			break;
 		case attRECIPTABLE:
 			{
@@ -215,30 +215,30 @@ bool KTNEFParser::decodeMessage()
 				d->device_->at( d->device_->at() - i2 );
 				value = readTNEFData( d->stream_, i2 );
 			}
-			kdDebug() << "Message Recipient Table" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message Recipient Table" << " (length=" << i2 << ")" << endl;
 			break;
 		case attBODY:
 			value = readMAPIString( d->stream_, false, false, i2 );
 			d->message_->addProperty( 0x1000, MAPI_TYPE_STRING8, value );
-			kdDebug() << "Message Body" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message Body" << " (length=" << i2 << ")" << endl;
 			break;
 		case attDATEMODIFIED:
 			value = readTNEFDate( d->stream_ );
 			d->message_->addProperty( 0x3008, MAPI_TYPE_TIME, value );
-			kdDebug() << "Message Date Modified" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message Date Modified" << " (length=" << i2 << ")" << endl;
 			break;
 		case attMSGID:
 			value = readMAPIString( d->stream_, false, false, i2 );
 			d->message_->addProperty( 0x300B, MAPI_TYPE_STRING8, value );
-			kdDebug() << "Message ID" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message ID" << " (length=" << i2 << ")" << endl;
 			break;
 		case attOEMCODEPAGE:
 			value = readTNEFData( d->stream_, i2 );
-			kdDebug() << "Message OEM Code Page" << " (length=" << i2 << ")" << endl;
+			kDebug() << "Message OEM Code Page" << " (length=" << i2 << ")" << endl;
 			break;
 		default:
 			value = readTNEFAttribute( d->stream_, type, i2 );
-			kdDebug().form( "Message: type=%x, length=%d, check=%x\n", i1, i2, u );
+			kDebug().form( "Message: type=%x, length=%d, check=%x\n", i1, i2, u );
 			break;
 	}
 	// skip data
@@ -248,7 +248,7 @@ bool KTNEFParser::decodeMessage()
 	d->stream_ >> u;
 	// add TNEF attribute
 	d->message_->addAttribute( tag, type, value, true );
-	//kdDebug() << "stream: " << d->device_->at() << endl;
+	//kDebug() << "stream: " << d->device_->at() << endl;
 	return true;
 }
 
@@ -269,14 +269,14 @@ bool KTNEFParser::decodeAttachment()
 	   case attATTACHTITLE:
 		   value = readMAPIString( d->stream_, false, false, i );
 		   d->current_->setName( value.toString() );
-		   kdDebug() << "Attachment Title: " << d->current_->name() << endl;
+		   kDebug() << "Attachment Title: " << d->current_->name() << endl;
 		   break;
 	   case attATTACHDATA:
 		   d->current_->setSize( i );
 		   d->current_->setOffset( d->device_->at() );
 		   d->device_->at( d->device_->at() + i );
 		   value = QString( "< size=%1 >" ).arg( i );
-		   kdDebug() << "Attachment Data: size=" << i << endl;
+		   kDebug() << "Attachment Data: size=" << i << endl;
 		   break;
 	   case attATTACHMENT:	// try to get attachment info
 		   i += d->device_->at();
@@ -296,27 +296,27 @@ bool KTNEFParser::decodeAttachment()
 		   break;
 	   case attATTACHMODDATE:
 		   value = readTNEFDate( d->stream_ );
-		   kdDebug() << "Attachment Modification Date: " << value.toString() << endl;
+		   kDebug() << "Attachment Modification Date: " << value.toString() << endl;
 		   break;
 	   case attATTACHCREATEDATE:
 		   value = readTNEFDate( d->stream_ );
-		   kdDebug() << "Attachment Creation Date: " << value.toString() << endl;
+		   kDebug() << "Attachment Creation Date: " << value.toString() << endl;
 		   break;
 	   case attATTACHMETAFILE:
-		   kdDebug() << "Attachment Metafile: size=" << i << endl;
+		   kDebug() << "Attachment Metafile: size=" << i << endl;
 		   //value = QString( "< size=%1 >" ).arg( i );
 		   //d->device_->at( d->device_->at()+i );
 		   value = readTNEFData( d->stream_, i );
 		   break;
 	   default:
 		   value = readTNEFAttribute( d->stream_, type, i );
-		   kdDebug().form( "Attachment unknown field:         tag=%x, length=%d\n",  tag, i);
+		   kDebug().form( "Attachment unknown field:         tag=%x, length=%d\n",  tag, i);
 		   break;
 	}
 	d->stream_ >> u;	// u <- checksum
 	// add TNEF attribute
 	d->current_->addAttribute( tag, type, value, true );
-	//kdDebug() << "stream: " << d->device_->at() << endl;
+	//kDebug() << "stream: " << d->device_->at() << endl;
 
 	return true;
 }
@@ -340,7 +340,7 @@ bool KTNEFParser::parseDevice()
 	}
 
 	if ( !d->device_->open( QIODevice::ReadOnly ) ) {
-	  kdDebug() << "Couldn't open device" << endl;
+	  kDebug() << "Couldn't open device" << endl;
 		return false;
 	}
 
@@ -350,8 +350,8 @@ bool KTNEFParser::parseDevice()
 	if (i == TNEF_SIGNATURE)
 	{
 		d->stream_ >> u;
-		kdDebug().form( "Attachment cross reference key: 0x%04x\n",u );
-		//kdDebug() << "stream: " << d->device_->at() << endl;
+		kDebug().form( "Attachment cross reference key: 0x%04x\n",u );
+		//kDebug() << "stream: " << d->device_->at() << endl;
 		while (!d->stream_.eof())
 		{
 			d->stream_ >> c;
@@ -364,7 +364,7 @@ bool KTNEFParser::parseDevice()
 				if (!decodeAttachment()) goto end;
 				break;
 			   default:
-				kdDebug() << "Unknown Level: " << c << ", at offset " << d->device_->at() << endl;
+				kDebug() << "Unknown Level: " << c << ", at offset " << d->device_->at() << endl;
 				goto end;
 			}
 		}
@@ -380,7 +380,7 @@ bool KTNEFParser::parseDevice()
 	}
 	else
 	{
-	  kdDebug() << "This is not a TNEF file" << endl;
+	  kDebug() << "This is not a TNEF file" << endl;
 end:	d->device_->close();
 		return false;
 	}
@@ -437,7 +437,7 @@ bool KTNEFParser::extractAll()
 
 bool KTNEFParser::extractFileTo(const QString& filename, const QString& dirname)
 {
-	kdDebug() << "Extracting attachment: filename=" << filename << ", dir=" << dirname << endl;
+	kDebug() << "Extracting attachment: filename=" << filename << ", dir=" << dirname << endl;
 	KTNEFAttach	*att = d->message_->attachment(filename);
 	if (!att) return false;
 	return extractAttachmentTo(att, dirname);
@@ -530,7 +530,7 @@ QDateTime formatTime( quint32 lowB, quint32 highB )
 #elif ( SIZEOF_UNSIGNED_LONG == 8 )
 	unsigned long u64;
 #else
-	kdWarning() << "Unable to perform date conversion on this system, no 64-bits integer found" << endl;
+	kWarning() << "Unable to perform date conversion on this system, no 64-bits integer found" << endl;
 	dt.setTime_t( 0xffffffffU );
 	return dt;
 #endif
@@ -543,7 +543,7 @@ QDateTime formatTime( quint32 lowB, quint32 highB )
 		dt.setTime_t( ( unsigned int )u64 );
 	else
 	{
-		kdWarning().form( "Invalid date: low byte=0x%08X, high byte=0x%08X\n", lowB, highB );
+		kWarning().form( "Invalid date: low byte=0x%08X, high byte=0x%08X\n", lowB, highB );
 		dt.setTime_t( 0xffffffffU );
 	}
 	return dt;
@@ -764,7 +764,7 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 
 	// get number of properties
 	d->stream_ >> n;
-	kdDebug() << "MAPI Properties: " << n << endl;
+	kDebug() << "MAPI Properties: " << n << endl;
 	for (uint i=0;i<n;i++)
 	{
 		if (d->stream_.eof())
@@ -775,7 +775,7 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 		readMAPIValue(d->stream_, mapi);
 		if (mapi.type == MAPI_TYPE_NONE)
 		{
-			kdDebug().form( "MAPI unsupported:         tag=%x, type=%x\n", mapi.tag, mapi.type );
+			kDebug().form( "MAPI unsupported:         tag=%x, type=%x\n", mapi.tag, mapi.type );
 			clearMAPIValue(mapi);
 			return false;
 		}
@@ -800,13 +800,13 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 						attach->setSize( data.size()-16 );
 						attach->setMimeTag( "application/ms-tnef" );
 						attach->setDisplayName( "Embedded Message" );
-						kdDebug() << "MAPI Embedded Message: size=" << data.size() << endl;
+						kDebug() << "MAPI Embedded Message: size=" << data.size() << endl;
 					}
 					d->device_->at( d->device_->at() + ( len-4 ) );
 					break;
 				}
 			}
-			kdDebug().form( "MAPI data: size=%d\n", mapi.value.toByteArray().size() );
+			kDebug().form( "MAPI data: size=%d\n", mapi.value.toByteArray().size() );
 			break;
 		   default:
 			{
@@ -821,23 +821,23 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 				switch ( mapi.type & 0x0FFF )
 				{
 					case MAPI_TYPE_UINT16:
-						kdDebug().form( "(tag=%04x) MAPI short%s: 0x%x\n", mapi.tag, mapiname.ascii(), mapi.value.toUInt() );
+						kDebug().form( "(tag=%04x) MAPI short%s: 0x%x\n", mapi.tag, mapiname.ascii(), mapi.value.toUInt() );
 						break;
 					case MAPI_TYPE_ULONG:
-						kdDebug().form( "(tag=%04x) MAPI long%s: 0x%x\n", mapi.tag, mapiname.ascii(), mapi.value.toUInt() );
+						kDebug().form( "(tag=%04x) MAPI long%s: 0x%x\n", mapi.tag, mapiname.ascii(), mapi.value.toUInt() );
 						break;
 					case MAPI_TYPE_BOOLEAN:
-						kdDebug().form( "(tag=%04x) MAPI boolean%s: %s\n", mapi.tag, mapiname.ascii(), ( mapi.value.toBool() ? "true" : "false" ) );
+						kDebug().form( "(tag=%04x) MAPI boolean%s: %s\n", mapi.tag, mapiname.ascii(), ( mapi.value.toBool() ? "true" : "false" ) );
 						break;
 					case MAPI_TYPE_TIME:
-						kdDebug().form( "(tag=%04x) MAPI time%s: %s\n", mapi.tag, mapiname.ascii(), mapi.value.toString().ascii() );
+						kDebug().form( "(tag=%04x) MAPI time%s: %s\n", mapi.tag, mapiname.ascii(), mapi.value.toString().ascii() );
 						break;
 					case MAPI_TYPE_USTRING:
 					case MAPI_TYPE_STRING8:
-						kdDebug().form( "(tag=%04x) MAPI string%s: size=%d \"%s\"\n", mapi.tag, mapiname.ascii(), mapi.value.toByteArray().size(), mapi.value.toString().ascii() );
+						kDebug().form( "(tag=%04x) MAPI string%s: size=%d \"%s\"\n", mapi.tag, mapiname.ascii(), mapi.value.toByteArray().size(), mapi.value.toString().ascii() );
 						break;
 					case MAPI_TYPE_BINARY:
-						kdDebug().form( "(tag=%04x) MAPI binary%s: size=%d\n", mapi.tag, mapiname.ascii(), mapi.value.toByteArray().size() );
+						kDebug().form( "(tag=%04x) MAPI binary%s: size=%d\n", mapi.tag, mapiname.ascii(), mapi.value.toByteArray().size() );
 						break;
 				}
 			}
@@ -849,7 +849,7 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 			p = new KTNEFProperty( key, ( mapi.type & 0x0FFF ), mapi.value, mapi.name.value );
 			props[ p->key() ] = p;
 		}
-		//kdDebug() << "stream: " << d->device_->at() << endl;
+		//kDebug() << "stream: " << d->device_->at() << endl;
 	}
 	return true;
 }

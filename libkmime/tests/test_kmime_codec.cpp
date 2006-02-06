@@ -160,20 +160,20 @@ int main( int argc, char * argv[] ) {
 
   if ( verbose ) {
     if ( encode )
-      kdDebug() << "encoding as " << encodingName << endl;
+      kDebug() << "encoding as " << encodingName << endl;
     else if ( decode )
-      kdDebug() << "decoding " << encodingName << endl;
+      kDebug() << "decoding " << encodingName << endl;
   }
 
   if ( optind != argc - 1 ) usage();
 
   QFile infile( argv[ optind ] );
   if (!infile.exists()) {
-    kdDebug() << "infile \"" << infile.fileName() << "\" does not exist!" << endl;
+    kDebug() << "infile \"" << infile.fileName() << "\" does not exist!" << endl;
     return INFILE_READ_ERR;
   }
   if (!infile.open( QIODevice::ReadOnly )) {
-    kdDebug() << "cannot open " << infile.fileName() << " for reading!"
+    kDebug() << "cannot open " << infile.fileName() << " for reading!"
 	      << endl;
     return INFILE_READ_ERR;
   }
@@ -181,35 +181,35 @@ int main( int argc, char * argv[] ) {
   QFile outfile( outfilename );
   if ( !outfilename.isEmpty() ) {
     if (!outfile.open( QIODevice::WriteOnly|QIODevice::Truncate )) {
-      kdDebug() << "cannot open " << outfile.fileName() << " for writing!"
+      kDebug() << "cannot open " << outfile.fileName() << " for writing!"
 		<< endl;
       return OUTFILE_WRITE_ERR;
     }
   }
 
   if ( verbose ) {
-    kdDebug() << "using output buffer size of " << outbufsize << endl;
-    kdDebug() << "using  input buffer size of " << inbufsize << endl;
+    kDebug() << "using output buffer size of " << outbufsize << endl;
+    kDebug() << "using  input buffer size of " << inbufsize << endl;
   }
   if ( !withFinish )
-    kdWarning() << "omitting finish calls. Results may be truncated!" << endl;
+    kWarning() << "omitting finish calls. Results may be truncated!" << endl;
 
   if ( inbufsize <= 0 )
     inbufsize = infile.size();
 
   // get a codec. Don't delete it later!!
-  kdDebug( verbose ) << "obtaining codec for \""
+  kDebug( verbose ) << "obtaining codec for \""
 		     << encodingName << "\"" << endl;
   Codec * codec = Codec::codecForName( encodingName );
   if ( !codec ) {
-    kdDebug() << "unknown codec \"" << encodingName << "\"" << endl;
+    kDebug() << "unknown codec \"" << encodingName << "\"" << endl;
     return UNKNOWN_CODEC;
   }
 
   QByteArray infile_buffer = infile.readAll();
 
   for ( int i = 0 ; i < iterations ; ++i ) {
-    kdDebug( verbose ) << "starting iteration " << i+1
+    kDebug( verbose ) << "starting iteration " << i+1
 		       << " of " << iterations << endl;
     switch ( pattern ) {
     case ChunkWise:
@@ -329,7 +329,7 @@ void encode_decode_chunkwise( bool encode, const Codec * codec,
 
   // we're going to need this below:
 #define write_full_outdata_then_reset  do { \
-     kdDebug( verbose ) << "  flushing output buffer." << endl; \
+     kDebug( verbose ) << "  flushing output buffer." << endl; \
      if ( writing ) { \
        qint64 outlen = outfile.write( outdata.data(), \
                                       outdata.size() ); \
@@ -340,7 +340,7 @@ void encode_decode_chunkwise( bool encode, const Codec * codec,
    } while ( false )
 
 #define report_status(x,y) do { \
-     kdDebug( verbose ) << "  " #x "() returned " #y " after processing " \
+     kDebug( verbose ) << "  " #x "() returned " #y " after processing " \
                         << iit - indata.begin() << " bytes of input.\n" \
 			<< "   output iterator now at position " \
 			<< oit - outdata.begin() << " of " \
@@ -348,7 +348,7 @@ void encode_decode_chunkwise( bool encode, const Codec * codec,
   } while ( false )
 
 #define report_finish_status(y) do { \
-     kdDebug( verbose ) << "  finish() returned " #y "\n" \
+     kDebug( verbose ) << "  finish() returned " #y "\n" \
 			<< "   output iterator now at position " \
 			<< oit - outdata.begin() << " of " \
 			<< outdata.size() << endl; \
@@ -377,7 +377,7 @@ void encode_decode_chunkwise( bool encode, const Codec * codec,
     indata = QByteArray( infile_buffer.begin() + offset, reallyRead );
     offset += reallyRead;
 
-    kdDebug( verbose ) << " read " << reallyRead << " bytes (max: "
+    kDebug( verbose ) << " read " << reallyRead << " bytes (max: "
 		       << indata.size() << ") from input." << endl;
 
     // setup input iterators:

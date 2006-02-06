@@ -91,7 +91,7 @@ int main( int argc, char **argv )
     Features *features = parser.parseFile( filename );
 
     if ( !features ) {
-      kdError() << "Parse error" << endl;
+      kError() << "Parse error" << endl;
       return 1;
     }
   }

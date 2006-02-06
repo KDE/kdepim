@@ -747,7 +747,7 @@ QString CertManager::displayNameForJob( const Kleo::Job *job )
     displayName = *it;
     mJobsDisplayNameMap.remove( it );
   } else {
-    kdWarning() << "Job not found in map: " << job << endl;
+    kWarning() << "Job not found in map: " << job << endl;
   }
   return displayName;
 }
@@ -783,7 +783,7 @@ void CertManager::startCertificateImport( const QByteArray & keyData, const QStr
 
   connectJobToStatusBarProgress( job, i18n("Importing certificates...") );
 
-  kdDebug() << "Importing certificate. keyData size:" << keyData.size() << endl;
+  kDebug() << "Importing certificate. keyData size:" << keyData.size() << endl;
   const GpgME::Error err = job->start( keyData );
   if ( err )
     showCertificateImportError( this, err, certDisplayName );
@@ -1250,7 +1250,7 @@ void CertManager::slotCertificateExportResult( const GpgME::Error & err, const Q
     return;
   }
 
-  kdDebug() << "CertManager::slotCertificateExportResult(): got " << data.size() << " bytes" << endl;
+  kDebug() << "CertManager::slotCertificateExportResult(): got " << data.size() << " bytes" << endl;
 
   const QString filter = QString("*.pem|") + i18n("ASCII Armored Certificate Bundles (*.pem)");
   const KUrl url = KFileDialog::getOpenURL( QString(),
@@ -1325,7 +1325,7 @@ void CertManager::slotSecretKeyExportResult( const GpgME::Error & err, const QBy
     return;
   }
 
-  kdDebug() << "CertManager::slotSecretKeyExportResult(): got " << data.size() << " bytes" << endl;
+  kDebug() << "CertManager::slotSecretKeyExportResult(): got " << data.size() << " bytes" << endl;
   QString filter = QString("*.p12|") + i18n("PKCS#12 Key Bundle (*.p12)");
   KUrl url = KFileDialog::getOpenURL( QString(),
                                       filter,

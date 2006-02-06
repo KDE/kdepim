@@ -59,7 +59,7 @@ protected:
 			if (w) return new Widget(w,name);
 			else
 			{
-				kdError() << k_funcinfo
+				kError() << k_funcinfo
 					<< ": Couldn't cast parent to widget."
 					<< endl;
 				return 0L;
@@ -75,13 +75,13 @@ protected:
 			{
 				if (!parent)
 				{
-					kdDebug() << k_funcinfo << ": Using NULL device." << endl;
+					kDebug() << k_funcinfo << ": Using NULL device." << endl;
 				}
 				return new Action(d,name,args);
 			}
 			else
 			{
-				kdError() << k_funcinfo
+				kError() << k_funcinfo
 					<< ": Couldn't cast parent to KPilotDeviceLink"
 					<< endl;
 				return 0L;

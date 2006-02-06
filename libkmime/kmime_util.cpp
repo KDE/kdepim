@@ -50,7 +50,7 @@ QByteArray cachedCharset( const QByteArray &name )
       return charset;
 
   c_harsetCache.append( name.toUpper() );
-  //kdDebug() << "KNMimeBase::cachedCharset() number of cs " << c_harsetCache.count() << endl;
+  //kDebug() << "KNMimeBase::cachedCharset() number of cs " << c_harsetCache.count() << endl;
   return c_harsetCache.last();
 }
 
@@ -61,7 +61,7 @@ QByteArray cachedLanguage( const QByteArray &name )
       return language;
 
   l_anguageCache.append( name.toUpper() );
-  //kdDebug() << "KNMimeBase::cachedCharset() number of cs " << c_harsetCache.count() << endl;
+  //kDebug() << "KNMimeBase::cachedCharset() number of cs " << c_harsetCache.count() << endl;
   return l_anguageCache.last();
 }
 
@@ -337,7 +337,7 @@ QByteArray uniqueString()
 
   for(int i=0; i<10; i++){
     pos=(int) (61.0*rand()/(RAND_MAX+1.0));
-    //kdDebug(5003) << pos << endl;
+    //kDebug(5003) << pos << endl;
     p[i]=chars[pos];
   }
 

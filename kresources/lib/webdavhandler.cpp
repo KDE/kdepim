@@ -174,7 +174,7 @@ QDateTime WebdavHandler::utcAsZone( const QDateTime& utc, const QString& timeZon
   int offset = icaltimezone_get_utc_offset(
     icaltimezone_get_builtin_timezone( timeZoneId.toLatin1() ),
     &tt, &daylight );
-kdDebug() << "Calculated offset of: " << offset << " of timezone: " << timeZoneId << endl;
+kDebug() << "Calculated offset of: " << offset << " of timezone: " << timeZoneId << endl;
   return utc.addSecs( offset );
 }
 

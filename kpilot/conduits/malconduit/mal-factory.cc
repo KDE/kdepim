@@ -112,7 +112,7 @@ MALConduitFactory::~MALConduitFactory()
 		}
 		else 
 		{
-			kdError() << k_funcinfo
+			kError() << k_funcinfo
 				<< ": Couldn't cast parent to widget."
 				<< endl;
 			return 0L;
@@ -129,7 +129,7 @@ MALConduitFactory::~MALConduitFactory()
 		}
 		else
 		{
-			kdError() << k_funcinfo
+			kError() << k_funcinfo
 				<< ": Couldn't cast parent to KPilotDeviceLink"
 				<< endl;
 			return 0L;

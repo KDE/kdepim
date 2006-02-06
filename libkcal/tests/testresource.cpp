@@ -71,12 +71,12 @@ int main(int argc, char *argv[])
     KConfig *config = 0;
     if ( args->getOption( "configfile" ) )
       config = new KConfig( KURL( args->getOption( "configfile" ) ).url() );
-    kdDebug() << KURL( args->getOption( "configfile" ) ).url() << endl;
+    kDebug() << KURL( args->getOption( "configfile" ) ).url() << endl;
     KCal::TestResource test( type, config );
     test.setup();
     test.runAll();
     test.cleanup();
-    kdDebug() << "All tests OK." << endl;
+    kDebug() << "All tests OK." << endl;
     return 0;
 }
 
@@ -99,18 +99,18 @@ void TestResource::setup()
         "Select the resource you wish to test. Test data will be used.", 
         resources );
 
-    kdDebug() << "Selected Resource: " << chosen << endl;
+    kDebug() << "Selected Resource: " << chosen << endl;
     if ( !chosen.isNull() )
       m_resource_type = chosen;
   }
   assert( !m_resource_type.isNull() );
   /* Either read one from the config file, or create a default one. */
   if ( m_config ) {
-    kdDebug() << "Reading config from file" << endl;
+    kDebug() << "Reading config from file" << endl;
     KRES::Factory *factory = KRES::Factory::self( "calendar" );
     m_res = dynamic_cast<ResourceCalendar*>( factory->resource( m_resource_type, m_config ) );
   } else {
-    kdDebug() << "Creating blank resource" << endl;
+    kDebug() << "Creating blank resource" << endl;
     m_res = manager->createResource( m_resource_type );
   }
   assert( m_res );
@@ -137,10 +137,10 @@ bool TestResource::check(const QString& txt, QString a, QString b)
     if (b.isEmpty())
         b.clear();
     if (a == b) {
-        kdDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "ok" << endl;
+        kDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "ok" << endl;
     }
     else {
-        kdDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "KO !" << endl;
+        kDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "KO !" << endl;
         cleanup();
         exit(1);
     }
@@ -149,7 +149,7 @@ bool TestResource::check(const QString& txt, QString a, QString b)
 
 void TestResource::testOpenAndClose()
 {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
   assert( m_res->open() );
   assert( m_res->isOpen() );
   m_res->close();
@@ -158,7 +158,7 @@ void TestResource::testOpenAndClose()
 
 void TestResource::testResourceAttributes()
 {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
   
   check( "type", m_res->type(), m_resource_type );
   
@@ -179,14 +179,14 @@ void TestResource::testResourceAttributes()
 
 void TestResource::testResourceCalendarAttributes()
 {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
 }
 
 
 void TestResource::testEventAddRemove()
 {
   ICalFormat f;
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
   
   int oldcount = m_res->rawIncidences().count();
   Event *event = makeTestEvent();
@@ -206,7 +206,7 @@ void TestResource::testEventAddRemove()
 void TestResource::testTodoAddRemove()
 {
   ICalFormat f;
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
   
   int oldcount = m_res->rawIncidences().count();
   Todo *todo = makeTestTodo();
@@ -226,7 +226,7 @@ void TestResource::testTodoAddRemove()
 void TestResource::testJournalAddRemove()
 {
   ICalFormat f;
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
   
   int oldcount = m_res->rawIncidences().count();
   Journal *journal = makeTestJournal();
@@ -245,7 +245,7 @@ void TestResource::testJournalAddRemove()
 
 void TestResource::cleanup()
 {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
 }
 
 }

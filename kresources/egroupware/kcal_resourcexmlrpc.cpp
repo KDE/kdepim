@@ -181,7 +181,7 @@ void ResourceXMLRPC::writeConfig( KConfig* config )
 
 bool ResourceXMLRPC::doOpen()
 {
-  kdDebug(5800) << "ResourceXMLRPC::doOpen()" << endl;
+  kDebug(5800) << "ResourceXMLRPC::doOpen()" << endl;
 
   if ( mServer )
     delete mServer;
@@ -206,7 +206,7 @@ bool ResourceXMLRPC::doOpen()
 
 void ResourceXMLRPC::doClose()
 {
-  kdDebug(5800) << "ResourceXMLRPC::doClose()" << endl;
+  kDebug(5800) << "ResourceXMLRPC::doClose()" << endl;
 
   QMap<QString, QVariant> args;
   args.insert( "sessionid", mSessionID );
@@ -221,7 +221,7 @@ void ResourceXMLRPC::doClose()
 
 bool ResourceXMLRPC::doLoad()
 {
-  kdDebug() << "ResourceXMLRPC::load()" << endl;
+  kDebug() << "ResourceXMLRPC::load()" << endl;
 
   mCalendar.close();
 
@@ -538,7 +538,7 @@ void ResourceXMLRPC::logoutFinished( const QList<QVariant>& variant,
   QMap<QString, QVariant> map = variant[ 0 ].toMap();
 
   if ( map[ "GOODBYE" ].toString() != "XOXO" )
-    kdError() << "logout failed" << endl;
+    kError() << "logout failed" << endl;
 
   KUrl url = KURL( mPrefs->url() );
   mSessionID = mKp3 = "";
@@ -768,7 +768,7 @@ void ResourceXMLRPC::loadTodoCategoriesFinished( const QList<QVariant> &mapList,
 void ResourceXMLRPC::fault( int error, const QString& errorMsg,
                             const QVariant& )
 {
-  kdError() << "Server send error " << error << ": " << errorMsg << endl;
+  kError() << "Server send error " << error << ": " << errorMsg << endl;
   mSynchronizer->stop();
 }
 

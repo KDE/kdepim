@@ -114,7 +114,7 @@ void ResourceGroupwareConfig::loadSettings( KRES::Resource *res )
   mResource = dynamic_cast<ResourceGroupware*>( res );
   
   if ( !mResource ) {
-    kdDebug(5700) << "ResourceGroupwareConfig::loadSettings(): cast failed" << endl;
+    kDebug(5700) << "ResourceGroupwareConfig::loadSettings(): cast failed" << endl;
     return;
   }
 
@@ -130,7 +130,7 @@ void ResourceGroupwareConfig::saveSettings( KRES::Resource *res )
   ResourceGroupware *resource = dynamic_cast<ResourceGroupware*>( res );
   
   if ( !resource ) {
-    kdDebug(5700) << "ResourceGroupwareConfig::saveSettings(): cast failed" << endl;
+    kDebug(5700) << "ResourceGroupwareConfig::saveSettings(): cast failed" << endl;
     return;
   }
 

@@ -92,7 +92,7 @@ void Todo::setDtDue(const QDateTime &dtDue, bool first )
   if ( doesRecur() && dtDue < recurrence()->startDateTime() )
     setDtStart( dtDue );
 
-  //kdDebug(5800) << "setDtDue says date is " << mDtDue.toString() << endl;
+  //kDebug(5800) << "setDtDue says date is " << mDtDue.toString() << endl;
 
   /*const Alarm::List& alarms = alarms();
   for (Alarm* alarm = alarms.first(); alarm; alarm = alarms.next())

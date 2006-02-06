@@ -137,7 +137,7 @@ void KABC::ResourceKolab::doClose()
 KABC::Ticket * KABC::ResourceKolab::requestSaveTicket()
 {
   if ( !addressBook() ) {
-    kdError() << "no addressbook" << endl;
+    kError() << "no addressbook" << endl;
     return 0;
   }
   mLocked = true;
@@ -170,7 +170,7 @@ QString KABC::ResourceKolab::loadContact( const QString& contactData,
   addr.setChanged( false );
   KABC::Resource::insertAddressee( addr ); // same as mAddrMap.insert( addr.uid(), addr );
   mUidMap[ addr.uid() ] = StorageReference( subResource, sernum );
-  kdDebug(5650) << "Loaded contact uid=" << addr.uid() << " sernum=" << sernum << " fullName=" << addr.name() << endl;
+  kDebug(5650) << "Loaded contact uid=" << addr.uid() << " sernum=" << sernum << " fullName=" << addr.name() << endl;
   return addr.uid();
 }
 
@@ -188,7 +188,7 @@ bool KABC::ResourceKolab::loadSubResourceHelper( const QString& subResource,
 {
   int count = 0;
   if ( !kmailIncidencesCount( count, mimetype, subResource ) ) {
-    kdError() << "Communication problem in KABC::ResourceKolab::loadSubResourceHelper()\n";
+    kError() << "Communication problem in KABC::ResourceKolab::loadSubResourceHelper()\n";
     return false;
   }
   if ( !count )
@@ -213,7 +213,7 @@ bool KABC::ResourceKolab::loadSubResourceHelper( const QString& subResource,
     QMap<quint32, QString> lst;
 
     if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
-      kdError() << "Communication problem in ResourceKolab::load()\n";
+      kError() << "Communication problem in ResourceKolab::load()\n";
       if ( progressId )
         uiserver.jobFinished( progressId );
       return false;
@@ -234,7 +234,7 @@ bool KABC::ResourceKolab::loadSubResourceHelper( const QString& subResource,
 
   }
 
-  kdDebug(5650) << "Contacts kolab resource: got " << count << " contacts in " << subResource << endl;
+  kDebug(5650) << "Contacts kolab resource: got " << count << " contacts in " << subResource << endl;
 
   if ( progressId )
     uiserver.jobFinished( progressId );
@@ -269,7 +269,7 @@ bool KABC::ResourceKolab::save( Ticket* )
     }
 
   if ( !rc )
-    kdDebug(5650) << k_funcinfo << " failed." << endl;
+    kDebug(5650) << k_funcinfo << " failed." << endl;
   return rc;
 }
 
@@ -301,7 +301,7 @@ void AttachmentList::updatePictureAttachment( const QImage& image, const QString
     tempFile->close();
     KUrl url;
     url.setPath( tempFile->name() );
-    kdDebug(5650) << "picture saved to " << url.path() << endl;
+    kDebug(5650) << "picture saved to " << url.path() << endl;
     addAttachment( url.url(), name, "image/png" );
   } else {
     deletedAttachments.append( name );
@@ -317,7 +317,7 @@ void AttachmentList::updateAttachment( const QByteArray& data, const QString& na
     tempFile->close();
     KUrl url;
     url.setPath( tempFile->name() );
-    kdDebug(5650) << "data saved to " << url.path() << endl;
+    kDebug(5650) << "data saved to " << url.path() << endl;
     addAttachment( url.url(), name, mimetype );
   } else {
     deletedAttachments.append( name );
@@ -332,7 +332,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
   if ( mUidMap.find( uid ) != mUidMap.end() ) {
     subResource = mUidMap[ uid ].resource();
     if ( !subresourceWritable( subResource ) ) {
-      kdWarning() << "Wow! Something tried to update a non-writable addressee! Fix this caller: " << kdBacktrace() << endl;
+      kWarning() << "Wow! Something tried to update a non-writable addressee! Fix this caller: " << kBacktrace() << endl;
       return false;
     }
     sernum = mUidMap[ uid ].serialNumber();
@@ -377,9 +377,9 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
                          att.attachmentURLs, att.attachmentMimeTypes, att.attachmentNames,
                          att.deletedAttachments );
   if ( !rc )
-    kdDebug(5650) << "kmailUpdate returned false!" << endl;
+    kDebug(5650) << "kmailUpdate returned false!" << endl;
   if ( rc ) {
-    kdDebug(5650) << "kmailUpdate returned, now sernum=" << sernum << " for uid=" << uid << endl;
+    kDebug(5650) << "kmailUpdate returned, now sernum=" << sernum << " for uid=" << uid << endl;
     mUidMap[ uid ] = StorageReference( subResource, sernum );
     // This is ugly, but it's faster than doing
     // mAddrMap.find(addr.uid()), which would give the same :-(
@@ -398,7 +398,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
 void KABC::ResourceKolab::insertAddressee( const Addressee& addr )
 {
   const QString uid = addr.uid();
-  //kdDebug(5650) << k_funcinfo << uid << endl;
+  //kDebug(5650) << k_funcinfo << uid << endl;
   bool ok = false;
   if ( mUidMap.contains( uid ) ) {
     mUidsPendingUpdate.append( uid );
@@ -416,10 +416,10 @@ void KABC::ResourceKolab::removeAddressee( const Addressee& addr )
 {
   const QString uid = addr.uid();
   if ( mUidMap.find( uid ) == mUidMap.end() ) return;
-  //kdDebug(5650) << k_funcinfo << uid << endl;
+  //kDebug(5650) << k_funcinfo << uid << endl;
   const QString resource = mUidMap[ uid ].resource();
   if ( !subresourceWritable( resource ) ) {
-    kdWarning() << "Wow! Something tried to delete a non-writable addressee! Fix this caller: " << kdBacktrace() << endl;
+    kWarning() << "Wow! Something tried to delete a non-writable addressee! Fix this caller: " << kBacktrace() << endl;
     return;
   }
   /* The user told us to delete, tell KMail */
@@ -449,7 +449,7 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
   const QString uid = loadContact( contactXML, subResource, sernum,
       ( KMailICalIface::StorageFormat )format );
 
-  //kdDebug(5650) << k_funcinfo << uid << endl;
+  //kDebug(5650) << k_funcinfo << uid << endl;
 
   // Emit "addressbook changed" if this comes from kmail and not from the GUI
   if ( !mUidsPendingAdding.contains( uid )
@@ -471,7 +471,7 @@ void KABC::ResourceKolab::fromKMailDelIncidence( const QString& type,
   if( type != s_kmailContentsType || !subresourceActive( subResource ) )
     return;
 
-  //kdDebug(5650) << k_funcinfo << uid << endl;
+  //kDebug(5650) << k_funcinfo << uid << endl;
 
   // Can't be in both, by contract
   if ( mUidsPendingDeletion.contains( uid ) ) {
@@ -493,7 +493,7 @@ void KABC::ResourceKolab::fromKMailRefresh( const QString& type,
   // Check if this is a contact
   if( type != s_kmailContentsType ) return;
 
-  //kdDebug(5650) << k_funcinfo << endl;
+  //kDebug(5650) << k_funcinfo << endl;
 
   load(); // ### should call loadSubResource(subResource) probably
   addressBook()->emitAddressBookChanged();
@@ -568,7 +568,7 @@ void KABC::ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>
     loadContact( it.data(), folder, it.key(), format );
   }
   if ( !addressBook() ){
-    kdDebug(5650) << "asyncLoadResult() : addressBook() returning NULL pointer.\n";
+    kDebug(5650) << "asyncLoadResult() : addressBook() returning NULL pointer.\n";
   }else
     addressBook()->emitAddressBookChanged();
 }
@@ -585,7 +585,7 @@ bool KABC::ResourceKolab::subresourceActive( const QString& subresource ) const
   }
 
   // Safe default bet:
-  kdDebug(5650) << "subresourceActive( " << subresource << " ): Safe bet\n";
+  kDebug(5650) << "subresourceActive( " << subresource << " ): Safe bet\n";
 
   return true;
 }
@@ -604,7 +604,7 @@ int KABC::ResourceKolab::subresourceCompletionWeight( const QString& subresource
     return mSubResources[ subresource ].completionWeight();
   }
 
-  kdDebug(5650) << "subresourceCompletionWeight( " << subresource << " ): not found, using default\n";
+  kDebug(5650) << "subresourceCompletionWeight( " << subresource << " ): not found, using default\n";
 
   return 80;
 }
@@ -615,7 +615,7 @@ QString KABC::ResourceKolab::subresourceLabel( const QString& subresource ) cons
     return mSubResources[ subresource ].label();
   }
 
-  kdDebug(5650) << "subresourceLabel( " << subresource << " ): not found!\n";
+  kDebug(5650) << "subresourceLabel( " << subresource << " ): not found!\n";
   return QString();
 }
 
@@ -624,7 +624,7 @@ void KABC::ResourceKolab::setSubresourceCompletionWeight( const QString& subreso
   if ( mSubResources.contains( subresource ) ) {
     mSubResources[ subresource ].setCompletionWeight( completionWeight );
   } else {
-    kdDebug(5650) << "setSubresourceCompletionWeight: subresource " << subresource << " not found" << endl;
+    kDebug(5650) << "setSubresourceCompletionWeight: subresource " << subresource << " not found" << endl;
   }
 }
 
@@ -644,7 +644,7 @@ void KABC::ResourceKolab::setSubresourceActive( const QString &subresource, bool
     mSubResources[ subresource ].setActive( active );
     load();
   } else {
-    kdDebug(5650) << "setSubresourceCompletionWeight: subresource " << subresource << " not found" << endl;
+    kDebug(5650) << "setSubresourceCompletionWeight: subresource " << subresource << " not found" << endl;
   }
 }
 

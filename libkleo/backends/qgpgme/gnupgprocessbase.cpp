@@ -82,7 +82,7 @@ bool Kleo::GnuPGProcessBase::start( RunMode runmode, Communication comm ) {
     // as argument to the --status-fd option:
     // PENDING(marc) find out why KProcess uses both pipe() and socketpair()...
     if ( ::pipe( d->statusFD ) < 0 ) {
-      kdDebug( 5150 ) << "Kleo::GnuPGProcessBase::start: pipe(2) failed: " << perror << endl;
+      kDebug( 5150 ) << "Kleo::GnuPGProcessBase::start: pipe(2) failed: " << perror << endl;
       return false;
     }
     ::fcntl( d->statusFD[0], F_SETFD, FD_CLOEXEC );
@@ -169,14 +169,14 @@ void Kleo::GnuPGProcessBase::parseStatusOutput() {
       continue;
     // check status token
     if ( line.left( startTokenLen ) != startToken ) {
-      kdDebug( 5150 ) << "Kleo::GnuPGProcessBase::childStatus: status-fd protocol error: line doesn't begin with \""
+      kDebug( 5150 ) << "Kleo::GnuPGProcessBase::childStatus: status-fd protocol error: line doesn't begin with \""
 		      << startToken << "\"" << endl;
       continue;
     }
     // remove status token:
     const QByteArray command = line.mid( startTokenLen ).simplified() + ' ';
     if ( command == " " ) {
-      kdDebug( 5150 ) << "Kleo::GnuPGProcessBase::childStatus: status-fd protocol error: line without content." << endl;
+      kDebug( 5150 ) << "Kleo::GnuPGProcessBase::childStatus: status-fd protocol error: line without content." << endl;
       continue;
     }
     // split into base and args

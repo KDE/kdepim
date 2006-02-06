@@ -80,7 +80,7 @@ void Event::setEndDate( const QDateTime& date )
   mEndDate = date;
   mHasEndDate = true;
   if ( mFloatingStatus == AllDay )
-    kdDebug() << "ERROR: Time on end date but no time on the event\n";
+    kDebug() << "ERROR: Time on end date but no time on the event\n";
   mFloatingStatus = HasTime;
 }
 
@@ -89,7 +89,7 @@ void Event::setEndDate( const QDate& date )
   mEndDate = QDateTime( date );
   mHasEndDate = true;
   if ( mFloatingStatus == HasTime )
-    kdDebug() << "ERROR: No time on end date but time on the event\n";
+    kDebug() << "ERROR: No time on end date but time on the event\n";
   mFloatingStatus = AllDay;
 }
 
@@ -166,7 +166,7 @@ bool Event::loadXML( const QDomDocument& document )
       QDomElement e = n.toElement();
       loadAttribute( e );
     } else
-      kdDebug() << "Node is not a comment or an element???" << endl;
+      kDebug() << "Node is not a comment or an element???" << endl;
   }
 
   return true;

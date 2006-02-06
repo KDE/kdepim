@@ -195,32 +195,32 @@ static void showChainListError( QWidget * parent, const GpgME::Error & err, cons
 }
 
 void CertificateInfoWidgetImpl::startCertificateChainListing() {
-  kdDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing()" << endl;
+  kDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing()" << endl;
 
   if ( mChain.empty() ) {
     // we need a seed...
-    kdWarning() << "CertificateInfoWidgetImpl::startCertificateChainListing(): mChain is empty!" << endl;
+    kWarning() << "CertificateInfoWidgetImpl::startCertificateChainListing(): mChain is empty!" << endl;
     return;
   }
   const char * chainID = mChain.front().chainID();
   if ( !chainID || !*chainID ) {
     // cert not found:
-    kdDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing(): empty chain ID - root not found" << endl;
+    kDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing(): empty chain ID - root not found" << endl;
     return;
   }
   const char * fpr = mChain.front().primaryFingerprint();
   if ( qstricmp( fpr, chainID ) == 0 ) {
-    kdDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing(): chain_id equals fingerprint -> found root" << endl;
+    kDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing(): chain_id equals fingerprint -> found root" << endl;
     return;
   }
   if ( mChain.size() > 100 ) {
     // safe guard against certificate loops (paranoia factor 8 out of 10)...
-    kdWarning() << "CertificateInfoWidgetImpl::startCertificateChainListing(): maximum chain length of 100 exceeded!" << endl;
+    kWarning() << "CertificateInfoWidgetImpl::startCertificateChainListing(): maximum chain length of 100 exceeded!" << endl;
     return;
   }
   if ( !mFoundIssuer ) {
     // key listing failed. Don't end up in endless loop
-    kdDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing(): issuer not found - giving up" << endl;
+    kDebug() << "CertificateInfoWidgetImpl::startCertificateChainListing(): issuer not found - giving up" << endl;
     return;
   }
 
@@ -239,7 +239,7 @@ void CertificateInfoWidgetImpl::startCertificateChainListing() {
   connect( job, SIGNAL(nextKey(const GpgME::Key&)),
 	   SLOT(slotNextKey(const GpgME::Key&)) );
 
-  kdDebug() << "Going to fetch" << endl
+  kDebug() << "Going to fetch" << endl
 	    << "  issuer  : \"" << mChain.front().issuerName() << "\"" << endl
 	    << "  chain id: " << mChain.front().chainID() << endl
 	    << "for" << endl
@@ -306,7 +306,7 @@ void CertificateInfoWidgetImpl::slotDumpProcessExited(KProcess* proc) {
 }
 
 void CertificateInfoWidgetImpl::slotNextKey( const GpgME::Key & key ) {
-  kdDebug() << "CertificateInfoWidgetImpl::slotNextKey( \""
+  kDebug() << "CertificateInfoWidgetImpl::slotNextKey( \""
 	    << key.userID(0).id() << "\" )" << endl;
   if ( key.isNull() )
     return;

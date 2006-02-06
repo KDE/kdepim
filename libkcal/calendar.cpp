@@ -321,7 +321,7 @@ Incidence *Calendar::dissociateOccurrence( Incidence *incidence, QDate date,
     if ( duration > 0 ) {
       int doneduration = recur->durationTo( date.addDays(-1) );
       if ( doneduration >= duration ) {
-        kdDebug(5850) << "The dissociated event already occurred more often "
+        kDebug(5850) << "The dissociated event already occurred more often "
                       << "than it was supposed to ever occur. ERROR!" << endl;
         recur->clear();
       } else {
@@ -623,7 +623,7 @@ Journal::List Calendar::journals( const QDate &date )
 void Calendar::setupRelations( Incidence *forincidence )
 {
   if ( !forincidence ) return;
-// kdDebug(5850) << "Calendar::setupRelations for incidence " << forincidence << " with UID " << forincidence->uid() << ", summary: " << forincidence->summary() << endl;
+// kDebug(5850) << "Calendar::setupRelations for incidence " << forincidence << " with UID " << forincidence->uid() << ", summary: " << forincidence->summary() << endl;
   QString uid = forincidence->uid();
 
   // First, go over the list of orphans and see if this is their parent
@@ -658,11 +658,11 @@ void Calendar::setupRelations( Incidence *forincidence )
 void Calendar::removeRelations( Incidence *incidence )
 {
   if( !incidence ) {
-    kdDebug(5800) << "Warning: Calendar::removeRelations( 0 )!\n";
+    kDebug(5800) << "Warning: Calendar::removeRelations( 0 )!\n";
     return;
   }
 
-// kdDebug(5850) << "Calendar::removeRelations for incidence " << forincidence << " with UID " << forincidence->uid() << ", summary: " << forincidence->summary() << endl;
+// kDebug(5850) << "Calendar::removeRelations for incidence " << forincidence << " with UID " << forincidence->uid() << ", summary: " << forincidence->summary() << endl;
   QString uid = incidence->uid();
 
   Incidence::List relations = incidence->relations();

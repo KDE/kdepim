@@ -582,7 +582,7 @@ void Content::removeContent(Content *c, bool del)
     for ( Headers::Base::List::iterator it = main->h_eaders.begin();
           it != main->h_eaders.end(); ) {
       if ( (*it)->isMimeHeader() ) {
-        kdDebug(5003) << "Content::removeContent(Content *c, bool del) : mime-header moved: "
+        kDebug(5003) << "Content::removeContent(Content *c, bool del) : mime-header moved: "
                       << (*it)->as7BitString() << endl;
         // first remove the old header
         removeHeader( (*it)->type() );
@@ -616,7 +616,7 @@ void Content::changeEncoding(Headers::contentEncoding e)
   else { // this content contains non textual data, that has to be re-encoded
 
     if(e!=Headers::CEbase64) {
-      //kdWarning(5003) << "Content::changeEncoding() : non textual data and encoding != base64 - this should not happen\n => forcing base64" << endl;
+      //kWarning(5003) << "Content::changeEncoding() : non textual data and encoding != base64 - this should not happen\n => forcing base64" << endl;
       e=Headers::CEbase64;
     }
 

@@ -359,7 +359,7 @@ void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Types type )
 
   GpgME::Context * context = GpgME::Context::createForProtocol( GpgME::Context::OpenPGP );
   if ( !context ) {
-    kdError() << "No context available" << endl;
+    kError() << "No context available" << endl;
     return;
   }
 
@@ -371,7 +371,7 @@ void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Types type )
   GpgME::Error error = context->exportPublicKeys( fingerprint.toLatin1(), dataObj );
 
   if ( error ) {
-    kdError() << error.asString() << endl;
+    kError() << error.asString() << endl;
     return;
   }
 

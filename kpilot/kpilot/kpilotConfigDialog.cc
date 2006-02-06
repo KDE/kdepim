@@ -127,7 +127,7 @@ void DeviceConfigPage::load()
 		fConfigWidget->fWorkaround->setCurrentItem(1);
 		break;
 	default:
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Unknown workaround number "
 			<< (int) KPilotSettings::workarounds()
 			<< endl;
@@ -176,7 +176,7 @@ void DeviceConfigPage::load()
 	case 0 : KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundNone); break;
 	case 1 : KPilotSettings::setWorkarounds(KPilotSettings::eWorkaroundUSB); break;
 	default :
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Unknown workaround number "
 			<< fConfigWidget->fWorkaround->currentItem()
 			<< endl;
@@ -202,7 +202,7 @@ void DeviceConfigPage::load()
 		fConfigWidget->fPilotSpeed->setEnabled(false);
 		break;
 	default:
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Unknown port type " << i << endl;
 	}
 }
@@ -224,7 +224,7 @@ void DeviceConfigPage::setEncoding()
 	QString enc = fConfigWidget->fPilotEncoding->currentText();
 	if (enc.isEmpty())
 	{
-		kdWarning() << k_funcinfo << "Empty encoding. Will ignore it"<<endl;
+		kWarning() << k_funcinfo << "Empty encoding. Will ignore it"<<endl;
 	}
 	else
 	{

@@ -75,7 +75,7 @@ void ResourceBlogging::readConfig( const KConfig *config )
 
 void ResourceBlogging::writeConfig( KConfig *config )
 {
-  kdDebug(5800) << "ResourceBlogging::writeConfig()" << endl;
+  kDebug(5800) << "ResourceBlogging::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
 

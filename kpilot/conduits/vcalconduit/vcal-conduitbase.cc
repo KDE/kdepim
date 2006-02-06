@@ -261,7 +261,7 @@ static void listResources(KCal::CalendarResources *p)
 			fCalendar = new KCal::CalendarLocal(tz);
 			if ( !fCalendar)
 			{
-				kdWarning() << k_funcinfo
+				kWarning() << k_funcinfo
 					<< "Cannot initialize calendar object for file "
 					<< config()->calendarFile() << endl;
 				return false;
@@ -336,7 +336,7 @@ static void listResources(KCal::CalendarResources *p)
 			fCalendar = rescal;
 			if ( !fCalendar)
 			{
-				kdWarning() << k_funcinfo << "Cannot initialize calendar "<<
+				kWarning() << k_funcinfo << "Cannot initialize calendar "<<
 					"object for ResourceCalendar"<<endl;
 				return false;
 			}
@@ -358,7 +358,7 @@ static void listResources(KCal::CalendarResources *p)
 
 	if (!fCalendar)
 	{
-		kdWarning() <<k_funcinfo << "Unable to initialize calendar object. Please check the conduit's setup."<<endl;
+		kWarning() <<k_funcinfo << "Unable to initialize calendar object. Please check the conduit's setup."<<endl;
 		emit logError(i18n("Unable to initialize the calendar object. Please check the conduit's setup"));
 		return false;
 	}
@@ -707,7 +707,7 @@ KCal::Incidence*VCalConduitBase::changeRecord(PilotRecord *r,PilotRecord *)
 	}
 	else
 	{
-		kdWarning() << k_funcinfo << ": While changing record -- not found in iCalendar" << endl;
+		kWarning() << k_funcinfo << ": While changing record -- not found in iCalendar" << endl;
 		addRecord(r);
 	}
 	KPILOT_DELETE(de);

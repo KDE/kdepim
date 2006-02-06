@@ -24,13 +24,13 @@ APIBlog::~APIBlog()
 
 void APIBlog::dumpBlog( BlogPosting *blog )
 {
-  kdDebug() << "-----------------------------------" << endl;
-  kdDebug() << "Post " << blog->postID() << " by \"" <<
+  kDebug() << "-----------------------------------" << endl;
+  kDebug() << "Post " << blog->postID() << " by \"" <<
                blog->userID() << "\" on " <<
                blog->dateTime().toString() << endl;
-  kdDebug() << "Title: " << blog->title() << endl;
-  kdDebug() << blog->content() <<endl;
-  kdDebug() << "-----------------------------------" << endl;
+  kDebug() << "Title: " << blog->title() << endl;
+  kDebug() << blog->content() <<endl;
+  kDebug() << "-----------------------------------" << endl;
 }
 
 
@@ -72,9 +72,9 @@ KCal::Journal *APIBlog::journalFromPosting( KBlog::BlogPosting *blog )
   QDateTime dt = blog->dateTime();
   QDateTime creationDt = blog->creationDateTime();
   QDateTime modificationDt = blog->modificationDateTime();
-kdDebug() << "dt            ="<<dt.toString( Qt::ISODate ) << endl;
-kdDebug() << "creationDt    ="<<creationDt.toString( Qt::ISODate ) << endl;
-kdDebug() << "modificationDt="<<modificationDt.toString( Qt::ISODate ) << endl;
+kDebug() << "dt            ="<<dt.toString( Qt::ISODate ) << endl;
+kDebug() << "creationDt    ="<<creationDt.toString( Qt::ISODate ) << endl;
+kDebug() << "modificationDt="<<modificationDt.toString( Qt::ISODate ) << endl;
   if ( dt.isValid() && !dt.isNull() ) {
     j->setDtStart( dt );
   } else if ( creationDt.isValid() && !creationDt.isNull() ) {
@@ -86,7 +86,7 @@ kdDebug() << "modificationDt="<<modificationDt.toString( Qt::ISODate ) << endl;
   j->setCreated( blog->creationDateTime() );
   j->setLastModified( blog->modificationDateTime() );
   j->setFloats( false );
-  kdDebug() << "Date for blog " << blog->title() << " is "
+  kDebug() << "Date for blog " << blog->title() << " is "
             << blog->dateTime().toString()<<endl;
   j->setSummary( blog->title() );
   j->setDescription( blog->content() );

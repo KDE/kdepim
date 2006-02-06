@@ -108,10 +108,10 @@ int checkDatabase(const char *path, recordInfo *info)
 	PilotLocalDatabase db(QString::fromLatin1(path));
 	if (!db.isDBOpen())
 	{
-		kdDebug() << "No database " << path << endl;
+		kDebug() << "No database " << path << endl;
 		if ( info[0].id == NO_EXIST )
 		{
-			kdDebug() << "This was expected" << endl;
+			kDebug() << "This was expected" << endl;
 			return OK;
 		}
 		else
@@ -122,7 +122,7 @@ int checkDatabase(const char *path, recordInfo *info)
 
 	if ( info[0].id == NO_EXIST )
 	{
-		kdDebug() << "Database not expected" << endl;
+		kDebug() << "Database not expected" << endl;
 		return ERR;
 	}
 
@@ -131,28 +131,28 @@ int checkDatabase(const char *path, recordInfo *info)
 	PilotRecord *r;
 	while( (r = db.readRecordByIndex(index) ) )
 	{
-		kdDebug() << "[" << index << "] id=" << r->id() << " size=" << r->size() << endl;
+		kDebug() << "[" << index << "] id=" << r->id() << " size=" << r->size() << endl;
 		if ( ((recordid_t)info[index].id) != r->id() )
 		{
-			kdDebug() << "* Bad ID (expected" << r->id() << ")" << endl;
+			kDebug() << "* Bad ID (expected" << r->id() << ")" << endl;
 			fail++;
 		}
 		else if ( info[index].size != r->size() )
 		{
-			kdDebug() << "* Bad size (expected " << info[index].size << ")" << endl;
+			kDebug() << "* Bad size (expected " << info[index].size << ")" << endl;
 			fail++;
 		}
 		index++;
 	}
 	if ( info[index].id != END )
 	{
-		kdDebug() << "* End wasn't expected yet." << endl;
+		kDebug() << "* End wasn't expected yet." << endl;
 		r++;
 	}
 
 	if (fail)
 	{
-		kdDebug() << "* " << fail << " failures." << endl;
+		kDebug() << "* " << fail << " failures." << endl;
 		return ERR;
 	}
 	return OK;
@@ -180,14 +180,14 @@ QStringList listCategories()
 	for (int i=0; i<20; i++)
 	{
 		PilotRecord *r = l->readRecordByIndex(i);
-		kdDebug() << "Read record " << (void *)r << " with id=" << r->id() << endl;
+		kDebug() << "Read record " << (void *)r << " with id=" << r->id() << endl;
 		if (!r) break;
 	}
 
 	for (int i=0; i<4; i++)
 	{
 		QString s = m->category(i);
-		kdDebug() << "Category " << i << ": " << (s.isEmpty() ? CSL1("<empty>") : s) << endl;
+		kDebug() << "Category " << i << ": " << (s.isEmpty() ? CSL1("<empty>") : s) << endl;
 		cats.append(s);
 /*
 		if (i<((sizeof(categoryNames) / sizeof(categoryNames[0]))))
@@ -224,7 +224,7 @@ int checkMemo()
 	QString c = m->category(1);
 	if (c != CSL1("Business"))
 	{
-		kdDebug() << "* Category 1 is not 'Business' but " << c << endl;
+		kDebug() << "* Category 1 is not 'Business' but " << c << endl;
 		return ERR;
 	}
 
@@ -234,7 +234,7 @@ int checkMemo()
 	c = m->category(2);
 	if (c != CSL1("Aardvark"))
 	{
-		kdDebug() << "* Category 2 is not 'Aardvark' but " << c << endl;
+		kDebug() << "* Category 2 is not 'Aardvark' but " << c << endl;
 		return ERR;
 	}
 
@@ -284,14 +284,14 @@ int main(int argc, char **argv)
 
 	while ( tests[i].path )
 	{
-		kdDebug() << "*** Test " << i << endl;
+		kDebug() << "*** Test " << i << endl;
 		int ret = checkDatabase( tests[i].path, tests[i].info );
 		if ( ret )
 		{
 			if ( (ret==ERR_NO_EXIST) && 
 				(tests[i].flags & ALLOW_NO_EXIST) )
 			{
-				kdDebug() << "* Test database doesn't exist, ignored." << endl;
+				kDebug() << "* Test database doesn't exist, ignored." << endl;
 			}
 			else
 			{
@@ -301,13 +301,13 @@ int main(int argc, char **argv)
 		i++;
 	}
 
-	kdDebug() << "*** Test " << i << endl;
+	kDebug() << "*** Test " << i << endl;
 	if (checkMemo()) r++;
 	i++;
 
 	if (r)
 	{
-		kdDebug() << "***\n*** Failed " << r << " tests." << endl;
+		kDebug() << "***\n*** Failed " << r << " tests." << endl;
 		return 1;
 	}
 	return 0;

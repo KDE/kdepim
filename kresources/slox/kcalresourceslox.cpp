@@ -84,7 +84,7 @@ KCalResourceSlox::KCalResourceSlox( const KUrl &url )
 
 KCalResourceSlox::~KCalResourceSlox()
 {
-  kdDebug() << "~KCalResourceSlox()" << endl;
+  kDebug() << "~KCalResourceSlox()" << endl;
 
   disableChangeNotification();
 
@@ -96,7 +96,7 @@ KCalResourceSlox::~KCalResourceSlox()
 
   delete mLock;
 
-  kdDebug() << "~KCalResourceSlox() done" << endl;
+  kDebug() << "~KCalResourceSlox() done" << endl;
 }
 
 void KCalResourceSlox::init()
@@ -137,7 +137,7 @@ void KCalResourceSlox::readConfig( const KConfig *config )
 
 void KCalResourceSlox::writeConfig( KConfig *config )
 {
-  kdDebug() << "KCalResourceSlox::writeConfig()" << endl;
+  kDebug() << "KCalResourceSlox::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
 
@@ -148,15 +148,15 @@ void KCalResourceSlox::writeConfig( KConfig *config )
 
 bool KCalResourceSlox::doLoad()
 {
-  kdDebug() << "KCalResourceSlox::load() " << long( this ) << endl;
+  kDebug() << "KCalResourceSlox::load() " << long( this ) << endl;
 
   if ( mLoadEventsJob || mLoadTodosJob ) {
-    kdDebug() << "KCalResourceSlox::load(): download still in progress."
+    kDebug() << "KCalResourceSlox::load(): download still in progress."
                 << endl;
     return true;
   }
   if ( mUploadJob ) {
-    kdWarning() << "KCalResourceSlox::load(): upload still in progress."
+    kWarning() << "KCalResourceSlox::load(): upload still in progress."
                 << endl;
     loadError( "Upload still in progress." );
     return false;
@@ -175,7 +175,7 @@ bool KCalResourceSlox::doLoad()
   QString p = KURL( mPrefs->url() ).protocol();
   if ( p != "http" && p != "https" && p != "webdav" && p != "webdavs" ) {
     QString err = i18n("Non-http protocol: '%1'").arg( p );
-    kdDebug() << "KCalResourceSlox::load(): " << err << endl;
+    kDebug() << "KCalResourceSlox::load(): " << err << endl;
     loadError( err );
     return false;
   }
@@ -199,7 +199,7 @@ void KCalResourceSlox::requestEvents()
   url.setUser( mPrefs->user() );
   url.setPass( mPrefs->password() );
 
-  kdDebug() << "KCalResourceSlox::requestEvents(): " << url << endl;
+  kDebug() << "KCalResourceSlox::requestEvents(): " << url << endl;
 
   QString lastsync = "0";
   if ( mPrefs->useLastSync() ) {
@@ -220,7 +220,7 @@ void KCalResourceSlox::requestEvents()
   } else
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectType ), "all" );
 
-  kdDebug() << "REQUEST CALENDAR: \n" << doc.toString( 2 ) << endl;
+  kDebug() << "REQUEST CALENDAR: \n" << doc.toString( 2 ) << endl;
 
   mLoadEventsJob = KIO::davPropFind( url, doc, "0", false );
   connect( mLoadEventsJob, SIGNAL( result( KIO::Job * ) ),
@@ -244,7 +244,7 @@ void KCalResourceSlox::requestTodos()
   url.setUser( mPrefs->user() );
   url.setPass( mPrefs->password() );
 
-  kdDebug() << "KCalResourceSlox::requestTodos(): " << url << endl;
+  kDebug() << "KCalResourceSlox::requestTodos(): " << url << endl;
 
   QString lastsync = "0";
   if ( mPrefs->useLastSync() ) {
@@ -265,7 +265,7 @@ void KCalResourceSlox::requestTodos()
   } else
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectType ), "all" );
 
-  kdDebug() << "REQUEST TASKS: \n" << doc.toString( 2 ) << endl;
+  kDebug() << "REQUEST TASKS: \n" << doc.toString( 2 ) << endl;
 
   mLoadTodosJob = KIO::davPropFind( url, doc, "0", false );
   connect( mLoadTodosJob, SIGNAL( result( KIO::Job * ) ),
@@ -303,7 +303,7 @@ void KCalResourceSlox::uploadIncidences()
     mUploadIsDelete = true;
   } else {
     mUploadedIncidence = 0;
-    kdDebug() << "uploadIncidences(): FINISHED" << endl;
+    kDebug() << "uploadIncidences(): FINISHED" << endl;
     emit resourceSaved( this );
     return;
   }
@@ -324,7 +324,7 @@ void KCalResourceSlox::uploadIncidences()
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectId ), sloxId );
   } else {
     if ( mUploadIsDelete ) {
-      kdError() << "Incidence to delete doesn't have a SLOX id" << endl;
+      kError() << "Incidence to delete doesn't have a SLOX id" << endl;
       clearChange( mUploadedIncidence );
       uploadIncidences();
       return;
@@ -339,7 +339,7 @@ void KCalResourceSlox::uploadIncidences()
     } else if ( mUploadedIncidence->type() == "Todo" ) {
       url.setPath( "/servlet/webdav.tasks/" + sloxId );
     } else {
-      kdWarning() << "uploadIncidences(): Unsupported incidence type: "
+      kWarning() << "uploadIncidences(): Unsupported incidence type: "
                   << mUploadedIncidence->type() << endl;
       return;
     }
@@ -363,7 +363,7 @@ void KCalResourceSlox::uploadIncidences()
       url.setPath( "/servlet/webdav.tasks/file.xml" );
       createTodoAttributes( doc, prop, static_cast<Todo *>( mUploadedIncidence ) );
     } else {
-      kdWarning() << "uploadIncidences(): Unsupported incidence type: "
+      kWarning() << "uploadIncidences(): Unsupported incidence type: "
                   << mUploadedIncidence->type() << endl;
       return;
     }
@@ -372,9 +372,9 @@ void KCalResourceSlox::uploadIncidences()
   url.setUser( mPrefs->user() );
   url.setPass( mPrefs->password() );
 
-  kdDebug() << "KCalResourceSlox::uploadIncidences(): " << url << endl;
+  kDebug() << "KCalResourceSlox::uploadIncidences(): " << url << endl;
 
-  kdDebug() << "UPLOAD: \n" << doc.toString( 2 ) << endl;
+  kDebug() << "UPLOAD: \n" << doc.toString( 2 ) << endl;
 
   mUploadJob = KIO::davPropPatch( url, doc, false );
   connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
@@ -416,7 +416,7 @@ void KCalResourceSlox::createIncidenceAttributes( QDomDocument &doc,
         QDomElement el = WebdavHandler::addSloxElement( this, doc, members, fieldName( Participant ), userId );
         el.setAttribute( "confirm", status );
       } else {
-        kdError() << "KCalResourceSlox: No accounts set." << endl;
+        kError() << "KCalResourceSlox: No accounts set." << endl;
       }
     }
   }
@@ -578,7 +578,7 @@ void KCalResourceSlox::createRecurrenceAttributes( QDomDocument &doc,
         WebdavHandler::addSloxElement( this, doc, parent, "interval", "1" );
       break; }
     default:
-      kdDebug() << k_funcinfo << "unsupported recurrence type: " << r->recurrenceType() << endl;
+      kDebug() << k_funcinfo << "unsupported recurrence type: " << r->recurrenceType() << endl;
   }
   WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceEnd ),
                                  WebdavHandler::qDateTimeToSlox( r->endDateTime() ) );
@@ -602,7 +602,7 @@ void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
       QString member = memberElement.text();
       KABC::Addressee account;
       if ( mAccounts ) account = mAccounts->lookupUser( member );
-      else kdError() << "KCalResourceSlox: no accounts set" << endl;
+      else kError() << "KCalResourceSlox: no accounts set" << endl;
       QString name;
       QString email;
       Attendee *a = incidence->attendeeByUid( member );
@@ -634,7 +634,7 @@ void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
         }
       }
     } else {
-      kdDebug() << "Unknown tag in members attribute: "
+      kDebug() << "Unknown tag in members attribute: "
                 << memberElement.tagName() << endl;
     }
   }
@@ -757,7 +757,7 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
     QDomElement e = n.toElement();
     QString tag = e.tagName();
     QString text = decodeText( e.text() );
-    kdDebug() << k_funcinfo << tag << ": " << text << endl;
+    kDebug() << k_funcinfo << tag << ": " << text << endl;
 
     if ( tag == fieldName( RecurrenceType ) ) {
       type = text;
@@ -884,7 +884,7 @@ void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
   } else if ( tag == fieldName( Priority ) ) {
     int p = text.toInt();
     if ( p < 1 || p > 3 ) {
-      kdError() << "Unknown priority: " << text << endl;
+      kError() << "Unknown priority: " << text << endl;
     } else {
       int priority;
       switch ( p ) {
@@ -909,12 +909,12 @@ void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
 
 void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 {
-  kdDebug() << "KCalResourceSlox::slotLoadTodosJobResult()" << endl;
+  kDebug() << "KCalResourceSlox::slotLoadTodosJobResult()" << endl;
 
   if ( job->error() ) {
     loadError( job->errorString() );
   } else {
-    kdDebug() << "KCalResourceSlox::slotLoadTodosJobResult() success" << endl;
+    kDebug() << "KCalResourceSlox::slotLoadTodosJobResult() success" << endl;
 
     QDomDocument doc = mLoadTodosJob->response();
 
@@ -983,12 +983,12 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 
 void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 {
-  kdDebug() << "KCalResourceSlox::slotLoadEventsResult() " << long( this ) << endl;
+  kDebug() << "KCalResourceSlox::slotLoadEventsResult() " << long( this ) << endl;
 
   if ( job->error() ) {
     loadError( job->errorString() );
   } else {
-    kdDebug() << "KCalResourceSlox::slotLoadEventsResult() success" << endl;
+    kDebug() << "KCalResourceSlox::slotLoadEventsResult() success" << endl;
 
     QDomDocument doc = mLoadEventsJob->response();
 
@@ -1046,7 +1046,7 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 
         mWebdavHandler.setSloxAttributes( event );
 
-//        kdDebug() << "EVENT " << item.uid << " " << event->summary() << endl;
+//        kDebug() << "EVENT " << item.uid << " " << event->summary() << endl;
 
         if ( newEvent ) mCalendar.addEvent( event );
 
@@ -1073,23 +1073,23 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 
 void KCalResourceSlox::slotUploadResult( KIO::Job *job )
 {
-  kdDebug() << "KCalResourceSlox::slotUploadResult()" << endl;
+  kDebug() << "KCalResourceSlox::slotUploadResult()" << endl;
 
   if ( job->error() ) {
     saveError( job->errorString() );
   } else {
-    kdDebug() << "KCalResourceSlox::slotUploadResult() success" << endl;
+    kDebug() << "KCalResourceSlox::slotUploadResult() success" << endl;
 
     if ( !mUploadJob )
     {
-        kdDebug() << "KCalResourceSlox::slotUploadResult() - mUploadJob was 0" << endl;
+        kDebug() << "KCalResourceSlox::slotUploadResult() - mUploadJob was 0" << endl;
         return;
     }
 
     QDomDocument doc = mUploadJob->response();
 
-    kdDebug() << "UPLOAD RESULT:" << endl;
-    kdDebug() << doc.toString( 2 ) << endl;
+    kDebug() << "UPLOAD RESULT:" << endl;
+    kDebug() << doc.toString( 2 ) << endl;
 
     QDomElement docElement = doc.documentElement();
 
@@ -1100,7 +1100,7 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
       if ( responseElement.tagName() == "response" ) {
         QDomNode propstat = responseElement.namedItem( "propstat" );
         if ( propstat.isNull() ) {
-          kdError() << "Unable to find propstat tag." << endl;
+          kError() << "Unable to find propstat tag." << endl;
           continue;
         }
 
@@ -1121,38 +1121,38 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
 
         QDomNode prop = propstat.namedItem( "prop" );
         if ( prop.isNull() ) {
-          kdError() << "Unable to find WebDAV property" << endl;
+          kError() << "Unable to find WebDAV property" << endl;
           continue;
         }
 
         QDomNode sloxIdNode = prop.namedItem( fieldName( ObjectId ) );
         if ( sloxIdNode.isNull() ) {
-          kdError() << "Unable to find SLOX id." << endl;
+          kError() << "Unable to find SLOX id." << endl;
           continue;
         }
         QDomElement sloxIdElement = sloxIdNode.toElement();
         QString sloxId = sloxIdElement.text();
-        kdDebug() << "SLOXID: " << sloxId << endl;
+        kDebug() << "SLOXID: " << sloxId << endl;
 
         if ( mUploadIsDelete ) {
-          kdDebug() << "Incidence deleted" << endl;
+          kDebug() << "Incidence deleted" << endl;
         } else {
           QDomNode clientIdNode = prop.namedItem( fieldName( ClientId ) );
           if ( clientIdNode.isNull() ) {
-            kdError() << "Unable to find client id." << endl;
+            kError() << "Unable to find client id." << endl;
             continue;
           }
           QDomElement clientidElement = clientIdNode.toElement();
           QString clientId = clientidElement.text();
 
-          kdDebug() << "CLIENTID: " << clientId << endl;
+          kDebug() << "CLIENTID: " << clientId << endl;
 
           Incidence *i = mUploadedIncidence->clone();
           QString uid;
           if ( i->type() == "Event" ) uid = sloxIdToEventUid( sloxId );
           else if ( i->type() == "Todo" ) uid = sloxIdToTodoUid( sloxId );
           else {
-            kdError() << "KCalResourceSlox::slotUploadResult(): Unknown type: "
+            kError() << "KCalResourceSlox::slotUploadResult(): Unknown type: "
                       << i->type() << endl;
           }
           i->setUid( uid );
@@ -1184,7 +1184,7 @@ void KCalResourceSlox::slotEventsProgress( KIO::Job *job,
                                            unsigned long percent )
 {
 #if 0
-  kdDebug() << "PROGRESS: events " << int( job ) << ": " << percent << endl;
+  kDebug() << "PROGRESS: events " << int( job ) << ": " << percent << endl;
 #else
   Q_UNUSED( job );
   Q_UNUSED( percent );
@@ -1195,7 +1195,7 @@ void KCalResourceSlox::slotEventsProgress( KIO::Job *job,
 void KCalResourceSlox::slotTodosProgress( KIO::Job *job, unsigned long percent )
 {
 #if 0
-  kdDebug() << "PROGRESS: todos " << int( job ) << ": " << percent << endl;
+  kDebug() << "PROGRESS: todos " << int( job ) << ": " << percent << endl;
 #else
   Q_UNUSED( job );
   Q_UNUSED( percent );
@@ -1206,7 +1206,7 @@ void KCalResourceSlox::slotTodosProgress( KIO::Job *job, unsigned long percent )
 void KCalResourceSlox::slotUploadProgress( KIO::Job *job, unsigned long percent )
 {
 #if 0
-  kdDebug() << "PROGRESS: upload " << int( job ) << ": " << percent << endl;
+  kDebug() << "PROGRESS: upload " << int( job ) << ": " << percent << endl;
 #else
   Q_UNUSED( job );
   Q_UNUSED( percent );
@@ -1230,7 +1230,7 @@ bool KCalResourceSlox::confirmSave()
 
 bool KCalResourceSlox::doSave()
 {
-  kdDebug() << "KCalResourceSlox::save()" << endl;
+  kDebug() << "KCalResourceSlox::save()" << endl;
 
   if ( readOnly() || !hasChanges() ) {
     emit resourceSaved( this );
@@ -1238,12 +1238,12 @@ bool KCalResourceSlox::doSave()
   }
 
   if ( mLoadEventsJob || mLoadTodosJob ) {
-    kdWarning() << "KCalResourceSlox::save(): download still in progress."
+    kWarning() << "KCalResourceSlox::save(): download still in progress."
                 << endl;
     return false;
   }
   if ( mUploadJob ) {
-    kdWarning() << "KCalResourceSlox::save(): upload still in progress."
+    kWarning() << "KCalResourceSlox::save(): upload still in progress."
                 << endl;
     return false;
   }
@@ -1264,13 +1264,13 @@ bool KCalResourceSlox::isSaving()
 
 void KCalResourceSlox::doClose()
 {
-  kdDebug() << "KCalResourceSlox::doClose()" << endl;
+  kDebug() << "KCalResourceSlox::doClose()" << endl;
 
   cancelLoadEvents();
   cancelLoadTodos();
 
   if ( mUploadJob ) {
-    kdError() << "KCalResourceSlox::doClose() Still saving" << endl;
+    kError() << "KCalResourceSlox::doClose() Still saving" << endl;
   } else {
     mCalendar.close();
   }
@@ -1284,7 +1284,7 @@ KABC::Lock *KCalResourceSlox::lock()
 void KCalResourceSlox::dump() const
 {
   ResourceCalendar::dump();
-  kdDebug(5800) << "  Url: " << mPrefs->url() << endl;
+  kDebug(5800) << "  Url: " << mPrefs->url() << endl;
 }
 
 void KCalResourceSlox::cancelLoadEvents()

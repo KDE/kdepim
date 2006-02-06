@@ -106,7 +106,7 @@ void KCalResourceSloxConfig::loadSettings( KRES::Resource *resource )
     mReloadConfig->loadSettings( res );
     mSaveConfig->loadSettings( res );
   } else {
-    kdError(5700) << "KCalResourceSloxConfig::loadSettings(): no KCalResourceSlox, cast failed" << endl;
+    kError(5700) << "KCalResourceSloxConfig::loadSettings(): no KCalResourceSlox, cast failed" << endl;
   }
 }
 
@@ -123,7 +123,7 @@ void KCalResourceSloxConfig::saveSettings( KRES::Resource *resource )
     mReloadConfig->saveSettings( res );
     mSaveConfig->saveSettings( res );
   } else {
-    kdError(5700) << "KCalResourceSloxConfig::saveSettings(): no KCalResourceSlox, cast failed" << endl;
+    kError(5700) << "KCalResourceSloxConfig::saveSettings(): no KCalResourceSlox, cast failed" << endl;
   }
 }
 

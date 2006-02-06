@@ -111,7 +111,7 @@ void ResourceRemote::readConfig( const KConfig *config )
 
 void ResourceRemote::writeConfig( KConfig *config )
 {
-  kdDebug(5800) << "ResourceRemote::writeConfig()" << endl;
+  kDebug(5800) << "ResourceRemote::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
 
@@ -163,15 +163,15 @@ bool ResourceRemote::useCacheFile() const
 
 bool ResourceRemote::doLoad()
 {
-  kdDebug(5800) << "ResourceRemote::load()" << endl;
+  kDebug(5800) << "ResourceRemote::load()" << endl;
 
   if ( mDownloadJob ) {
-    kdWarning() << "ResourceRemote::load(): download still in progress."
+    kWarning() << "ResourceRemote::load(): download still in progress."
                 << endl;
     return true;
   }
   if ( mUploadJob ) {
-    kdWarning() << "ResourceRemote::load(): upload still in progress."
+    kWarning() << "ResourceRemote::load(): upload still in progress."
                 << endl;
     return false;
   }
@@ -188,7 +188,7 @@ bool ResourceRemote::doLoad()
 
   emit resourceChanged( this );
 
-  kdDebug() << "Download from: " << mDownloadUrl << endl;
+  kDebug() << "Download from: " << mDownloadUrl << endl;
 
   mDownloadJob = KIO::file_copy( mDownloadUrl, KURL( cacheFile() ), -1, true,
                                  false, !mUseProgressManager );
@@ -208,7 +208,7 @@ bool ResourceRemote::doLoad()
 
 void ResourceRemote::slotPercent( KIO::Job *, unsigned long percent )
 {
-  kdDebug() << "ResourceRemote::slotPercent(): " << percent << endl;
+  kDebug() << "ResourceRemote::slotPercent(): " << percent << endl;
 
   mProgress->setProgress( percent );
 }
@@ -218,7 +218,7 @@ void ResourceRemote::slotLoadJobResult( KIO::Job *job )
   if ( job->error() ) {
     job->showErrorDialog( 0 );
   } else {
-    kdDebug(5800) << "ResourceRemote::slotLoadJobResult() success" << endl;
+    kDebug(5800) << "ResourceRemote::slotLoadJobResult() success" << endl;
 
     mCalendar.close();
     disableChangeNotification();
@@ -239,7 +239,7 @@ void ResourceRemote::slotLoadJobResult( KIO::Job *job )
 
 bool ResourceRemote::doSave()
 {
-  kdDebug(5800) << "ResourceRemote::save()" << endl;
+  kDebug(5800) << "ResourceRemote::save()" << endl;
 
   if ( readOnly() || !hasChanges() ) {
     emit resourceSaved( this );
@@ -247,12 +247,12 @@ bool ResourceRemote::doSave()
   }
 
   if ( mDownloadJob ) {
-    kdWarning() << "ResourceRemote::save(): download still in progress."
+    kWarning() << "ResourceRemote::save(): download still in progress."
                 << endl;
     return false;
   }
   if ( mUploadJob ) {
-    kdWarning() << "ResourceRemote::save(): upload still in progress."
+    kWarning() << "ResourceRemote::save(): upload still in progress."
                 << endl;
     return false;
   }
@@ -278,7 +278,7 @@ void ResourceRemote::slotSaveJobResult( KIO::Job *job )
   if ( job->error() ) {
     job->showErrorDialog( 0 );
   } else {
-    kdDebug(5800) << "ResourceRemote::slotSaveJobResult() success" << endl;
+    kDebug(5800) << "ResourceRemote::slotSaveJobResult() success" << endl;
   
     Incidence::List::ConstIterator it;
     for( it = mChangedIncidences.begin(); it != mChangedIncidences.end();
@@ -301,9 +301,9 @@ KABC::Lock *ResourceRemote::lock()
 void ResourceRemote::dump() const
 {
   ResourceCalendar::dump();
-  kdDebug(5800) << "  DownloadUrl: " << mDownloadUrl.url() << endl;
-  kdDebug(5800) << "  UploadUrl: " << mUploadUrl.url() << endl;
-  kdDebug(5800) << "  ReloadPolicy: " << reloadPolicy() << endl;
+  kDebug(5800) << "  DownloadUrl: " << mDownloadUrl.url() << endl;
+  kDebug(5800) << "  UploadUrl: " << mUploadUrl.url() << endl;
+  kDebug(5800) << "  ReloadPolicy: " << reloadPolicy() << endl;
 }
 
 void ResourceRemote::addInfoText( QString &txt ) const

@@ -446,7 +446,7 @@ void ConduitConfigWidget::fillLists()
 
 		if (!o->exec().isEmpty())
 		{
-			kdWarning() << k_funcinfo
+			kWarning() << k_funcinfo
 				<< ": Old-style conduit found "
 				<< o->name()
 				<< endl;

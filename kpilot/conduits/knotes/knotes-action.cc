@@ -195,7 +195,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 
 	if (fP && !fP->fDCOP)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Can't get DCOP client."
 			<< endl;
 	}
@@ -440,7 +440,7 @@ void KNotesAction::getConfigInfo()
 
 	if (notes.count() != memos.count())
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Notes and memo id lists don't match ("
 			<< notes.count()
 			<< ","
@@ -518,7 +518,7 @@ bool KNotesAction::modifyNoteOnPilot()
 
 			if (newid != nm.memo())
 			{
-				kdWarning() << k_funcinfo
+				kWarning() << k_funcinfo
 					<< ": Memo id changed during write? "
 					<< "From "
 					<< nm.memo()
@@ -529,7 +529,7 @@ bool KNotesAction::modifyNoteOnPilot()
 		}
 		else
 		{
-			kdWarning() << ": Modified note unknown to Pilot" << endl;
+			kWarning() << ": Modified note unknown to Pilot" << endl;
 			// Add it anyway, with new PilotID.
 			int newid = addNoteToPilot();
 			fP->fIdList.remove(nm);
@@ -677,7 +677,7 @@ bool KNotesAction::syncMemoToKNotes()
 				uint c = fP->fIdList.remove(m);
 				if (!c)
 				{
-					kdWarning() << k_funcinfo
+					kWarning() << k_funcinfo
 						<< ": Tried to remove valid note "
 						"and failed."
 						<< endl;

@@ -123,7 +123,7 @@ void ListCategorizer::setupWidget()
 
 	if (!p)
 	{
-		kdWarning() << "Drop without a category!" << endl;
+		kWarning() << "Drop without a category!" << endl;
 		return;
 	}
 

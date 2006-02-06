@@ -62,7 +62,7 @@ void KIO_Subjects::doReadSubjects( KKioDrop *drop )
 	*_metadata = *_kio->_metadata;
 
 	if( _jobs->count() > 0 )
-		kdWarning() << i18n( "Already a slave pending." ) << endl;
+		kWarning() << i18n( "Already a slave pending." ) << endl;
 		
 	while( !_jobs->isEmpty() )
 		delete _jobs->takeFirst();
@@ -101,7 +101,7 @@ void KIO_Subjects::getConnection( )
 		
 		if( ! ( _slave = KIO::Scheduler::getConnectedSlave( kurl, metadata ) ) )
 		{
-			kdWarning() << i18n( "Not able to open a kio-slave for %1." ).arg( _protocol->configName() );
+			kWarning() << i18n( "Not able to open a kio-slave for %1." ).arg( _protocol->configName() );
 			_kio->emitShowPassivePopup( i18n( "Not able to open a kio-slave for %1." ).arg( _protocol->configName() ) );
 			_valid = false;
 			_kio->emitValidChanged();

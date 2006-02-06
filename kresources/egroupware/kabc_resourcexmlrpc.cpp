@@ -131,7 +131,7 @@ void ResourceXMLRPC::writeConfig( KConfig *config )
 Ticket *ResourceXMLRPC::requestSaveTicket()
 {
   if ( !addressBook() ) {
-    kdDebug(5700) << "no addressbook" << endl;
+    kDebug(5700) << "no addressbook" << endl;
     return 0;
   }
 

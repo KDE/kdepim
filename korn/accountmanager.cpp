@@ -67,7 +67,7 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		const Protocol *proto = Protocols::getProto( accountGroup->readEntry( "protocol" ) );
 		if( !proto )
 		{
-			kdWarning() << "Protocol werd niet gevonden" << endl;
+			kWarning() << "Protocol werd niet gevonden" << endl;
 			++counter;
 			continue;
 		}

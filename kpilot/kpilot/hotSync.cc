@@ -210,7 +210,7 @@ static inline void initNoBackup(QStringList &dbnames,
 		{
 			if (s.length() != 6)
 			{
-				kdWarning() << k_funcinfo << ": Creator ID " << s << " is malformed." << endl;
+				kWarning() << k_funcinfo << ": Creator ID " << s << " is malformed." << endl;
 			}
 			else
 			{
@@ -309,7 +309,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 		fi = QFileInfo(fDatabaseDir);
 		if (!(fi.exists() && fi.isDir()))
 		{
-			kdError() << k_funcinfo
+			kError() << k_funcinfo
 				<< ": Database backup directory "
 				<< "doesn't exist."
 				<< endl;
@@ -320,7 +320,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 
 		if (!databaseDir.mkdir(backupDir, true))
 		{
-			kdError() << k_funcinfo
+			kError() << k_funcinfo
 				<< ": Can't create backup directory." << endl;
 			return false;
 		}
@@ -418,7 +418,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 
 	if (!createLocalDatabase(&info))
 	{
-		kdError() << k_funcinfo
+		kError() << k_funcinfo
 			<< ": Couldn't create local database for "
 			<< info.name << endl;
 		addSyncLogEntry(i18n("Backup of %1 failed.\n")
@@ -657,7 +657,7 @@ FileInstallAction::~FileInstallAction()
 	if (pi_file_install(f, pilotSocket(), 0, NULL) < 0)
 #endif
 	{
-		kdWarning() << k_funcinfo << ": failed to install." << endl;
+		kWarning() << k_funcinfo << ": failed to install." << endl;
 
 
 		emit logError(i18n("Cannot install file &quot;%1&quot;.").

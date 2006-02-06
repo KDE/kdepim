@@ -254,7 +254,7 @@ namespace MDN {
     for ( int i = 0 ; i < numDispositionTypes ; ++i )
       if ( dispositionTypes[i].dispositionType == d )
 	return i18n( dispositionTypes[i].description );
-    kdWarning() << "KMime::MDN::descriptionFor(): No such disposition type: "
+    kWarning() << "KMime::MDN::descriptionFor(): No such disposition type: "
 		<< (int)d << endl;
     return QString();
   }

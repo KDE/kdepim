@@ -66,7 +66,7 @@ static const char kpilotconfig_id[] =
 
 	if (version < ConfigurationVersion)
 	{
-		kdWarning() << k_funcinfo <<
+		kWarning() << k_funcinfo <<
 			": Config file has old version " << version << endl;
 	}
 	else

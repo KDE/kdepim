@@ -50,7 +50,7 @@ void CalFilter::apply( Event::List *eventlist ) const
 {
   if ( !mEnabled ) return;
 
-//  kdDebug(5800) << "CalFilter::apply()" << endl;
+//  kDebug(5800) << "CalFilter::apply()" << endl;
 
   Event::List::Iterator it = eventlist->begin();
   while( it != eventlist->end() ) {
@@ -61,7 +61,7 @@ void CalFilter::apply( Event::List *eventlist ) const
     }
   }
 
-//  kdDebug(5800) << "CalFilter::apply() done" << endl;
+//  kDebug(5800) << "CalFilter::apply() done" << endl;
 }
 
 // TODO: avoid duplicating apply() code
@@ -69,7 +69,7 @@ void CalFilter::apply( Todo::List *todolist ) const
 {
   if ( !mEnabled ) return;
 
-//  kdDebug(5800) << "CalFilter::apply()" << endl;
+//  kDebug(5800) << "CalFilter::apply()" << endl;
 
   Todo::List::Iterator it = todolist->begin();
   while( it != todolist->end() ) {
@@ -80,7 +80,7 @@ void CalFilter::apply( Todo::List *todolist ) const
     }
   }
 
-//  kdDebug(5800) << "CalFilter::apply() done" << endl;
+//  kDebug(5800) << "CalFilter::apply() done" << endl;
 }
 
 void CalFilter::apply( Journal::List *journallist ) const
@@ -99,7 +99,7 @@ void CalFilter::apply( Journal::List *journallist ) const
 
 bool CalFilter::filterIncidence(Incidence *incidence) const
 {
-//  kdDebug(5800) << "CalFilter::filterIncidence(): " << incidence->summary() << endl;
+//  kDebug(5800) << "CalFilter::filterIncidence(): " << incidence->summary() << endl;
 
   if ( !mEnabled ) return true;
 
@@ -170,7 +170,7 @@ bool CalFilter::filterIncidence(Incidence *incidence) const
     return true;
   }
 
-//  kdDebug(5800) << "CalFilter::filterIncidence(): passed" << endl;
+//  kDebug(5800) << "CalFilter::filterIncidence(): passed" << endl;
 
   return true;
 }

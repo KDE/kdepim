@@ -152,7 +152,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	KSharedPtr < KService > o = KService::serviceByDesktopName(fDesktopName);
 	if (!o)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Can't find desktop file for conduit "
 			<< fDesktopName
 			<< endl;
@@ -177,7 +177,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		QFile::encodeName(fLibraryName));
 	if (!factory)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Can't load library "
 			<< fLibraryName
 			<< endl;
@@ -196,7 +196,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 
 	if (!object)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Can't create SyncAction."
 			<< endl;
 		addSyncLogEntry(i18n("Could not create conduit %1.").arg(fDesktopName));
@@ -208,7 +208,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 
 	if (!fConduit)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Can't cast to ConduitAction."
 			<< endl;
 		addSyncLogEntry(i18n("Could not create conduit %1.").arg(fDesktopName));
@@ -239,7 +239,7 @@ void ConduitProxy::execDone(SyncAction *p)
 
 	if (p!=fConduit)
 	{
-		kdError() << k_funcinfo
+		kError() << k_funcinfo
 			<< ": Unknown conduit @"
 			<< (long) p
 			<< " finished."
@@ -362,7 +362,7 @@ void ActionQueue::actionCompleted(SyncAction *b)
 
 	if (!a)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": NULL action on stack."
 			<< endl;
 		return;

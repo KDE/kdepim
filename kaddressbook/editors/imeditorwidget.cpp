@@ -220,7 +220,7 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
             }
           }
         } else
-          kdDebug( 5720 ) << k_funcinfo << " no protocol found for: " << app << endl;
+          kDebug( 5720 ) << k_funcinfo << " no protocol found for: " << app << endl;
       }
     }
   }

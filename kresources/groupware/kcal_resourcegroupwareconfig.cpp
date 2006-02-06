@@ -69,12 +69,12 @@ ResourceGroupwareConfig::ResourceGroupwareConfig( QWidget* parent,  const char* 
 
 void ResourceGroupwareConfig::loadSettings( KRES::Resource *resource )
 {
-  kdDebug() << "KCal::ResourceGroupwareConfig::loadSettings()" << endl;
+  kDebug() << "KCal::ResourceGroupwareConfig::loadSettings()" << endl;
 
   ResourceGroupware *res = static_cast<ResourceGroupware *>( resource );
   if ( res ) {
     if ( !res->prefs() ) {
-      kdError() << "No PREF" << endl;
+      kError() << "No PREF" << endl;
       return;
     }
   
@@ -84,7 +84,7 @@ void ResourceGroupwareConfig::loadSettings( KRES::Resource *resource )
     mReloadConfig->loadSettings( res );
     mSaveConfig->loadSettings( res );
   } else {
-    kdError(5700) << "KCalResourceGroupwareConfig::loadSettings(): no KCalResourceGroupware, cast failed" << endl;
+    kError(5700) << "KCalResourceGroupwareConfig::loadSettings(): no KCalResourceGroupware, cast failed" << endl;
   }
 }
 
@@ -98,7 +98,7 @@ void ResourceGroupwareConfig::saveSettings( KRES::Resource *resource )
     mReloadConfig->saveSettings( res );
     mSaveConfig->saveSettings( res );
   } else {
-    kdError(5700) << "KCalResourceGroupwareConfig::saveSettings(): no KCalResourceGroupware, cast failed" << endl;
+    kError(5700) << "KCalResourceGroupwareConfig::saveSettings(): no KCalResourceGroupware, cast failed" << endl;
   }
 }
 

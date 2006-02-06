@@ -883,7 +883,7 @@ bool MALConduit::skip() {
   FUNCTIONSETUP;
 
   if (!fConfig) {
-    kdWarning() << k_funcinfo << ": No config file was set!" << endl;
+    kWarning() << k_funcinfo << ": No config file was set!" << endl;
     return false;
   }
 
@@ -921,7 +921,7 @@ bool MALConduit::skip() {
   // Now initiate the sync.
   PalmSyncInfo* pInfo=syncInfoNew();
   if (!pInfo) {
-    kdWarning() << k_funcinfo << ": Could not allocate SyncInfo!" << endl;
+    kWarning() << k_funcinfo << ": Could not allocate SyncInfo!" << endl;
     emit logError(i18n("MAL synchronization failed (no SyncInfo)."));
     return false;
   }
@@ -971,7 +971,7 @@ int malconduit_logf(const char *format, ...) {
     conduitInstance->printLogMessage(msg);
   } else {
     // write out to stderr
-    kdWarning()<<msg<<endl;
+    kWarning()<<msg<<endl;
   }
   return rval;
 }
@@ -1288,7 +1288,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
   if (sinfo.direction==eSyncDelete) {
     if (!sinfo.docfilename.isEmpty()) {
       if (!QFile::remove(sinfo.docfilename)) {
-        kdWarning()<<i18n("Unable to delete the text file \"%1\" on the PC").arg(sinfo.docfilename)<<endl;
+        kWarning()<<i18n("Unable to delete the text file \"%1\" on the PC").arg(sinfo.docfilename)<<endl;
       }
       QString bmkfilename = sinfo.docfilename;
       if (bmkfilename.endsWith(".txt")){
@@ -1303,7 +1303,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
       PilotLocalDatabase*database=new PilotLocalDatabase(fPDBDir, sinfo.dbinfo.name, false);
       if (database) {
         if ( database->deleteDatabase() !=0 ) {
-          kdWarning()<<i18n("Unable to delete database \"%1\" on the PC").arg(sinfo.dbinfo.name)<<endl;
+          kWarning()<<i18n("Unable to delete database \"%1\" on the PC").arg(sinfo.dbinfo.name)<<endl;
         }
         KPILOT_DELETE(database);
       }
@@ -1311,7 +1311,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
     if (!fLocalSync) {
       PilotDatabase *database=new PilotSerialDatabase(pilotSocket(), sinfo.dbinfo.name);
       if ( database->deleteDatabase() !=0 ) {
-        kdWarning()<<i18n("Unable to delete database \"%1\" from the handheld").arg(sinfo.dbinfo.name)<<endl;
+        kWarning()<<i18n("Unable to delete database \"%1\" from the handheld").arg(sinfo.dbinfo.name)<<endl;
       }
       KPILOT_DELETE(database);
     }

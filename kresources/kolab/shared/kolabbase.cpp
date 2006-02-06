@@ -90,15 +90,15 @@ void KolabBase::setFields( const KABC::Addressee* addressee )
 
   // Set creation-time and last-modification-time
   const QString creationString = addressee->custom( "KOLAB", "CreationDate" );
-  kdDebug(5006) << "Creation time string: " << creationString << endl;
+  kDebug(5006) << "Creation time string: " << creationString << endl;
   QDateTime creationDate;
   if ( creationString.isEmpty() ) {
     creationDate = QDateTime::currentDateTime();
-    kdDebug(5006) << "Creation date set to current time\n";
+    kDebug(5006) << "Creation date set to current time\n";
   }
   else {
     creationDate = stringToDateTime( creationString );
-    kdDebug(5006) << "Creation date loaded\n";
+    kDebug(5006) << "Creation date loaded\n";
   }
   QDateTime modified = addressee->revision();
   if ( !modified.isValid() )
@@ -107,7 +107,7 @@ void KolabBase::setFields( const KABC::Addressee* addressee )
   if ( modified < creationDate ) {
     // It's not possible that the modification date is earlier than creation
     creationDate = modified;
-    kdDebug(5006) << "Creation date set to modification date\n";
+    kDebug(5006) << "Creation date set to modification date\n";
   }
   setCreationDate( creationDate );
   const QString newCreationDate = dateTimeToString( creationDate );
@@ -115,7 +115,7 @@ void KolabBase::setFields( const KABC::Addressee* addressee )
     // We modified the creation date, so store it for future reference
     const_cast<KABC::Addressee*>( addressee )
       ->insertCustom( "KOLAB", "CreationDate", newCreationDate );
-    kdDebug(5006) << "Creation date modified. New one: " << newCreationDate << endl;
+    kDebug(5006) << "Creation date modified. New one: " << newCreationDate << endl;
   }
 
   switch( addressee->secrecy().type() ) {
@@ -263,9 +263,9 @@ bool KolabBase::loadEmailAttribute( QDomElement& element, Email& email )
         email.smtpAddress = e.text();
       else
         // TODO: Unhandled tag - save for later storage
-        kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
+        kDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
     } else
-      kdDebug() << "Node is not a comment or an element???" << endl;
+      kDebug() << "Node is not a comment or an element???" << endl;
   }
 
   return true;

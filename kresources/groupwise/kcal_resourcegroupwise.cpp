@@ -94,7 +94,7 @@ GroupwisePrefsBase *ResourceGroupwise::prefs()
 
 void ResourceGroupwise::readConfig( const KConfig *config )
 {
-  kdDebug() << "KCal::ResourceGroupwise::readConfig()" << endl;
+  kDebug() << "KCal::ResourceGroupwise::readConfig()" << endl;
 
   mPrefs->readConfig();
 
@@ -103,7 +103,7 @@ void ResourceGroupwise::readConfig( const KConfig *config )
 
 void ResourceGroupwise::writeConfig( KConfig *config )
 {
-  kdDebug() << "KCal::ResourceGroupwise::writeConfig()" << endl;
+  kDebug() << "KCal::ResourceGroupwise::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
 
@@ -124,15 +124,15 @@ void ResourceGroupwise::doClose()
 
 bool ResourceGroupwise::doLoad()
 {
-  kdDebug() << "ResourceGroupwise::load()" << endl;
+  kDebug() << "ResourceGroupwise::load()" << endl;
 
   if ( mIsShowingError ) {
-    kdDebug() << "Still showing error" << endl;
+    kDebug() << "Still showing error" << endl;
     return true;
   }
 
   if ( mDownloadJob ) {
-    kdDebug() << "Download still in progress" << endl;
+    kDebug() << "Download still in progress" << endl;
     return true;
   }
 
@@ -153,7 +153,7 @@ bool ResourceGroupwise::doLoad()
   url.setUser( prefs()->user() );
   url.setPass( prefs()->password() );
 
-  kdDebug() << "Download URL: " << url << endl;
+  kDebug() << "Download URL: " << url << endl;
 
   mJobData.clear();
 
@@ -174,7 +174,7 @@ bool ResourceGroupwise::doLoad()
 
 void ResourceGroupwise::slotJobResult( KIO::Job *job )
 {
-  kdDebug() << "ResourceGroupwise::slotJobResult(): " << endl;
+  kDebug() << "ResourceGroupwise::slotJobResult(): " << endl;
 
   if ( job->error() ) {
     mIsShowingError = true;
@@ -194,7 +194,7 @@ void ResourceGroupwise::slotJobResult( KIO::Job *job )
       Incidence::List incidences = calendar.incidences();
       Incidence::List::ConstIterator it;
       for( it = incidences.begin(); it != incidences.end(); ++it ) {
-//        kdDebug() << "INCIDENCE: " << (*it)->summary() << endl;
+//        kDebug() << "INCIDENCE: " << (*it)->summary() << endl;
         Incidence *i = (*it)->clone();
         QString remote = (*it)->customProperty( "GWRESOURCE", "UID" );
         QString local = idMapper().localId( remote );
@@ -222,19 +222,19 @@ void ResourceGroupwise::slotJobResult( KIO::Job *job )
 
 void ResourceGroupwise::slotJobData( KIO::Job *, const QByteArray &data )
 {
-//  kdDebug() << "ResourceGroupwise::slotJobData()" << endl;
+//  kDebug() << "ResourceGroupwise::slotJobData()" << endl;
 
   mJobData.append( data.data() );
 }
 
 bool ResourceGroupwise::doSave()
 {
-  kdDebug() << "KCal::ResourceGroupwise::doSave()" << endl;
+  kDebug() << "KCal::ResourceGroupwise::doSave()" << endl;
 
   saveCache();
 
   if ( !hasChanges() ) {
-    kdDebug() << "No changes" << endl;
+    kDebug() << "No changes" << endl;
     return true;
   }
 
@@ -244,7 +244,7 @@ bool ResourceGroupwise::doSave()
     0 );
 
   if ( !server.login() ) {
-    kdError() << "Unable to login to server" << endl;
+    kError() << "Unable to login to server" << endl;
     emit resourceSaveError( this, i18n( "Unable to login to server: " ) + server.error() );
     return false;
   }
@@ -302,7 +302,7 @@ void ResourceGroupwise::cancelLoad()
 
 bool ResourceGroupwise::userSettings( ngwt__Settings *&settings )
 {
-  kdDebug() << "ResourceGroupwise::userSettings()" << endl;
+  kDebug() << "ResourceGroupwise::userSettings()" << endl;
 
   GroupwiseServer server( prefs()->url(),
                           prefs()->user(),
@@ -317,11 +317,11 @@ bool ResourceGroupwise::userSettings( ngwt__Settings *&settings )
 
 bool ResourceGroupwise::modifyUserSettings( QMap<QString, QString> & settings )
 {
-  kdDebug() << "ResourceGroupwise::modifyUserSettings()" << endl;
+  kDebug() << "ResourceGroupwise::modifyUserSettings()" << endl;
 
   if ( settings.isEmpty() ) 
   {
-   kdDebug() << "ResourceGroupwise::modifyUserSettings(): no changed settings" << endl;
+   kDebug() << "ResourceGroupwise::modifyUserSettings(): no changed settings" << endl;
     return false;
   }
 

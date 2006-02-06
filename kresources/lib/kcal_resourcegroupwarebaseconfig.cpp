@@ -86,12 +86,12 @@ ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,
 
 void ResourceGroupwareBaseConfig::loadSettings( KRES::Resource *resource )
 {
-  kdDebug(7000) << "KCal::ResourceGroupwareBaseConfig::loadSettings()" << endl;
+  kDebug(7000) << "KCal::ResourceGroupwareBaseConfig::loadSettings()" << endl;
 
   ResourceGroupwareBase *res = static_cast<ResourceGroupwareBase *>( resource );
   if ( res ) {
     if ( !res->prefs() ) {
-      kdError() << "No PREF" << endl;
+      kError() << "No PREF" << endl;
       return;
     }
 
@@ -103,7 +103,7 @@ void ResourceGroupwareBaseConfig::loadSettings( KRES::Resource *resource )
     mFolderConfig->setFolderLister( res->folderLister() );
     mFolderConfig->updateFolderList();
   } else {
-    kdError(5700) << "KCalResourceGroupwareBaseConfig::loadSettings(): "
+    kError(5700) << "KCalResourceGroupwareBaseConfig::loadSettings(): "
                      "no KCalOpenGroupware, cast failed" << endl;
   }
 }
@@ -118,7 +118,7 @@ void ResourceGroupwareBaseConfig::saveSettings( KRES::Resource *resource )
     if ( mCacheDialog ) mCacheDialog->saveSettings( res );
     mFolderConfig->saveSettings();
   } else {
-    kdError(5700) << "KCalResourceGroupwareBaseConfig::saveSettings(): "
+    kError(5700) << "KCalResourceGroupwareBaseConfig::saveSettings(): "
                      "no KCalOpenGroupware, cast failed" << endl;
   }
 }

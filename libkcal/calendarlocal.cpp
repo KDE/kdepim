@@ -119,7 +119,7 @@ bool CalendarLocal::addEvent( Event *event )
 
 bool CalendarLocal::deleteEvent( Event *event )
 {
-//  kdDebug(5800) << "CalendarLocal::deleteEvent" << endl;
+//  kDebug(5800) << "CalendarLocal::deleteEvent" << endl;
 
   if ( mEvents.remove( event->uid() ) ) {
     setModified( true );
@@ -127,14 +127,14 @@ bool CalendarLocal::deleteEvent( Event *event )
     mDeletedIncidences.append( event );
     return true;
   } else {
-    kdWarning() << "CalendarLocal::deleteEvent(): Event not found." << endl;
+    kWarning() << "CalendarLocal::deleteEvent(): Event not found." << endl;
     return false;
   }
 }
 
 void CalendarLocal::deleteAllEvents()
 {
-  // kdDebug(5800) << "CalendarLocal::deleteAllEvents" << endl;
+  // kDebug(5800) << "CalendarLocal::deleteAllEvents" << endl;
   foreach ( Event *e, mEvents )
     notifyIncidenceDeleted( e );
 
@@ -144,7 +144,7 @@ void CalendarLocal::deleteAllEvents()
 
 Event *CalendarLocal::event( const QString &uid )
 {
-//  kdDebug(5800) << "CalendarLocal::event(): " << uid << endl;
+//  kDebug(5800) << "CalendarLocal::event(): " << uid << endl;
   return mEvents[ uid ];
 }
 
@@ -175,14 +175,14 @@ bool CalendarLocal::deleteTodo( Todo *todo )
     mDeletedIncidences.append( todo );
     return true;
   } else {
-    kdWarning() << "CalendarLocal::deleteTodo(): Todo not found." << endl;
+    kWarning() << "CalendarLocal::deleteTodo(): Todo not found." << endl;
     return false;
   }
 }
 
 void CalendarLocal::deleteAllTodos()
 {
-  // kdDebug(5800) << "CalendarLocal::deleteAllTodos()\n";
+  // kDebug(5800) << "CalendarLocal::deleteAllTodos()\n";
   Todo::List::ConstIterator it;
   for( it = mTodoList.begin(); it != mTodoList.end(); ++it ) {
     notifyIncidenceDeleted( *it );
@@ -231,7 +231,7 @@ Alarm::List CalendarLocal::alarmsTo( const QDateTime &to )
 
 Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
 {
-//  kdDebug(5800) << "CalendarLocal::alarms(" << from.toString() << " - "
+//  kDebug(5800) << "CalendarLocal::alarms(" << from.toString() << " - "
 //                << to.toString() << ")" << endl;
 
   Alarm::List alarms;
@@ -259,7 +259,7 @@ void CalendarLocal::appendAlarms( Alarm::List &alarms, Incidence *incidence,
     if ( (*it)->enabled() ) {
       QDateTime dt = (*it)->nextRepetition(preTime);
       if ( dt.isValid() && dt <= to ) {
-        kdDebug(5800) << "CalendarLocal::appendAlarms() '"
+        kDebug(5800) << "CalendarLocal::appendAlarms() '"
                       << incidence->summary() << "': "
                       << dt.toString() << endl;
         alarms.append( *it );
@@ -335,7 +335,7 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
             continue;
         }
       }
-      kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
+      kDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
                     << "': " << qdt.toString() << endl;
       alarms.append( alarm );
     }
@@ -467,9 +467,9 @@ Event::List CalendarLocal::rawEvents( EventSortField sortField, SortDirection so
 bool CalendarLocal::addJournal(Journal *journal)
 {
   if (journal->dtStart().isValid())
-    kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
+    kDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
   else
-    kdDebug(5800) << "Adding Journal without a DTSTART" << endl;
+    kDebug(5800) << "Adding Journal without a DTSTART" << endl;
 
   mJournalList.append(journal);
 
@@ -490,7 +490,7 @@ bool CalendarLocal::deleteJournal( Journal *journal )
     mDeletedIncidences.append( journal );
     return true;
   } else {
-    kdWarning() << "CalendarLocal::deleteJournal(): Journal not found." << endl;
+    kWarning() << "CalendarLocal::deleteJournal(): Journal not found." << endl;
     return false;
   }
 }

@@ -67,7 +67,7 @@ KABC::Addressee::List KDE2XXPort::importContacts( const QString& ) const
   } else if ( result == KMessageBox::No )
     proc << "kab2kabc";
   else
-    kdDebug(5720) << "KAddressBook::importKDE2(): Unknow return value." << endl;
+    kDebug(5720) << "KAddressBook::importKDE2(): Unknow return value." << endl;
 
   proc.start( KProcess::Block );
 

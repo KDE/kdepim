@@ -111,7 +111,7 @@ int TodoWidget::getAllTodos(PilotDatabase * todoDB)
 			todo = new PilotTodoEntry(*(fTodoAppInfo->info()), pilotRec);
 			if (todo == 0L)
 			{
-				kdWarning() << k_funcinfo
+				kWarning() << k_funcinfo
 					<< ": Couldn't allocate record "
 					<< currentRecord++
 					<< endl;
@@ -157,7 +157,7 @@ void TodoWidget::showComponent()
 	else
 	{
 		populateCategories(fCatList, 0L);
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Could not open local TodoDB" << endl;
 	}
 

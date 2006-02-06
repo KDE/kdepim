@@ -41,12 +41,12 @@ Event::Event(const Event &e) : Incidence(e)
 
 Event::~Event()
 {
-//  kdDebug(5800) << "~Event() " << int( this ) << endl;
+//  kDebug(5800) << "~Event() " << int( this ) << endl;
 }
 
 Event *Event::clone()
 {
-//  kdDebug(5800) << "Event::clone()" << endl;
+//  kDebug(5800) << "Event::clone()" << endl;
   return new Event(*this);
 }
 
@@ -78,7 +78,7 @@ QDateTime Event::dtEnd() const
   if (hasEndDate()) return mDtEnd;
   if (hasDuration()) return dtStart().addSecs(duration());
 
-  kdDebug(5800) << "Warning! Event '" << summary()
+  kDebug(5800) << "Warning! Event '" << summary()
             << "' has neither end date nor duration." << endl;
   return dtStart();
 }

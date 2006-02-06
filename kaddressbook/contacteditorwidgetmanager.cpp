@@ -56,7 +56,7 @@ ContactEditorWidgetManager::~ContactEditorWidgetManager()
 
 ContactEditorWidgetManager *ContactEditorWidgetManager::self()
 {
-  kdWarning( !kapp, 7520 ) << "No QApplication object available!" << endl;
+  kWarning( !kapp, 7520 ) << "No QApplication object available!" << endl;
 
   if ( !mSelf )
     mSelf = new ContactEditorWidgetManager();
@@ -77,7 +77,7 @@ KAB::ContactEditorWidgetFactory *ContactEditorWidgetManager::factory( int pos ) 
 void ContactEditorWidgetManager::reload()
 {
   mFactories.clear();
-  kdDebug(5720) << "ContactEditorWidgetManager::reload()" << endl;
+  kDebug(5720) << "ContactEditorWidgetManager::reload()" << endl;
   const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/ContactEditorWidget",
     QString( "[X-KDE-KAddressBook-CEWPluginVersion] == %1" ).arg( KAB_CEW_PLUGIN_VERSION ) );
 
@@ -85,7 +85,7 @@ void ContactEditorWidgetManager::reload()
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().toLatin1() );
     if ( !factory ) {
-      kdDebug(5720) << "ContactEditorWidgetManager::reload(): Factory creation failed" << endl;
+      kDebug(5720) << "ContactEditorWidgetManager::reload(): Factory creation failed" << endl;
       continue;
     }
 
@@ -93,7 +93,7 @@ void ContactEditorWidgetManager::reload()
                           static_cast<KAB::ContactEditorWidgetFactory*>( factory );
 
     if ( !pageFactory ) {
-      kdDebug(5720) << "ContactEditorWidgetManager::reload(): Cast failed" << endl;
+      kDebug(5720) << "ContactEditorWidgetManager::reload(): Cast failed" << endl;
       continue;
     }
 

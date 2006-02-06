@@ -79,16 +79,16 @@ XmlrpcJob::XmlrpcJob( const KUrl& url, const QString& method,
   // so do it now.
   QDataStream stream( &m_packedArgs, QIODevice::WriteOnly );
    stream << (int)1 << url;
-kdDebug()<<"XMLrpcJob::url="<<url.url()<<endl;
-kdDebug()<<"XmlrpcJob::XmlrpcJob, method="<<method<<endl;
+kDebug()<<"XMLrpcJob::url="<<url.url()<<endl;
+kDebug()<<"XmlrpcJob::XmlrpcJob, method="<<method<<endl;
   // Same for static data
   if ( ! method.isEmpty() ) {
-kdDebug()<<"XmlrpcJob::XmlrpcJob, method not empty."<<endl;
+kDebug()<<"XmlrpcJob::XmlrpcJob, method not empty."<<endl;
 
     QString call = markupCall( method, params );
     staticData = call.utf8();
     staticData.truncate( staticData.size() - 1 );
-    kdDebug() << "Message: " << call << endl;
+    kDebug() << "Message: " << call << endl;
 //     d->savedStaticData = staticData.copy();
   }
   addMetaData( "UserAgent", "KDE XML-RPC TransferJob" );
@@ -105,7 +105,7 @@ XmlrpcJob::~XmlrpcJob()
 QString XmlrpcJob::markupCall( const QString &cmd,
                                const QList<QVariant> &args )
 {
-kdDebug()<<"XmlrpcJob::markupCall, cmd="<<cmd<<endl;
+kDebug()<<"XmlrpcJob::markupCall, cmd="<<cmd<<endl;
   QString markup = "<?xml version=\"1.0\" ?>\r\n<methodCall>\r\n";
 
   markup += "<methodName>" + cmd + "</methodName>\r\n";
@@ -131,15 +131,15 @@ kdDebug()<<"XmlrpcJob::markupCall, cmd="<<cmd<<endl;
 
 void XmlrpcJob::slotData( const QByteArray& data )
 {
-kdDebug()<<"XmlrpcJob::slotData()"<<endl;
+kDebug()<<"XmlrpcJob::slotData()"<<endl;
   if ( m_redirectionURL.isEmpty() || !m_redirectionURL.isValid() || m_error )
     m_str_response.append( QString( data ) );
 }
 
 void XmlrpcJob::slotFinished()
 {
-kdDebug() << "XmlrpcJob::slotFinished()" << endl;
-kdDebug() << m_str_response << endl;
+kDebug() << "XmlrpcJob::slotFinished()" << endl;
+kDebug() << m_str_response << endl;
 
   // TODO: Redirection with XML-RPC??
 /*  if (! m_redirectionURL.isEmpty() && m_redirectionURL.isValid() ) {
@@ -157,7 +157,7 @@ kdDebug() << m_str_response << endl;
     }
   } else */
 
-  kdDebug() << "\033[35;40mResult: " << m_str_response << "\033[0;0m" << endl;
+  kDebug() << "\033[35;40mResult: " << m_str_response << "\033[0;0m" << endl;
   QDomDocument doc;
   QString errMsg;
   int errLine, errCol;
@@ -294,7 +294,7 @@ QString XmlrpcJob::marshal( const QVariant &arg )
         return markup;
       }
     default:
-      kdWarning() << "Failed to marshal unknown variant type: "
+      kWarning() << "Failed to marshal unknown variant type: "
                   << arg.type() << endl;
   };
   return QString();
@@ -311,11 +311,11 @@ QVariant XmlrpcJob::demarshal( const QDomElement &elem )
     // Assume <string> in that case:
     // Actually, the element will still have a child node, so this will not help here.
     // The dirty hack is at the end of this method.
-kdDebug()<<"XmlrpcJob::demarshal: No child nodes, assume type=string. Text: "<<elem.text()<<endl;
+kDebug()<<"XmlrpcJob::demarshal: No child nodes, assume type=string. Text: "<<elem.text()<<endl;
     return QVariant( elem.text() );
   }
 
-kdDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
+kDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
 
   const QDomElement typeElement = elem.firstChild().toElement();
   const QString typeName = typeElement.tagName().toLower();
@@ -371,7 +371,7 @@ kdDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
 
   } else {
 
-    kdWarning() << "Cannot demarshal unknown type " << typeName << ", text= " << typeElement.text() << endl;
+    kWarning() << "Cannot demarshal unknown type " << typeName << ", text= " << typeElement.text() << endl;
     // FIXME: This is just a workaround, for the issue mentioned at the beginning of this method.
     return QVariant( elem.text() );
   }
@@ -388,7 +388,7 @@ kdDebug()<<"Demarshalling element \"" << elem.text() <<"\"" << endl;
 XmlrpcJob* KIO::xmlrpcCall( const KUrl& url, const QString &method, const QList<QVariant> &params, bool showProgressInfo )
 {
   if ( url.isEmpty() ) {
-    kdWarning() << "Cannot execute call to " << method << ": empty server URL" << endl;
+    kWarning() << "Cannot execute call to " << method << ": empty server URL" << endl;
     return 0;
   }
   XmlrpcJob *job = new XmlrpcJob( url, method, params, showProgressInfo );

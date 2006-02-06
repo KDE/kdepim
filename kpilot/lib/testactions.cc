@@ -33,7 +33,7 @@ bool run_modes(bool test, bool local)
 {
 	bool ok = true;
 
-	kdDebug() << "***\n*** Sync Modes ("
+	kDebug() << "***\n*** Sync Modes ("
 		<< ( test ? "" : "no")
 		<< "test, "
 		<< ( local ? "" : "no")
@@ -45,10 +45,10 @@ bool run_modes(bool test, bool local)
 		m++)
 	{
 		SyncAction::SyncMode mode((SyncAction::SyncMode::Mode)m,test,local);
-		kdDebug() << "* " << mode.name() << endl;
+		kDebug() << "* " << mode.name() << endl;
 		SyncAction::SyncMode mode2(mode.list());
 		if (!(mode==mode2)) {
-			kdDebug() << "E " << "Modes mismatch [" << mode.name() << "] ["
+			kDebug() << "E " << "Modes mismatch [" << mode.name() << "] ["
 				<< mode2.name() << "]" << endl;
 			ok = false;
 		}
@@ -61,7 +61,7 @@ bool single_mode(int m, bool test, bool local)
 {
 	SyncAction::SyncMode mode((SyncAction::SyncMode::Mode)m,test,local);
 
-	kdDebug() << "* " << m << " " << test << " " << local << endl;
+	kDebug() << "* " << m << " " << test << " " << local << endl;
 
 	if ((mode.mode() == m) && (mode.isTest() == test) && (mode.isLocal() == local))
 	{
@@ -69,7 +69,7 @@ bool single_mode(int m, bool test, bool local)
 	}
 	else
 	{
-		kdDebug() << "E " << "Modes mismatch " << m << " " << test << " " << local
+		kDebug() << "E " << "Modes mismatch " << m << " " << test << " " << local
 			<< "[" << mode.name() << "]" << endl;
 		return false;
 	}
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
 	if (!run_modes(true,false)) return 1;
 	if (!run_modes(true,true)) return 1;
 
-	kdDebug() << "***\n*** Sync Modes - misc\n***\n";
+	kDebug() << "***\n*** Sync Modes - misc\n***\n";
 	if (!single_mode(3,false,false)) return 1;
 	if (!single_mode(1,true,true)) return 1;
 

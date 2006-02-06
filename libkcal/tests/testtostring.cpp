@@ -35,12 +35,12 @@ int main( int, char ** )
   ev->setSummary("Griazi");
   ICalFormat iformat;
   QString icalstr = iformat.toICalString(ev);
-  kdDebug(5800) << icalstr << endl;
+  kDebug(5800) << icalstr << endl;
   Incidence *ev2 = iformat.fromString(icalstr);
-  kdDebug(5800) << "Event reread!" << endl ;
+  kDebug(5800) << "Event reread!" << endl ;
   
   if (ev2)
-    kdDebug(5800) << iformat.toICalString(ev2) << endl;
+    kDebug(5800) << iformat.toICalString(ev2) << endl;
   else
-    kdDebug(5800) << "Could not read incidence" << endl;
+    kDebug(5800) << "Could not read incidence" << endl;
 }

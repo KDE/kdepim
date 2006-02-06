@@ -46,9 +46,9 @@ void GroupDavAddressBookAdaptor::customAdaptDownloadUrl( KUrl &url )
 
 void GroupDavAddressBookAdaptor::customAdaptUploadUrl( KUrl &url )
 {
-kdDebug()<<"GroupDavAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
+kDebug()<<"GroupDavAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
   url = WebdavHandler::toDAV( url );
 //   url.setPath( url.path() + "/new.vcf" );
 // url.addPath( "new.vcf" );
-kdDebug()<<"after GroupDavAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
+kDebug()<<"after GroupDavAddressBookAdaptor::adaptUploadUrl( "<<url.url()<<")"<<endl;
 }

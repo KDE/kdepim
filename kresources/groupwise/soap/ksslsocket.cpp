@@ -49,7 +49,7 @@ struct KSSLSocketPrivate
 
 KSSLSocket::KSSLSocket() : KExtendedSocket()
 {
-//  kdDebug() << "KSSLSocket() " << (void*)this << endl;
+//  kDebug() << "KSSLSocket() " << (void*)this << endl;
 
 	d = new KSSLSocketPrivate;
 	d->kssl = 0L;
@@ -68,7 +68,7 @@ KSSLSocket::KSSLSocket() : KExtendedSocket()
 
 KSSLSocket::~KSSLSocket()
 {
-//  kdDebug() << "KSSLSocket()::~KSSLSocket() " << (void*)this << endl;
+//  kDebug() << "KSSLSocket()::~KSSLSocket() " << (void*)this << endl;
 
 	//Close connection
 	closeNow();
@@ -93,17 +93,17 @@ Q_LONG KSSLSocket::read( char* data, Q_ULONG maxLen )
 
 Q_LONG KSSLSocket::write( const char* data, Q_ULONG len )
 {
-//  kdDebug() << "KSSLSocket::write() " << (void*)this  << endl;
-//  kdDebug() << "  d->kssl: " << (void*)d->kssl << endl;
+//  kDebug() << "KSSLSocket::write() " << (void*)this  << endl;
+//  kDebug() << "  d->kssl: " << (void*)d->kssl << endl;
 	return d->kssl->write( data, len );
 }
 
 void KSSLSocket::slotConnected()
 {
-//  kdDebug() << "KSSLSocket::slotConnected() " << (void*)this << endl;
+//  kDebug() << "KSSLSocket::slotConnected() " << (void*)this << endl;
 	if( KSSL::doesSSLWork() )
 	{
-		kdDebug(0) << k_funcinfo << "Trying SSL connection..." << endl;
+		kDebug(0) << k_funcinfo << "Trying SSL connection..." << endl;
 		if( !d->kssl )
 		{
 			d->kssl = new KSSL();
@@ -113,11 +113,11 @@ void KSSLSocket::slotConnected()
 			d->kssl->reInitialize();
 		}
 		d->kssl->setPeerHost(host());
-                kdDebug() << "SOCKET STATUS: " << socketStatus() << endl;
+                kDebug() << "SOCKET STATUS: " << socketStatus() << endl;
 		int rc = d->kssl->connect( sockfd );
                 if ( rc <= 0 ) {
-                  kdError() << "Error connecting KSSL: " << rc << endl;
-                  kdDebug() << "SYSTEM ERROR: " << systemError() << endl;
+                  kError() << "Error connecting KSSL: " << rc << endl;
+                  kDebug() << "SYSTEM ERROR: " << systemError() << endl;
                   emit sslFailure();
                   closeNow();
                 } else {
@@ -131,7 +131,7 @@ void KSSLSocket::slotConnected()
 	}
 	else
 	{
-		kdError(0) << k_funcinfo << "SSL not functional!" << endl;
+		kError(0) << k_funcinfo << "SSL not functional!" << endl;
 
 		d->kssl = 0L;
 		emit sslFailure();
@@ -141,7 +141,7 @@ void KSSLSocket::slotConnected()
 
 void KSSLSocket::slotDisconnected()
 {
-//  kdDebug() << "KSSLSocket::slotDisconnected() " << (void*)this << endl;
+//  kDebug() << "KSSLSocket::slotDisconnected() " << (void*)this << endl;
 	if( readNotifier() )
 		readNotifier()->setEnabled(false);
 }
@@ -175,7 +175,7 @@ I basically copied the below from tcpKIO::SlaveBase.hpp, with some modificaions 
 int KSSLSocket::messageBox( KIO::SlaveBase::MessageBoxType type, const QString &text, const QString &caption,
 	const QString &buttonYes, const QString &buttonNo )
 {
-	kdDebug(0) << "messageBox " << type << " " << text << " - " << caption << buttonYes << buttonNo << endl;
+	kDebug(0) << "messageBox " << type << " " << text << " - " << caption << buttonYes << buttonNo << endl;
 	QByteArray data, result;
 	QByteArray returnType;
 	QDataStream arg( &data,QIODevice::WriteOnly);
@@ -228,7 +228,7 @@ int KSSLSocket::verifyCertificate()
 	KSSLCertificate::KSSLValidationList ksvl = pc.validateVerbose(KSSLCertificate::SSLServer);
 
         if ( ksvl.count() == 1 && ksvl.first() == KSSLCertificate::Unknown ) {
-          kdDebug() << "Unknown validation error" << endl;
+          kDebug() << "Unknown validation error" << endl;
           return 0;
         }
 
@@ -375,7 +375,7 @@ int KSSLSocket::verifyCertificate()
 				break;
 		}
 		default:
-		kdDebug(0) << "SSL error in cert code."
+		kDebug(0) << "SSL error in cert code."
 				<< endl;
 		break;
 		}
@@ -391,7 +391,7 @@ int KSSLSocket::verifyCertificate()
 		return rc;
 
   if ( getenv("DEBUG_GW_RESOURCE") ) {
-  	kdDebug(0) << "SSL connection information follows:" << endl
+  	kDebug(0) << "SSL connection information follows:" << endl
 		  << "+-----------------------------------------------" << endl
 		  << "| Cipher: " << d->kssl->connectionInfo().getCipher() << endl
 		  << "| Description: " << d->kssl->connectionInfo().getCipherDescription() << endl

@@ -28,7 +28,7 @@
 #include "kmobileclient.h"
 
 #define KMOBILECLIENT_DEBUG_AREA 0
-#define PRINT_DEBUG kdDebug(KMOBILECLIENT_DEBUG_AREA) << "KMobileClient: "
+#define PRINT_DEBUG kDebug(KMOBILECLIENT_DEBUG_AREA) << "KMobileClient: "
 
 KMobileClient::KMobileClient()
     : DCOPClient()

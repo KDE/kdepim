@@ -26,7 +26,7 @@
 Network::Network( const QString name, NetworkStatus::Properties properties )
 	: m_name( name )
 {
-	kdDebug() << k_funcinfo << "constructing network '" << name << "', status: " << properties.status << endl;
+	kDebug() << k_funcinfo << "constructing network '" << name << "', status: " << properties.status << endl;
 	m_status = properties.status;
 	m_netmasks = properties.netmasks;
 	m_internet = properties.internet;
@@ -64,7 +64,7 @@ void Network::registerUsage( const QByteArray appId, const QString host )
 		if ( (*it).appId == appId && (*it).host == host )
 			return;
 	}
-	kdDebug() << k_funcinfo << "registering " << appId << " as using network " << m_name << " for " << host << endl;
+	kDebug() << k_funcinfo << "registering " << appId << " as using network " << m_name << " for " << host << endl;
 	m_usage.append( nus );
 }
 
@@ -75,7 +75,7 @@ void Network::unregisterUsage( const QByteArray appId, const QString host )
 	{
 		if ( (*it).appId == appId && (*it).host == host )
 		{
-			kdDebug() << k_funcinfo << "unregistering " << appId << "'s usage of " << m_name << " for " << host << endl;
+			kDebug() << k_funcinfo << "unregistering " << appId << "'s usage of " << m_name << " for " << host << endl;
 			m_usage.erase( it );
 			break;
 		}

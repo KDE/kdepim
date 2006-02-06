@@ -40,7 +40,7 @@ SloxFolderManager::SloxFolderManager( SloxBase *res, const KUrl & baseUrl ) :
   mBaseUrl( baseUrl ),
   mRes( res )
 {
-  kdDebug() << k_funcinfo << baseUrl << endl;
+  kDebug() << k_funcinfo << baseUrl << endl;
   readFolders();
 }
 
@@ -56,10 +56,10 @@ SloxFolderManager::~SloxFolderManager()
 
 void SloxFolderManager::requestFolders()
 {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
 
   if ( mDownloadJob ) {
-    kdDebug() << k_funcinfo << "Download still in progress" << endl;
+    kDebug() << k_funcinfo << "Download still in progress" << endl;
     return;
   }
 
@@ -77,7 +77,7 @@ void SloxFolderManager::requestFolders()
   WebdavHandler::addSloxElement( mRes, doc, prop, "foldertype", "GLOBALADDRESSBOOK" );
   WebdavHandler::addSloxElement( mRes, doc, prop, "foldertype", "INTERNALUSERS" );
 
-  kdDebug() << k_funcinfo << doc.toString( 2 ) << endl;
+  kDebug() << k_funcinfo << doc.toString( 2 ) << endl;
 
   mDownloadJob = KIO::davPropFind( url, doc, "0", false );
 
@@ -87,15 +87,15 @@ void SloxFolderManager::requestFolders()
 
 void SloxFolderManager::slotResult( KIO::Job *job )
 {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
 
   if ( job->error() ) {
     job->showErrorDialog( 0 );
   } else {
-    kdDebug() << k_funcinfo << " success, writing to " << cacheFile() << endl;
+    kDebug() << k_funcinfo << " success, writing to " << cacheFile() << endl;
     QFile f( cacheFile() );
     if ( !f.open( QIODevice::WriteOnly ) ) {
-      kdDebug() << "Unable to open '" << cacheFile() << "'" << endl;
+      kDebug() << "Unable to open '" << cacheFile() << "'" << endl;
       return;
     }
     QTextStream stream ( &f );
@@ -114,18 +114,18 @@ QString SloxFolderManager::cacheFile() const
 
   QString file = locateLocal( "cache", "slox/folders_" + host );
 
-  kdDebug() << k_funcinfo << file << endl;
+  kDebug() << k_funcinfo << file << endl;
 
   return file;
 }
 
 void SloxFolderManager::readFolders()
 {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
 
   QFile f( cacheFile() );
   if ( !f.open( QIODevice::ReadOnly ) ) {
-    kdDebug() << "Unable to open '" << cacheFile() << "'" << endl;
+    kDebug() << "Unable to open '" << cacheFile() << "'" << endl;
     requestFolders();
     return;
   }
@@ -155,7 +155,7 @@ void SloxFolderManager::readFolders()
     if ( id != "-1" && parentId != "-1" ) {
       SloxFolder *folder = new SloxFolder( id, parentId, type, name, def );
       mFolders[id] = folder;
-      kdDebug() << k_funcinfo << "Found folder: " << folder->name() << endl;
+      kDebug() << k_funcinfo << "Found folder: " << folder->name() << endl;
     }
   }
 

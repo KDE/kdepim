@@ -63,7 +63,7 @@ QString ResourceCalendar::infoText() const
 
 void ResourceCalendar::writeConfig( KConfig* config )
 {
-//  kdDebug(5800) << "ResourceCalendar::writeConfig()" << endl;
+//  kDebug(5800) << "ResourceCalendar::writeConfig()" << endl;
 
   KRES::Resource::writeConfig( config );
 }
@@ -101,7 +101,7 @@ void ResourceCalendar::setSubresourceActive( const QString &, bool )
 
 bool ResourceCalendar::load()
 {
-  kdDebug(5800) << "Loading resource " + resourceName() << endl;
+  kDebug(5800) << "Loading resource " + resourceName() << endl;
 
   mReceivedLoadError = false;
 
@@ -123,14 +123,14 @@ bool ResourceCalendar::load()
     }
   }
 
-  kdDebug(5800) << "Done loading resource " + resourceName() << endl;
+  kDebug(5800) << "Done loading resource " + resourceName() << endl;
 
   return success;
 }
 
 void ResourceCalendar::loadError( const QString &err )
 {
-  kdDebug(5800) << "Error loading resource: " << err << endl;
+  kDebug(5800) << "Error loading resource: " << err << endl;
 
   mReceivedLoadError = true;
 
@@ -144,7 +144,7 @@ void ResourceCalendar::loadError( const QString &err )
 bool ResourceCalendar::save( Incidence *incidence )
 {
   if ( !readOnly() ) {
-    kdDebug(5800) << "Save resource " + resourceName() << endl;
+    kDebug(5800) << "Save resource " + resourceName() << endl;
 
     mReceivedSaveError = false;
 
@@ -155,7 +155,7 @@ bool ResourceCalendar::save( Incidence *incidence )
     return success;
   } else {
     // Read-only, just don't save...
-    kdDebug(5800) << "Don't save read-only resource " + resourceName() << endl;
+    kDebug(5800) << "Don't save read-only resource " + resourceName() << endl;
     return true;
   }
 }
@@ -167,7 +167,7 @@ bool ResourceCalendar::doSave( Incidence * )
 
 void ResourceCalendar::saveError( const QString &err )
 {
-  kdDebug(5800) << "Error saving resource: " << err << endl;
+  kDebug(5800) << "Error saving resource: " << err << endl;
 
   mReceivedSaveError = true;
 

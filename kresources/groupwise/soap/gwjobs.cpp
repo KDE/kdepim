@@ -54,12 +54,12 @@ void ReadAddressBooksJob::setAddressBookIds( const QStringList &ids )
 {
   mAddressBookIds = ids;
 
-  kdDebug() << "ADDR IDS: " << ids.join( "," ) << endl;
+  kDebug() << "ADDR IDS: " << ids.join( "," ) << endl;
 }
 
 void ReadAddressBooksJob::run()
 {
-  kdDebug() << "ReadAddressBooksJob::run()" << endl;
+  kDebug() << "ReadAddressBooksJob::run()" << endl;
 
   mSoap->header->ngwt__session = mSession;
   _ngwm__getAddressBookListRequest addressBookListRequest;
@@ -78,10 +78,10 @@ void ReadAddressBooksJob::run()
     std::vector<class ngwt__AddressBook * >::const_iterator it;
     for ( it = addressBooks->begin(); it != addressBooks->end(); ++it ) {
       if ( !(*it)->id ) {
-        kdError() << "No addressbook id" << endl;
+        kError() << "No addressbook id" << endl;
       } else {
         QString id = GWConverter::stringToQString( (*it)->id );
-        kdDebug() << "Reading ID: " << id << endl;
+        kDebug() << "Reading ID: " << id << endl;
         if ( mAddressBookIds.find( id ) != mAddressBookIds.end() ) {
           readAddressBook( *(*it)->id );
           mProgress += 100;
@@ -93,7 +93,7 @@ void ReadAddressBooksJob::run()
 
 void ReadAddressBooksJob::readAddressBook( std::string &id )
 {
-  kdDebug() << "ReadAddressBookJob::readAddressBook() " << id.c_str() << endl;
+  kDebug() << "ReadAddressBookJob::readAddressBook() " << id.c_str() << endl;
 #if 0
   _ngwm__getItemsRequest itemsRequest;
   itemsRequest.container = &id;
@@ -115,7 +115,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
   std::vector<class ngwt__Item * > *items = &itemsResponse.items->item;
   if ( items ) {
 #if 1
-    kdDebug() << "ReadAddressBooksJob::readAddressBook() - got " << items->size() << " contacts in folder " << id.c_str()   << endl;
+    kDebug() << "ReadAddressBooksJob::readAddressBook() - got " << items->size() << " contacts in folder " << id.c_str()   << endl;
 #endif
     ContactConverter converter( mSoap );
 
@@ -129,12 +129,12 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 #if 1
     if ( item )
       if ( item->name )
-        kdDebug() << "ITEM: " << item->name->c_str() << endl;
+        kDebug() << "ITEM: " << item->name->c_str() << endl;
       if ( item->id )
-        kdDebug() << "ITEM: (" << item->id->c_str()
+        kDebug() << "ITEM: (" << item->id->c_str()
         << ")" << endl;
     else 
-      kdDebug() << "ITEM is null" << endl;
+      kDebug() << "ITEM is null" << endl;
 #endif
 
       ngwt__Contact *contact = dynamic_cast<ngwt__Contact *>( item );
@@ -161,7 +161,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 
       int progress = int( mProgress + count++ * 100. / maxCount );
 
-      kdDebug() << "PROGRESS: mProgress: " << mProgress << " count: "
+      kDebug() << "PROGRESS: mProgress: " << mProgress << " count: "
         << count << " maxCount: " << maxCount << " progress: " << progress
         << endl;
 
@@ -215,15 +215,15 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
   {
     KABC::Addressee::List contacts;
     mSoap->header->ngwt__session = mSession;
-    kdDebug() << "sending readCursorRequest with session: " << mSession.c_str() << endl;
+    kDebug() << "sending readCursorRequest with session: " << mSession.c_str() << endl;
     _ngwm__readCursorResponse readCursorResponse;
     if ( soap_call___ngw__readCursorRequest( mSoap, mUrl.toLatin1(), 0,
                                       &readCursorRequest,
                                       &readCursorResponse ) != SOAP_OK )
     {
-      kdDebug() << "Faults according to GSOAP:" << endl;
+      kDebug() << "Faults according to GSOAP:" << endl;
       soap_print_fault(mSoap, stderr);
-      kdDebug() << "Unable to read " << *( readCursorRequest.count ) << " items at once, halving number and retrying request" << endl;
+      kDebug() << "Unable to read " << *( readCursorRequest.count ) << " items at once, halving number and retrying request" << endl;
       *( readCursorRequest.count ) = qMax( 1, *( readCursorRequest.count )/2 );
       continue;
     }
@@ -231,7 +231,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
     if ( readCursorResponse.items ) {
       ContactConverter converter( mSoap );
  
-      kdDebug() << "ReadAddressBooksJob::readAddressBook() - got " << readCursorResponse.items->item.size() << " contacts in cursor read of folder " << id.c_str()   << endl;
+      kDebug() << "ReadAddressBooksJob::readAddressBook() - got " << readCursorResponse.items->item.size() << " contacts in cursor read of folder " << id.c_str()   << endl;
 
       std::vector<class ngwt__Item * >::const_iterator it;
       for( it = readCursorResponse.items->item.begin(); it != readCursorResponse.items->item.end(); ++it ) {
@@ -240,12 +240,12 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 #if 1
         if ( item )
           if ( item->name )
-            kdDebug() << "ITEM: " << item->name->c_str() << endl;
+            kDebug() << "ITEM: " << item->name->c_str() << endl;
           if ( item->id )
-            kdDebug() << "ITEM: (" << item->id->c_str()
+            kDebug() << "ITEM: (" << item->id->c_str()
             << ")" << endl;
         else 
-          kdDebug() << "ITEM is null" << endl;
+          kDebug() << "ITEM is null" << endl;
 #endif
         ngwt__Contact *contact = dynamic_cast<ngwt__Contact *>( item );
         KABC::Addressee addr;
@@ -265,13 +265,13 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
           contacts.append( addr );
       }
       readItems += readCursorResponse.items->item.size(); // this means that the read count is increased even if the call fails, but at least the while will always end
-      kdDebug() << " just read " << readCursorResponse.items->item.size() << " items" << endl;
+      kDebug() << " just read " << readCursorResponse.items->item.size() << " items" << endl;
       if ( readCursorResponse.items->item.size() == 0 )
         break;
     }
     else
     {
-      kdDebug() << " readCursor got no Items in Response!" << endl;
+      kDebug() << " readCursor got no Items in Response!" << endl;
       break;
     }
     // pass the received addressees back to the server
@@ -287,11 +287,11 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
                                     &destReq,
                                     &destResp ) != SOAP_OK )
   {
-    kdDebug() << "Faults according to GSOAP:" << endl;
+    kDebug() << "Faults according to GSOAP:" << endl;
     soap_print_fault(mSoap, stderr);
   }
 
-  kdDebug() << " read " << readItems << " items in total" << endl;
+  kDebug() << " read " << readItems << " items in total" << endl;
 #endif
 }
 
@@ -299,7 +299,7 @@ ReadCalendarJob::ReadCalendarJob( GroupwiseServer *server, struct soap *soap, co
                                   const std::string &session )
   : GWJob( server, soap, url, session ), mCalendar( 0 )
 {
-  kdDebug() << "ReadCalendarJob()" << endl;
+  kDebug() << "ReadCalendarJob()" << endl;
 }
 
 void ReadCalendarJob::setCalendarFolder( std::string *calendarFolder )
@@ -319,7 +319,7 @@ void ReadCalendarJob::setCalendar( KCal::Calendar *calendar )
 
 void ReadCalendarJob::run()
 {
-  kdDebug() << "ReadCalendarJob::run()" << endl;
+  kDebug() << "ReadCalendarJob::run()" << endl;
 
   mSoap->header->ngwt__session = mSession;
   _ngwm__getFolderListRequest folderListReq;
@@ -344,7 +344,7 @@ void ReadCalendarJob::run()
       std::vector<class ngwt__Folder * >::const_iterator it;
       for ( it = folders->begin(); it != folders->end(); ++it ) {
         if ( !(*it)->id ) {
-          kdError() << "No calendar id" << endl;
+          kError() << "No calendar id" << endl;
         } else {
           ngwt__SystemFolder * fld = dynamic_cast<ngwt__SystemFolder *>( *it );
           if ( fld )
@@ -360,39 +360,39 @@ void ReadCalendarJob::run()
               count = *( fld->count );
               totalItems += count;
             }
-            kdDebug() << "Folder " <<  (*(*it)->id).c_str() << ", containing " << count << " items." << endl;
+            kDebug() << "Folder " <<  (*(*it)->id).c_str() << ", containing " << count << " items." << endl;
             if ( fld->folderType == Calendar ) {
-              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Calendar, physically containing " << count << " items." << endl;
+              kDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Calendar, physically containing " << count << " items." << endl;
               readCalendarFolder( *(*it)->id, itemCounts );
               haveReadFolder = true;
               *mCalendarFolder = *((*it)->id);
             }
             else if ( fld->folderType == Checklist ) {
-              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Checklist, physically containing " << count << " items." << endl;
+              kDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Checklist, physically containing " << count << " items." << endl;
               readCalendarFolder( *(*it)->id, itemCounts );
               haveReadFolder = true;
               *mChecklistFolder = *((*it)->id);
             }
 /*            else if ( fld->folderType == SentItems ) {
-              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type SentItems, physically containing " << count << " items." << endl;
+              kDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type SentItems, physically containing " << count << " items." << endl;
               readCalendarFolder( *(*it)->id, itemCounts );
               haveReadFolder = true;
               *mChecklistFolder = *((*it)->id);
             }*/
 /*            else if ( fld->folderType == Mailbox ) {
-              kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Mailbox (not yet accepted items), containing " << count << " items." << endl;
+              kDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Mailbox (not yet accepted items), containing " << count << " items." << endl;
               readCalendarFolder( *(*it)->id, count, itemCounts );
               haveReadFolder = true;
             }*/
             if ( haveReadFolder )
             {
-              kdDebug() << "Folder contained " << itemCounts.appointments << " appointments, " << itemCounts.notes << " notes, and " << itemCounts.tasks << " tasks." << endl;
+              kDebug() << "Folder contained " << itemCounts.appointments << " appointments, " << itemCounts.notes << " notes, and " << itemCounts.tasks << " tasks." << endl;
               totals.appointments += itemCounts.appointments;
               totals.notes += itemCounts.notes;
               totals.tasks += itemCounts.tasks;
             }
             else
-              kdDebug() << "Skipping folder: " << *((*it)->id )->c_str() << endl;
+              kDebug() << "Skipping folder: " << *((*it)->id )->c_str() << endl;
           }
         }
       }
@@ -400,28 +400,28 @@ void ReadCalendarJob::run()
   }
 
   // perform consistency checks
-  kdDebug() << "Total count of items of all types in folders we read: " << totalItems << endl;
-  kdDebug() << "Folders we read contained " << totals.appointments << " appointments, " << totals.notes << " notes, and " << totals.tasks << " tasks." << endl;
-  kdDebug() << "Local calendar now contains " << mCalendar->rawEvents().count() << " events and " << mCalendar->rawJournals().count() << " journals, and " << mCalendar->rawTodos().count() << " todos." << endl;
+  kDebug() << "Total count of items of all types in folders we read: " << totalItems << endl;
+  kDebug() << "Folders we read contained " << totals.appointments << " appointments, " << totals.notes << " notes, and " << totals.tasks << " tasks." << endl;
+  kDebug() << "Local calendar now contains " << mCalendar->rawEvents().count() << " events and " << mCalendar->rawJournals().count() << " journals, and " << mCalendar->rawTodos().count() << " todos." << endl;
   if ( totals.appointments == mCalendar->rawEvents().count() )
-    kdDebug() << "All events accounted for." << endl;
+    kDebug() << "All events accounted for." << endl;
   else
-    kdDebug() << "ERROR: event counts do not match." << endl;
+    kDebug() << "ERROR: event counts do not match." << endl;
   if ( totals.notes == mCalendar->rawJournals().count() )
-    kdDebug() << "All journals accounted for." << endl;
+    kDebug() << "All journals accounted for." << endl;
   else
-    kdDebug() << "ERROR: journal counts do not match." << endl;
+    kDebug() << "ERROR: journal counts do not match." << endl;
   if ( totals.tasks == mCalendar->rawTodos().count() )
-    kdDebug() << "All todos accounted for." << endl;
+    kDebug() << "All todos accounted for." << endl;
   else
-    kdDebug() << "ERROR: todo counts do not match." << endl;
+    kDebug() << "ERROR: todo counts do not match." << endl;
 
-  kdDebug() << "ReadCalendarJob::run() done" << endl;
+  kDebug() << "ReadCalendarJob::run() done" << endl;
 }
 
 void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts & counts )
 {
-  kdDebug() << "ReadCalendarJob::readCalendarFolder() '" << id.c_str() << endl;
+  kDebug() << "ReadCalendarJob::readCalendarFolder() '" << id.c_str() << endl;
   mSoap->header->ngwt__session = mSession;
 
 #if 0
@@ -451,7 +451,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
   soap_call___ngw__getItemsRequest( mSoap, mUrl.toLatin1(), 0,
                                     &itemsRequest,
                                     &itemsResponse );
-  kdDebug() << "Faults according to GSOAP:" << endl;
+  kDebug() << "Faults according to GSOAP:" << endl;
   soap_print_fault(mSoap, stderr);
 
   if ( itemsResponse.items ) {
@@ -523,17 +523,17 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
   while ( true )
   {
     mSoap->header->ngwt__session = mSession;
-    kdDebug() << "sending readCursorRequest with session: " << mSession.c_str() << endl;
+    kDebug() << "sending readCursorRequest with session: " << mSession.c_str() << endl;
     _ngwm__readCursorResponse readCursorResponse;
     if ( soap_call___ngw__readCursorRequest( mSoap, mUrl.toLatin1(), 0,
                                       &readCursorRequest,
                                       &readCursorResponse ) != SOAP_OK )
     {
-      kdDebug() << "Faults according to GSOAP:" << endl;
+      kDebug() << "Faults according to GSOAP:" << endl;
       soap_print_fault(mSoap, stderr);
       soap_print_fault_location(mSoap, stderr);
 
-      kdDebug() << "EXITING" << endl;
+      kDebug() << "EXITING" << endl;
       break;
     }
   
@@ -569,13 +569,13 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
         }
       }
       readItems += readCursorResponse.items->item.size();
-      kdDebug() << " just read " << readCursorResponse.items->item.size() << " items" << endl;
+      kDebug() << " just read " << readCursorResponse.items->item.size() << " items" << endl;
       if ( readCursorResponse.items->item.size() == 0 )
         break;
     }
     else
     {
-      kdDebug() << " readCursor got no Items in Response!" << endl;
+      kDebug() << " readCursor got no Items in Response!" << endl;
       mServer->emitErrorMessage( i18n("Unable to read GroupWise address book: reading %1 returned no items." ).arg( id.c_str() ), false );
       break;
     }
@@ -590,11 +590,11 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
                                     &destReq,
                                     &destResp ) != SOAP_OK )
   {
-    kdDebug() << "Faults according to GSOAP:" << endl;
+    kDebug() << "Faults according to GSOAP:" << endl;
     soap_print_fault(mSoap, stderr);
   }
  
-  kdDebug() << " read " << readItems << " items in total" << endl;
+  kDebug() << " read " << readItems << " items in total" << endl;
 #endif
 }
 
@@ -608,7 +608,7 @@ void UpdateAddressBooksJob::setAddressBookIds( const QStringList &ids )
 {
   mAddressBookIds = ids;
 
-  kdDebug() << "ADDR IDS: " << ids.join( "," ) << endl;
+  kDebug() << "ADDR IDS: " << ids.join( "," ) << endl;
 }
 
 void UpdateAddressBooksJob::setStartSequenceNumber( const int startSeqNo )
@@ -618,7 +618,7 @@ void UpdateAddressBooksJob::setStartSequenceNumber( const int startSeqNo )
 
 void UpdateAddressBooksJob::run()
 {
-  kdDebug() << "UpdateAddressBooksJob::run()" << endl;
+  kDebug() << "UpdateAddressBooksJob::run()" << endl;
 
   mSoap->header->ngwt__session = mSession;
   _ngwm__getDeltasRequest request;
@@ -645,7 +645,7 @@ void UpdateAddressBooksJob::run()
   std::vector<class ngwt__Item * > *items = &response.items->item;
   if ( items ) {
 #if 1
-    kdDebug() << "ReadAddressBooksJob::UpdateAddressBooksJob() - got " << items->size() << "contacts" << endl;
+    kDebug() << "ReadAddressBooksJob::UpdateAddressBooksJob() - got " << items->size() << "contacts" << endl;
 #endif
     KABC::Addressee::List contacts;
     ContactConverter converter( mSoap );
@@ -657,12 +657,12 @@ void UpdateAddressBooksJob::run()
 #if 1
     if ( item )
       if ( item->name )
-        kdDebug() << "ITEM: " << item->name->c_str() << endl;
+        kDebug() << "ITEM: " << item->name->c_str() << endl;
       if ( item->id )
-        kdDebug() << "ITEM: ID (" << item->id->c_str()
+        kDebug() << "ITEM: ID (" << item->id->c_str()
         << ")" << endl;
     else 
-      kdDebug() << "ITEM is null" << endl;
+      kDebug() << "ITEM is null" << endl;
 #endif
 
       ngwt__Contact *contact = dynamic_cast<ngwt__Contact *>( item );

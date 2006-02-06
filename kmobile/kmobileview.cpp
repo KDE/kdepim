@@ -49,8 +49,8 @@ KMobileView::~KMobileView()
 
 bool KMobileView::addNewDevice(KConfig *config, KService::Ptr service)
 {
-   kdDebug() << "New mobile device item:\n";
-   kdDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'\n")
+   kDebug() << "New mobile device item:\n";
+   kDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'\n")
 		.arg(service->library()).arg(service->name()).arg(service->icon())
 		.arg(service->comment());
 

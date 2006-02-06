@@ -152,9 +152,9 @@ static bool requirementsAreMet( const CertificateWizardImpl::AttrPairList & list
       continue;
     const QString key = (*it).first;
 #ifndef NDEBUG
-    kdbgstream s = kdDebug();
+    kdbgstream s = kDebug();
 #else
-    kndbgstream s = kdDebug();
+    kndbgstream s = kDebug();
 #endif
     s << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\": ";
     if ( key.endsWith("!") && le->text().trimmed().isEmpty() ) {
@@ -243,7 +243,7 @@ void CertificateWizardImpl::slotGenerateCertificate()
       certParms += "\nname-email: " + email;
     certParms += "\n</GnupgKeyParms>\n";
 
-    kdDebug() << certParms << endl;
+    kDebug() << certParms << endl;
 
     Kleo::KeyGenerationJob * job =
       Kleo::CryptoBackendFactory::instance()->smime()->keyGenerationJob();
@@ -270,7 +270,7 @@ void CertificateWizardImpl::slotGenerateCertificate()
 
 void CertificateWizardImpl::slotResult( const GpgME::KeyGenerationResult & res,
 					const QByteArray & keyData ) {
-    //kdDebug() << "keyData.size(): " << keyData.size() << endl;
+    //kDebug() << "keyData.size(): " << keyData.size() << endl;
     _keyData = keyData;
 
     if ( res.error().isCanceled() || res.error() ) {
@@ -427,7 +427,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
     findServiceFor( "DCOP/Mailer", QString(),
                     QString(), &error, &dcopService );
   if ( result != 0 ) {
-    kdDebug() << "Couldn't connect to KMail\n";
+    kDebug() << "Couldn't connect to KMail\n";
     KMessageBox::error( this,
                         i18n( "DCOP Communication Error, unable to send certificate using KMail.\n%1" ).arg( error ) );
     return;
@@ -442,7 +442,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
     if ( reply.isValid() && (bool)reply ) {
       Q_ASSERT( kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) );
     } else
-      kdWarning() << "Error loading " << dcopService << endl;
+      kWarning() << "Error loading " << dcopService << endl;
   }
 
   DCOPClient* dcopClient = kapp->dcopClient();

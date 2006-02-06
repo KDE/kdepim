@@ -43,7 +43,7 @@ void DavAddressBookAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::Folder
   if ( !davjob ) return;
 
   QDomDocument doc = davjob->response();
-  kdDebug(7000) << " Doc: " << doc.toString() << endl;
+  kDebug(7000) << " Doc: " << doc.toString() << endl;
 
   QDomElement docElement = doc.documentElement();
   QDomNode n;

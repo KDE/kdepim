@@ -80,13 +80,13 @@ ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent )
 
 void ResourceGroupwiseConfig::loadSettings( KRES::Resource *resource )
 {
-  kdDebug() << "KCal::ResourceGroupwiseConfig::loadSettings()" << endl;
+  kDebug() << "KCal::ResourceGroupwiseConfig::loadSettings()" << endl;
   ResourceGroupwise *res = static_cast<ResourceGroupwise *>( resource );
   mResource = res;
   
   if ( res ) {
     if ( !res->prefs() ) {
-      kdError() << "No PREF" << endl;
+      kError() << "No PREF" << endl;
       return;
     }
   
@@ -96,7 +96,7 @@ void ResourceGroupwiseConfig::loadSettings( KRES::Resource *resource )
     mReloadConfig->loadSettings( res );
     mSaveConfig->loadSettings( res );
   } else {
-    kdError(5700) << "KCalResourceGroupwiseConfig::loadSettings(): no KCalResourceGroupwise, cast failed" << endl;
+    kError(5700) << "KCalResourceGroupwiseConfig::loadSettings(): no KCalResourceGroupwise, cast failed" << endl;
   }
 }
 
@@ -110,13 +110,13 @@ void ResourceGroupwiseConfig::saveSettings( KRES::Resource *resource )
     mReloadConfig->saveSettings( res );
     mSaveConfig->saveSettings( res );
   } else {
-    kdError(5700) << "KCalResourceGroupwiseConfig::saveSettings(): no KCalResourceGroupwise, cast failed" << endl;
+    kError(5700) << "KCalResourceGroupwiseConfig::saveSettings(): no KCalResourceGroupwise, cast failed" << endl;
   }
 }
 
 void ResourceGroupwiseConfig::slotViewUserSettings()
 {
-  kdDebug(5700) << "KCal::ResourceGroupwiseConfig::slotViewUserSettings()" << endl;
+  kDebug(5700) << "KCal::ResourceGroupwiseConfig::slotViewUserSettings()" << endl;
   if ( mResource )
   {
     ngwt__Settings * s;
@@ -129,7 +129,7 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
       GroupWiseSettingsWidget * settingsWidget = new GroupWiseSettingsWidget( dialog );
       dialog->setMainWidget( settingsWidget );
       // populate dialog
-      kdDebug() << "slotViewUserSettings() - settings are: " << endl;
+      kDebug() << "slotViewUserSettings() - settings are: " << endl;
       std::vector<class ngwt__SettingsGroup *>::const_iterator it;
       for( it = s->group.begin(); it != s->group.end(); ++it )
       {
@@ -138,7 +138,7 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
         if ( group->type )
         {
           groupName = QString::fromUtf8( group->type->c_str() );
-          kdDebug() << "GROUP: " << groupName << endl;;
+          kDebug() << "GROUP: " << groupName << endl;;
         }
         KListViewItem * groupLVI = new KListViewItem( settingsWidget->m_settingsList, groupName ); 
         std::vector<ngwt__Custom * > setting = group->setting;
@@ -155,7 +155,7 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
           if ( (*it2)->locked )
             locked = *((*it2)->locked);
 
-          kdDebug() << "  SETTING: " << setting  << "   value : " << value <<  (locked ? "locked" : " not locked " ) << endl;
+          kDebug() << "  SETTING: " << setting  << "   value : " << value <<  (locked ? "locked" : " not locked " ) << endl;
           KListViewItem * settingLVI = new KListViewItem( groupLVI, QString(), setting, value, (locked ? "locked" : " not locked " ) ); 
           if ( !locked )
             settingLVI->setRenameEnabled( 2, true );
@@ -170,7 +170,7 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
       }
     }
       else 
-        kdDebug() << "KCal::ResourceGroupwiseConfig::slotViewUserSettings() - NO SETTINGS" << endl;
+        kDebug() << "KCal::ResourceGroupwiseConfig::slotViewUserSettings() - NO SETTINGS" << endl;
   }
 }
 

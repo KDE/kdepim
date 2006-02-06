@@ -154,7 +154,7 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
   connect( d->updateTimer, SIGNAL(timeout()), SLOT(slotUpdateTimeout()) );
 
   if ( !columnStrategy ) {
-    kdWarning(5150) << "Kleo::KeyListView: need a column strategy to work with!" << endl;
+    kWarning(5150) << "Kleo::KeyListView: need a column strategy to work with!" << endl;
     return;
   }
 
@@ -192,14 +192,14 @@ Kleo::KeyListView::~KeyListView() {
 }
 
 void Kleo::KeyListView::insertItem( Q3ListViewItem * qlvi ) {
-  //kdDebug() << "Kleo::KeyListView::insertItem( " << qlvi << " )" << endl;
+  //kDebug() << "Kleo::KeyListView::insertItem( " << qlvi << " )" << endl;
   KListView::insertItem( qlvi );
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     registerItem( item );
 }
 
 void Kleo::KeyListView::takeItem( Q3ListViewItem * qlvi ) {
-  //kdDebug() << "Kleo::KeyListView::takeItem( " << qlvi << " )" << endl;
+  //kDebug() << "Kleo::KeyListView::takeItem( " << qlvi << " )" << endl;
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     deregisterItem( item );
   KListView::takeItem( qlvi );
@@ -232,7 +232,7 @@ void Kleo::KeyListView::slotUpdateTimeout() {
   const bool wasUpdatesEnabled = viewport()->isUpdatesEnabled();
   if ( wasUpdatesEnabled )
     viewport()->setUpdatesEnabled( false );
-  kdDebug( 5150 ) << "Kleo::KeyListView::slotUpdateTimeout(): processing "
+  kDebug( 5150 ) << "Kleo::KeyListView::slotUpdateTimeout(): processing "
 		  << d->keyBuffer.size() << " items en block" << endl;
   if ( hierarchical() ) {
     for ( std::vector<GpgME::Key>::const_iterator it = d->keyBuffer.begin() ; it != d->keyBuffer.end() ; ++it )
@@ -254,7 +254,7 @@ void Kleo::KeyListView::clear() {
 }
 
 void Kleo::KeyListView::registerItem( KeyListViewItem * item ) {
-  //kdDebug() << "registerItem( " << item << " )" << endl;
+  //kDebug() << "registerItem( " << item << " )" << endl;
   if ( !item )
     return;
   const QByteArray fpr = item->key().primaryFingerprint();
@@ -263,7 +263,7 @@ void Kleo::KeyListView::registerItem( KeyListViewItem * item ) {
 }
 
 void Kleo::KeyListView::deregisterItem( const KeyListViewItem * item ) {
-  //kdDebug() << "deregisterItem( KeyLVI: " << item << " )" << endl;
+  //kDebug() << "deregisterItem( KeyLVI: " << item << " )" << endl;
   if ( !item )
     return;
   std::map<QByteArray,KeyListViewItem*>::iterator it
@@ -469,14 +469,14 @@ void Kleo::KeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int
 }
 
 void Kleo::KeyListViewItem::insertItem( Q3ListViewItem * qlvi ) {
-  //kdDebug() << "Kleo::KeyListViewItem::insertItem( " << qlvi << " )" << endl;
+  //kDebug() << "Kleo::KeyListViewItem::insertItem( " << qlvi << " )" << endl;
   Q3ListViewItem::insertItem( qlvi );
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     listView()->registerItem( item );
 }
 
 void Kleo::KeyListViewItem::takeItem( Q3ListViewItem * qlvi ) {
-  //kdDebug() << "Kleo::KeyListViewItem::takeItem( " << qlvi << " )" << endl;
+  //kDebug() << "Kleo::KeyListViewItem::takeItem( " << qlvi << " )" << endl;
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     listView()->deregisterItem( item );
   Q3ListViewItem::takeItem( qlvi );

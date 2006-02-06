@@ -118,7 +118,7 @@ void ResourceKABC::writeConfig( KConfig *config )
 
 bool ResourceKABC::doOpen()
 {
-  kdDebug(5800) << "ResourceKABC::doOpen()" << endl;
+  kDebug(5800) << "ResourceKABC::doOpen()" << endl;
 
   mAddressbook = KABC::StdAddressBook::self( true );
   connect( mAddressbook, SIGNAL(addressBookChanged(AddressBook*)), SLOT( reload() ) );
@@ -128,7 +128,7 @@ bool ResourceKABC::doOpen()
 
 bool ResourceKABC::doLoad()
 {
-  kdDebug(5800) << "ResourceKABC::load()" << endl;
+  kDebug(5800) << "ResourceKABC::load()" << endl;
 
   mCalendar.close();
 
@@ -159,7 +159,7 @@ bool ResourceKABC::doLoad()
     QDate birthdate = (*it).birthday().date();
     QString name_1, email_1, uid_1;
     if ( birthdate.isValid() ) {
-      kdDebug(5800) << "found a birthday " << birthdate.toString() << endl;
+      kDebug(5800) << "found a birthday " << birthdate.toString() << endl;
 
       name_1 = (*it).nickName();
       email_1 = (*it).fullEmail();
@@ -181,7 +181,7 @@ bool ResourceKABC::doLoad()
       ev->setCustomProperty("KABC", "UID-1", uid_1 );
       ev->setCustomProperty("KABC", "NAME-1", name_1 );
       ev->setCustomProperty("KABC", "EMAIL-1", email_1 );
-      kdDebug(5800) << "ResourceKABC::doLoad: uid:" << uid_1 << " name: " << name_1
+      kDebug(5800) << "ResourceKABC::doLoad: uid:" << uid_1 << " name: " << name_1
         << " email: " << email_1 << endl;
       ev->setSummary(summary);
 
@@ -210,7 +210,7 @@ bool ResourceKABC::doLoad()
 
       ev->setReadOnly( true );
       mCalendar.addEvent(ev);
-      kdDebug(5800) << "imported " << birthdate.toString() << endl;
+      kDebug(5800) << "imported " << birthdate.toString() << endl;
     }
 
     QString anniversary_string = (*it).custom( "KADDRESSBOOK", "X-Anniversary" );
@@ -243,7 +243,7 @@ bool ResourceKABC::doLoad()
 
   for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
     QDateTime anniversary = QDateTime( QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate ) );
-    kdDebug(5800) << "found a anniversary " << anniversary.toString() << endl;
+    kDebug(5800) << "found a anniversary " << anniversary.toString() << endl;
     QString name;
     QString name_1 = (*addrIt).nickName();
     QString uid_1 = (*addrIt).uid();
@@ -315,7 +315,7 @@ bool ResourceKABC::doLoad()
 
     ev->setReadOnly( true );
     mCalendar.addEvent(ev);
-    kdDebug(5800) << "imported " << anniversary.toString() << endl;
+    kDebug(5800) << "imported " << anniversary.toString() << endl;
   }
 
   return true;
@@ -476,7 +476,7 @@ Alarm::List ResourceKABC::alarmsTo( const QDateTime &to )
 
 Alarm::List ResourceKABC::alarms( const QDateTime &from, const QDateTime &to )
 {
-//  kdDebug(5800) << "ResourceKABC::alarms(" << from.toString() << " - " << to.toString() << ")\n";
+//  kDebug(5800) << "ResourceKABC::alarms(" << from.toString() << " - " << to.toString() << ")\n";
 
   return mCalendar.alarms( from, to );
 }

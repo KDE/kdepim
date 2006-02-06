@@ -105,9 +105,9 @@ void PopMailWidgetConfig::load()
 	FUNCTIONSETUP;
 	MailConduitSettings::self()->config()->sync();
 	MailConduitSettings::self()->readConfig();
-/*kdWarning()<<"sendMode="<<MailConduitSettings::syncOutgoing()<<endl;
-kdWarning()<<"emailFrom="<<MailConduitSettings::emailAddress()<<endl;
-kdWarning()<<"signature="<<MailConduitSettings::signature()<<endl;*/
+/*kWarning()<<"sendMode="<<MailConduitSettings::syncOutgoing()<<endl;
+kWarning()<<"emailFrom="<<MailConduitSettings::emailAddress()<<endl;
+kWarning()<<"signature="<<MailConduitSettings::signature()<<endl;*/
 
 
 #define RD(a,b,c) fConfigWidget->a->b(MailConduitSettings::c())

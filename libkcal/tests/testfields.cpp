@@ -52,34 +52,34 @@ int main(int argc,char **argv)
 
   QString file = QLatin1String( INPUT );
   if (!cal.load( file ) ) {
-    kdError() << "Can't load " << file << endl;
+    kError() << "Can't load " << file << endl;
     return 1;
   }
 
   QString uid = QLatin1String("KOrganizer-1345486115.965");
   Event *e = cal.event( uid );
   if (!e) {
-    kdError() << "No event " << uid << endl;
+    kError() << "No event " << uid << endl;
     return 1;
   }
 
 /*  if (e->hasStartDate()) {
     QDateTime d = e->dtStart();
-    kdDebug() << "Event starts " << d << endl;
+    kDebug() << "Event starts " << d << endl;
   }
 */
 
-  kdDebug() << "Event description " << e->summary() << endl;
+  kDebug() << "Event description " << e->summary() << endl;
 
   if (e->hasEndDate()) {
     QDateTime d = e->dtEnd();
-    kdDebug() << "Event ends " << d << endl;
+    kDebug() << "Event ends " << d << endl;
   }
 
   if (e->pilotId()) {
-    kdDebug() << "Pilot ID = " << e->pilotId() << endl;
+    kDebug() << "Pilot ID = " << e->pilotId() << endl;
   } else {
-    kdError() << "No Pilot ID" << endl;
+    kError() << "No Pilot ID" << endl;
     return 1;
   }
 

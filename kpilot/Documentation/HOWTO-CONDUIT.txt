@@ -50,7 +50,7 @@ debugging. These are
 
 Uncommenting DEBUG will enable most of the debug information in
 KPilot. Uncommenting DEBUG_CERR will make debug output go direct
-to stderr (cerr) instead of through kdDebug. If in addition, you
+to stderr (cerr) instead of through kDebug. If in addition, you
 pass --debug N (say, N=1 or N=4) to KPilot or the daemon when you
 start them, they will print call traces (that's what FUNCTIONSETUP
 does, which you will see at the beginning of every function).

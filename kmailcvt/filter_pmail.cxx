@@ -63,7 +63,7 @@ void FilterPMail::import(FilterInfo *info)
     QStringList files = dir.entryList("*.[cC][nN][mM]; *.[pP][mM][mM]; *.[mM][bB][xX]", QDir::Files, QDir::Name);
     totalFiles = files.count();
     currentFile = 0;
-    kdDebug() << "Count is " << totalFiles << endl;
+    kDebug() << "Count is " << totalFiles << endl;
     
     if(!(folderParsed = parseFolderMatrix())) {
         info->addLog(i18n("Cannot parse the folder structure; continuing import without subfolder support."));
@@ -87,7 +87,7 @@ void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc
     if (inf->shouldTerminate()) return;
     
     QStringList files = dir.entryList(mask, QDir::Files, QDir::Name);
-    //kdDebug() << "Mask is " << mask << " count is " << files.count() << endl;
+    //kDebug() << "Mask is " << mask << " count is " << files.count() << endl;
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
         // Notify current file
         QFileInfo mailfileinfo(*mailFile);
@@ -286,7 +286,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
 /** Parse the information about folderstructure to folderMatrix */
 bool FilterPMail::parseFolderMatrix() 
 {
-    kdDebug() << "Start parsing the foldermatrix." << endl;
+    kDebug() << "Start parsing the foldermatrix." << endl;
     inf->addLog(i18n("Parsing the folder structure..."));
     
     QFile hierarch(chosenDir + "/hierarch.pm");

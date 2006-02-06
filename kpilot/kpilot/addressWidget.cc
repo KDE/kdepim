@@ -112,7 +112,7 @@ int AddressWidget::getAllAddresses(PilotDatabase * addressDB)
 			address = new PilotAddress(fAddressAppInfo, pilotRec);
 			if (address == 0L)
 			{
-				kdWarning() << k_funcinfo
+				kWarning() << k_funcinfo
 					<< ": Couldn't allocate record "
 					<< currentRecord++
 					<< endl;
@@ -159,7 +159,7 @@ void AddressWidget::showComponent()
 	else
 	{
 		populateCategories(fCatList, 0L);
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Could not open local AddressDB" << endl;
 	}
 

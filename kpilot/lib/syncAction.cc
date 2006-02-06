@@ -163,7 +163,7 @@ SyncAction::SyncMode::SyncMode(const QStringList &args) :
 
 	if (!maps[i].name)
 	{
-		kdError() << k_funcinfo << "No mode set by arguments "
+		kError() << k_funcinfo << "No mode set by arguments "
 			<< args << ", defaulting to FastSync." << endl;
 	}
 }
@@ -175,7 +175,7 @@ SyncAction::SyncMode::SyncMode(Mode m, bool test, bool local) :
 {
 	if ( ((int)m<(int)eFastSync) || ((int)m>(int)eRestore) )
 	{
-		kdError() << k_funcinfo << "Mode value " << (int)m << " is illegal"
+		kError() << k_funcinfo << "Mode value " << (int)m << " is illegal"
 			", defaulting to FastSync." << endl;
 		fMode = eFastSync;
 	}
@@ -199,7 +199,7 @@ QStringList SyncAction::SyncMode::list() const
 	}
 	if ( !maps[i].name )
 	{
-		kdError() << k_funcinfo << "Mode " << fMode << " does not have a name." << endl;
+		kError() << k_funcinfo << "Mode " << fMode << " does not have a name." << endl;
 		l.append(QString::fromLatin1(maps[0].name));
 	}
 
@@ -250,7 +250,7 @@ bool SyncAction::SyncMode::setMode(int mode)
 	}
 	else
 	{
-		kdWarning() << k_funcinfo << ": Bad sync mode " << mode << " requested." << endl ;
+		kWarning() << k_funcinfo << ": Bad sync mode " << mode << " requested." << endl ;
 		fMode = eHotSync;
 		return false;
 	}
@@ -269,7 +269,7 @@ bool SyncAction::SyncMode::setMode(SyncAction::SyncMode::Mode m)
 		i++;
 	}
 
-	kdWarning() << k_funcinfo << ": Bad sync mode " << m << " requested." << endl ;
+	kWarning() << k_funcinfo << ": Bad sync mode " << m << " requested." << endl ;
 	fMode = eHotSync;
 	return false;
 }
@@ -280,7 +280,7 @@ void SyncAction::startTickle(unsigned timeout)
 
 	if (!deviceLink())
 	{
-		kdWarning() << k_funcinfo << ": Trying to tickle without a device." << endl;
+		kWarning() << k_funcinfo << ": Trying to tickle without a device." << endl;
 	}
 	else
 	{
@@ -294,7 +294,7 @@ void SyncAction::stopTickle()
 	FUNCTIONSETUP;
 	if (!deviceLink())
 	{
-		kdWarning() << k_funcinfo << ": Trying to tickle without a device." << endl;
+		kWarning() << k_funcinfo << ": Trying to tickle without a device." << endl;
 	}
 	else
 	{

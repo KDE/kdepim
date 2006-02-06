@@ -65,7 +65,7 @@ class CreateEGroupwareKabcResource : public KConfigPropagator::Change
 
     void apply()
     {
-      kdDebug() << "Create eGroupware Addressbook Resource" << endl;
+      kDebug() << "Create eGroupware Addressbook Resource" << endl;
 
       KRES::Manager<KABC::Resource> manager( "contact" );
       manager.readConfig();
@@ -93,7 +93,7 @@ class ChangeEGroupwareKabcResource : public KConfigPropagator::Change
 
     void apply()
     {
-      kdDebug() << "Change eGroupware Addressbook Resource" << endl;
+      kDebug() << "Change eGroupware Addressbook Resource" << endl;
 
       KRES::Manager<KABC::Resource> manager( "contact" );
       manager.readConfig();
@@ -130,7 +130,7 @@ class CreateEGroupwareKcalResource : public KConfigPropagator::Change
 
     void apply()
     {
-      kdDebug() << "Create eGroupware Calendar Resource" << endl;
+      kDebug() << "Create eGroupware Calendar Resource" << endl;
 
       KCal::CalendarResourceManager manager( "calendar" );
       manager.readConfig();
@@ -157,7 +157,7 @@ class ChangeEGroupwareKcalResource : public KConfigPropagator::Change
 
     void apply()
     {
-      kdDebug() << "Change eGroupware Calendar Resource" << endl;
+      kDebug() << "Change eGroupware Calendar Resource" << endl;
 
       KCal::CalendarResourceManager manager( "calendar" );
       manager.readConfig();
@@ -194,7 +194,7 @@ class CreateEGroupwareKnotesResource : public KConfigPropagator::Change
 
     void apply()
     {
-      kdDebug() << "Create eGroupware notes Resource" << endl;
+      kDebug() << "Create eGroupware notes Resource" << endl;
 
       KRES::Manager<ResourceNotes> manager( "notes" );
       manager.readConfig();
@@ -223,7 +223,7 @@ class ChangeEGroupwareKnotesResource : public KConfigPropagator::Change
 
     void apply()
     {
-      kdDebug() << "Change eGroupware Notes Resource" << endl;
+      kDebug() << "Change eGroupware Notes Resource" << endl;
 
       KRES::Manager<ResourceNotes> manager( "notes" );
       manager.readConfig();

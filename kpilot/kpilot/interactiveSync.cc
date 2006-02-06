@@ -292,7 +292,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 
 	if (!dir.exists())
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Restore directory "
 			<< dirname << " does not exist." << endl;
 		fActionStatus = Error;
@@ -322,7 +322,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
     delete fileName;
 		if (!f)
 		{
-			kdWarning() << k_funcinfo
+			kWarning() << k_funcinfo
 				<< ": Can't open " << s << endl;
 			logMessage(i18n("File '%1' cannot be read.").arg(s));
 			continue;
@@ -342,7 +342,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		}
 		else
 		{
-			kdWarning() << k_funcinfo
+			kWarning() << k_funcinfo
 				<< ": Can't open " << s << endl;
 			logMessage(i18n("File '%1' cannot be read.").arg(s));
 		}
@@ -412,7 +412,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 
 	if (openConduit() < 0)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Restore apparently canceled." << endl;
 		logMessage(i18n("Restore incomplete."));
 		fActionStatus = Done;
@@ -432,7 +432,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 
 	if (!f)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Can't open "
 			<< dbi->path << " for restore." << endl;
 		logError(i18n("Cannot open file `%1' for restore.")
@@ -446,7 +446,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	if (pi_file_install(f, pilotSocket(), 0, NULL) < 0)
 #endif
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Couldn't  restore " << dbi->path << endl;
 		logError(i18n("Cannot restore file `%1'.")
 			.arg(databaseInfo.fileName()));

@@ -161,7 +161,7 @@ GpgME::Error Kleo::ChiasmusJob::slotProcessExited( KProcess * proc ) {
 }
 
 void Kleo::ChiasmusJob::showChiasmusOutput() {
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
   if ( mStderr.isEmpty() )
     return;
   KMessageBox::information( 0 /*how to get a parent widget?*/,

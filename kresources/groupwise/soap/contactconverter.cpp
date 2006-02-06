@@ -210,11 +210,11 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
 KABC::Addressee ContactConverter::convertFromAddressBookItem( ngwt__AddressBookItem * addrBkItem )
 {
-  kdDebug() << "ContactConverter::convertFromAddressBookItem()" << endl;
+  kDebug() << "ContactConverter::convertFromAddressBookItem()" << endl;
   KABC::Addressee addr;
   if ( !addrBkItem )
   {
-    kdDebug() << "Null AddressBookItem, bailing out!" << endl;
+    kDebug() << "Null AddressBookItem, bailing out!" << endl;
     return addr;
   }
   // gwt:Item
@@ -229,11 +229,11 @@ KABC::Addressee ContactConverter::convertFromAddressBookItem( ngwt__AddressBookI
 
 KABC::Addressee ContactConverter::convertFromResource( ngwt__Resource* resource )
 {
-  kdDebug() << "ContactConverter::convertFromResource()" << endl;
+  kDebug() << "ContactConverter::convertFromResource()" << endl;
   KABC::Addressee addr = convertFromAddressBookItem( resource );
   if ( !resource )
   {
-    kdDebug() << "Null Resource, bailing out!" << endl;
+    kDebug() << "Null Resource, bailing out!" << endl;
     return addr;
   }
   if ( resource->phone )
@@ -249,11 +249,11 @@ KABC::Addressee ContactConverter::convertFromResource( ngwt__Resource* resource 
 
 KABC::Addressee ContactConverter::convertFromGroup( ngwt__Group* group)
 {
-  kdDebug() << "ContactConverter::convertFromGroup()" << endl;
+  kDebug() << "ContactConverter::convertFromGroup()" << endl;
   KABC::Addressee addr = convertFromAddressBookItem( group );
   if ( !group )
   {
-    kdDebug() << "Null Resource, bailing out!" << endl;
+    kDebug() << "Null Resource, bailing out!" << endl;
     return addr;
   }
   addr.insertCategory( i18n( "Group" ) );
@@ -262,13 +262,13 @@ KABC::Addressee ContactConverter::convertFromGroup( ngwt__Group* group)
 
 KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
 {
-  kdDebug() << "ContactConverter::convertFromContact()" << endl;
+  kDebug() << "ContactConverter::convertFromContact()" << endl;
 
   KABC::Addressee addr = convertFromAddressBookItem( contact );
 
   if ( !contact )
   {
-    kdDebug() << "Null Contact, bailing out!" << endl;
+    kDebug() << "Null Contact, bailing out!" << endl;
     return addr;
   }
 
@@ -393,7 +393,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
     {
       QString protocol = addrIt.key();
       QStringList addresses = addrIt.data();
-      //kdDebug() << "got IM addresses for '" << protocol << "' : " << addresses << endl;
+      //kDebug() << "got IM addresses for '" << protocol << "' : " << addresses << endl;
       // TODO: map protocol to KDE's set of known protocol names (need to know the set of services in use elsewhere)
       if ( protocol == "nov" )
         protocol = "groupwise";
@@ -413,9 +413,9 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
     else if ( *contact->sync == update )
       addr.insertCustom( "GWRESOURCE", "SYNC", "UPD" );
   }
-  //kdDebug() << "Got the following addressee: " << endl;
+  //kDebug() << "Got the following addressee: " << endl;
   //addr.dump();
-  //kdDebug() << "Customs are: " << addr.customs() << endl;
+  //kDebug() << "Customs are: " << addr.customs() << endl;
 
   return addr;
 }
@@ -563,7 +563,7 @@ ngwt__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee
   Change semantics so that convertToContact pulls each 
   IM address out of the addressee and passes it to this
   function, which converts one at a time. */
-  kdDebug() << k_funcinfo << endl;
+  kDebug() << k_funcinfo << endl;
   ngwt__ImAddressList* imList = soap_new_ngwt__ImAddressList( soap(), -1 );
   std::vector<class ngwt__ImAddress*> *list = soap_new_std__vectorTemplateOfPointerTongwt__ImAddress( soap(), -1 );
 
@@ -595,7 +595,7 @@ ngwt__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee
           address->service->append( protocol.utf8() );
           address->address->append( (*it).utf8() );
           address->type->append( "all" );
-          kdDebug() << "adding: service: " << protocol << " address: " << *it << " type: all" << endl;
+          kDebug() << "adding: service: " << protocol << " address: " << *it << " type: all" << endl;
           list->push_back( address );
         }
       }

@@ -82,7 +82,7 @@ void ResourceSloxConfig::loadSettings( KRES::Resource *res )
   mRes = resource;
 
   if ( !resource ) {
-    kdDebug(5700) << "ResourceSloxConfig::loadSettings(): cast failed" << endl;
+    kDebug(5700) << "ResourceSloxConfig::loadSettings(): cast failed" << endl;
     return;
   }
 
@@ -101,7 +101,7 @@ void ResourceSloxConfig::saveSettings( KRES::Resource *res )
   ResourceSlox *resource = dynamic_cast<ResourceSlox*>( res );
 
   if ( !resource ) {
-    kdDebug(5700) << "ResourceSloxConfig::saveSettings(): cast failed" << endl;
+    kDebug(5700) << "ResourceSloxConfig::saveSettings(): cast failed" << endl;
     return;
   }
 

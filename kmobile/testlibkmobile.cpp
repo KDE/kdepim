@@ -34,10 +34,10 @@ int main(int argc, char **argv)
     QStringList deviceNames; 
     reply >> deviceNames;
 
-    kdDebug() << QString("%1\n").arg(ok?"Ok":"Failure");
-    kdDebug() << QString("Number of currently registered drivers: %1\n").arg(deviceNames.count());
+    kDebug() << QString("%1\n").arg(ok?"Ok":"Failure");
+    kDebug() << QString("Number of currently registered drivers: %1\n").arg(deviceNames.count());
     for (int i=0; i<deviceNames.count(); i++)
-      kdDebug() << QString("Device %1: %2\n").arg(i+1).arg(deviceNames[i]);
+      kDebug() << QString("Device %1: %2\n").arg(i+1).arg(deviceNames[i]);
 
   //  return app.exec();
 }

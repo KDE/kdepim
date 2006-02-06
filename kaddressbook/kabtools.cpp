@@ -58,7 +58,7 @@ void KABTools::mailVCards( const QStringList &uids, KABC::AddressBook *ab )
 
   KTempDir tempDir;
   if ( tempDir.status() != 0 ) {
-    kdWarning() << strerror( tempDir.status() ) << endl;
+    kWarning() << strerror( tempDir.status() ) << endl;
     return;
   }
 

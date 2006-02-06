@@ -66,7 +66,7 @@ void ResourceFeaturePlanConfig::loadSettings( KRES::Resource *res )
   ResourceFeaturePlan *resource = dynamic_cast<ResourceFeaturePlan *>( res );
   
   if ( !resource ) {
-    kdDebug(5700) << "ResourceFeaturePlanConfig::loadSettings(): cast failed" << endl;
+    kDebug(5700) << "ResourceFeaturePlanConfig::loadSettings(): cast failed" << endl;
     return;
   }
 
@@ -81,7 +81,7 @@ void ResourceFeaturePlanConfig::saveSettings( KRES::Resource *res )
   ResourceFeaturePlan *resource = dynamic_cast<ResourceFeaturePlan *>( res );
   
   if ( !resource ) {
-    kdDebug(5700) << "ResourceFeaturePlanConfig::saveSettings(): cast failed" << endl;
+    kDebug(5700) << "ResourceFeaturePlanConfig::saveSettings(): cast failed" << endl;
     return;
   }
 

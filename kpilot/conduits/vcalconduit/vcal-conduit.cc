@@ -691,7 +691,7 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 
 	if (!dateEntry || !vevent)
 	{
-		kdWarning() << k_funcinfo << ": NULL dateEntry or NULL vevent given for exceptions. Skipping exceptions" << endl;
+		kWarning() << k_funcinfo << ": NULL dateEntry or NULL vevent given for exceptions. Skipping exceptions" << endl;
 		return;
 	}
 	// first, we need to delete the old exceptions list, if it existed...
@@ -713,7 +713,7 @@ void VCalConduit::setExceptions(PilotDateEntry *dateEntry, const KCal::Event *ve
 	ex_List=new struct tm[excount];
 	if (!ex_List)
 	{
-		kdWarning() << k_funcinfo << ": Couldn't allocate memory for the exceptions" << endl;
+		kWarning() << k_funcinfo << ": Couldn't allocate memory for the exceptions" << endl;
 		dateEntry->setExceptionCount(0);
 		dateEntry->setExceptions(0);
 		return;

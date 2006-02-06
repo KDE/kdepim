@@ -96,7 +96,7 @@ Codec * Codec::codecForName( const QByteArray & name ) {
 #endif
 
   if ( !codec )
-    kdDebug() << "Unknown codec \"" << name << "\" requested!" << endl;
+    kDebug() << "Unknown codec \"" << name << "\" requested!" << endl;
 
   return codec;
 }
@@ -142,7 +142,7 @@ QByteArray Codec::encode( const QByteArray & src, bool withCRLF ) const
 
   // encode
   if ( !encode( iit, iend, oit, oend, withCRLF ) )
-    kdFatal() << name() << " codec lies about it's mEncodedSizeFor()"
+    kFatal() << name() << " codec lies about it's mEncodedSizeFor()"
               << endl;
 
   // shrink result to actual size:
@@ -165,7 +165,7 @@ QByteArray Codec::decode( const QByteArray & src, bool withCRLF ) const
 
   // decode
   if ( !decode( iit, iend, oit, oend, withCRLF ) )
-    kdFatal() << name() << " codec lies about it's maxDecodedSizeFor()"
+    kFatal() << name() << " codec lies about it's maxDecodedSizeFor()"
               << endl;
 
   // shrink result to actual size:

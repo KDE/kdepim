@@ -29,7 +29,7 @@
 #include "kmobileitem.h"
 
 
-#define PRINT_DEBUG kdDebug() << "KMobileItem: "
+#define PRINT_DEBUG kDebug() << "KMobileItem: "
 
 KMobileItem::KMobileItem(Q3IconView *parent, KConfig *_config, KService::Ptr service)
 	: QObject(parent), Q3IconViewItem(parent), m_dev(0L)

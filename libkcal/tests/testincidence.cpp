@@ -60,34 +60,34 @@ int main(int argc,char **argv)
 
   QString eventString1 = f.toString( event1 );
   if ( verbose )
-    kdDebug(5800) << "EVENT1 START:" << eventString1 << "EVENT1 END" << endl;
+    kDebug(5800) << "EVENT1 START:" << eventString1 << "EVENT1 END" << endl;
 
   Incidence *event2 = event1->clone();
 
   QString eventString2 = f.toString( event2 );
   if( verbose )
-    kdDebug(5800) << "EVENT2 START:" << eventString2 << "EVENT2 END" << endl;
+    kDebug(5800) << "EVENT2 START:" << eventString2 << "EVENT2 END" << endl;
 
   if ( eventString1 != eventString2 ) {
-    kdDebug(5800) << "Clone Event FAILED." << endl;
+    kDebug(5800) << "Clone Event FAILED." << endl;
   } else {
-    kdDebug(5800) << "Clone Event SUCCEEDED." << endl;
+    kDebug(5800) << "Clone Event SUCCEEDED." << endl;
   }
 
   Todo *todo1 = new Todo;
   todo1->setSummary("Test todo");
   QString todoString1 = f.toString( todo1 );
   if( verbose )
-    kdDebug(5800) << "todo1 START:" << todoString1 << "todo1 END" << endl;
+    kDebug(5800) << "todo1 START:" << todoString1 << "todo1 END" << endl;
     
   Incidence *todo2 = todo1->clone();
   QString todoString2 = f.toString( todo2 );
   if( verbose )
-    kdDebug(5800) << "todo2 START:" << todoString2 << "todo2 END" << endl;
+    kDebug(5800) << "todo2 START:" << todoString2 << "todo2 END" << endl;
 
   if ( todoString1 != todoString2 ) {
-    kdDebug(5800) << "Clone Todo FAILED." << endl;
+    kDebug(5800) << "Clone Todo FAILED." << endl;
   } else {
-    kdDebug(5800) << "Clone Todo SUCCEEDED." << endl;
+    kDebug(5800) << "Clone Todo SUCCEEDED." << endl;
   }
 }

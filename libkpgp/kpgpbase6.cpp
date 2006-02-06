@@ -69,7 +69,7 @@ Base6::decrypt( Block& block, const char *passphrase )
   // encrypted message
   if( error.find("File is encrypted.") != -1)
   {
-    //kdDebug(5100) << "kpgpbase: message is encrypted" << endl;
+    //kDebug(5100) << "kpgpbase: message is encrypted" << endl;
     status |= ENCRYPTED;
     if((index = error.find("Key for user ID")) != -1)
     {
@@ -77,7 +77,7 @@ Base6::decrypt( Block& block, const char *passphrase )
       index  = error.find(':', index) + 2;
       index2 = error.find('\n', index);
       block.setRequiredUserId( error.mid(index, index2 - index) );
-      //kdDebug(5100) << "Base: key needed is \"" << block.requiredUserId() << "\"!\n";
+      //kDebug(5100) << "Base: key needed is \"" << block.requiredUserId() << "\"!\n";
 
       // Test output length to find out, if the passphrase is
       // bad. If someone knows a better way, please fix this.
@@ -86,7 +86,7 @@ Base6::decrypt( Block& block, const char *passphrase )
       if (!passphrase || !output.length())
       {
 	errMsg = i18n("Bad passphrase; could not decrypt.");
-	//kdDebug(5100) << "Base: passphrase is bad" << endl;
+	//kDebug(5100) << "Base: passphrase is bad" << endl;
         status |= BADPHRASE;
         status |= ERROR;
       }
@@ -94,7 +94,7 @@ Base6::decrypt( Block& block, const char *passphrase )
     else if( error.find("You do not have the secret key needed to decrypt this file.") != -1)
     {
       errMsg = i18n("You do not have the secret key for this message.");
-      //kdDebug(5100) << "Base: no secret key for this message" << endl;
+      //kDebug(5100) << "Base: no secret key for this message" << endl;
       status |= NO_SEC_KEY;
       status |= ERROR;
     }
@@ -127,7 +127,7 @@ Base6::decrypt( Block& block, const char *passphrase )
   if(((index = error.find("File is signed.")) != -1)
     || (error.find("Good signature") != -1 ))
   {
-    //kdDebug(5100) << "Base: message is signed" << endl;
+    //kDebug(5100) << "Base: message is signed" << endl;
     status |= SIGNED;
     // determine the signature date
     if( ( index2 = error.find( "Signature made", index ) ) != -1 )
@@ -135,7 +135,7 @@ Base6::decrypt( Block& block, const char *passphrase )
       index2 += 15;
       int eol = error.find( '\n', index2 );
       block.setSignatureDate( error.mid( index2, eol-index2 ) );
-      kdDebug(5100) << "Message was signed on '" << block.signatureDate() << "'\n";
+      kDebug(5100) << "Message was signed on '" << block.signatureDate() << "'\n";
     }
     else
       block.setSignatureDate( QByteArray() );
@@ -180,7 +180,7 @@ Base6::decrypt( Block& block, const char *passphrase )
       block.setSignatureKeyId( QByteArray() );
     }
   }
-  //kdDebug(5100) << "status = " << status << endl;
+  //kDebug(5100) << "status = " << status << endl;
   block.setStatus( status );
   return status;
 }
@@ -305,7 +305,7 @@ Base6::pubKeys()
 	int index4 = error.find(QRegExp("/\\d{2}/\\d{2} "), index);
 	line = error.mid(index4+7,index2-index4-7);
       }
-      //kdDebug(5100) << "Base: found key for " << (const char *)line << endl;
+      //kDebug(5100) << "Base: found key for " << (const char *)line << endl;
 
       // don't add PGP's comments to the key list
       if (strncmp(line.data(),"*** KEY EXPIRED ***",19) &&
@@ -334,7 +334,7 @@ Base6::pubKeys()
     index2 = error.find(" \"", index);
     line = error.mid(index, index2-index+1).trimmed();
 
-    //kdDebug(5100) << "Base6: found key group for " << line << endl;
+    //kDebug(5100) << "Base6: found key group for " << line << endl;
     publicKeys.append(line);
   }
 
@@ -365,11 +365,11 @@ Base6::isVersion6()
 
   if( error.find("Version 6") != -1)
   {
-    //kdDebug(5100) << "kpgpbase: pgp version 6.x detected" << endl;
+    //kDebug(5100) << "kpgpbase: pgp version 6.x detected" << endl;
     return 1;
   }
 
-  //kdDebug(5100) << "kpgpbase: not pgp version 6.x" << endl;
+  //kDebug(5100) << "kpgpbase: not pgp version 6.x" << endl;
   return 0;
 }
 
@@ -385,7 +385,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
   if( ( strncmp( output.data() + offset, "DSS", 3 ) != 0 ) &&
       ( strncmp( output.data() + offset, "RSA", 3 ) != 0 ) )
   {
-    kdDebug(5100) << "Unknown key type or corrupt key data.\n";
+    kDebug(5100) << "Unknown key type or corrupt key data.\n";
     return 0;
   }
 
@@ -403,7 +403,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
     if( ( eol = output.find( '\n', offset ) ) == -1 )
       break;
 
-    //kdDebug(5100) << "Parsing: " << output.mid(offset, eol-offset) << endl;
+    //kDebug(5100) << "Parsing: " << output.mid(offset, eol-offset) << endl;
 
     if( firstLine && ( !strncmp( output.data() + offset, "DSS", 3 ) ||
                        !strncmp( output.data() + offset, "RSA", 3 ) ) )
@@ -424,7 +424,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       // DSS  1024      0x80E104A7 2000/06/05 expires 2002/05/31
       // DSS  1024      0x80E104A7 2001/06/27 *** KEY REVOKED ***expires 2002/06/27
       //  DH  1024      0x80E104A7 2000/06/05 *** KEY REVOKED ****** KEY EXPIRED ***
-      //kdDebug(5100)<<"Primary key data:\n";
+      //kDebug(5100)<<"Primary key data:\n";
       bool sign = false;
       bool encr = false;
 
@@ -459,7 +459,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         key->setDisabled( true );
         break;
       default:
-        kdDebug(5100) << "Unknown key flag.\n";
+        kDebug(5100) << "Unknown key flag.\n";
       }
 
       // Key Length
@@ -468,7 +468,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         pos++;
       pos2 = output.find( ' ', pos );
       subkey->setKeyLength( output.mid( pos, pos2-pos ).toUInt() );
-      //kdDebug(5100) << "Key Length: "<<subkey->keyLength()<<endl;
+      //kDebug(5100) << "Key Length: "<<subkey->keyLength()<<endl;
 
       // Key ID
       pos = pos2 + 1;
@@ -477,7 +477,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       pos += 2; // skip the '0x'
       pos2 = output.find( ' ', pos );
       subkey->setKeyID( output.mid( pos, pos2-pos ) );
-      //kdDebug(5100) << "Key ID: "<<subkey->keyID()<<endl;
+      //kDebug(5100) << "Key ID: "<<subkey->keyID()<<endl;
 
       // Creation Date
       pos = pos2 + 1;
@@ -508,7 +508,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
           subkey->setRevoked( true );
           key->setRevoked( true );
           pos += 19;
-          //kdDebug(5100) << "Key was revoked.\n";
+          //kDebug(5100) << "Key was revoked.\n";
         }
         else if( !strncmp( output.data() + pos, "*** KEY EXPIRED ***", 19 ) )
         {
@@ -517,7 +517,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
           subkey->setExpired( true );
           key->setExpired( true );
           pos += 19;
-          //kdDebug(5100) << "Key has expired.\n";
+          //kDebug(5100) << "Key has expired.\n";
         }
         else if( !strncmp( output.data() + pos, "expires ", 8 ) )
         {
@@ -529,19 +529,19 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
           // Here the same comments as for the creation date are valid.
           subkey->setExpirationDate( epoch.secsTo( dt ) );
           pos += 10;
-          //kdDebug(5100) << "Key expires...\n";
+          //kDebug(5100) << "Key expires...\n";
         }
         else if( !strncmp( output.data() + pos, "*** DEFAULT SIGNING KEY ***", 27 ) )
         {
           pos += 27;
-          //kdDebug(5100) << "Key is default signing key.\n";
+          //kDebug(5100) << "Key is default signing key.\n";
         }
         else
         {
           QByteArray uid = output.mid( pos, eol-pos );
           key->addUserID( uid );
           pos = eol;
-          //kdDebug(5100) << "User ID:"<<uid<<endl;
+          //kDebug(5100) << "User ID:"<<uid<<endl;
         }
       }
       // set key capabilities of the primary subkey
@@ -558,7 +558,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
     { // line contains secondary key data (or data for the next key)
       if( fpr )
         break; // here begins the next key's data
-      //kdDebug(5100)<<"Secondary key data:\n";
+      //kDebug(5100)<<"Secondary key data:\n";
 
       if( key == 0 )
         break;
@@ -608,31 +608,31 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
           sign = false;
           encr = false;
           pos += 19;
-          //kdDebug(5100) << "Key was revoked.\n";
+          //kDebug(5100) << "Key was revoked.\n";
         }
         else if( !strncmp( output.data() + pos, "*** KEY EXPIRED ***", 19 ) )
         {
           sign = false;
           encr = false;
           pos += 19;
-          //kdDebug(5100) << "Key has expired.\n";
+          //kDebug(5100) << "Key has expired.\n";
         }
         else if( !strncmp( output.data() + pos, "expires ", 8 ) )
         {
           pos += 18; // skip the expiration date
-          //kdDebug(5100) << "Key expires...\n";
+          //kDebug(5100) << "Key expires...\n";
         }
         else if( !strncmp( output.data() + pos, "*** DEFAULT SIGNING KEY ***", 27 ) )
         {
           pos += 27;
-          //kdDebug(5100) << "Key is default signing key.\n";
+          //kDebug(5100) << "Key is default signing key.\n";
         }
         else
         {
           QByteArray uid = output.mid( pos, eol-pos );
           key->addUserID( uid );
           pos = eol;
-          //kdDebug(5100) << "User ID:"<<uid<<endl;
+          //kDebug(5100) << "User ID:"<<uid<<endl;
         }
       }
       // store the global key capabilities
@@ -641,13 +641,13 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
     }
     else if( !strncmp( output.data() + offset, "Unknown type", 12 ) )
     { // line contains key data of unknown type (ignored)
-      kdDebug(5100)<<"Unknown key type.\n";
+      kDebug(5100)<<"Unknown key type.\n";
     }
     else if( output[offset] == ' ' )
     { // line contains additional key data
       if( key == 0 )
         break;
-      //kdDebug(5100)<<"Additional key data:\n";
+      //kDebug(5100)<<"Additional key data:\n";
 
       int pos = offset + 1;
       while( output[pos] == ' ' )
@@ -666,7 +666,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
 	for ( int idx = 0 ; (idx = fingerprint.find(' ', idx)) >= 0 ; )
 	  fingerprint.replace( idx, 1, "" );
 
-        //kdDebug(5100)<<"Fingerprint: "<<fingerprint<<endl;
+        //kDebug(5100)<<"Fingerprint: "<<fingerprint<<endl;
         subkey->setFingerprint( fingerprint );
       }
       else
@@ -674,13 +674,13 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         // Example:
         //                               Test key (2nd user ID) <abc@xyz>
 
-        //kdDebug(5100)<<"User ID: "<<output.mid( pos, eol-pos )<<endl;
+        //kDebug(5100)<<"User ID: "<<output.mid( pos, eol-pos )<<endl;
         key->addUserID( output.mid( pos, eol-pos ) );
       }
     }
     else if( !strncmp( output.data() + offset, "sig", 3 ) )
     { // line contains signature data (ignored)
-      //kdDebug(5100)<<"Signature.\n";
+      //kDebug(5100)<<"Signature.\n";
     }
     else // end of key data
       break;
@@ -695,7 +695,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
     key->setCanEncrypt( canEncr );
     key->setCanSign( canSign );
     key->setCanCertify( canSign );
-    //kdDebug(5100)<<"Key capabilities: "<<(canEncr?"E":"")<<(canSign?"SC":"")<<endl;
+    //kDebug(5100)<<"Key capabilities: "<<(canEncr?"E":"")<<(canSign?"SC":"")<<endl;
   }
 
   return key;
@@ -726,7 +726,7 @@ Base6::parseSingleKey( const QByteArray& output, Key* key /* = 0 */ )
 
   key = parseKeyData( output, offset, key );
 
-  //kdDebug(5100) << "finished parsing keys" << endl;
+  //kDebug(5100) << "finished parsing keys" << endl;
 
   return key;
 }
@@ -735,7 +735,7 @@ Base6::parseSingleKey( const QByteArray& output, Key* key /* = 0 */ )
 KeyList
 Base6::parseKeyList( const QByteArray& output, bool secretKeys )
 {
-  kdDebug(5100) << "Kpgp::Base6::parseKeyList()" << endl;
+  kDebug(5100) << "Kpgp::Base6::parseKeyList()" << endl;
   KeyList keys;
   Key *key = 0;
   int offset;
@@ -766,7 +766,7 @@ Base6::parseKeyList( const QByteArray& output, bool secretKeys )
   }
   while( key != 0 );
 
-  //kdDebug(5100) << "finished parsing keys" << endl;
+  //kDebug(5100) << "finished parsing keys" << endl;
 
   return keys;
 }
@@ -826,7 +826,7 @@ Base6::parseTrustDataForKey( Key* key, const QByteArray& str )
       for( UserIDListIterator it( userIDs ); it.current(); ++it )
         if( (*it)->text() == uid )
         {
-          kdDebug(5100)<<"Setting the validity of "<<uid<<" to "<<validity<<endl;
+          kDebug(5100)<<"Setting the validity of "<<uid<<" to "<<validity<<endl;
           (*it)->setValidity( validity );
           break;
         }

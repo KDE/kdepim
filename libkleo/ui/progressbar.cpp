@@ -57,7 +57,7 @@ void Kleo::ProgressBar::slotProgress( const QString &, int, int cur, int tot ) {
 }
 
 void Kleo::ProgressBar::setTotalSteps( int total ) {
-  kdDebug() << "Kleo::ProgressBar::setTotalSteps( " << total << " )" << endl;
+  kDebug() << "Kleo::ProgressBar::setTotalSteps( " << total << " )" << endl;
   if ( total == totalSteps() )
     return;
   Q3ProgressBar::setTotalSteps( 0 );
@@ -65,7 +65,7 @@ void Kleo::ProgressBar::setTotalSteps( int total ) {
 }
 
 void Kleo::ProgressBar::setProgress( int p ) {
-  kdDebug() << "Kleo::ProgressBar::setProgress( " << p << " )" << endl;
+  kDebug() << "Kleo::ProgressBar::setProgress( " << p << " )" << endl;
   mRealProgress = p;
   fixup( true );
 }
@@ -85,23 +85,23 @@ void Kleo::ProgressBar::fixup( bool newValue ) {
   const int cur = Q3ProgressBar::progress();
   const int tot = Q3ProgressBar::totalSteps();
 
-  kdDebug() << "Kleo::ProgressBar::startStopBusyTimer() cur = " << cur << "; tot = " << tot << "; real = " << mRealProgress << endl;
+  kDebug() << "Kleo::ProgressBar::startStopBusyTimer() cur = " << cur << "; tot = " << tot << "; real = " << mRealProgress << endl;
 
   if ( ( newValue && mRealProgress < 0 ) || ( !newValue && cur < 0 ) ) {
-    kdDebug() << "(new value) switch to reset" << endl;
+    kDebug() << "(new value) switch to reset" << endl;
     mBusyTimer->stop();
     if ( newValue )
       Q3ProgressBar::reset();
     mRealProgress = -1;
   } else if ( tot == 0 ) {
-    kdDebug() << "(new value) switch or stay in busy" << endl;
+    kDebug() << "(new value) switch or stay in busy" << endl;
     if ( !mBusyTimer->isActive() ) {
       mBusyTimer->start( busyTimerTickInterval );
       if ( newValue )
 	Q3ProgressBar::setProgress( mRealProgress );
     }
   } else {
-    kdDebug() << "(new value) normal progress" << endl;
+    kDebug() << "(new value) normal progress" << endl;
     mBusyTimer->stop();
     if ( Q3ProgressBar::progress() != mRealProgress )
       Q3ProgressBar::setProgress( mRealProgress );

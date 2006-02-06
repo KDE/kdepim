@@ -58,18 +58,18 @@ int main( int argc, char **argv )
   }
 
   QString input = QFile::decodeName( args->arg( 0 ) );
-  kdDebug(5800) << "Input file: " << input << endl;
+  kDebug(5800) << "Input file: " << input << endl;
 
   QTextStream *outstream;
   outstream = 0;
   QString fn("");
   if ( args->count() > 1 ) {
     fn = args->arg( 1 );
-    kdDebug() << "We have a file name given: " << fn << endl;
+    kDebug() << "We have a file name given: " << fn << endl;
   }
   QFile outfile( fn );
   if ( !fn.isEmpty() && outfile.open( QIODevice::WriteOnly ) ) {
-    kdDebug() << "Opened output file!!!" << endl;
+    kDebug() << "Opened output file!!!" << endl;
     outstream = new QTextStream( &outfile );
   }
 
@@ -85,8 +85,8 @@ int main( int argc, char **argv )
 
   for ( Incidence::List::Iterator it = inc.begin(); it != inc.end(); ++it ) {
     Incidence *incidence = *it;
-    kdDebug(5800) << "*+*+*+*+*+*+*+*+*+*" << endl;
-    kdDebug(5800) << " -> " << incidence->summary() << " <- " << endl;
+    kDebug(5800) << "*+*+*+*+*+*+*+*+*+*" << endl;
+    kDebug(5800) << " -> " << incidence->summary() << " <- " << endl;
 
     incidence->recurrence()->dump();
 
@@ -102,7 +102,7 @@ int main( int argc, char **argv )
       dt = QDate( 2005, 1, 1 );
       while ( dt.year() < 2007 ) {
         if ( incidence->recursOn( dt ) )
-          kdDebug(5800) << dt.toString( Qt::ISODate ) << endl;
+          kDebug(5800) << dt.toString( Qt::ISODate ) << endl;
         dt = dt.addDays( 1 );
       }
     }

@@ -76,7 +76,7 @@ int malconduit_logf(const char *format, ...)
 	else
 	{
 		// write out to stderr
-		kdWarning()<<msg<<endl;
+		kWarning()<<msg<<endl;
 	}
 	return rval;
 }
@@ -208,7 +208,7 @@ bool MALConduit::skip()
 	// Now initiate the sync.
 	PalmSyncInfo* pInfo=syncInfoNew();
 	if (!pInfo) {
-		kdWarning() << k_funcinfo << ": Could not allocate SyncInfo!" << endl;
+		kWarning() << k_funcinfo << ": Could not allocate SyncInfo!" << endl;
 		emit logError(i18n("MAL synchronization failed (no SyncInfo)."));
 		return false;
 	}

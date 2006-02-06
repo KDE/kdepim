@@ -40,7 +40,7 @@ FreeBusy::FreeBusy(const QDateTime &start, const QDateTime &end)
 
 FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime &end )
 {
-  kdDebug(5800) << "FreeBusy::FreeBusy" << endl;
+  kDebug(5800) << "FreeBusy::FreeBusy" << endl;
   mCalendar = calendar;
 
   setDtStart(start);
@@ -66,7 +66,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
     Event *floatingEvent = 0;
     if ( event->doesFloat() ) {
       // Floating event. Do the hack
-      kdDebug(5800) << "Floating event\n";
+      kDebug(5800) << "Floating event\n";
       floatingEvent = new Event( *event );
 
       // Set the start and end times to be on midnight
@@ -76,7 +76,7 @@ FreeBusy::FreeBusy( Calendar *calendar, const QDateTime &start, const QDateTime 
       floatingEvent->setDtStart( start );
       floatingEvent->setDtEnd( end );
 
-      kdDebug(5800) << "Use: " << start.toString() << " to " << end.toString()
+      kDebug(5800) << "Use: " << start.toString() << " to " << end.toString()
                     << endl;
       // Finally, use this event for the setting below
       event = floatingEvent;

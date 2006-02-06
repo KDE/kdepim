@@ -73,10 +73,10 @@ void KIO_Read::canceled( )
 void KIO_Read::slotResult( KIO::Job* job )
 {
 	if( job != _job )
-		kdWarning() << i18n( "Unknown job returned; I will try if this one will do... " ) << endl;
+		kWarning() << i18n( "Unknown job returned; I will try if this one will do... " ) << endl;
 
 	if( job->error() )
-		kdWarning() << i18n( "An error occurred when fetching the requested email: %1." ).arg( job->errorString() ) << endl;
+		kWarning() << i18n( "An error occurred when fetching the requested email: %1." ).arg( job->errorString() ) << endl;
 		
 	_kio->emitReadMailReady( _message );
 	
@@ -87,7 +87,7 @@ void KIO_Read::slotResult( KIO::Job* job )
 void KIO_Read::slotData( KIO::Job* job, const QByteArray & data )
 {
 	if( job != _job )
-		kdWarning() << i18n( "Unknown job returned; I will try if this one will do... " ) << endl;
+		kWarning() << i18n( "Unknown job returned; I will try if this one will do... " ) << endl;
 	
 	if( !data.isEmpty() )
 		_message->append( data );

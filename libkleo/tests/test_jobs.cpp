@@ -56,7 +56,7 @@ static void testSign()
   const Kleo::CryptoBackend::Protocol * proto = protocol == "openpgp" ? Kleo::CryptoBackendFactory::instance()->openpgp() : Kleo::CryptoBackendFactory::instance()->smime() ;
   assert( proto );
 
-  kdDebug() << "Using protocol " << proto->name() << endl;
+  kDebug() << "Using protocol " << proto->name() << endl;
 
 
   std::vector<GpgME::Key> signingKeys;
@@ -75,22 +75,22 @@ static void testSign()
   QCString cText = "Hallo Leute\n"; // like gpgme's t-sign.c
   QByteArray plainText;
   plainText.duplicate( cText.data(), cText.length() ); // hrmpf...
-  kdDebug() << k_funcinfo << "plainText=" << cText.data() << endl;
+  kDebug() << k_funcinfo << "plainText=" << cText.data() << endl;
 
-  kdDebug() << k_funcinfo << " signing with " << signingKeys[0].primaryFingerprint() << endl;
+  kDebug() << k_funcinfo << " signing with " << signingKeys[0].primaryFingerprint() << endl;
 
   QByteArray signature;
   const GpgME::SigningResult res =
     job->exec( signingKeys, plainText, GpgME::Context::Clearsigned, signature );
   if ( res.error().isCanceled() ) {
-    kdDebug() << "signing was canceled by user" << endl;
+    kDebug() << "signing was canceled by user" << endl;
     return;
   }
   if ( res.error() ) {
-    kdDebug() << "signing failed: " << res.error().asString() << endl;
+    kDebug() << "signing failed: " << res.error().asString() << endl;
     return;
   }
-  kdDebug() << k_funcinfo << "signing resulted in signature="
+  kDebug() << k_funcinfo << "signing resulted in signature="
 	    << QCString( signature.data(), signature.size() + 1 ) << endl;
 }
 

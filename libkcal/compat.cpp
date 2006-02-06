@@ -34,7 +34,7 @@ using namespace KCal;
 
 Compat *CompatFactory::createCompat( const QString &productId )
 {
-//  kdDebug(5800) << "CompatFactory::createCompat(): '" << productId << "'"
+//  kDebug(5800) << "CompatFactory::createCompat(): '" << productId << "'"
 //                << endl;
 
   Compat *compat = 0;
@@ -51,7 +51,7 @@ Compat *CompatFactory::createCompat( const QString &productId )
       if ( versionStop >= 0 ) {
         QString version = productId.mid( versionStart + 1,
                                          versionStop - versionStart - 1 );
-//        kdDebug(5800) << "Found KOrganizer version: " << version << endl;
+//        kDebug(5800) << "Found KOrganizer version: " << version << endl;
 
         int versionNum = version.section( ".", 0, 0 ).toInt() * 10000 +
                          version.section( ".", 1, 1 ).toInt() * 100 +
@@ -61,16 +61,16 @@ Compat *CompatFactory::createCompat( const QString &productId )
         if ( releaseStop > versionStop ) {
           release = productId.mid( versionStop+1, releaseStop-versionStop-1 );
         }
-//        kdDebug(5800) << "KOrganizer release: \"" << release << "\"" << endl;
+//        kDebug(5800) << "KOrganizer release: \"" << release << "\"" << endl;
 
-//        kdDebug(5800) << "Numerical version: " << versionNum << endl;
+//        kDebug(5800) << "Numerical version: " << versionNum << endl;
 
         if ( versionNum < 30100 ) {
           compat = new CompatPre31;
         } else if ( versionNum < 30200 ) {
           compat = new CompatPre32;
         } else if ( versionNum == 30200 && release == "pre" ) {
-          kdDebug(5800) << "Generating compat for KOrganizer 3.2 pre " << endl;
+          kDebug(5800) << "Generating compat for KOrganizer 3.2 pre " << endl;
           compat = new Compat32PrereleaseVersions;
         } else if ( versionNum < 30400 ) {
           compat = new CompatPre34;
@@ -80,7 +80,7 @@ Compat *CompatFactory::createCompat( const QString &productId )
       }
     }
   } else if ( outl9 >= 0 ) {
-    kdDebug(5800) << "Generating compat for Outlook < 2000 (Outlook 9.0)" << endl;
+    kDebug(5800) << "Generating compat for Outlook < 2000 (Outlook 9.0)" << endl;
     compat = new CompatOutlook9;
   }
 

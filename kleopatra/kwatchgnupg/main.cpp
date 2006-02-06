@@ -87,7 +87,7 @@ int main( int argc, char** argv )
 
 #if 0
   if (!KWatchGnuPGApplication::start()) {
-	kdError() << "KWatchGnuPG is already running!" << endl;
+	kError() << "KWatchGnuPG is already running!" << endl;
 	return 0;
   }
 #endif

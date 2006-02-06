@@ -773,7 +773,7 @@ TimeList Recurrence::recurTimesOn( const QDate &date ) const
 
 QDateTime Recurrence::getNextDateTime( const QDateTime &preDateTime ) const
 {
-kdDebug(5800) << " Recurrence::getNextDateTime after " << preDateTime << endl;
+kDebug(5800) << " Recurrence::getNextDateTime after " << preDateTime << endl;
   QDateTime nextDT = preDateTime;
   // prevent infinite loops, e.g. when an exrule extinguishes an rrule (e.g.
   // the exrule is identical to the rrule). If an occurrence is found, break
@@ -801,8 +801,8 @@ kdDebug(5800) << " Recurrence::getNextDateTime after " << preDateTime << endl;
     while ( it != mRDateTimes.end() && (*it) <= nextDT ) ++it;
     if ( it != mRDateTimes.end() ) dates << (*it);
 
-/*kdDebug(5800) << "    nextDT: " << nextDT << ", startDT: " << startDateTime() << endl;
-kdDebug(5800) << "   getNextDateTime: found " << dates.count() << " RDATES and DTSTART in loop " << loop << endl;*/
+/*kDebug(5800) << "    nextDT: " << nextDT << ", startDT: " << startDateTime() << endl;
+kDebug(5800) << "   getNextDateTime: found " << dates.count() << " RDATES and DTSTART in loop " << loop << endl;*/
     DateList::ConstIterator dit = mRDates.begin();
     while ( dit != mRDates.end() && QDateTime( (*dit), startDateTime().time() ) <= nextDT ) ++dit;
     if ( dit != mRDates.end() ) dates << QDateTime( (*dit), startDateTime().time() );
@@ -815,19 +815,19 @@ kdDebug(5800) << "   getNextDateTime: found " << dates.count() << " RDATES and D
 
     // Take the first of these (all others can't be used later on)
     qSortUnique( dates );
-// kdDebug(5800) << "   getNextDateTime: found " << dates.count() << " dates in loop " << loop << endl;
+// kDebug(5800) << "   getNextDateTime: found " << dates.count() << " dates in loop " << loop << endl;
 
     if ( dates.isEmpty() ) return QDateTime();
     nextDT = dates.first();
 
     // Check if that date/time is excluded explicitly or by an exrule:
     if ( !mExDates.contains( nextDT.date() ) && !mExDateTimes.contains( nextDT ) ) {
-// kdDebug(5800) << "   NextDT" << nextDT << " not excluded by EXDATE " << endl;
+// kDebug(5800) << "   NextDT" << nextDT << " not excluded by EXDATE " << endl;
       bool allowed = true;
       for ( RecurrenceRule::List::ConstIterator rr = mExRules.begin(); rr != mExRules.end(); ++rr ) {
         allowed = allowed && !( (*rr)->recursAt( nextDT ) );
       }
-// kdDebug(5800) << "   NextDT " << nextDT << ", allowed=" << allowed << endl;
+// kDebug(5800) << "   NextDT " << nextDT << ", allowed=" << allowed << endl;
       if ( allowed ) return nextDT;
     }
   }
@@ -880,7 +880,7 @@ QDateTime Recurrence::getPreviousDateTime( const QDateTime &afterDateTime ) cons
       QDateTime dt = (*rr)->getPreviousDate( prevDT );
       if ( dt.isValid() ) dates << dt;
     }
-kdDebug(5800) << "   getPreviousDateTime: found " << dates.count() << " dates in loop " << loop << endl;
+kDebug(5800) << "   getPreviousDateTime: found " << dates.count() << " dates in loop " << loop << endl;
 
     // Take the last of these (all others can't be used later on)
     qSortUnique( dates );
@@ -1046,34 +1046,34 @@ void Recurrence::recurrenceChanged( RecurrenceRule * )
 
 void Recurrence::dump() const
 {
-  kdDebug(5800) << "Recurrence::dump():" << endl;
+  kDebug(5800) << "Recurrence::dump():" << endl;
 
-  kdDebug(5800) << "  -) " << mRRules.count() << " RRULEs: " << endl;
+  kDebug(5800) << "  -) " << mRRules.count() << " RRULEs: " << endl;
   for ( RecurrenceRule::List::ConstIterator rr = mRRules.begin(); rr != mRRules.end(); ++rr ) {
-    kdDebug(5800) << "    -) RecurrenceRule : " << endl;
+    kDebug(5800) << "    -) RecurrenceRule : " << endl;
     (*rr)->dump();
   }
-  kdDebug(5800) << "  -) " << mExRules.count() << " EXRULEs: " << endl;
+  kDebug(5800) << "  -) " << mExRules.count() << " EXRULEs: " << endl;
   for ( RecurrenceRule::List::ConstIterator rr = mExRules.begin(); rr != mExRules.end(); ++rr ) {
-    kdDebug(5800) << "    -) ExceptionRule : " << endl;
+    kDebug(5800) << "    -) ExceptionRule : " << endl;
     (*rr)->dump();
   }
 
 
-  kdDebug(5800) << endl << "  -) " << mRDates.count() << " Recurrence Dates: " << endl;
+  kDebug(5800) << endl << "  -) " << mRDates.count() << " Recurrence Dates: " << endl;
   for ( DateList::ConstIterator it = mRDates.begin(); it != mRDates.end(); ++it ) {
-    kdDebug(5800) << "     " << (*it) << endl;
+    kDebug(5800) << "     " << (*it) << endl;
   }
-  kdDebug(5800) << endl << "  -) " << mRDateTimes.count() << " Recurrence Date/Times: " << endl;
+  kDebug(5800) << endl << "  -) " << mRDateTimes.count() << " Recurrence Date/Times: " << endl;
   for ( DateTimeList::ConstIterator it = mRDateTimes.begin(); it != mRDateTimes.end(); ++it ) {
-    kdDebug(5800) << "     " << (*it) << endl;
+    kDebug(5800) << "     " << (*it) << endl;
   }
-  kdDebug(5800) << endl << "  -) " << mExDates.count() << " Exceptions Dates: " << endl;
+  kDebug(5800) << endl << "  -) " << mExDates.count() << " Exceptions Dates: " << endl;
   for ( DateList::ConstIterator it = mExDates.begin(); it != mExDates.end(); ++it ) {
-    kdDebug(5800) << "     " << (*it) << endl;
+    kDebug(5800) << "     " << (*it) << endl;
   }
-  kdDebug(5800) << endl << "  -) " << mExDateTimes.count() << " Exception Date/Times: " << endl;
+  kDebug(5800) << endl << "  -) " << mExDateTimes.count() << " Exception Date/Times: " << endl;
   for ( DateTimeList::ConstIterator it = mExDateTimes.begin(); it != mExDateTimes.end(); ++it ) {
-    kdDebug(5800) << "     " << (*it) << endl;
+    kDebug(5800) << "     " << (*it) << endl;
   }
 }

@@ -136,7 +136,7 @@ VCalConduitSettings* ToDoConduitFactory::config()
 		}
 		else
 		{
-			kdError() << k_funcinfo
+			kError() << k_funcinfo
 				<< ": Couldn't cast to KPilotDeviceLink."
 				<< endl;
 		}

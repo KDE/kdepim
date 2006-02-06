@@ -71,7 +71,7 @@ bool KonsoleKalendar::importCalendar()
 {
   KonsoleKalendarAdd add( m_variables );
 
-  kdDebug() << "konsolecalendar.cpp::importCalendar() | importing now!"
+  kDebug() << "konsolecalendar.cpp::importCalendar() | importing now!"
             << endl;
   return( add.addImportedCalendar() );
 }
@@ -86,7 +86,7 @@ bool KonsoleKalendar::createCalendar()
       arg( m_variables->getCalendarFile() ).local8Bit().data()
          << endl;
   } else {
-    kdDebug() << "konsolekalendar.cpp::createCalendar() | "
+    kDebug() << "konsolekalendar.cpp::createCalendar() | "
               << "Creating calendar file: "
               << m_variables->getCalendarFile().local8Bit().data()
               << endl;
@@ -118,7 +118,7 @@ bool KonsoleKalendar::showInstance()
     printSpecs();
   } else {
 
-    kdDebug() << "konsolekalendar.cpp::showInstance() | "
+    kDebug() << "konsolekalendar.cpp::showInstance() | "
               << "open export file"
               << endl;
 
@@ -126,7 +126,7 @@ bool KonsoleKalendar::showInstance()
       f.setName( m_variables->getExportFile() );
       if ( !f.open( QIODevice::WriteOnly ) ) {
 	status = false;
-	kdDebug() << "konsolekalendar.cpp::showInstance() | "
+	kDebug() << "konsolekalendar.cpp::showInstance() | "
                   << "unable to open export file "
                   << m_variables->getExportFile()
                   << endl;
@@ -136,7 +136,7 @@ bool KonsoleKalendar::showInstance()
     }
 
     if ( status ) {
-      kdDebug() << "konsolekalendar.cpp::showInstance() | "
+      kDebug() << "konsolekalendar.cpp::showInstance() | "
                 << "opened successful"
                 << endl;
 
@@ -152,7 +152,7 @@ bool KonsoleKalendar::showInstance()
            m_variables->getExportType() != ExportTypeMonthHTML ) {
 
 	if ( m_variables->getAll() ) {
-	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
+	  kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "view all events sorted list"
                     << endl;
 
@@ -175,7 +175,7 @@ bool KonsoleKalendar::showInstance()
           }
 
 	} else if ( m_variables->isUID() ) {
-	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
+	  kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "view events by uid list"
                     << endl;
 	  //TODO: support a list of UIDs
@@ -185,7 +185,7 @@ bool KonsoleKalendar::showInstance()
 	  status = printEvent ( &ts, event, event->dtStart().date() );
 
         } else if ( m_variables->isNext() ) {
-          kdDebug() << "konsolekalendar.cpp::showInstance() | "
+          kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "Show next activity in calendar"
                     << endl;
 
@@ -204,14 +204,14 @@ bool KonsoleKalendar::showInstance()
 
 	    // when we get next event we exit..
 	    if ( events.count() ) {
-	      kdDebug() << "konsolekalendar.cpp::showInstance() | "
+	      kDebug() << "konsolekalendar.cpp::showInstance() | "
                         << "Next event"
                         << endl;
 	      return true;
 	    }
           }
 	} else {
-	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
+	  kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "view raw events within date range list"
                     << endl;
 
@@ -229,7 +229,7 @@ bool KonsoleKalendar::showInstance()
       } else {
 	QDate firstdate, lastdate;
 	if ( m_variables->getAll() ) {
-	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
+	  kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "HTML view all events sorted list"
                     << endl;
           // sort the events for this date by start date
@@ -242,13 +242,13 @@ bool KonsoleKalendar::showInstance()
           lastdate = events->last()->dtStart().date();
 	} else if ( m_variables->isUID() ) {
 	  // TODO
-	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
+	  kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "HTML view events by uid list" << endl;
 	  cout << i18n("Sorry, export to HTML by UID is not supported yet")
             .local8Bit().data() << endl;
 	  return( false );
 	} else {
-	  kdDebug() << "konsolekalendar.cpp::showInstance() | "
+	  kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "HTML view raw events within date range list"
                     << endl;
 	  firstdate = m_variables->getStartDateTime().date();
@@ -338,14 +338,14 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
     switch ( m_variables->getExportType() ) {
 
     case ExportTypeCSV:
-      kdDebug() << "konsolekalendar.cpp::printEvent() | "
+      kDebug() << "konsolekalendar.cpp::printEvent() | "
                 << "CSV export"
                 << endl;
       status = exports.exportAsCSV( ts, event, dt );
       break;
 
     case ExportTypeTextShort:
-      kdDebug()
+      kDebug()
         << "konsolekalendar.cpp::printEvent() | "
         << "TEXT-SHORT export"
         << endl;
@@ -361,7 +361,7 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
       break;
 
     default:// Default export-type is ExportTypeText
-      kdDebug() << "konsolekalendar.cpp::printEvent() | "
+      kDebug() << "konsolekalendar.cpp::printEvent() | "
                 << "TEXT export"
                 << endl;
       status = exports.exportAsTxt( ts, event, dt );
@@ -373,11 +373,11 @@ bool KonsoleKalendar::printEvent( QTextStream *ts, Event *event, QDate dt )
 
 bool KonsoleKalendar::addEvent()
 {
-  kdDebug() << "konsolecalendar.cpp::addEvent() | "
+  kDebug() << "konsolecalendar.cpp::addEvent() | "
             << "Create Adding"
             << endl;
   KonsoleKalendarAdd add( m_variables );
-  kdDebug() << "konsolecalendar.cpp::addEvent() | "
+  kDebug() << "konsolecalendar.cpp::addEvent() | "
             << "Adding Event now!"
             << endl;
   return( add.addEvent() );
@@ -386,11 +386,11 @@ bool KonsoleKalendar::addEvent()
 bool KonsoleKalendar::changeEvent()
 {
 
-  kdDebug() << "konsolecalendar.cpp::changeEvent() | "
+  kDebug() << "konsolecalendar.cpp::changeEvent() | "
             << "Create Changing"
             << endl;
   KonsoleKalendarChange change( m_variables );
-  kdDebug() << "konsolecalendar.cpp::changeEvent() | "
+  kDebug() << "konsolecalendar.cpp::changeEvent() | "
             << "Changing Event now!"
             << endl;
   return( change.changeEvent() );
@@ -398,11 +398,11 @@ bool KonsoleKalendar::changeEvent()
 
 bool KonsoleKalendar::deleteEvent()
 {
-  kdDebug() << "konsolecalendar.cpp::deleteEvent() | "
+  kDebug() << "konsolecalendar.cpp::deleteEvent() | "
             << "Create Deleting"
             << endl;
   KonsoleKalendarDelete del( m_variables );
-  kdDebug() << "konsolecalendar.cpp::deleteEvent() | "
+  kDebug() << "konsolecalendar.cpp::deleteEvent() | "
             << "Deleting Event now!"
             << endl;
   return( del.deleteEvent() );

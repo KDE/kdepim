@@ -67,7 +67,7 @@ Kleo::Job::~Job() {
 }
 
 void Kleo::Job::showErrorDialog( QWidget *, const QString & ) const {
-  kdDebug() << "Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!" << endl;
+  kDebug() << "Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!" << endl;
 }
 
 

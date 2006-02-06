@@ -94,7 +94,7 @@ GroupwarePrefsBase *ResourceGroupware::prefs()
 
 void ResourceGroupware::readConfig( const KConfig *config )
 {
-  kdDebug() << "KCal::ResourceGroupware::readConfig()" << endl;
+  kDebug() << "KCal::ResourceGroupware::readConfig()" << endl;
 
   mPrefs->readConfig();
 
@@ -103,7 +103,7 @@ void ResourceGroupware::readConfig( const KConfig *config )
 
 void ResourceGroupware::writeConfig( KConfig *config )
 {
-  kdDebug() << "KCal::ResourceGroupware::writeConfig()" << endl;
+  kDebug() << "KCal::ResourceGroupware::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
 
@@ -124,15 +124,15 @@ void ResourceGroupware::doClose()
 
 bool ResourceGroupware::doLoad()
 {
-  kdDebug() << "ResourceGroupware::load()" << endl;
+  kDebug() << "ResourceGroupware::load()" << endl;
 
   if ( mIsShowingError ) {
-    kdDebug() << "Still showing error" << endl;
+    kDebug() << "Still showing error" << endl;
     return true;
   }
 
   if ( mDownloadJob ) {
-    kdWarning() << "Download still in progress" << endl;
+    kWarning() << "Download still in progress" << endl;
     return false;
   }
 
@@ -150,7 +150,7 @@ bool ResourceGroupware::doLoad()
   url.setUser( prefs()->user() );
   url.setPass( prefs()->password() );
 
-  kdDebug() << "Download URL: " << url << endl;
+  kDebug() << "Download URL: " << url << endl;
 
   mJobData.clear();
 
@@ -171,7 +171,7 @@ bool ResourceGroupware::doLoad()
 
 void ResourceGroupware::slotJobResult( KIO::Job *job )
 {
-  kdDebug() << "ResourceGroupware::slotJobResult(): " << endl;
+  kDebug() << "ResourceGroupware::slotJobResult(): " << endl;
 
   if ( job->error() ) {
     mIsShowingError = true;
@@ -191,7 +191,7 @@ void ResourceGroupware::slotJobResult( KIO::Job *job )
       Incidence::List incidences = calendar.incidences();
       Incidence::List::ConstIterator it;
       for( it = incidences.begin(); it != incidences.end(); ++it ) {
-//        kdDebug() << "INCIDENCE: " << (*it)->summary() << endl;
+//        kDebug() << "INCIDENCE: " << (*it)->summary() << endl;
         Incidence *i = (*it)->clone();
         QString remote = (*it)->customProperty( "GWRESOURCE", "UID" );
         QString local = idMapper().localId( remote );
@@ -219,7 +219,7 @@ void ResourceGroupware::slotJobResult( KIO::Job *job )
 
 void ResourceGroupware::slotJobData( KIO::Job *, const QByteArray &data )
 {
-//  kdDebug() << "ResourceGroupware::slotJobData()" << endl;
+//  kDebug() << "ResourceGroupware::slotJobData()" << endl;
 
   mJobData.append( data.data() );
 }
@@ -235,12 +235,12 @@ void ResourceGroupware::loadFinished()
 
 bool ResourceGroupware::doSave()
 {
-  kdDebug() << "KCal::ResourceGroupware::doSave()" << endl;
+  kDebug() << "KCal::ResourceGroupware::doSave()" << endl;
 
   saveCache();
 
   if ( !hasChanges() ) {
-    kdDebug() << "No changes" << endl;
+    kDebug() << "No changes" << endl;
     return true;
   }
   

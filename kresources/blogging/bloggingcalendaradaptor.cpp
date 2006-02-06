@@ -64,20 +64,20 @@ BloggingUploadItem::~BloggingUploadItem()
 
 KIO::TransferJob *BloggingUploadItem::createUploadJob( KPIM::GroupwareDataAdaptor *adaptor, const KUrl &baseurl )
 {
-kdDebug()<<"BloggingUploadItem::createUploadJob, adaptor="<<adaptor<<", URL="<<baseurl.url()<<endl;
+kDebug()<<"BloggingUploadItem::createUploadJob, adaptor="<<adaptor<<", URL="<<baseurl.url()<<endl;
   Q_ASSERT( adaptor );
   if ( !adaptor || !mAPI ) return 0;
-  kdDebug() << "Uploading to: " << url().prettyURL() << endl;
+  kDebug() << "Uploading to: " << url().prettyURL() << endl;
   mAPI->setURL( baseurl );
   return mAPI->createUploadJob( url(), mPosting );
 }
 
 KIO::TransferJob *BloggingUploadItem::createUploadNewJob( KPIM::GroupwareDataAdaptor *adaptor, const KUrl &baseurl )
 {
-kdDebug()<<"BloggingUploadItem::createUploadNewJob"<<endl;
+kDebug()<<"BloggingUploadItem::createUploadNewJob"<<endl;
   Q_ASSERT( adaptor );
   if ( !adaptor || !mAPI ) return 0;
-  kdDebug() << "Uploading new item to: " << baseurl.prettyURL() << endl;
+  kDebug() << "Uploading new item to: " << baseurl.prettyURL() << endl;
   mAPI->setURL( baseurl );
   return mAPI->createUploadNewJob( mPosting );
 }
@@ -133,7 +133,7 @@ void BloggingCalendarAdaptor::slotFolderInfoRetrieved( const QString &id, const 
 void BloggingCalendarAdaptor::slotUserInfoRetrieved( const QString &/*nick*/,
        const QString &/*user*/, const QString &/*email*/ )
 {
-kdDebug() << "BloggingCalendarAdaptor::slotUserInfoRetrieved"<<endl;
+kDebug() << "BloggingCalendarAdaptor::slotUserInfoRetrieved"<<endl;
   mAuthenticated = true;
 }
 
@@ -162,7 +162,7 @@ void BloggingCalendarAdaptor::setPassword( const QString &password )
 
 void BloggingCalendarAdaptor::setUserPassword( KUrl & )
 {
-  kdDebug(5800) << "BloggingCalendarAdaptor::setUserPassword" << endl;
+  kDebug(5800) << "BloggingCalendarAdaptor::setUserPassword" << endl;
 }
 
 
@@ -204,7 +204,7 @@ KIO::TransferJob *BloggingCalendarAdaptor::createDownloadJob( const KUrl &url,
 KIO::Job *BloggingCalendarAdaptor::createRemoveJob( const KUrl &url,
                          KPIM::GroupwareUploadItem *deleteItem )
 {
-kdDebug()<<"BloggingCalendarAdaptor::createRemoveJob( " << url.url() << ", ..)" << endl;
+kDebug()<<"BloggingCalendarAdaptor::createRemoveJob( " << url.url() << ", ..)" << endl;
   if ( mAPI && deleteItem ) {
     return mAPI->createRemoveJob( url, deleteItem->url().url() );
   } else return 0;
@@ -215,12 +215,12 @@ kdDebug()<<"BloggingCalendarAdaptor::createRemoveJob( " << url.url() << ", ..)" 
 
 bool BloggingCalendarAdaptor::interpretLoginJob( KIO::Job *job )
 {
-kdDebug()<<"BloggingCalendarAdaptor::interpretLoginJob"<<endl;
+kDebug()<<"BloggingCalendarAdaptor::interpretLoginJob"<<endl;
   if ( mAPI && job ) {
-kdDebug()<<"We have an API and a job"<<endl;
+kDebug()<<"We have an API and a job"<<endl;
     mAuthenticated = false;
     mAPI->interpretUserInfoJob( job );
-kdDebug() << "authenticated=" << mAuthenticated << endl;
+kDebug() << "authenticated=" << mAuthenticated << endl;
     return mAuthenticated;
   } else return false;
 }
@@ -228,7 +228,7 @@ kdDebug() << "authenticated=" << mAuthenticated << endl;
 
 void BloggingCalendarAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister * )
 {
-kdDebug() << "BloggingCalendarAdaptor::interpretListFoldersJob" << endl;
+kDebug() << "BloggingCalendarAdaptor::interpretListFoldersJob" << endl;
   if ( mAPI && job ) {
     mAPI->interpretListFoldersJob( job );
   }

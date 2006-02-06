@@ -290,12 +290,12 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
       addToChecksum( i, checksum );
       // from reader: d->message_->addProperty( 0x0E07, MAPI_TYPE_ULONG, flag );
     }
-    kdDebug() << "Message Status" << " (length=" << i2 << ")" << endl;
+    kDebug() << "Message Status" << " (length=" << i2 << ")" << endl;
     break;
 */
 
   default:
-    kdDebug() << "Unknown TNEF tag: " << tag << endl;
+    kDebug() << "Unknown TNEF tag: " << tag << endl;
     return false;
   }
 

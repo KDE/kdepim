@@ -67,7 +67,7 @@ void ProcessDrop::recheck()
 	{
 		_valid = _process->start( KProcess::NotifyOnExit, KProcess::Stdout );
 		if( !_valid )
-			kdWarning() << i18n( "Could not start process %1" ).arg( *_program ) << endl; 
+			kWarning() << i18n( "Could not start process %1" ).arg( *_program ) << endl; 
 	}
 
 }
@@ -112,7 +112,7 @@ void ProcessDrop::slotDataReceived( KProcess *proc, char* data, int length )
 	//Test if the message comes from the right process
 	if( proc != _process ) 
 	{
-		kdDebug() << "Got wrong process in slotDataReceived()" << endl;
+		kDebug() << "Got wrong process in slotDataReceived()" << endl;
 		return;
 	}
 

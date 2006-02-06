@@ -162,7 +162,7 @@ KPIM::GroupwarePrefsBase *ResourceGroupwareBase::prefs()
 
 void ResourceGroupwareBase::readConfig( const KConfig *config )
 {
-  kdDebug(5800) << "KCal::ResourceGroupwareBase::readConfig()" << endl;
+  kDebug(5800) << "KCal::ResourceGroupwareBase::readConfig()" << endl;
   ResourceCached::readConfig( config );
   if ( mPrefs ) {
     mPrefs->readConfig();
@@ -173,7 +173,7 @@ void ResourceGroupwareBase::readConfig( const KConfig *config )
 
 void ResourceGroupwareBase::writeConfig( KConfig *config )
 {
-  kdDebug(5800) << "KCal::ResourceGroupwareBase::writeConfig()" << endl;
+  kDebug(5800) << "KCal::ResourceGroupwareBase::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
   ResourceCached::writeConfig( config );
@@ -254,15 +254,15 @@ void ResourceGroupwareBase::slotLogoffJobResult( KIO::Job *job )
 
 bool ResourceGroupwareBase::doLoad()
 {
-  kdDebug(5800) << "ResourceGroupwareBase::load()" << endl;
+  kDebug(5800) << "ResourceGroupwareBase::load()" << endl;
 
   if ( mIsShowingError ) {
-    kdDebug(5800) << "Still showing error" << endl;
+    kDebug(5800) << "Still showing error" << endl;
     return true;
   }
 
   if ( mDownloadJob ) {
-    kdWarning() << "Download still in progress" << endl;
+    kWarning() << "Download still in progress" << endl;
     return false;
   }
   
@@ -282,14 +282,14 @@ bool ResourceGroupwareBase::doLoad()
 
 void ResourceGroupwareBase::slotDownloadJobResult( KPIM::GroupwareJob *job )
 {
-  kdDebug(5800) << "ResourceGroupwareBase::slotJobResult(): " << endl;
+  kDebug(5800) << "ResourceGroupwareBase::slotJobResult(): " << endl;
 
   if ( job->error() ) {
     mIsShowingError = true;
     loadError( job->errorString() );
     mIsShowingError = false;
   } else {
-    kdDebug(5800) << "Successfully downloaded data" << endl;
+    kDebug(5800) << "Successfully downloaded data" << endl;
   
     clearChanges();
     saveCache();
@@ -304,12 +304,12 @@ void ResourceGroupwareBase::slotDownloadJobResult( KPIM::GroupwareJob *job )
 
 bool ResourceGroupwareBase::doSave()
 {
-  kdDebug(5800) << "KCal::ResourceGroupwareBase::doSave()" << endl;
+  kDebug(5800) << "KCal::ResourceGroupwareBase::doSave()" << endl;
 
   saveCache();
 
   if ( !hasChanges() ) {
-    kdDebug(5800) << "No changes" << endl;
+    kDebug(5800) << "No changes" << endl;
     return true;
   }
   // TODO: Implement confirming of single changes i.e. it should be possible
@@ -358,14 +358,14 @@ bool ResourceGroupwareBase::doSave()
 
 void ResourceGroupwareBase::slotUploadJobResult( KPIM::GroupwareJob *job )
 {
-  kdDebug(5800) << "ResourceGroupwareBase::slotUploadJobResult(): " << endl;
+  kDebug(5800) << "ResourceGroupwareBase::slotUploadJobResult(): " << endl;
 
   if ( job->error() ) {
     mIsShowingError = true;
     loadError( job->errorString() );
     mIsShowingError = false;
   } else {
-    kdDebug(5800) << "Successfully uploaded data" << endl;
+    kDebug(5800) << "Successfully uploaded data" << endl;
     /* 
      * After the put the server might have expanded recurring events and will
      * also change the uids of the uploaded events. Remove them from the cache
@@ -377,7 +377,7 @@ void ResourceGroupwareBase::slotUploadJobResult( KPIM::GroupwareJob *job )
       connect( mDownloadJob, SIGNAL( result( KPIM::GroupwareJob * ) ),
           SLOT( slotDownloadJobResult( KPIM::GroupwareJob * ) ) );
     } else {
-      kdWarning() << k_funcinfo << "Download still in progress. "
+      kWarning() << k_funcinfo << "Download still in progress. "
                                    "Can't happen. (TM)" << endl;
     }
   }

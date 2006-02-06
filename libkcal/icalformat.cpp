@@ -78,13 +78,13 @@ void ICalFormat::setImplementation( ICalFormatImpl *impl )
 
 bool ICalFormat::load( Calendar *calendar, const QString &fileName)
 {
-  kdDebug(5800) << "ICalFormat::load() " << fileName << endl;
+  kDebug(5800) << "ICalFormat::load() " << fileName << endl;
 
   clearException();
 
   QFile file( fileName );
   if (!file.open( QIODevice::ReadOnly ) ) {
-    kdDebug(5800) << "ICalFormat::load() load error" << endl;
+    kDebug(5800) << "ICalFormat::load() load error" << endl;
     setException(new ErrorFormat(ErrorFormat::LoadError));
     return false;
   }
@@ -102,7 +102,7 @@ bool ICalFormat::load( Calendar *calendar, const QString &fileName)
 
 bool ICalFormat::save( Calendar *calendar, const QString &fileName )
 {
-  kdDebug(5800) << "ICalFormat::save(): " << fileName << endl;
+  kDebug(5800) << "ICalFormat::save(): " << fileName << endl;
 
   clearException();
 
@@ -115,7 +115,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
 
   KSaveFile file( fileName );
   if ( file.status() != 0 ) {
-    kdDebug(5800) << "ICalFormat::save() errno: " << strerror( file.status() )
+    kDebug(5800) << "ICalFormat::save() errno: " << strerror( file.status() )
               << endl;
     setException( new ErrorFormat( ErrorFormat::SaveError,
                   i18n( "Error saving to '%1'." ).arg( fileName ) ) );
@@ -150,9 +150,9 @@ bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &text )
 
   // Let's defend const correctness until the very gates of hell^Wlibical
   calendar = icalcomponent_new_from_string( const_cast<char*>( (const char*)text ) );
-  //  kdDebug(5800) << "Error: " << icalerror_perror() << endl;
+  //  kDebug(5800) << "Error: " << icalerror_perror() << endl;
   if (!calendar) {
-    kdDebug(5800) << "ICalFormat::load() parse error" << endl;
+    kDebug(5800) << "ICalFormat::load() parse error" << endl;
     setException(new ErrorFormat(ErrorFormat::ParseErrorIcal));
     return false;
   }
@@ -165,7 +165,7 @@ bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &text )
           comp != 0; comp = icalcomponent_get_next_component(calendar, ICAL_VCALENDAR_COMPONENT) ) {
       // put all objects into their proper places
       if ( !mImpl->populate( cal, comp ) ) {
-        kdDebug(5800) << "ICalFormat::load(): Could not populate calendar" << endl;
+        kDebug(5800) << "ICalFormat::load(): Could not populate calendar" << endl;
         if ( !exception() ) {
           setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
         }
@@ -174,13 +174,13 @@ bool ICalFormat::fromRawString( Calendar *cal, const QByteArray &text )
         mLoadedProductId = mImpl->loadedProductId();
     }
   } else if (icalcomponent_isa(calendar) != ICAL_VCALENDAR_COMPONENT) {
-    kdDebug(5800) << "ICalFormat::load(): No VCALENDAR component found" << endl;
+    kDebug(5800) << "ICalFormat::load(): No VCALENDAR component found" << endl;
     setException(new ErrorFormat(ErrorFormat::NoCalendar));
     success = false;
   } else {
     // put all objects into their proper places
     if ( !mImpl->populate( cal, calendar ) ) {
-      kdDebug(5800) << "ICalFormat::load(): Could not populate calendar" << endl;
+      kDebug(5800) << "ICalFormat::load(): Could not populate calendar" << endl;
       if ( !exception() ) {
         setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
       }
@@ -231,7 +231,7 @@ QString ICalFormat::toString( Calendar *cal )
   Todo::List todoList = cal->rawTodos();
   Todo::List::ConstIterator it;
   for( it = todoList.begin(); it != todoList.end(); ++it ) {
-//    kdDebug(5800) << "ICalFormat::toString() write todo "
+//    kDebug(5800) << "ICalFormat::toString() write todo "
 //                  << (*it)->uid() << endl;
     component = mImpl->writeTodo( *it );
     icalcomponent_add_component( calendar, component );
@@ -241,7 +241,7 @@ QString ICalFormat::toString( Calendar *cal )
   Event::List events = cal->rawEvents();
   Event::List::ConstIterator it2;
   for( it2 = events.begin(); it2 != events.end(); ++it2 ) {
-//    kdDebug(5800) << "ICalFormat::toString() write event "
+//    kDebug(5800) << "ICalFormat::toString() write event "
 //                  << (*it2)->uid() << endl;
     component = mImpl->writeEvent( *it2 );
     icalcomponent_add_component( calendar, component );
@@ -251,7 +251,7 @@ QString ICalFormat::toString( Calendar *cal )
   Journal::List journals = cal->journals();
   Journal::List::ConstIterator it3;
   for( it3 = journals.begin(); it3 != journals.end(); ++it3 ) {
-    kdDebug(5800) << "ICalFormat::toString() write journal "
+    kDebug(5800) << "ICalFormat::toString() write journal "
                   << (*it3)->uid() << endl;
     component = mImpl->writeJournal( *it3 );
     icalcomponent_add_component( calendar, component );
@@ -307,7 +307,7 @@ bool ICalFormat::fromString( RecurrenceRule * recurrence, const QString& rrule )
   icalerror_clear_errno();
   struct icalrecurrencetype recur = icalrecurrencetype_from_string( rrule.toLatin1() );
   if ( icalerrno != ICAL_NO_ERROR ) {
-    kdDebug(5800) << "Recurrence parsing error: " << icalerror_strerror( icalerrno ) << endl;
+    kDebug(5800) << "Recurrence parsing error: " << icalerror_strerror( icalerrno ) << endl;
     success = false;
   }
 
@@ -348,7 +348,7 @@ QString ICalFormat::createScheduleMessage(IncidenceBase *incidence,
   QString messageText = QString::fromUtf8( icalcomponent_as_ical_string(message) );
 
 #if 0
-  kdDebug(5800) << "ICalFormat::createScheduleMessage: message START\n"
+  kDebug(5800) << "ICalFormat::createScheduleMessage: message START\n"
             << messageText
             << "ICalFormat::createScheduleMessage: message END" << endl;
 #endif
@@ -381,7 +381,7 @@ FreeBusy *ICalFormat::parseFreeBusy( const QString &str )
   }
 
   if ( !freeBusy )
-    kdDebug(5800) << "ICalFormat:parseFreeBusy: object is not a freebusy."
+    kDebug(5800) << "ICalFormat:parseFreeBusy: object is not a freebusy."
                   << endl;
   return freeBusy;
 }
@@ -448,12 +448,12 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
 
 
   if (!incidence) {
-    kdDebug(5800) << "ICalFormat:parseScheduleMessage: object is not a freebusy, event, todo or journal" << endl;
+    kDebug(5800) << "ICalFormat:parseScheduleMessage: object is not a freebusy, event, todo or journal" << endl;
     setException( new ErrorFormat( ErrorFormat::ParseErrorKcal, QLatin1String( "object is not a freebusy, event, todo or journal" ) ) );
     return 0;
   }
 
-  kdDebug(5800) << "ICalFormat::parseScheduleMessage() getting method..." << endl;
+  kDebug(5800) << "ICalFormat::parseScheduleMessage() getting method..." << endl;
 
   icalproperty_method icalmethod = icalproperty_get_method(m);
   Scheduler::Method method;
@@ -485,15 +485,15 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
       break;
     default:
       method = Scheduler::NoMethod;
-      kdDebug(5800) << "ICalFormat::parseScheduleMessage(): Unknow method" << endl;
+      kDebug(5800) << "ICalFormat::parseScheduleMessage(): Unknow method" << endl;
       break;
   }
 
-  kdDebug(5800) << "ICalFormat::parseScheduleMessage() restriction..." << endl;
+  kDebug(5800) << "ICalFormat::parseScheduleMessage() restriction..." << endl;
   
   if (!icalrestriction_check(message)) {
-    kdWarning(5800) << k_funcinfo << endl << "libkcal reported a problem while parsing:" << endl;
-    kdWarning(5800) << Scheduler::translatedMethodName(method) + ": " + mImpl->extractErrorProperty(c)<< endl;
+    kWarning(5800) << k_funcinfo << endl << "libkcal reported a problem while parsing:" << endl;
+    kWarning(5800) << Scheduler::translatedMethodName(method) + ": " + mImpl->extractErrorProperty(c)<< endl;
     /*
     setException(new ErrorFormat(ErrorFormat::Restriction,
                                    Scheduler::translatedMethodName(method) + ": " +
@@ -523,13 +523,13 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
     calendarComponent = 0;
   }
 
-  kdDebug(5800) << "ICalFormat::parseScheduleMessage() classify..." << endl;
+  kDebug(5800) << "ICalFormat::parseScheduleMessage() classify..." << endl;
 
   icalproperty_xlicclass result = icalclassify( message, calendarComponent,
                                                 (char *)"" );
 
-  kdDebug(5800) << "ICalFormat::parseScheduleMessage() returning..." << endl;
-  kdDebug(5800) << "ICalFormat::parseScheduleMessage(), result = " << result << endl;
+  kDebug(5800) << "ICalFormat::parseScheduleMessage() returning..." << endl;
+  kDebug(5800) << "ICalFormat::parseScheduleMessage(), result = " << result << endl;
 
   ScheduleMessage::Status status;
 
@@ -555,7 +555,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
       break;
   }
 
-  kdDebug(5800) << "ICalFormat::parseScheduleMessage(), status = " << status << endl;
+  kDebug(5800) << "ICalFormat::parseScheduleMessage(), status = " << status << endl;
 // TODO FIXME: Don't we have to free calendarComponent??? MEMLEAK
 
   return new ScheduleMessage(incidence,method,status);

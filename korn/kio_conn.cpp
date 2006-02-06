@@ -63,7 +63,7 @@ void KIO_Connection::removeSlave( KIO::Slave* slave )
 		initData();
 
 	if( !m_slaves->contains( slave ) )
-		kdDebug() << "(KIO_Connection): Not able to remove a non-existing slave." << endl;
+		kDebug() << "(KIO_Connection): Not able to remove a non-existing slave." << endl;
 
 	QMap< KIO::Slave*, int >::Iterator it = m_slaves->find( slave );
 	if( it.data() == 1 )

@@ -68,7 +68,7 @@ bool KRfc822Plugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
 
     if (!file.open(QIODevice::ReadOnly))
     {
-        kdDebug(7034) << "Couldn't open " << QFile::encodeName(info.path()) << endl;
+        kDebug(7034) << "Couldn't open " << QFile::encodeName(info.path()) << endl;
         return false;
     }
 

@@ -116,7 +116,7 @@ void CalendarAdaptor::calendarItemDownloaded( KCal::Incidence *inc,
     const QString &newLocalId, const KUrl &remoteId, const QString &fingerprint,
     const QString &storagelocation )
 {
-kdDebug() << "CalendarAdaptor::calendarItemDownloaded, inc=" << inc->summary() << ", local=" << newLocalId << ", remote=" << remoteId.url() << ", fpr=" << fingerprint << ", storagelocation="<< storagelocation << endl;
+kDebug() << "CalendarAdaptor::calendarItemDownloaded, inc=" << inc->summary() << ", local=" << newLocalId << ", remote=" << remoteId.url() << ", fpr=" << fingerprint << ", storagelocation="<< storagelocation << endl;
   // remove the currently existing item from the cache
   deleteItem( newLocalId );
   QString localId = idMapper()->localId( remoteId.path() );

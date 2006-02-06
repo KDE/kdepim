@@ -234,7 +234,7 @@ void PilotDaemonTray::changeIcon(IconShape i)
 	FUNCTIONSETUP;
 	if (icons[i].isNull())
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Icon #"<<i<<" is NULL!" << endl;
 	}
 	setPixmap(icons[i]);
@@ -312,7 +312,7 @@ PilotDaemon::PilotDaemon() :
 
 	if (fDaemonStatus == ERROR)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Connecting to device failed." << endl;
 		return;
 	}
@@ -606,7 +606,7 @@ bool PilotDaemon::setupPilotLink()
 	fPilotLink = new KPilotDeviceLink( 0, 0, fTempDevice );
 	if (!fPilotLink)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Can't get pilot link." << endl;
 		return false;
 	}
@@ -673,7 +673,7 @@ bool PilotDaemon::setupPilotLink()
 
 	if ( !fNextSyncType.setMode(mode) )
 	{
-		kdWarning() << k_funcinfo << ": Ignored fake sync type " << mode << endl;
+		kWarning() << k_funcinfo << ": Ignored fake sync type " << mode << endl;
 		return;
 	}
 
@@ -709,7 +709,7 @@ bool PilotDaemon::setupPilotLink()
 	else if (s.startsWith(CSL1("D"))) requestSync(0);
 	else
 	{
-		kdWarning() << ": Unknown sync type " << ( s.isEmpty() ? CSL1("<none>") : s )
+		kWarning() << ": Unknown sync type " << ( s.isEmpty() ? CSL1("<none>") : s )
 			<< endl;
 	}
 }
@@ -718,7 +718,7 @@ bool PilotDaemon::setupPilotLink()
 {
 	if ( !fNextSyncType.setOptions(test,local) )
 	{
-		kdWarning() << k_funcinfo << ": Nonsensical request for "
+		kWarning() << k_funcinfo << ": Nonsensical request for "
 			<< (test ? "test" : "notest")
 			<< ' '
 			<< (local ? "local" : "nolocal")
@@ -768,7 +768,7 @@ static void fillConduitNameMap()
 			KSharedPtr < KService > o = KService::serviceByDesktopName(*i);
 			if (!o)
 			{
-				kdWarning() << k_funcinfo << ": No service for " << *i << endl;
+				kWarning() << k_funcinfo << ": No service for " << *i << endl;
 			}
 			else
 			{
@@ -832,7 +832,7 @@ static KDesktopLockStatus isKDesktopLockRunning()
 	// Can't tell, very weird, err on the side of safety.
 	if (!dcopptr || !dcopptr->isAttached())
 	{
-		kdWarning() << k_funcinfo << ": Could not make DCOP connection. "
+		kWarning() << k_funcinfo << ": Could not make DCOP connection. "
 			<< "Assuming screensaver is active." << endl;
 		return DCOPError;
 	}
@@ -843,7 +843,7 @@ static KDesktopLockStatus isKDesktopLockRunning()
 	if (!dcopptr->call("kdesktop","KScreensaverIface","isBlanked()",
 		data,returnType,returnValue,true))
 	{
-		kdWarning() << k_funcinfo << ": Check for screensaver failed."
+		kWarning() << k_funcinfo << ": Check for screensaver failed."
 			<< "Assuming screensaver is active." << endl;
 		// Err on the side of safety again.
 		return DCOPError;
@@ -858,7 +858,7 @@ static KDesktopLockStatus isKDesktopLockRunning()
 	}
 	else
 	{
-		kdWarning() << k_funcinfo << ": Strange return value from screensaver. "
+		kWarning() << k_funcinfo << ": Strange return value from screensaver. "
 			<< "Assuming screensaver is active." << endl;
 		// Err on the side of safety.
 		return DCOPError;
@@ -908,7 +908,7 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 	if ((callstatus == DCOPStub::CallSucceeded) &&
 		(kpilotstatus != KPilotDCOP::WaitingForDaemon))
 	{
-		kdWarning() << k_funcinfo <<
+		kWarning() << k_funcinfo <<
 			": KPilot returned status " << kpilotstatus << endl;
 
 		fSyncStack->queueInit();
@@ -1185,7 +1185,7 @@ void PilotDaemon::slotRunKPilot()
 #endif
 		))
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Couldn't start KPilot! " << kpilotError << endl;
 	}
 	else
@@ -1334,7 +1334,7 @@ int main(int argc, char **argv)
 
 		if (KPilotSettings::configVersion() < KPilotConfig::ConfigurationVersion)
 		{
-			kdError() << k_funcinfo
+			kError() << k_funcinfo
 				<< ": Is still not configured for use."
 				<< endl;
 			if (!p->isSet("fail-silently"))
@@ -1362,7 +1362,7 @@ int main(int argc, char **argv)
 		delete gPilotDaemon;
 
 		gPilotDaemon = 0;
-		kdError() << k_funcinfo
+		kError() << k_funcinfo
 			<< ": **\n"
 			": Failed to start up daemon\n"
 			": due to errors constructing it.\n" ": **" << endl;

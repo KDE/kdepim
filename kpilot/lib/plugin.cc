@@ -151,7 +151,7 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 
 	if (!localDB)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Could not initialize object for local copy of database \""
 			<< name
 			<< "\"" << endl;
@@ -234,7 +234,7 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 
 	if (!fDatabase)
 	{
-		kdWarning() << k_funcinfo
+		kWarning() << k_funcinfo
 			<< ": Could not open database \""
 			<< name
 			<< "\" on the pilot."
@@ -362,7 +362,7 @@ int PluginUtility::findHandle(const QStringList &a)
 #endif
 			if (handle<1)
 			{
-				kdWarning() << k_funcinfo
+				kWarning() << k_funcinfo
 					<< ": Improbable handle value found."
 					<< endl;
 			}

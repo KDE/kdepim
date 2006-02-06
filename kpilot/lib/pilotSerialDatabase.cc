@@ -85,7 +85,7 @@ int PilotSerialDatabase::readAppBlock(unsigned char *buffer, int maxLen)
 	FUNCTIONSETUP;
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open" << endl;
+		kError() << k_funcinfo << ": DB not open" << endl;
 		return -1;
 	}
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
@@ -109,7 +109,7 @@ int PilotSerialDatabase::writeAppBlock(unsigned char *buffer, int len)
 	FUNCTIONSETUP;
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open" << endl;
+		kError() << k_funcinfo << ": DB not open" << endl;
 		return -1;
 	}
 	return dlp_WriteAppBlock(fDBSocket, getDBHandle(), buffer, len);
@@ -141,7 +141,7 @@ Q3ValueList<recordid_t> PilotSerialDatabase::idList()
 
 	if ( (r<0) || (idlenread<1) )
 	{
-		kdWarning() << k_funcinfo << ": Failed to read ID list from database." << endl;
+		kWarning() << k_funcinfo << ": Failed to read ID list from database." << endl;
 		return idlist;
 	}
 
@@ -163,12 +163,12 @@ PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open" << endl;
+		kError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
 	}
 	if (id>0xFFFFFF)
 	{
-		kdError() << k_funcinfo <<  " Encountered an invalid record id "
+		kError() << k_funcinfo <<  " Encountered an invalid record id "
 			<<id<<endl;;
 		return 0L;
 	}
@@ -195,7 +195,7 @@ PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open" << endl;
+		kError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
 	}
 
@@ -233,7 +233,7 @@ PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open" << endl;
+		kError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
 	}
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
@@ -260,7 +260,7 @@ PilotRecord *PilotSerialDatabase::readNextModifiedRec(int *ind)
 
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open" << endl;
+		kError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
 	}
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
@@ -292,7 +292,7 @@ recordid_t PilotSerialDatabase::writeRecord(PilotRecord * newRecord)
 
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open" << endl;
+		kError() << k_funcinfo << ": DB not open" << endl;
 		return 0;
 	}
 	// Do some sanity checking to prevent invalid UniqueIDs from being written
@@ -301,7 +301,7 @@ recordid_t PilotSerialDatabase::writeRecord(PilotRecord * newRecord)
 	// someone messed up full time...
 	if (newRecord->id()>0xFFFFFF)
 	{
-		kdError() << k_funcinfo << "Encountered an invalid record id "
+		kError() << k_funcinfo << "Encountered an invalid record id "
 			<<newRecord->id()<<", resetting it to zero.";
 		newRecord->setID(0);
 	}
@@ -321,7 +321,7 @@ int PilotSerialDatabase::deleteRecord(recordid_t id, bool all)
 	FUNCTIONSETUP;
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo <<": DB not open"<<endl;
+		kError() << k_funcinfo <<": DB not open"<<endl;
 		return -1;
 	}
 	return dlp_DeleteRecord(fDBSocket, getDBHandle(), all?1:0, id);
@@ -334,7 +334,7 @@ int PilotSerialDatabase::resetSyncFlags()
 	FUNCTIONSETUP;
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open" << endl;
+		kError() << k_funcinfo << ": DB not open" << endl;
 		return -1;
 	}
 	return dlp_ResetSyncFlags(fDBSocket, getDBHandle());
@@ -346,7 +346,7 @@ int PilotSerialDatabase::resetDBIndex()
 	FUNCTIONSETUP;
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open" << endl;
+		kError() << k_funcinfo << ": DB not open" << endl;
 		return -1;
 	}
 	return dlp_ResetDBIndex(fDBSocket, getDBHandle());
@@ -358,7 +358,7 @@ int PilotSerialDatabase::cleanup()
 	FUNCTIONSETUP;
 	if (isDBOpen() == false)
 	{
-		kdError() << k_funcinfo << ": DB not open" << endl;
+		kError() << k_funcinfo << ": DB not open" << endl;
 		return -1;
 	}
 	return dlp_CleanUpDatabase(fDBSocket, getDBHandle());
@@ -374,7 +374,7 @@ void PilotSerialDatabase::openDatabase()
 	QString s = getDBName();
 	if (s.isEmpty())
 	{
-		kdError() << k_funcinfo << ": Bad DB name, "
+		kError() << k_funcinfo << ": Bad DB name, "
 			<< (s.isNull() ? "null" : "empty")
 			<< " string given."
 			<< endl;
@@ -384,7 +384,7 @@ void PilotSerialDatabase::openDatabase()
 	Q3CString encodedName = QFile::encodeName(s);
 	if (encodedName.isEmpty())
 	{
-		kdError() << k_funcinfo << ": Bad DB name, "
+		kError() << k_funcinfo << ": Bad DB name, "
 			<< (encodedName.isNull() ? "null" : "empty")
 			<< " string given."
 			<< endl;
@@ -397,7 +397,7 @@ void PilotSerialDatabase::openDatabase()
 	if (dlp_OpenDB(fDBSocket, 0, dlpOpenReadWrite,
 		encodedNameBuffer, &db) < 0)
 	{
-		kdError() << k_funcinfo
+		kError() << k_funcinfo
 			<< i18n("Cannot open database")
 			<< i18n("Pilot database error") << endl;
 		return;
@@ -418,7 +418,7 @@ bool PilotSerialDatabase::createDatabase(long creator, long type, int cardno, in
 		creator, type, cardno, flags, version,
 		PilotAppCategory::codec()->fromUnicode(getDBName()), &db);
 	if (res<0) {
-		kdError() <<k_funcinfo
+		kError() <<k_funcinfo
 			<< i18n("Cannot create database %1 on the handheld").arg(getDBName())<<endl;
 		return false;
 	}

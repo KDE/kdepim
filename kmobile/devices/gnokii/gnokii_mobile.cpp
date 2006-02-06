@@ -40,7 +40,7 @@
 
 
 #define KGNOKII_DEBUG_AREA 5730
-#define PRINT_DEBUG kdDebug(KGNOKII_DEBUG_AREA) << "KMobileGnokii: "
+#define PRINT_DEBUG kDebug(KGNOKII_DEBUG_AREA) << "KMobileGnokii: "
 #define GNOKII_DEBUG(x)   PRINT_DEBUG << x
 
 
@@ -639,7 +639,7 @@ static QDateTime timestamp_2_QDateTime( const gn_timestamp &ts )
 static void print_calnote( const gn_calnote &entry )
 {
   gn_timestamp ts = entry.time;
-  kdWarning()	<< "location=" << entry.location       /* The number of the note in the phone memory */
+  kWarning()	<< "location=" << entry.location       /* The number of the note in the phone memory */
 		<< "  type=" <<  entry.type                /* The type of the note */
 		<< "  gn_timestamp=" <<         /* The time of the note */  
 		" year=" << ts.year <<
@@ -722,7 +722,7 @@ int KMobileGnokii::readCalendarEntry( int index, KCal::Event &event )
 		event.setCategories(i18n("REMINDER"));
 		break;
   default:
-		kdWarning() << "unknown calendar GN_CALNOTE_XXXX type #" << entry.type << endl;
+		kWarning() << "unknown calendar GN_CALNOTE_XXXX type #" << entry.type << endl;
   }
 
   // alarm:

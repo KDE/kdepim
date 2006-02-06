@@ -74,7 +74,7 @@ QString Signature::rawText( bool * ok ) const
   case FromCommand:
     return textFromCommand( ok );
   };
-  kdFatal( 5006 ) << "Signature::type() returned unknown value!" << endl;
+  kFatal( 5006 ) << "Signature::type() returned unknown value!" << endl;
   return QString(); // make compiler happy
 }
 
@@ -126,7 +126,7 @@ QString Signature::textFromFile( bool * ok ) const
   // ### FIXME: Use KIO::NetAccess to download non-local files!
   if ( !KURL(mUrl).isLocalFile() && !(QFileInfo(mUrl).isRelative()
                                       && QFileInfo(mUrl).exists()) ) {
-    kdDebug( 5006 ) << "Signature::textFromFile: non-local URLs are unsupported" << endl;
+    kDebug( 5006 ) << "Signature::textFromFile: non-local URLs are unsupported" << endl;
     if ( ok ) *ok = false;
     return QString();
   }
@@ -269,24 +269,24 @@ bool Identity::operator==( const Identity & other ) const {
 #if 0
   if ( same )
     return true;
-  if ( mUoid != other.mUoid ) kdDebug() << "mUoid differs : " << mUoid << " != " << other.mUoid << endl;
-  if ( mIdentity != other.mIdentity ) kdDebug() << "mIdentity differs : " << mIdentity << " != " << other.mIdentity << endl;
-  if ( mFullName != other.mFullName ) kdDebug() << "mFullName differs : " << mFullName << " != " << other.mFullName << endl;
-  if ( mEmailAddr != other.mEmailAddr ) kdDebug() << "mEmailAddr differs : " << mEmailAddr << " != " << other.mEmailAddr << endl;
-  if ( mOrganization != other.mOrganization ) kdDebug() << "mOrganization differs : " << mOrganization << " != " << other.mOrganization << endl;
-  if ( mReplyToAddr != other.mReplyToAddr ) kdDebug() << "mReplyToAddr differs : " << mReplyToAddr << " != " << other.mReplyToAddr << endl;
-  if ( mBcc != other.mBcc ) kdDebug() << "mBcc differs : " << mBcc << " != " << other.mBcc << endl;
-  if ( mVCardFile != other.mVCardFile ) kdDebug() << "mVCardFile differs : " << mVCardFile << " != " << other.mVCardFile << endl;
-  if ( mFcc != other.mFcc ) kdDebug() << "mFcc differs : " << mFcc << " != " << other.mFcc << endl;
-  if ( mPGPEncryptionKey != other.mPGPEncryptionKey ) kdDebug() << "mPGPEncryptionKey differs : " << mPGPEncryptionKey << " != " << other.mPGPEncryptionKey << endl;
-  if ( mPGPSigningKey != other.mPGPSigningKey ) kdDebug() << "mPGPSigningKey differs : " << mPGPSigningKey << " != " << other.mPGPSigningKey << endl;
-  if ( mSMIMEEncryptionKey != other.mSMIMEEncryptionKey ) kdDebug() << "mSMIMEEncryptionKey differs : '" << mSMIMEEncryptionKey << "' != '" << other.mSMIMEEncryptionKey << "'" << endl;
-  if ( mSMIMESigningKey != other.mSMIMESigningKey ) kdDebug() << "mSMIMESigningKey differs : " << mSMIMESigningKey << " != " << other.mSMIMESigningKey << endl;
-  if ( mPreferredCryptoMessageFormat != other.mPreferredCryptoMessageFormat ) kdDebug() << "mPreferredCryptoMessageFormat differs : " << mPreferredCryptoMessageFormat << " != " << other.mPreferredCryptoMessageFormat << endl;
-  if ( mDrafts != other.mDrafts ) kdDebug() << "mDrafts differs : " << mDrafts << " != " << other.mDrafts << endl;
-  if ( mTransport != other.mTransport ) kdDebug() << "mTransport differs : " << mTransport << " != " << other.mTransport << endl;
-  if ( mDictionary != other.mDictionary ) kdDebug() << "mDictionary differs : " << mDictionary << " != " << other.mDictionary << endl;
-  if ( ! ( mSignature == other.mSignature ) ) kdDebug() << "mSignature differs" << endl;
+  if ( mUoid != other.mUoid ) kDebug() << "mUoid differs : " << mUoid << " != " << other.mUoid << endl;
+  if ( mIdentity != other.mIdentity ) kDebug() << "mIdentity differs : " << mIdentity << " != " << other.mIdentity << endl;
+  if ( mFullName != other.mFullName ) kDebug() << "mFullName differs : " << mFullName << " != " << other.mFullName << endl;
+  if ( mEmailAddr != other.mEmailAddr ) kDebug() << "mEmailAddr differs : " << mEmailAddr << " != " << other.mEmailAddr << endl;
+  if ( mOrganization != other.mOrganization ) kDebug() << "mOrganization differs : " << mOrganization << " != " << other.mOrganization << endl;
+  if ( mReplyToAddr != other.mReplyToAddr ) kDebug() << "mReplyToAddr differs : " << mReplyToAddr << " != " << other.mReplyToAddr << endl;
+  if ( mBcc != other.mBcc ) kDebug() << "mBcc differs : " << mBcc << " != " << other.mBcc << endl;
+  if ( mVCardFile != other.mVCardFile ) kDebug() << "mVCardFile differs : " << mVCardFile << " != " << other.mVCardFile << endl;
+  if ( mFcc != other.mFcc ) kDebug() << "mFcc differs : " << mFcc << " != " << other.mFcc << endl;
+  if ( mPGPEncryptionKey != other.mPGPEncryptionKey ) kDebug() << "mPGPEncryptionKey differs : " << mPGPEncryptionKey << " != " << other.mPGPEncryptionKey << endl;
+  if ( mPGPSigningKey != other.mPGPSigningKey ) kDebug() << "mPGPSigningKey differs : " << mPGPSigningKey << " != " << other.mPGPSigningKey << endl;
+  if ( mSMIMEEncryptionKey != other.mSMIMEEncryptionKey ) kDebug() << "mSMIMEEncryptionKey differs : '" << mSMIMEEncryptionKey << "' != '" << other.mSMIMEEncryptionKey << "'" << endl;
+  if ( mSMIMESigningKey != other.mSMIMESigningKey ) kDebug() << "mSMIMESigningKey differs : " << mSMIMESigningKey << " != " << other.mSMIMESigningKey << endl;
+  if ( mPreferredCryptoMessageFormat != other.mPreferredCryptoMessageFormat ) kDebug() << "mPreferredCryptoMessageFormat differs : " << mPreferredCryptoMessageFormat << " != " << other.mPreferredCryptoMessageFormat << endl;
+  if ( mDrafts != other.mDrafts ) kDebug() << "mDrafts differs : " << mDrafts << " != " << other.mDrafts << endl;
+  if ( mTransport != other.mTransport ) kDebug() << "mTransport differs : " << mTransport << " != " << other.mTransport << endl;
+  if ( mDictionary != other.mDictionary ) kDebug() << "mDictionary differs : " << mDictionary << " != " << other.mDictionary << endl;
+  if ( ! ( mSignature == other.mSignature ) ) kDebug() << "mSignature differs" << endl;
 #endif
   return same;
 }
@@ -341,7 +341,7 @@ void Identity::readConfig( const KConfigBase * config )
   mXFaceEnabled = config->readEntry( "X-FaceEnabled", QVariant(false) ).toBool();
 
   mSignature.readConfig( config );
-  kdDebug(5006) << "Identity::readConfig(): UOID = " << mUoid
+  kDebug(5006) << "Identity::readConfig(): UOID = " << mUoid
 	    << " for identity named \"" << mIdentity << "\"" << endl;
 }
 

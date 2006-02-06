@@ -49,7 +49,7 @@ KPIM::FolderLister::ContentType GroupDavGlobals::getContentType( const QDomEleme
   QDomElement ctype = prop.namedItem("getcontenttype").toElement();
   if ( ctype.isNull() ) return KPIM::FolderLister::Unknown;
   const QString &type = ctype.text();
-kdDebug()<<"Found content type: "<<type<<endl;
+kDebug()<<"Found content type: "<<type<<endl;
   /// TODO: Not yet implemented in GroupDav!
   return KPIM::FolderLister::Unknown;
 }
@@ -58,7 +58,7 @@ kdDebug()<<"Found content type: "<<type<<endl;
 KPIM::FolderLister::ContentType GroupDavGlobals::getContentType( const QDomNode &folderNode )
 {
   QDomNode n4;
-kdDebug()<<"GroupDavGlobals::getContentType(...)"<<endl;
+kDebug()<<"GroupDavGlobals::getContentType(...)"<<endl;
   int type = KPIM::FolderLister::Unknown;
   for( n4 = folderNode.firstChild(); !n4.isNull(); n4 = n4.nextSibling() ) {
     QDomElement e = n4.toElement();
@@ -102,7 +102,7 @@ KIO::Job *GroupDavGlobals::createListFoldersJob( const KUrl &url )
   WebdavHandler::addElement( doc, prop, "d:resourcetype" );
 //  WebdavHandler::addElement( doc, prop, "d:hassubs" );
 
-  kdDebug(7000) << "props: " << doc.toString() << endl;
+  kDebug(7000) << "props: " << doc.toString() << endl;
   return KIO::davPropFind( url, doc, "1", false );
 }
 
@@ -114,7 +114,7 @@ KIO::TransferJob *GroupDavGlobals::createListItemsJob( const KUrl &url )
   QDomElement prop = WebdavHandler::addDavElement(  doc, root, "prop" );
   WebdavHandler::addDavElement( doc, prop, "getetag" );
 //  WebdavHandler::addDavElement( doc, prop, "getcontenttype" );
-  kdDebug(5800) << "props = "<< doc.toString() << endl;
+  kDebug(5800) << "props = "<< doc.toString() << endl;
   KIO::TransferJob *job = KIO::davPropFind( url, doc, "1", false );
   if ( job ) {
     job->addMetaData( "accept", "text/xml" );
@@ -127,7 +127,7 @@ KIO::TransferJob *GroupDavGlobals::createListItemsJob( const KUrl &url )
 KIO::TransferJob *GroupDavGlobals::createDownloadJob( KPIM::GroupwareDataAdaptor *adaptor,
                     const KUrl &url, KPIM::FolderLister::ContentType /*ctype*/ )
 {
-kdDebug()<<"GroupDavGlobals::createDownloadJob, url="<<url.url()<<endl;
+kDebug()<<"GroupDavGlobals::createDownloadJob, url="<<url.url()<<endl;
   KIO::TransferJob *job = KIO::get( url, false, false );
   if ( adaptor ) {
     QString mt = adaptor->mimeType();
@@ -142,27 +142,27 @@ KIO::Job *GroupDavGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor,
        KPIM::GroupwareUploadItem *deletedItem )
 {
   if ( !deletedItem ) return 0;
-  //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
+  //kDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
   KUrl url( deletedItem->url() );
   if ( adaptor ) {
     adaptor->adaptUploadUrl( url );
   }
   KIO::Job *delJob = 0;
   if ( !url.isEmpty() ) {
-    kdDebug(5700) << "Delete: " <<   url.url() << endl;
+    kDebug(5700) << "Delete: " <<   url.url() << endl;
     delJob = KIO::file_delete( url, false );
   }
   if ( delJob && adaptor && adaptor->idMapper() ) {
-    kdDebug(5800 ) << "Adding If-Match metadata: " << adaptor->idMapper()->fingerprint( deletedItem->uid() ) << endl;
+    kDebug(5800 ) << "Adding If-Match metadata: " << adaptor->idMapper()->fingerprint( deletedItem->uid() ) << endl;
     delJob->addMetaData( "customHTTPHeader", "If-Match: " + adaptor->idMapper()->fingerprint( deletedItem->uid() ) );
   }
   return delJob;
 
 /*  QStringList urls;
   KPIM::GroupwareUploadItem::List::const_iterator it;
-  kdDebug(5800) << " GroupDavGlobals::createRemoveJob, BaseURL="<<uploadurl.url()<<endl;
+  kDebug(5800) << " GroupDavGlobals::createRemoveJob, BaseURL="<<uploadurl.url()<<endl;
   for ( it = deletedItems.constBegin(); it != deletedItems.constEnd(); ++it ) {
-    //kdDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
+    //kDebug(7000) << "Delete: " << endl << format.toICalString(*it) << endl;
     KUrl url( (*it)->url() );
     if ( adaptor ) {
       adaptor->adaptUploadUrl( url );
@@ -171,10 +171,10 @@ KIO::Job *GroupDavGlobals::createRemoveJob( KPIM::GroupwareDataAdaptor *adaptor,
     url.setPath( (*it)->url().path() );
     if ( !(*it)->url().isEmpty() )*/
 /*    if ( !url.isEmpty() ) {
-kdDebug() << "Deleting item at "<< url.url() << endl;
+kDebug() << "Deleting item at "<< url.url() << endl;
       urls << url.url();
     }
-    kdDebug(5700) << "Delete (Mod) : " <<   url.url() << endl;
+    kDebug(5700) << "Delete (Mod) : " <<   url.url() << endl;
   }
   return KIO::file_del( urls, false, false );*/
 }
@@ -192,8 +192,8 @@ bool GroupDavGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor
   }
   QDomDocument doc = davjob->response();
 
-  kdDebug(7000) << " Doc: " << doc.toString() << endl;
-  kdDebug(7000) << " IdMapper: " << adaptor->idMapper()->asString() << endl;
+  kDebug(7000) << " Doc: " << doc.toString() << endl;
+  kDebug(7000) << " IdMapper: " << adaptor->idMapper()->asString() << endl;
 
   QDomElement docElem = doc.documentElement();
   QDomNode n = docElem.firstChild();
@@ -227,8 +227,8 @@ bool GroupDavGlobals::interpretListItemsJob( KPIM::GroupwareDataAdaptor *adaptor
 bool GroupDavGlobals::interpretCalendarDownloadItemsJob( KCal::CalendarAdaptor *adaptor,
                                          KIO::Job *job, const QString &jobData )
 {
-kdDebug(5800) << "GroupDavGlobals::interpretCalendarDownloadItemsJob, iCalendar=" << endl;
-kdDebug(5800) << jobData << endl;
+kDebug(5800) << "GroupDavGlobals::interpretCalendarDownloadItemsJob, iCalendar=" << endl;
+kDebug(5800) << jobData << endl;
   if ( !adaptor || !job ) return false;
   KCal::CalendarLocal calendar( QString::fromLatin1("UTC") );
   KCal::ICalFormat ical;
@@ -238,7 +238,7 @@ kdDebug(5800) << jobData << endl;
     KCal::Incidence::List raw = calendar.rawIncidences();
     KCal::Incidence::List::Iterator it = raw.begin();
     if ( raw.count() != 1 ) {
-      kdError() << "Parsed iCalendar does not contain exactly one event." << endl;
+      kError() << "Parsed iCalendar does not contain exactly one event." << endl;
       return false;
     }
 
@@ -252,7 +252,7 @@ kdDebug(5800) << jobData << endl;
                                      remoteId.prettyURL() );
     return true;
   } else {
-    kdError() << "Unable to parse iCalendar" << endl;
+    kError() << "Unable to parse iCalendar" << endl;
   }
   return false;
 }
@@ -261,15 +261,15 @@ kdDebug(5800) << jobData << endl;
 bool GroupDavGlobals::interpretAddressBookDownloadItemsJob(
       KABC::AddressBookAdaptor *adaptor, KIO::Job *job, const QString &jobData )
 {
-kdDebug(5800) << "GroupDavGlobals::interpretAddressBookDownloadItemsJob, vCard=" << endl;
-kdDebug(5800) << jobData << endl;
+kDebug(5800) << "GroupDavGlobals::interpretAddressBookDownloadItemsJob, vCard=" << endl;
+kDebug(5800) << jobData << endl;
   if ( !adaptor || !job ) return false;
 
   KABC::VCardConverter conv;
   KABC::Addressee::List addrs( conv.parseVCards( jobData.toUtf8()) );
 
   if ( addrs.count() != 1 ) {
-    kdError() << "Parsed vCard does not contain exactly one addressee." << endl;
+    kError() << "Parsed vCard does not contain exactly one addressee." << endl;
     return false;
   }
 

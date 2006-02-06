@@ -85,7 +85,7 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
 
   const QStringList components = config->componentList();
   for ( QStringList::const_iterator it = components.begin(); it != components.end(); ++it ) {
-    //kdDebug(5150) << "Component " << (*it).local8Bit() << ":" << endl;
+    //kDebug(5150) << "Component " << (*it).local8Bit() << ":" << endl;
     Kleo::CryptoConfigComponent* comp = config->component( *it );
     Q_ASSERT( comp );
     if ( comp->groupList().empty() )
@@ -264,12 +264,12 @@ CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoC
     case Kleo::CryptoConfigEntry::ArgType_Path:
     case Kleo::CryptoConfigEntry::ArgType_DirPath:
     case Kleo::CryptoConfigEntry::ArgType_String:
-      kdWarning(5150) << "No widget implemented for list of type " << entry->argType() << endl;
+      kWarning(5150) << "No widget implemented for list of type " << entry->argType() << endl;
       return 0; // TODO when the need arises :)
     case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
       return new CryptoConfigEntryLDAPURL( module, entry, entryName, glay, widget, name );
     }
-    kdWarning(5150) << "No widget implemented for list of (unknown) type " << entry->argType() << endl;
+    kWarning(5150) << "No widget implemented for list of (unknown) type " << entry->argType() << endl;
     return 0;
   }
 
@@ -286,12 +286,12 @@ CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoC
   case Kleo::CryptoConfigEntry::ArgType_DirPath:
     return new CryptoConfigEntryDirPath( module, entry, entryName, glay, widget, name );
   case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
-      kdWarning(5150) << "No widget implemented for type " << entry->argType() << endl;
+      kWarning(5150) << "No widget implemented for type " << entry->argType() << endl;
       return 0; // TODO when the need arises :)
   case Kleo::CryptoConfigEntry::ArgType_String:
     return new CryptoConfigEntryLineEdit( module, entry, entryName, glay, widget, name );
   }
-  kdWarning(5150) << "No widget implemented for (unknown) type " << entry->argType() << endl;
+  kWarning(5150) << "No widget implemented for (unknown) type " << entry->argType() << endl;
   return 0;
 }
 

@@ -86,20 +86,20 @@ QList<ScheduleMessage*> DummyScheduler::retrieveTransactions()
 
   QFile f("dummyscheduler.store");
   if (!f.open(QIODevice::ReadOnly)) {
-    kdDebug(5800) << "DummyScheduler::retrieveTransactions(): Can't open file"
+    kDebug(5800) << "DummyScheduler::retrieveTransactions(): Can't open file"
               << endl;
   } else {
     QTextStream t(&f);
     QString messageString;
     QString messageLine = t.readLine();
     while (!messageLine.isNull()) {
-//      kdDebug(5800) << "++++++++" << messageLine << endl;
+//      kDebug(5800) << "++++++++" << messageLine << endl;
       messageString += messageLine + "\n";
       if (messageLine.indexOf("END:VCALENDAR") >= 0) {
-        kdDebug(5800) << "---------------" << messageString << endl;
+        kDebug(5800) << "---------------" << messageString << endl;
         ScheduleMessage *message = mFormat->parseScheduleMessage(mCalendar,
                                                                  messageString);
-        kdDebug(5800) << "--Parsed" << endl;
+        kDebug(5800) << "--Parsed" << endl;
         if (message) {
           messageList.append(message);
         } else {
@@ -107,7 +107,7 @@ QList<ScheduleMessage*> DummyScheduler::retrieveTransactions()
           if (mFormat->exception()) {
             errorMessage = mFormat->exception()->message();
           }
-          kdDebug(5800) << "DummyScheduler::retrieveTransactions() Error parsing "
+          kDebug(5800) << "DummyScheduler::retrieveTransactions() Error parsing "
                        "message: " << errorMessage << endl;
         }
         messageString="";

@@ -74,7 +74,7 @@ NetworkStatusModule::~NetworkStatusModule()
 
 QStringList NetworkStatusModule::networks()
 {
-	kdDebug() << k_funcinfo << " contains " << d->networks.count() << " networks" << endl;
+	kDebug() << k_funcinfo << " contains " << d->networks.count() << " networks" << endl;
 	QStringList networks;
 	NetworkList::iterator end = d->networks.end();
 	NetworkList::iterator it = d->networks.begin();
@@ -88,12 +88,12 @@ int NetworkStatusModule::status( const QString & host )
 	Network * p = networkForHost( host );
 	if ( !p )
 	{
-		kdDebug() << k_funcinfo << " no networks have status for host '" << host << "'" << endl;
+		kDebug() << k_funcinfo << " no networks have status for host '" << host << "'" << endl;
 		return (int)NetworkStatus::NoNetworks;
 	}
 	else
 	{	
-		kdDebug() << k_funcinfo << " got status for host '" << host << "' : " << (int)(p->status()) << endl;
+		kDebug() << k_funcinfo << " got status for host '" << host << "' : " << (int)(p->status()) << endl;
 		return (int)(p->status());
 	}
 }
@@ -184,7 +184,7 @@ bool NetworkStatusModule::reportFailure( const QString & host )
 	// find network for host
 	// check IP record.  remove IP usage record.  if other IP exists, return true.
 	Q_UNUSED( host );
-	kdDebug() << k_funcinfo << "NOT IMPLEMENTED" << endl;
+	kDebug() << k_funcinfo << "NOT IMPLEMENTED" << endl;
 	return false;
 }
 
@@ -225,7 +225,7 @@ void NetworkStatusModule::unregisteredFromDCOP( const QByteArray & appId )
 	{
 		if ( (*it)->service() == appId)
 		{
-			kdDebug() << k_funcinfo << "removing '" << (*it)->name() << "', registered by " << appId << endl;
+			kDebug() << k_funcinfo << "removing '" << (*it)->name() << "', registered by " << appId << endl;
 			d->networks.erase( it );
 			break;
 		}
@@ -235,7 +235,7 @@ void NetworkStatusModule::unregisteredFromDCOP( const QByteArray & appId )
 // SERVICE INTERFACE //
 void NetworkStatusModule::setNetworkStatus( const QString & networkName, int st )
 {
-	kdDebug() << k_funcinfo << endl;
+	kDebug() << k_funcinfo << endl;
 	NetworkStatus::EnumStatus status = (NetworkStatus::EnumStatus)st;
 	Network * net = 0;
 	NetworkList::iterator it = d->networks.begin();
@@ -265,7 +265,7 @@ void NetworkStatusModule::setNetworkStatus( const QString & networkName, int st 
 			// only notify once per host
 			if ( !notified.contains( (*it).host ) )
 			{
-				kdDebug() << "notifying statusChange of " << networkName << " to " << (int)status << 
+				kDebug() << "notifying statusChange of " << networkName << " to " << (int)status << 
 						" because " << (*it).appId << " is using " << (*it).host << endl;
 				/*d->clientIface->*/statusChange( (*it).host, (int)status );
 				notified.append( (*it).host );
@@ -277,12 +277,12 @@ void NetworkStatusModule::setNetworkStatus( const QString & networkName, int st 
 			net->removeAllUsage();
 	}
 	else
-		kdDebug() << k_funcinfo << "No network found by this name" << endl;
+		kDebug() << k_funcinfo << "No network found by this name" << endl;
 }
 
 void NetworkStatusModule::registerNetwork( const QString & networkName, const NetworkStatus::Properties properties )
 {
-	kdDebug() << k_funcinfo << "registering '" << networkName << "', with status " << properties.status << endl;
+	kDebug() << k_funcinfo << "registering '" << networkName << "', with status " << properties.status << endl;
 	// TODO: check for re-registration, checking appid matches
 	
 	d->networks.append( new Network( networkName, properties ) );
@@ -297,7 +297,7 @@ void NetworkStatusModule::unregisterNetwork( const QString & networkName )
 void NetworkStatusModule::requestShutdown( const QString & networkName )
 {
 	Q_UNUSED( networkName );
-	kdDebug() << k_funcinfo << "NOT IMPLEMENTED" << endl;
+	kDebug() << k_funcinfo << "NOT IMPLEMENTED" << endl;
 }
 
 #include "networkstatus.moc"

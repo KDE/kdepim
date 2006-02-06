@@ -276,7 +276,7 @@ void KMobile::addDevice()
   KService::Ptr ptr;
   for ( it = list.begin(); it != list.end(); ++it ) {
     ptr = *it;
-    kdDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'\n")
+    kDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'\n")
 		.arg(ptr->library()).arg(ptr->name()).arg(ptr->icon()).arg(ptr->comment());
 
     QString iconName = ptr->icon();
@@ -360,7 +360,7 @@ KMobileDevice * KMobileFactory::chooseDeviceDialog( QWidget *parent,
     if (!ptr)
 	continue;
 
-    // kdDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'   #%5\n")
+    // kDebug() << QString("LIBRARY: '%1', NAME: '%2', ICON: '%3', COMMENT: '%4'   #%5\n")
     //		.arg(ptr->library()).arg(ptr->name()).arg(ptr->icon()).arg(ptr->comment()).arg(i);
 
     QString iconName = ptr->icon();
