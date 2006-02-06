@@ -26,6 +26,7 @@ COMPILE_BEFORE_kresources = libkpimexchange knotes kaddressbook
 COMPILE_BEFORE_wizards = libkdepim korganizer kaddressbook kmail
 COMPILE_BEFORE_korn = libkdenetwork
 COMPILE_BEFORE_kitchensync = libkdepim
+COMPILE_BEFORE_kioslaves = libpimldaptools
 
 AUTOMAKE_OPTIONS = foreign 1.5
 DISTCLEANFILES = inst-apps
