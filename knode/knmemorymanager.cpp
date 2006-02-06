@@ -44,11 +44,11 @@ void KNMemoryManager::updateCacheEntry(KNArticleCollection *c)
   if( (ci=findCacheEntry(c, true)) ) { // item is taken from the list
     oldSize=ci->storageSize;
     ci->sync();
-    kdDebug(5003) << "KNMemoryManager::updateCacheEntry() : collection (" << c->name() << ") updated" << endl;
+    kDebug(5003) << "KNMemoryManager::updateCacheEntry() : collection (" << c->name() << ") updated" << endl;
   }
   else {
     ci=new CollectionItem(c);
-    kdDebug(5003) << "KNMemoryManager::updateCacheEntry() : collection (" << c->name() << ") added" << endl;
+    kDebug(5003) << "KNMemoryManager::updateCacheEntry() : collection (" << c->name() << ") added" << endl;
   }
 
   mColList.append(ci);
@@ -66,7 +66,7 @@ void KNMemoryManager::removeCacheEntry(KNArticleCollection *c)
     c_ollCacheSize -= ci->storageSize;
     delete ci;
 
-    kdDebug(5003) << "KNMemoryManager::removeCacheEntry() : collection removed (" << c->name() << "), "
+    kDebug(5003) << "KNMemoryManager::removeCacheEntry() : collection removed (" << c->name() << "), "
                   << mColList.count() << " collections left in cache" << endl;
   }
 }
@@ -90,11 +90,11 @@ void KNMemoryManager::updateCacheEntry(KNArticle *a)
   if( (ai=findCacheEntry(a, true)) ) {
     oldSize=ai->storageSize;
     ai->sync();
-    kdDebug(5003) << "KNMemoryManager::updateCacheEntry() : article updated" << endl;
+    kDebug(5003) << "KNMemoryManager::updateCacheEntry() : article updated" << endl;
   }
   else {
     ai=new ArticleItem(a);
-    kdDebug(5003) << "KNMemoryManager::updateCacheEntry() : article added" << endl;
+    kDebug(5003) << "KNMemoryManager::updateCacheEntry() : article added" << endl;
   }
 
   mArtList.append(ai);
@@ -111,7 +111,7 @@ void KNMemoryManager::removeCacheEntry(KNArticle *a)
     a_rtCacheSize -= ai->storageSize;
     delete ai;
 
-    kdDebug(5003) << "KNMemoryManager::removeCacheEntry() : article removed, "
+    kDebug(5003) << "KNMemoryManager::removeCacheEntry() : article removed, "
                   << mArtList.count() << " articles left in cache" << endl;
 
   }
@@ -172,7 +172,7 @@ void KNMemoryManager::checkMemoryUsageCollections()
     }
   }
 
-  kdDebug(5003) << "KNMemoryManager::checkMemoryUsageCollections() : "
+  kDebug(5003) << "KNMemoryManager::checkMemoryUsageCollections() : "
                 << mColList.count() << " collections in cache => Usage : "
                 << ( c_ollCacheSize*100.0 / maxSize ) << "%" << endl;
 }
@@ -196,7 +196,7 @@ void KNMemoryManager::checkMemoryUsageArticles()
     }
   }
 
-  kdDebug(5003) << "KNMemoryManager::checkMemoryUsageArticles() : "
+  kDebug(5003) << "KNMemoryManager::checkMemoryUsageArticles() : "
                 << mArtList.count() << " articles in cache => Usage : "
                 << ( a_rtCacheSize*100.0 / maxSize ) << "%" << endl;
 }

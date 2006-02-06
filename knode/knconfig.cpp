@@ -90,7 +90,7 @@ void KNode::Identity::saveConfig(KConfigBase *c)
 
 void KNode::Identity::save()
 {
-  kdDebug(5003) << "KNConfig::Identity::save()" << endl;
+  kDebug(5003) << "KNConfig::Identity::save()" << endl;
   if(g_lobal) {
     KConfig *c=knGlobals.config();
     c->setGroup("IDENTITY");
@@ -238,7 +238,7 @@ KNode::DisplayedHeaders::DisplayedHeaders()
       h->setHeader(headerConf.readEntry("Header"));
       flags=headerConf.readEntry("Flags",QList<int>());
       if(h->name().isNull() || h->header().isNull() || (flags.count()!=8)) {
-        kdDebug(5003) << "KNConfig::DisplayedHeaders::DisplayedHeaders() : ignoring invalid/incomplete Header" << endl;
+        kDebug(5003) << "KNConfig::DisplayedHeaders::DisplayedHeaders() : ignoring invalid/incomplete Header" << endl;
         remove(h);
       }
       else {
@@ -263,7 +263,7 @@ void KNode::DisplayedHeaders::save()
   if(!d_irty)
     return;
 
-  kdDebug(5003) << "KNConfig::DisplayedHeaders::save()" << endl;
+  kDebug(5003) << "KNConfig::DisplayedHeaders::save()" << endl;
 
   QString dir(locateLocal("data","knode/"));
   if (dir.isNull()) {
@@ -315,7 +315,7 @@ KNDisplayedHeader* KNode::DisplayedHeaders::createNewHeader()
 void KNode::DisplayedHeaders::remove(KNDisplayedHeader *h)
 {
   if ( !mHeaderList.remove( h ) )
-    kdDebug(5003) << "KNConfig::DisplayedHeaders::remove() : cannot find pointer in list!" << endl;
+    kDebug(5003) << "KNConfig::DisplayedHeaders::remove() : cannot find pointer in list!" << endl;
 
 }
 
@@ -327,7 +327,7 @@ void KNode::DisplayedHeaders::up(KNDisplayedHeader *h)
     mHeaderList.takeAt( idx );
     mHeaderList.insert( idx - 1, h );
   }
-  else kdDebug(5003) << "KNConfig::DisplayedHeaders::up() : item not found in list" << endl;
+  else kDebug(5003) << "KNConfig::DisplayedHeaders::up() : item not found in list" << endl;
 }
 
 
@@ -338,7 +338,7 @@ void KNode::DisplayedHeaders::down(KNDisplayedHeader *h)
     mHeaderList.takeAt( idx );
     mHeaderList.insert( idx + 1, h );
   }
-  else kdDebug(5003) << "KNConfig::DisplayedHeaders::down() : item not found in list" << endl;
+  else kDebug(5003) << "KNConfig::DisplayedHeaders::down() : item not found in list" << endl;
 }
 
 
@@ -427,7 +427,7 @@ void KNode::Cleanup::saveConfig(KConfigBase *conf)
 
 void KNode::Cleanup::save()
 {
-  kdDebug(5003) << "KNConfig::Cleanup::save()" << endl;
+  kDebug(5003) << "KNConfig::Cleanup::save()" << endl;
   if (mGlobal) {
     KConfig *conf = knGlobals.config();
     conf->setGroup( "EXPIRE" );

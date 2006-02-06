@@ -80,7 +80,7 @@ KNGroupDialog::~KNGroupDialog()
 
 void KNGroupDialog::itemChangedState(CheckItem *it, bool s)
 {
-  kdDebug(5003) << "KNGroupDialog::itemChangedState()" << endl;
+  kDebug(5003) << "KNGroupDialog::itemChangedState()" << endl;
   if(s){
     if(itemInListView(unsubView, it->info)) {
       removeListItem(unsubView, it->info);

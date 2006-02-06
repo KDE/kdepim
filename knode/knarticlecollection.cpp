@@ -57,7 +57,7 @@ bool KNArticleVector::resize(int s)
   }
   else {
     s_ize=nSize;
-    //kdDebug(5003) << "size : " << siz << "\n" << endl;
+    //kDebug(5003) << "size : " << siz << "\n" << endl;
     return true;
   }
 
@@ -371,7 +371,7 @@ KNArticle* KNArticleCollection::byMessageId( const QByteArray &mid )
 {
   if(m_idIndex.isEmpty()) {
     m_idIndex.syncWithMaster();
-    kdDebug(5003) << "KNArticleCollection::byMessageId() : created index" << endl;
+    kDebug(5003) << "KNArticleCollection::byMessageId() : created index" << endl;
   }
   return m_idIndex.bsearch(mid);
 }
@@ -391,7 +391,7 @@ void KNArticleCollection::syncSearchIndex()
   m_idIndex.syncWithMaster();
 
   /*for(int i=0; i<m_idIndex.length(); i++) {
-    kdDebug(5003) << m_idIndex.at(i)->id() << " , " << m_idIndex.at(i)->messageID()->as7BitString(false) << endl;
+    kDebug(5003) << m_idIndex.at(i)->id() << " , " << m_idIndex.at(i)->messageID()->as7BitString(false) << endl;
   } */
 }
 

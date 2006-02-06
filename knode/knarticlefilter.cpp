@@ -126,7 +126,7 @@ void KNArticleFilter::load()
 
   l_oaded=true;
 
-  kdDebug(5003) << "KNMessageFilter: filter loaded \"" << n_ame << "\" " << endl;
+  kDebug(5003) << "KNMessageFilter: filter loaded \"" << n_ame << "\" " << endl;
 
 }
 
@@ -173,7 +173,7 @@ void KNArticleFilter::save()
   conf.setGroup("REFERENCES");
   references.save(&conf);
 
-  kdDebug(5003) << "KNMessageFilter: filter saved \"" << n_ame << "\" " << endl;
+  kDebug(5003) << "KNMessageFilter: filter saved \"" << n_ame << "\" " << endl;
 }
 
 
@@ -273,7 +273,7 @@ void KNArticleFilter::doFilter(KNGroup *g)
     }
   }
 
-  kdDebug(5003) << "KNArticleFilter::doFilter() : matched " << c_ount
+  kDebug(5003) << "KNArticleFilter::doFilter() : matched " << c_ount
                 << " articles , merged " << mergeCnt
                 << " threads by subject" << endl;
 

@@ -165,18 +165,18 @@ void KNFolder::setParent(KNCollection *p)
 bool KNFolder::loadHdrs()
 {
   if(isLoaded()) {
-    kdDebug(5003) << "KNFolder::loadHdrs() : already loaded" << endl;
+    kDebug(5003) << "KNFolder::loadHdrs() : already loaded" << endl;
     return true;
   }
 
   if(!i_ndexFile.open(QIODevice::ReadOnly)) {
-    kdError(5003) << "KNFolder::loadHdrs() : cannot open index-file!" << endl;
+    kError(5003) << "KNFolder::loadHdrs() : cannot open index-file!" << endl;
     closeFiles();
     return false;
   }
 
   if(!m_boxFile.open(QIODevice::ReadOnly)) {
-    kdError(5003) << "KNFolder::loadHdrs() : cannot open mbox-file!" << endl;
+    kError(5003) << "KNFolder::loadHdrs() : cannot open mbox-file!" << endl;
     closeFiles();
     return false;
   }
@@ -201,11 +201,11 @@ bool KNFolder::loadHdrs()
     byteCount=i_ndexFile.read((char*)(&dynamic), sizeof(DynData));
     if(byteCount!=sizeof(DynData))
       if( i_ndexFile.error() == QFile::NoError ) {
-        kdWarning(5003) << "KNFolder::loadHeaders() : found broken entry in index-file: Ignored!" << endl;
+        kWarning(5003) << "KNFolder::loadHeaders() : found broken entry in index-file: Ignored!" << endl;
         continue;
       }
       else {
-        kdError(5003) << "KNFolder::loadHeaders() : corrupted index-file, IO-error!" << endl;
+        kError(5003) << "KNFolder::loadHeaders() : corrupted index-file, IO-error!" << endl;
         closeFiles();
         clear();
         knGlobals.top->setCursorBusy( false );
@@ -219,7 +219,7 @@ bool KNFolder::loadHdrs()
 
     //read overview
     if(!m_boxFile.at(art->startOffset())) {
-      kdError(5003) << "KNFolder::loadHdrs() : cannot set mbox file-pointer!" << endl;
+      kError(5003) << "KNFolder::loadHdrs() : cannot set mbox file-pointer!" << endl;
       closeFiles();
       clear();
       knGlobals.top->setCursorBusy( false );
@@ -230,12 +230,12 @@ bool KNFolder::loadHdrs()
       tmp.resize( tmp.length() - 1 );
     if(tmp.isEmpty()) {
       if( m_boxFile.error() == QFile::NoError ) {
-        kdWarning(5003) << "found broken entry in mbox-file: Ignored!" << endl;
+        kWarning(5003) << "found broken entry in mbox-file: Ignored!" << endl;
         delete art;
         continue;
       }
       else {
-        kdError(5003) << "KNFolder::loadHdrs() : corrupted mbox-file, IO-error!"<< endl;
+        kError(5003) << "KNFolder::loadHdrs() : corrupted mbox-file, IO-error!"<< endl;
         closeFiles();
         clear();
         knGlobals.top->setCursorBusy( false );
@@ -280,7 +280,7 @@ bool KNFolder::loadHdrs()
     }
 
     if(!append(art)) {
-      kdError(5003) << "KNFolder::loadHdrs() : cannot append article!"<< endl;
+      kError(5003) << "KNFolder::loadHdrs() : cannot append article!"<< endl;
       delete art;
       clear();
       closeFiles();
@@ -332,14 +332,14 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
 
   closeFiles();
   if(!m_boxFile.open(QIODevice::ReadOnly)) {
-    kdError(5003) << "KNFolder::loadArticle(KNLocalArticle *a) : cannot open mbox file: "
+    kError(5003) << "KNFolder::loadArticle(KNLocalArticle *a) : cannot open mbox file: "
                   << m_boxFile.name() << endl;
     return false;
   }
 
   //set file-pointer
   if(!m_boxFile.at(a->startOffset())) {
-    kdError(5003) << "KNFolder::loadArticle(KNLocalArticle *a) : cannot set mbox file-pointer!" << endl;
+    kError(5003) << "KNFolder::loadArticle(KNLocalArticle *a) : cannot set mbox file-pointer!" << endl;
     closeFiles();
     return false;
   }
@@ -353,7 +353,7 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
   int readBytes=m_boxFile.read(buff.data(), size);
   closeFiles();
   if ( readBytes < (int)(size) && m_boxFile.error() != QFile::NoError ) {  // cannot read file
-    kdError(5003) << "KNFolder::loadArticle(KNLocalArticle *a) : corrupted mbox file, IO-error!" << endl;
+    kError(5003) << "KNFolder::loadArticle(KNLocalArticle *a) : corrupted mbox file, IO-error!" << endl;
     return false;
   }
 
@@ -372,7 +372,7 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
     return false;
 
   if(!m_boxFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
-    kdError(5003) << "KNFolder::saveArticles() : cannot open mbox-file!" << endl;
+    kError(5003) << "KNFolder::saveArticles() : cannot open mbox-file!" << endl;
     closeFiles();
     return false;
   }
@@ -400,7 +400,7 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
         oldFolder->removeArticles( l, false );
       }
       if ( !append( (*it) ) ) {
-        kdError(5003) << "KNFolder::saveArticle(KNLocalArticle::List *l) : cannot append article!" << endl;
+        kError(5003) << "KNFolder::saveArticle(KNLocalArticle::List *l) : cannot append article!" << endl;
         ret = false;
         continue;
         (*it)->setCollection(0);
@@ -446,7 +446,7 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
 
     }
     else {
-      kdError(5003) << "KNFolder::saveArticle() : article not in folder!" << endl;
+      kError(5003) << "KNFolder::saveArticle() : article not in folder!" << endl;
       ret=false;
     }
 
@@ -541,7 +541,7 @@ void KNFolder::syncIndex(bool force)
     return;
 
   if(!i_ndexFile.open(QIODevice::WriteOnly)) {
-    kdError(5003) << "KNFolder::syncIndex(bool force) : cannot open index-file!" << endl;
+    kError(5003) << "KNFolder::syncIndex(bool force) : cannot open index-file!" << endl;
     closeFiles();
     return;
   }

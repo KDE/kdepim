@@ -86,7 +86,7 @@ void KNAccountManager::loadAccounts()
       emit accountAdded(a);
     } else {
       delete a;
-      kdError(5003) << "Unable to load account " << (*it) << "!" << endl;
+      kError(5003) << "Unable to load account " << (*it) << "!" << endl;
     }
   }
 }

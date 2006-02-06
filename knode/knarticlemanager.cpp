@@ -546,7 +546,7 @@ void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
 void KNArticleManager::moveIntoFolder(KNLocalArticle::List &l, KNFolder *f)
 {
   if(!f) return;
-  kdDebug(5003) << k_funcinfo << " Target folder: " << f->name() << endl;
+  kDebug(5003) << k_funcinfo << " Target folder: " << f->name() << endl;
 
   f->setNotUnloadable(true);
 

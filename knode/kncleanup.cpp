@@ -188,7 +188,7 @@ void KNCleanUp::expireGroup( KNGroup *g, bool showResult )
   g->saveInfo();
   leftCnt=g->count();
 
-  kdDebug(5003) << "KNCleanUp::expireGroup() : " << g->groupname() << ": "
+  kDebug(5003) << "KNCleanUp::expireGroup() : " << g->groupname() << ": "
     << delCnt << " deleted , " << leftCnt << " left" << endl;
 
   if(showResult)

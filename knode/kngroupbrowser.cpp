@@ -273,7 +273,7 @@ void KNGroupBrowser::slotItemExpand(Q3ListViewItem *it)
   if(!it) return;
 
   if(it->childCount()) {
-    kdDebug(5003) << "KNGroupBrowser::slotItemExpand() : has already been expanded, returning" << endl;
+    kDebug(5003) << "KNGroupBrowser::slotItemExpand() : has already been expanded, returning" << endl;
     return;
   }
 
@@ -449,7 +449,7 @@ void KNGroupBrowser::CheckItem::setChecked(bool c)
 void KNGroupBrowser::CheckItem::stateChange(bool s)
 {
   if(browser) {
-    kdDebug(5003) << "KNGroupBrowser::CheckItem::stateChange()" << endl;
+    kDebug(5003) << "KNGroupBrowser::CheckItem::stateChange()" << endl;
     browser->itemChangedState(this, s);
   }
 }

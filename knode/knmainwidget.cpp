@@ -244,34 +244,34 @@ KNMainWidget::~KNMainWidget()
   h_drView->clear(); //avoid some random crashes in KNHdrViewItem::~KNHdrViewItem()
 
   delete knGlobals.scheduler();
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Scheduler deleted" << endl;
+  kDebug(5003) << "KNMainWidget::~KNMainWidget() : Scheduler deleted" << endl;
 
   delete a_rtManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Article Manager deleted" << endl;
+  kDebug(5003) << "KNMainWidget::~KNMainWidget() : Article Manager deleted" << endl;
 
   delete a_rtFactory;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Article Factory deleted" << endl;
+  kDebug(5003) << "KNMainWidget::~KNMainWidget() : Article Factory deleted" << endl;
 
   delete g_rpManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Group Manager deleted" << endl;
+  kDebug(5003) << "KNMainWidget::~KNMainWidget() : Group Manager deleted" << endl;
 
   delete f_olManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Folder Manager deleted" << endl;
+  kDebug(5003) << "KNMainWidget::~KNMainWidget() : Folder Manager deleted" << endl;
 
   delete f_ilManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Filter Manager deleted" << endl;
+  kDebug(5003) << "KNMainWidget::~KNMainWidget() : Filter Manager deleted" << endl;
 
   delete a_ccManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Account Manager deleted" << endl;
+  kDebug(5003) << "KNMainWidget::~KNMainWidget() : Account Manager deleted" << endl;
 
   delete c_fgManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Config deleted" << endl;
+  kDebug(5003) << "KNMainWidget::~KNMainWidget() : Config deleted" << endl;
 
   delete m_emManager;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : Memory Manager deleted" << endl;
+  kDebug(5003) << "KNMainWidget::~KNMainWidget() : Memory Manager deleted" << endl;
 
   delete p_gp;
-  kdDebug(5003) << "KNMainWidget::~KNMainWidget() : PGP deleted" << endl;
+  kDebug(5003) << "KNMainWidget::~KNMainWidget() : PGP deleted" << endl;
 }
 
 void KNMainWidget::initStatusBar()
@@ -407,7 +407,7 @@ QSize KNMainWidget::sizeHint() const
 
 void KNMainWidget::openURL(const KUrl &url)
 {
-  kdDebug(5003) << k_funcinfo << url << endl;
+  kDebug(5003) << k_funcinfo << url << endl;
   QString host = url.host();
   unsigned short int port = url.port();
   KNNntpAccount *acc=0;
@@ -447,7 +447,7 @@ void KNMainWidget::openURL(const KUrl &url)
       if ( acc == 0 )
         acc = a_ccManager->first();
     } else {
-      kdDebug(5003) << "KNMainWidget::openURL() URL is not a valid news URL" << endl;
+      kDebug(5003) << "KNMainWidget::openURL() URL is not a valid news URL" << endl;
     }
   }
 
@@ -496,7 +496,7 @@ void KNMainWidget::openURL(const KUrl &url)
         }
       } else {
         // TODO: fetch without group
-        kdDebug(5003) << "KNMainWidget::openURL() account has no groups" << endl;
+        kDebug(5003) << "KNMainWidget::openURL() account has no groups" << endl;
       }
     }
   }
@@ -781,7 +781,7 @@ void KNMainWidget::saveOptions()
 
 bool KNMainWidget::requestShutdown()
 {
-  kdDebug(5003) << "KNMainWidget::requestShutdown()" << endl;
+  kDebug(5003) << "KNMainWidget::requestShutdown()" << endl;
 
   if( a_rtFactory->jobsPending() &&
       KMessageBox::No==KMessageBox::warningYesNo(this, i18n(
@@ -799,7 +799,7 @@ bool KNMainWidget::requestShutdown()
 
 void KNMainWidget::prepareShutdown()
 {
-  kdDebug(5003) << "KNMainWidget::prepareShutdown()" << endl;
+  kDebug(5003) << "KNMainWidget::prepareShutdown()" << endl;
 
   //cleanup article-views
   ArticleWidget::cleanup();
@@ -932,7 +932,7 @@ void KNMainWidget::closeCurrentThread()
 
 void KNMainWidget::slotArticleSelected(Q3ListViewItem *i)
 {
-  kdDebug(5003) << "KNMainWidget::slotArticleSelected(QListViewItem *i)" << endl;
+  kDebug(5003) << "KNMainWidget::slotArticleSelected(QListViewItem *i)" << endl;
   if(b_lockui)
     return;
   KNArticle *selectedArticle=0;
@@ -994,7 +994,7 @@ void KNMainWidget::slotArticleSelectionChanged()
 
 void KNMainWidget::slotCollectionSelected(Q3ListViewItem *i)
 {
-  kdDebug(5003) << "KNMainWidget::slotCollectionSelected(QListViewItem *i)" << endl;
+  kDebug(5003) << "KNMainWidget::slotCollectionSelected(QListViewItem *i)" << endl;
   if(b_lockui)
     return;
   KNCollection *c=0;
@@ -1111,7 +1111,7 @@ void KNMainWidget::slotCollectionSelected(Q3ListViewItem *i)
 
 void KNMainWidget::slotCollectionRenamed(Q3ListViewItem *i)
 {
-  kdDebug(5003) << "KNMainWidget::slotCollectionRenamed(QListViewItem *i)" << endl;
+  kDebug(5003) << "KNMainWidget::slotCollectionRenamed(QListViewItem *i)" << endl;
 
   if (i) {
     (static_cast<KNCollectionViewItem*>(i))->coll->setName(i->text(0));
@@ -1126,7 +1126,7 @@ void KNMainWidget::slotCollectionRenamed(Q3ListViewItem *i)
 
 void KNMainWidget::slotCollectionViewDrop(QDropEvent* e, KNCollectionViewItem* after)
 {
-  kdDebug(5003) << "KNMainWidget::slotCollectionViewDrop() : type = " << e->format(0) << endl;
+  kDebug(5003) << "KNMainWidget::slotCollectionViewDrop() : type = " << e->format(0) << endl;
 
   KNCollectionViewItem *cvi=static_cast<KNCollectionViewItem*>(after);
   if (cvi && cvi->coll->type() != KNCollection::CTfolder)   // safety measure...
@@ -1257,7 +1257,7 @@ void KNMainWidget::slotNavNextUnreadThread()
 
 void KNMainWidget::slotNavReadThrough()
 {
-  kdDebug(5003) << "KNMainWidget::slotNavReadThrough()" << endl;
+  kDebug(5003) << "KNMainWidget::slotNavReadThrough()" << endl;
   if ( !mArticleViewer->atBottom() )
     mArticleViewer->scrollNext();
   else if(g_rpManager->currentGroup() != 0)
@@ -1267,7 +1267,7 @@ void KNMainWidget::slotNavReadThrough()
 
 void KNMainWidget::slotAccProperties()
 {
-  kdDebug(5003) << "KNMainWidget::slotAccProperties()" << endl;
+  kDebug(5003) << "KNMainWidget::slotAccProperties()" << endl;
   if(a_ccManager->currentAccount())
     a_ccManager->editProperties(a_ccManager->currentAccount());
   updateCaption();
@@ -1277,7 +1277,7 @@ void KNMainWidget::slotAccProperties()
 
 void KNMainWidget::slotAccRename()
 {
-  kdDebug(5003) << "KNMainWidget::slotAccRename()" << endl;
+  kDebug(5003) << "KNMainWidget::slotAccRename()" << endl;
   if(a_ccManager->currentAccount()) {
     disableAccels(true);   // hack: global accels break the inplace renaming
     c_olView->rename(a_ccManager->currentAccount()->listItem(), 0);
@@ -1287,7 +1287,7 @@ void KNMainWidget::slotAccRename()
 
 void KNMainWidget::slotAccSubscribe()
 {
-  kdDebug(5003) << "KNMainWidget::slotAccSubscribe()" << endl;
+  kDebug(5003) << "KNMainWidget::slotAccSubscribe()" << endl;
   if(a_ccManager->currentAccount())
     g_rpManager->showGroupDialog(a_ccManager->currentAccount());
 }
@@ -1295,7 +1295,7 @@ void KNMainWidget::slotAccSubscribe()
 
 void KNMainWidget::slotAccExpireAll()
 {
-  kdDebug(5003) << "KNMainWidget::slotAccExpireAll()" << endl;
+  kDebug(5003) << "KNMainWidget::slotAccExpireAll()" << endl;
   if(a_ccManager->currentAccount())
     g_rpManager->expireAll(a_ccManager->currentAccount());
 }
@@ -1303,7 +1303,7 @@ void KNMainWidget::slotAccExpireAll()
 
 void KNMainWidget::slotAccGetNewHdrs()
 {
-  kdDebug(5003) << "KNMainWidget::slotAccGetNewHdrs()" << endl;
+  kDebug(5003) << "KNMainWidget::slotAccGetNewHdrs()" << endl;
   if(a_ccManager->currentAccount())
     g_rpManager->checkAll(a_ccManager->currentAccount());
 }
@@ -1312,7 +1312,7 @@ void KNMainWidget::slotAccGetNewHdrs()
 
 void KNMainWidget::slotAccDelete()
 {
-  kdDebug(5003) << "KNMainWidget::slotAccDelete()" << endl;
+  kDebug(5003) << "KNMainWidget::slotAccDelete()" << endl;
   if(a_ccManager->currentAccount()) {
     if (a_ccManager->removeAccount(a_ccManager->currentAccount()))
       slotCollectionSelected(0);
@@ -1328,7 +1328,7 @@ void KNMainWidget::slotAccGetNewHdrsAll()
 
 void KNMainWidget::slotAccPostNewArticle()
 {
-  kdDebug(5003) << "KNMainWidget::slotAccPostNewArticle()" << endl;
+  kDebug(5003) << "KNMainWidget::slotAccPostNewArticle()" << endl;
   if(g_rpManager->currentGroup())
     a_rtFactory->createPosting(g_rpManager->currentGroup());
   else if(a_ccManager->currentAccount())
@@ -1338,7 +1338,7 @@ void KNMainWidget::slotAccPostNewArticle()
 
 void KNMainWidget::slotGrpProperties()
 {
-  kdDebug(5003) << "slotGrpProperties()" << endl;
+  kDebug(5003) << "slotGrpProperties()" << endl;
   if(g_rpManager->currentGroup())
     g_rpManager->showGroupProperties(g_rpManager->currentGroup());
   updateCaption();
@@ -1348,7 +1348,7 @@ void KNMainWidget::slotGrpProperties()
 
 void KNMainWidget::slotGrpRename()
 {
-  kdDebug(5003) << "slotGrpRename()" << endl;
+  kDebug(5003) << "slotGrpRename()" << endl;
   if(g_rpManager->currentGroup()) {
     disableAccels(true);   // hack: global accels break the inplace renaming
     c_olView->rename(g_rpManager->currentGroup()->listItem(), 0);
@@ -1358,7 +1358,7 @@ void KNMainWidget::slotGrpRename()
 
 void KNMainWidget::slotGrpGetNewHdrs()
 {
-  kdDebug(5003) << "KNMainWidget::slotGrpGetNewHdrs()" << endl;
+  kDebug(5003) << "KNMainWidget::slotGrpGetNewHdrs()" << endl;
   if(g_rpManager->currentGroup())
     g_rpManager->checkGroupForNewHeaders(g_rpManager->currentGroup());
 }
@@ -1366,7 +1366,7 @@ void KNMainWidget::slotGrpGetNewHdrs()
 
 void KNMainWidget::slotGrpExpire()
 {
-  kdDebug(5003) << "KNMainWidget::slotGrpExpire()" << endl;
+  kDebug(5003) << "KNMainWidget::slotGrpExpire()" << endl;
   if(g_rpManager->currentGroup())
     g_rpManager->expireGroupNow(g_rpManager->currentGroup());
 }
@@ -1374,14 +1374,14 @@ void KNMainWidget::slotGrpExpire()
 
 void KNMainWidget::slotGrpReorganize()
 {
-  kdDebug(5003) << "KNMainWidget::slotGrpReorganize()" << endl;
+  kDebug(5003) << "KNMainWidget::slotGrpReorganize()" << endl;
   g_rpManager->reorganizeGroup(g_rpManager->currentGroup());
 }
 
 
 void KNMainWidget::slotGrpUnsubscribe()
 {
-  kdDebug(5003) << "KNMainWidget::slotGrpUnsubscribe()" << endl;
+  kDebug(5003) << "KNMainWidget::slotGrpUnsubscribe()" << endl;
   if(g_rpManager->currentGroup()) {
     if(KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,
        i18n("Do you really want to unsubscribe from %1?").arg(g_rpManager->currentGroup()->groupname()), QString(), i18n("Unsubscribe"), KStdGuiItem::cancel()))
@@ -1393,7 +1393,7 @@ void KNMainWidget::slotGrpUnsubscribe()
 
 void KNMainWidget::slotGrpSetAllRead()
 {
-  kdDebug(5003) << "KNMainWidget::slotGrpSetAllRead()" << endl;
+  kDebug(5003) << "KNMainWidget::slotGrpSetAllRead()" << endl;
 
   a_rtManager->setAllRead(true);
   if ( knGlobals.settings()->markAllReadGoNext() )
@@ -1403,13 +1403,13 @@ void KNMainWidget::slotGrpSetAllRead()
 
 void KNMainWidget::slotGrpSetAllUnread()
 {
-  kdDebug(5003) << "KNMainWidget::slotGrpSetAllUnread()" << endl;
+  kDebug(5003) << "KNMainWidget::slotGrpSetAllUnread()" << endl;
   a_rtManager->setAllRead(false);
 }
 
 void KNMainWidget::slotGrpSetUnread()
 {
-  kdDebug(5003) << "KNMainWidget::slotGrpSetUnread()" << endl;
+  kDebug(5003) << "KNMainWidget::slotGrpSetUnread()" << endl;
   int groupLength = g_rpManager->currentGroup()->length();
 
   bool ok = false;
@@ -1422,7 +1422,7 @@ void KNMainWidget::slotGrpSetUnread()
 
 void KNMainWidget::slotFolNew()
 {
-  kdDebug(5003) << "KNMainWidget::slotFolNew()" << endl;
+  kDebug(5003) << "KNMainWidget::slotFolNew()" << endl;
   KNFolder *f = f_olManager->newFolder(0);
 
   if (f) {
@@ -1436,7 +1436,7 @@ void KNMainWidget::slotFolNew()
 
 void KNMainWidget::slotFolNewChild()
 {
-  kdDebug(5003) << "KNMainWidget::slotFolNew()" << endl;
+  kDebug(5003) << "KNMainWidget::slotFolNew()" << endl;
   if(f_olManager->currentFolder()) {
     KNFolder *f = f_olManager->newFolder(f_olManager->currentFolder());
 
@@ -1452,7 +1452,7 @@ void KNMainWidget::slotFolNewChild()
 
 void KNMainWidget::slotFolDelete()
 {
-  kdDebug(5003) << "KNMainWidget::slotFolDelete()" << endl;
+  kDebug(5003) << "KNMainWidget::slotFolDelete()" << endl;
 
   if(!f_olManager->currentFolder() || f_olManager->currentFolder()->isRootFolder())
     return;
@@ -1474,7 +1474,7 @@ void KNMainWidget::slotFolDelete()
 
 void KNMainWidget::slotFolRename()
 {
-  kdDebug(5003) << "KNMainWidget::slotFolRename()" << endl;
+  kDebug(5003) << "KNMainWidget::slotFolRename()" << endl;
 
   if(f_olManager->currentFolder() && !f_olManager->currentFolder()->isRootFolder()) {
     if(f_olManager->currentFolder()->isStandardFolder())
@@ -1489,7 +1489,7 @@ void KNMainWidget::slotFolRename()
 
 void KNMainWidget::slotFolCompact()
 {
-  kdDebug(5003) << "KNMainWidget::slotFolCompact()" << endl;
+  kDebug(5003) << "KNMainWidget::slotFolCompact()" << endl;
   if(f_olManager->currentFolder() && !f_olManager->currentFolder()->isRootFolder())
     f_olManager->compactFolder(f_olManager->currentFolder());
 }
@@ -1497,14 +1497,14 @@ void KNMainWidget::slotFolCompact()
 
 void KNMainWidget::slotFolCompactAll()
 {
-  kdDebug(5003) << "KNMainWidget::slotFolCompactAll()" << endl;
+  kDebug(5003) << "KNMainWidget::slotFolCompactAll()" << endl;
   f_olManager->compactAll();
 }
 
 
 void KNMainWidget::slotFolEmpty()
 {
-  kdDebug(5003) << "KNMainWidget::slotFolEmpty()" << endl;
+  kDebug(5003) << "KNMainWidget::slotFolEmpty()" << endl;
   if(f_olManager->currentFolder() && !f_olManager->currentFolder()->isRootFolder()) {
     if(f_olManager->currentFolder()->lockedArticles()>0) {
       KMessageBox::sorry(this,
@@ -1520,7 +1520,7 @@ void KNMainWidget::slotFolEmpty()
 
 void KNMainWidget::slotFolMBoxImport()
 {
-  kdDebug(5003) << "KNMainWidget::slotFolMBoxImport()" << endl;
+  kDebug(5003) << "KNMainWidget::slotFolMBoxImport()" << endl;
   if(f_olManager->currentFolder() && !f_olManager->currentFolder()->isRootFolder()) {
      f_olManager->importFromMBox(f_olManager->currentFolder());
   }
@@ -1529,7 +1529,7 @@ void KNMainWidget::slotFolMBoxImport()
 
 void KNMainWidget::slotFolMBoxExport()
 {
-  kdDebug(5003) << "KNMainWidget::slotFolMBoxExport()" << endl;
+  kDebug(5003) << "KNMainWidget::slotFolMBoxExport()" << endl;
   if(f_olManager->currentFolder() && !f_olManager->currentFolder()->isRootFolder()) {
     f_olManager->exportToMBox(f_olManager->currentFolder());
   }
@@ -1538,14 +1538,14 @@ void KNMainWidget::slotFolMBoxExport()
 
 void KNMainWidget::slotArtSortHeaders(int i)
 {
-  kdDebug(5003) << "KNMainWidget::slotArtSortHeaders(int i)" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtSortHeaders(int i)" << endl;
   h_drView->setSorting( i );
 }
 
 
 void KNMainWidget::slotArtSortHeadersKeyb()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtSortHeadersKeyb()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtSortHeadersKeyb()" << endl;
 
   int newCol = KNHelper::selectDialog(this, i18n("Select Sort Column"), a_ctArtSortHeaders->items(), a_ctArtSortHeaders->currentItem());
   if (newCol != -1)
@@ -1555,21 +1555,21 @@ void KNMainWidget::slotArtSortHeadersKeyb()
 
 void KNMainWidget::slotArtSearch()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtSearch()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtSearch()" << endl;
   a_rtManager->search();
 }
 
 
 void KNMainWidget::slotArtRefreshList()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtRefreshList()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtRefreshList()" << endl;
   a_rtManager->showHdrs(true);
 }
 
 
 void KNMainWidget::slotArtCollapseAll()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtCollapseAll()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtCollapseAll()" << endl;
 
   closeCurrentThread();
   a_rtManager->setAllThreadsOpen(false);
@@ -1580,7 +1580,7 @@ void KNMainWidget::slotArtCollapseAll()
 
 void KNMainWidget::slotArtExpandAll()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtExpandAll()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtExpandAll()" << endl;
 
   a_rtManager->setAllThreadsOpen(true);
   if (h_drView->currentItem())
@@ -1590,7 +1590,7 @@ void KNMainWidget::slotArtExpandAll()
 
 void KNMainWidget::slotArtToggleThread()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtToggleThread()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtToggleThread()" << endl;
   if( mArticleViewer->article() && mArticleViewer->article()->listItem()->isExpandable() ) {
     bool o = !(mArticleViewer->article()->listItem()->isOpen());
     mArticleViewer->article()->listItem()->setOpen( o );
@@ -1600,7 +1600,7 @@ void KNMainWidget::slotArtToggleThread()
 
 void KNMainWidget::slotArtToggleShowThreads()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtToggleShowThreads()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtToggleShowThreads()" << endl;
   if(g_rpManager->currentGroup()) {
     knGlobals.settings()->setShowThreads( !knGlobals.settings()->showThreads() );
     a_rtManager->showHdrs(true);
@@ -1610,7 +1610,7 @@ void KNMainWidget::slotArtToggleShowThreads()
 
 void KNMainWidget::slotArtSetArtRead()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtSetArtRead()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtSetArtRead()" << endl;
   if(!g_rpManager->currentGroup())
     return;
 
@@ -1622,7 +1622,7 @@ void KNMainWidget::slotArtSetArtRead()
 
 void KNMainWidget::slotArtSetArtUnread()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtSetArtUnread()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtSetArtUnread()" << endl;
   if(!g_rpManager->currentGroup())
     return;
 
@@ -1634,7 +1634,7 @@ void KNMainWidget::slotArtSetArtUnread()
 
 void KNMainWidget::slotArtSetThreadRead()
 {
-  kdDebug(5003) << "slotArtSetThreadRead()" << endl;
+  kDebug(5003) << "slotArtSetThreadRead()" << endl;
   if( !g_rpManager->currentGroup() )
     return;
 
@@ -1653,7 +1653,7 @@ void KNMainWidget::slotArtSetThreadRead()
 
 void KNMainWidget::slotArtSetThreadUnread()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtSetThreadUnread()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtSetThreadUnread()" << endl;
   if( !g_rpManager->currentGroup() )
     return;
 
@@ -1665,14 +1665,14 @@ void KNMainWidget::slotArtSetThreadUnread()
 
 void KNMainWidget::slotScoreEdit()
 {
-  kdDebug(5003) << "KNMainWidget::slotScoreEdit()" << endl;
+  kDebug(5003) << "KNMainWidget::slotScoreEdit()" << endl;
   s_coreManager->configure();
 }
 
 
 void KNMainWidget::slotReScore()
 {
-  kdDebug(5003) << "KNMainWidget::slotReScore()" << endl;
+  kDebug(5003) << "KNMainWidget::slotReScore()" << endl;
   if( !g_rpManager->currentGroup() )
     return;
 
@@ -1683,7 +1683,7 @@ void KNMainWidget::slotReScore()
 
 void KNMainWidget::slotScoreLower()
 {
-  kdDebug(5003) << "KNMainWidget::slotScoreLower() start" << endl;
+  kDebug(5003) << "KNMainWidget::slotScoreLower() start" << endl;
   if( !g_rpManager->currentGroup() )
     return;
 
@@ -1696,7 +1696,7 @@ void KNMainWidget::slotScoreLower()
 
 void KNMainWidget::slotScoreRaise()
 {
-  kdDebug(5003) << "KNMainWidget::slotScoreRaise() start" << endl;
+  kDebug(5003) << "KNMainWidget::slotScoreRaise() start" << endl;
   if( !g_rpManager->currentGroup() )
     return;
 
@@ -1709,7 +1709,7 @@ void KNMainWidget::slotScoreRaise()
 
 void KNMainWidget::slotArtToggleIgnored()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtToggleIgnored()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtToggleIgnored()" << endl;
   if( !g_rpManager->currentGroup() )
     return;
 
@@ -1729,7 +1729,7 @@ void KNMainWidget::slotArtToggleIgnored()
 
 void KNMainWidget::slotArtToggleWatched()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtToggleWatched()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtToggleWatched()" << endl;
   if( !g_rpManager->currentGroup() )
     return;
 
@@ -1742,7 +1742,7 @@ void KNMainWidget::slotArtToggleWatched()
 
 void KNMainWidget::slotArtOpenNewWindow()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtOpenNewWindow()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtOpenNewWindow()" << endl;
 
   if( mArticleViewer->article() ) {
     if ( !ArticleWindow::raiseWindowForArticle( mArticleViewer->article() ) ) {
@@ -1755,14 +1755,14 @@ void KNMainWidget::slotArtOpenNewWindow()
 
 void KNMainWidget::slotArtSendOutbox()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtSendOutbox()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtSendOutbox()" << endl;
   a_rtFactory->sendOutbox();
 }
 
 
 void KNMainWidget::slotArtDelete()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtDelete()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtDelete()" << endl;
   if (!f_olManager->currentFolder())
     return;
 
@@ -1779,7 +1779,7 @@ void KNMainWidget::slotArtDelete()
 
 void KNMainWidget::slotArtSendNow()
 {
-  kdDebug(5003) << "KNMainWidget::slotArtSendNow()" << endl;
+  kDebug(5003) << "KNMainWidget::slotArtSendNow()" << endl;
   if (!f_olManager->currentFolder())
     return;
 
@@ -1793,7 +1793,7 @@ void KNMainWidget::slotArtSendNow()
 
 void KNMainWidget::slotArtEdit()
 {
-  kdDebug(5003) << "KNodeVew::slotArtEdit()" << endl;
+  kDebug(5003) << "KNodeVew::slotArtEdit()" << endl;
   if (!f_olManager->currentFolder())
     return;
 
@@ -1804,14 +1804,14 @@ void KNMainWidget::slotArtEdit()
 
 void KNMainWidget::slotNetCancel()
 {
-  kdDebug(5003) << "KNMainWidget::slotNetCancel()" << endl;
+  kDebug(5003) << "KNMainWidget::slotNetCancel()" << endl;
   knGlobals.scheduler()->cancelJobs();
 }
 
 
 void KNMainWidget::slotFetchArticleWithID()
 {
-  kdDebug(5003) << "KNMainWidget::slotFetchArticleWithID()" << endl;
+  kDebug(5003) << "KNMainWidget::slotFetchArticleWithID()" << endl;
   if( !g_rpManager->currentGroup() )
     return;
 
@@ -1858,7 +1858,7 @@ KActionCollection* KNMainWidget::actionCollection() const
 
 KXMLGUIFactory* KNMainWidget::factory() const
 {
-  kdDebug(5003)<<"m_guiclient is "<< m_GUIClient
+  kDebug(5003)<<"m_guiclient is "<< m_GUIClient
            <<", the factory is " << m_GUIClient->factory() <<endl;
   return m_GUIClient->factory();
 }

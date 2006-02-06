@@ -47,7 +47,7 @@ KNGlobals::KNGlobals() :
   mMemManager( 0 ),
   mSettings( 0 )
 {
-  kdDebug(5003) << k_funcinfo << endl;
+  kDebug(5003) << k_funcinfo << endl;
 
   // find knode icons even when running in kontact
   KGlobal::iconLoader()->addAppDir("knode");
@@ -55,7 +55,7 @@ KNGlobals::KNGlobals() :
 
 KNGlobals::~KNGlobals( )
 {
-  kdDebug(5003) << k_funcinfo << endl;
+  kDebug(5003) << k_funcinfo << endl;
   delete mScoreManager;
   delete mSettings;
 }

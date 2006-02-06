@@ -42,7 +42,7 @@ void KNode::MailSendJob::execute()
   else
     destination.setProtocol( "smtp" );
   destination.setQuery( query.join( "&" ) );
-  kdDebug(5003) << k_funcinfo << destination << endl;
+  kDebug(5003) << k_funcinfo << destination << endl;
 
   // create job
   KIO::Job* job = KIO::storedPut( art->encodedContent( true ), destination, -1, false, false, false );
