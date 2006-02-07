@@ -299,10 +299,16 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       if( sMethod == "request" ) {
         // FIXME: All these "if (event) ... else ..." constructions are ugly.
         if( event ) {
-          html += i18n( "<h2>You have been invited to this meeting</h2>" );
+          if ( event->revision() > 0 )
+            html += i18n( "<h2>This meeting has been updated</h2>" );
+          else 
+            html += i18n( "<h2>You have been invited to this meeting</h2>" );
           html += meetingDetails( incidence, event );
         } else {
-          html += i18n( "<h2>You have been assigned this task</h2>" );
+          if ( todo->revision() > 0 )
+            html += i18n( "<h2>This task has been updated</h2>" );
+          else 
+            html += i18n( "<h2>You have been assigned this task</h2>" );
           html += taskDetails( incidence );
         }
       } else if( sMethod == "reply" ) {
@@ -388,7 +394,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       // Add the groupware URLs
       html += "<br>&nbsp;<br>&nbsp;<br>";
       html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td><td>";
-      if( sMethod == "request" || sMethod == "update" ) {
+      if( ( sMethod == "request" || sMethod == "update" ) && incidence->revision() == 0 ) {
         // Accept
         html += "<a href=\"" +
                 bodyPart->makeLink( "accept" ) + "\"><b>";
@@ -416,7 +422,8 @@ class Formatter : public KMail::Interface::BodyPartFormatter
           html += i18n("[Check my calendar...]" );
         }
 #endif
-      } else if( sMethod == "reply" || sMethod == "publish" ) {
+      } else if( sMethod == "reply" || sMethod == "publish" 
+            || ( sMethod == "request" && incidence->revision() > 0 ) ) {
         // Enter this into my calendar
         html += "<a href=\"" +
                 bodyPart->makeLink( "reply" ) + "\"><b>";
