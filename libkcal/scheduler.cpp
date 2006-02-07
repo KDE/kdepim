@@ -299,12 +299,13 @@ bool Scheduler::acceptAdd(IncidenceBase *incidence,ScheduleMessage::Status /* st
 bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
 {
   bool ret = false;
-  Event *even = mCalendar->event(incidence->uid());
+  const IncidenceBase *toDelete = mCalendar->incidenceFromSchedulingID( incidence->uid() );
+  Event *even = mCalendar->event(toDelete->uid());
   if (even) {
     mCalendar->deleteEvent(even);
     ret = true;
   } else {
-    Todo *todo = mCalendar->todo(incidence->uid());
+    Todo *todo = mCalendar->todo(toDelete->uid());
     if (todo) {
       mCalendar->deleteTodo(todo);
       ret = true;
