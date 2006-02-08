@@ -209,13 +209,7 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
         QByteArray rawData = file.readAll();
         file.close();
 
-        QTextCodec *codec = QTextCodec::codecForContent( rawData.data(), 50 );
- 
-        QString data;
-        if ( codec )
-          data = codec->toUnicode( rawData.data(), rawData.size() );
-        else
-          data = QString::fromUtf8( rawData.data(), rawData.size() );
+        QString data = QString::fromUtf8( rawData.data(), rawData.size() );
         addrList += parseVCard( data );
 
         KIO::NetAccess::removeTempFile( fileName );
