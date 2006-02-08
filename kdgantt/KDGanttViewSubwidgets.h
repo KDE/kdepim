@@ -486,6 +486,7 @@ public slots:
   void set_Mouse_Tracking(bool on);
   void moveMyContent( int, int );
   void setMyContentsHeight( int );
+  void updateHorScrollBar();
 private slots:
   void cutItem();
   void pasteItem( int );

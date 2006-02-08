@@ -4031,9 +4031,10 @@ KDGanttViewItem* KDGanttView::getItemAt( const QPoint& pos, bool global ) const
 void KDGanttView::addTickRight()
 {
   if ( _enableAdding && myCanvasView->horizontalScrollBar()->value() ==  myCanvasView->horizontalScrollBar()->maxValue()) {
-    myCanvasView->horizontalScrollBar()->blockSignals( true );
+    //myCanvasView->horizontalScrollBar()->blockSignals( true );
     myTimeHeader->addTickRight();
-    myCanvasView->horizontalScrollBar()->blockSignals( false );
+    //myCanvasView->horizontalScrollBar()->blockSignals( false );
+    myCanvasView->updateHorScrollBar();
     setTimelineToEnd();
   }
 }
