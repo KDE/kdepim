@@ -382,7 +382,8 @@ kdDebug()<<"ExchangeConverterCalendar::readIncidence: ERROR: No UID given"<<endl
     KCal::Alarm *alarm = event->newAlarm();
     alarm->setStartOffset( offset );
     alarm->setEnabled( true );
-    // TODO: multiple alarms; alarm->setType( KCal::Alarm::xxxx );
+    alarm->setType( KCal::Alarm::Display);
+    // TODO: multiple alarms; 
   }
 
 
@@ -688,7 +689,18 @@ class ExchangeConverterCalendar::createWebDAVVisitor : public IncidenceBase::Vis
       // FIXME: RecurrenceID is protected!
 //       domCalendarProperty( "recurrenceid", event->recurrenceId() );
       // FIXME: "reminderoffset"
-      // FIXME: "resources"
+      // FIXME: "resources"  Alarm::List alarms = event->alarms();
+
+       Alarm::List::ConstIterator it;
+       Alarm::List alarms = event->alarms();
+       for( it = alarms.begin(); it != alarms.end(); ++it ) {
+	 if ((*it)->hasStartOffset()) {
+	   domCalendarProperty( "reminderoffset", QString::number( (*it)->startOffset().asSeconds() * -1 ) );
+	 } else {
+	   kdDebug() << "ExchangeConverterCalendar::createWebDAVVisitor:  Alarm type not supported\n";
+	 }
+       }
+
       return true;
     }
     bool visit( Todo *todo )
@@ -789,6 +801,7 @@ QDomDocument ExchangeConverterCalendar::createWebDAV( Incidence *incidence )
 
   ExchangeConverterCalendar::createWebDAVVisitor v;
   v.act( doc, prop, incidence, mFormat.timeZoneId() );
+  kdDebug() << "ExchangeConverterCalendar::createWebDAVVisitor=" << doc.toString() << "\n";
 
   return doc;
 }
