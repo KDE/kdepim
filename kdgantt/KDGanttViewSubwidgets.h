@@ -492,11 +492,13 @@ private slots:
   void newRootItem( int );
   void newChildItem( int );
   void slotScrollTimer();
-
+  void myUpdateScrollBars();
+  
 private:
   KDCanvasToolTip* myToolTip;
   QTimer *myScrollTimer;
   QPoint mousePos;
+  QTimer scrollBarTimer;
 };
 
 class KDTimeHeaderToolTip :public QToolTip
