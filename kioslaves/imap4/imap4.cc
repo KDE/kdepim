@@ -1471,7 +1471,7 @@ IMAP4Protocol::specialQuotaCommand( int command, QDataStream& stream )
         imapCommand *cmd = doCommand(imapCommand::clientGetQuotaroot( aBox ) );
         if (cmd->result () != "OK")
         {
-          error(ERR_SLAVE_DEFINED, i18n("Retrieving the quota root inormation on folder %1 "
+          error(ERR_SLAVE_DEFINED, i18n("Retrieving the quota root information on folder %1 "
                 "failed. The server returned: %2")
               .arg(_url.prettyURL())
               .arg(cmd->resultInfo()));
