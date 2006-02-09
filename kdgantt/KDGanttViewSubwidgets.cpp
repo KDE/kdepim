@@ -3626,7 +3626,8 @@ void KDGanttCanvasView::slotScrollTimer() {
     if (my < 0)
         dy = -5;
     else if (my > visibleHeight())
-        dy = 5;
+        dy = QMIN(5, verticalScrollBar()->maxValue()-verticalScrollBar()->value());
+    
     if (dx != 0 || dy != 0)
         scrollBy(dx, dy);
 }
