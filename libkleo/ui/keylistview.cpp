@@ -171,8 +171,8 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
   for ( int i = 0 ; i < numSignalReplacements ; ++i )
     connect( this, signalReplacements[i].source, signalReplacements[i].target );
 
-  QToolTip::remove( this );
-  QToolTip::remove( viewport() ); // make double sure :)
+  this->setToolTip("");
+  viewport()->setToolTip(""); // make double sure :)
 #warning Port me!
 //  d->itemToolTip = new ItemToolTip( this );
 }

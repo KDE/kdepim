@@ -222,7 +222,6 @@ void Kleo::KeyRequester::updateKeys() {
   }
 
   mLabel->setText( labelTexts.join(", ") );
-  QToolTip::remove( mLabel );
   mLabel->setToolTip( toolTipText );
 }
 

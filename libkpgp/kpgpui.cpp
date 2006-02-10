@@ -1228,7 +1228,6 @@ void KeyRequester::setKeyIDs( const KeyIDList & keyIDs ) {
   QString s = mKeys.toStringList().join(", ");
 
   mLabel->setText( s );
-  QToolTip::remove( mLabel );
   mLabel->setToolTip( s );
 }
 
