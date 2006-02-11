@@ -240,11 +240,15 @@ QString ICalFormat::toString( Calendar *cal )
   // events
   Event::List events = cal->rawEvents();
   Event::List::ConstIterator it2;
-  for( it2 = events.begin(); it2 != events.end(); ++it2 ) {
-//    kDebug(5800) << "ICalFormat::toString() write event "
-//                  << (*it2)->uid() << endl;
-    component = mImpl->writeEvent( *it2 );
-    icalcomponent_add_component( calendar, component );
+  for( it2 = events.begin(); it2 != events.end(); ++it2 ) 
+  {
+    if (*it2)
+    {
+      // kDebug(5800) << "ICalFormat::toString() write event "
+      //             << (*it2)->uid() << endl;
+      component = mImpl->writeEvent( *it2 );
+      icalcomponent_add_component( calendar, component );
+    }
   }
 
   // journals
