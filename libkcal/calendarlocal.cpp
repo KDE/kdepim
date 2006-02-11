@@ -145,7 +145,7 @@ void CalendarLocal::deleteAllEvents()
 Event *CalendarLocal::event( const QString &uid )
 {
 //  kDebug(5800) << "CalendarLocal::event(): " << uid << endl;
-  return mEvents[ uid ];
+  return mEvents.value( uid );
 }
 
 bool CalendarLocal::addTodo( Todo *todo )
@@ -346,13 +346,13 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
 void CalendarLocal::insertEvent( Event *event )
 {
   QString uid = event->uid();
-  if ( mEvents[ uid ] == 0 ) {
+  if ( mEvents.value( uid ) == 0 ) {
     mEvents.insert( uid, event );
   }
 #ifndef NDEBUG
   else // if we already have an event with this UID, it has to be the same event,
       // otherwise something's really broken
-      Q_ASSERT( mEvents[uid] == event );
+      Q_ASSERT( mEvents.value( uid ) == event );
 #endif
 }
 
