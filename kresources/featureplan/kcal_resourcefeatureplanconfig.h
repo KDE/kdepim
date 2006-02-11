@@ -32,11 +32,11 @@ class QCheckBox;
 namespace KCal {
 
 class KDE_EXPORT ResourceFeaturePlanConfig : public KRES::ConfigWidget
-{ 
+{
   Q_OBJECT
 
   public:
-    ResourceFeaturePlanConfig( QWidget *parent = 0, const char *name = 0 );
+    ResourceFeaturePlanConfig( QWidget *parent = 0 );
 
   public slots:
     void loadSettings( KRES::Resource * );
