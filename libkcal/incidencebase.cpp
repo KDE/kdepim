@@ -379,5 +379,5 @@ void IncidenceBase::updated()
 
 KUrl IncidenceBase::uri() const
 {
-  return KURL( QString( "urn:x-ical:" ) + uid() );
+  return KUrl( QString( "urn:x-ical:" ) + uid() );
 }

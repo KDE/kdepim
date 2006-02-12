@@ -72,7 +72,7 @@ void Query::call( const QString &server, const QString &method,
   QDataStream stream( &postData, QIODevice::WriteOnly );
   stream.writeRawBytes( xmlMarkup.utf8(), xmlMarkup.utf8().length() );
 
-  KIO::TransferJob *job = KIO::http_post( KURL( server ), postData, false );
+  KIO::TransferJob *job = KIO::http_post( KUrl( server ), postData, false );
   if ( !job ) {
     kWarning() << "Unable to create KIO job for " << server << endl;
     return;
@@ -346,7 +346,7 @@ void Server::queryFinished( Query *query )
 
 void Server::setUrl( const KUrl &url )
 {
-  m_url = url.isValid() ? url : KURL();
+  m_url = url.isValid() ? url : KUrl();
 }
 
 void Server::call( const QString &method, const QList<QVariant> &args,

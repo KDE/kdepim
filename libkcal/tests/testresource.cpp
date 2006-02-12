@@ -70,8 +70,8 @@ int main(int argc, char *argv[])
       type = QString::fromLocal8Bit( args->getOption( "resource" ) );
     KConfig *config = 0;
     if ( args->getOption( "configfile" ) )
-      config = new KConfig( KURL( args->getOption( "configfile" ) ).url() );
-    kDebug() << KURL( args->getOption( "configfile" ) ).url() << endl;
+      config = new KConfig( KUrl( args->getOption( "configfile" ) ).url() );
+    kDebug() << KUrl( args->getOption( "configfile" ) ).url() << endl;
     KCal::TestResource test( type, config );
     test.setup();
     test.runAll();

@@ -139,7 +139,7 @@ public:
 	 * @param kurl a kurl to update for this job
 	 * @param metadata the metadata to update for this job
 	 */
-	virtual void readSubjectKURL( KUrl & kurl, KIO::MetaData & ) { kurl.setPath( kurl.path().replace( "/download/", "/headers/" ) ); }
+	virtual void readSubjectKUrl( KUrl & kurl, KIO::MetaData & ) { kurl.setPath( kurl.path().replace( "/download/", "/headers/" ) ); }
 	/**
 	 * This function manipuletes a kurl and metadata before the job is executed.
 	 * In this class, the path of the kurl is changed.
@@ -148,7 +148,7 @@ public:
 	 * @param kurl a kurl to update for this job
 	 * @param metadata the metadata to update for this job
 	 */
-	virtual void deleteMailKURL ( KUrl & kurl, KIO::MetaData & ) { kurl.setPath( kurl.path().replace( "/download/", "/remove/" ) ); }
+	virtual void deleteMailKUrl ( KUrl & kurl, KIO::MetaData & ) { kurl.setPath( kurl.path().replace( "/download/", "/remove/" ) ); }
 	/**
 	 * This function returns true if a delete command should be comitted.
 	 * This is the case for pop3, so this function returns true for this class.
@@ -164,7 +164,7 @@ public:
 	 * @param kurl a kurl to update for this job
 	 * @param metadata the metadata to update for this job
 	 */
-	virtual void deleteCommitKURL(KUrl & kurl, KIO::MetaData & ) { kurl.setPath( "commit" ); }
+	virtual void deleteCommitKUrl(KUrl & kurl, KIO::MetaData & ) { kurl.setPath( "commit" ); }
 
 	/**
 	 * This function adds names of groupbases to the list.

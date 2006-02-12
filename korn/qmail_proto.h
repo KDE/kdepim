@@ -114,7 +114,7 @@ public:
 	 *
 	 * @param kurl the url to be changed
 	 */
-	virtual void recheckKURL( KUrl &kurl, KIO::MetaData& ) const
+	virtual void recheckKUrl( KUrl &kurl, KIO::MetaData& ) const
 		{ if( kurl.path().right( 1 ) == "/" )
 		  	kurl.setPath( kurl.path() +  "new" );
 		  else

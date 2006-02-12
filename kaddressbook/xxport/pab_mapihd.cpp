@@ -310,7 +310,7 @@ KABC::Addressee pabfields_t::get() {
   if (!fax.isEmpty()) a.insertPhoneNumber( KABC::PhoneNumber( fax, KABC::PhoneNumber::Fax ) );
   if (!mobile.isEmpty()) a.insertPhoneNumber( KABC::PhoneNumber( mobile, KABC::PhoneNumber::Cell ) );
   if (!modem.isEmpty()) a.insertPhoneNumber( KABC::PhoneNumber( modem, KABC::PhoneNumber::Modem ) );
-  if (!homepage.isEmpty()) a.setUrl(KURL( homepage ));
+  if (!homepage.isEmpty()) a.setUrl(KUrl( homepage ));
   // Miss out talk
   if (!comment.isEmpty()) a.setNote(comment);
   // Miss out birthday

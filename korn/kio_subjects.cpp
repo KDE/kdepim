@@ -94,7 +94,7 @@ void KIO_Subjects::getConnection( )
 	
 	if( _protocol->connectionBased( ) )
 	{
-		_protocol->readSubjectConnectKURL( kurl, metadata );
+		_protocol->readSubjectConnectKUrl( kurl, metadata );
 		
 		if( kurl.port() == 0 )
 			kurl.setPort( _protocol->defaultPort() );
@@ -120,7 +120,7 @@ void KIO_Subjects::startJob( const QString &name, const long size )
 	
 	kurl = name;
 	
-	_protocol->readSubjectKURL( kurl, metadata );
+	_protocol->readSubjectKUrl( kurl, metadata );
 	
 	if( kurl.port() == 0 )
 		kurl.setPort( _protocol->defaultPort() );

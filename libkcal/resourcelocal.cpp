@@ -60,7 +60,7 @@ ResourceLocal::ResourceLocal( const KConfig* config )
 {
   if ( config ) {
     QString url = config->readPathEntry( "CalendarURL" );
-    mURL = KURL( url );
+    mURL = KUrl( url );
 
     QString format = config->readEntry( "Format" );
     if ( format == "ical" )
@@ -71,7 +71,7 @@ ResourceLocal::ResourceLocal( const KConfig* config )
       mFormat = new ICalFormat();
     }
   } else {
-    mURL = KURL();
+    mURL = KUrl();
     mFormat = new ICalFormat();
   }
   init();
@@ -80,7 +80,7 @@ ResourceLocal::ResourceLocal( const KConfig* config )
 ResourceLocal::ResourceLocal( const QString& fileName )
   : ResourceCached( 0 )
 {
-  mURL = KURL( fileName );
+  mURL = KUrl( fileName );
   mFormat = new ICalFormat();
   init();
 }
@@ -209,7 +209,7 @@ bool ResourceLocal::setFileName( const QString &fileName )
   delete mLock;
   mDirWatch.stopScan();
   mDirWatch.removeFile( mURL.path() );
-  mURL = KURL( fileName );
+  mURL = KUrl( fileName );
   mLock = new KABC::Lock( mURL.path() );
   mDirWatch.addFile( mURL.path() );
   mDirWatch.startScan();

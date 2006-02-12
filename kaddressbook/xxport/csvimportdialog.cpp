@@ -236,7 +236,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
           a.setMailer( value );
           break;
         case URL:
-          a.setUrl( KURL( value ) );
+          a.setUrl( KUrl( value ) );
           break;
         case Organization:
           a.setOrganization( value );

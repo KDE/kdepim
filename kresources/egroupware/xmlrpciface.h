@@ -80,7 +80,7 @@ namespace KXMLRPC
   {
     Q_OBJECT
     public:
-      Server( const KUrl &url = KURL(),
+      Server( const KUrl &url = KUrl(),
               QObject *parent = 0, const char *name = 0 );
       ~Server();
 

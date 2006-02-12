@@ -120,7 +120,7 @@ int KMobileSkeleton::readAddress( int index, KABC::Addressee &addr )
   addr.setRole("KDE Software Developer");
   addr.setOrganization("KDE.ORG");
   addr.setNote("the best KDE developer ever");
-  addr.setUrl(KURL("www.kde.org"));
+  addr.setUrl(KUrl("www.kde.org"));
   addr.insertEmail("peterm@kde.org");
   addr.insertPhoneNumber(KABC::PhoneNumber("+49 6110 12345"));
 

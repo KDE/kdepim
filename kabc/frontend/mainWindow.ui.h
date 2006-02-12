@@ -174,7 +174,7 @@ KABC::Addressee MainWindow::writeAddressee( const KABC::Addressee &addressee )
   Addressee a( addressee );
   a.setName( mNameEdit->text() );
   if ( !mUrlEdit->text().isEmpty() ) {
-    a.setUrl( KURL( mUrlEdit->text() ) );
+    a.setUrl( KUrl( mUrlEdit->text() ) );
   }
   
   a.setAdditionalName( mAdditionalNameEdit->text() );

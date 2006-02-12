@@ -68,7 +68,7 @@ void KIO_Count::count( KKioDrop *drop )
 	 * finished with counten. To be able to track back te staring values;
 	 * these are saved in the class.
 	 */
-	_kurl = new KURL( *_kio->_kurl );
+	_kurl = new KUrl( *_kio->_kurl );
 	_metadata = new KIO::MetaData( *_kio->_metadata );
 	_protocol = _kio->_protocol;
 
@@ -78,7 +78,7 @@ void KIO_Count::count( KKioDrop *drop )
 	// Serup a connection
 	if( _protocol->connectionBased( ) )
 	{
-		_protocol->recheckConnectKURL( kurl, metadata );
+		_protocol->recheckConnectKUrl( kurl, metadata );
 
 		if( kurl.port() == 0 )
 			kurl.setPort( _protocol->defaultPort() );
@@ -115,7 +115,7 @@ void KIO_Count::count( KKioDrop *drop )
 	/* Blocking this function: no new counts can be started from now */
 	_new_mailurls = new QList< KKioDrop::FileInfo >;
 
-	_protocol->recheckKURL( kurl, metadata );
+	_protocol->recheckKUrl( kurl, metadata );
 
 	if( kurl.port() == 0 )
 		kurl.setPort( _protocol->defaultPort() );
@@ -167,7 +167,7 @@ void KIO_Count::showPassive( const QString& id )
 	kurl = id;
 	//KIO::Slave *slave = 0;
 
-	_kio->_protocol->readSubjectKURL( kurl, metadata );
+	_kio->_protocol->readSubjectKUrl( kurl, metadata );
 	if( kurl.port() == 0 )
 		kurl.setPort( _kio->_protocol->defaultPort() );
 
@@ -272,7 +272,7 @@ void KIO_Count::entries( KIO::Job* job, const KIO::UDSEntryList &list )
 		{ //The file kioslave doesn't return UDS_URL, so use UDS_NAME.
 			kurl = *_kurl;
 			metadata = *_metadata;
-			_protocol->recheckKURL( kurl, metadata );
+			_protocol->recheckKUrl( kurl, metadata );
 			kurl.addPath( (*it1).stringValue( KIO::UDS_NAME ) );
 			fileinfo.name = kurl.url();
 		}
@@ -289,7 +289,7 @@ void KIO_Count::entries( KIO::Job* job, const KIO::UDSEntryList &list )
 			{ //The file kioslave doesn't return UDS_URL.
 				kurl = *_kurl;
 				metadata = *_metadata;
-				_protocol->recheckKURL( kurl, metadata );
+				_protocol->recheckKUrl( kurl, metadata );
 				kurl.addPath ( (*it2).m_str );
 				fileinfo.name = kurl.url();
 			}

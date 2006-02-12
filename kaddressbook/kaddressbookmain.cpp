@@ -86,7 +86,7 @@ void KAddressBookMain::addEmail( QString addr )
 
 void KAddressBookMain::importVCard( const QString& file )
 {
-  mCore->importVCard( KURL( file ) );
+  mCore->importVCard( KUrl( file ) );
 }
 
 void KAddressBookMain::showContactEditor( QString uid )

@@ -38,7 +38,7 @@
 
 #include "xxportmanager.h"
 
-KUrl XXPortManager::importURL = KURL();
+KUrl XXPortManager::importURL = KUrl();
 QString XXPortManager::importData = QString();
 
 XXPortManager::XXPortManager( KAB::Core *core, QObject *parent, const char *name )
@@ -63,7 +63,7 @@ void XXPortManager::importVCard( const KUrl &url )
 {
   importURL = url;
   slotImport( "vcard", "<empty>" );
-  importURL = KURL();
+  importURL = KUrl();
 }
 
 void XXPortManager::importVCard( const QString &vCard )

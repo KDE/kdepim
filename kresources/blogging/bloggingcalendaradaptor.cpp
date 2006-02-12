@@ -127,7 +127,7 @@ KPIM::GroupwareUploadItem *BloggingCalendarAdaptor::newUploadItem( KCal::Inciden
 
 void BloggingCalendarAdaptor::slotFolderInfoRetrieved( const QString &id, const QString &name )
 {
-  emit folderInfoRetrieved( KURL(id), name, KPIM::FolderLister::Journal );
+  emit folderInfoRetrieved( KUrl(id), name, KPIM::FolderLister::Journal );
 }
 
 void BloggingCalendarAdaptor::slotUserInfoRetrieved( const QString &/*nick*/,

@@ -54,7 +54,7 @@ void KIO_Read::readMail( const KornMailId * mailid, KKioDrop* drop )
 	
 	kurl = dynamic_cast<const KornStringId*>(mailid)->getId( );
 	
-	_kio->_protocol->readMailKURL( kurl, metadata );
+	_kio->_protocol->readMailKUrl( kurl, metadata );
 	
 	_job = KIO::get( kurl, false, false );
 	_job->addMetaData( metadata );

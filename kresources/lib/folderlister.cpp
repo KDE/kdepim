@@ -67,7 +67,7 @@ KUrl::List FolderLister::activeFolderIds() const
   FolderLister::Entry::List::ConstIterator it;
   for( it = mFolders.begin(); it != mFolders.end(); ++it ) {
     if ( (*it).active ) {
-      ids.append( KURL((*it).id) );
+      ids.append( KUrl((*it).id) );
     }
   }
 

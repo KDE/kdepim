@@ -108,7 +108,7 @@ void FolderConfig::updateFolderList()
 
   if ( !mOldFolderListerURL.isEmpty() && mFolderLister->adaptor() ) {
     mFolderLister->adaptor()->setBaseURL( mOldFolderListerURL );
-    mOldFolderListerURL = KURL();
+    mOldFolderListerURL = KUrl();
   }
 
   FolderLister::Entry::List folders = mFolderLister->folders();

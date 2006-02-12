@@ -63,7 +63,7 @@ ResourceLocalDir::ResourceLocalDir( const KConfig* config )
 ResourceLocalDir::ResourceLocalDir( const QString& dirName )
   : ResourceCached( 0 )
 {
-  mURL = KURL( dirName );
+  mURL = KUrl( dirName );
 
   init();
 }
@@ -72,7 +72,7 @@ ResourceLocalDir::ResourceLocalDir( const QString& dirName )
 void ResourceLocalDir::readConfig( const KConfig *config )
 {
   QString url = config->readPathEntry( "CalendarURL" );
-  mURL = KURL( url );
+  mURL = KUrl( url );
 }
 
 void ResourceLocalDir::writeConfig( KConfig *config )

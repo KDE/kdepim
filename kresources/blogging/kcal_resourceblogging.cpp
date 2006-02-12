@@ -63,7 +63,7 @@ void ResourceBlogging::readConfig( const KConfig *config )
     ad->setBaseURL( prefs()->url() );
   }
 //   QString url = config->readEntry( "URL" );
-//   mUrl = KURL( url );
+//   mUrl = KUrl( url );
   
 //   mServerAPI = config->readEntry( "ServerAPI" );
 //   mTemplate.setCategoryTagOpen( config->readEntry( "CategoryTagOpen", "<CATEGORY>" ) ); 

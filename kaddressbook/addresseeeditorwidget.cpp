@@ -577,7 +577,7 @@ void AddresseeEditorWidget::save()
 
   mAddressee.setRole( mRoleEdit->text() );
   mAddressee.setOrganization( mOrgEdit->text() );
-  mAddressee.setUrl( KURL( mURLEdit->text().trimmed() ) );
+  mAddressee.setUrl( KUrl( mURLEdit->text().trimmed() ) );
   if ( !mBlogEdit->text().isEmpty() )
     mAddressee.insertCustom( "KADDRESSBOOK", "BlogFeed", mBlogEdit->text() );
   else

@@ -308,11 +308,11 @@ int main( int argc, char** argv ) {
       // Test setting the option, sync'ing, then querying again
       KUrl::List lst;
       // We use non-empty paths to workaround a bug in KUrl (kdelibs-3.2)
-      lst << KURL( "ldap://a:389/?b" );
+      lst << KUrl( "ldap://a:389/?b" );
       // Test with query containing a litteral ':' (KUrl supports this)
       // and a ' ' (KUrl will escape it, see issue119)
-      lst << KURL( "ldap://foo:389/?a:b c" );
-      lst << KURL( "ldap://server:389/?a%3db,c=DE" ); // the query contains a litteral ','
+      lst << KUrl( "ldap://foo:389/?a:b c" );
+      lst << KUrl( "ldap://server:389/?a%3db,c=DE" ); // the query contains a litteral ','
       //cout << " trying to set: " << lst.toStringList().join(", ").local8Bit() << endl;
       assert( lst[0].query() == "?b" );
       assert( lst[1].query() == "?a:b%20c" ); // see, the space got escaped

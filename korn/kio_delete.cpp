@@ -100,7 +100,7 @@ void KIO_Delete::disConnect( )
 
 bool KIO_Delete::setupSlave( KUrl kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol )
 {
-	protocol->deleteMailConnectKURL( kurl, metadata );
+	protocol->deleteMailConnectKUrl( kurl, metadata );
 	
 	if( kurl.port() == 0 )
 		kurl.setPort( protocol->defaultPort() );
@@ -121,7 +121,7 @@ void KIO_Delete::deleteItem( const KornMailId *item, KUrl kurl, KIO::MetaData me
 
 	kurl = dynamic_cast<const KornStringId*>( item )->getId();
 	
-	protocol->deleteMailKURL( kurl, metadata );
+	protocol->deleteMailKUrl( kurl, metadata );
 	
 	if( kurl.port() == 0 )
 		kurl.setPort( protocol->defaultPort() );
@@ -154,7 +154,7 @@ void KIO_Delete::deleteItem( const KornMailId *item, KUrl kurl, KIO::MetaData me
  */
 void KIO_Delete::commitDelete( KUrl kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol )
 {
-	protocol->deleteCommitKURL( kurl, metadata );
+	protocol->deleteCommitKUrl( kurl, metadata );
 	
 	if( kurl.port() == 0 )
 		kurl.setPort( protocol->defaultPort() );

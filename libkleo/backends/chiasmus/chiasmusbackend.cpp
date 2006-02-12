@@ -88,7 +88,7 @@ namespace {
     to( const QVariant & v ) {
       m.setPath( v.toString() );
     }
-    operator KURL() const { return m; }
+    operator KUrl() const { return m; }
   };
 
   template <typename T>
@@ -170,7 +170,7 @@ namespace {
     int intValue() const { return mValue.toInt(); }
     unsigned int uintValue() const { return mValue.toUInt(); }
     KUrl urlValue() const {
-      if ( argType() != ArgType_Path && argType() != ArgType_DirPath ) return KURL( mValue.toString() );
+      if ( argType() != ArgType_Path && argType() != ArgType_DirPath ) return KUrl( mValue.toString() );
       KUrl u; u.setPath( mValue.toString() ); return u;
     }
     unsigned int numberOfTimesSet() const { return 0; }

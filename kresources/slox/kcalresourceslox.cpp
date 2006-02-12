@@ -172,7 +172,7 @@ bool KCalResourceSlox::doLoad()
 
   clearChanges();
 
-  QString p = KURL( mPrefs->url() ).protocol();
+  QString p = KUrl( mPrefs->url() ).protocol();
   if ( p != "http" && p != "https" && p != "webdav" && p != "webdavs" ) {
     QString err = i18n("Non-http protocol: '%1'").arg( p );
     kDebug() << "KCalResourceSlox::load(): " << err << endl;
@@ -610,7 +610,7 @@ void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
         if ( a ) continue;
 
         name = member;
-        email = member + "@" + KURL( mPrefs->url() ).host();
+        email = member + "@" + KUrl( mPrefs->url() ).host();
       } else {
         name = account.realName();
         email = account.preferredEmail();

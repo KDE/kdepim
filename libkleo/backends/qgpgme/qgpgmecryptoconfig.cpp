@@ -556,7 +556,7 @@ static KUrl parseURL( int mRealArgType, const QString& str )
       kWarning(5150) << "parseURL: malformed LDAP server: " << str << endl;
   }
   // other URLs : assume wellformed URL syntax.
-  return KURL( str );
+  return KUrl( str );
 }
 
 // The opposite of parseURL

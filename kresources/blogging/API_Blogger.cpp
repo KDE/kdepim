@@ -237,11 +237,11 @@ bool APIBlogger::interpretDownloadItemsJob( KIO::Job *job )
         KCal::Journal *j = journalFromPosting( &posting );
 //         dumpBlog( &posting );
         kDebug() << "Emitting itemOnServer( posting.postID()="<<posting.postID() << "); " << endl;
-        emit itemOnServer( KURL( posting.postID() ) );
+        emit itemOnServer( KUrl( posting.postID() ) );
         kDebug() << "Emitting itemDownloaded( j=" << j << ", uid=" << j->uid()
                   << ", postID=" << posting.postID() << ", fpr="
                   << posting.fingerprint() << "); " << endl;
-        emit itemDownloaded( j, j->uid(), KURL( posting.postID() ),
+        emit itemDownloaded( j, j->uid(), KUrl( posting.postID() ),
                              posting.fingerprint(), posting.postID() );
       } else {
         kDebug() << "readPostingFromMap failed! " << endl;

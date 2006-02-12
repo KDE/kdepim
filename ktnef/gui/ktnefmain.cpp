@@ -353,7 +353,7 @@ void KTNEFMain::viewDragRequested( const QList<KTNEFAttach*>& list )
 {
 	KUrl::List urlList;
 	for ( QList<KTNEFAttach*>::ConstIterator it=list.constBegin(); it!=list.constEnd(); ++it )
-		urlList << KURL( extractTemp( *it ) );
+		urlList << KUrl( extractTemp( *it ) );
 	if ( !list.isEmpty() )
 	{
 #warning Port KURLDrag usage

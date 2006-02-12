@@ -191,7 +191,7 @@ public:
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void recheckConnectKURL( KUrl &, KIO::MetaData & ) const { }
+	virtual void recheckConnectKUrl( KUrl &, KIO::MetaData & ) const { }
 	/**
 	 * This function can manipulate a KUrl which is used for checking for new emails.
 	 * 
@@ -207,7 +207,7 @@ public:
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void recheckKURL     ( KUrl &, KIO::MetaData & ) const { };
+	virtual void recheckKUrl     ( KUrl &, KIO::MetaData & ) const { };
 	/**
 	 * This function can manipulate a KUrl which is used after it for connecting.
 	 * After connecting, the connection is used to check for new emails.
@@ -222,7 +222,7 @@ public:
 	 * @param kurl the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void readSubjectConnectKURL ( KUrl & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
+	virtual void readSubjectConnectKUrl ( KUrl & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
 	/**
 	 * This function can manipulate a KUrl which is used before reading a subject.
 	 * 
@@ -238,7 +238,7 @@ public:
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void readSubjectKURL ( KUrl &, KIO::MetaData & ) const { } //For editing a kurl (adding extra options)
+	virtual void readSubjectKUrl ( KUrl &, KIO::MetaData & ) const { } //For editing a kurl (adding extra options)
 	/**
 	 * This function can manipulate a KUrl which is used after it for connecting.
 	 * After the connecting, the connection is used to delete emails.
@@ -253,7 +253,7 @@ public:
 	 * @param kurl the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void deleteMailConnectKURL( KUrl & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
+	virtual void deleteMailConnectKUrl( KUrl & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
 	/**
 	 * This function can manipulate a KUrl which is used to delete an email.
 	 * 
@@ -269,7 +269,7 @@ public:
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void deleteMailKURL  ( KUrl &, KIO::MetaData & ) const { }
+	virtual void deleteMailKUrl  ( KUrl &, KIO::MetaData & ) const { }
 	/**
 	 * This function should returns true if it is neccesairry to commit a delete operation.
 	 *
@@ -295,7 +295,7 @@ public:
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void deleteCommitKURL( KUrl &, KIO::MetaData & ) const { }
+	virtual void deleteCommitKUrl( KUrl &, KIO::MetaData & ) const { }
 	/**
 	 * This function can manipulate a KUrl which is used before reading an email.
 	 * 
@@ -311,7 +311,7 @@ public:
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void readMailKURL    ( KUrl &, KIO::MetaData & ) const { }
+	virtual void readMailKUrl    ( KUrl &, KIO::MetaData & ) const { }
 
 
 	/**

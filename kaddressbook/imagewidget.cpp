@@ -267,7 +267,7 @@ void ImageBaseWidget::urlDropped( const KUrl &url )
 
 void ImageBaseWidget::loadImage()
 {
-  QPixmap pixmap = loadPixmap( KURL( mImageUrl->url() ) );
+  QPixmap pixmap = loadPixmap( KUrl( mImageUrl->url() ) );
   if(! pixmap.isNull() )
     mImageLabel->setPixmap( pixmap );
 }

@@ -112,7 +112,7 @@ public:
 	 * @param url the url (not touched in this class)
 	 * @param md metadata (changed after running this function)
 	 */
-	virtual void recheckKURL( KUrl &, KIO::MetaData & md ) const
+	virtual void recheckKUrl( KUrl &, KIO::MetaData & md ) const
 		{ md.insert( "onlynew", "" ); md.insert( "savetime", "" ); }
 	/**
 	 * This function can alter the url and metadata before the job is started.
@@ -121,7 +121,7 @@ public:
 	 * @param url the url (not touched in this class)
 	 * @param metadata the metadata (not touched in this class)
 	 */
-	virtual void readSubjectKURL( KUrl &, KIO::MetaData & ) const { }
+	virtual void readSubjectKUrl( KUrl &, KIO::MetaData & ) const { }
 	/**
 	 * This function can alter the url and metadata before the job is started.
 	 * This function does nothing for this class.
@@ -129,7 +129,7 @@ public:
 	 * @param url the url (not touched in this class)
 	 * @param metadata the metadata (not touched in this class)
 	 */
-	virtual void deleteMailKURL( KUrl &, KIO::MetaData & ) const { }
+	virtual void deleteMailKUrl( KUrl &, KIO::MetaData & ) const { }
 	/**
 	 * This function can alter the url and metadata before the job is started.
 	 * This function does nothing for this class.
@@ -137,7 +137,7 @@ public:
 	 * @param url the url (not touched in this class)
 	 * @param metadata the metadata (not touched in this class)
 	 */
-	virtual void readMailKURL( KUrl &, KIO::MetaData & ) const   { }
+	virtual void readMailKUrl( KUrl &, KIO::MetaData & ) const   { }
 
 	/**
 	 * This function is used to retrieve the names of the groupboxes for the configuration.

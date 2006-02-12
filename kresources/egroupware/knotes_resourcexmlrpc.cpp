@@ -112,8 +112,8 @@ bool ResourceXMLRPC::load()
   if ( mServer )
     delete mServer;
 
-  mServer = new KXMLRPC::Server( KURL(), this );
-  mServer->setUrl( KURL( mPrefs->url() ) );
+  mServer = new KXMLRPC::Server( KUrl(), this );
+  mServer->setUrl( KUrl( mPrefs->url() ) );
   mServer->setUserAgent( "KDE-Notes" );
 
   QMap<QString, QVariant> args, columns;
@@ -224,7 +224,7 @@ void ResourceXMLRPC::loginFinished( const QList<QVariant>& variant,
 {
   QMap<QString, QVariant> map = variant[ 0 ].toMap();
 
-  KUrl url = KURL( mPrefs->url() );
+  KUrl url = KUrl( mPrefs->url() );
   if ( map[ "GOAWAY" ].toString() == "XOXO" ) { // failed
     mSessionID = mKp3 = "";
   } else {
@@ -247,7 +247,7 @@ void ResourceXMLRPC::logoutFinished( const QList<QVariant>& variant,
   if ( map[ "GOODBYE" ].toString() != "XOXO" )
     kError() << "logout failed" << endl;
 
-  KUrl url = KURL( mPrefs->url() );
+  KUrl url = KUrl( mPrefs->url() );
   mSessionID = mKp3 = "";
   url.setUser( mSessionID );
   url.setPass( mKp3 );

@@ -1161,7 +1161,7 @@ void ArticleWidget::slotURLClicked( const KUrl &url, bool forceOpen)
 
 void ArticleWidget::slotURLPopup( const QString &url, const QPoint &point )
 {
-  mCurrentURL = KURL( url );
+  mCurrentURL = KUrl( url );
   QString popupName;
   if ( url.isEmpty() ) // plain text
     popupName = "body_popup";

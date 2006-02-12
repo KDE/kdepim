@@ -124,7 +124,7 @@ QString Signature::textFromFile( bool * ok ) const
   assert( mType == FromFile );
 
   // ### FIXME: Use KIO::NetAccess to download non-local files!
-  if ( !KURL(mUrl).isLocalFile() && !(QFileInfo(mUrl).isRelative()
+  if ( !KUrl(mUrl).isLocalFile() && !(QFileInfo(mUrl).isRelative()
                                       && QFileInfo(mUrl).exists()) ) {
     kDebug( 5006 ) << "Signature::textFromFile: non-local URLs are unsupported" << endl;
     if ( ok ) *ok = false;

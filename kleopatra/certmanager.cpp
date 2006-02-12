@@ -205,7 +205,7 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
     slotSearch();
 
   if ( !import.isEmpty() )
-    slotImportCertFromFile( KURL( import ) );
+    slotImportCertFromFile( KUrl( import ) );
 
   readConfig();
   updateStatusBarLabels();

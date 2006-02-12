@@ -358,7 +358,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
       addr.setTitle( stringToQString( info->title ) );
 
     if ( info->website )
-      addr.setUrl( KURL( stringToQString( info->website ) ) );
+      addr.setUrl( KUrl( stringToQString( info->website ) ) );
   }
 
   // Personal information
@@ -372,7 +372,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
     }
 
     if ( info->website ) // we might overwrite the office info website here... :(
-      addr.setUrl( KURL( stringToQString( info->website ) ) );
+      addr.setUrl( KUrl( stringToQString( info->website ) ) );
   }
 
   // IM addresses

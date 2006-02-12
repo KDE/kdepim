@@ -148,8 +148,8 @@ bool ResourceXMLRPC::doOpen()
   if ( mServer )
     delete mServer;
 
-  mServer = new KXMLRPC::Server( KURL(), this );
-  mServer->setUrl( KURL( mPrefs->url() ) );
+  mServer = new KXMLRPC::Server( KUrl(), this );
+  mServer->setUrl( KUrl( mPrefs->url() ) );
   mServer->setUserAgent( "KDE-AddressBook" );
 
   QMap<QString, QVariant> args;
@@ -631,7 +631,7 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
       addr.setTimeZone( timeZone );
     } else if ( it.key() == "geo" ) {
     } else if ( it.key() == "url" ) {
-      addr.setUrl( KURL( it.data().toString() ) );
+      addr.setUrl( KUrl( it.data().toString() ) );
     } else if ( it.key() == "pubkey" ) {
     } else if ( it.key() == "org_name" ) {
       addr.setOrganization( it.data().toString() );

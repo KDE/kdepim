@@ -101,10 +101,10 @@ void ResourceRemote::init()
 void ResourceRemote::readConfig( const KConfig *config )
 {
   QString url = config->readEntry( "DownloadUrl" );
-  mDownloadUrl = KURL( url );
+  mDownloadUrl = KUrl( url );
 
   url = config->readEntry( "UploadUrl" );
-  mUploadUrl = KURL( url );
+  mUploadUrl = KUrl( url );
 
   ResourceCached::readConfig( config );
 }
@@ -190,7 +190,7 @@ bool ResourceRemote::doLoad()
 
   kDebug() << "Download from: " << mDownloadUrl << endl;
 
-  mDownloadJob = KIO::file_copy( mDownloadUrl, KURL( cacheFile() ), -1, true,
+  mDownloadJob = KIO::file_copy( mDownloadUrl, KUrl( cacheFile() ), -1, true,
                                  false, !mUseProgressManager );
   connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotLoadJobResult( KIO::Job * ) ) );
@@ -261,7 +261,7 @@ bool ResourceRemote::doSave()
 
   saveCache();
 
-  mUploadJob = KIO::file_copy( KURL( cacheFile() ), mUploadUrl, -1, true );
+  mUploadJob = KIO::file_copy( KUrl( cacheFile() ), mUploadUrl, -1, true );
   connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( slotSaveJobResult( KIO::Job * ) ) );
 
@@ -315,14 +315,14 @@ void ResourceRemote::addInfoText( QString &txt ) const
 bool ResourceRemote::setValue( const QString &key, const QString &value )
 {
   if ( key == "URL" ) {
-    setUploadUrl( KURL( value ) );
-    setDownloadUrl( KURL( value ) );
+    setUploadUrl( KUrl( value ) );
+    setDownloadUrl( KUrl( value ) );
     return true;
   } else  if ( key == "DownloadURL" ) {
-    setDownloadUrl( KURL( value ) );
+    setDownloadUrl( KUrl( value ) );
     return true;
   } else if ( key == "UploadURL" ) {
-    setUploadUrl( KURL( value ) );
+    setUploadUrl( KUrl( value ) );
     return true;
   } else
     return ResourceCached::setValue( key, value );
