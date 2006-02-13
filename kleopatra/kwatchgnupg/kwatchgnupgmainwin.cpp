@@ -49,7 +49,7 @@
 #include <kedittoolbar.h>
 #include <kkeydialog.h>
 
-#include <q3textedit.h>
+#include <QTextEdit>
 #include <qdir.h>
 #include <qeventloop.h>
 #include <qtimer.h>
@@ -68,7 +68,7 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent, const char* name 
   createActions();
   createGUI();
 
-  mCentralWidget = new Q3TextEdit( this, "central log view" );
+  mCentralWidget = new QTextEdit( this, "central log view" );
   mCentralWidget->setTextFormat( Qt::LogText );
   setCentralWidget( mCentralWidget );
 
@@ -277,10 +277,11 @@ void KWatchGnuPGMainWindow::slotReadConfig()
 {
   KConfig* config = KGlobal::config();
   config->setGroup("LogWindow");
-  mCentralWidget->setWordWrap( config->readEntry("WordWrap", false)
-							   ?Q3TextEdit::WidgetWidth
-							   :Q3TextEdit::NoWrap );
-  mCentralWidget->setMaxLogLines( config->readEntry( "MaxLogLen", 10000 ) );
+  mCentralWidget->setWordWrapMode( config->readEntry("WordWrap", false)
+							   ?QTextOption::WordWrap
+							   :QTextOption::NoWrap );
+#warning "porting kde4: setMaxLogLines ";  
+  //mCentralWidget->setMaxLogLines( config->readEntry( "MaxLogLen", 10000 ) );
   setGnuPGConfig();
   startWatcher();
 }
