@@ -254,10 +254,17 @@ bool Scheduler::acceptAdd(IncidenceBase *incidence,ScheduleMessage::Status /* st
 bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
 {
   bool ret = false;
-  Incidence *inc = mCalendar->incidence( incidence->uid() );
-  if ( inc ) {
-    mCalendar->deleteIncidence( inc );
+  const IncidenceBase *toDelete = mCalendar->incidenceFromSchedulingID( incidence->uid() );
+  Event *even = mCalendar->event(toDelete->uid());
+  if (even) {
+    mCalendar->deleteEvent(even);
     ret = true;
+  } else {
+    Todo *todo = mCalendar->todo(toDelete->uid());
+    if (todo) {
+      mCalendar->deleteTodo(todo);
+      ret = true;
+    }
   }
   deleteTransaction(incidence);
   return ret;
