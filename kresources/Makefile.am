@@ -1,1 +1,1 @@
-SUBDIRS = lib remote egroupware kolab slox featureplan groupdav birthdays blogging
+SUBDIRS = lib remote egroupware kolab slox featureplan groupdav birthdays
