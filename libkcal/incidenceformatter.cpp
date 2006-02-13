@@ -715,7 +715,10 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     case Scheduler::Publish:
         return i18n("This event has been published");
     case Scheduler::Request:
-        return i18n( "You have been invited to this meeting" );
+        if ( event->revision() > 0 )
+          return i18n( "<h2>This meeting has been updated</h2>" );
+        else
+          return i18n( "You have been invited to this meeting" );
     case Scheduler::Refresh:
         return i18n( "This invitation was refreshed" );
     case Scheduler::Cancel:
@@ -771,7 +774,10 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
     case Scheduler::Publish:
         return i18n("This task has been published");
     case Scheduler::Request:
-        return i18n( "You have been assigned this task" );
+        if ( event->revision() > 0 )
+          return i18n( "This task has been updated" );
+        else
+          return i18n( "You have been assigned this task" );
     case Scheduler::Refresh:
         return i18n( "This task was refreshed" );
     case Scheduler::Cancel:
@@ -1026,11 +1032,12 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     case Scheduler::Request:
     case Scheduler::Refresh:
     case Scheduler::Add:
+      if ( incBase->revision() == 0 ) {
         // Accept
         html += helper->makeLink( "accept", i18n( "[Accept]" ) );
         html += "</td><td> &nbsp; </td><td>";
         html += helper->makeLink( "accept_conditionally",
-                          i18n( "Accept conditionally", "[Accept cond.]" ) );
+            i18n( "Accept conditionally", "[Accept cond.]" ) );
         html += "</td><td> &nbsp; </td><td>";
         // Decline
         html += helper->makeLink( "decline", i18n( "[Decline]" ) );
@@ -1039,8 +1046,14 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
         html += "</b></a></td><td> &nbsp; </td><td>";
         html += helper->makeLink( "check_calendar", i18n("[Check my calendar...]" ) );
 #endif
+      } else {
+        if ( incBase->type() == "Todo" ) {
+            html += helper->makeLink( "reply", i18n( "[Enter this into my task list]" ) );
+          } else {
+            html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
+          }
+        }
         break;
-
     case Scheduler::Cancel:
         // Cancel event from my calendar
         html += helper->makeLink( "cancel", i18n( "[Remove this from my calendar]" ) );
