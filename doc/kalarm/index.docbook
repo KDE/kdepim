@@ -34,7 +34,7 @@
 </authorgroup>
 
 <copyright>
-<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year>
+<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year>
 <holder>David Jarvie</holder>
 </copyright>
 
@@ -42,8 +42,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2005-07-21</date>
-<releaseinfo>1.03.02</releaseinfo>
+<date>2006-02-13</date>
+<releaseinfo>1.03.09</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -742,6 +742,12 @@ on the right to display the Sound File dialog which lets you select a
 file to play and set volume and repetition options. If you hover the
 mouse over the button, a tooltip will display the audio file currently
 selected.</para>
+
+<note><para>&kalarm; uses the &arts; sound server for repetition and
+volume control. If &kalarm; has been built without &arts; support,
+repetition and volume options will not be available and a simple sound
+file selector will appear in place of the full Sound File
+dialog.</para></note>
 
 <para>In the Sound File dialog:</para>
 
