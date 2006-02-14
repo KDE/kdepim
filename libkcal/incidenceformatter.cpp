@@ -774,7 +774,7 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
     case Scheduler::Publish:
         return i18n("This task has been published");
     case Scheduler::Request:
-        if ( event->revision() > 0 )
+        if ( todo->revision() > 0 )
           return i18n( "This task has been updated" );
         else
           return i18n( "You have been assigned this task" );
