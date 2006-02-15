@@ -12,7 +12,7 @@
             <height>589</height>
         </rect>
     </property>
-    <property name="caption">
+    <property name="windowTitle">
         <string>Key Generation Wizard</string>
     </property>
     <property name="titleFont">

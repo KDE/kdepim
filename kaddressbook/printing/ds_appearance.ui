@@ -12,7 +12,7 @@
             <height>437</height>
         </rect>
     </property>
-    <property name="caption">
+    <property name="windowTitle">
         <string>Appearance Page</string>
     </property>
     <vbox>

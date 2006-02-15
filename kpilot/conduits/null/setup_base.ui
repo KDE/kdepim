@@ -29,7 +29,7 @@ the Null-conduit settings.</comment>
             <height>270</height>
         </size>
     </property>
-    <property name="caption">
+    <property name="windowTitle">
         <string>Null-Conduit Options</string>
     </property>
     <property name="layoutMargin" stdset="0">

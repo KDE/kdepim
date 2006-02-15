@@ -14,7 +14,7 @@
             <height>332</height>
         </rect>
     </property>
-    <property name="caption">
+    <property name="windowTitle">
         <string>KPilot Options</string>
     </property>
     <grid>

@@ -15,7 +15,7 @@ KPilot's settings.</comment>
             <height>323</height>
         </rect>
     </property>
-    <property name="caption">
+    <property name="windowTitle">
         <string>KPilot Options</string>
     </property>
     <grid>

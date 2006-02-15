@@ -12,7 +12,7 @@
             <height>534</height>
         </rect>
     </property>
-    <property name="caption">
+    <property name="windowTitle">
         <string>KABC Frontend</string>
     </property>
     <grid>

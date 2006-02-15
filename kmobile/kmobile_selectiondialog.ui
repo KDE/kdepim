@@ -12,7 +12,7 @@
             <height>311</height>
         </rect>
     </property>
-    <property name="caption">
+    <property name="windowTitle">
         <string>Select Mobile Device</string>
     </property>
     <grid>

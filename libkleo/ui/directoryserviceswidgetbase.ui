@@ -12,7 +12,7 @@
             <height>363</height>
         </rect>
     </property>
-    <property name="caption">
+    <property name="windowTitle">
         <string>Directory Services Configuration</string>
     </property>
     <vbox>
