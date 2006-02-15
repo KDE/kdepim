@@ -20,7 +20,12 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-
+/**
+ * @file stdcalendar.cpp
+ * Provides a class for Calendar Resources.
+ * @author Cornelius Schumacher
+ * @author Allen Winter
+ */
 #include "stdcalendar.h"
 
 #include <libkcal/resourcecalendar.h>

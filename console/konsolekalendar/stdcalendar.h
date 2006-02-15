@@ -25,8 +25,17 @@
 
 #include <libkcal/calendarresources.h>
 
+/**
+ * @file stdcalendar.h
+ * Provides a class for Calendar Resources.
+ */
+
 namespace KCal {
 
+/**
+ * @author Cornelius Schumacher
+ * @author Allen Winter
+ */
 class KDE_EXPORT StdCalendar : public KCal::CalendarResources
 {
   public:
