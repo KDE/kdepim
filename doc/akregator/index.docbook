@@ -1,7 +1,5 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
-  <!ENTITY akregator        "<application>Akregator</application>">
-  <!ENTITY kappname "&akregator;">
   <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
@@ -14,13 +12,53 @@
 
 <authorgroup>
 <author>
-<firstname></firstname>
-<othername></othername>
-<surname></surname>
-<affiliation>
-<address><email></email></address>
-</affiliation>
+<firstname>Frank</firstname>
+<surname>Osterfeld</surname>
+<affiliation><address><email>frank.osterfeld@kdemail.net</email></address></affiliation>
 </author>
+
+<author>
+<firstname>Teemu</firstname>
+<surname>Rytilahti</surname>
+<affiliation><address><email>tpr@d5k.net</email></address></affiliation>
+</author>
+
+<author>
+<firstname>Sashmit</firstname>
+<surname>Bhaduri</surname>
+<affiliation><address><email>sashmit@vfemail.net</email></address></affiliation>
+</author>
+
+<author>
+<firstname>Pierre</firstname>
+<surname>Habouzit</surname>
+<affiliation><address><email>pierre.habouzit@m4x.org</email></address></affiliation>
+</author>
+
+<author>
+<firstname>Stanislav</firstname>
+<surname>Karchebny</surname>
+<affiliation><address><email>Stanislav.Karchebny@kdemail.net</email></address></affiliation>
+</author>
+
+<author>
+<firstname>Gary</firstname>
+<surname>Cramblitt</surname>
+<affiliation><address><email>garycramblitt@comcast.net</email></address></affiliation>
+</author>
+
+<author>
+<firstname>Stephan</firstname>
+<surname>Binner</surname>
+<affiliation><address><email>&Stephan.Binner.mail;</email></address></affiliation>
+</author>
+
+<author>
+<firstname>Christof</firstname>
+<surname>Musik</surname>
+<affiliation><address><email>christof@freenet.de</email></address></affiliation>
+</author>
+
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
@@ -46,12 +84,14 @@
 </bookinfo>
 
 <chapter id="introduction"> <title>Introduction</title> <para>
-The documentation for &kappname; was not finished when &kde; was installed on
+The documentation for &akregator; was not finished when &kde; was installed on
 this computer.</para> <para>If you need help, please check <ulink
 url="http://www.kde.org">The &kde; Website</ulink> for updates, or by
 submitting your question to <ulink url="mailto:kde@kde.org">The
 &kde; User Mailing list</ulink>.</para> <para><emphasis>The &kde;
 Team</emphasis></para>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
 &underFDL;
 
