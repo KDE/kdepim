@@ -643,9 +643,15 @@ void UpdateAddressBooksJob::run()
   //request.view = soap_new_std__string( mSoap, -1 );
   //request.view->append("id name version modified ItemChanges");
   request.view = 0;
-  soap_call___ngw__getDeltasRequest( mSoap, mUrl.latin1(),
+  int result = soap_call___ngw__getDeltasRequest( mSoap, mUrl.latin1(),
                                               NULL, &request, &response);
   soap_print_fault( mSoap, stderr );
+
+  if (!mServer->checkResponse( result, response.status ) )
+  {
+    kdError() << "Error when getting addressbook deltas" << endl; 
+    return;
+  }
 
   std::vector<class ngwt__Item * > *items = &response.items->item;
   if ( items ) {
