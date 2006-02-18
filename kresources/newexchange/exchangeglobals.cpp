@@ -227,7 +227,9 @@ kdDebug()<<"ExchangeGlobals::interpretListItemsJob"<<endl;
 
     KPIM::FolderLister::ContentType type = getContentType( prop );
 
-    adaptor->processDownloadListItem( entry, newFingerprint, type );
+    if (type != KPIM::FolderLister::Unknown) { // Don't queue bad entries
+      adaptor->processDownloadListItem( entry, newFingerprint, type );
+    }
   }
 
   return true;
