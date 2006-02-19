@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Comment=Calendar in Mobile Device
+Comment[fr]=Calendrier dans un périphérique mobile
 Comment[x-test]=xxCalendar in Mobile Devicexx
 Icon=korganizer
 Type=MimeType

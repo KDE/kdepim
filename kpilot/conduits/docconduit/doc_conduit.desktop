@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Comment=Adds text files to your handheld, suitable for DOC readers.
+Comment[fr]=Ajoute des fichiers texte à votre Palm, approprié pour les lecteurs de DOC.
 Comment[x-test]=xxAdds text files to your handheld, suitable for DOC readers.xx
 Name=Palm DOC
 Name[x-test]=xxPalm DOCxx

@@ -2,8 +2,10 @@
 Encoding=UTF-8
 Type=Service
 Name=Perl (Sample)
+Name[fr]=Perl (exemple)
 Name[x-test]=xxPerl (Sample)xx
 Comment=This sample conduit runs a Perl interpreter.
+Comment[fr]=Cet exemple de canal lance un interpréteur Perl.
 Comment[x-test]=xxThis sample conduit runs a Perl interpreter.xx
 Implemented=file
 ServiceTypes=KPilotConduit

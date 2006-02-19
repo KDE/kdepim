@@ -2,8 +2,10 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_distributionlist
 Name=KAB Distribution List Plugin
+Name[fr]=Module de liste de diffusion pour KAB
 Name[x-test]=xxKAB Distribution List Pluginxx
 Comment=Plugin for managing distribution lists
+Comment[fr]=Module pour gérer des listes de diffusion
 Comment[x-test]=xxPlugin for managing distribution listsxx
 Type=Service
 ServiceTypes=KAddressBook/Extension

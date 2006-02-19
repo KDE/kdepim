@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Calendar on IMAP Server via KMail
+Name[fr]=Agenda sur serveur IMAP (via KMail)
 Name[x-test]=xxCalendar on IMAP Server via KMailxx
 X-KDE-Library=kcal_kolab
 Type=Service

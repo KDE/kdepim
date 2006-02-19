@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Groupware Server
+Name[fr]=Serveur de travail collaboratif
 Name[x-test]=xxGroupware Serverxx
 X-KDE-Library=kcal_groupware
 Type=Service

@@ -4,6 +4,7 @@ Type=Service
 Name=NULL
 Name[x-test]=xxNULLxx
 Comment=This conduit does nothing.
+Comment[fr]=Ce canal ne fait rien.
 Comment[x-test]=xxThis conduit does nothing.xx
 Implemented=file
 ServiceTypes=KPilotConduit

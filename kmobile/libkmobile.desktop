@@ -3,4 +3,5 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=kdedevice/mobiledevice
 Name=KDE Mobile Device Lowlevel Hardware Driver
+Name[fr]=Pilote matériel de bas niveau des périphériques mobiles pour KDE
 Name[x-test]=xxKDE Mobile Device Lowlevel Hardware Driverxx

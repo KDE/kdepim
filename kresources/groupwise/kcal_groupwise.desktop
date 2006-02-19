@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Novell GroupWise Server
+Name[fr]=Serveur de travail collaboratif GroupWise de Novell
 Name[x-test]=xxNovell GroupWise Serverxx
 X-KDE-Library=kcal_groupwise
 Type=Service

@@ -2,8 +2,10 @@
 Encoding=UTF-8
 Type=Service
 Comment=Send mail from your handheld through KMail.
+Comment[fr]=Permet d'envoyer des messages du Palm vers KMail
 Comment[x-test]=xxSend mail from your handheld through KMail.xx
 Name=Mail
+Name[fr]=Messages
 Name[x-test]=xxMailxx
 Implemented=file
 ServiceTypes=KPilotConduit

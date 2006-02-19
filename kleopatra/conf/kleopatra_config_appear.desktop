@@ -14,8 +14,11 @@ X-KDE-ParentComponents=kleopatra
 X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=Appearance
+Name[fr]=Apparence
 Name[x-test]=xxAppearancexx
 Comment=Colors & Fonts Configuration
+Comment[fr]=Configuration des polices et des couleurs
 Comment[x-test]=xxColors & Fonts Configurationxx
 Keywords=color,font, configuration
+Keywords[fr]=couleur,police,configuration,paramètres,réglages,couleurs,polices
 Keywords[x-test]=xxcolor,font, configurationxx

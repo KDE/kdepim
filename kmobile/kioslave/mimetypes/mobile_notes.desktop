@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Comment=Notes in Mobile Device
+Comment[fr]=Notes dans un périphérique mobile
 Comment[x-test]=xxNotes in Mobile Devicexx
 Icon=knotes
 Type=MimeType

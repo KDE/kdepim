@@ -13,6 +13,8 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Cleanup
+Name[fr]=Nettoyage
 Name[x-test]=xxCleanupxx
 Comment=Preserving Disk Space
+Comment[fr]=Préservation de l'espace disque
 Comment[x-test]=xxPreserving Disk Spacexx

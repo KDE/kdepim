@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Addressbook on IMAP Server via KMail
+Name[fr]=Carnet d'adresse sur serveur IMAP (via KMail)
 Name[x-test]=xxAddressbook on IMAP Server via KMailxx
 X-KDE-Library=kabc_kolab
 Type=Service

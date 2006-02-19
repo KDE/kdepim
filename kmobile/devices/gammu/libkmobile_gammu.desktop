@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Mobile Phone or Organizer (gammu)
+Name[fr]=Téléphone portable ou organiseur (gammu)
 Name[x-test]=xxMobile Phone or Organizer (gammu)xx
 Comment=This driver supports many NOKIA and other mobile phones via the gammu library
+Comment[fr]=Ce pilote prend en charge beaucoup de téléphones portables Nokia et autres à l'aide de la bibliothèque gammu
 Comment[x-test]=xxThis driver supports many NOKIA and other mobile phones via the gammu libraryxx
 Type=Service
 ServiceTypes=kdedevice/mobiledevice

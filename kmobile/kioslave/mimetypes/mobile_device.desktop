@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Comment=Mobile Device
+Comment[fr]=Périphérique mobile
 Comment[x-test]=xxMobile Devicexx
 Icon=kmobile
 Type=MimeType

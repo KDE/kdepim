@@ -13,6 +13,8 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Appearance
+Name[fr]=Apparence
 Name[x-test]=xxAppearancexx
 Comment=Customize Visual Appearance
+Comment[fr]=Personnalisation de l'apparence
 Comment[x-test]=xxCustomize Visual Appearancexx

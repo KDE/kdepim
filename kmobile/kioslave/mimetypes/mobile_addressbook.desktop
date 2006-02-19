@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Comment=Contacts in Mobile Device
+Comment[fr]=Contacts dans le périphérique mobile
 Comment[x-test]=xxContacts in Mobile Devicexx
 Icon=kaddressbook
 Type=MimeType

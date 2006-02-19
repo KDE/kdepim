@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=KAddressBook/ContactEditorWidget
 Comment=KAddressBook Contact Editor Widget Plugin
+Comment[fr]=Module d'édition de contacts de KAddressBook
 Comment[x-test]=xxKAddressBook Contact Editor Widget Pluginxx
 
 [PropertyDef::X-KDE-KAddressBook-CEWPluginVersion]

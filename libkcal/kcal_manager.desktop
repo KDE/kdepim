@@ -2,6 +2,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Calendar
+Name[fr]=Calendrier
 Name[x-test]=xxCalendarxx
 Type=Service
 ServiceTypes=KResources/Manager

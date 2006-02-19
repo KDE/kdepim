@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Birthdays From KAddressBook
+Name[fr]=Dates de naissance de KAddressBook
 Name[x-test]=xxBirthdays From KAddressBookxx
 X-KDE-Library=kcal_kabc
 Type=Service

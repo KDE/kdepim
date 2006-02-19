@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Calendar in Local File
+Name[fr]=Calendrier dans un fichier local
 Name[x-test]=xxCalendar in Local Filexx
 X-KDE-Library=kcal_local
 Type=Service

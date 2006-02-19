@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=KAddressBook/View
 Comment=KAddressBook View Plugin
+Comment[fr]=Module d'affichage pour KAddressBook
 Comment[x-test]=xxKAddressBook View Pluginxx
 
 [PropertyDef::X-KDE-KAddressBook-ViewPluginVersion]

@@ -13,5 +13,6 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Posting News
+Name[fr]=Postage de nouvelles
 Name[x-test]=xxPosting Newsxx
 

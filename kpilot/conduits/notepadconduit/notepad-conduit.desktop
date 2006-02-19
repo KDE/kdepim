@@ -2,8 +2,10 @@
 Encoding=UTF-8
 Type=Service
 Name=NotePad
+Name[fr]=Notes
 Name[x-test]=xxNotePadxx
 Comment=This conduit backs up NotePad drawings to a local folder.
+Comment[fr]=Ce conduit sauvegarde les dessins (Notes) dans un dossier local
 Comment[x-test]=xxThis conduit backs up NotePad drawings to a local folder.xx
 Implemented=file
 ServiceTypes=KPilotConduit

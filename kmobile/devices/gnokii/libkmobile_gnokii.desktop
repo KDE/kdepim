@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Mobile Phone or Organizer (gnokii)
+Name[fr]=Téléphone portable ou organiseur (gnokii)
 Name[x-test]=xxMobile Phone or Organizer (gnokii)xx
 Comment=This driver supports many NOKIA and other mobile phones via the gnokii library
+Comment[fr]=Ce pilote prend en charge beaucoup de téléphones portables Nokia et autres à l'aide de la bibliothèque gnokii
 Comment[x-test]=xxThis driver supports many NOKIA and other mobile phones via the gnokii libraryxx
 Type=Service
 ServiceTypes=kdedevice/mobiledevice

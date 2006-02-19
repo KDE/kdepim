@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=GroupDAV Server (e.g. OpenGroupware)
+Name[fr]=GroupDAV Serveur (ex. OpenGroupware)
 Name[x-test]=xxGroupDAV Server (e.g. OpenGroupware)xx
 X-KDE-Library=kabc_groupdav
 Type=Service

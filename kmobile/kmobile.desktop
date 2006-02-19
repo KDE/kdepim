@@ -10,9 +10,11 @@ Name=KMobile
 Name[x-test]=xxKMobilexx
 
 GenericName=Manage Mobile Devices
+GenericName[fr]=Gérer les périphériques mobiles
 GenericName[x-test]=xxManage Mobile Devicesxx
 
 Comment=A KDE Mobile Devices Manager
+Comment[fr]=Un gestionnaire de périphériques mobiles pour KDE
 Comment[x-test]=xxA KDE Mobile Devices Managerxx
 
 X-KDE-StartupNotify=false

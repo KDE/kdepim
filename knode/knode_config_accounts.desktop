@@ -13,6 +13,8 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Accounts
+Name[fr]=Comptes
 Name[x-test]=xxAccountsxx
 Comment=Setup for Newsgroup and Mail Servers
+Comment[fr]=Configuration les serveurs de messagerie et de groupes de discussion
 Comment[x-test]=xxSetup for Newsgroup and Mail Serversxx

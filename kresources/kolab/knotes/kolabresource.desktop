@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=IMAP Server via KMail
+Name[fr]=Serveur IMAP (via KMail)
 Name[x-test]=xxIMAP Server via KMailxx
 X-KDE-Library=knotes_kolab
 Type=Service

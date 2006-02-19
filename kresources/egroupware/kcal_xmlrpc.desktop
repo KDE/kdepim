@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=eGroupware Server (via XML-RPC)
+Name[fr]=Serveur eGroupware (via XML-RPC)
 Name[x-test]=xxeGroupware Server (via XML-RPC)xx
 X-KDE-Library=kcal_xmlrpc
 Type=Service

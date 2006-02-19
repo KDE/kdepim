@@ -2,8 +2,10 @@
 Encoding=UTF-8
 Type=Service
 Comment=This conduit syncs the Memo Pad application with KNotes.
+Comment[fr]=Ce canal synchronise l'application « Memo Pad » avec KNotes.
 Comment[x-test]=xxThis conduit syncs the Memo Pad application with KNotes.xx
 Name=KNotes / Memos
+Name[fr]=KNotes / Mémos
 Name[x-test]=xxKNotes / Memosxx
 Implemented=file
 ServiceTypes=KPilotConduit

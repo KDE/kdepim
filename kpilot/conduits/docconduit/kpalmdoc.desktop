@@ -4,6 +4,7 @@ Encoding=UTF-8
 Name=KPalmDOC
 Name[x-test]=xxKPalmDOCxx
 GenericName=PalmDOC Converter
+GenericName[fr]=Convertisseur PalmDOC
 GenericName[x-test]=xxPalmDOC Converterxx
 Exec=kpalmdoc
 Icon=kpalmdoc

@@ -2,8 +2,10 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_vcard_xxport
 Name=KAB vCard XXPort Plugin
+Name[fr]=Module d'import / export vCard pour KAB
 Name[x-test]=xxKAB vCard XXPort Pluginxx
 Comment=Plugin to import and export contacts in vCard format
+Comment[fr]=Module d'import / export de contacts au format vCard
 Comment[x-test]=xxPlugin to import and export contacts in vCard formatxx
 Type=Service
 ServiceTypes=KAddressBook/XXPort

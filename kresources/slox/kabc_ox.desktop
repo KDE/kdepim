@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=OpenXchange Server
+Name[fr]=Serveur OpenXchange
 Name[x-test]=xxOpenXchange Serverxx
 X-KDE-Library=kabc_slox
 Type=Service

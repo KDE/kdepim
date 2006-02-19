@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=vCard Info
+Name[fr]=Informations vCard
 Name[x-test]=xxvCard Infoxx
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_vcf

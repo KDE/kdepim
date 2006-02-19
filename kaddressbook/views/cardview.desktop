@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_cardview
 Name=Card View
+Name[fr]=Vue en cartes
 Name[x-test]=xxCard Viewxx
 Type=Service
 ServiceTypes=KAddressBook/View

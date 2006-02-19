@@ -2,8 +2,10 @@
 Encoding=UTF-8
 Type=Service
 Comment=This conduit writes information about your handheld and the sync to a file.
+Comment[fr]=Ce canal écrit des informations sur votre périphérique et la synchronisation dans un fichier.
 Comment[x-test]=xxThis conduit writes information about your handheld and the sync to a file.xx
 Name=System Information
+Name[fr]=Informations sur le système
 Name[x-test]=xxSystem Informationxx
 Implemented=file
 ServiceTypes=KPilotConduit

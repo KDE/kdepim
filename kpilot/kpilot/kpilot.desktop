@@ -2,8 +2,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KPilot
+Name[fr]=Palm Pilot
 Name[x-test]=xxKPilotxx
 GenericName=PalmPilot Tool
+GenericName[fr]=Outil pour le Palm Pilot
 GenericName[x-test]=xxPalmPilot Toolxx
 Exec=kpilot
 Icon=kpilot

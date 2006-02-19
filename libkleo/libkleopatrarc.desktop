@@ -1,6 +1,7 @@
 [Key Filter #0]
 was-validated=false
 Name=Not Validated Key
+Name[fr]=Clé non validée
 Name[x-test]=xxNot Validated Keyxx
 
 [Key Filter #1]
@@ -9,12 +10,14 @@ is-expired=true
 is-revoked=false
 foreground-color=255,0,0
 Name=Expired Key
+Name[fr]=Clé expirée
 Name[x-test]=xxExpired Keyxx
 
 [Key Filter #2]
 was-validated=true
 is-revoked=true
 Name=Revoked Key
+Name[fr]=Clé révoquée
 Name[x-test]=xxRevoked Keyxx
 
 [Key Filter #3]
@@ -22,6 +25,7 @@ was-validated=true
 is-root-certificate=true
 is-validity=ultimate
 Name=Trusted Root Certificate
+Name[fr]=Certificat racine de confiance
 Name[x-test]=xxTrusted Root Certificatexx
 background-color=0,0,255
 font-bold=true
@@ -32,6 +36,7 @@ was-validated=true
 is-root-certificate=true
 is-not-validity=ultimate
 Name=Not Trusted Root Certificate
+Name[fr]=Certificat racine non fiable
 Name[x-test]=xxNot Trusted Root Certificatexx
 
 [Key Filter #5]

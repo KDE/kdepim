@@ -2,8 +2,10 @@
 Encoding=UTF-8
 Type=Service
 Comment=This conduit syncs the ToDo list from your handheld to KOrganizer.
+Comment[fr]=Ce canal synchronise la liste des tâches de votre Palm sur KOrganizer.
 Comment[x-test]=xxThis conduit syncs the ToDo list from your handheld to KOrganizer.xx
 Name=ToDos (KOrganizer)
+Name[fr]=Tâches (KOrganizer)
 Name[x-test]=xxToDos (KOrganizer)xx
 Implemented=file
 ServiceTypes=KPilotConduit

@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_iconview
 Name=Icon View
+Name[fr]=Icônes
 Name[x-test]=xxIcon Viewxx
 Type=Service
 ServiceTypes=KAddressBook/View

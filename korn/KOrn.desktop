@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 GenericName=Mail Alert
+GenericName[fr]=Surveillance du courrier électronique
 GenericName[x-test]=xxMail Alertxx
 Exec=korn -caption "%c" %f
 Icon=korn

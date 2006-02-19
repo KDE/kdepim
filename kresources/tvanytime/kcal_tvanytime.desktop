@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=TV Schedules
+Name[fr]=Programmes TV
 Name[x-test]=xxTV Schedulesxx
 X-KDE-Library=kcal_tvanytime
 Type=Service

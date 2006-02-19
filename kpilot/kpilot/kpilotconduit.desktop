@@ -3,4 +3,5 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=KPilotConduit
 Comment=KPilot Conduit
+Comment[fr]=Canal de KPilot
 Comment[x-test]=xxKPilot Conduitxx

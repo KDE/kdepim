@@ -2,8 +2,10 @@
 Encoding=UTF-8
 Type=Service
 Comment=This conduit syncs the handheld addressbook with KDE's addressbook.
+Comment[fr]=Ce canal synchronise le carnet d'adresses du périphérique avec celui de KDE.
 Comment[x-test]=xxThis conduit syncs the handheld addressbook with KDE's addressbook.xx
 Name=Addressbook
+Name[fr]=Carnet d'adresses
 Name[x-test]=xxAddressbookxx
 Implemented=file
 ServiceTypes=KPilotConduit

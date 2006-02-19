@@ -14,8 +14,11 @@ X-KDE-ParentComponents=kaddressbook,kontact_kaddressbookplugin
 X-KDE-CfgDlgHierarchy=KAB
 
 Name=General
+Name[fr]=Général
 Name[x-test]=xxGeneralxx
 Comment=Configure the Address Book
+Comment[fr]=Configurer le carnet d'adresses
 Comment[x-test]=xxConfigure the Address Bookxx
 Keywords=kaddressbook, configure, settings
+Keywords[fr]=carnet d'adresses,adresses,kab,kaddressbook,configurer,paramètres,paramètre
 Keywords[x-test]=xxkaddressbook, configure, settingsxx

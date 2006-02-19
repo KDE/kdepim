@@ -12,8 +12,11 @@ X-KDE-ParentApp=kpilot
 X-KDE-ParentComponents=kpilot,kpilotDaemon,kontact_kpilotplugin
 
 Name=KPilot Configuration
+Name[fr]=Configuration de KPilot
 Name[x-test]=xxKPilot Configurationxx
 Comment=KPilot Main Configuration
+Comment[fr]=Configuration principale de KPilot
 Comment[x-test]=xxKPilot Main Configurationxx
 Keywords=kpilot,main
+Keywords[fr]=kpilot,principal
 Keywords[x-test]=xxkpilot,mainxx

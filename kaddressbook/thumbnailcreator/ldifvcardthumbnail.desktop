@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=Electronic Business Card Files
+Name[fr]=Fichiers de cartes de commerce électroniques
 Name[x-test]=xxElectronic Business Card Filesxx
 ServiceTypes=ThumbCreator
 MimeTypes=text/directory;text/x-vcard,text/x-ldif

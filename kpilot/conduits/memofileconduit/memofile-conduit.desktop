@@ -2,8 +2,10 @@
 Encoding=UTF-8
 Type=Service
 Name=Memo File
+Name[fr]=Fichier mémo
 Name[x-test]=xxMemo Filexx
 Comment=This conduit syncs your handheld memos with a local directory.
+Comment[fr]=Ce canal synchronise les mémos du Palm avec ceux de KDE.
 Comment[x-test]=xxThis conduit syncs your handheld memos with a local directory.xx
 Implemented=file
 ServiceTypes=KPilotConduit

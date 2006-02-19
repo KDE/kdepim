@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Network Status Daemon
+Name[fr]=Suivi de l'état du réseau
 Name[x-test]=xxNetwork Status Daemonxx
 Comment=Tracks status of network interfaces and provides notification to applications using the network.
+Comment[fr]=Surveille l'état des interfaces réseaux et fournit des notifications aux applications qui utilisent le réseau
 Comment[x-test]=xxTracks status of network interfaces and provides notification to applications using the network.xx
 Type=Service
 ServiceTypes=KDEDModule

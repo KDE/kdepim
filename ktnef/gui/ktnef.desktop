@@ -2,12 +2,14 @@
 Name=KTnef
 Name[x-test]=xxKTnefxx
 GenericName=TNEF File Viewer
+GenericName[fr]=Afficheur de fichiers TNEF
 GenericName[x-test]=xxTNEF File Viewerxx
 Exec=ktnef -caption "%c"
 Icon=ktnef
 Type=Application
 DocPath=ktnef/index.html
 Comment=A viewer/extractor for TNEF files
+Comment[fr]=Pour afficher / extraire des fichiers TNEF
 Comment[x-test]=xxA viewer/extractor for TNEF filesxx
 Terminal=false
 MimeType=application/ms-tnef;

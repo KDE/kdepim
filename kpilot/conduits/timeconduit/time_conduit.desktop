@@ -2,8 +2,10 @@
 Encoding=UTF-8
 Type=Service
 Comment=This conduit sets the time on your handheld from the PC clock.
+Comment[fr]=Ce canal règle l'heure de votre périphérique depuis celle du PC.
 Comment[x-test]=xxThis conduit sets the time on your handheld from the PC clock.xx
 Name=Time Synchronization
+Name[fr]=Synchronisation de l'heure
 Name[x-test]=xxTime Synchronizationxx
 Implemented=file
 ServiceTypes=KPilotConduit

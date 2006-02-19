@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Digital Camera
+Name[fr]=Appareil photo numérique
 Name[x-test]=xxDigital Cameraxx
 Comment=This driver supports many digital cameras
+Comment[fr]=Ce pilote prend en charge beaucoup d'appareils photo numériques
 Comment[x-test]=xxThis driver supports many digital camerasxx
 Type=Service
 ServiceTypes=kdedevice/mobiledevice

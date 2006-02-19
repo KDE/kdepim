@@ -1,8 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Skeleton Device
+Name[fr]=Périphérique modèle
 Name[x-test]=xxSkeleton Devicexx
 Comment=Mobile Skeleton Device
+Comment[fr]=Modèle de périphérique mobile
 Comment[x-test]=xxMobile Skeleton Devicexx
 Type=Service
 ServiceTypes=kdedevice/mobiledevice

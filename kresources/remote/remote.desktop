@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Calendar in Remote File
+Name[fr]=Calendrier dans un fichier distant
 Name[x-test]=xxCalendar in Remote Filexx
 X-KDE-Library=kcal_remote
 Type=Service

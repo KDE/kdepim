@@ -2,8 +2,10 @@
 Encoding=UTF-8
 Type=Service
 Name=Calendar (KOrganizer)
+Name[fr]=Agenda (KOrganizer)
 Name[x-test]=xxCalendar (KOrganizer)xx
 Comment=This conduit synchronizes your handheld with the KOrganizer datebook.
+Comment[fr]=Ce canal synchronise votre Palm avec l'agenda KOrganizer.
 Comment[x-test]=xxThis conduit synchronizes your handheld with the KOrganizer datebook.xx
 Implemented=file
 ServiceTypes=KPilotConduit

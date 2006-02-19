@@ -8,6 +8,7 @@ DocPath=knode/index.html
 Name=KNode
 Name[x-test]=xxKNodexx
 GenericName=News Reader
+GenericName[fr]=Lecteur de forums de discussion
 GenericName[x-test]=xxNews Readerxx
 X-KDE-StartupNotify=true
 X-DCOP-ServiceType=Unique

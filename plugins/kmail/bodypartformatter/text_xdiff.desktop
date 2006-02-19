@@ -1,8 +1,10 @@
 [Misc]
 Encoding=UTF-8
 Name=Application Octetstream
+Name[fr]=Application (flux d'octets)
 Name[x-test]=xxApplication Octetstreamxx
 Comment=A bodypart formatter plugin for text/x-diff
+Comment[fr]=Un formateur de partie de corps pour text/x-diff
 Comment[x-test]=xxA bodypart formatter plugin for text/x-diffxx
 [Plugin]
 Type=text/x-diff
