@@ -82,7 +82,7 @@ namespace {
   MAKE_TO( unsigned int, toUInt );
 
   template <>
-  class to<KURL> {
+  class to<KUrl> {
     KUrl m;
   public:
     to( const QVariant & v ) {
@@ -108,8 +108,8 @@ namespace {
     KUrl::List m;
   public:
     to( const QVariant & v ) {
-      // wow, KUrl::List is broken... it lacks conversion from and to QVL<KURL>...
-      m += to< QList<KURL> >( v );
+      // wow, KUrl::List is broken... it lacks conversion from and to QVL<KUrl>...
+      m += to< QList<KUrl> >( v );
     }
     operator KUrl::List() const { return m; }
   };
@@ -131,7 +131,7 @@ namespace {
   template <> struct from_helper<bool> : public QVariant {
     from_helper( bool b ) : QVariant( b, int() ) {}
   };
-  template <> struct from_helper<KURL> : public QVariant {
+  template <> struct from_helper<KUrl> : public QVariant {
     from_helper( const KUrl & url ) : QVariant( url.path() ) {}
   };
   template <typename T> struct from_helper< QList<T> > : public QVariant {
@@ -142,8 +142,8 @@ namespace {
       QVariant::operator=( result );
     }
   };
-  template <> struct from_helper<KUrl::List> : public from_helper< QList<KURL> > {
-    from_helper( const KUrl::List & l ) : from_helper< QList<KURL> >( l ) {}
+  template <> struct from_helper<KUrl::List> : public from_helper< QList<KUrl> > {
+    from_helper( const KUrl::List & l ) : from_helper< QList<KUrl> >( l ) {}
   };
 
   class ChiasmusConfigEntry : public Kleo::CryptoConfigEntry {
