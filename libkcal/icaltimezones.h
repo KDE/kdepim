@@ -46,7 +46,7 @@ class Recurrence;
  * @author David Jarvie <software@astrojar.org.uk>.
  * @since 3.5
  */
-class LIBKCAL_EXPORT ICalTimezone : public KTimezone
+class LIBKCAL_EXPORT ICalTimezone : public KTimeZone
 {
   public:
     /**
@@ -168,7 +168,7 @@ class LIBKCAL_EXPORT ICalTimezone : public KTimezone
  * @author David Jarvie <software@astrojar.org.uk>.
  * @since 3.5
  */
-class LIBKCAL_EXPORT ICalTimezoneSource : public KTimezoneSource
+class LIBKCAL_EXPORT ICalTimezoneSource : public KTimeZoneSource
 {
   public:
     /**
@@ -190,7 +190,7 @@ class LIBKCAL_EXPORT ICalTimezoneSource : public KTimezoneSource
 
     /**
      * Creates an ICalTimezone instance for each VTIMEZONE component within a
-     * CALENDAR component. The ICalTimezone instances are added to a KTimezones
+     * CALENDAR component. The ICalTimezone instances are added to a KTimeZones
      * collection.
      *
      * If an error occurs while processing any time zone, any remaining time zones
@@ -202,12 +202,12 @@ class LIBKCAL_EXPORT ICalTimezoneSource : public KTimezoneSource
      * @return @c false if any error occurred (either parsing a VTIMEZONE component
      *         or adding an ICalTimezone to @p zones), @c true otherwise
      */
-    bool parse(icalcomponent *calendar, KTimezones &zones);
+    bool parse(icalcomponent *calendar, KTimeZones &zones);
 
     /**
      * Reads an iCalendar file and creates an ICalTimezone instance for each
      * VTIMEZONE component within it. The ICalTimezone instances are added to a
-     * KTimezones collection.
+     * KTimeZones collection.
      *
      * If an error occurs while processing any time zone, any remaining time zones
      * are left unprocessed.
@@ -217,7 +217,7 @@ class LIBKCAL_EXPORT ICalTimezoneSource : public KTimezoneSource
      *                 instances are to be added
      * @return @c false if any error occurred, @c true otherwise
      */
-    bool parse(const QString &fileName, KTimezones &zones);
+    bool parse(const QString &fileName, KTimeZones &zones);
 
   private:
     ICalTimezoneSourcePrivate *d;
@@ -235,7 +235,7 @@ class LIBKCAL_EXPORT ICalTimezoneSource : public KTimezoneSource
  * @author David Jarvie <software@astrojar.org.uk>.
  * @since 4.0
  */
-class LIBKCAL_EXPORT ICalTimezoneData : public KTimezoneData
+class LIBKCAL_EXPORT ICalTimezoneData : public KTimeZoneData
 {
     friend class ICalTimezoneSource;
 
@@ -282,7 +282,7 @@ class LIBKCAL_EXPORT ICalTimezoneData : public KTimezoneData
      *
      * @return copy of this instance
      */
-    virtual KTimezoneData *clone();
+    virtual KTimeZoneData *clone();
 
     /**
      * Returns the complete list of time zone abbreviations.

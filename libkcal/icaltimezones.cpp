@@ -56,13 +56,13 @@ namespace KCal {
 /******************************************************************************/
 
 ICalTimezone::ICalTimezone(ICalTimezoneSource *source, const QString &name, ICalTimezoneData *data)
-  : KTimezone(source, name)
+  : KTimeZone(source, name)
 {
   setData(data);
 }
 
 ICalTimezone::ICalTimezone(const ICalTimezone &tz)
-  : KTimezone(tz)
+  : KTimeZone(tz)
 {
 }
 
@@ -72,7 +72,7 @@ ICalTimezone::~ICalTimezone()
 
 ICalTimezone &ICalTimezone::operator=(const ICalTimezone &tz)
 {
-  KTimezone::operator=(tz);
+  KTimeZone::operator=(tz);
   return *this;
 }
 
@@ -193,7 +193,7 @@ ICalTimezoneData::Phase::~Phase()
   delete recur;
 }
 
-KTimezoneData *ICalTimezoneData::clone()
+KTimeZoneData *ICalTimezoneData::clone()
 {
   ICalTimezoneData *newData = new ICalTimezoneData();
   newData->location     = location;
@@ -333,7 +333,7 @@ ICalTimezoneSource::~ICalTimezoneSource()
 {
 }
 
-bool ICalTimezoneSource::parse(const QString &fileName, KTimezones &zones)
+bool ICalTimezoneSource::parse(const QString &fileName, KTimeZones &zones)
 {
   QFile file(fileName);
   if (!file.open(QIODevice::ReadOnly))
@@ -353,7 +353,7 @@ bool ICalTimezoneSource::parse(const QString &fileName, KTimezones &zones)
   return result;
 }
 
-bool ICalTimezoneSource::parse(icalcomponent *calendar, KTimezones &zones)
+bool ICalTimezoneSource::parse(icalcomponent *calendar, KTimeZones &zones)
 {
   for (icalcomponent *c = icalcomponent_get_first_component(calendar, ICAL_VTIMEZONE_COMPONENT);
        c;  c = icalcomponent_get_next_component(calendar, ICAL_VTIMEZONE_COMPONENT))
