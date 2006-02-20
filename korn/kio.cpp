@@ -88,7 +88,7 @@ KKioDrop::KKioDrop()
 	_process( 0 ),
 	_mailurls( 0 )
 {
-	_kurl = new KURL;
+	_kurl = new KUrl;
 	_metadata = new KIO::MetaData;
 
 	//Initialising protocol; if no protocol is set before first use, it will use the first protocol
@@ -125,7 +125,7 @@ KKioDrop::KKioDrop( KConfigGroup* )
 	_process( 0 ),
 	_mailurls( 0 )
 {
-	_kurl = new KURL;
+	_kurl = new KUrl;
 	_metadata = new KIO::MetaData;
 
 	//Initialising protocol; if no protocol is set before first use, it will use the first protocol

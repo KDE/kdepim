@@ -37,7 +37,7 @@ KIO_Subjects::KIO_Subjects( QObject * parent )
 	_valid( true )
 {
 	_jobs = new QList<KIO_Single_Subject*>;
-	_kurl = new KURL;
+	_kurl = new KUrl;
 	_metadata = new KIO::MetaData;
 }
 

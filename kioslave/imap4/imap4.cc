@@ -1217,18 +1217,18 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
 }
 
 /*
- * Copy a mail: data = 'C' + srcURL (KURL) + destURL (KURL)
+ * Copy a mail: data = 'C' + srcURL (KUrl) + destURL (KUrl)
  * Capabilities: data = 'c'. Result shipped in infoMessage() signal
  * No-op: data = 'N'
  * Namespace: data = 'n'. Result shipped in infoMessage() signal
  *                        The format is: section=namespace=delimiter
  *                        Note that the namespace can be empty
- * Unsubscribe: data = 'U' + URL (KURL)
- * Subscribe: data = 'u' + URL (KURL)
- * Change the status: data = 'S' + URL (KURL) + Flags (QCString)
- * ACL commands: data = 'A' + command + URL (KURL) + command-dependent args
+ * Unsubscribe: data = 'U' + URL (KUrl)
+ * Subscribe: data = 'u' + URL (KUrl)
+ * Change the status: data = 'S' + URL (KUrl) + Flags (QCString)
+ * ACL commands: data = 'A' + command + URL (KUrl) + command-dependent args
  * AnnotateMore commands: data = 'M' + 'G'et/'S'et + URL + entry + command-dependent args
- * Search: data = 'E' + URL (KURL)
+ * Search: data = 'E' + URL (KUrl)
  */
 void
 IMAP4Protocol::special (const QByteArray & aData)

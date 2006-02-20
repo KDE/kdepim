@@ -350,7 +350,7 @@ Kleo::CryptoConfigEntry* QGpgMECryptoConfigGroup::entry( const QString& name ) c
 
 static QString gpgconf_unescape( const QString& str )
 {
-  // Looks like it's the same rules as KURL.
+  // Looks like it's the same rules as KUrl.
   return KUrl::decode_string( str);
 }
 

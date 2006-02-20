@@ -179,7 +179,7 @@ public:
 	/**
 	 * This function can manipulate a KUrl which is used after it for connecting.
 	 * 
-	 * This is one of the functions to manipulation a KURL.
+	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
@@ -195,7 +195,7 @@ public:
 	/**
 	 * This function can manipulate a KUrl which is used for checking for new emails.
 	 * 
-	 * This is one of the functions to manipulation a KURL.
+	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
@@ -212,7 +212,7 @@ public:
 	 * This function can manipulate a KUrl which is used after it for connecting.
 	 * After connecting, the connection is used to check for new emails.
 	 * 
-	 * This is one of the functions to manipulation a KURL.
+	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
@@ -226,7 +226,7 @@ public:
 	/**
 	 * This function can manipulate a KUrl which is used before reading a subject.
 	 * 
-	 * This is one of the functions to manipulation a KURL.
+	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
@@ -243,7 +243,7 @@ public:
 	 * This function can manipulate a KUrl which is used after it for connecting.
 	 * After the connecting, the connection is used to delete emails.
 	 * 
-	 * This is one of the functions to manipulation a KURL.
+	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
@@ -257,7 +257,7 @@ public:
 	/**
 	 * This function can manipulate a KUrl which is used to delete an email.
 	 * 
-	 * This is one of the functions to manipulation a KURL.
+	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
@@ -282,7 +282,7 @@ public:
 	/**
 	 * This function can manipulate a KUrl which is used for committing after a deleting operation.
 	 * 
-	 * This is one of the functions to manipulation a KURL.
+	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
@@ -299,7 +299,7 @@ public:
 	/**
 	 * This function can manipulate a KUrl which is used before reading an email.
 	 * 
-	 * This is one of the functions to manipulation a KURL.
+	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
 	 *
