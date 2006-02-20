@@ -174,7 +174,7 @@ void KTNEFMain::openFile()
 void KTNEFMain::viewFile()
 {
 	KTNEFAttach	*attach = view_->getSelection()->first();
-	KURL		url("file:"+extractTemp(attach));
+	KUrl		url("file:"+extractTemp(attach));
 	QString		mimename(attach->mimeTag());
 
 	if (mimename.isEmpty() || mimename == "application/octet-stream")
