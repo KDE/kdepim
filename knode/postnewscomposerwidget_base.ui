@@ -2,7 +2,7 @@
  <author>Volker Krause &lt;volker.krause@rwth-aachen.de></author>
  <comment></comment>
  <exportmacro></exportmacro>
- <class>PostNewsComposerWidgetBase</class>
+ <class>KNode::PostNewsComposerWidgetBase</class>
  <widget class="KCModule" name="PostNewsComposerWidgetBase" >
   <property name="geometry" >
    <rect>
