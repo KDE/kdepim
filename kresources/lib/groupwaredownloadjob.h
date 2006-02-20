@@ -75,10 +75,10 @@ class GroupwareDownloadJob : public GroupwareJob
         These pathes don't contain the server name! */
     KUrl::List mCurrentlyOnServer;
 
-    QMap<KURL,KPIM::FolderLister::ContentType> mItemsForDownload;
-    QMap<KURL,KPIM::FolderLister::ContentType> mItemsDownloading;
-    QMap<KURL,KPIM::FolderLister::ContentType> mItemsDownloaded;
-    QMap<KURL,KPIM::FolderLister::ContentType> mItemsDownloadError;
+    QMap<KUrl,KPIM::FolderLister::ContentType> mItemsForDownload;
+    QMap<KUrl,KPIM::FolderLister::ContentType> mItemsDownloading;
+    QMap<KUrl,KPIM::FolderLister::ContentType> mItemsDownloaded;
+    QMap<KUrl,KPIM::FolderLister::ContentType> mItemsDownloadError;
 
     KPIM::ProgressItem *mProgress;
 
