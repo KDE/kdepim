@@ -263,7 +263,7 @@ Q_OBJECT
     virtual KIO::TransferJob *createDownloadJob( const KUrl &,
                                           FolderLister::ContentType ) = 0;
     /** Creates the KIO::TransferJob for downloading a list of items items. */
-    virtual KIO::TransferJob *createDownloadJob( const QMap<KURL,FolderLister::ContentType> & ) { return 0; }
+    virtual KIO::TransferJob *createDownloadJob( const QMap<KUrl,FolderLister::ContentType> & ) { return 0; }
     /** Create the job to remove the deletedItems from the server. The base
         URL of the server is passed as uploadurl.  */
     virtual KIO::Job *createRemoveJob( const KUrl &,
