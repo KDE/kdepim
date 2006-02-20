@@ -206,7 +206,7 @@ bool KABC::ResourceKolab::loadSubResourceHelper( const QString& subResource,
     progressId = uiserver.newJob( kapp->dcopClient()->appId(), true );
     uiserver.totalFiles( progressId, count );
     uiserver.infoMessage( progressId, i18n( "Loading contacts..." ) );
-    uiserver.transferring( progressId, "Contacts" );
+    uiserver.transferring( progressId, KUrl("Contacts") );
   }
 
   for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
