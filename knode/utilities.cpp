@@ -28,6 +28,7 @@
 #include <kio/netaccess.h>
 #include <ktempfile.h>
 #include <kfiledialog.h>
+#include <kdialogbase.h>
 
 #include "knglobals.h"
 #include "utilities.h"
