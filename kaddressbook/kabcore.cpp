@@ -21,6 +21,10 @@
     without including the source code for Qt in the source distribution.
 */
 
+// Needed for ugly hack, to be removed in 4.0
+#include <unistd.h> // for usleep
+#include <qeventloop.h>
+
 #include <qclipboard.h>
 #include <qdir.h>
 #include <qfile.h>
@@ -605,6 +609,16 @@ void KABCore::addEmail( const QString &aStr )
 
   KABC::Addressee::parseEmailAddress( aStr, fullName, email );
 
+#if KDE_IS_VERSION(3,4,89)
+  // This ugly hack will be removed in 4.0
+  // addressbook may not be reloaded yet, as done asynchronously sometimes, so wait
+  while ( !mAddressBook->loadingHasFinished() ) {
+    QApplication::eventLoop()->processEvents( QEventLoop::ExcludeUserInput );
+    // use sleep here to reduce cpu usage
+    usleep( 100 );
+  }
+#endif
+
   // Try to lookup the addressee matching the email address
   bool found = false;
   QStringList emailList;
@@ -652,6 +666,16 @@ void KABCore::editContact( const QString &uid )
     if ( uidList.count() > 0 )
       localUID = *( uidList.at( 0 ) );
   }
+#if KDE_IS_VERSION(3,4,89)
+  // This ugly hack will be removed in 4.0
+  // for calls with given uid, as done from commandline and DCOP
+  // addressbook may not be reloaded yet, as done asynchronously, so wait
+  else while ( !mAddressBook->loadingHasFinished() ) {
+    QApplication::eventLoop()->processEvents( QEventLoop::ExcludeUserInput );
+    // use sleep here to reduce cpu usage
+    usleep( 100 );
+  }
+#endif
 
   KABC::Addressee addr = mAddressBook->findByUid( localUID );
   if ( !addr.isEmpty() ) {
@@ -790,6 +814,16 @@ void KABCore::extensionDeleted( const QStringList &uidList )
 
 QString KABCore::getNameByPhone( const QString &phone )
 {
+#if KDE_IS_VERSION(3,4,89)
+  // This ugly hack will be removed in 4.0
+  // addressbook may not be reloaded yet, as done asynchronously, so wait
+  while ( !mAddressBook->loadingHasFinished() ) {
+    QApplication::eventLoop()->processEvents( QEventLoop::ExcludeUserInput );
+    // use sleep here to reduce cpu usage
+    usleep( 100 );
+  }
+#endif
+
   QRegExp r( "[/*/-/ ]" );
   QString localPhone( phone );
 
