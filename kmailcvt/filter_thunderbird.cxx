@@ -56,7 +56,7 @@ void FilterThunderbird::import(FilterInfo *info)
     }
 
     KFileDialog *kfd;
-    kfd = new KFileDialog( thunderDir, "", 0, "kfiledialog", true );
+    kfd = new KFileDialog( thunderDir, "", 0 );
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     mailDir  = kfd->selectedFile();

@@ -57,7 +57,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
 
     //QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(), info->parent());
     KFileDialog *kfd;
-    kfd = new KFileDialog( evolDir, "", 0, "kfiledialog", true );
+    kfd = new KFileDialog( evolDir, "", 0 );
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     mailDir = kfd->selectedFile();

@@ -51,7 +51,7 @@ void FilterOpera::import(FilterInfo *info)
 
     //QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(), info->parent());
     KFileDialog *kfd;
-    kfd = new KFileDialog( startdir, "", 0, "kfiledialog", true );
+    kfd = new KFileDialog( startdir, "", 0);
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     QString operaDir = kfd->selectedFile();

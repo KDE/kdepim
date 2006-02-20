@@ -47,7 +47,7 @@ void FilterSylpheed::import( FilterInfo *info )
     QString _homeDir = QDir::homePath();
 
     KFileDialog *kfd;
-    kfd = new KFileDialog( _homeDir, "", 0, "kfiledialog", true );
+    kfd = new KFileDialog( _homeDir, "", 0 );
     kfd->setMode( KFile::Directory | KFile::LocalOnly );
     kfd->exec();
     mailDir = kfd->selectedFile();
