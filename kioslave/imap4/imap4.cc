@@ -516,7 +516,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
   {
     KUrl aURL = _url;
     aURL.setQuery (QString());
-    const QString encodedUrl = aURL.url(0, 106); // utf-8
+    const QString encodedUrl = aURL.url(0); // utf-8
 
     if (!_url.query ().isEmpty ())
     {
@@ -2060,7 +2060,7 @@ IMAP4Protocol::doListEntry (const KUrl & _url, int stretch, imapCache * cache,
 {
   KUrl aURL = _url;
   aURL.setQuery (QString());
-  const QString encodedUrl = aURL.url(0, 106); // utf-8
+  const QString encodedUrl = aURL.url(0); // utf-8
   doListEntry(encodedUrl, stretch, cache, withFlags, withSubject);
 }
 
@@ -2192,7 +2192,7 @@ IMAP4Protocol::doListEntry (const KUrl & _url, const QString & myBox,
         path += mailboxName;
       }
       aURL.setPath(path);
-      tmp = aURL.url(0, 106); // utf-8
+      tmp = aURL.url(0); // utf-8
 	  entry.insert(UDS_URL, tmp);
 
 	  entry.insert( UDS_USER, myUser);
