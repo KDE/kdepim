@@ -351,13 +351,13 @@ Kleo::CryptoConfigEntry* QGpgMECryptoConfigGroup::entry( const QString& name ) c
 static QString gpgconf_unescape( const QString& str )
 {
   // Looks like it's the same rules as KURL.
-  return KUrl::decode_string( str, 106 );
+  return KUrl::decode_string( str);
 }
 
 static QString gpgconf_escape( const QString& str )
 {
   // Escape special chars (including ':' and '%')
-  QString enc = KUrl::encode_string( str, 106 ); // and convert to utf8 first (to get %12%34 for one special char)
+  QString enc = KUrl::encode_string( str ); // and convert to utf8 first (to get %12%34 for one special char)
   // Also encode commas, for lists.
   enc.replace( ',', "%2c" );
   return enc;
