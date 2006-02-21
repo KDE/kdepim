@@ -194,20 +194,19 @@ bool KonsoleKalendar::showInstance()
 
 	  QDate dt;
 	  for ( dt = m_variables->getStartDateTime().date();
-                dt <= datetime.date() && status != false;
+                dt <= datetime.date();
                 dt = dt.addDays(1) ) {
 	    Event::List events =
               m_variables->getCalendar()->events( dt,
                                                   EventSortStartDate,
                                                   SortDirectionAscending );
-	    status = printEventList( &ts, &events, dt );
-
-	    // when we get next event we exit..
-	    if ( events.count() ) {
-	      kDebug() << "konsolekalendar.cpp::showInstance() | "
-                        << "Next event"
+            // finished here when we get the next event
+            if ( events.count() > 0 ) {
+	      kdDebug() << "konsolekalendar.cpp::showInstance() | "
+                        << "Got the next event"
                         << endl;
-	      return true;
+              printEvent( &ts, events.first(), dt );
+              return true;
 	    }
           }
 	} else {
