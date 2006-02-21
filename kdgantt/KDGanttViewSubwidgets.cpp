@@ -51,6 +51,7 @@
 #include <qpalette.h>
 #include <qdragobject.h>
 #include <qptrlist.h>
+#include <qpen.h>
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -2774,7 +2775,28 @@ void  KDListView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
 
 void  KDListView::drawToPainter ( QPainter * p )
 {
+    // Draw list
     drawContentsOffset ( p, 0, 0, 0, 0, contentsWidth(), contentsHeight() );
+    // Draw headers
+    QPen pen = QPen(Qt::lightGray, 1);
+    p->save();
+    QHeader *h = header();
+    for (int s = 0; s < h->count(); ++s) {
+        QRect r = h->sectionRect(s);
+        if (s==0) {
+            p->translate(0, -r.height()); // hmmm, is this safe?
+        }
+        //kdDebug()<<s<<": "<<h->label(s)<<" "<<r<<endl;
+        int x, y;
+        viewportToContents(r.x(), r.y(), x, y);
+        p->drawText(x+2, y, r.width()-2, r.height(), columnAlignment(s)|Qt::AlignVCenter, h->label(s), -1);
+        p->save();
+        p->setPen(pen);
+        p->drawRect(x, y+1, r.width(), r.height()-2);
+        p->restore();
+
+    }
+    p->restore();
 }
 
 
