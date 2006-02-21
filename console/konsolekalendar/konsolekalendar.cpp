@@ -202,9 +202,9 @@ bool KonsoleKalendar::showInstance()
                                                   SortDirectionAscending );
             // finished here when we get the next event
             if ( events.count() > 0 ) {
-	      kdDebug() << "konsolekalendar.cpp::showInstance() | "
-                        << "Got the next event"
-                        << endl;
+	      kDebug() << "konsolekalendar.cpp::showInstance() | "
+                       << "Got the next event"
+                       << endl;
               printEvent( &ts, events.first(), dt );
               return true;
 	    }
