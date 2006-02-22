@@ -97,7 +97,7 @@ void KIO_Subjects::getConnection( )
 		_protocol->readSubjectConnectKURL( kurl, metadata );
 		
 		if( kurl.port() == 0 )
-			kurl.setPort( _protocol->defaultPort() );
+			kurl.setPort( _protocol->defaultPort( _kio->_ssl ) );
 		
 		if( ! ( _slave = KIO::Scheduler::getConnectedSlave( kurl, metadata ) ) )
 		{
@@ -123,7 +123,7 @@ void KIO_Subjects::startJob( const QString &name, const long size )
 	_protocol->readSubjectKURL( kurl, metadata );
 	
 	if( kurl.port() == 0 )
-		kurl.setPort( _protocol->defaultPort() );
+		kurl.setPort( _protocol->defaultPort( _kio->_ssl ) );
 	
 	subject = new KIO_Single_Subject( this, name.latin1(), kurl, metadata, _protocol, _slave, name, size );
 	

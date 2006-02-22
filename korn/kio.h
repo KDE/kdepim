@@ -59,6 +59,7 @@ private:
 	bool _valid;
 		
 	const KIO_Protocol * _protocol;
+	bool _ssl;
 	
 	KIO_Count *_count;
 	KIO_Subjects *_subjects;

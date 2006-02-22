@@ -82,7 +82,7 @@ void KIO_Count::count( KKioDrop *drop )
 		_protocol->recheckConnectKURL( kurl, metadata );
 
 		if( kurl.port() == 0 )
-			kurl.setPort( _protocol->defaultPort() );
+			kurl.setPort( _protocol->defaultPort( _kio->_ssl ) );
 
 		if( ! ( _slave = KIO::Scheduler::getConnectedSlave( kurl, metadata ) ) ) //Forcing reload
 		{
@@ -118,7 +118,7 @@ void KIO_Count::count( KKioDrop *drop )
 	_protocol->recheckKURL( kurl, metadata );
 
 	if( kurl.port() == 0 )
-		kurl.setPort( _protocol->defaultPort() );
+		kurl.setPort( _protocol->defaultPort( _kio->_ssl ) );
 
 	//Making job to fetch file-list
 	
@@ -169,7 +169,7 @@ void KIO_Count::showPassive( const QString& id )
 
 	_kio->_protocol->readSubjectKURL( kurl, metadata );
 	if( kurl.port() == 0 )
-		kurl.setPort( _kio->_protocol->defaultPort() );
+		kurl.setPort( _kio->_protocol->defaultPort( _kio->_ssl ) );
 
 	KIO_Single_Subject *subject = new KIO_Single_Subject( this, id.latin1(), kurl, metadata, _kio->_protocol, _slave, id, 0 );
 

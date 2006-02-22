@@ -89,7 +89,7 @@ public:
 	 */
 	//virtual int fields() const { return server | port | username | password | mailbox; }
 	//virtual int urlFields() const { return no_fields; }
-	virtual unsigned short defaultPort() const { return 0; }
+	virtual unsigned short defaultPort( bool ) const { return 0; }
 
 	/*
 	 * This sets the string of such fields in Configuration
