@@ -1027,12 +1027,13 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
   // Add groupware links
 
+  Incidence* incidence = dynamic_cast<Incidence*>( incBase );
   switch ( msg->method() ) {
     case Scheduler::Publish:
     case Scheduler::Request:
     case Scheduler::Refresh:
     case Scheduler::Add:
-      if ( /*incBase->revision() == 0*/1 ) {
+      if ( incidence && incidence->revision() == 0 ) {
         // Accept
         html += helper->makeLink( "accept", i18n( "[Accept]" ) );
         html += "</td><td> &nbsp; </td><td>";
@@ -1076,7 +1077,6 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
   html += "</td></tr></table>";
 
-  Incidence* incidence = dynamic_cast<Incidence*>( incBase );
   if ( incidence ) {
     QString sDescr = incidence->description();
     if( ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Cancel ) &&

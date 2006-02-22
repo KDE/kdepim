@@ -39,7 +39,22 @@ namespace KCal {
 
 
 /**
-  This class provides the base class common to all calendar components.
+   This class provides the base class common to non-FreeBusy (Events, To-dos,
+   Journals) calendar components.
+
+   Several properties are not allowed for VFREEBUSY objects (see rfc:2445),
+   so they are not in IncidenceBase. The hierarchy is:
+
+   IncidenceBase
+   - FreeBusy
+   - Incidence
+     - Event
+     - Todo
+     - Journal
+
+   So IncidenceBase contains all properties that are common to all classes,
+   and Incidence contains all additional properties that are common to
+   Events, Todos and Journals, but are not allowed for FreeBusy entries.
 */
 class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observer
 {
@@ -130,6 +145,15 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
       Return time and date of creation.
     */
     QDateTime created() const;
+
+    /**
+      Set the number of revisions this incidence has seen.
+    */
+    void setRevision( int rev );
+    /**
+      Return the number of revisions this incidence has seen.
+    */
+    int revision() const;
 
     /**
       Set starting date/time.
@@ -442,6 +466,8 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     virtual QDateTime endDateRecurrenceBase() const { return dtStart(); }
 
   private:
+    int mRevision;
+
     // base components of jounal, event and todo
     QDateTime mCreated;
     QString mDescription;

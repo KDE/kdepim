@@ -46,6 +46,7 @@ Incidence::Incidence() :
 Incidence::Incidence( const Incidence &i ) : IncidenceBase( i ),Recurrence::Observer()
 {
 // TODO: reenable attributes currently commented out.
+  mRevision = i.mRevision;
   mCreated = i.mCreated;
   mDescription = i.mDescription;
   mSummary = i.mSummary;
@@ -195,6 +196,19 @@ void Incidence::setCreated( const QDateTime &created )
 QDateTime Incidence::created() const
 {
   return mCreated;
+}
+
+void Incidence::setRevision( int rev )
+{
+  if (mReadOnly) return;
+  mRevision = rev;
+
+  updated();
+}
+
+int Incidence::revision() const
+{
+  return mRevision;
 }
 
 void Incidence::setDtStart(const QDateTime &dtStart)

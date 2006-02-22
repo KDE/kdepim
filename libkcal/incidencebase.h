@@ -46,7 +46,21 @@ class Journal;
 class FreeBusy;
 
 /**
-  This class provides the base class common to all calendar components.
+   This class provides the base class common to all calendar components.
+
+   Several properties are not allowed for VFREEBUSY objects (see rfc:2445),
+   so they are not in IncidenceBase. The hierarchy is:
+
+   IncidenceBase
+   - FreeBusy
+   - Incidence
+     - Event
+     - Todo
+     - Journal
+
+   So IncidenceBase contains all properties that are common to all classes,
+   and Incidence contains all additional properties that are common to
+   Events, Todos and Journals, but are not allowed for FreeBusy entries.
 */
 class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
 {
@@ -123,15 +137,6 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     void setLastModified( const QDateTime &lm );
     /** Return the time the incidence was last modified. */
     QDateTime lastModified() const;
-
-  /**
-      Set the number of revisions this incidence has seen.
-    */
-    void setRevision( int rev );
-    /**
-      Return the number of revisions this incidence has seen.
-    */
-    int revision() const;
 
     /** sets the organizer for the incidence */
     void setOrganizer( const Person &o );
@@ -276,7 +281,6 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     QDateTime mDtStart;
     Person mOrganizer;
     QString mUid;
-    int mRevision;
     QDateTime mLastModified;
     Attendee::List mAttendees;
     QStringList mComments;
