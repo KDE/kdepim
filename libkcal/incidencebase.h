@@ -112,11 +112,11 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
 
     virtual QByteArray type() const = 0;
 
-    /** Set the unique id for the event */
+    /** Set the unique id for the incidence */
     void setUid( const QString & );
-    /** Return the unique id for the event */
+    /** Return the unique id for the incidence */
     QString uid() const;
-    /** Return the uri for the event, of form urn:x-ical:<uid> */
+    /** Return the uri for the incidence, of form urn:x-ical:<uid> */
     KUrl uri() const;
 
     /** Sets the time the incidence was last modified. */
@@ -124,7 +124,16 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     /** Return the time the incidence was last modified. */
     QDateTime lastModified() const;
 
-    /** sets the organizer for the event */
+  /**
+      Set the number of revisions this incidence has seen.
+    */
+    void setRevision( int rev );
+    /**
+      Return the number of revisions this incidence has seen.
+    */
+    int revision() const;
+
+    /** sets the organizer for the incidence */
     void setOrganizer( const Person &o );
     void setOrganizer( const QString &o );
     Person organizer() const;
@@ -134,17 +143,17 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     /** Return if the object is read-only. */
     bool isReadOnly() const { return mReadOnly; }
 
-    /** for setting the event's starting date/time with a QDateTime. */
+    /** for setting the incidence's starting date/time with a QDateTime. */
     virtual void setDtStart( const QDateTime &dtStart );
-    /** returns an event's starting date/time as a QDateTime. */
+    /** returns an incidence's starting date/time as a QDateTime. */
     virtual QDateTime dtStart() const;
-    /** returns an event's starting time as a string formatted according to the
+    /** returns an incidence's starting time as a string formatted according to the
      users locale settings */
     virtual QString dtStartTimeStr() const;
-    /** returns an event's starting date as a string formatted according to the
+    /** returns an incidence's starting date as a string formatted according to the
      users locale settings */
     virtual QString dtStartDateStr( bool shortfmt = true ) const;
-    /** returns an event's starting date and time as a string formatted according
+    /** returns an incidence's starting date and time as a string formatted according
      to the users locale settings */
     virtual QString dtStartStr() const;
 
@@ -173,7 +182,7 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     void addComment(const QString& comment);
 
     /**
-     * Remove a comment from the event.
+     * Remove a comment from the incidence.
      *
      * Removes first comment whose string is an exact match for the string
      * passed in.
@@ -267,6 +276,7 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     QDateTime mDtStart;
     Person mOrganizer;
     QString mUid;
+    int mRevision;
     QDateTime mLastModified;
     Attendee::List mAttendees;
     QStringList mComments;

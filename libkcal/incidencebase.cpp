@@ -49,6 +49,7 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i) :
   mHasDuration = i.mHasDuration;
   mOrganizer = i.mOrganizer;
   mUid = i.mUid;
+  mRevision = i.mRevision;
   Attendee::List attendees = i.attendees();
   Attendee::List::ConstIterator it;
   for( it = attendees.begin(); it != attendees.end(); ++it ) {
@@ -117,6 +118,19 @@ void IncidenceBase::setUid(const QString &uid)
 QString IncidenceBase::uid() const
 {
   return mUid;
+}
+
+void IncidenceBase::setRevision( int rev )
+{
+  if (mReadOnly) return;
+  mRevision = rev;
+
+  updated();
+}
+
+int IncidenceBase::revision() const
+{
+  return mRevision;
 }
 
 void IncidenceBase::setLastModified(const QDateTime &lm)

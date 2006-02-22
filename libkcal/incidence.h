@@ -114,7 +114,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
 
     /** Set whether the incidence floats, i.e. has a date but no time attached to it. */
     void setFloats( bool f );
-    
+
     /**
       Recreate event. The event is made a new unique event, but already stored
       event information is preserved. Sets uniquie id, creation date, last
@@ -130,15 +130,6 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
       Return time and date of creation.
     */
     QDateTime created() const;
-
-    /**
-      Set the number of revisions this event has seen.
-    */
-    void setRevision( int rev );
-    /**
-      Return the number of revisions this event has seen.
-    */
-    int revision() const;
 
     /**
       Set starting date/time.
@@ -451,8 +442,6 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     virtual QDateTime endDateRecurrenceBase() const { return dtStart(); }
 
   private:
-    int mRevision;
-
     // base components of jounal, event and todo
     QDateTime mCreated;
     QString mDescription;
