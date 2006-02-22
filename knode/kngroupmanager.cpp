@@ -176,7 +176,7 @@ bool KNGroupListData::writeOut()
 
   if(f.open(QIODevice::WriteOnly)) {
     for (KNGroupInfo *i=groups->first(); i; i=groups->next()) {
-      temp = i->name.utf8();
+      temp = i->name.toUtf8();
       switch (i->status) {
         case KNGroup::unknown: temp += " u ";
                                break;
@@ -187,7 +187,7 @@ bool KNGroupListData::writeOut()
         case KNGroup::moderated: temp += " m ";
                                  break;
       }
-      temp += i->description.utf8() + "\n";
+      temp += i->description.toUtf8() + "\n";
       f.write(temp.data(),temp.length());
     }
     f.close();

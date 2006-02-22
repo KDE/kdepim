@@ -267,7 +267,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
           line += ":16:";
         }
         line += '\n';
-        QByteArray line8bit = line.utf8(); // encode with utf8, and KProcIO uses utf8 when reading.
+        QByteArray line8bit = line.toUtf8(); // encode with utf8, and KProcIO uses utf8 when reading.
         tmpFile.file()->write( line8bit.data(), line8bit.size()-1 /*no 0*/ );
         dirtyEntries.append( it.current() );
       }

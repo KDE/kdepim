@@ -70,7 +70,7 @@ void Query::call( const QString &server, const QString &method,
 
   QByteArray postData;
   QDataStream stream( &postData, QIODevice::WriteOnly );
-  stream.writeRawBytes( xmlMarkup.utf8(), xmlMarkup.utf8().length() );
+  stream.writeRawBytes( xmlMarkup.toUtf8(), xmlMarkup.toUtf8().length() );
 
   KIO::TransferJob *job = KIO::http_post( KUrl( server ), postData, false );
   if ( !job ) {

@@ -2007,7 +2007,7 @@ void
 IMAP4Protocol::parseWriteLine (const QString & aStr)
 {
   //kDebug(7116) << "Writing: " << aStr << endl;
-  QByteArray writer = aStr.utf8();
+  QByteArray writer = aStr.toUtf8();
   int len = writer.length();
 
   // append CRLF if necessary

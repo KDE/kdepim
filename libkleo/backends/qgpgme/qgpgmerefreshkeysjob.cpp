@@ -97,7 +97,7 @@ GpgME::Error Kleo::QGpgMERefreshKeysJob::startAProcess() {
     strlen("--with-validation") + 1 + strlen("--force-crl-refresh") + 1 +
     strlen("--enable-crl-checks") + 1;
   while ( !mPatternsToDo.empty() ) {
-    const QByteArray pat = mPatternsToDo.front().utf8().trimmed();
+    const QByteArray pat = mPatternsToDo.front().toUtf8().trimmed();
     const unsigned int patLength = pat.length();
     if ( patLength >= commandLineLength )
       break;

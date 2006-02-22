@@ -333,7 +333,7 @@ bool KKioDrop::readConfigGroup( const QMap< QString, QString > &map, const Proto
 		return false;
 	}
 
-	this->setName( (*map.find( "name" )).utf8() );
+	this->setName( (*map.find( "name" )).toUtf8() );
 	
 	_protocol = protocol->getKIOProtocol();
 	if( !_protocol )

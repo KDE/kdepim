@@ -181,12 +181,12 @@ static bool sasl_interact( KIO::SlaveBase *slave, KIO::AuthInfo &ai, void *in )
       case SASL_CB_USER:
       case SASL_CB_AUTHNAME:
         kDebug(7116) << "SASL_CB_[USER|AUTHNAME]: '" << ai.username << "'" << endl;
-        interact->result = strdup( ai.username.utf8() );
+        interact->result = strdup( ai.username.toUtf8() );
         interact->len = strlen( (const char *) interact->result );
         break;
       case SASL_CB_PASS:
         kDebug(7116) << "SASL_CB_PASS: [hidden] " << endl;
-        interact->result = strdup( ai.password.utf8() );
+        interact->result = strdup( ai.password.toUtf8() );
         interact->len = strlen( (const char *) interact->result );
         break;
       default:

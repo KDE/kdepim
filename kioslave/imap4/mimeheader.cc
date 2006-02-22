@@ -409,7 +409,7 @@ mimeHeader::outputParameter (Q3Dict < QString > *aDict)
       {
         retVal += it.current ()->utf8 ();
       }
-      // << it.current()->utf8() << "'";
+      // << it.current()->toUtf8() << "'";
       ++it;
     }
     retVal += "\n";

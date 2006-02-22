@@ -32,7 +32,7 @@ DCOPDropInterface::~DCOPDropInterface()
 
 void DCOPDropInterface::changeName( const QString& name )
 {
-	this->setObjId( name.utf8() );
+	this->setObjId( name.toUtf8() );
 }
 
 int DCOPDropInterface::addMessage( const QString& subject, const QString& message )

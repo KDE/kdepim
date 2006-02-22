@@ -168,7 +168,7 @@ void Kleo::QGpgMEJob::setPatterns( const QStringList & sl, bool allowEmpty ) {
       continue;
     if ( (*it).isEmpty() && !allowEmpty )
       continue;
-    *pat_it++ = strdup( (*it).utf8().data() );
+    *pat_it++ = strdup( (*it).toUtf8().data() );
     ++mNumPatterns;
   }
   *pat_it++ = 0;

@@ -94,7 +94,7 @@ void DebugDialog::save()
     return;
   }
 
-  file.write( mMessages.join( "\n\n" ).utf8() );
+  file.write( mMessages.join( "\n\n" ).toUtf8() );
   file.close();
 }
 

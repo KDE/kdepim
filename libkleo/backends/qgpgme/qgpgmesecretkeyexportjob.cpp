@@ -82,7 +82,7 @@ GpgME::Error Kleo::QGpgMESecretKeyExportJob::start( const QStringList & patterns
   *mProcess << "gpgsm" << "--export-secret-key-p12";
   if ( mArmour )
     *mProcess << "--armor";
-  *mProcess << patterns.front().utf8();
+  *mProcess << patterns.front().toUtf8();
 
   mProcess->setUseStatusFD( true );
 

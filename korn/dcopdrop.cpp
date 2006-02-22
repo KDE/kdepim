@@ -205,7 +205,7 @@ void DCOPDrop::setDCOPName( const QString& name)
 	if( _interface )
 		_interface->changeName( name );
 	else
-		_interface = new DCOPDropInterface( this, name.utf8() );
+		_interface = new DCOPDropInterface( this, name.toUtf8() );
 }
 
 #include "dcopdrop.moc"

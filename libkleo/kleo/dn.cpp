@@ -266,7 +266,7 @@ failure:
 
 static QVector<Kleo::DN::Attribute>
 parse_dn( const QString & dn ) {
-  return parse_dn( (const unsigned char*)dn.utf8().data() );
+  return parse_dn( (const unsigned char*)dn.toUtf8().data() );
 }
 
 static QString

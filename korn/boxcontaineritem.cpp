@@ -155,7 +155,7 @@ void BoxContainerItem::readConfig( KConfig* config, const int index )
 	*_command = config->readEntry( "command", "" );
 	
 	//Sets the object ID for the DCOP-object
-	this->setObjId( config->readEntry( "name", "" ).utf8() );
+	this->setObjId( config->readEntry( "name", "" ).toUtf8() );
 	
 	//Read the settings of the reimplemented class.
 	//It is important to read this after the box-settings, because the

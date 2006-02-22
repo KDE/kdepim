@@ -1032,7 +1032,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     case Scheduler::Request:
     case Scheduler::Refresh:
     case Scheduler::Add:
-      if ( incBase->revision() == 0 ) {
+      if ( /*incBase->revision() == 0*/1 ) {
         // Accept
         html += helper->makeLink( "accept", i18n( "[Accept]" ) );
         html += "</td><td> &nbsp; </td><td>";

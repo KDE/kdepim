@@ -89,7 +89,7 @@ void MBoxProtocol::get( const KUrl& url )
 	{
 		line = mbox.currentLine();
 		line += '\n';
-		ba_line = QByteArray( line.utf8() );
+		ba_line = QByteArray( line.toUtf8() );
 		ba_line.truncate( ba_line.size() - 1 ); //Removing training '\0'
 		data( ba_line );
 		mbox.nextLine();

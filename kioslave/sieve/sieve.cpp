@@ -455,7 +455,7 @@ bool kio_sieveProtocol::activate(const KUrl& url)
 		return false;
 	}
 
-	if (!sendData("SETACTIVE \"" + filename.utf8() + "\""))
+	if (!sendData("SETACTIVE \"" + filename.toUtf8() + "\""))
 		return false;
 
 	if (operationSuccessful()) {
@@ -547,7 +547,7 @@ void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, bool /*overwri
 	// (will be fixed in Cyrus 2.1.10)
 #ifndef HAVE_BROKEN_TIMSIEVED
 	// first, check quota (it's a SHOULD in draft std)
-	if (!sendData("HAVESPACE \"" + filename.utf8() + "\" "
+	if (!sendData("HAVESPACE \"" + filename.toUtf8() + "\" "
 		      + Q3CString().setNum( bufLen )))
 		return;
 
@@ -557,7 +557,7 @@ void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, bool /*overwri
 	}
 #endif
 
-	if (!sendData("PUTSCRIPT \"" + filename.utf8() + "\" {"
+	if (!sendData("PUTSCRIPT \"" + filename.toUtf8() + "\" {"
 		      + Q3CString().setNum( bufLen ) + "+}"))
 		return;
 
@@ -680,7 +680,7 @@ void kio_sieveProtocol::get(const KUrl& url)
 
 	//SlaveBase::mimetype( QString("text/plain") ); // "application/sieve");
 
-	if (!sendData("GETSCRIPT \"" + filename.utf8() + "\""))
+	if (!sendData("GETSCRIPT \"" + filename.toUtf8() + "\""))
 		return;
 
 	if (receiveData() && r.getType() == kio_sieveResponse::QUANTITY) {
@@ -755,7 +755,7 @@ void kio_sieveProtocol::del(const KUrl &url, bool isfile)
 		return;
 	}
 
-	if (!sendData("DELETESCRIPT \"" + filename.utf8() + "\""))
+	if (!sendData("DELETESCRIPT \"" + filename.toUtf8() + "\""))
 		return;
 
 	if (operationSuccessful())
@@ -920,12 +920,12 @@ bool kio_sieveProtocol::saslInteract( void *in, AuthInfo &ai )
       case SASL_CB_USER:
       case SASL_CB_AUTHNAME:
         ksDebug() << "SASL_CB_[AUTHNAME|USER]: '" << m_sUser << "'" << endl;
-        interact->result = strdup( m_sUser.utf8() );
+        interact->result = strdup( m_sUser.toUtf8() );
         interact->len = strlen( (const char *) interact->result );
         break;
       case SASL_CB_PASS:
         ksDebug() << "SASL_CB_PASS: [hidden] " << endl;
-        interact->result = strdup( m_sPass.utf8() );
+        interact->result = strdup( m_sPass.toUtf8() );
         interact->len = strlen( (const char *) interact->result );
         break;
       default:

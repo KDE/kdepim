@@ -60,7 +60,7 @@ KIO::TransferJob *GroupwareUploadItem::createRawUploadJob(
   if ( adaptor )
     adaptor->adaptUploadUrl( upUrl );
   kDebug(7000) << "Uploading to: " << upUrl.prettyURL() << endl;
-  KIO::TransferJob *job = KIO::storedPut( dta.utf8(), upUrl, -1, true,
+  KIO::TransferJob *job = KIO::storedPut( dta.toUtf8(), upUrl, -1, true,
                                           false, false );
   job->addMetaData( "PropagateHttpHeader", "true" );
   if ( adaptor ) {
