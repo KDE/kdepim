@@ -123,7 +123,7 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
   QStringList entries(d.entryList("nntp.*", QDir::Dirs));
 
   int id = 1;
-  while (entries.findIndex(QString("nntp.%1").arg(id))!=-1)
+  while (entries.indexOf(QString("nntp.%1").arg(id))!=-1)
     ++id;
 
   a->setId(id);

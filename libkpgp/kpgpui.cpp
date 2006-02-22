@@ -444,7 +444,7 @@ void KeySelectionDialog::initKeylist( const KeyList& keyList,
                                                       (*it)->primaryUserID() );
 
     // select and open the given key
-    if( keyIds.findIndex( curKeyId ) != -1 ) {
+    if( keyIds.indexOf( curKeyId ) != -1 ) {
       if( 0 == firstSelectedItem ) {
         firstSelectedItem = primaryUserID;
       }
@@ -932,7 +932,7 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
         //         extended selection mode a normal left click deselects
         //         the not clicked items.
         if( 0 < selectedCount ) {
-          if( -1 == mKeyIds.findIndex( lvi->text(0).toLocal8Bit() ) ) {
+          if( -1 == mKeyIds.indexOf( lvi->text(0).toLocal8Bit() ) ) {
             // some items of this key are selected and the key wasn't selected
             // before => the user selected something
             kDebug(5100) << "selectedCount: "<<selectedCount<<"/"<<itemCount
@@ -940,7 +940,7 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
             userAction = SELECTED;
           }
           else if( ( itemCount > selectedCount ) &&
-                   ( -1 != mKeyIds.findIndex( lvi->text(0).toLocal8Bit() ) ) ) {
+                   ( -1 != mKeyIds.indexOf( lvi->text(0).toLocal8Bit() ) ) ) {
             // some items of this key are unselected and the key was selected
             // before => the user deselected something
             kDebug(5100) << "selectedCount: "<<selectedCount<<"/"<<itemCount

@@ -137,7 +137,7 @@ QString ComboInput::value() const
 void ComboInput::setValue( const QString& value )
 {
 	if( _list->contains( value ) )
-		_right->setCurrentItem( _list->keys().findIndex( value ) );
+		_right->setCurrentItem( _list->keys().indexOf( value ) );
 	else
 		_right->setCurrentItem( -1 );
 }

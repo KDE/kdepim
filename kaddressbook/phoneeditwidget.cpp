@@ -101,7 +101,7 @@ void PhoneTypeCombo::update()
     }
   }
 
-  setCurrentItem( mTypeList.findIndex( mType ) );
+  setCurrentItem( mTypeList.indexOf( mType ) );
 
   blockSignals( blocked );
 }

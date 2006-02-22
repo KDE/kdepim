@@ -365,7 +365,7 @@ void ViewManager::addView()
 
     // try to set the active view
     mActionSelectView->setItems( mViewNameList );
-    mActionSelectView->setCurrentItem( mViewNameList.findIndex( newName ) );
+    mActionSelectView->setCurrentItem( mViewNameList.indexOf( newName ) );
     setActiveView( newName );
 
     editView();

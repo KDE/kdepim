@@ -52,7 +52,7 @@ IMAddressWidget::IMAddressWidget( QWidget *parent, QList<KPluginInfo *> protocol
 
   mProtocols = protocols;
   populateProtocols();
-  cmbProtocol->setCurrentItem( mProtocols.findIndex( protocol ) );
+  cmbProtocol->setCurrentItem( mProtocols.indexOf( protocol ) );
 
   edtAddress->setText( address.section( QChar( 0xE120 ), 0, 0 ) );
   edtNetwork->setText( address.section( QChar( 0xE120 ), 1 ) );

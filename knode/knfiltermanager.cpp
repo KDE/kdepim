@@ -363,7 +363,7 @@ void KNFilterManager::slotShowFilterChooser()
 
   int currentItem=0;
   if (currFilter)
-    currentItem=ids.findIndex(currFilter->id());
+    currentItem=ids.indexOf(currFilter->id());
   if (currentItem==-1)
     currentItem=0;
 
