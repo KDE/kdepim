@@ -30,6 +30,7 @@
 #include <qcolor.h>
 #include <qcheckbox.h>
 #include <qradiobutton.h>
+#include <qlistview.h>
 #include <qstring.h>
 #include <qtimer.h>
 
@@ -56,7 +57,7 @@ KornCfgImpl::KornCfgImpl( QWidget * parent )
 
 	connect( elbBoxes, SIGNAL( elementsSwapped( int, int ) ), this, SLOT( slotElementsSwapped( int, int ) ) );
 	connect( elbBoxes, SIGNAL( elementDeleted( int ) ), this, SLOT( slotElementDeleted( int ) ) );
-	connect( elbBoxes, SIGNAL(activated(const QString&)), this, SLOT(slotActivated(const QString&)));
+	connect( elbBoxes, SIGNAL(activated(const QModelIndex&)), this, SLOT(slotActivated(const QModelIndex&)));
 	connect( elbBoxes, SIGNAL(setDefaults(const QString&,const int,KConfig*)), this, SLOT(slotSetDefaults(const QString&,const int,KConfig*)));
 	connect( pbEdit, SIGNAL(clicked()), this, SLOT(slotEditBox()) );
 
@@ -72,9 +73,8 @@ void KornCfgImpl::slotEditBox()
 {
 	if( _base )
 		return; //Already a dialog open
-#warning Port me!
-//	if( elbBoxes->listBox()->currentItem() < 0 )
-//		return; //No item selected
+	if( !elbBoxes->listView()->currentIndex().isValid() ) //TODO: test if it works
+		return; //No item selected
 	elbBoxes->setEnabled( false );
 	
 	_base = new KDialog( this, "Box Configuration", KDialog::Ok | KDialog::Cancel );
@@ -85,8 +85,7 @@ void KornCfgImpl::slotEditBox()
 	connect( _base, SIGNAL( finished() ), this, SLOT( slotDialogDestroyed() ) );
 	
 	_base->setMainWidget( widget );
-#warning Port me!
-//	widget->readConfig( _config, elbBoxes->listBox()->currentItem() );
+	widget->readConfig( _config, elbBoxes->listView()->currentIndex().row() ); //TODO: test if it works
 	
 	_base->show();
 }
@@ -119,7 +118,12 @@ void KornCfgImpl::slotElementDeleted( int box )
 	}
 }
 
-void KornCfgImpl::slotActivated( const QString& )
+void KornCfgImpl::slotActivated( const QModelIndex& )
+{
+	slotEditBox();
+}
+
+/*void KornCfgImpl::slotActivated( const QString& )
 {
 	slotEditBox();
 }
@@ -127,7 +131,7 @@ void KornCfgImpl::slotActivated( const QString& )
 void KornCfgImpl::slotActivated( const int )
 {
 	slotEditBox();
-}
+}*/
 
 void KornCfgImpl::slotSetDefaults( const QString& name, const int index, KConfig* config )
 {

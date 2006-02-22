@@ -18,6 +18,8 @@
 #include "maildlg.h"
 #include "progress_dialog_impl.h"
 
+#include <qvariant.h>
+
 KornSubjectsDlg::SubjectListViewItem::SubjectListViewItem( Q3ListView *parent, KornMailSubject * item)
 	// set the column strings except column 2 (date)
 	: KListViewItem(parent, item->getSender(), item->getSubject(), "", KGlobal::locale()->formatNumber(item->getSize(), 0))
@@ -435,7 +437,7 @@ void KornSubjectsDlg::makeDeleteStruct()
 {
 	_delete = new DeleteData;
 	_delete->messages = new QList< KornMailSubject* >;
-	_delete->ids = new QList< const KornMailId* >;
+	_delete->ids = new QList< QVariant >;
 	_delete->progress = new QProgressDialog( i18n( "Deleting mail; please wait...." ), "&Cancel", 0, 1, this );
 	_delete->totalNumberOfMessages = 0;
 
@@ -489,7 +491,7 @@ void KornSubjectsDlg::deleteNextMessage()
 		return;
 	}
 	
-	_delete->ids = new QList< const KornMailId* >;
+	_delete->ids = new QList< QVariant >;
 	_delete->drop = _delete->messages->first()->getMailDrop();
 	
 	fillDeleteIdList( _delete->drop );

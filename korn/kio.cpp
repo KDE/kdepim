@@ -34,10 +34,7 @@
 #include "kio_delete.h"
 #include "protocol.h"
 #include "protocols.h"
-#include "stringid.h"
 #include"utils.h"
-//#include"kiocfg.h"
-//#include"dropdlg.h"
 #include "mailsubject.h"
 
 #include<kconfig.h>
@@ -49,6 +46,7 @@
 #include<qlist.h>
 #include<qregexp.h>
 #include<qlist.h>
+#include <qvariant.h>
 #include<qvector.h>
 
 #include<assert.h>
@@ -294,7 +292,7 @@ bool KKioDrop::canReadMail( )
 	return (_protocol!=0?_protocol->canReadMail():false);
 }
 
-bool KKioDrop::deleteMails(QList<const KornMailId*> * ids, bool * /*stop*/)
+bool KKioDrop::deleteMails(QList<QVariant> * ids, bool * /*stop*/)
 {
 	_delete->deleteMails( ids, this );
 	return _delete->valid();
@@ -305,7 +303,7 @@ bool KKioDrop::canDeleteMails ()
 	return (_protocol!=0?_protocol->canDeleteMail():false);
 }
 
-QString KKioDrop::readMail(const KornMailId * item, bool * )
+QString KKioDrop::readMail(const QVariant item, bool * )
 {
 	_read->readMail( item, this );
 

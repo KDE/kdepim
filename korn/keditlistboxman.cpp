@@ -21,8 +21,8 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include <Q3ListBoxItem>
 #include <qmap.h>
+#include <qlistview.h>
 #include <qstring.h>
 
 KEditListBoxManager::KEditListBoxManager(	QWidget *parent, const char *name,
@@ -101,9 +101,8 @@ void KEditListBoxManager::init()
 	connect( this, SIGNAL( added( const QString& ) ), this, SLOT( slotAdded( const QString& ) ) );
 	connect( this, SIGNAL( removed( const QString& ) ), this, SLOT( slotRemoved( const QString& ) ) );
 
-#warning Port me!	
-//	connect( this->listBox(), SIGNAL( doubleClicked( Q3ListBoxItem * ) ), this, SLOT( slotActivated( Q3ListBoxItem * ) ) );
-//	connect( this->listBox(), SIGNAL( returnPressed( Q3ListBoxItem * ) ), this, SLOT( slotActivated( Q3ListBoxItem * ) ) );
+	connect( this->listView(), SIGNAL( doubleClicked( const QModelIndex&) ), this, SLOT( slotActivated( const QModelIndex& ) ) );
+	connect( this->listView(), SIGNAL( returnPressed( const QModelIndex& ) ), this, SLOT( slotActivated( const QModelIndex& ) ) );
 }
 
 void KEditListBoxManager::readNames()
@@ -214,10 +213,9 @@ void KEditListBoxManager::slotRemoved( const QString& name )
 	}
 }
 
-void KEditListBoxManager::slotActivated( Q3ListBoxItem* item )
+void KEditListBoxManager::slotActivated( const QModelIndex& item )
 {
-	if( item )
-		emit activated( item->text() );
+	emit activated( item );
 }
 
 void KEditListBoxManager::moveItem( int src, int dest )

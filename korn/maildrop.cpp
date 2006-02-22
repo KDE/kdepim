@@ -155,12 +155,12 @@ QVector<KornMailSubject> * KMailDrop::readSubjects(bool * stop)
 }
 
 
-bool KMailDrop::deleteMails(QList<const KornMailId*> * /*ids*/, bool * /*stop*/)
+bool KMailDrop::deleteMails(QList<QVariant> * /*ids*/, bool * /*stop*/)
 {
 	return false;
 }
 
-QString KMailDrop::readMail(const KornMailId * /*id*/, bool * /*stop*/)
+QString KMailDrop::readMail(const QVariant /*id*/, bool * /*stop*/)
 {
 	return "";
 }

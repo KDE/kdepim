@@ -19,8 +19,6 @@
 #include "dcopdrop.h"
 
 #include "dcopdropif.h"
-#include "intid.h"
-#include "mailid.h"
 #include "mailsubject.h"
 
 #include <kconfigbase.h>
@@ -119,15 +117,20 @@ QVector< KornMailSubject >* DCOPDrop::doReadSubjects( bool * )
         return vector;
 }
 
-bool DCOPDrop::deleteMails( QList<const KornMailId*> * ids, bool * )
+bool DCOPDrop::deleteMails( QList<const QVariant> * ids, bool * )
 {
 	emit deleteMailsTotalSteps( 1 );
 	
 	for( int xx = 0; xx < ids->size(); ++xx )
 	{
-		const KornIntId *id = dynamic_cast< const KornIntId* >( ids->at( xx ) );
-		if( id && _msgList->contains( id->getId() ) )
-			_msgList->erase( id->getId() );
+		if( ids->at( xx ).type() == QVariant::Int )
+		{
+			if( _msgList->contains( ids->at( xx ).toInt() ) )
+				_msgList->erase( ids->at( xx ).toInt() );
+		} else {
+			kDebug() << "Got a non-int in DCOPDrop::deleteMails()!" << endl;
+		}
+		
 	}
 	
 	emit deleteMailsProgress( 1 );
@@ -155,17 +158,16 @@ void DCOPDrop::doReadSubjectsASync( void )
 
 int DCOPDrop::addMessage( const QString& subject, const QString& message )
 {
-	KornIntId *id = new KornIntId( _counter );
-	KornMailSubject *mailsubject = new KornMailSubject( id, this );
-	++_counter;
-	
+	int id = _counter++;
+
+	KornMailSubject *mailsubject = new KornMailSubject( QVariant( id ), this );
 	mailsubject->setSubject( subject );
 	mailsubject->setSender( QString( "DCOP: %1" ).arg( *_name ) );
 	mailsubject->setHeader( message, true );
 	mailsubject->setSize( message.length() );
 	mailsubject->setDate( QDateTime::currentDateTime().toTime_t() );
 	
-	_msgList->insert( id->getId(), mailsubject );
+	_msgList->insert( id, mailsubject );
 	
 	emit changed( _msgList->count(), this );
 
@@ -176,7 +178,7 @@ int DCOPDrop::addMessage( const QString& subject, const QString& message )
 		emit showPassivePopup( &list, 1, passiveDate(), this->realName() );
 	}
 	
-	return _counter - 1;
+	return id;
 }
 
 bool DCOPDrop::removeMessage( int id )

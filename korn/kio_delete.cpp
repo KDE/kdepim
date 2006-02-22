@@ -18,8 +18,6 @@
 
 #include "kio_delete.h"
 
-#include "mailid.h"
-#include "stringid.h"
 #include "kio.h"
 #include "kio_proto.h"
 
@@ -31,6 +29,7 @@
 #include <kio/scheduler.h>
 
 #include <qlist.h>
+#include <qvariant.h>
 
 KIO_Delete::KIO_Delete( QObject * parent ) : QObject( parent ),
 	_kio( 0 ),
@@ -48,7 +47,7 @@ KIO_Delete::~KIO_Delete( )
 	delete _jobs;
 }
 
-bool KIO_Delete::deleteMails( QList< const KornMailId* > * ids, KKioDrop *drop )
+bool KIO_Delete::deleteMails( QList< QVariant > * ids, KKioDrop *drop )
 {
 	KUrl kurl = *drop->_kurl;
 	KIO::MetaData metadata = *drop->_metadata;
@@ -115,11 +114,16 @@ bool KIO_Delete::setupSlave( KUrl kurl, KIO::MetaData metadata, const KIO_Protoc
 	return true;
 }
 
-void KIO_Delete::deleteItem( const KornMailId *item, KUrl kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol )
+void KIO_Delete::deleteItem( const QVariant item, KUrl kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol )
 {
 	KIO::Job* job = 0;
 
-	kurl = dynamic_cast<const KornStringId*>( item )->getId();
+	if( item.type() != QVariant::String )
+	{
+		kDebug() << "Got wrong id type in KIO_Delete::deleteItem!" << endl;
+		return;
+	}
+	kurl = item.toString();
 	
 	protocol->deleteMailKUrl( kurl, metadata );
 	

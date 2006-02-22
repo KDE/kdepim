@@ -36,6 +36,7 @@ class KConfig;
 #include <qcolor.h>
 #include <qfont.h>
 #include <qlabel.h>
+#include <qlistview.h>
 #include <qstring.h>
 
 KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent )
@@ -75,7 +76,7 @@ KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent )
 	connect( chNewIcon, SIGNAL(toggled(bool)), ibNewIcon, SLOT(setEnabled(bool)) );
 	connect( chShowPassive, SIGNAL(toggled(bool)), chPassiveDate, SLOT(setEnabled(bool)) );
 	connect( pbEdit, SIGNAL(clicked()), this, SLOT(slotEditBox()) );
-	connect( elbAccounts, SIGNAL(activated(const QString&)), this, SLOT(slotActivated(const QString&)) );
+	connect( elbAccounts, SIGNAL(activated(const QModelIndex&)), this, SLOT(slotActivated(const QModelIndex&)) );
 	connect( elbAccounts, SIGNAL(setDefaults(const QString&,const int,KConfig*)), this, SLOT(slotSetDefaults(const QString&,const int,KConfig*)) );
 	connect( pbNormalFont, SIGNAL(pressed()), this, SLOT(slotChangeNormalFont()) );
 	connect( pbNewFont, SIGNAL(pressed()), this, SLOT(slotChangeNewFont()) );
@@ -261,9 +262,8 @@ void KornBoxCfgImpl::slotEditBox()
 {
 	if( _base )
 		return; //Already a dialog open
-#warning Port me!
-//	if( elbAccounts->listBox()->currentItem() < 0 )
-//		return; //No item selected
+	if( !elbAccounts->listView()->currentIndex().isValid() ) //TODO: test this
+		return; //No item selected
 	elbAccounts->setEnabled( false );
 	
 	_base = new KDialog( this, i18n("Box Configuration"), KDialog::Ok | KDialog::Cancel );
@@ -275,19 +275,23 @@ void KornBoxCfgImpl::slotEditBox()
 	
 	connect( _base, SIGNAL( finished() ), this, SLOT( slotDialogDestroyed() ) );
 
-#warning Port me!
-//	_group = new KConfigGroup( _config, QString( "korn-%1-%2" ).
-//			arg( _index ).arg(elbAccounts->listBox()->currentItem() ) );
+	_group = new KConfigGroup( _config, QString( "korn-%1-%2" ).
+			arg( _index ).arg(elbAccounts->listView()->currentIndex().row() ) );
 	
-//	QMap< QString, QString > *map = new QMap< QString, QString >( _config->entryMap( QString( "korn-%1-%2" ).
-//			                        arg( _index ).arg(elbAccounts->listBox()->currentItem() ) ) );
-//	widget->readConfig( _group, map, _index, elbAccounts->listBox()->currentItem() );
-//	delete map;
+	QMap< QString, QString > *map = new QMap< QString, QString >( _config->entryMap( QString( "korn-%1-%2" ).
+			                        arg( _index ).arg(elbAccounts->listView()->currentIndex().row() ) ) );
+	widget->readConfig( _group, map, _index, elbAccounts->listView()->currentIndex().row() );
+	delete map;
 
 	_base->show();
 }
+
+void KornBoxCfgImpl::slotActivated( const QModelIndex& )
+{
+	slotEditBox();
+}
 	
-void KornBoxCfgImpl::slotActivated( const QString& )
+/*void KornBoxCfgImpl::slotActivated( const QString& )
 {
 	slotEditBox();
 }
@@ -295,7 +299,7 @@ void KornBoxCfgImpl::slotActivated( const QString& )
 void KornBoxCfgImpl::slotActivated( const int )
 {
 	slotEditBox();
-}
+}*/
 
 void KornBoxCfgImpl::slotSetDefaults( const QString& name, const int, KConfig* config )
 {

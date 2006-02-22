@@ -241,7 +241,7 @@ public:
 	 * @param stop a pointer to a boolean to cancel the operation
 	 * @return true if succesfull; false otherwise
 	 */
-	virtual bool deleteMails(QList<const KornMailId*> * ids, bool * stop);
+	virtual bool deleteMails(QList<QVariant> * ids, bool * stop);
 
 	/**
 	 * This function checks if it is possible to read emails.
@@ -257,7 +257,7 @@ public:
 	 * @param stop a pointer to a boolean to cancel the reading
 	 * @return the message which is read
 	 */
-	virtual QString readMail(const KornMailId * id, bool * stop);
+	virtual QString readMail(const QVariant id, bool * stop);
 	//TODO: remove *stop from parameter, and the return parameter
 	
 	/**

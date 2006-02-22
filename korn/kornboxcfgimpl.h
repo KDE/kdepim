@@ -34,6 +34,7 @@ class KDialog;
 
 class QFont;
 class QString;
+class QModelIndex;
 class QWidget;
 
 /**
@@ -91,8 +92,9 @@ private:
 	
 private slots:
 	void slotEditBox();
-	void slotActivated( const QString& );
-	void slotActivated( const int );
+	void slotActivated( const QModelIndex& );
+	//void slotActivated( const QString& );
+	//void slotActivated( const int );
 	void slotSetDefaults( const QString&, const int, KConfig* );
 	void slotChangeNormalAnim();
 	void slotChangeNewAnim();

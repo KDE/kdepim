@@ -30,7 +30,6 @@
 #include <dcopobject.h>
 
 class DCOPDropInterface;
-class KornMailId;
 class KornMailSubject;
 
 class KConfigBase;
@@ -38,6 +37,7 @@ class KConfigBase;
 template<class A, class B> class QMap;
 template<class T> class QList;
 class QString;
+class QVariant;
 
 /**
  * This class implements a KMailDrop for DCOP-objects.
@@ -161,7 +161,7 @@ public:
 	 * @param stop Not used: only for synchrone opererations.
 	 * @return true if deleting was succesfull
 	 */
-	virtual bool deleteMails( QList<const KornMailId*> * ids, bool * stop );
+	virtual bool deleteMails( QList<const QVariant> * ids, bool * stop );
 	
 	/**
 	 * This function returns true if it is possible to read emails.

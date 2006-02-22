@@ -32,12 +32,9 @@ korn_SOURCES = \
   kornshell.cpp \
   subjectsdlg.cpp \
   maildlg.cpp \
-  mailid.cpp \
   mailsubject.cpp \
   mbox_proto.cpp \
   imap_proto.cpp \
-  intid.cpp \
-  stringid.cpp \
   kornapp.cpp \
   kio.cpp \
   kio_conn.cpp \
@@ -87,11 +84,8 @@ noinst_HEADERS = \
   kornshell.h \
   subjectsdlg.h \
   maildlg.h \
-  mailid.h \
   mailsubject.h \
   mbox_proto.h \
-  intid.h \
-  stringid.h \
   kornapp.h \
   kio.h \
   kio_conn.h \

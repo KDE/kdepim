@@ -29,12 +29,12 @@
 
 class KKioDrop;
 class KIO_Protocol;
-class KornMailId;
 
 class KUrl;
 namespace KIO { class MetaData; class Job; class Slave; }
 
 template<class T> class QList;
+class QVariant;
 
 /**
  * This class handles removing of selected messages.
@@ -61,7 +61,7 @@ public:
 	 * @param drop the maildrop of the account
 	 * @return true if succesfull, false otherwise
 	 */
-	bool deleteMails( QList< const KornMailId* > *list, KKioDrop* drop );
+	bool deleteMails( QList< QVariant > *list, KKioDrop* drop );
 	
 	/**
 	 * This function should return false then and only then if an error occurred.
@@ -81,7 +81,7 @@ private slots:
 private:
 	void disConnect( );
 	bool setupSlave( KUrl kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol );
-	void deleteItem( const KornMailId *item, KUrl, KIO::MetaData, const KIO_Protocol *&);
+	void deleteItem( const QVariant item, KUrl, KIO::MetaData, const KIO_Protocol *&);
 	void commitDelete( KUrl, KIO::MetaData, const KIO_Protocol *& );
 
 	KKioDrop *_kio;

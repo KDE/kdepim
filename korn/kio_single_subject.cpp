@@ -20,7 +20,6 @@
 
 #include "mailsubject.h"
 #include "kio_proto.h"
-#include "stringid.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -33,6 +32,7 @@
 
 #include <qregexp.h>
 #include <qstring.h>
+#include <qvariant.h>
 //Added by qt3to4:
 #include <QTextStream>
 
@@ -141,7 +141,7 @@ void KIO_Single_Subject::slotResult( KIO::Job *job )
 	{
 		kWarning() << i18n( "Error when fetching %1: %2" ).arg( *_name ).arg( job->errorString() ) << endl;
 	} else {
-		KornMailSubject * mailSubject = new KornMailSubject( new KornStringId( *_name ), 0 );
+		KornMailSubject * mailSubject = new KornMailSubject( QVariant( *_name ), 0 );
 		parseMail( _message, mailSubject, _protocol->fullMessage() );
 		mailSubject->setSize( _size );
 		emit readSubject( mailSubject );

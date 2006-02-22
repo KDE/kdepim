@@ -33,6 +33,7 @@ class KConfig;
 class KDialog;
 
 class QObject;
+class QModelIndex;
 class QString;
 
 /**
@@ -59,8 +60,9 @@ private slots:
 	void slotElementDeleted( int box );
 	
 	void slotEditBox();
-	void slotActivated( const QString& );
-	void slotActivated( const int );
+	void slotActivated( const QModelIndex& );
+	//void slotActivated( const QString& );
+	//void slotActivated( const int );
 	void slotSetDefaults( const QString&, const int, KConfig* );
 
 	void slotOK();

@@ -17,10 +17,10 @@ class KConfigGroup;
 class KDropCfgDialog;
 class QColor;
 class KornMailSubject;
-class KornMailId;
 
 template< class T > class QList;
 template< class T, class R > class QMap;
+class QVariant;
 
 /**
 * Abstract base class for all mailbox monitors.
@@ -275,7 +275,7 @@ class KMailDrop : public QObject
      * the KornMailSubject instances of the remaining mails might be used
      * further more.
      */
-    virtual bool deleteMails(QList<const KornMailId*> * ids, bool * stop);
+    virtual bool deleteMails(QList<QVariant> *ids, bool * stop);
 
     /**
      * Return true if the concrete subclass can load individual mails fully.
@@ -294,7 +294,7 @@ class KMailDrop : public QObject
      * terminate before the mail is loaded.
      * @return the fully loaded mail (header and body) or "" on error.
      */
-    virtual QString readMail(const KornMailId * id, bool * stop);
+    virtual QString readMail(const QVariant id, bool * stop);
 
     // data that belongs in every monitor
     //TODO: replace them by a settings class?

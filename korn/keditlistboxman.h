@@ -23,7 +23,7 @@
 
 class KConfig;
 
-class Q3ListBoxItem;
+class QModelIndex;
 class QString;
 class QWidget;
 
@@ -115,7 +115,7 @@ private slots:
 	void slotAdded( const QString& );
 	void slotRemoved( const QString& );
 	
-	void slotActivated( Q3ListBoxItem* );
+	void slotActivated( const QModelIndex& item );
 private:
 	/**
 	 * This private method moves an item. It is called from slotChanged().
@@ -139,9 +139,9 @@ private:
 signals:
 	/**
 	 * This signal is emitted when somebody selects an item
-	 * @param text The text of the newly selected item.
+	 * @param text the selected item of the listview
 	 */
-	void activated( const QString& text );
+	void activated( const QModelIndex& index );
 	
 	/**
 	 * This signal is emitted when defaults have to be set.

@@ -29,13 +29,13 @@
 #include <qobject.h>
 
 class KKioDrop;
-class KornMailId;
 
 class KUrl;
 namespace KIO { class MetaData; class Job; }
 class KIO_Protocol;
 
 class QString;
+class QVariant;
 
 /**
  * This class is used to read full messages.
@@ -63,7 +63,7 @@ public slots:
 	 * @param id the message to be downloaded
 	 * @param drop the maildrop of the account of the message
 	 */
-	void readMail( const KornMailId *id, KKioDrop* drop );
+	void readMail( const QVariant, KKioDrop* drop );
 	/**
 	 * This function cancels a pending download.
 	 * Normally, this slot is connected to a "Cancel"-button.

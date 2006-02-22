@@ -3,8 +3,9 @@
 
 class KMailDrop;
 
-#include "mailid.h"
+class QVariant;
 
+#include <qstring.h>
 
 
 /**
@@ -14,7 +15,7 @@ class KMailDrop;
  */
 class KornMailSubject
 {
-	KornMailId * 	_id;
+	QVariant* 	_id;
 	KMailDrop *     _drop;
 	QString		_subject;
 	QString		_sender;
@@ -30,12 +31,12 @@ public:
 
 	/**
 	 * KornMailSubject constructor
-	 * @param id id of the mail. The KornMailId instance should
+	 * @param id id of the mail. The QVariant instance should
 	 * not be touched or deleted afterwards. It is destroyed by
 	 * KornMailSubject's destructor.
 	 * @param drop The KMailDrop.
 	 */
-	KornMailSubject(KornMailId * id, KMailDrop * drop);
+	KornMailSubject(const QVariant &id, KMailDrop * drop);
 
 	/**
 	 * KornMailSubject copy constructor. All data of the source
@@ -61,7 +62,7 @@ public:
 	 * Return the mail id.
 	 * @return the mail id.
 	 */
-	const KornMailId * getId() const {return _id;}
+	const QVariant getId() const;
 
 	/**
 	 * Set the mails subject.

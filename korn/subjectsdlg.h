@@ -15,6 +15,7 @@ class QProgressDialog;
 class DoubleProgressDialog;
 
 template< class T > class QList;
+class QVariant;
 
 /**
  * KornSubjectsDlg loads all mail subjects and shows them in a list control.
@@ -73,7 +74,7 @@ class KornSubjectsDlg: public KDialog
 	struct DeleteData
 	{
 		QList< KornMailSubject* > *messages;
-		QList< const KornMailId* > *ids;
+		QList< QVariant > *ids;
 		QProgressDialog *progress;
 		KMailDrop *drop;
 		int totalNumberOfMessages;

@@ -20,8 +20,6 @@
 
 #include "kio.h"
 #include "kio_proto.h"
-#include "mailid.h"
-#include "stringid.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -31,6 +29,7 @@
 #include <kio/scheduler.h>
 
 #include <qstring.h>
+#include <qvariant.h>
 
 KIO_Read::KIO_Read( QObject * parent )
 	: QObject( parent ),
@@ -46,13 +45,18 @@ KIO_Read::~KIO_Read()
 	delete _job;
 }
 
-void KIO_Read::readMail( const KornMailId * mailid, KKioDrop* drop )
+void KIO_Read::readMail( const QVariant mailid, KKioDrop* drop )
 {
 	_kio = drop;
 	KUrl kurl = *_kio->_kurl;
 	KIO::MetaData metadata = *_kio->_metadata;
 	
-	kurl = dynamic_cast<const KornStringId*>(mailid)->getId( );
+	if( mailid.type() != QVariant::String )
+	{
+		kDebug() << "Got wrong type of id in KIO_Read::readMail" << endl;
+		return;
+	}
+	kurl = mailid.toString();
 	
 	_kio->_protocol->readMailKUrl( kurl, metadata );
 	
