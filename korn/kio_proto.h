@@ -155,9 +155,11 @@ public:
 	 * This function returns the default port for this kio-slave.
 	 * 0 is the default value.
 	 *
+	 * @param ssl True if the ssl-port should be returned; false otherwise.
+	 *            If the protocol doesn't support ssl, the argument is ignored.
 	 * @return The default port of this kio protocol.
 	 */
-	virtual unsigned short defaultPort() const { return 0; }
+	virtual unsigned short defaultPort( bool ) const { return 0; }
 
 	/**
 	 * There are two possibilities to delete something: with a get command and with a del command.

@@ -102,7 +102,7 @@ bool KIO_Delete::setupSlave( KUrl kurl, KIO::MetaData metadata, const KIO_Protoc
 	protocol->deleteMailConnectKUrl( kurl, metadata );
 	
 	if( kurl.port() == 0 )
-		kurl.setPort( protocol->defaultPort() );
+		kurl.setPort( protocol->defaultPort( _kio->_ssl ) );
 		
 	if( ! ( _slave = KIO::Scheduler::getConnectedSlave( kurl, metadata ) ) )
 	{
@@ -128,7 +128,7 @@ void KIO_Delete::deleteItem( const QVariant item, KUrl kurl, KIO::MetaData metad
 	protocol->deleteMailKUrl( kurl, metadata );
 	
 	if( kurl.port() == 0 )
-		kurl.setPort( protocol->defaultPort() );
+		kurl.setPort( protocol->defaultPort( _kio->_ssl ) );
 		
 	if( protocol->deleteFunction() == KIO_Protocol::get )
 	{
@@ -161,7 +161,7 @@ void KIO_Delete::commitDelete( KUrl kurl, KIO::MetaData metadata, const KIO_Prot
 	protocol->deleteCommitKUrl( kurl, metadata );
 	
 	if( kurl.port() == 0 )
-		kurl.setPort( protocol->defaultPort() );
+		kurl.setPort( protocol->defaultPort( _kio->_ssl ) );
 	
 	KIO::TransferJob *job = KIO::get( kurl, true, false );
 	job->addMetaData( metadata );

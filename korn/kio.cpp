@@ -78,6 +78,7 @@ KKioDrop::KKioDrop()
 	_metadata( 0 ),
 	_valid(false),
 	_protocol( 0 ),
+	_ssl(false),
 	_count( 0 ),
 	_subjects( 0 ),
 	_read( 0 ),
@@ -91,7 +92,7 @@ KKioDrop::KKioDrop()
 
 	//Initialising protocol; if no protocol is set before first use, it will use the first protocol
 	_protocol = Protocols::firstProtocol()->getKIOProtocol(); //The first protocol is the default
-	_kurl->setPort( _protocol->defaultPort() );
+	_kurl->setPort( _protocol->defaultPort( _ssl ) );
 
 	//Creating children and connect them to the outside world; this class passes the messages for them...
 	//This class handles all the counting.
@@ -115,6 +116,7 @@ KKioDrop::KKioDrop( KConfigGroup* )
 	_metadata( 0 ),
 	_valid(false),
 	_protocol( 0 ),
+	_ssl(false),
 	_count( 0 ),
 	_subjects( 0 ),
 	_read( 0 ),
@@ -128,7 +130,7 @@ KKioDrop::KKioDrop( KConfigGroup* )
 
 	//Initialising protocol; if no protocol is set before first use, it will use the first protocol
 	_protocol = Protocols::firstProtocol()->getKIOProtocol(); //The first protocol is the default
-	_kurl->setPort( _protocol->defaultPort() );
+	_kurl->setPort( _protocol->defaultPort( _ssl ) );
 		
 	//Creating children and connect them to the outside world; this class passes the messages for them...
 	//This class handles all the counting.
@@ -160,7 +162,7 @@ void KKioDrop::setKioServer(const QString & proto, const QString & server, int p
 	QString auth;
 	
 	if( port == -1 )
-		port = _protocol->defaultPort();
+		port = _protocol->defaultPort( ssl );
 
 	if( setProtocol ) //false if _protocol already made
 	{
@@ -173,6 +175,7 @@ void KKioDrop::setKioServer(const QString & proto, const QString & server, int p
 	_kurl->setProtocol( _protocol->protocol( ssl ) );
 	_kurl->setHost    ( server );
 	_kurl->setPort    ( port );
+	_ssl = ssl;
 	
 	//Checking for authentication-settings.
 	//if( _metadata->contains("auth") )
@@ -371,6 +374,7 @@ KKioDrop& KKioDrop::operator = ( const KKioDrop& other )
 
 	if( other._protocol )
 		_protocol = other._protocol->getKIOProtocol();
+	_ssl = other._ssl;
 
 	return *this;
 }
