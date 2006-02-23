@@ -185,8 +185,8 @@ void KNode::RangeFilterWidget::setFilter( RangeFilter &f )
 
 void KNode::RangeFilterWidget::clear()
 {
-  val1->setValue(val1->minValue());
-  val2->setValue(val2->minValue());
+  val1->setValue(val1->minimum());
+  val2->setValue(val2->minimum());
   enabled->setChecked(false);
 }
 
