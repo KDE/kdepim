@@ -1283,7 +1283,7 @@ void KNComposer::slotExternalEditor()
   }
 
   QByteArray local = codec->fromUnicode(tmp);
-  e_ditorTempfile->file()->writeBlock(local.data(),local.length());
+  e_ditorTempfile->file()->write(local.data(),local.length());
   e_ditorTempfile->file()->flush();
 
   if(e_ditorTempfile->status()!=0) {
