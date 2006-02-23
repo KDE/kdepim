@@ -66,7 +66,7 @@ void KIO_Connection::removeSlave( KIO::Slave* slave )
 		kDebug() << "(KIO_Connection): Not able to remove a non-existing slave." << endl;
 
 	QMap< KIO::Slave*, int >::Iterator it = m_slaves->find( slave );
-	if( it.data() == 1 )
+	if( it.value() == 1 )
 	{
 		KIO::Scheduler::disconnectSlave( slave ); //Disconnect slave
 		m_slaves->erase( it );  //Remove it from list

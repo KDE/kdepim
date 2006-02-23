@@ -89,7 +89,7 @@ void ResourceKolab::doClose()
   config.setGroup( configGroupName );
   Kolab::ResourceMap::ConstIterator it;
   for ( it = mSubResources.begin(); it != mSubResources.end(); ++it )
-    config.writeEntry( it.key(), it.data().active() );
+    config.writeEntry( it.key(), it.value().active() );
 }
 
 bool ResourceKolab::loadSubResource( const QString& subResource,
@@ -116,7 +116,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   mSilent = true;
   QMap<quint32, QString>::Iterator it;
   for ( it = lst.begin(); it != lst.end(); ++it ) {
-    KCal::Journal* journal = addNote( it.data(), subResource, it.key(), mimetype );
+    KCal::Journal* journal = addNote( it.value(), subResource, it.key(), mimetype );
     if ( !journal )
       kDebug(5500) << "loading note " << it.key() << " failed" << endl;
     else
@@ -136,7 +136,7 @@ bool ResourceKolab::load()
   bool rc = true;
   Kolab::ResourceMap::ConstIterator itR;
   for ( itR = mSubResources.begin(); itR != mSubResources.end(); ++itR ) {
-    if ( !itR.data().active() )
+    if ( !itR.value().active() )
       // This subResource is disabled
       continue;
 
@@ -371,7 +371,7 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
   Kolab::UidMap::ConstIterator mapIt;
   QStringList uids;
   for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
-    if ( mapIt.data().resource() == subResource )
+    if ( mapIt.value().resource() == subResource )
       // We have a match
       uids << mapIt.key();
 
@@ -406,7 +406,7 @@ void ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
   else
     mimetype = inlineMimeType;
   for( QMap<quint32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
-    KCal::Journal* journal = addNote( it.data(), folder, it.key(), mimetype );
+    KCal::Journal* journal = addNote( it.value(), folder, it.key(), mimetype );
     if ( !journal )
       kDebug(5500) << "loading note " << it.key() << " failed" << endl;
     else

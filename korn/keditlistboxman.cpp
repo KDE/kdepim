@@ -229,14 +229,14 @@ void KEditListBoxManager::moveItem( int src, int dest )
 	
 	_config->setGroup( _groupName->arg( dest ) );
 	for( it = srcList->begin(); it != srcList->end(); ++it )
-		_config->writeEntry( it.key(), it.data() );
+		_config->writeEntry( it.key(), it.value() );
 		
 	while( _subGroupName && _config->hasGroup( _subGroupName->arg( src ).arg( subnumber ) ) )
 	{
 		_config->deleteGroup( _subGroupName->arg( dest ).arg( subnumber ) );
 		_config->setGroup( _subGroupName->arg( dest ).arg( subnumber ) );
 		for( it = srcList->begin(); it != srcList->end(); ++it )
-			_config->writeEntry( it.key(), it.data() );
+			_config->writeEntry( it.key(), it.value() );
 			
 		++subnumber;
 	}
@@ -260,11 +260,11 @@ void KEditListBoxManager::changeItem( int first, int last )
 	
 	_config->setGroup( _groupName->arg( last ) );
 	for( it = firstList->begin(); it != firstList->end(); ++it )
-		_config->writeEntry( it.key(), it.data() );
+		_config->writeEntry( it.key(), it.value() );
 		
 	_config->setGroup( _groupName->arg( first ) );
 	for( it = lastList->begin(); it != lastList->end(); ++it )
-		_config->writeEntry( it.key(), it.data() );
+		_config->writeEntry( it.key(), it.value() );
 	
 	while( _subGroupName && (
 		_config->hasGroup( _subGroupName->arg( first ).arg( subnumber ) ) ||
@@ -277,11 +277,11 @@ void KEditListBoxManager::changeItem( int first, int last )
 		
 		_config->setGroup( _subGroupName->arg( last ).arg( subnumber ) );
 		for( it = firstList->begin(); it != firstList->end(); ++it )
-			_config->writeEntry( it.key(), it.data() );
+			_config->writeEntry( it.key(), it.value() );
 		
 		_config->setGroup( _subGroupName->arg( first ).arg( subnumber ) );
 		for( it = lastList->begin(); it != lastList->end(); ++it )
-			_config->writeEntry( it.key(), it.data() );
+			_config->writeEntry( it.key(), it.value() );
 	
 		++subnumber;
 	}

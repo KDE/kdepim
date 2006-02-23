@@ -192,9 +192,9 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
   QStringList labels;
   ResourceMap::ConstIterator it;
   for ( it = resources.begin(); it != resources.end(); ++it ) {
-    if ( it.data().writable() && it.data().active() ) {
+    if ( it.value().writable() && it.data().active() ) {
       // Writable and active possibility
-      possible[ it.data().label() ] = it.key();
+      possible[ it.value().label() ] = it.key();
     }
   }
 
@@ -205,7 +205,7 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
   }
   if ( possible.count() == 1 )
     // Just one found
-    return possible.begin().data(); // yes this is the subresource key, i.e. location
+    return possible.begin().value(); // yes this is the subresource key, i.e. location
 
   // Several found, ask the user
   QString chosenLabel = KInputDialog::getItem( i18n( "Select Resource Folder" ),

@@ -648,10 +648,10 @@ void ResourceXMLRPC::loadEventCategoriesFinished( const QList<QVariant> &mapList
 
   KPimPrefs prefs( "korganizerrc" );
   for ( it = map.begin(); it != map.end(); ++it ) {
-    mEventCategoryMap.insert( it.data().toString(), it.key().toInt() );
+    mEventCategoryMap.insert( it.value().toString(), it.key().toInt() );
 
-    if ( prefs.mCustomCategories.find( it.data().toString() ) == prefs.mCustomCategories.end() )
-      prefs.mCustomCategories.append( it.data().toString() );
+    if ( prefs.mCustomCategories.find( it.value().toString() ) == prefs.mCustomCategories.end() )
+      prefs.mCustomCategories.append( it.value().toString() );
   }
 
   prefs.usrWriteConfig();
@@ -753,10 +753,10 @@ void ResourceXMLRPC::loadTodoCategoriesFinished( const QList<QVariant> &mapList,
 
   KPimPrefs prefs( "korganizerrc" );
   for ( it = map.begin(); it != map.end(); ++it ) {
-    mTodoCategoryMap.insert( it.data().toString(), it.key().toInt() );
+    mTodoCategoryMap.insert( it.value().toString(), it.key().toInt() );
 
-    if ( prefs.mCustomCategories.find( it.data().toString() ) == prefs.mCustomCategories.end() )
-      prefs.mCustomCategories.append( it.data().toString() );
+    if ( prefs.mCustomCategories.find( it.value().toString() ) == prefs.mCustomCategories.end() )
+      prefs.mCustomCategories.append( it.value().toString() );
   }
 
   prefs.usrWriteConfig();
@@ -786,14 +786,14 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
   QMap<QString, QVariant>::ConstIterator it;
   for ( it = args.begin(); it != args.end(); ++it ) {
     if ( it.key() == "id" ) {
-      uid = it.data().toString();
+      uid = it.value().toString();
     } else if ( it.key() == "rights" ) {
-      rights = it.data().toInt();
+      rights = it.value().toInt();
     } else if ( it.key() == "start" ) {
-      event->setDtStart( it.data().toDateTime() );
+      event->setDtStart( it.value().toDateTime() );
     } else if ( it.key() == "end" ) {
       QDateTime start = args[ "start" ].toDateTime();
-      QDateTime end = it.data().toDateTime();
+      QDateTime end = it.value().toDateTime();
       if ( start.time() == end.time() &&
            start.time().hour() == 0 && start.time().minute() == 0 &&
            start.time().second() == 0 ) {
@@ -804,31 +804,31 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
         event->setHasEndDate( true );
       }
     } else if ( it.key() == "modtime" ) {
-      event->setLastModified( it.data().toDateTime() );
+      event->setLastModified( it.value().toDateTime() );
     } else if ( it.key() == "title" ) {
-      event->setSummary( it.data().toString() );
+      event->setSummary( it.value().toString() );
     } else if ( it.key() == "description" ) {
-      event->setDescription( it.data().toString() );
+      event->setDescription( it.value().toString() );
     } else if ( it.key() == "location" ) {
-      event->setLocation( it.data().toString() );
+      event->setLocation( it.value().toString() );
     } else if ( it.key() == "access" ) {
-      event->setSecrecy( (it.data().toString() == "public" ?
+      event->setSecrecy( (it.value().toString() == "public" ?
                           Incidence::SecrecyPublic : Incidence::SecrecyPrivate) );
     } else if ( it.key() == "category" ) {
-      const QMap<QString, QVariant> categories = it.data().toMap();
+      const QMap<QString, QVariant> categories = it.value().toMap();
       QMap<QString, QVariant>::ConstIterator catIt;
 
       QStringList eventCategories;
       for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
-        mEventCategoryMap.insert( catIt.data().toString(), catIt.key().toInt() );
-        eventCategories.append( catIt.data().toString() );
+        mEventCategoryMap.insert( catIt.value().toString(), catIt.key().toInt() );
+        eventCategories.append( catIt.value().toString() );
       }
 
       event->setCategories( eventCategories );
     } else if ( it.key() == "priority" ) {
       int priority = 0;
 
-      switch( it.data().toInt() ) {
+      switch( it.value().toInt() ) {
         case CAL_PRIO_LOW:
           priority = 10;
           break;
@@ -841,21 +841,21 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
 
       event->setPriority( priority );
     } else if ( it.key() == "recur_type" ) {
-      rType = it.data().toInt();
+      rType = it.value().toInt();
     } else if ( it.key() == "recur_interval" ) {
-      rInterval = it.data().toInt();
+      rInterval = it.value().toInt();
     } else if ( it.key() == "recur_enddate" ) {
-      rEndDate = it.data().toDateTime();
+      rEndDate = it.value().toDateTime();
     } else if ( it.key() == "recur_data" ) {
-      rData = it.data().toInt();
+      rData = it.value().toInt();
     } else if ( it.key() == "recur_exception" ) {
-      const QMap<QString, QVariant> dateList = it.data().toMap();
+      const QMap<QString, QVariant> dateList = it.value().toMap();
       QMap<QString, QVariant>::ConstIterator dateIt;
 
       for ( dateIt = dateList.begin(); dateIt != dateList.end(); ++dateIt )
         rExceptions.append( (*dateIt).toDateTime() );
     } else if ( it.key() == "participants" ) {
-      const QMap<QString, QVariant> persons = it.data().toMap();
+      const QMap<QString, QVariant> persons = it.value().toMap();
       QMap<QString, QVariant>::ConstIterator personsIt;
 
       for ( personsIt = persons.begin(); personsIt != persons.end(); ++personsIt ) {
@@ -877,7 +877,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
         event->addAttendee( attendee );
       }
     } else if ( it.key() == "alarm" ) {
-      const QMap<QString, QVariant> alarmList = it.data().toMap();
+      const QMap<QString, QVariant> alarmList = it.value().toMap();
       QMap<QString, QVariant>::ConstIterator alarmIt;
 
       for ( alarmIt = alarmList.begin(); alarmIt != alarmList.end(); ++alarmIt ) {
@@ -967,7 +967,7 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
     if ( it == mEventCategoryMap.end() ) // new category
       catMap.insert( QString::number( counter-- ), *catIt );
     else
-      catMap.insert( QString::number( it.data() ), *catIt );
+      catMap.insert( QString::number( it.value() ), *catIt );
   }
   args.insert( "category", catMap );
 
@@ -1102,7 +1102,7 @@ void ResourceXMLRPC::writeTodo( Todo* todo, QMap<QString, QVariant>& args )
     if ( it == mTodoCategoryMap.end() )
       catMap.insert( QString::number( counter-- ), *catIt );
     else
-      catMap.insert( QString::number( it.data() ), *catIt );
+      catMap.insert( QString::number( it.value() ), *catIt );
   }
   args.insert( "category", catMap );
 
@@ -1145,8 +1145,8 @@ void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, 
 
   QStringList todoCategories;
   for ( it = categories.begin(); it != categories.end(); ++it ) {
-    mTodoCategoryMap.insert( it.data().toString(), it.key().toInt() );
-    todoCategories.append( it.data().toString() );
+    mTodoCategoryMap.insert( it.value().toString(), it.key().toInt() );
+    todoCategories.append( it.value().toString() );
   }
 
   todo->setCategories( todoCategories );

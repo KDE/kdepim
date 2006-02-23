@@ -143,7 +143,7 @@ void DCOPDrop::eraseList( void )
 {
 	QMap<int, KornMailSubject* >::iterator it;
 	for( it = _msgList->begin(); it != _msgList->end(); ++it )
-		delete it.data();
+		delete it.value();
 	_msgList->clear();
 }
 
@@ -151,7 +151,7 @@ void DCOPDrop::doReadSubjectsASync( void )
 {
 	QMap<int, KornMailSubject* >::iterator it;
 	for( it = _msgList->begin(); it != _msgList->end(); ++it )
-		emit readSubject( new KornMailSubject( *it.data() ) );
+		emit readSubject( new KornMailSubject( *it.value() ) );
 	emit readSubjectsProgress( 1 );
 	emit readSubjectsReady( true );
 }

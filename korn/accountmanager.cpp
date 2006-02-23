@@ -144,8 +144,8 @@ void AccountManager::writeConfig( KConfig* config, const int index )
 	QMap< KMailDrop*, Dropinfo* >::Iterator it;
 	for( it = _dropInfo->begin(); it != _dropInfo->end(); ++it )
 	{
-		config->setGroup( QString( "korn-%1-%2" ).arg( index ).arg( it.data()->index ) );
-		config->writeEntry( "reset", it.data()->reset );
+		config->setGroup( QString( "korn-%1-%2" ).arg( index ).arg( it.value()->index ) );
+		config->writeEntry( "reset", it.value()->reset );
 	}
 }
 
@@ -155,7 +155,7 @@ QString AccountManager::getTooltip() const
 	QMap< KMailDrop*, Dropinfo* >::Iterator it;
 	for( it = _dropInfo->begin(); it != _dropInfo->end(); ++it )
 		if( it.key()->valid() )
-			result.append( QString( "%1: %2" ).arg( it.key()->realName() ).arg( it.data()->msgnr - it.data()->reset ));
+			result.append( QString( "%1: %2" ).arg( it.key()->realName() ).arg( it.value()->msgnr - it.value()->reset ));
 		else
 			result.append( QString( "%1: invalid" ).arg( it.key()->realName() ) );
 	result.sort();
@@ -173,8 +173,8 @@ void AccountManager::doReset()
 	QMap< KMailDrop*, Dropinfo* >::Iterator it;
 	for( it = _dropInfo->begin(); it != _dropInfo->end(); ++it )
 	{
-		it.data()->reset = it.data()->msgnr;
-		it.data()->newMessages = false;
+		it.value()->reset = it.value()->msgnr;
+		it.value()->newMessages = false;
 	}
 	
 	setCount( 0, false );
@@ -214,7 +214,7 @@ int AccountManager::totalMessages()
 	QMap< KMailDrop*, Dropinfo* >::Iterator it;
 	for( it = _dropInfo->begin(); it != _dropInfo->end(); ++it )
 		//if( it.date()->msgnr - it.date()->reset > 0 )
-			result += it.data()->msgnr - it.data()->reset;
+			result += it.value()->msgnr - it.value()->reset;
 	
 	return result;
 }
@@ -223,7 +223,7 @@ bool AccountManager::hasNewMessages()
 {
 	QMap< KMailDrop*, Dropinfo* >::Iterator it;
 	for( it = _dropInfo->begin(); it != _dropInfo->end(); ++it )
-		if( it.data()->newMessages )
+		if( it.value()->newMessages )
 			return true;
 	
 	return false;
@@ -236,7 +236,7 @@ void AccountManager::playSound( const QString& file )
 
 void AccountManager::slotChanged( int count, KMailDrop* mailDrop )
 {
-	Dropinfo *info = _dropInfo->find( mailDrop ).data();
+	Dropinfo *info = _dropInfo->find( mailDrop ).value();
 	info->newMessages = count > info->msgnr || ( count == info->msgnr && info->newMessages );
 	
 	if( count > info->msgnr )
