@@ -137,8 +137,8 @@ KNode::StringFilter StringFilterWidget::filter()
 
 void KNode::StringFilterWidget::setFilter( StringFilter &f )
 {
-  if(f.con) fType->setCurrentItem(0);
-  else fType->setCurrentItem(1);
+  if(f.con) fType->setCurrentIndex(0);
+  else fType->setCurrentIndex(1);
   fString->setText(f.data);
   regExp->setChecked(f.regExp);
 }
@@ -148,7 +148,7 @@ void KNode::StringFilterWidget::setFilter( StringFilter &f )
 void KNode::StringFilterWidget::clear()
 {
   fString->clear();
-  fType->setCurrentItem(0);
+  fType->setCurrentIndex(0);
   regExp->setChecked(false);
 }
 

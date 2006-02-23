@@ -1555,8 +1555,8 @@ void KNode::PostNewsTechnicalWidget::load()
   KCModule::load();
 
   kDebug(5003) << k_funcinfo << knGlobals.settings()->charset() << endl;
-  mCharset->setCurrentItem( mCharset->findText( knGlobals.settings()->charset() ) );
-  mEncoding->setCurrentItem( knGlobals.settings()->allow8BitBody() ? 0 : 1 );
+  mCharset->setCurrentIndex( mCharset->findText( knGlobals.settings()->charset() ) );
+  mEncoding->setCurrentIndex( knGlobals.settings()->allow8BitBody() ? 0 : 1 );
 
   mHeaderList->clear();
   XHeader::List list = knGlobals.settings()->xHeaders();

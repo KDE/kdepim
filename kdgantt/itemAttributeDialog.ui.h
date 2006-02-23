@@ -258,9 +258,9 @@ void itemAttributeDialog::reset( KDGanttViewItem * item )
     QPixmap * pix;
     pix  = (QPixmap *)ChangeText->pixmap();
     pix->fill( item->textColor() );
-    StartBox->setCurrentItem((int)start );
-    MiddleBox->setCurrentItem((int)middle );
-    EndBox->setCurrentItem( (int) end );
+    StartBox->setCurrentIndex((int)start );
+    MiddleBox->setCurrentIndex((int)middle );
+    EndBox->setCurrentIndex( (int) end );
     CalBox->setChecked( item-> displaySubitemsAsGroup() );
     PrioSpinBox->setValue( item->priority() );
     PrioSlider->setValue( item->priority() );

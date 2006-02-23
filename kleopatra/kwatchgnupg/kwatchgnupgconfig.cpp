@@ -166,7 +166,7 @@ void KWatchGnuPGConfig::loadConfig()
   mExeED->setURL( config->readEntry( "Executable", "watchgnupg" ) );
   mSocketED->setURL( config->readEntry( "Socket", QDir::home().canonicalPath()
 										+ "/.gnupg/log-socket") );
-  mLogLevelCB->setCurrentItem( log_level_to_int( config->readEntry( "LogLevel", "basic" ) ) );
+  mLogLevelCB->setCurrentIndex( log_level_to_int( config->readEntry( "LogLevel", "basic" ) ) );
 
   config->setGroup("LogWindow");
   mLoglenSB->setValue( config->readEntry( "MaxLogLen", 10000 ) );

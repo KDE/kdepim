@@ -170,13 +170,13 @@ void KNode::RangeFilterWidget::setFilter( RangeFilter &f )
   val1->setValue(f.val1);
   val2->setValue(f.val2);
 
-  op1->setCurrentItem((int)f.op1);
+  op1->setCurrentIndex((int)f.op1);
   if ( f.op2 == RangeFilter::dis )
-    op2->setCurrentItem(0);
+    op2->setCurrentIndex(0);
   else if ( f.op2 == RangeFilter::gt )
-    op2->setCurrentItem(1);
+    op2->setCurrentIndex(1);
   else if ( f.op2 == RangeFilter::gtoeq )
-    op2->setCurrentItem(2);
+    op2->setCurrentIndex(2);
 
   enabled->setChecked(f.enabled);
 }

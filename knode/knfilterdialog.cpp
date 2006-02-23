@@ -64,7 +64,7 @@ KNFilterDialog::KNFilterDialog( KNArticleFilter *f, QWidget *parent )
   topL->addWidget(fw,1);
 
   enabled->setChecked(f->isEnabled());
-  apon->setCurrentItem((int) f->applyOn());
+  apon->setCurrentIndex((int) f->applyOn());
   fname->setText(f->translatedName());
 
   fw->status->setFilter(f->status);

@@ -66,7 +66,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
 
   c_harset=new QComboBox(false, gb);
   c_harset->insertStringList( KGlobal::charsets()->availableEncodingNames() );
-  c_harset->setCurrentItem( c_harset->findText( g_rp->defaultCharset().toLower() ) );
+  c_harset->setCurrentIndex( c_harset->findText( g_rp->defaultCharset().toLower() ) );
   c_harset->setEnabled(g_rp->useCharset());
   connect(u_seCharset, SIGNAL(toggled(bool)), c_harset, SLOT(setEnabled(bool)));
   grpL->addWidget(c_harset, 2,2);

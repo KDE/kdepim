@@ -175,7 +175,7 @@ void KABConfigWidget::restoreSettings()
   mSMSHook->setText( KABPrefs::instance()->sMSHookApplication() );
   mFaxHook->setText( KABPrefs::instance()->faxHookApplication() );
   mAddresseeWidget->restoreSettings();
-  mEditorCombo->setCurrentItem( KABPrefs::instance()->editorType() );
+  mEditorCombo->setCurrentIndex( KABPrefs::instance()->editorType() );
   mLocationMapURL->setCurrentText( KABPrefs::instance()->locationMapURL().arg( KGlobal::locale()->country() ) );
   mLocationMapURL->lineEdit()->setCursorPosition( 0 );
 
@@ -214,7 +214,7 @@ void KABConfigWidget::defaults()
 {
   mNameParsing->setChecked( true );
   mViewsSingleClickBox->setChecked( false );
-  mEditorCombo->setCurrentItem( 0 );
+  mEditorCombo->setCurrentIndex( 0 );
   mLimitContactDisplay->setChecked( true );
 
   emit changed( true );

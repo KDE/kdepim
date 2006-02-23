@@ -72,7 +72,7 @@ class StatusFilterWidget : public QWidget
       public:
         TFCombo(QWidget *parent);
         ~TFCombo();
-        void setValue(bool b) { if(b) setCurrentItem(0); else setCurrentItem(1); }
+        void setValue(bool b) { if(b) setCurrentIndex(0); else setCurrentIndex(1); }
         bool value() const         { return (currentItem()==0); }
     };
 

@@ -154,9 +154,9 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
     mProtocolCB[i]->setChecked( cryptoFormats & msgFormat );
   }
 
-  mSignPref->setCurrentItem( Kleo::stringToSigningPreference( addr->custom( "KADDRESSBOOK",
+  mSignPref->setCurrentIndex( Kleo::stringToSigningPreference( addr->custom( "KADDRESSBOOK",
                                                                             "CRYPTOSIGNPREF" ) ) );
-  mCryptPref->setCurrentItem( Kleo::stringToEncryptionPreference( addr->custom( "KADDRESSBOOK",
+  mCryptPref->setCurrentIndex( Kleo::stringToEncryptionPreference( addr->custom( "KADDRESSBOOK",
                                                                                 "CRYPTOENCRYPTPREF" ) ) );
 
   // We dont use the contents of addr->key(...) because we want just a ref.

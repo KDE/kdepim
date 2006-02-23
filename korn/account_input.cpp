@@ -137,9 +137,9 @@ QString ComboInput::value() const
 void ComboInput::setValue( const QString& value )
 {
 	if( _list->contains( value ) )
-		_right->setCurrentItem( _list->keys().indexOf( value ) );
+		_right->setCurrentIndex( _list->keys().indexOf( value ) );
 	else
-		_right->setCurrentItem( -1 );
+		_right->setCurrentIndex( -1 );
 }
 
 CheckboxInput::CheckboxInput( QWidget *parent, const QString& title, const QString& defaul, const QString& configName )
