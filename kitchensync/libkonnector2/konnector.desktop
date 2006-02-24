@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=KitchenSync/Konnector
 Comment=Konnector Definitions
+Comment[br]=Termenadurioñ Konnector
 Comment[bs]=Definicije Konnectora
 Comment[ca]=Definicions de Konnector
 Comment[cs]=Definice konektorů
