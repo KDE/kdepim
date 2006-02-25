@@ -168,6 +168,18 @@ bool ResourceKolabBase::connectToKMail() const
   return mConnection->connectToKMail();
 }
 
+bool ResourceKolabBase::kmailAddSubresource( const QString& resource,
+                                             const QString& parent,
+                                             const QString& contentsType )
+{
+  return mConnection->kmailAddSubresource( resource, parent, contentsType );
+}
+
+bool ResourceKolabBase::kmailRemoveSubresource( const QString& resource )
+{
+  return mConnection->kmailRemoveSubresource( resource );
+}
+
 QString ResourceKolabBase::findWritableResource( const ResourceMap& resources,
                                                  const QString& text )
 {

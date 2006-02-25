@@ -45,6 +45,7 @@
 #include <kabc/locknull.h>
 #include <kmainwindow.h>
 #include <klocale.h>
+#include <kinputdialog.h>
 
 #include <qobject.h>
 #include <qtimer.h>
@@ -961,6 +962,43 @@ Kolab::ResourceMap* ResourceKolab::subResourceMap( const QString& contentsType )
   }
   // Not ours
   return 0;
+}
+
+
+/*virtual*/
+bool ResourceKolab::addSubresource( const QString& resource, const QString& parent )
+{
+   kdDebug(5650) << "KCal Kolab resource - adding subresource: " << resource << endl;
+   QString contentsType = kmailCalendarContentsType;
+   if ( !parent.isEmpty() ) {
+     if ( mEventSubResources.contains( parent ) )
+       contentsType = kmailCalendarContentsType;
+     else if ( mTodoSubResources.contains( parent ) )
+       contentsType = kmailTodoContentsType;
+     else if ( mJournalSubResources.contains( parent ) )
+       contentsType = kmailJournalContentsType;
+   } else {
+     QStringList contentTypeChoices;
+     contentTypeChoices << i18n("Calendar") << i18n("Tasks") << i18n("Journals");
+     bool ok;
+     const QString caption = i18n("Which kind of subresource should this be?");
+     const QString choice = KInputDialog::getItem( caption, QString::null, contentTypeChoices );
+     if ( choice == contentTypeChoices[0] )
+       contentsType = kmailCalendarContentsType;
+     else if ( choice == contentTypeChoices[1] )
+       contentsType = kmailTodoContentsType;
+     else if ( choice == contentTypeChoices[2] )
+       contentsType = kmailJournalContentsType;
+   }
+
+   return kmailAddSubresource( resource, parent, contentsType );
+}
+
+/*virtual*/
+bool ResourceKolab::removeSubresource( const QString& resource )
+{
+   kdDebug(5650) << "KCal Kolab resource - removing subresource: " << resource << endl;
+   return kmailRemoveSubresource( resource );
 }
 
 #include "resourcekolab.moc"

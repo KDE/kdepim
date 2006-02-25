@@ -113,6 +113,8 @@ public:
   /** Return the list of subresources. */
   QStringList subresources() const;
 
+  bool canHaveSubresources() const { return true; }
+
   /** Is this subresource active? */
   bool subresourceActive( const QString& ) const;
   /** (De)activate the subresource */
@@ -120,6 +122,9 @@ public:
 
   /** What is the label for this subresource? */
   virtual const QString labelForSubresource( const QString& resource ) const;
+
+  virtual bool addSubresource( const QString& resource, const QString& parent );
+  virtual bool removeSubresource( const QString& resource );
 
   KABC::Lock* lock();
 

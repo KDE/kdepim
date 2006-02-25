@@ -98,6 +98,11 @@ public:
                     const QStringList& attachmentNames,
                     const QStringList& deletedAttachments );
 
+  bool kmailAddSubresource( const QString& resource,
+                            const QString& parent,
+                            const QString& contentsType );
+  bool kmailRemoveSubresource( const QString& resource );
+
 private slots:
   virtual void unregisteredFromDCOP( const QCString& );
 

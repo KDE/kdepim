@@ -248,6 +248,21 @@ bool KMailConnection::kmailUpdate( const QString& resource,
     return false;
 }
 
+bool KMailConnection::kmailAddSubresource( const QString& resource,
+                                           const QString& parent,
+                                           const QString& contentsType )
+{
+  return connectToKMail() 
+      && mKMailIcalIfaceStub->addSubresource( resource, parent, contentsType )
+      && mKMailIcalIfaceStub->ok();
+}
+
+bool KMailConnection::kmailRemoveSubresource( const QString& resource )
+{
+  return connectToKMail() 
+      && mKMailIcalIfaceStub->removeSubresource( resource )
+      && mKMailIcalIfaceStub->ok();
+}
 
 void KMailConnection::unregisteredFromDCOP( const QCString& appId )
 {
