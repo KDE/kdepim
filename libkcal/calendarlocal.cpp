@@ -539,16 +539,16 @@ Journal::List CalendarLocal::rawJournalsForDate( const QDate &date )
 
 void CalendarLocal::setTimeZoneIdViewOnly( const QString& tz )
 {
-  const QString question( i18n("The timezone setting was changed. In order to display the calendar "
-      "you are looking at in the new timezone, it needs to be saved. Do you want to save the pending "
-      "changes or rather wait and apply the new timezone on the next reload?" ) );
+  const QString question( i18n("The time zone setting was changed. In order to display the calendar "
+      "you are looking at in the new time zone, it needs to be saved. Do you want to save the pending "
+      "changes or rather wait and apply the new time zone on the next reload?" ) );
   int rc = KMessageBox::Yes;
   if ( isModified() ) {
     rc = KMessageBox::questionYesNo( 0, question,
-                                       i18n("Save before applying timezones?"),
+                                       i18n("Save before applying time zones?"),
                                        KStdGuiItem::save(),
-                                       KGuiItem(i18n("Apply Timezone Change on Next Reload")),
-                                       "calendarLocalSaveBeforeTimezoneShift");
+                                       KGuiItem(i18n("Apply Time Zone Change on Next Reload")),
+                                       "calendarLocalSaveBeforeTimeZoneShift");
   }
   if ( rc == KMessageBox::Yes ) {
     reload( tz );
