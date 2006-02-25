@@ -119,6 +119,13 @@ public:
 	 * @return 0
 	 */
 	virtual const KIO_Protocol* getKIOProtocol() const { return 0; }
+
+	/**
+	 * This function returns if the protocol can be rechecked after a certain interval.
+	 *
+	 * @return true if it is possible to recheck after a certain interval; false otherwise
+	 */
+	virtual bool isPollable() const { return false; }
 };
 
 #endif

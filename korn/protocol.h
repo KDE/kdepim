@@ -161,6 +161,13 @@ public:
 	 * @return a pointer to this as KIO_Protocol if this implementation is a KIO_Protocol; 0 elsewise
 	 */
 	virtual const KIO_Protocol* getKIOProtocol() const { return 0; }
+
+	/**
+	 * This function returns if the protocol can be rechecked after a certain interval.
+	 *
+	 * @return true if it is possible to recheck after a certain interval; false otherwise
+	 */
+	virtual bool isPollable() const { return true; }
 };
 
 #endif //PROTOCOL_H

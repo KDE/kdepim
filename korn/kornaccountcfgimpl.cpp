@@ -239,6 +239,10 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 		_groupBoxes->at( groupCounter )->show();
 	}
 
+	// Enable / disable interval input field
+	this->lbInterval->setEnabled( protocol->isPollable() );
+	this->edInterval->setEnabled( protocol->isPollable() );
+
 	this->server_tab->updateGeometry();
 }
 
