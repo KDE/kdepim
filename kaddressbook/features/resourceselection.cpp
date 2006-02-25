@@ -170,6 +170,25 @@ void ResourceSelection::add()
   QStringList descs = mManager->resourceTypeDescriptions();
 
   bool ok = false;
+
+  ResourceItem *i = selectedItem();
+  if ( i ) {
+    KPIM::ResourceABC *res = dynamic_cast<KPIM::ResourceABC *>( i->resource() );
+    if ( i->isSubResource() || res->canHaveSubresources() ) {
+      const QString folderName = KInputDialog::getText( i18n( "Add Subresource" ),
+          i18n( "Please enter a name for the new subresource" ), QString::null,
+          &ok, this );
+      if ( !ok )
+        return;
+      const QString parentId = i->isSubResource() ? i->resourceIdentifier() : QString:: null;
+      if ( !res->addSubresource( folderName, parentId ) ) {
+        KMessageBox::error( this, i18n("<qt>Unable to create subresource <b>%1</b>.</qt>")
+            .arg( folderName ) );
+      }
+      return;
+    }
+  }
+
   QString desc = KInputDialog::getItem( i18n( "Add Address Book" ),
                                         i18n( "Please select type of the new address book:" ),
                                         descs, 0, false, &ok, this );
@@ -225,16 +244,32 @@ void ResourceSelection::remove()
   if ( !item )
     return;
 
-  int result = KMessageBox::warningContinueCancel( this,
-        i18n( "<qt>Do you really want to remove the address book <b>%1</b>?</qt>" )
-        .arg( item->resource()->resourceName() ), "",
+  const QString msg = item->isSubResource() ?
+        i18n("<qt>Do you really want to remove the subresource <b>%1</b>? "
+                "It will be completely removed, along with its contents. This "
+                "operation can not be undone.</qt>").arg( item->text() )
+      : i18n("<qt>Do you really want to remove the address book <b>%1</b>?</qt>")
+        .arg( item->resource()->resourceName() );
+  int result = KMessageBox::warningContinueCancel( this, msg, "",
         KGuiItem( i18n( "&Remove" ), "editdelete" ) );
   if ( result == KMessageBox::Cancel )
     return;
 
-  mLastResource = item->resource()->identifier();
+  if ( item->isSubResource() ) {
+    KPIM::ResourceABC *res = dynamic_cast<KPIM::ResourceABC *>( item->resource() );
+    if ( !res->removeSubresource( item->resourceIdentifier() ) ) {
+      KMessageBox::sorry( this,
+              i18n ("<qt>Failed to remove the subresource <b>%1</b>. The "
+                  "reason could be that it is a built-in one which cannot "
+                  "be removed, or that the removal of the underlying storage "
+                  "folder failed.</qt>").arg( item->text() ) );
 
-  core()->addressBook()->removeResource( item->resource() );
+     return;
+    }
+  } else {
+    mLastResource = item->resource()->identifier();
+    core()->addressBook()->removeResource( item->resource() );
+  }
   core()->addressBook()->emitAddressBookChanged();
 
   updateView();
@@ -245,7 +280,6 @@ void ResourceSelection::currentChanged( QListViewItem *item )
   ResourceItem *resItem = static_cast<ResourceItem*>( item );
   bool state = (resItem && !resItem->isSubResource() );
   mEditButton->setEnabled( state );
-  mRemoveButton->setEnabled( state );
 
   if ( !resItem )
     return;
@@ -289,11 +323,6 @@ void ResourceSelection::updateView()
     return;
 
   mListView->clear();
-  disconnect( this, SLOT( slotSubresourceAdded( KPIM::ResourceABC *, const QString &,
-                                                const QString & ) ) );
-  disconnect( this, SLOT( slotSubresourceRemoved( KPIM::ResourceABC *, const QString &,
-                                                  const QString & ) ) );
-  //disconnect( this, SLOT( closeResource( KPIM::ResourceABC * ) ) );
 
   KRES::Manager<KABC::Resource>::Iterator it;
   for ( it = mManager->begin(); it != mManager->end(); ++it ) {
@@ -301,6 +330,7 @@ void ResourceSelection::updateView()
     new ResourceItem( mListView, *it );
     KPIM::ResourceABC* resource = dynamic_cast<KPIM::ResourceABC *>( *it );
     if ( resource ) {
+      disconnect( resource, 0, this, 0 );
       connect( resource, SIGNAL( signalSubresourceAdded( KPIM::ResourceABC *,
                                                          const QString &, const QString & ) ),
                SLOT( slotSubresourceAdded( KPIM::ResourceABC *,
@@ -390,7 +420,6 @@ void ResourceSelection::initGUI()
   mEditButton = new QPushButton( i18n( "Edit..." ), this );
   mEditButton->setEnabled( false );
   mRemoveButton = new QPushButton( i18n( "Remove" ), this );
-  mRemoveButton->setEnabled( false );
 
   layout->addWidget( mAddButton, 1, 0 );
   layout->addWidget( mEditButton, 1, 1 );
