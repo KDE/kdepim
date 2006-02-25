@@ -129,6 +129,12 @@ public:
 
   virtual void setSubresourceActive( const QString &, bool );
 
+  virtual bool addSubresource( const QString&, const QString& );
+
+  virtual bool removeSubresource( const QString& );
+
+  virtual bool canHaveSubresources() const { return true; }
+
   /// Completion weight for a given subresource
   virtual int subresourceCompletionWeight( const QString& ) const;
 

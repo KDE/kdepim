@@ -628,4 +628,17 @@ void KABC::ResourceKolab::setSubresourceActive( const QString &subresource, bool
   }
 }
 
+
+/*virtual*/
+bool KABC::ResourceKolab::addSubresource( const QString& label, const QString& parent )
+{
+  return kmailAddSubresource( label, parent, s_kmailContentsType );
+}
+
+/*virtual*/
+bool KABC::ResourceKolab::removeSubresource( const QString& id )
+{
+  return kmailRemoveSubresource( id );
+}
+
 #include "resourcekolab.moc"
