@@ -283,6 +283,11 @@ class ResourceCalendar : public KRES::Resource
     virtual QStringList subresources() const { return QStringList(); }
 
     /**
+      Is this subresource capable of having subresources or not?
+    */
+    virtual bool canHaveSubresources() const { return false; }
+
+    /**
       Is this subresource active or not?
     */
     virtual bool subresourceActive( const QString& ) const { return true; }
@@ -294,7 +299,18 @@ class ResourceCalendar : public KRES::Resource
     {
        // the resource identifier is a sane fallback
        return resource;
-    };
+    }
+
+    /** 
+     * Remove a subresource with the id @param resource
+     */
+    virtual bool removeSubresource( const QString& resource );
+
+    /** 
+     * Add a subresource with the name @param resource and the parent 
+     * id @param parent.
+     */
+    virtual bool addSubresource( const QString& resource, const QString& parent );
 
   public slots:
     /**
