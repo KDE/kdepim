@@ -55,54 +55,54 @@ namespace KCal {
 
 /******************************************************************************/
 
-ICalTimezone::ICalTimezone(ICalTimezoneSource *source, const QString &name, ICalTimezoneData *data)
+ICalTimeZone::ICalTimeZone(ICalTimeZoneSource *source, const QString &name, ICalTimeZoneData *data)
   : KTimeZone(source, name)
 {
   setData(data);
 }
 
-ICalTimezone::ICalTimezone(const ICalTimezone &tz)
+ICalTimeZone::ICalTimeZone(const ICalTimeZone &tz)
   : KTimeZone(tz)
 {
 }
 
-ICalTimezone::~ICalTimezone()
+ICalTimeZone::~ICalTimeZone()
 {
 }
 
-ICalTimezone &ICalTimezone::operator=(const ICalTimezone &tz)
+ICalTimeZone &ICalTimeZone::operator=(const ICalTimeZone &tz)
 {
   KTimeZone::operator=(tz);
   return *this;
 }
 
-QString ICalTimezone::city() const
+QString ICalTimeZone::city() const
 {
-  const ICalTimezoneData *dat = static_cast<const ICalTimezoneData*>(data());
+  const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
   return dat ? dat->location : QString();
 }
 
-QByteArray ICalTimezone::url() const
+QByteArray ICalTimeZone::url() const
 {
-  const ICalTimezoneData *dat = static_cast<const ICalTimezoneData*>(data());
+  const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
   return dat ? dat->url : QByteArray();
 }
 
-QDateTime ICalTimezone::lastModified() const
+QDateTime ICalTimeZone::lastModified() const
 {
-  const ICalTimezoneData *dat = static_cast<const ICalTimezoneData*>(data());
+  const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
   return dat ? dat->lastModified : QDateTime();
 }
 
-int ICalTimezone::offsetAtZoneTime(const QDateTime &zoneDateTime, int *secondOffset) const
+int ICalTimeZone::offsetAtZoneTime(const QDateTime &zoneDateTime, int *secondOffset) const
 {
   if (secondOffset)
     *secondOffset = 0;
-  const ICalTimezoneData *dat = static_cast<const ICalTimezoneData*>(data());
+  const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
   if (!zoneDateTime.isValid()  ||  zoneDateTime.timeSpec() != Qt::LocalTime  ||  !dat)
     return 0;
   QDateTime start;
-  const ICalTimezoneData::Phase *phase = dat->phase(zoneDateTime, &start);
+  const ICalTimeZoneData::Phase *phase = dat->phase(zoneDateTime, &start);
   if (!phase)
     return 0;
   if (secondOffset) {
@@ -125,32 +125,32 @@ int ICalTimezone::offsetAtZoneTime(const QDateTime &zoneDateTime, int *secondOff
   return phase->offset;
 }
 
-int ICalTimezone::offsetAtUTC(const QDateTime &utcDateTime) const
+int ICalTimeZone::offsetAtUTC(const QDateTime &utcDateTime) const
 {
-  const ICalTimezoneData *dat = static_cast<const ICalTimezoneData*>(data());
+  const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
   if (!utcDateTime.isValid()  ||  utcDateTime.timeSpec() != Qt::UTC  ||  !dat)
     return 0;
-  const ICalTimezoneData::Phase *phase = dat->phase(utcDateTime);
+  const ICalTimeZoneData::Phase *phase = dat->phase(utcDateTime);
   if (!phase)
     return 0;
   return phase->offset;
 }
 
-int ICalTimezone::offset(time_t t) const
+int ICalTimeZone::offset(time_t t) const
 {
   return offsetAtUTC(fromTime_t(t));
 }
 
-bool ICalTimezone::isDstAtUTC(const QDateTime &utcDateTime) const
+bool ICalTimeZone::isDstAtUTC(const QDateTime &utcDateTime) const
 {
-  const ICalTimezoneData *dat = static_cast<const ICalTimezoneData*>(data());
+  const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
   if (!utcDateTime.isValid()  ||  utcDateTime.timeSpec() != Qt::UTC  ||  !dat)
     return false;
-  const ICalTimezoneData::Phase *phase = dat->phase(utcDateTime);
+  const ICalTimeZoneData::Phase *phase = dat->phase(utcDateTime);
   return phase ? phase->isDst : false;
 }
 
-bool ICalTimezone::isDst(time_t t) const
+bool ICalTimeZone::isDst(time_t t) const
 {
   return isDstAtUTC(fromTime_t(t));
 }
@@ -158,26 +158,26 @@ bool ICalTimezone::isDst(time_t t) const
 
 /******************************************************************************/
 
-class ICalTimezoneDataPrivate
+class ICalTimeZoneDataPrivate
 {
 public:
     QList<int> utcOffsets;
 };
 
 
-ICalTimezoneData::ICalTimezoneData()
-  : d(new ICalTimezoneDataPrivate())
+ICalTimeZoneData::ICalTimeZoneData()
+  : d(new ICalTimeZoneDataPrivate())
 {
 }
 
-ICalTimezoneData::~ICalTimezoneData()
+ICalTimeZoneData::~ICalTimeZoneData()
 {
   for (int i = 0, end = phases.count();  i < end;  ++i)
     delete phases[i];
   delete d;
 }
 
-ICalTimezoneData::Phase::Phase(const ICalTimezoneData::Phase &p)
+ICalTimeZoneData::Phase::Phase(const ICalTimeZoneData::Phase &p)
   : tznameIndex(p.tznameIndex),
     start(p.start),
     offset(p.offset),
@@ -188,14 +188,14 @@ ICalTimezoneData::Phase::Phase(const ICalTimezoneData::Phase &p)
 {
 }
 
-ICalTimezoneData::Phase::~Phase()
+ICalTimeZoneData::Phase::~Phase()
 {
   delete recur;
 }
 
-KTimeZoneData *ICalTimezoneData::clone()
+KTimeZoneData *ICalTimeZoneData::clone()
 {
-  ICalTimezoneData *newData = new ICalTimezoneData();
+  ICalTimeZoneData *newData = new ICalTimeZoneData();
   newData->location     = location;
   newData->url          = url;
   newData->lastModified = lastModified;
@@ -206,12 +206,12 @@ KTimeZoneData *ICalTimezoneData::clone()
   return newData;
 }
 
-QList<QByteArray> ICalTimezoneData::abbreviations() const
+QList<QByteArray> ICalTimeZoneData::abbreviations() const
 {
   return tznames;
 }
 
-QByteArray ICalTimezoneData::abbreviation(const QDateTime &utcDateTime) const
+QByteArray ICalTimeZoneData::abbreviation(const QDateTime &utcDateTime) const
 {
   if (!utcDateTime.isValid()  ||  utcDateTime.timeSpec() != Qt::UTC)
     return QByteArray();
@@ -219,7 +219,7 @@ QByteArray ICalTimezoneData::abbreviation(const QDateTime &utcDateTime) const
   return ph ? tznames[ph->tznameIndex[0]] : QByteArray();  // return the first abbreviation
 }
 
-QList<int> ICalTimezoneData::UTCOffsets() const
+QList<int> ICalTimeZoneData::UTCOffsets() const
 {
   if (d->utcOffsets.isEmpty()) {
     for (int i = 0, end = phases.count();  i < end;  ++i) {
@@ -232,7 +232,7 @@ QList<int> ICalTimezoneData::UTCOffsets() const
   return d->utcOffsets;
 }
 
-const ICalTimezoneData::Phase *ICalTimezoneData::phase(const QDateTime &dt, QDateTime *start) const
+const ICalTimeZoneData::Phase *ICalTimeZoneData::phase(const QDateTime &dt, QDateTime *start) const
 {
   int result = -1;
   QDateTime latest, previous;
@@ -282,7 +282,7 @@ const ICalTimezoneData::Phase *ICalTimezoneData::phase(const QDateTime &dt, QDat
 /**
  * Find the nearest UTC start time of this phase strictly after a given UTC or local time.
  */
-QDateTime ICalTimezoneData::Phase::nextStart(const QDateTime &dt) const
+QDateTime ICalTimeZoneData::Phase::nextStart(const QDateTime &dt) const
 {
   QDateTime utc = dt;
   if (dt.timeSpec() == Qt::LocalTime) {
@@ -300,7 +300,7 @@ QDateTime ICalTimezoneData::Phase::nextStart(const QDateTime &dt) const
 /**
  * Find the nearest UTC start time of this phase at or before a given UTC or local time.
  */
-QDateTime ICalTimezoneData::Phase::previousStart(const QDateTime &dt) const
+QDateTime ICalTimeZoneData::Phase::previousStart(const QDateTime &dt) const
 {
   QDateTime utc = dt;
   if (dt.timeSpec() == Qt::LocalTime) {
@@ -318,22 +318,22 @@ QDateTime ICalTimezoneData::Phase::previousStart(const QDateTime &dt) const
 
 /******************************************************************************/
 
-class ICalTimezoneSourcePrivate
+class ICalTimeZoneSourcePrivate
 {
   public:
-    static ICalTimezoneData::Phase *parsePhase(icalcomponent*, ICalTimezoneData*, bool daylight);
+    static ICalTimeZoneData::Phase *parsePhase(icalcomponent*, ICalTimeZoneData*, bool daylight);
 };
 
 
-ICalTimezoneSource::ICalTimezoneSource()
+ICalTimeZoneSource::ICalTimeZoneSource()
 {
 }
 
-ICalTimezoneSource::~ICalTimezoneSource()
+ICalTimeZoneSource::~ICalTimeZoneSource()
 {
 }
 
-bool ICalTimezoneSource::parse(const QString &fileName, KTimeZones &zones)
+bool ICalTimeZoneSource::parse(const QString &fileName, KTimeZones &zones)
 {
   QFile file(fileName);
   if (!file.open(QIODevice::ReadOnly))
@@ -353,12 +353,12 @@ bool ICalTimezoneSource::parse(const QString &fileName, KTimeZones &zones)
   return result;
 }
 
-bool ICalTimezoneSource::parse(icalcomponent *calendar, KTimeZones &zones)
+bool ICalTimeZoneSource::parse(icalcomponent *calendar, KTimeZones &zones)
 {
   for (icalcomponent *c = icalcomponent_get_first_component(calendar, ICAL_VTIMEZONE_COMPONENT);
        c;  c = icalcomponent_get_next_component(calendar, ICAL_VTIMEZONE_COMPONENT))
   {
-    ICalTimezone *zone = parse(c);
+    ICalTimeZone *zone = parse(c);
     if (!zone)
       return false;
     if (!zones.add(zone)) {
@@ -369,11 +369,11 @@ bool ICalTimezoneSource::parse(icalcomponent *calendar, KTimeZones &zones)
   return true;
 }
 
-ICalTimezone *ICalTimezoneSource::parse(icalcomponent *vtimezone)
+ICalTimeZone *ICalTimeZoneSource::parse(icalcomponent *vtimezone)
 {
   QString name;
   QString xlocation;
-  ICalTimezoneData* data = new ICalTimezoneData();
+  ICalTimeZoneData* data = new ICalTimeZoneData();
 
   // Read the fixed properties which can only appear once in VTIMEZONE
   icalproperty *p = icalcomponent_get_first_property(vtimezone, ICAL_ANY_PROPERTY);
@@ -405,7 +405,7 @@ ICalTimezone *ICalTimezoneSource::parse(icalcomponent *vtimezone)
         if (t.is_utc) {
           data->lastModified = toQDateTime(t);
         } else {
-          kDebug(5800) << "ICalTimezoneSource::parse(): LAST-MODIFIED not UTC" << endl;
+          kDebug(5800) << "ICalTimeZoneSource::parse(): LAST-MODIFIED not UTC" << endl;
         }
         break;
 		}
@@ -416,7 +416,7 @@ ICalTimezone *ICalTimezoneSource::parse(icalcomponent *vtimezone)
   }
 
   if (name.isEmpty()) {
-    kDebug(5800) << "ICalTimezoneSource::parse(): TZID missing" << endl;
+    kDebug(5800) << "ICalTimeZoneSource::parse(): TZID missing" << endl;
     delete data;
     return 0;
   }
@@ -431,22 +431,22 @@ ICalTimezone *ICalTimezoneSource::parse(icalcomponent *vtimezone)
   for (icalcomponent *c = icalcomponent_get_first_component(vtimezone, ICAL_ANY_COMPONENT);
        c;  c = icalcomponent_get_next_component(vtimezone, ICAL_ANY_COMPONENT))
   {
-    ICalTimezoneData::Phase *phase = 0;
+    ICalTimeZoneData::Phase *phase = 0;
     icalcomponent_kind kind = icalcomponent_isa(c);
     switch (kind) {
 
       case ICAL_XSTANDARD_COMPONENT:
         kDebug(5800) << "---standard phase: found" << endl;
-        phase = ICalTimezoneSourcePrivate::parsePhase(c, data, false);
+        phase = ICalTimeZoneSourcePrivate::parsePhase(c, data, false);
         break;
 
       case ICAL_XDAYLIGHT_COMPONENT:
         kDebug(5800) << "---daylight phase: found" << endl;
-        phase = ICalTimezoneSourcePrivate::parsePhase(c, data, true);
+        phase = ICalTimeZoneSourcePrivate::parsePhase(c, data, true);
         break;
 
       default:
-        kDebug(5800) << "ICalTimezoneSource::parse(): Unknown component: " << kind << endl;
+        kDebug(5800) << "ICalTimeZoneSource::parse(): Unknown component: " << kind << endl;
         break;
     }
     if (phase)
@@ -461,17 +461,17 @@ ICalTimezone *ICalTimezoneSource::parse(icalcomponent *vtimezone)
      * phase's UTC offset instead of the previous phase's (since
      * we don't have any information about the previous phase)
      */
-    ICalTimezoneData::Phase *phase = data->phases[0];
+    ICalTimeZoneData::Phase *phase = data->phases[0];
     phase->start = phase->start.addSecs(phase->prevOffset - phase->offset);
   }
 
-  return new ICalTimezone(this, name, data);
+  return new ICalTimeZone(this, name, data);
 }
 
-ICalTimezoneData::Phase *ICalTimezoneSourcePrivate::parsePhase(icalcomponent *c, ICalTimezoneData *data, bool daylight)
+ICalTimeZoneData::Phase *ICalTimeZoneSourcePrivate::parsePhase(icalcomponent *c, ICalTimeZoneData *data, bool daylight)
 {
   // Read the observance data for this standard/daylight savings phase.
-  ICalTimezoneData::Phase *phase = new ICalTimezoneData::Phase;
+  ICalTimeZoneData::Phase *phase = new ICalTimeZoneData::Phase;
   phase->isDst = daylight;
 
   bool recurs             = false;
@@ -530,7 +530,7 @@ ICalTimezoneData::Phase *ICalTimezoneSourcePrivate::parsePhase(icalcomponent *c,
         break;
 
       default:
-        kDebug(5800) << "ICalTimezoneSource::readPhase(): Unknown property: " << kind << endl;
+        kDebug(5800) << "ICalTimeZoneSource::readPhase(): Unknown property: " << kind << endl;
         break;
     }
     p = icalcomponent_get_next_property(c, ICAL_ANY_PROPERTY);
@@ -538,7 +538,7 @@ ICalTimezoneData::Phase *ICalTimezoneSourcePrivate::parsePhase(icalcomponent *c,
 
   // Validate the phase data
   if (!found_dtstart || !found_tzoffsetfrom || !found_tzoffsetto) {
-    kDebug(5800) << "ICalTimezoneSource::readPhase(): DTSTART/TZOFFSETFROM/TZOFFSETTO missing" << endl;
+    kDebug(5800) << "ICalTimeZoneSource::readPhase(): DTSTART/TZOFFSETFROM/TZOFFSETTO missing" << endl;
     delete phase;
     return 0;
   }

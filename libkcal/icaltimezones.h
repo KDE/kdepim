@@ -28,39 +28,39 @@
 
 namespace KCal {
 
-class ICalTimezoneSource;
-class ICalTimezoneData;
-class ICalTimezonePrivate;
-class ICalTimezoneSourcePrivate;
-class ICalTimezoneDataPrivate;
+class ICalTimeZoneSource;
+class ICalTimeZoneData;
+class ICalTimeZonePrivate;
+class ICalTimeZoneSourcePrivate;
+class ICalTimeZoneDataPrivate;
 class Recurrence;
 
 
 /**
- * The ICalTimezone class represents an iCalendar VTIMEZONE component.
+ * The ICalTimeZone class represents an iCalendar VTIMEZONE component.
  *
- * ICalTimezone instances are normally created by ICalTimezoneSource::parse().
+ * ICalTimeZone instances are normally created by ICalTimeZoneSource::parse().
  *
  * @short An iCalendar time zone
- * @see ICalTimezoneSource, ICalTimezoneData
+ * @see ICalTimeZoneSource, ICalTimeZoneData
  * @author David Jarvie <software@astrojar.org.uk>.
  * @since 3.5
  */
-class LIBKCAL_EXPORT ICalTimezone : public KTimeZone
+class LIBKCAL_EXPORT ICalTimeZone : public KTimeZone
 {
   public:
     /**
-     * Creates a time zone. This constructor is normally called from ICalTimezoneSource::parse().
+     * Creates a time zone. This constructor is normally called from ICalTimeZoneSource::parse().
      *
      * @param source   iCalendar VTIMEZONE reader and parser
      * @param name     time zone's unique name within the iCalendar object
      * @param data     parsed VTIMEZONE data 
      */
-    ICalTimezone(ICalTimezoneSource *source, const QString &name, ICalTimezoneData *data);
-    ICalTimezone(const ICalTimezone &);
-    virtual ~ICalTimezone();
+    ICalTimeZone(ICalTimeZoneSource *source, const QString &name, ICalTimeZoneData *data);
+    ICalTimeZone(const ICalTimeZone &);
+    virtual ~ICalTimeZone();
 
-    ICalTimezone &operator=(const ICalTimezone &);
+    ICalTimeZone &operator=(const ICalTimeZone &);
 
     /**
      * Returns the name of the city for this time zone, if any. There is no fixed
@@ -153,91 +153,91 @@ class LIBKCAL_EXPORT ICalTimezone : public KTimeZone
     virtual bool isDst(time_t t) const;
 
   private:
-    ICalTimezonePrivate *d;
+    ICalTimeZonePrivate *d;
 };
 
 
 /**
  * A class which reads and parses iCalendar VTIMEZONE components.
  *
- * ICalTimezoneSource is used to parse VTIMEZONE components and create
- * ICalTimezone instances to represent them.
+ * ICalTimeZoneSource is used to parse VTIMEZONE components and create
+ * ICalTimeZone instances to represent them.
  *
  * @short Reader and parser for iCalendar time zone data
- * @see ICalTimezone, ICalTimezoneData
+ * @see ICalTimeZone, ICalTimeZoneData
  * @author David Jarvie <software@astrojar.org.uk>.
  * @since 3.5
  */
-class LIBKCAL_EXPORT ICalTimezoneSource : public KTimeZoneSource
+class LIBKCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
 {
   public:
     /**
      * Constructs an iCalendar time zone source.
      */
-    ICalTimezoneSource();
-    virtual ~ICalTimezoneSource();
+    ICalTimeZoneSource();
+    virtual ~ICalTimeZoneSource();
 
     /**
-     * Creates an ICalTimezone instance containing the detailed information parsed
+     * Creates an ICalTimeZone instance containing the detailed information parsed
      * from a VTIMEZONE component.
      *
      * @param vtimezone the VTIMEZONE component from which data is to be extracted
-     * @return a ICalTimezone instance containing the parsed data.
-     *         The caller is responsible for deleting the ICalTimezone instance.
+     * @return a ICalTimeZone instance containing the parsed data.
+     *         The caller is responsible for deleting the ICalTimeZone instance.
      *         Null is returned on error.
      */
-    ICalTimezone *parse(icalcomponent *vtimezone);
+    ICalTimeZone *parse(icalcomponent *vtimezone);
 
     /**
-     * Creates an ICalTimezone instance for each VTIMEZONE component within a
-     * CALENDAR component. The ICalTimezone instances are added to a KTimeZones
+     * Creates an ICalTimeZone instance for each VTIMEZONE component within a
+     * CALENDAR component. The ICalTimeZone instances are added to a KTimeZones
      * collection.
      *
      * If an error occurs while processing any time zone, any remaining time zones
      * are left unprocessed.
      *
      * @param calendar the CALENDAR component from which data is to be extracted
-     * @param zones    the time zones collection to which the ICalTimezone
+     * @param zones    the time zones collection to which the ICalTimeZone
      *                 instances are to be added
      * @return @c false if any error occurred (either parsing a VTIMEZONE component
-     *         or adding an ICalTimezone to @p zones), @c true otherwise
+     *         or adding an ICalTimeZone to @p zones), @c true otherwise
      */
     bool parse(icalcomponent *calendar, KTimeZones &zones);
 
     /**
-     * Reads an iCalendar file and creates an ICalTimezone instance for each
-     * VTIMEZONE component within it. The ICalTimezone instances are added to a
+     * Reads an iCalendar file and creates an ICalTimeZone instance for each
+     * VTIMEZONE component within it. The ICalTimeZone instances are added to a
      * KTimeZones collection.
      *
      * If an error occurs while processing any time zone, any remaining time zones
      * are left unprocessed.
      *
      * @param fileName the file from which data is to be extracted
-     * @param zones    the time zones collection to which the ICalTimezone
+     * @param zones    the time zones collection to which the ICalTimeZone
      *                 instances are to be added
      * @return @c false if any error occurred, @c true otherwise
      */
     bool parse(const QString &fileName, KTimeZones &zones);
 
   private:
-    ICalTimezoneSourcePrivate *d;
+    ICalTimeZoneSourcePrivate *d;
 };
 
 
 /**
  * Parsed iCalendar VTIMEZONE data.
  *
- * This class is used by the ICalTimezoneSource class to pass parsed
- * data to an ICalTimezone intance.
+ * This class is used by the ICalTimeZoneSource class to pass parsed
+ * data to an ICalTimeZone intance.
  *
  * @short Parsed iCalendar time zone data
- * @see ICalTimezone, ICalTimezoneSource
+ * @see ICalTimeZone, ICalTimeZoneSource
  * @author David Jarvie <software@astrojar.org.uk>.
  * @since 4.0
  */
-class LIBKCAL_EXPORT ICalTimezoneData : public KTimeZoneData
+class LIBKCAL_EXPORT ICalTimeZoneData : public KTimeZoneData
 {
-    friend class ICalTimezoneSource;
+    friend class ICalTimeZoneSource;
 
   public:
 
@@ -273,8 +273,8 @@ class LIBKCAL_EXPORT ICalTimezoneData : public KTimeZoneData
       bool               isDst;       /**< true if daylight savings time, false if standard time */
     };
 
-    ICalTimezoneData();
-    virtual ~ICalTimezoneData();
+    ICalTimeZoneData();
+    virtual ~ICalTimeZoneData();
 
     /**
      * Creates a new copy of this object.
@@ -323,7 +323,7 @@ class LIBKCAL_EXPORT ICalTimezoneData : public KTimeZoneData
     QList<Phase*>     phases;         /**< time zone observances, ordered by start date/time */
 
 private:
-    ICalTimezoneDataPrivate *d;
+    ICalTimeZoneDataPrivate *d;
 };
 
 }
