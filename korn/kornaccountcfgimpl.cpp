@@ -223,6 +223,9 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 		_groupBoxes->at( groupCounter )->show();
 	}
 
+	this->lbInterval->setEnabled( proto != "process" && proto != "dcop" );
+	this->edInterval->setEnabled( proto != "process" && proto != "dcop" );
+	
 	this->server_tab->updateGeometry();
 }
 
