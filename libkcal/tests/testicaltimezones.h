@@ -24,7 +24,7 @@
 
 #include <qobject.h>
 
-class ICalTimezonesTest : public QObject
+class ICalTimeZonesTest : public QObject
 {
     Q_OBJECT
 private slots:
