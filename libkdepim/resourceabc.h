@@ -77,6 +77,16 @@ public:
    */
   virtual QString subresourceLabel( const QString& ) const = 0;
 
+  /** Remove a given subresource */
+  virtual bool removeSubresource( const QString& ) = 0;
+
+  /** Create a new subresource with label @param label under the 
+   * parent folder @param parent or at toplevel, if no parent is given. */
+  virtual bool addSubresource( const QString& label, const QString& parent ) = 0;
+
+  /** Can the resource have subresources? */
+  virtual bool canHaveSubresources() const { return false; }
+
 public slots:
   /**
    * (De-)activate a subresource.
