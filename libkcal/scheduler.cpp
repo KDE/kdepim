@@ -314,17 +314,17 @@ bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /*
               i18n("The event, task or journal to be canceled could not be found. "
                   "Maybe it has already been deleted, or the calendar that "
                   "contains it is disabled." ) );
-      return false;
-  }
-  Event *even = mCalendar->event(toDelete->uid());
-  if (even) {
-    mCalendar->deleteEvent(even);
-    ret = true;
   } else {
-    Todo *todo = mCalendar->todo(toDelete->uid());
-    if (todo) {
-      mCalendar->deleteTodo(todo);
+    Event *even = mCalendar->event(toDelete->uid());
+    if (even) {
+      mCalendar->deleteEvent(even);
       ret = true;
+    } else {
+      Todo *todo = mCalendar->todo(toDelete->uid());
+      if (todo) {
+        mCalendar->deleteTodo(todo);
+        ret = true;
+      }
     }
   }
   deleteTransaction(incidence);
