@@ -22,6 +22,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kstandarddirs.h>
+#include <kmessagebox.h>
 
 #include "event.h"
 #include "todo.h"
@@ -283,9 +284,17 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
   // Move the uid to be the schedulingID and make a unique UID
   inc->setSchedulingID( inc->uid() );
   inc->setUid( CalFormat::createUniqueId() );
-  kdDebug(5800) << "Storing new incidence with scheduling uid=" << inc->schedulingID() << " and uid=" << inc->uid() << endl;
-
-  mCalendar->addIncidence(inc);
+  // in case this is an update and we didn't find the to-be-updated incidence, 
+  // ask whether we should create a new one, or drop the update
+  if ( existingIncidences.count() > 0 || inc->revision() == 0 ||
+          KMessageBox::warningContinueCancel( 0,
+              i18n("The event, task or journal to be updated could not be found. "
+                  "Maybe it has already been deleted, or the calendar that "
+                  "contains it is disabled. Press continue to create a new "
+                  "one or cancel to discard this update." ) ) == KMessageBox::Continue ) {
+    kdDebug(5800) << "Storing new incidence with scheduling uid=" << inc->schedulingID() << " and uid=" << inc->uid() << endl;
+    mCalendar->addIncidence(inc);
+  }
   deleteTransaction(incidence);
   return true;
 }
@@ -300,6 +309,13 @@ bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /*
 {
   bool ret = false;
   const IncidenceBase *toDelete = mCalendar->incidenceFromSchedulingID( incidence->uid() );
+  if ( !toDelete ) {
+      KMessageBox::error( 0,
+              i18n("The event, task or journal to be canceled could not be found. "
+                  "Maybe it has already been deleted, or the calendar that "
+                  "contains it is disabled." ) );
+      return false;
+  }
   Event *even = mCalendar->event(toDelete->uid());
   if (even) {
     mCalendar->deleteEvent(even);
