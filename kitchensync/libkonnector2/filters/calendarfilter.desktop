@@ -9,6 +9,7 @@ X-KDE-KitchenSyncFilterType=calendar
 Name=Calendar Filter
 Name[bg]=Филтър за календара
 Name[br]=Sil deiziadur
+Name[ca]=Filtre per al calendari
 Name[cs]=Filtr kalendáře
 Name[da]=Kalenderfilter
 Name[de]=Filter für Kalender
@@ -42,6 +43,7 @@ Name[zh_CN]=日历过滤器
 
 Comment=Filters events and todos in a calendar
 Comment[bg]=Филтриране на събитията и задачите в календара
+Comment[ca]=Filtra els esdeveniments i tasques pendents d'un calendari
 Comment[cs]=Filtruje události a úkoly v knize adres
 Comment[da]=Filtrerer begivenheder og gøremål i en kalender
 Comment[de]=Filtert Ereignisse und Aufgaben in einem Kalender

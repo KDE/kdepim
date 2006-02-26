@@ -26,6 +26,7 @@ Name[tr]=Uygulama Sekizli Akışı
 Name[zh_CN]=应用程序 Octetstream
 Comment=A bodypart formatter plugin for text/x-diff
 Comment[bg]=Редактор с поддръжка на форматиране за текст/x-diff
+Comment[ca]=Un endollable formatador del cos per a text/x-diff
 Comment[cs]=Formátovač těla emailu pro typ text/x-diff
 Comment[da]=Et bodypart formateringsplugin for text/x-diff
 Comment[de]=Ein Inhaltsformatierungs-Modul für text/x-diff

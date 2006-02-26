@@ -9,6 +9,7 @@ X-KDE-KitchenSyncFilterType=addressbook
 Name=Address Book Filter
 Name[bg]=Филтър за адресника
 Name[br]=Sil karned chomlec'hioù
+Name[ca]=Filtre per a Address Book
 Name[cs]=Filtr knihy adres
 Name[da]=Addressebogsfilter
 Name[de]=Filter für Adressbuch
@@ -42,6 +43,7 @@ Name[zh_CN]=地址簿过滤器
 
 Comment=Filters contacts in an address book
 Comment[bg]=Филтриране на контактите в адресника
+Comment[ca]=Filtra els contactes d'una llibreta d'adreces
 Comment[cs]=Filtruje kontakty v knize adres
 Comment[da]=Filtrerer kontakter i en adressebog
 Comment[de]=Filtert Kontakte in einem Adressbuch
