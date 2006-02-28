@@ -80,7 +80,10 @@
   \param name the internal debugging name
 */
 
-KDGanttView::KDGanttView( QWidget* parent, const char* name  ) : KDGanttMinimizeSplitter( Qt::Vertical, parent, name )
+KDGanttView::KDGanttView( QWidget* parent, const char* name  )
+    : KDGanttMinimizeSplitter( Qt::Vertical, parent, name ),
+      myTimeHeaderScroll(0),
+      myCanvasView(0)
 {
 #if defined KDAB_EVAL
     EvalDialog::checkEvalLicense( "KD Gantt" );

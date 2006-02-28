@@ -860,7 +860,8 @@ void KDTimeHeaderWidget::checkWidth( int wid )
     // We probably come from an external resize and then we must
     // calculate on basis of myCanvasView.
     // (NOTE: we have disconnected the auto QScrollView scrollbar update)
-    myGanttView->myCanvasView->updateScrollBars();
+    if (myGanttView && myGanttView->myCanvasView)
+        myGanttView->myCanvasView->updateScrollBars();
 }
 
 bool KDTimeHeaderWidget::registerStartTime()
@@ -1084,6 +1085,9 @@ void KDTimeHeaderWidget::zoomToFit()
 {
     flagZoomToFit = true;
     computeTicks();
+    // Since we have disconnected autoupdate of scrollbars, we must do it ourselves
+    if (myGanttView && myGanttView->myCanvasView)
+        myGanttView->myCanvasView->updateScrollBars();
 }
 double KDTimeHeaderWidget::zoomFactor()
 {
@@ -1137,6 +1141,9 @@ void KDTimeHeaderWidget::zoomToSelection( QDateTime start, QDateTime end)
     updateTimeTable();
     repaint();
     moveTimeLineTo((getCoordX(start)-(viewWid-timeWid)/2));
+    // Since we have disconnected autoupdate of scrollbars, we must do it ourselves
+    if (myGanttView && myGanttView->myCanvasView)
+        myGanttView->myCanvasView->updateScrollBars();
 }
 void KDTimeHeaderWidget::moveTimeLineTo(int X)
 {
@@ -1169,6 +1176,9 @@ void KDTimeHeaderWidget::zoom(double factor, bool absolute)
     }
     myZoomFactor = newZoom;
     computeTicks();
+    // Since we have disconnected autoupdate of scrollbars, we must do it ourselves
+    if (myGanttView && myGanttView->myCanvasView)
+        myGanttView->myCanvasView->updateScrollBars();
 }
 
 /*!
@@ -1239,8 +1249,9 @@ void KDTimeHeaderWidget::setScale(Scale unit )
     myScale = unit;
     myZoomFactor = 1.0;
     computeTicks();
-
-
+    // Since we have disconnected autoupdate of scrollbars, we must do it ourselves
+    if (myGanttView && myGanttView->myCanvasView)
+        myGanttView->myCanvasView->updateScrollBars();
 }
 
 
