@@ -363,7 +363,7 @@ void DistributionListWidget::removeList()
 
   core()->addressBook()->removeAddressee( dist );
 
-  emit deleted( dist.uid() );
+  emit deleted( QStringList( dist.uid() ) );
 #else
   mManager->remove( mManager->list( mNameCombo->currentText() ) );
   mNameCombo->removeItem( mNameCombo->currentItem() );
