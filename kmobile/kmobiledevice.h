@@ -315,8 +315,8 @@ public:
 
     enum MessageBoxType { QuestionYesNo = 1, WarningYesNo = 2, WarningContinueCancel = 3,
 			        WarningYesNoCancel = 4, Information = 5, SSLMessageBox = 6 };
-	
-	
+
+
 signals:
     /**
      * Call this from stat() to express details about an object, the
@@ -385,7 +385,6 @@ signals:
      * @param info  See @ref AuthInfo.
      * @param errorMsg Error message to show
      * @return      @p TRUE if user clicks on "OK", @p FALSE otherwsie.
-     * @since 3.1
      */
     bool openPassDlg( KIO::AuthInfo& info, const QString &errorMsg );
 

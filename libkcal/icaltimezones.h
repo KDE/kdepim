@@ -44,7 +44,6 @@ class Recurrence;
  * @short An iCalendar time zone
  * @see ICalTimeZoneSource, ICalTimeZoneData
  * @author David Jarvie <software@astrojar.org.uk>.
- * @since 3.5
  */
 class LIBKCAL_EXPORT ICalTimeZone : public KTimeZone
 {
@@ -54,7 +53,7 @@ class LIBKCAL_EXPORT ICalTimeZone : public KTimeZone
      *
      * @param source   iCalendar VTIMEZONE reader and parser
      * @param name     time zone's unique name within the iCalendar object
-     * @param data     parsed VTIMEZONE data 
+     * @param data     parsed VTIMEZONE data
      */
     ICalTimeZone(ICalTimeZoneSource *source, const QString &name, ICalTimeZoneData *data);
     ICalTimeZone(const ICalTimeZone &);
@@ -166,7 +165,6 @@ class LIBKCAL_EXPORT ICalTimeZone : public KTimeZone
  * @short Reader and parser for iCalendar time zone data
  * @see ICalTimeZone, ICalTimeZoneData
  * @author David Jarvie <software@astrojar.org.uk>.
- * @since 3.5
  */
 class LIBKCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
 {
@@ -233,7 +231,6 @@ class LIBKCAL_EXPORT ICalTimeZoneSource : public KTimeZoneSource
  * @short Parsed iCalendar time zone data
  * @see ICalTimeZone, ICalTimeZoneSource
  * @author David Jarvie <software@astrojar.org.uk>.
- * @since 4.0
  */
 class LIBKCAL_EXPORT ICalTimeZoneData : public KTimeZoneData
 {

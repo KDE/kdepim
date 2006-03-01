@@ -42,7 +42,6 @@ namespace KIO {
  * If data coming from the slave can not be handled, the
  * reading of data from the slave should be suspended.
  * @see KIO::xmlrpcCall()
- * @since 3.4
  */
 class XmlrpcJob : public TransferJob {
 Q_OBJECT
