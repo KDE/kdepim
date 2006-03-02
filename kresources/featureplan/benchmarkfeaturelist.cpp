@@ -20,7 +20,7 @@
 */
 
 #include "kde-features.h"
-#include "kde-features_parser.custom.h"
+#include "kde-features_parser.h"
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -40,29 +40,29 @@ static const KCmdLineOptions options[] =
 
 void displayFeature( Feature *f )
 {
-  std::cout << "FEATURE: " << f->summary().local8Bit() << std::endl;
+  std::cout << "FEATURE: " << f->summary().local8Bit().data() << std::endl;
   Responsible::List r = f->responsibleList();
   Responsible::List::ConstIterator it;
   for( it = r.begin(); it != r.end(); ++it ) {
-    std::cout << "  RESPONSIBLE: " << (*it)->name().local8Bit() << " ("
-              << (*it)->email().local8Bit() << ")" << std::endl;
+    std::cout << "  RESPONSIBLE: " << (*it)->name().local8Bit().data() << " ("
+              << (*it)->email().local8Bit().data() << ")" << std::endl;
   }
-  std::cout << "  TARGET: " << f->target().local8Bit() << std::endl;
-  std::cout << "  STATUS: " << f->status().local8Bit() << std::endl;
+  std::cout << "  TARGET: " << f->target().local8Bit().data() << std::endl;
+  std::cout << "  STATUS: " << f->status().local8Bit().data() << std::endl;
 }
 
 void displayCategory( const QList<Category *> categories )
 {
   Category::List::ConstIterator it;
   for( it = categories.begin(); it != categories.end(); ++it ) {
-    std::cout << "CATEGORY: " << (*it)->name().local8Bit() << std::endl;
-    
+    std::cout << "CATEGORY: " << (*it)->name().local8Bit().data() << std::endl;
+
     Feature::List features = (*it)->featureList();
     Feature::List::ConstIterator it2;
     for( it2 = features.begin(); it2 != features.end(); ++it2 ) {
       displayFeature( *it2 );
     }
-  
+
     displayCategory( (*it)->categoryList() );
   }
 }
@@ -72,10 +72,10 @@ int main( int argc, char **argv )
   KAboutData aboutData( "benchmarkfeaturelist",
                         "Benchmark for feature list XML parser",
                         "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
+  KCmdLineArgs::init( argc, argv, &aboutData, KCmdLineArgs::CmdLineArgNone );
   KCmdLineArgs::addCmdLineOptions( options );
 
-  KApplication app( false, false );
+  KApplication app( false );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
