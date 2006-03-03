@@ -2,7 +2,8 @@ INCLUDES = -I$(top_srcdir)/libkcal -I$(top_builddir)/libkcal/libical/src \
 	-Iqttestlib $(all_includes)
 
 
-check_PROGRAMS = testtostring \
+check_PROGRAMS = loadcalendar \
+                 testtostring \
                  testincidence \
                  testcalendar \
                  readandwrite \
@@ -17,6 +18,10 @@ check_PROGRAMS = testtostring \
 
 
 METASOURCES = AUTO
+
+loadcalendar_SOURCES = loadcalendar.cpp
+loadcalendar_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+loadcalendar_LDADD = ../libkcal.la
 
 testincidence_SOURCES = testincidence.cpp
 testincidence_LDFLAGS = $(all_libraries) $(KDE_RPATH)
