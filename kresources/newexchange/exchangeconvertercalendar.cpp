@@ -596,7 +596,7 @@ class ExchangeConverterCalendar::createWebDAVVisitor : public IncidenceBase::Vis
       // FIXME: scheduling ID
 //       domProperty( "http://schemas.microsoft.com/repl/", "repl-uid", ??? );
       domHTTPMailProperty( "subject", incidence->summary() );
-//       domHTTPMailProperty( "textdescription", incidence->description() );
+      domHTTPMailProperty( "textdescription", incidence->description() );
       // FIXME: timestampt, comments and categories
 //       domHTTPMailProperty( "date", ??? ); // timestamp not available in libkcal
 //       domDavProperty( "comment", incidence->comments() ); // libkcal has a QStringlist, not one string
@@ -612,10 +612,10 @@ class ExchangeConverterCalendar::createWebDAVVisitor : public IncidenceBase::Vis
         domProperty( "http://schemas.microsoft.com/exchange/", "sensitivity", tmpstr );
 
       domHTTPMailProperty( "priority", QString::number(incidence->priority()) );
-/* FIXME: from, to, and cc always lead to a 403 Forbidden error...
-      domHTTPMailProperty( "from", incidence->organizer().fullName() );
 
-      // FIXME: Attendees:
+      domMailHeaderProperty( "from", incidence->organizer().fullName() );
+
+      //  Attendees:
       tmpstr = QString::null;
       QStringList reqattnames;
       QStringList optattnames;
@@ -633,9 +633,11 @@ class ExchangeConverterCalendar::createWebDAVVisitor : public IncidenceBase::Vis
           default: break;
         }
       }
-      domHTTPMailProperty( "to", reqattnames.join(", ") );
-      domHTTPMailProperty( "cc", optattnames.join(", ") );
-*/
+
+      domMailHeaderProperty( "to", reqattnames.join(", ") );
+      
+      domMailHeaderProperty( "cc", optattnames.join(", ") );
+
       // FIXME: Attachments: propertyHTTPMail( "hasattachment" );
 
       return true;
