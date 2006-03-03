@@ -256,7 +256,6 @@ Alarm::List ResourceCached::alarmsTo( const QDateTime &to )
 Alarm::List ResourceCached::alarms( const QDateTime &from, const QDateTime &to )
 {
   // kdDebug(5800) << "ResourceCached::alarms(" << from.toString() << " - " << to.toString() << ")\n";
-  loadCache();
   return mCalendar.alarms( from, to );
 }
 
