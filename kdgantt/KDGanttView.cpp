@@ -82,8 +82,8 @@
 
 KDGanttView::KDGanttView( QWidget* parent, const char* name  )
     : KDGanttMinimizeSplitter( Qt::Vertical, parent, name ),
-      myTimeHeaderScroll(0),
-      myCanvasView(0)
+      myCanvasView(0),
+      myTimeHeaderScroll(0)
 {
 #if defined KDAB_EVAL
     EvalDialog::checkEvalLicense( "KD Gantt" );
