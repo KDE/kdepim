@@ -61,7 +61,7 @@ testrecurrencetype_LDADD = ../libkcal.la
 
 testicaltimezones_SOURCES = testicaltimezones.cpp
 testicaltimezones_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-testicaltimezones_LDADD = ../libkcal.la -lqttestlib
+testicaltimezones_LDADD = ../libkcal.la -lQtTest_debug
 
 testvcalexport_SOURCES = testvcalexport.cpp
 testvcalexport_LDFLAGS = $(all_libraries) $(KDE_RPATH)
