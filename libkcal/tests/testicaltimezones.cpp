@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 #include <qtest_kde.h>
+#include <QtTest/QtTest>
 #include <QDateTime>
 #include <QTextStream>
 
@@ -118,7 +119,7 @@ int main(int argc, char *argv[])
     KApplication::disableAutoDcopRegistration();
     KApplication app(false);
     ICalTimeZonesTest tc;
-    return QtTest::exec(&tc, argc, argv);
+    return QTest::qExec(&tc, argc, argv);
 }
 
 
