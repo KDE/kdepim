@@ -26,6 +26,7 @@ Comment[hu]=SMS protokoll
 Comment[is]=SMS samskiptamátinn
 Comment[it]=Protocollo SMS
 Comment[ja]=SMS プロトコル
+Comment[km]=ពិធីការ​សេវា​សារ​ខ្លីៗ
 Comment[lt]=SMS protokolas
 Comment[nb]=SMS Protokoll
 Comment[nds]=SMS-Protokoll
@@ -47,5 +48,6 @@ Comment[tr]=SMS Protokolü
 Comment[uk]=Протокол SMS
 Comment[zh_CN]=短信息协议
 Name=SMS
+Name[km]=សេវា​សារ​ខ្លីៗ
 Name[zh_CN]=短信息
 
