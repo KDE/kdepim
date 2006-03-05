@@ -2,7 +2,7 @@ kde4_header()
 
 add_subdirectory( pics ) 
 
-include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories(${CMAKE_SOURCE_DIR}/libkdepim  ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 
 ########### next target ###############
@@ -22,7 +22,7 @@ kde4_automoc(${kpgp_LIB_SRCS})
 
 kde4_add_library(kpgp SHARED ${kpgp_LIB_SRCS})
 
-target_link_libraries(kpgp  ${QT_AND_KDECORE_LIBS} kdeui )
+target_link_libraries(kpgp  ${LIB_KDE3SUPPORT} )
 
 set_target_properties(kpgp PROPERTIES VERSION 2.2.0 SOVERSION 2 )
 install_targets(${LIB_INSTALL_DIR} kpgp )
