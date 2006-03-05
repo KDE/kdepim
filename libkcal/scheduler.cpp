@@ -255,15 +255,17 @@ bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /*
 {
   bool ret = false;
   const IncidenceBase *toDelete = mCalendar->incidenceFromSchedulingID( incidence->uid() );
-  Event *even = mCalendar->event(toDelete->uid());
-  if (even) {
-    mCalendar->deleteEvent(even);
-    ret = true;
-  } else {
-    Todo *todo = mCalendar->todo(toDelete->uid());
-    if (todo) {
-      mCalendar->deleteTodo(todo);
+  if ( toDelete ) {
+    Event *even = mCalendar->event(toDelete->uid());
+    if (even) {
+      mCalendar->deleteEvent(even);
       ret = true;
+    } else {
+      Todo *todo = mCalendar->todo(toDelete->uid());
+      if (todo) {
+        mCalendar->deleteTodo(todo);
+        ret = true;
+      }
     }
   }
   deleteTransaction(incidence);
