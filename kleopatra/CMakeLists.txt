@@ -21,7 +21,7 @@ set(kleopatra_SRCS
 
 kde4_automoc(${kleopatra_SRCS})
 
-kde4_add_ui_files(kleopatra_SRCS certificatewizard.ui certificateinfowidget.ui )
+kde4_add_ui3_files(kleopatra_SRCS certificatewizard.ui certificateinfowidget.ui )
 
 kde4_add_executable(kleopatra ${kleopatra_SRCS})
 
