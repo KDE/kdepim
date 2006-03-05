@@ -1,6 +1,6 @@
 kde4_header()
 
-include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories( ${CMAKE_SOURCE_DIR}/libkdepim ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 
 ########### next target ###############
@@ -20,7 +20,7 @@ kde4_automoc(${kgantt_LIB_SRCS})
 
 kde4_add_library(kgantt SHARED ${kgantt_LIB_SRCS})
 
-target_link_libraries(kgantt  ${QT_AND_KDECORE_LIBS} kdeui )
+target_link_libraries(kgantt  ${LIB_KDE3SUPPORT} )
 
 set_target_properties(kgantt PROPERTIES VERSION 0.0.2 SOVERSION 0 )
 install_targets(${LIB_INSTALL_DIR} kgantt )
