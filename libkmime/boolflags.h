@@ -37,7 +37,7 @@ public:
       @param b value to set bit @p i to.
   */
   void set(unsigned int i, bool b=true);
-  /** Get bit number @p.
+  /** Get bit number @p i.
       @param i bit number. Valid values are 0 through 15.
 	     Higher values all return @c false.
       @return Value of the single bit @p i. Invalid bit

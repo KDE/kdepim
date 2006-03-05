@@ -26,24 +26,40 @@ public:
   CharFreq( const QByteArray & buf );
   CharFreq( const char * buf, size_t len );
 
-  enum Type { None = 0, EightBitData, Binary = EightBitData,
-	      SevenBitData, EightBitText, SevenBitText };
+  enum Type { None = 0,
+              EightBitData,
+              Binary = EightBitData,
+	      SevenBitData,
+              EightBitText,
+              SevenBitText };
 
   Type type() const;
   bool isEightBitData() const;
   bool isEightBitText() const;
   bool isSevenBitData() const;
   bool isSevenBitText() const;
-  /** Returns true if buf has trailing whitespace, i.e. if any line ends
-      with space (' ') or tab ('\t'). */
+
+  /**
+   * Returns true if buf has trailing whitespace, i.e. if any line ends
+   * with space (' ') or tab ('\t').
+   */
   bool hasTrailingWhitespace() const;
-  /** Returns true if buf contains a line that starts with "From ". */
+
+  /**
+   * Returns true if buf contains a line that starts with "From ".
+   */
   bool hasLeadingFrom() const;
-  /** Returns the percentage of printable characters: printable/total.
-      If total == 0, the result is undefined. */
+
+  /**
+   * Returns the percentage of printable characters: printable/total.
+   * If total == 0, the result is undefined.
+   */
   float printableRatio() const;
-  /** Returns the percentage of control code (CTLs): CTL/total.
-      If total == 0, the result is undefined. */
+
+  /**
+   * Returns the percentage of control code (CTLs): CTL/total.
+   * If total == 0, the result is undefined.
+   */
   float controlCodesRatio() const;
 
 protected:

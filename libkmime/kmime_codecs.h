@@ -110,9 +110,8 @@ public:
    * @param dcursor/dend begin and end of output buffer
    * @param withCRLF If true, make the lineends CRLF, else make them LF only.
    *
-   * @return false if the encoded data didn't fit into the output
-   * buffer.
-   **/
+   * @return false if the encoded data didn't fit into the output buffer.
+   */
   virtual bool encode( const char* & scursor, const char * const send,
                        char* & dcursor, const char * const dend,
                        bool withCRLF=false ) const;
@@ -146,9 +145,8 @@ public:
    * @param dcursor/dend begin and end of output buffer
    * @param withCRLF If true, make the lineends CRLF, else make them LF only.
    *
-   * @return false if the decoded data didn't fit into the output
-   * buffer.
-   **/
+   * @return false if the decoded data didn't fit into the output buffer.
+   */
   virtual bool decode( const char* & scursor, const char * const send,
                        char* & dcursor, const char * const dend,
                        bool withCRLF=false ) const;
@@ -159,7 +157,7 @@ public:
    * shrinks the result QByteArray to the actual size again.
    *
    * For use with small @p src.
-   **/
+   */
   virtual QByteArray encode( const QByteArray & src, bool withCRLF=false ) const;
 
   /**
@@ -168,7 +166,7 @@ public:
    * shrinks the result QByteArray to the actual size again.
    *
    * For use with small @p src.
-   **/
+   */
   virtual QByteArray decode( const QByteArray & src, bool withCRLF=false ) const;
 
   /**
@@ -256,7 +254,7 @@ public:
  *
  * @short Stateful CTE decoder class
  * @author Marc Mutz <mutz@kde.org>
- **/
+ */
 class Decoder {
 protected:
   friend class Codec;
@@ -264,7 +262,7 @@ protected:
    * Protected constructor. Use KMime::Codec::makeDecoder to
    * create an instance. The bool parameter determines whether lines
    * end with CRLF (true) or LF (false, default).
-   **/
+   */
   Decoder( bool withCRLF=false )
     : mWithCRLF( withCRLF ) {}
 public:
@@ -272,13 +270,13 @@ public:
 
   /** Decode a chunk of data, maintaining state information between
    *  calls. See class decumentation for calling conventions.
-   **/
+   */
   virtual bool decode( const char* & scursor, const char * const send,
                        char* & dcursor, const char * const dend ) = 0;
   /** Call this method to finalize the output stream. Writes all
    *  remaining data and resets the decoder. See KMime::Codec for
    *  calling conventions.
-   **/
+   */
   virtual bool finish( char* & dcursor, const char * const dend ) = 0;
 
 protected:
@@ -300,23 +298,29 @@ protected:
 public:
   virtual ~Encoder() {}
 
-  /** Encode a chunk of data, maintaining state information between
-      calls. See KMime::Codec for calling conventions. */
+  /**
+   * Encode a chunk of data, maintaining state information between
+   * calls. See KMime::Codec for calling conventions.
+   */
   virtual bool encode( const char* & scursor, const char * const send,
                        char* & dcursor, const char * const dend ) = 0;
 
-  /** Call this method to finalize the output stream. Writes all
-      remaining data and resets the encoder. See KMime::Codec for
-      calling conventions. */
+  /**
+   * Call this method to finalize the output stream. Writes all remaining
+   * data and resets the encoder. See KMime::Codec for calling conventions.
+   */
   virtual bool finish( char* & dcursor, const char * const dend ) = 0;
 
 protected:
   /** Space in the output buffer */
   enum { maxBufferedChars = 8 };
 
-  /** Writes @p ch to the output stream or the output buffer,
-      depending on whether or not the output stream has space left.
-      @return true if written to the output stream, false if buffered. */
+  /**
+   * Writes @p ch to the output stream or the output buffer, depending on
+   * whether or not the output stream has space left.
+   *
+   * @return true if written to the output stream, false if buffered.
+   */
   bool write( char ch, char* & dcursor, const char * const dend ) {
     if ( dcursor != dend ) {
       // if there's space in the output stream, write there:
@@ -331,14 +335,18 @@ protected:
     }
   }
 
-  /** Writes characters from the output buffer to the output stream.
-      Implementations of encode and finish should call this
-      at the very beginning and for each iteration of the while loop.
-      @return true if all chars could be written, false otherwise */
+  /**
+   * Writes characters from the output buffer to the output stream.
+   * Implementations of encode and finish should call this
+   * at the very beginning and for each iteration of the while loop.
+   *
+   * @return true if all chars could be written, false otherwise
+   */
   bool flushOutputBuffer( char* & dcursor, const char * const dend );
 
-  /** Convenience function. Outputs LF or CRLF, based on the state of
-      mWithCRLF */
+  /**
+   * Convenience function. Outputs LF or CRLF, based on the state of mWithCRLF
+   */
   bool writeCRLF( char* & dcursor, const char * const dend ) {
     if ( mWithCRLF )
       write( '\r', dcursor, dend );
@@ -346,8 +354,10 @@ protected:
   }
 
 private:
-  /** An output buffer to simplyfy some codecs. Use with write
-      and flushOutputBuffer */
+  /**
+   * An output buffer to simplyfy some codecs.  Use with write and
+   * flushOutputBuffer.
+   */
   char mOutputBuffer[ maxBufferedChars ];
 protected:
   uchar mOutputBufferCursor;
