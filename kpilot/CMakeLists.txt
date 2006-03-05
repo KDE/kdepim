@@ -1,0 +1,36 @@
+kde4_header()
+
+add_subdirectory( lib ) 
+add_subdirectory( kpilot ) 
+add_subdirectory( conduits ) 
+
+include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+
+
+########### install files ###############
+
+
+kde4_footer()
+
+
+
+#original Makefile.am contents follow:
+
+### kdepim/kpilot/Makefile.am
+### (C) 1997 Stephan Kulow
+### Modified by Adriaan de Groot
+#
+#SUBDIRS = lib kpilot conduits
+#
+#messages:
+#	$(EXTRACTRC) `find . -name "*.rc" -o -name "*.ui"`  > rc.cpp
+#	$(XGETTEXT) `find . -name "*.cc" -o -name "*.cpp"` -o $(podir)/kpilot.pot   
+#	-rm -f rc.cpp
+#
+#
+## Just for the KPilot developers: grab all the strings, for checking.
+#devel-pot :
+#	extractrc `find . -name "*.rc" -o -name "*.ui"` > /tmp/rc.cpp
+#	xgettext -C --keyword=i18n --keyword=I18N_NOOP -o /tmp/kpilot.po \
+#		`find . -name "*.cc"` /tmp/rc.cpp
+#

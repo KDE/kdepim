@@ -1,0 +1,142 @@
+kde4_header()
+
+add_subdirectory( mimelib ) 
+
+include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+
+
+########### next target ###############
+
+set(mimelib_LIB_SRCS 
+   protocol.cpp 
+   address.cpp 
+   addrlist.cpp 
+   body.cpp 
+   bodypart.cpp 
+   boyermor.cpp 
+   datetime.cpp 
+   disptype.cpp 
+   dw_cte.cpp 
+   dw_date.cpp 
+   dw_mime.cpp 
+   entity.cpp 
+   field.cpp 
+   fieldbdy.cpp 
+   group.cpp 
+   headers.cpp 
+   mailbox.cpp 
+   mboxlist.cpp 
+   mechansm.cpp 
+   mediatyp.cpp 
+   message.cpp 
+   msgcmp.cpp 
+   msgid.cpp 
+   nntp.cpp 
+   param.cpp 
+   pop.cpp 
+   dwstring.cpp 
+   text.cpp 
+   token.cpp 
+   uuencode.cpp 
+   binhex.cpp )
+
+kde4_automoc(${mimelib_LIB_SRCS})
+
+kde4_add_library(mimelib SHARED ${mimelib_LIB_SRCS})
+
+target_link_libraries(mimelib  ${QT_AND_KDECORE_LIBS} kdefakes )
+
+set_target_properties(mimelib PROPERTIES VERSION 1.1.0 SOVERSION 1 )
+install_targets(${LIB_INSTALL_DIR} mimelib )
+
+
+########### next target ###############
+
+set(test_boyermor_SRCS test_boyermor.cpp )
+
+kde4_automoc(${test_boyermor_SRCS})
+
+if(KDE4_BUILD_TESTS)
+
+kde4_add_executable(test_boyermor ${test_boyermor_SRCS})
+
+target_link_libraries(test_boyermor  ${QT_AND_KDECORE_LIBS} mimelib )
+
+endif(KDE4_BUILD_TESTS)
+
+########### install files ###############
+
+
+kde4_footer()
+
+
+
+#original Makefile.am contents follow:
+
+## UNIX makefile for MIME++ library and example programs
+#
+## Choose a version to compile.  I recommend compiling development version,
+## which includes numerous assert macros to catch bad function arguments
+## and other safeguards.  The production version is designed to avoid
+## program aborts, such as will occur if an assertion fails.  The production
+## version tries to recover as best it can in the case of exceptional
+## conditions.  The debug version is designed to help you find bugs once
+## you know they exist.  The development version helps you out here just
+## a little, because it will dump core so you can examine the program
+## state with a debugger.
+##
+## Make sure you type 'make clean' after compiling one version before
+## compiling a different version.
+#
+#SUBDIRS = mimelib
+#KDE_CXXFLAGS = -UQT3_SUPPORT
+#LIBVERSION = DW_DEVELOPMENT_VERSION
+## LIBVERSION = DW_PRODUCTION_VERSION
+## LIBVERSION = DW_DEBUG_VERSION
+#
+#INCLUDES = $(all_includes)
+#
+#AM_CPPFLAGS = -D$(LIBVERSION) -D_REENTRANT
+#lib_LTLIBRARIES = libmimelib.la
+#
+#libmimelib_la_SOURCES = \
+#    protocol.cpp \
+#    address.cpp \
+#    addrlist.cpp \
+#    body.cpp \
+#    bodypart.cpp \
+#    boyermor.cpp \
+#    datetime.cpp \
+#    disptype.cpp \
+#    dw_cte.cpp \
+#    dw_date.cpp \
+#    dw_mime.cpp \
+#    entity.cpp \
+#    field.cpp \
+#    fieldbdy.cpp \
+#    group.cpp \
+#    headers.cpp \
+#    mailbox.cpp \
+#    mboxlist.cpp \
+#    mechansm.cpp \
+#    mediatyp.cpp \
+#    message.cpp \
+#    msgcmp.cpp \
+#    msgid.cpp \
+#    nntp.cpp \
+#    param.cpp \
+#    pop.cpp \
+#    dwstring.cpp \
+#    text.cpp \
+#    token.cpp \
+#    uuencode.cpp \
+#    binhex.cpp
+#
+#libmimelib_la_LDFLAGS = -L$(kde_libraries) -lkdefakes -version-info 1:1 -no-undefined
+#
+#check_PROGRAMS = test_boyermor
+#
+#TESTS=$(check_PROGRAMS)
+#
+#test_boyermor_SOURCES = test_boyermor.cpp
+#test_boyermor_LDADD = libmimelib.la $(LIBSOCKET)
