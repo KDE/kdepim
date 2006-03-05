@@ -16,11 +16,11 @@ set(ktnef_SRCS
 
 kde4_automoc(${ktnef_SRCS})
 
-kde4_add_ui_files(ktnef_SRCS attachpropertydialogbase.ui )
+kde4_add_ui3_files(ktnef_SRCS attachpropertydialogbase.ui )
 
 kde4_add_executable(ktnef ${ktnef_SRCS})
 
-target_link_libraries(ktnef  ${QT_AND_KDECORE_LIBS} ktnef )
+target_link_libraries(ktnef  ${LIB_KDEUI} ktnef )
 
 install_targets(/bin ktnef )
 
