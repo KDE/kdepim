@@ -3728,6 +3728,12 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     onItem->setItemEnabled( 3, false );
     myMyContentsHeight = 0;
     _showItemAddPopupMenu = false;
+
+    QObject* scrollViewTimer = child( "scrollview scrollbar timer", "QTimer", false );
+    Q_ASSERT( scrollViewTimer );
+    if ( scrollViewTimer )
+        disconnect( scrollViewTimer, SIGNAL(timeout()), this, SLOT(updateScrollBars() ) );
+
     mScrollbarTimer = new QTimer( this ); 
     connect( mScrollbarTimer, SIGNAL( timeout() ),
              this, SLOT( updateMyScrollBars() ) );
