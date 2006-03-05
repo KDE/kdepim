@@ -80,8 +80,8 @@ public:
     void moveToLast( QWidget * );
 
     void refresh() { recalc( TRUE ); }
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+    virtual QSize sizeHint() const;
+    virtual QSize minimumSizeHint() const;
 
     QValueList<int> sizes() const;
     void setSizes( QValueList<int> );

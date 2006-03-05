@@ -322,7 +322,7 @@ public:
     void setUserHorizonChangeEnabled( bool b );
     bool userHorizonChangeEnabled() const;
 
-    QSize sizeHint();
+    virtual QSize sizeHint() const;
     KDGanttViewItem* getItemByName( const QString& name ) const;
     KDGanttViewItem* getItemByUid( const QString& name, KDGanttViewItem* parentItem = 0 ) const;
     QDateTime getDateTimeForCoordX(int coordX, bool global = true ) const;
