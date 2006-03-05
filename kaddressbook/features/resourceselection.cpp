@@ -294,11 +294,6 @@ void ResourceSelection::updateView()
     return;
 
   mListView->clear();
-  disconnect( this, SLOT( slotSubresourceAdded( KPIM::ResourceABC *, const QString &,
-                                                const QString & ) ) );
-  disconnect( this, SLOT( slotSubresourceRemoved( KPIM::ResourceABC *, const QString &,
-                                                  const QString & ) ) );
-  //disconnect( this, SLOT( closeResource( KPIM::ResourceABC * ) ) );
 
   KRES::Manager<KABC::Resource>::Iterator it;
   for ( it = mManager->begin(); it != mManager->end(); ++it ) {
@@ -306,6 +301,7 @@ void ResourceSelection::updateView()
     new ResourceItem( mListView, *it );
     KPIM::ResourceABC* resource = dynamic_cast<KPIM::ResourceABC *>( *it );
     if ( resource ) {
+      disconnect( resource, 0, this, 0 );
       connect( resource, SIGNAL( signalSubresourceAdded( KPIM::ResourceABC *,
                                                          const QString &, const QString & ) ),
                SLOT( slotSubresourceAdded( KPIM::ResourceABC *,
