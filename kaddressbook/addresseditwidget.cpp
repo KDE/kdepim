@@ -45,6 +45,7 @@
 #include <QVBoxLayout>
 
 #include <kacceleratormanager.h>
+#include <kactivelabel.h>
 #include <kapplication.h>
 #include <kbuttonbox.h>
 #include <kcombobox.h>
@@ -98,7 +99,7 @@ AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
            SLOT( updateAddressEdit() ) );
   layout->addWidget( mTypeCombo );
 
-  mAddressField = new QLabel( this );
+  mAddressField = new KActiveLabel( this );
   mAddressField->setFrameStyle( QFrame::Panel | QFrame::Sunken );
   mAddressField->setMinimumHeight( 20 );
   mAddressField->setAlignment( Qt::AlignTop );
