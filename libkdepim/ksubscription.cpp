@@ -784,6 +784,7 @@ void KSubscription::slotUpdateStatusLabel()
 void KSubscription::slotLoadFolders()
 {
   enableButton(User1, false);
+  mLoading = true;
   subView->clear();
   unsubView->clear();
   groupView->clear();
