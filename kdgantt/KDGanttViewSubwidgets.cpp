@@ -3284,7 +3284,7 @@ QSize KDLegendWidget::legendSize()
 
 QSize KDLegendWidget::legendSizeHint()
 {
-    //qApp->processEvents();
+    QApplication::sendPostedEvents( 0, QEvent::LayoutHint );
     return QSize( myLegend->sizeHint().width(), myLegend->sizeHint().height()+scroll->horizontalScrollBar()->height());
 }
 
@@ -3859,12 +3859,21 @@ void KDGanttCanvasView::resetScrollBars()
 }
 void KDGanttCanvasView::setMyContentsHeight( int hei )
 {
-    verticalScrollBar()->setUpdatesEnabled( false );
-    mySignalSender->closingBlocked = true;
     //qDebug("setMyContentsHeight %d %d ", hei,  myMyContentsHeight);
     if ( hei > 0 )
         myMyContentsHeight = hei;
-    mScrollbarTimer->start( 0, true );
+    verticalScrollBar()->setUpdatesEnabled( true ); // set false in resizeEvent()
+    if ( viewport()->height() <= myMyContentsHeight )
+        verticalScrollBar()->setRange( 0, myMyContentsHeight- viewport()->height()+1);
+    else
+        verticalScrollBar()->setRange( 0,0 );
+    // testing for unmatching ScrollBar values of timeheader and timetable
+    // may happen after external resizing
+    if ( horizontalScrollBar()->value() != mySignalSender->myTimeHeaderScroll->horizontalScrollBar()->value() ) {
+        // I am the Boss!
+        mySignalSender->myTimeHeaderScroll->horizontalScrollBar()->setValue(horizontalScrollBar()->value()  );
+
+    }
 
 }
 void  KDGanttCanvasView::cutItem( KDGanttViewItem* item )
