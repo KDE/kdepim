@@ -5,11 +5,11 @@ add_subdirectory( kwatchgnupg )
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
-
+set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
 ########### next target ###############
 
-set(kleopatra_SRCS 
-   customactions.cpp 
+set(kleopatra_SRCS ${libconf_SRCS}
+	customactions.cpp 
    aboutdata.cpp 
    main.cpp 
    certmanager.cpp 
@@ -25,7 +25,7 @@ kde4_add_ui3_files(kleopatra_SRCS certificatewizard.ui certificateinfowidget.ui 
 
 kde4_add_executable(kleopatra ${kleopatra_SRCS})
 
-target_link_libraries(kleopatra  ${QT_AND_KDECORE_LIBS} conf kleopatra kutils )
+target_link_libraries(kleopatra  ${QT_AND_KDECORE_LIBS} kleopatra kutils )
 
 install_targets(/bin kleopatra )
 
