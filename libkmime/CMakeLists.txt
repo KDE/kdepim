@@ -1,11 +1,11 @@
 kde4_header()
 
-include_directories( ${CMAKE_SOURCE_DIR}/libemailfunctions ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories( ${CMAKE_SOURCE_DIR}/libkdepim/ ${CMAKE_SOURCE_DIR}/libemailfunctions ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 
 ########### next target ###############
 
-set(kmime_LIB_SRCS 
+set(kmime_LIB_SRCS ${libemailfunctions_SRCS}
    kmime_charfreq.cpp 
    kmime_util.cpp 
    kmime_mdn.cpp 
@@ -27,7 +27,7 @@ kde4_automoc(${kmime_LIB_SRCS})
 
 kde4_add_library(kmime SHARED ${kmime_LIB_SRCS})
 
-target_link_libraries(kmime  ${QT_AND_KDECORE_LIBS} emailfunctions )
+target_link_libraries(kmime  ${LIB_KIO} )
 
 set_target_properties(kmime PROPERTIES VERSION 2.2.0 SOVERSION 2 )
 install_targets(${LIB_INSTALL_DIR} kmime )

@@ -37,6 +37,15 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim ${KDE4_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
 )
 
+set(libemailfunctions_SRCS 
+	${CMAKE_SOURCE_DIR}/libemailfunctions/email.cpp 
+	${CMAKE_SOURCE_DIR}/libemailfunctions/idmapper.cpp 
+	${CMAKE_SOURCE_DIR}/libemailfunctions/kasciistricmp.cpp
+	${CMAKE_SOURCE_DIR}/libemailfunctions/kasciistringtools.cpp
+	${CMAKE_SOURCE_DIR}/libemailfunctions/networkstatus.cpp
+	)
+
+
 add_subdirectory(libakonadi)
 add_subdirectory(libemailfunctions)
 MESSAGE(STATUS "readd libkcal")
@@ -46,12 +55,15 @@ add_subdirectory(libkholidays)
 add_subdirectory(libkleo)
 add_subdirectory(libkmime)
 add_subdirectory(libkpgp)
+add_subdirectory(kleopatra)
 add_subdirectory(libkpimidentities)
 add_subdirectory(libksieve)
+add_subdirectory(mimelib)
 add_subdirectory(akregator)
 add_subdirectory(doc)
 #add_subdirectory(gpgmepp)
 add_subdirectory(indexlib)
+add_subdirectory(knode)
 add_subdirectory(kabc)
 add_subdirectory(kaddressbook)
 add_subdirectory(kalarm)
@@ -60,10 +72,8 @@ add_subdirectory(kdgantt)
 add_subdirectory(kfile-plugins)
 add_subdirectory(kgantt)
 add_subdirectory(kioslave)
-add_subdirectory(kleopatra)
 add_subdirectory(kmail)
 add_subdirectory(kmailcvt)
-add_subdirectory(knode)
 add_subdirectory(knotes)
 add_subdirectory(kode)
 add_subdirectory(konsolekalendar)
@@ -72,7 +82,6 @@ add_subdirectory(korganizer)
 add_subdirectory(korn)
 add_subdirectory(kresources)
 add_subdirectory(ktnef)
-add_subdirectory(mimelib)
 add_subdirectory(networkstatus)
 add_subdirectory(plugins)
 add_subdirectory(qgpgme)

@@ -30,7 +30,7 @@ set(kmailcvt_SRCS
 
 kde4_automoc(${kmailcvt_SRCS})
 
-kde4_add_ui_files(kmailcvt_SRCS kimportpagedlg.ui kselfilterpagedlg.ui )
+kde4_add_ui3_files(kmailcvt_SRCS kimportpagedlg.ui kselfilterpagedlg.ui )
 
 kde4_add_executable(kmailcvt ${kmailcvt_SRCS})
 
