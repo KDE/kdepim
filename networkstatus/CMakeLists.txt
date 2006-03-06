@@ -5,7 +5,9 @@ include_directories( ${CMAKE_SOURCE_DIR}/libkdepim ${KDE4_INCLUDE_DIR} ${QT_INCL
 
 ########### next target ###############
 
-set(kded_networkstatus_PART_SRCS networkstatus.cpp network.cpp )
+set(libnetworkstatus_SRCS networkstatuscommon.cpp )
+
+set(kded_networkstatus_PART_SRCS networkstatus.cpp network.cpp ${libnetworkstatus_SRCS})
 
 kde4_automoc(${kded_networkstatus_PART_SRCS})
 
@@ -15,7 +17,7 @@ kde4_add_plugin(kded_networkstatus ${kded_networkstatus_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kded_networkstatus )
 
-target_link_libraries(kded_networkstatus  ${QT_AND_KDECORE_LIBS} kio networkstatus )
+target_link_libraries(kded_networkstatus  ${LIB_KIO}  )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kded_networkstatus )
 
@@ -28,7 +30,7 @@ install_targets(${LIB_INSTALL_DIR}/kde4 kded_networkstatus )
 
 ########### next target ###############
 
-set(networkstatustestservice_SRCS testservice.cpp )
+set(networkstatustestservice_SRCS testservice.cpp ${libnetworkstatus_SRCS} )
 
 kde4_automoc(${networkstatustestservice_SRCS})
 
@@ -38,7 +40,7 @@ kde4_add_dcop_stubs(networkstatustestservice_SRCS serviceiface.h )
 
 kde4_add_executable(networkstatustestservice ${networkstatustestservice_SRCS})
 
-target_link_libraries(networkstatustestservice  ${QT_AND_KDECORE_LIBS} networkstatus )
+target_link_libraries(networkstatustestservice  ${LIB_KIO}  )
 
 install_targets(/bin networkstatustestservice )
 
