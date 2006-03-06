@@ -1080,6 +1080,12 @@ void KDTimeHeaderWidget::checkWidth( int wid )
          ( myMinimumWidth > mySizeHint &&
            myMinimumWidth < (width() - myGridMinorWidth  )) )
         computeTicks();
+    
+    // Update (horizontal) scrollbar, 
+    // We probably come from an external resize and then we must
+    // calculate on basis of myCanvasView.
+    // (NOTE: we have disconnected the auto QScrollView scrollbar update)
+    myGanttView->myCanvasView->updateScrollBars();
 }
 
 bool KDTimeHeaderWidget::registerStartTime()
@@ -3890,6 +3896,16 @@ void KDGanttCanvasView::setMyContentsHeight( int hei )
     }
 
 }
+
+// Call after *internal* resizing (like addTickRight())
+// Then the new scrollbar maxValue is in myTimeHeader.
+void KDGanttCanvasView::updateHorScrollBar() {
+    //qDebug("horizontalScrollBar max=%d, myTimeHeaderScroll=%d", horizontalScrollBar()->maxValue(), mySignalSender->myTimeHeaderScroll->horizontalScrollBar()->value());
+    
+    horizontalScrollBar()->setRange(mySignalSender->myTimeHeaderScroll->horizontalScrollBar()->minValue(), mySignalSender->myTimeHeaderScroll->horizontalScrollBar()->maxValue());
+    
+}
+
 void  KDGanttCanvasView::cutItem( KDGanttViewItem* item )
 {
     lastClickedItem = item;

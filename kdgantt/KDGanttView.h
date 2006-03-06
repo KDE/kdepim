@@ -515,6 +515,7 @@ private slots:
     void slotHeaderSizeChanged();
     void addTickRight();
     void addTickLeft();
+    void enableAdding( int );
     void slot_lvDropped(QDropEvent* e, KDGanttViewItem* droppedItem, KDGanttViewItem* itemBelowMouse );
 private:
     struct legendItem {
@@ -572,6 +573,7 @@ private:
     bool _displayEmptyTasksAsLine;
     bool _showLegendButton;
     bool _showHeader;
+    bool _enableAdding;
     bool fCenterTimeLineAfterShow;
     bool fDragEnabled;
     bool fDropEnabled;

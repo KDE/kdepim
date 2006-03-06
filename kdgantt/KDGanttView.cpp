@@ -4830,15 +4830,14 @@ int  KDGanttView::addTickcountForTimeline() const
 
 void KDGanttView::addTickRight()
 {
-    if (!mUserHorizonChangeEnabled) {
-        emit addOneTickRight();
-        return;
-    }
-    if ( myCanvasView->horizontalScrollBar()->value() ==  myCanvasView->horizontalScrollBar()->maxValue()) {
-        myTimeHeader->addTickRight( mAddTickcountForTimeline );
-    }
+  if ( _enableAdding && myCanvasView->horizontalScrollBar()->value() ==  myCanvasView->horizontalScrollBar()->maxValue()) {
+    //myCanvasView->horizontalScrollBar()->blockSignals( true );
+    myTimeHeader->addTickRight();
+    //myCanvasView->horizontalScrollBar()->blockSignals( false );
+    myCanvasView->updateHorScrollBar();
+    setTimelineToEnd();
+  }
 }
-
 
 void KDGanttView::addTickLeft()
 {
@@ -4851,6 +4850,11 @@ void KDGanttView::addTickLeft()
     }
 }
 
+
+void KDGanttView::enableAdding( int val )
+{
+  _enableAdding = ( val == 0 || val == myCanvasView->horizontalScrollBar()->maxValue());
+}
 
 
 /*!
