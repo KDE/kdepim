@@ -5,7 +5,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/libkmime ${CMAKE_SOURCE_DIR}/libemailfu
 
 ########### next target ###############
 
-set(kio_imap4_PART_SRCS 
+set(kio_imap4_PART_SRCS ${libemailfunctions_SRCS} 
    imapcommand.cc 
    imaplist.cc 
    mailaddress.cc 
@@ -24,7 +24,7 @@ kde4_add_plugin(kio_imap4 ${kio_imap4_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_imap4 )
 
-target_link_libraries(kio_imap4  ${QT_AND_KDECORE_LIBS} kio kmime emailfunctions )
+target_link_libraries(kio_imap4  ${LIB_KDE3SUPPORT}  kmime  )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kio_imap4 )
 
