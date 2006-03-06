@@ -319,6 +319,9 @@ public:
 
     void setNoInformationBrush( const QBrush& brush );
     QBrush noInformationBrush() const;
+
+    int getCoordX( QDateTime dt );
+
     int minimumHeight();
     void computeTaskLinksForItem( KDGanttViewItem * );
 
@@ -547,6 +550,9 @@ protected:
     QPopupMenu* onItem;
     bool _showItemAddPopupMenu;
     int myMyContentsHeight;
+    int getItemArea(KDGanttViewItem *item, int x);
+    int getLinkType(int from, int to);
+
 signals:
   void heightResized( int );
   void widthResized( int );
@@ -563,6 +569,7 @@ private slots:
   void pasteItem( int );
   void newRootItem( int );
   void newChildItem( int );
+  void slotScrollTimer();
   void myUpdateScrollBars();
 
 private:
@@ -574,6 +581,7 @@ private:
     QTimer * mScrollbarTimer;
   KDCanvasToolTip* myToolTip;
     QTimer scrollBarTimer;
+    QPoint mousePos;
 };
 
 #if QT_VERSION >= 0x040000

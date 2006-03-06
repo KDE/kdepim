@@ -48,6 +48,8 @@ class KDCanvasLine;
 class KDGanttViewTaskLink
 {
 public:
+    enum LinkType { None, FinishStart, StartStart, FinishFinish, StartFinish };
+
     KDGanttViewTaskLink( QPtrList<KDGanttViewItem> from,
                          QPtrList<KDGanttViewItem> to );
     KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,

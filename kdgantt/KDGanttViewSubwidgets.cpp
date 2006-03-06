@@ -37,6 +37,9 @@
 #include "KDGanttViewEventItem.h"
 #include "KDGanttViewSummaryItem.h"
 #include "KDGanttViewTaskItem.h"
+#ifndef KDGANTT_MASTER_CVS
+#include "KDGanttViewSubwidgets.moc"
+#endif
 
 #include <qlabel.h>
 #include <qpainter.h>
@@ -4421,5 +4424,61 @@ KDGanttViewTaskLink*  KDGanttCanvasView::getLink(QCanvasItem* it)
     return 0;
 }
 
+void KDGanttCanvasView::slotScrollTimer() {
+    int mx = mousePos.x();
+    int my = mousePos.y();
+    int dx = 0;
+    int dy = 0;
+    if (mx < 0)
+        dx = -5;
+    else if (mx > visibleWidth())
+        dx = 5;
+    if (my < 0)
+        dy = -5;
+    else if (my > visibleHeight())
+        dy = qMin(5, verticalScrollBar()->maxValue()-verticalScrollBar()->value()
+);
 
-#include "KDGanttViewSubwidgets.moc"
+    if (dx != 0 || dy != 0)
+        scrollBy(dx, dy);
+}
+
+int KDGanttCanvasView::getItemArea(KDGanttViewItem *item, int x) {
+    // area can be: no area = 0, Start = 1, Finish = 2
+    // TODO: middle (move, dnd), front, back (resize)
+    KDTimeTableWidget *tt = dynamic_cast<KDTimeTableWidget *>(canvas());
+    if (!tt) {
+        qWarning("Cannot cast canvas to KDTimeTableWidget");
+        return 0;
+    }
+    int area = 0;
+    int start = tt->getCoordX(item->startTime());
+    int end = start;
+    if (item->type() == KDGanttViewItem::Event) {
+        x > start ? area = 2 : area = 1;
+    } else {
+        end = tt->getCoordX(item->endTime());
+        if ((end - start)/2 > (x - start))
+            area = 1;
+        else
+            area = 2;
+    }
+    return area;
+}
+
+int KDGanttCanvasView::getLinkType(int from, int to) {
+    // from, to should be Start = 1 or Finish = 2
+    if ((from == 1) && (to == 1)) {
+        return KDGanttViewTaskLink::StartStart;
+    }
+    if ((from == 1) && (to == 2)) {
+        return KDGanttViewTaskLink::StartFinish;
+    }
+    if ((from == 2) && (to == 1)) {
+        return KDGanttViewTaskLink::FinishStart;
+    }
+    if ((from == 2) && (to == 2)) {
+        return KDGanttViewTaskLink::FinishFinish;
+    }
+    return KDGanttViewTaskLink::None;
+}
