@@ -16,7 +16,7 @@ kde4_automoc(${kabinterfaces_LIB_SRCS})
 
 kde4_add_library(kabinterfaces SHARED ${kabinterfaces_LIB_SRCS})
 
-target_link_libraries(kabinterfaces  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kabinterfaces  ${LIB_KIO} kabc)
 
 set_target_properties(kabinterfaces PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kabinterfaces )
