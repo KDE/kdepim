@@ -562,6 +562,7 @@ private slots:
   void pasteItem( int );
   void newRootItem( int );
   void newChildItem( int );
+  void myUpdateScrollBars();
 
 private:
     QTime mButtonDownTime;
@@ -571,6 +572,7 @@ private:
     ScrollBarMode myScrollBarMode;
     QTimer * mScrollbarTimer;
   KDCanvasToolTip* myToolTip;
+    QTimer scrollBarTimer;
 };
 
 #if QT_VERSION >= 0x040000

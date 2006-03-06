@@ -3729,11 +3729,14 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     myMyContentsHeight = 0;
     _showItemAddPopupMenu = false;
 
-    QObject* scrollViewTimer = child( "scrollview scrollbar timer", "QTimer", false );
+     QObject *scrollViewTimer = child( "scrollview scrollbar timer", "QTimer", false );
     Q_ASSERT( scrollViewTimer );
-    if ( scrollViewTimer )
+    if ( scrollViewTimer ) {
         disconnect( scrollViewTimer, SIGNAL(timeout()), this, SLOT(updateScrollBars() ) );
-
+    }
+    // If they needed a scrollbar timer in scrollview...
+    connect( &scrollBarTimer, SIGNAL(timeout()), this, SLOT(myUpdateScrollBars() ) );
+ 
     mScrollbarTimer = new QTimer( this ); 
     connect( mScrollbarTimer, SIGNAL( timeout() ),
              this, SLOT( updateMyScrollBars() ) );
@@ -3778,8 +3781,9 @@ void KDGanttCanvasView::resizeEvent ( QResizeEvent * e )
     updateScrollBars();
     emit heightResized( viewport()->height());
     emit widthResized( viewport()->width() + verticalScrollBar()->width() );
-    setMyContentsHeight( 0 );
+    //setMyContentsHeight( 0 ); //via timer
     //QScrollView::blockSignals( false );
+    scrollBarTimer.start(0, true);
 }
 void KDGanttCanvasView::setMyVScrollBarMode ( QScrollView::ScrollBarMode m )
 {
@@ -3862,6 +3866,10 @@ void KDGanttCanvasView::resetScrollBars()
         QTimer::singleShot( 0, this, SLOT ( updateMyScrollBarsLater() ) );
     }
     mySignalSender->closingBlocked = false;
+}
+void KDGanttCanvasView::myUpdateScrollBars()
+{
+    setMyContentsHeight( 0 );
 }
 void KDGanttCanvasView::setMyContentsHeight( int hei )
 {
