@@ -1,15 +1,66 @@
 kde4_header()
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/icalderivedparameter.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/icalderivedparameter.h )
-
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/icalderivedproperty.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/icalderivedproperty.h )
-
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/icalderivedvalue.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/icalderivedvalue.h )
-
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/icalversion.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/icalversion.h )
-
 include_directories( ${CMAKE_SOURCE_DIR}/libkcal/libical/src ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
+
+set(PROPERTYDEPS 
+	${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedproperties.pl 
+	${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/properties.csv	
+	${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv
+	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h.in 
+	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c.in 
+)
+
+add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h COMMAND ${PERL_EXECUTABLE} ARGS -I${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedproperties.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h.in -h ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/parameters.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h   DEPENDS  ${PROPERTYDEPS} )
+
+
+add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c COMMAND ${PERL_EXECUTABLE} ARGS -I${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedproperties.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c.in -c ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/parameters.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c   DEPENDS  ${PROPERTYDEPS} ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h )
+
+
+macro_additional_clean_files( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h )
+
+
+set(PARAMETERDEPS 
+	${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedproperties.pl 
+	${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/parameters.csv 
+	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c.in
+	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h.in
+)
+
+add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h COMMAND ${PERL_EXECUTABLE} ARGS -I${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h.in -h ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/parameters.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h   DEPENDS  ${PARAMETERDEPS} )
+
+add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c COMMAND ${PERL_EXECUTABLE} ARGS -I${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c.in -c ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/parameters.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c   DEPENDS  ${PARAMETERDEPS} ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h )
+
+macro_additional_clean_files( 
+	{CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c 
+	{CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h 
+)
+
+
+set(RESTRICTIONDEPS 
+	${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkrestrictiontable.pl
+	${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/restrictions.csv
+	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.c.in
+)
+
+add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.c COMMAND ${PERL_EXECUTABLE} ARGS -I${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkrestrictiontable.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.c.in -h ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/restrictions.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.c   DEPENDS  ${RESTRICTIONDEPS} )
+
+
+macro_additional_clean_files( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.c)
+
+set(VALUEDEPS
+	${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedvalues.pl
+	${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv
+	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.c.in
+	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h.in
+)
+
+add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h COMMAND ${PERL_EXECUTABLE} ARGS -I${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedvalues.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h.in -h ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h   DEPENDS  ${VALUEDEPS} )
+
+
+add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.c COMMAND ${PERL_EXECUTABLE} ARGS -I${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedvalues.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.c.in -c ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.c   DEPENDS  ${VALUEDEPS} ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h )
+
+macro_additional_clean_files(${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.c )
 
 ########### next target ###############
 
