@@ -183,7 +183,7 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
   case attBODY:
   case attMSGID:
     // QCString
-    cs = property->value().toString().local8Bit();
+    cs = property->value().toString().toLocal8Bit();
     addToChecksum( cs, checksum );
 
     stream << (quint8)LVL_MESSAGE;
@@ -199,8 +199,8 @@ bool KTNEFWriter::writeProperty( QDataStream &stream, int &bytes, int tag) {
     list = property->value().toList();
     assert( list.count() == 2 );
 
-    cs = list[0].toString().local8Bit();                       // Name
-    cs2 = (QString("smtp:") + list[1].toString()).local8Bit(); // Email address
+    cs = list[0].toString().toLocal8Bit();                       // Name
+    cs2 = (QString("smtp:") + list[1].toString()).toLocal8Bit(); // Email address
     i = 18 + cs.length() + cs2.length(); // 2 * sizof(TRP) + strings + 2x'\0'
 
     stream << (quint8)LVL_MESSAGE;
