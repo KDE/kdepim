@@ -27,9 +27,9 @@ set(PARAMETERDEPS
 	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h.in
 )
 
-add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h COMMAND ${PERL_EXECUTABLE} ARGS -I${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h.in -h ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/parameters.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h   DEPENDS  ${PARAMETERDEPS} )
+add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h COMMAND ${PERL_EXECUTABLE} ARGS -I${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h.in -h ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/parameters.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h   DEPENDS  ${PARAMETERDEPS} )
 
-add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c COMMAND ${PERL_EXECUTABLE} ARGS -I${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c.in -c ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/parameters.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c   DEPENDS  ${PARAMETERDEPS} ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h )
+add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c COMMAND ${PERL_EXECUTABLE} ARGS -I${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c.in -c ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/parameters.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c   DEPENDS  ${PARAMETERDEPS} ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h )
 
 macro_additional_clean_files( 
 	{CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c 
