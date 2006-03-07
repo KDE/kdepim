@@ -4,12 +4,47 @@ add_subdirectory( libical )
 add_subdirectory( versit ) 
 add_subdirectory( tests ) 
 
-include_directories( ${CMAKE_SOURCE_DIR}/ ${CMAKE_SOURCE_DIR}/ktnef ${CMAKE_SOURCE_DIR}/libemailfunctions ${CMAKE_SOURCE_DIR}/libkmime ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories( ${CMAKE_SOURCE_DIR}/libkcal/versit/  ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ ${CMAKE_SOURCE_DIR}/ ${CMAKE_SOURCE_DIR}/ktnef ${CMAKE_SOURCE_DIR}/libemailfunctions ${CMAKE_SOURCE_DIR}/libkmime ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+
+set(libversit_SRCS 
+	${CMAKE_SOURCE_DIR}/libkcal/versit/vcc.c 
+	${CMAKE_SOURCE_DIR}/libkcal/versit/vobject.c 
+)
+
+set(libical_SRCS
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/caldate.c       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalarray.c     
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalattach.c        
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c  
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrecur.c     
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.c   
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalcomponent.c     
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalenums.c     
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalerror.c     
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalmemory.c        
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalmime.c      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalparameter.c    
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalparser.c        
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c   
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalproperty.c      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltime.c      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalduration.c      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalperiod.c        
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltimezone.c      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltypes.c     
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalvalue.c     
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.c  
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/pvl.c           
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/sspm.c          
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/vsnprintf.c     
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icallangbind.c
+)
+
 
 
 ########### next target ###############
 
-set(kcal_LIB_SRCS 
+set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS}
    incidencebase.cpp 
    incidence.cpp 
    journal.cpp 
@@ -63,7 +98,7 @@ kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
 kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 
-target_link_libraries(kcal  ${QT_AND_KDECORE_LIBS} versit kio ical icalss ktnef emailfunctions kmime kresources kabc kde3support )
+target_link_libraries(kcal  ${LIB_KIO} icalss ktnef emailfunctions kmime kresources kabc kde3support )
 
 set_target_properties(kcal PROPERTIES VERSION 2.0.0 SOVERSION 2 )
 install_targets(${LIB_INSTALL_DIR} kcal )
