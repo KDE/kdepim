@@ -116,8 +116,8 @@ QString KNDisplayedHeader::translatedName()
   if (t_ranslateName) {
     // major hack alert !!!
     if (!n_ame.isEmpty()) {
-      if (i18n("collection of article headers",n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
-        return i18n("collection of article headers",n_ame.local8Bit());
+      if (i18n("collection of article headers",n_ame.toLocal8Bit())!=n_ame.toLocal8Bit().data())    // try to guess if this english or not
+        return i18n("collection of article headers",n_ame.toLocal8Bit());
       else
         return n_ame;
     } else

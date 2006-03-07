@@ -85,7 +85,7 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
 
   const QStringList components = config->componentList();
   for ( QStringList::const_iterator it = components.begin(); it != components.end(); ++it ) {
-    //kDebug(5150) << "Component " << (*it).local8Bit() << ":" << endl;
+    //kDebug(5150) << "Component " << (*it).toLocal8Bit() << ":" << endl;
     Kleo::CryptoConfigComponent* comp = config->component( *it );
     Q_ASSERT( comp );
     if ( comp->groupList().empty() )
@@ -94,7 +94,7 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
       vbox = addVBoxPage( comp->description(), QString(), loadIcon( comp->iconName() ) );
     }
     CryptoConfigComponentGUI* compGUI =
-      new CryptoConfigComponentGUI( this, comp, vbox, (*it).local8Bit() );
+      new CryptoConfigComponentGUI( this, comp, vbox, (*it).toLocal8Bit() );
     // KJanusWidget doesn't seem to have iterators, so we store a copy...
     mComponentGUIs.append( compGUI );
   }

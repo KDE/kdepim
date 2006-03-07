@@ -64,7 +64,7 @@ void KNode::Identity::loadConfig(KConfigBase *c)
   r_eplyTo=c->readEntry("Reply-To");
   m_ailCopiesTo=c->readEntry("Mail-Copies-To");
   o_rga=c->readEntry("Org");
-  s_igningKey = c->readEntry("SigningKey").local8Bit();
+  s_igningKey = c->readEntry("SigningKey").toLocal8Bit();
   u_seSigFile=c->readEntry("UseSigFile",false);
   u_seSigGenerator=c->readEntry("UseSigGenerator",false);
   s_igPath=c->readPathEntry("sigFile");

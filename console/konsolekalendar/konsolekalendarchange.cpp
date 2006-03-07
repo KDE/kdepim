@@ -62,24 +62,24 @@ bool KonsoleKalendarChange::changeEvent()
   Event *event = m_variables->getCalendar()->event( m_variables->getUID() );
   if ( event ) {
     if ( m_variables->isDryRun() ) {
-      cout << i18n( "Change Event <Dry Run>:" ).local8Bit().data()
+      cout << i18n( "Change Event <Dry Run>:" ).toLocal8Bit().data()
            << endl;
       printSpecs( event );
 
-      cout << i18n( "To Event <Dry Run>:" ).local8Bit().data()
+      cout << i18n( "To Event <Dry Run>:" ).toLocal8Bit().data()
            << endl;
       printSpecs();
     } else {
       kDebug() << "konsolekalendarchange.cpp:changeEvent() : "
-                << m_variables->getUID().local8Bit().data()
+                << m_variables->getUID().toLocal8Bit().data()
                 << endl;
 
       if ( m_variables->isVerbose() ) {
-        cout << i18n( "Change Event <Verbose>:" ).local8Bit().data()
+        cout << i18n( "Change Event <Verbose>:" ).toLocal8Bit().data()
              << endl;
         printSpecs( event );
 
-        cout << i18n( "To Event <Dry Run>:" ).local8Bit().data()
+        cout << i18n( "To Event <Dry Run>:" ).toLocal8Bit().data()
              << endl;
         printSpecs();
       }
@@ -108,14 +108,14 @@ bool KonsoleKalendarChange::changeEvent()
 
       if ( m_variables->getCalendar()->addEvent( event ) ) {
         cout << i18n( "Success: \"%1\" changed" )
-          .arg( event->summary() ).local8Bit().data()
+          .arg( event->summary() ).toLocal8Bit().data()
              << endl;
 
         m_variables->getCalendar()->save();
         status = true;
       } else {
         cout << i18n( "Failure: \"%1\" not changed" )
-          .arg( event->summary() ).local8Bit().data()
+          .arg( event->summary() ).toLocal8Bit().data()
              << endl;
       }
     }
@@ -128,53 +128,53 @@ bool KonsoleKalendarChange::changeEvent()
 void KonsoleKalendarChange::printSpecs( Event *event )
 {
   cout << i18n( "  UID:   %1" ).
-    arg( event->uid() ).local8Bit().data()
+    arg( event->uid() ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  What:  %1" ).
-    arg( event->summary() ).local8Bit().data()
+    arg( event->summary() ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  Begin: %1" ).
-    arg( event->dtStart().toString( Qt::TextDate ) ).local8Bit().data()
+    arg( event->dtStart().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  End:   %1" ).
-    arg( event->dtEnd().toString( Qt::TextDate ) ).local8Bit().data()
+    arg( event->dtEnd().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  Desc:  %1" ).
-    arg( event->description() ).local8Bit().data()
+    arg( event->description() ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  Location:  %1" ).
-    arg( event->location() ).local8Bit().data()
+    arg( event->location() ).toLocal8Bit().data()
        << endl;
 }
 
 void KonsoleKalendarChange::printSpecs()
 {
   cout << i18n( "  UID:   %1" ).
-    arg( m_variables->getUID() ).local8Bit().data()
+    arg( m_variables->getUID() ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  What:  %1" ).
-    arg( m_variables->getSummary() ).local8Bit().data()
+    arg( m_variables->getSummary() ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  Begin: %1" ).
-    arg( m_variables->getStartDateTime().toString( Qt::TextDate ) ).local8Bit().data()
+    arg( m_variables->getStartDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  End:   %1" ).
-    arg( m_variables->getEndDateTime().toString( Qt::TextDate ) ).local8Bit().data()
+    arg( m_variables->getEndDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  Desc:  %1" ).
-    arg( m_variables->getDescription() ).local8Bit().data()
+    arg( m_variables->getDescription() ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  Location:  %1" ).
-    arg( m_variables->getLocation() ).local8Bit().data()
+    arg( m_variables->getLocation() ).toLocal8Bit().data()
        << endl;
 }

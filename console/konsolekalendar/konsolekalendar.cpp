@@ -83,17 +83,17 @@ bool KonsoleKalendar::createCalendar()
 
   if ( m_variables->isDryRun() ) {
     cout << i18n( "Create Calendar <Dry Run>: %1" ).
-      arg( m_variables->getCalendarFile() ).local8Bit().data()
+      arg( m_variables->getCalendarFile() ).toLocal8Bit().data()
          << endl;
   } else {
     kDebug() << "konsolekalendar.cpp::createCalendar() | "
               << "Creating calendar file: "
-              << m_variables->getCalendarFile().local8Bit().data()
+              << m_variables->getCalendarFile().toLocal8Bit().data()
               << endl;
 
     if ( m_variables->isVerbose() ) {
       cout << i18n( "Create Calendar <Verbose>: %1" ).
-        arg( m_variables->getCalendarFile() ).local8Bit().data()
+        arg( m_variables->getCalendarFile() ).toLocal8Bit().data()
            << endl;
     }
 
@@ -113,7 +113,7 @@ bool KonsoleKalendar::showInstance()
   Event *event;
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n( "View Events <Dry Run>:" ).local8Bit().data()
+    cout << i18n( "View Events <Dry Run>:" ).toLocal8Bit().data()
          << endl;
     printSpecs();
   } else {
@@ -141,7 +141,7 @@ bool KonsoleKalendar::showInstance()
                 << endl;
 
       if ( m_variables->isVerbose() ) {
-	cout << i18n( "View Event <Verbose>:" ).local8Bit().data()
+	cout << i18n( "View Event <Verbose>:" ).toLocal8Bit().data()
              << endl;
 	printSpecs();
       }
@@ -244,7 +244,7 @@ bool KonsoleKalendar::showInstance()
 	  kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "HTML view events by uid list" << endl;
 	  cout << i18n("Sorry, export to HTML by UID is not supported yet")
-            .local8Bit().data() << endl;
+            .toLocal8Bit().data() << endl;
 	  return( false );
 	} else {
 	  kDebug() << "konsolekalendar.cpp::showInstance() | "
@@ -434,27 +434,27 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
 void KonsoleKalendar::printSpecs()
 {
   cout << i18n( "  What:  %1" ).
-    arg( m_variables->getSummary() ).local8Bit().data()
+    arg( m_variables->getSummary() ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  Begin: %1" ).
-    arg( m_variables->getStartDateTime().toString( Qt::TextDate ) ).local8Bit().data()
+    arg( m_variables->getStartDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  End:   %1" ).
-    arg( m_variables->getEndDateTime().toString( Qt::TextDate ) ).local8Bit().data()
+    arg( m_variables->getEndDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   if ( m_variables->getFloating() == true ) {
-    cout << i18n( "  No Time Associated with Event" ).local8Bit().data()
+    cout << i18n( "  No Time Associated with Event" ).toLocal8Bit().data()
          << endl;
   }
 
   cout << i18n( "  Desc:  %1" ).
-    arg( m_variables->getDescription() ).local8Bit().data()
+    arg( m_variables->getDescription() ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  Location:  %1" ).
-    arg( m_variables->getLocation() ).local8Bit().data()
+    arg( m_variables->getLocation() ).toLocal8Bit().data()
        << endl;
 }

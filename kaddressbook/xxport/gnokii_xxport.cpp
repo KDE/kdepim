@@ -68,7 +68,7 @@ extern "C" {
 // Locale conversion routines:
 // Gnokii uses the local 8 Bit encoding (based on LC_ALL), kaddressbook uses Unicode
 #define GN_FROM(x)	QString::fromLocal8Bit(x)
-#define GN_TO(x)	(x).local8Bit()
+#define GN_TO(x)	(x).toLocal8Bit()
 
 // static variables for GUI updates
 static GNOKIIXXPort *this_filter;

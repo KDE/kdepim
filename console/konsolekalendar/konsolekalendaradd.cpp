@@ -70,12 +70,12 @@ bool KonsoleKalendarAdd::addEvent()
   kDebug() << "konsolekalendaradd.cpp::addEvent()" << endl;
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n( "Insert Event <Dry Run>:" ).local8Bit().data()
+    cout << i18n( "Insert Event <Dry Run>:" ).toLocal8Bit().data()
          << endl;
     printSpecs();
   } else {
     if ( m_variables->isVerbose() ) {
-      cout << i18n( "Insert Event <Verbose>:" ).local8Bit().data()
+      cout << i18n( "Insert Event <Verbose>:" ).toLocal8Bit().data()
            << endl;
       printSpecs();
     }
@@ -91,14 +91,14 @@ bool KonsoleKalendarAdd::addEvent()
 
     if ( m_variables->getCalendar()->addEvent( event ) ) {
       cout << i18n( "Success: \"%1\" inserted" ).
-        arg( m_variables->getSummary() ).local8Bit().data()
+        arg( m_variables->getSummary() ).toLocal8Bit().data()
            << endl;
 
         m_variables->getCalendar()->save();
 
     } else {
       cout << i18n( "Failure: \"%1\" not inserted" ).
-        arg( m_variables->getSummary() ).local8Bit().data()
+        arg( m_variables->getSummary() ).toLocal8Bit().data()
            << endl;
       status = false;
     }
@@ -142,27 +142,27 @@ bool KonsoleKalendarAdd::addImportedCalendar()
 void KonsoleKalendarAdd::printSpecs()
 {
   cout << i18n( "  What:  %1" ).
-    arg( m_variables->getSummary() ).local8Bit().data()
+    arg( m_variables->getSummary() ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  Begin: %1" ).
-    arg( m_variables->getStartDateTime().toString( Qt::TextDate ) ).local8Bit().data()
+    arg( m_variables->getStartDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  End:   %1" ).
-    arg( m_variables->getEndDateTime().toString( Qt::TextDate ) ).local8Bit().data()
+    arg( m_variables->getEndDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   if ( m_variables->getFloating() == true ) {
-    cout << i18n( "  No Time Associated with Event" ).local8Bit().data()
+    cout << i18n( "  No Time Associated with Event" ).toLocal8Bit().data()
          << endl;
   }
 
   cout << i18n( "  Desc:  %1" ).
-    arg( m_variables->getDescription() ).local8Bit().data()
+    arg( m_variables->getDescription() ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  Location:  %1" ).
-    arg( m_variables->getLocation() ).local8Bit().data()
+    arg( m_variables->getLocation() ).toLocal8Bit().data()
        << endl;
 }

@@ -153,7 +153,7 @@ void KABC2Mutt::loadingFinished()
 
 static std::ostream & operator<< ( std::ostream &os, const QString &s )
 {
-  os << s.local8Bit().data();
+  os << s.toLocal8Bit().data();
   return os;
 }
 

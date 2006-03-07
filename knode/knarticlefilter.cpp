@@ -306,8 +306,8 @@ QString KNArticleFilter::translatedName()
   if (translateName) {
     // major hack alert !!!
     if (!n_ame.isEmpty()) {
-      if (i18n("default filter name",n_ame.local8Bit())!=n_ame.local8Bit().data())    // try to guess if this english or not
-        return i18n("default filter name",n_ame.local8Bit());
+      if (i18n("default filter name",n_ame.toLocal8Bit())!=n_ame.toLocal8Bit().data())    // try to guess if this english or not
+        return i18n("default filter name",n_ame.toLocal8Bit());
       else
         return n_ame;
     } else

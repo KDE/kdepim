@@ -673,7 +673,7 @@ void KNGroup::processXPostBuffer(bool deleteAfterwards)
   KNRemoteArticle::List al;
 
   for (QStringList::Iterator it = c_rosspostIDBuffer.begin(); it != c_rosspostIDBuffer.end(); ++it) {
-    if ((xp=byMessageId((*it).local8Bit())))
+    if ((xp=byMessageId((*it).toLocal8Bit())))
       al.append(xp);
     else
       remainder.append(*it);

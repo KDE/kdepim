@@ -1215,7 +1215,7 @@ void KNode::DisplayedHeaderConfDialog::slotOk()
 // the user selected one of the presets, insert the *translated* string as display name:
 void KNode::DisplayedHeaderConfDialog::slotActivated(int pos)
 {
-  n_ameE->setText(i18n(h_drC->text(pos).local8Bit()));  // I think it's save here, the combobox has only english defaults
+  n_ameE->setText(i18n(h_drC->text(pos).toLocal8Bit()));  // I think it's save here, the combobox has only english defaults
 }
 
 
