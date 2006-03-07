@@ -109,7 +109,7 @@ void ViewManager::saveSettings()
   KABPrefs::instance()->setViewNames( mViewNameList );
 
   if ( mActiveView )
-    KABPrefs::instance()->setCurrentView( mActiveView->caption() );
+    KABPrefs::instance()->setCurrentView( mActiveView->windowTitle() );
 }
 
 QStringList ViewManager::selectedUids() const
@@ -189,7 +189,7 @@ void ViewManager::setActiveView( const QString &name )
   KAddressBookView *view = 0;
 
   // Check that this isn't the same as the current active view
-  if ( mActiveView && ( mActiveView->caption() == name ) )
+  if ( mActiveView && ( mActiveView->windowTitle() == name ) )
     return;
 
   // At this point we know the view that should be active is not
@@ -278,9 +278,9 @@ void ViewManager::editView()
   }
 
   if ( wdg ) {
-    ViewConfigureDialog dlg( wdg, mActiveView->caption(), this );
+    ViewConfigureDialog dlg( wdg, mActiveView->windowTitle(), this );
 
-    KConfigGroup group( mCore->config(), mActiveView->caption() );
+    KConfigGroup group( mCore->config(), mActiveView->windowTitle() );
     dlg.restoreSettings( mCore->config() );
 
     if ( dlg.exec() ) {
@@ -309,17 +309,17 @@ void ViewManager::editView()
 void ViewManager::deleteView()
 {
   QString text = i18n( "<qt>Are you sure that you want to delete the view <b>%1</b>?</qt>" )
-                     .arg( mActiveView->caption() );
+                     .arg( mActiveView->windowTitle() );
   QString caption = i18n( "Confirm Delete" );
 
   if ( KMessageBox::warningContinueCancel( this, text, caption, KGuiItem( i18n( "&Delete" ), "editdelete" ) ) == KMessageBox::Continue ) {
-    mViewNameList.remove( mActiveView->caption() );
+    mViewNameList.remove( mActiveView->windowTitle() );
 
     // remove the view from the config file
     KConfig *config = mCore->config();
-    config->deleteGroup( mActiveView->caption() );
+    config->deleteGroup( mActiveView->windowTitle() );
 
-    mViewDict.remove( mActiveView->caption() );
+    mViewDict.remove( mActiveView->windowTitle() );
     mActiveView = 0;
 
     // we are in an invalid state now, but that should be fixed after
