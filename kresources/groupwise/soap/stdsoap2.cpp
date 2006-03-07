@@ -2996,7 +2996,7 @@ tcp_gethost(struct soap *soap, const char *addr, struct in_addr *inaddr)
   strncpy(addrcopy, addr, strlen(addr)+1);
   iadd = inet_addr(addrcopy);
 #else
-#if defined(_AIXVERSION_431) || defined(TRU64)
+#if defined(_AIXVERSION_431) || defined(__osf__)
   struct hostent_data ht_data;
 #endif
   iadd = inet_addr(addr);
@@ -3011,7 +3011,7 @@ tcp_gethost(struct soap *soap, const char *addr, struct in_addr *inaddr)
 #if defined(__GLIBC__)
   if (gethostbyname_r(addr, &hostent, soap->buf, SOAP_BUFLEN, &host, &soap->errnum) < 0)
     host = NULL;
-#elif defined(_AIXVERSION_431) || defined(TRU64)
+#elif defined(_AIXVERSION_431) || defined(__osf__)
   memset((void*)&ht_data, 0, sizeof(ht_data));
   if (gethostbyname_r(addr, &hostent, &ht_data) < 0)
   { host = NULL;
