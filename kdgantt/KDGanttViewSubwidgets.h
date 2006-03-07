@@ -353,7 +353,7 @@ class KDListView : public QListView
 public:
    KDListView (QWidget* parent,KDGanttView* gv );
    KDGanttView* myGanttView;
-   void drawToPainter( QPainter *p );
+   void drawToPainter( QPainter *p, bool drawHeader=false );
    void setCalendarMode( bool mode );
   bool calendarMode() { return _calendarMode; };
   QString getWhatsThisText(QPoint p);
@@ -365,6 +365,19 @@ public:
   QDragObject * dragObject ();
   void startDrag ();
   void paintemptyarea ( QPainter * p, const QRect & rect ){ QListView::paintEmptyArea( p, rect );};
+
+public:
+    class DrawableItem {
+    public:
+        DrawableItem(int level, int ypos, QListViewItem *item ) { y = ypos; l = level; i = item; };
+        int y;
+        int l;
+        QListViewItem * i;
+    };
+protected:
+    void drawAllContents(QPainter * p, int cx, int cy, int cw, int ch);
+    int buildDrawables(QPtrList<KDListView::DrawableItem> &lst, int level, int ypos, QListViewItem *item, int ymin, int ymax) const;
+
 private slots:
   void dragItem( QListViewItem * );
  private:

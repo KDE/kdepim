@@ -973,7 +973,10 @@ QSize KDGanttView::drawContents( QPainter* p,
       if ( drawTimeLine )
         temp =  thY;
       p->translate( 0, temp );
-      myListView->drawToPainter( p );
+      //HACK: Only draw list headers if we draw timeline, else
+      // there is no room for it. This will most probably be changed
+      // with qt4 anyway, so I think we can live with it atm.
+      myListView->drawToPainter( p, drawTimeLine ); 
       p->translate( lvX, -temp);
     }
     if ( drawTimeLine ) {

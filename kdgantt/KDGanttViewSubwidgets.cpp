@@ -2784,10 +2784,13 @@ void  KDListView::contentsMouseDoubleClickEvent ( QMouseEvent * e )
 }
 
 
-void  KDListView::drawToPainter ( QPainter * p )
+void  KDListView::drawToPainter ( QPainter * p, bool drawHeader )
 {
     // Draw list
-    drawContentsOffset ( p, 0, 0, 0, 0, contentsWidth(), contentsHeight() );
+    drawAllContents ( p, 0, 0, contentsWidth(), contentsHeight() );
+    if (!drawHeader) {
+        return;
+    }
     // Draw headers
     QPen pen = QPen(Qt::lightGray, 1);
     p->save();
@@ -2795,21 +2798,175 @@ void  KDListView::drawToPainter ( QPainter * p )
     for (int s = 0; s < h->count(); ++s) {
         QRect r = h->sectionRect(s);
         if (s==0) {
-            p->translate(0, -r.height()); // hmmm, is this safe?
+            p->translate(0, -r.height());
         }
         //kdDebug()<<s<<": "<<h->label(s)<<" "<<r<<endl;
-        int x, y;
-        viewportToContents(r.x(), r.y(), x, y);
-        p->drawText(x+2, y, r.width()-2, r.height(), columnAlignment(s)|Qt::AlignVCenter, h->label(s), -1);
+        p->drawText(r.x()+2, r.y(), r.width()-2, r.height(), columnAlignment(s)|Qt::AlignVCenter, h->label(s), -1);
         p->save();
         p->setPen(pen);
-        p->drawRect(x, y+1, r.width(), r.height()-2);
+        p->drawRect(r.x(), r.y()+1, r.width(), r.height()-2);
         p->restore();
 
     }
     p->restore();
 }
 
+int KDListView::buildDrawables(QPtrList<KDListView::DrawableItem> &lst, int level, int ypos, QListViewItem *item, int ymin, int ymax) const {
+    int y = ypos;
+    int ih = item->height();
+    if (y < ymin && y+ih > ymin) {
+        y = ymin; // include partial item at top
+    }
+    if (y >= ymin && y < ymax) { // include partial item at bottom
+        KDListView::DrawableItem *dr = new KDListView::DrawableItem(level, y, item);
+        lst.append(dr);
+        //kdDebug()<<k_funcinfo<<level<<", "<<y<<" : "<<item->text(0)<<endl;
+    }
+    y += ih;
+    if (item->isOpen()) {
+        QListViewItem *child = item->firstChild();
+        for (; child; child = child->nextSibling()) {
+            y = buildDrawables(lst, level+1, y, child, ymin, ymax);
+        }
+    }
+    return y;
+}
+// This is a copy of QListView::drawContentsOffset(), with a few changes
+// because drawContentsOffset() only draws *visible* items,
+// we want to draw *all* items.
+// FIXME: Haven't got paintBraches() to work, atm live without it.
+void KDListView::drawAllContents(QPainter * p, int cx, int cy, int cw, int ch) {
+    if ( columns() == 0 ) {
+        paintEmptyArea( p, QRect( cx, cy, cw, ch ) );
+        return;
+    }
+    //kdDebug()<<k_funcinfo<<QRect(cx, cy, cw, ch)<<endl;
+    QPtrList<KDListView::DrawableItem> drawables;
+    drawables.setAutoDelete(true);
+    QListViewItem *child = firstChild();
+    int level = 0;
+    int ypos = 0;
+    for (; child; child = child->nextSibling()) {
+        ypos = buildDrawables(drawables, level, ypos, child, cy, cy+ch);
+    }
+    
+    p->setFont( font() );
+
+    QPtrListIterator<KDListView::DrawableItem> it(drawables);
+
+    QRect r;
+    int fx = -1, x, fc = 0, lc = 0;
+    int tx = -1;
+    KDListView::DrawableItem * current;
+
+    while ( (current = it.current()) != 0 ) {
+        ++it;
+        int ih = current->i->height();
+        int ith = current->i->totalHeight();
+        int c;
+        int cs;
+
+        // need to paint current?
+        if ( ih > 0 && current->y < cy+ch && current->y+ih > cy ) {
+            //kdDebug()<<k_funcinfo<<"Paint: "<<current->i->text(0)<<" y="<<current->y<<endl;
+            if ( fx < 0 ) {
+                // find first interesting column, once
+                x = 0;
+                c = 0;
+                cs = header()->cellSize( 0 );
+                while ( x + cs <= cx && c < header()->count() ) {
+                    x += cs;
+                    c++;
+                    if ( c < header()->count() )
+                        cs = header()->cellSize( c );
+                }
+                fx = x;
+                fc = c;
+                while( x < cx + cw && c < header()->count() ) {
+                    x += cs;
+                    c++;
+                    if ( c < header()->count() )
+                        cs = header()->cellSize( c );
+                }
+                lc = c;
+            }
+
+            x = fx;
+            c = fc;
+            // draw to last interesting column
+
+            const QColorGroup &cg = ( palette().inactive() );
+
+            while ( c < lc && !drawables.isEmpty() ) {
+                int i = header()->mapToLogical( c );
+                cs = header()->cellSize( c );
+                r.setRect( x, current->y-cy, cs, ih );
+                if ( i == 0 )
+                    r.setLeft( r.left() + current->l * treeStepSize() );
+
+                p->save();
+                // No need to paint if the cell isn't technically visible
+                if ( !( r.width() == 0 || r.height() == 0 ) ) {
+                    p->translate( r.left(), r.top() );
+                    int ac = header()->mapToLogical( c );
+                    // map to Left currently. This should change once we
+                    // can really reverse the listview.
+                    int align = columnAlignment( ac );
+                    if ( align == AlignAuto ) align = AlignLeft;
+                    bool sel = current->i->isSelected();
+                    if (sel)
+                        current->i->setSelected(false);
+                    current->i->paintCell( p, cg, ac, r.width(), align );
+                    if (sel)
+                        current->i->setSelected(sel);
+                }
+                p->restore();
+                x += cs;
+                c++;
+            }
+
+        }
+
+        const int cell = header()->mapToActual( 0 );
+
+        if ( tx < 0 )
+            tx = header()->cellPos( cell );
+
+        // do any children of current need to be painted?
+/* FIXME: painting branches doesn't work for some reason...
+        if ( ih != ith && 
+            rootIsDecorated() &&
+            current->y + ith > cy &&
+            current->y + ih < cy + ch &&
+            tx + current->l * treeStepSize() < cx + cw &&
+            tx + (current->l+1) * treeStepSize() > cx ) {
+            // compute the clip rectangle the safe way
+
+            int rtop = current->y + ih;
+            int rbottom = current->y + ith;
+            int rleft = tx + current->l*treeStepSize();
+            int rright = rleft + treeStepSize();
+
+            int crtop = QMAX( rtop, cy );
+            int crbottom = QMIN( rbottom, cy+ch );
+            int crleft = QMAX( rleft, cx );
+            int crright = QMIN( rright, cx+cw );
+
+            r.setRect( crleft, crtop,
+                    crright-crleft, crbottom-crtop );
+
+            if ( r.isValid() ) {
+                p->save();
+                p->translate( rleft, crtop );
+                //kdDebug()<<k_funcinfo<<"paintBranches: "<<current->i->text(0)<<endl;
+
+                current->i->paintBranches( p, colorGroup(), treeStepSize(),
+                                        rtop - crtop, r.height() );
+                p->restore();
+            }
+        }*/
+    }
+}
 
 void KDListView::resizeEvent(QResizeEvent *)
 {
