@@ -6,7 +6,7 @@ add_subdirectory( tests )
 
 ADD_DEFINITIONS(-DPACKAGE_DATA_DIR=\\""${CMAKE_INSTALL_PREFIX}${DATA_INSTALL_DIR}/libical"\\" ) # added manually
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkcal/versit/  ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ ${CMAKE_SOURCE_DIR}/ ${CMAKE_SOURCE_DIR}/ktnef ${CMAKE_SOURCE_DIR}/libemailfunctions ${CMAKE_SOURCE_DIR}/libkmime ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/ ${CMAKE_SOURCE_DIR}/libkcal/versit/  ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ ${CMAKE_SOURCE_DIR}/ ${CMAKE_SOURCE_DIR}/ktnef ${CMAKE_SOURCE_DIR}/libemailfunctions ${CMAKE_SOURCE_DIR}/libkmime ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 set(ICALSCRIPTS ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ )
 
@@ -155,7 +155,7 @@ set(libicalss_SRCS
 
 ## ORDERING OF HEADERS IS SIGNIFICANT. Don't change this ordering. It
 ## is required to make the combined header ical.h properly
-set(COMBINEDHEADERS 
+set(COMBINEDHEADERSICAL 
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalversion.h         
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltime.h        
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalduration.h    
@@ -201,10 +201,40 @@ macro_additional_clean_files( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ic
 create_ical_file( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h )
 
 
+set(COMBINEDHEADERSICALSS
+    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalgauge.h
+    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalset.h
+    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalcluster.h
+    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalfileset.h
+    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icaldirset.h
+    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalcalendar.h
+    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalclassify.h
+    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalspanlist.h
+    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalmessage.h
+)
+
+macro(CREATE_ICALSS_FILE _out_FILE)
+    FILE(WRITE ${_out_FILE} "#ifdef __cplusplus\n")
+    FILE(APPEND ${_out_FILE} "extern \"C\" {\n")
+    FILE(APPEND ${_out_FILE} "#endif\n")
+    FILE(APPEND ${_out_FILE} "/*\n")
+    FILE(APPEND ${_out_FILE} " $$''Id''$$\n")
+    FILE(APPEND ${_out_FILE} "*/\n")
+    FILE(APPEND ${_out_FILE} "\n")
+    FILE(APPEND ${_out_FILE} "#ifdef __cplusplus\n")
+    FILE(APPEND ${_out_FILE} "}\n")
+    FILE(APPEND ${_out_FILE} "#endif\n")
+endmacro(CREATE_ICALSS_FILE)
+
+macro_additional_clean_files( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalss.h )
+
+create_icalss_file( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalss.h )
+
+
 
 ########### next target ###############
 
-set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS} ${libicalss_SRCS}
+set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS} ${libicalss_SRCS} ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalss.h ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h
    incidencebase.cpp 
    incidence.cpp 
    journal.cpp 
