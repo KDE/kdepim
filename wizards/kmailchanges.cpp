@@ -31,12 +31,31 @@
 #include <kdebug.h>
 
 
-class CreateDisconnectedImapAccount : public KConfigPropagator::Change
+class CreateImapAccount : public KConfigPropagator::Change
 {
-  public:
-    CreateDisconnectedImapAccount()
-      : KConfigPropagator::Change( i18n("Create Disconnected IMAP Account for KMail") )
+protected:
+    CreateImapAccount( const QString& title )
+        : KConfigPropagator::Change( title )
     {
+    }
+    
+    void constructUserDomainAndEmail()
+    {
+      mDefaultDomain = KolabConfig::self()->server();
+      mUser = KolabConfig::self()->user();
+      int pos = mUser.find( "@" );
+      // with kolab the userid _is_ the full email
+      if ( pos > 0 ) {
+        // The user typed in a full email address. Assume it's correct
+        mEmail = mUser;
+        const QString h = mUser.mid( pos+1 );
+        if ( !h.isEmpty() )
+          // The user did type in a domain on the email address. Use that
+          mDefaultDomain = h;
+      }
+      else
+        // Construct the email address. And use it for the username also
+        mUser = mEmail = mUser+"@"+KolabConfig::self()->server();
     }
 
     // This sucks as this is a 1:1 copy from KMAccount::encryptStr()
@@ -50,28 +69,26 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
 
     }
 
+    QString mUser;
+    QString mEmail;
+    QString mDefaultDomain;
+};
+
+class CreateDisconnectedImapAccount : public CreateImapAccount
+{
+  public:
+    CreateDisconnectedImapAccount()
+      : CreateImapAccount( i18n("Create Disconnected IMAP Account for KMail") )
+    {
+    }
+
     void apply()
     {
-      QString defaultDomain = KolabConfig::self()->server();
-      QString email;
-      QString user = KolabConfig::self()->user();
-      int pos = user.find( "@" );
-      // with kolab the userid _is_ the full email
-      if ( pos > 0 ) {
-        // The user typed in a full email address. Assume it's correct
-        email = user;
-        const QString h = user.mid( pos+1 );
-        if ( !h.isEmpty() )
-          // The user did type in a domain on the email address. Use that
-          defaultDomain = h;
-      }
-      else
-        // Construct the email address. And use it for the username also
-        user = email = user+"@"+KolabConfig::self()->server();
+      constructUserDomainAndEmail();
 
       KConfig c( "kmailrc" );
       c.setGroup( "General" );
-      c.writeEntry( "Default domain", defaultDomain );
+      c.writeEntry( "Default domain", mDefaultDomain );
       uint accCnt = c.readNumEntry( "accounts", 0 );
       c.writeEntry( "accounts", accCnt+1 );
       uint transCnt = c.readNumEntry( "transports", 0 );
@@ -86,7 +103,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
       c.writeEntry( "Name", "Kolab Server" );
       c.writeEntry( "host", KolabConfig::self()->server() );
 
-      c.writeEntry( "login", user );
+      c.writeEntry( "login",mUser );
 
       if ( KolabConfig::self()->savePassword() ) {
         c.writeEntry( "pass", encryptStr(KolabConfig::self()->password()) );
@@ -108,7 +125,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
       c.writeEntry( "encryption", "SSL" );
       c.writeEntry( "auth", true );
       c.writeEntry( "authtype", "PLAIN" );
-      c.writeEntry( "user", email );
+      c.writeEntry( "user", mEmail );
       c.writeEntry( "pass", encryptStr(KolabConfig::self()->password()) );
       c.writeEntry( "storepass", "true" );
 
@@ -116,10 +133,10 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
       // if it has to create a default identity.
       KEMailSettings es;
       es.setSetting( KEMailSettings::RealName, KolabConfig::self()->realName() );
-      es.setSetting( KEMailSettings::EmailAddress, email );
+      es.setSetting( KEMailSettings::EmailAddress, mEmail );
 
       KPIM::IdentityManager identityManager;
-      if ( !identityManager.allEmails().contains( email ) ) {
+      if ( !identityManager.allEmails().contains( mEmail ) ) {
         // Not sure how to name the identity. First one is "Default", next one "Kolab", but then...
         // let's use the server name after that.
         QString accountName = i18n( "Kolab" );
@@ -135,7 +152,7 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
 
         KPIM::Identity& identity = identityManager.newFromScratch( accountName );
         identity.setFullName( KolabConfig::self()->realName() );
-        identity.setEmailAddr( email );
+        identity.setEmailAddr( mEmail );
         identityManager.commit();
       }
 
@@ -146,6 +163,49 @@ class CreateDisconnectedImapAccount : public KConfigPropagator::Change
    }
 
 };
+
+class CreateOnlineImapAccount : public CreateImapAccount
+{
+  public:
+    CreateOnlineImapAccount()
+      : CreateImapAccount( i18n("Create Online IMAP Account for KMail") )
+    {
+    }
+
+    void apply()
+    {
+      constructUserDomainAndEmail();
+
+      KConfig c( "kmailrc" );
+      c.setGroup( "General" );
+      uint accCnt = c.readNumEntry( "accounts", 0 );
+      c.writeEntry( "accounts", accCnt+1 );
+
+      c.setGroup( QString("Account %1").arg(accCnt+1) );
+      int uid = kapp->random();
+      c.writeEntry( "Folder", uid );
+      c.writeEntry( "Id", uid );
+      c.writeEntry( "Type", "imap");
+      c.writeEntry( "auth", "*");
+      c.writeEntry( "Name", "Kolab Server Mail" );
+      c.writeEntry( "host", KolabConfig::self()->server() );
+
+      c.writeEntry( "login", mUser );
+
+      if ( KolabConfig::self()->savePassword() ) {
+        c.writeEntry( "pass", encryptStr(KolabConfig::self()->password()) );
+        c.writeEntry( "store-passwd", true );
+      }
+      c.writeEntry( "port", "993" );
+      c.writeEntry( "use-ssl", true );
+
+      c.writeEntry( "sieve-support", "true" );
+
+      c.setGroup( QString("Folder-%1").arg( uid ) );
+      c.writeEntry( "isOpen", true );
+    }
+};
+
 
 void createKMailChanges( KConfigPropagator::Change::List& changes )
 {
@@ -205,5 +265,16 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   c->value = "XML";
   changes.append( c );
 
+  if ( KolabConfig::self()->useOnlineForNonGroupware() ) {
+      c = new KConfigPropagator::ChangeConfig;
+      c->file = "kmailrc";
+      c->group = "IMAP Resource";
+      c->name = "ShowOnlyGroupwareFoldersForGroupwareAccount";
+      c->value = "true";
+      changes.append( c );
+      changes.append( new CreateOnlineImapAccount );
+  }
+
   changes.append( new CreateDisconnectedImapAccount );
 }
+

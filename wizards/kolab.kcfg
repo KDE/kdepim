@@ -25,6 +25,12 @@
       <label>Save Password</label>
       <default>false</default>
     </entry>
+
+    <entry name="UseOnlineForNonGroupware" type="Bool">
+      <label>Use Online IMAP account for non groupware folders</label>
+      <default>false</default>
+    </entry>
+
     <entry name="Kolab1Legacy" type="Bool">
       <label>Enable Kolab 1 Legacy settings</label>
       <default>false</default>

@@ -283,6 +283,10 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
 
   topLayout->setRowStretch( 4, 1 );
 
+  mUseOnlineForNonGroupwareCheck = new QCheckBox( i18n("Use an online IMAP account for non-groupware folders"), page );
+  topLayout->addMultiCellWidget( mUseOnlineForNonGroupwareCheck, 5, 5, 0, 1 );
+  topLayout->setRowStretch( 5, 1 );
+
   //DF: I don't see the point in showing the user those pages.
   //They are very 'internal' and of no use to anyone other than developers.
   //(This is even more true for the rules page. The changes page is sort of OK)
@@ -304,6 +308,7 @@ void KolabWizard::usrReadConfig()
   mRealNameEdit->setText( KolabConfig::self()->realName() );
   mPasswordEdit->setText( KolabConfig::self()->password() );
   mSavePasswordCheck->setChecked( KolabConfig::self()->savePassword() );
+  mUseOnlineForNonGroupwareCheck->setChecked( KolabConfig::self()->useOnlineForNonGroupware() );
 }
 
 void KolabWizard::usrWriteConfig()
@@ -313,4 +318,5 @@ void KolabWizard::usrWriteConfig()
   KolabConfig::self()->setRealName( mRealNameEdit->text() );
   KolabConfig::self()->setPassword( mPasswordEdit->text() );
   KolabConfig::self()->setSavePassword( mSavePasswordCheck->isChecked() );
+  KolabConfig::self()->setUseOnlineForNonGroupware( mUseOnlineForNonGroupwareCheck->isChecked() );
 }
