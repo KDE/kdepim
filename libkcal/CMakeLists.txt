@@ -21,7 +21,7 @@ ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h
 COMMAND ${PERL_EXECUTABLE} ARGS -I ${ICALSCRIPTS}
 ${ICALSCRIPTS}/mkderivedproperties.pl -i
 ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h.in
--h ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/properties.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h   DEPENDS  ${PROPERTYDEPS} )
+-h  ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/properties.csv ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h   DEPENDS  ${PROPERTYDEPS} )
 
 
 add_custom_command(OUTPUT
@@ -123,11 +123,39 @@ set(libical_SRCS
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icallangbind.c
 )
 
+set(libicalss_SRCS
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalcalendar.c      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalcalendar.h      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalclassify.c      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalclassify.h      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalcluster.c      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalcluster.h       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalclusterimpl.h   
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalgauge.c     
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalgauge.h     
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalgaugeimpl.h     
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icaldirset.c        
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icaldirset.h        
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icaldirsetimpl.h    
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalfileset.c       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalfileset.h       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalfilesetimpl.h   
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalset.c       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalset.h       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalssyacc.h        
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalspanlist.c      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalspanlist.h      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalmessage.c       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalmessage.h       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalsslexer.c           
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalssyacc.c
+   )
+
 
 
 ########### next target ###############
 
-set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS}
+set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS} ${libicalss_SRCS}
    incidencebase.cpp 
    incidence.cpp 
    journal.cpp 
@@ -181,7 +209,7 @@ kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
 kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 
-target_link_libraries(kcal  ${LIB_KIO} icalss ktnef emailfunctions kmime kresources kabc kde3support )
+target_link_libraries(kcal  ${LIB_KDE3SUPPORT}  ktnef emailfunctions kmime kresources kabc  )
 
 set_target_properties(kcal PROPERTIES VERSION 2.0.0 SOVERSION 2 )
 install_targets(${LIB_INSTALL_DIR} kcal )
