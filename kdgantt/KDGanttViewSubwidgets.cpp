@@ -722,7 +722,9 @@ int KDTimeTableWidget::horBackgroundLines(  QBrush& brush )
     return denseLineCount;
 }
 
-
+int KDTimeTableWidget::getCoordX( QDateTime dt ) {
+    return myGanttView->myTimeHeader->getCoordX(dt);
+}
 
 /* ***************************************************************
    KDTimeHeaderWidget:: KDTimeHeaderWidget
@@ -1088,7 +1090,9 @@ void KDTimeHeaderWidget::checkWidth( int wid )
     // We probably come from an external resize and then we must
     // calculate on basis of myCanvasView.
     // (NOTE: we have disconnected the auto QScrollView scrollbar update)
-    myGanttView->myCanvasView->updateScrollBars();
+    if (myGanttView && myGanttView->myCanvasView)
+        myGanttView->myCanvasView->updateScrollBars();
+
 }
 
 bool KDTimeHeaderWidget::registerStartTime()
