@@ -82,7 +82,7 @@ void GenericDBWidget::setupWidget()
 
 	fDBList = new KListBox( this );
 	g->addWidget( fDBList, 0, 0 );
-	fDBType = new KComboBox( FALSE, this );
+	fDBType = new KComboBox( false, this );
 	g->addWidget( fDBType, 1, 0 );
 	fDBType->insertItem( i18n( "All Databases" ) );
 	fDBType->insertItem( i18n( "Only Applications (*.prc)" ) );
@@ -91,7 +91,7 @@ void GenericDBWidget::setupWidget()
 	QGridLayout *g1 = new QGridLayout( 0, 1, 1);
 	fDBInfo = new KTextEdit( this );
 	fDBInfo->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)3, (QSizePolicy::SizeType)0, 0, 0, fDBInfo->sizePolicy().hasHeightForWidth() ) );
-	fDBInfo->setReadOnly( TRUE );
+	fDBInfo->setReadOnly( true );
 	g1->addWidget( fDBInfo, 0, 0 );
 	fDBInfoButton = new KPushButton( i18n( "General Database &Information" ), this );
 	g1->addWidget( fDBInfoButton, 1, 0 );
@@ -106,8 +106,8 @@ void GenericDBWidget::setupWidget()
 	fRecordList->addColumn(i18n("Record ID"));
 	fRecordList->setAllColumnsShowFocus(true);
 	fRecordList->setResizeMode( KListView::LastColumn );
-	fRecordList->setFullWidth( TRUE );
-	fRecordList->setItemsMovable( FALSE );
+	fRecordList->setFullWidth( true );
+	fRecordList->setItemsMovable( false );
 
 	fAddRecord = new KPushButton( i18n("&Add..."), this );
 	g2->addWidget( fAddRecord, 1, 0 );

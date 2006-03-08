@@ -701,7 +701,7 @@ bool IMAP4Protocol::parseRead(QByteArray & buffer, long len, long relay)
       error (ERR_CONNECTION_BROKEN, myHost);
       setState(ISTATE_CONNECT);
       closeConnection();
-      return FALSE;
+      return false;
     }
     if (relay > buffer.size())
     {
@@ -726,7 +726,7 @@ bool IMAP4Protocol::parseRead(QByteArray & buffer, long len, long relay)
 
 bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
 {
-  if (myHost.isEmpty()) return FALSE;
+  if (myHost.isEmpty()) return false;
 
   while (true) {
     ssize_t copyLen = 0;
@@ -759,7 +759,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
       readBufferLen -= copyLen;
       if (readBufferLen)
         memmove(readBuffer, &readBuffer[copyLen], readBufferLen);
-      if (buffer[buffer.size() - 1] == '\n') return TRUE;
+      if (buffer[buffer.size() - 1] == '\n') return true;
     }
     if (!isConnectionValid())
     {
@@ -767,14 +767,14 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
       error (ERR_CONNECTION_BROKEN, myHost);
       setState(ISTATE_CONNECT);
       closeConnection();
-      return FALSE;
+      return false;
     }
     if (!waitForResponse( responseTimeout() ))
     {
       error(ERR_SERVER_TIMEOUT, myHost);
       setState(ISTATE_CONNECT);
       closeConnection();
-      return FALSE;
+      return false;
     }
     readBufferLen = read(readBuffer, IMAP_BUFFER - 1);
     if (readBufferLen == 0)
@@ -783,7 +783,7 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
       error (ERR_CONNECTION_BROKEN, myHost);
       setState(ISTATE_CONNECT);
       closeConnection();
-      return FALSE;
+      return false;
     }
   }
 }
@@ -1248,7 +1248,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     KUrl src;
     KUrl dest;
     stream >> src >> dest;
-    copy(src, dest, 0, FALSE);
+    copy(src, dest, 0, false);
     break;
   }
   case 'c':
@@ -1881,7 +1881,7 @@ bool IMAP4Protocol::makeLogin ()
       return false;
     }
 
-    if (metaData("nologin") == "on") return TRUE;
+    if (metaData("nologin") == "on") return true;
 
     if (myTLS == "on" && !hasCapability(QString("STARTTLS")))
     {

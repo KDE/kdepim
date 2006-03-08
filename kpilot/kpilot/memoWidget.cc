@@ -621,7 +621,7 @@ void MemoWidget::slotImportMemo()
 	{
 		QFile importFile(fileName);
 
-		if (importFile.open(QIODevice::ReadOnly) == FALSE)
+		if (importFile.open(QIODevice::ReadOnly) == false)
 		{
 			// show error!
 			return;

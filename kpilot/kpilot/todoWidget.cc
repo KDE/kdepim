@@ -232,11 +232,11 @@ void TodoWidget::setupWidget()
 
 	fListBox = new TodoListView(this);
 	fListBox->addColumn( i18n( "To-do Item" ) );
-	fListBox->setAllColumnsShowFocus( TRUE );
+	fListBox->setAllColumnsShowFocus( true );
 	fListBox->setResizeMode( KListView::LastColumn );
-	fListBox->setFullWidth( TRUE );
-	fListBox->setItemsMovable( FALSE );
-	fListBox->setItemsRenameable (TRUE);
+	fListBox->setFullWidth( true );
+	fListBox->setItemsMovable( false );
+	fListBox->setItemsRenameable (true);
 	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
 	connect(fListBox, SIGNAL(selectionChanged(Q3ListViewItem*)),
 		this, SLOT(slotShowTodo(Q3ListViewItem*)));

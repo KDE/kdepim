@@ -130,7 +130,7 @@ BaseG::encsign( Block& block, const KeyIDList& recipients,
   if(!recipients.isEmpty())
   {
     int index = 0;
-    bool bad = FALSE;
+    bool bad = false;
     unsigned int num = 0;
     QByteArray badkeys = "";
     // Examples:
@@ -142,7 +142,7 @@ BaseG::encsign( Block& block, const KeyIDList& recipients,
     // (untrusted key, 23456789 is the key Id of the encryption sub key)
     while((index = error.find("skipped: ",index)) != -1)
     {
-      bad = TRUE;
+      bad = true;
       index = error.find('\'',index);
       int index2 = error.find('\'',index+1);
       badkeys += error.mid(index, index2-index+1) + ", ";

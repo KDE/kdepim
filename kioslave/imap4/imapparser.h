@@ -368,9 +368,9 @@ public:
 
   /** parse one word (maybe quoted) upto next space " ) ] } */
   static Q3CString parseOneWordC (parseString & inWords,
-    bool stopAtBracket = FALSE, int *len = 0);
+    bool stopAtBracket = false, int *len = 0);
   static inline QByteArray parseOneWord (parseString & inWords,
-    bool stopAtBracket = FALSE) {
+    bool stopAtBracket = false) {
     int len = 0; // string size
     // Choice: we can create an extra QCString, or we can get the buffer in
     // the wrong size to start.  Let's try option b.

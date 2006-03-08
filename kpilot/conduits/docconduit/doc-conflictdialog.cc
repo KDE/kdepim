@@ -98,7 +98,7 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 			cE.dbname=new QLabel(text, big_box);
 			resolutionGroupBoxLayout->addWidget( cE.dbname, cE.index, 0 );
 
-			cE.resolution=new QComboBox( FALSE, big_box);
+			cE.resolution=new QComboBox( false, big_box);
 			cE.resolution->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7,
 				(QSizePolicy::SizeType)0, 0, 0,
 				cE.resolution->sizePolicy().hasHeightForWidth() ) );

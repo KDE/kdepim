@@ -96,7 +96,7 @@ void FilterLNotes::ImportLNotes(const QString& file) {
 
         // Get folder name
         QFileInfo filenameInfo( file );
-        QString folder("LNotes-Import/" + filenameInfo.baseName(TRUE));
+        QString folder("LNotes-Import/" + filenameInfo.baseName(true));
         inf->setTo(folder);
 
         // State machine to read the data in. The fgetc usage is probably terribly slow ...

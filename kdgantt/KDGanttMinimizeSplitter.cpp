@@ -307,7 +307,7 @@ public:
 class QSplitterData
 {
 public:
-    QSplitterData() : opaque( FALSE ), firstShow( TRUE ) {}
+    QSplitterData() : opaque( false ), firstShow( true ) {}
 
     QPtrList<QSplitterLayoutStruct> list;
     bool opaque;
@@ -421,7 +421,7 @@ KDGanttMinimizeSplitter::KDGanttMinimizeSplitter( Orientation o, QWidget *parent
 KDGanttMinimizeSplitter::~KDGanttMinimizeSplitter()
 {
 #if QT_VERSION >= 300
-    data->list.setAutoDelete( TRUE );
+    data->list.setAutoDelete( true );
     delete data;
 #endif
 }
@@ -500,7 +500,7 @@ QSplitterLayoutStruct *KDGanttMinimizeSplitter::addWidget( QWidget *w, bool firs
 	newHandle = new KDGanttSplitterHandle( orientation(), this, tmp.toLatin1() );
 	s->wid = newHandle;
 	newHandle->setId(data->list.count());
-	s->isSplitter = TRUE;
+	s->isSplitter = true;
 	s->sizer = pick( newHandle->sizeHint() );
 	if ( first )
 	    data->list.insert( 0, s );
@@ -514,7 +514,7 @@ QSplitterLayoutStruct *KDGanttMinimizeSplitter::addWidget( QWidget *w, bool firs
 	s->sizer = pick( w->sizeHint() );
     else
 	s->sizer = pick( w->size() );
-    s->isSplitter = FALSE;
+    s->isSplitter = false;
     if ( first )
 	data->list.insert( 0, s );
     else
@@ -608,7 +608,7 @@ bool KDGanttMinimizeSplitter::event( QEvent *e )
     if ( e->type() == QEvent::LayoutHint || ( e->type() == QEvent::Show && data->firstShow ) ) {
 	recalc( isVisible() );
 	if ( e->type() == QEvent::Show )
-	    data->firstShow = FALSE;
+	    data->firstShow = false;
     }
     return QWidget::event( e );
 }
@@ -638,12 +638,12 @@ void KDGanttMinimizeSplitter::drawSplitter( QPainter *p,
 int KDGanttMinimizeSplitter::idAfter( QWidget* w ) const
 {
     QSplitterLayoutStruct *s = data->list.first();
-    bool seen_w = FALSE;
+    bool seen_w = false;
     while ( s ) {
 	if ( s->isSplitter && seen_w )
 	    return data->list.at();
 	if ( !s->isSplitter && s->wid == w )
-	    seen_w = TRUE;
+	    seen_w = true;
 	s = data->list.next();
     }
     return 0;
@@ -719,11 +719,11 @@ void KDGanttMinimizeSplitter::moveBefore( int pos, int id, bool upLeft )
 	    pos1 = pos2 + 1;
 	}
 	if ( upLeft ) {
-	    setG( w, pos1, dd, TRUE );
+	    setG( w, pos1, dd, true );
 	    moveBefore( pos2, id-1, upLeft );
 	} else {
 	    moveBefore( pos2, id-1, upLeft );
-	    setG( w, pos1, dd, TRUE );
+	    setG( w, pos1, dd, true );
 	}
     } else {
 	int dd, newLeft, nextPos;
@@ -738,7 +738,7 @@ void KDGanttMinimizeSplitter::moveBefore( int pos, int id, bool upLeft )
 	    newLeft = pos-dd+1;
 	    nextPos = newLeft - 1;
 	}
-	setG( w, newLeft, dd, TRUE );
+	setG( w, newLeft, dd, true );
 	moveBefore( nextPos, id-1, upLeft );
     }
 }
@@ -772,11 +772,11 @@ void KDGanttMinimizeSplitter::moveAfter( int pos, int id, bool upLeft )
 	    pos2 = pos + dd;
 	}
 	if ( upLeft ) {
-	    setG( w, pos1, dd, TRUE );
+	    setG( w, pos1, dd, true );
 	    moveAfter( pos2, id+1, upLeft );
 	} else {
 	    moveAfter( pos2, id+1, upLeft );
-	    setG( w, pos1, dd, TRUE );
+	    setG( w, pos1, dd, true );
 	}
     } else {
 	int left = pick( w->pos() );
@@ -794,7 +794,7 @@ void KDGanttMinimizeSplitter::moveAfter( int pos, int id, bool upLeft )
 	    newLeft = pos;
 	    nextPos = newLeft + dd;
 	}
-	setG( w, newLeft, dd, TRUE );
+	setG( w, newLeft, dd, true );
 	/*if( right != newRight )*/
 	moveAfter( nextPos, id+1, upLeft );
     }
@@ -907,23 +907,23 @@ void KDGanttMinimizeSplitter::doResize()
 	} else if ( s->isSplitter ) {
 	    a[i].stretch = 0;
 	    a[i].sizeHint = a[i].minimumSize = a[i].maximumSize = s->sizer;
-	    a[i].empty = FALSE;
+	    a[i].empty = false;
 	} else if ( s->mode == KeepSize ) {
 	    a[i].stretch = 0;
 	    a[i].minimumSize = pick( minSize(s->wid) );
 	    a[i].sizeHint = s->sizer;
 	    a[i].maximumSize = pick( s->wid->maximumSize() );
-	    a[i].empty = FALSE;
+	    a[i].empty = false;
 	} else if ( s->mode == FollowSizeHint ) {
 	    a[i].stretch = 0;
 	    a[i].minimumSize = a[i].sizeHint = pick( s->wid->sizeHint() );
 	    a[i].maximumSize = pick( s->wid->maximumSize() );
-	    a[i].empty = FALSE;
+	    a[i].empty = false;
 	} else { //proportional
 	    a[i].stretch = s->sizer;
 	    a[i].maximumSize = pick( s->wid->maximumSize() );
 	    a[i].sizeHint = a[i].minimumSize = pick( minSize(s->wid) );
-	    a[i].empty = FALSE;
+	    a[i].empty = false;
 	}
     }
 
@@ -945,7 +945,7 @@ void KDGanttMinimizeSplitter::recalc( bool update )
     int maxt = QWIDGETSIZE_MAX;
     int mint = fi;
     int n = data->list.count();
-    bool first = TRUE;
+    bool first = true;
     /*
       The splitter before a hidden widget is always hidden.
       The splitter before the first visible widget is hidden.
@@ -961,15 +961,15 @@ void KDGanttMinimizeSplitter::recalc( bool update )
 		else
 		    p->wid->show(); //may trigger new recalc
 	    if ( !s->wid->isHidden() )
-		first = FALSE;
+		first = false;
 	}
     }
 
-    bool empty=TRUE;
+    bool empty=true;
     for ( int j = 0; j< n; j++ ) {
 	QSplitterLayoutStruct *s = data->list.at(j);
 	if ( !s->wid->isHidden() ) {
-	    empty = FALSE;
+	    empty = false;
 	    if ( s->isSplitter ) {
 		minl += s->sizer;
 		maxl += s->sizer;
@@ -1026,7 +1026,7 @@ void KDGanttMinimizeSplitter::setResizeMode( QWidget *w, ResizeMode mode )
 	}
 	s = data->list.next();
     }
-    s = addWidget( w, TRUE );
+    s = addWidget( w, true );
     s->mode = mode;
 }
 
@@ -1064,11 +1064,11 @@ void KDGanttMinimizeSplitter::setOpaqueResize( bool on )
 void KDGanttMinimizeSplitter::moveToFirst( QWidget *w )
 {
     processChildEvents();
-    bool found = FALSE;
+    bool found = false;
     QSplitterLayoutStruct *s = data->list.first();
     while ( s ) {
 	if ( s->wid == w  ) {
-	    found = TRUE;
+	    found = true;
 	    QSplitterLayoutStruct *p = data->list.prev();
 	    if ( p ) { // not already at first place
 		data->list.take(); //take p
@@ -1081,7 +1081,7 @@ void KDGanttMinimizeSplitter::moveToFirst( QWidget *w )
 	s = data->list.next();
     }
      if ( !found )
-	addWidget( w, TRUE );
+	addWidget( w, true );
      recalcId();
 }
 
@@ -1093,11 +1093,11 @@ void KDGanttMinimizeSplitter::moveToFirst( QWidget *w )
 void KDGanttMinimizeSplitter::moveToLast( QWidget *w )
 {
     processChildEvents();
-    bool found = FALSE;
+    bool found = false;
     QSplitterLayoutStruct *s = data->list.first();
     while ( s ) {
 	if ( s->wid == w  ) {
-	    found = TRUE;
+	    found = true;
 	    data->list.take(); // take s
 	    QSplitterLayoutStruct *p = data->list.current();
 	    if ( p ) { // the splitter handle after s
@@ -1224,7 +1224,7 @@ void KDGanttMinimizeSplitter::setHidden( QWidget *w, bool hide )
 	w->hide();
     else
 	w->show();
-    recalc( TRUE );
+    recalc( true );
 }
 
 
@@ -1242,7 +1242,7 @@ bool KDGanttMinimizeSplitter::isHidden( QWidget *w ) const
     else
 	qWarning( "KDGanttMinimizeSplitter::isHidden(), unknown widget" );
 #endif
-    return FALSE;
+    return false;
 }
 #endif
 
@@ -1383,12 +1383,12 @@ void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int
     int sumStretch = 0;
     int spacerCount = 0;
 
-    bool wannaGrow = FALSE; // anyone who really wants to grow?
-    //    bool canShrink = FALSE; // anyone who could be persuaded to shrink?
+    bool wannaGrow = false; // anyone who really wants to grow?
+    //    bool canShrink = false; // anyone who could be persuaded to shrink?
 
     int i;
     for ( i = start; i < start + count; i++ ) {
-	chain[i].done = FALSE;
+	chain[i].done = false;
 	cHint += chain[i].sizeHint;
 	cMin += chain[i].minimumSize;
 	cMax += chain[i].maximumSize;
@@ -1405,7 +1405,7 @@ void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int
 	//	qDebug("not enough space");
 	for ( i = start; i < start+count; i++ ) {
 	    chain[i].size = chain[i].minimumSize;
-	    chain[i].done = TRUE;
+	    chain[i].done = true;
 	}
     } else if ( space < cHint + spacerCount*spacer ) {
 	// Less space than sizeHint, but more than minimum.
@@ -1418,7 +1418,7 @@ void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int
 	for ( i = start; i < start+count; i++ ) {
 	    if ( !chain[i].done && chain[i].minimumSize >= chain[i].sizeHint) {
 		chain[i].size = chain[i].sizeHint;
-		chain[i].done = TRUE;
+		chain[i].done = true;
 		space_left -= chain[i].sizeHint;
 		// sumStretch -= chain[i].stretch;
 		n--;
@@ -1426,7 +1426,7 @@ void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int
 	}
 	bool finished = n == 0;
 	while ( !finished ) {
-	    finished = TRUE;
+	    finished = true;
 	    fixed fp_over = toFixed( overdraft );
 	    fixed fp_w = 0;
 
@@ -1441,9 +1441,9 @@ void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int
 		chain[i].size = chain[i].sizeHint - w;
 		fp_w -= toFixed( w ); //give the difference to the next
 		if ( chain[i].size < chain[i].minimumSize ) {
-		    chain[i].done = TRUE;
+		    chain[i].done = true;
 		    chain[i].size = chain[i].minimumSize;
-		    finished = FALSE;
+		    finished = false;
 		    overdraft -= chain[i].sizeHint - chain[i].minimumSize;
 		    // sumStretch -= chain[i].stretch;
 		    n--;
@@ -1459,7 +1459,7 @@ void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int
 	    if ( !chain[i].done && (chain[i].maximumSize <= chain[i].sizeHint
 				    || wannaGrow && !chain[i].expansive) ) {
 		chain[i].size = chain[i].sizeHint;
-		chain[i].done = TRUE;
+		chain[i].done = true;
 		space_left -= chain[i].sizeHint;
 		sumStretch -= chain[i].stretch;
 		n--;
@@ -1504,7 +1504,7 @@ void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int
 		    if ( !chain[i].done &&
 			 chain[i].size < chain[i].sizeHint ) {
 			chain[i].size = chain[i].sizeHint;
-			chain[i].done = TRUE;
+			chain[i].done = true;
 			space_left -= chain[i].sizeHint;
 			sumStretch -= chain[i].stretch;
 			n--;
@@ -1517,7 +1517,7 @@ void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int
 		    if ( !chain[i].done &&
 			 chain[i].size > chain[i].maximumSize ) {
 			chain[i].size = chain[i].maximumSize;
-			chain[i].done = TRUE;
+			chain[i].done = true;
 			space_left -= chain[i].maximumSize;
 			sumStretch -= chain[i].stretch;
 			n--;

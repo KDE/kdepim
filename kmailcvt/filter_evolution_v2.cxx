@@ -211,7 +211,7 @@ void FilterEvolution_v2::importMBox(FilterInfo *info, const QString& mboxName, c
             if(!targetDir.isNull()) {
                 if(_targetDir.contains(".sbd"))
                     _targetDir.remove(".sbd");
-                destFolder += "Evolution-Import/" + _targetDir + "/" + filenameInfo.baseName(TRUE); // mboxName;
+                destFolder += "Evolution-Import/" + _targetDir + "/" + filenameInfo.baseName(true); // mboxName;
             } else {
                 destFolder = "Evolution-Import/" + rootDir;
                 if(destFolder.contains(".sbd"))

@@ -212,25 +212,25 @@ void ResolutionDlg::adjustButtons(ResolutionTable*tab)
 	if (!(tab->fExistItems & eExistsPC) )
 	{
 		fWidget->fPCValues->setText(i18n("Delete entry"));
-		fWidget->fKeepBoth->setDisabled(TRUE);
+		fWidget->fKeepBoth->setDisabled(true);
 		fWidget->fKeepBoth->hide();
 	}
 	if (!(tab->fExistItems & eExistsPalm) )
 	{
 		fWidget->fPalmValues->setText(i18n("Delete entry"));
-		fWidget->fKeepBoth->setDisabled(TRUE);
+		fWidget->fKeepBoth->setDisabled(true);
 		fWidget->fKeepBoth->hide();
 	}
 	if (!(tab->fExistItems & eExistsBackup) )
 	{
-		fWidget->fBackupValues->setDisabled(TRUE);
+		fWidget->fBackupValues->setDisabled(true);
 	}
 }
 
 void ResolutionDlg::fillListView()
 {
 	FUNCTIONSETUP;
-	fWidget->fResolutionView->setSorting(-1, FALSE);
+	fWidget->fResolutionView->setSorting(-1, false);
 	fWidget->fResolutionView->clear();
 	for ( ResolutionItem* it = fTable->last(); it; it = fTable->prev() )
 	{

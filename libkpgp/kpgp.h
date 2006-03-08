@@ -234,7 +234,7 @@ public:
   bool storePassPhrase(void) const;
 
   /** clears everything from memory */
-  void clear(const bool erasePassPhrase = FALSE);
+  void clear(const bool erasePassPhrase = false);
 
   /** returns the last error that occurred */
   const QString lastErrorMsg(void) const;
@@ -343,7 +343,7 @@ private:
        0 (together with some warning message) if something is missing
       -1 if the passphrase dialog was canceled
   */
-  int prepare(bool needPassPhrase=FALSE, Block* block = 0 );
+  int prepare(bool needPassPhrase=false, Block* block = 0 );
 
   /** cleanup passphrase if it should not be stored. */
   void cleanupPass() { if (!storePass) wipePassPhrase(); }

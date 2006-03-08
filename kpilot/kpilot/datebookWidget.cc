@@ -73,10 +73,10 @@ DatebookWidget::DatebookWidget(QWidget *parent, const QString &dbpath) :
 	fEventList->addColumn( i18n( "Rec" ) );
 	fEventList->addColumn( i18n( "Description" ) );
 //	fEventList->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7, 0, 0, fEventList->sizePolicy().hasHeightForWidth() ) );
-	fEventList->setAllColumnsShowFocus( TRUE );
-	fEventList->setShowSortIndicator( TRUE );
+	fEventList->setAllColumnsShowFocus( true );
+	fEventList->setShowSortIndicator( true );
 	fEventList->setResizeMode( KListView::/*LastColumn*/AllColumns );
-	fEventList->setFullWidth( TRUE );
+	fEventList->setFullWidth( true );
 //	fEventList->setAlternateBackground( QColor( 221, 146, 240 ) );
 	g->addMultiCellWidget(fEventList, 0, 2, 3, 3);
 

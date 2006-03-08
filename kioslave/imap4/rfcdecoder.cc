@@ -351,14 +351,14 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
     }
     beg = pos + 2;
     end = beg;
-    valid = TRUE;
+    valid = true;
     // parse charset name
     for (i = 2, pos += 2;
          i < maxLen && (*pos != '?' && (ispunct (*pos) || isalnum (*pos)));
          i++)
       pos++;
     if (*pos != '?' || i < 4 || i >= maxLen)
-      valid = FALSE;
+      valid = false;
     else
     {
       charset = Q3CString (beg, i - 1);  // -2 + 1 for the zero
@@ -376,7 +376,7 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
       if (pos[2] != '?'
           || (encoding != 'Q' && encoding != 'B' && encoding != 'q'
               && encoding != 'b'))
-        valid = FALSE;
+        valid = false;
       pos += 3;
       i += 3;
 //    kDebug(7116) << "rfcDecoder::decodeRFC2047String - charset " << charset << " - language " << language << " - '" << pos << "'" << endl;
@@ -392,7 +392,7 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
       }
       end = pos + 2;            //end now points to the first char after the encoded string
       if (i >= maxLen || !*pos)
-        valid = FALSE;
+        valid = false;
     }
     if (valid)
     {

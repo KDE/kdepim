@@ -159,7 +159,7 @@ protected:
     outputLine (_str.toLatin1 (), _str.length());
   }
   void doListEntry (const KUrl & _url, int stretch, imapCache * cache = NULL,
-    bool withFlags = FALSE, bool withSubject = FALSE);
+    bool withFlags = false, bool withSubject = false);
 
   /**
    * Send a list entry (folder) to the application
@@ -183,7 +183,7 @@ private:
   // This method behaves like the above method but takes an already encoded url,
   // so you don't have to call KUrl::url() for every mail.
   void doListEntry (const QString & encodedUrl, int stretch, imapCache * cache = NULL,
-    bool withFlags = FALSE, bool withSubject = FALSE);
+    bool withFlags = false, bool withSubject = false);
 
   QString myHost, myUser, myPass, myAuth, myTLS, myService;
   int myPort;

@@ -499,7 +499,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
   if (rest[0] == '[')
   {
     rest.pos++;
-    Q3CString option = parseOneWordC(rest, TRUE);
+    Q3CString option = parseOneWordC(rest, true);
 
     switch (option[0])
     {
@@ -1223,7 +1223,7 @@ void imapParser::parseBody (parseString & inWords)
     QByteArray label;
     inWords.pos++;
 
-    specifier = parseOneWord (inWords, TRUE);
+    specifier = parseOneWord (inWords, true);
 
     if (inWords[0] == '(')
     {
@@ -1708,7 +1708,7 @@ bool imapParser::parseRead (QByteArray & buffer, long len, long relay)
   Q_UNUSED(relay);
   qWarning
     ("imapParser::parseRead - virtual function not reimplemented - no data read");
-  return FALSE;
+  return false;
 }
 
 bool imapParser::parseReadLine (QByteArray & buffer, long relay)
@@ -1717,7 +1717,7 @@ bool imapParser::parseReadLine (QByteArray & buffer, long relay)
   Q_UNUSED(relay);
   qWarning
     ("imapParser::parseReadLine - virtual function not reimplemented - no data read");
-  return FALSE;
+  return false;
 }
 
 void
@@ -1843,11 +1843,11 @@ Q3CString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, 
   if (len > 0 && inWords[0] == '"')
   {
     unsigned int i = 1;
-    bool quote = FALSE;
+    bool quote = false;
     while (i < len && (inWords[i] != '"' || quote))
     {
       if (inWords[i] == '\\') quote = !quote;
-      else quote = FALSE;
+      else quote = false;
       i++;
     }
     if (i < len)
@@ -1917,7 +1917,7 @@ Q3CString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, 
 bool imapParser::parseOneNumber (parseString & inWords, ulong & num)
 {
   bool valid;
-  num = parseOneWordC(inWords, TRUE).toULong(&valid);
+  num = parseOneWordC(inWords, true).toULong(&valid);
   return valid;
 }
 

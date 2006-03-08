@@ -88,7 +88,7 @@ class LIBKCAL_EXPORT VCalFormat : public CalFormat
     /** takes a QDate and returns a string in the format YYYYMMDDTHHMMSS */
     QString qDateToISO(const QDate &);
     /** takes a QDateTime and returns a string in format YYYYMMDDTHHMMSS */
-    QString qDateTimeToISO(const QDateTime &, bool zulu=TRUE);
+    QString qDateTimeToISO(const QDateTime &, bool zulu=true);
     /** takes a string in the format YYYYMMDDTHHMMSS and returns a
      * valid QDateTime. */
     QDateTime ISOToQDateTime(const QString & dtStr);

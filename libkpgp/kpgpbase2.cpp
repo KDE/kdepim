@@ -116,7 +116,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
   if(!recipients.isEmpty())
   {
     int index = 0;
-    bool bad = FALSE;
+    bool bad = false;
     unsigned int num = 0;
     QByteArray badkeys = "";
     if (error.find("Cannot find the public key") != -1)
@@ -126,7 +126,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       while((index = error.find("Cannot find the public key",index))
 	    != -1)
       {
-        bad = TRUE;
+        bad = true;
         index = error.find('\'',index);
         int index2 = error.find('\'',index+1);
         if (num++)
@@ -157,7 +157,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       while((index = error.find("skipping userid",index))
 	    != -1)
       {
-        bad = TRUE;
+        bad = true;
         int index2 = error.find('\n',index+16);
         if (num++)
           badkeys += ", ";

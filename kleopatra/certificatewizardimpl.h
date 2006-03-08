@@ -51,7 +51,7 @@ class CertificateWizardImpl : public CertificateWizard
     Q_OBJECT
 
 public:
-    CertificateWizardImpl( QWidget* parent = 0, bool modal = FALSE, Qt::WFlags fl = 0 );
+    CertificateWizardImpl( QWidget* parent = 0, bool modal = false, Qt::WFlags fl = 0 );
     ~CertificateWizardImpl();
 
     bool sendToCA() const;

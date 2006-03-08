@@ -209,7 +209,7 @@ void FilterThunderbird::importMBox(FilterInfo *info, const QString& mboxName, co
             if(!targetDir.isNull()) {
                 if(_targetDir.contains(".sbd"))
                     _targetDir.remove(".sbd");
-                destFolder += "Thunderbird-Import/" + _targetDir + "/" + filenameInfo.baseName(TRUE);// mboxName;
+                destFolder += "Thunderbird-Import/" + _targetDir + "/" + filenameInfo.baseName(true);// mboxName;
             } else {
                 destFolder = "Thunderbird-Import/" + rootDir;
                 if(destFolder.contains(".sbd"))

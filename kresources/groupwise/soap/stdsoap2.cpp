@@ -182,7 +182,7 @@ static const char *soap_strerror(struct soap*);
 #endif
 
 #ifdef VXWORKS
-static int vx_nonblocking = TRUE; /* ioctl argument */
+static int vx_nonblocking = true; /* ioctl argument */
 #endif
 
 #if defined(PALM) && !defined(PALM_2)
@@ -3196,7 +3196,7 @@ again:
     ioctlsocket((SOAP_SOCKET)fd, FIONBIO, &nonblocking);
   }
 #elif defined(VXWORKS)
-  { vx_nonblocking = TRUE;
+  { vx_nonblocking = true;
     ioctl((SOAP_SOCKET)fd, FIONBIO, (int)(&vx_nonblocking)); /* modified to use fd */
   }
 #else
@@ -3208,7 +3208,7 @@ again:
     ioctlsocket((SOAP_SOCKET)fd, FIONBIO, &blocking);
   }
 #elif defined(VXWORKS)
-  { vx_nonblocking = FALSE;
+  { vx_nonblocking = false;
     ioctl((SOAP_SOCKET)fd, FIONBIO, (int)(&vx_nonblocking)); /* modified to use fd */
   }
 #else
@@ -3298,7 +3298,7 @@ again:
     ioctlsocket((SOAP_SOCKET)fd, FIONBIO, &blocking);
   }
 #elif defined(VXWORKS)
-  { vx_nonblocking = FALSE;
+  { vx_nonblocking = false;
     ioctl((SOAP_SOCKET)fd, FIONBIO, (int)(&vx_nonblocking)); /* modified to use fd */
   }
 #else
@@ -3738,7 +3738,7 @@ soap_accept(struct soap *soap)
           ioctlsocket((SOAP_SOCKET)soap->master, FIONBIO, &nonblocking);
         }
 #elif defined(VXWORKS)
-        { vx_nonblocking = TRUE;
+        { vx_nonblocking = true;
           ioctl((SOAP_SOCKET)soap->master, FIONBIO, (int)(&vx_nonblocking));
         }
 #else
@@ -3751,7 +3751,7 @@ soap_accept(struct soap *soap)
         ioctlsocket((SOAP_SOCKET)soap->master, FIONBIO, &blocking);
       }
 #elif defined(VXWORKS)
-      { vx_nonblocking = FALSE;
+      { vx_nonblocking = false;
         ioctl((SOAP_SOCKET)soap->master, FIONBIO, (int)(&vx_nonblocking));
       }
 #else
@@ -3821,7 +3821,7 @@ soap_accept(struct soap *soap)
           ioctlsocket((SOAP_SOCKET)soap->master, FIONBIO, &blocking);
           ioctlsocket((SOAP_SOCKET)soap->socket, FIONBIO, &blocking);
 #elif defined(VXWORKS)
-          vx_nonblocking = FALSE;
+          vx_nonblocking = false;
           ioctl((SOAP_SOCKET)soap->master, FIONBIO, (int)(&vx_nonblocking));
           ioctl((SOAP_SOCKET)soap->socket, FIONBIO, (int)(&vx_nonblocking));
 #elif defined(PALM)

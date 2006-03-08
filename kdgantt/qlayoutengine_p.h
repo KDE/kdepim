@@ -63,7 +63,7 @@
 struct QLayoutStruct
 {
     void initParameters() { minimumSize = sizeHint = 0;
-    maximumSize = QWIDGETSIZE_MAX; expansive = FALSE; empty = TRUE; }
+    maximumSize = QWIDGETSIZE_MAX; expansive = false; empty = true; }
     void init() { stretch = 0; initParameters(); }
     //permanent storage:
     int stretch;

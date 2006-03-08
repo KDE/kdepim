@@ -135,7 +135,7 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
                 _path = "Sylpheed-Import/";
                 QString _tmp = dir.filePath(*mailFile);
                 _tmp = _tmp.remove(_tmp.length() - _mfile.length() -1, _mfile.length()+1);
-                _path += _tmp.remove( mailDir ,TRUE);
+                _path += _tmp.remove( mailDir ,true);
                 QString _info = _path;
                 info->addLog(i18n("Import folder %1...").arg(_info.remove(0,15)));
 

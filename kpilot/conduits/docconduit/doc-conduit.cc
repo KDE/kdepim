@@ -480,9 +480,9 @@ void DOCConduit::syncNextTXT()
 	// Include all "extensions" except the last. This allows full stops inside the database name (e.g. abbreviations)
 	// first fill everything with 0, so we won't have a buffer overflow.
 	memset(&dbinfo.name[0], 0, 33);
-	strncpy(&dbinfo.name[0], fl.baseName(TRUE).toLatin1(), 30);
+	strncpy(&dbinfo.name[0], fl.baseName(true).toLatin1(), 30);
 
-	bool alreadySynced=fDBNames.contains(fl.baseName(TRUE));
+	bool alreadySynced=fDBNames.contains(fl.baseName(true));
 	if (!alreadySynced) {
 		docSyncInfo syncInfo(QString::fromLatin1(dbinfo.name),
 			txtfilename, pdbfilename, eSyncNone);
@@ -538,7 +538,7 @@ void DOCConduit::checkPDBFiles() {
 
 	//  Get the doc title and check if it has already been synced (in the synced docs list of in fDBNames to be synced)
 	// If the doc title doesn't appear in either list, install it to the Handheld, and add it to the list of dbs to be synced.
-	QString dbname=fl.baseName(TRUE).left(30);
+	QString dbname=fl.baseName(true).left(30);
 	if (!fDBNames.contains(dbname) && !fDBListSynced.contains(dbname)) {
 		if (fHandle->installFiles(lst, false)) {
 			DBInfo dbinfo;

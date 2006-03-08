@@ -127,7 +127,7 @@ void FilterOE::importMailBox( FilterInfo *info, const QString& fileName)
     quint32 sig_block1, sig_block2;
     mailbox >> sig_block1 >> sig_block2;
     if (sig_block1 == OE4_SIG_1 && sig_block2 == OE4_SIG_2) {
-        folderName = "OE-Import/" + mailfileinfo.baseName(TRUE);
+        folderName = "OE-Import/" + mailfileinfo.baseName(true);
         info->addLog(i18n("Importing OE4 Mailbox %1").arg( "../" + _nameOfFile));
         info->setTo(folderName);
         mbxImport(info, mailbox);
@@ -137,7 +137,7 @@ void FilterOE::importMailBox( FilterInfo *info, const QString& fileName)
         mailbox >> sig_block3 >> sig_block4;
         if (sig_block1 == OE5_SIG_1 && sig_block3 == OE5_SIG_3 && sig_block4 == OE5_SIG_4) {
             if (sig_block2 == OE5_EMAIL_SIG_2) {
-                folderName = "OE-Import/" + mailfileinfo.baseName(TRUE);
+                folderName = "OE-Import/" + mailfileinfo.baseName(true);
                 if(parsedFolder) {
                     QString _tmpFolder = getFolderName(_nameOfFile);
                     if(!_tmpFolder.isEmpty()) folderName = "OE-Import/" + _tmpFolder;

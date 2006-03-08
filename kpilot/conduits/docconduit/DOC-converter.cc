@@ -153,7 +153,7 @@ DOCConverter::DOCConverter(QObject *parent, const char *name):QObject(parent,nam
 	FUNCTIONSETUP;
 	docdb=0L;
 	eSortBookmarks=eSortNone;
-	fBookmarks.setAutoDelete( TRUE );
+	fBookmarks.setAutoDelete( true );
 	(void) doc_converter_id;
 }
 
@@ -267,7 +267,7 @@ int DOCConverter::findBmkInline(QString &text, bmkList &fBmks) {
 	int nr=0;
 	QRegExp rx(CSL1("<\\*(.*)\\*>"));
 
-	rx.setMinimal(TRUE);
+	rx.setMinimal(true);
 	int pos = 0;
 	while (pos >= 0) {
 		pos = rx.search(text, pos);
@@ -410,7 +410,7 @@ bool DOCConverter::convertTXTtoPDB() {
 
 	// Process the bookmarks: find the occurrences of the regexps, and sort them if requested:
 	bmkSortedList pdbBookmarks;
-	pdbBookmarks.setAutoDelete(TRUE);
+	pdbBookmarks.setAutoDelete(true);
 	docBookmark*bmk;
 	for (bmk = fBookmarks.first(); bmk; bmk = fBookmarks.next())
 	{
@@ -568,7 +568,7 @@ bool DOCConverter::convertPDBtoTXT()
 	// for the ztxt conduit there might be annotations after the bookmarks, so the upper bound needs to be adapted.
 	int upperBmkRec=docdb->recordCount();
 	bmkSortedList bmks;
-	bmks.setAutoDelete(TRUE);
+	bmks.setAutoDelete(true);
 	for (int i=header.numRecords+1; i<upperBmkRec; ++i)
 	{
 		PilotRecord*rec=docdb->readRecordByIndex(i);

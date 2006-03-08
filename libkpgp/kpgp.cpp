@@ -74,7 +74,7 @@ Module::~Module()
   writeAddressData();
 
   if (kpgpObject == this) kpgpObject = kpgpod.setObject( Module::kpgpObject, 0, false );
-  clear(TRUE);
+  clear(true);
   delete config;
   delete pgp;
 }
@@ -275,7 +275,7 @@ Module::decrypt( Block& block )
   do {
     // everything ready
     if( prepare( true, &block ) != 1 )
-      return FALSE;
+      return false;
     // ok now try to decrypt the message.
     retval = pgp->decrypt( block, passphrase );
     // loop on bad passphrase
@@ -685,7 +685,7 @@ Module::signKey(const KeyID& keyId)
   if (0 == pgp) assignPGPBase();
 
   if( prepare( true ) != 1 )
-    return FALSE;
+    return false;
   if(pgp->signKey(keyId, passphrase) & ERROR)
   {
     errMsg = pgp->lastErrorMessage();
@@ -875,7 +875,7 @@ Module::changePassPhrase()
 {
   //FIXME...
   KMessageBox::information(0,i18n("This feature is\nstill missing"));
-  return FALSE;
+  return false;
 }
 
 void
@@ -1326,12 +1326,12 @@ Module::checkForPGP(void)
   QString path;
   QStringList pSearchPaths;
 
-  havePgp=FALSE;
+  havePgp=false;
 
   path = QString::fromLocal8Bit( getenv("PATH") );
   pSearchPaths = path.split(":");
 
-  haveGpg=FALSE;
+  haveGpg=false;
   // lets try gpg
 
   foreach( QString curPath, pSearchPaths )
@@ -1341,14 +1341,14 @@ Module::checkForPGP(void)
     if ( !access( path.toLatin1() , X_OK ) ) // ### PORT: use Qt
     {
       kDebug(5100) << "Kpgp: gpg found" << endl;
-      havePgp=TRUE;
-      haveGpg=TRUE;
+      havePgp=true;
+      haveGpg=true;
       break;
     }
   }
 
   // search for pgp5.0
-  havePGP5=FALSE;
+  havePGP5=false;
   foreach( QString curPath, pSearchPaths )
   {
     path = curPath;
@@ -1356,8 +1356,8 @@ Module::checkForPGP(void)
     if ( !access( path.toLatin1() , X_OK ) ) // ### PORT: use Qt
     {
       kDebug(5100) << "Kpgp: pgp 5 found" << endl;
-      havePgp=TRUE;
-      havePGP5=TRUE;
+      havePgp=true;
+      havePGP5=true;
       break;
     }
   }
@@ -1371,7 +1371,7 @@ Module::checkForPGP(void)
       if ( !access( path.toLatin1() , X_OK ) ) // ### PORT: use Qt
       {
         kDebug(5100) << "Kpgp: pgp 2 or 6 found" << endl;
-        havePgp=TRUE;
+        havePgp=true;
         break;
       }
     }

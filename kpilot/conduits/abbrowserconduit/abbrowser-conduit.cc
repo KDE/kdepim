@@ -1936,7 +1936,7 @@ bool AbbrowserConduit::_buildResolutionTable(ResolutionTable*tab, const Addresse
 {
 	FUNCTIONSETUP;
 	if (!tab) return false;
-	tab->setAutoDelete( TRUE );
+	tab->setAutoDelete( true );
 	tab->labels[0]=i18n("Item on PC");
 	tab->labels[1]=i18n("Handheld");
 	tab->labels[2]=i18n("Last sync");

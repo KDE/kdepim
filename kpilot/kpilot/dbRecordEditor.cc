@@ -137,12 +137,12 @@ void DBRecordEditor::initWidgets()
 	DBRecordEditorBaseLayout->addWidget( fRecordIDLabel, 0, 2 );
 
 	fRecordIndex = new QLineEdit( fWidget, "fRecordIndex" );
-	fRecordIndex->setReadOnly( TRUE );
+	fRecordIndex->setReadOnly( true );
 
 	DBRecordEditorBaseLayout->addWidget( fRecordIndex, 0, 1 );
 
 	fRecordID = new QLineEdit( fWidget, "fRecordID" );
-	fRecordID->setReadOnly( TRUE );
+	fRecordID->setReadOnly( true );
 
 	DBRecordEditorBaseLayout->addWidget( fRecordID, 0, 3 );
 

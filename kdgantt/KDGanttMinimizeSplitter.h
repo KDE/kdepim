@@ -73,13 +73,13 @@ public:
 
 #if QT_VERSION >= 300
     virtual void setResizeMode( QWidget *w, ResizeMode );
-    virtual void setOpaqueResize( bool = TRUE );
+    virtual void setOpaqueResize( bool = true );
     bool opaqueResize() const;
 
     void moveToFirst( QWidget * );
     void moveToLast( QWidget * );
 
-    void refresh() { recalc( TRUE ); }
+    void refresh() { recalc( true ); }
     virtual QSize sizeHint() const;
     virtual QSize minimumSizeHint() const;
 
@@ -105,15 +105,15 @@ protected:
 
 private:
     void init();
-    void recalc( bool update = FALSE );
+    void recalc( bool update = false );
     void doResize();
     void storeSizes();
     void processChildEvents();
-    QSplitterLayoutStruct *addWidget( QWidget*, bool first = FALSE );
+    QSplitterLayoutStruct *addWidget( QWidget*, bool first = false );
     void recalcId();
     void moveBefore( int pos, int id, bool upLeft );
     void moveAfter( int pos, int id, bool upLeft );
-    void setG( QWidget *w, int p, int s, bool isSplitter = FALSE );
+    void setG( QWidget *w, int p, int s, bool isSplitter = false );
 
     QCOORD pick( const QPoint &p ) const
     { return orient == Qt::Horizontal ? p.x() : p.y(); }

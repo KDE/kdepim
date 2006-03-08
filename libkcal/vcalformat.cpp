@@ -72,7 +72,7 @@ bool VCalFormat::load(Calendar *calendar, const QString &fileName)
 
   if (!vcal) {
     setException(new ErrorFormat(ErrorFormat::CalVersionUnknown));
-    return FALSE;
+    return false;
   }
 
   // any other top-level calendar stuff should be added/initialized here
@@ -501,7 +501,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
     } else if (recur->duration() == -1) {
       tmpStr += "#0"; // defined as repeat forever
     } else {
-      tmpStr += qDateTimeToISO(recur->endDateTime(), FALSE);
+      tmpStr += qDateTimeToISO(recur->endDateTime(), false);
     }
     // Only write out the rrule if we have a valid recurrence (i.e. a known
     // type in thee switch above)
@@ -946,11 +946,11 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
   // "take up" any time.
   /*if ((isAPropertyOf(vevent, VCDTstartProp) == 0) ||
       (isAPropertyOf(vevent, VCDTendProp) == 0)) {
-    anEvent->setFloats(TRUE);
+    anEvent->setFloats(true);
     } else {
     }*/
 
-  anEvent->setFloats(FALSE);
+  anEvent->setFloats(false);
 
   // start time
   if ((vo = isAPropertyOf(vevent, VCDTstartProp)) != 0) {
@@ -958,7 +958,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     //    kDebug(5800) << "s is " << //          s << ", ISO is " << ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))).toString() << endl;
     deleteStr(s);
     if (anEvent->dtStart().time().isNull())
-      anEvent->setFloats(TRUE);
+      anEvent->setFloats(true);
   }
 
   // stop time
@@ -966,7 +966,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     anEvent->setDtEnd(ISOToQDateTime(s = fakeCString(vObjectUStringZValue(vo))));
       deleteStr(s);
       if (anEvent->dtEnd().time().isNull())
-        anEvent->setFloats(TRUE);
+        anEvent->setFloats(true);
   }
 
   // at this point, there should be at least a start or end time.
@@ -1069,7 +1069,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
                    }
                    anEvent->recurrence()->addMonthlyPos( tmpPos, qba );
                    qba.detach();
-                   qba.fill(FALSE); // clear out
+                   qba.fill(false); // clear out
                  } // while != "#"
                }
              break;}

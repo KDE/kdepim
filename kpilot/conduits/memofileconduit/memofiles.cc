@@ -686,7 +686,7 @@ bool Memofiles::folderRemove(const QDir &_d)
 		QFileInfo info(d, *it);
 		if(info.isDir()) {
 			if(!folderRemove(QDir(info.filePath())))
-				return FALSE;
+				return false;
 		} else {
 #ifdef DEBUG
 			DEBUGCONDUIT << fname
@@ -697,14 +697,14 @@ bool Memofiles::folderRemove(const QDir &_d)
 	}
 	QString name = d.dirName();
 	if(!d.cdUp())
-		return FALSE;
+		return false;
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 	<< ": removing folder: [" << name << "]" << endl;
 #endif
 	d.rmdir(name);
 
-	return TRUE;
+	return true;
 }
 
 QString Memofiles::filename(PilotMemo * memo)

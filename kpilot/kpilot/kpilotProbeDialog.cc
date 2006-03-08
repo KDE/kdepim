@@ -113,7 +113,7 @@ ProbeDialog::ProbeDialog(QWidget *parent, const char *n) :
 
 
 	fResultsGroup = new Q3GroupBox( i18n( "Detected Values" ), mainWidget, "fResultsGroup" );
-	fResultsGroup->setEnabled( FALSE );
+	fResultsGroup->setEnabled( false );
 	fResultsGroup->setColumnLayout(0, Qt::Vertical );
 	fResultsGroupLayout = new QGridLayout( fResultsGroup->layout() );
 	fResultsGroupLayout->setAlignment( Qt::AlignTop );

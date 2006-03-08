@@ -725,7 +725,7 @@ mimeHeader::magicSetType (bool aAutoDecode)
   QByteArray body;
   KMimeMagicResult *result;
 
-  KMimeMagic::self ()->setFollowLinks (TRUE); // is it necessary ?
+  KMimeMagic::self ()->setFollowLinks (true); // is it necessary ?
 
   if (aAutoDecode)
     body = bodyDecodedBinary ();
