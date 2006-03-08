@@ -4,6 +4,8 @@ add_subdirectory( libical )
 add_subdirectory( versit ) 
 add_subdirectory( tests ) 
 
+ADD_DEFINITIONS(-DPACKAGE_DATA_DIR=\\""${CMAKE_INSTALL_PREFIX}${DATA_INSTALL_DIR}/libical"\\" ) # added manually
+
 include_directories( ${CMAKE_SOURCE_DIR}/libkcal/versit/  ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ ${CMAKE_SOURCE_DIR}/ ${CMAKE_SOURCE_DIR}/ktnef ${CMAKE_SOURCE_DIR}/libemailfunctions ${CMAKE_SOURCE_DIR}/libkmime ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 set(ICALSCRIPTS ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ )
