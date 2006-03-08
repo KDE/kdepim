@@ -288,7 +288,7 @@ kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
 kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 
-target_link_libraries(kcal  ${LIB_KDE3SUPPORT}  ktnef emailfunctions kmime kresources kabc  )
+target_link_libraries(kcal  ${LIB_KDE3SUPPORT} ${QT_QTXML_LIBRARY} ktnef kmime kresources kabc  )
 
 set_target_properties(kcal PROPERTIES VERSION 2.0.0 SOVERSION 2 )
 install_targets(${LIB_INSTALL_DIR} kcal )
