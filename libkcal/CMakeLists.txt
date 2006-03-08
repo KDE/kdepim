@@ -183,6 +183,22 @@ set(COMBINEDHEADERS
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icallangbind.h
 )
 
+macro(CREATE_ICAL_FILE _out_FILE)
+    FILE(WRITE ${_out_FILE} "#ifdef __cplusplus\n")
+    FILE(APPEND ${_out_FILE} "extern \"C\" {\n")
+	FILE(APPEND ${_out_FILE} "#endif\n")
+	FILE(APPEND ${_out_FILE} "/*\n")
+	FILE(APPEND ${_out_FILE} " $$''Id''$$\n")
+	FILE(APPEND ${_out_FILE} "*/\n")
+	FILE(APPEND ${_out_FILE} "\n")
+	FILE(APPEND ${_out_FILE} "#ifdef __cplusplus\n")
+	FILE(APPEND ${_out_FILE} "}\n")
+	FILE(APPEND ${_out_FILE} "#endif\n")
+endmacro(CREATE_ICAL_FILE)
+
+macro_additional_clean_files( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h )
+
+create_ical_file( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h )
 
 
 
