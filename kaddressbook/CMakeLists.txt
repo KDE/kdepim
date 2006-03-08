@@ -1,5 +1,14 @@
 kde4_header()
 
+set(libkabcommon_SRCS
+	${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs.cpp 
+	${CMAKE_SOURCE_DIR}/kaddressbook/common/locationmap.cpp 
+	${CMAKE_SOURCE_DIR}/kaddressbook/common/filter.cpp
+	)
+
+kde4_add_kcfg_files(libkabcommon_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
+
+
 add_subdirectory( interfaces ) 
 add_subdirectory( common ) 
 add_subdirectory( printing ) 
@@ -17,7 +26,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${CMAKE_SOURCE_
 
 ########### next target ###############
 
-set(kaddressbook_SRCS 
+set(kaddressbook_SRCS ${libkabcommon_SRCS} 
    main.cpp 
    kaddressbookmain.cpp 
    addresseeconfig.cpp 
