@@ -153,6 +153,37 @@ set(libicalss_SRCS
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalssyacc.c
    )
 
+## ORDERING OF HEADERS IS SIGNIFICANT. Don't change this ordering. It
+## is required to make the combined header ical.h properly
+set(COMBINEDHEADERS 
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalversion.h         
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltime.h        
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalduration.h    
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalperiod.h      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalenums.h       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltypes.h       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrecur.h      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalattach.h     
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalicalderivedvalue.h      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalicalderivedparameter.h      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalvalue.h       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalparameter.h   
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalicalderivedproperty.h       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalproperty.h    
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/pvl.h         
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalarray.h       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalcomponent.h   
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltimezone.h    
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalparser.h      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalmemory.h      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalerror.h       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.h 
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/sspm.h        
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalmime.h        
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icallangbind.h
+)
+
+
 
 
 ########### next target ###############
