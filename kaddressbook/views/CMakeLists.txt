@@ -5,7 +5,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/common ${CMAKE_SOURCE_DIR}
 
 ########### next target ###############
 
-set(kaddrbk_cardview_PART_SRCS 
+set(kaddrbk_cardview_PART_SRCS ${libkabcommon_SRCS} 
    cardview.cpp 
    colorlistbox.cpp 
    configurecardviewdialog.cpp 

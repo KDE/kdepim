@@ -2,6 +2,8 @@ kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
+kde4_add_kcfg_files(libkabcommon_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
+
 
 ########### next target ###############
 

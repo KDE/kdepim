@@ -6,7 +6,6 @@ set(libkabcommon_SRCS
 	${CMAKE_SOURCE_DIR}/kaddressbook/common/filter.cpp
 	)
 
-kde4_add_kcfg_files(libkabcommon_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
 
 
 add_subdirectory( interfaces ) 
