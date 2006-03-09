@@ -7,22 +7,23 @@ include_directories( ${CMAKE_SOURCE_DIR}/ktnef ${KDE4_INCLUDE_DIR} ${QT_INCLUDES
 
 ########### next target ###############
 
-set(ktnef_SRCS 
+set(ktnef_bin_SRCS 
    ktnefmain.cpp 
    ktnefview.cpp 
    attachpropertydialog.cpp 
    messagepropertydialog.cpp 
    main.cpp )
 
-kde4_automoc(${ktnef_SRCS})
+kde4_automoc(${ktnef_bin_SRCS})
 
-kde4_add_ui3_files(ktnef_SRCS attachpropertydialogbase.ui )
+kde4_add_ui3_files(ktnef_bin_SRCS attachpropertydialogbase.ui )
 
-kde4_add_executable(ktnef ${ktnef_SRCS})
+kde4_add_executable(ktnef_bin ${ktnef_bin_SRCS})
+set_target_properties(ktnef_bin PROPERTIES OUTPUT_NAME ktnef)
 
-target_link_libraries(ktnef  ${LIB_KDEUI} ktnef )
+target_link_libraries(ktnef_bin  ${LIB_KDEUI} ktnef )
 
-install_targets(/bin ktnef )
+install_targets(/bin ktnef_bin )
 
 
 ########### install files ###############
