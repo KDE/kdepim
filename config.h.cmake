@@ -65,10 +65,10 @@
 #define HAVE_GETDOMAINNAME_PROTO 1
 
 /* Define if you have gethostname */
-#define HAVE_GETHOSTNAME 1
+#cmakedefine HAVE_GETHOSTNAME 1
 
 /* Define if you have the gethostname prototype */
-#define HAVE_GETHOSTNAME_PROTO 1
+#cmakedefine HAVE_GETHOSTNAME_PROTO 1
 
 /* Define to 1 if you have the <gnokii.h> header file. */
 #cmakedefine HAVE_GNOKII_H 1

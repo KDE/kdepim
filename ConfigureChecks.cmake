@@ -116,3 +116,5 @@ check_include_files("sys/time.h;time.h" TIME_WITH_SYS_TIME)
 check_include_files(assert.h HAVE_ASSERT_H)
 check_include_files(dirent.h HAVE_DIRENT_H)
 
+check_symbol_exists(gethostname     "unistd.h"                 HAVE_GETHOSTNAME)
+check_prototype_exists(gethostname "stdlib.h;unistd.h" HAVE_GETHOSTNAME_PROTO)
