@@ -31,7 +31,7 @@
 #define HAVE_C99_INITIALIZERS 1
 
 /* Define to 1 if you have the <Carbon/Carbon.h> header file. */
-/* #undef HAVE_CARBON_CARBON_H */
+#cmakedefine HAVE_CARBON_CARBON_H 1
 
 /* Define if you have the CoreAudio API */
 /* #undef HAVE_COREAUDIO */
@@ -148,7 +148,7 @@
 #cmakedefine HAVE_NDIR_H 1
 
 /* Define if your system needs _NSGetEnviron to set up the environment */
-/* #undef HAVE_NSGETENVIRON */
+#cmakedefine HAVE_NSGETENVIRON 1
 
 /* Define if you have OpenSSL < 0.9.6 */
 /* #undef HAVE_OLD_SSL_API */
@@ -160,31 +160,31 @@
 #define HAVE_PUTC_UNLOCKED 1
 
 /* Define if you have res_init */
-#define HAVE_RES_INIT 1
+#cmakedefine HAVE_RES_INIT 1
 
 /* Define if you have the res_init prototype */
-#define HAVE_RES_INIT_PROTO 1
+#cmakedefine HAVE_RES_INIT_PROTO 1
 
 /* Define to 1 if you have the <sasl/sasl.h> header file. */
 #cmakedefine HAVE_SASL_SASL_H 1
 
 /* Define to 1 if you have the `setenv' function. */
-#define HAVE_SETENV 1
+#cmakedefine HAVE_SETENV 1
 
 /* Define if you have the setenv prototype */
-#define HAVE_SETENV_PROTO 1
+#cmakedefine HAVE_SETENV_PROTO 1
 
 /* Define if you have a STL implementation by SGI */
 #define HAVE_SGI_STL 1
 
 /* Define to 1 if you have the `snprintf' function. */
-#define HAVE_SNPRINTF 1
+#cmakedefine HAVE_SNPRINTF 1
 
 /* Define to 1 if you have the `socket' function. */
-#define HAVE_SOCKET 1
+#cmakedefine HAVE_SOCKET 1
 
 /* If we are going to use OpenSSL */
-#define HAVE_SSL 1
+#cmakedefine HAVE_SSL 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #cmakedefine HAVE_STDINT_H 1
@@ -205,16 +205,16 @@
 #cmakedefine HAVE_STRING_H 1
 
 /* Define if you have strlcat */
-/* #undef HAVE_STRLCAT */
+#cmakedefine HAVE_STRLCAT 1
 
 /* Define if you have the strlcat prototype */
-/* #undef HAVE_STRLCAT_PROTO */
+#cmakedefine HAVE_STRLCAT_PROTO 1
 
 /* Define if you have strlcpy */
-/* #undef HAVE_STRLCPY */
+#cmakedefine HAVE_STRLCPY 1
 
 /* Define if you have the strlcpy prototype */
-/* #undef HAVE_STRLCPY_PROTO */
+#cmakedefine HAVE_STRLCPY_PROTO 1
 
 /* Define to 1 if you have the <sysent.h> header file. */
 #cmakedefine HAVE_SYSENT_H 1
@@ -276,22 +276,22 @@
 #cmakedefine HAVE_UNISTD_H 1
 
 /* Define to 1 if you have the `unsetenv' function. */
-#define HAVE_UNSETENV 1
+#cmakedefine HAVE_UNSETENV 1
 
 /* Define if you have the unsetenv prototype */
-#define HAVE_UNSETENV_PROTO 1
+#cmakedefine HAVE_UNSETENV_PROTO 1
 
 /* Define if you have usleep */
-#define HAVE_USLEEP 1
+#cmakedefine HAVE_USLEEP 1
 
 /* Define if you have the usleep prototype */
-#define HAVE_USLEEP_PROTO 1
+#cmakedefine HAVE_USLEEP_PROTO 1
 
 /* Define to 1 if you have the <values.h> header file. */
 #cmakedefine HAVE_VALUES_H 1
 
 /* Define to 1 if you have the `vsnprintf' function. */
-#define HAVE_VSNPRINTF 1
+#cmakedefine HAVE_VSNPRINTF 1
 
 /* Define if you have X11 header files */
 #define HAVE_X11_HEADERS 1
