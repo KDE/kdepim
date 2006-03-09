@@ -5,7 +5,7 @@
 #define GETGROUPS_T gid_t
 
 /* Define to 1 if you have the <assert.h> header file. */
-#define HAVE_ASSERT_H 1
+#cmakedefine HAVE_ASSERT_H 1
 
 /* Define to 1 if you have the `basename' function. */
 #define HAVE_BASENAME 1
@@ -44,7 +44,7 @@
 
 /* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
    */
-#define HAVE_DIRENT_H 1
+#cmakedefine HAVE_DIRENT_H 1
 
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #cmakedefine HAVE_DLFCN_H 1

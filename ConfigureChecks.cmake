@@ -107,5 +107,6 @@ check_include_files(unistd.h HAVE_UNISTD_H)
 check_include_files(values.h HAVE_VALUES_H)
 check_include_files(sys/time.h TM_IN_SYS_TIME)
 check_include_files("sys/time.h;time.h" TIME_WITH_SYS_TIME)
-
+check_include_files(assert.h HAVE_ASSERT_H)
+check_include_files(dirent.h HAVE_DIRENT_H)
 
