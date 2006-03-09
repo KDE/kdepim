@@ -57,6 +57,12 @@ else(KDE4_KDEPIM_NEW_DISTRLISTS)
 	set(KDEPIM_NEW_DISTRLISTS 0)
 endif(KDE4_KDEPIM_NEW_DISTRLISTS)
 
+if(SASL2_FOUND)
+	set(HAVE_LIBSASL2 1)
+else(SASL2_FOUND)
+	set(HAVE_LIBSASL2 0)
+endif(SASL2_FOUND)
+
 #now check for dlfcn.h using the cmake supplied CHECK_include_FILE() macro
 # If definitions like -D_GNU_SOURCE are needed for these checks they
 # should be added to _KDE4_PLATFORM_DEFINITIONS when it is originally

@@ -120,7 +120,7 @@
 #define HAVE_LIBPTHREAD 1
 
 /* Define if you have cyrus-sasl2 libraries */
-#define HAVE_LIBSASL2 1
+#cmakedefine HAVE_LIBSASL2 1
 
 /* Define if you have libXss installed */
 #define HAVE_LIBXSS 1
