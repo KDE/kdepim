@@ -48,9 +48,27 @@ set(libemailfunctions_SRCS
 	)
 
 
+set(libkdgantt_SRCS
+           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttView.cpp                   
+		   ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewEventItem.cpp
+           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewItem.cpp     
+           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewItemDrag.cpp     
+           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewSubwidgets.cpp   
+           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewSummaryItem.cpp  
+           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewTaskItem.cpp     
+           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewTaskLink.cpp     
+           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewTaskLinkGroup.cpp    
+           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttMinimizeSplitter.cpp     
+           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttSemiSizingControl.cpp        
+           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttSizingControl.cpp        
+           ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttXMLTools.cpp         
+)
+
+
+
 add_subdirectory(libakonadi)
 add_subdirectory(libemailfunctions)
-#add_subdirectory(libkcal)
+add_subdirectory(libkcal)
 add_subdirectory(libkdepim)
 add_subdirectory(libkholidays)
 add_subdirectory(libkleo)
