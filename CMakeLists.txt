@@ -36,6 +36,8 @@ include (ConfigureChecks.cmake)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h )
 
+macro_additional_clean_files( ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+
 include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim ${KDE4_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
 )
