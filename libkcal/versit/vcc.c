@@ -1643,7 +1643,7 @@ static int pushVObject(const char *prop)
     {
     VObject *newObj;
     if (ObjStackTop == MAXLEVEL)
-	return false;
+	return FALSE;
 
     ObjStack[++ObjStackTop] = curObj;
 
@@ -1654,7 +1654,7 @@ static int pushVObject(const char *prop)
     else
 	curObj = newVObject(prop);
 
-    return true;
+    return TRUE;
     }
 
 
