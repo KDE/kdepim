@@ -182,8 +182,6 @@ KDEPIM_PATH_GPGME(0.4.5,[
                      ])
 ])
 
-AC_SUBST(GPGME_LIBS_DEP)
-
 dnl Always true - either from the local copy or from the system lib.
 dnl Still used in gpgmepp/gpgmefw.h for some reason.
 AC_DEFINE(HAVE_GPGME_0_4_BRANCH, 1, [Always set since we use gpgme-copy if gpgme isn't available])
