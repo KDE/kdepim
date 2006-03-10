@@ -649,7 +649,7 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
     } else if ( it.key() == "adr_one_countryname" ) {
       addrOne.setCountry( it.data().toString() );
     } else if ( it.key() == "adr_one_type" ) {
-      QStringList types = QStringList::split( ';', it.data().toString() );
+      QStringList types = it.data().toString().split( ';', QString::SkipEmptyParts );
 
       int type = Address::Work;
       for ( int i = 0; i < types.count(); ++i )
@@ -669,7 +669,7 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
     } else if ( it.key() == "adr_two_countryname" ) {
       addrTwo.setCountry( it.data().toString() );
     } else if ( it.key() == "adr_two_type" ) {
-      QStringList types = QStringList::split( ';', it.data().toString() );
+      QStringList types = it.data().toString().split( ';', QString::SkipEmptyParts );
 
       int type = Address::Home;
       for ( int i = 0; i < types.count(); ++i )

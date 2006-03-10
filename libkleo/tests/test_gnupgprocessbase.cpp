@@ -75,7 +75,7 @@ void GnuPGViewer::setProcess( Kleo::GnuPGProcessBase * process ) {
 static QStringList split( char * buffer, int buflen, QString & old ) {
   // when done right, this would need to use QTextCodec...
   const QString str = old + QString::fromLocal8Bit( buffer, buflen );
-  QStringList l = QStringList::split( '\n', str, true );
+  QStringList l = str.split( '\n' );
   if ( l.empty() )
     return l;
   if ( str.endsWith( "\n" ) ) {

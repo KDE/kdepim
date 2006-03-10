@@ -136,7 +136,7 @@ void KolabBase::saveTo( KABC::Addressee* addressee ) const
 {
   addressee->setUid( uid() );
   addressee->setNote( body() );
-  addressee->setCategories( QStringList::split( ',', categories() ) );
+  addressee->setCategories( categories().split( ',', QString::SkipEmptyParts ) );
   addressee->setRevision( lastModified() );
   addressee->insertCustom( "KOLAB", "CreationDate",
                            dateTimeToString( creationDate() ) );

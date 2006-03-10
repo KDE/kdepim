@@ -109,7 +109,7 @@ void QGpgMECryptoConfig::slotCollectStdOut( KProcIO* proc )
   while( ( result = proc->readln(line) ) != -1 ) {
     //kDebug(5150) << "GOT LINE:" << line << endl;
     // Format: NAME:DESCRIPTION
-    QStringList lst = QStringList::split( ':', line, true );
+    QStringList lst = line.split( ':' );
     if ( lst.count() >= 2 ) {
       mComponents.insert( lst[0], new QGpgMECryptoConfigComponent( this, lst[0], lst[1] ) );
     } else {
@@ -201,7 +201,7 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut( KProcIO* proc )
   while( ( result = proc->readln(line) ) != -1 ) {
     //kDebug(5150) << "GOT LINE:" << line << endl;
     // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
-    const QStringList lst = QStringList::split( ':', line, true );
+    const QStringList lst = line.split( ':' );
     if ( lst.count() >= 10 ) {
       const int flags = lst[1].toInt();
       const int level = lst[2].toInt();
@@ -450,7 +450,7 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
 
   if ( isList() ) {
     QList<QVariant> lst;
-    QStringList items = QStringList::split( ',', str );
+    QStringList items = str.split( ',', QString::SkipEmptyParts );
     for( QStringList::const_iterator valit = items.begin(); valit != items.end(); ++valit ) {
       QString val = *valit;
       if ( isString ) {
@@ -540,7 +540,7 @@ static KUrl parseURL( int mRealArgType, const QString& str )
 {
   if ( mRealArgType == 33 ) { // LDAP server
     // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
-    QStringList items = QStringList::split( ':', str, true );
+    QStringList items = str.split( ':' );
     if ( items.count() == 5 ) {
       QStringList::const_iterator it = items.begin();
       KUrl url;

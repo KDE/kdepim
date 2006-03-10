@@ -313,7 +313,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		a->setFormattedName(s); // set formatted name as in Phone
 		if (s.find(',') == -1) {
 		  // assumed format: "givenname [... familyname]"
-		  addrlist = QStringList::split(' ', s);
+		  addrlist = s.split(' ', QString::SkipEmptyParts);
 		  if (addrlist.count() == 1) {
 			// only one string -> put it in the GivenName
 			a->setGivenName(s);
@@ -325,7 +325,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		  }
 		} else {
 		  // assumed format: "familyname, ... givenname"
-		  addrlist = QStringList::split(',', s);
+		  addrlist = s.split(',', QString::SkipEmptyParts);
 		  a->setFamilyName(addrlist.first().simplified());
 		  addrlist.remove(addrlist.first());
 		  a->setGivenName(addrlist.join(" ").simplified());
@@ -367,10 +367,10 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 			a->insertEmail(s);
 			break;
 		   case GN_PHONEBOOK_ENTRY_Postal:
-			addrlist = QStringList::split(';', s, true);
+			addrlist = s.split(';');
 			addr = new KABC::Address(KABC::Address::Work);
 			if (addrlist.count() <= 1) {
-				addrlist = QStringList::split(',', s, true);
+				addrlist = s.split(',');
 				if (addrlist.count() > 1 ) {
 					// assumed format: "Locality, ZIP, Country"
 					addr->setLocality(addrlist[0]);

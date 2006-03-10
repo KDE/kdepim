@@ -379,14 +379,14 @@ static gn_error read_phone_entry_highlevel( int index, const gn_memory_type memt
   s = QString(entry.name).simplified();
   a->setFormattedName(s);
   if (s.find(',')!=-1) {
-  	addrlist = QStringList::split(',', s);
+  	addrlist = s.split(',', QString::SkipEmptyParts);
 	if (addrlist.count()==2) {
 		a->setFamilyName(addrlist[0].simplified());
 		a->setGivenName(addrlist[1].simplified());
 	  } else
 		a->setGivenName(s);
   } else {
-  	addrlist = QStringList::split(' ', s);
+  	addrlist = s.split(' ', QString::SkipEmptyParts);
 	  if (addrlist.count()==2) {
 		a->setFamilyName(addrlist[1].simplified());
 		a->setGivenName(addrlist[0].simplified());
@@ -430,7 +430,7 @@ static gn_error read_phone_entry_highlevel( int index, const gn_memory_type memt
 				a->insertEmail(s);
 				break;
 		   case GN_PHONEBOOK_ENTRY_Postal:
-				addrlist = QStringList::split(',', s, true);
+				addrlist = s.split(',');
 				addr = new KABC::Address(KABC::Address::Work);
 				switch (addrlist.count()) {
 				 case 4:	addr->setStreet(addrlist[0].simplified());

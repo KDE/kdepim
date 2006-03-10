@@ -584,7 +584,7 @@ ngwt__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee
       if ( !protocol.isEmpty() ) {
         if ( protocol == "groupwise" )
           protocol = "novell";
-        QStringList addresses = QStringList::split( QChar( 0xE000 ), value );
+        QStringList addresses = value.split( QChar( 0xE000 ), QString::SkipEmptyParts );
         QStringList::iterator end = addresses.end();
         // extract each address for this protocol, and create an ngwt__ImAddress for it, and append it to list.
         for ( QStringList::ConstIterator it = addresses.begin(); it != end; ++it ) {

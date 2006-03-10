@@ -85,7 +85,7 @@ int KMobileProtocol::getDeviceAndRessource(const QString &_path,
 	KMobileDevice::Capabilities &devCaps)
 {
 //  PRINT_DEBUG << QString("###getDeviceAndRessource### %1\n").arg(_path);
-  QStringList path = QStringList::split('/', _path, false);
+  QStringList path = _path.split('/', QString::SkipEmptyParts);
 
   devName.clear();
   resource.clear();
@@ -554,7 +554,7 @@ void KMobileProtocol::stat( const KUrl &url )
 	return;
   }
 
-  QStringList path = QStringList::split('/', url.path(), false);
+  QStringList path = url.path().split('/', QString::SkipEmptyParts);
   QString filename = (path.count()>0) ? path[path.count()-1] : "/";
   QString fullPath = path.join("/");
   QString fullUrl = QString("mobile:/%1").arg(fullPath);

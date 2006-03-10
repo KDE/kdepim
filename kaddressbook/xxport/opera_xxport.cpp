@@ -92,7 +92,7 @@ KABC::Addressee::List OperaXXPort::importContacts( const QString& ) const
       if ( key == QString::fromLatin1( "name" ) )
         addr.setNameFromString( value );
       else if ( key == QString::fromLatin1( "mail" ) ) {
-        QStringList emails = QStringList::split( separator, value );
+        QStringList emails = value.split( separator, QString::SkipEmptyParts );
 
         QStringList::Iterator it = emails.begin();
         bool preferred = true;

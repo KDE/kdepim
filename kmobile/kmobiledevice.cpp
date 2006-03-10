@@ -377,7 +377,7 @@ bool KMobileDevice::lockDevice(const QString &device, QString &err_reason)
   return !dev_lock(device.local8bit());
 # else
   int pid = -1;
-  QStringList all = QStringList::split('/', device);
+  QStringList all = device.split('/', QString::SkipEmptyParts);
   if (!all.count()) {
 	err_reason = i18n("Invalid device (%1)").arg(device);
 	return false;
@@ -450,7 +450,7 @@ bool KMobileDevice::unlockDevice(const QString &device)
 # ifdef HAVE_LOCKDEV_H
   return 0 <= dev_unlock(device.local8bit(), getpid());
 # else
-  QStringList all = QStringList::split('/', device);
+  QStringList all = device.split('/', QString::SkipEmptyParts);
   if (!all.count()) return false;
   QString lockName = DEVICE_LOCK_PATH_PREFIX + all[all.count()-1];
   QFile file(lockName);

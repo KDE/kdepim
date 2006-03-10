@@ -355,9 +355,9 @@ void BackupConfigPage::load()
 
 	/* Backup tab */
 	KPilotSettings::setSkipBackupDB(
-		QStringList::split(CSL1(","),fConfigWidget->fBackupOnly->text()));
+		fConfigWidget->fBackupOnly->text().split(CSL1(","), QString::SkipEmptyParts));
 	KPilotSettings::setSkipRestoreDB(
-		QStringList::split(CSL1(","),fConfigWidget->fSkipDB->text()));
+		fConfigWidget->fSkipDB->text().split(CSL1(","), QString::SkipEmptyParts));
 	KPilotSettings::setRunConduitsWithBackup(fConfigWidget->fRunConduitsWithBackup->isChecked());
 
 	KPilotConfig::updateConfigVersion();
@@ -369,7 +369,7 @@ void BackupConfigPage::slotSelectNoBackupDBs()
 {
 	FUNCTIONSETUP;
 
-	QStringList selectedDBs(QStringList::split(',', fConfigWidget->fBackupOnly->text() ));
+	QStringList selectedDBs(fConfigWidget->fBackupOnly->text().split(',', QString::SkipEmptyParts));
 
 	QStringList deviceDBs=KPilotSettings::deviceDBs();
 	QStringList addedDBs=KPilotSettings::addedDBs();
@@ -387,7 +387,7 @@ void BackupConfigPage::slotSelectNoRestoreDBs()
 {
 	FUNCTIONSETUP;
 
-	QStringList selectedDBs(QStringList::split(',', fConfigWidget->fSkipDB->text() ));
+	QStringList selectedDBs(fConfigWidget->fSkipDB->text().split(',', QString::SkipEmptyParts));
 
 	QStringList deviceDBs=KPilotSettings::deviceDBs();
 	QStringList addedDBs=KPilotSettings::addedDBs();

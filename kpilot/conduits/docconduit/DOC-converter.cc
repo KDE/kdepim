@@ -306,7 +306,7 @@ int DOCConverter::findBmkFile(QString &, bmkList &fBmks) {
 	QString line;
 	while ( !(line=bmkstream.readLine()).isEmpty() ) {
 		if (!line.isEmpty() && !line.startsWith(CSL1("#")) ) {
-			QStringList bmkinfo=QStringList::split(CSL1(","), line);
+			QStringList bmkinfo=line.split(CSL1(","), QString::SkipEmptyParts);
 			int fieldnr=bmkinfo.count();
 			// We use the same syntax for the entries as MakeDocJ bookmark files:
 			//   <bookmark>,<string-to-search>,<bookmark-name-string>,<starting-bookmark>,<ending-bookmark>

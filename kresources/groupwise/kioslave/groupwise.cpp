@@ -148,7 +148,7 @@ QString Groupwise::soapUrl( const KUrl &url )
            url.path().startsWith("/calendar/") ||
            url.path().startsWith("/addressbook/" ) ) )
   {
-    QString soapPath = QString("/") + QStringList::split('/', url.path())[0];
+    QString soapPath = QString("/") + url.path().split('/', QString::SkipEmptyParts)[0];
     u += soapPath;
   }
   else
@@ -276,10 +276,10 @@ void Groupwise::getAddressbook( const KUrl &url )
     QStringList ids;
 
     query = query.mid( 1 );
-    QStringList queryItems = QStringList::split( "&", query );
+    QStringList queryItems = query.split( "&", QString::SkipEmptyParts );
     QStringList::ConstIterator it;
     for( it = queryItems.begin(); it != queryItems.end(); ++it ) {
-      QStringList item = QStringList::split( "=", (*it) );
+      QStringList item = (*it).split( "=", QString::SkipEmptyParts );
       if ( item.count() == 2 && item[ 0 ] == "addressbookid" ) {
         ids.append( item[ 1 ] );
       }
@@ -345,10 +345,10 @@ void Groupwise::updateAddressbook( const KUrl &url )
     QStringList ids;
 
     query = query.mid( 1 );
-    QStringList queryItems = QStringList::split( "&", query );
+    QStringList queryItems = query.split( "&", QString::SkipEmptyParts );
     QStringList::ConstIterator it;
     for( it = queryItems.begin(); it != queryItems.end(); ++it ) {
-      QStringList item = QStringList::split( "=", (*it) );
+      QStringList item = (*it).split( "=", QString::SkipEmptyParts );
       if ( item.count() == 2 && item[ 0 ] == "addressbookid" ) {
         ids.append( item[ 1 ] );
       }

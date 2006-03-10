@@ -138,7 +138,7 @@ QString KNode::Identity::getSignature()
         KProcess process;
 
         // construct command line...
-        QStringList command = QStringList::split(' ',s_igPath);
+        QStringList command = s_igPath.split(' ', QString::SkipEmptyParts);
         for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it )
           process << (*it);
 

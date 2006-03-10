@@ -130,7 +130,7 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
     QString line (*it);
 
     line.truncate(line.length() - 2);
-    QStringList tokens(QStringList::split (' ', line));
+    QStringList tokens(line.split (' ', QString::SkipEmptyParts));
 
     kDebug(7116) << "Processing: " << line << endl;
     if (tokens[0] != "*")

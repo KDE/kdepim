@@ -210,7 +210,7 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
       if ( name == QString::fromLatin1( "All" ) ) {
         KPluginInfo *protocol = protocolFromString( app );
         if ( protocol ) {
-          QStringList addresses = QStringList::split( QChar( 0xE000 ), value );
+          QStringList addresses = value.split( QChar( 0xE000 ), QString::SkipEmptyParts );
           QStringList::iterator end = addresses.end();
           for ( QStringList::ConstIterator it = addresses.begin(); it != end; ++it ) {
             IMAddressLVI *imaddresslvi = new IMAddressLVI( mWidget->lvAddresses, protocol, *it, Any/*, false*/ );

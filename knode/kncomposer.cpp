@@ -577,8 +577,8 @@ bool KNComposer::hasValidData()
       return false;
     }
 
-    int groupCount = QStringList::split(',',v_iew->g_roups->text()).count();
-    int fupCount = QStringList::split(',',v_iew->f_up2->currentText()).count();
+    int groupCount = v_iew->g_roups->text().split(',', QString::SkipEmptyParts).count();
+    int fupCount = v_iew->f_up2->currentText().split(',', QString::SkipEmptyParts).count();
     bool followUp = !v_iew->f_up2->currentText().isEmpty();
 
     if (groupCount>12) {
@@ -1297,7 +1297,7 @@ void KNComposer::slotExternalEditor()
   e_xternalEditor=new KProcess();
 
   // construct command line...
-  QStringList command = QStringList::split(' ',editorCommand);
+  QStringList command = editorCommand.split(' ', QString::SkipEmptyParts);
   bool filenameAdded=false;
   for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it ) {
     if ((*it).contains("%f")) {

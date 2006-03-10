@@ -254,7 +254,7 @@ bool VCard_LDIFCreator::createImageBig()
   painter.setFont(normalFont);
   fm = painter.fontMetrics();
 
-  const QStringList list( QStringList::split('\n', text) );
+  const QStringList list( text.split('\n', QString::SkipEmptyParts) );
   for ( QStringList::ConstIterator it = list.begin();
              p.y()<=pixmapSize.height() && it != list.end(); ++it ) {
      p.setY( p.y() + fm.height() );

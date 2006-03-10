@@ -46,16 +46,16 @@
 GnokiiConfig::GnokiiConfig( QWidget* parent, const char* name, bool modal, WFlags fl )
 	: GnokiiConfigUI(parent, name, modal, fl)
 {
-   QStringList list = QStringList::split(" ", MODELS);
+   QStringList list = MODELS.split(" ", QString::SkipEmptyParts);
    cb_Model->insertStringList(list);
 
-   list = QStringList::split(" ", CONNECTIONS);
+   list = CONNECTIONS.split(" ", QString::SkipEmptyParts);
    cb_Connection->insertStringList(list);
 
-   list = QStringList::split(" ", AVAILABLE_PORTS);
+   list = AVAILABLE_PORTS.split(" ", QString::SkipEmptyParts);
    cb_Port->insertStringList(list);
 
-   list = QStringList::split(" ", BAUDRATES);
+   list = BAUDRATES.split(" ", QString::SkipEmptyParts);
    cb_Baud->insertStringList(list);
 }
 

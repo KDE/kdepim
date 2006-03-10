@@ -239,7 +239,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
       tc->decodedText( text, true, knGlobals.settings()->removeTrailingNewlines() );
   }
   else
-    text = QStringList::split('\n',selectedText,true);
+    text = selectedText.split('\n');
 
   for(line=text.begin(); line!=text.end(); ++line) {
     if(!incSig && (*line)=="-- ")

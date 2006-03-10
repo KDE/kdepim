@@ -36,7 +36,7 @@ KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, cons
   subCB->setChecked(true);
 
   KNGroupInfo info;
-  QStringList actGroups = QStringList::split(',',act);
+  QStringList actGroups = act.split(',',QString::SkipEmptyParts);
   for ( QStringList::Iterator it = actGroups.begin(); it != actGroups.end(); ++it ) {
     info.name = *it;
     new GroupItem(selView, info);

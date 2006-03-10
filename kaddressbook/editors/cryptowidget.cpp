@@ -145,8 +145,7 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
   bool blocked = signalsBlocked();
   blockSignals( true );
 
-  QStringList lst = QStringList::split( ',', addr->custom( "KADDRESSBOOK",
-                                                           "CRYPTOPROTOPREF" ) );
+  QStringList lst = addr->custom( "KADDRESSBOOK", "CRYPTOPROTOPREF" ).split( ",", QString::SkipEmptyParts );
   uint cryptoFormats = Kleo::stringListToCryptoMessageFormats( lst );
 
   uint msgFormat = 1;
@@ -162,8 +161,8 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
   // We dont use the contents of addr->key(...) because we want just a ref.
   // to the key/cert. stored elsewhere.
 
-  mPgpKey->setFingerprints( QStringList::split( ",", addr->custom( "KADDRESSBOOK", "OPENPGPFP" ) ) );
-  mSmimeCert->setFingerprints( QStringList::split( ",", addr->custom( "KADDRESSBOOK", "SMIMEFP" ) ) );
+  mPgpKey->setFingerprints( addr->custom( "KADDRESSBOOK", "OPENPGPFP" ).split( ",", QString::SkipEmptyParts ) );
+  mSmimeCert->setFingerprints( addr->custom( "KADDRESSBOOK", "SMIMEFP" ).split( ",", QString::SkipEmptyParts ) );
 
   blockSignals( blocked );
 }

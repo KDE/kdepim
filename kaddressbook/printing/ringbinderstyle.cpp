@@ -80,7 +80,8 @@ RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent, const char* 
 
   QStringList tabNames = config->readEntry( LetterGroups, QStringList(),',' );
   if ( tabNames.isEmpty() )
-    tabNames = QStringList::split( ',', QString( "AB,CD,EF,GH,IJK,LM,NO,PQR,S,TU,VW,XYZ" ) );
+    tabNames = QString( "AB,CD,EF,GH,IJK,LM,NO,PQR,S,TU,VW,XYZ" ).split( ',', 
+QString::SkipEmptyParts );
 
   mPageAppearance->letterListBox->insertStringList( tabNames );
 }
@@ -332,8 +333,7 @@ bool RingBinderPrintStyle::printEntry( const KABC::Addressee& contact, const QRe
 #else
         formattedAddress = (*it).label();
 #endif
-        const QStringList laddr = QStringList::split( QChar( '\n' ),
-                                                formattedAddress );
+        const QStringList laddr = formattedAddress.split( QChar( '\n' ), QString::SkipEmptyParts );
         for ( QStringList::ConstIterator it = laddr.begin(); it != laddr.end(); ++it ) {
           linenum++;
           if ( !fake ) {

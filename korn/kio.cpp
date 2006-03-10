@@ -347,7 +347,7 @@ bool KKioDrop::readConfigGroup( const QMap< QString, QString > &map, const Proto
 
 	_kurl->setPass( *map.find( "password" ) );
 	
-	QStringList list = QStringList::split( ',', *map.find( "metadata" ) );
+	QStringList list = (*map.find( "metadata" )).split( ',', QString::SkipEmptyParts );
 	QStringList::Iterator it;
 	for( it = list.begin(); it != list.end(); ++it )
 	{

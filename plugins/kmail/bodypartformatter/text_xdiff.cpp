@@ -96,7 +96,7 @@ namespace {
       QString html = "<br><div align=\"center\">";
       html += "<pre " + tableStyle + ">";
 
-      QStringList lines = QStringList::split( '\n', diff, true );
+      QStringList lines = diff.split( '\n' );
       for ( QStringList::Iterator it = lines.begin(); it != lines.end(); ++it ) {
         QString line( Qt::escape( *it ) );
         QString style;

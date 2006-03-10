@@ -297,7 +297,7 @@ bool Memofiles::loadFromMetadata ()
 		int errors = 0;
 		bool ok;
 
-		QStringList fields = QStringList::split( FIELD_SEP, data );
+		QStringList fields = data.split( FIELD_SEP, QString::SkipEmptyParts );
 		if ( fields.count() >= 4 ) {
 			int id = fields[0].toInt( &ok );
 			if ( !ok )
@@ -547,7 +547,7 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 		int errors = 0;
 		bool ok;
 
-		QStringList fields = QStringList::split( FIELD_SEP, data );
+		QStringList fields = data.split( FIELD_SEP, QString::SkipEmptyParts );
 		if ( fields.count() >= 2 ) {
 			int id = fields[0].toInt( &ok );
 			if ( !ok )
