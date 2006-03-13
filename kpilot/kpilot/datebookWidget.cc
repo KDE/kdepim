@@ -37,7 +37,7 @@
 //Added by qt3to4:
 #include <QGridLayout>
 
-#include <klistview.h>
+#include <k3listview.h>
 #include <kdatepicker.h>
 #include <kmessagebox.h>
 
@@ -66,7 +66,7 @@ DatebookWidget::DatebookWidget(QWidget *parent, const QString &dbpath) :
 	fDeleteButton = new QPushButton( i18n( "&Delete..." ), this, "pushButton3" );
 	g->addWidget( fDeleteButton, 2, 2 );
 
-	fEventList = new KListView( this );
+	fEventList = new K3ListView( this );
 	fEventList->setObjectName( "kListView1" );
 	fEventList->addColumn( i18n( "Time" ) );
 	fEventList->addColumn( i18n( "Al" ) );
@@ -75,7 +75,7 @@ DatebookWidget::DatebookWidget(QWidget *parent, const QString &dbpath) :
 //	fEventList->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7, 0, 0, fEventList->sizePolicy().hasHeightForWidth() ) );
 	fEventList->setAllColumnsShowFocus( true );
 	fEventList->setShowSortIndicator( true );
-	fEventList->setResizeMode( KListView::/*LastColumn*/AllColumns );
+	fEventList->setResizeMode( K3ListView::/*LastColumn*/AllColumns );
 	fEventList->setFullWidth( true );
 //	fEventList->setAlternateBackground( QColor( 221, 146, 240 ) );
 	g->addMultiCellWidget(fEventList, 0, 2, 3, 3);

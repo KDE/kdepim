@@ -36,7 +36,7 @@
 #include <klocale.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
-#include <klistviewsearchline.h>
+#include <k3listviewsearchline.h>
 #include <khbox.h>
 #include <kxmlguiclient.h>
 #include <kxmlguifactory.h>
@@ -110,8 +110,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
 
   connect(c_olView, SIGNAL(selectionChanged(Q3ListViewItem*)),
           SLOT(slotCollectionSelected(Q3ListViewItem*)));
-  connect(c_olView, SIGNAL(contextMenu(KListView*, Q3ListViewItem*, const QPoint&)),
-          SLOT(slotCollectionRMB(KListView*, Q3ListViewItem*, const QPoint&)));
+  connect(c_olView, SIGNAL(contextMenu(K3ListView*, Q3ListViewItem*, const QPoint&)),
+          SLOT(slotCollectionRMB(K3ListView*, Q3ListViewItem*, const QPoint&)));
   connect(c_olView, SIGNAL(folderDrop(QDropEvent*, KNCollectionViewItem*)),
           SLOT(slotCollectionViewDrop(QDropEvent*, KNCollectionViewItem*)));
   connect(c_olView, SIGNAL(itemRenamed(Q3ListViewItem*)),
@@ -142,7 +142,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
                                         "all messages are shown again." ) );
 
   QLabel *lbl = new QLabel(i18n("&Search:"), q_uicksearch, "kde toolbar widget");
-  s_earchLineEdit = new KListViewSearchLine( q_uicksearch, h_drView );
+  s_earchLineEdit = new K3ListViewSearchLine( q_uicksearch, h_drView );
   q_uicksearch->setStretchableWidget(s_earchLineEdit);
   lbl->setBuddy(s_earchLineEdit);
   connect( resetQuickSearch, SIGNAL( activated() ), s_earchLineEdit, SLOT( clear() ));
@@ -154,8 +154,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
           SLOT(slotArticleSelected(Q3ListViewItem*)));
   connect(h_drView, SIGNAL(selectionChanged()),
           SLOT(slotArticleSelectionChanged()));
-  connect(h_drView, SIGNAL(contextMenu(KListView*, Q3ListViewItem*, const QPoint&)),
-          SLOT(slotArticleRMB(KListView*, Q3ListViewItem*, const QPoint&)));
+  connect(h_drView, SIGNAL(contextMenu(K3ListView*, Q3ListViewItem*, const QPoint&)),
+          SLOT(slotArticleRMB(K3ListView*, Q3ListViewItem*, const QPoint&)));
   connect(h_drView, SIGNAL(doubleClick(Q3ListViewItem *)),
           SLOT(slotOpenArticle(Q3ListViewItem *)));
   connect(h_drView, SIGNAL(sortingChanged(int)),
@@ -1157,7 +1157,7 @@ void KNMainWidget::slotCollectionViewDrop(QDropEvent* e, KNCollectionViewItem* a
 }
 
 
-void KNMainWidget::slotArticleRMB(KListView*, Q3ListViewItem *i, const QPoint &p)
+void KNMainWidget::slotArticleRMB(K3ListView*, Q3ListViewItem *i, const QPoint &p)
 {
   if(b_lockui)
     return;
@@ -1176,7 +1176,7 @@ void KNMainWidget::slotArticleRMB(KListView*, Q3ListViewItem *i, const QPoint &p
 }
 
 
-void KNMainWidget::slotCollectionRMB(KListView*, Q3ListViewItem *i, const QPoint &p)
+void KNMainWidget::slotCollectionRMB(K3ListView*, Q3ListViewItem *i, const QPoint &p)
 {
   if(b_lockui)
     return;

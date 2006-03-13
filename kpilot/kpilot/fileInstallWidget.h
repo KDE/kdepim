@@ -44,7 +44,7 @@ class Q3MultiLineEdit;
 class QPushButton;
 class Q3IconDragItem;
 
-class KIconView;
+class K3IconView;
 class KPilotInstaller;
 class FileInstaller;
 
@@ -78,7 +78,7 @@ protected:
 	KPilotInstaller* getPilotInstallerApp() { return fKPilotInstaller; }
 
 private:
-	KIconView  *fIconView;
+	K3IconView  *fIconView;
 	bool        fSaveFileList;
 
 	KPilotInstaller* fKPilotInstaller;

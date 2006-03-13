@@ -151,8 +151,8 @@ void KAddressBookTableView::reconstructListView()
            this, SIGNAL( startDrag() ) );
   connect( mListView, SIGNAL( addresseeDropped( QDropEvent* ) ),
            this, SIGNAL( dropped( QDropEvent* ) ) );
-  connect( mListView, SIGNAL( contextMenu( KListView*, Q3ListViewItem*, const QPoint& ) ),
-           this, SLOT( rmbClicked( KListView*, Q3ListViewItem*, const QPoint& ) ) );
+  connect( mListView, SIGNAL( contextMenu( K3ListView*, Q3ListViewItem*, const QPoint& ) ),
+           this, SLOT( rmbClicked( K3ListView*, Q3ListViewItem*, const QPoint& ) ) );
   connect( mListView->header(), SIGNAL( clicked( int ) ),
            this, SIGNAL( sortFieldChanged() ) );
 
@@ -351,7 +351,7 @@ void KAddressBookTableView::addresseeExecuted( Q3ListViewItem *item )
   }
 }
 
-void KAddressBookTableView::rmbClicked( KListView*, Q3ListViewItem*, const QPoint &point )
+void KAddressBookTableView::rmbClicked( K3ListView*, Q3ListViewItem*, const QPoint &point )
 {
   popup( point );
 }

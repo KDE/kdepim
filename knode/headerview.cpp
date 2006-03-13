@@ -38,7 +38,7 @@
 
 
 KNHeaderView::KNHeaderView( QWidget *parent ) :
-  KListView( parent ),
+  K3ListView( parent ),
   mSortCol( -1 ),
   mSortAsc( true ),
   mSortByThreadChangeDate( false ),
@@ -216,7 +216,7 @@ void KNHeaderView::setSorting( int column, bool ascending )
     emit sortingChanged( column );
   }
 
-  KListView::setSorting( column, ascending );
+  K3ListView::setSorting( column, ascending );
 
   if ( currentItem() )
     ensureItemVisible( currentItem() );
@@ -460,7 +460,7 @@ bool KNHeaderView::event( QEvent *e )
   if (e->type() == QEvent::ApplicationPaletteChange)
     return Q3ListView::event(e);
   else
-    return KListView::event(e);
+    return K3ListView::event(e);
 }
 
 void KNHeaderView::contentsMousePressEvent( QMouseEvent *e )
@@ -472,7 +472,7 @@ void KNHeaderView::contentsMousePressEvent( QMouseEvent *e )
   QPoint vp = contentsToViewport(e->pos());
   Q3ListViewItem *i = itemAt(vp);
 
-  KListView::contentsMousePressEvent( e );
+  K3ListView::contentsMousePressEvent( e );
 
   if ( i ) {
     int decoLeft = header()->sectionPos( 0 ) +
@@ -497,7 +497,7 @@ void KNHeaderView::contentsMouseDoubleClickEvent( QMouseEvent *e )
     return;
   }
 
-  KListView::contentsMouseDoubleClickEvent( e );
+  K3ListView::contentsMouseDoubleClickEvent( e );
 }
 
 
@@ -519,7 +519,7 @@ void KNHeaderView::keyPressEvent(QKeyEvent *e)
     break;
 
     default:
-      KListView::keyPressEvent (e);
+      K3ListView::keyPressEvent (e);
   }
 }
 
@@ -551,7 +551,7 @@ bool KNHeaderView::eventFilter(QObject *o, QEvent *e)
     return true;
   }
 
-  return KListView::eventFilter(o, e);
+  return K3ListView::eventFilter(o, e);
 }
 
 

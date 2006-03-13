@@ -43,7 +43,7 @@
 #include <kiconloader.h>
 #include <klineedit.h>
 #include <klistbox.h>
-#include <klistview.h>
+#include <k3listview.h>
 #include <klocale.h>
 #include <ktoolinvocation.h>
 
@@ -132,7 +132,7 @@ void FilterEditDialog::initGUI()
   connect( mNameEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( filterNameTextChanged( const QString&) ) );
 
-  mCategoriesView = new KListView( page );
+  mCategoriesView = new K3ListView( page );
   mCategoriesView->addColumn( i18n( "Category" ) );
   mCategoriesView->setFullWidth( true );
   topLayout->addMultiCellWidget( mCategoriesView, 1, 1, 0, 1 );

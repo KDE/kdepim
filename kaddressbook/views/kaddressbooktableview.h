@@ -52,7 +52,7 @@ class ContactListView;
 namespace KABC { class AddressBook; }
 
 /**
- * This class is the table view for kaddressbook. This view is a KListView
+ * This class is the table view for kaddressbook. This view is a K3ListView
  * with multiple columns for the selected fields.
  *
  * @short Table View
@@ -101,7 +101,7 @@ friend class ContactListView;
     /**
       RBM menu called.
      */
-    void rmbClicked( KListView*, Q3ListViewItem*, const QPoint& );
+    void rmbClicked( K3ListView*, Q3ListViewItem*, const QPoint& );
 
     /**
      * Called to update the presence of a single item

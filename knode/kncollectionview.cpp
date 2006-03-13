@@ -20,7 +20,7 @@
 #include <QMouseEvent>
 #include <Q3DragObject>
 #include <kiconloader.h>
-#include <klistview.h>
+#include <k3listview.h>
 #include <klocale.h>
 #include <kmenu.h>
 
@@ -380,7 +380,7 @@ Q3DragObject* KNCollectionView::dragObject()
 
 void KNCollectionView::contentsDropEvent( QDropEvent *e )
 {
-  cleanItemHighlighter(); // necessary since we overwrite KListView::contentsDropEvent()
+  cleanItemHighlighter(); // necessary since we overwrite K3ListView::contentsDropEvent()
   Q3ListViewItem *item = itemAt( contentsToViewport(e->pos()) );
   KNCollectionViewItem *fti = static_cast<KNCollectionViewItem*>(item);
   if (fti && (fti->coll) && acceptDrag(e)) {

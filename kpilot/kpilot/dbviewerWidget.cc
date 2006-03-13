@@ -99,13 +99,13 @@ void GenericDBWidget::setupWidget()
 	g1->addWidget( fAppInfoButton, 2, 0 );
 
 	QGridLayout *g2 = new QGridLayout( 0, 1, 1);
-	fRecordList = new KListView( this );
+	fRecordList = new K3ListView( this );
 	g2->addMultiCellWidget( fRecordList, 0, 0, 0, 2 );
 	fRecordList->addColumn(i18n("Rec. Nr."));
 	fRecordList->addColumn(i18n("Length"));
 	fRecordList->addColumn(i18n("Record ID"));
 	fRecordList->setAllColumnsShowFocus(true);
-	fRecordList->setResizeMode( KListView::LastColumn );
+	fRecordList->setResizeMode( K3ListView::LastColumn );
 	fRecordList->setFullWidth( true );
 	fRecordList->setItemsMovable( false );
 

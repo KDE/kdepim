@@ -44,7 +44,7 @@ class QPixmap;              // needed by KeySelectionDialog
 class QPushButton;          // needed by KeyRequester
 class QTimer;               // needed by KeySelectionDialog
 
-class KListView;            // needed by KeySelectionDialog
+class K3ListView;            // needed by KeySelectionDialog
 class KPasswordEdit;        // needed by PassphraseDialog
 
 namespace Kpgp {
@@ -188,7 +188,7 @@ class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
     bool checkKeys( const QList<Q3ListViewItem*>& ) const;
 
   private:
-    KListView *mListView;
+    K3ListView *mListView;
     QCheckBox *mRememberCB;
     QPixmap *mKeyGoodPix, *mKeyBadPix, *mKeyUnknownPix, *mKeyValidPix;
     KeyIDList mKeyIds;

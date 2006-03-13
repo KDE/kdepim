@@ -8,7 +8,7 @@
 */
 
 /** @file
-** This is a specialization of KListView to allow the user to
+** This is a specialization of K3ListView to allow the user to
 ** DnD a fixed set of objects into a fixed set of categories
 ** (categories set at construction time). @em Deprecated, do not use.
 */
@@ -34,19 +34,19 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <klistview.h>
+#include <k3listview.h>
 //Added by qt3to4:
 #include <QDropEvent>
 class QStringList;
 
 /**
- * This Widget extends KListView for a particular purpose:
+ * This Widget extends K3ListView for a particular purpose:
  * sorting some items into some bins. This can be useful
  * for putting items in an enabled / disabled state, or
  * into categories, or configuring toolbars (putting
  * icons onto toolbars).
  *
- * You can use all of the standard KListView signals and
+ * You can use all of the standard K3ListView signals and
  * slots. You may in particular want to change the names
  * of the columns, for example:
  * @code
@@ -63,7 +63,7 @@ class QStringList;
  * @version $Id$
  */
 
-class ListCategorizer : public KListView
+class ListCategorizer : public K3ListView
 {
 	Q_OBJECT
 
@@ -190,7 +190,7 @@ protected:
 
 private:
 	/**
-	 * Call several KListView functions to set up useful
+	 * Call several K3ListView functions to set up useful
 	 * behavior for this particular class.
 	 */
 	void setupWidget();

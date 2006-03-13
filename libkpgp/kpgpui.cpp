@@ -41,7 +41,7 @@
 #include <kcharsets.h>
 #include <kseparator.h>
 #include <kiconloader.h>
-#include <klistview.h>
+#include <k3listview.h>
 #include <kconfigbase.h>
 #include <kconfig.h>
 #include <kprogressbar.h>
@@ -344,7 +344,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
 	   this, SLOT(slotSearch(const QString&)) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
 
-  mListView = new KListView( page );
+  mListView = new K3ListView( page );
   mListView->addColumn( i18n("Key ID") );
   mListView->addColumn( i18n("User ID") );
   mListView->setAllColumnsShowFocus( true );

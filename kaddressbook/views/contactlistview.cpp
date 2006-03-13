@@ -159,7 +159,7 @@ ContactListViewItem::ContactListViewItem(const KABC::Addressee &a,
                                          KABC::AddressBook *doc,
                                          const KABC::Field::List &fields,
                                          KIMProxy *proxy )
-  : KListViewItem(parent), mAddressee(a), mFields( fields ),
+  : K3ListViewItem(parent), mAddressee(a), mFields( fields ),
     parentListView( parent ), mDocument(doc), mIMProxy( proxy )
 {
   if ( mIMProxy )
@@ -204,7 +204,7 @@ void ContactListViewItem::paintCell(QPainter * p,
                                     int width,
                                     int align)
 {
-  KListViewItem::paintCell(p, cg, column, width, align);
+  K3ListViewItem::paintCell(p, cg, column, width, align);
 
   if ( !p )
     return;
@@ -263,7 +263,7 @@ ContactListView::ContactListView(KAddressBookTableView *view,
                                  KABC::AddressBook* /* doc */,
                                  QWidget *parent,
                                  const char *name )
-  : KListView( parent ),
+  : K3ListView( parent ),
     pabWidget( view ),
     oldColumn( 0 )
 {
@@ -279,7 +279,7 @@ ContactListView::ContactListView(KAddressBookTableView *view,
   viewport()->setAcceptDrops( true );
   setAllColumnsShowFocus( true );
   setShowSortIndicator(true);
-  setSelectionModeExt( KListView::Extended );
+  setSelectionModeExt( K3ListView::Extended );
   setDropVisualizer(false);
 
   connect(this, SIGNAL(dropped(QDropEvent*)),
@@ -306,14 +306,14 @@ void ContactListView::paintEmptyArea( QPainter * p, const QRect & rect )
   else
   {
     // Do a normal paint
-    KListView::paintEmptyArea(p, rect);
+    K3ListView::paintEmptyArea(p, rect);
   }
 }
 
 void ContactListView::contentsMousePressEvent(QMouseEvent* e)
 {
   presspos = e->pos();
-  KListView::contentsMousePressEvent(e);
+  K3ListView::contentsMousePressEvent(e);
 }
 
 
@@ -324,7 +324,7 @@ void ContactListView::contentsMouseMoveEvent( QMouseEvent *e )
     emit startAddresseeDrag();
   }
   else
-    KListView::contentsMouseMoveEvent( e );
+    K3ListView::contentsMouseMoveEvent( e );
 }
 
 bool ContactListView::acceptDrag(QDropEvent *e) const

@@ -28,7 +28,7 @@
 //Added by qt3to4:
 #include <QList>
 #include <QDropEvent>
-#include <kiconview.h>
+#include <k3iconview.h>
 #include "kaddressbookview.h"
 
 class Q3IconViewItem;
@@ -39,7 +39,7 @@ class AddresseeIconViewItem;
 namespace KABC { class AddressBook; }
 
 /** This is an example kaddressbook view that is implemented using
-* KIconView. This view is not the most useful view, but it displays
+* K3IconView. This view is not the most useful view, but it displays
 * how simple implementing a new view can be.
 */
 class KAddressBookIconView : public KAddressBookView
@@ -75,7 +75,7 @@ class KAddressBookIconView : public KAddressBookView
 };
 
 
-class AddresseeIconView : public KIconView
+class AddresseeIconView : public K3IconView
 {
   Q_OBJECT
 

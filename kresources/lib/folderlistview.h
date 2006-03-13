@@ -24,7 +24,7 @@
 #ifndef FOLDERLISTVIEW_H
 #define FOLDERLISTVIEW_H
 
-#include <klistview.h>
+#include <k3listview.h>
 #include "folderlister.h"
 
 class FolderListItem;
@@ -35,7 +35,7 @@ class FolderListCaption;
     QListView that automatically adds columns for FolderListItems for selecting
     the default destination and a slot to edit the destinations using the keyboard.
 */
-class FolderListView : public KListView
+class FolderListView : public K3ListView
 {
   Q_OBJECT
 

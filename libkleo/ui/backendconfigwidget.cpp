@@ -41,7 +41,7 @@
 #include "kleo/cryptobackendfactory.h"
 #include "ui/keylistview.h" // for lvi_cast<>
 
-#include <klistview.h>
+#include <k3listview.h>
 #include <kdialog.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -76,11 +76,11 @@ namespace Kleo {
   class ProtocolCheckListItem;
 }
 
-class Kleo::BackendListView : public KListView
+class Kleo::BackendListView : public K3ListView
 {
 public:
   BackendListView( BackendConfigWidget* parent )
-    : KListView( parent ) {}
+    : K3ListView( parent ) {}
 
   /// return backend for currently selected (/current) item. Used by Configure button.
   const Kleo::CryptoBackend* currentBackend() const;
@@ -98,7 +98,7 @@ public:
 class Kleo::BackendListViewItem : public Q3ListViewItem
 {
 public:
-  BackendListViewItem( KListView* lv, Q3ListViewItem *prev, const CryptoBackend *cryptoBackend )
+  BackendListViewItem( K3ListView* lv, Q3ListViewItem *prev, const CryptoBackend *cryptoBackend )
     : Q3ListViewItem( lv, prev, cryptoBackend->displayName() ), mCryptoBackend( cryptoBackend )
     {}
 

@@ -55,7 +55,7 @@ class AddressBookWrapper : public KABC::AddressBook
 class ResourceItem : public Q3CheckListItem
 {
   public:
-    ResourceItem( KListView *parent, KABC::Resource *resource )
+    ResourceItem( K3ListView *parent, KABC::Resource *resource )
       : Q3CheckListItem( parent, resource->resourceName(), CheckBox ),
         mResource( resource ), mChecked( false ),
         mIsSubresource( false ), mSubItemsCreated( false ),
@@ -366,7 +366,7 @@ void ResourceSelection::initGUI()
 {
   QGridLayout *layout = new QGridLayout( this, 2, 3, 2, 5 );
 
-  mListView = new KListView( this );
+  mListView = new K3ListView( this );
   mListView->addColumn( i18n( "Address Books" ) );
   mListView->setFullWidth( true );
   layout->addMultiCellWidget( mListView, 0, 0, 0, 2 );

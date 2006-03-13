@@ -20,7 +20,7 @@
 #include <kiconloader.h>
 #include <kguiitem.h>
 #include <kinstance.h>
-#include <klistview.h>
+#include <k3listview.h>
 #include <klocale.h>
 
 #include "sloxfolderdialog.h"
@@ -31,7 +31,7 @@ SloxFolderDialog::SloxFolderDialog( SloxFolderManager *manager, FolderType type,
   mManager( manager ),
   mFolderType( type )
 {
-  mListView = new KListView( this );
+  mListView = new K3ListView( this );
   mListView->setRootIsDecorated( true );
   mListView->setShowSortIndicator( true );
   mListView->addColumn( i18n("Folder") );
@@ -75,11 +75,11 @@ void SloxFolderDialog::createFolderViewItem( SloxFolder *folder )
     SloxFolder *parent = mManager->folders()[folder->parentId()];
     createFolderViewItem( parent );
     if ( parent->item )
-      folder->item = new KListViewItem( parent->item );
+      folder->item = new K3ListViewItem( parent->item );
     else
-      folder->item = new KListViewItem( mListView );
+      folder->item = new K3ListViewItem( mListView );
   } else {
-    folder->item = new KListViewItem( mListView );
+    folder->item = new K3ListViewItem( mListView );
   }
   folder->item->setText( 0, folder->name() );
   folder->item->setText( 1, folder->id() );

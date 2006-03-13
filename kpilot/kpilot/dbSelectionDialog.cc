@@ -32,7 +32,7 @@
 
 #include <q3listview.h>
 #include <qpushbutton.h>
-#include <klistview.h>
+#include <k3listview.h>
 #include <kmessagebox.h>
 #include <kpushbutton.h>
 #include <klineedit.h>

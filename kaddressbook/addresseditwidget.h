@@ -43,7 +43,7 @@ class QToolButton;
 class KActiveLabel;
 class KComboBox;
 class KLineEdit;
-class KListView;
+class K3ListView;
 
 typedef TypeCombo<KABC::Address> AddressTypeCombo;
 

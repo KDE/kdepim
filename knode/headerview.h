@@ -22,7 +22,7 @@
 #include <QKeyEvent>
 #include <QEvent>
 
-#include <klistview.h>
+#include <k3listview.h>
 #include <kfoldertree.h>
 #include <kmime_util.h>
 
@@ -32,7 +32,7 @@ class KNHdrViewItem;
 /** Header view, displays the article listing of the currently selected
  *  news group or folder.
  */
-class KNHeaderView : public KListView  {
+class KNHeaderView : public K3ListView  {
 
   Q_OBJECT
 

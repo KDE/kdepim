@@ -40,7 +40,7 @@
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/keyfiltermanager.h>
 
-#include <klistview.h>
+#include <k3listview.h>
 #include <kconfig.h>
 #include <kdialog.h>
 #include <klocale.h>

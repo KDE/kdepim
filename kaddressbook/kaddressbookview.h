@@ -203,7 +203,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
 
       @param uid The uid of the selected addressee.
 
-      @see KListView
+      @see K3ListView
      */
     void selected( const QString &uid );
 
@@ -214,7 +214,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
 
       @param uid The uid of the selected addressee
 
-      @see KListView
+      @see K3ListView
      */
     void executed( const QString &uid );
 

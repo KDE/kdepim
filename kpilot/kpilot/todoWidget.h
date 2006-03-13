@@ -40,11 +40,11 @@ class Q3TextView;
 #include "pilotTodoEntry.h"
 #include "listItems.h"
 
-class TodoListView : public KListView
+class TodoListView : public K3ListView
 {
 Q_OBJECT
 public:
-	TodoListView(QWidget * parent = 0, const char * name = 0 ):KListView(parent){};
+	TodoListView(QWidget * parent = 0, const char * name = 0 ):K3ListView(parent){};
 	~TodoListView() {};
 signals:
 	void itemChecked(Q3CheckListItem*item);

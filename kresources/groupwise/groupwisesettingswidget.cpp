@@ -20,7 +20,7 @@
 */
 
 #include <kdebug.h>
-#include <klistview.h>
+#include <k3listview.h>
 
 #include "groupwisesettingswidget.h"
 

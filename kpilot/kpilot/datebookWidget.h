@@ -34,7 +34,7 @@
 
 class KDatePicker;
 class QPushButton;
-class KListView;
+class K3ListView;
 
 class DatebookWidget : public PilotComponent
 {
@@ -59,7 +59,7 @@ private:
 	QPushButton*fAddButton;
 	QPushButton*fEditButton;
 	QPushButton*fDeleteButton;
-	KListView*fEventList;
+	K3ListView*fEventList;
 };
 
 

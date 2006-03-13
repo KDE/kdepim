@@ -33,7 +33,7 @@
 #include <kapplication.h>
 #include <kbuttonbox.h>
 #include <kconfig.h>
-#include <klistview.h>
+#include <k3listview.h>
 #include <klocale.h>
 #include <khbox.h>
 #include <kvbox.h>
@@ -275,7 +275,7 @@ void LDAPOptionsWidget::initGUI()
   KHBox* hBox = new KHBox( groupBox );
   hBox->setSpacing( 6 );
   // Contents of the hbox: listview and up/down buttons on the right (vbox)
-  mHostListView = new KListView( hBox );
+  mHostListView = new K3ListView( hBox );
 
   KVBox* upDownBox = new KVBox( hBox );
   upDownBox->setSpacing( 6 );

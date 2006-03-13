@@ -32,7 +32,7 @@
 #include <QMouseEvent>
 #include <QDropEvent>
 
-#include <klistview.h>
+#include <k3listview.h>
 
 #include <kabc/field.h>
 
@@ -57,7 +57,7 @@ class DynamicTip : public QToolTip
 };
 #endif
 
-class ContactListViewItem : public KListViewItem
+class ContactListViewItem : public K3ListViewItem
 {
 
 public:
@@ -87,7 +87,7 @@ private:
 /////////////////////////////////////////////
 // ContactListView
 
-class ContactListView : public KListView
+class ContactListView : public K3ListView
 {
   Q_OBJECT
 

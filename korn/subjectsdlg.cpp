@@ -22,7 +22,7 @@
 
 KornSubjectsDlg::SubjectListViewItem::SubjectListViewItem( Q3ListView *parent, KornMailSubject * item)
 	// set the column strings except column 2 (date)
-	: KListViewItem(parent, item->getSender(), item->getSubject(), "", KGlobal::locale()->formatNumber(item->getSize(), 0))
+	: K3ListViewItem(parent, item->getSender(), item->getSubject(), "", KGlobal::locale()->formatNumber(item->getSize(), 0))
 	, _mailSubject( new KornMailSubject( *item ) )
 {
 	// convert the date according to the user settings and show it in column 2
@@ -56,7 +56,7 @@ int KornSubjectsDlg::SubjectListViewItem::compare( Q3ListViewItem* item, int col
 	else
 	{
 		// otherwise call default handling (i.e. string compare)
-		return KListViewItem::compare( item, column, ascending );
+		return K3ListViewItem::compare( item, column, ascending );
 	}
 }
 
@@ -80,7 +80,7 @@ KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
 	showButton->setEnabled(false);
 	QVBoxLayout * topLayout = new QVBoxLayout( page, 0, spacingHint() );
 	QHBoxLayout * buttons = new QHBoxLayout();
-	_list = new KListView(page);
+	_list = new K3ListView(page);
 	topLayout->addWidget(_list, 10);
 	topLayout->addLayout(buttons, 0);
 	buttons->addWidget(invertSelButton, 0);

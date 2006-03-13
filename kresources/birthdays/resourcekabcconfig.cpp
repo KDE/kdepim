@@ -63,7 +63,7 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
   mUseCategories = new QCheckBox( i18n( "Filter by categories" ), this );
   topLayout->addMultiCellWidget( mUseCategories, 3, 3, 0, 1 );
 
-  mCategoryView = new KListView( this );
+  mCategoryView = new K3ListView( this );
   mCategoryView->addColumn( "" );
   mCategoryView->header()->hide();
   mCategoryView->setEnabled( false );

@@ -33,7 +33,7 @@
 #ifndef __KLEO_KEYLISTVIEW_H__
 #define __KLEO_KEYLISTVIEW_H__
 
-#include <klistview.h>
+#include <k3listview.h>
 
 #include <gpgmepp/key.h>
 #include <kdepimmacros.h>
@@ -202,7 +202,7 @@ namespace Kleo {
   };
 
 
-  class KDE_EXPORT KeyListView : public KListView {
+  class KDE_EXPORT KeyListView : public K3ListView {
     Q_OBJECT
     friend class KeyListViewItem;
   public:
@@ -290,7 +290,7 @@ namespace Kleo {
     void slotEmitDoubleClicked( Q3ListViewItem*, const QPoint&, int );
     void slotEmitReturnPressed( Q3ListViewItem* );
     void slotEmitSelectionChanged( Q3ListViewItem* );
-    void slotEmitContextMenu( KListView*, Q3ListViewItem*, const QPoint& );
+    void slotEmitContextMenu( K3ListView*, Q3ListViewItem*, const QPoint& );
     void slotUpdateTimeout();
 
   public:

@@ -27,7 +27,7 @@
 #include <QGridLayout>
 
 #include <klocale.h>
-#include <klistview.h>
+#include <k3listview.h>
 #include <kdebug.h>
 #include <kdialogbase.h>
 #include <kstandarddirs.h>
@@ -140,7 +140,7 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
           groupName = QString::fromUtf8( group->type->c_str() );
           kDebug() << "GROUP: " << groupName << endl;;
         }
-        KListViewItem * groupLVI = new KListViewItem( settingsWidget->m_settingsList, groupName ); 
+        K3ListViewItem * groupLVI = new K3ListViewItem( settingsWidget->m_settingsList, groupName ); 
         std::vector<ngwt__Custom * > setting = group->setting;
         std::vector<class ngwt__Custom *>::const_iterator it2;
         for( it2 = setting.begin(); it2 != setting.end(); ++it2 )
@@ -156,7 +156,7 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
             locked = *((*it2)->locked);
 
           kDebug() << "  SETTING: " << setting  << "   value : " << value <<  (locked ? "locked" : " not locked " ) << endl;
-          KListViewItem * settingLVI = new KListViewItem( groupLVI, QString(), setting, value, (locked ? "locked" : " not locked " ) ); 
+          K3ListViewItem * settingLVI = new K3ListViewItem( groupLVI, QString(), setting, value, (locked ? "locked" : " not locked " ) ); 
           if ( !locked )
             settingLVI->setRenameEnabled( 2, true );
         }

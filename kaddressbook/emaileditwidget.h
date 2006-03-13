@@ -35,7 +35,7 @@ class QToolButton;
 
 class KComboBox;
 class KLineEdit;
-class KListView;
+class K3ListView;
 
 /**
   This widget displays a list box of the email addresses as well as buttons

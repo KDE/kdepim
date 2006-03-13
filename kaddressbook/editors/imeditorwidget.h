@@ -26,7 +26,7 @@
 #define IMEDITORWIDGET_H
 
 
-#include <klistview.h>
+#include <k3listview.h>
 #include <kdialogbase.h>
 
 #include "contacteditorwidget.h"
@@ -96,10 +96,10 @@ class IMEditorWidget : public KDialogBase
  */
 
 // VCard has been disabled as there is no standard VCard location to store IM addresses yet.
-class IMAddressLVI : public KListViewItem
+class IMAddressLVI : public K3ListViewItem
 {
   public:
-    IMAddressLVI( KListView *parent, KPluginInfo * protocol,
+    IMAddressLVI( K3ListView *parent, KPluginInfo * protocol,
                   const QString &address, const IMContext &context = Any );
 
     void setAddress( const QString &address );

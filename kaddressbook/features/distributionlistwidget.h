@@ -26,7 +26,7 @@
 
 #include <config.h> // for KDEPIM_NEW_DISTRLISTS
 #include <kdialogbase.h>
-#include <klistview.h>
+#include <k3listview.h>
 
 #include "extensionwidget.h"
 //Added by qt3to4:
@@ -109,7 +109,7 @@ class DistributionListWidget : public KAB::ExtensionWidget
 /**
   @short Helper class
 */
-class DistributionListView : public KListView
+class DistributionListView : public K3ListView
 {
   Q_OBJECT
 

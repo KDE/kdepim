@@ -28,7 +28,7 @@
 #include <kdialog.h>
 #include <klocale.h>
 #include <klineedit.h>
-#include <klistview.h>
+#include <k3listview.h>
 #include <kurlrequester.h>
 
 #include <qlabel.h>
@@ -42,7 +42,7 @@ using namespace KABC;
 class AddressBookItem : public Q3CheckListItem
 {
   public:
-    AddressBookItem( KListView *parent, GroupWise::AddressBook ab )
+    AddressBookItem( K3ListView *parent, GroupWise::AddressBook ab )
       : Q3CheckListItem( parent, "", CheckBox ),
         mId( ab.id )
     {
@@ -91,7 +91,7 @@ ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent )
   QPushButton *updateButton = new QPushButton( i18n( "Retrieve Address Book List From Server" ), this );
   mainLayout->addMultiCellWidget( updateButton, 4, 4, 0, 1 );
 
-  mAddressBookView = new KListView( this );
+  mAddressBookView = new K3ListView( this );
   mAddressBookView->addColumn( i18n( "Address Book" ) );
   mAddressBookView->addColumn( i18n( "Personal" ) );
   mAddressBookView->addColumn( i18n( "Frequent Contacts" ) );

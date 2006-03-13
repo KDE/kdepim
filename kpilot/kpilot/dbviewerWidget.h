@@ -40,7 +40,7 @@ class KPushButton;
 class KComboBox;
 class PilotLocalDatabase;
 class PilotRecord;
-class KListView;
+class K3ListView;
 
 class GenericDBWidget : public PilotComponent
 {
@@ -76,7 +76,7 @@ private:
 	KComboBox*fDBType;
 	KTextEdit*fDBInfo;
 	KPushButton*fDBInfoButton, *fAppInfoButton;
-	KListView*fRecordList;
+	K3ListView*fRecordList;
 	KPushButton*fAddRecord, *fEditRecord, *fDeleteRecord;
 
 	enum eDBType {

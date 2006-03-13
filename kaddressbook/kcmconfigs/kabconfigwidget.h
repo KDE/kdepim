@@ -32,7 +32,7 @@ class Q3ListViewItem;
 class QPushButton;
 class QComboBox;
 
-class KListView;
+class K3ListView;
 
 class AddresseeWidget;
 

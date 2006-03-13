@@ -35,14 +35,14 @@
 
 
 KNHdrViewItem::KNHdrViewItem( KNHeaderView *ref, KNArticle *a ) :
-  KListViewItem( ref )
+  K3ListViewItem( ref )
 {
   init( a );
 }
 
 
 KNHdrViewItem::KNHdrViewItem( KNHdrViewItem *ref, KNArticle *a ) :
-  KListViewItem( ref )
+  K3ListViewItem( ref )
 {
   init( a );
 }
@@ -241,7 +241,7 @@ QString KNHdrViewItem::text( int col ) const
   if ( col == hv->paintInfo()->dateCol ) {
     return hv->mDateFormatter.dateString( art->date()->qdt() );
   } else
-    return KListViewItem::text( col );
+    return K3ListViewItem::text( col );
 }
 
 

@@ -24,7 +24,7 @@
 #include "folderlistview.h"
 #include "folderlister.h"
 
-#include <klistview.h>
+#include <k3listview.h>
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kmenu.h>
@@ -39,7 +39,7 @@ static const int BoxSize = 16;
 
 //BEGIN FolderListView
 FolderListView::FolderListView( QWidget *parent, const QList<Property> &types )
-    : KListView( parent )
+    : K3ListView( parent )
 {
   setEnabledTypes( types );
 
@@ -154,7 +154,7 @@ void FolderListView::slotMousePressed(int btn, Q3ListViewItem* i, const QPoint& 
       // map pos to item/column and call FolderListItem::activate(col, pos)
       ((FolderListItem*)i)->activate( c, viewport()->mapFromGlobal( pos ) - QPoint( 0, itemRect(i).top() ) );
 //     } else {
-//       KListView::slotMousePressed( btn, i, pos, c );
+//       K3ListView::slotMousePressed( btn, i, pos, c );
     }
   }
 }

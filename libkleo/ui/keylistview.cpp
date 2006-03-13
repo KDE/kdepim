@@ -134,14 +134,14 @@ static const struct {
     SLOT(slotEmitReturnPressed(Q3ListViewItem*)) },
   { SIGNAL(selectionChanged(Q3ListViewItem*)),
     SLOT(slotEmitSelectionChanged(Q3ListViewItem*)) },
-  { SIGNAL(contextMenu(KListView*, Q3ListViewItem*,const QPoint&)),
-    SLOT(slotEmitContextMenu(KListView*, Q3ListViewItem*,const QPoint&)) },
+  { SIGNAL(contextMenu(K3ListView*, Q3ListViewItem*,const QPoint&)),
+    SLOT(slotEmitContextMenu(K3ListView*, Q3ListViewItem*,const QPoint&)) },
 };
 static const int numSignalReplacements = sizeof signalReplacements / sizeof *signalReplacements;
 
 
 Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const DisplayStrategy * displayStrategy, QWidget * parent, Qt::WFlags f )
-  : KListView( parent ),
+  : K3ListView( parent ),
     mColumnStrategy( columnStrategy ),
     mDisplayStrategy ( displayStrategy  ),
     mHierarchical( false )
@@ -193,7 +193,7 @@ Kleo::KeyListView::~KeyListView() {
 
 void Kleo::KeyListView::insertItem( Q3ListViewItem * qlvi ) {
   //kDebug() << "Kleo::KeyListView::insertItem( " << qlvi << " )" << endl;
-  KListView::insertItem( qlvi );
+  K3ListView::insertItem( qlvi );
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     registerItem( item );
 }
@@ -202,7 +202,7 @@ void Kleo::KeyListView::takeItem( Q3ListViewItem * qlvi ) {
   //kDebug() << "Kleo::KeyListView::takeItem( " << qlvi << " )" << endl;
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     deregisterItem( item );
-  KListView::takeItem( qlvi );
+  K3ListView::takeItem( qlvi );
 }
 
 
@@ -250,7 +250,7 @@ void Kleo::KeyListView::slotUpdateTimeout() {
 void Kleo::KeyListView::clear() {
   d->updateTimer->stop();
   d->keyBuffer.clear();
-  KListView::clear();
+  K3ListView::clear();
 }
 
 void Kleo::KeyListView::registerItem( KeyListViewItem * item ) {
@@ -365,7 +365,7 @@ void Kleo::KeyListView::slotEmitSelectionChanged( Q3ListViewItem * item ) {
     emit selectionChanged( static_cast<KeyListViewItem*>( item ) );
 }
 
-void Kleo::KeyListView::slotEmitContextMenu( KListView*, Q3ListViewItem * item, const QPoint & p ) {
+void Kleo::KeyListView::slotEmitContextMenu( K3ListView*, Q3ListViewItem * item, const QPoint & p ) {
   if ( !item || lvi_cast<KeyListViewItem>( item ) )
     emit contextMenu( static_cast<KeyListViewItem*>( item ), p );
 }
@@ -839,11 +839,11 @@ Kleo::KeyListViewItem * Kleo::KeyListViewItem::nextSibling() const {
 }
 
 Kleo::KeyListViewItem * Kleo::KeyListView::firstChild() const {
-  return static_cast<Kleo::KeyListViewItem*>( KListView::firstChild() );
+  return static_cast<Kleo::KeyListViewItem*>( K3ListView::firstChild() );
 }
 
 Kleo::KeyListViewItem * Kleo::KeyListView::selectedItem() const {
-  return static_cast<Kleo::KeyListViewItem*>( KListView::selectedItem() );
+  return static_cast<Kleo::KeyListViewItem*>( K3ListView::selectedItem() );
 }
 
 static void selectedItems( Q3PtrList<Kleo::KeyListViewItem> & result, Q3ListViewItem * start ) {

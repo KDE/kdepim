@@ -32,7 +32,7 @@ class QWidget;
 
 class KLineEdit;
 class KListBox;
-class KListView;
+class K3ListView;
 
 #include <kdialogbase.h>
 
@@ -88,7 +88,7 @@ class FilterEditDialog : public KDialogBase
     Filter mFilter;
 
     KLineEdit *mNameEdit;
-    KListView *mCategoriesView;
+    K3ListView *mCategoriesView;
     Q3ButtonGroup *mMatchRuleGroup;
     QPushButton *mEditButton;
     QPushButton *mRemoveButton;

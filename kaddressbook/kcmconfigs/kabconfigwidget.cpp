@@ -40,7 +40,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kdialog.h>
-#include <klistview.h>
+#include <k3listview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktrader.h>

@@ -18,7 +18,7 @@
 #ifndef KTNEFWIDGET_H
 #define	KTNEFWIDGET_H
 
-#include <klistview.h>
+#include <k3listview.h>
 #include <q3ptrlist.h>
 //Added by qt3to4:
 #include <QResizeEvent>
@@ -26,7 +26,7 @@
 
 class KTNEFAttach;
 
-class KDE_EXPORT KTNEFView : public KListView
+class KDE_EXPORT KTNEFView : public K3ListView
 {
 	Q_OBJECT
 

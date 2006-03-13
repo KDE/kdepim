@@ -225,8 +225,8 @@ protected slots:
   void slotCollectionSelected(Q3ListViewItem*);
   void slotCollectionRenamed(Q3ListViewItem*);
   void slotCollectionViewDrop(QDropEvent* e, KNCollectionViewItem* after);
-  void slotArticleRMB(KListView*, Q3ListViewItem *i, const QPoint &p);
-  void slotCollectionRMB(KListView*, Q3ListViewItem *i, const QPoint &p);
+  void slotArticleRMB(K3ListView*, Q3ListViewItem *i, const QPoint &p);
+  void slotCollectionRMB(K3ListView*, Q3ListViewItem *i, const QPoint &p);
   /** Open selected article in own composer/reader window */
   void slotOpenArticle(Q3ListViewItem *item);
   void slotHdrViewSortingChanged(int i);

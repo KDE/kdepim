@@ -2,14 +2,14 @@
 #define KornSubjectsDlg_h
 
 #include <kdialog.h>
-#include <klistview.h>
+#include <k3listview.h>
 #include <QVector>
 #include <kpushbutton.h>
 
 class KMailDrop;
 class KornMailSubject;
 class KornMailId;
-class KListView;
+class K3ListView;
 class KornMailDlg;
 class QProgressDialog;
 class DoubleProgressDialog;
@@ -30,7 +30,7 @@ class KornSubjectsDlg: public KDialog
 	* SubjectListViewItem is a helper class representing one line in the list view.
 	* It stores the mail subject the line represents and controls the sorting.
 	*/
-	class SubjectListViewItem : public KListViewItem
+	class SubjectListViewItem : public K3ListViewItem
 	{
 		KornMailSubject * _mailSubject;
 	public:
@@ -80,7 +80,7 @@ class KornSubjectsDlg: public KDialog
 		int totalNumberOfMessages;
 	} *_delete;
 	
-	KListView * _list;
+	K3ListView * _list;
 	KPushButton * invertSelButton;
 	KPushButton * clearSelButton;
 	KPushButton * deleteButton;

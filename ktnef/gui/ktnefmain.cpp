@@ -28,7 +28,7 @@
 #include <QMenu>
 //Added by qt3to4:
 #include <QTextStream>
-#include <klistview.h>
+#include <k3listview.h>
 #include <klocale.h>
 #include <kapplication.h>
 #include <kiconloader.h>

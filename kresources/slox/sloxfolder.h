@@ -23,7 +23,7 @@
 #include <qstring.h>
 #include <kdepimmacros.h>
 
-class KListViewItem;
+class K3ListViewItem;
 
 enum FolderType {
   Unbound,
@@ -43,7 +43,7 @@ class KDE_EXPORT SloxFolder
     QString name() const;
     bool isDefault() const { return mDefault; }
 
-    KListViewItem *item;
+    K3ListViewItem *item;
 
   private:
     QString mId, mParentId;

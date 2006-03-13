@@ -67,7 +67,7 @@ extern "C" {
 }
 
 AddresseeIconView::AddresseeIconView( QWidget *parent, const char *name )
-  : KIconView( parent, name )
+  : K3IconView( parent, name )
 {
   setSelectionMode( Q3IconView::Extended );
   setResizeMode( Q3IconView::Adjust );
@@ -75,7 +75,7 @@ AddresseeIconView::AddresseeIconView( QWidget *parent, const char *name )
   setGridX( 100 );
   setItemsMovable( false );
   setSorting( true, true );
-  setMode( KIconView::Select );
+  setMode( K3IconView::Select );
 
   connect( this, SIGNAL( dropped( QDropEvent*, const QList<Q3IconDragItem>& ) ),
            this, SLOT( itemDropped( QDropEvent*, const QList<Q3IconDragItem>& ) ) );
@@ -99,12 +99,12 @@ Q3DragObject *AddresseeIconView::dragObject()
 }
 
 
-class AddresseeIconViewItem : public KIconViewItem
+class AddresseeIconViewItem : public K3IconViewItem
 {
   public:
     AddresseeIconViewItem( const KABC::Field::List&, KABC::AddressBook *doc,
                            const KABC::Addressee &addr, Q3IconView *parent )
-      : KIconViewItem( parent ), mDocument( doc ), mAddressee( addr )
+      : K3IconViewItem( parent ), mDocument( doc ), mAddressee( addr )
       {
         refresh();
       }

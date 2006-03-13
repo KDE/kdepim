@@ -4,7 +4,7 @@
 **
 ** Copyright (C) 2000-2001 by Adriaan de Groot
 **
-** This file defines a specialization of KListView that can
+** This file defines a specialization of K3ListView that can
 ** be used to sort some fixed set of object into some fixed
 ** set of categories.
 */
@@ -43,7 +43,7 @@ static const char *listCat_id =
 
 ListCategorizer::ListCategorizer(QWidget * parent,
 	const char *name) :
-	KListView(parent, name), 
+	K3ListView(parent, name), 
 	fStartOpen(false)
 {
 	FUNCTIONSETUP;
@@ -55,7 +55,7 @@ ListCategorizer::ListCategorizer(const QStringList & i,
 	bool startOpen,
 	QWidget * parent,
 	const char *name) :
-	KListView(parent, name), 
+	K3ListView(parent, name), 
 	fStartOpen(startOpen)
 {
 	FUNCTIONSETUP;
@@ -145,7 +145,7 @@ void ListCategorizer::setupWidget()
 	if (!p || !p->parent())
 		return;
 
-	KListView::startDrag();
+	K3ListView::startDrag();
 }
 
 QStringList ListCategorizer::listSiblings(const Q3ListViewItem * p, int column) const

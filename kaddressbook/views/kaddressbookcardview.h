@@ -28,7 +28,7 @@
 //Added by qt3to4:
 #include <QDragEnterEvent>
 #include <QDropEvent>
-#include <kiconview.h>
+#include <k3iconview.h>
 
 #include "cardview.h"
 #include "kaddressbookview.h"

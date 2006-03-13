@@ -24,7 +24,7 @@
 #ifndef RESOURCESELECTION_H
 #define RESOURCESELECTION_H
 
-#include <klistview.h>
+#include <k3listview.h>
 
 #include "extensionwidget.h"
 
@@ -68,7 +68,7 @@ class ResourceSelection : public KAB::ExtensionWidget
 
     ResourceItem* selectedItem() const;
 
-    KListView *mListView;
+    K3ListView *mListView;
     QPushButton *mAddButton;
     QPushButton *mEditButton;
     QPushButton *mRemoveButton;

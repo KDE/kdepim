@@ -644,7 +644,7 @@ void UpdateAddressBooksJob::run()
 
   if (!mServer->checkResponse( result, response.status ) )
   {
-    kdError() << "Error when getting addressbook deltas" << endl;
+    kError() << "Error when getting addressbook deltas" << endl;
     return;
   }
 

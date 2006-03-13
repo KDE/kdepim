@@ -15,7 +15,7 @@
 #ifndef KNHDRVIEWITEM_H
 #define KNHDRVIEWITEM_H
 
-#include <klistview.h>
+#include <k3listview.h>
 #include "headerview.h"
 
 class KNArticle;
@@ -23,7 +23,7 @@ class KNHeaderView;
 
 
 /** Header view item. */
-class KNHdrViewItem : public KListViewItem  {
+class KNHdrViewItem : public K3ListViewItem  {
 
   public:
     KNHdrViewItem( KNHeaderView *ref, KNArticle *a = 0 );

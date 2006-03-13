@@ -17,7 +17,7 @@
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
-        <widget class="KListView" row="0" column="0" rowspan="1" colspan="3">
+        <widget class="K3ListView" row="0" column="0" rowspan="1" colspan="3">
             <column>
                 <property name="text">
                     <string>Database</string>

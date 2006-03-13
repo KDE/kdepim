@@ -27,7 +27,7 @@
 #include <qwidget.h>
 
 class QToolButton;
-class KListView;
+class K3ListView;
 class Q3ListViewItem;
 class QPushButton;
 
@@ -58,7 +58,7 @@ class LDAPOptionsWidget : public QWidget
   private:
     void initGUI();
 
-    KListView* mHostListView;
+    K3ListView* mHostListView;
 
     QPushButton* mAddButton;
     QPushButton* mEditButton;

@@ -26,7 +26,7 @@
 #include <qcheckbox.h>
 #include <qlabel.h>
 
-#include <klistview.h>
+#include <k3listview.h>
 #include <krestrictedline.h>
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
@@ -56,7 +56,7 @@ class ResourceKABCConfig : public KRES::ConfigWidget
     KRestrictedLine *mAlarmTimeEdit;
     QLabel *mALabel;
     QCheckBox *mUseCategories;
-    KListView *mCategoryView;
+    K3ListView *mCategoryView;
 
     class Private;
     Private *d;

@@ -26,7 +26,7 @@
 
 class KComboBox;
 class KLineEdit;
-class KListView;
+class K3ListView;
 class KUrlRequester;
 
 namespace KABC {
@@ -57,7 +57,7 @@ class ResourceGroupwareConfig : public KRES::ConfigWidget
     KLineEdit *mUser;
     KLineEdit *mPassword;
 
-    KListView *mAddressBookView;
+    K3ListView *mAddressBookView;
     KComboBox *mAddressBookBox;
 
     QStringList mWriteAddressBookIds;

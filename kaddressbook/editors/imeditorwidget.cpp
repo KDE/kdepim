@@ -45,9 +45,9 @@
 #include "imeditorwidget.h"
 
 
-IMAddressLVI::IMAddressLVI( KListView *parent, KPluginInfo *protocol,
+IMAddressLVI::IMAddressLVI( K3ListView *parent, KPluginInfo *protocol,
                             const QString &address, const IMContext &context )
-  : KListViewItem( parent )
+  : K3ListViewItem( parent )
 {
   setProtocol( protocol );
   setAddress( address );
@@ -74,7 +74,7 @@ void IMAddressLVI::paintCell( QPainter *p, const QColorGroup &cg,
     p->setFont( font );
   }
 
-  KListViewItem::paintCell( p, cg, column, width, alignment );
+  K3ListViewItem::paintCell( p, cg, column, width, alignment );
 }
 
 void IMAddressLVI::setAddress( const QString &address )

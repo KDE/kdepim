@@ -27,7 +27,7 @@
 #include "groupwaredataadaptor.h"
 #include "folderlistview.h"
 
-#include <klistview.h>
+#include <k3listview.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kdialog.h>

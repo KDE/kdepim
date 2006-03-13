@@ -27,7 +27,7 @@
 #include <kdepimmacros.h>
 #include <qwidget.h>
 
-// class KListView;
+// class K3ListView;
 class QComboBox;
 class FolderListView;
 

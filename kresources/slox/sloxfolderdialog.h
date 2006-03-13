@@ -24,7 +24,7 @@
 
 #include "sloxfolder.h"
 
-class KListView;
+class K3ListView;
 class SloxFolder;
 class SloxFolderManager;
 
@@ -46,7 +46,7 @@ class SloxFolderDialog : public KDialogBase
     void createFolderViewItem( SloxFolder *folder );
 
   private:
-    KListView *mListView;
+    K3ListView *mListView;
     SloxFolderManager *mManager;
     QString mFolderId;
     FolderType mFolderType;

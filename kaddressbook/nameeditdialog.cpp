@@ -38,7 +38,7 @@
 #include <kbuttonbox.h>
 #include <kconfig.h>
 #include <klineedit.h>
-#include <klistview.h>
+#include <k3listview.h>
 #include <kcombobox.h>
 #include <klocale.h>
 #include <kdebug.h>

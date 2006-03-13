@@ -35,7 +35,7 @@ static const char *todowidget_id =
 #include "options.h"
 
 #include <q3ptrlist.h>
-#include <klistview.h>
+#include <k3listview.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
 #include <qlabel.h>
@@ -233,7 +233,7 @@ void TodoWidget::setupWidget()
 	fListBox = new TodoListView(this);
 	fListBox->addColumn( i18n( "To-do Item" ) );
 	fListBox->setAllColumnsShowFocus( true );
-	fListBox->setResizeMode( KListView::LastColumn );
+	fListBox->setResizeMode( K3ListView::LastColumn );
 	fListBox->setFullWidth( true );
 	fListBox->setItemsMovable( false );
 	fListBox->setItemsRenameable (true);

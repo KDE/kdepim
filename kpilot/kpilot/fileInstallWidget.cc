@@ -57,7 +57,7 @@ static const char *fileinstallwidget_id =
 #include <kfiledialog.h>
 #include <kurldrag.h>
 #include <kiconloader.h>
-#include <kiconview.h>
+#include <k3iconview.h>
 #include <kglobal.h>
 #include <kurl.h>
 
@@ -95,7 +95,7 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	abutton->setWhatsThis(
 		i18n("<qt>Clear the list of files to install. No files will be installed.</qt>"));
 
-	fIconView = new KIconView(this);
+	fIconView = new K3IconView(this);
 	connect(fIconView, SIGNAL(dropped(QDropEvent *, const Q3ValueList<Q3IconDragItem> &)),
 		this, SLOT(slotDropEvent(QDropEvent *, const Q3ValueList<Q3IconDragItem> &)));
 	grid->addMultiCellWidget(fIconView, 1, 4, 2, 3);
@@ -269,11 +269,11 @@ void FileInstallWidget::refreshFileInstallList()
 	{
 		if(pdbOrPrc(*fileName))
 		{
-			new KIconViewItem(fIconView, *fileName, kpilotIcon);
+			new K3IconViewItem(fIconView, *fileName, kpilotIcon);
 		}
 		else
 		{
-			new KIconViewItem(fIconView, *fileName);
+			new K3IconViewItem(fIconView, *fileName);
 		}
 	}
 }
