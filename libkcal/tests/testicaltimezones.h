@@ -30,13 +30,13 @@ class ICalTimeZonesTest : public QObject
 private slots:
     void parse();
     void general();
-    void offsetAtUTC();
+    void offsetAtUtc();
     void offset();
     void offsetAtZoneTime();
     void abbreviation();
-    void isDstAtUTC();
+    void isDstAtUtc();
     void isDst();
-    void UTCOffsets();
+    void utcOffsets();
 };
 
 #endif

@@ -114,13 +114,13 @@ class LIBKCAL_EXPORT ICalTimeZone : public KTimeZone
      *                    the time zone definitions.
      * @return offset in seconds, or 0 if error
      */
-    virtual int offsetAtUTC(const QDateTime &utcDateTime) const;
+    virtual int offsetAtUtc(const QDateTime &utcDateTime) const;
 
     /**
      * Returns the offset of this time zone to UTC at a specified UTC time.
      *
      * Note that time_t has a more limited range than QDateTime, so consider using
-     * offsetAtUTC() instead.
+     * offsetAtUtc() instead.
      *
      * @param t the UTC time at which the offset is to be calculated, measured in seconds
      *          since 00:00:00 UTC 1st January 1970 (as returned by time(2)). An error
@@ -137,13 +137,13 @@ class LIBKCAL_EXPORT ICalTimeZone : public KTimeZone
      *                    @p utcDateTime.timeSpec() is not Qt::UTC.
      * @return @c true if daylight savings time is in operation, @c false otherwise
      */
-    virtual bool isDstAtUTC(const QDateTime &utcDateTime) const;
+    virtual bool isDstAtUtc(const QDateTime &utcDateTime) const;
 
     /**
      * Returns whether daylight savings time is in operation at a specified UTC time.
      *
      * Note that time_t has a more limited range than QDateTime, so consider using
-     * offsetAtUTC() instead.
+     * offsetAtUtc() instead.
      *
      * @param t the UTC time, measured in seconds since 00:00:00 UTC 1st January 1970
      *          (as returned by time(2))
@@ -302,7 +302,7 @@ class LIBKCAL_EXPORT ICalTimeZoneData : public KTimeZoneData
      *
      * @return the sorted list of UTC offsets
      */
-    virtual QList<int> UTCOffsets() const;
+    virtual QList<int> utcOffsets() const;
 
     /**
      * Find the timezone phase which is current at a given UTC or local time.

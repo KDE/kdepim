@@ -209,7 +209,7 @@ void ICalTimeZonesTest::general()
     delete tz2;
 }
 
-void ICalTimeZonesTest::offsetAtUTC()
+void ICalTimeZonesTest::offsetAtUtc()
 {
     QDateTime local(QDate(2000,6,30), QTime(7,0,0), Qt::LocalTime);
 
@@ -220,57 +220,57 @@ void ICalTimeZonesTest::offsetAtUTC()
     QVERIFY(tz);
     icalcomponent_free(vtimezone);
 
-    QCOMPARE(tz->offsetAtUTC(start.addSecs(-1)), 0);
-    QCOMPARE(tz->offsetAtUTC(start), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(daylight87.addSecs(-1)), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(daylight87), -4*3600);
-    QCOMPARE(tz->offsetAtUTC(standardOct87.addSecs(-1)), -4*3600);
-    QCOMPARE(tz->offsetAtUTC(standardOct87), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(standardOct87.addDays(1)), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(daylight88.addSecs(-1)), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(daylight88), -4*3600);
-    QCOMPARE(tz->offsetAtUTC(daylight97.addSecs(-1)), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(daylight97), -4*3600);
-    QCOMPARE(tz->offsetAtUTC(standardOct97.addSecs(-1)), -4*3600);
-    QCOMPARE(tz->offsetAtUTC(standardOct97), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(spring98), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(standardOct98.addSecs(-1)), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(standardOct98), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(daylight99.addSecs(-1)), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(daylight99), -4*3600);
-    QCOMPARE(tz->offsetAtUTC(standardOct99.addSecs(-1)), -4*3600);
-    QCOMPARE(tz->offsetAtUTC(standardOct99), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(daylight00.addSecs(-1)), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(daylight00), -4*3600);
-    QCOMPARE(tz->offsetAtUTC(spring01), -5*3600);
-    QCOMPARE(tz->offsetAtUTC(local), 0);
+    QCOMPARE(tz->offsetAtUtc(start.addSecs(-1)), 0);
+    QCOMPARE(tz->offsetAtUtc(start), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(daylight87.addSecs(-1)), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(daylight87), -4*3600);
+    QCOMPARE(tz->offsetAtUtc(standardOct87.addSecs(-1)), -4*3600);
+    QCOMPARE(tz->offsetAtUtc(standardOct87), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(standardOct87.addDays(1)), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(daylight88.addSecs(-1)), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(daylight88), -4*3600);
+    QCOMPARE(tz->offsetAtUtc(daylight97.addSecs(-1)), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(daylight97), -4*3600);
+    QCOMPARE(tz->offsetAtUtc(standardOct97.addSecs(-1)), -4*3600);
+    QCOMPARE(tz->offsetAtUtc(standardOct97), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(spring98), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(standardOct98.addSecs(-1)), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(standardOct98), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(daylight99.addSecs(-1)), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(daylight99), -4*3600);
+    QCOMPARE(tz->offsetAtUtc(standardOct99.addSecs(-1)), -4*3600);
+    QCOMPARE(tz->offsetAtUtc(standardOct99), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(daylight00.addSecs(-1)), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(daylight00), -4*3600);
+    QCOMPARE(tz->offsetAtUtc(spring01), -5*3600);
+    QCOMPARE(tz->offsetAtUtc(local), 0);
 
     // Check that copy constructor copies phases correctly
     ICalTimeZone tz1(*tz);
-    QCOMPARE(tz1.offsetAtUTC(start.addSecs(-1)), 0);
-    QCOMPARE(tz1.offsetAtUTC(start), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(daylight87.addSecs(-1)), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(daylight87), -4*3600);
-    QCOMPARE(tz1.offsetAtUTC(standardOct87.addSecs(-1)), -4*3600);
-    QCOMPARE(tz1.offsetAtUTC(standardOct87), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(standardOct87.addDays(1)), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(daylight88.addSecs(-1)), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(daylight88), -4*3600);
-    QCOMPARE(tz1.offsetAtUTC(daylight97.addSecs(-1)), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(daylight97), -4*3600);
-    QCOMPARE(tz1.offsetAtUTC(standardOct97.addSecs(-1)), -4*3600);
-    QCOMPARE(tz1.offsetAtUTC(standardOct97), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(spring98), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(standardOct98.addSecs(-1)), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(standardOct98), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(daylight99.addSecs(-1)), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(daylight99), -4*3600);
-    QCOMPARE(tz1.offsetAtUTC(standardOct99.addSecs(-1)), -4*3600);
-    QCOMPARE(tz1.offsetAtUTC(standardOct99), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(daylight00.addSecs(-1)), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(daylight00), -4*3600);
-    QCOMPARE(tz1.offsetAtUTC(spring01), -5*3600);
-    QCOMPARE(tz1.offsetAtUTC(local), 0);
+    QCOMPARE(tz1.offsetAtUtc(start.addSecs(-1)), 0);
+    QCOMPARE(tz1.offsetAtUtc(start), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(daylight87.addSecs(-1)), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(daylight87), -4*3600);
+    QCOMPARE(tz1.offsetAtUtc(standardOct87.addSecs(-1)), -4*3600);
+    QCOMPARE(tz1.offsetAtUtc(standardOct87), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(standardOct87.addDays(1)), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(daylight88.addSecs(-1)), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(daylight88), -4*3600);
+    QCOMPARE(tz1.offsetAtUtc(daylight97.addSecs(-1)), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(daylight97), -4*3600);
+    QCOMPARE(tz1.offsetAtUtc(standardOct97.addSecs(-1)), -4*3600);
+    QCOMPARE(tz1.offsetAtUtc(standardOct97), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(spring98), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(standardOct98.addSecs(-1)), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(standardOct98), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(daylight99.addSecs(-1)), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(daylight99), -4*3600);
+    QCOMPARE(tz1.offsetAtUtc(standardOct99.addSecs(-1)), -4*3600);
+    QCOMPARE(tz1.offsetAtUtc(standardOct99), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(daylight00.addSecs(-1)), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(daylight00), -4*3600);
+    QCOMPARE(tz1.offsetAtUtc(spring01), -5*3600);
+    QCOMPARE(tz1.offsetAtUtc(local), 0);
 
     delete tz;
 }
@@ -479,7 +479,7 @@ void ICalTimeZonesTest::abbreviation()
     delete tz;
 }
 
-void ICalTimeZonesTest::isDstAtUTC()
+void ICalTimeZonesTest::isDstAtUtc()
 {
     QDateTime local(QDate(2000,6,30), QTime(7,0,0), Qt::LocalTime);
 
@@ -490,30 +490,30 @@ void ICalTimeZonesTest::isDstAtUTC()
     QVERIFY(tz);
     icalcomponent_free(vtimezone);
 
-    QVERIFY(!tz->isDstAtUTC(start.addSecs(-1)));
-    QVERIFY(!tz->isDstAtUTC(start));
-    QVERIFY(!tz->isDstAtUTC(daylight87.addSecs(-1)));
-    QVERIFY(tz->isDstAtUTC(daylight87));
-    QVERIFY(tz->isDstAtUTC(standardOct87.addSecs(-1)));
-    QVERIFY(!tz->isDstAtUTC(standardOct87));
-    QVERIFY(!tz->isDstAtUTC(standardOct87.addDays(1)));
-    QVERIFY(!tz->isDstAtUTC(daylight88.addSecs(-1)));
-    QVERIFY(tz->isDstAtUTC(daylight88));
-    QVERIFY(!tz->isDstAtUTC(daylight97.addSecs(-1)));
-    QVERIFY(tz->isDstAtUTC(daylight97));
-    QVERIFY(tz->isDstAtUTC(standardOct97.addSecs(-1)));
-    QVERIFY(!tz->isDstAtUTC(standardOct97));
-    QVERIFY(!tz->isDstAtUTC(spring98));
-    QVERIFY(!tz->isDstAtUTC(standardOct98.addSecs(-1)));
-    QVERIFY(!tz->isDstAtUTC(standardOct98));
-    QVERIFY(!tz->isDstAtUTC(daylight99.addSecs(-1)));
-    QVERIFY(tz->isDstAtUTC(daylight99));
-    QVERIFY(tz->isDstAtUTC(standardOct99.addSecs(-1)));
-    QVERIFY(!tz->isDstAtUTC(standardOct99));
-    QVERIFY(!tz->isDstAtUTC(daylight00.addSecs(-1)));
-    QVERIFY(tz->isDstAtUTC(daylight00));
-    QVERIFY(!tz->isDstAtUTC(spring01));
-    QVERIFY(!tz->isDstAtUTC(local));
+    QVERIFY(!tz->isDstAtUtc(start.addSecs(-1)));
+    QVERIFY(!tz->isDstAtUtc(start));
+    QVERIFY(!tz->isDstAtUtc(daylight87.addSecs(-1)));
+    QVERIFY(tz->isDstAtUtc(daylight87));
+    QVERIFY(tz->isDstAtUtc(standardOct87.addSecs(-1)));
+    QVERIFY(!tz->isDstAtUtc(standardOct87));
+    QVERIFY(!tz->isDstAtUtc(standardOct87.addDays(1)));
+    QVERIFY(!tz->isDstAtUtc(daylight88.addSecs(-1)));
+    QVERIFY(tz->isDstAtUtc(daylight88));
+    QVERIFY(!tz->isDstAtUtc(daylight97.addSecs(-1)));
+    QVERIFY(tz->isDstAtUtc(daylight97));
+    QVERIFY(tz->isDstAtUtc(standardOct97.addSecs(-1)));
+    QVERIFY(!tz->isDstAtUtc(standardOct97));
+    QVERIFY(!tz->isDstAtUtc(spring98));
+    QVERIFY(!tz->isDstAtUtc(standardOct98.addSecs(-1)));
+    QVERIFY(!tz->isDstAtUtc(standardOct98));
+    QVERIFY(!tz->isDstAtUtc(daylight99.addSecs(-1)));
+    QVERIFY(tz->isDstAtUtc(daylight99));
+    QVERIFY(tz->isDstAtUtc(standardOct99.addSecs(-1)));
+    QVERIFY(!tz->isDstAtUtc(standardOct99));
+    QVERIFY(!tz->isDstAtUtc(daylight00.addSecs(-1)));
+    QVERIFY(tz->isDstAtUtc(daylight00));
+    QVERIFY(!tz->isDstAtUtc(spring01));
+    QVERIFY(!tz->isDstAtUtc(local));
 
     delete tz;
 }
@@ -554,7 +554,7 @@ void ICalTimeZonesTest::isDst()
     delete tz;
 }
 
-void ICalTimeZonesTest::UTCOffsets()
+void ICalTimeZonesTest::utcOffsets()
 {
     icalcomponent *vtimezone = loadVTIMEZONE(VTZ_Western);
     QVERIFY(vtimezone);
@@ -569,12 +569,12 @@ void ICalTimeZonesTest::UTCOffsets()
     QVERIFY(tz2);
     icalcomponent_free(vtimezone);
 
-    QList<int> offsets = tz->UTCOffsets();
+    QList<int> offsets = tz->utcOffsets();
     QCOMPARE(offsets.count(), 2);
     QCOMPARE(offsets[0], -5*3600);
     QCOMPARE(offsets[1], -4*3600);
 
-    offsets = tz2->UTCOffsets();
+    offsets = tz2->utcOffsets();
     QCOMPARE(offsets.count(), 1);
     QCOMPARE(offsets[0], 3*3600);
 

@@ -125,7 +125,7 @@ int ICalTimeZone::offsetAtZoneTime(const QDateTime &zoneDateTime, int *secondOff
   return phase->offset;
 }
 
-int ICalTimeZone::offsetAtUTC(const QDateTime &utcDateTime) const
+int ICalTimeZone::offsetAtUtc(const QDateTime &utcDateTime) const
 {
   const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
   if (!utcDateTime.isValid()  ||  utcDateTime.timeSpec() != Qt::UTC  ||  !dat)
@@ -138,10 +138,10 @@ int ICalTimeZone::offsetAtUTC(const QDateTime &utcDateTime) const
 
 int ICalTimeZone::offset(time_t t) const
 {
-  return offsetAtUTC(fromTime_t(t));
+  return offsetAtUtc(fromTime_t(t));
 }
 
-bool ICalTimeZone::isDstAtUTC(const QDateTime &utcDateTime) const
+bool ICalTimeZone::isDstAtUtc(const QDateTime &utcDateTime) const
 {
   const ICalTimeZoneData *dat = static_cast<const ICalTimeZoneData*>(data());
   if (!utcDateTime.isValid()  ||  utcDateTime.timeSpec() != Qt::UTC  ||  !dat)
@@ -152,7 +152,7 @@ bool ICalTimeZone::isDstAtUTC(const QDateTime &utcDateTime) const
 
 bool ICalTimeZone::isDst(time_t t) const
 {
-  return isDstAtUTC(fromTime_t(t));
+  return isDstAtUtc(fromTime_t(t));
 }
 
 
@@ -219,7 +219,7 @@ QByteArray ICalTimeZoneData::abbreviation(const QDateTime &utcDateTime) const
   return ph ? tznames[ph->tznameIndex[0]] : QByteArray();  // return the first abbreviation
 }
 
-QList<int> ICalTimeZoneData::UTCOffsets() const
+QList<int> ICalTimeZoneData::utcOffsets() const
 {
   if (d->utcOffsets.isEmpty()) {
     for (int i = 0, end = phases.count();  i < end;  ++i) {
