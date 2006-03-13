@@ -176,7 +176,7 @@
                 </size>
             </property>
         </widget>
-        <widget class="KListView" row="7" column="0" rowspan="1" colspan="3">
+        <widget class="K3ListView" row="7" column="0" rowspan="1" colspan="3">
             <column>
                 <property name="text">
                     <string>Name</string>

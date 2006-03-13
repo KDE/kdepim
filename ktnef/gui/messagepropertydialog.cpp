@@ -19,7 +19,7 @@
 #include "attachpropertydialog.h"
 #include "ktnef/ktnefmessage.h"
 
-#include <klistview.h>
+#include <k3listview.h>
 #include <klocale.h>
 
 MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg )
@@ -29,7 +29,7 @@ MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg
 {
 	m_message = msg;
 
-	m_listview = new KListView( this );
+	m_listview = new K3ListView( this );
 	m_listview->addColumn( i18n( "Name" ) );
 	m_listview->addColumn( i18n( "Value" ) );
 	m_listview->setAllColumnsShowFocus( true );

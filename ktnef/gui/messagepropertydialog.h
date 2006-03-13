@@ -20,7 +20,7 @@
 
 #include <kdialogbase.h>
 
-class KListView;
+class K3ListView;
 class KTNEFMessage;
 
 class MessagePropertyDialog : public KDialogBase
@@ -34,7 +34,7 @@ protected slots:
 
 private:
 	KTNEFMessage *m_message;
-	KListView    *m_listview;
+	K3ListView    *m_listview;
 };
 
 #endif /* MESSAGEPROPERTYDIALOG_H */

@@ -65,7 +65,7 @@ Attachment::~Attachment()
 //------------------------------------------------------------------------------------------------------
 
 KTNEFView::KTNEFView( QWidget *parent )
-	: KListView( parent )
+	: K3ListView( parent )
 {
 	addColumn(i18n("File Name"));
 	addColumn(i18n("File Type"));

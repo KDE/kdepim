@@ -27,7 +27,7 @@
 //Added by qt3to4:
 #include <QPixmap>
 #include <QTextStream>
-#include <klistview.h>
+#include <k3listview.h>
 #include <kmimetype.h>
 #include <kdebug.h>
 #include <klocale.h>
