@@ -54,7 +54,7 @@ install_files( ${XDG_APPS_DIR} FILES kpalmdoc.desktop )
 install_files( ${KCFG_INSTALL_DIR} FILES docconduit.kcfg kpalmdoc.kcfg )
 install_files( ${SERVICES_INSTALL_DIR} FILES doc_conduit.desktop )
 install_files( ${SERVICETYPES_INSTALL_DIR} FILES  )
-install_files( ${DATA_INSTALL_DIR}/kconf_update FILES kpalmdoc.upd )
+install_files( ${KCONF_UPDATE_INSTALL_DIR} FILES kpalmdoc.upd )
 
 kde4_footer()
 

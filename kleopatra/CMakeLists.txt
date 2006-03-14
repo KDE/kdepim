@@ -25,7 +25,7 @@ kde4_add_ui3_files(kleopatra_SRCS certificatewizard.ui certificateinfowidget.ui 
 
 kde4_add_executable(kleopatra ${kleopatra_SRCS})
 
-target_link_libraries(kleopatra  ${QT_AND_KDECORE_LIBS} kleopatra kutils )
+target_link_libraries(kleopatra  ${LIB_KDE3SUPPORT} kleopatra kutils )
 
 install_targets(/bin kleopatra )
 

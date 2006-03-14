@@ -7,7 +7,7 @@ include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_D
 
 ########### next target ###############
 
-set(korn_SRCS 
+set(korn_SRCS label.h 
    accountmanager.cpp 
    account_input.cpp 
    boxcontainer.cpp 

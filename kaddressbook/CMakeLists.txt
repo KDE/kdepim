@@ -1,15 +1,13 @@
 kde4_header()
 
-set(libkabcommon_SRCS
+set(libkabcommon_SRCS 
 	${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs.cpp 
 	${CMAKE_SOURCE_DIR}/kaddressbook/common/locationmap.cpp 
 	${CMAKE_SOURCE_DIR}/kaddressbook/common/filter.cpp
 	)
 
-
-
+add_subdirectory( common )
 add_subdirectory( interfaces ) 
-add_subdirectory( common ) 
 add_subdirectory( printing ) 
 add_subdirectory( editors ) 
 add_subdirectory( views ) 

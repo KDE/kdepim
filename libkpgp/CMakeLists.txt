@@ -30,7 +30,7 @@ install_targets(${LIB_INSTALL_DIR} kpgp )
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/kconf_update FILES kpgp.upd )
+install_files( ${KCONF_UPDATE_INSTALL_DIR} FILES kpgp.upd )
 
 kde4_create_doxygen_docs(  )
 
