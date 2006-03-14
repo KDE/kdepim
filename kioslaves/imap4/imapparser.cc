@@ -663,7 +663,7 @@ void imapParser::parseList (parseString & result)
 
 void imapParser::parseLsub (parseString & result)
 {
-  imapList this_one (result.cstr());
+  imapList this_one (result.cstr(), *this);
   listResponses.append (this_one);
 }
 

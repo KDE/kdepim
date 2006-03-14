@@ -27,6 +27,7 @@
 #include <qstring.h>
 
 class parseString;
+class imapParser;
 
 //the class handling the responses from list
 class imapList
@@ -34,7 +35,7 @@ class imapList
 public:
 
   imapList ();
-  imapList (const QString &);
+  imapList (const QString &, imapParser &);
   imapList (const imapList &);
     imapList & operator = (const imapList &);
 
@@ -121,6 +122,7 @@ public:
 
 private:
 
+  imapParser* parser_;
   QString hierarchyDelimiter_;
   QString name_;
   bool noInferiors_;
