@@ -27,6 +27,7 @@
 #include <qstring.h>
 
 class parseString;
+class imapParser;
 
 //the class handling the responses from list
 class imapList
@@ -34,17 +35,17 @@ class imapList
 public:
 
   imapList ();
-  imapList (const QString &);
+  imapList (const QString &, imapParser &);
   imapList (const imapList &);
     imapList & operator = (const imapList &);
 
-  // process the attributes  
-  void parseAttributes( parseString & );  
+  // process the attributes
+  void parseAttributes( parseString & );
 
   // return all atributes concatenated
-  QString attributesAsString() const 
-  { 
-    return attributes_.join(","); 
+  QString attributesAsString() const
+  {
+    return attributes_.join(",");
   }
 
   QString hierarchyDelimiter () const
@@ -121,6 +122,7 @@ public:
 
 private:
 
+  imapParser* parser_;
   QString hierarchyDelimiter_;
   QString name_;
   bool noInferiors_;

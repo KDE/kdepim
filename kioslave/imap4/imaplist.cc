@@ -47,18 +47,19 @@
 //Added by qt3to4:
 #include <Q3CString>
 
-imapList::imapList ():noInferiors_ (false),
-noSelect_ (false), marked_ (false), unmarked_ (false), 
+imapList::imapList (): parser_(0), noInferiors_ (false),
+noSelect_ (false), marked_ (false), unmarked_ (false),
 hasChildren_ (false), hasNoChildren_ (false)
 {
 }
 
-imapList::imapList (const imapList & lr):hierarchyDelimiter_ (lr.hierarchyDelimiter_),
+imapList::imapList (const imapList & lr):parser_(lr.parser_),
+hierarchyDelimiter_ (lr.hierarchyDelimiter_),
 name_ (lr.name_),
 noInferiors_ (lr.noInferiors_),
 noSelect_ (lr.noSelect_), marked_ (lr.marked_), unmarked_ (lr.unmarked_),
 hasChildren_ (lr.hasChildren_), hasNoChildren_ (lr.hasNoChildren_),
-attributes_ (lr.attributes_)  
+attributes_ (lr.attributes_)
 {
 }
 
@@ -68,6 +69,7 @@ imapList & imapList::operator = (const imapList & lr)
   if (this == &lr)
     return *this;
 
+  parser_ = lr.parser_;
   hierarchyDelimiter_ = lr.hierarchyDelimiter_;
   name_ = lr.name_;
   noInferiors_ = lr.noInferiors_;
@@ -81,10 +83,12 @@ imapList & imapList::operator = (const imapList & lr)
   return *this;
 }
 
-imapList::imapList (const QString & inStr):noInferiors_ (false),
+imapList::imapList (const QString & inStr, imapParser &parser)
+: parser_(&parser),
+noInferiors_ (false),
 noSelect_ (false),
 marked_ (false), unmarked_ (false), hasChildren_ (false),
-hasNoChildren_ (false)  
+hasNoChildren_ (false)
 {
   parseString s;
   s.data.duplicate(inStr.toLatin1(), inStr.length());
@@ -97,12 +101,12 @@ hasNoChildren_ (false)
   parseAttributes( s );
 
   s.pos++;  // tie off )
-  imapParser::skipWS (s);
+  parser_->skipWS (s);
 
-  hierarchyDelimiter_ = imapParser::parseOneWordC(s);
+  hierarchyDelimiter_ = parser_->parseOneWordC(s);
   if (hierarchyDelimiter_ == "NIL")
     hierarchyDelimiter_.clear();
-  name_ = rfcDecoder::fromIMAP (imapParser::parseOneWord (s));  // decode modified UTF7
+  name_ = rfcDecoder::fromIMAP (parser_->parseLiteral (s));  // decode modified UTF7
 }
 
 void imapList::parseAttributes( parseString & str )
@@ -111,7 +115,7 @@ void imapList::parseAttributes( parseString & str )
 
   while ( !str.isEmpty () && str[0] != ')' )
   {
-    orig = imapParser::parseOneWordC(str);
+    orig = parser_->parseOneWordC(str);
     attributes_ << orig;
     attribute = orig.toLower();
     if (-1 != attribute.find ("\\noinferiors"))

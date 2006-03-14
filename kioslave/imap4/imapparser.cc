@@ -667,7 +667,7 @@ void imapParser::parseList (parseString & result)
 
 void imapParser::parseLsub (parseString & result)
 {
-  imapList this_one (result.cstr());
+  imapList this_one (result.cstr(), *this);
   listResponses.append (this_one);
 }
 
@@ -1777,7 +1777,7 @@ imapParser::parseURL (const KUrl & _url, QString & _box, QString & _section,
     if (!_box.isEmpty () && _box[_box.length () - 1] == '/')
       _box.truncate(_box.length() - 1);
   }
-  kDebug(7116) << "URL: box= " << _box << ", section= " << _section << ", type= " 
+  kDebug(7116) << "URL: box= " << _box << ", section= " << _section << ", type= "
     << _type << ", uid= " << _uid << ", validity= " << _validity << ", info= " << _info << endl;
 }
 
