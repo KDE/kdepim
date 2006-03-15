@@ -11,7 +11,41 @@ include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_D
 
 ########### next target ###############
 
-set(kleopatra_LIB_SRCS 
+set(libkleopatra_core_SRCS
+   ${CMAKE_SOURCE_DIR}/libkleo/kleo/cryptobackend.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/kleo/cryptobackendfactory.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/kleo/enum.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/kleo/dn.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/kleo/job.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/kleo/multideletejob.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/kleo/hierarchicalkeylistjob.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/kleo/kconfigbasedkeyfilter.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/kleo/keyfiltermanager.cpp
+   )
+
+set(libkleopatra_ui_SRCS
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/kdhorizontalline.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/progressbar.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/progressdialog.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/keylistview.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/keyselectiondialog.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/keyrequester.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/passphrasedialog.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/keyapprovaldialog.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/backendconfigwidget.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/dnattributeorderconfigwidget.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/cryptoconfigmodule.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/cryptoconfigdialog.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/directoryserviceswidget.cpp 
+   ${CMAKE_SOURCE_DIR}/libkleo/ui/adddirectoryservicedialogimpl.cpp
+)
+
+kde4_add_ui3_files(libkleopatra_ui_SRCS
+	${CMAKE_SOURCE_DIR}/libkleo/ui/adddirectoryservicedialog.ui
+	${CMAKE_SOURCE_DIR}/libkleo/ui/directoryserviceswidgetbase.ui
+)
+
+set(kleopatra_LIB_SRCS ${libkleopatra_core_SRCS} ${libkleopatra_ui_SRCS}
    cryptplug.cpp 
    cryptplugwrapper.cpp 
    cryptplugwrapperlist.cpp 
@@ -21,7 +55,7 @@ kde4_automoc(${kleopatra_LIB_SRCS})
 
 kde4_add_library(kleopatra SHARED ${kleopatra_LIB_SRCS})
 
-target_link_libraries(kleopatra  ${QT_AND_KDECORE_LIBS} kleopatra_core kleopatra_backend_qgpgme kleopatra_backend_chiasmus kleopatra_ui qgpgme kio kdeui )
+target_link_libraries(kleopatra  ${LIB_KIO} kleopatra_backend_qgpgme kleopatra_backend_chiasmus qgpgme  )
 
 set_target_properties(kleopatra PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kleopatra )
