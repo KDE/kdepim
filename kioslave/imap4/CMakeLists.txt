@@ -24,7 +24,7 @@ kde4_add_plugin(kio_imap4 ${kio_imap4_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_imap4 )
 
-target_link_libraries(kio_imap4  ${LIB_KDE3SUPPORT}  kmime  )
+target_link_libraries(kio_imap4  ${LIB_KDE3SUPPORT}  ${SASL2_LIBRARIES} kmime  )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kio_imap4 )
 
