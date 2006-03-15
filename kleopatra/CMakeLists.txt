@@ -1,14 +1,14 @@
 kde4_header()
 
+set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
 add_subdirectory( conf ) 
 add_subdirectory( kwatchgnupg ) 
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
-set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
 ########### next target ###############
 
-set(kleopatra_SRCS ${libconf_SRCS}
+set(kleopatra_bin_SRCS ${libconf_SRCS}
 	customactions.cpp 
    aboutdata.cpp 
    main.cpp 
@@ -19,15 +19,16 @@ set(kleopatra_SRCS ${libconf_SRCS}
    crlview.cpp 
    certlistview.cpp )
 
-kde4_automoc(${kleopatra_SRCS})
+kde4_automoc(${kleopatra_bin_SRCS})
 
-kde4_add_ui3_files(kleopatra_SRCS certificatewizard.ui certificateinfowidget.ui )
+kde4_add_ui3_files(kleopatra_bin_SRCS certificatewizard.ui certificateinfowidget.ui )
 
-kde4_add_executable(kleopatra ${kleopatra_SRCS})
+kde4_add_executable(kleopatra_bin ${kleopatra_bin_SRCS})
+set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
-target_link_libraries(kleopatra  ${LIB_KDE3SUPPORT} kleopatra kutils )
+target_link_libraries(kleopatra_bin ${LIB_KDE3SUPPORT} kleopatra kutils )
 
-install_targets(/bin kleopatra )
+install_targets(/bin kleopatra_bin )
 
 
 ########### install files ###############
