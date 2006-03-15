@@ -28,7 +28,8 @@ kde4_automoc(${gpgme_LIB_SRCS})
 
 kde4_add_library(gpgme++ SHARED ${gpgme_LIB_SRCS})
 
-target_link_libraries(gpgme++ ${QT_AND_KDECORE_LIBS} )
+#Laurent test it !
+target_link_libraries(gpgme++ ${QT_AND_KDECORE_LIBS} gpgme gpg-error )
 
 set_target_properties(gpgme++ PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} gpgme++ )
