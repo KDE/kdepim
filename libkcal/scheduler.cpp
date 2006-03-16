@@ -287,11 +287,12 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
   // in case this is an update and we didn't find the to-be-updated incidence, 
   // ask whether we should create a new one, or drop the update
   if ( existingIncidences.count() > 0 || inc->revision() == 0 ||
-          KMessageBox::warningContinueCancel( 0,
+          KMessageBox::warningYesNo( 0,
               i18n("The event, task or journal to be updated could not be found. "
                   "Maybe it has already been deleted, or the calendar that "
                   "contains it is disabled. Press continue to create a new "
-                  "one or cancel to discard this update." ) ) == KMessageBox::Continue ) {
+                  "one or 'throw away' to discard this update." ),
+              i18n("Discard this update?"), i18n("Store"), i18n("Throw away") ) == KMessageBox::Yes ) {
     kdDebug(5800) << "Storing new incidence with scheduling uid=" << inc->schedulingID() << " and uid=" << inc->uid() << endl;
     mCalendar->addIncidence(inc);
   }
