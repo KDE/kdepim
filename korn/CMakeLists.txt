@@ -6,8 +6,9 @@ include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_D
 
 
 ########### next target ###############
+qt4_generate_moc(label.h label.moc.cpp)
 
-set(korn_SRCS label.h 
+set(korn_SRCS label.moc.cpp
    accountmanager.cpp 
    account_input.cpp 
    boxcontainer.cpp 
