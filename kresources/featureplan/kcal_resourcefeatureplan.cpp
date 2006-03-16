@@ -93,7 +93,7 @@ bool ResourceFeaturePlan::doLoad()
 
     insertCategories( categories, masterTodo );
   }
-  
+
   emit resourceChanged( this );
 
   return true;
@@ -102,37 +102,32 @@ bool ResourceFeaturePlan::doLoad()
 void ResourceFeaturePlan::insertCategories( const Category::List &categories,
                                             Todo *parent )
 {
-  Category::List::ConstIterator it;
-  for( it = categories.begin(); it != categories.end(); ++it ) {
-    Category *c = *it;
-  
+  foreach ( Category c, categories ) {
+
     Todo *categoryTodo = new Todo;
-    categoryTodo->setSummary( c->name() );
+    categoryTodo->setSummary( c.name() );
     categoryTodo->setRelatedTo( parent );
 
-    insertCategories( c->categoryList(), categoryTodo );  
-  
-    Feature::List features = (*it)->featureList();
-    Feature::List::ConstIterator it2;
-    for( it2 = features.begin(); it2 != features.end(); ++it2 ) {
-      Feature *f = *it2;
+    insertCategories( c.categoryList(), categoryTodo );
+
+    foreach ( Feature f,  c.featureList() ) {
       Todo *todo = new Todo;
 
-      QString summary = f->summary();
+      QString summary = f.summary();
       int pos = summary.find( '\n' );
       if ( pos > 0 ) summary = summary.left( pos ) + "...";
       todo->setSummary( summary );
-      
-      todo->setDescription( f->summary() );
- 
+
+      todo->setDescription( f.summary() );
+
       todo->setRelatedTo( categoryTodo );
-      
+
       int completed;
-      if ( f->status() == "done" ) completed = 100;
-      else if ( f->status() == "inprogress" ) completed = 50;
+      if ( f.status() == "done" ) completed = 100;
+      else if ( f.status() == "inprogress" ) completed = 50;
       else completed = 0;
       todo->setPercentComplete( completed );
- 
+
       mCalendar.addTodo( todo );
     }
   }

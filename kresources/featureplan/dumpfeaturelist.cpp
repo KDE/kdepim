@@ -41,34 +41,32 @@ static const KCmdLineOptions options[] =
 void displayFeature( Feature *f )
 {
   std::cout << "FEATURE: " << f->summary().local8Bit().data() << std::endl;
-  Responsible::List r = f->responsibleList();
-  Responsible::List::ConstIterator it;
-  for( it = r.begin(); it != r.end(); ++it ) {
-    std::cout << "  RESPONSIBLE: " << (*it)->name().local8Bit().data() << " ("
-              << (*it)->email().local8Bit().data() << ")" << std::endl;
+  foreach( Responsible e, f->responsibleList() ) {
+    std::cout << "  RESPONSIBLE: " << e.name().local8Bit().data() << " ("
+              << e.email().local8Bit().data() << ")" << std::endl;
   }
   std::cout << "  TARGET: " << f->target().local8Bit().data() << std::endl;
   std::cout << "  STATUS: " << f->status().local8Bit().data() << std::endl;
 }
 
-void displayCategory( const QList<Category *> categories )
+void displayCategory( const QList<Category> categories )
 {
-  Category::List::ConstIterator it;
-  for( it = categories.begin(); it != categories.end(); ++it ) {
-    std::cout << "CATEGORY: " << (*it)->name().local8Bit().data() << std::endl;
+  foreach( Category c, categories ) {
+    std::cout << "CATEGORY: " << c.name().local8Bit().data() << std::endl;
 
-    Feature::List features = (*it)->featureList();
+    Feature::List features = c.featureList();
     Feature::List::ConstIterator it2;
-    for( it2 = features.begin(); it2 != features.end(); ++it2 ) {
-      displayFeature( *it2 );
+    foreach( Feature f, features ) {
+      displayFeature( &f );
     }
 
-    displayCategory( (*it)->categoryList() );
+    displayCategory( c.categoryList() );
   }
 }
 
 int main( int argc, char **argv )
 {
+  KApplication::disableAutoDcopRegistration();
   KAboutData aboutData( "dumpfeaturelist", "Dump XML feature list to stdout",
                         "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData, KCmdLineArgs::CmdLineArgNone );
@@ -91,8 +89,7 @@ int main( int argc, char **argv )
   if ( !features ) {
     kError() << "Parse error" << endl;
   } else {
-    QList<Category *> categories = features->categoryList();
-    displayCategory( categories );
+    displayCategory( features->categoryList() );
   }
 
   QString out = filename + ".out";

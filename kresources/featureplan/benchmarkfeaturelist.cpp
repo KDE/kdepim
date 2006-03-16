@@ -69,6 +69,7 @@ void displayCategory( const QList<Category *> categories )
 
 int main( int argc, char **argv )
 {
+  KApplication::disableAutoDcopRegistration();
   KAboutData aboutData( "benchmarkfeaturelist",
                         "Benchmark for feature list XML parser",
                         "0.1" );
