@@ -585,7 +585,7 @@ and scrolling to the <guilabel>Kontact</guilabel> item in the list.</para>
         </para></listitem>
     </varlistentry>
     <varlistentry>
-        <term>News Component</term>
+        <term>Usenet Component</term>
         <listitem><para>
             <keycombo action="simul">
                 <keycap>Ctrl</keycap><keycap>7</keycap></keycombo>
@@ -624,7 +624,7 @@ and scrolling to the <guilabel>Kontact</guilabel> item in the list.</para>
         and Mail components, New Contact for the Contact component, New Event
         for the Calendar component, New To-do for the To-do list component, New
         Journal for the Journal component, New Note for the Notes component, 
-        New Feed for the Feeds component, and New Article for the News
+        New Feed for the Feeds component, and New Article for the Usenet
         component. Each of these actions has its own keyboard shortcut as listed
         below.</para></important></listitem>
     </varlistentry>
