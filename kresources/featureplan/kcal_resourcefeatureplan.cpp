@@ -80,12 +80,12 @@ bool ResourceFeaturePlan::doLoad()
 
   FeaturesParser parser;
 
-  Features *features = parser.parseFile( mPrefs->filename() );
+  Features features = parser.parseFile( mPrefs->filename() );
 
-  if ( !features ) {
+  if ( features.categoryList().isEmpty() ) {
     return false;
   } else {
-    Category::List categories = features->categoryList();
+    Category::List categories = features.categoryList();
 
     KCal::Todo *masterTodo = new KCal::Todo;
     masterTodo->setSummary( i18n("Feature Plan") );
