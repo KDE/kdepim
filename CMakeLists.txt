@@ -42,6 +42,17 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim ${KDE4_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
 )
 
+set(libknotesresources_SRCS 
+	${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp 
+	${CMAKE_SOURCE_DIR}/knotes/resourcenotes.cpp 
+	${CMAKE_SOURCE_DIR}/knotes/resourcelocal.cpp 
+	${CMAKE_SOURCE_DIR}/knotes/resourcelocalconfig.cpp
+)
+
+set(libknoteseditor_SRCS  
+	${CMAKE_SOURCE_DIR}/knotes/knoteedit.cpp 
+)
+
 set(libemailfunctions_SRCS 
 	${CMAKE_SOURCE_DIR}/libemailfunctions/email.cpp 
 	${CMAKE_SOURCE_DIR}/libemailfunctions/idmapper.cpp 
