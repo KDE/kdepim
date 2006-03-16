@@ -5,7 +5,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${KDE4_INCLUDE_DIR} ${QT_INCLUD
 
 ########### next target ###############
 
-set(kpimidentities_LIB_SRCS identitymanager.cpp identity.cpp identitycombo.cpp )
+set(kpimidentities_LIB_SRCS identitymanager.cpp identity.cpp identitycombo.cpp ${libemailfunctions_SRCS})
 
 kde4_automoc(${kpimidentities_LIB_SRCS})
 
@@ -13,7 +13,7 @@ kde4_add_dcop_skels(kpimidentities_LIB_SRCS identitymanager.h )
 
 kde4_add_library(kpimidentities SHARED ${kpimidentities_LIB_SRCS})
 
-target_link_libraries(kpimidentities  ${QT_AND_KDECORE_LIBS} kleopatra kdepim emailfunctions )
+target_link_libraries(kpimidentities  ${LIB_KDEUI} kleopatra kdepim )
 
 set_target_properties(kpimidentities PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kpimidentities )
