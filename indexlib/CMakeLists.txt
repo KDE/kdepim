@@ -36,7 +36,7 @@ install_targets(${LIB_INSTALL_DIR} index )
 ########### install files ###############
 
 install_files( /include/index FILES create.h index.h lockfile.h )
-
+install_files( /bin FILES indexlib-config )
 kde4_footer()
 
 
