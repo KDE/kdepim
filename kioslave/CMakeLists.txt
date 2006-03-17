@@ -1,6 +1,9 @@
 kde4_header()
 
-add_subdirectory( imap4 ) 
+if(OPENSSL_FOUND)
+	add_subdirectory( imap4 ) 
+endif(OPENSSL_FOUND)
+
 add_subdirectory( mbox ) 
 
 message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}: skipped subdir $(SIEVE_SUBDIR)")
