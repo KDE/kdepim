@@ -158,8 +158,8 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
 
   const int nbMessages = 200; // read 200 mails at a time (see kabc resource)
 
-  const QString labelTxt = mimetype == "application/x-vnd.kolab.task" ? i18n( "Loading tasks..." )
-                           : mimetype == "application/x-vnd.kolab.journal" ? i18n( "Loading journals..." )
+  const QString labelTxt = !strcmp(mimetype, "application/x-vnd.kolab.task") ? i18n( "Loading tasks..." )
+                           : !strcmp(mimetype, "application/x-vnd.kolab.journal") ? i18n( "Loading journals..." )
                            : i18n( "Loading events..." );
   const bool useProgress = qApp && qApp->type() != QApplication::Tty && count > 200;
   if ( useProgress )
