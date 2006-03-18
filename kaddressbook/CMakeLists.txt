@@ -1,10 +1,11 @@
 kde4_header()
 
-set(libkabcommon_SRCS 
+set(libkabcommon_SRCS
 	${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs.cpp 
 	${CMAKE_SOURCE_DIR}/kaddressbook/common/locationmap.cpp 
 	${CMAKE_SOURCE_DIR}/kaddressbook/common/filter.cpp
 	)
+kde4_add_kcfg_files(libkabcommon_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
 
 add_subdirectory( common )
 add_subdirectory( interfaces ) 
@@ -18,65 +19,34 @@ add_subdirectory( pics )
 add_subdirectory( csv-templates ) 
 add_subdirectory( thumbnailcreator ) 
 
-include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${CMAKE_SOURCE_DIR}/kaddressbook/features ${CMAKE_SOURCE_DIR}/kaddressbook/views ${CMAKE_SOURCE_DIR}/kaddressbook/printing ${CMAKE_SOURCE_DIR}/kaddressbook/common ${CMAKE_SOURCE_DIR}/kaddressbook/editors ${CMAKE_SOURCE_DIR}/akregator/src ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories( 
+	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces 
+	${CMAKE_SOURCE_DIR}/kaddressbook/features 
+	${CMAKE_SOURCE_DIR}/kaddressbook/views 
+	${CMAKE_SOURCE_DIR}/kaddressbook/printing 
+	${CMAKE_SOURCE_DIR}/kaddressbook/common 
+	${CMAKE_SOURCE_DIR}/kaddressbook/editors 
+	${CMAKE_SOURCE_DIR}/akregator/src 
+	${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 
 ########### next target ###############
 
-set(kaddressbook_SRCS ${libkabcommon_SRCS} 
-   main.cpp 
-   kaddressbookmain.cpp 
-   addresseeconfig.cpp 
-   addresseeeditordialog.cpp 
-   addresseeeditorwidget.cpp 
-   addresseeeditorbase.cpp 
-   addresseeeditorextension.cpp 
-   addresseeutil.cpp 
-   addresseditwidget.cpp 
-   addviewdialog.cpp 
-   emaileditwidget.cpp 
-   extensionmanager.cpp 
-   filtereditdialog.cpp 
-   filterselectionwidget.cpp 
-   geowidget.cpp 
-   imagewidget.cpp 
-   incsearchwidget.cpp 
-   jumpbuttonbar.cpp 
-   kabcore.cpp 
-   kablock.cpp 
-   kaddressbookservice.cpp 
-   kaddressbookview.cpp 
-   keywidget.cpp 
-   ldapsearchdialog.cpp 
-   nameeditdialog.cpp 
-   phoneeditwidget.cpp 
-   secrecywidget.cpp 
-   soundwidget.cpp 
-   viewconfigurefieldspage.cpp 
-   viewconfigurefilterpage.cpp 
-   viewconfigurewidget.cpp 
-   undocmds.cpp 
-   viewmanager.cpp 
-   xxportmanager.cpp 
-   xxportselectdialog.cpp 
-   contacteditorwidgetmanager.cpp 
-   simpleaddresseeeditor.cpp 
-   advancedcustomfields.cpp 
-   customfieldswidget.cpp 
-   freebusywidget.cpp 
-   searchmanager.cpp 
-   imeditwidget.cpp 
-   kabtools.cpp )
+set(kaddressbook_bin_SRCS ${libkabcommon_SRCS}
+	main.cpp 
+	kaddressbookmain.cpp 
+	)
 
-kde4_automoc(${kaddressbook_SRCS})
+kde4_automoc(${kaddressbook_bin_SRCS})
 
-kde4_add_dcop_skels(kaddressbook_SRCS kaddressbookiface.h )
+kde4_add_dcop_skels(kaddressbook_bin_SRCS kaddressbookiface.h )
 
-kde4_add_executable(kaddressbook ${kaddressbook_SRCS})
+kde4_add_executable(kaddressbook_bin ${kaddressbook_bin_SRCS})
+set_target_properties(kaddressbook_bin PROPERTIES OUTPUT_NAME kaddressbook)
 
-target_link_libraries(kaddressbook  ${QT_AND_KDECORE_LIBS} kaddressbook printer kabinterfaces kdepim kcal kabc_file khtml kabcommon kabim rsslocal kdeprint )
+target_link_libraries(kaddressbook_bin  ${QT_AND_KDECORE_LIBS} kaddressbook printer kabinterfaces kdepim kcal kabc_file khtml kabim rsslocal kdeprint )
 
-install_targets(/bin kaddressbook )
+install_targets(/bin kaddressbook_bin )
 
 
 ########### next target ###############
@@ -96,7 +66,49 @@ install_targets(${LIB_INSTALL_DIR}/kde4 kaddressbookpart )
 
 ########### next target ###############
 
-set(kaddressbook_LIB_SRCS dummy.cpp )
+set(kaddressbook_LIB_SRCS 
+	addresseeconfig.cpp
+   addresseeeditordialog.cpp
+   addresseeeditorwidget.cpp
+   addresseeeditorbase.cpp
+   addresseeeditorextension.cpp
+   addresseeutil.cpp
+   addresseditwidget.cpp
+   addviewdialog.cpp
+   emaileditwidget.cpp
+   extensionmanager.cpp
+   filtereditdialog.cpp
+   filterselectionwidget.cpp
+   geowidget.cpp
+   imagewidget.cpp
+   incsearchwidget.cpp
+   jumpbuttonbar.cpp
+   kabcore.cpp
+   kablock.cpp
+   kaddressbookservice.cpp
+   kaddressbookview.cpp
+   keywidget.cpp
+   ldapsearchdialog.cpp
+   nameeditdialog.cpp
+   phoneeditwidget.cpp
+   secrecywidget.cpp
+   soundwidget.cpp
+   viewconfigurefieldspage.cpp
+   viewconfigurefilterpage.cpp
+   viewconfigurewidget.cpp
+   undocmds.cpp
+   viewmanager.cpp
+   xxportmanager.cpp
+   xxportselectdialog.cpp
+   contacteditorwidgetmanager.cpp
+   simpleaddresseeeditor.cpp
+   advancedcustomfields.cpp
+   customfieldswidget.cpp
+   freebusywidget.cpp
+   searchmanager.cpp
+   imeditwidget.cpp
+   kabtools.cpp 
+)
 
 kde4_automoc(${kaddressbook_LIB_SRCS})
 
