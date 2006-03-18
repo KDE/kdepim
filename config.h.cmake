@@ -59,7 +59,7 @@
 #cmakedefine HAVE_FCNTL_H 1
 
 /* Define if you have getdomainname */
-#define HAVE_GETDOMAINNAME 1
+#cmakedefine HAVE_GETDOMAINNAME 1
 
 /* Define if you have the getdomainname prototype */
 #cmakedefine HAVE_GETDOMAINNAME_PROTO 1
