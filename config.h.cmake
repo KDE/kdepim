@@ -62,7 +62,7 @@
 #define HAVE_GETDOMAINNAME 1
 
 /* Define if you have the getdomainname prototype */
-#define HAVE_GETDOMAINNAME_PROTO 1
+#cmakedefine HAVE_GETDOMAINNAME_PROTO 1
 
 /* Define if you have gethostname */
 #cmakedefine HAVE_GETHOSTNAME 1
