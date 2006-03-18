@@ -336,28 +336,29 @@
 #define PACKAGE_VERSION ""
 
 /* The size of a `char *', as computed by sizeof. */
-#define SIZEOF_CHAR_P 4
+#define SIZEOF_CHAR_P ${SIZEOF_CHAR_P}
 
 /* The size of a `int', as computed by sizeof. */
-#define SIZEOF_INT 4
+#define SIZEOF_INT ${SIZEOF_INT}
 
 /* The size of a `long', as computed by sizeof. */
-#define SIZEOF_LONG 4
+#define SIZEOF_LONG ${SIZEOF_LONG}
 
 /* The size of a `short', as computed by sizeof. */
-#define SIZEOF_SHORT 2
+#define SIZEOF_SHORT ${SIZEOF_SHORT}
 
 /* The size of a `size_t', as computed by sizeof. */
-#define SIZEOF_SIZE_T 4
-
-/* The size of a `uint64_t', as computed by sizeof. */
-#define SIZEOF_UINT64_T 8
+#define SIZEOF_SIZE_T ${SIZEOF_SIZE_T}
 
 /* The size of a `unsigned long', as computed by sizeof. */
-#define SIZEOF_UNSIGNED_LONG 4
+#define SIZEOF_UNSIGNED_LONG ${SIZEOF_UNSIGNED_LONG}
+
+
+/* The size of a `uint64_t', as computed by sizeof. */
+#define SIZEOF_UINT64_T ${SIZEOF_UINT64_T}
 
 /* The size of a `unsigned long long', as computed by sizeof. */
-#define SIZEOF_UNSIGNED_LONG_LONG 8
+#define SIZEOF_UNSIGNED_LONG_LONG ${SIZEOF_UNSIGNED_LONG_LONG}
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
