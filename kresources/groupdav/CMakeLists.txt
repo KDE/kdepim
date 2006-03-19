@@ -71,6 +71,16 @@ install_targets(${LIB_INSTALL_DIR}/kde4 kabc_groupdav )
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kabc FILES kabc_groupdav.desktop )
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_groupdav.desktop )
 
+install(FILES uninstall.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kabc/ RENAME kabc_opengroupware.desktop)
+install(FILES uninstall.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal/ RENAME kcal_opengroupware.desktop)
+
+
+
+
+
+
+
+
 kde4_footer()
 
 
