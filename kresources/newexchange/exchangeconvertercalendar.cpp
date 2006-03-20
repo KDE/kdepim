@@ -355,16 +355,22 @@ kdDebug()<<"ExchangeConverterCalendar::readIncidence: ERROR: No UID given"<<endl
 /*  if ( WebdavHandler::extractString( node, "organizer", tmpstr ) )
     incidence->setOrganizer( tmpstr );*/
 
-  if ( WebdavHandler::extractDateTime( node, "dtstart", tmpdt ) )
+  if ( WebdavHandler::extractDateTime( node, "dtstart", tmpdt ) ) {
     event->setDtStart( WebdavHandler::utcAsZone( tmpdt, mFormat.timeZoneId() ) );
-  if ( WebdavHandler::extractDateTime( node, "dtend", tmpdt ) ) {
-    event->setDtEnd( WebdavHandler::utcAsZone( tmpdt, mFormat.timeZoneId() ) );
-  } else if ( WebdavHandler::extractLong( node, "duration", tmplng ) ) {
-    event->setDuration( tmplng );
   }
+  
+  bool allDay = false;
+  if ( WebdavHandler::extractBool( node, "alldayevent", allDay ) )
+    event->setFloats( allDay );
 
-  if ( WebdavHandler::extractBool( node, "alldayevent", tmpbool ) )
-    event->setFloats( tmpbool );
+  if ( WebdavHandler::extractLong( node, "duration", tmplng ) ) {
+    if (allDay)
+      tmplng--; // Otherwise event extends into next day
+    event->setDuration( tmplng );
+    //  kdDebug() << "DURATION " << tmplng << "\n";
+  } else if ( WebdavHandler::extractDateTime( node, "dtend", tmpdt ) ) {
+    event->setDtEnd( WebdavHandler::utcAsZone( tmpdt, mFormat.timeZoneId() ) );
+  }
 
   // FIXME: Here we have two different props for the same thing?!?!?
   if ( WebdavHandler::extractLong( node, "transparent", tmplng ) )
