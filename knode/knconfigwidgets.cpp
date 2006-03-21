@@ -1661,7 +1661,10 @@ KNode::XHeaderConfDialog::~XHeaderConfDialog()
 
 QString KNode::XHeaderConfDialog::result() const
 {
-  return mNameEdit->text() + ": " + mValueEdit->text();
+  QString value = mValueEdit->text();
+  // just in case someone pastes a newline
+  value.replace( '\n', ' ' );
+  return mNameEdit->text() + ": " + value;
 }
 
 
