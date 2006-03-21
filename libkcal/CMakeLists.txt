@@ -1,8 +1,5 @@
 kde4_header()
 
-add_subdirectory( libical ) 
-add_subdirectory( versit ) 
-add_subdirectory( tests ) 
 
 ADD_DEFINITIONS(-DPACKAGE_DATA_DIR=\\""${CMAKE_INSTALL_PREFIX}${DATA_INSTALL_DIR}/libical"\\" ) # added manually
 
@@ -164,11 +161,11 @@ set(COMBINEDHEADERSICAL
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltypes.h       
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrecur.h      
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalattach.h     
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalicalderivedvalue.h      
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalicalderivedparameter.h      
+   #${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h      
+   #${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h      
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalvalue.h       
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalparameter.h   
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalicalderivedproperty.h       
+   #${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h       
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalproperty.h    
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/pvl.h         
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalarray.h       
@@ -190,6 +187,17 @@ macro(CREATE_ICAL_FILE _out_FILE)
 	FILE(APPEND ${_out_FILE} "/*\n")
 	FILE(APPEND ${_out_FILE} " $$''Id''$$\n")
 	FILE(APPEND ${_out_FILE} "*/\n")
+    
+	foreach (_current_FILE ${COMBINEDHEADERSICAL})
+	MESSAGE(STATUS "test : <${_current_FILE}>")
+		FILE(READ ${_current_FILE} _contents)
+		STRING(REGEX REPLACE "#include.*\"ical" "" _contents "${_contents}" )
+		STRING(REGEX REPLACE "#include.*\"config" "" _contents "${_contents}" )
+		STRING(REGEX REPLACE "#include.*\"pvl.h\"" "" _contents "${_contents}" )
+		STRING(REGEX REPLACE "\$$(Id|Locker): .+\$$" "" _contents "${_contents}" )
+		FILE(APPEND ${_out_FILE} "${_contents}")
+	endforeach (_current_FILE ${COMBINEDHEADERSICAL})
+	
 	FILE(APPEND ${_out_FILE} "\n")
 	FILE(APPEND ${_out_FILE} "#ifdef __cplusplus\n")
 	FILE(APPEND ${_out_FILE} "}\n")
@@ -220,6 +228,14 @@ macro(CREATE_ICALSS_FILE _out_FILE)
     FILE(APPEND ${_out_FILE} "/*\n")
     FILE(APPEND ${_out_FILE} " $$''Id''$$\n")
     FILE(APPEND ${_out_FILE} "*/\n")
+    foreach (_current_FILE ${COMBINEDHEADERSICALSS})
+    MESSAGE(STATUS "test : <${_current_FILE}>")
+        FILE(READ ${_current_FILE} _contents)
+        STRING(REGEX REPLACE "#include.*\"ical" "" _contents "${_contents}" )
+        STRING(REGEX REPLACE "#include.*\"pvl.h\"" "" _contents "${_contents}" )
+        STRING(REGEX REPLACE "\$$(Id|Locker): .+\$$" "" _contents "${_contents}" )
+        FILE(APPEND ${_out_FILE} "${_contents}")
+    endforeach (_current_FILE ${COMBINEDHEADERSICALSS})
     FILE(APPEND ${_out_FILE} "\n")
     FILE(APPEND ${_out_FILE} "#ifdef __cplusplus\n")
     FILE(APPEND ${_out_FILE} "}\n")
@@ -337,6 +353,11 @@ kde4_add_executable(convertqtopia ${convertqtopia_SRCS})
 target_link_libraries(convertqtopia  ${QT_AND_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
+
+
+add_subdirectory( libical )
+add_subdirectory( versit )
+add_subdirectory( tests )
 
 ########### install files ###############
 
