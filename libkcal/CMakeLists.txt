@@ -150,67 +150,14 @@ set(libicalss_SRCS
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalssyacc.c
    )
 
-SET_SOURCE_FILES_PROPERTIES(
-	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h
-	PROPERTIES GENERATED TRUE)
-
-SET_SOURCE_FILES_PROPERTIES(${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h PROPERTIES OBJECT_DEPENDS ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h)
-## ORDERING OF HEADERS IS SIGNIFICANT. Don't change this ordering. It
-## is required to make the combined header ical.h properly
-set(COMBINEDHEADERSICAL
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalversion.h         
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltime.h        
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalduration.h    
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalperiod.h      
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalenums.h       
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltypes.h       
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrecur.h      
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalattach.h     
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h      
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h      
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalvalue.h       
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalparameter.h   
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h       
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalproperty.h    
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/pvl.h         
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalarray.h       
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalcomponent.h   
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltimezone.h    
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalparser.h      
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalmemory.h      
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalerror.h       
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.h 
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/sspm.h        
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalmime.h        
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icallangbind.h
-)
-
-macro(CREATE_ICAL_FILE _out_FILE)
-    FILE(WRITE ${_out_FILE} "#ifdef __cplusplus\n")
-    FILE(APPEND ${_out_FILE} "extern \"C\" {\n")
-	FILE(APPEND ${_out_FILE} "#endif\n")
-	FILE(APPEND ${_out_FILE} "/*\n")
-	FILE(APPEND ${_out_FILE} " $$''Id''$$\n")
-	FILE(APPEND ${_out_FILE} "*/\n")
-    
-	foreach (_current_FILE ${COMBINEDHEADERSICAL})
-		FILE(READ ${_current_FILE} _contents)
-		STRING(REGEX REPLACE "#include.*\"ical" "" _contents "${_contents}" )
-		STRING(REGEX REPLACE "#include.*\"config" "" _contents "${_contents}" )
-		STRING(REGEX REPLACE "#include.*\"pvl.h\"" "" _contents "${_contents}" )
-		STRING(REGEX REPLACE "\$$(Id|Locker): .+\$$" "" _contents "${_contents}" )
-		FILE(APPEND ${_out_FILE} "${_contents}")
-	endforeach (_current_FILE ${COMBINEDHEADERSICAL})
-	
-	FILE(APPEND ${_out_FILE} "\n")
-	FILE(APPEND ${_out_FILE} "#ifdef __cplusplus\n")
-	FILE(APPEND ${_out_FILE} "}\n")
-	FILE(APPEND ${_out_FILE} "#endif\n")
-endmacro(CREATE_ICAL_FILE)
 
 macro_additional_clean_files( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h )
 
-create_ical_file( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h )
+add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h 
+		COMMAND 
+		${CMAKE_COMMAND} 
+		-DKDE_FILE_H_FILE:FILEPATH=${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h
+		-P ${CMAKE_SOURCE_DIR}/libkcal/ical_file.cmake )
 
 
 set(COMBINEDHEADERSICALSS
