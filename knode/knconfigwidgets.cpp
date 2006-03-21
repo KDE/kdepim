@@ -2154,7 +2154,10 @@ KNConfig::XHeaderConfDialog::~XHeaderConfDialog()
 
 QString KNConfig::XHeaderConfDialog::result()
 {
-  return QString("X-%1: %2").arg(n_ame->text()).arg(v_alue->text());
+  QString value = v_alue->text();
+  // just in case someone pastes a newline
+  value.replace( '\n', ' ' );
+  return QString( "X-%1: %2" ).arg( n_ame->text() ).arg( value );
 }
 
 
