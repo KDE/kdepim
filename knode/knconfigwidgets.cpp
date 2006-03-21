@@ -2384,27 +2384,27 @@ KNConfig::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent
   connect( mExpEnabled, SIGNAL(toggled(bool)), SIGNAL(changed()) );
 
   mExpDays = new KIntSpinBox( 0, 99999, 1, 0, 10, mExpGroup );
-  mExpDays->setSuffix( i18n(" days") );
   QLabel *label = new QLabel( mExpDays, i18n("&Purge groups every:"), mExpGroup );
   grid->addWidget( label, 2, 0 );
   grid->addWidget( mExpDays, 2, 1, Qt::AlignRight );
   connect( mExpDays, SIGNAL(valueChanged(int)), SIGNAL(changed()) );
+  connect( mExpDays, SIGNAL(valueChanged(int)), SLOT(expDaysChanged(int)) );
   connect( mExpEnabled, SIGNAL(toggled(bool)), label, SLOT(setEnabled(bool)) );
   connect( mExpEnabled, SIGNAL(toggled(bool)), mExpDays, SLOT(setEnabled(bool)) );
 
   mExpReadDays = new KIntSpinBox( 0, 99999, 1, 0, 10, mExpGroup );
-  mExpReadDays->setSuffix( i18n(" days") );
   label = new QLabel( mExpReadDays, i18n("&Keep read articles:"), mExpGroup );
   grid->addWidget( label, 3, 0 );
   grid->addWidget( mExpReadDays, 3, 1, Qt::AlignRight );
   connect( mExpReadDays, SIGNAL(valueChanged(int)), SIGNAL(changed()) );
+  connect( mExpReadDays, SIGNAL(valueChanged(int)), SLOT(expReadDaysChanged(int)) );
 
   mExpUnreadDays = new KIntSpinBox( 0, 99999, 1, 0, 10, mExpGroup );
-  mExpUnreadDays->setSuffix( i18n(" days") );
   label = new QLabel( mExpUnreadDays, i18n("Keep u&nread articles:"), mExpGroup );
   grid->addWidget( label, 4, 0 );
   grid->addWidget( mExpUnreadDays, 4, 1, Qt::AlignRight );
   connect( mExpUnreadDays, SIGNAL(valueChanged(int)), SIGNAL(changed()) );
+  connect( mExpUnreadDays, SIGNAL(valueChanged(int)), SLOT(expUnreadDaysChanged(int)) );
 
   mExpUnavailable = new QCheckBox( i18n("&Remove articles that are not available on the server"), mExpGroup );
   grid->addMultiCellWidget( mExpUnavailable, 5, 5, 0, 1 );
@@ -2417,6 +2417,20 @@ KNConfig::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent
   grid->setColStretch(1,1);
 }
 
+void KNConfig::GroupCleanupWidget::expDaysChanged(int value)
+{
+  mExpDays->setSuffix( i18n(" day", " days", value) );
+}
+
+void KNConfig::GroupCleanupWidget::expReadDaysChanged(int value)
+{
+  mExpReadDays->setSuffix( i18n(" day", " days", value) );
+}
+
+void KNConfig::GroupCleanupWidget::expUnreadDaysChanged(int value)
+{
+  mExpUnreadDays->setSuffix( i18n(" day", " days", value) );
+}
 
 void KNConfig::GroupCleanupWidget::load()
 {

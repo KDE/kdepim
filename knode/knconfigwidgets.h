@@ -660,7 +660,9 @@ class KDE_EXPORT GroupCleanupWidget : public QWidget {
 
   private slots:
     void slotDefaultToggled( bool state );
-
+    void expDaysChanged( int value );
+    void expReadDaysChanged( int value );
+    void expUnreadDaysChanged( int value );
 };
 
 
