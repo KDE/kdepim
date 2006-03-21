@@ -166,8 +166,8 @@ set(COMBINEDHEADERSICAL
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltypes.h       
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrecur.h      
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalattach.h     
-   #${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h      
-   #${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h      
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h      
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalvalue.h       
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalparameter.h   
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h       
