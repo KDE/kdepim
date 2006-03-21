@@ -150,9 +150,14 @@ set(libicalss_SRCS
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalssyacc.c
    )
 
+SET_SOURCE_FILES_PROPERTIES(
+	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h
+	PROPERTIES GENERATED TRUE)
+
+SET_SOURCE_FILES_PROPERTIES(${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h PROPERTIES OBJECT_DEPENDS ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h)
 ## ORDERING OF HEADERS IS SIGNIFICANT. Don't change this ordering. It
 ## is required to make the combined header ical.h properly
-set(COMBINEDHEADERSICAL 
+set(COMBINEDHEADERSICAL
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalversion.h         
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltime.h        
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalduration.h    
@@ -165,7 +170,7 @@ set(COMBINEDHEADERSICAL
    #${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h      
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalvalue.h       
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalparameter.h   
-   #${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h       
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h       
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalproperty.h    
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/pvl.h         
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalarray.h       
@@ -189,7 +194,6 @@ macro(CREATE_ICAL_FILE _out_FILE)
 	FILE(APPEND ${_out_FILE} "*/\n")
     
 	foreach (_current_FILE ${COMBINEDHEADERSICAL})
-	MESSAGE(STATUS "test : <${_current_FILE}>")
 		FILE(READ ${_current_FILE} _contents)
 		STRING(REGEX REPLACE "#include.*\"ical" "" _contents "${_contents}" )
 		STRING(REGEX REPLACE "#include.*\"config" "" _contents "${_contents}" )
@@ -229,7 +233,6 @@ macro(CREATE_ICALSS_FILE _out_FILE)
     FILE(APPEND ${_out_FILE} " $$''Id''$$\n")
     FILE(APPEND ${_out_FILE} "*/\n")
     foreach (_current_FILE ${COMBINEDHEADERSICALSS})
-    MESSAGE(STATUS "test : <${_current_FILE}>")
         FILE(READ ${_current_FILE} _contents)
         STRING(REGEX REPLACE "#include.*\"ical" "" _contents "${_contents}" )
         STRING(REGEX REPLACE "#include.*\"pvl.h\"" "" _contents "${_contents}" )
