@@ -119,7 +119,7 @@ class AddresseeIconViewItem : public K3IconViewItem
         setText( mAddressee.givenName() + " " + mAddressee.familyName() );
 
       QPixmap icon;
-      QPixmap defaultIcon( KGlobal::iconLoader()->loadIcon( "vcard", KIcon::Desktop ) );
+      QPixmap defaultIcon( KGlobal::iconLoader()->loadIcon( "vcard", K3Icon::Desktop ) );
       KABC::Picture pic = mAddressee.photo();
       if ( pic.data().isNull() )
         pic = mAddressee.logo();

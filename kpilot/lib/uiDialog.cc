@@ -74,8 +74,8 @@
 
 	QPixmap applicationIcon =
 		l->loadIcon(QString::fromLatin1(p->appName()),
-		KIcon::Desktop,
-		64, KIcon::DefaultState, 0L,
+		K3Icon::Desktop,
+		64, K3Icon::DefaultState, 0L,
 		true);
 
 	if (applicationIcon.isNull())
@@ -87,7 +87,7 @@
 			<< endl;
 #endif
 		applicationIcon = l->loadIcon(QString::fromLatin1("kpilot"),
-			KIcon::Desktop);
+			K3Icon::Desktop);
 	}
 
 	text = new QLabel(w);

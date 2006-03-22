@@ -149,8 +149,8 @@ void AddresseeEditorWidget::setupTab1()
 
   // Person icon
   label = new QLabel( tab1 );
-  label->setPixmap( KGlobal::iconLoader()->loadIcon( "personal", KIcon::Desktop,
-                                                      KIcon::SizeMedium ) );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "personal", K3Icon::Desktop,
+                                                      K3Icon::SizeMedium ) );
   layout->addMultiCellWidget( label, 0, 1, 0, 0 );
 
   // First name
@@ -205,7 +205,7 @@ void AddresseeEditorWidget::setupTab1()
   // Phone numbers (upper right)
   label = new QLabel( tab1 );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "kaddressbook",
-                    KIcon::Desktop, KIcon::SizeMedium ) );
+                    K3Icon::Desktop, K3Icon::SizeMedium ) );
   layout->addMultiCellWidget( label, 0, 1, 3, 3 );
 
   mPhoneEditWidget = new PhoneEditWidget( tab1 );
@@ -218,8 +218,8 @@ void AddresseeEditorWidget::setupTab1()
   //////////////////////////////////////
   // Addresses (lower left)
   label = new QLabel( tab1 );
-  label->setPixmap( KGlobal::iconLoader()->loadIcon( "kfm_home", KIcon::Desktop,
-                                                     KIcon::SizeMedium ) );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "kfm_home", K3Icon::Desktop,
+                                                     K3Icon::SizeMedium ) );
   layout->addMultiCellWidget( label, 5, 6, 0, 0 );
 
   mAddressEditWidget = new AddressEditWidget( tab1 );
@@ -229,8 +229,8 @@ void AddresseeEditorWidget::setupTab1()
   //////////////////////////////////////
   // Email / Web (lower right)
   label = new QLabel( tab1 );
-  label->setPixmap( KGlobal::iconLoader()->loadIcon( "email", KIcon::Desktop,
-                                                     KIcon::SizeMedium ) );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "email", K3Icon::Desktop,
+                                                     K3Icon::SizeMedium ) );
   layout->addMultiCellWidget( label, 5, 6, 3, 3 );
 
   mEmailWidget = new EmailEditWidget( tab1 );
@@ -244,8 +244,8 @@ void AddresseeEditorWidget::setupTab1()
   QHBoxLayout *homePageLayout = new QHBoxLayout( 0, 11, 7 );
 
   label = new QLabel( tab1 );
-  label->setPixmap( KGlobal::iconLoader()->loadIcon( "homepage", KIcon::Desktop,
-                                                     KIcon::SizeMedium ) );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "homepage", K3Icon::Desktop,
+                                                     K3Icon::SizeMedium ) );
   homePageLayout->addWidget( label );
 
   label = new QLabel( i18n( "<urlLabel>:", "%1:" ).arg( KABC::Addressee::urlLabel() ), tab1 );
@@ -317,8 +317,8 @@ void AddresseeEditorWidget::setupTab2()
 
   // Department
   label = new QLabel( tab2 );
-  label->setPixmap( KGlobal::iconLoader()->loadIcon( "folder", KIcon::Desktop,
-                                                     KIcon::SizeMedium ) );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "folder", K3Icon::Desktop,
+                                                     K3Icon::SizeMedium ) );
   layout->addMultiCellWidget( label, 0, 1, 0, 0 );
 
   label = new QLabel( i18n( "Department:" ), tab2 );
@@ -376,8 +376,8 @@ void AddresseeEditorWidget::setupTab2()
   // Personal info
 
   label = new QLabel( tab2 );
-  label->setPixmap( KGlobal::iconLoader()->loadIcon( "personal", KIcon::Desktop,
-                                                     KIcon::SizeMedium ) );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "personal", K3Icon::Desktop,
+                                                     K3Icon::SizeMedium ) );
   layout->addMultiCellWidget( label, 4, 5, 0, 0 );
 
   label = new QLabel( i18n( "Nickname:" ), tab2 );

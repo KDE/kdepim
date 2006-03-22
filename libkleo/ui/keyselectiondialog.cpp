@@ -339,8 +339,8 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
 
   QSize dialogSize( 580, 400 );
   if ( kapp ) {
-    int iconSize = IconSize(KIcon::Desktop);
-    int miniSize = IconSize(KIcon::Small);
+    int iconSize = IconSize(K3Icon::Desktop);
+    int miniSize = IconSize(K3Icon::Small);
     KWin::setIcons( winId(), kapp->windowIcon().pixmap(iconSize, iconSize), 
 kapp->windowIcon().pixmap(miniSize, miniSize) );
 
@@ -363,7 +363,7 @@ kapp->windowIcon().pixmap(miniSize, miniSize) );
   le->setText( initialQuery );
   QToolButton *clearButton = new QToolButton( page );
   clearButton->setIconSet( KGlobal::iconLoader()->loadIconSet(
-              KApplication::reverseLayout() ? "clear_left":"locationbar_erase", KIcon::Small, 0 ) );
+              KApplication::reverseLayout() ? "clear_left":"locationbar_erase", K3Icon::Small, 0 ) );
   hlay->addWidget( clearButton );
   hlay->addWidget( new QLabel( le, i18n("&Search for:"), page ) );
   hlay->addWidget( le, 1 );

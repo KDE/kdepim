@@ -49,7 +49,7 @@ SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *na
 
   QLabel *label = new QLabel( this );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "multimedia",
-                    KIcon::Desktop, KIcon::SizeMedium ) );
+                    K3Icon::Desktop, K3Icon::SizeMedium ) );
   label->setAlignment( Qt::AlignTop );
   topLayout->addMultiCellWidget( label, 0, 1, 0, 0 );
 

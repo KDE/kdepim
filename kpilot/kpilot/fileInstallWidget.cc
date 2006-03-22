@@ -261,7 +261,7 @@ void FileInstallWidget::refreshFileInstallList()
 	FUNCTIONSETUP;
 
 	QStringList fileNames = fInstaller->fileNames();
-	QPixmap kpilotIcon = KGlobal::iconLoader()->loadIcon(CSL1("kpilot"), KIcon::Desktop);
+	QPixmap kpilotIcon = KGlobal::iconLoader()->loadIcon(CSL1("kpilot"), K3Icon::Desktop);
 
 	fIconView->clear();
 

@@ -100,7 +100,7 @@ bool KMobileItem::configLoad(int idx)
 
 QPixmap KMobileItem::getIcon() const
 {
-   return KGlobal::instance()->iconLoader()->loadIcon(m_iconName, KIcon::Desktop );
+   return KGlobal::instance()->iconLoader()->loadIcon(m_iconName, K3Icon::Desktop );
 }
 
 QString KMobileItem::config_SectionName(int idx) const

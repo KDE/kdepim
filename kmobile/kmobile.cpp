@@ -282,7 +282,7 @@ void KMobile::addDevice()
     QString iconName = ptr->icon();
     if (iconName.isEmpty())
 	iconName = KMOBILE_ICON_UNKNOWN;
-    QPixmap pm = KGlobal::instance()->iconLoader()->loadIcon(iconName, KIcon::Desktop );
+    QPixmap pm = KGlobal::instance()->iconLoader()->loadIcon(iconName, K3Icon::Desktop );
     
     Q3IconViewItem *item;
     item = new Q3IconViewItem( dialog->iconView, ptr->name(), pm );

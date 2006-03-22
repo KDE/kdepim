@@ -296,7 +296,7 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	}
 	
 	if( hasIcon )
-		pixmap = KGlobal::iconLoader()->loadIcon( *_icons[ index ], KIcon::Desktop, KIcon::SizeSmallMedium );
+		pixmap = KGlobal::iconLoader()->loadIcon( *_icons[ index ], K3Icon::Desktop, K3Icon::SizeSmallMedium );
 	
 	if( hasIcon && hasFg )
 	{

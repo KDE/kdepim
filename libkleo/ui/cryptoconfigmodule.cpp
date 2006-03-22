@@ -64,7 +64,7 @@ using namespace Kleo;
 
 inline QPixmap loadIcon( QString s ) {
   return KGlobal::instance()->iconLoader()
-    ->loadIcon( s.replace( QRegExp( "[^a-zA-Z0-9_]" ), "_" ), KIcon::NoGroup, KIcon::SizeMedium );
+    ->loadIcon( s.replace( QRegExp( "[^a-zA-Z0-9_]" ), "_" ), K3Icon::NoGroup, K3Icon::SizeMedium );
 }
 
 static const KJanusWidget::Face determineJanusFace( const Kleo::CryptoConfig * config ) {

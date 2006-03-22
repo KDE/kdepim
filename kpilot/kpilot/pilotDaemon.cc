@@ -198,7 +198,7 @@ void PilotDaemonTray::setupWidget()
 
 	KHelpMenu *help = new KHelpMenu(menu,aboutData);
 	menu->insertItem(
-		KGlobal::iconLoader()->loadIconSet(CSL1("help"),KIcon::Small,0,true),
+		KGlobal::iconLoader()->loadIconSet(CSL1("help"),K3Icon::Small,0,true),
 		i18n("&Help"),help->menu(),false /* no whatsthis */);
 
 

@@ -80,7 +80,7 @@ Kleo::PassphraseDialog::PassphraseDialog( const QString & msg, const QString & c
   QHBoxLayout * hlay = new QHBoxLayout( w, 0, spacingHint() );
 
   QLabel * label = new QLabel( w );
-  label->setPixmap( DesktopIcon( "pgp-keys", KIcon::SizeMedium ) );
+  label->setPixmap( DesktopIcon( "pgp-keys", K3Icon::SizeMedium ) );
   hlay->addWidget( label, 0, Qt::AlignTop );
 
   QVBoxLayout * vlay = new QVBoxLayout( hlay ); // inherits spacing

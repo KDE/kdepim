@@ -45,8 +45,8 @@
 ConfigureDialog::ConfigureDialog( QWidget *parent, const char *name, bool modal )
   : KCMultiDialog( KDialogBase::IconList, i18n( "Configure" ), parent, name, modal )
 {
-  KWin::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( KIcon::Desktop ), IconSize( KIcon::Desktop ) ),
-                  qApp->windowIcon().pixmap( IconSize( KIcon::Small ), IconSize( KIcon::Small ) ) );
+  KWin::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( K3Icon::Desktop ), IconSize( K3Icon::Desktop ) ),
+                  qApp->windowIcon().pixmap( IconSize( K3Icon::Small ), IconSize( K3Icon::Small ) ) );
   showButton( User1, true );
 
   addModule( "kleopatra_config_dirserv", false );

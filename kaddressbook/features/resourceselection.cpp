@@ -62,7 +62,7 @@ class ResourceItem : public Q3CheckListItem
         mResourceIdentifier()
     {
       setOn( resource->isActive() );
-      setPixmap( 0, KGlobal::iconLoader()->loadIcon( "contents", KIcon::Small ) );
+      setPixmap( 0, KGlobal::iconLoader()->loadIcon( "contents", K3Icon::Small ) );
       mChecked = isOn();
     }
 
@@ -75,7 +75,7 @@ class ResourceItem : public Q3CheckListItem
     {
       KPIM::ResourceABC* res = dynamic_cast<KPIM::ResourceABC *>( mResource );
       setOn( res->subresourceActive( mResourceIdentifier ) );
-      setPixmap( 0, KGlobal::iconLoader()->loadIcon( "contents", KIcon::Small ) );
+      setPixmap( 0, KGlobal::iconLoader()->loadIcon( "contents", K3Icon::Small ) );
       mChecked = isOn();
     }
 

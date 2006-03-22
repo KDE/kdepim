@@ -40,7 +40,7 @@
 SystemTray::SystemTray(KMainWindow *parent, const char *name) : KSystemTray(parent, name)
 
 {
-    m_appPix = KGlobal::instance()->iconLoader()->loadIcon("kmobile", KIcon::Small);
+    m_appPix = KGlobal::instance()->iconLoader()->loadIcon("kmobile", K3Icon::Small);
     setPixmap(m_appPix);
 
     setToolTip();
@@ -74,7 +74,7 @@ void SystemTray::contextMenuAboutToShow(KMenu *menu)
     for (unsigned int no=0; no<list.count(); no++) {
 	QString devName = list[no];
         QString iconName = main->mainView()->iconFileName(devName);
-        QPixmap pm = KGlobal::instance()->iconLoader()->loadIcon(iconName, KIcon::Small);
+        QPixmap pm = KGlobal::instance()->iconLoader()->loadIcon(iconName, K3Icon::Small);
 	menu->insertItem(pm, devName, SYSTEMTRAY_STARTID+no, 3+no);
 	menu->connectItem(SYSTEMTRAY_STARTID+no, this, SLOT(menuItemSelected()));
     }

@@ -99,10 +99,10 @@ Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
     x500LV->setSorting( -1 );
 
     // taken from kmail's configuredialog.cpp
-    upButton->setIconSet( BarIconSet( "up", KIcon::SizeSmall ) );
+    upButton->setIconSet( BarIconSet( "up", K3Icon::SizeSmall ) );
     upButton->setEnabled( false ); // b/c no item is selected yet
 
-    downButton->setIconSet( BarIconSet( "down", KIcon::SizeSmall ) );
+    downButton->setIconSet( BarIconSet( "down", K3Icon::SizeSmall ) );
     downButton->setEnabled( false ); // b/c no item is selected yet
 }
 

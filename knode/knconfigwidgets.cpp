@@ -1319,7 +1319,7 @@ KNode::FilterListWidget::FilterListWidget( KInstance *inst, QWidget *parent ) :
   topL->setRowStretch(11,1);
 
   a_ctive = SmallIcon("filter",16);
-  d_isabled = SmallIcon("filter",16,KIcon::DisabledState);
+  d_isabled = SmallIcon("filter",16,K3Icon::DisabledState);
 
   load();
 

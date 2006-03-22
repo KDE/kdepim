@@ -50,7 +50,7 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   layout->addMultiCellWidget( label, 0, 0, 0, 2 );
 
   label = new QLabel( this );
-  label->setPixmap( KGlobal::iconLoader()->loadIcon( "network", KIcon::Desktop ) );
+  label->setPixmap( KGlobal::iconLoader()->loadIcon( "network", K3Icon::Desktop ) );
   layout->addWidget( label, 0, 3 );
 
   label = new QLabel( "", this );

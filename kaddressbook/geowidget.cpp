@@ -61,7 +61,7 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
 
   label = new QLabel( this );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "package_network",
-                    KIcon::Desktop, KIcon::SizeMedium ) );
+                    K3Icon::Desktop, K3Icon::SizeMedium ) );
   label->setAlignment( Qt::AlignTop );
   topLayout->addMultiCellWidget( label, 0, 3, 0, 0 );
 

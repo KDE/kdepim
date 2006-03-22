@@ -494,7 +494,7 @@ void ViewManager::startDrag()
     }
   }
 
-  drag->setPixmap( KGlobal::iconLoader()->loadIcon( "vcard", KIcon::Desktop ) );
+  drag->setPixmap( KGlobal::iconLoader()->loadIcon( "vcard", K3Icon::Desktop ) );
   drag->dragCopy();
 }
 

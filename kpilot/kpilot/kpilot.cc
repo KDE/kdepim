@@ -298,7 +298,7 @@ void KPilotInstaller::initComponents()
 	QWidget *w;
 
 #define ADDICONPAGE(a,b) \
-	pixmap = KGlobal::iconLoader()->loadIcon(b, KIcon::Desktop, 64); \
+	pixmap = KGlobal::iconLoader()->loadIcon(b, K3Icon::Desktop, 64); \
 	w = getManagingWidget()->addVBoxPage(a,QString::null, pixmap) ;
 
 	ADDICONPAGE(i18n("HotSync"),CSL1("kpilotbhotsync"));
