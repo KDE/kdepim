@@ -21,7 +21,7 @@ kde4_add_plugin(conduit_address ${conduit_address_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_address )
 
-target_link_libraries(conduit_address  ${QT_AND_KDECORE_LIBS} kpilot kabc kabc_file )
+target_link_libraries(conduit_address  ${KDE4_KDECORE_LIBS} kpilot kabc kabc_file )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 conduit_address )
 

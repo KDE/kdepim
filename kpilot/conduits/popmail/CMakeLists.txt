@@ -17,7 +17,7 @@ kde4_add_plugin(conduit_popmail ${conduit_popmail_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_popmail )
 
-target_link_libraries(conduit_popmail  ${QT_AND_KDECORE_LIBS} kpilot kio )
+target_link_libraries(conduit_popmail  ${KDE4_KDECORE_LIBS} kpilot kio )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 conduit_popmail )
 

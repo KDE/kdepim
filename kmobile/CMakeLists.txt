@@ -23,7 +23,7 @@ kde4_add_dcop_skels(kmobile_SRCS kmobileiface.h )
 
 kde4_add_executable(kmobile ${kmobile_SRCS})
 
-target_link_libraries(kmobile  ${QT_AND_KDECORE_LIBS} kmobiledevice )
+target_link_libraries(kmobile  ${KDE4_KDECORE_LIBS} kmobiledevice )
 
 install_targets(/bin kmobile )
 
@@ -36,7 +36,7 @@ kde4_automoc(${kmobiledevice_LIB_SRCS})
 
 kde4_add_library(kmobiledevice SHARED ${kmobiledevice_LIB_SRCS})
 
-target_link_libraries(kmobiledevice  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kmobiledevice  ${KDE4_KDECORE_LIBS} )
 
 set_target_properties(kmobiledevice PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kmobiledevice )
@@ -50,7 +50,7 @@ kde4_automoc(${kmobileclient_LIB_SRCS})
 
 kde4_add_library(kmobileclient SHARED ${kmobileclient_LIB_SRCS})
 
-target_link_libraries(kmobileclient  ${QT_AND_KDECORE_LIBS} DCOP )
+target_link_libraries(kmobileclient  ${KDE4_KDECORE_LIBS} DCOP )
 
 set_target_properties(kmobileclient PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kmobileclient )
@@ -66,7 +66,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testlibkmobile ${testlibkmobile_SRCS})
 
-target_link_libraries(testlibkmobile  ${QT_AND_KDECORE_LIBS} kmobileclient )
+target_link_libraries(testlibkmobile  ${KDE4_KDECORE_LIBS} kmobileclient )
 
 endif(KDE4_BUILD_TESTS)
 

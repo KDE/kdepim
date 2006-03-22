@@ -17,7 +17,7 @@ kde4_add_plugin(kded_networkstatus ${kded_networkstatus_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kded_networkstatus )
 
-target_link_libraries(kded_networkstatus  ${LIB_KIO}  )
+target_link_libraries(kded_networkstatus  ${KDE4_KIO_LIBRARIES}  )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kded_networkstatus )
 
@@ -40,7 +40,7 @@ kde4_add_dcop_stubs(networkstatustestservice_SRCS serviceiface.h )
 
 kde4_add_executable(networkstatustestservice ${networkstatustestservice_SRCS})
 
-target_link_libraries(networkstatustestservice  ${LIB_KIO}  )
+target_link_libraries(networkstatustestservice  ${KDE4_KIO_LIBRARIES}  )
 
 install_targets(/bin networkstatustestservice )
 

@@ -13,7 +13,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(lexertest ${lexertest_SRCS})
 
-target_link_libraries(lexertest  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(lexertest  ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -27,7 +27,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(parsertest ${parsertest_SRCS})
 
-target_link_libraries(parsertest  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(parsertest  ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 

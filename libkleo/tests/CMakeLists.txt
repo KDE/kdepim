@@ -13,7 +13,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(test_keylister ${test_keylister_SRCS})
 
-target_link_libraries(test_keylister  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(test_keylister  ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -27,7 +27,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(test_keygen ${test_keygen_SRCS})
 
-target_link_libraries(test_keygen  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(test_keygen  ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -41,7 +41,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(test_keyselectiondialog ${test_keyselectiondialog_SRCS})
 
-target_link_libraries(test_keyselectiondialog  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(test_keyselectiondialog  ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -55,7 +55,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(test_cryptoconfig ${test_cryptoconfig_SRCS})
 
-target_link_libraries(test_cryptoconfig  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(test_cryptoconfig  ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -69,7 +69,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(test_gnupgprocessbase ${test_gnupgprocessbase_SRCS})
 
-target_link_libraries(test_gnupgprocessbase  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(test_gnupgprocessbase  ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -83,7 +83,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(test_jobs ${test_jobs_SRCS})
 
-target_link_libraries(test_jobs  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(test_jobs  ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 

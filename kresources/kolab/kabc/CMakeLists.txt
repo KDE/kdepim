@@ -11,7 +11,7 @@ kde4_automoc(${kabckolab_LIB_SRCS})
 
 kde4_add_library(kabckolab SHARED ${kabckolab_LIB_SRCS})
 
-target_link_libraries(kabckolab  ${QT_AND_KDECORE_LIBS} resourcekolabshared kresources kabc )
+target_link_libraries(kabckolab  ${KDE4_KDECORE_LIBS} resourcekolabshared kresources kabc )
 
 set_target_properties(kabckolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kabckolab )
@@ -27,7 +27,7 @@ kde4_add_plugin(kabc_kolab ${kabc_kolab_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_kolab )
 
-target_link_libraries(kabc_kolab  ${QT_AND_KDECORE_LIBS} kabckolab )
+target_link_libraries(kabc_kolab  ${KDE4_KDECORE_LIBS} kabckolab )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kabc_kolab )
 

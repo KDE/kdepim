@@ -13,7 +13,7 @@ kde4_add_plugin(kmail_bodypartformatter_text_vcard WITH_PREFIX ${kmail_bodypartf
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_vcard )
 
-target_link_libraries(kmail_bodypartformatter_text_vcard  ${QT_AND_KDECORE_LIBS} kdepim kmime emailfunctions )
+target_link_libraries(kmail_bodypartformatter_text_vcard  ${KDE4_KDECORE_LIBS} kdepim kmime emailfunctions )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kmail_bodypartformatter_text_vcard )
 
@@ -28,7 +28,7 @@ kde4_add_plugin(kmail_bodypartformatter_text_calendar WITH_PREFIX ${kmail_bodypa
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_calendar )
 
-target_link_libraries(kmail_bodypartformatter_text_calendar  ${QT_AND_KDECORE_LIBS} kcal kmailprivate )
+target_link_libraries(kmail_bodypartformatter_text_calendar  ${KDE4_KDECORE_LIBS} kcal kmailprivate )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kmail_bodypartformatter_text_calendar )
 
@@ -43,7 +43,7 @@ kde4_add_plugin(kmail_bodypartformatter_text_xdiff WITH_PREFIX ${kmail_bodypartf
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_xdiff )
 
-target_link_libraries(kmail_bodypartformatter_text_xdiff  ${QT_AND_KDECORE_LIBS} ${QT_QT3SUPPORT_LIBRARY} )
+target_link_libraries(kmail_bodypartformatter_text_xdiff  ${KDE4_KDECORE_LIBS} ${QT_QT3SUPPORT_LIBRARY} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kmail_bodypartformatter_text_xdiff )
 

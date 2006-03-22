@@ -13,7 +13,7 @@ kde4_add_plugin(kmobile_skeleton WITH_PREFIX ${kmobile_skeleton_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmobile_skeleton )
 
-target_link_libraries(kmobile_skeleton  ${QT_AND_KDECORE_LIBS} kmobiledevice )
+target_link_libraries(kmobile_skeleton  ${KDE4_KDECORE_LIBS} kmobiledevice )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kmobile_skeleton )
 

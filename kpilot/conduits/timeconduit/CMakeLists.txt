@@ -17,7 +17,7 @@ kde4_add_plugin(conduit_time ${conduit_time_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_time )
 
-target_link_libraries(conduit_time  ${QT_AND_KDECORE_LIBS} kpilot kdeui )
+target_link_libraries(conduit_time  ${KDE4_KDECORE_LIBS} kpilot kdeui )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 conduit_time )
 

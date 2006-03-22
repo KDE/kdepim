@@ -65,7 +65,7 @@ kde4_add_dcop_skels(korn_SRCS boxcontaineritem.h dcopdropif.h )
 
 kde4_add_executable(korn ${korn_SRCS})
 
-target_link_libraries(korn  ${QT_AND_KDECORE_LIBS} kio )
+target_link_libraries(korn  ${KDE4_KDECORE_LIBS} kio )
 
 install_targets(/bin korn )
 

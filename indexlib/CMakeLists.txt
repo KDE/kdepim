@@ -27,7 +27,7 @@ kde4_automoc(${index_LIB_SRCS})
 
 kde4_add_library(index SHARED ${index_LIB_SRCS})
 
-target_link_libraries(index  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(index  ${KDE4_KDECORE_LIBS} )
 
 set_target_properties(index PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} index )

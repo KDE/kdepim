@@ -11,7 +11,7 @@ kde4_automoc(${kcal_resourceremote_LIB_SRCS})
 
 kde4_add_library(kcal_resourceremote SHARED ${kcal_resourceremote_LIB_SRCS})
 
-target_link_libraries(kcal_resourceremote  ${QT_AND_KDECORE_LIBS} kcal kdepim )
+target_link_libraries(kcal_resourceremote  ${KDE4_KDECORE_LIBS} kcal kdepim )
 
 set_target_properties(kcal_resourceremote PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kcal_resourceremote )
@@ -27,7 +27,7 @@ kde4_add_plugin(kcal_remote ${kcal_remote_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_remote )
 
-target_link_libraries(kcal_remote  ${QT_AND_KDECORE_LIBS} kcal_resourceremote kdepim )
+target_link_libraries(kcal_remote  ${KDE4_KDECORE_LIBS} kcal_resourceremote kdepim )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kcal_remote )
 

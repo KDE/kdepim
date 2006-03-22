@@ -27,7 +27,7 @@ kde4_add_kcfg_files(kpilot_LIB_SRCS kpilotlibSettings.kcfgc )
 
 kde4_add_library(kpilot SHARED ${kpilot_LIB_SRCS})
 
-target_link_libraries(kpilot  ${QT_AND_KDECORE_LIBS} kdeui kcal )
+target_link_libraries(kpilot  ${KDE4_KDECORE_LIBS} kdeui kcal )
 
 set_target_properties(kpilot PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kpilot )
@@ -43,7 +43,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testactions ${testactions_SRCS})
 
-target_link_libraries(testactions  ${QT_AND_KDECORE_LIBS} kpilot )
+target_link_libraries(testactions  ${KDE4_KDECORE_LIBS} kpilot )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -57,7 +57,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testconstants ${testconstants_SRCS})
 
-target_link_libraries(testconstants  ${QT_AND_KDECORE_LIBS} kpilot )
+target_link_libraries(testconstants  ${KDE4_KDECORE_LIBS} kpilot )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -71,7 +71,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testdatabase ${testdatabase_SRCS})
 
-target_link_libraries(testdatabase  ${QT_AND_KDECORE_LIBS} kpilot )
+target_link_libraries(testdatabase  ${KDE4_KDECORE_LIBS} kpilot )
 
 endif(KDE4_BUILD_TESTS)
 

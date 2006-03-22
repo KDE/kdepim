@@ -44,7 +44,7 @@ kde4_automoc(${mimelib_LIB_SRCS})
 
 kde4_add_library(mimelib SHARED ${mimelib_LIB_SRCS})
 
-target_link_libraries(mimelib  ${QT_AND_KDECORE_LIBS} kdefakes )
+target_link_libraries(mimelib  ${KDE4_KDECORE_LIBS} kdefakes )
 
 set_target_properties(mimelib PROPERTIES VERSION 1.1.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} mimelib )
@@ -60,7 +60,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(test_boyermor ${test_boyermor_SRCS})
 
-target_link_libraries(test_boyermor  ${QT_AND_KDECORE_LIBS} mimelib )
+target_link_libraries(test_boyermor  ${KDE4_KDECORE_LIBS} mimelib )
 
 endif(KDE4_BUILD_TESTS)
 

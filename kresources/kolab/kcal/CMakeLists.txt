@@ -16,7 +16,7 @@ kde4_automoc(${kcalkolab_LIB_SRCS})
 
 kde4_add_library(kcalkolab SHARED ${kcalkolab_LIB_SRCS})
 
-target_link_libraries(kcalkolab  ${QT_AND_KDECORE_LIBS} kcal resourcekolabshared kresources )
+target_link_libraries(kcalkolab  ${KDE4_KDECORE_LIBS} kcal resourcekolabshared kresources )
 
 set_target_properties(kcalkolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kcalkolab )
@@ -32,7 +32,7 @@ kde4_add_plugin(kcal_kolab ${kcal_kolab_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_kolab )
 
-target_link_libraries(kcal_kolab  ${QT_AND_KDECORE_LIBS} kcalkolab )
+target_link_libraries(kcal_kolab  ${KDE4_KDECORE_LIBS} kcalkolab )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kcal_kolab )
 

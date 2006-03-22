@@ -13,7 +13,7 @@ kde4_add_dcop_skels(kpimidentities_LIB_SRCS identitymanager.h )
 
 kde4_add_library(kpimidentities SHARED ${kpimidentities_LIB_SRCS})
 
-target_link_libraries(kpimidentities  ${LIB_KDEUI} kleopatra kdepim )
+target_link_libraries(kpimidentities  ${KDE4_KDEUI_LIBRARIES} kleopatra kdepim )
 
 set_target_properties(kpimidentities PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kpimidentities )

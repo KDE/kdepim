@@ -13,7 +13,7 @@ kde4_add_plugin(kfile_ics ${kfile_ics_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kfile_ics )
 
-target_link_libraries(kfile_ics  ${QT_AND_KDECORE_LIBS} kcal kio )
+target_link_libraries(kfile_ics  ${KDE4_KDECORE_LIBS} kcal kio )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kfile_ics )
 

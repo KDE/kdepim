@@ -18,7 +18,7 @@ kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_mbox )
 
-target_link_libraries(kio_mbox  ${QT_AND_KDECORE_LIBS} kio )
+target_link_libraries(kio_mbox  ${KDE4_KDECORE_LIBS} kio )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kio_mbox )
 

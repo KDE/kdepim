@@ -13,7 +13,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(soapdebug ${soapdebug_SRCS})
 
-target_link_libraries(soapdebug  ${QT_AND_KDECORE_LIBS} gwsoap kdecore kcal kdepim )
+target_link_libraries(soapdebug  ${KDE4_KDECORE_LIBS} gwsoap kdecore kcal kdepim )
 
 endif(KDE4_BUILD_TESTS)
 

@@ -11,7 +11,7 @@ kde4_automoc(${knoteskolab_LIB_SRCS})
 
 kde4_add_library(knoteskolab SHARED ${knoteskolab_LIB_SRCS})
 
-target_link_libraries(knoteskolab  ${QT_AND_KDECORE_LIBS} kresources kdeprint resourcekolabshared knotesresources kcal )
+target_link_libraries(knoteskolab  ${KDE4_KDECORE_LIBS} kresources kdeprint resourcekolabshared knotesresources kcal )
 
 set_target_properties(knoteskolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} knoteskolab )
@@ -27,7 +27,7 @@ kde4_add_plugin(knotes_kolab ${knotes_kolab_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} knotes_kolab )
 
-target_link_libraries(knotes_kolab  ${QT_AND_KDECORE_LIBS} knoteskolab )
+target_link_libraries(knotes_kolab  ${KDE4_KDECORE_LIBS} knoteskolab )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 knotes_kolab )
 

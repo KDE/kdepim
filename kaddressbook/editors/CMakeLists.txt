@@ -16,7 +16,7 @@ kde4_add_plugin(kaddrbk_cryptosettings WITH_PREFIX ${kaddrbk_cryptosettings_PART
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_cryptosettings )
 
-target_link_libraries(kaddrbk_cryptosettings  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_cryptosettings  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_cryptosettings )
 

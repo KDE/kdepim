@@ -13,7 +13,7 @@ kde4_add_plugin(conduit_vcal ${conduit_vcal_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_vcal )
 
-target_link_libraries(conduit_vcal  ${QT_AND_KDECORE_LIBS} kpilot kcal vcalconduit_shared )
+target_link_libraries(conduit_vcal  ${KDE4_KDECORE_LIBS} kpilot kcal vcalconduit_shared )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 conduit_vcal )
 
@@ -28,7 +28,7 @@ kde4_add_plugin(conduit_todo ${conduit_todo_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_todo )
 
-target_link_libraries(conduit_todo  ${QT_AND_KDECORE_LIBS} kpilot kcal vcalconduit_shared )
+target_link_libraries(conduit_todo  ${KDE4_KDECORE_LIBS} kpilot kcal vcalconduit_shared )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 conduit_todo )
 

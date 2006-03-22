@@ -16,7 +16,7 @@ kde4_add_kcfg_files(kabc_xmlrpc_LIB_SRCS kabc_egroupwareprefs.kcfgc )
 
 kde4_add_library(kabc_xmlrpc SHARED ${kabc_xmlrpc_LIB_SRCS})
 
-target_link_libraries(kabc_xmlrpc  ${QT_AND_KDECORE_LIBS} kio kabc kdepim kabcommon egwcommon kabc_xmlrpc )
+target_link_libraries(kabc_xmlrpc  ${KDE4_KDECORE_LIBS} kio kabc kdepim kabcommon egwcommon kabc_xmlrpc )
 
 set_target_properties(kabc_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kabc_xmlrpc )
@@ -36,7 +36,7 @@ kde4_add_kcfg_files(kcal_xmlrpc_LIB_SRCS kcal_egroupwareprefs.kcfgc )
 
 kde4_add_library(kcal_xmlrpc SHARED ${kcal_xmlrpc_LIB_SRCS})
 
-target_link_libraries(kcal_xmlrpc  ${QT_AND_KDECORE_LIBS} kcal kdepim egwcommon kcal_xmlrpc )
+target_link_libraries(kcal_xmlrpc  ${KDE4_KDECORE_LIBS} kcal kdepim egwcommon kcal_xmlrpc )
 
 set_target_properties(kcal_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kcal_xmlrpc )
@@ -52,7 +52,7 @@ kde4_add_kcfg_files(knotes_xmlrpc_LIB_SRCS knotes_egroupwareprefs.kcfgc )
 
 kde4_add_library(knotes_xmlrpc SHARED ${knotes_xmlrpc_LIB_SRCS})
 
-target_link_libraries(knotes_xmlrpc  ${QT_AND_KDECORE_LIBS} kcal kdeprint knotesresources kdepim egwcommon knotes_xmlrpc )
+target_link_libraries(knotes_xmlrpc  ${KDE4_KDECORE_LIBS} kcal kdeprint knotesresources kdepim egwcommon knotes_xmlrpc )
 
 set_target_properties(knotes_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} knotes_xmlrpc )
@@ -69,7 +69,7 @@ kde4_add_plugin(kabc_xmlrpc ${kabc_xmlrpc_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_xmlrpc )
 
-target_link_libraries(kabc_xmlrpc  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kabc_xmlrpc  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kabc_xmlrpc )
 
@@ -85,7 +85,7 @@ kde4_add_plugin(kcal_xmlrpc ${kcal_xmlrpc_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_xmlrpc )
 
-target_link_libraries(kcal_xmlrpc  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kcal_xmlrpc  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kcal_xmlrpc )
 
@@ -101,7 +101,7 @@ kde4_add_plugin(knotes_xmlrpc ${knotes_xmlrpc_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} knotes_xmlrpc )
 
-target_link_libraries(knotes_xmlrpc  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(knotes_xmlrpc  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 knotes_xmlrpc )
 

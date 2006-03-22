@@ -13,7 +13,7 @@ kde4_add_plugin(kcal_kabc ${kcal_kabc_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_kabc )
 
-target_link_libraries(kcal_kabc  ${QT_AND_KDECORE_LIBS} kcal kabcommon )
+target_link_libraries(kcal_kabc  ${KDE4_KDECORE_LIBS} kcal kabcommon )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kcal_kabc )
 

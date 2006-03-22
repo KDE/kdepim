@@ -21,7 +21,7 @@ kde4_add_plugin(conduit_memofile ${conduit_memofile_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_memofile )
 
-target_link_libraries(conduit_memofile  ${QT_AND_KDECORE_LIBS} kpilot kdeui )
+target_link_libraries(conduit_memofile  ${KDE4_KDECORE_LIBS} kpilot kdeui )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 conduit_memofile )
 

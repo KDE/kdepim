@@ -13,7 +13,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(loadcalendar ${loadcalendar_SRCS})
 
-target_link_libraries(loadcalendar  ${QT_AND_KDECORE_LIBS} kcal )
+target_link_libraries(loadcalendar  ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -27,7 +27,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testtostring ${testtostring_SRCS})
 
-target_link_libraries(testtostring  ${QT_AND_KDECORE_LIBS} kcal )
+target_link_libraries(testtostring  ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -41,7 +41,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testincidence ${testincidence_SRCS})
 
-target_link_libraries(testincidence  ${QT_AND_KDECORE_LIBS} kcal )
+target_link_libraries(testincidence  ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -55,7 +55,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testcalendar ${testcalendar_SRCS})
 
-target_link_libraries(testcalendar  ${QT_AND_KDECORE_LIBS} kcal )
+target_link_libraries(testcalendar  ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -69,7 +69,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(readandwrite ${readandwrite_SRCS})
 
-target_link_libraries(readandwrite  ${QT_AND_KDECORE_LIBS} kcal )
+target_link_libraries(readandwrite  ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -83,7 +83,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testresource ${testresource_SRCS})
 
-target_link_libraries(testresource  ${QT_AND_KDECORE_LIBS} kcal )
+target_link_libraries(testresource  ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -97,7 +97,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testfields ${testfields_SRCS})
 
-target_link_libraries(testfields  ${QT_AND_KDECORE_LIBS} kcal )
+target_link_libraries(testfields  ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -111,7 +111,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testrecurrence ${testrecurrence_SRCS})
 
-target_link_libraries(testrecurrence  ${QT_AND_KDECORE_LIBS} kcal )
+target_link_libraries(testrecurrence  ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -125,7 +125,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testrecurprevious ${testrecurprevious_SRCS})
 
-target_link_libraries(testrecurprevious  ${QT_AND_KDECORE_LIBS} kcal )
+target_link_libraries(testrecurprevious  ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -139,7 +139,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testrecurson ${testrecurson_SRCS})
 
-target_link_libraries(testrecurson  ${QT_AND_KDECORE_LIBS} kcal )
+target_link_libraries(testrecurson  ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -153,7 +153,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testrecurrencetype ${testrecurrencetype_SRCS})
 
-target_link_libraries(testrecurrencetype  ${QT_AND_KDECORE_LIBS} kcal )
+target_link_libraries(testrecurrencetype  ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -167,7 +167,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testicaltimezones ${testicaltimezones_SRCS})
 
-target_link_libraries(testicaltimezones  ${QT_AND_KDECORE_LIBS} kcal QtTest_debug )
+target_link_libraries(testicaltimezones  ${KDE4_KDECORE_LIBS} kcal QtTest_debug )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -181,7 +181,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testvcalexport ${testvcalexport_SRCS})
 
-target_link_libraries(testvcalexport  ${QT_AND_KDECORE_LIBS} kcal )
+target_link_libraries(testvcalexport  ${KDE4_KDECORE_LIBS} kcal )
 
 endif(KDE4_BUILD_TESTS)
 

@@ -26,7 +26,7 @@ kde4_add_plugin(conduit_doc ${conduit_doc_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_doc )
 
-target_link_libraries(conduit_doc  ${QT_AND_KDECORE_LIBS} kpilot palmdoc_shared kdeui )
+target_link_libraries(conduit_doc  ${KDE4_KDECORE_LIBS} kpilot palmdoc_shared kdeui )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 conduit_doc )
 
@@ -43,7 +43,7 @@ kde4_add_kcfg_files(kpalmdoc_SRCS kpalmdocSettings.kcfgc )
 
 kde4_add_executable(kpalmdoc ${kpalmdoc_SRCS})
 
-target_link_libraries(kpalmdoc  ${QT_AND_KDECORE_LIBS} kpilot palmdoc_shared )
+target_link_libraries(kpalmdoc  ${KDE4_KDECORE_LIBS} kpilot palmdoc_shared )
 
 install_targets(/bin kpalmdoc )
 

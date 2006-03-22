@@ -78,7 +78,7 @@ kde4_add_kcfg_files(knodecommon_LIB_SRCS settings_base.kcfgc )
 
 kde4_add_library(knodecommon SHARED ${knodecommon_LIB_SRCS})
 
-target_link_libraries(knodecommon  ${QT_AND_KDECORE_LIBS} kdeprint kwalletclient kmime kpgp kdepim kutils khtml )
+target_link_libraries(knodecommon  ${KDE4_KDECORE_LIBS} kdeprint kwalletclient kmime kpgp kdepim kutils khtml )
 
 set_target_properties(knodecommon PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} knodecommon )
@@ -94,7 +94,7 @@ kde4_add_plugin(kcm_knode ${kcm_knode_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_knode )
 
-target_link_libraries(kcm_knode  ${QT_AND_KDECORE_LIBS} knodecommon )
+target_link_libraries(kcm_knode  ${KDE4_KDECORE_LIBS} knodecommon )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kcm_knode )
 
@@ -109,7 +109,7 @@ kde4_add_plugin(knodepart WITH_PREFIX ${knodepart_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} knodepart )
 
-target_link_libraries(knodepart  ${QT_AND_KDECORE_LIBS} knodecommon )
+target_link_libraries(knodepart  ${KDE4_KDECORE_LIBS} knodecommon )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 knodepart )
 
@@ -122,7 +122,7 @@ kde4_automoc(${knode_SRCS})
 
 kde4_add_executable(knode ${knode_SRCS})
 
-target_link_libraries(knode  ${QT_AND_KDECORE_LIBS} knodecommon )
+target_link_libraries(knode  ${KDE4_KDECORE_LIBS} knodecommon )
 
 install_targets(/bin knode )
 

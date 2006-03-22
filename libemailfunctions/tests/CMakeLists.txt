@@ -13,7 +13,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testidmapper ${testidmapper_SRCS})
 
-target_link_libraries(testidmapper  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(testidmapper  ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -27,7 +27,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testemail ${testemail_SRCS})
 
-target_link_libraries(testemail  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(testemail  ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 

@@ -17,7 +17,7 @@ kde4_add_plugin(kaddrbk_cardview WITH_PREFIX ${kaddrbk_cardview_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_cardview )
 
-target_link_libraries(kaddrbk_cardview  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_cardview  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_cardview )
 
@@ -32,7 +32,7 @@ kde4_add_plugin(kaddrbk_iconview WITH_PREFIX ${kaddrbk_iconview_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_iconview )
 
-target_link_libraries(kaddrbk_iconview  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_iconview  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_iconview )
 
@@ -47,7 +47,7 @@ kde4_add_plugin(kaddrbk_tableview WITH_PREFIX ${kaddrbk_tableview_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_tableview )
 
-target_link_libraries(kaddrbk_tableview  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_tableview  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_tableview )
 

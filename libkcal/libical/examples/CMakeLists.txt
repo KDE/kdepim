@@ -16,7 +16,7 @@ kde4_automoc(${doesnothing_SRCS})
 
 kde4_add_executable(doesnothing ${doesnothing_SRCS})
 
-target_link_libraries(doesnothing  ${QT_AND_KDECORE_LIBS} ical icalss icalvcal )
+target_link_libraries(doesnothing  ${KDE4_KDECORE_LIBS} ical icalss icalvcal )
 
 
 ########### install files ###############

@@ -80,7 +80,7 @@ kde4_add_dcop_skels(kaddressbook_bin_SRCS kaddressbookiface.h )
 kde4_add_executable(kaddressbook_bin ${kaddressbook_bin_SRCS})
 set_target_properties(kaddressbook_bin PROPERTIES OUTPUT_NAME kaddressbook)
 
-target_link_libraries(kaddressbook_bin  ${QT_AND_KDECORE_LIBS} kaddressbook printer kabinterfaces kdepim kcal kabc_file khtml kabim rsslocal kdeprint )
+target_link_libraries(kaddressbook_bin  ${KDE4_KDECORE_LIBS} kaddressbook printer kabinterfaces kdepim kcal kabc_file khtml kabim rsslocal kdeprint )
 
 install_targets(/bin kaddressbook_bin )
 
@@ -95,7 +95,7 @@ kde4_add_plugin(kaddressbookpart WITH_PREFIX ${kaddressbookpart_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddressbookpart )
 
-target_link_libraries(kaddressbookpart  ${QT_AND_KDECORE_LIBS} kaddressbook )
+target_link_libraries(kaddressbookpart  ${KDE4_KDECORE_LIBS} kaddressbook )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddressbookpart )
 
@@ -150,7 +150,7 @@ kde4_automoc(${kaddressbook_LIB_SRCS})
 
 kde4_add_library(kaddressbook SHARED ${kaddressbook_LIB_SRCS})
 
-target_link_libraries(kaddressbook  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kaddressbook  ${KDE4_KDECORE_LIBS} )
 
 set_target_properties(kaddressbook PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kaddressbook )

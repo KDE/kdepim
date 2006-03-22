@@ -17,7 +17,7 @@ kde4_add_plugin(conduit_sysinfo ${conduit_sysinfo_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_sysinfo )
 
-target_link_libraries(conduit_sysinfo  ${QT_AND_KDECORE_LIBS} kpilot kdeui kio )
+target_link_libraries(conduit_sysinfo  ${KDE4_KDECORE_LIBS} kpilot kdeui kio )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 conduit_sysinfo )
 

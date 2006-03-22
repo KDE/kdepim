@@ -22,7 +22,7 @@ kde4_automoc(${konsolekalendar_SRCS})
 
 kde4_add_executable(konsolekalendar ${konsolekalendar_SRCS})
 
-target_link_libraries(konsolekalendar  ${QT_AND_KDECORE_LIBS} kcal kdepim )
+target_link_libraries(konsolekalendar  ${KDE4_KDECORE_LIBS} kcal kdepim )
 
 install_targets(/bin konsolekalendar )
 

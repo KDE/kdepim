@@ -13,7 +13,7 @@ kde4_add_plugin(kaddrbk_csv_xxport WITH_PREFIX ${kaddrbk_csv_xxport_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_csv_xxport )
 
-target_link_libraries(kaddrbk_csv_xxport  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_csv_xxport  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_csv_xxport )
 
@@ -28,7 +28,7 @@ kde4_add_plugin(kaddrbk_vcard_xxport WITH_PREFIX ${kaddrbk_vcard_xxport_PART_SRC
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_vcard_xxport )
 
-target_link_libraries(kaddrbk_vcard_xxport  ${QT_AND_KDECORE_LIBS} kaddressbook qgpgme )
+target_link_libraries(kaddrbk_vcard_xxport  ${KDE4_KDECORE_LIBS} kaddressbook qgpgme )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_vcard_xxport )
 
@@ -43,7 +43,7 @@ kde4_add_plugin(kaddrbk_kde2_xxport WITH_PREFIX ${kaddrbk_kde2_xxport_PART_SRCS}
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_kde2_xxport )
 
-target_link_libraries(kaddrbk_kde2_xxport  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_kde2_xxport  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_kde2_xxport )
 
@@ -58,7 +58,7 @@ kde4_add_plugin(kaddrbk_bookmark_xxport WITH_PREFIX ${kaddrbk_bookmark_xxport_PA
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_bookmark_xxport )
 
-target_link_libraries(kaddrbk_bookmark_xxport  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_bookmark_xxport  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_bookmark_xxport )
 
@@ -73,7 +73,7 @@ kde4_add_plugin(kaddrbk_eudora_xxport WITH_PREFIX ${kaddrbk_eudora_xxport_PART_S
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_eudora_xxport )
 
-target_link_libraries(kaddrbk_eudora_xxport  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_eudora_xxport  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_eudora_xxport )
 
@@ -88,7 +88,7 @@ kde4_add_plugin(kaddrbk_ldif_xxport WITH_PREFIX ${kaddrbk_ldif_xxport_PART_SRCS}
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_ldif_xxport )
 
-target_link_libraries(kaddrbk_ldif_xxport  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_ldif_xxport  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_ldif_xxport )
 
@@ -103,7 +103,7 @@ kde4_add_plugin(kaddrbk_opera_xxport WITH_PREFIX ${kaddrbk_opera_xxport_PART_SRC
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_opera_xxport )
 
-target_link_libraries(kaddrbk_opera_xxport  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_opera_xxport  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_opera_xxport )
 
@@ -118,7 +118,7 @@ kde4_add_plugin(kaddrbk_pab_xxport WITH_PREFIX ${kaddrbk_pab_xxport_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_pab_xxport )
 
-target_link_libraries(kaddrbk_pab_xxport  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_pab_xxport  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_pab_xxport )
 

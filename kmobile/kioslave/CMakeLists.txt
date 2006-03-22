@@ -15,7 +15,7 @@ kde4_add_plugin(kio_mobile ${kio_mobile_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_mobile )
 
-target_link_libraries(kio_mobile  ${QT_AND_KDECORE_LIBS} kio kmobileclient )
+target_link_libraries(kio_mobile  ${KDE4_KDECORE_LIBS} kio kmobileclient )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kio_mobile )
 

@@ -15,7 +15,7 @@ kde4_add_plugin(kmobile_gnokii WITH_PREFIX ${kmobile_gnokii_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmobile_gnokii )
 
-target_link_libraries(kmobile_gnokii  ${QT_AND_KDECORE_LIBS} kmobiledevice kcal )
+target_link_libraries(kmobile_gnokii  ${KDE4_KDECORE_LIBS} kmobiledevice kcal )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kmobile_gnokii )
 

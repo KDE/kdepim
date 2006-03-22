@@ -17,7 +17,7 @@ kde4_automoc(${kslox_LIB_SRCS})
 
 kde4_add_library(kslox SHARED ${kslox_LIB_SRCS})
 
-target_link_libraries(kslox  ${QT_AND_KDECORE_LIBS} kcal kdepim )
+target_link_libraries(kslox  ${KDE4_KDECORE_LIBS} kcal kdepim )
 
 set_target_properties(kslox PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kslox )
@@ -33,7 +33,7 @@ kde4_add_kcfg_files(kabc_slox_LIB_SRCS kabcsloxprefs.kcfgc )
 
 kde4_add_library(kabc_slox SHARED ${kabc_slox_LIB_SRCS})
 
-target_link_libraries(kabc_slox  ${QT_AND_KDECORE_LIBS} kslox kabc kabc_slox )
+target_link_libraries(kabc_slox  ${KDE4_KDECORE_LIBS} kslox kabc kabc_slox )
 
 set_target_properties(kabc_slox PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kabc_slox )
@@ -49,7 +49,7 @@ kde4_add_kcfg_files(kcal_slox_LIB_SRCS kcalsloxprefs.kcfgc )
 
 kde4_add_library(kcal_slox SHARED ${kcal_slox_LIB_SRCS})
 
-target_link_libraries(kcal_slox  ${QT_AND_KDECORE_LIBS} kslox kcal kcal_slox )
+target_link_libraries(kcal_slox  ${KDE4_KDECORE_LIBS} kslox kcal kcal_slox )
 
 set_target_properties(kcal_slox PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kcal_slox )
@@ -66,7 +66,7 @@ kde4_add_plugin(kcal_slox ${kcal_slox_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_slox )
 
-target_link_libraries(kcal_slox  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kcal_slox  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kcal_slox )
 
@@ -82,7 +82,7 @@ kde4_add_plugin(kabc_slox ${kabc_slox_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_slox )
 
-target_link_libraries(kabc_slox  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kabc_slox  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kabc_slox )
 
@@ -97,7 +97,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testsloxaccounts ${testsloxaccounts_SRCS})
 
-target_link_libraries(testsloxaccounts  ${QT_AND_KDECORE_LIBS} kslox )
+target_link_libraries(testsloxaccounts  ${KDE4_KDECORE_LIBS} kslox )
 
 endif(KDE4_BUILD_TESTS)
 

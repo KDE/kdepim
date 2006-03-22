@@ -34,7 +34,7 @@ kde4_add_ui3_files(kmailcvt_SRCS kimportpagedlg.ui kselfilterpagedlg.ui )
 
 kde4_add_executable(kmailcvt ${kmailcvt_SRCS})
 
-target_link_libraries(kmailcvt  ${QT_AND_KDECORE_LIBS} kde3support )
+target_link_libraries(kmailcvt  ${KDE4_KDECORE_LIBS} kde3support )
 
 install_targets(/bin kmailcvt )
 

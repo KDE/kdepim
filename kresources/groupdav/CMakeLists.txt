@@ -11,7 +11,7 @@ kde4_automoc(${kcal_groupdav_LIB_SRCS})
 
 kde4_add_library(kcal_groupdav SHARED ${kcal_groupdav_LIB_SRCS})
 
-target_link_libraries(kcal_groupdav  ${QT_AND_KDECORE_LIBS} kgroupdav kgroupwaredav kcal kdepim kcal_groupdav )
+target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} kgroupdav kgroupwaredav kcal kdepim kcal_groupdav )
 
 set_target_properties(kcal_groupdav PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kcal_groupdav )
@@ -25,7 +25,7 @@ kde4_automoc(${kabc_groupdav_LIB_SRCS})
 
 kde4_add_library(kabc_groupdav SHARED ${kabc_groupdav_LIB_SRCS})
 
-target_link_libraries(kabc_groupdav  ${QT_AND_KDECORE_LIBS} kgroupdav kgroupwaredav kcal kdepim kabc kabc_groupdav )
+target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} kgroupdav kgroupwaredav kcal kdepim kabc kabc_groupdav )
 
 set_target_properties(kabc_groupdav PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kabc_groupdav )
@@ -45,7 +45,7 @@ kde4_add_plugin(kcal_groupdav ${kcal_groupdav_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_groupdav )
 
-target_link_libraries(kcal_groupdav  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kcal_groupdav )
 
@@ -61,7 +61,7 @@ kde4_add_plugin(kabc_groupdav ${kabc_groupdav_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_groupdav )
 
-target_link_libraries(kabc_groupdav  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kabc_groupdav )
 

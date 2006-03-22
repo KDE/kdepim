@@ -11,7 +11,7 @@ kde4_automoc(${copycluster_SRCS})
 
 kde4_add_executable(copycluster ${copycluster_SRCS})
 
-target_link_libraries(copycluster  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(copycluster  ${KDE4_KDECORE_LIBS} )
 
 
 ########### next target ###############
@@ -29,7 +29,7 @@ kde4_automoc(${regression_SRCS})
 
 kde4_add_executable(regression ${regression_SRCS})
 
-target_link_libraries(regression  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(regression  ${KDE4_KDECORE_LIBS} )
 
 
 ########### next target ###############
@@ -40,7 +40,7 @@ kde4_automoc(${parser_SRCS})
 
 kde4_add_executable(parser ${parser_SRCS})
 
-target_link_libraries(parser  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(parser  ${KDE4_KDECORE_LIBS} )
 
 
 ########### next target ###############
@@ -51,7 +51,7 @@ kde4_automoc(${stow_SRCS})
 
 kde4_add_executable(stow ${stow_SRCS})
 
-target_link_libraries(stow  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(stow  ${KDE4_KDECORE_LIBS} )
 
 
 ########### next target ###############
@@ -62,7 +62,7 @@ kde4_automoc(${recur_SRCS})
 
 kde4_add_executable(recur ${recur_SRCS})
 
-target_link_libraries(recur  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(recur  ${KDE4_KDECORE_LIBS} )
 
 
 ########### next target ###############
@@ -73,7 +73,7 @@ kde4_automoc(${testmime_SRCS})
 
 kde4_add_executable(testmime ${testmime_SRCS})
 
-target_link_libraries(testmime  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(testmime  ${KDE4_KDECORE_LIBS} )
 
 
 ########### next target ###############
@@ -84,7 +84,7 @@ kde4_automoc(${testvcal_SRCS})
 
 kde4_add_executable(testvcal ${testvcal_SRCS})
 
-target_link_libraries(testvcal  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(testvcal  ${KDE4_KDECORE_LIBS} )
 
 
 ########### next target ###############
@@ -95,7 +95,7 @@ kde4_automoc(${process_SRCS})
 
 kde4_add_executable(process ${process_SRCS})
 
-target_link_libraries(process  ${QT_AND_KDECORE_LIBS} )
+target_link_libraries(process  ${KDE4_KDECORE_LIBS} )
 
 
 ########### install files ###############

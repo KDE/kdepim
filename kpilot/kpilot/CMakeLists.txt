@@ -25,7 +25,7 @@ kde4_add_dcop_skels(kpilotTest_SRCS loggerDCOP.h )
 
 kde4_add_executable(kpilotTest ${kpilotTest_SRCS})
 
-target_link_libraries(kpilotTest  ${QT_AND_KDECORE_LIBS} kpilot configuration )
+target_link_libraries(kpilotTest  ${KDE4_KDECORE_LIBS} kpilot configuration )
 
 
 ########### next target ###############
@@ -58,7 +58,7 @@ kde4_add_dcop_stubs(kpilot_SRCS pilotDaemonDCOP.h )
 
 kde4_add_executable(kpilot ${kpilot_SRCS})
 
-target_link_libraries(kpilot  ${QT_AND_KDECORE_LIBS} kutils kpilot configuration )
+target_link_libraries(kpilot  ${KDE4_KDECORE_LIBS} kutils kpilot configuration )
 
 install_targets(/bin kpilot )
 
@@ -82,7 +82,7 @@ kde4_add_dcop_stubs(kpilotDaemon_SRCS kpilotDCOP.h loggerDCOP.h )
 
 kde4_add_executable(kpilotDaemon ${kpilotDaemon_SRCS})
 
-target_link_libraries(kpilotDaemon  ${QT_AND_KDECORE_LIBS} kpilot configuration )
+target_link_libraries(kpilotDaemon  ${KDE4_KDECORE_LIBS} kpilot configuration )
 
 install_targets(/bin kpilotDaemon )
 
@@ -116,7 +116,7 @@ kde4_add_plugin(kcm_kpilot ${kcm_kpilot_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kpilot )
 
-target_link_libraries(kcm_kpilot  ${QT_AND_KDECORE_LIBS} kpilot configuration )
+target_link_libraries(kcm_kpilot  ${KDE4_KDECORE_LIBS} kpilot configuration )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kcm_kpilot )
 

@@ -13,7 +13,7 @@ kde4_add_ui_files(kabcfrontend_SRCS mainWindow.ui )
 
 kde4_add_executable(kabcfrontend ${kabcfrontend_SRCS})
 
-target_link_libraries(kabcfrontend  ${QT_AND_KDECORE_LIBS} kabc )
+target_link_libraries(kabcfrontend  ${KDE4_KDECORE_LIBS} kabc )
 
 install_targets(/bin kabcfrontend )
 

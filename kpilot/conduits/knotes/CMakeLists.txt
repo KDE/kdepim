@@ -19,7 +19,7 @@ kde4_add_plugin(conduit_knotes ${conduit_knotes_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_knotes )
 
-target_link_libraries(conduit_knotes  ${QT_AND_KDECORE_LIBS} kpilot kdeui )
+target_link_libraries(conduit_knotes  ${KDE4_KDECORE_LIBS} kpilot kdeui )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 conduit_knotes )
 
