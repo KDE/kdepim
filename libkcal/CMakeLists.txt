@@ -192,7 +192,7 @@ macro(CREATE_ICALSS_FILE _out_FILE)
     FILE(APPEND ${_out_FILE} "#endif\n")
 endmacro(CREATE_ICALSS_FILE)
 
-macro_additional_clean_files( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalss.h )
+macro_additional_clean_files( ${CMAKE_SOURCE_DIR}/libical/src/libicalss/icalss.h )
 
 create_icalss_file( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalss.h )
 
