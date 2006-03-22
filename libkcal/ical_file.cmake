@@ -30,7 +30,8 @@ FILE(WRITE ${KDE_FILE_H_FILE} "#ifdef __cplusplus\n")
 FILE(APPEND ${KDE_FILE_H_FILE} "extern \"C\" {\n")
 FILE(APPEND ${KDE_FILE_H_FILE} "#endif\n")
 FILE(APPEND ${KDE_FILE_H_FILE} "/*\n")
-FILE(APPEND ${KDE_FILE_H_FILE} " $$''Id''$$\n")
+FILE(APPEND ${KDE_FILE_H_FILE} " $Id$\n")
+
 FILE(APPEND ${KDE_FILE_H_FILE} "*/\n")
 
 foreach (_current_FILE ${COMBINEDHEADERSICAL})
