@@ -46,11 +46,11 @@
 
 #include <kmenu.h> 
 #include <ktoolbar.h> 
-
+#include <kiconloader.h>
 #include <q3ptrdict.h>
 #include <qaction.h> 
 #include <qlineedit.h>
-
+#include <Q3MainWindow>
 class xQGanttBarView;
 
 #define sgn(n) (n < 0 ? -1 : 1)
