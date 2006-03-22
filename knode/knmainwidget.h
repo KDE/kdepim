@@ -38,7 +38,7 @@ class KToggleAction;
 class KSelectAction;
 class KRSqueezedTextLabel;
 class KLineEdit;
-class KToolBar;
+class QToolBar;
 class KXMLGUIClient;
 class KXMLGUIFactory;
 
@@ -203,7 +203,7 @@ protected:
   KNCollectionView *c_olView;
   KNHeaderView      *h_drView;
   bool b_lockui;
-  KToolBar        *q_uicksearch;
+  QToolBar        *q_uicksearch;
   QLineEdit       *s_earchLineEdit;
 
   //Core

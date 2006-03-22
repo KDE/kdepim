@@ -107,6 +107,8 @@ ArticleWindow::ArticleWindow( KNArticle *art )
   // settings menu
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
+  addAction( mArticleWidget->setCharsetKeyboardAction() );
+
   setupGUI( ToolBar|Keys|Create, "knreaderui.rc");
 
   KConfig *conf = knGlobals.config();

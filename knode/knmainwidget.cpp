@@ -129,21 +129,23 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   vlay->setMargin( 0 );
   h_drView = new KNHeaderView( dummy );
 
-  q_uicksearch = new KToolBar(dummy, "search toolbar");
+#warning Cannot use a KToolBar here, it will be deleted by KMainWindow::createGUI()
+  q_uicksearch = new QToolBar( dummy );
   KAction *resetQuickSearch = new KAction( i18n( "Reset Quick Search" ),
                                            QApplication::isRightToLeft()
                                            ? "clear_left"
                                            : "locationbar_erase",
                                            KShortcut(), 0, 0, actionCollection(),
                                            "reset_quicksearch" );
-  resetQuickSearch->plug( q_uicksearch );
+  q_uicksearch->addAction( resetQuickSearch );
   resetQuickSearch->setWhatsThis( i18n( "<b>Reset Quick Search</b><br>"
                                         "Resets the quick search so that "
                                         "all messages are shown again." ) );
 
-  QLabel *lbl = new QLabel(i18n("&Search:"), q_uicksearch, "kde toolbar widget");
+  QLabel *lbl = new QLabel(i18n("&Search:"), dummy, "kde toolbar widget");
+  q_uicksearch->addWidget( lbl );
   s_earchLineEdit = new K3ListViewSearchLine( q_uicksearch, h_drView );
-  q_uicksearch->setStretchableWidget(s_earchLineEdit);
+  q_uicksearch->addWidget( s_earchLineEdit );
   lbl->setBuddy(s_earchLineEdit);
   connect( resetQuickSearch, SIGNAL( activated() ), s_earchLineEdit, SLOT( clear() ));
 
@@ -347,10 +349,11 @@ void KNMainWidget::blockUI(bool b)
   KMenuBar *mbar =  mainWin ? mainWin->menuBar() : 0;
   if ( mbar )
     mbar->setEnabled(!b);
-  a_ccel->setEnabled(!b);
+#warning Port me!
+  /*a_ccel->setEnabled(!b);
   KAccel *naccel = mainWin ? mainWin->accel() : 0;
   if ( naccel )
-    naccel->setEnabled(!b);
+  naccel->setEnabled(!b);*/
   if (b)
     installEventFilter(this);
   else
@@ -361,11 +364,12 @@ void KNMainWidget::blockUI(bool b)
 
 void KNMainWidget::disableAccels(bool b)
 {
-  a_ccel->setEnabled(!b);
+#warning Port me!
+  /*a_ccel->setEnabled(!b);
   KMainWindow *mainWin = dynamic_cast<KMainWindow*>(topLevelWidget());
   KAccel *naccel = mainWin ? mainWin->accel() : 0;
   if ( naccel )
-    naccel->setEnabled(!b);
+    naccel->setEnabled(!b);*/
   if (b)
     installEventFilter(this);
   else
@@ -381,10 +385,11 @@ void KNMainWidget::secureProcessEvents()
   KMenuBar *mbar =  mainWin ? mainWin->menuBar() : 0;
   if ( mbar )
     mbar->setEnabled(false);
-  a_ccel->setEnabled(false);
+#warning Port me!
+  /*a_ccel->setEnabled(false);
   KAccel *naccel = mainWin ? mainWin->accel() : 0;
   if ( naccel )
-    naccel->setEnabled(false);
+    naccel->setEnabled(false);*/
   installEventFilter(this);
 
   kapp->processEvents();
@@ -393,8 +398,9 @@ void KNMainWidget::secureProcessEvents()
   if ( mbar )
     mbar->setEnabled(true);
   a_ccel->setEnabled(true);
-  if ( naccel )
-    naccel->setEnabled(true);
+#warning Port me!
+//   if ( naccel )
+//     naccel->setEnabled(true);
   removeEventFilter(this);
 }
 
@@ -515,7 +521,7 @@ void KNMainWidget::configChanged()
 void KNMainWidget::initActions()
 {
   a_ccel=new KAccel(this);
-  mArticleViewer->setCharsetKeyboardAction()->plugAccel(a_ccel);
+  addAction( mArticleViewer->setCharsetKeyboardAction() );
 
   //navigation
   a_ctNavNextArt            = new KAction( KGuiItem(i18n("&Next Article"), "next",
@@ -534,7 +540,7 @@ void KNMainWidget::initActions()
                               SLOT(prevGroup()), actionCollection(), "go_prevGroup");
   a_ctNavReadThrough        = new KAction(i18n("Read &Through Articles"), Qt::Key_Space , this,
                               SLOT(slotNavReadThrough()), actionCollection(), "go_readThrough");
-  a_ctNavReadThrough->plugAccel(a_ccel);
+  addAction( a_ctNavReadThrough );
 
   Q3Accel *accel = new Q3Accel( this );
   new KAction( i18n("Focus on Next Folder"), Qt::CTRL+Qt::Key_Right, c_olView,
@@ -629,7 +635,7 @@ void KNMainWidget::initActions()
                               SLOT(slotFolMBoxExport()), actionCollection(), "folder_MboxExport");
 
   //header-view - list-handling
-  a_ctArtSortHeaders        = new KSelectAction(i18n("S&ort"), 0, actionCollection(), "view_Sort");
+  a_ctArtSortHeaders        = new KSelectAction(i18n("S&ort"), KShortcut(), actionCollection(), "view_Sort");
   QStringList items;
   items += i18n("By &Subject");
   items += i18n("By S&ender");
@@ -641,12 +647,12 @@ void KNMainWidget::initActions()
   connect(a_ctArtSortHeaders, SIGNAL(activated(int)), this, SLOT(slotArtSortHeaders(int)));
   a_ctArtSortHeadersKeyb   = new KAction(i18n("Sort"), QString(), Qt::Key_F7 , this,
                              SLOT(slotArtSortHeadersKeyb()), actionCollection(), "view_Sort_Keyb");
-  a_ctArtSortHeadersKeyb->plugAccel(a_ccel);
+  addAction( a_ctArtSortHeadersKeyb );
   a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
                               actionCollection(), "view_Filter");
   a_ctArtFilter->setShortcutConfigurable(false);
   a_ctArtFilterKeyb         = new KAction(i18n("Filter"), Qt::Key_F6, 0, 0, actionCollection(), "view_Filter_Keyb");
-  a_ctArtFilterKeyb->plugAccel(a_ccel);
+  addAction( a_ctArtFilterKeyb );
   a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"mail_find" , Qt::Key_F4 , this,
                               SLOT(slotArtSearch()), actionCollection(), "article_search");
   a_ctArtRefreshList        = new KAction(i18n("&Refresh List"),"reload", KStdAccel::shortcut(KStdAccel::Reload), this,

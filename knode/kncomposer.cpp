@@ -278,7 +278,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   a_ctDoMail = new KToggleAction(i18n("Send E&mail"), "mail_generic" , 0 , this,
                    SLOT(slotToggleDoMail()), actionCollection(), "send_mail");
 
-  a_ctSetCharset = new KSelectAction(i18n("Set &Charset"), 0, actionCollection(), "set_charset");
+  a_ctSetCharset = new KSelectAction(i18n("Set &Charset"), KShortcut(), actionCollection(), "set_charset");
   a_ctSetCharset->setItems( KGlobal::charsets()->availableEncodingNames() );
   a_ctSetCharset->setShortcutConfigurable(false);
   connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
@@ -286,6 +286,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   a_ctSetCharsetKeyb = new KAction(i18n("Set Charset"), 0, this,
                                    SLOT(slotSetCharsetKeyboard()), actionCollection(), "set_charset_keyboard");
+  addAction( a_ctSetCharsetKeyb );
 
 
   a_ctWordWrap  = new KToggleAction(i18n("&Word Wrap"), 0 , this,

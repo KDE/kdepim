@@ -31,7 +31,7 @@
 
 KNFilterSelectAction::KNFilterSelectAction( const QString& text, const QString& pix,
                                             KActionCollection* parent, const char *name )
- : KActionMenu( text, pix, parent, name ), currentItem(-42)
+  : KActionMenu( KIcon( pix ), text, parent, name ), currentItem(-42)
 {
   popupMenu()->setCheckable(true);
   connect(popupMenu(),SIGNAL(activated(int)),this,SLOT(slotMenuActivated(int)));

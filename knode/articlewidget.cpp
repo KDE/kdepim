@@ -164,42 +164,44 @@ void ArticleWidget::initActions()
     SLOT(slotToggleRot13()), mActionCollection, "view_rot13" );
   mRot13Toggle->setChecked( false );
 
+  QActionGroup *ag = new QActionGroup( this );
   KToggleAction *ra;
   mHeaderStyleMenu = new KActionMenu( i18n("&Headers"), mActionCollection, "view_headers" );
   ra = new KToggleAction( i18n("&Fancy Headers"), 0, this, SLOT(slotFancyHeaders()),
                          mActionCollection, "view_headers_fancy" );
-  ra->setExclusiveGroup( "view_headers" );
+  ag->addAction ( ra );
   mHeaderStyleMenu->insert( ra );
   ra = new KToggleAction( i18n("&Standard Headers"), 0, this, SLOT(slotStandardHeaders()),
                          mActionCollection, "view_headers_standard" );
-  ra->setExclusiveGroup( "view_headers" );
+  ag->addAction( ra );
   mHeaderStyleMenu->insert( ra );
   ra = new KToggleAction( i18n("&All Headers"), 0, this, SLOT(slotAllHeaders()),
                          mActionCollection, "view_headers_all" );
-  ra->setExclusiveGroup( "view_headers" );
+  ag->addAction( ra );
   mHeaderStyleMenu->insert( ra );
 
+  ag = new QActionGroup( this );
   mAttachmentStyleMenu = new KActionMenu( i18n("&Attachments"), mActionCollection, "view_attachments" );
   ra = new KToggleAction( i18n("&As Icon"), 0, this, SLOT(slotIconAttachments()),
                          mActionCollection, "view_attachments_icon" );
-  ra->setExclusiveGroup( "view_attachments" );
+  ag->addAction( ra );
   mAttachmentStyleMenu->insert( ra );
   ra = new KToggleAction( i18n("&Inline"), 0, this, SLOT(slotInlineAttachments()),
                          mActionCollection, "view_attachments_inline" );
-  ra->setExclusiveGroup( "view_attachments" );
+  ag->addAction( ra );
   mAttachmentStyleMenu->insert( ra );
   ra = new KToggleAction( i18n("&Hide"), 0, this, SLOT(slotHideAttachments()),
                          mActionCollection, "view_attachments_hide" );
-  ra->setExclusiveGroup( "view_attachments" );
+  ag->addAction( ra );
   mAttachmentStyleMenu->insert( ra );
 
-  mCharsetSelect = new KSelectAction( i18n("Chars&et"), 0, mActionCollection, "set_charset" );
+  mCharsetSelect = new KSelectAction( i18n("Chars&et"), KShortcut(), mActionCollection, "set_charset" );
   mCharsetSelect->setShortcutConfigurable( false );
   QStringList cs = KGlobal::charsets()->descriptiveEncodingNames();
   cs.prepend( i18n("Automatic") );
   mCharsetSelect->setItems( cs );
   mCharsetSelect->setCurrentItem( 0 );
-  connect( mCharsetSelect, SIGNAL(activated(const QString&)),SLOT(slotSetCharset(const QString&)) );
+  connect( mCharsetSelect, SIGNAL(triggered(const QString&)),SLOT(slotSetCharset(const QString&)) );
   mCharsetSelectKeyb = new KAction( i18n("Charset"), Qt::Key_C, this,
     SLOT(slotSetCharsetKeyboard()), mActionCollection, "set_charset_keyboard" );
 
