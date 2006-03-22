@@ -84,16 +84,17 @@ int main( int argc, char **argv )
 
   FeaturesParser parser;
 
-  Features *features = parser.parseFile( filename );
+  bool ok;
+  Features features = parser.parseFile( filename, &ok );
 
-  if ( !features ) {
-    kError() << "Parse error" << endl;
+  if ( ok ) {
+    displayCategory( features.categoryList() );
   } else {
-    displayCategory( features->categoryList() );
+    kError() << "Parse error" << endl;
   }
 
   QString out = filename + ".out";
-  if ( !features->writeFile( out ) ) {
+  if ( !features.writeFile( out ) ) {
     kError() << "Write error" << endl;
   }
 }

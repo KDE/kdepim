@@ -80,23 +80,23 @@ bool ResourceFeaturePlan::doLoad()
 
   FeaturesParser parser;
 
-  Features features = parser.parseFile( mPrefs->filename() );
+  bool ok;
+  Features features = parser.parseFile( mPrefs->filename(), &ok );
 
-  if ( features.categoryList().isEmpty() ) {
-    return false;
-  } else {
+  if ( ok ) {
     Category::List categories = features.categoryList();
 
-    KCal::Todo *masterTodo = new KCal::Todo;
-    masterTodo->setSummary( i18n("Feature Plan") );
-    mCalendar.addTodo( masterTodo );
+    if ( !categories.isEmpty() ) {
+      KCal::Todo *masterTodo = new KCal::Todo;
+      masterTodo->setSummary( i18n("Feature Plan") );
+      mCalendar.addTodo( masterTodo );
 
-    insertCategories( categories, masterTodo );
+      insertCategories( categories, masterTodo );
+      emit resourceChanged( this );
+    }
   }
 
-  emit resourceChanged( this );
-
-  return true;
+  return ok;
 }
 
 void ResourceFeaturePlan::insertCategories( const Category::List &categories,
