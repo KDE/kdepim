@@ -150,7 +150,7 @@ void ExtensionManager::createActions()
     KToggleAction *action = new KToggleAction( data.title, 0, mMapper, SLOT( map() ),
                                                mActionCollection,
                                                QString( data.identifier + "_extension" ).toLatin1() );
-    action->setExclusiveGroup( "extensions" );
+    action->setActionGroup( "extensions" );
     mMapper->setMapping( action, actionCounter++ );
     mActionList.append( action );
 

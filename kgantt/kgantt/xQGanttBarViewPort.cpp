@@ -22,7 +22,7 @@
 #include "open.xpm"
 #include "close.xpm"
 
-#include <ktoolbarbutton.h> 
+ 
 #include <kiconloader.h>
 #include <klocale.h> 
   
