@@ -22,7 +22,7 @@ kde4_automoc(${kpgp_LIB_SRCS})
 
 kde4_add_library(kpgp SHARED ${kpgp_LIB_SRCS})
 
-target_link_libraries(kpgp  ${KDE4_KDE3SUPPORT_LIBRARIES} )
+target_link_libraries(kpgp  ${KDE4_KDE3SUPPORT_LIBS} )
 
 set_target_properties(kpgp PROPERTIES VERSION 2.2.0 SOVERSION 2 )
 install_targets(${LIB_INSTALL_DIR} kpgp )

@@ -20,7 +20,7 @@ kde4_automoc(${kgantt_LIB_SRCS})
 
 kde4_add_library(kgantt SHARED ${kgantt_LIB_SRCS})
 
-target_link_libraries(kgantt  ${KDE4_KDE3SUPPORT_LIBRARIES} )
+target_link_libraries(kgantt  ${KDE4_KDE3SUPPORT_LIBS} )
 
 set_target_properties(kgantt PROPERTIES VERSION 0.0.2 SOVERSION 0 )
 install_targets(${LIB_INSTALL_DIR} kgantt )
