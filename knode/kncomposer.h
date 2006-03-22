@@ -132,7 +132,6 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
 
   //------------------------------ <Actions> -----------------------------
 
-    KAccel        *a_ccel;
     KAction       *a_ctExternalEditor,
                   *a_ctSpellCheck,
                   *a_ctRemoveAttachment,

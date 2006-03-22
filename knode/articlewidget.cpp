@@ -164,31 +164,31 @@ void ArticleWidget::initActions()
     SLOT(slotToggleRot13()), mActionCollection, "view_rot13" );
   mRot13Toggle->setChecked( false );
 
-  KRadioAction *ra;
+  KToggleAction *ra;
   mHeaderStyleMenu = new KActionMenu( i18n("&Headers"), mActionCollection, "view_headers" );
-  ra = new KRadioAction( i18n("&Fancy Headers"), 0, this, SLOT(slotFancyHeaders()),
+  ra = new KToggleAction( i18n("&Fancy Headers"), 0, this, SLOT(slotFancyHeaders()),
                          mActionCollection, "view_headers_fancy" );
   ra->setExclusiveGroup( "view_headers" );
   mHeaderStyleMenu->insert( ra );
-  ra = new KRadioAction( i18n("&Standard Headers"), 0, this, SLOT(slotStandardHeaders()),
+  ra = new KToggleAction( i18n("&Standard Headers"), 0, this, SLOT(slotStandardHeaders()),
                          mActionCollection, "view_headers_standard" );
   ra->setExclusiveGroup( "view_headers" );
   mHeaderStyleMenu->insert( ra );
-  ra = new KRadioAction( i18n("&All Headers"), 0, this, SLOT(slotAllHeaders()),
+  ra = new KToggleAction( i18n("&All Headers"), 0, this, SLOT(slotAllHeaders()),
                          mActionCollection, "view_headers_all" );
   ra->setExclusiveGroup( "view_headers" );
   mHeaderStyleMenu->insert( ra );
 
   mAttachmentStyleMenu = new KActionMenu( i18n("&Attachments"), mActionCollection, "view_attachments" );
-  ra = new KRadioAction( i18n("&As Icon"), 0, this, SLOT(slotIconAttachments()),
+  ra = new KToggleAction( i18n("&As Icon"), 0, this, SLOT(slotIconAttachments()),
                          mActionCollection, "view_attachments_icon" );
   ra->setExclusiveGroup( "view_attachments" );
   mAttachmentStyleMenu->insert( ra );
-  ra = new KRadioAction( i18n("&Inline"), 0, this, SLOT(slotInlineAttachments()),
+  ra = new KToggleAction( i18n("&Inline"), 0, this, SLOT(slotInlineAttachments()),
                          mActionCollection, "view_attachments_inline" );
   ra->setExclusiveGroup( "view_attachments" );
   mAttachmentStyleMenu->insert( ra );
-  ra = new KRadioAction( i18n("&Hide"), 0, this, SLOT(slotHideAttachments()),
+  ra = new KToggleAction( i18n("&Hide"), 0, this, SLOT(slotHideAttachments()),
                          mActionCollection, "view_attachments_hide" );
   ra->setExclusiveGroup( "view_attachments" );
   mAttachmentStyleMenu->insert( ra );
@@ -290,10 +290,10 @@ void ArticleWidget::readConfig()
   conf->setGroup( "READNEWS" );
   mAttachmentStyle = conf->readEntry( "attachmentStyle", "inline" );
   mHeaderStyle = conf->readEntry( "headerStyle", "fancy" );
-  KRadioAction *ra = 0;
-  ra = static_cast<KRadioAction*>( mActionCollection->action( QString("view_attachments_%1").arg(mAttachmentStyle).latin1() ) );
+  KToggleAction *ra = 0;
+  ra = static_cast<KToggleAction*>( mActionCollection->action( QString("view_attachments_%1").arg(mAttachmentStyle).latin1() ) );
   ra->setChecked( true );
-  ra = static_cast<KRadioAction*>( mActionCollection->action( QString("view_headers_%1").arg(mHeaderStyle).latin1() ) );
+  ra = static_cast<KToggleAction*>( mActionCollection->action( QString("view_headers_%1").arg(mHeaderStyle).latin1() ) );
   ra->setChecked( true );
 
   delete mCSSHelper;

@@ -107,9 +107,6 @@ ArticleWindow::ArticleWindow( KNArticle *art )
   // settings menu
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
-  KAccel *accel = new KAccel( this );
-  mArticleWidget->setCharsetKeyboardAction()->plugAccel( accel );
-
   setupGUI( ToolBar|Keys|Create, "knreaderui.rc");
 
   KConfig *conf = knGlobals.config();

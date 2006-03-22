@@ -329,8 +329,6 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
-  a_ccel=new KAccel(this);
-  a_ctSetCharsetKeyb->plugAccel(a_ccel);
 
   createGUI("kncomposerui.rc",  false);
 
