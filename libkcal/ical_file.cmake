@@ -24,6 +24,7 @@ set(COMBINEDHEADERSICAL
    ${CMAKE_SOURCE_DIR}/libical/src/libical/sspm.h
    ${CMAKE_SOURCE_DIR}/libical/src/libical/icalmime.h
    ${CMAKE_SOURCE_DIR}/libical/src/libical/icallangbind.h
+
 )
 
 FILE(WRITE ${KDE_FILE_H_FILE} "#ifdef __cplusplus\n")
@@ -36,11 +37,13 @@ FILE(APPEND ${KDE_FILE_H_FILE} "*/\n")
 
 foreach (_current_FILE ${COMBINEDHEADERSICAL})
 	FILE(READ ${_current_FILE} _contents)
-	STRING(REGEX REPLACE "#include.*\"ical" "" _contents "${_contents}" )
-	STRING(REGEX REPLACE "#include.*\"config" "" _contents "${_contents}" )
-	STRING(REGEX REPLACE "#include.*\"pvl.h\"" "" _contents "${_contents}" )
-	STRING(REGEX REPLACE "\$$(Id|Locker): .+\$$" "" _contents "${_contents}" )
-	FILE(APPEND ${KDE_FILE_H_FILE} "${_contents}")
+    STRING(REGEX REPLACE "#include *\"ical.*\\.h\"" "" _contents "${_contents}" )
+    STRING(REGEX REPLACE "#include *\"config.*\\.h\"" "" _contents "${_contents}" )
+    STRING(REGEX REPLACE "#include *\"pvl\\.h\"" "" _contents "${_contents}" )
+    #STRING(REGEX REPLACE " *\$$[Id|Locker]: .+\$$" "" _contents "${_contents}" )
+	#STRING(REGEX REPLACE " *\$Id *: .+\$$" ""_contents "${_contents}" )
+	#STRING(REGEX REPLACE " *\$Locker *: .+\$$" ""_contents "${_contents}" )
+    FILE(APPEND ${KDE_FILE_H_FILE} "${_contents}")
 endforeach (_current_FILE ${KDE_FILE_HEADER})
 
 FILE(APPEND ${KDE_FILE_H_FILE} "\n")
