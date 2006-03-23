@@ -268,7 +268,7 @@ void CertManager::createActions() {
 			this, SLOT(newCertificate()),
 			actionCollection(), "file_new_certificate" );
 
-  connect( new KToggleAction( i18n("Hierarchical Key List"), 0,
+  connect( new KToggleAction( i18n("Hierarchical Key List"),
 			      actionCollection(), "view_hierarchical" ),
 	   SIGNAL(toggled(bool)), SLOT(slotToggleHierarchicalView(bool)) );
 
