@@ -145,12 +145,13 @@ void ExtensionManager::createActions()
 
   int actionCounter = 0;
   ExtensionData::List::ConstIterator it;
+  QActionGroup* extensionGroup = new QActionGroup(this);
   for ( it = mExtensionList.begin(); it != mExtensionList.end(); ++it ) {
     ExtensionData data = *it;
     KToggleAction *action = new KToggleAction( data.title, 0, mMapper, SLOT( map() ),
                                                mActionCollection,
                                                QString( data.identifier + "_extension" ).toLatin1() );
-    action->setActionGroup( "extensions" );
+    action->setActionGroup( extensionGroup );
     mMapper->setMapping( action, actionCounter++ );
     mActionList.append( action );
 

@@ -982,9 +982,11 @@ void KABCore::initGUI()
 {
   QVBoxLayout *topLayout = new QVBoxLayout( mWidget, 0, 0 );
   KToolBar* searchTB = new KToolBar( mWidget, "search toolbar" );
-  searchTB->boxLayout()->setSpacing( KDialog::spacingHint() );
+#warning "kde4: porting searchTB->boxLayout()->setSpacing";
+  //searchTB->boxLayout()->setSpacing( KDialog::spacingHint() );
   mIncSearchWidget = new IncSearchWidget( searchTB, "kde toolbar widget" );
-  searchTB->setStretchableWidget( mIncSearchWidget );
+#warning "kde4: porting searchTB->setStretchableWidget";
+  //searchTB->setStretchableWidget( mIncSearchWidget );
   connect( mIncSearchWidget, SIGNAL( doSearch( const QString& ) ),
            SLOT( incrementalTextSearch( const QString& ) ) );
 

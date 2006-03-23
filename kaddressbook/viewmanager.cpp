@@ -561,7 +561,7 @@ int ViewManager::filterPosition( const QString &name ) const
 
 void ViewManager::initActions()
 {
-  mActionSelectView = new KSelectAction( i18n( "Select View" ), 0, mCore->actionCollection(), "select_view" );
+  mActionSelectView = new KSelectAction( i18n( "Select View" ), mCore->actionCollection(), "select_view" );
 #if KDE_VERSION >= 309
   mActionSelectView->setMenuAccelsEnabled( false );
 #endif
