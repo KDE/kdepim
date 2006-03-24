@@ -6,9 +6,8 @@ include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_D
 
 
 ########### next target ###############
-qt4_generate_moc(label.h label.moc.cpp)
 
-set(korn_SRCS label.moc.cpp
+set(korn_SRCS 
    accountmanager.cpp 
    account_input.cpp 
    boxcontainer.cpp 
@@ -52,6 +51,9 @@ set(korn_SRCS label.moc.cpp
    process_proto.cpp 
    progress_dialog_impl.cpp 
    qmail_proto.cpp )
+
+# run moc on label.h and add the resulting stuff to the korn_SRCS list
+qt4_wrap_cpp(korn_SRCS label.h)
 
 kde4_automoc(${korn_SRCS})
 
