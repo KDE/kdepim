@@ -294,7 +294,7 @@
 #define HAVE_X11_HEADERS 1
 
 /* Define if you have XPM support */
-#define HAVE_XPM 1
+#cmakedefine HAVE_XPM 1
 
 /* safe saves */
 #define ICAL_SAFESAVES 1
