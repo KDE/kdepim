@@ -688,6 +688,7 @@ class KDE_EXPORT CleanupWidget : public KCModule {
 
   protected slots:
     void slotFolderCBtoggled(bool b);
+    void slotFolderDaysChanged(int value);
 
   private:
     GroupCleanupWidget *mGroupCleanup;

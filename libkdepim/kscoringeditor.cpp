@@ -427,7 +427,7 @@ RuleEditWidget::RuleEditWidget(KScoringManager *m,QWidget *p, const char *n)
   expireCheck = new QCheckBox(i18n("&Expire rule automatically"), groupB);
   groupL->addMultiCellWidget( expireCheck, 4,4, 0,1 );
   expireEdit = new KIntSpinBox(1,99999,1,30,10, groupB, "expireWidget");
-  expireEdit->setSuffix(i18n(" days"));
+  connect(expireEdit, SIGNAL(valueChanged(int)), SLOT(slotExpireEditChanged(int)));
   groupL->addWidget( expireEdit, 5, 1 );
   expireLabel = new QLabel(expireEdit, i18n("&Rule is valid for:"), groupB, "expireLabel");
   groupL->addWidget( expireLabel, 5, 0 );
@@ -579,6 +579,11 @@ void RuleEditWidget::setDirty()
 void RuleEditWidget::slotShrink()
 {
   emit(shrink());
+}
+
+void RuleEditWidget::slotExpireEditChanged(int value)
+{
+  expireEdit->setSuffix(i18n(" day", " days", value));
 }
 
 //============================================================================

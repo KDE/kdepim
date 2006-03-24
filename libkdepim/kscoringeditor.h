@@ -161,6 +161,8 @@ signals:
 protected slots:
   void slotAddGroup();
   void slotShrink();
+private slots:
+  void slotExpireEditChanged(int value);
 private:
   void clearContents();
 

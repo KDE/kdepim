@@ -74,8 +74,8 @@ ResourceExchangeConfig::ResourceExchangeConfig( QWidget* parent,  const char* na
 
   label = new QLabel( i18n( "Cache timeout:" ), this );
   mCacheEdit = new KIntNumInput( this );
+  connect(mCacheEdit, SIGNAL(valueChanged( int )), SLOT(slotCacheEditChanged( int )));
   mCacheEdit->setMinValue( 0 );
-  mCacheEdit->setSuffix( i18n(" seconds") );
   mainLayout->addWidget( label, 7, 0 );
   mainLayout->addWidget( mCacheEdit, 7, 1 );
 }
@@ -143,6 +143,11 @@ void ResourceExchangeConfig::slotFindClicked()
   } else {
     mMailboxEdit->setText( mailbox );
   }
+}
+
+void ResourceExchangeConfig::slotCacheEditChanged( int value )
+{
+  mCacheEdit->setSuffix( i18n(" second", " seconds", value) );
 }
 
 #include "resourceexchangeconfig.moc"

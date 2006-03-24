@@ -49,6 +49,7 @@ protected slots:
   void slotToggleAuto( bool on );
   void slotUserChanged( const QString& text );
   void slotFindClicked();
+  void slotCacheEditChanged( int value );
 
 private:
   KLineEdit* mHostEdit;
