@@ -110,9 +110,6 @@
 /* Define if you have libjpeg */
 #cmakedefine HAVE_LIBJPEG 1
 
-/* Define if you have MAL libraries */
-#define HAVE_LIBMAL 1
-
 /* Define if you have libpng */
 #cmakedefine HAVE_LIBPNG 1
 
