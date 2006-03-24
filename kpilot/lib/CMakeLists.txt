@@ -27,7 +27,7 @@ kde4_add_kcfg_files(kpilot_LIB_SRCS kpilotlibSettings.kcfgc )
 
 kde4_add_library(kpilot SHARED ${kpilot_LIB_SRCS})
 
-target_link_libraries(kpilot  ${KDE4_KDECORE_LIBS} kdeui kcal )
+target_link_libraries(kpilot  ${KDE4_KDEUI_LIBS} kcal )
 
 set_target_properties(kpilot PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kpilot )
