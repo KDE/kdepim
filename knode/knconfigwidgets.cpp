@@ -1872,11 +1872,11 @@ KNode::CleanupWidget::CleanupWidget( KInstance *inst,QWidget *parent ) :
   foldersL->addMultiCellWidget(f_olderCB,1,1,0,1);
 
   f_olderDays=new KIntSpinBox( 0, 99999, 1, 0, foldersB );
-  f_olderDays->setSuffix(i18n(" days"));
   f_olderDaysL=new QLabel(f_olderDays,i18n("P&urge folders every:"), foldersB);
   foldersL->addWidget(f_olderDaysL,2,0);
   foldersL->addWidget(f_olderDays,2,1,Qt::AlignRight);
   connect(f_olderDays, SIGNAL(valueChanged(int)), SLOT(changed()));
+  connect(f_olderDays, SIGNAL(valueChanged(int)), SLOT(slotFolderDaysChanged(int)));
 
   foldersL->setColStretch(1,1);
 
@@ -1918,6 +1918,10 @@ void KNode::CleanupWidget::slotFolderCBtoggled(bool b)
   emit changed(true);
 }
 
+void KNode::CleanupWidget::slotFolderDaysChanged(int value)
+{
+  f_olderDays->setSuffix(i18n(" day", " days", value));
+}
 
 //END: Cleanup configuration widgets -----------------------------------------
 
