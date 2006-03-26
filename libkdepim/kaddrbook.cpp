@@ -134,6 +134,7 @@ bool KAddrBookExternal::addAddressee( const KABC::Addressee& addressee )
     if ( !saved )
       ab->releaseSaveTicket( t );
   }
+  ab->emitAddressBookChanged( );
   return saved;
 }
 
