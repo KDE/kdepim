@@ -1138,7 +1138,11 @@ void Contact::saveTo( KABC::Addressee* addressee )
     distrList.setName( fullName() );
     QValueList<Member>::ConstIterator mit = mDistrListMembers.begin();
     for ( ; mit != mDistrListMembers.end(); ++mit ) {
-      distrList.insertEntry( (*mit).displayName, (*mit).email );
+      QString displayName = (*mit).displayName;
+      // fixup the display name DistributionList::assumes neither ',' nor ';' is present
+      displayName.replace( ',', ' ' );
+      displayName.replace( ';', ' ' );
+      distrList.insertEntry( displayName, (*mit).email );
     }
     addressee->insertCustom( "KADDRESSBOOK", "DistributionList", distrList.custom( "KADDRESSBOOK", "DistributionList" ) );
     Q_ASSERT( KPIM::DistributionList::isDistributionList( *addressee ) );
