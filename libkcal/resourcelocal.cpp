@@ -80,7 +80,7 @@ ResourceLocal::ResourceLocal( const KConfig* config )
 ResourceLocal::ResourceLocal( const QString& fileName )
   : ResourceCached( 0 )
 {
-  mURL = KUrl( fileName );
+  mURL = KUrl::fromPath( fileName );
   mFormat = new ICalFormat();
   init();
 }
