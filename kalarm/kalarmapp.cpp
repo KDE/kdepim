@@ -116,9 +116,7 @@ KAlarmApp::KAlarmApp()
 	KAEvent::setFeb29RecurType();
 
 	// Check if it's a KDE desktop by comparing the window manager name to "KWin"
-	NETRootInfo nri(qt_xdisplay(), NET::SupportingWMCheck);
-	const char* wmname = nri.wmName();
-	mKDEDesktop = wmname && !strcmp(wmname, "KWin");
+	mKDEDesktop = true;   // assume yes in lieu of a test which works
 
 	if (AlarmCalendar::initialiseCalendars())
 	{
