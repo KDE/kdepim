@@ -91,6 +91,10 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   //------------------------------- </CONFIG> ----------------------------------
 
   //-------------------------------- <GUI> ------------------------------------
+  // this will enable keyboard-only actions like that don't appear in any menu
+  actionCollection()->setDefaultShortcutContext( Qt::WindowShortcut );
+  actionCollection()->setAssociatedWidget( this );
+
   Q3Accel *accel = new Q3Accel( this );
   initStatusBar();
   setSpacing( 0 );
@@ -171,7 +175,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   mPrimarySplitter->addWidget( mSecondSplitter );
   mSecondSplitter->addWidget( dummy );
   mSecondSplitter->addWidget( mArticleViewer );
-
 
   //-------------------------------- </GUI> ------------------------------------
 
@@ -521,7 +524,6 @@ void KNMainWidget::configChanged()
 void KNMainWidget::initActions()
 {
   a_ccel=new KAccel(this);
-  addAction( mArticleViewer->setCharsetKeyboardAction() );
 
   //navigation
   a_ctNavNextArt            = new KAction( KGuiItem(i18n("&Next Article"), "next",
@@ -540,7 +542,6 @@ void KNMainWidget::initActions()
                               SLOT(prevGroup()), actionCollection(), "go_prevGroup");
   a_ctNavReadThrough        = new KAction(i18n("Read &Through Articles"), Qt::Key_Space , this,
                               SLOT(slotNavReadThrough()), actionCollection(), "go_readThrough");
-  addAction( a_ctNavReadThrough );
 
   Q3Accel *accel = new Q3Accel( this );
   new KAction( i18n("Focus on Next Folder"), Qt::CTRL+Qt::Key_Right, c_olView,
@@ -647,12 +648,10 @@ void KNMainWidget::initActions()
   connect(a_ctArtSortHeaders, SIGNAL(activated(int)), this, SLOT(slotArtSortHeaders(int)));
   a_ctArtSortHeadersKeyb   = new KAction(i18n("Sort"), QString(), Qt::Key_F7 , this,
                              SLOT(slotArtSortHeadersKeyb()), actionCollection(), "view_Sort_Keyb");
-  addAction( a_ctArtSortHeadersKeyb );
   a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
                               actionCollection(), "view_Filter");
   a_ctArtFilter->setShortcutConfigurable(false);
   a_ctArtFilterKeyb         = new KAction(i18n("Filter"), Qt::Key_F6, 0, 0, actionCollection(), "view_Filter_Keyb");
-  addAction( a_ctArtFilterKeyb );
   a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"mail_find" , Qt::Key_F4 , this,
                               SLOT(slotArtSearch()), actionCollection(), "article_search");
   a_ctArtRefreshList        = new KAction(i18n("&Refresh List"),"reload", KStdAccel::shortcut(KStdAccel::Reload), this,

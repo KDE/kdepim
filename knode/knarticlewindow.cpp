@@ -95,6 +95,10 @@ ArticleWindow::ArticleWindow( KNArticle *art )
   if ( art )
     setCaption( art->subject()->asUnicodeString() );
 
+  // this will enable keyboard-only actions like that don't appear in any menu
+  actionCollection()->setDefaultShortcutContext( Qt::WindowShortcut );
+  actionCollection()->setAssociatedWidget( this );
+
   mArticleWidget = new ArticleWidget( this, this, actionCollection() );
   mArticleWidget->setArticle( art );
   setCentralWidget( mArticleWidget );
@@ -106,8 +110,6 @@ ArticleWindow::ArticleWindow( KNArticle *art )
 
   // settings menu
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
-
-  addAction( mArticleWidget->setCharsetKeyboardAction() );
 
   setupGUI( ToolBar|Keys|Create, "knreaderui.rc");
 

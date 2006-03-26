@@ -74,8 +74,6 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     /// returns the currently shown article
     KNArticle *article() const { return mArticle; }
 
-    KAction* setCharsetKeyboardAction() const { return mCharsetSelectKeyb; }
-
     /// notify all instances about a config change
     static void configChanged();
     /** check wether the given article is displayed in any instance
