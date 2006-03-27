@@ -106,7 +106,7 @@ void KDGanttSplitterHandle::mouseMoveEvent( QMouseEvent *e )
     } else {
 	int min = pos; int max = pos;
 	s->getRange( id(), &min, &max );
-	s->setRubberband( QMAX( min, QMIN(max, pos )));
+	s->setRubberband( qMax( min, qMin(max, pos )));
     }
     _collapsed = false;
 }
@@ -667,7 +667,7 @@ void KDGanttMinimizeSplitter::moveSplitter( QCOORD p, int id )
     QSplitterLayoutStruct *s = data->list.at(id);
     int oldP = orient == Horizontal ? s->wid->x() : s->wid->y();
     bool upLeft;
-    if ( QApplication::reverseLayout() && orient == Horizontal ) {
+    if ( QApplication::isRightToLeft() && orient == Horizontal ) {
 	p += s->wid->width();
 	upLeft = p > oldP;
     } else
@@ -683,7 +683,7 @@ void KDGanttMinimizeSplitter::moveSplitter( QCOORD p, int id )
 void KDGanttMinimizeSplitter::setG( QWidget *w, int p, int s, bool isSplitter )
 {
     if ( orient == Horizontal ) {
-	if ( QApplication::reverseLayout() && orient == Horizontal && !isSplitter )
+	if ( QApplication::isRightToLeft() && orient == Horizontal && !isSplitter )
 	    p = contentsRect().width() - p - s;
 	w->setGeometry( p, contentsRect().y(), s, contentsRect().height() );
     } else
@@ -709,7 +709,7 @@ void KDGanttMinimizeSplitter::moveBefore( int pos, int id, bool upLeft )
     } else if ( s->isSplitter ) {
 	int pos1, pos2;
 	int dd = s->sizer;
-	if( QApplication::reverseLayout() && orient == Horizontal ) {
+	if( QApplication::isRightToLeft() && orient == Horizontal ) {
 	    pos1 = pos;
 	    pos2 = pos + dd;
 	} else {
@@ -725,14 +725,14 @@ void KDGanttMinimizeSplitter::moveBefore( int pos, int id, bool upLeft )
 	}
     } else {
 	int dd, newLeft, nextPos;
-	if( QApplication::reverseLayout() && orient == Horizontal ) {
+	if( QApplication::isRightToLeft() && orient == Horizontal ) {
 	    dd = w->geometry().right() - pos;
-	    dd = QMAX( pick(minSize(w)), QMIN(dd, pick(w->maximumSize())));
+	    dd = qMax( pick(minSize(w)), qMin(dd, pick(w->maximumSize())));
 	    newLeft = pos+1;
 	    nextPos = newLeft + dd;
 	} else {
 	    dd = pos - pick( w->pos() ) + 1;
-	    dd = QMAX( pick(minSize(w)), QMIN(dd, pick(w->maximumSize())));
+	    dd = qMax( pick(minSize(w)), qMin(dd, pick(w->maximumSize())));
 	    newLeft = pos-dd+1;
 	    nextPos = newLeft - 1;
 	}
@@ -762,7 +762,7 @@ void KDGanttMinimizeSplitter::moveAfter( int pos, int id, bool upLeft )
     } else if ( s->isSplitter ) {
 	int dd = s->sizer;
 	int pos1, pos2;
-	if( QApplication::reverseLayout() && orient == Horizontal ) {
+	if( QApplication::isRightToLeft() && orient == Horizontal ) {
 	    pos2 = pos - dd;
 	    pos1 = pos2 + 1;
 	} else {
@@ -779,15 +779,15 @@ void KDGanttMinimizeSplitter::moveAfter( int pos, int id, bool upLeft )
     } else {
 	int left = pick( w->pos() );
 	int right, dd,/* newRight,*/ newLeft, nextPos;
-	if ( QApplication::reverseLayout() && orient == Horizontal ) {
+	if ( QApplication::isRightToLeft() && orient == Horizontal ) {
 	    dd = pos - left + 1;
-	    dd = QMAX( pick(minSize(w)), QMIN(dd, pick(w->maximumSize())));
+	    dd = qMax( pick(minSize(w)), qMin(dd, pick(w->maximumSize())));
 	    newLeft = pos-dd+1;
 	    nextPos = newLeft - 1;
 	} else {
 	    right = pick( w->geometry().bottomRight() );
 	    dd = right - pos + 1;
-	    dd = QMAX( pick(minSize(w)), QMIN(dd, pick(w->maximumSize())));
+	    dd = qMax( pick(minSize(w)), qMin(dd, pick(w->maximumSize())));
 	    /*newRight = pos+dd-1;*/
 	    newLeft = pos;
 	    nextPos = newLeft + dd;
@@ -857,17 +857,17 @@ void KDGanttMinimizeSplitter::getRange( int id, int *min, int *max )
 	}
     }
     QRect r = contentsRect();
-    if ( orient == Horizontal && QApplication::reverseLayout() ) {
+    if ( orient == Horizontal && QApplication::isRightToLeft() ) {
 	int splitterWidth = style().pixelMetric(QStyle::PM_SplitterWidth, this);
 	if ( min )
-	    *min = pick(r.topRight()) - QMIN( maxB, pick(r.size())-minA ) - splitterWidth;
+	    *min = pick(r.topRight()) - qMin( maxB, pick(r.size())-minA ) - splitterWidth;
 	if ( max )
-	    *max = pick(r.topRight()) - QMAX( minB, pick(r.size())-maxA ) - splitterWidth;
+	    *max = pick(r.topRight()) - qMax( minB, pick(r.size())-maxA ) - splitterWidth;
     } else {
 	if ( min )
-	    *min = pick(r.topLeft()) + QMAX( minB, pick(r.size())-maxA );
+	    *min = pick(r.topLeft()) + qMax( minB, pick(r.size())-maxA );
 	if ( max )
-	    *max = pick(r.topLeft()) + QMIN( maxB, pick(r.size())-minA );
+	    *max = pick(r.topLeft()) + qMin( maxB, pick(r.size())-minA );
     }
 }
 
@@ -883,7 +883,7 @@ int KDGanttMinimizeSplitter::adjustPos( int p, int id )
     int min = 0;
     int max = 0;
     getRange( id, &min, &max );
-    p = QMAX( min, QMIN( p, max ) );
+    p = qMax( min, qMin( p, max ) );
 
     return p;
 }
@@ -975,10 +975,10 @@ void KDGanttMinimizeSplitter::recalc( bool update )
 		QSize minS = minSize(s->wid);
 		minl += pick( minS );
 		maxl += pick( s->wid->maximumSize() );
-		mint = QMAX( mint, trans( minS ));
+		mint = qMax( mint, trans( minS ));
 		int tm = trans( s->wid->maximumSize() );
 		if ( tm > 0 )
-		    maxt = QMIN( maxt, tm );
+		    maxt = qMin( maxt, tm );
 	    }
 	}
     }
@@ -991,7 +991,7 @@ void KDGanttMinimizeSplitter::recalc( bool update )
             maxl = QWIDGETSIZE_MAX;
         }
     } else {
-        maxl = QMIN( maxl, QWIDGETSIZE_MAX );
+        maxl = qMin( maxl, QWIDGETSIZE_MAX );
     }
     if ( maxt < mint )
 	maxt = mint;
@@ -1143,7 +1143,7 @@ QSize KDGanttMinimizeSplitter::sizeHint() const
 		QSize s = ((QWidget*)o)->sizeHint();
 		if ( s.isValid() ) {
 		    l += pick( s );
-		    t = QMAX( t, trans( s ) );
+		    t = qMax( t, trans( s ) );
 		}
 	    }
 	}
@@ -1173,7 +1173,7 @@ QSize KDGanttMinimizeSplitter::minimumSizeHint() const
 		QSize s = minSizeHint((QWidget*)o);
 		if ( s.isValid() ) {
 		    l += pick( s );
-		    t = QMAX( t, trans( s ) );
+		    t = qMax( t, trans( s ) );
 		}
 	    }
 	}

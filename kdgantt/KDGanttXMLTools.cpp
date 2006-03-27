@@ -124,7 +124,7 @@ void createBrushNode( QDomDocument& doc, QDomNode& parent,
     createColorNode( doc, brushElement, "Color", brush.color() );
     createStringNode( doc, brushElement, "Style",
                       KDGanttXML::brushStyleToString( brush.style() ) );
-    if( brush.style() == Qt::CustomPattern && brush.pixmap() )
+    if( brush.style() == Qt::TexturePattern && brush.pixmap() )
         createPixmapNode( doc, brushElement, "Pixmap", *brush.pixmap() );
 }
 
@@ -140,7 +140,7 @@ void createPixmapNode( QDomDocument& doc, QDomNode& parent,
     // conforms to the file format Qt Designer uses.
     QByteArray ba;
     QBuffer buffer( ba );
-    buffer.open( IO_WriteOnly );
+    buffer.open( QIODevice::WriteOnly );
     QImageIO imgio( &buffer, "XPM" );
     QImage image = pixmap.convertToImage();
     imgio.setImage( image );
