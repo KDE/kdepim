@@ -120,7 +120,6 @@ add_subdirectory(plugins)
 add_subdirectory(qgpgme)
 add_subdirectory(wizards)
 
-MESSAGE(STATUS "Perhaps not install FindKDE4. It will conflict when we install with rpm/deb package")
 add_subdirectory( cmake )
 
 kde4_create_doxygen_docs(  )
