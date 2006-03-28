@@ -785,7 +785,7 @@ bool KDGanttView::saveProject( QIODevice* device )
     QDomDocument doc = saveXML();
     if( device->isOpen() )
         device->close();
-    if( device->open( QIODevice::WriteOnly ) ) {
+    if( device->open( IO_WriteOnly ) ) {
         QTextStream ts( device );
         ts << doc.toString();
         return true;
@@ -811,7 +811,7 @@ bool KDGanttView::loadProject( QIODevice* device )
 
     if( device->isOpen() )
         device->close();
-    if( device->open( QIODevice::ReadOnly ) ) {
+    if( device->open( IO_ReadOnly ) ) {
         QDomDocument doc( "GanttView" );
         QString err;
         int errline, errcol;
@@ -3881,7 +3881,7 @@ int KDGanttView::addColumn( const QString& label, int width )
   Calls to this method are passed through to the underlying \a QListView.
 */
 
-int KDGanttView::addColumn( const QIcon& iconset, const QString& label,
+int KDGanttView::addColumn( const QIconSet& iconset, const QString& label,
                             int width )
 {
     return myListView->addColumn( iconset, label, width );

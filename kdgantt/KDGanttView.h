@@ -302,7 +302,7 @@ public:
 
     // Pass-through methods from QListView
     virtual int addColumn( const QString& label, int width = -1 );
-    virtual int addColumn( const QIcon& iconset, const QString& label,
+    virtual int addColumn( const QIconSet& iconset, const QString& label,
                            int width = -1 );
     virtual void removeColumn( int index );
     KDGanttViewItem* selectedItem() const;

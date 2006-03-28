@@ -2800,7 +2800,7 @@ void  KDListView::drawToPainter ( QPainter * p, bool drawHeader )
         if (s==0) {
             p->translate(0, -r.height());
         }
-        //kDebug()<<s<<": "<<h->label(s)<<" "<<r<<endl;
+        //kdDebug()<<s<<": "<<h->label(s)<<" "<<r<<endl;
         p->drawText(r.x()+2, r.y(), r.width()-2, r.height(), columnAlignment(s)|Qt::AlignVCenter, h->label(s), -1);
         p->save();
         p->setPen(pen);
@@ -2820,7 +2820,7 @@ int KDListView::buildDrawables(QPtrList<KDListView::DrawableItem> &lst, int leve
     if (y >= ymin && y < ymax) { // include partial item at bottom
         KDListView::DrawableItem *dr = new KDListView::DrawableItem(level, y, item);
         lst.append(dr);
-        //kDebug()<<k_funcinfo<<level<<", "<<y<<" : "<<item->text(0)<<endl;
+        //kdDebug()<<k_funcinfo<<level<<", "<<y<<" : "<<item->text(0)<<endl;
     }
     y += ih;
     if (item->isOpen()) {
@@ -2840,7 +2840,7 @@ void KDListView::drawAllContents(QPainter * p, int cx, int cy, int cw, int ch) {
         paintEmptyArea( p, QRect( cx, cy, cw, ch ) );
         return;
     }
-    //kDebug()<<k_funcinfo<<QRect(cx, cy, cw, ch)<<endl;
+    //kdDebug()<<k_funcinfo<<QRect(cx, cy, cw, ch)<<endl;
     QPtrList<KDListView::DrawableItem> drawables;
     drawables.setAutoDelete(true);
     QListViewItem *child = firstChild();
@@ -2868,7 +2868,7 @@ void KDListView::drawAllContents(QPainter * p, int cx, int cy, int cw, int ch) {
 
         // need to paint current?
         if ( ih > 0 && current->y < cy+ch && current->y+ih > cy ) {
-            //kDebug()<<k_funcinfo<<"Paint: "<<current->i->text(0)<<" y="<<current->y<<endl;
+            //kdDebug()<<k_funcinfo<<"Paint: "<<current->i->text(0)<<" y="<<current->y<<endl;
             if ( fx < 0 ) {
                 // find first interesting column, once
                 x = 0;
@@ -2947,10 +2947,10 @@ void KDListView::drawAllContents(QPainter * p, int cx, int cy, int cw, int ch) {
             int rleft = tx + current->l*treeStepSize();
             int rright = rleft + treeStepSize();
 
-            int crtop = qMax( rtop, cy );
-            int crbottom = qMin( rbottom, cy+ch );
-            int crleft = qMax( rleft, cx );
-            int crright = qMin( rright, cx+cw );
+            int crtop = QMAX( rtop, cy );
+            int crbottom = QMIN( rbottom, cy+ch );
+            int crleft = QMAX( rleft, cx );
+            int crright = QMIN( rright, cx+cw );
 
             r.setRect( crleft, crtop,
                     crright-crleft, crbottom-crtop );
@@ -2958,7 +2958,7 @@ void KDListView::drawAllContents(QPainter * p, int cx, int cy, int cw, int ch) {
             if ( r.isValid() ) {
                 p->save();
                 p->translate( rleft, crtop );
-                //kDebug()<<k_funcinfo<<"paintBranches: "<<current->i->text(0)<<endl;
+                //kdDebug()<<k_funcinfo<<"paintBranches: "<<current->i->text(0)<<endl;
 
                 current->i->paintBranches( p, colorGroup(), treeStepSize(),
                                         rtop - crtop, r.height() );
@@ -3749,7 +3749,7 @@ void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent *e )
     //qDebug("mousemove ");
     //QToolTip::setGloballyEnabled (false);
     //QToolTip::remove(viewport());
-    // viewport()->setToolTip( "hello");
+    // QToolTip::add(viewport(), "hello");
     // QToolTip::setGloballyEnabled (true);
     /*
       QCanvasItemList il = canvas() ->collisions ( e->pos() );
@@ -3816,7 +3816,7 @@ void KDGanttCanvasView::slotScrollTimer() {
     if (my < 0)
         dy = -5;
     else if (my > visibleHeight())
-        dy = qMin(5, verticalScrollBar()->maxValue()-verticalScrollBar()->value());
+        dy = QMIN(5, verticalScrollBar()->maxValue()-verticalScrollBar()->value());
     
     if (dx != 0 || dy != 0)
         scrollBy(dx, dy);
