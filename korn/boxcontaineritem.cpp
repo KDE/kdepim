@@ -28,7 +28,6 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kglobal.h>
-#include <kiconeffect.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kpassivepopup.h>
@@ -325,6 +324,7 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	{
 		//label->setBackgroundMode( Qt::X11ParentRelative );
 		label->setBackgroundRole( QPalette::NoRole );
+		palette.setColor( QPalette::Window, Qt::transparent );
 	}
 	
 	if( hasIcon )
@@ -343,8 +343,7 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	}
 
 	label->setPalette( palette );
-	label->setAutoFillBackground( label->backgroundRole() != QPalette::NoRole );
-	//TODO: fix transparent background (failes when non-transparent is showed first)
+	label->setAutoFillBackground( true );
 	
 	if( hasFg || hasBg || hasIcon || hasAnim )
 		label->show();
@@ -356,40 +355,14 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 QPixmap BoxContainerItem::calcComplexPixmap( const QPixmap &icon, const QColor& fgColour, const QFont* font, const int count )
 {
 	QPixmap result( icon );
-	QPixmap numberPixmap( icon.size() );
-	QImage iconImage( icon.toImage() );
-	QImage numberImage;
-	QRgb *rgbline;
 	QPainter p;
-	
-	//Make a transparent number; first make a white number on a black background.
-	//This pixmap also is the base alpha-channel, the foreground colour is added later.
-	numberPixmap.fill( Qt::black );
-	p.begin( &numberPixmap );
-	p.setPen( Qt::white );
+
+	p.setCompositionMode( QPainter::CompositionMode_DestinationOver );
+	p.begin( &result );
+	p.setPen( fgColour );
 	if( font )
 		p.setFont( *font );
 	p.drawText( icon.rect(), Qt::AlignCenter, QString::number( count ) );
-	p.end();
-
-	//Convert to image and add the alpha channel.
-	numberImage = numberPixmap.toImage();
-	if( numberImage.depth() != 32 ) //Make sure depth is 32 (and thus can have an alpha channel)
-		numberImage = numberImage.convertToFormat( QImage::Format_ARGB32 );
-	for( int xx = 0; xx < numberImage.height(); ++xx )
-	{
-		rgbline = (QRgb*)numberImage.scanLine( xx );
-
-		for( int yy = 0; yy < numberImage.width(); ++yy )
-		{
-			//Set colour and alpha channel
-			rgbline[ yy ] = qRgba( fgColour.red(), fgColour.green(), fgColour.blue(), qRed( rgbline[ yy ] ) ); 
-		}
-	}
-
-	//Merge icon and number and convert to result.
-	KIconEffect::overlay( iconImage, numberImage );
-	result.fromImage( iconImage );
 	
 	return result;
 }
