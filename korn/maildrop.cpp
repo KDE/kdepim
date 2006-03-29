@@ -41,10 +41,10 @@ KMailDrop::KMailDrop()
   connect(this, SIGNAL(changed( int, KMailDrop* )), SLOT(setCount( int, KMailDrop* )));
   
   //Set default colours; this prevents black (QColor::invalid) boxes after creating a new box.
-  _bgColour  = QApplication::palette().active().background();
-  _fgColour  = QApplication::palette().active().text();
-  _nbgColour = QApplication::palette().active().background();
-  _nfgColour = QApplication::palette().active().text();
+  _bgColour  = QApplication::palette().color( QPalette::Active, QPalette::Window );
+  _fgColour  = QApplication::palette().color( QPalette::Active, QPalette::WindowText );
+  _nbgColour = QApplication::palette().color( QPalette::Active, QPalette::Window );
+  _nfgColour = QApplication::palette().color( QPalette::Active, QPalette::WindowText );
 }
 
 KMailDrop::~KMailDrop()
@@ -88,10 +88,10 @@ bool KMailDrop::readConfigGroup(const KConfigBase & c)
   _caption    = c.readEntry(fu(CaptionConfigKey), QString());
   _clickCmd   = c.readPathEntry(fu(ClickConfigKey));
   _style      = Style(c.readEntry(fu(DisplayStyleConfigKey), (unsigned int)Plain));
-  _bgColour   = c.readEntry(fu(BgColourConfigKey), QApplication::palette().active().background());
-  _fgColour   = c.readEntry(fu(FgColourConfigKey), QApplication::palette().active().text());
-  _nbgColour  = c.readEntry(fu(NBgColourConfigKey), QApplication::palette().active().background());
-  _nfgColour  = c.readEntry(fu(NFgColourConfigKey), QApplication::palette().active().text());
+  _bgColour   = c.readEntry(fu(BgColourConfigKey), QApplication::palette().color(QPalette::Active, QPalette::Window));
+  _fgColour   = c.readEntry(fu(FgColourConfigKey), QApplication::palette().color(QPalette::Active, QPalette::WindowText));
+  _nbgColour  = c.readEntry(fu(NBgColourConfigKey), QApplication::palette().color(QPalette::Active, QPalette::Window));
+  _nfgColour  = c.readEntry(fu(NFgColourConfigKey), QApplication::palette().color(QPalette::Active, QPalette::WindowText));
   _icon       = c.readEntry(fu(IconConfigKey), QString());
   _nIcon      = c.readEntry(fu(NewMailIconConfigKey), QString());
   _realName   = c.readEntry(fu(RealNameConfigKey), QString());

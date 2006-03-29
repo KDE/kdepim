@@ -129,7 +129,7 @@ public:
 	/**
 	 * @return a stringlist
 	 */
-	virtual QStringList authList() const { return QStringList::split( '|', "Plain|APOP", false ); }
+	virtual QStringList authList() const { return QString( "Plain|APOP" ).split( '|', QString::SkipEmptyParts, Qt::CaseSensitive ); }
 	
 	/**
 	 * This function manipuletes a kurl and metadata before the job is executed.

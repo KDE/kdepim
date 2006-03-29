@@ -200,7 +200,7 @@ void KKioDrop::setUser(const QString & user, const QString & password,
 	if( ! auth.isEmpty() && auth != "Plain" )
 		(*_metadata)["auth"] = auth;
 	else if( _metadata->contains( "auth" ) )
-		_metadata->erase( "auth" );
+		_metadata->remove( "auth" );
 
 	_valid = _kurl->isValid();
 	emit validChanged( valid() );
@@ -333,7 +333,7 @@ bool KKioDrop::readConfigGroup( const QMap< QString, QString > &map, const Proto
 		return false;
 	}
 
-	this->setName( (*map.find( "name" )).toUtf8() );
+	this->setObjectName( *map.find( "name" ) );
 	
 	_protocol = protocol->getKIOProtocol();
 	if( !_protocol )
@@ -351,7 +351,7 @@ bool KKioDrop::readConfigGroup( const QMap< QString, QString > &map, const Proto
 	QStringList::Iterator it;
 	for( it = list.begin(); it != list.end(); ++it )
 	{
-		int split = (*it).find( "=" );
+		int split = (*it).indexOf( '=', 0, Qt::CaseSensitive );
 		if( split > 0 )
 			_metadata->insert( (*it).left( split ), (*it).right( (*it).length() - split - 1 ) );
 	}

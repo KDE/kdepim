@@ -97,22 +97,22 @@ void KIO_Single_Subject::parseMail( QString * message, KornMailSubject *subject,
 
 		if( inheader )
 		{
-			if( rx_sender.search( line ) == 0 )
+			if( rx_sender.indexIn( line ) == 0 )
 			{
-				if( rx_sender_has_name1.search( line ) == 0 )
+				if( rx_sender_has_name1.indexIn( line ) == 0 )
 					subject->setSender( rx_sender_has_name1.cap( 1 )  );
-				else if(rx_sender_has_name2.search( line ) == 0)
+				else if(rx_sender_has_name2.indexIn( line ) == 0)
 					subject->setSender( rx_sender_has_name2.cap( 1 ) );
 				else
 					subject->setSender( line.remove( rx_sender ) );
 				++fieldnumber;
 			}
-			else if( rx_subject.search( line ) == 0 )
+			else if( rx_subject.indexIn( line ) == 0 )
 			{
 				subject->setSubject( line.remove( rx_subject ) );
 				++fieldnumber;
 			}
-			else if( rx_date.search( line ) == 0 )
+			else if( rx_date.indexIn( line ) == 0 )
 			{
 	                 	subject->setDate( KRFCDate::parseDate( line.right( line.length() - 6 ) ) );
 				++fieldnumber;

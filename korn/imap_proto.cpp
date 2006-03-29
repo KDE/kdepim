@@ -85,7 +85,7 @@ void Imap_Protocol::writeEntries( QMap< QString, QString >* map ) const
 			map->insert( "ssl", "false" );
 			metadata += *map->find( "encryption" );
 		}
-		map->erase( "encryption" );
+		map->remove( "encryption" );
 	}
 
 	if( map->contains( "auth" ) )
@@ -93,7 +93,7 @@ void Imap_Protocol::writeEntries( QMap< QString, QString >* map ) const
 		if( !metadata.isEmpty() )
 			metadata += ",";
 		metadata += *map->find( "auth" );
-		map->erase( "auth" );
+		map->remove( "auth" );
 	}
 
 	map->insert( "metadata", metadata );

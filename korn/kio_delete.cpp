@@ -190,7 +190,7 @@ void KIO_Delete::slotResult( KIO::Job* job )
 		_valid = false;
 	}
 	
-	_jobs->remove( job );
+	_jobs->removeAll( job );
 	
 	_kio->emitDeleteMailsProgress( _total - _jobs->count() );
 	

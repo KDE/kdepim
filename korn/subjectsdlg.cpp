@@ -78,8 +78,10 @@ KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
 	showButton = new KPushButton(i18n("&Show"), page);
 	deleteButton->setEnabled(false);
 	showButton->setEnabled(false);
-	QVBoxLayout * topLayout = new QVBoxLayout( page, 0, spacingHint() );
+	QVBoxLayout * topLayout = new QVBoxLayout( page );
 	QHBoxLayout * buttons = new QHBoxLayout();
+	topLayout->setMargin( 0 );
+	topLayout->setSpacing( spacingHint() );
 	_list = new K3ListView(page);
 	topLayout->addWidget(_list, 10);
 	topLayout->addLayout(buttons, 0);
@@ -476,7 +478,7 @@ void KornSubjectsDlg::fillDeleteIdList( KMailDrop *drop )
 		if( current->getMailDrop() == drop )
 		{
 			_delete->ids->append( current->getId() );
-			_delete->messages->remove( current );
+			_delete->messages->removeAll( current );
 		}
 	}
 }
@@ -497,8 +499,8 @@ void KornSubjectsDlg::deleteNextMessage()
 	fillDeleteIdList( _delete->drop );
 	
 	// Connect the progress bar signals of the mail box
-	connect( _delete->drop, SIGNAL( deleteMailsTotalSteps( int ) ), _delete->progress, SLOT( setTotalSteps( int ) ) );
-	connect( _delete->drop, SIGNAL( deleteMailsProgress( int ) ), _delete->progress, SLOT( setProgress( int ) ) );
+	connect( _delete->drop, SIGNAL( deleteMailsTotalSteps( int ) ), _delete->progress, SLOT( setMaximum( int ) ) );
+	connect( _delete->drop, SIGNAL( deleteMailsProgress( int ) ), _delete->progress, SLOT( setValue( int ) ) );
 	connect( _delete->drop, SIGNAL( deleteMailsReady( bool ) ), this, SLOT( deleteMailsReady( bool ) ) );
 
 	// connect the cancel button of the progress bar
@@ -513,8 +515,8 @@ void KornSubjectsDlg::deleteMailsReady( bool /*success*/ )
 	if( !_delete )
 		return;
 	
-	disconnect( _delete->drop, SIGNAL( deleteMailsTotalSteps( int ) ), _delete->progress, SLOT( setTotalSteps( int ) ) );
-	disconnect( _delete->drop, SIGNAL( deleteMailsProgress( int ) ), _delete->progress, SLOT( setProgress( int ) ) );
+	disconnect( _delete->drop, SIGNAL( deleteMailsTotalSteps( int ) ), _delete->progress, SLOT( setMaximum( int ) ) );
+	disconnect( _delete->drop, SIGNAL( deleteMailsProgress( int ) ), _delete->progress, SLOT( setValue( int ) ) );
 	disconnect( _delete->drop, SIGNAL( deleteMailsReady( bool ) ), this, SLOT( deleteMailsReady( bool ) ) );
 
 	// disconnect the cancel button of the progress bar

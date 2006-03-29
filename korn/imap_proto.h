@@ -104,7 +104,7 @@ public:
 	 */
 	virtual unsigned short defaultPort( bool ssl ) const { return ssl ? 993 : 143; }
 
-	virtual QStringList authList() const { return QStringList::split( '|', "*|LOGIN|ANONYMOUS|CRAM-MD5", false); }
+	virtual QStringList authList() const { return QString( "*|LOGIN|ANONYMOUS|CRAM-MD5" ).split( '|', QString::KeepEmptyParts, Qt::CaseSensitive); }
 	//Could not test did, my server don't support other authentication methods.
 
 	/**

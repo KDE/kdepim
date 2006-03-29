@@ -117,7 +117,7 @@ QVector< KornMailSubject >* DCOPDrop::doReadSubjects( bool * )
         return vector;
 }
 
-bool DCOPDrop::deleteMails( QList<const QVariant> * ids, bool * )
+bool DCOPDrop::deleteMails( QList<QVariant> * ids, bool * )
 {
 	emit deleteMailsTotalSteps( 1 );
 	
@@ -126,7 +126,7 @@ bool DCOPDrop::deleteMails( QList<const QVariant> * ids, bool * )
 		if( ids->at( xx ).type() == QVariant::Int )
 		{
 			if( _msgList->contains( ids->at( xx ).toInt() ) )
-				_msgList->erase( ids->at( xx ).toInt() );
+				_msgList->remove( ids->at( xx ).toInt() );
 		} else {
 			kDebug() << "Got a non-int in DCOPDrop::deleteMails()!" << endl;
 		}
@@ -187,7 +187,7 @@ bool DCOPDrop::removeMessage( int id )
 		return false;
 	
 	delete (*_msgList)[ id ];
-	_msgList->erase( id );
+	_msgList->remove( id );
 	
 	emit changed( _msgList->count(), this );
 	

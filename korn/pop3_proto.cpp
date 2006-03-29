@@ -84,7 +84,7 @@ void Pop3_Protocol::writeEntries( QMap< QString, QString >* map ) const
 			map->insert( "ssl", "false" );
 			metadata += *map->find( "encryption" );
 		}
-		map->erase( "encryption" );
+		map->remove( "encryption" );
 	}
 
 	if( map->contains( "auth" ) )
@@ -92,7 +92,7 @@ void Pop3_Protocol::writeEntries( QMap< QString, QString >* map ) const
 		if( !metadata.isEmpty() && ! (*map->find( "auth" )).isEmpty() )
 			metadata += ",";
 		metadata += *map->find( "auth" );
-		map->erase( "auth" );
+		map->remove( "auth" );
 	}
 
 	map->insert( "metadata", metadata );

@@ -18,7 +18,9 @@ KornMailDlg::KornMailDlg( QWidget *parent )
 	enableButtonSeparator( true );
 	QWidget * page = new QWidget( this );
 	setMainWidget(page);
-	QVBoxLayout * topLayout = new QVBoxLayout( page, 0, spacingHint() );
+	QVBoxLayout * topLayout = new QVBoxLayout( page );
+	topLayout->setMargin( 0 );
+	topLayout->setSpacing( spacingHint() );
 	_editCtrl = new KEdit(page);
 	topLayout->addWidget(_editCtrl, 10);
 	_editCtrl->setReadOnly(true);

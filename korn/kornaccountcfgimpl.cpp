@@ -63,7 +63,7 @@ KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent )
 	connect( chPassivePopup, SIGNAL(toggled(bool)), chPassiveDate, SLOT(setEnabled(bool)) );
 	connect( cbProtocol, SIGNAL(activated(const QString&)), this, SLOT(slotProtocolChanged(const QString&)) );
 	
-	this->cbProtocol->insertStringList( Protocols::getProtocols() );
+	this->cbProtocol->insertItems( this->cbProtocol->count(), Protocols::getProtocols() );
 }
 	
 KornAccountCfgImpl::~KornAccountCfgImpl()
@@ -80,7 +80,7 @@ void KornAccountCfgImpl::readConfig( KConfigGroup *config, QMap< QString, QStrin
 	while( !_accountinput->isEmpty() )
 		delete _accountinput->takeFirst();
 
-	this->cbProtocol->setCurrentText( _config->readEntry( "protocol", "mbox" ) );
+	this->cbProtocol->setCurrentIndex( this->cbProtocol->findText( _config->readEntry( "protocol", "mbox" ) ) );
         slotProtocolChanged( this->cbProtocol->currentText() );
 	const Protocol *protocol = Protocols::getProto( _config->readEntry( "protocol", "mbox" ) );
 
@@ -126,11 +126,11 @@ void KornAccountCfgImpl::writeConfig()
 	if( map->contains( "password" ) )
 	{
 		KOrnPassword::writeKOrnPassword( _boxnr, _accountnr, *_config, *map->find( "password" ) );
-		map->erase( "password" );
+		map->remove( "password" );
 	}
 
 	for( it = map->begin(); it != map->end(); ++it )
-		_config->writeEntry( it.key(), it.data() );
+		_config->writeEntry( it.key(), it.value() );
 
 	delete map;
 	
@@ -190,11 +190,12 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 	}
 	delete _protocolLayout;
 	delete _vlayout;
-	_vlayout = new QVBoxLayout( this->server_tab, groupBoxes->count() + 1 );
+	_vlayout = new QVBoxLayout( this->server_tab );
 	_vlayout->setSpacing( 10 );
 	_vlayout->setMargin( 10 );
 
-	_protocolLayout = new QHBoxLayout( _vlayout );
+	_protocolLayout = new QHBoxLayout();
+	_vlayout->addLayout( _protocolLayout );
 	_protocolLayout->addWidget( this->lbProtocol );
 	_protocolLayout->addWidget( this->cbProtocol );
 
@@ -215,7 +216,7 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 	for( int groupCounter = 0; groupCounter < _groupBoxes->count(); ++groupCounter )
 	{
 		int counter = 0;
-		QGridLayout *grid = new QGridLayout( _groupBoxes->at( groupCounter ), 0, 2 );
+		QGridLayout *grid = new QGridLayout( _groupBoxes->at( groupCounter ) );
 		grid->setSpacing( 10 );
 		grid->setMargin( 15 );
 		for( int xx = 0; xx < _accountinput->size(); ++xx )

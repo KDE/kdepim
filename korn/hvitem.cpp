@@ -44,8 +44,8 @@ HVItem::HVItem( QWidget *parent )
 {
 	_popup->addTitle( QIcon( qApp->windowIcon().pixmap(IconSize(K3Icon::Small),IconSize(K3Icon::Small)) ), kapp->caption() );
 	this->fillKMenu( _popup, _actions );
-	_popup->insertSeparator();
-	KStdAction::quit( kapp, SLOT( quit() ), _actions )->plug( _popup );
+	_popup->addSeparator();
+	_popup->addAction( KStdAction::quit( kapp, SLOT( quit() ), _actions ) );
 	
 	connect( _label, SIGNAL( mouseButtonPressed( Qt::MouseButton ) ), this, SLOT( mouseButtonPressed( Qt::MouseButton ) ) );
 }

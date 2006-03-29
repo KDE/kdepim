@@ -204,15 +204,15 @@ void BoxContainerItem::fillKMenu( KMenu* popupMenu, KActionCollection* actions )
 	popupMenu->insertItem( i18n( "&View Emails" ), this, SLOT( slotView() ) );
 	popupMenu->insertItem( i18n( "R&un Command" ), this, SLOT( slotRunCommand() ) );*/
 	
-	(new KAction( i18n("&Configure"),     KShortcut(), this, SLOT( slotConfigure()  ), actions, "configure" ))->plug( popupMenu );
-	(new KAction( i18n("&Recheck"),       KShortcut(), this, SLOT( slotRecheck()    ), actions, "recheck"   ))->plug( popupMenu );
-	(new KAction( i18n("R&eset Counter"), KShortcut(), this, SLOT( slotReset()      ), actions, "reset"     ))->plug( popupMenu );
-	(new KAction( i18n("&View Emails"),   KShortcut(), this, SLOT( slotView()       ), actions, "view"      ))->plug( popupMenu );
-	(new KAction( i18n("R&un Command"),   KShortcut(), this, SLOT( slotRunCommand() ), actions, "run"       ))->plug( popupMenu );
-	popupMenu->insertSeparator();
-	KStdAction::help(      this, SLOT( help()      ), actions )->plug( popupMenu );
-	KStdAction::reportBug( this, SLOT( reportBug() ), actions )->plug( popupMenu );
-	KStdAction::aboutApp(  this, SLOT( about()     ), actions )->plug( popupMenu );
+	popupMenu->addAction(new KAction( i18n("&Configure"),     KShortcut(), this, SLOT( slotConfigure()  ), actions, "configure" ));
+	popupMenu->addAction(new KAction( i18n("&Recheck"),       KShortcut(), this, SLOT( slotRecheck()    ), actions, "recheck"   ));
+	popupMenu->addAction(new KAction( i18n("R&eset Counter"), KShortcut(), this, SLOT( slotReset()      ), actions, "reset"     ));
+	popupMenu->addAction(new KAction( i18n("&View Emails"),   KShortcut(), this, SLOT( slotView()       ), actions, "view"      ));
+	popupMenu->addAction(new KAction( i18n("R&un Command"),   KShortcut(), this, SLOT( slotRunCommand() ), actions, "run"       ));
+	popupMenu->addSeparator();
+	popupMenu->addAction( KStdAction::help(      this, SLOT( help()      ), actions ) );
+	popupMenu->addAction( KStdAction::reportBug( this, SLOT( reportBug() ), actions ) );
+	popupMenu->addAction( KStdAction::aboutApp(  this, SLOT( about()     ), actions ) );
 }
 
 void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject >* list, int total,
@@ -226,13 +226,13 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject
 	QWidget *mainglayout_wid = new QWidget( mainvlayout );
 	QGridLayout *mainglayout = new QGridLayout( mainglayout_wid );
 	
-	QLabel *title = new QLabel( "From", mainglayout_wid, "from_label" );
+	QLabel *title = new QLabel( "From", mainglayout_wid );
 	mainglayout->addWidget( title, 0, 0 );
 	QFont font = title->font();
 	font.setBold( true );
 	title->setFont( font );
 		
-	title = new QLabel( "Subject", mainglayout_wid, "subject_label" );
+	title = new QLabel( "Subject", mainglayout_wid );
 	mainglayout->addWidget( title, 0, 1 );
 	font = title->font();
 	font.setBold( true );
@@ -241,7 +241,7 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject
 	//Display only column 3 if 'date' is true.
 	if( date )
 	{
-		title = new QLabel( "Date", mainglayout_wid, "date_label" );
+		title = new QLabel( "Date", mainglayout_wid );
 		mainglayout->addWidget( title, 0, 2 );
 		font = title->font();
 		font.setBold( true );
@@ -251,13 +251,13 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject
 	for( int xx = 0; xx < list->size(); ++xx )
 	{
 		//Make a label, add it to the layout and place it into the right position.
-		mainglayout->addWidget( new QLabel( list->at( xx ).getSender(), mainglayout_wid, "from-value" ), xx + 1, 0 );
-		mainglayout->addWidget( new QLabel( list->at( xx ).getSubject(), mainglayout_wid, "subject-value" ), xx + 1, 1 );
+		mainglayout->addWidget( new QLabel( list->at( xx ).getSender(), mainglayout_wid ), xx + 1, 0 );
+		mainglayout->addWidget( new QLabel( list->at( xx ).getSubject(), mainglayout_wid ), xx + 1, 1 );
 		if( date )
 		{
 			QDateTime tijd;
 			tijd.setTime_t( list->at( xx ).getDate() );
-			mainglayout->addWidget( new QLabel( tijd.toString(), mainglayout_wid, "date-value" ), xx + 1, 2 );
+			mainglayout->addWidget( new QLabel( tijd.toString(), mainglayout_wid ), xx + 1, 2 );
 		}
 	}
 	
@@ -279,6 +279,7 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	bool hasFg = _fgColour[ index ] && _fgColour[ index ]->isValid();
 	
 	QPixmap pixmap;
+	QPalette palette = label->palette();
 	
 	if( label->movie() ) //Delete movie pointer
 		delete label->movie();
@@ -303,8 +304,10 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 		if( hasBg )
 		{
 			label->setPixmap( calcComplexPixmap( pixmap, *_fgColour[ index ], _fonts[ index ], count ) );
-			label->setBackgroundMode( Qt::FixedColor );
-			label->setPaletteBackgroundColor( *_bgColour[ index ] );
+			//label->setBackgroundMode( Qt::FixedColor );
+			//label->setPaletteBackgroundColor( *_bgColour[ index ] );
+			label->setBackgroundRole( QPalette::Window );
+			palette.setColor( label->backgroundRole(), *_bgColour[ index ] );
 		} else
 		{
 			label->setPixmap( calcComplexPixmap( pixmap, *_fgColour[ index ], _fonts[ index ], count ) );
@@ -314,11 +317,14 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	
 	if( hasBg )
 	{
-		label->setBackgroundMode( Qt::FixedColor );
-		label->setPaletteBackgroundColor( *_bgColour[ index ] );
+		//label->setBackgroundMode( Qt::FixedColor );
+		//label->setPaletteBackgroundColor( *_bgColour[ index ] );
+		label->setBackgroundRole( QPalette::Window );
+		palette.setColor( label->backgroundRole(), *_bgColour[ index ] );
 	} else
 	{
-		label->setBackgroundMode( Qt::X11ParentRelative );
+		//label->setBackgroundMode( Qt::X11ParentRelative );
+		label->setBackgroundRole( QPalette::NoRole );
 	}
 	
 	if( hasIcon )
@@ -330,10 +336,15 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	{
 		if( _fonts[ index ] )
 			label->setFont( *_fonts[ index ] );
-		label->setPaletteForegroundColor( *_fgColour[ index ] );
+		palette.setColor( label->foregroundRole(), *_fgColour[ index ] );
+		//label->setPaletteForegroundColor( *_fgColour[ index ] );
 		label->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
 		label->setText( QString::number( count ) );
 	}
+
+	label->setPalette( palette );
+	label->setAutoFillBackground( label->backgroundRole() != QPalette::NoRole );
+	//TODO: fix transparent background (failes when non-transparent is showed first)
 	
 	if( hasFg || hasBg || hasIcon || hasAnim )
 		label->show();
@@ -346,7 +357,7 @@ QPixmap BoxContainerItem::calcComplexPixmap( const QPixmap &icon, const QColor& 
 {
 	QPixmap result( icon );
 	QPixmap numberPixmap( icon.size() );
-	QImage iconImage( icon.convertToImage() );
+	QImage iconImage( icon.toImage() );
 	QImage numberImage;
 	QRgb *rgbline;
 	QPainter p;
@@ -354,7 +365,7 @@ QPixmap BoxContainerItem::calcComplexPixmap( const QPixmap &icon, const QColor& 
 	//Make a transparent number; first make a white number on a black background.
 	//This pixmap also is the base alpha-channel, the foreground colour is added later.
 	numberPixmap.fill( Qt::black );
-	p.begin( &numberPixmap, false );
+	p.begin( &numberPixmap );
 	p.setPen( Qt::white );
 	if( font )
 		p.setFont( *font );
@@ -362,10 +373,9 @@ QPixmap BoxContainerItem::calcComplexPixmap( const QPixmap &icon, const QColor& 
 	p.end();
 
 	//Convert to image and add the alpha channel.
-	numberImage = numberPixmap.convertToImage();
+	numberImage = numberPixmap.toImage();
 	if( numberImage.depth() != 32 ) //Make sure depth is 32 (and thus can have an alpha channel)
-		numberImage = numberImage.convertDepth( 32 );
-	numberImage.setAlphaBuffer( true ); //Enable alpha channel
+		numberImage = numberImage.convertToFormat( QImage::Format_ARGB32 );
 	for( int xx = 0; xx < numberImage.height(); ++xx )
 	{
 		rgbline = (QRgb*)numberImage.scanLine( xx );
@@ -379,7 +389,7 @@ QPixmap BoxContainerItem::calcComplexPixmap( const QPixmap &icon, const QColor& 
 
 	//Merge icon and number and convert to result.
 	KIconEffect::overlay( iconImage, numberImage );
-	result.convertFromImage( iconImage );
+	result.fromImage( iconImage );
 	
 	return result;
 }

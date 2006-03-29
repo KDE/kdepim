@@ -68,7 +68,7 @@ void KIO_Protocol::readEntries( QMap< QString, QString >* map ) const
 		QStringList::Iterator it;
 		for( it = list.begin(); it != list.end(); ++it )
 		{
-			int split = (*it).find( '=' );
+			int split = (*it).indexOf( '=', 0, Qt::CaseSensitive );
 
 			map->insert( (*it).left( split ), (*it).right( (*it).length() - split - 1 ) );
 		}

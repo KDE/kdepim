@@ -176,7 +176,7 @@ public:
 	 *
 	 * @return a list of authentication strings.
 	 */
-	virtual QStringList authList() const { return QStringList::split( '|', "Plain", false ); }
+	virtual QStringList authList() const { return QString( "Plain" ).split( '|', QString::KeepEmptyParts, Qt::CaseSensitive ); }
 
 	/**
 	 * This function can manipulate a KUrl which is used after it for connecting.

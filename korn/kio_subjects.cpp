@@ -168,7 +168,7 @@ void KIO_Subjects::slotReadSubject( KornMailSubject* subject )
 void KIO_Subjects::slotFinished( KIO_Single_Subject* item )
 {
 	item->deleteLater();
-	_jobs->remove( item );
+	_jobs->removeAll( item );
 	
 	_kio->emitReadSubjectsProgress( _jobs->count( ) );
 	
