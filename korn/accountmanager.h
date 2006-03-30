@@ -151,9 +151,10 @@ private:
 	
 	static KornSubjectsDlg *_subjectsDlg;
 	
-private:
+protected:
 	int totalMessages();
 	bool hasNewMessages();
+private:
 	void playSound( const QString& );
 private slots:
 	void slotChanged( int, KMailDrop* );

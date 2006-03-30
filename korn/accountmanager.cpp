@@ -236,16 +236,12 @@ void AccountManager::playSound( const QString& file )
 
 void AccountManager::slotChanged( int count, KMailDrop* mailDrop )
 {
+	bool newMessage;
+	
 	Dropinfo *info = _dropInfo->find( mailDrop ).value();
 	info->newMessages = count > info->msgnr || ( count == info->msgnr && info->newMessages );
 	
-	if( count > info->msgnr )
-	{
-		if( !mailDrop->soundFile().isEmpty() )
-			playSound( mailDrop->soundFile() );
-		if( !mailDrop->newMailCmd().isEmpty() )
-			runCommand( mailDrop->newMailCmd() );
-	}
+	newMessage = count > info->msgnr;
 	
 	info->msgnr = count;	
 	if( info->msgnr - info->reset < 0 )
@@ -253,6 +249,14 @@ void AccountManager::slotChanged( int count, KMailDrop* mailDrop )
 
 	setCount( totalMessages(), hasNewMessages() && totalMessages() > 0 );
 	setTooltip( getTooltip() );
+
+	if( newMessage )
+	{
+		if( !mailDrop->soundFile().isEmpty() )
+			playSound( mailDrop->soundFile() );
+		if( !mailDrop->newMailCmd().isEmpty() )
+			runCommand( mailDrop->newMailCmd() );
+	}
 }
 
 void AccountManager::slotValidChanged( bool )

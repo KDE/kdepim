@@ -166,6 +166,9 @@ void BoxContainerItem::runCommand( const QString& cmd )
 {
 	KProcess *process = new KProcess;
 	process->setUseShell( true );
+	if( hasNewMessages() )
+		process->setEnvironment( "HASNEWMESSAGES", "yes" );
+	process->setEnvironment( "NUMBEROFMESSAGES", QString::number( totalMessages() ) );
 	*process << cmd;
 	connect( process, SIGNAL( processExited (KProcess *) ), this, SLOT( processExited( KProcess * ) ) );
 	process->start();

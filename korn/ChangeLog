@@ -1,3 +1,8 @@
+2006-03-30 Mart Kelder <mart.kde@hccnet.nl>
+	* Added variables to the run command option:
+	  - $HASNEWMESSAGES is set to 'yes' if there are new messages;
+	  - $NUMBEROFMESSAGES contains the total number of messages of that box
+
 2000-06-14 Rik Hemsley <rik@kde.org>
   * More porting to KDE/Qt 2. Shitloads to do, took all day :(
   * Compiles cleanly with -DQT_NO_ASCII_CAST -DQT_NO_CAST_ASCII
