@@ -143,7 +143,6 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     PhoneEditWidget *mPhoneEditWidget;
     KLineEdit *mURLEdit;
     KLineEdit *mBlogEdit;
-//    KLineEdit *mIMAddressEdit;
     QPushButton *mCategoryButton;
     KLineEdit *mCategoryEdit;
     SecrecyWidget *mSecrecyWidget;
