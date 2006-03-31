@@ -572,7 +572,10 @@ void AddresseeEditorWidget::save()
 
   mAddressee.setRole( mRoleEdit->text() );
   mAddressee.setOrganization( mOrgEdit->text() );
-  mAddressee.setUrl( KURL( mURLEdit->text().stripWhiteSpace() ) );
+  QString homepage = mURLEdit->text().stripWhiteSpace();
+  if( !homepage.startsWith("http") )
+    homepage = "http://" + homepage;
+  mAddressee.setUrl( KURL( homepage ) );
   if ( !mBlogEdit->text().isEmpty() )
     mAddressee.insertCustom( "KADDRESSBOOK", "BlogFeed", mBlogEdit->text() );
   else
