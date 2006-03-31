@@ -280,7 +280,7 @@ void ImageButton::contextMenuEvent( QContextMenuEvent *event )
 
 void ImageButton::load()
 {
-  KURL url = KFileDialog::getOpenURL( QString(), QString(), this );
+  KURL url = KFileDialog::getOpenURL( QString(), KImageIO::pattern(), this );
   if ( url.isValid() ) {
     if ( mImageLoader ) {
       bool ok = false;
