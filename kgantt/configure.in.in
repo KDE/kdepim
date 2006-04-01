@@ -1,0 +1,3 @@
+dnl Only used by the korganizer projectview plugin which isn't compiled either.
+
+DO_NOT_COMPILE="$DO_NOT_COMPILE kgantt"
