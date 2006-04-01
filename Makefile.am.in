@@ -19,7 +19,7 @@ COMPILE_AFTER_libksieve = kmail
 #
 COMPILE_BEFORE_libkpimidentities = libkdepim kleopatra
 COMPILE_BEFORE_kleopatra = qgpgme libkpgp libkleo 
-COMPILE_BEFORE_korganizer = libkdepim libkpimidentities kgantt
+COMPILE_BEFORE_korganizer = libkdepim libkpimidentities
 COMPILE_BEFORE_kaddressbook = libkdepim kleopatra akregator
 COMPILE_BEFORE_kandy = libkdepim
 COMPILE_BEFORE_kmail= libkdepim libkpimidentities kleopatra libkpgp libkmime indexlib

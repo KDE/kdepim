@@ -49,8 +49,6 @@ There is also quite an amount of infrastructure in this package:
 * libkcal/libical: a basic iCalendar protocol implementation, see RFCs 2245,2246
 * libkpimexchange: connecting to Exchange2000 servers
 * kabc/frontend: A GUI frontend for libkabc, not intended for end users.
-* kgantt: lib to display and manage Gantt diagrams used by the project view
-          plugin of KOrganizer
 * kdgantt: alternative lib for Gantt diagrams, used by the free/busy view of
            KOrganizer (yes, we should decide for one of the Gantt libs)
 * ksync: library for syncing collections of data entries
