@@ -379,7 +379,7 @@ void KMobileProtocol::listAddressBook(const QString &devName, const QString &res
 #if 0
   	QString content = m_dev.readAddress(devName, i);
         if ( rx.search( content ) < 0 )
-		name = QString::null;
+                name.clear();
 	else
 		name = "_" + rx.cap(1);
 #endif
