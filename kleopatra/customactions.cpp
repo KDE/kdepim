@@ -32,6 +32,7 @@
 
 #include "customactions.h"
 
+#include <kcombobox.h>
 #include <ktoolbar.h>
 #include <kauthorized.h>
 
@@ -43,10 +44,16 @@ LabelAction::LabelAction( const QString & text,  KActionCollection * parent,
 			  const char* name )
   : KAction( text, QIcon(), KShortcut(), 0, 0, parent, name )
 {
-
+  setToolBarWidgetFactory( this );
 }
 
-int LabelAction::plug( QWidget * widget, int index ) {
+QWidget* LabelAction::createToolBarWidget( QToolBar * parent )
+{
+  return new QLabel( text(), parent, "kde toolbar widget" );
+}
+
+#warning How to port the Kiosk stuff below?
+/*int LabelAction::plug( QWidget * widget, int index ) {
   if ( !KAuthorized::authorizeKAction( name() ) )
     return -1;
   if ( widget->inherits( "KToolBar" ) ) {
@@ -60,17 +67,32 @@ int LabelAction::plug( QWidget * widget, int index ) {
   }
 
   return KAction::plug( widget, index );
-}
+}*/
 
 LineEditAction::LineEditAction( const QString & text, KActionCollection * parent,
 				QObject * receiver, const char * member, const char * name )
   : KAction( text, QIcon(), KShortcut(), 0, 0, parent, name ),
     _le(0), _receiver(receiver), _member(member)
 {
-
+  setToolBarWidgetFactory( this );
 }
 
-int LineEditAction::plug( QWidget * widget, int index ) {
+QWidget* LineEditAction::createToolBarWidget( QToolBar * parent )
+{
+  _le = new QLineEdit( parent );
+  connect( _le, SIGNAL( returnPressed() ), _receiver, _member );
+  return _le;
+}
+
+void LineEditAction::destroyToolBarWidget(QWidget* widget)
+{
+  if ( widget == _le )
+    _le = 0;
+  delete widget;
+}
+
+#warning How to port the Kiosk stuff below?
+/*int LineEditAction::plug( QWidget * widget, int index ) {
   if ( !KAuthorized::authorizeKAction( name() ) )
     return -1;
   if ( widget->inherits( "KToolBar" ) ) {
@@ -88,23 +110,29 @@ int LineEditAction::plug( QWidget * widget, int index ) {
   }
 
   return KAction::plug( widget, index );
-}
+}*/
 
 void LineEditAction::clear() {
-  _le->clear();
+  if ( _le )
+    _le->clear();
 }
 
 void LineEditAction::focusAll() {
-  _le->selectAll();
-  _le->setFocus();
+  if ( _le ) {
+    _le->selectAll();
+    _le->setFocus();
+  }
 }
 
 QString LineEditAction::text() const {
-  return _le->text();
+  if ( _le )
+    return _le->text();
+  return QString();
 }
 
 void LineEditAction::setText( const QString & txt ) {
-  _le->setText(txt);
+  if ( _le )
+    _le->setText(txt);
 }
 
 
@@ -113,10 +141,19 @@ ComboAction::ComboAction( const QStringList & lst,  KActionCollection * parent,
   : KAction( QString(), QIcon(), KShortcut(), 0, 0, parent, name ),
     _lst(lst), _receiver(receiver), _member(member)
 {
-
+  setToolBarWidgetFactory( this );
 }
 
-int ComboAction::plug( QWidget * widget, int index ) {
+QWidget* ComboAction::createToolBarWidget( QToolBar * parent )
+{
+  KComboBox* box = new KComboBox( parent );
+  box->addItems( _lst );
+  connect( box, SIGNAL( highlighted(int) ), _receiver, _member );
+  return box;
+}
+
+#warning How to port the Kiosk stuff below?
+/*int ComboAction::plug( QWidget * widget, int index ) {
   if ( !KAuthorized::authorizeKAction( name() ) )
     return -1;
   if ( widget->inherits( "KToolBar" ) ) {
@@ -129,6 +166,6 @@ int ComboAction::plug( QWidget * widget, int index ) {
   }
 
   return KAction::plug( widget, index );
-}
+}*/
 
 #include "customactions.moc"

@@ -39,39 +39,40 @@
 
 class QLineEdit;
 
-class LabelAction : public KAction {
+class LabelAction : public KAction, public QActionWidgetFactory {
   Q_OBJECT
 public:
   LabelAction( const QString & text, KActionCollection * parent,
 	       const char* name );
 
-  int plug( QWidget * widget, int index=-1 );
+  QWidget* createToolBarWidget( QToolBar * parent );
 };
 
-class LineEditAction : public KAction {
+class LineEditAction : public KAction, public QActionWidgetFactory {
   Q_OBJECT
 public:
   LineEditAction( const QString & text, KActionCollection * parent,
 		  QObject * receiver, const char * member, const char * name );
 
-  int plug( QWidget * widget, int index=-1 );
   void clear();
   void focusAll();
   QString text() const;
   void setText( const QString & txt );
+  QWidget* createToolBarWidget( QToolBar * parent );
+  void destroyToolBarWidget( QWidget* widget );
 private:
   QLineEdit* _le;
   QObject * _receiver;
   const char * _member;
 };
 
-class ComboAction : public KAction {
+class ComboAction : public KAction, public QActionWidgetFactory {
   Q_OBJECT
 public:
   ComboAction( const QStringList & lst,  KActionCollection * parent,
 	       QObject * receiver, const char * member, const char * name );
 
-  int plug( QWidget * widget, int index=-1 );
+  QWidget* createToolBarWidget( QToolBar * parent );
 
 private:
   QStringList _lst;
