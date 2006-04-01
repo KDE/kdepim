@@ -1,5 +1,6 @@
 [Key Filter #0]
 was-validated=false
+foreground-color=105,105,105
 Name=Not validated key
 Name[ar]=مفتاح غير صالح
 Name[bg]=Невалиден ключ
@@ -79,6 +80,7 @@ Name[zh_CN]=过期密钥
 [Key Filter #2]
 was-validated=true
 is-revoked=true
+font-strikeout=true
 Name=Revoked key
 Name[ar]=مفتاح مسترد
 Name[bg]=Анулиран ключ
@@ -157,6 +159,8 @@ Name[zh_CN]=可信任的根证书
 was-validated=true
 is-root-certificate=true
 is-not-validity=ultimate
+font-bold=true
+font-italic=true
 Name=Not trusted root certificate
 Name[ar]=شهادة جذر غير موثوقة
 Name[bg]=Ненадеждно удостоверение
