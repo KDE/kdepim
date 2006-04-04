@@ -18,6 +18,8 @@
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qmultilineedit.h>
+#include <qpopupmenu.h>
+#include "mainwindow.h"
 
 karmPart::karmPart( QWidget *parentWidget, const char *widgetName,
                                   QObject *parent, const char *name )
@@ -417,6 +419,14 @@ extern "C"
 	KGlobal::locale()->insertCatalogue("karm");
         return new karmPartFactory;
     }
+}
+
+void karmPart::contextMenuRequest( QListViewItem*, const QPoint& point, int )
+{
+    QPopupMenu* pop = dynamic_cast<QPopupMenu*>(
+                          factory()->container( i18n( "task_popup" ), this ) );
+    if ( pop )
+      pop->popup( point );
 }
 
 //----------------------------------------------------------------------------

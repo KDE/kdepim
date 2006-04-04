@@ -6,6 +6,7 @@
 #include <kparts/factory.h>
 #include <karmdcopiface.h>
 #include "reportcriteria.h"
+#include <qlistview.h>
 
 class KAccel;
 class KAccelMenuWatch;
@@ -59,7 +60,6 @@ class karmPart : public KParts::ReadWritePart, virtual public KarmDCOPIface
 public:
     karmPart(QWidget *parentWidget, const char *widgetName,
              QObject *parent, const char *name);
-
     // DCOP
     void quit();
     virtual bool save();
@@ -108,6 +108,7 @@ protected:
     virtual bool saveFile();
 
 protected slots:
+    void contextMenuRequest( QListViewItem*, const QPoint& point, int );
     void fileOpen();
     void fileSaveAs();
     void slotSelectionChanged();
