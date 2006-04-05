@@ -1745,10 +1745,15 @@ imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
   {
     QString temp = (*it);
 
-    // if we have a '/' separator we'll just nuke it
     int pt = temp.find ('/');
-    if (pt > 0)
-      temp.truncate(pt);
+    if (pt > 0) 
+    {
+      if (temp.findRev ('"', pt) == -1 || temp.find('"', pt) == -1)
+      {
+        // if we have non-quoted '/' separator we'll just nuke it
+        temp.truncate(pt);
+      }
+    }
     if (temp.find ("section=", 0, false) == 0)
       _section = temp.right (temp.length () - 8);
     else if (temp.find ("type=", 0, false) == 0)
