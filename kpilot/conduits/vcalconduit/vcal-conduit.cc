@@ -90,7 +90,9 @@ KCal::Incidence *VCalConduitPrivate::findIncidence(recordid_t id)
 }
 
 KCal::Incidence *VCalConduitPrivate::findIncidence(PilotAppCategory*tosearch)
-{
+{  
+        //LR that fuzzy logic is a bad joke...
+	return 0L;
 	PilotDateEntry*entry=dynamic_cast<PilotDateEntry*>(tosearch);
 	if (!entry) return 0L;
 
@@ -286,13 +288,10 @@ KCal::Event *VCalConduit::incidenceFromRecord(KCal::Event *e, const PilotDateEnt
 
    // We don't want this, do we?
 //	e->setOrganizer(fCalendar->getEmail());
-	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 	e->setSecrecy(de->isSecret() ?
 		KCal::Event::SecrecyPrivate :
 		KCal::Event::SecrecyPublic);
 
-	e->setPilotId(de->getID());
-	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 
 	setStartEndTimes(e,de);
 	setAlarms(e,de);
@@ -307,6 +306,9 @@ KCal::Event *VCalConduit::incidenceFromRecord(KCal::Event *e, const PilotDateEnt
 
 	// used by e.g. Agendus and Datebk
 	setCategory(e, de);
+	//LR moved
+	e->setPilotId(de->getID());
+	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 
 	return e;
 }
