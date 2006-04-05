@@ -263,7 +263,12 @@ PilotRecord*VCalConduit::recordFromIncidence(PilotDateEntry*de, const KCal::Even
 	setRecurrence(de, e);
 	setExceptions(de, e);
 	de->setDescription(e->summary());
-	de->setNote(e->description());
+	//LR added support for location
+	QString description = e->description();
+	if ( !e->location().isEmpty() ) {
+	  description = "*" + e->location() +"*\n" + description;
+	}
+	de->setNote( description );
 	setCategory(de, e);
 DEBUGCONDUIT<<"-------- "<<e->summary()<<endl;
 	return de->pack();
@@ -300,9 +305,31 @@ KCal::Event *VCalConduit::incidenceFromRecord(KCal::Event *e, const PilotDateEnt
 
 	e->setSummary(de->getDescription());
 #ifdef DEBUG
-		DEBUGCONDUIT<<fname<<": DESCRIPTION: "<<de->getDescription()<<"  ---------------------------------------------------"<<endl;
+	DEBUGCONDUIT<<fname<<": DESCRIPTION: "<<de->getDescription()<<"  ---------------------------------------------------"<<endl;
 #endif
-	e->setDescription(de->getNote());
+
+	//LR added support for location
+	QString description = de->getNote().stripWhiteSpace();
+	QString location;
+	if ( description.startsWith( "*") )  { //maybe a location in the notes
+	  int firstNewLine = description.find ( "\n" );
+	  if ( firstNewLine == -1 ) { //only one line in note
+	    if ( description.endsWith( "*") ) {
+	      location = description.mid ( 1,description.length()-2);
+	      description = "";
+	    }
+
+	  } else { //more than one line
+	    if ( description.at(firstNewLine-1 ) == '*' ) {
+	      location = description.mid ( 1,firstNewLine - 2 );
+	      description = description.mid(firstNewLine+1  );
+	    }
+	  }
+	}
+
+
+	e->setLocation(location);
+	e->setDescription( description );
 
 	// used by e.g. Agendus and Datebk
 	setCategory(e, de);

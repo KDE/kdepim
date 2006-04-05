@@ -101,7 +101,10 @@ KCal::Incidence *TodoConduitPrivate::findIncidence(recordid_t id)
 
 
 KCal::Incidence *TodoConduitPrivate::findIncidence(PilotAppCategory*tosearch)
-{
+{ 
+  //LR that fuzzy logic does not make much sense...
+  return 0L;
+
 	PilotTodoEntry*entry=dynamic_cast<PilotTodoEntry*>(tosearch);
 	if (!entry) return 0L;
 
@@ -313,7 +316,12 @@ PilotRecord*TodoConduit::recordFromTodo(PilotTodoEntry*de, const KCal::Todo*todo
 	de->setDescription(todo->summary());
 
 	// what we call description pilot puts as a separate note
-	de->setNote(todo->description());
+	//LR added support for location
+	QString description = todo->description();
+	if ( !todo->location().isEmpty() ) {
+	  description = "*" + todo->location() +"*\n" + description;
+	}
+	de->setNote( description );
 
 #ifdef DEBUG
 DEBUGCONDUIT<<"-------- "<<todo->summary()<<endl;
@@ -428,7 +436,28 @@ KCal::Todo *TodoConduit::incidenceFromRecord(KCal::Todo *e, const PilotTodoEntry
 	}
 
 	e->setSummary(de->getDescription());
-	e->setDescription(de->getNote());
+
+	//LR added support for location
+	QString description = de->getNote().stripWhiteSpace();
+	QString location;
+	if ( description.startsWith( "*") )  { //maybe a location in the notes
+	  int firstNewLine = description.find ( "\n" );
+	  if ( firstNewLine == -1 ) { //only one line in note
+	    if ( description.endsWith( "*") ) {
+	      location = description.mid ( 1,description.length()-2);
+	      description = "";
+	    }
+
+	  } else { //more than one line
+	    if ( description.at(firstNewLine-1 ) == '*' ) {
+	      location = description.mid ( 1,firstNewLine - 2 );
+	      description = description.mid(firstNewLine+1  );
+	    }
+	  }
+	}
+
+	e->setLocation(location);
+	e->setDescription( description );
 
 	e->setSyncStatus(KCal::Incidence::SYNCNONE);
 
