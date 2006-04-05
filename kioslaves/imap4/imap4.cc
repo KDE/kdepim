@@ -2232,6 +2232,10 @@ IMAP4Protocol::doListEntry (const KURL & _url, const QString & myBox,
           path += item.hierarchyDelimiter();
         }
         path += mailboxName;
+        if (path.upper() == "/INBOX/") {
+            // make sure the client can rely on INBOX
+            path = path.upper();
+        }
       }
       aURL.setPath(path);
       atom.m_str = aURL.url(0, 106); // utf-8
