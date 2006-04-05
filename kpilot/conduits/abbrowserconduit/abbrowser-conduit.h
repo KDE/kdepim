@@ -242,6 +242,7 @@ private:
 	// for a local file, we need to obtain a saveTicket when opening the abook
 	Ticket*ticket;
 
+	int mFormattedNameType;
 } ;
 
 #endif

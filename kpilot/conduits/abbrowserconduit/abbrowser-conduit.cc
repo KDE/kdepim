@@ -86,6 +86,8 @@ static inline void _setPhoneNumber(Addressee &abEntry, int type, const QString &
 
 
 
+#include <kconfig.h>
+#include <kstandarddirs.h>
 
 
 AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o, const char *n, const QStringList & a):
@@ -100,6 +102,10 @@ AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o, const char *n, const QS
 	DEBUGCONDUIT<<id_conduit_address<<endl;
 #endif
 	fConduitName=i18n("Addressbook");
+
+    KConfig config( locateLocal("config", "kabcrc") );
+    config.setGroup( "General" );
+    mFormattedNameType = config.readNumEntry( "FormattedNameType", 1 );
 }
 
 
@@ -1614,7 +1620,6 @@ void AbbrowserConduit::_copyPhone(Addressee &toAbEntry,
 }
 
 
-
 void AbbrowserConduit::_copy(Addressee &toAbEntry, PilotAddress *fromPiAddr)
 {
 	FUNCTIONSETUP;
@@ -1671,6 +1676,49 @@ void AbbrowserConduit::_copy(Addressee &toAbEntry, PilotAddress *fromPiAddr)
 	QString category;
 	if (0 < cat && cat <= 15) category = fAddressAppInfo.category.name[cat];
 	_setCategory(toAbEntry, category);
+
+	if ( toAbEntry.formattedName().isEmpty() ) {
+	  // LR copied from NameEditDialog::formattedName( const KABC::Addressee &addr, int type )
+	  // we do not use 
+	  // toAbEntry.setFormattedName( NameEditDialog::formattedName( toAbEntry, mFormattedNameType ) );
+	  // because we do not want to link kaddressbook
+
+	  const KABC::Addressee &addr = toAbEntry;
+	  int type = mFormattedNameType;
+
+	  enum FormattedNameType
+	    {
+	      CustomName, // returned by @ref customFormattedName()
+	      SimpleName, // form: givenName familyName
+	      FullName,   // form: prefix givenName additionalName familyName suffix
+	      ReverseName // form: familyName, givenName
+	    };
+	  QString retval;
+	  switch ( type ) {
+	  case SimpleName:
+	    retval = addr.givenName() + " " + addr.familyName();
+	    break;
+	  case FullName:
+	    retval =addr.prefix() + " " + addr.givenName() + " " +
+	      addr.additionalName() + " " + addr.familyName() + " " +
+	      addr.suffix();
+	    break;
+	  case ReverseName:
+	    if ( !addr.familyName().isEmpty() ) {
+	      retval = addr.familyName();
+	      if ( !addr.givenName().isEmpty() )
+                retval += ", " + addr.givenName();
+	    } else
+	      retval =  addr.givenName();
+	    break;
+	  default:
+	    retval = "";
+	    break;
+	  }
+	  toAbEntry.setFormattedName( retval.stripWhiteSpace () );
+       	}
+
+
 #ifdef DEBUG
 	showAddressee(toAbEntry);
 #endif
