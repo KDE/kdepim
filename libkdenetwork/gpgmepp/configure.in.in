@@ -63,6 +63,11 @@ AC_DEFUN([KDEPIM_PATH_GPGME],
   if test $ok = yes; then
     GPGME_CFLAGS=`$GPGME_CONFIG --cflags`
     GPGME_LIBS=`$GPGME_CONFIG --libs`
+    if test "x$GPGME_LIBS" != x ; then
+      if test "x`echo $GPGME_LIBS | grep lgpg-error`" = x ; then
+        GPGME_LIBS="$GPGME_LIBS -lgpg-error"
+      fi
+    fi
     AC_MSG_RESULT([yes])
     ifelse([$2], , :, [$2])
   else
