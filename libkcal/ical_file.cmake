@@ -36,6 +36,7 @@ FILE(APPEND ${KDE_FILE_H_FILE} " $Id$\n")
 FILE(APPEND ${KDE_FILE_H_FILE} "*/\n")
 
 foreach (_current_FILE ${COMBINEDHEADERSICAL})
+    MESSAGE( ${CMAKE_SOURCE_DIR})
 	FILE(READ ${_current_FILE} _contents)
     STRING(REGEX REPLACE "#include *\"ical.*\\.h\"" "" _contents "${_contents}" )
     STRING(REGEX REPLACE "#include *\"config.*\\.h\"" "" _contents "${_contents}" )
