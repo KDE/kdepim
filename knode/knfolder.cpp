@@ -121,7 +121,7 @@ bool KNFolder::readInfo(const QString &infoPath)
 
   if(i_d>-1) {
     QFileInfo fi(infoPath);
-    QString fname=fi.absolutePath()+"/"+fi.baseName();
+    QString fname = fi.absolutePath() + '/' + fi.baseName();
     closeFiles();
     clear();
 

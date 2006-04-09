@@ -213,7 +213,7 @@ bool UUEncoded::parse()
       else
         fileName = "";
       f_ilenames.append(fileName);
-      b_ins.append(s_rc.mid(uuStart, endPos-uuStart+1)); //everything beetween "begin" and "end" is uuencoded     
+      b_ins.append(s_rc.mid(uuStart, endPos-uuStart+1)); //everything beetween "begin" and "end" is uuencoded
       m_imeTypes.append(guessMimeType(fileName));
       firstIteration=false;
 
@@ -248,7 +248,7 @@ YENCEncoded::YENCEncoded(const QByteArray &src) :
 bool YENCEncoded::yencMeta(QByteArray& src, const QByteArray& name, int* value)
 {
   bool found = false;
-  QByteArray sought=name + "=";
+  QByteArray sought=name + '=';
 
   int iPos=src.indexOf( sought);
   if (iPos>-1) {
@@ -365,8 +365,8 @@ bool YENCEncoded::parse()
           ch+=256;
         if (ch=='\r')
         {
-          if (lineLength!=yencLine && totalSize!=yencSize)          
-            break;          
+          if (lineLength!=yencLine && totalSize!=yencSize)
+            break;
           pos++;
         }
         else if (ch=='\n')
@@ -391,20 +391,20 @@ bool YENCEncoded::parse()
               ch-=64+42;
               if (ch<0)
                 ch+=256;
-              if (totalSize>=yencSize)            
-                break;            
+              if (totalSize>=yencSize)
+                break;
               binary[totalSize++]=ch;
               lineLength++;
             }
-            else            
-              break;            
+            else
+              break;
           }
           else
           {
             ch-=42;
             if (ch<0)
               ch+=256;
-            if (totalSize>=yencSize)            
+            if (totalSize>=yencSize)
               break;
             binary[totalSize++]=ch;
             lineLength++;
@@ -413,14 +413,14 @@ bool YENCEncoded::parse()
           lineStart=false;
         }
       }
-      
+
       if (!containsEnd)
       {
         success=false;
         break;
       }
       if (totalSize!=yencSize)
-      {        
+      {
         success=false;
         break;
       }
@@ -434,12 +434,12 @@ bool YENCEncoded::parse()
       }
       meta=s_rc.mid(pos, eolPos-pos);
       if (!yencMeta(meta, "size", &totalSize))
-      {        
+      {
         success=false;
         break;
       }
       if (totalSize!=yencSize)
-      {        
+      {
         success=false;
         break;
       }

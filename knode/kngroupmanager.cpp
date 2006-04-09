@@ -463,7 +463,7 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
 
   acc=g->account();
 
-  QDir dir(acc->path(),g->groupname()+"*");
+  QDir dir( acc->path(), g->groupname() + '*' );
   if (dir.exists()) {
     if (unloadHeaders(g, true)) {
       if(c_urrentGroup==g) {

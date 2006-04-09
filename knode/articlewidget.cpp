@@ -587,7 +587,7 @@ void ArticleWidget::displayHeader()
       if ( orgHdr && !orgHdr->isEmpty() ) {
         headerHtml += "&nbsp;&nbsp;(";
         headerHtml += toHtmlString( orgHdr->asUnicodeString() );
-        headerHtml += ")";
+        headerHtml += ')';
       }
     } else if ( hb->is("Date") ) {
       KMime::Headers::Date *date=static_cast<KMime::Headers::Date*>(hb);
@@ -667,7 +667,7 @@ void ArticleWidget::displayBodyBlock( const QStringList &lines )
   QString line, html;
   QString quoteChars = knGlobals.settings()->quoteCharacters().simplified();
   if (quoteChars.isEmpty())
-    quoteChars = ">";
+    quoteChars = '>';
 
   for ( QStringList::const_iterator it = lines.begin(); it != lines.end(); ++it) {
     line = (*it);
@@ -955,7 +955,7 @@ void ArticleWidget::updateContents()
 QString ArticleWidget::writeAttachmentToTempFile( KMime::Content *att, int partNum )
 {
   // more or less KMail code
-  KTempFile *tempFile = new KTempFile( QString(), "." + QString::number( partNum ) );
+  KTempFile *tempFile = new KTempFile( QString(), '.' + QString::number( partNum ) );
   tempFile->setAutoDelete( true );
   QString fname = tempFile->name();
   delete tempFile;
@@ -977,7 +977,7 @@ QString ArticleWidget::writeAttachmentToTempFile( KMime::Content *att, int partN
     attName = attName.mid( slashPos + 1 );
   if( attName.isEmpty() )
     attName = "unnamed";
-  fname += "/" + attName;
+  fname += '/' + attName;
 
   QByteArray data = att->decodedContent();
   // ### KMail does crlf2lf conversion here before writing the file

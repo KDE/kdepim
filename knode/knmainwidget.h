@@ -38,7 +38,7 @@ class KToggleAction;
 class KSelectAction;
 class KRSqueezedTextLabel;
 class KLineEdit;
-class QToolBar;
+class KToolBar;
 class KXMLGUIClient;
 class KXMLGUIFactory;
 
@@ -203,7 +203,7 @@ protected:
   KNCollectionView *c_olView;
   KNHeaderView      *h_drView;
   bool b_lockui;
-  QToolBar        *q_uicksearch;
+  KToolBar        *q_uicksearch;
   QLineEdit       *s_earchLineEdit;
 
   //Core
@@ -398,12 +398,14 @@ private:
 };
 
 
+namespace KNode {
+
 /** Dialog to request a message ID. */
 class  FetchArticleIdDlg : public KDialogBase
 {
     Q_OBJECT
 public:
-    FetchArticleIdDlg(QWidget *parent, const char */*name*/ );
+    FetchArticleIdDlg( QWidget *parent );
     QString messageId() const;
 
 protected slots:
@@ -411,5 +413,7 @@ protected slots:
 protected:
     KLineEdit *edit;
 };
+
+}
 
 #endif

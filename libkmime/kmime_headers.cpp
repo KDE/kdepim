@@ -531,7 +531,7 @@ QString MessageID::asUnicodeString()
 
 void MessageID::generate(const QByteArray &fqdn)
 {
-  m_id="<"+uniqueString()+"@"+fqdn+">";
+  m_id = '<' + uniqueString() + '@' + fqdn + '>';
 }
 
 //-----</MessageID>----------------------------
@@ -648,7 +648,7 @@ QByteArray AddressField::as7BitString(bool incType)
       ret+=encodeRFC2047String(n_ame, e_ncCS, true);
     }
     if (!e_mail.isEmpty())
-      ret += " <"+e_mail+">";
+      ret += " <" + e_mail + '>';
   }
 
   return ret;
@@ -720,7 +720,7 @@ QString AddressField::asUnicodeString()
   else {
     QString s = n_ame;
     if (!e_mail.isEmpty())
-      s += " <"+e_mail+">";
+      s += " <" + e_mail + '>';
     return s;
   }
 }
@@ -849,7 +849,7 @@ QByteArray To::as7BitString(bool incType)
     if ( *it )
       ret += (*it)->as7BitString( false );
     for ( ++it; it != a_ddrList.end(); ++it )
-      ret += "," + (*it)->as7BitString( false );
+      ret += ',' + (*it)->as7BitString( false );
   }
 
   return ret;
@@ -881,7 +881,7 @@ QString To::asUnicodeString()
   if ( *it )
     ret += (*it)->asUnicodeString();
   for ( ++it; it != a_ddrList.end(); ++it )
-    ret += "," + (*it)->asUnicodeString();
+    ret += ',' + (*it)->asUnicodeString();
   return ret;
 }
 
@@ -1434,9 +1434,9 @@ void ContentType::setParameter(const QByteArray &name, const QByteArray &value, 
   QByteArray param;
 
   if(doubleQuotes)
-    param=name+"=\""+value+"\"";
+    param = name + "=\"" + value + '\"';
   else
-    param=name+"="+value;
+    param = name + '=' + value;
 
   pos1=QString(p_arams).indexOf(name, 0, Qt::CaseInsensitive);
   if(pos1==-1) {
@@ -1548,7 +1548,7 @@ QByteArray CDisposition::as7BitString(bool incType)
       ret+="; filename="+tmp;
     } else {
       // FIXME: encoded words can't be enclosed in quotes!!
-      ret+="; filename=\""+encodeRFC2047String(f_ilename, e_ncCS)+"\"";
+      ret += "; filename=\"" + encodeRFC2047String(f_ilename, e_ncCS) + '\"';
     }
   }
 
@@ -1585,7 +1585,7 @@ QString CDisposition::asUnicodeString()
     ret="inline";
 
   if(!f_ilename.isEmpty())
-    ret+="; filename=\""+f_ilename+"\"";
+    ret += "; filename=\"" + f_ilename + '\"';
 
   return ret;
 }

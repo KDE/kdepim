@@ -246,9 +246,9 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
       break;
 
     if ((*line)[0]=='>')
-      quoted+=">"+(*line)+"\n";  // second quote level without space
+      quoted += '>' + (*line) + '\n';  // second quote level without space
     else
-      quoted+="> "+(*line)+"\n";
+      quoted += "> " +(*line) + '\n';
   }
 
   if ( knGlobals.settings()->rewrap() ) {  //rewrap original article

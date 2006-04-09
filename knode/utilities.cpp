@@ -335,7 +335,7 @@ QString KNHelper::rewrapStringList(QStringList text, int wrapAt, QChar quoteChar
       if(thisLine.isEmpty() || (thisPrefix!=lastPrefix) || thisLine.contains("  ") || thisLine.contains('\t'))
         appendTextWPrefix(quoted, leftover, wrapAt, lastPrefix);
       else
-        thisLine.prepend(leftover+" ");
+        thisLine.prepend( leftover + ' ' );
       leftover.clear();
     }
 

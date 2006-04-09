@@ -133,8 +133,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   vlay->setMargin( 0 );
   h_drView = new KNHeaderView( dummy );
 
-#warning Cannot use a KToolBar here, it will be deleted by KMainWindow::createGUI()
-  q_uicksearch = new QToolBar( dummy );
+  q_uicksearch = new KToolBar( dummy );
   KAction *resetQuickSearch = new KAction( i18n( "Reset Quick Search" ),
                                            QApplication::isRightToLeft()
                                            ? "clear_left"
@@ -498,7 +497,7 @@ void KNMainWidget::openURL(const KUrl &url)
       if (g) {
         if ( !ArticleWindow::raiseWindowForArticle( groupname.toLatin1() ) ) { //article not yet opened
           KNRemoteArticle *a=new KNRemoteArticle(g);
-          QString messageID = "<"+groupname+">";
+          QString messageID = '<' + groupname + '>';
           a->messageID()->from7BitString(messageID.toLatin1());
           ArticleWindow *awin = new ArticleWindow( a );
           awin->show();
@@ -1820,7 +1819,8 @@ void KNMainWidget::slotFetchArticleWithID()
   if( !g_rpManager->currentGroup() )
     return;
 
-  FetchArticleIdDlg *dlg = new FetchArticleIdDlg(this, "messageid" );
+  FetchArticleIdDlg *dlg = new FetchArticleIdDlg( this );
+  dlg->setObjectName( "messageid" );
 
   if (dlg->exec()) {
     QString id = dlg->messageId().simplified();
@@ -1871,9 +1871,10 @@ KXMLGUIFactory* KNMainWidget::factory() const
 //--------------------------------
 
 
-FetchArticleIdDlg::FetchArticleIdDlg(QWidget *parent, const char */*name*/ )
-    :KDialogBase(parent, 0, true, i18n("Fetch Article with ID"), KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Ok)
+KNode::FetchArticleIdDlg::FetchArticleIdDlg( QWidget *parent ) :
+    KDialogBase ( i18n("Fetch Article with ID"), KDialog::Ok | KDialog::Cancel, KDialog::Ok, KDialog::Cancel, parent )
 {
+  setModal( true );
   KHBox *page = makeHBoxMainWidget();
 
   QLabel *label = new QLabel(i18n("&Message-ID:"),page);
@@ -1881,17 +1882,17 @@ FetchArticleIdDlg::FetchArticleIdDlg(QWidget *parent, const char */*name*/ )
   label->setBuddy(edit);
   edit->setFocus();
   enableButtonOK( false );
-  setButtonOK( i18n("&Fetch") );
+  setButtonText( KDialog::Ok, i18n("&Fetch") );
   connect( edit, SIGNAL(textChanged( const QString & )), this, SLOT(slotTextChanged(const QString & )));
   KNHelper::restoreWindowSize("fetchArticleWithID", this, QSize(325,66));
 }
 
-QString FetchArticleIdDlg::messageId() const
+QString KNode::FetchArticleIdDlg::messageId() const
 {
     return edit->text();
 }
 
-void FetchArticleIdDlg::slotTextChanged(const QString &_text )
+void KNode::FetchArticleIdDlg::slotTextChanged(const QString &_text )
 {
     enableButtonOK( !_text.isEmpty() );
 }
