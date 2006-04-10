@@ -156,6 +156,7 @@ macro_additional_clean_files( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ic
 add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h 
 		COMMAND 
 		${CMAKE_COMMAND} 
+		-DTOP:FILEPATH=${CMAKE_SOURCE_DIR}
 		-DKDE_FILE_H_FILE:FILEPATH=${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h
 		-P ${CMAKE_SOURCE_DIR}/libkcal/ical_file.cmake )
 
