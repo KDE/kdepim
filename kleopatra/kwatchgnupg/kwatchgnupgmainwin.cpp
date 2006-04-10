@@ -119,7 +119,7 @@ void KWatchGnuPGMainWindow::createActions()
 
 void KWatchGnuPGMainWindow::configureShortcuts()
 {
-  KKeyDialog::configure( actionCollection(), this );
+  KKeyDialog::configure( actionCollection(), KKeyChooser::LetterShortcutsAllowed, this );
 }
 
 void KWatchGnuPGMainWindow::slotConfigureToolbars()
