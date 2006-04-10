@@ -79,7 +79,7 @@ KNConvert::KNConvert(const QString &version)
 Unfortunately this version uses a different format for some data-files, so \
 in order to keep your existing data it is necessary to convert it first. This is \
 now done automatically by KNode. If you want to, a backup of your existing data \
-will be created before the conversion starts.", KNODE_VERSION), w_1);
+will be created before the conversion starts.", QString(KNODE_VERSION)), w_1);
   w1L->addMultiCellWidget(l1, 0,0, 0,2);
 
   c_reateBkup=new QCheckBox(i18n("Create backup of old data"), w_1);

@@ -17,7 +17,6 @@
 
 #include <kstdaction.h>
 #include <kconfig.h>
-#include <kaccel.h>
 #include <kaction.h>
 
 #include "knarticle.h"

@@ -15,6 +15,7 @@
 
 #include <qlayout.h>
 //Added by qt3to4:
+#include <Q3Accel>
 #include <QEvent>
 #include <QDropEvent>
 #include <QLabel>
@@ -24,7 +25,6 @@
 #include <ktoolbar.h>
 
 #include <kinputdialog.h>
-#include <kaccel.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
 #include <kedittoolbar.h>
@@ -38,6 +38,7 @@
 #include <kcmdlineargs.h>
 #include <k3listviewsearchline.h>
 #include <khbox.h>
+#include <kstdaccel.h>
 #include <kxmlguiclient.h>
 #include <kxmlguifactory.h>
 
@@ -243,7 +244,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
 
 KNMainWidget::~KNMainWidget()
 {
-  delete a_ccel;
+  //delete a_ccel;
 
   h_drView->clear(); //avoid some random crashes in KNHdrViewItem::~KNHdrViewItem()
 
@@ -399,8 +400,8 @@ void KNMainWidget::secureProcessEvents()
   b_lockui = false;
   if ( mbar )
     mbar->setEnabled(true);
-  a_ccel->setEnabled(true);
 #warning Port me!
+//  a_ccel->setEnabled(true);
 //   if ( naccel )
 //     naccel->setEnabled(true);
   removeEventFilter(this);
@@ -522,14 +523,14 @@ void KNMainWidget::configChanged()
 
 void KNMainWidget::initActions()
 {
-  a_ccel=new KAccel(this);
+  //a_ccel=new KAccel(this);
 
   //navigation
   a_ctNavNextArt            = new KAction( KGuiItem(i18n("&Next Article"), "next",
-                              i18n("Go to next article")), "N;Right", h_drView,
+                              i18n("Go to next article")), KShortcut("N;Right"), h_drView,
                               SLOT(nextArticle()), actionCollection(), "go_nextArticle" );
   a_ctNavPrevArt            = new KAction( KGuiItem(i18n("&Previous Article"), "previous",
-                              i18n("Go to previous article")), "P;Left" , h_drView,
+                              i18n("Go to previous article")), KShortcut("P;Left"), h_drView,
                               SLOT(prevArticle()), actionCollection(), "go_prevArticle" );
   a_ctNavNextUnreadArt      = new KAction(i18n("Next Unread &Article"), "1rightarrow", Qt::ALT+Qt::SHIFT+Qt::Key_Space , this,
                               SLOT(slotNavNextUnreadArt()), actionCollection(), "go_nextUnreadArticle");

@@ -86,7 +86,7 @@ void KNMainWindow::slotNewToolbarConfig()
 
 void KNMainWindow::slotConfKeys()
 {
-  KKeyDialog::configure(actionCollection(), true);
+  KKeyDialog::configure(actionCollection(), KKeyChooser::LetterShortcutsAllowed);
 }
 
 bool KNMainWindow::queryClose()

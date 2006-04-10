@@ -18,11 +18,11 @@
 #include <kdialogbase.h>
 #include <kcmodule.h>
 
-#include "nntpaccountdialog_base.h"
-#include "nntpaccountlistwidget_base.h"
-#include "postnewstechnicalwidget_base.h"
-#include "readnewsgeneralwidget_base.h"
-#include "smtpaccountwidget_base.h"
+#include "ui_nntpaccountdialog_base.h"
+#include "ui_nntpaccountlistwidget_base.h"
+#include "ui_postnewstechnicalwidget_base.h"
+#include "ui_readnewsgeneralwidget_base.h"
+#include "ui_smtpaccountwidget_base.h"
 
 #include <QList>
 //Added by qt3to4:

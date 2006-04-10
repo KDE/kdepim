@@ -34,7 +34,6 @@
 using KPIM::AddressesDialog;
 #include "recentaddresses.h"
 using KRecentAddress::RecentAddresses;
-#include <kaccel.h>
 #include <kcharsets.h>
 #include <kmessagebox.h>
 #include <kabc/addresseedialog.h>
@@ -1397,7 +1396,7 @@ void KNComposer::slotUpdateCursorPos()
 
 void KNComposer::slotConfKeys()
 {
-  KKeyDialog::configure(actionCollection(), this, true);
+  KKeyDialog::configure(actionCollection(), KKeyChooser::LetterShortcutsAllowed, this, true);
 }
 
 

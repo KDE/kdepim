@@ -31,8 +31,8 @@ class Q3ListViewItem;
 class QLineEdit;
 class QSplitter;
 
+class K3ListView;
 class KUrl;
-class KAccel;
 class KAction;
 class KToggleAction;
 class KSelectAction;
@@ -197,7 +197,7 @@ protected:
   void closeCurrentThread();
 
   //GUI
-  KAccel          *a_ccel;
+  //KAccel          *a_ccel;
   KNProgress      *p_rogBar;
   KNode::ArticleWidget *mArticleViewer;
   KNCollectionView *c_olView;

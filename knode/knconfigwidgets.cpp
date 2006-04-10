@@ -54,9 +54,9 @@
 #include "knfiltermanager.h"
 #include "knarticlefilter.h"
 #include "knscoring.h"
-#include "postnewscomposerwidget_base.h"
-#include "readnewsnavigationwidget_base.h"
-#include "readnewsviewerwidget_base.h"
+#include "ui_postnewscomposerwidget_base.h"
+#include "ui_readnewsnavigationwidget_base.h"
+#include "ui_readnewsviewerwidget_base.h"
 #include "settings.h"
 #include <kpgp.h>
 
