@@ -105,7 +105,7 @@ alarm message:</para>
 send, &kalarm; displays nothing.</para>
 
 <para>&kalarm; can run in either of two modes:
-<quote>continuous</quote> (the default) where it runs from the &kde;
+<quote>continuous</quote> (the default) where it runs from the
 system tray, or <quote>on-demand</quote> where it runs as and when
 required (with the option of displaying an independent system tray
 icon).</para>
