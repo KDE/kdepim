@@ -254,7 +254,7 @@ void CertManager::createActions() {
   action = KStdAction::redisplay( this, SLOT(slotRedisplay()), actionCollection() );
   // work around the fact that the stdaction has no shortcut
   KShortcut reloadShortcut = KStdAccel::shortcut(KStdAccel::Reload);
-  reloadShortcut.append(KKey(Qt::CTRL + Qt::Key_R));
+  reloadShortcut.append(Qt::CTRL + Qt::Key_R);
   action->setShortcut( reloadShortcut );
 
   connectEnableOperationSignal( this, action );
@@ -379,7 +379,7 @@ void CertManager::updateImportActions( bool enable ) {
 }
 
 void CertManager::slotEditKeybindings() {
-  KKeyDialog::configure( actionCollection(), true );
+  KKeyDialog::configure( actionCollection(), KKeyChooser::LetterShortcutsAllowed );
 }
 
 void CertManager::slotShowConfigurationDialog() {
