@@ -93,7 +93,7 @@ void ResourceLocalConfig::saveSettings( KRES::Resource *resource )
     for( int i = 0; file.exists(); ++i )
       file.setFileName( saveFolder + "/std" + QString::number(i) + ".ics" );
     
-    KMessageBox::information( this, i18n( "You did not specify a URL for this resource. Therefore, the resource will be saved in %1. It is still possible to change this location by editing the resource properties." ).arg( file.fileName() ) );
+    KMessageBox::information( this, i18n( "You did not specify a URL for this resource. Therefore, the resource will be saved in %1. It is still possible to change this location by editing the resource properties.", file.fileName() ) );
     
     url = file.fileName();
   }

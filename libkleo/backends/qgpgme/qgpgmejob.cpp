@@ -255,23 +255,25 @@ char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*d
   // DF: here, description is the key fingerprint, twice, then "17 0". Not really descriptive.
   //     So I'm ignoring QString::fromLocal8Bit( description ) )
   QString msg = previousWasBad ?
-                i18n( "You need a passphrase to unlock the secret key for user:<br/> %1 (retry)" ) :
-                i18n( "You need a passphrase to unlock the secret key for user:<br/> %1" );
-  msg = msg.arg( QString::fromUtf8( useridHint ) ) + "<br/><br/>";
+                i18n( "You need a passphrase to unlock the secret key for user:<br/> %1 (retry)",
+                      QString::fromUtf8( useridHint ) ) :
+                i18n( "You need a passphrase to unlock the secret key for user:<br/> %1",
+                      QString::fromUtf8( useridHint ) );
+  msg += "<br/><br/>";
   msg.prepend( "<qt>" );
   msg += i18n( "This dialog will reappear every time the passphrase is needed. For a more secure solution that also allows caching the passphrase, use gpg-agent." ) + "<br/>";
   const QString gpgAgent = KStandardDirs::findExe( "gpg-agent" );
   if ( !gpgAgent.isEmpty() ) {
-    msg += i18n( "gpg-agent was found in %1, but does not appear to be running." )
-           .arg( gpgAgent );
+    msg += i18n( "gpg-agent was found in %1, but does not appear to be running." ,
+             gpgAgent );
   } else {
-    msg += i18n( "gpg-agent is part of gnupg-%1, which you can download from %2" )
-           .arg( "1.9" )
-           .arg( "http://www.gnupg.org/download" );  // add #gnupg2 if you can make this a real link
+    msg += i18n( "gpg-agent is part of gnupg-%1, which you can download from %2" ,
+             QString("1.9") ,
+             QString("http://www.gnupg.org/download") );  // add #gnupg2 if you can make this a real link
   }
   msg += "<br/>";
-  msg += i18n( "For information on how to set up gpg-agent, see %1" )
-         .arg( "http://kmail.kde.org/kmail-pgpmime-howto.html" );
+  msg += i18n( "For information on how to set up gpg-agent, see %1" ,
+           QString("http://kmail.kde.org/kmail-pgpmime-howto.html") );
   msg += "<br/><br/>";
   msg += i18n( "Enter passphrase:" );
   Kleo::PassphraseDialog dlg( msg, i18n("Passphrase Dialog") );

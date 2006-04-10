@@ -174,7 +174,7 @@ kDebug() << m_str_response << endl;
       // TODO: Set the error of the job
       m_response.clear();
       m_response << QVariant( i18n( "Unknown type of XML markup received. "
-                    "Markup: \n %1" ).arg( m_str_response ) );
+                    "Markup: \n %1", m_str_response ) );
       m_responseType = XMLRPCUnknownResponse;
     }
 

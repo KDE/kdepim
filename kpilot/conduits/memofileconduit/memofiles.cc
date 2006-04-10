@@ -765,13 +765,13 @@ QString Memofiles::getResults()
 	QString result;
 
 	if (_countNewToLocal > 0)
-		result += i18n("%1 new to filesystem. ").arg(_countNewToLocal);
+		result += i18n("%1 new to filesystem. ", _countNewToLocal);
 
 	if (_countModifiedToLocal > 0)
-		result += i18n("%1 changed to filesystem. ").arg(_countModifiedToLocal);
+		result += i18n("%1 changed to filesystem. ", _countModifiedToLocal);
 
 	if (_countDeletedToLocal > 0)
-		result += i18n("%1 deleted from filesystem. ").arg(_countDeletedToLocal);
+		result += i18n("%1 deleted from filesystem. ", _countDeletedToLocal);
 
 	return result;
 }

@@ -81,7 +81,7 @@ ConduitConfigBase::~ConduitConfigBase()
 	FUNCTIONSETUP;
 
 	return i18n("<qt>The <i>%1</i> conduit's settings have been changed. Do you "
-		"want to save the changes before continuing?</qt>").arg(this->conduitName());
+		"want to save the changes before continuing?</qt>", this->conduitName());
 }
 
 /* virtual */ bool ConduitConfigBase::maybeSave()
@@ -92,7 +92,7 @@ ConduitConfigBase::~ConduitConfigBase()
 
 	int r = KMessageBox::questionYesNoCancel(fWidget,
 		maybeSaveText(),
-		i18n("%1 Conduit").arg(this->conduitName()), KStdGuiItem::save(), KStdGuiItem::discard());
+		i18n("%1 Conduit", this->conduitName()), KStdGuiItem::save(), KStdGuiItem::discard());
 	if (r == KMessageBox::Cancel) return false;
 	if (r == KMessageBox::Yes) commit();
 	return true;

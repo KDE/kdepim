@@ -152,8 +152,8 @@ private:
                               : i18n( "OpenPGP" );
     // second one is implementation name (gpg, gpgsm...)
     const QString impName = protocol ? protocol->displayName() : i18n( "failed" );
-    return i18n( "Items in Kleo::BackendConfigWidget listview (1: protocol; 2: implementation name)",
-                 "%1 (%2)" ).arg( protoName, impName );
+    return i18nc( "Items in Kleo::BackendConfigWidget listview (1: protocol; 2: implementation name)",
+                  "%1 (%2)", protoName, impName );
   }
 
   const CryptoBackend::Protocol* mProtocol; // can be 0

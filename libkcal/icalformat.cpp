@@ -118,7 +118,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
     kDebug(5800) << "ICalFormat::save() errno: " << strerror( file.status() )
               << endl;
     setException( new ErrorFormat( ErrorFormat::SaveError,
-                  i18n( "Error saving to '%1'." ).arg( fileName ) ) );
+                  i18n( "Error saving to '%1'.", fileName ) ) );
     return false;
   }
 
@@ -128,7 +128,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
 
   if ( !file.close() ) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
-                 i18n("Could not save '%1'").arg(fileName)));
+                 i18n("Could not save '%1'", fileName)));
     return false;
   }
 

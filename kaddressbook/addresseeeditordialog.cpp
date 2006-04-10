@@ -150,7 +150,7 @@ void AddresseeEditorDialog::slotCancel()
 void AddresseeEditorDialog::setTitle( const KABC::Addressee &addr )
 {
   if ( !addr.realName().isEmpty() )
-    setCaption( i18n( "Edit Contact '%1'" ).arg( addr.realName() ) );
+    setCaption( i18n( "Edit Contact '%1'", addr.realName() ) );
 }
 
 #include "addresseeeditordialog.moc"

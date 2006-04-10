@@ -37,7 +37,7 @@ Exception::~Exception()
 
 QString Exception::message()
 {
-  if (mMessage.isEmpty()) return i18n("%1 Error").arg(CalFormat::application());
+  if (mMessage.isEmpty()) return i18n("%1 Error", CalFormat::application());
   else return mMessage;
 }
 

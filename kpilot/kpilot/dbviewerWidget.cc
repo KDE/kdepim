@@ -190,12 +190,12 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 		if (!fDB || !fDB->isDBOpen())
 		{
 			fDBInfo->setText(i18n("<B>Warning:</B> Cannot read "
-				"database file %1.").arg(currentDB));
+				"database file %1.", currentDB));
 			return;
 		}
 		dbinfo=fDB->getDBInfo();
-		display.append(i18n("<B>Database:</B> %1, %2 records<BR>")
-			.arg(QString::fromLatin1(dbinfo.name)).arg(fDB->recordCount()));
+		display.append(i18n("<B>Database:</B> %1, %2 records<BR>",
+			 QString::fromLatin1(dbinfo.name), fDB->recordCount()));
 		char buff[5];
 		set_long(buff, dbinfo.type);
 		buff[4]='\0';
@@ -203,7 +203,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 		set_long(buff, dbinfo.creator);
 		buff[4]='\0';
 		QString cr = QString::fromLatin1(buff);
-		display.append(i18n("<B>Type:</B> %1, <B>Creator:</B> %2<br><br>").arg(tp).arg(cr));
+		display.append(i18n("<B>Type:</B> %1, <B>Creator:</B> %2<br><br>", tp, cr));
 
 		int currentRecord = 0;
 		PilotRecord *pilotRec;
@@ -247,33 +247,33 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 		if (!pf)
 		{
 			fDBInfo->setText(i18n("<B>Warning:</B> Cannot read "
-				"application file %1.").arg(dbname));
+				"application file %1.", dbname));
 			return;
 		}
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 		if (pi_file_get_info(pf,&dbinfo))
 		{
 			fDBInfo->setText(i18n("<B>Warning:</B> Cannot read "
-				"application file %1.").arg(dbname));
+				"application file %1.", dbname));
 			return;
 		}
 #else
 		pi_file_get_info(pf,&dbinfo);
 #endif
-		display.append(i18n("<B>Application:</B> %1<BR><BR>").arg(dbname));
+		display.append(i18n("<B>Application:</B> %1<BR><BR>", dbname));
 	}
 	enableWidgets(currentDBtype==eDatabase);
 
 	QDateTime ttime;
 
 	ttime.setTime_t(dbinfo.createDate);
-	display.append(i18n("Created: %1<BR>").arg(ttime.toString()));
+	display.append(i18n("Created: %1<BR>", ttime.toString()));
 
 	ttime.setTime_t(dbinfo.modifyDate);
-	display.append(i18n("Modified: %1<BR>").arg(ttime.toString()));
+	display.append(i18n("Modified: %1<BR>", ttime.toString()));
 
 	ttime.setTime_t(dbinfo.backupDate);
-	display.append(i18n("Backed up: %1<BR>").arg(ttime.toString()));
+	display.append(i18n("Backed up: %1<BR>", ttime.toString()));
 
 	fDBInfo->setText(display);
 }

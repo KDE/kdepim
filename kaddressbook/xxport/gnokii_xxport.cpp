@@ -146,8 +146,8 @@ static QString businit(void)
 			"The returned error message was:<br><b>%1</b><br><br>"
 			"You might try to run \"gnokii --identify\" on the command line to "
 			"check any cable/transport issues and to verify if your gnokii "
-			"configuration is correct.</center></qt>")
-			.arg(gn_error_print(error));
+			"configuration is correct.</center></qt>",
+			 gn_error_print(error));
 	}
 
 	// identify phone
@@ -248,7 +248,7 @@ static QString buildPhoneInfoString( const gn_memory_status &memstat )
 		.arg(format.arg(i18n("Revision")).arg(GN_FROM(revision)))
 		.arg(format.arg(i18n("IMEI")).arg(GN_FROM(imei)))
 		.arg(format.arg(i18n("Phonebook status"))
-			   .arg(i18n("%1 out of %2 contacts used").arg(memstat.used).arg(memstat.used+memstat.free)));
+			   .arg(i18n("%1 out of %2 contacts used", memstat.used, memstat.used+memstat.free)));
 }
 
 static QString buildMemoryTypeString( gn_memory_type memtype )
@@ -284,10 +284,10 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
   QString s, country;
 
   progress->setMaximum(memstat.used);
-  m_progressDlg->setLabel(i18n("<qt>Importing <b>%1</b> contacts from <b>%2</b> of the Mobile Phone.<br><br>%3</qt>")
-		.arg(memstat.used)
-		.arg(buildMemoryTypeString(memtype))
-		.arg(buildPhoneInfoString(memstat)) );
+  m_progressDlg->setLabel(i18n("<qt>Importing <b>%1</b> contacts from <b>%2</b> of the Mobile Phone.<br><br>%3</qt>",
+		 memstat.used,
+		 buildMemoryTypeString(memtype),
+		 buildPhoneInfoString(memstat)) );
 
   int num_read = 0;
 
@@ -790,10 +790,10 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 	progress->setValue(entries_written);
 	m_progressDlg->setButtonText(i18n("&Stop Export"));
 	m_progressDlg->setLabel(i18n("<qt>Exporting <b>%1</b> contacts to the <b>%2</b> "
-			"of the Mobile Phone.<br><br>%3</qt>")
-		.arg(list.count())
-		.arg(buildMemoryTypeString(memtype))
-		.arg(buildPhoneInfoString(memstat)) );
+			"of the Mobile Phone.<br><br>%3</qt>",
+		 list.count(),
+		 buildMemoryTypeString(memtype),
+		 buildPhoneInfoString(memstat)) );
 
 	// Now run the loop...
 	phone_entry_no = 1;

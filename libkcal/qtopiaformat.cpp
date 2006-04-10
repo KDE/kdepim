@@ -293,7 +293,7 @@ bool QtopiaFormat::save( Calendar *calendar, const QString &fileName )
   QFile file( fileName );
   if (!file.open( QIODevice::WriteOnly ) ) {
     setException(new ErrorFormat(ErrorFormat::SaveError,
-                 i18n("Could not open file '%1'").arg(fileName)));
+                 i18n("Could not open file '%1'", fileName)));
     return false;
   }
   QTextStream ts( &file );

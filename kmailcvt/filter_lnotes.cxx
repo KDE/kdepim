@@ -62,7 +62,7 @@ void FilterLNotes::import(FilterInfo *info) {
     for ( QStringList::Iterator filename = filenames.begin(); filename != filenames.end(); ++filename ) {
 
         ++currentFile;
-        info->addLog( i18n("Importing emails from %1").arg(*filename) );
+        info->addLog( i18n("Importing emails from %1", *filename) );
         ImportLNotes( *filename );
         inf->setOverall( 100 * currentFile / totalFiles );
         if ( info->shouldTerminate() )
@@ -86,7 +86,7 @@ void FilterLNotes::ImportLNotes(const QString& file) {
     QFile f(file);
 
     if (! f.open( QIODevice::ReadOnly ) ) {
-        inf->alert( i18n("Unable to open %1, skipping").arg( file ) );
+        inf->alert( i18n("Unable to open %1, skipping", file ) );
     } else {
 
         int ch = 0;
@@ -107,7 +107,7 @@ void FilterLNotes::ImportLNotes(const QString& file) {
                     // open temp output file
                     tempfile = new KTempFile;
                     state = 1;
-                    inf->setCurrent(i18n("Message %1").arg(n++));
+                    inf->setCurrent(i18n("Message %1", n++));
                     if ( inf->shouldTerminate() )
                         return;
                     // fall through

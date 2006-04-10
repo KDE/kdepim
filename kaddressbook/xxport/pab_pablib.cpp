@@ -46,7 +46,7 @@ adr_t A;
 bool ret;
 
    if (!in.isOpen()) {QString msg;
-     msg=i18n("Cannot open %1 for reading").arg(pabfile);
+     msg=i18n("Cannot open %1 for reading", pabfile);
      // info->alert(msg);
      return false;
    }
@@ -243,7 +243,7 @@ bool pab::knownPAB(void)
 content_t id;
    id=go(0);
    if (id!=PAB_FILE_ID) {QString msg;
-     msg=i18n("%1 has no PAB id that I know of, cannot convert this").arg(pabfile);
+     msg=i18n("%1 has no PAB id that I know of, cannot convert this", pabfile);
      // info->alert(msg);
      return false;
    }

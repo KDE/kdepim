@@ -165,7 +165,7 @@ bool ResourceKABC::doLoad()
       email_1 = (*it).fullEmail();
       uid_1 = (*it).uid();
       if (name_1.isEmpty()) name_1 = (*it).realName();
-      summary = i18n("%1's birthday").arg( name_1 );
+      summary = i18n("%1's birthday", name_1 );
 
 
       Event *ev = new Event();
@@ -264,9 +264,9 @@ bool ResourceKABC::doLoad()
       name_2 = spouse.nickName();
       if ( name_2.isEmpty() )
         name_2 = spouse.givenName();
-      summary = i18n("insert names of both spouses", "%1's & %2's anniversary").arg( name_1 ).arg( name_2 );
+      summary = i18nc("insert names of both spouses", "%1's & %2's anniversary", name_1, name_2 );
     } else {
-      summary = i18n("only one spouse in addressbook, insert the name", "%1's anniversary").arg( name_1 );
+      summary = i18nc("only one spouse in addressbook, insert the name", "%1's anniversary", name_1 );
     }
 
     Event *ev = new Event();

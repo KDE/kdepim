@@ -419,7 +419,7 @@ bool PilotSerialDatabase::createDatabase(long creator, long type, int cardno, in
 		PilotAppCategory::codec()->fromUnicode(getDBName()), &db);
 	if (res<0) {
 		kError() <<k_funcinfo
-			<< i18n("Cannot create database %1 on the handheld").arg(getDBName())<<endl;
+			<< i18n("Cannot create database %1 on the handheld", getDBName())<<endl;
 		return false;
 	}
 	// TODO: Do I have to open it explicitly???

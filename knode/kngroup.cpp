@@ -1062,7 +1062,7 @@ QString KNGroup::prepareForExecution()
   if (knGlobals.groupManager()->loadHeaders(this))
     return QString();
   else
-    return i18n("Cannot load saved headers: %1").arg(groupname());
+    return i18n("Cannot load saved headers: %1", groupname());
 }
 
 //***************************************************************************

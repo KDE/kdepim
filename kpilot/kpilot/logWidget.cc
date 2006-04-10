@@ -138,7 +138,7 @@ LogWidget::LogWidget(QWidget * parent) :
 	Q3HBox *h = new Q3HBox(this);
 	h->setSpacing(SPACING);
 	QPushButton *b = new QPushButton(
-		i18n("Clear the text of HotSync messages","Clear Log"),
+		i18nc("Clear the text of HotSync messages","Clear Log"),
 		h);
 	b->setWhatsThis(i18n("<qt>Clears the list of messages from the "
 		"current HotSync.</qt>"));
@@ -378,7 +378,7 @@ bool LogWidget::saveFile(const QString &saveFileName)
 	{
 		int r = KMessageBox::questionYesNo(this,
 			i18n("<qt>Cannot open the file &quot;%1&quot; "
-				"for writing; try again?</qt>"),
+				"for writing; try again?</qt>", saveFileName),
 			i18n("Cannot Save"), i18n("Try Again"), i18n("Do Not Try"));
 
 		if (r==KMessageBox::Yes) return false;

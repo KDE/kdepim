@@ -385,19 +385,19 @@ bool DOCConduit::doSync(docSyncInfo &sinfo)
 		}
 
 		if (!postSyncAction(database, sinfo, res))
-			emit logError(i18n("Unable to install the locally created PalmDOC %1 to the handheld.")
-				.arg(QString::fromLatin1(sinfo.dbinfo.name)));
+			emit logError(i18n("Unable to install the locally created PalmDOC %1 to the handheld.",
+				 QString::fromLatin1(sinfo.dbinfo.name)));
 		if (!res)
-			emit logError(i18n("Conversion of PalmDOC \"%1\" failed.")
-				.arg(QString::fromLatin1(sinfo.dbinfo.name)));
+			emit logError(i18n("Conversion of PalmDOC \"%1\" failed.",
+				 QString::fromLatin1(sinfo.dbinfo.name)));
 //		disconnect(&docconverter, SIGNAL(logError(const QString &)), SIGNAL(logError(const QString &)));
 //		disconnect(&docconverter, SIGNAL(logMessage(const QString &)), SIGNAL(logMessage(const QString &)));
 //		KPILOT_DELETE(database);
 	}
 	else
 	{
-		emit logError(i18n("Unable to open or create the database %1.")
-			.arg(QString::fromLatin1(sinfo.dbinfo.name)));
+		emit logError(i18n("Unable to open or create the database %1.",
+			 QString::fromLatin1(sinfo.dbinfo.name)));
 	}
 	return res;
 }
@@ -675,7 +675,7 @@ void DOCConduit::syncDatabases() {
 		case eSyncDelete:
 		case eSyncPDAToPC:
 		case eSyncPCToPDA:
-			emit logMessage(i18n("Synchronizing text \"%1\"").arg(sinfo.handheldDB));
+			emit logMessage(i18n("Synchronizing text \"%1\"", sinfo.handheldDB));
 			if (!doSync(sinfo)) {
 				// The sync could not be done, so inform the user (the error message should probably issued inside doSync)
 #ifdef DEBUG

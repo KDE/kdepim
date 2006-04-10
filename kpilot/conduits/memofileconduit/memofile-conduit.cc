@@ -112,7 +112,7 @@ MemofileConduit::~MemofileConduit()
 	}
 
 	setFirstSync( _memofiles->isFirstSync() );
-	addSyncLogEntry(i18n(" Syncing with %1.").arg(_memo_directory));
+	addSyncLogEntry(i18n(" Syncing with %1.", _memo_directory));
 
 	if ( (syncMode() == SyncAction::SyncMode::eCopyHHToPC) || _memofiles->isFirstSync() ) {
 		addSyncLogEntry(i18n(" Copying Pilot to PC..."));
@@ -626,13 +626,13 @@ QString MemofileConduit::getResults()
 	QString result;
 
 	if (_countNewToPilot > 0)
-		result += i18n("%1 new to Palm. ").arg(_countNewToPilot);
+		result += i18n("%1 new to Palm. ", _countNewToPilot);
 
 	if (_countModifiedToPilot > 0)
-		result += i18n("%1 changed to Palm. ").arg(_countModifiedToPilot);
+		result += i18n("%1 changed to Palm. ", _countModifiedToPilot);
 
 	if (_countDeletedToPilot > 0)
-		result += i18n("%1 deleted from Palm. ").arg(_countDeletedToPilot);
+		result += i18n("%1 deleted from Palm. ", _countDeletedToPilot);
 
 	result += _memofiles->getResults();
 

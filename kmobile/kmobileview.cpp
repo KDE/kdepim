@@ -131,7 +131,7 @@ QStringList KMobileView::deviceNames()
 void KMobileView::removeDevice( QString deviceName )
 {
    delete findDevice(deviceName);
-   emit signalChangeStatusbar( i18n("%1 removed").arg(deviceName) );
+   emit signalChangeStatusbar( i18n("%1 removed", deviceName) );
 }
 
 void KMobileView::configDevice( QString deviceName )
@@ -155,8 +155,8 @@ bool KMobileView::connectDevice( QString deviceName )
    connected = dev->m_dev->connectDevice();
    MUTEX_UNLOCK(dev->m_dev);
    emit signalChangeStatusbar(
-	connected ? i18n("Connection to %1 established").arg(deviceName)
-	          : i18n("Connection to %1 failed").arg(deviceName) );
+	connected ? i18n("Connection to %1 established", deviceName)
+	          : i18n("Connection to %1 failed", deviceName) );
    return connected;
 }
 
@@ -170,8 +170,8 @@ bool KMobileView::disconnectDevice( QString deviceName )
    disconnected = dev->m_dev->disconnectDevice();
    MUTEX_UNLOCK(dev->m_dev);
    emit signalChangeStatusbar(
-	disconnected ? i18n("%1 disconnected").arg(deviceName)
-	             : i18n("Disconnection of %1 failed").arg(deviceName) );
+	disconnected ? i18n("%1 disconnected", deviceName)
+	             : i18n("Disconnection of %1 failed", deviceName) );
    return disconnected;
 }
 
@@ -303,8 +303,8 @@ QString KMobileView::readAddress( QString deviceName, int index )
    if (str.isEmpty())
         return QString::null;
 
-   emit signalChangeStatusbar( i18n("Read addressbook entry %1 from %2")
-		.arg(index).arg(deviceName) );
+   emit signalChangeStatusbar( i18n("Read addressbook entry %1 from %2",
+		 index, deviceName) );
 
    return str;
 }
@@ -325,8 +325,8 @@ bool KMobileView::storeAddress( QString deviceName, int index, QString vcard, bo
    err = dev->m_dev->storeAddress(index, adr, append);
    MUTEX_UNLOCK(dev->m_dev);
    emit signalChangeStatusbar(
-	err ? i18n("Storing contact %1 on %2 failed").arg(index).arg(deviceName)
-	    : i18n("Contact %1 stored on %2").arg(index).arg(deviceName) );
+	err ? i18n("Storing contact %1 on %2 failed", index, deviceName)
+	    : i18n("Contact %1 stored on %2", index, deviceName) );
    return (err == 0);
 }
 
@@ -367,8 +367,8 @@ QString KMobileView::readNote( QString deviceName, int index )
    MUTEX_UNLOCK(dev->m_dev);
    if (err)
 	return QString::null;
-   emit signalChangeStatusbar( i18n("Read note %1 from %2")
-		.arg(index).arg(deviceName) );
+   emit signalChangeStatusbar( i18n("Read note %1 from %2",
+		 index, deviceName) );
    return note;
 }
 
@@ -384,8 +384,8 @@ bool KMobileView::storeNote( QString deviceName, int index, QString note )
    MUTEX_UNLOCK(dev->m_dev);
    if (err)
 	return false;
-   emit signalChangeStatusbar( i18n("Stored note %1 to %2")
-		.arg(index).arg(deviceName) );
+   emit signalChangeStatusbar( i18n("Stored note %1 to %2",
+		 index, deviceName) );
    return true;
 }
 

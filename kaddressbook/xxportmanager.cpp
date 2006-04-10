@@ -77,7 +77,7 @@ void XXPortManager::slotImport( const QString &identifier, const QString &data )
 {
   KAB::XXPort *obj = mXXPortObjects[ identifier ];
   if ( !obj ) {
-    KMessageBox::error( mCore->widget(), i18n( "<qt>No import plugin available for <b>%1</b>.</qt>" ).arg( identifier ) );
+    KMessageBox::error( mCore->widget(), i18n( "<qt>No import plugin available for <b>%1</b>.</qt>", identifier ) );
     return;
   }
 
@@ -101,7 +101,7 @@ void XXPortManager::slotExport( const QString &identifier, const QString &data )
 {
   KAB::XXPort *obj = mXXPortObjects[ identifier ];
   if ( !obj ) {
-    KMessageBox::error( mCore->widget(), i18n( "<qt>No export plugin available for <b>%1</b>.</qt>" ).arg( identifier ) );
+    KMessageBox::error( mCore->widget(), i18n( "<qt>No export plugin available for <b>%1</b>.</qt>", identifier ) );
     return;
   }
 

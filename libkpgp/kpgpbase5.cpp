@@ -157,8 +157,8 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
 		      "to are not trusted. No encryption done.");
       else
 	errMsg = i18n("The following key(s) are not trusted:\n%1\n"
-                      "Their owner(s) will not be able to decrypt the message.")
-		     .arg(QString::fromLocal8Bit( aStr ));
+                      "Their owner(s) will not be able to decrypt the message.",
+		      QString::fromLocal8Bit( aStr ));
       status |= ERROR;
       status |= BADKEYS;
     }
@@ -168,8 +168,8 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
     index = error.find(':',index);
     int index2 = error.find('\n',index);
 
-    errMsg = i18n("Missing encryption key(s) for:\n%1")
-      .arg(QString::fromLocal8Bit(error.mid(index,index2-index)));
+    errMsg = i18n("Missing encryption key(s) for:\n%1",
+       QString::fromLocal8Bit(error.mid(index,index2-index)));
 //    errMsg = QString("Missing encryption key(s) for: %1")
 //      .arg(error.mid(index,index2-index));
     status |= ERROR;

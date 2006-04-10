@@ -340,8 +340,8 @@ void KNNntpClient::doFetchNewHeaders()
   target->setLastFetchCount(0);
 
   sendSignal(TSdownloadNew);
-  errorPrefix=i18n("No new articles could be retrieved for\n%1/%2.\nThe following error occurred:\n")
-              .arg(account.server()).arg(target->groupname());
+  errorPrefix=i18n("No new articles could be retrieved for\n%1/%2.\nThe following error occurred:\n",
+               account.server(), target->groupname());
 
   cmd="GROUP ";
   cmd+=target->groupname().utf8();
@@ -486,8 +486,8 @@ void KNNntpClient::doFetchArticle()
       msgId = msgId.mid( 1, msgId.length() - 2 );
       job->setErrorString( errorPrefix + getCurrentLine() +
         i18n("<br><br>The article you requested is not available on your news server."
-             "<br>You could try to get it from <a href=\"http://groups.google.com/groups?selm=%1\">groups.google.com</a>.")
-          .arg( msgId ) );
+             "<br>You could try to get it from <a href=\"http://groups.google.com/groups?selm=%1\">groups.google.com</a>.",
+            msgId ) );
     }
     return;
   }
@@ -643,7 +643,7 @@ bool KNNntpClient::openConnection()
         #ifndef NDEBUG
         qDebug("knode: Authorization failed");
         #endif
-        job->setErrorString(i18n("Authentication failed.\nCheck your username and password.\n\n%1").arg(getCurrentLine()));
+        job->setErrorString(i18n("Authentication failed.\nCheck your username and password.\n\n%1", getCurrentLine()));
         job->setAuthError(true);
         closeConnection();
         return false;
@@ -700,7 +700,7 @@ bool KNNntpClient::sendCommand(const QByteArray &cmd, int &rep)
       //qDebug("knode: Password required");
 
       if (!account.pass().length()) {
-        job->setErrorString(i18n("Authentication failed.\nCheck your username and password.\n\n%1").arg(getCurrentLine()));
+        job->setErrorString(i18n("Authentication failed.\nCheck your username and password.\n\n%1", getCurrentLine()));
         job->setAuthError(true);
         closeConnection();
         return false;
@@ -721,7 +721,7 @@ bool KNNntpClient::sendCommand(const QByteArray &cmd, int &rep)
       if (!KNProtocolClient::sendCommand(cmd,rep))    // retry the original command
         return false;
     } else {
-      job->setErrorString(i18n("Authentication failed.\nCheck your username and password.\n\n%1").arg(getCurrentLine()));
+      job->setErrorString(i18n("Authentication failed.\nCheck your username and password.\n\n%1", getCurrentLine()));
       job->setAuthError(true);
       closeConnection();
       return false;
@@ -734,7 +734,7 @@ bool KNNntpClient::sendCommand(const QByteArray &cmd, int &rep)
 void KNNntpClient::handleErrors()
 {
   if (errorPrefix.isEmpty())
-    job->setErrorString(i18n("An error occurred:\n%1").arg(getCurrentLine()));
+    job->setErrorString(i18n("An error occurred:\n%1", getCurrentLine()));
   else
     job->setErrorString(errorPrefix + getCurrentLine());
 

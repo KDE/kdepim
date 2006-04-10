@@ -105,7 +105,7 @@ int main(int argc,char **argv)
     } else {
       bool success = icalendarFormat.save( &cal, outputFile );
       if ( !success ) {
-        std::cerr << i18n( "Error saving to '%1'." ).arg( outputFile ).toLocal8Bit()
+        std::cerr << i18n( "Error saving to '%1'.", outputFile ).toLocal8Bit()
                   << std::endl;
         return 1;
       }

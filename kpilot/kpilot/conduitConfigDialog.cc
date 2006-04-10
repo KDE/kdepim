@@ -548,7 +548,7 @@ void ConduitConfigWidget::loadAndConfigure(Q3ListViewItem *p) // ,bool exec)
 			i18n("<qt>This is an internal action which has no "
 			"configuration options. "
 			"The action's description is: <i>%1</i> "
-			"</qt>").arg(p->text(CONDUIT_COMMENT)));
+			"</qt>", p->text(CONDUIT_COMMENT)));
 		return;
 	}
 
@@ -738,8 +738,8 @@ void ConduitConfigWidget::warnNoExec(const Q3ListViewItem * p)
 
 	QString msg = i18n("<qt>No library could be "
 		"found for the conduit %1. This means that the "
-		"conduit was not installed properly.</qt>")
-		.arg(p->text(CONDUIT_NAME));
+		"conduit was not installed properly.</qt>",
+		 p->text(CONDUIT_NAME));
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": No library for "
@@ -755,8 +755,8 @@ void ConduitConfigWidget::warnNoLibrary(const Q3ListViewItem *p)
 
 	QString msg = i18n("<qt>There was a problem loading the library "
 		"for the conduit %1. This means that the "
-		"conduit was not installed properly.</qt>")
-		.arg(p->text(CONDUIT_NAME));
+		"conduit was not installed properly.</qt>",
+		 p->text(CONDUIT_NAME));
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": Can't load library for "

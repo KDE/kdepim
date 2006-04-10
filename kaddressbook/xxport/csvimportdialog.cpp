@@ -508,7 +508,7 @@ void CSVImportDialog::fillTable()
   else if ( code == Guess ) {
     QTextCodec* codec = QTextCodec::codecForContent( mFileArray.data(), mFileArray.size() );
     if ( codec ) {
-      KMessageBox::information( this, i18n( "Using codec '%1'" ).arg( QLatin1String( codec->name() ) ), i18n( "Encoding" ) );
+      KMessageBox::information( this, i18n( "Using codec '%1'", QLatin1String( codec->name() ) ), i18n( "Encoding" ) );
       inputStream.setCodec( codec );
     }
   }
@@ -668,7 +668,7 @@ void CSVImportDialog::reloadCodecs()
   for ( int i = 0; ( codec = QTextCodec::codecForIndex( i ) ); i++ )
     mCodecs.append( codec );
 
-  mCodecCombo->insertItem( i18n( "Local (%1)" ).arg( QLatin1String( QTextCodec::codecForLocale()->name() ) ), Local );
+  mCodecCombo->insertItem( i18n( "Local (%1)", QLatin1String( QTextCodec::codecForLocale()->name() ) ), Local );
   mCodecCombo->insertItem( i18n( "[guess]" ), Guess );
   mCodecCombo->insertItem( i18n( "Latin1" ), Latin1 );
   mCodecCombo->insertItem( i18n( "Unicode" ), Uni );

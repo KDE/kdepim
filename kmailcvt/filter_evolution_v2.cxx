@@ -93,14 +93,14 @@ void FilterEvolution_v2::import(FilterInfo *info)
             if (temp_mailfile.endsWith(".cmeta") || temp_mailfile.endsWith(".ev-summary") ||
                 temp_mailfile.endsWith(".ibex.index") || temp_mailfile.endsWith(".ibex.index.data") ) {}
             else {
-                info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
+                info->addLog( i18n("Start import file %1...", temp_mailfile ) );
                 importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString());
             }
         }
 
-        info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
+        info->addLog( i18n("Finished importing emails from %1", mailDir ));
         if(count_duplicates > 0) {
-            info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
+            info->addLog( i18np("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
         }
         if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
     }
@@ -129,7 +129,7 @@ void FilterEvolution_v2::importDirContents(FilterInfo *info, const QString& dirN
         if (temp_mailfile.endsWith(".cmeta") || temp_mailfile.endsWith(".ev-summary") ||
             temp_mailfile.endsWith(".ibex.index") || temp_mailfile.endsWith(".ibex.index.data") ) {}
         else {
-            info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
+            info->addLog( i18n("Start import file %1...", temp_mailfile ) );
             importMBox(info, (dirName + "/" + temp_mailfile) , KMailRootDir, KMailSubDir);
         }
     }
@@ -160,7 +160,7 @@ void FilterEvolution_v2::importMBox(FilterInfo *info, const QString& mboxName, c
     QFile mbox(mboxName);
     bool first_msg = true;
     if (!mbox.open(QIODevice::ReadOnly)) {
-        info->alert(i18n("Unable to open %1, skipping").arg(mboxName));
+        info->alert(i18n("Unable to open %1, skipping", mboxName));
     } else {
         QFileInfo filenameInfo(mboxName);
 

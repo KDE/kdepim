@@ -407,7 +407,7 @@ void Groupwise::slotReadAddressBookProcessedSize( int size )
 void Groupwise::slotServerErrorMessage( const QString & serverErrorMessage, bool fatal )
 {
   kDebug() << "Groupwise::slotJobErrorMessage()" << serverErrorMessage << ( fatal ? ", FATAL!" : ", proceeding" ) << endl;
-  errorMessage( i18n( "An error occurred while communicating with the GroupWise server:\n%1" ).arg( serverErrorMessage ) );
+  errorMessage( i18n( "An error occurred while communicating with the GroupWise server:\n%1", serverErrorMessage ) );
 }
 
 #include "groupwise.moc"

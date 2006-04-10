@@ -153,8 +153,8 @@ void Kleo::CryptoBackendFactory::scanForBackends( QStringList * reasons ) {
       QString reason;
       if ( (*it)->supportsProtocol( protocol ) && !(*it)->checkForProtocol( protocol, &reason ) ) {
         if ( reasons ) {
-          reasons->push_back( i18n("While scanning for %1 support in backend %2:")
-                              .arg( protocol, (*it)->displayName() ) );
+          reasons->push_back( i18n("While scanning for %1 support in backend %2:",
+                                   protocol, (*it)->displayName() ) );
           reasons->push_back( "  " + reason );
         }
       }

@@ -65,11 +65,11 @@ void FilterPlain::import(FilterInfo *info)
          */
         if(info->removeDupMsg) {
             if(! addMessage( info, "PLAIN-" + dir.dirName(), dir.filePath(*mailFile) )) {
-                info->addLog( i18n("Could not import %1").arg( *mailFile ) );
+                info->addLog( i18n("Could not import %1", *mailFile ) );
             }
         } else {
             if( ! addMessage_fastImport( info, "PLAIN-" + dir.dirName(), dir.filePath(*mailFile) )) {
-                info->addLog( i18n("Could not import %1").arg( *mailFile ) );
+                info->addLog( i18n("Could not import %1", *mailFile ) );
             }
         }
 
@@ -78,9 +78,9 @@ void FilterPlain::import(FilterInfo *info)
         if ( info->shouldTerminate() ) break;
     }
 
-    info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
+    info->addLog( i18n("Finished importing emails from %1", mailDir ));
     if (count_duplicates > 0) {
-        info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
+        info->addLog( i18np("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
     }
     if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
     

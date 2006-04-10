@@ -102,13 +102,13 @@ CheckUser::~CheckUser()
 		if (pilotUserEmpty)
 		{
 			QString defaultUserName =
-				i18n("A common name", "John Doe");
+				i18nc("A common name", "John Doe");
 
 			QString q = i18n("<qt>Neither KPilot nor the "
 				"handheld have a username set. "
 				"They <i>should</i> be set. "
 				"Should KPilot set them to a default value "
-				"(<i>%1</i>)?</qt>").arg(defaultUserName);
+				"(<i>%1</i>)?</qt>", defaultUserName);
 
 			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserNone" */) ==
 				KMessageBox::Yes)
@@ -125,8 +125,8 @@ CheckUser::~CheckUser()
 		{
 			QString q = i18n("<qt>The handheld has a username set "
 				"(<i>%1</i>) but KPilot does not. Should "
-				"KPilot use this username in future?").
-				arg(pilotUserName);
+				"KPilot use this username in future?", 
+				pilotUserName);
 
 			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserSome" */ ) ==
 				KMessageBox::Yes)
@@ -143,7 +143,7 @@ CheckUser::~CheckUser()
 			QString q = i18n("<qt>KPilot has a username set "
 				"(<i>%1</i>) but the handheld does not. "
 				"Should KPilot's username be set in the "
-				"handheld as well?").arg(guiUserName);
+				"handheld as well?", guiUserName);
 
 			if (questionYesNo(q, i18n("User Unknown") /* ,"askUserSome" */) ==
 				KMessageBox::Yes)
@@ -169,9 +169,9 @@ CheckUser::~CheckUser()
 					"however, KPilot says you are %2."
 					"Which of these is the correct name?\n"
 					"If you click on Cancel, the sync will proceed, "
-					"but the usernames will not be changed.").
-					arg(pilotUserName).
-					arg(guiUserName);
+					"but the usernames will not be changed.", 
+					pilotUserName, 
+					guiUserName);
 
 				int r = questionYesNoCancel(q,
 					i18n("User Mismatch"),
@@ -274,8 +274,8 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	if (questionYesNo(i18n("<qt>Are you sure you want to completely "
 				"restore your Pilot from the backup directory "
 				"(<i>%1</i>)? This will erase any information "
-				"you currently have on your Pilot.</qt>").
-			arg(dirname),
+				"you currently have on your Pilot.</qt>", 
+			dirname),
 			i18n("Restore Pilot")) != KMessageBox::Yes)
 	{
 		emit logError(i18n("Restore <i>not</i> performed."));
@@ -301,7 +301,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		return false;
 	}
 
-	emit logProgress(i18n("Restoring %1...").arg(QString::null),1);
+	emit logProgress(i18n("Restoring %1...", QString::null),1);
 
 	for (unsigned int i = 0; i < dir.count(); i++)
 	{
@@ -324,7 +324,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		{
 			kWarning() << k_funcinfo
 				<< ": Can't open " << s << endl;
-			logMessage(i18n("File '%1' cannot be read.").arg(s));
+			logMessage(i18n("File '%1' cannot be read.", s));
 			continue;
 		}
 
@@ -344,7 +344,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		{
 			kWarning() << k_funcinfo
 				<< ": Can't open " << s << endl;
-			logMessage(i18n("File '%1' cannot be read.").arg(s));
+			logMessage(i18n("File '%1' cannot be read.", s));
 		}
 
 		pi_file_close(f);
@@ -423,7 +423,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 
 	QFileInfo databaseInfo(dbi->path);
 	addSyncLogEntry(databaseInfo.fileName());
-	emit logProgress(i18n("Restoring %1...").arg(databaseInfo.fileName()),
+	emit logProgress(i18n("Restoring %1...", databaseInfo.fileName()),
 		(100*fP->fDBIndex) / (fP->fDBList.count()+1)) ;
 
 	char * fileName = qstrdup( dbi->path.utf8() );
@@ -435,8 +435,8 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		kWarning() << k_funcinfo
 			<< ": Can't open "
 			<< dbi->path << " for restore." << endl;
-		logError(i18n("Cannot open file `%1' for restore.")
-			.arg(databaseInfo.fileName()));
+		logError(i18n("Cannot open file `%1' for restore.",
+			 databaseInfo.fileName()));
 		return;
 	}
 
@@ -448,8 +448,8 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 	{
 		kWarning() << k_funcinfo
 			<< ": Couldn't  restore " << dbi->path << endl;
-		logError(i18n("Cannot restore file `%1'.")
-			.arg(databaseInfo.fileName()));
+		logError(i18n("Cannot restore file `%1'.",
+			 databaseInfo.fileName()));
 	}
 
 	pi_file_close(f);

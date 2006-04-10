@@ -80,7 +80,7 @@ PassphraseDialog::PassphraseDialog( QWidget *parent,
   if (keyID.isNull())
     label = new QLabel(i18n("Please enter your OpenPGP passphrase:"),rightArea);
   else
-    label = new QLabel(i18n("Please enter the OpenPGP passphrase for\n\"%1\":").arg(keyID),
+    label = new QLabel(i18n("Please enter the OpenPGP passphrase for\n\"%1\":", keyID),
                        rightArea);
   lineedit = new KPasswordEdit( rightArea );
   lineedit->setEchoMode(QLineEdit::Password);
@@ -472,8 +472,8 @@ void KeySelectionDialog::initKeylist( const KeyList& keyList,
     Q3ListViewItem* childItem;
 
     childItem = new Q3ListViewItem( primaryUserID, "",
-                                   i18n( "Fingerprint: %1" )
-                                   .arg( beautifyFingerprint( (*it)->primaryFingerprint() ) ) );
+                                   i18n( "Fingerprint: %1" ,
+                                     beautifyFingerprint( (*it)->primaryFingerprint() ) ) );
     if( primaryUserID->isSelected() && mListView->isMultiSelection() ) {
       mListView->setSelected( childItem, true );
     }
@@ -553,17 +553,17 @@ QString KeySelectionDialog::keyInfo( const Kpgp::Key *key ) const
   QDateTime dt;
   dt.setTime_t( key->creationDate() );
   if( remark.isEmpty() ) {
-    return " " + i18n("creation date and status of an OpenPGP key",
-                      "Creation date: %1, Status: %2")
-                     .arg( KGlobal::locale()->formatDate( dt.date(), true ) )
-                     .arg( status );
+    return " " + i18nc("creation date and status of an OpenPGP key",
+                      "Creation date: %1, Status: %2",
+                       KGlobal::locale()->formatDate( dt.date(), true ) ,
+                       status );
   }
   else {
-    return " " + i18n("creation date, status and remark of an OpenPGP key",
-                      "Creation date: %1, Status: %2 (%3)")
-                     .arg( KGlobal::locale()->formatDate( dt.date(), true ) )
-                     .arg( status )
-                     .arg( remark );
+    return " " + i18nc("creation date, status and remark of an OpenPGP key",
+                      "Creation date: %1, Status: %2 (%3)",
+                       KGlobal::locale()->formatDate( dt.date(), true ) ,
+                       status ,
+                       remark );
   }
 }
 
@@ -1025,8 +1025,8 @@ bool KeySelectionDialog::checkKeys( const QList<Q3ListViewItem*>& keys ) const
        it != keys.end();
        ++it ) {
     kDebug(5100) << "Checking key 0x" << getKeyId( *it ) << "...\n";
-    pProgressDlg->setLabel( i18n("Checking key 0x%1...")
-                            .arg( QString::fromAscii( getKeyId( *it ) ) ) );
+    pProgressDlg->setLabel( i18n("Checking key 0x%1...",
+                              QString::fromAscii( getKeyId( *it ) ) ) );
     kapp->processEvents();
     keysAllowed &= ( -1 != keyAdmissibility( *it, AllowExpensiveTrustCheck ) );
     pProgressDlg->progressBar()->advance( 1 );
@@ -1369,7 +1369,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     new QLabel( i18n("Your keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
     if( keyIDs[0].isEmpty() ) {
-      keyidsL->setText( i18n("<none> means 'no key'", "<none>") );
+      keyidsL->setText( i18nc("<none> means 'no key'", "<none>") );
     }
     else {
       keyidsL->setText( "0x" + keyIDs[0].toStringList().join( "\n0x" ) );
@@ -1426,7 +1426,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     new QLabel( i18n("Encryption keys:"), hbox );
     QLabel* keyidsL = new QLabel( hbox );
     if( (*kit).isEmpty() ) {
-      keyidsL->setText( i18n("<none> means 'no key'", "<none>") );
+      keyidsL->setText( i18nc("<none> means 'no key'", "<none>") );
     }
     else {
       keyidsL->setText( "0x" + (*kit).toStringList().join( "\n0x" ) );
@@ -1536,7 +1536,7 @@ KeyApprovalDialog::slotChangeEncryptionKey( int nr )
   KeyIDList keyIds = mKeys[nr];
   if( nr == 0 ) {
     keyIds = pgp->selectPublicKeys( i18n("Encryption Key Selection"),
-                                    i18n("if in your language something like "
+                                    i18nc("if in your language something like "
                                          "'key(s)' isn't possible please "
                                          "use the plural in the translation",
                                          "Select the key(s) which should "
@@ -1548,13 +1548,13 @@ KeyApprovalDialog::slotChangeEncryptionKey( int nr )
   }
   else {
     keyIds = pgp->selectPublicKeys( i18n("Encryption Key Selection"),
-                                    i18n("if in your language something like "
+                                    i18nc("if in your language something like "
                                          "'key(s)' isn't possible please "
                                          "use the plural in the translation",
                                          "Select the key(s) which should "
                                          "be used to encrypt the message "
-                                         "for\n%1")
-                                    .arg( mAddressLabels[nr-1]->text() ),
+                                         "for\n%1",
+                                      mAddressLabels[nr-1]->text() ),
                                     keyIds,
                                     mAddressLabels[nr-1]->text(),
                                     mAllowedKeys );

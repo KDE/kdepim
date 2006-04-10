@@ -56,7 +56,7 @@ QString ScheduleMessage::statusName(ScheduleMessage::Status status)
     case RequestUpdate:
       return i18n("Updated Request");
     default:
-      return i18n("Unknown Status: %1").arg(QString::number(status));
+      return i18n("Unknown Status: %1", status);
   }
 }
 
@@ -162,9 +162,9 @@ QString Scheduler::translatedMethodName(Method method)
     case Reply:
       return i18n("Reply");
     case Counter:
-      return i18n("counter proposal","Counter");
+      return i18nc("counter proposal","Counter");
     case Declinecounter:
-      return i18n("decline counter proposal","Decline Counter");
+      return i18nc("decline counter proposal","Decline Counter");
     default:
       return i18n("Unknown");
   }

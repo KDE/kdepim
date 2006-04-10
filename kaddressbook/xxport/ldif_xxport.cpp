@@ -72,8 +72,8 @@ KABC::Addressee::List LDIFXXPort::importContacts( const QString& ) const
 
   QFile file( fileName );
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>" );
-    KMessageBox::error( parentWidget(), msg.arg( fileName ) );
+    QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>", fileName );
+    KMessageBox::error( parentWidget(), msg );
     return addrList;
   }
 
@@ -108,9 +108,9 @@ bool LDIFXXPort::exportContacts( const KABC::AddresseeList &list, const QString&
   if ( !url.isLocalFile() ) {
     KTempFile tmpFile;
     if ( tmpFile.status() != 0 ) {
-      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.%2.</qt>" );
-      KMessageBox::error( parentWidget(), txt.arg( url.url() )
-                          .arg( strerror( tmpFile.status() ) ) );
+      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.%2.</qt>",
+                          url.url(), strerror( tmpFile.status() ) );
+      KMessageBox::error( parentWidget(), txt );
       return false;
     }
 
@@ -123,8 +123,8 @@ bool LDIFXXPort::exportContacts( const KABC::AddresseeList &list, const QString&
     QFile file( filename );
 
     if ( !file.open( QIODevice::WriteOnly ) ) {
-      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>" );
-      KMessageBox::error( parentWidget(), txt.arg( filename ) );
+      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>", filename );
+      KMessageBox::error( parentWidget(), txt );
       return false;
     }
 

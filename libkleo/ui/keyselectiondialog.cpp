@@ -244,8 +244,8 @@ namespace {
       return i18n( "OpenPGP key for %1\n"
 		   "Created: %2\n"
 		   "Expiry: %3\n"
-		   "Fingerprint: %4" )
-	.arg( uid ? QString::fromUtf8( uid ) : i18n("unknown"),
+		   "Fingerprint: %4",
+	      uid ? QString::fromUtf8( uid ) : i18n("unknown"),
 	      creation, expiry,
 	      fpr ? QString::fromLatin1( fpr ) : i18n("unknown") );
     else
@@ -253,11 +253,11 @@ namespace {
 		   "Created: %2\n"
 		   "Expiry: %3\n"
 		   "Fingerprint: %4\n"
-		   "Issuer: %5" )
-	.arg( uid ? Kleo::DN( uid ).prettyDN() : i18n("unknown"),
+		   "Issuer: %5",
+	      uid ? Kleo::DN( uid ).prettyDN() : i18n("unknown"),
 	      creation, expiry,
-	      fpr ? QString::fromLatin1( fpr ) : i18n("unknown") )
-	.arg( issuer ? Kleo::DN( issuer ).prettyDN() : i18n("unknown") );
+	      fpr ? QString::fromLatin1( fpr ) : i18n("unknown"),
+	      issuer ? Kleo::DN( issuer ).prettyDN() : i18n("unknown") );
   }
 
   const QPixmap * ColumnStrategy::pixmap( const GpgME::Key & key, int col ) const {
@@ -504,8 +504,8 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
   const QString msg = i18n( "<qt><p>An error occurred while fetching "
 			    "the keys from the backend:</p>"
-			    "<p><b>%1</b></p></qt>" )
-    .arg( QString::fromLocal8Bit( err.asString() ) );
+			    "<p><b>%1</b></p></qt>" ,
+      QString::fromLocal8Bit( err.asString() ) );
 
   KMessageBox::error( parent, msg, i18n( "Key Listing Failed" ) );
 }
@@ -564,7 +564,7 @@ void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & r
 
   if ( mTruncated > 0 )
     KMessageBox::information( this,
-			      i18n("<qt>One backend returned truncated output.<br>"
+			      i18np("<qt>One backend returned truncated output.<br>"
 				   "Not all available keys are shown</qt>",
 			           "<qt>%n backends returned truncated output.<br>"
 				   "Not all available keys are shown</qt>",

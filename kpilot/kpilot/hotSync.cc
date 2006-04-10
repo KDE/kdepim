@@ -110,8 +110,8 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 		openConduit();
 		// Let the KDE User know what's happening
 		// Pretty sure all database names are in latin1.
-		emit logMessage(i18n("Syncing database %1...")
-			.arg(PilotAppCategory::codec()->toUnicode(db.name)));
+		emit logMessage(i18n("Syncing database %1...",
+			 PilotAppCategory::codec()->toUnicode(db.name)));
 
 		kapp->processEvents();
 	}
@@ -249,7 +249,7 @@ static inline void initNoBackup(QStringList &dbnames,
 		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
 		CSL1("/");
 
-	logMessage(i18n("Backup directory: %1.").arg(fBackupDir));
+	logMessage(i18n("Backup directory: %1.", fBackupDir));
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
@@ -395,8 +395,8 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 		DEBUGCONDUIT << fname << ": Skipping database " << info.name
 			<< " (database in no-backup list)" << endl;
 #endif
-		QString s = i18n("Skipping %1")
-			.arg(PilotAppCategory::codec()->toUnicode(info.name));
+		QString s = i18n("Skipping %1",
+			 PilotAppCategory::codec()->toUnicode(info.name));
 		addSyncLogEntry(s);
 		return;
 	}
@@ -412,8 +412,8 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 		return;
 	}
 
-	QString s = i18n("Backing up: %1")
-		.arg(PilotAppCategory::codec()->toUnicode(info.name));
+	QString s = i18n("Backing up: %1",
+		 PilotAppCategory::codec()->toUnicode(info.name));
 	addSyncLogEntry(s);
 
 	if (!createLocalDatabase(&info))
@@ -421,8 +421,8 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 		kError() << k_funcinfo
 			<< ": Couldn't create local database for "
 			<< info.name << endl;
-		addSyncLogEntry(i18n("Backup of %1 failed.\n")
-			.arg(PilotAppCategory::codec()->toUnicode(info.name)));
+		addSyncLogEntry(i18n("Backup of %1 failed.\n",
+			 PilotAppCategory::codec()->toUnicode(info.name)));
 	}
 	else
 	{
@@ -597,7 +597,7 @@ FileInstallAction::~FileInstallAction()
 
 	fTimer->start(0, false);
 
-	emit logProgress(i18n("Installing one file",
+	emit logProgress(i18np("Installing one file",
 		"Installing %n Files",fList.count()), 0);
 	return true;
 }
@@ -637,7 +637,7 @@ FileInstallAction::~FileInstallAction()
 	DEBUGCONDUIT << fname << ": Installing file " << filePath << endl;
 #endif
 
-	QString m = i18n("Installing %1").arg(fileName);
+	QString m = i18n("Installing %1", fileName);
 	emit logProgress(m,(100 * fDBIndex) / (fList.count()+1));
 	m+=CSL1("\n");
 	emit addSyncLogEntry(m,false /* Don't print in KPilot's log. */ );
@@ -660,8 +660,8 @@ FileInstallAction::~FileInstallAction()
 		kWarning() << k_funcinfo << ": failed to install." << endl;
 
 
-		emit logError(i18n("Cannot install file &quot;%1&quot;.").
-			arg(fileName));
+		emit logError(i18n("Cannot install file &quot;%1&quot;.", 
+			fileName));
 	}
 	else
 	{
@@ -687,8 +687,8 @@ bool FileInstallAction::resourceOK(const QString &fileName, const QString &fileP
 
 	if (!QFile::exists(filePath))
 	{
-		emit logError(i18n("Unable to open file &quot;%1&quot;.").
-			arg(fileName));
+		emit logError(i18n("Unable to open file &quot;%1&quot;.", 
+			fileName));
 		return false;
 	}
 
@@ -697,8 +697,8 @@ bool FileInstallAction::resourceOK(const QString &fileName, const QString &fileP
 
 	if (!f)
 	{
-		emit logError(i18n("Unable to open file &quot;%1&quot;.").
-			arg(fileName));
+		emit logError(i18n("Unable to open file &quot;%1&quot;.", 
+			fileName));
 		return false;
 	}
 
@@ -706,8 +706,8 @@ bool FileInstallAction::resourceOK(const QString &fileName, const QString &fileP
 #if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
 	if (pi_file_get_info(f,&info) < 0)
 	{
-		emit logError(i18n("Unable to read file &quot;%1&quot;.").
-			arg(fileName));
+		emit logError(i18n("Unable to read file &quot;%1&quot;.", 
+			fileName));
 		return false;
 	}
 #else
@@ -725,7 +725,7 @@ bool FileInstallAction::resourceOK(const QString &fileName, const QString &fileP
 		emit logError(i18n("The database in &quot;%1&quot; has a "
 			"resource name that is longer than 31 characters. "
 			"This suggests a bug in the tool used to create the database. "
-			"KPilot cannot install this database.").arg(fileName));
+			"KPilot cannot install this database.", fileName));
 	}
 
 	return r;

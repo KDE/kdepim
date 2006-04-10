@@ -65,7 +65,7 @@ void FilterOE::import(FilterInfo *info)
     QDir dir (mailDir);
     QStringList files = dir.entryList("*.[dDmM][bB][xX]", QDir::Files, QDir::Name);
     if (files.isEmpty()) {
-        info->alert(i18n("No Outlook Express mailboxes found in directory %1.").arg(mailDir));
+        info->alert(i18n("No Outlook Express mailboxes found in directory %1.", mailDir));
         return;
     }
 
@@ -117,7 +117,7 @@ void FilterOE::importMailBox( FilterInfo *info, const QString& fileName)
     info->setFrom(mailfileinfo.fileName());
     
     if (!mailfile.open(QIODevice::ReadOnly)) {
-        info->addLog(i18n("Unable to open mailbox %1").arg(fileName));
+        info->addLog(i18n("Unable to open mailbox %1", fileName));
         return;
     }
     QDataStream mailbox(&mailfile);
@@ -128,7 +128,7 @@ void FilterOE::importMailBox( FilterInfo *info, const QString& fileName)
     mailbox >> sig_block1 >> sig_block2;
     if (sig_block1 == OE4_SIG_1 && sig_block2 == OE4_SIG_2) {
         folderName = "OE-Import/" + mailfileinfo.baseName(true);
-        info->addLog(i18n("Importing OE4 Mailbox %1").arg( "../" + _nameOfFile));
+        info->addLog(i18n("Importing OE4 Mailbox %1", QString("../") + _nameOfFile));
         info->setTo(folderName);
         mbxImport(info, mailbox);
         return;
@@ -142,13 +142,13 @@ void FilterOE::importMailBox( FilterInfo *info, const QString& fileName)
                     QString _tmpFolder = getFolderName(_nameOfFile);
                     if(!_tmpFolder.isEmpty()) folderName = "OE-Import/" + _tmpFolder;
                 }
-                info->addLog(i18n("Importing OE5+ Mailbox %1").arg( "../" + _nameOfFile));
+                info->addLog(i18n("Importing OE5+ Mailbox %1", QString("../") + _nameOfFile));
                 info->setTo(folderName);
                 dbxImport(info, mailbox);
                 return;
             } else if (sig_block2 == OE5_FOLDER_SIG_2) {
                 if(!parsedFolder) {
-                    info->addLog(i18n("Importing OE5+ Folder file %1").arg( "../" + _nameOfFile));
+                    info->addLog(i18n("Importing OE5+ Folder file %1", QString("../") + _nameOfFile));
                     currentIsFolderFile = true;
                     dbxImport(info, mailbox);
                     currentIsFolderFile = false;

@@ -139,7 +139,7 @@ void KIO_Single_Subject::slotResult( KIO::Job *job )
 
 	if( job->error() )
 	{
-		kWarning() << i18n( "Error when fetching %1: %2" ).arg( *_name ).arg( job->errorString() ) << endl;
+		kWarning() << i18n( "Error when fetching %1: %2", *_name, job->errorString() ) << endl;
 	} else {
 		KornMailSubject * mailSubject = new KornMailSubject( QVariant( *_name ), 0 );
 		parseMail( _message, mailSubject, _protocol->fullMessage() );

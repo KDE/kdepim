@@ -53,10 +53,10 @@ KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent )
 	_anims[ 0 ] = new QString;
 	_anims[ 1 ] = new QString;
 
-	lbLeft->setText( i18n( "Left mousebutton", "Left" ) );
+	lbLeft->setText( i18nc( "Left mousebutton", "Left" ) );
 	if( lbLeft->text() == "Left" )
 		lbLeft->setText( i18n( "Left" ) );
-	lbRight->setText( i18n( "Right mousebutton", "Right" ) );
+	lbRight->setText( i18nc( "Right mousebutton", "Right" ) );
 	if( lbRight->text() == "Right" )
 		lbRight->setText( i18n( "Right" ) );
 

@@ -188,9 +188,9 @@ static void showChainListError( QWidget * parent, const GpgME::Error & err, cons
   assert( err );
   const QString msg = i18n("<qt><p>An error occurred while fetching "
 			   "the certificate <b>%1</b> from the backend:</p>"
-			   "<p><b>%2</b></p></qt>")
-    .arg( subject ? QString::fromUtf8( subject ) : QString(),
-	  QString::fromLocal8Bit( err.asString() ) );
+			   "<p><b>%2</b></p></qt>",
+    subject ? QString::fromUtf8( subject ) : QString(),
+    QString::fromLocal8Bit( err.asString() ) );
   KMessageBox::error( parent, msg, i18n("Certificate Listing Failed" ) );
 }
 
@@ -268,7 +268,7 @@ void CertificateInfoWidgetImpl::startCertificateDump() {
                     this, SLOT( slotDumpProcessExited(KProcess*) ) );
 
   if ( !proc->start( KProcess::NotifyOnExit, (KProcess::Communication)(KProcess::Stdout | KProcess::Stderr) ) ) {
-    QString wmsg = i18n("Failed to execute gpgsm:\n%1").arg( i18n( "program not found" ) );
+    QString wmsg = i18n("Failed to execute gpgsm:\n%1", i18n( "program not found" ) );
     dumpView->setText( wmsg );
   }
 }
@@ -293,12 +293,12 @@ void CertificateInfoWidgetImpl::slotDumpProcessExited(KProcess* proc) {
       dumpView->setText( QString::fromUtf8( mDumpError ) );
     } else
     {
-      QString wmsg = i18n("Failed to execute gpgsm:\n%1");
+      QString reason;
       if ( rc == -1 )
-        wmsg = wmsg.arg( i18n( "program cannot be executed" ) );
+        reason = i18n( "program cannot be executed" );
       else
-        wmsg = wmsg.arg( strerror(rc) );
-      dumpView->setText( wmsg );
+        reason = strerror(rc);
+      dumpView->setText( i18n("Failed to execute gpgsm:\n%1", reason) );
     }
   }
 
@@ -328,8 +328,8 @@ void CertificateInfoWidgetImpl::updateChainView() {
   if ( (*it).chainID() && qstrcmp( (*it).chainID(), (*it).primaryFingerprint() ) == 0 )
     item = new Q3ListViewItem( pathView, Kleo::DN( (*it++).userID(0).id() ).prettyDN() );
   else {
-    item = new Q3ListViewItem( pathView, i18n("Issuer certificate not found ( %1)")
-			      .arg( Kleo::DN( (*it).issuerName() ).prettyDN() ) );
+    item = new Q3ListViewItem( pathView, i18n("Issuer certificate not found ( %1)",
+			        Kleo::DN( (*it).issuerName() ).prettyDN() ) );
     item->setOpen( true ); // Qt bug: doesn't open after setEnabled( false ) :/
     item->setEnabled( false );
   }

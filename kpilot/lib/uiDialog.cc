@@ -151,13 +151,13 @@
 	}
 
 	s = QString::null;
-	s += i18n("Send questions and comments to <a href=\"mailto:%1\">%2</a>.")
-		.arg( CSL1("kdepim-users@kde.org") )
-		.arg( CSL1("kdepim-users@kde.org") );
+	s += i18n("Send questions and comments to <a href=\"mailto:%1\">%2</a>.",
+		  CSL1("kdepim-users@kde.org") ,
+		  CSL1("kdepim-users@kde.org") );
 	s += ' ';
-	s += i18n("Send bug reports to <a href=\"mailto:%1\">%2</a>.")
-		.arg(p->bugAddress())
-		.arg(p->bugAddress());
+	s += i18n("Send bug reports to <a href=\"mailto:%1\">%2</a>.",
+		 p->bugAddress(),
+		 p->bugAddress());
 	s += ' ';
 	s += i18n("For trademark information, see the "
 		"<a href=\"help:/kpilot/trademarks.html\">KPilot User's Guide</a>.");

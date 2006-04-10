@@ -201,8 +201,8 @@ void MikesStyle::paintTagLine( QPainter &p, const QFont &font )
 {
   QFontMetrics fm( font );
 
-  QString text = i18n( "Printed on %1 by KAddressBook (http://www.kde.org)" )
-                 .arg( KGlobal::locale()->formatDateTime( QDateTime::currentDateTime() ) );
+  QString text = i18n( "Printed on %1 by KAddressBook (http://www.kde.org)" ,
+                   KGlobal::locale()->formatDateTime( QDateTime::currentDateTime() ) );
 
   p.setPen( Qt::black );
   p.drawText( 0, fm.height(), text );

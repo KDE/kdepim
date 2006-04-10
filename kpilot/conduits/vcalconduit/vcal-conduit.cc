@@ -637,7 +637,7 @@ void VCalConduit::setRecurrence(PilotDateEntry*dateEntry, const KCal::Event *eve
 		break;
 	case KCal::Recurrence::rYearlyDay:
 	case KCal::Recurrence::rYearlyPos:
-		emit logMessage(i18n("Event \"%1\" has a yearly recurrence other than by month, will change this to recurrence by month on handheld.").arg(event->summary()));
+		emit logMessage(i18n("Event \"%1\" has a yearly recurrence other than by month, will change this to recurrence by month on handheld.", event->summary()));
 	case KCal::Recurrence::rYearlyMonth:
 		dateEntry->setRepeatType(repeatYearly);
 		break;

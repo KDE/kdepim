@@ -252,8 +252,8 @@ void KPilotDeviceLink::checkDevice()
 		//
 		if (!(fi.isReadable() && fi.isWritable()))
 		{
-			emit logError(i18n("Pilot device %1 is not read-write.")
-				.arg(fPilotPath));
+			emit logError(i18n("Pilot device %1 is not read-write.",
+				 fPilotPath));
 		}
 	}
 	else
@@ -262,8 +262,8 @@ void KPilotDeviceLink::checkDevice()
 		// (relevant as long as we use only one device type)
 		//
 		emit logError(i18n("Pilot device %1 does not exist. "
-			"Probably it is a USB device and will appear during a HotSync.")
-				.arg(fPilotPath));
+			"Probably it is a USB device and will appear during a HotSync.",
+				 fPilotPath));
 		messages |= (OpenMessage | OpenFailMessage);
 	}
 }
@@ -286,8 +286,8 @@ void KPilotDeviceLink::openDevice()
 		fLinkStatus = FoundDevice;
 	}
 
-	shouldPrint(OpenMessage,i18n("Trying to open device %1...")
-		.arg(fPilotPath));
+	shouldPrint(OpenMessage,i18n("Trying to open device %1...",
+		 fPilotPath));
 
 	if (open())
 	{
@@ -300,8 +300,8 @@ void KPilotDeviceLink::openDevice()
 	else
 	{
 		shouldPrint(OpenFailMessage,i18n("Could not open device: %1 "
-				"(will retry)").
-				arg(fPilotPath));
+				"(will retry)", 
+				fPilotPath));
 
 		if (fLinkStatus != PilotLinkError)
 		{
@@ -452,7 +452,12 @@ bool KPilotDeviceLink::open(QString device)
 			return false;
 		}
 		e = errno;
-		msg = i18n("Cannot open Pilot port \"%1\". ");
+
+		QString ppath = fPilotPath;
+		if (ppath.isEmpty())
+			ppath = i18n("(empty)");
+		msg = i18n("Cannot open Pilot port \"%1\". ", ppath);
+
 		if (fOpenTimer )
 			fOpenTimer->stop();
 
@@ -468,17 +473,6 @@ bool KPilotDeviceLink::open(QString device)
 errInit:
 	close();
 
-	if (msg.find('%'))
-	{
-		if (fPilotPath.isEmpty())
-		{
-			msg = msg.arg(i18n("(empty)"));
-		}
-		else
-		{
-			msg = msg.arg(fPilotPath);
-		}
-	}
 	switch (e)
 	{
 	case ENOENT:
@@ -558,8 +552,8 @@ void KPilotDeviceLink::acceptDevice()
 
 		// Presumably, strerror() returns things in
 		// local8Bit and not latin1.
-		emit logError(i18n("Cannot listen on Pilot socket (%1)").
-			arg(QString::fromLocal8Bit(s)));
+		emit logError(i18n("Cannot listen on Pilot socket (%1)", 
+			QString::fromLocal8Bit(s)));
 
 		close();
 		return;
@@ -576,8 +570,8 @@ void KPilotDeviceLink::acceptDevice()
 
 		kWarning() << "pi_accept: " << s << endl;
 
-		emit logError(i18n("Cannot accept Pilot (%1)")
-			.arg(QString::fromLocal8Bit(s)));
+		emit logError(i18n("Cannot accept Pilot (%1)",
+			 QString::fromLocal8Bit(s)));
 
 		fLinkStatus = PilotLinkError;
 		close();
@@ -590,8 +584,8 @@ void KPilotDeviceLink::acceptDevice()
 		kError() << k_funcinfo
 			<< ": Already connected or unable to connect!"
 			<< endl;
-		emit logError(i18n("Cannot accept Pilot (%1)")
-			.arg(i18n("already connected")));
+		emit logError(i18n("Cannot accept Pilot (%1)",
+			 i18n("already connected")));
 		close();
 		return;
 	}
@@ -869,8 +863,8 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 		kWarning() << k_funcinfo
 			<< ": Cannot open file " << f << endl;
 		emit logError(i18n
-			("<qt>Cannot install the file &quot;%1&quot;.</qt>").
-			arg(f));
+			("<qt>Cannot install the file &quot;%1&quot;.</qt>", 
+			f));
 		return false;
 	}
 
@@ -883,8 +877,8 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 		kWarning() << k_funcinfo
 			<< ": Cannot pi_file_install " << f << endl;
 		emit logError(i18n
-			("<qt>Cannot install the file &quot;%1&quot;.</qt>").
-			arg(f));
+			("<qt>Cannot install the file &quot;%1&quot;.</qt>", 
+			f));
 		return false;
 	}
 

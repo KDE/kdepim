@@ -67,9 +67,9 @@ WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
 {
 	FUNCTIONSETUP;
 
-	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n")
-		.arg(QString::fromLatin1(KPILOT_VERSION)));
-	emit logMessage( i18n("Using encoding %1 on the handheld.").arg(PilotAppCategory::codecName()) );
+	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n",
+		 QString::fromLatin1(KPILOT_VERSION)));
+	emit logMessage( i18n("Using encoding %1 on the handheld.", PilotAppCategory::codecName()) );
 	emit syncDone(this);
 	return true;
 }
@@ -116,7 +116,7 @@ bool LocalBackupAction::exec()
 		return false;
 	}
 
-	logMessage( i18n("Creating local backup of databases in %1.").arg(dirname) );
+	logMessage( i18n("Creating local backup of databases in %1.", dirname) );
 	addSyncLogEntry( i18n("Creating local backup ..") );
 	qApp->processEvents();
 
@@ -156,7 +156,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 			<< ": Can't find desktop file for conduit "
 			<< fDesktopName
 			<< endl;
-		addSyncLogEntry(i18n("Could not find conduit %1.").arg(fDesktopName));
+		addSyncLogEntry(i18n("Could not find conduit %1.", fDesktopName));
 		emit syncDone(this);
 		return true;
 	}
@@ -181,7 +181,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 			<< ": Can't load library "
 			<< fLibraryName
 			<< endl;
-		addSyncLogEntry(i18n("Could not load conduit %1.").arg(fDesktopName));
+		addSyncLogEntry(i18n("Could not load conduit %1.", fDesktopName));
 		emit syncDone(this);
 		return true;
 	}
@@ -199,7 +199,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		kWarning() << k_funcinfo
 			<< ": Can't create SyncAction."
 			<< endl;
-		addSyncLogEntry(i18n("Could not create conduit %1.").arg(fDesktopName));
+		addSyncLogEntry(i18n("Could not create conduit %1.", fDesktopName));
 		emit syncDone(this);
 		return true;
 	}
@@ -211,12 +211,12 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		kWarning() << k_funcinfo
 			<< ": Can't cast to ConduitAction."
 			<< endl;
-		addSyncLogEntry(i18n("Could not create conduit %1.").arg(fDesktopName));
+		addSyncLogEntry(i18n("Could not create conduit %1.", fDesktopName));
 		emit syncDone(this);
 		return true;
 	}
 
-	addSyncLogEntry(i18n("[Conduit %1]").arg(fDesktopName));
+	addSyncLogEntry(i18n("[Conduit %1]", fDesktopName));
 
 	// Handle the syncDone signal properly & unload the conduit.
 	QObject::connect(fConduit,SIGNAL(syncDone(SyncAction *)),

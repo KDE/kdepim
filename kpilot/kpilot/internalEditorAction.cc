@@ -78,7 +78,7 @@ void InternalEditorAction::syncDirtyDB()
 	{
 		fInternalEditorSyncStatus=eSyncDirtyDB;
 		dirtyDBs=KPilotSettings::dirtyDatabases();
-		emit logMessage(i18n("Databases with changed records: %1").arg(dirtyDBs.join(CSL1(", "))));
+		emit logMessage(i18n("Databases with changed records: %1", dirtyDBs.join(CSL1(", "))));
 		dbIter=dirtyDBs.begin();
 	}
 	else
@@ -104,7 +104,7 @@ void InternalEditorAction::syncDirtyDB()
 	if (!localDB->isDBOpen() || !serialDB->isDBOpen())
 	{
 		emit logError(i18n("Unable to open the serial or local database for %1. "
-			"Skipping it.").arg(*dbIter));
+			"Skipping it.", *dbIter));
 		goto nextDB;
 	}
 	while ( (rec=localDB->readNextModifiedRec()) )
@@ -205,11 +205,11 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 		knownDB=false;
 
 	QString dialogText(i18n("The %1 with ID %2 of the database \"%3\" was changed "
-		"on the handheld and in the internal editor. Shall the changes in KPilot be copied to the handheld, and so override the changes there?").
-		arg(recType).arg(id).arg(dbName));
+		"on the handheld and in the internal editor. Shall the changes in KPilot be copied to the handheld, and so override the changes there?", 
+		recType, id, dbName));
 
 	KDialogBase*resdlg=new KDialogBase(0L, "internalresolutiondialog", true,
-		i18n("Conflict in database  %1").arg(*dbIter),
+		i18n("Conflict in database  %1", *dbIter),
 		KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Ok, true,
 		i18n("Use KPilot"), i18n("Use Handheld") );
 	resdlg->setButtonText(KDialogBase::Ok,  i18n("Use &KPilot"));
@@ -323,7 +323,7 @@ void InternalEditorAction::syncFlagsChangedDB()
 	{
 		fInternalEditorSyncStatus=eSyncFlagsChangedDB;
 		dirtyDBs=KPilotSettings::flagsChangedDatabases();
-		emit logMessage(i18n("Databases with changed flags: %1").arg(dirtyDBs.join(CSL1(", "))));
+		emit logMessage(i18n("Databases with changed flags: %1", dirtyDBs.join(CSL1(", "))));
 		dbIter=dirtyDBs.begin();
 	}
 	else
@@ -364,7 +364,7 @@ void InternalEditorAction::syncAppBlockChangedDB()
 	{
 		fInternalEditorSyncStatus=eSyncAppBlockChangedDB;
 		dirtyDBs=KPilotSettings::appBlockChangedDatabases();
-		emit logMessage(i18n("Databases with changed AppBlock: %1").arg(dirtyDBs.join(CSL1(", "))));
+		emit logMessage(i18n("Databases with changed AppBlock: %1", dirtyDBs.join(CSL1(", "))));
 		dbIter=dirtyDBs.begin();
 	}
 	else

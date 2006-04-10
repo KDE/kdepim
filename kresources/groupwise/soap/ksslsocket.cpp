@@ -327,21 +327,21 @@ int KSSLSocket::verifyCertificate()
 				{
 					if (ksv == KSSLCertificate::InvalidHost)
 					{
-						QString msg = i18n("The IP address of the host %1 "
-								"does not match the one the "
-								"certificate was issued to.");
 						result = messageBox( KIO::SlaveBase::WarningYesNoCancel,
-						msg.arg(ourHost),
+						i18n("The IP address of the host %1 "
+						     "does not match the one the "
+						     "certificate was issued to.",
+						     ourHost),
 						i18n("Server Authentication"),
 						i18n("&Details"),
 						KStdGuiItem::cont().text() );
 					}
 					else
 					{
-						QString msg = i18n("The server certificate failed the "
-							"authenticity test (%1).");
 						result = messageBox( KIO::SlaveBase::WarningYesNoCancel,
-						msg.arg(ourHost),
+						i18n("The server certificate failed the "
+						     "authenticity test (%1).",
+						     ourHost),
 						i18n("Server Authentication"),
 						i18n("&Details"),
 						KStdGuiItem::cont().text() );

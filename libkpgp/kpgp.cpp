@@ -368,10 +368,10 @@ Module::encrypt( Block& block,
 
   // did signing fail?
   if( status & ERR_SIGNING ) {
-    QString str = i18n("%1 = 'signing failed' error message",
+    QString str = i18nc("%1 = 'signing failed' error message",
                        "%1\nDo you want to send the message unsigned, "
-                       "or cancel sending the message?")
-                  .arg( pgp->lastErrorMessage() );
+                       "or cancel sending the message?",
+                    pgp->lastErrorMessage() );
     QApplication::setOverrideCursor( QCursor(Qt::ArrowCursor) );
     int ret = KMessageBox::warningContinueCancel( 0, str,
                                                   i18n("PGP Warning"),
@@ -386,10 +386,10 @@ Module::encrypt( Block& block,
 
   // check for bad keys
   if( status & BADKEYS ) {
-    QString str = i18n("%1 = 'bad keys' error message",
+    QString str = i18nc("%1 = 'bad keys' error message",
                        "%1\nDo you want to encrypt anyway, leave the "
-                       "message as-is, or cancel sending the message?")
-                  .arg( pgp->lastErrorMessage() );
+                       "message as-is, or cancel sending the message?",
+                    pgp->lastErrorMessage() );
 
     QApplication::setOverrideCursor( QCursor(Qt::ArrowCursor) );
     int ret = KMessageBox::warningYesNoCancel( 0, str,
@@ -413,10 +413,10 @@ Module::encrypt( Block& block,
   }
 
   if( status & MISSINGKEY ) {
-    QString str = i18n("%1 = 'missing keys' error message",
+    QString str = i18nc("%1 = 'missing keys' error message",
                        "%1\nDo you want to leave the message as-is, "
-                       "or cancel sending the message?")
-                  .arg( pgp->lastErrorMessage() );
+                       "or cancel sending the message?",
+                    pgp->lastErrorMessage() );
     QApplication::setOverrideCursor( QCursor(Qt::ArrowCursor) );
     int ret = KMessageBox::warningContinueCancel( 0, str,
                                                   i18n("PGP Warning"),
@@ -431,11 +431,11 @@ Module::encrypt( Block& block,
 
   if( status & ERROR ) {
     // show error dialog
-    errMsg = i18n( "The following error occurred:\n%1" )
-             .arg( pgp->lastErrorMessage() );
-    QString details = i18n( "This is the error message of %1:\n%2" )
-                      .arg( ( pgpType == tGPG ) ? "GnuPG" : "PGP" )
-                      .arg( block.error().data() );
+    errMsg = i18n( "The following error occurred:\n%1" ,
+               pgp->lastErrorMessage() );
+    QString details = i18n( "This is the error message of %1:\n%2" ,
+                        ( pgpType == tGPG ) ? "GnuPG" : "PGP" ,
+                        block.error().data() );
     QApplication::setOverrideCursor( QCursor(Qt::ArrowCursor) );
     KMessageBox::detailedSorry( 0, errMsg, details );
     QApplication::restoreOverrideCursor();
@@ -1207,14 +1207,14 @@ Module::getEncryptionKeys( const QString& person )
       bool rememberChoice;
       keyIds = selectKeys( rememberChoice, mPublicKeys,
                            i18n("Encryption Key Selection"),
-                           i18n("if in your language something like "
+                           i18nc("if in your language something like "
                                 "'key(s)' isn't possible please "
                                 "use the plural in the translation",
                                 "There is a problem with the "
                                 "encryption key(s) for \"%1\".\n\n"
                                 "Please re-select the key(s) which should "
                                 "be used for this recipient."
-                                ).arg(person),
+                                , person),
                            keyIds,
                            allowedKeys );
       if( !keyIds.isEmpty() ) {
@@ -1271,14 +1271,14 @@ Module::getEncryptionKeys( const QString& person )
     bool rememberChoice;
     KeyIDList keyIds = selectKeys( rememberChoice, mPublicKeys,
                                    i18n("Encryption Key Selection"),
-                                   i18n("if in your language something like "
+                                   i18nc("if in your language something like "
                                         "'key(s)' isn't possible please "
                                         "use the plural in the translation",
                                         "No valid and trusted OpenPGP key was "
                                         "found for \"%1\".\n\n"
                                         "Select the key(s) which should "
                                         "be used for this recipient."
-                                        ).arg(person),
+                                        , person),
                                    KeyIDList(),
                                    allowedKeys );
     if( !keyIds.isEmpty() ) {
@@ -1297,13 +1297,13 @@ Module::getEncryptionKeys( const QString& person )
     bool rememberChoice;
     KeyIDList keyIds = selectKeys( rememberChoice, matchingKeys,
                                    i18n("Encryption Key Selection"),
-                                   i18n("if in your language something like "
+                                   i18nc("if in your language something like "
                                         "'key(s)' isn't possible please "
                                         "use the plural in the translation",
                                         "More than one key matches \"%1\".\n\n"
                                         "Select the key(s) which should "
                                         "be used for this recipient."
-                                        ).arg(person),
+                                        , person),
                                    KeyIDList(),
                                    allowedKeys );
     if( !keyIds.isEmpty() ) {

@@ -175,8 +175,8 @@ void ConverterDlg::slotToText()
 			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
-				"<br>Use folder <em>%2</em> instead?</qt>").arg(pdburl)
-				.arg(pdbinfo.absolutePath()), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
+				"<br>Use folder <em>%2</em> instead?</qt>", pdburl,
+				 pdbinfo.absolutePath()), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
 			if (res==KMessageBox::Yes)
 			{
 				pdburl=pdbinfo.absolutePath();
@@ -191,7 +191,7 @@ void ConverterDlg::slotToText()
 			KMessageBox::sorry(this,
 				i18n("<qt>The folder <em>%1</em> for "
 				"the handheld database files is not a valid "
-				"folder.</qt>").arg(pdburl));
+				"folder.</qt>", pdburl));
 			return;
 		}
 
@@ -200,7 +200,7 @@ void ConverterDlg::slotToText()
 			KMessageBox::sorry(this,
 				i18n("<qt>The folder <em>%1</em> for "
 				"the handheld database files is not a "
-				"valid directory.</qt>").arg(pdburl));
+				"valid directory.</qt>", pdburl));
 			return;
 		}
 
@@ -211,8 +211,8 @@ void ConverterDlg::slotToText()
 			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
-				"<br>Use folder <em>%2</em> instead?</qt>").arg(txturl)
-				.arg(txtinfo.absolutePath()), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
+				"<br>Use folder <em>%2</em> instead?</qt>", txturl,
+				 txtinfo.absolutePath()), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
 			if (res==KMessageBox::Yes) {
 				txturl=txtinfo.absolutePath();
 				txtinfo.setFile(txturl);
@@ -227,7 +227,7 @@ void ConverterDlg::slotToText()
 		if (!txtinfo.isDir()) {
 			KMessageBox::sorry(this,
 				i18n("<qt>The folder <em>%1</em> for "
-				"the text files could not be created.</qt>").arg(txturl));
+				"the text files could not be created.</qt>", txturl));
 			return;
 		}
 
@@ -265,7 +265,7 @@ void ConverterDlg::slotToText()
 		if (!pdbinfo.isFile() || !pdbinfo.exists())
 		{
 			KMessageBox::sorry(this, i18n("<qt>The file <em>%1</em> does not "
-				"exist.</qt>").arg(pdburl));
+				"exist.</qt>", pdburl));
 			return;
 		}
 
@@ -280,7 +280,7 @@ void ConverterDlg::slotToText()
 		if (convertPDBtoTXT(pdbinfo.absolutePath(), pdbinfo.fileName(),
 				txtinfo.absolutePath(), txtinfo.fileName(), &conv) )
 		{
-			KMessageBox::information(this, i18n("Conversion of file %1 successful.").arg(pdburl));
+			KMessageBox::information(this, i18n("Conversion of file %1 successful.", pdburl));
 		}
 
 	}
@@ -324,8 +324,8 @@ void ConverterDlg::slotToPDB()
 			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
-				"<br>Use folder <em>%2</em> instead?</qt>").arg(txturl)
-				.arg(txtinfo.absolutePath()), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
+				"<br>Use folder <em>%2</em> instead?</qt>", txturl,
+				 txtinfo.absolutePath()), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
 			if (res==KMessageBox::Yes)
 			{
 				txturl=txtinfo.absolutePath();
@@ -338,7 +338,7 @@ void ConverterDlg::slotToPDB()
 		{
 			KMessageBox::sorry(this,
 				i18n("<qt>The folder <em>%1</em> for "
-				"the text files is not a valid folder.</qt>").arg(txturl));
+				"the text files is not a valid folder.</qt>", txturl));
 			return;
 		}
 
@@ -349,9 +349,9 @@ void ConverterDlg::slotToPDB()
 			int res=KMessageBox::questionYesNo(this,
 				i18n("<qt>You selected to sync folders, "
 				"but gave a filename instead (<em>%1</em>)."
-				"<br>Use folder <em>%2</em> instead?</qt>")
-				.arg(pdburl)
-				.arg(pdbinfo.absolutePath()), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
+				"<br>Use folder <em>%2</em> instead?</qt>",
+				 pdburl,
+				 pdbinfo.absolutePath()), QString::null, i18n("Use Folder"), KStdGuiItem::cancel());
 			if (res==KMessageBox::Yes) {
 				pdburl=pdbinfo.absolutePath();
 				pdbinfo.setFile(pdburl);
@@ -365,7 +365,7 @@ void ConverterDlg::slotToPDB()
 		}
 		if (!pdbinfo.isDir()) {
 			KMessageBox::sorry(this, i18n("<qt>The folder <em>%1</em> for "
-				"the PalmDOC files could not be created.</qt>").arg(pdburl));
+				"the PalmDOC files could not be created.</qt>", pdburl));
 			return;
 		}
 
@@ -403,14 +403,14 @@ void ConverterDlg::slotToPDB()
 		if (!txtinfo.isFile() || !txtinfo.exists())
 		{
 			KMessageBox::sorry(this, i18n("<qt>The file <em>%1</em> does not "
-				"exist.</qt>").arg(txturl));
+				"exist.</qt>", txturl));
 			return;
 		}
 
 		if (convertTXTtoPDB(txtinfo.absolutePath(), txtinfo.fileName(),
 				pdbinfo.absolutePath(), pdbinfo.fileName(), &conv) )
 		{
-			KMessageBox::information(this, i18n("Conversion of file %1 successful.").arg(txturl));
+			KMessageBox::information(this, i18n("Conversion of file %1 successful.", txturl));
 		}
 
 	}
@@ -453,8 +453,8 @@ bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 	DEBUGCONDUIT<<"Working  on file "<<pdbfile<<endl;
 	if (!dbfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
-			i18n("<qt>The database file <em>%1</em> already exists. Overwrite it?</qt>")
-			.arg(dbfileinfo.filePath()), QString::null, i18n("Overwrite"), KStdGuiItem::cancel() ) ))
+			i18n("<qt>The database file <em>%1</em> already exists. Overwrite it?</qt>",
+			 dbfileinfo.filePath()), QString::null, i18n("Overwrite"), KStdGuiItem::cancel() ) ))
 	{
 		PilotLocalDatabase*pdbdb=new PilotLocalDatabase(pdbdir, QFileInfo(pdbfile).baseName(), false);
 		if (pdbdb)
@@ -479,7 +479,7 @@ bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 		}
 		if ( !res && verbose )
 		{
-			KMessageBox::sorry(this, i18n("<qt>Error while converting the text %1.</qt>").arg(txtfile));
+			KMessageBox::sorry(this, i18n("<qt>Error while converting the text %1.</qt>", txtfile));
 		}
 	}
 	else
@@ -498,8 +498,8 @@ bool ConverterDlg::convertPDBtoTXT(QString pdbdir, QString pdbfile,
 	DEBUGCONDUIT<<"Working  on file "<<txtfile<<endl;
 	if (!txtfileinfo.exists() || !askOverwrite ||
 			(KMessageBox::Yes==KMessageBox::questionYesNo(this,
-			i18n("<qt>The text file <em>%1</em> already exists. Overwrite it?</qt>")
-			.arg(txtfileinfo.filePath()), QString::null, i18n("Overwrite"), KStdGuiItem::cancel() ) ))
+			i18n("<qt>The text file <em>%1</em> already exists. Overwrite it?</qt>",
+			 txtfileinfo.filePath()), QString::null, i18n("Overwrite"), KStdGuiItem::cancel() ) ))
 	{
 		PilotLocalDatabase*pdbdb=new PilotLocalDatabase(pdbdir, QFileInfo(pdbfile).baseName(), false);
 		if (pdbdb)
@@ -515,7 +515,7 @@ bool ConverterDlg::convertPDBtoTXT(QString pdbdir, QString pdbfile,
 		}
 		if ( !res && verbose )
 		{
-			KMessageBox::sorry(this, i18n("<qt>Error while converting the text %1.</qt>").arg(pdbfile));
+			KMessageBox::sorry(this, i18n("<qt>Error while converting the text %1.</qt>", pdbfile));
 		}
 	}
 	else

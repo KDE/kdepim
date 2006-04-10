@@ -102,7 +102,7 @@ PythonConduit::~PythonConduit()
 		DEBUGCONDUIT << fname << ": Python thread done." << endl;
 #endif
 		QString r;
-		addSyncLogEntry(i18n("Python returned %1.").arg(fThread->result()));
+		addSyncLogEntry(i18n("Python returned %1.", fThread->result()));
 		stopTickle();
 		delayDone();
 		return true;

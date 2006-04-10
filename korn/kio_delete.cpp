@@ -186,7 +186,7 @@ void KIO_Delete::slotResult( KIO::Job* job )
 {
 	if( job->error() )
 	{
-		kWarning() << i18n( "An error occurred when deleting email: %1." ).arg( job->errorString() ) << endl;
+		kWarning() << i18n( "An error occurred when deleting email: %1.", job->errorString() ) << endl;
 		_valid = false;
 	}
 	

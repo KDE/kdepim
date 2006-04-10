@@ -587,7 +587,7 @@ bool KNComposer::hasValidData()
 
     if (groupCount>5)
       if ( KMessageBox::warningYesNo( this, i18n("You are crossposting to more than five newsgroups.\nPlease reconsider whether this is really useful\nand remove groups in which your article is off-topic.\nDo you want to re-edit the article or send it anyway?"),
-            QString(), i18n("&Send"), i18n("edit article","&Edit") ) != KMessageBox::Yes )
+            QString(), i18n("&Send"), i18nc("edit article","&Edit") ) != KMessageBox::Yes )
         return false;
 
     if ( !followUp && groupCount > 2 ) {
@@ -596,7 +596,7 @@ bool KNComposer::hasValidData()
                 "Please use the \"Followup-To\" header to direct the replies "
                 "to your article into one group.\n"
                 "Do you want to re-edit the article or send it anyway?"),
-           QString(), i18n("&Send"), i18n("edit article","&Edit"), "missingFollowUpTo" )
+           QString(), i18n("&Send"), i18nc("edit article","&Edit"), "missingFollowUpTo" )
            != KMessageBox::Yes )
         return false;
     }
@@ -608,7 +608,7 @@ bool KNComposer::hasValidData()
 
     if (fupCount>5)
       if ( KMessageBox::warningYesNo( this, i18n("You are directing replies to more than five newsgroups.\nPlease reconsider whether this is really useful.\nDo you want to re-edit the article or send it anyway?"),
-            QString(), i18n("&Send"),i18n("edit article","&Edit") ) != KMessageBox::Yes )
+            QString(), i18n("&Send"),i18nc("edit article","&Edit") ) != KMessageBox::Yes )
         return false;
   }
 
@@ -678,7 +678,7 @@ bool KNComposer::hasValidData()
   if ((textLines>1)&&(notQuoted==1)) {
     if (hasAttributionLine)
       if ( KMessageBox::warningYesNo( this, i18n("Your article seems to consist entirely of quoted text;\ndo you want to re-edit the article or send it anyway?"),
-           QString(), i18n("&Send"), i18n("edit article","&Edit") ) != KMessageBox::Yes )
+           QString(), i18n("&Send"), i18nc("edit article","&Edit") ) != KMessageBox::Yes )
         return false;
   } else {
     if (notQuoted==0) {
@@ -693,12 +693,12 @@ bool KNComposer::hasValidData()
           i18n("Your article contains lines longer than 80 characters.\n"
                "Do you want to re-edit the article or send it anyway?"),
           QString(), i18n("&Send"),
-          i18n("edit article","&Edit") ) != KMessageBox::Yes )
+          i18nc("edit article","&Edit") ) != KMessageBox::Yes )
       return false;
 
   if (sigLength>8) {
     if ( KMessageBox::warningYesNo( this, i18n("Your signature is more than 8 lines long.\nYou should shorten it to match the widely accepted limit of 4 lines.\nDo you want to re-edit the article or send it anyway?"),
-         QString(), i18n("&Send"), i18n("edit article","&Edit") ) != KMessageBox::Yes )
+         QString(), i18n("&Send"), i18nc("edit article","&Edit") ) != KMessageBox::Yes )
       return false;
   } else
     if (sigLength>4)
@@ -1380,18 +1380,18 @@ void KNComposer::slotUpdateStatusBar()
   else
     overwriteDesc = i18n(" INS ");
 
-  statusBar()->changeItem(i18n(" Type: %1 ").arg(typeDesc), 1);
-  statusBar()->changeItem(i18n(" Charset: %1 ").arg( QString( c_harset ) ), 2);
+  statusBar()->changeItem(i18n(" Type: %1 ", typeDesc), 1);
+  statusBar()->changeItem(i18n(" Charset: %1 ", QString( c_harset ) ), 2);
   statusBar()->changeItem(overwriteDesc, 3);
-  statusBar()->changeItem(i18n(" Column: %1 ").arg(v_iew->e_dit->currentColumn() + 1), 4);
-  statusBar()->changeItem(i18n(" Line: %1 ").arg(v_iew->e_dit->currentLine() + 1), 5);
+  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->e_dit->currentColumn() + 1), 4);
+  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->e_dit->currentLine() + 1), 5);
 }
 
 
 void KNComposer::slotUpdateCursorPos()
 {
-  statusBar()->changeItem(i18n(" Column: %1 ").arg(v_iew->e_dit->currentColumn() + 1), 4);
-  statusBar()->changeItem(i18n(" Line: %1 ").arg(v_iew->e_dit->currentLine() + 1), 5);
+  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->e_dit->currentColumn() + 1), 4);
+  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->e_dit->currentLine() + 1), 5);
 }
 
 

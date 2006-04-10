@@ -77,8 +77,8 @@ bool KonsoleKalendarDelete::deleteEvent()
       }
 
       m_variables->getCalendar()->deleteEvent( event );
-      cout << i18n( "Success: \"%1\" deleted" )
-        .arg( event->summary() ).data()
+      cout << i18n( "Success: \"%1\" deleted" ,
+          event->summary() ).data()
            << endl;
 
       m_variables->getCalendar()->save();
@@ -92,27 +92,27 @@ bool KonsoleKalendarDelete::deleteEvent()
 
 void KonsoleKalendarDelete::printSpecs( Event *event )
 {
-  cout << i18n( "  UID:   %1" ).
-    arg( m_variables->getUID() ).data()
+  cout << i18n( "  UID:   %1" , 
+     m_variables->getUID() ).data()
        << endl;
 
-  cout << i18n( "  What:  %1" ).
-    arg( event->summary() ).data()
+  cout << i18n( "  What:  %1" , 
+     event->summary() ).data()
        << endl;
 
-  cout << i18n( "  Begin: %1" ).
-    arg( event->dtStart().toString( Qt::TextDate ) ).data()
+  cout << i18n( "  Begin: %1" , 
+     event->dtStart().toString( Qt::TextDate ) ).data()
        << endl;
 
-  cout << i18n( "  End:   %1" ).
-    arg( event->dtEnd().toString( Qt::TextDate ) ).data()
+  cout << i18n( "  End:   %1" , 
+     event->dtEnd().toString( Qt::TextDate ) ).data()
        << endl;
 
-  cout << i18n( "  Desc:  %1" ).
-    arg( event->description() ).data()
+  cout << i18n( "  Desc:  %1" , 
+     event->description() ).data()
        << endl;
 
-  cout << i18n( "  Location:  %1" ).
-    arg( event->location() ).data()
+  cout << i18n( "  Location:  %1" , 
+     event->location() ).data()
        << endl;
 }

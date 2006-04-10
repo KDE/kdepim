@@ -92,8 +92,7 @@ void TypeCombo<T>::updateTypes()
     }
     labelCount[ type ] = count;
     if ( count > 1 ) {
-      label = i18n( "label (number)", "%1 (%2)" ).arg( label )
-                                                 .arg( QString::number( count ) );
+      label = i18nc( "label (number)", "%1 (%2)", label, count );
     }
     insertItem( label );
   }

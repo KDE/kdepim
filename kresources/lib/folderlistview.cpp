@@ -60,32 +60,32 @@ kDebug() << "FolderListView::setEnabledTypes" << endl;
 
 
   if ( mTypes.contains( Event ) ) {
-    mColumnMap[Event] = addColumn( i18n("Short column header meaning default for new events", "Events") );
+    mColumnMap[Event] = addColumn( i18nc("Short column header meaning default for new events", "Events") );
     mTypeMap[mColumnMap[Event]] = Event;
   } else mColumnMap[Event] = -1;
 
   if ( mTypes.contains( Todo ) ) {
-    mColumnMap[Todo] = addColumn( i18n("Short column header meaning default for new to-dos", "Todos") );
+    mColumnMap[Todo] = addColumn( i18nc("Short column header meaning default for new to-dos", "Todos") );
     mTypeMap[mColumnMap[Todo]] = Todo;
   } else mColumnMap[Todo] = -1;
 
   if ( mTypes.contains( Journal ) ) {
-    mColumnMap[Journal] = addColumn( i18n("Short column header meaning default for new journals", "Journals") );
+    mColumnMap[Journal] = addColumn( i18nc("Short column header meaning default for new journals", "Journals") );
     mTypeMap[mColumnMap[Journal]] = Journal;
   } else mColumnMap[Journal] = -1;
 
   if ( mTypes.contains( Contact ) ) {
-    mColumnMap[Contact] = addColumn( i18n("Short column header meaning default for new contacts", "Contacts") );
+    mColumnMap[Contact] = addColumn( i18nc("Short column header meaning default for new contacts", "Contacts") );
     mTypeMap[mColumnMap[Contact]] = Contact;
   } else mColumnMap[Contact] = -1;
 
   if ( mTypes.contains( All ) ) {
-    mColumnMap[All] = addColumn( i18n("Short column header meaning default for all items", "All") );
+    mColumnMap[All] = addColumn( i18nc("Short column header meaning default for all items", "All") );
     mTypeMap[mColumnMap[All]] = All;
   } else mColumnMap[All] = -1;
 
   if ( mTypes.contains( Unknown ) ) {
-    mColumnMap[Unknown] = addColumn( i18n("Short column header meaning default for unknown new items", "Unknown") );
+    mColumnMap[Unknown] = addColumn( i18nc("Short column header meaning default for unknown new items", "Unknown") );
     mTypeMap[mColumnMap[Unknown]] = Unknown;
   } else mColumnMap[Unknown] = -1;
 }

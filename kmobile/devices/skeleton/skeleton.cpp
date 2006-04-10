@@ -64,7 +64,7 @@ KMobileSkeleton::~KMobileSkeleton()
 bool KMobileSkeleton::connectDevice(QWidget *parent)
 {
   if (KMessageBox::Continue != KMessageBox::warningContinueCancel(parent,
-	i18n("Please turn on your %1 on now and press continue to proceed.").arg(m_deviceName),
+	i18n("Please turn on your %1 on now and press continue to proceed.", m_deviceName),
 	m_deviceClassName ) )
 	return false;
   // connect it now...

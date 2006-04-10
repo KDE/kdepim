@@ -225,7 +225,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                                                   Scheduler::Reply );
       QString subject;
       if ( !incidence->summary().isEmpty() )
-        subject = i18n( "Answer: %1" ).arg( incidence->summary() );
+        subject = i18n( "Answer: %1", incidence->summary() );
       else
         subject = i18n( "Answer: Incidence with no summary" );
       return callback.mailICal( incidence->organizer().fullName(), msg, subject );

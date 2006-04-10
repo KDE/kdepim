@@ -392,7 +392,7 @@ void ResourceXMLRPC::deleteContactFinished( const QList<QVariant>&,
 void ResourceXMLRPC::fault( int error, const QString &errorMsg,
                             const QVariant& )
 {
-  QString msg = i18n( "<qt>Server sent error %1: <b>%2</b></qt>" ).arg( error ).arg( errorMsg );
+  QString msg = i18n( "<qt>Server sent error %1: <b>%2</b></qt>", error, errorMsg );
   if ( addressBook() )
     addressBook()->error( msg );
 
@@ -406,8 +406,9 @@ void ResourceXMLRPC::addContactFault( int, const QString &errorMsg,
 
   mAddrMap.remove( addr.uid() );
 
-  QString msg = i18n( "Unable to add contact %1 to server. (%2)" );
-  addressBook()->error( msg.arg( addr.formattedName(), errorMsg ) );
+  QString msg = i18n( "Unable to add contact %1 to server. (%2)",
+                       addr.formattedName(), errorMsg );
+  addressBook()->error( msg );
 }
 
 void ResourceXMLRPC::updateContactFault( int, const QString &errorMsg,
@@ -415,8 +416,9 @@ void ResourceXMLRPC::updateContactFault( int, const QString &errorMsg,
 {
   KABC::Addressee addr = mAddrMap[ id.toString() ];
 
-  QString msg = i18n( "Unable to update contact %1 on server. (%2)" );
-  addressBook()->error( msg.arg( addr.formattedName(), errorMsg ) );
+  QString msg = i18n( "Unable to update contact %1 on server. (%2)",
+                      addr.formattedName(), errorMsg );
+  addressBook()->error( msg );
 }
 
 void ResourceXMLRPC::deleteContactFault( int, const QString &errorMsg,
@@ -435,8 +437,9 @@ void ResourceXMLRPC::deleteContactFault( int, const QString &errorMsg,
 
   mAddrMap.insert( addr.uid(), addr );
 
-  QString msg = i18n( "Unable to delete contact %1 from server. (%2)" );
-  addressBook()->error( msg.arg( addr.formattedName(), errorMsg ) );
+  QString msg = i18n( "Unable to delete contact %1 from server. (%2)",
+                      addr.formattedName(), errorMsg );
+  addressBook()->error( msg );
 }
 
 QString ResourceXMLRPC::addrTypesToTypeStr( int typeMask )

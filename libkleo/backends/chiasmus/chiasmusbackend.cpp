@@ -433,13 +433,13 @@ Kleo::CryptoBackend::Protocol * Kleo::ChiasmusBackend::protocol( const char * na
 
 bool Kleo::ChiasmusBackend::checkForOpenPGP( QString * reason ) const {
   if ( reason )
-    *reason = i18n( "Unsupported protocol \"%1\"" ).arg( "OpenPGP" );
+    *reason = i18n( "Unsupported protocol \"%1\"", QString("OpenPGP") );
   return false;
 }
 
 bool Kleo::ChiasmusBackend::checkForSMIME( QString * reason ) const {
   if ( reason )
-    *reason = i18n( "Unsupported protocol \"%1\"" ).arg( "SMIME" );
+    *reason = i18n( "Unsupported protocol \"%1\"", QString("SMIME") );
   return false;
 }
 
@@ -455,7 +455,7 @@ bool Kleo::ChiasmusBackend::checkForChiasmus( QString * reason ) const {
   const QFileInfo fi( KShell::tildeExpand( chiasmus ) );
   if ( !fi.isExecutable() ) {
     if ( reason )
-      *reason = i18n( "File \"%1\" does not exist or is not executable." ).arg( chiasmus );
+      *reason = i18n( "File \"%1\" does not exist or is not executable.", chiasmus );
     return false;
   }
 
@@ -468,7 +468,7 @@ bool Kleo::ChiasmusBackend::checkForProtocol( const char * name, QString * reaso
   if ( qstricmp( name, "Chiasmus" ) == 0 )
     return checkForChiasmus( reason );
   if ( reason )
-    *reason = i18n( "Unsupported protocol \"%1\"" ).arg( name );
+    *reason = i18n( "Unsupported protocol \"%1\"", name );
   return 0;
 }
 

@@ -669,7 +669,7 @@ QString Incidence::statusStr() const
 QString Incidence::statusName(Incidence::Status status)
 {
   switch (status) {
-    case StatusTentative:    return i18n("incidence status", "Tentative");
+    case StatusTentative:    return i18nc("incidence status", "Tentative");
     case StatusConfirmed:    return i18n("Confirmed");
     case StatusCompleted:    return i18n("Completed");
     case StatusNeedsAction:  return i18n("Needs-Action");

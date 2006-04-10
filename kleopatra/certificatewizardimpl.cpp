@@ -90,11 +90,11 @@ static QString attributeLabel( const QString & attr, bool required ) {
   const QString label = Kleo::DNAttributeMapper::instance()->name2label( attr );
   if ( !label.isEmpty() )
     if ( required )
-      return i18n("Format string for the labels in the \"Your Personal Data\" page - required field",
-		  "*%1 (%2):").arg( label, attr );
+      return i18nc("Format string for the labels in the \"Your Personal Data\" page - required field",
+		   "*%1 (%2):", label, attr );
     else
-      return i18n("Format string for the labels in the \"Your Personal Data\" page",
-		  "%1 (%2):").arg( label, attr );
+      return i18nc("Format string for the labels in the \"Your Personal Data\" page",
+		   "%1 (%2):", label, attr );
 
   else if ( required )
     return '*' + attr + ':';
@@ -141,7 +141,7 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent, bool modal, Qt::W
 	     this, SLOT( slotSetValuesFromWhoAmI() ) );
 
     for ( unsigned int i = 0 ; i < numKeyLengths ; ++i )
-      keyLengthCB->insertItem( i18n("%n bit", "%n bits", keyLengths[i] ) );
+      keyLengthCB->insertItem( i18np("%n bit", "%n bits", keyLengths[i] ) );
 }
 
 static bool requirementsAreMet( const CertificateWizardImpl::AttrPairList & list ) {
@@ -257,8 +257,8 @@ void CertificateWizardImpl::slotGenerateCertificate()
     const GpgME::Error err = job->start( certParms );
     if ( err )
       KMessageBox::error( this,
-			  i18n( "Could not start certificate generation: %1" )
-			  .arg( QString::fromLocal8Bit( err.asString() ) ),
+			  i18n( "Could not start certificate generation: %1" ,
+			    QString::fromLocal8Bit( err.asString() ) ),
 			  i18n( "Certificate Manager Error" ) );
     else {
       generatePB->setEnabled( false );
@@ -280,8 +280,8 @@ void CertificateWizardImpl::slotResult( const GpgME::KeyGenerationResult & res,
 	  generatePB->setEnabled( true );
 	  if ( !res.error().isCanceled() )
 	    KMessageBox::error( this,
-				i18n( "Could not generate certificate: %1" )
-				.arg( QString::fromLatin1( res.error().asString() ) ),
+				i18n( "Could not generate certificate: %1" ,
+				  QString::fromLatin1( res.error().asString() ) ),
 				i18n( "Certificate Manager Error" ) );
     } else {
         // next will stay enabled until the user clicks Generate
@@ -429,7 +429,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
   if ( result != 0 ) {
     kDebug() << "Couldn't connect to KMail\n";
     KMessageBox::error( this,
-                        i18n( "DCOP Communication Error, unable to send certificate using KMail.\n%1" ).arg( error ) );
+                        i18n( "DCOP Communication Error, unable to send certificate using KMail.\n%1", error ) );
     return;
   }
 
@@ -476,7 +476,7 @@ void CertificateWizardImpl::accept()
       if ( KMessageBox::Cancel == KMessageBox::warningContinueCancel(
                                                                      this,
                                                                      i18n( "A file named \"%1\" already exists. "
-                                                                           "Are you sure you want to overwrite it?" ).arg( url.prettyURL() ),
+                                                                           "Are you sure you want to overwrite it?", url.prettyURL() ),
                                                                      i18n( "Overwrite File?" ),
                                                                      i18n( "&Overwrite" ) ) )
         return;

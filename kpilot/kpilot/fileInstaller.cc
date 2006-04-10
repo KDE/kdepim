@@ -110,7 +110,7 @@ void FileInstaller::deleteFiles(const QStringList &files)
 	FUNCTIONSETUP;
 
 	if(!(s.endsWith(CSL1(".pdb"), false) || s.endsWith(CSL1(".prc"), false))) {
-		KMessageBox::detailedSorry(w, i18n("Cannot install %1").arg(s),
+		KMessageBox::detailedSorry(w, i18n("Cannot install %1", s),
 			i18n("Only PalmOS database files (like *.pdb and *.prc) can be installed by the file installer."));
 		return false;
 	}

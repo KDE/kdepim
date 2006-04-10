@@ -528,7 +528,7 @@ bool CryptPlugWrapper::initialize( InitStatus* initStatus, QString* errorMsg )
 	if( !_cp->initialize() ) {
 	  _initStatus = InitStatus_InitError;
 	  kDebug(5150) << "Error while executing function 'initialize' on plugin " << _libName << endl;
-	  _lastError = i18n("Error while initializing plugin \"%1\"").arg( _libName );
+	  _lastError = i18n("Error while initializing plugin \"%1\"", _libName );
 	  if ( errorMsg )
 	    *errorMsg = _lastError;
 	  delete _cp; _cp = 0;

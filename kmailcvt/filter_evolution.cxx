@@ -74,7 +74,7 @@ void FilterEvolution::import(FilterInfo *info)
             info->setOverall((int) ((float) currentDir / numSubDirs * 100));
         }
     }
-    info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
+    info->addLog( i18n("Finished importing emails from %1", mailDir ));
     info->setCurrent(100);
     info->setOverall(100);
 }
@@ -122,7 +122,7 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
     bool first_msg = true;
     QString tmp_from = mboxName;
     if (!mbox.open(QIODevice::ReadOnly)) {
-        info->alert(i18n("Unable to open %1, skipping").arg(mboxName));
+        info->alert(i18n("Unable to open %1, skipping", mboxName));
     } else {
         QFileInfo filenameInfo(mboxName);
 
@@ -143,7 +143,7 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
         } else
             info->setTo(targetDir);
 
-        info->addLog(i18n("Importing emails from %1...").arg(tmp_from));
+        info->addLog(i18n("Importing emails from %1...", tmp_from));
 
         QByteArray input(MAX_LINE);
         long l = 0;
@@ -193,7 +193,7 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
         }
 
         if (count_duplicates > 0) {
-            info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
+            info->addLog( i18np("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
         }
         count_duplicates = 0;
         mbox.close();

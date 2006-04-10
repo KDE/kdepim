@@ -159,9 +159,9 @@ void ResolutionCheckListItem::setCaption(QString caption)
 
 void ResolutionCheckListItem::updateText()
 {
-	QString newText(i18n("Entries in the resolution dialog. First the name of the field, then the entry from the Handheld or PC after the colon", "%1: %2").arg(fCaption).arg(fText));
+	QString newText(i18nc("Entries in the resolution dialog. First the name of the field, then the entry from the Handheld or PC after the colon", "%1: %2", fCaption, fText));
 	newText.replace(QRegExp(CSL1("\n")),
-		i18n("Denoting newlines in Address entries. No need to translate", " | "));
+		i18nc("Denoting newlines in Address entries. No need to translate", " | "));
 	setText(0, newText);
 }
 

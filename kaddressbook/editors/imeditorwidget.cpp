@@ -86,8 +86,8 @@ void IMAddressLVI::setAddress( const QString &address )
     setText( 1, address );
   else {
     QString nickname = address.section( QChar( 0xE120 ), 0, 0 );
-    setText( 1, i18n( "<nickname> on <server>","%1 on %2" )
-           .arg( nickname ).arg( serverOrGroup ) );
+    setText( 1, i18nc( "<nickname> on <server>","%1 on %2" ,
+             nickname, serverOrGroup ) );
   }
 
   mAddress = address;
@@ -421,7 +421,7 @@ void IMEditorWidget::slotDelete()
   if ( num_selected == 0 )
     return;
 
-  if ( KMessageBox::warningContinueCancel( this, i18n( "Do you really want to delete the selected address?",
+  if ( KMessageBox::warningContinueCancel( this, i18np( "Do you really want to delete the selected address?",
                                            "Do you really want to delete the %n selected addresses?", num_selected ),
                                            i18n( "Confirm Delete" ), KStdGuiItem::del() ) != KMessageBox::Continue )
     return;

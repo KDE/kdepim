@@ -83,7 +83,7 @@ void Kleo::ProgressDialog::slotProgress( const QString & what, int current, int 
   else if ( what.isEmpty() )
     setLabelText( mBaseText );
   else
-    setLabelText( i18n( "%1: %2" ).arg( mBaseText, what ) );
+    setLabelText( i18n( "%1: %2", mBaseText, what ) );
   setProgress( current, total );
 }
 

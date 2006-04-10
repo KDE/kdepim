@@ -179,8 +179,8 @@ void Kleo::QGpgMEKeyListJob::showErrorDialog( QWidget * parent, const QString & 
     return;
   const QString msg = i18n( "<qt><p>An error occurred while fetching "
 			    "the keys from the backend:</p>"
-			    "<p><b>%1</b></p></qt>" )
-    .arg( QString::fromLocal8Bit( mResult.error().asString() ) );
+			    "<p><b>%1</b></p></qt>" ,
+      QString::fromLocal8Bit( mResult.error().asString() ) );
   KMessageBox::error( parent, msg, caption );
 }
 

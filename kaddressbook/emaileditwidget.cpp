@@ -303,7 +303,7 @@ void EmailEditDialog::remove()
 {
   QString address = mEmailListBox->currentText();
 
-  QString text = i18n( "<qt>Are you sure that you want to remove the email address <b>%1</b>?</qt>" ).arg( address );
+  QString text = i18n( "<qt>Are you sure that you want to remove the email address <b>%1</b>?</qt>", address );
   QString caption = i18n( "Confirm Remove" );
 
   if ( KMessageBox::warningContinueCancel( this, text, caption, KGuiItem( i18n( "&Delete" ), "editdelete" ) ) == KMessageBox::Continue ) {

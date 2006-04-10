@@ -129,7 +129,7 @@ QString PilotTodoEntry::getTextRepresentation(bool richText)
 		QDate dt(readTm(getDueDate()).date());
 		QString dueDate(dt.toString(Qt::LocalDate));
 		text+=par;
-		text+=i18n("Due date: %1").arg(dueDate);
+		text+=i18n("Due date: %1", dueDate);
 		text+=ps;
 	}
 
@@ -137,7 +137,7 @@ QString PilotTodoEntry::getTextRepresentation(bool richText)
 	text+=ps;
 
 	text+=par;
-	text+=i18n("Priority: %1").arg(getPriority());
+	text+=i18n("Priority: %1", getPriority());
 	text+=ps;
 
 	if (!getNote().isEmpty())

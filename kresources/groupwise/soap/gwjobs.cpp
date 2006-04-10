@@ -108,7 +108,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
                                     &itemsRequest, &itemsResponse );
   if ( result != 0 ) {
     soap_print_fault( mSoap, stderr );
-    mServer->emitErrorMessage( i18n("Unable to read GroupWise address book: %1" ).arg( id.c_str() ), false );
+    mServer->emitErrorMessage( i18n("Unable to read GroupWise address book: %1", id.c_str() ), false );
     return;
   }
 
@@ -576,7 +576,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
     else
     {
       kDebug() << " readCursor got no Items in Response!" << endl;
-      mServer->emitErrorMessage( i18n("Unable to read GroupWise address book: reading %1 returned no items." ).arg( id.c_str() ), false );
+      mServer->emitErrorMessage( i18n("Unable to read GroupWise address book: reading %1 returned no items.", id.c_str() ), false );
       break;
     }
   }

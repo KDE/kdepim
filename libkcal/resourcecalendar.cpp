@@ -54,7 +54,7 @@ QString ResourceCalendar::infoText() const
 
   KRES::Factory *factory = KRES::Factory::self( "calendar" );
   QString t = factory->typeName( type() );
-  txt += i18n("Type: %1").arg( t );
+  txt += i18n("Type: %1", t );
 
   addInfoText( txt );
 
@@ -134,7 +134,7 @@ void ResourceCalendar::loadError( const QString &err )
 
   mReceivedLoadError = true;
 
-  QString msg = i18n("Error while loading %1.\n") .arg( resourceName() );
+  QString msg = i18n("Error while loading %1.\n", resourceName() );
   if ( !err.isEmpty() ) {
     msg += err;
   }
@@ -171,7 +171,7 @@ void ResourceCalendar::saveError( const QString &err )
 
   mReceivedSaveError = true;
 
-  QString msg = i18n("Error while saving %1.\n") .arg( resourceName() );
+  QString msg = i18n("Error while saving %1.\n", resourceName() );
   if ( !err.isEmpty() ) {
     msg += err;
   }

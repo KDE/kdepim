@@ -349,7 +349,7 @@ void DistributionListWidget::editList()
 void DistributionListWidget::removeList()
 {
   int result = KMessageBox::warningContinueCancel( this,
-      i18n( "<qt>Delete distribution list <b>%1</b>?</qt>" ) .arg( mNameCombo->currentText() ),
+      i18n( "<qt>Delete distribution list <b>%1</b>?</qt>" , mNameCombo->currentText() ),
       QString(), KGuiItem( i18n("Delete"), "editdelete") );
 
   if ( result != KMessageBox::Continue )
@@ -509,7 +509,7 @@ void DistributionListWidget::updateContactView()
   mChangeEmailButton->setEnabled( state );
   mRemoveContactButton->setEnabled( state );
 
-  mEntryCountLabel->setText( i18n( "Count: %n contact", "Count: %n contacts", entryCount ) );
+  mEntryCountLabel->setText( i18np( "Count: %n contact", "Count: %n contacts", entryCount ) );
 }
 
 void DistributionListWidget::updateNameCombo()

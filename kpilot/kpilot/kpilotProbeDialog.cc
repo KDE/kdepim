@@ -285,7 +285,7 @@ void ProbeDialog::connection( KPilotDeviceLink*lnk)
 	mUID = usr->getUserID();
 	mDevice = mActiveLink->pilotPath();
 
-	fStatus->setText( i18n("Found a connected device on %1").arg(mDevice) );
+	fStatus->setText( i18n("Found a connected device on %1", mDevice) );
 	fUser->setText( mUserName );
 	fDevice->setText( mDevice );
 	mDetected = true;

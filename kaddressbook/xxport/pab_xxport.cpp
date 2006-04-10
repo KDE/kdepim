@@ -55,7 +55,7 @@ KABC::Addressee::List PABXXPort::importContacts( const QString& ) const
   if ( fileName.isEmpty() )
     return addrList;
   if ( !QFile::exists( fileName ) ) {
-    KMessageBox::sorry( parentWidget(), i18n( "<qt>Could not find a MS Exchange Personal Address Book <b>%1</b>.</qt>" ).arg( fileName ) );
+    KMessageBox::sorry( parentWidget(), i18n( "<qt>Could not find a MS Exchange Personal Address Book <b>%1</b>.</qt>", fileName ) );
     return addrList;
   }
 

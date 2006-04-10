@@ -80,9 +80,9 @@ void FilterKMail_maildir::import( FilterInfo *info )
         }
     }
 
-    info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
+    info->addLog( i18n("Finished importing emails from %1", mailDir ));
     if (count_duplicates > 0) {
-        info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
+        info->addLog( i18np("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
     }
     if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
     count_duplicates = 0;
@@ -154,7 +154,7 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
                 if(_path.endsWith("cur"))
                     _path.remove(_path.length() - 4 , 4);
                 QString _info = _path;
-                info->addLog(i18n("Import folder %1...").arg(_info.remove(0,12)));
+                info->addLog(i18n("Import folder %1...", _info.remove(0,12)));
                 info->setFrom(_info);
                 info->setTo(_path);
                 generatedPath = true;
@@ -162,12 +162,12 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
 
             if(info->removeDupMsg) {
                 if(! addMessage( info, _path, dir.filePath(*mailFile) )) {
-                    info->addLog( i18n("Could not import %1").arg( *mailFile ) );
+                    info->addLog( i18n("Could not import %1", *mailFile ) );
                 }
                 info->setCurrent((int) ((float) currentFile / numFiles * 100));
             } else {
                 if(! addMessage_fastImport( info, _path, dir.filePath(*mailFile) )) {
-                    info->addLog( i18n("Could not import %1").arg( *mailFile ) );
+                    info->addLog( i18n("Could not import %1", *mailFile ) );
                 }
                 info->setCurrent((int) ((float) currentFile / numFiles * 100));
             }

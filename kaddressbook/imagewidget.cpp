@@ -355,14 +355,14 @@ void ImageBaseWidget::slotLoadingComplete( RSS::Loader *loader,
 {
   if ( status != RSS::Success ) {
     KMessageBox::sorry( this,
-      i18n( "Unable to retrieve blog feed from '%1': %2" ).arg( mBlogFeed )
-      .arg( loader->errorCode() ) );
+      i18n( "Unable to retrieve blog feed from '%1': %2", mBlogFeed ,
+        loader->errorCode() ) );
     return;
   }
 
   if ( !doc.image() ) {
     KMessageBox::sorry( this,
-      i18n( "Blog feed at '%1' does not contain an image." ).arg( mBlogFeed ) );
+      i18n( "Blog feed at '%1' does not contain an image.", mBlogFeed ) );
     return;
   }
 

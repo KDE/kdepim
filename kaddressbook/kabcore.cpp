@@ -108,7 +108,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
     mAddressBook = new KABC::AddressBook;
     mAddressBook->addResource( new KABC::ResourceFile( file ) );
     if ( !mAddressBook->load() ) {
-      KMessageBox::error( parent, i18n( "Unable to load '%1'." ).arg( file ) );
+      KMessageBox::error( parent, i18n( "Unable to load '%1'.", file ) );
     }
   }
   mAddressBook->setErrorHandler( new KABC::GuiErrorHandler( mWidget ) );
@@ -413,7 +413,7 @@ void KABCore::deleteContacts( const QStringList &uids )
       ++it;
     }
 
-    if ( KMessageBox::warningContinueCancelList( mWidget, i18n( "Do you really want to delete this contact?",
+    if ( KMessageBox::warningContinueCancelList( mWidget, i18np( "Do you really want to delete this contact?",
                                                  "Do you really want to delete these %n contacts?", uids.count() ),
                                                  names, QString(), KStdGuiItem::del() ) == KMessageBox::Cancel )
       return;
@@ -513,8 +513,8 @@ void KABCore::setWhoAmI()
     return;
   }
 
-  QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>" ) );
-  if ( KMessageBox::questionYesNo( mWidget, text.arg( addrList[ 0 ].assembledName() ), QString(), i18n( "Use" ), i18n( "Do Not Use" ) ) == KMessageBox::Yes )
+  QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>", addrList[ 0 ].assembledName() ) );
+  if ( KMessageBox::questionYesNo( mWidget, text, QString(), i18n( "Use" ), i18n( "Do Not Use" ) ) == KMessageBox::Yes )
     static_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self( true ) )->setWhoAmI( addrList[ 0 ] );
 }
 
@@ -729,15 +729,15 @@ void KABCore::save()
     if ( ticket ) {
       if ( !mAddressBook->save( ticket ) ) {
         KMessageBox::error( mWidget,
-                            i18n( "<qt>Unable to save address book <b>%1</b>.</qt>" ).arg( (*it)->resourceName() ) );
+                            i18n( "<qt>Unable to save address book <b>%1</b>.</qt>", (*it)->resourceName() ) );
         mAddressBook->releaseSaveTicket( ticket );
       } else {
         setModified( false );
       }
     } else {
       KMessageBox::error( mWidget,
-                          i18n( "<qt>Unable to get access for saving the address book <b>%1</b>.</qt>" )
-                          .arg( (*it)->resourceName() ) );
+                          i18n( "<qt>Unable to get access for saving the address book <b>%1</b>.</qt>" ,
+                            (*it)->resourceName() ) );
     }
   }
 }
@@ -1267,7 +1267,7 @@ void KABCore::slotClearSearchBar()
 void KABCore::slotContactsUpdated()
 {
   if ( mStatusBar ) {
-    QString msg( i18n( "%n contact matches", "%n contacts matching", mSearchManager->contacts().count() ) );
+    QString msg( i18np( "%n contact matches", "%n contacts matching", mSearchManager->contacts().count() ) );
     if ( !mStatusBar->hasItem( 1 ) )
       mStatusBar->insertItem( msg, 1 );
     else

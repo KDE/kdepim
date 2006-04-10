@@ -80,7 +80,7 @@ void KIO_Read::slotResult( KIO::Job* job )
 		kWarning() << i18n( "Unknown job returned; I will try if this one will do... " ) << endl;
 
 	if( job->error() )
-		kWarning() << i18n( "An error occurred when fetching the requested email: %1." ).arg( job->errorString() ) << endl;
+		kWarning() << i18n( "An error occurred when fetching the requested email: %1.", job->errorString() ) << endl;
 		
 	_kio->emitReadMailReady( _message );
 	

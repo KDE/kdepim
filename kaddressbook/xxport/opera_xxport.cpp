@@ -56,8 +56,8 @@ KABC::Addressee::List OperaXXPort::importContacts( const QString& ) const
 
   QFile file( fileName );
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>" );
-    KMessageBox::error( parentWidget(), msg.arg( fileName ) );
+    QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>", fileName );
+    KMessageBox::error( parentWidget(), msg );
     return addrList;
   }
 

@@ -52,13 +52,13 @@ void FilterMBox::import(FilterInfo *info)
     for ( QStringList::Iterator filename = filenames.begin(); filename != filenames.end(); ++filename, ++currentFile) {
         QFile mbox( *filename );
         if (! mbox.open( QIODevice::ReadOnly ) ) {
-            info->alert( i18n("Unable to open %1, skipping").arg( *filename ) );
+            info->alert( i18n("Unable to open %1, skipping", *filename ) );
         } else {
             QFileInfo filenameInfo( *filename );
             QString folderName( "MBOX-" + filenameInfo.baseName(true) );
 
             info->setCurrent(0);
-            info->addLog( i18n("Importing emails from %1...").arg( *filename ) );
+            info->addLog( i18n("Importing emails from %1...", *filename ) );
 
             info->setFrom( *filename );
             info->setTo( folderName );
@@ -117,11 +117,11 @@ void FilterMBox::import(FilterInfo *info)
                 if ( info->shouldTerminate() ) break;
             }
 
-            info->addLog( i18n("Finished importing emails from %1").arg( *filename ));
+            info->addLog( i18n("Finished importing emails from %1", *filename ));
             if (count_duplicates > 0) {
-                info->addLog( i18n("1 duplicate message not imported to folder %1 in KMail", 
+                info->addLog( i18np("1 duplicate message not imported to folder %1 in KMail", 
                                    "%n duplicate messages not imported to folder %1 in KMail", 
-                                   count_duplicates).arg(folderName));
+                                   count_duplicates, folderName));
             }
             if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
             count_duplicates = 0;

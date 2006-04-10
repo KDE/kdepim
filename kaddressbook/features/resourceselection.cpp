@@ -187,12 +187,12 @@ void ResourceSelection::add()
   // Create new resource
   KABC::Resource *resource = mManager->createResource( type );
   if ( !resource ) {
-    KMessageBox::error( this, i18n("<qt>Unable to create an address book of type <b>%1</b>.</qt>")
-                              .arg( type ) );
+    KMessageBox::error( this, i18n("<qt>Unable to create an address book of type <b>%1</b>.</qt>",
+                                type ) );
     return;
   }
 
-  resource->setResourceName( i18n( "%1 address book" ).arg( type ) );
+  resource->setResourceName( i18n( "%1 address book", type ) );
 
   KRES::ConfigDialog dlg( this, QString( "contact" ), resource );
 
@@ -232,8 +232,8 @@ void ResourceSelection::remove()
     return;
 
   int result = KMessageBox::warningContinueCancel( this,
-        i18n( "<qt>Do you really want to remove the address book <b>%1</b>?</qt>" )
-        .arg( item->resource()->resourceName() ), "",
+        i18n( "<qt>Do you really want to remove the address book <b>%1</b>?</qt>" ,
+          item->resource()->resourceName() ), "",
         KGuiItem( i18n( "&Remove" ), "editdelete" ) );
   if ( result == KMessageBox::Cancel )
     return;

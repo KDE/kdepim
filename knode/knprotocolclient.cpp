@@ -210,11 +210,11 @@ bool KNProtocolClient::openConnection()
     if (ks.status() == IO_LookupError) {
       job->setErrorString(i18n("Unable to resolve hostname"));
     } else if (ks.status() == IO_ConnectError) {
-      job->setErrorString(i18n("Unable to connect:\n%1").arg(KExtendedSocket::strError(ks.status(), errno)));
+      job->setErrorString(i18n("Unable to connect:\n%1", KExtendedSocket::strError(ks.status(), errno)));
     } else if (ks.status() == IO_TimeOutError)
       job->setErrorString(i18n("A delay occurred which exceeded the\ncurrent timeout limit."));
     else
-      job->setErrorString(i18n("Unable to connect:\n%1").arg(KExtendedSocket::strError(ks.status(), errno)));
+      job->setErrorString(i18n("Unable to connect:\n%1", KExtendedSocket::strError(ks.status(), errno)));
 
     closeSocket();
     return false;
@@ -441,7 +441,7 @@ bool KNProtocolClient::checkNextResponse(int code)
 void KNProtocolClient::handleErrors()
 {
   if (errorPrefix.isEmpty())
-    job->setErrorString(i18n("An error occurred:\n%1").arg(thisLine));
+    job->setErrorString(i18n("An error occurred:\n%1", thisLine));
   else
     job->setErrorString(errorPrefix + thisLine);
 

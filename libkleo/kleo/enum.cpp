@@ -149,7 +149,7 @@ QString Kleo::encryptionPreferenceToLabel( EncryptionPreference pref )
   case AskWheneverPossible:
     return i18n( "Ask Whenever Possible" );
   default:
-    return i18n( "no specific preference", "<none>" );
+    return i18nc( "no specific preference", "<none>" );
   }
 }
 
@@ -201,6 +201,6 @@ QString Kleo::signingPreferenceToLabel( SigningPreference pref )
   case AskSigningWheneverPossible:
     return i18n( "Ask Whenever Possible" );
   default:
-    return i18n( "no specific preference", "<none>" );
+    return i18nc( "no specific preference", "<none>" );
   }
 }

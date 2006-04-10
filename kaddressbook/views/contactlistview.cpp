@@ -88,17 +88,17 @@ void DynamicTip::maybeTip( const QPoint &pos )
   if (a.isEmpty())
     return;
 
-  s += i18n("label: value", "%1: %2").arg(a.formattedNameLabel())
-                                     .arg(a.formattedName());
+  s += i18nc("label: value", "%1: %2", a.formattedNameLabel(),
+                                      a.formattedName());
 
   s += '\n';
-  s += i18n("label: value", "%1: %2").arg(a.organizationLabel())
-                                       .arg(a.organization());
+  s += i18nc("label: value", "%1: %2", a.organizationLabel(),
+                                        a.organization());
 
   QString notes = a.note().trimmed();
   if ( !notes.isEmpty() ) {
     notes += '\n';
-    s += '\n' + i18n("label: value", "%1: \n").arg(a.noteLabel());
+    s += '\n' + i18nc("label: value", "%1: \n", a.noteLabel());
     QFontMetrics fm( font() );
 
     // Begin word wrap code based on QMultiLineEdit code

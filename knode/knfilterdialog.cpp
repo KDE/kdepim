@@ -33,7 +33,7 @@
 
 
 KNFilterDialog::KNFilterDialog( KNArticleFilter *f, QWidget *parent )
-  : KDialogBase(Plain, (f->id()==-1)? i18n("New Filter"):i18n("Properties of %1").arg(f->name()),
+  : KDialogBase(Plain, (f->id()==-1)? i18n("New Filter"):i18n("Properties of %1", f->name()),
                 Ok|Cancel|Help, Ok, parent ),
     fltr(f)
 {

@@ -627,13 +627,13 @@ void ResourceCached::addInfoText( QString &txt ) const
 {
   if ( mLastLoad.isValid() ) {
     txt += "<br>";
-    txt += i18n("Last loaded: %1")
-           .arg( KGlobal::locale()->formatDateTime( mLastLoad ) );
+    txt += i18n("Last loaded: %1",
+             KGlobal::locale()->formatDateTime( mLastLoad ) );
   }
   if ( mLastSave.isValid() ) {
     txt += "<br>";
-    txt += i18n("Last saved: %1")
-           .arg( KGlobal::locale()->formatDateTime( mLastSave ) );
+    txt += i18n("Last saved: %1",
+             KGlobal::locale()->formatDateTime( mLastSave ) );
   }
 }
 

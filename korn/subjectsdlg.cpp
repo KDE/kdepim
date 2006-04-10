@@ -211,7 +211,7 @@ void KornSubjectsDlg::showMessage(Q3ListViewItem * item )
 
 void KornSubjectsDlg::showSubjectsDlg( const QString& name )
 {
-	setCaption( i18n("Mails in Box: %1").arg( name ) );
+	setCaption( i18n("Mails in Box: %1", name ) );
 
 	// load the subjects
 	reloadSubjects();
@@ -418,7 +418,7 @@ void KornSubjectsDlg::deleteMessage()
 		_delete->totalNumberOfMessages = _delete->messages->count();
 	}
 	
-	QString confirmation = i18n(	"Do you really want to delete %n message?",
+	QString confirmation = i18np(	"Do you really want to delete %n message?",
 					"Do you really want to delete %n messages?", _delete->messages->count() );
 	
 	if( KMessageBox::questionYesNo( this, confirmation, i18n( "Confirmation" ), KStdGuiItem::del(), KStdGuiItem::cancel() ) != KMessageBox::Yes )

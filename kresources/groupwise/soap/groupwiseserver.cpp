@@ -128,7 +128,7 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
   int rc = m_sock->connect();
   if ( rc != 0 ) {
     kError() << "gSoapOpen: connect failed " << rc << endl;
-    mError = i18n("Connect failed: %1.").arg( rc );
+    mError = i18n("Connect failed: %1.", rc );
     if ( rc == -1 ) perror( 0 );
     return SOAP_INVALID_SOCKET;
   }

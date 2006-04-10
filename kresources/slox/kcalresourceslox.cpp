@@ -174,7 +174,7 @@ bool KCalResourceSlox::doLoad()
 
   QString p = KUrl( mPrefs->url() ).protocol();
   if ( p != "http" && p != "https" && p != "webdav" && p != "webdavs" ) {
-    QString err = i18n("Non-http protocol: '%1'").arg( p );
+    QString err = i18n("Non-http protocol: '%1'", p );
     kDebug() << "KCalResourceSlox::load(): " << err << endl;
     loadError( err );
     return false;

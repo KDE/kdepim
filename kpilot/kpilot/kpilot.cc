@@ -207,7 +207,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 		{
 			fLogWidget->addMessage(i18n("Could not start the "
 				"KPilot daemon. The system error message "
-				"was: &quot;%1&quot;").arg(daemonError));
+				"was: &quot;%1&quot;", daemonError));
 		}
 		fAppStatus=Error;
 	}
@@ -225,8 +225,8 @@ void KPilotInstaller::startDaemonIfNeeded()
 			if (wordoffset>0) s.truncate(wordoffset);
 
 			fLogWidget->addMessage(
-				i18n("Daemon status is `%1'")
-				.arg(s.isEmpty() ? i18n("not running") : s ));
+				i18n("Daemon status is `%1'",
+				 s.isEmpty() ? i18n("not running") : s ));
 		}
 		fAppStatus=Normal;
 	}
@@ -242,8 +242,8 @@ void KPilotInstaller::readConfig()
 	if (fLogWidget)
 	{
 		fLogWidget->addMessage(i18n("Using character set %1 on "
-			"the handheld.")
-			.arg(PilotAppCategory::codecName()));
+			"the handheld.",
+			 PilotAppCategory::codecName()));
 	}
 }
 
@@ -506,7 +506,6 @@ bool KPilotInstaller::componentPreSync()
 	FUNCTIONSETUP;
 
 	QString reason;
-	QString rprefix(i18n("Cannot start a Sync now. %1"));
 
 	for (fP->list().first();
 		fP->list().current(); fP->list().next())
@@ -523,7 +522,7 @@ bool KPilotInstaller::componentPreSync()
 	if (!reason.isNull())
 	{
 		KMessageBox::sorry(this,
-			rprefix.arg(reason),
+			i18n("Cannot start a Sync now. %1", reason),
 			i18n("Cannot start Sync"));
 		return false;
 	}
@@ -992,8 +991,8 @@ void KPilotInstaller::componentUpdate()
 	//
 	if (fLogWidget)
 	{
-		fLogWidget->logMessage(i18n("Changed username to `%1'.")
-			.arg(KPilotSettings::userName()));
+		fLogWidget->logMessage(i18n("Changed username to `%1'.",
+			 KPilotSettings::userName()));
 		fManagingWidget->showPage(0);
 		slotAboutToShowComponent(fLogWidget);
 	}

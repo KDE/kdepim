@@ -132,7 +132,7 @@ PerlConduit::~PerlConduit()
 		DEBUGCONDUIT << fname << ": Perl thread done." << endl;
 #endif
 		QString r;
-		addSyncLogEntry(i18n("Perl returned %1.").arg(fThread->result()));
+		addSyncLogEntry(i18n("Perl returned %1.", fThread->result()));
 		stopTickle();
 		delayDone();
 		return true;

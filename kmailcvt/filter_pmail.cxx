@@ -76,7 +76,7 @@ void FilterPMail::import(FilterInfo *info)
     info->addLog(i18n("Importing 'UNIX' mail folders ('.mbx')..."));
     processFiles("*.[mM][bB][xX]", &FilterPMail::importUnixMailFolder);
 
-    info->addLog( i18n("Finished importing emails from %1").arg( chosenDir ));
+    info->addLog( i18n("Finished importing emails from %1", chosenDir ));
     info->setCurrent(100);
     info->setOverall(100);
 }
@@ -162,7 +162,7 @@ void FilterPMail::importMailFolder(const QString& file)
     long l = 0;
     QFile f(file);
     if (!f.open(QIODevice::ReadOnly)) {
-        inf->alert(i18n("Unable to open %1, skipping").arg(file));
+        inf->alert(i18n("Unable to open %1, skipping", file));
     } else {
         // Get folder name
         l = f.read((char *) &pmm_head, sizeof(pmm_head));
@@ -172,7 +172,7 @@ void FilterPMail::importMailFolder(const QString& file)
         else 
             folder.append(pmm_head.folder);
         inf->setTo(folder);
-        inf->addLog(i18n("Importing %1").arg("../" + QString(pmm_head.folder)));
+        inf->addLog(i18n("Importing %1", QString("../") + QString(pmm_head.folder)));
         
         QByteArray input(MAX_LINE);
         bool first_msg = true;
@@ -232,7 +232,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
     s.replace( QRegExp("MBX$"), "PMG");
     f.setName(s);
     if (! f.open( QIODevice::ReadOnly ) ) {
-        inf->alert( i18n("Unable to open %1, skipping").arg( s ) );
+        inf->alert( i18n("Unable to open %1, skipping", s ) );
         return;
     } else {
         f.read((char *) &pmg_head, sizeof(pmg_head));
@@ -250,9 +250,9 @@ void FilterPMail::importUnixMailFolder(const QString& file)
     /** Read in the mbox */
     f.setName(file);
     if (! f.open( QIODevice::ReadOnly ) ) {
-        inf->alert( i18n("Unable to open %1, skipping").arg( s ) );
+        inf->alert( i18n("Unable to open %1, skipping", s ) );
     } else {
-        inf->addLog(i18n("Importing %1").arg("../" + QString(pmg_head.folder)));
+        inf->addLog(i18n("Importing %1", QString("../") + QString(pmg_head.folder)));
         l = f.readLine( line.data(),MAX_LINE); // read the first line which is unneeded
         while ( ! f.atEnd() ) {
             KTempFile tempfile;
@@ -276,7 +276,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
             tempfile.unlink();   
             
             n++;
-            inf->setCurrent(i18n("Message %1").arg(n));            
+            inf->setCurrent(i18n("Message %1", n));            
             inf->setCurrent( (int) ( ( (float) f.at() / f.size() ) * 100 ) );
         }
     }    
@@ -291,7 +291,7 @@ bool FilterPMail::parseFolderMatrix()
     
     QFile hierarch(chosenDir + "/hierarch.pm");
     if (! hierarch.open( QIODevice::ReadOnly ) ) {
-        inf->alert( i18n("Unable to open %1, skipping").arg( chosenDir + "hierarch.pm" ) );
+        inf->alert( i18n("Unable to open %1, skipping", chosenDir + "hierarch.pm" ) );
         return false;
     } else {
         QStringList tmpList;

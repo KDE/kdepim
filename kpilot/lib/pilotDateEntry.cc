@@ -172,7 +172,7 @@ QString PilotDateEntry::getTextRepresentation(bool richText)
 	QDateTime dt(readTm(getEventStart()));
 	QString startDate(dt.toString(Qt::LocalDate));
 	text+=par;
-	text+=i18n("Start date: %1").arg(startDate);
+	text+=i18n("Start date: %1", startDate);
 	text+=ps;
 
 	if (isEvent())
@@ -186,43 +186,39 @@ QString PilotDateEntry::getTextRepresentation(bool richText)
 		dt=readTm(getEventEnd());
 		QString endDate(dt.toString(Qt::LocalDate));
 		text+=par;
-		text+=i18n("End date: %1").arg(endDate);
+		text+=i18n("End date: %1", endDate);
 		text+=ps;
 	}
 
 	if ( isAlarmEnabled() )
 	{
 		text+=par;
-		tmp=i18n("%1 is the duration, %2 is the time unit", "Alarm: %1 %2 before event starts").
-			arg(getAdvance());
 		switch (getAdvanceUnits())
 		{
-			case advMinutes: tmp=tmp.arg(i18n("minutes")); break;
-			case advHours: tmp=tmp.arg(i18n("hours")); break;
-			case advDays: tmp=tmp.arg(i18n("days")); break;
-			default: tmp=tmp.arg(QString::null); break;;
+			case advMinutes: tmp=i18n("minutes"); break;
+			case advHours: tmp=i18n("hours"); break;
+			case advDays: tmp=i18n("days"); break;
+			default: tmp=QString::null; break;;
 		}
-		text+=tmp;
+		text+=i18nc("%1 is the duration, %2 is the time unit", "Alarm: %1 %2 before event starts", 
+			    getAdvance(), tmp);
 		text+=ps;
 	}
 
 	if (getRepeatType() != repeatNone)
 	{
 		text+=par;
-		tmp=i18n("Recurrence: every %1 %2");
-		int freq = getRepeatFrequency();
-		tmp=tmp.arg(freq);
-
 		switch(getRepeatType())
 		{
-			case repeatDaily: tmp=tmp.arg(i18n("day(s)")); break;
-			case repeatWeekly: tmp=tmp.arg(i18n("week(s)")); break;
+			case repeatDaily: tmp=i18n("day(s)"); break;
+			case repeatWeekly: tmp=i18n("week(s)"); break;
 			case repeatMonthlyByDay:
-			case repeatMonthlyByDate: tmp=tmp.arg(i18n("month(s)")); break;
-			case repeatYearly: tmp=tmp.arg(i18n("year(s)")); break;
-			default: tmp=tmp.arg(QString::null); break;
+			case repeatMonthlyByDate: tmp=i18n("month(s)"); break;
+			case repeatYearly: tmp=i18n("year(s)"); break;
+			default: tmp=QString::null; break;
 		}
-		text+=tmp;
+		text+=i18nc("%1 is the frequency, %2 is the time unit", "Recurrence: every %1 %2",
+		            getRepeatFrequency(), tmp);
 		text+=br;
 
 		bool repeatsForever = getRepeatForever();
@@ -233,7 +229,7 @@ QString PilotDateEntry::getTextRepresentation(bool richText)
 		else
 		{
 			dt = readTm(getRepeatEnd());
-			text+=i18n("Until %1").arg(dt.toString(Qt::LocalDate));
+			text+=i18n("Until %1", dt.toString(Qt::LocalDate));
 		}
 		text+=br;
 

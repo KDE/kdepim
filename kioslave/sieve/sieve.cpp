@@ -328,7 +328,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 	
 	if (isConnectionValid()) return true;
 
-	infoMessage(i18n("Connecting to %1...").arg( m_sServer));
+	infoMessage(i18n("Connecting to %1...", m_sServer));
 
 	if (m_connMode == CONNECTION_ORIENTED && m_shouldBeConnected) {
 		error(ERR_CONNECTION_BROKEN, i18n("The connection to the server was lost."));
@@ -624,7 +624,7 @@ void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, bool /*overwri
 				error(ERR_INTERNAL_SERVER,
 						i18n("The script did not upload successfully.\n"
 							"This is probably due to errors in the script.\n"
-							"The server responded:\n%1").arg( QString::fromLatin1( errmsg ) ));
+							"The server responded:\n%1", QString::fromLatin1( errmsg ) ));
 
 				// clear the rest of the incoming data
 				receiveData();
@@ -937,7 +937,7 @@ bool kio_sieveProtocol::saslInteract( void *in, AuthInfo &ai )
   return true;
 }
 
-#define SASLERROR  error(ERR_COULD_NOT_AUTHENTICATE, i18n("An error occurred during authentication: %1").arg( \
+#define SASLERROR  error(ERR_COULD_NOT_AUTHENTICATE, i18n("An error occurred during authentication: %1", \
       QString::fromUtf8( sasl_errdetail( conn ) )));
 
 bool kio_sieveProtocol::authenticate()
@@ -1031,7 +1031,7 @@ bool kio_sieveProtocol::authenticate()
       sasl_dispose( &conn );
 			error(ERR_UNSUPPORTED_PROTOCOL,
 					i18n("A protocol error occurred during authentication.\n"
-							"Choose a different authentication method to %1.").arg(mechusing));
+							"Choose a different authentication method to %1.", mechusing));
 			return false;
 		}
 
@@ -1043,7 +1043,7 @@ bool kio_sieveProtocol::authenticate()
       sasl_dispose( &conn );
 			error(ERR_UNSUPPORTED_PROTOCOL,
 					i18n("A protocol error occurred during authentication.\n"
-							"Choose a different authentication method to %1.").arg(mechusing));
+							"Choose a different authentication method to %1.", mechusing));
 			return false;
 		}
 
@@ -1090,8 +1090,8 @@ bool kio_sieveProtocol::authenticate()
 		return true;
 	} else {
 		// Authentication failed.
-		error(ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server responded:\n%1")
-				.arg( QString::fromLatin1( r.getAction() ) ) );
+		error(ERR_COULD_NOT_AUTHENTICATE, i18n("Authentication failed.\nMost likely the password is wrong.\nThe server responded:\n%1",
+				  QString::fromLatin1( r.getAction() ) ) );
 		return false;
 	}
 }

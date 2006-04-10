@@ -115,8 +115,8 @@ void Query::slotResult( KIO::Job *job )
   int errLine, errCol;
   if ( !doc.setContent( data, false, &errMsg, &errLine, &errCol  ) )
   {
-    emit fault( -1, i18n( "Received invalid XML markup: %1 at %2:%3" )
-                        .arg( errMsg ).arg( errLine ).arg( errCol ), m_id );
+    emit fault( -1, i18n( "Received invalid XML markup: %1 at %2:%3" ,
+                          errMsg, errLine, errCol ), m_id );
     emit finished( this );
     return ;
   }

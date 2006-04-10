@@ -30,14 +30,14 @@ static const char *defFil[] = { "all","unread","new","watched","threads with unr
                                 "threads with new","own articles","threads with own articles", 0 };
 void dummyFilter()
 {
-  i18n("default filter name","all");
-  i18n("default filter name","unread");
-  i18n("default filter name","new");
-  i18n("default filter name","watched");
-  i18n("default filter name","threads with unread");
-  i18n("default filter name","threads with new");
-  i18n("default filter name","own articles");
-  i18n("default filter name","threads with own articles");
+  i18nc("default filter name","all");
+  i18nc("default filter name","unread");
+  i18nc("default filter name","new");
+  i18nc("default filter name","watched");
+  i18nc("default filter name","threads with unread");
+  i18nc("default filter name","threads with new");
+  i18nc("default filter name","own articles");
+  i18nc("default filter name","threads with own articles");
 }
 
 
@@ -306,8 +306,8 @@ QString KNArticleFilter::translatedName()
   if (translateName) {
     // major hack alert !!!
     if (!n_ame.isEmpty()) {
-      if (i18n("default filter name",n_ame.toLocal8Bit())!=n_ame.toLocal8Bit().data())    // try to guess if this english or not
-        return i18n("default filter name",n_ame.toLocal8Bit());
+      if (i18nc("default filter name",n_ame.toLocal8Bit())!=n_ame.toLocal8Bit().data())    // try to guess if this english or not
+        return i18nc("default filter name",n_ame.toLocal8Bit());
       else
         return n_ame;
     } else
@@ -323,7 +323,7 @@ void KNArticleFilter::setTranslatedName(const QString &s)
 {
   bool retranslated = false;
   for (const char **c=defFil;(*c)!=0;c++)   // ok, try if it matches any of the standard filter names
-    if (s==i18n("default filter name",*c)) {
+    if (s==i18nc("default filter name",*c)) {
       n_ame = QString::fromLatin1(*c);
       retranslated = true;
       break;

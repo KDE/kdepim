@@ -145,8 +145,8 @@ void HtmlExport::createMonthView(QTextStream *ts)
 
   while ( start < toDate() ) {
     // Write header
-    *ts << "<h2>" << (i18n("month_year","%1 %2").arg(KGlobal::locale()->calendar()->monthName(start))
-        .arg(start.year())) << "</h2>\n";
+    *ts << "<h2>" << (i18nc("month_year","%1 %2", KGlobal::locale()->calendar()->monthName(start),
+         start.year())) << "</h2>\n";
     if ( KGlobal::locale()->weekStartDay() == 1 ) {
       start = start.addDays(1 - start.dayOfWeek());
     } else {
@@ -450,7 +450,7 @@ void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
   *ts << "  <td";
   if (completed) *ts << " class=\"done\"";
   *ts << ">\n";
-  *ts << "    " << i18n("%1 %").arg(todo->percentComplete()) << "\n";
+  *ts << "    " << i18n("%1 %", todo->percentComplete()) << "\n";
   *ts << "  </td>\n";
 
   if ( mSettings->taskDueDate() ) {
@@ -609,20 +609,20 @@ void HtmlExport::createFooter( QTextStream *ts )
   QString mail, name, credit, creditURL;*/
   if (!mSettings->eMail().isEmpty()) {
     if (!mSettings->name().isEmpty())
-      trailer += i18n("by <a href=\"mailto:%1\">%2</a> ").arg( mSettings->eMail() ).arg( mSettings->name() );
+      trailer += i18n("by <a href=\"mailto:%1\">%2</a> ", mSettings->eMail(), mSettings->name() );
     else
-      trailer += i18n("by <a href=\"mailto:%1\">%2</a> ").arg( mSettings->eMail() ).arg( mSettings->eMail() );
+      trailer += i18n("by <a href=\"mailto:%1\">%2</a> ", mSettings->eMail(), mSettings->eMail() );
   } else {
     if (!mSettings->name().isEmpty())
-      trailer += i18n("by %1 ").arg( mSettings->name() );
+      trailer += i18n("by %1 ", mSettings->name() );
   }
   if (!mSettings->creditName().isEmpty()) {
     if (!mSettings->creditURL().isEmpty())
-      trailer += i18n("with <a href=\"%1\">%2</a>")
-                     .arg( mSettings->creditURL() )
-                     .arg( mSettings->creditName() );
+      trailer += i18n("with <a href=\"%1\">%2</a>",
+                       mSettings->creditURL() ,
+                       mSettings->creditName() );
     else
-      trailer += i18n("with %1").arg( mSettings->creditName() );
+      trailer += i18n("with %1", mSettings->creditName() );
   }
   *ts << "<p>" << trailer << "</p>\n";
 }

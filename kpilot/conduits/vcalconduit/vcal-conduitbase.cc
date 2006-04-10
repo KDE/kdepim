@@ -275,8 +275,8 @@ static void listResources(KCal::CalendarResources *p)
 				<< fCalendar->isLocalTime() << endl;
 #endif
 			emit logMessage( fCalendar->isLocalTime() ?
-				i18n("Using local time zone: %1").arg(tz) :
-				i18n("Using non-local time zone: %1").arg(tz) );
+				i18n("Using local time zone: %1", tz) :
+				i18n("Using non-local time zone: %1", tz) );
 
 			KUrl kurl(config()->calendarFile());
 			if(!KIO::NetAccess::download(config()->calendarFile(), fCalendarFile, 0L) &&
@@ -285,7 +285,7 @@ static void listResources(KCal::CalendarResources *p)
 				emit logError(i18n("You chose to sync with the file \"%1\", which "
 							"cannot be opened. Please make sure to supply a "
 							"valid file name in the conduit's configuration dialog. "
-							"Aborting the conduit.").arg(config()->calendarFile()));
+							"Aborting the conduit.", config()->calendarFile()));
 				KIO::NetAccess::removeTempFile(fCalendarFile);
 				return false;
 			}
@@ -315,13 +315,13 @@ static void listResources(KCal::CalendarResources *p)
 					emit logError(i18n("You chose to sync with the file \"%1\", which "
 							"cannot be opened or created. Please make sure to supply a "
 							"valid file name in the conduit's configuration dialog. "
-							"Aborting the conduit.").arg(config()->calendarFile()));
+							"Aborting the conduit.", config()->calendarFile()));
 					return false;
 				}
 				fl.close();
 				setFirstSync( true );
 			}
-			addSyncLogEntry(i18n("Syncing with file \"%1\"").arg(config()->calendarFile()));
+			addSyncLogEntry(i18n("Syncing with file \"%1\"", config()->calendarFile()));
 			break;
 		}
 
@@ -348,8 +348,8 @@ static void listResources(KCal::CalendarResources *p)
 #endif
 			addSyncLogEntry(i18n("Syncing with standard calendar resource."));
 			emit logMessage( fCalendar->isLocalTime() ?
-				i18n("Using local time zone: %1").arg(tz) :
-				i18n("Using non-local time zone: %1").arg(tz) );
+				i18n("Using local time zone: %1", tz) :
+				i18n("Using non-local time zone: %1", tz) );
 			break;
 		default:
 			break;
@@ -588,8 +588,8 @@ void VCalConduitBase::cleanup()
 				{
 					if(!KIO::NetAccess::upload(fCalendarFile, config()->calendarFile(), 0L)) {
 						emit logError(i18n("An error occurred while uploading \"%1\". You can try to upload "
-							"the temporary local file \"%2\" manually.")
-							.arg(config()->calendarFile()).arg(fCalendarFile));
+							"the temporary local file \"%2\" manually.",
+							 config()->calendarFile(), fCalendarFile));
 					}
 					else {
 						KIO::NetAccess::removeTempFile(fCalendarFile);

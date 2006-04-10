@@ -134,7 +134,7 @@ void ConfigWizard::accept()
 	APPEND_CONDUIT("vcal-conduit");
 	switch (app) {
 		case eAppEvolution:
-			applicationName=i18n("Gnome's PIM suite", "Evolution");
+			applicationName=i18nc("Gnome's PIM suite", "Evolution");
 
 			// TODO: Once the Evolution abook resource is finished, enable it...
 			conduits.remove("abbrowser_conduit");
@@ -163,11 +163,11 @@ void ConfigWizard::accept()
 		case eAppNone:
 			conduits.clear();
 			APPEND_CONDUIT("internal_fileinstall");
-			applicationName=i18n("Kpilot will sync with nothing","nothing (it will backup only)");
+			applicationName=i18nc("Kpilot will sync with nothing","nothing (it will backup only)");
 			break;
 //		case eAppKontact:
 		case eAppKDE:
-			applicationName=i18n("KDE's PIM suite", "Kontact");
+			applicationName=i18nc("KDE's PIM suite", "Kontact");
 		default:
 			APPEND_CONDUIT("knotes-conduit");
 			APPEND_CONDUIT("abbrowser_conduit");
@@ -201,7 +201,7 @@ void ConfigWizard::accept()
 	KPilotSettings::setInstalledConduits( conduits );
 #undef APPEND_CONDUIT
 
-	QString finishMessage = i18n("KPilot is now configured to sync with %1.").arg(applicationName);
+	QString finishMessage = i18n("KPilot is now configured to sync with %1.", applicationName);
 	if (fMode == InDialog)
 	{
 		finishMessage.append(CSL1("\n"));

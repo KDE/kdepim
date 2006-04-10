@@ -115,8 +115,8 @@ void Kleo::QGpgMESignEncryptJob::showErrorDialog( QWidget * parent, const QStrin
   if ( mResult.first.error().isCanceled() || mResult.second.error().isCanceled() )
     return;
   const QString msg = mResult.first.error()
-    ? i18n("Signing failed: %1" ).arg( QString::fromLocal8Bit( mResult.first.error().asString() ) )
-    : i18n("Encryption failed: %1").arg( QString::fromLocal8Bit( mResult.second.error().asString() ) ) ;
+    ? i18n("Signing failed: %1", QString::fromLocal8Bit( mResult.first.error().asString() ) )
+    : i18n("Encryption failed: %1", QString::fromLocal8Bit( mResult.second.error().asString() ) ) ;
   KMessageBox::error( parent, msg, caption );
 }
 

@@ -69,7 +69,7 @@ static const char *kpilotconfigdialog_id =
 /* virtual */ QString ConfigPage::maybeSaveText() const
 {
 	return i18n("<qt>The settings for configuration page <i>%1</i> have been changed. Do you "
-		"want to save the changes before continuing?</qt>").arg(this->conduitName());
+		"want to save the changes before continuing?</qt>", this->conduitName());
 }
 
 DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
@@ -151,8 +151,8 @@ void DeviceConfigPage::load()
 		i18n("<qt>The device name you entered (<i>%1</i>) "
 			"is longer than 13 characters. This is "
 			"probably unsupported and can cause problems. "
-			"Are you sure you want to use this device name?</qt>")
-			.arg(d),
+			"Are you sure you want to use this device name?</qt>",
+			 d),
 		i18n("Device Name too Long"), i18n("Use"), i18n("Do Not Use")
 		) ;
 	}

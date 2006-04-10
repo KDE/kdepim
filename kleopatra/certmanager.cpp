@@ -473,7 +473,7 @@ void CertManager::updateStatusBarLabels() {
   int total = 0;
   for ( Q3ListViewItemIterator it( mKeyListView ) ; it.current() ; ++it )
     ++total;
-  mStatusLabel->setText( i18n( "%n Key.","%n Keys.", total ) );
+  mStatusLabel->setText( i18np( "%n Key.","%n Keys.", total ) );
 }
 
 //
@@ -519,7 +519,7 @@ void CertManager::slotRefreshKeysResult( const GpgME::Error & err ) {
     return;
   if ( err )
     KMessageBox::error( this, i18n("An error occurred while trying to refresh "
-				   "keys:\n%1").arg( QString::fromLocal8Bit( err.asString() ) ),
+				   "keys:\n%1", QString::fromLocal8Bit( err.asString() ) ),
 			i18n("Refreshing Keys Failed") );
 }
 
@@ -527,8 +527,8 @@ static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
   const QString msg = i18n( "<qt><p>An error occurred while fetching "
 			    "the certificates from the backend:</p>"
-			    "<p><b>%1</b></p></qt>" )
-    .arg( QString::fromLocal8Bit( err.asString() ) );
+			    "<p><b>%1</b></p></qt>" ,
+      QString::fromLocal8Bit( err.asString() ) );
 
   KMessageBox::error( parent, msg, i18n( "Certificate Listing Failed" ) );
 }
@@ -700,9 +700,9 @@ static void showCertificateDownloadError( QWidget * parent, const GpgME::Error &
   assert( err );
   const QString msg = i18n( "<qt><p>An error occurred while trying "
 			    "to download the certificate %1:</p>"
-			    "<p><b>%2</b></p></qt>" )
-                      .arg( certDisplayName )
-                      .arg( QString::fromLocal8Bit( err.asString() ) );
+			    "<p><b>%2</b></p></qt>" ,
+                        certDisplayName ,
+                        QString::fromLocal8Bit( err.asString() ) );
 
   KMessageBox::error( parent, msg, i18n( "Certificate Download Failed" ) );
 }
@@ -768,9 +768,9 @@ static void showCertificateImportError( QWidget * parent, const GpgME::Error & e
   assert( err );
   const QString msg = i18n( "<qt><p>An error occurred while trying "
 			    "to import the certificate %1:</p>"
-			    "<p><b>%2</b></p></qt>" )
-                      .arg( certDisplayName )
-                      .arg( QString::fromLocal8Bit( err.asString() ) );
+			    "<p><b>%2</b></p></qt>" ,
+                        certDisplayName ,
+                        QString::fromLocal8Bit( err.asString() ) );
   KMessageBox::error( parent, msg, i18n( "Certificate Import Failed" ) );
 }
 
@@ -802,54 +802,54 @@ void CertManager::slotCertificateImportResult( const GpgME::ImportResult & res )
     showCertificateImportError( this, res.error(), displayName );
   } else {
 
-    const QString normalLine = i18n("<tr><td align=\"right\">%1</td><td>%2</td></tr>");
-    const QString boldLine = i18n("<tr><td align=\"right\"><b>%1</b></td><td>%2</td></tr>");
+    const KLocalizedString normalLine = ki18n("<tr><td align=\"right\">%1</td><td>%2</td></tr>");
+    const KLocalizedString boldLine = ki18n("<tr><td align=\"right\"><b>%1</b></td><td>%2</td></tr>");
 
     QStringList lines;
-    lines.push_back( normalLine.arg( i18n("Total number processed:"),
-				     QString::number( res.numConsidered() ) ) );
-    lines.push_back( normalLine.arg( i18n("Imported:"),
-				     QString::number( res.numImported() ) ) );
+    lines.push_back( normalLine.subs( i18n("Total number processed:") )
+			       .subs( res.numConsidered() ).toString() );
+    lines.push_back( normalLine.subs( i18n("Imported:") )
+			       .subs( res.numImported() ).toString() );
     if ( res.newSignatures() )
-      lines.push_back( normalLine.arg( i18n("New signatures:"),
-				       QString::number( res.newSignatures() ) ) );
+      lines.push_back( normalLine.subs( i18n("New signatures:") )
+				 .subs( res.newSignatures() ).toString() );
     if ( res.newUserIDs() )
-      lines.push_back( normalLine.arg( i18n("New user IDs:"),
-				       QString::number( res.newUserIDs() ) ) );
+      lines.push_back( normalLine.subs( i18n("New user IDs:") )
+				 .subs( res.newUserIDs() ).toString() );
     if ( res.numKeysWithoutUserID() )
-      lines.push_back( normalLine.arg( i18n("Keys without user IDs:"),
-				       QString::number( res.numKeysWithoutUserID() ) ) );
+      lines.push_back( normalLine.subs( i18n("Keys without user IDs:") )
+				 .subs( res.numKeysWithoutUserID() ).toString() );
     if ( res.newSubkeys() )
-      lines.push_back( normalLine.arg( i18n("New subkeys:"),
-				       QString::number( res.newSubkeys() ) ) );
+      lines.push_back( normalLine.subs( i18n("New subkeys:") )
+				 .subs( res.newSubkeys() ).toString() );
     if ( res.newRevocations() )
-      lines.push_back( boldLine.arg( i18n("Newly revoked:"),
-				     QString::number( res.newRevocations() ) ) );
+      lines.push_back( boldLine.subs( i18n("Newly revoked:") )
+			       .subs( res.newRevocations() ).toString() );
     if ( res.notImported() )
-      lines.push_back( boldLine.arg( i18n("Not imported:"),
-				     QString::number( res.notImported() ) ) );
+      lines.push_back( boldLine.subs( i18n("Not imported:") )
+			       .subs( res.notImported() ).toString() );
     if ( res.numUnchanged() )
-      lines.push_back( normalLine.arg( i18n("Unchanged:"),
-				       QString::number( res.numUnchanged() ) ) );
+      lines.push_back( normalLine.subs( i18n("Unchanged:") )
+				 .subs( res.numUnchanged() ).toString() );
     if ( res.numSecretKeysConsidered() )
-      lines.push_back( normalLine.arg( i18n("Secret keys processed:"),
-				       QString::number( res.numSecretKeysConsidered() ) ) );
+      lines.push_back( normalLine.subs( i18n("Secret keys processed:") )
+				 .subs( res.numSecretKeysConsidered() ).toString() );
     if ( res.numSecretKeysImported() )
-      lines.push_back( normalLine.arg( i18n("Secret keys imported:"),
-				       QString::number( res.numSecretKeysImported() ) ) );
+      lines.push_back( normalLine.subs( i18n("Secret keys imported:") )
+				 .subs( res.numSecretKeysImported() ).toString() );
     if ( res.numSecretKeysConsidered() - res.numSecretKeysImported() - res.numSecretKeysUnchanged() > 0 )
-      lines.push_back( boldLine.arg( i18n("Secret keys <em>not</em> imported:"),
-				     QString::number( res.numSecretKeysConsidered()
-						      - res.numSecretKeysImported()
-						      - res.numSecretKeysUnchanged() ) ) );
+      lines.push_back( boldLine.subs( i18n("Secret keys <em>not</em> imported:") )
+			       .subs(  res.numSecretKeysConsidered()
+				     - res.numSecretKeysImported()
+				     - res.numSecretKeysUnchanged() ).toString() );
     if ( res.numSecretKeysUnchanged() )
-      lines.push_back( normalLine.arg( i18n("Secret keys unchanged:"),
-				       QString::number( res.numSecretKeysUnchanged() ) ) );
+      lines.push_back( normalLine.subs( i18n("Secret keys unchanged:") )
+				 .subs( res.numSecretKeysUnchanged() ).toString() );
 
     KMessageBox::information( this,
 			      i18n( "<qt><p>Detailed results of importing %1:</p>"
-				    "<table>%2</table></qt>" )
-			      .arg( displayName ).arg( lines.join( QString() ) ),
+				    "<table>%2</table></qt>" ,
+			        displayName, lines.join( QString() ) ),
 			      i18n( "Certificate Import Result" ) );
 
     disconnectJobFromStatusBarProgress( res.error() );
@@ -871,7 +871,7 @@ void CertManager::slotDirmngrExited() {
     if ( !mDirmngrProc->normalExit() )
         KMessageBox::error( this, i18n( "The GpgSM process that tried to import the CRL file ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
     else if ( mDirmngrProc->exitStatus() )
-      KMessageBox::error( this, i18n( "An error occurred when trying to import the CRL file. The output from GpgSM was:\n%1").arg( mErrorbuffer ), i18n( "Certificate Manager Error" ) );
+      KMessageBox::error( this, i18n( "An error occurred when trying to import the CRL file. The output from GpgSM was:\n%1", mErrorbuffer ), i18n( "Certificate Manager Error" ) );
     else
       KMessageBox::information( this, i18n( "CRL file imported successfully." ), i18n( "Certificate Manager Information" ) );
 
@@ -930,7 +930,7 @@ bool CertManager::connectAndStartDirmngr( const char * slot, const char * proces
            this, SLOT(slotStderr(KProcess*,char*,int)) );
   if( !mDirmngrProc->start( KProcess::NotifyOnExit, KProcess::Stderr ) ) {
     delete mDirmngrProc; mDirmngrProc = 0;
-    KMessageBox::error( this, i18n( "Unable to start %1 process. Please check your installation." ).arg( processname ), i18n( "Certificate Manager Error" ) );
+    KMessageBox::error( this, i18n( "Unable to start %1 process. Please check your installation.", processname ), i18n( "Certificate Manager Error" ) );
     return false;
   }
   return true;
@@ -987,7 +987,7 @@ void CertManager::slotClearCRLsResult() {
   if ( !mDirmngrProc->normalExit() )
     KMessageBox::error( this, i18n( "The DirMngr process that tried to clear the CRL cache ended prematurely because of an unexpected error." ), i18n( "Certificate Manager Error" ) );
   else if ( mDirmngrProc->exitStatus() )
-    KMessageBox::error( this, i18n( "An error occurred when trying to clear the CRL cache. The output from DirMngr was:\n%1").arg( mErrorbuffer ), i18n( "Certificate Manager Error" ) );
+    KMessageBox::error( this, i18n( "An error occurred when trying to clear the CRL cache. The output from DirMngr was:\n%1", mErrorbuffer ), i18n( "Certificate Manager Error" ) );
   else
     KMessageBox::information( this, i18n( "CRL cache cleared successfully." ), i18n( "Certificate Manager Information" ) );
   delete mDirmngrProc; mDirmngrProc = 0;
@@ -997,8 +997,8 @@ static void showDeleteError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
   const QString msg = i18n("<qt><p>An error occurred while trying to delete "
 			   "the certificates:</p>"
-			   "<p><b>%1</b></p></qt>")
-    .arg( QString::fromLocal8Bit( err.asString() ) );
+			   "<p><b>%1</b></p></qt>",
+      QString::fromLocal8Bit( err.asString() ) );
   KMessageBox::error( parent, msg, i18n("Certificate Deletion Failed") );
 }
 
@@ -1069,10 +1069,10 @@ void CertManager::slotDeleteCertificate() {
       return;
 
   const QString msg = keysToDelete.size() > keys.size()
-    ? i18n("Do you really want to delete this certificate and the %1 certificates it certified?",
+    ? i18np("Do you really want to delete this certificate and the %1 certificates it certified?",
 	   "Do you really want to delete these %n certificates and the %1 certificates they certified?",
-	   keys.size() ).arg( keysToDelete.size() - keys.size() )
-    : i18n("Do you really want to delete this certificate?",
+	   keys.size(), keysToDelete.size() - keys.size() )
+    : i18np("Do you really want to delete this certificate?",
 	   "Do you really want to delete these %n certificates?", keys.size() ) ;
 
   if ( KMessageBox::warningContinueCancelList( this, msg, keyDisplayNames,
@@ -1085,16 +1085,15 @@ void CertManager::slotDeleteCertificate() {
   if ( Kleo::DeleteJob * job = Kleo::CryptoBackendFactory::instance()->smime()->deleteJob() )
     job->slotCancel();
   else {
+    QString reason = i18n("Operation not supported by the backend.");
     QString str = keys.size() == 1
                   ? i18n("<qt><p>An error occurred while trying to delete "
                          "the certificate:</p>"
-                         "<p><b>%1</b><p></qt>" )
+                         "<p><b>%1</b><p></qt>", reason )
                   : i18n( "<qt><p>An error occurred while trying to delete "
                           "the certificates:</p>"
-                          "<p><b>%1</b><p></qt>" );
-    KMessageBox::error( this,
-			str.arg( i18n("Operation not supported by the backend.") ),
-			i18n("Certificate Deletion Failed") );
+                          "<p><b>%1</b><p></qt>", reason );
+    KMessageBox::error( this, str, i18n("Certificate Deletion Failed") );
   }
 
   mItemsToDelete.clear(); // re-create according to the real selection
@@ -1200,8 +1199,8 @@ static void showCertificateExportError( QWidget * parent, const GpgME::Error & e
   assert( err );
   const QString msg = i18n("<qt><p>An error occurred while trying to export "
 			   "the certificate:</p>"
-			   "<p><b>%1</b></p></qt>")
-    .arg( QString::fromLocal8Bit( err.asString() ) );
+			   "<p><b>%1</b></p></qt>",
+      QString::fromLocal8Bit( err.asString() ) );
   KMessageBox::error( parent, msg, i18n("Certificate Export Failed") );
 }
 
@@ -1234,7 +1233,7 @@ static bool checkOverwrite( const KUrl& url, bool& overwrite, QWidget* w )
          KMessageBox::warningContinueCancel(
                                             w,
                                             i18n( "A file named \"%1\" already exists. "
-                                                  "Are you sure you want to overwrite it?" ).arg( url.prettyURL() ),
+                                                  "Are you sure you want to overwrite it?", url.prettyURL() ),
                                             i18n( "Overwrite File?" ),
                                             i18n( "&Overwrite" ) ) )
       return false;
@@ -1293,8 +1292,8 @@ static void showSecretKeyExportError( QWidget * parent, const GpgME::Error & err
   assert( err );
   const QString msg = i18n("<qt><p>An error occurred while trying to export "
 			   "the secret key:</p>"
-			   "<p><b>%1</b></p></qt>")
-    .arg( QString::fromLocal8Bit( err.asString() ) );
+			   "<p><b>%1</b></p></qt>",
+      QString::fromLocal8Bit( err.asString() ) );
   KMessageBox::error( parent, msg, i18n("Secret-Key Export Failed") );
 }
 

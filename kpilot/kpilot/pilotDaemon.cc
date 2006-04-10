@@ -172,12 +172,12 @@ void PilotDaemonTray::setupWidget()
 	menu->insertSeparator();
 
 	fSyncTypeMenu = new KMenu(menu,"sync_type_menu");
-	QString once = i18n("Appended to names of sync types to indicate the sync will happen just one time"," (once)");
+	QString once = i18nc("Appended to names of sync types to indicate the sync will happen just one time"," (once)");
 #define MI(a) fSyncTypeMenu->insertItem( \
 		SyncAction::SyncMode::name(SyncAction::SyncMode::a) + once, \
 		(int)(SyncAction::SyncMode::a));
-	fSyncTypeMenu->insertItem(i18n("Default (%1)")
-		.arg(SyncAction::SyncMode::name((SyncAction::SyncMode::Mode)KPilotSettings::syncType())),
+	fSyncTypeMenu->insertItem(i18n("Default (%1)",
+		 SyncAction::SyncMode::name((SyncAction::SyncMode::Mode)KPilotSettings::syncType())),
 		0);
 	fSyncTypeMenu->insertSeparator();
 
@@ -689,7 +689,7 @@ bool PilotDaemon::setupPilotLink()
 		}
 	}
 
-	getLogger().logMessage(i18n("Next HotSync will be: %1. ").arg(fNextSyncType.name()) +
+	getLogger().logMessage(i18n("Next HotSync will be: %1. ", fNextSyncType.name()) +
 		i18n("Please press the HotSync button."));
 }
 
@@ -1241,8 +1241,8 @@ void PilotDaemon::updateTrayStatus(const QString &s)
 	QString tipText = CSL1("<qt>");
 	tipText.append( s );
 	tipText.append( CSL1(" ") );
-	tipText.append( i18n("Next sync is %1.")
-		.arg( fNextSyncType.name() ) );
+	tipText.append( i18n("Next sync is %1.",
+		  fNextSyncType.name() ) );
 	tipText.append( CSL1("</qt>") );
 
 	QToolTip::remove(fTray);

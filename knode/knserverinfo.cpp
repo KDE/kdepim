@@ -104,7 +104,7 @@ void KNServerInfo::saveConf(KConfig *conf)
                 "but should not be considered secure from decryption efforts "
                 "if access to the configuration file is obtained.\n"
                 "Do you want to store the password for server '%1' in the "
-                "configuration file?").arg( server() ),
+                "configuration file?", server() ),
             i18n("KWallet Not Available"),
             KGuiItem( i18n("Store Password") ),
             KGuiItem( i18n("Do Not Store Password") ) )

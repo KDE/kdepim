@@ -38,8 +38,8 @@ ConfirmSaveDialog::ConfirmSaveDialog( const QString &destination,
   topLayout->setSpacing( spacingHint() );
 
   QLabel *label = new QLabel(
-      i18n("You have requested to save the following objects to '%1':")
-      .arg( destination ), topFrame );
+      i18n("You have requested to save the following objects to '%1':",
+        destination ), topFrame );
   topLayout->addWidget( label );
 
   QStringList headers;

@@ -154,13 +154,13 @@ BaseG::encsign( Block& block, const KeyIDList& recipients,
       if(num == recipients.count())
         errMsg = i18n("Could not find public keys matching the userid(s)\n"
                       "%1;\n"
-                      "the message is not encrypted.")
-                     .arg( badkeys.data() );
+                      "the message is not encrypted.",
+                       badkeys.data() );
       else
         errMsg = i18n("Could not find public keys matching the userid(s)\n"
                       "%1;\n"
-                      "these persons will not be able to read the message.")
-                     .arg( badkeys.data() );
+                      "these persons will not be able to read the message.",
+                       badkeys.data() );
       status |= MISSINGKEY;
       status |= ERROR;
     }

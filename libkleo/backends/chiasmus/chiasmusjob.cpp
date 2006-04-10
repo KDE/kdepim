@@ -206,12 +206,12 @@ void Kleo::ChiasmusJob::showErrorDialog( QWidget * parent, const QString & capti
     return;
   if ( mError.isCanceled() )
     return;
+  const QString reason = QString::fromLocal8Bit( mError.asString() );
   const QString msg = ( mMode == Encrypt
-                        ? i18n( "Encryption failed: %1" )
-                        : i18n( "Decryption failed: %1" ) )
-    .arg( QString::fromLocal8Bit( mError.asString() ) );
+                        ? i18n( "Encryption failed: %1", reason )
+                        : i18n( "Decryption failed: %1", reason ) );
   if ( !mStderr.isEmpty() ) {
-    const QString details = i18n( "The following was received on stderr:\n%1" ).arg( mStderr );
+    const QString details = i18n( "The following was received on stderr:\n%1", mStderr );
     KMessageBox::detailedError( parent, msg, details, caption );
   } else {
     KMessageBox::error( parent, msg, caption );

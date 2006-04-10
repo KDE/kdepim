@@ -194,10 +194,10 @@ void AddressWidget::hideComponent()
 #endif
 
 #if KDE_VERSION<220
-		s = i18n("There are still %1 address editing windows open.")
-			.arg(QString::number(fPendingAddresses));
+		s = i18n("There are still %1 address editing windows open.",
+			 fPendingAddresses);
 #else
-		s = i18n("There is still an address editing window open.",
+		s = i18np("There is still an address editing window open.",
 			"There are still %n address editing windows open.",
 			fPendingAddresses);
 #endif
@@ -685,7 +685,7 @@ void AddressWidget::slotExport()
 
 	QString prompt = (currentCatID==-1) ?
 		i18n("Export All Addresses") :
-		i18n("Export Address Category %1").arg(fAddressAppInfo->category(currentCatID)) ;
+		i18n("Export Address Category %1", fAddressAppInfo->category(currentCatID)) ;
 
 
 	QString saveFile = KFileDialog::getSaveFileName(
@@ -703,7 +703,7 @@ void AddressWidget::slotExport()
 	}
 	if (QFile::exists(saveFile) &&
 		KMessageBox::warningContinueCancel(this,
-			i18n("The file <i>%1</i> exists. Overwrite?").arg(saveFile),
+			i18n("The file <i>%1</i> exists. Overwrite?", saveFile),
 			i18n("Overwrite File?"),
 			i18n("Overwrite"))!=KMessageBox::Continue)
 	{
@@ -717,7 +717,7 @@ void AddressWidget::slotExport()
 	if (!f)
 	{
 		KMessageBox::sorry(this,
-			i18n("The file <i>%1</i> could not be opened for writing.").arg(saveFile));
+			i18n("The file <i>%1</i> could not be opened for writing.", saveFile));
 		return;
 	}
 	fAddressList.first();

@@ -139,13 +139,13 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
         if(num == recipients.count())
 	  errMsg = i18n("Could not find public keys matching the userid(s)\n"
                         "%1;\n"
-                        "the message is not encrypted.")
-                       .arg( badkeys.data() );
+                        "the message is not encrypted.",
+                         badkeys.data() );
         else
           errMsg = i18n("Could not find public keys matching the userid(s)\n"
                         "%1;\n"
-                        "these persons will not be able to read the message.")
-                       .arg( badkeys.data() );
+                        "these persons will not be able to read the message.",
+                         badkeys.data() );
         status |= MISSINGKEY;
         status |= ERROR;
       }
@@ -171,14 +171,14 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
 	  errMsg = i18n("Public keys not certified with trusted signature "
                         "for userid(s)\n"
                         "%1.\n"
-                        "The message is not encrypted.")
-                       .arg( badkeys.data() );
+                        "The message is not encrypted.",
+                         badkeys.data() );
         else
 	  errMsg = i18n("Public keys not certified with trusted signature "
                         "for userid(s)\n"
                         "%1;\n"
-                        "these persons will not be able to read the message.")
-                       .arg( badkeys.data() );
+                        "these persons will not be able to read the message.",
+                         badkeys.data() );
         status |= BADKEYS;
         status |= ERROR;
         return status;
@@ -449,7 +449,7 @@ Base2::decrypt( Block& block, const char *passphrase )
       index = error.find('\'', index) + 1;
       index2 = error.find('\'', index);
       block.setSignatureUserId( i18n("The keyring file %1 does not exist.\n"
-      "Please check your PGP setup.").arg(QString::fromLatin1( error.mid(index, index2-index)) ) );
+      "Please check your PGP setup.", QString::fromLatin1( error.mid(index, index2-index)) ) );
     }
     else
     {

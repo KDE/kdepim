@@ -359,7 +359,7 @@ void KNGroupBrowser::slotFilter(const QString &txt)
   lastFilter = filtertxt;
   incrementalFilter = !isRegexp;
 
-  leftLabel->setText(i18n("Groups on %1: (%2 displayed)").arg(a_ccount->name()).arg(matchList->count()));
+  leftLabel->setText(i18n("Groups on %1: (%2 displayed)", a_ccount->name(), matchList->count()));
 
   arrowBtn1->setEnabled(false);
   arrowBtn2->setEnabled(false);

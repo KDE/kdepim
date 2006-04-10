@@ -75,7 +75,7 @@ void KSelFilterPage::filterSelected(int i)
 	QString info = mFilterList.at(i)->info();
 	QString author = mFilterList.at(i)->author();
 	if(!author.isEmpty())
-		info += i18n("<p><i>Written by %1.</i></p>").arg(author);
+		info += i18n("<p><i>Written by %1.</i></p>", author);
 	mDesc->setText(info);
 }
 

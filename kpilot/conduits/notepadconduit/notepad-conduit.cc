@@ -82,7 +82,7 @@ NotepadConduit::~NotepadConduit()
 
 	QDir dir(NotepadConduitSettings::outputDirectory());
 	if(!dir.exists() && !dir.mkdir(dir.path())) {
-		emit logError(i18n("Unable to open %1").arg(dir.path()));
+		emit logError(i18n("Unable to open %1", dir.path()));
 		delayDone();
 		return false;
 	}
@@ -108,8 +108,8 @@ bool NotepadConduit::event(QEvent *e)
 //		stopTickle();
 		delayDone();
 		if(thread->getFailed())
-			logError(i18n("1 notepad could not be saved", "%n notepads could not be saved", thread->getFailed()));
-		logMessage(i18n("1 notepad saved", "%n notepads saved", thread->getSaved()));
+			logError(i18np("1 notepad could not be saved", "%n notepads could not be saved", thread->getFailed()));
+		logMessage(i18np("1 notepad saved", "%n notepads saved", thread->getSaved()));
 		delete thread;
 		return true;
 	}

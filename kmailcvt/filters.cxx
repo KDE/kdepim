@@ -151,16 +151,16 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
   switch ( int( reply ) )
   {
     case -1:
-      info->alert( i18n( "Cannot make folder %1 in KMail" ).arg( folderName ) );
+      info->alert( i18n( "Cannot make folder %1 in KMail", folderName ) );
       return false;
     case -2:
-      info->alert( i18n( "Cannot add message to folder %1 in KMail" ).arg( folderName ) );
+      info->alert( i18n( "Cannot add message to folder %1 in KMail", folderName ) );
       return false;
     case -4:
       count_duplicates++;
       return false;
     case 0:
-      info->alert( i18n( "Error while adding message to folder %1 in KMail" ).arg( folderName ) );
+      info->alert( i18n( "Error while adding message to folder %1 in KMail", folderName ) );
       return false;
   }
   return true;
@@ -186,13 +186,13 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
   switch ( int( reply ) )
   {
     case -1:
-      info->alert( i18n( "Cannot make folder %1 in KMail" ).arg( folderName ) );
+      info->alert( i18n( "Cannot make folder %1 in KMail", folderName ) );
       return false;
     case -2:
-      info->alert( i18n( "Cannot add message to folder %1 in KMail" ).arg( folderName ) );
+      info->alert( i18n( "Cannot add message to folder %1 in KMail", folderName ) );
       return false;
     case 0:
-      info->alert( i18n( "Error while adding message to folder %1 in KMail" ).arg( folderName ) );
+      info->alert( i18n( "Error while adding message to folder %1 in KMail", folderName ) );
       return false;
   }
   return true;

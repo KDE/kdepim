@@ -25,36 +25,36 @@ static const char *disp[] = { "Groups", 0 };
 
 void dummyHeader()
 {
-  i18n("collection of article headers","Approved");
-  i18n("collection of article headers","Content-Transfer-Encoding");
-  i18n("collection of article headers","Content-Type");
-  i18n("collection of article headers","Control");
-  i18n("collection of article headers","Date");
-  i18n("collection of article headers","Distribution");
-  i18n("collection of article headers","Expires");
-  i18n("collection of article headers","Followup-To");
-  i18n("collection of article headers","From");
-  i18n("collection of article headers","Lines");
-  i18n("collection of article headers","Mail-Copies-To");
-  i18n("collection of article headers","Message-ID");
-  i18n("collection of article headers","Mime-Version");
-  i18n("collection of article headers","NNTP-Posting-Host");
-  i18n("collection of article headers","Newsgroups");
-  i18n("collection of article headers","Organization");
-  i18n("collection of article headers","Path");
-  i18n("collection of article headers","References");
-  i18n("collection of article headers","Reply-To");
-  i18n("collection of article headers","Sender");
-  i18n("collection of article headers","Subject");
-  i18n("collection of article headers","Supersedes");
-  i18n("collection of article headers","To");
-  i18n("collection of article headers","User-Agent");
-  i18n("collection of article headers","X-Mailer");
-  i18n("collection of article headers","X-Newsreader");
-  i18n("collection of article headers","X-No-Archive");
-  i18n("collection of article headers","XRef");
+  i18nc("collection of article headers","Approved");
+  i18nc("collection of article headers","Content-Transfer-Encoding");
+  i18nc("collection of article headers","Content-Type");
+  i18nc("collection of article headers","Control");
+  i18nc("collection of article headers","Date");
+  i18nc("collection of article headers","Distribution");
+  i18nc("collection of article headers","Expires");
+  i18nc("collection of article headers","Followup-To");
+  i18nc("collection of article headers","From");
+  i18nc("collection of article headers","Lines");
+  i18nc("collection of article headers","Mail-Copies-To");
+  i18nc("collection of article headers","Message-ID");
+  i18nc("collection of article headers","Mime-Version");
+  i18nc("collection of article headers","NNTP-Posting-Host");
+  i18nc("collection of article headers","Newsgroups");
+  i18nc("collection of article headers","Organization");
+  i18nc("collection of article headers","Path");
+  i18nc("collection of article headers","References");
+  i18nc("collection of article headers","Reply-To");
+  i18nc("collection of article headers","Sender");
+  i18nc("collection of article headers","Subject");
+  i18nc("collection of article headers","Supersedes");
+  i18nc("collection of article headers","To");
+  i18nc("collection of article headers","User-Agent");
+  i18nc("collection of article headers","X-Mailer");
+  i18nc("collection of article headers","X-Newsreader");
+  i18nc("collection of article headers","X-No-Archive");
+  i18nc("collection of article headers","XRef");
 
-  i18n("collection of article headers","Groups");
+  i18nc("collection of article headers","Groups");
 }
 
 
@@ -116,8 +116,8 @@ QString KNDisplayedHeader::translatedName()
   if (t_ranslateName) {
     // major hack alert !!!
     if (!n_ame.isEmpty()) {
-      if (i18n("collection of article headers",n_ame.toLocal8Bit())!=n_ame.toLocal8Bit().data())    // try to guess if this english or not
-        return i18n("collection of article headers",n_ame.toLocal8Bit());
+      if (i18nc("collection of article headers",n_ame.toLocal8Bit())!=n_ame.toLocal8Bit().data())    // try to guess if this english or not
+        return i18nc("collection of article headers",n_ame.toLocal8Bit());
       else
         return n_ame;
     } else
@@ -134,7 +134,7 @@ void KNDisplayedHeader::setTranslatedName(const QString &s)
   QString c;
   QStringList pd = predefs();
   Q_FOREACH( c, pd ) {
-    if ( s == i18n("collection of article headers", c.toLatin1()) ) {
+    if ( s == i18nc("collection of article headers", c.toLatin1()) ) {
       n_ame = c;
       retranslated = true;
       break;
@@ -143,7 +143,7 @@ void KNDisplayedHeader::setTranslatedName(const QString &s)
 
   if (!retranslated) {
     for (const char **c=disp;(*c)!=0;c++)   // now our standard display names
-      if (s==i18n("collection of article headers",*c)) {
+      if (s==i18nc("collection of article headers",*c)) {
         n_ame = QString::fromLatin1(*c);
         retranslated = true;
         break;

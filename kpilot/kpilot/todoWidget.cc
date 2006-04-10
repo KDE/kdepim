@@ -180,10 +180,10 @@ void TodoWidget::showComponent()
 #endif
 
 #if KDE_VERSION<220
-		s = i18n("There are still %1 to-do editing windows open.")
-			.arg(QString::number(fPendingTodos));
+		s = i18n("There are still %1 to-do editing windows open.",
+			 fPendingTodos);
 #else
-		s = i18n("There is still a to-do editing window open.",
+		s = i18np("There is still a to-do editing window open.",
 			"There are still %n to-do editing windows open.",
 			fPendingTodos);
 #endif

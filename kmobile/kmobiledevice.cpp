@@ -379,15 +379,15 @@ bool KMobileDevice::lockDevice(const QString &device, QString &err_reason)
   int pid = -1;
   QStringList all = device.split('/', QString::SkipEmptyParts);
   if (!all.count()) {
-	err_reason = i18n("Invalid device (%1)").arg(device);
+	err_reason = i18n("Invalid device (%1)", device);
 	return false;
   }
   QString lockName = DEVICE_LOCK_PATH_PREFIX + all[all.count()-1];
   QFile file(lockName);
   if (file.exists() && file.open(QIODevice::ReadOnly)) {
      if (file.size() == 0) {
-	err_reason = i18n("Unable to read lockfile %s. Please check for reason and "
-		"remove the lockfile by hand.").arg(lockName);
+	err_reason = i18n("Unable to read lockfile %1. Please check for reason and "
+		"remove the lockfile by hand.", lockName);
 	PRINT_DEBUG << err_reason;
 	return false;
      }
@@ -405,11 +405,11 @@ bool KMobileDevice::lockDevice(const QString &device, QString &err_reason)
 	if (!file.remove()) {
 		PRINT_DEBUG << QString("Overriding failed, please check the permissions\n");
 		PRINT_DEBUG << QString("Cannot lock device %1\n").arg(device);
-		err_reason = i18n("Lockfile %1 is stale. Please check permissions.").arg(lockName);
+		err_reason = i18n("Lockfile %1 is stale. Please check permissions.", lockName);
 		return false;
 	}
      } else {
-	err_reason = i18n("Device %1 already locked.").arg(device);
+	err_reason = i18n("Device %1 already locked.", device);
 	return false;
     }
   }
@@ -418,13 +418,13 @@ bool KMobileDevice::lockDevice(const QString &device, QString &err_reason)
   int fd = open(lockName.local8Bit(), O_CREAT | O_EXCL | O_WRONLY, 0644);
   if (fd == -1) {
 	if (errno == EEXIST)
-		err_reason = i18n("Device %1 seems to be locked by unknown process.").arg(device);
+		err_reason = i18n("Device %1 seems to be locked by unknown process.", device);
 	else if (errno == EACCES)
 		err_reason = i18n("Please check permission on lock directory.");
 	else if (errno == ENOENT)
-		err_reason = i18n("Cannot create lockfile %1. Please check for existence of path.").arg(lockName);
+		err_reason = i18n("Cannot create lockfile %1. Please check for existence of path.", lockName);
 	else
-		err_reason = i18n("Could not create lockfile %1. Error-Code is %2.").arg(lockName).arg(errno);
+		err_reason = i18n("Could not create lockfile %1. Error-Code is %2.", lockName, errno);
 	return false;
   }
   QString lockText;

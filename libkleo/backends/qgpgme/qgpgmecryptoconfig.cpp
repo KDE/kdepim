@@ -89,13 +89,14 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
 
   // handle errors, if any (and if requested)
   if ( showErrors && rc != 0 ) {
-    QString wmsg = i18n("<qt>Failed to execute gpgconf:<br>%1</qt>");
+    QString reason;
     if ( rc == -1 )
-        wmsg = wmsg.arg( i18n( "program not found" ) );
+        reason = i18n( "program not found" );
     else if ( rc == -2 )
-        wmsg = wmsg.arg( i18n( "program cannot be executed" ) );
+        reason = i18n( "program cannot be executed" );
     else
-        wmsg = wmsg.arg( strerror(rc) );
+        reason = strerror(rc);
+    QString wmsg = i18n("<qt>Failed to execute gpgconf:<br>%1</qt>", reason);
     kWarning(5150) << wmsg << endl; // to see it from test_cryptoconfig.cpp
     KMessageBox::error(0, wmsg);
   }
@@ -308,7 +309,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   }
   else if( rc != 0 ) // Happens due to bugs in gpgconf (e.g. issues 104/115)
   {
-    QString wmsg = i18n( "Error from gpgconf while saving configuration: %1" ).arg( strerror( rc ) );
+    QString wmsg = i18n( "Error from gpgconf while saving configuration: %1", strerror( rc ) );
     kWarning(5150) << k_funcinfo << ":" << strerror( rc ) << endl;
     KMessageBox::error(0, wmsg);
   }

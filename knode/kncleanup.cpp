@@ -62,13 +62,13 @@ void KNCleanUp::start()
 
   for ( QList<KNArticleCollection*>::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
     if ( (*it)->type() == KNCollection::CTgroup ) {
-      d_lg->showMessage( i18n("Deleting expired articles in <b>%1</b>").arg( (*it)->name() ) );
+      d_lg->showMessage( i18n("Deleting expired articles in <b>%1</b>", (*it)->name() ) );
       kapp->processEvents();
       expireGroup( static_cast<KNGroup*>( (*it) ) );
       d_lg->doProgress();
     }
     else if ( (*it)->type() == KNCollection::CTfolder ) {
-      d_lg->showMessage( i18n("Compacting folder <b>%1</b>").arg( (*it)->name() ) );
+      d_lg->showMessage( i18n("Compacting folder <b>%1</b>", (*it)->name() ) );
       kapp->processEvents();
       compactFolder( static_cast<KNFolder*>( (*it) ) );
       d_lg->doProgress();
@@ -193,7 +193,7 @@ void KNCleanUp::expireGroup( KNGroup *g, bool showResult )
 
   if(showResult)
     KMessageBox::information(knGlobals.topWidget,
-      i18n("<b>%1</b><br>expired: %2<br>left: %3").arg(g->groupname()).arg(delCnt).arg(leftCnt));
+      i18n("<b>%1</b><br>expired: %2<br>left: %3", g->groupname(), delCnt, leftCnt));
 }
 
 

@@ -308,8 +308,8 @@ void ViewManager::editView()
 
 void ViewManager::deleteView()
 {
-  QString text = i18n( "<qt>Are you sure that you want to delete the view <b>%1</b>?</qt>" )
-                     .arg( mActiveView->windowTitle() );
+  QString text = i18n( "<qt>Are you sure that you want to delete the view <b>%1</b>?</qt>" ,
+                       mActiveView->windowTitle() );
   QString caption = i18n( "Confirm Delete" );
 
   if ( KMessageBox::warningContinueCancel( this, text, caption, KGuiItem( i18n( "&Delete" ), "editdelete" ) ) == KMessageBox::Continue ) {
@@ -427,7 +427,7 @@ void ViewManager::dropped( QDropEvent *e )
     KUrl::List::ConstIterator it = urls.begin();
     int c = urls.count();
     if ( c > 1 ) {
-      QString questionString = i18n( "Import one contact into your addressbook?", "Import %n contacts into your addressbook?", c );
+      QString questionString = i18np( "Import one contact into your addressbook?", "Import %n contacts into your addressbook?", c );
       if ( KMessageBox::questionYesNo( this, questionString, i18n( "Import Contacts?" ), i18n( "Import" ), i18n( "Do Not Import" ) ) == KMessageBox::Yes ) {
         for ( ; it != urls.end(); ++it )
           emit urlDropped( *it );

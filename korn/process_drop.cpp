@@ -67,7 +67,7 @@ void ProcessDrop::recheck()
 	{
 		_valid = _process->start( KProcess::NotifyOnExit, KProcess::Stdout );
 		if( !_valid )
-			kWarning() << i18n( "Could not start process %1" ).arg( *_program ) << endl; 
+			kWarning() << i18n( "Could not start process %1", *_program ) << endl; 
 	}
 
 }

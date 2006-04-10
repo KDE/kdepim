@@ -86,8 +86,8 @@ void KIO_Count::count( KKioDrop *drop )
 		//if( ! ( _slave = KIO::Scheduler::getConnectedSlave( kurl, metadata ) ) ) //Forcing reload
 		if( ! ( _slave = KIO_Connection::getSlave( kurl, metadata, _protocol ) ) ) //Reusing connection
 		{
-			kWarning() << i18n( "Not able to open a kio slave for %1." ).arg( _protocol->configName() ) << endl;
-			_kio->emitShowPassivePopup( i18n( "Not able to open a kio slave for %1." ).arg( _protocol->configName() ) );
+			kWarning() << i18n( "Not able to open a kio slave for %1.", _protocol->configName() ) << endl;
+			_kio->emitShowPassivePopup( i18n( "Not able to open a kio slave for %1.", _protocol->configName() ) );
 			_valid = false;
 			_kio->emitValidChanged();
 			_slave = 0;
@@ -208,8 +208,8 @@ void KIO_Count::result( KIO::Job* job )
 	//This could be very useful by resolving bugs.
 	if( job->error() )
 	{
-		kError() << i18n( "The next KIO-error occurred by counting: %1" ).arg( job->errorString() ) << endl;
-		_kio->emitShowPassivePopup( i18n( "The next KIO-error occurred by counting: %1" ).arg( job->errorString() ) );
+		kError() << i18n( "The next KIO-error occurred by counting: %1", job->errorString() ) << endl;
+		_kio->emitShowPassivePopup( i18n( "The next KIO-error occurred by counting: %1", job->errorString() ) );
 		_valid = false;
 		_kio->emitValidChanged();
 	}

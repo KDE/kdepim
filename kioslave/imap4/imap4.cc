@@ -630,9 +630,9 @@ IMAP4Protocol::listDir (const KUrl & _url)
   }
   if ( !selectInfo.alert().isNull() ) {
     if ( !myBox.isEmpty() ) {
-      warning( i18n( "Message from %1 while processing '%2': %3" ).arg( myHost, myBox, selectInfo.alert() ) );
+      warning( i18n( "Message from %1 while processing '%2': %3", myHost, myBox, selectInfo.alert() ) );
     } else {
-      warning( i18n( "Message from %1: %2" ).arg( myHost, selectInfo.alert() ) );
+      warning( i18n( "Message from %1: %2", myHost, selectInfo.alert() ) );
     }
     selectInfo.setAlert( 0 );
   }
@@ -958,7 +958,7 @@ IMAP4Protocol::mkdir (const KUrl & _url, int)
     if ( ask &&
         messageBox(QuestionYesNo,
           i18n("The following folder will be created on the server: %1 "
-               "What do you want to store in this folder?").arg( aBox ),
+               "What do you want to store in this folder?", aBox ),
           i18n("Create Folder"),
           i18n("&Messages"), i18n("&Subfolders")) == KMessageBox::No )
     {
@@ -1293,9 +1293,9 @@ IMAP4Protocol::special (const QByteArray & aData)
     {
       completeQueue.removeRef (cmd);
       error(ERR_SLAVE_DEFINED, i18n("Unsubscribe of folder %1 "
-                                    "failed. The server returned: %2")
-            .arg(_url.prettyURL())
-            .arg(cmd->resultInfo()));
+                                    "failed. The server returned: %2",
+             _url.prettyURL(),
+             cmd->resultInfo()));
       return;
     }
     completeQueue.removeRef (cmd);
@@ -1314,9 +1314,9 @@ IMAP4Protocol::special (const QByteArray & aData)
     {
       completeQueue.removeRef (cmd);
       error(ERR_SLAVE_DEFINED, i18n("Subscribe of folder %1 "
-                                    "failed. The server returned: %2")
-            .arg(_url.prettyURL())
-            .arg(cmd->resultInfo()));
+                                    "failed. The server returned: %2",
+             _url.prettyURL(),
+             cmd->resultInfo()));
       return;
     }
     completeQueue.removeRef (cmd);
@@ -1364,7 +1364,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     {
       completeQueue.removeRef (cmd);
       error(ERR_COULD_NOT_WRITE, i18n("Changing the flags of message %1 "
-                                      "failed.").arg(_url.prettyURL()));
+                                      "failed.", _url.prettyURL()));
       return;
     }
     completeQueue.removeRef (cmd);
@@ -1376,7 +1376,7 @@ IMAP4Protocol::special (const QByteArray & aData)
       {
         completeQueue.removeRef (cmd);
         error(ERR_COULD_NOT_WRITE, i18n("Changing the flags of message %1 "
-                                        "failed.").arg(_url.prettyURL()));
+                                        "failed.", _url.prettyURL()));
         return;
       }
       completeQueue.removeRef (cmd);
@@ -1416,10 +1416,10 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     if (cmd->result () != "OK")
     {
       error(ERR_SLAVE_DEFINED, i18n("Setting the Access Control List on folder %1 "
-                                      "for user %2 failed. The server returned: %3")
-            .arg(_url.prettyURL())
-            .arg(user)
-            .arg(cmd->resultInfo()));
+                                      "for user %2 failed. The server returned: %3",
+             _url.prettyURL(),
+             user,
+             cmd->resultInfo()));
       return;
     }
     completeQueue.removeRef (cmd);
@@ -1435,10 +1435,10 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     if (cmd->result () != "OK")
     {
       error(ERR_SLAVE_DEFINED, i18n("Deleting the Access Control List on folder %1 "
-                                    "for user %2 failed. The server returned: %3")
-            .arg(_url.prettyURL())
-            .arg(user)
-            .arg(cmd->resultInfo()));
+                                    "for user %2 failed. The server returned: %3",
+             _url.prettyURL(),
+             user,
+             cmd->resultInfo()));
       return;
     }
     completeQueue.removeRef (cmd);
@@ -1452,9 +1452,9 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     if (cmd->result () != "OK")
     {
       error(ERR_SLAVE_DEFINED, i18n("Retrieving the Access Control List on folder %1 "
-                                     "failed. The server returned: %2")
-            .arg(_url.prettyURL())
-            .arg(cmd->resultInfo()));
+                                     "failed. The server returned: %2",
+             _url.prettyURL(),
+             cmd->resultInfo()));
       return;
     }
     // Returning information to the application from a special() command isn't easy.
@@ -1479,9 +1479,9 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     if (cmd->result () != "OK")
     {
       error(ERR_SLAVE_DEFINED, i18n("Retrieving the Access Control List on folder %1 "
-                                    "failed. The server returned: %2")
-            .arg(_url.prettyURL())
-            .arg(cmd->resultInfo()));
+                                    "failed. The server returned: %2",
+             _url.prettyURL(),
+             cmd->resultInfo()));
       return;
     }
     QStringList lst = getResults();
@@ -1513,9 +1513,9 @@ IMAP4Protocol::specialSearchCommand( QDataStream& stream )
   if (cmd->result () != "OK")
   {
     error(ERR_SLAVE_DEFINED, i18n("Searching of folder %1 "
-          "failed. The server returned: %2")
-        .arg(aBox)
-        .arg(cmd->resultInfo()));
+          "failed. The server returned: %2",
+         aBox,
+         cmd->resultInfo()));
     return;
   }
   completeQueue.removeRef(cmd);
@@ -1551,10 +1551,10 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
     if (cmd->result () != "OK")
     {
       error(ERR_SLAVE_DEFINED, i18n("Setting the annotation %1 on folder %2 "
-                                    " failed. The server returned: %3")
-            .arg(entry)
-            .arg(_url.prettyURL())
-            .arg(cmd->resultInfo()));
+                                    " failed. The server returned: %3",
+             entry,
+             _url.prettyURL(),
+             cmd->resultInfo()));
       return;
     }
     completeQueue.removeRef (cmd);
@@ -1575,10 +1575,10 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
     if (cmd->result () != "OK")
     {
       error(ERR_SLAVE_DEFINED, i18n("Retrieving the annotation %1 on folder %2 "
-                                     "failed. The server returned: %3")
-            .arg(entry)
-            .arg(_url.prettyURL())
-            .arg(cmd->resultInfo()));
+                                     "failed. The server returned: %3",
+             entry,
+             _url.prettyURL(),
+             cmd->resultInfo()));
       return;
     }
     // Returning information to the application from a special() command isn't easy.
@@ -1721,7 +1721,7 @@ IMAP4Protocol::stat (const KUrl & _url)
       }
       completeQueue.removeRef (cmd);
       if (found)
-        error(ERR_COULD_NOT_STAT, i18n("Unable to get information about folder %1. The server replied: %2").arg(aBox).arg(cmdInfo));
+        error(ERR_COULD_NOT_STAT, i18n("Unable to get information about folder %1. The server replied: %2", aBox, cmdInfo));
       else
         error(KIO::ERR_DOES_NOT_EXIST, aBox);
       return;
@@ -1875,8 +1875,8 @@ bool IMAP4Protocol::makeLogin ()
     if (!hasCapability("IMAP4") && !hasCapability("IMAP4rev1"))
     {
       error(ERR_COULD_NOT_LOGIN, i18n("The server %1 supports neither "
-        "IMAP4 nor IMAP4rev1.\nIt identified itself with: %2")
-        .arg(myHost).arg(greeting));
+        "IMAP4 nor IMAP4rev1.\nIt identified itself with: %2",
+         myHost, greeting));
       closeConnection();
       return false;
     }
@@ -1921,7 +1921,7 @@ bool IMAP4Protocol::makeLogin ()
         && !hasCapability (QString ("AUTH=") + myAuth))
     {
       error (ERR_COULD_NOT_LOGIN, i18n("The authentication method %1 is not "
-        "supported by the server.").arg(myAuth));
+        "supported by the server.", myAuth));
       closeConnection();
       return false;
     }
@@ -1950,14 +1950,14 @@ bool IMAP4Protocol::makeLogin ()
       }
       if (!clientLogin (myUser, myPass, resultInfo))
         error(KIO::ERR_COULD_NOT_LOGIN, i18n("Unable to login. Probably the "
-        "password is wrong.\nThe server %1 replied:\n%2").arg(myHost).arg(resultInfo));
+        "password is wrong.\nThe server %1 replied:\n%2", myHost, resultInfo));
     }
     else
     {
 #ifdef HAVE_LIBSASL2
       if (!clientAuthenticate (this, authInfo, myHost, myAuth, mySSL, resultInfo))
         error(KIO::ERR_COULD_NOT_LOGIN, i18n("Unable to authenticate via %1.\n"
-	"The server %2 replied:\n%3").arg(myAuth).arg(myHost).arg(resultInfo));
+	"The server %2 replied:\n%3", myAuth, myHost, resultInfo));
       else {
         myUser = authInfo.username;
         myPass = authInfo.password;
@@ -2449,7 +2449,7 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
           // not allowed to enter this folder
           error(ERR_ACCESS_DENIED, cmdInfo);
         } else {
-          error(ERR_SLAVE_DEFINED, i18n("Unable to open folder %1. The server replied: %2").arg(aBox).arg(cmdInfo));
+          error(ERR_SLAVE_DEFINED, i18n("Unable to open folder %1. The server replied: %2", aBox, cmdInfo));
         }
       } else {
         error(KIO::ERR_DOES_NOT_EXIST, aBox);

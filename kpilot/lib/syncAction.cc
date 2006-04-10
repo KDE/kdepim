@@ -109,8 +109,8 @@ SyncAction::~SyncAction()
 
 	if (!r)
 	{
-		emit logError(i18n("The conduit %1 could not be executed.")
-			.arg(QString::fromLatin1(name())));
+		emit logError(i18n("The conduit %1 could not be executed.",
+			 QString::fromLatin1(name())));
 		delayDone();
 	}
 }

@@ -921,8 +921,8 @@ void KNArticleManager::processJob(KNJobData *j)
         msgId = msgId.mid( 1, msgId.length() - 2 );
         ArticleWidget::articleLoadError( a,
             i18n("The article you requested is not available on your news server."
-            "<br>You could try to get it from <a href=\"http://groups.google.com/groups?selm=%1\">groups.google.com</a>.")
-            .arg( msgId ) );
+            "<br>You could try to get it from <a href=\"http://groups.google.com/groups?selm=%1\">groups.google.com</a>.",
+              msgId ) );
         // mark article as read
         if ( knGlobals.settings()->autoMark() && !a->isOrphant() ) {
           KNRemoteArticle::List l;
@@ -1010,11 +1010,11 @@ void KNArticleManager::updateStatusString()
     if (g_roup->status()==KNGroup::moderated)
       name += i18n(" (moderated)");
 
-    knGlobals.setStatusMsg(i18n(" %1: %2 new , %3 displayed")
-                        .arg(name).arg(g_roup->newCount()).arg(displCnt),SB_GROUP);
+    knGlobals.setStatusMsg(i18n(" %1: %2 new , %3 displayed",
+                         name, g_roup->newCount(), displCnt),SB_GROUP);
 
     if(f_ilter)
-      knGlobals.setStatusMsg(i18n(" Filter: %1").arg(f_ilter->translatedName()), SB_FILTER);
+      knGlobals.setStatusMsg(i18n(" Filter: %1", f_ilter->translatedName()), SB_FILTER);
     else
       knGlobals.setStatusMsg( QString(), SB_FILTER );
   }
@@ -1023,8 +1023,8 @@ void KNArticleManager::updateStatusString()
       displCnt=f_ilter->count();
     else
       displCnt=f_older->count();
-    knGlobals.setStatusMsg(i18n(" %1: %2 displayed")
-      .arg(f_older->name()).arg(displCnt), SB_GROUP);
+    knGlobals.setStatusMsg(i18n(" %1: %2 displayed",
+       f_older->name(), displCnt), SB_GROUP);
     knGlobals.setStatusMsg( QString(), SB_FILTER );
   } else {
     knGlobals.setStatusMsg( QString(), SB_GROUP );

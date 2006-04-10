@@ -124,8 +124,8 @@ void KeyWidget::addKey()
   if ( KIO::NetAccess::download( url, tmpFile, this ) ) {
     QFile file( tmpFile );
     if ( !file.open( QIODevice::ReadOnly ) ) {
-      QString text( i18n( "<qt>Unable to open file <b>%1</b>.</qt>" ) );
-      KMessageBox::error( this, text.arg( url.url() ) );
+      QString text( i18n( "<qt>Unable to open file <b>%1</b>.</qt>", url.url() ) );
+      KMessageBox::error( this, text );
       return;
     }
 
@@ -156,8 +156,8 @@ void KeyWidget::removeKey()
     return;
 
   QString type = mKeyCombo->currentText();
-  QString text = i18n( "<qt>Do you really want to remove the key <b>%1</b>?</qt>" );
-  if ( KMessageBox::warningContinueCancel( this, text.arg( type ), "", KGuiItem( i18n( "&Delete" ), "editdelete" ) ) == KMessageBox::Cancel )
+  QString text = i18n( "<qt>Do you really want to remove the key <b>%1</b>?</qt>", type );
+  if ( KMessageBox::warningContinueCancel( this, text, "", KGuiItem( i18n( "&Delete" ), "editdelete" ) ) == KMessageBox::Cancel )
     return;
 
   mKeyList.remove( mKeyList.at( pos ) );

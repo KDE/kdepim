@@ -91,14 +91,14 @@ void FilterThunderbird::import(FilterInfo *info)
             QString temp_mailfile = *mailFile;
             if (temp_mailfile.endsWith(".msf") || temp_mailfile.endsWith("msgFilterRules.dat")) {}
             else {
-                info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
+                info->addLog( i18n("Start import file %1...", temp_mailfile ) );
                 importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString());
             }
         }
 
-        info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
+        info->addLog( i18n("Finished importing emails from %1", mailDir ));
         if(count_duplicates > 0) {
-            info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
+            info->addLog( i18np("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
         }
     }
     if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
@@ -126,7 +126,7 @@ void FilterThunderbird::importDirContents(FilterInfo *info, const QString& dirNa
         QString temp_mailfile = *mailFile;
         if (temp_mailfile.endsWith(".msf") || temp_mailfile.endsWith("msgFilterRules.dat")) {}
         else {
-            info->addLog( i18n("Start import file %1...").arg( temp_mailfile ) );
+            info->addLog( i18n("Start import file %1...", temp_mailfile ) );
             importMBox(info, (dirName + "/" + temp_mailfile) , KMailRootDir, KMailSubDir);
         }
     }
@@ -158,7 +158,7 @@ void FilterThunderbird::importMBox(FilterInfo *info, const QString& mboxName, co
     QFile mbox(mboxName);
     bool first_msg = true;
     if (!mbox.open(QIODevice::ReadOnly)) {
-        info->alert(i18n("Unable to open %1, skipping").arg(mboxName));
+        info->alert(i18n("Unable to open %1, skipping", mboxName));
     } else {
         QFileInfo filenameInfo(mboxName);
 

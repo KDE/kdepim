@@ -372,8 +372,8 @@ void KNode::NntpAccountListWidget::slotSelectionChanged()
   mSubscribeButton->setEnabled( item );
 
   if ( item ) {
-    mServerInfo->setText( i18n("Server: %1").arg( item->account()->server() ) );
-    mPortInfo->setText( i18n("Port: %1").arg( item->account()->port() ) );
+    mServerInfo->setText( i18n("Server: %1", item->account()->server() ) );
+    mPortInfo->setText( i18n("Port: %1", item->account()->port() ) );
   } else {
     mServerInfo->setText( i18n("Server: ") );
     mPortInfo->setText( i18n("Port: ") );
@@ -427,7 +427,7 @@ void KNode::NntpAccountListWidget::slotSubBtnClicked()
 
 
 KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *parent ) :
-    KDialogBase( Tabbed, (a->id() != -1) ? i18n("Properties of %1").arg(a->name()) : i18n("New Account"),
+    KDialogBase( Tabbed, (a->id() != -1) ? i18n("Properties of %1", a->name()) : i18n("New Account"),
                  Ok | Cancel | Help, Ok, parent ),
     mAccount( a )
 {
@@ -965,7 +965,7 @@ KNode::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, KIns
   connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(d_elBtn, 1,1);
 
-  e_ditBtn=new QPushButton(i18n("modify something","&Edit..."), this);
+  e_ditBtn=new QPushButton(i18nc("modify something","&Edit..."), this);
   connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
   topL->addWidget(e_ditBtn, 2,1);
 
@@ -1279,7 +1279,7 @@ KNode::FilterListWidget::FilterListWidget( KInstance *inst, QWidget *parent ) :
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn,1,1);
 
-  e_ditBtn=new QPushButton(i18n("modify something","&Edit..."), this);
+  e_ditBtn=new QPushButton(i18nc("modify something","&Edit..."), this);
   connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
   topL->addWidget(e_ditBtn,2,1);
 
@@ -1835,17 +1835,17 @@ void KNode::GroupCleanupWidget::slotDefaultToggled( bool state )
 
 void KNode::GroupCleanupWidget::expDaysChanged(int value)
 {
-  mExpDays->setSuffix( i18n(" day", " days", value) );
+  mExpDays->setSuffix( i18np(" day", " days", value) );
 }
 
 void KNode::GroupCleanupWidget::expReadDaysChanged(int value)
 {
-  mExpReadDays->setSuffix( i18n(" day", " days", value) );
+  mExpReadDays->setSuffix( i18np(" day", " days", value) );
 }
 
 void KNode::GroupCleanupWidget::expUnreadDaysChanged(int value)
 {
-  mExpUnreadDays->setSuffix( i18n(" day", " days", value) );
+  mExpUnreadDays->setSuffix( i18np(" day", " days", value) );
 }
 
 
@@ -1920,7 +1920,7 @@ void KNode::CleanupWidget::slotFolderCBtoggled(bool b)
 
 void KNode::CleanupWidget::slotFolderDaysChanged(int value)
 {
-  f_olderDays->setSuffix(i18n(" day", " days", value));
+  f_olderDays->setSuffix(i18np(" day", " days", value));
 }
 
 //END: Cleanup configuration widgets -----------------------------------------

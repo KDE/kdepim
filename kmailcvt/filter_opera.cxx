@@ -84,9 +84,9 @@ void FilterOpera::import(FilterInfo *info)
                 info->setCurrent(0);
                 QFile operaArchiv( importDir.filePath(*mailFile) );
                 if (! operaArchiv.open( QIODevice::ReadOnly ) ) {
-                    info->alert( i18n("Unable to open %1, skipping").arg( *mailFile ) );
+                    info->alert( i18n("Unable to open %1, skipping", *mailFile ) );
                 } else {
-                    info->addLog( i18n("Importing emails from %1...").arg( *mailFile ) );
+                    info->addLog( i18n("Importing emails from %1...", *mailFile ) );
                     QFileInfo filenameInfo( importDir.filePath(*mailFile) );
                     QString folderName( "OPERA-" + importDir.dirName() );
 
@@ -138,9 +138,9 @@ void FilterOpera::import(FilterInfo *info)
                         if ( info->shouldTerminate() ) break;
                     }
 
-                    info->addLog( i18n("Finished importing emails from %1").arg( *mailFile ));
+                    info->addLog( i18n("Finished importing emails from %1", *mailFile ));
                     if (count_duplicates > 0) {
-                        info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
+                        info->addLog( i18np("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
                     }
                     currentFile++;
                     count_duplicates = 0;

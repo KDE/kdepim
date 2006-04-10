@@ -683,14 +683,14 @@ DateFormatter::fancy(time_t otime) const
     if ( diff < 24 * 60 * 60 ) {
       if ( old.date().year() == mDate.date().year() &&
 	   old.date().dayOfYear() == mDate.date().dayOfYear() )
-	return i18n( "Today %1" ).arg( locale->
+	return i18n( "Today %1", locale->
 				       formatTime( old.time(), true ) );
     }
     if ( diff < 2 * 24 * 60 * 60 ) {
       QDateTime yesterday( mDate.addDays( -1 ) );
       if ( old.date().year() == yesterday.date().year() &&
 	   old.date().dayOfYear() == yesterday.date().dayOfYear() )
-	return i18n( "Yesterday %1" ).arg( locale->
+	return i18n( "Yesterday %1", locale->
 					   formatTime( old.time(), true) );
     }
     for ( int i = 3; i < 7; i++ )
@@ -698,9 +698,9 @@ DateFormatter::fancy(time_t otime) const
 	QDateTime weekday( mDate.addDays( -i + 1 ) );
 	if ( old.date().year() == weekday.date().year() &&
 	     old.date().dayOfYear() == weekday.date().dayOfYear() )
-	  return i18n( "1. weekday, 2. time", "%1 %2" ).
-	    arg( locale->calendar()->weekDayName( old.date() ) ).
-	    arg( locale->formatTime( old.time(), true) );
+	  return i18nc( "1. weekday, 2. time", "%1 %2" , 
+	     locale->calendar()->weekDayName( old.date() ) , 
+	     locale->formatTime( old.time(), true) );
       }
   }
 

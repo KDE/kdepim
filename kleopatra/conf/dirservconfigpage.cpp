@@ -286,11 +286,11 @@ Kleo::CryptoConfigEntry* DirectoryServicesConfigurationPage::configEntry( const 
 {
     Kleo::CryptoConfigEntry* entry = mConfig->entry( componentName, groupName, entryName );
     if ( !entry ) {
-        KMessageBox::error( this, i18n( "Backend error: gpgconf does not seem to know the entry for %1/%2/%3" ).arg( componentName, groupName, entryName ) );
+        KMessageBox::error( this, i18n( "Backend error: gpgconf does not seem to know the entry for %1/%2/%3", componentName, groupName, entryName ) );
         return 0;
     }
     if( entry->argType() != argType || entry->isList() != isList ) {
-        KMessageBox::error( this, i18n( "Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5" ).arg( componentName, groupName, entryName ).arg( entry->argType() ).arg( entry->isList() ) );
+        KMessageBox::error( this, i18n( "Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5", componentName, groupName, entryName, entry->argType(), entry->isList() ) );
         return 0;
     }
     return entry;

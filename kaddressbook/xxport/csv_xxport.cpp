@@ -54,9 +54,9 @@ bool CSVXXPort::exportContacts( const KABC::AddresseeList &list, const QString& 
   if ( !url.isLocalFile() ) {
     KTempFile tmpFile;
     if ( tmpFile.status() != 0 ) {
-      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.%2.</qt>" );
-      KMessageBox::error( parentWidget(), txt.arg( url.url() )
-                          .arg( strerror( tmpFile.status() ) ) );
+      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.%2.</qt>",
+                          url.url(), strerror( tmpFile.status() ) );
+      KMessageBox::error( parentWidget(), txt );
       return false;
     }
 
@@ -67,8 +67,8 @@ bool CSVXXPort::exportContacts( const KABC::AddresseeList &list, const QString& 
   } else {
     QFile file( url.path() );
     if ( !file.open( QIODevice::WriteOnly ) ) {
-      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>" );
-      KMessageBox::error( parentWidget(), txt.arg( url.path() ) );
+      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.</qt>", url.path() );
+      KMessageBox::error( parentWidget(), txt );
       return false;
     }
 

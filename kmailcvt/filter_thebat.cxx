@@ -80,9 +80,9 @@ void FilterTheBat::import( FilterInfo *info )
         }
     }
 
-    info->addLog( i18n("Finished importing emails from %1").arg( mailDir ));
+    info->addLog( i18n("Finished importing emails from %1", mailDir ));
     if (count_duplicates > 0) {
-        info->addLog( i18n("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
+        info->addLog( i18np("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
     }
     if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
     
@@ -147,7 +147,7 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
     QList<long> offsets;
 
     if (!tbb.open(QIODevice::ReadOnly)) {
-        info->alert(i18n("Unable to open %1, skipping").arg(FileName));
+        info->alert(i18n("Unable to open %1, skipping", FileName));
     } else {
         // BUILD the index of messages :
         // We need this really ugly way, because read with tbb.readLine()
@@ -191,7 +191,7 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
             _tmp = _tmp.remove(_tmp.length() - 13, 13);
             _path += _tmp.remove( mailDir ,true);
             QString _info = _path;
-            info->addLog(i18n("Import folder %1...").arg(_info.remove(0,14)));
+            info->addLog(i18n("Import folder %1...", _info.remove(0,14)));
             info->setTo(_path);
             info->setFrom("../" + _info + "/messages.tbb");
 

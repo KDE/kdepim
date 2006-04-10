@@ -700,7 +700,7 @@ void KNMainWidget::initActions()
                               SLOT(slotArtDelete()), actionCollection(), "article_delete");
   a_ctArtSendNow            = new KAction(i18n("Send &Now"),"mail_send", 0 , this,
                               SLOT(slotArtSendNow()), actionCollection(), "article_sendNow");
-  a_ctArtEdit               = new KAction(i18n("edit article","&Edit Article..."), "edit", Qt::Key_E , this,
+  a_ctArtEdit               = new KAction(i18nc("edit article","&Edit Article..."), "edit", Qt::Key_E , this,
                               SLOT(slotArtEdit()), actionCollection(), "article_edit");
 
   //network
@@ -1388,7 +1388,7 @@ void KNMainWidget::slotGrpUnsubscribe()
   kDebug(5003) << "KNMainWidget::slotGrpUnsubscribe()" << endl;
   if(g_rpManager->currentGroup()) {
     if(KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,
-       i18n("Do you really want to unsubscribe from %1?").arg(g_rpManager->currentGroup()->groupname()), QString(), i18n("Unsubscribe"), KStdGuiItem::cancel()))
+       i18n("Do you really want to unsubscribe from %1?", g_rpManager->currentGroup()->groupname()), QString(), i18n("Unsubscribe"), KStdGuiItem::cancel()))
       if (g_rpManager->unsubscribeGroup(g_rpManager->currentGroup()))
         slotCollectionSelected(0);
   }
@@ -1516,7 +1516,7 @@ void KNMainWidget::slotFolEmpty()
       return;
     }
     if( KMessageBox::Continue == KMessageBox::warningContinueCancel(
-        this, i18n("Do you really want to delete all articles in %1?").arg(f_olManager->currentFolder()->name()),"",KGuiItem(i18n("&Delete"),"editdelete")) )
+        this, i18n("Do you really want to delete all articles in %1?", f_olManager->currentFolder()->name()),"",KGuiItem(i18n("&Delete"),"editdelete")) )
       f_olManager->emptyFolder(f_olManager->currentFolder());
   }
 }

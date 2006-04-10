@@ -113,7 +113,7 @@ static QString plainTextBody()
     " visit\n%1" );
   const char * url = "http://www.kolab.org/kolab2-clients.html";
   QString firstPartTextUntranslated = QString::fromLatin1( firstPartTextToTranslate ).arg( url );
-  QString firstPartText = i18n( firstPartTextToTranslate ).arg( url );
+  QString firstPartText = i18n( firstPartTextToTranslate, url );
   if ( firstPartText != firstPartTextUntranslated ) {
     firstPartText.append("\n\n-----------------------------------------------------\n\n");
     firstPartText.append( firstPartTextUntranslated );

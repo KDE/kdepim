@@ -152,7 +152,7 @@ void ArticleWidget::initActions()
     Qt::Key_A, this, SLOT(slotRemail()), mActionCollection, "article_mailReply" );
   mForwardAction = new KAction( i18n("Forw&ard by Email..."), "mail_forward",
     Qt::Key_F, this, SLOT(slotForward()), mActionCollection, "article_forward" );
-  mCancelAction = new KAction( i18n("article","&Cancel Article"),
+  mCancelAction = new KAction( i18nc("article","&Cancel Article"),
     0, this, SLOT(slotCancel()), mActionCollection, "article_cancel" );
   mSupersedeAction = new KAction(i18n("S&upersede Article"),
     0, this, SLOT(slotSupersede()), mActionCollection, "article_supersede" );
@@ -729,8 +729,8 @@ QString ArticleWidget::displaySigHeader( const Kpgp::Block &block )
   QString signerKey = block.signatureKeyId();
   QString message;
   if ( signer.isEmpty() ) {
-    message = i18n( "Message was signed with unknown key 0x%1." )
-      .arg( signerKey );
+    message = i18n( "Message was signed with unknown key 0x%1." ,
+        signerKey );
     message += "<br/>";
     message += i18n( "The validity of the signature cannot be verified." );
     signClass = "signWarn";
@@ -750,11 +750,11 @@ QString ArticleWidget::displaySigHeader( const Kpgp::Block &block )
     signer = "<a href=\"mailto:" + KPIM::getEmailAddress( signer ) + "\">" + signer + "</a>";
 
     if( !signerKey.isEmpty() )
-      message += i18n( "Message was signed by %1 (Key ID: 0x%2)." )
-      .arg( signer )
-      .arg( signerKey );
+      message += i18n( "Message was signed by %1 (Key ID: 0x%2)." ,
+        signer ,
+        signerKey );
     else
-      message += i18n( "Message was signed by %1." ).arg( signer );
+      message += i18n( "Message was signed by %1.", signer );
     message += "<br/>";
 
     if( block.goodSignature() ) {
@@ -1011,8 +1011,8 @@ void ArticleWidget::processJob( KNJobData * job )
     KNRemoteArticle *a = static_cast<KNRemoteArticle*>( job->data() );
     if ( !job->canceled() ) {
       if ( !job->success() )
-        KMessageBox::error( this, i18n("An error occurred while downloading the article source:\n")
-          .arg( job->errorString() ) );
+        KMessageBox::error( this, i18n("An error occurred while downloading the article source:\n%1",
+            job->errorString() ) );
       else
         new KNSourceViewWindow( a->head() + "\n" + a->body() );
     }
