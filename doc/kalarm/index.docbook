@@ -42,8 +42,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2006-02-13</date>
-<releaseinfo>1.03.09</releaseinfo>
+<date>2006-04-10</date>
+<releaseinfo>1.03.10</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
