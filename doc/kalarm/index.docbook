@@ -1348,7 +1348,7 @@ titlebar or frame, so you cannot move it or resize it.</para>
 <sect1 id="system-tray">
 <title>System tray operation</title>
 
-<para>&kalarm; may be run as an icon in the &kde; system tray. This
+<para>&kalarm; may be run as an icon in the system tray. This
 icon allows one-click activation of &kalarm;, and provides both
 control and status indication of alarm monitoring. A normal &kalarm;
 icon indicates that alarms are being monitored, while a gray icon
@@ -1435,19 +1435,19 @@ while not running</guilabel> in the Preferences dialog.</para>
 <sect2>
 <title>Displaying &kalarm; in the system tray</title>
 
-<para>You must be running the &kde; desktop in order to display
-&kalarm; in the system tray. If &kalarm; is running in
-<quote>continuous</quote> mode, the system tray icon is always
-displayed. These instructions apply only to <quote>on-demand</quote>
-mode. (See
+<para>You must be running the &kde; desktop or another suitable window
+manager in order to display &kalarm; in the system tray. If &kalarm;
+is running in <quote>continuous</quote> mode, the system tray icon is
+always displayed. These instructions apply only to
+<quote>on-demand</quote> mode. (See
 <link linkend="preferences-general">Configuring &kalarm;</link> for a
 description of run modes.)</para>
 
-<para>To display &kalarm; in the &kde; system tray, select <menuchoice>
+<para>To display &kalarm; in the system tray, select <menuchoice>
 <guimenu>View</guimenu><guimenuitem>Show in System Tray</guimenuitem>
 </menuchoice>.</para>
 
-<para>To remove &kalarm; from the &kde; system tray, do one of the
+<para>To remove &kalarm; from the system tray, do one of the
 following:</para>
 
 <itemizedlist>
@@ -1738,7 +1738,7 @@ mode.</para>
 </listitem>
 </itemizedlist>
 
-<para>In this mode, if no &kde; system tray exists, &kalarm; runs
+<para>In this mode, if no system tray exists, &kalarm; runs
 continuously in the background and alarms are always enabled.</para>
 </listitem>
 
@@ -2481,7 +2481,7 @@ daemon</application>.</para>
 </row>
 <row>
   <entry><option>--tray</option></entry>
-  <entry>Display &kalarm; as an icon in the &kde; system tray.</entry>
+  <entry>Display &kalarm; as an icon in the system tray.</entry>
 </row>
 </tbody>
 </tgroup>
