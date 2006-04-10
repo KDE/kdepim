@@ -1,5 +1,5 @@
-# ORDERING OF HEADERS IS SIGNIFICANT. Don't change this ordering. It
-# is required to make the combined header ical.h properly
+# ORDERING OF HEADERS IS SIGNIFICANT. Don't change this ordering.
+# It is required to make the combined header ical.h properly.
 set(COMBINEDHEADERSICAL
    ${TOP}/libkcal/libical/src/libical/icalversion.h
    ${TOP}/libkcal/libical/src/libical/icaltime.h

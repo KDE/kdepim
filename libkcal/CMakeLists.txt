@@ -89,8 +89,8 @@ macro_additional_clean_files(${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ica
 
 
 set(libversit_SRCS 
-	${CMAKE_SOURCE_DIR}/libkcal/versit/vcc.c 
-	${CMAKE_SOURCE_DIR}/libkcal/versit/vobject.c 
+   ${CMAKE_SOURCE_DIR}/libkcal/versit/vcc.c 
+   ${CMAKE_SOURCE_DIR}/libkcal/versit/vobject.c 
 )
 
 set(libical_SRCS
@@ -148,56 +148,30 @@ set(libicalss_SRCS
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalmessage.h       
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalsslexer.c           
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalssyacc.c
-   )
-
-
-macro_additional_clean_files( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h )
-
-add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h 
-		COMMAND 
-		${CMAKE_COMMAND} 
-		-DTOP:FILEPATH=${CMAKE_SOURCE_DIR}
-		-DKDE_FILE_H_FILE:FILEPATH=${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h
-		-P ${CMAKE_SOURCE_DIR}/libkcal/ical_file.cmake )
-
-
-set(COMBINEDHEADERSICALSS
-    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalgauge.h
-    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalset.h
-    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalcluster.h
-    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalfileset.h
-    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icaldirset.h
-    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalcalendar.h
-    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalclassify.h
-    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalspanlist.h
-    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalmessage.h
 )
 
-macro(CREATE_ICALSS_FILE _out_FILE)
-    FILE(WRITE ${_out_FILE} "#ifdef __cplusplus\n")
-    FILE(APPEND ${_out_FILE} "extern \"C\" {\n")
-    FILE(APPEND ${_out_FILE} "#endif\n")
-    FILE(APPEND ${_out_FILE} "/*\n")
-    FILE(APPEND ${_out_FILE} " $Id$\n")
-    FILE(APPEND ${_out_FILE} "*/\n")
-    foreach (_current_FILE ${COMBINEDHEADERSICALSS})
-        FILE(READ ${_current_FILE} _contents)
-    	STRING(REGEX REPLACE "#include *\"ical.*\\.h\"" "" _contents "${_contents}" )
-	    STRING(REGEX REPLACE "#include *\"pvl\\.h\"" "" _contents "${_contents}" )
-		
-		#STRING(REGEX REPLACE "\$$(Id|Locker): .+\$$" "" _contents "${_contents}" )
-        FILE(APPEND ${_out_FILE} "${_contents}")
-    endforeach (_current_FILE ${COMBINEDHEADERSICALSS})
-    FILE(APPEND ${_out_FILE} "\n")
-    FILE(APPEND ${_out_FILE} "#ifdef __cplusplus\n")
-    FILE(APPEND ${_out_FILE} "}\n")
-    FILE(APPEND ${_out_FILE} "#endif\n")
-endmacro(CREATE_ICALSS_FILE)
 
-macro_additional_clean_files( ${CMAKE_SOURCE_DIR}/libical/src/libicalss/icalss.h )
+macro_additional_clean_files(${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h)
 
-create_icalss_file( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalss.h )
+add_custom_command(OUTPUT
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h 
+   COMMAND 
+   ${CMAKE_COMMAND} 
+   -DTOP:FILEPATH=${CMAKE_SOURCE_DIR}
+   -DKDE_FILE_H_FILE:FILEPATH=${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h
+   -P ${CMAKE_SOURCE_DIR}/libkcal/ical_file.cmake
+)
 
+macro_additional_clean_files(${CMAKE_SOURCE_DIR}/libical/src/libicalss/icalss.h)
+
+add_custom_command(OUTPUT
+   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalss.h 
+   COMMAND 
+   ${CMAKE_COMMAND} 
+   -DTOP:FILEPATH=${CMAKE_SOURCE_DIR}
+   -DKDE_FILE_H_FILE:FILEPATH=${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalss.h
+   -P ${CMAKE_SOURCE_DIR}/libkcal/icalss_file.cmake
+)
 
 
 ########### next target ###############
