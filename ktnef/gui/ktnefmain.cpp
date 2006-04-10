@@ -157,7 +157,7 @@ void KTNEFMain::loadFile(const QString& filename)
 	{
 		QList<KTNEFAttach*>	list = parser_->message()->attachmentList();
 		QString			msg;
-		msg = i18n( "%n attachment found", "%n attachments found", list.count() );
+		msg = i18np( "%n attachment found", "%n attachments found", list.count() );
 		statusBar()->changeItem(msg, 0);
 		view_->setAttachments(list);
 		enableExtractAll((list.count() > 0));
@@ -233,7 +233,7 @@ void KTNEFMain::extractAllFiles()
 		{
 			if (!parser_->extractFileTo(it->name(), dir))
 			{
-				QString	msg = i18n( "Unable to extract file \"%1\"" ).arg( it->name() );
+				QString	msg = i18n( "Unable to extract file \"%1\"", it->name() );
 				QMessageBox::critical(this,i18n("Error"),msg,QMessageBox::Ok|QMessageBox::Default,0);
 				return;
 			}
@@ -306,7 +306,7 @@ void KTNEFMain::extractTo(const QString& dirname)
 	while (it.hasNext())
 		if (!parser_->extractFileTo(it.next()->name(), dir))
 		{
-			QString	msg = i18n("Unable to extract file \"%1\"").arg( it.next()->name() );
+			QString	msg = i18n("Unable to extract file \"%1\"", it.next()->name() );
 			QMessageBox::critical(this,i18n("Error"),msg,QMessageBox::Ok|QMessageBox::Default,0);
 			return;
 		}
