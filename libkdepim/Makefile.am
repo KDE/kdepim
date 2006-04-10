@@ -5,6 +5,7 @@ INCLUDES = -I$(top_srcdir) $(all_includes)
 lib_LTLIBRARIES   = libkdepim.la
 libkdepim_la_SOURCES = \
   ktimeedit.cpp \
+  alarmclient.cpp \
   kprefsdialog.cpp kpimprefs.cpp \
   categoryselectdialog_base.ui categoryselectdialog.cpp \
   categoryeditdialog_base.ui categoryeditdialog.cpp \
