@@ -1599,7 +1599,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event*event )
       tmp = event->dtStartDateStr().replace(" ", "&nbsp;");
     else
       tmp = event->dtStartStr().replace(" ", "&nbsp;");
-    ret += "<br>" + i18nc("Event start", "<i>From:</i>&nbsp;%1", tmp)
+    ret += "<br>" + i18nc("Event start", "<i>From:</i>&nbsp;%1", tmp);
 
     if (event->doesFloat())
       tmp = event->dtEndDateStr().replace(" ", "&nbsp;");
