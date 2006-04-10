@@ -120,7 +120,7 @@ void KTNEFMain::setupActions()
 
 void KTNEFMain::slotConfigureKeys()
 {
-  KKeyDialog::configure( actionCollection(), this );
+  KKeyDialog::configure( actionCollection(), KKeyChooser::LetterShortcutsAllowed, this );
 }
 
 
