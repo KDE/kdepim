@@ -10,7 +10,8 @@ INCLUDES = -I$(srcdir)/libical/src/libical \
 
 lib_LTLIBRARIES   = libkcal.la
 libkcal_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 2:0:0
-libkcal_la_LIBADD  = versit/libversit.la $(LIB_KIO) \
+libkcal_la_LIBADD  = versit/libversit.la $(LIB_QTXML) $(LIB_QT3SUPPORT) \
+                     $(LIB_KDEUI) $(LIB_KIO) \
                      ./libical/src/libical/libical.la \
                      ./libical/src/libicalss/libicalss.la \
                      $(top_builddir)/ktnef/lib/libktnef.la \

@@ -16,8 +16,8 @@ libkleopatra_la_LIBADD = \
 			backends/chiasmus/libkleopatra_backend_chiasmus.la \
 			ui/libkleopatra_ui.la \
 			\
-			$(top_builddir)/qgpgme/libqgpgme.la \
-			$(LIB_KIO) $(LIB_KDEUI)
+			$(top_builddir)/qgpgme/libqgpgme.la -lDCOP \
+			$(LIB_KIO) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT3SUPPORT)
 
 # Disabled for kdepim-3.3, see also kleo/cryptobackendfactory.cpp
 # backends/kpgp/libkleopatra_backend_kpgp.la
