@@ -16,7 +16,7 @@ libkpgp_la_SOURCES = \
 
 libkpgp_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 4:0:2
 
-libkpgp_la_LIBADD = $(LIB_KDEUI) $(LIB_POLL)
+libkpgp_la_LIBADD = $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_QT) $(LIB_QT3SUPPORT) $(LIB_POLL) 
 
 METASOURCES = AUTO
 
