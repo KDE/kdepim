@@ -4,7 +4,7 @@ find_package( Gpgme )
 
 add_subdirectory( interfaces )
 
-include_directories( ${KDE4_INCLUDES} ${GPGME_INCLUDE_DIR} )
+include_directories( ${KDE4_INCLUDES} ${GPGME_INCLUDES} )
 
 
 ########### next target ###############
