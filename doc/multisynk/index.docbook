@@ -51,8 +51,8 @@
 <para>
 &multisynk; is a frontend for &kde;'s synchronization framework
 kitchensync. This framework let you synchronize a lot of mobile devices
-like handhelds and mobile phones with your KDE desktop, but also offers
-the possibility to synchronize two or more KDE desktops directly.
+like handhelds and mobile phones with your &kde; desktop, but also offers
+the possibility to synchronize two or more &kde; desktops directly.
 </para>
 
 <para>
@@ -261,8 +261,10 @@ with a timestamp in a separated window.
 
 <para>&multisynk; - The &kde; Synchronization Application</para>
 
-<para>Copyright (c) 2004, Tobias Koenig</para>
-<para>Currently it is maintained by Tobias Koenig <email>tokoe@kde.org</email>.</para>
+<para>Copyright (c) 2004, &Tobias.Koenig;</para>
+<para>Currently it is maintained by &Tobias.Koenig; <email>tokoe@kde.org</email>.</para>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 &underFDL;               <!-- FDL: do not remove -->
 </chapter>
 </book>

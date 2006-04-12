@@ -35,52 +35,52 @@
 
 <author>
 <firstname> Thomas</firstname> <surname>Schütz</surname>
-<affiliation> <address> <email>Thomas.Schuetz@gmx.li</email> </address>
+<affiliation> <address> &Thomas.Schuetz.mail; </address>
 </affiliation>
 </author>
 
 <othercredit role="developer" >
 <firstname> Christian</firstname> <surname> Gebauer</surname>
 <contrib> Developer and maintainer</contrib>
-<affiliation> <address> <email>gebauer@kde.org</email> </address> </affiliation>
+<affiliation> <address> &Christian.Gebauer.mail; </address> </affiliation>
 </othercredit>
 
 <othercredit role="developer">
 <firstname> Christian</firstname> <surname> Thurner</surname>
 <contrib> Developer</contrib>
-<affiliation> <address> <email>cthurner@web.de</email> </address> </affiliation>
+<affiliation> <address> &Christian.Thurner.mail; </address> </affiliation>
 </othercredit>
 
 <othercredit role="developer">
 <firstname> Dirk</firstname> <surname> Mueller</surname>
 <contrib> Developer</contrib>
-<affiliation> <address> <email>mueller@kde.org</email> </address> </affiliation>
+<affiliation> <address> &Dirk.Mueller.mail; </address> </affiliation>
 </othercredit>
 
 <othercredit role="developer">
 <firstname> Mark</firstname> <surname> Mutz</surname>
 <contrib> Developer</contrib>
-<affiliation> <address> <email>mutz@kde.org</email> </address> </affiliation>
+<affiliation> <address> &Marc.Mutz.mail; </address> </affiliation>
 </othercredit>
 
 <othercredit role="developer">
 <firstname> Roberto</firstname> <surname> Teixeira</surname>
 <contrib> Developer</contrib>
-<affiliation> <address> <email>roberto@kde.org</email> </address> </affiliation>
+<affiliation> <address> &Roberto.Teixeira.mail; </address> </affiliation>
 </othercredit>
 
 <othercredit role="developer">
 <firstname> Mathias</firstname> <surname> Waack</surname>
 <contrib> Developer</contrib>
-<affiliation> <address> <email>mathias@atoll-net.de</email> </address> </affiliation>
+<affiliation> <address> &Mathias.Waack.mail; </address> </affiliation>
 </othercredit>
-
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
 <copyright>
 <year> 2000</year> <year>2001</year> <year>2002</year>
-<holder>Stephan Johach</holder>
-<holder>Thomas Schütz</holder>
+<holder>&Stephan.Johach;</holder>
+<holder>&Thomas.Schuetz;</holder>
 </copyright>
 
 <date>2002-04-13</date>

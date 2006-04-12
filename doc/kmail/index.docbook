@@ -63,7 +63,7 @@
 <firstname>Daniel</firstname>
 <surname>Naber</surname>
 <affiliation><address>
-<email>daniel.naber@t-online.de</email>
+&Daniel.Naber.mail;
 </address></affiliation>
 </author>
 
@@ -71,7 +71,7 @@
 <firstname>David</firstname>
 <surname>Rugge</surname>
 <affiliation><address>
-<email>davidrugge@mediaone.net</email>
+&David.Rugge.mail;
 </address></affiliation>
 </author>
 
@@ -87,15 +87,15 @@
 <year>2000</year>
 <year>2001</year>
 <year>2002</year>
-<holder>David Rugge</holder>
+<holder>&David.Rugge;</holder>
 </copyright>
 <copyright>
 <year>2003</year>
-<holder>Daniel Naber</holder>
+<holder>&Daniel.Naber;</holder>
 </copyright>
 <copyright>
 <year>2004</year>
-<holder>Daniel Naber</holder>
+<holder>&Daniel.Naber;</holder>
 <holder>Ingo Kl&ouml;cker</holder>
 </copyright>
 

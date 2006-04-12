@@ -8,7 +8,7 @@
 
 <book lang="&language;">
 <bookinfo>
-<title>The &korn; Documentation</title>
+<title>The &appname; Documentation</title>
 
 <authorgroup>
 <author>
@@ -22,7 +22,7 @@
 <firstname>Sirtaj</firstname>
 <surname>Kang</surname>
 <affiliation>
-<address><email>taj@kde.org</email></address>
+<address>&Sirtaj.Singh.Kang.mail;</address>
 </affiliation>
 <contrib>Developer</contrib>
 </othercredit>
@@ -31,7 +31,7 @@
 <firstname>Cristian</firstname>
 <surname>Tibirna</surname>
 <affiliation>
-<address><email>tibirna@kde.org</email></address>
+<address>&Cristian.Tibirna.mail;</address>
 </affiliation>
 <contrib>Developer</contrib>
 </othercredit>
@@ -40,7 +40,7 @@
 <firstname>Kurt</firstname>
 <surname>Granroth</surname>
 <affiliation>
-<address><email>granroth@kde.org</email></address>
+<address>&Kurt.Granroth.mail;</address>
 </affiliation>
 <contrib>Developer</contrib>
 </othercredit>
@@ -49,7 +49,7 @@
 <firstname>Rik</firstname>
 <surname>Hemsley</surname>
 <affiliation>
-<address><email>rik@kde.org</email></address>
+<address>&Rik.Hemsley.mail;</address>
 </affiliation>
 <contrib>Developer</contrib>
 </othercredit>
@@ -57,7 +57,7 @@
 <othercredit role="reviewer">
 <firstname>Lauri</firstname>
 <surname>Watts</surname>
-<affiliation><address><email>lauri@kde.org</email></address></affiliation>
+<affiliation><address>&Lauri.Watts.mail;</address></affiliation>
 <contrib>Reviewer</contrib>
 </othercredit>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
@@ -68,12 +68,12 @@
 
 <copyright>
 <year>2000</year>
-<holder>Nick Betcher</holder>
+<holder>&Nick.Betcher;</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<abstract><para>This Documentation describes &korn; Version
+<abstract><para>This Documentation describes &appname; Version
 0.2</para></abstract>
 
 <keywordset>
@@ -86,8 +86,8 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&korn; is a KDE Mail Checker that has the capabilities to dock itself to
-<application>Kicker</application>. &korn; can check the following types of
+<para>&appname; is a KDE Mail Checker that has the capabilities to dock itself to
+<application>Kicker</application>. &appname; can check the following types of
 mailboxes:</para>
 
 <itemizedlist>
@@ -100,13 +100,13 @@ mailboxes:</para>
 <listitem><para>and the ability to check on a process</para></listitem>
 </itemizedlist>
 
-<para>&korn;, checks your mail on an interval that is user specified for each
-separate account.  Once mail is received you can have &korn; run a 3rd party
-program of your wishes or change the color/icon of &korn; while docked in
-&kicker;. In addition to this you can have &korn; run a program once you click
+<para>&appname;, checks your mail on an interval that is user specified for each
+separate account.  Once mail is received you can have &appname; run a 3rd party
+program of your wishes or change the color/icon of &appname; while docked in
+&kicker;. In addition to this you can have &appname; run a program once you click
 on the docked icon in &kicker;.</para>
 
-<para>The rest of this chapter relies on the user to &RMB; click on the &korn;
+<para>The rest of this chapter relies on the user to &RMB; click on the &appname;
 icon in the &kicker; panel to access the appropriate menus.</para>
 </chapter>
 
@@ -118,12 +118,12 @@ icon in the &kicker; panel to access the appropriate menus.</para>
 <title>The buttons</title>
 
 <para>The <guilabel>Preferences</guilabel> window is the most powerful part of
-&korn;. At a first glimpse you may underestimate its capabilities, but further
-under-the-hood you will find many ways to use &korn;.</para>
+&appname;. At a first glimpse you may underestimate its capabilities, but further
+under-the-hood you will find many ways to use &appname;.</para>
 
-<para>The first tab lists your current mailboxes. As default &korn; installs
+<para>The first tab lists your current mailboxes. As default &appname; installs
 <quote>Inbox</quote> as the default mailbox. The default <quote>Inbox</quote>
-may not fit most users needs. With this default mailbox in place &korn; will
+may not fit most users needs. With this default mailbox in place &appname; will
 check the path <filename
 class="directory">/var/spool/mail/<replaceable>user</replaceable></filename> for
 new mail.</para>
@@ -147,14 +147,14 @@ when you click <guibutton>New...</guibutton>.</para>
 
 <title>The <guilabel>Display</guilabel> Tab</title>
 
-<para>The display tab contains the options to change where &korn; will show
+<para>The display tab contains the options to change where &appname; will show
 itself.</para>
 
 <para>The first option, <guilabel>Horizontal</guilabel>, will create a window
 and the contents of the window will contain the options you specified in the
 <guilabel>View</guilabel> tab (which you can get to by selecting your mailbox
 and clicking <guimenuitem>Modify...</guimenuitem>). On the other hand, selecting
-<guilabel>Docked</guilabel> will dock &korn; into the &kicker; panel.</para>
+<guilabel>Docked</guilabel> will dock &appname; into the &kicker; panel.</para>
 
 <para>The option <guilabel>Vertical</guilabel> is similar to
 <guilabel>Horizontal</guilabel>, except the accounts stack
@@ -167,7 +167,7 @@ vertically.</para>
 <para>The <guibutton>New...</guibutton> button will load a window showing you
 what mailboxes can be created for checking on a interval. Select your
 appropriate mailbox type. If you don't know what type you should use, and you
-currently use <application>Netscape</application> to check your mail, use
+currently use <application>&Netscape;</application> to check your mail, use
 POP3.</para>
 
 <para>Following that window the modify options appear, allowing you to change
@@ -185,17 +185,17 @@ changes the time interval between each check. Keep in mind this is in seconds,
 not minutes.</para>
 
 <para>Next, the <guilabel>view</guilabel> tab has options for changing the icon
-or icon color while &korn; is docked in &kicker;. There are two options:
+or icon color while &appname; is docked in &kicker;. There are two options:
 <guilabel>Use color</guilabel> or <guilabel>Use icon</guilabel>. Selecting
 <guilabel>Use color</guilabel> will allow you to modify the colors. Selecting
 <guilabel>Use icon</guilabel> will allow you to change which icon is used for
-both <quote>Normal</quote> and <quote>New mail</quote>. Keep in mind that &korn;
+both <quote>Normal</quote> and <quote>New mail</quote>. Keep in mind that &appname;
 can only use a icon or color, not both.</para>
 
 <para>In the commands tab you can specify a command to be run once you receive
 new mail in the <guilabel>New mail</guilabel> line. Also, the
 <guilabel>Click</guilabel> line can contain a command to be run when you
-<mousebutton>left</mousebutton> click on &korn;.</para>
+<mousebutton>left</mousebutton> click on &appname;.</para>
 
 </sect1>
 
@@ -203,23 +203,24 @@ new mail in the <guilabel>New mail</guilabel> line. Also, the
 <chapter id="licenses-and-credits">
 <title>Credits and License</title>
 
-<para>&korn;.  Program copyright 2000:</para>
+<para>&appname;.  Program copyright 2000:</para>
 
 <itemizedlist>
-<listitem><para>Sirtaj Singh Kang <email>taj@kde.org</email></para></listitem>
-<listitem><para>Cristian Tibirna <email>tibirna@kde.org</email></para></listitem>
-<listitem><para>Kurt Granoth <email>granroth@kde.org</email></para></listitem>
-<listitem><para>Rik Hemsley <email>rik@kde.org</email></para></listitem>
+<listitem><para>&Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail;</para></listitem>
+<listitem><para>Cristian Tibirna &Cristian.Tibirna.mail;</para></listitem>
+<listitem><para>Kurt Granoth &Kurt.Granroth.mail;</para></listitem>
+<listitem><para>&Rik.Hemsley; &Rik.Hemsley.mail;</para></listitem>
 </itemizedlist>
 
-<para>Documentation copyright 2000 Nick Betcher
+<para>Documentation copyright 2000 &Nick.Betcher;
 <email>nbetcher@uswest.net</email></para>
 
 <para>We hope this documentation helped you. If you need to contact me, the
 document writer, you can at nbetcher@uswest.net. If you wish to contact the
-developers of &korn;, you can find their names in the <guimenuitem>About
+developers of &appname;, you can find their names in the <guimenuitem>About
 Korn...</guimenuitem> option or above.</para>
 
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 &underFDL;
 &underGPL;
 

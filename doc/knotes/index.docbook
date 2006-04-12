@@ -16,7 +16,7 @@
 <firstname>Fabian</firstname>
 <surname>Dal Santo</surname>
 <affiliation>
-<address><email>linuxgnu@yahoo.com.au</email></address>
+<address>&Fabian.DalSanto.mail;</address>
 </affiliation>
 </author>
 
@@ -37,7 +37,7 @@
 
 <copyright>
 <year>2000</year>
-<holder>Greg M. Holmes</holder>
+<holder>&Greg.M.Holmes;</holder>
 </copyright>
 <copyright>
 <year>2001</year>
@@ -138,7 +138,7 @@ position in the text of the note.</para>
 <varlistentry>
 <term>Renaming a note:</term>
 <listitem>
-<para>To rename a note &RMB; click on the note title bar and select
+<para>To rename a note &RMB; click on the note titlebar and select
 <guimenuitem>Rename...</guimenuitem>.</para>
 <para>Type the new name of the note in the dialog that appears.  To
 accept the new name, press the <guibutton>OK</guibutton> button.  To
@@ -151,7 +151,7 @@ and start over, click the <guibutton>Clear</guibutton> button.</para>
 <varlistentry>
 <term>Mailing a note:</term>
 <listitem>
-<para>To mail a note &RMB; click on the note title bar and select
+<para>To mail a note &RMB; click on the note titlebar and select
 <guimenuitem>Mail...</guimenuitem>.</para> 
 <para>What happens next depends on how you configured the Mail action in the
 <guilabel>Preferences...</guilabel> dialog.</para>
@@ -161,7 +161,7 @@ and start over, click the <guibutton>Clear</guibutton> button.</para>
 <varlistentry>
 <term>Printing a note:</term>
 <listitem>
-<para>To print a note &RMB; click on the note title bar and select
+<para>To print a note &RMB; click on the note titlebar and select
 <guimenuitem>Print</guimenuitem>.</para>
 <para>A standard &kde; print dialog will open.</para>
 </listitem>
@@ -170,7 +170,7 @@ and start over, click the <guibutton>Clear</guibutton> button.</para>
 <varlistentry>
 <term>Deleting a note:</term>
 <listitem>
-<para>To delete a note &RMB; click on the note title bar and select
+<para>To delete a note &RMB; click on the note titlebar and select
 <guimenuitem>Delete</guimenuitem>.</para>
 </listitem>
 </varlistentry>
@@ -179,7 +179,7 @@ and start over, click the <guibutton>Clear</guibutton> button.</para>
 <term>Hiding a note:</term>
 <listitem>
 <para>To hide a note, click the <guiicon>X</guiicon> in the upper
-right corner of the title bar of the note.  The note will no longer be
+right corner of the titlebar of the note.  The note will no longer be
 displayed on the screen.  The note itself will not be deleted.</para>
 </listitem>
 </varlistentry>
@@ -201,7 +201,7 @@ bar of the note and select <guisubmenu>To Desktop</guisubmenu>.
 Choose the desktop desired, or alternatively, <guimenuitem>All
 desktops</guimenuitem></para> 
 <para>To make the note remain on top of other windows &RMB; click on
-the title bar of the note and select <guimenuitem>Always On
+the titlebar of the note and select <guimenuitem>Always On
 Top</guimenuitem>.</para> 
 <para>To return the note to more normal window behavior, simply repeat
 this process.</para> 
@@ -344,7 +344,7 @@ allowing you to configure the note.</para>
 
 <para>&knotes;</para>
 
-<para>Program copyright 1997 Bernd Wuebben <email>wuebben@kde.org</email></para>
+<para>Program copyright 1997 Bernd Wuebben &Bernd.Johannes.Wuebben.mail;</para>
 
 <para>Contributors:</para>
 <itemizedlist>
@@ -352,11 +352,11 @@ allowing you to configure the note.</para>
 </listitem>
 </itemizedlist>
 
-<para>Documentation copyright 2000 Greg M. Holmes
+<para>Documentation copyright 2000 &Greg.M.Holmes;
 <email>holmegm@earthlink.net</email></para>
 
 <para>Documentation updated 2001 by Fabian Del Santo
-<email>linuxgnu@yahoo.com.au</email> and 2003 by &Lauri.Watts;
+&Fabian.DalSanto.mail; and 2003 by &Lauri.Watts;
 &Lauri.Watts.mail;.</para>
 
 

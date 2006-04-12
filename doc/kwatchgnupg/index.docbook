@@ -18,10 +18,9 @@
 <authorgroup>
 <author>
 <firstname>Marc</firstname>
-<othername></othername>
 <surname>Mutz</surname>
 <affiliation>
-<address><email>mutz@kde.org</email></address>
+<address>&Marc.Mutz.mail;</address>
 </affiliation>
 </author>
 
@@ -30,7 +29,7 @@
 <surname>Hansen</surname>
 <contrib>Developer</contrib>
 <affiliation>
-<address><email>steffen@klaralvdalens-datakonsult.se</email></address>
+<address>&Steffen.Hansen.mail;</address>
 </affiliation>
 </othercredit>
 
@@ -38,7 +37,7 @@
 <firstname>David</firstname>
 <surname>Faure</surname>
 <affiliation>
-<address><email>faure@kde.org</email></address>
+<address>&David.Faure.mail;</address>
 </affiliation>
 <contrib>Developer</contrib>
 </othercredit>
@@ -72,7 +71,7 @@
 <chapter id="introduction"> <title>Introduction</title> 
 
 <para>&kwatchgnupg; is simple &gnupg; log viewer for the upcoming
-&gnupg; versions 1.4 and 2.0. It works as a <acronym>GUI</acronym>
+&gnupg; versions 1.4 and 2.0. It works as a &GUI;
 wrapper around the command line tool &watchgnupg;, which listens on a
 socket for log lines from the &gnupg; backend applications. See
 <userinput>info watchgnupg</userinput> for more information about
@@ -80,8 +79,7 @@ socket for log lines from the &gnupg; backend applications. See
 
 <para>&kwatchgnupg; can be started from the
 <menuchoice><guimenu>Tools</guimenu></menuchoice> menu of both
-<application>Kleopatra</application> and
-<application>KMail</application>, as well as from the command
+&kleopatra; and &kmail;, as well as from the command
 line. The &kwatchgnupg; executable is named
 <userinput>kwatchgnupg</userinput>.
 </para>
@@ -124,7 +122,7 @@ configuration dialog.
 
 <para>
 Sometimes it might be convenient to save the current log window
-contents to a file, e.g. to mail it to the developers as part of a bug
+contents to a file, &eg; to mail it to the developers as part of a bug
 report. There are two ways to achieve this in &kwatchgnupg;:
 </para>
 
@@ -252,18 +250,19 @@ history manually.
 <itemizedlist>
 <title>Contributors</title>
 <listitem>
-<para>Steffen Hansen <email>hansen@kde.org</email></para>
+<para>&Steffen.Hansen; <email>hansen@kde.org</email></para>
 </listitem>
 <listitem>
-<para>Marc Mutz <email>mutz@kde.org</email></para>
+<para>&Marc.Mutz; &Marc.Mutz.mail;</para>
 </listitem>
 <listitem>
-<para>David Faure <email>faure@kde.org</email></para>
+<para>&David.Faure; &David.Faure.mail;</para>
 </listitem>
 </itemizedlist>
 
-&underGPL;
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 &underFDL;
+&underGPL;
 </chapter>
 
 &documentation.index; 

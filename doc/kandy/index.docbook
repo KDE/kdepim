@@ -14,7 +14,7 @@
 <firstname>Cornelius</firstname>
 <surname>Schumacher</surname>
 <affiliation>
-<address><email>schumacher@kde.org</email></address>
+<address>&Cornelius.Schumacher.mail;</address>
 </affiliation>
 </author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
@@ -208,7 +208,7 @@ with your phone via <command>AT</command> commands.</para>
 </menuchoice>
 </term>
 <listitem>
-<para><action>Toggle whether the statusbar should be displayed.</action></para>
+<para><action>Toggle whether the status bar should be displayed.</action></para>
 </listitem>
 </varlistentry>
 
@@ -267,16 +267,17 @@ linkend="configuring"/> section.</para>
 <chapter id="credits">
 <title>Credits and Licenses</title>
 
-<para>&kandy; copyright 2001 Cornelius Schumacher
-<email>schumacher@kde.org</email>.</para>
+<para>&kandy; copyright 2001 &Cornelius.Schumacher;
+&Cornelius.Schumacher.mail;.</para>
 
-<para>Documentation by Cornelius Schumacher, with additions by Lauri
-Watts <email>lauri@kde.org</email>.</para>
+<para>Documentation by &Cornelius.Schumacher;, with additions by 
+&Lauri.Watts; &Lauri.Watts.mail;.</para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
-&underGPL;
 &underFDL;
+
+&underGPL;
 
 </chapter>
 
@@ -320,9 +321,9 @@ or from the Usenet newsgroup: comp.windows.x.kde.</para>
 <title>Developer Information</title>
 
 <sect1 id="dcop">
-<title><acronym>DCOP</acronym> Interface</title>
+<title>&DCOP; Interface</title>
 
-<para>&kandy; provides a <acronym>DCOP</acronym> interface
+<para>&kandy; provides a &DCOP; interface
 <interfacename>KandyIface</interfacename> with the following functions:
 <function>syncPhonebook()</function> syncs the mobile phone book book
 with the &kde; address book. This is equivalent to pressing the

@@ -30,7 +30,7 @@
 <firstname>Don</firstname>
 <surname>Sanders</surname>
 <affiliation>
-<address><email>dsanders@kde.org</email></address>
+<address><email>&Don.Sanders.mail;</email></address>
 </affiliation>
 </author>
 <author>
@@ -114,7 +114,7 @@ a default resource installed that saves all contacts in a vCard file
 under $HOME/.kde/share/apps/kabc/std.vcf; you can add more resources
 by using the Resource Configuration dialog, which is available in
 <application>kcontrol</application> under
-<guilabel>KDE Components</guilabel>-><guilabel>KDE Resources Configuration</guilabel>:</para>
+<guilabel>&kde; Components</guilabel>-><guilabel>&kde; Resources Configuration</guilabel>:</para>
 
 <screenshot>
 <screeninfo>The Resource Configuration Dialog</screeninfo>
@@ -156,7 +156,7 @@ by using the Resource Configuration dialog, which is available in
 <varlistentry>
 <term><guilabel>Network</guilabel></term>
 <listitem><para>all contacts will be stored in one file, which can be located
-on a remote server (for example, through HTTP, WebDAV, FTP or Fish).</para></listitem>
+on a remote server (for example, through &HTTP;, WebDAV, &FTP; or Fish).</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -277,12 +277,12 @@ default formatted name type for new contacts, use the <link linkend="preferences
 </screenshot>
 
 <para>
-  A contact can have multiple instant messaging addresses associated with it.  Other applications, such as <application>Kopete</application> and <application>Konversation</application>, store their information here.  It is recommended that you add, edit and delete instant messaging addresses in <application>Kopete</application> or <application>Konversation</application> rather than here, since they can assist you better in adding the address, adding the user to a group, and so on.  If you are not interested in whether they are picked up in another application, and just want to store the instant messaging address with the contact, then it is fine to add and edit it here.
+  A contact can have multiple instant messaging addresses associated with it.  Other applications, such as &kopete; and &konversation;, store their information here.  It is recommended that you add, edit and delete instant messaging addresses in &kopete; or &konversation; rather than here, since they can assist you better in adding the address, adding the user to a group, and so on.  If you are not interested in whether they are picked up in another application, and just want to store the instant messaging address with the contact, then it is fine to add and edit it here.
 </para>
 <para>
   For more information on adding new Instant Messaging Addresses, see
-  <ulink url="help:/kopete/getting-started.html#creating-accounts"><application>Kopete</application>'s handbook</ulink>
-  and <ulink url="help:/konversation/linkaddressbook.html"><application>Konversation</application>'s handbook</ulink>.
+  <ulink url="help:/kopete/getting-started.html#creating-accounts">&kopete;'s handbook</ulink>
+  and <ulink url="help:/konversation/linkaddressbook.html">&konversation;'s handbook</ulink>.
 </para>
 </sect2>
 
@@ -291,10 +291,10 @@ default formatted name type for new contacts, use the <link linkend="preferences
 	<para>
 	  In this tab, you can define preferences with regards to
 	  cryptography for a contact. At the time of this writing,
-	  only <application>KMail</application> will make use of these
+	  only &kmail; will make use of these
 	  preferences when composing messages. This mechanism replaces
 	  the barely editable per-recipient crypto preferences of
-	  earlier <application>KMail</application> releases.
+	  earlier &kmail; releases.
 	</para>
 	<variablelist>
 	  <varlistentry id="managing-contacts-crypto-preferences-allowed-protocols">
@@ -308,7 +308,7 @@ default formatted name type for new contacts, use the <link linkend="preferences
 		section on <ulink
 		url="/kmail/the-composer-window.html#cryptographic-message-formats">Cryptographic
 		Message Formats</ulink> in <ulink
-		url="/kmail/"><application>KMail</application>'s
+		url="/kmail/">&kmail;'s
 		handbook</ulink> for a discussion of the different
 		available formats.
 	      </para>
@@ -346,7 +346,7 @@ default formatted name type for new contacts, use the <link linkend="preferences
 		  <listitem>
 		    <para>
 		      No preference, use whatever mode
-		      <application>KMail</application> defaults to.
+		      &kmail; defaults to.
 		    </para>
 		  </listitem>
 		</varlistentry>
@@ -503,8 +503,8 @@ designed to allow contacts to be edited quickly.</para></listitem>
 <varlistentry>
 <term><guilabel>Location of Contact</guilabel></term>
 <listitem><para>This extension takes the postal address of a contact and
-loads a map service from the internet (like www.map24.de) with these
-data; the result is shown in a <acronym>HTML</acronym> view.</para></listitem>
+loads a map service from the Internet (like www.map24.de) with these
+data; the result is shown in a &HTML; view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -549,7 +549,7 @@ moment:</para>
 <varlistentry>
 <term><guilabel>vCard</guilabel></term>
 <listitem><para>the vCard format is standardized format (RFC 2426)
-that is supported by most addressbook applications &mdash;
+that is supported by most address book applications &mdash;
 &kaddressbook; can import and export versions 2.1 and 3.0;</para></listitem>
 </varlistentry>
 
@@ -568,20 +568,20 @@ the Eudora mail client;</para></listitem>
 <varlistentry>
 <term><guilabel>CSV</guilabel></term>
 <listitem><para>CSV (comma separated value) is a format that is used
-by many (addressbook) applications &mdash; you can import and export your
+by many (address book) applications &mdash; you can import and export your
 contacts with this format;</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>KDE2</guilabel></term>
-<listitem><para>to import your old addressbook data from KDE 2.X you
+<listitem><para>to import your old address book data from KDE 2.X you
 can use this item;</para></listitem>
 </varlistentry>
 
 <varlistentry>
 <term><guilabel>LDIF</guilabel></term>
 <listitem><para>LDIF is a plain-text representation of LDAP data, used by
-Netscape and Mozilla to store their addressbook
+&Netscape; and Mozilla to store their address book
 data &mdash; &kaddressbook; supports import and export of this format;
 </para></listitem>
 </varlistentry>
@@ -612,7 +612,7 @@ of your contacts available in the bookmark menu of konqueror.</para></listitem>
 <title>LDAP queries</title>
 <para>
 Address information from LDAP servers can be imported into &kaddressbook;'s
-local addressbook by using the LDAP search dialog.
+local address book by using the LDAP search dialog.
 </para>
 <para>
 To configure (a number of) LDAP servers, use the
@@ -627,15 +627,15 @@ and press the <guibutton>Search</guibutton> button.
 </para> 
 <para>When the results display in the listbox it is possible to select
 one or more address(es); you can then use the <guibutton>Add Selected</guibutton> to
-import the selected address(es) to the local addressbook, or click the
+import the selected address(es) to the local address book, or click the
 <guibutton>Send email to Contact</guibutton> to invoke a mail program
 to write an email to the selected recipients.
 </para>
 <para>
-The <guibutton>Recursive search</guibutton> checkbox is enabled by
+The <guibutton>Recursive search</guibutton> check box is enabled by
 default; this will make the LDAP query consider all objects
 below the base DN of each server. If you only want to consider objects
-one level below the base uncheck this checkbox; if in doubt, leave it
+one level below the base uncheck this check box; if in doubt, leave it
 checked.
 </para>
 </sect1>
@@ -665,9 +665,9 @@ KAddressBook</guimenuitem></menuchoice> or using the toolbar icon.</para>
 
 <variablelist>
 <varlistentry>
-<term><guilabel>Honor KDE single click</guilabel></term>
+<term><guilabel>Honor &kde; single click</guilabel></term>
 <listitem><para>If checked, &kaddressbook; pays attention to the
-KDE single-click option.</para></listitem>
+&kde; single-click option.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -1139,12 +1139,12 @@ used to influence its starting behavior:</para>
 
 <para>&kaddressbook; - The &kde; Address Book</para>
 
-<para>Copyright (c) 1997-2003, The KDE-PIM Team</para>
+<para>Copyright (c) 1997-2003, The &kde;-PIM Team</para>
 
-<para>&kaddressbook; was originally written in 1997 by Don Sanders
-<email>dsanders@kde.org</email>. Currently it is
-maintained by Tobias Koenig <email>tokoe@kde.org</email>.</para>
-
+<para>&kaddressbook; was originally written in 1997 by &Don.Sanders; 
+&Don.Sanders.mail;. Currently it is
+maintained by &Tobias.Koenig; <email>tokoe@kde.org</email>.</para>
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 &underFDL;               <!-- FDL: do not remove -->
 </chapter>
 </book>

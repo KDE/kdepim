@@ -80,7 +80,7 @@
 <abstract>
 <para>
 &kpilot; &kpilotver; is the &kde; version of the Desktop &HotSync; software for
-&PalmOne; handhelds, the &ThreeCom; &PalmPilot; and other &PalmOS; devices.
+&PalmOne; &handheld;s, the &ThreeCom; &PalmPilot; and other &PalmOS; devices.
 </para>
 </abstract>
 
@@ -264,7 +264,7 @@ Documentation copyright 2004,2005 Carlos Leonhard Woelz
 <email>carloswoelz@imap-mail.com</email>
 </para>
 
-<!-- TRANS:CREDITS_FOR_TRANSLATORS -->
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 &underFDL;
 &underGPL;
 </chapter>

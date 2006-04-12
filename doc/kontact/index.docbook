@@ -872,17 +872,17 @@ name</replaceable></guimenuitem> from the <guimenu>Settings</guimenu>
 menu.</para>
 
 <screenshot>
-<screeninfo>&kontact; Settings Menu When KMail is Selected</screeninfo>
+<screeninfo>&kontact; Settings Menu When &kmail; is Selected</screeninfo>
 <mediaobject>
 <imageobject>
 <imagedata format="PNG" fileref="settings-menu-kmail.png"/>
 </imageobject>
 <textobject>
-<phrase>&kontact; Settings Menu When KMail is Selected</phrase>
+<phrase>&kontact; Settings Menu When &kmail; is Selected</phrase>
 </textobject>
 <caption>
 <para>
-&kontact; Settings Menu When KMail is Selected
+&kontact; Settings Menu When &kmail; is Selected
 </para>
 </caption>
 </mediaobject>
@@ -1291,7 +1291,7 @@ integrating. They did almost all the work.</para>
 <listitem><para>&Daniel.Molkentin; &Daniel.Molkentin.mail;</para>
 </listitem>
 
-<listitem><para>All the members of the KDE documentation list who
+<listitem><para>All the members of the &kde; documentation list who
 assisted with markup and style issues.</para>
 </listitem>
 </itemizedlist>

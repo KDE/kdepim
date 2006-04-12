@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "&kalarm;">
   <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
@@ -16,17 +16,16 @@
 <authorgroup>
 <author>
 <firstname>David</firstname>
-<othername></othername>
 <surname>Jarvie</surname>
 <affiliation>
-<address><email>software@astrojar.org.uk</email></address>
+<address>&David.Jarvie.mail;</address>
 </affiliation>
 </author>
 
 <othercredit role="developer">
 <firstname>David</firstname>
 <surname>Jarvie</surname>
-<affiliation><address><email>software@astrojar.org.uk</email></address></affiliation>
+<affiliation><address>&David.Jarvie.mail;</address></affiliation>
 <contrib>Developer</contrib>
 </othercredit>
 
@@ -35,7 +34,7 @@
 
 <copyright>
 <year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year>
-<holder>David Jarvie</holder>
+<holder>&David.Jarvie;</holder>
 </copyright>
 
 <legalnotice>&FDLNotice;</legalnotice>
@@ -225,7 +224,7 @@ or <menuchoice>
 </listitem>
 
 <listitem>
-<para>File alarms: the file path/URL is searched.</para>
+<para>File alarms: the file path/&URL; is searched.</para>
 </listitem>
 
 <listitem>
@@ -235,7 +234,7 @@ searched.</para>
 
 <listitem>
 <para>Email alarms: in addition to the subject and body of the email,
-the recipients and the URLs of attachments are searched.</para>
+the recipients and the &URL;s of attachments are searched.</para>
 </listitem>
 </itemizedlist>
 
@@ -308,7 +307,7 @@ already filled in with a copy of the selected alarm's details.</para>
 drag the email from &kmail; onto &kalarm;'s main window or system tray
 icon. This opens the <link linkend="alarm-edit-dlg">alarm edit
 dialog</link> with the entire email message (including sender,
-recipient, etc.) as the alarm text.</para>
+recipient, &etc;) as the alarm text.</para>
 </listitem>
 
 <listitem>
@@ -326,7 +325,7 @@ dialog</link> and sets the alarm text.</para>
 </listitem>
 
 <listitem>
-<para>To create a file display alarm, drag a file URL onto &kalarm;'s
+<para>To create a file display alarm, drag a file &URL; onto &kalarm;'s
 main window or system tray icon. This opens the
 <link linkend="alarm-edit-dlg">alarm edit dialog</link> and sets the
 file name.</para>
@@ -475,7 +474,7 @@ alarm can contain, apart from the start date.</para>
 <para>As an example, you may regularly want to set an
 alarm to remind you about a television program whose time varies
 from week to week. The template would contain all the alarm details
-(message text, whether to play a sound, etc.) except for the time and
+(message text, whether to play a sound, &etc;) except for the time and
 date. Now, to create the alarm, all you need to do is open the alarm
 edit dialog with that template and then enter the time and
 date.</para>
@@ -713,7 +712,7 @@ options:</para>
 
 <itemizedlist>
 <listitem>
-<para>The <guilabel>Confirm acknowledgment</guilabel> checkbox lets
+<para>The <guilabel>Confirm acknowledgment</guilabel> check box lets
 you specify whether you will be prompted for confirmation when you
 close the alarm message window. This may be used as a safeguard
 against accidental acknowledgment of alarms.</para>
@@ -753,7 +752,7 @@ dialog.</para></note>
 
 <itemizedlist>
 <listitem>
-<para>Enter the sound file path or URL, or use the button beside the
+<para>Enter the sound file path or &URL;, or use the button beside the
 edit box to display a file selection dialog.</para>
 </listitem>
 
@@ -799,7 +798,7 @@ the selected sound levels.</para></tip>
 <para>Check <guilabel>Reminder</guilabel> if you want to display a
 reminder in advance of the main alarm and of each of its recurrences
 (if any). Enter how long in advance using the edit controls beside
-the checkbox.</para>
+the check box.</para>
 
 <note><para>You can only display a reminder before each repetition of
 an alarm if the repetitions are set up using the
@@ -879,13 +878,13 @@ mode.</para></note>
 
 <itemizedlist>
 <listitem>
-<para>The <guilabel>Enter a script</guilabel> checkbox lets you choose
+<para>The <guilabel>Enter a script</guilabel> check box lets you choose
 whether to enter a shell command line or a script.</para>
 
 <para>If this option is unchecked, you can enter a shell command line
 to execute. The command is passed straight to the default shell (defined
 by the <envar>SHELL</envar> environment variable), and may include
-whatever options, parameters, piped commands, etc. are permitted by
+whatever options, parameters, piped commands, &etc; are permitted by
 the shell in a single line command.</para>
 
 <para>If this option is checked, you can enter the text of a script to
@@ -1015,7 +1014,7 @@ after its scheduled time:</para>
 
 <itemizedlist>
 <listitem>
-<para>The <guilabel>Cancel if late</guilabel> checkbox determines what
+<para>The <guilabel>Cancel if late</guilabel> check box determines what
 happens if the alarm cannot be triggered at its scheduled time.</para>
 
 <para>Check this box to cancel the alarm if it cannot be triggered
@@ -1681,7 +1680,7 @@ This displays the configuration dialog.</para>
 
 <itemizedlist>
 <listitem><para><guilabel>Start alarm monitoring at login</guilabel>:
-This starts alarm monitoring at KDE session login, by starting the
+This starts alarm monitoring at &kde; session login, by starting the
 <application>alarm daemon</application>. Note that in order for alarms
 to be activated, you also need to select appropriate options in the
 <guilabel>Run Mode</guilabel> group box.</para>
@@ -1900,9 +1899,9 @@ transmission.</para>
 
 <listitem><para><guilabel>Sendmail</guilabel>: When an email alarm is
 triggered, the email is sent automatically using
-<application>sendmail</application>. This option will only work if
-your system is configured to use <application>sendmail</application>,
-or a <application>sendmail</application> compatible mail transport
+<application>&Sendmail;</application>. This option will only work if
+your system is configured to use <application>&Sendmail;</application>,
+or a <application>&Sendmail;</application> compatible mail transport
 agent such as <application>postfix</application> or
 <application>qmail</application>.</para>
 </listitem>
@@ -2040,7 +2039,7 @@ time at which the alarm is scheduled.</para>
 </itemizedlist>
 </listitem>
 
-<listitem><para><guilabel>Message windows have a title bar and take keyboard focus</guilabel>: This
+<listitem><para><guilabel>Message windows have a titlebar and take keyboard focus</guilabel>: This
 option controls whether alarm message windows are modal or not, &ie;
 whether they grab the keyboard focus when they appear. See the
 <link linkend="message-window">Alarm message window</link> section for
@@ -2118,7 +2117,7 @@ default values for the options in the
 <listitem><para>Set the default states for the <guilabel>Cancel if
 late</guilabel>, <guilabel>Auto-close window after this
 time</guilabel> and <guilabel>Confirm acknowledgment</guilabel>
-checkboxes.</para>
+check boxes.</para>
 </listitem>
 
 <listitem><para>Set the default reminder period units.</para>
@@ -2139,7 +2138,7 @@ unchecked, or if <guilabel>Beep</guilabel> or
 <itemizedlist>
 <listitem><para>Set the default states for the <guilabel>Enter a
 script</guilabel> and <guilabel>Execute in terminal window</guilabel>
-checkboxes.</para>
+check boxes.</para>
 </listitem>
 </itemizedlist>
 
@@ -2147,7 +2146,7 @@ checkboxes.</para>
 
 <itemizedlist>
 <listitem><para>Set the default state for the <guilabel>Copy email to
-self</guilabel> checkbox.</para>
+self</guilabel> check box.</para>
 </listitem>
 </itemizedlist>
 
@@ -2674,13 +2673,13 @@ and by the command line. &DCOP; calls should be used in preference if
 <sect1 id="dcop-interface">
 <title>&DCOP; interface</title>
 
-<para>The DCOP calls described in this document are all implemented in
-&kalarm;'s <constant>request</constant> DCOP object. The interface is
+<para>The &DCOP; calls described in this document are all implemented in
+&kalarm;'s <constant>request</constant> &DCOP; object. The interface is
 defined in the file <filename>kalarmiface.h</filename>.</para>
 
-<note><para>In &kalarm; version 1.2, the DCOP interface was completely
+<note><para>In &kalarm; version 1.2, the &DCOP; interface was completely
 revised to allow easier calling of functions, and to conform better to
-the standard &kde; DCOP configuration. The old DCOP interface is
+the standard &kde; &DCOP; configuration. The old &DCOP; interface is
 currently still usable for compatibility purposes, but will be removed
 at some future date.</para></note>
 
@@ -3989,25 +3988,23 @@ and the <application>alarm daemon</application>'s application name is
 &kalarm;
 </para>
 <para>
-Program copyright 2001, 2002, 2003, 2004, 2005, 2006 David Jarvie <email>software@astrojar.org.uk</email>
+Program copyright 2001, 2002, 2003, 2004, 2005, 2006 &David.Jarvie; &David.Jarvie.mail;
 </para>
 <para>
 Alarm daemon authors:
 <itemizedlist>
-<listitem><para>Preston Brown <email>pbrown@kde.org</email></para>
+<listitem><para>&Preston.Brown; &Preston.Brown.mail;</para>
 </listitem>
-<listitem><para>David Jarvie <email>software@astrojar.org.uk</email></para>
+<listitem><para>&David.Jarvie; &David.Jarvie.mail;</para>
 </listitem>
-<listitem><para>Cornelius Schumacher <email>schumacher@kde.org</email></para>
+<listitem><para>&Cornelius.Schumacher; &Cornelius.Schumacher.mail;</para>
 </listitem>
 </itemizedlist>
 </para>
 
 <para>
-Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006 David Jarvie <email>software@astrojar.org.uk</email>
+Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006 &David.Jarvie; &David.Jarvie.mail;
 </para>
-
-<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
 <para>Thanks go to the author of the &kde; 1 KAlarm application,
 Stefan Nikolaus <email>stefan.nikolaus@stuco.uni-oldenburg.de</email>,
@@ -4015,6 +4012,7 @@ who kindly agreed to allow the name &kalarm; to be used by this
 &kde; 2 / &kde; 3 application.
 </para>
 
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 &underFDL;               <!-- FDL: do not remove -->
 
 &underGPL;        	 <!-- GPL License -->

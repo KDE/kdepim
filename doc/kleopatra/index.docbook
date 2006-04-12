@@ -7,6 +7,7 @@
   <!ENTITY gpgconf "<application>GpgConf</application>">
   <!ENTITY kappname "&kleopatra;">
   <!ENTITY package "kdepim">
+  <!ENTITY smime "<acronym>S/MIME</acronym>">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 
@@ -76,10 +77,9 @@
 
 <othercredit role="developer">
 <firstname>Steffen</firstname>
-<othername></othername>
 <surname>Hansen</surname>
 <affiliation>
-<address><email>steffen@klaralvdalens-datakonsult.se</email></address>
+<address>&Steffen.Hansen.mail;</address>
 </affiliation>
 <contrib>Developer</contrib>
 </othercredit>
@@ -94,7 +94,7 @@
 <firstname>Jesper</firstname>
 <surname>Pedersen</surname>
 <affiliation>
-<address><email>blackie@kde.org</email></address>
+<address>&Jesper.Pedersen.mail;</address>
 </affiliation>
 <contrib>Developer</contrib>
 </othercredit>
@@ -102,7 +102,7 @@
 <firstname>Daniel</firstname>
 <surname>Molkentin</surname>
 <affiliation>
-<address><email>molkentin@kde.org</email></address>
+<address>&Daniel.Molkentin.mail;</address>
 </affiliation>
 <contrib>Developer</contrib>
 </othercredit>
@@ -139,7 +139,7 @@
 the &gpgsm; keybox and for retrieving certificates from
 <acronym>LDAP</acronym> servers.</para>
 
-<para>&kleopatra; can be started from KMail's <guimenu>Tools</guimenu>
+<para>&kleopatra; can be started from &kmail;'s <guimenu>Tools</guimenu>
 menu, as well as from the command line. The &kleopatra; executable is
 named <userinput><command>kleopatra</command></userinput>.</para>
 
@@ -166,12 +166,12 @@ albeit one should not stretch this analogy too much.</para>
 
 <para>The main window is divided into the large key listing area, the
 menubar and the <link linkend="functions-search">search bar</link> on
-top, and a statusbar at the bottom.</para>
+top, and a status bar at the bottom.</para>
 
 <para>Each line in the key list corresponds to one certificate,
 identified by the so-called <guilabel>Subject &dn;</guilabel>. &dn; is
 an acronym for <quote>Distinguished Name</quote>, a hierarchical
-identifier, much like a filesystem path with an unusual syntax, that is
+identifier, much like a file system path with an unusual syntax, that is
 supposed to globally uniquely identify a given certificate.</para>
 
 <para>To be valid, and thus usable, (public) keys need to be signed by
@@ -180,7 +180,7 @@ certificates, but usually the terms <quote>certificate</quote> and
 <quote>(public) key</quote> are used interchangeably, and we will not
 distinguish between them in this manual either, except when explicitly
 noted. The name of the &ca; which issued the certificate (its &dn;)
-is shown in the <guilabel>Issuer DN</guilabel> column.</para>
+is shown in the <guilabel>Issuer &dn;</guilabel> column.</para>
 
 <para>&ca;s must in turn be signed by other &ca;s to be valid. Of
 course, this must end somewhere, so the top-level &ca; (root-&ca;)
@@ -267,9 +267,9 @@ just as you would to for <quote>normal</quote> certificates.</para>
 <para>The menu item <xref linkend="file-new-key-pair"/> starts the
 certificate-request-creating wizard which will guide you through a
 number of steps to create a certificate request; this request can, on the 
-last page of the wizard, either be sent to a certificate authority (CA)
+last page of the wizard, either be sent to a certificate authority (&ca;)
 to be signed or saved to a file (for example to a floppy, so it can be
-shipped to the CA).</para> <para>Whenever you are done with a step in
+shipped to the &ca;).</para> <para>Whenever you are done with a step in
 the wizard, press <guibutton>Next</guibutton> to go to the next step
 (or <guibutton>Back</guibutton> to review steps that are already
 completed). The certificate request creation can be canceled at any
@@ -304,7 +304,7 @@ sending mail to when they use your certificate.</para>
 </itemizedlist>
 </para><para>
 The next step in the wizard is to select whether to store the
-certificate in a file or send it directly to a CA. You will have to
+certificate in a file or send it directly to a &ca;. You will have to
 specify the filename or email address to send the certificate request to.
 </para></sect1>
 
@@ -340,7 +340,7 @@ linkend="crls-dump-crl-cache"/>).</para>
 <listitem>
 <para><action>Creates a new key pair (public and private)</action> and
 allows to send the public part to a certification authority
-(<acronym>CA</acronym>) for signing. The resulting certificate is then
+(&ca;) for signing. The resulting certificate is then
 sent back to you, or stored in an LDAP server for you to download into
 your local keybox, where you can use it to sign and decrypt
 mails.</para>
@@ -349,7 +349,7 @@ mails.</para>
 generation</quote>, since all keys are created locally. &kleopatra;
 (and &gpgsm;) do not support <quote>centralized key generation</quote>
 directly, but you can import the public/secret key bundle that you
-receive from the CA in PKCS#12 format via
+receive from the &ca; in PKCS#12 format via
 &file-import-certificates;.</para>
 </listitem>
 </varlistentry>
@@ -786,7 +786,7 @@ keybox.</action></para>
 <term>&commandline-option-import-certificate;</term>
 
 <listitem>
-<para><action>Specifies a file or URL from which to import
+<para><action>Specifies a file or &URL; from which to import
 certificates (or secret keys) from.</action></para>
 
 <para>This is the command line equivalent of <xref
@@ -816,7 +816,7 @@ linkend="settings-configure-gpgme-backend"/>.</para>
 <para>To add a new server, click on the <guilabel>Add
 Service...</guilabel> button. In the dialog that appears, you can set
 the <guilabel>Server name</guilabel>, the <guilabel>Port</guilabel>
-(preset to the default LDAP port), the <guilabel>Base DN</guilabel>
+(preset to the default LDAP port), the <guilabel>Base &dn;</guilabel>
 (sometimes referred to as the search root or search base), and the
 usual <guilabel>User name</guilabel> and
 <guilabel>Password</guilabel>, both of which are only needed if the
@@ -898,7 +898,7 @@ standard font.</para>
 
 </sect1>
 
-<sect1 id="configuration-dn-order"><title>Configuring the Order DN Attributes are Shown</title>
+<sect1 id="configuration-dn-order"><title>Configuring the Order &dn; Attributes are Shown</title>
 
 <para>Although &dn;s are hierarchical, the order of the individual
 components (called relative &dn;s (RDNs), or &dn; attributes) is not
@@ -908,7 +908,7 @@ of personal taste or company policy, which is why it is configurable in
 
 <note><para>This setting does not only apply to &kleopatra;, but to all
 applications using &kleopatra; Technology. At the time of this
-writing, these include KMail, KAddressBook, as well as &kleopatra;
+writing, these include &kmail;, &kaddressbook;, as well as &kleopatra;
 itself, of course.</para></note>
 
 <para>This configuration page basically consists of two lists, one for
@@ -984,11 +984,11 @@ button.</para>
 <chapter id="admin"><title>Administrator's Guide</title>
 
 <para>This Administrator's Guide describes ways to customize &kleopatra; that
-are not accessible via the GUI, but only via config files.</para>
+are not accessible via the &GUI;, but only via config files.</para>
 
 <para>It is assumed that the reader is familiar with the technology
 used for &kde; application configuration, including layout,
-filesystem location and cascading of &kde; config files, as well as
+file system location and cascading of &kde; config files, as well as
 the KIOSK framework.</para>
 
 <sect1 id="admin-certificate-request-wizard"><title>Customization of the Certificate-Creation Wizard</title>
@@ -1200,7 +1200,7 @@ C=DE
 	      <entry>boolean</entry>
 	      <entry>
 		the key has been disabled (marked for not using) by
-		the user. Ignored for S/MIME keys.
+		the user. Ignored for &smime; keys.
 	      </entry>
 	    </row>
 	    <row>
@@ -1253,7 +1253,7 @@ C=DE
 	      <entry>boolean</entry>
 	      <entry>
 		the key is an OpenPGP key (<literal>true</literal>),
-		or an S/MIME key (<literal>false</literal>).
+		or an &smime; key (<literal>false</literal>).
 	      </entry>
 	    </row>
 	    <row>
@@ -1368,36 +1368,37 @@ is-at-least-ownertrust=marginal<!--
 <chapter id="credits-and-license">
 <title>Credits and License</title>
 
-<para>&kleopatra; copyright 2002 Steffen Hansen, Matthias Kalle Dalheimer
-and Jesper Pedersen., copyright 2004 Daniel Molkentin, copyright 2004 Klar&auml;lvdalens Datakonsult AB</para>
+<para>&kleopatra; copyright 2002 &Steffen.Hansen;, &Matthias.Kalle.Dalheimer;
+and &Jesper.Pedersen;., copyright 2004 &Daniel.Molkentin;, copyright 2004 Klar&auml;lvdalens Datakonsult AB</para>
 
-<para>Documentation copyright 2002 Steffen Hansen, copyright 2004
-Daniel Molkentin, copyright 2004 Klar&auml;lvdalens Datakonsult AB</para>
+<para>Documentation copyright 2002 &Steffen.Hansen;, copyright 2004
+&Daniel.Molkentin;, copyright 2004 Klar&auml;lvdalens Datakonsult AB</para>
 
 <itemizedlist>
 <title>Contributors</title>
 <listitem>
-<para>Marc Mutz <email>mutz@kde.org</email></para>
+<para>&Marc.Mutz; &Marc.Mutz.mail;</para>
 </listitem>
 <listitem>
-<para>David Faure <email>faure@kde.org</email></para>
+<para>&David.Faure; &David.Faure.mail;</para>
 </listitem>
 <listitem>
-<para>Steffen Hansen <email>hansen@kde.org</email></para>
+<para>&Steffen.Hansen; <email>hansen@kde.org</email></para>
 </listitem>
 <listitem>
-<para>Matthias Kalle Dalheimer <email>kalle@kde.org</email></para>
+<para>&Matthias.Kalle.Dalheimer; &Matthias.Kalle.Dalheimer.mail;</para>
 </listitem>
 <listitem>
-<para>Jesper Pedersen <email>blackie@kde.org</email></para>
+<para>&Jesper.Pedersen; &Jesper.Pedersen.mail;</para>
 </listitem>
 <listitem>
-<para>Daniel Molkentin <email>molkentin@kde.org</email></para>
+<para>&Daniel.Molkentin; &Daniel.Molkentin.mail;</para>
 </listitem>
 </itemizedlist>
 
-&underGPL;
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 &underFDL;
+&underGPL;
 </chapter>
 
 &documentation.index; 
