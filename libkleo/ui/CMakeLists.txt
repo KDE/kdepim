@@ -5,6 +5,28 @@ include_directories( ${CMAKE_SOURCE_DIR}/libkpgp ${CMAKE_SOURCE_DIR}/libkleo ${K
 
 ########### next target ###############
 
+set(kleopatra_LIB_SRCS
+        directoryserviceswidgetbase.cpp
+        adddirectoryservicedialog.cpp
+        kdhorizontalline.cpp
+	progressbar.cpp
+	progressdialog.cpp
+	keylistview.cpp
+	keyselectiondialog.cpp
+	keyrequester.cpp
+	passphrasedialog.cpp
+	keyapprovaldialog.cpp
+	backendconfigwidget.cpp
+	dnattributeorderconfigwidget.cpp
+	cryptoconfigmodule.cpp
+	cryptoconfigdialog.cpp
+	directoryserviceswidget.cpp
+	adddirectoryservicedialogimpl.cpp )
+
+kde4_automoc(${kleopatra_LIB_SRCS})
+
+kde4_add_ui3_files(kleopatra_LIB_SRCS directoryserviceswidgetbase.ui3 adddirectoryservicedialog.ui3)
+
 
 ########### install files ###############
 
