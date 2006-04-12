@@ -25,7 +25,7 @@ libkmime_la_SOURCES = \
 libkmime_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 4:0:2
 
 libkmime_la_LIBADD = $(top_builddir)/libemailfunctions/libemailfunctions.la \
-                     $(LIB_KDECORE) $(LIB_POLL)
+                     $(KDE4_KDECORE_LIBS) $(LIB_POLL) -lDCOP
 
 METASOURCES = AUTO
 

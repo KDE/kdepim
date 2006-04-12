@@ -35,7 +35,7 @@
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <kconfig.h>
-
+#include <ktoolbar.h>
 #include <kedittoolbar.h>
 
 #include <kstdaccel.h>
