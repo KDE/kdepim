@@ -32,7 +32,7 @@
 
 #ifndef DIRECTORYSERVICESWIDGET_H
 #define DIRECTORYSERVICESWIDGET_H
-#include "directoryserviceswidgetbase.h"
+#include "ui_directoryserviceswidgetbase.h"
 #include <kurl.h>
 #include <kdepimmacros.h>
 
