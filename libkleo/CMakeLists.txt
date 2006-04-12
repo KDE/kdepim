@@ -74,8 +74,8 @@ set(libkleopatra_ui_SRCS
 )
 
 kde4_add_ui3_files(libkleopatra_ui_SRCS
-	${CMAKE_SOURCE_DIR}/libkleo/ui/adddirectoryservicedialog.ui
-	${CMAKE_SOURCE_DIR}/libkleo/ui/directoryserviceswidgetbase.ui
+	${CMAKE_SOURCE_DIR}/libkleo/ui/adddirectoryservicedialog.ui3
+	${CMAKE_SOURCE_DIR}/libkleo/ui/directoryserviceswidgetbase.ui3
 )
 
 set(kleopatra_LIB_SRCS ${libkleopatra_core_SRCS} ${libkleopatra_ui_SRCS} ${libkleopatra_backend_chiasmus_SRCS} ${libkleopatra_backend_qgpgme_SRCS}
