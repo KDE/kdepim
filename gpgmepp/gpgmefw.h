@@ -21,10 +21,6 @@
 #ifndef __GPGMEPP_GPGMEFW_H__
 #define __GPGMEPP_GPGMEFW_H__
 
-#ifndef HAVE_GPGME_0_4_BRANCH
-#error You need gpgme 0.4.x, x >= 4, to compile gpgme++
-#endif
-
 struct gpgme_context;
 typedef gpgme_context * gpgme_ctx_t;
 
