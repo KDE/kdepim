@@ -32,7 +32,7 @@
 
 #ifndef ADDDIRECTORYSERVICEDIALOGIMPL_H
 #define ADDDIRECTORYSERVICEDIALOGIMPL_H
-#include "adddirectoryservicedialog.h"
+#include "ui_adddirectoryservicedialog.h"
 
 class AddDirectoryServiceDialogImpl : public QDialog, public Ui::AddDirectoryServiceDialog
 {

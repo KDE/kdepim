@@ -1,12 +1,12 @@
 kde4_header()
 
-add_subdirectory( pics ) 
-add_subdirectory( kleo ) 
-add_subdirectory( backends ) 
-add_subdirectory( ui ) 
-add_subdirectory( tests ) 
+add_subdirectory( pics )
+add_subdirectory( kleo )
+add_subdirectory( backends )
+add_subdirectory( ui )
+add_subdirectory( tests )
 
-include_directories(${CMAKE_SOURCE_DIR}/libkpgp/ ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories(${CMAKE_SOURCE_DIR}/libkpgp/ ${KDE4_INCLUDES} ${GPGME_INCLUDES} )
 
 
 ########### next target ###############
