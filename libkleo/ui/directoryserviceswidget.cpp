@@ -93,9 +93,11 @@ private:
 Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
   Kleo::CryptoConfigEntry* configEntry,
   QWidget* parent,  const char* name, Qt::WFlags fl )
-    : DirectoryServicesWidgetBase( parent, name, fl ),
+    : QWidget( parent, name, fl ),
+    Ui::DirectoryServicesWidgetBase(),
       mConfigEntry( configEntry )
 {
+    setupUi(this);
     x500LV->setSorting( -1 );
 
     // taken from kmail's configuredialog.cpp

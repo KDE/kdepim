@@ -47,8 +47,9 @@
  *  TRUE to construct a modal dialog.
  */
 AddDirectoryServiceDialogImpl::AddDirectoryServiceDialogImpl( QWidget* parent,  const char* name, bool modal, Qt::WFlags fl )
-    : AddDirectoryServiceDialog( parent, name, modal, fl )
+    : QDialog(parent, name, modal, fl), AddDirectoryServiceDialog()
 {
+    setupUi(this);
     portED->setValidator( new QIntValidator( 0, 65535, portED ) );
 }
 

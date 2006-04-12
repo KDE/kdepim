@@ -41,7 +41,7 @@ namespace Kleo {
 
 class CryptoConfigEntry;
 
-class KDE_EXPORT DirectoryServicesWidget : public DirectoryServicesWidgetBase
+class KDE_EXPORT DirectoryServicesWidget : public QWidget, public Ui::DirectoryServicesWidgetBase
 {
   Q_OBJECT
 

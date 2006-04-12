@@ -34,7 +34,7 @@
 #define ADDDIRECTORYSERVICEDIALOGIMPL_H
 #include "adddirectoryservicedialog.h"
 
-class AddDirectoryServiceDialogImpl : public AddDirectoryServiceDialog
+class AddDirectoryServiceDialogImpl : public QDialog, public Ui::AddDirectoryServiceDialog
 {
     Q_OBJECT
 

@@ -25,7 +25,7 @@ set(kleopatra_LIB_SRCS
 
 kde4_automoc(${kleopatra_LIB_SRCS})
 
-kde4_add_ui3_files(kleopatra_LIB_SRCS directoryserviceswidgetbase.ui3 adddirectoryservicedialog.ui3)
+kde4_add_ui_files(kleopatra_LIB_SRCS directoryserviceswidgetbase.ui adddirectoryservicedialog.ui)
 
 
 ########### install files ###############
