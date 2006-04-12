@@ -6,15 +6,9 @@ project(kdepim)
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules )
 
-# support for Dart: http://public.kitware.com/dashboard.php?name=kde
-enable_testing()
-include(CTest)
-
-# Use colors
-set(CMAKE_COLOR_MAKEFILE ON)
-
 # search packages used by KDE
 find_package(KDE4 REQUIRED)
+include(KDE4Defaults)
 find_package(Perl REQUIRED)
 find_package(ZLIB REQUIRED)
 
