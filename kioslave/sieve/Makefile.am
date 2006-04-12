@@ -3,7 +3,7 @@ INCLUDES= -I$(srcdir)/../.. -I$(srcdir)/.. $(all_includes)
 kde_module_LTLIBRARIES = kio_sieve.la
 
 kio_sieve_la_SOURCES = sieve.cpp
-kio_sieve_la_LIBADD  = $(LIB_KIO) $(SASL2_LIBS)
+kio_sieve_la_LIBADD  = $(LIB_KIO) $(SASL2_LIBS) $(LIB_KDECORE) $(LIB_QT) $(LIB_QT3SUPPORT)
 kio_sieve_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 
 noinst_HEADERS = sieve.h

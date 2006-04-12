@@ -11,7 +11,7 @@ kde_module_LTLIBRARIES = kfile_vcf.la
 
 kfile_vcf_la_SOURCES = kfile_vcf.cpp 
 kfile_vcf_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
-kfile_vcf_la_LIBADD = $(LIB_KSYCOCA)
+kfile_vcf_la_LIBADD = $(LIB_KSYCOCA) $(LIB_KDECORE) $(LIB_QT)
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO

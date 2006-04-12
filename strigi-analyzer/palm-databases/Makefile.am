@@ -10,7 +10,7 @@ kde_module_LTLIBRARIES = kfile_palm.la
 
 kfile_palm_la_SOURCES = kfile_palm.cpp 
 kfile_palm_la_LDFLAGS = $(PISOCK_LDFLAGS) $(all_libraries) -module $(KDE_PLUGIN)
-kfile_palm_la_LIBADD = $(LIB_KSYCOCA) $(PISOCK_LIB)
+kfile_palm_la_LIBADD = $(LIB_KSYCOCA) $(PISOCK_LIB) $(LIB_KDECORE) $(LIB_QT)
 
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO

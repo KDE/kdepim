@@ -10,7 +10,7 @@ kde_module_LTLIBRARIES = kio_imap4.la
 kio_imap4_la_SOURCES = 	imapcommand.cc imaplist.cc mailaddress.cc \
   mimeheader.cc rfcdecoder.cc imap4.cc imapinfo.cc imapparser.cc mailheader.cc \
   mimehdrline.cc  mimeio.cc
-kio_imap4_la_LIBADD  = $(LIB_KIO) $(SASL2_LIBS) ../../libkmime/libkmime.la \
+kio_imap4_la_LIBADD  = $(LIB_KIO) $(LIB_QT3SUPPORT)  $(SASL2_LIBS) ../../libkmime/libkmime.la \
   ../../libemailfunctions/libemailfunctions.la
 kio_imap4_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -module $(KDE_PLUGIN)
 

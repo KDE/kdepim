@@ -12,7 +12,7 @@ kio_mbox_la_SOURCES = \
 	readmbox.cc \
 	stat.cc \
 	urlinfo.cc
-kio_mbox_la_LIBADD  = $(LIB_KIO)
+kio_mbox_la_LIBADD  = $(LIB_KIO) $(LIB_KDECORE) $(LIB_QT)
 kio_mbox_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -module $(KDE_PLUGIN)
 
 noinst_HEADERS = \
