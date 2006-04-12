@@ -38,7 +38,7 @@
  * That is just a progress dialog with two bars
  */
 
-#include "progress_dialog.h"
+#include "ui_progress_dialog.h"
 #include <QDialog>
 
 /**

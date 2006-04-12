@@ -28,7 +28,7 @@
 #include <QWidget>
 
 class KConfig;
-#include "korncfg.h"
+#include "ui_korncfg.h"
 
 class KDialog;
 

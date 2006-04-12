@@ -26,7 +26,7 @@
  */
 
 #include <QWidget>
-#include "kornboxcfg.h"
+#include "ui_kornboxcfg.h"
 
 class KConfig;
 class KConfigGroup;

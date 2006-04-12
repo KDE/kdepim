@@ -25,7 +25,7 @@
  * This file contains the class KornAccountCfgImpl
  */
 
-#include "kornaccountcfg.h"
+#include "ui_kornaccountcfg.h"
 #include <QWidget>
 //Added by qt3to4:
 #include <QLabel>
