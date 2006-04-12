@@ -239,7 +239,7 @@ int main( int argc, char *argv[] )
   if ( args->isSet( "export-list" ) ) {
     cout << endl;
     cout << i18n( "%1 supports these export formats:" , 
-       progDisplay ).toLocal8Bit().data()
+       QString(progDisplay) ).toLocal8Bit().data()
          << endl;
     cout << i18n( "  %1 [Default]" , QString( "Text" ) ).toLocal8Bit().data()
          << endl;
