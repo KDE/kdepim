@@ -3,6 +3,10 @@ kde4_header()
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  ${KDE4_ENABLE_EXCEPTIONS}")
 
+# Is there really a version of STL still in use without the std:: namespace?
+# For now we'll do without a configure check.
+add_definitions(-DSTD_NAMESPACE_PREFIX="std::" -DHAVE_STLNAMESPACE)
+
 ########### next target ###############
 
 set(index_LIB_SRCS 
