@@ -256,6 +256,7 @@ void AddressEditor::initLayout()
 	fAddress->setField(entryCustom4, fCustom4Field->text());
 
 	emit(recordChangeComplete(fAddress));
+        fDeleteOnCancel = false;
 	KDialogBase::slotOk();
 }
 
