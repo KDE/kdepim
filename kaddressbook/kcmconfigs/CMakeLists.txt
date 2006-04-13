@@ -17,7 +17,7 @@ kde4_add_plugin(kcm_kabconfig ${kcm_kabconfig_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kabconfig )
 
-target_link_libraries(kcm_kabconfig  ${KDE4_KIO_LIBS} kabinterfaces kdepim kabcommon )
+target_link_libraries(kcm_kabconfig  ${KDE4_KIO_LIBS} kdepim kaddressbook )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kcm_kabconfig )
 
@@ -47,7 +47,7 @@ kde4_add_plugin(kcm_kabcustomfields ${kcm_kabcustomfields_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kabcustomfields )
 
-target_link_libraries(kcm_kabcustomfields  ${KDE4_KDEUI_LIBS} kabcommon )
+target_link_libraries(kcm_kabcustomfields  ${KDE4_KDEUI_LIBS} kaddressbook )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kcm_kabcustomfields )
 

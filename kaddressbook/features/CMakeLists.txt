@@ -13,7 +13,7 @@ kde4_add_plugin(kaddrbk_distributionlist WITH_PREFIX ${kaddrbk_distributionlist_
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_distributionlist )
 
-target_link_libraries(kaddrbk_distributionlist  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_distributionlist  ${KDE4_KDECORE_LIBS} kabc kaddressbook ${LIB_KDE3SUPPORT})
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_distributionlist )
 
@@ -28,7 +28,7 @@ kde4_add_plugin(kaddrbk_resourceselection WITH_PREFIX ${kaddrbk_resourceselectio
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_resourceselection )
 
-target_link_libraries(kaddrbk_resourceselection  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_resourceselection  ${KDE4_KDECORE_LIBS} kabc kaddressbook)
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_resourceselection )
 

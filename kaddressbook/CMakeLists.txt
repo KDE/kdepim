@@ -1,16 +1,35 @@
 kde4_header()
 
-include_directories(
-    ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces
-    ${CMAKE_SOURCE_DIR}/kaddressbook/features
-    ${CMAKE_SOURCE_DIR}/kaddressbook/views
-    ${CMAKE_SOURCE_DIR}/kaddressbook/printing
-    ${CMAKE_SOURCE_DIR}/kaddressbook/common
-    ${CMAKE_SOURCE_DIR}/kaddressbook/editors
-    ${CMAKE_SOURCE_DIR}/akregator/src
-    ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+add_subdirectory( common )
+add_subdirectory( interfaces ) 
+add_subdirectory( printing ) 
+add_subdirectory( editors ) 
+add_subdirectory( views ) 
+add_subdirectory( features ) 
+add_subdirectory( kcmconfigs ) 
+add_subdirectory( xxport ) 
+add_subdirectory( pics ) 
+add_subdirectory( csv-templates ) 
+add_subdirectory( thumbnailcreator ) 
+
+include_directories( 
+	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces 
+	${CMAKE_SOURCE_DIR}/kaddressbook/features 
+	${CMAKE_SOURCE_DIR}/kaddressbook/views 
+	${CMAKE_SOURCE_DIR}/kaddressbook/printing 
+	${CMAKE_SOURCE_DIR}/kaddressbook/common 
+	${CMAKE_SOURCE_DIR}/kaddressbook/editors 
+	${CMAKE_SOURCE_DIR}/akregator/src 
+	${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 
+set(libkabcommon_SRCS
+	${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs.cpp 
+	${CMAKE_SOURCE_DIR}/kaddressbook/common/locationmap.cpp 
+	${CMAKE_SOURCE_DIR}/kaddressbook/common/filter.cpp
+	)
+
+kde4_add_kcfg_files(libkabcommon_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
 
 set(libkabinterfaces_SRCS
 	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces/configurewidget.cpp 
@@ -38,7 +57,16 @@ kde4_add_ui3_files(libprinter_SRCS
 	${CMAKE_SOURCE_DIR}/kaddressbook/printing/rbs_appearance.ui
 )
 
-kde4_add_kcfg_files(libprinter_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
+set(librsslocal_SRCS 
+	${CMAKE_SOURCE_DIR}/akregator/src/librss/article.cpp 
+	${CMAKE_SOURCE_DIR}/akregator/src/librss/document.cpp 
+	${CMAKE_SOURCE_DIR}/akregator/src/librss/image.cpp 
+	${CMAKE_SOURCE_DIR}/akregator/src/librss/textinput.cpp 
+	${CMAKE_SOURCE_DIR}/akregator/src/librss/tools_p.cpp 
+	${CMAKE_SOURCE_DIR}/akregator/src/librss/loader.cpp 
+	${CMAKE_SOURCE_DIR}/akregator/src/librss/enclosure.cpp 
+	${CMAKE_SOURCE_DIR}/akregator/src/librss/category.cpp
+	)
 
 set(libkabim_SRCS
 	${CMAKE_SOURCE_DIR}/kaddressbook/editors/imeditorwidget.cpp 
@@ -50,23 +78,10 @@ kde4_add_ui3_files(libkabim_SRCS
     ${CMAKE_SOURCE_DIR}/kaddressbook/editors/imaddressbase.ui
 )
 
-add_subdirectory( common )
-add_subdirectory( interfaces ) 
-add_subdirectory( printing ) 
-add_subdirectory( editors ) 
-add_subdirectory( views ) 
-add_subdirectory( features ) 
-add_subdirectory( kcmconfigs ) 
-add_subdirectory( xxport ) 
-add_subdirectory( pics ) 
-add_subdirectory( csv-templates ) 
-add_subdirectory( thumbnailcreator ) 
-
-
 
 ########### next target ###############
 
-set(kaddressbook_bin_SRCS ${libkabcommon_SRCS}
+set(kaddressbook_bin_SRCS
 	main.cpp 
 	kaddressbookmain.cpp 
 	)
@@ -80,7 +95,7 @@ kde4_add_dcop_skels(kaddressbook_bin_SRCS kaddressbookiface.h )
 kde4_add_executable(kaddressbook_bin ${kaddressbook_bin_SRCS})
 set_target_properties(kaddressbook_bin PROPERTIES OUTPUT_NAME kaddressbook)
 
-target_link_libraries(kaddressbook_bin  ${KDE4_KDECORE_LIBS} kaddressbook printer kabinterfaces kdepim kcal kabc_file khtml kabim rsslocal kdeprint )
+target_link_libraries(kaddressbook_bin  ${KDE4_KDECORE_LIBS} kaddressbook khtml)
 
 install_targets(/bin kaddressbook_bin )
 
@@ -88,6 +103,8 @@ install_targets(/bin kaddressbook_bin )
 ########### next target ###############
 
 set(kaddressbookpart_PART_SRCS kaddressbook_part.cpp )
+
+kde4_add_dcop_skels(kaddressbookpart_PART_SRCS kaddressbookiface.h)
 
 kde4_automoc(${kaddressbookpart_PART_SRCS})
 
@@ -102,7 +119,8 @@ install_targets(${LIB_INSTALL_DIR}/kde4 kaddressbookpart )
 
 ########### next target ###############
 
-set(kaddressbook_LIB_SRCS ${libkabinterfaces_SRCS} ${libprinter_SRCS} ${libkabim_SRCS}
+set(kaddressbook_LIB_SRCS ${libkabinterfaces_SRCS} ${libprinter_SRCS} ${libkabim_SRCS} ${librsslocal_SRCS}
+                          ${libkabcommon_SRCS}
 	addresseeconfig.cpp
    addresseeeditordialog.cpp
    addresseeeditorwidget.cpp
@@ -150,7 +168,7 @@ kde4_automoc(${kaddressbook_LIB_SRCS})
 
 kde4_add_library(kaddressbook SHARED ${kaddressbook_LIB_SRCS})
 
-target_link_libraries(kaddressbook  ${KDE4_KDECORE_LIBS} kcal kdepim kabc)
+target_link_libraries(kaddressbook  ${KDE4_KDECORE_LIBS} kdepim kcal kabc_file kdeprint )
 
 set_target_properties(kaddressbook PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kaddressbook )
