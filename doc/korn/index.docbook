@@ -86,8 +86,8 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&appname; is a KDE Mail Checker that has the capabilities to dock itself to
-<application>Kicker</application>. &appname; can check the following types of
+<para>&appname; is a &kde; Mail Checker that has the capabilities to dock itself to
+&kicker;. &appname; can check the following types of
 mailboxes:</para>
 
 <itemizedlist>

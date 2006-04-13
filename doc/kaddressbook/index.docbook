@@ -5,6 +5,7 @@
  <!ENTITY package "kdepim">
  <!ENTITY % addindex "IGNORE">
  <!ENTITY % English "INCLUDE" > <!-- change language only here -->  
+ <!ENTITY smime "<acronym>S/MIME</acronym>">
 ]>
 
 <book lang="&language;">
@@ -317,12 +318,12 @@ default formatted name type for new contacts, use the <link linkend="preferences
 	  <varlistentry id="managing-contacts-crypto-preferences-preferred-keys">
 	    <term>
 	      <guilabel>Preferred OpenPGP encryption key</guilabel>,
-	      <guilabel>Preferred S/MIME encryption certificate</guilabel>
+	      <guilabel>Preferred &smime; encryption certificate</guilabel>
 	    </term>
 	    <listitem>
 	      <para>
 		Here, you can assign a preferred OpenPGP key and/or
-		S/MIME certificate to be used when encrypting to this
+		&smime; certificate to be used when encrypting to this
 		contact. Otherwise, the local keyring and local
 		certificate box are searched for matching keys and
 		certificates.
@@ -574,7 +575,7 @@ contacts with this format;</para></listitem>
 
 <varlistentry>
 <term><guilabel>KDE2</guilabel></term>
-<listitem><para>to import your old address book data from KDE 2.X you
+<listitem><para>to import your old address book data from &kde; 2.X you
 can use this item;</para></listitem>
 </varlistentry>
 
