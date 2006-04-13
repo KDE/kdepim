@@ -3,15 +3,18 @@ kde4_header()
 include_directories( ${CMAKE_SOURCE_DIR}/kresources/lib ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 
+set(libkgroupdav_SRCS groupdavglobals.cpp)
+
+
 ########### next target ###############
 
-set(kcal_groupdav_LIB_SRCS groupdavcalendaradaptor.cpp kcal_resourcegroupdav.cpp kcal_resourcegroupdav_plugin.cpp )
+set(kcal_groupdav_LIB_SRCS groupdavcalendaradaptor.cpp kcal_resourcegroupdav.cpp kcal_resourcegroupdav_plugin.cpp ${libkgroupdav_SRCS})
 
 kde4_automoc(${kcal_groupdav_LIB_SRCS})
 
 kde4_add_library(kcal_groupdav SHARED ${kcal_groupdav_LIB_SRCS})
 
-target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} kgroupdav kgroupwaredav kcal kdepim kcal_groupdav )
+target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav kcal kdepim kcal_groupdav )
 
 set_target_properties(kcal_groupdav PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kcal_groupdav )
@@ -19,13 +22,13 @@ install_targets(${LIB_INSTALL_DIR} kcal_groupdav )
 
 ########### next target ###############
 
-set(kabc_groupdav_LIB_SRCS kabc_resourcegroupdav.cpp groupdavaddressbookadaptor.cpp kabc_resourcegroupdav_plugin.cpp )
+set(kabc_groupdav_LIB_SRCS kabc_resourcegroupdav.cpp groupdavaddressbookadaptor.cpp kabc_resourcegroupdav_plugin.cpp ${libkgroupdav_SRCS})
 
 kde4_automoc(${kabc_groupdav_LIB_SRCS})
 
 kde4_add_library(kabc_groupdav SHARED ${kabc_groupdav_LIB_SRCS})
 
-target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} kgroupdav kgroupwaredav kcal kdepim kabc kabc_groupdav )
+target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav kcal kdepim kabc kabc_groupdav )
 
 set_target_properties(kabc_groupdav PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kabc_groupdav )
