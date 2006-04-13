@@ -1,6 +1,12 @@
 kde4_header()
 
-include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook ${CMAKE_SOURCE_DIR}/kaddressbook/common ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories(
+	${CMAKE_SOURCE_DIR}/kaddressbook
+	${CMAKE_BINARY_DIR}/kaddressbook
+	${CMAKE_SOURCE_DIR}/kaddressbook/common
+	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces
+	${KDE4_INCLUDES}
+)
 
 
 ########### next target ###############
