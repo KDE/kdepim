@@ -43,6 +43,7 @@
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
 #include <kimproxy.h>
+#include <k3listview.h>
 
 #include "kaddressbooktableview.h"
 

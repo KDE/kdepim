@@ -46,7 +46,7 @@ libkaddressbook_la_LIBADD = $(top_builddir)/kaddressbook/printing/libprinter.la 
                             $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
                             $(top_builddir)/libkdepim/libkdepim.la \
                             $(top_builddir)/libkcal/libkcal.la \
-                            -lkabc_file $(LIB_KABC) $(LIB_KHTML) \
+                            -lkabc_file $(LIB_KABC) $(LIB_KHTML) $(LIB_KUTILS) \
                             $(top_builddir)/kaddressbook/common/libkabcommon.la \
                             $(top_builddir)/kaddressbook/editors/libkabim.la \
                             ../akregator/src/librss/librsslocal.la \

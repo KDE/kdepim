@@ -145,7 +145,7 @@ void KAddressBookMain::initActions()
 
 void KAddressBookMain::configureKeyBindings()
 {
-  KKeyDialog::configure( actionCollection(), this );
+  KKeyDialog::configure( actionCollection(), KKeyChooser::LetterShortcutsAllowed, this );
 }
 
 void KAddressBookMain::configureToolbars()
