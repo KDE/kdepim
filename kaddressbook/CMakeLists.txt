@@ -1,11 +1,16 @@
 kde4_header()
 
-set(libkabcommon_SRCS
-	${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/common/locationmap.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/common/filter.cpp
-	)
-#kde4_add_kcfg_files(libkabcommon_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
+include_directories(
+    ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces
+    ${CMAKE_SOURCE_DIR}/kaddressbook/features
+    ${CMAKE_SOURCE_DIR}/kaddressbook/views
+    ${CMAKE_SOURCE_DIR}/kaddressbook/printing
+    ${CMAKE_SOURCE_DIR}/kaddressbook/common
+    ${CMAKE_SOURCE_DIR}/kaddressbook/editors
+    ${CMAKE_SOURCE_DIR}/akregator/src
+    ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+
+
 
 set(libkabinterfaces_SRCS
 	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces/configurewidget.cpp 
@@ -33,6 +38,8 @@ kde4_add_ui3_files(libprinter_SRCS
 	${CMAKE_SOURCE_DIR}/kaddressbook/printing/rbs_appearance.ui
 )
 
+kde4_add_kcfg_files(libprinter_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
+
 set(libkabim_SRCS
 	${CMAKE_SOURCE_DIR}/kaddressbook/editors/imeditorwidget.cpp 
 	${CMAKE_SOURCE_DIR}/kaddressbook/editors/imaddresswidget.cpp
@@ -55,15 +62,6 @@ add_subdirectory( pics )
 add_subdirectory( csv-templates ) 
 add_subdirectory( thumbnailcreator ) 
 
-include_directories( 
-	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces 
-	${CMAKE_SOURCE_DIR}/kaddressbook/features 
-	${CMAKE_SOURCE_DIR}/kaddressbook/views 
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing 
-	${CMAKE_SOURCE_DIR}/kaddressbook/common 
-	${CMAKE_SOURCE_DIR}/kaddressbook/editors 
-	${CMAKE_SOURCE_DIR}/akregator/src 
-	${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 
 ########### next target ###############
@@ -72,6 +70,8 @@ set(kaddressbook_bin_SRCS ${libkabcommon_SRCS}
 	main.cpp 
 	kaddressbookmain.cpp 
 	)
+
+#kde4_add_kcfg_files(kaddressbook_bin_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
 
 kde4_automoc(${kaddressbook_bin_SRCS})
 
@@ -150,7 +150,7 @@ kde4_automoc(${kaddressbook_LIB_SRCS})
 
 kde4_add_library(kaddressbook SHARED ${kaddressbook_LIB_SRCS})
 
-target_link_libraries(kaddressbook  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(kaddressbook  ${KDE4_KDECORE_LIBS} kcal kdepim kabc)
 
 set_target_properties(kaddressbook PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kaddressbook )

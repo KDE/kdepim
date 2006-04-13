@@ -36,6 +36,12 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libkdepim ${KDE4_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
 )
 
+set(libkabcommon_SRCS 
+	${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs.cpp 
+	${CMAKE_SOURCE_DIR}/kaddressbook/common/locationmap.cpp 
+	${CMAKE_SOURCE_DIR}/kaddressbook/common/filter.cpp
+	)
+
 set(libknotesresources_SRCS 
 	${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp 
 	${CMAKE_SOURCE_DIR}/knotes/resourcenotes.cpp 

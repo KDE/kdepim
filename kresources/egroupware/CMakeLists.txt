@@ -8,7 +8,17 @@ include_directories( ${CMAKE_SOURCE_DIR}/libical/src/libical ${CMAKE_SOURCE_DIR}
 
 ########### next target ###############
 
-set(kabc_xmlrpc_LIB_SRCS kabc_resourcexmlrpc.cpp kabc_resourcexmlrpcconfig.cpp kabc_resourcexmlrpcplugin.cpp )
+set(libegwcommon_SRCS 
+	xmlrpciface.cpp 
+	synchronizer.cpp 
+	debugdialog.cpp
+	)
+
+
+set(kabc_xmlrpc_LIB_SRCS kabc_resourcexmlrpc.cpp kabc_resourcexmlrpcconfig.cpp kabc_resourcexmlrpcplugin.cpp ${libkabcommon_SRCS} ${libegwcommon_SRCS})
+
+kde4_add_kcfg_files(kabc_xmlrpc_LIB_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
+
 
 kde4_automoc(${kabc_xmlrpc_LIB_SRCS})
 
@@ -16,7 +26,7 @@ kde4_add_kcfg_files(kabc_xmlrpc_LIB_SRCS kabc_egroupwareprefs.kcfgc )
 
 kde4_add_library(kabc_xmlrpc SHARED ${kabc_xmlrpc_LIB_SRCS})
 
-target_link_libraries(kabc_xmlrpc  ${KDE4_KIO_LIBS} kabc kdepim kabcommon egwcommon kabc_xmlrpc )
+target_link_libraries(kabc_xmlrpc  ${KDE4_KIO_LIBS} kabc kdepim kabc_xmlrpc )
 
 set_target_properties(kabc_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kabc_xmlrpc )
@@ -24,11 +34,13 @@ install_targets(${LIB_INSTALL_DIR} kabc_xmlrpc )
 
 ########### next target ###############
 
-set(kcal_xmlrpc_LIB_SRCS 
+set(kcal_xmlrpc_LIB_SRCS ${libegwcommon_SRCS} 
    kcal_resourcexmlrpc.cpp 
    kcal_resourcexmlrpcconfig.cpp 
    todostatemapper.cpp 
    kcal_resourcexmlrpcplugin.cpp )
+
+kde4_add_kcfg_files(kcal_xmlrpc_LIB_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
 
 kde4_automoc(${kcal_xmlrpc_LIB_SRCS})
 
@@ -36,7 +48,7 @@ kde4_add_kcfg_files(kcal_xmlrpc_LIB_SRCS kcal_egroupwareprefs.kcfgc )
 
 kde4_add_library(kcal_xmlrpc SHARED ${kcal_xmlrpc_LIB_SRCS})
 
-target_link_libraries(kcal_xmlrpc  ${KDE4_KDECORE_LIBS} kcal kdepim egwcommon kcal_xmlrpc )
+target_link_libraries(kcal_xmlrpc  ${KDE4_KDECORE_LIBS} kcal kdepim  kcal_xmlrpc )
 
 set_target_properties(kcal_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kcal_xmlrpc )
@@ -44,7 +56,7 @@ install_targets(${LIB_INSTALL_DIR} kcal_xmlrpc )
 
 ########### next target ###############
 
-set(knotes_xmlrpc_LIB_SRCS knotes_resourcexmlrpc.cpp knotes_resourcexmlrpcconfig.cpp knotes_resourcexmlrpcplugin.cpp )
+set(knotes_xmlrpc_LIB_SRCS knotes_resourcexmlrpc.cpp knotes_resourcexmlrpcconfig.cpp knotes_resourcexmlrpcplugin.cpp ${libegwcommon_SRCS})
 
 kde4_automoc(${knotes_xmlrpc_LIB_SRCS})
 
@@ -52,7 +64,7 @@ kde4_add_kcfg_files(knotes_xmlrpc_LIB_SRCS knotes_egroupwareprefs.kcfgc )
 
 kde4_add_library(knotes_xmlrpc SHARED ${knotes_xmlrpc_LIB_SRCS})
 
-target_link_libraries(knotes_xmlrpc  ${KDE4_KDECORE_LIBS} kcal kdeprint knotesresources kdepim egwcommon knotes_xmlrpc )
+target_link_libraries(knotes_xmlrpc  ${KDE4_KDECORE_LIBS} kcal kdeprint knotesresources kdepim knotes_xmlrpc )
 
 set_target_properties(knotes_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} knotes_xmlrpc )
