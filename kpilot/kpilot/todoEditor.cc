@@ -149,6 +149,7 @@ void TodoEditor::fillFields()
 	fTodo->setNote(fWidget->fNote->text());
 
 	emit(recordChangeComplete(fTodo));
+	fDeleteOnCancel = false;
 	KDialogBase::slotOk();
 }
 
