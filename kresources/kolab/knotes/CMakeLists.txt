@@ -5,7 +5,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kresources/kolab/shared ${CMAKE_SOURCE_
 
 ########### next target ###############
 
-set(knoteskolab_LIB_SRCS resourcekolab.cpp note.cpp ${libresourcekolabshared_SRCS})
+set(knoteskolab_LIB_SRCS resourcekolab.cpp note.cpp ${libresourcekolabshared_SRCS} ${libknotesresources_SRCS})
 
 kde4_add_dcop_skels(knoteskolab_LIB_SRCS
     ${CMAKE_SOURCE_DIR}/kresources/kolab/shared/kmailconnection.h
@@ -18,7 +18,7 @@ kde4_automoc(${knoteskolab_LIB_SRCS})
 
 kde4_add_library(knoteskolab SHARED ${knoteskolab_LIB_SRCS})
 
-target_link_libraries(knoteskolab  ${KDE4_KDECORE_LIBS} kresources kdeprint  knotesresources kcal )
+target_link_libraries(knoteskolab  ${KDE4_KDECORE_LIBS} kresources kdeprint kcal kdepim)
 
 set_target_properties(knoteskolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} knoteskolab )

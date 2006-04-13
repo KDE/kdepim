@@ -5,18 +5,24 @@ include_directories( ${CMAKE_SOURCE_DIR}/kresources/kolab/shared ${KDE4_INCLUDE_
 
 ########### next target ###############
 
-set(kcalkolab_LIB_SRCS 
+set(kcalkolab_LIB_SRCS ${libresourcekolabshared_SRCS}
    incidence.cpp 
    event.cpp 
    task.cpp 
    journal.cpp 
    resourcekolab.cpp )
 
+kde4_add_dcop_skels(kcalkolab_LIB_SRCS
+    ${CMAKE_SOURCE_DIR}/kresources/kolab/shared/kmailconnection.h
+    )
+
+kde4_add_dcop_stubs(kcalkolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/kmailicalIface.h )
+
 kde4_automoc(${kcalkolab_LIB_SRCS})
 
 kde4_add_library(kcalkolab SHARED ${kcalkolab_LIB_SRCS})
 
-target_link_libraries(kcalkolab  ${KDE4_KDECORE_LIBS} kcal resourcekolabshared kresources )
+target_link_libraries(kcalkolab  ${KDE4_KDECORE_LIBS} kdepim kcal kresources )
 
 set_target_properties(kcalkolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kcalkolab )
