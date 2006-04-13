@@ -3,7 +3,18 @@ kde4_header()
 
 ADD_DEFINITIONS(-DPACKAGE_DATA_DIR=\\""${CMAKE_INSTALL_PREFIX}${DATA_INSTALL_DIR}/libical"\\" ) # added manually
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/ ${CMAKE_SOURCE_DIR}/libkcal/versit/  ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ ${CMAKE_SOURCE_DIR}/ ${CMAKE_SOURCE_DIR}/ktnef ${CMAKE_SOURCE_DIR}/libemailfunctions ${CMAKE_SOURCE_DIR}/libkmime ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories(
+	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/
+	${CMAKE_BINARY_DIR}/libkcal/libical/src/libicalss/
+	${CMAKE_SOURCE_DIR}/libkcal/versit/
+	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/
+	${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/
+	${CMAKE_SOURCE_DIR}/
+	${CMAKE_SOURCE_DIR}/ktnef
+	${CMAKE_SOURCE_DIR}/libemailfunctions
+	${CMAKE_SOURCE_DIR}/libkmime
+	${KDE4_INCLUDES}
+)
 
 set(ICALSCRIPTS ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ )
 
@@ -16,25 +27,25 @@ set(PROPERTYDEPS
 )
 
 add_custom_command(OUTPUT
-${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h
+${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedproperty.h
 COMMAND ${PERL_EXECUTABLE} ARGS -I ${ICALSCRIPTS}
 ${ICALSCRIPTS}/mkderivedproperties.pl -i
 ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h.in
--h  ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/properties.csv ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h   DEPENDS  ${PROPERTYDEPS} )
+-h  ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/properties.csv ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv > ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedproperty.h   DEPENDS  ${PROPERTYDEPS} )
 
 
 add_custom_command(OUTPUT
-${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c
+${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedproperty.c
 COMMAND ${PERL_EXECUTABLE} ARGS -I${ICALSCRIPTS}
 ${ICALSCRIPTS}/mkderivedproperties.pl -i
 ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c.in
 -c ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/properties.csv
-${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c   DEPENDS  ${PROPERTYDEPS} ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h )
+${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv > ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedproperty.c   DEPENDS  ${PROPERTYDEPS} ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedproperty.h )
 
 
 macro_additional_clean_files( 
-                              ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c 
-                              ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.h 
+                              ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedproperty.c 
+                              ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedproperty.h 
 )
 
 
@@ -46,16 +57,16 @@ set(PARAMETERDEPS
 )
 
 add_custom_command(OUTPUT
-${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h
-COMMAND ${PERL_EXECUTABLE} ARGS -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h.in -h ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/parameters.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h   DEPENDS  ${PARAMETERDEPS} )
+${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedparameter.h
+COMMAND ${PERL_EXECUTABLE} ARGS -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h.in -h ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/parameters.csv > ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedparameter.h   DEPENDS  ${PARAMETERDEPS} )
 
 add_custom_command(OUTPUT
-${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c
-COMMAND ${PERL_EXECUTABLE} ARGS -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c.in -c ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/parameters.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c   DEPENDS  ${PARAMETERDEPS} ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h )
+${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedparameter.c
+COMMAND ${PERL_EXECUTABLE} ARGS -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedparameters.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c.in -c ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/parameters.csv > ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedparameter.c   DEPENDS  ${PARAMETERDEPS} ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedparameter.h )
 
 macro_additional_clean_files( 
-	{CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c 
-	{CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.h 
+	${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedparameter.c 
+	${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedparameter.h 
 )
 
 
@@ -66,11 +77,11 @@ set(RESTRICTIONDEPS
 )
 
 add_custom_command(OUTPUT
-${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.c
-COMMAND ${PERL_EXECUTABLE} ARGS -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkrestrictiontable.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.c.in ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/restrictions.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.c   DEPENDS  ${RESTRICTIONDEPS} )
+${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalrestriction.c
+COMMAND ${PERL_EXECUTABLE} ARGS -I ${ICALSCRIPTS} ${ICALSCRIPTS}/mkrestrictiontable.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.c.in ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/restrictions.csv > ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalrestriction.c   DEPENDS  ${RESTRICTIONDEPS} )
 
 
-macro_additional_clean_files( ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.c)
+macro_additional_clean_files( ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalrestriction.c)
 
 set(VALUEDEPS
 	${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/mkderivedvalues.pl
@@ -79,12 +90,15 @@ set(VALUEDEPS
 	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h.in
 )
 
-add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h COMMAND ${PERL_EXECUTABLE} ARGS -I${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedvalues.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h.in -h ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h   DEPENDS  ${VALUEDEPS} )
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedvalue.h COMMAND ${PERL_EXECUTABLE} ARGS -I${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedvalues.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h.in -h ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv > ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedvalue.h   DEPENDS  ${VALUEDEPS} )
 
 
-add_custom_command(OUTPUT ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.c COMMAND ${PERL_EXECUTABLE} ARGS -I${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedvalues.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.c.in -c ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv > ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.c   DEPENDS  ${VALUEDEPS} ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h )
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedvalue.c COMMAND ${PERL_EXECUTABLE} ARGS -I${ICALSCRIPTS} ${ICALSCRIPTS}/mkderivedvalues.pl -i ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.c.in -c ${CMAKE_SOURCE_DIR}/libkcal/libical/design-data/value-types.csv > ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedvalue.c   DEPENDS  ${VALUEDEPS} ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedvalue.h )
 
-macro_additional_clean_files(${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.h ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.c )
+macro_additional_clean_files(
+	${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedvalue.h
+	${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedvalue.c
+)
 
 
 
@@ -97,9 +111,9 @@ set(libical_SRCS
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/caldate.c       
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalarray.c     
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalattach.c        
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedparameter.c  
+   ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedparameter.c  
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrecur.c     
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalrestriction.c   
+   ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalrestriction.c   
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalcomponent.c     
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalenums.c     
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalerror.c     
@@ -107,7 +121,7 @@ set(libical_SRCS
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalmime.c      
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalparameter.c    
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalparser.c        
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedproperty.c   
+   ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedproperty.c   
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalproperty.c      
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltime.c      
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalduration.c      
@@ -115,7 +129,7 @@ set(libical_SRCS
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltimezone.c      
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icaltypes.c     
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalvalue.c     
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/icalderivedvalue.c  
+   ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedvalue.c  
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/pvl.c           
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/sspm.c          
    ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/vsnprintf.c     
@@ -151,32 +165,37 @@ set(libicalss_SRCS
 )
 
 
-macro_additional_clean_files(${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h)
+macro_additional_clean_files(${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/ical.h)
 
 add_custom_command(OUTPUT
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h 
+   ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/ical.h 
    COMMAND 
    ${CMAKE_COMMAND} 
-   -DTOP:FILEPATH=${CMAKE_SOURCE_DIR}
-   -DKDE_FILE_H_FILE:FILEPATH=${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h
+   -DTOPS:FILEPATH=${CMAKE_SOURCE_DIR}
+   -DTOPB:FILEPATH=${CMAKE_BINARY_DIR}
+   -DKDE_FILE_H_FILE:FILEPATH=${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/ical.h
    -P ${CMAKE_SOURCE_DIR}/libkcal/ical_file.cmake
+   DEPENDS
+   ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedproperty.h
+   ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedparameter.h
+   ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/icalderivedvalue.h
 )
 
-macro_additional_clean_files(${CMAKE_SOURCE_DIR}/libical/src/libicalss/icalss.h)
+macro_additional_clean_files(${CMAKE_BINARY_DIR}/libical/src/libicalss/icalss.h)
 
 add_custom_command(OUTPUT
-   ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalss.h 
+   ${CMAKE_BINARY_DIR}/libkcal/libical/src/libicalss/icalss.h 
    COMMAND 
    ${CMAKE_COMMAND} 
    -DTOP:FILEPATH=${CMAKE_SOURCE_DIR}
-   -DKDE_FILE_H_FILE:FILEPATH=${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalss.h
+   -DKDE_FILE_H_FILE:FILEPATH=${CMAKE_BINARY_DIR}/libkcal/libical/src/libicalss/icalss.h
    -P ${CMAKE_SOURCE_DIR}/libkcal/icalss_file.cmake
 )
 
 
 ########### next target ###############
 
-set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS} ${libicalss_SRCS} ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss/icalss.h ${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical/ical.h
+set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS} ${libicalss_SRCS}
    incidencebase.cpp 
    incidence.cpp 
    journal.cpp 
@@ -235,6 +254,12 @@ target_link_libraries(kcal  ${KDE4_KDE3SUPPORT_LIBS} ${QT_QTXML_LIBRARY} ktnef k
 set_target_properties(kcal PROPERTIES VERSION 2.0.0 SOVERSION 2 )
 install_targets(${LIB_INSTALL_DIR} kcal )
 
+# hack to force ical[ss].h creation
+add_custom_target(ical-headers DEPENDS
+        ${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/ical.h
+        ${CMAKE_BINARY_DIR}/libkcal/libical/src/libicalss/icalss.h
+)
+add_dependencies(kcal ical-headers)
 
 ########### next target ###############
 
