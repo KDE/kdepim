@@ -517,32 +517,26 @@ QString TaskView::addTask
   const DesktopList& desktops, Task* parent )
 {
   Task *task;
-
   kdDebug(5970) << "TaskView::addTask: taskname = " << taskname << endl;
 
   if ( parent ) task = new Task( taskname, total, session, desktops, parent );
   else          task = new Task( taskname, total, session, desktops, this );
 
   task->setUid( _storage->addTask( task, parent ) );
-
-  if ( ! task->uid().isNull() )
+  QString taskuid=task->uid();
+  if ( ! taskuid.isNull() )
   {
     _desktopTracker->registerForDesktops( task, desktops );
-
     setCurrentItem( task );
-
     setSelected( task, true );
-
     task->setPixmapProgress();
-
     save();
   }
   else
   {
     delete task;
   }
-
-  return task->uid();
+  return taskuid;
 }
 
 void TaskView::newSubTask()
