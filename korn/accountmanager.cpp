@@ -81,6 +81,7 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		{
 			//Error occured when reading for config
 			++counter;
+			delete info;
 			continue;
 		}
 		
@@ -96,6 +97,7 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		if( !kiodrop->readConfigGroup( *accountGroup ) || !kiodrop->readConfigGroup( *configmap, nproto ) )
 		{
 			++counter;
+			delete info;
 			continue;
 		}
 		

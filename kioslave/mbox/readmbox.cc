@@ -143,8 +143,10 @@ unsigned int ReadMBox::skipMessage()
 
 void ReadMBox::rewind()
 {
-	if( m_stream )
-		m_stream->device()->reset();
+	if( !m_stream )
+		return;
+
+	m_stream->device()->reset();
 	m_atend = m_stream->atEnd();
 }
 
@@ -179,6 +181,7 @@ bool ReadMBox::open( bool savetime )
 	if( !m_file->open( QIODevice::ReadOnly ) )
 	{
 		delete m_file;
+		m_file = 0;
 		return false;
 	}
 	m_stream = new QTextStream( m_file );
