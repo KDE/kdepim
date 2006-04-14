@@ -1,8 +1,9 @@
 kde4_header()
 
-if(OPENSSL_FOUND)
+
+if(SASL2_FOUND)
 	add_subdirectory( imap4 ) 
-endif(OPENSSL_FOUND)
+endif(SASL2_FOUND)
 
 add_subdirectory( mbox ) 
 
