@@ -258,13 +258,13 @@
 #cmakedefine HAVE_SYS_TYPES_H 1
 
 /* define if you have a timezone variable */
-#define HAVE_TIMEZONE 1
+#cmakedefine HAVE_TIMEZONE 1
 
 /* Define to 1 if you have the <time.h> header file. */
 #cmakedefine HAVE_TIME_H 1
 
 /* Define if you have a tm_gmtoff member in struct tm */
-#define HAVE_TM_GMTOFF 1
+#cmakedefine HAVE_TM_GMTOFF 1
 
 /* Define to 1 if you have the `tzset' function. */
 #define HAVE_TZSET 1
