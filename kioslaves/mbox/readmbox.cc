@@ -142,8 +142,10 @@ unsigned int ReadMBox::skipMessage()
 
 void ReadMBox::rewind()
 {
-	if( m_stream )
-		m_stream->device()->reset();
+	if( !m_stream )
+		return; //Rewinding not possible
+	
+	m_stream->device()->reset();
 	m_atend = m_stream->atEnd();
 }
 
