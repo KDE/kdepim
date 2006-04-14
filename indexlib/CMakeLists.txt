@@ -36,6 +36,12 @@ target_link_libraries(index  ${KDE4_KDECORE_LIBS} )
 set_target_properties(index PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} index )
 
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix ${CMAKE_INSTALL_PREFIX}/bin)
+set(libdir ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR})
+set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/indexlib-config.in ${CMAKE_CURRENT_BINARY_DIR}/indexlib-config @ONLY)
 
 ########### install files ###############
 
