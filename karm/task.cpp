@@ -187,7 +187,7 @@ bool Task::isComplete() { return _percentcomplete == 100; }
 
 void Task::removeFromView()
 {
-  for (Task* child= this->firstChild(); child; child= child->nextSibling())
+  while ( Task* child = firstChild() )
     child->removeFromView();
   delete this;
 }
