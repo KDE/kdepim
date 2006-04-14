@@ -180,6 +180,7 @@ bool ReadMBox::open( bool savetime )
 	if( !m_file->open( IO_ReadOnly ) )
 	{
 		delete m_file;
+		m_file = 0;
 		return false;
 	}
 	m_stream = new QTextStream( m_file );
