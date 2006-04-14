@@ -5,7 +5,9 @@ include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/common ${KDE4_INCLUDE_DIR}
 
 ########### next target ###############
 
-set(kcal_kabc_PART_SRCS resourcekabc.cpp resourcekabcconfig.cpp )
+set(kcal_kabc_PART_SRCS ${libkabcommon_SRCS} resourcekabc.cpp resourcekabcconfig.cpp )
+
+kde4_add_kcfg_files(kcal_kabc_PART_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
 
 kde4_automoc(${kcal_kabc_PART_SRCS})
 
@@ -13,7 +15,7 @@ kde4_add_plugin(kcal_kabc ${kcal_kabc_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_kabc )
 
-target_link_libraries(kcal_kabc  ${KDE4_KDECORE_LIBS} kcal kabcommon )
+target_link_libraries(kcal_kabc  ${KDE4_KDECORE_LIBS} kcal kdepim )
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kcal_kabc )
 
