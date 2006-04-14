@@ -1,11 +1,11 @@
 kde4_header()
 
-include_directories( ${CMAKE_SOURCE_DIR}/kmail ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkmime ${CMAKE_SOURCE_DIR}/mimelib ${CMAKE_SOURCE_DIR}/libemailfunctions ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories( ${CMAKE_SOURCE_DIR}/kmail ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkmime ${CMAKE_SOURCE_DIR}/mimelib ${CMAKE_SOURCE_DIR}/libemailfunctions ${KDE4_INCLUDES} )
 
 
 ########### next target ###############
 
-set(kmail_bodypartformatter_text_vcard_PART_SRCS text_vcard.cpp )
+set(kmail_bodypartformatter_text_vcard_PART_SRCS ${libemailfunctions_SRCS} text_vcard.cpp )
 
 kde4_automoc(${kmail_bodypartformatter_text_vcard_PART_SRCS})
 
@@ -13,7 +13,7 @@ kde4_add_plugin(kmail_bodypartformatter_text_vcard WITH_PREFIX ${kmail_bodypartf
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_vcard )
 
-target_link_libraries(kmail_bodypartformatter_text_vcard  ${KDE4_KDECORE_LIBS} kdepim kmime emailfunctions )
+target_link_libraries(kmail_bodypartformatter_text_vcard  ${KDE4_KDECORE_LIBS} kdepim kmime)
 
 install_targets(${LIB_INSTALL_DIR}/kde4 kmail_bodypartformatter_text_vcard )
 
