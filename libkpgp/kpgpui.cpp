@@ -985,7 +985,7 @@ void KeySelectionDialog::slotCheckSelection( QListViewItem* plvi /* = 0 */ )
     kdDebug(5100) << "Selected keys: " << newKeyIdList.toStringList().join(", ") << endl;
     mKeyIds = newKeyIdList;
     if( !keysToBeChecked.isEmpty() ) {
-      keysAllowed &= checkKeys( keysToBeChecked );
+      keysAllowed = keysAllowed && checkKeys( keysToBeChecked );
     }
     enableButtonOK( keysAllowed );
 
@@ -1016,7 +1016,7 @@ bool KeySelectionDialog::checkKeys( const QValueList<QListViewItem*>& keys ) con
     pProgressDlg->setLabel( i18n("Checking key 0x%1...")
                             .arg( getKeyId( *it ) ) );
     kapp->processEvents();
-    keysAllowed &= ( -1 != keyAdmissibility( *it, AllowExpensiveTrustCheck ) );
+    keysAllowed = keysAllowed && ( -1 != keyAdmissibility( *it, AllowExpensiveTrustCheck ) );
     pProgressDlg->progressBar()->advance( 1 );
     kapp->processEvents();
   }

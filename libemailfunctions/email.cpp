@@ -322,14 +322,17 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
           if ( !inQuotedString ) {
             return InvalidDisplayName;
           }
+          break;
         case ']' :
           if ( !inQuotedString ) {
             return InvalidDisplayName;
           }
+          break;
         case ':' :
           if ( !inQuotedString ) {
             return DisallowedChar;
           }
+          break;
         case '<' :
           if ( !inQuotedString ) {
             context = InAngleAddress;

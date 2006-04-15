@@ -99,8 +99,7 @@ class PageItem : public QCheckListItem
         }
 
         delete list;
-      } else
-        delete wdg;
+      } 
     }
 
     QString name() const { return mName; }

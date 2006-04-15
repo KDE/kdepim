@@ -93,10 +93,10 @@ int main( int argc, char **argv )
   } else {
     QValueList<Category *> categories = features->categoryList();
     displayCategory( categories );
-  }
 
-  QString out = filename + ".out";
-  if ( !features->writeFile( out ) ) {
-    kdError() << "Write error" << endl;
+    QString out = filename + ".out";
+    if ( !features->writeFile( out ) ) {
+      kdError() << "Write error" << endl;
+    }
   }
 }

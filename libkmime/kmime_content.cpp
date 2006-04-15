@@ -395,6 +395,7 @@ QByteArray Content::decodedContent()
       case Headers::CEbinary :
         ret = temp;
         removeTrailingNewline=false;
+      break;
       default :
         ret = temp;
         removeTrailingNewline=true;

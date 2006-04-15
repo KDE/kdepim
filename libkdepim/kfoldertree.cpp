@@ -225,9 +225,9 @@ void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
 
     KListViewItem::paintCell( p, cg, column, width, align );
 
-    int r = lv ? lv->itemMargin() : 1;
     const QPixmap *icon = pixmap( column );
     int marg = lv ? lv->itemMargin() : 1;
+    int r = marg;
 
     QString t;
     QRect br;
@@ -238,7 +238,7 @@ void KFolderTreeItem::paintCell( QPainter * p, const QColorGroup & cg,
       p->setPen( ft->paintInfo().colFore );
 
     if ( icon ) {
-      r += icon->width() + lv->itemMargin();
+      r += icon->width() + marg;
     }
     t = text( column );
     if ( !t.isEmpty() )
