@@ -22,8 +22,8 @@
 #include "constants.h"
 #include "tools.h"
 
-#include "../elementwrapper.h"
-#include "../tools.h"
+#include <libsyndication/elementwrapper.h>
+#include <libsyndication/tools.h>
 
 #include <QDomElement>
 #include <QString>
