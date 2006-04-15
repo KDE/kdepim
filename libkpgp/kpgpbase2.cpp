@@ -865,9 +865,9 @@ Base2::parseTrustDataForKey( Key* key, const QByteArray& str )
           validity = KPGP_VALIDITY_FULL;
       else if( !strncmp( str.data() + index+21, "marginal", 8 ) )
         validity = KPGP_VALIDITY_MARGINAL;
-      else if( !strncmp( str.data() + index+21, "never", 8 ) )
+      else if( !strncmp( str.data() + index+21, "never", 5 ) )
         validity = KPGP_VALIDITY_NEVER;
-      else if( !strncmp( str.data() + index+21, "undefined", 8 ) )
+      else if( !strncmp( str.data() + index+21, "undefined", 9 ) )
         validity = KPGP_VALIDITY_UNDEFINED;
 
       // determine the user ID

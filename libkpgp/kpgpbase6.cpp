@@ -636,8 +636,8 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         }
       }
       // store the global key capabilities
-      canSign |= sign;
-      canEncr |= encr;
+      canSign = canSign || sign;
+      canEncr = canEncr || encr;
     }
     else if( !strncmp( output.data() + offset, "Unknown type", 12 ) )
     { // line contains key data of unknown type (ignored)
