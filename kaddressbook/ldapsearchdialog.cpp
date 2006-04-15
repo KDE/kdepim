@@ -139,7 +139,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   boxLayout->addWidget( mSearchEdit, 0, 1 );
   label->setBuddy( mSearchEdit );
 
-  label = new QLabel( i18n( "in" ), groupBox );
+  label = new QLabel( i18n( "In LDAP attribute", "in" ), groupBox );
   boxLayout->addWidget( label, 0, 2 );
 
   mFilterCombo = new KComboBox( groupBox );
