@@ -27,6 +27,7 @@ link_directories(${KDE4_LIB_DIR})
 include (MacroAdditionalCleanFiles)
 include (MacroAddFileDependencies)
 include (ConfigureChecks.cmake)
+include (gpgmepp/ConfigureChecks.cmake)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h )
 
