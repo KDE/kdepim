@@ -1,4 +1,4 @@
-SUBDIRS = src tests
+SUBDIRS = tests
 
 include $(top_srcdir)/admin/Doxyfile.am
 DOXYGEN_EMPTY = YES
