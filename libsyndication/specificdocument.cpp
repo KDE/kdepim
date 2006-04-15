@@ -22,10 +22,10 @@
 
 #include "specificdocument.h"
 
-namespace LibSyndication {
+namespace Syndication {
 
 SpecificDocument::~SpecificDocument()
 {
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

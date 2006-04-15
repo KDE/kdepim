@@ -29,7 +29,7 @@
 
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 
 class DocumentSource;
 
@@ -82,6 +82,6 @@ class KDE_EXPORT AbstractParser
         virtual QString format() const = 0;
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_ABSTRACTPARSER_H

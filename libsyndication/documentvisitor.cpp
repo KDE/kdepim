@@ -24,7 +24,7 @@
 #include "specificdocument.h"
 #include "documentvisitor.h"
 
-namespace LibSyndication {
+namespace Syndication {
 
 DocumentVisitor::~DocumentVisitor()
 {
@@ -35,24 +35,24 @@ bool DocumentVisitor::visit(SpecificDocument* document)
     return document->accept(this);
 }
 
-bool DocumentVisitor::visitRSS2Document(LibSyndication::RSS2::Document*)
+bool DocumentVisitor::visitRSS2Document(Syndication::RSS2::Document*)
 {
     return false;
 }
 
-bool DocumentVisitor::visitRDFDocument(LibSyndication::RDF::Document*)
+bool DocumentVisitor::visitRDFDocument(Syndication::RDF::Document*)
 {
     return false;
 }
         
-bool DocumentVisitor::visitAtomFeedDocument(LibSyndication::Atom::FeedDocument*)
+bool DocumentVisitor::visitAtomFeedDocument(Syndication::Atom::FeedDocument*)
 {
     return false;
 }
         
-bool DocumentVisitor::visitAtomEntryDocument(LibSyndication::Atom::EntryDocument*)
+bool DocumentVisitor::visitAtomEntryDocument(Syndication::Atom::EntryDocument*)
 { 
     return false;
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

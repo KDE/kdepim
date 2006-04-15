@@ -34,7 +34,7 @@
 #include <QList>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 Source::Source() : ElementWrapper()
@@ -222,4 +222,4 @@ QString Source::debugInfo() const
 }
 
 } // namespace Atom
-} //namespace LibSyndication
+} //namespace Syndication

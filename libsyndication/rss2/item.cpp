@@ -34,7 +34,7 @@
 #include <QString>
 #include <QList>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RSS2 {
 
 class Item::ItemPrivate
@@ -265,4 +265,4 @@ bool Item::accept(SpecificItemVisitor* visitor)
 }
 
 } // namespace RSS2
-} // namespace LibSyndication
+} // namespace Syndication

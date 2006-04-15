@@ -27,7 +27,7 @@
 
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Property;
@@ -49,6 +49,6 @@ class KDE_EXPORT Property : public Resource
 };
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RDF_PROPERTY_H

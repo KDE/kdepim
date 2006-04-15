@@ -32,7 +32,7 @@ class QDomElement;
 class QString;
 template <class T> class QList;
 
-namespace LibSyndication {
+namespace Syndication {
 
 class SpecificItemVisitor;
 
@@ -169,6 +169,6 @@ class KDE_EXPORT Entry : public ElementWrapper, public SpecificItem
 
 
 } // namespace Atom
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_ATOM_ENTRY_H

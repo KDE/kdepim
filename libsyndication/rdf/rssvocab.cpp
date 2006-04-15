@@ -28,7 +28,7 @@
 #include <QString>
 #include <QStringList>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class RSSVocab::RSSVocabPrivate
@@ -256,4 +256,4 @@ QStringList RSS09Vocab::properties() const
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

@@ -36,7 +36,7 @@
 #include <QList>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 Entry::Entry() : ElementWrapper()
@@ -234,5 +234,5 @@ bool Entry::accept(SpecificItemVisitor* visitor)
 }
 
 } // namespace Atom
-} //namespace LibSyndication
+} //namespace Syndication
 

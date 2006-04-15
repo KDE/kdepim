@@ -32,7 +32,7 @@
 class QByteArray;
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 
 
 /**
@@ -219,6 +219,6 @@ QString normalize(const QString& str, bool isCDATA, bool containsMarkup);
 KDE_EXPORT
 PersonPtr personFromString(const QString& str);
         
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_TOOLS_H

@@ -24,7 +24,7 @@
 #include "specificitem.h"
 #include "specificitemvisitor.h"
 
-namespace LibSyndication {
+namespace Syndication {
 
 SpecificItemVisitor::~SpecificItemVisitor()
 {
@@ -35,19 +35,19 @@ bool SpecificItemVisitor::visit(SpecificItem* item)
     return item->accept(this);
 }
 
-bool SpecificItemVisitor::visitRSS2Item(LibSyndication::RSS2::Item*)
+bool SpecificItemVisitor::visitRSS2Item(Syndication::RSS2::Item*)
 {
     return false;
 }
         
-bool SpecificItemVisitor::visitRDFItem(LibSyndication::RDF::Item*)
+bool SpecificItemVisitor::visitRDFItem(Syndication::RDF::Item*)
 {
     return false;
 }
        
-bool SpecificItemVisitor::visitAtomEntry(LibSyndication::Atom::Entry*)
+bool SpecificItemVisitor::visitAtomEntry(Syndication::Atom::Entry*)
 {
     return false;
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

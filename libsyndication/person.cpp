@@ -24,7 +24,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
 Person::~Person()
 {
@@ -66,4 +66,4 @@ bool Person::operator==(const Person& other) const
     return name() == other.name() && email() == other.email() && uri() == other.uri();
 }
         
-} // namespace LibSyndication
+} // namespace Syndication

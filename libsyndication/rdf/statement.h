@@ -28,7 +28,7 @@
 
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Statement;
@@ -92,6 +92,6 @@ class KDE_EXPORT Statement
 
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RDF_STATEMENT_H

@@ -23,7 +23,7 @@
 #include "nodevisitor.h"
 #include "property.h"
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 Property::Property() : Resource()
@@ -57,4 +57,4 @@ Property* Property::clone() const
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

@@ -38,7 +38,7 @@
 
 #include <cstdio>
 
-using namespace LibSyndication;
+using namespace Syndication;
 
 int main(int argc, char **argv)
 {
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
         f.close();
         
         
-        FeedPtr ptr(LibSyndication::parse(src));
+        FeedPtr ptr(Syndication::parse(src));
         if (ptr)
         {
             totalLength += src.size();

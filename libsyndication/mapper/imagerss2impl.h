@@ -26,7 +26,7 @@
 #include <image.h>
 #include <rss2/image.h>
 
-namespace LibSyndication {
+namespace Syndication {
     
 class ImageRSS2Impl;
 typedef SharedPtr<ImageRSS2Impl> ImageRSS2ImplPtr;
@@ -36,11 +36,11 @@ typedef SharedPtr<ImageRSS2Impl> ImageRSS2ImplPtr;
  * @internal
  * @author Frank Osterfeld
  */
-class ImageRSS2Impl : public LibSyndication::Image
+class ImageRSS2Impl : public Syndication::Image
 {
     public:
 
-        ImageRSS2Impl(const LibSyndication::RSS2::Image& image);
+        ImageRSS2Impl(const Syndication::RSS2::Image& image);
         
         bool isNull() const;
         
@@ -57,9 +57,9 @@ class ImageRSS2Impl : public LibSyndication::Image
         uint height() const;
         
     private:
-        LibSyndication::RSS2::Image m_image;
+        Syndication::RSS2::Image m_image;
 };
     
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_IMAGERSS2IMPL_H

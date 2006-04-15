@@ -33,23 +33,23 @@
 #include <QString>
 #include <QList>
 
-namespace LibSyndication {
+namespace Syndication {
 
-FeedAtomImpl::FeedAtomImpl(LibSyndication::Atom::FeedDocumentPtr doc) : m_doc(doc)
+FeedAtomImpl::FeedAtomImpl(Syndication::Atom::FeedDocumentPtr doc) : m_doc(doc)
 {
 }
 
-LibSyndication::SpecificDocumentPtr FeedAtomImpl::specificDocument() const
+Syndication::SpecificDocumentPtr FeedAtomImpl::specificDocument() const
 {
     return m_doc;
 }
 
-QList<LibSyndication::ItemPtr> FeedAtomImpl::items() const
+QList<Syndication::ItemPtr> FeedAtomImpl::items() const
 {
     QList<ItemPtr> items;
-    QList<LibSyndication::Atom::Entry> entries = m_doc->entries();
-    QList<LibSyndication::Atom::Entry>::ConstIterator it = entries.begin();
-    QList<LibSyndication::Atom::Entry>::ConstIterator end = entries.end();
+    QList<Syndication::Atom::Entry> entries = m_doc->entries();
+    QList<Syndication::Atom::Entry>::ConstIterator it = entries.begin();
+    QList<Syndication::Atom::Entry>::ConstIterator end = entries.end();
     
     for ( ; it != end; ++it)
     {
@@ -60,12 +60,12 @@ QList<LibSyndication::ItemPtr> FeedAtomImpl::items() const
     return items;
 }
 
-QList<LibSyndication::CategoryPtr> FeedAtomImpl::categories() const
+QList<Syndication::CategoryPtr> FeedAtomImpl::categories() const
 {
     QList<CategoryPtr> categories;
-    QList<LibSyndication::Atom::Category> entries = m_doc->categories();
-    QList<LibSyndication::Atom::Category>::ConstIterator it = entries.begin();
-    QList<LibSyndication::Atom::Category>::ConstIterator end = entries.end();
+    QList<Syndication::Atom::Category> entries = m_doc->categories();
+    QList<Syndication::Atom::Category>::ConstIterator it = entries.begin();
+    QList<Syndication::Atom::Category>::ConstIterator end = entries.end();
     
     for ( ; it != end; ++it)
     {
@@ -83,9 +83,9 @@ QString FeedAtomImpl::title() const
 
 QString FeedAtomImpl::link() const
 {
-    QList<LibSyndication::Atom::Link> links = m_doc->links();
-    QList<LibSyndication::Atom::Link>::ConstIterator it = links.begin();
-    QList<LibSyndication::Atom::Link>::ConstIterator end = links.end();
+    QList<Syndication::Atom::Link> links = m_doc->links();
+    QList<Syndication::Atom::Link>::ConstIterator it = links.begin();
+    QList<Syndication::Atom::Link>::ConstIterator end = links.end();
 
     // return first link where rel="alternate"
     // TODO: if there are multiple "alternate" links, find other criteria to choose one of them
@@ -107,9 +107,9 @@ QString FeedAtomImpl::description() const
 
 QList<PersonPtr> FeedAtomImpl::authors() const
 {
-    QList<LibSyndication::Atom::Person> atomps = m_doc->authors();
-    QList<LibSyndication::Atom::Person>::ConstIterator it = atomps.begin();
-    QList<LibSyndication::Atom::Person>::ConstIterator end = atomps.end();
+    QList<Syndication::Atom::Person> atomps = m_doc->authors();
+    QList<Syndication::Atom::Person>::ConstIterator it = atomps.begin();
+    QList<Syndication::Atom::Person>::ConstIterator end = atomps.end();
     
     QList<PersonPtr> list;
     
@@ -149,4 +149,4 @@ ImagePtr FeedAtomImpl::image() const
     return ImageAtomImplPtr(new ImageAtomImpl(m_doc->logo()));
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

@@ -29,7 +29,7 @@
 #include <QList>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
 Item::~Item()
 {
@@ -117,4 +117,4 @@ QString Item::debugInfo() const
     return info;
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

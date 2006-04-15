@@ -25,7 +25,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 Person::Person() : ElementWrapper()
@@ -68,4 +68,4 @@ QString Person::debugInfo() const
 }
 
 } // namespace Atom
-} //namespace LibSyndication
+} //namespace Syndication

@@ -28,7 +28,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class ItemRDFImpl;
 typedef SharedPtr<ItemRDFImpl> ItemRDFImplPtr;
@@ -36,11 +36,11 @@ typedef SharedPtr<ItemRDFImpl> ItemRDFImplPtr;
 /**
  * @internal
  */
-class ItemRDFImpl : public LibSyndication::Item
+class ItemRDFImpl : public Syndication::Item
 {
     public:
         
-        ItemRDFImpl(const LibSyndication::RDF::Item& item);
+        ItemRDFImpl(const Syndication::RDF::Item& item);
         
         QString title() const;
         
@@ -76,9 +76,9 @@ class ItemRDFImpl : public LibSyndication::Item
 
     private:
         
-        LibSyndication::RDF::Item m_item;
+        Syndication::RDF::Item m_item;
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_ITEMRDFIMPL_H

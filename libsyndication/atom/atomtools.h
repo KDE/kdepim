@@ -25,7 +25,7 @@
 
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 
 class ElementWrapper;
 
@@ -45,9 +45,9 @@ namespace Atom {
      * content is converted to a string. If it is plain text, characters like "&lt;", ">", "&amp;"
      * are escaped so the return string is valid HTML.
      */
-    QString extractAtomText(const LibSyndication::ElementWrapper& parent, const QString& tagname);
+    QString extractAtomText(const Syndication::ElementWrapper& parent, const QString& tagname);
 
 } // namespace Atom
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_ATOM_TOOLS_H

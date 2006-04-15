@@ -28,7 +28,7 @@
 class QDomElement;
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RSS2
 {
 /**
@@ -95,6 +95,6 @@ class KDE_EXPORT Cloud : public ElementWrapper
 };
 
 } // namespace RSS2
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RSS2_CLOUD_H

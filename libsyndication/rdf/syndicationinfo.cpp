@@ -22,30 +22,30 @@
 
 #include "property.h"
 #include "statement.h"
-#include "syndication.h"
+#include "syndicationinfo.h"
 #include "syndicationvocab.h"
 
 #include <tools.h>
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
     
-Syndication::Syndication(ResourcePtr resource) : ResourceWrapper(resource)
+    SyndicationInfo::SyndicationInfo(ResourcePtr resource) : ResourceWrapper(resource)
 {
 }
 
-Syndication::~Syndication()
+SyndicationInfo::~SyndicationInfo()
 {
 }
 
-Syndication::Period Syndication::updatePeriod() const
+SyndicationInfo::Period SyndicationInfo::updatePeriod() const
 {
     return stringToPeriod(resource()->property(SyndicationVocab::self()->updatePeriod())->asString());
 }
 
-int Syndication::updateFrequency() const
+int SyndicationInfo::updateFrequency() const
 {
     QString freqStr =  resource()->property(SyndicationVocab::self()->updateFrequency())->asString();
     
@@ -61,14 +61,14 @@ int Syndication::updateFrequency() const
         return 1; // 1 is default
 }
 
-time_t Syndication::updateBase() const
+time_t SyndicationInfo::updateBase() const
 {
     QString str =  resource()->property(SyndicationVocab::self()->updateBase())->asString();
     
     return parseDate(str, ISODate);
 }
 
-QString Syndication::debugInfo() const
+QString SyndicationInfo::debugInfo() const
 {
     QString info;
     if (updatePeriod() != Daily)
@@ -82,7 +82,7 @@ QString Syndication::debugInfo() const
     return info;
 }
 
-QString Syndication::periodToString(Period period)
+QString SyndicationInfo::periodToString(Period period)
 {
     switch (period)
     {
@@ -101,7 +101,7 @@ QString Syndication::periodToString(Period period)
     }
 }
 
-Syndication::Period Syndication::stringToPeriod(const QString& str)
+SyndicationInfo::Period SyndicationInfo::stringToPeriod(const QString& str)
 {
     if (str.isEmpty())
         return Daily; // default is "daily"
@@ -119,4 +119,4 @@ Syndication::Period Syndication::stringToPeriod(const QString& str)
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

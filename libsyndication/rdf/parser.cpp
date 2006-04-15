@@ -40,7 +40,7 @@
 #include <QStringList>
 
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Parser::ParserPrivate
@@ -63,12 +63,12 @@ bool Parser::accept(const DocumentSource& source) const
     return root.namespaceURI() == RDFVocab::self()->namespaceURI();
 }
 
-LibSyndication::SpecificDocumentPtr Parser::parse(const DocumentSource& source) const
+SpecificDocumentPtr Parser::parse(const DocumentSource& source) const
 {
     QDomDocument doc = source.asDomDocument();
     
     if (doc.isNull())
-        return LibSyndication::SpecificDocumentPtr(new Document());
+        return Syndication::SpecificDocumentPtr(new Document());
     
     ModelMaker maker;
     Model model = maker.createFromXML(doc);
@@ -81,7 +81,7 @@ LibSyndication::SpecificDocumentPtr Parser::parse(const DocumentSource& source) 
     QList<ResourcePtr> channels = model.resourcesWithType(RSSVocab::self()->channel());
     
     if (channels.isEmpty())
-        return LibSyndication::SpecificDocumentPtr(new Document());
+        return Syndication::SpecificDocumentPtr(new Document());
   
     return DocumentPtr(new Document(*(channels.begin())));
 }
@@ -156,4 +156,4 @@ QString Parser::format() const
 
         
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

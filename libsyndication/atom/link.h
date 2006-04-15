@@ -28,7 +28,7 @@
 class QDomElement;
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 /**
  * A link, pointing to webpages, media files on the web ("podcast"),
@@ -36,7 +36,7 @@ namespace Atom {
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Link : public LibSyndication::ElementWrapper
+class KDE_EXPORT Link : public Syndication::ElementWrapper
 {
     public:
 
@@ -68,7 +68,7 @@ class KDE_EXPORT Link : public LibSyndication::ElementWrapper
          * or the homepage of the feed.
          * 
          * @c "enclosure": The link describes an Enclosure. See 
-         * LibSyndication::Enclosure for more information.
+         * Syndication::Enclosure for more information.
          * 
          * @c "related": links to web resources with related content. E.g., an
          * article discussing KDE might link to the KDE homepage.
@@ -126,6 +126,6 @@ class KDE_EXPORT Link : public LibSyndication::ElementWrapper
 };
 
 } // namespace Atom
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_ATOM_LINK_H

@@ -27,7 +27,7 @@
 
 template <class T> class SharedPtr;
 
-namespace LibSyndication {
+namespace Syndication {
 
 class SpecificDocument;
 typedef SharedPtr<SpecificDocument> SpecificDocumentPtr;

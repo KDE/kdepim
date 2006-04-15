@@ -27,7 +27,7 @@
 
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class KDE_EXPORT DublinCoreVocab
@@ -83,6 +83,6 @@ class KDE_EXPORT DublinCoreVocab
 };
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RDF_DUBLINCOREVOCAB_H

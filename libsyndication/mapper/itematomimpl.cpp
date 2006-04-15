@@ -38,13 +38,13 @@
 #include <QString>
 
 
-using LibSyndication::Atom::Content;
-using LibSyndication::Atom::Link;
-using LibSyndication::Atom::Person;
+using Syndication::Atom::Content;
+using Syndication::Atom::Link;
+using Syndication::Atom::Person;
 
-namespace LibSyndication {
+namespace Syndication {
 
-ItemAtomImpl::ItemAtomImpl(const LibSyndication::Atom::Entry& entry) : m_entry(entry)
+ItemAtomImpl::ItemAtomImpl(const Syndication::Atom::Entry& entry) : m_entry(entry)
 {
 }
 
@@ -55,9 +55,9 @@ QString ItemAtomImpl::title() const
 
 QString ItemAtomImpl::link() const
 {
-    QList<LibSyndication::Atom::Link> links = m_entry.links();
-    QList<LibSyndication::Atom::Link>::ConstIterator it = links.begin();
-    QList<LibSyndication::Atom::Link>::ConstIterator end = links.end();
+    QList<Syndication::Atom::Link> links = m_entry.links();
+    QList<Syndication::Atom::Link>::ConstIterator it = links.begin();
+    QList<Syndication::Atom::Link>::ConstIterator end = links.end();
 
     // return first link where rel="alternate"
     for ( ; it != end; ++it)
@@ -87,9 +87,9 @@ QString ItemAtomImpl::content() const
 
 QList<PersonPtr> ItemAtomImpl::authors() const
 {
-    QList<LibSyndication::Atom::Person> atomps = m_entry.authors();
-    QList<LibSyndication::Atom::Person>::ConstIterator it = atomps.begin();
-    QList<LibSyndication::Atom::Person>::ConstIterator end = atomps.end();
+    QList<Syndication::Atom::Person> atomps = m_entry.authors();
+    QList<Syndication::Atom::Person>::ConstIterator it = atomps.begin();
+    QList<Syndication::Atom::Person>::ConstIterator end = atomps.end();
     
     QList<PersonPtr> list;
     
@@ -138,17 +138,17 @@ QString ItemAtomImpl::id() const
     if (!id.isEmpty())
         return id;
     
-    return QString("hash:%1").arg(LibSyndication::calcMD5Sum(title() + description() + link() + content()));
+    return QString("hash:%1").arg(Syndication::calcMD5Sum(title() + description() + link() + content()));
 }
 
 
-QList<LibSyndication::EnclosurePtr> ItemAtomImpl::enclosures() const
+QList<Syndication::EnclosurePtr> ItemAtomImpl::enclosures() const
 {
-    QList<LibSyndication::EnclosurePtr> list;
+    QList<Syndication::EnclosurePtr> list;
 
-    QList<LibSyndication::Atom::Link> links = m_entry.links();
-    QList<LibSyndication::Atom::Link>::ConstIterator it = links.begin();
-    QList<LibSyndication::Atom::Link>::ConstIterator end = links.end();
+    QList<Syndication::Atom::Link> links = m_entry.links();
+    QList<Syndication::Atom::Link>::ConstIterator it = links.begin();
+    QList<Syndication::Atom::Link>::ConstIterator end = links.end();
 
     for ( ; it != end; ++it)
     {
@@ -162,13 +162,13 @@ QList<LibSyndication::EnclosurePtr> ItemAtomImpl::enclosures() const
     return list;
 }
 
-QList<LibSyndication::CategoryPtr> ItemAtomImpl::categories() const
+QList<Syndication::CategoryPtr> ItemAtomImpl::categories() const
 {
-    QList<LibSyndication::CategoryPtr> list;
+    QList<Syndication::CategoryPtr> list;
     
-    QList<LibSyndication::Atom::Category> cats = m_entry.categories();
-    QList<LibSyndication::Atom::Category>::ConstIterator it = cats.begin();
-    QList<LibSyndication::Atom::Category>::ConstIterator end = cats.end();
+    QList<Syndication::Atom::Category> cats = m_entry.categories();
+    QList<Syndication::Atom::Category>::ConstIterator it = cats.begin();
+    QList<Syndication::Atom::Category>::ConstIterator end = cats.end();
     
     for ( ; it != end; ++it)
     {
@@ -202,9 +202,9 @@ QString ItemAtomImpl::commentPostUri() const
     return m_entry.extractElementTextNS(commentApiNamespace(), QString::fromUtf8("comment"));
 }
 
-LibSyndication::SpecificItemPtr ItemAtomImpl::specificItem() const
+Syndication::SpecificItemPtr ItemAtomImpl::specificItem() const
 {
-    return LibSyndication::SpecificItemPtr(new LibSyndication::Atom::Entry(m_entry));
+    return Syndication::SpecificItemPtr(new Syndication::Atom::Entry(m_entry));
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

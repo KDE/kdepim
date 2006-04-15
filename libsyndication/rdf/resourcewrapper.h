@@ -26,7 +26,7 @@
 
 #include <sharedptr.h>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Resource;
@@ -103,6 +103,6 @@ class KDE_EXPORT ResourceWrapper
 };
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RDF_RESOURCEWRAPPER_H

@@ -31,23 +31,23 @@
 #include <QList>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
-FeedRSS2Impl::FeedRSS2Impl(LibSyndication::RSS2::DocumentPtr doc) : m_doc(doc)
+FeedRSS2Impl::FeedRSS2Impl(Syndication::RSS2::DocumentPtr doc) : m_doc(doc)
 {
 }
 
-LibSyndication::SpecificDocumentPtr FeedRSS2Impl::specificDocument() const
+Syndication::SpecificDocumentPtr FeedRSS2Impl::specificDocument() const
 {
     return m_doc;
 }
         
-QList<LibSyndication::ItemPtr> FeedRSS2Impl::items() const
+QList<Syndication::ItemPtr> FeedRSS2Impl::items() const
 {
     QList<ItemPtr> items;
-    QList<LibSyndication::RSS2::Item> entries = m_doc->items();
-    QList<LibSyndication::RSS2::Item>::ConstIterator it = entries.begin();
-    QList<LibSyndication::RSS2::Item>::ConstIterator end = entries.end();
+    QList<Syndication::RSS2::Item> entries = m_doc->items();
+    QList<Syndication::RSS2::Item>::ConstIterator it = entries.begin();
+    QList<Syndication::RSS2::Item>::ConstIterator end = entries.end();
     
     for ( ; it != end; ++it)
     {
@@ -58,12 +58,12 @@ QList<LibSyndication::ItemPtr> FeedRSS2Impl::items() const
     return items;
 }
 
-QList<LibSyndication::CategoryPtr> FeedRSS2Impl::categories() const
+QList<Syndication::CategoryPtr> FeedRSS2Impl::categories() const
 {
     QList<CategoryPtr> categories;
-    QList<LibSyndication::RSS2::Category> entries = m_doc->categories();
-    QList<LibSyndication::RSS2::Category>::ConstIterator it = entries.begin();
-    QList<LibSyndication::RSS2::Category>::ConstIterator end = entries.end();
+    QList<Syndication::RSS2::Category> entries = m_doc->categories();
+    QList<Syndication::RSS2::Category>::ConstIterator it = entries.begin();
+    QList<Syndication::RSS2::Category>::ConstIterator end = entries.end();
     
     for ( ; it != end; ++it)
     {
@@ -110,4 +110,4 @@ ImagePtr FeedRSS2Impl::image() const
     return ptr;
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

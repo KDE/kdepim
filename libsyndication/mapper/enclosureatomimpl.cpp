@@ -24,9 +24,9 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
-EnclosureAtomImpl::EnclosureAtomImpl(const LibSyndication::Atom::Link& link)
+EnclosureAtomImpl::EnclosureAtomImpl(const Syndication::Atom::Link& link)
     : m_link(link)
 {}
         
@@ -60,4 +60,4 @@ uint EnclosureAtomImpl::duration() const
     return 0;
 }
  
-} // namespace LibSyndication
+} // namespace Syndication

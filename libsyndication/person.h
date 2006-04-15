@@ -27,7 +27,7 @@
 
 #include <kdepimmacros.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class Person;
 typedef SharedPtr<Person> PersonPtr;
@@ -97,6 +97,6 @@ class KDE_EXPORT Person
         virtual bool operator==(const Person& other) const;
 };
     
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_PERSON_H

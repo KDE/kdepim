@@ -28,7 +28,7 @@ class QString;
 
 template <class T> class SharedPtr;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Model;
@@ -60,6 +60,6 @@ class KDE_EXPORT ModelMaker
 };
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RDF_MODELMAKER_H

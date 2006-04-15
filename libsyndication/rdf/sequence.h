@@ -28,7 +28,7 @@
 
 template <class T> class QList;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 
@@ -67,6 +67,6 @@ class KDE_EXPORT Sequence : public Resource
 };
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RDF_SEQUENCE_H

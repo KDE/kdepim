@@ -32,7 +32,7 @@
 
 #include <kstaticdeleter.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 static ParserCollection<Feed>* parserColl = 0L;
 static KStaticDeleter<ParserCollection<Feed> > parsercollsd;
@@ -41,7 +41,7 @@ ParserCollection<Feed>* parserCollection()
 {
     if (parserColl == 0)
     {
-        parsercollsd.setObject(parserColl, new ParserCollectionImpl<LibSyndication::Feed>);
+        parsercollsd.setObject(parserColl, new ParserCollectionImpl<Syndication::Feed>);
         parserColl->registerParser(new RSS2::Parser, new RSS2Mapper);
         parserColl->registerParser(new Atom::Parser, new AtomMapper);
         parserColl->registerParser(new RDF::Parser, new RDFMapper);
@@ -54,5 +54,5 @@ FeedPtr parse(const DocumentSource& src, const QString& formatHint)
     return parserCollection()->parse(src, formatHint);
 }
 
-} // namespace LibSyndication
+} // namespace Syndication
 

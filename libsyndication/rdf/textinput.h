@@ -24,7 +24,7 @@
 
 #include "resourcewrapper.h"
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 /**
@@ -102,6 +102,6 @@ class KDE_EXPORT TextInput : public ResourceWrapper
 };
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif //  LIBSYNDICATION_RDF_TEXTINPUT_H

@@ -32,7 +32,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 Item::Item() : ResourceWrapper()
@@ -93,4 +93,4 @@ bool Item::accept(SpecificItemVisitor* visitor)
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

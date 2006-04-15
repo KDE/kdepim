@@ -23,7 +23,7 @@
 #include "node.h"
 #include "nodevisitor.h"
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 unsigned int Node::idCounter = 1;
@@ -38,4 +38,4 @@ Node::~Node()
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

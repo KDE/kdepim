@@ -28,7 +28,7 @@
 #include <QString>
 #include <QTextStream>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class ElementWrapper::ElementWrapperPrivate
 {
@@ -274,4 +274,4 @@ bool ElementWrapper::hasAttributeNS(const QString& nsURI, const QString& localNa
     return d->element.hasAttributeNS(nsURI, localName);
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

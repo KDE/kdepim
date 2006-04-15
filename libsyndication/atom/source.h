@@ -32,7 +32,7 @@ class QString;
 
 template <class T> class QList;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 class Category;
@@ -153,6 +153,6 @@ class KDE_EXPORT Source : public ElementWrapper
 };
 
 } // namespace Atom
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_ATOM_SOURCE_H

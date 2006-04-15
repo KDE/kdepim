@@ -26,7 +26,7 @@
 
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 /**
@@ -42,6 +42,6 @@ KDE_EXPORT
 QString atom0_3Namespace();
 
 } // namespace Atom
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_ATOM_CONSTANTS_H

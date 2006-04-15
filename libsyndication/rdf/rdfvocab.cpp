@@ -28,7 +28,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class RDFVocab::RDFVocabPrivate
@@ -91,4 +91,4 @@ QString RDFVocab::namespaceURI()
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

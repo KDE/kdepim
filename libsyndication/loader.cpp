@@ -27,7 +27,7 @@
 // test: TODO remove
 #include <iostream>
 
-namespace LibSyndication {
+namespace Syndication {
 
 struct Loader::LoaderPrivate
 {
@@ -42,7 +42,7 @@ struct Loader::LoaderPrivate
     }
     
     DataRetriever* retriever;
-    LibSyndication::ErrorCode lastError;
+    Syndication::ErrorCode lastError;
     int retrieverError;
     KUrl discoveredFeedURL;
     KUrl url;
@@ -56,8 +56,8 @@ Loader* Loader::create()
 Loader *Loader::create(QObject* object, const char* slot)
 {
     Loader *loader = create();
-    connect(loader, SIGNAL(loadingComplete(LibSyndication::Loader*,
-            LibSyndication::FeedPtr, LibSyndication::ErrorCode)),
+    connect(loader, SIGNAL(loadingComplete(Syndication::Loader*,
+            Syndication::FeedPtr, Syndication::ErrorCode)),
             object, slot);
     return loader;
 }
@@ -95,7 +95,7 @@ int Loader::retrieverError() const
     return d->retrieverError;
 }
         
-LibSyndication::ErrorCode Loader::errorCode() const
+Syndication::ErrorCode Loader::errorCode() const
 {
     return d->lastError;
 }
@@ -132,7 +132,7 @@ void Loader::slotRetrieverDone(const QByteArray& data, bool success)
         DocumentSource src(data, d->url.url());
         feed = parserCollection()->parse(src);
         
-        if (parserCollection()->lastError() != LibSyndication::Success)
+        if (parserCollection()->lastError() != Syndication::Success)
         {
             status = parserCollection()->lastError();
             discoverFeeds(data);
@@ -231,6 +231,6 @@ void Loader::discoverFeeds(const QByteArray &data)
     d->discoveredFeedURL.cleanPath();
 }
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #include "loader.moc"

@@ -19,8 +19,8 @@
  * Boston, MA 02110-1301, USA.
  *
  */
-#ifndef LIBSYNDICATION_RDF_SYNDICATION_H
-#define LIBSYNDICATION_RDF_SYNDICATION_H
+#ifndef LIBSYNDICATION_RDF_SYNDICATIONINFO_H
+#define LIBSYNDICATION_RDF_SYNDICATIONINFO_H
 
 #include "resourcewrapper.h"
 
@@ -28,7 +28,7 @@
 
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 /**
@@ -41,7 +41,7 @@ namespace RDF {
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Syndication : public ResourceWrapper
+class KDE_EXPORT SyndicationInfo : public ResourceWrapper
 {
     public:
         
@@ -61,19 +61,19 @@ class KDE_EXPORT Syndication : public ResourceWrapper
          * creates a wrapper wrapping a null resource.
          * isNull() will be true.
          */
-        Syndication();
+        SyndicationInfo();
         
         /**
          * creates a wrapper from a resource
          * @param resource the feed resource to read syndication
          * information from
          */
-        Syndication(ResourcePtr resource);
+        SyndicationInfo(ResourcePtr resource);
         
         /**
          * virtual destructor
          */
-        virtual ~Syndication();
+        virtual ~SyndicationInfo();
                 
         /**
          * Describes the period over which the channel format is updated.
@@ -132,6 +132,6 @@ class KDE_EXPORT Syndication : public ResourceWrapper
 };
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
-#endif // LIBSYNDICATION_RDF_SYNDICATION_H
+#endif // LIBSYNDICATION_RDF_SYNDICATIONINFO_H

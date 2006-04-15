@@ -26,7 +26,7 @@
 #include <image.h>
 #include <rdf/image.h>
 
-namespace LibSyndication {
+namespace Syndication {
     
 class ImageRDFImpl;
 typedef SharedPtr<ImageRDFImpl> ImageRDFImplPtr;
@@ -36,11 +36,11 @@ typedef SharedPtr<ImageRDFImpl> ImageRDFImplPtr;
  * @internal
  * @author Frank Osterfeld
  */
-class ImageRDFImpl : public LibSyndication::Image
+class ImageRDFImpl : public Syndication::Image
 {
     public:
 
-        ImageRDFImpl(const LibSyndication::RDF::Image& image);
+        ImageRDFImpl(const Syndication::RDF::Image& image);
         
         bool isNull() const;
         
@@ -57,9 +57,9 @@ class ImageRDFImpl : public LibSyndication::Image
         uint height() const;
         
     private:
-        LibSyndication::RDF::Image m_image;
+        Syndication::RDF::Image m_image;
 };
     
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_IMAGERDFIMPL_H

@@ -22,10 +22,10 @@
 
 #include "abstractparser.h"
 
-namespace LibSyndication {
+namespace Syndication {
 
 AbstractParser::~AbstractParser()
 {
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

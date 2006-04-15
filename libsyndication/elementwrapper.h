@@ -31,7 +31,7 @@
 class QDomElement;
 template <class T> class QList;
 
-namespace LibSyndication {
+namespace Syndication {
 
 /**
  * A wrapper for XML elements. This is the base class for the (lazy) wrappers
@@ -296,6 +296,6 @@ class KDE_EXPORT ElementWrapper
         SharedPtr<ElementWrapperPrivate> d;
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_ELEMENTWRAPPER_H

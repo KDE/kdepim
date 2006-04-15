@@ -28,7 +28,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class PersonImpl;
 typedef SharedPtr<PersonImpl> PersonImplPtr;
@@ -59,6 +59,6 @@ class PersonImpl : public Person
         QString m_email;
 };
     
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_PERSONIMPL_H

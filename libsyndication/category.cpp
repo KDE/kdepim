@@ -24,7 +24,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
 Category::~Category()
 {
@@ -61,4 +61,4 @@ QString Category::debugInfo() const
     return info;
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

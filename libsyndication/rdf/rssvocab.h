@@ -27,7 +27,7 @@
 class QString;
 class QStringList;
 
-namespace LibSyndication {
+namespace Syndication {
     
 template <class T> class SharedPtr;
 
@@ -97,7 +97,7 @@ class KDE_EXPORT RSSVocab
         
         /**
          * RSS 1.0 channel class, the instance is represented by
-         * LibSyndication::RDF::Document
+         * Syndication::RDF::Document
          */
         ResourcePtr channel() const;
         
@@ -190,7 +190,7 @@ class KDE_EXPORT RSS09Vocab
         
         /**
          * RSS 0.9 channel class, the instance is represented by
-         * LibSyndication::RDF::Document
+         * Syndication::RDF::Document
          */
         ResourcePtr channel() const;
         
@@ -235,6 +235,6 @@ class KDE_EXPORT RSS09Vocab
 };
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RDF_RSSVOCAB_H

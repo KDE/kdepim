@@ -27,7 +27,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class SyndicationVocab::SyndicationVocabPrivate
@@ -91,4 +91,4 @@ PropertyPtr SyndicationVocab::updateBase() const
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

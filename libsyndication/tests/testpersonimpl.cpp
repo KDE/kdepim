@@ -28,9 +28,9 @@
 #include <QString>
 #include <QStringList>
 
-using LibSyndication::Person;
-using LibSyndication::PersonPtr;
-using LibSyndication::PersonImpl;
+using Syndication::Person;
+using Syndication::PersonPtr;
+using Syndication::PersonImpl;
 
 void TestPersonImpl::fromString()
 {
@@ -77,7 +77,7 @@ void TestPersonImpl::fromString()
     
     while (it != end)
     {
-        PersonPtr q(LibSyndication::personFromString(*it));
+        PersonPtr q(Syndication::personFromString(*it));
         QCOMPARE(q->debugInfo(), (*pit)->debugInfo());
         ++it;
         ++pit;

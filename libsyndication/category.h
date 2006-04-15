@@ -27,7 +27,7 @@
 
 #include <kdepimmacros.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class Category;
 typedef SharedPtr<Category> CategoryPtr;
@@ -98,6 +98,6 @@ class KDE_EXPORT Category
         virtual QString debugInfo() const;
 };
     
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_CATEGORY_H

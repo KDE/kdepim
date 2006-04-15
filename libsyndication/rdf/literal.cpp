@@ -25,7 +25,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Literal::LiteralPrivate
@@ -145,4 +145,4 @@ void Literal::setId(unsigned int id)
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

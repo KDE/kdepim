@@ -32,7 +32,7 @@
 #include <QDomElement>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
      
@@ -151,4 +151,4 @@ ResourcePtr ModelMaker::readResource(Model& model, const QDomElement& el)
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

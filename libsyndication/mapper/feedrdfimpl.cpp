@@ -34,23 +34,23 @@
 #include <QStringList>
 #include <QList>
 
-namespace LibSyndication {
+namespace Syndication {
 
-FeedRDFImpl::FeedRDFImpl(LibSyndication::RDF::DocumentPtr doc) : m_doc(doc)
+FeedRDFImpl::FeedRDFImpl(Syndication::RDF::DocumentPtr doc) : m_doc(doc)
 {
 }
 
-LibSyndication::SpecificDocumentPtr FeedRDFImpl::specificDocument() const
+Syndication::SpecificDocumentPtr FeedRDFImpl::specificDocument() const
 {
     return m_doc;
 }
 
-QList<LibSyndication::ItemPtr> FeedRDFImpl::items() const
+QList<Syndication::ItemPtr> FeedRDFImpl::items() const
 {
     QList<ItemPtr> items;
-    QList<LibSyndication::RDF::Item> entries = m_doc->items();
-    QList<LibSyndication::RDF::Item>::ConstIterator it = entries.begin();
-    QList<LibSyndication::RDF::Item>::ConstIterator end = entries.end();
+    QList<Syndication::RDF::Item> entries = m_doc->items();
+    QList<Syndication::RDF::Item>::ConstIterator it = entries.begin();
+    QList<Syndication::RDF::Item>::ConstIterator end = entries.end();
     
     for ( ; it != end; ++it)
     {
@@ -61,10 +61,10 @@ QList<LibSyndication::ItemPtr> FeedRDFImpl::items() const
     return items;
 }
 
-QList<LibSyndication::CategoryPtr> FeedRDFImpl::categories() const
+QList<Syndication::CategoryPtr> FeedRDFImpl::categories() const
 {
     // TODO: check if it makes sense to map dc:subject to categories
-    return QList<LibSyndication::CategoryPtr>();
+    return QList<Syndication::CategoryPtr>();
 }
 
 QString FeedRDFImpl::title() const
@@ -119,4 +119,4 @@ ImagePtr FeedRDFImpl::image() const
     return ptr;
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

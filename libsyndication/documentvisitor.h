@@ -24,7 +24,7 @@
 
 #include <kdepimmacros.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class SpecificDocument;
 
@@ -78,7 +78,7 @@ class KDE_EXPORT DocumentVisitor
          * @return whether the visitor handled the document.
          * Reimplementations of this method must return @c true.
          */
-        virtual bool visitRSS2Document(LibSyndication::RSS2::Document* document);
+        virtual bool visitRSS2Document(Syndication::RSS2::Document* document);
         
         /**
          * reimplement this method to handle RDF (i.e. RSS 1.0) documents.
@@ -87,7 +87,7 @@ class KDE_EXPORT DocumentVisitor
          * @return whether the visitor handled the document.
          * Reimplementations of this method must return @c true.
          */
-        virtual bool visitRDFDocument(LibSyndication::RDF::Document* document);
+        virtual bool visitRDFDocument(Syndication::RDF::Document* document);
         
         /**
          * reimplement this method to handle Atom feed documents (most Atom 
@@ -97,7 +97,7 @@ class KDE_EXPORT DocumentVisitor
          * @return whether the visitor handled the document.
          * Reimplementations of this method must return @c true.
          */
-        virtual bool visitAtomFeedDocument(LibSyndication::Atom::FeedDocument* document);
+        virtual bool visitAtomFeedDocument(Syndication::Atom::FeedDocument* document);
         
         /**
          * reimplement this method to handle Atom entry documents.
@@ -106,9 +106,9 @@ class KDE_EXPORT DocumentVisitor
          * @return whether the visitor handled the document.
          * Reimplementations of this method must return @c true.
          */
-        virtual bool visitAtomEntryDocument(LibSyndication::Atom::EntryDocument* document);
+        virtual bool visitAtomEntryDocument(Syndication::Atom::EntryDocument* document);
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_DOCUMENTVISITOR_H

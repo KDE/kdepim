@@ -27,7 +27,7 @@
 
 #include <kdepimmacros.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class Image;
 typedef SharedPtr<Image> ImagePtr;
@@ -106,6 +106,6 @@ class KDE_EXPORT Image
         virtual QString debugInfo() const;
 };
     
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_IMAGE_H

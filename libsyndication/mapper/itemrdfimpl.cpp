@@ -37,12 +37,12 @@
 #include <QString>
 #include <QStringList>
 
-using LibSyndication::RDF::Property;
-using LibSyndication::RDF::PropertyPtr;
+using Syndication::RDF::Property;
+using Syndication::RDF::PropertyPtr;
 
-namespace LibSyndication {
+namespace Syndication {
 
-ItemRDFImpl::ItemRDFImpl(const LibSyndication::RDF::Item& item) : m_item(item)
+ItemRDFImpl::ItemRDFImpl(const Syndication::RDF::Item& item) : m_item(item)
 {
 }
 
@@ -110,16 +110,16 @@ time_t ItemRDFImpl::dateUpdated() const
     return m_item.dc().date();
 }
 
-QList<LibSyndication::EnclosurePtr> ItemRDFImpl::enclosures() const
+QList<Syndication::EnclosurePtr> ItemRDFImpl::enclosures() const
 {
     // return empty list
-    return QList<LibSyndication::EnclosurePtr>();
+    return QList<Syndication::EnclosurePtr>();
 }
 
-QList<LibSyndication::CategoryPtr> ItemRDFImpl::categories() const
+QList<Syndication::CategoryPtr> ItemRDFImpl::categories() const
 {
     // return empty list
-    return QList<LibSyndication::CategoryPtr>();
+    return QList<Syndication::CategoryPtr>();
 }
 
 int ItemRDFImpl::commentsCount() const
@@ -149,9 +149,9 @@ QString ItemRDFImpl::commentPostUri() const
     return m_item.resource()->property(prop)->asString();
 }
 
-LibSyndication::SpecificItemPtr ItemRDFImpl::specificItem() const
+Syndication::SpecificItemPtr ItemRDFImpl::specificItem() const
 {
-    return LibSyndication::SpecificItemPtr(new LibSyndication::RDF::Item(m_item));
+    return Syndication::SpecificItemPtr(new Syndication::RDF::Item(m_item));
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

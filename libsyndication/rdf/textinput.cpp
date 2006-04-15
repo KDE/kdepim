@@ -28,7 +28,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 TextInput::TextInput() : ResourceWrapper()
@@ -77,4 +77,4 @@ QString TextInput::debugInfo() const
 
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

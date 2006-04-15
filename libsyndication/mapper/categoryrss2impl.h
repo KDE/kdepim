@@ -26,7 +26,7 @@
 #include <category.h>
 #include <rss2/category.h>
 
-namespace LibSyndication {
+namespace Syndication {
     
 class CategoryRSS2Impl;
 typedef SharedPtr<CategoryRSS2Impl> CategoryRSS2ImplPtr;
@@ -36,11 +36,11 @@ typedef SharedPtr<CategoryRSS2Impl> CategoryRSS2ImplPtr;
  * @internal
  * @author Frank Osterfeld
  */
-class CategoryRSS2Impl : public LibSyndication::Category
+class CategoryRSS2Impl : public Syndication::Category
 {
     public:
 
-        CategoryRSS2Impl(const LibSyndication::RSS2::Category& category);
+        CategoryRSS2Impl(const Syndication::RSS2::Category& category);
         
         bool isNull() const;
         
@@ -51,9 +51,9 @@ class CategoryRSS2Impl : public LibSyndication::Category
         QString scheme() const;
         
     private:
-        LibSyndication::RSS2::Category m_category;
+        Syndication::RSS2::Category m_category;
 };
     
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_CATEGORYRSS2IMPL_H

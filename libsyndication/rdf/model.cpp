@@ -33,7 +33,7 @@
 #include <QList>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Model::ModelPrivate
@@ -486,4 +486,4 @@ LiteralPtr Model::literalByID(uint id) const
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

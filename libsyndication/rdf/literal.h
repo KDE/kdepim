@@ -27,7 +27,7 @@
 
 #include <sharedptr.h>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Literal;
@@ -70,6 +70,6 @@ class KDE_EXPORT Literal : public Node
 
     
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RDF_LITERAL_H

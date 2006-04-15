@@ -30,7 +30,7 @@ class QDomNode;
 class QString;
 template <class T, class U> class QHash;
 
-namespace LibSyndication {
+namespace Syndication {
 
 class SpecificDocument;
 class DocumentSource;
@@ -42,7 +42,7 @@ namespace Atom {
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Parser : public LibSyndication::AbstractParser
+class KDE_EXPORT Parser : public Syndication::AbstractParser
 {
     public:
 
@@ -57,7 +57,7 @@ class KDE_EXPORT Parser : public LibSyndication::AbstractParser
          * document, by checking the root element.
          * @param source document source to check
          */
-        bool accept(const LibSyndication::DocumentSource& source) const;
+        bool accept(const Syndication::DocumentSource& source) const;
 
         /**
          * parses either an EntryDocument or a FeedDocument from a
@@ -66,8 +66,8 @@ class KDE_EXPORT Parser : public LibSyndication::AbstractParser
          * @see SpecificDocument::isValid()
          * @param source the document source to parse
          */
-        LibSyndication::SpecificDocumentPtr parse(
-                const LibSyndication::DocumentSource& source) const;
+        Syndication::SpecificDocumentPtr parse(
+                const Syndication::DocumentSource& source) const;
         
         /**
          * returns the format string for this parser implementation, which is
@@ -90,6 +90,6 @@ class KDE_EXPORT Parser : public LibSyndication::AbstractParser
 };
 
 } // namespace Atom
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_ATOM_PARSER_H

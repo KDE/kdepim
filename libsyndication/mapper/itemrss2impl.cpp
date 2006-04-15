@@ -33,9 +33,9 @@
 #include <QList>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
-ItemRSS2Impl::ItemRSS2Impl(const LibSyndication::RSS2::Item& item) : m_item(item)
+ItemRSS2Impl::ItemRSS2Impl(const Syndication::RSS2::Item& item) : m_item(item)
 {
 }
 
@@ -103,13 +103,13 @@ time_t ItemRSS2Impl::dateUpdated() const
     return datePublished();
 }
 
-QList<LibSyndication::EnclosurePtr> ItemRSS2Impl::enclosures() const
+QList<Syndication::EnclosurePtr> ItemRSS2Impl::enclosures() const
 {
-    QList<LibSyndication::EnclosurePtr> list;
+    QList<Syndication::EnclosurePtr> list;
     
-    QList<LibSyndication::RSS2::Enclosure> encs = m_item.enclosures();
+    QList<Syndication::RSS2::Enclosure> encs = m_item.enclosures();
     
-    for (QList<LibSyndication::RSS2::Enclosure>::ConstIterator it = encs.begin();
+    for (QList<Syndication::RSS2::Enclosure>::ConstIterator it = encs.begin();
          it != encs.end(); ++it)
     {
         EnclosureRSS2ImplPtr impl(new EnclosureRSS2Impl(m_item, *it));
@@ -119,13 +119,13 @@ QList<LibSyndication::EnclosurePtr> ItemRSS2Impl::enclosures() const
     return list;
 }
 
-QList<LibSyndication::CategoryPtr> ItemRSS2Impl::categories() const
+QList<Syndication::CategoryPtr> ItemRSS2Impl::categories() const
 {
-    QList<LibSyndication::CategoryPtr> list;
+    QList<Syndication::CategoryPtr> list;
     
-    QList<LibSyndication::RSS2::Category> cats = m_item.categories();
-    QList<LibSyndication::RSS2::Category>::ConstIterator it = cats.begin();
-    QList<LibSyndication::RSS2::Category>::ConstIterator end = cats.end();
+    QList<Syndication::RSS2::Category> cats = m_item.categories();
+    QList<Syndication::RSS2::Category>::ConstIterator it = cats.begin();
+    QList<Syndication::RSS2::Category>::ConstIterator end = cats.end();
     
     for ( ; it != end; ++it)
     {
@@ -162,9 +162,9 @@ QString ItemRSS2Impl::commentPostUri() const
     return m_item.extractElementTextNS(commentApiNamespace(), QString::fromUtf8("comment"));
 }
 
-LibSyndication::SpecificItemPtr ItemRSS2Impl::specificItem() const
+Syndication::SpecificItemPtr ItemRSS2Impl::specificItem() const
 {
-    return LibSyndication::SpecificItemPtr(new LibSyndication::RSS2::Item(m_item));
+    return Syndication::SpecificItemPtr(new Syndication::RSS2::Item(m_item));
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

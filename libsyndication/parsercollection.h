@@ -34,14 +34,14 @@
 #include <QHash>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
 
 /**
  * A collection of format-specific parser implementations.
  * To parse a feed source, pass it to the parse() method of this class.
  * In most cases, you should use the global singleton instance
- * LibSyndication::parserCollection().
+ * Syndication::parserCollection().
  * When loading the source from the web, use Loader instead of using
  * this class directly.
  * 
@@ -132,6 +132,6 @@ class KDE_EXPORT ParserCollection
 
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_PARSERCOLLECTION_H

@@ -24,9 +24,9 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
-CategoryRSS2Impl::CategoryRSS2Impl(const LibSyndication::RSS2::Category& category)
+CategoryRSS2Impl::CategoryRSS2Impl(const Syndication::RSS2::Category& category)
     : m_category(category)
 {}
         
@@ -50,4 +50,4 @@ QString CategoryRSS2Impl::label() const
     return QString::null;
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

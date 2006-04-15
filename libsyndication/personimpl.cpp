@@ -24,7 +24,7 @@
 
 #include <QRegExp>
 
-namespace LibSyndication {
+namespace Syndication {
 
 
 PersonImpl::PersonImpl() : m_null(true)
@@ -37,4 +37,4 @@ PersonImpl::PersonImpl(const QString& name, const QString& uri,
 {
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

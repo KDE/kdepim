@@ -25,7 +25,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 Generator::Generator() : ElementWrapper()
@@ -66,5 +66,5 @@ QString Generator::debugInfo() const
 }
 
 } // namespace Atom
-} //namespace LibSyndication
+} //namespace Syndication
 

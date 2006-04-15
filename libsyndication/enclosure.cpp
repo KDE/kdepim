@@ -24,7 +24,7 @@
 
 #include "enclosure.h"
 
-namespace LibSyndication {
+namespace Syndication {
 
 Enclosure::~Enclosure()
 {
@@ -78,4 +78,4 @@ QString Enclosure::debugInfo() const
     return info;
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

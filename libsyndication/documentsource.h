@@ -30,7 +30,7 @@
 class QByteArray;
 class QDomDocument;
 
-namespace LibSyndication {
+namespace Syndication {
 
 /** 
  * Represents the source of a syndication document, as read from the
@@ -132,6 +132,6 @@ class KDE_EXPORT DocumentSource
         SharedPtr<DocumentSourcePrivate> d;
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_DOCUMENTSOURCE_H

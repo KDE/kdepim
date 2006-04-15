@@ -32,7 +32,7 @@
 
 
 
-namespace LibSyndication {
+namespace Syndication {
 
 /** @internal */
 class AtomMapper : public Mapper<Feed>
@@ -43,6 +43,6 @@ class AtomMapper : public Mapper<Feed>
     }
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_MAPPERATOMIMPL_H

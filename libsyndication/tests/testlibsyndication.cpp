@@ -34,7 +34,7 @@
 #include <iostream>
 
 
-using namespace LibSyndication;
+using namespace Syndication;
 
 void printUsage(const QString& error)
 {
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
     DocumentSource src(f.readAll(), "http://libsyndicationtest");
     f.close();
 
-    FeedPtr ptr(LibSyndication::parse(src));
+    FeedPtr ptr(Syndication::parse(src));
 
     if (ptr == 0L)
     {

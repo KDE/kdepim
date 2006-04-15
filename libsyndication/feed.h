@@ -30,7 +30,7 @@
 template <class T> class QList;
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 
 class SpecificDocument;
 typedef SharedPtr<SpecificDocument> SpecificDocumentPtr;
@@ -157,6 +157,6 @@ class KDE_EXPORT Feed : public SharedPtr<Feed>
         virtual QString debugInfo() const;
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_FEED_H

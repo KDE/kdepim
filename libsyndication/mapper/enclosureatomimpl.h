@@ -26,7 +26,7 @@
 #include <enclosure.h>
 #include <atom/link.h>
 
-namespace LibSyndication {
+namespace Syndication {
     
 class EnclosureAtomImpl;
 typedef SharedPtr<EnclosureAtomImpl> EnclosureAtomImplPtr;
@@ -36,11 +36,11 @@ typedef SharedPtr<EnclosureAtomImpl> EnclosureAtomImplPtr;
  * @internal
  * @author Frank Osterfeld
  */
-class EnclosureAtomImpl : public LibSyndication::Enclosure
+class EnclosureAtomImpl : public Syndication::Enclosure
 {
     public:
 
-        EnclosureAtomImpl(const LibSyndication::Atom::Link& link);
+        EnclosureAtomImpl(const Syndication::Atom::Link& link);
         
         bool isNull() const;
         
@@ -55,9 +55,9 @@ class EnclosureAtomImpl : public LibSyndication::Enclosure
         uint duration() const;
         
     private:
-        LibSyndication::Atom::Link m_link;
+        Syndication::Atom::Link m_link;
 };
     
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_ENCLOSUREATOMIMPL_H

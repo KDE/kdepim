@@ -24,9 +24,9 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
-ImageRDFImpl::ImageRDFImpl(const LibSyndication::RDF::Image& image)
+ImageRDFImpl::ImageRDFImpl(const Syndication::RDF::Image& image)
     : m_image(image)
 {}
         
@@ -65,4 +65,4 @@ uint ImageRDFImpl::height() const
     return 0;
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

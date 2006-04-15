@@ -36,7 +36,7 @@
 #include <QSet>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RSS2 {
 
 class Document::DocumentPrivate
@@ -423,4 +423,4 @@ bool Document::accept(DocumentVisitor* visitor)
 }
 
 } // namespace RSS2
-} // namespace LibSyndication
+} // namespace Syndication

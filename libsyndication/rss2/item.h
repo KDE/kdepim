@@ -36,7 +36,7 @@ class QDomElement;
 class QString;
 template <class T> class QList;
 
-namespace LibSyndication {
+namespace Syndication {
 
 class SpecificItemVisitor;
     
@@ -51,7 +51,7 @@ class Source;
  *
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Item : public ElementWrapper, public LibSyndication::SpecificItem
+class KDE_EXPORT Item : public ElementWrapper, public Syndication::SpecificItem
 {
     public:
         
@@ -243,6 +243,6 @@ class KDE_EXPORT Item : public ElementWrapper, public LibSyndication::SpecificIt
 };
 
 } // namespace RSS2
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RSS2_ITEM_H

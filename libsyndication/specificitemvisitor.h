@@ -24,7 +24,7 @@
 
 #include <kdepimmacros.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class SpecificDocument;
 
@@ -51,13 +51,13 @@ class KDE_EXPORT SpecificItemVisitor
 
         virtual bool visit(SpecificItem* item);
         
-        virtual bool visitRSS2Item(LibSyndication::RSS2::Item* item);
+        virtual bool visitRSS2Item(Syndication::RSS2::Item* item);
         
-        virtual bool visitRDFItem(LibSyndication::RDF::Item* item);
+        virtual bool visitRDFItem(Syndication::RDF::Item* item);
         
-        virtual bool visitAtomEntry(LibSyndication::Atom::Entry* item);
+        virtual bool visitAtomEntry(Syndication::Atom::Entry* item);
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_SPECIFICITEMVISITOR_H

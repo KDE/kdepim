@@ -22,10 +22,10 @@
  
 #include "specificitem.h"
 
-namespace LibSyndication {
+namespace Syndication {
 
 SpecificItem::~SpecificItem()
 {
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

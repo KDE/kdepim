@@ -23,31 +23,31 @@
 #ifndef LIBSYNDICATION_LIBSYNDICATION_H
 #define LIBSYNDICATION_LIBSYNDICATION_H
 
-#include "specificdocument.h"
-#include "abstractparser.h"
-#include "category.h"
-#include "constants.h"
-#include "dataretriever.h"
-#include "documentsource.h"
-#include "documentvisitor.h"
-#include "elementwrapper.h"
-#include "enclosure.h"
-#include "feed.h"
-#include "global.h"
-#include "image.h"
-#include "item.h"
-#include "loader.h"
-#include "mapper.h"
-#include "parsercollection.h"
-#include "person.h"
-#include "sharedptr.h"
-#include "specificitem.h"
-#include "specificitemvisitor.h"
-#include "tools.h"
+#include <libsyndication/specificdocument.h>
+#include <libsyndication/abstractparser.h>
+#include <libsyndication/category.h>
+#include <libsyndication/constants.h>
+#include <libsyndication/dataretriever.h>
+#include <libsyndication/documentsource.h>
+#include <libsyndication/documentvisitor.h>
+#include <libsyndication/elementwrapper.h>
+#include <libsyndication/enclosure.h>
+#include <libsyndication/feed.h>
+#include <libsyndication/global.h>
+#include <libsyndication/image.h>
+#include <libsyndication/item.h>
+#include <libsyndication/loader.h>
+#include <libsyndication/mapper.h>
+#include <libsyndication/parsercollection.h>
+#include <libsyndication/person.h>
+#include <libsyndication/sharedptr.h>
+#include <libsyndication/specificitem.h>
+#include <libsyndication/specificitemvisitor.h>
+#include <libsyndication/tools.h>
 
 /**
  * TODO
  */
-namespace LibSyndication {}
+namespace Syndication {}
 
 #endif // LIBSYNDICATION_LIBSYNDICATION_H

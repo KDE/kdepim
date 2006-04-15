@@ -28,7 +28,7 @@
 
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
     
 class SpecificItemVisitor;
     
@@ -124,6 +124,6 @@ class KDE_EXPORT Item : public ResourceWrapper, public SpecificItem
 };
         
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif //  LIBSYNDICATION_RDF_ITEM_H

@@ -31,7 +31,7 @@
 #include <QString>
 #include <QStringList>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
     
 
@@ -207,5 +207,5 @@ QString DublinCore::debugInfo() const
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 

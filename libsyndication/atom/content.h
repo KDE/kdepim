@@ -31,7 +31,7 @@
 class QByteArray;
 class QDomElement;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 /**
@@ -196,6 +196,6 @@ class KDE_EXPORT Content : public ElementWrapper
 };
 
 } // namespace Atom
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_ATOM_CONTENT_H

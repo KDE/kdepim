@@ -31,7 +31,7 @@
 
 template <class T> class QList;
 
-namespace LibSyndication {
+namespace Syndication {
 
 class Category;
 typedef SharedPtr<Category> CategoryPtr;
@@ -211,6 +211,6 @@ class KDE_EXPORT Item
         virtual QString debugInfo() const;
 };
     
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_ITEM_H

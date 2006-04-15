@@ -26,7 +26,7 @@
 #include <QDomElement>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 Category::Category() : ElementWrapper()
@@ -70,4 +70,4 @@ QString Category::debugInfo() const
 }
 
 } // namespace Atom
-} //namespace LibSyndication
+} //namespace Syndication

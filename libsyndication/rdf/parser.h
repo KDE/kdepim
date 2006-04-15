@@ -28,7 +28,7 @@
 
 #include <sharedptr.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class DocumentSource;
 
@@ -41,7 +41,7 @@ class Model;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Parser : public LibSyndication::AbstractParser
+class KDE_EXPORT Parser : public Syndication::AbstractParser
 {
     public:
         
@@ -63,12 +63,11 @@ class KDE_EXPORT Parser : public LibSyndication::AbstractParser
          * documents are converted to RSS 1.0.
          * 
          * @param source The document source to parse
-         * @return parsed document (a LibSyndication::RDF::Document), or an
+         * @return parsed document (a Syndication::RDF::Document), or an
          * invalid document if parsing failed.
          * @see Document::isValid()
          */
-        virtual LibSyndication::SpecificDocumentPtr parse(
-                const DocumentSource& source) const;
+        virtual SpecificDocumentPtr parse(const DocumentSource& source) const;
 
         /**
          * format string of this parser, which is @c "rdf".
@@ -91,6 +90,6 @@ class KDE_EXPORT Parser : public LibSyndication::AbstractParser
 };
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RDF_PARSER_H

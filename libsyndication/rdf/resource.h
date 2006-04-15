@@ -31,7 +31,7 @@ class QString;
 
 template <class T> class QList;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Model;
@@ -88,6 +88,6 @@ class KDE_EXPORT Resource : public Node
 };
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RDF_RESOURCE_H

@@ -29,7 +29,7 @@
 
 #include <QAtomic>
 
-namespace LibSyndication {
+namespace Syndication {
 
 template <class T>
 class SharedPtr;
@@ -259,6 +259,6 @@ class SharedPtr
 		KSharedData *d;
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_SHAREDPTR_H

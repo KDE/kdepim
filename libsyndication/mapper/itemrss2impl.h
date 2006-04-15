@@ -26,7 +26,7 @@
 #include <rss2/item.h>
 #include <item.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class ItemRSS2Impl;
 typedef SharedPtr<ItemRSS2Impl> ItemRSS2ImplPtr;
@@ -34,11 +34,11 @@ typedef SharedPtr<ItemRSS2Impl> ItemRSS2ImplPtr;
 /**
  * @internal
  */
-class ItemRSS2Impl : public LibSyndication::Item
+class ItemRSS2Impl : public Syndication::Item
 {
     public:
         
-        ItemRSS2Impl(const LibSyndication::RSS2::Item& item);
+        ItemRSS2Impl(const Syndication::RSS2::Item& item);
         
         QString title() const;
         
@@ -74,9 +74,9 @@ class ItemRSS2Impl : public LibSyndication::Item
         
     private:
         
-        LibSyndication::RSS2::Item m_item;
+        Syndication::RSS2::Item m_item;
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_ITEMRSS2IMPL_H

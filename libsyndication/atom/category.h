@@ -28,7 +28,7 @@
 class QDomElement;
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 /**
@@ -98,6 +98,6 @@ class KDE_EXPORT Category : public ElementWrapper
 };
 
 } // namespace Atom
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_ATOM_CATEGORY_H

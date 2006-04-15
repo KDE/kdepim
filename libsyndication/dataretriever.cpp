@@ -20,7 +20,7 @@
 #include <QBuffer>
 #include <QTimer>
 
-namespace LibSyndication {
+namespace Syndication {
 
 DataRetriever::DataRetriever()
 {
@@ -218,6 +218,6 @@ void OutputRetriever::slotExited(KProcess *p)
     emit dataRetrieved(data, p->normalExit() && p->exitStatus() == 0);
 }
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #include "dataretriever.moc"

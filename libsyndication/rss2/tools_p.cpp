@@ -28,7 +28,7 @@
 #include <QList>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RSS2 {
 
 QString extractContent(const ElementWrapper& wrapper)
@@ -55,4 +55,4 @@ QString extractContent(const ElementWrapper& wrapper)
 }
 
 } // namespace RSS2
-} // namespace LibSyndication
+} // namespace Syndication

@@ -30,7 +30,7 @@
 
 #define LIBSYNDICATION_VERSION "0.1"
 
-namespace LibSyndication {
+namespace Syndication {
 
 class DocumentSource;
 template <class T> class ParserCollection;
@@ -116,6 +116,6 @@ enum ErrorCode
 };
 
         
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_GLOBAL_H

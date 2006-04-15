@@ -32,21 +32,21 @@
 #include "rssvocab.h"
 #include "sequence.h"
 #include "statement.h"
-#include "syndication.h"
+#include "syndicationinfo.h"
 #include "textinput.h"
 
 #include <QList>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 
-Document::Document() : LibSyndication::SpecificDocument(), ResourceWrapper()
+Document::Document() : Syndication::SpecificDocument(), ResourceWrapper()
 {
 }
 
-Document::Document(ResourcePtr resource) : LibSyndication::SpecificDocument(), ResourceWrapper(resource)
+Document::Document(ResourcePtr resource) : Syndication::SpecificDocument(), ResourceWrapper(resource)
 {
 }
 
@@ -87,9 +87,9 @@ DublinCore Document::dc() const
     return DublinCore(resource());
 }
 
-Syndication Document::syn() const
+SyndicationInfo Document::syn() const
 {
-    return Syndication(resource());
+    return SyndicationInfo(resource());
 }
 
 QList<Item> Document::items() const
@@ -167,4 +167,4 @@ QString Document::debugInfo() const
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

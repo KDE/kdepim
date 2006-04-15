@@ -26,7 +26,7 @@
 #include <rss2/document.h>
 #include <feed.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class FeedRSS2Impl;
 typedef SharedPtr<FeedRSS2Impl> FeedRSS2ImplPtr;
@@ -36,13 +36,13 @@ typedef SharedPtr<Image> ImagePtr;
 /**
  * @internal
  */
-class FeedRSS2Impl : public LibSyndication::Feed
+class FeedRSS2Impl : public Syndication::Feed
 {
     public:
         
-        FeedRSS2Impl(LibSyndication::RSS2::DocumentPtr doc);
+        FeedRSS2Impl(Syndication::RSS2::DocumentPtr doc);
         
-        LibSyndication::SpecificDocumentPtr specificDocument() const;
+        Syndication::SpecificDocumentPtr specificDocument() const;
         
         QList<ItemPtr> items() const;
         
@@ -64,9 +64,9 @@ class FeedRSS2Impl : public LibSyndication::Feed
         
     private:
         
-        LibSyndication::RSS2::DocumentPtr m_doc;
+        Syndication::RSS2::DocumentPtr m_doc;
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_FEEDRSS2IMPL_H

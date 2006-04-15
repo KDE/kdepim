@@ -36,7 +36,7 @@
 
 template <class T> class QList;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 /**
@@ -245,6 +245,6 @@ class KDE_EXPORT Model
 
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RDF_MODEL_H

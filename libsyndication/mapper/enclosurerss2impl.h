@@ -27,7 +27,7 @@
 #include <rss2/enclosure.h>
 #include <rss2/item.h>
 
-namespace LibSyndication {
+namespace Syndication {
     
 class EnclosureRSS2Impl;
 typedef SharedPtr<EnclosureRSS2Impl> EnclosureRSS2ImplPtr;
@@ -37,12 +37,12 @@ typedef SharedPtr<EnclosureRSS2Impl> EnclosureRSS2ImplPtr;
  * @internal
  * @author Frank Osterfeld
  */
-class EnclosureRSS2Impl : public LibSyndication::Enclosure
+class EnclosureRSS2Impl : public Syndication::Enclosure
 {
     public:
 
-        EnclosureRSS2Impl(const LibSyndication::RSS2::Item& item,
-                          const LibSyndication::RSS2::Enclosure& enc);
+        EnclosureRSS2Impl(const Syndication::RSS2::Item& item,
+                          const Syndication::RSS2::Enclosure& enc);
         
         bool isNull() const;
         
@@ -57,10 +57,10 @@ class EnclosureRSS2Impl : public LibSyndication::Enclosure
         uint duration() const;
         
     private:
-        LibSyndication::RSS2::Item m_item;
-        LibSyndication::RSS2::Enclosure m_enclosure;
+        Syndication::RSS2::Item m_item;
+        Syndication::RSS2::Enclosure m_enclosure;
 };
     
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_ENCLOSURERSS2IMPL_H

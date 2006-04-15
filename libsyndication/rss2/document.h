@@ -35,7 +35,7 @@ class QString;
 template <class T> class QList;
 template <class T> class QSet;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RSS2 {
 
 class Category;
@@ -52,8 +52,8 @@ typedef SharedPtr<Document> DocumentPtr;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Document : public LibSyndication::SpecificDocument,
-                            public LibSyndication::ElementWrapper
+class KDE_EXPORT Document : public Syndication::SpecificDocument,
+                            public Syndication::ElementWrapper
 {
     public:
     
@@ -280,6 +280,6 @@ class KDE_EXPORT Document : public LibSyndication::SpecificDocument,
 };
 
 } // namespace RSS2
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RSS2_DOCUMENT_H

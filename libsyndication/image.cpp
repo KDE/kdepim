@@ -24,7 +24,7 @@
 
 #include "image.h"
 
-namespace LibSyndication {
+namespace Syndication {
 
 Image::~Image()
 {
@@ -75,4 +75,4 @@ QString Image::debugInfo() const
     return info;
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

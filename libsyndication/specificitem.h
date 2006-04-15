@@ -28,7 +28,7 @@
 
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 
 class SpecificItemVisitor;
 class SpecificItem;
@@ -68,7 +68,7 @@ class KDE_EXPORT SpecificItem
 
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_SPECIFICITEM_H
 

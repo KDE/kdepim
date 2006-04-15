@@ -33,7 +33,7 @@
 #include "person.h"
 #include "source.h"
 
-namespace LibSyndication {
+namespace Syndication {
 
 /** 
  * Atom parser and model classes, representing

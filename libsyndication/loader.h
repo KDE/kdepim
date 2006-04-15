@@ -27,7 +27,7 @@ namespace KIO
     class Job;
 }
 
-namespace LibSyndication {
+namespace Syndication {
 
 class DataRetriever;
 class Feed;
@@ -69,7 +69,7 @@ typedef SharedPtr<Feed> FeedPtr;
  *     // Note that Loader::~Loader() is private, so you cannot delete Loader instances.
  *     // You don't need to do that anyway since Loader instances delete themselves.
  *
- *     if (status != LibSyndication::Success)
+ *     if (status != Syndication::Success)
  *         return;
  *
  *     QString title = feed->title();
@@ -159,9 +159,9 @@ class KDE_EXPORT Loader : public QObject
          * problems while retrieving or parsing the data.
          * @see Feed, ErrorCode
          */
-        void loadingComplete(LibSyndication::Loader* loader,
-                             LibSyndication::FeedPtr feed,
-                             LibSyndication::ErrorCode error);
+        void loadingComplete(Syndication::Loader* loader,
+                             Syndication::FeedPtr feed,
+                             Syndication::ErrorCode error);
 
     private slots:
         
@@ -180,6 +180,6 @@ class KDE_EXPORT Loader : public QObject
 };
 
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_LOADER_H

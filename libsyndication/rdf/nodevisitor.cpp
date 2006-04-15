@@ -5,7 +5,7 @@
 #include "resource.h"
 #include "sequence.h"
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 NodeVisitor::~NodeVisitor() {}
@@ -40,4 +40,4 @@ bool NodeVisitor::visitSequence(SequencePtr)
     return false;
 }
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

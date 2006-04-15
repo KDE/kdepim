@@ -27,7 +27,7 @@
 
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 
 KDE_EXPORT
 QString xmlNamespace();
@@ -58,6 +58,6 @@ QString commentApiNamespace();
 KDE_EXPORT 
 QString slashNamespace();
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_CONSTANTS_H

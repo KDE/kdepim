@@ -27,7 +27,7 @@
 #include <QList>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Sequence::SequencePrivate
@@ -90,4 +90,4 @@ bool Sequence::isSequence() const
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

@@ -25,7 +25,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RSS2 {
 
 Category::Category() : ElementWrapper()
@@ -58,4 +58,4 @@ QString Category::debugInfo() const
 }
 
 } // namespace RSS2
-} // namespace LibSyndication
+} // namespace Syndication

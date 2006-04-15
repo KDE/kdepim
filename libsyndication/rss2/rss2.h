@@ -33,7 +33,7 @@
 #include "source.h"
 #include "textinput.h"
 
-namespace LibSyndication {
+namespace Syndication {
 
 /**
  * A parser and model classes for RSS 0.91 (Userland and Netscape flavor), 0.92, 0.93, 0.94
@@ -41,6 +41,6 @@ namespace LibSyndication {
  */
 namespace RSS2 {}
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RSS2_RSS2_H

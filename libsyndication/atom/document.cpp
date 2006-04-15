@@ -36,7 +36,7 @@
 #include <QList>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 FeedDocument::FeedDocument() : ElementWrapper()
@@ -296,4 +296,4 @@ QString EntryDocument::debugInfo() const
 }
 
 } // namespace Atom
-} // namespace LibSyndication
+} // namespace Syndication

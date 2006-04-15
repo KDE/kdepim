@@ -27,7 +27,7 @@
 
 #include <abstractparser.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class DocumentSource;
 
@@ -40,7 +40,7 @@ class Document;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Parser : public LibSyndication::AbstractParser
+class KDE_EXPORT Parser : public Syndication::AbstractParser
 {
     public:
 
@@ -64,11 +64,11 @@ class KDE_EXPORT Parser : public LibSyndication::AbstractParser
          * RSS 0.9x/2.0, so call accept() before to check.
          * 
          * @param source the source to wrap
-         * @return A LibSyndication::RSS2::Document instance wrapping the XML
+         * @return A Syndication::RSS2::Document instance wrapping the XML
          * source, or a null document (not a null pointer!) if there is no @c
          * &lt;channel> root element in the source.
          */
-        LibSyndication::SpecificDocumentPtr parse(const DocumentSource& source) const;
+        Syndication::SpecificDocumentPtr parse(const DocumentSource& source) const;
 
         /**
          * returns the format string of this parser implementation, which is
@@ -92,6 +92,6 @@ class KDE_EXPORT Parser : public LibSyndication::AbstractParser
 };
 
 } // namespace RSS2
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RSS2_PARSER_H

@@ -25,7 +25,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 Link::Link() : ElementWrapper()
@@ -92,4 +92,4 @@ QString Link::debugInfo() const
 }
 
 } // namespace Atom
-} //namespace LibSyndication
+} //namespace Syndication

@@ -28,11 +28,11 @@
 #include <QDomElement>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
 namespace Atom {
 
-QString extractAtomText(const LibSyndication::ElementWrapper& parent, const QString& tagname)
+QString extractAtomText(const Syndication::ElementWrapper& parent, const QString& tagname)
 {
     QString str;
     
@@ -63,6 +63,6 @@ QString extractAtomText(const LibSyndication::ElementWrapper& parent, const QStr
 }
 
 } // namespace Atom
-} // namespace LibSyndication
+} // namespace Syndication
 
 

@@ -26,7 +26,7 @@
 
 #include "resourcewrapper.h"
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Resource;
@@ -56,6 +56,6 @@ class KDE_EXPORT Image : public ResourceWrapper
 };
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif //  LIBSYNDICATION_RDF_IMAGE_H

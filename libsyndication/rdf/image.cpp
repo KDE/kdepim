@@ -26,7 +26,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
     
 Image::Image() : ResourceWrapper()
@@ -69,4 +69,4 @@ QString Image::debugInfo() const
 
     
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

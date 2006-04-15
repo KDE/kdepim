@@ -24,7 +24,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RSS2 {
 
 
@@ -74,4 +74,4 @@ QString Enclosure::debugInfo() const
 }
 
 } // namespace RSS2
-}  // namespace LibSyndication
+}  // namespace Syndication

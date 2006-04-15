@@ -31,7 +31,7 @@
 class QDomDocument;
 template <class T> class QList;
 
-namespace LibSyndication {
+namespace Syndication {
 
 class DocumentVisitor;
 
@@ -53,7 +53,7 @@ typedef SharedPtr<FeedDocument> FeedDocumentPtr;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT FeedDocument : public LibSyndication::SpecificDocument,
+class KDE_EXPORT FeedDocument : public Syndication::SpecificDocument,
 public ElementWrapper
 {
     public:
@@ -192,7 +192,7 @@ public ElementWrapper
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT EntryDocument : public LibSyndication::SpecificDocument, public LibSyndication::ElementWrapper
+class KDE_EXPORT EntryDocument : public Syndication::SpecificDocument, public Syndication::ElementWrapper
 {
     public:
 
@@ -241,6 +241,6 @@ class KDE_EXPORT EntryDocument : public LibSyndication::SpecificDocument, public
 };
 
 } // namespace Atom
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_ATOM_DOCUMENT_H

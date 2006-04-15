@@ -15,9 +15,9 @@ class TestLibSyndication : public QObject
     
     public slots:
         
-        void slotLoadingComplete(LibSyndication::Loader* loader,
-                            LibSyndication::FeedPtr feed,
-                            LibSyndication::ErrorCode error);
+        void slotLoadingComplete(Syndication::Loader* loader,
+                            Syndication::FeedPtr feed,
+                            Syndication::ErrorCode error);
 };
 
 #endif // TEST_TESTLIBSYNDICATION_H

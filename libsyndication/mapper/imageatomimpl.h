@@ -27,7 +27,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
     
 class ImageAtomImpl;
 typedef SharedPtr<ImageAtomImpl> ImageAtomImplPtr;
@@ -37,7 +37,7 @@ typedef SharedPtr<ImageAtomImpl> ImageAtomImplPtr;
  * @internal
  * @author Frank Osterfeld
  */
-class ImageAtomImpl : public LibSyndication::Image
+class ImageAtomImpl : public Syndication::Image
 {
     public:
         
@@ -63,6 +63,6 @@ class ImageAtomImpl : public LibSyndication::Image
         QString m_logoURI;
 };
     
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_IMAGEATOMIMPL_H

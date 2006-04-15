@@ -26,7 +26,7 @@
 #include <rdf/document.h>
 #include <feed.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class FeedRDFImpl;
 typedef SharedPtr<FeedRDFImpl> FeedRDFImplPtr;
@@ -36,13 +36,13 @@ typedef SharedPtr<Image> ImagePtr;
 /**
  * @internal
  */
-class FeedRDFImpl : public LibSyndication::Feed
+class FeedRDFImpl : public Syndication::Feed
 {
     public:
         
-        FeedRDFImpl(LibSyndication::RDF::DocumentPtr doc);
+        FeedRDFImpl(Syndication::RDF::DocumentPtr doc);
         
-        LibSyndication::SpecificDocumentPtr specificDocument() const;
+        Syndication::SpecificDocumentPtr specificDocument() const;
         
         QList<ItemPtr> items() const;
         
@@ -64,9 +64,9 @@ class FeedRDFImpl : public LibSyndication::Feed
         
     private:
         
-        LibSyndication::RDF::DocumentPtr m_doc;
+        Syndication::RDF::DocumentPtr m_doc;
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_FEEDRDFIMPL_H

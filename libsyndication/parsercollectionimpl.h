@@ -35,7 +35,7 @@
 #include <QHash>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
 /** @internal 
  */
@@ -121,7 +121,7 @@ void ParserCollectionImpl<T>::changeMapper(const QString& format, Mapper<T>* map
 template <class T>
 SharedPtr<T> ParserCollectionImpl<T>::parse(const DocumentSource& source, const QString& formatHint)
 {
-    m_lastError = LibSyndication::Success;
+    m_lastError = Syndication::Success;
 
     if (!formatHint.isNull() && m_parsers.contains(formatHint))
     {
@@ -161,7 +161,7 @@ SharedPtr<T> ParserCollectionImpl<T>::parse(const DocumentSource& source, const 
 }
 
 template <class T>
-LibSyndication::ErrorCode ParserCollectionImpl<T>::lastError() const
+Syndication::ErrorCode ParserCollectionImpl<T>::lastError() const
 {
     return m_lastError;
 }
@@ -177,6 +177,6 @@ ParserCollectionImpl<T>& ParserCollectionImpl<T>::operator=(const ParserCollecti
     return *this;
 }
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_PARSERCOLLECTIONIMPL_H

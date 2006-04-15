@@ -26,7 +26,7 @@
 #include <atom/document.h>
 #include <feed.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class FeedAtomImpl;
 typedef SharedPtr<FeedAtomImpl> FeedAtomImplPtr;
@@ -36,15 +36,15 @@ typedef SharedPtr<Image> ImagePtr;
 /**
  * @internal
  */
-class FeedAtomImpl : public LibSyndication::Feed
+class FeedAtomImpl : public Syndication::Feed
 {
     public:
         
-        FeedAtomImpl(LibSyndication::Atom::FeedDocumentPtr doc);
+        FeedAtomImpl(Syndication::Atom::FeedDocumentPtr doc);
         
-        LibSyndication::SpecificDocumentPtr specificDocument() const;
+        Syndication::SpecificDocumentPtr specificDocument() const;
         
-        QList<LibSyndication::ItemPtr> items() const;
+        QList<Syndication::ItemPtr> items() const;
                 
         QList<CategoryPtr> categories() const;
         
@@ -64,9 +64,9 @@ class FeedAtomImpl : public LibSyndication::Feed
         
     private:
         
-        LibSyndication::Atom::FeedDocumentPtr m_doc;
+        Syndication::Atom::FeedDocumentPtr m_doc;
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_FEEDATOMIMPL_H

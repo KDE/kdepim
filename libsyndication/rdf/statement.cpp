@@ -28,7 +28,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Statement::StatementPrivate
@@ -130,4 +130,4 @@ QString Statement::asString() const
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

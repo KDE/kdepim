@@ -27,7 +27,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class DublinCoreVocab::DublinCoreVocabPrivate
@@ -175,4 +175,4 @@ PropertyPtr DublinCoreVocab::type() const
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

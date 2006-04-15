@@ -29,12 +29,12 @@
 #include <QDomElement>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RSS2 {
 
 class Parser::ParserPrivate {};
     
-bool Parser::accept(const LibSyndication::DocumentSource& source) const
+bool Parser::accept(const Syndication::DocumentSource& source) const
 {
     QDomDocument doc = source.asDomDocument();
     if (doc.isNull())
@@ -45,7 +45,7 @@ bool Parser::accept(const LibSyndication::DocumentSource& source) const
     return !root.isNull();
 }
 
-LibSyndication::SpecificDocumentPtr Parser::parse(const LibSyndication::DocumentSource& source) const
+Syndication::SpecificDocumentPtr Parser::parse(const Syndication::DocumentSource& source) const
 {
     return DocumentPtr(new Document(Document::fromXML(source.asDomDocument())));
 }
@@ -61,4 +61,4 @@ Parser::~Parser() {}
 Parser& Parser::operator=(const Parser& /*other*/) { return *this; }
 
 } // namespace RSS2
-} // namespace LibSyndication
+} // namespace Syndication

@@ -24,7 +24,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 QString atom1Namespace()
@@ -38,4 +38,4 @@ QString atom0_3Namespace()
 }
 
 } // namespace Atom
-} // namespace LibSyndication
+} // namespace Syndication

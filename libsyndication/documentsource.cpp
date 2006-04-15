@@ -27,7 +27,7 @@
 #include <QDomDocument>
 #include <QXmlSimpleReader>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class DocumentSource::DocumentSourcePrivate
 {
@@ -114,4 +114,4 @@ const QString& DocumentSource::url() const
     return d->url;
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

@@ -24,9 +24,9 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
-CategoryAtomImpl::CategoryAtomImpl(const LibSyndication::Atom::Category& category)
+CategoryAtomImpl::CategoryAtomImpl(const Syndication::Atom::Category& category)
     : m_category(category)
 {}
         
@@ -50,4 +50,4 @@ QString CategoryAtomImpl::label() const
     return m_category.label();
 }
  
-} // namespace LibSyndication
+} // namespace Syndication

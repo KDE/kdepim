@@ -24,9 +24,9 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
-ImageRSS2Impl::ImageRSS2Impl(const LibSyndication::RSS2::Image& image)
+ImageRSS2Impl::ImageRSS2Impl(const Syndication::RSS2::Image& image)
     : m_image(image)
 {}
         
@@ -65,4 +65,4 @@ uint ImageRSS2Impl::height() const
     return m_image.width();
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

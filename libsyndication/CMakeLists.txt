@@ -25,7 +25,7 @@ set(librdflocal_la_SRCS
 	${CMAKE_SOURCE_DIR}/libsyndication/rdf/dublincorevocab.cpp 
 	${CMAKE_SOURCE_DIR}/libsyndication/rdf/dublincore.cpp 
 	${CMAKE_SOURCE_DIR}/libsyndication/rdf/syndicationvocab.cpp 
-	${CMAKE_SOURCE_DIR}/libsyndication/rdf/syndication.cpp 
+	${CMAKE_SOURCE_DIR}/libsyndication/rdf/syndicationinfo.cpp 
 	${CMAKE_SOURCE_DIR}/libsyndication/rdf/contentvocab.cpp 
 	${CMAKE_SOURCE_DIR}/libsyndication/rdf/item.cpp 
 	${CMAKE_SOURCE_DIR}/libsyndication/rdf/image.cpp 

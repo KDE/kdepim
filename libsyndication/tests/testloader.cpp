@@ -46,7 +46,7 @@
 #include <cstdlib>
 #include <iostream>
 
-using namespace LibSyndication;
+using namespace Syndication;
 
 static const KCmdLineOptions options[] =
 {
@@ -54,7 +54,7 @@ static const KCmdLineOptions options[] =
     KCmdLineLastOption
 };
 
-TestLibSyndication::TestLibSyndication(const QString& url)
+TestSyndication::TestLibSyndication(const QString& url)
 {
     KUrl kurl;
     if (!KUrl::isRelativeURL(url))
@@ -63,15 +63,15 @@ TestLibSyndication::TestLibSyndication(const QString& url)
         kurl = KUrl("file://" + QDir::currentPath() + "/", url);
     
     std::cerr << kurl.url().toLocal8Bit().data() << std::endl;    
-    Loader* loader = Loader::create(this, SLOT(slotLoadingComplete(LibSyndication::Loader*,
-                                    LibSyndication::FeedPtr,
-                                    LibSyndication::ErrorCode)));
+    Loader* loader = Loader::create(this, SLOT(slotLoadingComplete(Syndication::Loader*,
+                                    Syndication::FeedPtr,
+                                    Syndication::ErrorCode)));
     loader->loadFrom(kurl);
 }
 
-void TestLibSyndication::slotLoadingComplete(LibSyndication::Loader* loader,
-                    LibSyndication::FeedPtr feed,
-                    LibSyndication::ErrorCode error)
+void TestSyndication::slotLoadingComplete(Syndication::Loader* loader,
+                    Syndication::FeedPtr feed,
+                    Syndication::ErrorCode error)
 {
     if (feed)
     {

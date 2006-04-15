@@ -31,7 +31,7 @@
 #include <QList>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Resource::ResourcePrivate
@@ -188,4 +188,4 @@ QString Resource::uri() const
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

@@ -29,7 +29,7 @@
 #include <QString>
 #include <QStringList>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 class Content::ContentPrivate
@@ -198,4 +198,4 @@ QString Content::debugInfo() const
 }
 
 } // namespace Atom
-} //namespace LibSyndication
+} //namespace Syndication

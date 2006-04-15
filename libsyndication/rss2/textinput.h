@@ -27,7 +27,7 @@
 class QString;
 class QDomElement;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RSS2 {
 
 /**
@@ -93,6 +93,6 @@ class KDE_EXPORT TextInput : public ElementWrapper
 };
 
 } // namespace RSS2
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RSS2_TEXTINPUT_H

@@ -45,7 +45,7 @@
 #include "syndicationvocab.h"
 #include "textinput.h"
 
-namespace LibSyndication {
+namespace Syndication {
 
 /** 
  * LibSyndication's parser for the RDF-based 

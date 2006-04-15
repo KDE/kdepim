@@ -26,7 +26,7 @@
 #include <category.h>
 #include <atom/category.h>
 
-namespace LibSyndication {
+namespace Syndication {
     
 class CategoryAtomImpl;
 typedef SharedPtr<CategoryAtomImpl> CategoryAtomImplPtr;
@@ -36,11 +36,11 @@ typedef SharedPtr<CategoryAtomImpl> CategoryAtomImplPtr;
  * @internal
  * @author Frank Osterfeld
  */
-class CategoryAtomImpl : public LibSyndication::Category
+class CategoryAtomImpl : public Syndication::Category
 {
     public:
 
-        CategoryAtomImpl(const LibSyndication::Atom::Category& category);
+        CategoryAtomImpl(const Syndication::Atom::Category& category);
         
         bool isNull() const;
         
@@ -51,9 +51,9 @@ class CategoryAtomImpl : public LibSyndication::Category
         QString label() const;
         
     private:
-        LibSyndication::Atom::Category m_category;
+        Syndication::Atom::Category m_category;
 };
     
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_CATEGORYATOMIMPL_H

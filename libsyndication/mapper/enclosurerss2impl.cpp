@@ -27,10 +27,10 @@
 #include <QString>
 #include <QStringList>
 
-namespace LibSyndication {
+namespace Syndication {
 
-EnclosureRSS2Impl::EnclosureRSS2Impl(const LibSyndication::RSS2::Item& item,
-                                     const LibSyndication::RSS2::Enclosure& enc)
+EnclosureRSS2Impl::EnclosureRSS2Impl(const Syndication::RSS2::Item& item,
+                                     const Syndication::RSS2::Enclosure& enc)
     : m_item(item), m_enclosure(enc)
 {}
         
@@ -100,4 +100,4 @@ uint EnclosureRSS2Impl::duration() const
     return 0;
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

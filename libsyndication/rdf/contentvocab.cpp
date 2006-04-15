@@ -27,7 +27,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class ContentVocab::ContentVocabPrivate
@@ -77,4 +77,4 @@ PropertyPtr ContentVocab::encoded() const
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

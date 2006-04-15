@@ -33,7 +33,7 @@
 
 
 
-namespace LibSyndication {
+namespace Syndication {
 
 /** @internal */
 class RSS2Mapper : public Mapper<Feed>
@@ -44,6 +44,6 @@ class RSS2Mapper : public Mapper<Feed>
     }
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPERRSS2IMPL_H

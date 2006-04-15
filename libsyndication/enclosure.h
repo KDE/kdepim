@@ -27,7 +27,7 @@
 
 #include <kdepimmacros.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class Enclosure;
 typedef SharedPtr<Enclosure> EnclosurePtr;
@@ -107,6 +107,6 @@ class KDE_EXPORT Enclosure
         virtual QString debugInfo() const;
 };
     
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_ENCLOSURE_H

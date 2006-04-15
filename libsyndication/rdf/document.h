@@ -29,7 +29,7 @@
 
 template <class T> class QList;
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class Content;
@@ -38,7 +38,7 @@ class DublinCore;
 class Image;
 class Item;
 class Model;
-class Syndication;
+class SyndicationInfo;
 class TextInput;
 typedef SharedPtr<Document> DocumentPtr;
 
@@ -47,7 +47,7 @@ typedef SharedPtr<Document> DocumentPtr;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Document : public LibSyndication::SpecificDocument, public ResourceWrapper
+class KDE_EXPORT Document : public Syndication::SpecificDocument, public ResourceWrapper
 {
     
     public:
@@ -85,7 +85,7 @@ class KDE_EXPORT Document : public LibSyndication::SpecificDocument, public Reso
          * returns syndication information describing how often this feed
          * is updated.
          */
-        Syndication syn() const;
+        SyndicationInfo syn() const;
         
         /**
          * list of items contained in this feed
@@ -106,6 +106,6 @@ class KDE_EXPORT Document : public LibSyndication::SpecificDocument, public Reso
 };
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif //  LIBSYNDICATION_RDF_DOCUMENT_H

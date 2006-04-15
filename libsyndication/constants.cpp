@@ -24,7 +24,7 @@
 
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
 QString xmlNamespace()
 {
@@ -61,4 +61,4 @@ QString slashNamespace()
     return QString::fromUtf8("http://purl.org/rss/1.0/modules/slash/");
 }
 
-} // namespace LibSyndication
+} // namespace Syndication

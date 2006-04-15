@@ -24,7 +24,7 @@
 
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
     
 template <class T> class SharedPtr;
 
@@ -61,6 +61,6 @@ class KDE_EXPORT RDFVocab
 };
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_RDF_RDFVOCAB_H

@@ -28,7 +28,7 @@
 
 class QString;
 
-namespace LibSyndication {
+namespace Syndication {
 
 class DocumentVisitor;
 class SpecificDocument;
@@ -86,7 +86,7 @@ class KDE_EXPORT SpecificDocument
         virtual QString debugInfo() const = 0;
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_SPECIFICDOCUMENT_H
 

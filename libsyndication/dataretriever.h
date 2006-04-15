@@ -25,7 +25,7 @@ class KUrl;
 
 class QByteArray;
 
-namespace LibSyndication
+namespace Syndication
 {
 
 /**
@@ -217,6 +217,6 @@ class KDE_EXPORT FileRetriever : public DataRetriever
         FileRetrieverPrivate* d;
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_DATARETRIEVER_H

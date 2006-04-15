@@ -32,7 +32,7 @@
 #include <QRegExp>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 
 KMD5 md5Machine;
 
@@ -261,6 +261,6 @@ PersonPtr personFromString(const QString& strp)
     return PersonPtr(new PersonImpl(name, uri, email));
 }
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 

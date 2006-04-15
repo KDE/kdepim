@@ -23,7 +23,7 @@
 #include "resourcewrapper.h"
 
 
-namespace LibSyndication {
+namespace Syndication {
 namespace RDF {
 
 class ResourceWrapper::ResourceWrapperPrivate
@@ -75,4 +75,4 @@ ResourcePtr ResourceWrapper::resource() const
 }
 
 } // namespace RDF
-} // namespace LibSyndication
+} // namespace Syndication

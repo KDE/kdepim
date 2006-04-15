@@ -26,7 +26,7 @@
 #include <atom/entry.h>
 #include <item.h>
 
-namespace LibSyndication {
+namespace Syndication {
 
 class ItemAtomImpl;
 typedef SharedPtr<ItemAtomImpl> ItemAtomImplPtr;
@@ -34,11 +34,11 @@ typedef SharedPtr<ItemAtomImpl> ItemAtomImplPtr;
 /**
  * @internal
  */
-class ItemAtomImpl : public LibSyndication::Item
+class ItemAtomImpl : public Syndication::Item
 {
     public:
         
-        ItemAtomImpl(const LibSyndication::Atom::Entry& entry);
+        ItemAtomImpl(const Syndication::Atom::Entry& entry);
         
         QString title() const;
         
@@ -74,9 +74,9 @@ class ItemAtomImpl : public LibSyndication::Item
 
     private:
         
-        LibSyndication::Atom::Entry m_entry;
+        Syndication::Atom::Entry m_entry;
 };
 
-} // namespace LibSyndication
+} // namespace Syndication
 
 #endif // LIBSYNDICATION_MAPPER_ITEMATOMIMPL_H

@@ -38,7 +38,7 @@
 #include <QRegExp>
 #include <QString>
 
-namespace LibSyndication {
+namespace Syndication {
 namespace Atom {
 
 class Parser::ParserPrivate
@@ -48,13 +48,13 @@ class Parser::ParserPrivate
     static QDomNode convertNode(QDomDocument& doc, const QDomNode& node, const QHash<QString, QString>& nameMapper);
 };
         
-bool Parser::accept(const LibSyndication::DocumentSource& source) const
+bool Parser::accept(const Syndication::DocumentSource& source) const
 {
     QDomElement root = source.asDomDocument().documentElement();
     return !root.isNull() && (root.namespaceURI() == atom1Namespace() || root.namespaceURI() == atom0_3Namespace());
 }
 
-LibSyndication::SpecificDocumentPtr Parser::parse(const LibSyndication::DocumentSource& source) const
+Syndication::SpecificDocumentPtr Parser::parse(const Syndication::DocumentSource& source) const
 {
     QDomDocument doc = source.asDomDocument();
 
@@ -209,4 +209,4 @@ Parser::Parser(const Parser& other) : AbstractParser(other) {}
 Parser& Parser::operator=(const Parser& /*other*/) { return *this; }
 
 } // namespace Atom
-} // namespace LibSyndication
+} // namespace Syndication

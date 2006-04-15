@@ -28,7 +28,7 @@ class QDomElement;
 class QString;
 template <class T> class QList;
 
-namespace LibSyndication {
+namespace Syndication {
 
 class ElementWrapper;
 
