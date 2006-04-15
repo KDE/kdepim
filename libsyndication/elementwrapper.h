@@ -22,9 +22,9 @@
 #ifndef LIBSYNDICATION_ELEMENTWRAPPER_H
 #define LIBSYNDICATION_ELEMENTWRAPPER_H
 
-#include <QString>
+#include <QtCore/QString>
 
-#include "sharedptr.h"
+#include <libsyndication/sharedptr.h>
 
 #include <kdepimmacros.h>
 

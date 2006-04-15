@@ -23,7 +23,7 @@
 #ifndef LIBSYNDICATION_ATOM_PARSER_H
 #define LIBSYNDICATION_ATOM_PARSER_H
 
-#include <abstractparser.h>
+#include <libsyndication/abstractparser.h>
 
 class QDomDocument;
 class QDomNode;

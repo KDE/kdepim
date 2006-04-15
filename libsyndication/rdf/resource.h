@@ -23,9 +23,9 @@
 #ifndef LIBSYNDICATION_RDF_RESOURCE_H
 #define LIBSYNDICATION_RDF_RESOURCE_H
 
-#include "node.h"
+#include <libsyndication/rdf/node.h>
 
-#include <sharedptr.h>
+#include <libsyndication/sharedptr.h>
 
 class QString;
 

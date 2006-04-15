@@ -23,7 +23,7 @@
 #ifndef LIBSYNDICATION_RDF_PROPERTY_H
 #define LIBSYNDICATION_RDF_PROPERTY_H
 
-#include "resource.h"
+#include <libsyndication/rdf/resource.h>
 
 class QString;
 

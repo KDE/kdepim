@@ -22,7 +22,7 @@
 #ifndef LIBSYNDICATION_RDF_TEXTINPUT_H
 #define LIBSYNDICATION_RDF_TEXTINPUT_H
 
-#include "resourcewrapper.h"
+#include <libsyndication/rdf/resourcewrapper.h>
 
 namespace Syndication {
 namespace RDF {

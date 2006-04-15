@@ -23,11 +23,10 @@
 #ifndef LIBSYNDICATION_RSS2_ITEM_H
 #define LIBSYNDICATION_RSS2_ITEM_H
 
-#include "document.h"
-
-#include <elementwrapper.h>
-#include <sharedptr.h>
-#include <specificitem.h>
+#include <libsyndication/rss2/document.h>
+#include <libsyndication/elementwrapper.h>
+#include <libsyndication/sharedptr.h>
+#include <libsyndication/specificitem.h>
 
 #include <ctime>
 

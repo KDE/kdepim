@@ -22,9 +22,9 @@
 #ifndef LIBSYNDICATION_RDF_ITEM_H
 #define LIBSYNDICATION_RDF_ITEM_H
 
-#include "resourcewrapper.h"
+#include <libsyndication/rdf/resourcewrapper.h>
 
-#include <specificitem.h>
+#include <libsyndication/specificitem.h>
 
 class QString;
 

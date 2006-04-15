@@ -11,13 +11,12 @@
 #ifndef LIBSYNDICATION_LOADER_H
 #define LIBSYNDICATION_LOADER_H
 
-#include "global.h"
+#include <libsyndication/global.h>
+#include <libsyndication/sharedptr.h>
 
 #include <kdepimmacros.h>
 
-#include "sharedptr.h"
-
-#include <QObject>
+#include <QtCore/QObject>
 
 class KProcess;
 class KUrl;
@@ -162,7 +161,7 @@ class KDE_EXPORT Loader : public QObject
         void loadingComplete(Syndication::Loader* loader,
                              Syndication::FeedPtr feed,
                              Syndication::ErrorCode error);
-
+        
     private slots:
         
         void slotRetrieverDone(const QByteArray& data, bool success);

@@ -22,28 +22,28 @@
 #ifndef LIBSYNDICATION_RDF_RDF_H
 #define LIBSYNDICATION_RDF_RDF_H
 
-#include "contentvocab.h"
-#include "document.h"
-#include "dublincore.h"
-#include "dublincorevocab.h"
-#include "image.h"
-#include "item.h"
-#include "literal.h"
-#include "model.h"
-#include "modelmaker.h"
-#include "node.h"
-#include "nodevisitor.h"
-#include "parser.h"
-#include "property.h"
-#include "rdfvocab.h"
-#include "resource.h"
-#include "resourcewrapper.h"
-#include "rssvocab.h"
-#include "sequence.h"
-#include "statement.h"
-#include "syndication.h"
-#include "syndicationvocab.h"
-#include "textinput.h"
+#include <libsyndication/rdf/contentvocab.h>
+#include <libsyndication/rdf/document.h>
+#include <libsyndication/rdf/dublincore.h>
+#include <libsyndication/rdf/dublincorevocab.h>
+#include <libsyndication/rdf/image.h>
+#include <libsyndication/rdf/item.h>
+#include <libsyndication/rdf/literal.h>
+#include <libsyndication/rdf/model.h>
+#include <libsyndication/rdf/modelmaker.h>
+#include <libsyndication/rdf/node.h>
+#include <libsyndication/rdf/nodevisitor.h>
+#include <libsyndication/rdf/parser.h>
+#include <libsyndication/rdf/property.h>
+#include <libsyndication/rdf/rdfvocab.h>
+#include <libsyndication/rdf/resource.h>
+#include <libsyndication/rdf/resourcewrapper.h>
+#include <libsyndication/rdf/rssvocab.h>
+#include <libsyndication/rdf/sequence.h>
+#include <libsyndication/rdf/statement.h>
+#include <libsyndication/rdf/syndication.h>
+#include <libsyndication/rdf/syndicationvocab.h>
+#include <libsyndication/rdf/textinput.h>
 
 namespace Syndication {
 

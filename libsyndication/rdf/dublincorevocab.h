@@ -23,7 +23,7 @@
 #ifndef LIBSYNDICATION_RDF_DUBLINCOREVOCAB_H
 #define LIBSYNDICATION_RDF_DUBLINCOREVOCAB_H
 
-#include "property.h"
+#include <libsyndication/rdf/property.h>
 
 class QString;
 

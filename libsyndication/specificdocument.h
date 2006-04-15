@@ -24,7 +24,7 @@
 
 #include <kdepimmacros.h>
 
-#include "sharedptr.h"
+#include <libsyndication/sharedptr.h>
 
 class QString;
 

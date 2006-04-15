@@ -23,7 +23,7 @@
 #ifndef LIBSYNDICATION_ABSTRACTPARSER_H
 #define LIBSYNDICATION_ABSTRACTPARSER_H
 
-#include "specificdocument.h"
+#include <libsyndication/specificdocument.h>
 
 #include <kdepimmacros.h>
 

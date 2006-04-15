@@ -22,9 +22,9 @@
 #ifndef LIBSYNDICATION_RDF_STATEMENT_H
 #define LIBSYNDICATION_RDF_STATEMENT_H
 
-#include "property.h"
+#include <libsyndication/rdf/property.h>
 
-#include <sharedptr.h>
+#include <libsyndication/sharedptr.h>
 
 class QString;
 

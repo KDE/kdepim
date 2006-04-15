@@ -24,7 +24,7 @@
 #ifndef LIBSYNDICATION_RDF_IMAGE_H
 #define LIBSYNDICATION_RDF_IMAGE_H
 
-#include "resourcewrapper.h"
+#include <libsyndication/rdf/resourcewrapper.h>
 
 namespace Syndication {
 namespace RDF {

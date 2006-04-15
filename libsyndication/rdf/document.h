@@ -23,7 +23,7 @@
 #ifndef LIBSYNDICATION_RDF_DOCUMENT_H
 #define LIBSYNDICATION_RDF_DOCUMENT_H
 
-#include "resourcewrapper.h"
+#include <libsyndication/rdf/resourcewrapper.h>
 
 #include <specificdocument.h>
 

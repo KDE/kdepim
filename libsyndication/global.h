@@ -22,11 +22,11 @@
 #ifndef LIBSYNDICATION_GLOBAL_H
 #define LIBSYNDICATION_GLOBAL_H
 
-#include "feed.h"
+#include <libsyndication/feed.h>
 
 #include <kdepimmacros.h>
 
-#include <QString>
+#include <QtCore/QString>
 
 #define LIBSYNDICATION_VERSION "0.1"
 

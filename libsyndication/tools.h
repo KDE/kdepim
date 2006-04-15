@@ -23,7 +23,7 @@
 #ifndef LIBSYNDICATION_TOOLS_H
 #define LIBSYNDICATION_TOOLS_H
 
-#include "person.h"
+#include <libsyndication/person.h>
 
 #include <kdepimmacros.h>
 

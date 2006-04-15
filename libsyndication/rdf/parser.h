@@ -22,11 +22,9 @@
 #ifndef LIBSYNDICATION_RDF_PARSER_H
 #define LIBSYNDICATION_RDF_PARSER_H
 
-#include "document.h"
-
-#include <abstractparser.h>
-
-#include <sharedptr.h>
+#include <libsyndication/rdf/document.h>
+#include <libsyndication/abstractparser.h>
+#include <libsyndication/sharedptr.h>
 
 namespace Syndication {
 

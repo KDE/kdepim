@@ -12,8 +12,8 @@
 
 #include <kdepimmacros.h>
 
-#include <QObject>
-#include <QString>
+#include <QtCore/QObject>
+#include <QtCore/QString>
 
 namespace KIO
 {

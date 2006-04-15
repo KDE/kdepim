@@ -23,10 +23,10 @@
 #ifndef LIBSYNDICATION_ATOM_CONTENT_H
 #define LIBSYNDICATION_ATOM_CONTENT_H
 
-#include <elementwrapper.h>
-#include <sharedptr.h>
+#include <libsyndication/elementwrapper.h>
+#include <libsyndication/sharedptr.h>
 
-#include <QString>
+#include <QtCore/QString>
 
 class QByteArray;
 class QDomElement;

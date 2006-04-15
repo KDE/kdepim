@@ -23,9 +23,9 @@
 #ifndef LIBSYNDICATION_RDF_LITERAL_H
 #define LIBSYNDICATION_RDF_LITERAL_H
 
-#include "node.h"
+#include <libsyndication/rdf/node.h>
 
-#include <sharedptr.h>
+#include <libsyndication/sharedptr.h>
 
 namespace Syndication {
 namespace RDF {

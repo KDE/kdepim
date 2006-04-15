@@ -27,7 +27,7 @@
 #ifndef LIBSYNDICATION_SHAREDPTR_H
 #define LIBSYNDICATION_SHAREDPTR_H
 
-#include <QAtomic>
+#include <QtCore/QAtomic>
 
 namespace Syndication {
 

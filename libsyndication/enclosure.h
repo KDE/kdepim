@@ -23,7 +23,7 @@
 #ifndef LIBSYNDICATION_ENCLOSURE_H
 #define LIBSYNDICATION_ENCLOSURE_H
 
-#include "sharedptr.h"
+#include <libsyndication/sharedptr.h>
 
 #include <kdepimmacros.h>
 

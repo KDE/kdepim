@@ -129,7 +129,7 @@ class Model::ModelPrivate
     {
         StatementPtr stmt = statements[key];
         if (stmt)
-            stmtsBySubject[stmt->subject()->uri()].remove(stmt);
+            stmtsBySubject[stmt->subject()->uri()].removeAll(stmt);
         statements.remove(key);
         
     }

@@ -22,9 +22,9 @@
 #ifndef LIBSYNDICATION_RDF_SEQUENCE_H
 #define LIBSYNDICATION_RDF_SEQUENCE_H
 
-#include "resource.h"
+#include <libsyndication/rdf/resource.h>
 
-#include <sharedptr.h>
+#include <libsyndication/sharedptr.h>
 
 template <class T> class QList;
 

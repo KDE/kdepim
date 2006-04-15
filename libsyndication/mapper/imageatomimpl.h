@@ -25,7 +25,7 @@
 
 #include <image.h>
 
-#include <QString>
+#include <QtCore/QString>
 
 namespace Syndication {
     

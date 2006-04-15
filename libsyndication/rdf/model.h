@@ -22,17 +22,16 @@
 #ifndef LIBSYNDICATION_RDF_MODEL_H
 #define LIBSYNDICATION_RDF_MODEL_H
 
-#include <rdf/literal.h>
-#include <rdf/node.h>
-#include <rdf/property.h>
-#include <rdf/sequence.h>
-#include <rdf/statement.h>
+#include <libsyndication/rdf/literal.h>
+#include <libsyndication/rdf/node.h>
+#include <libsyndication/rdf/property.h>
+#include <libsyndication/rdf/sequence.h>
+#include <libsyndication/rdf/statement.h>
+#include <libsyndication/sharedptr.h>
 
 #include <kdepimmacros.h>
 
-#include <sharedptr.h>
-
-#include <QString>
+#include <QtCore/QString>
 
 template <class T> class QList;
 

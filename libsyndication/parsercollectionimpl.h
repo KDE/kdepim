@@ -23,17 +23,17 @@
 #ifndef LIBSYNDICATION_PARSERCOLLECTIONIMPL_H
 #define LIBSYNDICATION_PARSERCOLLECTIONIMPL_H
 
-#include "specificdocument.h"
-#include "abstractparser.h"
-#include "documentsource.h"
-#include "parsercollection.h"
-#include "feed.h"
-#include "global.h"
-#include "mapper.h"
+#include <libsyndication/specificdocument.h>
+#include <libsyndication/abstractparser.h>
+#include <libsyndication/documentsource.h>
+#include <libsyndication/parsercollection.h>
+#include <libsyndication/feed.h>
+#include <libsyndication/global.h>
+#include <libsyndication/mapper.h>
 
-#include <QDomDocument>
-#include <QHash>
-#include <QString>
+#include <QtXml/QDomDocument>
+#include <QtCore/QHash>
+#include <QtCore/QString>
 
 namespace Syndication {
 
