@@ -24,7 +24,7 @@ class TaskView;
  * application.
  *
  * @short Main Part
- * @author Thorsten Staerk <thorsten@staerk.de>
+ * @author Thorsten Staerk <kde at staerk dot de>
  * @version 0.1
  */
 class karmPart : public KParts::ReadWritePart, virtual public KarmDCOPIface
@@ -53,7 +53,7 @@ class karmPart : public KParts::ReadWritePart, virtual public KarmDCOPIface
     KAction*         actionPreferences;
     KAction*         actionClipTotals;
     KAction*         actionClipHistory;
-    QString          m_error[ KARM_MAX_ERROR_NO ];
+    QString          m_error[ KARM_MAX_ERROR_NO + 1 ];
 
     friend class KarmTray;
 
