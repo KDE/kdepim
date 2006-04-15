@@ -279,7 +279,9 @@ KWallet::Wallet* KNAccountManager::wallet()
 
 void KNAccountManager::prepareWallet()
 {
-  if ( mWallet && !mWallet->hasFolder("knode") )
+  if ( !mWallet )
+    return;
+  if ( !mWallet->hasFolder("knode") )
     mWallet->createFolder( "knode" );
   mWallet->setFolder( "knode" );
 }

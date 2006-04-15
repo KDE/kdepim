@@ -413,7 +413,11 @@ void ArticleWidget::displayArticle()
   if ( containsPGP ) {
     QPtrListIterator<Kpgp::Block> pbit( pgpBlocks );
     QStrListIterator npbit( nonPgpBlocks );
-    QTextCodec *codec = KGlobal::charsets()->codecForName( text->contentType()->charset() );
+    QTextCodec *codec;
+    if ( text )
+      codec = KGlobal::charsets()->codecForName( text->contentType()->charset() );
+    else
+      codec = KGlobal::locale()->codecForEncoding();
 
     for( ; *pbit != 0; ++pbit, ++npbit ) {
       // handle non-pgp block

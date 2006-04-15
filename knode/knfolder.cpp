@@ -504,7 +504,7 @@ void KNFolder::removeArticles( KNLocalArticle::List &l, bool del )
     updateListItem();
     i_ndexDirty=true;
   }
-  delete positions;
+  delete[] positions;
 }
 
 

@@ -344,7 +344,8 @@ void KNMainWidget::setStatusHelpMsg(const QString& text)
 {
   KMainWindow *mainWin = dynamic_cast<KMainWindow*>(topLevelWidget());
   KStatusBar *bar =  mainWin ? mainWin->statusBar() : 0;
-  bar->message(text, 2000);
+  if ( bar )
+    bar->message(text, 2000);
 }
 
 
