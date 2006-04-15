@@ -485,7 +485,7 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
       return false;
 
   ArticleWidget::articleRemoved( a );
-  if (!a->type()==KMime::Base::ATlocal)
+  if ( a->type() != KMime::Base::ATlocal )
     knGlobals.artFactory->deleteComposerForArticle(static_cast<KNLocalArticle*>(a));
   a->KMime::Content::clear();
   a->updateListItem();
