@@ -344,7 +344,7 @@ QString Document::debugInfo() const
     return info;
 }
 
-void Document::getItemTitleFormatInfo(bool& isCDATA, bool& containsMarkup) const
+void Document::getItemTitleFormatInfo(bool* isCDATA, bool* containsMarkup) const
 {
     if (!d->itemTitlesGuessed)
     {
@@ -376,11 +376,13 @@ void Document::getItemTitleFormatInfo(bool& isCDATA, bool& containsMarkup) const
         d->itemTitlesGuessed = true;
     }
     
-    isCDATA = d->itemTitleIsCDATA;
-    containsMarkup = d->itemTitleContainsMarkup;
+    if (isCDATA != 0L)
+        *isCDATA = d->itemTitleIsCDATA;
+    if (containsMarkup != 0L)
+        *containsMarkup = d->itemTitleContainsMarkup;
 }
         
-void Document::getItemDescriptionFormatInfo(bool& isCDATA, bool& containsMarkup) const
+void Document::getItemDescriptionFormatInfo(bool* isCDATA, bool* containsMarkup) const
 {
     if (!d->itemDescGuessed)
     {
@@ -413,8 +415,10 @@ void Document::getItemDescriptionFormatInfo(bool& isCDATA, bool& containsMarkup)
         d->itemDescGuessed = true;
     }
     
-    isCDATA = d->itemDescriptionIsCDATA;
-    containsMarkup = d->itemDescriptionContainsMarkup;
+    if (isCDATA != 0L)
+        *isCDATA = d->itemDescriptionIsCDATA;
+    if (containsMarkup != 0L)
+        *containsMarkup = d->itemDescriptionContainsMarkup;
 }
         
 bool Document::accept(DocumentVisitor* visitor)

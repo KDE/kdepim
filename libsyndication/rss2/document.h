@@ -263,12 +263,12 @@ class KDE_EXPORT Document : public Syndication::SpecificDocument,
         /**
          * @internal
          */
-        void getItemTitleFormatInfo(bool& isCDATA, bool& containsMarkup) const;
+        void getItemTitleFormatInfo(bool* isCDATA, bool* containsMarkup) const;
         
         /**
          * @internal
          */
-        void getItemDescriptionFormatInfo(bool& isCDATA, bool& containsMarkup) const;
+        void getItemDescriptionFormatInfo(bool* isCDATA, bool* containsMarkup) const;
 
     private:
     

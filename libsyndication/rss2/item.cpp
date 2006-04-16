@@ -78,7 +78,7 @@ QString Item::title() const
     
     bool isCDATA = false;
     bool containsMarkup = false;
-    d->doc->getItemTitleFormatInfo(isCDATA, containsMarkup);
+    d->doc->getItemTitleFormatInfo(&isCDATA, &containsMarkup);
     
     return normalize(originalTitle(), isCDATA, containsMarkup);
 }
@@ -106,7 +106,7 @@ QString Item::description() const
 
     bool isCDATA = false;
     bool containsMarkup = false;
-    d->doc->getItemDescriptionFormatInfo(isCDATA, containsMarkup);
+    d->doc->getItemDescriptionFormatInfo(&isCDATA, &containsMarkup);
     
     return normalize(originalDescription(), isCDATA, containsMarkup);
 }
