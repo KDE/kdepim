@@ -304,7 +304,7 @@ void DwDateTime::Parse()
         mZone   = 0;
     }
     if (mustDelete) {
-        delete str;
+        delete[] str;
     }
 }
 
