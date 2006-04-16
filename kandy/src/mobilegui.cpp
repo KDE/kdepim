@@ -462,7 +462,7 @@ void MobileGui::writePhonebookPostProcessing()
 
 void MobileGui::setClock()
 {
-  char *timeStr = (char *) malloc( 50 * sizeof( char ) );
+  char *timeStr = new char[50];
   QString id = "+cclk=";
   ATCommand *cmd = new ATCommand( id );
 
@@ -479,7 +479,7 @@ void MobileGui::setClock()
   
   mScheduler->execute( cmd );
   
-  delete timeStr;
+  delete[] timeStr;
   delete theTime;
 }
 
