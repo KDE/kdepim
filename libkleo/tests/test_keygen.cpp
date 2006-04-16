@@ -55,6 +55,8 @@
 #include <qlayout.h>
 #include <qlineedit.h>
 #include <qlabel.h>
+//Added by qt3to4:
+#include <Q3GridLayout>
 
 #include <assert.h>
 
@@ -69,14 +71,14 @@ static const int numKeyParams = sizeof keyParams / sizeof *keyParams;
 
 static const char * protocol = 0;
 
-KeyGenerator::KeyGenerator( QWidget * parent, const char * name, WFlags )
+KeyGenerator::KeyGenerator( QWidget * parent, const char * name )
   : KDialogBase( parent, name, true, "KeyGenerationJob test",
 		 Close|User1, User1, true, KGuiItem( "Create" ) )
 {
   QWidget * w = new QWidget( this );
   setMainWidget( w );
 
-  QGridLayout * glay = new QGridLayout( w, numKeyParams+3, 2, marginHint(), spacingHint() );
+  Q3GridLayout * glay = new Q3GridLayout( w, numKeyParams+3, 2, marginHint(), spacingHint() );
 
   int row = -1;
 

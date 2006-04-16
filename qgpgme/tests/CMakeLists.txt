@@ -1,6 +1,6 @@
 kde4_header()
 
-include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories( ${KDE4_INCLUDES}  )
 
 
 ########### next target ###############
@@ -13,7 +13,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(dataprovidertest ${dataprovidertest_SRCS})
 
-target_link_libraries(dataprovidertest  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(dataprovidertest  qgpgme ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 

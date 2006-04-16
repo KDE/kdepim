@@ -35,6 +35,9 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <iostream>
+//Added by qt3to4:
+#include <Q3ValueList>
+#include <Q3CString>
 using namespace std;
 
 #include <stdlib.h>
@@ -44,7 +47,7 @@ int main( int argc, char** argv ) {
 
   KAboutData aboutData( "test_cryptoconfig", "CryptoConfig Test", "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app( false, false );
+  KApplication app( false );
 
   Kleo::CryptoConfig * config = new QGpgMECryptoConfig();
 
@@ -53,21 +56,21 @@ int main( int argc, char** argv ) {
   QStringList components = config->componentList();
 
   for( QStringList::Iterator compit = components.begin(); compit != components.end(); ++compit ) {
-    cout << "Component " << (*compit).local8Bit() << ":" << endl;
+    cout << "Component " << (*compit).toLocal8Bit().constData() << ":" << endl;
     const Kleo::CryptoConfigComponent* comp = config->component( *compit );
     assert( comp );
     QStringList groups = comp->groupList();
     for( QStringList::Iterator groupit = groups.begin(); groupit != groups.end(); ++groupit ) {
       const Kleo::CryptoConfigGroup* group = comp->group( *groupit );
       assert( group );
-      cout << " Group " << (*groupit).local8Bit() << ": descr=\"" << group->description().local8Bit() << "\""
+      cout << " Group " << (*groupit).toLocal8Bit().constData() << ": descr=\"" << group->description().toLocal8Bit().constData() << "\""
            << " level=" << group->level() << endl;
       QStringList entries = group->entryList();
       for( QStringList::Iterator entryit = entries.begin(); entryit != entries.end(); ++entryit ) {
         const Kleo::CryptoConfigEntry* entry = group->entry( *entryit );
         assert( entry );
-        cout << "  Entry " << (*entryit).local8Bit() << ":"
-             << " descr=\"" << entry->description().local8Bit() << "\""
+        cout << "  Entry " << (*entryit).toLocal8Bit().constData() << ":"
+             << " descr=\"" << entry->description().toLocal8Bit().constData() << "\""
              << " " << ( entry->isSet() ? "is set" : "is not set" );
         if ( !entry->isList() )
           switch( entry->argType() ) {
@@ -81,7 +84,7 @@ int main( int argc, char** argv ) {
             break;
           case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
           case Kleo::CryptoConfigEntry::ArgType_URL:
-            cout << " URL value=" << entry->urlValue().prettyURL().local8Bit();
+            cout << " URL value=" << entry->urlValue().prettyURL().toLocal8Bit().constData();
             // fallthrough
           case Kleo::CryptoConfigEntry::ArgType_Path:
             // fallthrough
@@ -89,7 +92,7 @@ int main( int argc, char** argv ) {
             // fallthrough
           case Kleo::CryptoConfigEntry::ArgType_String:
 
-            cout << " string value=" << entry->stringValue().local8Bit();
+            cout << " string value=" << entry->stringValue().toLocal8Bit().constData();
             break;
           }
         else // lists
@@ -101,29 +104,29 @@ int main( int argc, char** argv ) {
           }
           case Kleo::CryptoConfigEntry::ArgType_Int: {
             assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
-            QValueList<int> lst = entry->intValueList();
+            Q3ValueList<int> lst = entry->intValueList();
             QString str;
-            for( QValueList<int>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+            for( Q3ValueList<int>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
               str += QString::number( *it );
             }
-            cout << " int values=" << str.local8Bit();
+            cout << " int values=" << str.toLocal8Bit().constData();
             break;
           }
           case Kleo::CryptoConfigEntry::ArgType_UInt: {
             assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
-            QValueList<uint> lst = entry->uintValueList();
+            Q3ValueList<uint> lst = entry->uintValueList();
             QString str;
-            for( QValueList<uint>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
+            for( Q3ValueList<uint>::Iterator it = lst.begin(); it != lst.end(); ++it ) {
               str += QString::number( *it );
             }
-            cout << " uint values=" << str.local8Bit();
+            cout << " uint values=" << str.toLocal8Bit().constData();
             break;
           }
           case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
           case Kleo::CryptoConfigEntry::ArgType_URL: {
               assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
               KUrl::List urls = entry->urlValueList();
-              cout << " url values=" << urls.toStringList().join(" ").local8Bit() << "\n    ";
+              cout << " url values=" << urls.toStringList().join(" ").toLocal8Bit().constData() << "\n    ";
           }
             // fallthrough
           case Kleo::CryptoConfigEntry::ArgType_Path:
@@ -133,7 +136,7 @@ int main( int argc, char** argv ) {
           case Kleo::CryptoConfigEntry::ArgType_String: {
             assert( entry->isOptional() ); // empty lists must be allowed (see issue121)
             QStringList lst = entry->stringValueList();
-            cout << " string values=" << lst.join(" ").local8Bit();
+            cout << " string values=" << lst.join(" ").toLocal8Bit().constData();
             break;
           }
           }
@@ -255,7 +258,7 @@ int main( int argc, char** argv ) {
     if ( entry ) {
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_Path );
       QString val = entry->stringValue();
-      cout << "Log-file initially: " << val.local8Bit() << endl;
+      cout << "Log-file initially: " << val.toLocal8Bit().constData() << endl;
 
       // Test setting the option, sync'ing, then querying again
       entry->setStringValue( QString::fromUtf8( "/tmp/test:%e5ä" ) );
@@ -272,7 +275,7 @@ int main( int argc, char** argv ) {
       Kleo::CryptoConfigEntry* entry = config->entry( "dirmngr", s_groupName, s_entryName );
       assert( entry );
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_Path );
-      cout << "Log-file now: " << entry->stringValue().local8Bit() << endl;
+      cout << "Log-file now: " << entry->stringValue().toLocal8Bit().constData() << endl;
       assert( entry->stringValue() == QString::fromUtf8( "/tmp/test:%e5ä" ) ); // (or even with %e5 decoded)
 
       // Reset old value
@@ -280,7 +283,7 @@ int main( int argc, char** argv ) {
       QString arg( val );
       if ( !arg.isEmpty() )
         arg.prepend( '"' );
-      QCString sys;
+      Q3CString sys;
       sys.sprintf( "echo 'log-file:%s' | gpgconf --change-options dirmngr", arg.local8Bit().data() );
       system( sys.data() );
 #endif
@@ -288,7 +291,7 @@ int main( int argc, char** argv ) {
       assert( entry->isDirty() );
       config->sync( true );
 
-      cout << "Log-file reset to initial " << val.local8Bit() << endl;
+      cout << "Log-file reset to initial " << val.toLocal8Bit().constData() << endl;
     }
     else
       cout << "Entry 'dirmngr/" << s_groupName << "/" << s_entryName << "' not found" << endl;
@@ -303,7 +306,7 @@ int main( int argc, char** argv ) {
       assert( entry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL );
       assert( entry->isList() );
       KUrl::List val = entry->urlValueList();
-      cout << "URL list initially: " << val.toStringList().join(", ").local8Bit() << endl;
+      cout << "URL list initially: " << val.toStringList().join(", ").toLocal8Bit().constData() << endl;
 
       // Test setting the option, sync'ing, then querying again
       KUrl::List lst;
@@ -334,15 +337,15 @@ int main( int argc, char** argv ) {
       // Get raw a:b:c:d:e form
       QStringList asStringList = entry->stringValueList();
       assert( asStringList.count() == 3 );
-      cout << "asStringList[0]=" << asStringList[0].local8Bit() << endl;
-      cout << "asStringList[1]=" << asStringList[1].local8Bit() << endl;
-      cout << "asStringList[2]=" << asStringList[2].local8Bit() << endl;
+      cout << "asStringList[0]=" << asStringList[0].toLocal8Bit().constData() << endl;
+      cout << "asStringList[1]=" << asStringList[1].toLocal8Bit().constData() << endl;
+      cout << "asStringList[2]=" << asStringList[2].toLocal8Bit().constData() << endl;
       assert( asStringList[0] == "a:389:::b" );
       assert( asStringList[1] == "foo:389:::a%3ab c" ); // the space must be decoded (issue119)
       assert( asStringList[2] == "server:389:::a=b,c=DE" ); // all decoded
       // Get KUrl form
       KUrl::List newlst = entry->urlValueList();
-      cout << "URL list now: " << newlst.toStringList().join(", ").local8Bit() << endl;
+      cout << "URL list now: " << newlst.toStringList().join(", ").toLocal8Bit().constData() << endl;
       assert( newlst.count() == 3 );
       //cout << "newlst[0]=" << newlst[0].url().local8Bit() << endl;
       //cout << "lst[0]=" << lst[0].url().local8Bit() << endl;
@@ -355,7 +358,7 @@ int main( int argc, char** argv ) {
       assert( entry->isDirty() );
       config->sync( true );
 
-      cout << "URL list reset to initial: " << val.toStringList().join(", ").local8Bit() << endl;
+      cout << "URL list reset to initial: " << val.toStringList().join(", ").toLocal8Bit().constData() << endl;
     }
     else
       cout << "Entry 'dirmngr/" << s_groupName << "/" << s_entryName << "' not found" << endl;

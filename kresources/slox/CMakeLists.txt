@@ -90,17 +90,17 @@ install_targets(${PLUGIN_INSTALL_DIR} kabc_slox_plugin )
 
 ########### next target ###############
 
-set(testsloxaccounts_SRCS testsloxaccounts.cpp )
+#set(testsloxaccounts_SRCS testsloxaccounts.cpp )
 
-kde4_automoc(${testsloxaccounts_SRCS})
+#kde4_automoc(${testsloxaccounts_SRCS})
 
-if(KDE4_BUILD_TESTS)
+#if(KDE4_BUILD_TESTS)
 
-kde4_add_executable(testsloxaccounts ${testsloxaccounts_SRCS})
+#kde4_add_executable(testsloxaccounts ${testsloxaccounts_SRCS})
 
-target_link_libraries(testsloxaccounts  ${KDE4_KDECORE_LIBS} kslox )
+#target_link_libraries(testsloxaccounts  ${KDE4_KDECORE_LIBS} kslox )
 
-endif(KDE4_BUILD_TESTS)
+#endif(KDE4_BUILD_TESTS)
 
 ########### install files ###############
 

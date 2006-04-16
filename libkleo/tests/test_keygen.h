@@ -34,7 +34,7 @@
 
 #include <kdialogbase.h>
 
-#include <qcstring.h>
+#include <q3cstring.h>
 
 namespace GpgME {
   class Error;
@@ -46,7 +46,7 @@ class QLineEdit;
 class KeyGenerator : public KDialogBase {
   Q_OBJECT
 public:
-  KeyGenerator( QWidget * parent=0, const char * name=0, WFlags f=0 );
+  KeyGenerator( QWidget * parent=0, const char * name=0 );
   ~KeyGenerator();
 
 public slots:

@@ -47,9 +47,9 @@
 #include <qstringlist.h>
 
 GnuPGViewer::GnuPGViewer( QWidget * parent, const char * name )
-  : QTextEdit( parent, name ), mProcess( 0 )
+  : Q3TextEdit( parent, name ), mProcess( 0 )
 {
-  setTextFormat( LogText );
+  setTextFormat( Qt::LogText );
   setMaxLogLines( 10000 );
 }
 
