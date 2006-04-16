@@ -1,6 +1,10 @@
 kde4_header()
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkcal ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories(
+	${CMAKE_SOURCE_DIR}/libkcal
+	${CMAKE_BINARY_DIR}/libkcal/libical/src
+	${KDE4_INCLUDES}
+)
 
 
 ########### next target ###############
@@ -90,7 +94,8 @@ endif(KDE4_BUILD_TESTS)
 ########### next target ###############
 
 set(testfields_SRCS testfields.cpp )
-
+set_source_files_properties( ${testfields_SRCS} PROPERTIES 
+	COMPILE_FLAGS -DINPUT='"$(srcdir)/data/test_pilot.ics"' )
 kde4_automoc(${testfields_SRCS})
 
 if(KDE4_BUILD_TESTS)

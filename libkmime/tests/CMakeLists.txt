@@ -1,6 +1,9 @@
 kde4_header()
 
-include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories(
+	${CMAKE_SOURCE_DIR}/libkmime
+	${KDE4_INCLUDES}
+)
 
 
 ########### next target ###############
@@ -13,7 +16,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(test_kmime_header_parsing ${test_kmime_header_parsing_SRCS})
 
-target_link_libraries(test_kmime_header_parsing  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_kmime_header_parsing  kmime ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -27,7 +30,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(test_charfreq ${test_charfreq_SRCS})
 
-target_link_libraries(test_charfreq  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_charfreq  kmime ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -41,7 +44,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(test_mdn ${test_mdn_SRCS})
 
-target_link_libraries(test_mdn  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_mdn  kmime ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -55,7 +58,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(test_dates ${test_dates_SRCS})
 
-target_link_libraries(test_dates  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_dates  kmime ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -69,7 +72,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(test_kmime_codec ${test_kmime_codec_SRCS})
 
-target_link_libraries(test_kmime_codec  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_kmime_codec  kmime ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -83,7 +86,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(rfc2047test ${rfc2047test_SRCS})
 
-target_link_libraries(rfc2047test  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(rfc2047test kmime ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
 
 endif(KDE4_BUILD_TESTS)
 
@@ -97,7 +100,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(kmime_util_test ${kmime_util_test_SRCS})
 
-target_link_libraries(kmime_util_test  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(kmime_util_test  kmime ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
 
 endif(KDE4_BUILD_TESTS)
 

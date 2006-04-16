@@ -36,7 +36,7 @@ using KSieve::Lexer;
 #include <ksieve/error.h>
 using KSieve::Error;
 
-#include <qcstring.h> // qstrlen
+#include <q3cstring.h> // qstrlen
 #include <qstring.h>
 
 #include <iostream>
@@ -407,7 +407,7 @@ int main( int argc, char * argv[]  ) {
       Lexer::Token token = lexer.nextToken( result );
       if ( lexer.error() ) {
 	cout << "Error " << token2string( token ) << ": \""
-	     << lexer.error().asString().toLatin1() << "\" at ("
+	     << lexer.error().asString().toLatin1().constData() << "\" at ("
 	     << lexer.error().line() << "," << lexer.error().column()
 	     << ")" << endl;
 	break;

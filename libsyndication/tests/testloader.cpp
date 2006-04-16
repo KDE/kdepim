@@ -54,7 +54,7 @@ static const KCmdLineOptions options[] =
     KCmdLineLastOption
 };
 
-TestSyndication::TestLibSyndication(const QString& url)
+TestLibSyndication::TestLibSyndication(const QString& url)
 {
     KUrl kurl;
     if (!KUrl::isRelativeURL(url))
@@ -69,7 +69,7 @@ TestSyndication::TestLibSyndication(const QString& url)
     loader->loadFrom(kurl);
 }
 
-void TestSyndication::slotLoadingComplete(Syndication::Loader* loader,
+void TestLibSyndication::slotLoadingComplete(Syndication::Loader* loader,
                     Syndication::FeedPtr feed,
                     Syndication::ErrorCode error)
 {

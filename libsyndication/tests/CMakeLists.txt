@@ -1,6 +1,6 @@
 kde4_header()
 
-include_directories( ${CMAKE_SOURCE_DIR}/akregator/src/libsyndication/ ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories( ${CMAKE_SOURCE_DIR}/libsyndication/ ${KDE4_INCLUDES}  )
 
 
 ########### next target ###############
@@ -13,21 +13,21 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testlibsyndication ${testlibsyndication_SRCS})
 
-target_link_libraries(testlibsyndication  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(testlibsyndication  syndication ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
 
-set(testlibsyndication2_SRCS testlibsyndication2.cpp )
+set(testloader_SRCS testloader.cpp )
 
-kde4_automoc(${testlibsyndication2_SRCS})
+kde4_automoc(${testloader_SRCS})
 
 if(KDE4_BUILD_TESTS)
 
-kde4_add_executable(testlibsyndication2 ${testlibsyndication2_SRCS})
+kde4_add_executable(testloader ${testloader_SRCS})
 
-target_link_libraries(testlibsyndication2  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(testloader  syndication ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -41,7 +41,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(testpersonimpl ${testpersonimpl_SRCS})
 
-target_link_libraries(testpersonimpl  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(testpersonimpl  syndication ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} )
 
 endif(KDE4_BUILD_TESTS)
 

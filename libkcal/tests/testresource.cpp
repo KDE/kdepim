@@ -66,10 +66,10 @@ int main(int argc, char *argv[])
     KApplication app;
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
     QString type = QString();
-    if ( args->getOption( "resource" ) )
+    if ( !args->getOption( "resource" ).isEmpty() )
       type = QString::fromLocal8Bit( args->getOption( "resource" ) );
     KConfig *config = 0;
-    if ( args->getOption( "configfile" ) )
+    if ( !args->getOption( "configfile" ).isEmpty() )
       config = new KConfig( KUrl( args->getOption( "configfile" ) ).url() );
     kDebug() << KUrl( args->getOption( "configfile" ) ).url() << endl;
     KCal::TestResource test( type, config );

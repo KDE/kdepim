@@ -93,7 +93,7 @@ int main(int argc,char **argv)
   kDebug(5800) << "Output File: '" << outputFile << "'" << endl;
 
   if ( sourceQtopia ) {
-    CalendarLocal cal;
+    CalendarLocal cal( QLatin1String( "UTC" ) );
     
     QtopiaFormat qtopiaFormat;
     qtopiaFormat.load( &cal, inputFile );
@@ -101,11 +101,11 @@ int main(int argc,char **argv)
     ICalFormat icalendarFormat;
     if ( outputFile.isEmpty() ) {
       QString out = icalendarFormat.toString( &cal );
-      std::cout << out.toLocal8Bit() << std::endl;
+      std::cout << out.toLocal8Bit().constData() << std::endl;
     } else {
       bool success = icalendarFormat.save( &cal, outputFile );
       if ( !success ) {
-        std::cerr << i18n( "Error saving to '%1'.", outputFile ).toLocal8Bit()
+        std::cerr << i18n( "Error saving to '%1'.", outputFile ).toLocal8Bit().constData()
                   << std::endl;
         return 1;
       }

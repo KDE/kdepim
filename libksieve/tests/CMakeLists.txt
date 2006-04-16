@@ -1,6 +1,9 @@
 kde4_header()
 
-include_directories( ${CMAKE_SOURCE_DIR}/libksieve ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+include_directories(
+	${CMAKE_SOURCE_DIR}/libksieve
+	${KDE4_INCLUDES}
+)
 
 
 ########### next target ###############
@@ -13,7 +16,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(lexertest ${lexertest_SRCS})
 
-target_link_libraries(lexertest  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(lexertest  ksieve ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -27,7 +30,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(parsertest ${parsertest_SRCS})
 
-target_link_libraries(parsertest  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(parsertest  ksieve ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
