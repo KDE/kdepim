@@ -38,32 +38,32 @@ static const KCmdLineOptions options[] =
   KCmdLineLastOption
 };
 
-void displayFeature( Feature *f )
+void displayFeature( const Feature &f )
 {
-  std::cout << "FEATURE: " << f->summary().local8Bit().data() << std::endl;
-  Responsible::List r = f->responsibleList();
+  std::cout << "FEATURE: " << f.summary().local8Bit().data() << std::endl;
+  Responsible::List r = f.responsibleList();
   Responsible::List::ConstIterator it;
   for( it = r.begin(); it != r.end(); ++it ) {
-    std::cout << "  RESPONSIBLE: " << (*it)->name().local8Bit().data() << " ("
-              << (*it)->email().local8Bit().data() << ")" << std::endl;
+    std::cout << "  RESPONSIBLE: " << (*it).name().local8Bit().data() << " ("
+              << (*it).email().local8Bit().data() << ")" << std::endl;
   }
-  std::cout << "  TARGET: " << f->target().local8Bit().data() << std::endl;
-  std::cout << "  STATUS: " << f->status().local8Bit().data() << std::endl;
+  std::cout << "  TARGET: " << f.target().local8Bit().data() << std::endl;
+  std::cout << "  STATUS: " << f.status().local8Bit().data() << std::endl;
 }
 
-void displayCategory( const QList<Category *> categories )
+void displayCategory( const Category::List &categories )
 {
   Category::List::ConstIterator it;
   for( it = categories.begin(); it != categories.end(); ++it ) {
-    std::cout << "CATEGORY: " << (*it)->name().local8Bit().data() << std::endl;
+    std::cout << "CATEGORY: " << (*it).name().local8Bit().data() << std::endl;
 
-    Feature::List features = (*it)->featureList();
+    Feature::List features = (*it).featureList();
     Feature::List::ConstIterator it2;
     for( it2 = features.begin(); it2 != features.end(); ++it2 ) {
       displayFeature( *it2 );
     }
 
-    displayCategory( (*it)->categoryList() );
+    displayCategory( (*it).categoryList() );
   }
 }
 
@@ -87,11 +87,10 @@ int main( int argc, char **argv )
   QString filename = QFile::decodeName( args->arg( 0 ) );
 
   for( int i = 0; i < 1; ++i ) {
-    FeaturesParser parser;
+    bool ok = false;
+    Features features = FeaturesParser::parseFile( filename, &ok );
 
-    Features *features = parser.parseFile( filename );
-
-    if ( !features ) {
+    if ( !ok ) {
       kError() << "Parse error" << endl;
       return 1;
     }

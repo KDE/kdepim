@@ -1,38 +1,11 @@
 kde4_header()
-include(AddFileDependencies)
 
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 
-add_custom_command(OUTPUT 
-	${CMAKE_SOURCE_DIR}/kresources/featureplan/kde-features.cpp 
-	${CMAKE_SOURCE_DIR}/kresources/featureplan/kde-features_parser.cpp 
-	${CMAKE_SOURCE_DIR}/kresources/featureplan/kde-features.h 
-	${CMAKE_SOURCE_DIR}/kresources/featureplan/kde-features_parser.h 
-	COMMAND 
-	${CMAKE_SOURCE_DIR}/kode/kxml_compiler/kxml_compiler 
-	ARGS 
-	--external-parser ${CMAKE_SOURCE_DIR}/kresources/featureplan/kde-features.rng  
-	DEPENDS 
-	${CMAKE_SOURCE_DIR}/kresources/featureplan/kde-features.rng 
-	${CMAKE_SOURCE_DIR}/kresources/featureplan/kde-features.dtd 
-	${CMAKE_SOURCE_DIR}/kresources/featureplan/kde-features.xsd 
-	${CMAKE_SOURCE_DIR}/kode/kxml_compiler/kxml_compiler )
+set(libfeatureplancommon_SRCS)
 
-macro_additional_clean_files( 
-	${CMAKE_SOURCE_DIR}/kresources/featureplan/kde-features.cpp 
-	${CMAKE_SOURCE_DIR}/kresources/featureplan/kde-features_parser.cpp 
-	${CMAKE_SOURCE_DIR}/kresources/featureplan/kde-features.h 
-	${CMAKE_SOURCE_DIR}/kresources/featureplan/kde-features_parser.h )
-
-add_file_dependencies(kcal_resourcefeatureplan.cpp ${CMAKE_SOURCE_DIR}/kresources/featureplan/kde-features.h )
-
-
-set(libfeatureplancommon_SRCS 
-	kde-features.cpp 
-	kde-features_parser.cpp
-)
- 
+kode_add_xml_parser(libfeatureplancommon_SRCS kde-features.rng)
 kde4_add_kcfg_files(libfeatureplancommon_SRCS prefs.kcfgc )
 
 ########### next target ###############
@@ -43,7 +16,7 @@ kde4_automoc(${kcal_resourcefeatureplan_LIB_SRCS})
 
 kde4_add_library(kcal_resourcefeatureplan SHARED ${kcal_resourcefeatureplan_LIB_SRCS})
 
-target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} featureplancommon kcal kdepim kcal_resourcefeatureplan )
+target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} kcal kdepim kcal_resourcefeatureplan )
 
 set_target_properties(kcal_resourcefeatureplan PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kcal_resourcefeatureplan )
@@ -77,7 +50,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(dumpfeaturelist ${dumpfeaturelist_SRCS})
 
-target_link_libraries(dumpfeaturelist  ${KDE4_KDECORE_LIBS} featureplancommon )
+target_link_libraries(dumpfeaturelist  ${KDE4_KDECORE_LIBS} )
 
 endif(KDE4_BUILD_TESTS)
 
@@ -91,7 +64,7 @@ if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(benchmarkfeaturelist ${benchmarkfeaturelist_SRCS})
 
-target_link_libraries(benchmarkfeaturelist  ${KDE4_KDECORE_LIBS} featureplancommon )
+target_link_libraries(benchmarkfeaturelist  ${KDE4_KDECORE_LIBS})
 
 endif(KDE4_BUILD_TESTS)
 
