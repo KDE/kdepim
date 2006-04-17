@@ -1,5 +1,7 @@
 kde4_header()
 
+if(KDE4_BUILD_TESTS)
+
 include_directories( ${CMAKE_SOURCE_DIR}/libsyndication/ ${KDE4_INCLUDES}  )
 
 
@@ -9,13 +11,9 @@ set(testlibsyndication_SRCS testlibsyndication.cpp )
 
 kde4_automoc(${testlibsyndication_SRCS})
 
-if(KDE4_BUILD_TESTS)
-
 kde4_add_executable(testlibsyndication ${testlibsyndication_SRCS})
 
 target_link_libraries(testlibsyndication  syndication ${KDE4_KDECORE_LIBS} )
-
-endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
 
@@ -23,13 +21,9 @@ set(testloader_SRCS testloader.cpp )
 
 kde4_automoc(${testloader_SRCS})
 
-if(KDE4_BUILD_TESTS)
-
 kde4_add_executable(testloader ${testloader_SRCS})
 
 target_link_libraries(testloader  syndication ${KDE4_KDECORE_LIBS} )
-
-endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
 
@@ -37,16 +31,15 @@ set(testpersonimpl_SRCS testpersonimpl.cpp )
 
 kde4_automoc(${testpersonimpl_SRCS})
 
-if(KDE4_BUILD_TESTS)
-
-kde4_add_executable(testpersonimpl ${testpersonimpl_SRCS})
+kde4_add_executable(testpersonimpl RUN_UNINSTALLED ${testpersonimpl_SRCS})
 
 target_link_libraries(testpersonimpl  syndication ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} )
 
-endif(KDE4_BUILD_TESTS)
+add_test(libsyndication-testpersonimpl ${EXECUTABLE_OUPUT_PATH}/testpersonimpl)
 
 ########### install files ###############
 
+endif(KDE4_BUILD_TESTS)
 
 kde4_footer()
 
