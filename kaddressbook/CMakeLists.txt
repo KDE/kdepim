@@ -114,7 +114,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddressbookpart )
 
 target_link_libraries(kaddressbookpart  ${KDE4_KDECORE_LIBS} kaddressbook )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kaddressbookpart )
+install_targets(${PLUGIN_INSTALL_DIR} kaddressbookpart )
 
 
 ########### next target ###############
