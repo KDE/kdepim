@@ -99,7 +99,7 @@
 #cmakedefine HAVE_GPGME_WRONG_KEY_USAGE 1
 
 /* Define if you want full-text indexing in KMail */
-/* #undef HAVE_INDEXLIB */
+#cmakedefine HAVE_INDEXLIB 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #cmakedefine HAVE_INTTYPES_H 1

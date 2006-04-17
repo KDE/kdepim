@@ -75,6 +75,13 @@ else(X11_Xpm_FOUND)
 	set(HAVE_XPM 0)
 endif(X11_Xpm_FOUND)
 
+OPTION(WITH_INDEXLIB "Enable full-text indexing in KMail." OFF)
+if(WITH_INDEXLIB)
+	set(HAVE_INDEXLIB 1)
+else(WITH_INDEXLIB)
+	set(HAVE_INDEXLIB 0)
+endif(WITH_INDEXLIB)
+
 #now check for dlfcn.h using the cmake supplied CHECK_include_FILE() macro
 # If definitions like -D_GNU_SOURCE are needed for these checks they
 # should be added to _KDE4_PLATFORM_DEFINITIONS when it is originally
