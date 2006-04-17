@@ -209,7 +209,7 @@ bool ResourceLocal::setFileName( const QString &fileName )
   delete mLock;
   mDirWatch.stopScan();
   mDirWatch.removeFile( mURL.path() );
-  mURL = KUrl( fileName );
+  mURL = KUrl::fromPath( fileName );
   mLock = new KABC::Lock( mURL.path() );
   mDirWatch.addFile( mURL.path() );
   mDirWatch.startScan();
