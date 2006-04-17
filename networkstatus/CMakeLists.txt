@@ -19,7 +19,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kded_networkstatus )
 
 target_link_libraries(kded_networkstatus  ${KDE4_KIO_LIBS}  )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kded_networkstatus )
+install_targets(${PLUGIN_INSTALL_DIR} kded_networkstatus )
 
 
 ########### next target ###############

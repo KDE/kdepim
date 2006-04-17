@@ -17,7 +17,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_kabc )
 
 target_link_libraries(kcal_kabc  ${KDE4_KDECORE_LIBS} kcal kdepim )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kcal_kabc )
+install_targets(${PLUGIN_INSTALL_DIR} kcal_kabc )
 
 
 ########### install files ###############

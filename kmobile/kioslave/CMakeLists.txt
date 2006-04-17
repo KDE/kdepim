@@ -17,7 +17,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_mobile )
 
 target_link_libraries(kio_mobile  ${KDE4_KIO_LIBS} kmobileclient )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kio_mobile )
+install_targets(${PLUGIN_INSTALL_DIR} kio_mobile )
 
 
 ########### install files ###############

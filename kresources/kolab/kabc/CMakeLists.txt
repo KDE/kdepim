@@ -35,7 +35,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_kolab )
 
 target_link_libraries(kabc_kolab  ${KDE4_KDECORE_LIBS} kabckolab kcal )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kabc_kolab )
+install_targets(${PLUGIN_INSTALL_DIR} kabc_kolab )
 
 
 ########### install files ###############

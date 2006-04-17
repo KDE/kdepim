@@ -28,7 +28,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_doc )
 
 target_link_libraries(conduit_doc  ${KDE4_KDECORE_LIBS} kpilot palmdoc_shared kdeui )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 conduit_doc )
+install_targets(${PLUGIN_INSTALL_DIR} conduit_doc )
 
 
 ########### next target ###############

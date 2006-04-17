@@ -19,7 +19,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_notepad )
 
 target_link_libraries(conduit_notepad  ${KDE4_KDECORE_LIBS} kpilot kdeui kio )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 conduit_notepad )
+install_targets(${PLUGIN_INSTALL_DIR} conduit_notepad )
 
 
 ########### install files ###############

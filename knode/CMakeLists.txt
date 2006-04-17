@@ -96,7 +96,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_knode )
 
 target_link_libraries(kcm_knode  ${KDE4_KDECORE_LIBS} knodecommon )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kcm_knode )
+install_targets(${PLUGIN_INSTALL_DIR} kcm_knode )
 
 
 ########### next target ###############
@@ -111,7 +111,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} knodepart )
 
 target_link_libraries(knodepart  ${KDE4_KDECORE_LIBS} knodecommon )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 knodepart )
+install_targets(${PLUGIN_INSTALL_DIR} knodepart )
 
 
 ########### next target ###############

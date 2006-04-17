@@ -15,7 +15,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_csv_xxport)
 
 target_link_libraries(kaddrbk_csv_xxport  ${KDE4_KDECORE_LIBS} kaddressbook kabc)
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_csv_xxport )
+install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_csv_xxport )
 
 
 ########### next target ###############
@@ -30,7 +30,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_vcard_xxport )
 
 target_link_libraries(kaddrbk_vcard_xxport  ${KDE4_KDECORE_LIBS} kaddressbook qgpgme )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_vcard_xxport )
+install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_vcard_xxport )
 
 
 ########### next target ###############
@@ -45,7 +45,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_kde2_xxport )
 
 target_link_libraries(kaddrbk_kde2_xxport  ${KDE4_KDECORE_LIBS} kabc kaddressbook)
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_kde2_xxport )
+install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_kde2_xxport )
 
 
 ########### next target ###############
@@ -60,7 +60,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_bookmark_xxport )
 
 target_link_libraries(kaddrbk_bookmark_xxport ${KDE4_KDECORE_LIBS} kaddressbook )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_bookmark_xxport )
+install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_bookmark_xxport )
 
 
 ########### next target ###############
@@ -75,7 +75,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_eudora_xxport )
 
 target_link_libraries(kaddrbk_eudora_xxport  ${KDE4_KDECORE_LIBS} kabc kaddressbook)
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_eudora_xxport )
+install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_eudora_xxport )
 
 
 ########### next target ###############
@@ -90,7 +90,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_ldif_xxport )
 
 target_link_libraries(kaddrbk_ldif_xxport  ${KDE4_KDECORE_LIBS} kabc kaddressbook )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_ldif_xxport )
+install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_ldif_xxport )
 
 
 ########### next target ###############
@@ -105,7 +105,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_opera_xxport )
 
 target_link_libraries(kaddrbk_opera_xxport  ${KDE4_KDECORE_LIBS} kabc kaddressbook)
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_opera_xxport )
+install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_opera_xxport )
 
 
 ########### next target ###############
@@ -120,7 +120,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_pab_xxport )
 
 target_link_libraries(kaddrbk_pab_xxport  ${KDE4_KDECORE_LIBS} kabc kaddressbook)
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kaddrbk_pab_xxport )
+install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_pab_xxport )
 
 
 ########### install files ###############

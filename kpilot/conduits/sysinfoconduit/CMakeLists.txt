@@ -19,7 +19,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_sysinfo )
 
 target_link_libraries(conduit_sysinfo  ${KDE4_KDECORE_LIBS} kpilot kdeui kio )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 conduit_sysinfo )
+install_targets(${PLUGIN_INSTALL_DIR} conduit_sysinfo )
 
 
 ########### install files ###############

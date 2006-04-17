@@ -36,7 +36,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} knotes_kolab )
 
 target_link_libraries(knotes_kolab  ${KDE4_KDECORE_LIBS} knoteskolab )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 knotes_kolab )
+install_targets(${PLUGIN_INSTALL_DIR} knotes_kolab )
 
 
 ########### install files ###############

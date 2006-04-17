@@ -273,7 +273,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_local )
 
 target_link_libraries(kcal_local  ${KDE4_KDECORE_LIBS} kcal )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kcal_local )
+install_targets(${PLUGIN_INSTALL_DIR} kcal_local )
 
 
 ########### next target ###############
@@ -288,7 +288,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_localdir )
 
 target_link_libraries(kcal_localdir  ${KDE4_KDECORE_LIBS} kcal )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kcal_localdir )
+install_targets(${PLUGIN_INSTALL_DIR} kcal_localdir )
 
 
 ########### next target ###############

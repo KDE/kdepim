@@ -15,7 +15,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_groupwise )
 
 target_link_libraries(kio_groupwise  ${KDE4_KDECORE_LIBS} kcal gwsoap kdepim kio )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kio_groupwise )
+install_targets(${PLUGIN_INSTALL_DIR} kio_groupwise )
 
 
 ########### install files ###############

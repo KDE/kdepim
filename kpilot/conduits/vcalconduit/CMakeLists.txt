@@ -15,7 +15,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_vcal )
 
 target_link_libraries(conduit_vcal  ${KDE4_KDECORE_LIBS} kpilot kcal vcalconduit_shared )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 conduit_vcal )
+install_targets(${PLUGIN_INSTALL_DIR} conduit_vcal )
 
 
 ########### next target ###############
@@ -30,7 +30,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_todo )
 
 target_link_libraries(conduit_todo  ${KDE4_KDECORE_LIBS} kpilot kcal vcalconduit_shared )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 conduit_todo )
+install_targets(${PLUGIN_INSTALL_DIR} conduit_todo )
 
 
 ########### next target ###############

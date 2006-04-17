@@ -37,7 +37,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_tvanytime )
 
 target_link_libraries(kcal_tvanytime  ${KDE4_KDECORE_LIBS} )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kcal_tvanytime )
+install_targets(${PLUGIN_INSTALL_DIR} kcal_tvanytime )
 
 
 ########### install files ###############

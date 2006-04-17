@@ -23,7 +23,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_address )
 
 target_link_libraries(conduit_address  ${KDE4_KDECORE_LIBS} kpilot kabc kabc_file )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 conduit_address )
+install_targets(${PLUGIN_INSTALL_DIR} conduit_address )
 
 
 ########### install files ###############

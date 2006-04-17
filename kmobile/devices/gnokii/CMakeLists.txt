@@ -17,7 +17,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmobile_gnokii )
 
 target_link_libraries(kmobile_gnokii  ${KDE4_KDECORE_LIBS} kmobiledevice kcal )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kmobile_gnokii )
+install_targets(${PLUGIN_INSTALL_DIR} kmobile_gnokii )
 
 
 ########### install files ###############

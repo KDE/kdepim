@@ -19,7 +19,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} conduit_null )
 
 target_link_libraries(conduit_null  ${KDE4_KDECORE_LIBS} kpilot kdeui )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 conduit_null )
+install_targets(${PLUGIN_INSTALL_DIR} conduit_null )
 
 
 ########### install files ###############

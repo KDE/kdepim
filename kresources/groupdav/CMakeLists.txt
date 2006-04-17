@@ -55,7 +55,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_groupdav )
 
 target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kcal_groupdav )
+install_targets(${PLUGIN_INSTALL_DIR} kcal_groupdav )
 
 
 ########### next target ###############
@@ -71,7 +71,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_groupdav )
 
 target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kabc_groupdav )
+install_targets(${PLUGIN_INSTALL_DIR} kabc_groupdav )
 
 
 ########### install files ###############

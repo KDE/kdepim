@@ -29,7 +29,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_remote )
 
 target_link_libraries(kcal_remote  ${KDE4_KDECORE_LIBS} kcal_resourceremote kdepim )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kcal_remote )
+install_targets(${PLUGIN_INSTALL_DIR} kcal_remote )
 
 
 ########### install files ###############

@@ -20,7 +20,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_mbox )
 
 target_link_libraries(kio_mbox  ${KDE4_KIO_LIBS} )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kio_mbox )
+install_targets(${PLUGIN_INSTALL_DIR} kio_mbox )
 
 
 ########### install files ###############

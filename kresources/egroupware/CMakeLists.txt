@@ -84,7 +84,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_xmlrpc_plugin )
 
 target_link_libraries(kabc_xmlrpc_plugin  ${KDE4_KDECORE_LIBS} kabc_xmlrpc)
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kabc_xmlrpc_plugin )
+install_targets(${PLUGIN_INSTALL_DIR} kabc_xmlrpc_plugin )
 
 
 ########### next target ###############
@@ -100,7 +100,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_xmlrpc_plugin )
 
 target_link_libraries(kcal_xmlrpc_plugin ${KDE4_KDECORE_LIBS} kcal_xmlrpc)
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kcal_xmlrpc_plugin )
+install_targets(${PLUGIN_INSTALL_DIR} kcal_xmlrpc_plugin )
 
 
 ########### next target ###############
@@ -116,7 +116,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} knotes_xmlrpc_plugin )
 
 target_link_libraries(knotes_xmlrpc_plugin ${KDE4_KDECORE_LIBS} knotes_xmlrpc )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 knotes_xmlrpc_plugin )
+install_targets(${PLUGIN_INSTALL_DIR} knotes_xmlrpc_plugin )
 
 
 ########### install files ###############

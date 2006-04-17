@@ -118,7 +118,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kpilot )
 
 target_link_libraries(kcm_kpilot  ${KDE4_KDECORE_LIBS} kpilot configuration )
 
-install_targets(${LIB_INSTALL_DIR}/kde4 kcm_kpilot )
+install_targets(${PLUGIN_INSTALL_DIR} kcm_kpilot )
 
 
 ########### install files ###############
