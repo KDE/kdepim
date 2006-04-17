@@ -15,6 +15,11 @@ IF (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
   IF (GPGMECONFIG_EXECUTABLE)
     EXEC_PROGRAM(${GPGMECONFIG_EXECUTABLE} ARGS --libs RETURN_VALUE _return_VALUE OUTPUT_VARIABLE GPGME_LIBRARIES)
 
+    # append -lgpg-error to the list of libraries, if necessary
+    IF (NOT GPGME_LIBRARIES MATCHES "lgpg-error")
+      set(GPGME_LIBRARIES "${GPGME_LIBRARIES} -lgpg-error")
+    ENDIF (NOT GPGME_LIBRARIES MATCHES "lgpg-error")
+
     EXEC_PROGRAM(${GPGMECONFIG_EXECUTABLE} ARGS --cflags RETURN_VALUE _return_VALUE OUTPUT_VARIABLE GPGME_CFLAGS)
     IF (GPGME_CFLAGS)
       # problem: here I get two identical -I directives, and this ends up as one path with a space in the var...
