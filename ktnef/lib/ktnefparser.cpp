@@ -119,6 +119,7 @@ bool KTNEFParser::decodeMessage()
 
 	// read (type+name)
 	d->stream_ >> i1;
+        u = 0;
 	tag = ( i1 & 0x0000FFFF );
 	type = ( ( i1 & 0xFFFF0000 ) >> 16 );
 	// read data length
