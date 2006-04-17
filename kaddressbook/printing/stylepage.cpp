@@ -156,7 +156,8 @@ void StylePage::initGUI()
   font.setPointSize( 20 );
   mPreview->setFont( font );
   mPreview->setScaledContents( true );
-  mPreview->setAlignment( int( Qt::TextWordWrap | Qt::AlignCenter ) );
+  mPreview->setAlignment( Qt::AlignCenter );
+  mPreview->setWordWrap( true );
   styleLayout->addWidget( mPreview );
 
   topLayout->addWidget( group, 1, 1 );

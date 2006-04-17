@@ -71,7 +71,7 @@ AddViewDialog::AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict,
     QRadioButton *button = new QRadioButton( i18n((*iter)->type().toUtf8()),
                                              mTypeGroup, (*iter)->type().toLatin1() );
     label = new QLabel( (*iter)->description(), mTypeGroup );
-    label->setAlignment( Qt::TextWordWrap );
+    label->setWordWrap( true );
 
     groupLayout->addWidget( button, row, 0, Qt::AlignTop );
     groupLayout->addWidget( label, row, 1, Qt::AlignTop );
