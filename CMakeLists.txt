@@ -17,6 +17,7 @@ if (APPLE)
 endif (APPLE)
 
 
+include( KodeMacros )
 macro_optional_find_package(LIBKDEPIM)
 macro_optional_find_package(Sasl2)
 
