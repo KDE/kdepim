@@ -123,10 +123,25 @@ target_link_libraries(kaddrbk_pab_xxport  ${KDE4_KDECORE_LIBS} kabc kaddressbook
 install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_pab_xxport )
 
 
+########### next target ###############
+
+set(kaddrbk_gmx_xxport_PART_SRCS gmx_xxport.cpp )
+
+kde4_automoc(${kaddrbk_gmx_xxport_PART_SRCS})
+
+kde4_add_plugin(kaddrbk_gmx_xxport WITH_PREFIX ${kaddrbk_gmx_xxport_PART_SRCS})
+
+kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_gmx_xxport )
+
+target_link_libraries(kaddrbk_gmx_xxport  ${KDE4_KDECORE_LIBS} kabc kaddressbook )
+
+install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_gmx_xxport )
+
+
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kaddressbook FILES csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop                 bookmark_xxport.desktop eudora_xxport.desktop ldif_xxport.desktop                 gnokii_xxport.desktop opera_xxport.desktop pab_xxport.desktop )
-install_files( ${DATA_INSTALL_DIR}/kaddressbook FILES csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc            bookmark_xxportui.rc eudora_xxportui.rc ldif_xxportui.rc            opera_xxportui.rc pab_xxportui.rc ${gnokii_RCFILE} )
+install_files( ${SERVICES_INSTALL_DIR}/kaddressbook FILES csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop                 bookmark_xxport.desktop eudora_xxport.desktop ldif_xxport.desktop                 gnokii_xxport.desktop opera_xxport.desktop pab_xxport.desktop gmx_xxport.desktop )
+install_files( ${DATA_INSTALL_DIR}/kaddressbook FILES csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc            bookmark_xxportui.rc eudora_xxportui.rc ldif_xxportui.rc            opera_xxportui.rc pab_xxportui.rc gmx_xxportui.rc ${gnokii_RCFILE} )
 
 kde4_footer()
 
