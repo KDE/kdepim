@@ -22,11 +22,8 @@ IF (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
 
     EXEC_PROGRAM(${GPGMECONFIG_EXECUTABLE} ARGS --cflags RETURN_VALUE _return_VALUE OUTPUT_VARIABLE GPGME_CFLAGS)
     IF (GPGME_CFLAGS)
-      # problem: here I get two identical -I directives, and this ends up as one path with a space in the var...
-      # so for now I just keep the first -Ifoo, but this might need to be fixed at some point...
-      STRING(REGEX REPLACE "-I([^ ]*).*" "\\1" GPGME_INCLUDES "${GPGME_CFLAGS}")
-      # next problem: I get no -I directive here at all, and this ends up with an empty -I in the compiler call
-      STRING(REGEX REPLACE "\n" " " GPGME_INCLUDES "${GPGME_INCLUDES}")
+      string(REGEX REPLACE "(\r?\n)+$" "" GPGME_CFLAGS "${GPGME_CFLAGS}")
+      string(REGEX REPLACE " *-I" ";" GPGME_INCLUDES "${GPGME_CFLAGS}")
     ENDIF (GPGME_CFLAGS)
 
     # ensure that they are cached
