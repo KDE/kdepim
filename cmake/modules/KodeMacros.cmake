@@ -1,9 +1,8 @@
 #
 # Macros for the 'kode' code generatation tools
 #
-
-# TODO: find kxml_compiler even if we are not building kdepim
-set( KODE_XML_COMPILER_EXECUTABLE ${CMAKE_BINARY_DIR}/kode/kxml_compiler/kxml_compiler.sh )
+# see FindKode.cmake for documentation
+#
 
 MACRO (KODE_ADD_XML_PARSER _sources)
 	foreach (_current_file ${ARGN})
