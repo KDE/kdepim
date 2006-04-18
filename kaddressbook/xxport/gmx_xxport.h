@@ -25,7 +25,7 @@
 #ifndef GMX_XXPORT_H
 #define GMX_XXPORT_H
 
-#include <kaddressbook/xxport.h>
+#include <xxport.h>
 
 class GMXXXPort : public KAB::XXPort
 {
