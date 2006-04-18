@@ -23,14 +23,9 @@
         * - <a href="kalarm/kalarmd/html/index.html"><b>kalarmd</b></a>
         *   (<a href="kalarm/kalarmd/html/classes.html">classes</a>)\n
         *   <i>Alarm daemon.</i>
-        * - <a href="kandy/html/index.html"><b>kandy</b></a>
-        *   (<a href="kandy/html/classes.html">classes</a>)\n
-        *   <i>Synchronises data with your mobile phone.</i>
         * - <a href="karm/html/index.html"><b>karm</b></a>
         *   (<a href="karm/html/classes.html">classes</a>)\n
         *   <i>A time tracker.</i>
-        * - <a href="kfile-plugins/html/index.html"><b>kfile-plugins</b></a>
-        *   <i></i>
         * - <a href="kmail/html/index.html"><b>kmail</b></a>
         *   (<a href="kmail/html/classes.html">classes</a>)\n
         *   <i>A fully-featured email client.</i>
@@ -90,12 +85,12 @@
         * - <a href="libkpimidentities/html/index.html"><b>libkpimidentities</b></a>
         *   (<a href="libkpimidentities/html/classes.html">classes</a>)\n
         *   <i>A library for managing identities.</i>
+        * - <a href="kdgantt/html/index.html"><b>kdgantt</b></a>
+        *   (<a href="kdgantt/html/classes.html">classes</a>)\n
+        *   <i>Klarälvdalens Datakonsult AB's gantt charting engine.</i>
         * - <a href="kpilot/lib/html/index.html"><b>kpilot library</b></a>
         *   (<a href="kpilot/lib/html/classes.html">classes</a>)\n
         *   <i>KPilot Library.</i>
-        * - <a href="ksync/html/index.html"><b>ksync</b></a>
-        *   (<a href="ksync/html/classes.html">classes</a>)\n
-        *   <i>A generic library for syncing collections of data entries.</i>
 	* </td>
 	* </tr></table>
         *
