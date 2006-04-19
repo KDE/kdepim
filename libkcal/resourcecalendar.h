@@ -372,10 +372,23 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
       A resource should call this function if a save error happens.
     */
     void saveError( const QString &errorMessage = QString() );
+    /**
+      Specify whether individual incidences should be set read-only when a
+      read-only resource is loaded.
+      @param noReadOnly true to inhibit setting incidences read-only,
+                        false to allow incidences to be set read-only
+    */
+    void setNoReadOnlyOnLoad( bool noReadOnly );
+    /**
+      Return whether individual incidences are inhibited from being set
+      read-only when a read-only resources is loaded.
+    */
+    bool noReadOnlyOnLoad() const;
 
   private:
     bool mReceivedLoadError;
     bool mReceivedSaveError;
+    bool mNoReadOnlyOnLoad;
 
     class Private;
     Private *d;

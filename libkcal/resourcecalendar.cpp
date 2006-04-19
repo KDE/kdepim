@@ -33,7 +33,8 @@
 using namespace KCal;
 
 ResourceCalendar::ResourceCalendar( const KConfig *config )
-    : KRES::Resource( config ),mResolveConflict( false )
+    : KRES::Resource( config ),mResolveConflict( false ),
+      mNoReadOnlyOnLoad( false )
 {
 }
 
@@ -115,7 +116,7 @@ bool ResourceCalendar::load()
   // If the resource is read-only, we need to set its incidences to read-only,
   // too. This can't be done at a lower-level, since the read-only setting
   // happens at this level
-  if ( readOnly() ) {
+  if ( !mNoReadOnlyOnLoad && readOnly() ) {
     Incidence::List incidences( rawIncidences() );
     Incidence::List::Iterator it;
     for ( it = incidences.begin(); it != incidences.end(); ++it ) {
@@ -183,5 +184,14 @@ bool ResourceCalendar::setValue( const QString &key, const QString &value )
   return false;
 }
 
+void ResourceCalendar::setNoReadOnlyOnLoad(bool noReadOnly)
+{
+  mNoReadOnlyOnLoad = noReadOnly;
+}
+
+bool ResourceCalendar::noReadOnlyOnLoad() const
+{
+  return mNoReadOnlyOnLoad;
+}
 
 #include "resourcecalendar.moc"
