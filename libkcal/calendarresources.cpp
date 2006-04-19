@@ -302,7 +302,7 @@ bool CalendarResources::deleteEvent( Event *event )
     status = false;
     CalendarResourceManager::ActiveIterator it;
     for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-      status |= (*it)->deleteEvent( event );
+      status = (*it)->deleteEvent( event ) || status;
     }
   }
 
@@ -349,7 +349,7 @@ bool CalendarResources::deleteTodo( Todo *todo )
     CalendarResourceManager::ActiveIterator it;
     status = false;
     for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-      status |= (*it)->deleteTodo( todo );
+      status = (*it)->deleteTodo( todo ) || status;
     }
   }
 
@@ -530,7 +530,7 @@ bool CalendarResources::deleteJournal( Journal *journal )
     CalendarResourceManager::ActiveIterator it;
     status = false;
     for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-      status |= (*it)->deleteJournal( journal );
+      status = (*it)->deleteJournal( journal ) || status;
     }
   }
 
