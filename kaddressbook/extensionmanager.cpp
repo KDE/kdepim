@@ -139,7 +139,8 @@ void ExtensionManager::createActions()
   //mActionList.setAutoDelete( false );
 
   delete mMapper;
-  mMapper = new QSignalMapper( this, "SignalMapper" );
+  mMapper = new QSignalMapper( this );
+  mMapper->setObjectName( "SignalMapper" );
   connect( mMapper, SIGNAL( mapped( int ) ),
            this, SLOT( setActiveExtension( int ) ) );
 
