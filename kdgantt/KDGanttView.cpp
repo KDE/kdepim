@@ -1525,7 +1525,7 @@ void KDGanttView::setTimelineToStart()
 */
 void KDGanttView::setTimelineToEnd()
 {
- myCanvasView->horizontalScrollBar()->setValue(myCanvasView->horizontalScrollBar()->maxValue());
+ myCanvasView->horizontalScrollBar()->setValue(myCanvasView->horizontalScrollBar()->maximum());
 }
 
 
@@ -4836,7 +4836,7 @@ int  KDGanttView::addTickcountForTimeline() const
 
 void KDGanttView::addTickRight()
 {
-  if ( _enableAdding && myCanvasView->horizontalScrollBar()->value() ==  myCanvasView->horizontalScrollBar()->maxValue()) {
+  if ( _enableAdding && myCanvasView->horizontalScrollBar()->value() ==  myCanvasView->horizontalScrollBar()->maximum()) {
     //myCanvasView->horizontalScrollBar()->blockSignals( true );
     myTimeHeader->addTickRight();
     //myCanvasView->horizontalScrollBar()->blockSignals( false );
@@ -4859,7 +4859,7 @@ void KDGanttView::addTickLeft()
 
 void KDGanttView::enableAdding( int val )
 {
-  _enableAdding = ( val == 0 || val == myCanvasView->horizontalScrollBar()->maxValue());
+  _enableAdding = ( val == 0 || val == myCanvasView->horizontalScrollBar()->maximum());
 }
 
 

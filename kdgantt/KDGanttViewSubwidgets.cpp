@@ -1017,7 +1017,7 @@ void KDTimeHeaderWidget::addTickRight( int num )
     myGanttView->myTimeTable->setBlockUpdating( block );
     //myGanttView->myCanvasView->updateScrollBars();
     myGanttView->myTimeTable->updateMyContent();
-    myGanttView->myCanvasView->horizontalScrollBar()->setValue( myGanttView->myCanvasView->horizontalScrollBar()->maxValue() );
+    myGanttView->myCanvasView->horizontalScrollBar()->setValue( myGanttView->myCanvasView->horizontalScrollBar()->maximum() );
     moveTimeLineTo( myGanttView->myCanvasView->contentsWidth() - myGanttView->myCanvasView->viewport()->width()  );
     myGanttView->myTimeTable->forceUpdate();
 }
@@ -2174,7 +2174,7 @@ void KDTimeHeaderWidget::updateTimeTable()
             }
         }
     }
-    myGanttView->myCanvasView->horizontalScrollBar()->setLineStep(scrollLineStep);
+    myGanttView->myCanvasView->horizontalScrollBar()->setSingleStep(scrollLineStep);
     myGanttView->myTimeTable->maximumComputedGridHeight = 0;
     myGanttView->myTimeTable->updateMyContent();
 }
@@ -3178,21 +3178,21 @@ void KDTimeHeaderWidget::mouseMoveEvent ( QMouseEvent * e )
         int val = -1;
         if (endMouseDown <  -x() ) {
             val = myGanttView->myCanvasView->horizontalScrollBar()->value() -
-                myGanttView->myCanvasView->horizontalScrollBar()->lineStep();
+                myGanttView->myCanvasView->horizontalScrollBar()->singleStep();
             if ( val < 0 ) {
                 val = 0;
             }
         }
         if (endMouseDown >  -x() +parentWidget()->width() ) {
             val = myGanttView->myCanvasView->horizontalScrollBar()->value() +
-                myGanttView->myCanvasView->horizontalScrollBar()->lineStep();
+                myGanttView->myCanvasView->horizontalScrollBar()->singleStep();
 
         }
         pendingPaint();
         //epaintMe(-x(),parentWidget()->width());
         if ( val > -1 ) {
-            if ( val > myGanttView->myCanvasView->horizontalScrollBar()->maxValue() ) {
-                val = myGanttView->myCanvasView->horizontalScrollBar()->maxValue();
+            if ( val > myGanttView->myCanvasView->horizontalScrollBar()->maximum() ) {
+                val = myGanttView->myCanvasView->horizontalScrollBar()->maximum();
             }
             myGanttView->myCanvasView->horizontalScrollBar()->setValue( val );
         }
@@ -3817,7 +3817,7 @@ void KDGanttCanvasView::updateMyScrollBarsLater()
         ++mScrollBarCheckCounter;
         QTimer::singleShot( 0, this, SLOT ( updateMyScrollBarsLater() ) );
     }
-    if ( verticalScrollBar()->maxValue () > myMyContentsHeight- viewport()->height()+1  ) {
+    if ( verticalScrollBar()->maximum () > myMyContentsHeight- viewport()->height()+1  ) {
         //qDebug("found!!!!!! %d ",mScrollBarCheckCounter );
         if ( mScrollBarCheckCounter < 20 ) {
             resetScrollBars();
@@ -3909,7 +3909,7 @@ void KDGanttCanvasView::setMyContentsHeight( int hei )
 void KDGanttCanvasView::updateHorScrollBar() {
     //qDebug("horizontalScrollBar max=%d, myTimeHeaderScroll=%d", horizontalScrollBar()->maxValue(), mySignalSender->myTimeHeaderScroll->horizontalScrollBar()->value());
     
-    horizontalScrollBar()->setRange(mySignalSender->myTimeHeaderScroll->horizontalScrollBar()->minValue(), mySignalSender->myTimeHeaderScroll->horizontalScrollBar()->maxValue());
+    horizontalScrollBar()->setRange(mySignalSender->myTimeHeaderScroll->horizontalScrollBar()->minimum(), mySignalSender->myTimeHeaderScroll->horizontalScrollBar()->maximum());
     
 }
 
@@ -4440,7 +4440,7 @@ void KDGanttCanvasView::slotScrollTimer() {
     if (my < 0)
         dy = -5;
     else if (my > visibleHeight())
-        dy = qMin(5, verticalScrollBar()->maxValue()-verticalScrollBar()->value()
+        dy = qMin(5, verticalScrollBar()->maximum() - verticalScrollBar()->value()
 );
 
     if (dx != 0 || dy != 0)
