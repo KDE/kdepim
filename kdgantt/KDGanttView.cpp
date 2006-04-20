@@ -88,10 +88,11 @@
 
 
 KDGanttView::KDGanttView( QWidget* parent, const char* name  )
-    : KDGanttMinimizeSplitter( Qt::Vertical, parent, name ),
+    : KDGanttMinimizeSplitter( Qt::Vertical, parent ),
       myTimeHeaderScroll(0),
       myCanvasView(0)
 {
+  setObjectName( name );
   
 #if defined KDAB_EVAL
     EvalDialog::checkEvalLicense( "KD Gantt" );
