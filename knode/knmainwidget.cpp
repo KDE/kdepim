@@ -298,7 +298,7 @@ void KNMainWidget::setStatusMsg(const QString& text, int id)
   KStatusBar *bar =  mainWin ? mainWin->statusBar() : 0;
   if ( !bar )
     return;
-  bar->clear();
+  bar->clearMessage();
   if (text.isEmpty() && (id==SB_MAIN)) {
     BroadcastStatus::instance()->setStatusMsg(i18n(" Ready"));
   } else {
@@ -319,7 +319,7 @@ void KNMainWidget::setStatusHelpMsg(const QString& text)
   KMainWindow *mainWin = dynamic_cast<KMainWindow*>(topLevelWidget());
   KStatusBar *bar =  mainWin ? mainWin->statusBar() : 0;
   if ( bar )
-    bar->message(text, 2000);
+    bar->showMessage(text, 2000);
 }
 
 

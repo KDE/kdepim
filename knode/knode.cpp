@@ -102,7 +102,7 @@ void KNMainWindow::setupStatusBar()
   mLittleProgress = new StatusbarProgressWidget( mProgressDialog, statusBar() );
   mLittleProgress->show();
 
-  statusBar()->addWidget( mLittleProgress, 0 , true );
+  statusBar()->addPermanentWidget( mLittleProgress, 0 );
 
   mStatusMsgLabel = new KRSqueezedTextLabel( QString(), statusBar() );
   mStatusMsgLabel->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );

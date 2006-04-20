@@ -232,12 +232,14 @@ void CertManager::writeConfig() {
 
 void CertManager::createStatusBar() {
   KStatusBar * bar = statusBar();
-  mProgressBar = new Kleo::ProgressBar( bar, "mProgressBar" );
+  mProgressBar = new Kleo::ProgressBar( bar );
+  mProgressBar->setObjectName( "mProgressBar" );
   mProgressBar->reset();
   mProgressBar->setFixedSize( QSize( 100, mProgressBar->height() * 3 / 5 ) );
-  bar->addWidget( mProgressBar, 0, true );
-  mStatusLabel = new QLabel( bar, "mStatusLabel" );
-  bar->addWidget( mStatusLabel, 1, false );
+  bar->addPermanentWidget( mProgressBar, 0 );
+  mStatusLabel = new QLabel( bar );
+  mStatusLabel->setObjectName( "mStatusLabel" );
+  bar->addWidget( mStatusLabel, 1 );
 }
 
 static inline void connectEnableOperationSignal( QObject * s, QObject * d ) {
@@ -446,9 +448,9 @@ void CertManager::connectJobToStatusBarProgress( Kleo::Job * job, const QString 
   if ( !job )
     return;
   if ( !initialText.isEmpty() )
-    statusBar()->message( initialText );
+    statusBar()->showMessage( initialText );
   connect( job, SIGNAL(progress(const QString&,int,int)),
-	   mProgressBar, SLOT(slotProgress(const QString&,int,int)) );
+     mProgressBar, SLOT(slotProgress(const QString&,int,int)) );
   connect( job, SIGNAL(done()), mProgressBar, SLOT(reset()) );
   connect( this, SIGNAL(stopOperations()), job, SLOT(slotCancel()) );
 
@@ -461,7 +463,7 @@ void CertManager::disconnectJobFromStatusBarProgress( const GpgME::Error & err )
   const QString msg = err.isCanceled() ? i18n("Canceled.")
     : err ? i18n("Failed.")
     : i18n("Done.") ;
-  statusBar()->message( msg, 4000 );
+  statusBar()->showMessage( msg, 4000 );
 
   action("view_stop_operations")->setEnabled( false );
   emit enableOperations( true );

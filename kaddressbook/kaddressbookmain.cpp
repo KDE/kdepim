@@ -62,7 +62,7 @@ KAddressBookMain::KAddressBookMain( const QString &file )
     statusBar() );
   progressWidget->show();
 
-  statusBar()->addWidget( progressWidget, 0, true );
+  statusBar()->addPermanentWidget( progressWidget, 0 );
 
   mCore->setStatusBar( statusBar() );
 
