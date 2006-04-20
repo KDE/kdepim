@@ -194,7 +194,7 @@ bool KNGroup::loadHdrs()
   if (dir.isNull())
     return false;
 
-  f.setName(dir+g_roupname+".static");
+  f.setFileName(dir+g_roupname+".static");
 
   if(f.open(QIODevice::ReadOnly)) {
 
@@ -292,7 +292,7 @@ bool KNGroup::loadHdrs()
   }
 
 
-  f.setName(dir+g_roupname+".dynamic");
+  f.setFileName(dir+g_roupname+".dynamic");
 
   if (f.open(QIODevice::ReadOnly)) {
 

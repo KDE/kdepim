@@ -489,7 +489,7 @@ void ViewManager::startDrag()
       tempFile.write( vcards );
       tempFile.close();
 
-      K3URLDrag *urlDrag = new K3URLDrag( KUrl( tempFile.name() ), this );
+      K3URLDrag *urlDrag = new K3URLDrag( KUrl( tempFile.fileName() ), this );
       drag->addDragObject( urlDrag );
     }
   }

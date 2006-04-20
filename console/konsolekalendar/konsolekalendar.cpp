@@ -123,16 +123,16 @@ bool KonsoleKalendar::showInstance()
               << endl;
 
     if ( m_variables->isExportFile() ) {
-      f.setName( m_variables->getExportFile() );
+      f.setFileName( m_variables->getExportFile() );
       if ( !f.open( QIODevice::WriteOnly ) ) {
-	status = false;
-	kDebug() << "konsolekalendar.cpp::showInstance() | "
+        status = false;
+        kDebug() << "konsolekalendar.cpp::showInstance() | "
                   << "unable to open export file "
                   << m_variables->getExportFile()
                   << endl;
       }
     } else {
-      f.open( QIODevice::WriteOnly, stdout );
+      f.open( stdout, QIODevice::WriteOnly );
     }
 
     if ( status ) {
@@ -141,9 +141,9 @@ bool KonsoleKalendar::showInstance()
                 << endl;
 
       if ( m_variables->isVerbose() ) {
-	cout << i18n( "View Event <Verbose>:" ).toLocal8Bit().data()
+        cout << i18n( "View Event <Verbose>:" ).toLocal8Bit().data()
              << endl;
-	printSpecs();
+        printSpecs();
       }
 
       QTextStream ts( &f );
@@ -151,12 +151,12 @@ bool KonsoleKalendar::showInstance()
       if ( m_variables->getExportType() != ExportTypeHTML &&
            m_variables->getExportType() != ExportTypeMonthHTML ) {
 
-	if ( m_variables->getAll() ) {
-	  kDebug() << "konsolekalendar.cpp::showInstance() | "
+        if ( m_variables->getAll() ) {
+          kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "view all events sorted list"
                     << endl;
 
-	  Event::List sortedList =
+          Event::List sortedList =
             m_variables->getCalendar()->events( EventSortStartDate );
           if( sortedList.count() > 0 )
           {
@@ -174,15 +174,15 @@ bool KonsoleKalendar::showInstance()
             }
           }
 
-	} else if ( m_variables->isUID() ) {
-	  kDebug() << "konsolekalendar.cpp::showInstance() | "
+        } else if ( m_variables->isUID() ) {
+          kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "view events by uid list"
                     << endl;
-	  //TODO: support a list of UIDs
-	  event = m_variables->getCalendar()->event( m_variables->getUID() );
-	  //If this UID represents a recurring Event,
+          //TODO: support a list of UIDs
+          event = m_variables->getCalendar()->event( m_variables->getUID() );
+          //If this UID represents a recurring Event,
           //only the first day of the Event will be printed
-	  status = printEvent ( &ts, event, event->dtStart().date() );
+          status = printEvent ( &ts, event, event->dtStart().date() );
 
         } else if ( m_variables->isNext() ) {
           kDebug() << "konsolekalendar.cpp::showInstance() | "
@@ -192,43 +192,43 @@ bool KonsoleKalendar::showInstance()
           QDateTime datetime = m_variables->getStartDateTime();
           datetime = datetime.addDays( 720 );
 
-	  QDate dt;
-	  for ( dt = m_variables->getStartDateTime().date();
+          QDate dt;
+          for ( dt = m_variables->getStartDateTime().date();
                 dt <= datetime.date();
                 dt = dt.addDays(1) ) {
-	    Event::List events =
+            Event::List events =
               m_variables->getCalendar()->events( dt,
                                                   EventSortStartDate,
                                                   SortDirectionAscending );
             // finished here when we get the next event
             if ( events.count() > 0 ) {
-	      kDebug() << "konsolekalendar.cpp::showInstance() | "
+              kDebug() << "konsolekalendar.cpp::showInstance() | "
                        << "Got the next event"
                        << endl;
               printEvent( &ts, events.first(), dt );
               return true;
-	    }
+            }
           }
-	} else {
-	  kDebug() << "konsolekalendar.cpp::showInstance() | "
+        } else {
+          kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "view raw events within date range list"
                     << endl;
 
-	  QDate dt;
-	  for ( dt = m_variables->getStartDateTime().date();
+          QDate dt;
+          for ( dt = m_variables->getStartDateTime().date();
                 dt <= m_variables->getEndDateTime().date() && status != false;
                 dt = dt.addDays(1) ) {
-	    Event::List events =
+            Event::List events =
               m_variables->getCalendar()->events( dt,
                                                   EventSortStartDate,
                                                   SortDirectionAscending );
-	    status = printEventList( &ts, &events, dt );
-	  }
-	}
+            status = printEventList( &ts, &events, dt );
+          }
+        }
       } else {
-	QDate firstdate, lastdate;
-	if ( m_variables->getAll() ) {
-	  kDebug() << "konsolekalendar.cpp::showInstance() | "
+        QDate firstdate, lastdate;
+        if ( m_variables->getAll() ) {
+          kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "HTML view all events sorted list"
                     << endl;
           // sort the events for this date by start date
@@ -239,20 +239,20 @@ bool KonsoleKalendar::showInstance()
                                 SortDirectionAscending ) );
           firstdate = events->first()->dtStart().date();
           lastdate = events->last()->dtStart().date();
-	} else if ( m_variables->isUID() ) {
-	  // TODO
-	  kDebug() << "konsolekalendar.cpp::showInstance() | "
+        } else if ( m_variables->isUID() ) {
+          // TODO
+          kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "HTML view events by uid list" << endl;
-	  cout << i18n("Sorry, export to HTML by UID is not supported yet")
+          cout << i18n("Sorry, export to HTML by UID is not supported yet")
             .toLocal8Bit().data() << endl;
-	  return( false );
-	} else {
-	  kDebug() << "konsolekalendar.cpp::showInstance() | "
+          return( false );
+        } else {
+          kDebug() << "konsolekalendar.cpp::showInstance() | "
                     << "HTML view raw events within date range list"
                     << endl;
-	  firstdate = m_variables->getStartDateTime().date();
-	  lastdate = m_variables->getEndDateTime().date();
-	}
+          firstdate = m_variables->getStartDateTime().date();
+          lastdate = m_variables->getEndDateTime().date();
+        }
 
         HTMLExportSettings htmlSettings( "Konsolekalendar" );
 
@@ -297,7 +297,7 @@ bool KonsoleKalendar::showInstance()
 
         KCal::HtmlExport *Export;
         Export = new HtmlExport( m_variables->getCalendar(), &htmlSettings );
-	status = Export->save( &ts );
+        status = Export->save( &ts );
         delete Export;
       }
       f.close();

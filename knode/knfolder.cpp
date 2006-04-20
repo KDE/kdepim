@@ -47,8 +47,8 @@ KNFolder::KNFolder(int id, const QString &name, KNFolder *parent)
   QString fname=path()+QString("custom_%1").arg(i_d);
 
   n_ame = name;
-  m_boxFile.setName(fname+".mbox");
-  i_ndexFile.setName(fname+".idx");
+  m_boxFile.setFileName(fname+".mbox");
+  i_ndexFile.setFileName(fname+".idx");
   i_nfoPath=fname+".info";
 
   p_arentId=parent?parent->id():-1;
@@ -66,8 +66,8 @@ KNFolder::KNFolder(int id, const QString &name, const QString &prefix, KNFolder 
   QString fname=path()+QString("%1_%2").arg(prefix).arg(i_d);
 
   n_ame = name;
-  m_boxFile.setName(fname+".mbox");
-  i_ndexFile.setName(fname+".idx");
+  m_boxFile.setFileName(fname+".mbox");
+  i_ndexFile.setFileName(fname+".idx");
   i_nfoPath=fname+".info";
 
   p_arentId=parent?parent->id():-1;
@@ -125,8 +125,8 @@ bool KNFolder::readInfo(const QString &infoPath)
     closeFiles();
     clear();
 
-    m_boxFile.setName(fname+".mbox");
-    i_ndexFile.setName(fname+".idx");
+    m_boxFile.setFileName(fname+".mbox");
+    i_ndexFile.setFileName(fname+".idx");
     c_ount=i_ndexFile.exists() ? (i_ndexFile.size()/sizeof(DynData)) : 0;
   }
 
@@ -333,7 +333,7 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
   closeFiles();
   if(!m_boxFile.open(QIODevice::ReadOnly)) {
     kError(5003) << "KNFolder::loadArticle(KNLocalArticle *a) : cannot open mbox file: "
-                  << m_boxFile.name() << endl;
+                  << m_boxFile.fileName() << endl;
     return false;
   }
 

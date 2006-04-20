@@ -162,7 +162,7 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
     f.close();
     return true;
   } else {
-    kWarning(5003) << "unable to open " << f.name() << " reason " << f.status() << endl;
+    kWarning(5003) << "unable to open " << f.fileName() << " reason " << f.status() << endl;
     return false;
   }
 }
@@ -193,7 +193,7 @@ bool KNGroupListData::writeOut()
     f.close();
     return true;
   } else {
-    kWarning(5003) << "unable to open " << f.name() << " reason " << f.status() << endl;
+    kWarning(5003) << "unable to open " << f.fileName() << " reason " << f.status() << endl;
     return false;
   }
 }

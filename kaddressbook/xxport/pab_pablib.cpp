@@ -23,7 +23,7 @@
 pab::pab(const char *_pabfile)
 {
   pabfile=_pabfile;
-  in.setName(pabfile);
+  in.setFileName(pabfile);
   in.open(QIODevice::ReadOnly);
   cap=i18n("Import MS Exchange Personal Address Book (.PAB)");
 }

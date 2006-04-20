@@ -230,7 +230,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
     /** Get the folder name */
     s.replace( QRegExp("mbx$"), "pmg");
     s.replace( QRegExp("MBX$"), "PMG");
-    f.setName(s);
+    f.setFileName(s);
     if (! f.open( QIODevice::ReadOnly ) ) {
         inf->alert( i18n("Unable to open %1, skipping", s ) );
         return;
@@ -248,7 +248,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
     }
     
     /** Read in the mbox */
-    f.setName(file);
+    f.setFileName(file);
     if (! f.open( QIODevice::ReadOnly ) ) {
         inf->alert( i18n("Unable to open %1, skipping", s ) );
     } else {
