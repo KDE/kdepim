@@ -107,7 +107,7 @@ void Kleo::KeyFilterManager::reload() {
   KConfig * config = Kleo::CryptoBackendFactory::instance()->configObject();
   if ( !config )
     return;
-  const QStringList groups = config->groupList().grep( QRegExp( "^Key Filter #\\d+$" ) );
+  const QStringList groups = config->groupList().filter( QRegExp( "^Key Filter #\\d+$" ) );
   for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
     const KConfigGroup cfg( config, *it );
     d->filters.push_back( new KConfigBasedKeyFilter( cfg ) );

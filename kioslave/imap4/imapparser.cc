@@ -637,7 +637,8 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
 void imapParser::parseCapability (parseString & result)
 {
   Q3CString temp( result.cstr() );
-  imapCapabilities = QStringList::split ( ' ', KPIM::kAsciiToLower( temp.data() ) );
+  QString data = KPIM::kAsciiToLower( temp.data() );
+  imapCapabilities = data.split ( ' ', QString::SkipEmptyParts );
 }
 
 void imapParser::parseFlags (parseString & result)
@@ -1740,7 +1741,7 @@ imapParser::parseURL (const KUrl & _url, QString & _box, QString & _section,
   if ( paramStart > -1 )
   {
     QString paramString = _box.right( _box.length() - paramStart-2 );
-    parameters = QStringList::split (';', paramString);  //split parameters
+    parameters = paramString.split (';', QString::SkipEmptyParts);  //split parameters
     _box.truncate( paramStart ); // strip parameters
   }
   // extract parameters

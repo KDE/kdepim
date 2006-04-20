@@ -238,7 +238,7 @@ void AppearanceConfigWidget::load()
   KConfig * config = Kleo::CryptoBackendFactory::instance()->configObject();
   if ( !config )
     return;
-  QStringList groups = config->groupList().grep( QRegExp( "^Key Filter #\\d+$" ) );
+  QStringList groups = config->groupList().filter( QRegExp( "^Key Filter #\\d+$" ) );
   for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
     KConfigGroup cfg( config, *it );
     (void) new CategoryListViewItem( categoriesLV, categoriesLV->lastItem(), cfg );
@@ -252,7 +252,7 @@ void AppearanceConfigWidget::save()
     return;
   // We know (assume) that the groups in the config object haven't changed,
   // so we just iterate over them and over the listviewitems, and map one-to-one.
-  QStringList groups = config->groupList().grep( QRegExp( "^Key Filter #\\d+$" ) );
+  QStringList groups = config->groupList().filter( QRegExp( "^Key Filter #\\d+$" ) );
   if ( groups.isEmpty() ) {
     // If we created the default categories ourselves just now, then we need to make up their list
     Q3ListViewItemIterator lvit( categoriesLV );

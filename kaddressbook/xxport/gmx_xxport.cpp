@@ -106,7 +106,7 @@ QList<KABC::Addressee> GMXXXPort::importContacts( const QString& ) const
   line = gmxStream.readLine();
   while (!line.startsWith("####") && !gmxStream.atEnd()) {
     while (1) {
-       strList = QStringList::split('#', line, true);
+       strList = line.split('#', QString::KeepEmptyParts );
        if (strList.count() >= 11) 
            break;
        line.append('\n');
@@ -142,7 +142,7 @@ QList<KABC::Addressee> GMXXXPort::importContacts( const QString& ) const
 
   while (!line.startsWith("####") && !gmxStream.atEnd()) {
     while (1) {
-       strList = QStringList::split('#', line, true);
+       strList = line.split('#', QString::KeepEmptyParts );
        if (strList.count() >= 21) 
            break;
        line.append('\n');

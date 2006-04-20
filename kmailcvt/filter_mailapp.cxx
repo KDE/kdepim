@@ -60,7 +60,7 @@ void FilterMailApp::import(FilterInfo *info)
         } else {
             QFileInfo filenameInfo( *filename );
             kDebug() << "importing filename " << *filename << endl;
-            QStringList name = QStringList::split("/", *filename);
+            QStringList name = (*filename).split("/", QString::SkipEmptyParts);
             QString folderName(name[name.count() - 2]);
 
             info->setCurrent(0);

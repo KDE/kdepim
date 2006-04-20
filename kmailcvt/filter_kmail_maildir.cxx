@@ -138,7 +138,7 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
                 _path = "KMail-Import";
                 QString _tmp = dir.filePath(*mailFile);
                 _tmp = _tmp.remove( mailDir ,true);
-                QStringList subFList = QStringList::split("/",_tmp,false);
+                QStringList subFList = _tmp.split( "/", QString::SkipEmptyParts );
                 for ( QStringList::Iterator it = subFList.begin(); it != subFList.end(); ++it ) {
                     QString _cat = *it;
                     if(!(_cat == *mailFile)) {

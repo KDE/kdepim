@@ -34,7 +34,7 @@
 extern "C"
 {
   KDE_EXPORT KCModule *create_kabcustomfields( QWidget *parent, const char * ) {
-	KInstance *inst= new KInstance("kcmkabcustomfields");
+  KInstance *inst= new KInstance("kcmkabcustomfields");
     return new KCMKabCustomFields( inst, parent );
   }
 }
@@ -74,6 +74,6 @@ QString KCMKabCustomFields::kabLocalDir()
 {
   QStringList kabdirs;
   kabdirs << locateLocal("data", "kaddressbook/");
-  return kabdirs.grep( QRegExp( "^"+KGlobal::dirs()->localkdedir() ) ).first();
+  return kabdirs.filter( QRegExp( "^"+KGlobal::dirs()->localkdedir() ) ).first();
 }
 

@@ -302,7 +302,7 @@ bool FilterPMail::parseFolderMatrix()
                 break;
             QString tmpArray[5];
             tmpRead.remove(tmpRead.length() -2,2);
-            QStringList tmpList = QStringList::split(",", tmpRead, false);
+            QStringList tmpList = QString(tmpRead).split(",", QString::SkipEmptyParts);
             int i = 0;
             for ( QStringList::Iterator it = tmpList.begin(); it != tmpList.end(); ++it, i++) {
                 QString _tmp = *it;
