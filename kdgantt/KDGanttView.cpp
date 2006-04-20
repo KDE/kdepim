@@ -55,6 +55,7 @@
 #include <qfile.h>
 #include <qapplication.h>
 #include <QtDebug>
+#include <QPrintDialog>
 
 #include <qmessagebox.h>
 #include <qfileinfo.h>
@@ -1176,8 +1177,8 @@ bool KDGanttView::loadProject( QIODevice* device )
 
 /*!
   Sends a Gantt view to a printer. The printer should already be set
-  up for printing (by calling QPrinter::setup()).
-  If the printer is not set up, QPrinter::setup() is called before printing
+  up for printing (by calling QPrintDialog).
+  If the printer is not set up, QPrintDialog is called before printing
 
   You can specify, whether the ListView, TimeLine, or Legend will be
   printed. All combinations of these three widgets are allowed.
@@ -1200,7 +1201,8 @@ void KDGanttView::print( QPrinter* printer ,
   if (! printer ) {
     printer = new QPrinter();
     deletePrinter = true;
-    if ( !printer->setup()) {
+    QPrintDialog dialog(printer);
+    if ( !dialog.exec() ) {
       delete printer;
       return;
     }
