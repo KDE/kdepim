@@ -152,7 +152,7 @@ void KDHorizontalLine::paintEvent( QPaintEvent * e ) {
     QRect r( x, 0, tw, h );
     int va = style()->styleHint( QStyle::SH_GroupBox_TextLabelVerticalAlignment, 0, this );
     if ( va & Qt::AlignTop )
-      r.moveBy( 0, fm.descent() );
+      r.translate( 0, fm.descent() );
     const QColor pen( (QRgb) style()->styleHint( QStyle::SH_GroupBox_TextLabelColor, 0, this ) );
 #if QT_VERSION >= 0x030300
     if ( !style()->styleHint( QStyle::SH_UnderlineShortcut, 0, this ) )
