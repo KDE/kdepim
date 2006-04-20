@@ -127,8 +127,8 @@
 	linktext->setFixedHeight(qMax(260,60+12*lineheight));
 	linktext->setVScrollBarMode(Q3ScrollView::Auto/*AlwaysOn*/);
 	text = new QLabel(w);
-	grid->addMultiCellWidget(text,0,0,2,3);
-	grid->addMultiCellWidget(linktext,1,2,1,3);
+	grid->addWidget(text,0,2,1,2);
+	grid->addWidget(linktext,1,1,2,3);
 
 	// Now set the program and copyright information.
 	s = CSL1("<qt><h3>");

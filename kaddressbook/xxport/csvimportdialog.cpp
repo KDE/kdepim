@@ -384,7 +384,7 @@ void CSVImportDialog::initGUI()
   mUrlRequester->setFilter( "*.csv" );
   hbox->addWidget( mUrlRequester );
 
-  layout->addMultiCellLayout( hbox, 0, 0, 0, 4 );
+  layout->addLayout( hbox, 0, 0, 1, 5 );
 
   // Delimiter: comma, semicolon, tab, space, other
   mDelimiterBox = new Q3ButtonGroup( i18n( "Delimiter" ), mPage );
@@ -393,7 +393,7 @@ void CSVImportDialog::initGUI()
   mDelimiterBox->layout()->setMargin( marginHint() );
   QGridLayout *delimiterLayout = new QGridLayout( mDelimiterBox->layout() );
   delimiterLayout->setAlignment( Qt::AlignTop );
-  layout->addMultiCellWidget( mDelimiterBox, 1, 4, 0, 0 );
+  layout->addWidget( mDelimiterBox, 1, 0, 4, 1);
 
   mRadioComma = new QRadioButton( i18n( "Comma" ), mDelimiterBox );
   mRadioComma->setChecked( true );
@@ -445,15 +445,15 @@ void CSVImportDialog::initGUI()
 
   mIgnoreDuplicates = new QCheckBox( mPage );
   mIgnoreDuplicates->setText( i18n( "Ignore duplicate delimiters" ) );
-  layout->addMultiCellWidget( mIgnoreDuplicates, 3, 3, 2, 4 );
+  layout->addWidget( mIgnoreDuplicates, 3, 2, 1, 3 );
 
   mCodecCombo = new QComboBox( mPage );
-  layout->addMultiCellWidget( mCodecCombo, 4, 4, 2, 4 );
+  layout->addWidget( mCodecCombo, 4, 2, 1, 3 );
 
   mTable = new Q3Table( 0, 0, mPage );
   mTable->setSelectionMode( Q3Table::NoSelection );
   mTable->horizontalHeader()->hide();
-  layout->addMultiCellWidget( mTable, 5, 5, 0, 4 );
+  layout->addWidget( mTable, 5, 0, 1, 5 );
 
   setButtonText( User1, i18n( "Apply Template..." ) );
   setButtonText( User2, i18n( "Save Template..." ) );

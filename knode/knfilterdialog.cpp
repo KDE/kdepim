@@ -52,7 +52,7 @@ KNFilterDialog::KNFilterDialog( KNArticleFilter *f, QWidget *parent )
 
   QGridLayout *gbL=new QGridLayout(gb, 2,4,8,5);
   gbL->addWidget(l1, 0,0);
-  gbL->addMultiCellWidget(fname, 0,0,1,3);
+  gbL->addWidget(fname, 0,1, 1,3);
   gbL->addWidget(enabled, 1,0);
   gbL->addWidget(l2, 1,2);
   gbL->addWidget(apon, 1,3);

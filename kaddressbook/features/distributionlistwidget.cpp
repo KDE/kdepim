@@ -189,7 +189,7 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   mContactView->setEnabled( false );
   mContactView->setAllColumnsShowFocus( true );
   mContactView->setFullWidth( true );
-  topLayout->addMultiCellWidget( mContactView, 1, 1, 0, 3 );
+  topLayout->addWidget( mContactView, 1, 0, 1, 4 );
   connect( mContactView, SIGNAL( selectionChanged() ),
            SLOT( selectionContactViewChanged() ) );
   connect( mContactView, SIGNAL( dropped( QDropEvent*, Q3ListViewItem* ) ),

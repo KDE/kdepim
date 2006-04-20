@@ -57,7 +57,7 @@ ResourceFeaturePlanConfig::ResourceFeaturePlanConfig( QWidget *parent )
 
   mCvsCheck = new QCheckBox( i18n("Use CVS"), this );
 
-  topLayout->addMultiCellWidget( mCvsCheck, 2, 2, 0, 1 );
+  topLayout->addWidget( mCvsCheck, 2, 0, 1, 2 );
 }
 
 void ResourceFeaturePlanConfig::loadSettings( KRES::Resource *res )

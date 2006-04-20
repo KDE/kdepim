@@ -61,10 +61,10 @@ ResourceGroupwareConfig::ResourceGroupwareConfig( QWidget* parent,  const char* 
   mPasswordEdit->setEchoMode( KLineEdit::Password );
 
   mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
-  mainLayout->addMultiCellWidget( mReloadConfig, 5, 5, 0, 1 );
+  mainLayout->addWidget( mReloadConfig, 5, 0, 1, 2 );
 
   mSaveConfig = new KCal::ResourceCachedSaveConfig( this );
-  mainLayout->addMultiCellWidget( mSaveConfig, 6, 6, 0, 1 );
+  mainLayout->addWidget( mSaveConfig, 6, 0, 1, 2 );
 }
 
 void ResourceGroupwareConfig::loadSettings( KRES::Resource *resource )

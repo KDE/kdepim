@@ -152,7 +152,7 @@ Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
         continue;
       KDHorizontalLine * hl = new KDHorizontalLine( group->description(), this );
       const int row = glay->numRows();
-      glay->addMultiCellWidget( hl, row, row, 0, 2 );
+      glay->addWidget( hl, row, 0, 1, 3 );
       mGroupGUIs.append( new CryptoConfigGroupGUI( module, group, glay, this ) );
     }
   } else if ( !groups.empty() ) {
@@ -217,7 +217,7 @@ Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
 
   QLabel * l = new QLabel( widget );
   l->setPixmap( loadIcon( iconName ) );
-  glay->addMultiCellWidget( l, startRow, endRow, 0, 0, Qt::AlignTop );
+  glay->addWidget( l, startRow, 0, endRow-startRow+1, 1, Qt::AlignTop );
 }
 
 bool Kleo::CryptoConfigGroupGUI::save()
@@ -500,7 +500,7 @@ Kleo::CryptoConfigEntryCheckBox::CryptoConfigEntryCheckBox(
 {
   const int row = glay->numRows();
   mCheckBox = new QCheckBox( widget );
-  glay->addMultiCellWidget( mCheckBox, row, row, 1, 2 );
+  glay->addWidget( mCheckBox, row, 1, 1, 2 );
   mCheckBox->setText( description() );
   connect( mCheckBox, SIGNAL( toggled(bool) ), SLOT( slotChanged() ) );
 }

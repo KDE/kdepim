@@ -73,11 +73,11 @@ ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,
   mFolderConfig = new KPIM::FolderConfig( this );
   connect( mFolderConfig, SIGNAL( updateFoldersClicked() ),
     SLOT( updateFolders() ) );
-  mainLayout->addMultiCellWidget( mFolderConfig, 4, 4, 0, 1 );
+  mainLayout->addWidget( mFolderConfig, 4, 0, 1, 2 );
 
   KHBox *hBox = new KHBox( this );
   mCacheSettingsButton = new KPushButton( i18n("Configure Cache Settings..."), hBox );
-  mainLayout->addMultiCellWidget( hBox, 5, 5, 0, 1 );
+  mainLayout->addWidget( hBox, 5, 0, 1, 2 );
   connect( mCacheSettingsButton, SIGNAL( clicked() ),
            SLOT( showCacheSettings() ) );
 

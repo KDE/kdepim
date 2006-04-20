@@ -61,7 +61,7 @@ AddViewDialog::AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict,
 
   mTypeGroup = new Q3ButtonGroup( 0, Qt::Horizontal, i18n( "View Type" ), page );
   connect( mTypeGroup, SIGNAL( clicked( int ) ), this, SLOT( clicked( int ) ) );
-  layout->addMultiCellWidget( mTypeGroup, 1, 1, 0, 1 );
+  layout->addWidget( mTypeGroup, 1, 0, 1, 2 );
   QGridLayout *groupLayout = new QGridLayout( mTypeGroup->layout(), 3, 2 );
   groupLayout->setSpacing( spacingHint() );
 

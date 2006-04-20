@@ -179,12 +179,12 @@ void ContactEditorTabPage::updateLayout()
   --last;
   for ( it = mWidgets.begin(); it != mWidgets.end() ; ++it ) {
     if ( (*it)->logicalWidth() == 2 ) {
-      mLayout->addMultiCellWidget( *it, row, row + (*it)->logicalHeight() - 1, 0, 1 );
+      mLayout->addWidget( *it, row, 0, (*it)->logicalHeight(), 2 );
       row += (*it)->logicalHeight();
       if ( it != mWidgets.end() ) {
         QFrame *frame = new QFrame( this );
         frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
-        mLayout->addMultiCellWidget( frame, row, row, 0, 1 );
+        mLayout->addWidget( frame, row, 0, 1, 2 );
         row++;
       }
       continue;
@@ -194,13 +194,13 @@ void ContactEditorTabPage::updateLayout()
     int leftHeight = (*it)->logicalHeight();
 
     if ( it == last ) { // last widget gets full width
-      mLayout->addMultiCellWidget( *it, row, row + leftHeight - 1, 0, 1 );
+      mLayout->addWidget( *it, row, 0, leftHeight, 2 );
       return;
     } else {
-      mLayout->addMultiCellWidget( *it, row, row + leftHeight - 1, 0, 0 );
+      mLayout->addWidget( *it, row, 0, leftHeight, 1);
       QFrame *frame = new QFrame( this );
       frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
-      mLayout->addMultiCellWidget( frame, row + leftHeight, row + leftHeight, 0, 1 );
+      mLayout->addWidget( frame, row + leftHeight, 0, 1, 2 );
     }
 
     // fill right side
@@ -211,7 +211,7 @@ void ContactEditorTabPage::updateLayout()
 
       int rightHeight = (*it)->logicalHeight();
       if ( rightHeight + i <= leftHeight )
-        mLayout->addMultiCellWidget( *it, row + i, row + i + rightHeight - 1, 1, 1 );
+        mLayout->addWidget( *it, row + i, 1, rightHeight, 1);
       else {
         --it;
         break;

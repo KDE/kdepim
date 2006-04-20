@@ -280,7 +280,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   topLayout->setSpacing( spacingHint() );
 
   mTypeCombo = new AddressTypeCombo( mAddressList, page );
-  topLayout->addMultiCellWidget( mTypeCombo, 0, 0, 0, 1 );
+  topLayout->addWidget( mTypeCombo, 0, 0, 1, 2 );
 
   QLabel *label = new QLabel( i18nc( "<streetLabel>:", "%1:", KABC::Address::streetLabel() ), page );
   label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
@@ -324,7 +324,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   mCountryCombo->setDuplicatesEnabled( false );
 
   QPushButton *labelButton = new QPushButton( i18n( "Edit Label..." ), page );
-  topLayout->addMultiCellWidget( labelButton, 7, 7, 0, 1 );
+  topLayout->addWidget( labelButton, 7, 0, 1, 2 );
   connect( labelButton, SIGNAL( clicked() ), SLOT( editLabel() ) );
 
   fillCountryCombo();
@@ -332,14 +332,14 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   topLayout->addWidget( mCountryCombo, 6, 1 );
 
   mPreferredCheckBox = new QCheckBox( i18n( "This is the preferred address" ), page );
-  topLayout->addMultiCellWidget( mPreferredCheckBox, 8, 8, 0, 1 );
+  topLayout->addWidget( mPreferredCheckBox, 8, 0, 1, 2 );
 
   KSeparator *sep = new KSeparator( Qt::Horizontal, page );
-  topLayout->addMultiCellWidget( sep, 9, 9, 0, 1 );
+  topLayout->addWidget( sep, 9, 0, 1, 2 );
 
   KHBox *buttonBox = new KHBox( page );
   buttonBox->setSpacing( spacingHint() );
-  topLayout->addMultiCellWidget( buttonBox, 10, 10, 0, 1 );
+  topLayout->addWidget( buttonBox, 10, 0, 1, 2 );
 
   QPushButton *addButton = new QPushButton( i18n( "New..." ), buttonBox );
   connect( addButton, SIGNAL( clicked() ), SLOT( addAddress() ) );

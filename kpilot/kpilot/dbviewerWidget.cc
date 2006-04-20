@@ -100,7 +100,7 @@ void GenericDBWidget::setupWidget()
 
 	QGridLayout *g2 = new QGridLayout( 0, 1, 1);
 	fRecordList = new K3ListView( this );
-	g2->addMultiCellWidget( fRecordList, 0, 0, 0, 2 );
+	g2->addWidget( fRecordList, 0, 0, 1, 3 );
 	fRecordList->addColumn(i18n("Rec. Nr."));
 	fRecordList->addColumn(i18n("Length"));
 	fRecordList->addColumn(i18n("Record ID"));
@@ -119,7 +119,7 @@ void GenericDBWidget::setupWidget()
 	g1->addLayout( g2, 3, 0 );
 
 
-	g->addMultiCellLayout( g1, 0, 1, 1, 1 );
+	g->addLayout( g1, 0, 1, 2, 1);
 	resize( QSize(682, 661).expandedTo(minimumSizeHint()) );
 
 	connect(fDBList, SIGNAL(highlighted(const QString &)),

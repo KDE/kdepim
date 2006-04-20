@@ -80,10 +80,10 @@ Unfortunately this version uses a different format for some data-files, so \
 in order to keep your existing data it is necessary to convert it first. This is \
 now done automatically by KNode. If you want to, a backup of your existing data \
 will be created before the conversion starts.", QString(KNODE_VERSION)), w_1);
-  w1L->addMultiCellWidget(l1, 0,0, 0,2);
+  w1L->addWidget(l1, 0, 0, 1, 3 );
 
   c_reateBkup=new QCheckBox(i18n("Create backup of old data"), w_1);
-  w1L->addMultiCellWidget(c_reateBkup, 2,2, 0,2);
+  w1L->addWidget(c_reateBkup, 2, 0, 1, 3 );
   connect(c_reateBkup, SIGNAL(toggled(bool)), this, SLOT(slotCreateBkupToggled(bool)));
 
   b_ackupPathLabel=new QLabel(i18n("Save backup in:"), w_1);

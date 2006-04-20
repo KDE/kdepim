@@ -54,15 +54,15 @@ KeyWidget::KeyWidget( QWidget *parent, const char *name )
   layout->addWidget( mKeyCombo, 0, 1 );
 
   mAddButton = new QPushButton( i18n( "Add..." ), this );
-  layout->addMultiCellWidget( mAddButton, 1, 1, 0, 1 );
+  layout->addWidget( mAddButton, 1, 0, 1, 2 );
 
   mRemoveButton = new QPushButton( i18n( "Remove" ), this );
   mRemoveButton->setEnabled( false );
-  layout->addMultiCellWidget( mRemoveButton, 2, 2, 0, 1 );
+  layout->addWidget( mRemoveButton, 2, 0, 1, 2 );
 
   mExportButton = new QPushButton( i18n( "Export..." ), this );
   mExportButton->setEnabled( false );
-  layout->addMultiCellWidget( mExportButton, 3, 3, 0, 1 );
+  layout->addWidget( mExportButton, 3, 0, 1, 2 );
 
   connect( mAddButton, SIGNAL( clicked() ), SLOT( addKey() ) );
   connect( mRemoveButton, SIGNAL( clicked() ), SLOT( removeKey() ) );

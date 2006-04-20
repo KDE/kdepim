@@ -295,7 +295,7 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
   hbl->addWidget( mKolab1 );
   mKolab2 = new QRadioButton( i18n ( "Kolab 2" ), bg );
   hbl->addWidget( mKolab2 );
-  topLayout->addMultiCellWidget( bg, 5, 5, 0, 1 );
+  topLayout->addWidget( bg, 5, 0, 1, 2 );
 
   setupRulesPage();
   setupChangesPage();

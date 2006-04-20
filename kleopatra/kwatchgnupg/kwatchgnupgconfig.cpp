@@ -144,7 +144,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   ++row;
   mWordWrapCB = new QCheckBox( i18n("Enable &word wrapping"), w );
   mWordWrapCB->hide(); // QTextEdit doesn't support word wrapping in LogText mode
-  glay->addMultiCellWidget( mWordWrapCB, row, row, 0, 2 );
+  glay->addWidget( mWordWrapCB, row, 0, 1, 3 );
 
   connect( mWordWrapCB, SIGNAL(clicked()), SLOT(slotChanged()) );
 

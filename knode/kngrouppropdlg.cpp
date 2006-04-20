@@ -58,11 +58,11 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
     n_ick->setText(g_rp->name());
   QLabel *l=new QLabel(n_ick, i18n("&Nickname:"), gb);
   grpL->addWidget(l,1,0);
-  grpL->addMultiCellWidget(n_ick,1,1,1,2);
+  grpL->addWidget(n_ick,1,1, 1,2);
 
   u_seCharset=new QCheckBox(i18n("&Use different default charset:"), gb);
   u_seCharset->setChecked(g_rp->useCharset());
-  grpL->addMultiCellWidget(u_seCharset,2,2,0,1);
+  grpL->addWidget(u_seCharset,2,0, 1, 2 );
 
   c_harset=new QComboBox(false, gb);
   c_harset->insertStringList( KGlobal::charsets()->availableEncodingNames() );

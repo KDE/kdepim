@@ -83,8 +83,8 @@ KeyGenerator::KeyGenerator( QWidget * parent, const char * name )
   int row = -1;
 
   ++row;
-  glay->addMultiCellWidget( new QLabel( "<GnupgKeyParms format=\"internal\">", w ),
-			    row, row, 0, 1 );
+  glay->addWidget( new QLabel( "<GnupgKeyParms format=\"internal\">", w ),
+			    row, 0, 1, 2 );
   for ( int i = 0 ; i < numKeyParams ; ++i ) {
     ++row;
     glay->addWidget( new QLabel( keyParams[i], w ), row, 0 );
@@ -92,8 +92,7 @@ KeyGenerator::KeyGenerator( QWidget * parent, const char * name )
   }
 
   ++row;
-  glay->addMultiCellWidget( new QLabel( "</GnupgKeyParms>", w ),
-			    row, row, 0, 1 );
+  glay->addWidget( new QLabel( "</GnupgKeyParms>", w ), row, 0, 1, 2 );
   ++row;
   glay->setRowStretch( row, 1 );
   glay->setColStretch( 1, 1 );

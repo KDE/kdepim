@@ -221,7 +221,7 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 
 	QLabel *label=new QLabel(dialogText, page);
 	label->setAlignment( Qt::TextWordWrap );
-	layout->addMultiCellWidget( label,  0,0, 0,1 );
+	layout->addWidget( label,  0, 0, 1, 2 );
 
  	layout->addItem( new QSpacerItem( 20, 10, QSizePolicy::Minimum,
 		QSizePolicy::Fixed ), 1, 0 );
@@ -246,7 +246,7 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 	{
 #ifdef USE_KHEXEDIT
 		label=new QLabel(i18n("Entry in KPilot"), page);
-		layout->addMultiCellWidget( label, 2,2,0,1);
+		layout->addWidget( label, 2,0, 1, 2 );
 
 		// directly display the record's data:
 		QWidget *hexEdit = KHE::createBytesEditWidget( page, "LocalBufferEdit" );
@@ -274,10 +274,10 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 			tmpW->setFrameShadow( Q3Frame::Sunken );
 			hexEdit = tmpW;
 		}
-		layout->addMultiCellWidget( hexEdit, 3,3,0,1);
+		layout->addWidget( hexEdit, 3,0, 1, 2 );
 
 		label=new QLabel(i18n("Entry on Handheld"), page);
-		layout->addMultiCellWidget( label, 4,4,0,1);
+		layout->addWidget( label, 4,0, 1, 2 );
 
 		// directly display the record's data:
 		hexEdit = KHE::createBytesEditWidget( page, "SerialBufferEdit" );
@@ -305,7 +305,7 @@ bool InternalEditorAction::queryUseKPilotChanges(QString dbName, recordid_t id, 
 			tmpW->setFrameShadow( Q3Frame::Sunken );
 			hexEdit = tmpW;
 		}
-		layout->addMultiCellWidget( hexEdit, 5,5,0,1);
+		layout->addWidget( hexEdit, 5,0, 1, 2 );
 #endif
 	}
 

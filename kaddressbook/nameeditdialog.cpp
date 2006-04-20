@@ -66,7 +66,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   mPrefixCombo->setEditable( true );
   mPrefixCombo->setEnabled( !readOnly );
   label->setBuddy( mPrefixCombo );
-  layout->addMultiCellWidget( mPrefixCombo, 0, 0, 1, 2 );
+  layout->addWidget( mPrefixCombo, 0, 1, 1, 2 );
 
   mPrefixCombo->setWhatsThis( i18n( "The predefined honorific prefixes can be extended in the settings dialog." ) );
 
@@ -75,21 +75,21 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   mGivenNameEdit = new KLineEdit( page );
   mGivenNameEdit->setReadOnly( readOnly );
   label->setBuddy( mGivenNameEdit );
-  layout->addMultiCellWidget( mGivenNameEdit, 1, 1, 1, 2 );
+  layout->addWidget( mGivenNameEdit, 1, 1, 1, 2 );
 
   label = new QLabel( i18n( "Additional names:" ), page );
   layout->addWidget( label, 2, 0 );
   mAdditionalNameEdit = new KLineEdit( page );
   mAdditionalNameEdit->setReadOnly( readOnly );
   label->setBuddy( mAdditionalNameEdit );
-  layout->addMultiCellWidget( mAdditionalNameEdit, 2, 2, 1, 2 );
+  layout->addWidget( mAdditionalNameEdit, 2, 1, 1, 2 );
 
   label = new QLabel( i18n( "Family names:" ), page );
   layout->addWidget( label, 3, 0 );
   mFamilyNameEdit = new KLineEdit( page );
   mFamilyNameEdit->setReadOnly( readOnly );
   label->setBuddy( mFamilyNameEdit );
-  layout->addMultiCellWidget( mFamilyNameEdit, 3, 3, 1, 2 );
+  layout->addWidget( mFamilyNameEdit, 3, 1, 1, 2 );
 
   label = new QLabel( i18n( "Honorific suffixes:" ), page );
   layout->addWidget( label, 4, 0 );
@@ -98,7 +98,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   mSuffixCombo->setEditable( true );
   mSuffixCombo->setEnabled( !readOnly );
   label->setBuddy( mSuffixCombo );
-  layout->addMultiCellWidget( mSuffixCombo, 4, 4, 1, 2 );
+  layout->addWidget( mSuffixCombo, 4, 1, 1, 2 );
 
   mSuffixCombo->setWhatsThis( i18n( "The predefined honorific suffixes can be extended in the settings dialog." ) );
 
@@ -118,7 +118,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   mParseBox->setEnabled( !readOnly );
   connect( mParseBox, SIGNAL( toggled(bool) ), SLOT( parseBoxChanged(bool) ) );
   connect( mParseBox, SIGNAL( toggled(bool) ), SLOT( modified() ) );
-  layout->addMultiCellWidget( mParseBox, 6, 6, 0, 1 );
+  layout->addWidget( mParseBox, 6, 0, 1, 2 );
 
   // Fill in the values
   mFamilyNameEdit->setText( addr.familyName() );

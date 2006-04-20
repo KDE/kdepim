@@ -85,10 +85,10 @@ ResourceGroupwareConfig::ResourceGroupwareConfig( QWidget* parent,  const char* 
   QFrame *hline = new QFrame( this );
   hline->setFrameStyle( QFrame::HLine | QFrame::Sunken );
 
-  mainLayout->addMultiCellWidget( hline, 3, 3, 0, 1 );
+  mainLayout->addWidget( hline, 3, 0, 1, 2 );
 
   QPushButton *updateButton = new QPushButton( i18n( "Retrieve Address Book List From Server" ), this );
-  mainLayout->addMultiCellWidget( updateButton, 4, 4, 0, 1 );
+  mainLayout->addWidget( updateButton, 4, 0, 1, 2 );
 
   mAddressBookView = new K3ListView( this );
   mAddressBookView->addColumn( i18n( "Address Book" ) );
@@ -98,7 +98,7 @@ ResourceGroupwareConfig::ResourceGroupwareConfig( QWidget* parent,  const char* 
 #endif
   mAddressBookView->setFullWidth( true );
 
-  mainLayout->addMultiCellWidget( mAddressBookView, 5, 5, 0, 1 );
+  mainLayout->addWidget( mAddressBookView, 5, 0, 1, 2 );
 
   label = new QLabel( i18n( "Address book for new contacts:" ), this );
   mAddressBookBox = new KComboBox( this );

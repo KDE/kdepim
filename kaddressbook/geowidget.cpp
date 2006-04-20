@@ -63,10 +63,10 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "package_network",
                     K3Icon::Desktop, K3Icon::SizeMedium ) );
   label->setAlignment( Qt::AlignTop );
-  topLayout->addMultiCellWidget( label, 0, 3, 0, 0 );
+  topLayout->addWidget( label, 0, 0, 4, 1);
 
   mGeoIsValid = new QCheckBox( i18n( "Use geo data" ), this );
-  topLayout->addMultiCellWidget( mGeoIsValid, 0, 0, 1, 2 );
+  topLayout->addWidget( mGeoIsValid, 0, 1, 1, 2 );
 
   label = new QLabel( i18n( "Latitude:" ), this );
   topLayout->addWidget( label, 1, 1 );
@@ -98,7 +98,7 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
 
   mExtendedButton = new QPushButton( i18n( "Edit Geo Data..." ), this );
   mExtendedButton->setEnabled( false );
-  topLayout->addMultiCellWidget( mExtendedButton, 3, 3, 1, 2 );
+  topLayout->addWidget( mExtendedButton, 3, 1, 1, 2 );
 
   connect( mLatitudeBox, SIGNAL( valueChanged( double ) ),
            SLOT( setModified() ) );
@@ -185,7 +185,7 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
   topLayout->setRowStretch( 1, 1 );
 
   mMapWidget = new GeoMapWidget( page );
-  topLayout->addMultiCellWidget( mMapWidget, 0, 1, 0, 0 );
+  topLayout->addWidget( mMapWidget, 0, 0, 2, 1);
 
   mCityCombo = new KComboBox( page );
   topLayout->addWidget( mCityCombo, 0, 1 );

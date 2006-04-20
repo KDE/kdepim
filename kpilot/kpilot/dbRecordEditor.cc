@@ -165,12 +165,12 @@ void DBRecordEditor::initWidgets()
 	fFlagsGroupLayout->addWidget( fBusy, 0, 1 );
 
 	fSecret = new QCheckBox( fFlagsGroup, "fSecret" );
-	fFlagsGroupLayout->addMultiCellWidget( fSecret, 1, 1, 1, 2 );
+	fFlagsGroupLayout->addWidget( fSecret, 1, 1, 1, 2 );
 
 	fArchived = new QCheckBox( fFlagsGroup, "fArchived" );
 	fFlagsGroupLayout->addWidget( fArchived, 0, 2 );
 
-	DBRecordEditorBaseLayout->addMultiCellWidget( fFlagsGroup, 1, 1, 0, 3 );
+	DBRecordEditorBaseLayout->addWidget( fFlagsGroup, 1, 0, 1, 4 );
 
 #ifdef USE_KHEXEDIT
 	fRecordData = KHE::createBytesEditWidget( fWidget, "fRecordData" );
@@ -209,7 +209,7 @@ void DBRecordEditor::initWidgets()
 		fRecordDataIf = 0;
 	}
 
-	DBRecordEditorBaseLayout->addMultiCellWidget( fRecordData, 2, 2, 0, 3 );
+	DBRecordEditorBaseLayout->addWidget( fRecordData, 2, 0, 1, 4 );
 #endif
 
 	languageChange();

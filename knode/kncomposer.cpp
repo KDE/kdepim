@@ -1763,7 +1763,7 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   f_up2=new KComboBox(true, hdrFrame);
   l_fup2=new QLabel(f_up2, i18n("Follo&wup-To:"), hdrFrame);
   hdrL->addWidget(l_fup2, 2,0);
-  hdrL->addMultiCellWidget(f_up2, 2,2, 1,2);
+  hdrL->addWidget(f_up2, 2, 1, 1,2);
 
   //subject
   s_ubject=new KNLineEditSpell(this, false, hdrFrame);
@@ -1771,7 +1771,7 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
 
   QLabel *l=new QLabel(s_ubject, i18n("S&ubject:"), hdrFrame);
   hdrL->addWidget(l, 3,0);
-  hdrL->addMultiCellWidget(s_ubject, 3,3, 1,2);
+  hdrL->addWidget(s_ubject, 3, 1, 1,2);
   connect(s_ubject, SIGNAL(textChanged(const QString&)),
           parent(), SLOT(slotSubjectChanged(const QString&)));
 
@@ -1903,7 +1903,7 @@ void KNComposer::ComposerView::showAttachmentView()
     QGridLayout *topL=new QGridLayout(a_ttWidget, 3, 2, 4, 4);
 
     a_ttView=new AttachmentView(a_ttWidget);
-    topL->addMultiCellWidget(a_ttView, 0,2, 0,0);
+    topL->addWidget(a_ttView, 0, 0, 3, 1);
 
     //connections
     connect(a_ttView, SIGNAL(currentChanged(Q3ListViewItem*)),

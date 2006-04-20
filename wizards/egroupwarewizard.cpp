@@ -340,7 +340,7 @@ EGroupwareWizard::EGroupwareWizard() : KConfigWizard( new EGroupwarePropagator )
   QWhatsThis::add( label, i18n( "Some servers may not have the xmlrpc.php file in the 'egroupware' folder of the server. With this option it is possible to eventually change the path to that file. For most servers, the default value is OK." ) );
 
   mUseSSLConnectionCheck = new QCheckBox( i18n( "Use SS&L connection" ), page );
-  topLayout->addMultiCellWidget( mUseSSLConnectionCheck, 5, 5, 0, 1 );
+  topLayout->addWidget( mUseSSLConnectionCheck, 5, 0, 1, 2 );
 
   topLayout->setRowStretch( 6, 1 );
 

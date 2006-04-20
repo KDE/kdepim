@@ -243,11 +243,11 @@ SloxWizard::SloxWizard() : KConfigWizard( new SloxPropagator )
   topLayout->addWidget( mPasswordEdit, 2, 1 );
 
   mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
-  topLayout->addMultiCellWidget( mSavePasswordCheck, 3, 3, 0, 1 );
+  topLayout->addWidget( mSavePasswordCheck, 3, 0, 1, 2 );
 
   mSecureCheck = new QCheckBox( i18n("Encrypt communication with server"),
                                 page );
-  topLayout->addMultiCellWidget( mSecureCheck, 4, 4, 0, 1 );
+  topLayout->addWidget( mSecureCheck, 4, 0, 1, 2 );
 
   topLayout->setRowStretch( 5, 1 );
 

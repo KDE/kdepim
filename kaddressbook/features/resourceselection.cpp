@@ -369,7 +369,7 @@ void ResourceSelection::initGUI()
   mListView = new K3ListView( this );
   mListView->addColumn( i18n( "Address Books" ) );
   mListView->setFullWidth( true );
-  layout->addMultiCellWidget( mListView, 0, 0, 0, 2 );
+  layout->addWidget( mListView, 0, 0, 1, 3 );
 
   mAddButton = new QPushButton( i18n( "Add..." ), this );
   mEditButton = new QPushButton( i18n( "Edit..." ), this );

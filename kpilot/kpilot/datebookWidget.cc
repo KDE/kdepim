@@ -52,7 +52,7 @@ DatebookWidget::DatebookWidget(QWidget *parent, const QString &dbpath) :
 
 	fDatePicker = new KDatePicker( this, "fDatePicker" );
 	fDatePicker->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)4, (QSizePolicy::SizeType)5, 0, 0, fDatePicker->sizePolicy().hasHeightForWidth() ) );
-	g->addMultiCellWidget(fDatePicker,0,0,0,2);
+	g->addWidget(fDatePicker,0,0, 1, 3 );
 
 	QSpacerItem* spacer = new QSpacerItem( 20, 180, QSizePolicy::Minimum, QSizePolicy::Expanding );
 	g->addItem( spacer, 1, 1 );
@@ -78,7 +78,7 @@ DatebookWidget::DatebookWidget(QWidget *parent, const QString &dbpath) :
 	fEventList->setResizeMode( K3ListView::/*LastColumn*/AllColumns );
 	fEventList->setFullWidth( true );
 //	fEventList->setAlternateBackground( QColor( 221, 146, 240 ) );
-	g->addMultiCellWidget(fEventList, 0, 2, 3, 3);
+	g->addWidget(fEventList, 0, 3, 3, 1);
 
 	connect(fDatePicker, SIGNAL(dateChanged()), SLOT(slotDayChanged()));
 	connect(fAddButton, SIGNAL(clicked()), SLOT(slotAddEvent()));

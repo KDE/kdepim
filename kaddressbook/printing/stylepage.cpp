@@ -121,7 +121,7 @@ void StylePage::initGUI()
   QLabel *label = new QLabel( i18n( "What should the print look like?\n"
                                     "KAddressBook has several printing styles, designed for different purposes.\n"
                                     "Choose the style that suits your needs below." ), this );
-  topLayout->addMultiCellWidget( label, 0, 0, 0, 1 );
+  topLayout->addWidget( label, 0, 0, 1, 2 );
 
   Q3ButtonGroup *group = new Q3ButtonGroup( i18n( "Sorting" ), this );
   group->setColumnLayout( 0, Qt::Vertical );

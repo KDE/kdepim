@@ -61,10 +61,10 @@ ResourceRemoteConfig::ResourceRemoteConfig( QWidget* parent )
   mainLayout->addWidget( mUploadUrl, 2, 1 );
 
   mReloadConfig = new ResourceCachedReloadConfig( this );
-  mainLayout->addMultiCellWidget( mReloadConfig, 3, 3, 0, 1 );
+  mainLayout->addWidget( mReloadConfig, 3, 0, 1, 2 );
 
   mSaveConfig = new ResourceCachedSaveConfig( this );
-  mainLayout->addMultiCellWidget( mSaveConfig, 4, 4, 0, 1 );
+  mainLayout->addWidget( mSaveConfig, 4, 0, 1, 2 );
 }
 
 void ResourceRemoteConfig::loadSettings( KRES::Resource *resource )

@@ -58,16 +58,16 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
 
   Q3Frame *line = new Q3Frame( this );
   line->setFrameStyle( Q3Frame::Sunken | Q3Frame::HLine );
-  topLayout->addMultiCellWidget( line, 2, 2, 0, 1 );
+  topLayout->addWidget( line, 2, 0, 1, 2 );
 
   mUseCategories = new QCheckBox( i18n( "Filter by categories" ), this );
-  topLayout->addMultiCellWidget( mUseCategories, 3, 3, 0, 1 );
+  topLayout->addWidget( mUseCategories, 3, 0, 1, 2 );
 
   mCategoryView = new K3ListView( this );
   mCategoryView->addColumn( "" );
   mCategoryView->header()->hide();
   mCategoryView->setEnabled( false );
-  topLayout->addMultiCellWidget( mCategoryView, 4, 4, 0, 1 );
+  topLayout->addWidget( mCategoryView, 4, 0, 1, 2 );
 
   connect( mUseCategories, SIGNAL( toggled( bool ) ),
            mCategoryView, SLOT( setEnabled( bool ) ) );

@@ -57,7 +57,7 @@ ResourceTVAnytimeConfig::ResourceTVAnytimeConfig( QWidget* parent,  const char* 
   mDays = new QSpinBox( this );
   mainLayout->addWidget( mDays, 2, 1 );
   mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
-  mainLayout->addMultiCellWidget( mReloadConfig, 3, 3, 0, 1 );
+  mainLayout->addWidget( mReloadConfig, 3, 0, 1, 2 );
 
 }
 

@@ -237,7 +237,7 @@ void TodoWidget::setupWidget()
 	fListBox->setFullWidth( true );
 	fListBox->setItemsMovable( false );
 	fListBox->setItemsRenameable (true);
-	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
+	grid->addWidget(fListBox, 1, 0, 1, 2 );
 	connect(fListBox, SIGNAL(selectionChanged(Q3ListViewItem*)),
 		this, SLOT(slotShowTodo(Q3ListViewItem*)));
 	connect(fListBox, SIGNAL(doubleClicked(Q3ListViewItem*)),
@@ -258,7 +258,7 @@ void TodoWidget::setupWidget()
 
 	// todo info text view
 	fTodoInfo = new Q3TextView(this);
-	grid->addMultiCellWidget(fTodoInfo, 1, 4, 2, 2);
+	grid->addWidget(fTodoInfo, 1, 2, 4, 1);
 
 	QPushButton *button;
 	QString wt;

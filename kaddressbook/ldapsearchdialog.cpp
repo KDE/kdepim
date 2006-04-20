@@ -168,12 +168,12 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
 
   mRecursiveCheckbox = new QCheckBox( i18n( "Recursive search" ), groupBox  );
   mRecursiveCheckbox->setChecked( true );
-  boxLayout->addMultiCellWidget( mRecursiveCheckbox, 1, 1, 0, 4 );
+  boxLayout->addWidget( mRecursiveCheckbox, 1, 0, 1, 5 );
 
   mSearchType = new KComboBox( groupBox );
   mSearchType->insertItem( i18n( "Contains" ) );
   mSearchType->insertItem( i18n( "Starts With" ) );
-  boxLayout->addMultiCellWidget( mSearchType, 1, 1, 3, 4 );
+  boxLayout->addWidget( mSearchType, 1, 3, 1, 2 );
 
   topLayout->addWidget( groupBox );
 

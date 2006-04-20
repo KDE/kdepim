@@ -238,7 +238,7 @@ void AddressWidget::setupWidget()
 	grid->addWidget(label, 0, 0);
 
 	fListBox = new Q3ListBox(this);
-	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
+	grid->addWidget(fListBox, 1, 0, 1, 2 );
 	connect(fListBox, SIGNAL(highlighted(int)),
 		this, SLOT(slotShowAddress(int)));
 	connect(fListBox, SIGNAL(selected(int)),
@@ -253,7 +253,7 @@ void AddressWidget::setupWidget()
 
 	// address info text view
 	fAddrInfo = new Q3TextView(this);
-	grid->addMultiCellWidget(fAddrInfo, 1, 4, 2, 2);
+	grid->addWidget(fAddrInfo, 1, 2, 4, 1);
 
 	QPushButton *button;
 	QString wt;

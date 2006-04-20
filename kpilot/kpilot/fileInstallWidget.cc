@@ -98,7 +98,7 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	fIconView = new K3IconView(this);
 	connect(fIconView, SIGNAL(dropped(QDropEvent *, const Q3ValueList<Q3IconDragItem> &)),
 		this, SLOT(slotDropEvent(QDropEvent *, const Q3ValueList<Q3IconDragItem> &)));
-	grid->addMultiCellWidget(fIconView, 1, 4, 2, 3);
+	grid->addWidget(fIconView, 1, 2, 4, 2 );
 	fIconView->setWhatsThis(
 		i18n
 		("<qt>This lists files that will be installed on the Pilot during the next HotSync. Drag files here or use the Add button.</qt>"));

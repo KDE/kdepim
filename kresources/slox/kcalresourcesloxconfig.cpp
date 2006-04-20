@@ -71,7 +71,7 @@ KCalResourceSloxConfig::KCalResourceSloxConfig( QWidget* parent,  const char* na
 
   mLastSyncCheck = new QCheckBox( i18n("Only load data since last sync"),
                                   this );
-  mainLayout->addMultiCellWidget( mLastSyncCheck, 4, 4, 0, 1 );
+  mainLayout->addWidget( mLastSyncCheck, 4, 0, 1, 2 );
 
   mCalButton = new KPushButton( i18n("Calendar Folder..."), this );
   mainLayout->addWidget( mCalButton, 5, 0 );
@@ -82,10 +82,10 @@ KCalResourceSloxConfig::KCalResourceSloxConfig( QWidget* parent,  const char* na
   connect( mTaskButton, SIGNAL( clicked() ), SLOT( selectTaskFolder() ) );
 
   mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
-  mainLayout->addMultiCellWidget( mReloadConfig, 6, 6, 0, 1 );
+  mainLayout->addWidget( mReloadConfig, 6, 0, 1, 2 );
 
   mSaveConfig = new KCal::ResourceCachedSaveConfig( this );
-  mainLayout->addMultiCellWidget( mSaveConfig, 7, 7, 0, 1 );
+  mainLayout->addWidget( mSaveConfig, 7, 0, 1, 2 );
 }
 
 void KCalResourceSloxConfig::loadSettings( KRES::Resource *resource )

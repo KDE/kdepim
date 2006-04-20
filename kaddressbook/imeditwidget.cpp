@@ -64,7 +64,7 @@ IMEditWidget::IMEditWidget( QWidget *parent, KABC::Addressee &addr, const char *
 
   mEditButton = new QPushButton( i18n( "Edit IM Addresses..." ), this);
   connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
-  topLayout->addMultiCellWidget( mEditButton, 1, 1, 0, 1 );
+  topLayout->addWidget( mEditButton, 1, 0, 1, 2 );
 
   topLayout->activate();
 }

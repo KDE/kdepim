@@ -68,12 +68,12 @@ ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,  cons
   Q3Frame *hline = new Q3Frame( this );
   hline->setFrameStyle( Q3Frame::HLine | Q3Frame::Sunken );
 
-  mainLayout->addMultiCellWidget( hline, 3, 3, 0, 1 );
+  mainLayout->addWidget( hline, 3, 0, 1, 2 );
 
   mFolderConfig = new KPIM::FolderConfig( this );
   connect( mFolderConfig, SIGNAL( updateFoldersClicked() ),
     SLOT( updateFolders() ) );
-  mainLayout->addMultiCellWidget( mFolderConfig, 4, 4, 0, 1 );
+  mainLayout->addWidget( mFolderConfig, 4, 0, 1, 2 );
 }
 
 void ResourceGroupwareBaseConfig::loadSettings( KRES::Resource *res )

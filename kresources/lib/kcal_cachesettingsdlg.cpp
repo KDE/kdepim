@@ -50,10 +50,10 @@ CacheSettingsDialog::CacheSettingsDialog( QWidget* parent, const char* name )
   mainLayout->setSpacing( KDialog::spacingHint() );
 
   mReloadConfig = new KCal::ResourceCachedReloadConfig( mainWidget );
-  mainLayout->addMultiCellWidget( mReloadConfig, 1, 3, 2, 2 );
+  mainLayout->addWidget( mReloadConfig, 1, 2, 3, 1);
 
   mSaveConfig = new KCal::ResourceCachedSaveConfig( mainWidget );
-  mainLayout->addMultiCellWidget( mSaveConfig, 4, 4, 2, 2 );
+  mainLayout->addWidget( mSaveConfig, 4, 2, 1, 1);
 }
 
 void CacheSettingsDialog::loadSettings( KRES::Resource *resource )

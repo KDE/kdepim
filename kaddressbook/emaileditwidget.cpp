@@ -108,7 +108,7 @@ EmailEditWidget::EmailEditWidget( QWidget *parent, const char *name )
 
   mEditButton = new QPushButton( i18n( "Edit Email Addresses..." ), this);
   connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
-  topLayout->addMultiCellWidget( mEditButton, 1, 1, 0, 1 );
+  topLayout->addWidget( mEditButton, 1, 0, 1, 2 );
 
   topLayout->activate();
 }
@@ -191,7 +191,7 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
            SLOT( selectionChanged( int ) ) );
   connect( mEmailListBox, SIGNAL( selected( int ) ),
            SLOT( edit() ) );
-  topLayout->addMultiCellWidget( mEmailListBox, 0, 3, 0, 1 );
+  topLayout->addWidget( mEmailListBox, 0, 0, 4, 2 );
 
   mAddButton = new QPushButton( i18n( "Add..." ), page );
   connect( mAddButton, SIGNAL( clicked() ), SLOT( add() ) );

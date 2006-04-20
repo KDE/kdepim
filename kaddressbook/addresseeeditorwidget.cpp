@@ -151,7 +151,7 @@ void AddresseeEditorWidget::setupTab1()
   label = new QLabel( tab1 );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "personal", K3Icon::Desktop,
                                                       K3Icon::SizeMedium ) );
-  layout->addMultiCellWidget( label, 0, 1, 0, 0 );
+  layout->addWidget( label, 0, 0, 2, 1);
 
   // First name
   button = new QPushButton( i18n( "Edit Name..." ), tab1 );
@@ -199,47 +199,47 @@ void AddresseeEditorWidget::setupTab1()
   // Left hand separator. This separator doesn't go all the way
   // across so the dialog still flows from top to bottom
   bar = new KSeparator( Qt::Horizontal, tab1 );
-  layout->addMultiCellWidget( bar, 4, 4, 0, 2 );
+  layout->addWidget( bar, 4, 0, 1, 3 );
 
   //////////////////////////////////////
   // Phone numbers (upper right)
   label = new QLabel( tab1 );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "kaddressbook",
                     K3Icon::Desktop, K3Icon::SizeMedium ) );
-  layout->addMultiCellWidget( label, 0, 1, 3, 3 );
+  layout->addWidget( label, 0, 3, 2, 1 );
 
   mPhoneEditWidget = new PhoneEditWidget( tab1 );
   connect( mPhoneEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  layout->addMultiCellWidget( mPhoneEditWidget, 0, 3, 4, 6 );
+  layout->addWidget( mPhoneEditWidget, 0, 4, 4, 3 );
 
   bar = new KSeparator( Qt::Horizontal, tab1 );
-  layout->addMultiCellWidget( bar, 4, 4, 3, 6 );
+  layout->addWidget( bar, 4, 3, 1, 4 );
 
   //////////////////////////////////////
   // Addresses (lower left)
   label = new QLabel( tab1 );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "kfm_home", K3Icon::Desktop,
                                                      K3Icon::SizeMedium ) );
-  layout->addMultiCellWidget( label, 5, 6, 0, 0 );
+  layout->addWidget( label, 5, 0, 2, 1);
 
   mAddressEditWidget = new AddressEditWidget( tab1 );
   connect( mAddressEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  layout->addMultiCellWidget( mAddressEditWidget, 5, 10, 1, 2 );
+  layout->addWidget( mAddressEditWidget, 5, 1, 6, 2 );
 
   //////////////////////////////////////
   // Email / Web (lower right)
   label = new QLabel( tab1 );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "email", K3Icon::Desktop,
                                                      K3Icon::SizeMedium ) );
-  layout->addMultiCellWidget( label, 5, 6, 3, 3 );
+  layout->addWidget( label, 5, 3, 2, 1);
 
   mEmailWidget = new EmailEditWidget( tab1 );
   connect( mEmailWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  layout->addMultiCellWidget( mEmailWidget, 5, 6, 4, 6 );
+  layout->addWidget( mEmailWidget, 5, 4, 2, 3 );
 
   // add the separator
   bar = new KSeparator( Qt::Horizontal, tab1 );
-  layout->addMultiCellWidget( bar, 7, 7, 3, 6 );
+  layout->addWidget( bar, 7, 3, 1, 4 );
 
   QHBoxLayout *homePageLayout = new QHBoxLayout( 0, 11, 7 );
 
@@ -255,7 +255,7 @@ void AddresseeEditorWidget::setupTab1()
   label->setBuddy( mURLEdit );
   homePageLayout->addWidget( label );
   homePageLayout->addWidget( mURLEdit );
-  layout->addMultiCellLayout( homePageLayout, 8, 8, 3, 6 );
+  layout->addLayout( homePageLayout, 8, 3, 1, 4 );
 
   QHBoxLayout *blogLayout = new QHBoxLayout( 0, 11, 7 );
   label = new QLabel( i18n( "Blog feed:" ), tab1 );
@@ -265,16 +265,16 @@ void AddresseeEditorWidget::setupTab1()
   connect( mBlogEdit, SIGNAL( textChanged( const QString & ) ),
            SLOT( textChanged( const QString & ) ) );
   label->setBuddy( mBlogEdit );
-  layout->addMultiCellLayout( blogLayout, 9, 9, 4, 6 );
+  layout->addLayout( blogLayout, 9, 4, 1, 3 );
 
   mIMWidget = new IMEditWidget( tab1, mAddressee );
   connect( mIMWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  layout->addMultiCellWidget( mIMWidget, 10, 10, 4, 6 );
+  layout->addWidget( mIMWidget, 10, 4, 1, 3 );
 
   layout->addColSpacing( 6, 50 );
 
   bar = new KSeparator( Qt::Horizontal, tab1 );
-  layout->addMultiCellWidget( bar, 11, 11, 0, 6 );
+  layout->addWidget( bar, 11, 0, 1, 7 );
 
   ///////////////////////////////////////
   KHBox *categoryBox = new KHBox( tab1 );
@@ -292,7 +292,7 @@ void AddresseeEditorWidget::setupTab1()
   mSecrecyWidget = new SecrecyWidget( categoryBox );
   connect( mSecrecyWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
 
-  layout->addMultiCellWidget( categoryBox, 12, 12, 0, 6 );
+  layout->addWidget( categoryBox, 12, 0, 1, 7 );
 
   // Build the layout and add to the tab widget
   layout->activate(); // required
@@ -319,7 +319,7 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( tab2 );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "folder", K3Icon::Desktop,
                                                      K3Icon::SizeMedium ) );
-  layout->addMultiCellWidget( label, 0, 1, 0, 0 );
+  layout->addWidget( label, 0, 0, 2, 1 );
 
   label = new QLabel( i18n( "Department:" ), tab2 );
   layout->addWidget( label, 0, 1 );
@@ -351,7 +351,7 @@ void AddresseeEditorWidget::setupTab2()
   connect( mManagerEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mManagerEdit );
-  layout->addMultiCellWidget( mManagerEdit, 0, 0, 4, 5 );
+  layout->addWidget( mManagerEdit, 0, 4, 1, 2 );
 
   label = new QLabel( i18n( "Assistant's name:" ), tab2 );
   layout->addWidget( label, 1, 3 );
@@ -359,7 +359,7 @@ void AddresseeEditorWidget::setupTab2()
   connect( mAssistantEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mAssistantEdit );
-  layout->addMultiCellWidget( mAssistantEdit, 1, 1, 4, 5 );
+  layout->addWidget( mAssistantEdit, 1, 4, 1, 2 );
 
   label = new QLabel( i18nc( "<titleLabel>:", "%1:", KABC::Addressee::titleLabel() ), tab2 );
   layout->addWidget( label, 2, 3 );
@@ -367,10 +367,10 @@ void AddresseeEditorWidget::setupTab2()
   connect( mTitleEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   label->setBuddy( mTitleEdit );
-  layout->addMultiCellWidget( mTitleEdit, 2, 2, 4, 5 );
+  layout->addWidget( mTitleEdit, 2, 4, 1, 2 );
 
   bar = new KSeparator( Qt::Horizontal, tab2 );
-  layout->addMultiCellWidget( bar, 3, 3, 0, 5 );
+  layout->addWidget( bar, 3, 0, 1, 6 );
 
   /////////////////////////////////////////////////
   // Personal info
@@ -378,7 +378,7 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( tab2 );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "personal", K3Icon::Desktop,
                                                      K3Icon::SizeMedium ) );
-  layout->addMultiCellWidget( label, 4, 5, 0, 0 );
+  layout->addWidget( label, 4, 0, 2, 1);
 
   label = new QLabel( i18n( "Nickname:" ), tab2 );
   layout->addWidget( label, 4, 1 );
@@ -417,7 +417,7 @@ void AddresseeEditorWidget::setupTab2()
   layout->addWidget( mAnniversaryPicker, 5, 4 );
 
   bar = new KSeparator( Qt::Horizontal, tab2 );
-  layout->addMultiCellWidget( bar, 6, 6, 0, 5 );
+  layout->addWidget( bar, 6, 0, 1, 6 );
 
    //////////////////////////////////////
   // Notes
@@ -429,7 +429,7 @@ void AddresseeEditorWidget::setupTab2()
   mNoteEdit->setMinimumSize( mNoteEdit->sizeHint() );
   connect( mNoteEdit, SIGNAL( textChanged() ), SLOT( emitModified() ) );
   label->setBuddy( mNoteEdit );
-  layout->addMultiCellWidget( mNoteEdit, 7, 7, 1, 5 );
+  layout->addWidget( mNoteEdit, 7, 1, 1, 5 );
 
    // Build the layout and add to the tab widget
   layout->activate(); // required

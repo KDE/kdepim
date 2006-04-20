@@ -66,13 +66,13 @@ ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent )
   mPasswordEdit->setEchoMode( KLineEdit::Password );
 
   QPushButton *settingsButton = new QPushButton( i18n( "View User Settings" ), this );
-  mainLayout->addMultiCellWidget( settingsButton, 4, 4, 0, 1 );
+  mainLayout->addWidget( settingsButton, 4, 0, 1, 2 );
 
   mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
-  mainLayout->addMultiCellWidget( mReloadConfig, 5, 5, 0, 1 );
+  mainLayout->addWidget( mReloadConfig, 5, 0, 1, 2 );
 
   mSaveConfig = new KCal::ResourceCachedSaveConfig( this );
-  mainLayout->addMultiCellWidget( mSaveConfig, 6, 6, 0, 1 );
+  mainLayout->addWidget( mSaveConfig, 6, 0, 1, 2 );
 
   connect( settingsButton, SIGNAL( clicked() ), SLOT( slotViewUserSettings() ) );
 

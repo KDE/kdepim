@@ -249,7 +249,7 @@ void MemoWidget::setupWidget()
 	grid->addWidget(label, 0, 0);
 
 	fListBox = new Q3ListBox(this);
-	grid->addMultiCellWidget(fListBox, 1, 1, 0, 1);
+	grid->addWidget(fListBox, 1, 0, 1, 2 );
 	connect(fListBox, SIGNAL(highlighted(int)),
 		this, SLOT(slotShowMemo(int)));
 	connect(fListBox, SIGNAL(selectionChanged()),
@@ -265,7 +265,7 @@ void MemoWidget::setupWidget()
 	fTextWidget = new KTextEdit(this, "textArea");
 	fTextWidget->setWordWrap(KTextEdit::WidgetWidth);
 	fTextWidget->setTextFormat(Qt::PlainText);
-	grid->addMultiCellWidget(fTextWidget, 1, 4, 2, 2);
+	grid->addWidget(fTextWidget, 1, 2, 4, 1);
 	fTextWidget->setWhatsThis(
 		i18n("The text of the selected memo appears here."));
 	fTextWidget->setReadOnly(!KPilotSettings::internalEditors());

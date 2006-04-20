@@ -141,7 +141,7 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
   mImageLabel = new ImageLabel( i18n( "Picture" ), box );
   mImageLabel->setFixedSize( 100, 140 );
   mImageLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
-  boxLayout->addMultiCellWidget( mImageLabel, 0, 3, 0, 0, Qt::AlignTop );
+  boxLayout->addWidget( mImageLabel, 0, 0, 4, 1, Qt::AlignTop );
 
   mImageUrl = new KUrlRequester( box );
   mImageUrl->setFilter( KImageIO::pattern() );
@@ -155,13 +155,13 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
   boxLayout->addWidget( mClearButton, 0, 2 );
 
   mBlogButton = new QPushButton( i18n( "Get From Blog" ), box );
-  boxLayout->addMultiCellWidget( mBlogButton, 1, 1, 1, 2 );
+  boxLayout->addWidget( mBlogButton, 1, 1, 1, 2 );
   connect( mBlogButton, SIGNAL( clicked() ), SLOT( getPictureFromBlog() ) );
   showBlogButton( false );
 
   mUseImageUrl = new QCheckBox( i18n( "Store as URL" ), box );
   mUseImageUrl->setEnabled( false );
-  boxLayout->addMultiCellWidget( mUseImageUrl, 2, 2, 1, 2 );
+  boxLayout->addWidget( mUseImageUrl, 2, 1, 1, 2 );
 
   topLayout->addWidget( box );
 

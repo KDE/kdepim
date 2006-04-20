@@ -135,7 +135,7 @@ void FilterEditDialog::initGUI()
   mCategoriesView = new K3ListView( page );
   mCategoriesView->addColumn( i18n( "Category" ) );
   mCategoriesView->setFullWidth( true );
-  topLayout->addMultiCellWidget( mCategoriesView, 1, 1, 0, 1 );
+  topLayout->addWidget( mCategoriesView, 1, 0, 1, 2 );
 
   mMatchRuleGroup = new Q3ButtonGroup( page );
   mMatchRuleGroup->setExclusive( true );
@@ -153,7 +153,7 @@ void FilterEditDialog::initGUI()
   mMatchRuleGroup->insert( radio );
   gbLayout->addWidget( radio );
 
-  topLayout->addMultiCellWidget( mMatchRuleGroup, 2, 2, 0, 1 );
+  topLayout->addWidget( mMatchRuleGroup, 2, 0, 1, 2 );
 }
 
 void FilterEditDialog::filterNameTextChanged( const QString &text )

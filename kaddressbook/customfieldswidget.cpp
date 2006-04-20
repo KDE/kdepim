@@ -69,7 +69,7 @@ AddFieldDialog::AddFieldDialog( QWidget *parent, const char *name )
 
   mGlobal = new QCheckBox( i18n( "Is available for all contacts" ), page );
   mGlobal->setChecked( true );
-  layout->addMultiCellWidget( mGlobal, 2, 2, 0, 1 );
+  layout->addWidget( mGlobal, 2, 0, 1, 2 );
 
   connect( mTitle, SIGNAL( textChanged( const QString& ) ),
            this, SLOT( nameChanged( const QString& ) ) );
@@ -463,7 +463,7 @@ void CustomFieldsWidget::initGUI()
                                          KDialog::spacingHint() );
 
   mFieldWidget = new FieldWidget( this );
-  layout->addMultiCellWidget( mFieldWidget, 0, 0, 0, 2 );
+  layout->addWidget( mFieldWidget, 0, 0, 1, 3 );
 
   mAddButton = new QPushButton( i18n( "Add Field..." ), this );
   layout->addWidget( mAddButton, 1, 1, Qt::AlignRight );

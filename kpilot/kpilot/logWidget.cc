@@ -101,7 +101,7 @@ LogWidget::LogWidget(QWidget * parent) :
 
 	fLog->setWhatsThis( i18n("<qt>This lists all the messages received "
 			"during the current HotSync</qt>"));
-	grid->addMultiCellWidget(fLog, 1, 1,1,2);
+	grid->addWidget(fLog, 1,1, 1,2);
 
 
 	QString initialText ;
@@ -152,7 +152,7 @@ LogWidget::LogWidget(QWidget * parent) :
 
 	fButtonBox = h;
 
-	grid->addMultiCellWidget(h,2,2,1,2);
+	grid->addWidget(h,2,1, 1,2);
 
 	fLabel = new QLabel(i18n("Sync progress:"),this);
 	grid->addWidget(fLabel,3,1);
@@ -201,7 +201,7 @@ LogWidget::LogWidget(QWidget * parent) :
 		fSplash->setPixmap(splash);
 		fSplash->setAlignment(Qt::AlignCenter);
 		QTimer::singleShot(3000,this,SLOT(hideSplash()));
-		grid->addMultiCellWidget(fSplash,1,3,1,2);
+		grid->addWidget(fSplash,1,1,3,2);
 		grid->addColSpacing(0,10);
 		grid->setColStretch(1,50);
 		grid->setColStretch(2,50);

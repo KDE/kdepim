@@ -300,11 +300,11 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
   topLayout->addWidget( mPasswordEdit, 4, 1 );
 
   mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
-  topLayout->addMultiCellWidget( mSavePasswordCheck, 5, 5, 0, 1 );
+  topLayout->addWidget( mSavePasswordCheck, 5, 0, 1, 2 );
 
   mSecureCheck = new QCheckBox( i18n("Encrypt communication with server"),
                                 page );
-  topLayout->addMultiCellWidget( mSecureCheck, 5, 5, 0, 1 );
+  topLayout->addWidget( mSecureCheck, 5, 0, 1, 2 );
 
   topLayout->setRowStretch( 6, 1 );
 

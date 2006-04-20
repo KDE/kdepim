@@ -142,7 +142,7 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
     d->selfRequester->setKeys( sender );
     glay->addWidget( d->selfRequester, row, 1 );
     ++row;
-    glay->addMultiCellWidget( new KSeparator( Qt::Horizontal, view ), row, row, 0, 1 );
+    glay->addWidget( new KSeparator( Qt::Horizontal, view ), row, 0, 1, 2 );
   }
 
   const QStringList prefs = preferencesStrings();

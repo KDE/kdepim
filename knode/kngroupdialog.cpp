@@ -291,7 +291,7 @@ void KNGroupDialog::slotUser2()
   QGridLayout *topL = new QGridLayout( btnGrp );
 
   QRadioButton *takeLast = new QRadioButton( i18n("Created since last check:"), btnGrp );
-  topL->addMultiCellWidget(takeLast, 0, 0, 0, 1);
+  topL->addWidget(takeLast, 0, 0, 1, 2 );
 
   QLabel *l = new QLabel(KGlobal::locale()->formatDate(lastDate, false),btnGrp);
   topL->addWidget(l, 1, 1, Qt::AlignLeft);
@@ -299,7 +299,7 @@ void KNGroupDialog::slotUser2()
   connect(takeLast, SIGNAL(toggled(bool)), l, SLOT(setEnabled(bool)));
 
   QRadioButton *takeCustom = new QRadioButton( i18n("Created since this date:"), btnGrp );
-  topL->addMultiCellWidget(takeCustom, 2, 2, 0, 1);
+  topL->addWidget(takeCustom, 2, 0, 1, 2 );
 
   KDatePicker *dateSel = new KDatePicker( lastDate, btnGrp );
   dateSel->setMinimumSize(dateSel->sizeHint());

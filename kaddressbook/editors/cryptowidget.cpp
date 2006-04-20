@@ -78,7 +78,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   topLayout->setRowStretch( 4, 1 );
 
   QGroupBox* protGB = new QGroupBox( i18n( "Allowed Protocols" ), this );
-  topLayout->addMultiCellWidget( protGB, 0, 0, 0, 1 );
+  topLayout->addWidget( protGB, 0, 0, 1, 2 );
 
   uint msgFormat = 1;
   for ( uint i = 0 ; i < NumberOfProtocols ; ++i ) {
@@ -103,7 +103,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
   topLayout->addWidget( mSmimeCert, 2, 1 );
 
   QGroupBox* box = new QGroupBox( i18n( "Message Preference" ), this );
-  topLayout->addMultiCellWidget( box, 3, 3, 0, 1 );
+  topLayout->addWidget( box, 3, 0, 1, 2 );
 
 
   // Send preferences/sign (see libkleo/kleo/enum.h)

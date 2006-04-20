@@ -51,7 +51,7 @@ SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *na
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "multimedia",
                     K3Icon::Desktop, K3Icon::SizeMedium ) );
   label->setAlignment( Qt::AlignTop );
-  topLayout->addMultiCellWidget( label, 0, 1, 0, 0 );
+  topLayout->addWidget( label, 0, 0, 2, 1);
 
   mPlayButton = new QPushButton( i18n( "Play" ), this );
   mPlayButton->setEnabled( false );
