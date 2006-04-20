@@ -69,7 +69,8 @@ AddViewDialog::AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict,
   Q3DictIterator<ViewFactory> iter( *mViewFactoryDict );
   for ( iter.toFirst(); iter.current(); ++iter ) {
     QRadioButton *button = new QRadioButton( i18n((*iter)->type().toUtf8()),
-                                             mTypeGroup, (*iter)->type().toLatin1() );
+                                             mTypeGroup );
+    button->setObjectName( (*iter)->type().toLatin1() );
     label = new QLabel( (*iter)->description(), mTypeGroup );
     label->setWordWrap( true );
 

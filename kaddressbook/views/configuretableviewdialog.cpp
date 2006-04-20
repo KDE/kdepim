@@ -116,17 +116,19 @@ void LookAndFeelPage::initGUI()
                                          i18n("Row Separator"), this);
   layout->addWidget(group);
 
-  mAlternateButton = new QRadioButton(i18n("Alternating backgrounds"),
-                                      group, "mAlternateButton");
-  mLineButton = new QRadioButton(i18n("Single line"), group, "mLineButton");
-  mNoneButton = new QRadioButton(i18n("None"), group, "mNoneButton");
+  mAlternateButton = new QRadioButton(i18n("Alternating backgrounds"), group);
+  mAlternateButton->setObjectName( "mAlternateButton" );
+  mLineButton = new QRadioButton(i18n("Single line"), group );
+  mLineButton->setObjectName( "mLineButton" );
+  mNoneButton = new QRadioButton(i18n("None"), group );
+  mNoneButton->setObjectName( "mNoneButton" );
 
   // Background Checkbox/Selector
   QHBoxLayout *backgroundLayout = new QHBoxLayout();
   layout->addLayout(backgroundLayout);
 
-  mBackgroundBox = new QCheckBox(i18n("Enable background image:"), this,
-                                 "mBackgroundBox");
+  mBackgroundBox = new QCheckBox(i18n("Enable background image:"), this );
+  mBackgroundBox->setObjectName( "mBackgroundBox" );
   connect(mBackgroundBox, SIGNAL(toggled(bool)),
           SLOT(enableBackgroundToggled(bool)));
   backgroundLayout->addWidget(mBackgroundBox);
@@ -139,10 +141,11 @@ void LookAndFeelPage::initGUI()
   backgroundLayout->addWidget(mBackgroundName);
 
   // ToolTip Checkbox
-  mToolTipBox = new QCheckBox(i18n("Enable contact tooltips"), this,
-                              "mToolTipBox");
+  mToolTipBox = new QCheckBox(i18n("Enable contact tooltips"), this );
+  mToolTipBox->setObjectName( "mToolTipBox");
   layout->addWidget(mToolTipBox);
-  mIMPresenceBox = new QCheckBox( i18n( "Show instant messaging presence" ), this, "mIMPresenceBox" );
+  mIMPresenceBox = new QCheckBox( i18n( "Show instant messaging presence" ), this );
+  mIMPresenceBox->setObjectName( "mIMPresenceBox" );
   layout->addWidget( mIMPresenceBox );
 }
 
