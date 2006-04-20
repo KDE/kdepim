@@ -49,7 +49,7 @@ AddViewDialog::AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict,
   QGridLayout *layout = new QGridLayout( page, 2, 2 );
   layout->setSpacing( spacingHint() );
   layout->setRowStretch( 1, 1 );
-  layout->setColStretch( 1, 1 );
+  layout->setColumnStretch( 1, 1 );
 
   QLabel *label = new QLabel( i18n( "View name:" ), page );
   layout->addWidget( label, 0, 0 );

@@ -121,8 +121,8 @@
 	grid->addColSpacing(3,SPACING+linewidth/2);
 	grid->setRowStretch(1,50);
 	grid->setRowStretch(2,50);
-	grid->setColStretch(2,50);
-	grid->setColStretch(3,50);
+	grid->setColumnStretch(2,50);
+	grid->setColumnStretch(3,50);
 	linktext->setMinimumSize(linewidth,qMax(260,60+12*lineheight));
 	linktext->setFixedHeight(qMax(260,60+12*lineheight));
 	linktext->setVScrollBarMode(Q3ScrollView::Auto/*AlwaysOn*/);

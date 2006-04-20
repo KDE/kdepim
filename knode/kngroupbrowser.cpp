@@ -116,8 +116,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   listL->addWidget(groupView, 1,0);
   listL->addLayout(arrL, 1,1);
   listL->setRowStretch(1,1);
-  listL->setColStretch(0,5);
-  listL->setColStretch(2,2);
+  listL->setColumnStretch(0,5);
+  listL->setColumnStretch(2,2);
 
   arrL->addWidget( arrowBtn1, Qt::AlignCenter );
   arrL->addWidget( arrowBtn2, Qt::AlignCenter );

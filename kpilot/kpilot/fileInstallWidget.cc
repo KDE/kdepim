@@ -107,8 +107,8 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	fIconView->viewport()->installEventFilter(this);
 
 	grid->setRowStretch(2, 100);
-	grid->setColStretch(2, 50);
-	grid->setColStretch(2, 50);
+	grid->setColumnStretch(2, 50);
+	grid->setColumnStretch(2, 50);
 	grid->addColSpacing(4, SPACING);
 	grid->addRowSpacing(5, SPACING);
 

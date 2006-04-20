@@ -1733,7 +1733,7 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   QFrame *hdrFrame=new QFrame(main);
   hdrFrame->setFrameStyle(QFrame::Box | QFrame::Sunken);
   QGridLayout *hdrL=new QGridLayout(hdrFrame, 4,3, 7,5);
-  hdrL->setColStretch(1,1);
+  hdrL->setColumnStretch(1,1);
 
   //To
   t_o=new KNLineEdit(this, true, hdrFrame);
@@ -1936,7 +1936,7 @@ void KNComposer::ComposerView::showAttachmentView()
     topL->addWidget(a_ttEditBtn, 2,1, Qt::AlignTop);
 
     topL->setRowStretch(2,1);
-    topL->setColStretch(0,1);
+    topL->setColumnStretch(0,1);
   }
 
   if(!v_iewOpen) {
@@ -2565,7 +2565,7 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, Q
   fileL->addWidget(new QLabel(i18n("Size:"), fileGB), 2,0);
   fileL->addWidget(new QLabel(a->contentSize(), fileGB), 2,1, Qt::AlignLeft);
 
-  fileL->setColStretch(1,1);
+  fileL->setColumnStretch(1,1);
   topL->addWidget(fileGB);
 
   //mime info
@@ -2597,7 +2597,7 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, Q
   mimeL->addWidget(e_ncoding, 3,1);
   mimeL->addWidget(new QLabel(e_ncoding, i18n("&Encoding:"), mimeGB), 3,0);
 
-  mimeL->setColStretch(1,1);
+  mimeL->setColumnStretch(1,1);
   topL->addWidget(mimeGB);
 
   //connections

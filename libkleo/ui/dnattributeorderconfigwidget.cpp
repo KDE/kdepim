@@ -84,8 +84,8 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
   d->mapper = mapper;
 
   QGridLayout * glay = new QGridLayout( this, 2, 3, 0, KDialog::spacingHint() );
-  glay->setColStretch( 0, 1 );
-  glay->setColStretch( 2, 1 );
+  glay->setColumnStretch( 0, 1 );
+  glay->setColumnStretch( 2, 1 );
 
   int row = -1;
 

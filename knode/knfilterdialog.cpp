@@ -56,7 +56,7 @@ KNFilterDialog::KNFilterDialog( KNArticleFilter *f, QWidget *parent )
   gbL->addWidget(enabled, 1,0);
   gbL->addWidget(l2, 1,2);
   gbL->addWidget(apon, 1,3);
-  gbL->setColStretch(1,1);
+  gbL->setColumnStretch(1,1);
 
   QVBoxLayout *topL=new QVBoxLayout(page,0,5);
 

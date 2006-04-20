@@ -136,7 +136,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   groupBox->setColumnLayout( 0, Qt::Vertical );
   QGridLayout *boxLayout = new QGridLayout( groupBox->layout(), 2,
                                             5, spacingHint() );
-  boxLayout->setColStretch( 1, 1 );
+  boxLayout->setColumnStretch( 1, 1 );
 
   QLabel *label = new QLabel( i18n( "Search for:" ), groupBox );
   boxLayout->addWidget( label, 0, 0 );

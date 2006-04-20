@@ -127,7 +127,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   grid->addWidget( mSMSHook, 2, 1 );
 
 
-  grid->setColStretch( 1, 1 );
+  grid->setColumnStretch( 1, 1 );
 
   layout->addWidget( groupBox );
 

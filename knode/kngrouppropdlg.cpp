@@ -71,8 +71,8 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   connect(u_seCharset, SIGNAL(toggled(bool)), c_harset, SLOT(setEnabled(bool)));
   grpL->addWidget(c_harset, 2,2);
 
-  grpL->setColStretch(1,1);
-  grpL->setColStretch(2,2);
+  grpL->setColumnStretch(1,1);
+  grpL->setColumnStretch(2,2);
 
   // group name & description
   gb = new QGroupBox(i18n("Description"), page);
@@ -108,7 +108,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   grpL->addWidget(l,3,2);
 
   grpL->addColSpacing(1,20);
-  grpL->setColStretch(2,1);
+  grpL->setColumnStretch(2,1);
 
   // statistics
   gb = new QGroupBox(i18n("Statistics"), page);
@@ -143,7 +143,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   grpL->addWidget(l,5,2);
 
   grpL->addColSpacing(1,20);
-  grpL->setColStretch(2,1);
+  grpL->setColumnStretch(2,1);
 
   pageL->addStretch(1);
 

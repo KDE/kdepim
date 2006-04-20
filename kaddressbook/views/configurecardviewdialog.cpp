@@ -276,7 +276,7 @@ void CardViewLookNFeelPage::initGUI()
   QGridLayout *gFnts = new QGridLayout( vbFonts, 2, 3 );
   gFnts->setSpacing( spacing );
   gFnts->setAutoAdd( true );
-  gFnts->setColStretch( 1, 1 );
+  gFnts->setColumnStretch( 1, 1 );
   QLabel *lTFnt = new QLabel( i18n("&Text font:"), vbFonts );
   lTextFont = new QLabel( vbFonts );
   lTextFont->setFrameStyle( QFrame::Panel|QFrame::Sunken );

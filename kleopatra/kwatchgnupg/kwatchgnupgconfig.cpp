@@ -89,7 +89,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   w = new QWidget( group );
 
   glay = new QGridLayout( w, 3, 2, 0, spacingHint() );
-  glay->setColStretch( 1, 1 );
+  glay->setColumnStretch( 1, 1 );
 
   int row = -1;
 
@@ -125,7 +125,7 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   w = new QWidget( group );
 
   glay = new QGridLayout( w, 2, 3, 0, spacingHint() );
-  glay->setColStretch( 1, 1 );
+  glay->setColumnStretch( 1, 1 );
 
   row = -1;
 

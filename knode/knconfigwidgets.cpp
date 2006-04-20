@@ -175,7 +175,7 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *pa
   topL->addWidget(s_igEditor, 10, 0, 1, 3 );
   connect( s_igEditor, SIGNAL(textChanged()), SLOT(changed()) );
 
-  topL->setColStretch(1,1);
+  topL->setColumnStretch(1,1);
   topL->setRowStretch(7,1);
   topL->setResizeMode(QLayout::SetMinimumSize);
   connect(s_ig,SIGNAL(textChanged ( const QString & )),
@@ -1141,7 +1141,7 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
   n_ameE->setMaxLength(64);
   nameL->addWidget(new QLabel(n_ameE, i18n("Displayed na&me:"),nameW),1,0);
   nameL->addWidget(n_ameE,1,1);
-  nameL->setColStretch(1,1);
+  nameL->setColumnStretch(1,1);
 
   topL->addWidget(nameW,0,0, 1, 2 );
 
@@ -1169,8 +1169,8 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
   v_alueCB[3]=new QCheckBox(i18n("U&nderlined"), vgb);
   topL->addWidget(vgb,1,1);
 
-  topL->setColStretch(0,1);
-  topL->setColStretch(1,1);
+  topL->setColumnStretch(0,1);
+  topL->setColumnStretch(1,1);
 
   // preset values...
   h_drC->addItems( KNDisplayedHeader::predefs() );
@@ -1250,7 +1250,7 @@ KNode::ScoringWidget::ScoringWidget( KInstance *inst, QWidget *parent ) :
   topL->addWidget(l, 3, 0);
   topL->addWidget( mWatched, 3, 1);
 
-  topL->setColStretch(0, 1);
+  topL->setColumnStretch(0, 1);
 
   addConfig( knGlobals.settings(), this );
   load();
@@ -1794,7 +1794,7 @@ KNode::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent )
   grid->addWidget( mPreserveThreads, 6, 0, 1, 2 );
   connect( mPreserveThreads, SIGNAL(toggled(bool)), SIGNAL(changed()) );
 
-  grid->setColStretch(1,1);
+  grid->setColumnStretch(1,1);
 }
 
 
@@ -1878,7 +1878,7 @@ KNode::CleanupWidget::CleanupWidget( KInstance *inst,QWidget *parent ) :
   connect(f_olderDays, SIGNAL(valueChanged(int)), SLOT(changed()));
   connect(f_olderDays, SIGNAL(valueChanged(int)), SLOT(slotFolderDaysChanged(int)));
 
-  foldersL->setColStretch(1,1);
+  foldersL->setColumnStretch(1,1);
 
   topL->addStretch(1);
 

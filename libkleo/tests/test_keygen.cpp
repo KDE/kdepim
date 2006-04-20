@@ -95,7 +95,7 @@ KeyGenerator::KeyGenerator( QWidget * parent, const char * name )
   glay->addWidget( new QLabel( "</GnupgKeyParms>", w ), row, 0, 1, 2 );
   ++row;
   glay->setRowStretch( row, 1 );
-  glay->setColStretch( 1, 1 );
+  glay->setColumnStretch( 1, 1 );
 
   connect( this, SIGNAL(user1Clicked()), SLOT(slotStartKeyGeneration()) );
 }

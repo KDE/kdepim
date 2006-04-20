@@ -218,7 +218,7 @@ void AddressEditor::initLayout()
 	grid->addRowSpacing(9, SPACING);
 	grid->addColSpacing(2, SPACING);
 	grid->setRowStretch(9, 100);
-	grid->setColStretch(2, 50);
+	grid->setColumnStretch(2, 50);
 }
 
 /* slot */ void AddressEditor::slotCancel()

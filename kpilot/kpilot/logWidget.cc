@@ -87,7 +87,7 @@ LogWidget::LogWidget(QWidget * parent) :
 	grid->addColSpacing(0, SPACING);
 	grid->addColSpacing(3, SPACING);
 	grid->setRowStretch(1, 50);
-	grid->setColStretch(2, 50);
+	grid->setColumnStretch(2, 50);
 
 	fLog = new Q3TextEdit(this);
 	fLog->setReadOnly(true);
@@ -203,8 +203,8 @@ LogWidget::LogWidget(QWidget * parent) :
 		QTimer::singleShot(3000,this,SLOT(hideSplash()));
 		grid->addWidget(fSplash,1,1,3,2);
 		grid->addColSpacing(0,10);
-		grid->setColStretch(1,50);
-		grid->setColStretch(2,50);
+		grid->setColumnStretch(1,50);
+		grid->setColumnStretch(2,50);
 		grid->addColSpacing(3,10);
 	}
 

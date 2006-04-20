@@ -95,7 +95,7 @@ will be created before the conversion starts.", QString(KNODE_VERSION)), w_1);
   b_rowseBtn= new QPushButton(i18n("Browse..."), w_1);
   connect(b_rowseBtn, SIGNAL(clicked()), this, SLOT(slotBrowse()));
   w1L->addWidget(b_rowseBtn, 3,2);
-  w1L->setColStretch(1,1);
+  w1L->setColumnStretch(1,1);
   w1L->addRowSpacing(1,15);
   w1L->setRowStretch(4,1);
   w1L->addRowSpacing(4,15);

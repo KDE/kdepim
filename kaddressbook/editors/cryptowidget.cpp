@@ -74,7 +74,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
 {
   QGridLayout *topLayout = new QGridLayout( this, 2, 5, KDialog::marginHint(),
                                             KDialog::spacingHint() );
-  topLayout->setColStretch( 1, 1 );
+  topLayout->setColumnStretch( 1, 1 );
   topLayout->setRowStretch( 4, 1 );
 
   QGroupBox* protGB = new QGroupBox( i18n( "Allowed Protocols" ), this );

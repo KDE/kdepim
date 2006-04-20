@@ -130,7 +130,7 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
   QWidget * view = new QWidget( sv->viewport() );
 
   QGridLayout * glay = new QGridLayout( view, 3, 2, marginHint(), spacingHint() );
-  glay->setColStretch( 1, 1 );
+  glay->setColumnStretch( 1, 1 );
   sv->addChild( view );
 
   int row = -1;
