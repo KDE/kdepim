@@ -275,14 +275,14 @@ void KDGanttSemiSizingControl::setup()
 
     //---------------------------------------- Set the arrow on the button
     if ( !isMinimized() ) {
-        _but->setPixmap( pixmap( Down ) );
+        _but->setIcon( QIcon(pixmap( Down )) );
     }
     else {
         if ( _arrowPos == Before ) {
-            _but->setPixmap( pixmap( Right ) );
+            _but->setIcon( QIcon(pixmap( Right )) );
         }
         else {
-            _but->setPixmap( pixmap( Left ) );
+            _but->setIcon( QIcon(pixmap( Left )) );
         }
     }
 

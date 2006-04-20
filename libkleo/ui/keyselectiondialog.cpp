@@ -362,7 +362,7 @@ kapp->windowIcon().pixmap(miniSize, miniSize) );
   QLineEdit * le = new QLineEdit( page );
   le->setText( initialQuery );
   QToolButton *clearButton = new QToolButton( page );
-  clearButton->setIconSet( KGlobal::iconLoader()->loadIconSet(
+  clearButton->setIcon( KGlobal::iconLoader()->loadIconSet(
               KApplication::reverseLayout() ? "clear_left":"locationbar_erase", K3Icon::Small, 0 ) );
   hlay->addWidget( clearButton );
   hlay->addWidget( new QLabel( le, i18n("&Search for:"), page ) );

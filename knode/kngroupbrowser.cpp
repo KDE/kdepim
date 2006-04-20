@@ -80,8 +80,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   arrowBtn1->setEnabled(false);
   arrowBtn2=new QPushButton(page);
   arrowBtn2->setEnabled(false);
-  arrowBtn1->setIconSet(pmRight);
-  arrowBtn2->setIconSet(pmLeft);
+  arrowBtn1->setIcon(pmRight);
+  arrowBtn2->setIcon(pmLeft);
   arrowBtn1->setFixedSize(35,30);
   arrowBtn2->setFixedSize(35,30);
 

@@ -61,7 +61,7 @@ JumpButton::JumpButton( const QString &firstChar, const QString &lastChar,
                         QWidget *parent )
   : QPushButton( "", parent ), mChar( firstChar )
 {
-  setToggleButton( true );
+  setCheckable( true );
   if ( !lastChar.isEmpty() )
     setText( QString( "%1 - %2" ).arg( firstChar.toUpper() ).arg( lastChar.toUpper() ) );
   else

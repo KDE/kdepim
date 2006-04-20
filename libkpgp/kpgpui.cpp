@@ -1130,8 +1130,8 @@ void KeySelectionDialog::filterByKeyIDOrUID( const QString & str )
 
   for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
     item->setVisible( item->text( 0 ).toUpper().startsWith( str )
-		      || rx.search( item->text( 1 ) ) >= 0
-		      || anyChildMatches( item, rx ) );
+                      || rx.search( item->text( 1 ) ) >= 0
+                      || anyChildMatches( item, rx ) );
 
 }
 
@@ -1144,7 +1144,7 @@ void KeySelectionDialog::filterByUID( const QString & str )
 
   for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
     item->setVisible( rx.search( item->text( 1 ) ) >= 0
-		      || anyChildMatches( item, rx ) );
+                      || anyChildMatches( item, rx ) );
 }
 
 
@@ -1171,7 +1171,7 @@ void KeySelectionDialog::showAllItems()
 
 // ------------------------------------------------------------------------
 KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
-			    unsigned int allowedKeys, const char * name )
+                            unsigned int allowedKeys, const char * name )
   : QWidget( parent, name ),
     mDialogCaption( i18n("OpenPGP Key Selection") ),
     mDialogMessage( i18n("Please select an OpenPGP key to use.") ),
@@ -1189,8 +1189,8 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
   mEraseButton = new QPushButton( this );
   mEraseButton->setAutoDefault( false );
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
-					    QSizePolicy::Minimum ) );
-  mEraseButton->setPixmap( SmallIcon( "clear_left" ) );
+                                            QSizePolicy::Minimum ) );
+  mEraseButton->setOcpm( SmallIconSet( "clear_left" ) );
   mEraseButton->setToolTip( i18n("Clear") );
 
   // the button to call the KeySelectionDialog:
@@ -1205,7 +1205,7 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
   connect( mDialogButton, SIGNAL(clicked()), SLOT(slotDialogButtonClicked()) );
 
   setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
-			      QSizePolicy::Fixed ) );
+                              QSizePolicy::Fixed ) );
 }
 
 KeyRequester::~KeyRequester() {

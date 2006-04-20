@@ -120,8 +120,8 @@ void Kleo::KeyRequester::init()
   mEraseButton = new KPushButton( this );
   mEraseButton->setAutoDefault( false );
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
-					    QSizePolicy::Minimum ) );
-  mEraseButton->setIconSet( SmallIconSet( QApplication::isRightToLeft() ? "locationbar_erase" : "clear_left" ) );
+                                            QSizePolicy::Minimum ) );
+  mEraseButton->setIcon( SmallIconSet( QApplication::isRightToLeft() ? "locationbar_erase" : "clear_left" ) );
   mEraseButton->setToolTip( i18n("Clear") );
 
   // the button to call the KeySelectionDialog:
@@ -136,7 +136,7 @@ void Kleo::KeyRequester::init()
   connect( mDialogButton, SIGNAL(clicked()), SLOT(slotDialogButtonClicked()) );
 
   setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding,
-			      QSizePolicy::Fixed ) );
+                              QSizePolicy::Fixed ) );
 
   setAllowedKeys( mKeyUsage );
 }
@@ -183,7 +183,7 @@ QStringList Kleo::KeyRequester::fingerprints() const {
   for ( std::vector<GpgME::Key>::const_iterator it = mKeys.begin() ; it != mKeys.end() ; ++it )
     if ( !it->isNull() )
       if ( const char * fpr = it->primaryFingerprint() )
-	result.push_back( fpr );
+        result.push_back( fpr );
   return result;
 }
 
@@ -213,9 +213,9 @@ void Kleo::KeyRequester::updateKeys() {
     toolTipText += fpr.right(8) + ": ";
     if ( const char * uid = it->userID(0).id() )
       if ( it->protocol() == GpgME::Context::OpenPGP )
-	toolTipText += QString::fromUtf8( uid );
+        toolTipText += QString::fromUtf8( uid );
       else
-	toolTipText += Kleo::DN( uid ).prettyDN();
+        toolTipText += Kleo::DN( uid ).prettyDN();
     else
       toolTipText += i18n("<unknown>");
     toolTipText += '\n';
@@ -230,8 +230,8 @@ void Kleo::KeyRequester::updateKeys() {
 static void showKeyListError( QWidget * parent, const GpgME::Error & err ) {
   assert( err );
   const QString msg = i18n( "<qt><p>An error occurred while fetching "
-			    "the keys from the backend:</p>"
-			    "<p><b>%1</b></p></qt>" ,
+                            "the keys from the backend:</p>"
+                            "<p><b>%1</b></p></qt>" ,
       QString::fromLocal8Bit( err.asString() ) );
 
   KMessageBox::error( parent, msg, i18n( "Key Listing Failed" ) );
@@ -261,23 +261,23 @@ void Kleo::KeyRequester::startKeyListJob( const QStringList & fingerprints ) {
     KeyListJob * job = mOpenPGPBackend->keyListJob( false ); // local, no sigs
     if ( !job ) {
       KMessageBox::error( this,
-			  i18n("The OpenPGP backend does not support listing keys. "
-			       "Check your installation."),
-			  i18n("Key Listing Failed") );
+                          i18n("The OpenPGP backend does not support listing keys. "
+                               "Check your installation."),
+                          i18n("Key Listing Failed") );
     } else {
       connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
-	       SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
+               SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
       connect( job, SIGNAL(nextKey(const GpgME::Key&)),
-	       SLOT(slotNextKey(const GpgME::Key&)) );
+               SLOT(slotNextKey(const GpgME::Key&)) );
 
       const GpgME::Error err = job->start( fingerprints,
         mKeyUsage & Kleo::KeySelectionDialog::SecretKeys &&
         !( mKeyUsage & Kleo::KeySelectionDialog::PublicKeys ) );
 
       if ( err )
-	showKeyListError( this, err );
+        showKeyListError( this, err );
       else
-	++mJobs;
+        ++mJobs;
     }
   }
 
@@ -285,23 +285,23 @@ void Kleo::KeyRequester::startKeyListJob( const QStringList & fingerprints ) {
     KeyListJob * job = mSMIMEBackend->keyListJob( false ); // local, no sigs
     if ( !job ) {
       KMessageBox::error( this,
-			  i18n("The S/MIME backend does not support listing keys. "
-			       "Check your installation."),
-			  i18n("Key Listing Failed") );
+                          i18n("The S/MIME backend does not support listing keys. "
+                               "Check your installation."),
+                          i18n("Key Listing Failed") );
     } else {
       connect( job, SIGNAL(result(const GpgME::KeyListResult&)),
-	       SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
+               SLOT(slotKeyListResult(const GpgME::KeyListResult&)) );
       connect( job, SIGNAL(nextKey(const GpgME::Key&)),
-	       SLOT(slotNextKey(const GpgME::Key&)) );
+               SLOT(slotNextKey(const GpgME::Key&)) );
 
       const GpgME::Error err = job->start( fingerprints,
         mKeyUsage & Kleo::KeySelectionDialog::SecretKeys &&
         !( mKeyUsage & Kleo::KeySelectionDialog::PublicKeys ) );
 
       if ( err )
-	showKeyListError( this, err );
+        showKeyListError( this, err );
       else
-	++mJobs;
+        ++mJobs;
     }
   }
 
@@ -431,10 +431,10 @@ static inline unsigned int signingKeyUsage( bool openpgp, bool smime, bool trust
 }
 
 Kleo::EncryptionKeyRequester::EncryptionKeyRequester( bool multi, unsigned int proto,
-						      QWidget * parent, const char * name,
-						      bool onlyTrusted, bool onlyValid )
+                                                      QWidget * parent, const char * name,
+                                                      bool onlyTrusted, bool onlyValid )
   : KeyRequester( encryptionKeyUsage( proto & OpenPGP, proto & SMIME, onlyTrusted, onlyValid ), multi,
-		  parent, name )
+                  parent, name )
 {
 }
 
@@ -452,10 +452,10 @@ void Kleo::EncryptionKeyRequester::setAllowedKeys( unsigned int proto, bool only
 }
 
 Kleo::SigningKeyRequester::SigningKeyRequester( bool multi, unsigned int proto,
-						QWidget * parent, const char * name,
-						bool onlyTrusted, bool onlyValid )
+                                                QWidget * parent, const char * name,
+                                                bool onlyTrusted, bool onlyValid )
   : KeyRequester( signingKeyUsage( proto & OpenPGP, proto & SMIME, onlyTrusted, onlyValid ), multi,
-		  parent, name )
+                  parent, name )
 {
 }
 

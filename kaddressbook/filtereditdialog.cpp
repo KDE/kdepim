@@ -107,7 +107,7 @@ Filter FilterEditDialog::filter()
   }
   filter.setCategories( categories );
 
-  if ( mMatchRuleGroup->find( 0 )->isOn() )
+  if ( mMatchRuleGroup->find( 0 )->isChecked() )
     filter.setMatchRule( Filter::Matching );
   else
     filter.setMatchRule( Filter::NotMatching );
