@@ -2559,7 +2559,7 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, Q
   QGroupBox *fileGB = new QGroupBox( i18n("File"), page );
   QGridLayout *fileL=new QGridLayout(fileGB, 3,2, 15,5);
 
-  fileL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
+  fileL->addItem( new QSpacerItem( 0, fontMetrics().lineSpacing()-9), 0, 0 );
   fileL->addWidget(new QLabel(i18n("Name:"), fileGB) ,1,0);
   fileL->addWidget(new QLabel(QString("<b>%1</b>").arg(a->name()), fileGB), 1,1, Qt::AlignLeft);
   fileL->addWidget(new QLabel(i18n("Size:"), fileGB), 2,0);
@@ -2572,7 +2572,7 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, Q
   QGroupBox *mimeGB = new QGroupBox( i18n("Mime"), page );
   QGridLayout *mimeL=new QGridLayout(mimeGB, 4,2, 15,5);
 
-  mimeL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
+  mimeL->addItem( new QSpacerItem( 0, fontMetrics().lineSpacing()-9), 0, 0 );
   m_imeType=new KLineEdit(mimeGB);
   m_imeType->setText(a->mimeType());
   mimeL->addWidget(m_imeType, 1,1);

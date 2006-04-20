@@ -310,7 +310,7 @@ void KNGroupDialog::slotUser2()
   takeLast->setChecked(true);
   dateSel->setEnabled(false);
 
-  topL->addColSpacing(0,30);
+  topL->addItem( new QSpacerItem(30, 0 ), 0, 0 );
   dlg->disableResize();
 
   if (dlg->exec()) {

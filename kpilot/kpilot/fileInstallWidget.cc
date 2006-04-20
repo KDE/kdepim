@@ -109,8 +109,8 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	grid->setRowStretch(2, 100);
 	grid->setColumnStretch(2, 50);
 	grid->setColumnStretch(2, 50);
-	grid->addColSpacing(4, SPACING);
-	grid->addRowSpacing(5, SPACING);
+	grid->addItem( new QSpacerItem( SPACING, 0 ), 0, 4 );
+	grid->addItem( new QSpacerItem( 0, SPACING), 5, 0 );
 
 	fInstaller = new FileInstaller;
 	connect(fInstaller, SIGNAL(filesChanged()),

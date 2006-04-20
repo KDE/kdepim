@@ -215,8 +215,8 @@ void AddressEditor::initLayout()
 	MakeField(i18n("Custom 3:"), fCustom3Field, 7, 4);
 	MakeField(i18n("Custom 4:"), fCustom4Field, 8, 4);
 
-	grid->addRowSpacing(9, SPACING);
-	grid->addColSpacing(2, SPACING);
+	grid->addItem( new QSpacerItem( 0, SPACING), 9, 0 );
+	grid->addItem( new QSpacerItem( SPACING, 0 ), 0, 2 );
 	grid->setRowStretch(9, 100);
 	grid->setColumnStretch(2, 50);
 }

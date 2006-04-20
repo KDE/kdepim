@@ -271,7 +271,7 @@ void AddresseeEditorWidget::setupTab1()
   connect( mIMWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
   layout->addWidget( mIMWidget, 10, 4, 1, 3 );
 
-  layout->addColSpacing( 6, 50 );
+  layout->addItem( new QSpacerItem( 50, 0 ), 0, 6 );
 
   bar = new KSeparator( Qt::Horizontal, tab1 );
   layout->addWidget( bar, 11, 0, 1, 7 );

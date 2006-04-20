@@ -51,7 +51,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   pageL->addWidget(gb);
   QGridLayout *grpL=new QGridLayout(gb, 3, 3, 15, 5);
 
-  grpL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
+  grpL->addItem( new QSpacerItem( 0, fontMetrics().lineSpacing()-9), 0, 0 );
 
   n_ick=new KLineEdit(gb);
   if (g_rp->hasName())
@@ -79,7 +79,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   pageL->addWidget(gb);
   grpL=new QGridLayout(gb, 4, 3, 15, 5);
 
-  grpL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
+  grpL->addItem( new QSpacerItem( 0, fontMetrics().lineSpacing()-9), 0, 0 );
 
   l=new QLabel(i18n("Name:"), gb);
   grpL->addWidget(l,1,0);
@@ -107,7 +107,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   l=new QLabel(status,gb);
   grpL->addWidget(l,3,2);
 
-  grpL->addColSpacing(1,20);
+  grpL->addItem( new QSpacerItem(20, 0 ), 0, 1 );
   grpL->setColumnStretch(2,1);
 
   // statistics
@@ -115,7 +115,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   pageL->addWidget(gb);
   grpL=new QGridLayout(gb, 6, 3, 15, 5);
 
-  grpL->addRowSpacing(0, fontMetrics().lineSpacing()-9);
+  grpL->addItem( new QSpacerItem( 0, fontMetrics().lineSpacing()-9), 0, 0 );
 
   l=new QLabel(i18n("Articles:"), gb);
   grpL->addWidget(l,1,0);
@@ -142,7 +142,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   l=new QLabel(QString::number(g_rp->statThrWithNew()),gb);
   grpL->addWidget(l,5,2);
 
-  grpL->addColSpacing(1,20);
+  grpL->addItem( new QSpacerItem(20, 0 ), 0, 1 );
   grpL->setColumnStretch(2,1);
 
   pageL->addStretch(1);

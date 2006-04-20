@@ -80,12 +80,12 @@ LogWidget::LogWidget(QWidget * parent) :
 	FUNCTIONSETUP;
 	QGridLayout *grid = new QGridLayout(this, 4, 4, SPACING);
 
-	grid->addRowSpacing(0, SPACING);
-	grid->addRowSpacing(1, 100);
-	grid->addColSpacing(2, 100);
-	grid->addRowSpacing(3, SPACING);
-	grid->addColSpacing(0, SPACING);
-	grid->addColSpacing(3, SPACING);
+	grid->addItem( new QSpacerItem( 0, SPACING), 0, 0 );
+	grid->addItem( new QSpacerItem( 0, 100), 1, 0 );
+	grid->addItem( new QSpacerItem( 100, 0 ), 0, 2 );
+	grid->addItem( new QSpacerItem( 0, SPACING), 3, 0 );
+	grid->addItem( new QSpacerItem( SPACING, 0 ), 0, 0 );
+	grid->addItem( new QSpacerItem( SPACING, 0 ), 0, 3 );
 	grid->setRowStretch(1, 50);
 	grid->setColumnStretch(2, 50);
 
@@ -202,10 +202,10 @@ LogWidget::LogWidget(QWidget * parent) :
 		fSplash->setAlignment(Qt::AlignCenter);
 		QTimer::singleShot(3000,this,SLOT(hideSplash()));
 		grid->addWidget(fSplash,1,1,3,2);
-		grid->addColSpacing(0,10);
+		grid->addItem( new QSpacerItem(10, 0 ), 0, 0 );
 		grid->setColumnStretch(1,50);
 		grid->setColumnStretch(2,50);
-		grid->addColSpacing(3,10);
+		grid->addItem( new QSpacerItem(10, 0 ), 0, 3 );
 	}
 
 	(void) logw_id;

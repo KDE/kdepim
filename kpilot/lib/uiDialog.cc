@@ -61,8 +61,8 @@
 
 	QGridLayout *grid = new QGridLayout(w, 5, 4, SPACING);
 
-	grid->addColSpacing(0, SPACING);
-	grid->addColSpacing(4, SPACING);
+	grid->addItem( new QSpacerItem( SPACING, 0 ), 0, 0 );
+	grid->addItem( new QSpacerItem( SPACING, 0 ), 0, 4 );
 
 
 #ifdef DEBUG
@@ -115,10 +115,10 @@
 
 
 	KActiveLabel *linktext = new KActiveLabel(w);
-	grid->addRowSpacing(1,qMax(100,6*lineheight));
-	grid->addRowSpacing(2,qMax(100,6*lineheight));
-	grid->addColSpacing(2,SPACING+linewidth/2);
-	grid->addColSpacing(3,SPACING+linewidth/2);
+	grid->addItem( new QSpacerItem( 0,qMax(100,6*lineheight)), 1, 0 );
+	grid->addItem( new QSpacerItem( 0,qMax(100,6*lineheight)), 2, 0 );
+	grid->addItem( new QSpacerItem(SPACING+linewidth/2, 0 ), 0, 2 );
+	grid->addItem( new QSpacerItem(SPACING+linewidth/2, 0 ), 0, 3 );
 	grid->setRowStretch(1,50);
 	grid->setRowStretch(2,50);
 	grid->setColumnStretch(2,50);

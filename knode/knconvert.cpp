@@ -96,9 +96,9 @@ will be created before the conversion starts.", QString(KNODE_VERSION)), w_1);
   connect(b_rowseBtn, SIGNAL(clicked()), this, SLOT(slotBrowse()));
   w1L->addWidget(b_rowseBtn, 3,2);
   w1L->setColumnStretch(1,1);
-  w1L->addRowSpacing(1,15);
+  w1L->addItem( new QSpacerItem( 0,15), 1, 0 );
   w1L->setRowStretch(4,1);
-  w1L->addRowSpacing(4,15);
+  w1L->addItem( new QSpacerItem( 0,15), 4, 0 );
 
   w_2=new QLabel(s_tack);
   w_2->setText(i18n("<b>Converting, please wait...</b>"));

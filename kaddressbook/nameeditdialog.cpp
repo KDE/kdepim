@@ -56,7 +56,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   QWidget *page = plainPage();
   QGridLayout *layout = new QGridLayout( page );
   layout->setSpacing( spacingHint() );
-  layout->addColSpacing( 2, 100 );
+  layout->addItem( new QSpacerItem( 100, 0 ), 0, 2 );
   QLabel *label;
 
   label = new QLabel( i18n( "Honorific prefixes:" ), page );

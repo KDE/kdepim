@@ -977,7 +977,7 @@ KNode::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, KIns
   connect(d_ownBtn, SIGNAL(clicked()), this, SLOT(slotDownBtnClicked()));
   topL->addWidget(d_ownBtn, 5,1);
 
-  topL->addRowSpacing(3,20);        // separate up/down buttons
+  topL->addItem( new QSpacerItem( 0,20), 3, 0 );        // separate up/down buttons
   topL->setRowStretch(6,1);         // stretch the listbox
 
   slotSelectionChanged();     // disable buttons initially
@@ -1236,7 +1236,7 @@ KNode::ScoringWidget::ScoringWidget( KInstance *inst, QWidget *parent ) :
   mKsc = new KScoringEditorWidget( knGlobals.scoringManager(), this );
   topL->addWidget( mKsc, 0, 0, 1, 2 );
 
-  topL->addRowSpacing(1, 10);
+  topL->addItem( new QSpacerItem( 0, 10), 1, 0 );
 
   mIgnored = new KIntSpinBox( -100000, 100000, 1, 0, this );
   mIgnored->setObjectName( "kcfg_ignoredThreshold" );
