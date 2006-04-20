@@ -75,7 +75,7 @@ void KNAccountManager::loadAccounts()
   }
   QDir d(dir);
   KNNntpAccount *a;
-  QStringList entries(d.entryList("nntp.*", QDir::Dirs));
+  QStringList entries(d.entryList(QStringList("nntp.*"), QDir::Dirs));
 
   QStringList::Iterator it;
   for(it = entries.begin(); it != entries.end(); ++it) {

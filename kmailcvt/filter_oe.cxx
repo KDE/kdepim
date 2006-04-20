@@ -63,7 +63,7 @@ void FilterOE::import(FilterInfo *info)
     }
 
     QDir dir (mailDir);
-    QStringList files = dir.entryList("*.[dDmM][bB][xX]", QDir::Files, QDir::Name);
+    QStringList files = dir.entryList(QStringList("*.[dDmM][bB][xX]"), QDir::Files, QDir::Name);
     if (files.isEmpty()) {
         info->alert(i18n("No Outlook Express mailboxes found in directory %1.", mailDir));
         return;

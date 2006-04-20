@@ -67,7 +67,7 @@ void FilterKMail_maildir::import( FilterInfo *info )
 
         /** Recursive import of the MailArchives */
         QDir dir(mailDir);
-        QStringList rootSubDirs = dir.entryList("*", QDir::Dirs | QDir::Hidden, QDir::Name);
+        QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
         int currentDir = 1, numSubDirs = rootSubDirs.size();
         for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
             if(info->shouldTerminate()) break;
@@ -105,7 +105,7 @@ void FilterKMail_maildir::importDirContents( FilterInfo *info, const QString& di
     /** If there are subfolders, we import them one by one */
 
     QDir subfolders(dirName);
-    QStringList subDirs = subfolders.entryList("*", QDir::Dirs | QDir::Hidden, QDir::Name);
+    QStringList subDirs = subfolders.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
     for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
         if(info->shouldTerminate()) return;
         if(!(*filename == "." || *filename == "..")) {
@@ -127,7 +127,7 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
     bool generatedPath = false;
 
     QDir importDir (dirName);
-    QStringList files = importDir.entryList("[^\\.]*", QDir::Files, QDir::Name);
+    QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
     int currentFile = 1, numFiles = files.size();
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile, ++currentFile) {
         if(info->shouldTerminate()) return;

@@ -75,7 +75,7 @@ void FilterThunderbird::import(FilterInfo *info)
 
         /** Recursive import of the MailArchives */
         QDir dir(mailDir);
-        QStringList rootSubDirs = dir.entryList("[^\\.]*", QDir::Dirs, QDir::Name); // Removal of . and ..
+        QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
         int currentDir = 1, numSubDirs = rootSubDirs.size();
         for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
             if(info->shouldTerminate()) break;
@@ -85,7 +85,7 @@ void FilterThunderbird::import(FilterInfo *info)
 
         /** import last but not least all archives from the root-dir */
         QDir importDir (mailDir);
-        QStringList files = importDir.entryList("[^\\.]*", QDir::Files, QDir::Name);
+        QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
         for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
             if(info->shouldTerminate()) break;
             QString temp_mailfile = *mailFile;
@@ -120,7 +120,7 @@ void FilterThunderbird::importDirContents(FilterInfo *info, const QString& dirNa
     QDir dir(dirName);
 
     QDir importDir (dirName);
-    QStringList files = importDir.entryList("[^\\.]*", QDir::Files, QDir::Name);
+    QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
         if(info->shouldTerminate()) break;
         QString temp_mailfile = *mailFile;
@@ -133,7 +133,7 @@ void FilterThunderbird::importDirContents(FilterInfo *info, const QString& dirNa
 
     /** If there are subfolders, we import them one by one */
     QDir subfolders(dirName);
-    QStringList subDirs = subfolders.entryList("[^\\.]*", QDir::Dirs, QDir::Name);
+    QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name);
     for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
         if(info->shouldTerminate()) break;
         QString kSubDir;

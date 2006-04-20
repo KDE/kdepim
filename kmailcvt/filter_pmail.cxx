@@ -60,7 +60,7 @@ void FilterPMail::import(FilterInfo *info)
     // Count total number of files to be processed
     info->addLog(i18n("Counting files..."));
     dir.setPath (chosenDir);
-    QStringList files = dir.entryList("*.[cC][nN][mM]; *.[pP][mM][mM]; *.[mM][bB][xX]", QDir::Files, QDir::Name);
+    QStringList files = dir.entryList(QStringList("*.[cC][nN][mM]")<<"*.[pP][mM][mM]"<<"*.[mM][bB][xX]", QDir::Files, QDir::Name);
     totalFiles = files.count();
     currentFile = 0;
     kDebug() << "Count is " << totalFiles << endl;
@@ -86,7 +86,7 @@ void FilterPMail::processFiles(const QString& mask, void(FilterPMail::* workFunc
 {
     if (inf->shouldTerminate()) return;
     
-    QStringList files = dir.entryList(mask, QDir::Files, QDir::Name);
+    QStringList files = dir.entryList(QStringList(mask), QDir::Files, QDir::Name);
     //kDebug() << "Mask is " << mask << " count is " << files.count() << endl;
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
         // Notify current file

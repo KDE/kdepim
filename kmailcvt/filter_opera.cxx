@@ -69,7 +69,7 @@ void FilterOpera::import(FilterInfo *info)
         info->setOverall(0);
 
         QDir importDir (operaDir);
-        QStringList files = importDir.entryList("*.[mM][bB][sS]", QDir::Files, QDir::Name);
+        QStringList files = importDir.entryList(QStringList("*.[mM][bB][sS]"), QDir::Files, QDir::Name);
 
         // Count total number of files to be processed
         info->addLog(i18n("Counting files..."));

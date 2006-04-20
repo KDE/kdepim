@@ -262,7 +262,7 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
     return;
   QDir d(dir);
 
-  QStringList entries(d.entryList("*.grpinfo"));
+  QStringList entries(d.entryList(QStringList("*.grpinfo")));
   for(QStringList::Iterator it=entries.begin(); it != entries.end(); ++it) {
     group=new KNGroup(a);
     if (group->readInfo(dir+(*it))) {

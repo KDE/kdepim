@@ -53,7 +53,7 @@ void FilterOutlook::import(FilterInfo *info)
     QString outlookDir;
     outlookDir = KFileDialog::getExistingDirectory(QDir::homePath(), info->parent());
     QDir importDir (outlookDir);
-    QStringList files = importDir.entryList("*.[pP][sS][tT]", QDir::Files, QDir::Name);
+    QStringList files = importDir.entryList(QStringList("*.[pP][sS][tT]"), QDir::Files, QDir::Name);
     for ( QStringList::Iterator pstFile = files.begin(); pstFile != files.end(); ++pstFile) {
         info->addLog( i18n("Importing emails from %1...", *pstFile ) );
         info->addLog( i18np("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));

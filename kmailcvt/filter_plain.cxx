@@ -46,7 +46,7 @@ void FilterPlain::import(FilterInfo *info)
         return;
     }
     QDir dir (mailDir);
-    QStringList files = dir.entryList("*.[eE][mM][lL]; *.[tT][xX][tT]; *.[mM][sS][gG]", QDir::Files, QDir::Name);
+    QStringList files = dir.entryList(QStringList("*.[eE][mM][lL]")<<"*.[tT][xX][tT]"<<"*.[mM][sS][gG]", QDir::Files, QDir::Name);
 
     // Count total number of files to be processed
     info->addLog(i18n("Counting files..."));
