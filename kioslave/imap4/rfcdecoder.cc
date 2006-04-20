@@ -643,10 +643,10 @@ rfcDecoder::decodeRFC2231String (const QString & _str)
   {
     if (st.at (p) == 37)
     {
-      ch = st.at (p + 1).latin1 () - 48;
+      ch = st.at (p + 1).toLatin1 () - 48;
       if (ch > 16)
         ch -= 7;
-      ch2 = st.at (p + 2).latin1 () - 48;
+      ch2 = st.at (p + 2).toLatin1 () - 48;
       if (ch2 > 16)
         ch2 -= 7;
       st.replace( p, 1, ch * 16 + ch2 );
