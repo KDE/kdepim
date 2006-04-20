@@ -49,9 +49,9 @@
 class EmailValidator : public QRegExpValidator
 {
   public:
-    EmailValidator()
-      : QRegExpValidator( 0, "EmailValidator" )
+    EmailValidator() : QRegExpValidator( 0 )
     {
+      setObjectName( "EmailValidator" );
       QRegExp rx( ".*@.*\\.[A-Za-z]+" );
       setRegExp( rx );
     }
