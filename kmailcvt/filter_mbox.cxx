@@ -55,7 +55,7 @@ void FilterMBox::import(FilterInfo *info)
             info->alert( i18n("Unable to open %1, skipping", *filename ) );
         } else {
             QFileInfo filenameInfo( *filename );
-            QString folderName( "MBOX-" + filenameInfo.baseName(true) );
+            QString folderName( "MBOX-" + filenameInfo.completeBaseName() );
 
             info->setCurrent(0);
             info->addLog( i18n("Importing emails from %1...", *filename ) );

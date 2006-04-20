@@ -662,7 +662,7 @@ int main( int argc, char *argv[] )
       remote = false;
     } else if ( !variables.getCalendarFile().contains( '/' ) ) {
       QFileInfo info( variables.getCalendarFile() );
-      variables.setCalendarFile( info.absFilePath() );
+      variables.setCalendarFile( info.absoluteFilePath() );
       exists = QFile::exists( variables.getCalendarFile() );
       remote = false;
     } else {
