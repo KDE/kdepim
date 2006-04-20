@@ -210,19 +210,22 @@ void CardViewLookNFeelPage::initGUI()
 
   KHBox *hbSW = new KHBox( gbGeneral );
   QLabel *lSW = new QLabel( i18n("Separator &width:"), hbSW );
-  sbSepWidth = new QSpinBox( 1, 50, 1, hbSW );
+  sbSepWidth = new QSpinBox( hbSW );
+  sbSepWidth->setRange( 1, 50 );
   lSW->setBuddy( sbSepWidth);
 
   KHBox *hbPadding = new KHBox( gbGeneral );
   QLabel *lSpacing = new QLabel( i18n("&Padding:"), hbPadding );
-  sbSpacing = new QSpinBox( 0, 100, 1, hbPadding );
+  sbSpacing = new QSpinBox( hbPadding );
+  sbSpacing->setRange( 0, 100 );
   lSpacing->setBuddy( sbSpacing );
 
   Q3GroupBox *gbCards = new Q3GroupBox( 1, Qt::Horizontal, i18n("Cards"), loTab );
 
   KHBox *hbMargin = new KHBox( gbCards );
   QLabel *lMargin = new QLabel( i18n("&Margin:"), hbMargin );
-  sbMargin = new QSpinBox( 0, 100, 1, hbMargin );
+  sbMargin = new QSpinBox( hbMargin );
+  sbMargin->setRange( 0, 100 );
   lMargin->setBuddy( sbMargin );
 
   cbDrawBorders = new QCheckBox( i18n("Draw &borders"), gbCards );

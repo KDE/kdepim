@@ -130,7 +130,9 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   row = -1;
 
   ++row;
-  mLoglenSB = new QSpinBox( 0, 1000000, 100, w );
+  mLoglenSB = new QSpinBox( w );
+  mLoglenSB->setRange( 0, 1000000 );
+  mLoglenSB->setSingleStep( 100 );
   mLoglenSB->setSuffix( i18nc("history size spinbox suffix"," lines") );
   mLoglenSB->setSpecialValueText( i18n("unlimited") );
   glay->addWidget( new QLabel( mLoglenSB, i18n("&History size:"), w ), row, 0 );

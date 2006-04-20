@@ -151,7 +151,8 @@ void FieldWidget::addField( const QString &identifier, const QString &title,
   record.mLabel = new QLabel( title + ":", this );
   record.mGlobal = isGlobal;
   if ( type == "integer" ) {
-    QSpinBox *wdg = new QSpinBox( 0, 1000, 1, this );
+    QSpinBox *wdg = new QSpinBox( this );
+    wdg->setRange( 0, 1000 );
     record.mWidget = wdg;
     connect( wdg, SIGNAL( valueChanged( int ) ),
              this, SIGNAL( changed() ) );
