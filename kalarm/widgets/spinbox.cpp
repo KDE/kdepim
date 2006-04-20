@@ -1,7 +1,7 @@
 /*
  *  spinbox.cpp  -  spin box with read-only option and shift-click step value
  *  Program:  kalarm
- *  (C) 2002, 2004 by David Jarvie <software@astrojar.org.uk>
+ *  Copyright (c) 2002, 2004 by David Jarvie <software@astrojar.org.uk>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -13,9 +13,9 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
 #include <kdeversion.h>
@@ -418,7 +418,7 @@ bool SpinBox::setShiftStepping(bool shift)
 */
 int SpinBox::shiftStepAdjustment(int oldValue, int shiftStep)
 {
-	if (oldValue == 0)
+	if (oldValue == 0  ||  shiftStep == 0)
 		return 0;
 	if (shiftStep > 0)
 	{
