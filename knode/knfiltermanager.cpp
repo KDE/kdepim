@@ -329,7 +329,7 @@ void KNFilterManager::updateMenu()
       if ( ( f = byID( (*it) ) ) )
         a_ctFilter->popupMenu()->insertItem( f->translatedName(), f->id() );
     } else
-      a_ctFilter->popupMenu()->insertSeparator();
+      a_ctFilter->popupMenu()->addSeparator();
   }
 
   if(currFilter)

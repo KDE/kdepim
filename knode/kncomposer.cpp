@@ -83,7 +83,7 @@ KNLineEdit::KNLineEdit( KNComposer::ComposerView *_composerView, bool useComplet
 void KNLineEdit::contextMenuEvent( QContextMenuEvent*e )
 {
    QMenu *popup = KLineEdit::createStandardContextMenu();
-   popup->insertSeparator();
+   popup->addSeparator();
    popup->insertItem( i18n( "Edit Recent Addresses..." ),
 		   this, SLOT( editRecentAddresses() ) );
    popup->exec( e->globalPos() );

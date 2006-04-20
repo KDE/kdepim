@@ -169,7 +169,7 @@ void PilotDaemonTray::setupWidget()
 		SLOT(slotRunKPilot()));
 	menuConfigureConduitsItem = menu->insertItem(i18n("&Configure KPilot..."),
 		daemon, SLOT(slotRunConfig()));
-	menu->insertSeparator();
+	menu->addSeparator();
 
 	fSyncTypeMenu = new KMenu(menu,"sync_type_menu");
 	QString once = i18nc("Appended to names of sync types to indicate the sync will happen just one time"," (once)");
@@ -179,7 +179,7 @@ void PilotDaemonTray::setupWidget()
 	fSyncTypeMenu->insertItem(i18n("Default (%1)",
 		 SyncAction::SyncMode::name((SyncAction::SyncMode::Mode)KPilotSettings::syncType())),
 		0);
-	fSyncTypeMenu->insertSeparator();
+	fSyncTypeMenu->addSeparator();
 
         // Keep this synchronized with kpilotui.rc and kpilot.cc if at all possible.
 	MI(eHotSync);

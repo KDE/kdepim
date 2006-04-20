@@ -50,7 +50,7 @@ SystemTray::SystemTray(KMainWindow *parent, const char *name) : KSystemTray(pare
     
     KMenu* menu = contextMenu();
     addAction->plug(menu);
-    menu->insertSeparator();
+    menu->addSeparator();
 }
 
 SystemTray::~SystemTray()

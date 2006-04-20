@@ -101,7 +101,7 @@ void FolderListView::showPopupMenu( FolderListItem *i, const QPoint &globalPos )
   m.setTitle( folder.name);
   id = m.insertItem( i18n("&Enabled"), this, SLOT(slotPopupHandler(int)), 0, FolderName );
   m.setItemChecked( id, i->isOn() );
-  m.insertSeparator();
+  m.addSeparator();
 
   if ( ( folder.type & KPIM::FolderLister::Event ) && (mTypes.contains( Event ) ) ) {
     id = m.insertItem( i18n("Default for New &Events"), this, SLOT(slotPopupHandler(int)), 0, Event );
