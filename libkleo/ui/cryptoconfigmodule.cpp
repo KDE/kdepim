@@ -144,21 +144,21 @@ Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
   QGridLayout * glay = new QGridLayout( this, 1, 3, 0, KDialog::spacingHint() );
   const QStringList groups = mComponent->groupList();
   if ( groups.size() > 1 ) {
-    glay->setColSpacing( 0, KDHorizontalLine::indentHint() );
+    glay->setColumnMinimumWidth( 0, KDHorizontalLine::indentHint() );
     for ( QStringList::const_iterator it = groups.begin(), end = groups.end() ; it != end; ++it ) {
       Kleo::CryptoConfigGroup* group = mComponent->group( *it );
       Q_ASSERT( group );
       if ( !group )
         continue;
       KDHorizontalLine * hl = new KDHorizontalLine( group->description(), this );
-      const int row = glay->numRows();
+      const int row = glay->rowCount();
       glay->addWidget( hl, row, 0, 1, 3 );
       mGroupGUIs.append( new CryptoConfigGroupGUI( module, group, glay, this ) );
     }
   } else if ( !groups.empty() ) {
     mGroupGUIs.append( new CryptoConfigGroupGUI( module, mComponent->group( groups.front() ), glay, this ) );
   }
-  glay->setRowStretch( glay->numRows(), 1 );
+  glay->setRowStretch( glay->rowCount(), 1 );
 }
 
 
@@ -194,7 +194,7 @@ Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
   QGridLayout * glay, QWidget* widget, const char* name )
   : QObject( module, name ), mGroup( group )
 {
-  const int startRow = glay->numRows();
+  const int startRow = glay->rowCount();
   const QStringList entries = mGroup->entryList();
   for( QStringList::const_iterator it = entries.begin(), end = entries.end() ; it != end; ++it ) {
     Kleo::CryptoConfigEntry* entry = group->entry( *it );
@@ -207,7 +207,7 @@ Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
       entryGUI->load();
     }
   }
-  const int endRow = glay->numRows() - 1;
+  const int endRow = glay->rowCount() - 1;
   if ( endRow < startRow )
     return;
 
@@ -329,7 +329,7 @@ Kleo::CryptoConfigEntryLineEdit::CryptoConfigEntryLineEdit(
   QGridLayout * glay, QWidget* widget, const char* name )
   : CryptoConfigEntryGUI( module, entry, entryName, name )
 {
-  const int row = glay->numRows();
+  const int row = glay->rowCount();
   mLineEdit = new KLineEdit( widget );
   glay->addWidget( new QLabel( mLineEdit, description(), widget ), row, 1 );
   glay->addWidget( mLineEdit, row, 2 );
@@ -354,7 +354,7 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
   QGridLayout * glay, QWidget* widget, const char* name )
   : CryptoConfigEntryGUI( module, entry, entryName, name )
 {
-  const int row = glay->numRows();
+  const int row = glay->rowCount();
   mUrlRequester = new KUrlRequester( widget );
   mUrlRequester->setMode( KFile::File | KFile::ExistingOnly | KFile::LocalOnly );
   glay->addWidget( new QLabel( mUrlRequester, description(), widget ), row, 1 );
@@ -382,7 +382,7 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
   QGridLayout * glay, QWidget* widget, const char* name )
   : CryptoConfigEntryGUI( module, entry, entryName, name )
 {
-  const int row = glay->numRows();
+  const int row = glay->rowCount();
   mUrlRequester = new KUrlRequester( widget );
   mUrlRequester->setMode( KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly );
   glay->addWidget( new QLabel( mUrlRequester, description(), widget ), row, 1 );
@@ -411,7 +411,7 @@ Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
   QGridLayout * glay, QWidget* widget, const char* name )
   : CryptoConfigEntryGUI( module, entry, entryName, name )
 {
-  const int row = glay->numRows();
+  const int row = glay->rowCount();
   mUrlRequester = new KUrlRequester( widget );
   mUrlRequester->setMode( KFile::File | KFile::ExistingOnly );
   glay->addWidget( new QLabel( mUrlRequester, description(), widget ), row, 1 );
@@ -447,7 +447,7 @@ Kleo::CryptoConfigEntrySpinBox::CryptoConfigEntrySpinBox(
     mKind = Int;
   }
 
-  const int row = glay->numRows();
+  const int row = glay->rowCount();
   mNumInput = new KIntNumInput( widget );
   glay->addWidget( new QLabel( mNumInput, description(), widget ), row, 1 );
   glay->addWidget( mNumInput, row, 2 );
@@ -498,7 +498,7 @@ Kleo::CryptoConfigEntryCheckBox::CryptoConfigEntryCheckBox(
   QGridLayout * glay, QWidget* widget, const char* name )
   : CryptoConfigEntryGUI( module, entry, entryName, name )
 {
-  const int row = glay->numRows();
+  const int row = glay->rowCount();
   mCheckBox = new QCheckBox( widget );
   glay->addWidget( mCheckBox, row, 1, 1, 2 );
   mCheckBox->setText( description() );
@@ -526,7 +526,7 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
   mPushButton = new QPushButton( i18n( "Edit..." ), widget );
 
 
-  const int row = glay->numRows();
+  const int row = glay->rowCount();
   glay->addWidget( new QLabel( mPushButton, description(), widget ), row, 1 );
   QHBoxLayout * hlay = new QHBoxLayout;
   glay->addLayout( hlay, row, 2 );

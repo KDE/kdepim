@@ -1757,7 +1757,7 @@ KNode::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent )
   top->addWidget( mExpGroup );
   QGridLayout *grid = new QGridLayout( mExpGroup, 7, 2, KDialog::marginHint(), KDialog::spacingHint() );
 
-  grid->setRowSpacing( 0, KDialog::spacingHint() );
+  grid->setRowMinimumHeight( 0, KDialog::spacingHint() );
 
   mExpEnabled = new QCheckBox( i18n("&Expire old articles automatically"), mExpGroup );
   grid->addWidget( mExpEnabled, 1, 0, 1, 2 );
@@ -1865,7 +1865,7 @@ KNode::CleanupWidget::CleanupWidget( KInstance *inst,QWidget *parent ) :
   topL->addWidget(foldersB);
   QGridLayout *foldersL = new QGridLayout( foldersB, 3, 2, KDialog::marginHint(), KDialog::spacingHint() );
 
-  foldersL->setRowSpacing( 0, KDialog::spacingHint() );
+  foldersL->setRowMinimumHeight( 0, KDialog::spacingHint() );
 
   f_olderCB=new QCheckBox(i18n("Co&mpact folders automatically"), foldersB);
   connect(f_olderCB, SIGNAL(toggled(bool)), this, SLOT(slotFolderCBtoggled(bool)));

@@ -55,7 +55,7 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
 
   label = new QLabel( "", this );
   layout->addWidget( label, 1, 0 );
-  layout->setRowSpacing( 1, 20 );
+  layout->setRowMinimumHeight( 1, 20 );
 
   label = new QLabel( i18n( "Select the type of server you want connect your KDE to:" ), this );
   layout->addWidget( label, 2, 0, 1, 4 );
