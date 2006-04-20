@@ -30,7 +30,7 @@ using namespace KCal;
 
 ConfirmSaveDialog::ConfirmSaveDialog( const QString &destination,
                                       QWidget *parent, const char *name )
-  : KDialogBase( parent, name, true, i18n("Confirm Save"), Ok | Cancel )
+  : KDialogBase( Plain, i18n("Confirm Save"), Ok | Cancel, Ok, parent, name, /*modal*/true )
 {
   QFrame *topFrame = makeMainWidget();
 

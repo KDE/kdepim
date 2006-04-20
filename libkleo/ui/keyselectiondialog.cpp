@@ -300,7 +300,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      bool rememberChoice,
 					      QWidget * parent, const char * name,
 					      bool modal )
-  : KDialogBase( parent, name, modal, title, Default|Ok|Cancel, Ok ),
+  : KDialogBase( Plain, title, Default|Ok|Cancel, Ok, parent, name, modal ),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
@@ -319,7 +319,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      bool rememberChoice,
 					      QWidget * parent, const char * name,
 					      bool modal )
-  : KDialogBase( parent, name, modal, title, Default|Ok|Cancel, Ok ),
+  : KDialogBase( Plain, title, Default|Ok|Cancel, Ok, parent, name, modal ),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
@@ -353,19 +353,28 @@ kapp->windowIcon().pixmap(miniSize, miniSize) );
   mStartSearchTimer = new QTimer( this );
 
   QFrame *page = makeMainWidget();
-  QVBoxLayout *topLayout = new QVBoxLayout( page, 0, spacingHint() );
+  QVBoxLayout *topLayout = new QVBoxLayout( page );
+  topLayout->setMargin( 0 );
+  topLayout->setSpacing( spacingHint() );
 
   if ( !text.isEmpty() )
     topLayout->addWidget( new QLabel( text, page ) );
 
-  QHBoxLayout * hlay = new QHBoxLayout( topLayout ); // inherits spacing
+  QHBoxLayout * hlay = new QHBoxLayout();
+  topLayout->addLayout( topLayout );
+
   QLineEdit * le = new QLineEdit( page );
   le->setText( initialQuery );
   QToolButton *clearButton = new QToolButton( page );
   clearButton->setIcon( KGlobal::iconLoader()->loadIconSet(
-              KApplication::reverseLayout() ? "clear_left":"locationbar_erase", K3Icon::Small, 0 ) );
+              KApplication::isRightToLeft() ? "clear_left":"locationbar_erase", K3Icon::Small, 0 ) );
+
   hlay->addWidget( clearButton );
-  hlay->addWidget( new QLabel( le, i18n("&Search for:"), page ) );
+
+  QLabel* lbSearchFor =  new QLabel( i18n("&Search for:"), page ) ;
+  lbSearchFor->setBuddy(le);
+
+  hlay->addWidget(lbSearchFor);
   hlay->addWidget( le, 1 );
   le->setFocus();
 
@@ -713,7 +722,8 @@ void Kleo::KeySelectionDialog::slotSearch( const QString & text ) {
 }
 
 void Kleo::KeySelectionDialog::slotSearch() {
-  mStartSearchTimer->start( sCheckSelectionDelay, true /*single-shot*/ );
+  mStartSearchTimer->setSingleShot( true );
+  mStartSearchTimer->start( sCheckSelectionDelay );
 }
 
 void Kleo::KeySelectionDialog::slotFilter() {
@@ -723,7 +733,7 @@ void Kleo::KeySelectionDialog::slotFilter() {
   }
 
   // OK, so we need to filter:
-  QRegExp keyIdRegExp( "(?:0x)?[A-F0-9]{1,8}", false /*case-insens.*/ );
+  QRegExp keyIdRegExp( "(?:0x)?[A-F0-9]{1,8}", Qt::CaseInsensitive );
   if ( keyIdRegExp.exactMatch( mSearchText ) ) {
     if ( mSearchText.startsWith( "0X" ) )
       // search for keyID only:
@@ -753,7 +763,7 @@ static bool anyUIDMatches( const Kleo::KeyListViewItem * item, QRegExp & rx ) {
 
   const std::vector<GpgME::UserID> uids = item->key().userIDs();
   for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != uids.end() ; ++it )
-    if ( it->id() && rx.search( QString::fromUtf8( it->id() ) ) >= 0 )
+    if ( it->id() && rx.indexIn( QString::fromUtf8( it->id() ) ) >= 0 )
       return true;
   return false;
 }
@@ -762,7 +772,7 @@ void Kleo::KeySelectionDialog::filterByKeyIDOrUID( const QString & str ) {
   assert( !str.isEmpty() );
 
   // match beginnings of words:
-  QRegExp rx( "\\b" + QRegExp::escape( str ), false );
+  QRegExp rx( "\\b" + QRegExp::escape( str ), Qt::CaseInsensitive );
 
   for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
     item->setVisible( item->text( 0 ).toUpper().startsWith( str ) || anyUIDMatches( item, rx ) );
@@ -773,7 +783,7 @@ void Kleo::KeySelectionDialog::filterByUID( const QString & str ) {
   assert( !str.isEmpty() );
 
   // match beginnings of words:
-  QRegExp rx( "\\b" + QRegExp::escape( str ), false );
+  QRegExp rx( "\\b" + QRegExp::escape( str ), Qt::CaseInsensitive );
 
   for ( KeyListViewItem * item = mKeyListView->firstChild() ; item ; item = item->nextSibling() )
     item->setVisible( anyUIDMatches( item, rx ) );

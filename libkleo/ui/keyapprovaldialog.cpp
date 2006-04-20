@@ -111,7 +111,7 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
                                       const std::vector<GpgME::Key> & sender,
                                       QWidget * parent, const char * name,
                                       bool modal )
-  : KDialogBase( parent, name, modal, i18n("Encryption Key Approval"), Ok|Cancel, Ok ),
+  : KDialogBase( Plain, i18n("Encryption Key Approval"), Ok|Cancel, Ok, parent, name, modal ),
     d( 0 )
 {
   assert( !recipients.empty() );
@@ -119,7 +119,9 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
   d = new Private();
 
   QFrame *page = makeMainWidget();
-  QVBoxLayout * vlay = new QVBoxLayout( page, 0, spacingHint() );
+  QVBoxLayout * vlay = new QVBoxLayout( page );
+  vlay->setMargin( 0 );
+  vlay->setSpacing( spacingHint() );
 
   vlay->addWidget( new QLabel( i18n("The following keys will be used for encryption:"), page ) );
 
@@ -129,7 +131,9 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
 
   QWidget * view = new QWidget( sv->viewport() );
 
-  QGridLayout * glay = new QGridLayout( view, 3, 2, marginHint(), spacingHint() );
+  QGridLayout * glay = new QGridLayout( view );
+  glay->setMargin( marginHint() );
+  glay->setSpacing( spacingHint() );
   glay->setColumnStretch( 1, 1 );
   sv->addChild( view );
 
@@ -162,8 +166,9 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
 
     ++row;
     glay->addWidget( new QLabel( i18n("Encryption preference:"), view ), row, 0 );
-    QComboBox * cb = new QComboBox( false, view );
-    cb->insertStringList( prefs );
+    QComboBox * cb = new QComboBox( view );
+    cb->setEditable(false);
+    cb->addItems( prefs );
     glay->addWidget( cb, row, 1 );
     cb->setCurrentIndex( pref2cb( it->pref ) );
     connect( cb, SIGNAL(activated(int)), SLOT(slotPrefsChanged()) );
@@ -215,7 +220,7 @@ std::vector<Kleo::KeyApprovalDialog::Item> Kleo::KeyApprovalDialog::items() cons
   std::vector<KeyRequester*>::const_iterator rit = d->requesters.begin();
   std::vector<QComboBox*>::const_iterator cit = d->preferences.begin();
   while ( ait != d->addresses.end() )
-    result.push_back( Item( *ait++, (*rit++)->keys(), cb2pref( (*cit++)->currentItem() ) ) );
+    result.push_back( Item( *ait++, (*rit++)->keys(), cb2pref( (*cit++)->currentIndex() ) ) );
   return result;
 }
 

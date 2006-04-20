@@ -822,23 +822,23 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 				switch ( mapi.type & 0x0FFF )
 				{
 					case MAPI_TYPE_UINT16:
-						kDebug().form( "(tag=%04x) MAPI short%s: 0x%x\n", mapi.tag, mapiname.ascii(), mapi.value.toUInt() );
+						kDebug().form( "(tag=%04x) MAPI short%s: 0x%x\n", mapi.tag, mapiname.toAscii().data(), mapi.value.toUInt() );
 						break;
 					case MAPI_TYPE_ULONG:
-						kDebug().form( "(tag=%04x) MAPI long%s: 0x%x\n", mapi.tag, mapiname.ascii(), mapi.value.toUInt() );
+						kDebug().form( "(tag=%04x) MAPI long%s: 0x%x\n", mapi.tag, mapiname.toAscii().data(), mapi.value.toUInt() );
 						break;
 					case MAPI_TYPE_BOOLEAN:
-						kDebug().form( "(tag=%04x) MAPI boolean%s: %s\n", mapi.tag, mapiname.ascii(), ( mapi.value.toBool() ? "true" : "false" ) );
+						kDebug().form( "(tag=%04x) MAPI boolean%s: %s\n", mapi.tag, mapiname.toAscii().data(), ( mapi.value.toBool() ? "true" : "false" ) );
 						break;
 					case MAPI_TYPE_TIME:
-						kDebug().form( "(tag=%04x) MAPI time%s: %s\n", mapi.tag, mapiname.ascii(), mapi.value.toString().ascii() );
+						kDebug().form( "(tag=%04x) MAPI time%s: %s\n", mapi.tag, mapiname.toAscii().data(), mapi.value.toString().toAscii().data() );
 						break;
 					case MAPI_TYPE_USTRING:
 					case MAPI_TYPE_STRING8:
-						kDebug().form( "(tag=%04x) MAPI string%s: size=%d \"%s\"\n", mapi.tag, mapiname.ascii(), mapi.value.toByteArray().size(), mapi.value.toString().ascii() );
+						kDebug().form( "(tag=%04x) MAPI string%s: size=%d \"%s\"\n", mapi.tag, mapiname.toAscii().data(), mapi.value.toByteArray().size(), mapi.value.toString().toAscii().data() );
 						break;
 					case MAPI_TYPE_BINARY:
-						kDebug().form( "(tag=%04x) MAPI binary%s: size=%d\n", mapi.tag, mapiname.ascii(), mapi.value.toByteArray().size() );
+						kDebug().form( "(tag=%04x) MAPI binary%s: size=%d\n", mapi.tag, mapiname.toAscii().data(), mapi.value.toByteArray().size() );
 						break;
 				}
 			}

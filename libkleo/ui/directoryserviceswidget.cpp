@@ -93,10 +93,11 @@ private:
 Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
   Kleo::CryptoConfigEntry* configEntry,
   QWidget* parent,  const char* name, Qt::WFlags fl )
-    : QWidget( parent, name, fl ),
+    : QWidget( parent, fl ),
     Ui::DirectoryServicesWidgetBase(),
       mConfigEntry( configEntry )
 {
+    setObjectName(name);
     setupUi(this);
     x500LV->setSorting( -1 );
 

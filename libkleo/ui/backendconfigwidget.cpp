@@ -200,14 +200,17 @@ void Kleo::BackendListView::deselectAll( const char * protocolName, Q3CheckListI
 ////
 
 Kleo::BackendConfigWidget::BackendConfigWidget( CryptoBackendFactory * factory, QWidget * parent, const char * name, Qt::WFlags f )
-  : QWidget( parent, name, f ), d( 0 )
+  : QWidget( parent, f ), d( 0 )
 {
+  setObjectName( name) ;
   assert( factory );
   d = new Private();
   d->backendFactory = factory;
 
   QHBoxLayout * hlay =
-    new QHBoxLayout( this, 0, KDialog::spacingHint() );
+    new QHBoxLayout( this );
+  hlay->setMargin( 0 );
+  hlay->setSpacing( KDialog::spacingHint() );
 
   d->listView = new BackendListView( this );
   d->listView->setObjectName( "d->listView" );
@@ -222,7 +225,8 @@ Kleo::BackendConfigWidget::BackendConfigWidget( CryptoBackendFactory * factory, 
   connect( d->listView, SIGNAL(selectionChanged(Q3ListViewItem*)),
 	   SLOT(slotSelectionChanged(Q3ListViewItem*)) );
 
-  QVBoxLayout * vlay = new QVBoxLayout( hlay ); // inherits spacing
+  QVBoxLayout * vlay = new QVBoxLayout();
+  hlay->addLayout(vlay);
 
   d->configureButton = new QPushButton( i18n("Confi&gure..."), this );
   d->configureButton->setAutoDefault( false );

@@ -56,8 +56,9 @@
 #include <kdebug.h>
 
 Kleo::Job::Job( QObject * parent, const char * name )
-  : QObject( parent, name )
+  : QObject( parent )
 {
+  setObjectName(name);
   if ( qApp )
     connect( qApp, SIGNAL(aboutToQuit()), SLOT(slotCancel()) );
 }

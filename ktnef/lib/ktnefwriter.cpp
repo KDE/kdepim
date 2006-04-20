@@ -420,7 +420,7 @@ void KTNEFWriter::addAttendee( const QString& /*cn*/, Role /*r*/, PartStat /*p*/
 // I assume this is the same as the sender?
 // U also assume that this is like "Name <address>"
 void KTNEFWriter::setOrganizer( const QString& organizer ) {
-  int i = organizer.find( '<' );
+  int i = organizer.indexOf( '<' );
 
   if ( i == -1 )
     return;

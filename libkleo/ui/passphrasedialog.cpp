@@ -70,20 +70,23 @@ struct Kleo::PassphraseDialog::Private {
 
 Kleo::PassphraseDialog::PassphraseDialog( const QString & msg, const QString & caption,
 					  QWidget * parent, const char * name, bool modal )
-  : KDialogBase( parent, name, modal, caption, Ok|Cancel, Ok ), d( 0 )
+  : KDialogBase( Plain, caption, Ok|Cancel, Ok, parent, name, modal ), d( 0 )
 {
   d = new Private();
 
   QWidget * w = new QWidget( this );
   setMainWidget( w );
 
-  QHBoxLayout * hlay = new QHBoxLayout( w, 0, spacingHint() );
+  QHBoxLayout * hlay = new QHBoxLayout( w );
+  hlay->setMargin( 0 );
+  hlay->setSpacing( spacingHint() );
 
   QLabel * label = new QLabel( w );
   label->setPixmap( DesktopIcon( "pgp-keys", K3Icon::SizeMedium ) );
   hlay->addWidget( label, 0, Qt::AlignTop );
 
-  QVBoxLayout * vlay = new QVBoxLayout( hlay ); // inherits spacing
+  QVBoxLayout * vlay = new QVBoxLayout();
+  hlay->addLayout( vlay );
 
   vlay->addWidget( new QLabel( msg.isEmpty() ? i18n("Please enter your passphrase:") : msg, w ) );
 

@@ -33,8 +33,9 @@
 using namespace GpgME;
 
 QGpgME::EventLoopInteractor::EventLoopInteractor( QObject * parent, const char * name )
- : QObject( parent, name ), GpgME::EventLoopInteractor()
+ : QObject( parent ), GpgME::EventLoopInteractor()
 {
+  setObjectName(name);
   if ( !parent )
     if ( qApp ) {
       connect( qApp, SIGNAL(aboutToQuit()), SLOT(deleteLater()) );

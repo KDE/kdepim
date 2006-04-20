@@ -113,10 +113,10 @@ class KDE_EXPORT Base {
     typedef QList<KMime::Headers::Base*> List;
 
     /** Create an empty header. */
-    Base() : e_ncCS(0), p_arent(0) {}
+    Base() : e_ncCS(""), p_arent(0) {}
 
     /** Create an empty header with a parent-content. */
-    Base(KMime::Content *parent) : e_ncCS(0), p_arent(parent) {}
+    Base(KMime::Content *parent) : e_ncCS(""), p_arent(parent) {}
 
     /** Destructor */
     virtual ~Base()  {}

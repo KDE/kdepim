@@ -66,10 +66,11 @@ static const char * availableProtocols[] = {
 static const unsigned int numAvailableProtocols = sizeof availableProtocols / sizeof *availableProtocols;
 
 Kleo::CryptoBackendFactory::CryptoBackendFactory()
-  : QObject( qApp, "CryptoBackendFactory::instance()" ),
+  : QObject( qApp ),
     mConfigObject( 0 ),
     mAvailableProtocols( availableProtocols, availableProtocols + numAvailableProtocols )
 {
+  setObjectName("CryptoBackendFactory::instance()");
   mBackendList.push_back( new QGpgMEBackend() );
 #if 0 // disabled for kde-3.3
   mBackendList.push_back( new PGP2Backend() );

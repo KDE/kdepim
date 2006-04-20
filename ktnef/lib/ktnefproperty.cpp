@@ -39,9 +39,9 @@ QString KTNEFProperty::keyString()
 	if ( _name.isValid() )
 	{
 		if ( _name.type() == QVariant::String )
-			return _name.asString();
+			return _name.toString();
 		else
-			return mapiNamedTagString( _name.asUInt(), _key );
+			return mapiNamedTagString( _name.toUInt(), _key );
 	}
 	else
 		return mapiTagString( _key );

@@ -77,13 +77,16 @@ static void prepare( Q3ListView * lv ) {
 }
 
 Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent, const char * name, Qt::WFlags f )
-  : QWidget( parent, name, f ), d( 0 )
+  : QWidget( parent, f ), d( 0 )
 {
+  setObjectName(name);
   assert( mapper );
   d = new Private();
   d->mapper = mapper;
 
-  QGridLayout * glay = new QGridLayout( this, 2, 3, 0, KDialog::spacingHint() );
+  QGridLayout * glay = new QGridLayout( this );
+  glay->setMargin( 0 ); 
+  glay->setSpacing( KDialog::spacingHint() );
   glay->setColumnStretch( 0, 1 );
   glay->setColumnStretch( 2, 1 );
 
@@ -116,7 +119,9 @@ Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMap
 
   // the up/down/left/right arrow cross:
 
-  QGridLayout * xlay = new QGridLayout( 5, 3, 0, "xlay" );
+  QGridLayout * xlay = new QGridLayout();
+  xlay->setSpacing( 0 );
+  xlay->setObjectName( "xlay" );
   xlay->setAlignment( Qt::AlignCenter );
 
   static const struct {

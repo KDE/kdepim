@@ -67,8 +67,9 @@ struct Kleo::KeyFilterManager::Private {
 Kleo::KeyFilterManager * Kleo::KeyFilterManager::mSelf = 0;
 
 Kleo::KeyFilterManager::KeyFilterManager( QObject * parent, const char * name )
-  : QObject( parent, name ), d( 0 )
+  : QObject( parent ), d( 0 )
 {
+  setObjectName(name);
   mSelf = this;
   d = new Private();
   // ### DF: doesn't a KStaticDeleter work more reliably?

@@ -65,9 +65,9 @@ QString KTNEFPropertySet::findNamedProp(const QString& name, const QString& fall
     if ( (*it)->name().isValid() ){
       QString s;
       if ( (*it)->name().type() == QVariant::String )
-        s = (*it)->name().asString();
+        s = (*it)->name().toString();
       else
-        s = QString().sprintf( "0X%04X", (*it)->name().asUInt() );
+        s = QString().sprintf( "0X%04X", (*it)->name().toUInt() );
 
       if( s.toUpper() == name.toUpper() ){
         QVariant value = ( *it )->value();
