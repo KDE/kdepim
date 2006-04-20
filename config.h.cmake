@@ -30,9 +30,6 @@
 /* Define to 1 if your C compiler support C99 designated initializers */
 #define HAVE_C99_INITIALIZERS 1
 
-/* Define to 1 if you have the <Carbon/Carbon.h> header file. */
-#cmakedefine HAVE_CARBON_CARBON_H 1
-
 /* Define if you have the CoreAudio API */
 /* #undef HAVE_COREAUDIO */
 
@@ -107,12 +104,6 @@
 /* Define to 1 if you have the <libgen.h> header file. */
 #cmakedefine HAVE_LIBGEN_H 1
 
-/* Define if you have libjpeg */
-#cmakedefine HAVE_LIBJPEG 1
-
-/* Define if you have libpng */
-#cmakedefine HAVE_LIBPNG 1
-
 /* Define if you have a working libpthread (will enable threaded code) */
 #define HAVE_LIBPTHREAD 1
 
@@ -121,9 +112,6 @@
 
 /* Define if you have libXss installed */
 #define HAVE_LIBXSS 1
-
-/* Define if you have libz */
-#cmakedefine HAVE_LIBZ 1
 
 /* Define to 1 if you have the <lockdev.h> header file. */
 #cmakedefine HAVE_LOCKDEV_H 1
@@ -171,29 +159,17 @@
 /* Define if you have the setenv prototype */
 #cmakedefine HAVE_SETENV_PROTO 1
 
-/* Define if you have a STL implementation by SGI */
-#define HAVE_SGI_STL 1
-
 /* Define to 1 if you have the `snprintf' function. */
 #cmakedefine HAVE_SNPRINTF 1
 
 /* Define to 1 if you have the `socket' function. */
 #cmakedefine HAVE_SOCKET 1
 
-/* If we are going to use OpenSSL */
-#cmakedefine HAVE_SSL 1
-
 /* Define to 1 if you have the <stdint.h> header file. */
 #cmakedefine HAVE_STDINT_H 1
 
-/* Define to 1 if you have the <stdlib.h> header file. */
-#cmakedefine HAVE_STDLIB_H 1
-
 /* Define if your version of stl is defined in namespace std */
 #define HAVE_STLNAMESPACE 1
-
-/* Define to 1 if you have the `strdup' function. */
-#define HAVE_STRDUP 1
 
 /* Define to 1 if you have the <strings.h> header file. */
 #cmakedefine HAVE_STRINGS_H 1
@@ -292,9 +268,6 @@
 
 /* Define if you have X11 header files */
 #define HAVE_X11_HEADERS 1
-
-/* Define if you have XPM support */
-#cmakedefine HAVE_XPM 1
 
 /* safe saves */
 #define ICAL_SAFESAVES 1
