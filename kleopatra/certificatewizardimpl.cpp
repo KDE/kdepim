@@ -141,7 +141,7 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent, bool modal, Qt::W
 	     this, SLOT( slotSetValuesFromWhoAmI() ) );
 
     for ( unsigned int i = 0 ; i < numKeyLengths ; ++i )
-      keyLengthCB->insertItem( i18np("%n bit", "%n bits", keyLengths[i] ) );
+      keyLengthCB->addItem( i18np("%n bit", "%n bits", keyLengths[i] ) );
 }
 
 static bool requirementsAreMet( const CertificateWizardImpl::AttrPairList & list ) {
@@ -199,7 +199,7 @@ void CertificateWizardImpl::slotGenerateCertificate()
     QString certParms;
     certParms += "<GnupgKeyParms format=\"internal\">\n";
     certParms += "Key-Type: RSA\n";
-    certParms += QString( "Key-Length: %1\n" ).arg( keyLengths[keyLengthCB->currentItem()] );
+    certParms += QString( "Key-Length: %1\n" ).arg( keyLengths[keyLengthCB->currentIndex()] );
     certParms += "Key-Usage: ";
     if ( signOnlyCB->isChecked() )
       certParms += "Sign";

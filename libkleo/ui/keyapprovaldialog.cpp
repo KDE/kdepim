@@ -167,7 +167,7 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
     ++row;
     glay->addWidget( new QLabel( i18n("Encryption preference:"), view ), row, 0 );
     QComboBox * cb = new QComboBox( view );
-    cb->setEditable(false);
+    cb->setEditable( false );
     cb->addItems( prefs );
     glay->addWidget( cb, row, 1 );
     cb->setCurrentIndex( pref2cb( it->pref ) );

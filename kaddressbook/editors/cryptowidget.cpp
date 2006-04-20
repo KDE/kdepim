@@ -111,9 +111,10 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
 
   l = new QLabel( i18n( "Sign:" ), hbox );
 
-  mSignPref = new QComboBox( false, hbox );
+  mSignPref = new QComboBox( hbox );
+  mSignPref->setEditable( false );
   for ( unsigned int i = Kleo::UnknownSigningPreference; i < Kleo::MaxSigningPreference ; ++i )
-    mSignPref->insertItem( Kleo::signingPreferenceToLabel(
+    mSignPref->addItem( Kleo::signingPreferenceToLabel(
                            static_cast<Kleo::SigningPreference>( i ) ) );
 
   // Send preferences/encrypt (see libkleo/kleo/enum.h)
@@ -121,9 +122,10 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *
 
   l = new QLabel( i18n("Encrypt:"), hbox );
 
-  mCryptPref = new QComboBox( false, hbox );
+  mCryptPref = new QComboBox( hbox );
+  mCryptPref->setEditable( false );
   for ( unsigned int i = Kleo::UnknownPreference; i < Kleo::MaxEncryptionPreference ; ++i )
-    mCryptPref->insertItem( Kleo::encryptionPreferenceToLabel(
+    mCryptPref->addItem( Kleo::encryptionPreferenceToLabel(
                             static_cast<Kleo::EncryptionPreference>( i ) ) );
 
   // Emit "changed()" signal
@@ -183,7 +185,7 @@ void CryptoWidget::storeContact( KABC::Addressee *addr )
     addr->removeCustom( "KADDRESSBOOK", "CRYPTOPROTOPREF" );
 
   Kleo::SigningPreference signPref =
-      static_cast<Kleo::SigningPreference>( mSignPref->currentItem() );
+      static_cast<Kleo::SigningPreference>( mSignPref->currentIndex() );
   if ( signPref != Kleo::UnknownSigningPreference )
     addr->insertCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF",
                         Kleo::signingPreferenceToString( signPref ) );
@@ -191,7 +193,7 @@ void CryptoWidget::storeContact( KABC::Addressee *addr )
     addr->removeCustom( "KADDRESSBOOK", "CRYPTOSIGNPREF" );
 
   Kleo::EncryptionPreference encryptPref =
-      static_cast<Kleo::EncryptionPreference>( mCryptPref->currentItem() );
+      static_cast<Kleo::EncryptionPreference>( mCryptPref->currentIndex() );
   if ( encryptPref != Kleo::UnknownPreference )
     addr->insertCustom( "KADDRESSBOOK", "CRYPTOENCRYPTPREF",
                         Kleo::encryptionPreferenceToString( encryptPref ) );

@@ -149,10 +149,10 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   boxLayout->addWidget( label, 0, 2 );
 
   mFilterCombo = new KComboBox( groupBox );
-  mFilterCombo->insertItem( i18n( "Name" ) );
-  mFilterCombo->insertItem( i18n( "Email" ) );
-  mFilterCombo->insertItem( i18n( "Home Number" ) );
-  mFilterCombo->insertItem( i18n( "Work Number" ) );
+  mFilterCombo->addItem( i18n( "Name" ) );
+  mFilterCombo->addItem( i18n( "Email" ) );
+  mFilterCombo->addItem( i18n( "Home Number" ) );
+  mFilterCombo->addItem( i18n( "Work Number" ) );
   boxLayout->addWidget( mFilterCombo, 0, 3 );
 
   QSize buttonSize;
@@ -171,8 +171,8 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   boxLayout->addWidget( mRecursiveCheckbox, 1, 0, 1, 5 );
 
   mSearchType = new KComboBox( groupBox );
-  mSearchType->insertItem( i18n( "Contains" ) );
-  mSearchType->insertItem( i18n( "Starts With" ) );
+  mSearchType->addItem( i18n( "Contains" ) );
+  mSearchType->addItem( i18n( "Starts With" ) );
   boxLayout->addWidget( mSearchType, 1, 3, 1, 2 );
 
   topLayout->addWidget( groupBox );
@@ -290,7 +290,7 @@ void LDAPSearchDialog::saveSettings()
 {
   KConfig config( "kaddressbookrc" );
   config.setGroup( "LDAPSearch" );
-  config.writeEntry( "SearchType", mSearchType->currentItem() );
+  config.writeEntry( "SearchType", mSearchType->currentIndex() );
   config.sync();
 }
 
@@ -363,7 +363,7 @@ void LDAPSearchDialog::slotStartSearch()
   connect( mSearchButton, SIGNAL( clicked() ),
            this, SLOT( slotStopSearch() ) );
 
-  bool startsWith = (mSearchType->currentItem() == 1);
+  bool startsWith = (mSearchType->currentIndex() == 1);
 
   QString filter = makeFilter( mSearchEdit->text().trimmed(), mFilterCombo->currentText(), startsWith );
 

@@ -210,8 +210,8 @@ void KNode::StatusFilterWidget::slotEnabled()
 
 KNode::StatusFilterWidget::TFCombo::TFCombo( QWidget *parent ) : QComboBox( parent )
 {
-  insertItem(i18n("True"));
-  insertItem(i18n("False"));
+  addItem(i18n("True"));
+  addItem(i18n("False"));
 }
 
 

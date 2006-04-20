@@ -95,9 +95,9 @@ void PhoneTypeCombo::update()
   QList<int>::ConstIterator it;
   for ( it = mTypeList.begin(); it != mTypeList.end(); ++it ) {
     if ( *it == -1 ) { // "Other..." entry
-      insertItem( i18n( "Other..." ) );
+      addItem( i18n( "Other..." ) );
     } else {
-      insertItem( KABC::PhoneNumber::typeLabel( *it ) );
+      addItem( KABC::PhoneNumber::typeLabel( *it ) );
     }
   }
 

@@ -108,11 +108,11 @@ KNode::RangeFilterWidget::RangeFilterWidget( const QString& value, int min, int 
   layout->addWidget( val1 );
 
   op1 = new QComboBox( this );
-  op1->insertItem("<");
-  op1->insertItem("<=");
-  op1->insertItem("=");
-  op1->insertItem(">=");
-  op1->insertItem(">");
+  op1->addItem("<");
+  op1->addItem("<=");
+  op1->addItem("=");
+  op1->addItem(">=");
+  op1->addItem(">");
   layout->addWidget( op1 );
 
   des = new QLabel( value, this );
@@ -120,9 +120,9 @@ KNode::RangeFilterWidget::RangeFilterWidget( const QString& value, int min, int 
   layout->addWidget( des );
 
   op2 = new QComboBox( this );
-  op2->insertItem("");
-  op2->insertItem("<");
-  op2->insertItem("<=");
+  op2->addItem("");
+  op2->addItem("<");
+  op2->addItem("<=");
   layout->addWidget( op2 );
 
   val2 = new KIntSpinBox( min, max, 1, min, this );
@@ -150,7 +150,7 @@ RangeFilter KNode::RangeFilterWidget::filter()
   r.val1=val1->value();
   r.val2=val2->value();
 
-  r.op1=(RangeFilter::Op) op1->currentItem();
+  r.op1=(RangeFilter::Op) op1->currentIndex();
   if (op2->currentText().isEmpty())
     r.op2 = RangeFilter::dis;
   else if (op2->currentText()=="<")
@@ -197,14 +197,14 @@ void KNode::RangeFilterWidget::slotOp1Changed( int id )
   bool state = op1->isEnabled() && id < 2;
   op2->setEnabled(state);
   des->setEnabled(state);
-  slotOp2Changed(op2->currentItem());
+  slotOp2Changed(op2->currentIndex());
 }
 
 
 
 void KNode::RangeFilterWidget::slotOp2Changed( int id )
 {
-  val2->setEnabled(op1->isEnabled() && (op1->currentItem()<2) && (id>0));
+  val2->setEnabled(op1->isEnabled() && (op1->currentIndex()<2) && (id>0));
 }
 
 
@@ -214,7 +214,7 @@ void KNode::RangeFilterWidget::slotEnabled( bool e )
   op1->setEnabled(e);
   val1->setEnabled(e);
   des->setEnabled(e);
-  slotOp1Changed(op1->currentItem());
+  slotOp1Changed(op1->currentIndex());
 }
 
 // -----------------------------------------------------------------------------

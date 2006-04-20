@@ -75,7 +75,7 @@ void ViewConfigureFieldsPage::restoreSettings( KConfig *config )
   for ( it = fields.begin(); it != fields.end(); ++it )
     new FieldItem( mSelectedBox, *it );
 
-  slotShowFields( mCategoryCombo->currentItem() );
+  slotShowFields( mCategoryCombo->currentIndex() );
 }
 
 void ViewConfigureFieldsPage::saveSettings( KConfig *config )
@@ -135,7 +135,7 @@ void ViewConfigureFieldsPage::slotSelect()
       where++;
     }
 
-  slotShowFields( mCategoryCombo->currentItem() );
+  slotShowFields( mCategoryCombo->currentIndex() );
 }
 
 void ViewConfigureFieldsPage::slotUnSelect()
@@ -146,7 +146,7 @@ void ViewConfigureFieldsPage::slotUnSelect()
       --i;
     }
 
-  slotShowFields( mCategoryCombo->currentItem() );
+  slotShowFields( mCategoryCombo->currentIndex() );
 }
 
 void ViewConfigureFieldsPage::slotButtonsEnabled()
@@ -210,13 +210,13 @@ void ViewConfigureFieldsPage::initGUI()
   QGridLayout *gl = new QGridLayout( this , 6, 4, 0, KDialog::spacingHint() );
 
   mCategoryCombo = new KComboBox( false, this );
-  mCategoryCombo->insertItem( KABC::Field::categoryLabel( KABC::Field::All ) );
-  mCategoryCombo->insertItem( KABC::Field::categoryLabel( KABC::Field::Frequent ) );
-  mCategoryCombo->insertItem( KABC::Field::categoryLabel( KABC::Field::Address ) );
-  mCategoryCombo->insertItem( KABC::Field::categoryLabel( KABC::Field::Email ) );
-  mCategoryCombo->insertItem( KABC::Field::categoryLabel( KABC::Field::Personal ) );
-  mCategoryCombo->insertItem( KABC::Field::categoryLabel( KABC::Field::Organization ) );
-  mCategoryCombo->insertItem( KABC::Field::categoryLabel( KABC::Field::CustomCategory ) );
+  mCategoryCombo->addItem( KABC::Field::categoryLabel( KABC::Field::All ) );
+  mCategoryCombo->addItem( KABC::Field::categoryLabel( KABC::Field::Frequent ) );
+  mCategoryCombo->addItem( KABC::Field::categoryLabel( KABC::Field::Address ) );
+  mCategoryCombo->addItem( KABC::Field::categoryLabel( KABC::Field::Email ) );
+  mCategoryCombo->addItem( KABC::Field::categoryLabel( KABC::Field::Personal ) );
+  mCategoryCombo->addItem( KABC::Field::categoryLabel( KABC::Field::Organization ) );
+  mCategoryCombo->addItem( KABC::Field::categoryLabel( KABC::Field::CustomCategory ) );
   connect( mCategoryCombo, SIGNAL( activated(int) ), SLOT( slotShowFields(int) ) );
   gl->addWidget( mCategoryCombo, 0, 0 );
 

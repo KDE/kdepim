@@ -151,11 +151,11 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
   sSuffix += config.readEntry( "Suffixes" , QStringList() );
   sSuffix.sort();
 
-  mPrefixCombo->insertStringList( sTitle );
-  mSuffixCombo->insertStringList( sSuffix );
+  mPrefixCombo->addItems( sTitle );
+  mSuffixCombo->addItems( sSuffix );
 
-  mPrefixCombo->setCurrentText( addr.prefix() );
-  mSuffixCombo->setCurrentText( addr.suffix() );
+  mPrefixCombo->setItemText( mPrefixCombo->currentIndex(), addr.prefix() );
+  mSuffixCombo->setItemText( mSuffixCombo->currentIndex(), addr.suffix() );
 
   mAddresseeConfig.setAddressee( addr );
   mParseBox->setChecked( mAddresseeConfig.automaticNameParsing() );
@@ -182,7 +182,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
            this, SLOT( formattedNameChanged( const QString& ) ) );
 
   initTypeCombo();
-  mFormattedNameCombo->setCurrentItem( type );
+  mFormattedNameCombo->setCurrentIndex( type );
   mPrefixCombo->lineEdit()->setFocus();
   mChanged = false;
 }
@@ -223,7 +223,7 @@ QString NameEditDialog::customFormattedName() const
 
 int NameEditDialog::formattedNameType() const
 {
-  return mFormattedNameCombo->currentItem();
+  return mFormattedNameCombo->currentIndex();
 }
 
 bool NameEditDialog::changed() const
@@ -303,17 +303,17 @@ void NameEditDialog::modified()
 
 void NameEditDialog::initTypeCombo()
 {
-  int pos = mFormattedNameCombo->currentItem();
+  int pos = mFormattedNameCombo->currentIndex();
 
   mFormattedNameCombo->clear();
-  mFormattedNameCombo->insertItem( i18n( "Custom" ) );
-  mFormattedNameCombo->insertItem( i18n( "Simple Name" ) );
-  mFormattedNameCombo->insertItem( i18n( "Full Name" ) );
-  mFormattedNameCombo->insertItem( i18n( "Reverse Name with Comma" ) );
-  mFormattedNameCombo->insertItem( i18n( "Reverse Name" ) );
-  mFormattedNameCombo->insertItem( i18n( "Organization" ) );
+  mFormattedNameCombo->addItem( i18n( "Custom" ) );
+  mFormattedNameCombo->addItem( i18n( "Simple Name" ) );
+  mFormattedNameCombo->addItem( i18n( "Full Name" ) );
+  mFormattedNameCombo->addItem( i18n( "Reverse Name with Comma" ) );
+  mFormattedNameCombo->addItem( i18n( "Reverse Name" ) );
+  mFormattedNameCombo->addItem( i18n( "Organization" ) );
 
-  mFormattedNameCombo->setCurrentItem( pos );
+  mFormattedNameCombo->setCurrentIndex( pos );
 }
 
 void NameEditDialog::slotHelp()

@@ -69,7 +69,7 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
   for ( filterIt = mFilters.begin(); filterIt != mFilters.end(); ++filterIt )
     filters.append( (*filterIt).name() );
 
-  mFiltersCombo->insertStringList( filters );
+  mFiltersCombo->addItems( filters );
   mUseFilters->setEnabled( filters.count() > 0 );
 
   // setup categories
@@ -83,13 +83,13 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
   mUseSelection->setEnabled( count != 0 );
   mUseSelection->setChecked( count  > 0 );
 
-  mSortTypeCombo->insertItem( i18n( "Ascending" ) );
-  mSortTypeCombo->insertItem( i18n( "Descending" ) );
+  mSortTypeCombo->addItem( i18n( "Ascending" ) );
+  mSortTypeCombo->addItem( i18n( "Descending" ) );
 
   mFields = mCore->addressBook()->fields( KABC::Field::All );
   KABC::Field::List::ConstIterator fieldIt;
   for ( fieldIt = mFields.begin(); fieldIt != mFields.end(); ++fieldIt )
-    mFieldCombo->insertItem( (*fieldIt)->label() );
+    mFieldCombo->addItem( (*fieldIt)->label() );
 }
 
 KABC::AddresseeList XXPortSelectDialog::contacts()
@@ -138,8 +138,8 @@ KABC::AddresseeList XXPortSelectDialog::contacts()
   }
 
   if ( mUseSorting ) {
-    list.setReverseSorting( mSortTypeCombo->currentItem() == 1 );
-    int pos = mFieldCombo->currentItem();
+    list.setReverseSorting( mSortTypeCombo->currentIndex() == 1 );
+    int pos = mFieldCombo->currentIndex();
     if ( pos < mFields.count() )
       list.sortByField( mFields[ pos ] );
   }
@@ -218,7 +218,8 @@ void XXPortSelectDialog::initGUI()
                                        "This option is disabled if you have no categories." ) );
   groupLayout->addWidget( mUseCategories, 3, 0, Qt::AlignTop );
 
-  mFiltersCombo = new QComboBox( false, mButtonGroup );
+  mFiltersCombo = new QComboBox( mButtonGroup );
+  mFiltersCombo->setEditable( false );
   mFiltersCombo->setWhatsThis( i18n( "Select a filter to decide which contacts to export." ) );
   groupLayout->addWidget( mFiltersCombo, 2, 1 );
 

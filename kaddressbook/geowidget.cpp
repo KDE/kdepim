@@ -222,8 +222,8 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
   sexagesimalLayout->addWidget( mLatSeconds, 0, 3 );
 
   mLatDirection = new KComboBox( sexagesimalGroup );
-  mLatDirection->insertItem( i18n( "North" ) );
-  mLatDirection->insertItem( i18n( "South" ) );
+  mLatDirection->addItem( i18n( "North" ) );
+  mLatDirection->addItem( i18n( "South" ) );
   sexagesimalLayout->addWidget( mLatDirection, 0, 4 );
 
   label = new QLabel( i18n( "Longitude:" ), sexagesimalGroup );
@@ -252,8 +252,8 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
   sexagesimalLayout->addWidget( mLongSeconds, 1, 3 );
 
   mLongDirection = new KComboBox( sexagesimalGroup );
-  mLongDirection->insertItem( i18n( "East" ) );
-  mLongDirection->insertItem( i18n( "West" ) );
+  mLongDirection->addItem( i18n( "East" ) );
+  mLongDirection->addItem( i18n( "West" ) );
   sexagesimalLayout->addWidget( mLongDirection, 1, 4 );
 
   topLayout->addWidget( sexagesimalGroup, 1, 1 );
@@ -315,12 +315,12 @@ void GeoDialog::sexagesimalInputChanged()
   mLatitude = (double)( mLatDegrees->value() + (double)mLatMinutes->value() /
                         60 + (double)mLatSeconds->value() / 3600 );
 
-  mLatitude *= ( mLatDirection->currentItem() == 1 ? -1 : 1 );
+  mLatitude *= ( mLatDirection->currentIndex() == 1 ? -1 : 1 );
 
   mLongitude = (double)( mLongDegrees->value() + (double)mLongMinutes->value() /
                          60 + (double)mLongSeconds->value() / 3600 );
 
-  mLongitude *= ( mLongDirection->currentItem() == 1 ? -1 : 1 );
+  mLongitude *= ( mLongDirection->currentIndex() == 1 ? -1 : 1 );
 
   mUpdateSexagesimalInput = false;
 
@@ -337,7 +337,7 @@ void GeoDialog::geoMapChanged()
 
 void GeoDialog::cityInputChanged()
 {
-  if ( mCityCombo->currentItem() != 0 ) {
+  if ( mCityCombo->currentIndex() != 0 ) {
     GeoData data = mGeoDataMap[ mCityCombo->currentText() ];
     mLatitude = data.latitude;
     mLongitude = data.longitude;
@@ -458,7 +458,7 @@ void GeoDialog::loadCityList()
     }
     QStringList items( mGeoDataMap.keys() );
     items.prepend( i18n( "Undefined" ) );
-    mCityCombo->insertStringList( items );
+    mCityCombo->addItems( items );
 
     file.close();
   }

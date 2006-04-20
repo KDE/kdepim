@@ -1449,9 +1449,9 @@ void KNComposer::slotGroupsChanged(const QString &t)
 
   QStringList groups = t.split(',');
   foreach ( QString s, groups ) {
-    v_iew->f_up2->insertItem( s );
+    v_iew->f_up2->addItem( s );
   }
-  v_iew->f_up2->insertItem("");
+  v_iew->f_up2->addItem("");
 
   if ( !currText.isEmpty() || !mFirstEdit ) // user might have cleared fup2 intentionally during last edit
     v_iew->f_up2->lineEdit()->setText(currText);
@@ -2583,17 +2583,18 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, Q
   mimeL->addWidget(d_escription, 2,1);
   mimeL->addWidget(new QLabel(d_escription, i18n("&Description:"), mimeGB), 2,0);
 
-  e_ncoding=new QComboBox(false, mimeGB);
-  e_ncoding->insertItem("7Bit");
-  e_ncoding->insertItem("8Bit");
-  e_ncoding->insertItem("quoted-printable");
-  e_ncoding->insertItem("base64");
+  e_ncoding=new QComboBox(mimeGB);
+  e_ncoding->setEditable(false);
+  e_ncoding->addItem("7Bit");
+  e_ncoding->addItem("8Bit");
+  e_ncoding->addItem("quoted-printable");
+  e_ncoding->addItem("base64");
   if(a->isFixedBase64()) {
-    e_ncoding->setCurrentItem(3);
+    e_ncoding->setCurrentIndex(3);
     e_ncoding->setEnabled(false);
   }
   else
-    e_ncoding->setCurrentItem(a->cte());
+    e_ncoding->setCurrentIndex(a->cte());
   mimeL->addWidget(e_ncoding, 3,1);
   mimeL->addWidget(new QLabel(e_ncoding, i18n("&Encoding:"), mimeGB), 3,0);
 
@@ -2621,7 +2622,7 @@ void KNComposer::AttachmentPropertiesDlg::apply()
 {
   a_ttachment->setDescription(d_escription->text());
   a_ttachment->setMimeType(m_imeType->text());
-  a_ttachment->setCte(e_ncoding->currentItem());
+  a_ttachment->setCte(e_ncoding->currentIndex());
 }
 
 
@@ -2645,11 +2646,11 @@ void KNComposer::AttachmentPropertiesDlg::slotMimeTypeTextChanged(const QString 
     enableButtonOK( !text.isEmpty() );
   if(text.left(5)!="text/") {
     n_onTextAsText=a_ttachment->isFixedBase64();
-    e_ncoding->setCurrentItem(3);
+    e_ncoding->setCurrentIndex(3);
     e_ncoding->setEnabled(false);
   }
   else {
-    e_ncoding->setCurrentItem(a_ttachment->cte());
+    e_ncoding->setCurrentIndex(a_ttachment->cte());
     e_ncoding->setEnabled(true);
   }
 }

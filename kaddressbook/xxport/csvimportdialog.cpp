@@ -414,14 +414,16 @@ void CSVImportDialog::initGUI()
   mDelimiterEdit = new QLineEdit( mDelimiterBox );
   delimiterLayout->addWidget( mDelimiterEdit, 1, 2 );
 
-  mComboLine = new QComboBox( false, mPage );
-  mComboLine->insertItem( i18n( "1" ) );
+  mComboLine = new QComboBox( mPage );
+  mComboLine->setEditable( false );
+  mComboLine->addItem( i18n( "1" ) );
   layout->addWidget( mComboLine, 2, 3 );
 
-  mComboQuote = new QComboBox( false, mPage );
-  mComboQuote->insertItem( i18n( "\"" ), 0 );
-  mComboQuote->insertItem( i18n( "'" ), 1 );
-  mComboQuote->insertItem( i18n( "None" ), 2 );
+  mComboQuote = new QComboBox( mPage );
+  mComboQuote->setEditable( false );
+  mComboQuote->addItem( i18n( "\"" ), 0 );
+  mComboQuote->addItem( i18n( "'" ), 1 );
+  mComboQuote->addItem( i18n( "None" ), 2 );
   layout->addWidget( mComboQuote, 2, 2 );
 
   mDatePatternEdit = new QLineEdit( mPage );
@@ -494,7 +496,7 @@ void CSVImportDialog::fillTable()
   QTextStream inputStream( mFileArray, QIODevice::ReadOnly );
 
   // find the current codec
-  int code = mCodecCombo->currentItem();
+  int code = mCodecCombo->currentIndex();
   if ( code == Local )
     inputStream.setEncoding( QTextStream::Locale );
   else if ( code >= Codec )
@@ -655,7 +657,7 @@ void CSVImportDialog::fillComboBox()
 {
   mComboLine->clear();
   for ( int row = 1; row < mTable->numRows() + 1; ++row )
-    mComboLine->insertItem( QString::number( row ), row - 1 );
+    mComboLine->addItem( QString::number( row ), row - 1 );
 }
 
 void CSVImportDialog::reloadCodecs()
@@ -668,14 +670,14 @@ void CSVImportDialog::reloadCodecs()
   for ( int i = 0; ( codec = QTextCodec::codecForIndex( i ) ); i++ )
     mCodecs.append( codec );
 
-  mCodecCombo->insertItem( i18n( "Local (%1)", QLatin1String( QTextCodec::codecForLocale()->name() ) ), Local );
-  mCodecCombo->insertItem( i18n( "[guess]" ), Guess );
-  mCodecCombo->insertItem( i18n( "Latin1" ), Latin1 );
-  mCodecCombo->insertItem( i18n( "Unicode" ), Uni );
-  mCodecCombo->insertItem( i18n( "Microsoft Unicode" ), MSBug );
+  mCodecCombo->addItem( i18n( "Local (%1)", QLatin1String( QTextCodec::codecForLocale()->name() ) ), Local );
+  mCodecCombo->addItem( i18n( "[guess]" ), Guess );
+  mCodecCombo->addItem( i18n( "Latin1" ), Latin1 );
+  mCodecCombo->addItem( i18n( "Unicode" ), Uni );
+  mCodecCombo->addItem( i18n( "Microsoft Unicode" ), MSBug );
 
-	for ( int i = 0; i < mCodecs.count(); i++ )
-    mCodecCombo->insertItem( mCodecs.at( i )->name(), Codec + i );
+  for ( int i = 0; i < mCodecs.count(); i++ )
+    mCodecCombo->addItem( mCodecs.at( i )->name(), Codec + i );
 }
 
 void CSVImportDialog::setText( int row, int col, const QString& text )
@@ -759,7 +761,7 @@ void CSVImportDialog::delimiterClicked( int id )
 
 void CSVImportDialog::textquoteSelected( const QString& mark )
 {
-  if ( mComboQuote->currentItem() == 2 )
+  if ( mComboQuote->currentIndex() == 2 )
     mTextQuote = 0;
   else
     mTextQuote = mark[ 0 ];
@@ -830,7 +832,7 @@ void CSVImportDialog::applyTemplate()
   mDelimiterBox->setButton( config.readEntry( "DelimiterType", 0) );
   delimiterClicked( config.readEntry( "DelimiterType",0 ) );
   int quoteType = config.readEntry( "QuoteType", 0 );
-  mComboQuote->setCurrentItem( quoteType );
+  mComboQuote->setCurrentIndex( quoteType );
   textquoteSelected( mComboQuote->currentText() );
 
   // create the column map
@@ -873,7 +875,7 @@ void CSVImportDialog::saveTemplate()
   config.writeEntry( "Columns", mTable->numCols() );
   config.writeEntry( "DelimiterType", mDelimiterBox->id( mDelimiterBox->selected() ) );
   config.writeEntry( "DelimiterOther", mDelimiterEdit->text() );
-  config.writeEntry( "QuoteType", mComboQuote->currentItem() );
+  config.writeEntry( "QuoteType", mComboQuote->currentIndex() );
 
   config.setGroup( "Misc" );
   config.writeEntry( "Name", name );

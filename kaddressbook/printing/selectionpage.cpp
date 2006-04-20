@@ -81,7 +81,8 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
                                        "This option is disabled if you have no categories." ) );
   groupLayout->addWidget( mUseCategories, 3, 0, Qt::AlignTop );
 
-  mFiltersCombo = new QComboBox( false, mButtonGroup );
+  mFiltersCombo = new QComboBox( mButtonGroup );
+  mFiltersCombo->setEditable( false );
   mFiltersCombo->setWhatsThis( i18n( "Select a filter to decide which contacts to print." ) );
   groupLayout->addWidget( mFiltersCombo, 2, 1 );
 
@@ -104,7 +105,7 @@ SelectionPage::~SelectionPage()
 void SelectionPage::setFilters( const QStringList& filters )
 {
   mFiltersCombo->clear();
-  mFiltersCombo->insertStringList( filters );
+  mFiltersCombo->addItems( filters );
 
   mUseFilters->setEnabled( filters.count() > 0 );
 }

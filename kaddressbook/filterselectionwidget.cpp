@@ -49,18 +49,18 @@ FilterSelectionWidget::~FilterSelectionWidget()
 
 int FilterSelectionWidget::currentItem() const
 {
-  return mFilterCombo->currentItem();
+  return mFilterCombo->currentIndex();
 }
 
 void FilterSelectionWidget::setCurrentItem( int index )
 {
-  mFilterCombo->setCurrentItem( index );
+  mFilterCombo->setCurrentIndex( index );
 }
 
 void FilterSelectionWidget::setItems( const QStringList &names )
 {
   mFilterCombo->clear();
-  mFilterCombo->insertStringList( names );
+  mFilterCombo->addItems( names );
 }
 
 #include "filterselectionwidget.moc"

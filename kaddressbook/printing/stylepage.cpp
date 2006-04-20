@@ -44,8 +44,8 @@ StylePage::StylePage( KABC::AddressBook *ab, QWidget* parent,  const char* name 
 
   initFieldCombo();
 
-  mSortTypeCombo->insertItem( i18n( "Ascending" ) );
-  mSortTypeCombo->insertItem( i18n( "Descending" ) );
+  mSortTypeCombo->addItem( i18n( "Ascending" ) );
+  mSortTypeCombo->addItem( i18n( "Descending" ) );
 
   connect( mStyleCombo, SIGNAL( activated( int ) ), SIGNAL( styleChanged( int ) ) );
 }
@@ -64,7 +64,7 @@ void StylePage::setPreview( const QPixmap &pixmap )
 
 void StylePage::addStyleName( const QString &name )
 {
-  mStyleCombo->insertItem( name );
+  mStyleCombo->addItem( name );
 }
 
 void StylePage::clearStyleNames()
@@ -74,7 +74,7 @@ void StylePage::clearStyleNames()
 
 void StylePage::setSortField( KABC::Field *field )
 {
-  mFieldCombo->setCurrentText( field->label() );
+  mFieldCombo->setItemText( mFieldCombo->currentIndex(), field->label() );
 }
 
 void StylePage::setSortAscending( bool value )
@@ -87,15 +87,15 @@ void StylePage::setSortAscending( bool value )
 
 KABC::Field* StylePage::sortField()
 {
-  if ( mFieldCombo->currentItem() == -1 )
+  if ( mFieldCombo->currentIndex() == -1 )
     return mFields[ 0 ];
 
-  return mFields[ mFieldCombo->currentItem() ];
+  return mFields[ mFieldCombo->currentIndex() ];
 }
 
 bool StylePage::sortAscending()
 {
-  return ( mSortTypeCombo->currentItem() == 0 );
+  return ( mSortTypeCombo->currentIndex() == 0 );
 }
 
 void StylePage::initFieldCombo()
@@ -108,7 +108,7 @@ void StylePage::initFieldCombo()
   mFields = mAddressBook->fields( KABC::Field::All );
   KABC::Field::List::ConstIterator it;
   for ( it = mFields.begin(); it != mFields.end(); ++it )
-    mFieldCombo->insertItem( (*it)->label() );
+    mFieldCombo->addItem( (*it)->label() );
 }
 
 void StylePage::initGUI()

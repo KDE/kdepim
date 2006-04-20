@@ -100,8 +100,8 @@ KNode::StringFilterWidget::StringFilterWidget( const QString& title, QWidget *pa
   : QGroupBox( title, parent )
 {
   fType=new QComboBox(this);
-  fType->insertItem(i18n("Does Contain"));
-  fType->insertItem(i18n("Does NOT Contain"));
+  fType->addItem(i18n("Does Contain"));
+  fType->addItem(i18n("Does NOT Contain"));
 
   fString=new KLineEdit(this);
 
@@ -126,7 +126,7 @@ KNode::StringFilterWidget::~StringFilterWidget()
 KNode::StringFilter StringFilterWidget::filter()
 {
   StringFilter ret;
-  ret.con=(fType->currentItem()==0);
+  ret.con=(fType->currentIndex()==0);
   ret.data=fString->text();
   ret.regExp=regExp->isChecked();
 

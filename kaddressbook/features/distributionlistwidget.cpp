@@ -305,7 +305,7 @@ void DistributionListWidget::createList()
 #endif
 
   // Select the new one in the list
-  mNameCombo->setCurrentText( newName );
+  mNameCombo->setItemText( mNameCombo->currentIndex(), newName );
   // Display the contents of the list we just selected (well, it's empty)
   updateContactView();
 }
@@ -341,7 +341,7 @@ void DistributionListWidget::editList()
 #endif
 
   // Select the new name in the list (updateNameCombo couldn't know we wanted that one)
-  mNameCombo->setCurrentText( newName );
+  mNameCombo->setItemText( mNameCombo->currentIndex(), newName );
   // Display the contents of the list we just selected
   updateContactView();
 }
@@ -366,7 +366,7 @@ void DistributionListWidget::removeList()
   emit deleted( QStringList( dist.uid() ) );
 #else
   mManager->remove( mManager->list( mNameCombo->currentText() ) );
-  mNameCombo->removeItem( mNameCombo->currentItem() );
+  mNameCombo->removeItem( mNameCombo->currentIndex() );
 
   updateContactView();
 
@@ -514,7 +514,7 @@ void DistributionListWidget::updateContactView()
 
 void DistributionListWidget::updateNameCombo()
 {
-  int pos = mNameCombo->currentItem();
+  int pos = mNameCombo->currentIndex();
   mNameCombo->clear();
 #ifdef KDEPIM_NEW_DISTRLISTS
   const QStringList names = core()->distributionListNames();
@@ -522,7 +522,7 @@ void DistributionListWidget::updateNameCombo()
   mManager->load();
   const QStringList names = mManager->listNames();
 #endif
-  mNameCombo->insertStringList( names );
+  mNameCombo->addItems( names );
   mNameCombo->setCurrentIndex( qMin( pos, (int)names.count() - 1 ) );
 
   updateContactView();

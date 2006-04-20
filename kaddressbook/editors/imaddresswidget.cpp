@@ -77,7 +77,7 @@ void IMAddressWidget::slotAddressChanged( const QString &text )
 
 KPluginInfo * IMAddressWidget::protocol() const
 {
-  int protocolIndex = cmbProtocol->currentItem();
+  int protocolIndex = cmbProtocol->currentIndex();
 
   return mProtocols[ protocolIndex ];
 }
@@ -122,7 +122,7 @@ void IMAddressWidget::populateProtocols()
   // insert the protocols in order
   QList<KPluginInfo *>::ConstIterator it;
   for ( it = mProtocols.begin(); it != mProtocols.end(); ++it )
-    cmbProtocol->insertItem( SmallIcon( (*it)->icon() ), (*it)->name() );
+    cmbProtocol->addItem( SmallIcon( (*it)->icon() ), (*it)->name() );
 }
 
 void IMAddressWidget::slotProtocolChanged()

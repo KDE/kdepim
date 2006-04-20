@@ -92,14 +92,14 @@ void ViewConfigureFilterPage::restoreSettings( KConfig *config )
   const Filter::List list = Filter::restore( config, "Filter" );
   Filter::List::ConstIterator it;
   for ( it = list.begin(); it != list.end(); ++it )
-    mFilterCombo->insertItem( (*it).name() );
+    mFilterCombo->addItem( (*it).name() );
 
   int id = config->readEntry( "DefaultFilterType", 1 );
   mFilterGroup->setButton( id );
   buttonClicked( id );
 
   if ( id == 2 ) // has default filter
-    mFilterCombo->setCurrentText( config->readEntry( "DefaultFilterName" ) );
+    mFilterCombo->setItemText( mFilterCombo->currentIndex(), config->readEntry( "DefaultFilterName" ) );
 }
 
 void ViewConfigureFilterPage::saveSettings( KConfig *config )

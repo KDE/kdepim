@@ -153,11 +153,11 @@ AddresseeWidget::AddresseeWidget( QWidget *parent, const char *name )
   layout->addWidget( label, 1, 0 );
 
   mFormattedNameCombo = new KComboBox( this );
-  mFormattedNameCombo->insertItem( i18n( "Empty" ) );
-  mFormattedNameCombo->insertItem( i18n( "Simple Name" ) );
-  mFormattedNameCombo->insertItem( i18n( "Full Name" ) );
-  mFormattedNameCombo->insertItem( i18n( "Reverse Name with Comma" ) );
-  mFormattedNameCombo->insertItem( i18n( "Reverse Name" ) );
+  mFormattedNameCombo->addItem( i18n( "Empty" ) );
+  mFormattedNameCombo->addItem( i18n( "Simple Name" ) );
+  mFormattedNameCombo->addItem( i18n( "Full Name" ) );
+  mFormattedNameCombo->addItem( i18n( "Reverse Name with Comma" ) );
+  mFormattedNameCombo->addItem( i18n( "Reverse Name" ) );
   layout->addWidget( mFormattedNameCombo, 1, 1, 1, 2 );
 
   connect( mPrefix, SIGNAL( modified() ), SIGNAL( modified() ) );
@@ -195,7 +195,7 @@ void AddresseeWidget::saveSettings()
 
   KConfig cfg( "kaddressbookrc" );
   cfg.setGroup( "General" );
-  cfg.writeEntry( "FormattedNameType", mFormattedNameCombo->currentItem() );
+  cfg.writeEntry( "FormattedNameType", mFormattedNameCombo->currentIndex() );
 
   DCOPClient *client = DCOPClient::mainClient();
   if ( client )

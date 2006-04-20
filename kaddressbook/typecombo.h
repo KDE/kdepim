@@ -75,7 +75,7 @@ void TypeCombo<T>::updateTypes()
 {
   // Remember current item
   QString currentId;
-  int current = currentItem();
+  int current = currentIndex();
   if ( current >= 0 ) currentId = mTypeList[ current ].id();
 
   clear();
@@ -94,7 +94,7 @@ void TypeCombo<T>::updateTypes()
     if ( count > 1 ) {
       label = i18nc( "label (number)", "%1 (%2)", label, count );
     }
-    insertItem( label );
+    addItem( label );
   }
 
   // Restore previous current item
@@ -123,7 +123,7 @@ void TypeCombo<T>::selectType( int type )
 template <class T>
 int TypeCombo<T>::selectedType()
 {
-  return mTypeList[ currentItem() ].type();
+  return mTypeList[ currentIndex() ].type();
 }
 
 template <class T>
@@ -131,7 +131,7 @@ typename TypeCombo<T>::Iterator TypeCombo<T>::selectedElement()
 {
 #warning Ugly porting hack!
    typename TypeCombo<T>::Iterator it = mTypeList.begin();
-  for ( int i = 0; i < currentItem(); ++i, ++it );
+  for ( int i = 0; i < currentIndex(); ++i, ++it );
   return it;
 //  return mTypeList.at( currentItem() );
 }

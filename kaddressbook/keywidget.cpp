@@ -151,7 +151,7 @@ void KeyWidget::addKey()
 
 void KeyWidget::removeKey()
 {
-  int pos = mKeyCombo->currentItem();
+  int pos = mKeyCombo->currentIndex();
   if ( pos == -1 )
     return;
 
@@ -168,7 +168,7 @@ void KeyWidget::removeKey()
 
 void KeyWidget::exportKey()
 {
-  KABC::Key key = mKeyList.at( mKeyCombo->currentItem() );
+  KABC::Key key = mKeyList.at( mKeyCombo->currentIndex() );
 
   KUrl url = KFileDialog::getSaveURL();
 
@@ -183,15 +183,15 @@ void KeyWidget::exportKey()
 
 void KeyWidget::updateKeyCombo()
 {
-  int pos = mKeyCombo->currentItem();
+  int pos = mKeyCombo->currentIndex();
   mKeyCombo->clear();
 
   KABC::Key::List::ConstIterator it;
   for ( it = mKeyList.begin(); it != mKeyList.end(); ++it ) {
     if ( (*it).type() == KABC::Key::Custom )
-      mKeyCombo->insertItem( (*it).customTypeString() );
+      mKeyCombo->addItem( (*it).customTypeString() );
     else
-      mKeyCombo->insertItem( KABC::Key::typeLabel( (*it).type() ) );
+      mKeyCombo->addItem( KABC::Key::typeLabel( (*it).type() ) );
   }
 
   mKeyCombo->setCurrentItem( pos );

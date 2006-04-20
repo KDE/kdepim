@@ -143,8 +143,9 @@ Config::Config( QWidget *parent, bool encrypt )
   KHBox * hbox = new KHBox( group );
   lay->addWidget( hbox );
   label = new QLabel( i18n("Select encryption tool to &use:"), hbox );
-  toolCombo = new QComboBox( false, hbox );
-  toolCombo->insertStringList( QStringList()
+  toolCombo = new QComboBox( hbox );
+  toolCombo->setEditable( false );
+  toolCombo->addItems( QStringList()
 			       << i18n("Autodetect")
 			       << i18n("GnuPG - Gnu Privacy Guard")
 			       << i18n("PGP Version 2.x")
@@ -258,7 +259,7 @@ Config::setValues()
   case Module::tPGP6: type = 4; break;
   case Module::tOff:  type = 5; break;
   }
-  toolCombo->setCurrentItem( type );
+  toolCombo->setCurrentIndex( type );
 }
 
 void
@@ -272,7 +273,7 @@ Config::applySettings()
     pgp->setShowKeyApprovalDlg( showKeyApprovalDlg->isChecked() );
 
   Module::PGPType type;
-  switch ( toolCombo->currentItem() ) {
+  switch ( toolCombo->currentIndex() ) {
     // convert combobox entry indices to Kpgp::Module constants:
   default:
   case 0: type = Module::tAuto; break;
@@ -1190,7 +1191,7 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
   mEraseButton->setAutoDefault( false );
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
                                             QSizePolicy::Minimum ) );
-  mEraseButton->setOcpm( SmallIconSet( "clear_left" ) );
+  mEraseButton->setIcon( SmallIconSet( "clear_left" ) );
   mEraseButton->setToolTip( i18n("Clear") );
 
   // the button to call the KeySelectionDialog:
@@ -1454,32 +1455,32 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     hbox = new KHBox( bigvbox );
     new QLabel( i18n("Encryption preference:"), hbox );
     QComboBox *encrPrefCombo = new QComboBox( hbox );
-    encrPrefCombo->insertItem( i18n("<none>") );
-    encrPrefCombo->insertItem( i18n("Never Encrypt with This Key") );
-    encrPrefCombo->insertItem( i18n("Always Encrypt with This Key") );
-    encrPrefCombo->insertItem( i18n("Encrypt Whenever Encryption is Possible") );
-    encrPrefCombo->insertItem( i18n("Always Ask") );
-    encrPrefCombo->insertItem( i18n("Ask Whenever Encryption is Possible") );
+    encrPrefCombo->addItem( i18n("<none>") );
+    encrPrefCombo->addItem( i18n("Never Encrypt with This Key") );
+    encrPrefCombo->addItem( i18n("Always Encrypt with This Key") );
+    encrPrefCombo->addItem( i18n("Encrypt Whenever Encryption is Possible") );
+    encrPrefCombo->addItem( i18n("Always Ask") );
+    encrPrefCombo->addItem( i18n("Ask Whenever Encryption is Possible") );
 
     EncryptPref encrPref = pgp->encryptionPreference( *ait );
     switch( encrPref ) {
       case NeverEncrypt:
-        encrPrefCombo->setCurrentItem( 1 );
+        encrPrefCombo->setCurrentIndex( 1 );
         break;
       case AlwaysEncrypt:
-        encrPrefCombo->setCurrentItem( 2 );
+        encrPrefCombo->setCurrentIndex( 2 );
         break;
       case AlwaysEncryptIfPossible:
-        encrPrefCombo->setCurrentItem( 3 );
+        encrPrefCombo->setCurrentIndex( 3 );
         break;
       case AlwaysAskForEncryption:
-        encrPrefCombo->setCurrentItem( 4 );
+        encrPrefCombo->setCurrentIndex( 4 );
         break;
       case AskWheneverPossible:
-        encrPrefCombo->setCurrentItem( 5 );
+        encrPrefCombo->setCurrentIndex( 5 );
         break;
       default:
-        encrPrefCombo->setCurrentItem( 0 );
+        encrPrefCombo->setCurrentIndex( 0 );
     }
     connect( encrPrefCombo, SIGNAL(activated(int)),
              this, SLOT(slotPrefsChanged(int)) );
@@ -1587,7 +1588,7 @@ KeyApprovalDialog::slotOk()
     for( unsigned int i = 0; i < mAddressLabels.size(); i++ ) {
       // traverse all Address and Encryption Preference widgets
       EncryptPref encrPref;
-      switch( mEncrPrefCombos[i]->currentItem() ) {
+      switch( mEncrPrefCombos[i]->currentIndex() ) {
         case 1:
           encrPref = NeverEncrypt;
           break;

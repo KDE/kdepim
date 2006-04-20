@@ -67,7 +67,8 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   label->setAlignment( Qt::AlignVCenter | Qt::AlignRight );
   layout->addWidget( label );
 
-  mFieldCombo = new QComboBox( false, this );
+  mFieldCombo = new QComboBox( this );
+  mFieldCombo->setEditable( false );
   layout->addWidget( mFieldCombo );
   label->setBuddy(mFieldCombo);
 
@@ -118,12 +119,12 @@ void IncSearchWidget::initFields()
   mFieldList = KABC::Field::allFields();
 
   mFieldCombo->clear();
-  mFieldCombo->insertItem( i18n( "Visible Fields" ) );
-  mFieldCombo->insertItem( i18n( "All Fields" ) );
+  mFieldCombo->addItem( i18n( "Visible Fields" ) );
+  mFieldCombo->addItem( i18n( "All Fields" ) );
 
   KABC::Field::List::ConstIterator it;
   for ( it = mFieldList.begin(); it != mFieldList.end(); ++it )
-    mFieldCombo->insertItem( (*it)->label() );
+    mFieldCombo->addItem( (*it)->label() );
 
   announceDoSearch();
 }
@@ -132,22 +133,22 @@ KABC::Field::List IncSearchWidget::currentFields() const
 {
   KABC::Field::List fieldList;
 
-  if ( mFieldCombo->currentItem() == 0 )
+  if ( mFieldCombo->currentIndex() == 0 )
     fieldList = mViewFields;
-  else if ( mFieldCombo->currentItem() > 1 )
-    fieldList.append( mFieldList[ mFieldCombo->currentItem() - 2 ] );
+  else if ( mFieldCombo->currentIndex() > 1 )
+    fieldList.append( mFieldList[ mFieldCombo->currentIndex() - 2 ] );
 
   return fieldList;
 }
 
 void IncSearchWidget::setCurrentItem( int pos )
 {
-  mFieldCombo->setCurrentItem( pos );
+  mFieldCombo->setCurrentIndex( pos );
 }
 
 int IncSearchWidget::currentItem() const
 {
-  return mFieldCombo->currentItem();
+  return mFieldCombo->currentIndex();
 }
 
 void IncSearchWidget::setViewFields( const KABC::Field::List &fields )

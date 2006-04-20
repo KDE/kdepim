@@ -106,12 +106,13 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   connect( mSocketED, SIGNAL(textChanged(const QString&)), SLOT(slotChanged()) );
 
   ++row;
-  mLogLevelCB = new QComboBox( false, w );
-  mLogLevelCB->insertItem( i18n("None") );
-  mLogLevelCB->insertItem( i18n("Basic") );
-  mLogLevelCB->insertItem( i18n("Advanced") );
-  mLogLevelCB->insertItem( i18n("Expert") );
-  mLogLevelCB->insertItem( i18n("Guru") );
+  mLogLevelCB = new QComboBox( w );
+  mLogLevelCB->setEditable( false );
+  mLogLevelCB->addItem( i18n("None") );
+  mLogLevelCB->addItem( i18n("Basic") );
+  mLogLevelCB->addItem( i18n("Advanced") );
+  mLogLevelCB->addItem( i18n("Expert") );
+  mLogLevelCB->addItem( i18n("Guru") );
   glay->addWidget( new QLabel( mLogLevelCB, i18n("Default &log level:"), w ), row, 0 );
   glay->addWidget( mLogLevelCB, row, 1 );
   connect( mLogLevelCB, SIGNAL(activated(int)), SLOT(slotChanged()) );
@@ -185,7 +186,7 @@ void KWatchGnuPGConfig::saveConfig()
   config->setGroup("WatchGnuPG");
   config->writeEntry( "Executable", mExeED->url() );
   config->writeEntry( "Socket", mSocketED->url() );
-  config->writeEntry( "LogLevel", log_levels[mLogLevelCB->currentItem()] );
+  config->writeEntry( "LogLevel", log_levels[mLogLevelCB->currentIndex()] );
 
   config->setGroup("LogWindow");
   config->writeEntry( "MaxLogLen", mLoglenSB->value() );

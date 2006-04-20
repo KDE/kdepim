@@ -91,8 +91,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   editorLayout->addWidget( label );
 
   mEditorCombo = new QComboBox( groupBox );
-  mEditorCombo->insertItem( i18n( "Full Editor" ) );
-  mEditorCombo->insertItem( i18n( "Simple Editor" ) );
+  mEditorCombo->addItem( i18n( "Full Editor" ) );
+  mEditorCombo->addItem( i18n( "Simple Editor" ) );
   label->setBuddy( mEditorCombo );
   editorLayout->addWidget( mEditorCombo );
 
@@ -135,14 +135,15 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   boxLayout = new QVBoxLayout( groupBox->layout(), KDialog::spacingHint() );
   boxLayout->setAlignment( Qt::AlignTop );
 
-  mLocationMapURL = new QComboBox( true, groupBox );
+  mLocationMapURL = new QComboBox( groupBox );
+  mLocationMapURL->setEditable( true );
   mLocationMapURL->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
   mLocationMapURL->setToolTip( i18n( "<ul> <li>%s: Street</li>"
                                  "<li>%r: Region</li>"
                                  "<li>%l: Location</li>"
                                  "<li>%z: Zip Code</li>"
                                  "<li>%c: Country ISO Code</li> </ul>" ) );
-  mLocationMapURL->insertStringList( KABPrefs::instance()->locationMapURLs() );
+  mLocationMapURL->addItems( KABPrefs::instance()->locationMapURLs() );
   boxLayout->addWidget( mLocationMapURL );
   layout->addWidget( groupBox );
 
@@ -176,7 +177,8 @@ void KABConfigWidget::restoreSettings()
   mFaxHook->setText( KABPrefs::instance()->faxHookApplication() );
   mAddresseeWidget->restoreSettings();
   mEditorCombo->setCurrentIndex( KABPrefs::instance()->editorType() );
-  mLocationMapURL->setCurrentText( KABPrefs::instance()->locationMapURL().arg( KGlobal::locale()->country() ) );
+  mLocationMapURL->setItemText( mLocationMapURL->currentIndex(),
+      KABPrefs::instance()->locationMapURL().arg( KGlobal::locale()->country() ) );
   mLocationMapURL->lineEdit()->setCursorPosition( 0 );
 
   KConfig config( "kabcrc", false, false );
@@ -196,7 +198,7 @@ void KABConfigWidget::saveSettings()
   KABPrefs::instance()->setPhoneHookApplication( mPhoneHook->text() );
   KABPrefs::instance()->setSMSHookApplication( mSMSHook->text() );
   KABPrefs::instance()->setFaxHookApplication( mFaxHook->text() );
-  KABPrefs::instance()->setEditorType( mEditorCombo->currentItem() );
+  KABPrefs::instance()->setEditorType( mEditorCombo->currentIndex() );
   KABPrefs::instance()->setLocationMapURL( mLocationMapURL->currentText() );
   mAddresseeWidget->saveSettings();
 

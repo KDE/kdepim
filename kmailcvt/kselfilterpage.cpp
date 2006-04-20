@@ -82,7 +82,7 @@ void KSelFilterPage::filterSelected(int i)
 void KSelFilterPage::addFilter(Filter *f)
 {
 	mFilterList.append(f);
-	mFilterCombo->insertItem(f->name());
+	mFilterCombo->addItem(f->name());
 	if (mFilterCombo->count() == 1) filterSelected(0); // Setup description box with fist filter selected
 }
 
@@ -93,7 +93,7 @@ bool KSelFilterPage::removeDupMsg_checked()
 
 Filter * KSelFilterPage::getSelectedFilter(void)
 {
-	return mFilterList.at(mFilterCombo->currentItem());
+	return mFilterList.at(mFilterCombo->currentIndex());
 }
 
 #include "kselfilterpage.moc"

@@ -90,7 +90,7 @@ AddFieldDialog::AddFieldDialog( QWidget *parent, const char *name )
   mTypeName.append( i18n( "Date & Time" ) );
 
   for ( int i = 0; i < mTypeName.count(); ++i )
-    mType->insertItem( mTypeName[ i ] );
+    mType->addItem( mTypeName[ i ] );
 
   nameChanged( "" );
 
@@ -110,7 +110,7 @@ QString AddFieldDialog::identifier() const
 
 QString AddFieldDialog::type() const
 {
-  return mTypeList[ mType->currentItem() ];
+  return mTypeList[ mType->currentIndex() ];
 }
 
 bool AddFieldDialog::isGlobal() const

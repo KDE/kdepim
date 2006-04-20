@@ -1215,7 +1215,7 @@ void KNode::DisplayedHeaderConfDialog::slotOk()
 // the user selected one of the presets, insert the *translated* string as display name:
 void KNode::DisplayedHeaderConfDialog::slotActivated(int pos)
 {
-  n_ameE->setText(i18n(h_drC->text(pos).toLocal8Bit()));  // I think it's save here, the combobox has only english defaults
+  n_ameE->setText(i18n(h_drC->itemText(pos).toLocal8Bit()));  // I think it's save here, the combobox has only english defaults
 }
 
 
@@ -1532,9 +1532,9 @@ KNode::PostNewsTechnicalWidget::PostNewsTechnicalWidget( KInstance *inst, QWidge
 {
   setupUi( this );
 
-  mCharset->insertStringList( KGlobal::charsets()->availableEncodingNames() );
-  mEncoding->insertItem( i18n("Allow 8-bit") );
-  mEncoding->insertItem( i18n("7-bit (Quoted-Printable)") );
+  mCharset->addItems( KGlobal::charsets()->availableEncodingNames() );
+  mEncoding->addItem( i18n("Allow 8-bit") );
+  mEncoding->addItem( i18n("7-bit (Quoted-Printable)") );
 
   connect( mHeaderList, SIGNAL( itemActivated(QListWidgetItem*) ), SLOT( slotEditBtnClicked() ) );
   connect( mHeaderList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChanged() ) );
@@ -1568,7 +1568,7 @@ void KNode::PostNewsTechnicalWidget::load()
 void KNode::PostNewsTechnicalWidget::save()
 {
   knGlobals.settings()->setCharset( mCharset->currentText() );
-  knGlobals.settings()->setAllow8BitBody( mEncoding->currentItem() == 0 );
+  knGlobals.settings()->setAllow8BitBody( mEncoding->currentIndex() == 0 );
 
   XHeader::List list;
   for ( int i = 0; i < mHeaderList->count(); ++i )

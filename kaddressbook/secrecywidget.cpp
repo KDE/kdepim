@@ -66,7 +66,7 @@ void SecrecyWidget::setSecrecy( const KABC::Secrecy &secrecy )
 KABC::Secrecy SecrecyWidget::secrecy() const
 {
   KABC::Secrecy secrecy;
-  secrecy.setType( mSecrecyCombo->currentItem() );
+  secrecy.setType( mSecrecyCombo->currentIndex() );
 
   return secrecy;
 }

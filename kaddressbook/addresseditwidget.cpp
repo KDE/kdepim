@@ -185,7 +185,7 @@ void AddressEditWidget::updateAddressee( const KABC::Addressee &addr )
 
 void AddressEditWidget::edit()
 {
-  AddressEditDialog dialog( mAddressList, mTypeCombo->currentItem(), this );
+  AddressEditDialog dialog( mAddressList, mTypeCombo->currentIndex(), this );
   if ( dialog.exec() ) {
     if ( dialog.changed() ) {
       mAddressList = dialog.addresses();
@@ -468,13 +468,14 @@ void AddressEditDialog::updateAddressEdits()
   mLocalityEdit->setText( a.locality() );
   mPostalCodeEdit->setText( a.postalCode() );
   mPOBoxEdit->setText( a.postOfficeBox() );
-  mCountryCombo->setCurrentText( a.country() );
+  mCountryCombo->setItemText( mCountryCombo->currentIndex(), a.country() );
   mLabel = a.label();
 
   mPreferredCheckBox->setChecked( a.type() & KABC::Address::Pref );
 
   if ( a.isEmpty() )
-    mCountryCombo->setCurrentText( KGlobal::locale()->twoAlphaToCountryName( KGlobal::locale()->country() ) );
+    mCountryCombo->setItemText( mCountryCombo->currentIndex(), 
+       KGlobal::locale()->twoAlphaToCountryName( KGlobal::locale()->country() ) );
 
   mStreetTextEdit->setFocus();
 
@@ -598,7 +599,7 @@ void AddressEditDialog::fillCountryCombo()
 
   countries = sortLocaleAware( countries );
 
-  mCountryCombo->insertStringList( countries );
+  mCountryCombo->addItems( countries );
   mCountryCombo->completionObject()->setItems( countries );
   mCountryCombo->setAutoCompletion( true );
 }
