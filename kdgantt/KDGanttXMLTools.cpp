@@ -124,8 +124,8 @@ void createBrushNode( QDomDocument& doc, QDomNode& parent,
     createColorNode( doc, brushElement, "Color", brush.color() );
     createStringNode( doc, brushElement, "Style",
                       KDGanttXML::brushStyleToString( brush.style() ) );
-    if( brush.style() == Qt::TexturePattern && brush.pixmap() )
-        createPixmapNode( doc, brushElement, "Pixmap", *brush.pixmap() );
+    if( brush.style() == Qt::TexturePattern && !brush.texture().isNull() )
+        createPixmapNode( doc, brushElement, "Pixmap", brush.texture() );
 }
 
 
@@ -437,7 +437,7 @@ bool readBrushNode( const QDomElement& element, QBrush& brush )
 	brush.setColor( tempColor );
 	brush.setStyle( tempStyle );
         if( !tempPixmap.isNull() )
-            brush.setPixmap( tempPixmap );
+            brush.setTexture( tempPixmap );
     }
 
     return ok;

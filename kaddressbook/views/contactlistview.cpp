@@ -296,10 +296,10 @@ void ContactListView::paintEmptyArea( QPainter * p, const QRect & rect )
   QBrush b = palette().brush(QPalette::Active, QColorGroup::Base);
 
   // Get the brush, which will have the background pixmap if there is one.
-  if (b.pixmap())
+  if (!b.texture().isNull())
   {
     p->drawTiledPixmap( rect.left(), rect.top(), rect.width(), rect.height(),
-      *(b.pixmap()),
+      b.texture(),
       rect.left() + contentsX(),
       rect.top() + contentsY() );
   }
