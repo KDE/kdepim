@@ -274,7 +274,7 @@ KABC::Resource *KABCore::requestResource( QWidget *parent )
   QList<KRES::Resource*> kresResources;
   QList<KABC::Resource*>::const_iterator resIt;
   for ( resIt = kabcResources.begin(); resIt != kabcResources.end(); ++resIt) {
-    if ( (*resIt)->readOnly() ) {
+    if ( !(*resIt)->readOnly() ) {
       KRES::Resource *res = static_cast<KRES::Resource*>( *resIt );
       if ( res )
         kresResources.append( res );
