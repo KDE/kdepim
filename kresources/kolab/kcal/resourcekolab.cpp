@@ -279,7 +279,7 @@ bool ResourceKolab::doSave()
 void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase)
 {
  const QString uid = incidencebase->uid();
-  kdDebug() << k_funcinfo << uid << endl;
+  //kdDebug() << k_funcinfo << uid << endl;
 
   if ( mUidsPendingUpdate.contains( uid ) || mUidsPendingAdding.contains( uid ) ) {
     /* We are currently processing this event ( removing and readding or
@@ -314,7 +314,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* incidencebase )
 
 void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subresource, Q_UINT32 sernum )
 {
-  kdDebug() << k_funcinfo << subresource << " " << sernum << " uid=" << inc->uid() << endl;
+  //kdDebug() << k_funcinfo << subresource << " " << sernum << " uid=" << inc->uid() << endl;
     if ( ! inc )
         return;
     if ( ! mResolveConflict ) {
@@ -365,7 +365,7 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
 void ResourceKolab::addIncidence( const char* mimetype, const QString& xml,
                                   const QString& subResource, Q_UINT32 sernum )
 {
-  kdDebug() << k_funcinfo << mimetype << " " << subResource << endl;
+  //kdDebug() << k_funcinfo << mimetype << " " << subResource << endl;
   // This uses pointer comparison, so it only works if we use the static
   // objects defined in the top of the file
   if ( mimetype == eventAttachmentMimeType )
@@ -412,7 +412,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
 bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _subresource,
                                   Q_UINT32 sernum )
 {
-  kdDebug() << k_funcinfo << _subresource << " " << sernum << endl;
+  //kdDebug() << k_funcinfo << _subresource << " " << sernum << endl;
   const QString &uid = incidence->uid();
   QString subResource = _subresource;
   Kolab::ResourceMap *map = &mEventSubResources; // don't use a ref here!
@@ -546,7 +546,7 @@ bool ResourceKolab::addEvent( KCal::Event* event )
 void ResourceKolab::addEvent( const QString& xml, const QString& subresource,
                               Q_UINT32 sernum )
 {
-  kdDebug() << k_funcinfo << subresource << " " << sernum << endl;
+  //kdDebug() << k_funcinfo << subresource << " " << sernum << endl;
   KCal::Event* event = Kolab::Event::xmlToEvent( xml, mCalendar.timeZoneId() );
   Q_ASSERT( event );
   if( event ) {
@@ -558,7 +558,7 @@ bool ResourceKolab::deleteIncidence( KCal::Incidence* incidence )
 {
   if ( incidence->isReadOnly() ) return false;
   const QString uid = incidence->uid();
-  kdDebug() << k_funcinfo << uid << endl;
+  //kdDebug() << k_funcinfo << uid << endl;
   if( !mUidMap.contains( uid ) ) return false; // Odd
   /* The user told us to delete, tell KMail */
   if ( !mSilent ) {
@@ -893,7 +893,7 @@ void ResourceKolab::fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map
                                               const QString& type,
                                               const QString& folder )
 {
-  kdDebug() << k_funcinfo << type << " " << folder << endl;
+  //kdDebug() << k_funcinfo << type << " " << folder << endl;
   const bool silent = mSilent;
   mSilent = true;
   for( QMap<Q_UINT32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it )
