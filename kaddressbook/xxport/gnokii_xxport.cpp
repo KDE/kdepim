@@ -94,12 +94,12 @@ static char manufacturer[64], model[GN_MODEL_MAX_LENGTH+1],
             revision[GN_REVISION_MAX_LENGTH+1], imei[GN_IMEI_MAX_LENGTH+1];
 static QString PhoneProductId;
 
-static gn_statemachine states[4]; // reserve ram if sizeof(gn_statemachine) differs between libgnokii versions
-static gn_data gnokii_data[4];    // reserve ram if sizeof(gn_data) differs between libgnokii versions
+static struct gn_statemachine state;
+static gn_data data;
 
 static void busterminate(void)
 {
-	gn_sm_functions(GN_OP_Terminate, NULL, &states[0]);
+	gn_sm_functions(GN_OP_Terminate, NULL, &state);
 	if (lockfile) gn_device_unlock(lockfile);
 }
 
@@ -116,18 +116,18 @@ static QString businit(void)
 #endif
 		return i18n("Failed to initialize the gnokii library.");
 
-	if (!gn_cfg_phone_load("", &states[0]))
+	if (!gn_cfg_phone_load("", &state))
 		return i18n("Gnokii is not yet configured.");
 
 	// uncomment to debug all gnokii communication on stderr.
 	// gn_log_debug_mask = GN_LOG_T_STDERR;
 
-	gn_data_clear(&gnokii_data[0]);
+	gn_data_clear(&data);
 
 	aux = gn_cfg_get(gn_cfg_info, "global", "use_locking");
 	// Defaults to 'no'
 	if (aux && !strcmp(aux, "yes")) {
-		lockfile = gn_device_lock(states[0].config.port_device);
+		lockfile = gn_device_lock(state.config.port_device);
 		if (lockfile == NULL) {
 			return i18n("Gnokii reports a 'Lock File Error'.\n "
 			"Please exit all other running instances of gnokii, check if you have "
@@ -136,11 +136,11 @@ static QString businit(void)
 	}
 
 	// Initialise the code for the GSM interface.
-	int old_dcd = states[0].config.require_dcd; // work-around for older gnokii versions
-	states[0].config.require_dcd = false;
-	error = gn_gsm_initialise(&states[0]);
+	int old_dcd = state.config.require_dcd; // work-around for older gnokii versions
+	state.config.require_dcd = false;
+	error = gn_gsm_initialise(&state);
 	GNOKII_CHECK_ERROR(error);
-	states[0].config.require_dcd = old_dcd;
+	state.config.require_dcd = old_dcd;
 	if (error != GN_ERR_NONE) {
 		busterminate();
 		return i18n("<qt><center>Mobile Phone interface initialization failed.<br><br>"
@@ -152,11 +152,11 @@ static QString businit(void)
 	}
 
 	// identify phone
-	gn_data_clear(&gnokii_data[0]);
-	gnokii_data[0].manufacturer = manufacturer;
-	gnokii_data[0].model = model;
-	gnokii_data[0].revision = revision;
-	gnokii_data[0].imei = imei;
+	gn_data_clear(&data);
+	data.manufacturer = manufacturer;
+	data.model = model;
+	data.revision = revision;
+	data.imei = imei;
 
 	QCString unknown(GN_TO(i18n("Unknown")));
 	qstrncpy(manufacturer, unknown, sizeof(manufacturer)-1);
@@ -167,7 +167,7 @@ static QString businit(void)
 	if (m_progressDlg->wasCancelled())
 		return QString::null;
 	else
-		error = gn_sm_functions(GN_OP_Identify, &gnokii_data[0], &states[0]);
+		error = gn_sm_functions(GN_OP_Identify, &data, &state);
 	GNOKII_CHECK_ERROR(error);
 
 	GNOKII_DEBUG( QString("Found mobile phone: %1 %2, Revision: %3, IMEI: %4\n")
@@ -184,11 +184,11 @@ static gn_error read_phone_memstat( const gn_memory_type memtype, gn_memory_stat
 {
 	gn_error error;
 
-	gn_data_clear(&gnokii_data[0]);
+	gn_data_clear(&data);
 	memset(memstat, 0, sizeof(*memstat));
 	memstat->memory_type = memtype;
-	gnokii_data[0].memory_status = memstat;
-	error = gn_sm_functions(GN_OP_GetMemoryStatus, &gnokii_data[0], &states[0]);
+	data.memory_status = memstat;
+	error = gn_sm_functions(GN_OP_GetMemoryStatus, &data, &state);
 	GNOKII_CHECK_ERROR(error);
 	if (error != GN_ERR_NONE) {
 		switch (memtype) {
@@ -216,8 +216,8 @@ static gn_error read_phone_entry( const int index, const gn_memory_type memtype,
 	gn_error error;
 	entry->memory_type = memtype;
 	entry->location = index;
-	gnokii_data[0].phonebook_entry = entry;
-	error = gn_sm_functions(GN_OP_ReadPhonebook, &gnokii_data[0], &states[0]);
+	data.phonebook_entry = entry;
+	error = gn_sm_functions(GN_OP_ReadPhonebook, &data, &state);
 	GNOKII_CHECK_ERROR(error);
 	return error;
 }
@@ -228,8 +228,8 @@ static bool phone_entry_empty( const int index, const gn_memory_type memtype )
 	gn_phonebook_entry entry;
 	entry.memory_type = memtype;
 	entry.location = index;
-	gnokii_data[0].phonebook_entry = &entry;
-	error = gn_sm_functions(GN_OP_ReadPhonebook, &gnokii_data[0], &states[0]);
+	data.phonebook_entry = &entry;
+	error = gn_sm_functions(GN_OP_ReadPhonebook, &data, &state);
 	if (error == GN_ERR_EMPTYLOCATION)
 		return true;
 	GNOKII_CHECK_ERROR(error);
@@ -666,8 +666,8 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 						.arg(subentry->number_type).arg(GN_FROM(subentry->data.number)));
 	}
 
-	gnokii_data[0].phonebook_entry = &entry;
-	gn_error error = gn_sm_functions(GN_OP_WritePhonebook, &gnokii_data[0], &states[0]);
+	data.phonebook_entry = &entry;
+	gn_error error = gn_sm_functions(GN_OP_WritePhonebook, &data, &state);
 	GNOKII_CHECK_ERROR(error);
 
 	return error;
@@ -681,9 +681,9 @@ static gn_error xxport_phone_delete_entry( int phone_location, gn_memory_type me
 	entry.empty = 1;
 	entry.memory_type = memtype;
 	entry.location = phone_location;
-	gnokii_data[0].phonebook_entry = &entry;
+	data.phonebook_entry = &entry;
 	GNOKII_DEBUG(QString("Deleting entry %1\n").arg(phone_location));
-	gn_error error = gn_sm_functions(GN_OP_WritePhonebook, &gnokii_data[0], &states[0]);
+	gn_error error = gn_sm_functions(GN_OP_WritePhonebook, &data, &state);
 	GNOKII_CHECK_ERROR(error);
 	return error;
 }
