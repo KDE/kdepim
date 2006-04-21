@@ -30,6 +30,13 @@
 #include <identity.h>
 #include <kdebug.h>
 
+static const char* s_folderContentsType[] = {
+  I18N_NOOP( "Calendar" ),
+  I18N_NOOP( "Contacts" ),
+  I18N_NOOP( "Notes" ),
+  I18N_NOOP( "Tasks" ),
+  I18N_NOOP( "Journal" ) };
+
 
 class CreateImapAccount : public KConfigPropagator::Change
 {
@@ -200,6 +207,14 @@ class CreateOnlineImapAccount : public CreateImapAccount
       c.writeEntry( "use-ssl", true );
 
       c.writeEntry( "sieve-support", "true" );
+
+      // locally unsubscribe the default folders
+      c.writeEntry( "locally-subscribed-folders", true );
+      QString groupwareFolders = QString("/INBOX/%1/,/INBOX/%2/,/INBOX/%3/,/INBOX/%4/,/INBOX/%5/")
+          .arg( s_folderContentsType[0] ).arg( s_folderContentsType[1] )
+          .arg( s_folderContentsType[2] ).arg( s_folderContentsType[3] )
+          .arg( s_folderContentsType[4] );
+      c.writeEntry( "locallyUnsubscribedFolders", groupwareFolders );
 
       c.setGroup( QString("Folder-%1").arg( uid ) );
       c.writeEntry( "isOpen", true );
