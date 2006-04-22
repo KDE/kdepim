@@ -365,12 +365,7 @@ Todo::List CalendarResources::rawTodos( TodoSortField sortField,
 
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Todo::List todos = (*it)->rawTodos( TodoSortUnsorted );
-    Todo::List::ConstIterator it2;
-    for ( it2 = todos.begin(); it2 != todos.end(); ++it2 ) {
-      result.append( *it2 );
-      mResourceMap[ *it2 ] = *it;
-    }
+    appendIncidences<Todo::List>( result, (*it)->rawTodos( TodoSortUnsorted ), *it );
   }
   return sortTodos( &result, sortField, sortDirection );
 }
@@ -398,12 +393,7 @@ Todo::List CalendarResources::rawTodosForDate( const QDate &date )
 
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Todo::List todos = (*it)->rawTodosForDate( date );
-    Todo::List::ConstIterator it2;
-    for ( it2 = todos.begin(); it2 != todos.end(); ++it2 ) {
-      result.append( *it2 );
-      mResourceMap[ *it2 ] = *it;
-    }
+    appendIncidences<Todo::List>( result, (*it)->rawTodosForDate( date ), *it );
   }
 
   return result;
@@ -414,12 +404,9 @@ Alarm::List CalendarResources::alarmsTo( const QDateTime &to )
   kDebug(5800) << "CalendarResources::alarmsTo" << endl;
 
   Alarm::List result;
-  CalendarResourceManager::ActiveIterator resit;
-  for ( resit = mManager->activeBegin(); resit != mManager->activeEnd(); ++resit ) {
-    Alarm::List list = (*resit)->alarmsTo( to );
-    Alarm::List::Iterator alarmit;
-    for ( alarmit = list.begin(); alarmit != list.end(); ++alarmit )
-      result.append( *alarmit );
+  CalendarResourceManager::ActiveIterator it;
+  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+    result += (*it)->alarmsTo( to );
   }
   return result;
 }
@@ -428,12 +415,9 @@ Alarm::List CalendarResources::alarms( const QDateTime &from,
                                        const QDateTime &to )
 {
   Alarm::List result;
-  CalendarResourceManager::ActiveIterator resit;
-  for ( resit = mManager->activeBegin(); resit != mManager->activeEnd(); ++resit ) {
-    Alarm::List list = (*resit)->alarms( from, to );
-    Alarm::List::Iterator alarmit;
-    for ( alarmit = list.begin(); alarmit != list.end(); ++alarmit )
-      result.append( *alarmit );
+  CalendarResourceManager::ActiveIterator it;
+  for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
+    result += (*it)->alarms( from, to );
   }
   return result;
 }
@@ -447,12 +431,7 @@ Event::List CalendarResources::rawEventsForDate( const QDate &date,
   Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Event::List list = (*it)->rawEventsForDate( date );
-    Event::List::ConstIterator it2;
-    for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
-      result.append( *it2 );
-      mResourceMap[ *it2 ] = *it;
-    }
+    appendIncidences<Event::List>( result, (*it)->rawEventsForDate( date ), *it );
   }
   return sortEvents( &result, sortField, sortDirection );
 }
@@ -465,12 +444,7 @@ Event::List CalendarResources::rawEvents( const QDate &start, const QDate &end,
   Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Event::List list = (*it)->rawEvents( start, end, inclusive );
-    Event::List::ConstIterator it2;
-    for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
-      result.append( *it2 );
-      mResourceMap[ *it2 ] = *it;
-    }
+    appendIncidences<Event::List>( result, (*it)->rawEvents( start, end, inclusive ), *it );
   }
   return result;
 }
@@ -483,12 +457,7 @@ Event::List CalendarResources::rawEventsForDate( const QDateTime &qdt )
   Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Event::List list = (*it)->rawEventsForDate( qdt );
-    Event::List::ConstIterator it2;
-    for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
-      result.append( *it2 );
-      mResourceMap[ *it2 ] = *it;
-    }
+    appendIncidences<Event::List>( result, (*it)->rawEventsForDate( qdt ), *it );
   }
   return result;
 }
@@ -501,12 +470,7 @@ Event::List CalendarResources::rawEvents( EventSortField sortField,
   Event::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Event::List list = (*it)->rawEvents( EventSortUnsorted );
-    Event::List::ConstIterator it2;
-    for ( it2 = list.begin(); it2 != list.end(); ++it2 ) {
-      result.append( *it2 );
-      mResourceMap[ *it2 ] = *it;
-    }
+    appendIncidences<Event::List>( result, (*it)->rawEvents( EventSortUnsorted ), *it );
   }
   return sortEvents( &result, sortField, sortDirection );
 }
@@ -571,12 +535,7 @@ Journal::List CalendarResources::rawJournals( JournalSortField sortField,
   Journal::List result;
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Journal::List journals = (*it)->rawJournals( JournalSortUnsorted );
-    Journal::List::ConstIterator it2;
-    for ( it2 = journals.begin(); it2 != journals.end(); ++it2 ) {
-      result.append( *it2 );
-      mResourceMap[ *it2 ] = *it;
-    }
+    appendIncidences<Journal::List>( result, (*it)->rawJournals( JournalSortUnsorted ), *it );
   }
   return sortJournals( &result, sortField, sortDirection );
 }
@@ -588,14 +547,17 @@ Journal::List CalendarResources::rawJournalsForDate( const QDate &date )
 
   CalendarResourceManager::ActiveIterator it;
   for ( it = mManager->activeBegin(); it != mManager->activeEnd(); ++it ) {
-    Journal::List journals = (*it)->rawJournalsForDate( date );
-    Journal::List::ConstIterator it2;
-    for ( it2 = journals.begin(); it2 != journals.end(); ++it2 ) {
-      result.append( *it2 );
-      mResourceMap[ *it2 ] = *it;
-    }
+    appendIncidences<Journal::List>( result, (*it)->rawJournalsForDate( date ), *it );
   }
   return result;
+}
+
+template< class IncidenceList >
+void CalendarResources::appendIncidences(IncidenceList &result, const IncidenceList &extra, ResourceCalendar *resource)
+{
+  result += extra;
+  for (typename IncidenceList::ConstIterator it = extra.begin();  it != extra.end();  ++it)
+    mResourceMap[ *it ] = resource;
 }
 
 void CalendarResources::connectResource( ResourceCalendar *resource )

@@ -653,6 +653,8 @@ class LIBKCAL_EXPORT CalendarResources :
        Initialize the Resource object with starting values.
     */
     void init( const QString &family );
+    template< class IncidenceList >
+    void appendIncidences(IncidenceList &result, const IncidenceList &extra, ResourceCalendar *);
 
     bool mOpen;
 
