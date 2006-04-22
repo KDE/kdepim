@@ -8,11 +8,9 @@ digraph "inter-dependency graph for kdepim" {
         "libkleo" -> "libkpimidentities";
         "kaddressbook" -> "kontact";
         "kaddressbook" -> "kresources";
-        "kaddressbook" -> "wizards";
         "kdgantt" -> "korganizer";
         "kmail" -> "kresources";
         "kmail" -> "plugins";
-        "kmail" -> "wizards";
         "knotes" -> "kontact";
         "knotes" -> "kresources";
         "kode" -> "kresources";
@@ -25,6 +23,7 @@ digraph "inter-dependency graph for kdepim" {
         "libemailfunctions" -> "knode";
         "libemailfunctions" -> "korganizer";
         "libemailfunctions" -> "libkcal";
+        "libemailfunctions" -> "libkmime";
         "libemailfunctions" -> "libkpimidentities";
         "libkcal" -> "kalarm";
         "libkcal" -> "karm";

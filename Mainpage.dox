@@ -2,6 +2,7 @@
         * @mainpage KDE PIM API Reference
 	*
 	*
+        * \section Overview
         *
         * This section contains the KDE online class reference for the current
         * development version of KDE-PIM.  Additionally, you can subscribe
@@ -85,6 +86,9 @@
         * - <a href="libkpimidentities/html/index.html"><b>libkpimidentities</b></a>
         *   (<a href="libkpimidentities/html/classes.html">classes</a>)\n
         *   <i>A library for managing identities.</i>
+        * - <a href="libsyndication/html/index.html"><b>libsyndication</b></a>
+        *   (<a href="libsyndication/html/classes.html">classes</a>)\n
+        *   <i>A feed handling library.</i>
         * - <a href="kdgantt/html/index.html"><b>kdgantt</b></a>
         *   (<a href="kdgantt/html/classes.html">classes</a>)\n
         *   <i>Klarälvdalens Datakonsult AB's gantt charting engine.</i>
@@ -94,6 +98,15 @@
 	* </td>
 	* </tr></table>
         *
+        * \section Dependencies
+        *
+        * \ref dependency-graph
+        *
+        *
+        * \page dependency-graph Intra-Module Dependencies 
+        * The following graph shows the dependencies between the various kdepim modules.
+        *
+        * \dotfile dependency-graph.dot
         *
         */
 // DOXYGEN_VERSION=4.0
