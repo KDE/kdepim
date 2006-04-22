@@ -58,9 +58,9 @@ extern "C" {
 
 #include <kdebug.h>
 #include <kcodecs.h>
+#include <kglobal.h>
 #include <kurl.h>
 
-#include <kasciistricmp.h>
 #include <kasciistringtools.h>
 
 imapParser::imapParser ()

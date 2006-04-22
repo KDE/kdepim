@@ -19,6 +19,7 @@ digraph "inter-dependency graph for kdepim" {
         "kresources" -> "karm";
         "kresources" -> "wizards";
         "ktnef" -> "libkcal";
+        "libemailfunctions" -> "kioslaves"
         "libemailfunctions" -> "kmail";
         "libemailfunctions" -> "knode";
         "libemailfunctions" -> "korganizer";
