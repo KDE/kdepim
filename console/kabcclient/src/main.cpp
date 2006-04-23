@@ -142,7 +142,7 @@ int main(int argc, char** argv)
 
     if (!client.setInputFormat(args->getOption("input-format")))
     {
-        const QString error = i18n("Invalid input format \"%0\". See --input-format help");
+        const QString error = i18n("Invalid input format \"%1\". See --input-format help");
         KCmdLineArgs::usage(error.arg(args->getOption("input-format")));
         return 1;
     }
@@ -151,7 +151,7 @@ int main(int argc, char** argv)
     {
         if (!client.setInputOptions(args->getOption("input-format-options")))
         {
-            const QString error = i18n("Invalid options for input format \"%0\". "
+            const QString error = i18n("Invalid options for input format \"%1\". "
                                       "See --input-format-options help");
             KCmdLineArgs::usage(error.arg(args->getOption("input-format")));
         }
@@ -159,7 +159,7 @@ int main(int argc, char** argv)
     
     if (!client.setOutputFormat(args->getOption("output-format")))
     {
-        const QString error = i18n("Invalid output format \"%0\". See --output-format help");
+        const QString error = i18n("Invalid output format \"%1\". See --output-format help");
         KCmdLineArgs::usage(error.arg(args->getOption("output-format")));
         return 1;
     }
@@ -168,7 +168,7 @@ int main(int argc, char** argv)
     {
         if (!client.setOutputOptions(args->getOption("output-format-options")))
         {
-            const QString error = i18n("Invalid options for output format \"%0\". "
+            const QString error = i18n("Invalid options for output format \"%1\". "
                                        "See --output-format-options help");
             KCmdLineArgs::usage(error.arg(args->getOption("output-format")));
         }
@@ -180,7 +180,7 @@ int main(int argc, char** argv)
         
     if (!client.setInputCodec(codecName))
     {
-        const QString error = i18n("Invalid input codec \"%0\"");
+        const QString error = i18n("Invalid input codec \"%1\"");
         KCmdLineArgs::usage(error.arg(codecName));
         return 1;
     }
@@ -191,7 +191,7 @@ int main(int argc, char** argv)
         
     if (!client.setOutputCodec(codecName))
     {
-        const QString error = i18n("Invalid output codec \"%0\"");
+        const QString error = i18n("Invalid output codec \"%1\"");
         KCmdLineArgs::usage(error.arg(codecName));
         return 1;
     }
@@ -269,7 +269,7 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
         InputFormat* format = factory->inputFormat(args->getOption("input-format"));
         if (format == 0)
         {
-            const QString error = i18n("Invalid input format \"%0\". See --input-format help");
+            const QString error = i18n("Invalid input format \"%1\". See --input-format help");
             KCmdLineArgs::usage(error.arg(args->getOption("input-format")));
             exit(1);
         }
@@ -321,7 +321,7 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
         OutputFormat* format = factory->outputFormat(args->getOption("output-format"));
         if (format == 0)
         {
-            const QString error = i18n("Invalid output format \"%0\". See --output-format help");
+            const QString error = i18n("Invalid output format \"%1\". See --output-format help");
             KCmdLineArgs::usage(error.arg(args->getOption("output-format")));
             exit(1);
         }
