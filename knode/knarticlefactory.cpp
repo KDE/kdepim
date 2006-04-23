@@ -138,14 +138,14 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
 
   //subject
   QString subject=a->subject()->asUnicodeString();
-  if(subject.left(3).upper()!="RE:")
+  if ( subject.left(3).toUpper() != "RE:" )
     subject.prepend("Re: ");
   art->subject()->fromUnicodeString(subject, a->subject()->rfc2047Charset());
 
   //newsgroups
   KMime::Headers::FollowUpTo *fup2=a->followUpTo(false);
   if(fup2 && !fup2->isEmpty()) {
-    if( ( fup2->as7BitString(false).upper()=="POSTER" ) ) { //Followup-To: poster
+    if( ( fup2->as7BitString(false).toUpper()=="POSTER" ) ) { //Followup-To: poster
       if( post && // user wanted to reply by public posting?
           // ask the user if she wants to ignore this F'up-To: poster
           ( KMessageBox::Yes != KMessageBox::questionYesNo(knGlobals.topWidget,
@@ -703,7 +703,7 @@ void KNArticleFactory::deleteComposerForArticle(KNLocalArticle *a)
 {
   KNComposer *com = findComposer( a );
   if ( com ) {
-    mCompList.remove( com );
+    mCompList.removeAll( com );
     delete com;
   }
 }
@@ -824,7 +824,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
 
   //email
   if(id->hasEmail()&&id->emailIsValid())
-    from->setEmail(id->email().latin1());
+    from->setEmail(id->email().toLatin1());
   else {
     if ( id->hasEmail() )
       KMessageBox::sorry(knGlobals.topWidget,
@@ -868,7 +868,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
 
   type->setCharset(defChset);
 
-  if (defChset.lower()=="us-ascii")
+  if ( defChset.toLower() == "us-ascii"  )
     art->contentTransferEncoding()->setCte(KMime::Headers::CE7Bit);
   else
     art->contentTransferEncoding()->setCte( knGlobals.settings()->allow8BitBody() ? KMime::Headers::CE8Bit : KMime::Headers::CEquPr );
@@ -886,7 +886,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
         value.replace(QRegExp("%EMAIL"), QString::fromLatin1(origPost->from()->email()));
       }
       else
-        if(value.find("%NAME") != -1 || value.find("%EMAIL") != -1)
+        if ( value.indexOf( "%NAME" ) != -1 || value.indexOf( "%EMAIL" ) != -1 )
           continue;
 
       art->setHeader( new KMime::Headers::Generic( (*it).name().toLatin1(), art, value,
@@ -970,10 +970,10 @@ and cancel (or supersede) it there."));
     if(ownArticle) {
       ownArticle = false;
       if(gid && gid->hasEmail())
-        ownArticle |= ( gid->email().latin1() == remArt->from()->email() );
+        ownArticle |= ( gid->email().toLatin1() == remArt->from()->email() );
       if (accId && accId->hasEmail())
-        ownArticle |= ( accId->email().latin1() == remArt->from()->email() );
-      ownArticle |= ( defId->email().latin1() == remArt->from()->email() );
+        ownArticle |= ( accId->email().toLatin1() == remArt->from()->email() );
+      ownArticle |= ( defId->email().toLatin1() == remArt->from()->email() );
     }
 
     if(!ownArticle) {

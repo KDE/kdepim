@@ -158,7 +158,7 @@ QString KNCollectionViewItem::squeezeFolderName( const QString &text,
     int curPos = 0, nextPos = 0;
     QString temp;
     while ( (uint)fm.width(t) > width && nextPos != -1 ) {
-      nextPos = t.find('.', curPos);
+      nextPos = t.indexOf( '.', curPos );
       if ( nextPos != -1 ) {
         temp = t[curPos];
         t.replace( curPos, nextPos - curPos, temp );

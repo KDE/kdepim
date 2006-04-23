@@ -319,7 +319,7 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
 
   if(dstIdx.exists() && dstIdx.size()>0) { //we are converting from 0.4beta*
     if( (filesOpen=filesOpen && dstIdx.open(QIODevice::ReadOnly)) ) {
-      dstIdx.at( dstIdx.size()-sizeof(NewFolderIndex) ); //set filepointer to last entry
+      dstIdx.seek( dstIdx.size() - sizeof(NewFolderIndex) ); //set filepointer to last entry
       dstIdx.read( (char*)(&newIdx), sizeof(NewFolderIndex) );
       lastId=newIdx.id;
       dstIdx.close();
@@ -406,7 +406,7 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
     //read mbox-data
     unsigned int size=oldIdx.eo-oldIdx.so;
     QByteArray buffer;
-    srcMBox.at(oldIdx.so);
+    srcMBox.seek( oldIdx.so );
     buffer = srcMBox.read( size );
 
     //remove "X-KNode-Overview"
@@ -417,7 +417,7 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
     //write mbox-data
     ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
     ts.flush();
-    newIdx.so=dstMBox.at(); //save start-offset
+    newIdx.so = dstMBox.pos(); //save start-offset
     ts << "X-KNode-Overview: ";
     ts << KMime::extractHeader(buffer, "Subject") << '\t';
     ts << KMime::extractHeader(buffer, "Newsgroups") << '\t';
@@ -425,7 +425,7 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
     ts << KMime::extractHeader(buffer, "Lines") << '\n';
     ts << buffer;
     ts.flush();
-    newIdx.eo=dstMBox.at(); //save end-offset
+    newIdx.eo = dstMBox.pos(); //save end-offset
     ts << '\n';
 
     //write index-data

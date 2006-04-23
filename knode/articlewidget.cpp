@@ -293,9 +293,9 @@ void ArticleWidget::readConfig()
   mAttachmentStyle = conf->readEntry( "attachmentStyle", "inline" );
   mHeaderStyle = conf->readEntry( "headerStyle", "fancy" );
   KToggleAction *ra = 0;
-  ra = static_cast<KToggleAction*>( mActionCollection->action( QString("view_attachments_%1").arg(mAttachmentStyle).latin1() ) );
+  ra = static_cast<KToggleAction*>( mActionCollection->action( QString("view_attachments_%1").arg(mAttachmentStyle) ) );
   ra->setChecked( true );
-  ra = static_cast<KToggleAction*>( mActionCollection->action( QString("view_headers_%1").arg(mHeaderStyle).latin1() ) );
+  ra = static_cast<KToggleAction*>( mActionCollection->action( QString("view_headers_%1").arg(mHeaderStyle) ) );
   ra->setChecked( true );
 
   delete mCSSHelper;
@@ -472,7 +472,7 @@ void ArticleWidget::displayArticle()
       text->decodedText( htmlTxt, true, knGlobals.settings()->removeTrailingNewlines() );
       if ( mShowHtml ) {
         // strip </html> & </body>
-        int i = qMin( htmlTxt.findRev( "</html>", -1, false ), htmlTxt.findRev( "</body>", -1, false ) );
+        int i = qMin( htmlTxt.lastIndexOf( "</html>", -1, Qt::CaseInsensitive ), htmlTxt.lastIndexOf( "</body>", -1, Qt::CaseInsensitive ) );
         if ( i >= 0 )
           htmlTxt.truncate( i );
         html += htmlTxt;
@@ -567,7 +567,7 @@ void ArticleWidget::displayHeader()
   KNDisplayedHeader::List dhs = knGlobals.configManager()->displayedHeaders()->headers();
   for ( KNDisplayedHeader::List::Iterator it = dhs.begin(); it != dhs.end(); ++it ) {
     KNDisplayedHeader *dh = (*it);
-    hb = mArticle->getHeaderByType(dh->header().latin1());
+    hb = mArticle->getHeaderByType(dh->header().toLatin1());
     if ( !hb || hb->is("Subject") || hb->is("Organization") )
       continue;
 
@@ -914,7 +914,7 @@ int ArticleWidget::quotingDepth( const QString &line, const QString &quoteChars 
     // skip spaces
     if ( line[i].isSpace() )
       continue;
-    if ( quoteChars.find( line[i] ) != -1 )
+    if ( quoteChars.indexOf( line[i] ) != -1 )
       ++level;
     else
       break;
@@ -976,7 +976,7 @@ QString ArticleWidget::writeAttachmentToTempFile( KMime::Content *att, int partN
   // strip off a leading path
   KMime::Headers::ContentType* ct = att->contentType();
   QString attName = ct->name();
-  int slashPos = attName.findRev( '/' );
+  int slashPos = attName.lastIndexOf( '/' );
   if( -1 != slashPos )
     attName = attName.mid( slashPos + 1 );
   if( attName.isEmpty() )
@@ -1358,7 +1358,7 @@ void ArticleWidget::slotSetCharset( const QString &charset )
     mOverrideCharset = KMime::Headers::Latin1;
   } else {
     mForceCharset = true;
-    mOverrideCharset = KGlobal::charsets()->encodingForName( charset ).latin1();
+    mOverrideCharset = KGlobal::charsets()->encodingForName( charset ).toLatin1();
   }
 
   if ( mArticle && mArticle->hasContent() ) {

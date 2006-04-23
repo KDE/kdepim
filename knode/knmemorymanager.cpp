@@ -124,7 +124,7 @@ KNMemoryManager::CollectionItem* KNMemoryManager::findCacheEntry(KNArticleCollec
     if ( (*it)->col == c ) {
       CollectionItem *ret = (*it);
       if ( take )
-        mColList.remove( it );
+        mColList.erase( it );
       return ret;
     }
   }
@@ -139,7 +139,7 @@ KNMemoryManager::ArticleItem* KNMemoryManager::findCacheEntry(KNArticle *a, bool
     if ( (*it)->art == a ) {
       ArticleItem *ret = (*it);
       if ( take )
-        mArtList.remove( it );
+        mArtList.erase( it );
       return ret;
     }
   }

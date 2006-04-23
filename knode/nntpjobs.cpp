@@ -75,7 +75,7 @@ void KNode::GroupListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList &
     if ( name.isEmpty() )
       continue;
     if ( target->subscribed.contains( name ) ) {
-      target->subscribed.remove( name );    // group names are unique, we wont find it again anyway...
+      target->subscribed.removeAll( name );    // group names are unique, we wont find it again anyway...
       subscribed = true;
     } else {
       subscribed = false;

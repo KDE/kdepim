@@ -120,7 +120,7 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
     return false;
   }
   QDir d(dir);
-  QStringList entries(d.entryList("nntp.*", QDir::Dirs));
+  QStringList entries = d.entryList( QStringList( "nntp.*" ), QDir::Dirs );
 
   int id = 1;
   while (entries.indexOf(QString("nntp.%1").arg(id))!=-1)
@@ -180,7 +180,7 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
     if(c_urrentAccount==a) setCurrentAccount(0);
 
     emit(accountRemoved(a));
-    mAccounts.remove( a );  // finally delete a
+    mAccounts.removeAll( a );  // finally delete a
     return true;
   }
 

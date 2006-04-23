@@ -1826,8 +1826,8 @@ void KNMainWidget::slotFetchArticleWithID()
 
   if (dlg->exec()) {
     QString id = dlg->messageId().simplified();
-    if (id.find(QRegExp("*@*",false,true))!=-1) {
-      if (id.find(QRegExp("<*>",false,true))==-1)   // add "<>" when necessary
+    if ( id.indexOf( QRegExp("*@*",false,true) ) != -1 ) {
+      if ( id.indexOf( QRegExp("<*>",false,true) ) == -1 )   // add "<>" when necessary
         id = QString("<%1>").arg(id);
 
       if ( !ArticleWindow::raiseWindowForArticle( id.toLatin1() ) ) { //article not yet opened

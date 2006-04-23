@@ -664,7 +664,7 @@ bool KNComposer::hasValidData()
     firstLine = false;
   }
 
-  if (n_eeds8Bit && (c_harset.lower()=="us-ascii")) {
+  if (n_eeds8Bit && (c_harset.toLower()=="us-ascii")) {
     KMessageBox::sorry(this, i18n("Your message contains characters which are not included\nin the \"us-ascii\" character set; please choose\na suitable character set from the \"Options\" menu."));
     return false;
   }
@@ -816,7 +816,7 @@ bool KNComposer::applyChanges()
     }
   } else {             // save as draft
     text->contentType()->setCharset(c_harset);
-    if (c_harset.lower()=="us-ascii")
+    if (c_harset.toLower()=="us-ascii")
       text->contentTransferEncoding()->setCte(KMime::Headers::CE7Bit);
     else
       text->contentTransferEncoding()->setCte( knGlobals.settings()->allow8BitBody()
@@ -1213,7 +1213,7 @@ void KNComposer::slotSetCharset(const QString &s)
   if(s.isEmpty())
     return;
 
-  c_harset=s.latin1();
+  c_harset = s.toLatin1();
   setConfig(true); //adjust fonts
 }
 
@@ -2046,8 +2046,8 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
     if( !paraText.at(charPos).isSpace() )
     {
       //Get word right clicked on
-      firstSpace = paraText.findRev( m_bound, charPos ) + 1;
-      lastSpace = paraText.find( m_bound, charPos );
+      firstSpace = paraText.lastIndexOf( m_bound, charPos ) + 1;
+      lastSpace = paraText.indexOf( m_bound, charPos );
       if( lastSpace == -1 )
         lastSpace = paraText.length();
       QString word = paraText.mid( firstSpace, lastSpace - firstSpace );
@@ -2141,7 +2141,7 @@ QStringList KNComposer::Editor::processedText()
   QString replacement;
   int tabPos;
   for (QStringList::Iterator it = ret.begin(); it != ret.end(); ++it ) {
-    while ((tabPos=(*it).find('\t'))!=-1) {
+    while ( ( tabPos = (*it).indexOf('\t') ) != -1 ) {
       replacement.fill(QChar(' '), 8-(tabPos%8));
       (*it).replace(tabPos, 1, replacement);
     }
@@ -2628,11 +2628,11 @@ void KNComposer::AttachmentPropertiesDlg::apply()
 
 void KNComposer::AttachmentPropertiesDlg::accept()
 {
-  if(m_imeType->text().find('/')==-1) {
+  if ( m_imeType->text().indexOf('/') == -1 ) {
     KMessageBox::sorry(this, i18n("You have set an invalid mime-type.\nPlease change it."));
     return;
   }
-  else if(n_onTextAsText && m_imeType->text().find("text/", 0, false)!=-1 &&
+  else if ( n_onTextAsText && m_imeType->text().indexOf( "text/", 0, Qt::CaseInsensitive ) != -1 &&
        KMessageBox::warningContinueCancel(this,
        i18n("You have changed the mime-type of this non-textual attachment\nto text. This might cause an error while loading or encoding the file.\nProceed?")
        ) == KMessageBox::Cancel) return;

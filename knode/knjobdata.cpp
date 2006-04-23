@@ -50,7 +50,7 @@ void KNJobConsumer::emitJob( KNJobData *j )
 
 void KNJobConsumer::jobDone( KNJobData *j )
 {
-  if ( j && mJobs.remove( j ) )
+  if ( j && mJobs.removeAll( j ) )
     processJob( j );
 }
 

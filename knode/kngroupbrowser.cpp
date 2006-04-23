@@ -218,7 +218,7 @@ void KNGroupBrowser::createListItems(Q3ListViewItem *parent)
     compare=gn->name.mid(prefix.length());
 
     if(!expandit || !compare.startsWith(tlgn)) {
-     if((colon=compare.find('.'))!=-1) {
+     if( ( colon = compare.indexOf('.') ) != -1 ) {
         colon++;
         expandit=true;
       } else {
@@ -328,7 +328,7 @@ void KNGroupBrowser::slotFilter(const QString &txt)
     for(KNGroupInfo *g=matchList->first(); g; g=matchList->next()) {
       if ((notCheckSub||g->subscribed)&&
           (notCheckNew||g->newGroup)&&
-          (notCheckStr||(g->name.find(filtertxt)!=-1)))
+          ( notCheckStr || ( g->name.indexOf(filtertxt) != -1 ) ) )
       tempList->append(g);
     }
 
@@ -340,7 +340,7 @@ void KNGroupBrowser::slotFilter(const QString &txt)
     for(KNGroupInfo *g=allList->first(); g; g=allList->next()) {
       if ((notCheckSub||g->subscribed)&&
           (notCheckNew||g->newGroup)&&
-          (notCheckStr||(isRegexp? (reg.search(g->name,0) != -1):(g->name.find(filtertxt)!=-1))))
+          (notCheckStr||(isRegexp? (reg.search(g->name,0) != -1) : ( g->name.indexOf( filtertxt ) != -1 ) )))
         matchList->append(g);
     }
   }

@@ -116,7 +116,7 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
   if(f.open(QIODevice::ReadOnly)) {
     while(!f.atEnd()) {
       line = f.readLine();
-      sepPos1 = line.find(' ');
+      sepPos1 = line.indexOf( ' ' );
 
       if (sepPos1==-1) {        // no description
         name = QString::fromUtf8(line);
@@ -125,7 +125,7 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
       } else {
         name = QString::fromUtf8(line.left(sepPos1));
 
-        sepPos2 = line.find(' ',sepPos1+1);
+        sepPos2 = line.indexOf( ' ', sepPos1 + 1 );
         if (sepPos2==-1) {        // no status
           description = QString::fromUtf8(line.right(line.length()-sepPos1-1));
           status = KNGroup::unknown;
@@ -145,7 +145,7 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
       }
 
       if (subscribed.contains(name)) {
-        subscribed.remove(name);    // group names are unique, we wont find it again anyway...
+        subscribed.removeAll( name );    // group names are unique, we wont find it again anyway...
         sub = true;
       } else
         sub = false;
@@ -482,7 +482,7 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
       kDebug(5003) << "Files deleted!" << endl;
 
       emit groupRemoved(g);
-      mGroupList.remove( g );
+      mGroupList.removeAll( g );
       delete g;
 
       return true;

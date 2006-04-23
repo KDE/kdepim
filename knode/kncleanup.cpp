@@ -227,14 +227,14 @@ void KNCleanUp::compactFolder(KNFolder *f)
     ts.setEncoding(QTextStream::Latin1);
     for(int idx=0; idx<f->length(); idx++) {
       art=f->at(idx);
-      if(f->m_boxFile.at(art->startOffset())) {
+      if ( f->m_boxFile.seek( art->startOffset() ) ) {
         ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
         ts.flush();
-        art->setStartOffset(newMBoxFile.at());
-        while(f->m_boxFile.at() < (uint)art->endOffset())
+        art->setStartOffset( newMBoxFile.pos() );
+        while ( f->m_boxFile.pos() < (uint)art->endOffset() )
           ts << f->m_boxFile.readLine();
         ts.flush();
-        art->setEndOffset(newMBoxFile.at());
+        art->setEndOffset( newMBoxFile.pos() );
         newMBoxFile.putch('\n');
       }
     }

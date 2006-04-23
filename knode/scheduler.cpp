@@ -105,12 +105,12 @@ void Scheduler::schedule()
 {
   if ( !currentNntpJob && !nntpJobQueue.isEmpty() ) {
     currentNntpJob = nntpJobQueue.first();
-    nntpJobQueue.remove( nntpJobQueue.begin() );
+    nntpJobQueue.removeFirst();
     startJob( currentNntpJob );
   }
   if ( !currentSmtpJob && !smtpJobQueue.isEmpty() ) {
     currentSmtpJob = smtpJobQueue.first();
-    smtpJobQueue.remove( smtpJobQueue.begin() );
+    smtpJobQueue.removeFirst();
     startJob( currentSmtpJob );
   }
 }
@@ -135,7 +135,7 @@ void Scheduler::cancelJobs( int type, KPIM::ProgressItem * item )
   for ( it = nntpJobQueue.begin(); it != nntpJobQueue.end();) {
     tmp = *it;
     if ( ( item && tmp->progressItem() == item ) || type == 0 || type == tmp->type() ) {
-      it = nntpJobQueue.remove( it );
+      it = nntpJobQueue.erase( it );
       tmp->cancel();
       tmp->notifyConsumer();
     } else
@@ -144,7 +144,7 @@ void Scheduler::cancelJobs( int type, KPIM::ProgressItem * item )
   for ( it = smtpJobQueue.begin(); it != smtpJobQueue.end();) {
     tmp = *it;
     if ( ( item && tmp->progressItem() == item ) || type == 0 || type == tmp->type() ) {
-      it = smtpJobQueue.remove( it );
+      it = smtpJobQueue.erase( it );
       tmp->cancel();
       tmp->notifyConsumer();
     } else
@@ -153,7 +153,7 @@ void Scheduler::cancelJobs( int type, KPIM::ProgressItem * item )
   for ( it = mWalletQueue.begin(); it != mWalletQueue.end();) {
     tmp = *it;
     if ( ( item && tmp->progressItem() == item ) || type == 0 || type == tmp->type() ) {
-      it = mWalletQueue.remove( it );
+      it = mWalletQueue.erase( it );
       tmp->cancel();
       tmp->notifyConsumer();
     } else

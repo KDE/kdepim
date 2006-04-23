@@ -73,9 +73,9 @@ void KNServerInfo::readConf(KConfig *conf)
     readPassword();
 
   QString encStr = conf->readEntry( "encryption", "None" );
-  if ( encStr.contains( "SSL", false ) )
+  if ( encStr.contains( "SSL", Qt::CaseInsensitive ) )
     mEncryption = SSL;
-  else if ( encStr.contains( "TLS", false ) )
+  else if ( encStr.contains( "TLS", Qt::CaseInsensitive ) )
     mEncryption = TLS;
   else
     mEncryption = None;

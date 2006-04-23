@@ -390,7 +390,7 @@ int KNHelper::findStringInFile( QFile * file, const char * str )
   int currentFilePos, pos;
 
   while ( !file->atEnd() ) {
-    currentFilePos = file->at();
+    currentFilePos = file->pos();
     searchBuffer = file->read( 4096 );
     if ( searchBuffer.isEmpty() )
       return -1;
@@ -398,7 +398,7 @@ int KNHelper::findStringInFile( QFile * file, const char * str )
     pos = searchBuffer.indexOf( str );
     if ( pos < 0 ) {
       if ( !file->atEnd() )
-        file->at( file->at() - strlen( str ) );
+        file->seek( file->pos() - strlen( str ) );
       else
         return -1;
     } else

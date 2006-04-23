@@ -49,7 +49,7 @@ bool KNode::StringFilter::doFilter( const QString &s )
       QRegExp matcher(expanded);
       ret = ( matcher.search(s) >= 0 );
     } else
-      ret=(s.find(expanded,0,false)!=-1);
+      ret = ( s.indexOf( expanded, 0, Qt::CaseInsensitive ) != -1 );
 
     if(!con) ret=!ret;
   }

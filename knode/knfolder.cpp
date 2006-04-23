@@ -218,7 +218,7 @@ bool KNFolder::loadHdrs()
     dynamic.getData(art);
 
     //read overview
-    if(!m_boxFile.at(art->startOffset())) {
+    if ( !m_boxFile.seek( art->startOffset() ) ) {
       kError(5003) << "KNFolder::loadHdrs() : cannot set mbox file-pointer!" << endl;
       closeFiles();
       clear();
@@ -245,8 +245,8 @@ bool KNFolder::loadHdrs()
 
     //set overview
     bool end=false;
-    pos1=tmp.find(' ')+1;
-    pos2=tmp.find('\t', pos1);
+    pos1 = tmp.indexOf( ' ' ) + 1;
+    pos2 = tmp.indexOf( '\t', pos1 );
     if (pos2 == -1) {
       pos2=tmp.length();
       end=true;
@@ -255,7 +255,7 @@ bool KNFolder::loadHdrs()
 
     if (!end) {
       pos1=pos2+1;
-      pos2=tmp.find('\t', pos1);
+      pos2 = tmp.indexOf( '\t', pos1 );
       if (pos2 == -1) {
         pos2=tmp.length();
         end=true;
@@ -265,7 +265,7 @@ bool KNFolder::loadHdrs()
 
     if (!end) {
       pos1=pos2+1;
-      pos2=tmp.find('\t', pos1);
+      pos2 = tmp.indexOf( '\t', pos1 );
       if (pos2 == -1) {
         pos2=tmp.length();
         end=true;
@@ -338,7 +338,7 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
   }
 
   //set file-pointer
-  if(!m_boxFile.at(a->startOffset())) {
+  if ( !m_boxFile.seek( a->startOffset() ) ) {
     kError(5003) << "KNFolder::loadArticle(KNLocalArticle *a) : cannot set mbox file-pointer!" << endl;
     closeFiles();
     return false;
@@ -347,7 +347,7 @@ bool KNFolder::loadArticle(KNLocalArticle *a)
   //read content
   m_boxFile.readLine(); //skip X-KNode-Overview
 
-  unsigned int size=a->endOffset()-m_boxFile.at()-1;
+  unsigned int size = a->endOffset() - m_boxFile.pos() - 1;
   QByteArray buff;
   buff.resize( size + 10 );
   int readBytes=m_boxFile.read(buff.data(), size);
@@ -416,7 +416,7 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
       //MBox
       ts << "From aaa@aaa Mon Jan 01 00:00:00 1997\n";
       ts.flush();
-      (*it)->setStartOffset(m_boxFile.at()); //save offset
+      (*it)->setStartOffset( m_boxFile.pos() ); //save offset
 
       //write overview information
       ts << "X-KNode-Overview: ";
@@ -438,7 +438,7 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
       ts << "\n";
       ts.flush();
 
-      (*it)->setEndOffset( m_boxFile.at() ); //save offset
+      (*it)->setEndOffset( m_boxFile.pos() ); //save offset
 
       //update
       ArticleWidget::articleChanged( (*it) );

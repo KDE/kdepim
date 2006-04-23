@@ -261,7 +261,7 @@ bool KNGroup::loadHdrs()
         // following lines contain one header per line
         for ( uint i = buffer.toUInt(); i > 0; --i ) {
           buffer = f.readLine().trimmed();
-          int pos = buffer.find(':');
+          int pos = buffer.indexOf( ':' );
           QByteArray hdrName = buffer.left( pos );
           // skip headers we already set above and which we actually never should
           // find here, but however it still happens... (eg. #101355)
@@ -640,7 +640,7 @@ void KNGroup::syncDynamicData()
         if(art->hasChanged() && !art->isExpired()) {
 
           data.setData(art);
-          f.at(i*sOfData);
+          f.seek( i * sOfData );
           f.write((char*) &data, sOfData);
           cnt++;
           art->setChanged(false);

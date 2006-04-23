@@ -178,7 +178,7 @@ bool KNFolderManager::deleteFolder(KNFolder *f)
 
     if ( unloadHeaders( (*it), true ) ) {
       (*it)->deleteFiles();
-      mFolderList.remove( (*it) );
+      mFolderList.removeAll( (*it) );
       delete (*it);
     } else
       return false;
@@ -301,14 +301,14 @@ void KNFolderManager::importFromMBox(KNFolder *f)
     if (!file->atEnd()) {                // search for the first article...
       str = file->readLine();
       if ( str.left( 5 ) == "From " ) {
-        artStart = file->at();
+        artStart = file->pos();
         done = false;
       } else {
         artStart = KNHelper::findStringInFile( file, "\n\nFrom " );
         if (artStart != -1) {
-          file->at(artStart+1);
+          file->seek( artStart + 1 );
           str = file->readLine();
-          artStart = file->at();
+          artStart = file->pos();
           done = false;
         }
       }
@@ -321,7 +321,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
         artEnd = KNHelper::findStringInFile( file, "\n\nFrom " );
 
         if (artEnd != -1) {
-          file->at(artStart);    // seek the first character of the article
+          file->seek( artStart );    // seek the first character of the article
           int size=artEnd-artStart;
           QByteArray buffer;
           buffer = file->read( size);
@@ -334,12 +334,12 @@ void KNFolderManager::importFromMBox(KNFolder *f)
             list.append(art);
           }
 
-          file->at(artEnd+1);
+          file->seek( artEnd + 1 );
           str = file->readLine();
-          artStart = file->at();
+          artStart = file->pos();
         } else {
           if ((int)file->size() > artStart) {
-            file->at(artStart);    // seek the first character of the article
+            file->seek( artStart );    // seek the first character of the article
             int size=file->size()-artStart;
             QByteArray buffer;
             buffer = file->read( size );

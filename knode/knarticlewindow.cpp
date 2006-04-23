@@ -121,7 +121,7 @@ ArticleWindow::ArticleWindow( KNArticle *art )
 
 ArticleWindow::~ArticleWindow()
 {
-  mInstances.remove( this );
+  mInstances.removeAll( this );
   KConfig *conf = knGlobals.config();
   conf->setGroup("articleWindow_options");
   saveMainWindowSettings(conf);

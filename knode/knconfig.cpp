@@ -223,7 +223,7 @@ KNode::DisplayedHeaders::DisplayedHeaders()
   if (!fname.isNull()) {
     KSimpleConfig headerConf(fname,true);
     QStringList headers = headerConf.groupList();
-    headers.remove("<default>");
+    headers.removeAll("<default>");
     headers.sort();
 
     KNDisplayedHeader *h;
@@ -314,7 +314,7 @@ KNDisplayedHeader* KNode::DisplayedHeaders::createNewHeader()
 
 void KNode::DisplayedHeaders::remove(KNDisplayedHeader *h)
 {
-  if ( !mHeaderList.remove( h ) )
+  if ( !mHeaderList.removeAll( h ) )
     kDebug(5003) << "KNConfig::DisplayedHeaders::remove() : cannot find pointer in list!" << endl;
 
 }
