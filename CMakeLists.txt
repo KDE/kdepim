@@ -20,17 +20,15 @@ add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} -DHAVE_CONFIG_H=1)
 link_directories(${KDE4_LIB_DIR})
 
 
-include (MacroAdditionalCleanFiles)
-include (MacroAddFileDependencies)
+include (MacroLibrary)
+
 include (ConfigureChecks.cmake)
 include (gpgmepp/ConfigureChecks.cmake)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h )
 
-#macro_additional_clean_files( ${CMAKE_CURRENT_BINARY_DIR}/config.h)
-
 include_directories(
-  ${CMAKE_SOURCE_DIR}/libkdepim ${KDE4_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 set(libkabcommon_SRCS 
