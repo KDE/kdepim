@@ -1988,6 +1988,17 @@ bool IMAP4Protocol::makeLogin ()
     if (cmd->result () == "OK")
     {
       QValueListIterator < imapList > it = listResponses.begin();
+      if ( it == listResponses.end() )
+      {
+          // empty answer - this is a buggy imap server
+          // as a fallback we fire a normal listing and take the first answer
+          completeQueue.removeRef (cmd);
+          cmd = doCommand( imapCommand::clientList("", "%") );
+          if (cmd->result () == "OK")
+          {
+              it = listResponses.begin();
+          }
+      }
       if ( it != listResponses.end() )
       {
         namespaceToDelimiter[QString::null] = (*it).hierarchyDelimiter();
