@@ -93,7 +93,7 @@ int main( int, char** ) {
     const QByteArray ba2 = qba_dp.data();
     assertEqual( ba2.size(), inputSize + 1 );
     assertEqual( memcmp( ba2.data(), input, inputSize ), 0 );
-    assertEqual( ba2[inputSize], ch );
+    assertEqual( ba2.at(inputSize), ch );
 
     // writing past end of buffer:
     assertEqual( data.seek( 10, SEEK_END ), inputSize + 11 );
@@ -101,8 +101,8 @@ int main( int, char** ) {
     const QByteArray ba3 = qba_dp.data();
     assertEqual( ba3.size(), inputSize + 12 );
     assertEqual( memcmp( ba3.data(), input, inputSize ), 0 );
-    assertEqual( ba3[inputSize], ch );
-    assertEqual( ba3[inputSize+11], ch );
+    assertEqual( ba3.at(inputSize), ch );
+    assertEqual( ba3.at(inputSize+11), ch );
     assertEqual( memcmp( ba3.data() + inputSize + 1, nulls, 10 ), 0 );
   }
 
