@@ -1413,6 +1413,49 @@ in the search string.</para><para>Analogous restrictions as in the
 <sect2 id="filter-examples">
 <title>Filter Examples</title>
 
+<para>As of yet &kmail; does not highlight or mark mails, that are
+having an extra <replaceable>Priority:</replaceable> header.
+If I want to flag all <quote>urgent</quote> messages as being
+<emphasis>important</emphasis>, I can use a filter:</para>
+
+<procedure>
+<title>Tagging urgent messages as <emphasis>important</emphasis></title>
+<step>
+<para>Open up the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
+Filters...</guimenuitem></menuchoice> dialog and click the
+<guiicon>New</guiicon> icon below the <guilabel>Available Filters</guilabel>
+list.</para>
+</step>
+<step>
+<para>In the <guilabel>Filter Criteria</guilabel> area, type
+<userinput>Priority</userinput> in the text field of the first
+drop-down box, and type <userinput>urgent</userinput> in the
+text field of the second drop-down box.</para>
+<para>So your filter will match all messages containing a
+<quote>Priority: urgent</quote> header field.</para>
+</step>
+<step>
+<para>Skip down to the <guilabel>Filter Actions</guilabel> area.
+Select <guilabel>Mark As</guilabel> from the first drop-down box.
+A new drop-down box containing a list of marker flags is shown
+to the right. Select <guilabel>Important</guilabel> from the
+drop-down box.</para>
+</step>
+<step>
+<para>Since you want this filter to <emphasis>not</emphasis>
+prevent other filters message rules from being applied,
+carefully <emphasis>uncheck</emphasis> the
+<guilabel>If this filter matches, stop processing here</guilabel> option.</para>
+</step>
+<step>
+<para>Click on <guibutton>OK</guibutton>, and you are done.</para>
+<para>Just keep in mind to move the <quote>Priority: urgent</quote>
+filter entry to the top of the <guilabel>Available Filters</guilabel>
+list, each time, when you have added another filter, so your
+non-stopping filter will allways be applied first.</para>
+</step>
+</procedure>
+
 <para>If I am subscribed to the (general) &kde; List, I could create a
 folder for the list (I will call it
 <replaceable>KDE-General</replaceable>) and use a filter to
