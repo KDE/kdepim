@@ -120,10 +120,10 @@ void KNJobData::setupKIOJob( KIO::Job *job )
       else
         job->addMetaData( "tls", "off" );
     }
-    connect( job, SIGNAL( percent(KIO::Job*, unsigned long) ),
-             SLOT( slotJobPercent(KIO::Job*, unsigned long) ) );
-    connect( job, SIGNAL( infoMessage(KIO::Job*, const QString&) ),
-             SLOT( slotJobInfoMessage(KIO::Job*, const QString&) ) );
+    connect( job, SIGNAL( percent(KJob*, unsigned long) ),
+             SLOT( slotJobPercent(KJob*, unsigned long) ) );
+    connect( job, SIGNAL( infoMessage(KJob*, const QString&) ),
+             SLOT( slotJobInfoMessage(KJob*, const QString&) ) );
   }
 }
 
@@ -146,13 +146,13 @@ void KNJobData::createProgressItem()
       KPIM::ProgressManager::getUniqueID(), msg, i18n( "Waiting..." ), true, encr );
 }
 
-void KNJobData::slotJobPercent( KIO::Job*, unsigned long percent )
+void KNJobData::slotJobPercent( KJob*, unsigned long percent )
 {
   kDebug(5003) << k_funcinfo << "Progress: " << percent << endl;
   setProgress( percent );
 }
 
-void KNJobData::slotJobInfoMessage( KIO::Job*, const QString &msg )
+void KNJobData::slotJobInfoMessage( KJob*, const QString &msg )
 {
   kDebug(5003) << k_funcinfo << "Status: " << msg << endl;
   setStatus( msg );

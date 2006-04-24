@@ -16,6 +16,7 @@
 #include "knserverinfo.h"
 
 #include <kdebug.h>
+#include <kio/job.h>
 
 
 KNode::MailSendJob::MailSendJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
@@ -46,11 +47,11 @@ void KNode::MailSendJob::execute()
 
   // create job
   KIO::Job* job = KIO::storedPut( art->encodedContent( true ), destination, -1, false, false, false );
-  connect( job, SIGNAL( result(KIO::Job*) ), SLOT( slotResult(KIO::Job*) ) );
+  connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
   setupKIOJob( job );
 }
 
-void KNode::MailSendJob::slotResult( KIO::Job * job )
+void KNode::MailSendJob::slotResult( KJob * job )
 {
   if ( job->error() )
     setError( job->error(), job->errorString() );

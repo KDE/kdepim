@@ -23,6 +23,8 @@
 
 #include <libkdepim/progressmanager.h>
 
+class KJob;
+
 namespace KIO {
   class Job;
 }
@@ -196,9 +198,9 @@ class KNJobData : public QObject
 
   private slots:
     /** Connected to the progress signal of mJob to update the progress item. */
-    void slotJobPercent( KIO::Job *job, unsigned long percent );
+    void slotJobPercent( KJob *job, unsigned long percent );
     /** Connected to the info message signal if mJob to update the progress item. */
-    void slotJobInfoMessage( KIO::Job *job, const QString &msg );
+    void slotJobInfoMessage( KJob *job, const QString &msg );
     /** Emits the finished signal. @see emitFinished() */
     void slotEmitFinished();
 

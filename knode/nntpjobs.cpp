@@ -44,8 +44,7 @@ void KNode::GroupListJob::execute()
   KIO::Job* job = KIO::listDir( destination, false, true );
   connect( job, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)),
            SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)) );
-  connect( job, SIGNAL( result(KIO::Job*) ),
-           SLOT( slotResult(KIO::Job*) ) );
+  connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
   setupKIOJob( job );
 }
 
@@ -87,7 +86,7 @@ void KNode::GroupListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList &
   }
 }
 
-void KNode::GroupListJob::slotResult( KIO::Job * job )
+void KNode::GroupListJob::slotResult( KJob * job )
 {
   if ( job->error() )
     setError( job->error(), job->errorString() );
@@ -156,8 +155,7 @@ void KNode::ArticleListJob::execute()
   KIO::Job* job = KIO::listDir( destination, false, true );
   connect( job, SIGNAL(entries(KIO::Job*, const KIO::UDSEntryList&)),
            SLOT(slotEntries(KIO::Job*, const KIO::UDSEntryList&)) );
-  connect( job, SIGNAL( result(KIO::Job*) ),
-           SLOT( slotResult(KIO::Job*) ) );
+  connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
   setupKIOJob( job );
 }
 
@@ -167,8 +165,9 @@ void KNode::ArticleListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList
   mArticleList += list;
 }
 
-void KNode::ArticleListJob::slotResult( KIO::Job * job )
+void KNode::ArticleListJob::slotResult( KJob * job )
 {
+  Q_ASSERT( mJob == job );
   if ( job->error() )
     setError( job->error(), job->errorString() );
   else {
@@ -177,15 +176,15 @@ void KNode::ArticleListJob::slotResult( KIO::Job * job )
 
     setStatus( i18n("Sorting...") );
 
-    if ( job->metaData().contains( "FirstSerialNumber" ) ) {
-      int firstSerNum = job->metaData()["FirstSerialNumber"].toInt();
+    if ( mJob->metaData().contains( "FirstSerialNumber" ) ) {
+      int firstSerNum = mJob->metaData()["FirstSerialNumber"].toInt();
       target->setFirstNr( firstSerNum );
     }
 
     target->insortNewHeaders( mArticleList );
 
-    if ( job->metaData().contains( "LastSerialNumber" ) ) {
-      int lastSerNum = job->metaData()["LastSerialNumber"].toInt();
+    if ( mJob->metaData().contains( "LastSerialNumber" ) ) {
+      int lastSerNum = mJob->metaData()["LastSerialNumber"].toInt();
       target->setLastNr( lastSerNum );
     }
   }
@@ -212,11 +211,11 @@ void KNode::ArticleFetchJob::execute()
   url.setPath( path );
 
   KIO::Job* job = KIO::storedGet( url, false, false );
-  connect( job, SIGNAL( result(KIO::Job*) ), SLOT( slotResult(KIO::Job*) ) );
+  connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
   setupKIOJob( job );
 }
 
-void KNode::ArticleFetchJob::slotResult( KIO::Job * job )
+void KNode::ArticleFetchJob::slotResult( KJob * job )
 {
   if ( job->error() )
     setError( job->error(), job->errorString() );
@@ -247,11 +246,11 @@ void KNode::ArticlePostJob::execute( )
   KUrl url = baseUrl();
 
   KIO::Job* job = KIO::storedPut( target->encodedContent( true ), url, -1, true, false, false );
-  connect( job, SIGNAL( result(KIO::Job*) ), SLOT( slotResult(KIO::Job*) ) );
+  connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
   setupKIOJob( job );
 }
 
-void KNode::ArticlePostJob::slotResult( KIO::Job * job )
+void KNode::ArticlePostJob::slotResult( KJob * job )
 {
   if ( job->error() )
     setError( job->error(), job->errorString() );

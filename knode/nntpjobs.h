@@ -19,6 +19,8 @@
 
 #include <Q3SortedList>
 
+class KJob;
+
 class KNGroupInfo;
 
 namespace KNode {
@@ -34,7 +36,7 @@ class GroupListJob : public KNJobData
 
   private slots:
     void slotEntries( KIO::Job *job, const KIO::UDSEntryList &list );
-    void slotResult( KIO::Job *job );
+    void slotResult( KJob *job );
 
   private:
     Q3SortedList<KNGroupInfo> mGroupList;
@@ -69,7 +71,7 @@ class ArticleListJob : public KNJobData
 
   private slots:
     void slotEntries( KIO::Job *job, const KIO::UDSEntryList &list );
-    void slotResult( KIO::Job *job );
+    void slotResult( KJob *job );
 
   private:
     KIO::UDSEntryList mArticleList;
@@ -88,7 +90,7 @@ class ArticleFetchJob : public KNJobData
     virtual void execute();
 
   private slots:
-    void slotResult( KIO::Job *job );
+    void slotResult( KJob *job );
 
   private:
     bool mParseArticle;
@@ -106,7 +108,7 @@ class ArticlePostJob : public KNJobData
     virtual void execute();
 
   private slots:
-    void slotResult( KIO::Job *job );
+    void slotResult( KJob *job );
 };
 
 }

@@ -15,7 +15,7 @@
 
 #include "knjobdata.h"
 
-#include <kio/job.h>
+class KJob;
 
 namespace KNode {
 
@@ -29,7 +29,7 @@ class MailSendJob : public KNJobData
     virtual void execute();
 
   private slots:
-    void slotResult( KIO::Job *job );
+    void slotResult( KJob *job );
 };
 
 }
