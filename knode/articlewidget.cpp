@@ -868,7 +868,7 @@ void ArticleWidget::displayAttachment( KMime::Content *att, int partNum )
   } else { // icon
     QByteArray mimetype = ct->mimeType();
     KPIM::kAsciiToLower( mimetype.data() );
-    QString iconName = KMimeType::mimeType( mimetype )->icon( QString(), false );
+    QString iconName = KMimeType::mimeType( mimetype )->icon( QString() );
     QString iconFile = KGlobal::instance()->iconLoader()->iconPath( iconName, K3Icon::Desktop );
     html += "<div><a href=\"" + href + "\"><img src=\"" +
             iconFile + "\" border=\"0\">" + label +
