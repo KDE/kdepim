@@ -1,0 +1,46 @@
+kde4_header()
+
+add_subdirectory( tests ) 
+
+include_directories(
+	${CMAKE_SOURCE_DIR}/
+	${KDE4_INCLUDES}
+)
+
+
+########### next target ###############
+
+set( kholidays_ng_LIB_SRC
+astroseasons.cpp
+dumpholidaylist.cpp
+holidaycalendar.cpp
+holiday.cpp
+holidayfilter.cpp
+kholidays.cpp
+lunarphase.cpp
+zodiac.cpp
+)
+
+kde4_automoc( ${kholidays_ng_LIB_SRC} )
+kde4_add_library( kholidays_ng SHARED ${kholidays_ng_LIB_SRC} )
+target_link_libraries( kholidays_ng ${KDE4_KDECORE_LIBS} )
+set_target_properties( kholidays_ng PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+install_targets( ${LIB_INSTALL_DIR} kholidays )
+
+########### install files ###############
+
+install_files( /include/libkholiday_ng FILES
+astroseasons.h
+holidaycalendar.h
+holidayfilter.h
+holiday.h
+kholidays.h
+kholidays_version.h
+lunarphase.h
+zodiac.h
+)
+
+kde4_create_doxygen_docs(  )
+
+kde4_footer()
+
