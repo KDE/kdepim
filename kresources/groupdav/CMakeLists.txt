@@ -9,7 +9,7 @@ include_directories(
 
 set(libkgroupdav_SRCS groupdavglobals.cpp)
 
-set(kde4_servicesdir     ${CMAKE_INSTALL_PREFIX}${SERVICES_INSTALL_DIR})
+set(kde_servicesdir     ${CMAKE_INSTALL_PREFIX}${SERVICES_INSTALL_DIR})
 
 ########### next target ###############
 
@@ -76,11 +76,11 @@ install_targets(${PLUGIN_INSTALL_DIR} kabc_groupdav )
 
 ########### install files ###############
 
-install_files( ${kde4_servicesdir}/kresources/kabc FILES kabc_groupdav.desktop )
-install_files( ${kde4_servicesdir}/kresources/kcal FILES kcal_groupdav.desktop )
+install_files( ${SERVICES_INSTALL_DIR}/kresources/kabc FILES kabc_groupdav.desktop )
+install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_groupdav.desktop )
 
-install(FILES uninstall.desktop DESTINATION ${kde4_servicesdir}/kresources/kabc/ RENAME kabc_opengroupware.desktop)
-install(FILES uninstall.desktop DESTINATION ${kde4_servicesdir}/kresources/kcal/ RENAME kcal_opengroupware.desktop)
+install(FILES uninstall.desktop DESTINATION ${kde_servicesdir}/kresources/kabc/ RENAME kabc_opengroupware.desktop)
+install(FILES uninstall.desktop DESTINATION ${kde_servicesdir}/kresources/kcal/ RENAME kcal_opengroupware.desktop)
 
 
 
