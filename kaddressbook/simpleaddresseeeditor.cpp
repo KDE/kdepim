@@ -66,8 +66,7 @@ void SimpleAddresseeEditor::setInitialFocus()
 
 void SimpleAddresseeEditor::initGui()
 {
-  QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(), KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Name:" ), this );
   topLayout->addWidget( label, 0, 0 );

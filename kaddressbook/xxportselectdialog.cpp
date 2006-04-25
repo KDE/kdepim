@@ -185,8 +185,7 @@ void XXPortSelectDialog::initGUI()
 {
   QFrame *page = plainPage();
 
-  QVBoxLayout *topLayout = new QVBoxLayout( page, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
+  QVBoxLayout *topLayout = new QVBoxLayout( page, KDialog::marginHint(), KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Which contacts do you want to export?" ), page );
   topLayout->addWidget( label );
@@ -233,8 +232,7 @@ void XXPortSelectDialog::initGUI()
 
   Q3ButtonGroup *sortingGroup = new Q3ButtonGroup( i18n( "Sorting" ), page );
   sortingGroup->setColumnLayout( 0, Qt::Vertical );
-  QGridLayout *sortLayout = new QGridLayout( sortingGroup->layout(), 2, 2,
-                                             KDialog::spacingHint() );
+  QGridLayout *sortLayout = new QGridLayout( sortingGroup->layout(), 2, 2, KDialog::spacingHint() );
   sortLayout->setAlignment( Qt::AlignTop );
 
   label = new QLabel( i18n( "Criterion:" ), sortingGroup );

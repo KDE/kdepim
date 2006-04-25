@@ -127,8 +127,7 @@ void AdvancedCustomFields::setReadOnly( bool readOnly )
 
 void AdvancedCustomFields::initGUI( const QString &uiFile )
 {
-  QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(),
-                                         KDialog::spacingHint() );
+  QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   mFields = new KPIM::DesignerFields( uiFile, this );
   layout->addWidget( mFields );

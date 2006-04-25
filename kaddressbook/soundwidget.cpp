@@ -44,8 +44,7 @@
 SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::ContactEditorWidget( ab, parent, name ), mReadOnly( false )
 {
-  QGridLayout *topLayout = new QGridLayout( this, 2, 3, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( this, 2, 3, KDialog::marginHint(), KDialog::spacingHint() );
 
   QLabel *label = new QLabel( this );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "multimedia",

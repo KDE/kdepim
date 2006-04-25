@@ -131,11 +131,9 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
                                   const char *name )
   : QWidget( parent, name ), mReadOnly( false ), mRssLoader( 0 )
 {
-  QHBoxLayout *topLayout = new QHBoxLayout( this, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
+  QHBoxLayout *topLayout = new QHBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
   Q3GroupBox *box = new Q3GroupBox( 0, Qt::Vertical, title, this );
-  QGridLayout *boxLayout = new QGridLayout( box->layout(), 3, 3,
-                                            KDialog::spacingHint() );
+  QGridLayout *boxLayout = new QGridLayout( box->layout(), 3, 3, KDialog::spacingHint() );
   boxLayout->setRowStretch( 3, 1 );
 
   mImageLabel = new ImageLabel( i18n( "Picture" ), box );
@@ -378,8 +376,7 @@ void ImageBaseWidget::slotLoadingComplete( Syndication::Loader *loader,
 ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::ContactEditorWidget( ab, parent, name )
 {
-  QHBoxLayout *layout = new QHBoxLayout( this, KDialog::marginHint(),
-                                         KDialog::spacingHint() );
+  QHBoxLayout *layout = new QHBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   mPhotoWidget = new ImageBaseWidget( KABC::Addressee::photoLabel(), this );
   layout->addWidget( mPhotoWidget );

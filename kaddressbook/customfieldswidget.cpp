@@ -126,8 +126,7 @@ void AddFieldDialog::nameChanged( const QString &name )
 FieldWidget::FieldWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(),
-                                         KDialog::spacingHint() );
+  QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   mGlobalLayout = new QVBoxLayout( layout, KDialog::spacingHint() );
   mGlobalLayout->setAlignment( Qt::AlignTop );
@@ -460,8 +459,7 @@ void CustomFieldsWidget::removeField()
 
 void CustomFieldsWidget::initGUI()
 {
-  QGridLayout *layout = new QGridLayout( this, 2, 3, KDialog::marginHint(),
-                                         KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout( this, 2, 3, KDialog::marginHint(), KDialog::spacingHint() );
 
   mFieldWidget = new FieldWidget( this );
   layout->addWidget( mFieldWidget, 0, 0, 1, 3 );

@@ -44,8 +44,7 @@
 KeyWidget::KeyWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QGridLayout *layout = new QGridLayout( this, 4, 2, KDialog::marginHint(),
-                                         KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout( this, 4, 2, KDialog::marginHint(), KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Keys:" ), this );
   layout->addWidget( label, 0, 0 );

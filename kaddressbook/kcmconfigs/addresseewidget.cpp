@@ -50,8 +50,7 @@ NamePartWidget::NamePartWidget( const QString &title, const QString &label,
   QHBoxLayout *layout = new QHBoxLayout( this );
 
   Q3GroupBox *group = new Q3GroupBox( 0, Qt::Vertical, title, this );
-  QGridLayout *groupLayout = new QGridLayout( group->layout(), 2, 2,
-                                              KDialog::spacingHint() );
+  QGridLayout *groupLayout = new QGridLayout( group->layout(), 2, 2, KDialog::spacingHint() );
 
   mBox = new Q3ListBox( group );
   connect( mBox, SIGNAL( selectionChanged( Q3ListBoxItem* ) ),
@@ -137,8 +136,7 @@ void NamePartWidget::selectionChanged( Q3ListBoxItem *item )
 AddresseeWidget::AddresseeWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QGridLayout *layout = new QGridLayout( this, 2, 3, KDialog::marginHint(),
-                                         KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout( this, 2, 3, KDialog::marginHint(), KDialog::spacingHint() );
 
   mPrefix = new NamePartWidget( i18n( "Prefixes"), i18n( "Enter prefix:" ), this );
   layout->addWidget( mPrefix, 0, 0 );

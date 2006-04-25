@@ -37,8 +37,7 @@
 FreeBusyWidget::FreeBusyWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::ContactEditorWidget( ab, parent, name )
 {
-  QHBoxLayout *layout = new QHBoxLayout( this, KDialog::marginHint(),
-                                         KDialog::spacingHint() );
+  QHBoxLayout *layout = new QHBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Location of Free/Busy information:" ), this );
   layout->addWidget( label );

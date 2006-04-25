@@ -34,8 +34,7 @@
 SecrecyWidget::SecrecyWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(),
-                                         KDialog::spacingHint() );
+  QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
   mSecrecyCombo = new KComboBox( this );
   layout->addWidget( mSecrecyCombo );
 

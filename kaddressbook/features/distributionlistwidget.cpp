@@ -163,8 +163,7 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   , mManager( 0 )
 #endif
 {
-  QGridLayout *topLayout = new QGridLayout( this, 3, 4, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( this, 3, 4, KDialog::marginHint(), KDialog::spacingHint() );
 
   mNameCombo = new QComboBox( this );
   topLayout->addWidget( mNameCombo, 0, 0 );

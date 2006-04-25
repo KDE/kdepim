@@ -72,8 +72,7 @@ QString CryptoWidgetFactory::pageIdentifier() const
 CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::ContactEditorWidget( ab, parent, name ), mReadOnly( false )
 {
-  QGridLayout *topLayout = new QGridLayout( this, 2, 5, KDialog::marginHint(),
-                                            KDialog::spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( this, 2, 5, KDialog::marginHint(), KDialog::spacingHint() );
   topLayout->setColumnStretch( 1, 1 );
   topLayout->setRowStretch( 4, 1 );
 
