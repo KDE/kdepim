@@ -22,10 +22,11 @@ zodiac.cpp
 )
 
 kde4_automoc( ${kholidays_ng_LIB_SRC} )
+kode_add_xml_parser( kholidays_ng_LIB_SRC kde-holidays.rng )
 kde4_add_library( kholidays_ng SHARED ${kholidays_ng_LIB_SRC} )
-target_link_libraries( kholidays_ng ${KDE4_KDECORE_LIBS} )
+target_link_libraries( kholidays_ng ${KDE4_KDECORE_LIBS} ${QT_QTXML_LIBRARY} )
 set_target_properties( kholidays_ng PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets( ${LIB_INSTALL_DIR} kholidays )
+install_targets( ${LIB_INSTALL_DIR} kholidays_ng )
 
 ########### install files ###############
 
