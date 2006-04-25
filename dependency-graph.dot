@@ -1,6 +1,5 @@
 # to create a ps file use 'dot -Tps -o dependency-graph.ps dependency-graph.dot' (dot it part of the graphviz package)
 digraph "inter-dependency graph for kdepim" {
-        "akregator" -> "kaddressbook";
         "akregator" -> "kontact";
         "libkleo" -> "kleopatra";
         "libkleo" -> "kaddressbook";
@@ -73,6 +72,7 @@ digraph "inter-dependency graph for kdepim" {
         "karm" -> "kontact";
         "knode" -> "kontact";
         "libsyndication" -> "akregator";
+        "libsyndication" -> "kaddressbook";
         "kpilot" -> "kontact";
 }
 
