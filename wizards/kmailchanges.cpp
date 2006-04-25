@@ -211,9 +211,9 @@ class CreateOnlineImapAccount : public CreateImapAccount
       // locally unsubscribe the default folders
       c.writeEntry( "locally-subscribed-folders", true );
       QString groupwareFolders = QString("/INBOX/%1/,/INBOX/%2/,/INBOX/%3/,/INBOX/%4/,/INBOX/%5/")
-          .arg( s_folderContentsType[0] ).arg( s_folderContentsType[1] )
-          .arg( s_folderContentsType[2] ).arg( s_folderContentsType[3] )
-          .arg( s_folderContentsType[4] );
+          .arg( i18n(s_folderContentsType[0]) ).arg( i18n(s_folderContentsType[1]) )
+          .arg( i18n(s_folderContentsType[2]) ).arg( i18n(s_folderContentsType[3]) )
+          .arg( i18n(s_folderContentsType[4]) );
       c.writeEntry( "locallyUnsubscribedFolders", groupwareFolders );
 
       c.setGroup( QString("Folder-%1").arg( uid ) );
