@@ -132,7 +132,8 @@ FieldWidget::FieldWidget( QWidget *parent, const char *name )
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( KDialog::marginHint() );
 
-  mGlobalLayout = new QVBoxLayout( layout );
+  mGlobalLayout = new QVBoxLayout();
+  layout->addItem( mGlobalLayout );
   mGlobalLayout->setSpacing( KDialog::spacingHint() );
   mGlobalLayout->setAlignment( Qt::AlignTop );
 
@@ -141,7 +142,8 @@ FieldWidget::FieldWidget( QWidget *parent, const char *name )
   mSeparator->hide();
   layout->addWidget( mSeparator );
 
-  mLocalLayout = new QVBoxLayout( layout );
+  mLocalLayout = new QVBoxLayout();
+  layout->addItem( mLocalLayout );
   mLocalLayout->setSpacing( KDialog::spacingHint() );
   mLocalLayout->setAlignment( Qt::AlignTop );
 }

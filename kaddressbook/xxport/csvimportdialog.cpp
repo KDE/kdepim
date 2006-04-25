@@ -392,7 +392,8 @@ void CSVImportDialog::initGUI()
   mDelimiterBox->setColumnLayout( 0, Qt::Vertical );
   mDelimiterBox->layout()->setSpacing( spacingHint() );
   mDelimiterBox->layout()->setMargin( marginHint() );
-  QGridLayout *delimiterLayout = new QGridLayout( mDelimiterBox->layout() );
+  QGridLayout *delimiterLayout = new QGridLayout();
+  mDelimiterBox->layout()->addItem( delimiterLayout );
   delimiterLayout->setAlignment( Qt::AlignTop );
   layout->addWidget( mDelimiterBox, 1, 0, 4, 1);
 

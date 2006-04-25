@@ -67,7 +67,8 @@ CRLView::CRLView( QWidget* parent, const char* name, bool modal )
   _textView->setTextFormat( Qt::LogText );
   topLayout->addWidget( _textView );
 
-  QHBoxLayout* hbLayout = new QHBoxLayout( topLayout );
+  QHBoxLayout* hbLayout = new QHBoxLayout();
+  topLayout->addItem( hbLayout );
 
   _updateButton = new KPushButton( i18n("&Update"), this );
   _closeButton = new KPushButton( KStdGuiItem::close(), this );

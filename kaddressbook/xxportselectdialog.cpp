@@ -197,7 +197,8 @@ void XXPortSelectDialog::initGUI()
   mButtonGroup->layout()->setSpacing( KDialog::spacingHint() );
   mButtonGroup->layout()->setMargin( KDialog::marginHint() );
 
-  QGridLayout *groupLayout = new QGridLayout( mButtonGroup->layout() );
+  QGridLayout *groupLayout = new QGridLayout();
+  mButtonGroup->layout()->addItem( groupLayout );
   groupLayout->setAlignment( Qt::AlignTop );
 
   mUseWholeBook = new QRadioButton( i18n( "&All contacts" ), mButtonGroup );
@@ -234,7 +235,8 @@ void XXPortSelectDialog::initGUI()
 
   Q3ButtonGroup *sortingGroup = new Q3ButtonGroup( i18n( "Sorting" ), page );
   sortingGroup->setColumnLayout( 0, Qt::Vertical );
-  QGridLayout *sortLayout = new QGridLayout( sortingGroup->layout() );
+  QGridLayout *sortLayout = new QGridLayout();
+  sortingGroup->layout()->addItem( sortLayout );
   sortLayout->setSpacing( KDialog::spacingHint() );
   sortLayout->setAlignment( Qt::AlignTop );
 

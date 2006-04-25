@@ -178,7 +178,7 @@ PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
   QGridLayout *layout = new QGridLayout( this );
   layout->setSpacing( KDialog::spacingHint() );
 
-  mWidgetLayout = new QVBoxLayout( layout );
+  mWidgetLayout = new QVBoxLayout();
   layout->addLayout( mWidgetLayout, 0, 0, 1, 2 );
 
   mAddButton = new QPushButton( i18n( "Add" ), this );

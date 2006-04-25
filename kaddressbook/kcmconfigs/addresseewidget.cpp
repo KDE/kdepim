@@ -50,7 +50,8 @@ NamePartWidget::NamePartWidget( const QString &title, const QString &label,
   QHBoxLayout *layout = new QHBoxLayout( this );
 
   Q3GroupBox *group = new Q3GroupBox( 0, Qt::Vertical, title, this );
-  QGridLayout *groupLayout = new QGridLayout( group->layout() );
+  QGridLayout *groupLayout = new QGridLayout();
+  group->layout()->addItem( groupLayout );
   groupLayout->setSpacing( KDialog::spacingHint() );
 
   mBox = new Q3ListBox( group );

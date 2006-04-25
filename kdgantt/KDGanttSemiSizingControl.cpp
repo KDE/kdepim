@@ -266,11 +266,13 @@ void KDGanttSemiSizingControl::setup()
     else
         _layout = new QVBoxLayout( this );
 
-    if ( _orient == Qt::Vertical && !isMinimized() )
-        butLayout = new QHBoxLayout( _layout );
-    else
-        butLayout = new QVBoxLayout( _layout );
-
+    if ( _orient == Qt::Vertical && !isMinimized() ) {
+        butLayout = new QHBoxLayout();
+        _layout->addItem( butLayout );
+    } else {
+        butLayout = new QVBoxLayout();
+        _layout->addItem( butLayout );
+    }
 
 
     //---------------------------------------- Set the arrow on the button

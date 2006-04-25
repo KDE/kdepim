@@ -135,7 +135,9 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( KDialog::marginHint() );
   Q3GroupBox *box = new Q3GroupBox( 0, Qt::Vertical, title, this );
-  QGridLayout *boxLayout = new QGridLayout( box->layout(), 3, 3, KDialog::spacingHint() );
+  QGridLayout *boxLayout = new QGridLayout();
+  box->layout()->addItem( boxLayout );
+  boxLayout->setSpacing( KDialog::spacingHint() );
   boxLayout->setRowStretch( 3, 1 );
 
   mImageLabel = new ImageLabel( i18n( "Picture" ), box );

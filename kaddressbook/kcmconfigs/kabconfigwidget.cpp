@@ -67,7 +67,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   layout->setMargin( KDialog::marginHint() );
 
   Q3GroupBox *groupBox = new Q3GroupBox( 0, Qt::Vertical, i18n( "General" ), generalPage );
-  QBoxLayout *boxLayout = new QVBoxLayout( groupBox->layout() );
+  QBoxLayout *boxLayout = new QVBoxLayout();
+  groupBox->layout()->addItem( boxLayout );
   boxLayout->setAlignment( Qt::AlignTop );
 
   mViewsSingleClickBox = new QCheckBox( i18n( "Honor KDE single click" ), groupBox, "msingle" );
@@ -87,7 +88,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   mLimitContactDisplay = new QCheckBox( i18n( "Limit unfiltered display to 100 contacts" ), groupBox, "mlimit" );
   boxLayout->addWidget( mLimitContactDisplay );
 
-  QBoxLayout *editorLayout = new QHBoxLayout( boxLayout );
+  QBoxLayout *editorLayout = new QHBoxLayout();
+  boxLayout->addItem( editorLayout );
   editorLayout->setSpacing( KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Addressee editor type:" ), groupBox );
@@ -105,7 +107,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   layout->addWidget( groupBox );
 
   groupBox = new Q3GroupBox( 0, Qt::Vertical, i18n( "Script-Hooks" ), generalPage );
-  QGridLayout *grid = new QGridLayout( groupBox->layout() );
+  QGridLayout *grid = new QGridLayout();
+  groupBox->layout()->addItem( grid );
   grid->setSpacing( KDialog::spacingHint() );
   label = new QLabel( i18n( "Phone:" ), groupBox );
   grid->addWidget( label, 0, 0 );
@@ -135,7 +138,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   layout->addWidget( groupBox );
 
   groupBox = new Q3GroupBox( 0, Qt::Vertical, i18n( "Location Map" ), generalPage );
-  boxLayout = new QVBoxLayout( groupBox->layout() );
+  boxLayout = new QVBoxLayout();
+  groupBox->layout()->addItem( boxLayout );
   boxLayout->setSpacing( KDialog::spacingHint() );
   boxLayout->setAlignment( Qt::AlignTop );
 

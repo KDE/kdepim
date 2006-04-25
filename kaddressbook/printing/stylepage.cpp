@@ -126,7 +126,8 @@ void StylePage::initGUI()
 
   Q3ButtonGroup *group = new Q3ButtonGroup( i18n( "Sorting" ), this );
   group->setColumnLayout( 0, Qt::Vertical );
-  QGridLayout *sortLayout = new QGridLayout( group->layout() );
+  QGridLayout *sortLayout = new QGridLayout();
+  group->layout()->addItem( sortLayout );
   sortLayout->setSpacing( KDialog::spacingHint() );
   sortLayout->setAlignment( Qt::AlignTop );
 
@@ -146,7 +147,8 @@ void StylePage::initGUI()
 
   group = new Q3ButtonGroup( i18n( "Print Style" ), this );
   group->setColumnLayout( 0, Qt::Vertical );
-  QVBoxLayout *styleLayout = new QVBoxLayout( group->layout() );
+  QVBoxLayout *styleLayout = new QVBoxLayout();
+  group->layout()->addItem( styleLayout );
   styleLayout->setSpacing( KDialog::spacingHint() );
 
   mStyleCombo = new KComboBox( false, group );

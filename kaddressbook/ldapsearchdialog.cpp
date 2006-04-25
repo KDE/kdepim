@@ -136,7 +136,8 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   groupBox->setFrameShape( Q3GroupBox::Box );
   groupBox->setFrameShadow( Q3GroupBox::Sunken );
   groupBox->setColumnLayout( 0, Qt::Vertical );
-  QGridLayout *boxLayout = new QGridLayout( groupBox->layout() );
+  QGridLayout *boxLayout = new QGridLayout();
+  groupBox->layout()->addItem( boxLayout );
   boxLayout->setSpacing( spacingHint() );
   boxLayout->setColumnStretch( 1, 1 );
 
