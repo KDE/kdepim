@@ -33,9 +33,9 @@
 #include <kurlrequester.h>
 #include <kpixmapregionselectordialog.h>
 
-#include <librss/loader.h>
-#include <librss/document.h>
-#include <librss/image.h>
+#include <libsyndication/loader.h>
+#include <libsyndication/feed.h>
+#include <libsyndication/image.h>
 
 #include <qapplication.h>
 #include <qcheckbox.h>
@@ -341,33 +341,33 @@ void ImageBaseWidget::getPictureFromBlog()
     return;
   }
 
-  mRssLoader = RSS::Loader::create();
-  connect( mRssLoader, SIGNAL( loadingComplete( Loader *, Document,
-    Status ) ),
-    SLOT( slotLoadingComplete( Loader *, Document, Status ) ) );
-  mRssLoader->loadFrom( mBlogFeed, new RSS::FileRetriever );
+  mRssLoader = Syndication::Loader::create();
+  connect( mRssLoader, SIGNAL( loadingComplete( Syndication::Loader *, Syndication::FeedPtr,
+    Syndication::ErrorCode ) ),
+    SLOT( slotLoadingComplete( Syndication::Loader *, Syndication::FeedPtr, Syndication::ErrorCode ) ) );
+  mRssLoader->loadFrom( mBlogFeed );
 
   // TODO: Show progress for fetching image from blog.
 }
 
-void ImageBaseWidget::slotLoadingComplete( RSS::Loader *loader,
-  RSS::Document doc, RSS::Status status )
+void ImageBaseWidget::slotLoadingComplete( Syndication::Loader *loader,
+  Syndication::FeedPtr feed, Syndication::ErrorCode error )
 {
-  if ( status != RSS::Success ) {
+  if ( error != Syndication::Success ) {
     KMessageBox::sorry( this,
       i18n( "Unable to retrieve blog feed from '%1': %2", mBlogFeed ,
         loader->errorCode() ) );
     return;
   }
 
-  if ( !doc.image() ) {
+  if ( feed->image()->isNull() ) {
     KMessageBox::sorry( this,
       i18n( "Blog feed at '%1' does not contain an image.", mBlogFeed ) );
     return;
   }
 
   blockSignals( true );
-  mImageUrl->setURL( doc.image()->url().url() );
+  mImageUrl->setURL( feed->image()->url() );
   loadImage();
   blockSignals( false );
   imageChanged();

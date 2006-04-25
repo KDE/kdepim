@@ -39,14 +39,14 @@
 class KUrlRequester;
 class QCheckBox;
 
-#include <librss/global.h>
+#include <libsyndication/global.h>
+#include <libsyndication/sharedptr.h>
 
-namespace RSS {
+namespace Syndication {
 class Loader;
-class Document;
+class Feed;
+typedef SharedPtr<Feed> FeedPtr;
 }
-
-using namespace RSS;
 
 /**
   Small helper class
@@ -119,7 +119,7 @@ class ImageBaseWidget : public QWidget
     void clear();
     void imageChanged();
     void getPictureFromBlog();
-    void slotLoadingComplete( Loader *loader, Document doc, Status status );
+    void slotLoadingComplete( Syndication::Loader *loader, Syndication::FeedPtr feed, Syndication::ErrorCode error );
 
   private:
     QPixmap loadPixmap( const KUrl &url );
@@ -135,7 +135,7 @@ class ImageBaseWidget : public QWidget
 
     bool mReadOnly;
 
-    RSS::Loader *mRssLoader;
+    Syndication::Loader *mRssLoader;
 };
 
 class ImageWidget : public KAB::ContactEditorWidget
