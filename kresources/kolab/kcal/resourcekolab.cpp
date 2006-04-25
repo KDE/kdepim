@@ -117,6 +117,8 @@ bool ResourceKolab::doOpen()
   mOpen = true;
 
   KConfig config( configFile() );
+  config.setGroup( "General" );
+  mProgressDialogIncidenceLimit = config.readNumEntry("ProgressDialogIncidenceLimit", 200);
 
   return openResource( config, kmailCalendarContentsType, mEventSubResources )
     && openResource( config, kmailTodoContentsType, mTodoSubResources )
@@ -163,7 +165,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
                       : mimetype == "application/x-vnd.kolab.journal" ? i18n( "Loading journals..." )
                       : i18n( "Loading events..." );
 
-  const bool useProgress = qApp && qApp->type() != QApplication::Tty && count > 200;
+  const bool useProgress = qApp && qApp->type() != QApplication::Tty && count > mProgressDialogIncidenceLimit;
   if ( useProgress )
     (void)::Observer::self(); // ensure kio_uiserver is running
   UIServer_stub uiserver( "kio_uiserver", "UIServer" );
