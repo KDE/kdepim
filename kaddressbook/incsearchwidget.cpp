@@ -43,7 +43,9 @@
 IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
     : QWidget( parent, name )
 {
-  QHBoxLayout *layout = new QHBoxLayout( this, 2, KDialog::spacingHint() );
+  QHBoxLayout *layout = new QHBoxLayout( this );
+  layout->setSpacing( KDialog::spacingHint() );
+  layout->setMargin( 2 );
 
   QToolButton *button = new QToolButton( this );
   button->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum );

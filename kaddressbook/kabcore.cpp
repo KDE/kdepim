@@ -980,7 +980,9 @@ void KABCore::slotEditorDestroyed( const QString &uid )
 
 void KABCore::initGUI()
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( mWidget, 0, 0 );
+  QVBoxLayout *topLayout = new QVBoxLayout( mWidget );
+  topLayout->setSpacing( 0 );
+  topLayout->setMargin( 0 );
   KToolBar* searchTB = new KToolBar( mWidget, "search toolbar" );
   searchTB->layout()->setSpacing( KDialog::spacingHint() );
   mIncSearchWidget = new IncSearchWidget( searchTB, "kde toolbar widget" );
@@ -1004,7 +1006,9 @@ void KABCore::initGUI()
   mDetailsPage = new QWidget( mDetailsWidget );
   mDetailsLayout->addWidget( mDetailsPage );
 
-  QHBoxLayout *detailsPageLayout = new QHBoxLayout( mDetailsPage, 0, 0 );
+  QHBoxLayout *detailsPageLayout = new QHBoxLayout( mDetailsPage );
+  detailsPageLayout->setSpacing( 0 );
+  detailsPageLayout->setMargin( 0 );
   mDetails = new KPIM::AddresseeView( mDetailsPage );
   detailsPageLayout->addWidget( mDetails );
 

@@ -46,7 +46,7 @@ CacheSettingsDialog::CacheSettingsDialog( QWidget* parent, const char* name )
   QWidget *mainWidget = new QWidget( this );
   setMainWidget( mainWidget );
 
-  QGridLayout *mainLayout = new QGridLayout( mainWidget, 2, 2 );
+  QGridLayout *mainLayout = new QGridLayout( mainWidget );
   mainLayout->setSpacing( KDialog::spacingHint() );
 
   mReloadConfig = new KCal::ResourceCachedReloadConfig( mainWidget );

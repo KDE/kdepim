@@ -40,7 +40,9 @@ using namespace KCal;
 ResourceFeaturePlanConfig::ResourceFeaturePlanConfig( QWidget *parent )
   : KRES::ConfigWidget( parent )
 {
-  QGridLayout *topLayout = new QGridLayout( this, 3, 2, 0, KDialog::spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( this );
+  topLayout->setSpacing( KDialog::spacingHint() );
+  topLayout->setMargin( 0 );
 
   QLabel *label = new QLabel( i18n( "Filename:" ), this );
   mFilename = new KUrlRequester( this );

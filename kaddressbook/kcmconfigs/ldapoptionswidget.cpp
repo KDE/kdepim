@@ -260,7 +260,9 @@ void LDAPOptionsWidget::defaults()
 
 void LDAPOptionsWidget::initGUI()
 {
-  QVBoxLayout *layout = new QVBoxLayout( this, 0, KDialog::spacingHint() );
+  QVBoxLayout *layout = new QVBoxLayout( this );
+  layout->setSpacing( KDialog::spacingHint() );
+  layout->setMargin( 0 );
 
   QGroupBox *groupBox = new QGroupBox( i18n( "LDAP Servers" ), this );
   /*

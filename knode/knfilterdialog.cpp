@@ -50,7 +50,9 @@ KNFilterDialog::KNFilterDialog( KNArticleFilter *f, QWidget *parent )
 
   fw=new KNFilterConfigWidget(page);
 
-  QGridLayout *gbL=new QGridLayout(gb, 2,4,8,5);
+  QGridLayout *gbL=new QGridLayout(gb);
+  gbL->setSpacing(5);
+  gbL->setMargin(8);
   gbL->addWidget(l1, 0,0);
   gbL->addWidget(fname, 0,1, 1,3);
   gbL->addWidget(enabled, 1,0);
@@ -58,7 +60,9 @@ KNFilterDialog::KNFilterDialog( KNArticleFilter *f, QWidget *parent )
   gbL->addWidget(apon, 1,3);
   gbL->setColumnStretch(1,1);
 
-  QVBoxLayout *topL=new QVBoxLayout(page,0,5);
+  QVBoxLayout *topL=new QVBoxLayout(page);
+  topL->setSpacing(5);
+  topL->setMargin(0);
 
   topL->addWidget(gb);
   topL->addWidget(fw,1);

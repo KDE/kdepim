@@ -41,7 +41,9 @@ PrintProgress::PrintProgress( QWidget *parent, const char *name )
 {
   setCaption( i18n( "Printing: Progress" ) );
 
-  QGridLayout *topLayout = new QGridLayout( this, 1, 1, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( this );
+  topLayout->setSpacing( KDialog::spacingHint() );
+  topLayout->setMargin( KDialog::marginHint() );
 
   mLogBrowser = new Q3TextBrowser( this );
   topLayout->addWidget( mLogBrowser, 0, 0 );

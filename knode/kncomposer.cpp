@@ -1732,7 +1732,9 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   //headers
   QFrame *hdrFrame=new QFrame(main);
   hdrFrame->setFrameStyle(QFrame::Box | QFrame::Sunken);
-  QGridLayout *hdrL=new QGridLayout(hdrFrame, 4,3, 7,5);
+  QGridLayout *hdrL=new QGridLayout(hdrFrame);
+  hdrL->setSpacing(5);
+  hdrL->setMargin(7);
   hdrL->setColumnStretch(1,1);
 
   //To
@@ -1808,7 +1810,9 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   notL->addStretch(1);
 
   //finish GUI
-  QVBoxLayout *topL=new QVBoxLayout(main, 4,4);
+  QVBoxLayout *topL=new QVBoxLayout(main);
+  topL->setSpacing(4);
+  topL->setMargin(4);
   topL->addWidget(hdrFrame);
   topL->addWidget(e_dit, 1);
 }
@@ -1900,7 +1904,9 @@ void KNComposer::ComposerView::showAttachmentView()
 {
   if(!a_ttWidget) {
     a_ttWidget=new QWidget(this);
-    QGridLayout *topL=new QGridLayout(a_ttWidget, 3, 2, 4, 4);
+    QGridLayout *topL=new QGridLayout(a_ttWidget);
+    topL->setSpacing(4);
+    topL->setMargin(4);
 
     a_ttView=new AttachmentView(a_ttWidget);
     topL->addWidget(a_ttView, 0, 0, 3, 1);
@@ -2557,7 +2563,9 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, Q
 
   //file info
   QGroupBox *fileGB = new QGroupBox( i18n("File"), page );
-  QGridLayout *fileL=new QGridLayout(fileGB, 3,2, 15,5);
+  QGridLayout *fileL=new QGridLayout(fileGB);
+  fileL->setSpacing(5);
+  fileL->setMargin(15);
 
   fileL->addItem( new QSpacerItem( 0, fontMetrics().lineSpacing()-9), 0, 0 );
   fileL->addWidget(new QLabel(i18n("Name:"), fileGB) ,1,0);
@@ -2570,7 +2578,9 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, Q
 
   //mime info
   QGroupBox *mimeGB = new QGroupBox( i18n("Mime"), page );
-  QGridLayout *mimeL=new QGridLayout(mimeGB, 4,2, 15,5);
+  QGridLayout *mimeL=new QGridLayout(mimeGB);
+  mimeL->setSpacing(5);
+  mimeL->setMargin(15);
 
   mimeL->addItem( new QSpacerItem( 0, fontMetrics().lineSpacing()-9), 0, 0 );
   m_imeType=new KLineEdit(mimeGB);

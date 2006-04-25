@@ -79,7 +79,9 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
   QWidget * vbox = 0;
   if ( face() == Plain ) {
     vbox = plainPage();
-    QVBoxLayout * vlay = new QVBoxLayout( vbox, 0, KDialog::spacingHint() );
+    QVBoxLayout * vlay = new QVBoxLayout( vbox );
+    vlay->setSpacing( KDialog::spacingHint() );
+    vlay->setMargin( 0 );
     vlay->setAutoAdd( true );
   }
 
@@ -141,7 +143,9 @@ Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
   : QWidget( parent, name ),
     mComponent( component )
 {
-  QGridLayout * glay = new QGridLayout( this, 1, 3, 0, KDialog::spacingHint() );
+  QGridLayout * glay = new QGridLayout( this );
+  glay->setSpacing( KDialog::spacingHint() );
+  glay->setMargin( 0 );
   const QStringList groups = mComponent->groupList();
   if ( groups.size() > 1 ) {
     glay->setColumnMinimumWidth( 0, KDHorizontalLine::indentHint() );

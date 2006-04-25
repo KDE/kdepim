@@ -372,7 +372,9 @@ void CSVImportDialog::initGUI()
 {
   mPage = plainPage();
 
-  QGridLayout *layout = new QGridLayout( mPage, 1, 1, marginHint(), spacingHint() );
+  QGridLayout *layout = new QGridLayout( mPage );
+  layout->setSpacing( spacingHint() );
+  layout->setMargin( marginHint() );
   QHBoxLayout *hbox = new QHBoxLayout();
   hbox->setSpacing( spacingHint() );
 

@@ -51,7 +51,9 @@ AddFieldDialog::AddFieldDialog( QWidget *parent, const char *name )
 {
   QWidget *page = plainPage();
 
-  QGridLayout *layout = new QGridLayout( page, 3, 2, marginHint(), spacingHint() );
+  QGridLayout *layout = new QGridLayout( page );
+  layout->setSpacing( spacingHint() );
+  layout->setMargin( marginHint() );
 
   QLabel *label = new QLabel( i18n( "Title:" ), page );
   layout->addWidget( label, 0, 0 );
@@ -126,9 +128,12 @@ void AddFieldDialog::nameChanged( const QString &name )
 FieldWidget::FieldWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QVBoxLayout *layout = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+  QVBoxLayout *layout = new QVBoxLayout( this );
+  layout->setSpacing( KDialog::spacingHint() );
+  layout->setMargin( KDialog::marginHint() );
 
-  mGlobalLayout = new QVBoxLayout( layout, KDialog::spacingHint() );
+  mGlobalLayout = new QVBoxLayout( layout );
+  mGlobalLayout->setSpacing( KDialog::spacingHint() );
   mGlobalLayout->setAlignment( Qt::AlignTop );
 
   mSeparator = new QFrame( this );
@@ -136,7 +141,8 @@ FieldWidget::FieldWidget( QWidget *parent, const char *name )
   mSeparator->hide();
   layout->addWidget( mSeparator );
 
-  mLocalLayout = new QVBoxLayout( layout, KDialog::spacingHint() );
+  mLocalLayout = new QVBoxLayout( layout );
+  mLocalLayout->setSpacing( KDialog::spacingHint() );
   mLocalLayout->setAlignment( Qt::AlignTop );
 }
 
@@ -459,7 +465,9 @@ void CustomFieldsWidget::removeField()
 
 void CustomFieldsWidget::initGUI()
 {
-  QGridLayout *layout = new QGridLayout( this, 2, 3, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout( this );
+  layout->setSpacing( KDialog::spacingHint() );
+  layout->setMargin( KDialog::marginHint() );
 
   mFieldWidget = new FieldWidget( this );
   layout->addWidget( mFieldWidget, 0, 0, 1, 3 );

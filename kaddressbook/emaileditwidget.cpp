@@ -91,7 +91,9 @@ class EmailItem : public Q3ListBoxText
 EmailEditWidget::EmailEditWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( this );
+  topLayout->setSpacing( KDialog::spacingHint() );
+  topLayout->setMargin( KDialog::marginHint() );
 
   QLabel *label = new QLabel( i18n( "Email:" ), this );
   topLayout->addWidget( label, 0, 0 );
@@ -180,7 +182,9 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
 {
   QWidget *page = plainPage();
 
-  QGridLayout *topLayout = new QGridLayout( page, 4, 3, 0, spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( page );
+  topLayout->setSpacing( spacingHint() );
+  topLayout->setMargin( 0 );
 
   mEmailListBox = new Q3ListBox( page );
 

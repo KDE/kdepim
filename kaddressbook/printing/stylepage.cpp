@@ -115,7 +115,9 @@ void StylePage::initGUI()
 {
   setCaption( i18n( "Choose Printing Style" ) );
 
-  QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( this );
+  topLayout->setSpacing( KDialog::spacingHint() );
+  topLayout->setMargin( KDialog::marginHint() );
 
   QLabel *label = new QLabel( i18n( "What should the print look like?\n"
                                     "KAddressBook has several printing styles, designed for different purposes.\n"
@@ -124,7 +126,8 @@ void StylePage::initGUI()
 
   Q3ButtonGroup *group = new Q3ButtonGroup( i18n( "Sorting" ), this );
   group->setColumnLayout( 0, Qt::Vertical );
-  QGridLayout *sortLayout = new QGridLayout( group->layout(), 2, 2, KDialog::spacingHint() );
+  QGridLayout *sortLayout = new QGridLayout( group->layout() );
+  sortLayout->setSpacing( KDialog::spacingHint() );
   sortLayout->setAlignment( Qt::AlignTop );
 
   label = new QLabel( i18n( "Criterion:" ), group );
@@ -143,7 +146,8 @@ void StylePage::initGUI()
 
   group = new Q3ButtonGroup( i18n( "Print Style" ), this );
   group->setColumnLayout( 0, Qt::Vertical );
-  QVBoxLayout *styleLayout = new QVBoxLayout( group->layout(), KDialog::spacingHint() );
+  QVBoxLayout *styleLayout = new QVBoxLayout( group->layout() );
+  styleLayout->setSpacing( KDialog::spacingHint() );
 
   mStyleCombo = new KComboBox( false, group );
   styleLayout->addWidget( mStyleCombo );

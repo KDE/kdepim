@@ -143,7 +143,9 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( KInstanc
     : KCModule( instance, parent, args )
 {
   mConfig = Kleo::CryptoBackendFactory::instance()->config();
-  QVBoxLayout* lay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
+  QVBoxLayout* lay = new QVBoxLayout( this );
+  lay->setSpacing( KDialog::spacingHint() );
+  lay->setMargin( 0 );
   Kleo::CryptoConfigEntry* entry = configEntry( s_dirserv_componentName, s_dirserv_groupName, s_dirserv_entryName,
                                                 Kleo::CryptoConfigEntry::ArgType_LDAPURL, true );
   mWidget = new Kleo::DirectoryServicesWidget( entry, this );

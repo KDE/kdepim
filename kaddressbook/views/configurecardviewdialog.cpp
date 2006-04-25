@@ -276,7 +276,7 @@ void CardViewLookNFeelPage::initGUI()
   connect( cbEnableCustomFonts, SIGNAL(clicked()), this, SLOT(enableFonts()) );
 
   vbFonts = new QWidget( fntTab );
-  QGridLayout *gFnts = new QGridLayout( vbFonts, 2, 3 );
+  QGridLayout *gFnts = new QGridLayout( vbFonts );
   gFnts->setSpacing( spacing );
   gFnts->setAutoAdd( true );
   gFnts->setColumnStretch( 1, 1 );

@@ -136,7 +136,7 @@ void AddresseeEditorWidget::setupTab1()
   // This is the General tab
   QWidget *tab1 = new QWidget( mTabWidget );
 
-  QGridLayout *layout = new QGridLayout( tab1, 11, 7 );
+  QGridLayout *layout = new QGridLayout( tab1 );
   layout->setMargin( KDialogBase::marginHint() );
   layout->setSpacing( KDialogBase::spacingHint() );
 
@@ -241,7 +241,9 @@ void AddresseeEditorWidget::setupTab1()
   bar = new KSeparator( Qt::Horizontal, tab1 );
   layout->addWidget( bar, 7, 3, 1, 4 );
 
-  QHBoxLayout *homePageLayout = new QHBoxLayout( 0, 11, 7 );
+  QHBoxLayout *homePageLayout = new QHBoxLayout();
+  homePageLayout->setSpacing( 7 );
+  homePageLayout->setMargin( 11 );
 
   label = new QLabel( tab1 );
   label->setPixmap( KGlobal::iconLoader()->loadIcon( "homepage", K3Icon::Desktop,
@@ -257,7 +259,9 @@ void AddresseeEditorWidget::setupTab1()
   homePageLayout->addWidget( mURLEdit );
   layout->addLayout( homePageLayout, 8, 3, 1, 4 );
 
-  QHBoxLayout *blogLayout = new QHBoxLayout( 0, 11, 7 );
+  QHBoxLayout *blogLayout = new QHBoxLayout();
+  blogLayout->setSpacing( 7 );
+  blogLayout->setMargin( 11 );
   label = new QLabel( i18n( "Blog feed:" ), tab1 );
   blogLayout->addWidget( label );
   mBlogEdit = new KLineEdit( tab1 );
@@ -305,7 +309,7 @@ void AddresseeEditorWidget::setupTab2()
   // This is the Details tab
   QWidget *tab2 = new QWidget( mTabWidget );
 
-  QGridLayout *layout = new QGridLayout( tab2, 6, 6 );
+  QGridLayout *layout = new QGridLayout( tab2 );
   layout->setMargin( KDialogBase::marginHint() );
   layout->setSpacing( KDialogBase::spacingHint() );
 

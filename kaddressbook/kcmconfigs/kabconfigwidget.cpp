@@ -53,14 +53,18 @@
 KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( this, 0, KDialog::spacingHint() );
+  QVBoxLayout *topLayout = new QVBoxLayout( this );
+  topLayout->setSpacing( KDialog::spacingHint() );
+  topLayout->setMargin( 0 );
 
   QTabWidget *tabWidget = new QTabWidget( this );
   topLayout->addWidget( tabWidget );
 
   // General page
   QWidget *generalPage = new QWidget( this );
-  QVBoxLayout *layout = new QVBoxLayout( generalPage, KDialog::marginHint(), KDialog::spacingHint() );
+  QVBoxLayout *layout = new QVBoxLayout( generalPage );
+  layout->setSpacing( KDialog::spacingHint() );
+  layout->setMargin( KDialog::marginHint() );
 
   Q3GroupBox *groupBox = new Q3GroupBox( 0, Qt::Vertical, i18n( "General" ), generalPage );
   QBoxLayout *boxLayout = new QVBoxLayout( groupBox->layout() );
@@ -83,7 +87,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   mLimitContactDisplay = new QCheckBox( i18n( "Limit unfiltered display to 100 contacts" ), groupBox, "mlimit" );
   boxLayout->addWidget( mLimitContactDisplay );
 
-  QBoxLayout *editorLayout = new QHBoxLayout( boxLayout, KDialog::spacingHint() );
+  QBoxLayout *editorLayout = new QHBoxLayout( boxLayout );
+  editorLayout->setSpacing( KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Addressee editor type:" ), groupBox );
   editorLayout->addWidget( label );
@@ -100,7 +105,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   layout->addWidget( groupBox );
 
   groupBox = new Q3GroupBox( 0, Qt::Vertical, i18n( "Script-Hooks" ), generalPage );
-  QGridLayout *grid = new QGridLayout( groupBox->layout(), 3, 2, KDialog::spacingHint() );
+  QGridLayout *grid = new QGridLayout( groupBox->layout() );
+  grid->setSpacing( KDialog::spacingHint() );
   label = new QLabel( i18n( "Phone:" ), groupBox );
   grid->addWidget( label, 0, 0 );
 
@@ -129,7 +135,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   layout->addWidget( groupBox );
 
   groupBox = new Q3GroupBox( 0, Qt::Vertical, i18n( "Location Map" ), generalPage );
-  boxLayout = new QVBoxLayout( groupBox->layout(), KDialog::spacingHint() );
+  boxLayout = new QVBoxLayout( groupBox->layout() );
+  boxLayout->setSpacing( KDialog::spacingHint() );
   boxLayout->setAlignment( Qt::AlignTop );
 
   mLocationMapURL = new QComboBox( groupBox );

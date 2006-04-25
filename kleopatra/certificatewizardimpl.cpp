@@ -337,7 +337,9 @@ void CertificateWizardImpl::slotSetValuesFromWhoAmI()
 
 void CertificateWizardImpl::createPersonalDataPage()
 {
-  QGridLayout* grid = new QGridLayout( edContainer, 2, 1, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout* grid = new QGridLayout( edContainer );
+  grid->setSpacing( KDialog::spacingHint() );
+  grid->setMargin( KDialog::marginHint() );
 
   KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
   QStringList attrOrder = config.readEntry( "DNAttributeOrder" , QStringList() );

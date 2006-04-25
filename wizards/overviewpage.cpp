@@ -42,7 +42,9 @@
 OverViewPage::OverViewPage( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QGridLayout *layout = new QGridLayout( this, 7, 4, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *layout = new QGridLayout( this );
+  layout->setSpacing( KDialog::spacingHint() );
+  layout->setMargin( KDialog::marginHint() );
 
   const QString msg = i18n( "KDE Groupware Wizard" );
   QLabel *label = new QLabel( "<qt><b><u><h2>" + msg + "</h2></u></b></qt>" , this );

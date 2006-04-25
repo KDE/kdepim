@@ -389,7 +389,9 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list,
     mContacts( list )
 {
   QFrame *page = plainPage();
-  QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );
+  QVBoxLayout *layout = new QVBoxLayout( page );
+  layout->setSpacing( spacingHint() );
+  layout->setMargin( marginHint() );
 
   QLabel *label = new QLabel( i18n( "Do you want to import this contact in your address book?" ), page );
   QFont font = label->font();
@@ -462,7 +464,9 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent,
 {
   QFrame *page = plainPage();
 
-  QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );
+  QVBoxLayout *layout = new QVBoxLayout( page );
+  layout->setSpacing( spacingHint() );
+  layout->setMargin( marginHint() );
 
   QLabel *label = new QLabel( i18n( "Select the fields which shall be exported in the vCard." ), page );
   layout->addWidget( label );

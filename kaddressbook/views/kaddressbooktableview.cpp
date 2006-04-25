@@ -93,7 +93,8 @@ KAddressBookTableView::KAddressBookTableView( KAB::Core *core,
                                               QWidget *parent, const char *name )
   : KAddressBookView( core, parent, name )
 {
-  mMainLayout = new QVBoxLayout( viewWidget(), 2 );
+  mMainLayout = new QVBoxLayout( viewWidget() );
+  mMainLayout->setSpacing( 2 );
 
   // The list view will be created when the config is read.
   mListView = 0;

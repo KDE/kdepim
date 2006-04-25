@@ -207,7 +207,9 @@ void ViewConfigureFieldsPage::initGUI()
 {
   setCaption( i18n( "Select Fields to Display" ) );
 
-  QGridLayout *gl = new QGridLayout( this , 6, 4, 0, KDialog::spacingHint() );
+  QGridLayout *gl = new QGridLayout( this  );
+  gl->setSpacing( KDialog::spacingHint() );
+  gl->setMargin( 0 );
 
   mCategoryCombo = new KComboBox( false, this );
   mCategoryCombo->addItem( KABC::Field::categoryLabel( KABC::Field::All ) );

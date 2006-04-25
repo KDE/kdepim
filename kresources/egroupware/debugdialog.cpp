@@ -40,7 +40,9 @@ DebugDialog::DebugDialog()
                 User1 | User2 | Ok, Ok, true )
 {
   QWidget *page = plainPage();
-  QVBoxLayout *layout = new QVBoxLayout( page, marginHint(), spacingHint() );
+  QVBoxLayout *layout = new QVBoxLayout( page );
+  layout->setSpacing( spacingHint() );
+  layout->setMargin( marginHint() );
 
   mView = new KTextBrowser( page );
   layout->addWidget( mView );

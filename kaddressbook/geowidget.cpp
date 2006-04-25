@@ -55,7 +55,7 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
 {
   QLabel *label = 0;
 
-  QGridLayout *topLayout = new QGridLayout( this, 4, 3 );
+  QGridLayout *topLayout = new QGridLayout( this );
   topLayout->setMargin( KDialog::marginHint() );
   topLayout->setSpacing( KDialog::spacingHint() );
 
@@ -180,7 +180,9 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
 {
   QFrame *page = plainPage();
 
-  QGridLayout *topLayout = new QGridLayout( page, 2, 2, marginHint(), spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( page );
+  topLayout->setSpacing( spacingHint() );
+  topLayout->setMargin( marginHint() );
   topLayout->setRowStretch( 1, 1 );
 
   mMapWidget = new GeoMapWidget( page );
@@ -190,7 +192,8 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
   topLayout->addWidget( mCityCombo, 0, 1 );
 
   QGroupBox *sexagesimalGroup = new QGroupBox( i18n( "Sexagesimal" ), page );
-  QGridLayout *sexagesimalLayout = new QGridLayout( sexagesimalGroup->layout(), 2, 5, spacingHint() );
+  QGridLayout *sexagesimalLayout = new QGridLayout( sexagesimalGroup->layout() );
+  sexagesimalLayout->setSpacing( spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Latitude:" ), sexagesimalGroup );
   sexagesimalLayout->addWidget( label, 0, 0 );

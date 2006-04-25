@@ -81,14 +81,18 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
 
   QWidget * top = plainPage();
 
-  QVBoxLayout * vlay = new QVBoxLayout( top, 0, spacingHint() );
+  QVBoxLayout * vlay = new QVBoxLayout( top );
+  vlay->setSpacing( spacingHint() );
+  vlay->setMargin( 0 );
 
   group = new Q3GroupBox( i18n("WatchGnuPG"), top );
   group->layout()->setSpacing( spacingHint() );
 
   w = new QWidget( group );
 
-  glay = new QGridLayout( w, 3, 2, 0, spacingHint() );
+  glay = new QGridLayout( w );
+  glay->setSpacing( spacingHint() );
+  glay->setMargin( 0 );
   glay->setColumnStretch( 1, 1 );
 
   int row = -1;
@@ -125,7 +129,9 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
 
   w = new QWidget( group );
 
-  glay = new QGridLayout( w, 2, 3, 0, spacingHint() );
+  glay = new QGridLayout( w );
+  glay->setSpacing( spacingHint() );
+  glay->setMargin( 0 );
   glay->setColumnStretch( 1, 1 );
 
   row = -1;

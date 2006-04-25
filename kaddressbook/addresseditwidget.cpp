@@ -91,7 +91,9 @@ class TabPressEater : public QObject
 AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  QBoxLayout *layout = new QVBoxLayout( this, 4, 2 );
+  QBoxLayout *layout = new QVBoxLayout( this );
+  layout->setSpacing( 2 );
+  layout->setMargin( 4 );
   layout->setSpacing( KDialog::spacingHint() );
 
   mTypeCombo = new AddressTypeCombo( mAddressList, this );
@@ -276,7 +278,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
 
   QWidget *page = plainPage();
 
-  QGridLayout *topLayout = new QGridLayout( page, 8, 2 );
+  QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );
 
   mTypeCombo = new AddressTypeCombo( mAddressList, page );

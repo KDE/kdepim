@@ -3335,7 +3335,9 @@ void KDLegendWidget::addLegendItem( KDGanttViewItem::Shape shape, const QColor& 
     QLabel * temp;
     QWidget *w = new QWidget( myLegend );
     w->setBackgroundColor( Qt::white );
-    QHBoxLayout *lay = new QHBoxLayout( w ,0, 6);
+    QHBoxLayout *lay = new QHBoxLayout( w  );
+    lay->setSpacing( 6 );
+    lay->setMargin( 0 );
     temp = new QLabel ( w );
     lay->addWidget( temp, 0, Qt:: AlignRight);
     temp->setPixmap(KDGanttView::getPixmap( shape,  shapeColor, Qt::white, 10));
@@ -3357,7 +3359,9 @@ void KDLegendWidget::addLegendItem( KDGanttViewItem::Shape shape, const QColor& 
     QPixmap p = KDGanttView::getPixmap( shape,  shapeColor, Qt::white, 10);
     QWidget *w = new QWidget( myLegend );
     w->setBackgroundColor( Qt::white );
-    QHBoxLayout *lay = new QHBoxLayout( w ,0, 6);
+    QHBoxLayout *lay = new QHBoxLayout( w  );
+    lay->setSpacing( 6 );
+    lay->setMargin( 0 );
     temp = new QLabel ( w );
     lay->addWidget( temp, 0, Qt:: AlignRight);
     temp->setPixmap(p);  

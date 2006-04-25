@@ -66,7 +66,9 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *pa
 {
   QString msg;
 
-  QGridLayout *topL=new QGridLayout(this,  11, 3, 5,5);
+  QGridLayout *topL=new QGridLayout(this);
+  topL->setSpacing(5);
+  topL->setMargin(5);
 
   n_ame=new KLineEdit(this);
   QLabel *l=new QLabel(n_ame, i18n("&Name:"), this);
@@ -470,7 +472,8 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
 
   // per server cleanup configuration
   QFrame* cleanupPage = addPage( i18n("&Cleanup") );
-  QVBoxLayout *cleanupLayout = new QVBoxLayout( cleanupPage, KDialog::spacingHint() );
+  QVBoxLayout *cleanupLayout = new QVBoxLayout( cleanupPage );
+  cleanupLayout->setSpacing( KDialog::spacingHint() );
   mCleanupWidget = new GroupCleanupWidget( a->cleanupConfig(), cleanupPage );
   mCleanupWidget->load();
   cleanupLayout->addWidget( mCleanupWidget );
@@ -948,7 +951,9 @@ KNode::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, KIns
   s_ave( false ),
   d_ata( d )
 {
-  QGridLayout *topL=new QGridLayout(this, 7,2, 5,5);
+  QGridLayout *topL=new QGridLayout(this);
+  topL->setSpacing(5);
+  topL->setMargin(5);
 
   //listbox
   mHeaderList = new QListWidget( this );
@@ -1125,10 +1130,13 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
     h_dr(h)
 {
   QFrame* page=plainPage();
-  QGridLayout *topL=new QGridLayout(page, 2, 2, 0, 5);
+  QGridLayout *topL=new QGridLayout(page);
+  topL->setSpacing(5);
+  topL->setMargin(0);
 
   QWidget *nameW = new QWidget(page);
-  QGridLayout *nameL=new QGridLayout(nameW, 2, 2, 5);
+  QGridLayout *nameL=new QGridLayout(nameW);
+  nameL->setSpacing(5);
 
   h_drC=new KComboBox(true, nameW);
   h_drC->lineEdit()->setMaxLength(64);
@@ -1148,7 +1156,9 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
   QGroupBox *ngb=new QGroupBox(i18n("Name"), page);
   // ### hide style settings for now, the new viewer doesn't support this yet
   ngb->hide();
-  QVBoxLayout *ngbL = new QVBoxLayout(ngb, 8, 5);
+  QVBoxLayout *ngbL = new QVBoxLayout(ngb);
+  ngbL->setSpacing(5);
+  ngbL->setMargin(8);
   ngbL->setAutoAdd(true);
   ngbL->addSpacing(fontMetrics().lineSpacing()-4);
   n_ameCB[0]=new QCheckBox(i18n("&Large"), ngb);
@@ -1160,7 +1170,9 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
   QGroupBox *vgb=new QGroupBox(i18n("Value"), page);
   // ### hide style settings for now, the new viewer doen't support this yet
   vgb->hide();
-  QVBoxLayout *vgbL = new QVBoxLayout(vgb, 8, 5);
+  QVBoxLayout *vgbL = new QVBoxLayout(vgb);
+  vgbL->setSpacing(5);
+  vgbL->setMargin(8);
   vgbL->setAutoAdd(true);
   vgbL->addSpacing(fontMetrics().lineSpacing()-4);
   v_alueCB[0]=new QCheckBox(i18n("L&arge"), vgb);
@@ -1232,7 +1244,9 @@ void KNode::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
 KNode::ScoringWidget::ScoringWidget( KInstance *inst, QWidget *parent ) :
   KCModule( inst, parent )
 {
-  QGridLayout *topL = new QGridLayout(this,4,2, 5,5);
+  QGridLayout *topL = new QGridLayout(this);
+  topL->setSpacing(5);
+  topL->setMargin(5);
   mKsc = new KScoringEditorWidget( knGlobals.scoringManager(), this );
   topL->addWidget( mKsc, 0, 0, 1, 2 );
 
@@ -1264,7 +1278,9 @@ KNode::FilterListWidget::FilterListWidget( KInstance *inst, QWidget *parent ) :
   KCModule( inst, parent ),
   f_ilManager( knGlobals.filterManager() )
 {
-  QGridLayout *topL=new QGridLayout(this, 6,2, 5,5);
+  QGridLayout *topL=new QGridLayout(this);
+  topL->setSpacing(5);
+  topL->setMargin(5);
 
   // == Filters =================================================
 
@@ -1687,7 +1703,8 @@ KNode::PostNewsComposerWidget::PostNewsComposerWidget( KInstance *inst, QWidget 
 KNode::PostNewsSpellingWidget::PostNewsSpellingWidget( KInstance *inst, QWidget *parent ) :
   KCModule( inst, parent )
 {
-  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+  QVBoxLayout *topL=new QVBoxLayout(this);
+  topL->setSpacing(5);
 
   c_onf = new KSpellConfig( this, 0, false );
   topL->addWidget(c_onf);
@@ -1713,7 +1730,8 @@ void KNode::PostNewsSpellingWidget::save()
 KNode::PrivacyWidget::PrivacyWidget( KInstance *inst,QWidget *parent ) :
   KCModule(inst, parent )
 {
-  QBoxLayout *topLayout = new QVBoxLayout(this, 5);
+  QBoxLayout *topLayout = new QVBoxLayout(this);
+  topLayout->setSpacing(5);
   c_onf = new Kpgp::Config( this, false );
   c_onf->setObjectName( "knode pgp config" );
   topLayout->addWidget(c_onf);
@@ -1755,7 +1773,9 @@ KNode::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent )
 
   mExpGroup = new QGroupBox( i18n("Newsgroup Cleanup Settings"), this );
   top->addWidget( mExpGroup );
-  QGridLayout *grid = new QGridLayout( mExpGroup, 7, 2, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *grid = new QGridLayout( mExpGroup );
+  grid->setSpacing( KDialog::spacingHint() );
+  grid->setMargin( KDialog::marginHint() );
 
   grid->setRowMinimumHeight( 0, KDialog::spacingHint() );
 
@@ -1853,7 +1873,8 @@ KNode::CleanupWidget::CleanupWidget( KInstance *inst,QWidget *parent ) :
   KCModule(inst, parent ),
   d_ata( knGlobals.configManager()->cleanup() )
 {
-  QVBoxLayout *topL=new QVBoxLayout(this, 5);
+  QVBoxLayout *topL=new QVBoxLayout(this);
+  topL->setSpacing(5);
 
   mGroupCleanup = new GroupCleanupWidget( d_ata, this );
   topL->addWidget( mGroupCleanup );
@@ -1863,7 +1884,9 @@ KNode::CleanupWidget::CleanupWidget( KInstance *inst,QWidget *parent ) :
 
   QGroupBox *foldersB = new QGroupBox( i18n("Folders"), this );
   topL->addWidget(foldersB);
-  QGridLayout *foldersL = new QGridLayout( foldersB, 3, 2, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *foldersL = new QGridLayout( foldersB );
+  foldersL->setSpacing( KDialog::spacingHint() );
+  foldersL->setMargin( KDialog::marginHint() );
 
   foldersL->setRowMinimumHeight( 0, KDialog::spacingHint() );
 

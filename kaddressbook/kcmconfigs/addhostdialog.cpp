@@ -41,7 +41,9 @@ AddHostDialog::AddHostDialog( KPIM::LdapServer *server, QWidget* parent,  const 
   mServer = server;
 
   QWidget *page = plainPage();
-  QHBoxLayout *layout = new QHBoxLayout( page, marginHint(), spacingHint() );
+  QHBoxLayout *layout = new QHBoxLayout( page );
+  layout->setSpacing( spacingHint() );
+  layout->setMargin( marginHint() );
 
   mCfg = new KABC::LdapConfigWidget(
        KABC::LdapConfigWidget::W_USER |

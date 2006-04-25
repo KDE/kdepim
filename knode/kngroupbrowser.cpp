@@ -95,10 +95,13 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
           this, SLOT(slotItemDoubleClicked(Q3ListViewItem*)));
 
   //layout
-  QGridLayout *topL=new QGridLayout(page,3,1,0,5);
+  QGridLayout *topL=new QGridLayout(page);
+  topL->setSpacing(5);
+  topL->setMargin(0);
   QHBoxLayout *filterL=new QHBoxLayout(10);
   QVBoxLayout *arrL=new QVBoxLayout(10);
-  listL=new QGridLayout(2, 3, 5);
+  listL=new QGridLayout();
+  listL->setSpacing(5);
 
   topL->addLayout(filterL, 0,0);
   topL->addWidget(sep,1,0);

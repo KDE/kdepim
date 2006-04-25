@@ -73,7 +73,9 @@ JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name
 {
   setMinimumSize( 1, 1 );
 
-  QVBoxLayout *layout = new QVBoxLayout( this, 0, 0 );
+  QVBoxLayout *layout = new QVBoxLayout( this );
+  layout->setSpacing( 0 );
+  layout->setMargin( 0 );
   layout->setAlignment( Qt::AlignTop );
   layout->setAutoAdd( true );
   layout->setResizeMode( QLayout::FreeResize );

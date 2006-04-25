@@ -122,7 +122,9 @@ void FilterEditDialog::initGUI()
   QWidget *page = plainPage();
   QLabel *label;
 
-  QGridLayout *topLayout = new QGridLayout( page, 3, 2, 0, spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( page );
+  topLayout->setSpacing( spacingHint() );
+  topLayout->setMargin( 0 );
 
   label = new QLabel( i18n( "Name:" ), page );
   mNameEdit = new KLineEdit( page );
@@ -263,7 +265,9 @@ void FilterDialog::initGUI()
 
   QWidget *page = plainPage();
 
-  QGridLayout *topLayout = new QGridLayout( page, 1, 2, 0, spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( page );
+  topLayout->setSpacing( spacingHint() );
+  topLayout->setMargin( 0 );
 
   mFilterListBox = new KListBox( page );
   topLayout->addWidget( mFilterListBox, 0, 0 );

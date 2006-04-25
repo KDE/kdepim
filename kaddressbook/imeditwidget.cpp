@@ -48,7 +48,9 @@
 IMEditWidget::IMEditWidget( QWidget *parent, KABC::Addressee &addr, const char *name )
   : QWidget( parent, name ), mAddressee(addr)
 {
-  QGridLayout *topLayout = new QGridLayout( this, 2, 2, KDialog::marginHint(), KDialog::spacingHint() );
+  QGridLayout *topLayout = new QGridLayout( this );
+  topLayout->setSpacing( KDialog::spacingHint() );
+  topLayout->setMargin( KDialog::marginHint() );
 
   QLabel *label = new QLabel( i18n( "IM address:" ), this );
   topLayout->addWidget( label, 0, 0 );

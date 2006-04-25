@@ -31,7 +31,9 @@ KNFilterConfigWidget::KNFilterConfigWidget( QWidget *parent ) :
 {
   QWidget *sf, *idW, *add;
   sf=new QWidget(this);
-  QVBoxLayout *sfL=new QVBoxLayout(sf, 8,5);
+  QVBoxLayout *sfL=new QVBoxLayout(sf);
+  sfL->setSpacing(5);
+  sfL->setMargin(8);
   subject = new StringFilterWidget( i18n("Subject"), sf );
   sfL->addWidget(subject);
   from = new StringFilterWidget( i18n("From"), sf );
@@ -42,7 +44,9 @@ KNFilterConfigWidget::KNFilterConfigWidget( QWidget *parent ) :
   addTab(sf, i18n("Subject && &From"));
 
   idW=new QWidget(this);
-  QVBoxLayout *idL=new QVBoxLayout(idW, 8,5);
+  QVBoxLayout *idL=new QVBoxLayout(idW);
+  idL->setSpacing(5);
+  idL->setMargin(8);
   messageId = new StringFilterWidget( i18n("Message-ID"), idW );
   idL->addWidget(messageId);
   references = new StringFilterWidget( i18n("References"), idW );
@@ -54,7 +58,9 @@ KNFilterConfigWidget::KNFilterConfigWidget( QWidget *parent ) :
   addTab(status, i18n("&Status"));
 
   add=new QWidget(this);
-  QVBoxLayout *addL=new QVBoxLayout(add, 8,5);
+  QVBoxLayout *addL=new QVBoxLayout(add);
+  addL->setSpacing(5);
+  addL->setMargin(8);
   score = new RangeFilterWidget( i18n("Score"), -99999, 99999, add );
   addL->addWidget(score);
   age = new RangeFilterWidget( i18n("Age"), 0, 999, add, i18n(" days") );

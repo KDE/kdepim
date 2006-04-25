@@ -33,7 +33,9 @@
 KNode::KCMTabContainer::KCMTabContainer( KInstance *inst, QWidget * parent )
   : KCModule( inst, parent )
 {
-  QVBoxLayout *vlay = new QVBoxLayout( this, 0, KDialog::spacingHint() );
+  QVBoxLayout *vlay = new QVBoxLayout( this );
+  vlay->setSpacing( KDialog::spacingHint() );
+  vlay->setMargin( 0 );
   mTabWidget = new QTabWidget( this );
   vlay->addWidget( mTabWidget );
 }

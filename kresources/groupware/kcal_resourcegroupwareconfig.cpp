@@ -42,7 +42,7 @@ ResourceGroupwareConfig::ResourceGroupwareConfig( QWidget* parent,  const char* 
     : KRES::ConfigWidget( parent, name )
 {
   resize( 245, 115 ); 
-  QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
+  QGridLayout *mainLayout = new QGridLayout( this );
 
   QLabel *label = new QLabel( i18n("URL:"), this );
   mainLayout->addWidget( label, 1, 0 );

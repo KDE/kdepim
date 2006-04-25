@@ -44,12 +44,15 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   // General tab ===============================================
 
   QWidget *page = addPage(i18n("&General"));
-  QVBoxLayout *pageL = new QVBoxLayout(page, 3);
+  QVBoxLayout *pageL = new QVBoxLayout(page);
+  pageL->setSpacing(3);
 
   // settings
   QGroupBox *gb = new QGroupBox(i18n("Settings"), page);
   pageL->addWidget(gb);
-  QGridLayout *grpL=new QGridLayout(gb, 3, 3, 15, 5);
+  QGridLayout *grpL=new QGridLayout(gb);
+  grpL->setSpacing(5);
+  grpL->setMargin(15);
 
   grpL->addItem( new QSpacerItem( 0, fontMetrics().lineSpacing()-9), 0, 0 );
 
@@ -78,7 +81,9 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   // group name & description
   gb = new QGroupBox(i18n("Description"), page);
   pageL->addWidget(gb);
-  grpL=new QGridLayout(gb, 4, 3, 15, 5);
+  grpL=new QGridLayout(gb);
+  grpL->setSpacing(5);
+  grpL->setMargin(15);
 
   grpL->addItem( new QSpacerItem( 0, fontMetrics().lineSpacing()-9), 0, 0 );
 
@@ -114,7 +119,9 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   // statistics
   gb = new QGroupBox(i18n("Statistics"), page);
   pageL->addWidget(gb);
-  grpL=new QGridLayout(gb, 6, 3, 15, 5);
+  grpL=new QGridLayout(gb);
+  grpL->setSpacing(5);
+  grpL->setMargin(15);
 
   grpL->addItem( new QSpacerItem( 0, fontMetrics().lineSpacing()-9), 0, 0 );
 
@@ -153,7 +160,8 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
 
   // per server cleanup configuration
   QFrame* cleanupPage = addPage( i18n("&Cleanup") );
-  QVBoxLayout *cleanupLayout = new QVBoxLayout( cleanupPage, KDialog::spacingHint() );
+  QVBoxLayout *cleanupLayout = new QVBoxLayout( cleanupPage );
+  cleanupLayout->setSpacing( KDialog::spacingHint() );
   mCleanupWidget = new KNode::GroupCleanupWidget( g_rp->cleanupConfig(), cleanupPage );
   mCleanupWidget->load();
   cleanupLayout->addWidget( mCleanupWidget );

@@ -51,7 +51,7 @@ ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,
   setObjectName(name);
   resize( 245, 115 );
 
-  QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
+  QGridLayout *mainLayout = new QGridLayout( this );
   mainLayout->setSpacing( KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n("URL:"), this );

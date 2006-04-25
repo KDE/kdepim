@@ -127,14 +127,17 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
 {
   setButtonCancel( KStdGuiItem::close() );
   QFrame *page = plainPage();
-  QVBoxLayout *topLayout = new QVBoxLayout( page, marginHint(), spacingHint() );
+  QVBoxLayout *topLayout = new QVBoxLayout( page );
+  topLayout->setSpacing( spacingHint() );
+  topLayout->setMargin( marginHint() );
 
   Q3GroupBox *groupBox = new Q3GroupBox( i18n( "Search for Addresses in Directory" ),
                                        page );
   groupBox->setFrameShape( Q3GroupBox::Box );
   groupBox->setFrameShadow( Q3GroupBox::Sunken );
   groupBox->setColumnLayout( 0, Qt::Vertical );
-  QGridLayout *boxLayout = new QGridLayout( groupBox->layout(), 2, 5, spacingHint() );
+  QGridLayout *boxLayout = new QGridLayout( groupBox->layout() );
+  boxLayout->setSpacing( spacingHint() );
   boxLayout->setColumnStretch( 1, 1 );
 
   QLabel *label = new QLabel( i18n( "Search for:" ), groupBox );

@@ -75,7 +75,9 @@ PassphraseDialog::PassphraseDialog( QWidget *parent,
   label->setPixmap( BarIcon("pgp-keys") );
 
   QWidget *rightArea = new QWidget( hbox );
-  QVBoxLayout *vlay = new QVBoxLayout( rightArea, 0, spacingHint() );
+  QVBoxLayout *vlay = new QVBoxLayout( rightArea );
+  vlay->setSpacing( spacingHint() );
+  vlay->setMargin( 0 );
 
   if (keyID.isNull())
     label = new QLabel(i18n("Please enter your OpenPGP passphrase:"),rightArea);
@@ -116,7 +118,9 @@ Config::Config( QWidget *parent, bool encrypt )
   QString     msg;
 
 
-  QVBoxLayout *topLayout = new QVBoxLayout( this, 0, KDialog::spacingHint() );
+  QVBoxLayout *topLayout = new QVBoxLayout( this );
+  topLayout->setSpacing( KDialog::spacingHint() );
+  topLayout->setMargin( 0 );
 
   group = new QGroupBox( i18n("Warning"), this );
   QVBoxLayout *lay = new QVBoxLayout(group);
@@ -327,7 +331,9 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   mKeyValidPix   = new QPixmap( UserIcon("key") );
 
   QFrame *page = makeMainWidget();
-  QVBoxLayout *topLayout = new QVBoxLayout( page, 0, spacingHint() );
+  QVBoxLayout *topLayout = new QVBoxLayout( page );
+  topLayout->setSpacing( spacingHint() );
+  topLayout->setMargin( 0 );
 
   if( !text.isEmpty() ) {
     QLabel *label = new QLabel( page );
@@ -1180,7 +1186,9 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
     mAllowedKeys( allowedKeys ),
     d( 0 )
 {
-  QHBoxLayout * hlay = new QHBoxLayout( this, 0, KDialog::spacingHint() );
+  QHBoxLayout * hlay = new QHBoxLayout( this );
+  hlay->setSpacing( KDialog::spacingHint() );
+  hlay->setMargin( 0 );
 
   // the label where the key id is to be displayed:
   mLabel = new QLabel( this );
@@ -1341,7 +1349,9 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   //   do something;
 
   QFrame *page = makeMainWidget();
-  QVBoxLayout *topLayout = new QVBoxLayout( page, 0, KDialog::spacingHint() );
+  QVBoxLayout *topLayout = new QVBoxLayout( page );
+  topLayout->setSpacing( KDialog::spacingHint() );
+  topLayout->setMargin( 0 );
 
   QLabel *label = new QLabel( i18n("The following keys will be used for "
                                    "encryption:"),
@@ -1632,7 +1642,9 @@ CipherTextDialog::CipherTextDialog( const QByteArray & text,
 {
   // FIXME (post KDE2.2): show some more info, e.g. the output of GnuPG/PGP
   QFrame *page = makeMainWidget();
-  QVBoxLayout *topLayout = new QVBoxLayout( page, 0, spacingHint() );
+  QVBoxLayout *topLayout = new QVBoxLayout( page );
+  topLayout->setSpacing( spacingHint() );
+  topLayout->setMargin( 0 );
 
   QLabel *label = new QLabel( page );
   label->setText(i18n("Result of the last encryption/sign operation:"));

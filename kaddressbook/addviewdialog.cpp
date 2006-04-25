@@ -46,7 +46,7 @@ AddViewDialog::AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict,
 
   QWidget *page = plainPage();
 
-  QGridLayout *layout = new QGridLayout( page, 2, 2 );
+  QGridLayout *layout = new QGridLayout( page );
   layout->setSpacing( spacingHint() );
   layout->setRowStretch( 1, 1 );
   layout->setColumnStretch( 1, 1 );
@@ -62,7 +62,7 @@ AddViewDialog::AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict,
   mTypeGroup = new Q3ButtonGroup( 0, Qt::Horizontal, i18n( "View Type" ), page );
   connect( mTypeGroup, SIGNAL( clicked( int ) ), this, SLOT( clicked( int ) ) );
   layout->addWidget( mTypeGroup, 1, 0, 1, 2 );
-  QGridLayout *groupLayout = new QGridLayout( mTypeGroup->layout(), 3, 2 );
+  QGridLayout *groupLayout = new QGridLayout( mTypeGroup->layout() );
   groupLayout->setSpacing( spacingHint() );
 
   int row = 0;

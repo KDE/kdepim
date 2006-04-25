@@ -54,12 +54,15 @@ KNConvert::KNConvert(const QString &version)
   : QDialog(0,0,true), l_ogList(0), c_onversionDone(false), v_ersion(version)
 {
   setCaption(kapp->makeStdCaption(i18n("Conversion")));
-  QVBoxLayout *topL=new QVBoxLayout(this, 5,5);
+  QVBoxLayout *topL=new QVBoxLayout(this);
+  topL->setSpacing(5);
+  topL->setMargin(5);
   s_tack=new QStackedWidget(this);
   topL->addWidget(s_tack, 1);
   topL->addWidget(new KSeparator(this));
 
-  QHBoxLayout *btnL=new QHBoxLayout(topL, 5);
+  QHBoxLayout *btnL=new QHBoxLayout(topL);
+  btnL->setSpacing(5);
   s_tartBtn=new QPushButton(i18n("Start Conversion..."), this);
   s_tartBtn->setDefault(true);
   btnL->addStretch(1);
@@ -72,7 +75,9 @@ KNConvert::KNConvert(const QString &version)
 
   w_1=new QWidget(s_tack);
   s_tack->insertWidget(1,w_1);
-  QGridLayout *w1L=new QGridLayout(w_1, 5,3, 5,5);
+  QGridLayout *w1L=new QGridLayout(w_1);
+  w1L->setSpacing(5);
+  w1L->setMargin(5);
 
   QLabel *l1=new QLabel(i18n(
 "<b>Congratulations, you have upgraded to KNode version %1.</b><br>\
@@ -107,7 +112,9 @@ will be created before the conversion starts.", QString(KNODE_VERSION)), w_1);
 
   w_3=new QWidget(s_tack);
   s_tack->insertWidget(3,w_3);
-  QVBoxLayout *w3L=new QVBoxLayout(w_3, 5,5);
+  QVBoxLayout *w3L=new QVBoxLayout(w_3);
+  w3L->setSpacing(5);
+  w3L->setMargin(5);
 
   r_esultLabel=new QLabel(w_3);
   w3L->addWidget(r_esultLabel);

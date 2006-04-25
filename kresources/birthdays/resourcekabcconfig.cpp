@@ -42,7 +42,9 @@ using namespace KCal;
 ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
     : KRES::ConfigWidget( parent )
 {
-  QGridLayout *topLayout = new QGridLayout( this, 5, 1, 11, 6 );
+  QGridLayout *topLayout = new QGridLayout( this );
+  topLayout->setSpacing( 6 );
+  topLayout->setMargin( 11 );
 
   mAlarm = new QCheckBox(i18n("Set reminder"), this);
   topLayout->addWidget(mAlarm, 0, 0);

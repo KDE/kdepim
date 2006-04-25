@@ -47,7 +47,9 @@ KCalResourceSloxConfig::KCalResourceSloxConfig( QWidget* parent,  const char* na
 {
   setObjectName(name);
   resize( 245, 115 );
-  QGridLayout *mainLayout = new QGridLayout( this, 6, 2, KDialog::spacingHint(), KDialog::spacingHint() );
+  QGridLayout *mainLayout = new QGridLayout( this );
+  mainLayout->setSpacing( KDialog::spacingHint() );
+  mainLayout->setMargin( KDialog::spacingHint() );
 
   QLabel *label = new QLabel( i18n( "Download from:" ), this );
 

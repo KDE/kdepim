@@ -56,7 +56,9 @@
 CRLView::CRLView( QWidget* parent, const char* name, bool modal )
   : QDialog( parent, name, modal ), _process(0)
 {
-  QVBoxLayout* topLayout = new QVBoxLayout( this, 10, 4 );
+  QVBoxLayout* topLayout = new QVBoxLayout( this );
+  topLayout->setSpacing( 4 );
+  topLayout->setMargin( 10 );
 
   topLayout->addWidget( new QLabel( i18n("CRL cache dump:"), this ) );
 

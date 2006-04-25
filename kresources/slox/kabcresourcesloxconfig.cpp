@@ -45,7 +45,9 @@ ResourceSloxConfig::ResourceSloxConfig( QWidget* parent,  const char* name )
   : KRES::ConfigWidget( parent ), mRes( 0 )
 {
   setObjectName(name);
-  QGridLayout *mainLayout = new QGridLayout( this, 5, 2, 0, KDialog::spacingHint() );
+  QGridLayout *mainLayout = new QGridLayout( this );
+  mainLayout->setSpacing( KDialog::spacingHint() );
+  mainLayout->setMargin( 0 );
 
   QLabel *label = new QLabel( i18n( "URL:" ), this );
   mURL = new KUrlRequester( this );

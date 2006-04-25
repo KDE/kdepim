@@ -133,7 +133,9 @@ void PhoneTypeCombo::otherSelected()
 PhoneNumberWidget::PhoneNumberWidget( QWidget *parent )
   : QWidget( parent )
 {
-  QHBoxLayout *layout = new QHBoxLayout( this, 6, 11 );
+  QHBoxLayout *layout = new QHBoxLayout( this );
+  layout->setSpacing( 11 );
+  layout->setMargin( 6 );
 
   mTypeCombo = new PhoneTypeCombo( this );
   mNumberEdit = new KLineEdit( this );
@@ -173,7 +175,7 @@ void PhoneNumberWidget::setReadOnly( bool readOnly )
 PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
   : QWidget( parent, name ), mReadOnly( false )
 {
-  QGridLayout *layout = new QGridLayout( this, 2, 2 );
+  QGridLayout *layout = new QGridLayout( this );
   layout->setSpacing( KDialog::spacingHint() );
 
   mWidgetLayout = new QVBoxLayout( layout );
@@ -303,7 +305,8 @@ PhoneTypeDialog::PhoneTypeDialog( int type, QWidget *parent )
 {
   QWidget *page = plainPage();
 
-  QVBoxLayout *layout = new QVBoxLayout( page, spacingHint() );
+  QVBoxLayout *layout = new QVBoxLayout( page );
+  layout->setSpacing( spacingHint() );
 
   mPreferredBox = new QCheckBox( i18n( "This is the preferred phone number" ), page );
   layout->addWidget( mPreferredBox );

@@ -110,7 +110,9 @@ Kleo::KeyRequester::KeyRequester( QWidget * parent, const char * name )
 
 void Kleo::KeyRequester::init()
 {
-  QHBoxLayout * hlay = new QHBoxLayout( this, 0, KDialog::spacingHint() );
+  QHBoxLayout * hlay = new QHBoxLayout( this );
+  hlay->setSpacing( KDialog::spacingHint() );
+  hlay->setMargin( 0 );
 
   // the label where the key id is to be displayed:
   mLabel = new QLabel( this );
