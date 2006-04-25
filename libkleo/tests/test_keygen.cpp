@@ -55,8 +55,7 @@
 #include <qlayout.h>
 #include <qlineedit.h>
 #include <qlabel.h>
-//Added by qt3to4:
-#include <Q3GridLayout>
+#include <QGridLayout>
 
 #include <assert.h>
 
@@ -78,7 +77,9 @@ KeyGenerator::KeyGenerator( QWidget * parent, const char * name )
   QWidget * w = new QWidget( this );
   setMainWidget( w );
 
-  Q3GridLayout * glay = new Q3GridLayout( w, numKeyParams+3, 2, marginHint(), spacingHint() );
+  QGridLayout *glay = new QGridLayout( w );
+  glay->setMargin( marginHint() );
+  glay->setSpacing( spacingHint() );
 
   int row = -1;
 
