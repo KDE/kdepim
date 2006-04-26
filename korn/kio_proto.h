@@ -280,7 +280,7 @@ public:
 	 *
 	 * @return true if a commit command is neccesiary, false otherwise.
 	 */
-	virtual bool commitDelete() const { return false; }
+	virtual bool commitDelete() { return false; }
 	/**
 	 * This function can manipulate a KUrl which is used for committing after a deleting operation.
 	 * 
