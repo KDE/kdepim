@@ -124,7 +124,7 @@ public:
 	 * @param kurl the kurl to be changed
 	 * @param metadata the metadata to be changed
 	 */
-	virtual void readSubjectKUrl( KUrl &kurl, KIO::MetaData & ) const { kurl.setPath( kurl.path() + ";section=ENVELOPE" ); }
+	virtual void readSubjectKUrl( KUrl &kurl, KIO::MetaData & ) { kurl.setPath( kurl.path() + ";section=ENVELOPE" ); }
 	/**
 	 * This function change the kurl and the metadata.
 	 * In this case, expunge=auto is added to the metadata.

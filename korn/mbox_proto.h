@@ -121,7 +121,7 @@ public:
 	 * @param url the url (not touched in this class)
 	 * @param metadata the metadata (not touched in this class)
 	 */
-	virtual void readSubjectKUrl( KUrl &, KIO::MetaData & ) const { }
+	virtual void readSubjectKUrl( KUrl &, KIO::MetaData & ) { }
 	/**
 	 * This function can alter the url and metadata before the job is started.
 	 * This function does nothing for this class.
@@ -129,7 +129,7 @@ public:
 	 * @param url the url (not touched in this class)
 	 * @param metadata the metadata (not touched in this class)
 	 */
-	virtual void deleteMailKUrl( KUrl &, KIO::MetaData & ) const { }
+	virtual void deleteMailKUrl( KUrl &, KIO::MetaData & ) { }
 	/**
 	 * This function can alter the url and metadata before the job is started.
 	 * This function does nothing for this class.
