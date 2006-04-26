@@ -581,8 +581,10 @@ rfcDecoder::encodeRFC2231String (const QString & _str)
       break;
     l++;
   }
-  if (!*l)
-    return _str.ascii ();
+  if (!*l) {
+    free(latin);
+    return _str;
+  }
   Q3CString result;
   l = latin;
   while (*l)
