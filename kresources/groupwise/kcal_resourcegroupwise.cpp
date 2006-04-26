@@ -158,8 +158,8 @@ bool ResourceGroupwise::doLoad()
   mJobData.clear();
 
   mDownloadJob = KIO::get( url, false, false );
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotJobResult( KIO::Job * ) ) );
+  connect( mDownloadJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotJobResult( KJob * ) ) );
   connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
 
@@ -172,7 +172,7 @@ bool ResourceGroupwise::doLoad()
   return true;
 }
 
-void ResourceGroupwise::slotJobResult( KIO::Job *job )
+void ResourceGroupwise::slotJobResult( KJob *job )
 {
   kDebug() << "ResourceGroupwise::slotJobResult(): " << endl;
 

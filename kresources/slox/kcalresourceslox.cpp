@@ -223,10 +223,10 @@ void KCalResourceSlox::requestEvents()
   kDebug() << "REQUEST CALENDAR: \n" << doc.toString( 2 ) << endl;
 
   mLoadEventsJob = KIO::davPropFind( url, doc, "0", false );
-  connect( mLoadEventsJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotLoadEventsResult( KIO::Job * ) ) );
-  connect( mLoadEventsJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
-           SLOT( slotEventsProgress( KIO::Job *, unsigned long ) ) );
+  connect( mLoadEventsJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotLoadEventsResult( KJob * ) ) );
+  connect( mLoadEventsJob, SIGNAL( percent( KJob *, unsigned long ) ),
+           SLOT( slotEventsProgress( KJob *, unsigned long ) ) );
 
   mLoadEventsProgress = KPIM::ProgressManager::instance()->createProgressItem(
       KPIM::ProgressManager::getUniqueID(), i18n("Downloading events") );
@@ -268,10 +268,10 @@ void KCalResourceSlox::requestTodos()
   kDebug() << "REQUEST TASKS: \n" << doc.toString( 2 ) << endl;
 
   mLoadTodosJob = KIO::davPropFind( url, doc, "0", false );
-  connect( mLoadTodosJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotLoadTodosResult( KIO::Job * ) ) );
-  connect( mLoadTodosJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
-           SLOT( slotTodosProgress( KIO::Job *, unsigned long ) ) );
+  connect( mLoadTodosJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotLoadTodosResult( KJob * ) ) );
+  connect( mLoadTodosJob, SIGNAL( percent( KJob *, unsigned long ) ),
+           SLOT( slotTodosProgress( KJob *, unsigned long ) ) );
 
   mLoadTodosProgress = KPIM::ProgressManager::instance()->createProgressItem(
       KPIM::ProgressManager::getUniqueID(), i18n("Downloading to-dos") );
@@ -377,10 +377,10 @@ void KCalResourceSlox::uploadIncidences()
   kDebug() << "UPLOAD: \n" << doc.toString( 2 ) << endl;
 
   mUploadJob = KIO::davPropPatch( url, doc, false );
-  connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotUploadResult( KIO::Job * ) ) );
-  connect( mUploadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
-           SLOT( slotUploadProgress( KIO::Job *, unsigned long ) ) );
+  connect( mUploadJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotUploadResult( KJob * ) ) );
+  connect( mUploadJob, SIGNAL( percent( KJob *, unsigned long ) ),
+           SLOT( slotUploadProgress( KJob *, unsigned long ) ) );
 
   mUploadProgress = KPIM::ProgressManager::instance()->createProgressItem(
       KPIM::ProgressManager::getUniqueID(), i18n("Uploading incidence") );
@@ -907,7 +907,7 @@ void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
   }
 }
 
-void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
+void KCalResourceSlox::slotLoadTodosResult( KJob *job )
 {
   kDebug() << "KCalResourceSlox::slotLoadTodosJobResult()" << endl;
 
@@ -981,7 +981,7 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
   mLoadTodosProgress = 0;
 }
 
-void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
+void KCalResourceSlox::slotLoadEventsResult( KJob *job )
 {
   kDebug() << "KCalResourceSlox::slotLoadEventsResult() " << long( this ) << endl;
 
@@ -1071,7 +1071,7 @@ void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
   mLoadEventsProgress = 0;
 }
 
-void KCalResourceSlox::slotUploadResult( KIO::Job *job )
+void KCalResourceSlox::slotUploadResult( KJob *job )
 {
   kDebug() << "KCalResourceSlox::slotUploadResult()" << endl;
 
@@ -1180,7 +1180,7 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
   uploadIncidences();
 }
 
-void KCalResourceSlox::slotEventsProgress( KIO::Job *job,
+void KCalResourceSlox::slotEventsProgress( KJob *job,
                                            unsigned long percent )
 {
 #if 0
@@ -1192,7 +1192,7 @@ void KCalResourceSlox::slotEventsProgress( KIO::Job *job,
   if ( mLoadEventsProgress ) mLoadEventsProgress->setProgress( percent );
 }
 
-void KCalResourceSlox::slotTodosProgress( KIO::Job *job, unsigned long percent )
+void KCalResourceSlox::slotTodosProgress( KJob *job, unsigned long percent )
 {
 #if 0
   kDebug() << "PROGRESS: todos " << int( job ) << ": " << percent << endl;
@@ -1203,7 +1203,7 @@ void KCalResourceSlox::slotTodosProgress( KIO::Job *job, unsigned long percent )
   if ( mLoadTodosProgress ) mLoadTodosProgress->setProgress( percent );
 }
 
-void KCalResourceSlox::slotUploadProgress( KIO::Job *job, unsigned long percent )
+void KCalResourceSlox::slotUploadProgress( KJob *job, unsigned long percent )
 {
 #if 0
   kDebug() << "PROGRESS: upload " << int( job ) << ": " << percent << endl;

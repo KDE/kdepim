@@ -179,8 +179,8 @@ bool ResourceTVAnytime::doLoad()
 
   // TODO: find out if the file to download is fresh.  if not, just work with the cache.
   mDownloadJob = KIO::file_copy( url, destination, -1, true );
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotJobResult( KIO::Job * ) ) );
+  connect( mDownloadJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotJobResult( KJob * ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Downloading programme schedule") );
@@ -192,7 +192,7 @@ bool ResourceTVAnytime::doLoad()
   return true;
 }
 
-void ResourceTVAnytime::slotJobResult( KIO::Job *job )
+void ResourceTVAnytime::slotJobResult( KJob *job )
 {
   kDebug() << "ResourceTVAnytime::slotJobResult(): " << endl;
 

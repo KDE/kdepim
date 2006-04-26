@@ -24,6 +24,7 @@
 #include <kdepimmacros.h>
 #include <qobject.h>
 
+class KJob;
 namespace KIO {
 class Job;
 }
@@ -50,7 +51,7 @@ class KDE_EXPORT SloxAccounts : public QObject
     QString cacheFile() const;
 
   protected slots:
-    void slotResult( KIO::Job * );
+    void slotResult( KJob * );
 
   private:
     QString mDomain;

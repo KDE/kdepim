@@ -100,7 +100,7 @@ class KDE_EXPORT ResourceTVAnytime : public ResourceCached
     bool readProgrammeInformation( const QDomDocument & );
 
   protected slots:
-    void slotJobResult( KIO::Job * );
+    void slotJobResult( KJob * );
     void cancelLoad();
     void slotEmitResourceChanged();
 

@@ -141,16 +141,16 @@ void SloxAccounts::requestAccounts()
     mDownloadJob = KIO::davPropFind( url, doc, "0", false );
   }
 
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotResult( KIO::Job * ) ) );
+  connect( mDownloadJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotResult( KJob * ) ) );
 }
 
-void SloxAccounts::slotResult( KIO::Job *job )
+void SloxAccounts::slotResult( KJob *job )
 {
   kDebug() << "SloxAccounts::slotResult()" << endl;
 
   if ( job->error() ) {
-    job->showErrorDialog( 0 );
+    static_cast<KIO::Job*>(job)->showErrorDialog( 0 );
   } else {
     if ( mRes->resType() == "ox" ) {
       QFile f( cacheFile() );

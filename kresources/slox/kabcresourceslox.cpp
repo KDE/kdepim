@@ -205,10 +205,10 @@ bool ResourceSlox::asyncLoad()
   kDebug() << "REQUEST CONTACTS: \n" << doc.toString( 2 ) << endl;
 
   mDownloadJob = KIO::davPropFind( url, doc, "0", false );
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotResult( KIO::Job * ) ) );
-  connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
-           SLOT( slotProgress( KIO::Job *, unsigned long ) ) );
+  connect( mDownloadJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotResult( KJob * ) ) );
+  connect( mDownloadJob, SIGNAL( percent( KJob *, unsigned long ) ),
+           SLOT( slotProgress( KJob *, unsigned long ) ) );
 
   mDownloadProgress = KPIM::ProgressManager::instance()->createProgressItem(
       KPIM::ProgressManager::getUniqueID(), i18n("Downloading contacts") );
@@ -221,12 +221,12 @@ bool ResourceSlox::asyncLoad()
   return true;
 }
 
-void ResourceSlox::slotResult( KIO::Job *job )
+void ResourceSlox::slotResult( KJob *job )
 {
   kDebug() << "ResourceSlox::slotResult()" << endl;
 
   if ( job->error() ) {
-    job->showErrorDialog( 0 );
+    static_cast<KIO::Job*>(job)->showErrorDialog( 0 );
   } else {
     kDebug() << "ResourceSlox::slotResult() success" << endl;
 
@@ -286,12 +286,12 @@ void ResourceSlox::slotResult( KIO::Job *job )
   emit loadingFinished( this );
 }
 
-void ResourceSlox::slotUploadResult( KIO::Job *job )
+void ResourceSlox::slotUploadResult( KJob *job )
 {
   kDebug() << "ResourceSlox::slotUploadResult()" << endl;
 
   if ( job->error() ) {
-    job->showErrorDialog( 0 );
+    static_cast<KIO::Job*>(job)->showErrorDialog( 0 );
   } else {
     kDebug() << "ResourceSlox::slotUploadResult() success" << endl;
 
@@ -514,10 +514,10 @@ void ResourceSlox::uploadContacts()
   url.setPass( mPrefs->password() );
 
   mUploadJob = KIO::davPropPatch( url, doc, false );
-  connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotUploadResult( KIO::Job * ) ) );
-  connect( mUploadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
-           SLOT( slotProgress( KIO::Job *, unsigned long ) ) );
+  connect( mUploadJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotUploadResult( KJob * ) ) );
+  connect( mUploadJob, SIGNAL( percent( KJob *, unsigned long ) ),
+           SLOT( slotProgress( KJob *, unsigned long ) ) );
 
   mUploadProgress = KPIM::ProgressManager::instance()->createProgressItem(
       KPIM::ProgressManager::getUniqueID(), i18n("Uploading contacts") );
@@ -630,7 +630,7 @@ void KABC::ResourceSlox::createAddressFields( QDomDocument &doc, QDomElement &pa
   WebdavHandler::addSloxElement( this, doc, parent, prefix + fieldName( Country ), addr.country() );
 }
 
-void ResourceSlox::slotProgress( KIO::Job *job, unsigned long percent )
+void ResourceSlox::slotProgress( KJob *job, unsigned long percent )
 {
   if ( mDownloadProgress && job == mDownloadJob )
     mDownloadProgress->setProgress( percent );

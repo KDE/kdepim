@@ -45,6 +45,7 @@ class Job;
 class DavJob;
 }
 
+class KJob;
 namespace KCal {
 class SloxPrefs;
 }
@@ -91,13 +92,13 @@ class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached, public SloxBase
     void dump() const;
 
   protected slots:
-    void slotLoadEventsResult( KIO::Job * );
-    void slotLoadTodosResult( KIO::Job * );
-    void slotUploadResult( KIO::Job * );
+    void slotLoadEventsResult( KJob * );
+    void slotLoadTodosResult( KJob * );
+    void slotUploadResult( KJob * );
 
-    void slotEventsProgress( KIO::Job *job, unsigned long percent );
-    void slotTodosProgress( KIO::Job *job, unsigned long percent );
-    void slotUploadProgress( KIO::Job *job, unsigned long percent );
+    void slotEventsProgress( KJob *job, unsigned long percent );
+    void slotTodosProgress( KJob *job, unsigned long percent );
+    void slotUploadProgress( KJob *job, unsigned long percent );
 
     void cancelLoadEvents();
     void cancelLoadTodos();

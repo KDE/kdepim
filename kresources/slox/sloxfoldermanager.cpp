@@ -81,16 +81,16 @@ void SloxFolderManager::requestFolders()
 
   mDownloadJob = KIO::davPropFind( url, doc, "0", false );
 
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotResult( KIO::Job * ) ) );
+  connect( mDownloadJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotResult( KJob * ) ) );
 }
 
-void SloxFolderManager::slotResult( KIO::Job *job )
+void SloxFolderManager::slotResult( KJob *job )
 {
   kDebug() << k_funcinfo << endl;
 
   if ( job->error() ) {
-    job->showErrorDialog( 0 );
+    static_cast<KIO::Job*>(job)->showErrorDialog( 0 );
   } else {
     kDebug() << k_funcinfo << " success, writing to " << cacheFile() << endl;
     QFile f( cacheFile() );

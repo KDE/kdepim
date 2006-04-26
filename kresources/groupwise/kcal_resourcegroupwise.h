@@ -72,7 +72,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     bool confirmSave();
 
   protected slots:
-    void slotJobResult( KIO::Job * );
+    void slotJobResult( KJob * );
     void slotJobData( KIO::Job *, const QByteArray & );
 
     void cancelLoad();

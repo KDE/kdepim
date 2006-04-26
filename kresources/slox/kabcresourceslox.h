@@ -29,7 +29,7 @@
 
 #include <qmap.h>
 #include <qdom.h>
-
+class KJob;
 namespace KIO {
 class DavJob;
 class Job;
@@ -86,9 +86,9 @@ class KDE_EXPORT ResourceSlox : public ResourceCached, public SloxBase
     void uploadContacts();
 
   protected slots:
-    void slotResult( KIO::Job *job );
-    void slotUploadResult( KIO::Job *job );
-    void slotProgress( KIO::Job *job, unsigned long percent );
+    void slotResult( KJob *job );
+    void slotUploadResult( KJob *job );
+    void slotProgress( KJob *job, unsigned long percent );
 
     void cancelDownload();
     void cancelUpload();

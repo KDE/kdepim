@@ -84,11 +84,11 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     void initGroupwise();
 
   private slots:
-    void slotFetchJobResult( KIO::Job * );
-    void slotUpdateJobResult( KIO::Job * );
+    void slotFetchJobResult( KJob * );
+    void slotUpdateJobResult( KJob * );
     void slotReadJobData( KIO::Job *, const QByteArray & );
     void slotUpdateJobData( KIO::Job *, const QByteArray & );
-    void slotJobPercent( KIO::Job *job, unsigned long percent );
+    void slotJobPercent( KJob *job, unsigned long percent );
 
     void cancelLoad();
 

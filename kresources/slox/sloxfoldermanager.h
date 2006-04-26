@@ -31,7 +31,7 @@ namespace KIO {
 class Job;
 class DavJob;
 }
-
+class KJob;
 class SloxBase;
 class SloxFolder;
 
@@ -54,7 +54,7 @@ class KDE_EXPORT SloxFolderManager : public QObject
     QString cacheFile() const;
 
   protected slots:
-    void slotResult( KIO::Job * );
+    void slotResult( KJob * );
 
   private:
     KIO::DavJob *mDownloadJob;
