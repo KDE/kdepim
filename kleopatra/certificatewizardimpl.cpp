@@ -486,8 +486,8 @@ void CertificateWizardImpl::accept()
 
     KIO::Job* uploadJob = KIO::storedPut( _keyData, url, -1, overwrite, false /*resume*/ );
     uploadJob->setWindow( this );
-    connect( uploadJob, SIGNAL( result( KIO::Job* ) ),
-             this, SLOT( slotUploadResult( KIO::Job* ) ) );
+    connect( uploadJob, SIGNAL( result( KJob* ) ),
+             this, SLOT( slotUploadResult( KJob* ) ) );
     // Can't press finish again during the upload
     setFinishEnabled( finishPage, false );
   }
@@ -497,10 +497,10 @@ void CertificateWizardImpl::accept()
    This slot is invoked by the KIO job used in newCertificate
    to save/upload the certificate, when finished (success or error).
 */
-void CertificateWizardImpl::slotUploadResult( KIO::Job* job )
+void CertificateWizardImpl::slotUploadResult( KJob* job )
 {
   if ( job->error() ) {
-    job->showErrorDialog();
+    static_cast<KIO::Job*>(job)->showErrorDialog();
     setFinishEnabled( finishPage, true );
   } else {
     // All good, close dialog

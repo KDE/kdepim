@@ -46,6 +46,7 @@ namespace KIO {
   class Job;
 }
 
+class KJob;
 class CertificateWizardImpl : public CertificateWizard
 {
     Q_OBJECT
@@ -74,7 +75,7 @@ private slots:
 
     void slotHelpClicked();
 
-    void slotUploadResult( KIO::Job* );
+    void slotUploadResult( KJob* );
 
 private:
     void createPersonalDataPage();
