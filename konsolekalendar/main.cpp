@@ -670,6 +670,7 @@ int main( int argc, char *argv[] )
       exists = QFile::exists( variables.getCalendarFile() );
       remote = false;
     } else {
+      exists = true; // really have no idea if the remote file exists
       remote = true;
     }
 
@@ -684,13 +685,13 @@ int main( int argc, char *argv[] )
         //cout << i18n( "Attempting to create a remote file %1" ).
         // arg( variables.getCalendarFile() ).local8Bit() << endl;
         return 1;
-      }
-
-      if ( exists ) {
-        cout << i18n( "Calendar %1 already exists" ).
-          arg( variables.getCalendarFile() ).local8Bit()
-             << endl;
-        return 1;
+      } else {
+        if ( exists ) {
+          cout << i18n( "Calendar %1 already exists" ).
+            arg( variables.getCalendarFile() ).local8Bit()
+               << endl;
+          return 1;
+        }
       }
 
       if ( konsolekalendar->createCalendar() ) {
