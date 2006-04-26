@@ -42,8 +42,6 @@ ReadMBox::ReadMBox( const UrlInfo* info, MBoxProtocol* parent, bool onlynew, boo
 	: MBoxFile( info, parent ),
 	m_file( 0 ),
 	m_stream( 0 ),
-	m_current_line( new QString( QString() ) ),
-	m_current_id( new QString( QString() ) ),
 	m_atend( true ),
 	m_prev_time( 0 ),
 	m_only_new( onlynew ),
@@ -66,18 +64,17 @@ ReadMBox::ReadMBox( const UrlInfo* info, MBoxProtocol* parent, bool onlynew, boo
 
 ReadMBox::~ReadMBox()
 {
-	delete m_current_line;
 	close();
 }
 
 QString ReadMBox::currentLine() const
 {
-	return *m_current_line;
+	return m_current_line;
 }
 
 QString ReadMBox::currentID() const
 {
-	return *m_current_id;
+	return m_current_id;
 }
 
 bool ReadMBox::nextLine()
@@ -85,33 +82,33 @@ bool ReadMBox::nextLine()
 	if( !m_stream )
 		return true;
 		
-	*m_current_line = m_stream->readLine();
-	m_atend = m_current_line->isNull();
+	m_current_line = m_stream->readLine();
+	m_atend = m_current_line.isNull();
 	if( m_atend ) // Cursor was at EOF
 	{
-		*m_current_id = QString();
+		m_current_id = QString();
 		m_prev_status = m_status;
 		return true;
 	}
 
 	//New message
-	if( m_current_line->left( 5 ) == "From " )
+	if( m_current_line.left( 5 ) == "From " )
 	{
-		*m_current_id = *m_current_line;
+		m_current_id = m_current_line;
 		m_prev_status = m_status;
 		m_status = true;
 		m_header = true;
 		return true;
 	} else if( m_only_new )
 	{
-		if( m_header && m_current_line->left( 7 ) == "Status:" &&
-		    ! m_current_line->contains( "U" ) && ! m_current_line->contains( "N" ) )
+		if( m_header && m_current_line.left( 7 ) == "Status:" &&
+		    ! m_current_line.contains( "U" ) && ! m_current_line.contains( "N" ) )
 		{
 			m_status = false;
 		}
 	}
 
-	if( m_current_line->trimmed().isEmpty() )
+	if( m_current_line.trimmed().isEmpty() )
 		m_header = false;
 
 	return false;
@@ -122,21 +119,21 @@ bool ReadMBox::searchMessage( const QString& id )
 	if( !m_stream )
 		return false;
 		
-	while( !m_atend && *m_current_id != id )
+	while( !m_atend && m_current_id != id )
 		nextLine();
 
-	return *m_current_id == id;
+	return m_current_id == id;
 }
 
 unsigned int ReadMBox::skipMessage()
 {
-	unsigned int result = m_current_line->length();
+	unsigned int result = m_current_line.length();
 
 	if( !m_stream )
 		return 0;
 
 	while( !nextLine() )
-		result += m_current_line->length();
+		result += m_current_line.length();
 
 	return result;
 }
@@ -155,7 +152,7 @@ bool ReadMBox::atEnd() const
 	if( !m_stream )
 		return true;
 	
-	return m_atend || ( m_info->type() == UrlInfo::message && *m_current_id != m_info->id() );
+	return m_atend || ( m_info->type() == UrlInfo::message && m_current_id != m_info->id() );
 }
 
 bool ReadMBox::inListing() const
