@@ -20,8 +20,6 @@ What it is
 ----------
 
 * kaddressbook: The KDE addressbook application.
-* kandy: sync phone book entries between your cell phone and computer
-         ("kandy" comes from "Handy", the german word used for a cellular)
 * kmail: the KDE mail client
 * kmailcvt: tool for importing mail related data from other programs
 * knode: news client
@@ -30,7 +28,6 @@ What it is
 * kalarmd: alarm monitoring daemon, shared by korganizer and kalarm.
 * kontact: Integrated PIM application
 * karm: Time tracker.
-* kitchensync: Synchronization framework, still under heavy development.
 * kfile-plugins: vCard KFIleItem plugin.
 * knotes: yellow notes application
 * konsolecalendar: Command line tool for accessing calendar files.
@@ -50,7 +47,6 @@ There is also quite an amount of infrastructure in this package:
 * kabc/frontend: A GUI frontend for libkabc, not intended for end users.
 * kdgantt: alternative lib for Gantt diagrams, used by the free/busy view of
            KOrganizer (yes, we should decide for one of the Gantt libs)
-* ksync: library for syncing collections of data entries
 * kioslaves/sieve: Sieve kioslave
 * ktnef: handling of tnef data
 
