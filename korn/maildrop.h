@@ -281,7 +281,7 @@ class KMailDrop : public QObject
      * Return true if the concrete subclass can load individual mails fully.
      * This will enable the "Full Message" button in the mail dialog.
      */
-    virtual bool canReadMail() {return false;}
+    virtual bool canReadMail() const {return false;}
 
     /**
      * Load a mail from the mailbox fulle . The concrete subclass has

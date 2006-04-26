@@ -249,7 +249,7 @@ public:
 	 *
 	 * @return true if it is possible to read emails; false otherwise
 	 */
-	virtual bool canReadMail ();
+	virtual bool canReadMail () const;
 	/**
 	 * This function reads a certain email.
 	 * The email can be specified with a KornMailId (more specific: a KornStringId)
