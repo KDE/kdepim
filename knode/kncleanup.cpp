@@ -96,9 +96,6 @@ void KNCleanUp::expireGroup( KNGroup *g, bool showResult )
   bool unavailable=false;
   KNRemoteArticle *art, *ref;
 
-  if (!g)
-    return;
-
   KNode::Cleanup *conf = g->activeCleanupConfig();
 
   g->setNotUnloadable(true);
