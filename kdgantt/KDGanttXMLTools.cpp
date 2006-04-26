@@ -661,61 +661,55 @@ bool readDateTimeNode( const QDomElement& element, QDateTime& datetime )
 
 bool readDateNode( const QDomElement& element, QDate& value )
 {
-    bool ok = true;
     int year, month, day;
     if( element.hasAttribute( "Year" ) ) {
         bool yearOk = false;
         year = element.attribute( "Year" ).toInt( &yearOk );
-        ok = ok & yearOk;
+	if (!yearOk) return false;
     }
     if( element.hasAttribute( "Month" ) ) {
         bool monthOk = false;
         month = element.attribute( "Month" ).toInt( &monthOk );
-        ok = ok & monthOk;
+	if (!monthOk) return false;
     }
     if( element.hasAttribute( "Day" ) ) {
         bool dayOk = false;
         day = element.attribute( "Day" ).toInt( &dayOk );
-        ok = ok & dayOk;
+        if (!dayOk) return false;
     }
 
-    if( ok )
-        value.setYMD( year, month, day );
-
-    return ok;
+    value.setYMD( year, month, day );
+    return true;
 }
 
 
 
 bool readTimeNode( const QDomElement& element, QTime& value )
 {
-    bool ok = true;
     int hour, minute, second, msec;
     if( element.hasAttribute( "Hour" ) ) {
         bool hourOk = false;
         hour = element.attribute( "Hour" ).toInt( &hourOk );
-        ok = ok & hourOk;
+	if (!hourOk) return false;
     }
     if( element.hasAttribute( "Minute" ) ) {
         bool minuteOk = false;
         minute = element.attribute( "Minute" ).toInt( &minuteOk );
-        ok = ok & minuteOk;
+	if (!minuteOk) return false;
     }
     if( element.hasAttribute( "Second" ) ) {
         bool secondOk = false;
         second = element.attribute( "Second" ).toInt( &secondOk );
-        ok = ok & secondOk;
+	if (!secondOk) return false;
     }
     if( element.hasAttribute( "Millisecond" ) ) {
         bool msecOk = false;
         msec = element.attribute( "Millisecond" ).toInt( &msecOk );
-        ok = ok & msecOk;
+	if (!msecOk) return false;
     }
 
-    if( ok )
-        value.setHMS( hour, minute, second, msec );
-
-    return ok;
+    value.setHMS( hour, minute, second, msec );
+    return true;
 }
 
 
