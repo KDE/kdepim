@@ -63,7 +63,7 @@ void KIO_Read::readMail( const QVariant mailid, KKioDrop* drop )
 	_job = KIO::get( kurl, false, false );
 	_job->addMetaData( metadata );
 	
-	connect( _job, SIGNAL( result( KIO::Job* ) ), this, SLOT( slotResult( KIO::Job* ) ) );
+	connect( _job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
 	connect( _job, SIGNAL( data( KIO::Job*, const QByteArray& ) ), this, SLOT( slotData( KIO::Job*, const QByteArray & ) ) );
 }
 
@@ -74,7 +74,7 @@ void KIO_Read::canceled( )
 	_job = 0;
 }
 
-void KIO_Read::slotResult( KIO::Job* job )
+void KIO_Read::slotResult( KJob* job )
 {
 	if( job != _job )
 		kWarning() << i18n( "Unknown job returned; I will try if this one will do... " ) << endl;

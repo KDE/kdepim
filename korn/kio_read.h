@@ -31,6 +31,7 @@
 class KKioDrop;
 
 class KUrl;
+class KJob;
 namespace KIO { class MetaData; class Job; }
 class KIO_Protocol;
 
@@ -85,7 +86,7 @@ signals:
 	void ready( QString *msg );
 	
 private slots:
-	void slotResult( KIO::Job* );
+	void slotResult( KJob* );
 	void slotData( KIO::Job*, const QByteArray& );
 };
 

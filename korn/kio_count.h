@@ -34,7 +34,7 @@
 class KIO_Protocol;
 class KIO_Single_Subject;
 class KKioDrop; 
-
+class KJob;
 class KornMailSubject;
 
 template<class T> class QList;
@@ -98,7 +98,7 @@ private:
 	void disconnectSlave();
 	
 private slots:
-	void result( KIO::Job* );
+	void result( KJob* );
 	void entries( KIO::Job*, const KIO::UDSEntryList &list );
 	
 	void addtoPassivePopup( KornMailSubject* );

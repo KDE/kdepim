@@ -146,7 +146,7 @@ void KIO_Delete::deleteItem( const QVariant item, KUrl kurl, KIO::MetaData metad
 	else
 		return; //Unknown deleteFunction
 		
-	connect( job, SIGNAL( result( KIO::Job* ) ), this, SLOT( slotResult( KIO::Job* ) ) );
+	connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
 		
 	job->addMetaData( metadata );
 	
@@ -165,7 +165,7 @@ void KIO_Delete::commitDelete( KUrl kurl, KIO::MetaData metadata, const KIO_Prot
 	
 	KIO::TransferJob *job = KIO::get( kurl, true, false );
 	job->addMetaData( metadata );
-	connect( job, SIGNAL( result( KIO::Job* ) ), this, SLOT( slotResult( KIO::Job* ) ) );
+	connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
 	
 	_jobs->append( dynamic_cast< KIO::Job* >( job ) );
 	
@@ -182,7 +182,7 @@ void KIO_Delete::canceled( )
 	disConnect( );
 }
 
-void KIO_Delete::slotResult( KIO::Job* job )
+void KIO_Delete::slotResult( KJob* job )
 {
 	if( job->error() )
 	{
@@ -190,7 +190,7 @@ void KIO_Delete::slotResult( KIO::Job* job )
 		_valid = false;
 	}
 	
-	_jobs->removeAll( job );
+	_jobs->removeAll( static_cast<KIO::Job*>(job) );
 	
 	_kio->emitDeleteMailsProgress( _total - _jobs->count() );
 	

@@ -35,7 +35,7 @@ class KIO_Protocol;
 
 class QString;
 class QByteArray;
-
+class KJob;
 /**
  * The class KIO_Single_Subject is used to fetch one subject of an email.
  * If can access the private members of KKioDrop, because of friend classes.
@@ -82,7 +82,7 @@ private:
 	void init( KIO::Slave*& );
 	
 private slots:
-	void slotResult( KIO::Job* );
+	void slotResult( KJob* );
 	void slotData( KIO::Job*, const QByteArray& );
 	
 signals:

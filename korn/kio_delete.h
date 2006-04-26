@@ -29,7 +29,7 @@
 
 class KKioDrop;
 class KIO_Protocol;
-
+class KJob;
 class KUrl;
 namespace KIO { class MetaData; class Job; class Slave; }
 
@@ -76,7 +76,7 @@ public slots:
 	 */
 	void canceled( );
 private slots:
-	void slotResult( KIO::Job* );
+	void slotResult( KJob* );
 	
 private:
 	void disConnect( );

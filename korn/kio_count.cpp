@@ -125,7 +125,7 @@ void KIO_Count::count( KKioDrop *drop )
 	_job = KIO::listDir( kurl, false );
 	_job->addMetaData( metadata );
 
-	connect( _job, SIGNAL( result( KIO::Job* ) ), this, SLOT( result( KIO::Job* ) ) );
+	connect( _job, SIGNAL( result( KJob* ) ), this, SLOT( result( KJob* ) ) );
 	connect( _job, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList& ) ),
 	         this, SLOT( entries( KIO::Job*, const KIO::UDSEntryList& ) ) );
 
@@ -140,7 +140,7 @@ void KIO_Count::stopActiveCount()
 	if( !_new_mailurls )
 		return;
 
-	disconnect( _job, SIGNAL( result( KIO::Job* ) ), this, SLOT( result( KIO::Job* ) ) );
+	disconnect( _job, SIGNAL( result( KJob* ) ), this, SLOT( result( KJob* ) ) );
 	disconnect( _job, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList& ) ),
 	            this, SLOT( entries( KIO::Job*, const KIO::UDSEntryList& ) ) );
 
@@ -198,7 +198,7 @@ void KIO_Count::disconnectSlave()
 }
 
 //This function is called when fetching is over
-void KIO_Count::result( KIO::Job* job )
+void KIO_Count::result( KJob* job )
 {
 	//job should be the latest job; elsewise: print an error.
 	if( job != _job )
@@ -214,7 +214,7 @@ void KIO_Count::result( KIO::Job* job )
 		_kio->emitValidChanged();
 	}
 
-	disconnect( job, SIGNAL( result( KIO::Job* ) ), this, SLOT( result( KIO::Job* ) ) );
+	disconnect( job, SIGNAL( result( KJob* ) ), this, SLOT( result( KJob* ) ) );
 	disconnect( job, SIGNAL( entries( KIO::Job*, const KIO::UDSEntryList& ) ),
 	            this, SLOT( entries( KIO::Job*, const KIO::UDSEntryList& ) ) );
 

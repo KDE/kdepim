@@ -66,7 +66,7 @@ void KIO_Single_Subject::init( KIO::Slave *& slave)
 	_job = KIO::get( *_kurl, false, false );
 	_job->addMetaData( *_metadata );
 
-	connect( _job, SIGNAL( result( KIO::Job* ) ), this, SLOT( slotResult( KIO::Job* ) ) );
+	connect( _job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
 	connect( _job, SIGNAL( data         (KIO::Job *, const QByteArray &) ),
 	         this, SLOT( slotData(KIO::Job *, const QByteArray &) ) );
 
@@ -132,7 +132,7 @@ void KIO_Single_Subject::slotData( KIO::Job* job, const QByteArray& data )
 }
 
 //KIO::Scheduler::disconnectSlave missing  if connection stops
-void KIO_Single_Subject::slotResult( KIO::Job *job )
+void KIO_Single_Subject::slotResult( KJob *job )
 {
 	if( job != _job )
 		kWarning() << i18n( "Got invalid job; something strange happened?" ) << endl;
