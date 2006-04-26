@@ -195,8 +195,8 @@ bool ResourceGroupwareBase::doOpen()
       return false;
     } else {
       mLoginFinished = false;
-      connect( loginJob, SIGNAL( result( KIO::Job * ) ),
-               SLOT( slotLoginJobResult( KIO::Job* ) ) );
+      connect( loginJob, SIGNAL( result( KJob * ) ),
+               SLOT( slotLoginJobResult( KJob* ) ) );
       enter_loop();
       return mLoginFinished;
     }
@@ -222,10 +222,10 @@ void ResourceGroupwareBase::enter_loop()
 }
 // END:COPIED
 
-void ResourceGroupwareBase::slotLoginJobResult( KIO::Job *job )
+void ResourceGroupwareBase::slotLoginJobResult( KJob *job )
 {
   if ( !adaptor() ) return;
-  mLoginFinished = adaptor()->interpretLoginJobResult( job );
+  mLoginFinished = adaptor()->interpretLoginJobResult( static_cast<KIO::Job*>(job) );
   emit leaveModality();
 }
 
@@ -237,17 +237,17 @@ void ResourceGroupwareBase::doClose()
   if ( adaptor() && 
        adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResNeedsLogoff ) {
     KIO::Job *logoffJob = adaptor()->createLogoffJob( prefs()->url(), prefs()->user(), prefs()->password() );
-    connect( logoffJob, SIGNAL( result( KIO::Job * ) ),
-             SLOT( slotLogoffJobResult( KIO::Job* ) ) );
+    connect( logoffJob, SIGNAL( result( KJob * ) ),
+             SLOT( slotLogoffJobResult( KJob* ) ) );
     // TODO: Do we really need to block while waiting for the job to return?
     enter_loop();
   }
 }
 
-void ResourceGroupwareBase::slotLogoffJobResult( KIO::Job *job )
+void ResourceGroupwareBase::slotLogoffJobResult( KJob *job )
 {
   if ( !adaptor() ) return;
-  adaptor()->interpretLogoffJobResult( job );
+  adaptor()->interpretLogoffJobResult( static_cast<KIO::Job*>(job) );
   // TODO: Do we really need to block while waiting for the job to return?
   emit leaveModality();
 }

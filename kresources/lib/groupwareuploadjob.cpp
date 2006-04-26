@@ -102,8 +102,8 @@ kDebug() << "Not using batch delete " << endl;
 
     if ( mDeletionJob ) {
       mDeletionJobData.clear();
-      connect( mDeletionJob, SIGNAL( result( KIO::Job* ) ),
-               SLOT( slotDeletionJobResult( KIO::Job* ) ) );
+      connect( mDeletionJob, SIGNAL( result( KJob* ) ),
+               SLOT( slotDeletionJobResult( KJob* ) ) );
 //       connect( mDeletionJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
 //                SLOT( slotDeletionJobData( KIO::Job *, const QByteArray & ) ) );
     } else {
@@ -123,10 +123,10 @@ void GroupwareUploadJob::slotDeletionJobData( KIO::Job *, const QByteArray &data
 
 
 
-void GroupwareUploadJob::slotDeletionJobResult( KIO::Job *job )
+void GroupwareUploadJob::slotDeletionJobResult( KJob *job )
 {
   if ( job  && adaptor() ) {
-    adaptor()->interpretRemoveJob( job, mDeletionJobData );
+    adaptor()->interpretRemoveJob( static_cast<KIO::Job*>(job), mDeletionJobData );
   }
   mDeletionJob = 0;
   QTimer::singleShot( 0, this, SLOT( deleteItem() ) );
@@ -159,8 +159,8 @@ kDebug() << "Not using batch upload " << endl;
 
     if ( mUploadJob ) {
       mUploadJobData.clear();
-      connect( mUploadJob, SIGNAL( result( KIO::Job* ) ),
-               SLOT( slotUploadJobResult( KIO::Job* ) ) );
+      connect( mUploadJob, SIGNAL( result( KJob* ) ),
+               SLOT( slotUploadJobResult( KJob* ) ) );
       connect( mUploadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
                SLOT( slotUploadJobData( KIO::Job *, const QByteArray & ) ) );
     } else {
@@ -179,10 +179,10 @@ void GroupwareUploadJob::slotUploadJobData( KIO::Job *, const QByteArray &data )
 
 
 
-void GroupwareUploadJob::slotUploadJobResult( KIO::Job *job )
+void GroupwareUploadJob::slotUploadJobResult( KJob *job )
 {
   if ( job  && adaptor() ) {
-    adaptor()->interpretUploadJob( job, mUploadJobData );
+    adaptor()->interpretUploadJob( static_cast<KIO::Job*>(job), mUploadJobData );
   }
   mUploadJob = 0;
   QTimer::singleShot( 0, this, SLOT( uploadItem() ) );
@@ -217,8 +217,8 @@ kDebug() << "Not using batch create to " << url.url() << " for item of type " <<
 
     if ( mUploadJob ) {
       mUploadNewJobData.clear();
-      connect( mUploadJob, SIGNAL( result( KIO::Job* ) ),
-               SLOT( slotUploadNewJobResult( KIO::Job* ) ) );
+      connect( mUploadJob, SIGNAL( result( KJob* ) ),
+               SLOT( slotUploadNewJobResult( KJob* ) ) );
       connect( mUploadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
                SLOT( slotUploadNewJobData( KIO::Job *, const QByteArray & ) ) );
     } else {
@@ -240,10 +240,10 @@ void GroupwareUploadJob::slotUploadNewJobData( KIO::Job *, const QByteArray &dat
 
 
 
-void GroupwareUploadJob::slotUploadNewJobResult( KIO::Job *job )
+void GroupwareUploadJob::slotUploadNewJobResult( KJob *job )
 {
   if ( job  && adaptor() ) {
-    adaptor()->interpretUploadNewJob( job, mUploadNewJobData );
+    adaptor()->interpretUploadNewJob( static_cast<KIO::Job*>(job), mUploadNewJobData );
   }
   mUploadJob = 0;
   QTimer::singleShot( 0, this, SLOT( uploadNewItem() ) );

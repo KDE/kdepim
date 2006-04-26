@@ -40,7 +40,7 @@ class FolderLister;
 class GroupwarePrefsBase;
 }
 
-
+class KJob;
 namespace KCal {
 
 class CalendarAdaptor;
@@ -94,8 +94,8 @@ class KDE_EXPORT ResourceGroupwareBase : public ResourceCached
     virtual KPIM::GroupwareUploadJob *createUploadJob( CalendarAdaptor *adaptor );
 
   protected slots:
-    void slotLoginJobResult( KIO::Job *job );
-    void slotLogoffJobResult( KIO::Job *job );
+    void slotLoginJobResult( KJob *job );
+    void slotLogoffJobResult( KJob *job );
     void slotDownloadJobResult( KPIM::GroupwareJob * );
     void slotUploadJobResult( KPIM::GroupwareJob * );
 

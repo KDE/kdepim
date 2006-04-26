@@ -57,9 +57,9 @@ class GroupwareDownloadJob : public GroupwareJob
 
     void cancelLoad();
 
-    void slotListItemsResult( KIO::Job * );
+    void slotListItemsResult( KJob * );
     void slotListItemsData( KIO::Job *, const QByteArray & );
-    void slotDownloadItemResult( KIO::Job * );
+    void slotDownloadItemResult( KJob * );
     void slotDownloadItemData( KIO::Job *, const QByteArray & );
     
     void slotItemToDownload( const KUrl &remoteURL,

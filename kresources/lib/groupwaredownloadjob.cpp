@@ -105,8 +105,8 @@ void GroupwareDownloadJob::listItems()
     mListItemsData.clear();
     mListEventsJob = adaptor()->createListItemsJob( url );
 
-    connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
-             SLOT( slotListItemsResult( KIO::Job * ) ) );
+    connect( mListEventsJob, SIGNAL( result( KJob * ) ),
+             SLOT( slotListItemsResult( KJob * ) ) );
     connect( mListEventsJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
         SLOT( slotListItemsData( KIO::Job *, const QByteArray & ) ) );
   }
@@ -121,7 +121,7 @@ void GroupwareDownloadJob::slotListItemsData( KIO::Job *, const QByteArray &data
 }
 
 
-void GroupwareDownloadJob::slotListItemsResult( KIO::Job *job )
+void GroupwareDownloadJob::slotListItemsResult( KJob *job )
 {
   kDebug(5800) << "GroupwareDownloadJob::slotListItemsResult(): " << endl;
 
@@ -132,7 +132,7 @@ void GroupwareDownloadJob::slotListItemsResult( KIO::Job *job )
     }
     error( job->errorString() );
   } else {
-    adaptor()->interpretListItemsJob( job, mListItemsData );
+    adaptor()->interpretListItemsJob( static_cast<KIO::Job*>(job), mListItemsData );
   }
 
   mListItemsData.clear();
@@ -187,14 +187,14 @@ void GroupwareDownloadJob::downloadItem()
 
       mDownloadJob = adaptor()->createDownloadJob( href, ctype );
     }
-    connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-        SLOT( slotDownloadItemResult( KIO::Job * ) ) );
+    connect( mDownloadJob, SIGNAL( result( KJob * ) ),
+        SLOT( slotDownloadItemResult( KJob * ) ) );
     connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
         SLOT( slotDownloadItemData( KIO::Job *, const QByteArray & ) ) );
   }
 }
 
-void GroupwareDownloadJob::slotDownloadItemResult( KIO::Job *job )
+void GroupwareDownloadJob::slotDownloadItemResult( KJob *job )
 {
   kDebug(5800) << "GroupwareDownloadJob::slotDownloadItemResult(): " << endl;
 
@@ -204,7 +204,7 @@ void GroupwareDownloadJob::slotDownloadItemResult( KIO::Job *job )
   if ( job->error() ) {
     error( job->errorString() );
   } else {
-    adaptor()->interpretDownloadItemsJob( job, mDownloadItemsData );
+    adaptor()->interpretDownloadItemsJob( static_cast<KIO::Job*>(job), mDownloadItemsData );
   }
 
   if ( mProgress ) {

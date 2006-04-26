@@ -87,11 +87,11 @@ class GroupwareUploadJob : public GroupwareJob
 
     void cancelSave();
 
-    void slotDeletionJobResult( KIO::Job *job );
+    void slotDeletionJobResult( KJob *job );
     void slotDeletionJobData( KIO::Job *, const QByteArray & );
-    void slotUploadJobResult( KIO::Job *job );
+    void slotUploadJobResult( KJob *job );
     void slotUploadJobData( KIO::Job *, const QByteArray & );
-    void slotUploadNewJobResult( KIO::Job *job );
+    void slotUploadNewJobResult( KJob *job );
     void slotUploadNewJobData( KIO::Job *, const QByteArray & );
 
     void slotItemDeleted( const QString &localID, const KUrl &remoteURL );
