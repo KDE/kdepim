@@ -364,8 +364,8 @@ int       i;
 
 pabrec::~pabrec()
 {
-  delete _mem;
-  delete m_W;
+  delete [] _mem;
+  delete [] m_W;
 }
 
 
