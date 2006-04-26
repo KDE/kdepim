@@ -19,7 +19,7 @@ MACRO (KODE_ADD_XML_PARSER _sources)
 			COMMAND ${KODE_XML_COMPILER_EXECUTABLE}
 			ARGS --external-parser ${_schema}
 			MAIN_DEPENDENCY ${_schema}
-			DEPENDS ${KODE_XML_COMPILER_EXECUATABLE}
+			DEPENDS ${KODE_XML_COMPILER_EXECUTABLE}
 		)
 		# hack since the above OUTPUT line doesn't work with cmake 2.3.4-20060317
 		add_custom_command( OUTPUT ${_source_h} DEPENDS ${_source_cpp} )
