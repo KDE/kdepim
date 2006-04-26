@@ -101,7 +101,7 @@ public:
   int maxEncodedSizeFor( int insize, bool ) {
     return insize;
   }
-  int maxDecodedSizeFor( int insize, bool ) {
+  int maxDecodedSizeFor( int insize, bool ) const {
     return insize;
   }
 
