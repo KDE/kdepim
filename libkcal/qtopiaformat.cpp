@@ -202,7 +202,7 @@ class QtopiaParser : public QXmlDefaultHandler
       return false;
     }
  
-    QString errorString ()
+    QString errorString () const
     {
       return "QtopiaParser: Error!";
     }
