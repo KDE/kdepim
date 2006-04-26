@@ -193,23 +193,23 @@ void KNode::Appearance::recreateLVIcons()
 {
   QPixmap tempPix = UserIcon("greyball");
 
-  QImage tempImg=tempPix.convertToImage();
+  QImage tempImg=tempPix.toImage();
   KIconEffect::colorize(tempImg, knGlobals.settings()->readArticleColor(), 1.0);
-  i_cons[greyBall].convertFromImage(tempImg);
+  i_cons[greyBall] = QPixmap::fromImage(tempImg);
 
-  tempImg=tempPix.convertToImage();
+  tempImg=tempPix.toImage();
   KIconEffect::colorize(tempImg, knGlobals.settings()->unreadArticleColor(), 1.0);
-  i_cons[redBall].convertFromImage(tempImg);
+  i_cons[redBall] = QPixmap::fromImage(tempImg);
 
   tempPix = UserIcon("greyballchk");
 
-  tempImg=tempPix.convertToImage();
+  tempImg=tempPix.toImage();
   KIconEffect::colorize(tempImg, knGlobals.settings()->readArticleColor(), 1.0);
-  i_cons[greyBallChkd].convertFromImage(tempImg);
+  i_cons[greyBallChkd] = QPixmap::fromImage(tempImg);
 
-  tempImg=tempPix.convertToImage();
+  tempImg=tempPix.toImage();
   KIconEffect::colorize(tempImg, knGlobals.settings()->unreadArticleColor(), 1.0);
-  i_cons[redBallChkd].convertFromImage(tempImg);
+  i_cons[redBallChkd] = QPixmap::fromImage(tempImg);
 }
 
 
