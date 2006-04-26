@@ -35,9 +35,8 @@ check_cxx_source_compiles ("
 # check if gpgme has gpgme_decrypt_result_t->wrong_key_usage
 check_cxx_source_compiles ("
   #include <gpgme.h>
-  int main() {
-    gpgme_decrypt_result_t res;
-    unsigned int wku = res->wrong_key_usage;
+  int test(gpgme_decrypt_result_t& res) {
+    return res.wrong_key_usage;
   }
 " HAVE_GPGME_WRONG_KEY_USAGE
 )
