@@ -418,8 +418,8 @@ void KNConfig::NntpAccountListWidget::slotAddBtnClicked()
   KNNntpAccount *acc = new KNNntpAccount();
 
   if(acc->editProperties(this)) {
-    a_ccManager->newAccount(acc);
-    acc->saveInfo();
+    if (a_ccManager->newAccount(acc))
+      acc->saveInfo();
   }
   else
     delete acc;
