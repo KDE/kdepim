@@ -297,7 +297,7 @@ public:
 	 * @param url the kurl to manipulate
 	 * @param metadata the metadata to manipulate
 	 */
-	virtual void deleteCommitKUrl( KUrl &, KIO::MetaData & ) const { }
+	virtual void deleteCommitKUrl( KUrl &, KIO::MetaData & ) { }
 	/**
 	 * This function can manipulate a KUrl which is used before reading an email.
 	 * 
