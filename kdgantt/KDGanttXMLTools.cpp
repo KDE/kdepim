@@ -382,28 +382,28 @@ bool readBoolNode( const QDomElement& element, bool& value )
 
 bool readColorNode( const QDomElement& element, QColor& value )
 {
-    bool ok = true;
+    int ok = 0;
     int red, green, blue;
     if( element.hasAttribute( "Red" ) ) {
         bool redOk = false;
         red = element.attribute( "Red" ).toInt( &redOk );
-        ok = ok & redOk;
+	ok += redOk;
     }
     if( element.hasAttribute( "Green" ) ) {
         bool greenOk = false;
         green = element.attribute( "Green" ).toInt( &greenOk );
-        ok = ok & greenOk;
+        ok += greenOk;
     }
     if( element.hasAttribute( "Blue" ) ) {
         bool blueOk = false;
         blue = element.attribute( "Blue" ).toInt( &blueOk );
-        ok = ok & blueOk;
+        ok += blueOk;
     }
 
-    if( ok )
+    if( ok == 3 )
         value.setRgb( red, green, blue );
 
-    return ok;
+    return ok == 3;
 }
 
 
