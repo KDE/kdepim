@@ -43,6 +43,7 @@ class FileCopyJob;
 class Job;
 }
 
+class KJob;
 namespace KCal {
 
 /**
@@ -93,10 +94,10 @@ class KDE_EXPORT ResourceRemote : public ResourceCached
 
 
   protected slots:
-    void slotLoadJobResult( KIO::Job * );
-    void slotSaveJobResult( KIO::Job * );
+    void slotLoadJobResult( KJob * );
+    void slotSaveJobResult( KJob * );
 
-    void slotPercent( KIO::Job *, unsigned long percent );
+    void slotPercent( KJob *, unsigned long percent );
 
   protected:
     bool doLoad();

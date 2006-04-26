@@ -242,12 +242,12 @@ bool ResourceGroupware::asyncLoad()
   mJobData.clear();
 
   mDownloadJob = KPIM::GroupwareJob::getAddressBook( url );
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotJobResult( KIO::Job * ) ) );
+  connect( mDownloadJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotJobResult( KJob * ) ) );
   connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
-  connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
-           SLOT( slotJobPercent( KIO::Job *, unsigned long ) ) );
+  connect( mDownloadJob, SIGNAL( percent( KJob *, unsigned long ) ),
+           SLOT( slotJobPercent( KJob *, unsigned long ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Downloading addressbook") );
@@ -298,7 +298,7 @@ bool ResourceGroupware::asyncSave( Ticket* )
   return true;
 }
 
-void ResourceGroupware::slotJobResult( KIO::Job *job )
+void ResourceGroupware::slotJobResult( KJob *job )
 {
   kDebug() << "ResourceGroupware::slotJobResult(): " << endl;
 
@@ -346,7 +346,7 @@ void ResourceGroupware::slotJobData( KIO::Job *, const QByteArray &data )
   mJobData.append( data.data() );
 }
 
-void ResourceGroupware::slotJobPercent( KIO::Job *, unsigned long percent )
+void ResourceGroupware::slotJobPercent( KJob *, unsigned long percent )
 {
   kDebug() << "ResourceGroupware::slotJobPercent() " << percent << endl;
   if ( mProgress ) mProgress->setProgress( percent );

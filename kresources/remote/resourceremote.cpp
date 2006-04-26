@@ -192,11 +192,11 @@ bool ResourceRemote::doLoad()
 
   mDownloadJob = KIO::file_copy( mDownloadUrl, KUrl( cacheFile() ), -1, true,
                                  false, !mUseProgressManager );
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotLoadJobResult( KIO::Job * ) ) );
+  connect( mDownloadJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotLoadJobResult( KJob * ) ) );
   if ( mUseProgressManager ) {
-    connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
-             SLOT( slotPercent( KIO::Job *, unsigned long ) ) );
+    connect( mDownloadJob, SIGNAL( percent( KJob *, unsigned long ) ),
+             SLOT( slotPercent( KJob *, unsigned long ) ) );
     mProgress = KPIM::ProgressManager::createProgressItem(
         KPIM::ProgressManager::getUniqueID(), i18n("Downloading Calendar") );
 
@@ -206,17 +206,17 @@ bool ResourceRemote::doLoad()
   return true;
 }
 
-void ResourceRemote::slotPercent( KIO::Job *, unsigned long percent )
+void ResourceRemote::slotPercent( KJob *, unsigned long percent )
 {
   kDebug() << "ResourceRemote::slotPercent(): " << percent << endl;
 
   mProgress->setProgress( percent );
 }
 
-void ResourceRemote::slotLoadJobResult( KIO::Job *job )
+void ResourceRemote::slotLoadJobResult( KJob *job )
 {
   if ( job->error() ) {
-    job->showErrorDialog( 0 );
+    static_cast<KIO::Job*>(job)->showErrorDialog( 0 );
   } else {
     kDebug(5800) << "ResourceRemote::slotLoadJobResult() success" << endl;
 
@@ -262,8 +262,8 @@ bool ResourceRemote::doSave()
   saveCache();
 
   mUploadJob = KIO::file_copy( KUrl( cacheFile() ), mUploadUrl, -1, true );
-  connect( mUploadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotSaveJobResult( KIO::Job * ) ) );
+  connect( mUploadJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotSaveJobResult( KJob * ) ) );
 
   return true;
 }
@@ -273,10 +273,10 @@ bool ResourceRemote::isSaving()
   return mUploadJob;
 }
 
-void ResourceRemote::slotSaveJobResult( KIO::Job *job )
+void ResourceRemote::slotSaveJobResult( KJob *job )
 {
   if ( job->error() ) {
-    job->showErrorDialog( 0 );
+    static_cast<KIO::Job*>(job)->showErrorDialog( 0 );
   } else {
     kDebug(5800) << "ResourceRemote::slotSaveJobResult() success" << endl;
   

@@ -272,8 +272,8 @@ void FolderLister::doRetrieveFolder( const KUrl &u )
 
       kDebug(7000) << "FolderLister::retrieveFolders: adjustedURL=" 
                     << url.prettyURL() << endl;
-      connect( listjob, SIGNAL( result( KIO::Job * ) ),
-               SLOT( slotListJobResult( KIO::Job * ) ) );
+      connect( listjob, SIGNAL( result( KJob * ) ),
+               SLOT( slotListJobResult( KJob * ) ) );
     } else {
       // TODO: Indicate a problem to the user!
       kWarning() << "Unable to create the folder list job for the url " 
@@ -319,7 +319,7 @@ kDebug() << "Folder "<< href << " is not of correct type ("<<type<<")"<<endl;
   }
 }
 
-void FolderLister::slotListJobResult( KIO::Job *job )
+void FolderLister::slotListJobResult( KJob *job )
 {
   kDebug(7000) << "OpenGroupware::slotListJobResult(): " << endl;
   kDebug() << "URLS (" << mUrls.count() << "): " << mUrls.toStringList().join(" | ") << endl;
@@ -334,7 +334,7 @@ void FolderLister::slotListJobResult( KIO::Job *job )
   if ( job->error() ) {
     kError() << "Unable to retrieve folders." << endl;
   } else {
-    interpretListFoldersJob( job );
+    interpretListFoldersJob( static_cast<KIO::Job*>(job) );
   }
   kDebug() << "After URLS (" << mUrls.count() << "): " 
             << mUrls.toStringList().join(" | ") << endl;

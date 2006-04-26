@@ -69,7 +69,7 @@ class ResourceGroupware : public ResourceCached
   protected slots:
     void loadFinished();
 
-    void slotJobResult( KIO::Job * );
+    void slotJobResult( KJob * );
     void slotJobData( KIO::Job *, const QByteArray & );
 
     void cancelLoad();

@@ -683,13 +683,13 @@ void CertManager::slotImportCertFromFile( const KUrl & certURL )
   // Download the cert
   KIO::StoredTransferJob* importJob = KIO::storedGet( certURL );
   importJob->setWindow( this );
-  connect( importJob, SIGNAL(result(KIO::Job*)), SLOT(slotImportResult(KIO::Job*)) );
+  connect( importJob, SIGNAL(result(KJob*)), SLOT(slotImportResult(KJob*)) );
 }
 
-void CertManager::slotImportResult( KIO::Job* job )
+void CertManager::slotImportResult( KJob* job )
 {
   if ( job->error() ) {
-    job->showErrorDialog();
+    static_cast<KIO::Job*>(job)->showErrorDialog();
   } else {
     KIO::StoredTransferJob* trJob = static_cast<KIO::StoredTransferJob *>( job );
     startCertificateImport( trJob->data(), trJob->url().fileName() );
@@ -903,18 +903,18 @@ void CertManager::importCRLFromFile() {
       destURL.setPath( tempFile.name() );
       KIO::Job* copyJob = KIO::file_copy( url, destURL, 0600, true, false );
       copyJob->setWindow( this );
-      connect( copyJob, SIGNAL( result( KIO::Job * ) ),
-               SLOT( slotImportCRLJobFinished( KIO::Job * ) ) );
+      connect( copyJob, SIGNAL( result( KJob * ) ),
+               SLOT( slotImportCRLJobFinished( KJob * ) ) );
     }
   }
 }
 
-void CertManager::slotImportCRLJobFinished( KIO::Job *job )
+void CertManager::slotImportCRLJobFinished( KJob *job )
 {
   KIO::FileCopyJob* fcjob = static_cast<KIO::FileCopyJob*>( job );
   QString tempFilePath = fcjob->destURL().path();
   if ( job->error() ) {
-    job->showErrorDialog();
+    static_cast<KIO::Job*>(job)->showErrorDialog();
     QFile::remove( tempFilePath ); // unlink tempfile
     updateImportActions( true );
     return;
@@ -1267,8 +1267,8 @@ void CertManager::slotCertificateExportResult( const GpgME::Error & err, const Q
 
   KIO::Job* uploadJob = KIO::storedPut( data, url, -1, overwrite, false /*resume*/ );
   uploadJob->setWindow( this );
-  connect( uploadJob, SIGNAL( result( KIO::Job* ) ),
-           this, SLOT( slotUploadResult( KIO::Job* ) ) );
+  connect( uploadJob, SIGNAL( result( KJob* ) ),
+           this, SLOT( slotUploadResult( KJob* ) ) );
 }
 
 
@@ -1341,14 +1341,14 @@ void CertManager::slotSecretKeyExportResult( const GpgME::Error & err, const QBy
 
   KIO::Job* uploadJob = KIO::storedPut( data, url, -1, overwrite, false /*resume*/ );
   uploadJob->setWindow( this );
-  connect( uploadJob, SIGNAL( result( KIO::Job* ) ),
-           this, SLOT( slotUploadResult( KIO::Job* ) ) );
+  connect( uploadJob, SIGNAL( result( KJob* ) ),
+           this, SLOT( slotUploadResult( KJob* ) ) );
 }
 
-void CertManager::slotUploadResult( KIO::Job* job )
+void CertManager::slotUploadResult( KJob* job )
 {
   if ( job->error() )
-    job->showErrorDialog();
+    static_cast<KIO::Job*>(job)->showErrorDialog();
 }
 
 void CertManager::slotDropped(const KUrl::List& lst)

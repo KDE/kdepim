@@ -155,8 +155,8 @@ bool ResourceGroupware::doLoad()
   mJobData.clear();
 
   mDownloadJob = KPIM::GroupwareJob::getCalendar( url );
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotJobResult( KIO::Job * ) ) );
+  connect( mDownloadJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotJobResult( KJob * ) ) );
   connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            SLOT( slotJobData( KIO::Job *, const QByteArray & ) ) );
 
@@ -169,7 +169,7 @@ bool ResourceGroupware::doLoad()
   return true;
 }
 
-void ResourceGroupware::slotJobResult( KIO::Job *job )
+void ResourceGroupware::slotJobResult( KJob *job )
 {
   kDebug() << "ResourceGroupware::slotJobResult(): " << endl;
 

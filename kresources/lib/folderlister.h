@@ -32,7 +32,7 @@
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qobject.h>
-
+class KJob;
 namespace KIO {
 class Job;
 }
@@ -99,7 +99,7 @@ class KDE_EXPORT FolderLister : public QObject
     void foldersRead();
 
   protected slots:
-    void slotListJobResult( KIO::Job * );
+    void slotListJobResult( KJob * );
     /** Adds the folder with the given url and display name to the folder
      *  tree (if is has an appropriate type) */
     virtual void processFolderResult( const KUrl &href,

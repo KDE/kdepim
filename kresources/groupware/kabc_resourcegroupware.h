@@ -67,9 +67,9 @@ class ResourceGroupware : public ResourceCached
     void init();
 
   private slots:
-    void slotJobResult( KIO::Job * );
+    void slotJobResult( KJob * );
     void slotJobData( KIO::Job *, const QByteArray & );
-    void slotJobPercent( KIO::Job *job, unsigned long percent );
+    void slotJobPercent( KJob *job, unsigned long percent );
 
     void cancelLoad();
 

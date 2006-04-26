@@ -53,6 +53,7 @@ namespace Kleo {
   class Job;
 }
 
+class KJob;
 namespace KIO {
   class Job;
 }
@@ -100,11 +101,11 @@ private slots:
     void slotDeleteCertificate();
     void slotExportSecretKey();
     void slotExportCertificate();
-    void slotUploadResult( KIO::Job* job );
+    void slotUploadResult( KJob* job );
 
     void slotImportCertFromFile();
     void slotImportCertFromFile( const KUrl & filename );
-    void slotImportResult( KIO::Job* );
+    void slotImportResult( KJob* );
 
     void slotCertificateImportResult( const GpgME::ImportResult & result );
     void slotCertificateDownloadResult( const GpgME::Error & error, const QByteArray & keyData );
@@ -116,7 +117,7 @@ private slots:
 
     void importCRLFromFile();
     void importCRLFromLDAP();
-    void slotImportCRLJobFinished( KIO::Job * );
+    void slotImportCRLJobFinished( KJob * );
 
     void slotDirmngrExited();
     void slotStderr( KProcess*, char*, int );

@@ -194,8 +194,8 @@ void OpenGroupware::getCalendar( const KUrl &_url )
 
   // FIXME do progress handling
   mListEventsJob = KIO::davPropFind( url, props, "0", false );
-  connect( mListEventsJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotGetCalendarListingResult( KIO::Job * ) ) );
+  connect( mListEventsJob, SIGNAL( result( KJob * ) ),
+           SLOT( slotGetCalendarListingResult( KJob * ) ) );
 }
 
 void OpenGroupware::getAddressbook( const KUrl &url )
@@ -218,7 +218,7 @@ void OpenGroupware::debugMessage( const QString &msg )
 }
 
 
-void OpenGroupware::slotGetCalendarListingResult( KIO::Job *job )
+void OpenGroupware::slotGetCalendarListingResult( KJob *job )
 {
   
   kDebug(7000) << k_funcinfo << endl;
