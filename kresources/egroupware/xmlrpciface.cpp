@@ -83,8 +83,8 @@ void Query::call( const QString &server, const QString &method,
 
   connect( job, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            this, SLOT( slotData( KIO::Job *, const QByteArray & ) ) );
-  connect( job, SIGNAL( result( KIO::Job * ) ),
-           this, SLOT( slotResult( KIO::Job * ) ) );
+  connect( job, SIGNAL( result( KJob * ) ),
+           this, SLOT( slotResult( KJob * ) ) );
 
   m_pendingJobs.append( job );
 }
@@ -96,9 +96,9 @@ void Query::slotData( KIO::Job *, const QByteArray &data )
   memcpy( m_buffer.data() + oldSize, data.data(), data.size() );
 }
 
-void Query::slotResult( KIO::Job *job )
+void Query::slotResult( KJob *job )
 {
-  m_pendingJobs.remove( job );
+  m_pendingJobs.remove( static_cast<KIO::Job*>(job) );
 
   if ( job->error() != 0 )
   {

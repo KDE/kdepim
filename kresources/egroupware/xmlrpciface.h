@@ -24,6 +24,7 @@ namespace KIO
 {
   class Job;
 }
+class KJob;
 
 namespace KXMLRPC
 {
@@ -53,7 +54,7 @@ namespace KXMLRPC
 
     private slots:
       void slotData( KIO::Job *job, const QByteArray &data );
-      void slotResult( KIO::Job *job );
+      void slotResult( KJob *job );
 
     private:
       bool isMessageResponse( const QDomDocument &doc ) const;
