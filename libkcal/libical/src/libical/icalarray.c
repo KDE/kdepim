@@ -149,10 +149,10 @@ icalarray_expand		(icalarray	*array,
 			new_space_allocated * array->element_size);
 	*/
 	new_data = malloc(new_space_allocated * array->element_size);
-	memcpy(new_data,array->data,array->element_size*array->space_allocated);
-	free(array->data);
 
     if (new_data) {
+	memcpy(new_data,array->data,array->element_size*array->space_allocated);
+	free(array->data);
 	array->data = new_data;
 	array->space_allocated = new_space_allocated;
     } else {
