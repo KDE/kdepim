@@ -33,7 +33,7 @@ class KNHdrViewItem : public K3ListViewItem  {
     virtual int compare(Q3ListViewItem *i, int col, bool ascending) const;
 
     void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment);
-    int width(const QFontMetrics &fm, const Q3ListView *lv, int column);
+    int width(const QFontMetrics &fm, const Q3ListView *lv, int column) const;
 
     virtual QString text( int col ) const;
 

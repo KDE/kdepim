@@ -195,7 +195,7 @@ void KNHdrViewItem::paintCell( QPainter *p, const QColorGroup &cg, int column, i
 }
 
 
-int KNHdrViewItem::width( const QFontMetrics &fm, const Q3ListView *, int column )
+int KNHdrViewItem::width( const QFontMetrics &fm, const Q3ListView *, int column ) const
 {
   int ret = fm.boundingRect( text(column) ).width();
   const KPaintInfo *paintInfo = static_cast<KNHeaderView*>( listView() )->paintInfo();
