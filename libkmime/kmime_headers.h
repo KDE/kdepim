@@ -159,10 +159,10 @@ class KDE_EXPORT Base {
     virtual void clear()  {}
 
     /** Do we have data? */
-    virtual bool isEmpty()  { return false; }
+    virtual bool isEmpty() const { return false; }
 
     /** Return the type of this header (e.g. "From") */
-    virtual const char* type()  { return ""; }
+    virtual const char* type() const { return ""; }
 
     /** Check if this header is of type t. */
     bool is(const char* t)  { return (strcasecmp(t, type())==0); }
@@ -231,7 +231,7 @@ public:
   virtual QString asUnicodeString();
 
   virtual void clear()            { d_ecoded.truncate(0); }
-  virtual bool isEmpty()          { return (d_ecoded.isEmpty()); }
+  virtual bool isEmpty()   const  { return (d_ecoded.isEmpty()); }
 
 private:
   QString d_ecoded;
@@ -579,8 +579,8 @@ class KDE_EXPORT Generic : public Generics::GUnstructured {
     ~Generic() { delete[] t_ype; }
 
     virtual void clear()            { delete[] t_ype; GUnstructured::clear(); }
-    virtual bool isEmpty()          { return (t_ype==0 || GUnstructured::isEmpty()); }
-    virtual const char* type()      { return t_ype; }
+    virtual bool isEmpty() const    { return (t_ype==0 || GUnstructured::isEmpty()); }
+    virtual const char* type() const { return t_ype; }
     void setType(const char *type);
 
   protected:
@@ -601,7 +601,7 @@ class KDE_EXPORT Subject : public Generics::GUnstructured {
       : Generics::GUnstructured( p, s, cs ) {}
     ~Subject()  {}
 
-    virtual const char* type() { return "Subject"; }
+    virtual const char* type() const { return "Subject"; }
 
     bool isReply() {
       return ( asUnicodeString().indexOf( "Re:", 0, Qt::CaseInsensitive ) == 0 );
@@ -620,7 +620,7 @@ class KDE_EXPORT Organization : public Generics::GUnstructured {
       : Generics::GUnstructured( p, s, cs ) {}
     ~Organization()  {}
 
-    virtual const char* type()      { return "Organization"; }
+    virtual const char* type() const { return "Organization"; }
 
 };
 
@@ -647,8 +647,8 @@ class KDE_EXPORT Control : public Base {
     virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
     virtual void clear()            { c_trlMsg.truncate(0); }
-    virtual bool isEmpty()          { return (c_trlMsg.isEmpty()); }
-    virtual const char* type()      { return "Control"; }
+    virtual bool isEmpty() const    { return (c_trlMsg.isEmpty()); }
+    virtual const char* type() const { return "Control"; }
 
     bool isCancel()                 { return QString(c_trlMsg).contains("cancel", Qt::CaseInsensitive); }
 
@@ -673,8 +673,8 @@ class KDE_EXPORT Date : public Base {
     virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
     virtual void clear()            { t_ime=0; }
-    virtual bool isEmpty()          { return (t_ime==0); }
-    virtual const char* type()      { return "Date"; }
+    virtual bool isEmpty() const    { return (t_ime==0); }
+    virtual const char* type() const { return "Date"; }
 
     time_t unixTime()               { return t_ime; }
     void setUnixTime(time_t t)      { t_ime=t; }
@@ -703,8 +703,8 @@ class KDE_EXPORT Newsgroups : public Base {
     virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
     virtual void clear()            { g_roups.clear(); }
-    virtual bool isEmpty()          { return g_roups.isEmpty(); }
-    virtual const char* type()      { return "Newsgroups"; }
+    virtual bool isEmpty() const    { return g_roups.isEmpty(); }
+    virtual const char* type() const { return "Newsgroups"; }
 
     QByteArray firstGroup();
     bool isCrossposted()            { return g_roups.contains(','); }
@@ -726,7 +726,7 @@ class KDE_EXPORT FollowUpTo : public Newsgroups {
     FollowUpTo(Content *p, const QString &s) : Newsgroups(p,s)  {}
     ~FollowUpTo()  {}
 
-    virtual const char* type()        { return "Followup-To"; }
+    virtual const char* type() const { return "Followup-To"; }
 
 };
 
@@ -748,7 +748,7 @@ class KDE_EXPORT Lines : public Base {
     virtual QString asUnicodeString();
     virtual void clear()            { l_ines=-1; }
     virtual bool isEmpty()          { return (l_ines==-1); }
-    virtual const char* type()      { return "Lines"; }
+    virtual const char* type() const { return "Lines"; }
 
     int numberOfLines()             { return l_ines; }
     void setNumberOfLines(int i)    { l_ines=i; }
@@ -775,8 +775,8 @@ class KDE_EXPORT UserAgent : public Base {
     virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
     virtual void clear()            { u_agent.resize(0); }
-    virtual bool isEmpty()          { return (u_agent.isEmpty()); }
-    virtual const char* type()      { return "User-Agent"; }
+    virtual bool isEmpty() const     { return (u_agent.isEmpty()); }
+    virtual const char* type() const { return "User-Agent"; }
 
   protected:
     QByteArray u_agent;
