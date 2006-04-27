@@ -101,7 +101,7 @@ public:
 
   const char * name() const { return "binary"; }
 
-  int maxEncodedSizeFor( int insize, bool ) {
+  int maxEncodedSizeFor( int insize, bool ) const {
     return insize;
   }
   int maxDecodedSizeFor( int insize, bool ) const {
