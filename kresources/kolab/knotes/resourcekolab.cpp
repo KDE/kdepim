@@ -268,7 +268,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
     sernum = 0;
   }
 
-  KCal::Journal* journal = dynamic_cast<KCal::Journal*>( i );
+  KCal::Journal* journal = static_cast<KCal::Journal*>( i );
   QString xml = Note::journalToXML( journal );
   if( !xml.isEmpty() && kmailUpdate( subResource, sernum, xml, attachmentMimeType, journal->uid() ) )
     mUidMap[ i->uid() ] = StorageReference( subResource, sernum );
