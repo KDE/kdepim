@@ -15,6 +15,7 @@
 # check if we are currently building kdepim
 if ( EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepimmacros.h )
 	set( KODE_XML_COMPILER_EXECUTABLE ${CMAKE_BINARY_DIR}/kode/kxml_compiler/kxml_compiler.sh )
+	set( _KODE_XML_COMPILER_DEP kxml_compiler )
 else ( EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepimmacros.h )
 	find_program( KODE_XML_COMPILER_EXECUTABLE NAME kxml_compiler PATHS
 		${KDE4_BIN_INSTALL_DIR}
@@ -34,6 +35,8 @@ else ( EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepimmacros.h )
 	else ( KODE_XML_COMPILER_EXECUTABLE )
 		message( FATAL_ERROR "Couldn't find kxml_compiler" )
 	endif ( KODE_XML_COMPILER_EXECUTABLE )
+
+	set( _KODE_XML_COMPILER_DEP )
 endif ( EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepimmacros.h )
 
 # macros to use the Kode tools

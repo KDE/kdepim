@@ -15,16 +15,12 @@ MACRO (KODE_ADD_XML_PARSER _sources)
 		set( _parser_h   ${CMAKE_CURRENT_BINARY_DIR}/${_basename}_parser.h )
 
 		add_custom_command(
-			OUTPUT ${_source_cpp} #${_source_h} ${_parser_cpp} ${_parser_h}
+			OUTPUT ${_source_cpp} ${_source_h} ${_parser_cpp} ${_parser_h}
 			COMMAND ${KODE_XML_COMPILER_EXECUTABLE}
 			ARGS --external-parser ${_schema}
 			MAIN_DEPENDENCY ${_schema}
-			DEPENDS ${KODE_XML_COMPILER_EXECUTABLE}
+			DEPENDS ${_KODE_XML_COMPILER_DEP}
 		)
-		# hack since the above OUTPUT line doesn't work with cmake 2.3.4-20060317
-		add_custom_command( OUTPUT ${_source_h} DEPENDS ${_source_cpp} )
-		add_custom_command( OUTPUT ${_parser_cpp} DEPENDS ${_source_cpp} )
-		add_custom_command( OUTPUT ${_parser_h} DEPENDS ${_source_cpp} )
 
 		set( ${_sources} ${${_sources}} ${_source_cpp} ${_parser_cpp} )
 	endforeach (_current_file)
