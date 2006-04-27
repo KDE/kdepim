@@ -1884,8 +1884,10 @@ bool KDGanttView::highlightColors( KDGanttViewItem::Type type,
                                    QColor& start, QColor& middle,
                                    QColor& end ) const
 {
-  int index = getIndex( type );
-  start = myColorHL [index*3];
+    int index = getIndex( type );
+    if (index < 0) return false;
+
+    start = myColorHL [index*3];
     middle = myColorHL [index*3+1];
     end = myColorHL [index*3+2];
     return !undefinedColorHL[index];
