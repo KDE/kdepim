@@ -74,6 +74,7 @@ set(libkdgantt_SRCS
 
 
 
+add_subdirectory(kode)
 add_subdirectory(libakonadi)
 add_subdirectory(libemailfunctions)
 add_subdirectory(libkcal)
@@ -103,7 +104,6 @@ add_subdirectory(kioslave)
 add_subdirectory(kmail)
 add_subdirectory(kmailcvt)
 add_subdirectory(knotes)
-add_subdirectory(kode)
 add_subdirectory(konsolekalendar)
 add_subdirectory(kontact)
 add_subdirectory(korganizer)
