@@ -444,7 +444,7 @@ QString Kleo::KeyListViewItem::toolTip( int col ) const {
 }
 
 int Kleo::KeyListViewItem::compare( Q3ListViewItem * item, int col, bool ascending ) const {
-  if ( !item || item->rtti() != RTTI || !listView() || !listView()->columnStrategy() )
+  if ( item->rtti() != RTTI || !listView() || !listView()->columnStrategy() )
     return Q3ListViewItem::compare( item, col, ascending );
   KeyListViewItem * that = static_cast<KeyListViewItem*>( item );
   return listView()->columnStrategy()->compare( this->key(), that->key(), col );
