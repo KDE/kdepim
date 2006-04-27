@@ -125,7 +125,7 @@ bool KTNEFParser::decodeMessage()
 	// read data length
 	d->stream_ >> i2;
 	// offset after reading the value
-	off = d->device_->at() + i2;
+	off = d->device_->pos() + i2;
 	switch ( tag )
 	{
 		case attAIDOWNER:
@@ -159,9 +159,9 @@ bool KTNEFParser::decodeMessage()
 			kDebug() << "Message MAPI Properties" << " (length=" << i2 << ")" << endl;
 			{
 				int nProps = d->message_->properties().count();
-				i2 += d->device_->at();
+				i2 += d->device_->pos();
 				readMAPIProperties( d->message_->properties(), 0 );
-				d->device_->at( i2 );
+				d->device_->seek( i2 );
 				kDebug() << "Properties: " << d->message_->properties().count() << endl;
 				value = QString( "< %1 properties >" ).arg( d->message_->properties().count() - nProps );
 			}
@@ -172,7 +172,7 @@ bool KTNEFParser::decodeMessage()
 			break;
 		case attFROM:
 			d->message_->addProperty( 0x0024, MAPI_TYPE_STRING8, readTNEFAddress( d->stream_ ) );
-			d->device_->at( d->device_->at() - i2 );
+			d->device_->seek( d->device_->pos() - i2 );
 			value = readTNEFData( d->stream_, i2 );
 			kDebug() << "Message From" << " (length=" << i2 << ")" << endl;
 			break;
@@ -213,7 +213,7 @@ bool KTNEFParser::decodeMessage()
 					recipTable << formatRecipient( props );
 				}
 				d->message_->addProperty( 0x0E12, MAPI_TYPE_STRING8, recipTable );
-				d->device_->at( d->device_->at() - i2 );
+				d->device_->seek( d->device_->pos() - i2 );
 				value = readTNEFData( d->stream_, i2 );
 			}
 			kDebug() << "Message Recipient Table" << " (length=" << i2 << ")" << endl;
@@ -243,13 +243,13 @@ bool KTNEFParser::decodeMessage()
 			break;
 	}
 	// skip data
-	if ( d->device_->at() != off && !d->device_->at( off ) )
+	if ( d->device_->pos() != off && !d->device_->seek( off ) )
 		return false;
 	// get checksum
 	d->stream_ >> u;
 	// add TNEF attribute
 	d->message_->addAttribute( tag, type, value, true );
-	//kDebug() << "stream: " << d->device_->at() << endl;
+	//kDebug() << "stream: " << d->device_->pos() << endl;
 	return true;
 }
 
@@ -274,15 +274,15 @@ bool KTNEFParser::decodeAttachment()
 		   break;
 	   case attATTACHDATA:
 		   d->current_->setSize( i );
-		   d->current_->setOffset( d->device_->at() );
-		   d->device_->at( d->device_->at() + i );
+		   d->current_->setOffset( d->device_->pos() );
+		   d->device_->seek( d->device_->pos() + i );
 		   value = QString( "< size=%1 >" ).arg( i );
 		   kDebug() << "Attachment Data: size=" << i << endl;
 		   break;
 	   case attATTACHMENT:	// try to get attachment info
-		   i += d->device_->at();
+		   i += d->device_->pos();
 		   readMAPIProperties( d->current_->properties(), d->current_ );
-		   d->device_->at( i );
+		   d->device_->seek( i );
 		   d->current_->setIndex( d->current_->property( MAPI_TAG_INDEX ).toUInt() );
 		   d->current_->setDisplaySize( d->current_->property( MAPI_TAG_SIZE ).toUInt() );
 		   str = d->current_->property( MAPI_TAG_DISPLAYNAME ).toString();
@@ -306,7 +306,7 @@ bool KTNEFParser::decodeAttachment()
 	   case attATTACHMETAFILE:
 		   kDebug() << "Attachment Metafile: size=" << i << endl;
 		   //value = QString( "< size=%1 >" ).arg( i );
-		   //d->device_->at( d->device_->at()+i );
+		   //d->device_->seek( d->device_->pos()+i );
 		   value = readTNEFData( d->stream_, i );
 		   break;
 	   default:
@@ -317,7 +317,7 @@ bool KTNEFParser::decodeAttachment()
 	d->stream_ >> u;	// u <- checksum
 	// add TNEF attribute
 	d->current_->addAttribute( tag, type, value, true );
-	//kDebug() << "stream: " << d->device_->at() << endl;
+	//kDebug() << "stream: " << d->device_->pos() << endl;
 
 	return true;
 }
@@ -352,7 +352,7 @@ bool KTNEFParser::parseDevice()
 	{
 		d->stream_ >> u;
 		kDebug().form( "Attachment cross reference key: 0x%04x\n",u );
-		//kDebug() << "stream: " << d->device_->at() << endl;
+		//kDebug() << "stream: " << d->device_->pos() << endl;
 		while (!d->stream_.eof())
 		{
 			d->stream_ >> c;
@@ -365,7 +365,7 @@ bool KTNEFParser::parseDevice()
 				if (!decodeAttachment()) goto end;
 				break;
 			   default:
-				kDebug() << "Unknown Level: " << c << ", at offset " << d->device_->at() << endl;
+				kDebug() << "Unknown Level: " << c << ", at offset " << d->device_->pos() << endl;
 				goto end;
 			}
 		}
@@ -399,7 +399,7 @@ bool KTNEFParser::extractAttachmentTo(KTNEFAttach *att, const QString& dirname)
 	QString	filename = dirname + "/" + att->name();
 	if (!d->device_->isOpen())
 		return false;
-	if (!d->device_->at(att->offset()))
+	if (!d->device_->seek(att->offset()))
 		return false;
 	KSaveFile saveFile( filename );
 	QFile *outfile = saveFile.file();
@@ -482,12 +482,12 @@ void KTNEFParser::checkCurrent( int key )
                                         if (!mimetype) return; // FIXME
 					if ( mimetype->name() == "application/octet-stream" && d->current_->size() > 0 )
 					{
-						int oldOffset = d->device_->at();
+						int oldOffset = d->device_->pos();
 						QByteArray buffer( qMin( 32, d->current_->size() ) );
-						d->device_->at( d->current_->offset() );
+						d->device_->seek( d->current_->offset() );
 						d->device_->read( buffer.data(), buffer.size() );
 						mimetype = KMimeType::findByContent( buffer );
-						d->device_->at( oldOffset );
+						d->device_->seek( oldOffset );
 					}
 					d->current_->setMimeTag( mimetype->name() );
 				}
@@ -790,20 +790,20 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 					QByteArray data = mapi.value.toByteArray();
 					int len = data.size();
 					ALIGN( len, 4 );
-					d->device_->at( d->device_->at()-len );
+					d->device_->seek( d->device_->pos()-len );
 					quint32 interface_ID;
 					d->stream_ >> interface_ID;
 					if ( interface_ID == MAPI_IID_IMessage )
 					{
 						// embedded TNEF file
 						attach->unsetDataParser();
-						attach->setOffset( d->device_->at()+12 );
+						attach->setOffset( d->device_->pos()+12 );
 						attach->setSize( data.size()-16 );
 						attach->setMimeTag( "application/ms-tnef" );
 						attach->setDisplayName( "Embedded Message" );
 						kDebug() << "MAPI Embedded Message: size=" << data.size() << endl;
 					}
-					d->device_->at( d->device_->at() + ( len-4 ) );
+					d->device_->seek( d->device_->pos() + ( len-4 ) );
 					break;
 				}
 			}
@@ -850,7 +850,7 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 			p = new KTNEFProperty( key, ( mapi.type & 0x0FFF ), mapi.value, mapi.name.value );
 			props[ p->key() ] = p;
 		}
-		//kDebug() << "stream: " << d->device_->at() << endl;
+		//kDebug() << "stream: " << d->device_->pos() << endl;
 	}
 	return true;
 }
