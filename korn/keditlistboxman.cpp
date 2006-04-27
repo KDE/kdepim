@@ -141,11 +141,12 @@ void KEditListBoxManager::slotChanged()
 	
 	_config->setGroup( _groupName->arg( this->currentItem() ) );
 	
-	if( this->currentItem() > 0 && this->text( this->currentItem() - 1 ) == _config->readEntry( "name", QString() ) )
-		changeItem( this->currentItem() - 1, this->currentItem() ); //moved down
-	else if( this->currentItem() < this->count() - 1 &&
-		 this->text( this->currentItem() + 1 ) == _config->readEntry( "name", QString() ) )
-		changeItem( this->currentItem(), this->currentItem() + 1 );  //moved up
+        int ci = currentItem();
+	if( ci > 0 && this->text( ci - 1 ) == _config->readEntry( "name", QString() ) )
+		changeItem( ci - 1, ci ); //moved down
+	else if( ci >= 0 && ci < this->count() - 1 &&
+		 this->text( ci + 1 ) == _config->readEntry( "name", QString() ) )
+		changeItem( ci, ci + 1 );  //moved up
 	else if( this->currentText() != _config->readEntry( "name", QString() ) )
 		changedText(); //changed
 }
