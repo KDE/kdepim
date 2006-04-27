@@ -1288,7 +1288,7 @@ void imapParser::parseBody (parseString & inWords)
        {
          Q3CString references = parseLiteralC(inWords, true);
          int start = references.find ('<');
-         int end = references.findRev ('>');
+         int end = references.lastIndexOf ('>');
          if (start < end)
                  references = references.mid (start, end - start + 1);
          envelope->setReferences(references.simplified());

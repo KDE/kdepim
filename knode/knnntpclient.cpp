@@ -528,7 +528,7 @@ void KNNntpClient::doPostArticle()
 
   if (art->messageID(false)==0) {  // article has no message ID => search for a ID in the response
     QByteArray s = getCurrentLine();
-    int start = s.findRev(QRegExp("<[^\\s]*@[^\\s]*>"));
+    int start = s.lastIndexOf(QRegExp("<[^\\s]*@[^\\s]*>"));
     if (start != -1) {        // post response includes a recommended id
       int end = s.find('>',start);
       art->messageID()->from7BitString(s.mid(start,end-start+1));

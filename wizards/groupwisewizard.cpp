@@ -405,8 +405,8 @@ void GroupwiseWizard::slotAboutToShowPage( QWidget *page )
   if ( page == mEmailPage ) {
     if ( mEmailEdit->text().isEmpty() ) {
       QString host = GroupwiseConfig::host();
-      int pos = host.findRev( "." );
-      if ( pos > 0 ) pos = host.findRev( ".", pos - 1 );
+      int pos = host.lastIndexOf( "." );
+      if ( pos > 0 ) pos = host.lastIndexOf( ".", pos - 1 );
       if ( pos > 0 ) host = host.mid( pos + 1 );
       QString email = GroupwiseConfig::user() + "@" + host;
       mEmailEdit->setText( email );

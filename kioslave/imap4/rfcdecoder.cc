@@ -362,7 +362,7 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
     else
     {
       charset = Q3CString (beg, i - 1);  // -2 + 1 for the zero
-      int pt = charset.findRev('*');
+      int pt = charset.lastIndexOf('*');
       if (pt != -1)
       {
         // save language for later usage
@@ -626,7 +626,7 @@ rfcDecoder::decodeRFC2231String (const QString & _str)
   if (p < 0)
     return _str;
 
-  int l = _str.findRev ('\'');
+  int l = _str.lastIndexOf ('\'');
 
   //second is language
   if (p >= l)

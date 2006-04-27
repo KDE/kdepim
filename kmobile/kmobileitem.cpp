@@ -120,7 +120,7 @@ void KMobileItem::writeKonquMimeFile() const
 {
    // strip path and file extension of icon name
    QString icon = m_iconName;
-   int p = icon.findRev('/');
+   int p = icon.lastIndexOf('/');
    if (p>=0) icon = icon.mid(p+1);
    p = icon.find('.');
    if (p>=0) icon = icon.left(p);

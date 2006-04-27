@@ -496,9 +496,9 @@ mimeHdrLine::truncateLine(Q3CString aLine, unsigned int truncate)
     validStart += 2;
   }
   while (len > truncate) {
-    cutHere = aLine.findRev(' ', truncate);
+    cutHere = aLine.lastIndexOf(' ', truncate);
     if (cutHere < 1 || cutHere < validStart) {
-      cutHere = aLine.findRev('\t', truncate);
+      cutHere = aLine.lastIndexOf('\t', truncate);
       if (cutHere < 1) {
         cutHere = aLine.find(' ', 1);
         if (cutHere < 1) {

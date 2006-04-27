@@ -111,7 +111,7 @@ bool UrlInfo::isMessage( const KUrl& url )
 {
 	QString path = url.path();
 	QFileInfo info;
-	int cutindex = path.findRev( '/' );
+	int cutindex = path.lastIndexOf( '/' );
 	
 	//Does it contain at least one /?
 	if( cutindex < 0 )

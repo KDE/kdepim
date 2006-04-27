@@ -154,9 +154,9 @@ QString EudoraXXPort::email( const QString& line ) const
 {
   int b;
   QString result;
-  b = line.findRev( '\"' );
+  b = line.lastIndexOf( '\"' );
   if ( b == -1 ) {
-    b = line.findRev( ' ' );
+    b = line.lastIndexOf( ' ' );
     if ( b == -1 )
       return result;
   }
@@ -170,9 +170,9 @@ QString EudoraXXPort::comment( const QString& line ) const
   int b;
   QString result;
   int i;
-  b = line.findRev( '>' );
+  b = line.lastIndexOf( '>' );
   if ( b == -1 ) {
-    b = line.findRev( '\"' );
+    b = line.lastIndexOf( '\"' );
     if ( b == -1 )
       return result;
   }

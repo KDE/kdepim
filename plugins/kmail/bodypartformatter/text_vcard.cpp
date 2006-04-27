@@ -116,7 +116,7 @@ namespace {
        if ( vCard.isEmpty() ) return true;
        VCardConverter vcc;
        Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
-       int index = path.right( path.length() - path.findRev( ":" ) - 1 ).toInt();
+       int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
        if ( index == -1 ) return true;
        KABC::Addressee a = al[index];
        if ( a.isEmpty() ) return true;

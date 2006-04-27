@@ -79,8 +79,8 @@ mailHeader::addHdrLine (mimeHdrLine * inLine)
 	goto out;
   }
   if (!qstricmp (label.data (), "Message-ID")) {
-      int start = value.findRev ('<');
-      int end = value.findRev ('>');
+      int start = value.lastIndexOf ('<');
+      int end = value.lastIndexOf ('>');
       if (start < end)
           messageID = value.mid (start, end - start + 1);
       else {
@@ -90,8 +90,8 @@ mailHeader::addHdrLine (mimeHdrLine * inLine)
       goto out;
   }
   if (!qstricmp (label.data (), "In-Reply-To")) {
-      int start = value.findRev ('<');
-      int end = value.findRev ('>');
+      int start = value.lastIndexOf ('<');
+      int end = value.lastIndexOf ('>');
       if (start < end)
         inReplyTo = value.mid (start, end - start + 1);
       goto out;

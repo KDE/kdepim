@@ -1003,7 +1003,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
     {
       KUrl testDir = dest;
 
-      QString subDir = dBox.right (dBox.length () - dBox.findRev ('/'));
+      QString subDir = dBox.right (dBox.length () - dBox.lastIndexOf ('/'));
       QString topDir = dBox.left (sub);
       testDir.setPath ("/" + topDir);
       dType =
@@ -2322,7 +2322,7 @@ IMAP4Protocol::parseURL (const KUrl & _url, QString & _box,
     // we try to reconstruct it from the URL
     if (!_box.isEmpty())
     {
-      int start = _url.path().findRev(_box);
+      int start = _url.path().lastIndexOf(_box);
       if (start != -1)
         _hierarchyDelimiter = _url.path().mid(start-1, start);
       kDebug(7116) << "IMAP4::parseURL - reconstructed delimiter:" << _hierarchyDelimiter

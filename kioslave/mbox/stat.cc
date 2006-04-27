@@ -86,7 +86,7 @@ KIO::UDSEntry Stat::statMessage( const UrlInfo& info )
 	entry.insert( KIO::UDS_MIME_TYPE, QString( "message/rfc822" ) );
 	
 	entry.insert( KIO::UDS_URL, url );
-	url = url.right( url.length() - url.findRev( "/" ) - 1 );
+	url = url.right( url.length() - url.lastIndexOf( "/" ) - 1 );
 	entry.insert( KIO::UDS_NAME, url );
 
 	return entry;

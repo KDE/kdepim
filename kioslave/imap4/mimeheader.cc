@@ -358,7 +358,7 @@ mimeHeader::setParameter (const Q3CString& aLabel, const QString& aValue,
         int offset = 0;
         if (limit > int(vlen))
           limit = vlen;
-        offset = val.findRev ('%', limit);
+        offset = val.lastIndexOf ('%', limit);
         if (offset == limit - 1 || offset == limit - 2)
         {
 //          cout << "offset " << offset << "-" << limit << "=" << limit-offset << endl;
