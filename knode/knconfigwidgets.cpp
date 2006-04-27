@@ -389,8 +389,8 @@ void KNode::NntpAccountListWidget::slotAddBtnClicked()
   KNNntpAccount *acc = new KNNntpAccount();
 
   if(acc->editProperties(this)) {
-    knGlobals.accountManager()->newAccount(acc);
-    acc->saveInfo();
+    if(knGlobals.accountManager()->newAccount(acc))
+      acc->saveInfo();
   }
   else
     delete acc;
