@@ -1,2 +1,0 @@
-# $Id$
-AM_CONDITIONAL(include_gnokii_device, test -n "$LIB_GNOKII")
