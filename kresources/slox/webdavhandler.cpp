@@ -32,6 +32,7 @@
 #endif
 
 #include <config.h>
+#include <climits>
 #include <stdlib.h>
 
 #include <libkcal/incidence.h>
