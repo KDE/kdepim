@@ -108,7 +108,7 @@ enum ErrorCode
     XmlNotAccepted = 7, /**< The source is valid XML, but no parser accepted
                          * it.
                          */
-    InvalidFormat = 8, /**< the source was accepted by a parser, but the actual
+    InvalidFormat = 8 /**< the source was accepted by a parser, but the actual
                         * parsing failed. As our parser implementations
                         * currently do not validate the source ("parse what you
                         * can get"), this code will be rarely seen.

@@ -57,7 +57,7 @@ class KDE_EXPORT Content : public ElementWrapper
             EscapedHTML, /**< the content is escaped HTML, (i.e., "<", ">" etc.
                           * are markup) */
             XML, /**< the content is embedded XML */
-            Binary, /**< the content is base64-encoded binary content */
+            Binary /**< the content is base64-encoded binary content */
         };
        
         /**
