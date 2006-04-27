@@ -2,12 +2,12 @@ kde4_header()
 
 
 if(SASL2_FOUND)
-	add_subdirectory( imap4 ) 
+	add_subdirectory( imap4 )
+	add_subdirectory( sieve )
 endif(SASL2_FOUND)
 
 add_subdirectory( mbox ) 
 
-message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}: skipped subdir $(SIEVE_SUBDIR)")
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 
