@@ -1482,8 +1482,7 @@ void CardView::tryShowFullText()
 
 void CardView::drawRubberBands( int pos )
 {
-  if ( pos && d &&
-       (!d->mSpan || ((pos - d->mFirstX) / d->mSpan) - d->mColspace - d->mSepWidth < MIN_ITEM_WIDTH) )
+  if (!d->mSpan || ((pos - d->mFirstX) / d->mSpan) - d->mColspace - d->mSepWidth < MIN_ITEM_WIDTH)
     return;
 
   int tmpcw = (d->mRubberBandAnchor - d->mFirstX) / d->mSpan;
