@@ -98,7 +98,14 @@
         *
         *
         * \page dependency-graph Intra-Module Dependencies 
-        * The following graph shows the dependencies between the various kdepim modules.
+        * The following graph shows the compile-time dependencies between the various kdepim modules.
+        *
+        * Colors:
+        * - yellow: shared libraries
+        * - red: static libraries
+        * - blue: applications
+        * - green: plugins or other non-standalone modules (kded modules, kioslaves, etc.)
+        * - gray: currently disabled
         *
         * \dotfile dependency-graph.dot
         *

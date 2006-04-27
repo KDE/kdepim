@@ -1,5 +1,64 @@
 # to create a ps file use 'dot -Tps -o dependency-graph.ps dependency-graph.dot' (dot it part of the graphviz package)
+# This file is also included in Mainpage.dox, so if you change color codings
+# etc., you might need to adapt Mainpage.dox as well.
 digraph "inter-dependency graph for kdepim" {
+        /*
+           Node definitions
+           Put all sub-dirs here.
+
+           Color coding:
+           shared libs: lightyellow
+           static libs: pink
+           plugins or other non-standalone modules: palegreen
+           applications: lightcyan 
+           disabled: lightgray
+         */
+        "akonadiserver"[style=filled, fillcolor=lightcyan];
+        "akregator"[style=filled, fillcolor=lightcyan];
+        "gpgmepp"[style=filled, fillcolor=lightyellow, URL="gpgmepp/html/index.html"];
+        "indexlib"[style=filled, fillcolor=lightyellow];
+        /* kabc ?? */
+        "kaddressbook"[style=filled, fillcolor=lightcyan, URL="kaddressbook/html/index.html"];
+        "kalarm"[style=filled, fillcolor=lightcyan, URL="kalarm/html/index.html"];
+        "karm"[style=filled, fillcolor=lightcyan, URL="karm/html/index.html"];
+        "kdgantt"[style=filled, fillcolor=lightyellow, URL="kdgantt/html/index.html"];
+        "kfile-plugins"[style=filled, fillcolor=palegreen];
+        "kioslave"[style=filled, fillcolor=palegreen, URL="kioslave/html/index.html"];
+        "kleopatra"[style=filled, fillcolor=lightcyan, URL="kleopatra/html/index.html"];
+        "kmail"[style=filled, fillcolor=lightcyan, URL="kmail/html/index.html"];
+        "kmailcvt"[style=filled, fillcolor=lightcyan];
+        "kmobile"[style=filled, fillcolor=lightgray];
+        "knode"[style=filled, fillcolor=lightcyan, URL="knode/html/index.html"];
+        "knotes"[style=filled, fillcolor=lightcyan, URL="knotes/html/index.html"];
+        "kode"[style=filled, fillcolor=lightcyan];
+        "konsolekalendar"[style=filled, fillcolor=lightcyan, URL="konsolekalendar/html/index.html"];
+        "kontact"[style=filled, fillcolor=lightcyan, URL="kontact/html/index.html"];
+        "korganizer"[style=filled, fillcolor=lightcyan, URL="korganizer/html/index.html"];
+        "korn"[style=filled, fillcolor=lightcyan];
+        "kresources"[style=filled, fillcolor=palegreen];
+        "ktnef"[style=filled, fillcolor=lightcyan];
+        "libakonadi"[style=filled, fillcolor=lightyellow, URL="libakonadi/html/index.html"];
+        "libemailfunctions"[style=filled, fillcolor=pink, URL="libemailfunctions/html/index.html"];
+        "libkcal"[style=filled, fillcolor=lightyellow, URL="libkcal/html/index.html"];
+        "libkdepim"[style=filled, fillcolor=lightyellow, URL="libkdepim/html/index.html"];
+        "libkholidays"[style=filled, fillcolor=lightyellow, URL="libkholidays/html/index.html"];
+        "libkholidays_ng"[style=filled, fillcolor=lightyellow, URL="libkholidays_ng/html/index.html"];
+        "libkleo"[style=filled, fillcolor=lightyellow, URL="libkleo/html/index.html"];
+        "libkmime"[style=filled, fillcolor=lightyellow, URL="libkmime/html/index.html"];
+        "libkpgp"[style=filled, fillcolor=lightyellow, URL="libkpgp/html/index.html"];
+        "libkpimidentities"[style=filled, fillcolor=lightyellow, URL="libkpimidentities/html/index.html"];
+        "libksieve"[style=filled, fillcolor=lightyellow];
+        "libsyndication"[style=filled, fillcolor=lightyellow, URL="libsyndication/html/index.html"];
+        "mimelib"[style=filled, fillcolor=lightyellow];
+        "networkstatus"[style=filled, fillcolor=palegreen];
+        "plugins"[style=filled, fillcolor=palegreen];
+        "qgpgme"[style=filled, fillcolor=lightyellow, URL="qgpgme/html/index.html"];
+        "wizards"[style=filled, fillcolor=lightcyan];
+
+        /*
+           Edge definitions
+           Put all compile-time dependencies here.
+        */
         "akregator" -> "kontact";
         "libkleo" -> "kleopatra";
         "libkleo" -> "kaddressbook";
@@ -18,7 +77,7 @@ digraph "inter-dependency graph for kdepim" {
         "kresources" -> "karm";
         "kresources" -> "wizards";
         "ktnef" -> "libkcal";
-        "libemailfunctions" -> "kioslaves"
+        "libemailfunctions" -> "kioslave"
         "libemailfunctions" -> "kmail";
         "libemailfunctions" -> "knode";
         "libemailfunctions" -> "korganizer";
@@ -44,7 +103,7 @@ digraph "inter-dependency graph for kdepim" {
         "libkdepim" -> "kaddressbook";
         "libkdepim" -> "kalarm";
         "libkdepim" -> "karm";
-        "libkdepim" -> "kioslaves";
+        "libkdepim" -> "kioslave";
         "libkdepim" -> "kmail";
         "libkdepim" -> "knode";
         "libkdepim" -> "knotes";
@@ -56,7 +115,7 @@ digraph "inter-dependency graph for kdepim" {
         "libkholidays" -> "kontact";
         "libkholidays" -> "korganizer";
         "libkmime" -> "kalarm";
-        "libkmime" -> "kioslaves";
+        "libkmime" -> "kioslave";
         "libkmime" -> "kmail";
         "libkmime" -> "knode";
         "libkmime" -> "libakonadi";
