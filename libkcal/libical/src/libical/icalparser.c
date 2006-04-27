@@ -49,6 +49,7 @@
 #include <string.h> /* For strncpy & size_t */
 #include <stdio.h> /* For FILE and fgets and snprintf */
 #include <stdlib.h> /* for free */
+#include <ctype.h>
 
 #include "icalmemory.h"
 #include "icalparser.h"
