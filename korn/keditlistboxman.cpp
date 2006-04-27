@@ -139,9 +139,10 @@ void KEditListBoxManager::slotChanged()
 	
 	//First check if the item was moved up
 	
-	_config->setGroup( _groupName->arg( this->currentItem() ) );
-	
         int ci = currentItem();
+        if (ci >= 0)
+ 		_config->setGroup( _groupName->arg( ci ) );
+	
 	if( ci > 0 && this->text( ci - 1 ) == _config->readEntry( "name", QString() ) )
 		changeItem( ci - 1, ci ); //moved down
 	else if( ci >= 0 && ci < this->count() - 1 &&
