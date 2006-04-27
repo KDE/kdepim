@@ -896,10 +896,6 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
     Recurrence *re = event->recurrence();
 //    re->setRecurStart( event->dtStart() );
 
-
-    if ( rInterval == 0 ) // libkcal crashes with rInterval == 0
-      rInterval = 1;
-
     switch ( rType ) {
       case CAL_RECUR_DAILY:
         re->setDaily( rInterval );
