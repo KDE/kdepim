@@ -296,7 +296,10 @@ void KEditListBoxManager::changeItem( int first, int last )
 
 void KEditListBoxManager::changedText()
 {
-	_config->setGroup( _groupName->arg( this->currentItem() ) );
+	int ci = this->currentItem();
+        if (ci < 0) return;
+
+	_config->setGroup( _groupName->arg( ci ) );
 	_config->writeEntry( "name", this->currentText() );
 }
 
