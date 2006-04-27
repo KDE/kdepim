@@ -254,13 +254,7 @@ void KNHeaderView::prevArticle()
   KNHdrViewItem *it = static_cast<KNHdrViewItem*>( currentItem() );
 
   if (it && it->isActive()) {  // take current article, if not selected
-    if (it)
-      it = static_cast<KNHdrViewItem*>(it->itemAbove());
-    else
-      it = static_cast<KNHdrViewItem*>( firstChild() );
-  }
-
-  if (it) {
+    it = static_cast<KNHdrViewItem*>(it->itemAbove());
     clearSelection();
     setActive( it );
     setSelectionAnchor( currentItem() );
