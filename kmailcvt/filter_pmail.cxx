@@ -179,11 +179,11 @@ void FilterPMail::importMailFolder(const QString& file)
         
         while (!f.atEnd()) {
             KTempFile tempfile;
-            inf->setCurrent( (int) ( ( (float) f.at() / f.size() ) * 100 ) );
+            inf->setCurrent( (int) ( ( (float) f.pos() / f.size() ) * 100 ) );
             
             if(!first_msg) {
                 // set the filepos back to last line minus the seperate char (0x1a)
-                f.at(f.at() - l + 1); 
+                f.seek(f.pos() - l + 1); 
             }
             
             // no problem to loose the last line in file. This only contains a seperate char
@@ -277,7 +277,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
             
             n++;
             inf->setCurrent(i18n("Message %1", n));            
-            inf->setCurrent( (int) ( ( (float) f.at() / f.size() ) * 100 ) );
+            inf->setCurrent( (int) ( ( (float) f.pos() / f.size() ) * 100 ) );
         }
     }    
     f.close();

@@ -104,7 +104,7 @@ void FilterMailApp::import(FilterInfo *info)
 
                 tmp.unlink();
 
-                int currentPercentage = (int) ( ( (float) mbox.at() / filenameInfo.size() ) * 100 );
+                int currentPercentage = (int) ( ( (float) mbox.pos() / filenameInfo.size() ) * 100 );
                 info->setCurrent( currentPercentage );
                 if (currentFile == 1)
                     overall_status = (int)( currentPercentage*((float)currentFile/mMboxFiles.count()));

@@ -127,7 +127,7 @@ void FilterLNotes::ImportLNotes(const QString& file) {
                         delete tempfile;
                         state = 0;
 
-                        int currentPercentage = (int) ( ( (float) f.at() / filenameInfo.size() ) * 100 );
+                        int currentPercentage = (int) ( ( (float) f.pos() / filenameInfo.size() ) * 100 );
                         inf->setCurrent( currentPercentage );
                         if ( inf->shouldTerminate() )
                             return;

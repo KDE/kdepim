@@ -168,12 +168,12 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
             if(!iFound) {
                 iFound = _tmp.lastIndexOf("!");
                 if (iFound >= 0 && ((l-iFound) < 5) ) {
-                    int _i = tbb.at();
-                    tbb.at((_i - iFound));
+                    int _i = tbb.pos();
+                    tbb.seek((_i - iFound));
                 }
             } else {
                 ++count;
-                endOfEmail = (tbb.at() - l + _tmp.find(regexp));
+                endOfEmail = (tbb.pos() - l + _tmp.find(regexp));
                 offsets.append(endOfEmail);
             }
         }
@@ -182,7 +182,7 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
         // IMPORT the messages:
         if(!offsets.empty() || (offsets.empty() && (tbb.size() > 3128))) {
             offsets.append(tbb.size());
-            tbb.at(3128);
+            tbb.seek(3128);
             long lastPos = 3128;
             long endPos = 0;
 
@@ -216,8 +216,8 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
 
                 tmp.unlink();
                 lastPos = endPos + 48;
-                tbb.at(lastPos);
-                info->setCurrent( (int) ( ( (float) tbb.at() / tbb.size() ) * 100 ));
+                tbb.seek(lastPos);
+                info->setCurrent( (int) ( ( (float) tbb.pos() / tbb.size() ) * 100 ));
             }
 
         }

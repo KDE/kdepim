@@ -260,9 +260,9 @@ return true;
 content_t pab::go(adr_t a)
 {
 content_t A;
-  in.at(a);
+  in.seek(a);
   A=read();
-  in.at(a);
+  in.seek(a);
 return A;
 }
 
@@ -289,7 +289,7 @@ unsigned char mem[2];
 content_t pab::relative(int words)
 {
 adr_t     a;
-  a=in.at();
+  a=in.pos();
 return go(a+(words*sizeof(content_t)));
 }
 

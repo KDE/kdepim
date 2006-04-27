@@ -126,7 +126,7 @@ void FilterOpera::import(FilterInfo *info)
                         else
                             addMessage_fastImport( info, folderName, tmp.name() );
                         tmp.unlink();
-                        int currentPercentage = (int) ( ( (float) operaArchiv.at() / filenameInfo.size() ) * 100 );
+                        int currentPercentage = (int) ( ( (float) operaArchiv.pos() / filenameInfo.size() ) * 100 );
                         info->setCurrent( currentPercentage );
 
                         if (currentFile == 1)

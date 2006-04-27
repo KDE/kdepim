@@ -187,7 +187,7 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
                 addMessage_fastImport( info, destFolder, tmp.name() );
 
             tmp.unlink();
-            int currentPercentage = (int) (((float) mbox.at() / filenameInfo.size()) * 100);
+            int currentPercentage = (int) (((float) mbox.pos() / filenameInfo.size()) * 100);
             info->setCurrent(currentPercentage);
             if (info->shouldTerminate()) return;
         }

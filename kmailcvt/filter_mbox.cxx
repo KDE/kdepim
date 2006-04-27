@@ -88,10 +88,10 @@ void FilterMBox::import(FilterInfo *info)
                        
                        // workaround to fix hang if a corrupted mbox contains some 
                        // binary data, for more see bug #106796
-                       if (mbox.at() == filepos)
-                           mbox.at(mbox.size());
+                       if (mbox.pos() == filepos)
+                           mbox.seek(mbox.size());
                        else 
-                           filepos = mbox.at();
+                           filepos = mbox.pos();
                 }
                 tmp.close();
                 first_msg = false;
@@ -106,7 +106,7 @@ void FilterMBox::import(FilterInfo *info)
                     addMessage_fastImport( info, folderName, tmp.name() );
 
                 tmp.unlink();
-                int currentPercentage = (int) ( ( (float) mbox.at() / filenameInfo.size() ) * 100 );
+                int currentPercentage = (int) ( ( (float) mbox.pos() / filenameInfo.size() ) * 100 );
                 info->setCurrent( currentPercentage );
                 if (currentFile == 1)
                     overall_status = (int)( currentPercentage*((float)currentFile/filenames.count()));

@@ -54,7 +54,7 @@ class pab
     word_t     lower(content_t);
     word_t     upper(content_t);
     byte_t     readbyte(void);
-    adr_t      curpos(void) { return in.at(); }
+    adr_t      curpos(void) { return in.pos(); }
     adr_t      tell(void)   { return curpos(); }
   private:
     bool  recUnknown(pabrec & R);

@@ -168,7 +168,7 @@ void FilterOE::mbxImport( FilterInfo *info, QDataStream& ds)
 
     // Read the header
     ds >> msgCount >> lastMsgNum >> fileSize;
-    ds.device()->at( ds.device()->at() + 64 ); // Skip 0's
+    ds.device()->seek( ds.device()->pos() + 64 ); // Skip 0's
     kDebug() << "This mailbox has " << msgCount << " messages" << endl;
     if (msgCount == 0)
         return; // Don't import empty mailbox
@@ -213,9 +213,9 @@ void FilterOE::dbxImport( FilterInfo *info, QDataStream& ds)
 {
     // Get item count & offset of index
     quint32 itemCount, indexPtr;
-    ds.device()->at(0xc4);
+    ds.device()->seek(0xc4);
     ds >> itemCount;
-    ds.device()->at(0xe4);
+    ds.device()->seek(0xe4);
     ds >> indexPtr;
     kDebug() << "Item count is " << itemCount << ", Index at " << indexPtr << endl;
 
@@ -224,7 +224,7 @@ void FilterOE::dbxImport( FilterInfo *info, QDataStream& ds)
     totalEmails = itemCount;
     currentEmail = 0;
     // Parse the indexes
-    ds.device()->at(indexPtr);
+    ds.device()->seek(indexPtr);
     dbxReadIndex(info, ds, indexPtr);
 }
 
@@ -235,8 +235,8 @@ void FilterOE::dbxReadIndex( FilterInfo *info, QDataStream& ds, int filePos)
     quint32 self, unknown, nextIndexPtr, parent, indexCount;
     quint8 unknown2, ptrCount;
     quint16 unknown3;
-    int wasAt = ds.device()->at();
-    ds.device()->at(filePos);
+    int wasAt = ds.device()->pos();
+    ds.device()->seek(filePos);
 
 
     kDebug() << "Reading index of file " << folderName << endl;
@@ -261,7 +261,7 @@ void FilterOE::dbxReadIndex( FilterInfo *info, QDataStream& ds, int filePos)
         dbxReadIndex(info, ds, nextIndexPtr);
     }
 
-    ds.device()->at(wasAt); // Restore file position to same as when function called
+    ds.device()->seek(wasAt); // Restore file position to same as when function called
 }
 
 void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
@@ -269,11 +269,11 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
     quint32 curOffset, blockSize;
     quint16 unknown;
     quint8 count, unknown2;
-    int wasAt = ds.device()->at();
+    int wasAt = ds.device()->pos();
     
     QString folderEntry[4];
     
-    ds.device()->at(filePos);
+    ds.device()->seek(filePos);
 
     ds >> curOffset >> blockSize >> unknown >> count >> unknown2; // _dbx_email_headerstruct
     kDebug() << "Data block has " << (int) count << " elements" << endl;
@@ -285,7 +285,7 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
 
         ds >> type >> value;
         value &= 0xffffff;
-        ds.device()->at(ds.device()->at() - 1); // We only wanted 3 bytes
+        ds.device()->seek(ds.device()->pos() - 1); // We only wanted 3 bytes
 
         if(!currentIsFolderFile) {
             if (type == 0x84) { // It's an email!
@@ -293,12 +293,12 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
                 dbxReadEmail(info, ds, value);
                 ++count0x84;
             } else if( type == 0x04) {
-                int currentFilePos = ds.device()->at();
-                ds.device()->at(filePos + 12 + value + (count*4) );
+                int currentFilePos = ds.device()->pos();
+                ds.device()->seek(filePos + 12 + value + (count*4) );
                 quint32 newOFF;
                 ds >> newOFF;
                 kDebug() << "**** Offset of emaildata (0x04) " <<  newOFF << endl;
-                ds.device()->at(currentFilePos);
+                ds.device()->seek(currentFilePos);
                 dbxReadEmail(info, ds, newOFF);
                 ++count0x04;
             }
@@ -325,7 +325,7 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
     if(currentIsFolderFile) {
         folderStructure.append(folderEntry);
     }
-    ds.device()->at(wasAt); // Restore file position to same as when function called
+    ds.device()->seek(wasAt); // Restore file position to same as when function called
 }
 
 void FilterOE::dbxReadEmail( FilterInfo *info, QDataStream& ds, int filePos)
@@ -336,8 +336,8 @@ void FilterOE::dbxReadEmail( FilterInfo *info, QDataStream& ds, int filePos)
     quint8 intCount, unknown;
     KTempFile tmp;
     bool _break = false;
-    int wasAt = ds.device()->at();
-    ds.device()->at(filePos);
+    int wasAt = ds.device()->pos();
+    ds.device()->seek(filePos);
 
     do {
         ds >> self >> nextAddressOffset >> blockSize >> intCount >> unknown >> nextAddress; // _dbx_block_hdrstruct
@@ -349,7 +349,7 @@ void FilterOE::dbxReadEmail( FilterInfo *info, QDataStream& ds, int filePos)
             _break = true;
             break;
         }
-        ds.device()->at(nextAddress);
+        ds.device()->seek(nextAddress);
     } while (nextAddress != 0);
     tmp.close();
 
@@ -362,7 +362,7 @@ void FilterOE::dbxReadEmail( FilterInfo *info, QDataStream& ds, int filePos)
         currentEmail++;
         int currentPercentage = (int) ( ( (float) currentEmail / totalEmails ) * 100 );
         info->setCurrent(currentPercentage);
-        ds.device()->at(wasAt);
+        ds.device()->seek(wasAt);
     }
     tmp.unlink();
 }
@@ -372,8 +372,8 @@ QString FilterOE::parseFolderString( QDataStream& ds, int filePos )
 {
     char tmp;
     QString returnString;
-    int wasAt = ds.device()->at();
-    ds.device()->at(filePos);
+    int wasAt = ds.device()->pos();
+    ds.device()->seek(filePos);
     
     // read while != 0x00
     while( !ds.device()->atEnd() ) {
@@ -383,7 +383,7 @@ QString FilterOE::parseFolderString( QDataStream& ds, int filePos )
         }
         else break;
     }
-    ds.device()->at(wasAt);
+    ds.device()->seek(wasAt);
     return returnString;
 }
 
