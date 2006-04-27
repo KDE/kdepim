@@ -2465,16 +2465,18 @@ void KNComposer::Editor::del()
 
 void KNComposer::Editor::slotMisspelling (const QString &, const QStringList &lst, unsigned int)
 {
+    if (!m_composer) return;
+
     int countAction = m_composer->listOfResultOfCheckWord( lst , selectWordUnderCursor());
     if ( countAction>0 )
     {
-        QMenu* popup = m_composer ? m_composer->popupMenu( "edit_with_spell" ): 0;
+        QMenu* popup = m_composer->popupMenu( "edit_with_spell" );
         if ( popup )
             popup->popup(QCursor::pos());
     }
     else
     {
-        QMenu* popup = m_composer ? m_composer->popupMenu( "edit" ): 0;
+        QMenu* popup = m_composer->popupMenu( "edit" );
         if ( popup )
             popup->popup(QCursor::pos());
     }
