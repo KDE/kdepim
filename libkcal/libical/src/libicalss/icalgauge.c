@@ -30,6 +30,7 @@
 #include "icalgauge.h"
 #include "icalgaugeimpl.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "icalssyacc.h"
 

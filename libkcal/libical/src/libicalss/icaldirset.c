@@ -80,6 +80,7 @@
 #include <time.h> /* for clock() */
 #include <stdlib.h> /* for rand(), srand() */
 #include <string.h> /* for strdup */
+#include <stdio.h>
 #include "icaldirsetimpl.h"
 
 
