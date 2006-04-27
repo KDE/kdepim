@@ -82,10 +82,10 @@ private:
 	void disConnect( );
 	bool setupSlave( KUrl kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol );
 	void deleteItem( const QVariant item, KUrl, KIO::MetaData, const KIO_Protocol *&);
-	void commitDelete( KUrl, KIO::MetaData, const KIO_Protocol *& );
+	void commitDelete( KUrl, KIO::MetaData, const KIO_Protocol *& ) const;
 
 	KKioDrop *_kio;
-	unsigned int _total;
+	mutable unsigned int _total;
 	QList< KIO::Job* > *_jobs;
 	KIO::Slave *_slave;
 	bool _valid;

@@ -290,7 +290,7 @@ QVector<KornMailSubject> * KKioDrop::doReadSubjects(bool * )
 	return vector;
 }
 
-bool KKioDrop::canReadMail( )
+bool KKioDrop::canReadMail( ) const
 {
 	return (_protocol!=0?_protocol->canReadMail():false);
 }

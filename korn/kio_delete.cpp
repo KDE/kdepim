@@ -156,7 +156,7 @@ void KIO_Delete::deleteItem( const QVariant item, KUrl kurl, KIO::MetaData metad
 /*
  * Some protocols needs to a command to commit protocols.
  */
-void KIO_Delete::commitDelete( KUrl kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol )
+void KIO_Delete::commitDelete( KUrl kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol ) const
 {
 	protocol->deleteCommitKUrl( kurl, metadata );
 	
