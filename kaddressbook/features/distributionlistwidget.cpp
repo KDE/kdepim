@@ -146,7 +146,7 @@ class ContactItem : public Q3ListViewItem
     }
 
   protected:
-    bool acceptDrop( const QMimeSource* )
+    bool acceptDrop( const QMimeSource* ) const
     {
       return true;
     }
