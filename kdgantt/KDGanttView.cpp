@@ -1793,6 +1793,7 @@ void KDGanttView::setColors( KDGanttViewItem::Type type,
       }
     }
     int index = getIndex( type );
+    if (index < 0) return;
     myColor [index*3] = start;
     myColor [index*3+1] = middle;
     myColor [index*3+2] = end;
@@ -1815,8 +1816,9 @@ void KDGanttView::setColors( KDGanttViewItem::Type type,
 bool KDGanttView::colors( KDGanttViewItem::Type type,
                           QColor& start, QColor& middle, QColor& end ) const
 {
-  int index = getIndex( type );
-  start = myColor [index*3];
+    int index = getIndex( type );
+    if (index < 0) return false;
+    start = myColor [index*3];
     middle = myColor [index*3+1];
     end = myColor [index*3+2];
     return !undefinedColor[index];
