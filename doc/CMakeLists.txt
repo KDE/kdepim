@@ -6,7 +6,6 @@ add_subdirectory(api)
 add_subdirectory(common)
 add_subdirectory(kaddressbook)
 add_subdirectory(kalarm)
-add_subdirectory(kandy)
 add_subdirectory(karm)
 add_subdirectory(kleopatra)
 add_subdirectory(kmail)
@@ -16,10 +15,8 @@ add_subdirectory(konsolekalendar)
 add_subdirectory(kontact)
 add_subdirectory(korganizer)
 add_subdirectory(korn)
-add_subdirectory(kpilot)
 add_subdirectory(ktnef)
 add_subdirectory(kwatchgnupg)
-add_subdirectory(multisynk)
 
 ########### install files ###############
 
