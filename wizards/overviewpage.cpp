@@ -40,8 +40,10 @@
 #include "overviewpage.h"
 
 OverViewPage::OverViewPage( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+  : QWidget( parent )
 {
+  setObjectName(name);
+
   QGridLayout *layout = new QGridLayout( this );
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( KDialog::marginHint() );

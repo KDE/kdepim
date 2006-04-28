@@ -241,7 +241,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         KMessageBox::error( 0, i18n("Could not save file to KOrganizer") );
         return false;
       }
-      ts->setEncoding( QTextStream::UnicodeUTF8 );
+      ts->setCodec("UTF-8");
       (*ts) << receiver << '\n' << iCal;
       file.close();
 

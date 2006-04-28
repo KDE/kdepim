@@ -127,7 +127,7 @@ static void closeResource( KConfig& config, ResourceMap& map )
   ResourceMap::ConstIterator it;
   for ( it = map.begin(); it != map.end(); ++it ) {
     config.setGroup( it.key() );
-    config.writeEntry( "Active", it.data().active() );
+    config.writeEntry( "Active", it.value().active() );
   }
 }
 
@@ -185,7 +185,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
     { // for RAII scoping below
       TemporarySilencer t( this );
       for( QMap<quint32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
-        addIncidence( mimetype, it.data(), subResource, it.key() );
+        addIncidence( mimetype, it.value(), subResource, it.key() );
       }
     }
     if ( progressId ) {
@@ -215,7 +215,7 @@ bool ResourceKolab::doLoadAll( ResourceMap& map, const char* mimetype )
 {
   bool rc = true;
   for ( ResourceMap::ConstIterator it = map.begin(); it != map.end(); ++it ) {
-    if ( !it.data().active() )
+    if ( !it.value().active() )
       // This resource is disabled
       continue;
 
@@ -261,7 +261,7 @@ void ResourceKolab::removeIncidences( const QByteArray& incidenceType )
     // better call event(uid), todo(uid) etc. directly.
 
     // A  faster but hackish way would probably be to check the type of the resource,
-    // like mEventSubResources.find( it.data().resource() ) != mEventSubResources.end() ?
+    // like mEventSubResources.find( it.value().resource() ) != mEventSubResources.end() ?
     const QString& uid = it.key();
     if ( incidenceType == "Event" && mCalendar.event( uid ) )
       mUidMap.remove( it );
@@ -841,7 +841,7 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
   Kolab::UidMap::ConstIterator mapIt;
   QStringList uids;
   for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
-    if ( mapIt.data().resource() == subResource )
+    if ( mapIt.value().resource() == subResource )
       // We have a match
       uids << mapIt.key();
 
@@ -900,7 +900,7 @@ void ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
 {
   TemporarySilencer t( this );
   for( QMap<quint32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it )
-    addIncidence( type.toLatin1(), it.data(), folder, it.key() );
+    addIncidence( type.toLatin1(), it.value(), folder, it.key() );
 }
 
 bool ResourceKolab::subresourceActive( const QString& subresource ) const

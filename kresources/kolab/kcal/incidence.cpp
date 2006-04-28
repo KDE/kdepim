@@ -651,7 +651,7 @@ void Incidence::setFields( const KCal::Incidence* incidence )
   for ( ; cit != map.end() ; ++cit ) {
     Custom c;
     c.key = cit.key();
-    c.value = cit.data();
+    c.value = cit.value();
     mCustomList.append( c );
   }
 }

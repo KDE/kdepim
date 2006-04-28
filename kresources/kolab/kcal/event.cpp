@@ -155,7 +155,7 @@ bool Event::loadXML( const QDomDocument& document )
 
   if ( top.tagName() != "event" ) {
     qWarning( "XML error: Top tag was %s instead of the expected event",
-              top.tagName().toAscii() );
+              top.tagName().toAscii().data() );
     return false;
   }
 

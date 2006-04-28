@@ -145,7 +145,7 @@ bool ResourceKolabBase::kmailUpdate( const QString& resource,
     KTempFile file;
     file.setAutoDelete( true );
     QTextStream* stream = file.textStream();
-    stream->setEncoding( QTextStream::UnicodeUTF8 );
+    stream->setCodec( "UTF-8" );
     *stream << xml;
     file.close();
 
@@ -192,7 +192,7 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources )
   QStringList labels;
   ResourceMap::ConstIterator it;
   for ( it = resources.begin(); it != resources.end(); ++it ) {
-    if ( it.value().writable() && it.data().active() ) {
+    if ( it.value().writable() && it.value().active() ) {
       // Writable and active possibility
       possible[ it.value().label() ] = it.key();
     }

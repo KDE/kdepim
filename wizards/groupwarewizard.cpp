@@ -29,8 +29,10 @@
 #include "groupwarewizard.h"
 
 GroupwareWizard::GroupwareWizard( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+  : QWidget( parent )
 {
+  setObjectName(name);
+
   setWindowTitle( i18n( "KDE Groupware Wizard" ) );
 
   QVBoxLayout *layout = new QVBoxLayout( this );
