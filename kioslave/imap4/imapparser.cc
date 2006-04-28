@@ -1940,7 +1940,7 @@ bool imapParser::hasCapability (const QString & cap)
 
 void imapParser::removeCapability (const QString & cap)
 {
-  imapCapabilities.remove(cap.toLower());
+  imapCapabilities.removeAll(cap.toLower());
 }
 
 QString imapParser::namespaceForBox( const QString & box )

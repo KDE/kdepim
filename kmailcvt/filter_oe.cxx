@@ -84,7 +84,7 @@ void FilterOE::import(FilterInfo *info)
             importMailBox(info, dir.filePath(*mailFile));
             if(!folderStructure.isEmpty()) parsedFolder = true;
             // remove file from QStringList::files, no longer needed
-            files.remove(mailFile);
+            files.erase(mailFile);
             currentIsFolderFile = false;
             break;
         }

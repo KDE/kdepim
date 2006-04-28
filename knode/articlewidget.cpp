@@ -126,7 +126,7 @@ ArticleWidget::ArticleWidget( QWidget *parent,
 
 ArticleWidget::~ArticleWidget()
 {
-  mInstances.remove( this );
+  mInstances.removeAll( this );
   delete mTimer;
   delete mCSSHelper;
   if ( mArticle && mArticle->isOrphant() )

@@ -456,8 +456,8 @@ bool KABC::ResourceKolab::fromKMailAddIncidence( const QString& type,
        && !mUidsPendingUpdate.contains( uid ) ) {
     addressBook()->emitAddressBookChanged();
   } else {
-    mUidsPendingAdding.remove( uid );
-    mUidsPendingUpdate.remove( uid );
+    mUidsPendingAdding.removeAll( uid );
+    mUidsPendingUpdate.removeAll( uid );
   }
 
   return true;
@@ -475,7 +475,7 @@ void KABC::ResourceKolab::fromKMailDelIncidence( const QString& type,
 
   // Can't be in both, by contract
   if ( mUidsPendingDeletion.contains( uid ) ) {
-    mUidsPendingDeletion.remove( uid );
+    mUidsPendingDeletion.removeAll( uid );
   } else if ( mUidsPendingUpdate.contains( uid ) ) {
     // It's good to know if was deleted, but we are waiting on a new one to
     // replace it, so let's just sit tight.

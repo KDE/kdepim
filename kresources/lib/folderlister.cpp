@@ -327,7 +327,7 @@ void FolderLister::slotListJobResult( KJob *job )
             << mProcessedPathes.join(" | ") << endl;
   KIO::SimpleJob *j = dynamic_cast<KIO::SimpleJob*>(job);
   if ( j ) {
-    mUrls.remove( j->url() );
+    mUrls.removeAll( j->url() );
     mProcessedPathes.append( j->url().path(-1) );
   }
 

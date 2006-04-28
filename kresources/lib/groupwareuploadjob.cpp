@@ -275,9 +275,9 @@ void GroupwareUploadJob::slotItemDeleted( const QString &/*localId*/, const KUrl
     if ( (*it)->url().path() == remoteURL.path() ) {
 kDebug()<<"Found it in the list!"<<endl;
       KPIM::GroupwareUploadItem *item = (*it);
-      mDeletedItems.remove( item );
-      mItemsUploading.remove( item );
-      mItemsUploadError.remove( item );
+      mDeletedItems.removeAll( item );
+      mItemsUploading.removeAll( item );
+      mItemsUploadError.removeAll( item );
       mItemsUploaded.append( item );
     }
   }
@@ -312,10 +312,10 @@ void GroupwareUploadJob::slotItemUploaded( const QString &/*localId*/, const KUr
     if ( (*it)->url().path() == remoteURL.path() ) {
 kDebug()<<"Found it in the list!"<<endl;
       KPIM::GroupwareUploadItem *item = (*it);
-      mChangedItems.remove( item );
-      mAddedItems.remove( item );
-      mItemsUploading.remove( item );
-      mItemsUploadError.remove( item );
+      mChangedItems.removeAll( item );
+      mAddedItems.removeAll( item );
+      mItemsUploading.removeAll( item );
+      mItemsUploadError.removeAll( item );
       mItemsUploaded.append( item );
     }
   }
@@ -353,10 +353,10 @@ void GroupwareUploadJob::slotItemUploadedNew( const QString &localId, const KUrl
     if ( (*it)->url().path() == remoteURL.path() ) {
 kDebug()<<"Found it in the list!"<<endl;
       KPIM::GroupwareUploadItem *item = (*it);
-      mChangedItems.remove( item );
-      mAddedItems.remove( item );
-      mItemsUploading.remove( item );
-      mItemsUploadError.remove( item );
+      mChangedItems.removeAll( item );
+      mAddedItems.removeAll( item );
+      mItemsUploading.removeAll( item );
+      mItemsUploadError.removeAll( item );
       mItemsUploaded.append( item );
     }
   }
@@ -380,9 +380,9 @@ void GroupwareUploadJob::slotItemDeleteError( const KUrl &remoteURL, const QStri
     if ( (*it)->url().path() == remoteURL.path() ) {
 kDebug()<<"Found it in the list!"<<endl;
       KPIM::GroupwareUploadItem *item = (*it);
-      mDeletedItems.remove( item );
-      mItemsUploaded.remove( item );
-      mItemsUploading.remove( item );
+      mDeletedItems.removeAll( item );
+      mItemsUploaded.removeAll( item );
+      mItemsUploading.removeAll( item );
       mItemsUploadError.append( item );
     }
   }
@@ -406,9 +406,9 @@ void GroupwareUploadJob::slotItemUploadError( const KUrl &remoteURL, const QStri
     if ( (*it)->url().path() == remoteURL.path() ) {
 kDebug()<<"Found it in the list!"<<endl;
       KPIM::GroupwareUploadItem *item = (*it);
-      mChangedItems.remove( item );
-      mItemsUploaded.remove( item );
-      mItemsUploading.remove( item );
+      mChangedItems.removeAll( item );
+      mItemsUploaded.removeAll( item );
+      mItemsUploading.removeAll( item );
       mItemsUploadError.append( item );
     }
   }
@@ -432,9 +432,9 @@ void GroupwareUploadJob::slotItemUploadNewError( const QString &/*localID*/, con
     if ( (*it)->url().path() == url.path() ) {
 kDebug()<<"Found it in the list!"<<endl;
       KPIM::GroupwareUploadItem *item = (*it);
-      mAddedItems.remove( item );
-      mItemsUploaded.remove( item );
-      mItemsUploading.remove( item );
+      mAddedItems.removeAll( item );
+      mItemsUploaded.removeAll( item );
+      mItemsUploading.removeAll( item );
       mItemsUploadError.append( item );
     }
   }

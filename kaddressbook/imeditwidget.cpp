@@ -104,10 +104,10 @@ QStringList IMEditWidget::ims()
 {
   if ( mIMEdit->text().isEmpty() ) {
     if ( mIMList.count() > 0 )
-      mIMList.remove( mIMList.begin() );
+      mIMList.removeFirst();
   } else {
     if ( mIMList.count() > 0 )
-      mIMList.remove( mIMList.begin() );
+      mIMList.removeFirst();
 
     mIMList.prepend( mIMEdit->text() );
   }
@@ -138,7 +138,7 @@ void IMEditWidget::edit()
 void IMEditWidget::textChanged( const QString &text )
 {
   if ( mIMList.count() > 0 )
-    mIMList.remove( mIMList.begin() );
+    mIMList.removeFirst();
 
   mIMList.prepend( text );
 }

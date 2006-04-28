@@ -139,13 +139,9 @@ void EmailEditWidget::setEmails( const QStringList &list )
 
 QStringList EmailEditWidget::emails()
 {
-  if ( mEmailEdit->text().isEmpty() ) {
-    if ( mEmailList.count() > 0 )
-      mEmailList.remove( mEmailList.begin() );
-  } else {
-    if ( mEmailList.count() > 0 )
-      mEmailList.remove( mEmailList.begin() );
-
+  if ( mEmailList.count() > 0 )
+    mEmailList.removeFirst();
+  if ( !mEmailEdit->text().isEmpty() ) {
     mEmailList.prepend( mEmailEdit->text() );
   }
 
@@ -168,7 +164,7 @@ void EmailEditWidget::edit()
 void EmailEditWidget::textChanged( const QString &text )
 {
   if ( mEmailList.count() > 0 )
-    mEmailList.remove( mEmailList.begin() );
+    mEmailList.removeFirst();
 
   mEmailList.prepend( text );
 }
@@ -215,7 +211,7 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
   topLayout->activate();
 
   QStringList items = list;
-  if ( items.remove( "" ) > 0 )
+  if ( items.removeAll( "" ) > 0 )
     mChanged = true;
   else
     mChanged = false;

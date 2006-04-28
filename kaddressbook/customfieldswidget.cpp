@@ -218,7 +218,7 @@ void FieldWidget::removeField( const QString &identifier )
       delete (*it).mWidget;
       delete (*it).mLayout;
 
-      mFieldList.remove( it );
+      mFieldList.erase( it );
       recalculateLayout();
 
       bool hasLocal = false;
@@ -340,7 +340,7 @@ void FieldWidget::removeLocalFields()
       delete (*it).mWidget;
       delete (*it).mLayout;
 
-      it = mFieldList.remove( it );
+      it = mFieldList.erase( it );
       it--;
       recalculateLayout();
     }

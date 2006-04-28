@@ -256,7 +256,7 @@ void PhoneEditWidget::add()
 
 void PhoneEditWidget::remove()
 {
-  mPhoneNumberList.remove( mPhoneNumberList.last() );
+  mPhoneNumberList.removeLast();
   changed();
 
   updateWidgets();
@@ -318,7 +318,7 @@ PhoneTypeDialog::PhoneTypeDialog( int type, QWidget *parent )
 
   // fill widgets
   mTypeList = KABC::PhoneNumber::typeList();
-  mTypeList.remove( KABC::PhoneNumber::Pref );
+  mTypeList.removeAll( KABC::PhoneNumber::Pref );
 
   KABC::PhoneNumber::TypeList::ConstIterator it;
   mGroup = new QButtonGroup( box );

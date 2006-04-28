@@ -352,11 +352,11 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
       kmailDeleteIncidence( subresource, sernum );// remove new from kmail
       if ( localIncidence ) {
         addIncidence( localIncidence, subresource, 0  );
-        mUidsPendingAdding.remove( localIncidence->uid() ); // we do want to inform KOrg also
+        mUidsPendingAdding.removeAll( localIncidence->uid() ); // we do want to inform KOrg also
       }
       if ( addedIncidence  ) {
         addIncidence( addedIncidence, subresource, 0  );
-        mUidsPendingAdding.remove( addedIncidence->uid() ); // we do want to inform KOrg also
+        mUidsPendingAdding.removeAll( addedIncidence->uid() ); // we do want to inform KOrg also
       }
       mSilent = silent;
   }
@@ -494,7 +494,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
      * in the calendar remains valid, but the serial number changed, so we need to
      * update that */
     if ( ourOwnUpdate = mUidsPendingUpdate.contains( uid ) ) {
-      mUidsPendingUpdate.remove( uid );
+      mUidsPendingUpdate.removeAll( uid );
       mUidMap.remove( uid );
       mUidMap[ uid ] = StorageReference( subResource, sernum );
     } else {
@@ -535,7 +535,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       if ( !mUidsPendingAdding.contains( uid ) ) {
         if ( !ourOwnUpdate ) mResourceChangedTimer.start( 100 );
       } else {
-        mUidsPendingAdding.remove( uid );
+        mUidsPendingAdding.removeAll( uid );
       }
     }
 
@@ -756,7 +756,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
 
   // Can't be in both, by contract
   if ( mUidsPendingDeletion.contains( uid ) ) {
-    mUidsPendingDeletion.remove( uid );
+    mUidsPendingDeletion.removeAll( uid );
   } else if ( mUidsPendingUpdate.contains( uid ) ) {
     // It's good to know if was deleted, but we are waiting on a new one to
     // replace it, so let's just sit tight.

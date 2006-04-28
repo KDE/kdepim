@@ -98,7 +98,7 @@ void Query::slotData( KIO::Job *, const QByteArray &data )
 
 void Query::slotResult( KJob *job )
 {
-  m_pendingJobs.remove( static_cast<KIO::Job*>(job) );
+  m_pendingJobs.removeAll( static_cast<KIO::Job*>(job) );
 
   if ( job->error() != 0 )
   {
@@ -340,7 +340,7 @@ Server::~Server()
 
 void Server::queryFinished( Query *query )
 {
-  mPendingQueries.remove( query );
+  mPendingQueries.removeAll( query );
   query->deleteLater();
 }
 

@@ -426,7 +426,7 @@ void VCardViewerDialog::updateView()
 
 void VCardViewerDialog::slotUser1()
 {
-  mIt = mContacts.remove( mIt );
+  mIt = mContacts.erase( mIt );
 
   if ( mIt == mContacts.end() )
     slotApply();

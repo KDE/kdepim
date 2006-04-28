@@ -161,7 +161,7 @@ void KeyWidget::removeKey()
   if ( KMessageBox::warningContinueCancel( this, text, "", KGuiItem( i18n( "&Delete" ), "editdelete" ) ) == KMessageBox::Cancel )
     return;
 
-  mKeyList.remove( mKeyList.at( pos ) );
+  mKeyList.removeAt( pos );
   emit changed();
 
   updateKeyCombo();

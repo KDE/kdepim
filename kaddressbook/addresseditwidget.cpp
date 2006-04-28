@@ -153,7 +153,7 @@ void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
   const QList<int> configList = config.noDefaultAddrTypes();
   QList<int>::ConstIterator it;
   for ( it = configList.begin(); it != configList.end(); ++it )
-    defaultTypes.remove( *it );
+    defaultTypes.removeAll( *it );
 
   // Insert default types.
   // Doing this for mPrefCombo is enough because the list is shared by all
@@ -416,7 +416,7 @@ void AddressEditDialog::removeAddress()
     if ( mPreviousAddress && mPreviousAddress->id() == (*it).id() )
       mPreviousAddress = 0;
 
-    mAddressList.remove( it );
+    mAddressList.erase( it );
     mTypeCombo->updateTypes();
     updateAddressEdits();
 
@@ -621,7 +621,7 @@ AddressTypeDialog::AddressTypeDialog( int type, QWidget *parent )
   QHBoxLayout *buttonLayout = new QHBoxLayout( box );
 
   mTypeList = KABC::Address::typeList();
-  mTypeList.remove( KABC::Address::Pref );
+  mTypeList.removeAll( KABC::Address::Pref );
 
   KABC::Address::TypeList::ConstIterator it;
   int i = 0;

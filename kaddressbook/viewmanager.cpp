@@ -313,7 +313,7 @@ void ViewManager::deleteView()
   QString caption = i18n( "Confirm Delete" );
 
   if ( KMessageBox::warningContinueCancel( this, text, caption, KGuiItem( i18n( "&Delete" ), "editdelete" ) ) == KMessageBox::Continue ) {
-    mViewNameList.remove( mActiveView->windowTitle() );
+    mViewNameList.removeAll( mActiveView->windowTitle() );
 
     // remove the view from the config file
     KConfig *config = mCore->config();
