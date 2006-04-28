@@ -2153,7 +2153,7 @@ int KDTimeHeaderWidget::minorScaleCount() const
 void KDTimeHeaderWidget::resizeEvent ( QResizeEvent * )
 {
     // qDebug("KDTimeHeaderWidget:: resizeEvent ");
-    paintPix.resize( 1280, height () );
+    paintPix = QPixmap( 1280, height () );
 }
 
 

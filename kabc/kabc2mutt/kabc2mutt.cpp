@@ -53,8 +53,8 @@ void KABC2Mutt::loadingFinished()
   for ( iaddr = mAddressBook->begin(); iaddr != mAddressBook->end(); ++iaddr ) {
     const QString name = (*iaddr).givenName() + ' ' + (*iaddr).familyName();
     if ( !mQuery.isEmpty() ) {
-      bool match = (name.contains(mQuery, 0, mIgnoreCase?Qt::CaseInsensitive:Qt::CaseSensitive) ) ||
-                   ((*iaddr).preferredEmail().contains( mQuery, 0, mIgnoreCase?Qt::CaseInsensitive:Qt::CaseSensitive ) );
+      bool match = (name.contains(mQuery, mIgnoreCase?Qt::CaseInsensitive:Qt::CaseSensitive) ) ||
+                   ((*iaddr).preferredEmail().contains( mQuery, mIgnoreCase?Qt::CaseInsensitive:Qt::CaseSensitive ) );
       if ( !match )
         continue;
     }
