@@ -129,7 +129,7 @@ namespace {
 
   // some special types:
   template <> struct from_helper<bool> : public QVariant {
-    from_helper( bool b ) : QVariant( b, int() ) {}
+    from_helper( bool b ) : QVariant( b ) {}
   };
   template <> struct from_helper<KUrl> : public QVariant {
     from_helper( const KUrl & url ) : QVariant( url.path() ) {}
@@ -181,7 +181,7 @@ namespace {
       if ( argType() != ArgType_Path && argType()!= ArgType_DirPath ) return mValue.toStringList();
       else return to<KUrl::List>( mValue ); }
     void resetToDefault() { mValue = defaultValue(); mDirty = false; }
-    void setBoolValue( bool value ) { setValue( QVariant( value, int() ) ); }
+    void setBoolValue( bool value ) { setValue( QVariant( value ) ); }
     void setStringValue( const QString & value ) { setValue( value ); }
     void setIntValue( int value ) { setValue( value ); }
     void setUIntValue( unsigned int value ) { setValue( value ); }
@@ -220,9 +220,9 @@ namespace {
       return QVariant();
     case ArgType_None:
       if ( isList() )
-        return QList<QVariant>() << QVariant( data.defaults.boolean.value, int() );
+        return QList<QVariant>() << QVariant( data.defaults.boolean.value );
       else
-        return QVariant( data.defaults.boolean.value, int() );
+        return QVariant( data.defaults.boolean.value );
     case ArgType_String:
       if ( isList() )
         return QStringList( QString::fromLatin1( data.defaults.string ) );

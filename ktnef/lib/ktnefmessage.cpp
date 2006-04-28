@@ -86,7 +86,7 @@ QString KTNEFMessage::rtfString()
 	else
 	{
 		QByteArray rtf;
-		QBuffer input( &prop.asByteArray() ), output( &rtf );
+		QBuffer input( &prop.toByteArray() ), output( &rtf );
 		if ( input.open( QIODevice::ReadOnly ) && output.open( QIODevice::WriteOnly ) )
 			lzfu_decompress( &input, &output );
 		return QString( rtf );
