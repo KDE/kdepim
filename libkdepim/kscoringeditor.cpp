@@ -127,8 +127,8 @@ void SingleConditionWidget::clear()
 
 void SingleConditionWidget::toggleRegExpButton( int selected )
 {
-  bool isRegExp = KScoringExpression::MATCH == selected &&
-      KScoringExpression::MATCHCS == selected &&
+  bool isRegExp = (KScoringExpression::MATCH == selected ||
+      KScoringExpression::MATCHCS == selected) &&
       !KTrader::self()->query("KRegExpEditor/KRegExpEditor").isEmpty();
   regExpButton->setEnabled( isRegExp );
 }
