@@ -328,7 +328,7 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
                                  QString & language)
 {
   //do we have a rfc string
-  if (_str.find("=?") < 0)
+  if (!_str.contains("=?") )
     return _str;
 
   // FIXME get rid of the conversion?
@@ -620,7 +620,7 @@ rfcDecoder::encodeRFC2231String (const QString & _str)
 const QString
 rfcDecoder::decodeRFC2231String (const QString & _str)
 {
-  int p = _str.find ('\'');
+  int p = _str.indexOf ('\'');
 
   //see if it is an rfc string
   if (p < 0)

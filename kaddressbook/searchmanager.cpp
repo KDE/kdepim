@@ -97,7 +97,7 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
       } else if ( type == EndsWith && (*fieldIt)->value( *it ).endsWith( pattern, false ) ) {
         mContacts.append( *it );
         break;
-      } else if ( type == Contains && (*fieldIt)->value( *it ).find( pattern, 0, false ) != -1 ) {
+      } else if ( type == Contains && (*fieldIt)->value( *it ).contains( pattern, Qt::CaseInsensitive ) ) {
         mContacts.append( *it );
         break;
       } else if ( type == Equals && (*fieldIt)->value( *it ).localeAwareCompare( pattern ) == 0 ) {
