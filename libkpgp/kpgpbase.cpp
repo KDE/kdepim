@@ -162,7 +162,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
           }
           else if (pollin.revents & POLLOUT) {
             // search end of next line
-            if ((len2 = input.find('\n', i)) == -1)
+            if ((len2 = input.indexOf('\n', i)) == -1)
               len2 = input.length()-i;
             else
               len2 = len2-i+1;
@@ -595,7 +595,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
           else if (poller[STD_IN].revents & POLLOUT) {
             if (!input.isEmpty()) {
               // search end of next line
-              if ((len2 = input.find('\n', input_pos)) == -1)
+              if ((len2 = input.indexOf('\n', input_pos)) == -1)
                 len2 = input.length()-input_pos;
               else
                 len2 = len2-input_pos+1;

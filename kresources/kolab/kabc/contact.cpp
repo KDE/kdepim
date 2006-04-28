@@ -1093,12 +1093,12 @@ void Contact::setFields( const KABC::Addressee* addressee )
   for( QStringList::Iterator it = customs.begin(); it != customs.end(); ++it ) {
     // KABC::Addressee doesn't offer a real way to iterate over customs, other than splitting strings ourselves
     // The format is "app-name:value".
-    int pos = (*it).find( '-' );
+    int pos = (*it).indexOf( '-' );
     if ( pos == -1 ) continue;
     QString app = (*it).left( pos );
     if ( app == "KOLAB" ) continue;
     QString name = (*it).mid( pos + 1 );
-    pos = name.find( ':' );
+    pos = name.indexOf( ':' );
     if ( pos == -1 ) continue;
     QString value = name.mid( pos + 1 );
     name = name.left( pos );

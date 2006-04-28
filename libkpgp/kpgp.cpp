@@ -1042,7 +1042,7 @@ Module::prepareMessageForDecryption( const QByteArray& msg,
     start = 0;
   else
   {
-    start = msg.find( "\n-----BEGIN PGP" ) + 1;
+    start = msg.indexOf( "\n-----BEGIN PGP" ) + 1;
     if( start == 0 )
     {
       nonPgpBlocks.append( msg );
@@ -1060,20 +1060,20 @@ Module::prepareMessageForDecryption( const QByteArray& msg,
     else
       pgpBlock = UnknownBlock;
 
-    nextEnd = msg.find( "\n-----END PGP", start + 15 );
+    nextEnd = msg.indexOf( "\n-----END PGP", start + 15 );
     if( nextEnd == -1 )
     {
       nonPgpBlocks.append( msg.mid( lastEnd+1 ) );
       break;
     }
-    nextStart = msg.find( "\n-----BEGIN PGP", start + 15 );
+    nextStart = msg.indexOf( "\n-----BEGIN PGP", start + 15 );
 
     if( ( nextStart == -1 ) || ( nextEnd < nextStart ) ||
         ( pgpBlock == ClearsignedBlock ) )
     { // most likely we found a PGP block (but we don't check if it's valid)
       // store the preceding non-PGP block
       nonPgpBlocks.append( msg.mid( lastEnd+1, start-lastEnd-1 ) );
-      lastEnd = msg.find( "\n", nextEnd + 14 );
+      lastEnd = msg.indexOf( "\n", nextEnd + 14 );
       if( lastEnd == -1 )
       {
         pgpBlocks.append( Block( msg.mid( start ) ) );
@@ -1084,7 +1084,7 @@ Module::prepareMessageForDecryption( const QByteArray& msg,
       {
         pgpBlocks.append( Block( msg.mid( start, lastEnd+1-start ) ) );
         if( ( nextStart != -1 ) && ( nextEnd > nextStart ) )
-          nextStart = msg.find( "\n-----BEGIN PGP", lastEnd+1 );
+          nextStart = msg.indexOf( "\n-----BEGIN PGP", lastEnd+1 );
       }
     }
 
@@ -1474,12 +1474,12 @@ Module::canonicalAddress( const QString& _adress )
   address = address.trimmed();
 
   // just leave pure e-mail address.
-  if((index = address.find("<")) != -1)
-    if((index2 = address.find("@",index+1)) != -1)
-      if((index2 = address.find(">",index2+1)) != -1)
+  if((index = address.indexOf("<")) != -1)
+    if((index2 = address.indexOf("@",index+1)) != -1)
+      if((index2 = address.indexOf(">",index2+1)) != -1)
 	return address.mid(index,index2-index+1);
 
-  if((index = address.find("@")) == -1)
+  if((index = address.indexOf("@")) == -1)
   {
     // local address
     //char hostname[1024];
@@ -1490,7 +1490,7 @@ Module::canonicalAddress( const QString& _adress )
   else
   {
     int index1 = address.lastIndexOf(" ",index);
-    int index2 = address.find(" ",index);
+    int index2 = address.indexOf(" ",index);
     if(index2 == -1) index2 = address.length();
     return "<" + address.mid(index1+1 ,index2-index1-1) + ">";
   }

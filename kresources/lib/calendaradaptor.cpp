@@ -75,12 +75,10 @@ bool CalendarAdaptor::localItemHasChanged( const QString &localId )
   if ( !i ) return false;
 
   if ( !mResource->deletedIncidences().isEmpty() &&
-      mResource->deletedIncidences().find( i )
-   != mResource->deletedIncidences().end() )
+      mResource->deletedIncidences().contains( i )  )
     return true;
   if ( !mResource->changedIncidences().isEmpty() &&
-       mResource->changedIncidences().find( i )
-    != mResource->changedIncidences().end() )
+       mResource->changedIncidences().contains( i )  )
     return true;
 
   return false;

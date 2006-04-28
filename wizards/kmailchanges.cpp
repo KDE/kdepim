@@ -212,11 +212,11 @@ void CreateDisconnectedImapAccount::apply()
     // let's use the server name after that.
     QString accountName = mAccountName;
     const QStringList identities = identityManager.identities();
-    if ( identities.find( accountName ) != identities.end() ) {
+    if ( identities.contains( accountName )  ) {
       accountName = mServer;
       int i = 2;
       // And if there's already one, number them
-      while ( identities.find( accountName ) != identities.end() ) {
+      while ( identities.contains( accountName )  ) {
         accountName = mServer + " " + QString::number( i++ );
       }
     }

@@ -114,7 +114,7 @@ void ResourceFeaturePlan::insertCategories( const Category::List &categories,
       Todo *todo = new Todo;
 
       QString summary = f.summary();
-      int pos = summary.find( '\n' );
+      int pos = summary.indexOf( '\n' );
       if ( pos > 0 ) summary = summary.left( pos ) + "...";
       todo->setSummary( summary );
 

@@ -110,7 +110,7 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
   QString email;
   const QString server = KolabConfig::self()->server();
   QString user = KolabConfig::self()->user();
-  int pos = user.find( "@" );
+  int pos = user.indexOf( "@" );
   // with kolab the userid _is_ the full email
   if ( pos > 0 )
     // The user typed in a full email address. Assume it's correct

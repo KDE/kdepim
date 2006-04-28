@@ -211,7 +211,7 @@ bool Key::matchesUserID(const QString& str, bool cs)
     return false;
   
   for (UserIDListIterator it(mUserIDs); it.current(); ++it) {
-    if (((*it)->text().find(str, 0, cs)) != -1)
+    if (((*it)->text().indexOf(str, 0, cs?Qt::CaseSensitive:Qt::CaseInsensitive)) != -1)
       return true;
   }
 

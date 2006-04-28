@@ -151,7 +151,7 @@ void FolderLister::readConfig( KPIM::GroupwarePrefsBase *newprefs )
     for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
       e.type = (FolderLister::ContentType)( e.type | contentTypeFromString( *it ) );
     }
-    if ( active.find( e.id ) != active.end() ) e.active = true;
+    if ( active.contains( e.id )  ) e.active = true;
     mFolders.append( e );
   }
 

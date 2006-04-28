@@ -162,7 +162,7 @@ void Kleo::GnuPGProcessBase::parseStatusOutput() {
   static const int startTokenLen = sizeof startToken / sizeof *startToken - 1;
 
   int lineStart = 0;
-  for ( int lineEnd = d->statusBuffer.find( '\n' ) ; lineEnd >= 0 ; lineEnd = d->statusBuffer.find( '\n', lineStart = lineEnd+1 ) ) {
+  for ( int lineEnd = d->statusBuffer.indexOf( '\n' ) ; lineEnd >= 0 ; lineEnd = d->statusBuffer.indexOf( '\n', lineStart = lineEnd+1 ) ) {
     // get next line:
     const QByteArray line = d->statusBuffer.mid( lineStart, lineEnd - lineStart ).trimmed();
     if ( line.isEmpty() )
@@ -183,7 +183,7 @@ void Kleo::GnuPGProcessBase::parseStatusOutput() {
     QString cmd;
     QStringList args;
     int tagStart = 0;
-    for ( int tagEnd = command.find( ' ' ) ; tagEnd >= 0 ; tagEnd = command.find( ' ', tagStart = tagEnd+1 ) ) {
+    for ( int tagEnd = command.indexOf( ' ' ) ; tagEnd >= 0 ; tagEnd = command.indexOf( ' ', tagStart = tagEnd+1 ) ) {
       const QByteArray tag = command.mid( tagStart, tagEnd - tagStart );
       if ( cmd.isNull() )
 	cmd = fromHexEscapedUtf8( tag );

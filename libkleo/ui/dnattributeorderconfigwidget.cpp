@@ -180,7 +180,7 @@ void Kleo::DNAttributeOrderConfigWidget::load() {
 
   const QStringList all = Kleo::DNAttributeMapper::instance()->names();
   for ( QStringList::const_iterator it = all.begin() ; it != all.end() ; ++it )
-    if ( order.find( *it ) == order.end() )
+    if ( !order.contains( *it )  )
       (void)new Q3ListViewItem( d->availableLV, *it, d->mapper->name2label( *it ) );
 
   if ( !d->placeHolderItem->listView() )
