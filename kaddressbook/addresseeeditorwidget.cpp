@@ -482,7 +482,7 @@ void AddresseeEditorWidget::setupCustomFieldsTabs()
 
   const QStringList list = KGlobal::dirs()->findAllResources( "data", "kaddressbook/contacteditorpages/*.ui", true, true );
   for ( QStringList::ConstIterator it = list.begin(); it != list.end(); ++it ) {
-    if ( activePages.find( (*it).mid( (*it).lastIndexOf('/') + 1 ) ) == activePages.end() )
+    if ( !activePages.contains( (*it).mid( (*it).lastIndexOf('/') + 1 ) )  )
       continue;
 
     ContactEditorTabPage *page = new ContactEditorTabPage( mTabWidget );

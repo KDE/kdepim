@@ -64,7 +64,7 @@ public:
   }
   int find(char c, int index = 0)
   {
-    int res = data.find(c, index + pos);
+    int res = data.indexOf(c, index + pos);
     return (res == -1) ? res : (res - pos);
   }
   // Warning: does not check for going past end of "data"

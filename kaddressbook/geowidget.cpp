@@ -445,9 +445,9 @@ void GeoDialog::loadCityList()
       }
 
       if ( !c.isEmpty() && !n.isEmpty() ) {
-        pos = c.find( "+", 1 );
+        pos = c.indexOf( "+", 1 );
         if ( pos < 0 )
-          pos = c.find( "-", 1 );
+          pos = c.indexOf( "-", 1 );
         if ( pos > 0 ) {
           GeoData data;
           data.latitude = calculateCoordinate( c.left( pos ) );

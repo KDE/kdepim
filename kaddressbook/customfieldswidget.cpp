@@ -530,12 +530,12 @@ QStringList CustomFieldsWidget::marshallFields( bool global ) const
 
 void splitField( const QString &str, QString &app, QString &name, QString &value )
 {
-  int colon = str.find( ':' );
+  int colon = str.indexOf( ':' );
   if ( colon != -1 ) {
     QString tmp = str.left( colon );
     value = str.mid( colon + 1 );
 
-    int dash = tmp.find( '-' );
+    int dash = tmp.indexOf( '-' );
     if ( dash != -1 ) {
       app = tmp.left( dash );
       name = tmp.mid( dash + 1 );

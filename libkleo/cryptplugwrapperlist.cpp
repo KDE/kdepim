@@ -28,7 +28,7 @@
 CryptPlugWrapper * CryptPlugWrapperList::findForLibName( const QString & libName ) const
 {
   for ( Q3PtrListIterator<CryptPlugWrapper> it( *this ) ; it.current() ; ++it )
-    if ( (*it)->libName().find( libName, 0, false ) >= 0 )
+    if ( (*it)->libName().contains( libName, Qt::CaseInsensitive ) )
       return *it;
   return 0;
 }

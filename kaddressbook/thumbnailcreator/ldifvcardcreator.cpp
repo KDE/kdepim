@@ -201,7 +201,7 @@ bool VCard_LDIFCreator::createImageSmall()
       // after starting a new line, we also jump to the next
       // physical newline in the file if we don't come from one
       if ( !newLine ) {
-        int pos = text.find( '\n', i );
+        int pos = text.indexOf( '\n', i );
         if ( pos > (int) i )
           i = pos +1;
       }

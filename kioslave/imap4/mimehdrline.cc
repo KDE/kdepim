@@ -491,7 +491,7 @@ mimeHdrLine::truncateLine(Q3CString aLine, unsigned int truncate)
 
   // see if we have a line of the form "key: value" (like "Subject: bla")
   // then we do not want to truncate between key and value
-  int validStart = aLine.find(": ");
+  int validStart = aLine.indexOf(": ");
   if (validStart > -1) {
     validStart += 2;
   }
@@ -500,9 +500,9 @@ mimeHdrLine::truncateLine(Q3CString aLine, unsigned int truncate)
     if (cutHere < 1 || cutHere < validStart) {
       cutHere = aLine.lastIndexOf('\t', truncate);
       if (cutHere < 1) {
-        cutHere = aLine.find(' ', 1);
+        cutHere = aLine.indexOf(' ', 1);
         if (cutHere < 1) {
-          cutHere = aLine.find('\t', 1);
+          cutHere = aLine.indexOf('\t', 1);
           if (cutHere < 1) {
             // simply truncate
             return aLine.left(truncate);

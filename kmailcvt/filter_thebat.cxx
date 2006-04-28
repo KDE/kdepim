@@ -173,7 +173,7 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
                 }
             } else {
                 ++count;
-                endOfEmail = (tbb.pos() - l + _tmp.find(regexp));
+                endOfEmail = (tbb.pos() - l + _tmp.indexOf(regexp));
                 offsets.append(endOfEmail);
             }
         }

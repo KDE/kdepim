@@ -149,8 +149,8 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
 
       else if (tokens[2] == "[PERMANENTFLAGS")
       {
-        int flagsStart = line.find('(');
-        int flagsEnd = line.find(')');
+        int flagsStart = line.indexOf('(');
+        int flagsEnd = line.indexOf(')');
 
         kDebug(7116) << "Checking permFlags from " << flagsStart << " to " << flagsEnd << endl;
         if ((-1 != flagsStart) && (-1 != flagsEnd) && flagsStart < flagsEnd)
@@ -172,8 +172,8 @@ permanentFlagsAvailable_ (false), readWriteAvailable_ (false)
     }
     else if (tokens[1] == "FLAGS")
     {
-      int flagsStart = line.find ('(');
-      int flagsEnd = line.find (')');
+      int flagsStart = line.indexOf ('(');
+      int flagsEnd = line.indexOf (')');
 
       if ((-1 != flagsStart) && (-1 != flagsEnd) && flagsStart < flagsEnd)
         setFlags (_flags (line.mid (flagsStart, flagsEnd).toLatin1() ));

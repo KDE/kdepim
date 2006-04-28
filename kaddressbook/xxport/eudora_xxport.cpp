@@ -126,22 +126,22 @@ QString EudoraXXPort::key( const QString& line) const
 {
   int e;
   QString result;
-  int b = line.find( '\"', 0 );
+  int b = line.indexOf( '\"', 0 );
 
   if ( b == -1 ) {
-    b = line.find( ' ' );
+    b = line.indexOf( ' ' );
     if ( b == -1 )
       return result;
 
     b++;
-    e = line.find( ' ', b );
+    e = line.indexOf( ' ', b );
     result = line.mid( b, e - b );
 
     return result;
   }
 
   b++;
-  e = line.find( '\"', b );
+  e = line.indexOf( '\"', b );
   if ( e == -1 )
     return result;
 
@@ -192,12 +192,12 @@ QString EudoraXXPort::get( const QString& line, const QString& key ) const
   int b, e;
 
   // Find formatted key, return on error
-  b = line.find( fd );
+  b = line.indexOf( fd );
   if ( b == -1 )
     return QString();
 
   b += fd.length();
-  e = line.find( '>', b );
+  e = line.indexOf( '>', b );
   if ( e == -1 )
     return QString();
 

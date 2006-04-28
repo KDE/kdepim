@@ -353,7 +353,7 @@ void IMEditorWidget::slotAdd()
       mPreferred = addressWid->address();
     }
 
-    if ( mChangedProtocols.find( addressWid->protocol() ) == mChangedProtocols.end() )
+    if ( !mChangedProtocols.contains( addressWid->protocol() )  )
       mChangedProtocols.append( addressWid->protocol() );
 
     mWidget->lvAddresses->sort();
@@ -388,7 +388,7 @@ void IMEditorWidget::slotEdit()
       }
 
       // the entry for the protocol of the current address has changed
-      if ( mChangedProtocols.find( current->protocol() ) == mChangedProtocols.end() ) {
+      if ( !mChangedProtocols.contains( current->protocol() )  ) {
         mChangedProtocols.append( current->protocol() );
       }
       // update protocol - has another protocol gained an address?
@@ -396,7 +396,7 @@ void IMEditorWidget::slotEdit()
         modified = true;
         // this proto is losing an entry
         current->setProtocol( addressWid->protocol() );
-        if ( mChangedProtocols.find( current->protocol() ) == mChangedProtocols.end() )
+        if ( !mChangedProtocols.contains( current->protocol() )  )
           mChangedProtocols.append( current->protocol() );
       }
 
@@ -431,7 +431,7 @@ void IMEditorWidget::slotDelete()
   while( it.current() ) {
     if ( it.current()->isSelected() ) {
       IMAddressLVI * current = static_cast<IMAddressLVI*>( *it );
-      if ( mChangedProtocols.find( current->protocol() ) == mChangedProtocols.end() )
+      if ( !mChangedProtocols.contains( current->protocol() )  )
         mChangedProtocols.append( current->protocol() );
 
       if ( current->preferred() )
@@ -477,12 +477,12 @@ KPluginInfo * IMEditorWidget::protocolFromString( const QString &fieldValue ) co
 
 void IMEditorWidget::splitField( const QString &str, QString &app, QString &name, QString &value )
 {
-  int colon = str.find( ':' );
+  int colon = str.indexOf( ':' );
   if ( colon != -1 ) {
     QString tmp = str.left( colon );
     value = str.mid( colon + 1 );
 
-    int dash = tmp.find( '-' );
+    int dash = tmp.indexOf( '-' );
     if ( dash != -1 ) {
       app = tmp.left( dash );
       name = tmp.mid( dash + 1 );
