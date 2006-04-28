@@ -729,7 +729,7 @@ void imapParser::parseStatus (parseString & inWords)
   lastStatus = imapInfo ();
 
   parseLiteralC(inWords);       // swallow the box
-  if (inWords[0] != '(')
+  if (inWords.isEmpty() || inWords[0] != '(')
     return;
 
   inWords.pos++;
