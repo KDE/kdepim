@@ -91,10 +91,10 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
     const KABC::Field::List::ConstIterator fieldEndIt( fieldList.end() );
     for ( ; fieldIt != fieldEndIt; ++fieldIt ) {
 
-      if ( type == StartsWith && (*fieldIt)->value( *it ).startsWith( pattern, false ) ) {
+      if ( type == StartsWith && (*fieldIt)->value( *it ).startsWith( pattern, Qt::CaseInsensitive ) ) {
         mContacts.append( *it );
         break;
-      } else if ( type == EndsWith && (*fieldIt)->value( *it ).endsWith( pattern, false ) ) {
+      } else if ( type == EndsWith && (*fieldIt)->value( *it ).endsWith( pattern, Qt::CaseInsensitive ) ) {
         mContacts.append( *it );
         break;
       } else if ( type == Contains && (*fieldIt)->value( *it ).contains( pattern, Qt::CaseInsensitive ) ) {

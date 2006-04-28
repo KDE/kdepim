@@ -32,7 +32,7 @@ using namespace KNode;
 StringFilter& KNode::StringFilter::operator=( const StringFilter &sf )
 {
   con=sf.con;
-  data=sf.data.copy();
+  data=sf.data;
   regExp=sf.regExp;
 
   return (*this);

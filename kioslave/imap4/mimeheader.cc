@@ -174,7 +174,7 @@ mimeHeader::addParameter (const Q3CString& aParameter, Q3Dict < QString > *aList
   int pos = aParameter.indexOf ('=');
 //  cout << aParameter.left(pos).data();
   aValue = new QString ();
-  aValue->setLatin1 (aParameter.right (aParameter.length () - pos - 1));
+  aValue->fromLatin1 (aParameter.right (aParameter.length () - pos - 1));
   aLabel = aParameter.left (pos);
   if ((*aValue)[0] == '"')
     *aValue = aValue->mid (1, aValue->length () - 2);
@@ -303,19 +303,19 @@ mimeHeader::getParameter (const Q3CString& aStr, Q3Dict < QString > *aDict)
         while (found);
         if (encoded.contains ('\''))
         {
-          retVal = rfcDecoder::decodeRFC2231String (encoded.local8Bit ());
+          retVal = rfcDecoder::decodeRFC2231String (encoded.toLocal8Bit ());
         }
         else
         {
           retVal =
             rfcDecoder::decodeRFC2231String (Q3CString ("''") +
-                                             encoded.local8Bit ());
+                                             encoded.toLocal8Bit ());
         }
       }
       else
       {
         //simple encoded parameter
-        retVal = rfcDecoder::decodeRFC2231String (found->local8Bit ());
+        retVal = rfcDecoder::decodeRFC2231String (found->toLocal8Bit ());
       }
     }
     else
@@ -403,11 +403,11 @@ mimeHeader::outputParameter (Q3Dict < QString > *aDict)
       retVal += (";\n\t" + it.currentKey () + "=").toLatin1 ();
       if (it.current ()->indexOf (' ') > 0 || it.current ()->indexOf (';') > 0)
       {
-        retVal += '"' + it.current ()->utf8 () + '"';
+        retVal += '"' + it.current ()->toUtf8 () + '"';
       }
       else
       {
-        retVal += it.current ()->utf8 ();
+        retVal += it.current ()->toUtf8 ();
       }
       // << it.current()->toUtf8() << "'";
       ++it;

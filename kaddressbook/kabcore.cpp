@@ -541,7 +541,7 @@ void KABCore::incrementalJumpButtonSearch( const QString& character )
     KABC::AddresseeList::ConstIterator it;
     const KABC::AddresseeList::ConstIterator endIt( list.end() );
     for ( it = list.begin(); it != endIt; ++it ) {
-      if ( field->value( *it ).startsWith( character, false ) ) {
+      if ( field->value( *it ).startsWith( character, Qt::CaseInsensitive ) ) {
         mViewManager->setSelected( (*it).uid(), true );
         return;
       }

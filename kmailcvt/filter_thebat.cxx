@@ -189,7 +189,7 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
             QString _path = "TheBat-Import/";
             QString _tmp = FileName;
             _tmp = _tmp.remove(_tmp.length() - 13, 13);
-            _path += _tmp.remove( mailDir ,true);
+            _path += _tmp.remove( mailDir, Qt::CaseSensitive );
             QString _info = _path;
             info->addLog(i18n("Import folder %1...", _info.remove(0,14)));
             info->setTo(_path);

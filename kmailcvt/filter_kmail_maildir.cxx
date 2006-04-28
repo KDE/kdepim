@@ -137,7 +137,7 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
             if(!generatedPath) {
                 _path = "KMail-Import";
                 QString _tmp = dir.filePath(*mailFile);
-                _tmp = _tmp.remove( mailDir ,true);
+                _tmp = _tmp.remove( mailDir, Qt::CaseSensitive );
                 QStringList subFList = _tmp.split( "/", QString::SkipEmptyParts );
                 for ( QStringList::Iterator it = subFList.begin(); it != subFList.end(); ++it ) {
                     QString _cat = *it;

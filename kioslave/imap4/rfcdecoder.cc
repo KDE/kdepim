@@ -62,7 +62,7 @@ QString rfcDecoder::fromIMAP (const QString & inSrc)
   unsigned char base64[256], utf8[6];
   unsigned int srcPtr = 0;
   QByteArray dst;
-  QByteArray src = inSrc.ascii ();
+  QByteArray src = inSrc.toAscii ();
   uint srcLen = inSrc.length();
 
   /* initialize modified base64 decoding table */
@@ -179,7 +179,7 @@ QString rfcDecoder::toIMAP (const QString & inSrc)
 {
   unsigned int utf8pos, utf8total, c, utf7mode, bitstogo, utf16flag;
   unsigned int ucs4, bitbuf;
-  Q3CString src = inSrc.utf8 ();
+  Q3CString src = inSrc.toUtf8 ();
   QString dst;
 
   int srcPtr = 0;
@@ -300,8 +300,8 @@ rfcDecoder::codecForName (const QString & _str)
 {
   if (_str.isEmpty ())
     return NULL;
-  return QTextCodec::codecForName (_str.lower ().
-                                   replace ("windows", "cp").latin1 ());
+  return QTextCodec::codecForName (_str.toLower ().
+                                   replace ("windows", "cp").toLatin1 ());
 }
 
 //-----------------------------------------------------------------------------
@@ -332,7 +332,7 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
     return _str;
 
   // FIXME get rid of the conversion?
-  QByteArray aStr = _str.ascii ();  // QString.length() means Unicode chars
+  QByteArray aStr = _str.toAscii ();  // QString.length() means Unicode chars
   QByteArray result;
   char *pos, *beg, *end, *mid = NULL;
   Q3CString str;
@@ -434,7 +434,7 @@ rfcDecoder::decodeRFC2047String (const QString & _str, QString & charset,
   }
   if (!charset.isEmpty ())
   {
-    QTextCodec *aCodec = codecForName (charset.ascii ());
+    QTextCodec *aCodec = codecForName (charset.toAscii ());
     if (aCodec)
     {
 //    kDebug(7116) << "Codec is " << aCodec->name() << endl;
@@ -453,7 +453,7 @@ rfcDecoder::encodeRFC2047String (const QString & _str)
 {
   if (_str.isEmpty ())
     return _str;
-  const signed char *latin = reinterpret_cast<const signed char *>(_str.latin1()), *l, *start, *stop;
+  const signed char *latin = reinterpret_cast<const signed char *>(_str.toLatin1()), *l, *start, *stop;
   char hexcode;
   int numQuotes, i;
   int rptr = 0;
@@ -570,7 +570,7 @@ rfcDecoder::encodeRFC2231String (const QString & _str)
     return _str;
   signed char *latin = (signed char *) calloc (1, _str.length () + 1);
   char *latin_us = (char *) latin;
-  strcpy (latin_us, _str.latin1 ());
+  strcpy (latin_us, _str.toLatin1 ());
   signed char *l = latin;
   char hexcode;
   int i;

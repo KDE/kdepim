@@ -45,10 +45,10 @@ static const KCmdLineOptions options[] =
 void displayHolidays( const QList<Holiday> holidays )
 {
   foreach( Holiday h, holidays ) {
-    cout << "NAME: " << h.name().local8Bit().data() << endl;
-    cout << "  TYPE: " << h.type().local8Bit().data() << endl;
+    cout << "NAME: " << h.name().toLocal8Bit().data() << endl;
+    cout << "  TYPE: " << h.type().toLocal8Bit().data() << endl;
     if ( !h.description().isEmpty() )
-      cout << "  DESC: " << h.description().local8Bit().data() << endl;
+      cout << "  DESC: " << h.description().toLocal8Bit().data() << endl;
     else
       cout << "  DESC: " << "(none)" << endl;
 //    displaySpec( h.datespec() );

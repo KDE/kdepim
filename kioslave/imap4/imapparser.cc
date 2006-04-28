@@ -1054,7 +1054,7 @@ mimeHeader * imapParser::parseSimplePart (parseString & inWords,
       QString *disposition = parameters["content-disposition"];
 
       if (disposition)
-        localPart->setDisposition (disposition->ascii ());
+        localPart->setDisposition (disposition->toAscii ());
       parameters.remove ("content-disposition");
       Q3AsciiDictIterator < QString > it (parameters);
       while (it.current ())
@@ -1170,7 +1170,7 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
       QString *disposition = parameters["content-disposition"];
 
       if (disposition)
-        localPart->setDisposition (disposition->ascii ());
+        localPart->setDisposition (disposition->toAscii ());
       parameters.remove ("content-disposition");
       Q3AsciiDictIterator < QString > it (parameters);
       while (it.current ())
@@ -1251,13 +1251,13 @@ void imapParser::parseBody (parseString & inWords)
 
       if (!envelope || seenUid.isEmpty ())
       {
-        kDebug(7116) << "imapParser::parseBody - discarding " << envelope << " " << seenUid.ascii () << endl;
+        kDebug(7116) << "imapParser::parseBody - discarding " << envelope << " " << seenUid.toAscii () << endl;
         // don't know where to put it, throw it away
         parseLiteralC(inWords, true);
       }
       else
       {
-        kDebug(7116) << "imapParser::parseBody - reading " << envelope << " " << seenUid.ascii () << endl;
+        kDebug(7116) << "imapParser::parseBody - reading " << envelope << " " << seenUid.toAscii () << endl;
         // fill it up with data
         QString theHeader = parseLiteralC(inWords, true);
         mimeIOQString myIO;
@@ -1280,7 +1280,7 @@ void imapParser::parseBody (parseString & inWords)
 
        if (!envelope || seenUid.isEmpty ())
        {
-         kDebug(7116) << "imapParser::parseBody - discarding " << envelope << " " << seenUid.ascii () << endl;
+         kDebug(7116) << "imapParser::parseBody - discarding " << envelope << " " << seenUid.toAscii () << endl;
          // don't know where to put it, throw it away
          parseLiteralC (inWords, true);
        }
@@ -1314,7 +1314,7 @@ void imapParser::parseBody (parseString & inWords)
         return;
       }
       // throw it away
-      kDebug(7116) << "imapParser::parseBody - discarding " << seenUid.ascii () << endl;
+      kDebug(7116) << "imapParser::parseBody - discarding " << seenUid.toAscii () << endl;
       parseLiteralC(inWords, true);
     }
 
@@ -1327,13 +1327,13 @@ void imapParser::parseBody (parseString & inWords)
 
     if (!envelope || seenUid.isEmpty ())
     {
-      kDebug(7116) << "imapParser::parseBody - discarding " << envelope << " " << seenUid.ascii () << endl;
+      kDebug(7116) << "imapParser::parseBody - discarding " << envelope << " " << seenUid.toAscii () << endl;
       // don't know where to put it, throw it away
       parseSentence (inWords);
     }
     else
     {
-      kDebug(7116) << "imapParser::parseBody - reading " << envelope << " " << seenUid.ascii () << endl;
+      kDebug(7116) << "imapParser::parseBody - reading " << envelope << " " << seenUid.toAscii () << endl;
       // fill it up with data
       QString section;
       mimeHeader *body = parseBodyStructure (inWords, section, envelope);
@@ -1930,7 +1930,7 @@ bool imapParser::hasCapability (const QString & cap)
        it != imapCapabilities.end (); ++it)
   {
 //    kDebug(7116) << "imapParser::hasCapability - Examining '" << (*it) << "'" << endl;
-    if ( !(kasciistricmp(c.ascii(), (*it).ascii())) )
+    if ( !(kasciistricmp(c.toAscii(), (*it).toAscii())) )
     {
       return true;
     }

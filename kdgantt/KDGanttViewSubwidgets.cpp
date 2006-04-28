@@ -451,7 +451,7 @@ void KDTimeTableWidget::computeHorizontalGrid()
         //QString ts = "asGroup";
         //if (!temp->displaySubitemsAsGroup() )
         //	ts = " NOT asGroup";
-        //qDebug("temp name %s %s", temp->listViewText(0).latin1(), ts.latin1());
+        //qDebug("temp name %s %s", temp->listViewText(0).toLatin1(), ts.toLatin1());
 
         temp = temp->itemBelow ();
     }
@@ -1037,7 +1037,7 @@ void KDTimeHeaderWidget::addTickLeft( int num )
 // the time in secs of one Major grid tick
 QDateTime KDTimeHeaderWidget::addMajorTickTime( const QDateTime& dt, int fac )
 {
-    // qDebug("KDTimeHeaderWidget::addMajorTickTime %d %d - %s  ", fac,myMajorScaleCount,  dt.toString().latin1() );
+    // qDebug("KDTimeHeaderWidget::addMajorTickTime %d %d - %s  ", fac,myMajorScaleCount,  dt.toString().toLatin1() );
     fac *= myMajorScaleCount;
     switch (myRealScale)
         {
@@ -1054,11 +1054,11 @@ QDateTime KDTimeHeaderWidget::addMajorTickTime( const QDateTime& dt, int fac )
             return dt.addDays( fac * 7 );
             break;
         case KDGanttView::Week:
-            //qDebug("return %s ",dt.addMonths( fac ).toString().latin1() );
+            //qDebug("return %s ",dt.addMonths( fac ).toString().toLatin1() );
             return dt.addMonths( fac );
             break;
         case KDGanttView::Month:
-            //qDebug("return %s ",dt.addYears( fac ).toString().latin1() );
+            //qDebug("return %s ",dt.addYears( fac ).toString().toLatin1() );
             return dt.addYears( fac );
             break;
         case KDGanttView::Auto:
@@ -1398,7 +1398,7 @@ double KDTimeHeaderWidget::secsFromTo( QDateTime begin, QDateTime end )
 
 void KDTimeHeaderWidget::zoomToSelectionAndSetStartEnd( const QDateTime& start, const QDateTime &end)
 {
-    //qDebug("start %s end %s ",start.toString().latin1(), end.toString().latin1() );
+    //qDebug("start %s end %s ",start.toString().toLatin1(), end.toString().toLatin1() );
     myHorizonStart = start;
     flagStartTimeSet = true;
     myHorizonEnd = end;
@@ -2515,7 +2515,7 @@ void KDTimeHeaderWidget::computeTicks(bool doNotComputeRealScale) // default fal
     minorItems = (int)  (secsFromTo( myRealStart, myHorizonEnd));
     //qDebug("tempMinorScaleCount %d scale: %d  - real scale: %d", tempMinorScaleCount, myScale, myRealScale);
     //qDebug("Zoom factor %f ",myZoomFactor );
-    //qDebug("sta %s - %s end %s ",myRealStart.toString().latin1(), myHorizonStart.toString().latin1(),myHorizonEnd.toString().latin1());
+    //qDebug("sta %s - %s end %s ",myRealStart.toString().toLatin1(), myHorizonStart.toString().toLatin1(),myHorizonEnd.toString().toLatin1());
     QString testTextMinor,testTextMajor, tempStr;
     QRect itemRectMinor, itemRectMajor;
     QDate tempDate = myRealStart.date();
@@ -2962,7 +2962,7 @@ void KDTimeHeaderWidget::centerDateTime( const QDateTime& center,  bool changeHo
         }
     }
     moveTimeLineTo(getCoordX( center )-(myGanttView->myCanvasView->viewport()->width() /2));
-    //  qDebug("centerDateTime %s %d %d", center.toString().latin1(),getCoordX( center ),(myGanttView->myCanvasView->viewport()->width() /2) );
+    //  qDebug("centerDateTime %s %d %d", center.toString().toLatin1(),getCoordX( center ),(myGanttView->myCanvasView->viewport()->width() /2) );
 }
 
 void KDTimeHeaderWidget::pendingPaint()
@@ -3149,8 +3149,8 @@ void KDTimeHeaderWidget::mouseReleaseEvent ( QMouseEvent *  )
             start = 0;
         if ( end > width() )
             end = width();
-        //qDebug("start %s ",getDateTimeForIndex(start).toString().latin1() );
-        //qDebug("end %s ",getDateTimeForIndex(end).toString().latin1() );
+        //qDebug("start %s ",getDateTimeForIndex(start).toString().toLatin1() );
+        //qDebug("end %s ",getDateTimeForIndex(end).toString().toLatin1() );
         emit myGanttView->timeIntervalSelected( getDateTimeForIndex(start),getDateTimeForIndex(end) );
         emit myGanttView->timeIntervallSelected( getDateTimeForIndex(start),getDateTimeForIndex(end) );
     }
@@ -3597,7 +3597,7 @@ void KDListView::dropEvent ( QDropEvent *e )
                                 newItem = KDGanttViewItem::createFromDomElement( myGanttView,
                                                                                  element );
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.latin1() );
+                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
                             Q_ASSERT( false );
                         }
                     }
@@ -4210,7 +4210,7 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
     static KDGanttViewItem* lastClicked = 0;
     mySignalSender->gvMouseButtonClicked( e->button(), currentItem ,  e->globalPos() );
     mySignalSender->gvMouseButtonReleased( e->button(), currentItem ,  e->globalPos() );
-    //qDebug("datetime %s ",mySignalSender->getDateTimeForCoordX(e->globalPos().x(), true ).toString().latin1() );
+    //qDebug("datetime %s ",mySignalSender->getDateTimeForCoordX(e->globalPos().x(), true ).toString().toLatin1() );
     //qDebug("mousepos %d %d ",e->pos().x(),e->pos().y() );
     //qDebug("mouseup ");
     // if ( currentLink || currentItem )

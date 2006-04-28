@@ -806,7 +806,7 @@ bool Contact::loadXML( const QDomDocument& document )
   mIsDistributionList = top.tagName() == "distribution-list";
   if ( top.tagName() != "contact" && !mIsDistributionList ) {
     qWarning( "XML error: Top tag was %s instead of the expected contact or distribution-list",
-              top.tagName().ascii() );
+              top.tagName().toAscii() );
     return false;
   }
 

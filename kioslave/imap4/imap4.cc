@@ -2444,7 +2444,7 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
       }
       completeQueue.removeRef (cmd);
       if (found) {
-        if ( cmdInfo.contains("permission", false) ) {
+        if ( cmdInfo.contains("permission", Qt::CaseInsensitive) ) {
           // not allowed to enter this folder
           error(ERR_ACCESS_DENIED, cmdInfo);
         } else {
