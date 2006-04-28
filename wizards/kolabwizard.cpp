@@ -268,7 +268,7 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
   topLayout->addWidget( label, 1, 0 );
   mUserEdit = new KLineEdit( page );
   topLayout->addWidget( mUserEdit, 1, 1 );
-  QWhatsThis::add(mUserEdit, i18n("Your email address on the Kolab Server. "
+  mUserEdit->setWhatsThis( i18n("Your email address on the Kolab Server. "
                         "Format: <i>name@example.net</i>"));
 
   label = new QLabel( i18n("Real name:"), page );
@@ -290,7 +290,7 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
   QGroupBox *bg = new QGroupBox(i18n("Server Version"), page );
   QHBoxLayout *hbl = new QHBoxLayout();
   bg->setLayout( hbl );
-  QWhatsThis::add( bg, i18n("Choose the version of the Kolab Server you are using.") );
+  bg->setWhatsThis( i18n("Choose the version of the Kolab Server you are using.") );
   mKolab1 = new QRadioButton( i18n ( "Kolab 1" ), bg );
   hbl->addWidget( mKolab1 );
   mKolab2 = new QRadioButton( i18n ( "Kolab 2" ), bg );

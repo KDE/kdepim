@@ -128,11 +128,13 @@ bool KTNEFParser::decodeMessage()
 	off = d->device_->pos() + i2;
 	switch ( tag )
 	{
-		case attAIDOWNER:
-			d->stream_ >> value.asUInt();
+		case attAIDOWNER: {
+			uint tmp;
+			d->stream_ >> tmp;
+			value.setValue( tmp );
 			d->message_->addProperty( 0x0062, MAPI_TYPE_ULONG, value );
 			kDebug() << "Message Owner Appointment ID" << " (length=" << i2 << ")" << endl;
-			break;
+			break;}
 		case attREQUESTRES:
 			d->stream_ >> u;
 			d->message_->addProperty( 0x0063, MAPI_TYPE_UINT16, u );
@@ -166,9 +168,11 @@ bool KTNEFParser::decodeMessage()
 				value = QString( "< %1 properties >" ).arg( d->message_->properties().count() - nProps );
 			}
 			break;
-		case attTNEFVERSION:
-			d->stream_ >> value.asUInt();
-			kDebug() << "Message TNEF Version" << " (length=" << i2 << ")" << endl;
+		case attTNEFVERSION: {
+			uint tmp;
+			d->stream_ >> tmp;
+			value.setValue( tmp );
+			kDebug() << "Message TNEF Version" << " (length=" << i2 << ")" << endl;}
 			break;
 		case attFROM:
 			d->message_->addProperty( 0x0024, MAPI_TYPE_STRING8, readTNEFAddress( d->stream_ ) );
@@ -662,10 +666,13 @@ quint16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
 		// name type
 		stream >> mapi.name.type;
 		// name
-		if ( mapi.name.type == 0 )
-			stream >> mapi.name.value.asUInt();
-		else if ( mapi.name.type == 1 )
-			mapi.name.value.asString() = readMAPIString( stream, true );
+		if ( mapi.name.type == 0 ) {
+			uint tmp;
+			stream >> tmp;
+			mapi.name.value.setValue( tmp );
+		} else if ( mapi.name.type == 1 ) {
+			mapi.name.value.setValue( readMAPIString( stream, true ) );
+		}
 	}
 
 	int n = 1;
@@ -682,17 +689,24 @@ quint16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
 		{
 		   case MAPI_TYPE_UINT16:
 			stream >> d;
-			value.asUInt() = ( d & 0x0000FFFF );
+			value.setValue( d & 0x0000FFFF );
 			break;
 		   case MAPI_TYPE_BOOLEAN:
-		   case MAPI_TYPE_ULONG:
-			stream >> value.asUInt();
+		   case MAPI_TYPE_ULONG: {
+		   uint tmp;
+		   stream >> tmp;
+			value.setValue( tmp );
+			}
 			break;
 		   case MAPI_TYPE_FLOAT:
+			 // FIXME: Don't we have to set the value here
 			stream >> d;
 			break;
-		   case MAPI_TYPE_DOUBLE:
-			stream >> value.asDouble();
+		   case MAPI_TYPE_DOUBLE: {
+		   double tmp;
+		   stream >> tmp;
+			value.setValue( tmp );
+			}
 			break;
 		   case MAPI_TYPE_TIME:
 			{
@@ -711,7 +725,7 @@ quint16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
 			for (uint i=0;i<d;i++)
 			{
 				value.clear();
-				value.asString() = readMAPIString( stream );
+				value.setValue( readMAPIString( stream ) );
 			}
 			break;
 		   case MAPI_TYPE_USTRING:
@@ -733,10 +747,11 @@ quint16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
 				{
 					int fullLen = len;
 					ALIGN(fullLen, 4);
-					stream.readRawBytes(value.asByteArray().data(), len);
+					stream.readRawBytes(value.toByteArray().data(), len);
 					quint8 c;
 					for ( int i=len; i<fullLen; i++ )
 						stream >> c;
+					// FIXME: Shouldn't we do something with the value???
 				}
 			}
 			break;
@@ -744,10 +759,13 @@ quint16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
 			mapi.type = MAPI_TYPE_NONE;
 			break;
 		}
-		if ( ISVECTOR( mapi ) )
-			mapi.value.asList().append( value );
-		else
+		if ( ISVECTOR( mapi ) ) {
+		  QList <QVariant> lst = mapi.value.toList();
+		  lst << value;
+			mapi.value.setValue( lst );
+		} else {
 			mapi.value = value;
+		}
 	}
 	return mapi.tag;
 }
