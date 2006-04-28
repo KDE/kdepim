@@ -142,18 +142,20 @@ void FilterLNotes::ImportLNotes(const QString& file) {
             }
         }
 
+	if (tempfile) tempfile->close();
+
         // did Folder end without 0x1a at the end?
         if (state != 0) {
-            tempfile->close();
-
             if(inf->removeDupMsg)
                 addMessage( inf, folder, tempfile->name() );
             else
                 addMessage_fastImport( inf, folder, tempfile->name() );
-
+        }
+	if (tempfile) {
             tempfile->unlink();
             delete tempfile;
         }
+ 
         f.close();
     }
 }
