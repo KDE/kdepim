@@ -249,11 +249,11 @@ IMAP4Protocol::get (const KUrl & _url)
     //        the logic is in the app.
 
     QString aUpper = aSection.toUpper();
-    if (aUpper.find ("STRUCTURE") != -1)
+    if (aUpper.contains("STRUCTURE"))
     {
       aSection = "BODYSTRUCTURE";
     }
-    else if (aUpper.find ("ENVELOPE") != -1)
+    else if (aUpper.contains("ENVELOPE"))
     {
       aSection = "UID RFC822.SIZE FLAGS ENVELOPE";
       if (hasCapability("IMAP4rev1")) {
@@ -267,9 +267,9 @@ IMAP4Protocol::get (const KUrl & _url)
     {
       aSection = "UID RFC822.HEADER RFC822.SIZE FLAGS";
     }
-    else if (aUpper.find ("BODY.PEEK[") != -1)
+    else if (aUpper.contains("BODY.PEEK["))
     {
-      if (aUpper.find ("BODY.PEEK[]") != -1)
+      if (aUpper.contains("BODY.PEEK[]"))
       {
         if (!hasCapability("IMAP4rev1")) // imap4 does not know BODY.PEEK[]
           aSection.replace("BODY.PEEK[]", "RFC822.PEEK");
@@ -363,11 +363,11 @@ IMAP4Protocol::get (const KUrl & _url)
 
         if (!cmd->isComplete ())
         {
-          if ((aUpper.find ("BODYSTRUCTURE") != -1)
-                    || (aUpper.find ("FLAGS") != -1)
-                    || (aUpper.find ("UID") != -1)
-                    || (aUpper.find ("ENVELOPE") != -1)
-                    || (aUpper.find ("BODY.PEEK[0]") != -1
+          if ( aUpper.contains("BODYSTRUCTURE")
+                    || aUpper.contains("FLAGS")
+                    || aUpper.contains("UID")
+                    || aUpper.contains("ENVELOPE")
+                    || (aUpper.contains("BODY.PEEK[0]") 
                         && (aEnum == ITYPE_BOX || aEnum == ITYPE_DIR_AND_BOX)))
           {
             if (aEnum == ITYPE_BOX || aEnum == ITYPE_DIR_AND_BOX)
@@ -460,8 +460,8 @@ IMAP4Protocol::listDir (const KUrl & _url)
       QString mailboxName;
       UDSEntry entry;
       KUrl aURL = _url;
-      if (aURL.path().find(';') != -1)
-        aURL.setPath(aURL.path().left(aURL.path().find(';')));
+      if ( aURL.path().contains(';') )
+        aURL.setPath(aURL.path().left(aURL.path().indexOf(';')));
 
       kDebug(7116) << "IMAP4Protocol::listDir - got " << listResponses.count () << endl;
 
@@ -608,7 +608,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
         bool withSubject = mySection.isEmpty();
         if (mySection.isEmpty()) mySection = "UID RFC822.SIZE ENVELOPE";
 
-        bool withFlags = mySection.toUpper().find("FLAGS") != -1;
+        bool withFlags = mySection.toUpper().contains("FLAGS") ;
         imapCommand *fetch =
           sendCommand (imapCommand::
                        clientFetch (mySequence, mySection));
@@ -899,7 +899,7 @@ IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
         if (hasCapability("UIDPLUS"))
         {
           QString uid = cmd->resultInfo();
-          if (uid.find("APPENDUID") != -1)
+          if ( uid.contains("APPENDUID") )
           {
             uid = uid.section(" ", 2, 2);
             uid.truncate(uid.length()-1);
@@ -954,7 +954,7 @@ IMAP4Protocol::mkdir (const KUrl & _url, int)
     parseURL(_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
   if (type == ITYPE_BOX)
   {
-    bool ask = ( aInfo.find( "ASKUSER" ) != -1 );
+    bool ask = ( aInfo.contains( "ASKUSER" ) );
     if ( ask &&
         messageBox(QuestionYesNo,
           i18n("The following folder will be created on the server: %1 "
@@ -996,7 +996,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
   if (dType != ITYPE_BOX && dType != ITYPE_DIR_AND_BOX)
   {
     // this might be konqueror
-    int sub = dBox.find (sBox);
+    int sub = dBox.indexOf (sBox);
 
     // might be moving to upper folder
     if (sub > 0)
@@ -1073,7 +1073,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
       if (hasCapability("UIDPLUS"))
       {
         QString uid = cmd->resultInfo();
-        if (uid.find("COPYUID") != -1)
+        if ( uid.contains("COPYUID") )
         {
           uid = uid.section(" ", 2, 3);
           uid.truncate(uid.length()-1);
@@ -2125,7 +2125,7 @@ IMAP4Protocol::doListEntry (const KUrl & _url, const QString & myBox,
     QString mailboxName = item.name ();
 
     // some beautification
-    if (mailboxName.find (myBox) == 0 && mailboxName.length() > myBox.length())
+    if ( mailboxName.startsWith(myBox) && mailboxName.length() > myBox.length())
     {
       mailboxName =
         mailboxName.right (mailboxName.length () - myBox.length ());
@@ -2139,7 +2139,7 @@ IMAP4Protocol::doListEntry (const KUrl & _url, const QString & myBox,
 
 	QString tmp;
     if (!item.hierarchyDelimiter().isEmpty() &&
-        mailboxName.find(item.hierarchyDelimiter()) != -1)
+        mailboxName.contains(item.hierarchyDelimiter()) )
       tmp = mailboxName.section(item.hierarchyDelimiter(), -1);
     else
       tmp = mailboxName;
@@ -2302,17 +2302,16 @@ IMAP4Protocol::parseURL (const KUrl & _url, QString & _box,
   {
     if (!_uid.isEmpty ())
     {
-      if (_uid.find (':') == -1 && _uid.find (',') == -1
-          && _uid.find ('*') == -1)
+      if ( !_uid.contains(':') && !_uid.contains(',') && !_uid.contains('*') )
         retVal = ITYPE_MSG;
     }
   }
   if (retVal == ITYPE_MSG)
   {
-    if ( (_section.find ("BODY.PEEK[", 0, false) != -1 ||
-          _section.find ("BODY[", 0, false) != -1) &&
-         _section.find(".MIME") == -1 &&
-         _section.find(".HEADER") == -1 )
+    if ( ( _section.contains("BODY.PEEK[", Qt::CaseInsensitive) ||
+          _section.contains("BODY[", Qt::CaseInsensitive) ) &&
+         !_section.contains(".MIME") &&
+         !_section.contains(".HEADER") )
       retVal = ITYPE_ATTACH;
   }
   if ( _hierarchyDelimiter.isEmpty() &&
@@ -2377,9 +2376,9 @@ void IMAP4Protocol::flushOutput(QString contentEncoding)
   {
     // get the coding from the MIME header
     QByteArray decoded;
-    if (contentEncoding.find("quoted-printable", 0, false) == 0)
+    if ( contentEncoding.startsWith("quoted-printable", Qt::CaseInsensitive) )
       decoded = KCodecs::quotedPrintableDecode(outputCache);
-    else if (contentEncoding.find("base64", 0, false) == 0)
+    else if ( contentEncoding.startsWith("base64", Qt::CaseInsensitive) )
       KCodecs::base64Decode(outputCache, decoded);
     else
       decoded = outputCache;
@@ -2445,7 +2444,7 @@ IMAP4Protocol::assureBox (const QString & aBox, bool readonly)
       }
       completeQueue.removeRef (cmd);
       if (found) {
-        if (cmdInfo.find("permission", 0, false) != -1) {
+        if ( cmdInfo.contains("permission", false) ) {
           // not allowed to enter this folder
           error(ERR_ACCESS_DENIED, cmdInfo);
         } else {
