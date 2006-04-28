@@ -1160,7 +1160,7 @@ bool kio_sieveProtocol::receiveData(bool waitForData, Q3CString *reparse)
 		  {
 			// expecting {quantity}
 			start = 0;
-			end = interpret.find('}', start + 1);
+			end = interpret.indexOf('}', start + 1);
 
 			bool ok = false;
 			r.setQuantity(interpret.mid(start + 1, end - start - 1).toUInt( &ok ));
@@ -1183,7 +1183,7 @@ bool kio_sieveProtocol::receiveData(bool waitForData, Q3CString *reparse)
 
 	start = 0;
 
-	end = interpret.find(34, start + 1);
+	end = interpret.indexOf(34, start + 1);
 	if (end == -1) {
 		ksDebug() << "Possible insufficient buffer size." << endl;
 		r.setKey(interpret.right(interpret.length() - start));
@@ -1192,7 +1192,7 @@ bool kio_sieveProtocol::receiveData(bool waitForData, Q3CString *reparse)
 
 	r.setKey(interpret.mid(start + 1, end - start - 1));
 
-	start = interpret.find(34, end + 1);
+	start = interpret.indexOf(34, end + 1);
 	if (start == -1) {
 		if ((int)interpret.length() > end)
 			// skip " and space
@@ -1201,7 +1201,7 @@ bool kio_sieveProtocol::receiveData(bool waitForData, Q3CString *reparse)
 		return true;
 	}
 
-	end = interpret.find(34, start + 1);
+	end = interpret.indexOf(34, start + 1);
 	if (end == -1) {
 		ksDebug() << "Possible insufficient buffer size." << endl;
 		r.setVal(interpret.right(interpret.length() - start));

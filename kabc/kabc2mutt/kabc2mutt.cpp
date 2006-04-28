@@ -53,8 +53,8 @@ void KABC2Mutt::loadingFinished()
   for ( iaddr = mAddressBook->begin(); iaddr != mAddressBook->end(); ++iaddr ) {
     const QString name = (*iaddr).givenName() + ' ' + (*iaddr).familyName();
     if ( !mQuery.isEmpty() ) {
-      bool match = (name.find(mQuery, 0, mIgnoreCase) > -1) ||
-                   ((*iaddr).preferredEmail().find( mQuery, 0, mIgnoreCase ) > -1 );
+      bool match = (name.contains(mQuery, 0, mIgnoreCase?Qt::CaseInsensitive:Qt::CaseSensitive) ) ||
+                   ((*iaddr).preferredEmail().contains( mQuery, 0, mIgnoreCase?Qt::CaseInsensitive:Qt::CaseSensitive ) );
       if ( !match )
         continue;
     }
@@ -130,7 +130,7 @@ void KABC2Mutt::loadingFinished()
     KABC::DistributionList *list = manager.list( *iaddr );
     if ( list ) {
       if ( !mQuery.isEmpty() ) {
-        bool match = ((*iaddr).find(mQuery) > -1);
+        bool match = ((*iaddr).contains(mQuery) );
         if ( !match )
           continue;
       }

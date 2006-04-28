@@ -108,7 +108,7 @@ mailAddress::parseAddress (const char *aCStr)
         len = advance;
         user = user.mid (1, len - 2);  // strip <>
         len -= 2;
-        pt = user.find('@');
+        pt = user.indexOf('@');
         host = user.right (len - pt - 1); // split it into host
         user.truncate(pt); // and user
         break;
@@ -164,7 +164,7 @@ mailAddress::parseAddress (const char *aCStr)
     }
     else if (user.isEmpty ())
     {
-      pt = rawFullName.find ('@');
+      pt = rawFullName.indexOf ('@');
       if (pt >= 0)
       {
         user = rawFullName;

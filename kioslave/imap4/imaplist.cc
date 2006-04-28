@@ -118,17 +118,17 @@ void imapList::parseAttributes( parseString & str )
     orig = parser_->parseOneWordC(str);
     attributes_ << orig;
     attribute = orig.toLower();
-    if (-1 != attribute.find ("\\noinferiors"))
+    if ( attribute.contains ("\\noinferiors"))
       noInferiors_ = true;
-    else if (-1 != attribute.find ("\\noselect"))
+    else if ( attribute.contains ("\\noselect"))
       noSelect_ = true;
-    else if (-1 != attribute.find ("\\marked"))
+    else if ( attribute.contains ("\\marked"))
       marked_ = true;
-    else if (-1 != attribute.find ("\\unmarked"))
+    else if ( attribute.contains ("\\unmarked"))
       unmarked_ = true;
-    else if (-1 != attribute.find ("\\haschildren"))
+    else if ( attribute.contains ("\\haschildren"))
       hasChildren_ = true;
-    else if (-1 != attribute.find ("\\hasnochildren"))
+    else if ( attribute.contains ("\\hasnochildren"))
       hasNoChildren_ = true;
     else
       kDebug(7116) << "imapList::imapList: bogus attribute " << attribute << endl;

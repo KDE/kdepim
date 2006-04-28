@@ -85,7 +85,7 @@ mimeIO::outputMimeLine (const Q3CString & inLine)
   {
     int start, end, offset;
     start = 0;
-    end = aLine.find ('\n', start);
+    end = aLine.indexOf ('\n', start);
     while (end >= 0)
     {
       offset = 1;
@@ -96,7 +96,7 @@ mimeIO::outputMimeLine (const Q3CString & inLine)
       }
       outputLine (aLine.mid (start, end - start) + theCRLF, end - start + crlfLen);
       start = end + offset;
-      end = aLine.find ('\n', start);
+      end = aLine.indexOf ('\n', start);
     }
     outputLine (aLine.mid (start, len - start) + theCRLF, len - start + crlfLen);
   }
@@ -180,7 +180,7 @@ mimeIOQString::inputLine (Q3CString & _str)
   if (theString.isEmpty ())
     return 0;
 
-  int i = theString.find ('\n');
+  int i = theString.indexOf ('\n');
 
   if (i == -1)
     return 0;
