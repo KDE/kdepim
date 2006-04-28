@@ -67,7 +67,7 @@ int main( int argc, char **argv )
   if ( !subString.isEmpty() ) {
     // Mutt wants a first line with some status message on it
     // See http://mutt.org/doc/manual/manual-4.html#ss4.5
-    std::cout << QString(i18n( "Searching KDE addressbook" ).toLatin1()) << std::endl;
+    std::cout << i18n( "Searching KDE addressbook" ).toLatin1().data() << std::endl;
   }
   object->setQuery( subString );
 
