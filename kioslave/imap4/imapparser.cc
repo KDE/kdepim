@@ -113,7 +113,7 @@ imapParser::sendCommand (imapCommand * aCmd)
      // we no longer have a box open
     currentBox.clear();
   }
-  else if (command.find ("SEARCH") != -1
+  else if (command.contains("SEARCH")
            || command == "GETACL"
            || command == "LISTRIGHTS"
            || command == "MYRIGHTS"
@@ -506,7 +506,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
     case 'A':                  // ALERT
       if (option == "ALERT")
       {
-        rest.pos = rest.data.find(']', rest.pos) + 1;
+        rest.pos = rest.data.indexOf(']', rest.pos) + 1;
         // The alert text is after [ALERT].
         // Is this correct or do we need to care about litterals?
         selectInfo.setAlert( rest.cstr() );
@@ -525,7 +525,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
       }
       else if (option == "PERMANENTFLAGS")
       {
-        uint end = rest.data.find(']', rest.pos);
+        uint end = rest.data.indexOf(']', rest.pos);
         Q3CString flags(rest.data.data() + rest.pos, end - rest.pos);
         selectInfo.setPermanentFlags (flags);
         rest.pos = end;
@@ -1287,7 +1287,7 @@ void imapParser::parseBody (parseString & inWords)
        else
        {
          Q3CString references = parseLiteralC(inWords, true);
-         int start = references.find ('<');
+         int start = references.indexOf ('<');
          int end = references.lastIndexOf ('>');
          if (start < end)
                  references = references.mid (start, end - start + 1);
@@ -1302,7 +1302,7 @@ void imapParser::parseBody (parseString & inWords)
     else
     {
       Q3CString spec(specifier.data(), specifier.size()+1);
-      if (spec.find(".MIME") != -1)
+      if (spec.contains(".MIME") )
       {
         mailHeader *envelope = new mailHeader;
         QString theHeader = parseLiteralC(inWords, false);
@@ -1455,7 +1455,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
           if (!lastHandled) lastHandled = new imapCache();
           lastHandled->setSize (size);
         }
-        else if (word.find ("RFC822") == 0)
+        else if (word.startsWith("RFC822"))
         {
           // might be RFC822 RFC822.TEXT RFC822.HEADER
           parseLiteralC(inWords, true);
@@ -1737,7 +1737,7 @@ imapParser::parseURL (const KUrl & _url, QString & _box, QString & _section,
 
   _box = _url.path ();
   kDebug(7116) << "imapParser::parseURL " << _box << endl;
-  int paramStart = _box.find("/;");
+  int paramStart = _box.indexOf("/;");
   if ( paramStart > -1 )
   {
     QString paramString = _box.right( _box.length() - paramStart-2 );
@@ -1751,18 +1751,18 @@ imapParser::parseURL (const KUrl & _url, QString & _box, QString & _section,
     QString temp = (*it);
 
     // if we have a '/' separator we'll just nuke it
-    int pt = temp.find ('/');
+    int pt = temp.indexOf ('/');
     if (pt > 0)
       temp.truncate(pt);
-    if (temp.find ("section=", 0, false) == 0)
+    if (temp.startsWith("section=", Qt::CaseInsensitive))
       _section = temp.right (temp.length () - 8);
-    else if (temp.find ("type=", 0, false) == 0)
+    else if (temp.startsWith("type=", Qt::CaseInsensitive))
       _type = temp.right (temp.length () - 5);
-    else if (temp.find ("uid=", 0, false) == 0)
+    else if (temp.startsWith("uid=", Qt::CaseInsensitive))
       _uid = temp.right (temp.length () - 4);
-    else if (temp.find ("uidvalidity=", 0, false) == 0)
+    else if (temp.startsWith("uidvalidity=", Qt::CaseInsensitive))
       _validity = temp.right (temp.length () - 12);
-    else if (temp.find ("info=", 0, false) == 0)
+    else if (temp.startsWith("info=", Qt::CaseInsensitive))
       _info = temp.right (temp.length () - 5);
   }
 //  kDebug(7116) << "URL: section= " << _section << ", type= " << _type << ", uid= " << _uid << endl;
@@ -1953,7 +1953,7 @@ QString imapParser::namespaceForBox( const QString & box )
     QString cleanPrefix;
     for ( QList<QString>::Iterator it = list.begin(); it != list.end(); ++it )
     {
-      if ( !(*it).isEmpty() && box.find( *it ) != -1 )
+      if ( !(*it).isEmpty() && box.contains( *it ) )
         return (*it);
     }
   }

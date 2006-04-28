@@ -289,7 +289,7 @@ reorder_dn( const Kleo::DN::Attribute::List & dn ) {
 
   // find all unknown entries in their order of appearance
   for ( Kleo::DN::const_iterator it = dn.begin(); it != dn.end(); ++it )
-    if ( attrOrder.find( (*it).name() ) == attrOrder.end() )
+    if ( !attrOrder.contains( (*it).name() )  )
       unknownEntries.push_back( *it );
 
   // process the known attrs in the desired order

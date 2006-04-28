@@ -650,7 +650,7 @@ void ResourceXMLRPC::loadEventCategoriesFinished( const QList<QVariant> &mapList
   for ( it = map.begin(); it != map.end(); ++it ) {
     mEventCategoryMap.insert( it.value().toString(), it.key().toInt() );
 
-    if ( prefs.mCustomCategories.find( it.value().toString() ) == prefs.mCustomCategories.end() )
+    if ( !prefs.mCustomCategories.contains( it.value().toString() )  )
       prefs.mCustomCategories.append( it.value().toString() );
   }
 
@@ -755,7 +755,7 @@ void ResourceXMLRPC::loadTodoCategoriesFinished( const QList<QVariant> &mapList,
   for ( it = map.begin(); it != map.end(); ++it ) {
     mTodoCategoryMap.insert( it.value().toString(), it.key().toInt() );
 
-    if ( prefs.mCustomCategories.find( it.value().toString() ) == prefs.mCustomCategories.end() )
+    if ( !prefs.mCustomCategories.contains( it.value().toString() )  )
       prefs.mCustomCategories.append( it.value().toString() );
   }
 

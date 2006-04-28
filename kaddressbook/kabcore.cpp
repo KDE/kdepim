@@ -1172,7 +1172,7 @@ void KABCore::updateCategories()
   QStringList::ConstIterator it;
   const QStringList::ConstIterator endIt( customCategories.end() );
   for ( it = customCategories.begin(); it != endIt; ++it ) {
-    if ( categories.find( *it ) == categories.end() ) {
+    if ( !categories.contains( *it )  ) {
       categories.append( *it );
     }
   }

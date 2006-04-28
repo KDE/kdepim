@@ -59,7 +59,7 @@ class SetupLDAPSearchAccount : public KConfigPropagator::Change
       // If the user gave a full email address, the domain name
       // of that overrides the server name for the ldap dn
       const QString user = KolabConfig::self()->user();
-      int pos = user.find( "@" );
+      int pos = user.indexOf( "@" );
       if ( pos > 0 ) {
         const QString h = user.mid( pos+1 );
         if ( !h.isEmpty() )
@@ -181,7 +181,7 @@ class KolabPropagator : public KConfigPropagator
 
       QString user = KolabConfig::self()->user();
       // We now use the full email address in the freebusy URL
-      //int pos = user.find( "@" );
+      //int pos = user.indexOf( "@" );
       //if ( pos > 0 ) user = user.left( pos );
 
       KUrl publishURL = freeBusyBaseUrl;
