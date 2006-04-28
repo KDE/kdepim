@@ -731,7 +731,7 @@ int KDTimeTableWidget::getCoordX( QDateTime dt ) {
    ***************************************************************** */
 KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant ):QWidget ( parent, "KDTimeHeaderWidget", Qt::WNoAutoErase )
 {
-    paintPix.resize( 1280,100 );
+    paintPix = QPixmap( 1280,100 );
     myToolTip = new KDTimeHeaderToolTip(this,this);
     mWeekStartsMonday = false;
     mWeekScaleShowNumber = false;
@@ -2202,7 +2202,7 @@ void KDTimeHeaderWidget::repaintMe(int left,int paintwid, QPainter* painter)
     QPainter* p;
     int offsetLeft = 0;
     if ( paintwid > paintPix.width()-100 )
-        paintPix.resize( paintwid+100, height () );
+        paintPix = QPixmap( paintwid+100, height () );
     if ( painter )
         p = painter;
     else {

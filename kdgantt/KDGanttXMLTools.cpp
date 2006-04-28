@@ -150,7 +150,7 @@ void createPixmapNode( QDomDocument& doc, QDomNode& parent,
 #else
     QBuffer buffer( &ba );
     buffer.open( IO_WriteOnly );
-    QImage image = pixmap.convertToImage();
+    QImage image = pixmap.toImage();
     image.save( &buffer,  "XPM" );
     buffer.close();
 #endif
@@ -383,7 +383,7 @@ bool readBoolNode( const QDomElement& element, bool& value )
 bool readColorNode( const QDomElement& element, QColor& value )
 {
     int ok = 0;
-    int red, green, blue;
+    int red = 0, green = 0, blue = 0;
     if( element.hasAttribute( "Red" ) ) {
         bool redOk = false;
         red = element.attribute( "Red" ).toInt( &redOk );
@@ -411,7 +411,7 @@ bool readBrushNode( const QDomElement& element, QBrush& brush )
 {
     bool ok = true;
     QColor tempColor;
-    Qt::BrushStyle tempStyle;
+    Qt::BrushStyle tempStyle = Qt::NoBrush;
     QPixmap tempPixmap;
     QDomNode node = element.firstChild();
     while( !node.isNull() ) {
@@ -447,7 +447,7 @@ bool readBrushNode( const QDomElement& element, QBrush& brush )
 bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
 {
     bool ok = true;
-    int tempLength;
+    ulong tempLength;
     QString tempData;
     QDomNode node = element.firstChild();
     while( !node.isNull() ) {
@@ -462,7 +462,9 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
                     qDebug( "Unsupported pixmap format in XML file" );
 #endif
             } else if( tagName == "Length" ) {
-                ok = ok & readIntNode( element, tempLength );
+		int tempInt;
+                ok = ok & readIntNode( element, tempInt );
+	        tempLength = tempInt;
             } else if( tagName == "Data" ) {
                 ok = ok & readStringNode( element, tempData );
             } else {
@@ -495,17 +497,19 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
             if( tempLength < (int)tempData.length() * 5 )
                 tempLength = tempData.length() * 5;
             QByteArray baunzip( tempLength );
-            ::uncompress( (uchar*) baunzip.data(), (ulong*)&tempLength,
+            ::uncompress( (uchar*) baunzip.data(), &tempLength,
                           (uchar*) ba, tempData.length()/2 );
             QImage image;
             image.loadFromData( (const uchar*)baunzip.data(), tempLength, "XPM" );
 
             if( image.isNull() )
-                pixmap.resize( 0, 0 ); // This is _not_ an error, we just read a NULL pixmap!
-            else
-                ok = ok & pixmap.convertFromImage( image, 0 );
+                pixmap = QPixmap( ); // This is _not_ an error, we just read a NULL pixmap!
+            else {
+                pixmap = QPixmap::fromImage( image );
+		ok = ok & !pixmap.isNull();
+	    }
         } else
-            pixmap.resize( 0, 0 ); // This is _not_ an error, we just read a empty pixmap!
+            pixmap = QPixmap(); // This is _not_ an error, we just read a empty pixmap!
     }
 
     return ok;
@@ -517,7 +521,7 @@ bool readPenNode( const QDomElement& element, QPen& pen )
     bool ok = true;
     int tempWidth;
     QColor tempColor;
-    Qt::PenStyle tempStyle;
+    Qt::PenStyle tempStyle = Qt::NoPen;
     QDomNode node = element.firstChild();
     while( !node.isNull() ) {
         QDomElement element = node.toElement();
@@ -661,7 +665,7 @@ bool readDateTimeNode( const QDomElement& element, QDateTime& datetime )
 
 bool readDateNode( const QDomElement& element, QDate& value )
 {
-    int year, month, day;
+    int year = 0, month = 0, day = 0;
     if( element.hasAttribute( "Year" ) ) {
         bool yearOk = false;
         year = element.attribute( "Year" ).toInt( &yearOk );
@@ -686,7 +690,7 @@ bool readDateNode( const QDomElement& element, QDate& value )
 
 bool readTimeNode( const QDomElement& element, QTime& value )
 {
-    int hour, minute, second, msec;
+    int hour = 0, minute = 0, second = 0, msec = 0;
     if( element.hasAttribute( "Hour" ) ) {
         bool hourOk = false;
         hour = element.attribute( "Hour" ).toInt( &hourOk );
