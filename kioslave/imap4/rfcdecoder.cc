@@ -453,7 +453,7 @@ rfcDecoder::encodeRFC2047String (const QString & _str)
 {
   if (_str.isEmpty ())
     return _str;
-  const signed char *latin = reinterpret_cast<const signed char *>(_str.toLatin1()), *l, *start, *stop;
+  const signed char *latin = reinterpret_cast<const signed char *>(_str.toLatin1().data()), *l, *start, *stop;
   char hexcode;
   int numQuotes, i;
   int rptr = 0;
