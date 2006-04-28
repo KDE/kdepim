@@ -171,7 +171,7 @@ mimeHeader::addParameter (const Q3CString& aParameter, Q3Dict < QString > *aList
 
   QString *aValue;
   Q3CString aLabel;
-  int pos = aParameter.find ('=');
+  int pos = aParameter.indexOf ('=');
 //  cout << aParameter.left(pos).data();
   aValue = new QString ();
   aValue->setLatin1 (aParameter.right (aParameter.length () - pos - 1));
@@ -301,7 +301,7 @@ mimeHeader::getParameter (const Q3CString& aStr, Q3Dict < QString > *aDict)
           part++;
         }
         while (found);
-        if (encoded.find ('\'') >= 0)
+        if (encoded.contains ('\''))
         {
           retVal = rfcDecoder::decodeRFC2231String (encoded.local8Bit ());
         }
@@ -338,7 +338,7 @@ mimeHeader::setParameter (const Q3CString& aLabel, const QString& aValue,
   {
 
     //see if it needs to get encoded
-    if (encoded && aLabel.find ('*') == -1)
+    if (encoded && !aLabel.contains('*'))
     {
       val = rfcDecoder::encodeRFC2231String (aValue);
     }
@@ -401,7 +401,7 @@ mimeHeader::outputParameter (Q3Dict < QString > *aDict)
     while (it.current ())
     {
       retVal += (";\n\t" + it.currentKey () + "=").toLatin1 ();
-      if (it.current ()->find (' ') > 0 || it.current ()->find (';') > 0)
+      if (it.current ()->indexOf (' ') > 0 || it.current ()->indexOf (';') > 0)
       {
         retVal += '"' + it.current ()->utf8 () + '"';
       }
@@ -516,7 +516,7 @@ mimeHeader::parseBody (mimeIO & useIO, Q3CString & messageBody,
       retVal = 1;               //continue with next part
       break;
     }
-    else if (mbox && inputStr.find ("From ") == 0)
+    else if (mbox && inputStr.startsWith ("From ") )
     {
       retVal = 0;               // end of mbox
       break;
@@ -545,7 +545,7 @@ mimeHeader::parseHeader (mimeIO & useIO)
   while (useIO.inputLine (inputStr))
   {
     int appended;
-    if (inputStr.find ("From ") != 0 || !first)
+    if (!inputStr.startsWith ("From ") || !first)
     {
       first = false;
       appended = my_line.appendStr (inputStr);
@@ -573,7 +573,7 @@ mimeHeader *
 mimeHeader::bodyPart (const QString & _str)
 {
   // see if it is nested a little deeper
-  int pt = _str.find('.');
+  int pt = _str.indexOf('.');
   if (pt != -1)
   {
     QString tempStr = _str;
@@ -653,9 +653,9 @@ mimeHeader::bodyDecodedBinary ()
 {
   QByteArray retVal;
 
-  if (contentEncoding.find ("quoted-printable", 0, false) == 0)
+  if (contentEncoding.startsWith ("quoted-printable", Qt::CaseInsensitive) )
     retVal = KCodecs::quotedPrintableDecode(postMultipartBody);
-  else if (contentEncoding.find ("base64", 0, false) == 0)
+  else if (contentEncoding.startsWith ("base64", Qt::CaseInsensitive) )
     KCodecs::base64Decode(postMultipartBody, retVal);
   else retVal = postMultipartBody;
 
@@ -675,9 +675,9 @@ mimeHeader::setBodyEncoded (const QByteArray & _arr)
   QByteArray setVal;
 
   kDebug(7116) << "mimeHeader::setBodyEncoded - in size " << _arr.size () << endl;
-  if (contentEncoding.find ("quoted-printable", 0, false) == 0)
+  if (contentEncoding.startsWith ("quoted-printable", Qt::CaseInsensitive) )
     setVal = KCodecs::quotedPrintableEncode(_arr);
-  else if (contentEncoding.find ("base64", 0, false) == 0)
+  else if (contentEncoding.startsWith ("base64", Qt::CaseInsensitive) )
     KCodecs::base64Encode(_arr, setVal);
   else
     setVal.duplicate (_arr);
