@@ -195,6 +195,8 @@ static const char * oidForAttributeName( const QString & attr ) {
  */
 void CertificateWizardImpl::slotGenerateCertificate()
 {
+    if(keyLengthCB->currentIndex() < 0) return;
+
     // Ask gpgme to generate a key and return it
     QString certParms;
     certParms += "<GnupgKeyParms format=\"internal\">\n";
