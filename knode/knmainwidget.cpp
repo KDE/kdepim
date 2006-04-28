@@ -908,7 +908,7 @@ void KNMainWidget::getSelectedThreads(KNRemoteArticle::List &l)
       art=static_cast<KNRemoteArticle*> ((static_cast<KNHdrViewItem*>(i))->art);
       // ignore the article if it is already in the list
       // (multiple aritcles are selected in one thread)
-      if ( l.find(art) == l.end() )
+      if ( !l.contains(art)  )
         art->thread(l);
     }
 }
@@ -1826,8 +1826,8 @@ void KNMainWidget::slotFetchArticleWithID()
 
   if (dlg->exec()) {
     QString id = dlg->messageId().simplified();
-    if ( id.indexOf( QRegExp("*@*",false,true) ) != -1 ) {
-      if ( id.indexOf( QRegExp("<*>",false,true) ) == -1 )   // add "<>" when necessary
+    if ( id.indexOf( QRegExp("*@*", Qt::CaseInsensitive, QRegExp::Wildcard) ) != -1 ) {
+      if ( id.indexOf( QRegExp("<*>", Qt::CaseInsensitive, QRegExp::Wildcard) ) == -1 )   // add "<>" when necessary
         id = QString("<%1>").arg(id);
 
       if ( !ArticleWindow::raiseWindowForArticle( id.toLatin1() ) ) { //article not yet opened
