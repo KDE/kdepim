@@ -577,9 +577,9 @@ void ResourceXMLRPC::writeContact( const Addressee &addr, QMap<QString, QVariant
   const QStringList customFields = addr.customs();
   QStringList::ConstIterator it;
   for ( it = customFields.begin(); it != customFields.end(); ++it ) {
-    int colon = (*it).find( ":" );
+    int colon = (*it).indexOf( ":" );
     QString identifier = (*it).left( colon );
-    int dash = identifier.find( "-" );
+    int dash = identifier.indexOf( "-" );
     QString app = identifier.left( dash );
     QString name = identifier.mid( dash + 1 );
     QString value = (*it).mid( colon + 1 );
@@ -754,7 +754,7 @@ void ResourceXMLRPC::loadCategoriesFinished( const QList<QVariant> &mapList,
     mCategoryMap.insert( it.data().toString(), it.key().toInt() );
 
     QStringList categories = prefs->customCategories();
-    if ( categories.find( it.data().toString() ) == categories.end() )
+    if ( !categories.contains( it.data().toString() )  )
       categories.append( it.data().toString() );
 
     prefs->mCustomCategories = categories;
