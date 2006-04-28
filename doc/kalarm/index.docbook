@@ -42,7 +42,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2006-04-10</date>
+<date>2006-04-09</date>
 <releaseinfo>1.03.10</releaseinfo>
 
 <abstract>
@@ -2455,8 +2455,9 @@ a red background at 10 p.m. on the 27th of this month are:</para>
 <title>Other options</title>
 
 <para>The following options are used to reset or halt the
-<application>alarm daemon</application>, or to control &kalarm;'s
-display mode.</para>
+<application>alarm daemon</application>, to display the
+<link linkend="alarm-edit-dlg">alarm edit dialog</link>, or to control
+&kalarm;'s display mode.</para>
 
 <para>See the <link linkend="daemon-reset">Alarm daemon</link> section
 for a discussion about resetting and stopping the <application>alarm
@@ -2471,6 +2472,21 @@ daemon</application>.</para>
 </row>
 </thead>
 <tbody>
+<row>
+  <entry><option>--edit <replaceable>eventID</replaceable></option></entry>
+  <entry>Display the alarm edit dialog to edit the alarm with the
+  specified event ID.</entry>
+</row>
+<row>
+  <entry><option>-n</option>, <option>--edit-new</option></entry>
+  <entry>Display the alarm edit dialog, in order to edit a new
+  alarm.</entry>
+</row>
+<row>
+  <entry><option>--edit-new-preset <replaceable>templateName</replaceable></option></entry>
+  <entry>Display the alarm edit dialog, preset with the alarm template
+  of the specified name, in order to edit a new alarm.</entry>
+</row>
 <row>
   <entry><option>--reset</option></entry>
   <entry>Reset the <application>alarm daemon</application>.</entry>
@@ -2648,6 +2664,7 @@ request the following functions:</para>
 alarm</para></listitem>
 <listitem><para>cancel an already scheduled alarm</para></listitem>
 <listitem><para>trigger an already scheduled alarm</para></listitem>
+<listitem><para>display the alarm edit dialog</para></listitem>
 </itemizedlist>
 
 <para>Each of the above functions is implemented both by a &DCOP; call
@@ -3690,6 +3707,100 @@ identical to
 </refsect1>
 </refentry>
 
+<refentry id="dcop_edit">
+<refmeta>
+<refentrytitle>edit</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>edit</refname>
+<refpurpose>Display the <link linkend="alarm-edit-dlg">alarm edit
+dialog</link> to edit an alarm.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+bool edit(const QString&amp; <replaceable>eventID</replaceable>)
+</synopsis>
+
+<refsect2>
+<title>Parameters</title>
+<variablelist>
+<varlistentry>
+<term><parameter>eventID</parameter></term>
+<listitem>
+<para>Specifies the unique ID of the event to be edited.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+
+<refsect2>
+<title>Return value</title>
+<para><returnvalue>false</returnvalue> if the specified
+alarm could not be found or is read-only,
+<returnvalue>true</returnvalue> otherwise.</para>
+</refsect2>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><function>edit()</function> is a &DCOP; call to display the
+<link linkend="alarm-edit-dlg">alarm edit dialog</link> to edit the
+specified alarm.</para>
+
+</refsect1>
+</refentry>
+
+<refentry id="dcop_editnew">
+<refmeta>
+<refentrytitle>editNew</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>editNew</refname>
+<refpurpose>Display the <link linkend="alarm-edit-dlg">alarm edit
+dialog</link> to edit a new alarm.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+bool editNew(const QString&amp; <replaceable>templateName</replaceable>)
+</synopsis>
+
+<refsect2>
+<title>Parameters</title>
+<variablelist>
+<varlistentry>
+<term><parameter>templateName</parameter></term>
+<listitem>
+<para>Specifies the name of an alarm template to base the new alarm
+on, or empty if no template should be used.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+
+<refsect2>
+<title>Return value</title>
+<para><returnvalue>false</returnvalue> if
+<parameter>templateName</parameter> is non-empty but a template of
+that name cannot be found, <returnvalue>true</returnvalue>
+otherwise.</para>
+</refsect2>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para><function>editNew()</function> is a &DCOP; call to display the
+<link linkend="alarm-edit-dlg">alarm edit dialog</link> to edit a new
+alarm. If an alarm template name is specified as a parameter, the
+dialog is preset with details from the template. If the specified
+template cannot be found, the
+<link linkend="alarm-edit-dlg">alarm edit dialog</link> is still
+displayed but is (obviously) not preset with the template.</para>
+
+</refsect1>
+</refentry>
+
 </sect1>
 
 <sect1 id="cmdline-interface">
@@ -3878,7 +3989,7 @@ and the <application>alarm daemon</application>'s application name is
 &kalarm;
 </para>
 <para>
-Program copyright 2001, 2002, 2003, 2004, 2005 David Jarvie <email>software@astrojar.org.uk</email>
+Program copyright 2001, 2002, 2003, 2004, 2005, 2006 David Jarvie <email>software@astrojar.org.uk</email>
 </para>
 <para>
 Alarm daemon authors:
@@ -3893,7 +4004,7 @@ Alarm daemon authors:
 </para>
 
 <para>
-Documentation copyright 2001, 2002, 2003, 2004, 2005 David Jarvie <email>software@astrojar.org.uk</email>
+Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006 David Jarvie <email>software@astrojar.org.uk</email>
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
