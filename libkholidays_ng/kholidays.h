@@ -21,12 +21,18 @@
 #ifndef KHOLIDAYS_HOLIDAYS_H
 #define KHOLIDAYS_HOLIDAYS_H
 
-class KHolidays {
+#include "kdepim_export.h"
+
+namespace LibKHolidays {
+
+class KHOLIDAYS_EXPORT KHolidays {
   public:
     KHolidays();
     ~KHolidays();
 
   private:
 };
+
+}
 
 #endif

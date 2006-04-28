@@ -21,6 +21,8 @@
 #include "kholidays.h"
 #include "kholidays_version.h"
 
+using namespace LibKHolidays;
+
 KHolidays::KHolidays()
 {
 }

@@ -20,7 +20,7 @@
 
 #include "holidaycalendar.h"
 
-using namespace KHolidays;
+using namespace LibKHolidays;
 
 HolidayCalendar::HolidayCalendar() {
 }

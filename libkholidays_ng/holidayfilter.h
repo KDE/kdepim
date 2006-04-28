@@ -21,14 +21,15 @@
 #ifndef KHOLIDAYS_HOLIDAYFILTER_H
 #define KHOLIDAYS_HOLIDAYFILTER_H
 
+#include "kdepim_export.h"
 #include "holiday.h"
 
-namespace KHolidays {
+namespace LibKHolidays {
 
 /**
    A class for filtering Holidays.
 */
-class HolidayFilter
+class KHOLIDAYS_EXPORT HolidayFilter
 {
   public:
   /**

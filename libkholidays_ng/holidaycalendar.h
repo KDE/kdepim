@@ -24,9 +24,10 @@
 #include <qstring.h>
 #include <qdatetime.h>
 
+#include "kdepim_export.h"
 #include "holiday.h"
 
-namespace KHolidays {
+namespace LibKHolidays {
 
 /**
    Sort direction.
@@ -49,7 +50,7 @@ enum HolidaySortField {
   A class for Holiday Calendar handling.
 */
 
-class HolidayCalendar {
+class KHOLIDAYS_EXPORT HolidayCalendar {
   public:
     HolidayCalendar();
     ~HolidayCalendar();

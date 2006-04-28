@@ -24,7 +24,7 @@
 
 #include "holiday.h"
 
-using namespace KHolidays;
+using namespace LibKHolidays;
 
 Holiday::Holiday()
 {

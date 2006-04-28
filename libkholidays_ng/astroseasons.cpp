@@ -24,7 +24,7 @@
 
 #include "astroseasons.h"
 
-using namespace KHolidays;
+using namespace LibKHolidays;
 
 AstroSeasons::AstroSeasons()
 {

@@ -55,9 +55,11 @@
 
 #include <time.h>
 
-namespace KHolidays {
+#include "kdepim_export.h"
 
-class Zodiac
+namespace LibKHolidays {
+
+class KHOLIDAYS_EXPORT Zodiac
 {
   public:
     enum ZodiacType { Tropical, Sidereal };

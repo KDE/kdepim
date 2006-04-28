@@ -26,6 +26,8 @@
 #include <qstringlist.h>
 #include <qdatetime.h>
 
+#include "kdepim_export.h"
+
 /**
   Represents and manages a Holiday
 
@@ -60,9 +62,9 @@
 
 */
 
-namespace KHolidays {
+namespace LibKHolidays {
 
-class Holiday
+class KHOLIDAYS_EXPORT Holiday
 {
   public:
 

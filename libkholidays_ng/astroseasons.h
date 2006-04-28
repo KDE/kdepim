@@ -46,9 +46,11 @@
 
 #include <time.h>
 
-namespace KHolidays {
+#include "kdepim_export.h"
 
-class AstroSeasons
+namespace LibKHolidays {
+
+class KHOLIDAYS_EXPORT AstroSeasons
 {
   public:
     enum Season { JuneSolstice,  DecemberSolstice,

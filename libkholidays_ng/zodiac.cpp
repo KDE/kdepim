@@ -24,7 +24,7 @@
 
 #include "zodiac.h"
 
-using namespace KHolidays;
+using namespace LibKHolidays;
 
 Zodiac::Zodiac( ZodiacType type )
 {

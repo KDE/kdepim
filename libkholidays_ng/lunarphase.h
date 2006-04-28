@@ -52,9 +52,11 @@
 
 #include <time.h>
 
-namespace KHolidays {
+#include "kdepim_export.h"
 
-class LunarPhase
+namespace LibKHolidays {
+
+class KHOLIDAYS_EXPORT LunarPhase
 {
   public:
     enum Phase { New,  FirstQ, LastQ, Full, None };
