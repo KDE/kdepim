@@ -127,9 +127,9 @@ class AddresseeIconViewItem : public K3IconViewItem
       if ( pic.isIntern() && !pic.data().isNull() ) {
         QImage img = pic.data();
         if ( img.width() > img.height() )
-          icon = img.scaleWidth( 32 );
+          icon = QPixmap::fromImage( img.scaleWidth( 32 ) );
         else
-          icon = img.scaleHeight( 32 );
+          icon = QPixmap::fromImage( img.scaleHeight( 32 ) );
       } else
         icon = defaultIcon;
 

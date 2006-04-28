@@ -277,7 +277,7 @@ bool VCard_LDIFCreator::create(const QString &path, int width, int height, QImag
     pixmapSize.setWidth( height * 3 / 4 );
 
   if ( pixmapSize != mPixmap.size() )
-    mPixmap.resize( pixmapSize );
+    mPixmap = QPixmap( pixmapSize );
 
   mPixmap.fill( QColor( 245, 245, 245 ) ); // light-grey background
 
@@ -293,7 +293,7 @@ bool VCard_LDIFCreator::create(const QString &path, int width, int height, QImag
   if (!ok)
     return false;
 
-  img = mPixmap.convertToImage();
+  img = mPixmap.toImage();
   return true;
 }
 

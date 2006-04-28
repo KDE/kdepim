@@ -69,7 +69,7 @@ void ImageLabel::setReadOnly( bool readOnly )
 void ImageLabel::startDrag()
 {
   if ( pixmap() && !pixmap()->isNull() ) {
-    Q3ImageDrag *drag = new Q3ImageDrag( pixmap()->convertToImage(), this );
+    Q3ImageDrag *drag = new Q3ImageDrag( pixmap()->toImage(), this );
     drag->dragCopy();
   }
 }
@@ -224,9 +224,9 @@ void ImageBaseWidget::setImage( const KABC::Picture &photo )
 
     if ( px.height() != 140 || px.width() != 100 ) {
       if ( px.height() > px.width() )
-        px = px.convertToImage().scaleHeight( 140 );
+        px = QPixmap::fromImage( px.toImage().scaleHeight( 140 ) );
       else
-        px = px.convertToImage().scaleWidth( 100 );
+        px = QPixmap::fromImage( px.toImage().scaleWidth( 100 ) );
     }
 
     mImageLabel->setPixmap( px );
@@ -251,7 +251,7 @@ KABC::Picture ImageBaseWidget::image() const
     photo.setUrl( mImageUrl->url() );
   else {
     if ( mImageLabel->pixmap() ) {
-      photo.setData( mImageLabel->pixmap()->convertToImage() );
+      photo.setData( mImageLabel->pixmap()->toImage() );
     }
   }
 
@@ -329,9 +329,9 @@ QPixmap ImageBaseWidget::loadPixmap( const KUrl &url )
 
   if ( pixmap.height() != 140 || pixmap.width() != 100 ) {
     if ( pixmap.height() > pixmap.width() )
-      pixmap = pixmap.convertToImage().scaleHeight( 140 );
+      pixmap = QPixmap::fromImage( pixmap.toImage().scaleHeight( 140 ) );
     else
-      pixmap = pixmap.convertToImage().scaleWidth( 100 );
+      pixmap = QPixmap::fromImage( pixmap.toImage().scaleWidth( 100 ) );
   }
 
   return pixmap;
