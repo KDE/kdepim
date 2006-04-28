@@ -71,7 +71,8 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *pa
   topL->setMargin(5);
 
   n_ame=new KLineEdit(this);
-  QLabel *l=new QLabel(n_ame, i18n("&Name:"), this);
+  QLabel *l=new QLabel(i18n("&Name:"),this);
+  l->setBuddy(n_ame);
   topL->addWidget(l, 0,0);
   topL->addWidget(n_ame, 0, 1, 1,2);
   msg = i18n("<qt><p>Your name as it will appear to others reading your articles.</p>"
@@ -81,7 +82,8 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *pa
   connect( n_ame, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
 
   o_rga=new KLineEdit(this);
-  l=new QLabel(o_rga, i18n("Organi&zation:"), this);
+  l=new QLabel(i18n("Organi&zation:"),this);
+  l->setBuddy(o_rga);
   topL->addWidget(l, 1,0);
   topL->addWidget(o_rga, 1, 1, 1,2);
   msg = i18n( "<qt><p>The name of the organization you work for.</p>"
@@ -91,7 +93,8 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *pa
   connect( o_rga, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
 
   e_mail=new KLineEdit(this);
-  l=new QLabel(e_mail, i18n("Email a&ddress:"), this);
+  l=new QLabel(i18n("Email a&ddress:"),this);
+  l->setBuddy(e_mail);
   topL->addWidget(l, 2,0);
   topL->addWidget(e_mail, 2, 1, 1,2);
   msg = i18n( "<qt><p>Your email address as it will appear to others "
@@ -101,7 +104,8 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *pa
   connect( e_mail, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
 
   r_eplyTo=new KLineEdit(this);
-  l=new QLabel(r_eplyTo, i18n("&Reply-to address:"), this);
+  l=new QLabel(i18n("&Reply-to address:"),this);
+  l->setBuddy(r_eplyTo);
   topL->addWidget(l, 3,0);
   topL->addWidget(r_eplyTo, 3, 1, 1,2);
   msg = i18n( "<qt><p>When someone reply to your article by email, this is the address the message "
@@ -112,7 +116,8 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *pa
   connect( r_eplyTo, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
 
   m_ailCopiesTo=new KLineEdit(this);
-  l=new QLabel(m_ailCopiesTo, i18n("&Mail-copies-to:"), this);
+  l=new QLabel(i18n("&Mail-copies-to:"),this);
+  l->setBuddy(m_ailCopiesTo);
   topL->addWidget(l, 4,0);
   topL->addWidget(m_ailCopiesTo, 4, 1, 1,2);
   connect( m_ailCopiesTo, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
@@ -122,7 +127,8 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *pa
   s_igningKey->setDialogCaption(i18n("Your OpenPGP Key"));
   s_igningKey->setDialogMessage(i18n("Select the OpenPGP key which should be "
       "used for signing articles."));
-  l=new QLabel(s_igningKey, i18n("Signing ke&y:"), this);
+  l=new QLabel(i18n("Signing ke&y:"),this);
+  l->setBuddy(s_igningKey);
   topL->addWidget(l, 5,0);
   topL->addWidget(s_igningKey, 5, 1, 1,2);
   msg = i18n("<qt><p>The OpenPGP key you choose here will be "
@@ -143,7 +149,8 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *pa
                    i18n( "<qt><p>Mark this to let KNode read the signature from a file.</p></qt>" ) );
   s_ig = new KLineEdit(this);
 
-  f_ileName = new QLabel(s_ig, i18n("Signature &file:"), this);
+  f_ileName = new QLabel(i18n("Signature &file:"),this);
+  f_ileName->setBuddy(s_ig);
   topL->addWidget(f_ileName, 7, 0 );
   topL->addWidget(s_ig, 7, 1 );
   c_ompletion = new KUrlCompletion();
@@ -1254,13 +1261,15 @@ KNode::ScoringWidget::ScoringWidget( KInstance *inst, QWidget *parent ) :
 
   mIgnored = new KIntSpinBox( -100000, 100000, 1, 0, this );
   mIgnored->setObjectName( "kcfg_ignoredThreshold" );
-  QLabel *l = new QLabel( mIgnored, i18n("Default score for &ignored threads:"), this );
+  QLabel *l = new QLabel( i18n("Default score for &ignored threads:"), this );
+  l->setBuddy( mIgnored );
   topL->addWidget(l, 2, 0);
   topL->addWidget( mIgnored, 2, 1 );
 
   mWatched = new KIntSpinBox( -100000, 100000, 1, 0, this );
   mWatched->setObjectName( "kcfg_watchedThreshold" );
-  l = new QLabel( mWatched, i18n("Default score for &watched threads:"), this );
+  l = new QLabel( i18n("Default score for &watched threads:"), this );
+  l->setBuddy( mWatched );
   topL->addWidget(l, 3, 0);
   topL->addWidget( mWatched, 3, 1);
 
@@ -1784,7 +1793,8 @@ KNode::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent )
   connect( mExpEnabled, SIGNAL(toggled(bool)), SIGNAL(changed()) );
 
   mExpDays = new KIntSpinBox( 0, 99999, 1, 0, mExpGroup );
-  QLabel *label = new QLabel( mExpDays, i18n("&Purge groups every:"), mExpGroup );
+  QLabel *label = new QLabel( i18n("&Purge groups every:"), mExpGroup );
+  label->setBuddy( mExpDays );
   grid->addWidget( label, 2, 0 );
   grid->addWidget( mExpDays, 2, 1, Qt::AlignRight );
   connect( mExpDays, SIGNAL(valueChanged(int)), SIGNAL(changed()) );
@@ -1793,14 +1803,16 @@ KNode::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent )
   connect( mExpEnabled, SIGNAL(toggled(bool)), mExpDays, SLOT(setEnabled(bool)) );
 
   mExpReadDays = new KIntSpinBox( 0, 99999, 1, 0, mExpGroup );
-  label = new QLabel( mExpReadDays, i18n("&Keep read articles:"), mExpGroup );
+  label = new QLabel( i18n("&Keep read articles:"), mExpGroup );
+  label->setBuddy( mExpReadDays );
   grid->addWidget( label, 3, 0 );
   grid->addWidget( mExpReadDays, 3, 1, Qt::AlignRight );
   connect( mExpReadDays, SIGNAL(valueChanged(int)), SIGNAL(changed()) );
   connect( mExpReadDays, SIGNAL(valueChanged(int)), SLOT(expReadDaysChanged(int)) );
 
   mExpUnreadDays = new KIntSpinBox( 0, 99999, 1, 0, mExpGroup );
-  label = new QLabel( mExpUnreadDays, i18n("Keep u&nread articles:"), mExpGroup );
+  label = new QLabel( i18n("Keep u&nread articles:"), mExpGroup );
+  label->setBuddy( mExpUnreadDays );
   grid->addWidget( label, 4, 0 );
   grid->addWidget( mExpUnreadDays, 4, 1, Qt::AlignRight );
   connect( mExpUnreadDays, SIGNAL(valueChanged(int)), SIGNAL(changed()) );
@@ -1895,7 +1907,8 @@ KNode::CleanupWidget::CleanupWidget( KInstance *inst,QWidget *parent ) :
   foldersL->addWidget(f_olderCB,1,0, 1, 2 );
 
   f_olderDays=new KIntSpinBox( 0, 99999, 1, 0, foldersB );
-  f_olderDaysL=new QLabel(f_olderDays,i18n("P&urge folders every:"), foldersB);
+  f_olderDaysL=new QLabel(i18n("P&urge folders every:"),foldersB);
+  f_olderDaysL->setBuddy(f_olderDays);
   foldersL->addWidget(f_olderDaysL,2,0);
   foldersL->addWidget(f_olderDays,2,1,Qt::AlignRight);
   connect(f_olderDays, SIGNAL(valueChanged(int)), SLOT(changed()));

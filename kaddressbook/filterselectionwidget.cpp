@@ -35,7 +35,8 @@ FilterSelectionWidget::FilterSelectionWidget( QWidget *parent, const char *name 
 {
   setSpacing( KDialog::spacingHint() );
 
-  QLabel *label = new QLabel( i18n( "Filter:" ), this, "kde toolbar widget" );
+  QLabel *label = new QLabel( i18n( "Filter:" ), this );
+  label->setObjectName( "kde toolbar widget" );
 
   mFilterCombo = new KComboBox( this );
   label->setBuddy( mFilterCombo );

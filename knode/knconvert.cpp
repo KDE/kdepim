@@ -91,7 +91,7 @@ will be created before the conversion starts.", QString(KNODE_VERSION)), w_1);
   w1L->addWidget(c_reateBkup, 2, 0, 1, 3 );
   connect(c_reateBkup, SIGNAL(toggled(bool)), this, SLOT(slotCreateBkupToggled(bool)));
 
-  b_ackupPathLabel=new QLabel(i18n("Save backup in:"), w_1);
+  b_ackupPathLabel=new QLabel(i18n("Save backup in:"),w_1);
   w1L->addWidget(b_ackupPathLabel, 3,0);
 
   b_ackupPath=new KLineEdit(QDir::homePath()+QString("/knodedata-")+v_ersion+".tar.gz", w_1);
@@ -118,7 +118,7 @@ will be created before the conversion starts.", QString(KNODE_VERSION)), w_1);
 
   r_esultLabel=new QLabel(w_3);
   w3L->addWidget(r_esultLabel);
-  QLabel *l2=new QLabel(i18n("Processed tasks:"), w_3);
+  QLabel *l2=new QLabel(i18n("Processed tasks:"),w_3);
   l_ogList = new QListWidget( w_3 );
   w3L->addSpacing(15);
   w3L->addWidget(l2);

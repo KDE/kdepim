@@ -41,11 +41,13 @@ KNFilterDialog::KNFilterDialog( KNArticleFilter *f, QWidget *parent )
 
   QGroupBox *gb = new QGroupBox( page );
   fname=new KLineEdit(gb);
-  QLabel *l1=new QLabel(fname, i18n("Na&me:"), gb);
+  QLabel *l1=new QLabel(i18n("Na&me:"),gb);
+  l1->setBuddy(fname);
   apon=new QComboBox(gb);
   apon->addItem(i18n("Single Articles"));
   apon->addItem(i18n("Whole Threads"));
-  QLabel *l2=new QLabel(apon, i18n("Apply o&n:"), gb);
+  QLabel *l2=new QLabel(i18n("Apply o&n:"),gb);
+  l2->setBuddy(apon);
   enabled=new QCheckBox(i18n("Sho&w in menu"), gb);
 
   fw=new KNFilterConfigWidget(page);

@@ -55,7 +55,8 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   button->setToolTip( i18n( "Reset" ) );
   layout->addWidget( button );
 
-  QLabel *label = new QLabel( i18n( "Search:" ), this, "kde toolbar widget" );
+  QLabel *label = new QLabel( i18n( "Search:" ), this );
+  label->setObjectName( "kde toolbar widget" );
   label->setAlignment( Qt::AlignVCenter | Qt::AlignRight );
   layout->addWidget( label );
 
@@ -65,7 +66,8 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   label->setBuddy( mSearchText );
   layout->addWidget( mSearchText );
 
-  label = new QLabel( i18nc( "as in 'Search in:'", "&in:" ), this, "kde toolbar widget" );
+  label = new QLabel( i18nc( "as in 'Search in:'", "&in:" ), this );
+  label->setObjectName( "kde toolbar widget" );
   label->setAlignment( Qt::AlignVCenter | Qt::AlignRight );
   layout->addWidget( label );
 

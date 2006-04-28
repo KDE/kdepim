@@ -266,7 +266,7 @@ KNCleanUp::ProgressDialog::ProgressDialog( int steps, QWidget *parent ) :
   QVBoxLayout *topL=new QVBoxLayout(top);
   topL->setSpacing(10);
 
-  QLabel *l=new QLabel(i18n("Cleaning up. Please wait..."), top);
+  QLabel *l=new QLabel(i18n("Cleaning up. Please wait..."),top);
   topL->addWidget(l);
 
   KSeparator *sep=new KSeparator(top);

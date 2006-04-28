@@ -59,7 +59,8 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   n_ick=new KLineEdit(gb);
   if (g_rp->hasName())
     n_ick->setText(g_rp->name());
-  QLabel *l=new QLabel(n_ick, i18n("&Nickname:"), gb);
+  QLabel *l=new QLabel(i18n("&Nickname:"), gb);
+  l->setBuddy(n_ick);
   grpL->addWidget(l,1,0);
   grpL->addWidget(n_ick,1,1, 1,2);
 

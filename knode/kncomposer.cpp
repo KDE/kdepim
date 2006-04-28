@@ -1741,7 +1741,8 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   t_o=new KNLineEdit(this, true, hdrFrame);
   mEdtList.append(t_o);
 
-  l_to=new QLabel(t_o, i18n("T&o:"), hdrFrame);
+  l_to=new QLabel(i18n("T&o:"),hdrFrame);
+  l_to->setBuddy(t_o);
   t_oBtn=new QPushButton(i18n("&Browse..."), hdrFrame);
   hdrL->addWidget(l_to, 0,0);
   hdrL->addWidget(t_o, 0,1);
@@ -1752,7 +1753,8 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   g_roups=new KNLineEdit(this, false, hdrFrame);
   mEdtList.append(g_roups);
 
-  l_groups=new QLabel(g_roups, i18n("&Groups:"), hdrFrame);
+  l_groups=new QLabel(i18n("&Groups:"),hdrFrame);
+  l_groups->setBuddy(g_roups);
   g_roupsBtn=new QPushButton(i18n("B&rowse..."), hdrFrame);
   hdrL->addWidget(l_groups, 1,0);
   hdrL->addWidget(g_roups, 1,1);
@@ -1763,7 +1765,8 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
 
   //Followup-To
   f_up2=new KComboBox(true, hdrFrame);
-  l_fup2=new QLabel(f_up2, i18n("Follo&wup-To:"), hdrFrame);
+  l_fup2=new QLabel(i18n("Follo&wup-To:"),hdrFrame);
+  l_fup2->setBuddy(f_up2);
   hdrL->addWidget(l_fup2, 2,0);
   hdrL->addWidget(f_up2, 2, 1, 1,2);
 
@@ -1771,7 +1774,8 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   s_ubject=new KNLineEditSpell(this, false, hdrFrame);
   mEdtList.append(s_ubject);
 
-  QLabel *l=new QLabel(s_ubject, i18n("S&ubject:"), hdrFrame);
+  QLabel *l=new QLabel(i18n("S&ubject:"),hdrFrame);
+  l->setBuddy(s_ubject);
   hdrL->addWidget(l, 3,0);
   hdrL->addWidget(s_ubject, 3, 1, 1,2);
   connect(s_ubject, SIGNAL(textChanged(const QString&)),
@@ -1800,7 +1804,7 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   QVBoxLayout *notL=new QVBoxLayout(e_dit);
   notL->addStretch(1);
   n_otification=new Q3GroupBox(2, Qt::Horizontal, e_dit);
-  l=new QLabel(i18n("You are currently editing the article body\nin an external editor. To continue, you have\nto close the external editor."), n_otification);
+  l=new QLabel(i18n("You are currently editing the article body\nin an external editor. To continue,you have\nto close the external editor."), n_otification);
   c_ancelEditorBtn=new QPushButton(i18n("&Kill External Editor"), n_otification);
 #warning Port me?
 //   n_otification->setFrameStyle(Q3Frame::Panel | Q3Frame::Raised);

@@ -53,7 +53,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   setMainWidget(page);
 
   filterEdit=new KLineEdit(page);
-  QLabel *l=new QLabel(filterEdit,i18n("S&earch:"), page);
+  QLabel *l=new QLabel(i18n("S&earch:"),page);
+  l->setBuddy(filterEdit);
   noTreeCB=new QCheckBox(i18n("Disable &tree view"), page);
   noTreeCB->setChecked(false);
   subCB=new QCheckBox(i18n("&Subscribed only"), page);
@@ -66,7 +67,7 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
 
   QFont fnt=font();
   fnt.setBold(true);
-  leftLabel=new QLabel(i18n("Loading groups..."), page);
+  leftLabel=new QLabel(i18n("Loading groups..."),page);
   rightLabel=new QLabel(page);
   leftLabel->setFont(fnt);
   rightLabel->setFont(fnt);

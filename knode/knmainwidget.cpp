@@ -146,7 +146,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
                                         "Resets the quick search so that "
                                         "all messages are shown again." ) );
 
-  QLabel *lbl = new QLabel(i18n("&Search:"), dummy, "kde toolbar widget");
+  QLabel *lbl = new QLabel(i18n("&Search:"),dummy);
+  lbl->setObjectName("kde toolbar widget");
   q_uicksearch->addWidget( lbl );
   s_earchLineEdit = new K3ListViewSearchLine( q_uicksearch, h_drView );
   q_uicksearch->addWidget( s_earchLineEdit );

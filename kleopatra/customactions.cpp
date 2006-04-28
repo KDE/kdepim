@@ -59,7 +59,8 @@ QWidget* LabelAction::createToolBarWidget( QToolBar * parent )
   if ( widget->inherits( "KToolBar" ) ) {
     KToolBar * bar = (KToolBar *)widget;
     int id_ = getToolButtonID();
-    QLabel* label = new QLabel( text(), bar, "kde toolbar widget" );
+    QLabel* label = new QLabel( text(), bar );
+    label->setObjectName( "kde toolbar widget" );
     bar->insertWidget( id_, label->width(), label, index );
     addContainer( bar, id_ );
     connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );
