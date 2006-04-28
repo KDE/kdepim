@@ -337,7 +337,7 @@ Recurrence *Incidence::recurrence() const
 {
   if (!mRecurrence)
   {
-    const_cast<KCal::Incidence*>(this)->mRecurrence = new Recurrence();
+    mRecurrence = new Recurrence();
     mRecurrence->setStartDateTime( IncidenceBase::dtStart() );
     mRecurrence->setFloats( doesFloat() );
     mRecurrence->setRecurReadOnly( mReadOnly );

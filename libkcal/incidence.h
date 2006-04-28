@@ -485,7 +485,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
     int mPriority;                        // 1 = highest, 2 = less, etc.
 
     Alarm::List mAlarms;
-    Recurrence *mRecurrence;
+    mutable Recurrence *mRecurrence;
 
     QString mLocation;
 
