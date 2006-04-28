@@ -40,7 +40,7 @@ BaseG::BaseG()
 {
   // determine the version of gpg (the method is equivalent to gpgme's method)
   runGpg( "--version", 0 );
-  int eol = output.find( '\n' );
+  int eol = output.indexOf( '\n' );
   if( eol > 0 ) {
     int pos = output.lastIndexOf( ' ', eol - 1 );
     if( pos != -1 ) {
@@ -140,11 +140,11 @@ BaseG::encsign( Block& block, const KeyIDList& recipients,
     // (expired or revoked key)
     // gpg: 23456789: no info to calculate a trust probability
     // (untrusted key, 23456789 is the key Id of the encryption sub key)
-    while((index = error.find("skipped: ",index)) != -1)
+    while((index = error.indexOf("skipped: ",index) ) != -1 )
     {
       bad = true;
-      index = error.find('\'',index);
-      int index2 = error.find('\'',index+1);
+      index = error.indexOf('\'',index);
+      int index2 = error.indexOf('\'',index+1);
       badkeys += error.mid(index, index2-index+1) + ", ";
       num++;
     }
@@ -180,14 +180,14 @@ BaseG::encsign( Block& block, const KeyIDList& recipients,
     // Example 4 (unusable secret key, sign & encrypt):
     // gpg: skipped `0xAC0EB35D': unusable secret key
     // gpg: [stdin]: sign+encrypt failed: unusable secret key
-    if( error.find("bad passphrase") != -1 )
+    if( error.contains("bad passphrase") )
     {
       errMsg = i18n("Signing failed because the passphrase is wrong.");
       status |= BADPHRASE;
       status |= ERR_SIGNING;
       status |= ERROR;
     }
-    else if( error.find("unusable secret key") != -1 )
+    else if( error.contains("unusable secret key") )
     {
       errMsg = i18n("Signing failed because your secret key is unusable.");
       status |= ERR_SIGNING;
@@ -215,7 +215,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
   clear();
   input = block.text();
   exitStatus = runGpg("--batch --decrypt", passphrase);
-  if( !output.isEmpty() && ( error.find( "gpg: quoted printable" ) == -1 ) )
+  if( !output.isEmpty() && ( !error.contains( "gpg: quoted printable" ) ) )
     block.setProcessedText( output );
   block.setError( error );
 
@@ -246,13 +246,13 @@ BaseG::decrypt( Block& block, const char *passphrase )
   // gpg: public key decryption failed: bad passphrase
   // gpg: encrypted with 2048-bit ELG-E key, ID 23456789, created 2000-02-02
   //       "Foo Bar (home) <foo@bar.xyz>"
-  if( error.find( "gpg: encrypted with" ) != -1 )
+  if( error.contains( "gpg: encrypted with" ) )
   {
     //kDebug(5100) << "kpgpbase: message is encrypted" << endl;
     status |= ENCRYPTED;
-    if( error.find( "\ngpg: decryption failed" ) != -1 )
+    if( error.contains( "\ngpg: decryption failed" ) )
     {
-      if( ( index = error.find( "bad passphrase" ) ) != -1 )
+      if( ( index = error.indexOf( "bad passphrase" ) ) != -1 )
       {
         if( passphrase != 0 )
         {
@@ -272,7 +272,7 @@ BaseG::decrypt( Block& block, const char *passphrase )
           kDebug(5100) << "Base: key needed is \"" << block.requiredUserId() << "\"!" << endl;
         }
       }
-      else if( error.find( "secret key not available" ) != -1 )
+      else if( error.contains( "secret key not available" ) )
       {
         // no secret key fitting this message
         status |= NO_SEC_KEY;
@@ -285,14 +285,14 @@ BaseG::decrypt( Block& block, const char *passphrase )
 #if 0
     // ##### FIXME: This information is anyway currently not used
     //       I'll change it to always determine the recipients.
-    index = error.find("can only be read by:");
+    index = error.indexOf("can only be read by:");
     if(index != -1)
     {
-      index = error.find('\n',index);
-      int end = error.find("\n\n",index);
+      index = error.indexOf('\n',index);
+      int end = error.indexOf("\n\n",index);
 
       mRecipients.clear();
-      while( (index2 = error.find('\n',index+1)) <= end )
+      while( (index2 = error.indexOf('\n',index+1)) <= end )
       {
 	QByteArray item = error.mid(index+1,index2-index-1);
 	item.trimmed();
@@ -306,48 +306,48 @@ BaseG::decrypt( Block& block, const char *passphrase )
   // Example 1 (unknown signature key):
   // gpg: Signature made Wed 02 Jan 2002 11:26:33 AM CET using DSA key ID 2E250C64
   // gpg: Can't check signature: public key not found
-  if((index = error.find("Signature made")) != -1)
+  if( ( index = error.indexOf("Signature made") ) != -1 )
   {
     //kDebug(5100) << "Base: message is signed" << endl;
     status |= SIGNED;
     // get signature date and signature key ID
     // Example: Signature made Sun 06 May 2001 03:49:27 PM CEST using DSA key ID 12345678
-    index2 = error.find("using", index+15);
+    index2 = error.indexOf("using", index+15);
     block.setSignatureDate( error.mid(index+15, index2-(index+15)-1) );
     kDebug(5100) << "Message was signed on '" << block.signatureDate() << "'\n";
-    index2 = error.find("key ID ", index2) + 7;
+    index2 = error.indexOf("key ID ", index2) + 7;
     block.setSignatureKeyId( error.mid(index2,8) );
     kDebug(5100) << "Message was signed with key '" << block.signatureKeyId() << "'\n";
     // move index to start of next line
-    index = error.find('\n', index2)+1;
+    index = error.indexOf('\n', index2)+1;
 
-    if ((error.find("Key matching expected", index) != -1)
-        || (error.find("Can't check signature", index) != -1))
+    if ((error.indexOf("Key matching expected", index) != -1 )
+        || (error.indexOf("Can't check signature", index) != -1 ))
     {
       status |= UNKNOWN_SIG;
       status |= GOODSIG;
       block.setSignatureUserId( QString() );
     }
-    else if( error.find("Good signature", index) != -1 )
+    else if( error.indexOf("Good signature", index) != -1 )
     {
       status |= GOODSIG;
       // get the primary user ID of the signer
-      index = error.find('"',index);
-      index2 = error.find('\n',index+1);
+      index = error.indexOf('"',index);
+      index2 = error.indexOf('\n',index+1);
       index2 = error.lastIndexOf('"', index2-1);
       block.setSignatureUserId( error.mid( index+1, index2-index-1 ) );
     }
-    else if( error.find("BAD signature", index) != -1 )
+    else if( error.indexOf("BAD signature", index) != -1 )
     {
       //kDebug(5100) << "BAD signature" << endl;
       status |= ERROR;
       // get the primary user ID of the signer
-      index = error.find('"',index);
-      index2 = error.find('\n',index+1);
+      index = error.indexOf('"',index);
+      index2 = error.indexOf('\n',index+1);
       index2 = error.lastIndexOf('"', index2-1);
       block.setSignatureUserId( error.mid( index+1, index2-index-1 ) );
     }
-    else if( error.find("Can't find the right public key", index) != -1 )
+    else if( error.indexOf("Can't find the right public key", index) != -1 )
     {
       // #### fix this hack
       // I think this can't happen anymore because if the pubring is missing
@@ -391,7 +391,7 @@ BaseG::readPublicKey( const KeyID& keyID,
   if( !strncmp( output.data(), "pub:", 4 ) )
     offset = 0;
   else {
-    offset = output.find( "\npub:" );
+    offset = output.indexOf( "\npub:" );
     if( offset == -1 )
       return 0;
     else
@@ -538,7 +538,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
   {
     int eol;
     // search the end of the current line
-    if( ( eol = output.find( '\n', index ) ) == -1 )
+    if( ( eol = output.indexOf( '\n', index ) ) == -1 )
       break;
 
     bool bIsPublicKey = false;
@@ -557,7 +557,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       Subkey *subkey = new Subkey( QByteArray(), !bIsPublicKey );
 
       int pos = index + 4; // begin of 2nd field
-      int pos2 = output.find( ':', pos );
+      int pos2 = output.indexOf( ':', pos );
       for( int field = 2; field <= 12; field++ )
       {
         switch( field )
@@ -654,7 +654,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
           break;
         }
         pos = pos2 + 1;
-        pos2 = output.find( ':', pos );
+        pos2 = output.indexOf( ':', pos );
       }
       key->addSubkey( subkey );
     }
@@ -665,7 +665,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       UserID *userID = new UserID( "" );
 
       int pos = index + 4; // begin of 2nd field
-      int pos2 = output.find( ':', pos );
+      int pos2 = output.indexOf( ':', pos );
       for( int field=2; field <= 10; field++ )
       {
         switch( field )
@@ -715,7 +715,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
           // replace "\xXX" with the corresponding character;
           // other escaped characters, i.e. \n, \r etc., are ignored
           // because they shouldn't appear in user IDs
-          for ( int idx = 0 ; (idx = uid.find( "\\x", idx )) >= 0 ; ++idx ) {
+          for ( int idx = 0 ; (idx = uid.indexOf( "\\x", idx ) != -1) ; ++idx ) {
             char str[2] = "x";
             str[0] = (char) QString( uid.mid( idx + 2, 2 ) ).toShort( 0, 16 );
             uid.replace( idx, 4, str );
@@ -787,7 +787,7 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
           break;
         }
         pos = pos2 + 1;
-        pos2 = output.find( ':', pos );
+        pos2 = output.indexOf( ':', pos );
       }
 
       // user IDs are printed in UTF-8 by gpg (if one uses --with-colons)
@@ -803,8 +803,8 @@ BaseG::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       // search the fingerprint (it's in the 10th field)
       int pos = index + 4;
       for( int i = 0; i < 8; i++ )
-        pos = output.find( ':', pos ) + 1;
-      int pos2 = output.find( ':', pos );
+        pos = output.indexOf( ':', pos ) + 1;
+      int pos2 = output.indexOf( ':', pos );
 
       key->setFingerprint( keyID, output.mid( pos, pos2-pos ) );
     }
@@ -832,9 +832,9 @@ BaseG::parseKeyList( const QByteArray& output, bool secretKeys )
     offset = 0;
   else {
     if( secretKeys )
-      offset = output.find( "\nsec:" );
+      offset = output.indexOf( "\nsec:" );
     else
-      offset = output.find( "\npub:" );
+      offset = output.indexOf( "\npub:" );
     if( offset == -1 )
       return keys;
     else

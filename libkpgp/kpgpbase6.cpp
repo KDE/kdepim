@@ -67,15 +67,15 @@ Base6::decrypt( Block& block, const char *passphrase )
   }
 
   // encrypted message
-  if( error.find("File is encrypted.") != -1)
+  if( error.contains("File is encrypted.") )
   {
     //kDebug(5100) << "kpgpbase: message is encrypted" << endl;
     status |= ENCRYPTED;
-    if((index = error.find("Key for user ID")) != -1)
+    if((index = error.indexOf("Key for user ID")) != -1 )
     {
       // Find out the key for which the phrase is needed
-      index  = error.find(':', index) + 2;
-      index2 = error.find('\n', index);
+      index  = error.indexOf(':', index) + 2;
+      index2 = error.indexOf('\n', index);
       block.setRequiredUserId( error.mid(index, index2 - index) );
       //kDebug(5100) << "Base: key needed is \"" << block.requiredUserId() << "\"!\n";
 
@@ -91,7 +91,7 @@ Base6::decrypt( Block& block, const char *passphrase )
         status |= ERROR;
       }
     }
-    else if( error.find("You do not have the secret key needed to decrypt this file.") != -1)
+    else if( error.contains("You do not have the secret key needed to decrypt this file.") )
     {
       errMsg = i18n("You do not have the secret key for this message.");
       //kDebug(5100) << "Base: no secret key for this message" << endl;
@@ -124,46 +124,46 @@ Base6::decrypt( Block& block, const char *passphrase )
    * File is signed.  Good signature from user "Joe User <joe@foo.bar>".
    * Signature made 2001/12/05 13:09 GMT
    */
-  if(((index = error.find("File is signed.")) != -1)
-    || (error.find("Good signature") != -1 ))
+  if(((index = error.indexOf("File is signed.")) != -1 )
+    || (error.contains("Good signature") ))
   {
     //kDebug(5100) << "Base: message is signed" << endl;
     status |= SIGNED;
     // determine the signature date
-    if( ( index2 = error.find( "Signature made", index ) ) != -1 )
+    if( ( index2 = error.indexOf( "Signature made", index ) ) != -1 )
     {
       index2 += 15;
-      int eol = error.find( '\n', index2 );
+      int eol = error.indexOf( '\n', index2 );
       block.setSignatureDate( error.mid( index2, eol-index2 ) );
       kDebug(5100) << "Message was signed on '" << block.signatureDate() << "'\n";
     }
     else
       block.setSignatureDate( QByteArray() );
     // determine signature status and signature key
-    if( error.find("signature not checked") != -1)
+    if( error.contains("signature not checked") )
     {
-      index = error.find("KeyID:",index);
+      index = error.indexOf("KeyID:",index);
       block.setSignatureKeyId( error.mid(index+9,8) );
       block.setSignatureUserId( QString() );
       status |= UNKNOWN_SIG;
       status |= GOODSIG;
     }
-    else if((index = error.find("Good signature")) != -1 )
+    else if((index = error.indexOf("Good signature")) != -1 )
     {
       status |= GOODSIG;
       // get signer
-      index = error.find('"',index)+1;
-      index2 = error.find('"', index);
+      index = error.indexOf('"',index)+1;
+      index2 = error.indexOf('"', index);
       block.setSignatureUserId( error.mid(index, index2-index) );
 
       // get key ID of signer
-      index = error.find("KeyID:",index2);
+      index = error.indexOf("KeyID:",index2);
       if (index == -1)
         block.setSignatureKeyId( QByteArray() );
       else
         block.setSignatureKeyId( error.mid(index+9,8) );
     }
-    else if( error.find("Can't find the right public key") != -1 )
+    else if( error.contains("Can't find the right public key") )
     {
       // #### fix this hack
       // #### This doesn't happen with PGP 6.5.8 because it seems to
@@ -254,28 +254,28 @@ Base6::pubKeys()
   if (error.length() > 1) error.truncate(error.length()-1);
 
   QStrList publicKeys;
-  index = error.find("bits/keyID",1); // skip first to "\n"
+  index = error.indexOf("bits/keyID",1); // skip first to "\n"
   if (index ==-1)
   {
-    index = error.find("Type bits",1); // skip first to "\n"
+    index = error.indexOf("Type bits",1); // skip first to "\n"
     if (index == -1)
       return 0;
     else
       compatibleMode = 0;
   }
 
-  while( (index = error.find("\n",index)) != -1)
+  while( (index = error.indexOf("\n",index)) != -1 )
   {
     //parse line
     QCString line;
-    if( (index2 = error.find("\n",index+1)) != -1)
+    if( (index2 = error.indexOf("\n",index+1)) != -1 )
       // skip last line
     {
       int index3;
       if (compatibleMode)
       {
-        int index_pub = error.find("pub ",index);
-        int index_sec = error.find("sec ",index);
+        int index_pub = error.indexOf("pub ",index);
+        int index_sec = error.indexOf("sec ",index);
         if (index_pub < 0)
           index3 = index_sec;
         else if (index_sec < 0)
@@ -285,8 +285,8 @@ Base6::pubKeys()
       }
       else
       {
-        int index_rsa = error.find("RSA ",index);
-        int index_dss = error.find("DSS ",index);
+        int index_rsa = error.indexOf("RSA ",index);
+        int index_dss = error.indexOf("DSS ",index);
         if (index_rsa < 0)
           index3 = index_dss;
         else if (index_dss < 0)
@@ -302,14 +302,14 @@ Base6::pubKeys()
 	line = line.trimmed();
       } else {
 	// line with new key
-	int index4 = error.find(QRegExp("/\\d{2}/\\d{2} "), index);
+	int index4 = error.indexOf(QRegExp("/\\d{2}/\\d{2} "), index);
 	line = error.mid(index4+7,index2-index4-7);
       }
       //kDebug(5100) << "Base: found key for " << (const char *)line << endl;
 
       // don't add PGP's comments to the key list
       if (strncmp(line.data(),"*** KEY EXPIRED ***",19) &&
-          line.find(QRegExp("^expires \\d{4}/\\d{2}/\\d{2}")) < 0 &&
+          !line.contains(QRegExp("^expires \\d{4}/\\d{2}/\\d{2}")) &&
           strncmp(line.data(),"*** DEFAULT SIGNING KEY ***",27)) {
         publicKeys.append(line);
       }
@@ -328,10 +328,10 @@ Base6::pubKeys()
   }
 
   index = 0;
-  while ( (index = error.find("\n >", index)) != -1 ) {
+  while ( (index = error.indexOf("\n >", index)) != -1 ) {
     QCString line;
     index += 4;
-    index2 = error.find(" \"", index);
+    index2 = error.indexOf(" \"", index);
     line = error.mid(index, index2-index+1).trimmed();
 
     //kDebug(5100) << "Base6: found key group for " << line << endl;
@@ -363,7 +363,7 @@ Base6::isVersion6()
     return 0;
   }
 
-  if( error.find("Version 6") != -1)
+  if( error.contains("Version 6") )
   {
     //kDebug(5100) << "kpgpbase: pgp version 6.x detected" << endl;
     return 1;
@@ -400,7 +400,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
     int eol;
 
     // search the end of the current line
-    if( ( eol = output.find( '\n', offset ) ) == -1 )
+    if( ( eol = output.indexOf( '\n', offset ) ) == -1 )
       break;
 
     //kDebug(5100) << "Parsing: " << output.mid(offset, eol-offset) << endl;
@@ -466,7 +466,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       pos = offset + 4;
       while( output[pos] == ' ' )
         pos++;
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
       subkey->setKeyLength( output.mid( pos, pos2-pos ).toUInt() );
       //kDebug(5100) << "Key Length: "<<subkey->keyLength()<<endl;
 
@@ -475,7 +475,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       while( output[pos] == ' ' )
         pos++;
       pos += 2; // skip the '0x'
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
       subkey->setKeyID( output.mid( pos, pos2-pos ) );
       //kDebug(5100) << "Key ID: "<<subkey->keyID()<<endl;
 
@@ -483,7 +483,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       pos = pos2 + 1;
       while( output[pos] == ' ' )
         pos++;
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
       int year = output.mid( pos, 4 ).toInt();
       int month = output.mid( pos+5, 2 ).toInt();
       int day = output.mid( pos+8, 2 ).toInt();
@@ -583,19 +583,19 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       pos = offset + 4;
       while( output[pos] == ' ' )
         pos++;
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
 
       // Key ID (ignored as it is anyway equal to the primary key id)
       pos = pos2 + 1;
       while( output[pos] == ' ' )
         pos++;
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
 
       // Creation Date of secondary key (ignored)
       pos = pos2 + 1;
       while( output[pos] == ' ' )
         pos++;
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
 
       // User ID or key properties
       pos = pos2 + 1;
@@ -663,7 +663,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         pos += 18;
         QByteArray fingerprint = output.mid( pos, eol-pos );
         // remove white space from the fingerprint
-	for ( int idx = 0 ; (idx = fingerprint.find(' ', idx)) >= 0 ; )
+	for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1; )
 	  fingerprint.replace( idx, 1, "" );
 
         //kDebug(5100)<<"Fingerprint: "<<fingerprint<<endl;
@@ -712,7 +712,7 @@ Base6::parseSingleKey( const QByteArray& output, Key* key /* = 0 */ )
     offset = 9;
   else
   {
-    offset = output.find( "\nType bits" );
+    offset = output.indexOf( "\nType bits" );
     if( offset == -1 )
       return 0;
     else
@@ -720,7 +720,7 @@ Base6::parseSingleKey( const QByteArray& output, Key* key /* = 0 */ )
   }
 
   // key data begins in the next line
-  offset = output.find( '\n', offset ) + 1;
+  offset = output.indexOf( '\n', offset ) + 1;
   if( offset == 0 )
     return 0;
 
@@ -745,13 +745,13 @@ Base6::parseKeyList( const QByteArray& output, bool secretKeys )
     offset = 0;
   else
   {
-    offset = output.find( "\nType bits" ) + 1;
+    offset = output.indexOf( "\nType bits" ) + 1;
     if( offset == 0 )
       return keys;
   }
 
   // key data begins in the next line
-  offset = output.find( '\n', offset ) + 1;
+  offset = output.indexOf( '\n', offset ) + 1;
   if( offset == -1 )
     return keys;
 
@@ -782,11 +782,11 @@ Base6::parseTrustDataForKey( Key* key, const QByteArray& str )
   UserIDList userIDs = key->userIDs();
 
   // search the start of the trust data
-  int offset = str.find( "\n\n  KeyID" );
+  int offset = str.indexOf( "\n\n  KeyID" );
   if( offset == -1 )
     return;
 
-  offset = str.find( '\n', offset ) + 1;
+  offset = str.indexOf( '\n', offset ) + 1;
   if( offset == 0 )
     return;
 
@@ -800,7 +800,7 @@ Base6::parseTrustDataForKey( Key* key, const QByteArray& str )
     int eol;
 
     // search the end of the current line
-    if( ( eol = str.find( '\n', offset ) ) == -1 )
+    if( ( eol = str.indexOf( '\n', offset ) ) == -1 )
       break;
 
     if( str[offset+23] != ' ' )

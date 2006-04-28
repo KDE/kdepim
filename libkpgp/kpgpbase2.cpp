@@ -119,16 +119,16 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
     bool bad = false;
     unsigned int num = 0;
     QByteArray badkeys = "";
-    if (error.find("Cannot find the public key") != -1)
+    if (error.contains("Cannot find the public key") )
     {
       index = 0;
       num = 0;
-      while((index = error.find("Cannot find the public key",index))
+      while((index = error.indexOf("Cannot find the public key",index))
 	    != -1)
       {
         bad = true;
-        index = error.find('\'',index);
-        int index2 = error.find('\'',index+1);
+        index = error.indexOf('\'',index);
+        int index2 = error.indexOf('\'',index+1);
         if (num++)
           badkeys += ", ";
         badkeys += error.mid(index, index2-index+1);
@@ -150,15 +150,15 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
         status |= ERROR;
       }
     }
-    if (error.find("skipping userid") != -1)
+    if (error.contains("skipping userid") )
     {
       index = 0;
       num = 0;
-      while((index = error.find("skipping userid",index))
+      while((index = error.indexOf("skipping userid",index))
 	    != -1)
       {
         bad = true;
-        int index2 = error.find('\n',index+16);
+        int index2 = error.indexOf('\n',index+16);
         if (num++)
           badkeys += ", ";
         badkeys += error.mid(index+16, index2-index-16);
@@ -188,12 +188,12 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
 #endif
   if(passphrase != 0)
   {
-    if(error.find("Pass phrase is good") != -1)
+    if(error.contains("Pass phrase is good") )
     {
       //kDebug(5100) << "Base: Good Passphrase!" << endl;
       status |= SIGNED;
     }
-    if( error.find("Bad pass phrase") != -1)
+    if( error.contains("Bad pass phrase") )
     {
       errMsg = i18n("Bad passphrase; could not sign.");
       status |= BADPHRASE;
@@ -201,7 +201,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
       status |= ERROR;
     }
   }
-  if (error.find("Signature error") != -1)
+  if (error.contains("Signature error") )
   {
     errMsg = i18n("Signing failed: please check your PGP User Identity, "
                   "the PGP setup, and the key rings.");
@@ -209,7 +209,7 @@ Base2::encsign( Block& block, const KeyIDList& recipients,
     status |= ERR_SIGNING;
     status |= ERROR;
   }
-  if (error.find("Encryption error") != -1)
+  if (error.contains("Encryption error") )
   {
     errMsg = i18n("Encryption failed: please check your PGP setup "
                   "and the key rings.");
@@ -239,16 +239,16 @@ Base2::decrypt( Block& block, const char *passphrase )
 
   // pgp2.6 has sometimes problems with the ascii armor pgp5.0 produces
   // this hack can solve parts of the problem
-  if(error.find("ASCII armor corrupted.") != -1)
+  if(error.contains("ASCII armor corrupted.") )
   {
     kDebug(5100) << "removing ASCII armor header" << endl;
-    int index1 = input.find("-----BEGIN PGP SIGNED MESSAGE-----");
+    int index1 = input.indexOf("-----BEGIN PGP SIGNED MESSAGE-----");
     if(index1 != -1)
-      index1 = input.find("-----BEGIN PGP SIGNATURE-----", index1);
+      index1 = input.indexOf("-----BEGIN PGP SIGNATURE-----", index1);
     else
-      index1 = input.find("-----BEGIN PGP MESSAGE-----");
-    index1 = input.find('\n', index1);
-    index2 = input.find("\n\n", index1);
+      index1 = input.indexOf("-----BEGIN PGP MESSAGE-----");
+    index1 = input.indexOf('\n', index1);
+    index2 = input.indexOf("\n\n", index1);
     input.remove(index1, index2 - index1);
     exitStatus = run(PGP2 " +batchmode +language=en -f", passphrase);
     if( !output.isEmpty() )
@@ -283,19 +283,19 @@ Base2::decrypt( Block& block, const char *passphrase )
    *
    * You do not have the secret key needed to decrypt this file.
    */
-  if(error.find("File is encrypted.") != -1)
+  if(error.contains("File is encrypted.") )
   {
     //kDebug(5100) << "kpgpbase: message is encrypted" << endl;
     status |= ENCRYPTED;
-    if((index = error.find("Key for user ID:")) != -1)
+    if((index = error.indexOf("Key for user ID:")) != -1 )
     {
       // Find out the key for which the phrase is needed
       index  += 17;
-      index2 = error.find('\n', index);
+      index2 = error.indexOf('\n', index);
       block.setRequiredUserId( error.mid(index, index2 - index) );
       //kDebug(5100) << "Base: key needed is \"" << block.requiredUserId() << "\"!\n";
 
-      if((passphrase != 0) && (error.find("Bad pass phrase") != -1))
+      if((passphrase != 0) && (error.contains("Bad pass phrase") ))
       {
         errMsg = i18n("Bad passphrase; could not decrypt.");
         kDebug(5100) << "Base: passphrase is bad" << endl;
@@ -315,14 +315,14 @@ Base2::decrypt( Block& block, const char *passphrase )
 #if 0
     // ##### FIXME: This information is anyway currently not used
     //       I'll change it to always determine the recipients.
-    index = error.find("can only be read by:");
+    index = error.indexOf("can only be read by:");
     if(index != -1)
     {
-      index = error.find('\n',index);
-      int end = error.find("\n\n",index);
+      index = error.indexOf('\n',index);
+      int end = error.indexOf("\n\n",index);
 
       mRecipients.clear();
-      while( (index2 = error.find('\n',index+1)) <= end )
+      while( (index2 = error.indexOf('\n',index+1)) <= end )
       {
 	QByteArray item = error.mid(index+1,index2-index-1);
 	item.trimmed();
@@ -393,19 +393,19 @@ Base2::decrypt( Block& block, const char *passphrase )
    * Signature made 2001/09/09 16:01 GMT using 1024-bit key, key ID 12345678
    */
 
-  if((index = error.find("File has signature")) != -1)
+  if((index = error.indexOf("File has signature")) != -1 )
   {
     // move index to start of next line
-    index = error.find('\n', index+18) + 1;
+    index = error.indexOf('\n', index+18) + 1;
     //kDebug(5100) << "Base: message is signed" << endl;
     status |= SIGNED;
     // get signature date and signature key ID
-    if ((index2 = error.find("Signature made", index)) != -1) {
+    if ((index2 = error.indexOf("Signature made", index)) != -1 ) {
       index2 += 15;
-      int index3 = error.find("using", index2);
+      int index3 = error.indexOf("using", index2);
       block.setSignatureDate( error.mid(index2, index3-index2-1) );
       kDebug(5100) << "Message was signed on '" << block.signatureDate() << "'\n";
-      index3 = error.find("key ID ", index3) + 7;
+      index3 = error.indexOf("key ID ", index3) + 7;
       block.setSignatureKeyId( error.mid(index3,8) );
       kDebug(5100) << "Message was signed with key '" << block.signatureKeyId() << "'\n";
     }
@@ -416,38 +416,38 @@ Base2::decrypt( Block& block, const char *passphrase )
       block.setSignatureKeyId( "" );
     }
 
-    if( ( index2 = error.find("Key matching expected", index) ) != -1)
+    if( ( index2 = error.indexOf("Key matching expected", index) ) != -1 )
     {
       status |= UNKNOWN_SIG;
       status |= GOODSIG;
-      int index3 = error.find("Key ID ", index2) + 7;
+      int index3 = error.indexOf("Key ID ", index2) + 7;
       block.setSignatureKeyId( error.mid(index3,8) );
       block.setSignatureUserId( QString() );
     }
-    else if( (index2 = error.find("Good signature from", index)) != -1 )
+    else if( (index2 = error.indexOf("Good signature from", index)) != -1 )
     {
       status |= GOODSIG;
       // get signer
-      index = error.find('"',index2+19);
-      index2 = error.find('"', index+1);
+      index = error.indexOf('"',index2+19);
+      index2 = error.indexOf('"', index+1);
       block.setSignatureUserId( error.mid(index+1, index2-index-1) );
     }
-    else if( (index2 = error.find("Bad signature from", index)) != -1 )
+    else if( (index2 = error.indexOf("Bad signature from", index)) != -1 )
     {
       status |= ERROR;
       // get signer
-      index = error.find('"',index2+19);
-      index2 = error.find('"', index+1);
+      index = error.indexOf('"',index2+19);
+      index2 = error.indexOf('"', index+1);
       block.setSignatureUserId( error.mid(index+1, index2-index-1) );
     }
-    else if( error.find("Keyring file", index) != -1 )
+    else if( error.indexOf("Keyring file", index) != -1 )
     {
       // #### fix this hack
       status |= UNKNOWN_SIG;
       status |= GOODSIG; // this is a hack...
       // determine file name of missing keyring file
-      index = error.find('\'', index) + 1;
-      index2 = error.find('\'', index);
+      index = error.indexOf('\'', index) + 1;
+      index2 = error.indexOf('\'', index);
       block.setSignatureUserId( i18n("The keyring file %1 does not exist.\n"
       "Please check your PGP setup.", QString::fromLatin1( error.mid(index, index2-index)) ) );
     }
@@ -627,10 +627,10 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
   {
     /*
     if( secretKeys )
-      index = output.find( "\nsec" );
+      index = output.indexOf( "\nsec" );
     else
     */
-      index = output.find( "\npub" );
+      index = output.indexOf( "\npub" );
     if( index == -1 )
       return 0;
     else
@@ -642,7 +642,7 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
     int index2;
 
     // search the end of the current line
-    if( ( index2 = output.find( '\n', index ) ) == -1 )
+    if( ( index2 = output.indexOf( '\n', index ) ) == -1 )
       break;
 
     if( !strncmp( output.data() + index, "pub", 3 ) ||
@@ -700,19 +700,19 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
       pos = index + 4;
       while( output[pos] == ' ' )
         pos++;
-      pos2 = output.find( '/', pos );
+      pos2 = output.indexOf( '/', pos );
       subkey->setKeyLength( output.mid( pos, pos2-pos ).toUInt() );
 
       // Key ID
       pos = pos2 + 1;
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
       subkey->setKeyID( output.mid( pos, pos2-pos ) );
 
       // Creation Date
       pos = pos2 + 1;
       while( output[pos] == ' ' )
         pos++;
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
       int year = output.mid( pos, 4 ).toInt();
       int month = output.mid( pos+5, 2 ).toInt();
       int day = output.mid( pos+8, 2 ).toInt();
@@ -754,7 +754,7 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
 
         QByteArray fingerprint = output.mid( pos, index2-pos );
         // remove white space from the fingerprint
-	for ( int idx = 0 ; (idx = fingerprint.find(' ', idx)) >= 0 ; )
+	for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
 	  fingerprint.replace( idx, 1, "" );
 
         subkey->setFingerprint( fingerprint );
@@ -827,10 +827,10 @@ Base2::parseTrustDataForKey( Key* key, const QByteArray& str )
   UserIDList userIDs = key->userIDs();
 
   // search the trust data belonging to this key
-  int index = str.find( '\n' ) + 1;
+  int index = str.indexOf( '\n' ) + 1;
   while( ( index > 0 ) &&
          ( strncmp( str.data() + index+2, keyID.data(), 8 ) != 0 ) )
-    index = str.find( '\n', index ) + 1;
+    index = str.indexOf( '\n', index ) + 1;
 
   if( index == 0 )
     return;
@@ -846,7 +846,7 @@ Base2::parseTrustDataForKey( Key* key, const QByteArray& str )
     int index2;
 
     // search the end of the current line
-    if( ( index2 = str.find( '\n', index ) ) == -1 )
+    if( ( index2 = str.indexOf( '\n', index ) ) == -1 )
       break;
 
     // check if trust info for the next key starts
@@ -908,9 +908,9 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
   else
   {
     if( secretKeys )
-      index = output.find( "\nsec" );
+      index = output.indexOf( "\nsec" );
     else
-      index = output.find( "\npub" );
+      index = output.indexOf( "\npub" );
     if( index == -1 )
       return keys;
     else
@@ -922,7 +922,7 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
     int index2;
 
     // search the end of the current line
-    if( ( index2 = output.find( '\n', index ) ) == -1 )
+    if( ( index2 = output.indexOf( '\n', index ) ) == -1 )
       break;
 
     if( !strncmp( output.data() + index, "pub", 3 ) ||
@@ -979,19 +979,19 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
       pos = index + 4;
       while( output[pos] == ' ' )
         pos++;
-      pos2 = output.find( '/', pos );
+      pos2 = output.indexOf( '/', pos );
       subkey->setKeyLength( output.mid( pos, pos2-pos ).toUInt() );
 
       // Key ID
       pos = pos2 + 1;
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
       subkey->setKeyID( output.mid( pos, pos2-pos ) );
 
       // Creation Date
       pos = pos2 + 1;
       while( output[pos] == ' ' )
         pos++;
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
       int year = output.mid( pos, 4 ).toInt();
       int month = output.mid( pos+5, 2 ).toInt();
       int day = output.mid( pos+8, 2 ).toInt();
@@ -1035,7 +1035,7 @@ Base2::parseKeyList( const QByteArray& output, bool secretKeys )
         pos2 = pos + 18;
         QByteArray fingerprint = output.mid( pos, index2-pos );
         // remove white space from the fingerprint
-	for ( int idx = 0 ; (idx = fingerprint.find(' ', idx)) >= 0 ; )
+	for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
 	  fingerprint.replace( idx, 1, "" );
 
         subkey->setFingerprint( fingerprint );

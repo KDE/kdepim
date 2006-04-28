@@ -125,7 +125,7 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
     status = ERROR;
 
   // now parse the returned info
-  if(error.find("Cannot unlock private key") != -1)
+  if(error.contains("Cannot unlock private key") )
   {
     errMsg = i18n("The passphrase you entered is invalid.");
     status |= ERROR;
@@ -135,16 +135,16 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
 //{
     QByteArray aStr;
     index = -1;
-    while((index = error.find("WARNING: The above key",index+1)) != -1)
+    while((index = error.indexOf("WARNING: The above key",index+1)) != -1 )
     {
-      int index2 = error.find("But you previously",index);
-      int index3 = error.find("WARNING: The above key",index+1);
+      int index2 = error.indexOf("But you previously",index);
+      int index3 = error.indexOf("WARNING: The above key",index+1);
       if(index2 == -1 || (index2 > index3 && index3 != -1))
       {
 	// the key wasn't valid, no encryption to this person
 	// extract the person
-	index2 = error.find('\n',index);
-	index3 = error.find('\n',index2+1);
+	index2 = error.indexOf('\n',index);
+	index3 = error.indexOf('\n',index2+1);
 	aStr += error.mid(index2+1, index3-index2-1);
 	aStr += ", ";
       }
@@ -152,7 +152,7 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
     if(!aStr.isEmpty())
     {
       aStr.truncate(aStr.length()-2);
-      if(error.find("No valid keys found") != -1)
+      if(error.contains("No valid keys found") )
 	errMsg = i18n("The key(s) you want to encrypt your message "
 		      "to are not trusted. No encryption done.");
       else
@@ -163,10 +163,10 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
       status |= BADKEYS;
     }
 //}
-  if((index = error.find("No encryption keys found for")) != -1)
+  if((index = error.indexOf("No encryption keys found for")) != -1 )
   {
-    index = error.find(':',index);
-    int index2 = error.find('\n',index);
+    index = error.indexOf(':',index);
+    int index2 = error.indexOf('\n',index);
 
     errMsg = i18n("Missing encryption key(s) for:\n%1",
        QString::fromLocal8Bit(error.mid(index,index2-index)));
@@ -180,7 +180,7 @@ Base5::encsign( Block& block, const KeyIDList& recipients,
     // dash-escape the input
     if (input[0] == '-')
       input = "- " + input;
-    for ( int idx = 0 ; (idx = input.find("\n-", idx)) >= 0 ; idx += 4 )
+    for ( int idx = 0 ; (idx = input.indexOf("\n-", idx)) != -1 ; idx += 4 )
       input.replace(idx, 2, "\n- -");
 
     output = "-----BEGIN PGP SIGNED MESSAGE-----\n\n" + input + "\n" + output;
@@ -214,7 +214,7 @@ Base5::decrypt( Block& block, const char *passphrase )
   // lets parse the returned information.
   int index;
 
-  index = error.find("Cannot decrypt message");
+  index = error.indexOf("Cannot decrypt message");
   if(index != -1)
   {
     //kDebug(5100) << "message is encrypted" << endl;
@@ -222,7 +222,7 @@ Base5::decrypt( Block& block, const char *passphrase )
 
     // ok. we have an encrypted message. Is the passphrase bad,
     // or do we not have the secret key?
-    if(error.find("Need a pass phrase") != -1)
+    if(error.contains("Need a pass phrase") )
     {
       if(passphrase != 0)
       {
@@ -244,15 +244,15 @@ Base5::decrypt( Block& block, const char *passphrase )
 #if 0
     // ##### FIXME: This information is anyway currently not used
     //       I'll change it to always determine the recipients.
-    index = error.find("can only be decrypted by:");
+    index = error.indexOf("can only be decrypted by:");
     if(index != -1)
     {
-      index = error.find('\n',index);
-      int end = error.find("\n\n",index);
+      index = error.indexOf('\n',index);
+      int end = error.indexOf("\n\n",index);
 
       mRecipients.clear();
       int index2;
-      while( (index2 = error.find('\n',index+1)) <= end )
+      while( (index2 = error.indexOf('\n',index+1)) <= end )
       {
 	QByteArray item = error.mid(index+1,index2-index-1);
 	item.trimmed();
@@ -262,7 +262,7 @@ Base5::decrypt( Block& block, const char *passphrase )
     }
 #endif
   }
-  index = error.find("Good signature");
+  index = error.indexOf("Good signature");
   if(index != -1)
   {
     //kDebug(5100) << "good signature" << endl;
@@ -270,18 +270,18 @@ Base5::decrypt( Block& block, const char *passphrase )
     status |= GOODSIG;
 
     // get key ID of signer
-    index = error.find("Key ID ", index) + 7;
+    index = error.indexOf("Key ID ", index) + 7;
     block.setSignatureKeyId( error.mid(index, 8) );
 
     // get signer
-    index = error.find('"',index) + 1;
-    int index2 = error.find('"', index);
+    index = error.indexOf('"',index) + 1;
+    int index2 = error.indexOf('"', index);
     block.setSignatureUserId( error.mid(index, index2-index) );
 
     /// ### FIXME get signature date
     block.setSignatureDate( "" );
   }
-  index = error.find("BAD signature");
+  index = error.indexOf("BAD signature");
   if(index != -1)
   {
     //kDebug(5100) << "BAD signature" << endl;
@@ -289,21 +289,21 @@ Base5::decrypt( Block& block, const char *passphrase )
     status |= ERROR;
 
     // get key ID of signer
-    index = error.find("Key ID ", index) + 7;
+    index = error.indexOf("Key ID ", index) + 7;
     block.setSignatureKeyId( error.mid(index, 8) );
 
     // get signer
-    index = error.find('"',index) + 1;
-    int index2 = error.find('"', index);
+    index = error.indexOf('"',index) + 1;
+    int index2 = error.indexOf('"', index);
     block.setSignatureUserId( error.mid(index, index2-index) );
 
     /// ### FIXME get signature date
     block.setSignatureDate( "" );
   }
-  index = error.find("Signature by unknown key");
+  index = error.indexOf("Signature by unknown key");
   if(index != -1)
   {
-    index = error.find("keyid: 0x",index) + 9;
+    index = error.indexOf("keyid: 0x",index) + 9;
     block.setSignatureKeyId( error.mid(index, 8) );
     block.setSignatureUserId( QString() );
     // FIXME: not a very good solution...
@@ -485,7 +485,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
     int eol;
 
     // search the end of the current line
-    eol = output.find( '\n', offset );
+    eol = output.indexOf( '\n', offset );
     if( ( eol == -1 ) || ( eol == offset ) )
       break;
 
@@ -527,7 +527,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       pos = offset + 4;
       while( output[pos] == ' ' )
         pos++;
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
       subkey->setKeyLength( output.mid( pos, pos2-pos ).toUInt() );
       //kDebug(5100) << "Key Length: "<<subkey->keyLength()<<endl;
 
@@ -536,7 +536,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       while( output[pos] == ' ' )
         pos++;
       pos += 2; // skip the '0x'
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
       subkey->setKeyID( output.mid( pos, pos2-pos ) );
       //kDebug(5100) << "Key ID: "<<subkey->keyID()<<endl;
 
@@ -544,7 +544,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       pos = pos2 + 1;
       while( output[pos] == ' ' )
         pos++;
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
       int year = output.mid( pos, 4 ).toInt();
       int month = output.mid( pos+5, 2 ).toInt();
       int day = output.mid( pos+8, 2 ).toInt();
@@ -563,7 +563,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
         pos = pos2 + 1;
         while( output[pos] == ' ' )
           pos++;
-        pos2 = output.find( ' ', pos );
+        pos2 = output.indexOf( ' ', pos );
         if( output[pos] == '-' )
         { // key doesn't expire
           subkey->setExpirationDate( -1 );
@@ -597,7 +597,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       pos = pos2 + 1;
       while( output[pos] == ' ' )
         pos++;
-      pos2 = output.find( ' ', pos );
+      pos2 = output.indexOf( ' ', pos );
       if( !strncmp( output.data() + pos, "RSA", 3 ) )
       {
         sign = true;
@@ -655,10 +655,10 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
          f20    Fingerprint20 = 226F 4B63 6DA2 7389 91D1  2A49 D58A 3EC1 5214 181E
 
        */
-      int pos = output.find( '=', offset+3 ) + 2;
+      int pos = output.indexOf( '=', offset+3 ) + 2;
       QByteArray fingerprint = output.mid( pos, eol-pos );
       // remove white space from the fingerprint
-      for ( int idx = 0 ; (idx = fingerprint.find(' ', idx)) >= 0 ; )
+      for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
 	fingerprint.replace( idx, 1, "" );
       subkey->setFingerprint( fingerprint );
       //kDebug(5100)<<"Fingerprint: "<<fingerprint<<endl;
@@ -701,13 +701,13 @@ Base5::parseSingleKey( const QByteArray& output, Key* key /* = 0 */ )
     offset = 0;
   else
   {
-    offset = output.find( "\nType Bits" ) + 1;
+    offset = output.indexOf( "\nType Bits" ) + 1;
     if( offset == 0 )
       return 0;
   }
 
   // key data begins in the next line
-  offset = output.find( '\n', offset ) + 1;
+  offset = output.indexOf( '\n', offset ) + 1;
   if( offset == -1 )
     return 0;
 
@@ -731,13 +731,13 @@ Base5::parseKeyList( const QByteArray& output, bool onlySecretKeys )
     offset = 0;
   else
   {
-    offset = output.find( "\nType Bits" ) + 1;
+    offset = output.indexOf( "\nType Bits" ) + 1;
     if( offset == 0 )
       return keys;
   }
 
   // key data begins in the next line
-  offset = output.find( '\n', offset ) + 1;
+  offset = output.indexOf( '\n', offset ) + 1;
   if( offset == -1 )
     return keys;
 
@@ -771,11 +771,11 @@ Base5::parseTrustDataForKey( Key* key, const QByteArray& str )
   UserIDList userIDs = key->userIDs();
 
   // search the start of the trust data
-  int offset = str.find( "\n\n  KeyID" ) + 9;
+  int offset = str.indexOf( "\n\n  KeyID" ) + 9;
   if( offset == -1 + 9 )
     return;
 
-  offset = str.find( '\n', offset ) + 1;
+  offset = str.indexOf( '\n', offset ) + 1;
   if( offset == -1 + 1 )
     return;
 
@@ -789,7 +789,7 @@ Base5::parseTrustDataForKey( Key* key, const QByteArray& str )
     int eol;
 
     // search the end of the current line
-    if( ( eol = str.find( '\n', offset ) ) == -1 )
+    if( ( eol = str.indexOf( '\n', offset ) ) == -1 )
       break;
 
     if( str[offset+23] != ' ' )
