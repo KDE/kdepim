@@ -90,10 +90,11 @@ VObject* newVObject(const char *id)
 
 void deleteVObject(VObject *p)
 {
+  if (!p)
+    return;
   if (p->id)
     unUseStr(p->id);
-  if (p)
-    free(p);
+  free(p);
   p = NULL;
 }
 
