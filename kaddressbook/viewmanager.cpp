@@ -212,7 +212,7 @@ void ViewManager::setActiveView( const QString &name )
       view = factory->view( mCore, mViewWidgetStack );
 
     if ( view ) {
-      view->setCaption( name );
+      view->setWindowTitle( name );
       mViewDict.insert( name, view );
       mViewWidgetStack->addWidget( view );
       view->readConfig( group );

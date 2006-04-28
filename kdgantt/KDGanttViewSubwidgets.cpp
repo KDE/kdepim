@@ -3233,7 +3233,7 @@ void KDLegendWidget::setAsDockwindow( bool dockwin )
             dock->resize( 200, 100 );
             dock->setHorizontallyStretchable( true );
             dock->setVerticallyStretchable( true );
-            dock->setCaption(tr("Legend: ") );
+            dock->setWindowTitle(tr("Legend: ") );
             dock->setResizeEnabled (true );
             delete myLegend;
             myLegend = 0;

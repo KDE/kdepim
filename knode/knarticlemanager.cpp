@@ -48,7 +48,7 @@
 using namespace KNode;
 
 
-KNArticleManager::KNArticleManager() : QObject(0,0)
+KNArticleManager::KNArticleManager() : QObject(0)
 {
   g_roup=0;
   f_older=0;

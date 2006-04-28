@@ -98,7 +98,7 @@ QString AddViewDialog::viewName()const
 QString AddViewDialog::viewType()const
 {
   // we missuse the name property for storing the type
-  return mTypeGroup->find( mTypeId )->name();
+  return mTypeGroup->find( mTypeId )->objectName();
 }
 
 void AddViewDialog::clicked( int id )

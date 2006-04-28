@@ -95,7 +95,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 {
   mWidget = new QWidget( parent, name );
 
-  mIsPart = !parent->isA( "KAddressBookMain" );
+  mIsPart = (parent->metaObject()->className() != "KAddressBookMain");
 
   mAddressBookChangedTimer = new QTimer( this );
   connect( mAddressBookChangedTimer, SIGNAL( timeout() ),

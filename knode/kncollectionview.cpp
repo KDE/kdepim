@@ -427,7 +427,7 @@ bool KNCollectionView::eventFilter(QObject *o, QEvent *e)
   // header popup menu
   if ( e->type() == QEvent::MouseButtonPress &&
        static_cast<QMouseEvent*>(e)->button() == Qt::RightButton &&
-       o->isA("QHeader") )
+       o->metaObject()->className()=="QHeader" )
   {
     mPopup->popup( static_cast<QMouseEvent*>(e)->globalPos() );
     return true;

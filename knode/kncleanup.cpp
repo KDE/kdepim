@@ -257,7 +257,7 @@ KNCleanUp::ProgressDialog::ProgressDialog( int steps, QWidget *parent ) :
   const int w=400,
             h=160;
 
-  setCaption(kapp->makeStdCaption(i18n("Cleaning Up")));
+  setWindowTitle(kapp->makeStdCaption(i18n("Cleaning Up")));
 
   setFixedSize(w,h);
   QFrame *top = new QFrame( this );

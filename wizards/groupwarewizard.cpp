@@ -31,7 +31,7 @@
 GroupwareWizard::GroupwareWizard( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  setCaption( i18n( "KDE Groupware Wizard" ) );
+  setWindowTitle( i18n( "KDE Groupware Wizard" ) );
 
   QVBoxLayout *layout = new QVBoxLayout( this );
 

@@ -540,7 +540,7 @@ void KDGanttViewTaskLink::createNode( QDomDocument& doc,
                              whatsThisText() );
     if( group() )
         KDGanttXML::createStringNode( doc, taskLinkElement, "Group",
-                                 group()->name() );
+                                 group()->objectName() );
     KDGanttXML::createBoolNode( doc, taskLinkElement, "Visible",
                            isVisible() );
 }

@@ -42,9 +42,10 @@ class XXPort::XXPortPrivate
 
 XXPort::XXPort( KABC::AddressBook *ab, QWidget *parent,
                             const char *name )
-  : QObject( parent, name ), mAddressBook( ab ), mParentWidget( parent ),
+  : QObject( parent ), mAddressBook( ab ), mParentWidget( parent ),
     d( new XXPortPrivate )
 {
+  setObjectName( name );
   setInstance( new KInstance( "kaddressbook" ) );
 
   d->mExportMapper = new QSignalMapper( this );

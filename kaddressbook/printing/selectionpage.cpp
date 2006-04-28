@@ -44,7 +44,7 @@
 SelectionPage::SelectionPage( QWidget* parent, const char* name )
     : QWidget( parent, name )
 {
-  setCaption( i18n( "Choose Which Contacts to Print" ) );
+  setWindowTitle( i18n( "Choose Which Contacts to Print" ) );
 
   QVBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );

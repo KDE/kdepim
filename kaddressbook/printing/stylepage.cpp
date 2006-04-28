@@ -113,7 +113,7 @@ void StylePage::initFieldCombo()
 
 void StylePage::initGUI()
 {
-  setCaption( i18n( "Choose Printing Style" ) );
+  setWindowTitle( i18n( "Choose Printing Style" ) );
 
   QGridLayout *topLayout = new QGridLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );

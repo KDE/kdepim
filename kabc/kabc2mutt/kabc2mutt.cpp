@@ -30,11 +30,12 @@
 static std::ostream & operator<< ( std::ostream &os, const QString &s );
 
 KABC2Mutt::KABC2Mutt( QObject *parent, const char *name )
-  : QObject( parent, name ), mFormat( Aliases ),
+  : QObject( parent ), mFormat( Aliases ),
     mIgnoreCase( false ), mAllAddresses( false ),
     mAlternateKeyFormat( false ),
     mAddressBook( 0 )
 {
+  setObjectName( name );
 }
 
 void KABC2Mutt::run()

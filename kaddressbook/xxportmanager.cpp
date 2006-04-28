@@ -42,8 +42,9 @@ KUrl XXPortManager::importURL = KUrl();
 QString XXPortManager::importData = QString();
 
 XXPortManager::XXPortManager( KAB::Core *core, QObject *parent, const char *name )
-  : QObject( parent, name ), mCore( core )
+  : QObject( parent ), mCore( core )
 {
+  setObjectName( name );
   loadPlugins();
 }
 

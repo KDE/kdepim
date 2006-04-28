@@ -30,8 +30,9 @@ using namespace KAB;
 
 SearchManager::SearchManager( KABC::AddressBook *ab,
                               QObject *parent, const char *name )
-  : QObject( parent, name ), mAddressBook( ab )
+  : QObject( parent ), mAddressBook( ab )
 {
+  setObjectName( name );
 }
 
 void SearchManager::search( const QString &pattern, const KABC::Field::List &fields, Type type )

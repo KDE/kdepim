@@ -801,7 +801,7 @@ void CSVImportDialog::applyTemplate()
   QStringList templates;
 
   // load all template files
-  QStringList list = KGlobal::dirs()->findAllResources( "data" , QString( kapp->name() ) +
+  QStringList list = KGlobal::dirs()->findAllResources( "data" , QString( kapp->objectName() ) +
       "/csv-templates/*.desktop", true, true );
 
   for ( QStringList::iterator it = list.begin(); it != list.end(); ++it )
@@ -857,7 +857,7 @@ void CSVImportDialog::applyTemplate()
 void CSVImportDialog::saveTemplate()
 {
   QString fileName = KFileDialog::getSaveFileName(
-                     locateLocal( "data", QString( kapp->name() ) + "/csv-templates/" ),
+                     locateLocal( "data", QString( kapp->objectName() ) + "/csv-templates/" ),
                      "*.desktop", this );
 
   if ( fileName.isEmpty() )

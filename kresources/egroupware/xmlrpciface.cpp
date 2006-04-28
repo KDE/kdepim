@@ -308,8 +308,10 @@ QVariant Query::demarshal( const QDomElement &elem ) const
 }
 
 Query::Query( const QVariant &id, QObject *parent, const char *name )
-  : QObject( parent, name ), m_id( id )
-{}
+  : QObject( parent ), m_id( id )
+{
+  setObjectName( name );
+}
 
 Query::~Query()
 {
@@ -319,8 +321,9 @@ Query::~Query()
 }
 
 Server::Server( const KUrl &url, QObject *parent, const char *name )
-    : QObject( parent, name )
+    : QObject( parent )
 {
+  setObjectName( name );
   if ( url.isValid() )
     m_url = url;
 

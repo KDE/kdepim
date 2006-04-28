@@ -39,7 +39,7 @@ using namespace KABPrinting;
 PrintProgress::PrintProgress( QWidget *parent, const char *name )
   : QWidget( parent, name )
 {
-  setCaption( i18n( "Printing: Progress" ) );
+  setWindowTitle( i18n( "Printing: Progress" ) );
 
   QGridLayout *topLayout = new QGridLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );

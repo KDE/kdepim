@@ -42,9 +42,9 @@
 #include <QByteArray>
 
 HierarchyAnalyser::HierarchyAnalyser( QObject * parent, const char * name )
-  : QObject( parent, name )
+  : QObject( parent )
 {
-
+  setObjectName( name );
 }
 
 HierarchyAnalyser::~HierarchyAnalyser() {

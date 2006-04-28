@@ -196,8 +196,9 @@ void Kleo::CryptoConfigComponentGUI::defaults()
 Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
   CryptoConfigModule* module, Kleo::CryptoConfigGroup* group,
   QGridLayout * glay, QWidget* widget, const char* name )
-  : QObject( module, name ), mGroup( group )
+  : QObject( module ), mGroup( group )
 {
+  setObjectName( name );
   const int startRow = glay->rowCount();
   const QStringList entries = mGroup->entryList();
   for( QStringList::const_iterator it = entries.begin(), end = entries.end() ; it != end; ++it ) {
@@ -306,8 +307,9 @@ Kleo::CryptoConfigEntryGUI::CryptoConfigEntryGUI(
   Kleo::CryptoConfigEntry* entry,
   const QString& entryName,
   const char* name )
-  : QObject( module, name ), mEntry( entry ), mName( entryName ), mChanged( false )
+  : QObject( module ), mEntry( entry ), mName( entryName ), mChanged( false )
 {
+  setObjectName( name );
   connect( this, SIGNAL( changed() ), module, SIGNAL( changed() ) );
 }
 

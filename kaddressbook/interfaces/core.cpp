@@ -26,8 +26,9 @@
 using namespace KAB;
 
 Core::Core( KXMLGUIClient *client, QObject *parent, const char *name )
-  : QObject( parent, name ), mGUIClient( client )
+  : QObject( parent ), mGUIClient( client )
 {
+  setObjectName( name );
 }
 
 #include "core.moc"

@@ -33,7 +33,7 @@ KNSourceViewWindow::KNSourceViewWindow( const QString &text )
 
   setTextFormat( Qt::PlainText );
 
-  setCaption(kapp->makeStdCaption(i18n("Article Source")));
+  setWindowTitle(kapp->makeStdCaption(i18n("Article Source")));
 #warning "kde4: porting\n";  
   //setPaper( QBrush( knGlobals.settings()->backgroundColor()) );
   setFont( knGlobals.settings()->articleFixedFont() );

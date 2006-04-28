@@ -67,8 +67,9 @@ class TabPressEater : public QObject
 {
   public:
     TabPressEater( QObject *parent )
-      : QObject( parent, "TabPressEater" )
+      : QObject( parent )
     {
+      setObjectName( "TabPressEater" );
     }
 
   protected:

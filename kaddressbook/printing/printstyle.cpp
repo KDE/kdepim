@@ -35,8 +35,9 @@ using namespace KABPrinting;
 
 
 PrintStyle::PrintStyle( PrintingWizard* parent, const char* name )
-  : QObject( parent, name ), mWizard( parent ), mSortField( 0 )
+  : QObject( parent ), mWizard( parent ), mSortField( 0 )
 {
+  setObjectName( name );
 }
 
 PrintStyle::~PrintStyle()

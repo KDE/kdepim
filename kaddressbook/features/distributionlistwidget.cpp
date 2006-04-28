@@ -92,8 +92,9 @@ class DeletePressedCatcher : public QObject
 {
   public:
     DeletePressedCatcher( DistributionListWidget *parent )
-      : QObject( parent, "DeletePressedCatcher" ), mWidget( parent )
+      : QObject( parent ), mWidget( parent )
     {
+      setObjectName( "DeletePressedCatcher" );
     }
 
   protected:
