@@ -1858,6 +1858,8 @@ void KDGanttView::setHighlightColors( KDGanttViewItem::Type type,
       }
     }
     int index = getIndex( type );
+    if (index < 0) return;
+
     myColorHL [index*3] = start;
     myColorHL [index*3+1] = middle;
     myColorHL [index*3+2] = end;
