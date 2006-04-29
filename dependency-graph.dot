@@ -1,7 +1,7 @@
 # to create a ps file use 'dot -Tps -o dependency-graph.ps dependency-graph.dot' (dot it part of the graphviz package)
 # This file is also included in Mainpage.dox, so if you change color codings
 # etc., you might need to adapt Mainpage.dox as well.
-digraph "inter-dependency graph for kdepim" {
+strict digraph "inter-dependency graph for kdepim" {
         /*
            Node definitions
            Put all sub-dirs here.
@@ -27,7 +27,6 @@ digraph "inter-dependency graph for kdepim" {
         "kleopatra"[style=filled, fillcolor=lightcyan, URL="kleopatra/html/index.html"];
         "kmail"[style=filled, fillcolor=lightcyan, URL="kmail/html/index.html"];
         "kmailcvt"[style=filled, fillcolor=lightcyan];
-        "kmobile"[style=filled, fillcolor=lightgray];
         "knode"[style=filled, fillcolor=lightcyan, URL="knode/html/index.html"];
         "knotes"[style=filled, fillcolor=lightcyan, URL="knotes/html/index.html"];
         "kode"[style=filled, fillcolor=lightcyan];
@@ -119,7 +118,6 @@ digraph "inter-dependency graph for kdepim" {
         "libkmime" -> "kmail";
         "libkmime" -> "knode";
         "libkmime" -> "libakonadi";
-        "libkmime" -> "libkcal";
         "libkpgp" -> "kmail";
         "libkpgp" -> "knode";
         "libkpgp" -> "libkleo";
