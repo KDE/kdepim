@@ -178,7 +178,7 @@ void FilterThunderbird::importMBox(FilterInfo *info, const QString& mboxName, co
         } else
             info->setTo(targetDir);
 
-        QByteArray input(MAX_LINE);
+        QByteArray input(MAX_LINE,'\0');
         long l = 0;
 
         while (!mbox.atEnd()) {

@@ -145,7 +145,7 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
 
         info->addLog(i18n("Importing emails from %1...", tmp_from));
 
-        QByteArray input(MAX_LINE);
+        QByteArray input(MAX_LINE,'\0');
         long l = 0;
 
         while (!mbox.atEnd()) {

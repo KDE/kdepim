@@ -487,7 +487,7 @@ void KTNEFParser::checkCurrent( int key )
 					if ( mimetype->name() == "application/octet-stream" && d->current_->size() > 0 )
 					{
 						int oldOffset = d->device_->pos();
-						QByteArray buffer( qMin( 32, d->current_->size() ) );
+						QByteArray buffer( qMin( 32, d->current_->size() ), '\0' );
 						d->device_->seek( d->current_->offset() );
 						d->device_->read( buffer.data(), buffer.size() );
 						mimetype = KMimeType::findByContent( buffer );
@@ -606,7 +606,7 @@ QString readTNEFAddress( QDataStream& stream )
 
 QByteArray readTNEFData( QDataStream& stream, quint32 len )
 {
-	QByteArray array( len );
+	QByteArray array( len, '\0' );
 	if ( len > 0 )
 		stream.readRawBytes( array.data(), len );
 	return array;
@@ -742,7 +742,7 @@ quint16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
 				value.clear();
 				quint32 len;
 				stream >> len;
-				value = QByteArray( len );
+				value = QByteArray( len, '\0' );
 				if (len > 0)
 				{
 					int fullLen = len;

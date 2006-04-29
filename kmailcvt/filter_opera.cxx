@@ -93,7 +93,7 @@ void FilterOpera::import(FilterInfo *info)
                     info->setFrom( *mailFile );
                     info->setTo( folderName );
 
-                    QByteArray input(MAX_LINE);
+                    QByteArray input(MAX_LINE,'\0');
                     long l = 0;
                     bool first_msg = true;
 

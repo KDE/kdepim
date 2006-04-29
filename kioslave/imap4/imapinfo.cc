@@ -197,7 +197,7 @@ ulong imapInfo::_flags (const QByteArray & inFlags)
 {
   ulong flags = 0;
   parseString flagsString;
-  flagsString.data.duplicate(inFlags.data(), inFlags.length());
+  flagsString.data = inFlags;
 
   if (flagsString[0] == '(')
     flagsString.pos++;

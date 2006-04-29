@@ -174,7 +174,7 @@ void FilterPMail::importMailFolder(const QString& file)
         inf->setTo(folder);
         inf->addLog(i18n("Importing %1", QString("../") + QString(pmm_head.folder)));
         
-        QByteArray input(MAX_LINE);
+        QByteArray input(MAX_LINE,'\0');
         bool first_msg = true;
         
         while (!f.atEnd()) {
@@ -224,7 +224,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
     
     QFile f;
     QString folder("PegasusMail-Import/"), s(file), seperate;
-    QByteArray line(MAX_LINE);
+    QByteArray line(MAX_LINE,'\0');
     int n = 0, l = 0;
 
     /** Get the folder name */

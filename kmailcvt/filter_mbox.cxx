@@ -63,7 +63,7 @@ void FilterMBox::import(FilterInfo *info)
             info->setFrom( *filename );
             info->setTo( folderName );
 
-            QByteArray input(MAX_LINE);
+            QByteArray input(MAX_LINE,'\0');
             long l = 0;
 
             while ( ! mbox.atEnd() ) {

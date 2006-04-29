@@ -1652,7 +1652,7 @@ int imapParser::parseLoop ()
       parseUntagged (result);
       break;
     case '+':
-      continuation.duplicate(result.data);
+      continuation = result.data;
       break;
     default:
       {

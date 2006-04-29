@@ -194,11 +194,13 @@ void FieldWidget::addField( const QString &identifier, const QString &title,
   record.mWidget->show();
 
   if ( isGlobal ) {
-    record.mLayout = new QHBoxLayout( mGlobalLayout );
+    record.mLayout = new QHBoxLayout();
+    mGlobalLayout->addLayout( record.mLayout );
     record.mLayout->addWidget( record.mLabel );
     record.mLayout->addWidget( record.mWidget, Qt::AlignLeft );
   } else {
-    record.mLayout = new QHBoxLayout( mLocalLayout );
+    record.mLayout = new QHBoxLayout();
+    mLocalLayout->addLayout( record.mLayout );
     record.mLayout->addWidget( record.mLabel );
     record.mLayout->addWidget( record.mWidget, Qt::AlignLeft );
     mSeparator->show();

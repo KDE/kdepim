@@ -459,8 +459,8 @@ rfcDecoder::encodeRFC2047String (const QString & _str)
   int rptr = 0;
   // My stats show this number results in 12 resize() out of 73,000
   int resultLen = 3 * _str.length() / 2;
-  QByteArray result(resultLen);
-  
+  QByteArray result(resultLen, '\0');
+
   while (*latin)
   {
     l = latin;

@@ -91,7 +91,7 @@ marked_ (false), unmarked_ (false), hasChildren_ (false),
 hasNoChildren_ (false)
 {
   parseString s;
-  s.data.duplicate(inStr.toLatin1(), inStr.length());
+  s.data = inStr.toLatin1();
 
   if (s[0] != '(')
     return;                     //not proper format for us

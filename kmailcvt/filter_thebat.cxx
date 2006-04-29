@@ -138,7 +138,7 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
     // ----------------------------------------
 
     long l = 0;
-    QByteArray input(50);
+    QByteArray input(50,'\0');
     QRegExp regexp("!.p.0");
     QFile tbb(FileName);
     int iFound = 0;
@@ -201,7 +201,7 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
                     return;
                 }
                 endPos = *it;
-                QByteArray input(endPos-lastPos);
+                QByteArray input(endPos-lastPos,'\0');
                 tbb.read(input.data(), endPos-lastPos);
 
                 KTempFile tmp;

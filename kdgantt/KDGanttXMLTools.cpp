@@ -155,7 +155,7 @@ void createPixmapNode( QDomDocument& doc, QDomNode& parent,
     buffer.close();
 #endif
     ulong len = ba.size() * 2;
-    QByteArray bazip( len );
+    QByteArray bazip( len, '\0' );
     ::compress(  (uchar*) bazip.data(), &len, (uchar*) ba.data(), ba.size() );
     QString dataString;
     static const char hexchars[] = "0123456789abcdef";
@@ -496,7 +496,7 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
 
             if( tempLength < (int)tempData.length() * 5 )
                 tempLength = tempData.length() * 5;
-            QByteArray baunzip( tempLength );
+            QByteArray baunzip( tempLength, '\0' );
             ::uncompress( (uchar*) baunzip.data(), &tempLength,
                           (uchar*) ba, tempData.length()/2 );
             QImage image;

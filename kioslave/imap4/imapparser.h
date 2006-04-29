@@ -101,7 +101,7 @@ public:
   void fromString(const QString &s)
   {
     clear();
-    data.duplicate(s.toLatin1(), s.length());
+    data = s.toLatin1();
   }
   QByteArray data;
   int pos;
@@ -358,7 +358,7 @@ public:
     // Choice: we can create an extra QCString, or we can get the buffer in
     // the wrong size to start.  Let's try option b.
     Q3CString tmp = parseLiteralC(inWords, relay, stopAtBracket, &len);
-    return QByteArray().duplicate(tmp.data(), len);
+    return tmp;
   }
 
   // static parser routines, can be used elsewhere
@@ -375,7 +375,7 @@ public:
     // Choice: we can create an extra QCString, or we can get the buffer in
     // the wrong size to start.  Let's try option b.
     Q3CString tmp = parseOneWordC(inWords, stopAtBracket, &len);
-    return QByteArray().duplicate(tmp.data(), len);
+    return tmp;
   }
 
 

@@ -202,7 +202,7 @@ mailAddress::parseAddress (const char *aCStr)
 const QByteArray
 mailAddress::getStr ()
 {
-  QByteArray retVal(128); // Should be generally big enough
+  QByteArray retVal(128, '\0' ); // Should be generally big enough
 
   if (!rawFullName.isEmpty ())
   {

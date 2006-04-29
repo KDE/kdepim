@@ -180,7 +180,7 @@ void FilterEvolution_v2::importMBox(FilterInfo *info, const QString& mboxName, c
         } else
             info->setTo(targetDir);
 
-        QByteArray input(MAX_LINE);
+        QByteArray input(MAX_LINE, '\0');
         long l = 0;
 
         while (!mbox.atEnd()) {
