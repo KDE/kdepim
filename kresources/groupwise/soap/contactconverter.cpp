@@ -392,7 +392,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
     for ( addrIt = addressMap.begin(); addrIt != addressMap.end(); ++addrIt )
     {
       QString protocol = addrIt.key();
-      QStringList addresses = addrIt.data();
+      QStringList addresses = addrIt.value();
       //kDebug() << "got IM addresses for '" << protocol << "' : " << addresses << endl;
       // TODO: map protocol to KDE's set of known protocol names (need to know the set of services in use elsewhere)
       if ( protocol == "nov" )

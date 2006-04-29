@@ -287,7 +287,7 @@ QString XmlrpcJob::marshal( const QVariant &arg )
         {
           markup += "<member>\r\n";
           markup += "<name>" + it.key() + "</name>\r\n";
-          markup += marshal( it.data() );
+          markup += marshal( it.value() );
           markup += "</member>\r\n";
         }
         markup += "</struct></value>\r\n";

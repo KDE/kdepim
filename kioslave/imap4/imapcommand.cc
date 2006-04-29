@@ -359,7 +359,7 @@ imapCommand::clientSetAnnotation( const QString& box, const QString& entry, cons
     parameter += "\"";
     parameter += rfcDecoder::toIMAP (it.key());
     parameter += "\" \"";
-    parameter += rfcDecoder::toIMAP (it.data());
+    parameter += rfcDecoder::toIMAP (it.value());
     parameter += "\" ";
   }
   // Turn last space into a ')'

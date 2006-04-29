@@ -191,7 +191,7 @@ QList<KABC::Addressee> GMXXXPort::importContacts( const QString& ) const
 
   // now add the addresses to to addrList
   for ( AddressMap::Iterator it = addrMap.begin(); it != addrMap.end(); ++it ) {
-     KABC::Addressee *addr = it.data();
+     KABC::Addressee *addr = it.value();
      addrList.append(*addr);
      delete addr;
   }

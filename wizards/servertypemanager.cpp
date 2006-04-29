@@ -58,7 +58,7 @@ QString ServerTypeManager::title( const QString& identifier ) const
   if ( it == mServerTypeFactoryMap.end() )
     return QString::null;
   else
-    return it.data()->title();
+    return it.value()->title();
 }
 
 ServerType* ServerTypeManager::serverType( const QString& identifier )
@@ -69,7 +69,7 @@ ServerType* ServerTypeManager::serverType( const QString& identifier )
     if ( it == mServerTypeFactoryMap.end() ) // no factory for this type
       return 0;
 
-    ServerType *serverType = it.data()->serverType( 0, identifier.toLatin1() );
+    ServerType *serverType = it.value()->serverType( 0, identifier.toLatin1() );
     if ( !serverType )
       return 0;
 

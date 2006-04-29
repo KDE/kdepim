@@ -14,11 +14,11 @@ using namespace KMime;
 static const char * typeToString( int type ) {
   switch ( type ) {
   case CharFreq::EightBitData:
-    return "eight bit data (binary)";
+    return "eight bit.value (binary)";
   case CharFreq::EightBitText:
     return "eight bit text";
   case CharFreq::SevenBitData:
-    return "seven bit data";
+    return "seven bit.value";
   case CharFreq::SevenBitText:
     return "seven bit text";
   default:

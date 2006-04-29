@@ -908,7 +908,7 @@ uint CSVImportDialog::posToType( int pos ) const
   QMap<QString, uint>::ConstIterator it;
   for ( it = mTypeMap.begin(); it != mTypeMap.end(); ++it, ++counter )
     if ( counter == (uint)pos )
-      return it.data();
+      return it.value();
 
   return 0;
 }
@@ -918,7 +918,7 @@ int CSVImportDialog::typeToPos( uint type ) const
   uint counter = 0;
   QMap<QString, uint>::ConstIterator it;
   for ( it = mTypeMap.begin(); it != mTypeMap.end(); ++it, ++counter )
-    if ( it.data() == type )
+    if ( it.value() == type )
       return counter;
 
   return -1;

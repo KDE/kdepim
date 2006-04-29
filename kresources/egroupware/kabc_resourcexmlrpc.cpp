@@ -447,7 +447,7 @@ QString ResourceXMLRPC::addrTypesToTypeStr( int typeMask )
   QStringList types;
   QMap<QString, int>::ConstIterator it;
   for ( it = mAddrTypes.begin(); it != mAddrTypes.end(); ++it )
-    if ( it.data() & typeMask )
+    if ( it.value() & typeMask )
       types.append( it.key() );
 
   return types.join( ";" );
@@ -485,7 +485,7 @@ void ResourceXMLRPC::writeContact( const Addressee &addr, QMap<QString, QVariant
     if ( it == mCategoryMap.end() ) // new category
       catMap.insert( QString::number( counter-- ), *catIt );
     else
-      catMap.insert( QString::number( it.data() ), *catIt );
+      catMap.insert( QString::number( it.value() ), *catIt );
   }
   args.insert( "cat_id", catMap );
 
@@ -602,57 +602,57 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
   QMap<QString, QVariant>::ConstIterator it;
   for ( it = args.begin(); it != args.end(); ++it ) {
     if ( it.key() == "id" ) {
-      uid = it.data().toString();
+      uid = it.value().toString();
     } else if ( it.key() == "access" ) {
       Secrecy secrecy;
-      if ( it.data().toString() == "private" )
+      if ( it.value().toString() == "private" )
         secrecy.setType( Secrecy::Private );
       else
         secrecy.setType( Secrecy::Public );
 
       addr.setSecrecy( secrecy );
     } else if ( it.key() == "fn" ) {
-      addr.setFormattedName( it.data().toString() );
+      addr.setFormattedName( it.value().toString() );
     } else if ( it.key() == "n_given" ) {
-      addr.setGivenName( it.data().toString() );
+      addr.setGivenName( it.value().toString() );
     } else if ( it.key() == "n_family" ) {
-      addr.setFamilyName( it.data().toString() );
+      addr.setFamilyName( it.value().toString() );
     } else if ( it.key() == "n_middle" ) {
-      addr.setAdditionalName( it.data().toString() );
+      addr.setAdditionalName( it.value().toString() );
     } else if ( it.key() == "n_prefix" ) {
-      addr.setPrefix( it.data().toString() );
+      addr.setPrefix( it.value().toString() );
     } else if ( it.key() == "n_suffix" ) {
-      addr.setSuffix( it.data().toString() );
+      addr.setSuffix( it.value().toString() );
     } else if ( it.key() == "sound" ) {
     } else if ( it.key() == "bday" ) {
-      addr.setBirthday( it.data().toDateTime() );
+      addr.setBirthday( it.value().toDateTime() );
     } else if ( it.key() == "note" ) {
-      addr.setNote( it.data().toString() );
+      addr.setNote( it.value().toString() );
     } else if ( it.key() == "tz" ) {
-      int hour = it.data().toInt();
+      int hour = it.value().toInt();
       TimeZone timeZone( hour * 60 );
       addr.setTimeZone( timeZone );
     } else if ( it.key() == "geo" ) {
     } else if ( it.key() == "url" ) {
-      addr.setUrl( KUrl( it.data().toString() ) );
+      addr.setUrl( KUrl( it.value().toString() ) );
     } else if ( it.key() == "pubkey" ) {
     } else if ( it.key() == "org_name" ) {
-      addr.setOrganization( it.data().toString() );
+      addr.setOrganization( it.value().toString() );
     } else if ( it.key() == "org_unit" ) {
     } else if ( it.key() == "title" ) {
-      addr.setTitle( it.data().toString() );
+      addr.setTitle( it.value().toString() );
     } else if ( it.key() == "adr_one_street" ) {
-      addrOne.setStreet( it.data().toString() );
+      addrOne.setStreet( it.value().toString() );
     } else if ( it.key() == "adr_one_locality" ) {
-      addrOne.setLocality( it.data().toString() );
+      addrOne.setLocality( it.value().toString() );
     } else if ( it.key() == "adr_one_region" ) {
-      addrOne.setRegion( it.data().toString() );
+      addrOne.setRegion( it.value().toString() );
     } else if ( it.key() == "adr_one_postalcode" ) {
-      addrOne.setPostalCode( it.data().toString() );
+      addrOne.setPostalCode( it.value().toString() );
     } else if ( it.key() == "adr_one_countryname" ) {
-      addrOne.setCountry( it.data().toString() );
+      addrOne.setCountry( it.value().toString() );
     } else if ( it.key() == "adr_one_type" ) {
-      QStringList types = it.data().toString().split( ';', QString::SkipEmptyParts );
+      QStringList types = it.value().toString().split( ';', QString::SkipEmptyParts );
 
       int type = Address::Work;
       for ( int i = 0; i < types.count(); ++i )
@@ -660,19 +660,19 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
 
       addrOne.setType( type );
     } else if ( it.key() == "label" ) {
-      addrOne.setLabel( it.data().toString() );
+      addrOne.setLabel( it.value().toString() );
     } else if ( it.key() == "adr_two_street" ) {
-      addrTwo.setStreet( it.data().toString() );
+      addrTwo.setStreet( it.value().toString() );
     } else if ( it.key() == "adr_two_locality" ) {
-      addrTwo.setLocality( it.data().toString() );
+      addrTwo.setLocality( it.value().toString() );
     } else if ( it.key() == "adr_two_region" ) {
-      addrTwo.setRegion( it.data().toString() );
+      addrTwo.setRegion( it.value().toString() );
     } else if ( it.key() == "adr_two_postalcode" ) {
-      addrTwo.setPostalCode( it.data().toString() );
+      addrTwo.setPostalCode( it.value().toString() );
     } else if ( it.key() == "adr_two_countryname" ) {
-      addrTwo.setCountry( it.data().toString() );
+      addrTwo.setCountry( it.value().toString() );
     } else if ( it.key() == "adr_two_type" ) {
-      QStringList types = it.data().toString().split( ';', QString::SkipEmptyParts );
+      QStringList types = it.value().toString().split( ';', QString::SkipEmptyParts );
 
       int type = Address::Home;
       for ( int i = 0; i < types.count(); ++i )
@@ -680,45 +680,45 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
 
       addrTwo.setType( type );
     } else if ( it.key() == "tel_work" ) {
-      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Work ) );
+      addr.insertPhoneNumber( PhoneNumber( it.value().toString(), PhoneNumber::Work ) );
     } else if ( it.key() == "tel_home" ) {
-      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Home ) );
+      addr.insertPhoneNumber( PhoneNumber( it.value().toString(), PhoneNumber::Home ) );
     } else if ( it.key() == "tel_voice" ) {
-      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Voice ) );
+      addr.insertPhoneNumber( PhoneNumber( it.value().toString(), PhoneNumber::Voice ) );
     } else if ( it.key() == "tel_fax" ) {
-      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Fax ) );
+      addr.insertPhoneNumber( PhoneNumber( it.value().toString(), PhoneNumber::Fax ) );
     } else if ( it.key() == "tel_msg" ) {
-      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Msg ) );
+      addr.insertPhoneNumber( PhoneNumber( it.value().toString(), PhoneNumber::Msg ) );
     } else if ( it.key() == "tel_cell" ) {
-      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Cell ) );
+      addr.insertPhoneNumber( PhoneNumber( it.value().toString(), PhoneNumber::Cell ) );
     } else if ( it.key() == "tel_pager" ) {
-      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Pager ) );
+      addr.insertPhoneNumber( PhoneNumber( it.value().toString(), PhoneNumber::Pager ) );
     } else if ( it.key() == "tel_bbs" ) {
-      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Bbs ) );
+      addr.insertPhoneNumber( PhoneNumber( it.value().toString(), PhoneNumber::Bbs ) );
     } else if ( it.key() == "tel_modem" ) {
-      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Modem ) );
+      addr.insertPhoneNumber( PhoneNumber( it.value().toString(), PhoneNumber::Modem ) );
     } else if ( it.key() == "tel_car" ) {
-      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Car ) );
+      addr.insertPhoneNumber( PhoneNumber( it.value().toString(), PhoneNumber::Car ) );
     } else if ( it.key() == "tel_isdn" ) {
-      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Isdn ) );
+      addr.insertPhoneNumber( PhoneNumber( it.value().toString(), PhoneNumber::Isdn ) );
     } else if ( it.key() == "tel_video" ) {
-      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Video ) );
+      addr.insertPhoneNumber( PhoneNumber( it.value().toString(), PhoneNumber::Video ) );
     } else if ( it.key() == "tel_prefer" ) {
-      addr.insertPhoneNumber( PhoneNumber( it.data().toString(), PhoneNumber::Pref ) );
+      addr.insertPhoneNumber( PhoneNumber( it.value().toString(), PhoneNumber::Pref ) );
     } else if ( it.key() == "email" ) {
-      addr.insertEmail( it.data().toString(), true );
+      addr.insertEmail( it.value().toString(), true );
     } else if ( it.key() == "email_type" ) {
     } else if ( it.key() == "email_home" ) {
-      addr.insertEmail( it.data().toString(), false );
+      addr.insertEmail( it.value().toString(), false );
     } else if ( it.key() == "email_home_type" ) {
     } else if ( it.key() == "cat_id" ) {
-      const QMap<QString, QVariant> categories = it.data().toMap();
+      const QMap<QString, QVariant> categories = it.value().toMap();
       QMap<QString, QVariant>::ConstIterator it;
 
       for ( it = categories.begin(); it != categories.end(); ++it )
-        addr.insertCategory( it.data().toString() );
+        addr.insertCategory( it.value().toString() );
     } else if ( it.key() == "rights" ) {
-      setRights( addr, it.data().toInt() );
+      setRights( addr, it.value().toInt() );
     }
   }
 
@@ -732,7 +732,7 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
                                                 args[ cfIt.key() ].toString() );
       KCal::FreeBusyUrlStore::self()->sync();
     } else
-      addr.insertCustom( "XMLRPCResource", cfIt.key(), cfIt.data() );
+      addr.insertCustom( "XMLRPCResource", cfIt.key(), cfIt.value() );
   }
 
   if ( !addrOne.isEmpty() )
@@ -751,11 +751,11 @@ void ResourceXMLRPC::loadCategoriesFinished( const QList<QVariant> &mapList,
 
   KABPrefs *prefs = KABPrefs::instance();
   for ( it = map.begin(); it != map.end(); ++it ) {
-    mCategoryMap.insert( it.data().toString(), it.key().toInt() );
+    mCategoryMap.insert( it.value().toString(), it.key().toInt() );
 
     QStringList categories = prefs->customCategories();
-    if ( !categories.contains( it.data().toString() )  )
-      categories.append( it.data().toString() );
+    if ( !categories.contains( it.value().toString() )  )
+      categories.append( it.value().toString() );
 
     prefs->mCustomCategories = categories;
   }
@@ -770,7 +770,7 @@ void ResourceXMLRPC::loadCustomFieldsFinished( const QList<QVariant> &mapList,
   QMap<QString, QVariant>::ConstIterator it;
 
   for ( it = map.begin(); it != map.end(); ++it )
-    mCustomFieldsMap.insert( it.key(), it.data().toString() );
+    mCustomFieldsMap.insert( it.key(), it.value().toString() );
 }
 
 #include "kabc_resourcexmlrpc.moc"

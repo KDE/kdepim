@@ -178,8 +178,8 @@ void GroupwareDownloadJob::downloadItem()
       // Download the first item of the list
       QMap<KUrl,KPIM::FolderLister::ContentType>::Iterator it = mItemsForDownload.begin();
       KUrl href( it.key() );
-      KPIM::FolderLister::ContentType ctype = it.data();
-      mItemsDownloading.insert( it.key(), it.data() );
+      KPIM::FolderLister::ContentType ctype = it.value();
+      mItemsDownloading.insert( it.key(), it.value() );
       mItemsForDownload.remove( it.key() );
  
       adaptor()->adaptDownloadUrl( href );

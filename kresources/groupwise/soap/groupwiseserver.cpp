@@ -1080,7 +1080,7 @@ bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
   PropMap customs = incidence->customProperties();
   PropMap::Iterator it;
   for ( it = customs.begin(); it != customs.end(); ++it )
-    kDebug() << "key: " << it.key() << ", data: " << it.data() << endl;
+    kDebug() << "key: " << it.key() << ", data: " << it.value() << endl;
   kDebug() << "incidence custom properties END" << endl;
 
   if ( incidence->attendeeCount() > 0 ) {
@@ -1495,12 +1495,12 @@ bool GroupwiseServer::modifyUserSettings( QMap<QString, QString> & settings  )
   QMap<QString, QString>::Iterator it;
   for ( it = settings.begin(); it != settings.end(); ++it )
   {
-    kDebug() << " creating Custom for " << it.key() << ", " << it.data() << endl;
+    kDebug() << " creating Custom for " << it.key() << ", " << it.value() << endl;
     ngwt__Custom * custom = soap_new_ngwt__Custom( mSoap, -1 );
     custom->locked = 0;
     custom->field.append( it.key().utf8() );
     custom->value = soap_new_std__string( mSoap, -1 );
-    custom->value->append( it.data().utf8() );
+    custom->value->append( it.value().utf8() );
     request.settings->setting.push_back( custom );
 
   }

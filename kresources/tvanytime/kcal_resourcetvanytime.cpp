@@ -128,7 +128,7 @@ void ResourceTVAnytime::writeConfig( KConfig *config )
   QStringList activeServices;
   ServiceMap::ConstIterator it;
   for ( it = mServiceMap.begin(); it != mServiceMap.end(); ++it )
-    if ( it.data().active() )
+    if ( it.value().active() )
       activeServices.append( it.key() );
   config->writeEntry( "ActiveServices", activeServices );
 }
@@ -257,7 +257,7 @@ bool ResourceTVAnytime::readSchedule()
 #if 1
   for ( it = mServiceMap.begin(); it != mServiceMap.end(); ++it )
   {
-    if ( (it.data().active() ) )
+    if ( (it.value().active() ) )
       readService( it.key() );
   }
 #else

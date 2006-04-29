@@ -129,8 +129,8 @@ void KABC::ResourceKolab::doClose()
   Kolab::ResourceMap::ConstIterator it;
   for ( it = mSubResources.begin(); it != mSubResources.end(); ++it ) {
     config.setGroup( it.key() );
-    config.writeEntry( "Active", it.data().active() );
-    config.writeEntry( "CompletionWeight", it.data().completionWeight() );
+    config.writeEntry( "Active", it.value().active() );
+    config.writeEntry( "CompletionWeight", it.value().completionWeight() );
   }
 }
 
@@ -220,7 +220,7 @@ bool KABC::ResourceKolab::loadSubResourceHelper( const QString& subResource,
     }
 
     for( QMap<quint32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
-      loadContact( it.data(), subResource, it.key(), format );
+      loadContact( it.value(), subResource, it.key(), format );
     }
     if ( progressId ) {
       uiserver.processedFiles( progressId, startIndex );
@@ -249,7 +249,7 @@ bool KABC::ResourceKolab::load()
   bool rc = true;
   Kolab::ResourceMap::ConstIterator itR;
   for ( itR = mSubResources.begin(); itR != mSubResources.end(); ++itR ) {
-    if ( !itR.data().active() )
+    if ( !itR.value().active() )
       // This resource is disabled
       continue;
 
@@ -538,7 +538,7 @@ void KABC::ResourceKolab::fromKMailDelSubresource( const QString& type,
   Kolab::UidMap::ConstIterator mapIt;
   QStringList uids;
   for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
-    if ( mapIt.data().resource() == subResource )
+    if ( mapIt.value().resource() == subResource )
       // We have a match
       uids << mapIt.key();
 
@@ -565,7 +565,7 @@ void KABC::ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>
   // FIXME
   KMailICalIface::StorageFormat format = KMailICalIface::StorageXML;
   for( QMap<quint32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
-    loadContact( it.data(), folder, it.key(), format );
+    loadContact( it.value(), folder, it.key(), format );
   }
   if ( !addressBook() ){
     kDebug(5650) << "asyncLoadResult() : addressBook() returning NULL pointer.\n";
@@ -634,7 +634,7 @@ QMap<QString, QString> KABC::ResourceKolab::uidToResourceMap() const
   QMap<QString, QString> map;
   Kolab::UidMap::ConstIterator mapIt;
   for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
-    map[ mapIt.key() ] = mapIt.data().resource();
+    map[ mapIt.key() ] = mapIt.value().resource();
   return map;
 }
 
