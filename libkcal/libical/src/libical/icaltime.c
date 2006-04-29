@@ -872,7 +872,7 @@ icaltime_get_timezone(const struct icaltimetype t) {
 	return t.zone;
 }
 
-char *
+const char *
 icaltime_get_tzid(const struct icaltimetype t) {
 
 	if (t.zone != NULL) {

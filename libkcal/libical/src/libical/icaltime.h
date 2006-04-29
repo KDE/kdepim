@@ -188,7 +188,7 @@ const char* icaltime_as_ical_string(const struct icaltimetype tt);
 const icaltimezone *icaltime_get_timezone(const struct icaltimetype t);
 
 /** @brief Return the tzid, or NULL for a floating time */
-char *icaltime_get_tzid(const struct icaltimetype t);
+const char *icaltime_get_tzid(const struct icaltimetype t);
 
 /** @brief Set the timezone */
 struct icaltimetype icaltime_set_timezone(struct icaltimetype *t,

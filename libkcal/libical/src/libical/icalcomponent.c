@@ -1483,7 +1483,7 @@ icalproperty_method icalcomponent_get_method(icalcomponent* comp)
  */
 void icalcomponent_set_dtstart(icalcomponent* comp, struct icaltimetype v)
 {
-    char *tzid;
+    const char *tzid;
     ICALSETUPSET(ICAL_DTSTART_PROPERTY);
 
     if (prop == 0){
@@ -1601,7 +1601,7 @@ struct icaltimetype icalcomponent_get_dtend(icalcomponent* comp)
  */
 void icalcomponent_set_dtend(icalcomponent* comp, struct icaltimetype v)
 {
-    char *tzid;
+    const char *tzid;
     ICALSETUPSET(ICAL_DTEND_PROPERTY);
 
     if (icalcomponent_get_first_property(inner,ICAL_DURATION_PROPERTY)
@@ -2167,6 +2167,7 @@ icalcomponent_handle_conflicting_vtimezones (icalcomponent *comp,
 					     const char *tzid,
 					     icalarray *tzids_to_rename)
 {
+  (void)tzid_prop;
   int i, suffix, max_suffix = 0, num_elements;
   unsigned int tzid_len;
   char *tzid_copy, *new_tzid, suffix_buf[32];
@@ -2184,7 +2185,7 @@ icalcomponent_handle_conflicting_vtimezones (icalcomponent *comp,
   num_elements = comp->timezones ? comp->timezones->num_elements : 0;
   for (i = 0; i < num_elements; i++) {
     icaltimezone *zone;
-    char *existing_tzid, *existing_tzid_copy;
+    const char *existing_tzid, *existing_tzid_copy;
     unsigned int existing_tzid_len;
 
     zone = icalarray_element_at (comp->timezones, i);
@@ -2338,7 +2339,7 @@ icaltimezone* icalcomponent_get_timezone(icalcomponent* comp, const char *tzid)
 {
     icaltimezone *zone;
     int lower, upper, middle, cmp;
-    char *zone_tzid;
+    const char *zone_tzid;
 
     if (!comp->timezones)
 	return NULL;

@@ -132,11 +132,13 @@ icalerrorenum icaldirset_commit(icalset* set)
 
 void icaldirset_lock(const char* dir)
 {
+    (void)dir;
 }
 
 
 void icaldirset_unlock(const char* dir)
 {
+    (void)dir;
 }
 
 /* Load the contents of the store directory into the store's internal directory list*/
@@ -560,6 +562,8 @@ int icaldirset_count_components(icalset* store,
 			       icalcomponent_kind kind)
 {
     /* HACK, not implemented */
+    (void)store;
+    (void)kind;
     assert(0);
 
     return 0;
@@ -568,6 +572,8 @@ int icaldirset_count_components(icalset* store,
 
 icalcomponent* icaldirset_fetch_match(icalset* set, icalcomponent *c)
 {
+    (void)set;
+    (void)c;
     fprintf(stderr," icaldirset_fetch_match is not implemented\n");
     assert(0);
     return 0;
@@ -637,6 +643,9 @@ icalerrorenum icaldirset_modify(icalset* set,
 			       icalcomponent *new)
 {
     assert(0);
+    (void)set;
+    (void)old;
+    (void)new;
     return ICAL_NO_ERROR; /* HACK, not implemented */
 
 }
@@ -644,7 +653,7 @@ icalerrorenum icaldirset_modify(icalset* set,
 
 void icaldirset_clear(icalset* set)
 {
-
+    (void)set;
     assert(0);
     return;
     /* HACK, not implemented */
@@ -796,11 +805,15 @@ icalsetiter icaldirset_begin_component(icalset* set, icalcomponent_kind kind, ic
 icalcomponent* icaldirsetiter_to_next(icalset* set, icalsetiter* i)
 {
     /* TO BE IMPLEMENTED */
+    (void)set;
+    (void)i;
     return NULL;
 }
 
 icalcomponent* icaldirsetiter_to_prior(icalset* set, icalsetiter* i)
 {
     /* TO BE IMPLEMENTED */
+    (void)set;
+    (void)i;
     return NULL;
 }

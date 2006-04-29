@@ -205,6 +205,7 @@ char* icalfileset_read_from_file(char *s, size_t size, void *d)
 
 icalerrorenum icalfileset_read_file(icalfileset* set,mode_t mode)
 {
+    (void)mode;
     icalparser *parser;
   
     parser = icalparser_new();
@@ -407,7 +408,7 @@ icalerrorenum icalfileset_commit(icalset* set)
     
 	sz=write(fset->fd,str,strlen(str));
 
-	if ( sz != strlen(str)){
+	if ( sz != (int)strlen(str)){
 	    perror("write");
 	    icalerror_set_errno(ICAL_FILE_ERROR);
 	    return ICAL_FILE_ERROR;
@@ -549,6 +550,8 @@ icalcomponent* icalfileset_fetch(icalset* set,const char* uid)
 
 int icalfileset_has_uid(icalset* set,const char* uid)
 {
+    (void)set;
+    (void)uid;
     assert(0); /* HACK, not implemented */
     return 0;
 }
@@ -654,7 +657,10 @@ icalcomponent* icalfileset_fetch_match(icalset* set, icalcomponent *comp)
 icalerrorenum icalfileset_modify(icalset* set, icalcomponent *old,
 				 icalcomponent *new)
 {
-    icalfileset *fset = (icalfileset*) set;
+    (void)set;
+    (void)old;
+    (void)new;
+    /*icalfileset *fset = (icalfileset*) set;*/
 
     assert(0); /* HACK, not implemented */
     return ICAL_NO_ERROR;
@@ -811,7 +817,7 @@ icalsetiter icalfileset_begin_component(icalset* set, icalcomponent_kind kind, i
 
             /* add recurrence-id to the component
                if there is a recurrence-id already, remove it, then add the new one */
-            if (prop = icalcomponent_get_first_property(comp, ICAL_RECURRENCEID_PROPERTY))
+            if (  (prop = icalcomponent_get_first_property(comp, ICAL_RECURRENCEID_PROPERTY)) )
                 icalcomponent_remove_property(comp, prop);
             icalcomponent_add_property(comp, icalproperty_new_recurrenceid(next));
 
@@ -876,7 +882,7 @@ icalcomponent* icalfileset_form_a_matched_recurrence_component(icalsetiter* itr)
 
     /* add recurrence-id to the component
      * if there is a recurrence-id already, remove it, then add the new one */
-    if (prop = icalcomponent_get_first_property(comp, ICAL_RECURRENCEID_PROPERTY))
+    if ( (prop = icalcomponent_get_first_property(comp, ICAL_RECURRENCEID_PROPERTY)) )
         icalcomponent_remove_property(comp, prop);
         icalcomponent_add_property(comp, icalproperty_new_recurrenceid(next));
 
@@ -890,9 +896,9 @@ icalcomponent* icalfileset_form_a_matched_recurrence_component(icalsetiter* itr)
 }
 icalcomponent* icalfilesetiter_to_next(icalset* set, icalsetiter* i)
 {
-
+    (void)set;
     icalcomponent* c = NULL;
-    icalfileset *fset = (icalfileset*) set;
+    /*icalfileset *fset = (icalfileset*) set;*/
     struct icaltimetype start, next;
     icalproperty *dtstart, *rrule, *prop, *due;
     struct icalrecurrencetype recur;
@@ -945,7 +951,7 @@ icalcomponent* icalfilesetiter_to_next(icalset* set, icalsetiter* i)
 
         /* add recurrence-id to the component
          * if there is a recurrence-id already, remove it, then add the new one */
-        if (prop = icalcomponent_get_first_property(c, ICAL_RECURRENCEID_PROPERTY))
+        if ( (prop = icalcomponent_get_first_property(c, ICAL_RECURRENCEID_PROPERTY)) )
             icalcomponent_remove_property(c, prop);
         icalcomponent_add_property(c, icalproperty_new_recurrenceid(next));
 

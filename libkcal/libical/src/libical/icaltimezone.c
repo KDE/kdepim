@@ -1123,8 +1123,8 @@ icaltimezone_adjust_change		(icaltimezonechange *tt,
 }
 
 
-char*
-icaltimezone_get_tzid			(icaltimezone	*zone)
+const char*
+icaltimezone_get_tzid			(const icaltimezone	*zone)
 {
     /* If this is a floating time, without a timezone, return NULL. */
     if (!zone)
@@ -1137,8 +1137,8 @@ icaltimezone_get_tzid			(icaltimezone	*zone)
 }
 
 
-char*
-icaltimezone_get_location		(icaltimezone	*zone)
+const char*
+icaltimezone_get_location		(const icaltimezone	*zone)
 {
     /* If this is a floating time, without a timezone, return NULL. */
     if (!zone)
@@ -1150,8 +1150,8 @@ icaltimezone_get_location		(icaltimezone	*zone)
 }
 
 
-char*
-icaltimezone_get_tznames		(icaltimezone	*zone)
+const char*
+icaltimezone_get_tznames		(const icaltimezone	*zone)
 {
     /* If this is a floating time, without a timezone, return NULL. */
     if (!zone)
@@ -1166,7 +1166,7 @@ icaltimezone_get_tznames		(icaltimezone	*zone)
 
 /** Returns the latitude of a builtin timezone. */
 double
-icaltimezone_get_latitude		(icaltimezone	*zone)
+icaltimezone_get_latitude		(const icaltimezone	*zone)
 {
     /* If this is a floating time, without a timezone, return 0. */
     if (!zone)
@@ -1180,7 +1180,7 @@ icaltimezone_get_latitude		(icaltimezone	*zone)
 
 /** Returns the longitude of a builtin timezone. */
 double
-icaltimezone_get_longitude		(icaltimezone	*zone)
+icaltimezone_get_longitude		(const icaltimezone	*zone)
 {
     /* If this is a floating time, without a timezone, return 0. */
     if (!zone)
@@ -1194,7 +1194,7 @@ icaltimezone_get_longitude		(icaltimezone	*zone)
 
 /** Returns the VTIMEZONE component of a timezone. */
 icalcomponent*
-icaltimezone_get_component		(icaltimezone	*zone)
+icaltimezone_get_component		(const icaltimezone	*zone)
 {
     /* If this is a floating time, without a timezone, return NULL. */
     if (!zone)

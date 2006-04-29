@@ -77,25 +77,25 @@ icaltimezone* icaltimezone_get_builtin_timezone_from_tzid (const char *tzid);
 icaltimezone* icaltimezone_get_utc_timezone	(void);
 
 /** Returns the TZID of a timezone. */
-char*	icaltimezone_get_tzid			(icaltimezone	*zone);
+const char*	icaltimezone_get_tzid			(const icaltimezone	*zone);
 
 /** Returns the city name of a timezone. */
-char*	icaltimezone_get_location		(icaltimezone	*zone);
+const char*	icaltimezone_get_location		(const icaltimezone	*zone);
 
 /** Returns the TZNAME properties used in the latest STANDARD and DAYLIGHT
    components. If they are the same it will return just one, e.g. "LMT".
    If they are different it will format them like "EST/EDT". Note that this
    may also return NULL. */
-char*	icaltimezone_get_tznames		(icaltimezone	*zone);
+const char*	icaltimezone_get_tznames		(const icaltimezone	*zone);
 
 /** Returns the latitude of a builtin timezone. */
-double	icaltimezone_get_latitude		(icaltimezone	*zone);
+double	icaltimezone_get_latitude		(const icaltimezone	*zone);
 
 /** Returns the longitude of a builtin timezone. */
-double	icaltimezone_get_longitude		(icaltimezone	*zone);
+double	icaltimezone_get_longitude		(const icaltimezone	*zone);
 
 /** Returns the VTIMEZONE component of a timezone. */
-icalcomponent*	icaltimezone_get_component	(icaltimezone	*zone);
+icalcomponent*	icaltimezone_get_component	(const icaltimezone	*zone);
 
 /** Sets the VTIMEZONE component of an icaltimezone, initializing the tzid,
    location & tzname fields. It returns 1 on success or 0 on failure, i.e.

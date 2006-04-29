@@ -73,8 +73,10 @@ void* icalmime_text_new_part()
 }
 void icalmime_text_add_line(void *part, 
 			    struct sspm_header *header, 
-			    char* line, size_t size)
+			    const char* line, size_t size)
 {
+    (void)header;
+    (void)size;
     struct text_part* impl = (struct text_part*) part;
 
     icalmemory_append_string(&(impl->buf),&(impl->buf_pos),
@@ -118,21 +120,23 @@ void* icalmime_attachment_new_part()
     return 0;
 }
 void icalmime_attachment_add_line(void *part, struct sspm_header *header, 
-				  char* line, size_t size)
+				  const char* line, size_t size)
 {
-    part = part;
-    header = header;
-    line = line;
-    size = size;
+    (void)part;
+    (void)header;
+    (void)line;
+    (void)size;
 }
 
 void* icalmime_attachment_end_part(void* part)
 {
+    (void)part;
     return 0;
 }
 
 void icalmime_attachment_free_part(void *part)
 {
+    (void)part;
 }
 
 
@@ -191,8 +195,8 @@ icalcomponent* icalmime_parse(char* (*get_string)(char *s, size_t size,
 
 #define TMPSZ 1024
 	char mimetype[TMPSZ];			       
-	char* major = sspm_major_type_string(parts[i].header.major);
-	char* minor = sspm_minor_type_string(parts[i].header.minor);
+	const char* major = sspm_major_type_string(parts[i].header.major);
+	const char* minor = sspm_minor_type_string(parts[i].header.minor);
 
 	if(parts[i].header.minor == SSPM_UNKNOWN_MINOR_TYPE ){
 	    assert(parts[i].header.minor_text !=0);

@@ -514,7 +514,7 @@ char* icalparser_get_line(icalparser *parser,
 
 }
 
-static void insert_error(icalcomponent* comp, char* text,
+static void insert_error(icalcomponent* comp, const char* text,
 		  const char* message, icalparameter_xlicerrortype type)
 {
     char temp[1024];

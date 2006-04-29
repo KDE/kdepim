@@ -85,10 +85,10 @@ struct icaltriggertype icaltriggertype_from_string(const char* str)
 
     null_tr = tr;
 
-    if(str == 0) goto error;
 
     /* Suppress errors so a failure in icaltime_from_string() does not cause an abort */
     es = icalerror_get_error_state(ICAL_MALFORMEDDATA_ERROR);
+    if(str == 0) goto error;
     icalerror_set_error_state(ICAL_MALFORMEDDATA_ERROR,ICAL_ERROR_NONFATAL);
     e = icalerrno;
     icalerror_set_errno(ICAL_NO_ERROR);
