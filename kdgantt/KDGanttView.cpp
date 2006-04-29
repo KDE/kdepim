@@ -4997,12 +4997,12 @@ void KDGanttView::setGvBackgroundColor ( const QColor & c )
 void KDGanttView::setTimeHeaderBackgroundColor ( const QColor & c )
 {
   QPalette pal;
-  pal.setColor( myTimeHeader->backgroundRole(), col );
+  pal.setColor( myTimeHeader->backgroundRole(), c );
 
   myTimeHeader->setPalette( pal );
   //rightWidget->setPalette( pal );
 
-  pal.setColor( timeHeaderSpacerWidget->backgroundRole(), col );
+  pal.setColor( timeHeaderSpacerWidget->backgroundRole(), c );
   timeHeaderSpacerWidget->setPalette( pal );
 }
 
