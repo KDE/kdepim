@@ -2050,7 +2050,7 @@ void icalcomponent_merge_component(icalcomponent* comp,
 {
   icalcomponent *subcomp, *next_subcomp;
   icalarray *tzids_to_rename;
-  int i;
+  unsigned int i;
 
   /* Check that both components are VCALENDAR components. */
   assert (icalcomponent_isa(comp) == ICAL_VCALENDAR_COMPONENT);
@@ -2281,7 +2281,7 @@ static void icalcomponent_rename_tzids_callback(icalparameter *param, void *data
 
     /* Step through the rename table to see if the current TZID matches
        any of the ones we want to rename. */
-    for (i = 0; i < rename_table->num_elements - 1; i += 2) {
+    for (i = 0; (unsigned int)i < rename_table->num_elements - 1; i += 2) {
         if (!strcmp (tzid, icalarray_element_at (rename_table, i))) {
 	    icalparameter_set_tzid (param, icalarray_element_at (rename_table, i + 1));
 	    break;

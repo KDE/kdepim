@@ -96,7 +96,7 @@ icalarray_element_at		(icalarray	*array,
 				 int		 position)
 {
     assert (position >= 0);
-    assert (position < array->num_elements);
+    assert ((unsigned int)position < array->num_elements);
 
     return (char *)(array->data) + (position * array->element_size);
 }
@@ -110,7 +110,7 @@ icalarray_remove_element_at	(icalarray	*array,
     int elements_to_move;
 
     assert (position >= 0);
-    assert (position < array->num_elements);
+    assert ((unsigned int)position < array->num_elements);
 
     dest = (char *)array->data + (position * array->element_size);
     elements_to_move = array->num_elements - position - 1;
@@ -141,7 +141,7 @@ icalarray_expand		(icalarray	*array,
 
     new_space_allocated = array->space_allocated + array->increment_size;
 
-    if (space_needed > array->increment_size) 
+    if ((unsigned int)space_needed > array->increment_size)
 	new_space_allocated += space_needed;
 
 	/*

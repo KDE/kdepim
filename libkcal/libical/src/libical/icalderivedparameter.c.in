@@ -51,7 +51,7 @@ struct icalparameter_impl* icalparameter_new_impl(icalparameter_kind kind);
    representation of the parameter's name */
 struct icalparameter_kind_map {
     icalparameter_kind kind;
-    char *name;
+    const char *name;
     
 };
 

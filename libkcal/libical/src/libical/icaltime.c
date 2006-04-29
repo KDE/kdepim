@@ -317,7 +317,7 @@ const char* icaltime_as_ical_string(const struct icaltimetype tt)
     if(tt.is_date){
 	snprintf(buf, size,"%04d%02d%02d",tt.year,tt.month,tt.day);
     } else {
-	char* fmt;
+	const char* fmt;
 	if(tt.is_utc){
 	    fmt = "%04d%02d%02dT%02d%02d%02dZ";
 	} else {

@@ -189,7 +189,7 @@ static char* icaltimezone_load_get_line_fn	(char		*s,
 static void  format_utc_offset			(int		 utc_offset,
 						 char		*buffer);
 
-static char* get_zone_directory(void);
+static const char* get_zone_directory(void);
 
 
 /** Creates a new icaltimezone. */
@@ -864,7 +864,7 @@ icaltimezone_get_utc_offset		(icaltimezone	*zone,
 	if (change_num < 0)
 	    return 0;
 
-	if (change_num >= zone->changes->num_elements)
+	if ((unsigned int)change_num >= zone->changes->num_elements)
 	    break;
 
 	zone_change = icalarray_element_at (zone->changes, change_num);
@@ -999,7 +999,7 @@ icaltimezone_get_utc_offset_of_utc_time	(icaltimezone	*zone,
 	if (change_num < 0)
 	    return 0;
 
-	if (change_num >= zone->changes->num_elements)
+	if ((unsigned int)change_num >= zone->changes->num_elements)
 	    break;
 
 	zone_change = icalarray_element_at (zone->changes, change_num);
@@ -1246,7 +1246,7 @@ icaltimezone_array_free			(icalarray	*timezones)
 
 	if ( timezones )
 	{
-		for (i = 0; i < timezones->num_elements; i++) {
+		for (i = 0; (unsigned int)i < timezones->num_elements; i++) {
 		zone = icalarray_element_at (timezones, i);
 		icaltimezone_free (zone, 0);
 		}
@@ -1550,7 +1550,7 @@ icaltimezone_load_get_line_fn		(char		*s,
 					 size_t		 size,
 					 void		*data)
 {
-    return fgets (s, size, (FILE*) data);
+    return fgets (s, (int)size, (FILE*) data);
 }
 
 
@@ -1580,7 +1580,7 @@ icaltimezone_dump_changes		(icaltimezone	*zone,
 					 int		 max_year,
 					 FILE		*fp)
 {
-    static char *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    static const char *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 			      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
     icaltimezonechange *zone_change;
     int change_num;
@@ -1594,7 +1594,7 @@ icaltimezone_dump_changes		(icaltimezone	*zone,
 #endif
 
     change_num = 0;
-    for (change_num = 0; change_num < zone->changes->num_elements; change_num++) {
+    for (change_num = 0; (unsigned int)change_num < zone->changes->num_elements; change_num++) {
 	zone_change = icalarray_element_at (zone->changes, change_num);
 
 	if (zone_change->year > max_year)
@@ -1622,7 +1622,7 @@ static void
 format_utc_offset			(int		 utc_offset,
 					 char		*buffer)
 {
-  char *sign = "+";
+  const char *sign = "+";
   int hours, minutes, seconds;
 
   if (utc_offset < 0) {
@@ -1649,7 +1649,7 @@ format_utc_offset			(int		 utc_offset,
     snprintf (buffer, sizeof(buffer), "%s%02i%02i%02i", sign, hours, minutes, seconds);
 }
 
-static char* get_zone_directory(void)
+static const char* get_zone_directory(void)
 {
 	return zone_files_directory == NULL ? ZONEINFO_DIRECTORY : zone_files_directory;
 }

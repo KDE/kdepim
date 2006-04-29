@@ -92,10 +92,10 @@ char* sspm_strdup(char* str){
 
 static struct  major_content_type_map 
 {
-	enum sspm_major_type type;
-	char* str;
-	
-} major_content_type_map[]  = 
+        enum sspm_major_type type;
+        const char* str;
+
+} major_content_type_map[]  =
 {
     {SSPM_MULTIPART_MAJOR_TYPE,"multipart" },
     {SSPM_TEXT_MAJOR_TYPE,"text" },
@@ -111,8 +111,8 @@ static struct  major_content_type_map
 
 static struct  minor_content_type_map 
 {
-	enum sspm_minor_type type;
-	char* str;
+        enum sspm_minor_type type;
+        const char* str;
 
 } minor_content_type_map[]  = 
 {
@@ -131,8 +131,8 @@ static struct  minor_content_type_map
 
 
 struct encoding_map {
-	enum sspm_encoding encoding;
-	char* str;
+        enum sspm_encoding encoding;
+        const char* str;
 } sspm_encoding_map[] = 
 {
     {SSPM_NO_ENCODING,""},
@@ -238,7 +238,7 @@ char* sspm_value(char* line)
 
 }
 
-static char *mime_headers[] = {
+static const char *mime_headers[] = {
     "Content-Type",
     "Content-Transfer-Encoding",
     "Content-Disposition",

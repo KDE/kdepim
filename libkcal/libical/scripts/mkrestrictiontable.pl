@@ -58,7 +58,7 @@ while(<F>)
 
 
 # Print the terminating line 
-print "    {ICAL_METHOD_NONE,ICAL_NO_COMPONENT,ICAL_NO_PROPERTY,ICAL_RESTRICTION_NONE}\n";
+print "    {ICAL_METHOD_NONE,ICAL_NO_COMPONENT,ICAL_NO_PROPERTY,ICAL_RESTRICTION_NONE, 0}\n";
 
 print "};\n";
 
@@ -94,5 +94,5 @@ while(<F>)
 }
 
 # print the terminating line 
-print "    {ICAL_METHOD_NONE,ICAL_NO_COMPONENT,ICAL_NO_COMPONENT,ICAL_RESTRICTION_NONE}\n";
+print "    {ICAL_METHOD_NONE,ICAL_NO_COMPONENT,ICAL_NO_COMPONENT,ICAL_RESTRICTION_NONE, 0}\n";
 print "};\n";

@@ -447,7 +447,7 @@ struct icalrecurrencetype icalrecurrencetype_from_string(const char* str)
 
 }
 
-static struct { char* str;size_t offset; int limit;  } recurmap[] = 
+static struct { const char* str;size_t offset; int limit;  } recurmap[] = 
 {
     {";BYSECOND=",offsetof(struct icalrecurrencetype,by_second),60},
     {";BYMINUTE=",offsetof(struct icalrecurrencetype,by_minute),60},

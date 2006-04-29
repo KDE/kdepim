@@ -159,7 +159,7 @@ static struct icalerror_string_map string_map[] =
 
 icalerrorenum icalerror_error_from_string(const char* str){
  
-    icalerrorenum e;
+    icalerrorenum e = ICAL_NO_ERROR;
     int i = 0;
 
     for( i = 0; string_map[i].error != ICAL_NO_ERROR; i++){
