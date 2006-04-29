@@ -386,13 +386,13 @@ void KNode::Cleanup::loadConfig(KConfigBase *conf)
   e_xpireInterval = conf->readEntry( "expInterval", 5 );
   r_eadMaxAge = conf->readEntry( "readDays", 10 );
   u_nreadMaxAge = conf->readEntry( "unreadDays", 15 );
-  mLastExpDate = conf->readDateTimeEntry( "lastExpire" ).date();
+  mLastExpDate = conf->readEntry( "lastExpire", QDateTime() ).date();
 
   // folder compaction settings (only available globally)
   if (mGlobal) {
     d_oCompact = conf->readEntry( "doCompact", true );
     c_ompactInterval = conf->readEntry( "comInterval", 5 );
-    mLastCompDate = conf->readDateTimeEntry( "lastCompact" ).date();
+    mLastCompDate = conf->readEntry( "lastCompact", QDateTime() ).date();
   }
 
   if (!mGlobal)

@@ -97,7 +97,7 @@ bool KNNntpAccount::readInfo(const QString &confPath)
   n_ame = conf.readEntry("name");
   //u_nsentCount = conf.readEntry("unsentCnt", 0);
   f_etchDescriptions = conf.readEntry("fetchDescriptions", true);
-  l_astNewFetch = conf.readDateTimeEntry("lastNewFetch").date();
+  l_astNewFetch = conf.readEntry("lastNewFetch", QDateTime() ).date();
   w_asOpen = conf.readEntry("listItemOpen", false);
   u_seDiskCache = conf.readEntry("useDiskCache", false);
   i_ntervalChecking=conf.readEntry("intervalChecking", false);

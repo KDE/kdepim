@@ -206,7 +206,7 @@ namespace {
     }
     void read( const KConfigBase * config ) {
       mDirty = false;
-      mValue = config->readPropertyEntry( kleo_chiasmus_config_entries[mIdx].name, defaultValue() );
+      mValue = config->readEntry( kleo_chiasmus_config_entries[mIdx].name, defaultValue() );
     }
   private:
     QVariant defaultValue() const;
