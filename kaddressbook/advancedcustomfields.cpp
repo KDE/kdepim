@@ -96,7 +96,7 @@ void AdvancedCustomFields::loadContact( KABC::Addressee *addr )
 {
   QString ns;
   if ( mFields->identifier().toUpper() == "KADDRESSBOOK" ||
-    QRegExp( "^Form\\d\\d?$" ).search( mFields->identifier() ) >= 0 ) {
+    QRegExp( "^Form\\d\\d?$" ).indexIn( mFields->identifier() ) >= 0 ) {
     ns = "KADDRESSBOOK";
   } else {
     ns = mFields->identifier();
@@ -110,7 +110,7 @@ void AdvancedCustomFields::storeContact( KABC::Addressee *addr )
 {
   QString ns;
   if ( mFields->identifier().toUpper() == "KADDRESSBOOK" ||
-    QRegExp( "^Form\\d\\d?$" ).search( mFields->identifier() ) >= 0 ) {
+    QRegExp( "^Form\\d\\d?$" ).indexIn( mFields->identifier() ) >= 0 ) {
     ns = "KADDRESSBOOK";
   } else {
     ns = mFields->identifier();

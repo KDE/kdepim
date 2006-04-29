@@ -169,8 +169,8 @@ void Loader::discoverFeeds(const QByteArray &data)
     // "<[\\s]link[^>]*rel[\\s]=[\\s]\\\"[\\s]alternate[\\s]\\\"[^>]*>"
     // "type[\\s]=[\\s]\\\"application/rss+xml\\\""
     // "href[\\s]=[\\s]\\\"application/rss+xml\\\""
-    QRegExp rx( "(?:REL)[^=]*=[^sAa]*(?:service.feed|ALTERNATE)[\\s]*[^s][^s](?:[^>]*)(?:HREF)[^=]*=[^A-Z0-9-_~,./$]*([^'\">\\s]*)", false);
-    if (rx.search(str)!=-1)
+    QRegExp rx( "(?:REL)[^=]*=[^sAa]*(?:service.feed|ALTERNATE)[\\s]*[^s][^s](?:[^>]*)(?:HREF)[^=]*=[^A-Z0-9-_~,./$]*([^'\">\\s]*)", Qt::CaseInsensitive );
+    if (rx.indexIn(str)!=-1)
         s2=rx.cap(1);
     else{
     // does not support Atom/RSS autodiscovery.. try finding feeds by brute force....
@@ -179,7 +179,7 @@ void Loader::discoverFeeds(const QByteArray &data)
         QString host=d->url.host();
         rx.setPattern("(?:<A )[^H]*(?:HREF)[^=]*=[^A-Z0-9-_~,./]*([^'\">\\s]*)");
         while ( pos >= 0 ) {
-            pos = rx.search( str, pos );
+            pos = rx.indexIn( str, pos );
             s2=rx.cap(1);
             if (s2.endsWith(".rdf") || s2.endsWith(".rss") || s2.endsWith(".xml"))
                     feeds.append(s2);

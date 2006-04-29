@@ -824,7 +824,7 @@ void ArticleWidget::displayAttachment( KMime::Content *att, int partNum )
     label = i18n("unnamed" );
   // if label consists of only whitespace replace them by underscores
   if ( label.count( ' ' ) == label.length() )
-    label.replace( QRegExp( " ", true, true ), "_" );
+    label.replace( QRegExp( " ", Qt::CaseSensitive, QRegExp::Wildcard ), "_" );
   label = toHtmlString( label, None );
 
   // attachment comment

@@ -47,7 +47,7 @@ bool KNode::StringFilter::doFilter( const QString &s )
   if(!expanded.isEmpty()) {
     if(regExp) {
       QRegExp matcher(expanded);
-      ret = ( matcher.search(s) >= 0 );
+      ret = ( matcher.indexIn(s) >= 0 );
     } else
       ret = ( s.indexOf( expanded, 0, Qt::CaseInsensitive ) != -1 );
 

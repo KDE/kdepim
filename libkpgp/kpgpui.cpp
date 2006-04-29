@@ -1103,7 +1103,7 @@ void KeySelectionDialog::slotFilter()
   }
 
   // OK, so we need to filter:
-  QRegExp keyIdRegExp( "(?:0x)?[A-F0-9]{1,8}", false /*case-insens.*/ );
+  QRegExp keyIdRegExp( "(?:0x)?[A-F0-9]{1,8}", Qt::CaseInsensitive );
   if ( keyIdRegExp.exactMatch( mSearchText ) ) {
     if ( mSearchText.startsWith( "0X" ) )
       // search for keyID only:
@@ -1133,11 +1133,11 @@ void KeySelectionDialog::filterByKeyIDOrUID( const QString & str )
   assert( !str.isEmpty() );
 
   // match beginnings of words:
-  QRegExp rx( "\\b" + QRegExp::escape( str ), false );
+  QRegExp rx( "\\b" + QRegExp::escape( str ), Qt::CaseInsensitive );
 
   for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
     item->setVisible( item->text( 0 ).toUpper().startsWith( str )
-                      || rx.search( item->text( 1 ) ) >= 0
+                      || rx.indexIn( item->text( 1 ) ) >= 0
                       || anyChildMatches( item, rx ) );
 
 }
@@ -1147,10 +1147,10 @@ void KeySelectionDialog::filterByUID( const QString & str )
   assert( !str.isEmpty() );
 
   // match beginnings of words:
-  QRegExp rx( "\\b" + QRegExp::escape( str ), false );
+  QRegExp rx( "\\b" + QRegExp::escape( str ), Qt::CaseInsensitive );
 
   for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( rx.search( item->text( 1 ) ) >= 0
+    item->setVisible( rx.indexIn( item->text( 1 ) ) >= 0
                       || anyChildMatches( item, rx ) );
 }
 
@@ -1163,7 +1163,7 @@ bool KeySelectionDialog::anyChildMatches( const Q3ListViewItem * item, QRegExp &
   Q3ListViewItem * stop = item->nextSibling(); // It's OK if stop is NULL...
 
   for ( Q3ListViewItemIterator it( item->firstChild() ) ; it.current() && it.current() != stop ; ++it )
-    if ( rx.search( it.current()->text( 1 ) ) >= 0 ) {
+    if ( rx.indexIn( it.current()->text( 1 ) ) >= 0 ) {
       //item->setOpen( true ); // do we want that?
       return true;
     }

@@ -434,11 +434,11 @@ void GeoDialog::loadCityList()
 
       country = line.left( 2 );
       QString c, n;
-      pos = coord.search( line, 0 );
+      pos = coord.indexIn( line, 0 );
       if ( pos >= 0 )
         c = line.mid( pos, coord.matchedLength() );
 
-      pos = name.search(line, pos);
+      pos = name.indexIn(line, pos);
       if ( pos > 0 ) {
         n = line.mid( pos, name.matchedLength() ).trimmed();
         n.replace( '_', " " );

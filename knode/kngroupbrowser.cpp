@@ -314,7 +314,7 @@ void KNGroupBrowser::slotItemDoubleClicked(Q3ListViewItem *it)
 void KNGroupBrowser::slotFilter(const QString &txt)
 {
   QString filtertxt = txt.toLower();
-  QRegExp reg(filtertxt, false, false);
+  QRegExp reg(filtertxt, Qt::CaseInsensitive, QRegExp::RegExp);
   CheckItem *cit=0;
 
   bool notCheckSub = !subCB->isChecked();
@@ -344,7 +344,7 @@ void KNGroupBrowser::slotFilter(const QString &txt)
     for(KNGroupInfo *g=allList->first(); g; g=allList->next()) {
       if ((notCheckSub||g->subscribed)&&
           (notCheckNew||g->newGroup)&&
-          (notCheckStr||(isRegexp? (reg.search(g->name,0) != -1) : ( g->name.indexOf( filtertxt ) != -1 ) )))
+          (notCheckStr||(isRegexp? (reg.indexIn(g->name,0) != -1) : ( g->name.indexOf( filtertxt ) != -1 ) )))
         matchList->append(g);
     }
   }
