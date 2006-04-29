@@ -528,7 +528,7 @@ void KABC::ResourceKolab::fromKMailDelSubresource( const QString& type,
     return;
 
   // Ok, it's our job, and we have it here
-  mSubResources.erase( subResource );
+  mSubResources.remove( subResource );
 
   KConfig config( configFile() );
   config.deleteGroup( subResource );

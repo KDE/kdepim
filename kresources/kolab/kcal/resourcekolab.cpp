@@ -264,11 +264,11 @@ void ResourceKolab::removeIncidences( const QByteArray& incidenceType )
     // like mEventSubResources.find( it.value().resource() ) != mEventSubResources.end() ?
     const QString& uid = it.key();
     if ( incidenceType == "Event" && mCalendar.event( uid ) )
-      mUidMap.remove( it );
+      mUidMap.erase( it );
     else if ( incidenceType == "Todo" && mCalendar.todo( uid ) )
-      mUidMap.remove( it );
+      mUidMap.erase( it );
     else if ( incidenceType == "Journal" && mCalendar.journal( uid ) )
-      mUidMap.remove( it );
+      mUidMap.erase( it );
   }
 }
 
@@ -827,7 +827,7 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
   if ( !map ) // not ours
     return;
   if ( map->contains( subResource ) )
-    map->erase( subResource );
+    map->remove( subResource );
   else
     // Not registered
     return;

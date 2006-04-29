@@ -747,7 +747,7 @@ QString CertManager::displayNameForJob( const Kleo::Job *job )
   QString displayName;
   if ( it != mJobsDisplayNameMap.end() ) {
     displayName = *it;
-    mJobsDisplayNameMap.remove( it );
+    mJobsDisplayNameMap.erase( it );
   } else {
     kWarning() << "Job not found in map: " << job << endl;
   }

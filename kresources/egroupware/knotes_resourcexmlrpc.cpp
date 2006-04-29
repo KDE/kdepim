@@ -300,7 +300,7 @@ void ResourceXMLRPC::updateNoteFinished( const QList<QVariant>&, const QVariant&
 
 void ResourceXMLRPC::deleteNoteFinished( const QList<QVariant>&, const QVariant &id )
 {
-  mUidMap.erase( id.toString() );
+  mUidMap.remove( id.toString() );
 
   KCal::Journal *journal = mCalendar.journal( id.toString() );
   mCalendar.deleteJournal( journal );

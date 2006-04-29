@@ -142,7 +142,7 @@ bool WebdavHandler::extractStringList( const QDomElement &node, const QString &e
   if ( !element.isNull() ) {
     value.clear();
     QDomNodeList list = element.elementsByTagNameNS( "xml:", "v" );
-    for( uint i=0; i < list.count(); i++ ) {
+    for( uint i=0; i < list.length(); i++ ) {
       QDomElement item = list.item(i).toElement();
       value.append( item.text() );
     }
