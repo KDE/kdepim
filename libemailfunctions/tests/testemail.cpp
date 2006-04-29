@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
 {
   KApplication::disableAutoDcopRegistration();
   KCmdLineArgs::init( argc, argv, "testemail", 0, 0, 0, 0 );
-  KApplication app( false, false );
+  KApplication app( false );
 
   // Empty input
   checkGetNameAndEmail( QString(), QString(), QString(), false );

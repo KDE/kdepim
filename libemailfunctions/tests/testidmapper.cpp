@@ -28,7 +28,7 @@ int main( int argc, char **argv )
 {
   KApplication::disableAutoDcopRegistration();
   KCmdLineArgs::init( argc, argv, "testemail", 0, 0, 0, 0 );
-  KApplication app( false, false );
+  KApplication app( false );
 
   KPIM::IdMapper mapper( "test.uidmap" ) ;
   mapper.setIdentifier("testidentifier");
@@ -37,22 +37,22 @@ int main( int argc, char **argv )
   mapper.setRemoteId( "yes", "klar" );
   mapper.setRemoteId( "no", "nee" );
 
-  qDebug( "full:\n%s", mapper.asString().toLatin1() );
+  qDebug( "full:\n%s", mapper.asString().toLatin1().constData() );
 
   mapper.save();
 
   mapper.clear();
-  qDebug( "empty:\n%s", mapper.asString().toLatin1() );
+  qDebug( "empty:\n%s", mapper.asString().toLatin1().constData() );
 
   mapper.load();
-  qDebug( "full again:\n%s", mapper.asString().toLatin1() );
+  qDebug( "full again:\n%s", mapper.asString().toLatin1().constData() );
 
   mapper.save();
 
   mapper.clear();
-  qDebug( "empty:\n%s", mapper.asString().toLatin1() );
+  qDebug( "empty:\n%s", mapper.asString().toLatin1().constData() );
 
   mapper.load();
-  qDebug( "full again:\n%s", mapper.asString().toLatin1() );
+  qDebug( "full again:\n%s", mapper.asString().toLatin1().constData() );
   return 0;
 }
