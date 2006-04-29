@@ -62,7 +62,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
   public:
     enum DefaultFilterType { None = 0, Active = 1, Specific = 2 };
 
-    KAddressBookView( KAB::Core *core, QWidget *parent, const char *name );
+    KAddressBookView( KAB::Core *core, QWidget *parent );
     virtual ~KAddressBookView();
 
     /**
@@ -277,8 +277,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
 class KDE_EXPORT ViewFactory : public KLibFactory
 {
   public:
-    virtual KAddressBookView *view( KAB::Core *core, QWidget *parent,
-                                    const char *name = 0 ) = 0;
+    virtual KAddressBookView *view( KAB::Core *core, QWidget *parent ) = 0;
     /**
       @return The type of the view. This is normally a small one word
       string (ie: Table, Icon, Tree, etc).
@@ -302,8 +301,7 @@ class KDE_EXPORT ViewFactory : public KLibFactory
       <B>not</B> be called.
      */
     virtual ViewConfigureWidget *configureWidget( KABC::AddressBook *ab,
-                                                  QWidget *parent,
-                                                  const char *name = 0 );
+                                                  QWidget *parent );
 
   protected:
     virtual QObject* createObject( QObject*, const char*, const char*,

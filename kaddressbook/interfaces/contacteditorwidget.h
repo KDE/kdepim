@@ -43,7 +43,7 @@ class KDE_EXPORT ContactEditorWidget : public QWidget
   public:
     typedef QList<ContactEditorWidget*> List;
 
-    ContactEditorWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    ContactEditorWidget( KABC::AddressBook *ab, QWidget *parent );
     ~ContactEditorWidget();
 
     /**
@@ -118,8 +118,7 @@ class KDE_EXPORT ContactEditorWidget : public QWidget
 class ContactEditorWidgetFactory : public KLibFactory
 {
   public:
-    virtual ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent,
-                                               const char *name = 0 ) = 0;
+    virtual ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent ) = 0;
 
     /**
       Returns the i18ned title of this tab page.

@@ -42,7 +42,7 @@ class AdvancedCustomFields : public KAB::ContactEditorWidget
 
   public:
     AdvancedCustomFields( const QString &uiFile, KABC::AddressBook *ab,
-                          QWidget *parent, const char *name = 0 );
+                          QWidget *parent );
 
     void loadContact( KABC::Addressee *addr );
     void storeContact( KABC::Addressee *addr );

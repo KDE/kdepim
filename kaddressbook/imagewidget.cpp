@@ -127,9 +127,8 @@ void ImageLabel::mouseMoveEvent( QMouseEvent *event )
 }
 
 
-ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent,
-                                  const char *name )
-  : QWidget( parent, name ), mReadOnly( false ), mRssLoader( 0 )
+ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent )
+  : QWidget( parent ), mReadOnly( false ), mRssLoader( 0 )
 {
   QHBoxLayout *topLayout = new QHBoxLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
@@ -377,8 +376,8 @@ void ImageBaseWidget::slotLoadingComplete( Syndication::Loader *loader,
   mRssLoader = 0;
 }
 
-ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::ContactEditorWidget( ab, parent, name )
+ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent )
+  : KAB::ContactEditorWidget( ab, parent )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
   layout->setSpacing( KDialog::spacingHint() );

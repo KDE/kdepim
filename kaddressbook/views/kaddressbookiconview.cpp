@@ -49,9 +49,9 @@
 class IconViewFactory : public ViewFactory
 {
   public:
-    KAddressBookView *view( KAB::Core *core, QWidget *parent, const char *name )
+    KAddressBookView *view( KAB::Core *core, QWidget *parent )
     {
-      return new KAddressBookIconView( core, parent, name );
+      return new KAddressBookIconView( core, parent );
     }
 
     QString type() const { return I18N_NOOP( "Icon" ); }
@@ -143,8 +143,8 @@ class AddresseeIconViewItem : public K3IconViewItem
 
 
 KAddressBookIconView::KAddressBookIconView( KAB::Core *core,
-                                            QWidget *parent, const char *name)
-  : KAddressBookView( core, parent, name )
+                                            QWidget *parent)
+  : KAddressBookView( core, parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( viewWidget() );
 

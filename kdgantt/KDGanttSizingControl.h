@@ -43,9 +43,9 @@ class KDGanttSizingControl : public QWidget
 
 public:
     bool isMinimized() const;
-    
+
 protected:
-    KDGanttSizingControl( QWidget* parent = 0, const char* name = 0, Qt::WFlags f = 0 );
+    KDGanttSizingControl( QWidget* parent = 0, Qt::WFlags f = 0 );
 
 public slots:
     virtual void minimize( bool minimize );

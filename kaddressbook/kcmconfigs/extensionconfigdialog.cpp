@@ -42,7 +42,8 @@ ExtensionConfigDialog::ExtensionConfigDialog( KAB::ExtensionFactory *factory, KC
   layout->setSpacing( spacingHint() );
   layout->setMargin( marginHint() );
 
-  mWidget = factory->configureWidget( page, "ExtensionConfigWidget" );
+  mWidget = factory->configureWidget( page );
+  mWidget->setObjectName( "ExtensionConfigWidget" );
   layout->addWidget( mWidget, 0, 0 );
 
   mWidget->restoreSettings( mConfig );

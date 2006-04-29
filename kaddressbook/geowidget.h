@@ -56,7 +56,7 @@ class GeoWidget : public KAB::ContactEditorWidget
   Q_OBJECT
 
   public:
-    GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    GeoWidget( KABC::AddressBook *ab, QWidget *parent );
     ~GeoWidget();
 
     void loadContact( KABC::Addressee *addr );
@@ -151,9 +151,9 @@ class GeoMapWidget : public QWidget
 class GeoWidgetFactory : public KAB::ContactEditorWidgetFactory
 {
   public:
-    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent )
     {
-      return new GeoWidget( ab, parent, name );
+      return new GeoWidget( ab, parent );
     }
 
     QString pageIdentifier() const { return "misc"; }

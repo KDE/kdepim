@@ -45,7 +45,7 @@ class LookAndFeelPage;
 class ConfigureTableViewWidget : public ViewConfigureWidget
 {
   public:
-    ConfigureTableViewWidget( KABC::AddressBook *ab, QWidget *parent, const char *name );
+    ConfigureTableViewWidget( KABC::AddressBook *ab, QWidget *parent );
     virtual ~ConfigureTableViewWidget();
 
     virtual void restoreSettings( KConfig* );
@@ -65,7 +65,7 @@ class LookAndFeelPage : public QWidget
   Q_OBJECT
 
   public:
-    LookAndFeelPage( QWidget *parent, const char *name = 0 );
+    LookAndFeelPage( QWidget *parent );
     ~LookAndFeelPage() {}
 
     void restoreSettings( KConfig* );

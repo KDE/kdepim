@@ -69,8 +69,8 @@ QString CryptoWidgetFactory::pageIdentifier() const
   return "crypto";
 }
 
-CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::ContactEditorWidget( ab, parent, name ), mReadOnly( false )
+CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent )
+  : KAB::ContactEditorWidget( ab, parent ), mReadOnly( false )
 {
   QGridLayout *topLayout = new QGridLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );

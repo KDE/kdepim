@@ -50,8 +50,8 @@
 
 #include "geowidget.h"
 
-GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::ContactEditorWidget( ab, parent, name ), mReadOnly( false )
+GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent )
+  : KAB::ContactEditorWidget( ab, parent ), mReadOnly( false )
 {
   QLabel *label = 0;
 

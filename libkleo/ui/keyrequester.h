@@ -79,9 +79,9 @@ namespace Kleo {
     Q_OBJECT
   public:
     KeyRequester( unsigned int allowedKeys, bool multipleKeys=false,
-		  QWidget * parent=0, const char * name=0 );
+		  QWidget * parent=0 );
     // Constructor for Qt Designer
-    KeyRequester( QWidget * parent=0, const char * name=0 );
+    KeyRequester( QWidget * parent=0 );
     ~KeyRequester();
 
     const GpgME::Key & key() const;
@@ -169,12 +169,12 @@ namespace Kleo {
      * Preferred constructor
      */
     EncryptionKeyRequester( bool multipleKeys=false, unsigned int proto=AllProtocols,
-			    QWidget * parent=0, const char * name=0,
+			    QWidget * parent=0,
 			    bool onlyTrusted=true, bool onlyValid=true );
     /**
      * Constructor for Qt designer
      */
-    EncryptionKeyRequester( QWidget * parent=0, const char * name=0 );
+    EncryptionKeyRequester( QWidget * parent=0 );
     ~EncryptionKeyRequester();
 
     void setAllowedKeys( unsigned int proto, bool onlyTrusted=true, bool onlyValid=true );
@@ -201,12 +201,12 @@ namespace Kleo {
      * @param onlyValid only show valid keys
      */
     SigningKeyRequester( bool multipleKeys=false, unsigned int proto=AllProtocols,
-			 QWidget * parent=0, const char * name=0,
+			 QWidget * parent=0,
 			 bool onlyTrusted=true, bool onlyValid=true );
     /**
      * Constructor for Qt designer
      */
-    SigningKeyRequester( QWidget * parent=0, const char * name=0 );
+    SigningKeyRequester( QWidget * parent=0 );
     ~SigningKeyRequester();
 
     /*

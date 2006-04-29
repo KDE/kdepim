@@ -53,7 +53,7 @@ class ExtensionManager : public KHBox
   Q_OBJECT
 
   public:
-    ExtensionManager( KAB::Core *core, QWidget *parent, const char *name = 0 );
+    ExtensionManager( KAB::Core *core, QWidget *parent );
     ~ExtensionManager();
 
     /**

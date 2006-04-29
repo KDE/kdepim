@@ -51,7 +51,7 @@ class KDE_EXPORT ViewConfigureWidget : public KAB::ConfigureWidget
   Q_OBJECT
 
   public:
-    ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent );
     virtual ~ViewConfigureWidget();
 
     /**

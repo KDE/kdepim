@@ -32,7 +32,7 @@
  **
  **********************************************************************/
 
-// we need the protected QHeader method 
+// we need the protected QHeader method
 // QHeader::paintSection ( QPainter * p, int index, const QRect & fr )
 // in order to print the header of the list view
 // because we cannot reimplement QHeader to access this method we
@@ -93,7 +93,7 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  )
       myCanvasView(0)
 {
   setObjectName( name );
-  
+
 #if defined KDAB_EVAL
     EvalDialog::checkEvalLicense( "KD Gantt" );
 #endif
@@ -115,46 +115,46 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  )
     spacerLeftLayout = new QHBoxLayout( spacerLeft );
     spacerLeftLayout->setMargin( 0 );
     spacerLeftLayout->setSpacing( 0 );
-    
+
     myListView = new KDListView(leftWidget, this);
     myListView->setVScrollBarMode (QScrollView::AlwaysOff );
 #if QT_VERSION < 0x040000
     connect( myListView, SIGNAL( selectionChanged( QListViewItem* ) ),
              this, SLOT( slotSelectionChanged( QListViewItem* ) ) );
-    connect( myListView, SIGNAL( mouseButtonClicked ( int, QListViewItem * , const QPoint &, int ) ), 
+    connect( myListView, SIGNAL( mouseButtonClicked ( int, QListViewItem * , const QPoint &, int ) ),
              this, SLOT( slotmouseButtonClicked ( int , QListViewItem * , const QPoint &, int ) ) );
-    connect( myListView, SIGNAL( contextMenuRequested ( QListViewItem * , const QPoint &, int  ) ), 
+    connect( myListView, SIGNAL( contextMenuRequested ( QListViewItem * , const QPoint &, int  ) ),
              this, SLOT( slotcontextMenuRequested ( QListViewItem * , const QPoint & , int ) ) );
-    connect( myListView, SIGNAL(doubleClicked ( QListViewItem *  ) ), 
+    connect( myListView, SIGNAL(doubleClicked ( QListViewItem *  ) ),
              this, SLOT(slotdoubleClicked ( QListViewItem * ) ) );
-    connect( myListView, SIGNAL(expanded ( QListViewItem *  ) ), 
+    connect( myListView, SIGNAL(expanded ( QListViewItem *  ) ),
              this, SLOT(slotItemExpanded ( QListViewItem * ) ) );
-    connect( myListView, SIGNAL(collapsed ( QListViewItem *  ) ), 
+    connect( myListView, SIGNAL(collapsed ( QListViewItem *  ) ),
              this, SLOT(slotItemCollapsed( QListViewItem * ) ) );
-    connect( myListView, SIGNAL(currentChanged( QListViewItem *  ) ), 
+    connect( myListView, SIGNAL(currentChanged( QListViewItem *  ) ),
              this, SLOT(slotCurrentChanged ( QListViewItem * ) ) );
-    connect( myListView, SIGNAL(itemRenamed ( QListViewItem * , int , const QString &  ) ), 
+    connect( myListView, SIGNAL(itemRenamed ( QListViewItem * , int , const QString &  ) ),
              this, SLOT(slotItemRenamed ( QListViewItem *, int , const QString &  ) ) );
-    connect( myListView, SIGNAL(mouseButtonPressed(  int, QListViewItem * , const QPoint &, int ) ), 
+    connect( myListView, SIGNAL(mouseButtonPressed(  int, QListViewItem * , const QPoint &, int ) ),
              this, SLOT(slotMouseButtonPressed (  int , QListViewItem * , const QPoint & , int ) ) );
 #else
     connect( myListView, SIGNAL( selectionChanged( Q3ListViewItem* ) ),
              this, SLOT( slotSelectionChanged( Q3ListViewItem* ) ) );
-    connect( myListView, SIGNAL( mouseButtonClicked ( int, Q3ListViewItem * , const QPoint &, int ) ), 
+    connect( myListView, SIGNAL( mouseButtonClicked ( int, Q3ListViewItem * , const QPoint &, int ) ),
              this, SLOT( slotmouseButtonClicked ( int , Q3ListViewItem * , const QPoint &, int ) ) );
-    connect( myListView, SIGNAL( contextMenuRequested ( Q3ListViewItem * , const QPoint &, int  ) ), 
+    connect( myListView, SIGNAL( contextMenuRequested ( Q3ListViewItem * , const QPoint &, int  ) ),
              this, SLOT( slotcontextMenuRequested ( Q3ListViewItem * , const QPoint & , int ) ) );
-    connect( myListView, SIGNAL(doubleClicked ( Q3ListViewItem *  ) ), 
+    connect( myListView, SIGNAL(doubleClicked ( Q3ListViewItem *  ) ),
              this, SLOT(slotdoubleClicked ( Q3ListViewItem * ) ) );
-    connect( myListView, SIGNAL(expanded ( Q3ListViewItem *  ) ), 
+    connect( myListView, SIGNAL(expanded ( Q3ListViewItem *  ) ),
              this, SLOT(slotItemExpanded ( Q3ListViewItem * ) ) );
-    connect( myListView, SIGNAL(collapsed ( Q3ListViewItem *  ) ), 
+    connect( myListView, SIGNAL(collapsed ( Q3ListViewItem *  ) ),
              this, SLOT(slotItemCollapsed( Q3ListViewItem * ) ) );
-    connect( myListView, SIGNAL(currentChanged( Q3ListViewItem *  ) ), 
+    connect( myListView, SIGNAL(currentChanged( Q3ListViewItem *  ) ),
              this, SLOT(slotCurrentChanged ( Q3ListViewItem * ) ) );
-    connect( myListView, SIGNAL(itemRenamed ( Q3ListViewItem * , int , const QString &  ) ), 
+    connect( myListView, SIGNAL(itemRenamed ( Q3ListViewItem * , int , const QString &  ) ),
              this, SLOT(slotItemRenamed ( Q3ListViewItem *, int , const QString &  ) ) );
-    connect( myListView, SIGNAL(mouseButtonPressed(  int, Q3ListViewItem * , const QPoint &, int ) ), 
+    connect( myListView, SIGNAL(mouseButtonPressed(  int, Q3ListViewItem * , const QPoint &, int ) ),
              this, SLOT(slotMouseButtonPressed (  int , Q3ListViewItem * , const QPoint & , int ) ) );
 #endif
     //connect( myListView, SIGNAL( ), this, SLOT( ) );
@@ -179,8 +179,9 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  )
     //myTimeHeader = new KDTimeHeaderWidget (rightWidget,this);
     myTimeHeader = new KDTimeHeaderWidget (myTimeHeaderScroll->viewport(),this);
     myTimeHeaderScroll->addChild( myTimeHeader );
-    myTimeHeaderScroll->viewport()->setBackgroundColor( myTimeHeader->backgroundColor() );
-    timeHeaderSpacerWidget->setBackgroundColor( myTimeHeader->backgroundColor() );
+    QPalette pal = myTimeHeader->palette();
+    myTimeHeaderScroll->viewport()->setPalette( pal );
+    timeHeaderSpacerWidget->setPalette( pal );
     myCanvasView = new KDGanttCanvasView( this, myTimeTable, rightWidget);
     myTimeHeaderScroll->setFrameStyle( QFrame::NoFrame  );
     //
@@ -193,14 +194,14 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  )
     myListView->setFrameStyle( QFrame::NoFrame  );
     myListView->setMargin( 0 );
 #if QT_VERSION < 0x040000
-    QObject::connect(myListView, SIGNAL (  expanded ( QListViewItem * ) ) , 
+    QObject::connect(myListView, SIGNAL (  expanded ( QListViewItem * ) ) ,
                      myTimeTable , SLOT( expandItem(QListViewItem * ))) ;
-    QObject::connect(myListView, SIGNAL (collapsed ( QListViewItem * ) ) , 
+    QObject::connect(myListView, SIGNAL (collapsed ( QListViewItem * ) ) ,
                      myTimeTable , SLOT(collapseItem(QListViewItem * ))) ;
 #else
-    QObject::connect(myListView, SIGNAL (  expanded ( Q3ListViewItem * ) ) , 
+    QObject::connect(myListView, SIGNAL (  expanded ( Q3ListViewItem * ) ) ,
                      myTimeTable , SLOT( expandItem(Q3ListViewItem * ))) ;
-    QObject::connect(myListView, SIGNAL (collapsed ( Q3ListViewItem * ) ) , 
+    QObject::connect(myListView, SIGNAL (collapsed ( Q3ListViewItem * ) ) ,
                      myTimeTable , SLOT(collapseItem(Q3ListViewItem * ))) ;
 #endif
     timeHeaderSpacerWidget->setFixedWidth(myCanvasView->verticalScrollBar()->width() );
@@ -264,11 +265,11 @@ KDGanttView::~KDGanttView()
 }
 /*!
   This virtual method returns 0.
-  Reimplement this virtual method to create your own subclassed items 
+  Reimplement this virtual method to create your own subclassed items
   on a Drag&Drop operation or on save/load of data.
   Please read KDGanttView::createNewItem() for details.
 
-  \param KDGanttViewItemTypeAsString the type of the new item as string. 
+  \param KDGanttViewItemTypeAsString the type of the new item as string.
          Is not Task, Summary or Event but another name for subclassed items.
          Usually the value is used what KDGanttViewItem::typeString() returns for that subclass.
   \param parent item of the new item. May be 0. If 0 the new item becomes a root item in this KDGantt view.
@@ -338,36 +339,36 @@ KDGanttViewItem* KDGanttView::createUserDefinedItem( QString kdGanttViewItemType
 /*!
   Creates a KDGanttViewItem according to the specification in the parameters.
   Calls KDGanttView::createUserDefinedItem() for a user defined item type.
-  Reimplement this virtual method in a subclass of KDGanttView to define specific behaviour when adding new 
+  Reimplement this virtual method in a subclass of KDGanttView to define specific behaviour when adding new
   standard items and user defined (subclassed) items.
   In general it is not needed to reimplement this virtual method and it is sufficient to reimplement
-  KDGanttView::createUserDefinedItem() only. 
-  You can find details about subclassing and needed reimplementation of methods in the manual chapter 
-  "Subclassing of KDGanttView and KDGanttViewItem" and there is a detailed real world 
-  example program "timerTrackerApp" provided which demonstrates all reimplementations needed for 
+  KDGanttView::createUserDefinedItem() only.
+  You can find details about subclassing and needed reimplementation of methods in the manual chapter
+  "Subclassing of KDGanttView and KDGanttViewItem" and there is a detailed real world
+  example program "timerTrackerApp" provided which demonstrates all reimplementations needed for
   a proper implementation of subclassing.
   We give here a short overview of the problems and solutions.
   Well, there is in general no problem if you subclass KDGanttView.
-  But if you subclass a KDGanttViewItem 
+  But if you subclass a KDGanttViewItem
   (to be more precise: A KDGanttViewTaskItem,  KDGanttViewSummaryItem or KDGanttViewEventItem)
   and you enable Drag&Drop (DnD) or you want to save/load configuration data via
   KDGanttView::loadProject() or KDGanttView::saveProject() there is a problem:
   When DnD is performed or load/save is called there are items created automatically in KDGantt and added
-  to KDGanttView. But if you drag a subclassed item you want to create an instance of that 
-  subclass on a drop event, of course. 
+  to KDGanttView. But if you drag a subclassed item you want to create an instance of that
+  subclass on a drop event, of course.
   For that reason this method KDGanttView::createUserDefinedItem() is called every time a new item is created
   internally in KDGantt.
-  Such that if you subclass a KDGanttViewItem you should subclass KDGanttView as well and reimplement 
+  Such that if you subclass a KDGanttViewItem you should subclass KDGanttView as well and reimplement
   KDGanttView::createUserDefinedItem() and
   KDGanttViewItem::typeString().
-  It is a good idea to reimplement 
+  It is a good idea to reimplement
   KDGanttViewItem::userWriteToElement() and
   KDGanttViewItem::userReadFromElement()
   as well to preserve item subclass specific properties during DnD or save/load.
   If you want some specific behaviour on dropping standard types you have to reimplement this method
-  KDGanttView::createNewItem() as well. 
+  KDGanttView::createNewItem() as well.
 
-  \param KDGanttViewItemTypeAsString the type of the new item as string. 
+  \param KDGanttViewItemTypeAsString the type of the new item as string.
          May be Task, Summary or Event for standard KDGanttViewItems. Should be another name for subclassed items.
          Usually the value is used what KDGanttViewItem::typeString() returns for that subclass.
          Calls createUserDefinedItem() if such a non standard type name is passed.
@@ -390,12 +391,12 @@ KDGanttViewItem* KDGanttView::createNewItem( QString KDGanttViewItemTypeAsString
    switch( type ) {
     case KDGanttViewItem::Event:
         if ( parent ) {
-            if ( after ) 
+            if ( after )
                 retItem = new KDGanttViewEventItem( parent, after, lvtext, name);
             else
                 retItem = new KDGanttViewEventItem( parent, lvtext, name);
         } else {
-            if ( after ) 
+            if ( after )
                 retItem = new KDGanttViewEventItem( this, after, lvtext, name);
             else
                 retItem = new KDGanttViewEventItem( this, lvtext, name);
@@ -403,12 +404,12 @@ KDGanttViewItem* KDGanttView::createNewItem( QString KDGanttViewItemTypeAsString
         break;
     case KDGanttViewItem::Summary:
         if ( parent ) {
-            if ( after ) 
+            if ( after )
                 retItem = new KDGanttViewSummaryItem( parent, after, lvtext, name);
             else
                 retItem = new KDGanttViewSummaryItem( parent, lvtext, name);
         } else {
-            if ( after ) 
+            if ( after )
                 retItem = new KDGanttViewSummaryItem( this, after, lvtext, name);
             else
                 retItem = new KDGanttViewSummaryItem( this, lvtext, name);
@@ -416,18 +417,18 @@ KDGanttViewItem* KDGanttView::createNewItem( QString KDGanttViewItemTypeAsString
         break;
     case KDGanttViewItem::Task:
         if ( parent ) {
-            if ( after ) 
+            if ( after )
                 retItem = new KDGanttViewTaskItem( parent, after, lvtext, name);
             else
                 retItem = new KDGanttViewTaskItem( parent, lvtext, name);
         } else {
-            if ( after ) 
+            if ( after )
                 retItem = new KDGanttViewTaskItem( this, after, lvtext, name);
             else
                 retItem = new KDGanttViewTaskItem( this, lvtext, name);
         }
         break;
-    case KDGanttViewItem::UnknownType: 
+    case KDGanttViewItem::UnknownType:
         retItem = createUserDefinedItem( KDGanttViewItemTypeAsString,parent,after,lvtext,name );
         break;
     default:
@@ -462,13 +463,13 @@ QHeader * KDGanttView::listViewHeader () const
 
 /*!
   Sets all list view items with subitems which may be expanded recursively to expanded state.
-  It makes sure that the item which was currently visible 
+  It makes sure that the item which was currently visible
   at the top of the list view before the operation is visible after the operation.
   \sa setAllClose()
 */
 void KDGanttView::setAllOpen()
 {
-   
+
     KDGanttViewItem* curItem = (KDGanttViewItem*) myListView->itemAt( QPoint (  myListView->width() - 10 , 5 ));
     bool block = myTimeTable->blockUpdating();
     myTimeTable->setBlockUpdating( true );
@@ -482,11 +483,11 @@ void KDGanttView::setAllOpen()
     if ( curItem && ! block ) {
         myListView->ensureItemVisible( curItem );
     }
-        
+
 }
 /*!
   Sets all list view items with subitems recursively to closed state.
-  It makes sure that the item which was currently visible 
+  It makes sure that the item which was currently visible
   at the top of the list view before the operation is visible after the operation.
   \sa setAllOpen()
 */
@@ -614,7 +615,13 @@ bool KDGanttView::close ( bool alsoDelete )
   //qDebug() << "close ";
   if ( closingBlocked )
     return false;
-  return QWidget::close ( alsoDelete );
+  if ( QWidget::close()  )
+  {
+    if ( alsoDelete )
+      deleteLater();
+    return true;
+  }
+  return false;
 }
 
 
@@ -1325,7 +1332,7 @@ QSize KDGanttView::drawContents( QPainter* p,
     if ( p ) {
         if ( drawListView ) {
             if ( drawTimeLine )
-                temp =  thY; 
+                temp =  thY;
             p->translate( 0, temp );
             if ( headerVisible() ) {
                 p->translate( 0,  -myListView->header()->height());
@@ -1333,8 +1340,8 @@ QSize KDGanttView::drawContents( QPainter* p,
                 int iii;
                 QRect rect ( 0,0,0, myListView->header()->height());
                 for ( iii = 0; iii < cou; ++iii ) {
-                    rect.setLeft ( myListView->header()->sectionPos( iii ) ); 
-                    rect.setRight ( myListView->header()->sectionPos( iii ) + myListView->header()->sectionSize (iii)); 
+                    rect.setLeft ( myListView->header()->sectionPos( iii ) );
+                    rect.setRight ( myListView->header()->sectionPos( iii ) + myListView->header()->sectionSize (iii));
                     myListView->header()->paintSection ( p,  myListView->header()->mapToIndex (iii),  rect );
                 }
                 p->translate( 0,  myListView->header()->height());
@@ -1446,7 +1453,7 @@ void KDGanttView::zoomToSelectionAndSetStartEnd( const QDateTime& start,  const 
     myTimeHeader->setHorizonStart(start);
     myTimeHeader->setHorizonEnd(start);
     myTimeHeader->zoomToSelection( start, end);
-    */ 
+    */
     myTimeHeader->zoomToSelectionAndSetStartEnd( start, end);
 }
 
@@ -1474,14 +1481,14 @@ void KDGanttView::ensureVisible( KDGanttViewItem* item )
   If the specified QDateTime is within the datetime range of
   horizonStart() and horizonEnd() then the specified QDateTime is made visible
   on the timeline and the specified QDateTime is centered, if possible.
-  (It is not possible to center it if the specified QDateTime is too near to the 
+  (It is not possible to center it if the specified QDateTime is too near to the
   horizonStart() or horizonEnd(), of course.)
-  If userHorizonChangeEnabled() is enabled and the specified QDateTime 
+  If userHorizonChangeEnabled() is enabled and the specified QDateTime
   is not within the datetime range of  horizonStart() and horizonEnd()
   then horizonStart() and horizonEnd() are moved such that
   the specified QDateTime is in the center of the new horizonStart() and horizonEnd()
   and the timeline is displayed centered on the specified QDateTime.
-  
+
   \sa center(), centerTimelineAfterShow() userHorizonChangeEnabled()
 */
 void KDGanttView::centerTimeline( const QDateTime& center )
@@ -2001,7 +2008,7 @@ void KDGanttView::addLegendItem( KDGanttViewItem::Shape shape,
   \sa clearLegend()
 */
 void KDGanttView::addLegendItem( KDGanttViewItem::Shape shape,
-                                 const QColor& shapeColor, 
+                                 const QColor& shapeColor,
                                  const QString& text,
                                  KDGanttViewItem::Shape shape2,
                                  const QColor& shapeColor2,
@@ -2269,7 +2276,7 @@ KDGanttView::HourFormat KDGanttView::hourFormat() const
   \param show true in order to show ticks, false in order to hide them.
          If show is true, setShowMinorTicks( false ) is performed automatically
          to hide the grid of the minor ticks.
-         In order to show now grid, call setShowMinorTicks( false ) and 
+         In order to show now grid, call setShowMinorTicks( false ) and
          setShowMajorTicks( false ).
   \sa showMajorTicks(), setShowMinorTicks(), showMinorTicks()
 */
@@ -2297,7 +2304,7 @@ bool KDGanttView::showMajorTicks() const
   \param show true in order to show ticks, false in order to hide them.
          If show is true, setShowMajorTicks( false ) is performed automatically
          to hide the grid of the major ticks.
-         In order to show now grid, call setShowMinorTicks( false ) and 
+         In order to show now grid, call setShowMinorTicks( false ) and
          setShowMajorTicks( false ).
 
   \sa showMinorTicks(), setShowMajorTicks(), showMajorTicks()
@@ -2365,7 +2372,7 @@ s
 
   \param start start datetime of the time interval
   \param end end datetime of the time interval
-  \param priority paint priority. May be 0 to 10. 
+  \param priority paint priority. May be 0 to 10.
                   An interval with higher priority is painted over other intervals.
   \param color the background color
   \param mini show the color only in scales greater than this
@@ -2577,18 +2584,18 @@ void KDGanttView::weekendDays( int& start, int& end ) const
   This signal is emitted when the user has configured an item
   visually. This signal is emitted on every mouse move when the user
   is changing an item.
-  That means this signal is emitted every time when the user is about 
+  That means this signal is emitted every time when the user is about
   to configure an item.
- /sa itemChanged()  
+ /sa itemChanged()
 */
 /*!
   \fn void KDGanttView::itemChanged( KDGanttViewItem* )
 
-  This signal is emitted after the mouse key is released 
+  This signal is emitted after the mouse key is released
   when the user has configured an item visually.
   That means this signal is emitted after the user has finished
   the configured of an item.
-  /sa itemConfigured()  
+  /sa itemConfigured()
 */
 
 
@@ -3148,9 +3155,9 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                     QDomElement element = node.toElement();
                     if( !element.isNull() ) {
                         QString tagName = element.tagName();
-                        if( tagName == "BackGroundBrush" ) 
+                        if( tagName == "BackGroundBrush" )
                             KDGanttXML::readBrushNode( element, value );
-                        else if( tagName == "LineCount" ) 
+                        else if( tagName == "LineCount" )
                             KDGanttXML::readIntNode( element, linecount );
                     }
                     node = node.nextSibling();
@@ -4280,7 +4287,7 @@ QDomDocument KDGanttView::saveXML( bool withPI ) const
     // the CalendarMode element
     KDGanttXML::createBoolNode( doc, docRoot, "CalendarMode", calendarMode() );
     KDGanttXML::createIntNode( doc, docRoot, "TickcountForTimeline", addTickcountForTimeline()  );
- 
+
     KDGanttXML::createBoolNode( doc, docRoot, "DisplaySubitemsAsGroup", displaySubitemsAsGroup()  );
     KDGanttXML::createBoolNode( doc, docRoot, "WeekScaleShowNumber",weekScaleShowNumber()  );
     KDGanttXML::createBoolNode( doc, docRoot, "WeekStartsMonday", weekStartsMonday() );
@@ -4300,17 +4307,17 @@ QDomDocument KDGanttView::saveXML( bool withPI ) const
     return doc;
 }
 /*!
-  This virtual method does nothing. 
+  This virtual method does nothing.
   Reimplement it to save your own data to the QDomElement.
   The data can be read with userReadFromElement().
-  The body contains a small example to write an int value and a QString, 
+  The body contains a small example to write an int value and a QString,
   which is commented out.
   This method is automatically called from  KDGanttView::saveXML( bool withPI )
   which is called from KDGanttView::saveProject().
 
   \param doc the DOM document to which the node belongs
   \param parentElement the element into which to insert user defined data
-  \sa userReadFromElement() 
+  \sa userReadFromElement()
 */
 void KDGanttView::userWriteToElement( QDomDocument& doc,
                                       QDomElement& userElement ) const
@@ -4327,12 +4334,12 @@ void KDGanttView::userWriteToElement( QDomDocument& doc,
 
 }
 /*!
-  This virtual method does nothing. 
+  This virtual method does nothing.
   Reimplement it to read your own data from the QDomElement.
   The data was written from userWriteToElement().
-  The body contains a small example to read  an int value and a QString, 
+  The body contains a small example to read  an int value and a QString,
   which is commented out.
-  This method is automatically called from 
+  This method is automatically called from
   loadXML() which is called from KDGanttView::loadProject().
 
   \param doc the DOM document to which the node belongs
@@ -4359,7 +4366,7 @@ void KDGanttView::userReadFromElement( QDomElement& element )
                 if( KDGanttXML::readStringNode( userElement, value ) )
                     userData = value;
 
-        } 
+        }
         node = node.nextSibling();
     }
     qDebug() <<"User data read: " << userNumber << " " << userData;
@@ -4390,7 +4397,7 @@ QString KDGanttView::scaleToString( Scale scale )
 
 KDGanttView::Scale KDGanttView::stringToScale( const QString& string )
 {
-    
+
     if( string == "Second" )
         return Second;
     else if( string == "Minute" )
@@ -4461,7 +4468,7 @@ KDGanttView::HourFormat KDGanttView::stringToHourFormat( const QString& string )
         return Hour_12;
     else if( string == "Hour_24" )
         return Hour_24;
-    
+
     return Hour_24_FourDigit;
 }
 
@@ -4715,7 +4722,7 @@ KDGanttViewItem* KDGanttView::getItemByName( const QString& name ) const
          pass 0 to  search in all KDGanttViewItems in the Gantt view.
   \return the pointer to the item with uid \a uid. O, if there is no item
   in the Gantt view with this name.
-  \sa KDGanttViewItem::getChildByUid() KDGanttViewItem::uid() KDGanttViewItem::setUid() 
+  \sa KDGanttViewItem::getChildByUid() KDGanttViewItem::uid() KDGanttViewItem::setUid()
 
 */
 KDGanttViewItem* KDGanttView::getItemByUid( const QString& uid,  KDGanttViewItem* parentItem ) const
@@ -4830,7 +4837,7 @@ void  KDGanttView::setAddTickcountForTimeline( int count )
     mAddTickcountForTimeline = count;
 }
 /*!
-  Returns the count for adding ticks to the timeline if the user clicks on the arrow 
+  Returns the count for adding ticks to the timeline if the user clicks on the arrow
   buttons of the horizontal scrollbar of the gantt view.
 
   \return the tick count
@@ -4883,12 +4890,12 @@ int KDGanttView::childCount() const
 /*!
   Clears the complete content of the Gant view.
   That is
-  all gantt items, 
-  the legend and the legend items, 
+  all gantt items,
+  the legend and the legend items,
   the tasklinks,
   the tasklink groups and
   the background color settings for columns/time interval in the gantt view.
-  
+
 */
 void KDGanttView::clearAll()
 {
@@ -4918,7 +4925,7 @@ void KDGanttView::clear()
   // in Qt3 wee need the processEvents(); to fix a crash
   // in Qt4 with Qt3 compat it crashes here
   // I had a look at the Q3ListView source code:
-  // in theory it may not crash ... in theory 
+  // in theory it may not crash ... in theory
 #if QT_VERSION < 0x040000
   qApp->processEvents();
 #endif
@@ -4962,8 +4969,10 @@ void KDGanttView::startDrag ()
 */
 void KDGanttView::setPaletteBackgroundColor( const QColor& col)
 {
-  QWidget::setPaletteBackgroundColor( col );
-  timeHeaderSpacerWidget->setPaletteBackgroundColor( col );
+  QPalette pal = palette();
+  pal.setColor( backgroundRole(), col );
+  QWidget::setPalette( pal );
+  timeHeaderSpacerWidget->setPalette( pal );
 }
 
 
@@ -4987,9 +4996,14 @@ void KDGanttView::setGvBackgroundColor ( const QColor & c )
 */
 void KDGanttView::setTimeHeaderBackgroundColor ( const QColor & c )
 {
-  myTimeHeader->setPaletteBackgroundColor( c );
-  //rightWidget->setPaletteBackgroundColor( c );
-  timeHeaderSpacerWidget->setPaletteBackgroundColor( c );
+  QPalette pal;
+  pal.setColor( myTimeHeader->backgroundRole(), col );
+
+  myTimeHeader->setPalette( pal );
+  //rightWidget->setPalette( pal );
+
+  pal.setColor( timeHeaderSpacerWidget->backgroundRole(), col );
+  timeHeaderSpacerWidget->setPalette( pal );
 }
 
 
@@ -5001,8 +5015,12 @@ void KDGanttView::setTimeHeaderBackgroundColor ( const QColor & c )
 */
 void KDGanttView::setLegendHeaderBackgroundColor ( const QColor & c )
 {
-  myLegend->setPaletteBackgroundColor( c );
-  leftWidget->setPaletteBackgroundColor( c );
+  QPalette pal;
+  pal.setColor( myLegend->backgroundRole(), c );
+  myLegend->setPalette( pal );
+
+  pal.setColor( leftWidget->backgroundRole(), c );
+  leftWidget->setPalette( pal );
 }
 
 
@@ -5026,7 +5044,7 @@ void KDGanttView::setLvBackgroundColor ( const QColor & c )
 */
 QColor KDGanttView::lvBackgroundColor ( )const
 {
- return myListView->viewport()->paletteBackgroundColor( );
+  return myListView->viewport()->palette().color(myListView->viewport()->backgroundRole());
 }
 
 
@@ -5050,7 +5068,7 @@ QColor KDGanttView::gvBackgroundColor () const
 */
 QColor KDGanttView::timeHeaderBackgroundColor () const
 {
- return myTimeHeader->paletteBackgroundColor( );
+  return myTimeHeader->palette().color(myTimeHeader->backgroundRole());
 }
 
 
@@ -5062,7 +5080,7 @@ QColor KDGanttView::timeHeaderBackgroundColor () const
 */
 QColor KDGanttView::legendHeaderBackgroundColor () const
 {
- return myLegend->paletteBackgroundColor( );
+  return myLegend->palette().color(myLegend->backgroundRole());
 }
 
 
@@ -5083,8 +5101,8 @@ QColor KDGanttView::legendHeaderBackgroundColor () const
 void KDGanttView::addUserdefinedLegendHeaderWidget( QWidget * w )
 {
   if ( w ) {
-      w->reparent ( spacerLeft, 0, QPoint(0,0) );
-      spacerLeftLayout->addWidget( w );
+    w->setParent ( spacerLeft );
+    spacerLeftLayout->addWidget( w );
   }
 }
 
@@ -5465,7 +5483,7 @@ void  KDGanttView::itemAboutToBeDeleted( KDGanttViewItem * item)
   Specifies whether the user can expand the horizon
   by pressing the arrow buttons of the horizontal scrollbar of the gantt view.
   The default value for a newly created gantt chart is true.
-  If set to false, the signal addOneTickLeft() or addOneTickRight() is emitted, 
+  If set to false, the signal addOneTickLeft() or addOneTickRight() is emitted,
   depending on the arrow button the user pressed.
 
   \param show if true, the user can expand the horizon.
@@ -5479,7 +5497,7 @@ void KDGanttView::setUserHorizonChangeEnabled( bool b )
 
 
 /*!
-  Returns whether the user can expand the horizon 
+  Returns whether the user can expand the horizon
   by clicking the scrollbar buttons.
 
   \return true if the user can expand the horizon
@@ -5490,7 +5508,7 @@ void KDGanttView::setUserHorizonChangeEnabled( bool b )
 }
 
 /*!
-  This method is provided for convenience and as an example 
+  This method is provided for convenience and as an example
   how to set the user defined date time formats.
   It sets the formats to formats which are used in Germany.
   It calls
@@ -5502,7 +5520,7 @@ void KDGanttView::setUserHorizonChangeEnabled( bool b )
   setTimeHeaderDateFormatDay( " d. MMM 'yy" );
   setTimeHeaderDatetimeFormatHour( "dddd, dd. MMM 'yy" );
   setTimeHeaderDatetimeFormatMinute( "ddd, dd. MMM h:mm" );
-  
+
   \sa setTimeHeaderTooltipDateTimeFormat ()  setTimeHeaderDateFormatMonth() setTimeHeaderDateFormatWeek() setTimeHeaderDateFormatDay() setTimeHeaderDatetimeFormatMinute () setTimeHeaderDatetimeFormatHour() setWeekStartsMonday() setWeekScaleShowNumber()
 */
 
@@ -5520,17 +5538,17 @@ void KDGanttView::setGermanDateTimeFormat()
 }
 
 /*!
-  Returns the user defined datetime format of the time header tooltip. 
+  Returns the user defined datetime format of the time header tooltip.
   Returns an empty string as default, i.e. if there is no user defined format.
   You can find details about the possible format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
 
   \return user defined datetime format of the time header tooltip
   \sa setTimeHeaderTooltipDateTimeFormat ()
 */
-QString KDGanttView::timeHeaderTooltipDateTimeFormat() const 
+QString KDGanttView::timeHeaderTooltipDateTimeFormat() const
 {
     return myTimeHeader->tooltipDateTimeFormat();
 }
@@ -5539,9 +5557,9 @@ QString KDGanttView::timeHeaderTooltipDateTimeFormat() const
   As default datetime format of the time header tooltip the return value of  QDateTime::toString () is used..
   You can find details about the possible user defined format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
-  
+
   \param the datetime format of time header tooltip. To unset the user defined format pass an empty string.
   \sa timeHeaderTooltipDateTimeFormat()
 */
@@ -5551,17 +5569,17 @@ void KDGanttView::setTimeHeaderTooltipDateTimeFormat( const QString& fmt )
 }
 
 /*!
-  Returns the user defined date format for the upper date row of the time header if the time header scale is set to month. 
+  Returns the user defined date format for the upper date row of the time header if the time header scale is set to month.
   Returns an empty string as default, i.e. if there is no user defined format.
   You can find details about the possible format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
 
   \return user defined date format of the time header in monthly scale
   \sa setTimeHeaderDateFormatMonth()
 */
-QString KDGanttView::timeHeaderDateFormatMonth() const  
+QString KDGanttView::timeHeaderDateFormatMonth() const
 {
     return myTimeHeader->dateFormatMonth();
 }
@@ -5570,9 +5588,9 @@ QString KDGanttView::timeHeaderDateFormatMonth() const
   Sets the user defined date format for the upper date row of the time header if the time header scale is set to month.
   You can find details about the possible user defined format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
-  
+
   \param the user defined date format of the time header in monthly scale
   \sa timeHeaderDateFormatMonth()
 */
@@ -5582,17 +5600,17 @@ void KDGanttView::setTimeHeaderDateFormatMonth( const QString& fmt )
 }
 
 /*!
-  Returns the user defined date format for the upper date row of the time header if the time header scale is set to week. 
+  Returns the user defined date format for the upper date row of the time header if the time header scale is set to week.
   Returns an empty string as default, i.e. if there is no user defined format.
   You can find details about the possible format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
 
   \return user defined date format of the time header in weekly scale
   \sa setTimeHeaderDateFormatWeek()
 */
-QString KDGanttView::timeHeaderDateFormatWeek() const 
+QString KDGanttView::timeHeaderDateFormatWeek() const
 {
     return myTimeHeader->dateFormatWeek();
 }
@@ -5600,9 +5618,9 @@ QString KDGanttView::timeHeaderDateFormatWeek() const
   Sets the user defined date format for the upper date row of the time header if the time header scale is set to week.
   You can find details about the possible user defined format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
-  
+
   \param the user defined date format of the time header in weekly scale
   \sa timeHeaderDateFormatWeek()
 */
@@ -5611,17 +5629,17 @@ void KDGanttView::setTimeHeaderDateFormatWeek( const QString& fmt )
     myTimeHeader->setDateFormatWeek( fmt );
 }
 /*!
-  Returns the user defined date format for the upper date row of the time header if the time header scale is set to day. 
+  Returns the user defined date format for the upper date row of the time header if the time header scale is set to day.
   Returns an empty string as default, i.e. if there is no user defined format.
   You can find details about the possible format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
 
   \return user defined date format of the time header in daily scale
   \sa setTimeHeaderDateFormatDay()
 */
-QString KDGanttView::timeHeaderDateFormatDay() const 
+QString KDGanttView::timeHeaderDateFormatDay() const
 {
     return myTimeHeader->dateFormatDay();
 }
@@ -5629,9 +5647,9 @@ QString KDGanttView::timeHeaderDateFormatDay() const
   Sets the user defined date format for the upper date row of the time header if the time header scale is set to day.
   You can find details about the possible user defined format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
-  
+
   \param the user defined date format of the time header in daily scale
   \sa timeHeaderDateFormatDay()
 */
@@ -5643,11 +5661,11 @@ void KDGanttView::setTimeHeaderDateFormatDay( const QString& fmt )
 
 
 /*!
-  Returns the user defined datetime format for the upper date row of the time header if the time header scale is set to second. 
+  Returns the user defined datetime format for the upper date row of the time header if the time header scale is set to second.
   Returns an empty string as default, i.e. if there is no user defined format.
   You can find details about the possible format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
 
   \return user defined date format of the time header in secondly scale
@@ -5661,9 +5679,9 @@ QString KDGanttView::timeHeaderDatetimeFormatSecond() const
   Sets the user defined date format for the upper date row of the time header if the time header scale is set to second.
   You can find details about the possible user defined format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
-  
+
   \param the user defined date format of the time header in secondly scale
   \sa timeHeaderDateFormatMinute()
 */
@@ -5673,11 +5691,11 @@ void KDGanttView::setTimeHeaderDatetimeFormatSecond( const QString& fmt )
 }
 
 /*!
-  Returns the user defined datetime format for the upper date row of the time header if the time header scale is set to minute. 
+  Returns the user defined datetime format for the upper date row of the time header if the time header scale is set to minute.
   Returns an empty string as default, i.e. if there is no user defined format.
   You can find details about the possible format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
 
   \return user defined date format of the time header in minutely scale
@@ -5691,9 +5709,9 @@ QString KDGanttView::timeHeaderDatetimeFormatMinute() const
   Sets the user defined date format for the upper date row of the time header if the time header scale is set to minute.
   You can find details about the possible user defined format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
-  
+
   \param the user defined date format of the time header in minutely scale
   \sa timeHeaderDateFormatMinute()
 */
@@ -5704,11 +5722,11 @@ void KDGanttView::setTimeHeaderDatetimeFormatMinute( const QString& fmt )
 
 
 /*!
-  Returns the user defined datetime format for the upper date row of the time header if the time header scale is set to hour. 
+  Returns the user defined datetime format for the upper date row of the time header if the time header scale is set to hour.
   Returns an empty string as default, i.e. if there is no user defined format.
   You can find details about the possible format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
 
   \return user defined date format of the time header in hourly scale
@@ -5722,9 +5740,9 @@ QString KDGanttView::timeHeaderDatetimeFormatHour() const
   Sets the user defined date format for the upper date row of the time header if the time header scale is set to hour.
   You can find details about the possible user defined format itself in the Qt documentation of:
   QDateTime::toString ( const QString & format ) const
-  QDate::toString( const QString & format ) 
+  QDate::toString( const QString & format )
   QTime::toString( const QString & format )
-  
+
   \param the user defined date format of the time header in hourly scale
   \sa timeHeaderDateFormatHour()
 */
@@ -5738,7 +5756,7 @@ void KDGanttView::setTimeHeaderDatetimeFormatHour( const QString& fmt )
   If the global scale is set to day the upper row of the time header displays a weekly scale.
   If the global scale is set to week the lower row of the time header displays a weekly scale.
 
-  
+
   \param pass true to set week start to monday
          pass false to set week start to sunday
   \sa weekStartsMonday()
@@ -5763,7 +5781,7 @@ bool KDGanttView::weekStartsMonday() const
   The ISO week numbering is used, i.e. the first week (week 1) of the year
   is the first week which contains a Thursday.
 
-  
+
   \param pass true to display numbers of weeks
          pass false display numbers of the day of the date where the week starts
   \sa weekStartsMonday()
@@ -5828,7 +5846,7 @@ QDate KDGanttView::tomorrow() const
 }
 /*!
   This method is provided for convenience.
-  It returns the start of the current week 
+  It returns the start of the current week
   dependend on the value weekStartsOnMonday().
   \return the start of current week
 */
@@ -5838,7 +5856,7 @@ QDate KDGanttView::currentWeek() const
 }
 /*!
   This method is provided for convenience.
-  It returns the start of the last week 
+  It returns the start of the last week
   (the week before current week)
   dependend on the value weekStartsOnMonday().
   \return the start of last week (the week before current week)
@@ -5951,7 +5969,7 @@ void KDGanttView::gotoLastYear()
 /*!
   This slot is provided for convenience.
   It selects today as displayed timespan
-  and makes sure that the selected timespan 
+  and makes sure that the selected timespan
   is visible in the gantt view
   and sets the timeline start to the start
   of the selected timespan.
@@ -5964,7 +5982,7 @@ void KDGanttView::selectToday()
 /*!
   This slot is provided for convenience.
   It selects yesterday as displayed timespan
-  and makes sure that the selected timespan 
+  and makes sure that the selected timespan
   is visible in the gantt view
   and sets the timeline start to the start
   of the selected timespan.
@@ -5977,7 +5995,7 @@ void KDGanttView::selectYesterday()
 /*!
   This slot is provided for convenience.
   It selects the current week as displayed timespan
-  and makes sure that the selected timespan 
+  and makes sure that the selected timespan
   is visible in the gantt view
   and sets the timeline start to the start
   of the selected timespan.
@@ -5990,7 +6008,7 @@ void KDGanttView::selectCurrentWeek()
 /*!
   This slot is provided for convenience.
   It selects the last week as displayed timespan
-  and makes sure that the selected timespan 
+  and makes sure that the selected timespan
   is visible in the gantt view
   and sets the timeline start to the start
   of the selected timespan.
@@ -6003,7 +6021,7 @@ void KDGanttView::selectLastWeek()
 /*!
   This slot is provided for convenience.
   It selects the current month as displayed timespan
-  and makes sure that the selected timespan 
+  and makes sure that the selected timespan
   is visible in the gantt view
   and sets the timeline start to the start
   of the selected timespan.
@@ -6016,7 +6034,7 @@ void KDGanttView::selectCurrentMonth()
 /*!
   This slot is provided for convenience.
   It selects the last month as displayed timespan
-  and makes sure that the selected timespan 
+  and makes sure that the selected timespan
   is visible in the gantt view
   and sets the timeline start to the start
   of the selected timespan.
@@ -6029,7 +6047,7 @@ void KDGanttView::selectLastMonth()
 /*!
   This slot is provided for convenience.
   It selects the current year as displayed timespan
-  and makes sure that the selected timespan 
+  and makes sure that the selected timespan
   is visible in the gantt view
   and sets the timeline start to the start
   of the selected timespan.
@@ -6042,7 +6060,7 @@ void KDGanttView::selectCurrentYear()
 /*!
   This slot is provided for convenience.
   It selects the last year as displayed timespan
-  and makes sure that the selected timespan 
+  and makes sure that the selected timespan
   is visible in the gantt view
   and sets the timeline start to the start
   of the selected timespan.
@@ -6064,7 +6082,7 @@ void KDGanttView::selectLastYear()
 
 /*!
   \fn addOneTickRight();
-  
+
   This signal is emitted when userHorizonChangeEnabled() is set to false
   and the slider of the vertical scrollbar of the gantt view is on the right side
   and the user clicks the "right" arrow of the scrollbar

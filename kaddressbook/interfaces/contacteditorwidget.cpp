@@ -26,8 +26,8 @@
 using namespace KAB;
 
 ContactEditorWidget::ContactEditorWidget( KABC::AddressBook *ab,
-                                          QWidget *parent, const char *name )
-  : QWidget( parent, name ), mAddressBook( ab ), mModified( false )
+                                          QWidget *parent )
+  : QWidget( parent ), mAddressBook( ab ), mModified( false )
 {
 }
 

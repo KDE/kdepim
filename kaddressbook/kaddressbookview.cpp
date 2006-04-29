@@ -39,9 +39,8 @@
 
 #include "kaddressbookview.h"
 
-KAddressBookView::KAddressBookView( KAB::Core *core, QWidget *parent,
-                                    const char *name )
-    : QWidget( parent, name ), mCore( core ), mFieldList()
+KAddressBookView::KAddressBookView( KAB::Core *core, QWidget *parent )
+    : QWidget( parent ), mCore( core ), mFieldList()
 {
   initGUI();
 
@@ -196,10 +195,9 @@ void KAddressBookView::updateView()
 }
 
 ViewConfigureWidget *ViewFactory::configureWidget( KABC::AddressBook *ab,
-                                                   QWidget *parent,
-                                                   const char *name )
+                                                   QWidget *parent )
 {
-  return new ViewConfigureWidget( ab, parent, name );
+  return new ViewConfigureWidget( ab, parent );
 }
 
 #include "kaddressbookview.moc"

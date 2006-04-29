@@ -41,9 +41,8 @@
 
 #include "viewconfigurewidget.h"
 
-ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent,
-                                          const char *name )
-  : KAB::ConfigureWidget( ab, parent, name )
+ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent )
+  : KAB::ConfigureWidget( ab, parent )
 {
   QVBoxLayout *topLayout = new QVBoxLayout( this );
 

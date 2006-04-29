@@ -34,8 +34,8 @@
 
 #include "freebusywidget.h"
 
-FreeBusyWidget::FreeBusyWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::ContactEditorWidget( ab, parent, name )
+FreeBusyWidget::FreeBusyWidget( KABC::AddressBook *ab, QWidget *parent )
+  : KAB::ContactEditorWidget( ab, parent )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
   layout->setSpacing( KDialog::spacingHint() );

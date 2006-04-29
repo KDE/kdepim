@@ -138,8 +138,8 @@ void ResourceItem::stateChange( bool active )
 
 ////
 
-ResourceSelection::ResourceSelection( KAB::Core *core, QWidget *parent, const char *name )
-  : KAB::ExtensionWidget( core, parent, name ), mManager( 0 )
+ResourceSelection::ResourceSelection( KAB::Core *core, QWidget *parent )
+  : KAB::ExtensionWidget( core, parent ), mManager( 0 )
 {
   initGUI();
 
@@ -387,9 +387,9 @@ void ResourceSelection::initGUI()
 class ResourceSelectionFactory : public KAB::ExtensionFactory
 {
   public:
-    KAB::ExtensionWidget *extension( KAB::Core *core, QWidget *parent, const char *name )
+    KAB::ExtensionWidget *extension( KAB::Core *core, QWidget *parent )
     {
-      return new ResourceSelection( core, parent, name );
+      return new ResourceSelection( core, parent );
     }
 
     QString identifier() const

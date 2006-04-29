@@ -52,12 +52,10 @@ class KDGanttSemiSizingControl : public KDGanttSizingControl
 public:
     enum ArrowPosition { Before, After };
 
-    KDGanttSemiSizingControl( QWidget* parent = 0, const char* name = 0 );
-    KDGanttSemiSizingControl( Qt::Orientation orientation, QWidget* parent = 0,
-                           const char* name = 0 );
+    KDGanttSemiSizingControl( QWidget* parent = 0 );
+    KDGanttSemiSizingControl( Qt::Orientation orientation, QWidget* parent = 0 );
     KDGanttSemiSizingControl( ArrowPosition arrowPosition,
-                         Qt::Orientation orientation, QWidget* parent = 0,
-                         const char* name = 0 );
+                              Qt::Orientation orientation, QWidget* parent = 0 );
 
     void setMinimizedWidget( QWidget* widget );
     void setMaximizedWidget( QWidget* widget );

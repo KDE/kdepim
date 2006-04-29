@@ -55,7 +55,7 @@ class DistributionListWidget : public KAB::ExtensionWidget
     Q_OBJECT
 
   public:
-    DistributionListWidget( KAB::Core*, QWidget *parent, const char *name = 0 );
+    DistributionListWidget( KAB::Core*, QWidget *parent );
     virtual ~DistributionListWidget();
 
     void contactsSelectionChanged();
@@ -114,7 +114,7 @@ class DistributionListView : public K3ListView
   Q_OBJECT
 
   public:
-    DistributionListView( QWidget *parent, const char* name = 0 );
+    DistributionListView( QWidget *parent );
 
   protected:
     void dragEnterEvent( QDragEnterEvent *e );

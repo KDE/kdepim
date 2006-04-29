@@ -65,9 +65,9 @@ typedef KABC::DistributionList DistributionList;
 class DistributionListFactory : public KAB::ExtensionFactory
 {
   public:
-    KAB::ExtensionWidget *extension( KAB::Core *core, QWidget *parent, const char *name )
+    KAB::ExtensionWidget *extension( KAB::Core *core, QWidget *parent )
     {
-      return new DistributionListWidget( core, parent, name );
+      return new DistributionListWidget( core, parent );
     }
 
     QString identifier() const
@@ -157,9 +157,8 @@ class ContactItem : public Q3ListViewItem
     QString mEmail;
 };
 
-DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent,
-                                                const char *name )
-  : KAB::ExtensionWidget( core, parent, name )
+DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent )
+  : KAB::ExtensionWidget( core, parent )
 #ifndef KDEPIM_NEW_DISTRLISTS
   , mManager( 0 )
 #endif
@@ -596,7 +595,7 @@ void DistributionListWidget::changed()
 }
 #endif
 
-DistributionListView::DistributionListView( QWidget *parent, const char* name )
+DistributionListView::DistributionListView( QWidget *parent )
   : K3ListView( parent )
 {
   setDragEnabled( true );

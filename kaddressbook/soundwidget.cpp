@@ -41,8 +41,8 @@
 
 #include "soundwidget.h"
 
-SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
-  : KAB::ContactEditorWidget( ab, parent, name ), mReadOnly( false )
+SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent )
+  : KAB::ContactEditorWidget( ab, parent ), mReadOnly( false )
 {
   QGridLayout *topLayout = new QGridLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );

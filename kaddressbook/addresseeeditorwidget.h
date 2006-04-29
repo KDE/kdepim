@@ -68,7 +68,7 @@ class AddresseeEditorWidget : public AddresseeEditorBase
   Q_OBJECT
 
   public:
-    AddresseeEditorWidget( QWidget *parent, const char *name = 0 );
+    AddresseeEditorWidget( QWidget *parent );
     ~AddresseeEditorWidget();
 
     void setAddressee( const KABC::Addressee& );

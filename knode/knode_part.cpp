@@ -66,7 +66,8 @@ KNodePart::KNodePart( QWidget *parentWidget, const char *widgetName,
   knGlobals.setInstance( KNodeFactory::instance() );
 
   // create a canvas to insert our widget
-  QWidget *canvas = new QWidget(parentWidget, widgetName);
+  QWidget *canvas = new QWidget(parentWidget);
+  canvas->setObjectName( widgetName );
   canvas->setFocusPolicy( Qt::ClickFocus );
   setWidget(canvas);
 

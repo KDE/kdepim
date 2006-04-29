@@ -48,19 +48,18 @@
 class CardViewFactory : public ViewFactory
 {
   public:
-    KAddressBookView *view( KAB::Core *core, QWidget *parent, const char *name )
+    KAddressBookView *view( KAB::Core *core, QWidget *parent )
     {
-      return new KAddressBookCardView( core, parent, name );
+      return new KAddressBookCardView( core, parent );
     }
 
     QString type() const { return I18N_NOOP("Card"); }
 
     QString description() const { return i18n( "Rolodex style cards represent contacts." ); }
 
-    ViewConfigureWidget *configureWidget( KABC::AddressBook *ab, QWidget *parent,
-                                          const char *name = 0 )
+    ViewConfigureWidget *configureWidget( KABC::AddressBook *ab, QWidget *parent )
     {
-      return new ConfigureCardViewWidget( ab, parent, name );
+      return new ConfigureCardViewWidget( ab, parent );
     }
 };
 
@@ -149,8 +148,8 @@ void AddresseeCardView::startDrag()
 
 
 KAddressBookCardView::KAddressBookCardView( KAB::Core *core,
-                                            QWidget *parent, const char *name )
-    : KAddressBookView( core, parent, name )
+                                            QWidget *parent )
+    : KAddressBookView( core, parent )
 {
   mShowEmptyFields = false;
 

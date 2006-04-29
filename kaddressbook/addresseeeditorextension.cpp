@@ -34,8 +34,8 @@
 
 #include "addresseeeditorextension.h"
 
-AddresseeEditorExtension::AddresseeEditorExtension( KAB::Core *core, QWidget *parent, const char *name )
-  : KAB::ExtensionWidget( core, parent, name )
+AddresseeEditorExtension::AddresseeEditorExtension( KAB::Core *core, QWidget *parent )
+  : KAB::ExtensionWidget( core, parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 

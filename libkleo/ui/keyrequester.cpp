@@ -84,8 +84,8 @@
 #include <assert.h>
 
 Kleo::KeyRequester::KeyRequester( unsigned int allowedKeys, bool multipleKeys,
-				  QWidget * parent, const char * name )
-  : QWidget( parent, name ),
+				  QWidget * parent )
+  : QWidget( parent ),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mMulti( multipleKeys ),
@@ -96,8 +96,8 @@ Kleo::KeyRequester::KeyRequester( unsigned int allowedKeys, bool multipleKeys,
   init();
 }
 
-Kleo::KeyRequester::KeyRequester( QWidget * parent, const char * name )
-  : QWidget( parent, name ),
+Kleo::KeyRequester::KeyRequester( QWidget * parent )
+  : QWidget( parent ),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mMulti( false ),
@@ -433,15 +433,15 @@ static inline unsigned int signingKeyUsage( bool openpgp, bool smime, bool trust
 }
 
 Kleo::EncryptionKeyRequester::EncryptionKeyRequester( bool multi, unsigned int proto,
-                                                      QWidget * parent, const char * name,
+                                                      QWidget * parent,
                                                       bool onlyTrusted, bool onlyValid )
   : KeyRequester( encryptionKeyUsage( proto & OpenPGP, proto & SMIME, onlyTrusted, onlyValid ), multi,
-                  parent, name )
+                  parent )
 {
 }
 
-Kleo::EncryptionKeyRequester::EncryptionKeyRequester( QWidget * parent, const char * name )
-  : KeyRequester( 0, false, parent, name )
+Kleo::EncryptionKeyRequester::EncryptionKeyRequester( QWidget * parent )
+  : KeyRequester( 0, false, parent )
 {
 }
 
@@ -454,15 +454,15 @@ void Kleo::EncryptionKeyRequester::setAllowedKeys( unsigned int proto, bool only
 }
 
 Kleo::SigningKeyRequester::SigningKeyRequester( bool multi, unsigned int proto,
-                                                QWidget * parent, const char * name,
+                                                QWidget * parent,
                                                 bool onlyTrusted, bool onlyValid )
   : KeyRequester( signingKeyUsage( proto & OpenPGP, proto & SMIME, onlyTrusted, onlyValid ), multi,
-                  parent, name )
+                  parent )
 {
 }
 
-Kleo::SigningKeyRequester::SigningKeyRequester( QWidget * parent, const char * name )
-  : KeyRequester( 0, false, parent, name )
+Kleo::SigningKeyRequester::SigningKeyRequester( QWidget * parent )
+  : KeyRequester( 0, false, parent )
 {
 }
 

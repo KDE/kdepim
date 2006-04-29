@@ -32,7 +32,7 @@ class AddresseeEditorExtension : public KAB::ExtensionWidget
   Q_OBJECT
 
   public:
-    AddresseeEditorExtension( KAB::Core *core, QWidget *parent, const char *name = 0 );
+    AddresseeEditorExtension( KAB::Core *core, QWidget *parent );
     ~AddresseeEditorExtension();
 
     /**

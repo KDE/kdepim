@@ -44,9 +44,8 @@
 #include "configuretableviewdialog.h"
 
 ConfigureTableViewWidget::ConfigureTableViewWidget( KABC::AddressBook *ab,
-                                                    QWidget *parent,
-                                                    const char *name )
-  : ViewConfigureWidget( ab, parent, name )
+                                                    QWidget *parent )
+  : ViewConfigureWidget( ab, parent )
 {
   QWidget *page = addPage( i18n( "Look & Feel" ), QString(),
                            KGlobal::iconLoader()->loadIcon( "looknfeel",
@@ -75,8 +74,8 @@ void ConfigureTableViewWidget::saveSettings( KConfig *config )
 
 
 
-LookAndFeelPage::LookAndFeelPage(QWidget *parent, const char *name)
-  : QWidget(parent, name)
+LookAndFeelPage::LookAndFeelPage(QWidget *parent)
+  : QWidget(parent)
 {
   initGUI();
 

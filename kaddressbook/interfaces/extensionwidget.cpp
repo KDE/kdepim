@@ -27,9 +27,8 @@
 
 using namespace KAB;
 
-ExtensionWidget::ExtensionWidget( Core *core, QWidget *parent,
-                                  const char *name )
-  : QWidget( parent, name ), mCore( core )
+ExtensionWidget::ExtensionWidget( Core *core, QWidget *parent )
+  : QWidget( parent ), mCore( core )
 {
 }
 

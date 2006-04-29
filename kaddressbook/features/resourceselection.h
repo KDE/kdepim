@@ -40,7 +40,7 @@ class ResourceSelection : public KAB::ExtensionWidget
   Q_OBJECT
 
   public:
-    ResourceSelection( KAB::Core*, QWidget *parent, const char *name );
+    ResourceSelection( KAB::Core*, QWidget *parent );
     virtual ~ResourceSelection();
 
     QString title() const;

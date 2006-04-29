@@ -33,7 +33,7 @@ class FreeBusyWidget : public KAB::ContactEditorWidget
   Q_OBJECT
 
   public:
-    FreeBusyWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    FreeBusyWidget( KABC::AddressBook *ab, QWidget *parent );
     ~FreeBusyWidget();
 
     void loadContact( KABC::Addressee *addr );
@@ -50,9 +50,9 @@ class FreeBusyWidget : public KAB::ContactEditorWidget
 class FreeBusyWidgetFactory : public KAB::ContactEditorWidgetFactory
 {
   public:
-    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent )
     {
-      return new FreeBusyWidget( ab, parent, name );
+      return new FreeBusyWidget( ab, parent );
     }
 
     QString pageIdentifier() const { return "misc"; }

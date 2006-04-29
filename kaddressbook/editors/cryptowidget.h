@@ -38,7 +38,7 @@ class CryptoWidget : public KAB::ContactEditorWidget
   Q_OBJECT
 
   public:
-    CryptoWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    CryptoWidget( KABC::AddressBook *ab, QWidget *parent );
     ~CryptoWidget();
 
     void loadContact( KABC::Addressee *addr );
@@ -59,9 +59,9 @@ class CryptoWidgetFactory : public KAB::ContactEditorWidgetFactory
 {
   public:
     CryptoWidgetFactory();
-    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent )
     {
-      return new CryptoWidget( ab, parent, name );
+      return new CryptoWidget( ab, parent );
     }
 
     QString pageTitle() const;

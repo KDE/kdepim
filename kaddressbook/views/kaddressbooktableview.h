@@ -66,8 +66,7 @@ friend class ContactListView;
   Q_OBJECT
 
   public:
-    KAddressBookTableView( KAB::Core *core, QWidget *parent,
-                           const char *name = 0 );
+    KAddressBookTableView( KAB::Core *core, QWidget *parent );
     virtual ~KAddressBookTableView();
 
     virtual void refresh( const QString &uid = QString() );

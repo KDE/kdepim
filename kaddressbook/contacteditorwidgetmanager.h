@@ -70,7 +70,7 @@ class ContactEditorTabPage : public QWidget
   Q_OBJECT
 
   public:
-    ContactEditorTabPage( QWidget *parent, const char *name = 0 );
+    ContactEditorTabPage( QWidget *parent );
 
     /**
       Adds a widget to the tab.

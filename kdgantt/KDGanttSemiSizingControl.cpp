@@ -62,9 +62,8 @@
   the base class.
 */
 
-KDGanttSemiSizingControl::KDGanttSemiSizingControl( QWidget* parent,
-                                          const char* name ) :
-    KDGanttSizingControl( parent, name ), _orient( Qt::Horizontal ), 
+KDGanttSemiSizingControl::KDGanttSemiSizingControl( QWidget* parent ) :
+    KDGanttSizingControl( parent ), _orient( Qt::Horizontal ),
     _arrowPos( Before ), _minimizedWidget(0), _maximizedWidget(0)
 {
     init();
@@ -84,9 +83,8 @@ KDGanttSemiSizingControl::KDGanttSemiSizingControl( QWidget* parent,
 */
 
 KDGanttSemiSizingControl::KDGanttSemiSizingControl( Qt::Orientation orientation,
-                                          QWidget* parent,
-                                          const char* name ) :
-    KDGanttSizingControl( parent, name ), _orient( orientation ), 
+                                                    QWidget* parent ):
+    KDGanttSizingControl( parent ), _orient( orientation ),
     _arrowPos( Before ), _minimizedWidget(0), _maximizedWidget(0)
 {
     init();
@@ -108,9 +106,8 @@ KDGanttSemiSizingControl::KDGanttSemiSizingControl( Qt::Orientation orientation,
 
 KDGanttSemiSizingControl::KDGanttSemiSizingControl( ArrowPosition arrowPosition,
                                                     Qt::Orientation orientation,
-                                                    QWidget* parent,
-                                                    const char* name ) :
-    KDGanttSizingControl( parent, name ), _orient( orientation ), 
+                                                    QWidget* parent ):
+    KDGanttSizingControl( parent ), _orient( orientation ),
     _arrowPos( arrowPosition ), _minimizedWidget(0), _maximizedWidget(0)
 {
     init();
@@ -409,7 +406,7 @@ QPixmap KDGanttSemiSizingControl::pixmap( Direction direction ) {
 #else
     QPainter p( &pix );
     p.setPen( Qt::black );
-    p.setBrush( colorGroup().button() );
+    p.setBrush( palette().button() );
     p.drawPolygon( arr );
     QBitmap bit( s, s );
     bit.fill( Qt::blue );

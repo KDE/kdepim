@@ -32,8 +32,8 @@
 
 #include "simpleaddresseeeditor.h"
 
-SimpleAddresseeEditor::SimpleAddresseeEditor( QWidget *parent, const char *name )
-  : AddresseeEditorBase( parent, name ),
+SimpleAddresseeEditor::SimpleAddresseeEditor( QWidget *parent )
+  : AddresseeEditorBase( parent ),
     mDirty( false ),
     mBlockModified( false )
 {

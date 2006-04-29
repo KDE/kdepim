@@ -38,7 +38,7 @@ class SoundWidget : public KAB::ContactEditorWidget
   Q_OBJECT
 
   public:
-    SoundWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    SoundWidget( KABC::AddressBook *ab, QWidget *parent );
     ~SoundWidget();
 
     void loadContact( KABC::Addressee *addr );
@@ -64,9 +64,9 @@ class SoundWidget : public KAB::ContactEditorWidget
 class SoundWidgetFactory : public KAB::ContactEditorWidgetFactory
 {
   public:
-    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent )
     {
-      return new SoundWidget( ab, parent, name );
+      return new SoundWidget( ab, parent );
     }
 
     QString pageIdentifier() const { return "misc"; }

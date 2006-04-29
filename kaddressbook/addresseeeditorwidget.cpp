@@ -71,8 +71,8 @@
 
 #include "addresseeeditorwidget.h"
 
-AddresseeEditorWidget::AddresseeEditorWidget( QWidget *parent, const char *name )
-  : AddresseeEditorBase( parent, name ),
+AddresseeEditorWidget::AddresseeEditorWidget( QWidget *parent )
+  : AddresseeEditorBase( parent ),
     mBlockSignals( false ), mReadOnly( false )
 {
   kDebug(5720) << "AddresseeEditorWidget()" << endl;

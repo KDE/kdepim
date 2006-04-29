@@ -125,8 +125,8 @@ void AddFieldDialog::nameChanged( const QString &name )
   enableButton( Ok, !name.isEmpty() );
 }
 
-FieldWidget::FieldWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+FieldWidget::FieldWidget( QWidget *parent )
+  : QWidget( parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setSpacing( KDialog::spacingHint() );
@@ -360,8 +360,8 @@ void FieldWidget::recalculateLayout()
 }
 
 CustomFieldsWidget::CustomFieldsWidget( KABC::AddressBook *ab,
-                                        QWidget *parent, const char *name )
-  : KAB::ContactEditorWidget( ab, parent, name )
+                                        QWidget *parent )
+  : KAB::ContactEditorWidget( ab, parent )
 {
   initGUI();
 

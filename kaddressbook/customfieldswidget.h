@@ -94,7 +94,7 @@ class FieldWidget : public QWidget
   Q_OBJECT
 
   public:
-    FieldWidget( QWidget *parent, const char *name = 0 );
+    FieldWidget( QWidget *parent );
 
     void addField( const QString &identifier, const QString &title,
                    const QString &type, bool isGlobal );
@@ -128,7 +128,7 @@ class CustomFieldsWidget : public KAB::ContactEditorWidget
   Q_OBJECT
 
   public:
-    CustomFieldsWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    CustomFieldsWidget( KABC::AddressBook *ab, QWidget *parent );
 
     void loadContact( KABC::Addressee *addr );
     void storeContact( KABC::Addressee *addr );
@@ -155,9 +155,9 @@ class CustomFieldsWidget : public KAB::ContactEditorWidget
 class CustomFieldsWidgetFactory : public KAB::ContactEditorWidgetFactory
 {
   public:
-    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent )
     {
-      return new CustomFieldsWidget( ab, parent, name );
+      return new CustomFieldsWidget( ab, parent );
     }
 
     QString pageTitle() const { return i18n( "Custom Fields" ); }

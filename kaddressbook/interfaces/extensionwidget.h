@@ -41,7 +41,7 @@ class KDE_EXPORT ExtensionWidget : public QWidget
   Q_OBJECT
 
   public:
-    ExtensionWidget( Core *core, QWidget *parent, const char *name = 0 );
+    ExtensionWidget( Core *core, QWidget *parent );
     ~ExtensionWidget();
 
     /**
@@ -91,10 +91,9 @@ class KDE_EXPORT ExtensionWidget : public QWidget
 class ExtensionFactory : public KLibFactory
 {
   public:
-    virtual ExtensionWidget *extension( KAB::Core *core, QWidget *parent,
-                                        const char *name = 0 ) = 0;
+    virtual ExtensionWidget *extension( KAB::Core *core, QWidget *parent ) = 0;
 
-    virtual ConfigureWidget *configureWidget( QWidget*, const char* = 0 )
+    virtual ConfigureWidget *configureWidget( QWidget* )
     {
       return 0;
     }

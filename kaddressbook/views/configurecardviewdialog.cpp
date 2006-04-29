@@ -50,9 +50,8 @@
 /////////////////////////////////
 // ConfigureCardViewDialog
 
-ConfigureCardViewWidget::ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget *parent,
-                                                  const char *name )
-  : ViewConfigureWidget( ab, parent, name )
+ConfigureCardViewWidget::ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget *parent )
+  : ViewConfigureWidget( ab, parent )
 {
   QWidget *page = addPage( i18n( "Look & Feel" ), QString(),
                            DesktopIcon( "looknfeel" ) );
@@ -79,7 +78,7 @@ void ConfigureCardViewWidget::saveSettings( KConfig *config )
 
 ////////////////////////
 // CardViewLookNFeelPage
-CardViewLookNFeelPage::CardViewLookNFeelPage( QWidget *parent, const char *name )
+CardViewLookNFeelPage::CardViewLookNFeelPage( QWidget *parent )
   : KVBox( parent )
 {
   initGUI();

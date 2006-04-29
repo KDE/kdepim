@@ -51,7 +51,7 @@ class CardViewLookAndFeelPage;
 class ConfigureCardViewWidget : public ViewConfigureWidget
 {
   public:
-    ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget *parent, const char *name );
+    ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget *parent );
     virtual ~ConfigureCardViewWidget();
 
     virtual void restoreSettings( KConfig* );
@@ -85,7 +85,7 @@ class CardViewLookNFeelPage : public KVBox {
   Q_OBJECT
 
   public:
-    CardViewLookNFeelPage( QWidget *parent=0, const char *name=0 );
+    CardViewLookNFeelPage( QWidget *parent=0 );
     ~CardViewLookNFeelPage();
 
     void restoreSettings( KConfig* );

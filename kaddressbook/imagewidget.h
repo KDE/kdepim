@@ -82,7 +82,7 @@ class ImageBaseWidget : public QWidget
   Q_OBJECT
 
   public:
-    ImageBaseWidget( const QString &title, QWidget *parent, const char *name = 0 );
+    ImageBaseWidget( const QString &title, QWidget *parent );
     ~ImageBaseWidget();
 
     /**
@@ -141,7 +141,7 @@ class ImageBaseWidget : public QWidget
 class ImageWidget : public KAB::ContactEditorWidget
 {
   public:
-    ImageWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    ImageWidget( KABC::AddressBook *ab, QWidget *parent );
 
     void loadContact( KABC::Addressee *addr );
     void storeContact( KABC::Addressee *addr );
@@ -157,9 +157,9 @@ class ImageWidget : public KAB::ContactEditorWidget
 class ImageWidgetFactory : public KAB::ContactEditorWidgetFactory
 {
   public:
-    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent, const char *name )
+    KAB::ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent )
     {
-      return new ImageWidget( ab, parent, name );
+      return new ImageWidget( ab, parent );
     }
 
     QString pageIdentifier() const { return "misc"; }

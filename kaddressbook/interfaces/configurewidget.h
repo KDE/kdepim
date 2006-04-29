@@ -38,7 +38,7 @@ namespace KAB {
 class KDE_EXPORT ConfigureWidget : public QWidget
 {
   public:
-    ConfigureWidget( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    ConfigureWidget( KABC::AddressBook *ab, QWidget *parent );
     ~ConfigureWidget();
 
     /**

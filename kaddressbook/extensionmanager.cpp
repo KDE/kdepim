@@ -37,8 +37,7 @@
 
 #include "extensionmanager.h"
 
-ExtensionManager::ExtensionManager( KAB::Core *core, QWidget *parent,
-                                    const char *name )
+ExtensionManager::ExtensionManager( KAB::Core *core, QWidget *parent )
   : KHBox( parent ), mCore( core ), mCurrentExtensionWidget( 0 ),
     mMapper( 0 )
 {
@@ -133,7 +132,7 @@ void ExtensionManager::setActiveExtension( int id )
 void ExtensionManager::createActions()
 {
   mCore->guiClient()->unplugActionList( "extensions_list" );
-#warning "kde4: todo look at this two lines commented"  
+#warning "kde4: todo look at this two lines commented"
   //mActionList.setAutoDelete( true );
   mActionList.clear();
   //mActionList.setAutoDelete( false );

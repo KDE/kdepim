@@ -33,7 +33,7 @@ class SimpleAddresseeEditor : public AddresseeEditorBase
 {
     Q_OBJECT
   public:
-    SimpleAddresseeEditor( QWidget *parent, const char *name = 0 );
+    SimpleAddresseeEditor( QWidget *parent );
     ~SimpleAddresseeEditor();
 
     void setAddressee( const KABC::Addressee& );

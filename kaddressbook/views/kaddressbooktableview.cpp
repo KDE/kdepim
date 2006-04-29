@@ -65,9 +65,9 @@
 class TableViewFactory : public ViewFactory
 {
   public:
-    KAddressBookView *view( KAB::Core *core, QWidget *parent, const char *name )
+    KAddressBookView *view( KAB::Core *core, QWidget *parent )
     {
-      return new KAddressBookTableView( core, parent, name );
+      return new KAddressBookTableView( core, parent );
     }
 
     QString type() const { return I18N_NOOP( "Table" ); }
@@ -75,10 +75,9 @@ class TableViewFactory : public ViewFactory
     QString description() const { return i18n( "A listing of contacts in a table. Each cell of "
                                   "the table holds a field of the contact." ); }
 
-    ViewConfigureWidget *configureWidget( KABC::AddressBook *ab, QWidget *parent,
-                                          const char *name = 0 )
+    ViewConfigureWidget *configureWidget( KABC::AddressBook *ab, QWidget *parent )
     {
-      return new ConfigureTableViewWidget( ab, parent, name );
+      return new ConfigureTableViewWidget( ab, parent );
     }
 };
 
@@ -90,8 +89,8 @@ extern "C" {
 }
 
 KAddressBookTableView::KAddressBookTableView( KAB::Core *core,
-                                              QWidget *parent, const char *name )
-  : KAddressBookView( core, parent, name )
+                                              QWidget *parent )
+  : KAddressBookView( core, parent )
 {
   mMainLayout = new QVBoxLayout( viewWidget() );
   mMainLayout->setSpacing( 2 );

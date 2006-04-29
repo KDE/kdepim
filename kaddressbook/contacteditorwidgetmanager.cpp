@@ -110,8 +110,8 @@ void ContactEditorWidgetManager::reload()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ContactEditorTabPage::ContactEditorTabPage( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+ContactEditorTabPage::ContactEditorTabPage( QWidget *parent )
+  : QWidget( parent )
 {
   mLayout = new QGridLayout( this );
   mLayout->setSpacing( KDialog::spacingHint() );

@@ -33,8 +33,8 @@ class AddresseeEditorBase : public QWidget
   Q_OBJECT
 
   public:
-    AddresseeEditorBase( QWidget *parent, const char *name = 0 )
-      : QWidget( parent, name )
+    AddresseeEditorBase( QWidget *parent )
+      : QWidget( parent )
     {
     }
 

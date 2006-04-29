@@ -86,8 +86,8 @@ class KABCStorage : public KPIM::DesignerFields::Storage
 
 
 AdvancedCustomFields::AdvancedCustomFields( const QString &uiFile, KABC::AddressBook *ab,
-                                            QWidget *parent, const char *name )
-  : KAB::ContactEditorWidget( ab, parent, name )
+                                            QWidget *parent )
+  : KAB::ContactEditorWidget( ab, parent )
 {
   initGUI( uiFile );
 }
