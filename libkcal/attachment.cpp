@@ -21,8 +21,6 @@
 
 #include "attachment.h"
 
-#include <libkmime/kmime_codecs.h>
-//Added by qt3to4:
 #include <QByteArray>
 
 using namespace KCal;
@@ -106,10 +104,7 @@ char *Attachment::data() const
 QByteArray &Attachment::decodedData() const
 {
   if ( d->mDataCache.isNull() ) {
-    QByteArray in;
-    const QByteArray data = mData.toUtf8();
-    KMime::Codec * codec = KMime::Codec::codecForName( "base64" );
-    d->mDataCache = codec->decode( data );
+    d->mDataCache = QByteArray::fromBase64( mData.toUtf8() );
   }
   
   return d->mDataCache;
@@ -117,8 +112,7 @@ QByteArray &Attachment::decodedData() const
 
 void Attachment::setDecodedData( const QByteArray &data )
 {
-  KMime::Codec *codec = KMime::Codec::codecForName( "base64" );
-  setData( codec->encode( data ).data() );
+  setData( data.toBase64() );
   d->mDataCache = data;
 }
 
