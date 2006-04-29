@@ -106,8 +106,8 @@ void ResourceCached::readConfig( const KConfig *config )
   mSaveInterval = config->readEntry( "SaveInterval", 10 );
   mSavePolicy = config->readEntry( "SavePolicy", int(SaveNever) );
 
-  mLastLoad = config->readDateTimeEntry( "LastLoad" );
-  mLastSave = config->readDateTimeEntry( "LastSave" );
+  mLastLoad = config->readEntry( "LastLoad", QDateTime() );
+  mLastSave = config->readEntry( "LastSave", QDateTime() );
 
   setupSaveTimer();
   setupReloadTimer();

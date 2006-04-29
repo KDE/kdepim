@@ -343,7 +343,7 @@ extern const char* lookupProp(const char* str);
 extern const char* lookupProp_(const char* str);
 
 extern wchar_t* fakeUnicode(const char *ps, int *bytes);
-extern int uStrLen(const wchar_t *u);
+extern unsigned int uStrLen(const wchar_t *u);
 extern char* fakeCString(const wchar_t *u);
 
 extern void printVObjectToFile(char *fname,VObject *o);

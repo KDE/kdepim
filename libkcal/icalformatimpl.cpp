@@ -57,7 +57,7 @@ static QDateTime ICalDate2QDate(const icaltimetype& t)
   return QDateTime(QDate(year,t.month,t.day), QTime(t.hour,t.minute,t.second));
 }
 
-static void _dumpIcaltime( const icaltimetype& t)
+/*static void _dumpIcaltime( const icaltimetype& t)
 {
   kDebug(5800) << "--- Y: " << t.year << " M: " << t.month << " D: " << t.day
       << endl;
@@ -65,7 +65,7 @@ static void _dumpIcaltime( const icaltimetype& t)
       << endl;
   kDebug(5800) << "--- isUtc: " << icaltime_is_utc( t )<< endl;
   kDebug(5800) << "--- zoneId: " << icaltimezone_get_tzid( const_cast<icaltimezone*>( t.zone ) )<< endl;
-}
+}*/
 
 const int gSecondsPerMinute = 60;
 const int gSecondsPerHour   = gSecondsPerMinute * 60;

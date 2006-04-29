@@ -38,7 +38,6 @@ typedef void* yyscan_t;
 
 int ssparse(yyscan_t );
 
-
 icalgauge* icalgauge_new_from_sql(char* sql, int expand)
 {
     struct icalgauge_impl *impl;
@@ -190,7 +189,7 @@ int icalgauge_compare_recurse(icalcomponent* comp, icalcomponent* gauge)
 	icalproperty* targetprop; 
 	icalparameter* compareparam;
 	icalparameter_xliccomparetype compare;
-	int rel; /* The relationship between the gauge and target values.*/
+	unsigned int rel; /* The relationship between the gauge and target values.*/
 	
 	/* Extract the comparison type from the gauge. If there is no
 	   comparison type, assume that it is "EQUAL" */

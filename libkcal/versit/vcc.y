@@ -140,7 +140,7 @@ extern "C" {
 #endif
 
   /*    static void Parse_Debug(const char *s);*/
-    static void yyerror(char *s);
+    static void yyerror(const char *s);
 
 #if __CPLUSPLUS__
     };
@@ -174,7 +174,7 @@ static void enterProps(const char *s);
 static void enterAttr(const char *s1, const char *s2);
 /* static void enterValues(const char *value); */
 static void appendValue(const char *value);
-static void mime_error_(char *s);
+static void mime_error_(const char *s);
 
 %}
 
@@ -913,7 +913,7 @@ static char * lexGetDataFromBase64()
 	    trip = (trip << 6) | b;
 	    if (++quadIx == 4) {
 		unsigned char outBytes[3];
-		int numOut;
+		unsigned int numOut;
 		int i;
 		for (i = 0; i < 3; i++) {
 		    outBytes[2-i] = (unsigned char)(trip & 0xFF);
@@ -946,7 +946,7 @@ static char * lexGetDataFromBase64()
     DBG_(("db: bytesLen = %d\n",  bytesLen));
     /* kludge: all this won't be necessary if we have tree form
 	representation */
-    if (bytes) {
+    if (bytes) { 
 	setValueWithSize(curProp,bytes,(unsigned int)bytesLen);
 	free(bytes);
 	}
@@ -1217,7 +1217,7 @@ void registerMimeErrorHandler(MimeErrorHandler me)
     mimeErrorHandler = me;
     }
 
-static void mime_error(char *s)
+static void mime_error(const char *s)
     {
     char msg[256];
     if (mimeErrorHandler) {
@@ -1226,7 +1226,7 @@ static void mime_error(char *s)
 	}
     }
 
-static void mime_error_(char *s)
+static void mime_error_(const char *s)
     {
     if (mimeErrorHandler) {
 	mimeErrorHandler(s);

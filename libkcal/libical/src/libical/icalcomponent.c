@@ -2185,7 +2185,8 @@ icalcomponent_handle_conflicting_vtimezones (icalcomponent *comp,
   num_elements = comp->timezones ? comp->timezones->num_elements : 0;
   for (i = 0; i < num_elements; i++) {
     icaltimezone *zone;
-    const char *existing_tzid, *existing_tzid_copy;
+    const char *existing_tzid;
+    const char *existing_tzid_copy;
     unsigned int existing_tzid_len;
 
     zone = icalarray_element_at (comp->timezones, i);

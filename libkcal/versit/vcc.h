@@ -46,7 +46,7 @@ DFARS 252.227-7013 or 48 CFR 52.227-19, as applicable.
 extern "C" {
 #endif
 
-typedef void (*MimeErrorHandler)(char *);
+typedef void (*MimeErrorHandler)(const char *);
 
 extern void registerMimeErrorHandler(MimeErrorHandler);
 

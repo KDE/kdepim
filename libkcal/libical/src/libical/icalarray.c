@@ -80,7 +80,7 @@ icalarray_free			(icalarray	*array)
 
 void
 icalarray_append		(icalarray	*array,
-				 void		*element)
+				 const void		*element)
 {
     if (array->num_elements >= array->space_allocated)
 	icalarray_expand (array, 1);

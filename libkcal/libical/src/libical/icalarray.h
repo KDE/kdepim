@@ -49,7 +49,7 @@ icalarray *icalarray_new		(int		 element_size,
 void	   icalarray_free		(icalarray	*array);
 
 void	   icalarray_append		(icalarray	*array,
-					 void		*element);
+					 const void		*element);
 void	   icalarray_remove_element_at	(icalarray	*array,
 					 int		 position);
 

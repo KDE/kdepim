@@ -178,7 +178,7 @@ const wchar_t* vObjectUStringZValue(VObject *o)
 
 void setVObjectUStringZValue(VObject *o, const wchar_t *s)
 {
-    USTRINGZ_VALUE_OF(o) = (wchar_t*) dupStr((char*)s,(uStrLen(s)+1)*2);
+    USTRINGZ_VALUE_OF(o) = (wchar_t*) dupStr((char*)s,(unsigned)(uStrLen(s)+1)*2);
     VALUE_TYPE(o) = VCVT_USTRINGZ;
 }
 
@@ -1047,7 +1047,7 @@ stuff:
 	    }
 	else if (fp->alloc) {
 	    fp->limit = fp->limit + OFILE_REALLOC_SIZE;
-	    fp->s = realloc(fp->s,fp->limit);
+	    fp->s = realloc(fp->s,(unsigned int)fp->limit);
 	    if (fp->s) goto stuff;
 	    }
 	if (fp->alloc)
@@ -1100,9 +1100,9 @@ static void initMemOFile(OFile *fp, char *s, int len)
 }
 
 
-static int writeBase64(OFile *fp, unsigned char *s, long len)
+static int writeBase64(OFile *fp, unsigned char *s, unsigned long len)
 {
-    long cur = 0;
+    unsigned long cur = 0;
     int i, numQuads = 0;
     unsigned long trip;
     unsigned char b;
@@ -1123,7 +1123,7 @@ static int writeBase64(OFile *fp, unsigned char *s, long len)
 	for (i = 3; i >= 0; i--) {
 	    b = (unsigned char)(trip & 0x3F);
 	    trip = trip >> 6;
-	    if ((3 - i) < (cur - len))
+	    if ((unsigned long)(3 - i) < (cur - len))
 		quad[i] = '='; /* pad char */
 	    else if (b < 26) quad[i] = (char)b + 'A';
 	    else if (b < 52) quad[i] = (char)(b - 26) + 'a';
@@ -1399,10 +1399,10 @@ wchar_t* fakeUnicode(const char *ps, int *bytes)
 	}				 
     *pw = (wchar_t)0;
 	
-    return r;
+    return r; 
 }
 
-int uStrLen(const wchar_t *u)
+unsigned int uStrLen(const wchar_t *u)
 {
     int i = 0;
     while (*u != (wchar_t)0) { u++; i++; }
@@ -1412,7 +1412,7 @@ int uStrLen(const wchar_t *u)
 char* fakeCString(const wchar_t *u)
 {
     char *s, *t;
-    int len = uStrLen(u) + 1;
+    unsigned int len = uStrLen(u) + 1;
     t = s = (char*)malloc(len+1);
     while (*u) {
 	if (*u == (wchar_t)0x2028)
