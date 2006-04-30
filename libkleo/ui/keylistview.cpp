@@ -229,7 +229,7 @@ void Kleo::KeyListView::slotUpdateTimeout() {
   if ( d->keyBuffer.empty() )
     return;
 
-  const bool wasUpdatesEnabled = viewport()->isUpdatesEnabled();
+  const bool wasUpdatesEnabled = viewport()->updatesEnabled();
   if ( wasUpdatesEnabled )
     viewport()->setUpdatesEnabled( false );
   kDebug( 5150 ) << "Kleo::KeyListView::slotUpdateTimeout(): processing "
