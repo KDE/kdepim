@@ -133,7 +133,7 @@ void KeyWidget::addKey()
     QTextStream s( &file );
     QString data;
 
-    s.setEncoding( QTextStream::UnicodeUTF8 );
+    s.setCodec( "UTF-8" );
     s >> data;
     file.close();
 
@@ -175,7 +175,7 @@ void KeyWidget::exportKey()
 
   KTempFile tempFile;
   QTextStream *s = tempFile.textStream();
-  s->setEncoding( QTextStream::UnicodeUTF8 );
+  s->setCodec( "UTF-8" );
   (*s) << key.textData();
   tempFile.close();
 

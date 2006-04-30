@@ -394,7 +394,7 @@ void KNFolderManager::exportToMBox(KNFolder *f)
     knGlobals.top->secureProcessEvents();
 
     QTextStream ts(file);
-    ts.setEncoding(QTextStream::Latin1);
+    ts.setCodec( "ISO 8859-1" );
     KNLocalArticle *a;
 
     for(int idx=0; idx<f->length(); idx++) {

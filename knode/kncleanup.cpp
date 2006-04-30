@@ -221,7 +221,7 @@ void KNCleanUp::compactFolder(KNFolder *f)
 
   if( (f->m_boxFile.open(QIODevice::ReadOnly)) && (newMBoxFile.open(QIODevice::WriteOnly)) ) {
     QTextStream ts(&newMBoxFile);
-    ts.setEncoding(QTextStream::Latin1);
+    ts.setCodec( "ISO 8859-1" );
     for(int idx=0; idx<f->length(); idx++) {
       art=f->at(idx);
       if ( f->m_boxFile.seek( art->startOffset() ) ) {

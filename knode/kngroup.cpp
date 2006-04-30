@@ -535,7 +535,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
   if(f.open(mode)) {
 
     QTextStream ts(&f);
-    ts.setEncoding(QTextStream::Latin1);
+    ts.setCodec( "ISO 8859-1" );
 
     for(idx=length()-cnt; idx<length(); idx++) {
 

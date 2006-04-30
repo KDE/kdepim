@@ -62,7 +62,7 @@ KABC::Addressee::List OperaXXPort::importContacts( const QString& ) const
   }
 
   QTextStream stream( &file );
-  stream.setEncoding( QTextStream::UnicodeUTF8 );
+  stream.setCodec( "UTF-8" );
   QString line, key, value;
   bool parseContact = false;
   KABC::Addressee addr;

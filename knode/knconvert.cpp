@@ -314,7 +314,7 @@ int KNConvert::Converter04::convertFolder(QString srcPrefix, QString dstPrefix)
         dstMBox(dstPrefix+".mbox"),
         dstIdx(dstPrefix+".idx");
   QTextStream ts(&dstMBox);
-  ts.setEncoding(QTextStream::Latin1);
+  ts.setCodec( "ISO 8859-1" );
 
   OldFolderIndex oldIdx;
   NewFolderIndex newIdx;

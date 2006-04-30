@@ -78,8 +78,9 @@ KABC::Addressee::List LDIFXXPort::importContacts( const QString& ) const
   }
 
   QTextStream t( &file );
-  t.setEncoding( QTextStream::Latin1 );
-  QString wholeFile = t.read();
+  t.setCodec( "ISO 8859-1" );
+
+  QString wholeFile = t.readAll();
   QDateTime dtDefault = QFileInfo(file).lastModified();
   file.close();
 
@@ -141,7 +142,7 @@ void LDIFXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
   KABC::LDIFConverter::addresseeToLDIF( list, str );
 
   QTextStream t( fp );
-  t.setEncoding( QTextStream::UnicodeUTF8 );
+  t.setCodec( "UTF-8" );
   t << str;
 }
 

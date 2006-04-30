@@ -3,7 +3,7 @@
     Copyright (c) 2003 - 2004 Helge Deller <deller@kde.org>
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License version 2 as 
+    it under the terms of the GNU General Public License version 2 as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -23,8 +23,8 @@
     Description:
     This import/export filter reads and writes addressbook entries in the
     gmx format which is natively used by the german freemail provider GMX.
-    The big advantage of this format is, that it stores it's information 
-    very consistent and makes parsing pretty simple. Furthermore, most 
+    The big advantage of this format is, that it stores it's information
+    very consistent and makes parsing pretty simple. Furthermore, most
     information needed by KABC is available when compared to other formats.
     For further information please visit http://www.gmx.com
 */
@@ -74,7 +74,7 @@ QList<KABC::Addressee> GMXXXPort::importContacts( const QString& ) const
 {
   QList<KABC::Addressee> addrList;
 
-  QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), 
+  QString fileName = KFileDialog::getOpenFileName( QDir::homePath(),
                       GMX_FILESELECTION_STRING, 0 );
   if ( fileName.isEmpty() )
     return addrList;
@@ -89,7 +89,7 @@ QList<KABC::Addressee> GMXXXPort::importContacts( const QString& ) const
 
   QDateTime dt;
   QTextStream gmxStream( &file );
-  gmxStream.setEncoding( QTextStream::Latin1 );
+  gmxStream.setCodec( "ISO 8859-1" );
   QString line, line2;
   line  = gmxStream.readLine();
   line2 = gmxStream.readLine();
@@ -107,7 +107,7 @@ QList<KABC::Addressee> GMXXXPort::importContacts( const QString& ) const
   while (!line.startsWith("####") && !gmxStream.atEnd()) {
     while (1) {
        strList = line.split('#', QString::KeepEmptyParts );
-       if (strList.count() >= 11) 
+       if (strList.count() >= 11)
            break;
        line.append('\n');
        line.append(gmxStream.readLine());
@@ -122,10 +122,10 @@ QList<KABC::Addressee> GMXXXPort::importContacts( const QString& ) const
     addr->setNote(strList[6]);
     if (checkDateTime(strList[7],dt)) addr->setRevision(dt);
     // addr->setStatus(strList[8]); Status
-    // addr->xxx(strList[9]); Address_link_id 
+    // addr->xxx(strList[9]); Address_link_id
     // addr->setCategory(strList[10]); Categories
     addrMap[strList[0]] = addr;
-    
+
     line = gmxStream.readLine();
   }
 
@@ -143,7 +143,7 @@ QList<KABC::Addressee> GMXXXPort::importContacts( const QString& ) const
   while (!line.startsWith("####") && !gmxStream.atEnd()) {
     while (1) {
        strList = line.split('#', QString::KeepEmptyParts );
-       if (strList.count() >= 21) 
+       if (strList.count() >= 21)
            break;
        line.append('\n');
        line.append(gmxStream.readLine());
@@ -176,7 +176,7 @@ QList<KABC::Addressee> GMXXXPort::importContacts( const QString& ) const
 	// strList[14]=Record_type_id (0,1,2) - see above
 	// strList[15]=Record_type (name of this additional record entry)
 	if (!strList[16].isEmpty()) addr->setOrganization(strList[16]); // Company
-	if (!strList[17].isEmpty()) addr->insertCustom( 
+	if (!strList[17].isEmpty()) addr->insertCustom(
 			"KADDRESSBOOK", "X-Department", strList[17]); // Department
         if (checkDateTime(strList[18],dt)) addr->setRevision(dt); // Change_date
 	// strList[19]=Preferred (see above)
@@ -205,7 +205,7 @@ QList<KABC::Addressee> GMXXXPort::importContacts( const QString& ) const
 
 bool GMXXXPort::exportContacts( const KABC::AddresseeList &list, const QString& )
 {
-  KUrl url = KFileDialog::getSaveURL( QDir::homePath() + "/addressbook.gmx", 
+  KUrl url = KFileDialog::getSaveURL( QDir::homePath() + "/addressbook.gmx",
 			GMX_FILESELECTION_STRING );
   if ( url.isEmpty() )
       return true;
@@ -256,7 +256,7 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
     return;
 
   QTextStream t( fp );
-  t.setEncoding( QTextStream::Latin1 );
+  t.setCodec( "ISO 8859-1" );
 
   KABC::AddresseeList::ConstIterator it;
   typedef QMap<int, const KABC::Addressee *> AddressMap;

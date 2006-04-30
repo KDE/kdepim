@@ -500,15 +500,15 @@ void CSVImportDialog::fillTable()
   // find the current codec
   int code = mCodecCombo->currentIndex();
   if ( code == Local )
-    inputStream.setEncoding( QTextStream::Locale );
+    inputStream.setCodec( QTextCodec::codecForLocale() );
   else if ( code >= Codec )
     inputStream.setCodec( mCodecs.at( code - Codec ) );
   else if ( code == Uni )
-    inputStream.setEncoding( QTextStream::Unicode );
+    inputStream.setCodec("UTF-16");
   else if ( code == MSBug )
-    inputStream.setEncoding( QTextStream::UnicodeReverse );
+    inputStream.setCodec("UTF-16LE");
   else if ( code == Latin1 )
-    inputStream.setEncoding( QTextStream::Latin1 );
+    inputStream.setCodec( "ISO 8859-1" );
   else if ( code == Guess ) {
     QTextCodec* codec = QTextCodec::codecForContent( mFileArray.data(), mFileArray.size() );
     if ( codec ) {

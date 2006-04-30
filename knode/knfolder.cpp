@@ -381,7 +381,7 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
   bool ret=true;
   bool clear=false;
   QTextStream ts(&m_boxFile);
-  ts.setEncoding(QTextStream::Latin1);
+  ts.setCodec( "ISO 8859-1" );
 
   for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
 
