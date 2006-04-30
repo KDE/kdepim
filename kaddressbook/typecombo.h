@@ -101,7 +101,7 @@ void TypeCombo<T>::updateTypes()
   if ( !currentId.isEmpty() ) {
     for ( i = 0; i < mTypeList.count(); ++i ) {
       if ( mTypeList[ i ].id() == currentId ) {
-        setCurrentItem( i );
+        setCurrentIndex( i );
         break;
       }
     }
@@ -114,7 +114,7 @@ void TypeCombo<T>::selectType( int type )
   int i;
   for ( i = 0; i < mTypeList.count(); ++i ) {
     if ( (mTypeList[ i ].type() & ~T::Pref) == type ) {
-      setCurrentItem( i );
+      setCurrentIndex( i );
       break;
     }
   }

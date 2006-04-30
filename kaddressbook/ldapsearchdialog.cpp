@@ -227,7 +227,7 @@ void LDAPSearchDialog::restoreSettings()
 
   KConfig kabConfig( "kaddressbookrc" );
   kabConfig.setGroup( "LDAPSearch" );
-  mSearchType->setCurrentItem( kabConfig.readEntry( "SearchType", 0 ) );
+  mSearchType->setCurrentIndex( kabConfig.readEntry( "SearchType", 0 ) );
 
   // then read the config file and register all selected
   // server in the list

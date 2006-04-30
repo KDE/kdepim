@@ -43,8 +43,9 @@ SecrecyWidget::SecrecyWidget( QWidget *parent, const char *name )
 
   const KABC::Secrecy::TypeList list = KABC::Secrecy::typeList();
   KABC::Secrecy::TypeList::ConstIterator it;
+  /* (*it) is the type enum, which is also used as the index in the combo */
   for ( it = list.begin(); it != list.end(); ++it )
-    mSecrecyCombo->insertItem( KABC::Secrecy::typeLabel( *it ), *it );
+    mSecrecyCombo->insertItem( *it, KABC::Secrecy::typeLabel( *it ) );
 
   connect( mSecrecyCombo, SIGNAL( activated( const QString& ) ),
            SIGNAL( changed() ) );
@@ -62,7 +63,7 @@ void SecrecyWidget::setReadOnly( bool readOnly )
 void SecrecyWidget::setSecrecy( const KABC::Secrecy &secrecy )
 {
   if ( secrecy.type() != KABC::Secrecy::Invalid )
-    mSecrecyCombo->setCurrentItem( secrecy.type() );
+    mSecrecyCombo->setCurrentIndex( secrecy.type() );
 }
 
 KABC::Secrecy SecrecyWidget::secrecy() const

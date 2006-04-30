@@ -185,7 +185,7 @@ void AddresseeWidget::restoreSettings()
 
   KConfig cfg( "kaddressbookrc" );
   cfg.setGroup( "General" );
-  mFormattedNameCombo->setCurrentItem( cfg.readEntry( "FormattedNameType", 1 ) );
+  mFormattedNameCombo->setCurrentIndex( cfg.readEntry( "FormattedNameType", 1 ) );
 }
 
 void AddresseeWidget::saveSettings()

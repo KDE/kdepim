@@ -382,7 +382,7 @@ void GeoDialog::updateInputs()
     mLatMinutes->setValue( minutes );
     mLatSeconds->setValue( seconds );
 
-    mLatDirection->setCurrentItem( mLatitude < 0 ? 1 : 0 );
+    mLatDirection->setCurrentIndex( mLatitude < 0 ? 1 : 0 );
 
     degrees = (int)( longitude * 1 );
     minutes = (int)( ( longitude - degrees ) * 60 );
@@ -391,15 +391,15 @@ void GeoDialog::updateInputs()
     mLongDegrees->setValue( degrees );
     mLongMinutes->setValue( minutes );
     mLongSeconds->setValue( seconds );
-    mLongDirection->setCurrentItem( mLongitude < 0 ? 1 : 0 );
+    mLongDirection->setCurrentIndex( mLongitude < 0 ? 1 : 0 );
   }
   mUpdateSexagesimalInput = true;
 
   int pos = nearestCity( mLongitude, mLatitude );
   if ( pos != -1 )
-    mCityCombo->setCurrentItem( pos + 1 );
+    mCityCombo->setCurrentIndex( pos + 1 );
   else
-    mCityCombo->setCurrentItem( 0 );
+    mCityCombo->setCurrentIndex( 0 );
 
   mCityCombo->blockSignals( false );
   mLatDegrees->blockSignals( false );

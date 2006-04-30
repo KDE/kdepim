@@ -81,9 +81,9 @@ void StylePage::setSortField( KABC::Field *field )
 void StylePage::setSortAscending( bool value )
 {
   if ( value )
-    mSortTypeCombo->setCurrentItem( 0 );
+    mSortTypeCombo->setCurrentIndex( 0 );
   else
-    mSortTypeCombo->setCurrentItem( 1 );
+    mSortTypeCombo->setCurrentIndex( 1 );
 }
 
 KABC::Field* StylePage::sortField()

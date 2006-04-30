@@ -196,7 +196,7 @@ void KeyWidget::updateKeyCombo()
       mKeyCombo->addItem( KABC::Key::typeLabel( (*it).type() ) );
   }
 
-  mKeyCombo->setCurrentItem( pos );
+  mKeyCombo->setCurrentIndex( pos );
 
   bool state = ( mKeyList.count() != 0 );
   mRemoveButton->setEnabled( state );
