@@ -235,7 +235,8 @@ void ViewConfigureFieldsPage::initGUI()
   label->setBuddy( mSelectedBox );
   gl->addWidget( mSelectedBox, 1, 2 );
 
-  QBoxLayout *vb1 = new QBoxLayout( QBoxLayout::TopToBottom, KDialog::spacingHint() );
+  QBoxLayout *vb1 = new QVBoxLayout();
+  vb1->setSpacing( KDialog::spacingHint() );
   vb1->addStretch();
 
   mAddButton = new QToolButton( this );
@@ -251,7 +252,8 @@ void ViewConfigureFieldsPage::initGUI()
   vb1->addStretch();
   gl->addLayout( vb1, 1, 1 );
 
-  QBoxLayout *vb2 = new QBoxLayout( QBoxLayout::TopToBottom, KDialog::spacingHint() );
+  QBoxLayout *vb2 = new QVBoxLayout();
+  vb2->setSpacing( KDialog::spacingHint() );
   vb2->addStretch();
 
   mUpButton = new QToolButton( this );

@@ -47,16 +47,15 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
   topLayout->setMargin( 11 );
 
   mAlarm = new QCheckBox(i18n("Set reminder"), this);
-  topLayout->addWidget(mAlarm, 0, 0);
-  QBoxLayout *alarmLayout = new QHBoxLayout( topLayout );
+  topLayout->addWidget(mAlarm, 0, 0, 1, 2);
 
   mALabel = new QLabel(i18n("Reminder before (in days):"),this);
-  alarmLayout->addWidget(mALabel);
+  topLayout->addWidget(mALabel, 1, 0 );
   mAlarmTimeEdit = new KRestrictedLine(this);
   mAlarmTimeEdit->setValidChars("1234567890");
   mAlarmTimeEdit->setObjectName("alarmTimeEdit");
   mAlarmTimeEdit->setText("0");
-  alarmLayout->addWidget(mAlarmTimeEdit);
+  topLayout->addWidget(mAlarmTimeEdit, 1, 1 );
 
   Q3Frame *line = new Q3Frame( this );
   line->setFrameStyle( Q3Frame::Sunken | Q3Frame::HLine );

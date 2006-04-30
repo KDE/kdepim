@@ -44,7 +44,8 @@ KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
   unsubView=new Q3ListView(page);
   unsubView->addColumn(i18n("Unsubscribe From"));
 
-  QVBoxLayout *protL=new QVBoxLayout(3);
+  QVBoxLayout *protL=new QVBoxLayout();
+  protL->setSpacing(3);
   listL->addLayout(protL, 1,2);
   protL->addWidget(subView);
   protL->addWidget(unsubView);

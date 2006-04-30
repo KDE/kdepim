@@ -70,10 +70,10 @@ ResourceSloxConfig::ResourceSloxConfig( QWidget* parent,  const char* name )
 
   mLastSyncCheck = new QCheckBox( i18n("Only load data since last sync"),
                                   this );
-  mainLayout->addMultiCellWidget( mLastSyncCheck, 3, 3, 0, 1 );
+  mainLayout->addWidget( mLastSyncCheck, 3, 0, 1, 2);
 
   mFolderButton = new KPushButton( i18n("Select Folder..."), this );
-  mainLayout->addMultiCellWidget( mFolderButton, 4, 4, 0, 1 );
+  mainLayout->addWidget( mFolderButton, 4, 0, 1, 2 );
   connect( mFolderButton, SIGNAL( clicked() ), SLOT( selectAddressFolder() ) );
 
 }

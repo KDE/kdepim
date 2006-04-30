@@ -99,8 +99,10 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   QGridLayout *topL=new QGridLayout(page);
   topL->setSpacing(5);
   topL->setMargin(0);
-  QHBoxLayout *filterL=new QHBoxLayout(10);
-  QVBoxLayout *arrL=new QVBoxLayout(10);
+  QHBoxLayout *filterL=new QHBoxLayout();
+  filterL->setSpacing(10);
+  QVBoxLayout *arrL=new QVBoxLayout();
+  arrL->setSpacing(10);
   listL=new QGridLayout();
   listL->setSpacing(5);
 

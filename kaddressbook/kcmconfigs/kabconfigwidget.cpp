@@ -71,13 +71,16 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   groupBox->layout()->addItem( boxLayout );
   boxLayout->setAlignment( Qt::AlignTop );
 
-  mViewsSingleClickBox = new QCheckBox( i18n( "Honor KDE single click" ), groupBox, "msingle" );
+  mViewsSingleClickBox = new QCheckBox( i18n( "Honor KDE single click" ), groupBox );
+  mViewsSingleClickBox->setObjectName( "msingle" );
   boxLayout->addWidget( mViewsSingleClickBox );
 
-  mNameParsing = new QCheckBox( i18n( "Automatic name parsing for new addressees" ), groupBox, "mparse" );
+  mNameParsing = new QCheckBox( i18n( "Automatic name parsing for new addressees" ), groupBox );
+  mNameParsing->setObjectName( "mparse" );
   boxLayout->addWidget( mNameParsing );
 
-  mTradeAsFamilyName = new QCheckBox( i18n( "Trade single name component as family name" ), groupBox, "mtrade" );
+  mTradeAsFamilyName = new QCheckBox( i18n( "Trade single name component as family name" ), groupBox );
+  mTradeAsFamilyName->setObjectName( "mtrade" );
   boxLayout->addWidget( mTradeAsFamilyName );
 /**
   TODO: show the checkbox when we can compile agains kdelibs from HEAD, atm it
@@ -85,7 +88,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 */
   mTradeAsFamilyName->hide();
 
-  mLimitContactDisplay = new QCheckBox( i18n( "Limit unfiltered display to 100 contacts" ), groupBox, "mlimit" );
+  mLimitContactDisplay = new QCheckBox( i18n( "Limit unfiltered display to 100 contacts" ), groupBox );
+  mLimitContactDisplay->setObjectName( "mlimit" );
   boxLayout->addWidget( mLimitContactDisplay );
 
   QBoxLayout *editorLayout = new QHBoxLayout();
