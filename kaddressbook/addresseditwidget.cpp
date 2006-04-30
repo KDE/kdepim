@@ -355,7 +355,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   connect( mChangeTypeButton, SIGNAL( clicked() ), SLOT( changeType() ) );
 
   mTypeCombo->updateTypes();
-  mTypeCombo->setCurrentItem( selected );
+  mTypeCombo->setCurrentIndex( selected );
 
   updateAddressEdits();
 
@@ -401,7 +401,7 @@ void AddressEditDialog::addAddress()
     mAddressList.append( Address( dlg.type() ) );
 
     mTypeCombo->updateTypes();
-    mTypeCombo->setCurrentItem( mTypeCombo->count() - 1 );
+    mTypeCombo->setCurrentIndex( mTypeCombo->count() - 1 );
     updateAddressEdits();
 
     modified();
