@@ -1786,10 +1786,10 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   e_dit->setMinimumHeight(50);
 
   KConfigGroup config( knGlobals.config(), "VISUAL_APPEARANCE" );
-  QColor defaultColor1( kapp->palette().active().text()); // defaults from kmreaderwin.cpp
-  QColor defaultColor2( kapp->palette().active().text() );
-  QColor defaultColor3( kapp->palette().active().text() );
-  QColor defaultForeground( kapp->palette().active().text() );
+  QColor defaultColor1( kapp->palette().color( QPalette::Text )); // defaults from kmreaderwin.cpp
+  QColor defaultColor2( kapp->palette().color( QPalette::Text ) );
+  QColor defaultColor3( kapp->palette().color( QPalette::Text ) );
+  QColor defaultForeground( kapp->palette().color( QPalette::Text ) );
   QColor col1 = config.readEntry( "ForegroundColor", defaultForeground );
   QColor col2 = config.readEntry( "quote3Color", defaultColor3 );
   QColor col3 = config.readEntry( "quote2Color", defaultColor2 );

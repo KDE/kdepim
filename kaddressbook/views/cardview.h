@@ -90,10 +90,10 @@ class CardViewItem
     void setCaption( const QString &caption );
 
     /**
-      Paints the card using the given painter and color group. The
+      Paints the card using the given painter and palette. The
       card will handle painting itself selected if it is selected.
      */
-    virtual void paintCard( QPainter *p, QColorGroup &cg );
+    virtual void paintCard( QPainter *p, const QPalette &pal );
 
     /**
       Repaints the card. This is done by sending a repaint event to the

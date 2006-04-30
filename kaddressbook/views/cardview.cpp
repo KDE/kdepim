@@ -111,10 +111,10 @@ class CardViewSeparator
 
     ~CardViewSeparator() {}
 
-    void paintSeparator( QPainter *p, QColorGroup &cg )
+    void paintSeparator( QPainter *p, const QPalette &pal )
     {
       p->fillRect( 0, 0, mRect.width(), mRect.height(),
-                   cg.brush(QColorGroup::Button) );
+                   pal.brush(QColorGroup::Button) );
     }
 
     void repaintSeparator()
@@ -232,7 +232,7 @@ void CardViewItem::initialize()
     mView->insertItem( this );
 }
 
-void CardViewItem::paintCard( QPainter *p, QColorGroup &cg )
+void CardViewItem::paintCard( QPainter *p, const QPalette &pal )
 {
   if ( !mView )
     return;
@@ -262,9 +262,9 @@ void CardViewItem::paintCard( QPainter *p, QColorGroup &cg )
 
   // Draw a simple box
   if ( isSelected() )
-    pen = QPen( cg.highlight(), 1 );
+    pen = QPen( pal.highlight(), 1 );
   else
-    pen = QPen( cg.button(), 1 );
+    pen = QPen( pal.button(), 1 );
   p->setPen( pen );
 
   // Draw the border - this is only draw if the user asks for it.
@@ -273,9 +273,9 @@ void CardViewItem::paintCard( QPainter *p, QColorGroup &cg )
 
   // set the proper pen color for the caption box
   if ( isSelected() )
-    brush = cg.brush( QColorGroup::Highlight );
+    brush = pal.brush( QColorGroup::Highlight );
   else
-    brush = cg.brush( QColorGroup::Button );
+    brush = pal.brush( QColorGroup::Button );
 
   p->fillRect( mg, mg, w, 4 + bFm.height(), brush );
 
@@ -284,9 +284,9 @@ void CardViewItem::paintCard( QPainter *p, QColorGroup &cg )
   QFont bFont = mView->headerFont();
   p->setFont( bFont );
   if ( isSelected() )
-    p->setPen( cg.highlightedText() );
+    p->setPen( pal.highlightedText() );
   else
-    p->setPen( cg.buttonText() );
+    p->setPen( pal.buttonText() );
 
   p->drawText( 2 + mg, 2 + mg + bFm.ascent(), trimString( d->mCaption, w - 4, bFm ) );
   p->restore();
@@ -295,7 +295,7 @@ void CardViewItem::paintCard( QPainter *p, QColorGroup &cg )
   Q3PtrListIterator<CardViewItem::Field> iter( d->mFieldList );
   QString label, value;
   int yPos = mg + 4 + bFm.height() + fm.height();
-  p->setPen( cg.text() );
+  p->setPen( pal.text() );
 
   int fh = fm.height();
   int cln( 0 );
@@ -857,7 +857,7 @@ void CardView::drawContents( QPainter *p, int clipx, int clipy,
    calcLayout();
 
   // allow setting costum colors in the viewport pale
-  QColorGroup cg = viewport()->palette().active();
+  QPalette pal = viewport()->palette();
 
   QRect clipRect( clipx, clipy, clipw, cliph );
   QRect cardRect;
@@ -878,7 +878,7 @@ void CardView::drawContents( QPainter *p, int clipx, int clipy,
       // Tell the card to paint
       p->save();
       p->translate( cardRect.x(), cardRect.y() );
-      item->paintCard( p, cg );
+      item->paintCard( p, pal );
       p->restore();
     }
   }
@@ -892,7 +892,7 @@ void CardView::drawContents( QPainter *p, int clipx, int clipy,
     if ( clipRect.intersects( sepRect ) || clipRect.contains( sepRect ) ) {
       p->save();
       p->translate( sepRect.x(), sepRect.y() );
-      sep->paintSeparator( p, cg );
+      sep->paintSeparator( p, pal );
       p->restore();
     }
   }

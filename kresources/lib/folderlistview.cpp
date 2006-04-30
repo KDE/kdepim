@@ -250,7 +250,7 @@ void FolderListItem::paintCell( QPainter *p, const QColorGroup &cg, int col, int
     super::paintCell( p, cg, col, width, align );
     return;
   } else {
-    p->fillRect( 0, 0, width, height(), QBrush( cg.base() ) );
+    p->fillRect( 0, 0, width, height(), cg.brush( QPalette::Base ) );
   }
 
   int marg = lv->itemMargin();
@@ -271,7 +271,7 @@ void FolderListItem::paintCell( QPainter *p, const QColorGroup &cg, int col, int
       int y = (height() - BoxSize) / 2;
 
       if ( isEnabled() )
-        p->setPen( QPen( cg.text(), 1 ) );
+        p->setPen( QPen( cg.color( QPalette::Text ), 1 ) );
       else
         p->setPen( QPen( lv->palette().color( QPalette::Disabled, QColorGroup::Text ), 1 ) );
 
@@ -279,9 +279,9 @@ void FolderListItem::paintCell( QPainter *p, const QColorGroup &cg, int col, int
 
       if ( isDefault( prop ) ) {
         if ( isEnabled() )
-          p->setBrush( cg.text() );
+          p->setBrush( cg.brush( QPalette::Text ) );
         else
-          p->setBrush( lv->palette().color( QPalette::Disabled, QColorGroup::Text ) );
+          p->setBrush( lv->palette().color( QPalette::Disabled, QPalette::Text ) );
         p->drawEllipse( x + marg + 3, y + 5, BoxSize-10, BoxSize-10 );
       }
       break;

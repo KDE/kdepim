@@ -456,8 +456,8 @@ void Kleo::KeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int
     Q3ListViewItem::paintCell( p, cg, column, width, alignment );
     return;
   }
-  const QColor fg = ds->keyForeground( key(), cg.text() );
-  const QColor bg = ds->keyBackground( key(), cg.base() );
+  const QColor fg = ds->keyForeground( key(), cg.color( QPalette::Text ) );
+  const QColor bg = ds->keyBackground( key(), cg.color( QPalette::Base ) );
   const QFont f = ds->keyFont( key(), p->font() );
 
   QColorGroup _cg = cg;
@@ -548,8 +548,8 @@ void Kleo::SubkeyKeyListViewItem::paintCell( QPainter * p, const QColorGroup & c
     Q3ListViewItem::paintCell( p, cg, column, width, alignment );
     return;
   }
-  const QColor fg = ds->subkeyForeground( subkey(), cg.text() );
-  const QColor bg = ds->subkeyBackground( subkey(), cg.base() );
+  const QColor fg = ds->subkeyForeground( subkey(), cg.color( QPalette::Text ) );
+  const QColor bg = ds->subkeyBackground( subkey(), cg.color( QPalette::Base ) );
   const QFont f = ds->subkeyFont( subkey(), p->font() );
 
   QColorGroup _cg = cg;
@@ -627,8 +627,8 @@ void Kleo::UserIDKeyListViewItem::paintCell( QPainter * p, const QColorGroup & c
     Q3ListViewItem::paintCell( p, cg, column, width, alignment );
     return;
   }
-  const QColor fg = ds->useridForeground( userID(), cg.text() );
-  const QColor bg = ds->useridBackground( userID(), cg.base() );
+  const QColor fg = ds->useridForeground( userID(), cg.color( QPalette::Text ) );
+  const QColor bg = ds->useridBackground( userID(), cg.color( QPalette::Base ) );
   const QFont f = ds->useridFont( userID(), p->font() );
 
   QColorGroup _cg = cg;
@@ -705,8 +705,8 @@ void Kleo::SignatureKeyListViewItem::paintCell( QPainter * p, const QColorGroup 
     Q3ListViewItem::paintCell( p, cg, column, width, alignment );
     return;
   }
-  const QColor fg = ds->signatureForeground( signature(), cg.text() );
-  const QColor bg = ds->signatureBackground( signature(), cg.base() );
+  const QColor fg = ds->signatureForeground( signature(), cg.color( QPalette::Text ) );
+  const QColor bg = ds->signatureBackground( signature(), cg.color( QPalette::Base ) );
   const QFont f = ds->signatureFont( signature(), p->font() );
 
   QColorGroup _cg = cg;

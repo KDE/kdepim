@@ -128,8 +128,8 @@ void KNHdrViewItem::paintCell( QPainter *p, const QColorGroup &cg, int column, i
 
   QPen pen = p->pen();
   if (isSelected() || mActive) {
-    pen.setColor( cg.highlightedText() );
-    base = cg.highlight();
+    pen.setColor( cg.color( QPalette::HighlightedText ) );
+    base = cg.color( QPalette::Highlight );
   } else {
     if (greyOut())
       pen.setColor( greyColor() );
@@ -184,9 +184,9 @@ void KNHdrViewItem::paintCell( QPainter *p, const QColorGroup &cg, int column, i
       p->setFont( f2 );
       QPen pen = p->pen();
       if (isSelected() || mActive) {
-        pen.setColor( cg.highlightedText() );
+        pen.setColor( cg.color( QPalette::HighlightedText ) );
       } else {
-        pen.setColor( cg.link() );
+        pen.setColor( cg.color( QPalette::Link ) );
       }
       p->setPen( pen );
       p->drawText( xText + QFontMetrics( orig ).width( t, -1 ), 0, width - xText - 5, height(), alignment | Qt::AlignVCenter,  t2 );
