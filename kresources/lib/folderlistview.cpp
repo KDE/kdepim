@@ -273,7 +273,7 @@ void FolderListItem::paintCell( QPainter *p, const QColorGroup &cg, int col, int
       if ( isEnabled() )
         p->setPen( QPen( cg.color( QPalette::Text ), 1 ) );
       else
-        p->setPen( QPen( lv->palette().color( QPalette::Disabled, QColorGroup::Text ), 1 ) );
+        p->setPen( QPen( lv->palette().color( QPalette::Disabled, QPalette::Text ), 1 ) );
 
       p->drawEllipse( x+marg, y+2, BoxSize-4, BoxSize-4 );
 
