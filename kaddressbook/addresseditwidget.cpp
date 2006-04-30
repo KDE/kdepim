@@ -107,7 +107,7 @@ AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
   mAddressField->setFrameStyle( QFrame::Panel | QFrame::Sunken );
   mAddressField->setMinimumHeight( 20 );
   mAddressField->setAlignment( Qt::AlignTop );
-  mAddressField->setTextFormat( Qt::PlainText );
+  mAddressField->setAcceptRichText( false );
   layout->addWidget( mAddressField );
 
   mEditButton = new QPushButton( i18n( "&Edit Addresses..." ), this );
@@ -229,17 +229,17 @@ void AddressEditWidget::updateAddressEdit()
   bool block = signalsBlocked();
   blockSignals( true );
 
-  mAddressField->setText( "" );
+  mAddressField->setPlainText( "" );
 
   if ( it != mAddressList.end() ) {
     KABC::Address a = *it;
     if ( !a.isEmpty() ) {
 #if KDE_VERSION >= 319
       if ( a.type() & KABC::Address::Work && mAddressee.realName() != mAddressee.organization() ) {
-        mAddressField->setText( a.formattedAddress( mAddressee.realName(),
+        mAddressField->setPlainText( a.formattedAddress( mAddressee.realName(),
                                    mAddressee.organization() ) );
       } else {
-        mAddressField->setText( a.formattedAddress( mAddressee.realName() ) );
+        mAddressField->setPlainText( a.formattedAddress( mAddressee.realName() ) );
       }
 #else
       QString text;
@@ -289,7 +289,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   QLabel *label = new QLabel( i18nc( "<streetLabel>:", "%1:", KABC::Address::streetLabel() ), page );
   label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
   topLayout->addWidget( label, 1, 0 );
-  mStreetTextEdit = new Q3TextEdit( page );
+  mStreetTextEdit = new QTextEdit( page );
   mStreetTextEdit->setTextFormat( Qt::PlainText );
   label->setBuddy( mStreetTextEdit );
   topLayout->addWidget( mStreetTextEdit, 1, 1 );
@@ -467,7 +467,7 @@ void AddressEditDialog::updateAddressEdits()
 
   bool tmp = mChanged;
 
-  mStreetTextEdit->setText( a.street() );
+  mStreetTextEdit->setPlainText( a.street() );
   mRegionEdit->setText( a.region() );
   mLocalityEdit->setText( a.locality() );
   mPostalCodeEdit->setText( a.postalCode() );
@@ -498,7 +498,7 @@ void AddressEditDialog::saveAddress( KABC::Address &addr )
   addr.setPostalCode( mPostalCodeEdit->text() );
   addr.setCountry( mCountryCombo->currentText() );
   addr.setPostOfficeBox( mPOBoxEdit->text() );
-  addr.setStreet( mStreetTextEdit->text() );
+  addr.setStreet( mStreetTextEdit->toPlainText() );
   addr.setLabel( mLabel );
 
 

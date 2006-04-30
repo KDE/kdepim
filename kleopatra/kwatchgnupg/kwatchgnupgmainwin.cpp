@@ -68,7 +68,8 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent, const char* name 
   createActions();
   createGUI();
 
-  mCentralWidget = new QTextEdit( this, "central log view" );
+  mCentralWidget = new QTextEdit( this );
+  mCentralWidget->setObjectName( "central log view" );
   mCentralWidget->setTextFormat( Qt::LogText );
   setCentralWidget( mCentralWidget );
 
@@ -249,7 +250,7 @@ void KWatchGnuPGMainWindow::slotSaveAs()
   }
   if( file.open( QIODevice::WriteOnly ) ) {
 	QTextStream st(&file);
-	st << mCentralWidget->text();
+	st << mCentralWidget->toPlainText();
 	file.close();
   }
 }

@@ -37,7 +37,7 @@
 class QButtonGroup;
 class QCheckBox;
 class Q3ListView;
-class Q3TextEdit;
+class QTextEdit;
 class QToolButton;
 
 class KActiveLabel;
@@ -117,7 +117,7 @@ class AddressEditDialog : public KDialogBase
     QStringList sortLocaleAware( const QStringList& );
 
     AddressTypeCombo *mTypeCombo;
-    Q3TextEdit *mStreetTextEdit;
+    QTextEdit *mStreetTextEdit;
     KComboBox *mCountryCombo;
     KLineEdit *mRegionEdit;
     KLineEdit *mLocalityEdit;

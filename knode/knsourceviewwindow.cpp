@@ -31,17 +31,17 @@ KNSourceViewWindow::KNSourceViewWindow( const QString &text )
   Q3Accel *accel = new Q3Accel( this, "browser close-accel" );
   accel->connectItem( accel->insertItem( Qt::Key_Escape ), this , SLOT( close() ));
 
-  setTextFormat( Qt::PlainText );
+  setAcceptRichText( false );
 
   setWindowTitle(kapp->makeStdCaption(i18n("Article Source")));
 #warning "kde4: porting\n";  
   //setPaper( QBrush( knGlobals.settings()->backgroundColor()) );
   setFont( knGlobals.settings()->articleFixedFont() );
-  setColor( knGlobals.settings()->textColor() );
+  setTextColor( knGlobals.settings()->textColor() );
 #warning "kde4: porting\n";  
   //setWordWrap( KTextBrowser::NoWrap );
 
-  setText( text );
+  setPlainText( text );
   KNHelper::restoreWindowSize("sourceWindow", this, QSize(500,300));
   show();
 }

@@ -124,7 +124,7 @@ void DebugDialog::addText( const QString &text, Type type )
     mHTMLMessages.append( "<font color=\"blue\">" + htmlCode + "</font>" );
 
   mView->clear();
-  mView->setText( mHTMLMessages.join( "<br>" ) );
+  mView->setHtml( mHTMLMessages.join( "<br>" ) );
 }
 
 #include "debugdialog.moc"
