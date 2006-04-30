@@ -48,9 +48,9 @@ my $outfile = $file;
 $outfile =~ /\/([^\/]*)$/;
 $outfile = "$file.$id.out";
 
-$cmd = "./$app $file $outfile 2> /dev/null";
+$cmd = "$app $file $outfile 2> /dev/null";
 
-#print "CMD $cmd\n";
+print "CMD $cmd\n";
 
 if ( system( $cmd ) != 0 ) {
   print STDERR "Error running $app\n";
@@ -86,10 +86,14 @@ sub checkfile()
   $error = 0;
   $i = 0;
   $line = 1;
+  if ( !open( ERRLOG, ">>FAILED.log" ) ) {
+    print "Unable to open FAILED.log";
+  };
 	my $errorlines = 0;
   while( <READ> ) {
     $out = $_;
     $ref = @ref[$i++];
+    
 
     # DTSTAMP, LAST-MODIFIED and CREATED might be different to the reference...
     if ( $out =~ /^DTSTAMP:[0-9ZT]+$/ && $ref =~ /^DTSTAMP:[0-9ZT]+$/ ) {
@@ -105,16 +109,17 @@ sub checkfile()
     }
 
     if ( $out ne $ref ) {
+      # don't are about a failed errorlog open
       if ( $errorlines == 0 ) {
-        print $logentry;
+        print ERRLOG $logentry;
       }
       $errorlines++;
       $error++;
       if ( $errorlines < $MAXERRLINES ) {
-        print "  Line $line: Expected      : $ref";
-        print "  Line $line: Actual output : $out";
+        print ERRLOG "  Line $line: Expected      : $ref";
+        print ERRLOG "  Line $line: Actual output : $out";
       } elsif ( $errorlines == $MAXERRLINES ) {
-        print "  <Remaining error suppressed>\n";
+        print ERRLOG "  <Remaining error suppressed>\n";
       }
     }
     
@@ -133,26 +138,26 @@ sub checkfile()
       $firstline =~ /^(\d+) known errors/;
       my $expected = $1;
       if ( $expected == $error ) {
-        print "\n  EXPECTED FAIL: $error errors found.\n";
-        print "    Fixme:\n";
+        print ERRLOG "\n  EXPECTED FAIL: $error errors found.\n";
+        print ERRLOG "    Fixme:\n";
         while( <FIXME> ) {
-          print "      ";
-          print;
+          print ERRLOG "      ";
+          print ERRLOG;
         }
       } else {
-        print "\n  UNEXPECTED FAIL: $error errors found, $expected expected.\n";
+        print ERRLOG "\n  UNEXPECTED FAIL: $error errors found, $expected expected.\n";
         exit 1;
       }
     } else {
-      print "\n  FAILED: $error errors found.\n";
+      print ERRLOG "\n  FAILED: $error errors found.\n";
       if ( $error > 5 ) {
-        system( "diff -u $file.$id.ref $outfile" ); 
+        print ERRLOG system( "diff -u $file.$id.ref $outfile" );
       }
-      system( "touch FAILED" );
+#       system( "touch FAILED" );
       exit 1;
     }
   } else {
-    unlink($outfile);
+     unlink($outfile);
 #    print "  OK\n";
   }
 }

@@ -1,5 +1,8 @@
 kde4_header()
 
+# Test apps should be in the bin dir so that add_test can locate them
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
+
 include_directories(
 	${CMAKE_SOURCE_DIR}/libkcal
 	${CMAKE_BINARY_DIR}/libkcal/libical/src
@@ -191,6 +194,54 @@ target_link_libraries(testvcalexport  ${KDE4_KDECORE_LIBS} kcal )
 endif(KDE4_BUILD_TESTS)
 
 ########### install files ###############
+
+########### Tests #######################
+
+if(KDE4_BUILD_TESTS)
+
+FILE( GLOB_RECURSE testFiles       data/RecurrenceRule/*.ics )
+FILE( GLOB_RECURSE compatFiles     data/Compat/*.ics )
+FILE( GLOB_RECURSE vCalFilesAsIcal data/vCalendar/*.ics )
+FILE( GLOB_RECURSE vCalFiles       data/vCalendar/*.vcs )
+
+FOREACH( file ${testFiles} )
+  GET_FILENAME_COMPONENT( fn ${file} NAME)
+  ADD_TEST( RecurNext-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/testrecurrence "next" ${file} )
+ENDFOREACH(file)
+
+FOREACH( file ${testFiles} )
+  GET_FILENAME_COMPONENT( fn ${file} NAME)
+  ADD_TEST( RecurPrev-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/testrecurprevious "prev" ${file} )
+ENDFOREACH(file)
+
+FOREACH( file ${testFiles} )
+  GET_FILENAME_COMPONENT( fn ${file} NAME)
+  ADD_TEST( RecursOn-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/testrecurson "recurson" ${file} )
+ENDFOREACH(file)
+
+FOREACH( file ${compatFiles} )
+  GET_FILENAME_COMPONENT( fn ${file} NAME)
+  ADD_TEST( Compat-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/readandwrite "ical" ${file} )
+ENDFOREACH(file)
+
+FOREACH( file ${vCalFilesAsIcal} )
+  GET_FILENAME_COMPONENT( fn ${file} NAME)
+  ADD_TEST( VCalOut-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/textvcalexport "vcal" ${file} )
+ENDFOREACH(file)
+
+FOREACH( file ${vCalFiles} )
+  GET_FILENAME_COMPONENT( fn ${file} NAME)
+  ADD_TEST( VCalIn-${fn} ${CMAKE_CURRENT_SOURCE_DIR}/runsingletestcase.pl ${EXECUTABLE_OUTPUT_PATH}/readandwrite "ical" ${file} )
+ENDFOREACH(file)
+
+# ADD_TEST( TestRecurrence  runtestcase.pl testrecurrence    "next" ${CMAKE_CURRENT_SOURCE_DIR} data/RecurrenceRule/ "*.ics" )
+# ADD_TEST( TestRecPrevious runtestcase.pl testrecurprevious "prev" ${CMAKE_CURRENT_SOURCE_DIR} data/RecurrenceRule/ "*.ics" )
+# ADD_TEST( TestRecursOn    runtestcase.pl testrecurson  "recurson" ${CMAKE_CURRENT_SOURCE_DIR} data/RecurrenceRule/ "*.ics" )
+# ADD_TEST( TestCompat      runtestcase.pl readandwrite      "ical" ${CMAKE_CURRENT_SOURCE_DIR} data/Compat/         "*.ics" )
+# ADD_TEST( TestVCal        runtestcase.pl testvcalexport    "vcal" ${CMAKE_CURRENT_SOURCE_DIR} data/vCalendar/      "*.ics" )
+# ADD_TEST( TestFromVCal    runtestcase.pl readandwrite      "ical" ${CMAKE_CURRENT_SOURCE_DIR} data/vCalendar/      "*.vcs" )
+
+endif(KDE4_BUILD_TESTS)
 
 
 kde4_footer()
