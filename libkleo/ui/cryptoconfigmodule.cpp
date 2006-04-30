@@ -140,9 +140,10 @@ void Kleo::CryptoConfigModule::cancel()
 Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
   CryptoConfigModule* module, Kleo::CryptoConfigComponent* component,
   QWidget* parent, const char* name )
-  : QWidget( parent, name ),
+  : QWidget( parent ),
     mComponent( component )
 {
+  setObjectName( name );
   QGridLayout * glay = new QGridLayout( this );
   glay->setSpacing( KDialog::spacingHint() );
   glay->setMargin( 0 );

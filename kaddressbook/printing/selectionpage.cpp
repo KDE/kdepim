@@ -42,8 +42,9 @@
 #include "selectionpage.h"
 
 SelectionPage::SelectionPage( QWidget* parent, const char* name )
-    : QWidget( parent, name )
+    : QWidget( parent )
 {
+  setObjectName( name );
   setWindowTitle( i18n( "Choose Which Contacts to Print" ) );
 
   QVBoxLayout *topLayout = new QVBoxLayout( this );

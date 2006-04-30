@@ -777,7 +777,7 @@ void KNMainWidget::saveOptions()
   KConfig *conf=knGlobals.config();
   conf->setGroup("APPEARANCE");
 
-  conf->writeEntry("quicksearch", q_uicksearch->isShown());
+  conf->writeEntry("quicksearch", !q_uicksearch->isHidden());
   //saveMainWindowSettings(KGlobal::config(),"mainWindow_options");
 
   c_olView->writeConfig();

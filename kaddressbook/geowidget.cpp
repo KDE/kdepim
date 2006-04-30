@@ -520,8 +520,9 @@ int GeoDialog::nearestCity( double x, double y ) const
 
 
 GeoMapWidget::GeoMapWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name ), mLatitude( 0 ), mLongitude( 0 )
+  : QWidget( parent ), mLatitude( 0 ), mLongitude( 0 )
 {
+  setObjectName( name );
   setBackgroundMode( Qt::NoBackground );
 
   setFixedSize( 400, 200 );

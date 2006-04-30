@@ -32,8 +32,9 @@
 #include "secrecywidget.h"
 
 SecrecyWidget::SecrecyWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+  : QWidget( parent )
 {
+  setObjectName( name );
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( KDialog::marginHint() );

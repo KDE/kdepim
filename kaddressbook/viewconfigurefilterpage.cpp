@@ -40,8 +40,9 @@
 
 ViewConfigureFilterPage::ViewConfigureFilterPage( QWidget *parent,
                                                   const char *name )
-  : QWidget( parent, name )
+  : QWidget( parent )
 {
+  setObjectName( name );
   QBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( 0 );

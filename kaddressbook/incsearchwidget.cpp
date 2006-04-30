@@ -41,8 +41,9 @@
 #include "incsearchwidget.h"
 
 IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
-    : QWidget( parent, name )
+    : QWidget( parent )
 {
+  setObjectName( name );
   QHBoxLayout *layout = new QHBoxLayout( this );
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( 2 );

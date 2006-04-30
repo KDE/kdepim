@@ -361,11 +361,13 @@ void ContactListView::setBackgroundPixmap(const QString &filename)
 {
   if (filename.isEmpty())
   {
-    unsetPalette();
+    setPalette( QPalette() );
   }
   else
   {
-    setPaletteBackgroundPixmap(QPixmap(filename));
+    QPalette palette;
+    palette.setBrush( backgroundRole(), QBrush(QPixmap(filename) ));
+    setPalette( palette );
   }
 }
 

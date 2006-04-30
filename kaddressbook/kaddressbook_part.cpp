@@ -52,7 +52,8 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
   setInstance( KAddressbookFactory::instance() );
 
   // create a canvas to insert our widget
-  QWidget *canvas = new QWidget( parentWidget, widgetName );
+  QWidget *canvas = new QWidget( parentWidget );
+  canvas->setObjectName( widgetName );
   canvas->setFocusPolicy( Qt::ClickFocus );
   setWidget( canvas );
 

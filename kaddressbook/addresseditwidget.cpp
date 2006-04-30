@@ -90,8 +90,9 @@ class TabPressEater : public QObject
 
 
 AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+  : QWidget( parent )
 {
+  setObjectName( name );
   QBoxLayout *layout = new QVBoxLayout( this );
   layout->setSpacing( 2 );
   layout->setMargin( 4 );

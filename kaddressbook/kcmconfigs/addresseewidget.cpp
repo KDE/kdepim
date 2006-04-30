@@ -45,8 +45,9 @@
 
 NamePartWidget::NamePartWidget( const QString &title, const QString &label,
                                 QWidget *parent, const char *name )
-  : QWidget( parent, name ), mTitle( title ), mLabel( label )
+  : QWidget( parent ), mTitle( title ), mLabel( label )
 {
+  setObjectName( name );
   QHBoxLayout *layout = new QHBoxLayout( this );
 
   Q3GroupBox *group = new Q3GroupBox( 0, Qt::Vertical, title, this );
@@ -136,8 +137,9 @@ void NamePartWidget::selectionChanged( Q3ListBoxItem *item )
 
 
 AddresseeWidget::AddresseeWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+  : QWidget( parent )
 {
+  setObjectName( name );
   QGridLayout *layout = new QGridLayout( this );
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( KDialog::marginHint() );

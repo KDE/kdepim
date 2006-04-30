@@ -2308,7 +2308,7 @@ void KNComposer::Editor::slotRemoveBox()
     setCursorPosition(l,c-2);
 
     setAutoUpdate(true);
-    repaint(false);
+    repaint();
   }
 }
 

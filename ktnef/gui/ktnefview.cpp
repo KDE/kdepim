@@ -50,7 +50,7 @@ Attachment::Attachment(Q3ListView *parent, KTNEFAttach *attach)
 	if (!attach_->fileName().isEmpty()) setText(0, attach_->fileName());
 	KMimeType::Ptr	mimeType = KMimeType::mimeType( attach_->mimeTag() );
 	setText(1, mimeType->comment());
-	QPixmap pix = loadRenderingPixmap( attach, parent->colorGroup().base() );
+	QPixmap pix = loadRenderingPixmap( attach, parent->palette().color( QPalette::Base ) );
 	if ( !pix.isNull() )
 		setPixmap( 0, pix );
 	else

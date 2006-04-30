@@ -4967,6 +4967,7 @@ void KDGanttView::startDrag ()
 /*!
   This method is overridden for internal purposes.
 */
+#warning "FIXME: This overridden method is not called any more, as it is deprecated"
 void KDGanttView::setPaletteBackgroundColor( const QColor& col)
 {
   QPalette pal = palette();
@@ -5032,7 +5033,9 @@ void KDGanttView::setLegendHeaderBackgroundColor ( const QColor & c )
 */
 void KDGanttView::setLvBackgroundColor ( const QColor & c )
 {
- myListView->viewport()->setPaletteBackgroundColor( c );
+  QPalette pal;
+  pal.setColor( myListView->viewport()->backgroundRole(), c );
+  myListView->viewport()->setPalette( pal );
 }
 
 

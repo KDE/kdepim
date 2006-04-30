@@ -72,8 +72,9 @@ class LDAPItem : public Q3CheckListItem
 };
 
 LDAPOptionsWidget::LDAPOptionsWidget( QWidget* parent,  const char* name )
-  : QWidget( parent, name )
+  : QWidget( parent )
 {
+  setObjectName( name );
   initGUI();
 
   mHostListView->setSorting( -1 );

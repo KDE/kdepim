@@ -52,9 +52,10 @@
 #include "viewmanager.h"
 
 ViewManager::ViewManager( KAB::Core *core, QWidget *parent, const char *name )
-  : QWidget( parent, name ), mCore( core ), mActiveView( 0 ),
+  : QWidget( parent ), mCore( core ), mActiveView( 0 ),
     mFilterSelectionWidget( 0 )
 {
+  setObjectName( name );
   initGUI();
   initActions();
 

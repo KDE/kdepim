@@ -69,8 +69,9 @@ JumpButton::JumpButton( const QString &firstChar, const QString &lastChar,
 }
 
 JumpButtonBar::JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name )
-  : QWidget( parent, name ), mCore( core )
+  : QWidget( parent ), mCore( core )
 {
+  setObjectName( name );
   setMinimumSize( 1, 1 );
 
   QVBoxLayout *layout = new QVBoxLayout( this );

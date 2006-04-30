@@ -46,8 +46,9 @@
 #include "imeditorwidget.h"
 
 IMEditWidget::IMEditWidget( QWidget *parent, KABC::Addressee &addr, const char *name )
-  : QWidget( parent, name ), mAddressee(addr)
+  : QWidget( parent ), mAddressee(addr)
 {
+  setObjectName( name );
   QGridLayout *topLayout = new QGridLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( KDialog::marginHint() );

@@ -173,8 +173,9 @@ void PhoneNumberWidget::setReadOnly( bool readOnly )
 
 
 PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name ), mReadOnly( false )
+  : QWidget( parent ), mReadOnly( false )
 {
+  setObjectName( name );
   QGridLayout *layout = new QGridLayout( this );
   layout->setSpacing( KDialog::spacingHint() );
 

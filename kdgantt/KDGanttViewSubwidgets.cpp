@@ -3363,26 +3363,36 @@ void KDLegendWidget::addLegendItem( KDGanttViewItem::Shape shape, const QColor& 
     QLabel * temp;
     QPixmap p = KDGanttView::getPixmap( shape,  shapeColor, Qt::white, 10);
     QWidget *w = new QWidget( myLegend );
-    w->setBackgroundColor( Qt::white );
+    QPalette pal;
+    pal.setColor( w->backgroundRole(), Qt::white );
+    w->setPalette( pal );
     QHBoxLayout *lay = new QHBoxLayout( w  );
     lay->setSpacing( 6 );
     lay->setMargin( 0 );
     temp = new QLabel ( w );
     lay->addWidget( temp, 0, Qt:: AlignRight);
     temp->setPixmap(p);
-    temp->setBackgroundColor( Qt::white );
+    QPalette pal1;
+    pal1.setColor( temp->backgroundRole(), Qt::white );
+    temp->setPalette( pal1 );
     if( !text.isEmpty() ){
         temp = new QLabel ( text, w );
-        temp->setBackgroundColor( Qt::white );
+        QPalette pal2;
+        pal2.setColor( temp->backgroundRole(), Qt::white );
+        temp->setPalette( pal2 );
         lay->addWidget( temp, 0, Qt::AlignCenter);
     }
     temp = new QLabel ( w );
     lay->addWidget( temp, 0, Qt:: AlignRight);
     temp->setPixmap( KDGanttView::getPixmap( shape2,  shapeColor2, Qt::white, 10));
-    temp->setBackgroundColor( Qt::white );
+    QPalette pal3;
+    pal3.setColor( temp->backgroundRole(), Qt::white );
+    temp->setPalette( pal3 );
     if( !text2.isEmpty() ){
         temp = new QLabel ( text2, w );
-        temp->setBackgroundColor( Qt::white );
+        QPalette pal4;
+        pal4.setColor( temp->backgroundRole(), Qt::white );
+        temp->setPalette( pal4 );
         lay->addWidget( temp, 0, Qt::AlignLeft);
     }
     lay->addStretch();

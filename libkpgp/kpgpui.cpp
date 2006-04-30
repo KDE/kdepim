@@ -1182,13 +1182,14 @@ void KeySelectionDialog::showAllItems()
 // ------------------------------------------------------------------------
 KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
                             unsigned int allowedKeys, const char * name )
-  : QWidget( parent, name ),
+  : QWidget( parent ),
     mDialogCaption( i18n("OpenPGP Key Selection") ),
     mDialogMessage( i18n("Please select an OpenPGP key to use.") ),
     mMulti( multipleKeys ),
     mAllowedKeys( allowedKeys ),
     d( 0 )
 {
+  setObjectName( name );
   QHBoxLayout * hlay = new QHBoxLayout( this );
   hlay->setSpacing( KDialog::spacingHint() );
   hlay->setMargin( 0 );

@@ -51,8 +51,9 @@
 #include "kabconfigwidget.h"
 
 KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
-  : QWidget( parent, name )
+  : QWidget( parent )
 {
+  setObjectName( name );
   QVBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( 0 );

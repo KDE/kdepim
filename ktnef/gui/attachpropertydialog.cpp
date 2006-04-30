@@ -51,14 +51,14 @@ void AttachPropertyDialog::setAttachment(KTNEFAttach *attach)
 {
 	QString	s = (attach->fileName().isEmpty() ? attach->name() : attach->fileName());
 	filename_->setText("<b>"+s+"</b>");
-	setCaption(s);
+	setWindowTitle(s);
 	display_->setText(attach->displayName());
 	mime_->setText(attach->mimeTag());
 	s.setNum(attach->size());
 	s.append(" bytes");
 	size_->setText(s);
 	KMimeType::Ptr	mimetype = KMimeType::mimeType(attach->mimeTag());
-	QPixmap pix = loadRenderingPixmap( attach, colorGroup().background() );
+	QPixmap pix = loadRenderingPixmap( attach, palette().color( QPalette::Background ) );
 	if ( !pix.isNull() )
 		icon_->setPixmap( pix );
 	else

@@ -59,9 +59,10 @@ class FieldItem : public Q3ListBoxText
 ViewConfigureFieldsPage::ViewConfigureFieldsPage( KABC::AddressBook *ab,
                                                   QWidget *parent,
                                                   const char *name )
-  : QWidget( parent, name ), mAddressBook( ab )
+  : QWidget( parent ), mAddressBook( ab )
 {
-  initGUI();
+   setObjectName( name );
+   initGUI();
 }
 
 void ViewConfigureFieldsPage::restoreSettings( KConfig *config )

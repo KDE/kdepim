@@ -530,7 +530,7 @@ Q3DragObject* KNHeaderView::dragObject()
 
 void KNHeaderView::slotSizeChanged( int section, int, int newSize )
 {
-  viewport()->repaint( header()->sectionPos(section), 0, newSize, visibleHeight(), false);
+  viewport()->repaint( header()->sectionPos(section), 0, newSize, visibleHeight() );
 }
 
 

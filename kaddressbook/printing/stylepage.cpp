@@ -38,8 +38,9 @@
 #include "stylepage.h"
 
 StylePage::StylePage( KABC::AddressBook *ab, QWidget* parent,  const char* name )
-  : QWidget( parent, name ), mAddressBook( ab )
+  : QWidget( parent ), mAddressBook( ab )
 {
+  setObjectName( name );
   initGUI();
 
   initFieldCombo();

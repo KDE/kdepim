@@ -33,7 +33,7 @@ KNode::SearchDialog::SearchDialog( searchType type, QWidget *parent ) :
 {
   Q_UNUSED( type );
 
-  setIcon( SmallIcon("knode") );
+  setWindowIcon( SmallIconSet("knode") );
   setButtonBoxOrientation( Qt::Vertical );
 
   KVBox *filterBox = makeVBoxMainWidget();
