@@ -168,9 +168,9 @@ void CategoryListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int 
   p->setFont( font );
 
   if ( mForegroundColor.isValid() )
-    _cg.setColor( QColorGroup::Text, mForegroundColor );
+    _cg.setColor( QPalette::Text, mForegroundColor );
   if ( mBackgroundColor.isValid() )
-    _cg.setColor( QColorGroup::Base, mBackgroundColor );
+    _cg.setColor( QPalette::Base, mBackgroundColor );
 
   Q3ListViewItem::paintCell( p, _cg, column, width, alignment );
 }

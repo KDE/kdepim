@@ -123,8 +123,8 @@ void KNCollectionView::readConfig()
   setFont( knGlobals.settings()->groupListFont() );
 
   QPalette p = palette();
-  p.setColor( QColorGroup::Base, knGlobals.settings()->backgroundColor() );
-  p.setColor( QColorGroup::Text, knGlobals.settings()->textColor() );
+  p.setColor( QPalette::Base, knGlobals.settings()->backgroundColor() );
+  p.setColor( QPalette::Text, knGlobals.settings()->textColor() );
   setPalette( p );
   setAlternateBackground( knGlobals.settings()->backgroundColor() );
   // FIXME: make this configurable

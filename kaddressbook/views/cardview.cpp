@@ -114,7 +114,7 @@ class CardViewSeparator
     void paintSeparator( QPainter *p, const QPalette &pal )
     {
       p->fillRect( 0, 0, mRect.width(), mRect.height(),
-                   pal.brush(QColorGroup::Button) );
+                   pal.brush(QPalette::Button) );
     }
 
     void repaintSeparator()
@@ -273,9 +273,9 @@ void CardViewItem::paintCard( QPainter *p, const QPalette &pal )
 
   // set the proper pen color for the caption box
   if ( isSelected() )
-    brush = pal.brush( QColorGroup::Highlight );
+    brush = pal.brush( QPalette::Highlight );
   else
-    brush = pal.brush( QColorGroup::Button );
+    brush = pal.brush( QPalette::Button );
 
   p->fillRect( mg, mg, w, 4 + bFm.height(), brush );
 

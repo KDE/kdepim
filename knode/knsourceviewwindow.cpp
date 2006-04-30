@@ -50,8 +50,8 @@ KNSourceViewWindow::KNSourceViewWindow( const QString &text )
 void KNSourceViewWindow::setPalette( const QPalette &pal )
 {
   QPalette p = pal;
-  p.setColor( QColorGroup::Text, knGlobals.settings()->textColor() );
-  p.setColor( QColorGroup::Background, knGlobals.settings()->backgroundColor() );
+  p.setColor( QPalette::Text, knGlobals.settings()->textColor() );
+  p.setColor( QPalette::Background, knGlobals.settings()->backgroundColor() );
   KTextBrowser::setPalette( p );
 }
 

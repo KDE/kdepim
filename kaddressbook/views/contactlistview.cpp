@@ -293,7 +293,7 @@ ContactListView::ContactListView(KAddressBookTableView *view,
 
 void ContactListView::paintEmptyArea( QPainter * p, const QRect & rect )
 {
-  QBrush b = palette().brush(QPalette::Active, QColorGroup::Base);
+  QBrush b = palette().brush(QPalette::Active, QPalette::Base);
 
   // Get the brush, which will have the background pixmap if there is one.
   if (!b.texture().isNull())

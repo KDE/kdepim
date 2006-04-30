@@ -462,8 +462,8 @@ void Kleo::KeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int
 
   QColorGroup _cg = cg;
   p->setFont( f );
-  _cg.setColor( QColorGroup::Text, fg );
-  _cg.setColor( QColorGroup::Base, bg );
+  _cg.setColor( QPalette::Text, fg );
+  _cg.setColor( QPalette::Base, bg );
 
   Q3ListViewItem::paintCell( p, _cg, column, width, alignment );
 }
@@ -554,8 +554,8 @@ void Kleo::SubkeyKeyListViewItem::paintCell( QPainter * p, const QColorGroup & c
 
   QColorGroup _cg = cg;
   p->setFont( f );
-  _cg.setColor( QColorGroup::Text, fg );
-  _cg.setColor( QColorGroup::Base, bg );
+  _cg.setColor( QPalette::Text, fg );
+  _cg.setColor( QPalette::Base, bg );
 
   Q3ListViewItem::paintCell( p, _cg, column, width, alignment );
 }
@@ -633,8 +633,8 @@ void Kleo::UserIDKeyListViewItem::paintCell( QPainter * p, const QColorGroup & c
 
   QColorGroup _cg = cg;
   p->setFont( f );
-  _cg.setColor( QColorGroup::Text, fg );
-  _cg.setColor( QColorGroup::Base, bg );
+  _cg.setColor( QPalette::Text, fg );
+  _cg.setColor( QPalette::Base, bg );
 
   Q3ListViewItem::paintCell( p, _cg, column, width, alignment );
 }
@@ -711,8 +711,8 @@ void Kleo::SignatureKeyListViewItem::paintCell( QPainter * p, const QColorGroup 
 
   QColorGroup _cg = cg;
   p->setFont( f );
-  _cg.setColor( QColorGroup::Text, fg );
-  _cg.setColor( QColorGroup::Base, bg );
+  _cg.setColor( QPalette::Text, fg );
+  _cg.setColor( QPalette::Base, bg );
 
   Q3ListViewItem::paintCell( p, _cg, column, width, alignment );
 }
