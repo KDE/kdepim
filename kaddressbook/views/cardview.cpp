@@ -52,8 +52,9 @@ class CardViewTip : public QLabel
 {
   public:
     CardViewTip( QWidget *parent = 0, const char *name = 0 )
-      : QLabel( parent, name )
+      : QLabel( parent )
     {
+      setObjectName( name );
       setPalette( QToolTip::palette() );
       setFrameStyle( Panel | Plain );
       setMidLineWidth( 0 );

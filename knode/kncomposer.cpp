@@ -2592,12 +2592,16 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, Q
   m_imeType=new KLineEdit(mimeGB);
   m_imeType->setText(a->mimeType());
   mimeL->addWidget(m_imeType, 1,1);
-  mimeL->addWidget(new QLabel(m_imeType, i18n("&Mime-Type:"), mimeGB), 1,0);
+  QLabel *label = new QLabel(i18n("&Mime-Type:"), mimeGB);
+  label->setBuddy(m_imeType);
+  mimeL->addWidget(label, 1,0);
 
   d_escription=new KLineEdit(mimeGB);
   d_escription->setText(a->description());
   mimeL->addWidget(d_escription, 2,1);
-  mimeL->addWidget(new QLabel(d_escription, i18n("&Description:"), mimeGB), 2,0);
+  label=new QLabel(i18n("&Description:"), mimeGB);
+  label->setBuddy(d_escription);
+  mimeL->addWidget(label, 2,0);
 
   e_ncoding=new QComboBox(mimeGB);
   e_ncoding->setEditable(false);
@@ -2612,7 +2616,9 @@ KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, Q
   else
     e_ncoding->setCurrentIndex(a->cte());
   mimeL->addWidget(e_ncoding, 3,1);
-  mimeL->addWidget(new QLabel(e_ncoding, i18n("&Encoding:"), mimeGB), 3,0);
+  label=new QLabel(i18n("&Encoding:"), mimeGB);
+  label->setBuddy(e_ncoding);
+  mimeL->addWidget(label, 3,0);
 
   mimeL->setColumnStretch(1,1);
   topL->addWidget(mimeGB);

@@ -337,7 +337,9 @@ Kleo::CryptoConfigEntryLineEdit::CryptoConfigEntryLineEdit(
 {
   const int row = glay->rowCount();
   mLineEdit = new KLineEdit( widget );
-  glay->addWidget( new QLabel( mLineEdit, description(), widget ), row, 1 );
+  QLabel *label = new QLabel( description(), widget );
+  label->setBuddy( mLineEdit );
+  glay->addWidget( label, row, 1 );
   glay->addWidget( mLineEdit, row, 2 );
   connect( mLineEdit, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
 }
@@ -363,7 +365,9 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
   const int row = glay->rowCount();
   mUrlRequester = new KUrlRequester( widget );
   mUrlRequester->setMode( KFile::File | KFile::ExistingOnly | KFile::LocalOnly );
-  glay->addWidget( new QLabel( mUrlRequester, description(), widget ), row, 1 );
+  QLabel *label = new QLabel( description(), widget );
+  label->setBuddy( mUrlRequester );
+  glay->addWidget( label, row, 1 );
   glay->addWidget( mUrlRequester, row, 2 );
   connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
 }
@@ -391,7 +395,9 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
   const int row = glay->rowCount();
   mUrlRequester = new KUrlRequester( widget );
   mUrlRequester->setMode( KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly );
-  glay->addWidget( new QLabel( mUrlRequester, description(), widget ), row, 1 );
+  QLabel *label = new QLabel( description(), widget );
+  label->setBuddy( mUrlRequester );
+  glay->addWidget( label, row, 1 );
   glay->addWidget( mUrlRequester, row, 2 );
   connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
 }
@@ -420,7 +426,9 @@ Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
   const int row = glay->rowCount();
   mUrlRequester = new KUrlRequester( widget );
   mUrlRequester->setMode( KFile::File | KFile::ExistingOnly );
-  glay->addWidget( new QLabel( mUrlRequester, description(), widget ), row, 1 );
+  QLabel *label = new QLabel( description(), widget );
+  label->setBuddy( mUrlRequester );
+  glay->addWidget( label, row, 1 );
   glay->addWidget( mUrlRequester, row, 2 );
   connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
 }
@@ -455,7 +463,9 @@ Kleo::CryptoConfigEntrySpinBox::CryptoConfigEntrySpinBox(
 
   const int row = glay->rowCount();
   mNumInput = new KIntNumInput( widget );
-  glay->addWidget( new QLabel( mNumInput, description(), widget ), row, 1 );
+  QLabel *label = new QLabel( description(), widget );
+  label->setBuddy( mNumInput );
+  glay->addWidget( label, row, 1 );
   glay->addWidget( mNumInput, row, 2 );
 
   if ( mKind == UInt || mKind == ListOfNone )
@@ -533,7 +543,9 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
 
 
   const int row = glay->rowCount();
-  glay->addWidget( new QLabel( mPushButton, description(), widget ), row, 1 );
+  QLabel *label = new QLabel( description(), widget );
+  label->setBuddy( mPushButton );
+  glay->addWidget( label, row, 1 );
   QHBoxLayout * hlay = new QHBoxLayout;
   glay->addLayout( hlay, row, 2 );
   hlay->addWidget( mLabel, 1 );

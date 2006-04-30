@@ -49,7 +49,9 @@ LabelAction::LabelAction( const QString & text,  KActionCollection * parent,
 
 QWidget* LabelAction::createToolBarWidget( QToolBar * parent )
 {
-  return new QLabel( text(), parent, "kde toolbar widget" );
+  QLabel *label = new QLabel( text(), parent );
+  label->setObjectName( "kde toolbar widget" );
+  return label;
 }
 
 #warning How to port the Kiosk stuff below?

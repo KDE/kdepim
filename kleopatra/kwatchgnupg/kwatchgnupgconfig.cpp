@@ -99,13 +99,17 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
 
   ++row;
   mExeED = new KUrlRequester( w );
-  glay->addWidget( new QLabel( mExeED, i18n("&Executable:"), w ), row, 0 );
+  QLabel *label = new QLabel( i18n("&Executable:"), w );
+  label->setBuddy( mExeED );
+  glay->addWidget( label, row, 0 );
   glay->addWidget( mExeED, row, 1 );
   connect( mExeED, SIGNAL(textChanged(const QString&)), SLOT(slotChanged()) );
 
   ++row;
   mSocketED = new KUrlRequester( w );
-  glay->addWidget( new QLabel( mSocketED, i18n("&Socket:"), w ), row, 0 );
+  label = new QLabel( i18n("&Socket:"), w );
+  label->setBuddy( mSocketED );
+  glay->addWidget( label, row, 0 );
   glay->addWidget( mSocketED, row, 1 );
   connect( mSocketED, SIGNAL(textChanged(const QString&)), SLOT(slotChanged()) );
 
@@ -117,7 +121,9 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   mLogLevelCB->addItem( i18n("Advanced") );
   mLogLevelCB->addItem( i18n("Expert") );
   mLogLevelCB->addItem( i18n("Guru") );
-  glay->addWidget( new QLabel( mLogLevelCB, i18n("Default &log level:"), w ), row, 0 );
+  label = new QLabel( i18n("Default &log level:"), w );
+  label->setBuddy( mLogLevelCB );
+  glay->addWidget( label, row, 0 );
   glay->addWidget( mLogLevelCB, row, 1 );
   connect( mLogLevelCB, SIGNAL(activated(int)), SLOT(slotChanged()) );
 
@@ -142,7 +148,9 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
   mLoglenSB->setSingleStep( 100 );
   mLoglenSB->setSuffix( i18nc("history size spinbox suffix"," lines") );
   mLoglenSB->setSpecialValueText( i18n("unlimited") );
-  glay->addWidget( new QLabel( mLoglenSB, i18n("&History size:"), w ), row, 0 );
+  label = new QLabel( i18n("&History size:"), w );
+  label->setBuddy( mLoglenSB );
+  glay->addWidget( label, row, 0 );
   glay->addWidget( mLoglenSB, row, 1 );
   QPushButton * button = new QPushButton( i18n("Set &Unlimited"), w );
   glay->addWidget( button, row, 2 );

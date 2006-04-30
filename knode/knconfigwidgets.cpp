@@ -1148,13 +1148,17 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
   h_drC=new KComboBox(true, nameW);
   h_drC->lineEdit()->setMaxLength(64);
   connect(h_drC, SIGNAL(activated(int)), this, SLOT(slotActivated(int)));
-  nameL->addWidget(new QLabel(h_drC, i18n("H&eader:"),nameW),0,0);
+  QLabel *label=new QLabel(i18n("H&eader:"),nameW);
+  label->setBuddy(h_drC);
+  nameL->addWidget(label,0,0);
   nameL->addWidget(h_drC,0,1);
 
   n_ameE=new KLineEdit(nameW);
 
   n_ameE->setMaxLength(64);
-  nameL->addWidget(new QLabel(n_ameE, i18n("Displayed na&me:"),nameW),1,0);
+  label=new QLabel(i18n("Displayed na&me:"),nameW);
+  label->setBuddy(n_ameE);
+  nameL->addWidget(label,1,0);
   nameL->addWidget(n_ameE,1,1);
   nameL->setColumnStretch(1,1);
 
@@ -1294,7 +1298,9 @@ KNode::FilterListWidget::FilterListWidget( KInstance *inst, QWidget *parent ) :
   // == Filters =================================================
 
   mFilterList = new QListWidget( this );
-  topL->addWidget( new QLabel( mFilterList, i18n("&Filters:"), this ), 0, 0 );
+  QLabel *label=new QLabel(i18n("&Filters:"), this );
+  label->setBuddy(mFilterList);
+  topL->addWidget( label, 0, 0 );
 
   connect( mFilterList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChangedFilter() ) );
   connect( mFilterList, SIGNAL( itemActivated( QListWidgetItem* ) ), SLOT( slotEditBtnClicked() ) );
@@ -1319,7 +1325,9 @@ KNode::FilterListWidget::FilterListWidget( KInstance *inst, QWidget *parent ) :
   // == Menu ====================================================
 
   mMenuList = new QListWidget( this );
-  topL->addWidget( new QLabel( mMenuList, i18n("&Menu:"), this ), 6, 0 );
+  label=new QLabel( i18n("&Menu:"), this );
+  label->setBuddy(mMenuList);
+  topL->addWidget( label, 6, 0 );
 
   connect( mMenuList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChangedMenu() ) );
   topL->addWidget( mMenuList, 7, 0, 5, 1);

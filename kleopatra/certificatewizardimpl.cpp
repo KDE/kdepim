@@ -362,7 +362,9 @@ void CertificateWizardImpl::createPersonalDataPage()
 
     QLineEdit * le = new QLineEdit( edContainer );
     grid->addWidget( le, row, 1 );
-    grid->addWidget( new QLabel( le, label.isEmpty() ? attr : label, edContainer ), row, 0 );
+    QLabel* lbl = new QLabel( label.isEmpty() ? attr : label, edContainer );
+    lbl->setBuddy( le );
+    grid->addWidget( lbl, row, 0 );
 
     le->setText( preset );
     if ( config.entryIsImmutable( attr ) )

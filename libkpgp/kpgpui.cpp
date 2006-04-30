@@ -344,7 +344,9 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   QHBoxLayout * hlay = new QHBoxLayout(); // inherits spacing
   topLayout->addLayout( hlay );
   QLineEdit * le = new QLineEdit( page );
-  hlay->addWidget( new QLabel( le, i18n("&Search for:"), page ) );
+  QLabel *label = new QLabel( i18n("&Search for:"), page );
+  label->setBuddy( le );
+  hlay->addWidget( label );
   hlay->addWidget( le, 1 );
   le->setFocus();
 
