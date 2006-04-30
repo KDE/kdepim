@@ -262,9 +262,9 @@ void CardViewItem::paintCard( QPainter *p, const QPalette &pal )
 
   // Draw a simple box
   if ( isSelected() )
-    pen = QPen( pal.highlight(), 1 );
+    pen = QPen( pal.color( QPalette::Highlight ), 1 );
   else
-    pen = QPen( pal.button(), 1 );
+    pen = QPen( pal.color( QPalette::Button), 1 );
   p->setPen( pen );
 
   // Draw the border - this is only draw if the user asks for it.
@@ -284,9 +284,9 @@ void CardViewItem::paintCard( QPainter *p, const QPalette &pal )
   QFont bFont = mView->headerFont();
   p->setFont( bFont );
   if ( isSelected() )
-    p->setPen( pal.highlightedText() );
+    p->setPen( pal.color( QPalette::HighlightedText) );
   else
-    p->setPen( pal.buttonText() );
+    p->setPen( pal.color( QPalette::ButtonText) );
 
   p->drawText( 2 + mg, 2 + mg + bFm.ascent(), trimString( d->mCaption, w - 4, bFm ) );
   p->restore();
@@ -602,11 +602,11 @@ CardView::CardView( QWidget *parent, const char *name )
   viewport()->setMouseTracking( true );
   viewport()->setFocusProxy( this );
   viewport()->setFocusPolicy( Qt::WheelFocus );
-  viewport()->setBackgroundMode( Qt::PaletteBase );
+  viewport()->setBackgroundRole( QPalette::Base );
 
   connect( d->mTimer, SIGNAL( timeout() ), this, SLOT( tryShowFullText() ) );
 
-  setBackgroundMode( Qt::PaletteBackground, Qt::PaletteBase );
+  setBackgroundRole( QPalette::Background );
 
   // no reason for a vertical scrollbar
   setVScrollBarMode( AlwaysOff );
@@ -1491,7 +1491,7 @@ void CardView::drawRubberBands( int pos )
   int h = visibleHeight();
 
   QPainter p( viewport() );
-  // FIXME porting 
+  // FIXME porting
   //p.setRasterOp( XorROP );
   p.setPen( Qt::gray );
   p.setBrush( Qt::gray );

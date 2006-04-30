@@ -523,7 +523,7 @@ GeoMapWidget::GeoMapWidget( QWidget *parent, const char *name )
   : QWidget( parent ), mLatitude( 0 ), mLongitude( 0 )
 {
   setObjectName( name );
-  setBackgroundMode( Qt::NoBackground );
+  setAttribute(Qt::WA_NoSystemBackground, true);
 
   setFixedSize( 400, 200 );
 

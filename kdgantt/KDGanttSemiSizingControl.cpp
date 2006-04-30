@@ -406,7 +406,7 @@ QPixmap KDGanttSemiSizingControl::pixmap( Direction direction ) {
 #else
     QPainter p( &pix );
     p.setPen( Qt::black );
-    p.setBrush( palette().button() );
+    p.setBrush( palette().color( QPalette::Button) );
     p.drawPolygon( arr );
     QBitmap bit( s, s );
     bit.fill( Qt::blue );
