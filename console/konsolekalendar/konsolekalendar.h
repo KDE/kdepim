@@ -126,7 +126,7 @@ namespace KCal
     bool printEvent( QTextStream *ts, Event *event, QDate dt );
 
     /**
-     * Variables that changes stuff in programm
+     * Variables that changes stuff in program
      */
     KonsoleKalendarVariables *m_variables;
 
@@ -136,7 +136,7 @@ namespace KCal
     ResourceCalendar *m_Calendar;
 
     /**
-     * This is usefull if we like to have same day events to same system
+     * This is useful if we like to have same day events to same system
      */
     QDate m_saveDate;
 
