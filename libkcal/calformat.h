@@ -50,7 +50,7 @@ class LIBKCAL_EXPORT CalFormat
 
     /**
       loads a calendar on disk into the calendar associated with this format.
-      Returns TRUE if successful,else returns FALSE.
+      Returns true if successful,else returns false.
       @param fileName the name of the calendar on disk.
     */
     virtual bool load(Calendar *, const QString &fileName) = 0;
