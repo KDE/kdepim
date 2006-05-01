@@ -39,11 +39,5 @@ install-data-local:
 uninstall-local:
 	rm -f $(DESTDIR)$(kde_confdir)/libkleopatrarc
 
-messages: #rc.cpp
-	$(EXTRACTRC) */*.ui > rc.cpp
-	$(XGETTEXT) *.cpp *.h \
-	kleo/*.cpp kleo/*.h \
-	ui/*.cpp ui/*.h \
-	backends/*/*.cpp backends/*/*.h -o $(podir)/libkleopatra.pot
 
 include $(top_srcdir)/admin/Doxyfile.am
