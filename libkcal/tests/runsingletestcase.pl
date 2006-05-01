@@ -26,8 +26,8 @@
 #      runtestcase.pl appname testfile.ics
 # The application/script appname is required to take two arguments:
 #      appname inputfile outputfile
-# where inputfile is the file to be used as input data, and the ouput of the
-# programm will go to outputfile (=testfile.ics.out if called through 
+# where inputfile is the file to be used as input data, and the output of the
+# program will go to outputfile (=testfile.ics.out if called through 
 # runtestcase.pl). That outputfile is then compared to the reference file
 # testfile.ics.ref.
 

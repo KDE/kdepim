@@ -422,7 +422,7 @@ void test_parameters()
 
     for (i=0;enums[i] != -1; i++){
       if (VERBOSE) printf("%s\n",icalparameter_enum_to_string(enums[i]));
-      ok("test paramter enums",
+      ok("test parameter enums",
 	 (icalparameter_string_to_enum(icalparameter_enum_to_string(enums[i]))==enums[i]));
     }
 }
@@ -2732,7 +2732,7 @@ void test_gauge_compare() {
     icalcomponent_free(c);
 
 
-    /* Complex comparisions */
+    /* Complex comparisons */
 
     c =  icalcomponent_vanew(
 	ICAL_VCALENDAR_COMPONENT,

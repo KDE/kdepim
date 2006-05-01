@@ -55,7 +55,7 @@
  *  Function to convert a struct tm time specification
  *  to an ANSI time_t using the specified time zone.
  *  This is different from the standard mktime() function
- *  in that we dont want the automatic adjustments for
+ *  in that we don't want the automatic adjustments for
  *  local daylight savings time applied to the result.
  *  This function expects well-formed input.
  */

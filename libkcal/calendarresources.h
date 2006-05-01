@@ -185,7 +185,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
     /**
        Save this Calendar.
-       If the save is successfull, the Ticket is deleted.  Otherwise, the
+       If the save is successful, the Ticket is deleted.  Otherwise, the
        caller must release the Ticket with releaseSaveTicket() to abandon
        the save operation or call save() to try the save again.
 
@@ -538,7 +538,7 @@ class LIBKCAL_EXPORT CalendarResources :
       SortDirection sortDirection = SortDirectionAscending );
 
     /**
-       Return an unfiltered list of all Journals for on the specifed date.
+       Return an unfiltered list of all Journals for on the specified date.
 
        @param date request unfiltered Journals for this QDate only.
 

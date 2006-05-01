@@ -247,7 +247,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
     /**
        Get the Time Zone ID for the Calendar.
 
-       @return the string containg the Time Zone ID.
+       @return the string containing the Time Zone ID.
     */
     QString timeZoneId() const;
 
@@ -695,7 +695,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
       SortDirection sortDirection = SortDirectionAscending );
 
     /**
-       Return a filtered list of all Journals for on the specifed date.
+       Return a filtered list of all Journals for on the specified date.
 
        @param date request filtered Journals for this QDate only.
 
@@ -716,7 +716,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
       SortDirection sortDirection = SortDirectionAscending ) = 0;
 
     /**
-       Return an unfiltered list of all Journals for on the specifed date.
+       Return an unfiltered list of all Journals for on the specified date.
 
        @param date request unfiltered Journals for this QDate only.
 
@@ -915,7 +915,7 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
 
   private:
     /**
-       Intialize a Calendar object with starting values.
+       Initialize a Calendar object with starting values.
     */
     void init();
 

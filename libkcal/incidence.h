@@ -268,7 +268,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
       on the given date (might start before that date, but end on or after the
       given date).
       @param date the date where the incidence should occur
-      @return the start date/time of all occurences that overlap with the given
+      @return the start date/time of all occurrences that overlap with the given
           date. Empty list if the incidence does not overlap with the date at all
     */
     virtual QList<QDateTime> startDateTimesForDate( const QDate &date ) const;
@@ -277,7 +277,7 @@ class LIBKCAL_EXPORT Incidence : public IncidenceBase, public Recurrence::Observ
       Calculates the start date/time for all recurrences that happen at the given
       time.
       @param datetime the date/time where the incidence should occur
-      @return the start date/time of all occurences that overlap with the given
+      @return the start date/time of all occurrences that overlap with the given
           date/time. Empty list if the incidence does not happen at the given
           time at all.
     */

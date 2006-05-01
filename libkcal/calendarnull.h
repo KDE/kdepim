@@ -77,7 +77,7 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
     void save() {}
 
     bool reload( const QString & ) { return true;}
-    
+
 // Event Specific Methods //
 
     /**
@@ -200,7 +200,7 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
 
     /**
        Return an unfiltered list of all Todos for this Calendar which
-       are due on the specifed date.
+       are due on the specified date.
 
        First parameter is the due date to return unfiltered Todos for.
 
@@ -254,7 +254,7 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
       { return Journal::List(); }
 
     /**
-       Return an unfiltered list of all Journals for on the specifed date.
+       Return an unfiltered list of all Journals for on the specified date.
 
        First parameter specifies the data to return the unfiltered Journals for.
 
@@ -296,7 +296,7 @@ class LIBKCAL_EXPORT CalendarNull : public Calendar
     void incidenceUpdated( IncidenceBase * /*incidenceBase*/ ) {}
 
     void setTimeZoneIdViewOnly( const QString& ) {};
-    
+
   private:
     static CalendarNull *mSelf;
 

@@ -82,7 +82,7 @@ class LIBKCAL_EXPORT CalFilter
     */
     void setEnabled( bool );
     /**
-      Return wheter the filter is enabled or not.
+      Return whether the filter is enabled or not.
     */
     bool isEnabled() const;
 
@@ -100,13 +100,13 @@ class LIBKCAL_EXPORT CalFilter
     QStringList categoryList() const;
 
     /**
-      Set list of email addresses which are to be considered when finding 
+      Set list of email addresses which are to be considered when finding
       incidences which the current user is not a participant of. This is
       normally the list used by KOPrefs::thatIsMe() as well.
     */
     void setEmailList( const QStringList & );
     /**
-      Return list of email addresses which are to be considered when finding 
+      Return list of email addresses which are to be considered when finding
       incidences which the current user is not a participant of. This is
       normally the list used by KOPrefs::thatIsMe() as well.
       See related functions.

@@ -53,7 +53,7 @@ icalparameter_kind icalparameter_isa(icalparameter* parameter);
 
 int icalparameter_isa_parameter(void* param);
 
-/* Acess the name of an X parameer */
+/* Access the name of an X parameer */
 void icalparameter_set_xname (icalparameter* param, const char* v);
 const char* icalparameter_get_xname(icalparameter* param);
 void icalparameter_set_xvalue (icalparameter* param, const char* v);

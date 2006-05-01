@@ -694,7 +694,7 @@ icalproperty_remove_parameter_by_kind(icalproperty* prop, icalparameter_kind kin
  *  @param prop   A valid icalproperty.
  *  @param name   The name of the parameter to remove
  *
- *  This function removes paramters with the given name.  The name
+ *  This function removes parameters with the given name.  The name
  *  corresponds to either a built-in name (TZID, etc.) or the name of
  *  an extended parameter (X-FOO)
  *

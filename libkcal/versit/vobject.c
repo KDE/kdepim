@@ -721,8 +721,8 @@ static const char *AAlarmFields[] = {
     0
     };
 
-/* ExDate -- has unamed fields */
-/* RDate -- has unamed fields */
+/* ExDate -- has unnamed fields */
+/* RDate -- has unnamed fields */
 
 static const char *DAlarmFields[] = {
     VCRunTimeProp,

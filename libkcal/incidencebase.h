@@ -241,11 +241,11 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     */
     enum { SYNCNONE = 0, SYNCMOD = 1, SYNCDEL = 3 };
     /**
-      Set synchronisation satus.
+      Set synchronization satus.
     */
     void setSyncStatus( int status );
     /**
-      Return synchronisation status.
+      Return synchronization status.
     */
     int syncStatus() const;
 

@@ -380,7 +380,7 @@ bool Incidence::recursAt(const QDateTime &qdt) const
   on the given date (might start before that date, but end on or after the
   given date).
   @param date the date where the incidence should occur
-  @return the start date/time of all occurences that overlap with the given
+  @return the start date/time of all occurrences that overlap with the given
       date. Empty list if the incidence does not overlap with the date at all
 */
 QList<QDateTime> Incidence::startDateTimesForDate( const QDate &date ) const
@@ -426,7 +426,7 @@ QList<QDateTime> Incidence::startDateTimesForDate( const QDate &date ) const
   Calculates the start date/time for all recurrences that happen at the given
   time.
   @param datetime the date/time where the incidence should occur
-  @return the start date/time of all occurences that overlap with the given
+  @return the start date/time of all occurrences that overlap with the given
       date/time. Empty list if the incidence does not happen at the given
       time at all.
 */

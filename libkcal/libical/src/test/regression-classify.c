@@ -86,7 +86,7 @@ void test_classify(void)
     icalcomponent *c,*match; 
     int i=0;
     int error_count = 0;
-    /* Open up the two storage files, one for the incomming components, 
+    /* Open up the two storage files, one for the incoming components, 
        one for the calendar */
     icalset* incoming = icalset_new_file("../../test-data/incoming.ics");
     icalset* cal = icalset_new_file("../../test-data/calendar.ics");
@@ -153,7 +153,7 @@ void test_classify(void)
 
         if(this_uid != 0){
             /* Look in the calendar for a component with the same UID
-               as the incomming component. We should reall also be
+               as the incoming component. We should reall also be
                checking the RECURRENCE-ID. Another way to do this
                operation is to us icalset_find_match(), which does use
                the RECURRENCE-ID. */

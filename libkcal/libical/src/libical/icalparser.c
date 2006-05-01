@@ -278,7 +278,7 @@ char* icalparser_get_next_paramvalue(char* line, char **end)
 
 
 /**
-   A property may have multiple values, if the values are seperated by
+   A property may have multiple values, if the values are separated by
    commas in the content line. This routine will look for the next
    comma after line and will set the next place to start searching in
    end. */
@@ -297,7 +297,7 @@ char* icalparser_get_next_value(char* line, char **end, icalvalue_kind kind)
 	next = icalparser_get_next_char(',',p,1);
 
 	/* Unforunately, RFC2445 says that for the RECUR value, COMMA
-	   can both seperate digits in a list, and it can seperate
+	   can both separate digits in a list, and it can separate
 	   multiple recurrence specifications. This is not a friendly
 	   part of the spec. This weirdness tries to
 	   distinguish the two uses. it is probably a HACK*/
@@ -307,7 +307,7 @@ char* icalparser_get_next_value(char* line, char **end, icalvalue_kind kind)
 		 (*end+length) > next+5 &&
 		 strncmp(next,"FREQ",4) == 0
 		) {
-		/* The COMMA was followed by 'FREQ', is it a real seperator*/
+		/* The COMMA was followed by 'FREQ', is it a real separator*/
 		/* Fall through */
 	    } else if (next != 0){
 		/* Not real, get the next COMMA */
@@ -327,7 +327,7 @@ char* icalparser_get_next_value(char* line, char **end, icalvalue_kind kind)
 	}
 
 	/* If the comma is preceded by a '\', then it is a literal and
-	   not a value seperator*/  
+	   not a value separator*/  
       
 	if ( (next!=0 && *(next-1) == '\\') ||
 	     (next!=0 && *(next-3) == '\\')
@@ -796,7 +796,7 @@ icalcomponent* icalparser_add_line(icalparser* parser,
     while(1) {
 
 	if (*(end-1) == ':'){
-	    /* if the last seperator was a ":" and the value is a
+	    /* if the last separator was a ":" and the value is a
 	       URL, icalparser_get_next_parameter will find the
 	       ':' in the URL, so better break now. */
 	    break;
