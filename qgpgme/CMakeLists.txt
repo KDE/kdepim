@@ -24,8 +24,6 @@ install_targets(${LIB_INSTALL_DIR} qgpgme )
 
 install_files( /include/qgpgme FILES  )
 
-kde4_create_doxygen_docs(  )
-
 kde4_footer()
 
 

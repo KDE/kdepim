@@ -32,8 +32,6 @@ install_targets(${LIB_INSTALL_DIR} kpgp )
 
 install_files( ${KCONF_UPDATE_INSTALL_DIR} FILES kpgp.upd kpgp-3.1-upgrade-address-data.pl)
 
-kde4_create_doxygen_docs(  )
-
 kde4_footer()
 
 

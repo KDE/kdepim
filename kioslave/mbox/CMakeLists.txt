@@ -27,8 +27,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kio_mbox )
 
 install_files( ${SERVICES_INSTALL_DIR} FILES mbox.protocol )
 
-kde4_create_doxygen_docs(  )
-
 kde4_footer()
 
 

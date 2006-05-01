@@ -3,14 +3,9 @@ kde4_header()
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 
-########### next target ###############
-
-
 ########### install files ###############
 
 install_files( /include/libsyndication/rss2 FILES category.h cloud.h document.h enclosure.h                   image.h item.h parser.h rss2.h source.h textinput.h )
-
-kde4_create_doxygen_docs(  )
 
 kde4_footer()
 

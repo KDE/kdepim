@@ -31,17 +31,15 @@ install_targets( ${LIB_INSTALL_DIR} kholidays_ng )
 ########### install files ###############
 
 install_files( /include/libkholiday_ng FILES
-astroseasons.h
-holidaycalendar.h
-holidayfilter.h
-holiday.h
-kholidays.h
-kholidays_version.h
-lunarphase.h
-zodiac.h
-)
-
-kde4_create_doxygen_docs(  )
+   astroseasons.h
+   holidaycalendar.h
+   holidayfilter.h
+   holiday.h
+   kholidays.h
+   kholidays_version.h
+   lunarphase.h
+   zodiac.h
+   )
 
 kde4_footer()
 

@@ -97,8 +97,6 @@ install_targets(${LIB_INSTALL_DIR} kleopatra )
 ########### install files ###############
 
 
-kde4_create_doxygen_docs(  )
-
 kde4_footer()
 
 

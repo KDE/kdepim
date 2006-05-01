@@ -19,11 +19,6 @@ set_target_properties(kpimidentities PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kpimidentities )
 
 
-########### install files ###############
-
-
-kde4_create_doxygen_docs(  )
-
 kde4_footer()
 
 

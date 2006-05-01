@@ -6,14 +6,9 @@ include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_D
 
 kde4_add_dcop_skels(libemailfunctions_SRCS ${CMAKE_SOURCE_DIR}/libemailfunctions/networkstatus.h )
 
-########### next target ###############
-
-
 ########### install files ###############
 
 install_files( /include/libemailfunctions FILES idmapper.h )
-
-kde4_create_doxygen_docs(  )
 
 kde4_footer()
 

@@ -3,14 +3,9 @@ kde4_header()
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 
-########### next target ###############
-
-
 ########### install files ###############
 
 install_files( /include/libsyndication/atom FILES category.h constants.h content.h document.h entry.h                   generator.h link.h parser.h person.h source.h atom.h )
-
-kde4_create_doxygen_docs(  )
 
 kde4_footer()
 

@@ -41,8 +41,6 @@ install_targets(${LIB_INSTALL_DIR} kmime )
 ########### install files ###############
 
 
-kde4_create_doxygen_docs( EXCLUDE kmime_headers_obs.h  )
-
 kde4_footer()
 
 

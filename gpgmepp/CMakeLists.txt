@@ -41,8 +41,6 @@ install_targets(${LIB_INSTALL_DIR} gpgme++ )
 
 install_files( /include/gpgme++ FILES  )
 
-kde4_create_doxygen_docs(  )
-
 kde4_footer()
 
 

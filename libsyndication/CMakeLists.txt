@@ -125,8 +125,6 @@ install_files( /include/libsyndication FILES specificdocument.h abstractparser.h
                 documentvisitor.h documentsource.h elementwrapper.h item.h feed.h category.h image.h         
                 enclosure.h person.h global.h dataretriever.h loader.h )
 
-kde4_create_doxygen_docs( EXCLUDE mapper  )
-
 kde4_footer()
 
 #original Makefile.am contents follow:

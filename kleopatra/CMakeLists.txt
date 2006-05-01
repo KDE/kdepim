@@ -36,8 +36,6 @@ install_targets(/bin kleopatra_bin )
 install_files( ${XDG_APPS_DIR} FILES kleopatra_import.desktop )
 install_files( ${DATA_INSTALL_DIR}/kleopatra FILES kleopatraui.rc )
 
-kde4_create_doxygen_docs(  )
-
 kde4_footer()
 
 

@@ -136,8 +136,6 @@ install_files( ${DATA_INSTALL_DIR}/knode FILES headers.rc knodeui.rc knreaderui.
 
 kde4_install_icons( ${ICON_INSTALL_DIR}  hicolor )
 
-kde4_create_doxygen_docs(  )
-
 kde4_footer()
 
 

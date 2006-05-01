@@ -3,9 +3,6 @@ kde4_header()
 include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
 
 
-########### next target ###############
-
-
 ########### install files ###############
 
 install_files( /include/libsyndication/rdf FILES parser.h dublincorevocab.h dublincore.h
@@ -13,8 +10,6 @@ install_files( /include/libsyndication/rdf FILES parser.h dublincorevocab.h dubl
                textinput.h document.h rssvocab.h node.h property.h literal.h resource.h
                model.h modelmaker.h rdfvocab.h sequence.h statement.h resourcewrapper.h 
                nodevisitor.h rdf.h )
-
-kde4_create_doxygen_docs(  )
 
 kde4_footer()
 
