@@ -23,5 +23,3 @@ kcal_service_DATA = blogging.desktop
 
 METASOURCES = AUTO
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kres_blogging.pot

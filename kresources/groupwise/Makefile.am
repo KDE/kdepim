@@ -42,6 +42,4 @@ kabc_service_DATA = kabc_groupwise.desktop
 
 METASOURCES = AUTO
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp soap/*.cpp -o $(podir)/kres_groupwise.pot
 noinst_HEADERS = groupwisesettingswidget.h

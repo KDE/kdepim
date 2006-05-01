@@ -11,5 +11,3 @@ noinst_HEADERS = sieve.h
 kdelnk_DATA = sieve.protocol
 kdelnkdir = $(kde_servicesdir)
 
-messages:
-	$(XGETTEXT) *.cpp -o $(podir)/kio_sieve.pot

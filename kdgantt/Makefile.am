@@ -39,7 +39,5 @@ METASOURCES = AUTO
 
 INCLUDES  = $(all_includes)
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp *.h -o $(podir)/kdgantt.pot
 include $(top_srcdir)/admin/Doxyfile.am
 DOXYGEN_SET_IGNORE_PREFIX = KD

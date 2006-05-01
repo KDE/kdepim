@@ -45,5 +45,3 @@ install-data-local: uninstall.desktop
 	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_servicesdir)/kresources/kabc/kabc_opengroupware.desktop
 	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_servicesdir)/kresources/kcal/kcal_opengroupware.desktop
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kres_groupdav.pot

@@ -77,8 +77,6 @@ managerdir = $(kde_servicesdir)/kresources
 
 METASOURCES = AUTO
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/libkcal.pot
 
 DOXYGEN_EXCLUDE = libical
 DOXYGEN_REFERENCES=kresources

@@ -31,8 +31,6 @@ kcm_kabcustomfields_la_COMPILE_FIRST = $(top_builddir)/kaddressbook/common/kabpr
 
 METASOURCES = AUTO
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kcmkabconfig.pot
 
 kde_services_DATA = kabconfig.desktop kabldapconfig.desktop \
                     kabcustomfields.desktop

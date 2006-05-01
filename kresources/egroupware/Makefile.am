@@ -67,5 +67,3 @@ knotes_service_DATA = knotes_xmlrpc.desktop
 
 METASOURCES = AUTO
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kres_xmlrpc.pot

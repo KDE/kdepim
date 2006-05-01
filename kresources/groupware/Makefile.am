@@ -38,5 +38,3 @@ kabc_service_DATA = kabc_groupware.desktop
 
 METASOURCES = AUTO
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kres_groupware.pot

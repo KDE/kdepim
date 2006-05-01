@@ -37,7 +37,3 @@ link_DATA = text_vcard.desktop text_calendar.desktop text_xdiff.desktop
 
 METASOURCES = AUTO
 
-messages:
-	$(XGETTEXT) text_vcard.cpp -o $(podir)/kmail_text_vcard_plugin.pot
-	$(XGETTEXT) text_calendar.cpp -o $(podir)/kmail_text_calendar_plugin.pot
-	$(XGETTEXT) text_xdiff.cpp -o $(podir)/kmail_text_xdiff_plugin.pot

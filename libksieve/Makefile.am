@@ -14,5 +14,3 @@ libksieve_la_LDFLAGS = $(all_libraries) -version-info 0:0:0 -no-undefined
 dummy.cpp:
 	echo > dummy.cpp
 
-messages:
-	$(XGETTEXT) shared/*.cpp parser/*.cpp impl/*.h ksieve/*.h -o $(podir)/libksieve.pot

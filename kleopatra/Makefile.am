@@ -25,8 +25,5 @@ rc_DATA = kleopatraui.rc
 
 xdg_apps_DATA = kleopatra_import.desktop
 
-messages: rc.cpp
-	$(EXTRACTRC) conf/*.ui >> rc.cpp
-	$(XGETTEXT) conf/*.cpp *.cpp *.h -o $(podir)/kleopatra.pot
 
 include $(top_srcdir)/admin/Doxyfile.am

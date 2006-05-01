@@ -22,5 +22,3 @@ service_DATA = remote.desktop
 
 METASOURCES = AUTO
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kres_remote.pot

@@ -13,8 +13,6 @@ libqgpgme_la_LIBADD = $(LIB_QT) ../gpgmepp/libgpgme++.la
 
 METASOURCES = AUTO
 
-messages:
-	$(XGETTEXT) *.cpp *.h -o $(podir)/libqgpgme.pot
 
 include $(top_srcdir)/admin/Doxyfile.am
 

@@ -26,5 +26,3 @@ picsdir = $(kde_datadir)/kwatchgnupg/pics
 
 EXTRA_DIST = $(pics_DATA)
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp *.h -o $(podir)/kwatchgnupg.pot

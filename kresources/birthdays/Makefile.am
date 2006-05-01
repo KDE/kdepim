@@ -18,5 +18,3 @@ service_DATA = kabc.desktop
 
 METASOURCES = AUTO
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/kres_birthday.pot

@@ -19,8 +19,6 @@ kfile_ics_la_LIBADD = $(top_builddir)/libkcal/libkcal.la $(LIB_KSYCOCA)
 
 METASOURCES = AUTO
 
-messages: rc.cpp
-	$(XGETTEXT) kfile_ics.cpp -o $(podir)/kfile_ics.pot
 
 services_DATA = kfile_ics.desktop
 servicesdir = $(kde_servicesdir)

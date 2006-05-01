@@ -40,7 +40,5 @@ DISTCLEANFILES = kde-holidays.h kde-holidays.cpp \
 	kde-holidays.h.backup kde-holidays.cpp.backup \
 	kde-holidays_parser.h.backup kde-holidays_parser.cpp.backup
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/libkholidays_ng.pot
 
 include $(top_srcdir)/admin/Doxyfile.am

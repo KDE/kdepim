@@ -16,8 +16,6 @@ kfile_vcf_la_LIBADD = $(LIB_KSYCOCA) $(LIB_KDECORE) $(LIB_QT)
 # let automoc handle all of the meta source files (moc)
 METASOURCES = AUTO
 
-messages: rc.cpp
-	$(XGETTEXT) kfile_vcf.cpp -o $(podir)/kfile_vcf.pot
 
 services_DATA = kfile_vcf.desktop
 servicesdir = $(kde_servicesdir)

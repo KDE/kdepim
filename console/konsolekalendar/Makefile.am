@@ -18,8 +18,6 @@ konsolekalendar_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 appsdir = $(kde_appsdir)/Utilities
 xdg_apps_DATA = konsolekalendar.desktop
 
-messages: rc.cpp
-	$(XGETTEXT) *.cpp -o $(podir)/konsolekalendar.pot
 
 include $(top_srcdir)/admin/Doxyfile.am
 

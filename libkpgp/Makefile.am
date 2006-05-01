@@ -24,7 +24,5 @@ updatedir = $(kde_datadir)/kconf_update
 update_DATA = kpgp.upd
 update_SCRIPTS = kpgp-3.1-upgrade-address-data.pl
 
-messages: 
-	$(XGETTEXT) *.cpp *.h -o $(podir)/libkpgp.pot
 
 include $(top_srcdir)/admin/Doxyfile.am
