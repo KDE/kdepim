@@ -77,7 +77,7 @@ struct icaltriggertype icaltriggertype_from_string(const char* str)
 
     
     struct icaltriggertype tr, null_tr;
-    icalerrorstate es;
+    icalerrorstate es = ICAL_ERROR_UNKNOWN;
     icalerrorenum e;
 
     tr.time= icaltime_null_time();
