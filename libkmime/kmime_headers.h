@@ -747,7 +747,7 @@ class KDE_EXPORT Lines : public Base {
     virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
     virtual void clear()            { l_ines=-1; }
-    virtual bool isEmpty()          { return (l_ines==-1); }
+    virtual bool isEmpty() const    { return (l_ines==-1); }
     virtual const char* type() const { return "Lines"; }
 
     int numberOfLines()             { return l_ines; }
