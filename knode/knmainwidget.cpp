@@ -464,7 +464,7 @@ void KNMainWidget::openURL(const KUrl &url)
 
   if (acc) {
     QString decodedUrl = KUrl::decode_string( url.url() );
-    bool isMID=( decodedUrl.contains('@')==1 );
+    bool isMID=decodedUrl.contains('@' );
 
     if (!isMID) {
       QString groupname=url.path(-1);
