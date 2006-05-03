@@ -232,7 +232,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
                                     Qt::AlignTop | Qt::AlignLeft, line1 );
     } else {
       painter->drawText( Ruler1, y, Width-Ruler1, Height, Qt::AlignTop | Qt::AlignLeft,
-                         line1, -1, &rect );
+                         line1, &rect );
     }
 
     y += rect.height();
@@ -321,7 +321,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
       painter->drawText( limits[ counter ].left(), limits[ counter ].top() +
                          heights[ counter ] + Offset, limits[ counter ].width(),
                          limits[ counter ].height(), Qt::AlignTop | Qt::AlignLeft,
-                         list.at( 0 ), -1, &rect );
+                         list.at( 0 ), &rect );
     }
 
     heights[ counter ] += rect.height();
@@ -340,7 +340,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
         painter->drawText( limits[ counter ].left() + Ruler1, limits[ counter ].top()
                            + heights[ counter ] + Offset, limits[ counter ].width()
                            - Ruler1, limits[ counter ].height(), Qt::AlignTop | Qt::AlignLeft,
-                           list.at( c2 ), -1, &rect );
+                           list.at( c2 ), &rect );
       }
       (*rpos)->push_back( rect );
       heights[ counter ] += rect.height();
@@ -365,7 +365,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
     } else {
       painter->drawText( 0, y, Width, Height, Qt::AlignTop | Qt::AlignLeft,
                          addresses.count() == 1 ? i18n( "Address:" )
-                         : i18n( "Addresses:" ), -1, &rect );
+                         : i18n( "Addresses:" ), &rect );
     }
 
     y += rect.height();
@@ -428,7 +428,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
                                       Qt::AlignTop | Qt::AlignLeft, line1 );
       } else {
         painter->drawText( Ruler1, y, Width - Ruler1, Height,
-                           Qt::AlignTop | Qt::AlignLeft, line1, -1, &rect );
+                           Qt::AlignTop | Qt::AlignLeft, line1, &rect );
       }
 
       y += rect.height();
@@ -438,7 +438,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
                                         Qt::AlignTop | Qt::AlignLeft, line2 );
         } else {
           painter->drawText( Ruler2, y, Width - Ruler2, Height,
-                             Qt::AlignTop | Qt::AlignLeft, line2, -1, &rect );
+                             Qt::AlignTop | Qt::AlignLeft, line2, &rect );
         }
         y += rect.height();
       }
@@ -449,7 +449,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
                                         Qt::AlignTop | Qt::AlignLeft, line3 );
         } else {
           painter->drawText( Ruler2, y, Width - Ruler2, Height,
-                             Qt::AlignTop | Qt::AlignLeft, line3, -1, &rect );
+                             Qt::AlignTop | Qt::AlignLeft, line3, &rect );
         }
         y += rect.height();
       }
@@ -460,7 +460,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
                                         Qt::AlignTop | Qt::AlignLeft, line4 );
         } else {
           painter->drawText( Ruler2, y, Width - Ruler2, Height,
-                             Qt::AlignTop | Qt::AlignLeft, line4, -1, &rect );
+                             Qt::AlignTop | Qt::AlignLeft, line4, &rect );
         }
         y += rect.height();
       }
@@ -474,7 +474,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
         } else {
           painter->drawText( Ruler2, y, Width - Ruler2, Height,
                              Qt::AlignTop | Qt::AlignLeft,
-                             i18n( "(Deliver to:)" ), -1, &rect );
+                             i18n( "(Deliver to:)" ), &rect );
         }
 
         y += rect.height();
@@ -484,7 +484,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
                                         Qt::AlignTop | Qt::AlignLeft, address.label() );
         } else {
           painter->drawText( Ruler3, y, Width - Ruler3, Height,
-                             Qt::AlignTop | Qt::AlignLeft, address.label(), -1, &rect );
+                             Qt::AlignTop | Qt::AlignLeft, address.label(), &rect );
         }
 
         y += rect.height();
@@ -503,7 +503,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
     } else {
       painter->drawText( 0, y, Width, Height,
                          Qt::AlignTop | Qt::AlignLeft | Qt::TextWordWrap,
-                         addr.note(), -1, &rect );
+                         addr.note(), &rect );
     }
 
     y += rect.height();
