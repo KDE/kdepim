@@ -357,7 +357,7 @@ bool KTNEFParser::parseDevice()
 		d->stream_ >> u;
 		kDebug().form( "Attachment cross reference key: 0x%04x\n",u );
 		//kDebug() << "stream: " << d->device_->pos() << endl;
-		while (!d->stream_.eof())
+		while (!d->stream_.atEnd())
 		{
 			d->stream_ >> c;
 			switch (c)
@@ -786,7 +786,7 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 	kDebug() << "MAPI Properties: " << n << endl;
 	for (uint i=0;i<n;i++)
 	{
-		if (d->stream_.eof())
+		if (d->stream_.atEnd())
 		{
 			clearMAPIValue(mapi);
 			return false;
