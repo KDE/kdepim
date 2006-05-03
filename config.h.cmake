@@ -70,8 +70,6 @@
 /* Define to 1 if you have the <gnokii.h> header file. */
 #cmakedefine HAVE_GNOKII_H 1
 
-/* Define if you want full-text indexing in KMail */
-#cmakedefine HAVE_INDEXLIB 1
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #cmakedefine HAVE_INTTYPES_H 1
