@@ -1409,7 +1409,7 @@ void GroupwiseServer::log( const QString &prefix, const char *s, size_t n )
       }
       written += w;
     }
-    f.putch( '\n' );
+    f.putChar( '\n' );
     f.close();
   }
 }

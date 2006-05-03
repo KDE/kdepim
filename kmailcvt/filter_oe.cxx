@@ -377,7 +377,7 @@ QString FilterOE::parseFolderString( QDataStream& ds, int filePos )
     
     // read while != 0x00
     while( !ds.device()->atEnd() ) {
-        tmp = ds.device()->getch();
+        ds.device()->getChar(&tmp);
         if( tmp != 0x00) {
             returnString += tmp;
         }

@@ -89,7 +89,7 @@ void FilterLNotes::ImportLNotes(const QString& file) {
         inf->alert( i18n("Unable to open %1, skipping", file ) );
     } else {
 
-        int ch = 0;
+        char ch = 0;
         int state = 0;
         int n = 0;
         KTempFile *tempfile = 0;
@@ -100,7 +100,7 @@ void FilterLNotes::ImportLNotes(const QString& file) {
         inf->setTo(folder);
 
         // State machine to read the data in. The fgetc usage is probably terribly slow ...
-        while ((ch = f.getch()) >= 0) {
+        while (f.getChar(&ch)) {
             switch (state) {
                     // new message state
                 case 0:
@@ -137,7 +137,7 @@ void FilterLNotes::ImportLNotes(const QString& file) {
                     if (ch == 0x0d) {
                         break;
                     }
-                    tempfile->file()->putch(ch);
+                    tempfile->file()->putChar(ch);
                     break;
             }
         }

@@ -232,7 +232,7 @@ void KNCleanUp::compactFolder(KNFolder *f)
           ts << f->m_boxFile.readLine();
         ts.flush();
         art->setEndOffset( newMBoxFile.pos() );
-        newMBoxFile.putch('\n');
+        newMBoxFile.putChar('\n');
       }
     }
 
