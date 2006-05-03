@@ -343,7 +343,7 @@ void FilterOE::dbxReadEmail( FilterInfo *info, QDataStream& ds, int filePos)
         ds >> self >> nextAddressOffset >> blockSize >> intCount >> unknown >> nextAddress; // _dbx_block_hdrstruct
         QByteArray blockBuffer(blockSize,'\0');
         ds.readRawData(blockBuffer.data(), blockSize);
-        tmp.dataStream()->writeRawBytes(blockBuffer.data(), blockSize);
+        tmp.dataStream()->writeRawData(blockBuffer.data(), blockSize);
         // to detect incomplete mails or corrupted archives. See Bug #86119
         if(ds.atEnd()) {
             _break = true;

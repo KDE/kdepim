@@ -104,7 +104,7 @@ int lzfu_decompress(QIODevice *input, QIODevice *output)
 			{
 				// compressed chunck
 				char c1, c2;
-				if (input->read(&c1, 1) != 1 || input->readBlock(&c2, 1) != 1)
+				if (input->read(&c1, 1) != 1 || input->read(&c2, 1) != 1)
 				{
 					fprintf(stderr, "unexpected eof, cannot read block header\n");
 					return -1;
@@ -138,7 +138,7 @@ int lzfu_decompress(QIODevice *input, QIODevice *output)
 					else
 						fprintf( stdout, "%c", c1 );
 #endif
-					output->putch(c1);
+					output->putChar(c1);
 					ocursor++;
 				}
 #ifdef DO_DEBUG
@@ -148,8 +148,8 @@ int lzfu_decompress(QIODevice *input, QIODevice *output)
 			else
 			{
 				// uncompressed chunk (char)
-				signed char c = (char)input->getch();
-				if (c == -1)
+				char c;
+                                if (!input->getChar(&c))
 				{
 					if (!input->atEnd())
 					{
@@ -167,7 +167,7 @@ int lzfu_decompress(QIODevice *input, QIODevice *output)
 					window[wlength] = c;
 					wlength = ( wlength+1 ) % 4096;
 				//}
-				output->putch(c);
+				output->putChar(c);
 				ocursor++;
 			}
 		}

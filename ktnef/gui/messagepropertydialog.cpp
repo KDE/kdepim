@@ -23,9 +23,9 @@
 #include <klocale.h>
 
 MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg )
-	: KDialogBase( parent, "MessagePropertyDialog", true, i18n( "Message Properties" ),
-			KDialogBase::Close|KDialogBase::User1, KDialogBase::Close, false,
-			KStdGuiItem::save() )
+	: KDialogBase( Plain, i18n( "Message Properties" ),
+			KDialogBase::Close|KDialogBase::User1, KDialogBase::Close, parent, "MessagePropertyDialog",
+                        /*modal=*/true, /*separator=*/false, KStdGuiItem::save() )
 {
 	m_message = msg;
 
