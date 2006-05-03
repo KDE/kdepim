@@ -102,7 +102,7 @@ void formatProperties( const QMap<int,KTNEFProperty*>& props, Q3ListView *lv, Q3
 				new Q3ListViewItem( newItem, "[" + QString::number( i ) + "]", KTNEFProperty::formatValue( *lit ) );
 		}
 		else if ( value.type() == QVariant::DateTime )
-			newItem->setText( 1, value.asDateTime().toString() );
+			newItem->setText( 1, value.toDateTime().toString() );
 		else
 		{
 			newItem->setText( 1, ( *it )->valueString() );
@@ -140,7 +140,7 @@ void saveProperty( Q3ListView *lv, KTNEFPropertySet *pSet, QWidget *parent )
 				switch ( prop.type() )
 				{
 					case QVariant::ByteArray:
-						f.write( prop.asByteArray().data(), prop.asByteArray().size() );
+						f.write( prop.toByteArray().data(), prop.toByteArray().size() );
 						break;
 					default:
 						{
@@ -164,7 +164,8 @@ QPixmap loadRenderingPixmap( KTNEFPropertySet *pSet, const QColor& bgColor )
 	if ( !rendData.isNull() && !wmf.isNull() )
 	{
 		// Get rendering size
-		QBuffer rendBuffer( &rendData.asByteArray() );
+                QByteArray rendDataArray( rendData.toByteArray() );
+		QBuffer rendBuffer( &rendDataArray );
 		rendBuffer.open( QIODevice::ReadOnly );
 		QDataStream rendStream( &rendBuffer );
 		rendStream.setByteOrder( QDataStream::LittleEndian );
@@ -178,7 +179,8 @@ QPixmap loadRenderingPixmap( KTNEFPropertySet *pSet, const QColor& bgColor )
 			// Load WMF data
 #warning Port me!
 //			QWinMetaFile wmfLoader;
-			QBuffer wmfBuffer( &wmf.asByteArray() );
+                        QByteArray wmfArray( wmf.toByteArray() );
+			QBuffer wmfBuffer( &wmfArray );
 //			wmfBuffer.open( QIODevice::ReadOnly );
 //			wmfLoader.setBbox( QRect( 0, 0, w, h ) );
 //			if ( wmfLoader.load( wmfBuffer ) )

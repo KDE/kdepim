@@ -86,7 +86,7 @@ void addToChecksum( QByteArray &cs, quint16 &checksum ) {
 }
 
 void writeCString( QDataStream &stream, QByteArray &str ) {
-  stream.writeRawBytes( str.data(), str.length() );
+  stream.writeRawData( str.data(), str.length() );
   stream << (quint8)0;
 }
 

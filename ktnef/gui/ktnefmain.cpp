@@ -385,7 +385,7 @@ void KTNEFMain::slotShowMessageProperties()
 void KTNEFMain::slotShowMessageText()
 {
 	QString rtf = parser_->message()->rtfString();
-	qDebug( "%s", rtf.latin1() );
+	qDebug( "%s", rtf.toLatin1().data() );
 	KTempFile tmpFile( KGlobal::dirs()->localkdedir() + "/share/apps/ktnef/tmp/", "rtf");
 	*( tmpFile.textStream() ) << rtf;
 	tmpFile.close();
