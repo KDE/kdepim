@@ -24,9 +24,6 @@
    */
 /* #undef HAVE_BROKEN_TIMSIEVED */
 
-/* Define to 1 if you have the <byteswap.h> header file. */
-#cmakedefine HAVE_BYTESWAP_H 1
-
 /* Define to 1 if your C compiler support C99 designated initializers */
 #define HAVE_C99_INITIALIZERS 1
 
