@@ -85,9 +85,6 @@
 /* Define if you have cyrus-sasl2 libraries */
 #cmakedefine HAVE_LIBSASL2 1
 
-/* Define if you have libXss installed */
-#define HAVE_LIBXSS 1
-
 /* Define to 1 if you have the <lockdev.h> header file. */
 #cmakedefine HAVE_LOCKDEV_H 1
 
