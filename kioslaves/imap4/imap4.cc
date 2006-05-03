@@ -354,7 +354,7 @@ IMAP4Protocol::get (const KURL & _url)
         if (cache)
           lastone = cache->getHeader ();
 
-        if (!cmd->isComplete ())
+        if (cmd && !cmd->isComplete ())
         {
           if ((aUpper.find ("BODYSTRUCTURE") != -1)
                     || (aUpper.find ("FLAGS") != -1)
@@ -387,7 +387,7 @@ IMAP4Protocol::get (const KURL & _url)
           }
         } // if not complete
       }
-      while (!cmd->isComplete ());
+      while (cmd && !cmd->isComplete ());
       if (aEnum == ITYPE_BOX || aEnum == ITYPE_DIR_AND_BOX)
       {
         // write the end boundary
