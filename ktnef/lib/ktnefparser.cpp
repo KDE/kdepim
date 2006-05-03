@@ -608,7 +608,7 @@ QByteArray readTNEFData( QDataStream& stream, quint32 len )
 {
 	QByteArray array( len, '\0' );
 	if ( len > 0 )
-		stream.readRawBytes( array.data(), len );
+		stream.readRawData( array.data(), len );
 	return array;
 }
 
@@ -638,7 +638,7 @@ QString readMAPIString( QDataStream& stream, bool isUnicode, bool align, int len
 	if ( align )
 		ALIGN( fullLen, 4 );
 	buf = new char[ len ];
-	stream.readRawBytes( buf, len );
+	stream.readRawData( buf, len );
 	quint8 c;
 	for ( uint i=len; i<fullLen; i++ )
 		stream >> c;
@@ -747,7 +747,7 @@ quint16 readMAPIValue(QDataStream& stream, MAPI_value& mapi)
 				{
 					int fullLen = len;
 					ALIGN(fullLen, 4);
-					stream.readRawBytes(value.toByteArray().data(), len);
+					stream.readRawData(value.toByteArray().data(), len);
 					quint8 c;
 					for ( int i=len; i<fullLen; i++ )
 						stream >> c;
