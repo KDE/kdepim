@@ -776,7 +776,7 @@ void imapParser::parseAddressList (parseString & inWords, QPtrList<mailAddress>&
 {
   if (inWords[0] != '(')
   {
-    parseOneWord (inWords);     // parse NIL
+    parseOneWordC (inWords);     // parse NIL
   }
   else
   {
@@ -894,7 +894,7 @@ mailHeader * imapParser::parseEnvelope (parseString & inWords)
 // caller must clean up the dictionary items
 QAsciiDict < QString > imapParser::parseDisposition (parseString & inWords)
 {
-  QByteArray disposition;
+  QCString disposition;
   QAsciiDict < QString > retVal (17, false);
 
   // return value is a shallow copy
@@ -903,7 +903,7 @@ QAsciiDict < QString > imapParser::parseDisposition (parseString & inWords)
   if (inWords[0] != '(')
   {
     //disposition only
-    disposition = parseOneWord (inWords);
+    disposition = parseOneWordC (inWords);
   }
   else
   {
@@ -911,8 +911,7 @@ QAsciiDict < QString > imapParser::parseDisposition (parseString & inWords)
     skipWS (inWords);
 
     //disposition
-    disposition = parseOneWord (inWords);
-
+    disposition = parseOneWordC (inWords);
     retVal = parseParameters (inWords);
     if (inWords[0] != ')')
       return retVal;
@@ -922,7 +921,7 @@ QAsciiDict < QString > imapParser::parseDisposition (parseString & inWords)
 
   if (!disposition.isEmpty ())
   {
-    retVal.insert ("content-disposition", new QString(b2c(disposition)));
+    retVal.insert ("content-disposition", new QString(disposition));
   }
 
   return retVal;
@@ -940,7 +939,7 @@ QAsciiDict < QString > imapParser::parseParameters (parseString & inWords)
   if (inWords[0] != '(')
   {
     //better be NIL
-    parseOneWord (inWords);
+    parseOneWordC (inWords);
   }
   else
   {
@@ -1060,6 +1059,7 @@ mimeHeader * imapParser::parseSimplePart (parseString & inWords,
                                        *(it.current ()));
         ++it;
       }
+
       parameters.clear ();
     }
 
@@ -1076,7 +1076,6 @@ mimeHeader * imapParser::parseSimplePart (parseString & inWords,
     else
       parseLiteralC(inWords);
   }
-
   if (inWords[0] == ')')
     inWords.pos++;
   skipWS (inWords);
@@ -1100,7 +1099,7 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
   if (inWords[0] != '(')
   {
     // skip ""
-    parseOneWord (inWords);
+    parseOneWordC (inWords);
     return 0;
   }
   inWords.pos++;
@@ -1144,7 +1143,7 @@ mimeHeader * imapParser::parseBodyStructure (parseString & inWords,
     }
 
     // fetch subtype
-    subtype = parseOneWord (inWords);
+    subtype = parseOneWordC (inWords);
 
     localPart->setType ("MULTIPART/" + b2c(subtype));
 
@@ -1217,11 +1216,11 @@ void imapParser::parseBody (parseString & inWords)
   // see if we got a part specifier
   if (inWords[0] == '[')
   {
-    QByteArray specifier;
-    QByteArray label;
+    QCString specifier;
+    QCString label;
     inWords.pos++;
 
-    specifier = parseOneWord (inWords, TRUE);
+    specifier = parseOneWordC (inWords, TRUE);
 
     if (inWords[0] == '(')
     {
@@ -1229,7 +1228,7 @@ void imapParser::parseBody (parseString & inWords)
 
       while (!inWords.isEmpty () && inWords[0] != ')')
       {
-        label = parseOneWord (inWords);
+        label = parseOneWordC (inWords);
       }
 
       if (inWords[0] == ')')
@@ -1240,7 +1239,7 @@ void imapParser::parseBody (parseString & inWords)
     skipWS (inWords);
 
     // parse the header
-    if (qstrncmp(specifier, "0", specifier.size()) == 0)
+    if (specifier == "0")
     {
       mailHeader *envelope = 0;
       if (lastHandled)
@@ -1264,12 +1263,12 @@ void imapParser::parseBody (parseString & inWords)
 
       }
     }
-    else if (qstrncmp(specifier, "HEADER.FIELDS", specifier.size()) == 0)
+    else if (specifier == "HEADER.FIELDS")
     {
       // BODY[HEADER.FIELDS (References)] {n}
       //kdDebug(7116) << "imapParser::parseBody - HEADER.FIELDS: "
       // << QCString(label.data(), label.size()+1) << endl;
-      if (qstrncmp(label, "REFERENCES", label.size()) == 0)
+      if (label == "REFERENCES")
       {
        mailHeader *envelope = 0;
        if (lastHandled)
@@ -1298,8 +1297,7 @@ void imapParser::parseBody (parseString & inWords)
     }
     else
     {
-      QCString spec(specifier.data(), specifier.size()+1);
-      if (spec.find(".MIME") != -1)
+      if (specifier.find(".MIME") != -1)
       {
         mailHeader *envelope = new mailHeader;
         QString theHeader = parseLiteralC(inWords, false);
@@ -1604,10 +1602,10 @@ void imapParser::parseNamespace (parseString & result)
     {
       // drop NIL
       ++ns;
-      parseOneWord( result );
+      parseOneWordC( result );
     } else {
       // drop whatever it is
-      parseOneWord( result );
+      parseOneWordC( result );
     }
   }
   if ( !delimEmpty.isEmpty() ) {

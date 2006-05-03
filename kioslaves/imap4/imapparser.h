@@ -367,15 +367,6 @@ public:
   /** parse one word (maybe quoted) upto next space " ) ] } */
   static QCString parseOneWordC (parseString & inWords,
     bool stopAtBracket = FALSE, int *len = 0);
-  static inline QByteArray parseOneWord (parseString & inWords,
-    bool stopAtBracket = FALSE) {
-    int len = 0; // string size
-    // Choice: we can create an extra QCString, or we can get the buffer in
-    // the wrong size to start.  Let's try option b.
-    QCString tmp = parseOneWordC(inWords, stopAtBracket, &len);
-    return QByteArray().duplicate(tmp.data(), len);
-  }
-
 
   /** parse one number using parseOneWord */
   static bool parseOneNumber (parseString & inWords, ulong & num);
