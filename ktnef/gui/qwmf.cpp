@@ -616,7 +616,7 @@ void QWinMetaFile::setPolyFillMode( long, short* parm )
 //-----------------------------------------------------------------------------
 void QWinMetaFile::setBkColor( long, short* parm )
 {
-    mPainter.setBackgroundColor( color( parm ) );
+    mPainter.setBackground( QBrush( color( parm ) ) );
 }
 
 
