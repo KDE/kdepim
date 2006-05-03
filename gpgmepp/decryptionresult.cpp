@@ -22,6 +22,8 @@
 #include <config.h>
 #endif
 
+#include <config-gpgmepp.h>
+
 #include <gpgmepp/decryptionresult.h>
 #include "shared.h"
 #include "result_p.h"

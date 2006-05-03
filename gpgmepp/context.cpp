@@ -20,6 +20,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+#include <config-gpgmepp.h>
 
 #include <gpgmepp/context.h>
 #include <gpgmepp/eventloopinteractor.h>
