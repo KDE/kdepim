@@ -305,8 +305,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   new KAction(i18n("Re&move Box"), 0, v_iew->e_dit,
               SLOT(slotRemoveBox()), actionCollection(), "tools_unbox");
 
-  KAction *undoRewrap = new KAction(i18n("Get &Original Text (not re-wrapped)"), 0, this,
-                                    SLOT(slotUndoRewrap()), actionCollection(), "tools_undoRewrap");
+  KAction *undoRewrap = new KAction(i18n("Get &Original Text (not re-wrapped)"), actionCollection(), "tools_undoRewrap");
+  connect(undoRewrap, SIGNAL(triggered(bool) ), SLOT(slotUndoRewrap()));
   undoRewrap->setEnabled(!u_nwraped.isNull());
 
   KAction *rot13 = new KAction(i18n("S&cramble (Rot 13)"), "encrypted", 0, v_iew->e_dit,
@@ -425,8 +425,8 @@ int KNComposer::listOfResultOfCheckWord( const QStringList & lst , const QString
         {
             if ( !(*it).isEmpty() ) // in case of removed subtypes or placeholders
             {
-                KAction * act = new KAction( *it, KShortcut(), v_iew->e_dit,
-                                             SLOT( slotCorrectWord() ), 0, 0 );
+                KAction *act = new KAction( *it, 0, 0 );
+                connect(act, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT( slotCorrectWord() ));
 
                 m_listAction.append( act );
             }
