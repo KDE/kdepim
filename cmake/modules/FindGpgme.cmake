@@ -5,6 +5,8 @@
 #  GPGME_INCLUDES - the gpgme include directory
 #  GPGME_LIBRARIES - The libraries needed to use gpgme
 
+INCLUDE (MacroEnsureVersion)
+
 # if not already in cache
 IF (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
   set(GPGME_FOUND FALSE)
@@ -13,22 +15,33 @@ IF (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
 
   # if gpgme-config has been found
   IF (GPGMECONFIG_EXECUTABLE)
-    EXEC_PROGRAM(${GPGMECONFIG_EXECUTABLE} ARGS --libs RETURN_VALUE _return_VALUE OUTPUT_VARIABLE GPGME_LIBRARIES)
 
-    # append -lgpg-error to the list of libraries, if necessary
-    IF (NOT GPGME_LIBRARIES MATCHES "lgpg-error")
-      set(GPGME_LIBRARIES "${GPGME_LIBRARIES} -lgpg-error")
-    ENDIF (NOT GPGME_LIBRARIES MATCHES "lgpg-error")
+    EXEC_PROGRAM(${GPGMECONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE GPGME_VERSION)
 
-    EXEC_PROGRAM(${GPGMECONFIG_EXECUTABLE} ARGS --cflags RETURN_VALUE _return_VALUE OUTPUT_VARIABLE GPGME_CFLAGS)
-    IF (GPGME_CFLAGS)
-      string(REGEX REPLACE "(\r?\n)+$" "" GPGME_CFLAGS "${GPGME_CFLAGS}")
-      string(REGEX REPLACE " *-I" ";" GPGME_INCLUDES "${GPGME_CFLAGS}")
-    ENDIF (GPGME_CFLAGS)
+    MACRO_ENSURE_VERSION( "0.4.5" ${GPGME_VERSION} GPGME_INSTALLED_VERSION_TOO_OLD )
 
-    # ensure that they are cached
-    set(GPGME_INCLUDES ${GPGME_INCLUDES} CACHE INTERNAL "The gpgme include paths")
-    set(GPGME_LIBRARIES ${GPGME_LIBRARIES} CACHE INTERNAL "The gpgme libraries")
+    IF (NOT GPGME_INSTALLED_VERSION_TOO_OLD)
+
+      EXEC_PROGRAM(${GPGMECONFIG_EXECUTABLE} ARGS --libs OUTPUT_VARIABLE GPGME_LIBRARIES)
+
+      # append -lgpg-error to the list of libraries, if necessary
+      IF (NOT GPGME_LIBRARIES MATCHES "lgpg-error")
+        set(GPGME_LIBRARIES "${GPGME_LIBRARIES} -lgpg-error")
+      ENDIF (NOT GPGME_LIBRARIES MATCHES "lgpg-error")
+
+      EXEC_PROGRAM(${GPGMECONFIG_EXECUTABLE} ARGS --cflags OUTPUT_VARIABLE GPGME_CFLAGS)
+      IF (GPGME_CFLAGS)
+        string(REGEX REPLACE "(\r?\n)+$" "" GPGME_CFLAGS "${GPGME_CFLAGS}")
+        string(REGEX REPLACE " *-I" ";" GPGME_INCLUDES "${GPGME_CFLAGS}")
+      ENDIF (GPGME_CFLAGS)
+
+      # ensure that they are cached
+      set(GPGME_INCLUDES ${GPGME_INCLUDES} CACHE INTERNAL "The gpgme include paths")
+      set(GPGME_LIBRARIES ${GPGME_LIBRARIES} CACHE INTERNAL "The gpgme libraries")
+
+    ELSE (NOT GPGME_INSTALLED_VERSION_TOO_OLD)
+      message(STATUS "The installed version of gpgme is too old: ${GPGME_VERSION}")
+    ENDIF (NOT GPGME_INSTALLED_VERSION_TOO_OLD)
 
   ENDIF (GPGMECONFIG_EXECUTABLE)
 
