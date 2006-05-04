@@ -546,8 +546,9 @@ void KNMainWidget::initActions()
                               SLOT(slotNavReadThrough()), actionCollection(), "go_readThrough");
 
   Q3Accel *accel = new Q3Accel( this );
-  new KAction( i18n("Focus on Next Folder"), Qt::CTRL+Qt::Key_Right, c_olView,
-    SLOT(incCurrentFolder()), actionCollection(), "inc_current_folder" );
+  KAction *action = new KAction( i18n("Focus on Next Folder"), actionCollection(), "inc_current_folder" );
+  connect(action, SIGNAL(triggered(bool) ), c_olView, SLOT(incCurrentFolder()));
+  action->setShortcut(Qt::CTRL+Qt::Key_Right);
   accel->connectItem(accel->insertItem(Qt::CTRL+Qt::Key_Right),
     c_olView, SLOT(incCurrentFolder()));
   new KAction( i18n("Focus on Previous Folder"), Qt::CTRL+Qt::Key_Left, c_olView,

@@ -93,7 +93,8 @@ void KTNEFMain::setupActions()
 	// Action menu
 	new KAction(i18n("View"), QString("viewmag"), 0, this, SLOT(viewFile()), actionCollection(), "view_file");
 	new KAction(i18n("View With..."), QString("package_applications"), 0, this, SLOT(viewFileAs()), actionCollection(), "view_file_as");
-	new KAction(i18n("Extract"), 0, this, SLOT(extractFile()), actionCollection(), "extract_file");
+	KAction *action = new KAction(i18n("Extract"), actionCollection(), "extract_file");
+	connect(action, SIGNAL(triggered(bool) ), SLOT(extractFile()));
 	new KAction(i18n("Extract To..."), QString("ktnef_extract_to"), 0, this, SLOT(extractFileTo()), actionCollection(), "extract_file_to");
 	new KAction(i18n("Extract All To..."), QString("ktnef_extract_all_to"), 0, this, SLOT(extractAllFiles()), actionCollection(), "extract_all_files");
 	new KAction( i18n( "Message Properties" ), "help", 0, this, SLOT( slotShowMessageProperties() ), actionCollection(), "msg_properties" );

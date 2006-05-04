@@ -236,8 +236,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   KStdAction::pasteText(this, SLOT(slotPaste()), actionCollection());
 
-  new KAction(i18n("Paste as &Quotation"), 0, v_iew->e_dit,
-                   SLOT(slotPasteAsQuotation()), actionCollection(), "paste_quoted");
+  KAction *action = new KAction(i18n("Paste as &Quotation"), actionCollection(), "paste_quoted");
+  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotPasteAsQuotation()));
 
   KStdAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
 
@@ -247,16 +247,16 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   KStdAction::replace(v_iew->e_dit, SLOT(slotReplace()), actionCollection());
 
   //attach menu
-  new KAction(i18n("Append &Signature"), 0 , this, SLOT(slotAppendSig()),
-                   actionCollection(), "append_signature");
+  action = new KAction(i18n("Append &Signature"), actionCollection(), "append_signature");
+  connect(action, SIGNAL(triggered(bool) ), SLOT(slotAppendSig()));
 
-  new KAction(i18n("&Insert File..."), 0, this, SLOT(slotInsertFile()),
-                   actionCollection(), "insert_file");
+  action = new KAction(i18n("&Insert File..."), actionCollection(), "insert_file");
+  connect(action, SIGNAL(triggered(bool) ), SLOT(slotInsertFile()));
 
-  new KAction(i18n("Insert File (in a &box)..."), 0, this, SLOT(slotInsertFileBoxed()),
-                   actionCollection(), "insert_file_boxed");
+  action = new KAction(i18n("Insert File (in a &box)..."), actionCollection(), "insert_file_boxed");
+  connect(action, SIGNAL(triggered(bool) ), SLOT(slotInsertFileBoxed()));
 
-  new KAction(i18n("Attach &File..."), "attach", 0, this, SLOT(slotAttachFile()),
+  action = new KAction(i18n("Attach &File..."), "attach", 0, this, SLOT(slotAttachFile()),
                    actionCollection(), "attach_file");
 
   a_ctPGPsign = new KToggleAction(i18n("Sign Article with &PGP"),
@@ -293,17 +293,17 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   //tools menu
 
-  new KAction(i18n("Add &Quote Characters"), 0, v_iew->e_dit,
-              SLOT(slotAddQuotes()), actionCollection(), "tools_quote");
+  action = new KAction(i18n("Add &Quote Characters"), actionCollection(), "tools_quote");
+  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotAddQuotes()));
 
-  new KAction(i18n("&Remove Quote Characters"), 0, v_iew->e_dit,
-              SLOT(slotRemoveQuotes()), actionCollection(), "tools_unquote");
+  action = new KAction(i18n("&Remove Quote Characters"), actionCollection(), "tools_unquote");
+  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotRemoveQuotes()));
 
-  new KAction(i18n("Add &Box"), 0, v_iew->e_dit,
-              SLOT(slotAddBox()), actionCollection(), "tools_box");
+  action = new KAction(i18n("Add &Box"), actionCollection(), "tools_box");
+  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotAddBox()));
 
-  new KAction(i18n("Re&move Box"), 0, v_iew->e_dit,
-              SLOT(slotRemoveBox()), actionCollection(), "tools_unbox");
+  action = new KAction(i18n("Re&move Box"), actionCollection(), "tools_unbox");
+  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotRemoveBox()));
 
   KAction *undoRewrap = new KAction(i18n("Get &Original Text (not re-wrapped)"), actionCollection(), "tools_undoRewrap");
   connect(undoRewrap, SIGNAL(triggered(bool) ), SLOT(slotUndoRewrap()));

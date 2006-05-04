@@ -211,13 +211,13 @@ void ArticleWidget::initActions()
                mActionCollection, "copy_url" );
   new KAction( i18n("&Bookmark This Link"), "bookmark_add", 0, this, SLOT(slotAddBookmark()),
                mActionCollection, "add_bookmark" );
-  new KAction( i18n("&Add to Address Book"), 0, this, SLOT(slotAddToAddressBook()),
-               mActionCollection, "add_addr_book" );
-  new KAction( i18n("&Open in Address Book"), 0, this, SLOT(slotOpenInAddressBook()),
-               mActionCollection, "openin_addr_book" );
-  new KAction( i18n("&Open Attachment"), "fileopen", 0, this, SLOT(slotOpenAttachment()),
+  KAction *action = new KAction( i18n("&Add to Address Book"), mActionCollection, "add_addr_book" );
+  connect(action, SIGNAL(triggered(bool) ), SLOT(slotAddToAddressBook()));
+  action = new KAction( i18n("&Open in Address Book"), mActionCollection, "openin_addr_book" );
+  connect(action, SIGNAL(triggered(bool) ), SLOT(slotOpenInAddressBook()));
+  action = new KAction( i18n("&Open Attachment"), "fileopen", 0, this, SLOT(slotOpenAttachment()),
                mActionCollection, "open_attachment" );
-  new KAction( i18n("&Save Attachment As..."), "filesaveas", 0, this, SLOT(slotSaveAttachment()),
+  action = new KAction( i18n("&Save Attachment As..."), "filesaveas", 0, this, SLOT(slotSaveAttachment()),
                mActionCollection, "save_attachment" );
 }
 
