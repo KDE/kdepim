@@ -263,11 +263,11 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 		   "signature", 0,
                    actionCollection(), "sign_article");
 
-  a_ctRemoveAttachment = new KAction(i18n("&Remove"), 0, this,
-                                    SLOT(slotRemoveAttachment()), actionCollection(), "remove_attachment");
+  a_ctRemoveAttachment = new KAction(i18n("&Remove"), actionCollection(), "remove_attachment");
+  connect(a_ctRemoveAttachment, SIGNAL(triggered(bool) ), SLOT(slotRemoveAttachment()));
 
-  a_ctAttachmentProperties  = new KAction(i18n("&Properties"), 0, this,
-                                          SLOT(slotAttachmentProperties()), actionCollection(), "attachment_properties");
+  a_ctAttachmentProperties = new KAction(i18n("&Properties"), actionCollection(), "attachment_properties");
+  connect(a_ctAttachmentProperties, SIGNAL(triggered(bool) ), SLOT(slotAttachmentProperties()));
 
   //options menu
 
@@ -283,8 +283,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   connect(a_ctSetCharset, SIGNAL(activated(const QString&)),
   this, SLOT(slotSetCharset(const QString&)));
 
-  a_ctSetCharsetKeyb = new KAction(i18n("Set Charset"), 0, this,
-                                   SLOT(slotSetCharsetKeyboard()), actionCollection(), "set_charset_keyboard");
+  a_ctSetCharsetKeyb = new KAction(i18n("Set Charset"), actionCollection(), "set_charset_keyboard");
+  connect(a_ctSetCharsetKeyb, SIGNAL(triggered(bool) ), SLOT(slotSetCharsetKeyboard()));
   addAction( a_ctSetCharsetKeyb );
 
 

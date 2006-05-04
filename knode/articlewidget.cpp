@@ -144,8 +144,9 @@ void ArticleWidget::initActions()
   mSelectAllAction = KStdAction::selectAll( this, SLOT(slotSelectAll()), mActionCollection );
   mFindAction = KStdAction::find( this, SLOT(slotFind()), mActionCollection, "find_in_article" );
   mFindAction->setText( i18n("F&ind in Article...") );
-  mViewSourceAction = new KAction( i18n("&View Source"),  Qt::Key_V , this,
-    SLOT(slotViewSource()), mActionCollection, "article_viewSource" );
+  mViewSourceAction = new KAction( i18n("&View Source"), mActionCollection, "article_viewSource" );
+  connect(mViewSourceAction, SIGNAL(triggered(bool) ), SLOT(slotViewSource()));
+  mViewSourceAction->setShortcut(Qt::Key_V);
   mReplyAction = new KAction( i18n("&Followup to Newsgroup..."), "message_reply",
     Qt::Key_R, this, SLOT(slotReply()), mActionCollection, "article_postReply" );
   mRemailAction = new KAction( i18n("Reply by E&mail..."), "mail_reply",
@@ -154,8 +155,8 @@ void ArticleWidget::initActions()
     Qt::Key_F, this, SLOT(slotForward()), mActionCollection, "article_forward" );
   mCancelAction = new KAction( i18nc("article","&Cancel Article"),
     0, this, SLOT(slotCancel()), mActionCollection, "article_cancel" );
-  mSupersedeAction = new KAction(i18n("S&upersede Article"),
-    0, this, SLOT(slotSupersede()), mActionCollection, "article_supersede" );
+  mSupersedeAction = new KAction(i18n("S&upersede Article"), mActionCollection, "article_supersede" );
+  connect(mSupersedeAction, SIGNAL(triggered(bool) ), SLOT(slotSupersede()));
   mFixedFontToggle = new KToggleAction( i18n("U&se Fixed Font"),
     Qt::Key_X ,this, SLOT(slotToggleFixedFont()), mActionCollection, "view_useFixedFont" );
   mFancyToggle = new KToggleAction( i18n("Fancy Formating"),
@@ -202,8 +203,9 @@ void ArticleWidget::initActions()
   mCharsetSelect->setItems( cs );
   mCharsetSelect->setCurrentItem( 0 );
   connect( mCharsetSelect, SIGNAL(triggered(const QString&)),SLOT(slotSetCharset(const QString&)) );
-  mCharsetSelectKeyb = new KAction( i18n("Charset"), Qt::Key_C, this,
-    SLOT(slotSetCharsetKeyboard()), mActionCollection, "set_charset_keyboard" );
+  mCharsetSelectKeyb = new KAction( i18n("Charset"), mActionCollection, "set_charset_keyboard" );
+  connect(mCharsetSelectKeyb, SIGNAL(triggered(bool) ), SLOT(slotSetCharsetKeyboard()));
+  mCharsetSelectKeyb->setShortcut(Qt::Key_C);
 
   new KAction( i18n("&Open URL"), "fileopen", 0, this, SLOT(slotOpenURL()),
                mActionCollection, "open_url" );

@@ -542,8 +542,9 @@ void KNMainWidget::initActions()
                               SLOT(nextGroup()), actionCollection(), "go_nextGroup");
   a_ctNavPrevGroup          = new KAction(i18n("Pre&vious Group"), "up", Qt::Key_Minus , c_olView,
                               SLOT(prevGroup()), actionCollection(), "go_prevGroup");
-  a_ctNavReadThrough        = new KAction(i18n("Read &Through Articles"), Qt::Key_Space , this,
-                              SLOT(slotNavReadThrough()), actionCollection(), "go_readThrough");
+  a_ctNavReadThrough = new KAction(i18n("Read &Through Articles"), actionCollection(), "go_readThrough");
+  connect(a_ctNavReadThrough, SIGNAL(triggered(bool) ), SLOT(slotNavReadThrough()));
+  a_ctNavReadThrough->setShortcut(Qt::Key_Space);
 
   Q3Accel *accel = new Q3Accel( this );
   KAction *action = new KAction( i18n("Focus on Next Folder"), actionCollection(), "inc_current_folder" );
@@ -606,8 +607,8 @@ void KNMainWidget::initActions()
                               SLOT(slotGrpUnsubscribe()), actionCollection(), "group_unsubscribe");
   a_ctGrpSetAllRead         = new KAction(i18n("Mark All as &Read"), "goto", 0, this,
                               SLOT(slotGrpSetAllRead()), actionCollection(), "group_allRead");
-  a_ctGrpSetAllUnread       = new KAction(i18n("Mark All as U&nread"), 0, this,
-                              SLOT(slotGrpSetAllUnread()), actionCollection(), "group_allUnread");
+  a_ctGrpSetAllUnread = new KAction(i18n("Mark All as U&nread"), actionCollection(), "group_allUnread");
+  connect(a_ctGrpSetAllUnread, SIGNAL(triggered(bool) ), SLOT(slotGrpSetAllUnread()));
   a_ctGrpSetUnread          = new KAction(i18n("Mark Last as Unr&ead..."), 0, this,
                               SLOT(slotGrpSetUnread()), actionCollection(), "group_unread");
 
@@ -629,12 +630,12 @@ void KNMainWidget::initActions()
                               SLOT(slotFolRename()), actionCollection(), "folder_rename");
   a_ctFolCompact            = new KAction(i18n("C&ompact Folder"), "wizard", 0, this,
                               SLOT(slotFolCompact()), actionCollection(), "folder_compact");
-  a_ctFolCompactAll         = new KAction(i18n("Co&mpact All Folders"), 0, this,
-                              SLOT(slotFolCompactAll()), actionCollection(), "folder_compact_all");
-  a_ctFolEmpty              = new KAction(i18n("&Empty Folder"), 0, this,
-                              SLOT(slotFolEmpty()), actionCollection(), "folder_empty");
-  a_ctFolMboxImport         = new KAction(i18n("&Import MBox Folder..."), 0, this,
-                              SLOT(slotFolMBoxImport()), actionCollection(), "folder_MboxImport");
+  a_ctFolCompactAll = new KAction(i18n("Co&mpact All Folders"), actionCollection(), "folder_compact_all");
+  connect(a_ctFolCompactAll, SIGNAL(triggered(bool) ), SLOT(slotFolCompactAll()));
+  a_ctFolEmpty = new KAction(i18n("&Empty Folder"), actionCollection(), "folder_empty");
+  connect(a_ctFolEmpty, SIGNAL(triggered(bool) ), SLOT(slotFolEmpty()));
+  a_ctFolMboxImport = new KAction(i18n("&Import MBox Folder..."), actionCollection(), "folder_MboxImport");
+  connect(a_ctFolMboxImport, SIGNAL(triggered(bool) ), SLOT(slotFolMBoxImport()));
   a_ctFolMboxExport         = new KAction(i18n("E&xport as MBox Folder..."), 0, this,
                               SLOT(slotFolMBoxExport()), actionCollection(), "folder_MboxExport");
 
@@ -659,10 +660,10 @@ void KNMainWidget::initActions()
                               SLOT(slotArtSearch()), actionCollection(), "article_search");
   a_ctArtRefreshList        = new KAction(i18n("&Refresh List"),"reload", KStdAccel::shortcut(KStdAccel::Reload), this,
                               SLOT(slotArtRefreshList()), actionCollection(), "view_Refresh");
-  a_ctArtCollapseAll        = new KAction(i18n("&Collapse All Threads"), 0 , this,
-                              SLOT(slotArtCollapseAll()), actionCollection(), "view_CollapseAll");
-  a_ctArtExpandAll          = new KAction(i18n("E&xpand All Threads"), 0 , this,
-                              SLOT(slotArtExpandAll()), actionCollection(), "view_ExpandAll");
+  a_ctArtCollapseAll = new KAction(i18n("&Collapse All Threads"), actionCollection(), "view_CollapseAll");
+  connect(a_ctArtCollapseAll, SIGNAL(triggered(bool) ), SLOT(slotArtCollapseAll()));
+  a_ctArtExpandAll = new KAction(i18n("E&xpand All Threads"), actionCollection(), "view_ExpandAll");
+  connect(a_ctArtExpandAll, SIGNAL(triggered(bool) ), SLOT(slotArtExpandAll()));
   a_ctArtToggleThread       = new KAction(i18n("&Toggle Subthread"), Qt::Key_T, this,
                               SLOT(slotArtToggleThread()), actionCollection(), "thread_toggle");
   a_ctArtToggleShowThreads  = new KToggleAction(i18n("Show T&hreads"), 0 , this,
@@ -672,12 +673,15 @@ void KNMainWidget::initActions()
   a_ctArtToggleShowThreads->setChecked( knGlobals.settings()->showThreads() );
 
   //header-view - remote articles
-  a_ctArtSetArtRead         = new KAction(i18n("Mark as &Read"), Qt::Key_D , this,
-                              SLOT(slotArtSetArtRead()), actionCollection(), "article_read");
-  a_ctArtSetArtUnread       = new KAction(i18n("Mar&k as Unread"), Qt::Key_U , this,
-                              SLOT(slotArtSetArtUnread()), actionCollection(), "article_unread");
-  a_ctArtSetThreadRead      = new KAction(i18n("Mark &Thread as Read"), Qt::CTRL+Qt::Key_D , this,
-                              SLOT(slotArtSetThreadRead()), actionCollection(), "thread_read");
+  a_ctArtSetArtRead = new KAction(i18n("Mark as &Read"), actionCollection(), "article_read");
+  connect(a_ctArtSetArtRead, SIGNAL(triggered(bool) ), SLOT(slotArtSetArtRead()));
+  a_ctArtSetArtRead->setShortcut(Qt::Key_D);
+  a_ctArtSetArtUnread = new KAction(i18n("Mar&k as Unread"), actionCollection(), "article_unread");
+  connect(a_ctArtSetArtUnread, SIGNAL(triggered(bool) ), SLOT(slotArtSetArtUnread()));
+  a_ctArtSetArtUnread->setShortcut(Qt::Key_U);
+  a_ctArtSetThreadRead = new KAction(i18n("Mark &Thread as Read"), actionCollection(), "thread_read");
+  connect(a_ctArtSetThreadRead, SIGNAL(triggered(bool) ), SLOT(slotArtSetThreadRead()));
+  a_ctArtSetThreadRead->setShortcut(Qt::CTRL+Qt::Key_D);
   a_ctArtSetThreadUnread    = new KAction(i18n("Mark T&hread as Unread"), Qt::CTRL+Qt::Key_U , this,
                               SLOT(slotArtSetThreadUnread()), actionCollection(), "thread_unread");
   a_ctArtOpenNewWindow      = new KAction(i18n("Open in Own &Window"), "window_new", Qt::Key_O , this,
@@ -686,10 +690,11 @@ void KNMainWidget::initActions()
   // scoring
   a_ctScoresEdit            = new KAction(i18n("&Edit Scoring Rules..."), "edit", Qt::CTRL+Qt::Key_E, this,
                               SLOT(slotScoreEdit()), actionCollection(), "scoreedit");
-  a_ctReScore               = new KAction(i18n("Recalculate &Scores"), 0, this,
-                              SLOT(slotReScore()),actionCollection(),"rescore");
-  a_ctScoreLower            = new KAction(i18n("&Lower Score for Author..."), Qt::CTRL+Qt::Key_L, this,
-                              SLOT(slotScoreLower()), actionCollection(), "scorelower");
+  a_ctReScore = new KAction(i18n("Recalculate &Scores"), actionCollection(), "rescore");
+  connect(a_ctReScore, SIGNAL(triggered(bool) ), SLOT(slotReScore()));
+  a_ctScoreLower = new KAction(i18n("&Lower Score for Author..."), actionCollection(), "scorelower");
+  connect(a_ctScoreLower, SIGNAL(triggered(bool) ), SLOT(slotScoreLower()));
+  a_ctScoreLower->setShortcut(Qt::CTRL+Qt::Key_L);
   a_ctScoreRaise            = new KAction(i18n("&Raise Score for Author..."), Qt::CTRL+Qt::Key_I, this,
                               SLOT(slotScoreRaise()),actionCollection(),"scoreraise");
   a_ctArtToggleIgnored      = new KAction(i18n("&Ignore Thread"), "bottom", Qt::Key_I , this,
