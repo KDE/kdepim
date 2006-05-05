@@ -265,6 +265,7 @@ void TodoConduit::postSync()
         KCal::Todo *todo = *it;
         todo->setSyncStatus( KCal::Incidence::SYNCNONE );
     }
+    resumeKMailNetworkJobs();
 }
 
 

@@ -181,6 +181,9 @@ VCalConduit::~VCalConduit()
 VCalConduitPrivateBase* VCalConduit::newVCalPrivate(KCal::Calendar *fCalendar) {
 	return new VCalConduitPrivate(fCalendar);
 }
+
+
+
 void VCalConduit::postSync()
 {
     FUNCTIONSETUP;
@@ -195,7 +198,7 @@ void VCalConduit::postSync()
         todo->setSyncStatus( KCal::Incidence::SYNCNONE );
     }
     
-   
+   resumeKMailNetworkJobs();
 }
 void VCalConduit::_getAppInfo()
 {

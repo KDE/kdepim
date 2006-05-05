@@ -74,7 +74,7 @@ public:
 protected:
 	virtual const QString dbname() { return CSL1("DatebookDB"); };
 
-	virtual void preSync() {_getAppInfo(); };
+	virtual void preSync() {_getAppInfo();stopKMailNetworkJobs(); };
 	virtual VCalConduitPrivateBase*newVCalPrivate(KCal::Calendar *fCalendar);
 
 	void _getAppInfo();

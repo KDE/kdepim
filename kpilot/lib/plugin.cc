@@ -333,6 +333,19 @@ bool ConduitAction::openDatabases(const QString &dbName, bool *retrieved)
 	}
 }
 
+void ConduitAction::stopKMailNetworkJobs()
+{
+
+  kapp->dcopClient()->send( "kmail", "KMailIface",
+                            "stopNetworkJobs()",
+                            QString::null );
+}
+void ConduitAction::resumeKMailNetworkJobs()
+{
+  kapp->dcopClient()->send( "kmail", "KMailIface",
+                            "resumeNetworkJobs()",
+                            QString::null );
+}
 int PluginUtility::findHandle(const QStringList &a)
 {
 	FUNCTIONSETUP;

@@ -210,6 +210,9 @@ protected:
 	bool fFirstSync;
 	QString fConduitName;
 
+	void stopKMailNetworkJobs();
+	void resumeKMailNetworkJobs();
+
 private:
 	/**
 	* Open both the local copy of database @p dbName
@@ -230,6 +233,8 @@ private:
 	* fDatabase. Just open the local one.
 	*/
 	bool openDatabases_(const QString &dbName,const QString &localPath);
+
+	
 } ;
 
 class  PluginUtility

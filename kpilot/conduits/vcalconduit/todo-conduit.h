@@ -76,7 +76,7 @@ protected:
 	virtual const QString getTitle(PilotAppCategory*de);
 	
 	virtual const QString dbname() { return CSL1("ToDoDB"); };
-	virtual void preSync() {_getAppInfo(); };
+	virtual void preSync() {_getAppInfo();stopKMailNetworkJobs(); };
 	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar) { 
 		return new TodoConduitPrivate(fCalendar);
 	};

@@ -256,6 +256,7 @@ KNotesAction::KNotesAction(KPilotDeviceLink *o,
 		return delayDone();
 	}
 
+	stopKMailNetworkJobs();
 	fP->fTimer = new QTimer(this);
 	fActionStatus = Init;
 	resetIndexes();
@@ -824,6 +825,7 @@ void KNotesAction::cleanupMemos()
 	fDatabase->resetSyncFlags();
 	fLocalDatabase->cleanup();
 	fLocalDatabase->resetSyncFlags();
+	resumeKMailNetworkJobs();
 }
 
 

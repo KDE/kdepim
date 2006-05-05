@@ -152,7 +152,7 @@ void AbbrowserConduit::_mapContactsToPilot(QMap < recordid_t, QString > &idConta
 bool AbbrowserConduit::_prepare()
 {
 	FUNCTIONSETUP;
-
+	stopKMailNetworkJobs();
 	readConfig();
 	syncedIds.clear();
 
@@ -1066,6 +1066,7 @@ void AbbrowserConduit::slotCleanup()
 	KPILOT_DELETE(fLocalDatabase);
 	_saveAddressBook();
 	emit syncDone(this);
+	resumeKMailNetworkJobs();
 }
 
 
