@@ -362,8 +362,8 @@ void CertManager::createActions() {
   mComboAction = new ComboAction( lst, actionCollection(), this, SLOT( slotToggleRemote(int) ),
                                   "location_combo_action");
 
-  mFindAction = new KAction( i18n("Find"), "find", 0, this, SLOT(slotSearch()),
-			     actionCollection(), "find" );
+  mFindAction = new KAction(KIcon("find"),  i18n("Find"), actionCollection(), "find" );
+  connect(mFindAction, SIGNAL(triggered(bool)), SLOT(slotSearch()));
 
   KStdAction::keyBindings( this, SLOT(slotEditKeybindings()), actionCollection() );
   KStdAction::preferences( this, SLOT(slotShowConfigurationDialog()), actionCollection() );
