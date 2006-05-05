@@ -571,29 +571,24 @@ void ViewManager::initActions()
 
   KAction *action;
 
-  action = new KAction( i18n( "Modify View..." ), "configure", 0, this,
-                        SLOT( editView() ), mCore->actionCollection(),
-                        "view_modify" );
+  action = new KAction(KIcon("configure"),  i18n( "Modify View..." ), mCore->actionCollection(), "view_modify" );
+  connect(action, SIGNAL(triggered(bool) ), SLOT( editView() ));
   action->setWhatsThis( i18n( "By pressing this button a dialog opens that allows you to modify the view of the addressbook. There you can add or remove fields that you want to be shown or hidden in the addressbook like the name for example." ) );
 
-  action = new KAction( i18n( "Add View..." ), "window_new", 0, this,
-                        SLOT( addView() ), mCore->actionCollection(),
-                        "view_add" );
+  action = new KAction(KIcon("window_new"),  i18n( "Add View..." ), mCore->actionCollection(), "view_add" );
+  connect(action, SIGNAL(triggered(bool) ), SLOT( addView() ));
   action->setWhatsThis( i18n( "You can add a new view by choosing one from the dialog that appears after pressing the button. You have to give the view a name, so that you can distinguish between the different views." ) );
 
-  mActionDeleteView = new KAction( i18n( "Delete View" ), "view_remove", 0,
-                                   this, SLOT( deleteView() ),
-                                   mCore->actionCollection(), "view_delete" );
+  mActionDeleteView = new KAction(KIcon("view_remove"),  i18n( "Delete View" ), mCore->actionCollection(), "view_delete" );
+  connect(mActionDeleteView, SIGNAL(triggered(bool) ), SLOT( deleteView() ));
   mActionDeleteView->setWhatsThis( i18n( "By pressing this button you can delete the actual view, which you have added before." ) );
 
-  action = new KAction( i18n( "Refresh View" ), "reload", 0, this,
-               SLOT( refreshView() ), mCore->actionCollection(),
-               "view_refresh" );
+  action = new KAction(KIcon("reload"),  i18n( "Refresh View" ), mCore->actionCollection(), "view_refresh" );
+  connect(action, SIGNAL(triggered(bool) ), SLOT( refreshView() ));
   action->setWhatsThis( i18n( "The view will be refreshed by pressing this button." ) );
 
-  action = new KAction( i18n( "Edit &Filters..." ), "filter", 0, this,
-               SLOT( configureFilters() ), mCore->actionCollection(),
-               "options_edit_filters" );
+  action = new KAction(KIcon("filter"),  i18n( "Edit &Filters..." ), mCore->actionCollection(), "options_edit_filters" );
+  connect(action, SIGNAL(triggered(bool) ), SLOT( configureFilters() ));
   action->setWhatsThis( i18n( "Edit the contact filters<p>You will be presented with a dialog, where you can add, remove and edit filters." ) );
 }
 

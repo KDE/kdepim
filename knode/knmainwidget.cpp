@@ -605,10 +605,8 @@ void KNMainWidget::initActions()
   a_ctGrpSetUnread = new KAction(i18n("Mark Last as Unr&ead..."), actionCollection(), "group_unread");
   connect(a_ctGrpSetUnread, SIGNAL(triggered(bool) ), SLOT(slotGrpSetUnread()));
 
-
-
-   KAction *action = new KAction(KIcon("configure"),  i18n("&Configure KNode..."), actionCollection(), "knode_configure_knode" );
-   connect(action, SIGNAL(triggered(bool) ), SLOT(slotSettings()));
+  action = new KAction(KIcon("configure"),  i18n("&Configure KNode..."), actionCollection(), "knode_configure_knode" );
+  connect(action, SIGNAL(triggered(bool) ), SLOT(slotSettings()));
 
   //collection-view - folder
   a_ctFolNew = new KAction(KIcon("folder_new"), i18n("&New Folder"), actionCollection(), "folder_new");
