@@ -147,12 +147,15 @@ void ArticleWidget::initActions()
   mViewSourceAction = new KAction( i18n("&View Source"), mActionCollection, "article_viewSource" );
   connect(mViewSourceAction, SIGNAL(triggered(bool) ), SLOT(slotViewSource()));
   mViewSourceAction->setShortcut(Qt::Key_V);
-  mReplyAction = new KAction( i18n("&Followup to Newsgroup..."), "message_reply",
-    Qt::Key_R, this, SLOT(slotReply()), mActionCollection, "article_postReply" );
-  mRemailAction = new KAction( i18n("Reply by E&mail..."), "mail_reply",
-    Qt::Key_A, this, SLOT(slotRemail()), mActionCollection, "article_mailReply" );
-  mForwardAction = new KAction( i18n("Forw&ard by Email..."), "mail_forward",
-    Qt::Key_F, this, SLOT(slotForward()), mActionCollection, "article_forward" );
+  mReplyAction = new KAction(KIcon("message_reply"),  i18n("&Followup to Newsgroup..."), mActionCollection, "article_postReply" );
+  connect(mReplyAction, SIGNAL(triggered(bool)), SLOT(slotReply()));
+  mReplyAction->setShortcut(Qt::Key_R);
+  mRemailAction = new KAction(KIcon("mail_reply"),  i18n("Reply by E&mail..."), mActionCollection, "article_mailReply" );
+  connect(mRemailAction, SIGNAL(triggered(bool)), SLOT(slotRemail()));
+  mRemailAction->setShortcut(Qt::Key_A);
+  mForwardAction = new KAction(KIcon("mail_forward"),  i18n("Forw&ard by Email..."), mActionCollection, "article_forward" );
+  connect(mForwardAction, SIGNAL(triggered(bool)), SLOT(slotForward()));
+  mForwardAction->setShortcut(Qt::Key_F);
   mCancelAction = new KAction( i18nc("article","&Cancel Article"),
     0, this, SLOT(slotCancel()), mActionCollection, "article_cancel" );
   mSupersedeAction = new KAction(i18n("S&upersede Article"), mActionCollection, "article_supersede" );
@@ -207,20 +210,20 @@ void ArticleWidget::initActions()
   connect(mCharsetSelectKeyb, SIGNAL(triggered(bool) ), SLOT(slotSetCharsetKeyboard()));
   mCharsetSelectKeyb->setShortcut(Qt::Key_C);
 
-  new KAction( i18n("&Open URL"), "fileopen", 0, this, SLOT(slotOpenURL()),
-               mActionCollection, "open_url" );
-  new KAction( i18n("&Copy Link Address"), "editcopy", 0, this, SLOT( slotCopyURL()),
-               mActionCollection, "copy_url" );
-  new KAction( i18n("&Bookmark This Link"), "bookmark_add", 0, this, SLOT(slotAddBookmark()),
-               mActionCollection, "add_bookmark" );
-  KAction *action = new KAction( i18n("&Add to Address Book"), mActionCollection, "add_addr_book" );
+  KAction *action = new KAction(KIcon("fileopen"),  i18n("&Open URL"), mActionCollection, "open_url" );
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotOpenURL()));
+  action = new KAction(KIcon("editcopy"),  i18n("&Copy Link Address"), mActionCollection, "copy_url" );
+  connect(action, SIGNAL(triggered(bool)), SLOT( slotCopyURL()));
+  action = new KAction(KIcon("bookmark_add"),  i18n("&Bookmark This Link"), mActionCollection, "add_bookmark" );
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotAddBookmark()));
+  action = new KAction( i18n("&Add to Address Book"), mActionCollection, "add_addr_book" );
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotAddToAddressBook()));
   action = new KAction( i18n("&Open in Address Book"), mActionCollection, "openin_addr_book" );
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotOpenInAddressBook()));
-  action = new KAction( i18n("&Open Attachment"), "fileopen", 0, this, SLOT(slotOpenAttachment()),
-               mActionCollection, "open_attachment" );
-  action = new KAction( i18n("&Save Attachment As..."), "filesaveas", 0, this, SLOT(slotSaveAttachment()),
-               mActionCollection, "save_attachment" );
+  action = new KAction(KIcon("fileopen"),  i18n("&Open Attachment"), mActionCollection, "open_attachment" );
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotOpenAttachment()));
+  action = new KAction(KIcon("filesaveas"),  i18n("&Save Attachment As..."), mActionCollection, "save_attachment" );
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotSaveAttachment()));
 }
 
 

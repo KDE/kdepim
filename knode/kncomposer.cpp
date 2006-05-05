@@ -211,17 +211,18 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   //------------------------------- <Actions> --------------------------------------
 
   //file menu
-  new KAction(i18n("&Send Now"),"mail_send", Qt::CTRL + Qt::Key_Return , this,
-    SLOT(slotSendNow()), actionCollection(), "send_now");
+  KAction *action = new KAction(KIcon("mail_send"), i18n("&Send Now"), actionCollection(), "send_now");
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotSendNow()));
+  action->setShortcut(Qt::CTRL + Qt::Key_Return);
 
-  new KAction(i18n("Send &Later"), "queue", 0, this,
-    SLOT(slotSendLater()), actionCollection(), "send_later");
+  action = new KAction(KIcon("queue"), i18n("Send &Later"), actionCollection(), "send_later");
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotSendLater()));
 
-  new KAction(i18n("Save as &Draft"),"filesave", 0 , this,
-    SLOT(slotSaveAsDraft()), actionCollection(), "save_as_draft");
+  action = new KAction(KIcon("filesave"), i18n("Save as &Draft"), actionCollection(), "save_as_draft");
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotSaveAsDraft()));
 
-  new KAction(i18n("D&elete"),"editdelete", 0 , this,
-    SLOT(slotArtDelete()), actionCollection(), "art_delete");
+  action = new KAction(KIcon("editdelete"), i18n("D&elete"), actionCollection(), "art_delete");
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotArtDelete()));
 
   KStdAction::close(this, SLOT(close()),actionCollection());
 
@@ -236,7 +237,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   KStdAction::pasteText(this, SLOT(slotPaste()), actionCollection());
 
-  KAction *action = new KAction(i18n("Paste as &Quotation"), actionCollection(), "paste_quoted");
+  action = new KAction(i18n("Paste as &Quotation"), actionCollection(), "paste_quoted");
   connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotPasteAsQuotation()));
 
   KStdAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
@@ -256,8 +257,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   action = new KAction(i18n("Insert File (in a &box)..."), actionCollection(), "insert_file_boxed");
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotInsertFileBoxed()));
 
-  action = new KAction(i18n("Attach &File..."), "attach", 0, this, SLOT(slotAttachFile()),
-                   actionCollection(), "attach_file");
+  action = new KAction(KIcon("attach"), i18n("Attach &File..."), actionCollection(), "attach_file");
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotAttachFile()));
 
   a_ctPGPsign = new KToggleAction(i18n("Sign Article with &PGP"),
 		   "signature", 0,
@@ -309,13 +310,13 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   connect(undoRewrap, SIGNAL(triggered(bool) ), SLOT(slotUndoRewrap()));
   undoRewrap->setEnabled(!u_nwraped.isNull());
 
-  KAction *rot13 = new KAction(i18n("S&cramble (Rot 13)"), "encrypted", 0, v_iew->e_dit,
-                               SLOT(slotRot13()), actionCollection(), "tools_rot13");
+  KAction *rot13 = new KAction(KIcon("encrypted"), i18n("S&cramble (Rot 13)"), actionCollection(), "tools_rot13");
+  connect(rot13, SIGNAL(triggered(bool)), v_iew->e_dit, SLOT(slotRot13()));
   rot13->setEnabled(false);
   connect(v_iew->e_dit, SIGNAL(copyAvailable(bool)), rot13, SLOT(setEnabled(bool)));
 
-  a_ctExternalEditor = new KAction(i18n("Start &External Editor"), "run", 0, this,
-                       SLOT(slotExternalEditor()), actionCollection(), "external_editor");
+  a_ctExternalEditor = new KAction(KIcon("run"), i18n("Start &External Editor"), actionCollection(), "external_editor");
+  connect(a_ctExternalEditor, SIGNAL(triggered(bool)), SLOT(slotExternalEditor()));
 
   a_ctSpellCheck = KStdAction::spelling (this, SLOT(slotSpellcheck()), actionCollection());
 

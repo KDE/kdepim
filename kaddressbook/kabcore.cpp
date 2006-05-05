@@ -1051,8 +1051,8 @@ void KABCore::initActions()
   KAction *action;
 
   // file menu
-  mActionMail = new KAction( i18n( "&Send Email to Contact..." ), "mail_send", 0,
-                             this, SLOT( sendMail() ), actionCollection(), "file_mail" );
+  mActionMail = new KAction(KIcon("mail_send"),  i18n( "&Send Email to Contact..." ), actionCollection(), "file_mail" );
+  connect(mActionMail, SIGNAL(triggered(bool)), SLOT( sendMail() ));
   action = KStdAction::print( this, SLOT( print() ), actionCollection() );
   mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
@@ -1061,8 +1061,9 @@ void KABCore::initActions()
                              SLOT( save() ), actionCollection(), "file_sync" );
   mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 
-  action = new KAction( i18n( "&New Contact..." ), "identity", Qt::CTRL+Qt::Key_N, this,
-               SLOT( newContact() ), actionCollection(), "file_new_contact" );
+  action = new KAction(KIcon("identity"),  i18n( "&New Contact..." ), actionCollection(), "file_new_contact" );
+  connect(action, SIGNAL(triggered(bool)), SLOT( newContact() ));
+  action->setShortcut(Qt::CTRL+Qt::Key_N);
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers." ) );
 
   mActionMailVCard = new KAction( i18n( "Send &Contact..." ), "mail_post_to", 0,
@@ -1130,8 +1131,8 @@ void KABCore::initActions()
   action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possibilities to configure KAddressBook." ) );
 
   // misc
-  action = new KAction( i18n( "&Lookup Addresses in LDAP Directory..." ), "find", 0,
-                        this, SLOT( openLDAPDialog() ), actionCollection(), "ldap_lookup" );
+  action = new KAction(KIcon("find"),  i18n( "&Lookup Addresses in LDAP Directory..." ), actionCollection(), "ldap_lookup" );
+  connect(action, SIGNAL(triggered(bool)), SLOT( openLDAPDialog() ));
   action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );
 
   mActionWhoAmI = new KAction( i18n( "Set as Personal Contact Data" ), "personal", 0, this,

@@ -91,16 +91,24 @@ void KTNEFMain::setupActions()
 	KStdAction::quit(kapp, SLOT(quit()), actionCollection());
 
 	// Action menu
-	new KAction(i18n("View"), QString("viewmag"), 0, this, SLOT(viewFile()), actionCollection(), "view_file");
-	new KAction(i18n("View With..."), QString("package_applications"), 0, this, SLOT(viewFileAs()), actionCollection(), "view_file_as");
-	KAction *action = new KAction(i18n("Extract"), actionCollection(), "extract_file");
+	KAction *action = new KAction(KIcon(QString("viewmag")), i18n("View"), actionCollection(), "view_file");
+	connect(action, SIGNAL(triggered(bool)), SLOT(viewFile()));
+	action = new KAction(KIcon(QString("package_applications")), i18n("View With..."), actionCollection(), "view_file_as");
+	connect(action, SIGNAL(triggered(bool)), SLOT(viewFileAs()));
+	action = new KAction(i18n("Extract"), actionCollection(), "extract_file");
 	connect(action, SIGNAL(triggered(bool) ), SLOT(extractFile()));
-	new KAction(i18n("Extract To..."), QString("ktnef_extract_to"), 0, this, SLOT(extractFileTo()), actionCollection(), "extract_file_to");
-	new KAction(i18n("Extract All To..."), QString("ktnef_extract_all_to"), 0, this, SLOT(extractAllFiles()), actionCollection(), "extract_all_files");
-	new KAction( i18n( "Message Properties" ), "help", 0, this, SLOT( slotShowMessageProperties() ), actionCollection(), "msg_properties" );
-	new KAction(i18n("Properties"), QString("contents"), 0, this, SLOT(propertiesFile()), actionCollection(), "properties_file");
-	new KAction( i18n( "Show Message Text" ), "mail_generic", 0, this, SLOT( slotShowMessageText() ), actionCollection(), "msg_text" );
-	new KAction( i18n( "Save Message Text As..." ), "filesave", 0, this, SLOT( slotSaveMessageText() ), actionCollection(), "msg_save" );
+	action = new KAction(KIcon(QString("ktnef_extract_to")), i18n("Extract To..."), actionCollection(), "extract_file_to");
+	connect(action, SIGNAL(triggered(bool)), SLOT(extractFileTo()));
+	action = new KAction(KIcon(QString("ktnef_extract_all_to")), i18n("Extract All To..."), actionCollection(), "extract_all_files");
+	connect(action, SIGNAL(triggered(bool)), SLOT(extractAllFiles()));
+	action = new KAction(KIcon("help"),  i18n( "Message Properties" ), actionCollection(), "msg_properties" );
+	connect(action, SIGNAL(triggered(bool)), SLOT( slotShowMessageProperties() ));
+	action = new KAction(KIcon(QString("contents")), i18n("Properties"), actionCollection(), "properties_file");
+	connect(action, SIGNAL(triggered(bool)), SLOT(propertiesFile()));
+	action = new KAction(KIcon("mail_generic"),  i18n( "Show Message Text" ), actionCollection(), "msg_text" );
+	connect(action, SIGNAL(triggered(bool)), SLOT( slotShowMessageText() ));
+	action = new KAction(KIcon("filesave"),  i18n( "Save Message Text As..." ), actionCollection(), "msg_save" );
+	connect(action, SIGNAL(triggered(bool)), SLOT( slotSaveMessageText() ));
 	actionCollection()->action("view_file")->setEnabled(false);
 	actionCollection()->action("view_file_as")->setEnabled(false);
 	actionCollection()->action("extract_file")->setEnabled(false);
@@ -109,7 +117,8 @@ void KTNEFMain::setupActions()
 	actionCollection()->action("properties_file")->setEnabled(false);
 
 	// Option menu
-	new KAction(i18n("Default Folder..."), QString("folder_open"), 0, this, SLOT(optionDefaultDir()), actionCollection(), "options_default_dir");
+	action = new KAction(KIcon(QString("folder_open")), i18n("Default Folder..."), actionCollection(), "options_default_dir");
+	connect(action, SIGNAL(triggered(bool)), SLOT(optionDefaultDir()));
 
 	createStandardStatusBarAction();
 	setStandardToolBarMenuEnabled(true);
