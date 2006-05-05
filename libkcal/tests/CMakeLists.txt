@@ -117,7 +117,7 @@ kde4_automoc(${testrecurrence_SRCS})
 
 if(KDE4_BUILD_TESTS)
 
-kde4_add_executable(testrecurrence ${testrecurrence_SRCS})
+kde4_add_executable(testrecurrence RUN_UNINSTALLED ${testrecurrence_SRCS})
 
 target_link_libraries(testrecurrence  ${KDE4_KDECORE_LIBS} kcal )
 
@@ -131,7 +131,7 @@ kde4_automoc(${testrecurprevious_SRCS})
 
 if(KDE4_BUILD_TESTS)
 
-kde4_add_executable(testrecurprevious ${testrecurprevious_SRCS})
+kde4_add_executable(testrecurprevious RUN_UNINSTALLED ${testrecurprevious_SRCS})
 
 target_link_libraries(testrecurprevious  ${KDE4_KDECORE_LIBS} kcal )
 
@@ -145,7 +145,7 @@ kde4_automoc(${testrecurson_SRCS})
 
 if(KDE4_BUILD_TESTS)
 
-kde4_add_executable(testrecurson ${testrecurson_SRCS})
+kde4_add_executable(testrecurson RUN_UNINSTALLED ${testrecurson_SRCS})
 
 target_link_libraries(testrecurson  ${KDE4_KDECORE_LIBS} kcal )
 
@@ -159,7 +159,7 @@ kde4_automoc(${testrecurrencetype_SRCS})
 
 if(KDE4_BUILD_TESTS)
 
-kde4_add_executable(testrecurrencetype ${testrecurrencetype_SRCS})
+kde4_add_executable(testrecurrencetype RUN_UNINSTALLED ${testrecurrencetype_SRCS})
 
 target_link_libraries(testrecurrencetype  ${KDE4_KDECORE_LIBS} kcal )
 
@@ -173,9 +173,11 @@ kde4_automoc(${testicaltimezones_SRCS})
 
 if(KDE4_BUILD_TESTS)
 
-kde4_add_executable(testicaltimezones ${testicaltimezones_SRCS})
+kde4_add_executable(testicaltimezones RUN_UNINSTALLED ${testicaltimezones_SRCS})
 
-target_link_libraries(testicaltimezones  ${KDE4_KDECORE_LIBS} kcal QtTest_debug )
+target_link_libraries(testicaltimezones  ${KDE4_KDECORE_LIBS} kcal ${QT_QTTEST_LIBRARY})
+
+add_test(libkcal-testicaltimezones ${EXECUTABLE_OUTPUT_PATH}/testicaltimezones)
 
 endif(KDE4_BUILD_TESTS)
 
@@ -187,7 +189,7 @@ kde4_automoc(${testvcalexport_SRCS})
 
 if(KDE4_BUILD_TESTS)
 
-kde4_add_executable(testvcalexport ${testvcalexport_SRCS})
+kde4_add_executable(testvcalexport RUN_UNINSTALLED ${testvcalexport_SRCS})
 
 target_link_libraries(testvcalexport  ${KDE4_KDECORE_LIBS} kcal )
 
