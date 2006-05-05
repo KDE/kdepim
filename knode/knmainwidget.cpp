@@ -534,10 +534,12 @@ void KNMainWidget::initActions()
   a_ctNavPrevArt            = new KAction( KGuiItem(i18n("&Previous Article"), "previous",
                               i18n("Go to previous article")), KShortcut("P;Left"), h_drView,
                               SLOT(prevArticle()), actionCollection(), "go_prevArticle" );
-  a_ctNavNextUnreadArt      = new KAction(i18n("Next Unread &Article"), "1rightarrow", Qt::ALT+Qt::SHIFT+Qt::Key_Space , this,
-                              SLOT(slotNavNextUnreadArt()), actionCollection(), "go_nextUnreadArticle");
-  a_ctNavNextUnreadThread   = new KAction(i18n("Next Unread &Thread"),"2rightarrow", Qt::SHIFT+Qt::Key_Space , this,
-                              SLOT(slotNavNextUnreadThread()), actionCollection(), "go_nextUnreadThread");
+  a_ctNavNextUnreadArt = new KAction(KIcon("1rightarrow"), i18n("Next Unread &Article"), actionCollection(), "go_nextUnreadArticle");
+  connect(a_ctNavNextUnreadArt, SIGNAL(triggered(bool)), SLOT(slotNavNextUnreadArt()));
+  a_ctNavNextUnreadArt->setShortcut(Qt::ALT+Qt::SHIFT+Qt::Key_Space);
+  a_ctNavNextUnreadThread = new KAction(KIcon("2rightarrow"), i18n("Next Unread &Thread"), actionCollection(), "go_nextUnreadThread");
+  connect(a_ctNavNextUnreadThread, SIGNAL(triggered(bool)), SLOT(slotNavNextUnreadThread()));
+  a_ctNavNextUnreadThread->setShortcut(Qt::SHIFT+Qt::Key_Space);
   a_ctNavNextGroup = new KAction(KIcon("down"), i18n("Ne&xt Group"), actionCollection(), "go_nextGroup");
   connect(a_ctNavNextGroup, SIGNAL(triggered(bool)), c_olView, SLOT(nextGroup()));
   a_ctNavNextGroup->setShortcut(Qt::Key_Plus);
@@ -644,8 +646,9 @@ void KNMainWidget::initActions()
   a_ctArtSortHeaders->setItems(items);
   a_ctArtSortHeaders->setShortcutConfigurable(false);
   connect(a_ctArtSortHeaders, SIGNAL(activated(int)), this, SLOT(slotArtSortHeaders(int)));
-  a_ctArtSortHeadersKeyb   = new KAction(i18n("Sort"), QString(), Qt::Key_F7 , this,
-                             SLOT(slotArtSortHeadersKeyb()), actionCollection(), "view_Sort_Keyb");
+  a_ctArtSortHeadersKeyb = new KAction(i18n("Sort"), actionCollection(), "view_Sort_Keyb");
+  connect(a_ctArtSortHeadersKeyb, SIGNAL(triggered(bool)), SLOT(slotArtSortHeadersKeyb()));
+  a_ctArtSortHeadersKeyb->setShortcut(Qt::Key_F7);
   a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
                               actionCollection(), "view_Filter");
   a_ctArtFilter->setShortcutConfigurable(false);

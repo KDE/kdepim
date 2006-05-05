@@ -346,8 +346,8 @@ void CertManager::createActions() {
 			actionCollection(), "crl_clear_crl_cache" );
   action->setEnabled( mDirMngrFound ); // we also need dirmngr for this
 
-  action = new KAction( i18n("GnuPG Log Viewer..."), "pgp-keys", 0, this,
-                        SLOT(slotStartWatchGnuPG()), actionCollection(), "tools_start_kwatchgnupg");
+  action = new KAction(KIcon("pgp-keys"),  i18n("GnuPG Log Viewer..."), actionCollection(), "tools_start_kwatchgnupg");
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotStartWatchGnuPG()));
   // disable action if no kwatchgnupg binary is around
   if (KStandardDirs::findExe("kwatchgnupg").isEmpty()) action->setEnabled(false);
 
@@ -368,8 +368,8 @@ void CertManager::createActions() {
   KStdAction::keyBindings( this, SLOT(slotEditKeybindings()), actionCollection() );
   KStdAction::preferences( this, SLOT(slotShowConfigurationDialog()), actionCollection() );
 
-  new KAction( i18n( "Configure &GpgME Backend" ), 0, 0, this, SLOT(slotConfigureGpgME()),
-               actionCollection(), "configure_gpgme" );
+  action = new KAction( i18n( "Configure &GpgME Backend" ), actionCollection(), "configure_gpgme" );
+  connect(action, SIGNAL(triggered(bool)), SLOT(slotConfigureGpgME()));
 
   createStandardStatusBarAction();
   updateImportActions( true );
