@@ -307,14 +307,12 @@ void CertManager::createActions() {
 					    actionCollection(), "certificates_validate" );
   connectEnableOperationSignal( this, mValidateCertificateAction );
 
-  mImportCertFromFileAction = new KAction( i18n("Import Certificates..."), 0,
-					   this, SLOT(slotImportCertFromFile()),
-					   actionCollection(), "file_import_certificates" );
+  mImportCertFromFileAction = new KAction( i18n("Import Certificates..."), actionCollection(), "file_import_certificates" );
+  connect(mImportCertFromFileAction, SIGNAL(triggered(bool) ), SLOT(slotImportCertFromFile()));
   connectEnableOperationSignal( this, mImportCertFromFileAction );
 
   mImportCRLFromFileAction = new KAction( i18n("Import CRLs..."), 0,
-					  this, SLOT(importCRLFromFile()),
-					  actionCollection(), "file_import_crls" );
+					  this, SLOT(importCRLFromFile()), actionCollection(), "file_import_crls" );
   connectEnableOperationSignal( this, mImportCRLFromFileAction );
 
   mExportCertificateAction = new KAction( i18n("Export Certificates..."), "export", 0,
@@ -337,13 +335,11 @@ void CertManager::createActions() {
   mDirMngrFound = !dirmngr.isEmpty();
 
   action = new KAction( i18n("Dump CRL Cache..."), 0,
-			this, SLOT(slotViewCRLs()),
-			actionCollection(), "crl_dump_crl_cache" );
+			this, SLOT(slotViewCRLs()), actionCollection(), "crl_dump_crl_cache" );
   action->setEnabled( mDirMngrFound ); // we also need dirmngr for this
 
   action = new KAction( i18n("Clear CRL Cache..."), 0,
-			this, SLOT(slotClearCRLs()),
-			actionCollection(), "crl_clear_crl_cache" );
+			this, SLOT(slotClearCRLs()), actionCollection(), "crl_clear_crl_cache" );
   action->setEnabled( mDirMngrFound ); // we also need dirmngr for this
 
   action = new KAction(KIcon("pgp-keys"),  i18n("GnuPG Log Viewer..."), actionCollection(), "tools_start_kwatchgnupg");

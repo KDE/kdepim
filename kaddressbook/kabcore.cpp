@@ -1071,9 +1071,8 @@ void KABCore::initActions()
                                   actionCollection(), "file_mail_vcard" );
   mActionMailVCard->setWhatsThis( i18n( "Send a mail with the selected contact as attachment." ) );
 
-  mActionChat = new KAction( i18n( "Chat &With..." ), 0,
-                                  this, SLOT( startChat() ),
-                                  actionCollection(), "file_chat" );
+  mActionChat = new KAction( i18n( "Chat &With..." ), actionCollection(), "file_chat" );
+  connect(mActionChat, SIGNAL(triggered(bool) ), SLOT( startChat() ));
   mActionChat->setWhatsThis( i18n( "Start a chat with the selected contact." ) );
 
   mActionEditAddressee = new KAction( i18n( "&Edit Contact..." ), "edit", 0,
@@ -1141,8 +1140,7 @@ void KABCore::initActions()
   mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you do not have to input your personal data several times." ) );
 
   mActionCategories = new KAction( i18n( "Select Categories..." ), 0, this,
-                                   SLOT( setCategories() ), actionCollection(),
-                                   "edit_set_categories" );
+                                   SLOT( setCategories() ), actionCollection(), "edit_set_categories" );
   mActionCategories->setWhatsThis( i18n( "Set the categories for all selected contacts." ) );
 
   KAction *clearLocation = new KAction( i18n( "Clear Search Bar" ),
