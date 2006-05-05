@@ -261,29 +261,27 @@ void CertManager::createActions() {
 
   connectEnableOperationSignal( this, action );
 
-  action = new KAction( i18n("Stop Operation"), "stop", Qt::Key_Escape,
-			this, SIGNAL(stopOperations()),
-			actionCollection(), "view_stop_operations" );
+  action = new KAction(KIcon("stop"),  i18n("Stop Operation"), actionCollection(), "view_stop_operations" );
+  connect(action, SIGNAL(triggered(bool) ), SIGNAL(stopOperations()));
+  action->setShortcut(Qt::Key_Escape);
   action->setEnabled( false );
 
-  (void)   new KAction( i18n("New Key Pair..."), "filenew", 0,
-			this, SLOT(newCertificate()),
-			actionCollection(), "file_new_certificate" );
+  action = new KAction(KIcon("filenew"),  i18n("New Key Pair..."), actionCollection(), "file_new_certificate" );
+  connect(action, SIGNAL(triggered(bool) ), SLOT(newCertificate()));
 
   connect( new KToggleAction( i18n("Hierarchical Key List"),
 			      actionCollection(), "view_hierarchical" ),
 	   SIGNAL(toggled(bool)), SLOT(slotToggleHierarchicalView(bool)) );
 
-  action = new KAction( i18n("Expand All"), 0, Qt::CTRL+Qt::Key_Period,
-			this, SLOT(slotExpandAll()),
-			actionCollection(), "view_expandall" );
-  action = new KAction( i18n("Collapse All"), 0, Qt::CTRL+Qt::Key_Comma,
-			this, SLOT(slotCollapseAll()),
-			actionCollection(), "view_collapseall" );
+  action = new KAction( i18n("Expand All"), actionCollection(), "view_expandall" );
+  connect(action, SIGNAL(triggered(bool) ), SLOT(slotExpandAll()));
+  action->setShortcut(Qt::CTRL+Qt::Key_Period);
+  action = new KAction( i18n("Collapse All"), actionCollection(), "view_collapseall" );
+  connect(action, SIGNAL(triggered(bool) ), SLOT(slotCollapseAll()));
+  action->setShortcut(Qt::CTRL+Qt::Key_Comma);
 
-  (void)   new KAction( i18n("Refresh CRLs"), 0, 0,
-			this, SLOT(slotRefreshKeys()),
-			actionCollection(), "certificates_refresh_clr" );
+  action = new KAction( i18n("Refresh CRLs"), actionCollection(), "certificates_refresh_clr" );
+  connect(action, SIGNAL(triggered(bool) ), SLOT(slotRefreshKeys()));
 
 #ifdef NOT_IMPLEMENTED_ANYWAY
   mRevokeCertificateAction = new KAction( i18n("Revoke"), 0,
@@ -297,14 +295,14 @@ void CertManager::createActions() {
   connectEnableOperationSignal( this, mExtendCertificateAction );
 #endif
 
-  mDeleteCertificateAction = new KAction( i18n("Delete"), "editdelete", Qt::Key_Delete,
-                                    this, SLOT(slotDeleteCertificate()),
-                                    actionCollection(), "edit_delete_certificate" );
+  mDeleteCertificateAction = new KAction(KIcon("editdelete"),  i18n("Delete"), actionCollection(), "edit_delete_certificate" );
+  connect(mDeleteCertificateAction, SIGNAL(triggered(bool) ), SLOT(slotDeleteCertificate()));
+  mDeleteCertificateAction->setShortcut(Qt::Key_Delete);
   connectEnableOperationSignal( this, mDeleteCertificateAction );
 
-  mValidateCertificateAction = new KAction( i18n("Validate"), "reload", Qt::SHIFT + Qt::Key_F5,
-					    this, SLOT(slotValidate()),
-					    actionCollection(), "certificates_validate" );
+  mValidateCertificateAction = new KAction(KIcon("reload"),  i18n("Validate"), actionCollection(), "certificates_validate" );
+  connect(mValidateCertificateAction, SIGNAL(triggered(bool) ), SLOT(slotValidate()));
+  mValidateCertificateAction->setShortcut(Qt::SHIFT + Qt::Key_F5);
   connectEnableOperationSignal( this, mValidateCertificateAction );
 
   mImportCertFromFileAction = new KAction( i18n("Import Certificates..."), actionCollection(), "file_import_certificates" );
@@ -315,21 +313,17 @@ void CertManager::createActions() {
   connect(mImportCRLFromFileAction, SIGNAL(triggered(bool) ), SLOT(importCRLFromFile()));
   connectEnableOperationSignal( this, mImportCRLFromFileAction );
 
-  mExportCertificateAction = new KAction( i18n("Export Certificates..."), "export", 0,
-					  this, SLOT(slotExportCertificate()),
-					  actionCollection(), "file_export_certificate" );
+  mExportCertificateAction = new KAction(KIcon("export"),  i18n("Export Certificates..."), actionCollection(), "file_export_certificate" );
+  connect(mExportCertificateAction, SIGNAL(triggered(bool) ), SLOT(slotExportCertificate()));
 
-  mExportSecretKeyAction = new KAction( i18n("Export Secret Key..."), "export", 0,
-                                        this, SLOT(slotExportSecretKey()),
-                                        actionCollection(), "file_export_secret_keys" );
+  mExportSecretKeyAction = new KAction(KIcon("export"),  i18n("Export Secret Key..."), actionCollection(), "file_export_secret_keys" );
+  connect(mExportSecretKeyAction, SIGNAL(triggered(bool) ), SLOT(slotExportSecretKey()));
   connectEnableOperationSignal( this, mExportSecretKeyAction );
 
-  mViewCertDetailsAction = new KAction( i18n("Certificate Details..."), 0, 0,
-                                        this, SLOT(slotViewDetails()), actionCollection(),
-                                        "view_certificate_details" );
-  mDownloadCertificateAction = new KAction( i18n( "Download"), 0, 0,
-                                        this, SLOT(slotDownloadCertificate()), actionCollection(),
-                                        "download_certificate" );
+  mViewCertDetailsAction = new KAction( i18n("Certificate Details..."), actionCollection(), "view_certificate_details" );
+  connect(mViewCertDetailsAction, SIGNAL(triggered(bool) ), SLOT(slotViewDetails()));
+  mDownloadCertificateAction = new KAction( i18n( "Download"), actionCollection(), "download_certificate" );
+  connect(mDownloadCertificateAction, SIGNAL(triggered(bool) ), SLOT(slotDownloadCertificate()));
 
   const QString dirmngr = KStandardDirs::findExe( "gpgsm" );
   mDirMngrFound = !dirmngr.isEmpty();

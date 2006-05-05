@@ -1066,23 +1066,20 @@ void KABCore::initActions()
   action->setShortcut(Qt::CTRL+Qt::Key_N);
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers." ) );
 
-  mActionMailVCard = new KAction( i18n( "Send &Contact..." ), "mail_post_to", 0,
-                                  this, SLOT( mailVCard() ),
-                                  actionCollection(), "file_mail_vcard" );
+  mActionMailVCard = new KAction(KIcon("mail_post_to"),  i18n( "Send &Contact..." ), actionCollection(), "file_mail_vcard" );
+  connect(mActionMailVCard, SIGNAL(triggered(bool) ), SLOT( mailVCard() ));
   mActionMailVCard->setWhatsThis( i18n( "Send a mail with the selected contact as attachment." ) );
 
   mActionChat = new KAction( i18n( "Chat &With..." ), actionCollection(), "file_chat" );
   connect(mActionChat, SIGNAL(triggered(bool) ), SLOT( startChat() ));
   mActionChat->setWhatsThis( i18n( "Start a chat with the selected contact." ) );
 
-  mActionEditAddressee = new KAction( i18n( "&Edit Contact..." ), "edit", 0,
-                                      this, SLOT( editContact() ),
-                                      actionCollection(), "file_properties" );
+  mActionEditAddressee = new KAction(KIcon("edit"),  i18n( "&Edit Contact..." ), actionCollection(), "file_properties" );
+  connect(mActionEditAddressee, SIGNAL(triggered(bool) ), SLOT( editContact() ));
   mActionEditAddressee->setWhatsThis( i18n( "Edit a contact<p>You will be presented with a dialog where you can change all data about a person, including addresses and phone numbers." ) );
 
-  mActionMerge = new KAction( i18n( "&Merge Contacts" ), "", 0,
-                              this, SLOT( mergeContacts() ),
-                              actionCollection(), "edit_merge" );
+  mActionMerge = new KAction( i18n( "&Merge Contacts" ), actionCollection(), "edit_merge" );
+  connect(mActionMerge, SIGNAL(triggered(bool) ), SLOT( mergeContacts() ));
 
   // edit menu
   mActionCopy = KStdAction::copy( this, SLOT( copyContacts() ), actionCollection() );
@@ -1096,15 +1093,14 @@ void KABCore::initActions()
 //  mActionUndo->setWhatsThis( i18n( "Undoes the last <b>Cut</b>, <b>Copy</b> or <b>Paste</b>." ) );
 //  mActionRedo->setWhatsThis( i18n( "Redoes the last <b>Cut</b>, <b>Copy</b> or <b>Paste</b>." ) );
 
-  mActionDelete = new KAction( i18n( "&Delete Contact" ), "editdelete",
-                               Qt::Key_Delete, this, SLOT( deleteContacts() ),
-                               actionCollection(), "edit_delete" );
+  mActionDelete = new KAction(KIcon("editdelete"),  i18n( "&Delete Contact" ), actionCollection(), "edit_delete" );
+  connect(mActionDelete, SIGNAL(triggered(bool) ), SLOT( deleteContacts() ));
+  mActionDelete->setShortcut(Qt::Key_Delete);
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
 
-  mActionStoreAddresseeIn = new KAction( i18n( "St&ore Contact In..." ), "kaddressbook", 0,
-                                      this, SLOT( storeContactIn() ),
-                                      actionCollection(), "edit_store_in" );
+  mActionStoreAddresseeIn = new KAction(KIcon("kaddressbook"),  i18n( "St&ore Contact In..." ), actionCollection(), "edit_store_in" );
+  connect(mActionStoreAddresseeIn, SIGNAL(triggered(bool) ), SLOT( storeContactIn() ));
   mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." ) );
 
   // settings menu
@@ -1121,11 +1117,12 @@ void KABCore::initActions()
   connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
 
   if ( mIsPart )
-    action = new KAction( i18n( "&Configure Address Book..." ), "configure", 0,
-                          this, SLOT( configure() ), actionCollection(),
-                          "kaddressbook_configure" );
-  else
+  {
+    action = new KAction(KIcon("configure"),  i18n( "&Configure Address Book..." ), actionCollection(), "kaddressbook_configure" );
+    connect(action, SIGNAL(triggered(bool) ), SLOT( configure() ));
+  } else {
     action = KStdAction::preferences( this, SLOT( configure() ), actionCollection() );
+  }
 
   action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possibilities to configure KAddressBook." ) );
 
@@ -1134,18 +1131,17 @@ void KABCore::initActions()
   connect(action, SIGNAL(triggered(bool)), SLOT( openLDAPDialog() ));
   action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );
 
-  mActionWhoAmI = new KAction( i18n( "Set as Personal Contact Data" ), "personal", 0, this,
-                               SLOT( setWhoAmI() ), actionCollection(),
-                               "edit_set_personal" );
+  mActionWhoAmI = new KAction(KIcon("personal"),  i18n( "Set as Personal Contact Data" ), actionCollection(), "edit_set_personal" );
+  connect(mActionWhoAmI, SIGNAL(triggered(bool) ), SLOT( setWhoAmI() ));
   mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you do not have to input your personal data several times." ) );
 
   mActionCategories = new KAction( i18n( "Select Categories..." ), actionCollection(), "edit_set_categories" );
   connect(mActionCategories, SIGNAL(triggered(bool) ), SLOT( setCategories() ));
   mActionCategories->setWhatsThis( i18n( "Set the categories for all selected contacts." ) );
 
-  KAction *clearLocation = new KAction( i18n( "Clear Search Bar" ),
-					QApplication::isRightToLeft() ? "clear_left" : "locationbar_erase",
-					Qt::CTRL+Qt::Key_L, this, SLOT( slotClearSearchBar() ), actionCollection(), "clear_search" );
+  KAction *clearLocation = new KAction(KIcon(QApplication::isRightToLeft() ? "clear_left" : "locationbar_erase"),  i18n( "Clear Search Bar" ), actionCollection(), "clear_search" );
+  connect(clearLocation, SIGNAL(triggered(bool) ), SLOT( slotClearSearchBar() ));
+  clearLocation->setShortcut(Qt::CTRL+Qt::Key_L);
   clearLocation->setWhatsThis( i18n( "Clear Search Bar<p>"
 				     "Clears the content of the quick search bar." ) );
 

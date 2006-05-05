@@ -137,10 +137,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   q_uicksearch = new KToolBar( dummy );
   KAction *resetQuickSearch = new KAction( i18n( "Reset Quick Search" ),
                                            QApplication::isRightToLeft()
-                                           ? "clear_left"
-                                           : "locationbar_erase",
-                                           KShortcut(), 0, 0, actionCollection(),
-                                           "reset_quicksearch" );
+                                           ? "clear_left" : "locationbar_erase", KShortcut(), 0, 0, actionCollection(), "reset_quicksearch" );
   q_uicksearch->addAction( resetQuickSearch );
   resetQuickSearch->setWhatsThis( i18n( "<b>Reset Quick Search</b><br>"
                                         "Resets the quick search so that "
@@ -610,10 +607,8 @@ void KNMainWidget::initActions()
 
 
 
-   (void) new KAction( i18n("&Configure KNode..."),
-                       "configure", 0, this,
-                       SLOT(slotSettings()), actionCollection(),
-                       "knode_configure_knode" );
+   KAction *action = new KAction(KIcon("configure"),  i18n("&Configure KNode..."), actionCollection(), "knode_configure_knode" );
+   connect(action, SIGNAL(triggered(bool) ), SLOT(slotSettings()));
 
   //collection-view - folder
   a_ctFolNew = new KAction(KIcon("folder_new"), i18n("&New Folder"), actionCollection(), "folder_new");
