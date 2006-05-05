@@ -19,17 +19,16 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kapplication.h>
-#include <kcmdlineargs.h>
 
+#include "testidmapper.h"
+#include "testidmapper.moc"
 #include "idmapper.h"
+#include <qtest_kde.h>
 
-int main( int argc, char **argv )
+QTEST_KDEMAIN( IdMapperTest, NoGUI )
+
+void IdMapperTest::testIdMapper()
 {
-  KApplication::disableAutoDcopRegistration();
-  KCmdLineArgs::init( argc, argv, "testemail", 0, 0, 0, 0 );
-  KApplication app( false );
-
   KPIM::IdMapper mapper( "test.uidmap" ) ;
   mapper.setIdentifier("testidentifier");
 
@@ -37,22 +36,29 @@ int main( int argc, char **argv )
   mapper.setRemoteId( "yes", "klar" );
   mapper.setRemoteId( "no", "nee" );
 
-  qDebug( "full:\n%s", mapper.asString().toLatin1().constData() );
+  QString mapperAsString = "foo\tbar\t\r\nno\tnee\t\r\nyes\tklar\t\r\n";
+
+  // full
+  QCOMPARE( mapper.asString(), mapperAsString );
 
   mapper.save();
 
   mapper.clear();
-  qDebug( "empty:\n%s", mapper.asString().toLatin1().constData() );
+  // empty
+  QCOMPARE( mapper.asString(), QString() );
 
   mapper.load();
-  qDebug( "full again:\n%s", mapper.asString().toLatin1().constData() );
+  // full again
+  QCOMPARE( mapper.asString(), mapperAsString );
 
   mapper.save();
 
   mapper.clear();
-  qDebug( "empty:\n%s", mapper.asString().toLatin1().constData() );
+  // empty
+  QCOMPARE( mapper.asString(), QString() );
 
   mapper.load();
-  qDebug( "full again:\n%s", mapper.asString().toLatin1().constData() );
-  return 0;
+  // full again
+  QCOMPARE( mapper.asString(), mapperAsString );
 }
+

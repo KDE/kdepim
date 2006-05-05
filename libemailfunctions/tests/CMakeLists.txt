@@ -11,9 +11,11 @@ set(testidmapper_SRCS ${libemailfunctions_SRCS} testidmapper.cpp )
 
 kde4_automoc(${testidmapper_SRCS})
 
-kde4_add_executable(testidmapper ${testidmapper_SRCS})
+kde4_add_executable(testidmapper RUN_UNINSTALLED ${testidmapper_SRCS})
 
-target_link_libraries(testidmapper  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(testidmapper  ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
+
+add_test(kresources-idmappertest ${EXECUTABLE_OUTPUT_PATH}/testidmapper)
 
 ########### next target ###############
 
