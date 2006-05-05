@@ -546,33 +546,24 @@ void KNMainWidget::initActions()
   connect(a_ctNavReadThrough, SIGNAL(triggered(bool) ), SLOT(slotNavReadThrough()));
   a_ctNavReadThrough->setShortcut(Qt::Key_Space);
 
-  Q3Accel *accel = new Q3Accel( this );
   KAction *action = new KAction( i18n("Focus on Next Folder"), actionCollection(), "inc_current_folder" );
   connect(action, SIGNAL(triggered(bool) ), c_olView, SLOT(incCurrentFolder()));
   action->setShortcut(Qt::CTRL+Qt::Key_Right);
-  accel->connectItem(accel->insertItem(Qt::CTRL+Qt::Key_Right),
-    c_olView, SLOT(incCurrentFolder()));
-  new KAction( i18n("Focus on Previous Folder"), Qt::CTRL+Qt::Key_Left, c_olView,
-    SLOT(decCurrentFolder()), actionCollection(), "dec_current_folder" );
-  accel->connectItem(accel->insertItem(Qt::CTRL+Qt::Key_Left),
-    c_olView, SLOT(decCurrentFolder()));
-  new KAction( i18n("Select Folder with Focus"), Qt::CTRL+Qt::Key_Space, c_olView,
-    SLOT(selectCurrentFolder()), actionCollection(), "select_current_folder" );
-  accel->connectItem(accel->insertItem(Qt::CTRL+Qt::Key_Space),
-    c_olView, SLOT(selectCurrentFolder()));
-
-  new KAction( i18n("Focus on Next Article"), Qt::ALT+Qt::Key_Right, h_drView,
-               SLOT(incCurrentArticle()), actionCollection(), "inc_current_article" );
-  accel->connectItem( accel->insertItem(Qt::ALT+Qt::Key_Right),
-                      h_drView, SLOT(incCurrentArticle()) );
-  new KAction( i18n("Focus on Previous Article"), Qt::ALT+Qt::Key_Left, h_drView,
-               SLOT(decCurrentArticle()), actionCollection(), "dec_current_article" );
-  accel->connectItem( accel->insertItem(Qt::ALT+Qt::Key_Left),
-                      h_drView, SLOT(decCurrentArticle()) );
-  new KAction( i18n("Select Article with Focus"), Qt::ALT+Qt::Key_Space, h_drView,
-               SLOT(selectCurrentArticle()), actionCollection(), "select_current_article" );
-  accel->connectItem( accel->insertItem(Qt::ALT+Qt::Key_Space),
-                      h_drView, SLOT(selectCurrentArticle()) );
+  action = new KAction( i18n("Focus on Previous Folder"), actionCollection(), "dec_current_folder" );
+  connect(action, SIGNAL(triggered(bool) ), c_olView, SLOT(decCurrentFolder()));
+  action->setShortcut(Qt::CTRL+Qt::Key_Left);
+  action = new KAction( i18n("Select Folder with Focus"), actionCollection(), "select_current_folder" );
+  connect(action, SIGNAL(triggered(bool) ), c_olView, SLOT(selectCurrentFolder()));
+  action->setShortcut(Qt::CTRL+Qt::Key_Space);
+  action = new KAction( i18n("Focus on Next Article"), actionCollection(), "inc_current_article" );
+  connect(action, SIGNAL(triggered(bool) ), h_drView, SLOT(incCurrentArticle()));
+  action->setShortcut(Qt::ALT+Qt::Key_Right);
+  action = new KAction( i18n("Focus on Previous Article"), actionCollection(), "dec_current_article" );
+  connect(action, SIGNAL(triggered(bool) ), h_drView, SLOT(decCurrentArticle()));
+  action->setShortcut(Qt::ALT+Qt::Key_Left);
+  action = new KAction( i18n("Select Article with Focus"), actionCollection(), "select_current_article" );
+  connect(action, SIGNAL(triggered(bool) ), h_drView, SLOT(selectCurrentArticle()));
+  action->setShortcut(Qt::ALT+Qt::Key_Space);
 
   //collection-view - accounts
   a_ctAccProperties         = new KAction(i18n("Account &Properties"), "configure", 0, this,
@@ -581,8 +572,8 @@ void KNMainWidget::initActions()
                               SLOT(slotAccRename()), actionCollection(), "account_rename");
   a_ctAccSubscribe          = new KAction(i18n("&Subscribe to Newsgroups..."), "news_subscribe", 0, this,
                               SLOT(slotAccSubscribe()), actionCollection(), "account_subscribe");
-  a_ctAccExpireAll          = new KAction(i18n("&Expire All Groups"), 0, this,
-                              SLOT(slotAccExpireAll()), actionCollection(), "account_expire_all");
+  a_ctAccExpireAll = new KAction(i18n("&Expire All Groups"), actionCollection(), "account_expire_all");
+  connect(a_ctAccExpireAll, SIGNAL(triggered(bool) ), SLOT(slotAccExpireAll()));
   a_ctAccGetNewHdrs         = new KAction(i18n("&Get New Articles in All Groups"), "mail_get", 0, this,
                               SLOT(slotAccGetNewHdrs()), actionCollection(), "account_dnlHeaders");
   a_ctAccGetNewHdrsAll      = new KAction(i18n("&Get New Articles in All Accounts"), "mail_get_all", 0, this,
@@ -601,16 +592,16 @@ void KNMainWidget::initActions()
                               SLOT(slotGrpGetNewHdrs()), actionCollection(), "group_dnlHeaders");
   a_ctGrpExpire             = new KAction(i18n("E&xpire Group"), "wizard", 0, this,
                               SLOT(slotGrpExpire()), actionCollection(), "group_expire");
-  a_ctGrpReorganize         = new KAction(i18n("Re&organize Group"), 0, this,
-                              SLOT(slotGrpReorganize()), actionCollection(), "group_reorg");
+  a_ctGrpReorganize = new KAction(i18n("Re&organize Group"), actionCollection(), "group_reorg");
+  connect(a_ctGrpReorganize, SIGNAL(triggered(bool) ), SLOT(slotGrpReorganize()));
   a_ctGrpUnsubscribe        = new KAction(i18n("&Unsubscribe From Group"), "news_unsubscribe", 0, this,
                               SLOT(slotGrpUnsubscribe()), actionCollection(), "group_unsubscribe");
   a_ctGrpSetAllRead         = new KAction(i18n("Mark All as &Read"), "goto", 0, this,
                               SLOT(slotGrpSetAllRead()), actionCollection(), "group_allRead");
   a_ctGrpSetAllUnread = new KAction(i18n("Mark All as U&nread"), actionCollection(), "group_allUnread");
   connect(a_ctGrpSetAllUnread, SIGNAL(triggered(bool) ), SLOT(slotGrpSetAllUnread()));
-  a_ctGrpSetUnread          = new KAction(i18n("Mark Last as Unr&ead..."), 0, this,
-                              SLOT(slotGrpSetUnread()), actionCollection(), "group_unread");
+  a_ctGrpSetUnread = new KAction(i18n("Mark Last as Unr&ead..."), actionCollection(), "group_unread");
+  connect(a_ctGrpSetUnread, SIGNAL(triggered(bool) ), SLOT(slotGrpSetUnread()));
 
 
 
@@ -636,8 +627,8 @@ void KNMainWidget::initActions()
   connect(a_ctFolEmpty, SIGNAL(triggered(bool) ), SLOT(slotFolEmpty()));
   a_ctFolMboxImport = new KAction(i18n("&Import MBox Folder..."), actionCollection(), "folder_MboxImport");
   connect(a_ctFolMboxImport, SIGNAL(triggered(bool) ), SLOT(slotFolMBoxImport()));
-  a_ctFolMboxExport         = new KAction(i18n("E&xport as MBox Folder..."), 0, this,
-                              SLOT(slotFolMBoxExport()), actionCollection(), "folder_MboxExport");
+  a_ctFolMboxExport = new KAction(i18n("E&xport as MBox Folder..."), actionCollection(), "folder_MboxExport");
+  connect(a_ctFolMboxExport, SIGNAL(triggered(bool) ), SLOT(slotFolMBoxExport()));
 
   //header-view - list-handling
   a_ctArtSortHeaders        = new KSelectAction(i18n("S&ort"), KShortcut(), actionCollection(), "view_Sort");
@@ -655,7 +646,8 @@ void KNMainWidget::initActions()
   a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
                               actionCollection(), "view_Filter");
   a_ctArtFilter->setShortcutConfigurable(false);
-  a_ctArtFilterKeyb         = new KAction(i18n("Filter"), Qt::Key_F6, 0, 0, actionCollection(), "view_Filter_Keyb");
+  a_ctArtFilterKeyb = new KAction(i18n("Filter"), actionCollection(), "view_Filter_Keyb");
+  a_ctArtFilterKeyb->setShortcut(Qt::Key_F6);
   a_ctArtSearch             = new KAction(i18n("&Search Articles..."),"mail_find" , Qt::Key_F4 , this,
                               SLOT(slotArtSearch()), actionCollection(), "article_search");
   a_ctArtRefreshList        = new KAction(i18n("&Refresh List"),"reload", KStdAccel::shortcut(KStdAccel::Reload), this,
@@ -664,8 +656,9 @@ void KNMainWidget::initActions()
   connect(a_ctArtCollapseAll, SIGNAL(triggered(bool) ), SLOT(slotArtCollapseAll()));
   a_ctArtExpandAll = new KAction(i18n("E&xpand All Threads"), actionCollection(), "view_ExpandAll");
   connect(a_ctArtExpandAll, SIGNAL(triggered(bool) ), SLOT(slotArtExpandAll()));
-  a_ctArtToggleThread       = new KAction(i18n("&Toggle Subthread"), Qt::Key_T, this,
-                              SLOT(slotArtToggleThread()), actionCollection(), "thread_toggle");
+  a_ctArtToggleThread = new KAction(i18n("&Toggle Subthread"), actionCollection(), "thread_toggle");
+  connect(a_ctArtToggleThread, SIGNAL(triggered(bool) ), SLOT(slotArtToggleThread()));
+  a_ctArtToggleThread->setShortcut(Qt::Key_T);
   a_ctArtToggleShowThreads  = new KToggleAction(i18n("Show T&hreads"), 0 , this,
                               SLOT(slotArtToggleShowThreads()), actionCollection(), "view_showThreads");
   a_ctArtToggleShowThreads->setCheckedState(i18n("Hide T&hreads"));
@@ -682,8 +675,9 @@ void KNMainWidget::initActions()
   a_ctArtSetThreadRead = new KAction(i18n("Mark &Thread as Read"), actionCollection(), "thread_read");
   connect(a_ctArtSetThreadRead, SIGNAL(triggered(bool) ), SLOT(slotArtSetThreadRead()));
   a_ctArtSetThreadRead->setShortcut(Qt::CTRL+Qt::Key_D);
-  a_ctArtSetThreadUnread    = new KAction(i18n("Mark T&hread as Unread"), Qt::CTRL+Qt::Key_U , this,
-                              SLOT(slotArtSetThreadUnread()), actionCollection(), "thread_unread");
+  a_ctArtSetThreadUnread = new KAction(i18n("Mark T&hread as Unread"), actionCollection(), "thread_unread");
+  connect(a_ctArtSetThreadUnread, SIGNAL(triggered(bool) ), SLOT(slotArtSetThreadUnread()));
+  a_ctArtSetThreadUnread->setShortcut(Qt::CTRL+Qt::Key_U);
   a_ctArtOpenNewWindow      = new KAction(i18n("Open in Own &Window"), "window_new", Qt::Key_O , this,
                               SLOT(slotArtOpenNewWindow()), actionCollection(), "article_ownWindow");
 
@@ -695,8 +689,9 @@ void KNMainWidget::initActions()
   a_ctScoreLower = new KAction(i18n("&Lower Score for Author..."), actionCollection(), "scorelower");
   connect(a_ctScoreLower, SIGNAL(triggered(bool) ), SLOT(slotScoreLower()));
   a_ctScoreLower->setShortcut(Qt::CTRL+Qt::Key_L);
-  a_ctScoreRaise            = new KAction(i18n("&Raise Score for Author..."), Qt::CTRL+Qt::Key_I, this,
-                              SLOT(slotScoreRaise()),actionCollection(),"scoreraise");
+  a_ctScoreRaise = new KAction(i18n("&Raise Score for Author..."), actionCollection(), "scoreraise");
+  connect(a_ctScoreRaise, SIGNAL(triggered(bool) ), SLOT(slotScoreRaise()));
+  a_ctScoreRaise->setShortcut(Qt::CTRL+Qt::Key_I);
   a_ctArtToggleIgnored      = new KAction(i18n("&Ignore Thread"), "bottom", Qt::Key_I , this,
                               SLOT(slotArtToggleIgnored()), actionCollection(), "thread_ignore");
   a_ctArtToggleWatched      = new KAction(i18n("&Watch Thread"), "top", Qt::Key_W , this,
@@ -717,8 +712,8 @@ void KNMainWidget::initActions()
                               SLOT(slotNetCancel()), actionCollection(), "net_stop");
   a_ctNetCancel->setEnabled(false);
 
-  a_ctFetchArticleWithID    = new KAction(i18n("&Fetch Article with ID..."), 0, this,
-                              SLOT(slotFetchArticleWithID()), actionCollection(), "fetch_article_with_id");
+  a_ctFetchArticleWithID = new KAction(i18n("&Fetch Article with ID..."), actionCollection(), "fetch_article_with_id");
+  connect(a_ctFetchArticleWithID, SIGNAL(triggered(bool) ), SLOT(slotFetchArticleWithID()));
   a_ctFetchArticleWithID->setEnabled(false);
 
   a_ctToggleQuickSearch      = new KToggleAction(i18n("Show Quick Search"), KShortcut(), this,
