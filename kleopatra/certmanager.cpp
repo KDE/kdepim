@@ -311,8 +311,8 @@ void CertManager::createActions() {
   connect(mImportCertFromFileAction, SIGNAL(triggered(bool) ), SLOT(slotImportCertFromFile()));
   connectEnableOperationSignal( this, mImportCertFromFileAction );
 
-  mImportCRLFromFileAction = new KAction( i18n("Import CRLs..."), 0,
-					  this, SLOT(importCRLFromFile()), actionCollection(), "file_import_crls" );
+  mImportCRLFromFileAction = new KAction( i18n("Import CRLs..."), actionCollection(), "file_import_crls" );
+  connect(mImportCRLFromFileAction, SIGNAL(triggered(bool) ), SLOT(importCRLFromFile()));
   connectEnableOperationSignal( this, mImportCRLFromFileAction );
 
   mExportCertificateAction = new KAction( i18n("Export Certificates..."), "export", 0,

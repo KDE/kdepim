@@ -1139,8 +1139,8 @@ void KABCore::initActions()
                                "edit_set_personal" );
   mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you do not have to input your personal data several times." ) );
 
-  mActionCategories = new KAction( i18n( "Select Categories..." ), 0, this,
-                                   SLOT( setCategories() ), actionCollection(), "edit_set_categories" );
+  mActionCategories = new KAction( i18n( "Select Categories..." ), actionCollection(), "edit_set_categories" );
+  connect(mActionCategories, SIGNAL(triggered(bool) ), SLOT( setCategories() ));
   mActionCategories->setWhatsThis( i18n( "Set the categories for all selected contacts." ) );
 
   KAction *clearLocation = new KAction( i18n( "Clear Search Bar" ),
