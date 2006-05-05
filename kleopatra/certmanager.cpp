@@ -328,12 +328,12 @@ void CertManager::createActions() {
   const QString dirmngr = KStandardDirs::findExe( "gpgsm" );
   mDirMngrFound = !dirmngr.isEmpty();
 
-  action = new KAction( i18n("Dump CRL Cache..."), 0,
-			this, SLOT(slotViewCRLs()), actionCollection(), "crl_dump_crl_cache" );
+  action = new KAction( i18n("Dump CRL Cache..."), actionCollection(), "crl_dump_crl_cache" );
+  connect(action, SIGNAL(triggered(bool) ), SLOT(slotViewCRLs()));
   action->setEnabled( mDirMngrFound ); // we also need dirmngr for this
 
-  action = new KAction( i18n("Clear CRL Cache..."), 0,
-			this, SLOT(slotClearCRLs()), actionCollection(), "crl_clear_crl_cache" );
+  action = new KAction( i18n("Clear CRL Cache..."), actionCollection(), "crl_clear_crl_cache" );
+  connect(action, SIGNAL(triggered(bool) ), SLOT(slotClearCRLs()));
   action->setEnabled( mDirMngrFound ); // we also need dirmngr for this
 
   action = new KAction(KIcon("pgp-keys"),  i18n("GnuPG Log Viewer..."), actionCollection(), "tools_start_kwatchgnupg");
