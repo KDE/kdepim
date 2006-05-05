@@ -340,7 +340,7 @@ void KTNEFMain::viewRightButtonPressed(Q3ListViewItem*, const QPoint& p, int)
 		}
 	}
 	else if ( list->count() == 0 )
-		actionCollection()->action( "msg_properties" )->plug( &m );
+		m.addAction( actionCollection()->action( "msg_properties" ) );
 	m.exec( p );
 }
 
