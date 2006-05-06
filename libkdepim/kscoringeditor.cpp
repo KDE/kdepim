@@ -248,7 +248,8 @@ SingleActionWidget::SingleActionWidget(KScoringManager *m,QWidget *p, const char
           w = new QLabel( stack ); // empty dummy
           break;
       }
-      stack->addWidget(w,index++);
+      if ( w )
+        stack->addWidget(w,index++);
     }
   }
 
