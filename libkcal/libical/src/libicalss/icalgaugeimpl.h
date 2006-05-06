@@ -22,6 +22,9 @@
 
 ======================================================================*/
 
+#ifndef ICALGAUGEIMPL_H
+#define ICALGAUGEIMPL_H
+
 #include "ical.h"
 
 typedef enum icalgaugecompare {
@@ -61,3 +64,4 @@ struct icalgauge_impl
 };
 
 
+#endif

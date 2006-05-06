@@ -695,7 +695,7 @@ void Calendar::removeRelations( Incidence *incidence )
     QStringList relatedToUids;
     // First get the list of all keys in the mOrphans list that point to the removed item
     relatedToUids << incidence->relatedToUid();
-    for ( QMultiHash<QString, Incidence*>::Iterator it = mOrphans.begin(); it != mOrphans.end(); it++ ) {
+    for ( QMultiHash<QString, Incidence*>::Iterator it = mOrphans.begin(); it != mOrphans.end(); ++it ) {
       if ( it.value()->uid() == uid ) {
         relatedToUids << it.key();
       }

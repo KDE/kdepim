@@ -27,6 +27,9 @@
  ======================================================================*/
 
 
+#ifndef ICALCLUSTERIMPL_H
+#define ICALCLUSTERIMPL_H
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -44,3 +47,4 @@ struct icalcluster_impl {
 	icalcomponent  *data;
 	int		changed;
 };
+#endif

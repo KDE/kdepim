@@ -25,6 +25,9 @@
 
  ======================================================================*/
 
+#ifndef ICALDIRSETIMPL_H
+#define ICALDIRSETIMPL_H
+
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -46,3 +49,5 @@ struct icaldirset_impl
   pvl_list directory;		/**< ??? */
   pvl_elem directory_iterator;	/**< ??? */
 };
+
+#endif

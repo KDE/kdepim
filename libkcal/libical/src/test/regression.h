@@ -1,3 +1,6 @@
+#ifndef REGRESSION_H
+#define REGRESSION_H
+
 #ifdef  __cplusplus
 extern "C" {
 #endif
@@ -50,4 +53,6 @@ void test_run(char *test_name,
 
 #ifdef  __cplusplus
 }
+#endif
+
 #endif
