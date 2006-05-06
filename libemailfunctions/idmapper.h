@@ -29,6 +29,8 @@
 
 namespace KPIM {
 
+class IdMapperPrivate;
+
 /**
     An Id Mapper maps Ids. What to or what for is not entirely
     clear, but maps have categories. This is probably an
@@ -45,10 +47,10 @@ class KDE_EXPORT IdMapper
     /**
       Create Id mapper. The path specifies the category of mapping, the
       identifier the concrete object.
-      
+
       If you don't pass an identifier you have to set it before calling load()
       or save().
-      
+
       The current implementation stores the data at
       $(KDEHOME)/share/apps/\<path\>/\<identifier\>.
 
@@ -68,7 +70,7 @@ class KDE_EXPORT IdMapper
     /**
       Return id map path.
     */
-    QString path() const { return mPath; }
+    QString path() const;
 
     /**
       Set id map identifier.
@@ -78,7 +80,7 @@ class KDE_EXPORT IdMapper
     /**
       Return id map identifier.
     */
-    QString identifier() const { return mIdentifier; }
+    QString identifier() const;
 
     /**
       Loads the map.
@@ -132,7 +134,7 @@ class KDE_EXPORT IdMapper
 
 
     /**
-     * Stores a fingerprint for an id which can be used to detect if 
+     * Stores a fingerprint for an id which can be used to detect if
      * the locally held version differs from what is on the server.
      * This can be a sequence number of an md5 hash depending on what
      * the server provides.
@@ -172,11 +174,7 @@ class KDE_EXPORT IdMapper
     QString filename();
 
   private:
-    QMap<QString, QVariant> mIdMap;
-    QMap<QString, QString> mFingerprintMap;
-
-    QString mPath;
-    QString mIdentifier;
+    IdMapperPrivate* const d;
 };
 
 }
