@@ -71,7 +71,7 @@ QString Person::fullName() const
           if ( name[ name.length()-1 ] != '"' )
               name.append( '"' );
       }
-      return name + " <" + mEmail + ">";
+      return name + " <" + mEmail + '>';
     }
   }
 }

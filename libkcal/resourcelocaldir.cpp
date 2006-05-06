@@ -117,7 +117,7 @@ bool ResourceLocalDir::doLoad()
   QString dirName = mURL.path();
   bool success = true;
 
-  if ( !( KStandardDirs::exists( dirName ) || KStandardDirs::exists( dirName + "/") ) ) {
+  if ( !( KStandardDirs::exists( dirName ) || KStandardDirs::exists( dirName + '/') ) ) {
     kDebug(5800) << "ResourceLocalDir::load(): Directory '" << dirName << "' doesn't exist yet. Creating it..." << endl;
 
     // Create the directory. Use 0775 to allow group-writable if the umask
@@ -136,7 +136,7 @@ bool ResourceLocalDir::doLoad()
       if ( (*it).endsWith( "~" ) ) // is backup file, ignore it
         continue;
 
-      QString fileName = dirName + "/" + *it;
+      QString fileName = dirName + '/' + *it;
       kDebug(5800) << " read '" << fileName << "'" << endl;
       CalendarLocal cal( mCalendar.timeZoneId() );
       if ( !doFileLoad( cal, fileName ) ) {
@@ -180,7 +180,7 @@ bool ResourceLocalDir::doSave( Incidence *incidence )
 {
   mDirWatch.stopScan();  // do prohibit the dirty() signal and a following reload()
 
-  QString fileName = mURL.path() + "/" + incidence->uid();
+  QString fileName = mURL.path() + '/' + incidence->uid();
   kDebug(5800) << "writing '" << fileName << "'" << endl;
 
   CalendarLocal cal( mCalendar.timeZoneId() );
@@ -248,7 +248,7 @@ void ResourceLocalDir::dump() const
 
 bool ResourceLocalDir::deleteIncidenceFile(Incidence *incidence)
 {
-  QFile file( mURL.path() + "/" + incidence->uid() );
+  QFile file( mURL.path() + '/' + incidence->uid() );
   if ( !file.exists() )
     return true;
 

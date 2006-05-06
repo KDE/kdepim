@@ -3,6 +3,7 @@
   FILE: icalmemory.c
   CREATOR: eric 30 June 1999
   
+ (C) COPYRIGHT 1999, Eric Busboom <eric@softwarestudio.org>, http://www.softwarestudio.org
   $Id$
   $Locker:  $
     

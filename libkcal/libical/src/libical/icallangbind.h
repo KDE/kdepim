@@ -8,8 +8,8 @@
   $Id$
   $Locker:  $
 
-  (C) COPYRIGHT 1999 Eric Busboom 
-  http://www.softwarestudio.org
+  (C) COPYRIGHT 1999, Eric Busboom <eric@softwarestudio.org>
+     http://www.softwarestudio.org
   
   This package is free software and is provided "as is" without
   express or implied warranty.  It may be used, redistributed and/or

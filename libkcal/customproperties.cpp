@@ -62,7 +62,7 @@ void CustomProperties::setCustomProperty(const QByteArray &app, const QByteArray
 {
   if (value.isNull() || key.isEmpty() || app.isEmpty())
     return;
-  QByteArray property = "X-KDE-" + app + "-" + key;
+  QByteArray property = "X-KDE-" + app + '-' + key;
   if (!checkName(property))
     return;
   mProperties[property] = value;
@@ -70,12 +70,12 @@ void CustomProperties::setCustomProperty(const QByteArray &app, const QByteArray
 
 void CustomProperties::removeCustomProperty(const QByteArray &app, const QByteArray &key)
 {
-  removeNonKDECustomProperty(QByteArray("X-KDE-" + app + "-" + key));
+  removeNonKDECustomProperty(QByteArray("X-KDE-" + app + '-' + key));
 }
 
 QString CustomProperties::customProperty(const QByteArray &app, const QByteArray &key) const
 {
-  return nonKDECustomProperty(QByteArray("X-KDE-" + app + "-" + key));
+  return nonKDECustomProperty(QByteArray("X-KDE-" + app + '-' + key));
 }
 
 void CustomProperties::setNonKDECustomProperty(const QByteArray &name, const QString &value)

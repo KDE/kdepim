@@ -2012,7 +2012,7 @@ void ICalFormatImpl::dumpIcalRecurrence(icalrecurrencetype r)
     int index = 0;
     QString out = " By Day: ";
     while((i = r.by_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
-      out.append(QString::number(i) + " ");
+      out.append(QString::number(i) + ' ');
     }
     kDebug(5800) << out << endl;
   }
@@ -2020,7 +2020,7 @@ void ICalFormatImpl::dumpIcalRecurrence(icalrecurrencetype r)
     int index = 0;
     QString out = " By Month Day: ";
     while((i = r.by_month_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
-      out.append(QString::number(i) + " ");
+      out.append(QString::number(i) + ' ');
     }
     kDebug(5800) << out << endl;
   }
@@ -2028,7 +2028,7 @@ void ICalFormatImpl::dumpIcalRecurrence(icalrecurrencetype r)
     int index = 0;
     QString out = " By Year Day: ";
     while((i = r.by_year_day[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
-      out.append(QString::number(i) + " ");
+      out.append(QString::number(i) + ' ');
     }
     kDebug(5800) << out << endl;
   }
@@ -2036,7 +2036,7 @@ void ICalFormatImpl::dumpIcalRecurrence(icalrecurrencetype r)
     int index = 0;
     QString out = " By Month: ";
     while((i = r.by_month[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
-      out.append(QString::number(i) + " ");
+      out.append(QString::number(i) + ' ');
     }
     kDebug(5800) << out << endl;
   }
@@ -2045,7 +2045,7 @@ void ICalFormatImpl::dumpIcalRecurrence(icalrecurrencetype r)
     QString out = " By Set Pos: ";
     while((i = r.by_set_pos[index++]) != ICAL_RECURRENCE_ARRAY_MAX) {
       kDebug(5800) << "========= " << i << endl;
-      out.append(QString::number(i) + " ");
+      out.append(QString::number(i) + ' ');
     }
     kDebug(5800) << out << endl;
   }

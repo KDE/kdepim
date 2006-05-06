@@ -253,7 +253,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
       if (!curAttendee->email().isEmpty() &&
           !curAttendee->name().isEmpty())
         tmpStr = "MAILTO:" + curAttendee->name() + " <" +
-                 curAttendee->email() + ">";
+                 curAttendee->email() + '>';
       else if (curAttendee->name().isEmpty())
         tmpStr = "MAILTO: " + curAttendee->email();
       else if (curAttendee->email().isEmpty())
@@ -413,7 +413,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
       if (!curAttendee->email().isEmpty() &&
           !curAttendee->name().isEmpty())
         tmpStr = "MAILTO:" + curAttendee->name() + " <" +
-                 curAttendee->email() + ">";
+                 curAttendee->email() + '>';
       else if (curAttendee->name().isEmpty())
         tmpStr = "MAILTO: " + curAttendee->email();
       else if (curAttendee->email().isEmpty())
@@ -519,7 +519,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   QString tmpStr2;
 
   for (it = dateList.begin(); it != dateList.end(); ++it) {
-    tmpStr = qDateToISO(*it) + ";";
+    tmpStr = qDateToISO(*it) + ';';
     tmpStr2 += tmpStr;
   }
   if (!tmpStr2.isEmpty()) {

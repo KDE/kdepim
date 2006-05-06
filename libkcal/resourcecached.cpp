@@ -305,7 +305,7 @@ void ResourceCached::saveCache()
 
 void ResourceCached::setIdMapperIdentifier()
 {
-  mIdMapper.setIdentifier( type() + "_" + identifier() );
+  mIdMapper.setIdentifier( type() + '_' + identifier() );
 }
 
 void ResourceCached::clearCache()
@@ -384,7 +384,7 @@ QString ResourceCached::cacheFile() const
 
 QString ResourceCached::changesCacheFile( const QString &type ) const
 {
-  return locateLocal( "cache", "kcal/changescache/" + identifier() + "_" + type );
+  return locateLocal( "cache", "kcal/changescache/" + identifier() + '_' + type );
 }
 
 void ResourceCached::saveChangesCache( const QMap<Incidence*, bool> &map, const QString &type )

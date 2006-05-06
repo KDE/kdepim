@@ -75,7 +75,7 @@ static QString eventViewerAddLink( const QString &ref, const QString &text,
 static QString eventViewerAddTag( const QString & tag, const QString & text )
 {
   int numLineBreaks = text.count( "\n" );
-  QString str = "<" + tag + ">";
+  QString str = "<" + tag + '>';
   QString tmpText = text;
   QString tmpStr = str;
   if( numLineBreaks >= 0 ) {
@@ -92,7 +92,7 @@ static QString eventViewerAddTag( const QString & tag, const QString & text )
       tmpStr += tmpText;
     }
   }
-  tmpStr += "</" + tag + ">";
+  tmpStr += "</" + tag + '>';
   return tmpStr;
 }
 

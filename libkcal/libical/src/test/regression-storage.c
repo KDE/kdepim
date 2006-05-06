@@ -8,8 +8,8 @@
   $Id$
   $Locker:  $
 
-  (C) COPYRIGHT 1999 Eric Busboom 
-  http://www.softwarestudio.org
+ (C) COPYRIGHT 1999, Eric Busboom <eric@softwarestudio.org>
+     http://www.softwarestudio.org
 
   The contents of this file are subject to the Mozilla Public License
   Version 1.0 (the "License"); you may not use this file except in
