@@ -88,7 +88,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
       This function calls doLoad() which has to be reimplented by the resource
       to do the actual loading.
     */
-    bool load();
+    virtual bool load();
 
     /**
       Save resource data. After calling this function it is safe to close the
