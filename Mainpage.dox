@@ -105,6 +105,7 @@
         * - red: static libraries
         * - blue: applications
         * - green: plugins or other non-standalone modules (kded modules, kioslaves, etc.)
+        * - orange: code generators or other development tools
         * - gray: currently disabled
         *
         * \dotfile dependency-graph.dot

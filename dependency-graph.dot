@@ -10,7 +10,8 @@ strict digraph "inter-dependency graph for kdepim" {
            shared libs: lightyellow
            static libs: pink
            plugins or other non-standalone modules: palegreen
-           applications: lightcyan 
+           applications: lightcyan
+           code generators or other development tools: orange
            disabled: lightgray
          */
         "akonadiserver"[style=filled, fillcolor=lightcyan];
@@ -29,7 +30,7 @@ strict digraph "inter-dependency graph for kdepim" {
         "kmailcvt"[style=filled, fillcolor=lightcyan];
         "knode"[style=filled, fillcolor=lightcyan, URL="knode/html/index.html"];
         "knotes"[style=filled, fillcolor=lightcyan, URL="knotes/html/index.html"];
-        "kode"[style=filled, fillcolor=lightcyan];
+        "kode"[style=filled, fillcolor=orange];
         "konsolekalendar"[style=filled, fillcolor=lightcyan, URL="konsolekalendar/html/index.html"];
         "kontact"[style=filled, fillcolor=lightcyan, URL="kontact/html/index.html"];
         "korganizer"[style=filled, fillcolor=lightcyan, URL="korganizer/html/index.html"];
@@ -71,17 +72,17 @@ strict digraph "inter-dependency graph for kdepim" {
         "knotes" -> "kontact";
         "knotes" -> "kresources";
         "kode" -> "kresources";
+        "kode" -> "libkholidays_ng";
         "korganizer" -> "kontact";
         "korganizer" -> "wizards";
         "kresources" -> "karm";
         "kresources" -> "wizards";
         "ktnef" -> "libkcal";
-        "libemailfunctions" -> "kioslave"
         "libemailfunctions" -> "kmail";
         "libemailfunctions" -> "knode";
         "libemailfunctions" -> "korganizer";
         "libemailfunctions" -> "libkcal";
-        "libemailfunctions" -> "libkmime";
+        "libemailfunctions" -> "libkdepim";
         "libemailfunctions" -> "libkpimidentities";
         "libemailfunctions" -> "plugins";
         "libkcal" -> "kalarm";
