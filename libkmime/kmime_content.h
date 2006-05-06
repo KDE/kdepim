@@ -52,6 +52,7 @@ class Base {
 
 };
 
+class ContentPrivate;
 
 /** This class encapsulates a mime-encoded content.
     It parses the given data and creates a tree-like
@@ -63,24 +64,45 @@ class KDE_EXPORT Content : public Base {
   public:
     typedef QList<KMime::Content*> List;
 
+    /**
+      Creates an empty Content object.
+    */
     Content();
+    /**
+      Creates a Content object containing the given raw data.
+      @param h The header data.
+      @param b The body data.
+    */
     Content( const QByteArray &h, const QByteArray &b );
+    /**
+      Destroys this Content object.
+    */
     virtual ~Content();
 
     //type
-    virtual articleType type()      { return ATmimeContent; }
+    virtual articleType type() const { return ATmimeContent; }
 
     //content handling
-    bool hasContent()               { return ( !h_ead.isEmpty() && (!b_ody.isEmpty() || !c_ontents.isEmpty()) ); }
+    bool hasContent() const;
     void setContent( const QList<QByteArray> & l );
     void setContent( const QByteArray &s );
     virtual void parse();
     virtual void assemble();
     virtual void clear();
 
-    //header access
-    QByteArray head()       { return h_ead; }
-    // extracts and removes the next header from head. The caller has to delete the returned header;
+    /**
+      Returns the content header raw data.
+    */
+    QByteArray head() const;
+    /**
+      Sets the content header raw data.
+    */
+    void setHead( const QByteArray &head );
+
+    /**
+      Extracts and removes the next header from head.
+      The caller has to delete the returned header.
+    */
     Headers::Generic*  getNextHeader(QByteArray &head);
     virtual Headers::Base* getHeaderByType(const char *type);
     virtual void setHeader(Headers::Base *h);
@@ -93,42 +115,77 @@ class KDE_EXPORT Content : public Base {
 
     //content access
     int size();
-    int storageSize();
-    int lineCount();
-    QByteArray body()       { return b_ody; }
-    void setBody( const QByteArray & str ) { b_ody = str; }
-    QByteArray encodedContent(bool useCrLf=false);
+    int storageSize() const;
+    int lineCount() const;
+    /**
+      Returns the content body raw data.
+    */
+    QByteArray body() const;
+    /**
+      Sets the content body raw data.
+    */
+    void setBody( const QByteArray &body );
+    /**
+      Returns a QByteArray containing the encoded message.
+      @param useCrLf Use CRLF instead of LF for linefeeds.
+    */
+    QByteArray encodedContent( bool useCrLf = false );
+    /**
+      Returns the decoded content.
+    */
     QByteArray decodedContent();
-    void decodedText(QString &s, bool trimText=false,
-                     bool removeTrailingNewlines=false);
-    void decodedText(QStringList &s, bool trimText=false,
-                     bool removeTrailingNewlines=false);
+    /**
+      Returns the decoded text. Additional to decodedContent(), this also
+      applies charset.decoding. If this is not a text content, decodedText()
+      returns an empty QString.
+    */
+    QString decodedText( bool trimText = false, bool removeTrailingNewlines = false );
+    /**
+      Sets the content body to the given string using the current charset.
+      @param s Unicode-encoded string.
+    */
     void fromUnicodeString(const QString &s);
 
     Content* textContent();
-    void attachments(List &dst, bool incAlternatives=false);
+    /**
+      Returns a list of attachments.
+      @param incAlternatives include multipart/alternative parts.
+    */
+    List attachments( bool incAlternatives = false );
     void addContent(Content *c, bool prepend=false);
     void removeContent(Content *c, bool del=false);
     void changeEncoding(Headers::contentEncoding e);
 
-    //saves the encoded content to the given textstream
-    // scrambleFromLines: replace "\nFrom " with "\n>From ", this is
-    // needed to avoid problem with mbox-files
+    /**
+      Saves the encoded content to the given textstream
+      @param scrambleFromLines: replace "\nFrom " with "\n>From ", this is
+      needed to avoid problem with mbox-files
+    */
     void toStream(QTextStream &ts, bool scrambleFromLines=false);
 
-    // this charset is used for all headers and the body
-    // if the charset is not declared explictly
-    QByteArray defaultCharset() const        { return d_efaultCS; }
+    /**
+      This charset is used for all headers and the body
+      if the charset is not declared explictly.
+    */
+    QByteArray defaultCharset() const;
+    /**
+      Sets the default charset.
+      @param cs The new default charset.
+    */
     void setDefaultCharset( const QByteArray &cs );
 
-    // use the default charset even if a different charset is
-    // declared in the article
-    bool forceDefaultCS()         {  return f_orceDefaultCS; }
+    /**
+      Use the default charset even if a different charset is
+      declared in the article.
+    */
+    bool forceDefaultCharset() const;
 
-    // enables/disables the force mode, housekeeping.
-    // works correctly only when the article is completely empty or
-    // completely loaded
-    virtual void setForceDefaultCS(bool b);
+    /**
+      Enables/disables the force mode, housekeeping.
+      works correctly only when the article is completely empty or
+      completely loaded.
+    */
+    virtual void setForceDefaultCharset(bool b);
 
 
   protected:
@@ -136,12 +193,11 @@ class KDE_EXPORT Content : public Base {
     bool decodeText();
     template <class T> T* getHeaderInstance(T *ptr, bool create);
 
-    QByteArray h_ead,
-               b_ody;
     List c_ontents;
     Headers::Base::List h_eaders;
-    QByteArray d_efaultCS;
-    bool f_orceDefaultCS;
+
+  private:
+    ContentPrivate* const d;
 };
 
 // some compilers (for instance Compaq C++) need template inline functions

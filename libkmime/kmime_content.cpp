@@ -30,19 +30,30 @@ using namespace KMime;
 
 namespace KMime {
 
-Content::Content()
- : f_orceDefaultCS( false )
+class ContentPrivate
 {
-  d_efaultCS = cachedCharset("ISO-8859-1");
+  public:
+    QByteArray head;
+    QByteArray body;
+    QByteArray defaultCS;
+    bool forceDefaultCS;
+};
+
+Content::Content()
+  : d( new ContentPrivate )
+{
+  d->forceDefaultCS = false;
+  d->defaultCS = cachedCharset("ISO-8859-1");
 }
 
 
 Content::Content( const QByteArray &h, const QByteArray &b )
- : f_orceDefaultCS( false )
+  : d( new ContentPrivate )
 {
-  d_efaultCS = cachedCharset("ISO-8859-1");
-  h_ead = h;
-  b_ody = b;
+  d->forceDefaultCS = false;
+  d->defaultCS = cachedCharset("ISO-8859-1");
+  d->head = h;
+  d->body = b;
 }
 
 
@@ -52,18 +63,25 @@ Content::~Content()
   c_ontents.clear();
   qDeleteAll( h_eaders );
   h_eaders.clear();
+  delete d;
+}
+
+
+bool Content::hasContent() const
+{
+  return ( !d->head.isEmpty() && (!d->body.isEmpty() || !c_ontents.isEmpty()) );
 }
 
 
 void Content::setContent( const QList<QByteArray> & l )
 {
   //qDebug("Content::setContent( const QList<QByteArray> & l ) : start");
-  h_ead.clear();
-  b_ody.clear();
+  d->head.clear();
+  d->body.clear();
 
   //usage of textstreams is much faster than simply appending the strings
-  QTextStream hts(&h_ead, QIODevice::WriteOnly),
-              bts(&b_ody, QIODevice::WriteOnly);
+  QTextStream hts( &(d->head), QIODevice::WriteOnly ),
+              bts( &(d->body), QIODevice::WriteOnly );
   hts.setCodec( "ISO 8859-1" );
   bts.setCodec( "ISO 8859-1" );
 
@@ -91,11 +109,35 @@ void Content::setContent( const QByteArray &s )
 {
   int pos = s.indexOf( "\n\n", 0 );
   if(pos>-1) {
-    h_ead=s.left(++pos);  //header *must* end with "\n" !!
-    b_ody=s.mid(pos+1, s.length()-pos-1);
+    d->head = s.left(++pos);  //header *must* end with "\n" !!
+    d->body = s.mid( pos + 1, s.length() - pos - 1 );
   }
   else
-    h_ead=s;
+    d->head = s;
+}
+
+
+QByteArray Content::head() const
+{
+  return d->head;
+}
+
+
+void Content::setHead( const QByteArray &head )
+{
+  d->head = head;
+}
+
+
+QByteArray Content::body() const
+{
+  return d->body;
+}
+
+
+void Content::setBody( const QByteArray &body )
+{
+  d->body = body;
 }
 
 
@@ -109,7 +151,7 @@ void Content::parse()
   // check this part has already been partioned into subparts.
   // if this is the case, we will not try to reparse the body
   // of this part.
-  if ( b_ody.size() == 0 && !c_ontents.isEmpty() ) {
+  if ( d->body.size() == 0 && !c_ontents.isEmpty() ) {
     // reparse all sub parts
     foreach ( Content *c, c_ontents )
       c->parse();
@@ -136,7 +178,7 @@ void Content::parse()
     tmp=ct->boundary(); //get boundary-parameter
 
     if(!tmp.isEmpty()) {
-      Parser::MultiPart mpp(b_ody, tmp);
+      Parser::MultiPart mpp( d->body, tmp );
       if(mpp.parse()) { //at least one part found
 
         if(ct->isSubtype("alternative")) //examine category for the sub-parts
@@ -156,7 +198,7 @@ void Content::parse()
         }
 
         //the whole content is now split into single parts, so it's safe delete the message-body
-        b_ody.clear();
+        d->body.clear();
       }
       else { //sh*t, the parsing failed so we have to treat the message as "text/plain" instead
         ct->setMimeType("text/plain");
@@ -165,7 +207,7 @@ void Content::parse()
     }
   }
   else if (ct->mimeType()=="invalid/invalid") { //non-mime body => check for uuencoded content
-    Parser::UUEncoded uup(b_ody, rawHeader("Subject"));
+    Parser::UUEncoded uup( d->body, rawHeader("Subject") );
 
     if(uup.parse()) { // yep, it is uuencoded
 
@@ -177,7 +219,7 @@ void Content::parse()
       }
       else { //it's a complete message => treat as "multipart/mixed"
         //the whole content is now split into single parts, so it's safe to delete the message-body
-        b_ody.clear();
+        d->body.clear();
 
         //binary parts
         for ( int i = 0; i < uup.binaryParts().count(); ++i ) {
@@ -201,7 +243,7 @@ void Content::parse()
         }
       }
     } else {
-      Parser::YENCEncoded yenc(b_ody);
+      Parser::YENCEncoded yenc( d->body );
 
       if ( yenc.parse()) {
         /* If it is partial, just assume there is exactly one decoded part,
@@ -214,7 +256,7 @@ void Content::parse()
         }
         else { //it's a complete message => treat as "multipart/mixed"
           //the whole content is now split into single parts, so it's safe to delete the message-body
-          b_ody.clear();
+          d->body.clear();
 
           //binary parts
           for (int i=0;i<yenc.binaryParts().count();i++) {
@@ -271,7 +313,7 @@ void Content::assemble()
   if(h)
     newHead+=h->as7BitString()+"\n";
 
-  h_ead=newHead;
+  d->head = newHead;
 }
 
 
@@ -281,12 +323,12 @@ void Content::clear()
   h_eaders.clear();
   qDeleteAll( c_ontents );
   c_ontents.clear();
-  h_ead.clear();
-  b_ody.clear();
+  d->head.clear();
+  d->body.clear();
 }
 
 
-QByteArray Content::encodedContent(bool useCrLf)
+QByteArray Content::encodedContent( bool useCrLf )
 {
   QByteArray e;
 
@@ -300,8 +342,7 @@ QByteArray Content::encodedContent(bool useCrLf)
       if ((c->contentTransferEncoding(true)->cte()==Headers::CEuuenc) ||
           (c->contentTransferEncoding(true)->cte()==Headers::CEbinary)) {
         convertNonMimeBinaries=true;
-        c->b_ody = KCodecs::base64Encode(c->decodedContent(), true);
-        c->b_ody.append("\n");
+        c->setBody( KCodecs::base64Encode(c->decodedContent(), true) + '\n' );
         c->contentTransferEncoding(true)->setCte(Headers::CEbase64);
         c->contentTransferEncoding(true)->setDecoded(false);
         c->removeHeader("Content-Description");
@@ -312,40 +353,40 @@ QByteArray Content::encodedContent(bool useCrLf)
     // add proper mime headers...
     if (convertNonMimeBinaries) {
       int beg = 0, end = 0;
-      beg = h_ead.indexOf( "MIME-Version: " );
-      if ( beg >= 0 ) end = h_ead.indexOf( '\n', beg );
-      if ( beg >= 0 && end > beg ) h_ead.remove( beg, end - beg );
-      beg = h_ead.indexOf( "Content-Type: " );
-      if ( beg >= 0 ) end = h_ead.indexOf( '\n', beg );
-      if ( beg >= 0 && end > beg ) h_ead.remove( beg, end - beg );
-      beg = h_ead.indexOf( "Content-Transfer-Encoding: " );
-      if ( beg >= 0 ) end = h_ead.indexOf( '\n', beg );
-      if ( beg >= 0 && end > beg ) h_ead.remove( beg, end - beg );
+      beg = d->head.indexOf( "MIME-Version: " );
+      if ( beg >= 0 ) end = d->head.indexOf( '\n', beg );
+      if ( beg >= 0 && end > beg ) d->head.remove( beg, end - beg );
+      beg = d->head.indexOf( "Content-Type: " );
+      if ( beg >= 0 ) end = d->head.indexOf( '\n', beg );
+      if ( beg >= 0 && end > beg ) d->head.remove( beg, end - beg );
+      beg = d->head.indexOf( "Content-Transfer-Encoding: " );
+      if ( beg >= 0 ) end = d->head.indexOf( '\n', beg );
+      if ( beg >= 0 && end > beg ) d->head.remove( beg, end - beg );
 
-      h_ead+="MIME-Version: 1.0\n";
-      h_ead+=contentType(true)->as7BitString()+"\n";
-      h_ead+=contentTransferEncoding(true)->as7BitString()+"\n";
+      d->head += "MIME-Version: 1.0\n";
+      d->head += contentType( true )->as7BitString() + "\n";
+      d->head += contentTransferEncoding( true )->as7BitString() + '\n';
     }
   }
 
   //head
-  e=h_ead;
-  e+='\n';
+  e = d->head;
+  e += '\n';
 
   //body
-  if(!b_ody.isEmpty()) { //this message contains only one part
+  if( !d->body.isEmpty() ) { //this message contains only one part
     Headers::CTEncoding *enc=contentTransferEncoding();
 
     if(enc->needToEncode()) {
       if(enc->cte()==Headers::CEquPr) {
-        e+=KCodecs::quotedPrintableEncode(b_ody, false);
+        e += KCodecs::quotedPrintableEncode( d->body, false );
       } else {
-        e+=KCodecs::base64Encode(b_ody, true);
-        e+="\n";
+        e += KCodecs::base64Encode( d->body, true );
+        e += '\n';
       }
     }
     else
-      e+=b_ody;
+      e += d->body;
   }
   else if( !c_ontents.isEmpty() ) { //this is a multipart message
     Headers::ContentType *ct=contentType();
@@ -372,13 +413,13 @@ QByteArray Content::decodedContent()
   QByteArray temp, ret;
   Headers::CTEncoding *ec=contentTransferEncoding();
   bool removeTrailingNewline=false;
-  int size = b_ody.length();
+  int size = d->body.length();
 
   if (size==0)
     return ret;
 
   temp.resize(size);
-  memcpy(temp.data(), b_ody.data(), size);
+  memcpy(temp.data(), d->body.data(), size);
 
   if(ec->decoded()) {
     ret = temp;
@@ -389,7 +430,7 @@ QByteArray Content::decodedContent()
         KCodecs::base64Decode(temp, ret);
       break;
       case Headers::CEquPr :
-        ret = KCodecs::quotedPrintableDecode(b_ody);
+        ret = KCodecs::quotedPrintableDecode( d->body );
         ret.resize(ret.size()-1);  // remove null-char
         removeTrailingNewline=true;
       break;
@@ -413,55 +454,28 @@ QByteArray Content::decodedContent()
 }
 
 
-void Content::decodedText(QString &s, bool trimText,
-			  bool removeTrailingNewlines)
+QString Content::decodedText( bool trimText, bool removeTrailingNewlines )
 {
-  if(!decodeText()) //this is not a text content !!
-    return;
+  if ( !decodeText() ) //this is not a text content !!
+    return QString();
 
-  bool ok=true;
-  QTextCodec *codec=KGlobal::charsets()->codecForName(contentType()->charset(),ok);
+  bool ok = true;
+  QTextCodec *codec = KGlobal::charsets()->codecForName( contentType()->charset(), ok );
 
-  s=codec->toUnicode(b_ody.data(), b_ody.length());
+  QString s = codec->toUnicode( d->body.data(), d->body.length() );
 
-  if (trimText && removeTrailingNewlines) {
+  if ( trimText && removeTrailingNewlines ) {
     int i;
-    for (i=s.length()-1; i>=0; i--)
-      if (!s[i].isSpace())
+    for ( i = s.length() - 1; i >= 0; --i )
+      if ( !s[i].isSpace() )
         break;
-    s.truncate(i+1);
+    s.truncate( i + 1 );
   } else {
-    if (s.right(1)=="\n")
-      s.truncate(s.length()-1);    // remove trailing new-line
-  }
-}
-
-
-void Content::decodedText(QStringList &l, bool trimText,
-			  bool removeTrailingNewlines)
-{
-  if(!decodeText()) //this is not a text content !!
-    return;
-
-  QString unicode;
-  bool ok=true;
-
-  QTextCodec *codec=KGlobal::charsets()->codecForName(contentType()->charset(),ok);
-
-  unicode=codec->toUnicode(b_ody.data(), b_ody.length());
-
-  if (trimText && removeTrailingNewlines) {
-    int i;
-    for (i=unicode.length()-1; i>=0; i--)
-      if (!unicode[i].isSpace())
-        break;
-    unicode.truncate(i+1);
-  } else {
-    if (unicode.right(1)=="\n")
-      unicode.truncate(unicode.length()-1);    // remove trailing new-line
+    if ( s.right( 1 ) == "\n" )
+      s.truncate( s.length() - 1 ); // remove trailing new-line
   }
 
-  l = unicode.split( '\n' ); //split the string at linebreaks
+  return s;
 }
 
 
@@ -476,7 +490,7 @@ void Content::fromUnicodeString(const QString &s)
     contentType()->setCharset(chset);
   }
 
-  b_ody=codec->fromUnicode(s);
+  d->body = codec->fromUnicode( s );
   contentTransferEncoding()->setDecoded(true); //text is always decoded
 }
 
@@ -497,24 +511,26 @@ Content* Content::textContent()
 }
 
 
-void Content::attachments( Content::List &dst, bool incAlternatives )
+Content::List Content::attachments( bool incAlternatives )
 {
+  List attachments;
   if ( c_ontents.isEmpty() )
-    dst.append(this);
+    attachments.append( this );
   else {
     foreach ( Content *c, c_ontents ) {
       if( !incAlternatives && c->contentType()->category()==Headers::CCalternativePart)
         continue;
       else
-        c->attachments(dst, incAlternatives);
+        attachments += c->attachments( incAlternatives );
     }
   }
 
   if(type()!=ATmimeContent) { // this is the toplevel article
     Content *text=textContent();
     if(text)
-      dst.removeAll( text );
+      attachments.removeAll( text );
   }
+  return attachments;
 }
 
 
@@ -545,9 +561,9 @@ void Content::addContent(Content *c, bool prepend)
     main->assemble();
 
     //now we can copy the body and append the new content;
-    main->b_ody = b_ody;
+    main->setBody( d->body );
     c_ontents.append( main );
-    b_ody.clear(); //not longer needed
+    d->body.clear(); //not longer needed
 
 
     //finally we have to convert this article to "multipart/mixed"
@@ -597,7 +613,7 @@ void Content::removeContent(Content *c, bool del)
     }
 
     //now we can copy the body
-    b_ody = main->b_ody;
+    d->body = main->body();
 
     //finally we can delete the content list
     qDeleteAll( c_ontents );
@@ -622,8 +638,8 @@ void Content::changeEncoding(Headers::contentEncoding e)
     }
 
     if(enc->cte()!=e) { // ok, we reencode the content using base64
-      b_ody = KCodecs::base64Encode(decodedContent(), true);
-      b_ody.append("\n");
+      d->body = KCodecs::base64Encode( decodedContent(), true );
+      d->body.append( "\n" );
       enc->setCte(e); //set encoding
       enc->setDecoded(false);
     }
@@ -771,7 +787,7 @@ bool Content::removeHeader(const char *type)
 
 int Content::size()
 {
-  int ret=b_ody.length();
+  int ret = d->body.length();
 
   if(contentTransferEncoding()->cte()==Headers::CEbase64)
     return (ret*3/4); //base64 => 6 bit per byte
@@ -780,12 +796,12 @@ int Content::size()
 }
 
 
-int Content::storageSize()
+int Content::storageSize() const
 {
-  int s=h_ead.size();
+  int s = d->head.size();
 
   if ( c_ontents.isEmpty() )
-    s+=b_ody.size();
+    s += d->body.size();
   else {
     foreach ( Content *c, c_ontents )
       s+=c->storageSize();
@@ -795,12 +811,12 @@ int Content::storageSize()
 }
 
 
-int Content::lineCount()
+int Content::lineCount() const
 {
   int ret=0;
   if(type()==ATmimeContent)
-    ret+=h_ead.count('\n');
-  ret+=b_ody.count('\n');
+    ret += d->head.count('\n');
+  ret += d->body.count('\n');
 
   foreach ( Content *c, c_ontents )
     ret+=c->lineCount();
@@ -811,7 +827,7 @@ int Content::lineCount()
 
 QByteArray Content::rawHeader(const char *name)
 {
-  return KMime::extractHeader(h_ead, name);
+  return KMime::extractHeader( d->head, name );
 }
 
 
@@ -826,19 +842,19 @@ bool Content::decodeText()
 
   switch(enc->cte()) {
     case Headers::CEbase64 :
-      b_ody=KCodecs::base64Decode(b_ody);
-      b_ody.append("\n");
+      d->body = KCodecs::base64Decode( d->body );
+      d->body.append("\n");
     break;
     case Headers::CEquPr :
-      b_ody=KCodecs::quotedPrintableDecode(b_ody);
+      d->body = KCodecs::quotedPrintableDecode( d->body );
     break;
     case Headers::CEuuenc :
-      b_ody=KCodecs::uudecode(b_ody);
-      b_ody.append("\n");
+      d->body = KCodecs::uudecode( d->body );
+      d->body.append("\n");
     break;
     case Headers::CEbinary :
       // nothing to decode
-      b_ody.append("\n");
+      d->body.append("\n");
     default :
     break;
   }
@@ -848,9 +864,15 @@ bool Content::decodeText()
 }
 
 
+QByteArray Content::defaultCharset() const
+{
+  return d->defaultCS;
+}
+
+
 void Content::setDefaultCharset( const QByteArray &cs )
 {
-  d_efaultCS = KMime::cachedCharset(cs);
+  d->defaultCS = KMime::cachedCharset(cs);
 
   foreach ( Content *c, c_ontents )
     c->setDefaultCharset(cs);
@@ -861,12 +883,18 @@ void Content::setDefaultCharset( const QByteArray &cs )
 }
 
 
-void Content::setForceDefaultCS(bool b)
+bool Content::forceDefaultCharset() const
 {
-  f_orceDefaultCS=b;
+  return d->forceDefaultCS;
+}
+
+
+void Content::setForceDefaultCharset( bool b )
+{
+  d->forceDefaultCS = b;
 
   foreach ( Content *c, c_ontents )
-    c->setForceDefaultCS(b);
+    c->setForceDefaultCharset( b );
 
   // reparse the part and its sub-parts in order
   // to clear cached header values

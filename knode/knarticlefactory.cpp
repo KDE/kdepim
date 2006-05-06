@@ -236,7 +236,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   if (selectedText.isEmpty()) {
     KMime::Content *tc = a->textContent();
     if(tc)
-      tc->decodedText( text, true, knGlobals.settings()->removeTrailingNewlines() );
+      text = tc->decodedText( true, knGlobals.settings()->removeTrailingNewlines() ).split( '\n' );
   }
   else
     text = selectedText.split('\n');
@@ -323,12 +323,8 @@ void KNArticleFactory::createForward(KNArticle *a)
   fwd+=( i18n("Newsgroup") + ": " + a->newsgroups()->asUnicodeString() + "\n\n" );
 
   KMime::Content *text=a->textContent();
-  if(text) {
-    QStringList decodedLines;
-    text->decodedText( decodedLines, false, false );
-    for(QStringList::Iterator it=decodedLines.begin(); it!=decodedLines.end(); ++it)
-      fwd += (*it) + "\n";
-  }
+  if(text)
+    fwd += text->decodedText( false, false );
 
   fwd += QString("\n--------------- %1\n").arg(i18n("Forwarded message (end)"));
 
@@ -338,9 +334,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   //------------------------ <Attachments> -------------------------
 
   if(incAtt) {
-    KMime::Content::List al;
-
-    a->attachments( al, false );
+    KMime::Content::List al = a->attachments( false );
     foreach ( KMime::Content *c, al )
       art->addContent( new KMime::Content(c->head(), c->body()) );
   }
@@ -503,7 +497,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
   QString text;
   KMime::Content *textContent=a->textContent();
   if(textContent)
-    textContent->decodedText(text);
+    text = textContent->decodedText();
 
   //open composer
   KNComposer *c=new KNComposer(art, text, sig);

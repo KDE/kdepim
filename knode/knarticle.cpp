@@ -246,7 +246,7 @@ void KNRemoteArticle::thread(KNRemoteArticle::List &l)
 }
 
 
-void KNRemoteArticle::setForceDefaultCS(bool b)
+void KNRemoteArticle::setForceDefaultCharset(bool b)
 {
   if (!b) { // restore default
     KNGroup *g=static_cast<KNGroup*>(c_ol);
@@ -255,7 +255,7 @@ void KNRemoteArticle::setForceDefaultCS(bool b)
     else
       setDefaultCharset( knGlobals.settings()->charset().toLatin1() );
   }
-  KNArticle::setForceDefaultCS(b);
+  KNArticle::setForceDefaultCharset( b );
   initListItem();
 }
 
@@ -395,11 +395,11 @@ void KNLocalArticle::updateListItem()
 }
 
 
-void KNLocalArticle::setForceDefaultCS(bool b)
+void KNLocalArticle::setForceDefaultCharset( bool b )
 {
   if (!b)  // restore default
     setDefaultCharset( knGlobals.settings()->charset().toLatin1() );
-  KNArticle::setForceDefaultCS(b);
+  KNArticle::setForceDefaultCharset( b );
   updateListItem();
 }
 

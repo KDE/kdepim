@@ -60,7 +60,7 @@ void Base::setRFC2047Charset( const QByteArray &cs )
 
 bool Base::forceCS()
 {
-  return ( p_arent!=0 ? p_arent->forceDefaultCS() : false );
+  return ( p_arent != 0 ? p_arent->forceDefaultCharset() : false );
 }
 
 

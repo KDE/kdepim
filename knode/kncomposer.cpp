@@ -928,7 +928,7 @@ void KNComposer::initData(const QString &text)
 
   if(text.isEmpty()) {
     if(textContent)
-      textContent->decodedText(s);
+      s = textContent->decodedText();
   } else
     s = text;
 
@@ -954,9 +954,8 @@ void KNComposer::initData(const QString &text)
 
   if(a_rticle->contentType()->isMultipart()) {
     v_iew->showAttachmentView();
-    KMime::Content::List attList;
+    KMime::Content::List attList = a_rticle->attachments();
     AttachmentViewItem *item=0;
-    a_rticle->attachments( attList );
     foreach ( KMime::Content *c, attList )
       item=new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(c));
   }

@@ -384,10 +384,10 @@ void ArticleWidget::displayArticle()
     return;
   }
 
-  if ( mForceCharset != mArticle->forceDefaultCS()
+  if ( mForceCharset != mArticle->forceDefaultCharset()
        || ( mForceCharset && mArticle->defaultCharset() != mOverrideCharset ) ) {
         mArticle->setDefaultCharset( mOverrideCharset );
-        mArticle->setForceDefaultCS( mForceCharset );
+        mArticle->setForceDefaultCharset( mForceCharset );
   }
 
   removeTempFiles();
@@ -462,7 +462,7 @@ void ArticleWidget::displayArticle()
   mAttachments.clear();
   mAttachementMap.clear();
   if( !text || ct->isMultipart() )
-    mArticle->attachments( mAttachments, knGlobals.settings()->showAlternativeContents() );
+    mAttachments = mArticle->attachments( knGlobals.settings()->showAlternativeContents() );
 
   // partial message
   if(ct->isPartial()) {
@@ -473,8 +473,7 @@ void ArticleWidget::displayArticle()
   if ( text && text->hasContent() && !ct->isPartial() ) {
     // handle HTML messages
     if ( text->contentType()->isHTMLText() ) {
-      QString htmlTxt;
-      text->decodedText( htmlTxt, true, knGlobals.settings()->removeTrailingNewlines() );
+      QString htmlTxt = text->decodedText( true, knGlobals.settings()->removeTrailingNewlines() );
       if ( mShowHtml ) {
         // strip </html> & </body>
         int i = qMin( htmlTxt.lastIndexOf( "</html>", -1, Qt::CaseInsensitive ), htmlTxt.lastIndexOf( "</body>", -1, Qt::CaseInsensitive ) );
@@ -494,11 +493,8 @@ void ArticleWidget::displayArticle()
       }
     }
     else {
-      if ( !containsPGP ) {
-        QStringList lines;
-        text->decodedText( lines, true, knGlobals.settings()->removeTrailingNewlines() );
-        displayBodyBlock( lines );
-      }
+      if ( !containsPGP )
+        QStringList lines = text->decodedText( true, knGlobals.settings()->removeTrailingNewlines() ).split( '\n' );
     }
 
   }
@@ -860,8 +856,7 @@ void ArticleWidget::displayAttachment( KMime::Content *att, int partNum )
         html += "<br>" + comment;
       html += "</td></tr><tr class=\"textAtmB\"><td>";
       // content
-      QString tmp;
-      att->decodedText( tmp );
+      QString tmp = att->decodedText();
       /*if( ct->isHTMLText() )
         // ### to dangerous, we should use the same stuff as for the main text here
         html += tmp;
@@ -1368,7 +1363,7 @@ void ArticleWidget::slotSetCharset( const QString &charset )
 
   if ( mArticle && mArticle->hasContent() ) {
     mArticle->setDefaultCharset( mOverrideCharset );  // the article will choose the correct default,
-    mArticle->setForceDefaultCS( mForceCharset );     // when we disable the overdrive
+    mArticle->setForceDefaultCharset( mForceCharset );     // when we disable the overdrive
     updateContents();
   }
 }

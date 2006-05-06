@@ -88,16 +88,16 @@ void Message::assemble()
   newHead+=contentTransferEncoding()->as7BitString()+"\n";
 
   //X-Headers
-  int pos=h_ead.indexOf("\nX-");
+  int pos = head().indexOf( "\nX-" );
   if(pos>-1) //we already have some x-headers => "recycle" them
-    newHead+=h_ead.mid(pos+1, h_ead.length()-pos-1);
+    newHead += head().mid( pos + 1, head().length() - pos - 1 );
   else
     foreach ( Headers::Base *h, h_eaders ) {
       if ( h->isXHeader() && ( strncasecmp( h->type(), "X-KNode", 7 ) != 0 ) )
         newHead += h->as7BitString() + '\n';
     }
 
-  h_ead=newHead;
+  setHead( newHead );
 }
 
 

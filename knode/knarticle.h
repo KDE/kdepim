@@ -98,7 +98,7 @@ class KNRemoteArticle : public KNArticle {
     ~KNRemoteArticle();
 
     // type
-    articleType type() { return ATremote; }
+    articleType type() const { return ATremote; }
 
     // content handling
     virtual void parse();
@@ -172,7 +172,7 @@ class KNRemoteArticle : public KNArticle {
     void initListItem();
     void updateListItem();
 
-    void setForceDefaultCS(bool b);
+    virtual void setForceDefaultCharset( bool b );
 
     QColor color() const { return c_olor; }
     void setColor(const QColor& c) { c_olor = c; }
@@ -218,7 +218,7 @@ class KNLocalArticle : public KNArticle {
     ~KNLocalArticle();
 
     //type
-    articleType type()     { return ATlocal; }
+    articleType type() const { return ATlocal; }
 
     //content handling
     void parse();
@@ -276,7 +276,7 @@ class KNLocalArticle : public KNArticle {
     //list item handling
     void updateListItem();
 
-    void setForceDefaultCS(bool b);
+    virtual void setForceDefaultCharset(bool b);
 
     protected:
       //hardcoded headers
