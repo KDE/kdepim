@@ -368,15 +368,15 @@ IMAP4Protocol::get (const KURL & _url)
               // write the mime header (default is here message/rfc822)
               outputLine ("--IMAPDIGEST\r\n", 14);
               cacheOutput = true;
-              if (cache->getUid () != 0)
+              if (cache && cache->getUid () != 0)
                 outputLineStr ("X-UID: " +
                                QString::number(cache->getUid ()) + "\r\n");
-              if (cache->getSize () != 0)
+              if (cache && cache->getSize () != 0)
                 outputLineStr ("X-Length: " +
                                QString::number(cache->getSize ()) + "\r\n");
-              if (!cache->getDate ().isEmpty())
+              if (cache && !cache->getDate ().isEmpty())
                 outputLineStr ("X-Date: " + cache->getDate () + "\r\n");
-              if (cache->getFlags () != 0)
+              if (cache && cache->getFlags () != 0)
                 outputLineStr ("X-Flags: " +
                                QString::number(cache->getFlags ()) + "\r\n");
             } else cacheOutput = true;
