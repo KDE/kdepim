@@ -705,6 +705,9 @@ void Kleo::KeySelectionDialog::slotTryOk() {
 void Kleo::KeySelectionDialog::slotOk() {
   if ( mCheckSelectionTimer->isActive() )
     slotCheckSelection();
+  // button could be disabled again after checking the selected key
+  if ( !actionButton( Ok )->isEnabled() )
+    return;
   mStartSearchTimer->stop();
   accept();
 }
