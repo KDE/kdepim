@@ -4,6 +4,7 @@
     KMime, the KDE internet mail/usenet news message library.
     Copyright (c) 2001 the KMime authors.
     See file AUTHORS for details
+    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -82,12 +83,27 @@ class KDE_EXPORT Content : public Base {
     //type
     virtual articleType type() const { return ATmimeContent; }
 
-    //content handling
+    /**
+      Returns true if this Content object is not empty.
+    */
     bool hasContent() const;
+    /**
+      Sets the content to the given raw data, containing the content head and
+      body separated by two linefeeds.
+      @param l a line-splitted list of the raw content data.
+    */
     void setContent( const QList<QByteArray> & l );
+    /**
+      Sets the content to the given raw data, containing the content head and
+      body separated by two linefeeds.
+      @param s a QByteArray containing the raw content data.
+    */
     void setContent( const QByteArray &s );
     virtual void parse();
     virtual void assemble();
+    /**
+      Clears the complete message and deletes all sub-contents.
+    */
     virtual void clear();
 
     /**
@@ -108,14 +124,26 @@ class KDE_EXPORT Content : public Base {
     virtual void setHeader(Headers::Base *h);
     virtual bool removeHeader(const char *type);
     bool hasHeader(const char *type)                                  { return (getHeaderByType(type)!=0); }
+    /**
+      Returns the content type header.
+      @param create Create the header if it doesn't exist yet.
+    */
     Headers::ContentType* contentType(bool create=true)             { Headers::ContentType *p=0; return getHeaderInstance(p, create); }
     Headers::CTEncoding* contentTransferEncoding(bool create=true)  { Headers::CTEncoding *p=0; return getHeaderInstance(p, create); }
     Headers::CDisposition* contentDisposition(bool create=true)     { Headers::CDisposition *p=0; return getHeaderInstance(p, create); }
     Headers::CDescription* contentDescription(bool create=true)     { Headers::CDescription *p=0; return getHeaderInstance(p, create); }
 
-    //content access
+    /**
+      Returns the size of the content body after encoding.
+    */
     int size();
+    /**
+      Returns the size of this content and all sub-contents.
+    */
     int storageSize() const;
+    /**
+      Line count of this content and all sub-contents.
+    */
     int lineCount() const;
     /**
       Returns the content body raw data.
@@ -126,17 +154,18 @@ class KDE_EXPORT Content : public Base {
     */
     void setBody( const QByteArray &body );
     /**
-      Returns a QByteArray containing the encoded message.
+      Returns a QByteArray containing the encoded content, including the
+      content header and all sub-contents.
       @param useCrLf Use CRLF instead of LF for linefeeds.
     */
     QByteArray encodedContent( bool useCrLf = false );
     /**
-      Returns the decoded content.
+      Returns the decoded content body.
     */
     QByteArray decodedContent();
     /**
       Returns the decoded text. Additional to decodedContent(), this also
-      applies charset.decoding. If this is not a text content, decodedText()
+      applies charset decoding. If this is not a text content, decodedText()
       returns an empty QString.
     */
     QString decodedText( bool trimText = false, bool removeTrailingNewlines = false );
@@ -146,22 +175,42 @@ class KDE_EXPORT Content : public Base {
     */
     void fromUnicodeString(const QString &s);
 
+    /**
+      Returns the first content with mimetype text/.
+    */
     Content* textContent();
     /**
       Returns a list of attachments.
       @param incAlternatives include multipart/alternative parts.
     */
     List attachments( bool incAlternatives = false );
-    void addContent(Content *c, bool prepend=false);
-    void removeContent(Content *c, bool del=false);
+    /**
+      Returns a list of sub-contents.
+    */
+    List contents() const;
+    /**
+      Adds a new sub-content, the current Content object is converted into a
+      multipart/mixed content node if it has been a single-part content.
+      @param c The new sub-content.
+      @param prepend Prepend to content list instead of append.
+    */
+    void addContent( Content *c, bool prepend = false );
+    /**
+      Removes the given sub-content, the current Content object is converted
+      into a single-port content if only one sub-content is left.
+      @param c The content to remove.
+      @param del Delete the removed content object.
+    */
+    void removeContent( Content *c, bool del = false );
     void changeEncoding(Headers::contentEncoding e);
 
     /**
       Saves the encoded content to the given textstream
+      @param ts The stream where the content should be written to.
       @param scrambleFromLines: replace "\nFrom " with "\n>From ", this is
       needed to avoid problem with mbox-files
     */
-    void toStream(QTextStream &ts, bool scrambleFromLines=false);
+    void toStream( QTextStream &ts, bool scrambleFromLines = false );
 
     /**
       This charset is used for all headers and the body
@@ -184,8 +233,9 @@ class KDE_EXPORT Content : public Base {
       Enables/disables the force mode, housekeeping.
       works correctly only when the article is completely empty or
       completely loaded.
+      @param b True to force usage of the default charset.
     */
-    virtual void setForceDefaultCharset(bool b);
+    virtual void setForceDefaultCharset( bool b );
 
 
   protected:
@@ -193,7 +243,6 @@ class KDE_EXPORT Content : public Base {
     bool decodeText();
     template <class T> T* getHeaderInstance(T *ptr, bool create);
 
-    List c_ontents;
     Headers::Base::List h_eaders;
 
   private:

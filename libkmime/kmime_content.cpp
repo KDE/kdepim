@@ -4,6 +4,7 @@
     KMime, the KDE internet mail/usenet news message library.
     Copyright (c) 2001 the KMime authors.
     See file AUTHORS for details
+    Copyright (c) 2006 Volker Krause <volker.krause@rwth-aachen.de>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,6 +36,7 @@ class ContentPrivate
   public:
     QByteArray head;
     QByteArray body;
+    Content::List contents;
     QByteArray defaultCS;
     bool forceDefaultCS;
 };
@@ -59,8 +61,8 @@ Content::Content( const QByteArray &h, const QByteArray &b )
 
 Content::~Content()
 {
-  qDeleteAll( c_ontents );
-  c_ontents.clear();
+  qDeleteAll( d->contents );
+  d->contents.clear();
   qDeleteAll( h_eaders );
   h_eaders.clear();
   delete d;
@@ -69,7 +71,7 @@ Content::~Content()
 
 bool Content::hasContent() const
 {
-  return ( !d->head.isEmpty() && (!d->body.isEmpty() || !c_ontents.isEmpty()) );
+  return ( !d->head.isEmpty() && (!d->body.isEmpty() || !d->contents.isEmpty()) );
 }
 
 
@@ -151,15 +153,15 @@ void Content::parse()
   // check this part has already been partioned into subparts.
   // if this is the case, we will not try to reparse the body
   // of this part.
-  if ( d->body.size() == 0 && !c_ontents.isEmpty() ) {
+  if ( d->body.size() == 0 && !d->contents.isEmpty() ) {
     // reparse all sub parts
-    foreach ( Content *c, c_ontents )
+    foreach ( Content *c, d->contents )
       c->parse();
     return;
   }
 
-  qDeleteAll( c_ontents );
-  c_ontents.clear();
+  qDeleteAll( d->contents );
+  d->contents.clear();
 
   Headers::ContentType *ct=contentType();
   QByteArray tmp;
@@ -193,7 +195,7 @@ void Content::parse()
           c->setContent(*it);
           c->parse();
           c->contentType()->setCategory(cat); //set category of the sub-part
-          c_ontents.append( c );
+          d->contents.append( c );
           //qDebug("part:\n%s\n\n%s", c->h_ead.data(), c->b_ody.left(100).data());
         }
 
@@ -237,9 +239,9 @@ void Content::parse()
           addContent(c);
         }
 
-        if ( !c_ontents.isEmpty() && c_ontents.first() ) { //readd the plain text before the uuencoded part
-          c_ontents.first()->setContent("Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n"+uup.textPart());
-          c_ontents.first()->contentType()->setMimeType("text/plain");
+        if ( !d->contents.isEmpty() && d->contents.first() ) { //readd the plain text before the uuencoded part
+          d->contents.first()->setContent("Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n"+uup.textPart());
+          d->contents.first()->contentType()->setMimeType("text/plain");
         }
       }
     } else {
@@ -277,9 +279,9 @@ void Content::parse()
             addContent(c);
           }
 
-          if( !c_ontents.isEmpty() && c_ontents.first() ) { //readd the plain text before the uuencoded part
-            c_ontents.first()->setContent("Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n"+yenc.textPart());
-            c_ontents.first()->contentType()->setMimeType("text/plain");
+          if( !d->contents.isEmpty() && d->contents.first() ) { //readd the plain text before the uuencoded part
+            d->contents.first()->setContent("Content-Type: text/plain\nContent-Transfer-Encoding: 7Bit\n\n"+yenc.textPart());
+            d->contents.first()->contentType()->setMimeType("text/plain");
           }
         }
       }
@@ -321,8 +323,8 @@ void Content::clear()
 {
   qDeleteAll( h_eaders );
   h_eaders.clear();
-  qDeleteAll( c_ontents );
-  c_ontents.clear();
+  qDeleteAll( d->contents );
+  d->contents.clear();
   d->head.clear();
   d->body.clear();
 }
@@ -334,11 +336,11 @@ QByteArray Content::encodedContent( bool useCrLf )
 
   // hack to convert articles with uuencoded or yencoded binaries into
   // proper mime-compliant articles
-  if ( !c_ontents.isEmpty() ) {
+  if ( !d->contents.isEmpty() ) {
     bool convertNonMimeBinaries=false;
 
     // reencode non-mime binaries...
-    foreach ( Content *c, c_ontents ) {
+    foreach ( Content *c, d->contents ) {
       if ((c->contentTransferEncoding(true)->cte()==Headers::CEuuenc) ||
           (c->contentTransferEncoding(true)->cte()==Headers::CEbinary)) {
         convertNonMimeBinaries=true;
@@ -388,12 +390,12 @@ QByteArray Content::encodedContent( bool useCrLf )
     else
       e += d->body;
   }
-  else if( !c_ontents.isEmpty() ) { //this is a multipart message
+  else if( !d->contents.isEmpty() ) { //this is a multipart message
     Headers::ContentType *ct=contentType();
     QByteArray boundary="--"+ct->boundary();
 
     //add all (encoded) contents separated by boundaries
-    foreach ( Content *c, c_ontents ) {
+    foreach ( Content *c, d->contents ) {
       e+=boundary+"\n";
       e+=c->encodedContent(false);  // don't convert LFs here, we do that later!!!!!
     }
@@ -503,7 +505,7 @@ Content* Content::textContent()
   if(contentType()->isText())
     ret=this;
   else
-    foreach ( Content *c, c_ontents )
+    foreach ( Content *c, d->contents )
       if( (ret=c->textContent())!=0 )
         break;
 
@@ -514,10 +516,10 @@ Content* Content::textContent()
 Content::List Content::attachments( bool incAlternatives )
 {
   List attachments;
-  if ( c_ontents.isEmpty() )
+  if ( d->contents.isEmpty() )
     attachments.append( this );
   else {
-    foreach ( Content *c, c_ontents ) {
+    foreach ( Content *c, d->contents ) {
       if( !incAlternatives && c->contentType()->category()==Headers::CCalternativePart)
         continue;
       else
@@ -534,9 +536,15 @@ Content::List Content::attachments( bool incAlternatives )
 }
 
 
+Content::List Content::contents() const
+{
+  return d->contents;
+}
+
+
 void Content::addContent(Content *c, bool prepend)
 {
-  if ( c_ontents.isEmpty() ) { // this message is not multipart yet
+  if ( d->contents.isEmpty() ) { // this message is not multipart yet
 
     // first we convert the body to a content
     Content *main=new Content();
@@ -562,7 +570,7 @@ void Content::addContent(Content *c, bool prepend)
 
     //now we can copy the body and append the new content;
     main->setBody( d->body );
-    c_ontents.append( main );
+    d->contents.append( main );
     d->body.clear(); //not longer needed
 
 
@@ -576,24 +584,24 @@ void Content::addContent(Content *c, bool prepend)
   }
   //here we actually add the content
   if(prepend)
-    c_ontents.insert( 0, c );
+    d->contents.insert( 0, c );
   else
-    c_ontents.append( c );
+    d->contents.append( c );
 }
 
 
 void Content::removeContent(Content *c, bool del)
 {
-  if( c_ontents.isEmpty() ) // what the ..
+  if( d->contents.isEmpty() ) // what the ..
     return;
 
-  c_ontents.removeAll( c );
+  d->contents.removeAll( c );
   if(del)
     delete c;
 
   //only one content left => turn this message in a single-part
-  if ( c_ontents.count() == 1 ) {
-    Content *main = c_ontents.first();
+  if ( d->contents.count() == 1 ) {
+    Content *main = d->contents.first();
 
     //first we have to move the mime-headers
     for ( Headers::Base::List::iterator it = main->h_eaders.begin();
@@ -616,8 +624,8 @@ void Content::removeContent(Content *c, bool del)
     d->body = main->body();
 
     //finally we can delete the content list
-    qDeleteAll( c_ontents );
-    c_ontents.clear();
+    qDeleteAll( d->contents );
+    d->contents.clear();
   }
 }
 
@@ -800,10 +808,10 @@ int Content::storageSize() const
 {
   int s = d->head.size();
 
-  if ( c_ontents.isEmpty() )
+  if ( d->contents.isEmpty() )
     s += d->body.size();
   else {
-    foreach ( Content *c, c_ontents )
+    foreach ( Content *c, d->contents )
       s+=c->storageSize();
   }
 
@@ -818,7 +826,7 @@ int Content::lineCount() const
     ret += d->head.count('\n');
   ret += d->body.count('\n');
 
-  foreach ( Content *c, c_ontents )
+  foreach ( Content *c, d->contents )
     ret+=c->lineCount();
 
   return ret;
@@ -874,7 +882,7 @@ void Content::setDefaultCharset( const QByteArray &cs )
 {
   d->defaultCS = KMime::cachedCharset(cs);
 
-  foreach ( Content *c, c_ontents )
+  foreach ( Content *c, d->contents )
     c->setDefaultCharset(cs);
 
   // reparse the part and its sub-parts in order
@@ -893,7 +901,7 @@ void Content::setForceDefaultCharset( bool b )
 {
   d->forceDefaultCS = b;
 
-  foreach ( Content *c, c_ontents )
+  foreach ( Content *c, d->contents )
     c->setForceDefaultCharset( b );
 
   // reparse the part and its sub-parts in order
