@@ -92,7 +92,7 @@ void DebugDialog::save()
 
   QFile file( fileName );
   if ( !file.open( QIODevice::WriteOnly ) ) {
-    qWarning( "Couldn't open file %s", file.fileName().toLatin1() );
+    qWarning( "Couldn't open file %s", file.fileName().toLatin1().data() );
     return;
   }
 
