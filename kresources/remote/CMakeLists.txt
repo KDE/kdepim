@@ -25,6 +25,8 @@ kde4_automoc(${kcal_remote_PART_SRCS})
 
 kde4_add_plugin(kcal_remote ${kcal_remote_PART_SRCS})
 
+kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_remote )
+
 target_link_libraries(kcal_remote  ${KDE4_KDECORE_LIBS} kcal_resourceremote kdepim )
 
 install_targets(${PLUGIN_INSTALL_DIR} kcal_remote )
