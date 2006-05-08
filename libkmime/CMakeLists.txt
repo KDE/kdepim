@@ -10,7 +10,7 @@ include_directories(
 
 ########### next target ###############
 
-set(kmime_LIB_SRCS ${libemailfunctions_SRCS}
+set(kmime_LIB_SRCS
    kmime_charfreq.cpp 
    kmime_util.cpp 
    kmime_mdn.cpp 

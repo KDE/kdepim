@@ -39,7 +39,7 @@
 
 #include "kautodeletehash.h"
 
-#include <kasciistringtools.h>
+#include <kascii.h>
 #include <kdebug.h>
 #include <kstaticdeleter.h>
 
@@ -89,7 +89,7 @@ Codec * Codec::codecForName( const QByteArray & name ) {
     fillDictionary();
   }
   QByteArray lowerName = name;
-  KPIM::kAsciiToLower( lowerName.data() );
+  kAsciiToLower( lowerName.data() );
   Codec * codec = (*all)[ lowerName ];
 #if defined(QT_THREAD_SUPPORT)
   dictLock->unlock();
