@@ -67,7 +67,7 @@ kde4_add_dcop_skels(korn_SRCS boxcontaineritem.h dcopdropif.h )
 
 kde4_add_executable(korn ${korn_SRCS})
 
-target_link_libraries(korn  ${KDE4_KIO_LIBS} )
+target_link_libraries(korn  ${KDE4_KIO_LIBS} phononcore)
 
 install_targets(/bin korn )
 

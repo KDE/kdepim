@@ -31,6 +31,7 @@
 #include <k3listview.h>
 #include <klocale.h>
 #include <kapplication.h>
+#include <kactioncollection.h>
 #include <kiconloader.h>
 #include <qpixmap.h>
 #include <kstdaccel.h>

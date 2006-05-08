@@ -232,7 +232,7 @@ void FolderLister::folderSubitemRetrieved( const KUrl &url, bool isFolder )
     KUrl u( url ) ;
     u.setUser( QString() );
     u.setPass( QString() );
-    mProcessedPathes.append( url.path(-1) );
+    mProcessedPathes.append( url.path( KUrl::RemoveTrailingSlash ) );
   }
 }
 
@@ -262,8 +262,8 @@ void FolderLister::doRetrieveFolder( const KUrl &u )
 
   KUrl url( u );
   if ( adaptor() ) adaptor()->adaptDownloadUrl( url );
-  if ( mUrls.contains( url ) || mProcessedPathes.contains( url.path(-1) ) ) {
-    kDebug()<<"Item "<<u.path(-1)<<" is already being downloaded "<<endl;
+  if ( mUrls.contains( url ) || mProcessedPathes.contains( url.path( KUrl::RemoveTrailingSlash ) ) ) {
+    kDebug()<<"Item "<<u.path( KUrl::RemoveTrailingSlash )<<" is already being downloaded "<<endl;
   } else {
 
     KIO::Job *listjob = createListFoldersJob( url );
@@ -328,7 +328,7 @@ void FolderLister::slotListJobResult( KJob *job )
   KIO::SimpleJob *j = dynamic_cast<KIO::SimpleJob*>(job);
   if ( j ) {
     mUrls.removeAll( j->url() );
-    mProcessedPathes.append( j->url().path(-1) );
+    mProcessedPathes.append( j->url().path( KUrl::RemoveTrailingSlash ) );
   }
 
   if ( job->error() ) {

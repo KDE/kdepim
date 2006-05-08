@@ -26,9 +26,10 @@
 #include "protocols.h"
 #include "subjectsdlg.h"
 
-#include <kaudioplayer.h>
 #include <kconfig.h>
 #include <kdebug.h>
+#include <kurl.h>
+#include <phonon/simpleplayer.h>
 
 #include <qlist.h>
 
@@ -233,7 +234,8 @@ bool AccountManager::hasNewMessages()
 
 void AccountManager::playSound( const QString& file )
 {
-	KAudioPlayer::play( file );
+	Phonon::SimplePlayer* player = new Phonon::SimplePlayer( this );
+	player->play( KUrl( file ) );
 }
 
 void AccountManager::slotChanged( int count, KMailDrop* mailDrop )

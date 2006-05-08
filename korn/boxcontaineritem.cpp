@@ -34,6 +34,7 @@
 #include <kmenu.h>
 #include <kprocess.h>
 #include <kshortcut.h>
+#include <kstdaction.h>
 #include <ktoolinvocation.h>
 
 #include <qbitmap.h>
