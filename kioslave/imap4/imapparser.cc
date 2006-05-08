@@ -56,12 +56,11 @@ extern "C" {
 #include <qstring.h>
 #include <qstringlist.h>
 
+#include <kascii.h>
 #include <kdebug.h>
 #include <kcodecs.h>
 #include <kglobal.h>
 #include <kurl.h>
-
-#include <kasciistringtools.h>
 
 imapParser::imapParser ()
 {
@@ -637,7 +636,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
 void imapParser::parseCapability (parseString & result)
 {
   Q3CString temp( result.cstr() );
-  QString data = KPIM::kAsciiToLower( temp.data() );
+  QString data = kAsciiToLower( temp.data() );
   imapCapabilities = data.split ( ' ', QString::SkipEmptyParts );
 }
 

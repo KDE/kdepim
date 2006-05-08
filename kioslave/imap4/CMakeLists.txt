@@ -5,7 +5,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/libkmime ${CMAKE_SOURCE_DIR}/libemailfu
 
 ########### next target ###############
 
-set(kio_imap4_PART_SRCS ${libemailfunctions_SRCS} 
+set(kio_imap4_PART_SRCS 
    imapcommand.cc 
    imaplist.cc 
    mailaddress.cc 
