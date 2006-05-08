@@ -25,6 +25,7 @@
 
 #include <libsyndication/person.h>
 #include <libsyndication/sharedptr.h>
+#include <kdepim_export.h>
 
 #include <QtCore/QString>
 
@@ -36,7 +37,7 @@ typedef SharedPtr<PersonImpl> PersonImplPtr;
 /**
  * @internal
  */
-class PersonImpl : public Person
+class SYNDICATION_EXPORT PersonImpl : public Person
 {
     public:
 

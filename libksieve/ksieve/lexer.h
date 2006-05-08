@@ -33,13 +33,15 @@
 #ifndef __KSIEVE_LEXER_H__
 #define __KSIEVE_LEXER_H__
 
+#include <kdepim_export.h>
+
 class QString;
 
 namespace KSieve {
 
-  class Error;
+  class KSIEVE_EXPORT Error;
 
-  class Lexer {
+  class KSIEVE_EXPORT Lexer {
   public:
     enum Options {
       IncludeComments = 0,
