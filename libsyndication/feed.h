@@ -25,7 +25,7 @@
 
 #include <libsyndication/sharedptr.h>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 template <class T> class QList;
 class QString;
@@ -57,7 +57,7 @@ typedef SharedPtr<Person> PersonPtr;
  *
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Feed : public SharedPtr<Feed>
+class SYNDICATION_EXPORT Feed : public SharedPtr<Feed>
 {
     public:
         

@@ -22,7 +22,7 @@
 #ifndef LIBSYNDICATION_ATOM_CONSTANTS_H
 #define LIBSYNDICATION_ATOM_CONSTANTS_H
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 class QString;
 
@@ -32,13 +32,13 @@ namespace Atom {
 /**
  * namespace used by Atom 1.0 elements
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 QString atom1Namespace();
 
 /**
  * namespace used by Atom 0.3 elements
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 QString atom0_3Namespace();
 
 } // namespace Atom

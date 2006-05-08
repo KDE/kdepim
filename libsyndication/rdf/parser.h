@@ -39,7 +39,7 @@ class Model;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Parser : public Syndication::AbstractParser
+class SYNDICATION_EXPORT Parser : public Syndication::AbstractParser
 {
     public:
         

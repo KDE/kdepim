@@ -23,7 +23,7 @@
 #ifndef LIBSYNDICATION_MAPPER_H
 #define LIBSYNDICATION_MAPPER_H
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 template <class T> class SharedPtr;
 
@@ -103,7 +103,7 @@ typedef SharedPtr<SpecificDocument> SpecificDocumentPtr;
  * @author Frank Osterfeld
  */
 template <class T>
-class KDE_EXPORT Mapper
+class SYNDICATION_EXPORT Mapper
 {
     public:
         

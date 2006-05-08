@@ -44,7 +44,7 @@ namespace Syndication {
 // (template classes require implementations to be in the header)
 
 template <class T>
-class KDE_EXPORT ParserCollectionImpl : public ParserCollection<T>
+class SYNDICATION_EXPORT ParserCollectionImpl : public ParserCollection<T>
 {
     public:
         

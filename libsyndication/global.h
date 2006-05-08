@@ -24,7 +24,7 @@
 
 #include <libsyndication/feed.h>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #include <QtCore/QString>
 
@@ -64,7 +64,7 @@ template <class T> class ParserCollection;
  * }
  * @endcode
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 ParserCollection<Feed>* parserCollection();
 
 /**
@@ -76,7 +76,7 @@ ParserCollection<Feed>* parserCollection();
  * @param src the document source to parse
  * @param formatHint an optional hint which format to test first
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 FeedPtr parse(const DocumentSource& src, const QString& formatHint=QString());
 
 /**

@@ -46,7 +46,7 @@ class Person;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Source : public ElementWrapper
+class SYNDICATION_EXPORT Source : public ElementWrapper
 {
     public:
 

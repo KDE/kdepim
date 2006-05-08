@@ -26,7 +26,7 @@
 
 #include <libsyndication/sharedptr.h>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 class QDomElement;
 template <class T> class QList;
@@ -40,7 +40,7 @@ namespace Syndication {
  *
  * @author Frank Osterfeld
  */
-class KDE_EXPORT ElementWrapper
+class SYNDICATION_EXPORT ElementWrapper
 {
     public:
         

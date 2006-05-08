@@ -22,7 +22,7 @@
 #ifndef LIBSYNDICATION_RDF_NODE_H
 #define LIBSYNDICATION_RDF_NODE_H
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #include <libsyndication/sharedptr.h>
 
@@ -35,7 +35,7 @@ class NodeVisitor;
 
 typedef SharedPtr<Node> NodePtr;
 
-class KDE_EXPORT Node
+class SYNDICATION_EXPORT Node
 {
     public:
         

@@ -25,7 +25,7 @@
 
 #include <libsyndication/specificdocument.h>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 class QString;
 
@@ -39,7 +39,7 @@ class DocumentSource;
  *
  * @author Frank Osterfeld
  */
-class KDE_EXPORT AbstractParser
+class SYNDICATION_EXPORT AbstractParser
 {
     public:
 

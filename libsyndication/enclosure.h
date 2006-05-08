@@ -25,7 +25,7 @@
 
 #include <libsyndication/sharedptr.h>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 namespace Syndication {
 
@@ -40,7 +40,7 @@ typedef SharedPtr<Enclosure> EnclosurePtr;
  *
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Enclosure
+class SYNDICATION_EXPORT Enclosure
 {
     public:
 

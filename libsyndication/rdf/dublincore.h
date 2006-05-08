@@ -46,7 +46,7 @@ typedef SharedPtr<Resource> ResourcePtr;
  * For more information on Dublin Core, see
  * http://dublincore.org/
  */
-class KDE_EXPORT DublinCore : public ResourceWrapper
+class SYNDICATION_EXPORT DublinCore : public ResourceWrapper
 {
     public:
         

@@ -22,7 +22,7 @@
 #ifndef LIBSYNDICATION_RDF_RSSVOCAB_H
 #define LIBSYNDICATION_RDF_RSSVOCAB_H
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 class QString;
 class QStringList;
@@ -45,7 +45,7 @@ typedef SharedPtr<Resource> ResourcePtr;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT RSSVocab
+class SYNDICATION_EXPORT RSSVocab
 {
     public:
 
@@ -138,7 +138,7 @@ class KDE_EXPORT RSSVocab
  * @author Frank Osterfeld
  */
 
-class KDE_EXPORT RSS09Vocab
+class SYNDICATION_EXPORT RSS09Vocab
 {
     public:
 

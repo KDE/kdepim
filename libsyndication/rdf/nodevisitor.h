@@ -22,7 +22,7 @@
 #ifndef LIBSYNDICATION_RDF_NODEVISITOR_H
 #define LIBSYNDICATION_RDF_NODEVISITOR_H
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 namespace Syndication {
 
@@ -41,7 +41,7 @@ typedef SharedPtr<Resource> ResourcePtr;
 class Sequence;
 typedef SharedPtr<Sequence> SequencePtr;
     
-class KDE_EXPORT NodeVisitor
+class SYNDICATION_EXPORT NodeVisitor
 {
     public:
 

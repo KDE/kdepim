@@ -37,7 +37,7 @@ namespace RSS2 {
  *
  * @author Frank Osterfeld
  */
-class KDE_EXPORT TextInput : public ElementWrapper
+class SYNDICATION_EXPORT TextInput : public ElementWrapper
 {
     public:
 

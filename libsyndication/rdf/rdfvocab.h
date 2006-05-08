@@ -35,7 +35,7 @@ typedef SharedPtr<Property> PropertyPtr;
 class Resource;
 typedef SharedPtr<Resource> ResourcePtr;
 
-class KDE_EXPORT RDFVocab
+class SYNDICATION_EXPORT RDFVocab
 {
     public:
     

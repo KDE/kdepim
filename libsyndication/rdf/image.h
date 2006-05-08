@@ -32,7 +32,7 @@ namespace RDF {
 class Resource;
 typedef SharedPtr<Resource> ResourcePtr;
 
-class KDE_EXPORT Image : public ResourceWrapper
+class SYNDICATION_EXPORT Image : public ResourceWrapper
 {
     
     public:

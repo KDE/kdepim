@@ -25,7 +25,7 @@
 
 #include <libsyndication/sharedptr.h>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 namespace Syndication {
 
@@ -44,7 +44,7 @@ typedef SharedPtr<Person> PersonPtr;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Person
+class SYNDICATION_EXPORT Person
 {
     public:
 

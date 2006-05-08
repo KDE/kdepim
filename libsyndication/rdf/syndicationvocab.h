@@ -42,7 +42,7 @@ typedef SharedPtr<Property> PropertyPtr;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT SyndicationVocab
+class SYNDICATION_EXPORT SyndicationVocab
 {
     public:
 

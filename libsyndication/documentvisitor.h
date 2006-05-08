@@ -22,7 +22,7 @@
 #ifndef LIBSYNDICATION_DOCUMENTVISITOR_H
 #define LIBSYNDICATION_DOCUMENTVISITOR_H
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 namespace Syndication {
 
@@ -53,7 +53,7 @@ namespace RSS2
  *
  * @author Frank Osterfeld
  */
-class KDE_EXPORT DocumentVisitor
+class SYNDICATION_EXPORT DocumentVisitor
 {
     public:
 

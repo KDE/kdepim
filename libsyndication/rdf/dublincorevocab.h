@@ -30,7 +30,7 @@ class QString;
 namespace Syndication {
 namespace RDF {
 
-class KDE_EXPORT DublinCoreVocab
+class SYNDICATION_EXPORT DublinCoreVocab
 {
     public:
 

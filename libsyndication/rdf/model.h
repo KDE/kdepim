@@ -29,7 +29,7 @@
 #include <libsyndication/rdf/statement.h>
 #include <libsyndication/sharedptr.h>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #include <QtCore/QString>
 
@@ -44,7 +44,7 @@ namespace RDF {
  *
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Model
+class SYNDICATION_EXPORT Model
 {
     public:
 

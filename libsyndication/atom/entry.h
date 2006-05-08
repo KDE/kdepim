@@ -49,7 +49,7 @@ class Source;
  *
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Entry : public ElementWrapper, public SpecificItem
+class SYNDICATION_EXPORT Entry : public ElementWrapper, public SpecificItem
 {
     public:
     

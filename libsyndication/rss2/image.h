@@ -31,7 +31,7 @@ class QString;
 namespace Syndication {
 namespace RSS2 {
 
-class KDE_EXPORT Image : public ElementWrapper
+class SYNDICATION_EXPORT Image : public ElementWrapper
 {
     public:
 

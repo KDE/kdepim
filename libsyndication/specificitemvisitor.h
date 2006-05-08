@@ -22,7 +22,7 @@
 #ifndef LIBSYNDICATION_SPECIFICITEMVISITOR_H
 #define LIBSYNDICATION_SPECIFICITEMVISITOR_H
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 namespace Syndication {
 
@@ -43,7 +43,7 @@ namespace RSS2
     class Item;
 }
 
-class KDE_EXPORT SpecificItemVisitor
+class SYNDICATION_EXPORT SpecificItemVisitor
 {
     public:
 

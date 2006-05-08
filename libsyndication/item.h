@@ -25,7 +25,7 @@
 
 #include <libsyndication/sharedptr.h>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #include <ctime>
 
@@ -49,7 +49,7 @@ typedef SharedPtr<SpecificItem> SpecificItemPtr;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Item
+class SYNDICATION_EXPORT Item
 {
     public:
 

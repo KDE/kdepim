@@ -53,7 +53,7 @@ typedef SharedPtr<FeedDocument> FeedDocumentPtr;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT FeedDocument : public Syndication::SpecificDocument,
+class SYNDICATION_EXPORT FeedDocument : public Syndication::SpecificDocument,
 public ElementWrapper
 {
     public:
@@ -192,7 +192,7 @@ public ElementWrapper
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT EntryDocument : public Syndication::SpecificDocument, public Syndication::ElementWrapper
+class SYNDICATION_EXPORT EntryDocument : public Syndication::SpecificDocument, public Syndication::ElementWrapper
 {
     public:
 

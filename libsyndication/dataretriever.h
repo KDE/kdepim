@@ -10,7 +10,7 @@
 #ifndef LIBSYNDICATION_DATARETRIEVER_H
 #define LIBSYNDICATION_DATARETRIEVER_H
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -33,7 +33,7 @@ namespace Syndication
  * a new retrieval algorithm which can then be plugged into the RSS loader.
  * @see Loader, FileRetriever, OutputRetriever
  */
-class KDE_EXPORT DataRetriever : public QObject
+class SYNDICATION_EXPORT DataRetriever : public QObject
 {
     Q_OBJECT
     public:
@@ -94,7 +94,7 @@ class KDE_EXPORT DataRetriever : public QObject
  * by the program on stdout. To be used with Loader::loadFrom().
  * @see DataRetriever, Loader::loadFrom()
  */
-class KDE_EXPORT OutputRetriever : public DataRetriever
+class SYNDICATION_EXPORT OutputRetriever : public DataRetriever
 {
     Q_OBJECT
             
@@ -145,7 +145,7 @@ class KDE_EXPORT OutputRetriever : public DataRetriever
  * Implements a file retriever, to be used with Loader::loadFrom().
  * @see DataRetriever, Loader::loadFrom()
  */
-class KDE_EXPORT FileRetriever : public DataRetriever
+class SYNDICATION_EXPORT FileRetriever : public DataRetriever
 {
     Q_OBJECT
             

@@ -25,7 +25,7 @@
 
 #include <libsyndication/sharedptr.h>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 namespace Syndication {
 
@@ -43,7 +43,7 @@ typedef SharedPtr<Category> CategoryPtr;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Category
+class SYNDICATION_EXPORT Category
 {
     public:
 

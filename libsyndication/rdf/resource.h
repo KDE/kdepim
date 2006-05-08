@@ -43,7 +43,7 @@ typedef SharedPtr<Statement> StatementPtr;
 
 typedef SharedPtr<Resource> ResourcePtr;
 
-class KDE_EXPORT Resource : public Node
+class SYNDICATION_EXPORT Resource : public Node
 {
     friend class Model;
     

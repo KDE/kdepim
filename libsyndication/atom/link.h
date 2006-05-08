@@ -36,7 +36,7 @@ namespace Atom {
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Link : public Syndication::ElementWrapper
+class SYNDICATION_EXPORT Link : public Syndication::ElementWrapper
 {
     public:
 

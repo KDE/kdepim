@@ -70,7 +70,7 @@ namespace Syndication {
  * @author Frank Osterfeld
  */
 template <class T>
-class KDE_EXPORT ParserCollection
+class SYNDICATION_EXPORT ParserCollection
 {
     public:
 

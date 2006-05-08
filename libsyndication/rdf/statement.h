@@ -39,7 +39,7 @@ typedef SharedPtr<Statement> StatementPtr;
  * An RDF statement, consisting of a triple
  * (subject, predicate, object).
  */
-class KDE_EXPORT Statement
+class SYNDICATION_EXPORT Statement
 {
     public:
     

@@ -50,7 +50,7 @@ class Source;
  *
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Item : public ElementWrapper, public Syndication::SpecificItem
+class SYNDICATION_EXPORT Item : public ElementWrapper, public Syndication::SpecificItem
 {
     public:
         

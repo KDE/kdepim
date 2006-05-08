@@ -22,7 +22,7 @@
 #ifndef LIBSYNDICATION_RDF_CONTENTVOCAB_H
 #define LIBSYNDICATION_RDF_CONTENTVOCAB_H
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 class QString;
 
@@ -35,7 +35,7 @@ namespace RDF {
 class Property;
 typedef SharedPtr<Property> PropertyPtr;
 
-class KDE_EXPORT ContentVocab
+class SYNDICATION_EXPORT ContentVocab
 {
     public:
 

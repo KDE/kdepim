@@ -25,7 +25,7 @@
 
 #include <libsyndication/person.h>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #include <ctime>
 
@@ -70,7 +70,7 @@ enum DateFormat
  * @return parsed date in seconds since epoch, 0 if no date could
  * be parsed from the string.
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 time_t parseISODate(const QString& str);
 
 /**
@@ -81,7 +81,7 @@ time_t parseISODate(const QString& str);
  * @return parsed date in seconds since epoch, 0 if no date could
  * be parsed from the string.
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 time_t parseRFCDate(const QString& str);
 
 /**
@@ -97,7 +97,7 @@ time_t parseRFCDate(const QString& str);
  * @return parsed date in seconds since epoch, 0 if no date could
  * be parsed from the string.
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 time_t parseDate(const QString& str, DateFormat hint=RFCDate);
 
 
@@ -110,7 +110,7 @@ time_t parseDate(const QString& str, DateFormat hint=RFCDate);
  * @return string representation of the date, or a null string if 
  * @c date is 0
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 QString dateTimeToString(time_t date);
 
 /**
@@ -118,7 +118,7 @@ QString dateTimeToString(time_t date);
  * 
  * @param str a string 
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 QString resolveEntities(const QString& str);
    
 /**
@@ -126,14 +126,14 @@ QString resolveEntities(const QString& str);
  * with &amp;lt; &amp;gt; &amp;amp;, &amp;quot; &amp;apos;. 
  * @param str the string to escape
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 QString escapeSpecialCharacters(const QString& str);
 
 /**
  * replaces newlines ("\n") by &lt;br/>
  * @param str to convert
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 QString convertNewlines(const QString& str);
         
 /**
@@ -141,7 +141,7 @@ QString convertNewlines(const QString& str);
  *
  * @param plainText a string in plain text.
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 QString plainTextToHtml(const QString& plainText);
 
 /**
@@ -150,7 +150,7 @@ QString plainTextToHtml(const QString& plainText);
  * @param html string in HTML format
  * @return stripped text
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 QString htmlToPlainText(const QString& html);
 
 /**
@@ -160,7 +160,7 @@ QString htmlToPlainText(const QString& html);
  * @return @c true if the heuristic thinks it's HTML, @c false
  * if thinks it is plain text
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 bool isHtml(const QString& str);
 
 /**
@@ -172,7 +172,7 @@ bool isHtml(const QString& str);
  * @return @c true if the heuristic thinks it contains markup, @c false
  * if thinks it is markup-free plain text
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 bool stringContainsMarkup(const QString& str);
 
 /**
@@ -184,7 +184,7 @@ bool stringContainsMarkup(const QString& str);
  * @param str a string with unknown content
  * @return string as HTML (as long as the heuristics work)
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 QString normalize(const QString& str);
 
 /**
@@ -205,7 +205,7 @@ QString normalize(const QString& str);
  *        tag @c str was read from.
  * @return string as HTML (as long as the heuristics work)
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 QString normalize(const QString& str, bool isCDATA, bool containsMarkup);
 
 /**
@@ -216,7 +216,7 @@ QString normalize(const QString& str, bool isCDATA, bool containsMarkup);
  * @param str the string to parse the person from.
  * @return a Person object containing the parsed information.
  */
-KDE_EXPORT
+SYNDICATION_EXPORT
 PersonPtr personFromString(const QString& str);
         
 } // namespace Syndication

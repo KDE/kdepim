@@ -14,7 +14,7 @@
 #include <libsyndication/global.h>
 #include <libsyndication/sharedptr.h>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #include <QtCore/QObject>
 
@@ -76,7 +76,7 @@ typedef SharedPtr<Feed> FeedPtr;
  * }
  * \endcode
  */
-class KDE_EXPORT Loader : public QObject
+class SYNDICATION_EXPORT Loader : public QObject
 {
     Q_OBJECT
     

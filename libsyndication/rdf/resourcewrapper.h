@@ -22,7 +22,7 @@
 #ifndef LIBSYNDICATION_RDF_RESOURCEWRAPPER_H
 #define LIBSYNDICATION_RDF_RESOURCEWRAPPER_H
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #include <libsyndication/sharedptr.h>
 
@@ -38,7 +38,7 @@ typedef SharedPtr<Resource> ResourcePtr;
  *
  * @author Frank Osterfeld
  */
-class KDE_EXPORT ResourceWrapper
+class SYNDICATION_EXPORT ResourceWrapper
 {
     public:
         /**

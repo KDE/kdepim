@@ -40,7 +40,7 @@ typedef SharedPtr<Sequence> SequencePtr;
  * of RDF nodes. (opposed to the usually unordered graph
  * structure)
  */
-class KDE_EXPORT Sequence : public Resource
+class SYNDICATION_EXPORT Sequence : public Resource
 {
     public:
         

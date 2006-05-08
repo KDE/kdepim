@@ -42,7 +42,7 @@ namespace Atom {
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Content : public ElementWrapper
+class SYNDICATION_EXPORT Content : public ElementWrapper
 {
     public:
 

@@ -41,7 +41,7 @@ typedef SharedPtr<Resource> ResourcePtr;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT ModelMaker
+class SYNDICATION_EXPORT ModelMaker
 {
     public:
     

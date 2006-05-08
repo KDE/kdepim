@@ -34,7 +34,7 @@ namespace RDF {
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT TextInput : public ResourceWrapper
+class SYNDICATION_EXPORT TextInput : public ResourceWrapper
 {
     
     public:

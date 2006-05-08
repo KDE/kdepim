@@ -41,7 +41,7 @@ namespace RDF {
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT SyndicationInfo : public ResourceWrapper
+class SYNDICATION_EXPORT SyndicationInfo : public ResourceWrapper
 {
     public:
         

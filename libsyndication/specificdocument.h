@@ -22,7 +22,7 @@
 #ifndef LIBSYNDICATION_SPECIFICDOCUMENT_H
 #define LIBSYNDICATION_SPECIFICDOCUMENT_H
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #include <libsyndication/sharedptr.h>
 
@@ -47,7 +47,7 @@ typedef SharedPtr<SpecificDocument> SpecificDocumentPtr;
  *
  * @author Frank Osterfeld
  */
-class KDE_EXPORT SpecificDocument
+class SYNDICATION_EXPORT SpecificDocument
 {
     public:
 

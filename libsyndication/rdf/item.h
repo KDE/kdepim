@@ -45,7 +45,7 @@ class Model;
  * 
  * @author Frank Osterfeld
  */
-class KDE_EXPORT Item : public ResourceWrapper, public SpecificItem
+class SYNDICATION_EXPORT Item : public ResourceWrapper, public SpecificItem
 {
     
     public:

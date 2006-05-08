@@ -25,7 +25,7 @@
 
 #include <libsyndication/sharedptr.h>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 class QByteArray;
 class QDomDocument;
@@ -46,7 +46,7 @@ namespace Syndication {
  *
  * @author Frank Osterfeld
  */
-class KDE_EXPORT DocumentSource
+class SYNDICATION_EXPORT DocumentSource
 {
     public:
 
