@@ -34,6 +34,7 @@
 #define __KLEO_GNUPGPROCESSBASE_H__
 
 #include <kprocess.h>
+#include <kdepim_export.h>
 
 namespace Kleo {
 
@@ -45,7 +46,7 @@ namespace Kleo {
    *
    * @author Marc Mutz <mutz@kde.org>
    */
-  class GnuPGProcessBase : public KProcess {
+  class KLEO_EXPORT GnuPGProcessBase : public KProcess {
     Q_OBJECT
   public:
     GnuPGProcessBase( QObject * parent=0 );

@@ -87,6 +87,8 @@
 #include <kio/job.h>
 #include <kio/netaccess.h>
 #include <kstdaccel.h>
+#include <kstdaction.h>
+#include <ktoggleaction.h>
 #include <kxmlguifactory.h>
 
 // Qt

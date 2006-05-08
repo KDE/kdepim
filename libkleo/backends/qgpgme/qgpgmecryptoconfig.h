@@ -38,6 +38,7 @@
 #include <qstringlist.h>
 #include <qobject.h>
 #include <qvariant.h>
+#include <kdepim_export.h>
 class KProcIO;
 
 class QGpgMECryptoConfigComponent;
@@ -46,7 +47,7 @@ class QGpgMECryptoConfigEntry;
  * CryptoConfig implementation around the gpgconf command-line tool
  * For method docu, see kleo/cryptoconfig.h
  */
-class QGpgMECryptoConfig : public QObject, public Kleo::CryptoConfig {
+class KLEO_EXPORT QGpgMECryptoConfig : public QObject, public Kleo::CryptoConfig {
 
   Q_OBJECT
 public:
