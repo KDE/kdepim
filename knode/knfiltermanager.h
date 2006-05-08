@@ -18,7 +18,7 @@
 #include <qglobal.h>
 #include <QList>
 
-#include <kaction.h>
+#include <kactionmenu.h>
 
 namespace KNode {
 class FilterListWidget;

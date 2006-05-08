@@ -123,7 +123,7 @@ QFile* KNLoadHelper::getFile( const QString &dialogTitle )
   if (url.isEmpty())
     return 0;
 
-  l_astPath = url.url(-1);
+  l_astPath = url.url( KUrl::RemoveTrailingSlash );
   l_astPath.truncate(l_astPath.length()-url.fileName().length());
 
   return setURL(url);

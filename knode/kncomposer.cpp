@@ -58,8 +58,10 @@ using KRecentAddress::RecentAddresses;
 #include <kxmlguifactory.h>
 #include <kstatusbar.h>
 #include <klocale.h>
+#include <kselectaction.h>
 #include <spellingfilter.h>
 #include <kstdguiitem.h>
+#include <ktoggleaction.h>
 
 #include <kapplication.h>
 #include "kngroupselectdialog.h"
@@ -331,7 +333,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
 
-  createGUI("kncomposerui.rc",  false);
+  createGUI("kncomposerui.rc");
 
   //---------------------------------- </Actions> ----------------------------------------
 
@@ -415,7 +417,7 @@ KNComposer::~KNComposer()
 
 int KNComposer::listOfResultOfCheckWord( const QStringList & lst , const QString & selectWord)
 {
-    createGUI("kncomposerui.rc",  false);
+    createGUI("kncomposerui.rc");
     unplugActionList("spell_result" );
     qDeleteAll( m_listAction );
     m_listAction.clear();

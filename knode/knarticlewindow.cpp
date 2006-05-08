@@ -18,6 +18,7 @@
 #include <kstdaction.h>
 #include <kconfig.h>
 #include <kaction.h>
+#include <kactioncollection.h>
 
 #include "knarticle.h"
 #include "articlewidget.h"

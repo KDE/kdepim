@@ -29,8 +29,11 @@
 #include <QHBoxLayout>
 
 #include <kaction.h>
+#include <kactioncollection.h>
+#include <kactionmenu.h>
 #include <kaddrbook.h>
 #include <kapplication.h>
+#include <kascii.h>
 #include <kbookmarkmanager.h>
 #include <kcharsets.h>
 #include <khtml_part.h>
@@ -41,13 +44,15 @@
 #include <kmessagebox.h>
 #include <kmimetype.h>
 #include <krun.h>
+#include <kselectaction.h>
 #include <kstandarddirs.h>
+#include <kstdaction.h>
 #include <ktempfile.h>
+#include <ktoggleaction.h>
 #include <kurl.h>
 #include <kxmlguifactory.h>
 
 #include <libemailfunctions/email.h>
-#include <libemailfunctions/kasciistringtools.h>
 
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>
@@ -101,7 +106,7 @@ ArticleWidget::ArticleWidget( QWidget *parent,
   QHBoxLayout *box = new QHBoxLayout( this );
   box->setMargin( 0 );
   box->setSpacing( 0 );
-  mViewer = new KHTMLPart( this, "mViewer" );
+  mViewer = new KHTMLPart( this );
   box->addWidget( mViewer->widget() );
   mViewer->widget()->setFocusPolicy( Qt::WheelFocus );
   mViewer->setPluginsEnabled( false );
@@ -867,7 +872,7 @@ void ArticleWidget::displayAttachment( KMime::Content *att, int partNum )
     }
   } else { // icon
     QByteArray mimetype = ct->mimeType();
-    KPIM::kAsciiToLower( mimetype.data() );
+    kAsciiToLower( mimetype.data() );
     QString iconName = KMimeType::mimeType( mimetype )->icon( QString() );
     QString iconFile = KGlobal::instance()->iconLoader()->iconPath( iconName, K3Icon::Desktop );
     html += "<div><a href=\"" + href + "\"><img src=\"" +

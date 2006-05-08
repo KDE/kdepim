@@ -24,6 +24,7 @@
 #include <QSplitter>
 #include <ktoolbar.h>
 
+#include <kactioncollection.h>
 #include <kinputdialog.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
@@ -38,7 +39,9 @@
 #include <kcmdlineargs.h>
 #include <k3listviewsearchline.h>
 #include <khbox.h>
+#include <kselectaction.h>
 #include <kstdaccel.h>
+#include <ktoggleaction.h>
 #include <kxmlguiclient.h>
 #include <kxmlguifactory.h>
 
@@ -464,7 +467,7 @@ void KNMainWidget::openURL(const KUrl &url)
     bool isMID=decodedUrl.contains('@' );
 
     if (!isMID) {
-      QString groupname=url.path(-1);
+      QString groupname=url.path( KUrl::RemoveTrailingSlash );
       while(groupname.startsWith("/"))
         groupname.remove(0,1);
       Q3ListViewItem *item=0;

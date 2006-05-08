@@ -46,8 +46,7 @@
 typedef KParts::GenericFactory< KNodePart > KNodeFactory;
 K_EXPORT_COMPONENT_FACTORY( libknodepart, KNodeFactory )
 
-KNodePart::KNodePart( QWidget *parentWidget, const char *widgetName,
-                      QObject *parent, const char */*name*/, const QStringList &)
+KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QStringList &)
   : KParts::ReadOnlyPart( parent ),
   mParentWidget( parentWidget )
 {
@@ -67,7 +66,6 @@ KNodePart::KNodePart( QWidget *parentWidget, const char *widgetName,
 
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget(parentWidget);
-  canvas->setObjectName( widgetName );
   canvas->setFocusPolicy( Qt::ClickFocus );
   setWidget(canvas);
 
