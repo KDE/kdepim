@@ -56,6 +56,7 @@
 #include <kresources/selectdialog.h>
 #include <kstandarddirs.h>
 #include <kstatusbar.h>
+#include <kstdaction.h>
 #include <kstdguiitem.h>
 #include <kxmlguiclient.h>
 #include <ktoolbar.h>

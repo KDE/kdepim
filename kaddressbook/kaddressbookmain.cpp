@@ -26,6 +26,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstatusbar.h>
+#include <kstdaction.h>
 
 #include <libkdepim/statusbarprogresswidget.h>
 #include <libkdepim/progressdialog.h>
@@ -68,7 +69,7 @@ KAddressBookMain::KAddressBookMain( const QString &file )
 
   setStandardToolBarMenuEnabled( true );
 
-  createGUI( "kaddressbookui.rc", false );
+  createGUI( "kaddressbookui.rc" );
 
   resize( 400, 300 ); // initial size
   setAutoSaveSettings();
@@ -161,7 +162,7 @@ void KAddressBookMain::configureToolbars()
 
 void KAddressBookMain::newToolbarConfig()
 {
-  createGUI( "kaddressbookui.rc", false );
+  createGUI( "kaddressbookui.rc" );
   applyMainWindowSettings( KGlobal::config(), "MainWindow" );
 }
 

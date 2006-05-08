@@ -44,8 +44,7 @@
 typedef KParts::GenericFactory< KAddressbookPart > KAddressbookFactory;
 K_EXPORT_COMPONENT_FACTORY( libkaddressbookpart, KAddressbookFactory )
 
-KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetName,
-                                    QObject *parent, const char *name,
+KAddressbookPart::KAddressbookPart( QWidget *parentWidget, QObject *parent,
                                     const QStringList & )
   : DCOPObject( "KAddressBookIface" ), KParts::ReadOnlyPart( parent )
 {
@@ -53,7 +52,6 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, const char *widgetNam
 
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget( parentWidget );
-  canvas->setObjectName( widgetName );
   canvas->setFocusPolicy( Qt::ClickFocus );
   setWidget( canvas );
 

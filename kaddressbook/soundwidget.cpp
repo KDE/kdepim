@@ -22,7 +22,6 @@
 */
 
 #include <kabc/sound.h>
-#include <kaudioplayer.h>
 #include <kdebug.h>
 #include <kdialog.h>
 #include <kiconloader.h>
@@ -30,6 +29,7 @@
 #include <klocale.h>
 #include <ktempfile.h>
 #include <kurlrequester.h>
+#include <phonon/simpleplayer.h>
 
 #include <qcheckbox.h>
 #include <qlabel.h>
@@ -133,7 +133,8 @@ void SoundWidget::playSound()
   tmp.file()->write( mSound.data() );
   tmp.close();
 
-  KAudioPlayer::play( tmp.name() );
+  Phonon::SimplePlayer* player = new Phonon::SimplePlayer( this );
+  player->play( tmp.name() );
 
   // we can't remove the sound file from within the program, because
   // KAudioPlay uses a async dcop call... :(

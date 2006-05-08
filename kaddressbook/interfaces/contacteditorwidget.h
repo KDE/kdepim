@@ -132,8 +132,7 @@ class ContactEditorWidgetFactory : public KLibFactory
     virtual QString pageIdentifier() const = 0;
 
   protected:
-    virtual QObject* createObject( QObject*, const char*, const char*,
-                                   const QStringList & )
+    virtual QObject* createObject( QObject*, const char*, const QStringList & )
     {
       return 0;
     }

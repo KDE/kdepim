@@ -166,7 +166,7 @@ class XXPortFactory : public KLibFactory
                                   const char *name = 0 ) = 0;
 
   protected:
-    virtual QObject* createObject( QObject*, const char*, const char*,
+    virtual QObject* createObject( QObject*, const char*,
                                    const QStringList & )
     {
       return 0;
