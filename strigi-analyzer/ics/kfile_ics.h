@@ -1,5 +1,5 @@
-/* This file is part of the KDE project
- * Copyright (C) 2002 Shane Wright <me@shanewright.co.uk>
+  /* This file is part of the KDE project
+ * Copyright (C) 2004 Bram Schoenmakers <bramschoenmakers@kde.nl>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public
@@ -17,21 +17,20 @@
  *
  */
 
-#ifndef KFILE_VCF_H
-#define KFILE_VCF_H
+#ifndef KFILE_ICS_H
+#define KFILE_ICS_H
 
 #include <kfilemetainfo.h>
 
 class QStringList;
 
-class KVcfPlugin: public KFilePlugin
+class ICSPlugin : public KFilePlugin
 {
-    Q_OBJECT
-    
+  Q_OBJECT
 public:
-    KVcfPlugin( QObject *parent, const QStringList& args );
-    
-    virtual bool readInfo( KFileMetaInfo& info, uint what);
+  ICSPlugin( QObject *parent, const QStringList& args );
+
+  virtual bool readInfo( KFileMetaInfo& info, uint what );
 };
 
 #endif

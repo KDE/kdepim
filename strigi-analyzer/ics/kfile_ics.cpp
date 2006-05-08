@@ -33,10 +33,9 @@ using namespace KCal;
 typedef KGenericFactory<ICSPlugin> ICSFactory;
 K_EXPORT_COMPONENT_FACTORY(kfile_ics, ICSFactory( "kfile_ics" ))
 
-ICSPlugin::ICSPlugin( QObject *parent, const char *name, const QStringList& args )
+ICSPlugin::ICSPlugin( QObject *parent, const QStringList& args )
   : KFilePlugin( parent, args )
 {
-  setObjectName(name);
   KFileMimeTypeInfo* info = addMimeTypeInfo( "text/calendar" ); //TODO: vcs !!
 
   KFileMimeTypeInfo::GroupInfo* group = 0L;
