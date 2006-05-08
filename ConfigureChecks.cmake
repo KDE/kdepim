@@ -5,29 +5,16 @@ include(CheckFunctionExists)
 include(CheckLibraryExists)
 include(CheckPrototypeExists)
 include(CheckTypeSize)
-
+include(MacroBoolTo01)
 # The FindKDE4.cmake module sets _KDE4_PLATFORM_DEFINITIONS with
 # definitions like _GNU_SOURCE that are needed on each platform.
 set(CMAKE_REQUIRED_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS})
 
-if(KDE4_KDEPIM_NEW_DISTRLISTS)
-	set(KDEPIM_NEW_DISTRLISTS 1)
-else(KDE4_KDEPIM_NEW_DISTRLISTS)
-	set(KDEPIM_NEW_DISTRLISTS 0)
-endif(KDE4_KDEPIM_NEW_DISTRLISTS)
-
-if(SASL2_FOUND)
-	set(HAVE_LIBSASL2 1)
-else(SASL2_FOUND)
-	set(HAVE_LIBSASL2 0)
-endif(SASL2_FOUND)
+macro_bool_to_01(KDE4_KDEPIM_NEW_DISTRLISTS KDEPIM_NEW_DISTRLISTS)
+macro_bool_to_01(SASL2_FOUND HAVE_LIBSASL2)
 
 OPTION(WITH_INDEXLIB "Enable full-text indexing in KMail." OFF)
-if(WITH_INDEXLIB)
-	set(HAVE_INDEXLIB 1)
-else(WITH_INDEXLIB)
-	set(HAVE_INDEXLIB 0)
-endif(WITH_INDEXLIB)
+macro_bool_to_01(WITH_INDEXLIB HAVE_INDEXLIB)
 
 #now check for dlfcn.h using the cmake supplied CHECK_include_FILE() macro
 # If definitions like -D_GNU_SOURCE are needed for these checks they
