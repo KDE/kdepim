@@ -64,7 +64,7 @@ class CardViewFactory : public ViewFactory
 };
 
 extern "C" {
-  void *init_libkaddrbk_cardview()
+  KDE_EXPORT void *init_libkaddrbk_cardview()
   {
     return ( new CardViewFactory );
   }

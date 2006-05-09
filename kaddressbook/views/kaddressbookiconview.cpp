@@ -60,7 +60,7 @@ class IconViewFactory : public ViewFactory
 };
 
 extern "C" {
-  void *init_libkaddrbk_iconview()
+  KDE_EXPORT void *init_libkaddrbk_iconview()
   {
     return ( new IconViewFactory );
   }

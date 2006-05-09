@@ -47,7 +47,7 @@
 #include "cryptowidget.h"
 
 extern "C" {
-  void *init_libkaddrbk_cryptosettings()
+  KDE_EXPORT void *init_libkaddrbk_cryptosettings()
   {
     return ( new CryptoWidgetFactory );
   }

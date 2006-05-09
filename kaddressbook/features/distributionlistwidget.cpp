@@ -77,7 +77,7 @@ class DistributionListFactory : public KAB::ExtensionFactory
 };
 
 extern "C" {
-  void *init_libkaddrbk_distributionlist()
+  KDE_EXPORT void *init_libkaddrbk_distributionlist()
   {
     return ( new DistributionListFactory );
   }

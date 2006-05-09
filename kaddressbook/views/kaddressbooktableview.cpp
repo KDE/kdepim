@@ -82,7 +82,7 @@ class TableViewFactory : public ViewFactory
 };
 
 extern "C" {
-  void *init_libkaddrbk_tableview()
+  KDE_EXPORT void *init_libkaddrbk_tableview()
   {
     return ( new TableViewFactory );
   }

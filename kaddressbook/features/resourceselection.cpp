@@ -399,7 +399,7 @@ class ResourceSelectionFactory : public KAB::ExtensionFactory
 };
 
 extern "C" {
-  void *init_libkaddrbk_resourceselection()
+  KDE_EXPORT void *init_libkaddrbk_resourceselection()
   {
     return ( new ResourceSelectionFactory );
   }
