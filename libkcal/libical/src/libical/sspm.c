@@ -217,7 +217,10 @@ char* sspm_value(char* line)
 
     /* Find the first colon and the next semicolon */
 
+    value[0] = 0;
     c = strchr(line,':');
+    if (!c)
+	return value;
     s = strchr(c,';');
 
     /* Skip the colon */
