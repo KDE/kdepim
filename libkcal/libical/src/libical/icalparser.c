@@ -1022,7 +1022,7 @@ icalcomponent* icalparser_clean(icalparser* parser)
 	parser->root_component = pvl_pop(parser->components);
 	tail=pvl_data(pvl_tail(parser->components));
 
-	if(tail != 0){
+	if(tail != 0 && parser->root_component != NULL){
 	    if(icalcomponent_get_parent(parser->root_component)!=0){
 		icalerror_warn("icalparser_clean is trying to attach a component for the second time");
 	    } else {
