@@ -32,7 +32,7 @@ typedef KRES::PluginFactory<ResourceXMLRPC, ResourceXMLRPCConfig> XMLRPCFactory;
 // Problem: How to insert the catalogue!
 extern "C"
 {
-  void *init_kcal_xmlrpc()
+  KDE_EXPORT void *init_kcal_xmlrpc()
   {
     KGlobal::locale()->insertCatalog( "kres_xmlrpc" );
     return new XMLRPCFactory;

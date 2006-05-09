@@ -32,7 +32,7 @@ typedef KRES::PluginFactory< ResourceFeaturePlan, ResourceFeaturePlanConfig > Fe
 // Problem: How to insert the catalogue!
 extern "C"
 {
-  void* init_kcal_resourcefeatureplan()
+  KDE_EXPORT void* init_kcal_resourcefeatureplan()
   {
     KGlobal::locale()->insertCatalog( "kres_featureplan" );
     return new FeatureplanFactory;

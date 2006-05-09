@@ -30,7 +30,7 @@ typedef KRES::PluginFactory< ResourceSlox, ResourceSloxConfig > SloxFactory;
 
 extern "C"
 {
-  void *init_kabc_slox()
+  KDE_EXPORT void *init_kabc_slox()
   {
     KGlobal::locale()->insertCatalog( "libkcal" );
     KGlobal::locale()->insertCatalog( "kabc_slox" );

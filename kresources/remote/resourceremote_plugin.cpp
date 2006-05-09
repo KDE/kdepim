@@ -32,7 +32,7 @@ typedef KRES::PluginFactory<ResourceRemote,ResourceRemoteConfig> RemoteFactory;
 // Problem: How do I insert the catalogue???
 extern "C"
 {
-  void *init_kcal_remote()
+  KDE_EXPORT void *init_kcal_remote()
   {
     KGlobal::locale()->insertCatalog( "libkcal" );
     KGlobal::locale()->insertCatalog( "kres_remote" );

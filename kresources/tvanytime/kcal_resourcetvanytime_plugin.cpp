@@ -31,7 +31,7 @@ typedef KRES::PluginFactory< ResourceTVAnytime, ResourceTVAnytimeConfig > TVAnyt
 // Problem: How do I insert the catalogue???
 extern "C"
 {
-  void *init_kcal_tvanytime()
+  KDE_EXPORT void *init_kcal_tvanytime()
   {
     KGlobal::locale()->insertCatalog( "libkcal" );
     KGlobal::locale()->insertCatalog( "kres_tvanytime" );

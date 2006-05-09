@@ -31,7 +31,7 @@ typedef KRES::PluginFactory<KCalResourceSlox,KCalResourceSloxConfig> SLOXFactory
 // Problem: How do I insert the catalogue???
 extern "C"
 {
-  void *init_kcal_slox()
+  KDE_EXPORT void *init_kcal_slox()
   {
     KGlobal::locale()->insertCatalog( "libkcal" );
     KGlobal::locale()->insertCatalog( "kabc_slox" );

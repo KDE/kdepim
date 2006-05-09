@@ -31,7 +31,7 @@ typedef KRES::PluginFactory< ResourceGroupwise, ResourceGroupwiseConfig > Groupw
 // Problem: How do I insert the catalogue???
 extern "C"
 {
-  void *init_kcal_groupwise()
+  KDE_EXPORT void *init_kcal_groupwise()
   {
     KGlobal::locale()->insertCatalog( "libkcal" );
     KGlobal::locale()->insertCatalog( "kres_groupwise" );

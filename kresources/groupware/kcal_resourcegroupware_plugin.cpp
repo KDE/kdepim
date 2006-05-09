@@ -31,7 +31,7 @@ typedef KRES::PluginFactory<ResourceGroupware, ResourceGroupwareConfig> Groupwar
 
 extern "C"
 {
-  void *init_kcal_groupware()
+  KDE_EXPORT void *init_kcal_groupware()
   {
     KGlobal::locale()->insertCatalog( "libkcal" );
     KGlobal::locale()->insertCatalog( "kres_groupware" );

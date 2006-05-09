@@ -33,7 +33,7 @@ typedef KRES::PluginFactory< ResourceGroupDav, ResourceGroupwareBaseConfig > Gro
 // Problem: How do I insert the catalogue???
 extern "C"
 {
-  void *init_kabc_groupdav()
+  KDE_EXPORT void *init_kabc_groupdav()
   {
     KGlobal::locale()->insertCatalog( "kdepimresources" );
     KGlobal::locale()->insertCatalog( "kres_groupdav" );

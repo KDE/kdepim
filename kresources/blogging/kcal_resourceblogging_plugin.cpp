@@ -32,7 +32,7 @@ typedef KRES::PluginFactory< ResourceBlogging, ResourceBloggingConfig > Blogging
 
 extern "C"
 {
-  void *init_kcal_blogging()
+  KDE_EXPORT void *init_kcal_blogging()
   {
     KGlobal::locale()->insertCatalog( "kdepimresources" );
     KGlobal::locale()->insertCatalog( "kres_blogging" );
