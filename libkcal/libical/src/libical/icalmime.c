@@ -103,7 +103,7 @@ void* icalmime_text_end_part(void* part)
     struct text_part* impl = ( struct text_part*) part;
 
     icalmemory_add_tmp_buffer(impl->buf);
-    free(impl);
+    /* What for? free(impl); */
 
     return impl->buf;
 }
