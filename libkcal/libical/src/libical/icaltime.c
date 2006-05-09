@@ -178,7 +178,7 @@ icaltime_from_timet(const time_t tm, const int is_date)
  */
 struct icaltimetype 
 icaltime_from_timet_with_zone(const time_t tm, const int is_date,
-	const icaltimezone *zone)
+	icaltimezone *zone)
 {
     struct icaltimetype tt = icaltime_null_time();
     struct tm t;
@@ -223,7 +223,7 @@ icaltime_from_timet_with_zone(const time_t tm, const int is_date,
  * 
  * Returns the current time in the given timezone, as an icaltimetype.
  */
-struct icaltimetype icaltime_current_time_with_zone(const icaltimezone *zone)
+struct icaltimetype icaltime_current_time_with_zone(icaltimezone *zone)
 {
     return icaltime_from_timet_with_zone (time (NULL), 0, zone);
 }
@@ -275,7 +275,7 @@ time_t icaltime_as_timet(const struct icaltimetype tt)
  *	time is simply returned as time_t in its native timezone.
  */
 time_t icaltime_as_timet_with_zone(const struct icaltimetype _tt,
-	const icaltimezone *zone)
+	icaltimezone *zone)
 {
     struct icaltimetype tt = _tt;
     struct tm stm;
@@ -867,7 +867,7 @@ struct icaltimetype icaltime_convert_to_zone(const struct icaltimetype tt,
 	return ret;
 }
 
-const icaltimezone *
+icaltimezone *
 icaltime_get_timezone(const struct icaltimetype t) {
 
 	return t.zone;
@@ -890,7 +890,7 @@ icaltime_get_tzid(const struct icaltimetype t) {
  *	then you should use icaltime_convert_to_timezone instead.
  */
 struct icaltimetype
-icaltime_set_timezone(struct icaltimetype *t, const icaltimezone *zone) {
+icaltime_set_timezone(struct icaltimetype *t, icaltimezone *zone) {
 
 	/* If it's a date do nothing */
 	if (t->is_date) {

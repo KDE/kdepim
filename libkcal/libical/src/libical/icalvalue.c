@@ -53,7 +53,7 @@
 #define strcasecmp    stricmp
 #endif
 
-#if _MAC_OS_
+#ifdef _MAC_OS_
 #include "icalmemory_strdup.h"
 #endif
 
