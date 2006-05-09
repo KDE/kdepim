@@ -26,7 +26,7 @@ using namespace KCal;
 
 extern "C"
 {
-  void *init_kcal_localdir()
+  KDE_EXPORT void *init_kcal_localdir()
   {
     return new KRES::PluginFactory<ResourceLocalDir,ResourceLocalDirConfig>();
   }
