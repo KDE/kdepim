@@ -781,7 +781,7 @@ static int input YY_PROTO(( YY_ONLY_ARG ));
 /* %* */
 #endif
 
-#if YY_STACK_USED
+#ifdef YY_STACK_USED
 #ifndef YY_REENTRANT
 /* %c */
 #ifndef ssIN_HEADER
@@ -1858,10 +1858,10 @@ YY_DECL_LAST_ARG
 	b->yy_fill_buffer = 1;
 
 /* %- */
-#if YY_ALWAYS_INTERACTIVE
+#ifdef YY_ALWAYS_INTERACTIVE
 	b->yy_is_interactive = 1;
 #else
-#if YY_NEVER_INTERACTIVE
+#ifdef YY_NEVER_INTERACTIVE
 	b->yy_is_interactive = 0;
 #else
 	b->yy_is_interactive = file ? (isatty( fileno(file) ) > 0) : 0;
@@ -2454,7 +2454,7 @@ YY_DECL_LAST_ARG
 	free( (char *) ptr );	/* see yy_flex_realloc() for (char *) cast */
 	}
 
-#if YY_MAIN
+#ifdef YY_MAIN
 int main()
 	{
 

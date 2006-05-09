@@ -978,11 +978,11 @@ case 9:
     break;
 case 10:
 #line 89 "icalssyacc.y"
-{ssyacc_add_where(yyextra,yyvsp[-2].v_string,ICALGAUGECOMPARE_ISNULL,""); }
+{ssyacc_add_where(yyextra,yyvsp[-2].v_string,ICALGAUGECOMPARE_ISNULL,(char *)""); }
     break;
 case 11:
 #line 90 "icalssyacc.y"
-{ssyacc_add_where(yyextra,yyvsp[-3].v_string,ICALGAUGECOMPARE_ISNOTNULL,""); }
+{ssyacc_add_where(yyextra,yyvsp[-3].v_string,ICALGAUGECOMPARE_ISNOTNULL,(char *)""); }
     break;
 case 12:
 #line 91 "icalssyacc.y"
