@@ -50,7 +50,7 @@ DFARS 252.227-7013 or 48 CFR 52.227-19, as applicable.
 
 
 /* debugging utilities */
-#if __DEBUG
+#ifdef __DEBUG
 #define DBG_(x) printf x
 #else
 #define DBG_(x)
@@ -135,14 +135,14 @@ static int ObjStackTop;
 
 
 /* A helpful utility for the rest of the app. */
-#if __CPLUSPLUS__
+#ifdef __CPLUSPLUS__
 extern "C" {
 #endif
 
   /*    static void Parse_Debug(const char *s);*/
     static void yyerror(const char *s);
 
-#if __CPLUSPLUS__
+#ifdef __CPLUSPLUS__
     };
 #endif
 
