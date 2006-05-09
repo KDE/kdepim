@@ -38,6 +38,10 @@
 typedef void* yyscan_t;
 
 int ssparse(yyscan_t );
+int sslex_init();
+int ssset_extra();
+int ss_scan_string();
+int sslex_destroy();
 
 icalgauge* icalgauge_new_from_sql(char* sql, int expand)
 {

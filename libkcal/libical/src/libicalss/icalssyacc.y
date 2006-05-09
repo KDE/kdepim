@@ -49,7 +49,9 @@ static void ssyacc_add_where(struct icalgauge_impl* impl, char* prop,
 static void ssyacc_add_select(struct icalgauge_impl* impl, char* str1);
 static void ssyacc_add_from(struct icalgauge_impl* impl, char* str1);
 static void set_logic(struct icalgauge_impl* impl,icalgaugelogic l);
-void sserror(char *s); /* Don't know why I need this.... */
+void sserror(const char *s); /* Don't know why I need this.... */
+int ssget_extra();
+int sslex();
 
 %}
 
@@ -246,7 +248,7 @@ static void ssyacc_add_from(struct icalgauge_impl* impl, char* str1)
 }
 
 
-void sserror(char *s){
+void sserror(const char *s){
   fprintf(stderr,"Parse error \'%s\'\n", s);
   icalerror_set_errno(ICAL_MALFORMEDDATA_ERROR);
 }

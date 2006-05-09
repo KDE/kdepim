@@ -80,8 +80,9 @@ static void ssyacc_add_where(struct icalgauge_impl* impl, char* prop,
 static void ssyacc_add_select(struct icalgauge_impl* impl, char* str1);
 static void ssyacc_add_from(struct icalgauge_impl* impl, char* str1);
 static void set_logic(struct icalgauge_impl* impl,icalgaugelogic l);
-void sserror(char *s); /* Don't know why I need this.... */
-
+void sserror(const char *s); /* Don't know why I need this.... */
+int ssget_extra();
+int sslex();
 
 #line 56 "icalssyacc.y"
 #ifndef YYSTYPE
@@ -285,7 +286,7 @@ static const short yycheck[] =
 
 /* The parser invokes alloca or malloc; define the necessary symbols.  */
 
-# if YYSTACK_USE_ALLOCA
+# ifdef YYSTACK_USE_ALLOCA
 #  define YYSTACK_ALLOC alloca
 # else
 #  ifndef YYSTACK_USE_ALLOCA
@@ -316,7 +317,7 @@ union yyalloc
 {
   short yyss;
   YYSTYPE yyvs;
-# if YYLSP_NEEDED
+# ifdef YYLSP_NEEDED
   YYLTYPE yyls;
 # endif
 };
@@ -326,7 +327,7 @@ union yyalloc
 
 /* The size of an array large to enough to hold all stacks, each with
    N elements.  */
-# if YYLSP_NEEDED
+# ifdef YYLSP_NEEDED
 #  define YYSTACK_BYTES(N) \
      ((N) * (sizeof (short) + sizeof (YYSTYPE) + sizeof (YYLTYPE))	\
       + 2 * YYSTACK_GAP_MAX)
@@ -422,7 +423,7 @@ while (0)
 /* YYLEX -- calling `yylex' with the right arguments.  */
 
 #if YYPURE
-# if YYLSP_NEEDED
+# ifdef YYLSP_NEEDED
 #  ifdef YYLEX_PARAM
 #   define YYLEX		yylex (&yylval, &yylloc, YYLEX_PARAM)
 #  else
@@ -472,7 +473,7 @@ int yydebug;
    SIZE_MAX < YYSTACK_BYTES (YYMAXDEPTH)
    evaluated with infinite-precision integer arithmetic.  */
 
-#if YYMAXDEPTH == 0
+#if defined(YYMAXDEPTH) && (YYMAXDEPTH == 0)
 # undef YYMAXDEPTH
 #endif
 
@@ -603,7 +604,7 @@ YYSTYPE yylval;						\
 /* Number of parse errors so far.  */			\
 int yynerrs;
 
-#if YYLSP_NEEDED
+#ifdef YYLSP_NEEDED
 # define YY_DECL_VARIABLES			\
 YY_DECL_NON_LSP_VARIABLES			\
 						\
@@ -656,14 +657,14 @@ yyparse (YYPARSE_PARAM_ARG)
   YYSTYPE *yyvs = yyvsa;
   register YYSTYPE *yyvsp;
 
-#if YYLSP_NEEDED
+#ifdef YYLSP_NEEDED
   /* The location stack.  */
   YYLTYPE yylsa[YYINITDEPTH];
   YYLTYPE *yyls = yylsa;
   YYLTYPE *yylsp;
 #endif
 
-#if YYLSP_NEEDED
+#ifdef YYLSP_NEEDED
 # define YYPOPSTACK   (yyvsp--, yyssp--, yylsp--)
 #else
 # define YYPOPSTACK   (yyvsp--, yyssp--)
@@ -675,7 +676,7 @@ yyparse (YYPARSE_PARAM_ARG)
   /* The variables used to return semantic value and location from the
      action routines.  */
   YYSTYPE yyval;
-#if YYLSP_NEEDED
+#ifdef YYLSP_NEEDED
   YYLTYPE yyloc;
 #endif
 
@@ -697,7 +698,7 @@ yyparse (YYPARSE_PARAM_ARG)
 
   yyssp = yyss;
   yyvsp = yyvs;
-#if YYLSP_NEEDED
+#ifdef YYLSP_NEEDED
   yylsp = yyls;
 #endif
   goto yysetstate;
@@ -729,7 +730,7 @@ yyparse (YYPARSE_PARAM_ARG)
 
 	/* Each stack pointer address is followed by the size of the
 	   data in use in that stack, in bytes.  */
-# if YYLSP_NEEDED
+# ifdef YYLSP_NEEDED
 	YYLTYPE *yyls1 = yyls;
 	/* This used to be a conditional around just the two extra args,
 	   but that might be undefined if yyoverflow is a macro.  */
@@ -764,7 +765,7 @@ yyparse (YYPARSE_PARAM_ARG)
 	  goto yyoverflowlab;
 	YYSTACK_RELOCATE (short, yyss);
 	YYSTACK_RELOCATE (YYSTYPE, yyvs);
-# if YYLSP_NEEDED
+# ifdef YYLSP_NEEDED
 	YYSTACK_RELOCATE (YYLTYPE, yyls);
 # endif
 # undef YYSTACK_RELOCATE
@@ -775,7 +776,7 @@ yyparse (YYPARSE_PARAM_ARG)
 
       yyssp = yyss + yysize - 1;
       yyvsp = yyvs + yysize - 1;
-#if YYLSP_NEEDED
+#ifdef YYLSP_NEEDED
       yylsp = yyls + yysize - 1;
 #endif
 
@@ -882,7 +883,7 @@ yybackup:
     yychar = YYEMPTY;
 
   *++yyvsp = yylval;
-#if YYLSP_NEEDED
+#ifdef YYLSP_NEEDED
   *++yylsp = yylloc;
 #endif
 
@@ -922,7 +923,7 @@ yyreduce:
      GCC warning that YYVAL may be used uninitialized.  */
   yyval = yyvsp[1-yylen];
 
-#if YYLSP_NEEDED
+#ifdef YYLSP_NEEDED
   /* Similarly for the default location.  Let the user run additional
      commands if for instance locations are ranges.  */
   yyloc = yylsp[1-yylen];
@@ -1022,7 +1023,7 @@ case 19:
 
   yyvsp -= yylen;
   yyssp -= yylen;
-#if YYLSP_NEEDED
+#ifdef YYLSP_NEEDED
   yylsp -= yylen;
 #endif
 
@@ -1038,7 +1039,7 @@ case 19:
 #endif
 
   *++yyvsp = yyval;
-#if YYLSP_NEEDED
+#ifdef YYLSP_NEEDED
   *++yylsp = yyloc;
 #endif
 
@@ -1167,7 +1168,7 @@ yyerrpop:
     YYABORT;
   yyvsp--;
   yystate = *--yyssp;
-#if YYLSP_NEEDED
+#ifdef YYLSP_NEEDED
   yylsp--;
 #endif
 
@@ -1211,7 +1212,7 @@ yyerrhandle:
   YYDPRINTF ((stderr, "Shifting error token, "));
 
   *++yyvsp = yylval;
-#if YYLSP_NEEDED
+#ifdef YYLSP_NEEDED
   *++yylsp = yylloc;
 #endif
 
@@ -1393,7 +1394,7 @@ static void ssyacc_add_from(struct icalgauge_impl* impl, char* str1)
 }
 
 
-void sserror(char *s){
+void sserror(const char *s){
   fprintf(stderr,"Parse error \'%s\'\n", s);
   icalerror_set_errno(ICAL_MALFORMEDDATA_ERROR);
 }
