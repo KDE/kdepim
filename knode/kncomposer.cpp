@@ -274,11 +274,11 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   //options menu
 
-  a_ctDoPost = new KToggleAction(i18n("Send &News Article"), "filenew", 0 , this,
-                   SLOT(slotToggleDoPost()), actionCollection(), "send_news");
+  a_ctDoPost = new KToggleAction(KIcon("filenew"), i18n("Send &News Article"), actionCollection(), "send_news");
+  connect(a_ctDoPost, SIGNAL(triggered(bool) ), SLOT(slotToggleDoPost()));
 
-  a_ctDoMail = new KToggleAction(i18n("Send E&mail"), "mail_generic" , 0 , this,
-                   SLOT(slotToggleDoMail()), actionCollection(), "send_mail");
+  a_ctDoMail = new KToggleAction(KIcon("mail_generic"), i18n("Send E&mail"), actionCollection(), "send_mail");
+  connect(a_ctDoMail, SIGNAL(triggered(bool) ), SLOT(slotToggleDoMail()));
 
   a_ctSetCharset = new KSelectAction(i18n("Set &Charset"), KShortcut(), actionCollection(), "set_charset");
   a_ctSetCharset->setItems( KGlobal::charsets()->availableEncodingNames() );

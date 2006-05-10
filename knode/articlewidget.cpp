@@ -169,8 +169,8 @@ void ArticleWidget::initActions()
     Qt::Key_X ,this, SLOT(slotToggleFixedFont()), mActionCollection, "view_useFixedFont" );
   mFancyToggle = new KToggleAction( i18n("Fancy Formating"),
     Qt::Key_Y, this, SLOT(slotToggleFancyFormating()), mActionCollection, "view_fancyFormating" );
-  mRot13Toggle = new KToggleAction( i18n("&Unscramble (Rot 13)"), "decrypted", 0 , this,
-    SLOT(slotToggleRot13()), mActionCollection, "view_rot13" );
+  mRot13Toggle = new KToggleAction(KIcon("decrypted"),  i18n("&Unscramble (Rot 13)"), mActionCollection, "view_rot13" );
+  connect(mRot13Toggle, SIGNAL(triggered(bool) ), SLOT(slotToggleRot13()));
   mRot13Toggle->setChecked( false );
 
   QActionGroup *ag = new QActionGroup( this );
