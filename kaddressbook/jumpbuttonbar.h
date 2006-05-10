@@ -25,7 +25,7 @@
 #define JUMPBUTTONBAR_H
 
 #include <qsizepolicy.h>
-#include <qwidget.h>
+#include <QWidget>
 #include <qstringlist.h>
 //Added by qt3to4:
 #include <QResizeEvent>

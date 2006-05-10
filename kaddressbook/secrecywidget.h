@@ -24,7 +24,7 @@
 #ifndef SECRECYWIDGET_H
 #define SECRECYWIDGET_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 namespace KABC { class Secrecy; }
 class KComboBox;

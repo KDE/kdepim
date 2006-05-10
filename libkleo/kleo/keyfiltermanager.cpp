@@ -42,7 +42,7 @@
 #include <kconfig.h>
 
 #include <qapplication.h>
-#include <qregexp.h>
+#include <QRegExp>
 #include <qstringlist.h>
 #include <q3valuevector.h>
 

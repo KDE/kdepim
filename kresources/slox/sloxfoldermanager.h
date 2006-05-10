@@ -20,7 +20,7 @@
 #ifndef SLOXFOLDERMANAGER_H
 #define SLOXFOLDERMANAGER_H
 
-#include <qmap.h>
+#include <QMap>
 #include <qobject.h>
 
 #include <kurl.h>

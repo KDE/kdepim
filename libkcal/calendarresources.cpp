@@ -29,7 +29,7 @@
 #include <stdlib.h>
 
 #include <qdatetime.h>
-#include <qstring.h>
+#include <QString>
 #include <qlist.h>
 //Added by qt3to4:
 

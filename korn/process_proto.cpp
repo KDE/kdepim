@@ -27,7 +27,7 @@
 #include <klocale.h>
 
 #include <qlist.h>
-#include <qmap.h>
+#include <QMap>
 #include <qstringlist.h>
 #include <qvector.h>
 

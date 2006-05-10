@@ -40,7 +40,7 @@
 #include <kcharsets.h>
 
 #include <qtextcodec.h>
-#include <qmap.h>
+#include <QMap>
 #include <qstringlist.h>
 
 #include <ctype.h> // for isdigit

@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-#include <qfile.h>
+#include <QFile>
 
 using namespace std;
 using namespace KMime;

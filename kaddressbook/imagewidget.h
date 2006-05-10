@@ -24,7 +24,7 @@
 #ifndef IMAGEWIDGET_H
 #define IMAGEWIDGET_H
 
-#include <qlabel.h>
+#include <QLabel>
 //Added by qt3to4:
 #include <QDragEnterEvent>
 #include <QMouseEvent>

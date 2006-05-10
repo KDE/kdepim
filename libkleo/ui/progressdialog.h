@@ -34,7 +34,7 @@
 #define __KLEO_PROGRESSDIALOG_H__
 
 #include <q3progressdialog.h>
-#include <qstring.h>
+#include <QString>
 #include <kdepimmacros.h>
 namespace Kleo {
 

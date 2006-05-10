@@ -42,7 +42,7 @@
 
 #include <assert.h>
 #include <ktempfile.h>
-#include <qfile.h>
+#include <QFile>
 #include <stdlib.h>
 #include <qtextcodec.h>
 

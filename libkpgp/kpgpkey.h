@@ -22,7 +22,7 @@
 #include <time.h>
 
 #include <q3cstring.h>
-#include <qstring.h>
+#include <QString>
 #include <qstringlist.h>
 
 //Added by qt3to4:

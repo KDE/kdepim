@@ -34,7 +34,7 @@
 #define __KLEO_JOB_H__
 
 #include <qobject.h>
-#include <qstring.h>
+#include <QString>
 
 class QWidget;
 

@@ -7,7 +7,7 @@
 #include <QHBoxLayout>
 #include <kcursor.h>
 #include <kdebug.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <qlist.h>
 #include <qdatetime.h>
 #include <qtimer.h>
@@ -18,7 +18,7 @@
 #include "maildlg.h"
 #include "progress_dialog_impl.h"
 
-#include <qvariant.h>
+#include <QVariant>
 
 KornSubjectsDlg::SubjectListViewItem::SubjectListViewItem( Q3ListView *parent, KornMailSubject * item)
 	// set the column strings except column 2 (date)

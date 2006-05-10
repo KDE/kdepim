@@ -61,7 +61,7 @@
 #include <ktempfile.h>
 
 #include <qurl.h>
-#include <qdir.h>
+#include <QDir>
 #include <qtextstream.h>
 
 #include <kdepimmacros.h>

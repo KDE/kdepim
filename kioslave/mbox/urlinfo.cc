@@ -22,7 +22,7 @@
 #include <kurl.h>
 
 #include <qfileinfo.h>
-#include <qstring.h>
+#include <QString>
 
 UrlInfo::UrlInfo( const KUrl& url, const UrlType type )
 	: m_type( invalid ),

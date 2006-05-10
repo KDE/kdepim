@@ -51,9 +51,9 @@ extern "C" {
 }
 #endif
 
-#include <qregexp.h>
+#include <QRegExp>
 #include <qbuffer.h>
-#include <qstring.h>
+#include <QString>
 #include <qstringlist.h>
 
 #include <kascii.h>

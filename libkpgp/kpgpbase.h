@@ -19,7 +19,7 @@
 #ifndef KPGPBASE_H
 #define KPGPBASE_H
 
-#include <qstring.h>
+#include <QString>
 #include <q3cstring.h>
 #include <qstringlist.h>
 

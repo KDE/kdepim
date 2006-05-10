@@ -25,7 +25,7 @@
 #include <qicon.h>
 #include <qimage.h>
 #include <q3dragobject.h>
-#include <qcombobox.h>
+#include <QComboBox>
 #include <qpainter.h>
 #include <qbrush.h>
 #include <qevent.h>

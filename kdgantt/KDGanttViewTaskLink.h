@@ -35,8 +35,8 @@
 #ifndef KDGANTTVIEWTASKLINK_H
 #define KDGANTTVIEWTASKLINK_H
 
-#include <qcolor.h>
-#include <qstring.h>
+#include <QColor>
+#include <QString>
 
 #include "kdgantt_qt3_compat.h"
 

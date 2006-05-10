@@ -25,7 +25,7 @@
 #include <kconfigbase.h>
 #include <klocale.h>
 
-#include <qmap.h>
+#include <QMap>
 #include <q3ptrlist.h>
 #include <qvector.h>
 

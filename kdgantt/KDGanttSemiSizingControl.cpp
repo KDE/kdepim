@@ -33,10 +33,10 @@
 
 
 #include "KDGanttSemiSizingControl.h"
-#include <qpushbutton.h>
+#include <QPushButton>
 #include <qpainter.h>
 #include <qbitmap.h>
-#include <qtooltip.h>
+#include <QToolTip>
 #include <qwhatsthis.h>
 /*!
   \class KDGanttSemiSizingControl KDGanttSemiSizingControl.h

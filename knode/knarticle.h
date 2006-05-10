@@ -17,9 +17,9 @@
 
 #include <qstringlist.h>
 #include <qtextstream.h>
-#include <qfile.h>
-#include <qfont.h>
-#include <qcolor.h>
+#include <QFile>
+#include <QFont>
+#include <QColor>
 #include <q3asciidict.h>
 #include <QList>
 

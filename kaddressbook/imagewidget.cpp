@@ -38,13 +38,13 @@
 #include <libsyndication/image.h>
 
 #include <qapplication.h>
-#include <qcheckbox.h>
+#include <QCheckBox>
 #include <q3dragobject.h>
 #include <q3groupbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 #include <qpixmap.h>
-#include <qtooltip.h>
+#include <QToolTip>
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QFrame>

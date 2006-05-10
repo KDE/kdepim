@@ -39,14 +39,14 @@
 #include <kdebug.h>
 
 #include <qfontmetrics.h>
-#include <qtooltip.h>
+#include <QToolTip>
 #include <qrect.h>
 #include <q3header.h>
-#include <qpoint.h>
+#include <QPoint>
 #include <q3ptrlist.h>
 #include <qpainter.h>
-#include <qfont.h>
-#include <qcolor.h>
+#include <QFont>
+#include <QColor>
 #include <qtimer.h>
 #include <q3cstring.h>
 //Added by qt3to4:

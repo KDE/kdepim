@@ -24,7 +24,7 @@
 #ifndef INCSEARCHWIDGET_H
 #define INCSEARCHWIDGET_H
 
-#include <qwidget.h>
+#include <QWidget>
 //Added by qt3to4:
 #include <QKeyEvent>
 

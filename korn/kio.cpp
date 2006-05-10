@@ -46,7 +46,7 @@
 #include<qlist.h>
 #include<qregexp.h>
 #include<qlist.h>
-#include <qvariant.h>
+#include <QVariant>
 #include<qvector.h>
 
 #include<assert.h>

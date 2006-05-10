@@ -27,7 +27,7 @@
 #include <kstringvalidator.h>
 
 #include <qvalidator.h>
-#include <qfile.h>
+#include <QFile>
 #include <qdatetime.h>
 
 #if !defined(__osf__)

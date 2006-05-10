@@ -13,9 +13,9 @@
 */
 
 #include <qgroupbox.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <q3vbox.h>
-#include <qcheckbox.h>
+#include <QCheckBox>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QGridLayout>
@@ -32,7 +32,7 @@
 #include "utilities.h"
 #include "kngroup.h"
 #include "kngrouppropdlg.h"
-#include <qlabel.h>
+#include <QLabel>
 
 
 KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )

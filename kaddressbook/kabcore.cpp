@@ -22,10 +22,10 @@
 */
 
 #include <qclipboard.h>
-#include <qdir.h>
-#include <qfile.h>
-#include <qlayout.h>
-#include <qregexp.h>
+#include <QDir>
+#include <QFile>
+#include <QLayout>
+#include <QRegExp>
 #include <q3vbox.h>
 #include <QSplitter>
 //Added by qt3to4:

@@ -32,12 +32,12 @@
 #include <kdebug.h>
 #include <kdialog.h>
 
-#include <qlayout.h>
+#include <QLayout>
 #include <q3groupbox.h>
-#include <qpushbutton.h>
-#include <qcombobox.h>
+#include <QPushButton>
+#include <QComboBox>
 #include <q3hbox.h>
-#include <qlabel.h>
+#include <QLabel>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QBoxLayout>

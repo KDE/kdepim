@@ -23,11 +23,11 @@
 
 #include <q3groupbox.h>
 #include <q3header.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
+#include <QLabel>
+#include <QLayout>
+#include <QPushButton>
 #include <qtoolbutton.h>
-#include <qstring.h>
+#include <QString>
 #include <QVBoxLayout>
 
 #include <kapplication.h>

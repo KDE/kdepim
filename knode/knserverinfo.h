@@ -15,7 +15,7 @@
 #ifndef KNSERVERINFO_H
 #define KNSERVERINFO_H
 
-#include <qstring.h>
+#include <QString>
 
 class KConfig;
 namespace KWallet {

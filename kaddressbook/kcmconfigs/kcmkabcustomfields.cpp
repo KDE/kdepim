@@ -27,7 +27,7 @@
 
 #include <kstandarddirs.h>
 
-#include <qregexp.h>
+#include <QRegExp>
 
 #include <kdepimmacros.h>
 

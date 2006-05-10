@@ -24,8 +24,8 @@
  *********************************************************************/
 
 #include <qstringlist.h>
-#include <qstring.h>
-#include <qmap.h>
+#include <QString>
+#include <QMap>
 
 /**
  *  @brief encapulate a IMAP command

@@ -38,7 +38,7 @@
 #include <impl/utf8validator.h>
 #include <ksieve/error.h>
 
-#include <qstring.h>
+#include <QString>
 #include <qstringlist.h>
 #include <qtextcodec.h>
 

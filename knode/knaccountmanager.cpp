@@ -14,7 +14,7 @@
 
 #include <stdlib.h>
 
-#include <qdir.h>
+#include <QDir>
 
 #include <kdebug.h>
 #include <ksimpleconfig.h>

@@ -22,7 +22,7 @@
 #define KABC_GW_CONVERTER_H
 
 #include <qdatetime.h>
-#include <qstring.h>
+#include <QString>
 
 #include "soapH.h"
 

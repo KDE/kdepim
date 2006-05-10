@@ -20,7 +20,7 @@
 #define PAB_LIB_HXX
 
 #include <klocale.h>
-#include <qfile.h>
+#include <QFile>
 
 #include "pab_mapihd.h"
 

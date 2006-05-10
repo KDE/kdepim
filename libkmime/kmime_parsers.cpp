@@ -15,7 +15,7 @@
 */
 #include "kmime_parsers.h"
 
-#include <qregexp.h>
+#include <QRegExp>
 #include <QByteArray>
 
 using namespace KMime::Parser;

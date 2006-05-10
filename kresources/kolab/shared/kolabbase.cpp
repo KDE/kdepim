@@ -37,7 +37,7 @@
 #include <libkcal/journal.h>
 #include <libkdepim/kpimprefs.h>
 #include <kdebug.h>
-#include <qfile.h>
+#include <QFile>
 
 using namespace Kolab;
 

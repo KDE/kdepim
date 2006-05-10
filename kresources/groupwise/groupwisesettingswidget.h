@@ -22,7 +22,7 @@
 #ifndef GROUPWISE_SETTINGS_WIDGET_H
 #define GROUPWISE_SETTINGS_WIDGET_H
 
-#include <qmap.h>
+#include <QMap>
 
 class Q3ListViewItem;
 

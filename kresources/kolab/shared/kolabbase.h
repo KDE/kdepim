@@ -36,7 +36,7 @@
 
 #include <qdom.h>
 #include <qdatetime.h>
-#include <qcolor.h>
+#include <QColor>
 
 class QFile;
 

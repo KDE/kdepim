@@ -20,7 +20,7 @@
 #ifndef SLOXFOLDER_H
 #define SLOXFOLDER_H
 
-#include <qstring.h>
+#include <QString>
 #include <kdepimmacros.h>
 
 class K3ListViewItem;

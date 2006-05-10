@@ -15,7 +15,7 @@
 #ifndef KNODE_STATUSFILTER_H
 #define KNODE_STATUSFILTER_H
 
-#include <qcombobox.h>
+#include <QComboBox>
 #include <qbitarray.h>
 
 class QCheckBox;

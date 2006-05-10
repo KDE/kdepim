@@ -21,7 +21,7 @@
 
 #include <kdebug.h>
 
-#include <qlayout.h>
+#include <QLayout>
 #include <qlist.h>
 #include <qvector.h>
 #include <qstringlist.h>

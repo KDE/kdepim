@@ -49,8 +49,8 @@
 #include <kapplication.h>
 #include <dcopclient.h>
 
-#include <qpushbutton.h>
-#include <qlayout.h>
+#include <QPushButton>
+#include <QLayout>
 #include <q3header.h>
 #include <qtimer.h>
 //Added by qt3to4:

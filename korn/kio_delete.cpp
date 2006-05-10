@@ -29,7 +29,7 @@
 #include <kio/scheduler.h>
 
 #include <qlist.h>
-#include <qvariant.h>
+#include <QVariant>
 
 KIO_Delete::KIO_Delete( QObject * parent ) : QObject( parent ),
 	_kio( 0 ),

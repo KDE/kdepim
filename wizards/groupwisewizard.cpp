@@ -34,10 +34,10 @@
 #include <klineedit.h>
 #include <klocale.h>
 
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qspinbox.h>
+#include <QCheckBox>
+#include <QLabel>
+#include <QLayout>
+#include <QSpinBox>
 #include <QGroupBox>
 
 QString serverUrl()

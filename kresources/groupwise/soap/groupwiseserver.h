@@ -24,9 +24,9 @@
 #include <kio/job.h>
 #include <kio/jobclasses.h>
 #include <qapplication.h>
-#include <qmap.h>
+#include <QMap>
 #include <qobject.h>
-#include <qstring.h>
+#include <QString>
 #include <qthread.h>
 
 

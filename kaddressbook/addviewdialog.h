@@ -26,7 +26,7 @@
 
 #include <kdialogbase.h>
 #include <q3dict.h>
-#include <qstring.h>
+#include <QString>
 
 class Q3ButtonGroup;
 class QLineEdit;

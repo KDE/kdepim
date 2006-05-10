@@ -34,7 +34,7 @@
 #include <qdom.h>
 #include <qdatetime.h>
 #include <q3ptrlist.h>
-#include <qregexp.h>
+#include <QRegExp>
 #include <qstringlist.h>
 #include <qtimer.h>
 

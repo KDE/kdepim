@@ -28,7 +28,7 @@
 #include <kdebug.h>
 
 #include <qlist.h>
-#include <qstring.h>
+#include <QString>
 
 KIO_Subjects::KIO_Subjects( QObject * parent )
 	: QObject( parent ),

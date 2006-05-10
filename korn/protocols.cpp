@@ -32,7 +32,7 @@
 #include "kmail_proto.h"
 
 #include <QHash>
-#include <qstring.h>
+#include <QString>
 #include <qstringlist.h>
 
 QHash< QString, Protocol* >* Protocols::protocols = 0;

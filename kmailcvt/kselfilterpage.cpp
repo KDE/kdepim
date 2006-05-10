@@ -17,7 +17,7 @@
 
 #include <kstandarddirs.h>
 #include <q3textedit.h>
-#include <qcheckbox.h> 
+#include <QCheckBox> 
 #include <klocale.h>
 #include "filters.hxx"
 

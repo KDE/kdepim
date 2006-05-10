@@ -23,15 +23,15 @@
 
 #include <q3buttongroup.h>
 #include <q3hbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
+#include <QLabel>
+#include <QLayout>
+#include <QPushButton>
 #include <qradiobutton.h>
-#include <qregexp.h>
-#include <qstring.h>
+#include <QRegExp>
+#include <QString>
 #include <qtoolbutton.h>
-#include <qtooltip.h>
-#include <qwidget.h>
+#include <QToolTip>
+#include <QWidget>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QGridLayout>

@@ -36,7 +36,7 @@ class KUrlRequester;
 class QComboBox;
 class QCheckBox;
 
-#include <qmap.h>
+#include <QMap>
 
 /**
  * This classe contains methods to use in the creation of the protocol configuration box.

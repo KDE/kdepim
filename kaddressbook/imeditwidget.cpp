@@ -21,14 +21,14 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QCheckBox>
+#include <QLabel>
+#include <QLayout>
 #include <qpainter.h>
-#include <qpushbutton.h>
-#include <qstring.h>
+#include <QPushButton>
+#include <QString>
 #include <qtoolbutton.h>
-#include <qtooltip.h>
+#include <QToolTip>
 //Added by qt3to4:
 #include <QGridLayout>
 

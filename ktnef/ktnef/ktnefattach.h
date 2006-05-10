@@ -18,9 +18,9 @@
 #ifndef KTNEFATTACH_H
 #define	KTNEFATTACH_H
 
-#include <qstring.h>
-#include <qmap.h>
-#include <qvariant.h>
+#include <QString>
+#include <QMap>
+#include <QVariant>
 #include <ktnef/ktnefpropertyset.h>
 #include <kdepimmacros.h>
 

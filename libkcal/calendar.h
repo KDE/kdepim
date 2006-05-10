@@ -32,7 +32,7 @@
 #define KCAL_CALENDAR_H
 
 #include <qobject.h>
-#include <qstring.h>
+#include <QString>
 #include <qdatetime.h>
 #include <qlist.h>
 #include <QMultiHash>

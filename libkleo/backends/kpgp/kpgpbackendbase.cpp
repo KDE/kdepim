@@ -43,7 +43,7 @@
 
 #include <klocale.h>
 
-#include <qstring.h>
+#include <QString>
 
 #include "kpgpwrapper.h"
 

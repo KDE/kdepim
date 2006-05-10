@@ -21,9 +21,9 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include <qmap.h>
+#include <QMap>
 #include <qlistview.h>
-#include <qstring.h>
+#include <QString>
 
 KEditListBoxManager::KEditListBoxManager(	QWidget *parent, const char *name,
 						bool checkAtEntering, KEditListBox::Buttons buttons )

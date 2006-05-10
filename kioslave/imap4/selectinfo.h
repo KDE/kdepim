@@ -24,7 +24,7 @@
  *********************************************************************/
 
 #include <qstringlist.h>
-#include <qstring.h>
+#include <QString>
 
 //class handling the info we get on EXAMINE and SELECT
 class imapInfo

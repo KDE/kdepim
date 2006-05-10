@@ -32,8 +32,8 @@
 #include <klineedit.h>
 #include <kdialog.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 //Added by qt3to4:
 #include <QGridLayout>
 

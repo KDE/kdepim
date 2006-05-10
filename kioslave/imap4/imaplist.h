@@ -24,7 +24,7 @@
  *********************************************************************/
 
 #include <qstringlist.h>
-#include <qstring.h>
+#include <QString>
 
 class parseString;
 class imapParser;

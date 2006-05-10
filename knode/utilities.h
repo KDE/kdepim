@@ -17,7 +17,7 @@
 
 #include <kurl.h>
 
-#include <qfile.h>
+#include <QFile>
 
 #include <qglobal.h>
 #include <q3ptrvector.h>

@@ -42,7 +42,7 @@
 #include <kdebug.h>
 #include <kconfig.h>
 
-#include <qfile.h>
+#include <QFile>
 
 SloxItem::SloxItem()
   : status( Invalid )

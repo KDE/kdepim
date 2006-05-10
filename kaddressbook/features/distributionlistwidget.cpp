@@ -24,11 +24,11 @@
 
 #include <q3buttongroup.h>
 #include <q3button.h>
-#include <qcombobox.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QComboBox>
+#include <QLabel>
+#include <QLayout>
 #include <q3listview.h>
-#include <qpushbutton.h>
+#include <QPushButton>
 #include <qradiobutton.h>
 //Added by qt3to4:
 #include <QGridLayout>

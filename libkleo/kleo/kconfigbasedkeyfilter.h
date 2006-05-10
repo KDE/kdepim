@@ -35,9 +35,9 @@
 
 #include "keyfilter.h"
 
-#include <qfont.h>
-#include <qstring.h>
-#include <qcolor.h>
+#include <QFont>
+#include <QString>
+#include <QColor>
 
 #include <gpgmepp/key.h>
 

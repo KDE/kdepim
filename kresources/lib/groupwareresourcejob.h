@@ -24,7 +24,7 @@
 #define KPIM_GROUPWAREJOB_H
 
 #include <qobject.h>
-#include <qstring.h>
+#include <QString>
 #include "folderlister.h"
 
 namespace KPIM {

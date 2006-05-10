@@ -28,8 +28,8 @@
 #include <kio/jobclasses.h>
 #include <kio/scheduler.h>
 
-#include <qstring.h>
-#include <qvariant.h>
+#include <QString>
+#include <QVariant>
 
 KIO_Read::KIO_Read( QObject * parent )
 	: QObject( parent ),

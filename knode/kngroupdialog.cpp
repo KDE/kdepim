@@ -12,10 +12,10 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 #include <qradiobutton.h>
-#include <qcheckbox.h>
+#include <QCheckBox>
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QGroupBox>
@@ -32,7 +32,7 @@
 #include "knnntpaccount.h"
 #include "kngroupdialog.h"
 #include "knglobals.h"
-#include <qpushbutton.h>
+#include <QPushButton>
 
 
 KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :

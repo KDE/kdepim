@@ -21,7 +21,7 @@
 #ifndef KCAL_SCHEDULER_H
 #define KCAL_SCHEDULER_H
 
-#include <qstring.h>
+#include <QString>
 #include <QList>
 
 #include "libkcal_export.h"

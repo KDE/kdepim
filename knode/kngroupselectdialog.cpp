@@ -12,17 +12,17 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qlayout.h>
-#include <qlabel.h>
+#include <QLayout>
+#include <QLabel>
 #include <q3header.h>
-#include <qcheckbox.h>
+#include <QCheckBox>
 
 #include <klocale.h>
 #include <kmessagebox.h>
 
 #include "utilities.h"
 #include "kngroupselectdialog.h"
-#include <qpushbutton.h>
+#include <QPushButton>
 
 
 KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, const QString &act) :

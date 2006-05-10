@@ -24,7 +24,7 @@
  *********************************************************************/
 
 #include <q3ptrlist.h>
-#include <qstring.h>
+#include <QString>
 #include <q3cstring.h>
 #include "rfcdecoder.h"
 

@@ -24,7 +24,7 @@
 #ifndef SELECTIONPAGE_H
 #define SELECTIONPAGE_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 class QGroupBox;
 class QComboBox;

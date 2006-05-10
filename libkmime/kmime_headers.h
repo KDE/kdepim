@@ -24,11 +24,11 @@
 
 #include "kmime_header_parsing.h"
 
-#include <qstring.h>
+#include <QString>
 #include <qstringlist.h>
-#include <qregexp.h>
+#include <QRegExp>
 #include <qdatetime.h>
-#include <qmap.h>
+#include <QMap>
 #include <QList>
 #include <QByteArray>
 

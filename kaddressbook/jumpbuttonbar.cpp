@@ -24,9 +24,9 @@
 #include <qapplication.h>
 #include <q3buttongroup.h>
 #include <qevent.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
-#include <qstring.h>
+#include <QLayout>
+#include <QPushButton>
+#include <QString>
 #include <QStyle>
 #include <QStyleOption>
 //Added by qt3to4:

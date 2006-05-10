@@ -33,7 +33,7 @@
 #ifndef __KSIEVE_ERROR_H__
 #define __KSIEVE_ERROR_H__
 
-#include <qstring.h>
+#include <QString>
 
 #include <kdepimmacros.h>
 

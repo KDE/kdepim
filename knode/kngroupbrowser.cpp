@@ -12,8 +12,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qlayout.h>
-#include <qcheckbox.h>
+#include <QLayout>
+#include <QCheckBox>
 #include <qtimer.h>
 #include <qapplication.h>
 //Added by qt3to4:
@@ -32,8 +32,8 @@
 #include "knconfigmanager.h"
 #include "knnntpaccount.h"
 #include "kngroupbrowser.h"
-#include <qlabel.h>
-#include <qpushbutton.h>
+#include <QLabel>
+#include <QPushButton>
 
 
 KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAccount *a,

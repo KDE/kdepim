@@ -19,7 +19,7 @@ t it will be useful,
  */
 
 #include <qdatetime.h>
-#include <qfile.h>
+#include <QFile>
 
 #include <libkcal/calendarlocal.h>
 #include <libkcal/todo.h>

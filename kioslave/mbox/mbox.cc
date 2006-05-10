@@ -22,7 +22,7 @@
 #include "stat.h"
 #include "urlinfo.h"
 
-#include <qstring.h>
+#include <QString>
 #include <q3cstring.h>
 
 #include <kdebug.h>

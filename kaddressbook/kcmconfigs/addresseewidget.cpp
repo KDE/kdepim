@@ -23,10 +23,10 @@
 
 #include <q3cstring.h>
 #include <q3groupbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 #include <q3listbox.h>
-#include <qpushbutton.h>
+#include <QPushButton>
 //Added by qt3to4:
 #include <QHBoxLayout>
 #include <QGridLayout>

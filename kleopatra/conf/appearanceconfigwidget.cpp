@@ -49,15 +49,15 @@
 #include <kfontdialog.h>
 #include <kcolordialog.h>
 
-#include <qpushbutton.h>
-#include <qlayout.h>
+#include <QPushButton>
+#include <QLayout>
 #include <q3header.h>
-#include <qcolor.h>
-#include <qfont.h>
-#include <qstring.h>
+#include <QColor>
+#include <QFont>
+#include <QString>
 #include <qpainter.h>
-#include <qregexp.h>
-#include <qcheckbox.h>
+#include <QRegExp>
+#include <QCheckBox>
 
 #include <assert.h>
 

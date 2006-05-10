@@ -19,7 +19,7 @@
 #define MIMEIO_H
 
 #include <q3cstring.h>
-#include <qfile.h>
+#include <QFile>
 
 /**
   *@author Sven Carstens

@@ -24,10 +24,10 @@
 #ifndef CONTACTLISTVIEW_H
 #define CONTACTLISTVIEW_H
 
-#include <qcolor.h>
+#include <QColor>
 #include <qpixmap.h>
-#include <qtooltip.h>
-#include <qstring.h>
+#include <QToolTip>
+#include <QString>
 //Added by qt3to4:
 #include <QMouseEvent>
 #include <QDropEvent>

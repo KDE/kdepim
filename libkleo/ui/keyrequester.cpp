@@ -72,12 +72,12 @@
 
 // Qt
 #include <qapplication.h>
-#include <qlayout.h>
-#include <qtooltip.h>
-#include <qstring.h>
+#include <QLayout>
+#include <QToolTip>
+#include <QString>
 #include <qstringlist.h>
-#include <qlabel.h>
-#include <qregexp.h>
+#include <QLabel>
+#include <QRegExp>
 //Added by qt3to4:
 #include <QHBoxLayout>
 

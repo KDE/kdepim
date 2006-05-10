@@ -22,7 +22,7 @@
 #ifndef KCAL_INCIDENCEFORMATTER_H
 #define KCAL_INCIDENCEFORMATTER_H
 
-#include <qstring.h>
+#include <QString>
 
 #include "libkcal_export.h"
 

@@ -35,7 +35,7 @@
 #ifndef KDGANTTSEMISIZINGCONTROL_H
 #define KDGANTTSEMISIZINGCONTROL_H
 
-#include <qlayout.h>
+#include <QLayout>
 
 #include "kdgantt_qt3_compat.h"
 

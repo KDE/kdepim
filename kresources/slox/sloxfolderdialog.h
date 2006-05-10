@@ -19,7 +19,7 @@
 #ifndef SLOXFOLDERDIALOG_H
 #define SLOXFOLDERDIALOG_H
 
-#include <qstring.h>
+#include <QString>
 #include <kdialogbase.h>
 
 #include "sloxfolder.h"

@@ -16,7 +16,7 @@
 #include <stdlib.h>
 
 #include <QByteArray>
-#include <qdir.h>
+#include <QDir>
 #include <QFile>
 
 #include <klocale.h>

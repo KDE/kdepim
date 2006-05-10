@@ -13,9 +13,9 @@
 */
 
 #include <QHBoxLayout>
-#include <qlabel.h>
-#include <qcheckbox.h>
-#include <qcombobox.h>
+#include <QLabel>
+#include <QCheckBox>
+#include <QComboBox>
 
 #include <knuminput.h>
 #include <ksimpleconfig.h>

@@ -27,9 +27,9 @@
 #include <kio/global.h>
 
 #include <QDateTime>
-#include <qfile.h>
+#include <QFile>
 #include <qfileinfo.h>
-#include <qstring.h>
+#include <QString>
 #include <qtextstream.h>
 
 #ifdef HAVE_SYS_TYPES_H

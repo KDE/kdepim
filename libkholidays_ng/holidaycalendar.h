@@ -21,7 +21,7 @@
 #ifndef KHOLIDAYS_HOLIDAYCALENDAR_H
 #define KHOLIDAYS_HOLIDAYCALENDAR_H
 
-#include <qstring.h>
+#include <QString>
 #include <qdatetime.h>
 
 #include "kdepim_export.h"

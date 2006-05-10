@@ -22,14 +22,14 @@
 */
 
 #include <qapplication.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <q3header.h>
 #include <q3vbox.h>
 #include <q3listbox.h>
-#include <qwidget.h>
-#include <qfile.h>
+#include <QWidget>
+#include <QFile>
 #include <qimage.h>
-#include <qcombobox.h>
+#include <QComboBox>
 #include <qapplication.h>
 #include <q3dragobject.h>
 #include <qevent.h>

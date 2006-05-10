@@ -38,7 +38,7 @@
 #include <libkdepim/distributionlist.h>
 #include <kio/netaccess.h>
 #include <kdebug.h>
-#include <qfile.h>
+#include <QFile>
 #include <float.h>
 
 using namespace Kolab;

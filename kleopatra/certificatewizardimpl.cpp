@@ -64,14 +64,14 @@
 #include <ktoolinvocation.h>
 
 // Qt
-#include <qlineedit.h>
+#include <QLineEdit>
 #include <q3textedit.h>
-#include <qpushbutton.h>
-#include <qcheckbox.h>
+#include <QPushButton>
+#include <QCheckBox>
 #include <qradiobutton.h>
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qcombobox.h>
+#include <QLayout>
+#include <QLabel>
+#include <QComboBox>
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QByteArray>

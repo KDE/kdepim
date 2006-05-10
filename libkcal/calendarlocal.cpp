@@ -22,7 +22,7 @@
 */
 
 #include <qdatetime.h>
-#include <qstring.h>
+#include <QString>
 
 #include <kdebug.h>
 #include <klocale.h>

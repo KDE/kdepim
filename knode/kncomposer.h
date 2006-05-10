@@ -20,8 +20,8 @@
 #include <kmainwindow.h>
 #include <kdialogbase.h>
 #include <keditcl.h>
-#include <qlineedit.h>
-#include <qregexp.h>
+#include <QLineEdit>
+#include <QRegExp>
 //Added by qt3to4:
 #include <QByteArray>
 #include <QCloseEvent>

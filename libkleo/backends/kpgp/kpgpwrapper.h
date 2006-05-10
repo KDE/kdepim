@@ -35,7 +35,7 @@
 
 #include <kleo/cryptobackend.h>
 
-#include <qstring.h>
+#include <QString>
 
 namespace Kleo {
   class KeyListJob;

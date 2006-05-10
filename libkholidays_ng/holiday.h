@@ -22,7 +22,7 @@
 #define KHOLIDAYS_HOLIDAY_H
 
 #include <qlist.h>
-#include <qstring.h>
+#include <QString>
 #include <qstringlist.h>
 #include <qdatetime.h>
 

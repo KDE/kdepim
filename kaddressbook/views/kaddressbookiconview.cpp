@@ -23,7 +23,7 @@
 
 #include <qapplication.h>
 #include <q3iconview.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <qstringlist.h>
 //Added by qt3to4:
 #include <QPixmap>

@@ -21,7 +21,7 @@
 #ifndef KCAL_FREEBUSYURLSTORE_H
 #define KCAL_FREEBUSYURLSTORE_H
 
-#include <qstring.h>
+#include <QString>
 
 #include "libkcal_export.h"
 

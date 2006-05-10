@@ -24,7 +24,7 @@
 #ifndef KABCONFIGWIDGET_H
 #define KABCONFIGWIDGET_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 class QCheckBox;
 class QLineEdit;

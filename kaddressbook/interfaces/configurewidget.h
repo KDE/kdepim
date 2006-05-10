@@ -24,7 +24,7 @@
 #ifndef KAB_CONFIGUREWIDGET_H
 #define KAB_CONFIGUREWIDGET_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 #include <kconfig.h>
 #include <kdepimmacros.h>

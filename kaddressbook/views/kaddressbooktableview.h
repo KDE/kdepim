@@ -28,9 +28,9 @@
 #include <config.h>
 #endif
 
-#include <qwidget.h>
+#include <QWidget>
 #include <q3listview.h>
-#include <qstring.h>
+#include <QString>
 #include <qdialog.h>
 #include <q3tabdialog.h>
 #include <qstringlist.h>

@@ -21,10 +21,10 @@
 */
 
 #include <qapplication.h>
-#include <qfile.h>
+#include <QFile>
 #include <qtextstream.h>
 #include <qtextcodec.h>
-#include <qregexp.h>
+#include <QRegExp>
 
 #include <kglobal.h>
 #include <klocale.h>

@@ -58,7 +58,7 @@
 #include <q3listview.h>
 #include <q3textedit.h>
 #include <q3header.h>
-#include <qpushbutton.h>
+#include <QPushButton>
 #include <qcursor.h>
 #include <qapplication.h>
 #include <qdatetime.h>

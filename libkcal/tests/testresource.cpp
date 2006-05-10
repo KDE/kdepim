@@ -31,7 +31,7 @@
 #include <kinputdialog.h>
 #include <kresources/factory.h>
 
-#include <qdir.h>
+#include <QDir>
 #include <qfileinfo.h>
 #include <qstringlist.h>
 

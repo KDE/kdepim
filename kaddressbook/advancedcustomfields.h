@@ -28,7 +28,7 @@
 
 #include <klocale.h>
 
-#include <qmap.h>
+#include <QMap>
 #include <qpair.h>
 #include <qstringlist.h>
 

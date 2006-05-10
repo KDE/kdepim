@@ -24,7 +24,7 @@
 #ifndef CONTACTEDITORWIDGETMANAGER_H
 #define CONTACTEDITORWIDGETMANAGER_H
 
-#include <qwidget.h>
+#include <QWidget>
 //Added by qt3to4:
 #include <QGridLayout>
 

@@ -47,8 +47,8 @@
 
 #include <qobject.h>
 #include <qtimer.h>
-#include <qstring.h>
-#include <qfile.h>
+#include <QString>
+#include <QFile>
 #include <qapplication.h>
 
 #include <assert.h>

@@ -28,12 +28,12 @@
 #include <klocale.h>
 
 #include <q3buttongroup.h>
-#include <qcombobox.h>
+#include <QComboBox>
 #include <q3header.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 #include <q3listview.h>
-#include <qpushbutton.h>
+#include <QPushButton>
 #include <qradiobutton.h>
 #include <qstringlist.h>
 

@@ -24,7 +24,7 @@
 #ifndef KAB_CONTACTEDITORWIDGET_H
 #define KAB_CONTACTEDITORWIDGET_H
 
-#include <qwidget.h>
+#include <QWidget>
 //Added by qt3to4:
 #include <QList>
 

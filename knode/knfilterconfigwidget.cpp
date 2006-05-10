@@ -12,8 +12,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qlayout.h>
-#include <qlabel.h>
+#include <QLayout>
+#include <QLabel>
 //Added by qt3to4:
 #include <QVBoxLayout>
 

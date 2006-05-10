@@ -25,7 +25,7 @@
 
 #include <string.h> /* strncmp */
 
-#include <qregexp.h>
+#include <QRegExp>
 #include <qdatetime.h>
 //Added by qt3to4:
 #include <QByteArray>

@@ -32,7 +32,7 @@
 #ifndef _KPIM_IDENTITYCOMBO_H_
 #define _KPIM_IDENTITYCOMBO_H_
 
-#include <qcombobox.h>
+#include <QComboBox>
 
 #include <kdepimmacros.h>
 

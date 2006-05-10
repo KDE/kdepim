@@ -29,9 +29,9 @@
 #include <kstdaction.h>
 
 #include <qcursor.h>
-#include <qlabel.h>
+#include <QLabel>
 #include <qlist.h>
-#include <qtooltip.h>
+#include <QToolTip>
 #include <QIcon>
 //Added by qt3to4:
 #include <kiconloader.h>

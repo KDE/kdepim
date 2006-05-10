@@ -19,7 +19,7 @@
     *************************************************************************
 */
 
-#include <qvariant.h>
+#include <QVariant>
 #include <kextsock.h>
 #include <kio/slavebase.h>
 

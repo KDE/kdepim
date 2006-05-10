@@ -26,7 +26,7 @@
 
 #include <kabc/addressee.h>
 
-#include <qwidget.h>
+#include <QWidget>
 
 class AddresseeEditorBase : public QWidget
 {

@@ -20,7 +20,7 @@
 #include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <qregexp.h>
+#include <QRegExp>
 #include <ktempfile.h>
 #include <kdebug.h>
 

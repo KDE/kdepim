@@ -22,8 +22,8 @@
 #ifndef KCAL_CUSTOMPROPERTIES_H
 #define KCAL_CUSTOMPROPERTIES_H
 
-#include <qstring.h>
-#include <qmap.h>
+#include <QString>
+#include <QMap>
 //Added by qt3to4:
 #include <QByteArray>
 #include <kdepimmacros.h>

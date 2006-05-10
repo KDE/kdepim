@@ -27,8 +27,8 @@
 #include "viewconfigurewidget.h"
 
 
-#include <qwidget.h>
-#include <qfont.h>
+#include <QWidget>
+#include <QFont>
 //Added by qt3to4:
 #include <QLabel>
 #include <kvbox.h>

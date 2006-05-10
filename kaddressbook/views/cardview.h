@@ -25,12 +25,12 @@
 #define CARDVIEW_H
 
 #include <qpair.h>
-#include <qpoint.h>
+#include <QPoint>
 #include <q3ptrlist.h>
 #include <qrect.h>
 #include <q3scrollview.h>
 #include <q3listbox.h>
-#include <qstring.h>
+#include <QString>
 //Added by qt3to4:
 #include <QWheelEvent>
 #include <QFocusEvent>

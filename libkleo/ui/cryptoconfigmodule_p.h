@@ -34,7 +34,7 @@
 
 #include <qtabwidget.h>
 #include <q3hbox.h>
-#include <qcheckbox.h>
+#include <QCheckBox>
 //Added by qt3to4:
 #include <QLabel>
 #include <QList>

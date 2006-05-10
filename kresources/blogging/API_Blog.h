@@ -14,7 +14,7 @@
 #include <libkcal/journal.h>
 
 #include <qobject.h>
-#include <qstring.h>
+#include <QString>
 
 #include <qdatetime.h>
 

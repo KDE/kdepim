@@ -21,8 +21,8 @@
 #ifndef BLOGGINGGLOBALS_H
 #define BLOGGINGGLOBALS_H
 
-#include <qstring.h>
-#include <qvariant.h>
+#include <QString>
+#include <QVariant>
 
 
 class BloggingGlobals

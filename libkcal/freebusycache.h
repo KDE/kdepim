@@ -21,7 +21,7 @@
 #ifndef KCAL_FREEBUSYCACHE_H
 #define KCAL_FREEBUSYCACHE_H
 
-#include <qstring.h>
+#include <QString>
 
 namespace KCal {
 

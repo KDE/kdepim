@@ -43,7 +43,7 @@ template< class T> class QList;
 template< class T> class QVector;
 template< class T, class S> class QMap;
 
-//#include <qstring.h>
+//#include <QString>
 
 /**
  * This class implements a DCOP-protocol.

@@ -21,16 +21,16 @@
 
 
 #include <q3buttongroup.h>
-#include <qcheckbox.h>
-#include <qcombobox.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qlineedit.h>
-#include <qpushbutton.h>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QLabel>
+#include <QLayout>
+#include <QLineEdit>
+#include <QPushButton>
 #include <qradiobutton.h>
 #include <q3table.h>
 #include <qtextcodec.h>
-#include <qtooltip.h>
+#include <QToolTip>
 //Added by qt3to4:
 #include <QTextStream>
 #include <QGridLayout>

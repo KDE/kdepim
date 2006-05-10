@@ -20,10 +20,10 @@
 */
 
 #include <qdatetime.h>
-#include <qstring.h>
-#include <qregexp.h>
+#include <QString>
+#include <QRegExp>
 #include <qclipboard.h>
-#include <qfile.h>
+#include <QFile>
 #include <qtextstream.h>
 //Added by qt3to4:
 #include <QByteArray>

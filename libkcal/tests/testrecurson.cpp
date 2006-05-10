@@ -27,7 +27,7 @@
 #include <kdebug.h>
 #include <kcmdlineargs.h>
 
-#include <qfile.h>
+#include <QFile>
 #include <QTextStream>
 
 

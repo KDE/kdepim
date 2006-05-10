@@ -26,12 +26,12 @@
 
 #include <qcursor.h>
 #include <qdatetime.h>
-#include <qlabel.h>
+#include <QLabel>
 #include <qpainter.h>
 #include <QStyle>
 #include <QStyleOption>
 #include <qtimer.h>
-#include <qtooltip.h>
+#include <QToolTip>
 //Added by qt3to4:
 #include <QWheelEvent>
 #include <QFocusEvent>

@@ -32,7 +32,7 @@
 #ifndef KDGANTTVIEWITEMGRAG_H
 #define KDGANTTVIEWITEMGRAG_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 #include "kdgantt_qt3_compat.h"
 

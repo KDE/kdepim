@@ -37,7 +37,7 @@
 #include <kshell.h>
 
 #include <qtimer.h>
-#include <qfile.h>
+#include <QFile>
 #include <QStringList>
 
 #include <cstring>

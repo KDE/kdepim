@@ -37,10 +37,10 @@
 
 
 
-#include <qwidget.h>
+#include <QWidget>
 #include <qsplitter.h>
-#include <qlayout.h>
-#include <qfont.h>
+#include <QLayout>
+#include <QFont>
 
 #include "kdgantt_qt3_compat.h"
 

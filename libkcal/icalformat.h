@@ -21,7 +21,7 @@
 #ifndef KCAL_ICALFORMAT_H
 #define KCAL_ICALFORMAT_H
 
-#include <qstring.h>
+#include <QString>
 //Added by qt3to4:
 #include <QByteArray>
 

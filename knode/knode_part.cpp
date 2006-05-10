@@ -38,7 +38,7 @@
 #include <kstatusbar.h>
 #include <krsqueezedtextlabel.h>
 
-#include <qlayout.h>
+#include <QLayout>
 //Added by qt3to4:
 #include <QVBoxLayout>
 

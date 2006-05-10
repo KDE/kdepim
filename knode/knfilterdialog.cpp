@@ -12,9 +12,9 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qlabel.h>
-#include <qcheckbox.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QCheckBox>
+#include <QLayout>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QGridLayout>

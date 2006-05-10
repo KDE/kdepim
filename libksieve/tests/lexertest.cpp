@@ -37,7 +37,7 @@ using KSieve::Lexer;
 using KSieve::Error;
 
 #include <q3cstring.h> // qstrlen
-#include <qstring.h>
+#include <QString>
 
 #include <iostream>
 using std::cout;

@@ -15,7 +15,7 @@
 #include <qbuffer.h>
 #include <qdom.h>
 #include <qobject.h>
-#include <qvariant.h>
+#include <QVariant>
 
 //Added by qt3to4:
 #include <QByteArray>

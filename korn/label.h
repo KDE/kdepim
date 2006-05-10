@@ -25,7 +25,7 @@
  * This file contains a class which adds a signal to a QLabel.
  */
 
-#include <qlabel.h>
+#include <QLabel>
 #include <QMouseEvent>
 
 /**

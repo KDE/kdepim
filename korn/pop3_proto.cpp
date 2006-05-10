@@ -23,7 +23,7 @@
 
 #include <kdebug.h>
 
-#include <qwidget.h>
+#include <QWidget>
 #include <qobject.h>
 #include <qlist.h>
 #include <qstringlist.h>

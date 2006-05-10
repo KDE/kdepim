@@ -24,7 +24,7 @@
 #ifndef PRINTSTYLE_H
 #define PRINTSTYLE_H
 
-#include <qwidget.h>
+#include <QWidget>
 #include <qstringlist.h>
 #include <qpixmap.h>
 

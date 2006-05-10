@@ -23,13 +23,13 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qcheckbox.h>
-#include <qcombobox.h>
+#include <QCheckBox>
+#include <QComboBox>
 #include <q3datetimeedit.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <qobject.h>
-#include <qspinbox.h>
-#include <qregexp.h>
+#include <QSpinBox>
+#include <QRegExp>
 #include <q3textedit.h>
 //Added by qt3to4:
 #include <QVBoxLayout>

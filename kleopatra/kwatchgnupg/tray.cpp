@@ -37,7 +37,7 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kiconloader.h>
-#include <qtooltip.h>
+#include <QToolTip>
 
 KWatchGnuPGTray::KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin )
   : KSystemTray( mainwin )

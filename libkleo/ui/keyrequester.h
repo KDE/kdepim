@@ -49,7 +49,7 @@
 #ifndef __KLEO_UI_KEYREQUESTER_H__
 #define __KLEO_UI_KEYREQUESTER_H__
 
-#include <qwidget.h>
+#include <QWidget>
 //Added by qt3to4:
 #include <QLabel>
 #include <kleo/cryptobackend.h>

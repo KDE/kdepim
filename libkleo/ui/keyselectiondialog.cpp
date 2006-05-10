@@ -62,18 +62,18 @@
 #include <kmessagebox.h>
 #include <kpushbutton.h>
 // Qt
-#include <qcheckbox.h>
+#include <QCheckBox>
 #include <qtoolbutton.h>
-#include <qlabel.h>
+#include <QLabel>
 #include <qpixmap.h>
 #include <qtimer.h>
-#include <qlayout.h>
-#include <qlineedit.h>
+#include <QLayout>
+#include <QLineEdit>
 #include <QDateTime>
 
 #include <q3popupmenu.h>
-#include <qregexp.h>
-#include <qpushbutton.h>
+#include <QRegExp>
+#include <QPushButton>
 //Added by qt3to4:
 #include <Q3Frame>
 #include <QHBoxLayout>

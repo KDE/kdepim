@@ -15,7 +15,7 @@
 #ifndef KNCOLLECTION_H
 #define KNCOLLECTION_H
 
-#include <qstring.h>
+#include <QString>
 
 class KNCollectionViewItem;
 

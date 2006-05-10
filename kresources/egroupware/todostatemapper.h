@@ -22,8 +22,8 @@
 #ifndef TODOSTATEMAPPER_H
 #define TODOSTATEMAPPER_H
 
-#include <qdatastream.h>
-#include <qmap.h>
+#include <QDataStream>
+#include <QMap>
 
 class TodoStateMapper
 {

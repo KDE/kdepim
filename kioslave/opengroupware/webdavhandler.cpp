@@ -29,7 +29,7 @@
 #include <kdebug.h>
 #include <kconfig.h>
 
-#include <qfile.h>
+#include <QFile>
 
 
 WebdavHandler::WebdavHandler()

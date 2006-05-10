@@ -49,7 +49,7 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 
-#include <qstring.h>
+#include <QString>
 #include <qstringlist.h>
 
 #include <algorithm>

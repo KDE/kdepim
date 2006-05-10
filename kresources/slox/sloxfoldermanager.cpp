@@ -17,9 +17,9 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include <qfile.h>
+#include <QFile>
 #include <qdom.h>
-#include <qstring.h>
+#include <QString>
 //Added by qt3to4:
 #include <QTextStream>
 

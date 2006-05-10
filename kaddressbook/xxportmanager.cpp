@@ -21,7 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qlayout.h>
+#include <QLayout>
 
 #include <kabc/addressbook.h>
 #include <kabc/resource.h>

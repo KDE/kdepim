@@ -27,11 +27,11 @@
 #include <kdialog.h>
 #include <klocale.h>
 
-#include <qcolor.h>
-#include <qcheckbox.h>
+#include <QColor>
+#include <QCheckBox>
 #include <qradiobutton.h>
 #include <qlistview.h>
-#include <qstring.h>
+#include <QString>
 #include <qtimer.h>
 
 

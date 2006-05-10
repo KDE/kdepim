@@ -2,7 +2,7 @@
 using namespace KMime::MDN;
 
 #include <QByteArray>
-#include <qstring.h>
+#include <QString>
 
 #include <iostream>
 using std::cout;

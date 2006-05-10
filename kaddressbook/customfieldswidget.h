@@ -28,11 +28,11 @@
 #include <kdialogbase.h>
 #include <klocale.h>
 
-#include <qmap.h>
+#include <QMap>
 #include <qpair.h>
 #include <qstringlist.h>
 #include <q3valuevector.h>
-#include <qwidget.h>
+#include <QWidget>
 //Added by qt3to4:
 #include <QLabel>
 #include <QVBoxLayout>

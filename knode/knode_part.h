@@ -31,7 +31,7 @@
 #include <kparts/event.h>
 #include <kparts/part.h>
 
-#include <qwidget.h>
+#include <QWidget>
 
 class KInstance;
 class KAboutData;

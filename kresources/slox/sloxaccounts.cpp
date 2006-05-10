@@ -33,9 +33,9 @@
 #include <kstringhandler.h>
 #include <kconfig.h>
 
-#include <qfile.h>
+#include <QFile>
 #include <qdom.h>
-#include <qstring.h>
+#include <QString>
 //Added by qt3to4:
 #include <QTextStream>
 

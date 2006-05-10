@@ -30,7 +30,7 @@
 
 #include <qtextcodec.h>
 #include <qbuffer.h>
-#include <qregexp.h>
+#include <QRegExp>
 //Added by qt3to4:
 #include <Q3CString>
 #include <QLatin1Char>

@@ -16,7 +16,7 @@
  */
 
 #include "mapi.h"
-#include <qmap.h>
+#include <QMap>
 #include <klocale.h>
 
 static struct

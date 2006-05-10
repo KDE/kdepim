@@ -36,10 +36,10 @@
 #define __KDGANTTXMLTOOLS_H__
 
 #include <qpen.h>
-#include <qstring.h>
-#include <qcolor.h>
+#include <QString>
+#include <QColor>
 #include <qrect.h>
-#include <qfont.h>
+#include <QFont>
 #include <qstringlist.h>
 #include <qdatetime.h>
 

@@ -27,7 +27,7 @@
 #include <kdepimmacros.h>
 #include <kabc/addressee.h>
 
-#include <qmap.h>
+#include <QMap>
 #include <qdom.h>
 class KJob;
 namespace KIO {

@@ -34,7 +34,7 @@
 #ifndef __KLEO_UI_BACKENDCONFIGWIDGET_H__
 #define __KLEO_UI_BACKENDCONFIGWIDGET_H__
 
-#include <qwidget.h>
+#include <QWidget>
 #include <kdepimmacros.h>
 
 namespace Kleo {

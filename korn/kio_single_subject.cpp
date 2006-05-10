@@ -30,9 +30,9 @@
 #include <kio/jobclasses.h>
 #include <krfcdate.h>
 
-#include <qregexp.h>
-#include <qstring.h>
-#include <qvariant.h>
+#include <QRegExp>
+#include <QString>
+#include <QVariant>
 //Added by qt3to4:
 #include <QTextStream>
 

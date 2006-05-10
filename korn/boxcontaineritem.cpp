@@ -38,16 +38,16 @@
 #include <ktoolinvocation.h>
 
 #include <qbitmap.h>
-#include <qcolor.h>
-#include <qfont.h>
+#include <QColor>
+#include <QFont>
 #include <qdatetime.h>
 #include <qgridlayout.h>
-#include <qlabel.h>
+#include <QLabel>
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <q3ptrlist.h>
-#include <qstring.h>
-#include <qtooltip.h>
+#include <QString>
+#include <QToolTip>
 #include <q3vbox.h>
 #include <QMovie>
 

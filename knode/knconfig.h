@@ -15,9 +15,9 @@
 #ifndef KNCONFIG_H
 #define KNCONFIG_H
 
-#include <qcolor.h>
+#include <QColor>
 #include <qdatetime.h>
-#include <qfont.h>
+#include <QFont>
 #include <QList>
 #include <qobject.h>
 #include <qpixmap.h>

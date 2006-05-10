@@ -26,7 +26,7 @@
 #include <groupwareresourcejob.h>
 #include <folderlister.h>
 #include <kurl.h>
-#include <qstring.h>
+#include <QString>
 //Added by qt3to4:
 #include <QByteArray>
 #include <libkcal/listbase.h>

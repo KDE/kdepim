@@ -20,17 +20,17 @@
 #define KPGP_H
 
 #include <stdio.h>
-#include <qstring.h>
+#include <QString>
 #include <qdialog.h>
-#include <qwidget.h>
-#include <qcombobox.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
+#include <QWidget>
+#include <QComboBox>
+#include <QLayout>
+#include <QPushButton>
 #include <q3listview.h>
 #include <q3buttongroup.h>
 #include <qradiobutton.h>
 #include <q3multilineedit.h>
-#include <qcheckbox.h>
+#include <QCheckBox>
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QByteArray>

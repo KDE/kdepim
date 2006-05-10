@@ -21,10 +21,10 @@
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
 */
-#include <qcheckbox.h>
-#include <qcombobox.h>
-#include <qlineedit.h>
-#include <qlabel.h>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QLabel>
 //Added by qt3to4:
 #include <QList>
 

@@ -24,7 +24,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qstring.h>
+#include <QString>
 //Added by qt3to4:
 #include <QDragEnterEvent>
 #include <QDropEvent>

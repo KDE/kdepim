@@ -19,7 +19,7 @@
 
 #include <config.h>
 
-#include <qregexp.h>
+#include <QRegExp>
 
 #include <klocale.h>
 #include <kfiledialog.h>

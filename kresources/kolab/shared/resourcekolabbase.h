@@ -34,8 +34,8 @@
 #ifndef RESOURCEKOLABBASE_H
 #define RESOURCEKOLABBASE_H
 
-#include <qstring.h>
-#include <qmap.h>
+#include <QString>
+#include <QMap>
 #include <qstringlist.h>
 
 #include "subresource.h"

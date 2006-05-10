@@ -35,7 +35,7 @@
 #include <iostream>
 
 #include <qdatetime.h>
-#include <qfile.h>
+#include <QFile>
 #include <qtextstream.h>
 
 #include <kdebug.h>

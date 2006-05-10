@@ -29,7 +29,7 @@
 #include <kdepimmacros.h>
 
 
-#include <qstring.h>
+#include <QString>
 #include <qstringlist.h>
 #include <qobject.h>
 class KJob;

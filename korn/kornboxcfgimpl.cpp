@@ -32,12 +32,12 @@ class KConfig;
 #include <kicondialog.h>
 #include <kurlrequester.h>
 
-#include <qcheckbox.h>
-#include <qcolor.h>
-#include <qfont.h>
-#include <qlabel.h>
+#include <QCheckBox>
+#include <QColor>
+#include <QFont>
+#include <QLabel>
 #include <qlistview.h>
-#include <qstring.h>
+#include <QString>
 
 KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent )
 	: QWidget( parent ),

@@ -42,10 +42,10 @@
 #include <kdialog.h>
 
 #include <khbox.h>
-#include <qlabel.h>
+#include <QLabel>
 #include <q3datetimeedit.h>
-#include <qcheckbox.h>
-#include <qlayout.h>
+#include <QCheckBox>
+#include <QLayout>
 //Added by qt3to4:
 #include <QVBoxLayout>
 

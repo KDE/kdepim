@@ -22,7 +22,7 @@
 #define KCAL_RESOURCEREMOTEDIR_H
 
 #include <q3ptrlist.h>
-#include <qstring.h>
+#include <QString>
 #include <qdatetime.h>
 
 #include <kurl.h>

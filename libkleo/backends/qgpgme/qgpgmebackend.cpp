@@ -45,8 +45,8 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 
-#include <qfile.h>
-#include <qstring.h>
+#include <QFile>
+#include <QString>
 
 Kleo::QGpgMEBackend::QGpgMEBackend()
   : Kleo::CryptoBackend(),

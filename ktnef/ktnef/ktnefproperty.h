@@ -18,8 +18,8 @@
 #ifndef KTNEFPROPERTY_H
 #define KTNEFPROPERTY_H
 
-#include <qvariant.h>
-#include <qstring.h>
+#include <QVariant>
+#include <QString>
 #include <kdepimmacros.h>
 
 class KDE_EXPORT KTNEFProperty

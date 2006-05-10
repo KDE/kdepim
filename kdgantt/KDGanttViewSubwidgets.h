@@ -37,13 +37,13 @@
 #define KDGANTTVIEWSUBWIDGETS_H
 
 
-#include <qwidget.h>
+#include <QWidget>
 #include <qsplitter.h>
 #include <qevent.h>
 #include <qwhatsthis.h>
 #include <qtimer.h>
-#include <qlayout.h>
-#include <qlabel.h>
+#include <QLayout>
+#include <QLabel>
 #include <qbrush.h>
 
 #include "kdgantt_qt3_compat.h"

@@ -22,7 +22,7 @@
 #ifndef OVERVIEWPAGE_H
 #define OVERVIEWPAGE_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 class OverViewPage : public QWidget
 {

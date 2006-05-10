@@ -24,7 +24,7 @@
 #ifndef VIEWCONFIGUREFIELDSPAGE_H
 #define VIEWCONFIGUREFIELDSPAGE_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 #include <kabc/field.h>
 #include <kabc/addressbook.h>

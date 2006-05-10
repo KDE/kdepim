@@ -19,17 +19,17 @@
 //#include <stdio.h>
 
 
-#include <qlabel.h>
+#include <QLabel>
 
-#include <qtooltip.h>
+#include <QToolTip>
 #include <qapplication.h>
 #include <qtextcodec.h>
 #include <qdatetime.h>
 #include <qpixmap.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <qtimer.h>
 #include <q3popupmenu.h>
-#include <qregexp.h>
+#include <QRegExp>
 //Added by qt3to4:
 #include <QFrame>
 #include <QByteArray>

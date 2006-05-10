@@ -32,7 +32,7 @@
 #ifndef __KMIME_HEADER_PARSING_H__
 #define __KMIME_HEADER_PARSING_H__
 
-#include <qstring.h>
+#include <QString>
 #include <qpair.h>
 
 #include <time.h>

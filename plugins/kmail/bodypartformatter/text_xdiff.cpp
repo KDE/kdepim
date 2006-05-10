@@ -48,8 +48,8 @@
 #include <kapplication.h>
 
 #include <qurl.h>
-#include <qfile.h>
-#include <qdir.h>
+#include <QFile>
+#include <QDir>
 #include <qtextdocument.h>
 
 namespace {

@@ -20,7 +20,7 @@
 */
 
 #include <qapplication.h>
-#include <qlayout.h>
+#include <QLayout>
 
 #include <klocale.h>
 

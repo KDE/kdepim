@@ -24,7 +24,7 @@
 #ifndef KAB_EXTENSIONWIDGET_H
 #define KAB_EXTENSIONWIDGET_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 #include <kabc/addressbook.h>
 #include <klibloader.h>

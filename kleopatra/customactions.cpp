@@ -36,8 +36,8 @@
 #include <ktoolbar.h>
 #include <kauthorized.h>
 
-#include <qlineedit.h>
-#include <qlabel.h>
+#include <QLineEdit>
+#include <QLabel>
 
 
 LabelAction::LabelAction( const QString & text,  KActionCollection * parent,

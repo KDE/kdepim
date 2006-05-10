@@ -23,7 +23,7 @@
 #warning Port me!
 //#include "qwmf.h"
 
-#include <qlabel.h>
+#include <QLabel>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QTextStream>
@@ -34,7 +34,7 @@
 #include <kmessagebox.h>
 #include <kfiledialog.h>
 #include <qbuffer.h>
-#include <qdatastream.h>
+#include <QDataStream>
 #include <q3picture.h>
 #include <QDateTime>
 

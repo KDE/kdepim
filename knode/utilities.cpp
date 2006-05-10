@@ -13,9 +13,9 @@
 */
 
 #include <QByteArray>
-#include <qlayout.h>
+#include <QLayout>
 #include <QListWidget>
-#include <qregexp.h>
+#include <QRegExp>
 #include <qapplication.h>
 #include <qcursor.h>
 //Added by qt3to4:

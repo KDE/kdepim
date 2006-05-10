@@ -26,8 +26,8 @@
 
 #include <kabc/addressbook.h>
 
-#include <qcolor.h>
-#include <qfont.h>
+#include <QColor>
+#include <QFont>
 #include <qrect.h>
 
 

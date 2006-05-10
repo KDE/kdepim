@@ -19,7 +19,7 @@
 */
 
 #include <qapplication.h>
-#include <qfile.h>
+#include <QFile>
 
 #include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>

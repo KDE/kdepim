@@ -35,11 +35,11 @@
 #include <kiconloader.h>
 #include <klocale.h>
 
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qcheckbox.h>
-#include <qcombobox.h>
-#include <qpushbutton.h>
+#include <QLayout>
+#include <QLabel>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QPushButton>
 #include <QGroupBox>
 #include <khbox.h>
 #include <QGridLayout>

@@ -28,7 +28,7 @@
 #include <kcalendarsystem.h>
 
 #include <qtextcodec.h>
-#include <qregexp.h>
+#include <QRegExp>
 #include <QTextStream>
 
 #include <stdlib.h>

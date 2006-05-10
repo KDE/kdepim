@@ -41,10 +41,10 @@
 #include "KDGanttViewSubwidgets.moc"
 #endif
 
-#include <qlabel.h>
+#include <QLabel>
 #include <qpainter.h>
 #include <qrect.h>
-#include <qtooltip.h>
+#include <QToolTip>
 #include <qapplication.h>
 #include <qdrawutil.h>
 #include <qpalette.h>

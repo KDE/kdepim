@@ -51,8 +51,8 @@
 #endif
 #include <qprinter.h>
 #include <qpainter.h>
-#include <qlayout.h>
-#include <qfile.h>
+#include <QLayout>
+#include <QFile>
 #include <qapplication.h>
 #include <QtDebug>
 #include <QPrintDialog>

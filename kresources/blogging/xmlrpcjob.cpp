@@ -26,8 +26,8 @@
 
 #include "xmlrpcjob.h"
 
-#include <qvariant.h>
-#include <qregexp.h>
+#include <QVariant>
+#include <QRegExp>
 //Added by qt3to4:
 #include <QList>
 #include <QDateTime>

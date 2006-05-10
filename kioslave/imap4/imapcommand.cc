@@ -43,7 +43,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include <qregexp.h>
+#include <QRegExp>
 #include <qbuffer.h>
 
 #include <kprotocolmanager.h>

@@ -24,7 +24,7 @@
 #include <getopt.h>
 #include <cassert>
 
-#include <qfile.h>
+#include <QFile>
 #include <QByteArray>
 
 using namespace KMime;

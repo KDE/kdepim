@@ -26,8 +26,8 @@
 
 #include <qdatetime.h>
 #include <qlist.h>
-#include <qmap.h>
-#include <qstring.h>
+#include <QMap>
+#include <QString>
 #include <qtimer.h>
 
 DCOPDrop::DCOPDrop()

@@ -32,7 +32,7 @@
 #ifndef __KMIME_MDN_H__
 #define __KMIME_MDN_H__
 
-#include <qstring.h>
+#include <QString>
 //#include <QByteArray>
 #include <QList>
 #include <kdepimmacros.h>

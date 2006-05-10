@@ -23,9 +23,9 @@
 
 #include <qdatetime.h>
 #include <qdom.h>
-#include <qmap.h>
-#include <qregexp.h>
-#include <qstring.h>
+#include <QMap>
+#include <QRegExp>
+#include <QString>
 #include <qstringlist.h>
 #include <kurl.h>
 

@@ -33,7 +33,7 @@
 #ifndef __KLEO_UI_DNATTRIBUTEORDERCONFIGWIDGET_H__
 #define __KLEO_UI_DNATTRIBUTEORDERCONFIGWIDGET_H__
 
-#include <qwidget.h>
+#include <QWidget>
 #include <kdepimmacros.h>
 namespace Kleo {
   class DNAttributeMapper;

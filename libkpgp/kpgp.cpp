@@ -30,7 +30,7 @@
 #include <sys/wait.h>
 #include <signal.h>
 
-#include <qlabel.h>
+#include <QLabel>
 #include <qcursor.h>
 #include <qapplication.h>
 #include <QByteArray>

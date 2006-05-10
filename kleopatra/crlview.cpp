@@ -43,8 +43,8 @@
 #include <kstdguiitem.h>
 #include <kglobalsettings.h>
 
-#include <qlayout.h>
-#include <qlabel.h>
+#include <QLayout>
+#include <QLabel>
 #include <q3textedit.h>
 #include <qfontmetrics.h>
 #include <qtimer.h>

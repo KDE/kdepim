@@ -21,7 +21,7 @@
 #include <kapplication.h>
 #include <klocale.h>
 
-#include <qregexp.h>
+#include <QRegExp>
 
 #include <iostream>
 

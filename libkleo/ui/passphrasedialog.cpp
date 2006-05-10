@@ -56,8 +56,8 @@
 #include <kiconloader.h>
 #include <klocale.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 #include <qfontmetrics.h>
 //Added by qt3to4:
 #include <QVBoxLayout>

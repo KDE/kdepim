@@ -22,7 +22,7 @@
 #ifndef KCAL_ALARM_H
 #define KCAL_ALARM_H
 
-#include <qstring.h>
+#include <QString>
 #include <qstringlist.h>
 
 

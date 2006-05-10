@@ -22,12 +22,12 @@
 */
 
 #include <qapplication.h>
-#include <qcombobox.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QComboBox>
+#include <QLabel>
+#include <QLayout>
 #include <qtimer.h>
 #include <qtoolbutton.h>
-#include <qtooltip.h>
+#include <QToolTip>
 
 //Added by qt3to4:
 #include <QHBoxLayout>

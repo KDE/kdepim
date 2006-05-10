@@ -31,7 +31,7 @@
 #include <kio/global.h>
 #include <kurl.h>
 
-#include <qstring.h>
+#include <QString>
 
 KIO_Count::KIO_Count( QObject * parent )
 	: QObject ( parent ),

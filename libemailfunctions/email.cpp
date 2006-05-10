@@ -25,7 +25,7 @@
 #include <klocale.h>
 #include <kidna.h>
 
-#include <qregexp.h>
+#include <QRegExp>
 //Added by qt3to4:
 #include <QByteArray>
 

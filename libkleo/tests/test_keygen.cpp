@@ -52,9 +52,9 @@
 #include <qmessagebox.h>
 #include <qstringlist.h>
 #include <qtimer.h>
-#include <qlayout.h>
-#include <qlineedit.h>
-#include <qlabel.h>
+#include <QLayout>
+#include <QLineEdit>
+#include <QLabel>
 #include <QGridLayout>
 
 #include <assert.h>

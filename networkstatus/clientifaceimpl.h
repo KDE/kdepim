@@ -22,7 +22,7 @@
 #ifndef NETWORKSTATUS_CLIENTIFACEIMPL_H
 #define NETWORKSTATUS_CLIENTIFACEIMPL_H
 
-#include <qstring.h>
+#include <QString>
 
 #include "clientiface.h"
 #include "networkstatus.h"

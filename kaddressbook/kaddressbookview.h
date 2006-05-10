@@ -27,7 +27,7 @@
 #define KAB_VIEW_PLUGIN_VERSION 1
 
 #include <qstringlist.h>
-#include <qwidget.h>
+#include <QWidget>
 //Added by qt3to4:
 #include <QDropEvent>
 

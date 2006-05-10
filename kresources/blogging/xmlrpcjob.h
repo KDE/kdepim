@@ -25,7 +25,7 @@
 
 #include <kurl.h>
 
-#include <qstring.h>
+#include <QString>
 
 #include <qdom.h>
 

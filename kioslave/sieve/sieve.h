@@ -19,7 +19,7 @@
 #include <kio/tcpslavebase.h>
 #include <kio/authinfo.h>
 
-#include <qstring.h>
+#include <QString>
 #include <q3cstring.h>
 #include <qstringlist.h>
 

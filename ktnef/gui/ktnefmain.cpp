@@ -37,7 +37,7 @@
 #include <kstdaccel.h>
 #include <qmessagebox.h>
 #include <kfiledialog.h>
-#include <qdir.h>
+#include <QDir>
 #include <kprocess.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>

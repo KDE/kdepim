@@ -15,8 +15,8 @@
 #include <QByteArray>
 #include <QList>
 #include <QListWidget>
-#include <qlayout.h>
-#include <qlabel.h>
+#include <QLayout>
+#include <QLabel>
 
 #include <kiconloader.h>
 #include <klocale.h>

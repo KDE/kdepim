@@ -23,18 +23,18 @@
 */
 
 #include <q3buttongroup.h>
-#include <qcheckbox.h>
+#include <QCheckBox>
 
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 #include <q3listbox.h>
 #include <q3listview.h>
-#include <qpushbutton.h>
+#include <QPushButton>
 #include <q3signal.h>
-#include <qstring.h>
+#include <QString>
 #include <q3textedit.h>
 #include <qtoolbutton.h>
-#include <qtooltip.h>
+#include <QToolTip>
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QKeyEvent>

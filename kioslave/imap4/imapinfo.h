@@ -24,7 +24,7 @@
  *********************************************************************/
 
 #include <qstringlist.h>
-#include <qstring.h>
+#include <QString>
 #include <QString>
 #include <Q3CString>
 #include <QLatin1String>

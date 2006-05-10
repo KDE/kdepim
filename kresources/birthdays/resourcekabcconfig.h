@@ -23,8 +23,8 @@
 #ifndef KCAL_RESOURCEKABCCONFIG_H
 #define KCAL_RESOURCEKABCCONFIG_H
 
-#include <qcheckbox.h>
-#include <qlabel.h>
+#include <QCheckBox>
+#include <QLabel>
 
 #include <k3listview.h>
 #include <krestrictedline.h>

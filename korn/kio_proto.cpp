@@ -21,7 +21,7 @@
 
 #include <kconfig.h>
 
-#include <qmap.h>
+#include <QMap>
 
 QMap< QString, QString >* KIO_Protocol::createConfig( KConfigGroup * group, const QString& password ) const
 {

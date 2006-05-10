@@ -34,7 +34,7 @@
 
 #include <klocale.h>
 
-#include <qstring.h>
+#include <QString>
 #include <qstringlist.h>
 
 static const struct {

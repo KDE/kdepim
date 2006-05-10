@@ -51,7 +51,7 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 #include <kuser.h>
 #include <dcopclient.h>
 
-#include <qregexp.h>
+#include <QRegExp>
 
 #include <assert.h>
 #include <krandom.h>

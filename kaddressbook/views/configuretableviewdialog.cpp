@@ -21,11 +21,11 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qstring.h>
-#include <qwidget.h>
-#include <qlayout.h>
+#include <QString>
+#include <QWidget>
+#include <QLayout>
 #include <qradiobutton.h>
-#include <qcheckbox.h>
+#include <QCheckBox>
 #include <q3vbox.h>
 #include <q3buttongroup.h>
 //Added by qt3to4:

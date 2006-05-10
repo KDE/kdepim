@@ -38,10 +38,10 @@
 
 
 #include <qdatetime.h>
-#include <qstring.h>
-#include <qcolor.h>
+#include <QString>
+#include <QColor>
 #include <qpixmap.h>
-#include <qfont.h>
+#include <QFont>
 
 
 #include "kdgantt_qt3_compat.h"

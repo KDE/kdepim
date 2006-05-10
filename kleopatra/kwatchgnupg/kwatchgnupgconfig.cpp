@@ -39,12 +39,12 @@
 #include <Q3GroupBox>
 
 #include <q3frame.h>
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qspinbox.h>
-#include <qcheckbox.h>
-#include <qcombobox.h>
-#include <qdir.h>
+#include <QLayout>
+#include <QLabel>
+#include <QSpinBox>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QDir>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QGridLayout>

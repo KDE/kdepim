@@ -24,7 +24,7 @@
 #include "kmime_warning.h"
 
 #include <qtextcodec.h>
-#include <qstring.h>
+#include <QString>
 #include <qstringlist.h>
 
 #include <kglobal.h>

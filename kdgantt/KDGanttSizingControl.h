@@ -33,7 +33,7 @@
 #ifndef KDGANTTSIZINGCONTROL_H
 #define KDGANTTSIZINGCONTROL_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 #include "kdgantt_qt3_compat.h"
 

@@ -24,7 +24,7 @@
 #ifndef ADDRESSEEWIDGET_H
 #define ADDRESSEEWIDGET_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 class KComboBox;
 class KLineEdit;

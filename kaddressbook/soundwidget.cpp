@@ -31,10 +31,10 @@
 #include <kurlrequester.h>
 #include <phonon/simpleplayer.h>
 
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qpushbutton.h>
+#include <QCheckBox>
+#include <QLabel>
+#include <QLayout>
+#include <QPushButton>
 
 //Added by qt3to4:
 #include <QGridLayout>

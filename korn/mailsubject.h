@@ -5,7 +5,7 @@ class KMailDrop;
 
 class QVariant;
 
-#include <qstring.h>
+#include <QString>
 
 
 /**

@@ -24,7 +24,7 @@
 #ifndef DATEPARSER_H
 #define DATEPARSER_H
 
-#include <qstring.h>
+#include <QString>
 
 /**
   This class parses the date out of a given string with the

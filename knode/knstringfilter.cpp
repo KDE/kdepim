@@ -12,8 +12,8 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qcombobox.h>
-#include <qcheckbox.h>
+#include <QComboBox>
+#include <QCheckBox>
 #include <QGridLayout>
 
 #include <kdialog.h>

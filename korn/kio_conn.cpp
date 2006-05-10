@@ -24,7 +24,7 @@
 #include <kio/scheduler.h>
 #include <kio/slave.h>
 
-#include <qmap.h>
+#include <QMap>
 
 QMap< KIO::Slave*, int >* KIO_Connection::m_slaves = 0;
 

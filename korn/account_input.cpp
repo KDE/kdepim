@@ -22,10 +22,10 @@
 #include <kurlrequester.h>
 #include <klineedit.h>
 
-#include <qcheckbox.h>
-#include <qcombobox.h>
-#include <qlabel.h>
-#include <qstring.h>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QLabel>
+#include <QString>
 #include <qstringlist.h>
 #include <qvalidator.h>
 

@@ -4,10 +4,10 @@
 
 #include <kinstance.h>
 
-#include <qfile.h>
+#include <QFile>
 #include <QByteArray>
 #include <QList>
-//#include <qstring.h>
+//#include <QString>
 
 //#include <stdio.h>
 #include <iostream>

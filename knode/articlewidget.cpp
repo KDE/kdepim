@@ -17,10 +17,10 @@
 
 #include <qbuffer.h>
 #include <qclipboard.h>
-#include <qdir.h>
-#include <qfile.h>
+#include <QDir>
+#include <QFile>
 #include <qimage.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <QMenu>
 #include <qstringlist.h>
 #include <qtextcodec.h>

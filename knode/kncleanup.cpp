@@ -14,10 +14,10 @@
 
 #include <stdlib.h>
 
-#include <qdir.h>
+#include <QDir>
 #include <QFile>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 #include <QProgressBar>
 //Added by qt3to4:
 #include <QVBoxLayout>

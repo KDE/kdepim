@@ -20,11 +20,11 @@
 */
 
 #include <q3buttongroup.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <qradiobutton.h>
-#include <qspinbox.h>
+#include <QSpinBox>
 #include <khbox.h>
-#include <qlabel.h>
+#include <QLabel>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QBoxLayout>

@@ -27,7 +27,7 @@
 
 #include <libemailfunctions/email.h>
 
-#include <qregexp.h>
+#include <QRegExp>
 
 using namespace KCal;
 

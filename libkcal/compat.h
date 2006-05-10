@@ -22,7 +22,7 @@
 #ifndef KCAL_COMPAT_H
 #define KCAL_COMPAT_H
 
-#include <qstring.h>
+#include <QString>
 #include <qdatetime.h>
 
 namespace KCal {

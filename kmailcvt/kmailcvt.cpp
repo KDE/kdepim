@@ -17,7 +17,7 @@
 #include "kmailcvt.h"
 #include <kaboutapplication.h>
 #include <klocale.h>
-#include <qpushbutton.h>
+#include <QPushButton>
 
 #include "filters.hxx"
 

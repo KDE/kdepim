@@ -23,7 +23,7 @@
 #include <kdebug.h>
 #include <kwallet.h>
 
-#include <qstring.h>
+#include <QString>
 #include <qstringlist.h>
 
 KWallet::Wallet* KOrnPassword::m_wallet = 0;

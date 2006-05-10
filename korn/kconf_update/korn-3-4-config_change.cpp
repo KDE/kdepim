@@ -16,10 +16,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <qstring.h>
-#include <qregexp.h>
+#include <QString>
+#include <QRegExp>
 #include <qtextstream.h>
-#include <qmap.h>
+#include <QMap>
 #include <q3valuelist.h>
 
 #include <stdio.h>

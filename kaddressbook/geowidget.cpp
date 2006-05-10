@@ -30,17 +30,17 @@
 #include <knuminput.h>
 #include <kstandarddirs.h>
 
-#include <qcheckbox.h>
-#include <qfile.h>
+#include <QCheckBox>
+#include <QFile>
 #include <q3groupbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 #include <q3listbox.h>
 #include <qpainter.h>
 #include <qpixmap.h>
-#include <qpushbutton.h>
-#include <qregexp.h>
-#include <qstring.h>
+#include <QPushButton>
+#include <QRegExp>
+#include <QString>
 //Added by qt3to4:
 #include <QTextStream>
 #include <QPaintEvent>

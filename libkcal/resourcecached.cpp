@@ -19,10 +19,10 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qdatastream.h>
+#include <QDataStream>
 #include <qdatetime.h>
-#include <qfile.h>
-#include <qstring.h>
+#include <QFile>
+#include <QString>
 
 #include <kdebug.h>
 #include <klocale.h>

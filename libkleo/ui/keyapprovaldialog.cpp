@@ -51,11 +51,11 @@
 
 #include <qstringlist.h>
 #include <q3frame.h>
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qcombobox.h>
+#include <QLayout>
+#include <QLabel>
+#include <QComboBox>
 #include <q3scrollview.h>
-#include <qpushbutton.h>
+#include <QPushButton>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QGridLayout>

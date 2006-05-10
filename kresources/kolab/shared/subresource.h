@@ -33,8 +33,8 @@
 #ifndef SUBRESOURCE_H
 #define SUBRESOURCE_H
 
-#include <qstring.h>
-#include <qmap.h>
+#include <QString>
+#include <QMap>
 
 
 namespace Kolab {

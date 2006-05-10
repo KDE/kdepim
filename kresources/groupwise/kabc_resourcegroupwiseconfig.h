@@ -25,7 +25,7 @@
 #include <kresources/configwidget.h>
 #include <kdepimmacros.h>
 
-#include <qmap.h>
+#include <QMap>
 
 class KComboBox;
 class KLineEdit;

@@ -23,8 +23,8 @@
 #include <kdebug.h>
 
 #include <qboxlayout.h>
-#include <qlabel.h>
-#include <qwidget.h>
+#include <QLabel>
+#include <QWidget>
 
 HVContainer::HVContainer( Qt::Orientation orientation, QObject * parent )
 	: BoxContainer( parent ),

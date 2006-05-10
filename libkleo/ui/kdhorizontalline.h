@@ -42,7 +42,7 @@
 #define __KDTOOLS__KDHORIZONTALLINE_H__
 
 #include <q3frame.h>
-#include <qstring.h>
+#include <QString>
 //Added by qt3to4:
 #include <QPaintEvent>
 

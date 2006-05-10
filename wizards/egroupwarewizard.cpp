@@ -34,9 +34,9 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QCheckBox>
+#include <QLabel>
+#include <QLayout>
 #include <qwhatsthis.h>
 
 

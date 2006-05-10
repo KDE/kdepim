@@ -22,7 +22,7 @@
 #ifndef GROUPWAREWIZARD_H
 #define GROUPWAREWIZARD_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 class OverViewPage;
 

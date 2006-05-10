@@ -23,10 +23,10 @@
 
 #include "ringbinderstyle.h"
 
-#include <qcheckbox.h>
-#include <qlayout.h>
+#include <QCheckBox>
+#include <QLayout>
 #include <qpainter.h>
-#include <qspinbox.h>
+#include <QSpinBox>
 #include <qstringlist.h>
 
 #include <kabc/addresseelist.h>

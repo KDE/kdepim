@@ -29,14 +29,14 @@
 #include <klineedit.h>
 #include <kurlrequester.h>
 
-#include <qcheckbox.h>
-#include <qcombobox.h>
+#include <QCheckBox>
+#include <QComboBox>
 #include <q3ptrvector.h>
-#include <qlayout.h>
-#include <qmap.h>
-#include <qlabel.h>
+#include <QLayout>
+#include <QMap>
+#include <QLabel>
 #include <qlist.h>
-#include <qwidget.h>
+#include <QWidget>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QHBoxLayout>

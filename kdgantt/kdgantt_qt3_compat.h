@@ -32,7 +32,7 @@
 #ifndef __QT3_COMPAT_H__
 #define __QT3_COMPAT_H__
 
-#include <qwidget.h>
+#include <QWidget>
 
 #if QT_VERSION < 0x040000
 
@@ -52,7 +52,7 @@
 #include <qvbuttongroup.h>
 #include <qvgroupbox.h>
 #include <qscrollview.h>
-#include <qtooltip.h>
+#include <QToolTip>
 #include <qdockwindow.h>
 #include <qpaintdevicemetrics.h>
 

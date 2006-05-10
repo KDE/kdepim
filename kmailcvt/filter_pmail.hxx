@@ -18,7 +18,7 @@
 #ifndef FILTER_PMAIL_HXX
 #define FILTER_PMAIL_HXX
 
-#include <qdir.h>
+#include <QDir>
 
 #include "filters.hxx"
 

@@ -21,9 +21,9 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qcheckbox.h>
+#include <QCheckBox>
 #include <q3frame.h>
-#include <qlayout.h>
+#include <QLayout>
 //Added by qt3to4:
 #include <QVBoxLayout>
 

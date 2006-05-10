@@ -30,7 +30,7 @@
 
 #include "protocol.h"
 
-#include <qstring.h>
+#include <QString>
 
 template< class T > class QList;
 

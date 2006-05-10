@@ -24,7 +24,7 @@
 #ifndef VIEWCONFIGUREFILTERPAGE
 #define VIEWCONFIGUREFILTERPAGE
 
-#include <qwidget.h>
+#include <QWidget>
 
 class Q3ButtonGroup;
 

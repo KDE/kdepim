@@ -19,7 +19,7 @@
 #define	KTNEFMAIN_H
 
 #include <kmainwindow.h>
-#include <qstring.h>
+#include <QString>
 #include <q3listview.h>
 //Added by qt3to4:
 

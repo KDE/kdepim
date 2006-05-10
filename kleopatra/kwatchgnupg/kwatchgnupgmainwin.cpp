@@ -50,7 +50,7 @@
 #include <kkeydialog.h>
 
 #include <QTextEdit>
-#include <qdir.h>
+#include <QDir>
 #include <qeventloop.h>
 #include <qtimer.h>
 #include <qtextcodec.h>

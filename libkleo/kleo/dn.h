@@ -33,7 +33,7 @@
 #ifndef __KLEO_DN_H__
 #define __KLEO_DN_H__
 
-#include <qstring.h>
+#include <QString>
 #include <q3valuevector.h>
 #include <kdepimmacros.h>
 

@@ -44,9 +44,9 @@
 #include <kmessagebox.h>
 #include <kshell.h>
 
-#include <qdir.h>
+#include <QDir>
 #include <qstringlist.h>
-#include <qvariant.h>
+#include <QVariant>
 #include <qtimer.h>
 #include <qfileinfo.h>
 

@@ -22,7 +22,7 @@
 
 #include "protocol.h"
 
-#include <qstring.h>
+#include <QString>
 
 class KConfig;
 class KConfigBase;

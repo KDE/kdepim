@@ -3,7 +3,7 @@
 #include<kdebug.h>
 #include <klocale.h>
 #include <qdatetime.h>
-#include <qvariant.h>
+#include <QVariant>
 
 KornMailSubject::KornMailSubject() : _id(0), _drop(0), _size(-1), _date(-1), _fullMessage(false)
 {

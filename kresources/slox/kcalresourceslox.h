@@ -24,7 +24,7 @@
 #include "webdavhandler.h"
 
 #include <q3ptrlist.h>
-#include <qstring.h>
+#include <QString>
 #include <qdatetime.h>
 #include <qdom.h>
 

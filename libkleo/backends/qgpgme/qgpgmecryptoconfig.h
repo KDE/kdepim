@@ -37,7 +37,7 @@
 #include <q3dict.h>
 #include <qstringlist.h>
 #include <qobject.h>
-#include <qvariant.h>
+#include <QVariant>
 #include <kdepim_export.h>
 class KProcIO;
 

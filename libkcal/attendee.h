@@ -22,7 +22,7 @@
 #ifndef KCAL_ATTENDEE_H
 #define KCAL_ATTENDEE_H
 
-#include <qstring.h>
+#include <QString>
 
 #include "listbase.h"
 #include "person.h"

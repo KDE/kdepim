@@ -44,7 +44,7 @@
 #include <q3buttongroup.h>
 #include <qtoolbutton.h>
 #include <q3listview.h>
-#include <qpushbutton.h>
+#include <QPushButton>
 
 using namespace Kleo;
 

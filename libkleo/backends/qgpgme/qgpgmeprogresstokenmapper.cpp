@@ -38,7 +38,7 @@
 
 #include <klocale.h>
 
-#include <qstring.h>
+#include <QString>
 
 #include <assert.h>
 #include <map>

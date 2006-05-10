@@ -22,8 +22,8 @@
 #ifndef KPIM_IDMAPPER_H
 #define KPIM_IDMAPPER_H
 
-#include <qmap.h>
-#include <qvariant.h>
+#include <QMap>
+#include <QVariant>
 
 #include <kdepimmacros.h>
 

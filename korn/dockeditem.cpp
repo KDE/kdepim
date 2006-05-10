@@ -30,7 +30,7 @@
 
 #include <qbitmap.h>
 #include <qcursor.h>
-#include <qtooltip.h>
+#include <QToolTip>
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <qmovie.h>

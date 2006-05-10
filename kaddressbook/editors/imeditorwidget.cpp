@@ -25,8 +25,8 @@
 #include <q3listview.h>
 #include <qstringlist.h>
 #include <q3vbox.h>
-#include <qlayout.h>
-#include <qfont.h>
+#include <QLayout>
+#include <QFont>
 #include <qpainter.h>
 //Added by qt3to4:
 #include <QList>

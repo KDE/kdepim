@@ -26,7 +26,7 @@
 
 #include <kcmodule.h>
 #include <kinstance.h>
-#include <qwidget.h>
+#include <QWidget>
 
 class LDAPOptionsWidget;
 

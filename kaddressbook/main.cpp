@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include <qstring.h>
+#include <QString>
 
 #include <kabc/stdaddressbook.h>
 #include <kaboutdata.h>

@@ -34,7 +34,7 @@
 #define __KLEO_TESTS_GNUPGVIEWER_H__
 
 #include <q3textedit.h>
-#include <qstring.h>
+#include <QString>
 
 namespace Kleo {
   class GnuPGProcessBase;

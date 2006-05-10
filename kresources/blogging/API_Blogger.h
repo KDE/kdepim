@@ -23,8 +23,8 @@
 
 #include "API_Blog.h"
 
-#include <qstring.h>
-#include <qvariant.h>
+#include <QString>
+#include <QVariant>
 
 
 namespace KBlog {

@@ -22,14 +22,14 @@
 */
 
 #include <kapplication.h>
-#include <qcheckbox.h>
+#include <QCheckBox>
 #include <kcolorbutton.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kdialog.h>
 #include <kfontcombo.h>
 #include <kglobalsettings.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <klocale.h>
 #include <knuminput.h>
 #include <q3paintdevicemetrics.h>

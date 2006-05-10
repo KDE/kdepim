@@ -29,7 +29,7 @@
 
 #include <kconfig.h>
 
-#include <qstring.h>
+#include <QString>
 #include <qdatetime.h>
 #include <qtimer.h>
 

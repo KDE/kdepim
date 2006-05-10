@@ -36,7 +36,7 @@
 
 #include <q3cstring.h>
 #include <q3valuevector.h>
-#include <qlineedit.h>
+#include <QLineEdit>
 #include <kurl.h>
 
 namespace GpgME {

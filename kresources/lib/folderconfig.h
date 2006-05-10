@@ -25,7 +25,7 @@
 
 #include <kurl.h>
 #include <kdepimmacros.h>
-#include <qwidget.h>
+#include <QWidget>
 
 // class K3ListView;
 class QComboBox;

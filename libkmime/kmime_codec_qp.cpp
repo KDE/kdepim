@@ -643,7 +643,7 @@ bool Rfc2047QEncodingEncoder::encode( const char* & scursor, const char * const 
   return (scursor == send);
 } // encode
 
-#include <qstring.h>
+#include <QString>
 
 bool Rfc2047QEncodingEncoder::finish( char* & dcursor, const char * const dend ) {
   mInsideFinishing = true;

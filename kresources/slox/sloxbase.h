@@ -20,7 +20,7 @@
 #ifndef SLOXUTILS_H
 #define SLOXUTILS_H
 
-#include <qstring.h>
+#include <QString>
 #include <kdepimmacros.h>
 
 namespace KRES {

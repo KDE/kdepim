@@ -22,7 +22,7 @@
 
 #include <kresources/configwidget.h>
 
-#include <qmap.h>
+#include <QMap>
 
 class KComboBox;
 class KLineEdit;

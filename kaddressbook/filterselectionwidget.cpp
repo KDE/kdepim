@@ -21,7 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qlabel.h>
+#include <QLabel>
 
 #include <kcombobox.h>
 #include <kdialog.h>

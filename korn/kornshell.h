@@ -24,7 +24,7 @@ class KDialog;
 
 class KConfig;
 
-#include <qwidget.h>
+#include <QWidget>
 
 /**
  * This is a rewritten KornShell class. It is rewritten because the depending classes changed.

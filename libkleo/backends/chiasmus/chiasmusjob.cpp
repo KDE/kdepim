@@ -50,7 +50,7 @@
 
 #include <qtimer.h>
 #include <qfileinfo.h>
-#include <qvariant.h>
+#include <QVariant>
 
 #include <memory>
 

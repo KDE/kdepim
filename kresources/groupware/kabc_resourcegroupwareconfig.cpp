@@ -31,8 +31,8 @@
 #include <k3listview.h>
 #include <kurlrequester.h>
 
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QLabel>
+#include <QLayout>
 
 using namespace KABC;
 

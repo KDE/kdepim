@@ -20,14 +20,14 @@
 #define KPGPUI_H
 
 #include <kdialogbase.h>  // base class of all dialogs here
-#include <qwidget.h>      // base class of Config
-#include <qcheckbox.h>    // used in inlined methods
+#include <QWidget>      // base class of Config
+#include <QCheckBox>    // used in inlined methods
 //Added by qt3to4:
 #include <QPixmap>
 #include <QLabel>
 #include <kdebug.h>       // used in inlined methods
 #include <q3cstring.h>     // used in return-by-value
-#include <qstring.h>      // is a member in KeyRequester
+#include <QString>      // is a member in KeyRequester
 #include <QVector> // used in KeyApprovalDialog
 #include <q3ptrvector.h>
 #include "kpgp.h"

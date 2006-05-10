@@ -27,7 +27,7 @@
 #include <klocale.h>
 #include <kcmdlineargs.h>
 
-#include <qfile.h>
+#include <QFile>
 #include <qfileinfo.h>
 
 using namespace KCal;

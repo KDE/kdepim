@@ -27,7 +27,7 @@
 #include <kabc/field.h>
 
 #include <q3dict.h>
-#include <qwidget.h>
+#include <QWidget>
 //Added by qt3to4:
 #include <QHBoxLayout>
 

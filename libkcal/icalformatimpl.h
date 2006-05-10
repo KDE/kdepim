@@ -22,7 +22,7 @@
 #ifndef KCAL_ICALFORMATIMPL_H
 #define KCAL_ICALFORMATIMPL_H
 
-#include <qstring.h>
+#include <QString>
 
 #include "scheduler.h"
 #include "freebusy.h"

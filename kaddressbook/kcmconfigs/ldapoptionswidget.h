@@ -24,7 +24,7 @@
 #ifndef LDAPOPTIONSWIDGET_H
 #define LDAPOPTIONSWIDGET_H
 
-#include <qwidget.h>
+#include <QWidget>
 
 class QToolButton;
 class K3ListView;

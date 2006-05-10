@@ -21,7 +21,7 @@
 #ifndef KABC_RESOURCEXMLRPC_H
 #define KABC_RESOURCEXMLRPC_H
 
-#include <qmap.h>
+#include <QMap>
 //Added by qt3to4:
 #include <QList>
 #include <kdepimmacros.h>

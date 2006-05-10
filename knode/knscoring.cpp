@@ -12,7 +12,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qstring.h>
+#include <QString>
 
 #include <kwin.h>
 #include <kscoringeditor.h>

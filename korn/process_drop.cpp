@@ -24,8 +24,8 @@
 #include <kprocess.h>
 
 #include <qbytearray.h>
-#include <qregexp.h>
-#include <qstring.h>
+#include <QRegExp>
+#include <QString>
 
 ProcessDrop::ProcessDrop()
 	: KPollableDrop(),

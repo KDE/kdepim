@@ -53,7 +53,7 @@
 #include <q3valuelist.h>
 #include <qpair.h>
 #include <qstringlist.h>
-#include <qstring.h>
+#include <QString>
 #include <kdepimmacros.h>
 
 

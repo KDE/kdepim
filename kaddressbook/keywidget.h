@@ -24,7 +24,7 @@
 #ifndef KEYWIDGET_H
 #define KEYWIDGET_H
 
-#include <qwidget.h>
+#include <QWidget>
 #include <kabc/key.h>
 
 class KComboBox;

@@ -25,7 +25,7 @@
 #ifndef STYLEPAGE_H
 #define STYLEPAGE_H
 
-#include <qwidget.h>
+#include <QWidget>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QLabel>

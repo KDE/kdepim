@@ -28,7 +28,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <qmap.h>
+#include <QMap>
 #include <qobject.h>
 #include <qlist.h>
 #include <qvector.h>

@@ -50,7 +50,7 @@
 
 */
 
-#include <qstring.h>
+#include <QString>
 #include <qdatetime.h>
 
 #include <time.h>

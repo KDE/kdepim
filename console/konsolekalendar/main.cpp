@@ -58,7 +58,7 @@
 #include <libkcal/resourcelocal.h>
 
 #include <qdatetime.h>
-#include <qfile.h>
+#include <QFile>
 #include <qfileinfo.h>
 
 #include <stdlib.h>

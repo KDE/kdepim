@@ -27,7 +27,7 @@
  */
 
 #include <qdatetime.h>
-#include <qfile.h>
+#include <QFile>
 #include <qpixmap.h>
 #include <qimage.h>
 #include <qpainter.h>

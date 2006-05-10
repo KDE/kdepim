@@ -22,7 +22,7 @@
 #define KCAL_RESOURCEKABC_H
 
 #include <q3ptrlist.h>
-#include <qstring.h>
+#include <QString>
 #include <qdatetime.h>
 
 #include <kconfig.h>

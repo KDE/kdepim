@@ -23,7 +23,7 @@
  *
  *********************************************************************/
 
-#include <qstring.h>
+#include <QString>
 
 class QTextCodec;
 

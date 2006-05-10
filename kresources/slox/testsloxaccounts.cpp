@@ -25,7 +25,7 @@
 #include <kdebug.h>
 #include <kcmdlineargs.h>
 
-#include <qpushbutton.h>
+#include <QPushButton>
 
 static const KCmdLineOptions options[] =
 {

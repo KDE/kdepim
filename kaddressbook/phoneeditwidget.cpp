@@ -22,15 +22,15 @@
 */
 
 #include <q3buttongroup.h>
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <QCheckBox>
+#include <QLabel>
+#include <QLayout>
 #include <q3listbox.h>
 #include <q3listview.h>
-#include <qpushbutton.h>
+#include <QPushButton>
 #include <qsignalmapper.h>
-#include <qstring.h>
-#include <qtooltip.h>
+#include <QString>
+#include <QToolTip>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QList>

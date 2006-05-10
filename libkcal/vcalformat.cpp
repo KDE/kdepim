@@ -22,11 +22,11 @@
 
 #include <qapplication.h>
 #include <qdatetime.h>
-#include <qstring.h>
-#include <qregexp.h>
+#include <QString>
+#include <QRegExp>
 #include <qclipboard.h>
 #include <qdialog.h>
-#include <qfile.h>
+#include <QFile>
 //Added by qt3to4:
 #include <QByteArray>
 

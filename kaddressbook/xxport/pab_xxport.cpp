@@ -22,7 +22,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qfile.h>
+#include <QFile>
 
 #include <kdebug.h>
 #include <kfiledialog.h>

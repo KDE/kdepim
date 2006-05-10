@@ -46,11 +46,11 @@
 #include <kapplication.h>
 
 #include <qtoolbutton.h>
-#include <qlayout.h>
+#include <QLayout>
 #include <q3header.h>
-#include <qlabel.h>
+#include <QLabel>
 #include <q3listview.h>
-#include <qtooltip.h>
+#include <QToolTip>
 //Added by qt3to4:
 #include <QGridLayout>
 
