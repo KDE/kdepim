@@ -663,8 +663,8 @@ void KNMainWidget::initActions()
   a_ctArtToggleThread = new KAction(i18n("&Toggle Subthread"), actionCollection(), "thread_toggle");
   connect(a_ctArtToggleThread, SIGNAL(triggered(bool) ), SLOT(slotArtToggleThread()));
   a_ctArtToggleThread->setShortcut(Qt::Key_T);
-  a_ctArtToggleShowThreads  = new KToggleAction(i18n("Show T&hreads"), 0 , this,
-                              SLOT(slotArtToggleShowThreads()), actionCollection(), "view_showThreads");
+  a_ctArtToggleShowThreads = new KToggleAction(i18n("Show T&hreads"), actionCollection(), "view_showThreads");
+  connect(a_ctArtToggleShowThreads, SIGNAL(triggered(bool) ), SLOT(slotArtToggleShowThreads()));
   a_ctArtToggleShowThreads->setCheckedState(i18n("Hide T&hreads"));
 
   a_ctArtToggleShowThreads->setChecked( knGlobals.settings()->showThreads() );
@@ -725,8 +725,8 @@ void KNMainWidget::initActions()
   connect(a_ctFetchArticleWithID, SIGNAL(triggered(bool) ), SLOT(slotFetchArticleWithID()));
   a_ctFetchArticleWithID->setEnabled(false);
 
-  a_ctToggleQuickSearch      = new KToggleAction(i18n("Show Quick Search"), KShortcut(), this,
-                               SLOT(slotToggleQuickSearch()), actionCollection(), "settings_show_quickSearch");
+  a_ctToggleQuickSearch = new KToggleAction(i18n("Show Quick Search"), actionCollection(), "settings_show_quickSearch");
+  connect(a_ctToggleQuickSearch, SIGNAL(triggered(bool) ), SLOT(slotToggleQuickSearch()));
   a_ctToggleQuickSearch->setCheckedState(i18n("Hide Quick Search"));
 }
 

@@ -165,10 +165,12 @@ void ArticleWidget::initActions()
     0, this, SLOT(slotCancel()), mActionCollection, "article_cancel" );
   mSupersedeAction = new KAction(i18n("S&upersede Article"), mActionCollection, "article_supersede" );
   connect(mSupersedeAction, SIGNAL(triggered(bool) ), SLOT(slotSupersede()));
-  mFixedFontToggle = new KToggleAction( i18n("U&se Fixed Font"),
-    Qt::Key_X ,this, SLOT(slotToggleFixedFont()), mActionCollection, "view_useFixedFont" );
-  mFancyToggle = new KToggleAction( i18n("Fancy Formating"),
-    Qt::Key_Y, this, SLOT(slotToggleFancyFormating()), mActionCollection, "view_fancyFormating" );
+  mFixedFontToggle = new KToggleAction( i18n("U&se Fixed Font"), mActionCollection, "view_useFixedFont" );
+  connect(mFixedFontToggle, SIGNAL(triggered(bool) ), SLOT(slotToggleFixedFont()));
+  mFixedFontToggle->setShortcut(Qt::Key_X);
+  mFancyToggle = new KToggleAction( i18n("Fancy Formating"), mActionCollection, "view_fancyFormating" );
+  connect(mFancyToggle, SIGNAL(triggered(bool) ), SLOT(slotToggleFancyFormating()));
+  mFancyToggle->setShortcut(Qt::Key_Y);
   mRot13Toggle = new KToggleAction(KIcon("decrypted"),  i18n("&Unscramble (Rot 13)"), mActionCollection, "view_rot13" );
   connect(mRot13Toggle, SIGNAL(triggered(bool) ), SLOT(slotToggleRot13()));
   mRot13Toggle->setChecked( false );
@@ -176,31 +178,31 @@ void ArticleWidget::initActions()
   QActionGroup *ag = new QActionGroup( this );
   KToggleAction *ra;
   mHeaderStyleMenu = new KActionMenu( i18n("&Headers"), mActionCollection, "view_headers" );
-  ra = new KToggleAction( i18n("&Fancy Headers"), 0, this, SLOT(slotFancyHeaders()),
-                         mActionCollection, "view_headers_fancy" );
+  ra = new KToggleAction( i18n("&Fancy Headers"), mActionCollection, "view_headers_fancy" );
+  connect(ra, SIGNAL(triggered(bool) ), SLOT(slotFancyHeaders()));
   ag->addAction ( ra );
   mHeaderStyleMenu->insert( ra );
-  ra = new KToggleAction( i18n("&Standard Headers"), 0, this, SLOT(slotStandardHeaders()),
-                         mActionCollection, "view_headers_standard" );
+  ra = new KToggleAction( i18n("&Standard Headers"), mActionCollection, "view_headers_standard" );
+  connect(ra, SIGNAL(triggered(bool) ), SLOT(slotStandardHeaders()));
   ag->addAction( ra );
   mHeaderStyleMenu->insert( ra );
-  ra = new KToggleAction( i18n("&All Headers"), 0, this, SLOT(slotAllHeaders()),
-                         mActionCollection, "view_headers_all" );
+  ra = new KToggleAction( i18n("&All Headers"), mActionCollection, "view_headers_all" );
+  connect(ra, SIGNAL(triggered(bool) ), SLOT(slotAllHeaders()));
   ag->addAction( ra );
   mHeaderStyleMenu->insert( ra );
 
   ag = new QActionGroup( this );
   mAttachmentStyleMenu = new KActionMenu( i18n("&Attachments"), mActionCollection, "view_attachments" );
-  ra = new KToggleAction( i18n("&As Icon"), 0, this, SLOT(slotIconAttachments()),
-                         mActionCollection, "view_attachments_icon" );
+  ra = new KToggleAction( i18n("&As Icon"), mActionCollection, "view_attachments_icon" );
+  connect(ra, SIGNAL(triggered(bool) ), SLOT(slotIconAttachments()));
   ag->addAction( ra );
   mAttachmentStyleMenu->insert( ra );
-  ra = new KToggleAction( i18n("&Inline"), 0, this, SLOT(slotInlineAttachments()),
-                         mActionCollection, "view_attachments_inline" );
+  ra = new KToggleAction( i18n("&Inline"), mActionCollection, "view_attachments_inline" );
+  connect(ra, SIGNAL(triggered(bool) ), SLOT(slotInlineAttachments()));
   ag->addAction( ra );
   mAttachmentStyleMenu->insert( ra );
-  ra = new KToggleAction( i18n("&Hide"), 0, this, SLOT(slotHideAttachments()),
-                         mActionCollection, "view_attachments_hide" );
+  ra = new KToggleAction( i18n("&Hide"), mActionCollection, "view_attachments_hide" );
+  connect(ra, SIGNAL(triggered(bool) ), SLOT(slotHideAttachments()));
   ag->addAction( ra );
   mAttachmentStyleMenu->insert( ra );
 

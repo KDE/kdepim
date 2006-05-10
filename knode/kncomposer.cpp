@@ -291,8 +291,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   addAction( a_ctSetCharsetKeyb );
 
 
-  a_ctWordWrap  = new KToggleAction(i18n("&Word Wrap"), 0 , this,
-                      SLOT(slotToggleWordWrap()), actionCollection(), "toggle_wordwrap");
+  a_ctWordWrap = new KToggleAction(i18n("&Word Wrap"), actionCollection(), "toggle_wordwrap");
+  connect(a_ctWordWrap, SIGNAL(triggered(bool) ), SLOT(slotToggleWordWrap()));
 
   //tools menu
 
