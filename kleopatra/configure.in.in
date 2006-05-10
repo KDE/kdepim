@@ -1,1 +1,0 @@
-AC_DEFINE_UNQUOTED(MAX_CMD_LENGTH, $lt_cv_sys_max_cmd_len, [Maximum length of command line arguments])

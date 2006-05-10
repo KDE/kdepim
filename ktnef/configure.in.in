@@ -1,3 +1,0 @@
-AC_CHECK_SIZEOF(unsigned long long)
-AC_CHECK_SIZEOF(unsigned long)
-AC_CHECK_SIZEOF(uint64_t)
