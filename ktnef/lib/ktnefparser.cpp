@@ -25,9 +25,9 @@
 #include "ktnef/ktnefmessage.h"
 
 #include <qdatetime.h>
-#include <qdatastream.h>
-#include <qfile.h>
-#include <qvariant.h>
+#include <QDataStream>
+#include <QFile>
+#include <QVariant>
 #include <QList>
 #include <kdebug.h>
 #include <kmimetype.h>

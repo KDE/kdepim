@@ -18,8 +18,8 @@
 #ifndef KTNEFPARSER_H
 #define	KTNEFPARSER_H
 
-#include <qstring.h>
-#include <qmap.h>
+#include <QString>
+#include <QMap>
 #include <QIODevice>
 #include <kdepimmacros.h>
 

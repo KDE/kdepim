@@ -18,8 +18,8 @@
 #ifndef KTNEFPROPERTYSET_H
 #define KTNEFPROPERTYSET_H
 
-#include <qmap.h>
-#include <qvariant.h>
+#include <QMap>
+#include <QVariant>
 #include <kdepimmacros.h>
 
 class KTNEFProperty;

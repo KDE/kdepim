@@ -18,7 +18,7 @@
 #ifndef MAPI_H
 #define MAPI_H
 
-#include <qstring.h>
+#include <QString>
 
 QString mapiTagString( int key );
 QString mapiNamedTagString( int key, int tag = -1 );

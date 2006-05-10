@@ -19,7 +19,7 @@
 #define ATTACHPROPERTYDLG_H
 
 #include "attachpropertydialogbase.h"
-#include <qmap.h>
+#include <QMap>
 #include <qpixmap.h>
 
 class KTNEFAttach;

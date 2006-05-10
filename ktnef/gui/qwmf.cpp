@@ -22,7 +22,7 @@
 #include <qfileinfo.h>
 #include <qpixmap.h>
 #include <qpainter.h>
-#include <qdatastream.h>
+#include <QDataStream>
 #include <qapplication.h>
 #include <qbuffer.h>
 //Added by qt3to4:
