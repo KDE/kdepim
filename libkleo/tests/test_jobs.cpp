@@ -75,8 +75,7 @@ static void testSign()
   Kleo::SignJob* job = proto->signJob( true, true );
 
   Q3CString cText = "Hallo Leute\n"; // like gpgme's t-sign.c
-  QByteArray plainText;
-  plainText.duplicate( cText.data(), cText.length() ); // hrmpf...
+  QByteArray plainText = QByteArray( cText.data(), cText.length() ); // hrmpf...
   kDebug() << k_funcinfo << "plainText=" << cText.data() << endl;
 
   kDebug() << k_funcinfo << " signing with " << signingKeys[0].primaryFingerprint() << endl;

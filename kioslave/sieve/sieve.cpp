@@ -257,13 +257,13 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
 
 		} else if (r.getKey() == "SASL") {
 			// Save list of available SASL methods
-			m_sasl_caps = QStringList::split(' ', r.getVal());
+			m_sasl_caps = QString(r.getVal()).split(' ');
 			ksDebug() << "Server SASL authentication methods: " << m_sasl_caps.join(", ") << endl;
 			setMetaData("saslMethods", r.getVal());
 
 		} else if (r.getKey() == "SIEVE") {
 			// Save script capabilities; report back as meta data:
-			ksDebug() << "Server script capabilities: " << QStringList::split(' ', r.getVal()).join(", ") << endl;
+			ksDebug() << "Server script capabilities: " << QString(r.getVal()).split(' ').join(", ") << endl;
 			setMetaData("sieveExtensions", r.getVal());
 
 		} else if (r.getKey() == "STARTTLS") {
@@ -299,7 +299,7 @@ void kio_sieveProtocol::changeCheck( const KUrl &url )
 	else {
 		QString query = url.query();
 		if ( query.startsWith("?") ) query.remove( 0, 1 );
-		QStringList q = QStringList::split( ",", query );
+		QStringList q = query.split( "," );
 		QStringList::iterator it;
   
 		for ( it = q.begin(); it != q.end(); ++it ) {

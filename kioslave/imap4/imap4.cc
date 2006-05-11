@@ -2190,9 +2190,9 @@ IMAP4Protocol::doListEntry (const KUrl & _url, const QString & myBox,
           path += item.hierarchyDelimiter();
         }
         path += mailboxName;
-        if (path.upper() == "/INBOX/") {
+        if (path.toUpper() == "/INBOX/") {
           // make sure the client can rely on INBOX
-          path = path.upper();
+          path = path.toUpper();
         }
       }
       aURL.setPath(path);

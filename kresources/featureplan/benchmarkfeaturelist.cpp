@@ -40,22 +40,22 @@ static const KCmdLineOptions options[] =
 
 void displayFeature( const Feature &f )
 {
-  std::cout << "FEATURE: " << f.summary().local8Bit().data() << std::endl;
+  std::cout << "FEATURE: " << f.summary().toLocal8Bit().data() << std::endl;
   Responsible::List r = f.responsibleList();
   Responsible::List::ConstIterator it;
   for( it = r.begin(); it != r.end(); ++it ) {
-    std::cout << "  RESPONSIBLE: " << (*it).name().local8Bit().data() << " ("
-              << (*it).email().local8Bit().data() << ")" << std::endl;
+    std::cout << "  RESPONSIBLE: " << (*it).name().toLocal8Bit().data() << " ("
+              << (*it).email().toLocal8Bit().data() << ")" << std::endl;
   }
-  std::cout << "  TARGET: " << f.target().local8Bit().data() << std::endl;
-  std::cout << "  STATUS: " << f.status().local8Bit().data() << std::endl;
+  std::cout << "  TARGET: " << f.target().toLocal8Bit().data() << std::endl;
+  std::cout << "  STATUS: " << f.status().toLocal8Bit().data() << std::endl;
 }
 
 void displayCategory( const Category::List &categories )
 {
   Category::List::ConstIterator it;
   for( it = categories.begin(); it != categories.end(); ++it ) {
-    std::cout << "CATEGORY: " << (*it).name().local8Bit().data() << std::endl;
+    std::cout << "CATEGORY: " << (*it).name().toLocal8Bit().data() << std::endl;
 
     Feature::List features = (*it).featureList();
     Feature::List::ConstIterator it2;

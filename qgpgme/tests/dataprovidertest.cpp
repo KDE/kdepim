@@ -110,8 +110,7 @@ int main( int, char** ) {
     //
     // QByteArrayDataProvider with initial data:
     //
-    QByteArray ba;
-    ba.duplicate( input, inputSize );
+    QByteArray ba = QByteArray( input, inputSize );
     QGpgME::QByteArrayDataProvider qba_dp( ba );
     Data data( &qba_dp );
 

@@ -34,14 +34,13 @@
 
 #include <QLabel>
 #include <QLayout>
-//Added by qt3to4:
 #include <QGridLayout>
 
 
 using namespace KCal;
 
-CacheSettingsDialog::CacheSettingsDialog( QWidget* parent, const char* name )
-    : KDialogBase( parent, name, true, i18n("Resource Cache Settings"), KDialogBase::Close )
+CacheSettingsDialog::CacheSettingsDialog( QWidget* parent )
+    : KDialog( parent, i18n("Resource Cache Settings"), KDialogBase::Close )
 {
   QWidget *mainWidget = new QWidget( this );
   setMainWidget( mainWidget );

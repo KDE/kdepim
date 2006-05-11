@@ -40,19 +40,19 @@ static const KCmdLineOptions options[] =
 
 void displayFeature( Feature *f )
 {
-  std::cout << "FEATURE: " << f->summary().local8Bit().data() << std::endl;
+  std::cout << "FEATURE: " << f->summary().toLocal8Bit().data() << std::endl;
   foreach( Responsible e, f->responsibleList() ) {
-    std::cout << "  RESPONSIBLE: " << e.name().local8Bit().data() << " ("
-              << e.email().local8Bit().data() << ")" << std::endl;
+    std::cout << "  RESPONSIBLE: " << e.name().toLocal8Bit().data() << " ("
+              << e.email().toLocal8Bit().data() << ")" << std::endl;
   }
-  std::cout << "  TARGET: " << f->target().local8Bit().data() << std::endl;
-  std::cout << "  STATUS: " << f->status().local8Bit().data() << std::endl;
+  std::cout << "  TARGET: " << f->target().toLocal8Bit().data() << std::endl;
+  std::cout << "  STATUS: " << f->status().toLocal8Bit().data() << std::endl;
 }
 
 void displayCategory( const QList<Category> categories )
 {
   foreach( Category c, categories ) {
-    std::cout << "CATEGORY: " << c.name().local8Bit().data() << std::endl;
+    std::cout << "CATEGORY: " << c.name().toLocal8Bit().data() << std::endl;
 
     Feature::List features = c.featureList();
     Feature::List::ConstIterator it2;
