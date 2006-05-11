@@ -3,9 +3,6 @@ kde4_header()
 add_subdirectory( tests )
 
 
-
-kde4_add_dcop_skels(libemailfunctions_SRCS ${CMAKE_SOURCE_DIR}/libemailfunctions/networkstatus.h )
-
 ########### install files ###############
 
 kde4_footer()
