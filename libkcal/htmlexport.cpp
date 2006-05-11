@@ -424,9 +424,9 @@ void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
 
   *ts << "<tr>\n";
 
-  *ts << "  <td class=\"sum\"";
+  *ts << "  <td class=\"sum";
   if (completed) *ts << "done";
-  *ts << ">\n";
+  *ts << "\">\n";
   *ts << "    <a name=\"" << todo->uid() << "\"></a>\n";
   *ts << "    <b>" << cleanChars(todo->summary()) << "</b>\n";
   if (!todo->description().isEmpty()) {
@@ -436,10 +436,7 @@ void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
     *ts << "    <div align=\"right\"><a href=\"#sub" << todo->uid()
         << "\">" << i18n("Sub-Tasks") << "</a></div>\n";
   }
-
-  *ts << "  </td";
-  if (completed) *ts << " class=\"done\"";
-  *ts << ">\n";
+  *ts << "  </td>\n";
 
   *ts << "  <td";
   if (completed) *ts << " class=\"done\"";
