@@ -39,20 +39,20 @@
 
 #include <qptrlist.h>
 #include <qdom.h>
-#include <qvbox.h>  
-#include <qarray.h> 
+#include <qvbox.h>
+#include <qarray.h>
 #include <qhbuttongroup.h>
 #include <qlistview.h>
 #include <qcanvas.h>
 #include <qdict.h>
-#include "qvaluelist.h"
+#include <qvaluelist.h>
 #include <qcstring.h>
 #include <qdragobject.h>
 #include <qpopupmenu.h>
 #include <qvbuttongroup.h>
 #include <qvgroupbox.h>
 #include <qscrollview.h>
-#include <QToolTip>
+#include <qtooltip.h>
 #include <qdockwindow.h>
 #include <qpaintdevicemetrics.h>
 
@@ -65,35 +65,35 @@ typedef QListViewItem Q3ListViewItem;
 
 #else
 
-#include <q3ptrlist.h>
+#include <Q3PtrList>
 #include <QtXml/qdom.h>
-#include <q3vbox.h>
+#include <Q3VBox>
 
-#include <q3canvas.h>
-#include <q3dict.h>
-#include <q3listview.h>
-#include "q3valuelist.h"
-#include <q3cstring.h>
-#include <q3dragobject.h>
-#include <q3dockwindow.h>
-#include <q3scrollview.h>
-#include <q3popupmenu.h>
-#include <q3groupbox.h>
-#include <q3scrollview.h>
-#include <q3memarray.h> 
-//#include <q3array.h> 
+#include <Q3Canvas>
+#include <Q3Dict>
+#include <Q3ListView>
+#include <Q3ValueList>
+#include <Q3CString>
+#include <Q3DragObject>
+#include <Q3DockWindow>
+#include <Q3ScrollView>
+#include <Q3PopupMenu>
+#include <Q3GroupBox>
+#include <Q3ScrollView>
+#include <Q3MemArray>
+//#include <q3array.h>
 
 
 #define QPtrList Q3PtrList
 #define QVBox Q3VBox
 #define QHBox Q3HBox
 #define QCanvasText Q3CanvasText
-#define QCanvasLine Q3CanvasLine 
-#define QCanvasPolygonalItem Q3CanvasPolygonalItem 
-#define QCanvasPolygon Q3CanvasPolygon 
-#define QCanvasEllipse Q3CanvasEllipse 
-#define QCanvasRectangle Q3CanvasRectangle 
-#define QCanvasView Q3CanvasView 
+#define QCanvasLine Q3CanvasLine
+#define QCanvasPolygonalItem Q3CanvasPolygonalItem
+#define QCanvasPolygon Q3CanvasPolygon
+#define QCanvasEllipse Q3CanvasEllipse
+#define QCanvasRectangle Q3CanvasRectangle
+#define QCanvasView Q3CanvasView
 #define QCanvasItem Q3CanvasItem
 #define QListViewItemIterator Q3ListViewItemIterator
 #define QPtrListIterator Q3PtrListIterator
