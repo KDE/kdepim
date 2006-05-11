@@ -43,7 +43,7 @@ class KDE_EXPORT CacheSettingsDialog : public KDialogBase
 { 
     Q_OBJECT
   public:
-    CacheSettingsDialog( QWidget *parent = 0, const char *name = 0 );
+    CacheSettingsDialog( QWidget *parent = 0 );
 
   public slots:
     virtual void loadSettings( KRES::Resource *resource );
