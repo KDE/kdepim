@@ -1,9 +1,11 @@
 KAlarm
 
-=== Version 1.2.12 --- 4 April 2006 ===
+=== Version 1.2.12 --- 11 May 2006 ===
 Make system tray icon appear in non-KDE window managers.
+Fix corruption of alarms displayed at logout and then deferred after login.
 Fix erroneous adjustment of recurrence start date when saving alarm.
 Fix crash when --play command line option is used, if compiled without aRts.
+Don't show disabled alarms in system tray tooltip alarm list.
 
 === Version 1.2.11 --- 29 January 2006 ===
 Fix kalarmd hang when triggering late alarm and KAlarm run mode is on-demand.
