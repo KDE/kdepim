@@ -597,7 +597,8 @@ CardView::CardView( QWidget *parent, const char *name )
   d->mBFm = new QFontMetrics( f );
   d->mTip = new CardViewTip( viewport() );
   d->mTip->hide();
-  d->mTimer = new QTimer( this, "mouseTimer" );
+  d->mTimer = new QTimer( this );
+  d->mTimer->setObjectName( "mouseTimer" );
 
   viewport()->setMouseTracking( true );
   viewport()->setFocusProxy( this );

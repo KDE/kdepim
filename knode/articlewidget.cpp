@@ -121,6 +121,7 @@ ArticleWidget::ArticleWidget( QWidget *parent,
            SLOT(slotURLPopup(const QString&, const QPoint&)) );
 
   mTimer = new QTimer( this );
+  mTimer->setSingleShot( true );
   connect( mTimer, SIGNAL(timeout()), SLOT(slotTimeout()) );
 
   initActions();
@@ -521,7 +522,7 @@ void ArticleWidget::displayArticle()
 
   enableActions();
   if( mArticle->type() == KMime::Base::ATremote && knGlobals.settings()->autoMark() )
-    mTimer->start( knGlobals.settings()->autoMarkSeconds() * 1000, true );
+    mTimer->start( knGlobals.settings()->autoMarkSeconds() * 1000 );
 }
 
 

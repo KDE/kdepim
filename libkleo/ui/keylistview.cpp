@@ -151,6 +151,7 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
   d = new Private();
 
   d->updateTimer = new QTimer( this );
+  d->updateTimer->setSingleShot( true );
   connect( d->updateTimer, SIGNAL(timeout()), SLOT(slotUpdateTimeout()) );
 
   if ( !columnStrategy ) {
@@ -222,7 +223,7 @@ void Kleo::KeyListView::slotAddKey( const GpgME::Key & key ) {
 
   d->keyBuffer.push_back( key );
   if ( !d->updateTimer->isActive() )
-    d->updateTimer->start( updateDelayMilliSecs, true /* single-shot */ );
+    d->updateTimer->start( updateDelayMilliSecs );
 }
 
 void Kleo::KeyListView::slotUpdateTimeout() {

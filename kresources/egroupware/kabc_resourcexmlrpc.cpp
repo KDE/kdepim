@@ -207,7 +207,7 @@ bool ResourceXMLRPC::asyncLoad()
                  this, SLOT( listContactsFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
-  mServer->call( LoadCategoriesCommand, QVariant( false, 0 ),
+  mServer->call( LoadCategoriesCommand, QVariant( false ),
                  this, SLOT( loadCategoriesFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 

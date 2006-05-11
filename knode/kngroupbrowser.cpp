@@ -42,6 +42,7 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   incrementalFilter(false), a_ccount(a)
 {
   refilterTimer = new QTimer();
+  refilterTimer->setSingleShot( true );
 
   allList=new Q3SortedList<KNGroupInfo>;
   allList->setAutoDelete(true);
@@ -398,7 +399,7 @@ void KNGroupBrowser::slotFilterTextChanged(const QString &)
   if (subCB->isChecked() || newCB->isChecked())
     slotRefilter();
   else
-    refilterTimer->start(200,true);
+    refilterTimer->start(200);
 }
 
 

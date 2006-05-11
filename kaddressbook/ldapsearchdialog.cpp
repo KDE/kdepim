@@ -125,7 +125,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
                  Cancel, Default, parent, name, false, true ),
     mAddressBook( ab ), mCore( core )
 {
-  setButtonCancel( KStdGuiItem::close() );
+  setButtonGuiItem( KDialog::Cancel, KStdGuiItem::close() );
   QFrame *page = plainPage();
   QVBoxLayout *topLayout = new QVBoxLayout( page );
   topLayout->setSpacing( spacingHint() );

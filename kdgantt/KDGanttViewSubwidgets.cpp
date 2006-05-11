@@ -68,8 +68,10 @@ KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):QCa
     resize(1600,1200);
     myTaskLinkList.setAutoDelete( false );
     mUpdateTimer = new QTimer ( this );
+    mUpdateTimer->setSingleShot( true );
     connect( mUpdateTimer, SIGNAL (  timeout() ) , this, SLOT( updateSlot() )) ;
     mSimpleUpdateTimer = new QTimer ( this );
+    mSimpleUpdateTimer->setSingleShot( true );
     connect( mSimpleUpdateTimer, SIGNAL (  timeout() ) , this, SLOT( simpleUpdateSlot() )) ;
 }
 KDTimeTableWidget::~KDTimeTableWidget()
@@ -618,7 +620,7 @@ void KDTimeTableWidget::forceUpdate()
 }
 void KDTimeTableWidget::simpleUpdate()
 {
-    mSimpleUpdateTimer->start( 0, true );
+    mSimpleUpdateTimer->start( 0 );
 }
 void KDTimeTableWidget::updateMyContent()
 {
@@ -662,7 +664,7 @@ void KDTimeTableWidget::updateMyContent()
         }
     //setAllChanged();
     //qDebug("START TIMER ");
-    mUpdateTimer->start( 0, true );
+    mUpdateTimer->start( 0 );
     if (pendingWidth && pendingHeight ) {
         resize( pendingWidth, pendingHeight );
         pendingWidth = 0;

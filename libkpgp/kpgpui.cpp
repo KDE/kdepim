@@ -323,6 +323,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
 
   mCheckSelectionTimer = new QTimer( this );
   mStartSearchTimer = new QTimer( this );
+  mStartSearchTimer->setSingleShot( true );
 
   // load the key status icons
   mKeyGoodPix    = new QPixmap( UserIcon("key_ok") );
@@ -1095,7 +1096,7 @@ void KeySelectionDialog::slotCancel()
 void KeySelectionDialog::slotSearch( const QString & text )
 {
   mSearchText = text.trimmed().toUpper();
-  mStartSearchTimer->start( sCheckSelectionDelay, true /*single-shot*/ );
+  mStartSearchTimer->start( sCheckSelectionDelay );
 }
 
 void KeySelectionDialog::slotFilter()

@@ -81,6 +81,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   mFieldCombo->setWhatsThis( i18n( "Here you can choose the field, which shall be used for incremental search." ) );
 
   mInputTimer = new QTimer( this );
+  mInputTimer->setSingleShot( true );
 
   connect( mInputTimer, SIGNAL( timeout() ),
            SLOT( timeout() ) );
@@ -111,7 +112,7 @@ void IncSearchWidget::announceDoSearch()
   if ( mInputTimer->isActive() )
     mInputTimer->stop();
 
-  mInputTimer->start( 0, true );
+  mInputTimer->start( 0 );
 }
 
 void IncSearchWidget::timeout()
