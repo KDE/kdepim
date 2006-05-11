@@ -4,7 +4,7 @@ if(KDE4_BUILD_TESTS)
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/libkmime
-	${KDE4_INCLUDES}
+	
 )
 
 

@@ -4,7 +4,6 @@ add_subdirectory( tests )
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/libkdepim/
-	${KDE4_INCLUDES}
 )
 
 ########### next target ###############

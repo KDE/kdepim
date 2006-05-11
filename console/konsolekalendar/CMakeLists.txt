@@ -2,7 +2,7 @@ kde4_header()
 
 add_subdirectory( pixmaps ) 
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkcal ${KDE4_INCLUDES} )
+include_directories( ${CMAKE_SOURCE_DIR}/libkcal  )
 
 
 ########### next target ###############

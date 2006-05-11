@@ -2,7 +2,7 @@ kde4_header()
 
 add_subdirectory( tests )
 
-include_directories( ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+
 
 kde4_add_dcop_skels(libemailfunctions_SRCS ${CMAKE_SOURCE_DIR}/libemailfunctions/networkstatus.h )
 

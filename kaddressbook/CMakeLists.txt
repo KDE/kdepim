@@ -19,8 +19,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/kaddressbook/printing 
 	${CMAKE_SOURCE_DIR}/kaddressbook/common 
 	${CMAKE_SOURCE_DIR}/kaddressbook/editors 
-	${CMAKE_SOURCE_DIR}/akregator/src 
-	${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}  )
+	${CMAKE_SOURCE_DIR}/akregator/src )
 
 
 set(libkabcommon_SRCS

@@ -2,7 +2,7 @@ kde4_header()
 
 if(KDE4_BUILD_TESTS)
 
-include_directories( ${CMAKE_SOURCE_DIR}/libsyndication/ ${KDE4_INCLUDES}  )
+include_directories( ${CMAKE_SOURCE_DIR}/libsyndication/   )
 
 
 ########### next target ###############

@@ -1,6 +1,6 @@
 kde4_header()
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkpgp ${CMAKE_SOURCE_DIR}/libkleo ${KDE4_INCLUDES} ${GPGME_INCLUDES} )
+include_directories( ${CMAKE_SOURCE_DIR}/libkpgp ${CMAKE_SOURCE_DIR}/libkleo  ${GPGME_INCLUDES} )
 
 
 ########### next target ###############

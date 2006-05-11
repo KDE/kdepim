@@ -1,6 +1,6 @@
 kde4_header()
 
-include_directories( ${CMAKE_SOURCE_DIR}/kmail ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkmime ${CMAKE_SOURCE_DIR}/mimelib ${CMAKE_SOURCE_DIR}/libemailfunctions ${KDE4_INCLUDES} )
+include_directories( ${CMAKE_SOURCE_DIR}/kmail ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkmime ${CMAKE_SOURCE_DIR}/mimelib ${CMAKE_SOURCE_DIR}/libemailfunctions  )
 
 
 ########### next target ###############

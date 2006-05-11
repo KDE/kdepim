@@ -6,7 +6,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-gpgmepp.h.cmake ${CMAKE_CURREN
 
 add_subdirectory( interfaces )
 
-include_directories( ${KDE4_INCLUDES} ${GPGME_INCLUDES} )
+include_directories(  ${GPGME_INCLUDES} )
 
 
 ########### next target ###############
@@ -41,7 +41,9 @@ install_targets(${LIB_INSTALL_DIR} gpgme++ )
 
 ########### install files ###############
 
-install_files( /include/gpgme++ FILES  )
+install_files( /include/gpgme++ FILES  context.h key.h trustitem.h 
+   eventloopinteractor.h data.h gpgmefw.h result.h keylistresult.h keygenerationresult.h 
+   importresult.h decryptionresult.h verificationresult.h signingresult.h encryptionresult.h engineinfo.h )
 
 kde4_footer()
 

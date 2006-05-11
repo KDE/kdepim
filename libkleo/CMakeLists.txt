@@ -6,7 +6,7 @@ add_subdirectory( backends )
 add_subdirectory( ui )
 add_subdirectory( tests )
 
-include_directories(${CMAKE_SOURCE_DIR}/libkpgp/ ${KDE4_INCLUDES} ${GPGME_INCLUDES} )
+include_directories(${CMAKE_SOURCE_DIR}/libkpgp/  ${GPGME_INCLUDES} )
 
 
 ########### next target ###############

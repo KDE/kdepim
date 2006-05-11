@@ -4,7 +4,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical
 	${CMAKE_BINARY_DIR}/libkcal/libical/src/libical
 	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss
-	${KDE4_INCLUDES}
+	
 )
 
 

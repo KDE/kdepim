@@ -5,7 +5,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces
 	${CMAKE_SOURCE_DIR}/kaddressbook
 	${CMAKE_BINARY_DIR}/kaddressbook
-	${KDE4_INCLUDES}
+	
 )
 
 

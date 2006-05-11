@@ -1,6 +1,6 @@
 kde4_header()
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkmime ${SASL2_INCLUDE_DIR} ${KDE4_INCLUDES} )
+include_directories( ${CMAKE_SOURCE_DIR}/libkmime ${SASL2_INCLUDE_DIR} )
 
 
 ########### next target ###############
