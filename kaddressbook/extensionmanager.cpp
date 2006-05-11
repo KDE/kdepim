@@ -149,9 +149,8 @@ void ExtensionManager::createActions()
   QActionGroup* extensionGroup = new QActionGroup(this);
   for ( it = mExtensionList.begin(); it != mExtensionList.end(); ++it ) {
     ExtensionData data = *it;
-    KToggleAction *action = new KToggleAction( data.title, 0, mMapper, SLOT( map() ),
-                                               mActionCollection,
-                                               QString( data.identifier + "_extension" ).toLatin1() );
+    KToggleAction *action = new KToggleAction( data.title, mActionCollection, QString( data.identifier + "_extension" ) );
+    connect(action, SIGNAL(triggered(bool) ), mMapper, SLOT( map() ));
     action->setActionGroup( extensionGroup );
     mMapper->setMapping( action, actionCounter++ );
     mActionList.append( action );
