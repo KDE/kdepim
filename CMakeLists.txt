@@ -47,13 +47,12 @@ set(libknoteseditor_SRCS
 
 set(libemailfunctions_SRCS 
 	${CMAKE_SOURCE_DIR}/libemailfunctions/email.cpp 
-	${CMAKE_SOURCE_DIR}/libemailfunctions/networkstatus.cpp
 )
 
 
 set(libkdgantt_SRCS
            ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttView.cpp                   
-		   ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewEventItem.cpp
+	   ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewEventItem.cpp
            ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewItem.cpp     
            ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewItemDrag.cpp     
            ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewSubwidgets.cpp   
