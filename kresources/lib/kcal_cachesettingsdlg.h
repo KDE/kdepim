@@ -39,7 +39,7 @@ class ResourceCachedSaveConfig;
   Configuration widget for groupware kioslave resource.
   @see KCalOpenGroupware
 */
-class KDE_EXPORT CacheSettingsDialog : public KDialogBase
+class KDE_EXPORT CacheSettingsDialog : public KDialog
 { 
     Q_OBJECT
   public:
