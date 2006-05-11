@@ -1,0 +1,49 @@
+Current Release is Proko2 2.1.1
+
+
+Changes since Proko2 2.1.0:
+
+Bugfixes:
+
+o Change the default for hiding groupware folders back to true. (issue 1206)
+
+o Automatically unsubscribe the default folders and turn on local subscription
+   for the online imap account in the kolab wizard. (issue 1206)
+
+o Don't list messages in the INBOX if it is the one of the groupware 
+   main account and we are in "only groupware folders for this account"
+   mode. (issue 1207)
+
+o If we are hiding groupware folders, and the account is the groupware
+   base account, and it's set to only locally subscribe to groupware folders,
+   hide it completely from the folder tree. (issue 1207)
+
+o Don't reload the KConfig object of the standard addressbook for every
+   incidence during loading, by caching the "thatIsMe" entry. This should
+   speed up calendar loading significantly, but it means that if they user
+   changes their "thatIsMe" entry in the addressbook, KOrganizer won't
+   realize that until the next restart. Given the spectacularly low frequency
+   with which that is expected to happen, I think that's worth it. I can't
+   fix it at the root, since that is in kdelibs.  (issue 1118)
+
+o Also trigger a reload of the folder when a new IncidencesFor annotation 
+   is retrieved from the server. (issue 398)
+
+o Fix of the concurrent KPilot and KMail dImap sync problem. Concurrent sync
+    is now blocked. Problem was that on a concurrent sync contacts/tasks/events
+    were duplicated in the dImap folders (issues 1136, 1137)
+
+Features:
+
+o Non-gui config key that allows to specify after how many 
+  incidences a progress dialog comes up. (issue 1118)
+
+o Backport large parts of the online/offline support from 3.5, which makes
+   it possible to suspend and resume all network jobs via DCOP. KPilot will
+   use this to disable network traffic during a kolab resource sync, for example,
+   but the user can also use it to go offline on the road, and thus avoid error
+   messages due to interval mail checks. (issue 1137).
+
+
+Older Changes:
+
