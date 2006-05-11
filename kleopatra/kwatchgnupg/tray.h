@@ -34,7 +34,7 @@
 #define TRAY_H
 
 #include <ksystemtray.h>
-#include <qpixmap.h>
+#include <QPixmap>
 
 class KWatchGnuPGMainWindow;
 

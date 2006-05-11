@@ -34,7 +34,7 @@
 #include <kio/job.h>
 #include <klocale.h>
 
-#include <qapplication.h>
+#include <QApplication>
 
 using namespace KCal;
 

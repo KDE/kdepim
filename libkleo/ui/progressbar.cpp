@@ -33,7 +33,7 @@
 #include "config.h"
 #include "progressbar.h"
 
-#include <qtimer.h>
+#include <QTimer>
 #include <kdebug.h>
 
 static const int busyTimerTickInterval = 100;

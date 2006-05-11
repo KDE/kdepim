@@ -35,9 +35,9 @@
 #include <kdebug.h>
 #include <kurl.h>
 
-#include <qsocketnotifier.h>
-#include <qtextcodec.h>
-#include <qstringlist.h>
+#include <QSocketNotifier>
+#include <QTextCodec>
+#include <QStringList>
 //Added by qt3to4:
 #include <QList>
 #include <QByteArray>

@@ -15,7 +15,7 @@
 #ifndef KNGROUPMANAGER_H
 #define KNGROUPMANAGER_H
 
-#include <qobject.h>
+#include <QObject>
 #include <q3sortedlist.h>
 
 #include "knjobdata.h"

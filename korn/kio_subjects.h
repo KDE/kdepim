@@ -23,7 +23,7 @@
  * This file defines the class KIO_Subjects
  */
 
-#include <qobject.h>
+#include <QObject>
 
 class KKioDrop;
 class KIO_Single_Subject;

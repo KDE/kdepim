@@ -33,7 +33,7 @@
 #ifndef __KLEO_KEYFILTERMANAGER_H__
 #define __KLEO_KEYFILTERMANAGER_H__
 
-#include <qobject.h>
+#include <QObject>
 #include <kdepimmacros.h>
 namespace GpgME {
   class Key;

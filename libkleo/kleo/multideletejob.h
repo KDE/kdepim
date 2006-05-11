@@ -37,7 +37,7 @@
 #include <kleo/cryptobackend.h>
 
 #include <kdepimmacros.h>
-#include <qpointer.h>
+#include <QPointer>
 
 #include <vector>
 

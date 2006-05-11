@@ -35,7 +35,7 @@
 
 #include <kleo/refreshkeysjob.h>
 
-#include <qstringlist.h>
+#include <QStringList>
 
 namespace Kleo {
   class GnuPGProcessBase;

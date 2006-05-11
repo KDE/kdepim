@@ -22,7 +22,7 @@
 #ifndef KCAL_FREEBUSY_H
 #define KCAL_FREEBUSY_H
 
-#include <qdatetime.h>
+#include <QDateTime>
 
 #include <QByteArray>
 #include <QList>

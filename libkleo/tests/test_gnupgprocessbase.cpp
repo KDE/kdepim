@@ -44,7 +44,7 @@
 #include <kmessagebox.h>
 #include <kdebug.h>
 
-#include <qstringlist.h>
+#include <QStringList>
 
 GnuPGViewer::GnuPGViewer( QWidget * parent, const char * name )
   : Q3TextEdit( parent, name ), mProcess( 0 )

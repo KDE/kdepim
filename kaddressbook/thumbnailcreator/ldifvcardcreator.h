@@ -21,7 +21,7 @@
 #ifndef VCARD_LDIFCREATOR_H
 #define VCARD_LDIFCREATOR_H
 
-#include <qpixmap.h>
+#include <QPixmap>
 #include <kio/thumbcreator.h>
 
 class KPixmapSplitter;

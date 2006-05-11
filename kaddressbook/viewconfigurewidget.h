@@ -26,7 +26,7 @@
 
 #include <kdialogbase.h>
 #include <kdepimmacros.h>
-#include <qpixmap.h>
+#include <QPixmap>
 #include <kvbox.h>
 
 #include "configurewidget.h"

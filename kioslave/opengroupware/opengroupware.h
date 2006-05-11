@@ -22,7 +22,7 @@
 
 #include <kio/slavebase.h>
 
-#include <qobject.h>
+#include <QObject>
 
 namespace KIO {
   class Job;

@@ -22,7 +22,7 @@
 #ifndef ICALTIMEZONESTEST_H
 #define ICALTIMEZONESTEST_H
 
-#include <qobject.h>
+#include <QObject>
 
 class ICalTimeZonesTest : public QObject
 {

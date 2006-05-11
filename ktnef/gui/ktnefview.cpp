@@ -20,7 +20,7 @@
 #include "attachpropertydialog.h"
 
 #include <q3header.h>
-#include <qpixmap.h>
+#include <QPixmap>
 #include <QFrame>
 #include <QResizeEvent>
 

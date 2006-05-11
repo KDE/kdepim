@@ -23,7 +23,7 @@
 
 #include <gpgmepp/eventloopinteractor.h>
 
-#include <qobject.h>
+#include <QObject>
 #include <kdepimmacros.h>
 
 namespace GpgME {

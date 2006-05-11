@@ -22,7 +22,7 @@
 #ifndef KCAL_RESOURCELOCALCONFIG_H
 #define KCAL_RESOURCELOCALCONFIG_H
 
-#include <qradiobutton.h>
+#include <QRadioButton>
 #include <q3buttongroup.h>
 #include <kurlrequester.h>
 

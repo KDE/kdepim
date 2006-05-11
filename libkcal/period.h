@@ -21,7 +21,7 @@
 #ifndef KCAL_PERIOD_H
 #define KCAL_PERIOD_H
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include "libkcal_export.h"
 
 #include "duration.h"

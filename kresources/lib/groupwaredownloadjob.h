@@ -24,7 +24,7 @@
 #define KPIM_GROUPWAREDOWNLOADJOB_H
 
 #include "groupwareresourcejob.h"
-#include <qstringlist.h>
+#include <QStringList>
 
 namespace KIO {
   class Job;

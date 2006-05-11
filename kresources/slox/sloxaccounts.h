@@ -22,7 +22,7 @@
 
 #include <kabc/addressee.h>
 #include <kdepimmacros.h>
-#include <qobject.h>
+#include <QObject>
 
 class KJob;
 namespace KIO {

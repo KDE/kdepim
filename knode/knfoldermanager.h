@@ -16,7 +16,7 @@
 #define KNFOLDERMANAGER_H
 
 #include <QList>
-#include <qobject.h>
+#include <QObject>
 
 class KNFolder;
 class KNArticleManager;

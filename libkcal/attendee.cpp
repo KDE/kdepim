@@ -19,7 +19,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qstringlist.h>
+#include <QStringList>
 
 #include <kdebug.h>
 #include <klocale.h>

@@ -16,8 +16,8 @@
 
 #include <stdlib.h>
 #include <klocale.h>
-#include <qtextcodec.h>
-#include <qmutex.h>
+#include <QTextCodec>
+#include <QMutex>
 //Added by qt3to4:
 #include <Q3StrList>
 #include <QByteArray>

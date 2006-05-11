@@ -22,7 +22,7 @@
 #ifndef NETWORKSTATUS_NETWORK_H
 #define NETWORKSTATUS_NETWORK_H
 
-#include <qstringlist.h>
+#include <QStringList>
 //Added by qt3to4:
 #include <QList>
 #include <ksharedptr.h>

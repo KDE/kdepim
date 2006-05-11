@@ -42,7 +42,7 @@
 #include <gpgmepp/context.h>
 #include <gpgmepp/data.h>
 
-#include <qstringlist.h>
+#include <QStringList>
 
 #include <assert.h>
 

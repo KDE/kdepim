@@ -27,8 +27,8 @@
 
 #include <gpgmepp/context.h>
 
-#include <qsocketnotifier.h>
-#include <qapplication.h>
+#include <QSocketNotifier>
+#include <QApplication>
 
 using namespace GpgME;
 

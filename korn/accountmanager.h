@@ -25,7 +25,7 @@
  * This file defines the class AccountManager
  */
 
-#include <qobject.h>
+#include <QObject>
 
 class DCOPDrop;
 class KornSubjectsDlg;

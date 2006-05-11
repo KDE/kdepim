@@ -30,7 +30,7 @@
 #include <libkdepim/distributionlist.h>
 #endif
 
-#include <qobject.h>
+#include <QObject>
 
 #include <kabc/field.h>
 #include <kcommand.h>

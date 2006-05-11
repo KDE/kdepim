@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include "konsolekalendarepoch.h"
 
 using namespace KCal;

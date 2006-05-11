@@ -40,13 +40,13 @@
 
 #include "kdhorizontalline.h"
 
-#include <qstyle.h>
-#include <qpainter.h>
+#include <QStyle>
+#include <QPainter>
 #ifdef QT_ACCESSIBILITY_SUPPORT
-#include <qaccessible.h>
+#include <QAccessible>
 #endif
-#include <qfontmetrics.h>
-#include <qapplication.h>
+#include <QFontMetrics>
+#include <QApplication>
 //Added by qt3to4:
 #include <QPaintEvent>
 #include <Q3Frame>

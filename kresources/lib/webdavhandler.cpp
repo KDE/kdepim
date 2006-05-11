@@ -23,7 +23,7 @@
 
 #include <kdebug.h>
 
-#include <qdatetime.h>
+#include <QDateTime>
 
 extern "C" {
   #include <ical.h>

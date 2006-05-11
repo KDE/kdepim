@@ -22,8 +22,8 @@
 #ifndef INCIDENCE_H
 #define INCIDENCE_H
 
-#include <qdatetime.h>
-#include <qstringlist.h>
+#include <QDateTime>
+#include <QStringList>
 
 
 #include "recurrence.h"

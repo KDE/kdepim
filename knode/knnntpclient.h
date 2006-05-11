@@ -17,7 +17,7 @@
 #ifndef KNNNTPCLIENT_H
 #define KNNNTPCLIENT_H
 
-#include <qmutex.h>
+#include <QMutex>
 //Added by qt3to4:
 #include <QByteArray>
 

@@ -47,7 +47,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <qstringlist.h>
+#include <QStringList>
 
 #include <algorithm>
 

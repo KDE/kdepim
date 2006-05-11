@@ -22,8 +22,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qapplication.h>
-#include <qclipboard.h>
+#include <QApplication>
+#include <QClipboard>
 
 #include <klocale.h>
 #include <kapplication.h>

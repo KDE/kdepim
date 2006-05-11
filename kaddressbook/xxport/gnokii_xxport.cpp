@@ -33,7 +33,7 @@
 
 #include "config.h"
 
-#include <qcursor.h>
+#include <QCursor>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>

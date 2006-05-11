@@ -35,7 +35,7 @@
 
 #include <kleo/keylistjob.h>
 
-#include <qstringlist.h>
+#include <QStringList>
 
 namespace GpgME {
   class Error;

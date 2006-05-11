@@ -21,7 +21,7 @@
 #include <dcopobject.h>
 #include <dcopref.h>
 #include <kurl.h>
-#include <qstringlist.h>
+#include <QStringList>
 
 
 /** DCOP interface. */

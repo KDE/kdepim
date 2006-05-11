@@ -32,7 +32,7 @@
 
 #include <q3listview.h>
 #include <q3header.h>
-#include <qpainter.h>
+#include <QPainter>
 
 static const int BoxSize = 16;
 

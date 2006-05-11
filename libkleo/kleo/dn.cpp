@@ -43,7 +43,7 @@
 #include <kconfig.h>
 #include <klocale.h>
 
-#include <qstringlist.h>
+#include <QStringList>
 #include <q3valuevector.h>
 
 #include <iostream>

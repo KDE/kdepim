@@ -35,7 +35,7 @@
 
 #include <kaction.h>
 
-#include <qstringlist.h>
+#include <QStringList>
 
 class QLineEdit;
 

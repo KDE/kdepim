@@ -25,7 +25,7 @@
 #define XXPORTMANAGER_H
 
 #include <q3dict.h>
-#include <qobject.h>
+#include <QObject>
 
 #include <kurl.h>
 

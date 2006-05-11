@@ -28,7 +28,7 @@
 #include "mimeio.h"
 
 #include <kio/tcpslavebase.h>
-#include <qbuffer.h>
+#include <QBuffer>
 #include <QDateTime>
 //Added by qt3to4:
 #include <QByteArray>

@@ -22,7 +22,7 @@
 #ifndef NETWORKSTATUS_H
 #define NETWORKSTATUS_H
 
-#include <qobject.h>
+#include <QObject>
 #include <dcopobject.h>
 
 namespace KPIM {

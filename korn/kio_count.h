@@ -25,7 +25,7 @@
  * This file contains the class KIO_Count
  */
 
-#include <qobject.h>
+#include <QObject>
 
 #include "kio.h" //Alsewise, no access to KKioDrop::FileInfo (needed in template)
 

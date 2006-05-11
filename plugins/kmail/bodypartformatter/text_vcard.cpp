@@ -30,7 +30,7 @@
     your version.
 */
 
-#include <qurl.h>
+#include <QUrl>
 
 #include <kapplication.h>
 #include <kglobal.h>

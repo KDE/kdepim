@@ -24,7 +24,7 @@
 #ifndef KABPREFS_H
 #define KABPREFS_H
 
-#include <qstringlist.h>
+#include <QStringList>
 #include <kdepimmacros.h>
 #include "kabprefs_base.h"
 

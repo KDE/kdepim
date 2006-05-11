@@ -21,7 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qdatetime.h>
+#include <QDateTime>
 
 #include "dateparser.h"
 

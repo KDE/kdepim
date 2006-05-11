@@ -40,7 +40,7 @@
 
 #include <klocale.h>
 
-#include <qstringlist.h>
+#include <QStringList>
 #include <q3tl.h>
 
 #include <gpgmepp/key.h>

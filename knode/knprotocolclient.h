@@ -17,8 +17,8 @@
 #ifndef KNPROTOCOLCLIENT_H
 #define KNPROTOCOLCLIENT_H
 
-#include <qdatetime.h>
-#include <qthread.h>
+#include <QDateTime>
+#include <QThread>
 #include <q3cstring.h>
 //Added by qt3to4:
 #include <Q3StrList>

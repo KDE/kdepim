@@ -21,7 +21,7 @@
 #ifndef KCAL_RESOURCETVANYTIME_H
 #define KCAL_RESOURCETVANYTIME_H
 
-#include <qtimer.h>
+#include <QTimer>
 
 #include <libkdepim/progressmanager.h>
 

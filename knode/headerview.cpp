@@ -12,10 +12,10 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qcursor.h>
+#include <QCursor>
 #include <q3header.h>
 #include <q3stylesheet.h>
-#include <qtimer.h>
+#include <QTimer>
 //Added by qt3to4:
 #include <QKeyEvent>
 #include <QEvent>

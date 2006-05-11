@@ -28,11 +28,11 @@
 #include <libkcal/icalformat.h>
 #include <libkcal/calendarlocal.h>
 
-#include <qapplication.h>
-#include <qdatetime.h>
-#include <qptrlist.h>
-#include <qstringlist.h>
-#include <qtimer.h>
+#include <QApplication>
+#include <QDateTime>
+#include <Q3PtrList>
+#include <QStringList>
+#include <QTimer>
 
 #include <kabc/locknull.h>
 #include <kdebug.h>

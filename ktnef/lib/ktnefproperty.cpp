@@ -17,7 +17,7 @@
 
 #include "ktnef/ktnefproperty.h"
 #include "mapi.h"
-#include <qdatetime.h>
+#include <QDateTime>
 #include <ctype.h>
 
 KTNEFProperty::KTNEFProperty()

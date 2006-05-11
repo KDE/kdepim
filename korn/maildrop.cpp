@@ -7,7 +7,7 @@
 
 #include<assert.h>
 #include<qapplication.h>
-#include <qlist.h>
+#include <QList>
 
 #include<kconfigbase.h>
 #include<kdebug.h>

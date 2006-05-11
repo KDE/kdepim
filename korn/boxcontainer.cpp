@@ -22,7 +22,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include <qlist.h>
+#include <QList>
 
 BoxContainer::BoxContainer( QObject * parent )
 	: QObject( parent ),

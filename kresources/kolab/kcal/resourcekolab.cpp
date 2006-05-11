@@ -47,9 +47,9 @@
 #include <kmainwindow.h>
 #include <klocale.h>
 
-#include <qobject.h>
-#include <qtimer.h>
-#include <qapplication.h>
+#include <QObject>
+#include <QTimer>
+#include <QApplication>
 
 #include <assert.h>
 

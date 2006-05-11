@@ -15,8 +15,8 @@
 #ifndef KNDISPLAYEDHEADER_H
 #define KNDISPLAYEDHEADER_H
 
-#include <qbitarray.h>
-#include <qstringlist.h>
+#include <QBitArray>
+#include <QStringList>
 
 
 /** A header displayed in the article viewer. */

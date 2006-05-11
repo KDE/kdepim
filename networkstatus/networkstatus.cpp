@@ -21,7 +21,7 @@
 
 #include "networkstatus.h"
 
-#include <qtimer.h>
+#include <QTimer>
 
 #include <dcopclient.h>
 #include <kapplication.h>

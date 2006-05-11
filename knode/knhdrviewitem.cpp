@@ -14,7 +14,7 @@
 */
 
 #include <q3dragobject.h>
-#include <qpainter.h>
+#include <QPainter>
 //Added by qt3to4:
 #include <QPixmap>
 

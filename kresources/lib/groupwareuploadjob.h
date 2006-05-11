@@ -26,7 +26,7 @@
 #include "groupwareresourcejob.h"
 
 #include <kurl.h>
-#include <qstringlist.h>
+#include <QStringList>
 #include <groupwaredataadaptor.h>
 
 namespace KIO {

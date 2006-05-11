@@ -47,7 +47,7 @@
 
 #include <qgpgme/eventloopinteractor.h>
 
-#include <qstringlist.h>
+#include <QStringList>
 
 #include <gpg-error.h>
 

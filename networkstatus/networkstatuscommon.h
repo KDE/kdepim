@@ -22,7 +22,7 @@
 #ifndef NETWORKSTATUS_COMMON_H
 #define NETWORKSTATUS_COMMON_H
 
-#include <qstringlist.h>
+#include <QStringList>
 
 namespace NetworkStatus
 {

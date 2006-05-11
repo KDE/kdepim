@@ -26,11 +26,11 @@
 #include "kde-features.h"
 #include "kde-features_parser.h"
 
-#include <qapplication.h>
-#include <qdatetime.h>
+#include <QApplication>
+#include <QDateTime>
 #include <q3ptrlist.h>
-#include <qstringlist.h>
-#include <qtimer.h>
+#include <QStringList>
+#include <QTimer>
 
 #include <kabc/locknull.h>
 #include <kdebug.h>

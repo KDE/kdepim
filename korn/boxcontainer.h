@@ -25,7 +25,7 @@
  * This file contains a class BoxContainer
  */
 
-#include <qobject.h>
+#include <QObject>
 
 class BoxContainerItem;
 

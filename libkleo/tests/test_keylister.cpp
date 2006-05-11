@@ -45,9 +45,9 @@
 #include <kcmdlineargs.h>
 #include <kdebug.h>
 
-#include <qmessagebox.h>
-#include <qstringlist.h>
-#include <qtimer.h>
+#include <QMessageBox>
+#include <QStringList>
+#include <QTimer>
 
 #include <assert.h>
 

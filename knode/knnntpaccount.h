@@ -15,12 +15,12 @@
 #ifndef KNNNTPACCOUNT_H
 #define KNNNTPACCOUNT_H
 
-#include <qdatetime.h>
+#include <QDateTime>
 
 #include "kncollection.h"
 #include "knserverinfo.h"
-#include <qobject.h>
-#include <qtimer.h>
+#include <QObject>
+#include <QTimer>
 
 class KNNntpAccount;
 

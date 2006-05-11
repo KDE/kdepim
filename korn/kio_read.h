@@ -26,7 +26,7 @@
  * This class should be used if someone wants to read the Full Message
  */
 
-#include <qobject.h>
+#include <QObject>
 
 class KKioDrop;
 

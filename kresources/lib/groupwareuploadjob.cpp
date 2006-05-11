@@ -33,8 +33,8 @@
 #include <kurl.h>
 #include <kio/job.h>
 
-#include <qstringlist.h>
-#include <qtimer.h>
+#include <QStringList>
+#include <QTimer>
 #include <klocale.h>
 
 using namespace KPIM;

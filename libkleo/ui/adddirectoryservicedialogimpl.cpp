@@ -36,7 +36,7 @@
 
 #include "adddirectoryservicedialogimpl.h"
 
-#include <qvalidator.h>
+#include <QValidator>
 #include <klineedit.h>
 
 /*

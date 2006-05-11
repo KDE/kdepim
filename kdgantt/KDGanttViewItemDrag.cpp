@@ -33,7 +33,7 @@
 
 #include <KDGanttViewItemDrag.h>
 #include <KDGanttViewItem.h>
-#include <qpixmap.h>
+#include <QPixmap>
 
 /*!
   \class KDGanttViewItemDrag KDGanttViewItemDrag.h
@@ -54,7 +54,7 @@
   \param source the source widget
   \param name the internal object name
 */
-#include <qbitmap.h>
+#include <QBitmap>
 KDGanttViewItemDrag::KDGanttViewItemDrag( KDGanttViewItem* item , QWidget *source,  const char * name  ) : QStoredDrag("x-application/x-KDGanttViewItemDrag", source,  name )
 {
     myItem = item;

@@ -36,7 +36,7 @@
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
 
-#include <qcolordialog.h>
+#include <QColorDialog>
 void itemAttributeDialog::init( )
 {
 

@@ -25,7 +25,7 @@
  * This file contains the class KIO_Singel_Subject
  */
 
-#include <qobject.h>
+#include <QObject>
 
 class KornMailSubject;
 

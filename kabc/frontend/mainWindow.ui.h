@@ -6,9 +6,9 @@
 ** a constructor, and a destroy() slot in place of a destructor.
 *****************************************************************************/
 
-#include <qfiledialog.h>
+#include <QFileDialog>
 #include <kinputdialog.h>
-#include <qmessagebox.h>
+#include <QMessageBox>
 
 #include <klocale.h>
 #include <kdebug.h>

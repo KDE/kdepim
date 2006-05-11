@@ -15,9 +15,9 @@
 #ifndef KNODE_SCHEDULER_H
 #define KNODE_SCHEDULER_H
 
-#include <qobject.h>
-#include <qmutex.h>
-#include <qlist.h>
+#include <QObject>
+#include <QMutex>
+#include <QList>
 
 namespace KPIM {
   class ProgressItem;

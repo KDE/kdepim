@@ -33,7 +33,7 @@
 #ifndef __KLEO_CRYPTOBACKENDFACTORY_H__
 #define __KLEO_CRYPTOBACKENDFACTORY_H__
 
-#include <qobject.h>
+#include <QObject>
 
 #include "cryptobackend.h"
 #include <kdepimmacros.h>

@@ -33,9 +33,9 @@
  **********************************************************************/
 
 #include "KDGanttXMLTools.h"
-#include <qbrush.h>
-#include <qbuffer.h>
-#include <qimage.h>
+#include <QBrush>
+#include <QBuffer>
+#include <QImage>
 #include <zlib.h>
 
 namespace KDGanttXML {

@@ -28,7 +28,7 @@
 #ifndef _KONSOLEKALENDAR_H
 #define _KONSOLEKALENDAR_H
 
-#include <qdatetime.h>
+#include <QDateTime>
 
 #include <kapplication.h>
 

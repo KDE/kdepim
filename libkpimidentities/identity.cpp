@@ -17,7 +17,7 @@
 #include <kconfig.h>
 #include <kurl.h>
 
-#include <qfileinfo.h>
+#include <QFileInfo>
 //Added by qt3to4:
 #include <QByteArray>
 

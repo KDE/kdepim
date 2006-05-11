@@ -19,7 +19,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qtimer.h>
+#include <QTimer>
 #include <dcopclient.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>

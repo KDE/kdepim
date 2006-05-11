@@ -52,7 +52,7 @@
 #include "refreshkeysjob.h"
 #include "specialjob.h"
 
-#include <qapplication.h>
+#include <QApplication>
 #include <kdebug.h>
 
 Kleo::Job::Job( QObject * parent, const char * name )

@@ -23,7 +23,7 @@
 #define KCAL_CALENDARLOCAL_H
 
 #include "calendar.h"
-#include <qhash.h>
+#include <QHash>
 #include <kdepimmacros.h>
 
 namespace KCal {

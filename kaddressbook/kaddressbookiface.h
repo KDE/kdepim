@@ -25,7 +25,7 @@
 #define KADDRESSBOOKIFACE_H
 
 #include <dcopobject.h>
-#include <qstringlist.h>
+#include <QStringList>
 #include <kdepimmacros.h>
 
 class KDE_EXPORT KAddressBookIface : virtual public DCOPObject

@@ -39,7 +39,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <qtimer.h>
+#include <QTimer>
 
 #include <assert.h>
 

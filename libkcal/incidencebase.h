@@ -23,8 +23,8 @@
 #ifndef KCAL_INCIDENCEBASE_H
 #define KCAL_INCIDENCEBASE_H
 
-#include <qdatetime.h>
-#include <qstringlist.h>
+#include <QDateTime>
+#include <QStringList>
 
 #include <QByteArray>
 #include <QList>

@@ -18,7 +18,7 @@
 #include <kurl.h>
 #include <kio/global.h>
 
-#include <qobject.h>
+#include <QObject>
 #include <QList>
 
 #include <libkdepim/progressmanager.h>

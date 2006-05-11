@@ -15,7 +15,7 @@
 #ifndef KNFILTERCONFIGWIDGET_H
 #define KNFILTERCONFIGWIDGET_H
 
-#include <qtabwidget.h>
+#include <QTabWidget>
 
 namespace KNode {
   class RangeFilterWidget;

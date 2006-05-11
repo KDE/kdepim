@@ -31,7 +31,7 @@
 #include <sys/wait.h> /* waitpid */
 #include <errno.h>
 
-#include <qapplication.h>
+#include <QApplication>
 //Added by qt3to4:
 #include <QByteArray>
 

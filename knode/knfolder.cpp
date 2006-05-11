@@ -13,7 +13,7 @@
 */
 
 #include <QByteArray>
-#include <qfileinfo.h>
+#include <QFileInfo>
 #include <QTextStream>
 
 #include <ksimpleconfig.h>

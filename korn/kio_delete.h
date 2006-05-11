@@ -25,7 +25,7 @@
  * This file contains the class KIO_Delete
  */
 
-#include <qobject.h>
+#include <QObject>
 
 class KKioDrop;
 class KIO_Protocol;

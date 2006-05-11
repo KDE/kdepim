@@ -33,8 +33,8 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include <qdatetime.h>
-#include <qobject.h>
+#include <QDateTime>
+#include <QObject>
 
 #include <kdebug.h>
 #include <kstandarddirs.h>

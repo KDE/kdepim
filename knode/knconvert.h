@@ -17,7 +17,7 @@
 
 #include <time.h>
 
-#include <qdialog.h>
+#include <QDialog>
 
 #include <qglobal.h>
 #include <QList>

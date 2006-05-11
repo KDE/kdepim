@@ -40,7 +40,7 @@
 #include <kurl.h>
 #include <ktempfile.h>
 #include <kmessagebox.h>
-#include <qtextstream.h>
+#include <QTextStream>
 #include <kdebug.h>
 #include <dcopobject.h>
 

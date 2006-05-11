@@ -35,7 +35,7 @@
 #define APPEARANCECONFIGWIDGET_H
 
 #include "appearanceconfigwidgetbase.h"
-#include <qstringlist.h>
+#include <QStringList>
 class KConfig;
 
 namespace Kleo {

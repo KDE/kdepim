@@ -40,7 +40,7 @@
 #include <gpgmepp/keylistresult.h>
 
 #include <q3cstring.h>
-#include <qpointer.h>
+#include <QPointer>
 
 #include <set>
 

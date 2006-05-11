@@ -24,7 +24,7 @@
  *
  *********************************************************************/
 
-#include <qstringlist.h>
+#include <QStringList>
 #include <q3valuelist.h>
 #include <q3ptrlist.h>
 #include <q3asciidict.h>

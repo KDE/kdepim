@@ -36,7 +36,7 @@
 #include "KDGanttViewSubwidgets.h"
 
 #include "KDGanttViewTaskItem.h"
-#include <qapplication.h>
+#include <QApplication>
 #if QT_VERSION < 0x040000
 #include "itemAttributeDialog.h"
 #endif
