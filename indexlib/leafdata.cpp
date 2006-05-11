@@ -50,7 +50,7 @@ uint32_t leaf_data::get_reference( unsigned idx ) const {
 }
 
 bool leaf_data::can_add( uint32_t ref ) const {
-	if ( ( capacity() - usedbytes() ) > ( 1 + byte_io::byte_lenght<uint32_t>() ) ) return true;
+	if ( ( capacity() - usedbytes() ) > uint16_t( 1 + byte_io::byte_lenght<uint32_t>() ) ) return true;
 	if ( capacity() == usedbytes() ) return false;
 	uint32_t last = 0;
 	for ( iterator first = begin(), past = end(); first != past; ++first ) {
