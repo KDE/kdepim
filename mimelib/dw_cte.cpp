@@ -62,7 +62,7 @@ int DwToCrLfEol(const DwString& aSrcStr, DwString& aDestStr)
     char* destBuf = (char*) destStr.data();
 
     // Encode source to destination
-    size_t destLen;
+    size_t destLen = 0;
     to_crlf(srcBuf, srcLen, destBuf, destSize, &destLen);
     aDestStr.assign(destStr, 0, destLen);
     return 0;
@@ -80,7 +80,7 @@ int DwToLfEol(const DwString& aSrcStr, DwString& aDestStr)
     char* destBuf = (char*) destStr.data();
 
     // Encode source to destination
-    size_t destLen;
+    size_t destLen = 0;
     to_lf(srcBuf, srcLen, destBuf, destSize, &destLen);
     aDestStr.assign(destStr, 0, destLen);
     return 0;
@@ -98,7 +98,7 @@ int DwToCrEol(const DwString& aSrcStr, DwString& aDestStr)
     char* destBuf = (char*) destStr.data();
 
     // Encode source to destination
-    size_t destLen;
+    size_t destLen = 0;
     to_cr(srcBuf, srcLen, destBuf, destSize, &destLen);
     aDestStr.assign(destStr, 0, destLen);
     return 0;
@@ -131,7 +131,7 @@ int DwEncodeBase64(const DwString& aSrcStr, DwString& aDestStr)
     char* destBuf = (char*) destStr.data();
 
     // Encode source to destination
-    size_t destLen;
+    size_t destLen = 0;
     int result =
     encode_base64(srcBuf, srcLen, destBuf, destSize, &destLen);
     aDestStr.assign(destStr, 0, destLen);
@@ -151,7 +151,7 @@ int DwDecodeBase64(const DwString& aSrcStr, DwString& aDestStr)
     char* destBuf = (char*) destStr.data();
 
     // Encode source to destination
-    size_t destLen;
+    size_t destLen = 0;
     int result =
     decode_base64(srcBuf, srcLen, destBuf, destSize, &destLen);
     aDestStr.assign(destStr, 0, destLen);
@@ -172,7 +172,7 @@ int DwEncodeQuotedPrintable(const DwString& aSrcStr, DwString& aDestStr)
     char* destBuf = (char*) destStr.data();
     
     // Encode source to destination
-    size_t destLen;
+    size_t destLen = 0;
     int result =
     encode_qp(srcBuf, srcLen, destBuf, destSize, &destLen);
     aDestStr.assign(destStr, 0, destLen);
@@ -192,7 +192,7 @@ int DwDecodeQuotedPrintable(const DwString& aSrcStr, DwString& aDestStr)
     char* destBuf = (char*) destStr.data();
     
     // Encode source to destination
-    size_t destLen;
+    size_t destLen = 0;
     int result = 
     decode_qp(srcBuf, srcLen, destBuf, destSize, &destLen);
     aDestStr.assign(destStr, 0, destLen);
