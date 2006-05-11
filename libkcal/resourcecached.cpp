@@ -372,7 +372,7 @@ void ResourceCached::cleanUpTodoCache( const Todo::List &todoList )
   calendar.close();
 }
 
-KPIM::IdMapper& ResourceCached::idMapper()
+KRES::IdMapper& ResourceCached::idMapper()
 {
   return mIdMapper;
 }

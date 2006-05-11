@@ -24,7 +24,7 @@
 #include "groupdavglobals.h"
 #include "groupwaredataadaptor.h"
 #include <webdavhandler.h>
-#include <libemailfunctions/idmapper.h>
+#include <kresources/idmapper.h>
 #include <calendaradaptor.h>
 #include <addressbookadaptor.h>
 

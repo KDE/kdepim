@@ -30,7 +30,7 @@
 #include <klocale.h>
 #include <kurl.h>
 #include <kio/job.h>
-#include <libemailfunctions/idmapper.h>
+#include <kresources/idmapper.h>
 #include <libkdepim/progressmanager.h>
 
 using namespace KPIM;

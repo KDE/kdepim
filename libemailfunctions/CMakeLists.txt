@@ -8,8 +8,6 @@ kde4_add_dcop_skels(libemailfunctions_SRCS ${CMAKE_SOURCE_DIR}/libemailfunctions
 
 ########### install files ###############
 
-install_files( /include/libemailfunctions FILES idmapper.h )
-
 kde4_footer()
 
 

@@ -24,7 +24,7 @@
 #include "groupwaredataadaptor.h"
 #include <kdebug.h>
 #include <kio/job.h>
-#include <libemailfunctions/idmapper.h>
+#include <kresources/idmapper.h>
 
 using namespace KPIM;
 

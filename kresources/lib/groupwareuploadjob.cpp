@@ -26,7 +26,7 @@
 #include "folderlister.h"
 #include "groupwaredataadaptor.h"
 
-#include <libemailfunctions/idmapper.h>
+#include <kresources/idmapper.h>
 #include <libkdepim/progressmanager.h>
 
 #include <kdebug.h>

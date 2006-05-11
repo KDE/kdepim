@@ -21,7 +21,7 @@
 
 #include "bloggingcalendaradaptor.h"
 #include "bloggingglobals.h"
-#include <libemailfunctions/idmapper.h>
+#include <kresources/idmapper.h>
 #include <folderlister.h>
 
 #include <libkcal/calendarlocal.h>

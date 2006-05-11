@@ -23,7 +23,7 @@
 
 #include "resourcecalendar.h"
 
-#include "libemailfunctions/idmapper.h"
+#include <kresources/idmapper.h>
 #include "incidence.h"
 #include "calendarlocal.h"
 
@@ -280,7 +280,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Returns a reference to the id mapper.
      */
-    KPIM::IdMapper& idMapper();
+    KRES::IdMapper& idMapper();
 
   protected:
     // From Calendar::Observer
@@ -354,7 +354,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     QMap<KCal::Incidence *,bool> mChangedIncidences;
     QMap<KCal::Incidence *,bool> mDeletedIncidences;
 
-    KPIM::IdMapper mIdMapper;
+    KRES::IdMapper mIdMapper;
 
     class Private;
     Private *d;

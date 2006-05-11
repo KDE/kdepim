@@ -39,10 +39,13 @@ class TransferJob;
 class Job;
 }
 
+namespace KRES {
+class IdMapper;
+}
+
 namespace KPIM {
 
 class FolderLister;
-class IdMapper;
 class GroupwareDataAdaptor;
 //class GroupwareJob;
 
@@ -184,14 +187,14 @@ Q_OBJECT
     /**
       Set id mapper.
     */
-    void setIdMapper( KPIM::IdMapper *v )
+    void setIdMapper( KRES::IdMapper *v )
     {
       mIdMapper = v;
     }
     /**
       Get idMapper. See setIdMapper().
     */
-    KPIM::IdMapper *idMapper() const
+    KRES::IdMapper *idMapper() const
     {
       return mIdMapper;
     }
@@ -354,7 +357,7 @@ Q_OBJECT
     KUrl mBaseURL;
     QString mUser;
     QString mPassword;
-    KPIM::IdMapper *mIdMapper;
+    KRES::IdMapper *mIdMapper;
     QMap<KIO::Job*,QString> mJobUIDMap;
 };
 

@@ -4,7 +4,6 @@ add_subdirectory( tests )
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/libkdepim/
-	${CMAKE_SOURCE_DIR}/libemailfunctions
 	${KDE4_INCLUDES}
 )
 

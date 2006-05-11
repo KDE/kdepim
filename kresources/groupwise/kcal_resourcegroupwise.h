@@ -21,7 +21,7 @@
 #ifndef KCAL_RESOURCEGROUPWISE_H
 #define KCAL_RESOURCEGROUPWISE_H
 
-#include <libemailfunctions/idmapper.h>
+#include <kresources/idmapper.h>
 
 #include <libkdepim/progressmanager.h>
 
