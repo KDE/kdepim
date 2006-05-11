@@ -22,11 +22,11 @@
 #include <stdlib.h>
 #include <typeinfo>
 
-#include <qapplication.h>
-#include <qdatetime.h>
+#include <QApplication>
+#include <QDateTime>
 #include <q3ptrlist.h>
-#include <qstringlist.h>
-#include <qtimer.h>
+#include <QStringList>
+#include <QTimer>
 //Added by qt3to4:
 #include <QList>
 
@@ -259,7 +259,7 @@ bool ResourceXMLRPC::doLoad()
                  this, SLOT( loadEventCategoriesFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
 
-  mServer->call( LoadTodoCategoriesCommand, QVariant( false, 0 ),
+  mServer->call( LoadTodoCategoriesCommand, QVariant( false ),
                  this, SLOT( loadTodoCategoriesFinished( const QList<QVariant>&, const QVariant& ) ),
                  this, SLOT( fault( int, const QString&, const QVariant& ) ) );
   return true;
