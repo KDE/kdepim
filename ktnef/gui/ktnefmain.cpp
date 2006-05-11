@@ -274,7 +274,7 @@ void KTNEFMain::optionDefaultDir()
 void KTNEFMain::viewSelectionChanged()
 {
 	QList<KTNEFAttach*>	*list = view_->getSelection();
-	bool	on1 = (list->count() == 1u), on2 = (list->count() > 0u);
+	bool	on1 = (list->count() == 1), on2 = (list->count() > 0);
 	actionCollection()->action("view_file")->setEnabled(on1);
 	actionCollection()->action("view_file_as")->setEnabled(on1);
 	actionCollection()->action("properties_file")->setEnabled(on1);
@@ -333,9 +333,9 @@ void KTNEFMain::viewRightButtonPressed(Q3ListViewItem*, const QPoint& p, int)
 {
 	QList<KTNEFAttach*>	*list = view_->getSelection();
 	QMenu m;
-	if (list->count() > 0u)
+	if (list->count() > 0)
 	{
-		if (list->count() == 1u)
+		if (list->count() == 1)
 		{
 			m.addAction(SmallIcon("viewmag"), i18n("View"), this, SLOT(viewFile()));
 			m.addAction(SmallIcon("package_applications"), i18n("View With..."), this, SLOT(viewFileAs()));
