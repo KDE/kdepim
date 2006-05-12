@@ -1133,10 +1133,12 @@ void KNode::DisplayedHeadersWidget::slotDownBtnClicked()
 
 
 KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *h, QWidget *parent )
-  : KDialogBase( Plain, i18n("Header Properties"), Ok | Cancel | Help, Ok, parent ),
+  : KDialog( parent, i18n("Header Properties"), Ok | Cancel | Help ),
     h_dr(h)
 {
-  QFrame* page=plainPage();
+  setDefaultButton( Ok );
+  QWidget* page=new QWidget( this );
+  setMainWidget( page );
   QGridLayout *topL=new QGridLayout(page);
   topL->setSpacing(5);
   topL->setMargin(0);
@@ -1664,9 +1666,11 @@ void KNode::PostNewsTechnicalWidget::slotEditBtnClicked()
 
 
 KNode::XHeaderConfDialog::XHeaderConfDialog( const QString &h, QWidget *parent ) :
-  KDialogBase( parent, 0, true, i18n("Additional Header"), Ok | Cancel, Ok )
+  KDialog( parent, i18n("Additional Header"), Ok | Cancel )
 {
-  KHBox* page = makeHBoxMainWidget();
+  setDefaultButton( Ok );
+  KHBox* page = new KHBox( this );
+  setMainWidget( page );
 
   mNameEdit = new KLineEdit( page );
   new QLabel( ":", page );

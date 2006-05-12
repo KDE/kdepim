@@ -48,7 +48,7 @@
 
 // KDE
 #include <klocale.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
 #include <kprocio.h>
@@ -377,9 +377,11 @@ void CertificateInfoWidgetImpl::slotShowCertPathDetails( Q3ListViewItem * item )
 
   assert( itemIndex >= 0 );
 
-  KDialogBase * dialog =
-    new KDialogBase( this, "dialog", false, i18n("Additional Information for Key"),
-		     KDialogBase::Close, KDialogBase::Close );
+  KDialog * dialog =
+    new KDialog( this, i18n("Additional Information for Key"), KDialog::Close );
+	dialog->setObjectName( "dialog" );
+	dialog->setDefaultButton( KDialog::Close );
+	dialog->setModal( false );
   CertificateInfoWidgetImpl * top =
     new CertificateInfoWidgetImpl( mChain[itemIndex], mExternal, dialog );
   dialog->setMainWidget( top );

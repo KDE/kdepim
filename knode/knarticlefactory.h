@@ -20,7 +20,7 @@
 #include <QListWidgetItem>
 #include <QPixmap>
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include "knjobdata.h"
 #include "knarticle.h"
@@ -98,7 +98,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
 
 
 /** Message send error dialog. */
-class KNSendErrorDialog : public KDialogBase  {
+class KNSendErrorDialog : public KDialog  {
 
   Q_OBJECT
 

@@ -16,7 +16,7 @@
 
 #include "knodeiface.h"
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kvbox.h>
 #include "resource.h"
 
@@ -401,7 +401,7 @@ private:
 namespace KNode {
 
 /** Dialog to request a message ID. */
-class  FetchArticleIdDlg : public KDialogBase
+class  FetchArticleIdDlg : public KDialog
 {
     Q_OBJECT
 public:

@@ -15,7 +15,7 @@
 #ifndef KNODE_SEARCHDIALOG_H
 #define KNODE_SEARCHDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 class QCloseEvent;
 
@@ -25,7 +25,7 @@ class KNArticleFilter;
 namespace KNode {
 
 /** Article search dialog. */
-class SearchDialog : public KDialogBase
+class SearchDialog : public KDialog
 {
   Q_OBJECT
 

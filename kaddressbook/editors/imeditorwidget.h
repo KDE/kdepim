@@ -27,7 +27,7 @@
 
 
 #include <k3listview.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include "contacteditorwidget.h"
 
@@ -46,12 +46,12 @@ enum IMContext { Any, Home, Work };
 /**
  * The widget we add to KAddressbook's contact editor dialog
  */
-class IMEditorWidget : public KDialogBase
+class IMEditorWidget : public KDialog
 {
   Q_OBJECT
 
   public:
-    IMEditorWidget( QWidget *parent, const QString &preferredIM, const char *name = 0 );
+    IMEditorWidget( QWidget *parent, const QString &preferredIM );
     ~IMEditorWidget() {};
 
     void loadContact( KABC::Addressee *addr );

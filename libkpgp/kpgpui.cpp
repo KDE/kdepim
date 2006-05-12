@@ -16,21 +16,19 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-//#include <stdio.h>
 
 
 #include <QLabel>
 
 #include <QToolTip>
-#include <qapplication.h>
-#include <qtextcodec.h>
-#include <qdatetime.h>
-#include <qpixmap.h>
+#include <QApplication>
+#include <QTextCodec>
+#include <QDateTime>
+#include <QPixmap>
 #include <QLayout>
-#include <qtimer.h>
-#include <q3popupmenu.h>
+#include <QTimer>
+#include <QMenu>
 #include <QRegExp>
-//Added by qt3to4:
 #include <QFrame>
 #include <QByteArray>
 #include <QVBoxLayout>
@@ -63,11 +61,14 @@ const int Kpgp::KeySelectionDialog::sCheckSelectionDelay = 250;
 namespace Kpgp {
 
 PassphraseDialog::PassphraseDialog( QWidget *parent,
-                                    const QString &caption, bool modal,
+                                    const QString &caption, 
                                     const QString &keyID )
-  :KDialogBase( parent, 0, modal, caption, Ok|Cancel )
+  :KDialog( parent, caption, Ok|Cancel  )
 {
-  KHBox *hbox = makeHBoxMainWidget();
+  setDefaultButton( Ok );
+  KHBox *hbox = new KHBox( this );
+  setMainWidget( hbox );
+  
   hbox->setSpacing( spacingHint() );
   hbox->setMargin( marginHint() );
 
@@ -93,7 +94,7 @@ PassphraseDialog::PassphraseDialog( QWidget *parent,
   vlay->addWidget( label );
   vlay->addWidget( lineedit );
 
-  disableResize();
+//   disableResize();
 }
 
 
@@ -302,13 +303,13 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
                                         const bool rememberChoice,
                                         const unsigned int allowedKeys,
                                         const bool extendedSelection,
-                                        QWidget *parent, const char *name,
-                                        bool modal )
-  : KDialogBase( parent, name, modal, title, Default|Ok|Cancel, Ok ),
+                                        QWidget *parent )
+  : KDialog( parent, title, Default|Ok|Cancel ),
     mRememberCB( 0 ),
     mAllowedKeys( allowedKeys ),
     mCurrentContextMenuItem( 0 )
 {
+  setDefaultButton( Ok );
   if ( qApp )
     KWin::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( K3Icon::Desktop ), IconSize( K3Icon::Desktop ) ),
                     qApp->windowIcon().pixmap( IconSize( K3Icon::Small ), IconSize( K3Icon::Small ) ) );
@@ -331,7 +332,8 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   mKeyUnknownPix = new QPixmap( UserIcon("key_unknown") );
   mKeyValidPix   = new QPixmap( UserIcon("key") );
 
-  QFrame *page = makeMainWidget();
+  QFrame *page = new QFrame( this );
+  setMainWidget( page );
   QVBoxLayout *topLayout = new QVBoxLayout( page );
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
@@ -411,7 +413,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
                                                     const QPoint&, int ) ),
            this,      SLOT( slotRMB( Q3ListViewItem*, const QPoint&, int ) ) );
 
-  setButtonText( KDialogBase::Default, i18n("&Reread Keys") );
+  setButtonGuiItem( KDialog::Default, i18n("&Reread Keys") );
   connect( this, SIGNAL( defaultClicked() ),
            this, SLOT( slotRereadKeys() ) );
 }
@@ -1059,8 +1061,8 @@ void KeySelectionDialog::slotRMB( Q3ListViewItem* lvi, const QPoint& pos, int )
 
   mCurrentContextMenuItem = lvi;
 
-  Q3PopupMenu menu(this);
-  menu.insertItem( i18n( "Recheck Key" ), this, SLOT( slotRecheckKey() ) );
+  QMenu menu(this);
+  menu.addAction( i18n( "Recheck Key" ), this, SLOT( slotRecheckKey() ) );
   menu.exec( pos );
 }
 
@@ -1335,14 +1337,13 @@ KeyIDList SecretKeyRequester::keyRequestHook( Module * pgp ) const {
 KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
                                       const QVector<KeyIDList>& keyIDs,
                                       const int allowedKeys,
-                                      QWidget *parent, const char *name,
-                                      bool modal )
-  : KDialogBase( parent, name, modal, i18n("Encryption Key Approval"),
-                 Ok|Cancel, Ok ),
+                                      QWidget *parent )
+  : KDialog( parent, i18n("Encryption Key Approval"), Ok|Cancel ),
     mKeys( keyIDs ),
     mAllowedKeys( allowedKeys ),
     mPrefsChanged( false )
 {
+  setDefaultButton( Ok );
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
 
   if( pgp == 0 )
@@ -1353,7 +1354,8 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   //     addresses.count()+1 != keyList.count() )
   //   do something;
 
-  QFrame *page = makeMainWidget();
+  QFrame *page = new QFrame( this );
+  setMainWidget( page );
   QVBoxLayout *topLayout = new QVBoxLayout( page );
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( 0 );
@@ -1521,7 +1523,7 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
                    + sv->horizontalScrollBar()->sizeHint().height()
                    + sv->frameWidth()
                    + topLayout->spacing()
-                   + actionButton( KDialogBase::Cancel )->sizeHint().height()
+                   + actionButton( KDialog::Cancel )->sizeHint().height()
                    + marginHint()
                    + 2;
   // don't make the dialog too large
@@ -1641,12 +1643,13 @@ KeyApprovalDialog::slotCancel()
 
 // ------------------------------------------------------------------------
 CipherTextDialog::CipherTextDialog( const QByteArray & text,
-                                    const QByteArray & charset, QWidget *parent,
-                                    const char *name, bool modal )
-  :KDialogBase( parent, name, modal, i18n("OpenPGP Information"), Ok|Cancel, Ok)
+                                    const QByteArray & charset, QWidget *parent )
+  :KDialog( parent, i18n("OpenPGP Information"), Ok|Cancel )
 {
+  setDefaultButton( Ok );
   // FIXME (post KDE2.2): show some more info, e.g. the output of GnuPG/PGP
-  QFrame *page = makeMainWidget();
+  QFrame *page = new QFrame( this );
+  setMainWidget( page );
   QVBoxLayout *topLayout = new QVBoxLayout( page );
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );

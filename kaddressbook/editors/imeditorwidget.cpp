@@ -31,7 +31,7 @@
 //Added by qt3to4:
 #include <QList>
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <klocale.h>
@@ -142,9 +142,9 @@ void IMAddressLVI::activate()
 
 /*===========================================================================*/
 
-IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM, const char *name )
-  : KDialogBase( parent, name, false, i18n( "Edit Instant Messenging Address" ),
-                 Help | Ok | Cancel, Ok, false ),
+IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM )
+  : KDialog( parent, i18n( "Edit Instant Messenging Address" ),
+                 Help | Ok | Cancel ),
     mReadOnly( false )
 {
   mWidget = new IMEditorBase( this );
@@ -333,8 +333,8 @@ bool IMEditorWidget::isModified() const
 
 void IMEditorWidget::slotAdd()
 {
-  KDialogBase addDialog( this, "addaddress", true, i18n( "Add Address" ),
-                         KDialogBase::Ok | KDialogBase::Cancel );
+  KDialog addDialog( this, i18n( "Add Address" ), KDialog::Ok | KDialog::Cancel );
+  addDialog.setObjectName( "addaddress" );
 
   IMAddressWidget *addressWid = new IMAddressWidget( &addDialog, mProtocols );
   addDialog.enableButtonOK( false );
@@ -368,8 +368,8 @@ void IMEditorWidget::slotEdit()
 
   // Just edit the first one selected.
   if ( IMAddressLVI *current = static_cast<IMAddressLVI*>( it.current() ) ) {
-    KDialogBase editDialog( this, "editaddress", true, i18n( "Edit Address" ),
-                            KDialogBase::Ok | KDialogBase::Cancel );
+    KDialog editDialog( this, i18n( "Edit Address" ), KDialog::Ok | KDialog::Cancel );
+    editDialog.setObjectName( "editaddress" );
     IMAddressWidget *addressWid = new IMAddressWidget( &editDialog, mProtocols, current->protocol(),
                                                        current->address(), current->context() ) ;
     connect( addressWid, SIGNAL( inValidState( bool ) ),

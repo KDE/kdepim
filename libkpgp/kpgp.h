@@ -21,14 +21,14 @@
 
 #include <stdio.h>
 #include <QString>
-#include <qdialog.h>
+#include <QDialog>
 #include <QWidget>
 #include <QComboBox>
 #include <QLayout>
 #include <QPushButton>
 #include <q3listview.h>
 #include <q3buttongroup.h>
-#include <qradiobutton.h>
+#include <QRadioButton>
 #include <q3multilineedit.h>
 #include <QCheckBox>
 //Added by qt3to4:

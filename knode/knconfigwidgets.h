@@ -406,7 +406,7 @@ class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
 
 
 /** Configuration dialog for a single header displayed in the article viewer. */
-class KDE_EXPORT DisplayedHeaderConfDialog : public KDialogBase {
+class KDE_EXPORT DisplayedHeaderConfDialog : public KDialog {
 
   Q_OBJECT
 
@@ -542,7 +542,7 @@ class KDE_EXPORT PostNewsTechnicalWidget : public KCModule, KNode::Ui::PostNewsT
 
 
 /** Dialog to edit additional headers. */
-class KDE_EXPORT XHeaderConfDialog : public KDialogBase
+class KDE_EXPORT XHeaderConfDialog : public KDialog
 {
   public:
     /** Create a new dialog to edit an additional header.

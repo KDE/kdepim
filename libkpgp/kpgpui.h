@@ -19,17 +19,16 @@
 #ifndef KPGPUI_H
 #define KPGPUI_H
 
-#include <kdialogbase.h>  // base class of all dialogs here
+#include <kdialog.h>  // base class of all dialogs here
 #include <QWidget>      // base class of Config
 #include <QCheckBox>    // used in inlined methods
-//Added by qt3to4:
 #include <QPixmap>
 #include <QLabel>
 #include <kdebug.h>       // used in inlined methods
-#include <q3cstring.h>     // used in return-by-value
+#include <Q3CString>     // used in return-by-value
 #include <QString>      // is a member in KeyRequester
 #include <QVector> // used in KeyApprovalDialog
-#include <q3ptrvector.h>
+#include <Q3PtrVector>
 #include "kpgp.h"
 
 #include <kdepimmacros.h>
@@ -55,13 +54,13 @@ class Key;                  // needed by KeySelectionDialog
 class KeyIDList;            // needed by KeySelectionDialog
 
 /** the passphrase dialog */
-class KDE_EXPORT PassphraseDialog : public KDialogBase
+class KDE_EXPORT PassphraseDialog : public KDialog
 {
   Q_OBJECT
 
   public:
     PassphraseDialog( QWidget *parent=0, const QString &caption=QString(),
-                      bool modal=true, const QString &keyID=QString());
+                      const QString &keyID=QString());
     virtual ~PassphraseDialog();
 
     const char * passphrase();
@@ -101,7 +100,7 @@ class KDE_EXPORT Config : public QWidget
 
 
 // -------------------------------------------------------------------------
-#define KeySelectionDialogSuper KDialogBase
+#define KeySelectionDialogSuper KDialog
 class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
 {
   Q_OBJECT
@@ -121,8 +120,7 @@ class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
                         const bool rememberChoice = false,
                         const unsigned int allowedKeys = AllKeys,
                         const bool extendedSelection = false,
-                        QWidget *parent=0, const char *name=0,
-                        bool modal=true );
+                        QWidget *parent=0 );
     virtual ~KeySelectionDialog();
 
     /** Returns the key ID of the selected key in single selection mode.
@@ -292,7 +290,7 @@ protected:
 
 
 // -------------------------------------------------------------------------
-class KDE_EXPORT KeyApprovalDialog: public KDialogBase
+class KDE_EXPORT KeyApprovalDialog: public KDialog
 {
   Q_OBJECT
 
@@ -300,8 +298,7 @@ class KDE_EXPORT KeyApprovalDialog: public KDialogBase
     KeyApprovalDialog( const QStringList&,
                        const QVector<KeyIDList>&,
                        const int allowedKeys,
-                       QWidget *parent = 0, const char *name = 0,
-                       bool modal = true );
+                       QWidget *parent = 0 );
     virtual ~KeyApprovalDialog() {};
 
     QVector<KeyIDList> keys() const { return mKeys; };
@@ -327,13 +324,13 @@ class KDE_EXPORT KeyApprovalDialog: public KDialogBase
 
 
 // -------------------------------------------------------------------------
-class KDE_EXPORT CipherTextDialog: public KDialogBase
+class KDE_EXPORT CipherTextDialog: public KDialog
 {
   Q_OBJECT
 
   public:
     CipherTextDialog( const QByteArray & text, const QByteArray & charset=0,
-                      QWidget *parent=0, const char *name=0, bool modal=true );
+                      QWidget *parent=0 );
     virtual ~CipherTextDialog() {};
 
   private:

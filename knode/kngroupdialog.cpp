@@ -285,7 +285,7 @@ void KNGroupDialog::slotUser1()
 void KNGroupDialog::slotUser2()
 {
   QDate lastDate = a_ccount->lastNewFetch();
-  KDialogBase *dlg = new KDialogBase( this, 0L, true, i18n("New Groups"), Ok | Cancel, Ok);
+  KDialog *dlg = new KDialog( this, i18n("New Groups"), Ok | Cancel );
 
   QGroupBox *btnGrp = new QGroupBox( i18n("Check for New Groups"), dlg );
   dlg->setMainWidget(btnGrp);
@@ -312,7 +312,6 @@ void KNGroupDialog::slotUser2()
   dateSel->setEnabled(false);
 
   topL->addItem( new QSpacerItem(30, 0 ), 0, 0 );
-  dlg->disableResize();
 
   if (dlg->exec()) {
     if (takeCustom->isChecked())

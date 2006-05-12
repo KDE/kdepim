@@ -31,8 +31,8 @@
 #include <signal.h>
 
 #include <QLabel>
-#include <qcursor.h>
-#include <qapplication.h>
+#include <QCursor>
+#include <QApplication>
 #include <QByteArray>
 
 #include <kdebug.h>
@@ -204,7 +204,7 @@ Module::prepare( bool needPassPhrase, Block* block )
       QString ID;
       if( block )
         ID = block->requiredUserId();
-      PassphraseDialog passdlg(0, i18n("OpenPGP Security Check"), true, ID);
+      PassphraseDialog passdlg(0, i18n("OpenPGP Security Check"), ID);
       QApplication::setOverrideCursor( QCursor(Qt::ArrowCursor) );
       int passdlgResult = passdlg.exec();
       QApplication::restoreOverrideCursor();

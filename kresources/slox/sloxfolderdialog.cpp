@@ -16,6 +16,7 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
+#include <QPixmap>
 
 #include <kiconloader.h>
 #include <kguiitem.h>
@@ -26,11 +27,13 @@
 #include "sloxfolderdialog.h"
 #include "sloxfoldermanager.h"
 
-SloxFolderDialog::SloxFolderDialog( SloxFolderManager *manager, FolderType type, QWidget *parent, const char *name ) :
-  KDialogBase( parent, name, true, i18n("Select Folder"), Ok|Cancel|User1, Ok, false, KGuiItem( i18n("Reload"), "reload" ) ),
+SloxFolderDialog::SloxFolderDialog( SloxFolderManager *manager, FolderType type, QWidget *parent ) :
+  KDialog( parent, i18n("Select Folder"), Ok|Cancel|User1 ),
   mManager( manager ),
   mFolderType( type )
 {
+  setDefaultButton( Ok );
+  setButtonGuiItem( User1, KGuiItem( i18n("Reload"), "reload" ) );
   mListView = new K3ListView( this );
   mListView->setRootIsDecorated( true );
   mListView->setShowSortIndicator( true );

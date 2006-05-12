@@ -2561,7 +2561,7 @@ KNComposer::AttachmentViewItem::~AttachmentViewItem()
 
 
 KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, QWidget *parent ) :
-  KDialogBase( parent, 0, true, i18n("Attachment Properties"), Help | Ok | Cancel, Ok ), a_ttachment(a),
+  KDialog( parent, i18n("Attachment Properties"), Help | Ok | Cancel ), a_ttachment(a),
   n_onTextAsText(false)
 {
   //init GUI
@@ -2661,7 +2661,7 @@ void KNComposer::AttachmentPropertiesDlg::accept()
        i18n("You have changed the mime-type of this non-textual attachment\nto text. This might cause an error while loading or encoding the file.\nProceed?")
        ) == KMessageBox::Cancel) return;
 
-  KDialogBase::accept();
+  KDialog::accept();
 }
 
 

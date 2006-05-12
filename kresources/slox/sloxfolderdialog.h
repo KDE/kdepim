@@ -20,7 +20,7 @@
 #define SLOXFOLDERDIALOG_H
 
 #include <QString>
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include "sloxfolder.h"
 
@@ -28,11 +28,11 @@ class K3ListView;
 class SloxFolder;
 class SloxFolderManager;
 
-class KDE_EXPORT SloxFolderDialog : public KDialogBase
+class KDE_EXPORT SloxFolderDialog : public KDialog
 {
   Q_OBJECT
   public:
-    SloxFolderDialog( SloxFolderManager *manager, FolderType type, QWidget* parent = 0, const char *name = 0 );
+    SloxFolderDialog( SloxFolderManager *manager, FolderType type, QWidget* parent = 0 );
     ~SloxFolderDialog();
 
     QString selectedFolder() const;

@@ -1056,7 +1056,7 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
 
 void KNArticleFactory::slotSendErrorDialogDone()
 {
-  s_endErrDlg->delayedDestruct();
+  s_endErrDlg->deleteLater();
   s_endErrDlg=0;
 }
 
@@ -1065,9 +1065,11 @@ void KNArticleFactory::slotSendErrorDialogDone()
 
 
 KNSendErrorDialog::KNSendErrorDialog()
-  : KDialogBase(knGlobals.topWidget, 0, true, i18n("Errors While Sending"), Close, Close, true)
+  : KDialog(knGlobals.topWidget, i18n("Errors While Sending"), Close )
 {
-  KVBox *page = makeVBoxMainWidget();
+  KVBox *page = new KVBox( this );
+  setMainWidget( page );
+  setDefaultButton( Close );
 
   new QLabel(QString("<b>%1</b><br>%2").arg(i18n("Errors occurred while sending these articles:"))
                                        .arg(i18n("The unsent articles are stored in the \"Outbox\" folder.")), page);

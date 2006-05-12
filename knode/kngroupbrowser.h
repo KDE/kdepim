@@ -22,7 +22,7 @@
 #include <QLabel>
 #include <QGridLayout>
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include "kngroupmanager.h"
 
@@ -36,7 +36,7 @@ class KNNntpAccount;
 
 
 /** Base class for group selection dialogs. */
-class KNGroupBrowser : public KDialogBase {
+class KNGroupBrowser : public KDialog {
 
   Q_OBJECT
 
@@ -68,7 +68,7 @@ class KNGroupBrowser : public KDialogBase {
         KNGroupInfo info;
     };
 
-    KNGroupBrowser( QWidget *parent, const QString &caption, KNNntpAccount *a, int buttons = 0,
+    KNGroupBrowser( QWidget *parent, const QString &caption, KNNntpAccount *a, ButtonCodes buttons = 0,
                     bool newCBact = false, const QString &user1 = QString(), const QString &user2 = QString() );
     ~KNGroupBrowser();
 

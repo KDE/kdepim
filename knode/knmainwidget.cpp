@@ -1885,10 +1885,11 @@ KXMLGUIFactory* KNMainWidget::factory() const
 
 
 KNode::FetchArticleIdDlg::FetchArticleIdDlg( QWidget *parent ) :
-    KDialogBase ( i18n("Fetch Article with ID"), KDialog::Ok | KDialog::Cancel, KDialog::Ok, KDialog::Cancel, parent )
+    KDialog( parent, i18n("Fetch Article with ID"), KDialog::Ok | KDialog::Cancel )
 {
   setModal( true );
-  KHBox *page = makeHBoxMainWidget();
+  KHBox *page = new KHBox( this );
+  setMainWidget( page );
 
   QLabel *label = new QLabel(i18n("&Message-ID:"),page);
   edit = new KLineEdit(page);

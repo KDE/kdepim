@@ -81,7 +81,7 @@
 #include <kstatusbar.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kkeydialog.h>
 #include <ktempfile.h>
 #include <kio/job.h>
@@ -1139,7 +1139,10 @@ void CertManager::slotViewDetails( Kleo::KeyListViewItem * item ) {
     return;
 
   // <UGH>
-  KDialogBase * dialog = new KDialogBase( this, "dialog", false, i18n("Additional Information for Key"), KDialogBase::Close, KDialogBase::Close );
+  KDialog * dialog = new KDialog( this, i18n("Additional Information for Key"), KDialog::Close );
+  dialog->setObjectName( "dialog" );
+  dialog->setModal( false );
+  dialog->setDefaultButton( KDialog::Close );
 
   CertificateInfoWidgetImpl * top = new CertificateInfoWidgetImpl( item->key(), isRemote(), dialog );
   dialog->setMainWidget( top );

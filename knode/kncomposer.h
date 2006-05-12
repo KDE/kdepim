@@ -18,7 +18,7 @@
 #include <k3listview.h>
 
 #include <kmainwindow.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <keditcl.h>
 #include <QLineEdit>
 #include <QRegExp>
@@ -348,7 +348,7 @@ class KNComposer::AttachmentViewItem : public K3ListViewItem {
 
 
 /** Attachment properties dialog. */
-class KNComposer::AttachmentPropertiesDlg : public KDialogBase {
+class KNComposer::AttachmentPropertiesDlg : public KDialog {
 
   Q_OBJECT
 
