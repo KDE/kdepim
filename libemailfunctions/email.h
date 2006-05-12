@@ -31,7 +31,7 @@
 
 namespace KPIM {
 
-/** 
+/**
     @defgroup emailvalidation Email Validation Functions
 
     This collection of methods is located in the KPIM namespace --
@@ -49,10 +49,10 @@ namespace KPIM {
     indicate some specific problem with the address which
     is being validated.
 
-    Result type for splitAddress(), isValidEmailAddress() 
+    Result type for splitAddress(), isValidEmailAddress()
     and isValidSimpleEmailAddress().
 */
-enum EmailParseResult { 
+enum EmailParseResult {
 	AddressOk,          /**< Email is valid */
 	AddressEmpty,       /**< The address is empty */
 	UnexpectedEnd,      /**< Something is unbalanced */
@@ -70,7 +70,7 @@ enum EmailParseResult {
 	InvalidDisplayName  /**< An invalid displayname detected in address */
 	};
 
-/** Split a comma separated list of email addresses. 
+/** Split a comma separated list of email addresses.
 
     @param aStr a single string representing a list of addresses
     @return a list of strings, where each string is one address
@@ -141,10 +141,10 @@ KDE_EXPORT EmailParseResult splitAddress( const QString & address,
 KDE_EXPORT EmailParseResult isValidEmailAddress( const QString& aStr );
 
 /** Translate the enum errorcodes from emailParseResult
-    into i18n'd strings that can be used for msg boxes. 
+    into i18n'd strings that can be used for msg boxes.
 
     @param errorCode an @em error code returned from one of the
-		       email validation functions. Do not pass 
+		       email validation functions. Do not pass
 		       AddressOk as a value, since that will yield
 		       a misleading error message
     @return human-readable and already translated message describing
@@ -160,7 +160,7 @@ KDE_EXPORT QString emailParseResultToString( EmailParseResult errorCode );
 
     @param aStr         a single email address,
                           example: joe.user@example.org
-    @return             true if no error was encountered. 
+    @return             true if no error was encountered.
 
     @note This method differs from calling isValidEmailAddress()
 	  and checking that that returns AddressOk in two ways:
@@ -168,14 +168,14 @@ KDE_EXPORT QString emailParseResultToString( EmailParseResult errorCode );
 */
 KDE_EXPORT bool isValidSimpleEmailAddress( const QString& aStr );
 
-/** Returns a i18n string to be used in msgboxes 
+/** Returns a i18n string to be used in msgboxes
     this allows for error messages to be the same
-    across the board. 
-   
+    across the board.
+
     @return             An i18n ready string for use in msgboxes.
 */
 
-KDE_EXPORT QString simpleEmailAddressErrorMsg(); 
+KDE_EXPORT QString simpleEmailAddressErrorMsg();
 
 /** @}  */
 
@@ -231,7 +231,7 @@ KDE_EXPORT QString getFirstEmailAddress( const QString & addresses );
   "Stefan Taferner <taferner@example.org>" returns "taferner@example.org"
   and "Stefan Taferner". "joe@example.com" returns "joe@example.com"
   and "". Note that this only returns the first address.
-  Also note that the return value is TRUE if both the name and the
+  Also note that the return value is true if both the name and the
   mail are not empty: this does NOT tell you if mail contains a
   valid email address or just some rubbish.
 
@@ -254,7 +254,7 @@ KDE_EXPORT bool getNameAndMail(const QString& aStr, QString& name, QString& mail
 
   @param email2  the second email address to use for comparison
 
-  @param matchName  if set to true email address and displayname must match 
+  @param matchName  if set to true email address and displayname must match
 
   @return true if the comparison matches true in all other cases
  */
@@ -311,7 +311,7 @@ KDE_EXPORT QString normalizeAddressesAndDecodeIDNs( const QString & addresses );
     in punycode.
 
   @param str  a list of email addresses
-  @return     the email addresses in normalized form 
+  @return     the email addresses in normalized form
 */
 KDE_EXPORT QString normalizeAddressesAndEncodeIDNs( const QString & str );
 
@@ -319,7 +319,7 @@ KDE_EXPORT QString normalizeAddressesAndEncodeIDNs( const QString & str );
 
 /** @ingroup emailextraction
 
-    Add quote characters around the given string if it contains a 
+    Add quote characters around the given string if it contains a
     character that makes that necessary, in an email name, such as ",".
 
   @param str  a string that may need quoting

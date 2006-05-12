@@ -278,7 +278,7 @@ int main(int argc, char *argv[])
   checkIsValidEmailAddress( "\"matt<blah blah>\" <matt@fruitsalad.org>", "AddressOk" );
 
   // a , inside a double quoted string is OK, how do I know this? well Ingo says so
-  // and it makes sense since it is also a seperator of email addresses
+  // and it makes sense since it is also a separator of email addresses
   checkIsValidEmailAddress( "\"Douhan, Matt\" <matt@fruitsalad.org>", "AddressOk" );
 
   // Domains literals also need to work
@@ -323,7 +323,7 @@ int main(int argc, char *argv[])
   // escape a quote to many to see if it makes it invalid
   checkIsValidEmailAddress( "\"testing, \\\"testing\\\" <matt@fruitsalad.org>", "UnbalancedQuote" );
 
-  // escape a parens and thus make a comma appear 
+  // escape a parens and thus make a comma appear
   checkIsValidEmailAddress( "Matt (jongel, fibbel\\\) <matt@fruitsalad.org>", "UnbalancedParens" );
 
   // several errors inside doublequotes
@@ -369,7 +369,7 @@ int main(int argc, char *argv[])
   //bug 105405
   checkIsValidEmailAddress( "[foobar] <matt@fruitsalad.org>", "InvalidDisplayName" );
   checkIsValidEmailAddress( "matt \"[foobar]\" Douhan <matt@fruitsalad.org>", "AddressOk" );
- 
+
   checkIsValidEmailAddress( "Matt Douhan <matt\"@@\"fruitsalad.org>", "TooFewAts" );
 
 

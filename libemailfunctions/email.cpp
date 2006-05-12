@@ -287,7 +287,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
   // if 0 or > 1 take action
   // at this point to many @'s cannot bail out right away since
   // @ is allowed in qoutes, so we use a bool to keep track
-  // and then make a judgement further down in the parser
+  // and then make a judgment further down in the parser
   // FIXME count only @ not in double quotes
 
   bool tooManyAtsFlag = false;
@@ -298,7 +298,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
   } else if ( atCount == 0 ) {
 	  return TooFewAts;
   }
-  
+
   // The main parser, try and catch all weird and wonderful
   // mistakes users and/or machines can create
 
@@ -322,8 +322,8 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
           break;
         case '[' :
           if ( !inQuotedString ) {
-            return InvalidDisplayName; 
-          } 
+            return InvalidDisplayName;
+          }
           break;
         case ']' :
           if ( !inQuotedString ) {
@@ -344,7 +344,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
           ++index; // skip the '\'
           if (( index + 1 )> strlen ) {
             return UnexpectedEnd;
-          } 
+          }
           break;
         case ',' :
           if ( !inQuotedString )
@@ -389,7 +389,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
           ++index; // skip the '\'
           if (( index + 1 )> strlen ) {
             return UnexpectedEnd;
-          } 
+          }
           break;
         }
         break;
@@ -804,13 +804,13 @@ QString KPIM::normalizedAddress( const QString & displayName,
   if ( displayName.isEmpty() && comment.isEmpty() )
     return addrSpec;
   else if ( comment.isEmpty() )
-    return displayName + " <" + addrSpec + ">";
+    return displayName + " <" + addrSpec + '>';
   else if ( displayName.isEmpty() ) {
     QString commentStr = comment;
-    return quoteNameIfNecessary( commentStr ) + " <" + addrSpec + ">";
+    return quoteNameIfNecessary( commentStr ) + " <" + addrSpec + '>';
   }
   else
-    return displayName + " (" + comment + ") <" + addrSpec + ">";
+    return displayName + " (" + comment + ") <" + addrSpec + '>';
 }
 
 
