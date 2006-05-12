@@ -1,4 +1,6 @@
 
+find_package( Gpgme )
+
 add_subdirectory( pics )
 add_subdirectory( kleo )
 add_subdirectory( backends )
