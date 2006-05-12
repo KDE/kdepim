@@ -12,57 +12,59 @@ add_subdirectory( csv-templates )
 add_subdirectory( thumbnailcreator ) 
 
 include_directories( 
-	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces 
-	${CMAKE_SOURCE_DIR}/kaddressbook/features 
-	${CMAKE_SOURCE_DIR}/kaddressbook/views 
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing 
-	${CMAKE_SOURCE_DIR}/kaddressbook/common 
-	${CMAKE_SOURCE_DIR}/kaddressbook/editors 
+	${CMAKE_CURRENT_SOURCE_DIR}/interfaces 
+	${CMAKE_CURRENT_SOURCE_DIR}/features 
+	${CMAKE_CURRENT_SOURCE_DIR}/views 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing 
+	${CMAKE_CURRENT_SOURCE_DIR}/common 
+	${CMAKE_CURRENT_SOURCE_DIR}/editors 
 	${CMAKE_SOURCE_DIR}/akregator/src )
 
 
 set(libkabcommon_SRCS
-	${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/common/locationmap.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/common/filter.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/common/locationmap.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/common/filter.cpp
 	)
 
-kde4_add_kcfg_files(libkabcommon_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
+kde4_add_kcfg_files(libkabcommon_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs_base.kcfgc )
 
 set(libkabinterfaces_SRCS
-	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces/configurewidget.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces/contacteditorwidget.cpp
-	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces/core.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces/extensionwidget.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces/xxport.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/interfaces/configurewidget.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/interfaces/contacteditorwidget.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/interfaces/core.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/interfaces/extensionwidget.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/interfaces/xxport.cpp
 )
 
 
 set(libprinter_SRCS
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing/detailledstyle.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing/kabentrypainter.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing/mikesstyle.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing/ringbinderstyle.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing/printingwizard.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing/printprogress.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing/printstyle.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing/selectionpage.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing/stylepage.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing/printsortmode.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/detailledstyle.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/kabentrypainter.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/mikesstyle.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/ringbinderstyle.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/printingwizard.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/printprogress.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/printstyle.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/selectionpage.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/stylepage.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/printsortmode.cpp
 )
-kde4_add_ui3_files(libprinter_SRCS
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing/ds_appearance.ui
-	${CMAKE_SOURCE_DIR}/kaddressbook/printing/rbs_appearance.ui
+MACRO_ADD_FILE_DEPENDENCIES(${CMAKE_CURRENT_SOURCE_DIR}/printing/detailledstyle.cpp ${CMAKE_CURRENT_BINARY_DIR}/ui_ds_appearance.h ${CMAKE_CURRENT_BINARY_DIR}/ui_rbs_appearance.h)
+
+kde4_add_ui_files(libprinter_SRCS
+        ${CMAKE_CURRENT_SOURCE_DIR}/printing/ds_appearance.ui
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/rbs_appearance.ui
 )
 
 set(libkabim_SRCS
-	${CMAKE_SOURCE_DIR}/kaddressbook/editors/imeditorwidget.cpp 
-	${CMAKE_SOURCE_DIR}/kaddressbook/editors/imaddresswidget.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/editors/imeditorwidget.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/editors/imaddresswidget.cpp
 )
 
 kde4_add_ui3_files(libkabim_SRCS
-	${CMAKE_SOURCE_DIR}/kaddressbook/editors/imeditorbase.ui
-    ${CMAKE_SOURCE_DIR}/kaddressbook/editors/imaddressbase.ui
+	${CMAKE_CURRENT_SOURCE_DIR}/editors/imeditorbase.ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/editors/imaddressbase.ui
 )
 
 
@@ -73,7 +75,7 @@ set(kaddressbook_bin_SRCS
 	kaddressbookmain.cpp 
 	)
 
-#kde4_add_kcfg_files(kaddressbook_bin_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
+#kde4_add_kcfg_files(kaddressbook_bin_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs_base.kcfgc )
 
 kde4_automoc(${kaddressbook_bin_SRCS})
 
