@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( pics ) 
 
@@ -32,7 +31,6 @@ install_files( ${XDG_APPS_DIR} FILES ktnef.desktop )
 install_files( ${DATA_INSTALL_DIR}/ktnef FILES ktnefui.rc )
 install_files( ${MIME_INSTALL_DIR}/application FILES ms-tnef.desktop )
 
-kde4_footer()
 
 
 
