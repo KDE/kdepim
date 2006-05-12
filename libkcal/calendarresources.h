@@ -48,6 +48,7 @@ class CalendarResources : public Calendar,
       public:
         DestinationPolicy( CalendarResourceManager *manager )
           : mManager( manager ) {}
+        virtual ~DestinationPolicy() { }
 
         virtual ResourceCalendar *destination( Incidence * ) = 0;
 
