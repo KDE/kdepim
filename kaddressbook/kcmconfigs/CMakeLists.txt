@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/kaddressbook
@@ -62,7 +61,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kcm_kabcustomfields )
 
 install_files( ${SERVICES_INSTALL_DIR} FILES kabconfig.desktop kabldapconfig.desktop                      kabcustomfields.desktop )
 
-kde4_footer()
 
 
 

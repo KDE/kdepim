@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${CMAKE_SOURCE_DIR}/libkleo/ui ${CMAKE_BINARY_DIR}/libkleo  )
 
@@ -31,7 +30,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kcm_kleopatra )
 
 install_files( ${SERVICES_INSTALL_DIR} FILES kleopatra_config_dirserv.desktop  	kleopatra_config_appear.desktop  	kleopatra_config_dnorder.desktop )
 
-kde4_footer()
 
 
 

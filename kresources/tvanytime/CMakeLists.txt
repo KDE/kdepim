@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -44,7 +43,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kcal_tvanytime )
 
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_tvanytime.desktop )
 
-kde4_footer()
 
 
 

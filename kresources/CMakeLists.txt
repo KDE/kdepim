@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( lib ) 
 add_subdirectory( remote ) 
@@ -15,7 +14,6 @@ add_subdirectory( birthdays )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

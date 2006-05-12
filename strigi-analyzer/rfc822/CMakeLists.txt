@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -22,7 +21,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kfile_rfc822 )
 
 install_files( ${SERVICES_INSTALL_DIR} FILES kfile_rfc822.desktop )
 
-kde4_footer()
 
 
 

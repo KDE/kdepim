@@ -1,4 +1,3 @@
-kde4_header()
 
 # Test apps should be in the bin dir so that add_test can locate them
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
@@ -246,7 +245,6 @@ ENDFOREACH(file)
 endif(KDE4_BUILD_TESTS)
 
 
-kde4_footer()
 
 
 

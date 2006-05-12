@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -7,7 +6,6 @@ kde4_header()
 
 install_files( ${KCONF_UPDATE_INSTALL_DIR} FILES korn-3-4-config_change.upd korn-3-5-update.upd korn-3-5-ssl-update.pl korn-3-5-metadata-update.pl)
 
-kde4_footer()
 
 
 

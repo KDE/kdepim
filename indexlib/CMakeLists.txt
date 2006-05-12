@@ -1,4 +1,3 @@
-kde4_header()
 
 
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  ${KDE4_ENABLE_EXCEPTIONS}")
@@ -47,7 +46,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/indexlib-config.in ${CMAKE_CURRENT_BI
 
 install_files( /include/index FILES create.h index.h lockfile.h )
 install_files( /bin FILES indexlib-config )
-kde4_footer()
 
 
 

@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/kresources/kolab/shared ${CMAKE_SOURCE_DIR}/knotes  )
 
@@ -43,7 +42,6 @@ install_targets(${PLUGIN_INSTALL_DIR} knotes_kolab )
 
 install_files( ${SERVICES_INSTALL_DIR}/kresources/knotes FILES kolabresource.desktop )
 
-kde4_footer()
 
 
 

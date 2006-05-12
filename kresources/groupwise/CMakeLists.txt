@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( soap ) 
 add_subdirectory( kioslave ) 
@@ -82,7 +81,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kabc_groupwise )
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kabc FILES kabc_groupwise.desktop )
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_groupwise.desktop )
 
-kde4_footer()
 
 
 

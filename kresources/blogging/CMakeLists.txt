@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/kresources/lib ${CMAKE_SOURCE_DIR}/kresources/blogging/libkblog/  )
 
@@ -45,7 +44,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kcal_blogging )
 
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES blogging.desktop )
 
-kde4_footer()
 
 
 

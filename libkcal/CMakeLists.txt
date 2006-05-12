@@ -1,4 +1,3 @@
-kde4_header()
 
 
 ADD_DEFINITIONS(-DPACKAGE_DATA_DIR=\\""${CMAKE_INSTALL_PREFIX}${DATA_INSTALL_DIR}/libical"\\" ) # added manually
@@ -320,7 +319,6 @@ install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES local.desktop local
 install_files( /include/libkcal FILES alarm.h attachment.h attendee.h calendar.h    calendarlocal.h calendarnull.h calendarresources.h calfilter.h calformat.h    calstorage.h customproperties.h dndfactory.h duration.h event.h    exceptions.h filestorage.h freebusy.h htmlexportsettings.h htmlexport.h icaldrag.h    icalformat.h icaltimezones.h incidencebase.h incidence.h incidenceformatter.h    journal.h kcalversion.h listbase.h period.h person.h    qtopiaformat.h recurrencerule.h recurrence.h resourcecached.h resourcecalendar.h    resourcelocalconfig.h resourcelocaldirconfig.h resourcelocaldir.h    resourcelocal.h scheduler.h libkcal_export.h    todo.h vcaldrag.h vcalformat.h )
 install_files( ${SERVICES_INSTALL_DIR}/kresources FILES kcal_manager.desktop )
 
-kde4_footer()
 
 
 

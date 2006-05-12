@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -101,7 +100,6 @@ target_link_libraries(process  ${KDE4_KDECORE_LIBS} )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

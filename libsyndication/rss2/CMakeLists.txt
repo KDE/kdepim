@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -7,7 +6,6 @@ kde4_header()
 
 install_files( /include/libsyndication/rss2 FILES category.h cloud.h document.h enclosure.h                   image.h item.h parser.h rss2.h source.h textinput.h )
 
-kde4_footer()
 
 
 

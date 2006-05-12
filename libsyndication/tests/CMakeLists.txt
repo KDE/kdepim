@@ -1,4 +1,3 @@
-kde4_header()
 
 if(KDE4_BUILD_TESTS)
 
@@ -41,7 +40,6 @@ add_test(libsyndication-testpersonimpl ${EXECUTABLE_OUPUT_PATH}/testpersonimpl)
 
 endif(KDE4_BUILD_TESTS)
 
-kde4_footer()
 
 
 

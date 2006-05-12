@@ -1,4 +1,3 @@
-kde4_header()
 
 ########### install files ###############
 
@@ -23,4 +22,3 @@ install_files( ${DATA_INSTALL_DIR}/knode/pics FILES
 )
 kde4_install_icons( ${DATA_INSTALL_DIR}/knode/icons crystalsvg )
 
-kde4_footer()

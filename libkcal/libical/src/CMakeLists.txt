@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( libical ) 
 add_subdirectory( libicalss ) 
@@ -9,7 +8,6 @@ add_subdirectory( libicalss )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

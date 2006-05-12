@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/kmail ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkmime ${CMAKE_SOURCE_DIR}/mimelib ${CMAKE_SOURCE_DIR}/libemailfunctions  )
 
@@ -52,7 +51,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_xdiff )
 
 install_files( ${DATA_INSTALL_DIR}/kmail/plugins/bodypartformatter FILES text_vcard.desktop text_calendar.desktop text_xdiff.desktop )
 
-kde4_footer()
 
 
 

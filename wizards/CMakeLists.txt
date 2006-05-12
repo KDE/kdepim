@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkpimidentities ${CMAKE_SOURCE_DIR}/libkcal ${CMAKE_SOURCE_DIR}/kresources/kolab/shared ${CMAKE_SOURCE_DIR}/knotes ${CMAKE_SOURCE_DIR}/libkleo ${CMAKE_SOURCE_DIR}/kresources/lib  )
 
@@ -79,7 +78,6 @@ install_targets(/bin kolabwizard )
 install_files( ${XDG_APPS_DIR} FILES groupwarewizard.desktop )
 install_files( ${KCFG_INSTALL_DIR} FILES egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg )
 
-kde4_footer()
 
 
 

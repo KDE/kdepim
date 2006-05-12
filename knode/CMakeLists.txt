@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( pics ) 
 add_subdirectory( filters ) 
@@ -136,7 +135,6 @@ install_files( ${DATA_INSTALL_DIR}/knode FILES headers.rc knodeui.rc knreaderui.
 
 kde4_install_icons( ${ICON_INSTALL_DIR}  hicolor )
 
-kde4_footer()
 
 
 

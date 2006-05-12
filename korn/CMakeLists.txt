@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( kconf_update ) 
 
@@ -78,7 +77,6 @@ install_files( ${XDG_APPS_DIR} FILES KOrn.desktop )
 
 kde4_install_icons( ${ICON_INSTALL_DIR}  hicolor )
 
-kde4_footer()
 
 
 

@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -21,7 +20,6 @@ install_targets(/bin kabcfrontend )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

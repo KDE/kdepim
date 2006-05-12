@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkpgp ${CMAKE_SOURCE_DIR}/libkleo  ${GPGME_INCLUDES} )
 
@@ -32,7 +31,6 @@ kde4_add_ui_files(kleopatra_LIB_SRCS directoryserviceswidgetbase.ui adddirectory
 
 install_files( /include/kleo FILES  )
 
-kde4_footer()
 
 
 

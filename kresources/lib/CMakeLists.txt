@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical
@@ -59,7 +58,6 @@ install_targets(${LIB_INSTALL_DIR} kgroupwaredav )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${SASL2_INCLUDE_DIR}  )
 
@@ -22,7 +21,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kio_sieve )
 
 install_files( ${SERVICES_INSTALL_DIR} FILES sieve.protocol )
 
-kde4_footer()
 
 
 

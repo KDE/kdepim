@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( vcf ) 
 add_subdirectory( ics ) 
@@ -9,7 +8,6 @@ add_subdirectory( ics )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

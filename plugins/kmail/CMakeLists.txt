@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( bodypartformatter ) 
 
@@ -8,7 +7,6 @@ add_subdirectory( bodypartformatter )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

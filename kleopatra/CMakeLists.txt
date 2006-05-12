@@ -1,4 +1,3 @@
-kde4_header()
 
 set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
 add_subdirectory( conf ) 
@@ -36,7 +35,6 @@ install_targets(/bin kleopatra_bin )
 install_files( ${XDG_APPS_DIR} FILES kleopatra_import.desktop )
 install_files( ${DATA_INSTALL_DIR}/kleopatra FILES kleopatraui.rc )
 
-kde4_footer()
 
 
 

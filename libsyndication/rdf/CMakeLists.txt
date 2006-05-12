@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -11,7 +10,6 @@ install_files( /include/libsyndication/rdf FILES parser.h dublincorevocab.h dubl
                model.h modelmaker.h rdfvocab.h sequence.h statement.h resourcewrapper.h 
                nodevisitor.h rdf.h )
 
-kde4_footer()
 
 
 

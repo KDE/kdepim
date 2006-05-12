@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/ktnef  )
 
@@ -28,7 +27,6 @@ install_targets(${LIB_INSTALL_DIR} ktnef )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

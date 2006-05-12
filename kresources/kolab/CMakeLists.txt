@@ -1,4 +1,3 @@
-kde4_header()
 
 set(libresourcekolabshared_SRCS 
 	${CMAKE_SOURCE_DIR}/kresources/kolab/shared/resourcekolabbase.cpp 
@@ -21,7 +20,6 @@ add_subdirectory( kcal )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

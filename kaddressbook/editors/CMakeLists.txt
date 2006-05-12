@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( protocols ) 
 add_subdirectory( icons ) 
@@ -30,7 +29,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_cryptosettings )
 install_files( ${SERVICES_INSTALL_DIR}/kaddressbook FILES cryptosettings.desktop )
 install_files( ${SERVICETYPES_INSTALL_DIR} FILES kaddressbookimprotocol.desktop )
 
-kde4_footer()
 
 
 

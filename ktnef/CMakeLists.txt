@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( ktnef ) 
 add_subdirectory( lib ) 
@@ -10,7 +9,6 @@ add_subdirectory( gui )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

@@ -1,4 +1,3 @@
-kde4_header()
 
 if(KDE4_BUILD_TESTS)
 
@@ -86,7 +85,6 @@ add_test(libkmime-kmime_util_test ${EXECUTABLE_OUPUT_PATH}/kmime_util_test)
 
 endif(KDE4_BUILD_TESTS)
 
-kde4_footer()
 
 
 

@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( tests ) 
 
@@ -41,5 +40,4 @@ install_files( /include/libkholiday_ng FILES
    zodiac.h
    )
 
-kde4_footer()
 

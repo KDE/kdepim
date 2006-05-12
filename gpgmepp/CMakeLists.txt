@@ -1,4 +1,3 @@
-kde4_header()
 
 find_package( Gpgme )
 
@@ -45,7 +44,6 @@ install_files( /include/gpgme++ FILES  context.h key.h trustitem.h
    eventloopinteractor.h data.h gpgmefw.h result.h keylistresult.h keygenerationresult.h 
    importresult.h decryptionresult.h verificationresult.h signingresult.h encryptionresult.h engineinfo.h )
 
-kde4_footer()
 
 
 

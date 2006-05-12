@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -37,7 +36,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kcal_remote )
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES remote.desktop )
 install_files( /include/libkcal FILES resourceremoteconfig.h resourceremote.h )
 
-kde4_footer()
 
 
 

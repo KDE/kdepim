@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( tests ) 
 
@@ -24,7 +23,6 @@ install_targets(${LIB_INSTALL_DIR} qgpgme )
 
 install_files( /include/qgpgme FILES  )
 
-kde4_footer()
 
 
 

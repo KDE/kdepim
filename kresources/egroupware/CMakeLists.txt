@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/libical/src/libical ${CMAKE_SOURCE_DIR}/libical/src/libicalss ${CMAKE_SOURCE_DIR}/ ${CMAKE_SOURCE_DIR}/knotes ${CMAKE_SOURCE_DIR}/kaddressbook/common  )
 
@@ -126,7 +125,6 @@ install_files( ${SERVICES_INSTALL_DIR}/kresources/kabc FILES kabc_xmlrpc.desktop
 install_files( /include/kabc FILES kabc_resourcexmlrpc.h kcal_resourcexmlrpc.h )
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_xmlrpc.desktop )
 
-kde4_footer()
 
 
 

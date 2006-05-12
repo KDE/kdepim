@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -72,7 +71,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kabc_groupware )
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kabc FILES kabc_groupware.desktop )
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_groupware.desktop )
 
-kde4_footer()
 
 
 

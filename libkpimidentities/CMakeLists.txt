@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
@@ -19,7 +18,6 @@ set_target_properties(kpimidentities PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kpimidentities )
 
 
-kde4_footer()
 
 
 

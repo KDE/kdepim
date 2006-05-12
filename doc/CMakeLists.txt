@@ -1,4 +1,3 @@
-kde4_header()
 
 
 add_subdirectory(akregator)
@@ -21,7 +20,6 @@ add_subdirectory(kwatchgnupg)
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

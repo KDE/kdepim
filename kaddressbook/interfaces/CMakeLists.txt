@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -27,7 +26,6 @@ install_targets(${LIB_INSTALL_DIR} kabinterfaces )
 install_files( /include/kaddressbook FILES configurewidget.h contacteditorwidget.h core.h                       extensionwidget.h xxport.h )
 install_files( ${SERVICETYPES_INSTALL_DIR} FILES kaddressbook_contacteditorwidget.desktop                     kaddressbook_extension.desktop kaddressbook_xxport.desktop )
 
-kde4_footer()
 
 
 

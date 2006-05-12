@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( pics ) 
 
@@ -32,7 +31,6 @@ install_targets(${LIB_INSTALL_DIR} kpgp )
 
 install_files( ${KCONF_UPDATE_INSTALL_DIR} FILES kpgp.upd kpgp-3.1-upgrade-address-data.pl)
 
-kde4_footer()
 
 
 

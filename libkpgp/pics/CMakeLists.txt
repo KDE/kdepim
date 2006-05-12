@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -8,7 +7,6 @@ kde4_header()
 #install_files( ${DATA_INSTALL_DIR}/knode/pics FILES $(kmaildata_DATA) )
 install_files( ${DATA_INSTALL_DIR}/kmail/pics FILES key_ok.png key_bad.png key_unknown.png key.png )
 
-kde4_footer()
 
 
 

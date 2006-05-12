@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/kresources/kolab/shared  )
 
@@ -42,7 +41,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kabc_kolab )
 
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kabc FILES kolab.desktop )
 
-kde4_footer()
 
 
 

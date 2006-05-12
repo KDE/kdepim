@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/common  )
 
@@ -25,7 +24,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kcal_kabc )
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kabc.desktop )
 install_files( /include/libkcal FILES resourcekabc.h resourcekabcconfig.h )
 
-kde4_footer()
 
 
 

@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -49,7 +48,6 @@ install_targets(/bin networkstatustestservice )
 
 install_files( ${SERVICES_INSTALL_DIR}/kded FILES networkstatus.desktop )
 
-kde4_footer()
 
 
 

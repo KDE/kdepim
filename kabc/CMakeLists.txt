@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( kabc2mutt ) 
 
@@ -8,7 +7,6 @@ add_subdirectory( kabc2mutt )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

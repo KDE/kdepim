@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( pixmaps ) 
 
@@ -32,7 +31,6 @@ install_targets(/bin konsolekalendar )
 install_files( ${XDG_APPS_DIR} FILES konsolekalendar.desktop )
 install_files( ${APPLNK_INSTALL_DIR}/Utilities FILES  )
 
-kde4_footer()
 
 
 

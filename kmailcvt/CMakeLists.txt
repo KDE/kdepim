@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( pics ) 
 
@@ -46,7 +45,6 @@ kde4_install_icons( ${ICON_INSTALL_DIR}  hicolor )
 
 install(FILES uninstall.desktop DESTINATION ${CMAKE_INSTALL_PREFIX}${APPLNK_INSTALL_DIR}/Utilities/ RENAME kmailcvt.desktop)
 
-kde4_footer()
 
 
 

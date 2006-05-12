@@ -1,4 +1,3 @@
-kde4_header()
 
 
 if(SASL2_FOUND)
@@ -14,7 +13,6 @@ add_subdirectory( mbox )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

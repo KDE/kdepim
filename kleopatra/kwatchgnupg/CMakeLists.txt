@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
@@ -26,7 +25,6 @@ install_targets(/bin kwatchgnupg )
 install_files( ${DATA_INSTALL_DIR}/kwatchgnupg/pics FILES kwatchgnupg.png kwatchgnupg2.png )
 install_files( ${DATA_INSTALL_DIR}/kwatchgnupg FILES kwatchgnupgui.rc )
 
-kde4_footer()
 
 
 

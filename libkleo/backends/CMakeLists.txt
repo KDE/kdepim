@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( qgpgme ) 
 add_subdirectory( chiasmus ) 
@@ -9,7 +8,6 @@ add_subdirectory( chiasmus )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

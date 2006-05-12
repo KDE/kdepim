@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( kmail ) 
 
@@ -8,7 +7,6 @@ add_subdirectory( kmail )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

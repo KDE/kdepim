@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook ${CMAKE_SOURCE_DIR}/kaddressbook/details ${CMAKE_SOURCE_DIR}/kaddressbook/common  )
 
@@ -10,7 +9,6 @@ include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook ${CMAKE_SOURCE_DIR}/kaddre
 
 install_files( ${DATA_INSTALL_DIR}/kaddressbook/printing FILES detailed-style.png mike-style.png ringbinder-style.png )
 
-kde4_footer()
 
 
 

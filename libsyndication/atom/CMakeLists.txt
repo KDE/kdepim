@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -7,7 +6,6 @@ kde4_header()
 
 install_files( /include/libsyndication/atom FILES category.h constants.h content.h document.h entry.h                   generator.h link.h parser.h person.h source.h atom.h )
 
-kde4_footer()
 
 
 

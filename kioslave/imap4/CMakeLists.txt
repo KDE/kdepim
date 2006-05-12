@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkmime ${SASL2_INCLUDE_DIR} )
 
@@ -33,7 +32,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kio_imap4 )
 
 install_files( ${SERVICES_INSTALL_DIR} FILES imap4.protocol imaps.protocol )
 
-kde4_footer()
 
 
 

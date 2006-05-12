@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( 
 	${CMAKE_SOURCE_DIR}/kaddressbook/interfaces 
@@ -16,7 +15,6 @@ kde4_add_kcfg_files(libkabcommon_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/ka
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

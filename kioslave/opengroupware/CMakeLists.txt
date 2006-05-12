@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/kresources/opengroupware/soap  )
 
@@ -22,7 +21,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kio_opengroupware )
 
 install_files( ${SERVICES_INSTALL_DIR} FILES opengroupware.protocol opengroupwares.protocol )
 
-kde4_footer()
 
 
 

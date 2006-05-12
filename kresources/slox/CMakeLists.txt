@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -107,7 +106,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kabc_slox_plugin )
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kabc FILES kabc_slox.desktop kabc_ox.desktop )
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_slox.desktop kcal_ox.desktop )
 
-kde4_footer()
 
 
 

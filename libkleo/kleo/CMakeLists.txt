@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
@@ -10,7 +9,6 @@ include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
 install_files( /include/kleo FILES  )
 
-kde4_footer()
 
 
 

@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -72,7 +71,6 @@ endif(KDE4_BUILD_TESTS)
 
 install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_resourcefeatureplan.desktop )
 
-kde4_footer()
 
 
 

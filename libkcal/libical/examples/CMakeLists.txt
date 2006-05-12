@@ -1,4 +1,3 @@
-kde4_header()
 
 
 
@@ -22,7 +21,6 @@ target_link_libraries(doesnothing  ${KDE4_KDECORE_LIBS} ical icalss icalvcal )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

@@ -1,4 +1,3 @@
-kde4_header()
 
 include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${CMAKE_SOURCE_DIR}/kaddressbook  )
 
@@ -37,7 +36,6 @@ install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_resourceselection )
 
 install_files( ${SERVICES_INSTALL_DIR}/kaddressbook FILES distributionlist.desktop resourceselection.desktop )
 
-kde4_footer()
 
 
 

@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( pics )
 add_subdirectory( kleo )
@@ -97,7 +96,6 @@ install_targets(${LIB_INSTALL_DIR} kleopatra )
 ########### install files ###############
 
 
-kde4_footer()
 
 
 

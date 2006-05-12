@@ -1,4 +1,3 @@
-kde4_header()
 
 add_subdirectory( common )
 add_subdirectory( interfaces ) 
@@ -171,7 +170,6 @@ install_files( ${SERVICETYPES_INSTALL_DIR} FILES kaddressbook_view.desktop dcopa
 
 kde4_install_icons( ${ICON_INSTALL_DIR}  hicolor )
 
-kde4_footer()
 
 
 
