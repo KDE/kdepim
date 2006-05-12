@@ -123,6 +123,8 @@ public:
   /** What is the label for this subresource? */
   virtual const QString labelForSubresource( const QString& resource ) const;
 
+  virtual QString subresourceIdentifier( Incidence *incidence );
+
   virtual bool addSubresource( const QString& resource, const QString& parent );
   virtual bool removeSubresource( const QString& resource );
 
@@ -192,6 +194,14 @@ private:
   QDict<KCal::IncidenceBase> mPendingUpdates;
   QTimer mResourceChangedTimer;
   int mProgressDialogIncidenceLimit;
+  /**
+    This map contains the association between a new added incidence
+    and the subresource it belongs to.
+    That's needed to return the correct mapping in subresourceIdentifier().
+
+    We can't trust on mUidMap here, because it contains only non-pending uids.
+   */
+  QMap<QString, QString> mNewIncidencesMap;
 };
 
 }

@@ -467,6 +467,8 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     }
     if ( subResource.isEmpty() )
       return false;
+    
+    mNewIncidencesMap.insert( uid, subResource );
 
     if ( !sendKMailUpdate( incidence, subResource, sernum ) ) {
       kdError(5500) << "Communication problem in ResourceKolab::addIncidence()\n";
@@ -535,6 +537,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
         mUidsPendingAdding.remove( uid );
       }
     }
+    mNewIncidencesMap.remove( uid );
   }
   return true;
 }
@@ -982,7 +985,6 @@ bool ResourceKolab::addSubresource( const QString& resource, const QString& pare
    } else {
      QStringList contentTypeChoices;
      contentTypeChoices << i18n("Calendar") << i18n("Tasks") << i18n("Journals");
-     bool ok;
      const QString caption = i18n("Which kind of subresource should this be?");
      const QString choice = KInputDialog::getItem( caption, QString::null, contentTypeChoices );
      if ( choice == contentTypeChoices[0] )
@@ -1002,5 +1004,20 @@ bool ResourceKolab::removeSubresource( const QString& resource )
    kdDebug(5650) << "KCal Kolab resource - removing subresource: " << resource << endl;
    return kmailRemoveSubresource( resource );
 }
+
+/*virtual*/
+QString ResourceKolab::subresourceIdentifier( Incidence *incidence )
+{
+  QString uid = incidence->uid();
+  if ( mUidMap.contains( uid ) )
+    return mUidMap[ uid ].resource();
+  else
+    if ( mNewIncidencesMap.contains( uid ) )
+      return mNewIncidencesMap[ uid ];
+    else
+      return QString();
+}
+
+
 
 #include "resourcekolab.moc"

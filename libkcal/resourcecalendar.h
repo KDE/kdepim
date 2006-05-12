@@ -301,6 +301,17 @@ class ResourceCalendar : public KRES::Resource
        return resource;
     }
 
+    /**
+      Get the identifier of the subresource associated with a specified
+      incidence.
+
+      @return the identifier of the subresource or an empty string.
+    */
+    virtual QString subresourceIdentifier( Incidence *incidence ) 
+    { Q_UNUSED( incidence ); return QString(); }
+
+
+
     /** 
      * Remove a subresource with the id @param resource
      */
