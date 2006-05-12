@@ -25,8 +25,8 @@
 #define PRINTSTYLE_H
 
 #include <QWidget>
-#include <qstringlist.h>
-#include <qpixmap.h>
+#include <QStringList>
+#include <QPixmap>
 
 #include <kabc/field.h>
 

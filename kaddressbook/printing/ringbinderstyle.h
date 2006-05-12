@@ -26,12 +26,26 @@
 
 #include <kabc/addressee.h>
 #include "printstyle.h"
+#include "ui_rbs_appearance.h"
+
 
 class KPrinter;
-class RingBinderStyleAppearanceForm;
 
 namespace KABPrinting
 {
+
+class RingBinderStyleAppearanceForm : public QWidget, public Ui::RingBinderStyleAppearanceForm_Base
+{
+  Q_OBJECT
+  
+  public:
+    RingBinderStyleAppearanceForm( QWidget *parent );
+    ~RingBinderStyleAppearanceForm() {}
+  public slots:
+    void groupLetter();
+    void ungroupLetter();
+};
+
 
 class RingBinderPrintStyle : public PrintStyle
 {

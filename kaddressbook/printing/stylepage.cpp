@@ -25,8 +25,8 @@
 #include <q3buttongroup.h>
 #include <QLabel>
 #include <QLayout>
-#include <qpixmap.h>
-#include <qradiobutton.h>
+#include <QPixmap>
+#include <QRadioButton>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QGridLayout>

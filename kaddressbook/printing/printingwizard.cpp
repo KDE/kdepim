@@ -27,9 +27,9 @@
 #include <QLabel>
 #include <QLayout>
 #include <q3listview.h>
-#include <qpixmap.h>
+#include <QPixmap>
 #include <QPushButton>
-#include <qradiobutton.h>
+#include <QRadioButton>
 
 #include <kabc/addresseelist.h>
 #include <kapplication.h>
@@ -103,13 +103,13 @@ void PrintingWizard::registerStyles()
   mStyleFactories.append( new RingBinderPrintStyleFactory( this ) );
 
   mStylePage->clearStyleNames();
-  for ( uint i = 0; i < mStyleFactories.count(); ++i )
+  for ( int i = 0; i < mStyleFactories.count(); ++i )
     mStylePage->addStyleName( mStyleFactories.at( i )->description() );
 }
 
 void PrintingWizard::slotStyleSelected( int index )
 {
-  if ( index < 0 || (uint)index >= mStyleFactories.count() )
+  if ( index < 0 || index >= mStyleFactories.count() )
     return;
 
   setFinishEnabled( mStylePage, false );

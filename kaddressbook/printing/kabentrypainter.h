@@ -28,7 +28,7 @@
 
 #include <QColor>
 #include <QFont>
-#include <qrect.h>
+#include <QRect>
 
 
 typedef QList<QRect> QRectList;

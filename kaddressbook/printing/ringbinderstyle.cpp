@@ -25,9 +25,9 @@
 
 #include <QCheckBox>
 #include <QLayout>
-#include <qpainter.h>
+#include <QPainter>
 #include <QSpinBox>
-#include <qstringlist.h>
+#include <QStringList>
 
 #include <kabc/addresseelist.h>
 #include <kapplication.h>
@@ -44,7 +44,6 @@
 #include "printprogress.h"
 #include "printstyle.h"
 
-#include "rbs_appearance.h"
 
 using namespace KABPrinting;
 
@@ -58,9 +57,48 @@ const char* FillWithEmptyFields = "FillWithEmptyFields";
 const char* MinNumberOfEmptyFields = "MinNumberOfEmptyFields";
 const char* LetterGroups = "LetterGroups";
 
+
+RingBinderStyleAppearanceForm::RingBinderStyleAppearanceForm( QWidget *parent )
+ : QWidget( parent )
+{
+  setObjectName( "AppearancePage" );
+  setupUi( this );
+  connect( groupButton, SIGNAL(clicked()), SLOT(groupLetter()) );
+  connect( ungroupButton, SIGNAL(clicked()), SLOT(ungroupLetter()) );
+}
+
+void RingBinderStyleAppearanceForm::groupLetter()
+{
+  if ( letterListBox->currentItem() > 0 ) {
+      int id = letterListBox->currentItem();
+      letterListBox->changeItem(
+                letterListBox->text(id-1) + letterListBox->text(id).at(0)
+              , id - 1);
+      if ( letterListBox->text(id).length() > 1 ) {
+          letterListBox->changeItem(
+                    letterListBox->text(id).right(letterListBox->text(id).length()-1)
+                  , id
+                  );
+          letterListBox->setCurrentItem(id);
+      } else {
+          letterListBox->removeItem(id);
+      }
+  }
+}
+
+void RingBinderStyleAppearanceForm::ungroupLetter()
+{
+  if ( letterListBox->text(letterListBox->currentItem()).length() > 1 ) {
+      int id = letterListBox->currentItem();
+      letterListBox->insertItem( QString(letterListBox->text(id).at(letterListBox->text(id).length()-1)), id+1 );
+      letterListBox->changeItem( letterListBox->text(id).left(letterListBox->text(id).length()-1), id );
+  }
+}
+
+
 RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent, const char* name )
   : PrintStyle( parent, name ),
-    mPageAppearance( new RingBinderStyleAppearanceForm( parent, "AppearancePage" ) ),
+    mPageAppearance( new RingBinderStyleAppearanceForm( parent ) ),
     mPrintProgress( 0 )
 {
   setPreview( "ringbinder-style.png" );

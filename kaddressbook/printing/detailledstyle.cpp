@@ -33,12 +33,12 @@
 #include <klocale.h>
 #include <knuminput.h>
 #include <q3paintdevicemetrics.h>
-#include <qpainter.h>
+#include <QPainter>
 #include <kprinter.h>
 #include <kstandarddirs.h>
 #include <kglobal.h>
 
-#include "ds_appearance.h"
+#include "ui_ds_appearance.h"
 #include "printingwizard.h"
 #include "printprogress.h"
 #include "printstyle.h"
@@ -63,10 +63,19 @@ const char *ColoredContactHeaders = "UseColoredContactHeaders";
 const char *ContactHeaderForeColor = "ContactHeaderForeColor";
 const char *ContactHeaderBGColor = "ContactHeaderBGColor";
 
+class KABPrinting::AppearancePage : public QWidget, public Ui::AppearancePage_Base
+{
+public:
+  AppearancePage( QWidget* parent ) : QWidget( parent )
+  {
+    setupUi( this );
+    setObjectName( "AppearancePage" );
+  }
+};
 
 DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent, const char *name )
   : PrintStyle( parent, name ),
-    mPageAppearance( new AppearancePage( parent, "AppearancePage" ) ),
+    mPageAppearance( new AppearancePage( parent ) ),
     mPainter( 0 ),
     mPrintProgress( 0 )
 {

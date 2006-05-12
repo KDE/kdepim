@@ -23,7 +23,7 @@
 
 
 #include <q3paintdevicemetrics.h>
-#include <qpainter.h>
+#include <QPainter>
 
 #include <kdebug.h>
 #include <kglobal.h>

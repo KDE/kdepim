@@ -29,9 +29,10 @@
 #include "printstyle.h"
 #include "kabentrypainter.h"
 
-class AppearancePage;
 
 namespace KABPrinting {
+
+class AppearancePage;
 
 class DetailledPrintStyle : public PrintStyle
 {
