@@ -47,7 +47,7 @@ void KNode::KCMTabContainer::addTab( KCModule* tab, const QString & title ) {
 
 void KNode::KCMTabContainer::load() {
   for ( int i = 0 ; i < mTabWidget->count() ; ++i ) {
-    KCModule *tab = (KCModule*) mTabWidget->page(i);
+    KCModule *tab = (KCModule*) mTabWidget->widget(i);
     if ( tab )
       tab->load();
   }
@@ -55,7 +55,7 @@ void KNode::KCMTabContainer::load() {
 
 void KNode::KCMTabContainer::save() {
   for ( int i = 0 ; i < mTabWidget->count() ; ++i ) {
-    KCModule *tab = (KCModule*) mTabWidget->page(i);
+    KCModule *tab = (KCModule*) mTabWidget->widget(i);
     if ( tab )
       tab->save();
   }
