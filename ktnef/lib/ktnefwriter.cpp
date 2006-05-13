@@ -24,7 +24,7 @@
 #include "ktnef/ktnefpropertyset.h"
 
 #include <QFile>
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QDataStream>
 //Added by qt3to4:
 #include <QList>

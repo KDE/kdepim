@@ -20,7 +20,7 @@
 
 #include "attachpropertydialogbase.h"
 #include <QMap>
-#include <qpixmap.h>
+#include <QPixmap>
 
 class KTNEFAttach;
 class KTNEFProperty;

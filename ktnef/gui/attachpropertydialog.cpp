@@ -33,7 +33,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kfiledialog.h>
-#include <qbuffer.h>
+#include <QBuffer>
 #include <QDataStream>
 #include <q3picture.h>
 #include <QDateTime>

@@ -19,7 +19,7 @@
 #include "ktnef/ktnefattach.h"
 
 #include "lzfu.h"
-#include <qbuffer.h>
+#include <QBuffer>
 #include <QList>
 
 class KTNEFMessage::MessagePrivate
