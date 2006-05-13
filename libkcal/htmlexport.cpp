@@ -26,6 +26,7 @@
 #include <qtextcodec.h>
 #include <qregexp.h>
 
+#include <kcharsets.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -244,14 +245,17 @@ void HtmlExport::createEventList (QTextStream *ts)
                                            EventSortStartDate,
                                            SortDirectionAscending );
     if (events.count()) {
-      *ts << "  <tr><td colspan=\"" << QString::number(columns)
-          << "\" class=\"datehead\"><i>"
-          << KGlobal::locale()->formatDate(dt)
-          << "</i></td></tr>\n";
-
       Event::List::ConstIterator it;
+      bool first = true;
       for( it = events.begin(); it != events.end(); ++it ) {
         if ( checkSecrecy( *it ) ) {
+          if ( first ) {
+            *ts << "  <tr><td colspan=\"" << QString::number(columns)
+            << "\" class=\"datehead\"><i>"
+            << KGlobal::locale()->formatDate(dt)
+            << "</i></td></tr>\n";
+            first = false;
+          }
           createEvent( ts, *it, dt );
         }
       }
@@ -632,15 +636,24 @@ QString HtmlExport::cleanChars(const QString &text)
   txt = txt.replace( "<", "&lt;" );
   txt = txt.replace( ">", "&gt;" );
   txt = txt.replace( "\"", "&quot;" );
-  txt = txt.replace( "�", "&auml;" );
-  txt = txt.replace( "�", "&Auml;" );
-  txt = txt.replace( "�", "&ouml;" );
-  txt = txt.replace( "�", "&Ouml;" );
-  txt = txt.replace( "�", "&uuml;" );
-  txt = txt.replace( "�", "&Uuml;" );
-  txt = txt.replace( "�", "&szlig;" );
-  txt = txt.replace( "�", "&euro;" );
-  txt = txt.replace( "�", "&eacute;" );
+  txt = txt.replace( QString::fromUtf8("ä"), "&auml;" );
+  txt = txt.replace( QString::fromUtf8("á"), "&aacute;" );
+  txt = txt.replace( QString::fromUtf8("à"), "&agrave;" );
+  txt = txt.replace( QString::fromUtf8("â"), "&acirc;" );
+  txt = txt.replace( QString::fromUtf8("Ä"), "&Auml;" );
+  txt = txt.replace( QString::fromUtf8("ó"), "&oacute;" );
+  txt = txt.replace( QString::fromUtf8("ô"), "&ocirc;" );
+  txt = txt.replace( QString::fromUtf8("ö"), "&ouml;" );
+  txt = txt.replace( QString::fromUtf8("Ö"), "&Ouml;" );
+  txt = txt.replace( QString::fromUtf8("ü"), "&uuml;" );
+  txt = txt.replace( QString::fromUtf8("Ü"), "&Uuml;" );
+  txt = txt.replace( QString::fromUtf8("ß"), "&szlig;" );
+  txt = txt.replace( QString::fromUtf8("€"), "&euro;" );
+  txt = txt.replace( QString::fromUtf8("é"), "&eacute;" );
+  txt = txt.replace( QString::fromUtf8("ë"), "&euml;" );
+  txt = txt.replace( QString::fromUtf8("è"), "&egrave;" );
+  txt = txt.replace( QString::fromUtf8("ñ"), "&ntilde;" );
+  txt = txt.replace( QString::fromUtf8("ç"), "&ccedil;" );
 
   return txt;
 }
