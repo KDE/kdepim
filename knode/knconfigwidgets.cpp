@@ -1136,7 +1136,6 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
   : KDialog( parent, i18n("Header Properties"), Ok | Cancel | Help ),
     h_dr(h)
 {
-  setDefaultButton( Ok );
   QWidget* page=new QWidget( this );
   setMainWidget( page );
   QGridLayout *topL=new QGridLayout(page);
@@ -1668,7 +1667,6 @@ void KNode::PostNewsTechnicalWidget::slotEditBtnClicked()
 KNode::XHeaderConfDialog::XHeaderConfDialog( const QString &h, QWidget *parent ) :
   KDialog( parent, i18n("Additional Header"), Ok | Cancel )
 {
-  setDefaultButton( Ok );
   KHBox* page = new KHBox( this );
   setMainWidget( page );
 

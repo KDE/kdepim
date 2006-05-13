@@ -65,7 +65,6 @@ PassphraseDialog::PassphraseDialog( QWidget *parent,
                                     const QString &keyID )
   :KDialog( parent, caption, Ok|Cancel  )
 {
-  setDefaultButton( Ok );
   KHBox *hbox = new KHBox( this );
   setMainWidget( hbox );
   
@@ -309,7 +308,6 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
     mAllowedKeys( allowedKeys ),
     mCurrentContextMenuItem( 0 )
 {
-  setDefaultButton( Ok );
   if ( qApp )
     KWin::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( K3Icon::Desktop ), IconSize( K3Icon::Desktop ) ),
                     qApp->windowIcon().pixmap( IconSize( K3Icon::Small ), IconSize( K3Icon::Small ) ) );
@@ -1343,7 +1341,6 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
     mAllowedKeys( allowedKeys ),
     mPrefsChanged( false )
 {
-  setDefaultButton( Ok );
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
 
   if( pgp == 0 )
@@ -1646,7 +1643,6 @@ CipherTextDialog::CipherTextDialog( const QByteArray & text,
                                     const QByteArray & charset, QWidget *parent )
   :KDialog( parent, i18n("OpenPGP Information"), Ok|Cancel )
 {
-  setDefaultButton( Ok );
   // FIXME (post KDE2.2): show some more info, e.g. the output of GnuPG/PGP
   QFrame *page = new QFrame( this );
   setMainWidget( page );

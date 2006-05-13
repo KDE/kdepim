@@ -571,7 +571,6 @@ void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
   // This is just a simple dialog around the directory-services-widget
   KDialog dialog( mPushButton->parentWidget(), i18n( "Configure LDAP Servers" ),
                   KDialog::Default|KDialog::Cancel|KDialog::Ok );
-  dialog.setDefaultButton( KDialog::Ok );
   DirectoryServicesWidget* dirserv = new DirectoryServicesWidget( mEntry, &dialog );
   dirserv->load();
   dialog.setMainWidget( dirserv );

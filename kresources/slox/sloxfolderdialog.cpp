@@ -32,7 +32,6 @@ SloxFolderDialog::SloxFolderDialog( SloxFolderManager *manager, FolderType type,
   mManager( manager ),
   mFolderType( type )
 {
-  setDefaultButton( Ok );
   setButtonGuiItem( User1, KGuiItem( i18n("Reload"), "reload" ) );
   mListView = new K3ListView( this );
   mListView->setRootIsDecorated( true );
