@@ -18,6 +18,10 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <QPainter>
 //Added by qt3to4:
 #include <QDragEnterEvent>
@@ -26,7 +30,7 @@
 #include <QDropEvent>
 
 #include <kcolordialog.h>
-#include <k3colordrag.h>
+#include <kcolormimedata.h>
 
 #include "colorlistbox.h"
 
@@ -60,6 +64,7 @@ void ColorListBox::setColor( uint index, const QColor &color )
     ColorListItem *colorItem = (ColorListItem*)item(index);
     colorItem->setColor(color);
     updateItem( colorItem );
+    emit changed();
   }
 }
 
@@ -98,23 +103,20 @@ void ColorListBox::newColor( int index )
 
 void ColorListBox::dragEnterEvent( QDragEnterEvent *e )
 {
-  if( K3ColorDrag::canDecode(e) && isEnabled() )
-  {
+  if ( KColorMimeData::canDecode( e->mimeData() ) && isEnabled() ) {
     mCurrentOnDragEnter = currentItem();
-    e->accept( true );
+    e->setAccepted( true );
   }
-  else
-  {
+  else {
     mCurrentOnDragEnter = -1;
-    e->accept( false );
+    e->setAccepted( false );
   }
 }
 
 
 void ColorListBox::dragLeaveEvent( QDragLeaveEvent * )
 {
-  if( mCurrentOnDragEnter != -1 )
-  {
+  if ( mCurrentOnDragEnter != -1 ) {
     setCurrentItem( mCurrentOnDragEnter );
     mCurrentOnDragEnter = -1;
   }
@@ -123,11 +125,9 @@ void ColorListBox::dragLeaveEvent( QDragLeaveEvent * )
 
 void ColorListBox::dragMoveEvent( QDragMoveEvent *e )
 {
-  if( K3ColorDrag::canDecode(e) && isEnabled() )
-  {
+  if ( KColorMimeData::canDecode( e->mimeData() ) && isEnabled() ) {
     ColorListItem *item = (ColorListItem*)itemAt( e->pos() );
-    if( item != 0 )
-    {
+    if ( item != 0 ) {
       setCurrentItem ( item );
     }
   }
@@ -136,14 +136,12 @@ void ColorListBox::dragMoveEvent( QDragMoveEvent *e )
 
 void ColorListBox::dropEvent( QDropEvent *e )
 {
-  QColor color;
-  if( K3ColorDrag::decode( e, color ) )
-  {
+  QColor color = KColorMimeData::fromMimeData( e->mimeData() );
+  if ( color.isValid() ) {
     int index = currentItem();
-    if( index != -1 )
-    {
+    if ( index != -1 ) {
       ColorListItem *colorItem = (ColorListItem*)item(index);
-      colorItem->setColor(color);
+      colorItem->setColor( color );
       triggerUpdate( false ); // Redraw item
     }
     mCurrentOnDragEnter = -1;
