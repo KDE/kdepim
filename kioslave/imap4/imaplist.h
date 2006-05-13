@@ -23,7 +23,7 @@
  *
  *********************************************************************/
 
-#include <qstringlist.h>
+#include <QStringList>
 #include <QString>
 
 class parseString;

@@ -19,10 +19,10 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qbuttongroup.h>
+#include <QButtonGroup>
 #include <QLabel>
 #include <QLayout>
-#include <qradiobutton.h>
+#include <QRadioButton>
 
 #include <kacceleratormanager.h>
 #include <kdialog.h>

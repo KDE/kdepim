@@ -48,11 +48,11 @@
                                                                           */
 #include "kleo/cryptobackend.h"
 
-#include <qdatetime.h>
+#include <QDateTime>
 
 #include <q3valuelist.h>
-#include <qpair.h>
-#include <qstringlist.h>
+#include <QPair>
+#include <QStringList>
 #include <QString>
 #include <kdepimmacros.h>
 

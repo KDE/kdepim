@@ -68,7 +68,7 @@
 #include <q3textedit.h>
 #include <QPushButton>
 #include <QCheckBox>
-#include <qradiobutton.h>
+#include <QRadioButton>
 #include <QLayout>
 #include <QLabel>
 #include <QComboBox>

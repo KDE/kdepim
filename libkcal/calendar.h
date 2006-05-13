@@ -31,10 +31,10 @@
 #ifndef KCAL_CALENDAR_H
 #define KCAL_CALENDAR_H
 
-#include <qobject.h>
+#include <QObject>
 #include <QString>
-#include <qdatetime.h>
-#include <qlist.h>
+#include <QDateTime>
+#include <QList>
 #include <QMultiHash>
 #include <kdepimmacros.h>
 

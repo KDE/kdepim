@@ -22,13 +22,13 @@
 */
 
 #include <q3header.h>
-#include <qicon.h>
-#include <qimage.h>
+#include <QIcon>
+#include <QImage>
 #include <q3dragobject.h>
 #include <QComboBox>
-#include <qpainter.h>
-#include <qbrush.h>
-#include <qevent.h>
+#include <QPainter>
+#include <QBrush>
+#include <QEvent>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QDropEvent>

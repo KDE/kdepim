@@ -47,9 +47,9 @@
 #include <kshell.h>
 #include <kdebug.h>
 
-#include <qstringlist.h>
+#include <QStringList>
 #include <QVariant>
-#include <qfileinfo.h>
+#include <QFileInfo>
 //Added by qt3to4:
 #include <QList>
 

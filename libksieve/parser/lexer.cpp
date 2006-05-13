@@ -39,8 +39,8 @@
 #include <ksieve/error.h>
 
 #include <QString>
-#include <qstringlist.h>
-#include <qtextcodec.h>
+#include <QStringList>
+#include <QTextCodec>
 
 #include <memory> // std::auto_ptr
 

@@ -25,7 +25,7 @@
 #define LOCATIONMAP_H
 
 #include <kabc/address.h>
-#include <qobject.h>
+#include <QObject>
 #include <QString>
 
 class LocationMap : public QObject

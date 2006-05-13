@@ -29,10 +29,10 @@
 #include <klocale.h>
 
 #include <QMap>
-#include <qobject.h>
-#include <qlist.h>
-#include <qvector.h>
-#include <qstringlist.h>
+#include <QObject>
+#include <QList>
+#include <QVector>
+#include <QStringList>
 
 const char* KMail_Protocol::kmailGroupName = "Account %1";
 const char* KMail_Protocol::kmailKeyType = "Type";

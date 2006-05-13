@@ -27,7 +27,7 @@
 #include <kdeversion.h>
 #include <kcalendarsystem.h>
 
-#include <qtextcodec.h>
+#include <QTextCodec>
 #include <QRegExp>
 #include <QTextStream>
 

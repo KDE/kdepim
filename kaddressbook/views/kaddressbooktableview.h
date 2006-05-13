@@ -31,9 +31,9 @@
 #include <QWidget>
 #include <q3listview.h>
 #include <QString>
-#include <qdialog.h>
+#include <QDialog>
 #include <q3tabdialog.h>
-#include <qstringlist.h>
+#include <QStringList>
 
 //Added by qt3to4:
 #include <QVBoxLayout>

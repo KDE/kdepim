@@ -92,7 +92,7 @@
 #include <kxmlguifactory.h>
 
 // Qt
-#include <qfontmetrics.h>
+#include <QFontMetrics>
 //Added by qt3to4:
 #include <Q3PtrList>
 #include <QLabel>

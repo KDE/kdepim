@@ -18,7 +18,7 @@ t it will be useful,
  *
  */
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QFile>
 
 #include <libkcal/calendarlocal.h>

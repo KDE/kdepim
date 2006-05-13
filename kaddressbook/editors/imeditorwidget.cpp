@@ -23,11 +23,11 @@
 */
 
 #include <q3listview.h>
-#include <qstringlist.h>
+#include <QStringList>
 #include <q3vbox.h>
 #include <QLayout>
 #include <QFont>
-#include <qpainter.h>
+#include <QPainter>
 //Added by qt3to4:
 #include <QList>
 

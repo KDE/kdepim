@@ -37,13 +37,13 @@
 #include <libsyndication/feed.h>
 #include <libsyndication/image.h>
 
-#include <qapplication.h>
+#include <QApplication>
 #include <QCheckBox>
 #include <q3dragobject.h>
 #include <q3groupbox.h>
 #include <QLabel>
 #include <QLayout>
-#include <qpixmap.h>
+#include <QPixmap>
 #include <QToolTip>
 //Added by qt3to4:
 #include <QGridLayout>

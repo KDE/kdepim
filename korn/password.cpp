@@ -24,7 +24,7 @@
 #include <kwallet.h>
 
 #include <QString>
-#include <qstringlist.h>
+#include <QStringList>
 
 KWallet::Wallet* KOrnPassword::m_wallet = 0;
 bool KOrnPassword::m_openFailed = false;

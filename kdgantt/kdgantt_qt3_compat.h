@@ -37,30 +37,30 @@
 #if QT_VERSION < 0x040000
 
 
-#include <qptrlist.h>
+#include <Q3PtrList>
 #include <qdom.h>
 #include <qvbox.h>
 #include <qarray.h>
-#include <qhbuttongroup.h>
-#include <qlistview.h>
+#include <Q3HButtonGroup>
+#include <QListView>
 #include <qcanvas.h>
 #include <qdict.h>
-#include <qvaluelist.h>
-#include <qcstring.h>
+#include <Q3ValueList>
+#include <Q3CString>
 #include <qdragobject.h>
 #include <qpopupmenu.h>
 #include <qvbuttongroup.h>
 #include <qvgroupbox.h>
 #include <qscrollview.h>
-#include <qtooltip.h>
+#include <QToolTip>
 #include <qdockwindow.h>
-#include <qpaintdevicemetrics.h>
+#include <Q3PaintDeviceMetrics>
 
 //for moc
 typedef QListViewItem Q3ListViewItem;
 
 #define protected public
-#include <qheader.h>
+#include <Q3Header>
 #undef protected
 
 #else

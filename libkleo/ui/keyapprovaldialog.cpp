@@ -49,7 +49,7 @@
 #include <kglobalsettings.h>
 #include <kseparator.h>
 
-#include <qstringlist.h>
+#include <QStringList>
 #include <q3frame.h>
 #include <QLayout>
 #include <QLabel>

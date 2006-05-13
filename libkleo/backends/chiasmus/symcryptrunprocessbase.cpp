@@ -36,7 +36,7 @@
 #include <kdebug.h>
 #include <kshell.h>
 
-#include <qtimer.h>
+#include <QTimer>
 #include <QFile>
 #include <QStringList>
 

@@ -24,10 +24,10 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QLayout>
-#include <qpainter.h>
+#include <QPainter>
 #include <QPushButton>
 #include <QString>
-#include <qtoolbutton.h>
+#include <QToolButton>
 #include <QToolTip>
 //Added by qt3to4:
 #include <QGridLayout>

@@ -29,7 +29,7 @@
 #include <QLayout>
 #include <q3listview.h>
 #include <QPushButton>
-#include <qradiobutton.h>
+#include <QRadioButton>
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QKeyEvent>

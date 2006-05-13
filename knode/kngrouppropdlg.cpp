@@ -12,7 +12,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <qgroupbox.h>
+#include <QGroupBox>
 #include <QLayout>
 #include <q3vbox.h>
 #include <QCheckBox>

@@ -23,9 +23,9 @@
 #include "kmime_header_parsing.h"
 #include "kmime_warning.h"
 
-#include <qtextcodec.h>
+#include <QTextCodec>
 #include <QString>
-#include <qstringlist.h>
+#include <QStringList>
 
 #include <kglobal.h>
 #include <kcharsets.h>

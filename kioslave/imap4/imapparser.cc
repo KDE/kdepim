@@ -52,9 +52,9 @@ extern "C" {
 #endif
 
 #include <QRegExp>
-#include <qbuffer.h>
+#include <QBuffer>
 #include <QString>
-#include <qstringlist.h>
+#include <QStringList>
 
 #include <kascii.h>
 #include <kdebug.h>

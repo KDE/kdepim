@@ -24,7 +24,7 @@
 #include "ktnef/ktnefproperty.h"
 #include "ktnef/ktnefmessage.h"
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QDataStream>
 #include <QFile>
 #include <QVariant>

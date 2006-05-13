@@ -41,9 +41,9 @@
 
 #include <kconfig.h>
 
-#include <qapplication.h>
+#include <QApplication>
 #include <QRegExp>
-#include <qstringlist.h>
+#include <QStringList>
 #include <q3valuevector.h>
 
 #include <algorithm>

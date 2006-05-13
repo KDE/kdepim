@@ -25,9 +25,9 @@
 #include "kmime_header_parsing.h"
 
 #include <QString>
-#include <qstringlist.h>
+#include <QStringList>
 #include <QRegExp>
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QMap>
 #include <QList>
 #include <QByteArray>

@@ -26,8 +26,8 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QString>
-#include <qstringlist.h>
-#include <qvalidator.h>
+#include <QStringList>
+#include <QValidator>
 
 AccountInput::AccountInput( const QString& configName )
 	: _configName( new QString( configName ) )

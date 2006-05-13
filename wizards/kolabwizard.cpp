@@ -38,8 +38,8 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QLayout>
-#include <qradiobutton.h>
-#include <qwhatsthis.h>
+#include <QRadioButton>
+#include <QWhatsThis>
 #include <QGroupBox>
 
 class SetupLDAPSearchAccount : public KConfigPropagator::Change

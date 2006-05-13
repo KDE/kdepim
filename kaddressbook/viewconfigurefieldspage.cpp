@@ -25,8 +25,8 @@
 #include <QLayout>
 #include <q3listbox.h>
 #include <QPushButton>
-#include <qtoolbutton.h>
-#include <qapplication.h>
+#include <QToolButton>
+#include <QApplication>
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QBoxLayout>

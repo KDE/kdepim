@@ -55,7 +55,7 @@
 #include <QColor>
 #include <QFont>
 #include <QString>
-#include <qpainter.h>
+#include <QPainter>
 #include <QRegExp>
 #include <QCheckBox>
 

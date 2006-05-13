@@ -23,7 +23,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <qtextcodec.h>
+#include <QTextCodec>
 #include <QTextStream>
 #include <QByteArray>
 

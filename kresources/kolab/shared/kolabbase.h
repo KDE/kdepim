@@ -35,7 +35,7 @@
 #define KOLABBASE_H
 
 #include <qdom.h>
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QColor>
 
 class QFile;

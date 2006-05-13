@@ -37,10 +37,10 @@
 #define KDGANTTVIEWITEM_H
 
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QString>
 #include <QColor>
-#include <qpixmap.h>
+#include <QPixmap>
 #include <QFont>
 
 

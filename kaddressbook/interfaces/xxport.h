@@ -24,7 +24,7 @@
 #ifndef KAB_XXPORT_H
 #define KAB_XXPORT_H
 
-#include <qobject.h>
+#include <QObject>
 
 #include <kabc/addressbook.h>
 #include <kabc/addresseelist.h>

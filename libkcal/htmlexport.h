@@ -23,7 +23,7 @@
 #define KCAL_HTMLEXPORT_H
 
 #include <QString>
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QMap>
 //Added by qt3to4:
 #include <QTextStream>

@@ -23,9 +23,9 @@
 #define WEBDAVHANDLER_H
 
 #include <QString>
-#include <qstringlist.h>
+#include <QStringList>
 #include <qdom.h>
-#include <qdatetime.h>
+#include <QDateTime>
 #include <kurl.h>
 #include <kdepimmacros.h>
 

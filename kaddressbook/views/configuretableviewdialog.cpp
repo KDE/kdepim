@@ -24,7 +24,7 @@
 #include <QString>
 #include <QWidget>
 #include <QLayout>
-#include <qradiobutton.h>
+#include <QRadioButton>
 #include <QCheckBox>
 #include <q3vbox.h>
 #include <q3buttongroup.h>

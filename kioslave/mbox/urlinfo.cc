@@ -21,7 +21,7 @@
 #include <kdebug.h>
 #include <kurl.h>
 
-#include <qfileinfo.h>
+#include <QFileInfo>
 #include <QString>
 
 UrlInfo::UrlInfo( const KUrl& url, const UrlType type )

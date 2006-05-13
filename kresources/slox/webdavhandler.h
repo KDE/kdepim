@@ -22,7 +22,7 @@
 
 
 #include <QString>
-#include <qdatetime.h>
+#include <QDateTime>
 #include <qdom.h>
 
 #include <kdepimmacros.h>

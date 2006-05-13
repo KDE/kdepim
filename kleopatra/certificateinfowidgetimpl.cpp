@@ -59,16 +59,16 @@
 #include <q3textedit.h>
 #include <q3header.h>
 #include <QPushButton>
-#include <qcursor.h>
-#include <qapplication.h>
-#include <qdatetime.h>
+#include <QCursor>
+#include <QApplication>
+#include <QDateTime>
 //Added by qt3to4:
 #include <QList>
 #include <QByteArray>
 
 // other
 #include <assert.h>
-#include <qtextcodec.h>
+#include <QTextCodec>
 
 CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( const GpgME::Key & key, bool external,
 						      QWidget * parent, const char * name )

@@ -28,9 +28,9 @@
 */
 #include <stdlib.h>
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QString>
-#include <qlist.h>
+#include <QList>
 //Added by qt3to4:
 
 #include <kdebug.h>

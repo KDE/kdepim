@@ -14,7 +14,7 @@
 
 #include <QLabel>
 #include <QLayout>
-#include <qradiobutton.h>
+#include <QRadioButton>
 #include <QCheckBox>
 //Added by qt3to4:
 #include <QGridLayout>

@@ -13,7 +13,7 @@
 */
 
 
-#include <qpainter.h>
+#include <QPainter>
 
 #include <QLabel>
 //Added by qt3to4:

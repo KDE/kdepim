@@ -46,8 +46,8 @@
 #include <QLayout>
 #include <QLabel>
 #include <q3textedit.h>
-#include <qfontmetrics.h>
-#include <qtimer.h>
+#include <QFontMetrics>
+#include <QTimer>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QHBoxLayout>

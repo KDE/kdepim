@@ -42,7 +42,7 @@
 #include <kdebug.h>
 
 #include <q3buttongroup.h>
-#include <qtoolbutton.h>
+#include <QToolButton>
 #include <q3listview.h>
 #include <QPushButton>
 

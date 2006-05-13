@@ -28,7 +28,7 @@
 // Commands for undo/redo functionality.
 
 #include <QString>
-#include <qstringlist.h>
+#include <QStringList>
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>

@@ -13,10 +13,10 @@
 #include <kio/job.h>
 #include <libkcal/journal.h>
 
-#include <qobject.h>
+#include <QObject>
 #include <QString>
 
-#include <qdatetime.h>
+#include <QDateTime>
 
 /**
 This is the main interface for blog backends

@@ -46,7 +46,7 @@
 #include "qptrlist.h"
 #include "qmemarray.h"
 #else
-#include <qlist.h>
+#include <QList>
 #include <qarray.h>
 #define QPtrList QList
 #define QMemArray QArray
@@ -55,8 +55,8 @@
 #include "qobjectlist.h"
 #include "qstyle.h"
 #include "qapplication.h" //sendPostedEvents
-#include <qvaluelist.h>
-#include <qcursor.h>
+#include <Q3ValueList>
+#include <QCursor>
 
 
 #ifndef DOXYGEN_SKIP_INTERNAL

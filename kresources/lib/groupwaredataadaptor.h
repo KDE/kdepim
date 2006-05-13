@@ -30,7 +30,7 @@
 //Added by qt3to4:
 #include <QByteArray>
 #include <libkcal/listbase.h>
-#include <qobject.h>
+#include <QObject>
 #include <kdepimmacros.h>
 
 

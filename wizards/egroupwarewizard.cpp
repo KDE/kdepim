@@ -37,7 +37,7 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QLayout>
-#include <qwhatsthis.h>
+#include <QWhatsThis>
 
 
 static QString createURL( const QString &server, bool useSSL, const QString &location )

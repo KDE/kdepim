@@ -28,7 +28,7 @@
 #include <kvbox.h>
 #include <q3groupbox.h>
 #include <QSpinBox>
-#include <qtabwidget.h>
+#include <QTabWidget>
 
 //Added by qt3to4:
 #include <QFrame>

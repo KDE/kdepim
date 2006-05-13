@@ -14,8 +14,8 @@
 
 #include <QLayout>
 #include <QCheckBox>
-#include <qtimer.h>
-#include <qapplication.h>
+#include <QTimer>
+#include <QApplication>
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QHBoxLayout>

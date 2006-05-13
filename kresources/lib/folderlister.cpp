@@ -29,7 +29,7 @@
 
 #include <kdebug.h>
 #include <kconfig.h>
-#include <qstringlist.h>
+#include <QStringList>
 
 using namespace KPIM;
 

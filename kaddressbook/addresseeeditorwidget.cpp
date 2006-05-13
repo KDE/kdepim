@@ -27,9 +27,9 @@
 #include <QLayout>
 #include <q3listbox.h>
 #include <QPushButton>
-#include <qtabwidget.h>
+#include <QTabWidget>
 #include <q3textedit.h>
-#include <qtoolbutton.h>
+#include <QToolButton>
 #include <QToolTip>
 //Added by qt3to4:
 #include <QVBoxLayout>

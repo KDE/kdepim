@@ -21,9 +21,9 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qapplication.h>
+#include <QApplication>
 #include <q3buttongroup.h>
-#include <qevent.h>
+#include <QEvent>
 #include <QLayout>
 #include <QPushButton>
 #include <QString>

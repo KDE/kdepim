@@ -21,7 +21,7 @@
 #define SLOXFOLDERMANAGER_H
 
 #include <QMap>
-#include <qobject.h>
+#include <QObject>
 
 #include <kurl.h>
 

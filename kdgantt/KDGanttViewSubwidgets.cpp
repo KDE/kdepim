@@ -42,12 +42,13 @@
 #endif
 
 #include <QLabel>
-#include <qpainter.h>
-#include <qrect.h>
+#include <QPainter>
+#include <QRect>
 #include <QToolTip>
-#include <qapplication.h>
+#include <QApplication>
 #include <qdrawutil.h>
-#include <qpalette.h>
+#include <QPalette>
+#include <QMouseEvent>
 
 KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):QCanvas (parent)
 {

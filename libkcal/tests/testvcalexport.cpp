@@ -32,7 +32,7 @@
 #include <kcmdlineargs.h>
 
 #include <QFile>
-#include <qfileinfo.h>
+#include <QFileInfo>
 
 using namespace KCal;
 

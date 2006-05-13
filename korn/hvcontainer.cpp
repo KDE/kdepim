@@ -22,7 +22,7 @@
 
 #include <kdebug.h>
 
-#include <qboxlayout.h>
+#include <QBoxLayout>
 #include <QLabel>
 #include <QWidget>
 

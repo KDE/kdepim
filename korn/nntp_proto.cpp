@@ -22,10 +22,10 @@
 #include "account_input.h"
 
 #include <QWidget>
-#include <qobject.h>
-#include <qstringlist.h>
-#include <qvector.h>
-#include <qlist.h>
+#include <QObject>
+#include <QStringList>
+#include <QVector>
+#include <QList>
 
 void Nntp_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 {

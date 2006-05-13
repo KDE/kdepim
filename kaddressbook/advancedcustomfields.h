@@ -29,8 +29,8 @@
 #include <klocale.h>
 
 #include <QMap>
-#include <qpair.h>
-#include <qstringlist.h>
+#include <QPair>
+#include <QStringList>
 
 #include <libkdepim/designerfields.h>
 

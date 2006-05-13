@@ -36,7 +36,7 @@
 
 #include <QString>
 #include <QMap>
-#include <qstringlist.h>
+#include <QStringList>
 
 #include "subresource.h"
 #include <kmail/kmailicalIface.h>

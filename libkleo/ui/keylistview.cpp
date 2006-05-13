@@ -38,16 +38,16 @@
 
 #include <kdebug.h>
 
-#include <qfontmetrics.h>
+#include <QFontMetrics>
 #include <QToolTip>
-#include <qrect.h>
+#include <QRect>
 #include <q3header.h>
 #include <QPoint>
 #include <q3ptrlist.h>
-#include <qpainter.h>
+#include <QPainter>
 #include <QFont>
 #include <QColor>
-#include <qtimer.h>
+#include <QTimer>
 #include <q3cstring.h>
 //Added by qt3to4:
 #include <QPixmap>

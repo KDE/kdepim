@@ -44,7 +44,7 @@
 #include <ktempfile.h>
 #include <QFile>
 #include <stdlib.h>
-#include <qtextcodec.h>
+#include <QTextCodec>
 
 // Just for the Q_ASSERT in the dtor. Not thread-safe, but who would
 // have 2 threads talking to gpgconf anyway? :)

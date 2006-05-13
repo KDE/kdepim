@@ -28,8 +28,8 @@
 #include <klocale.h>
 #include <ktrader.h>
 
-#include <qsignalmapper.h>
-#include <qtimer.h>
+#include <QSignalMapper>
+#include <QTimer>
 #include <kvbox.h>
 
 #include "addresseeeditorextension.h"

@@ -45,10 +45,10 @@
 #include <kshell.h>
 
 #include <QDir>
-#include <qstringlist.h>
+#include <QStringList>
 #include <QVariant>
-#include <qtimer.h>
-#include <qfileinfo.h>
+#include <QTimer>
+#include <QFileInfo>
 
 #include <gpg-error.h>
 

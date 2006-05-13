@@ -24,7 +24,7 @@
 #endif
 #include <sys/types.h>
 #include <string.h>
-#include <qiodevice.h>
+#include <QIODevice>
 #include <stdio.h>
 
 //#define DO_DEBUG

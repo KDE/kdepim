@@ -21,12 +21,12 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <qdom.h>
 #include <QMap>
 #include <QRegExp>
 #include <QString>
-#include <qstringlist.h>
+#include <QStringList>
 #include <kurl.h>
 
 

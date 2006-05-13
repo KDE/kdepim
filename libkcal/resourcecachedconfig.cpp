@@ -21,7 +21,7 @@
 
 #include <q3buttongroup.h>
 #include <QLayout>
-#include <qradiobutton.h>
+#include <QRadioButton>
 #include <QSpinBox>
 #include <khbox.h>
 #include <QLabel>

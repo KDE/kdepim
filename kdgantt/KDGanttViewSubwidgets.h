@@ -38,13 +38,13 @@
 
 
 #include <QWidget>
-#include <qsplitter.h>
-#include <qevent.h>
-#include <qwhatsthis.h>
-#include <qtimer.h>
+#include <QSplitter>
+#include <QEvent>
+#include <QWhatsThis>
+#include <QTimer>
 #include <QLayout>
 #include <QLabel>
-#include <qbrush.h>
+#include <QBrush>
 
 #include "kdgantt_qt3_compat.h"
 

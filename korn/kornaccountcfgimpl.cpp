@@ -35,7 +35,7 @@
 #include <QLayout>
 #include <QMap>
 #include <QLabel>
-#include <qlist.h>
+#include <QList>
 #include <QWidget>
 //Added by qt3to4:
 #include <QVBoxLayout>

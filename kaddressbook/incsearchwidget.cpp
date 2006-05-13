@@ -21,12 +21,12 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qapplication.h>
+#include <QApplication>
 #include <QComboBox>
 #include <QLabel>
 #include <QLayout>
-#include <qtimer.h>
-#include <qtoolbutton.h>
+#include <QTimer>
+#include <QToolButton>
 #include <QToolTip>
 
 //Added by qt3to4:

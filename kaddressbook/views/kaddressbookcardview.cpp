@@ -21,12 +21,12 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qapplication.h>
+#include <QApplication>
 #include <q3dragobject.h>
-#include <qevent.h>
+#include <QEvent>
 #include <q3iconview.h>
 #include <QLayout>
-#include <qstringlist.h>
+#include <QStringList>
 //Added by qt3to4:
 #include <QDragEnterEvent>
 #include <QVBoxLayout>

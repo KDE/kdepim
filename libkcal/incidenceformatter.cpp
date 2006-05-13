@@ -48,8 +48,8 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 
-#include <qbuffer.h>
-#include <qdatetime.h>
+#include <QBuffer>
+#include <QDateTime>
 //Added by qt3to4:
 #include <QList>
 

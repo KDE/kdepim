@@ -32,8 +32,8 @@
 #include <kresources/factory.h>
 
 #include <QDir>
-#include <qfileinfo.h>
-#include <qstringlist.h>
+#include <QFileInfo>
+#include <QStringList>
 
 #include <stdio.h>
 #include <stdlib.h>

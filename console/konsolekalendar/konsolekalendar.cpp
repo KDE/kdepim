@@ -34,9 +34,9 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QFile>
-#include <qtextstream.h>
+#include <QTextStream>
 
 #include <kdebug.h>
 #include <klocale.h>

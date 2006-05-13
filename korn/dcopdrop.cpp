@@ -24,11 +24,11 @@
 #include <kconfigbase.h>
 #include <kdebug.h>
 
-#include <qdatetime.h>
-#include <qlist.h>
+#include <QDateTime>
+#include <QList>
 #include <QMap>
 #include <QString>
-#include <qtimer.h>
+#include <QTimer>
 
 DCOPDrop::DCOPDrop()
 	: KMailDrop(),

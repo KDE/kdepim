@@ -28,8 +28,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <qtextcodec.h>
-#include <qbuffer.h>
+#include <QTextCodec>
+#include <QBuffer>
 #include <QRegExp>
 //Added by qt3to4:
 #include <Q3CString>

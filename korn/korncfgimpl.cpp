@@ -29,10 +29,10 @@
 
 #include <QColor>
 #include <QCheckBox>
-#include <qradiobutton.h>
-#include <qlistview.h>
+#include <QRadioButton>
+#include <QListView>
 #include <QString>
-#include <qtimer.h>
+#include <QTimer>
 
 
 /*

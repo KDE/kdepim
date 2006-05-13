@@ -24,13 +24,13 @@
 
 #include <limits.h>
 
-#include <qcursor.h>
-#include <qdatetime.h>
+#include <QCursor>
+#include <QDateTime>
 #include <QLabel>
-#include <qpainter.h>
+#include <QPainter>
 #include <QStyle>
 #include <QStyleOption>
-#include <qtimer.h>
+#include <QTimer>
 #include <QToolTip>
 //Added by qt3to4:
 #include <QWheelEvent>

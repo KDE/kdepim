@@ -34,10 +34,10 @@
 
 #include "KDGanttSemiSizingControl.h"
 #include <QPushButton>
-#include <qpainter.h>
-#include <qbitmap.h>
+#include <QPainter>
+#include <QBitmap>
 #include <QToolTip>
-#include <qwhatsthis.h>
+#include <QWhatsThis>
 /*!
   \class KDGanttSemiSizingControl KDGanttSemiSizingControl.h
   This class provides exactly one child widget with a button for

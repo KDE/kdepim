@@ -35,13 +35,13 @@
 #ifndef __KDGANTTXMLTOOLS_H__
 #define __KDGANTTXMLTOOLS_H__
 
-#include <qpen.h>
+#include <QPen>
 #include <QString>
 #include <QColor>
-#include <qrect.h>
+#include <QRect>
 #include <QFont>
-#include <qstringlist.h>
-#include <qdatetime.h>
+#include <QStringList>
+#include <QDateTime>
 
 #include "kdgantt_qt3_compat.h"
 

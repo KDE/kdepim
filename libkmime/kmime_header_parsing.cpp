@@ -39,9 +39,9 @@
 #include <kglobal.h>
 #include <kcharsets.h>
 
-#include <qtextcodec.h>
+#include <QTextCodec>
 #include <QMap>
-#include <qstringlist.h>
+#include <QStringList>
 
 #include <ctype.h> // for isdigit
 #include <cassert>

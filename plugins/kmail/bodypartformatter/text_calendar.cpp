@@ -60,9 +60,9 @@
 #include <kapplication.h>
 #include <ktempfile.h>
 
-#include <qurl.h>
+#include <QUrl>
 #include <QDir>
-#include <qtextstream.h>
+#include <QTextStream>
 
 #include <kdepimmacros.h>
 

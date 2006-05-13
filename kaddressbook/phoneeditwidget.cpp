@@ -28,7 +28,7 @@
 #include <q3listbox.h>
 #include <q3listview.h>
 #include <QPushButton>
-#include <qsignalmapper.h>
+#include <QSignalMapper>
 #include <QString>
 #include <QToolTip>
 //Added by qt3to4:

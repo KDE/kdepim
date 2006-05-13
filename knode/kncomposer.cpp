@@ -13,9 +13,9 @@
 */
 
 #include <q3header.h>
-#include <qtextcodec.h>
-#include <qclipboard.h>
-#include <qapplication.h>
+#include <QTextCodec>
+#include <QClipboard>
+#include <QApplication>
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QKeyEvent>
@@ -52,7 +52,7 @@ using KRecentAddress::RecentAddresses;
 #include <kpgpblock.h>
 #include <kprocess.h>
 #include <k3syntaxhighlighter.h>
-#include <qcursor.h>
+#include <QCursor>
 #include <k3urldrag.h>
 #include <kcompletionbox.h>
 #include <kxmlguifactory.h>

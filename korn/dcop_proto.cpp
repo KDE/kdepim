@@ -27,7 +27,7 @@
 
 #include <QMap>
 #include <q3ptrlist.h>
-#include <qvector.h>
+#include <QVector>
 
 KMailDrop* DCOP_Protocol::createMaildrop( KConfigGroup* ) const
 {

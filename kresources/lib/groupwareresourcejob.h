@@ -23,7 +23,7 @@
 #ifndef KPIM_GROUPWAREJOB_H
 #define KPIM_GROUPWAREJOB_H
 
-#include <qobject.h>
+#include <QObject>
 #include <QString>
 #include "folderlister.h"
 

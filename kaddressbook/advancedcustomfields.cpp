@@ -27,7 +27,7 @@
 #include <QComboBox>
 #include <q3datetimeedit.h>
 #include <QLayout>
-#include <qobject.h>
+#include <QObject>
 #include <QSpinBox>
 #include <QRegExp>
 #include <q3textedit.h>

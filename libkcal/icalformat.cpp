@@ -19,12 +19,12 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QString>
 #include <QRegExp>
-#include <qclipboard.h>
+#include <QClipboard>
 #include <QFile>
-#include <qtextstream.h>
+#include <QTextStream>
 //Added by qt3to4:
 #include <QByteArray>
 

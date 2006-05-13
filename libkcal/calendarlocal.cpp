@@ -21,7 +21,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QString>
 
 #include <kdebug.h>

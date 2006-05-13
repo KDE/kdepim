@@ -29,8 +29,8 @@
 #include <klocale.h>
 
 #include <QMap>
-#include <qpair.h>
-#include <qstringlist.h>
+#include <QPair>
+#include <QStringList>
 #include <q3valuevector.h>
 #include <QWidget>
 //Added by qt3to4:

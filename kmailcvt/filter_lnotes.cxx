@@ -21,7 +21,7 @@
 #include <kfiledialog.h>
 #include <ktempfile.h>
 #include <kdebug.h>
-#include <qfileinfo.h>
+#include <QFileInfo>
 
 #include "filter_lnotes.hxx"
 

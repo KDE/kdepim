@@ -47,10 +47,10 @@
 #include <kstandarddirs.h>
 #include <kapplication.h>
 
-#include <qurl.h>
+#include <QUrl>
 #include <QFile>
 #include <QDir>
-#include <qtextdocument.h>
+#include <QTextDocument>
 
 namespace {
 

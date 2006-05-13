@@ -26,11 +26,11 @@
  *
  */
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QFile>
-#include <qpixmap.h>
-#include <qimage.h>
-#include <qpainter.h>
+#include <QPixmap>
+#include <QImage>
+#include <QPainter>
 
 #include <kdebug.h>
 #include <kglobal.h>

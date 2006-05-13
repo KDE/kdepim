@@ -45,11 +45,11 @@
 #include <kapplication.h>
 #include <dcopclient.h>
 
-#include <qobject.h>
-#include <qtimer.h>
+#include <QObject>
+#include <QTimer>
 #include <QString>
 #include <QFile>
-#include <qapplication.h>
+#include <QApplication>
 
 #include <assert.h>
 

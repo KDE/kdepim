@@ -36,8 +36,8 @@
 #include <QLabel>
 #include <QLayout>
 #include <q3listbox.h>
-#include <qpainter.h>
-#include <qpixmap.h>
+#include <QPainter>
+#include <QPixmap>
 #include <QPushButton>
 #include <QRegExp>
 #include <QString>

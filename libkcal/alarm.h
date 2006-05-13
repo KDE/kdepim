@@ -23,7 +23,7 @@
 #define KCAL_ALARM_H
 
 #include <QString>
-#include <qstringlist.h>
+#include <QStringList>
 
 
 #include "customproperties.h"

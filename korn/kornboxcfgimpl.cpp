@@ -36,7 +36,7 @@ class KConfig;
 #include <QColor>
 #include <QFont>
 #include <QLabel>
-#include <qlistview.h>
+#include <QListView>
 #include <QString>
 
 KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent )

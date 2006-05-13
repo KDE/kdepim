@@ -27,9 +27,9 @@
 #include <QLayout>
 #include <QLineEdit>
 #include <QPushButton>
-#include <qradiobutton.h>
+#include <QRadioButton>
 #include <q3table.h>
-#include <qtextcodec.h>
+#include <QTextCodec>
 #include <QToolTip>
 //Added by qt3to4:
 #include <QTextStream>

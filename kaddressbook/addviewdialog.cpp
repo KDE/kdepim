@@ -25,7 +25,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>
-#include <qradiobutton.h>
+#include <QRadioButton>
 //Added by qt3to4:
 #include <QGridLayout>
 

@@ -19,12 +19,12 @@
 
 #include <math.h>
 #include <assert.h>
-#include <qfileinfo.h>
-#include <qpixmap.h>
-#include <qpainter.h>
+#include <QFileInfo>
+#include <QPixmap>
+#include <QPainter>
 #include <QDataStream>
-#include <qapplication.h>
-#include <qbuffer.h>
+#include <QApplication>
+#include <QBuffer>
 //Added by qt3to4:
 #include <Q3CString>
 #include <QPolygon>

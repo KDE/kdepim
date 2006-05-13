@@ -26,10 +26,10 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <qlist.h>
+#include <QList>
 #include <QMap>
-#include <qstringlist.h>
-#include <qvector.h>
+#include <QStringList>
+#include <QVector>
 
 const Protocol* Process_Protocol::getProtocol( KConfigGroup* ) const
 {

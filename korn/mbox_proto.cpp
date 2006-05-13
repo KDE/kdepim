@@ -22,9 +22,9 @@
 #include <kdebug.h>
 
 #include <QLayout>
-#include <qlist.h>
-#include <qvector.h>
-#include <qstringlist.h>
+#include <QList>
+#include <QVector>
+#include <QStringList>
 
 #include "account_input.h"
 

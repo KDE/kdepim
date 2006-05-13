@@ -36,9 +36,9 @@
 #include <kconfig.h>
 #include <kstandarddirs.h>
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QString>
-#include <qstringlist.h>
+#include <QStringList>
 
 #include <stdlib.h>
 #include <iostream>

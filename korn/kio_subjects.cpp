@@ -27,7 +27,7 @@
 #include <kio/scheduler.h>
 #include <kdebug.h>
 
-#include <qlist.h>
+#include <QList>
 #include <QString>
 
 KIO_Subjects::KIO_Subjects( QObject * parent )

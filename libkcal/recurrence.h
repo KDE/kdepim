@@ -25,7 +25,7 @@
 #define KCAL_RECURRENCE_H
 
 #include <QString>
-#include <qbitarray.h>
+#include <QBitArray>
 //Added by qt3to4:
 #include <QList>
 

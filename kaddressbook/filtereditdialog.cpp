@@ -26,10 +26,10 @@
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
-#include <qradiobutton.h>
+#include <QRadioButton>
 #include <QRegExp>
 #include <QString>
-#include <qtoolbutton.h>
+#include <QToolButton>
 #include <QToolTip>
 #include <QWidget>
 //Added by qt3to4:

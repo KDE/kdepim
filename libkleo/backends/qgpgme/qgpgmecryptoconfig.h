@@ -35,8 +35,8 @@
 
 #include <kleo/cryptoconfig.h>
 #include <q3dict.h>
-#include <qstringlist.h>
-#include <qobject.h>
+#include <QStringList>
+#include <QObject>
 #include <QVariant>
 #include <kdepim_export.h>
 class KProcIO;

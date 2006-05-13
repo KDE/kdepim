@@ -12,9 +12,9 @@
 
 #include <kurl.h>
 
-#include <qbuffer.h>
+#include <QBuffer>
 #include <qdom.h>
-#include <qobject.h>
+#include <QObject>
 #include <QVariant>
 
 //Added by qt3to4:

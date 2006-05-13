@@ -30,13 +30,13 @@
 
 #include <libkdepim/kpimprefs.h>
 
-#include <qapplication.h>
+#include <QApplication>
 #include <qdom.h>
-#include <qdatetime.h>
+#include <QDateTime>
 #include <q3ptrlist.h>
 #include <QRegExp>
-#include <qstringlist.h>
-#include <qtimer.h>
+#include <QStringList>
+#include <QTimer>
 
 #include <kabc/locknull.h>
 #include <karchive.h>

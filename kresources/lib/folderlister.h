@@ -30,8 +30,8 @@
 
 
 #include <QString>
-#include <qstringlist.h>
-#include <qobject.h>
+#include <QStringList>
+#include <QObject>
 class KJob;
 namespace KIO {
 class Job;

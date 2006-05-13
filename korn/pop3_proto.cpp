@@ -24,10 +24,10 @@
 #include <kdebug.h>
 
 #include <QWidget>
-#include <qobject.h>
-#include <qlist.h>
-#include <qstringlist.h>
-#include <qvector.h>
+#include <QObject>
+#include <QList>
+#include <QStringList>
+#include <QVector>
 
 void Pop3_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 {

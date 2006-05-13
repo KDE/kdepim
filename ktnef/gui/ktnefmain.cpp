@@ -33,9 +33,9 @@
 #include <kapplication.h>
 #include <kactioncollection.h>
 #include <kiconloader.h>
-#include <qpixmap.h>
+#include <QPixmap>
 #include <kstdaccel.h>
-#include <qmessagebox.h>
+#include <QMessageBox>
 #include <kfiledialog.h>
 #include <QDir>
 #include <kprocess.h>

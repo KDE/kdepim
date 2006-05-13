@@ -21,10 +21,10 @@
 #ifndef KHOLIDAYS_HOLIDAY_H
 #define KHOLIDAYS_HOLIDAY_H
 
-#include <qlist.h>
+#include <QList>
 #include <QString>
-#include <qstringlist.h>
-#include <qdatetime.h>
+#include <QStringList>
+#include <QDateTime>
 
 #include "kdepim_export.h"
 

@@ -33,7 +33,7 @@
 
 #include <QHash>
 #include <QString>
-#include <qstringlist.h>
+#include <QStringList>
 
 QHash< QString, Protocol* >* Protocols::protocols = 0;
 

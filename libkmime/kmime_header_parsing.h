@@ -33,7 +33,7 @@
 #define __KMIME_HEADER_PARSING_H__
 
 #include <QString>
-#include <qpair.h>
+#include <QPair>
 
 #include <time.h>
 

@@ -28,7 +28,7 @@
 #include <kio/jobclasses.h>
 #include <kio/scheduler.h>
 
-#include <qlist.h>
+#include <QList>
 #include <QVariant>
 
 KIO_Delete::KIO_Delete( QObject * parent ) : QObject( parent ),

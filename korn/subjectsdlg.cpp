@@ -1,6 +1,6 @@
 #include "subjectsdlg.h"
 #include "maildrop.h"
-#include <qapplication.h>
+#include <QApplication>
 #include <QDesktopWidget>
 //Added by qt3to4:
 #include <QVBoxLayout>
@@ -8,9 +8,9 @@
 #include <kcursor.h>
 #include <kdebug.h>
 #include <QLayout>
-#include <qlist.h>
-#include <qdatetime.h>
-#include <qtimer.h>
+#include <QList>
+#include <QDateTime>
+#include <QTimer>
 #include "mailsubject.h"
 #include <klocale.h>
 #include <QProgressDialog>

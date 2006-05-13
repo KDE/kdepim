@@ -26,9 +26,9 @@
 #include <kgenericfactory.h>
 #include <kstringvalidator.h>
 
-#include <qvalidator.h>
+#include <QValidator>
 #include <QFile>
-#include <qdatetime.h>
+#include <QDateTime>
 
 #if !defined(__osf__)
 #include <inttypes.h>

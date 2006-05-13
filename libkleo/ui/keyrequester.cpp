@@ -71,11 +71,11 @@
 #include <kpushbutton.h>
 
 // Qt
-#include <qapplication.h>
+#include <QApplication>
 #include <QLayout>
 #include <QToolTip>
 #include <QString>
-#include <qstringlist.h>
+#include <QStringList>
 #include <QLabel>
 #include <QRegExp>
 //Added by qt3to4:

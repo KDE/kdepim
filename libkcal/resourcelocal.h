@@ -23,7 +23,7 @@
 #define KCAL_RESOURCELOCAL_H
 
 #include <QString>
-#include <qdatetime.h>
+#include <QDateTime>
 
 #include <kurl.h>
 #include <kdirwatch.h>

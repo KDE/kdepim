@@ -31,7 +31,7 @@
 #include <kurl.h>
 #include <phonon/simpleplayer.h>
 
-#include <qlist.h>
+#include <QList>
 
 KornSubjectsDlg* AccountManager::_subjectsDlg = 0;
 

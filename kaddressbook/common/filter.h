@@ -25,7 +25,7 @@
 #define FILTER_H
 
 #include <QString>
-#include <qstringlist.h>
+#include <QStringList>
 
 
 #include <kabc/addressee.h>

@@ -33,7 +33,7 @@
 #ifndef CRLVIEW_H
 #define CRLVIEW_H
 
-#include <qdialog.h>
+#include <QDialog>
 #include <QString>
 //Added by qt3to4:
 #include <QCloseEvent>

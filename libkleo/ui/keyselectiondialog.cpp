@@ -63,10 +63,10 @@
 #include <kpushbutton.h>
 // Qt
 #include <QCheckBox>
-#include <qtoolbutton.h>
+#include <QToolButton>
 #include <QLabel>
-#include <qpixmap.h>
-#include <qtimer.h>
+#include <QPixmap>
+#include <QTimer>
 #include <QLayout>
 #include <QLineEdit>
 #include <QDateTime>

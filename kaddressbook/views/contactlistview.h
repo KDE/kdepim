@@ -25,7 +25,7 @@
 #define CONTACTLISTVIEW_H
 
 #include <QColor>
-#include <qpixmap.h>
+#include <QPixmap>
 #include <QToolTip>
 #include <QString>
 //Added by qt3to4:

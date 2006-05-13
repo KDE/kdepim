@@ -28,9 +28,9 @@
 
 #include <QDateTime>
 #include <QFile>
-#include <qfileinfo.h>
+#include <QFileInfo>
 #include <QString>
-#include <qtextstream.h>
+#include <QTextStream>
 
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>

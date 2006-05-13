@@ -22,7 +22,7 @@
 #include <kdebug.h>
 
 #include <QMap>
-#include <qlistview.h>
+#include <QListView>
 #include <QString>
 
 KEditListBoxManager::KEditListBoxManager(	QWidget *parent, const char *name,

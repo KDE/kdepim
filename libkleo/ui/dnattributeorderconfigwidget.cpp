@@ -45,7 +45,7 @@
 #include <kconfig.h>
 #include <kapplication.h>
 
-#include <qtoolbutton.h>
+#include <QToolButton>
 #include <QLayout>
 #include <q3header.h>
 #include <QLabel>

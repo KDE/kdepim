@@ -49,17 +49,18 @@
 #if QT_VERSION < 0x040000
 #include "itemAttributeDialog.h"
 #endif
-#include <qprinter.h>
-#include <qpainter.h>
+#include <QPrinter>
+#include <QPainter>
 #include <QLayout>
 #include <QFile>
-#include <qapplication.h>
+#include <QApplication>
 #include <QtDebug>
 #include <QPrintDialog>
+#include <QDragEnterEvent>
 
-#include <qmessagebox.h>
-#include <qfileinfo.h>
-#include <qtextstream.h>
+#include <QMessageBox>
+#include <QFileInfo>
+#include <QTextStream>
 
 
 

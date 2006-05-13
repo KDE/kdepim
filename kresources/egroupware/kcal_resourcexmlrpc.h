@@ -22,7 +22,7 @@
 #ifndef KCAL_RESOURCEXMLRPC_H
 #define KCAL_RESOURCEXMLRPC_H
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <q3ptrlist.h>
 #include <QString>
 //Added by qt3to4:

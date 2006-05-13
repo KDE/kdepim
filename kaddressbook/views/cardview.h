@@ -24,10 +24,10 @@
 #ifndef CARDVIEW_H
 #define CARDVIEW_H
 
-#include <qpair.h>
+#include <QPair>
 #include <QPoint>
 #include <q3ptrlist.h>
-#include <qrect.h>
+#include <QRect>
 #include <q3scrollview.h>
 #include <q3listbox.h>
 #include <QString>

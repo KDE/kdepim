@@ -48,8 +48,8 @@
 #include <kdebug.h>
 #include <kmessagebox.h>
 
-#include <qtimer.h>
-#include <qfileinfo.h>
+#include <QTimer>
+#include <QFileInfo>
 #include <QVariant>
 
 #include <memory>

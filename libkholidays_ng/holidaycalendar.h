@@ -22,7 +22,7 @@
 #define KHOLIDAYS_HOLIDAYCALENDAR_H
 
 #include <QString>
-#include <qdatetime.h>
+#include <QDateTime>
 
 #include "kdepim_export.h"
 #include "holiday.h"

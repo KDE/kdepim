@@ -28,12 +28,12 @@
 #include <kpassivepopup.h>
 #include <kmenu.h>
 
-#include <qbitmap.h>
-#include <qcursor.h>
+#include <QBitmap>
+#include <QCursor>
 #include <QToolTip>
-#include <qpainter.h>
-#include <qpixmap.h>
-#include <qmovie.h>
+#include <QPainter>
+#include <QPixmap>
+#include <QMovie>
 
 DockedItem::DockedItem( QWidget * parent )
 	: BoxContainerItem( parent ),

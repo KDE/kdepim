@@ -22,10 +22,10 @@
 #include "account_input.h"
 
 #include <QWidget>
-#include <qobject.h>
-#include <qstringlist.h>
-#include <qlist.h>
-#include <qvector.h>
+#include <QObject>
+#include <QStringList>
+#include <QList>
+#include <QVector>
 
 void Imap_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 {

@@ -16,8 +16,8 @@
 #include <QLayout>
 #include <QListWidget>
 #include <QRegExp>
-#include <qapplication.h>
-#include <qcursor.h>
+#include <QApplication>
+#include <QCursor>
 //Added by qt3to4:
 #include <QHBoxLayout>
 

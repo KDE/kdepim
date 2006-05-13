@@ -23,7 +23,7 @@
 #include <klocale.h>
 #include <kprocess.h>
 
-#include <qbytearray.h>
+#include <QByteArray>
 #include <QRegExp>
 #include <QString>
 

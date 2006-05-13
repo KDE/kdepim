@@ -30,7 +30,7 @@ class KMime::Headers::List;
 #include "kmime_util.h"
 #include "kmime_headers.h"
 
-#include <qtextstream.h>
+#include <QTextStream>
 #include <QByteArray>
 #include <QList>
 

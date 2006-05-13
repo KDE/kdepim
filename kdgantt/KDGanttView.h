@@ -38,7 +38,7 @@
 
 
 #include <QWidget>
-#include <qsplitter.h>
+#include <QSplitter>
 #include <QLayout>
 #include <QFont>
 

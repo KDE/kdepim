@@ -37,14 +37,14 @@
 #include <kstdaction.h>
 #include <ktoolinvocation.h>
 
-#include <qbitmap.h>
+#include <QBitmap>
 #include <QColor>
 #include <QFont>
-#include <qdatetime.h>
-#include <qgridlayout.h>
+#include <QDateTime>
+#include <QGridLayout>
 #include <QLabel>
-#include <qpainter.h>
-#include <qpixmap.h>
+#include <QPainter>
+#include <QPixmap>
 #include <q3ptrlist.h>
 #include <QString>
 #include <QToolTip>

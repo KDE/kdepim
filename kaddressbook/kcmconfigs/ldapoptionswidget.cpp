@@ -26,7 +26,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
-#include <qtoolbutton.h>
+#include <QToolButton>
 #include <QString>
 #include <QVBoxLayout>
 

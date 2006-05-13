@@ -20,10 +20,10 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <qapplication.h>
+#include <QApplication>
 #include <QFile>
-#include <qtextstream.h>
-#include <qtextcodec.h>
+#include <QTextStream>
+#include <QTextCodec>
 #include <QRegExp>
 
 #include <kglobal.h>

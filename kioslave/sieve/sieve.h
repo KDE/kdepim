@@ -21,7 +21,7 @@
 
 #include <QString>
 #include <q3cstring.h>
-#include <qstringlist.h>
+#include <QStringList>
 
 class KDESasl;
 class KUrl;

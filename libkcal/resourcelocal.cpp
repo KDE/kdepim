@@ -23,7 +23,7 @@
 #include <typeinfo>
 #include <stdlib.h>
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QString>
 
 #include <kdebug.h>

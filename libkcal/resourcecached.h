@@ -30,8 +30,8 @@
 #include <kconfig.h>
 
 #include <QString>
-#include <qdatetime.h>
-#include <qtimer.h>
+#include <QDateTime>
+#include <QTimer>
 
 #include <kdepimmacros.h>
 

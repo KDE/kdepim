@@ -16,11 +16,11 @@
 #define KNCONFIG_H
 
 #include <QColor>
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QFont>
 #include <QList>
-#include <qobject.h>
-#include <qpixmap.h>
+#include <QObject>
+#include <QPixmap>
 
 #include <kconfig.h>
 

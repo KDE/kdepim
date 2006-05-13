@@ -18,7 +18,7 @@
 
 #include <QString>
 #include <QRegExp>
-#include <qtextstream.h>
+#include <QTextStream>
 #include <QMap>
 #include <q3valuelist.h>
 

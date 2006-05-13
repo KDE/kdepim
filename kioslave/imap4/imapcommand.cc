@@ -44,7 +44,7 @@
 #include <stdlib.h>
 
 #include <QRegExp>
-#include <qbuffer.h>
+#include <QBuffer>
 
 #include <kprotocolmanager.h>
 #include <ksock.h>

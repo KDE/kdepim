@@ -24,7 +24,7 @@
 //
 
 #include <QFile>
-#include <qtextstream.h>
+#include <QTextStream>
 
 #include <kdebug.h>
 #include <kstandarddirs.h>

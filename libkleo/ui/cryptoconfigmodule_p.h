@@ -32,7 +32,7 @@
 #ifndef CRYPTOCONFIGMODULE_P_H
 #define CRYPTOCONFIGMODULE_P_H
 
-#include <qtabwidget.h>
+#include <QTabWidget>
 #include <q3hbox.h>
 #include <QCheckBox>
 //Added by qt3to4:

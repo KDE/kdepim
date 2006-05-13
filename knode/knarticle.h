@@ -15,8 +15,8 @@
 #ifndef KNARTICLE_H
 #define KNARTICLE_H
 
-#include <qstringlist.h>
-#include <qtextstream.h>
+#include <QStringList>
+#include <QTextStream>
 #include <QFile>
 #include <QFont>
 #include <QColor>

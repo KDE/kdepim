@@ -21,7 +21,7 @@
 #ifndef KABC_GW_CONVERTER_H
 #define KABC_GW_CONVERTER_H
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <QString>
 
 #include "soapH.h"

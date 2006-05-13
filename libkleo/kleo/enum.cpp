@@ -35,7 +35,7 @@
 #include <klocale.h>
 
 #include <QString>
-#include <qstringlist.h>
+#include <QStringList>
 
 static const struct {
   Kleo::CryptoMessageFormat format;

@@ -22,7 +22,7 @@
 */
 
 #include <QMap>
-#include <qsignalmapper.h>
+#include <QSignalMapper>
 
 #include <kaction.h>
 #include <kinstance.h>

@@ -15,16 +15,16 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-#include <qbuffer.h>
-#include <qclipboard.h>
+#include <QBuffer>
+#include <QClipboard>
 #include <QDir>
 #include <QFile>
-#include <qimage.h>
+#include <QImage>
 #include <QLayout>
 #include <QMenu>
-#include <qstringlist.h>
-#include <qtextcodec.h>
-#include <qtimer.h>
+#include <QStringList>
+#include <QTextCodec>
+#include <QTimer>
 //Added by qt3to4:
 #include <QHBoxLayout>
 

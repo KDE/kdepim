@@ -35,7 +35,7 @@
 #include <libkcal/event.h>
 
 #include <QString>
-#include <qdatetime.h>
+#include <QDateTime>
 
 /**
  * @file konsolekalendarvariables.h

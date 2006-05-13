@@ -58,7 +58,7 @@
 
 #include <QLabel>
 #include <QLayout>
-#include <qfontmetrics.h>
+#include <QFontMetrics>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QHBoxLayout>

@@ -23,11 +23,11 @@
 
 #include <kio/job.h>
 #include <kio/jobclasses.h>
-#include <qapplication.h>
+#include <QApplication>
 #include <QMap>
-#include <qobject.h>
+#include <QObject>
 #include <QString>
-#include <qthread.h>
+#include <QThread>
 
 
 #include <string>
