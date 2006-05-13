@@ -5301,7 +5301,7 @@ void  KDGanttView::lvDragEnterEvent ( QDragEnterEvent * e)
   // e->accept(KDGanttViewItemDrag::canDecode(e) );
 
   if ( KDGanttViewItemDrag::canDecode(e) ) {
-    e->accept( true);
+    e->setAccepted( true);
     return;
   }
 
@@ -5316,7 +5316,7 @@ void  KDGanttView::lvDragEnterEvent ( QDragEnterEvent * e)
   //  return;
   // }
 
-  e->accept( false );
+  e->setAccepted( false );
 }
 
 

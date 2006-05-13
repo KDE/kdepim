@@ -321,7 +321,7 @@ void ContactListView::contentsMousePressEvent(QMouseEvent* e)
 // To initiate a drag operation
 void ContactListView::contentsMouseMoveEvent( QMouseEvent *e )
 {
-  if ((e->state() & Qt::LeftButton) && (e->pos() - presspos).manhattanLength() > 4 ) {
+  if ((e->buttons() & Qt::LeftButton) && (e->pos() - presspos).manhattanLength() > 4 ) {
     emit startAddresseeDrag();
   }
   else

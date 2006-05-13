@@ -3515,17 +3515,17 @@ void KDListView::resizeEvent(QResizeEvent *)
 void KDListView::dragEnterEvent ( QDragEnterEvent * e)
 {
     if ( !myGanttView->dropEnabled() ) {
-        e->accept( false );
+        e->setAccepted( false );
         return;
     }
     myGanttView->lvDragEnterEvent(e);
-    //e->accept(KDGanttViewItemDrag::canDecode(e) );
+    //e->setAccepted(KDGanttViewItemDrag::canDecode(e) );
 }
 
 void KDListView::dragMoveEvent ( QDragMoveEvent * e)
 {
     if ( !myGanttView->dropEnabled() ) {
-        e->accept( false );
+        e->setAccepted( false );
         return;
     }
     KDGanttViewItem* draggedItem = 0;
@@ -3540,7 +3540,7 @@ void KDListView::dragMoveEvent ( QDragMoveEvent * e)
     if (myGanttView->lvDragMoveEvent ( e , draggedItem, gItem ) )
         return;
     if ( !KDGanttViewItemDrag::canDecode(e) ) {
-        e->accept( false );
+        e->setAccepted( false );
         return;
     }
     if ( e->source() == myGanttView && gItem ){
@@ -3548,17 +3548,17 @@ void KDListView::dragMoveEvent ( QDragMoveEvent * e)
         KDGanttViewItem* pItem = gItem->parent();
         while ( pItem ) {
             if ( pItem == myGanttView->myCanvasView->lastClickedItem ) {
-                e->accept( false );
+                e->setAccepted( false );
                 return;
             }
             pItem = pItem->parent();
         }
         if ( gItem == myGanttView->myCanvasView->lastClickedItem ) {
-            e->accept( false );
+            e->setAccepted( false );
             return;
         }
     }
-    e->accept( true );
+    e->setAccepted( true );
 }
 
 void KDListView::dragLeaveEvent ( QDragLeaveEvent * )
@@ -3568,7 +3568,7 @@ void KDListView::dragLeaveEvent ( QDragLeaveEvent * )
 void KDListView::dropEvent ( QDropEvent *e )
 {
     if ( !myGanttView->dropEnabled() ) {
-        e->accept( false );
+        e->setAccepted( false );
         return;
     }
     QPoint pos = e->pos();
@@ -3771,6 +3771,7 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     }
     // If they needed a scrollbar timer in scrollview...
     connect( &scrollBarTimer, SIGNAL(timeout()), this, SLOT(myUpdateScrollBars() ) );
+    scrollBarTimer.setSingleShot( true );
 
     mScrollbarTimer = new QTimer( this );
     connect( mScrollbarTimer, SIGNAL( timeout() ),
@@ -3818,7 +3819,7 @@ void KDGanttCanvasView::resizeEvent ( QResizeEvent * e )
     emit widthResized( viewport()->width() + verticalScrollBar()->width() );
     //setMyContentsHeight( 0 ); //via timer
     //QScrollView::blockSignals( false );
-    scrollBarTimer.start(0, true);
+    scrollBarTimer.start(0);
 }
 void KDGanttCanvasView::setMyVScrollBarMode ( QScrollView::ScrollBarMode m )
 {

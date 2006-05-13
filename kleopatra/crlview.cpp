@@ -53,8 +53,8 @@
 #include <QHBoxLayout>
 #include <QCloseEvent>
 
-CRLView::CRLView( QWidget* parent, const char* name, bool modal )
-  : QDialog( parent, name, modal ), _process(0)
+CRLView::CRLView( QWidget* parent )
+  : QDialog( parent ), _process(0)
 {
   QVBoxLayout* topLayout = new QVBoxLayout( this );
   topLayout->setSpacing( 4 );

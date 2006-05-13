@@ -376,12 +376,12 @@ void KAddressBookTableView::updatePresence( const QString &uid )
 
 void KAddressBookTableView::scrollUp()
 {
-  QApplication::postEvent( mListView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Up, 0, 0 ) );
+  QApplication::postEvent( mListView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Up, 0 ) );
 }
 
 void KAddressBookTableView::scrollDown()
 {
-  QApplication::postEvent( mListView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Down, 0, 0 ) );
+  QApplication::postEvent( mListView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Down, 0 ) );
 }
 
 

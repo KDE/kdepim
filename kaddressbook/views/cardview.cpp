@@ -1071,13 +1071,13 @@ void CardView::contentsMousePressEvent( QMouseEvent *e )
     item->repaintCard();
     emit selectionChanged();
   } else if ( d->mSelectionMode == CardView::Extended ) {
-    if ( (e->button() & Qt::LeftButton) && (e->state() & Qt::ShiftModifier) ) {
+    if ( (e->button() & Qt::LeftButton) && (e->modifiers() & Qt::ShiftModifier) ) {
       if ( item == other )
         return;
 
       bool s = !item->isSelected();
 
-      if ( s && !(e->state() & Qt::ControlModifier) ) {
+      if ( s && !(e->modifiers() & Qt::ControlModifier) ) {
         bool b = signalsBlocked();
         blockSignals( true );
         selectAll( false );
@@ -1098,7 +1098,7 @@ void CardView::contentsMousePressEvent( QMouseEvent *e )
       }
 
       emit selectionChanged();
-    } else if ( (e->button() & Qt::LeftButton) && (e->state() & Qt::ControlModifier) ) {
+    } else if ( (e->button() & Qt::LeftButton) && (e->modifiers() & Qt::ControlModifier) ) {
       item->setSelected( !item->isSelected() );
       item->repaintCard();
       emit selectionChanged();
@@ -1138,7 +1138,7 @@ void CardView::contentsMouseReleaseEvent( QMouseEvent *e )
   }
 
   // If there are accel keys, we will not emit signals
-  if ( (e->state() & Qt::ShiftModifier) || (e->state() & Qt::ControlModifier) )
+  if ( (e->modifiers() & Qt::ShiftModifier) || (e->modifiers() & Qt::ControlModifier) )
     return;
 
   // Get the item at this position
@@ -1173,7 +1173,7 @@ void CardView::contentsMouseMoveEvent( QMouseEvent *e )
       return;
   }
 
-  if ( d->mLastClickOnItem && (e->state() & Qt::LeftButton) &&
+  if ( d->mLastClickOnItem && (e->buttons() & Qt::LeftButton) &&
        ((e->pos() - d->mLastClickPos).manhattanLength() > 4)) {
 
     startDrag();
@@ -1342,7 +1342,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
                                  itemRect(d->mCurrentItem).center() ) );
       break;
     default:
-      if ( (e->state() & Qt::ControlModifier) && e->key() == Qt::Key_A ) {
+      if ( (e->modifiers() & Qt::ControlModifier) && e->key() == Qt::Key_A ) {
         // select all
         selectAll( true );
         break;
@@ -1355,7 +1355,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
   // handle selection
   if ( aItem ) {
     if ( d->mSelectionMode == CardView::Extended ) {
-      if ( e->state() & Qt::ShiftModifier ) {
+      if ( e->modifiers() & Qt::ShiftModifier ) {
         // shift button: toggle range
         // if control button is pressed, leave all items
         // and toggle selection current->old current
@@ -1382,7 +1382,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
         }
 
         emit selectionChanged();
-      } else if ( e->state() & Qt::ControlModifier ) {
+      } else if ( e->modifiers() & Qt::ControlModifier ) {
         // control button: do nothing
       } else {
         // no button: move selection to this item

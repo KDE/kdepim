@@ -461,7 +461,7 @@ void KNHeaderView::contentsMousePressEvent( QMouseEvent *e )
 {
   if (!e) return;
 
-  bool selectMode=(( e->state() & Qt::ShiftModifier ) || ( e->state() & Qt::ControlModifier ));
+  bool selectMode=(( e->modifiers() & Qt::ShiftModifier ) || ( e->modifiers() & Qt::ControlModifier ));
 
   QPoint vp = contentsToViewport(e->pos());
   Q3ListViewItem *i = itemAt(vp);

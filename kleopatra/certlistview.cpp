@@ -24,12 +24,12 @@ void CertKeyListView::contentsDragEnterEvent( QDragEnterEvent * event )
   //  kDebug() << fmt << endl;
 
   // We only accept URL drops. We'll check the mimetype later on.
-  event->accept( Q3UriDrag::canDecode( event ) );
+  event->setAccepted( Q3UriDrag::canDecode( event ) );
 }
 
 void CertKeyListView::contentsDragMoveEvent( QDragMoveEvent * event )
 {
-  event->accept( Q3UriDrag::canDecode( event ) );
+  event->setAccepted( Q3UriDrag::canDecode( event ) );
 }
 
 

@@ -1674,7 +1674,7 @@ void KNComposer::slotSpellFinished()
 void KNComposer::slotDragEnterEvent(QDragEnterEvent *ev)
 {
   QStringList files;
-  ev->accept( KUrl::List::canDecode( ev->mimeData() ) );
+  ev->setAccepted( KUrl::List::canDecode( ev->mimeData() ) );
 }
 
 
@@ -2031,7 +2031,7 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
     QKeyEvent *k = (QKeyEvent*)e;
     // ---sven's Arrow key navigation start ---
     // Key Up in first line takes you to Subject line.
-    if (k->key() == Qt::Key_Up && k->state() != Qt::ShiftModifier && currentLine() == 0
+    if (k->key() == Qt::Key_Up && k->modifiers() != Qt::ShiftModifier && currentLine() == 0
       && lineOfChar(0, currentColumn()) == 0)
     {
       deselect();
@@ -2040,7 +2040,7 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
     }
     // ---sven's Arrow key navigation end ---
 
-    if (k->key() == Qt::Key_Backtab && k->state() == Qt::ShiftModifier)
+    if (k->key() == Qt::Key_Backtab && k->modifiers() == Qt::ShiftModifier)
     {
       deselect();
       m_composerView->focusNextPrevEdit(0, false);

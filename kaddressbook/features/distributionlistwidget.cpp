@@ -606,13 +606,13 @@ DistributionListView::DistributionListView( QWidget *parent )
 void DistributionListView::dragEnterEvent( QDragEnterEvent* e )
 {
   bool canDecode = Q3TextDrag::canDecode( e );
-  e->accept( canDecode );
+  e->setAccepted( canDecode );
 }
 
 void DistributionListView::viewportDragMoveEvent( QDragMoveEvent *e )
 {
   bool canDecode = Q3TextDrag::canDecode( e );
-  e->accept( canDecode );
+  e->setAccepted( canDecode );
 }
 
 void DistributionListView::viewportDropEvent( QDropEvent *e )

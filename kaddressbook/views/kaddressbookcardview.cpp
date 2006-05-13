@@ -363,12 +363,12 @@ void KAddressBookCardView::rmbClicked( CardViewItem*, const QPoint &point )
 
 void KAddressBookCardView::scrollUp()
 {
-  QApplication::postEvent( mCardView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Up, 0, 0 ) );
+  QApplication::postEvent( mCardView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Up, 0 ) );
 }
 
 void KAddressBookCardView::scrollDown()
 {
-  QApplication::postEvent( mCardView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Down, 0, 0 ) );
+  QApplication::postEvent( mCardView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Down, 0 ) );
 }
 
 #include "kaddressbookcardview.moc"

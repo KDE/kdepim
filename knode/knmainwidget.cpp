@@ -1155,7 +1155,7 @@ void KNMainWidget::slotCollectionViewDrop(QDropEvent* e, KNCollectionViewItem* a
   }
   else if(dest && e->provides("x-knode-drag/article")) {
     if(f_olManager->currentFolder()) {
-      if (e->action() == QDropEvent::Move) {
+      if (e->dropAction() == Qt::MoveAction) {
         KNLocalArticle::List l;
         getSelectedArticles(l);
         a_rtManager->moveIntoFolder(l, dest);

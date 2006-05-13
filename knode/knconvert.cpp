@@ -51,7 +51,7 @@ bool KNConvert::needToConvert(const QString &oldVersion)
 
 
 KNConvert::KNConvert(const QString &version)
-  : QDialog(0,0,true), l_ogList(0), c_onversionDone(false), v_ersion(version)
+  : QDialog(0), l_ogList(0), c_onversionDone(false), v_ersion(version)
 {
   setWindowTitle(kapp->makeStdCaption(i18n("Conversion")));
   QVBoxLayout *topL=new QVBoxLayout(this);

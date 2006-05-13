@@ -35,18 +35,17 @@
 
 #include <QDialog>
 #include <QString>
-//Added by qt3to4:
-#include <QCloseEvent>
 
 class Q3TextEdit;
 class QPushButton;
 class KProcess;
 class QTimer;
+class QCloseEvent;
 
 class CRLView : public QDialog {
   Q_OBJECT
 public:
-  CRLView( QWidget* parent = 0, const char* name = 0, bool modal = false );
+  CRLView( QWidget* parent = 0 );
   ~CRLView();
 public slots:
   void slotUpdateView();

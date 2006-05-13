@@ -252,7 +252,7 @@ void KNCleanUp::compactFolder(KNFolder *f)
 
 
 KNCleanUp::ProgressDialog::ProgressDialog( int steps, QWidget *parent ) :
-  QDialog( parent, 0, true )
+  QDialog( parent )
 {
   const int w=400,
             h=160;

@@ -84,7 +84,7 @@ void ImageLabel::dragEnterEvent( QDragEnterEvent *event )
   if ( Q3UriDrag::canDecode( event ) )
     accepted = true;
 
-  event->accept( accepted );
+  event->setAccepted( accepted );
 }
 
 void ImageLabel::dropEvent( QDropEvent *event )
@@ -103,7 +103,7 @@ void ImageLabel::dropEvent( QDropEvent *event )
 
 	KUrl::List urls = KUrl::List::fromMimeData( event->mimeData() );
     if ( urls.isEmpty() ) { // oops, no data
-        event->accept( false );
+        event->setAccepted( false );
         return;
 	}
 
@@ -119,7 +119,7 @@ void ImageLabel::mousePressEvent( QMouseEvent *event )
 
 void ImageLabel::mouseMoveEvent( QMouseEvent *event )
 {
-  if ( (event->state() & Qt::LeftButton) &&
+  if ( (event->buttons() & Qt::LeftButton) &&
        (event->pos() - mDragStartPos).manhattanLength() >
        KGlobalSettings::dndEventDelay() ) {
     startDrag();
@@ -223,9 +223,9 @@ void ImageBaseWidget::setImage( const KABC::Picture &photo )
 
     if ( px.height() != 140 || px.width() != 100 ) {
       if ( px.height() > px.width() )
-        px = QPixmap::fromImage( px.toImage().scaleHeight( 140 ) );
+        px = QPixmap::fromImage( px.toImage().scaledToHeight( 140 ) );
       else
-        px = QPixmap::fromImage( px.toImage().scaleWidth( 100 ) );
+        px = QPixmap::fromImage( px.toImage().scaledToWidth( 100 ) );
     }
 
     mImageLabel->setPixmap( px );
@@ -328,9 +328,9 @@ QPixmap ImageBaseWidget::loadPixmap( const KUrl &url )
 
   if ( pixmap.height() != 140 || pixmap.width() != 100 ) {
     if ( pixmap.height() > pixmap.width() )
-      pixmap = QPixmap::fromImage( pixmap.toImage().scaleHeight( 140 ) );
+      pixmap = QPixmap::fromImage( pixmap.toImage().scaledToHeight( 140 ) );
     else
-      pixmap = QPixmap::fromImage( pixmap.toImage().scaleWidth( 100 ) );
+      pixmap = QPixmap::fromImage( pixmap.toImage().scaledToWidth( 100 ) );
   }
 
   return pixmap;

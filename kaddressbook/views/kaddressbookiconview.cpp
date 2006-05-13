@@ -127,9 +127,9 @@ class AddresseeIconViewItem : public K3IconViewItem
       if ( pic.isIntern() && !pic.data().isNull() ) {
         QImage img = pic.data();
         if ( img.width() > img.height() )
-          icon = QPixmap::fromImage( img.scaleWidth( 32 ) );
+          icon = QPixmap::fromImage( img.scaledToWidth( 32 ) );
         else
-          icon = QPixmap::fromImage( img.scaleHeight( 32 ) );
+          icon = QPixmap::fromImage( img.scaledToHeight( 32 ) );
       } else
         icon = defaultIcon;
 
@@ -308,12 +308,12 @@ void KAddressBookIconView::rmbClicked( Q3IconViewItem*, const QPoint &point )
 
 void KAddressBookIconView::scrollUp()
 {
-  QApplication::postEvent( mIconView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Up, 0, 0 ) );
+  QApplication::postEvent( mIconView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Up, 0 ) );
 }
 
 void KAddressBookIconView::scrollDown()
 {
-  QApplication::postEvent( mIconView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Down, 0, 0 ) );
+  QApplication::postEvent( mIconView, new QKeyEvent( QEvent::KeyPress, Qt::Key_Down, 0 ) );
 }
 
 #include "kaddressbookiconview.moc"

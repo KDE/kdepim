@@ -385,10 +385,10 @@ void KNCollectionView::contentsDropEvent( QDropEvent *e )
   KNCollectionViewItem *fti = static_cast<KNCollectionViewItem*>(item);
   if (fti && (fti->coll) && acceptDrag(e)) {
     emit folderDrop( e, fti );
-    e->accept( true );
+    e->setAccepted( true );
   }
   else
-    e->accept( false );
+    e->setAccepted( false );
 }
 
 
