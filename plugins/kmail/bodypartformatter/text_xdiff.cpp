@@ -46,6 +46,8 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kapplication.h>
+#include <kdepimmacros.h>
+
 
 #include <QUrl>
 #include <QFile>
@@ -146,7 +148,7 @@ namespace {
 }
 
 extern "C"
-KMail::Interface::BodyPartFormatterPlugin *
+KDE_EXPORT KMail::Interface::BodyPartFormatterPlugin *
 libkmail_bodypartformatter_text_xdiff_create_bodypart_formatter_plugin() {
   return new Plugin();
 }
