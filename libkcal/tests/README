@@ -1,0 +1,3 @@
+To build these tests, build with the cmake option KDE4_BUILD_TESTS=ON.
+
+To run all these tests, enter the command 'ctest'.
