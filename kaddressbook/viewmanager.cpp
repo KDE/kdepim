@@ -566,7 +566,7 @@ void ViewManager::initActions()
 #if KDE_VERSION >= 309
   mActionSelectView->setMenuAccelsEnabled( false );
 #endif
-  connect( mActionSelectView, SIGNAL( activated( const QString& ) ),
+  connect( mActionSelectView, SIGNAL( triggered( const QString& ) ),
            SLOT( setActiveView( const QString& ) ) );
 
   KAction *action;

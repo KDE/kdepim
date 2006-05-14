@@ -177,7 +177,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   mAddressBookService = new KAddressBookService( this );
 
   mCommandHistory = new KCommandHistory( actionCollection(), true );
-  connect( mCommandHistory, SIGNAL( commandExecuted() ),
+  connect( mCommandHistory, SIGNAL( commandExecuted(KCommand *) ),
            mSearchManager, SLOT( reload() ) );
 
   mSearchManager->reload();
