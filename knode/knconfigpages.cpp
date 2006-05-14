@@ -90,7 +90,7 @@ extern "C"
 //
 extern "C"
 {
-  KCModule *create_knode_config_accounts( QWidget *parent )
+  KDE_EXPORT KCModule *create_knode_config_accounts( QWidget *parent )
   {
     KNode::AccountsPage *page = new KNode::AccountsPage( knGlobals.instance(), parent );
     return page;
@@ -111,7 +111,7 @@ KNode::AccountsPage::AccountsPage( KInstance *inst,QWidget *parent )
 //
 extern "C"
 {
-  KCModule *create_knode_config_appearance( QWidget *parent )
+  KDE_EXPORT KCModule *create_knode_config_appearance( QWidget *parent )
   {
     KNode::AppearanceWidget *page = new KNode::AppearanceWidget( knGlobals.instance(), parent );
     return page;
@@ -125,7 +125,7 @@ extern "C"
 //
 extern "C"
 {
-  KCModule *create_knode_config_read_news( QWidget *parent )
+  KDE_EXPORT KCModule *create_knode_config_read_news( QWidget *parent )
   {
     KNode::ReadNewsPage *page = new KNode::ReadNewsPage( knGlobals.instance(), parent );
     return page;
@@ -150,7 +150,7 @@ KNode::ReadNewsPage::ReadNewsPage( KInstance *inst,QWidget *parent )
 //
 extern "C"
 {
-  KCModule *create_knode_config_post_news( QWidget *parent )
+  KDE_EXPORT KCModule *create_knode_config_post_news( QWidget *parent )
   {
     KNode::PostNewsPage *page = new KNode::PostNewsPage( knGlobals.instance(), parent );
     return page;
@@ -172,7 +172,7 @@ KNode::PostNewsPage::PostNewsPage( KInstance *inst, QWidget *parent )
 //
 extern "C"
 {
-  KCModule *create_knode_config_privacy( QWidget *parent )
+  KDE_EXPORT KCModule *create_knode_config_privacy( QWidget *parent )
   {
     KNode::PrivacyWidget *page = new KNode::PrivacyWidget( knGlobals.instance(), parent );
     return page;
@@ -186,7 +186,7 @@ extern "C"
 //
 extern "C"
 {
-  KCModule *create_knode_config_cleanup( QWidget *parent )
+  KDE_EXPORT KCModule *create_knode_config_cleanup( QWidget *parent )
   {
     KNode::CleanupWidget *page = new KNode::CleanupWidget( knGlobals.instance(), parent );
     return page;
