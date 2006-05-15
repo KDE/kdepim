@@ -21,8 +21,6 @@ kde4_automoc(${kio_imap4_PART_SRCS})
 
 kde4_add_plugin(kio_imap4 ${kio_imap4_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_imap4 )
-
 target_link_libraries(kio_imap4  ${KDE4_KDE3SUPPORT_LIBS}  ${SASL2_LIBRARIES} kmime  )
 
 install_targets(${PLUGIN_INSTALL_DIR} kio_imap4 )
