@@ -615,7 +615,7 @@ const QPixmap * Kleo::UserIDKeyListViewItem::pixmap( int col ) const {
 }
 
 int Kleo::UserIDKeyListViewItem::compare( Q3ListViewItem * item, int col, bool ascending ) const {
-  if ( !item || item->rtti() != RTTI || !listView() || !listView()->columnStrategy() )
+  if ( item->rtti() != RTTI || !listView() || !listView()->columnStrategy() )
     return KeyListViewItem::compare( item, col, ascending );
   UserIDKeyListViewItem * that = static_cast<UserIDKeyListViewItem*>( item );
   return listView()->columnStrategy()->userIDCompare( this->userID(), that->userID(), col );
