@@ -694,7 +694,7 @@ const QPixmap * Kleo::SignatureKeyListViewItem::pixmap( int col ) const {
 }
 
 int Kleo::SignatureKeyListViewItem::compare( Q3ListViewItem * item, int col, bool ascending ) const {
-  if ( !item || item->rtti() != RTTI || !listView() || !listView()->columnStrategy() )
+  if ( item->rtti() != RTTI || !listView() || !listView()->columnStrategy() )
     return KeyListViewItem::compare( item, col, ascending );
   SignatureKeyListViewItem * that = static_cast<SignatureKeyListViewItem*>( item );
   return listView()->columnStrategy()->signatureCompare( this->signature(), that->signature(), col );
