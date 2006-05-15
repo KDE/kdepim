@@ -30,7 +30,7 @@
 #include <QByteArray>
 
 //-----------------------------------------------------------------------------
-QStringList KPIM::splitEmailAddrList(const QString& aStr)
+QStringList EmailAddressTools::splitAddressList(const QString& aStr)
 {
   // Features:
   // - always ignores quoted characters
@@ -101,8 +101,8 @@ QStringList KPIM::splitEmailAddrList(const QString& aStr)
 }
 
 //-----------------------------------------------------------------------------
-// Used by KPIM::splitAddress(...) and KPIM::getFirstEmailAddress(...).
-KPIM::EmailParseResult splitAddressInternal( const QByteArray& address,
+// Used by EmailAddressTools::splitAddress(...) and EmailAddressTools::firstEmailAddress(...).
+EmailAddressTools::EmailParseResult splitAddressInternal( const QByteArray& address,
                                              QByteArray & displayName,
                                              QByteArray & addrSpec,
                                              QByteArray & comment,
@@ -115,7 +115,7 @@ KPIM::EmailParseResult splitAddressInternal( const QByteArray& address,
   comment = "";
 
   if ( address.isEmpty() )
-    return KPIM::AddressEmpty;
+    return EmailAddressTools::AddressEmpty;
 
   // The following is a primitive parser for a mailbox-list (cf. RFC 2822).
   // The purpose is to extract a displayable string from the mailboxes.
@@ -152,13 +152,13 @@ KPIM::EmailParseResult splitAddressInternal( const QByteArray& address,
                  if ( *p )
                    displayName += *p;
                  else
-                   return KPIM::UnexpectedEnd;
+                   return EmailAddressTools::UnexpectedEnd;
                  break;
       case ',' : if ( !inQuotedString ) {
                    if ( allowMultipleAddresses )
                      stop = true;
                    else
-                     return KPIM::UnexpectedComma;
+                     return EmailAddressTools::UnexpectedComma;
                  }
                  else
                    displayName += *p;
@@ -186,7 +186,7 @@ KPIM::EmailParseResult splitAddressInternal( const QByteArray& address,
                  if ( *p )
                    comment += *p;
                  else
-                   return KPIM::UnexpectedEnd;
+                   return EmailAddressTools::UnexpectedEnd;
                  break;
       default :  comment += *p;
       }
@@ -209,7 +209,7 @@ KPIM::EmailParseResult splitAddressInternal( const QByteArray& address,
                  if ( *p )
                    addrSpec += *p;
                  else
-                   return KPIM::UnexpectedEnd;
+                   return EmailAddressTools::UnexpectedEnd;
                  break;
       default :  addrSpec += *p;
       }
@@ -219,11 +219,11 @@ KPIM::EmailParseResult splitAddressInternal( const QByteArray& address,
   }
   // check for errors
   if ( inQuotedString )
-    return KPIM::UnbalancedQuote;
+    return EmailAddressTools::UnbalancedQuote;
   if ( context == InComment )
-    return KPIM::UnbalancedParens;
+    return EmailAddressTools::UnbalancedParens;
   if ( context == InAngleAddress )
-    return KPIM::UnclosedAngleAddr;
+    return EmailAddressTools::UnclosedAngleAddr;
 
   displayName = displayName.trimmed();
   comment = comment.trimmed();
@@ -231,7 +231,7 @@ KPIM::EmailParseResult splitAddressInternal( const QByteArray& address,
 
   if ( addrSpec.isEmpty() ) {
     if ( displayName.isEmpty() )
-      return KPIM::NoAddressSpec;
+      return EmailAddressTools::NoAddressSpec;
     else {
       addrSpec = displayName;
       displayName.truncate( 0 );
@@ -242,12 +242,12 @@ KPIM::EmailParseResult splitAddressInternal( const QByteArray& address,
   kDebug() << "comment      : \"" << comment << "\"" << endl;
   kDebug() << "addr-spec    : \"" << addrSpec << "\"" << endl;
 */
-  return KPIM::AddressOk;
+  return EmailAddressTools::AddressOk;
 }
 
 
 //-----------------------------------------------------------------------------
-KPIM::EmailParseResult KPIM::splitAddress( const QByteArray& address,
+EmailAddressTools::EmailParseResult EmailAddressTools::splitAddress( const QByteArray& address,
                                            QByteArray & displayName,
                                            QByteArray & addrSpec,
                                            QByteArray & comment )
@@ -258,13 +258,13 @@ KPIM::EmailParseResult KPIM::splitAddress( const QByteArray& address,
 
 
 //-----------------------------------------------------------------------------
-KPIM::EmailParseResult KPIM::splitAddress( const QString & address,
+EmailAddressTools::EmailParseResult EmailAddressTools::splitAddress( const QString & address,
                                            QString & displayName,
                                            QString & addrSpec,
                                            QString & comment )
 {
   QByteArray d, a, c;
-  KPIM::EmailParseResult result = splitAddress( address.toUtf8(), d, a, c );
+  EmailAddressTools::EmailParseResult result = splitAddress( address.toUtf8(), d, a, c );
   if ( result == AddressOk ) {
     displayName = QString::fromUtf8( d );
     addrSpec = QString::fromUtf8( a );
@@ -275,7 +275,7 @@ KPIM::EmailParseResult KPIM::splitAddress( const QString & address,
 
 
 //-----------------------------------------------------------------------------
-KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
+EmailAddressTools::EmailParseResult EmailAddressTools::isValidAddress( const QString& aStr )
 {
   // If we are passed an empty string bail right away no need to process further
   // and waste resources
@@ -449,7 +449,7 @@ KPIM::EmailParseResult KPIM::isValidEmailAddress( const QString& aStr )
 }
 
 //-----------------------------------------------------------------------------
-QString KPIM::emailParseResultToString( EmailParseResult errorCode )
+QString EmailAddressTools::emailParseResultToString( EmailParseResult errorCode )
 {
   switch ( errorCode ) {
     case TooManyAts :
@@ -507,7 +507,7 @@ QString KPIM::emailParseResultToString( EmailParseResult errorCode )
 }
 
 //-----------------------------------------------------------------------------
-bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
+bool EmailAddressTools::isValidSimpleAddress( const QString& aStr )
 {
   // If we are passed an empty string bail right away no need to process further
   // and waste resources
@@ -552,17 +552,17 @@ bool KPIM::isValidSimpleEmailAddress( const QString& aStr )
 }
 
 //-----------------------------------------------------------------------------
-QString KPIM::simpleEmailAddressErrorMsg()
+QString EmailAddressTools::simpleEmailAddressErrorMsg()
 {
       return i18n("The email address you entered is not valid because it "
                   "does not seem to contain an actual email address, i.e. "
                   "something of the form joe@example.org.");
 }
 //-----------------------------------------------------------------------------
-QByteArray KPIM::getEmailAddress( const QByteArray & address )
+QByteArray EmailAddressTools::extractEmailAddress( const QByteArray & address )
 {
   QByteArray dummy1, dummy2, addrSpec;
-  KPIM::EmailParseResult result =
+  EmailAddressTools::EmailParseResult result =
     splitAddressInternal( address, dummy1, addrSpec, dummy2,
                           false /* don't allow multiple addresses */ );
   if ( result != AddressOk ) {
@@ -577,17 +577,17 @@ QByteArray KPIM::getEmailAddress( const QByteArray & address )
 
 
 //-----------------------------------------------------------------------------
-QString KPIM::getEmailAddress( const QString & address )
+QString EmailAddressTools::extractEmailAddress( const QString & address )
 {
-  return QString::fromUtf8( getEmailAddress( address.toUtf8() ) );
+  return QString::fromUtf8( extractEmailAddress( address.toUtf8() ) );
 }
 
 
 //-----------------------------------------------------------------------------
-QByteArray KPIM::getFirstEmailAddress( const QByteArray & addresses )
+QByteArray EmailAddressTools::firstEmailAddress( const QByteArray & addresses )
 {
   QByteArray dummy1, dummy2, addrSpec;
-  KPIM::EmailParseResult result =
+  EmailAddressTools::EmailParseResult result =
     splitAddressInternal( addresses, dummy1, addrSpec, dummy2,
                           true /* allow multiple addresses */ );
   if ( result != AddressOk ) {
@@ -602,14 +602,14 @@ QByteArray KPIM::getFirstEmailAddress( const QByteArray & addresses )
 
 
 //-----------------------------------------------------------------------------
-QString KPIM::getFirstEmailAddress( const QString & addresses )
+QString EmailAddressTools::firstEmailAddress( const QString & addresses )
 {
-  return QString::fromUtf8( getFirstEmailAddress( addresses.toUtf8() ) );
+  return QString::fromUtf8( firstEmailAddress( addresses.toUtf8() ) );
 }
 
 
 //-----------------------------------------------------------------------------
-bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
+bool EmailAddressTools::extractEmailAddressAndName(const QString& aStr, QString& mail, QString& name)
 {
   name.clear();
   mail.clear();
@@ -783,13 +783,13 @@ bool KPIM::getNameAndMail(const QString& aStr, QString& name, QString& mail)
 
 
 //-----------------------------------------------------------------------------
-bool KPIM::compareEmail( const QString& email1, const QString& email2,
+bool EmailAddressTools::compareEmail( const QString& email1, const QString& email2,
                          bool matchName )
 {
   QString e1Name, e1Email, e2Name, e2Email;
 
-  getNameAndMail( email1, e1Name, e1Email );
-  getNameAndMail( email2, e2Name, e2Email );
+  extractEmailAddressAndName( email1, e1Email, e1Name );
+  extractEmailAddressAndName( email2, e2Email, e2Name );
 
   return e1Email == e2Email &&
     ( !matchName || ( e1Name == e2Name ) );
@@ -797,7 +797,7 @@ bool KPIM::compareEmail( const QString& email1, const QString& email2,
 
 
 //-----------------------------------------------------------------------------
-QString KPIM::normalizedAddress( const QString & displayName,
+QString EmailAddressTools::normalizedAddress( const QString & displayName,
                                  const QString & addrSpec,
                                  const QString & comment )
 {
@@ -815,7 +815,7 @@ QString KPIM::normalizedAddress( const QString & displayName,
 
 
 //-----------------------------------------------------------------------------
-QString KPIM::decodeIDN( const QString & addrSpec )
+QString EmailAddressTools::fromIdn( const QString & addrSpec )
 {
   const int atPos = addrSpec.lastIndexOf( '@' );
   if ( atPos == -1 )
@@ -830,7 +830,7 @@ QString KPIM::decodeIDN( const QString & addrSpec )
 
 
 //-----------------------------------------------------------------------------
-QString KPIM::encodeIDN( const QString & addrSpec )
+QString EmailAddressTools::toIdn( const QString & addrSpec )
 {
   const int atPos = addrSpec.lastIndexOf( '@' );
   if ( atPos == -1 )
@@ -845,14 +845,14 @@ QString KPIM::encodeIDN( const QString & addrSpec )
 
 
 //-----------------------------------------------------------------------------
-QString KPIM::normalizeAddressesAndDecodeIDNs( const QString & str )
+QString EmailAddressTools::normalizeAddressesAndDecodeIdn( const QString & str )
 {
-//  kDebug() << "KPIM::normalizeAddressesAndDecodeIDNs( \""
+//  kDebug() << "EmailAddressTools::normalizeAddressesAndDecodeIDNs( \""
 //                << str << "\" )" << endl;
   if( str.isEmpty() )
     return str;
 
-  const QStringList addressList = KPIM::splitEmailAddrList( str );
+  const QStringList addressList = EmailAddressTools::splitAddressList( str );
   QStringList normalizedAddressList;
 
   QByteArray displayName, addrSpec, comment;
@@ -861,12 +861,12 @@ QString KPIM::normalizeAddressesAndDecodeIDNs( const QString & str )
        ( it != addressList.end() );
        ++it ) {
     if( !(*it).isEmpty() ) {
-      if ( KPIM::splitAddress( (*it).toUtf8(), displayName, addrSpec, comment )
+      if ( EmailAddressTools::splitAddress( (*it).toUtf8(), displayName, addrSpec, comment )
            == AddressOk ) {
 
         normalizedAddressList <<
           normalizedAddress( QString::fromUtf8( displayName ),
-                             decodeIDN( QString::fromUtf8( addrSpec ) ),
+                             fromIdn( QString::fromUtf8( addrSpec ) ),
                              QString::fromUtf8( comment ) );
       }
       else {
@@ -883,14 +883,14 @@ QString KPIM::normalizeAddressesAndDecodeIDNs( const QString & str )
 }
 
 //-----------------------------------------------------------------------------
-QString KPIM::normalizeAddressesAndEncodeIDNs( const QString & str )
+QString EmailAddressTools::normalizeAddressesAndEncodeIdn( const QString & str )
 {
-  //kDebug() << "KPIM::normalizeAddressesAndEncodeIDNs( \""
+  //kDebug() << "EmailAddressTools::normalizeAddressesAndEncodeIDNs( \""
   //              << str << "\" )" << endl;
   if( str.isEmpty() )
     return str;
 
-  const QStringList addressList = KPIM::splitEmailAddrList( str );
+  const QStringList addressList = EmailAddressTools::splitAddressList( str );
   QStringList normalizedAddressList;
 
   QByteArray displayName, addrSpec, comment;
@@ -899,12 +899,12 @@ QString KPIM::normalizeAddressesAndEncodeIDNs( const QString & str )
        ( it != addressList.end() );
        ++it ) {
     if( !(*it).isEmpty() ) {
-      if ( KPIM::splitAddress( (*it).toUtf8(), displayName, addrSpec, comment )
+      if ( EmailAddressTools::splitAddress( (*it).toUtf8(), displayName, addrSpec, comment )
            == AddressOk ) {
 
         normalizedAddressList <<
           normalizedAddress( QString::fromUtf8( displayName ),
-                             encodeIDN( QString::fromUtf8( addrSpec ) ),
+                             toIdn( QString::fromUtf8( addrSpec ) ),
                              QString::fromUtf8( comment ) );
       }
       else {
@@ -952,7 +952,7 @@ static QString escapeQuotes( const QString & str )
 }
 
 //-----------------------------------------------------------------------------
-QString KPIM::quoteNameIfNecessary( const QString &str )
+QString EmailAddressTools::quoteNameIfNecessary( const QString &str )
 {
   QString quoted = str;
 

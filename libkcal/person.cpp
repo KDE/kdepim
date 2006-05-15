@@ -34,7 +34,7 @@ using namespace KCal;
 Person::Person( const QString &fullName )
 {
   QString name, email;
-  KPIM::getNameAndMail( fullName, name, email );
+  EmailAddressTools::extractEmailAddressAndName( fullName, email, name );
   setName( name );
   setEmail( email );
 }

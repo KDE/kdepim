@@ -594,7 +594,7 @@ void ArticleWidget::displayHeader()
 
     if ( hb->is("From") ) {
       headerHtml += QString( "<a href=\"mailto:%1\">%2</a>")
-          .arg( KPIM::getEmailAddress( hb->asUnicodeString() ) )
+          .arg( EmailAddressTools::extractEmailAddress( hb->asUnicodeString() ) )
           .arg( toHtmlString( hb->asUnicodeString(), None ) );
       KMime::Headers::Base *orgHdr = mArticle->getHeaderByType( "Organization" );
       if ( orgHdr && !orgHdr->isEmpty() ) {
@@ -760,7 +760,7 @@ QString ArticleWidget::displaySigHeader( const Kpgp::Block &block )
 
     // HTMLize the signer's user id and create mailto: link
     signer = toHtmlString( signer, None );
-    signer = "<a href=\"mailto:" + KPIM::getEmailAddress( signer ) + "\">" + signer + "</a>";
+    signer = "<a href=\"mailto:" + EmailAddressTools::extractEmailAddress( signer ) + "\">" + signer + "</a>";
 
     if( !signerKey.isEmpty() )
       message += i18n( "Message was signed by %1 (Key ID: 0x%2)." ,

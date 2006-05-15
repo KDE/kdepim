@@ -110,7 +110,7 @@ bool KNode::Identity::isEmpty()
 
 bool KNode::Identity::emailIsValid()
 {
-  return KPIM::isValidSimpleEmailAddress( e_mail );
+  return EmailAddressTools::isValidSimpleAddress( e_mail );
 }
 
 

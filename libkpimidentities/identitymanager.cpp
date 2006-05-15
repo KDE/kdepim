@@ -308,7 +308,7 @@ const Identity & IdentityManager::identityForUoidOrDefault( uint uoid ) const
 
 const Identity & IdentityManager::identityForAddress( const QString & addresses ) const
 {
-  QStringList addressList = KPIM::splitEmailAddrList( addresses );
+  QStringList addressList = EmailAddressTools::splitAddressList( addresses );
   for ( ConstIterator it = begin() ; it != end() ; ++it ) {
     for( QStringList::ConstIterator addrIt = addressList.begin();
          addrIt != addressList.end(); ++addrIt ) {
@@ -316,7 +316,7 @@ const Identity & IdentityManager::identityForAddress( const QString & addresses 
       // a QCString and not a char*. It doesn't matter because emailAddr()
       // returns a 7-bit string.
       if( (*it).emailAddr().toLower() ==
-          KPIM::getEmailAddress( *addrIt ).toLower() ) {
+          EmailAddressTools::extractEmailAddress( *addrIt ).toLower() ) {
         return (*it);
       }
     }
