@@ -45,7 +45,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/indexlib-config.in ${CMAKE_CURRENT_BI
 ########### install files ###############
 
 install_files( /include/index FILES create.h index.h lockfile.h )
-install_files( /bin FILES indexlib-config )
+install(PROGRAMS indexlib-config DESTINATION bin )
 
 
 
