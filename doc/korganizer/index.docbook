@@ -305,12 +305,14 @@ Settings</guimenu><guimenuitem>Configure Date &amp;
 Time...</guimenuitem></menuchoice>.  &korganizer; has to be restarted
 for changes done in &kcontrol; to take effect.</para>
 
-<sect1>Hidden Options</sect1>
+<sect1 id="hidden-options">
+<title>Hidden Options</title>
 <para>Some settings are meant to be adjusted by a site administrator, or integrator,
 with specialised tools such as Kiosk, and therefor are not accessible from anywhere
 in the user interface.</para>
-<sect2>Limit for the number of events and tasks to load before the Kolab
-resource shows a progress dialog:</sect2>
+<sect2>
+<title>Limit for the number of events and tasks to load before the Kolab
+resource shows a progress dialog:</title>
 <para>You can change this setting by adding the following:</para>
 <programlisting>
 [General]
@@ -325,6 +327,8 @@ to the file:
 <programlisting>
 $KDEHOME/share/config/kresources/kolab/kcalrc
 </programlisting>
+</sect2>
+</sect1>
 
 
 <!-- Filters and Catagories should be mentioned here, refering to detail -->
