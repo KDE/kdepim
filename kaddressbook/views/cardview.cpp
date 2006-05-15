@@ -866,9 +866,6 @@ void CardView::drawContents( QPainter *p, int clipx, int clipy,
   CardViewItem *item;
   CardViewSeparator *sep;
 
-  // make sure the viewport is a pure background
-  viewport()->erase( clipRect );
-
   // Now tell the cards to draw, if they are in the clip region
   Q3PtrListIterator<CardViewItem> iter( d->mItemList );
   for ( iter.toFirst(); iter.current(); ++iter) {
