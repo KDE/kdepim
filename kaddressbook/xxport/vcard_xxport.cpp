@@ -367,6 +367,7 @@ void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Types type )
   QGpgME::QByteArrayDataProvider dataProvider;
   GpgME::Data dataObj( &dataProvider );
   GpgME::Error error = context->exportPublicKeys( fingerprint.toLatin1(), dataObj );
+  delete context;
 
   if ( error ) {
     kError() << error.asString() << endl;
