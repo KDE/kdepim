@@ -1,5 +1,7 @@
 # gpgme configure checks
 
+include (FindGpgme)
+
 set(CMAKE_REQUIRED_INCLUDES ${GPGME_INCLUDES})
 set(CMAKE_REQUIRED_LIBRARIES ${GPGME_LIBRARIES})
 
@@ -15,20 +17,20 @@ check_cxx_source_compiles ("
 # check if gpgme has gpgme_cancel
 check_cxx_source_compiles ("
   #include <gpgme.h>
-  int main() {
-    gpgme_ctx_t ctx = 0;
+  int test(gpgme_ctx_t& ctx) {
     gpgme_error_t e = gpgme_cancel( ctx );
   }
+  int main() { return 0; }
 " HAVE_GPGME_CANCEL 
 )
 
 # check if gpgme has gpgme_key_t->keylist_mode
 check_cxx_source_compiles ("
   #include <gpgme.h>
-  int main() {
-    gpgme_key_t key = 0;
+  int test(gpgme_key_t& key) {
     key->keylist_mode = 0;
   }
+  int main() { return 0; }
 " HAVE_GPGME_KEY_T_KEYLIST_MODE 
 )
 
@@ -36,8 +38,9 @@ check_cxx_source_compiles ("
 check_cxx_source_compiles ("
   #include <gpgme.h>
   int test(gpgme_decrypt_result_t& res) {
-    return res.wrong_key_usage;
+    return res->wrong_key_usage;
   }
+  int main() { return 0; }
 " HAVE_GPGME_WRONG_KEY_USAGE
 )
 
@@ -53,22 +56,22 @@ check_cxx_source_compiles ("
 # check if gpgme has gpgme_key_t->is_qualified
 check_cxx_source_compiles ("
   #include <gpgme.h>
-  int main() {
-    gpgme_key_t key;
+  int test(gpgme_key_t& key) {
     unsigned int iq;
     iq = key->is_qualified;
   }
+  int main() { return 0; }
 " HAVE_GPGME_KEY_T_IS_QUALIFIED 
 )
 
 # check if gpgme has gpgme_subkey_t->is_qualified
 check_cxx_source_compiles ("
   #include <gpgme.h>
-  int main() {
-    gpgme_subkey_t subkey;
+  int test(gpgme_subkey_t& subkey) {
     unsigned int iq;
     iq = subkey->is_qualified;
   }
+  int main() { return 0; }
 " HAVE_GPGME_SUBKEY_T_IS_QUALIFIED 
 )
 
