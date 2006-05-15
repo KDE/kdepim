@@ -708,9 +708,9 @@ bool IMAP4Protocol::parseRead(QByteArray & buffer, long len, long relay)
       QByteArray relayData;
       ssize_t relbuf = relay - buffer.size();
       int currentRelay = qMin(relbuf, readLen);
-      relayData.setRawData(buf, currentRelay);
+      relayData = QByteArray::fromRawData(buf, currentRelay);
       parseRelay(relayData);
-      relayData.resetRawData(buf, currentRelay);
+      relayData.clear();
     }
     {
       QBuffer stream( &buffer );
@@ -740,9 +740,9 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
 
         if (copyLen < (ssize_t) relay)
           relay = copyLen;
-        relayData.setRawData (readBuffer, relay);
+        relayData = QByteArray::fromRawData (readBuffer, relay);
         parseRelay (relayData);
-        relayData.resetRawData (readBuffer, relay);
+        relayData.clear();
 //        kDebug(7116) << "relayed : " << relay << "d" << endl;
       }
       // append to buffer
@@ -2361,9 +2361,9 @@ IMAP4Protocol::outputLine (const QByteArray & _str, int len)
   bool relay = relayEnabled;
 
   relayEnabled = true;
-  temp.setRawData (_str.data (), len);
+  temp = QByteArray::fromRawData (_str.data (), len);
   parseRelay (temp);
-  temp.resetRawData (_str.data (), len);
+  temp.clear();
 
   relayEnabled = relay;
   return 0;

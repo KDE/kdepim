@@ -103,7 +103,7 @@ hasNoChildren_ (false)
   s.pos++;  // tie off )
   parser_->skipWS (s);
 
-  hierarchyDelimiter_ = parser_->parseOneWordC(s);
+  hierarchyDelimiter_ = parser_->parseOneWord(s);
   if (hierarchyDelimiter_ == "NIL")
     hierarchyDelimiter_.clear();
   name_ = rfcDecoder::fromIMAP (parser_->parseLiteral (s));  // decode modified UTF7
@@ -115,7 +115,7 @@ void imapList::parseAttributes( parseString & str )
 
   while ( !str.isEmpty () && str[0] != ')' )
   {
-    orig = parser_->parseOneWordC(str);
+    orig = parser_->parseOneWord(str);
     attributes_ << orig;
     attribute = orig.toLower();
     if ( attribute.contains ("\\noinferiors"))

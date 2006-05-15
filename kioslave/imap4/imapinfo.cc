@@ -204,7 +204,7 @@ ulong imapInfo::_flags (const QByteArray & inFlags)
 
   while (!flagsString.isEmpty () && flagsString[0] != ')')
   {
-    Q3CString entry = imapParser::parseOneWordC(flagsString).toUpper();
+    QByteArray entry = imapParser::parseOneWord(flagsString).toUpper();
 
     if (entry.isEmpty ())
       flagsString.clear();

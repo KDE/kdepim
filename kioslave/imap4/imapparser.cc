@@ -104,7 +104,7 @@ imapParser::sendCommand (imapCommand * aCmd)
      // we need to know which box we are selecting
     parseString p;
     p.fromString(aCmd->parameter());
-    currentBox = parseOneWordC(p);
+    currentBox = parseOneWord(p);
     kDebug(7116) << "imapParser::sendCommand - setting current box to " << currentBox << endl;
   }
   else if (command == "CLOSE")
@@ -327,7 +327,7 @@ imapParser::parseUntagged (parseString & result)
 {
   //kDebug(7116) << "imapParser::parseUntagged - '" << result.cstr() << "'" << endl;
 
-  parseOneWordC(result);        // *
+  parseOneWord(result);        // *
   QByteArray what = parseLiteral (result); // see whats coming next
 
   switch (what[0])
@@ -498,7 +498,7 @@ imapParser::parseResult (QByteArray & result, parseString & rest,
   if (rest[0] == '[')
   {
     rest.pos++;
-    Q3CString option = parseOneWordC(rest, true);
+    Q3CString option = parseOneWord(rest, true);
 
     switch (option[0])
     {
@@ -673,18 +673,18 @@ void imapParser::parseLsub (parseString & result)
 
 void imapParser::parseListRights (parseString & result)
 {
-  parseOneWordC (result); // skip mailbox name
-  parseOneWordC (result); // skip user id
+  parseOneWord (result); // skip mailbox name
+  parseOneWord (result); // skip user id
   int outlen = 1;
   while ( outlen ) {
-    Q3CString word = parseOneWordC (result, false, &outlen);
+    Q3CString word = parseOneWord (result, false, &outlen);
     lastResults.append (word);
   }
 }
 
 void imapParser::parseAcl (parseString & result)
 {
-  parseOneWordC (result); // skip mailbox name
+  parseOneWord (result); // skip mailbox name
   int outlen = 1;
   // The result is user1 perm1 user2 perm2 etc. The caller will sort it out.
   while ( outlen && !result.isEmpty() ) {
@@ -695,9 +695,9 @@ void imapParser::parseAcl (parseString & result)
 
 void imapParser::parseAnnotation (parseString & result)
 {
-  parseOneWordC (result); // skip mailbox name
+  parseOneWord (result); // skip mailbox name
   skipWS (result);
-  parseOneWordC (result); // skip entry name (we know it since we don't allow wildcards in it)
+  parseOneWord (result); // skip entry name (we know it since we don't allow wildcards in it)
   skipWS (result);
   if (result.isEmpty() || result[0] != '(')
     return;
@@ -713,9 +713,9 @@ void imapParser::parseAnnotation (parseString & result)
 
 void imapParser::parseMyRights (parseString & result)
 {
-  parseOneWordC (result); // skip mailbox name
+  parseOneWord (result); // skip mailbox name
   Q_ASSERT( lastResults.isEmpty() ); // we can only be called once
-  lastResults.append (parseOneWordC (result) );
+  lastResults.append (parseOneWord (result) );
 }
 
 void imapParser::parseSearch (parseString & result)
@@ -743,7 +743,7 @@ void imapParser::parseStatus (parseString & inWords)
   {
     ulong value;
 
-    Q3CString label = parseOneWordC(inWords);
+    Q3CString label = parseOneWord(inWords);
     if (parseOneNumber (inWords, value))
     {
       if (label == "MESSAGES")
@@ -1426,7 +1426,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
       case 'U':
         if (word == "UID")
         {
-          seenUid = parseOneWordC(inWords);
+          seenUid = parseOneWord(inWords);
           mailHeader *envelope = 0;
           if (lastHandled)
             envelope = lastHandled->getHeader ();
@@ -1466,7 +1466,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
       case 'I':
         if (word == "INTERNALDATE")
         {
-          Q3CString date = parseOneWordC(inWords);
+          Q3CString date = parseOneWord(inWords);
           if (!lastHandled) lastHandled = new imapCache();
           lastHandled->setDate(date);
         }
@@ -1579,9 +1579,9 @@ void imapParser::parseNamespace (parseString & result)
         ++ns;
       }
       // namespace prefix
-      Q3CString prefix = parseOneWordC( result );
+      Q3CString prefix = parseOneWord( result );
       // delimiter
-      Q3CString delim = parseOneWordC( result );
+      Q3CString delim = parseOneWord( result );
       kDebug(7116) << "imapParser::parseNamespace ns='" << prefix <<
        "',delim='" << delim << "'" << endl;
       if ( ns == 0 )
@@ -1830,11 +1830,11 @@ Q3CString imapParser::parseLiteralC(parseString & inWords, bool relay, bool stop
     return retVal;
   }
 
-  return parseOneWordC(inWords, stopAtBracket, outlen);
+  return parseOneWord(inWords, stopAtBracket, outlen);
 }
 
 // does not know about literals ( {7} literal )
-Q3CString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, int *outLen)
+QByteArray imapParser::parseOneWord (parseString & inWords, bool stopAtBracket, int *outLen)
 {
   uint retValSize = 0;
   uint len = inWords.length();
@@ -1919,7 +1919,7 @@ Q3CString imapParser::parseOneWordC (parseString & inWords, bool stopAtBracket, 
 bool imapParser::parseOneNumber (parseString & inWords, ulong & num)
 {
   bool valid;
-  num = parseOneWordC(inWords, true).toULong(&valid);
+  num = parseOneWord(inWords, true).toULong(&valid);
   return valid;
 }
 

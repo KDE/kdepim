@@ -71,23 +71,23 @@ public:
   void takeLeft(Q3CString& dest, uint len) const
   {
     dest.resize(len + 1);
-    qmemmove(dest.data(), data.data() + pos, len);
+    memmove(dest.data(), data.data() + pos, len);
   }
   // Warning: does not check for going past end of "data"
   void takeLeftNoResize(Q3CString& dest, uint len) const
   {
-    qmemmove(dest.data(), data.data() + pos, len);
+    memmove(dest.data(), data.data() + pos, len);
   }
   // Warning: does not check for going past end of "data"
   void takeMid(Q3CString& dest, uint start, uint len) const
   {
     dest.resize(len + 1);
-    qmemmove(dest.data(), data.data() + pos + start, len);
+    memmove(dest.data(), data.data() + pos + start, len);
   }
   // Warning: does not check for going past end of "data"
   void takeMidNoResize(Q3CString& dest, uint start, uint len) const
   {
-    qmemmove(dest.data(), data.data() + pos + start, len);
+    memmove(dest.data(), data.data() + pos + start, len);
   }
   void clear()
   {
@@ -367,17 +367,8 @@ public:
   { return Q3CString(ba.data(), ba.size() + 1); }
 
   /** parse one word (maybe quoted) upto next space " ) ] } */
-  static Q3CString parseOneWordC (parseString & inWords,
+  static QByteArray parseOneWord (parseString & inWords,
     bool stopAtBracket = false, int *len = 0);
-  static inline QByteArray parseOneWord (parseString & inWords,
-    bool stopAtBracket = false) {
-    int len = 0; // string size
-    // Choice: we can create an extra QCString, or we can get the buffer in
-    // the wrong size to start.  Let's try option b.
-    Q3CString tmp = parseOneWordC(inWords, stopAtBracket, &len);
-    return tmp;
-  }
-
 
   /** parse one number using parseOneWord */
   static bool parseOneNumber (parseString & inWords, ulong & num);
