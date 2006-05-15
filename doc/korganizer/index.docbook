@@ -312,19 +312,19 @@ in the user interface.</para>
 <sect2>Limit for the number of events and tasks to load before the Kolab
 resource shows a progress dialog:</sect2>
 <para>You can change this setting by adding the following:</para>
-<code>
+<programlisting>
 [General]
 ProgressDialogIncidenceLimit=n
-</code>
+</programlisting>
 <para>
 where n is the number of incidences for which the progress dialog starts to be 
 shown.
 
 to the file:
 </para>
-<code>
+<programlisting>
 $KDEHOME/share/config/kresources/kolab/kcalrc
-</code>
+</programlisting>
 
 
 <!-- Filters and Catagories should be mentioned here, refering to detail -->
