@@ -1,0 +1,48 @@
+This is s.carstens@gmx.de release of KDE 2.0 kioslave
+for the IMAP protocol.
+
+It supports LOGIN, AUTHENTICATE LOGIN, AUTHENTICATE ANONYMOUS and
+AUTHENTICATE CRAM-MD5.
+It supports the rfc2192 URL naming convention.
+
+- UIDVALIDITY check is conditional
+- put will check if the mailbox exists and create it
+  or will append the data to that mailbox
+  (no append after create)
+  use edit->new->textfile from konqueror
+- move will try to guess the correct destination
+  as konqueror appends the source mailbox name to
+  the destination
+- del will currently delete empty directories,
+  mark messages for deletion.
+  If deleting a directory konqueror does the following:
+  - list the box
+  - take the box url + file name and try to delete it
+  - delete the box
+  As the konqueror created urls are invalid we ignore them
+  at the moment.
+- relative URL's are not supported because
+  konqueror will not handle them
+- there are 2 additional section keywords
+  ENVELOPE will do a FETCH ENVELOPE
+  STRUCTURE will do a FETCH BODYSTRUCTURE
+  normal behaviour is FETCH BODY.PEEK[section]
+  
+- the mime types delivered are not really consistent
+  with the returned data
+  - it will return inode/directory on list entries
+    which contain inferiors
+  - it will return message/digest on selectable mailboxes
+    with file type S_IFDIR
+  - type message/rfc822-imap on selected messages
+	and type S_IFREG
+	
+In Konqueror set the mimetype message/rfc822 to use
+the inline viewer.
+
+Try it:  imap://user@host/
+         imap://user;AUTH=*@host/
+		 imap://user;AUTH=LOGIN@host/
+		 imap://user;AUTH=CRAM-MD5@host/
+		
+comments to s.carstens@gmx.de

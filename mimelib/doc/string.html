@@ -1,0 +1,717 @@
+<HTML>
+<HEAD>
+  <TITLE> DwString Man Page </TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H2>
+  <FONT COLOR="navy"> NAME </FONT>
+</H2>
+<P>
+DwString -- String class
+<H2>
+  <FONT COLOR="navy"> SYNOPSIS </FONT>
+</H2>
+<PRE>class DW_EXPORT DwString {
+
+public:
+
+    static const size_t <A HREF="string.html#npos">npos</A>;
+    <A HREF="string.html#DwString">DwString</A>();
+    <A HREF="string.html#DwString">DwString</A>(const DwString&amp; aStr, size_t aPos=0, size_t aLen=npos);
+    <A HREF="string.html#DwString">DwString</A>(const char* aBuf, size_t aLen);
+    <A HREF="string.html#DwString">DwString</A>(const char* aCstr);
+    <A HREF="string.html#DwString">DwString</A>(size_t aLen, char aChar);
+    <A HREF="string.html#DwString">DwString</A>(char* aBuf, size_t aSize, size_t aStart, size_t aLen);
+    virtual ~DwString();
+    DwString&amp; <A HREF="string.html#op_eq">operator =</A> (const DwString&amp; aStr);
+    DwString&amp; <A HREF="string.html#op_eq">operator =</A> (const char* aCstr);
+    DwString&amp; <A HREF="string.html#op_eq">operator =</A> (char aChar);
+    size_t <A HREF="string.html#size">size</A>() const;
+    size_t <A HREF="string.html#length">length</A>() const;
+    size_t <A HREF="string.html#max_size">max_size</A>() const;
+    void <A HREF="string.html#resize">resize</A>(size_t aLen, char aChar);
+    void <A HREF="string.html#resize">resize</A>(size_t aLen);
+    size_t <A HREF="string.html#capacity">capacity</A>() const;
+    void <A HREF="string.html#reserve">reserve</A>(size_t aSize);
+    void <A HREF="string.html#clear">clear</A>();
+    DwBool <A HREF="string.html#empty">empty</A>() const;
+    const char&amp; <A HREF="string.html#op_brackets">operator []</A> (size_t aPos) const;
+    char&amp; <A HREF="string.html#op_brackets">operator []</A> (size_t aPos);
+    const char&amp; <A HREF="string.html#at">at</A>(size_t aPos) const;
+    char&amp; <A HREF="string.html#at">at</A>(size_t aPos);
+    DwString&amp; <A HREF="string.html#op_plus_eq">operator +=</A> (const DwString&amp; aStr);
+    DwString&amp; <A HREF="string.html#op_plus_eq">operator +=</A> (const char* aCstr);
+    DwString&amp; <A HREF="string.html#op_plus_eq">operator +=</A> (char aChar);
+    DwString&amp; <A HREF="string.html#append">append</A>(const DwString&amp; aStr);
+    DwString&amp; <A HREF="string.html#append">append</A>(const DwString&amp; aStr, size_t aPos, size_t aLen);
+    DwString&amp; <A HREF="string.html#append">append</A>(const char* aBuf, size_t aLen);
+    DwString&amp; <A HREF="string.html#append">append</A>(const char* aCstr);
+    DwString&amp; <A HREF="string.html#append">append</A>(size_t aLen, char aChar);
+    DwString&amp; <A HREF="string.html#assign">assign</A>(const DwString&amp; aStr);
+    DwString&amp; <A HREF="string.html#assign">assign</A>(const DwString&amp; aStr, size_t aPos, size_t aLen);
+    DwString&amp; <A HREF="string.html#assign">assign</A>(const char* aBuf, size_t aLen);
+    DwString&amp; <A HREF="string.html#assign">assign</A>(const char* aCstr);
+    DwString&amp; <A HREF="string.html#assign">assign</A>(size_t aLen, char aChar);
+    DwString&amp; <A HREF="string.html#insert">insert</A>(size_t aPos1, const DwString&amp; aStr);
+    DwString&amp; <A HREF="string.html#insert">insert</A>(size_t aPos1, const DwString&amp; aStr, size_t aPos2,
+        size_t aLen2);
+    DwString&amp; <A HREF="string.html#insert">insert</A>(size_t aPos1, const char* aBuf, size_t aLen2);
+    DwString&amp; <A HREF="string.html#insert">insert</A>(size_t aPos1, const char* aCstr);
+    DwString&amp; <A HREF="string.html#insert">insert</A>(size_t aPos1, size_t aLen2, char aChar);
+    DwString&amp; <A HREF="string.html#erase">erase</A>(size_t aPos=0, size_t aLen=npos);
+    DwString&amp; <A HREF="string.html#replace">replace</A>(size_t aPos1, size_t aLen1, const DwString&amp; aStr);
+    DwString&amp; <A HREF="string.html#replace">replace</A>(size_t aPos1, size_t aLen1, const DwString&amp; aStr,
+        size_t aPos2, size_t aLen2);
+    DwString&amp; <A HREF="string.html#replace">replace</A>(size_t aPos1, size_t aLen1, const char* aBuf,
+        size_t aLen2);
+    DwString&amp; <A HREF="string.html#replace">replace</A>(size_t aPos1, size_t aLen1, const char* aCstr);
+    DwString&amp; <A HREF="string.html#replace">replace</A>(size_t aPos1, size_t aLen1, size_t aLen2, char aChar);
+    size_t <A HREF="string.html#copy">copy</A>(char* aBuf, size_t aLen, size_t aPos=0) const;
+    void <A HREF="string.html#swap">swap</A>(DwString&amp; aStr);
+    const char* <A HREF="string.html#c_str">c_str</A>() const;
+    const char* <A HREF="string.html#data">data</A>() const;
+    size_t <A HREF="string.html#find">find</A>(const DwString&amp; aStr, size_t aPos=0) const;
+    size_t <A HREF="string.html#find">find</A>(const char* aBuf, size_t aPos, size_t aLen) const;
+    size_t <A HREF="string.html#find">find</A>(const char* aCstr, size_t aPos=0) const;
+    size_t <A HREF="string.html#find">find</A>(char aChar, size_t aPos=0) const;
+    size_t <A HREF="string.html#rfind">rfind</A>(const DwString&amp; aStr, size_t aPos=npos) const;
+    size_t <A HREF="string.html#rfind">rfind</A>(const char* aBuf, size_t aPos, size_t aLen) const;
+    size_t <A HREF="string.html#rfind">rfind</A>(const char* aCstr, size_t aPos=npos) const;
+    size_t <A HREF="string.html#rfind">rfind</A>(char aChar, size_t aPos=npos) const;
+    size_t <A HREF="string.html#find_first_of">find_first_of</A>(const DwString&amp; aStr, size_t aPos=0) const;
+    size_t <A HREF="string.html#find_first_of">find_first_of</A>(const char* aBuf, size_t aPos, size_t aLen) const;
+    size_t <A HREF="string.html#find_first_of">find_first_of</A>(const char* aCstr, size_t aPos=0) const;
+    size_t <A HREF="string.html#find_last_of">find_last_of</A>(const DwString&amp; aStr, size_t aPos=npos) const;
+    size_t <A HREF="string.html#find_last_of">find_last_of</A>(const char* aBuf, size_t aPos, size_t aLen) const;
+    size_t <A HREF="string.html#find_last_of">find_last_of</A>(const char* aCstr, size_t aPos=npos) const;
+    size_t <A HREF="string.html#find_first_not_of">find_first_not_of</A>(const DwString&amp; aStr, size_t aPos=0) const;
+    size_t <A HREF="string.html#find_first_not_of">find_first_not_of</A>(const char* aBuf, size_t aPos, size_t aLen) const;
+    size_t <A HREF="string.html#find_first_not_of">find_first_not_of</A>(const char* aCstr, size_t aPos=0) const;
+    size_t <A HREF="string.html#find_last_not_of">find_last_not_of</A>(const DwString&amp; aStr, size_t aPos=npos) const;
+    size_t <A HREF="string.html#find_last_not_of">find_last_not_of</A>(const char* aBuf, size_t aPos, size_t aLen) const;
+    size_t <A HREF="string.html#find_last_not_of">find_last_not_of</A>(const char* aCstr, size_t aPos=npos) const;
+    DwString <A HREF="string.html#substr">substr</A>(size_t aPos=0, size_t aLen=npos) const;
+    int <A HREF="string.html#compare">compare</A>(const DwString&amp; aStr) const;
+    int <A HREF="string.html#compare">compare</A>(size_t aPos1, size_t aLen1, const DwString&amp; aStr) const;
+    int <A HREF="string.html#compare">compare</A>(size_t aPos1, size_t aLen1, const DwString&amp; aStr,
+        size_t aPos2, size_t aLen2) const;
+    int <A HREF="string.html#compare">compare</A>(const char* aCstr) const;
+    int <A HREF="string.html#compare">compare</A>(size_t aPos1, size_t aLen1, const char* aBuf,
+        size_t aLen2=npos) const;
+    virtual const char* <A HREF="string.html#ClassName">ClassName</A>() const;
+    int <A HREF="string.html#ObjectId">ObjectId</A>() const;
+    void <A HREF="string.html#ConvertToLowerCase">ConvertToLowerCase</A>();
+    void <A HREF="string.html#ConvertToUpperCase">ConvertToUpperCase</A>();
+    void <A HREF="string.html#Trim">Trim</A>();
+    void <A HREF="string.html#WriteTo">WriteTo</A>(ostream&amp; aStrm) const;
+    int <A HREF="string.html#RefCount">RefCount</A>() const;
+    void <A HREF="string.html#TakeBuffer">TakeBuffer</A>(char* aBuf, size_t aSize, size_t aStart, size_t aLen);
+    void <A HREF="string.html#ReleaseBuffer">ReleaseBuffer</A>(char** aBuf, size_t* aSize, size_t* aStart, size_t* aLen);
+    void <A HREF="string.html#CopyTo">CopyTo</A>(DwString* aStr) const;
+
+protected:
+
+    DwStringRep* mRep;
+    size_t  mStart;
+    size_t  mLength;
+    void _copy();
+    void _replace(size_t aPos1, size_t aLen1, const char* aBuf, size_t aLen2);
+    void _replace(size_t aPos1, size_t aLen1, size_t aLen2, char aChar);
+    friend void mem_free(char*);
+
+public:
+
+    virtual void <A HREF="string.html#PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm) const;
+    virtual void <A HREF="string.html#CheckInvariants">CheckInvariants</A>() const;
+};
+</PRE>
+<H2>
+  <FONT COLOR="navy"> DESCRIPTION </FONT>
+</H2>
+<P>
+<B><TT>DwString</TT></B> is the workhorse of the MIME++ library. Creating,
+parsing, or otherwise manipulating MIME messages is basically a matter of
+manipulating strings. <B><TT>DwString</TT></B> provides all the basic
+functionality required of a string object, including copying, comparing,
+concatenating, and so on.
+<P>
+<B><TT>DwString</TT></B> is similar to the <B><TT>string</TT></B> class that
+is part of the proposed ANSI standard C++ library. Some of the member functions
+present in the ANSI <B><TT>string</TT></B> are not present in
+<B><TT>DwString</TT></B>: mostly these are the functions that deal with
+iterators. <B><TT>DwString</TT></B> also includes some member functions and
+class utility functions that are not a part of the ANSI
+<B><TT>string</TT></B> class. These non-ANSI functions are easy to distinguish:
+they all begin with upper-case letters, and all ANSI functions begin with
+lower-case letters. The library classes themselves use only the ANSI
+<B><TT>string</TT></B> functions. At some point in the future, MIME++ will
+probably allow the option to substitute the ANSI <B><TT>string</TT></B> class
+for <B><TT>DwString</TT></B>.
+<P>
+<B><TT>DwString</TT></B> makes extensive use of copy-on-write, even when
+extracting substrings. It is this feature that distiguishes
+<B><TT>DwString</TT></B> from most other string classes.
+<B><TT>DwString</TT></B> also handles binary data, which can contain embedded
+NUL characters.
+<H2>
+  <FONT COLOR="navy"> Public Member Functions </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> <A NAME="DwString">DwString</A>() <BR>
+DwString(const DwString&amp; aStr, size_t aPos=0, size_t aLen=npos) <BR>
+DwString(const char* aBuf, size_t aLen) <BR>
+DwString(const char* aCstr) <BR>
+DwString(size_t aLen, char aChar) <BR>
+DwString(char* aBuf, size_t aSize, size_t aStart, size_t aLen) </B></FONT>
+<P>
+The first constructor is the default constructor, which sets the
+<B><TT>DwString</TT></B> object's contents to be empty.
+<P>
+The second constructor is the copy constructor, which copies at most
+<B><TT>aLen</TT></B> characters beginning at position
+<B><TT>aPos</TT></B> from <B><TT>aStr</TT></B> to the new
+<B><TT>DwString</TT></B> object. It will not copy more characters than what
+are available in <B><TT>aStr</TT></B>. <B><TT>aPos</TT></B> must be less
+than or equal to <B><TT>aStr.size()</TT></B>.
+<P>
+The third constructor copies <B><TT>aLen</TT></B> characters from the buffer
+<B><TT>aBuf</TT></B> into the new <B><TT>DwString</TT></B> object.
+<B><TT>aBuf</TT></B> need not be NUL-terminated and may contain NUL characters.
+<P>
+The fourth constructor copies the contents of the NUL-terminated string
+<B><TT>aCstr</TT></B> into the new <B><TT>DwString</TT></B> object.
+<P>
+The fifth constructor sets the contents of the new
+<B><TT>DwString</TT></B> object to be the character <B><TT>aChar</TT></B>
+repeated <B><TT>aLen</TT></B> times.
+<P>
+The sixth constructor is an <I>advanced</I> constructor that sets the contents
+of the new <B><TT>DwString</TT></B> object to the <B><TT>aLen</TT></B> characters
+starting at offset <B><TT>aStart</TT></B> in the buffer
+<B><TT>aBuf</TT></B>. <B><TT>aSize</TT></B> is the allocated size of
+<B><TT>aBuf</TT></B>. This constructor is provided for efficiency in setting
+a new <B><TT>DwString</TT></B>'s contents from a large buffer. It is efficient
+because no copying takes place. Instead, <B><TT>aBuf</TT></B> becomes the
+buffer used internally by the <B><TT>DwString</TT></B> object, which takes
+responsibility for deleting the buffer. Because <B><TT>DwString</TT></B>
+will free the buffer using <B><TT>delete []</TT></B>, the buffer should have
+been allocated using <B><TT>new</TT></B>. See also: TakeBuffer(), and
+ReleaseBuffer().
+<P>
+<FONT COLOR="teal"><B> DwString&amp; <A NAME="op_eq">operator =</A> (const
+DwString&amp; aStr) <BR>
+DwString&amp; operator = (const char* aCstr) <BR>
+DwString&amp; operator = (char aChar) </B></FONT>
+<P>
+Assigns the contents of the operand to this string. <B><TT>aCstr</TT></B>
+must point to a NUL-terminated array of characters (a C string). Returns
+<B><TT>*this</TT></B>.
+<P>
+<FONT COLOR="teal"><B> <A NAME="size">size</A>_t size() const </B></FONT>
+<P>
+Returns the number of characters in this string's contents. This member function
+is identical to <B><TT>length()</TT></B>
+<P>
+<FONT COLOR="teal"><B> size_t <A NAME="length">length</A>() const </B></FONT>
+<P>
+Returns the number of characters in this string's contents. This member function
+is identical to <B><TT>size()</TT></B>
+<P>
+<FONT COLOR="teal"><B> size_t <A NAME="max_size">max_size</A>() const
+</B></FONT>
+<P>
+Returns the maximum length that this string can ever attain.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="resize">resize</A>(size_t aLen, char
+aChar) <BR>
+void resize(size_t aLen) </B></FONT>
+<P>
+Changes the length of this string. If the string shortened, the final characters
+are truncated. If the string is expanded, the added characters will be NULs
+or the character specified by <B><TT>aChar</TT></B>.
+<P>
+<FONT COLOR="teal"><B> size_t <A NAME="capacity">capacity</A>() const
+</B></FONT>
+<P>
+Returns the size of the internal buffer used for this string, which will
+always be greater than or equal to the length of the string.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="reserve">reserve</A>(size_t aSize)
+</B></FONT>
+<P>
+If <B><TT>aSize</TT></B> is greater than the current capacity of this string,
+this member function will increase the capacity to be at least
+<B><TT>aSize</TT></B>.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="clear">clear</A>() </B></FONT>
+<P>
+Sets this string's contents to be empty.
+<P>
+<FONT COLOR="teal"><B> DwBool <A NAME="empty">empty</A>() const </B></FONT>
+<P>
+Returns a true value if and only if the contents of this string are empty.
+<P>
+<FONT COLOR="teal"><B> const char&amp; <A NAME="op_brackets">operator []</A>
+(size_t aPos) const <BR>
+char&amp; operator [] (size_t aPos) </B></FONT>
+<P>
+Returns <B><TT>DwString::at(aPos) const</TT></B> or
+<B><TT>DwString::at(aPos)</TT></B>. Note that the non-const version always
+assumes that the contents will be modified and therefore always copies a
+shared internal buffer before it returns.
+<P>
+<FONT COLOR="teal"><B> const char&amp; <A NAME="at">at</A>(size_t aPos) const
+<BR>
+char&amp; at(size_t aPos) </B></FONT>
+<P>
+Returns the character at position <B><TT>aPos</TT></B> in the string's contents.
+The non-const version returns an lvalue that may be assigned to. Note that
+the non-const version always assumes that the contents will be modified and
+therefore always copies a shared internal buffer before it returns.
+<P>
+<FONT COLOR="teal"><B> DwString&amp; <A NAME="op_plus_eq">operator +=</A>
+(const DwString&amp; aStr) <BR>
+DwString&amp; operator += (const char* aCstr) <BR>
+DwString&amp; operator += (char aChar) </B></FONT>
+<P>
+Appends the contents of the operand to this string. <B><TT>aCstr</TT></B>
+must point to a NUL-terminated array of characters (a C string). Returns
+<B><TT>*this</TT></B>.
+<P>
+<FONT COLOR="teal"><B> DwString&amp; <A NAME="append">append</A>(const
+DwString&amp; aStr) <BR>
+DwString&amp; append(const DwString&amp; aStr, size_t aPos, size_t aLen)
+<BR>
+DwString&amp; append(const char* aBuf, size_t aLen) <BR>
+DwString&amp; append(const char* aCstr) <BR>
+DwString&amp; append(size_t aLen, char aChar) </B></FONT>
+<P>
+Appends characters to (the end of) this string. Returns
+<B><TT>*this</TT></B>.
+<P>
+The first version appends all of the characters from
+<B><TT>aStr</TT></B>.
+<P>
+The second version appends at most <B><TT>aLen</TT></B> characters from
+<B><TT>aStr</TT></B> beginning at position <B><TT>aPos</TT></B>.
+<B><TT>aPos</TT></B> must be less than or equal to
+<B><TT>aStr.size()</TT></B>. The function will not append more characters
+than what are available in <B><TT>aStr</TT></B>.
+<P>
+The third version appends <B><TT>aLen</TT></B> characters from
+<B><TT>aBuf</TT></B>, which is not assumed to be NUL-terminated and can contain
+embedded NULs.
+<P>
+The fourth version appends characters from the NUL-terminated string
+<B><TT>aCstr</TT></B>.
+<P>
+The fifth version appends <B><TT>aChar</TT></B> repeated
+<B><TT>aLen</TT></B> times.
+<P>
+<FONT COLOR="teal"><B> DwString&amp; <A NAME="assign">assign</A>(const
+DwString&amp; aStr) <BR>
+DwString&amp; assign(const DwString&amp; aStr, size_t aPos, size_t aLen)
+<BR>
+DwString&amp; assign(const char* aBuf, size_t aLen) <BR>
+DwString&amp; assign(const char* aCstr) <BR>
+DwString&amp; assign(size_t aLen, char aChar) </B></FONT>
+<P>
+Assigns characters to this string. Returns <B><TT>*this</TT></B>.
+<P>
+The first version assigns all of the characters from
+<B><TT>aStr</TT></B>.
+<P>
+The second version assigns at most <B><TT>aLen</TT></B> characters from
+<B><TT>aStr</TT></B> beginning at position <B><TT>aPos</TT></B>.
+<B><TT>aPos</TT></B> must be less than or equal to
+<B><TT>aStr.size()</TT></B>. The function will not assign more characters
+than what are available in <B><TT>aStr</TT></B>.
+<P>
+The third version assigns <B><TT>aLen</TT></B> characters from
+<B><TT>aBuf</TT></B>, which is not assumed to be NUL-terminated and can contain
+embedded NULs.
+<P>
+The fourth version assigns characters from the NUL-terminated string
+<B><TT>aCstr</TT></B>.
+<P>
+The fifth version assigns <B><TT>aChar</TT></B> repeated
+<B><TT>aLen</TT></B> times.
+<P>
+<FONT COLOR="teal"><B> DwString&amp; <A NAME="insert">insert</A>(size_t aPos1,
+const DwString&amp; aStr) <BR>
+DwString&amp; insert(size_t aPos1, const DwString&amp; aStr, size_t aPos2,
+size_t aLen2) <BR>
+DwString&amp; insert(size_t aPos1, const char* aBuf, size_t aLen2) <BR>
+DwString&amp; insert(size_t aPos1, const char* aCstr) <BR>
+DwString&amp; insert(size_t aPos1, size_t aLen2, char aChar) </B></FONT>
+<P>
+Inserts characters into this string beginning at position
+<B><TT>aPos1</TT></B>. Returns <B><TT>*this</TT></B>.
+<P>
+The first version inserts all of the characters from
+<B><TT>aStr</TT></B>.
+<P>
+The second version inserts at most <B><TT>aLen2</TT></B> characters from
+<B><TT>aStr</TT></B> beginning at position <B><TT>aPos2</TT></B>.
+<B><TT>aPos1</TT></B> must be less than or equal to
+<B><TT>aStr.size()</TT></B>. The function will not assign more characters
+than what are available in <B><TT>aStr</TT></B>.
+<P>
+The third version inserts <B><TT>aLen2</TT></B> characters from
+<B><TT>aBuf</TT></B>, which is not assumed to be NUL-terminated and can contain
+embedded NULs.
+<P>
+The fourth version inserts characters from the NUL-terminated string
+<B><TT>aCstr</TT></B>.
+<P>
+The fifth version inserts <B><TT>aChar</TT></B> repeated
+<B><TT>aLen2</TT></B> times.
+<P>
+<FONT COLOR="teal"><B> DwString&amp; <A NAME="erase">erase</A>(size_t aPos=0,
+size_t aLen=npos) </B></FONT>
+<P>
+Erases (removes) at most <B><TT>aLen</TT></B> characters beginning at position
+<B><TT>aPos</TT></B> from this string. The function will not erase more
+characters than what are available. Returns <B><TT>*this</TT></B>.
+<P>
+<FONT COLOR="teal"><B> DwString&amp; <A NAME="replace">replace</A>(size_t
+aPos1, size_t aLen1, const DwString&amp; aStr) <BR>
+DwString&amp; replace(size_t aPos1, size_t aLen1, const DwString&amp; aStr,
+size_t aPos2, size_t aLen2) <BR>
+DwString&amp; replace(size_t aPos1, size_t aLen1, const char* aBuf, size_t
+aLen2) <BR>
+DwString&amp; replace(size_t aPos1, size_t aLen1, const char* aCstr) <BR>
+DwString&amp; replace(size_t aPos1, size_t aLen1, size_t aLen2, char aChar)
+</B></FONT>
+<P>
+Removes <B><TT>aLen1</TT></B> characters beginning at position
+<B><TT>aPos1</TT></B> and inserts other characters. Returns
+<B><TT>*this</TT></B>.
+<P>
+The first version inserts all of the characters from
+<B><TT>aStr</TT></B>.
+<P>
+The second version inserts at most <B><TT>aLen2</TT></B> characters from
+<B><TT>aStr</TT></B> beginning at position <B><TT>aPos2</TT></B>.
+<B><TT>aPos1</TT></B> must be less than or equal to
+<B><TT>aStr.size()</TT></B>. The function will not assign more characters
+than what are available in <B><TT>aStr</TT></B>.
+<P>
+The third version inserts <B><TT>aLen2</TT></B> characters from
+<B><TT>aBuf</TT></B>, which is not assumed to be NUL-terminated and can contain
+embedded NULs.
+<P>
+The fourth version inserts characters from the NUL-terminated string
+<B><TT>aCstr</TT></B>.
+<P>
+The fifth version inserts <B><TT>aChar</TT></B> repeated
+<B><TT>aLen2</TT></B> times.
+<P>
+<FONT COLOR="teal"><B> size_t <A NAME="copy">copy</A>(char* aBuf, size_t
+aLen, size_t aPos=0) const </B></FONT>
+<P>
+Copies at most <B><TT>aLen</TT></B> characters beginning at position
+<B><TT>aPos</TT></B> from this string to the buffer pointed to by
+<B><TT>aBuf</TT></B>. Returns the number of characters copied.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="swap">swap</A>(DwString&amp; aStr)
+</B></FONT>
+<P>
+Swaps the contents of this string and <B><TT>aStr</TT></B>.
+<P>
+<FONT COLOR="teal"><B> const char* <A NAME="c_str">c_str</A>() const
+</B></FONT>
+<P>
+<P>
+<FONT COLOR="teal"><B> const char* <A NAME="data">data</A>() const
+</B></FONT>
+<P>
+These member functions permit access to the internal buffer used by the
+<B><TT>DwString</TT></B> object. <B><TT>c_str()</TT></B> returns a NUL-terminated
+string suitable for use in C library functions. <B><TT>data()</TT></B> returns
+a pointer to the internal buffer, which may not be NUL-terminated.
+<P>
+<B><TT>c_str()</TT></B> may copy the internal buffer in order to place the
+terminating NUL. This is not a violation of the const declaration: it is
+a logical const, not a bit-representation const. It could have the side effect
+of invalidating a pointer previously returned by <B><TT>c_str()</TT></B>
+or <B><TT>data()</TT></B>.
+<P>
+The characters in the returned string should not be modified, and should
+be considered invalid after any call to a non-const member function or another
+call to <B><TT>c_str()</TT></B>.
+<P>
+<FONT COLOR="teal"><B> size_t <A NAME="find">find</A>(const DwString&amp;
+aStr, size_t aPos=0) const <BR>
+size_t find(const char* aBuf, size_t aPos, size_t aLen) const <BR>
+size_t find(const char* aCstr, size_t aPos=0) const <BR>
+size_t find(char aChar, size_t aPos=0) const </B></FONT>
+<P>
+Performs a forward search for a sequence of characters in the
+<B><TT>DwString</TT></B> object. The return value is the position of the
+sequence in the string if found, or <B><TT>DwString::npos</TT></B> if not
+found.
+<P>
+The first version searches beginning at position <B><TT>aPos</TT></B> for
+the sequence of characters in <B><TT>aStr</TT></B>.
+<P>
+The second version searches beginning at position <B><TT>aPos</TT></B> for
+the sequence of <B><TT>aLen</TT></B> characters in <B><TT>aBuf</TT></B>,
+which need not be NUL-terminated and can contain embedded NULs.
+<P>
+The third version searches beginning at position <B><TT>aPos</TT></B> for
+the sequence of characters in the NUL-terminated string
+<B><TT>aCstr</TT></B>.
+<P>
+The fourth version searches beginning at position <B><TT>aPos</TT></B> for
+the character <B><TT>aChar</TT></B>.
+<P>
+<FONT COLOR="teal"><B> size_t <A NAME="rfind">rfind</A>(const DwString&amp;
+aStr, size_t aPos=npos) const <BR>
+size_t rfind(const char* aBuf, size_t aPos, size_t aLen) const <BR>
+size_t rfind(const char* aCstr, size_t aPos=npos) const <BR>
+size_t rfind(char aChar, size_t aPos=npos) const </B></FONT>
+<P>
+Performs a reverse search for a sequence of characters in the
+<B><TT>DwString</TT></B> object. The return value is the position of the
+sequence in the string if found, or <B><TT>DwString::npos</TT></B> if not
+found.
+<P>
+The first version searches beginning at position <B><TT>aPos</TT></B> for
+the sequence of characters in <B><TT>aStr</TT></B>.
+<P>
+The second version searches beginning at position <B><TT>aPos</TT></B> for
+the sequence of <B><TT>aLen</TT></B> characters in <B><TT>aBuf</TT></B>,
+which need not be NUL-terminated and can contain embedded NULs.
+<P>
+The third version searches beginning at position <B><TT>aPos</TT></B> for
+the sequence of characters in the NUL-terminated string
+<B><TT>aCstr</TT></B>.
+<P>
+The fourth version searches beginning at position <B><TT>aPos</TT></B> for
+the character <B><TT>aChar</TT></B>.
+<P>
+<FONT COLOR="teal"><B> size_t <A NAME="find_first_of">find_first_of</A>(const
+DwString&amp; aStr, size_t aPos=0) const <BR>
+size_t find_first_of(const char* aBuf, size_t aPos, size_t aLen) const <BR>
+size_t find_first_of(const char* aCstr, size_t aPos=0) const </B></FONT>
+<P>
+Performs a forward search beginning at position <B><TT>aPos</TT></B> for
+the first occurrence of any character from a specified set of characters.
+The return value is the position of the character if found, or
+<B><TT>DwString::npos</TT></B> if not found.
+<P>
+The first version searches for any character in the string
+<B><TT>aStr</TT></B>.
+<P>
+The second version searches for any of the <B><TT>aLen</TT></B> characters
+in <B><TT>aBuf</TT></B>.
+<P>
+The third version searches for any character in the NUL-terminated string
+<B><TT>aCstr</TT></B>.
+<P>
+<FONT COLOR="teal"><B> size_t <A NAME="find_last_of">find_last_of</A>(const
+DwString&amp; aStr, size_t aPos=npos) const <BR>
+size_t find_last_of(const char* aBuf, size_t aPos, size_t aLen) const <BR>
+size_t find_last_of(const char* aCstr, size_t aPos=npos) const </B></FONT>
+<P>
+Performs a reverse search beginning at position <B><TT>aPos</TT></B> for
+the first occurrence of any character from a specified set of characters.
+If <B><TT>aPos</TT></B> is greater than or equal to the number of characters
+in the string, then the search starts at the end of the string. The return
+value is the position of the character if found, or
+<B><TT>DwString::npos</TT></B> if not found.
+<P>
+The first version searches for any character in the string
+<B><TT>aStr</TT></B>.
+<P>
+The second version searches for any of the <B><TT>aLen</TT></B> characters
+in <B><TT>aBuf</TT></B>.
+<P>
+The third version searches for any character in the NUL-terminated string
+<B><TT>aCstr</TT></B>.
+<P>
+<FONT COLOR="teal"><B> size_t
+<A NAME="find_first_not_of">find_first_not_of</A>(const DwString&amp; aStr,
+size_t aPos=0) const <BR>
+size_t find_first_not_of(const char* aBuf, size_t aPos, size_t aLen) const
+<BR>
+size_t find_first_not_of(const char* aCstr, size_t aPos=0) const </B></FONT>
+<P>
+Performs a forward search beginning at position <B><TT>aPos</TT></B> for
+the first occurrence of any character <I>not</I> in a specified set of
+characters. The return value is the position of the character if found, or
+<B><TT>DwString::npos</TT></B> if not found.
+<P>
+The first version searches for any character not in the string
+<B><TT>aStr</TT></B>.
+<P>
+The second version searches for any character not among the
+<B><TT>aLen</TT></B> characters in <B><TT>aBuf</TT></B>.
+<P>
+The third version searches for any character not in the NUL-terminated string
+<B><TT>aCstr</TT></B>.
+<P>
+<FONT COLOR="teal"><B> size_t
+<A NAME="find_last_not_of">find_last_not_of</A>(const DwString&amp; aStr,
+size_t aPos=npos) const <BR>
+size_t find_last_not_of(const char* aBuf, size_t aPos, size_t aLen) const
+<BR>
+size_t find_last_not_of(const char* aCstr, size_t aPos=npos) const
+</B></FONT>
+<P>
+Performs a reverse search beginning at position <B><TT>aPos</TT></B> for
+the first occurrence of any character <I>not</I> in a specified set of
+characters. If <B><TT>aPos</TT></B> is greater than or equal to the number
+of characters in the string, then the search starts at the end of the string.
+The return value is the position of the character if found, or
+<B><TT>DwString::npos</TT></B> if not found.
+<P>
+The first version searches for any character not in the string
+<B><TT>aStr</TT></B>.
+<P>
+The second version searches for any character not among the
+<B><TT>aLen</TT></B> characters in <B><TT>aBuf</TT></B>.
+<P>
+The third version searches for any character not in the NUL-terminated string
+<B><TT>aCstr</TT></B>.
+<P>
+<FONT COLOR="teal"><B> DwString <A NAME="substr">substr</A>(size_t aPos=0,
+size_t aLen=npos) const </B></FONT>
+<P>
+Returns a string that contains at most <B><TT>aLen</TT></B> characters from
+the <B><TT>DwString</TT></B> object beginning at position
+<B><TT>aPos</TT></B>. The returned substring will not contain more characters
+than what are available in the superstring <B><TT>DwString</TT></B> object.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="compare">compare</A>(const DwString&amp;
+aStr) const <BR>
+int compare(size_t aPos1, size_t aLen1, const DwString&amp; aStr) const <BR>
+int compare(size_t aPos1, size_t aLen1, const DwString&amp; aStr, size_t
+aPos2, size_t aLen2) const <BR>
+int compare(const char* aCstr) const <BR>
+int compare(size_t aPos1, size_t aLen1, const char* aBuf, size_t aLen2=npos)
+const </B></FONT>
+<P>
+These member functions compare a sequence of characters to this
+<B><TT>DwString</TT></B> object, or a segment of this
+<B><TT>DwString</TT></B> object. They return -1, 0, or 1, depending on whether
+this <B><TT>DwString</TT></B> object is less than, equal to, or greater than
+the compared sequence of characters, respectively.
+<P>
+The first version compares <B><TT>aStr</TT></B> to this string.
+<P>
+The second version compares <B><TT>aStr</TT></B> to the segment of this string
+of length <B><TT>aLen</TT></B> beginning at position
+<B><TT>aPos</TT></B>.
+<P>
+The third version compares the {tt aLen2} characters beginning at position
+<B><TT>aPos2</TT></B> in <B><TT>aStr</TT></B> with the
+<B><TT>aLen1</TT></B> characters beginning at position
+<B><TT>aPos1</TT></B> in this <B><TT>DwString</TT></B> object.
+<P>
+The fourth version compares the NUL-terminated string
+<B><TT>aCstr</TT></B> to this <B><TT>DwString</TT></B>.
+<P>
+The fifth version compares the <B><TT>aLen2</TT></B> characters in
+<B><TT>aBuf</TT></B> with this <B><TT>DwString</TT></B>.
+<P>
+<FONT COLOR="teal"><B> virtual const char*
+<A NAME="ClassName">ClassName</A>() const </B></FONT>
+<P>
+This virtual function returns the name of the class as a NUL-terminated char
+string.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="ObjectId">ObjectId</A>() const
+</B></FONT>
+<P>
+Returns the unique object id for this <B><TT>DwString</TT></B>.
+<P>
+<FONT COLOR="teal"><B> void
+<A NAME="ConvertToLowerCase">ConvertToLowerCase</A>() <BR>
+void <A NAME="ConvertToUpperCase">ConvertToUpperCase</A>() </B></FONT>
+<P>
+Converts this <B><TT>DwString</TT></B> object's characters to all lower case
+or all upper case.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="Trim">Trim</A>() </B></FONT>
+<P>
+Removes all white space from the beginning and the end of this
+<B><TT>DwString</TT></B> object. White space characters include ASCII HT,
+LF, and SPACE.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="WriteTo">WriteTo</A>(ostream&amp; aStrm)
+const </B></FONT>
+<P>
+Writes the contents of this <B><TT>DwString</TT></B> object to the stream
+<B><TT>aStrm</TT></B>.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="RefCount">RefCount</A>() const
+</B></FONT>
+<P>
+This <I>advanced</I> member function returns the number of references to
+the internal buffer used by the <B><TT>DwString</TT></B> object.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="TakeBuffer">TakeBuffer</A>(char* aBuf,
+size_t aSize, size_t aStart, size_t aLen) </B></FONT>
+<P>
+This <I>advanced</I> member function sets the contents of the
+<B><TT>DwString</TT></B> object to the <B><TT>aLen</TT></B> characters starting
+at offset <B><TT>aStart</TT></B> in the buffer <B><TT>aBuf</TT></B>.
+<B><TT>aSize</TT></B> is the allocated size of <B><TT>aBuf</TT></B>. This
+member function is provided for efficiency in setting a
+<B><TT>DwString</TT></B>'s contents from a large buffer. It is efficient
+because no copying takes place. Instead, <B><TT>aBuf</TT></B> becomes the
+buffer used internally by the <B><TT>DwString</TT></B> object, which takes
+responsibility for deleting the buffer. Because DwString will free the buffer
+using <B><TT>delete []</TT></B>, the buffer should have been allocated using
+<B><TT>new</TT></B>. See also: ReleaseBuffer().
+<P>
+<FONT COLOR="teal"><B> void <A NAME="ReleaseBuffer">ReleaseBuffer</A>(char**
+aBuf, size_t* aSize, size_t* aStart, size_t* aLen) </B></FONT>
+<P>
+This <I>advanced</I> member function is the symmetric opposite of
+<B><TT>TakeBuffer()</TT></B>, to the extent that such an opposite is possible.
+It provides a way to ``export'' the buffer used internally by the
+<B><TT>DwString</TT></B> object. Note, however, that because of the
+copy-on-modify feature of <B><TT>DwString</TT></B>, the
+<B><TT>DwString</TT></B> object may not have sole ownership of its internal
+buffer. When that is case, <B><TT>ReleaseBuffer()</TT></B> will return a
+copy of the buffer. You can check to see if the internal buffer is shared
+by calling <B><TT>RefCount()</TT></B>. On return from this member function,
+the <B><TT>DwString</TT></B> object will have valid, but empty, contents.
+It is recommended that you use this function only on rare occasions where
+you need to export efficiently a large buffer.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="CopyTo">CopyTo</A>(DwString* aStr) const
+</B></FONT>
+<P>
+This <I>advanced</I> member function copies this <B><TT>DwString</TT></B>
+object to <B><TT>aStr</TT></B>. This member function is different from the
+assignment operator, because it physically copies the buffer instead of just
+duplicating a reference to it.
+<P>
+<FONT COLOR="teal"><B> virtual void
+<A NAME="PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm) const
+</B></FONT>
+<P>
+Prints debugging information about the object to <B><TT>aStrm</TT></B>.
+<P>
+This member function is available only in the debug version of the library.
+<P>
+<FONT COLOR="teal"><B> virtual void
+<A NAME="CheckInvariants">CheckInvariants</A>() const </B></FONT>
+<P>
+Aborts if one of the invariants of the object fails. Use this member function
+to track down bugs.
+<P>
+This member function is available only in the debug version of the library.
+<H2>
+  <FONT COLOR="navy"> Public Data Members </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> static const size_t <A NAME="npos">npos</A>
+</B></FONT>
+<P>
+<B><TT>npos</TT></B> is assigned the value (size_t)-1.
+</BODY></HTML>

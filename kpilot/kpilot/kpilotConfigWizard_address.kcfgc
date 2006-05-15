@@ -1,0 +1,7 @@
+File=../conduits/abbrowserconduit/abbrowserconduit.kcfg
+ClassName=KPilotWizard_addressConfig
+Singleton=False
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true

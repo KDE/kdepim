@@ -1,0 +1,26 @@
+Sorry, there's no autoconf script available yet.  However, there are comments
+in the makefile to help you out, and there are not a lot of changes to make.
+There are different options available, some of which are platform dependent.
+For example, under Win32 you can compile the library as a .LIB or as a .DLL.
+To change any of the defaults, edit the file ./mimepp/config.h.  It's
+probably a good idea to take a look at that file anyway.
+
+There are several makefiles available.  Makefile.unx is a makefile for a
+generic UNIX system.  Makefile.vc is a makefile for Visual C++ 4 or 5.
+Makefile.bc is a makefile for Borland C++ 5.
+
+If you are using the library on a non-UNIX system, such as Windows 3.1 or
+Macintosh, you will probably need to change msgid.cpp.  The function
+DwMsgId::CreateDefault() needs to get the host name and the process ID to
+create a msg-id.  I put some conditional compilation macros in to support
+Winsock, but I have not tested it under Windows 3.1.  If you do not know how
+to get your host name, you can set the static member DwMsgId::sHostName
+before using the library functions.
+
+On a UNIX system:
+
+Typing 'make -f makefile.unx' will make the library libmimepp.a and the
+example programs exampl01, exampl02, exampl03, exampl04, exampl05;
+typing 'make lib' will make just the library.  Finally, type 'make install
+' to copy the include files to /usr/local/include/mimepp and the library
+to /usr/local/lib.

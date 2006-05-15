@@ -1,0 +1,8 @@
+AC_COMPILE_IFELSE([
+#include <kdeversion.h>
+#if ! ( KDE_IS_VERSION( 3, 2, 90 ) )
+#error KDE 3.2
+#endif
+], need_kde32_compat="no" , need_kde32_compat="yes")
+
+AM_CONDITIONAL(need_kde32_compatibility, test "$need_kde32_compat" = "yes")

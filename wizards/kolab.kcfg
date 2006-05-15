@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg>
+
+  <kcfgfile name="kolabrc"/>
+
+  <group name="General">
+    <entry name="Server" type="String">
+      <label>Kolab server name</label>
+      <default></default>
+    </entry>
+    <entry name="User" type="String">
+      <label>Kolab user name</label>
+      <default></default>
+    </entry>
+    <entry name="RealName" type="String">
+      <label>Real user name</label>
+      <default></default>
+    </entry>
+    <entry name="Password" type="Password">
+      <label>Kolab user password</label>
+      <default></default>
+    </entry>
+    <entry name="SavePassword" type="Bool">
+      <label>Save Password</label>
+      <default>false</default>
+    </entry>
+
+    <entry name="UseOnlineForNonGroupware" type="Bool">
+      <label>Use Online IMAP account for non groupware folders</label>
+      <default>false</default>
+    </entry>
+
+    <entry name="Kolab1Legacy" type="Bool">
+      <label>Enable Kolab 1 Legacy settings</label>
+      <default>false</default>
+    </entry>
+  </group>
+
+  <group name="Constants">
+    <entry name="EnableFreeBusy">
+      <default>true</default>
+    </entry>
+  </group>
+
+  <propagation source="kolabrc/General/Kolab1Legacy"
+               target="korganizerrc/FreeBusy/FreeBusyPublishAuto" />
+  <propagation source="kolabrc/Constants/EnableFreeBusy"
+               target="korganizerrc/FreeBusy/FreeBusyRetrieveAuto" />
+
+  <propagation source="kolabrc/General/User"
+               target="korganizerrc/FreeBusy/FreeBusyPublishUser" />
+  <propagation source="kolabrc/General/Password"
+               target="korganizerrc/FreeBusy/FreeBusyPublishPassword"
+               hidevalue="true" />
+  <propagation source="kolabrc/General/SavePassword"
+               target="korganizerrc/FreeBusy/FreeBusyPublishSavePassword" />
+
+  <propagation source="kolabrc/General/User"
+               target="korganizerrc/FreeBusy/FreeBusyRetrieveUser" />
+  <propagation source="kolabrc/General/Password"
+               target="korganizerrc/FreeBusy/FreeBusyRetrievePassword"
+               hidevalue="true" />
+  <propagation source="kolabrc/General/SavePassword"
+               target="korganizerrc/FreeBusy/FreeBusyRetrieveSavePassword" />
+
+</kcfg>

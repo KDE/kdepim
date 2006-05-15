@@ -1,0 +1,15 @@
+/** \mainpage libkcal - The KDE calendar access library
+
+This library provides access to and handling of calendar data. It supports the
+standard formats iCalendar and vCalendar and the group scheduling standard iTIP.
+
+<b>Important:</b> This is mainly a KDE PIM internal library. The API might be
+subject to source and binary incompatible changes.
+
+If you use this library for kdepim-external projects, please let us know, so we
+can coordinate possible changes.
+
+libkcal development is discussed on the <a
+href="mailto:kde-pim@kde.org">kde-pim@kde.org</a> mailing list.
+
+*/

@@ -1,0 +1,8 @@
+See kdelibs/kabc/HACKING or http://korganizer.kde.org/develop/hacking.html for
+general coding style conventions.
+
+Additional conventions for libkcal and KOrganizer:
+
+- Don't use dynamic_cast. In most cases the use of dynamic_cast is an indication
+for design problems. In addition it isn't always available, e.g. when compiling
+without run-time type information for KOrganizer/Embedded.

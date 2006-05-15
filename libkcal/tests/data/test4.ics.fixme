@@ -1,0 +1,3 @@
+2 known errors
+- Handle CN parameter for ORGANIZER
+- Handle WKST parameter for RRULE

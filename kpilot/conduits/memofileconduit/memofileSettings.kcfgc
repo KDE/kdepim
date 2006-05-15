@@ -1,0 +1,7 @@
+File=memofileconduit.kcfg
+ClassName= MemofileConduitSettings
+Singleton=true
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true

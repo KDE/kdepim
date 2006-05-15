@@ -1,0 +1,118 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>StartExitConfigWidget</class>
+<comment>A tabWidget for configuring
+KPilot's settings.</comment>
+<author>David Bishop</author>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>StartExitForm</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>593</width>
+            <height>323</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>KPilot Options</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <widget class="QGroupBox" row="1" column="0">
+            <property name="name">
+                <cstring>groupBox4</cstring>
+            </property>
+            <property name="title">
+                <string>Exit Options</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QCheckBox" row="1" column="0">
+                    <property name="name">
+                        <cstring>fKillDaemonOnExit</cstring>
+                    </property>
+                    <property name="text">
+                        <string>S&amp;top KPilot's system tray application on exit</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Check this box to stop the KPilot daemon when you quit KPilot (only if KPilot started the daemon itself).&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="0" column="0">
+                    <property name="name">
+                        <cstring>fQuitAfterSync</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Quit &amp;after HotSync</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Check this box to stop both KPilot and the KPilot daemon after the HotSync finishes. This may be useful for systems where KPilot is started by the USB daemon.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QGroupBox" row="0" column="0">
+            <property name="name">
+                <cstring>GroupBox1_2</cstring>
+            </property>
+            <property name="title">
+                <string>Startup Options</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QCheckBox" row="0" column="0">
+                    <property name="name">
+                        <cstring>fStartDaemonAtLogin</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Start KPilot at login</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Check this box to start up the KPilot daemon every time you log in to KDE.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="1" column="0">
+                    <property name="name">
+                        <cstring>fDockDaemon</cstring>
+                    </property>
+                    <property name="text">
+                        <string>S&amp;how KPilot in system tray</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>&lt;qt&gt;Check this box to place a Kpilot icon in the system tray, which shows the daemon's status, and allows you to select the next sync type and to configure KPilot.&lt;/qt&gt;</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <spacer row="2" column="0">
+            <property name="name">
+                <cstring>spacer3</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>31</height>
+                </size>
+            </property>
+        </spacer>
+    </grid>
+</widget>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>
