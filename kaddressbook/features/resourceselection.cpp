@@ -262,7 +262,7 @@ void ResourceSelection::currentChanged( Q3ListViewItem *item )
   if ( resItem->checked() != resItem->isOn() ) {
     resItem->setChecked( resItem->isOn() );
     if ( resItem->isSubResource() ) {
-      KPIM::ResourceABC *res = dynamic_cast<KPIM::ResourceABC *>( resource );
+      KPIM::ResourceABC *res = static_cast<KPIM::ResourceABC *>( resource );
       res->setSubresourceActive( resItem->resourceIdentifier(), resItem->isOn() );
       mManager->change( resource );
     } else {
