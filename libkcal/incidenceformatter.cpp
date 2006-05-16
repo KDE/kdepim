@@ -381,7 +381,7 @@ static QString eventViewerFormatTodo( Todo *todo )
   QString tmpStr = eventViewerFormatHeader( todo );
 
   if ( !todo->location().isEmpty() ) {
-    tmpStr += eventViewerAddTag( "b", i18n("Location:") );
+    tmpStr += eventViewerAddTag( "b", i18n("Location:") + " " );
     tmpStr += todo->location();
     tmpStr += "<br>";
   }
