@@ -139,7 +139,7 @@ bool ResourceGroupware::doLoad()
   mCalendar.close();
 
   disableChangeNotification();
-  loadCache();
+  loadFromCache();
   enableChangeNotification();
 
   emit resourceChanged( this );
@@ -203,7 +203,7 @@ void ResourceGroupware::slotJobResult( KJob *job )
         addIncidence( i );
       }
     }
-    saveCache();
+    saveToCache();
     enableChangeNotification();
 
     clearChanges();
@@ -226,7 +226,7 @@ void ResourceGroupware::slotJobData( KIO::Job *, const QByteArray &data )
 
 void ResourceGroupware::loadFinished()
 {
-  saveCache();
+  saveToCache();
   enableChangeNotification();
 
   emit resourceChanged( this );
@@ -237,7 +237,7 @@ bool ResourceGroupware::doSave()
 {
   kDebug() << "KCal::ResourceGroupware::doSave()" << endl;
 
-  saveCache();
+  saveToCache();
 
   if ( !hasChanges() ) {
     kDebug() << "No changes" << endl;
@@ -253,7 +253,7 @@ bool ResourceGroupware::doSave()
   for( it = added.begin(); it != added.end(); ++it ) {
     if ( mServer->addIncidence( *it, this ) ) {
       clearChange( *it );
-      saveCache();
+      saveToCache();
     }
   }
   Incidence::List changed = changedIncidences();

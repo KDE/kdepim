@@ -174,7 +174,7 @@ bool ResourceGroupwareBase::asyncLoad()
   }
 
   mAddrMap.clear();
-  loadCache();
+  loadFromCache();
 
   mDownloadJob = createDownloadJob( mAdaptor );
   connect( mDownloadJob, SIGNAL( result( KPIM::GroupwareJob * ) ),

@@ -276,26 +276,27 @@ void ResourceCached::clearChanges()
   mDeletedIncidences.clear();
 }
 
-void ResourceCached::loadCache()
+bool ResourceCached::loadFromCache()
 {
   setIdMapperIdentifier();
   mIdMapper.load();
 
-  if ( KStandardDirs::exists( cacheFile() ) ) {
-    mCalendar.load( cacheFile() );
-    if ( !noReadOnlyOnLoad() && readOnly() ) {
-      Incidence::List incidences( rawIncidences() );
-      Incidence::List::Iterator it;
-      for ( it = incidences.begin(); it != incidences.end(); ++it ) {
-        (*it)->setReadOnly( true );
-      }
+  if ( !KStandardDirs::exists( cacheFile() ) )
+    return false;
+  mCalendar.load( cacheFile() );
+  if ( !noReadOnlyOnLoad() && readOnly() ) {
+    Incidence::List incidences( rawIncidences() );
+    Incidence::List::Iterator it;
+    for ( it = incidences.begin(); it != incidences.end(); ++it ) {
+      (*it)->setReadOnly( true );
     }
   }
+  return true;
 }
 
-void ResourceCached::saveCache()
+void ResourceCached::saveToCache()
 {
-  kDebug(5800) << "ResourceCached::saveCache(): " << cacheFile() << endl;
+  kDebug(5800) << "ResourceCached::saveToCache(): " << cacheFile() << endl;
 
   setIdMapperIdentifier();
   mIdMapper.save();

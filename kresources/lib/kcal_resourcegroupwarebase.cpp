@@ -269,7 +269,7 @@ bool ResourceGroupwareBase::doLoad()
   mCalendar.close();
   clearChanges();
   disableChangeNotification();
-  loadCache();
+  loadFromCache();
   enableChangeNotification();
   emit resourceChanged( this );
 
@@ -292,7 +292,7 @@ void ResourceGroupwareBase::slotDownloadJobResult( KPIM::GroupwareJob *job )
     kDebug(5800) << "Successfully downloaded data" << endl;
   
     clearChanges();
-    saveCache();
+    saveToCache();
     enableChangeNotification();
 
     emit resourceChanged( this );
@@ -306,7 +306,7 @@ bool ResourceGroupwareBase::doSave()
 {
   kDebug(5800) << "KCal::ResourceGroupwareBase::doSave()" << endl;
 
-  saveCache();
+  saveToCache();
 
   if ( !hasChanges() ) {
     kDebug(5800) << "No changes" << endl;

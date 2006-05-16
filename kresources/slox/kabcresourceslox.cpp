@@ -176,7 +176,7 @@ bool ResourceSlox::asyncLoad()
     return true;
   }
 
-  loadCache();
+  loadFromCache();
   clearChanges();
 
   KUrl url = mPrefs->url();
@@ -276,7 +276,7 @@ void ResourceSlox::slotResult( KJob *job )
     }
 
     clearChanges();
-    saveCache();
+    saveToCache();
   }
 
   mDownloadJob = 0;
@@ -319,7 +319,7 @@ void ResourceSlox::slotUploadResult( KJob *job )
           a.setResource( this );
           a.setChanged( false );
           mAddrMap.insert( a.uid(), a );
-          saveCache();
+          saveToCache();
         }
       }
     }
@@ -459,7 +459,7 @@ bool ResourceSlox::save( Ticket* )
     return false;
   }
 
-  saveCache();
+  saveToCache();
   uploadContacts();
   return true;
 }

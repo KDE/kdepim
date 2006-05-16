@@ -180,7 +180,7 @@ bool ResourceRemote::doLoad()
 
   if ( mUseCacheFile ) {
     disableChangeNotification();
-    loadCache();
+    loadFromCache();
     enableChangeNotification();
   }
 
@@ -222,7 +222,7 @@ void ResourceRemote::slotLoadJobResult( KJob *job )
 
     mCalendar.close();
     disableChangeNotification();
-    loadCache();
+    loadFromCache();
     enableChangeNotification();
 
     emit resourceChanged( this );
@@ -259,7 +259,7 @@ bool ResourceRemote::doSave()
 
   mChangedIncidences = allChanges();
 
-  saveCache();
+  saveToCache();
 
   mUploadJob = KIO::file_copy( KUrl( cacheFile() ), mUploadUrl, -1, true );
   connect( mUploadJob, SIGNAL( result( KJob * ) ),

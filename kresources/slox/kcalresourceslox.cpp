@@ -165,7 +165,7 @@ bool KCalResourceSlox::doLoad()
   mCalendar.close();
 
   disableChangeNotification();
-  loadCache();
+  loadFromCache();
   enableChangeNotification();
 
   emit resourceChanged( this );
@@ -1058,7 +1058,7 @@ void KCalResourceSlox::slotLoadEventsResult( KJob *job )
 
     enableChangeNotification();
 
-    saveCache();
+    saveToCache();
 
     clearChanges();
 
@@ -1163,7 +1163,7 @@ void KCalResourceSlox::slotUploadResult( KJob *job )
           disableChangeNotification();
           mCalendar.deleteIncidence( mUploadedIncidence );
           mCalendar.addIncidence( i );
-          saveCache();
+          saveToCache();
           enableChangeNotification();
 
           emit resourceChanged( this );
@@ -1252,7 +1252,7 @@ bool KCalResourceSlox::doSave()
 
   if ( !confirmSave() ) return false;
 
-  saveCache();
+  saveToCache();
 
   uploadIncidences();
 

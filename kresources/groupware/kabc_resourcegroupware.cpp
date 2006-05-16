@@ -212,7 +212,7 @@ bool ResourceGroupware::asyncLoad()
   }
 
   mAddrMap.clear();
-  loadCache();
+  loadFromCache();
 
 #if 0
   if ( addressBooks().isEmpty() ) {
@@ -290,7 +290,7 @@ bool ResourceGroupware::asyncSave( Ticket* )
       clearChange( *it );
   }
 
-  saveCache();
+  saveToCache();
 
   mServer->logout();
 #endif
@@ -330,7 +330,7 @@ void ResourceGroupware::slotJobResult( KJob *job )
     }
   }
 
-  saveCache();
+  saveToCache();
 
   emit loadingFinished( this );
 

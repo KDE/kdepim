@@ -139,7 +139,7 @@ bool ResourceGroupwise::doLoad()
   mCalendar.close();
 
   disableChangeNotification();
-  loadCache();
+  loadFromCache();
   enableChangeNotification();
 
   emit resourceChanged( this );
@@ -206,7 +206,7 @@ void ResourceGroupwise::slotJobResult( KJob *job )
         addIncidence( i );
       }
     }
-    saveCache();
+    saveToCache();
     enableChangeNotification();
 
     clearChanges();
@@ -231,7 +231,7 @@ bool ResourceGroupwise::doSave()
 {
   kDebug() << "KCal::ResourceGroupwise::doSave()" << endl;
 
-  saveCache();
+  saveToCache();
 
   if ( !hasChanges() ) {
     kDebug() << "No changes" << endl;
@@ -255,7 +255,7 @@ bool ResourceGroupwise::doSave()
   for( it = added.begin(); it != added.end(); ++it ) {
     if ( server.addIncidence( *it, this ) ) {
       clearChange( *it );
-      saveCache();
+      saveToCache();
     }
   }
   Incidence::List changed = changedIncidences();

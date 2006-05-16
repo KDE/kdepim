@@ -260,14 +260,15 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     Incidence::List deletedIncidences() const;
 
     /**
-      Loads the cache, this method should be called on load.
+      Loads the resource from the cache, this method should be called on load.
+      @return true if the cache file exists, false if not
      */
-    void loadCache();
+    bool loadFromCache();
 
     /**
-      Saves the cache back.
+      Saves the resource back to the cache.
      */
-    void saveCache();
+    void saveToCache();
 
     /**
       Clear cache.
@@ -317,7 +318,7 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     void setupReloadTimer();
 
     /**
-      This method is used by loadCache() and saveCache(), reimplement
+      This method is used by loadFromCache() and saveToCache(), reimplement
       it to change the location of the cache.
      */
     virtual QString cacheFile() const;

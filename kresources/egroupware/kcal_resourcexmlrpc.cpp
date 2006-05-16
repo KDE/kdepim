@@ -226,14 +226,14 @@ bool ResourceXMLRPC::doLoad()
   mCalendar.close();
 
   disableChangeNotification();
-  loadCache();
+  loadFromCache();
   enableChangeNotification();
 
   emit resourceChanged( this );
 
   clearChanges();
 
-  loadCache();
+  loadFromCache();
   mTodoStateMapper.setIdentifier( type() + "_" + identifier() );
   mTodoStateMapper.load();
 
@@ -272,7 +272,7 @@ bool ResourceXMLRPC::doSave()
     return true;
   }
 
-  saveCache();
+  saveToCache();
 
   const Event::List events = mCalendar.rawEvents();
   Event::List::ConstIterator evIt;
@@ -344,7 +344,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
 
       mCalendar.deleteIncidence( oldEvent );
       mCalendar.addIncidence( ev );
-      saveCache();
+      saveToCache();
     }
   } else { // new event
     writeEvent( ev, args );
@@ -354,7 +354,7 @@ bool ResourceXMLRPC::addEvent( Event* ev )
                    QVariant( ev->uid() ) );
 
     mCalendar.addEvent( ev );
-    saveCache();
+    saveToCache();
   }
 
   enableChangeNotification();
@@ -424,7 +424,7 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
 
       mCalendar.deleteIncidence( oldTodo );
       mCalendar.addIncidence( todo );
-      saveCache();
+      saveToCache();
     }
   } else { // new todo
     writeTodo( todo, args );
@@ -434,7 +434,7 @@ bool ResourceXMLRPC::addTodo( Todo *todo )
                    QVariant( todo->uid() ) );
 
     mCalendar.addTodo( todo );
-    saveCache();
+    saveToCache();
   }
 
   enableChangeNotification();
@@ -603,7 +603,7 @@ void ResourceXMLRPC::listEventsFinished( const QList<QVariant>& list,
 
   if ( changed ) {
     cleanUpEventCache( retrievedEvents );
-    saveCache();
+    saveToCache();
     emit resourceChanged( this );
   }
 
@@ -619,7 +619,7 @@ void ResourceXMLRPC::deleteEventFinished( const QList<QVariant>&,
 
   disableChangeNotification();
   mCalendar.deleteEvent( ev );
-  saveCache();
+  saveToCache();
   enableChangeNotification();
 
   emit resourceChanged( this );
@@ -708,7 +708,7 @@ void ResourceXMLRPC::listTodosFinished( const QList<QVariant>& list,
 
   if ( changed ) {
     cleanUpTodoCache( retrievedTodos );
-    saveCache();
+    saveToCache();
     emit resourceChanged( this );
   }
 
@@ -724,7 +724,7 @@ void ResourceXMLRPC::deleteTodoFinished( const QList<QVariant>&,
   Todo *todo = mCalendar.todo( id.toString() );
   disableChangeNotification();
   mCalendar.deleteTodo( todo );
-  saveCache();
+  saveToCache();
   enableChangeNotification();
 
   emit resourceChanged( this );

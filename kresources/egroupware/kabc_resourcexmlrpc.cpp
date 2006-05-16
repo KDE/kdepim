@@ -109,7 +109,7 @@ void ResourceXMLRPC::initEGroupware()
 
 ResourceXMLRPC::~ResourceXMLRPC()
 {
-  saveCache();
+  saveToCache();
 
   delete mServer;
   mServer = 0;
@@ -193,7 +193,7 @@ bool ResourceXMLRPC::asyncLoad()
 
   mAddrMap.clear();
 
-  loadCache();
+  loadFromCache();
 
   QMap<QString, QVariant> args;
   args.insert( "start", "0" );
@@ -358,7 +358,7 @@ void ResourceXMLRPC::listContactsFinished( const QList<QVariant> &mapList,
   }
 
   cleanUpCache( serverContacts );
-  saveCache();
+  saveToCache();
 
   emit loadingFinished( this );
 }
@@ -369,7 +369,7 @@ void ResourceXMLRPC::addContactFinished( const QList<QVariant> &list,
   clearChange( id.toString() );
   idMapper().setRemoteId( id.toString(), list[ 0 ].toString() );
 
-  saveCache();
+  saveToCache();
 }
 
 void ResourceXMLRPC::updateContactFinished( const QList<QVariant>&,
@@ -377,7 +377,7 @@ void ResourceXMLRPC::updateContactFinished( const QList<QVariant>&,
 {
   clearChange( id.toString() );
 
-  saveCache();
+  saveToCache();
 }
 
 void ResourceXMLRPC::deleteContactFinished( const QList<QVariant>&,
@@ -386,7 +386,7 @@ void ResourceXMLRPC::deleteContactFinished( const QList<QVariant>&,
   clearChange( id.toString() );
   idMapper().removeRemoteId( idMapper().remoteId( id.toString() ) );
 
-  saveCache();
+  saveToCache();
 }
 
 void ResourceXMLRPC::fault( int error, const QString &errorMsg,

@@ -162,7 +162,7 @@ bool ResourceTVAnytime::doLoad()
 
   disableChangeNotification();
   // FIXME - reenable cache
-  loadCache(); // TODO: default loadCache() won't set up the subresources...
+  loadFromCache(); // TODO: default loadFromCache() won't set up the subresources...
   enableChangeNotification();
 
   emit resourceChanged( this );
@@ -212,7 +212,7 @@ void ResourceTVAnytime::slotJobResult( KJob *job )
     readSchedule();
 
     // FIXME - reenable cache
-    saveCache();
+    saveToCache();
     enableChangeNotification();
 
     clearChanges();

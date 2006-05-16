@@ -241,7 +241,7 @@ bool ResourceGroupwise::asyncLoad()
     return true;
   }
 
-  loadCache();
+  loadFromCache();
 
   if ( addressBooks().isEmpty() ) {
     kDebug() << "Retrieving default addressbook list." << endl;
@@ -339,7 +339,7 @@ bool ResourceGroupwise::asyncSave( Ticket* )
       clearChange( *it );
   }
 
-  saveCache();
+  saveToCache();
 
   mServer->logout();
 
@@ -355,7 +355,7 @@ void ResourceGroupwise::slotFetchJobResult( KJob *job )
     emit loadingError( this, job->errorString() );
   }
 
-  saveCache();
+  saveToCache();
 
   mDownloadJob = 0;
   if ( mProgress ) mProgress->setComplete();
@@ -397,7 +397,7 @@ void ResourceGroupwise::slotUpdateJobResult( KJob *job )
     kError() << job->errorString() << endl;
     emit loadingError( this, job->errorString() );
   }
-  saveCache();
+  saveToCache();
 
   emit loadingFinished( this );
 
