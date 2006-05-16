@@ -339,7 +339,7 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 
   accountLayout->setRowStretch( 2, 1 );
 
-  connect( this, SIGNAL( aboutToShowPage( QWidget * ) ),
+  connect( this, SIGNAL( currentPageChanged( QWidget * ) ),
     SLOT( slotAboutToShowPage( QWidget * ) ) );
 
 
