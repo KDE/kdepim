@@ -683,7 +683,9 @@ void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
       incidence->clearAlarms();
     }
   } else if ( tag == fieldName( CreatedBy ) ) {
-    KABC::Addressee a = mAccounts->lookupUser( text );
+    KABC::Addressee a;
+    if ( mAccounts ) a = mAccounts->lookupUser( text );
+    else kDebug() << "KCalResourceSlox: no accounts set" << endl;
     incidence->setOrganizer( Person( a.formattedName(), a.preferredEmail() ) );
   } else if ( tag == fieldName( Participants ) ) {
     parseMembersAttribute( e, incidence );
