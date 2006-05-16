@@ -141,7 +141,7 @@ Kleo::CryptoBackend::Protocol * Kleo::QGpgMEBackend::protocol( const char * name
 }
 
 bool Kleo::QGpgMEBackend::supportsProtocol( const char * name ) const {
-  return qstricmp( name, OpenPGP ) == 0 || qstricmp( name, SMIME );
+  return qstricmp( name, OpenPGP ) == 0 || qstricmp( name, SMIME ) == 0;
 }
 
 const char * Kleo::QGpgMEBackend::enumerateProtocols( int i ) const {
