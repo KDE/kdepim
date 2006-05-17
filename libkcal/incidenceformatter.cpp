@@ -368,7 +368,7 @@ static QString eventViewerFormatEvent( Event *event )
   }
 
   tmpStr += "</table>";
-  tmpStr += "<p><em>" + i18n( "Creation date: %1.", 
+  tmpStr += "<p><em>" + i18n( "Creation date: %1.",
     KGlobal::locale()->formatDateTime( event->created() , true ) ) + "</em>";
   return tmpStr;
 }
@@ -379,8 +379,7 @@ static QString eventViewerFormatTodo( Todo *todo )
   QString tmpStr = eventViewerFormatHeader( todo );
 
   if ( !todo->location().isEmpty() ) {
-    tmpStr += eventViewerAddTag( "b", i18n("Location:") );
-    tmpStr += todo->location();
+    tmpStr += eventViewerAddTag( "b", i18n("Location: %1", todo->location()) );
     tmpStr += "<br>";
   }
   if ( todo->hasDueDate() ) {
@@ -404,12 +403,12 @@ static QString eventViewerFormatTodo( Todo *todo )
     QDateTime dt = todo->recurrence()->getNextDateTime(
                                          QDateTime::currentDateTime() );
     tmpStr += eventViewerAddTag( "p", "<em>" +
-      i18n("This is a recurring to-do. The next occurrence will be on %1.", 
+      i18n("This is a recurring to-do. The next occurrence will be on %1.",
       KGlobal::locale()->formatDateTime( dt, true ) ) + "</em>" );
   }
   tmpStr += eventViewerFormatAttendees( todo );
   tmpStr += eventViewerFormatAttachments( todo );
-  tmpStr += "<p><em>" + i18n( "Creation date: %1.", 
+  tmpStr += "<p><em>" + i18n( "Creation date: %1.",
     KGlobal::locale()->formatDateTime( todo->created() , true ) ) + "</em>";
   return tmpStr;
 }
@@ -1605,21 +1604,21 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event*event )
       tmp = event->dtEndDateStr().replace(" ", "&nbsp;");
     else
       tmp = event->dtEndStr().replace(" ", "&nbsp;");
-    ret += "<br>" + i18nc("Event end","<i>To:</i>&nbsp;%1", tmp); 
+    ret += "<br>" + i18nc("Event end","<i>To:</i>&nbsp;%1", tmp);
 
   } else {
 
-    ret += "<br>"+i18n("<i>Date:</i>&nbsp;%1", 
+    ret += "<br>"+i18n("<i>Date:</i>&nbsp;%1",
          event->dtStartDateStr().replace(" ", "&nbsp;") );
     if ( !event->doesFloat() ) {
       if ( event->dtStartTimeStr() == event->dtEndTimeStr() ) { // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" + i18nc("time for event, &nbsp; to prevent ugly line breaks",
-        "<i>Time:</i>&nbsp;%1", 
+        "<i>Time:</i>&nbsp;%1",
          event->dtStartTimeStr().replace(" ", "&nbsp;") );
       } else {
         tmp = "<br>" + i18nc("time range for event, &nbsp; to prevent ugly line breaks",
-        "<i>Time:</i>&nbsp;%1&nbsp;-&nbsp;%2", 
-         event->dtStartTimeStr().replace(" ", "&nbsp;") , 
+        "<i>Time:</i>&nbsp;%1&nbsp;-&nbsp;%2",
+         event->dtStartTimeStr().replace(" ", "&nbsp;") ,
          event->dtEndTimeStr().replace(" ", "&nbsp;") );
       }
       ret += tmp;
@@ -1637,12 +1636,12 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo*todo )
     // No need to add <i> here. This is separated issue and each line
     // is very visible on its own. On the other hand... Yes, I like it
     // italics here :)
-    ret += "<br>" + i18n("<i>Start:</i>&nbsp;%1", 
+    ret += "<br>" + i18n("<i>Start:</i>&nbsp;%1",
       (floats)
         ?(todo->dtStartDateStr().replace(" ", "&nbsp;"))
         :(todo->dtStartStr().replace(" ", "&nbsp;")) ) ;
   if (todo->hasDueDate())
-    ret += "<br>" + i18n("<i>Due:</i>&nbsp;%1", 
+    ret += "<br>" + i18n("<i>Due:</i>&nbsp;%1",
       (floats)
         ?(todo->dtDueDateStr().replace(" ", "&nbsp;"))
         :(todo->dtDueStr().replace(" ", "&nbsp;")) );
@@ -1707,7 +1706,7 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence* incidenc
 
   if (!incidence->location().isEmpty()) {
     // Put Location: in italics
-    tmp += "<br>"+i18n("<i>Location:</i>&nbsp;%1", 
+    tmp += "<br>"+i18n("<i>Location:</i>&nbsp;%1",
        incidence->location().replace("\n", "<br>") );
   }
   if (!incidence->description().isEmpty()) {
