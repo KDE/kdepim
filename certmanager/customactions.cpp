@@ -109,9 +109,10 @@ void LineEditAction::setText( const QString & txt ) {
 
 
 ComboAction::ComboAction( const QStringList & lst,  KActionCollection * parent,
-			  QObject * receiver, const char * member, const char * name )
+			  QObject * receiver, const char * member, const char * name,
+                          int selectedID )
   : KAction( QString::null, QIconSet(), KShortcut(), 0, 0, parent, name ),
-    _lst(lst), _receiver(receiver), _member(member)
+    _lst(lst), _receiver(receiver), _member(member), _selectedId( selectedID )
 {
 
 }
@@ -123,6 +124,7 @@ int ComboAction::plug( QWidget * widget, int index ) {
     KToolBar *bar = (KToolBar *)widget;
     int id_ = getToolButtonID();
     bar->insertCombo( _lst, id_, false, SIGNAL( highlighted(int) ), _receiver, _member );
+    bar->setCurrentComboItem( id_,_selectedId );
     addContainer( bar, id_ );
     connect( bar, SIGNAL( destroyed() ), this, SLOT( slotDestroyed() ) );
     return containerCount() - 1;
