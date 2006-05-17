@@ -69,7 +69,8 @@ class ComboAction : public KAction {
   Q_OBJECT
 public:
   ComboAction( const QStringList & lst,  KActionCollection * parent,
-	       QObject * receiver, const char * member, const char * name );
+	       QObject * receiver, const char * member, const char * name,
+               int selectedID );
 
   int plug( QWidget * widget, int index=-1 );
 
@@ -77,6 +78,7 @@ private:
   QStringList _lst;
   QObject * _receiver;
   const char * _member;
+  int _selectedId;
 };
 
 
