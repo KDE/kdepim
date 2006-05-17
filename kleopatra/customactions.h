@@ -70,7 +70,8 @@ class ComboAction : public KAction, public QActionWidgetFactory {
   Q_OBJECT
 public:
   ComboAction( const QStringList & lst,  KActionCollection * parent,
-	       QObject * receiver, const char * member, const char * name );
+               QObject * receiver, const char * member, const char * name,
+               int selectedID );
 
   QWidget* createToolBarWidget( QToolBar * parent );
 
@@ -78,6 +79,7 @@ private:
   QStringList _lst;
   QObject * _receiver;
   const char * _member;
+  int _selectedId;
 };
 
 

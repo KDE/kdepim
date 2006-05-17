@@ -175,7 +175,7 @@ private:
     void importNextURLOrRedisplay();
     void startRedisplay( bool validating );
     QString displayNameForJob( const Kleo::Job *job );
-    void readConfig();
+    void readConfig( bool noQueryGiven );
     void writeConfig();
 
 private:
@@ -214,6 +214,8 @@ private:
     bool     mNextFindRemote : 1; // state of the combo, i.e. whether the next find action will be remote
     bool     mRemote : 1; // whether the currently displayed items are from a remote listing
     bool     mDirMngrFound : 1;
+    bool     mHierarchicalView : 1; // whether to display the list view in hierarchical mode
+
 };
 
 #endif // _CERTMANAGER_H_

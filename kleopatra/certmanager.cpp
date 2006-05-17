@@ -174,10 +174,11 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
     mFindAction( 0 ),
     mImportCertFromFileAction( 0 ),
     mImportCRLFromFileAction( 0 ),
-    mNextFindRemote( false ),
+    mNextFindRemote( remote ),
     mRemote( remote ),
     mDirMngrFound( false )
 {
+  readConfig( query.isEmpty() );
   createStatusBar();
   createActions();
 
@@ -209,7 +210,7 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
   if ( !import.isEmpty() )
     slotImportCertFromFile( KUrl( import ) );
 
-  readConfig();
+  slotToggleHierarchicalView( mHierarchicalView );
   updateStatusBarLabels();
   slotSelectionChanged(); // initial state for selection-dependent actions
 }
@@ -220,16 +221,20 @@ CertManager::~CertManager() {
   delete mHierarchyAnalyser; mHierarchyAnalyser = 0;
 }
 
-void CertManager::readConfig() {
+void CertManager::readConfig( bool noQueryGiven ) {
   KConfig config( "kleopatrarc" );
   config.setGroup( "Display Options" );
-  slotToggleHierarchicalView( config.readEntry( "hierarchicalView", false ) );
+  mHierarchicalView = config.readBoolEntry( "hierarchicalView", false );
+  if ( noQueryGiven ) {
+    mNextFindRemote = config.readBoolEntry( "startInRemoteMode", false );
+  }
 }
 
 void CertManager::writeConfig() {
   KConfig config( "kleopatrarc" );
   config.setGroup( "Display Options" );
   config.writeEntry( "hierarchicalView", mKeyListView->hierarchical() );
+  config.writeEntry( "startInRemoteMode", mNextFindRemote );
 }
 
 void CertManager::createStatusBar() {
@@ -352,7 +357,7 @@ void CertManager::createActions() {
   QStringList lst;
   lst << i18n("In Local Certificates") << i18n("In External Certificates");
   mComboAction = new ComboAction( lst, actionCollection(), this, SLOT( slotToggleRemote(int) ),
-                                  "location_combo_action");
+                                  "location_combo_action", mNextFindRemote? 1 : 0 );
 
   mFindAction = new KAction(KIcon("find"),  i18n("Find"), actionCollection(), "find" );
   connect(mFindAction, SIGNAL(triggered(bool)), SLOT(slotSearch()));
@@ -411,6 +416,7 @@ void CertManager::slotToggleRemote( int idx ) {
 }
 
 void CertManager::slotToggleHierarchicalView( bool hier ) {
+  mHierarchicalView = hier;
   mKeyListView->setHierarchical( hier );
   mKeyListView->setRootIsDecorated( hier );
   if ( KAction * act = action("view_expandall") )
