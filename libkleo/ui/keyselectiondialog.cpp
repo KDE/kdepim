@@ -60,6 +60,7 @@
 #include <kwin.h>
 #include <kconfig.h>
 #include <kmessagebox.h>
+#include <kprocess.h>
 #include <kpushbutton.h>
 // Qt
 #include <QCheckBox>
@@ -300,7 +301,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      bool rememberChoice,
 					      QWidget * parent, const char * name,
 					      bool modal )
-  : KDialogBase( Plain, title, Default|Ok|Cancel, Ok, parent, name, modal ),
+  : KDialogBase( Plain, title, Default|Ok|Cancel|Help, Ok, parent, name, modal ),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
@@ -319,7 +320,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      bool rememberChoice,
 					      QWidget * parent, const char * name,
 					      bool modal )
-  : KDialogBase( Plain, title, Default|Ok|Cancel, Ok, parent, name, modal ),
+  : KDialogBase( Plain, title, Default|Ok|Cancel|Help, Ok, parent, name, modal ),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
@@ -341,7 +342,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   if ( kapp ) {
     int iconSize = IconSize(K3Icon::Desktop);
     int miniSize = IconSize(K3Icon::Small);
-    KWin::setIcons( winId(), kapp->windowIcon().pixmap(iconSize, iconSize), 
+    KWin::setIcons( winId(), kapp->windowIcon().pixmap(iconSize, iconSize),
 kapp->windowIcon().pixmap(miniSize, miniSize) );
 
     KConfigGroup dialogConfig( KGlobal::config(), "Key Selection Dialog" );
@@ -415,8 +416,9 @@ kapp->windowIcon().pixmap(miniSize, miniSize) );
            SLOT(slotRMB(Kleo::KeyListViewItem*,const QPoint&)) );
 
   setButtonText( KDialogBase::Default, i18n("&Reread Keys") );
-  connect( this, SIGNAL(defaultClicked()),
-           this, SLOT(slotRereadKeys()) );
+  setButtonText( KDialogBase::Help, i18n("&Start Certificate Manager") );
+  connect( this, SIGNAL(defaultClicked()), this, SLOT(slotRereadKeys()) );
+  connect( this, SIGNAL(helpClicked()), this, SLOT(slotStartCertificateManager()) );
 
   slotRereadKeys();
 }
@@ -505,6 +507,20 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
 			      i18n("Key Listing Failed") );
     connectSignals();
   }
+}
+
+void Kleo::KeySelectionDialog::slotStartCertificateManager()
+{
+  KProcess certManagerProc;
+  certManagerProc << "kleopatra";
+
+  if( !certManagerProc.start( KProcess::DontCare ) )
+    KMessageBox::error( this,
+                        i18n( "Could not start certificate manager; "
+                              "please check your installation." ),
+                        i18n( "Certificate Manager Error" ) );
+  else
+    kdDebug(5006) << "\nslotStartCertManager(): certificate manager started.\n" << endl;
 }
 
 #ifndef __KLEO_UI_SHOW_KEY_LIST_ERROR_H__
