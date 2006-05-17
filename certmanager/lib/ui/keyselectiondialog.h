@@ -120,6 +120,7 @@ namespace Kleo {
 
   private slots:
     void slotRereadKeys();
+    void slotStartCertificateManager();
     void slotKeyListResult( const GpgME::KeyListResult & );
     void slotSelectionChanged();
     void slotCheckSelection() { slotCheckSelection( 0 ); }
