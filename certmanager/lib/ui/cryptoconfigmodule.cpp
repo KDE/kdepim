@@ -551,6 +551,9 @@ void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
   dialog.setMainWidget( dirserv );
   connect( &dialog, SIGNAL( defaultClicked() ), dirserv, SLOT( defaults() ) );
   if ( dialog.exec() ) {
+    // Focus out any spinbox that might still have the focus - aegypten issue440
+    // Not needed with kdelibs >= 3.4.
+    dialog.actionButton( KDialogBase::Ok )->setFocus();
     // Note that we just grab the urls from the dialog, we don't call its save method,
     // since the user hasn't confirmed the big config dialog yet.
     setURLList( dirserv->urlList() );
