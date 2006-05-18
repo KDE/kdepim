@@ -42,6 +42,7 @@ class IncidenceBase : public CustomProperties
   public:
     class Observer {
       public:
+        virtual ~Observer(){}
         virtual void incidenceUpdated( IncidenceBase * ) = 0;
         virtual void incidenceUpdatedSilent( IncidenceBase * ) {};
     };

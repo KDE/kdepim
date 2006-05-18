@@ -72,7 +72,7 @@ class ListBase : public QValueList<T *>
         return false;
       } else {
         if ( mAutoDelete ) delete t;
-        remove( it );
+        QValueList<T*>::remove( it );
         return true;
       }
     }

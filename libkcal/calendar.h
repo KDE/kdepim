@@ -285,6 +285,7 @@ class Calendar : public QObject, public CustomProperties,
 
     class Observer {
       public:
+        virtual ~Observer(){}
         virtual void calendarModified( bool, Calendar * ) {};
 
         virtual void calendarIncidenceAdded( Incidence * ) {}

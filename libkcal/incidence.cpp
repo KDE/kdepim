@@ -24,6 +24,7 @@
 
 #include "calformat.h"
 
+#include "listbase.h"
 #include "incidence.h"
 
 using namespace KCal;
