@@ -413,7 +413,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
   {
     if ( *contact->sync == add )
       addr.insertCustom( "GWRESOURCE", "SYNC", "ADD" );
-    else if ( *contact->sync == _delete )
+    else if ( *contact->sync == delete_ )
       addr.insertCustom( "GWRESOURCE", "SYNC", "DEL" );
     else if ( *contact->sync == update )
       addr.insertCustom( "GWRESOURCE", "SYNC", "UPD" );

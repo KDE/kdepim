@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.3 2006-04-10 15:48:38 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.3 2006-05-18 13:53:46 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__acceptRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__acceptRequest *ngwm__acceptRequest, _ngwm__acceptResponse *ngwm__acceptResponse)

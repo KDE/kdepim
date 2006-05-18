@@ -7,7 +7,7 @@
 
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.3 2006-04-10 15:48:38 GMT")
+SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.3 2006-05-18 13:53:47 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -218,6 +218,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ngwt__DistributionType(soap, NULL, NULL, "ngwt:DistributionType");
 	case SOAP_TYPE_ngwt__DeltaSyncType:
 		return soap_in_ngwt__DeltaSyncType(soap, NULL, NULL, "ngwt:DeltaSyncType");
+	case SOAP_TYPE_ngwt__CustomType:
+		return soap_in_ngwt__CustomType(soap, NULL, NULL, "ngwt:CustomType");
 	case SOAP_TYPE_ngwt__CursorSeek:
 		return soap_in_ngwt__CursorSeek(soap, NULL, NULL, "ngwt:CursorSeek");
 	case SOAP_TYPE_ngwt__ContactType:
@@ -1526,6 +1528,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__DayOfYearWeek(soap, NULL, NULL, "ngwt:DayOfYearWeek");
 	case SOAP_TYPE_PointerTongwt__Custom:
 		return soap_in_PointerTongwt__Custom(soap, NULL, NULL, "ngwt:Custom");
+	case SOAP_TYPE_PointerTongwt__CustomType:
+		return soap_in_PointerTongwt__CustomType(soap, NULL, NULL, "ngwt:CustomType");
 	case SOAP_TYPE_PointerTongwt__uid:
 		return soap_in_PointerTongwt__uid(soap, NULL, NULL, "ngwt:uid");
 	case SOAP_TYPE_PointerTongwt__Category:
@@ -1751,6 +1755,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwt:DeltaSyncType"))
 		{	*type = SOAP_TYPE_ngwt__DeltaSyncType;
 			return soap_in_ngwt__DeltaSyncType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:CustomType"))
+		{	*type = SOAP_TYPE_ngwt__CustomType;
+			return soap_in_ngwt__CustomType(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwt:CursorSeek"))
 		{	*type = SOAP_TYPE_ngwt__CursorSeek;
@@ -3264,6 +3272,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_ngwt__DistributionType(soap, tag, id, (const enum ngwt__DistributionType *)ptr, "ngwt:DistributionType");
 	case SOAP_TYPE_ngwt__DeltaSyncType:
 		return soap_out_ngwt__DeltaSyncType(soap, tag, id, (const enum ngwt__DeltaSyncType *)ptr, "ngwt:DeltaSyncType");
+	case SOAP_TYPE_ngwt__CustomType:
+		return soap_out_ngwt__CustomType(soap, tag, id, (const enum ngwt__CustomType *)ptr, "ngwt:CustomType");
 	case SOAP_TYPE_ngwt__CursorSeek:
 		return soap_out_ngwt__CursorSeek(soap, tag, id, (const enum ngwt__CursorSeek *)ptr, "ngwt:CursorSeek");
 	case SOAP_TYPE_ngwt__ContactType:
@@ -4572,6 +4582,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__DayOfYearWeek(soap, tag, id, (ngwt__DayOfYearWeek *const*)ptr, "ngwt:DayOfYearWeek");
 	case SOAP_TYPE_PointerTongwt__Custom:
 		return soap_out_PointerTongwt__Custom(soap, tag, id, (ngwt__Custom *const*)ptr, "ngwt:Custom");
+	case SOAP_TYPE_PointerTongwt__CustomType:
+		return soap_out_PointerTongwt__CustomType(soap, tag, id, (enum ngwt__CustomType *const*)ptr, "ngwt:CustomType");
 	case SOAP_TYPE_PointerTongwt__uid:
 		return soap_out_PointerTongwt__uid(soap, tag, id, (std::string *const*)ptr, "ngwt:uid");
 	case SOAP_TYPE_PointerTongwt__Category:
@@ -6788,6 +6800,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTongwt__Custom:
 		soap_serialize_PointerTongwt__Custom(soap, (ngwt__Custom *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__CustomType:
+		soap_serialize_PointerTongwt__CustomType(soap, (enum ngwt__CustomType *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__uid:
 		soap_serialize_PointerTongwt__uid(soap, (std::string *const*)ptr);
@@ -12798,6 +12813,7 @@ static const struct soap_code_map soap_codes_ngwt__FolderType[] =
 	{ (long)Query, "Query" },
 	{ (long)Root, "Root" },
 	{ (long)JunkMail, "JunkMail" },
+	{ (long)Notes, "Notes" },
 	{ 0, NULL }
 };
 
@@ -13400,6 +13416,92 @@ SOAP_FMAC3 enum ngwt__DeltaSyncType * SOAP_FMAC4 soap_in_ngwt__DeltaSyncType(str
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__CustomType(struct soap *soap, enum ngwt__CustomType *a)
+{
+(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_ngwt__CustomType
+	*a = SOAP_DEFAULT_ngwt__CustomType;
+#else
+	*a = (enum ngwt__CustomType)0;
+#endif
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__CustomType(struct soap *soap, const enum ngwt__CustomType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ngwt__CustomType);
+	if (soap_out_ngwt__CustomType(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+static const struct soap_code_map soap_codes_ngwt__CustomType[] =
+{	{ (long)String, "String" },
+	{ (long)Numeric, "Numeric" },
+	{ (long)Date, "Date" },
+	{ (long)Binary, "Binary" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__CustomType2s(struct soap *soap, enum ngwt__CustomType n)
+{	const char *s = soap_str_code(soap_codes_ngwt__CustomType, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__CustomType(struct soap *soap, const char *tag, int id, const enum ngwt__CustomType *a, const char *type)
+{	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__CustomType), type);
+	soap_send(soap, soap_ngwt__CustomType2s(soap, *a));
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 enum ngwt__CustomType * SOAP_FMAC4 soap_get_ngwt__CustomType(struct soap *soap, enum ngwt__CustomType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__CustomType(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__CustomType(struct soap *soap, const char *s, enum ngwt__CustomType *a)
+{
+	const struct soap_code_map *map;
+	if (!s)
+		return SOAP_OK;
+	map = soap_code(soap_codes_ngwt__CustomType, s);
+	if (map)
+		*a = (enum ngwt__CustomType)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n))
+			return soap->error;
+		*a = (enum ngwt__CustomType)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum ngwt__CustomType * SOAP_FMAC4 soap_in_ngwt__CustomType(struct soap *soap, const char *tag, enum ngwt__CustomType *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	if (*soap->type && soap_match_tag(soap, soap->type, type))
+	{	soap->error = SOAP_TYPE;
+		return NULL;
+	}
+	a = (enum ngwt__CustomType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__CustomType, sizeof(enum ngwt__CustomType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2ngwt__CustomType(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__CustomType *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__CustomType, 0, sizeof(enum ngwt__CustomType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__CursorSeek(struct soap *soap, enum ngwt__CursorSeek *a)
 {
 (void)soap; /* appease -Wall -Werror */
@@ -13849,7 +13951,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__AgeAction(struct soap *soap, const enum
 
 static const struct soap_code_map soap_codes_ngwt__AgeAction[] =
 {	{ (long)archive, "archive" },
-	{ (long)_delete, "delete" },
+	{ (long)delete__, "delete" },
 	{ (long)retain, "retain" },
 	{ 0, NULL }
 };
@@ -18617,7 +18719,8 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__unacceptRequest(struct soap *soap, i
 void _ngwm__startFreeBusySessionResponse::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
-	soap_embedded(soap, &((_ngwm__startFreeBusySessionResponse*)this)->freeBusySessionId, SOAP_TYPE_int);
+	soap_embedded(soap, &((_ngwm__startFreeBusySessionResponse*)this)->freeBusySessionId, SOAP_TYPE_PointerToint);
+	soap_serialize_PointerToint(soap, &((_ngwm__startFreeBusySessionResponse*)this)->freeBusySessionId);
 	soap_embedded(soap, &((_ngwm__startFreeBusySessionResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
 	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__startFreeBusySessionResponse*)this)->status);
 	/* transient soap skipped */
@@ -18626,7 +18729,7 @@ void _ngwm__startFreeBusySessionResponse::soap_serialize(struct soap *soap) cons
 void _ngwm__startFreeBusySessionResponse::soap_default(struct soap *soap)
 {
 	this->soap = soap;
-	soap_default_int(soap, &((_ngwm__startFreeBusySessionResponse*)this)->freeBusySessionId);
+	((_ngwm__startFreeBusySessionResponse*)this)->freeBusySessionId = NULL;
 	((_ngwm__startFreeBusySessionResponse*)this)->status = NULL;
 	/* transient soap skipped */
 }
@@ -18647,7 +18750,7 @@ int _ngwm__startFreeBusySessionResponse::soap_out(struct soap *soap, const char 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__startFreeBusySessionResponse(struct soap *soap, const char *tag, int id, const _ngwm__startFreeBusySessionResponse *a, const char *type)
 {
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__startFreeBusySessionResponse), type);
-	soap_out_int(soap, "ngwm:freeBusySessionId", -1, &(((_ngwm__startFreeBusySessionResponse*)a)->freeBusySessionId), "");
+	soap_out_PointerToint(soap, "ngwm:freeBusySessionId", -1, &(((_ngwm__startFreeBusySessionResponse*)a)->freeBusySessionId), "");
 	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__startFreeBusySessionResponse*)a)->status), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
@@ -18691,7 +18794,7 @@ SOAP_FMAC3 _ngwm__startFreeBusySessionResponse * SOAP_FMAC4 soap_in__ngwm__start
 		for (;;)
 		{	soap->error = SOAP_TAG_MISMATCH;
 			if (soap_flag_freeBusySessionId1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_int(soap, "ngwm:freeBusySessionId", &(((_ngwm__startFreeBusySessionResponse*)a)->freeBusySessionId), ""))
+				if (soap_in_PointerToint(soap, "ngwm:freeBusySessionId", &(((_ngwm__startFreeBusySessionResponse*)a)->freeBusySessionId), ""))
 				{	soap_flag_freeBusySessionId1 = 0;
 					continue;
 				}
@@ -18708,7 +18811,7 @@ SOAP_FMAC3 _ngwm__startFreeBusySessionResponse * SOAP_FMAC4 soap_in__ngwm__start
 			if (soap->error)
 				return NULL;
 		}
-		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_freeBusySessionId1 || soap_flag_status1))
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
 		{	soap->error = SOAP_OCCURS;
 			return NULL;
 		}
@@ -37647,8 +37750,7 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createItemsRequest(struct soap *soap
 void _ngwm__createItemResponse::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
-	soap_embedded(soap, &((_ngwm__createItemResponse*)this)->id, SOAP_TYPE_PointerTongwt__uid);
-	soap_serialize_PointerTongwt__uid(soap, &((_ngwm__createItemResponse*)this)->id);
+	soap_serialize_std__vectorTemplateOfngwt__uid(soap, &((_ngwm__createItemResponse*)this)->id);
 	soap_embedded(soap, &((_ngwm__createItemResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
 	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__createItemResponse*)this)->status);
 	/* transient soap skipped */
@@ -37657,7 +37759,7 @@ void _ngwm__createItemResponse::soap_serialize(struct soap *soap) const
 void _ngwm__createItemResponse::soap_default(struct soap *soap)
 {
 	this->soap = soap;
-	((_ngwm__createItemResponse*)this)->id = NULL;
+	soap_default_std__vectorTemplateOfngwt__uid(soap, &((_ngwm__createItemResponse*)this)->id);
 	((_ngwm__createItemResponse*)this)->status = NULL;
 	/* transient soap skipped */
 }
@@ -37678,7 +37780,7 @@ int _ngwm__createItemResponse::soap_out(struct soap *soap, const char *tag, int 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createItemResponse(struct soap *soap, const char *tag, int id, const _ngwm__createItemResponse *a, const char *type)
 {
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__createItemResponse), type);
-	soap_out_PointerTongwt__uid(soap, "ngwm:id", -1, &(((_ngwm__createItemResponse*)a)->id), "");
+	soap_out_std__vectorTemplateOfngwt__uid(soap, "ngwm:id", -1, &(((_ngwm__createItemResponse*)a)->id), "");
 	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__createItemResponse*)a)->status), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
@@ -37716,16 +37818,14 @@ SOAP_FMAC3 _ngwm__createItemResponse * SOAP_FMAC4 soap_in__ngwm__createItemRespo
 			return (_ngwm__createItemResponse *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id1 = 1, soap_flag_status1 = 1;
+	short soap_flag_status1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
 		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_id1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_PointerTongwt__uid(soap, "ngwm:id", &(((_ngwm__createItemResponse*)a)->id), "ngwt:uid"))
-				{	soap_flag_id1 = 0;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfngwt__uid(soap, "ngwm:id", &(((_ngwm__createItemResponse*)a)->id), "ngwt:uid"))
 					continue;
-				}
 			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__createItemResponse*)a)->status), "ngwt:Status"))
 				{	soap_flag_status1 = 0;
@@ -42184,6 +42284,8 @@ void ngwt__Task::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -42245,6 +42347,7 @@ void ngwt__Task::soap_default(struct soap *soap)
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -42292,6 +42395,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Task(struct soap *soap, const char *tag
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -42356,7 +42460,7 @@ SOAP_FMAC3 ngwt__Task * SOAP_FMAC4 soap_in_ngwt__Task(struct soap *soap, const c
 			return (ngwt__Task *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id6 = 1, soap_flag_name6 = 1, soap_flag_version6 = 1, soap_flag_modified6 = 1, soap_flag_changes6 = 1, soap_flag_categories5 = 1, soap_flag_created5 = 1, soap_flag_customs5 = 1, soap_flag_status4 = 1, soap_flag_thread4 = 1, soap_flag_msgId4 = 1, soap_flag_source4 = 1, soap_flag_returnSentItemsId4 = 1, soap_flag_delivered4 = 1, soap_flag_class_4 = 1, soap_flag_security4 = 1, soap_flag_comment4 = 1, soap_flag_subject3 = 1, soap_flag_originalSubject3 = 1, soap_flag_subjectPrefix3 = 1, soap_flag_distribution3 = 1, soap_flag_message3 = 1, soap_flag_attachments3 = 1, soap_flag_options3 = 1, soap_flag_link3 = 1, soap_flag_hasAttachment3 = 1, soap_flag_size3 = 1, soap_flag_subType3 = 1, soap_flag_nntpOrImap3 = 1, soap_flag_smimeType3 = 1, soap_flag_rdate2 = 1, soap_flag_rrule2 = 1, soap_flag_exdate2 = 1, soap_flag_recurrenceKey2 = 1, soap_flag_iCalId2 = 1, soap_flag_startDate1 = 1, soap_flag_dueDate1 = 1, soap_flag_assignedDate1 = 1, soap_flag_taskPriority1 = 1, soap_flag_completed1 = 1;
+	short soap_flag_id6 = 1, soap_flag_name6 = 1, soap_flag_version6 = 1, soap_flag_modified6 = 1, soap_flag_changes6 = 1, soap_flag_categories5 = 1, soap_flag_created5 = 1, soap_flag_customs5 = 1, soap_flag_status4 = 1, soap_flag_thread4 = 1, soap_flag_msgId4 = 1, soap_flag_messageId4 = 1, soap_flag_source4 = 1, soap_flag_returnSentItemsId4 = 1, soap_flag_delivered4 = 1, soap_flag_class_4 = 1, soap_flag_security4 = 1, soap_flag_comment4 = 1, soap_flag_subject3 = 1, soap_flag_originalSubject3 = 1, soap_flag_subjectPrefix3 = 1, soap_flag_distribution3 = 1, soap_flag_message3 = 1, soap_flag_attachments3 = 1, soap_flag_options3 = 1, soap_flag_link3 = 1, soap_flag_hasAttachment3 = 1, soap_flag_size3 = 1, soap_flag_subType3 = 1, soap_flag_nntpOrImap3 = 1, soap_flag_smimeType3 = 1, soap_flag_rdate2 = 1, soap_flag_rrule2 = 1, soap_flag_exdate2 = 1, soap_flag_recurrenceKey2 = 1, soap_flag_iCalId2 = 1, soap_flag_startDate1 = 1, soap_flag_dueDate1 = 1, soap_flag_assignedDate1 = 1, soap_flag_taskPriority1 = 1, soap_flag_completed1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -42418,6 +42522,11 @@ SOAP_FMAC3 ngwt__Task * SOAP_FMAC4 soap_in_ngwt__Task(struct soap *soap, const c
 			if (soap_flag_msgId4 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId4 = 0;
+					continue;
+				}
+			if (soap_flag_messageId4 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId4 = 0;
 					continue;
 				}
 			if (soap_flag_source4 && soap->error == SOAP_TAG_MISMATCH)
@@ -43828,6 +43937,8 @@ void ngwt__SharedNotification::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -43882,6 +43993,7 @@ void ngwt__SharedNotification::soap_default(struct soap *soap)
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -43929,6 +44041,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SharedNotification(struct soap *soap, c
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -43986,7 +44099,7 @@ SOAP_FMAC3 ngwt__SharedNotification * SOAP_FMAC4 soap_in_ngwt__SharedNotificatio
 			return (ngwt__SharedNotification *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_nntpOrImap2 = 1, soap_flag_smimeType2 = 1, soap_flag_notification1 = 1, soap_flag_description1 = 1, soap_flag_rights1 = 1;
+	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_messageId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_nntpOrImap2 = 1, soap_flag_smimeType2 = 1, soap_flag_notification1 = 1, soap_flag_description1 = 1, soap_flag_rights1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -44048,6 +44161,11 @@ SOAP_FMAC3 ngwt__SharedNotification * SOAP_FMAC4 soap_in_ngwt__SharedNotificatio
 			if (soap_flag_msgId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId3 = 0;
+					continue;
+				}
+			if (soap_flag_messageId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId3 = 0;
 					continue;
 				}
 			if (soap_flag_source3 && soap->error == SOAP_TAG_MISMATCH)
@@ -49949,6 +50067,8 @@ void ngwt__PhoneMessage::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -50004,6 +50124,7 @@ void ngwt__PhoneMessage::soap_default(struct soap *soap)
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -50051,6 +50172,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__PhoneMessage(struct soap *soap, const c
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -50109,7 +50231,7 @@ SOAP_FMAC3 ngwt__PhoneMessage * SOAP_FMAC4 soap_in_ngwt__PhoneMessage(struct soa
 			return (ngwt__PhoneMessage *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_nntpOrImap2 = 1, soap_flag_smimeType2 = 1, soap_flag_caller1 = 1, soap_flag_company1 = 1, soap_flag_phone1 = 1, soap_flag_flags1 = 1;
+	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_messageId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_nntpOrImap2 = 1, soap_flag_smimeType2 = 1, soap_flag_caller1 = 1, soap_flag_company1 = 1, soap_flag_phone1 = 1, soap_flag_flags1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -50171,6 +50293,11 @@ SOAP_FMAC3 ngwt__PhoneMessage * SOAP_FMAC4 soap_in_ngwt__PhoneMessage(struct soa
 			if (soap_flag_msgId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId3 = 0;
+					continue;
+				}
+			if (soap_flag_messageId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId3 = 0;
 					continue;
 				}
 			if (soap_flag_source3 && soap->error == SOAP_TAG_MISMATCH)
@@ -51343,6 +51470,8 @@ void ngwt__Note::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -51400,6 +51529,7 @@ void ngwt__Note::soap_default(struct soap *soap)
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -51447,6 +51577,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Note(struct soap *soap, const char *tag
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -51507,7 +51638,7 @@ SOAP_FMAC3 ngwt__Note * SOAP_FMAC4 soap_in_ngwt__Note(struct soap *soap, const c
 			return (ngwt__Note *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id6 = 1, soap_flag_name6 = 1, soap_flag_version6 = 1, soap_flag_modified6 = 1, soap_flag_changes6 = 1, soap_flag_categories5 = 1, soap_flag_created5 = 1, soap_flag_customs5 = 1, soap_flag_status4 = 1, soap_flag_thread4 = 1, soap_flag_msgId4 = 1, soap_flag_source4 = 1, soap_flag_returnSentItemsId4 = 1, soap_flag_delivered4 = 1, soap_flag_class_4 = 1, soap_flag_security4 = 1, soap_flag_comment4 = 1, soap_flag_subject3 = 1, soap_flag_originalSubject3 = 1, soap_flag_subjectPrefix3 = 1, soap_flag_distribution3 = 1, soap_flag_message3 = 1, soap_flag_attachments3 = 1, soap_flag_options3 = 1, soap_flag_link3 = 1, soap_flag_hasAttachment3 = 1, soap_flag_size3 = 1, soap_flag_subType3 = 1, soap_flag_nntpOrImap3 = 1, soap_flag_smimeType3 = 1, soap_flag_rdate2 = 1, soap_flag_rrule2 = 1, soap_flag_exdate2 = 1, soap_flag_recurrenceKey2 = 1, soap_flag_iCalId2 = 1, soap_flag_startDate1 = 1;
+	short soap_flag_id6 = 1, soap_flag_name6 = 1, soap_flag_version6 = 1, soap_flag_modified6 = 1, soap_flag_changes6 = 1, soap_flag_categories5 = 1, soap_flag_created5 = 1, soap_flag_customs5 = 1, soap_flag_status4 = 1, soap_flag_thread4 = 1, soap_flag_msgId4 = 1, soap_flag_messageId4 = 1, soap_flag_source4 = 1, soap_flag_returnSentItemsId4 = 1, soap_flag_delivered4 = 1, soap_flag_class_4 = 1, soap_flag_security4 = 1, soap_flag_comment4 = 1, soap_flag_subject3 = 1, soap_flag_originalSubject3 = 1, soap_flag_subjectPrefix3 = 1, soap_flag_distribution3 = 1, soap_flag_message3 = 1, soap_flag_attachments3 = 1, soap_flag_options3 = 1, soap_flag_link3 = 1, soap_flag_hasAttachment3 = 1, soap_flag_size3 = 1, soap_flag_subType3 = 1, soap_flag_nntpOrImap3 = 1, soap_flag_smimeType3 = 1, soap_flag_rdate2 = 1, soap_flag_rrule2 = 1, soap_flag_exdate2 = 1, soap_flag_recurrenceKey2 = 1, soap_flag_iCalId2 = 1, soap_flag_startDate1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -51569,6 +51700,11 @@ SOAP_FMAC3 ngwt__Note * SOAP_FMAC4 soap_in_ngwt__Note(struct soap *soap, const c
 			if (soap_flag_msgId4 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId4 = 0;
+					continue;
+				}
+			if (soap_flag_messageId4 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId4 = 0;
 					continue;
 				}
 			if (soap_flag_source4 && soap->error == SOAP_TAG_MISMATCH)
@@ -52668,6 +52804,8 @@ void ngwt__Mail::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -52719,6 +52857,7 @@ void ngwt__Mail::soap_default(struct soap *soap)
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -52766,6 +52905,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Mail(struct soap *soap, const char *tag
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -52820,7 +52960,7 @@ SOAP_FMAC3 ngwt__Mail * SOAP_FMAC4 soap_in_ngwt__Mail(struct soap *soap, const c
 			return (ngwt__Mail *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_status2 = 1, soap_flag_thread2 = 1, soap_flag_msgId2 = 1, soap_flag_source2 = 1, soap_flag_returnSentItemsId2 = 1, soap_flag_delivered2 = 1, soap_flag_class_2 = 1, soap_flag_security2 = 1, soap_flag_comment2 = 1, soap_flag_subject1 = 1, soap_flag_originalSubject1 = 1, soap_flag_subjectPrefix1 = 1, soap_flag_distribution1 = 1, soap_flag_message1 = 1, soap_flag_attachments1 = 1, soap_flag_options1 = 1, soap_flag_link1 = 1, soap_flag_hasAttachment1 = 1, soap_flag_size1 = 1, soap_flag_subType1 = 1, soap_flag_nntpOrImap1 = 1, soap_flag_smimeType1 = 1;
+	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_status2 = 1, soap_flag_thread2 = 1, soap_flag_msgId2 = 1, soap_flag_messageId2 = 1, soap_flag_source2 = 1, soap_flag_returnSentItemsId2 = 1, soap_flag_delivered2 = 1, soap_flag_class_2 = 1, soap_flag_security2 = 1, soap_flag_comment2 = 1, soap_flag_subject1 = 1, soap_flag_originalSubject1 = 1, soap_flag_subjectPrefix1 = 1, soap_flag_distribution1 = 1, soap_flag_message1 = 1, soap_flag_attachments1 = 1, soap_flag_options1 = 1, soap_flag_link1 = 1, soap_flag_hasAttachment1 = 1, soap_flag_size1 = 1, soap_flag_subType1 = 1, soap_flag_nntpOrImap1 = 1, soap_flag_smimeType1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -52882,6 +53022,11 @@ SOAP_FMAC3 ngwt__Mail * SOAP_FMAC4 soap_in_ngwt__Mail(struct soap *soap, const c
 			if (soap_flag_msgId2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId2 = 0;
+					continue;
+				}
+			if (soap_flag_messageId2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId2 = 0;
 					continue;
 				}
 			if (soap_flag_source2 && soap->error == SOAP_TAG_MISMATCH)
@@ -59787,6 +59932,8 @@ void ngwt__DocumentRef::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -59850,6 +59997,7 @@ void ngwt__DocumentRef::soap_default(struct soap *soap)
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -59897,6 +60045,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DocumentRef(struct soap *soap, const ch
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -59963,7 +60112,7 @@ SOAP_FMAC3 ngwt__DocumentRef * SOAP_FMAC4 soap_in_ngwt__DocumentRef(struct soap 
 			return (ngwt__DocumentRef *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_nntpOrImap2 = 1, soap_flag_smimeType2 = 1, soap_flag_library1 = 1, soap_flag_documentNumber1 = 1, soap_flag_filename1 = 1, soap_flag_documentTypeName1 = 1, soap_flag_author1 = 1, soap_flag_creator1 = 1, soap_flag_officialVersion1 = 1, soap_flag_currentVersion1 = 1, soap_flag_versionNumber1 = 1, soap_flag_versionDescription1 = 1, soap_flag_fileSize1 = 1, soap_flag_acl1 = 1;
+	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_messageId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_nntpOrImap2 = 1, soap_flag_smimeType2 = 1, soap_flag_library1 = 1, soap_flag_documentNumber1 = 1, soap_flag_filename1 = 1, soap_flag_documentTypeName1 = 1, soap_flag_author1 = 1, soap_flag_creator1 = 1, soap_flag_officialVersion1 = 1, soap_flag_currentVersion1 = 1, soap_flag_versionNumber1 = 1, soap_flag_versionDescription1 = 1, soap_flag_fileSize1 = 1, soap_flag_acl1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -60025,6 +60174,11 @@ SOAP_FMAC3 ngwt__DocumentRef * SOAP_FMAC4 soap_in_ngwt__DocumentRef(struct soap 
 			if (soap_flag_msgId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId3 = 0;
+					continue;
+				}
+			if (soap_flag_messageId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId3 = 0;
 					continue;
 				}
 			if (soap_flag_source3 && soap->error == SOAP_TAG_MISMATCH)
@@ -62131,6 +62285,7 @@ void ngwt__Custom::soap_default(struct soap *soap)
 	soap_default_std__string(soap, &((ngwt__Custom*)this)->field);
 	((ngwt__Custom*)this)->value = NULL;
 	((ngwt__Custom*)this)->locked = NULL;
+	((ngwt__Custom*)this)->type = NULL;
 	/* transient soap skipped */
 }
 
@@ -62149,6 +62304,8 @@ int ngwt__Custom::soap_out(struct soap *soap, const char *tag, int id, const cha
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Custom(struct soap *soap, const char *tag, int id, const ngwt__Custom *a, const char *type)
 {
+	if (((ngwt__Custom *)a)->type)
+		soap_set_attr(soap, "type", soap_ngwt__CustomType2s(soap, *((ngwt__Custom *)a)->type));
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__Custom), type);
 	soap_out_std__string(soap, "ngwt:field", -1, &(((ngwt__Custom*)a)->field), "");
 	soap_out_PointerTostd__string(soap, "ngwt:value", -1, &(((ngwt__Custom*)a)->value), "");
@@ -62187,6 +62344,16 @@ SOAP_FMAC3 ngwt__Custom * SOAP_FMAC4 soap_in_ngwt__Custom(struct soap *soap, con
 		{	soap_revert(soap);
 			*soap->id = '\0';
 			return (ngwt__Custom *)a->soap_in(soap, tag, type);
+		}
+	}
+	{	const char *t = soap_attr_value(soap, "type", 0);
+		if (t)
+		{	if (!(((ngwt__Custom *)a)->type = (enum ngwt__CustomType *)soap_malloc(soap, sizeof(enum ngwt__CustomType))))
+			{	soap->error = SOAP_EOM;
+				return NULL;
+			}
+	if (soap_s2ngwt__CustomType(soap, t, ((ngwt__Custom *)a)->type))
+		return NULL;
 		}
 	}
 	short soap_flag_field1 = 1, soap_flag_value1 = 1, soap_flag_locked1 = 1;
@@ -64169,6 +64336,8 @@ void ngwt__CalendarItem::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -64225,6 +64394,7 @@ void ngwt__CalendarItem::soap_default(struct soap *soap)
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -64272,6 +64442,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__CalendarItem(struct soap *soap, const c
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -64331,7 +64502,7 @@ SOAP_FMAC3 ngwt__CalendarItem * SOAP_FMAC4 soap_in_ngwt__CalendarItem(struct soa
 			return (ngwt__CalendarItem *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_nntpOrImap2 = 1, soap_flag_smimeType2 = 1, soap_flag_rdate1 = 1, soap_flag_rrule1 = 1, soap_flag_exdate1 = 1, soap_flag_recurrenceKey1 = 1, soap_flag_iCalId1 = 1;
+	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_messageId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_nntpOrImap2 = 1, soap_flag_smimeType2 = 1, soap_flag_rdate1 = 1, soap_flag_rrule1 = 1, soap_flag_exdate1 = 1, soap_flag_recurrenceKey1 = 1, soap_flag_iCalId1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -64393,6 +64564,11 @@ SOAP_FMAC3 ngwt__CalendarItem * SOAP_FMAC4 soap_in_ngwt__CalendarItem(struct soa
 			if (soap_flag_msgId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId3 = 0;
+					continue;
+				}
+			if (soap_flag_messageId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId3 = 0;
 					continue;
 				}
 			if (soap_flag_source3 && soap->error == SOAP_TAG_MISMATCH)
@@ -64781,6 +64957,8 @@ void ngwt__BoxEntry::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -64819,6 +64997,7 @@ void ngwt__BoxEntry::soap_default(struct soap *soap)
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -64866,6 +65045,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__BoxEntry(struct soap *soap, const char 
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -64907,7 +65087,7 @@ SOAP_FMAC3 ngwt__BoxEntry * SOAP_FMAC4 soap_in_ngwt__BoxEntry(struct soap *soap,
 			return (ngwt__BoxEntry *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_categories2 = 1, soap_flag_created2 = 1, soap_flag_customs2 = 1, soap_flag_status1 = 1, soap_flag_thread1 = 1, soap_flag_msgId1 = 1, soap_flag_source1 = 1, soap_flag_returnSentItemsId1 = 1, soap_flag_delivered1 = 1, soap_flag_class_1 = 1, soap_flag_security1 = 1, soap_flag_comment1 = 1;
+	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_categories2 = 1, soap_flag_created2 = 1, soap_flag_customs2 = 1, soap_flag_status1 = 1, soap_flag_thread1 = 1, soap_flag_msgId1 = 1, soap_flag_messageId1 = 1, soap_flag_source1 = 1, soap_flag_returnSentItemsId1 = 1, soap_flag_delivered1 = 1, soap_flag_class_1 = 1, soap_flag_security1 = 1, soap_flag_comment1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -64969,6 +65149,11 @@ SOAP_FMAC3 ngwt__BoxEntry * SOAP_FMAC4 soap_in_ngwt__BoxEntry(struct soap *soap,
 			if (soap_flag_msgId1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId1 = 0;
+					continue;
+				}
+			if (soap_flag_messageId1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId1 = 0;
 					continue;
 				}
 			if (soap_flag_source1 && soap->error == SOAP_TAG_MISMATCH)
@@ -65889,6 +66074,8 @@ void ngwt__Appointment::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -65954,6 +66141,7 @@ void ngwt__Appointment::soap_default(struct soap *soap)
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -66001,6 +66189,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Appointment(struct soap *soap, const ch
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -66069,7 +66258,7 @@ SOAP_FMAC3 ngwt__Appointment * SOAP_FMAC4 soap_in_ngwt__Appointment(struct soap 
 			return (ngwt__Appointment *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id6 = 1, soap_flag_name6 = 1, soap_flag_version6 = 1, soap_flag_modified6 = 1, soap_flag_changes6 = 1, soap_flag_categories5 = 1, soap_flag_created5 = 1, soap_flag_customs5 = 1, soap_flag_status4 = 1, soap_flag_thread4 = 1, soap_flag_msgId4 = 1, soap_flag_source4 = 1, soap_flag_returnSentItemsId4 = 1, soap_flag_delivered4 = 1, soap_flag_class_4 = 1, soap_flag_security4 = 1, soap_flag_comment4 = 1, soap_flag_subject3 = 1, soap_flag_originalSubject3 = 1, soap_flag_subjectPrefix3 = 1, soap_flag_distribution3 = 1, soap_flag_message3 = 1, soap_flag_attachments3 = 1, soap_flag_options3 = 1, soap_flag_link3 = 1, soap_flag_hasAttachment3 = 1, soap_flag_size3 = 1, soap_flag_subType3 = 1, soap_flag_nntpOrImap3 = 1, soap_flag_smimeType3 = 1, soap_flag_rdate2 = 1, soap_flag_rrule2 = 1, soap_flag_exdate2 = 1, soap_flag_recurrenceKey2 = 1, soap_flag_iCalId2 = 1, soap_flag_startDate1 = 1, soap_flag_endDate1 = 1, soap_flag_startDay1 = 1, soap_flag_endDay1 = 1, soap_flag_acceptLevel1 = 1, soap_flag_alarm1 = 1, soap_flag_allDayEvent1 = 1, soap_flag_place1 = 1, soap_flag_timezone1 = 1;
+	short soap_flag_id6 = 1, soap_flag_name6 = 1, soap_flag_version6 = 1, soap_flag_modified6 = 1, soap_flag_changes6 = 1, soap_flag_categories5 = 1, soap_flag_created5 = 1, soap_flag_customs5 = 1, soap_flag_status4 = 1, soap_flag_thread4 = 1, soap_flag_msgId4 = 1, soap_flag_messageId4 = 1, soap_flag_source4 = 1, soap_flag_returnSentItemsId4 = 1, soap_flag_delivered4 = 1, soap_flag_class_4 = 1, soap_flag_security4 = 1, soap_flag_comment4 = 1, soap_flag_subject3 = 1, soap_flag_originalSubject3 = 1, soap_flag_subjectPrefix3 = 1, soap_flag_distribution3 = 1, soap_flag_message3 = 1, soap_flag_attachments3 = 1, soap_flag_options3 = 1, soap_flag_link3 = 1, soap_flag_hasAttachment3 = 1, soap_flag_size3 = 1, soap_flag_subType3 = 1, soap_flag_nntpOrImap3 = 1, soap_flag_smimeType3 = 1, soap_flag_rdate2 = 1, soap_flag_rrule2 = 1, soap_flag_exdate2 = 1, soap_flag_recurrenceKey2 = 1, soap_flag_iCalId2 = 1, soap_flag_startDate1 = 1, soap_flag_endDate1 = 1, soap_flag_startDay1 = 1, soap_flag_endDay1 = 1, soap_flag_acceptLevel1 = 1, soap_flag_alarm1 = 1, soap_flag_allDayEvent1 = 1, soap_flag_place1 = 1, soap_flag_timezone1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -66131,6 +66320,11 @@ SOAP_FMAC3 ngwt__Appointment * SOAP_FMAC4 soap_in_ngwt__Appointment(struct soap 
 			if (soap_flag_msgId4 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId4 = 0;
+					continue;
+				}
+			if (soap_flag_messageId4 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId4 = 0;
 					continue;
 				}
 			if (soap_flag_source4 && soap->error == SOAP_TAG_MISMATCH)
@@ -90812,6 +91006,55 @@ SOAP_FMAC3 ngwt__Custom ** SOAP_FMAC4 soap_in_PointerTongwt__Custom(struct soap 
 	}
 	else
 	{	a = (ngwt__Custom **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__Custom, sizeof(ngwt__Custom), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__CustomType(struct soap *soap, enum ngwt__CustomType *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_ngwt__CustomType);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__CustomType(struct soap *soap, enum ngwt__CustomType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__CustomType);
+	if (soap_out_PointerTongwt__CustomType(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__CustomType(struct soap *soap, const char *tag, int id, enum ngwt__CustomType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__CustomType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ngwt__CustomType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 enum ngwt__CustomType ** SOAP_FMAC4 soap_get_PointerTongwt__CustomType(struct soap *soap, enum ngwt__CustomType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__CustomType(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 enum ngwt__CustomType ** SOAP_FMAC4 soap_in_PointerTongwt__CustomType(struct soap *soap, const char *tag, enum ngwt__CustomType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (enum ngwt__CustomType **)soap_malloc(soap, sizeof(enum ngwt__CustomType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ngwt__CustomType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__CustomType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__CustomType, sizeof(enum ngwt__CustomType), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}

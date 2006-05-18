@@ -1209,6 +1209,7 @@ bool GroupwiseServer::insertAddressee( const QString &addrBookId, KABC::Addresse
 
   _ngwm__createItemRequest request;
   request.item = contact;
+  request.notification = 0;
 
   _ngwm__createItemResponse response;
   mSoap->header->ngwt__session = mSession;
@@ -1218,7 +1219,7 @@ bool GroupwiseServer::insertAddressee( const QString &addrBookId, KABC::Addresse
                                                    &request, &response );
   if ( !checkResponse( result, response.status ) ) return false;
 
-  addr.insertCustom( "GWRESOURCE", "UID", QString::fromUtf8( response.id->c_str() ) );
+  addr.insertCustom( "GWRESOURCE", "UID", QString::fromUtf8( response.id.front().c_str() ) );
   addr.setChanged( false );
 
   return true;
@@ -1337,7 +1338,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
     mUrl.latin1(), NULL, &startSessionRequest, &startSessionResponse );
   if ( !checkResponse( result, startSessionResponse.status ) ) return false;
 
-  int fbSessionId = startSessionResponse.freeBusySessionId;
+  int fbSessionId = *startSessionResponse.freeBusySessionId;
 
   kdDebug() << "Free/Busy session ID: " << fbSessionId << endl;
 

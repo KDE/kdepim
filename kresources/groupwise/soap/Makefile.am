@@ -29,7 +29,7 @@ libgwsoap_la_LIBADD	= -lkabc
 # rename any 'new' method invocations
 
 # do not just set "srcdir=." here, it breaks when building with srcdir!=builddir
-# srcdir = .
+srcdir = .
 
 stubs: groupwise.wsdl
 	wsdl2h -e -o $(srcdir)/groupwise.h $(srcdir)/groupwise.wsdl -t $(srcdir)/typemap.dat

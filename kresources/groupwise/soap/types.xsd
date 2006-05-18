@@ -2,22 +2,41 @@
 ================================================================================
 File:	types.xsd
 
-   Copyright (C) 2005-2005 Novell, Inc. All Rights Reserved.
+Copyright (c) 2005-2006	Novell, Inc. All Rights Reserved.
 
-   Use and redistribution of this work is subject to the developer license
-   agreement through which this work is made available. Pursuant to that license
-   agreement, Novell hereby grants You a royalty-free, non-exclusive license to
-   include Novell's sample code in Your product(s) that interoperate with the
-   applicable Novell product, and worldwide distribution rights to market,
-   distribute, or sell Novell's sample code as a component of Your product.
+Use and redistribution of this work is subject to the developer license
+agreement through which this work is made available. Pursuant to that license
+agreement, Novell hereby grants You a royalty-free, non-exclusive license to
+include Novell's sample code in Your product(s) that interoperate with the
+applicable Novell product, and worldwide distribution rights to market,
+distribute, or sell Novell's sample code as a component of Your product.
 
-   THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-   NOVELL OR THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
-   OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-   ARISING FROM, OUT OF OR IN CONNECTION WITH THE WORK OR THE USE OR OTHER
-   DEALINGS IN THE WORK.
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL NOVELL OR THE AUTHORS 
+OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF 
+OR IN CONNECTION WITH THE WORK OR THE USE OR OTHER DEALINGS IN THE WORK.
+
+
+Alternatively, the contents of this file may be used under the terms of 
+GNU General Public License Version 2 (the "GPL") as explained below.  
+If you wish to allow use of your version of this file only under the terms 
+of the GPL, and not to allow others to use your version of this file under 
+the provisions appearing above, indicate your decision by deleting the 
+provisions above and replace them with the notice and other provisions required 
+by the GPL. If you do not delete the provisions above, a recipient may use 
+your version of this file under the above provisions of the GPL.
+
+
+This file is free software; you can redistribute it and/or modify it under the 
+terms of version 2 of the GNU General Public License as published by the 
+Free Software Foundation.  This program is distributed in the hope that it will 
+be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of 
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+for more details.  You should have received a copy of the GNU General Public License 
+along with this program; if not, contact Novell, Inc.  To contact Novell about this 
+file by physical or electronic mail, you may find current contact information at www.novell.com.
 ================================================================================
 --><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schemas.novell.com/2005/01/GroupWise/types" elementFormDefault="qualified" xmlns:tns="http://schemas.novell.com/2005/01/GroupWise/types">
 	<xs:element name="acceptLevel" type="tns:AcceptLevel"/>
@@ -208,6 +227,7 @@ File:	types.xsd
 					<xs:element name="status" type="tns:ItemStatus" minOccurs="0"/>
 					<xs:element name="thread" type="xs:string" minOccurs="0"/>
 					<xs:element name="msgId" type="xs:string" minOccurs="0"/>
+					<xs:element name="messageId" type="xs:string" minOccurs="0"/>
 					<xs:element name="source" type="tns:ItemSource" minOccurs="0"/>
 					<xs:element name="returnSentItemsId" type="xs:boolean" minOccurs="0"/>
 					<xs:element name="delivered" type="xs:dateTime"/>
@@ -345,12 +365,21 @@ File:	types.xsd
 			<xs:element name="value" type="xs:string" minOccurs="0"/>
 			<xs:element name="locked" type="xs:boolean" minOccurs="0"/>
 		</xs:sequence>
+		<xs:attribute name="type" type="tns:CustomType" use="optional"/>
 	</xs:complexType>
 	<xs:complexType name="CustomList">
 		<xs:sequence>
 			<xs:element name="custom" type="tns:Custom" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:simpleType name="CustomType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="String"/>
+			<xs:enumeration value="Numeric"/>
+			<xs:enumeration value="Date"/>
+			<xs:enumeration value="Binary"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="Day">
 		<xs:restriction base="xs:unsignedByte">
 			<xs:maxInclusive value="30"/>
@@ -667,6 +696,7 @@ File:	types.xsd
 			<xs:enumeration value="Query"/>
 			<xs:enumeration value="Root"/>
 			<xs:enumeration value="JunkMail"/>
+			<xs:enumeration value="Notes"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="FreeBusyBlockList">
@@ -887,7 +917,7 @@ File:	types.xsd
 			<xs:element name="private" type="xs:boolean" minOccurs="0"/>
 			<xs:element name="opened" type="xs:boolean" minOccurs="0"/>
 			<xs:element name="read" type="xs:boolean" minOccurs="0"/>
-			<xs:element name="replied" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="replied" type="xs:boolean" minOccurs="0"/>      
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="JunkEntry">

@@ -49,7 +49,7 @@ enum ngwt__AcceptLevel {Free = 0, Tentative = 1, Busy = 2, OutOfOffice = 3};
 #ifndef SOAP_TYPE_ngwt__AgeAction
 #define SOAP_TYPE_ngwt__AgeAction (342)
 /* ngwt:AgeAction */
-enum ngwt__AgeAction {archive = 0, _delete = 1, retain = 2};
+enum ngwt__AgeAction {archive = 0, delete__ = 1, retain = 2};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AppointmentConflict
@@ -82,188 +82,194 @@ enum ngwt__ContactType {Contact__ = 0, Group_ = 1, Resource_ = 2, Organization__
 enum ngwt__CursorSeek {current = 0, start = 1, end = 2};
 #endif
 
+#ifndef SOAP_TYPE_ngwt__CustomType
+#define SOAP_TYPE_ngwt__CustomType (348)
+/* ngwt:CustomType */
+enum ngwt__CustomType {String = 0, Numeric = 1, Date = 2, Binary = 3};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__DeltaSyncType
-#define SOAP_TYPE_ngwt__DeltaSyncType (352)
+#define SOAP_TYPE_ngwt__DeltaSyncType (353)
 /* ngwt:DeltaSyncType */
 enum ngwt__DeltaSyncType {add = 0, delete_ = 1, update = 2};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__DistributionType
-#define SOAP_TYPE_ngwt__DistributionType (353)
+#define SOAP_TYPE_ngwt__DistributionType (354)
 /* ngwt:DistributionType */
 enum ngwt__DistributionType {TO = 0, CC = 1, BC = 2};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Execution
-#define SOAP_TYPE_ngwt__Execution (354)
+#define SOAP_TYPE_ngwt__Execution (355)
 /* ngwt:Execution */
 enum ngwt__Execution {Startup = 0, Exit = 1, New = 2, FolderOpen = 3, FolderClose = 4, FolderNew = 5, User = 6};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FilterDate
-#define SOAP_TYPE_ngwt__FilterDate (355)
+#define SOAP_TYPE_ngwt__FilterDate (356)
 /* ngwt:FilterDate */
 enum ngwt__FilterDate {Today = 0, Tomorrow = 1, ThisMonth = 2, ThisWeek = 3, ThisYear = 4, Yesterday = 5};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FilterOp
-#define SOAP_TYPE_ngwt__FilterOp (356)
+#define SOAP_TYPE_ngwt__FilterOp (357)
 /* ngwt:FilterOp */
 enum ngwt__FilterOp {and_ = 0, or_ = 1, not_ = 2, eq = 3, ne = 4, gt = 5, lt = 6, gte = 7, lte = 8, contains = 9, containsWord = 10, begins = 11, exists = 12, notExist = 13, isOf = 14, isNotOf = 15, fieldEqual = 16, fieldGTE = 17, fieldGT = 18, fieldLTE = 19, fieldLT = 20, fieldNE = 21, fieldDateEqual = 22};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FolderACLStatus
-#define SOAP_TYPE_ngwt__FolderACLStatus (357)
+#define SOAP_TYPE_ngwt__FolderACLStatus (358)
 /* ngwt:FolderACLStatus */
 enum ngwt__FolderACLStatus {pending = 0, accepted = 1, deleted = 2, opened = 3, owner = 4};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FolderType
-#define SOAP_TYPE_ngwt__FolderType (358)
+#define SOAP_TYPE_ngwt__FolderType (359)
 /* ngwt:FolderType */
-enum ngwt__FolderType {Mailbox = 0, SentItems = 1, Draft = 2, Trash = 3, Calendar = 4, Contacts = 5, Documents = 6, Checklist = 7, Cabinet = 8, Normal_ = 9, NNTPServer = 10, NNTPNewsGroup = 11, IMAP = 12, Query = 13, Root = 14, JunkMail = 15};
+enum ngwt__FolderType {Mailbox = 0, SentItems = 1, Draft = 2, Trash = 3, Calendar = 4, Contacts = 5, Documents = 6, Checklist = 7, Cabinet = 8, Normal_ = 9, NNTPServer = 10, NNTPNewsGroup = 11, IMAP = 12, Query = 13, Root = 14, JunkMail = 15, Notes = 16};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Frequency
-#define SOAP_TYPE_ngwt__Frequency (359)
+#define SOAP_TYPE_ngwt__Frequency (360)
 /* ngwt:Frequency */
 enum ngwt__Frequency {Daily = 0, Weekly = 1, Monthly = 2, Yearly = 3};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemClass
-#define SOAP_TYPE_ngwt__ItemClass (362)
+#define SOAP_TYPE_ngwt__ItemClass (363)
 /* ngwt:ItemClass */
 enum ngwt__ItemClass {Public = 0, Private = 1};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemOptionsPriority
-#define SOAP_TYPE_ngwt__ItemOptionsPriority (363)
+#define SOAP_TYPE_ngwt__ItemOptionsPriority (364)
 /* ngwt:ItemOptionsPriority */
 enum ngwt__ItemOptionsPriority {High = 0, Standard = 1, Low = 2};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemSecurity
-#define SOAP_TYPE_ngwt__ItemSecurity (364)
+#define SOAP_TYPE_ngwt__ItemSecurity (365)
 /* ngwt:ItemSecurity */
 enum ngwt__ItemSecurity {Normal__ = 0, Proprietary = 1, Confidential = 2, Secret = 3, TopSecret = 4, ForYourEyesOnly = 5};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemSource
-#define SOAP_TYPE_ngwt__ItemSource (365)
+#define SOAP_TYPE_ngwt__ItemSource (366)
 /* ngwt:ItemSource */
 enum ngwt__ItemSource {received_ = 0, sent_ = 1, draft_ = 2, personal_ = 3};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__JunkHandlingListType
-#define SOAP_TYPE_ngwt__JunkHandlingListType (366)
+#define SOAP_TYPE_ngwt__JunkHandlingListType (367)
 /* ngwt:JunkHandlingListType */
 enum ngwt__JunkHandlingListType {junk = 0, block = 1, trust = 2};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__JunkMatchType
-#define SOAP_TYPE_ngwt__JunkMatchType (367)
+#define SOAP_TYPE_ngwt__JunkMatchType (368)
 /* ngwt:JunkMatchType */
 enum ngwt__JunkMatchType {email = 0, domain = 1};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__LinkType
-#define SOAP_TYPE_ngwt__LinkType (368)
+#define SOAP_TYPE_ngwt__LinkType (369)
 /* ngwt:LinkType */
 enum ngwt__LinkType {forward = 0, reply = 1};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__MessageList
-#define SOAP_TYPE_ngwt__MessageList (369)
+#define SOAP_TYPE_ngwt__MessageList (370)
 /* ngwt:MessageList */
 enum ngwt__MessageList {All = 0, Modified = 1, New_ = 2};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__MessageType
-#define SOAP_TYPE_ngwt__MessageType (370)
+#define SOAP_TYPE_ngwt__MessageType (371)
 /* ngwt:MessageType */
 enum ngwt__MessageType {Appointment__ = 0, CalendarItem__ = 1, DocumentReference_ = 2, Mail__ = 3, Note__ = 4, PhoneMessage__ = 5, Task__ = 6};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__NotificationType
-#define SOAP_TYPE_ngwt__NotificationType (373)
+#define SOAP_TYPE_ngwt__NotificationType (374)
 /* ngwt:NotificationType */
 enum ngwt__NotificationType {SharedAddressBook = 0, SharedFolder = 1};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__OccurrenceType
-#define SOAP_TYPE_ngwt__OccurrenceType (374)
+#define SOAP_TYPE_ngwt__OccurrenceType (375)
 /* ngwt:OccurrenceType */
 enum ngwt__OccurrenceType {First = 0, Second = 1, Third = 2, Fourth = 3, Fifth = 4, Last = 5};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__PhoneNumberType
-#define SOAP_TYPE_ngwt__PhoneNumberType (375)
+#define SOAP_TYPE_ngwt__PhoneNumberType (376)
 /* ngwt:PhoneNumberType */
 enum ngwt__PhoneNumberType {Fax = 0, Home = 1, Mobile = 2, Office = 3, Pager = 4};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__PostalAddressType
-#define SOAP_TYPE_ngwt__PostalAddressType (376)
+#define SOAP_TYPE_ngwt__PostalAddressType (377)
 /* ngwt:PostalAddressType */
 enum ngwt__PostalAddressType {Home_ = 0, Office_ = 1};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__RecipientType
-#define SOAP_TYPE_ngwt__RecipientType (377)
+#define SOAP_TYPE_ngwt__RecipientType (378)
 /* ngwt:RecipientType */
 enum ngwt__RecipientType {User_ = 0, Resource__ = 1, PersonalGroup = 2, SystemGroup = 3, PersonalGroupMember = 4, SystemGroupMember = 5};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__RetractType
-#define SOAP_TYPE_ngwt__RetractType (378)
+#define SOAP_TYPE_ngwt__RetractType (379)
 /* ngwt:RetractType */
 enum ngwt__RetractType {myMailbox = 0, recipientMailboxes = 1, allMailboxes = 2};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__RuleActionType
-#define SOAP_TYPE_ngwt__RuleActionType (379)
+#define SOAP_TYPE_ngwt__RuleActionType (380)
 /* ngwt:RuleActionType */
 enum ngwt__RuleActionType {Accept = 0, Archive = 1, Category_ = 2, Delegate = 3, Delete = 4, Forward = 5, Link = 6, MarkPrivate = 7, MarkRead = 8, MarkUnread = 9, Move = 10, Purge = 11, Reply = 12, Send = 13, StopRules = 14, Unknown = 15};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__StatusTrackingOptions
-#define SOAP_TYPE_ngwt__StatusTrackingOptions (380)
+#define SOAP_TYPE_ngwt__StatusTrackingOptions (381)
 /* ngwt:StatusTrackingOptions */
 enum ngwt__StatusTrackingOptions {None = 0, Delivered = 1, DeliveredAndOpened = 2, All_ = 3};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__VersionEventType
-#define SOAP_TYPE_ngwt__VersionEventType (383)
+#define SOAP_TYPE_ngwt__VersionEventType (384)
 /* ngwt:VersionEventType */
 enum ngwt__VersionEventType {archive_ = 0, checkIn = 1, checkOut = 2, copyIn = 3, copyOut = 4, copyVersion = 5, created = 6, deleteVersion = 7, endAccess = 8, resetStatus = 9, restore = 10, retrieve = 11, securityModified = 12, versionDownloaded = 13, viewed = 14, unknown = 15};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__VersionStatus
-#define SOAP_TYPE_ngwt__VersionStatus (384)
+#define SOAP_TYPE_ngwt__VersionStatus (385)
 /* ngwt:VersionStatus */
 enum ngwt__VersionStatus {available = 0, checkedOut = 1, inUse = 2, deleted_ = 3, archived = 4, massInUse = 5, unavailable = 6};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__WeekDay
-#define SOAP_TYPE_ngwt__WeekDay (385)
+#define SOAP_TYPE_ngwt__WeekDay (386)
 /* ngwt:WeekDay */
 enum ngwt__WeekDay {Sunday = 0, Monday = 1, Tuesday = 2, Wednesday = 3, Thursday = 4, Friday = 5, Saturday = 6};
 #endif
 
 #ifndef SOAP_TYPE_ngwe__EventType
-#define SOAP_TYPE_ngwe__EventType (387)
+#define SOAP_TYPE_ngwe__EventType (388)
 /* ngwe:EventType */
 enum ngwe__EventType {AddressBookAdd = 0, AddressBookDelete = 1, AddressBookModify = 2, AddressBookItemAdd = 3, AddressBookItemDelete = 4, AddressBookItemModify = 5, FolderAccept = 6, FolderAdd = 7, FolderDelete = 8, FolderItemAdd = 9, FolderItemDelete = 10, FolderItemMove = 11, FolderModify = 12, ItemAccept = 13, ItemArchive = 14, ItemComplete = 15, ItemDecline = 16, ItemDelete = 17, ItemMarkPrivate = 18, ItemMarkRead = 19, ItemMarkUnread = 20, ItemModify = 21, ItemPurge = 22, ItemUnarchive = 23, ItemUndelete = 24, Login = 25, Logout = 26, ProxyAccessAdd = 27, ProxyAccessModify = 28, ProxyAccessDelete = 29, ProxyLogin = 30, SessionTimedOut = 31, TrustedApplicationLogin = 32, ItemMarkUnprivate = 33, ItemUnaccept = 34, ItemUncomplete = 35, PersonalGroupItemAdd = 36, PersonalGroupItemDelete = 37};
 #endif
 
 #ifndef SOAP_TYPE_ngwe__Field
-#define SOAP_TYPE_ngwe__Field (388)
+#define SOAP_TYPE_ngwe__Field (389)
 /* ngwe:Field */
 enum ngwe__Field {AcceptLevel_ = 0, Alarm_ = 1, AllDayEvent_ = 2, Attachment_ = 3, Category__ = 4, Classification_ = 5, Contact___ = 6, DueDate_ = 7, Duration_ = 8, EmailAddress_ = 9, ExpirationDate_ = 10, Hidden_ = 11, IMAddress_ = 12, MessageBody_ = 13, Name_ = 14, Organization___ = 15, Owner_ = 16, PersonalSubject_ = 17, PhoneNumber_ = 18, Place_ = 19, PostalAddress_ = 20, RecipientStatus_ = 21, Rights_ = 22, Security_ = 23, SendPriority_ = 24, StartDate_ = 25, Subject_ = 26, TaskCategory_ = 27, TaskPriority_ = 28};
 #endif
 
 #ifndef SOAP_TYPE_ngwe__ItemType
-#define SOAP_TYPE_ngwe__ItemType (389)
+#define SOAP_TYPE_ngwe__ItemType (390)
 /* ngwe:ItemType */
 enum ngwe__ItemType {AddressBookItem_ = 0, Appointment___ = 1, CalendarItem___ = 2, Contact____ = 3, Group__ = 4, Mail___ = 5, Note___ = 6, Organization____ = 7, PhoneMessage___ = 8, Resource___ = 9, Task___ = 10, DocumentRef_ = 11};
 #endif
@@ -582,6 +588,7 @@ public:
 public:
 	std::string *value;	/* optional element of type xsd:string */
 	bool *locked;	/* optional element of type xsd:boolean */
+	enum ngwt__CustomType *type;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
 	virtual int soap_type() const { return 45; } /* = unique id SOAP_TYPE_ngwt__Custom */
@@ -2763,7 +2770,7 @@ public:
 class SOAP_CMAC _ngwm__createItemResponse
 {
 public:
-	std::string *id;	/* RPC return element */	/* optional element of type ngwt:uid */
+	std::vector<std::string >id;	/* RPC return element */	/* optional element of type ngwt:uid */
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
@@ -5668,7 +5675,7 @@ public:
 class SOAP_CMAC _ngwm__startFreeBusySessionResponse
 {
 public:
-	int freeBusySessionId;	/* RPC return element */	/* required element of type xsd:int */
+	int *freeBusySessionId;	/* RPC return element */	/* optional element of type xsd:int */
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
@@ -6882,6 +6889,7 @@ public:
 	ngwt__ItemStatus *status;	/* optional element of type ngwt:ItemStatus */
 	std::string *thread;	/* optional element of type xsd:string */
 	std::string *msgId;	/* optional element of type xsd:string */
+	std::string *messageId;	/* optional element of type xsd:string */
 	enum ngwt__ItemSource *source;	/* optional element of type ngwt:ItemSource */
 	bool *returnSentItemsId;	/* optional element of type xsd:boolean */
 	char *delivered;	/* required element of type xsd:string */
@@ -7488,7 +7496,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (600)
+#define SOAP_TYPE_SOAP_ENV__Header (602)
 /* SOAP Header: */
 struct SOAP_ENV__Header
 {
@@ -7498,7 +7506,7 @@ struct SOAP_ENV__Header
 #endif
 
 #ifndef SOAP_TYPE___ngw__acceptRequest
-#define SOAP_TYPE___ngw__acceptRequest (604)
+#define SOAP_TYPE___ngw__acceptRequest (606)
 /* Operation wrapper: */
 struct __ngw__acceptRequest
 {
@@ -7507,7 +7515,7 @@ struct __ngw__acceptRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__acceptShareRequest
-#define SOAP_TYPE___ngw__acceptShareRequest (608)
+#define SOAP_TYPE___ngw__acceptShareRequest (610)
 /* Operation wrapper: */
 struct __ngw__acceptShareRequest
 {
@@ -7516,7 +7524,7 @@ struct __ngw__acceptShareRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__addItemRequest
-#define SOAP_TYPE___ngw__addItemRequest (612)
+#define SOAP_TYPE___ngw__addItemRequest (614)
 /* Operation wrapper: */
 struct __ngw__addItemRequest
 {
@@ -7525,7 +7533,7 @@ struct __ngw__addItemRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__addItemsRequest
-#define SOAP_TYPE___ngw__addItemsRequest (616)
+#define SOAP_TYPE___ngw__addItemsRequest (618)
 /* Operation wrapper: */
 struct __ngw__addItemsRequest
 {
@@ -7534,7 +7542,7 @@ struct __ngw__addItemsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__addMembersRequest
-#define SOAP_TYPE___ngw__addMembersRequest (620)
+#define SOAP_TYPE___ngw__addMembersRequest (622)
 /* Operation wrapper: */
 struct __ngw__addMembersRequest
 {
@@ -7543,7 +7551,7 @@ struct __ngw__addMembersRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__closeFreeBusySessionRequest
-#define SOAP_TYPE___ngw__closeFreeBusySessionRequest (624)
+#define SOAP_TYPE___ngw__closeFreeBusySessionRequest (626)
 /* Operation wrapper: */
 struct __ngw__closeFreeBusySessionRequest
 {
@@ -7552,7 +7560,7 @@ struct __ngw__closeFreeBusySessionRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__completeRequest
-#define SOAP_TYPE___ngw__completeRequest (628)
+#define SOAP_TYPE___ngw__completeRequest (630)
 /* Operation wrapper: */
 struct __ngw__completeRequest
 {
@@ -7561,7 +7569,7 @@ struct __ngw__completeRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__createCursorRequest
-#define SOAP_TYPE___ngw__createCursorRequest (632)
+#define SOAP_TYPE___ngw__createCursorRequest (634)
 /* Operation wrapper: */
 struct __ngw__createCursorRequest
 {
@@ -7570,7 +7578,7 @@ struct __ngw__createCursorRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__createItemRequest
-#define SOAP_TYPE___ngw__createItemRequest (636)
+#define SOAP_TYPE___ngw__createItemRequest (638)
 /* Operation wrapper: */
 struct __ngw__createItemRequest
 {
@@ -7579,7 +7587,7 @@ struct __ngw__createItemRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__createItemsRequest
-#define SOAP_TYPE___ngw__createItemsRequest (640)
+#define SOAP_TYPE___ngw__createItemsRequest (642)
 /* Operation wrapper: */
 struct __ngw__createItemsRequest
 {
@@ -7588,7 +7596,7 @@ struct __ngw__createItemsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__createJunkEntryRequest
-#define SOAP_TYPE___ngw__createJunkEntryRequest (644)
+#define SOAP_TYPE___ngw__createJunkEntryRequest (646)
 /* Operation wrapper: */
 struct __ngw__createJunkEntryRequest
 {
@@ -7597,7 +7605,7 @@ struct __ngw__createJunkEntryRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__createProxyAccessRequest
-#define SOAP_TYPE___ngw__createProxyAccessRequest (648)
+#define SOAP_TYPE___ngw__createProxyAccessRequest (650)
 /* Operation wrapper: */
 struct __ngw__createProxyAccessRequest
 {
@@ -7606,7 +7614,7 @@ struct __ngw__createProxyAccessRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__createSignatureRequest
-#define SOAP_TYPE___ngw__createSignatureRequest (652)
+#define SOAP_TYPE___ngw__createSignatureRequest (654)
 /* Operation wrapper: */
 struct __ngw__createSignatureRequest
 {
@@ -7615,7 +7623,7 @@ struct __ngw__createSignatureRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__declineRequest
-#define SOAP_TYPE___ngw__declineRequest (656)
+#define SOAP_TYPE___ngw__declineRequest (658)
 /* Operation wrapper: */
 struct __ngw__declineRequest
 {
@@ -7624,7 +7632,7 @@ struct __ngw__declineRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__delegateRequest
-#define SOAP_TYPE___ngw__delegateRequest (660)
+#define SOAP_TYPE___ngw__delegateRequest (662)
 /* Operation wrapper: */
 struct __ngw__delegateRequest
 {
@@ -7633,7 +7641,7 @@ struct __ngw__delegateRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__destroyCursorRequest
-#define SOAP_TYPE___ngw__destroyCursorRequest (664)
+#define SOAP_TYPE___ngw__destroyCursorRequest (666)
 /* Operation wrapper: */
 struct __ngw__destroyCursorRequest
 {
@@ -7642,7 +7650,7 @@ struct __ngw__destroyCursorRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__executeRuleRequest
-#define SOAP_TYPE___ngw__executeRuleRequest (668)
+#define SOAP_TYPE___ngw__executeRuleRequest (670)
 /* Operation wrapper: */
 struct __ngw__executeRuleRequest
 {
@@ -7651,7 +7659,7 @@ struct __ngw__executeRuleRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__forwardRequest
-#define SOAP_TYPE___ngw__forwardRequest (672)
+#define SOAP_TYPE___ngw__forwardRequest (674)
 /* Operation wrapper: */
 struct __ngw__forwardRequest
 {
@@ -7660,7 +7668,7 @@ struct __ngw__forwardRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getAddressBookListRequest
-#define SOAP_TYPE___ngw__getAddressBookListRequest (676)
+#define SOAP_TYPE___ngw__getAddressBookListRequest (678)
 /* Operation wrapper: */
 struct __ngw__getAddressBookListRequest
 {
@@ -7669,7 +7677,7 @@ struct __ngw__getAddressBookListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getAttachmentRequestMessage
-#define SOAP_TYPE___ngw__getAttachmentRequestMessage (680)
+#define SOAP_TYPE___ngw__getAttachmentRequestMessage (682)
 /* Operation wrapper: */
 struct __ngw__getAttachmentRequestMessage
 {
@@ -7678,7 +7686,7 @@ struct __ngw__getAttachmentRequestMessage
 #endif
 
 #ifndef SOAP_TYPE___ngw__getCategoryListRequest
-#define SOAP_TYPE___ngw__getCategoryListRequest (684)
+#define SOAP_TYPE___ngw__getCategoryListRequest (686)
 /* Operation wrapper: */
 struct __ngw__getCategoryListRequest
 {
@@ -7687,7 +7695,7 @@ struct __ngw__getCategoryListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getCustomListRequest
-#define SOAP_TYPE___ngw__getCustomListRequest (688)
+#define SOAP_TYPE___ngw__getCustomListRequest (690)
 /* Operation wrapper: */
 struct __ngw__getCustomListRequest
 {
@@ -7696,7 +7704,7 @@ struct __ngw__getCustomListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getDeltasRequest
-#define SOAP_TYPE___ngw__getDeltasRequest (692)
+#define SOAP_TYPE___ngw__getDeltasRequest (694)
 /* Operation wrapper: */
 struct __ngw__getDeltasRequest
 {
@@ -7705,7 +7713,7 @@ struct __ngw__getDeltasRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getDeltaInfoRequest
-#define SOAP_TYPE___ngw__getDeltaInfoRequest (696)
+#define SOAP_TYPE___ngw__getDeltaInfoRequest (698)
 /* Operation wrapper: */
 struct __ngw__getDeltaInfoRequest
 {
@@ -7714,7 +7722,7 @@ struct __ngw__getDeltaInfoRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getDocumentTypeListRequest
-#define SOAP_TYPE___ngw__getDocumentTypeListRequest (700)
+#define SOAP_TYPE___ngw__getDocumentTypeListRequest (702)
 /* Operation wrapper: */
 struct __ngw__getDocumentTypeListRequest
 {
@@ -7723,7 +7731,7 @@ struct __ngw__getDocumentTypeListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getFolderRequest
-#define SOAP_TYPE___ngw__getFolderRequest (704)
+#define SOAP_TYPE___ngw__getFolderRequest (706)
 /* Operation wrapper: */
 struct __ngw__getFolderRequest
 {
@@ -7732,7 +7740,7 @@ struct __ngw__getFolderRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getFolderListRequest
-#define SOAP_TYPE___ngw__getFolderListRequest (708)
+#define SOAP_TYPE___ngw__getFolderListRequest (710)
 /* Operation wrapper: */
 struct __ngw__getFolderListRequest
 {
@@ -7741,7 +7749,7 @@ struct __ngw__getFolderListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getFreeBusyRequest
-#define SOAP_TYPE___ngw__getFreeBusyRequest (712)
+#define SOAP_TYPE___ngw__getFreeBusyRequest (714)
 /* Operation wrapper: */
 struct __ngw__getFreeBusyRequest
 {
@@ -7750,7 +7758,7 @@ struct __ngw__getFreeBusyRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getItemRequest
-#define SOAP_TYPE___ngw__getItemRequest (716)
+#define SOAP_TYPE___ngw__getItemRequest (718)
 /* Operation wrapper: */
 struct __ngw__getItemRequest
 {
@@ -7759,7 +7767,7 @@ struct __ngw__getItemRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getItemsRequest
-#define SOAP_TYPE___ngw__getItemsRequest (720)
+#define SOAP_TYPE___ngw__getItemsRequest (722)
 /* Operation wrapper: */
 struct __ngw__getItemsRequest
 {
@@ -7768,7 +7776,7 @@ struct __ngw__getItemsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getJunkEntriesRequest
-#define SOAP_TYPE___ngw__getJunkEntriesRequest (724)
+#define SOAP_TYPE___ngw__getJunkEntriesRequest (726)
 /* Operation wrapper: */
 struct __ngw__getJunkEntriesRequest
 {
@@ -7777,7 +7785,7 @@ struct __ngw__getJunkEntriesRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getJunkMailSettingsRequest
-#define SOAP_TYPE___ngw__getJunkMailSettingsRequest (728)
+#define SOAP_TYPE___ngw__getJunkMailSettingsRequest (730)
 /* Operation wrapper: */
 struct __ngw__getJunkMailSettingsRequest
 {
@@ -7786,7 +7794,7 @@ struct __ngw__getJunkMailSettingsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getLibraryItemRequest
-#define SOAP_TYPE___ngw__getLibraryItemRequest (732)
+#define SOAP_TYPE___ngw__getLibraryItemRequest (734)
 /* Operation wrapper: */
 struct __ngw__getLibraryItemRequest
 {
@@ -7795,7 +7803,7 @@ struct __ngw__getLibraryItemRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getLibraryListRequest
-#define SOAP_TYPE___ngw__getLibraryListRequest (736)
+#define SOAP_TYPE___ngw__getLibraryListRequest (738)
 /* Operation wrapper: */
 struct __ngw__getLibraryListRequest
 {
@@ -7804,7 +7812,7 @@ struct __ngw__getLibraryListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getQuickMessagesRequest
-#define SOAP_TYPE___ngw__getQuickMessagesRequest (740)
+#define SOAP_TYPE___ngw__getQuickMessagesRequest (742)
 /* Operation wrapper: */
 struct __ngw__getQuickMessagesRequest
 {
@@ -7813,7 +7821,7 @@ struct __ngw__getQuickMessagesRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getProxyAccessListRequest
-#define SOAP_TYPE___ngw__getProxyAccessListRequest (744)
+#define SOAP_TYPE___ngw__getProxyAccessListRequest (746)
 /* Operation wrapper: */
 struct __ngw__getProxyAccessListRequest
 {
@@ -7822,7 +7830,7 @@ struct __ngw__getProxyAccessListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getProxyListRequest
-#define SOAP_TYPE___ngw__getProxyListRequest (748)
+#define SOAP_TYPE___ngw__getProxyListRequest (750)
 /* Operation wrapper: */
 struct __ngw__getProxyListRequest
 {
@@ -7831,7 +7839,7 @@ struct __ngw__getProxyListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getRuleListRequest
-#define SOAP_TYPE___ngw__getRuleListRequest (752)
+#define SOAP_TYPE___ngw__getRuleListRequest (754)
 /* Operation wrapper: */
 struct __ngw__getRuleListRequest
 {
@@ -7840,7 +7848,7 @@ struct __ngw__getRuleListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getSettingsRequest
-#define SOAP_TYPE___ngw__getSettingsRequest (756)
+#define SOAP_TYPE___ngw__getSettingsRequest (758)
 /* Operation wrapper: */
 struct __ngw__getSettingsRequest
 {
@@ -7849,7 +7857,7 @@ struct __ngw__getSettingsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getSignaturesRequest
-#define SOAP_TYPE___ngw__getSignaturesRequest (760)
+#define SOAP_TYPE___ngw__getSignaturesRequest (762)
 /* Operation wrapper: */
 struct __ngw__getSignaturesRequest
 {
@@ -7858,7 +7866,7 @@ struct __ngw__getSignaturesRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getTimestampRequest
-#define SOAP_TYPE___ngw__getTimestampRequest (764)
+#define SOAP_TYPE___ngw__getTimestampRequest (766)
 /* Operation wrapper: */
 struct __ngw__getTimestampRequest
 {
@@ -7867,7 +7875,7 @@ struct __ngw__getTimestampRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getTimezoneListRequest
-#define SOAP_TYPE___ngw__getTimezoneListRequest (768)
+#define SOAP_TYPE___ngw__getTimezoneListRequest (770)
 /* Operation wrapper: */
 struct __ngw__getTimezoneListRequest
 {
@@ -7876,7 +7884,7 @@ struct __ngw__getTimezoneListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getUserListRequest
-#define SOAP_TYPE___ngw__getUserListRequest (772)
+#define SOAP_TYPE___ngw__getUserListRequest (774)
 /* Operation wrapper: */
 struct __ngw__getUserListRequest
 {
@@ -7885,7 +7893,7 @@ struct __ngw__getUserListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__loginRequest
-#define SOAP_TYPE___ngw__loginRequest (776)
+#define SOAP_TYPE___ngw__loginRequest (778)
 /* Operation wrapper: */
 struct __ngw__loginRequest
 {
@@ -7894,7 +7902,7 @@ struct __ngw__loginRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__logoutRequest
-#define SOAP_TYPE___ngw__logoutRequest (780)
+#define SOAP_TYPE___ngw__logoutRequest (782)
 /* Operation wrapper: */
 struct __ngw__logoutRequest
 {
@@ -7903,7 +7911,7 @@ struct __ngw__logoutRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__markPrivateRequest
-#define SOAP_TYPE___ngw__markPrivateRequest (784)
+#define SOAP_TYPE___ngw__markPrivateRequest (786)
 /* Operation wrapper: */
 struct __ngw__markPrivateRequest
 {
@@ -7912,7 +7920,7 @@ struct __ngw__markPrivateRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__markReadRequest
-#define SOAP_TYPE___ngw__markReadRequest (788)
+#define SOAP_TYPE___ngw__markReadRequest (790)
 /* Operation wrapper: */
 struct __ngw__markReadRequest
 {
@@ -7921,7 +7929,7 @@ struct __ngw__markReadRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__markUnPrivateRequest
-#define SOAP_TYPE___ngw__markUnPrivateRequest (792)
+#define SOAP_TYPE___ngw__markUnPrivateRequest (794)
 /* Operation wrapper: */
 struct __ngw__markUnPrivateRequest
 {
@@ -7930,7 +7938,7 @@ struct __ngw__markUnPrivateRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__markUnReadRequest
-#define SOAP_TYPE___ngw__markUnReadRequest (796)
+#define SOAP_TYPE___ngw__markUnReadRequest (798)
 /* Operation wrapper: */
 struct __ngw__markUnReadRequest
 {
@@ -7939,7 +7947,7 @@ struct __ngw__markUnReadRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifyItemRequest
-#define SOAP_TYPE___ngw__modifyItemRequest (800)
+#define SOAP_TYPE___ngw__modifyItemRequest (802)
 /* Operation wrapper: */
 struct __ngw__modifyItemRequest
 {
@@ -7948,7 +7956,7 @@ struct __ngw__modifyItemRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifyJunkEntryRequest
-#define SOAP_TYPE___ngw__modifyJunkEntryRequest (804)
+#define SOAP_TYPE___ngw__modifyJunkEntryRequest (806)
 /* Operation wrapper: */
 struct __ngw__modifyJunkEntryRequest
 {
@@ -7957,7 +7965,7 @@ struct __ngw__modifyJunkEntryRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifyJunkMailSettingsRequest
-#define SOAP_TYPE___ngw__modifyJunkMailSettingsRequest (808)
+#define SOAP_TYPE___ngw__modifyJunkMailSettingsRequest (810)
 /* Operation wrapper: */
 struct __ngw__modifyJunkMailSettingsRequest
 {
@@ -7966,7 +7974,7 @@ struct __ngw__modifyJunkMailSettingsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifyPasswordRequest
-#define SOAP_TYPE___ngw__modifyPasswordRequest (812)
+#define SOAP_TYPE___ngw__modifyPasswordRequest (814)
 /* Operation wrapper: */
 struct __ngw__modifyPasswordRequest
 {
@@ -7975,7 +7983,7 @@ struct __ngw__modifyPasswordRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifyProxyAccessRequest
-#define SOAP_TYPE___ngw__modifyProxyAccessRequest (816)
+#define SOAP_TYPE___ngw__modifyProxyAccessRequest (818)
 /* Operation wrapper: */
 struct __ngw__modifyProxyAccessRequest
 {
@@ -7984,7 +7992,7 @@ struct __ngw__modifyProxyAccessRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifySettingsRequest
-#define SOAP_TYPE___ngw__modifySettingsRequest (820)
+#define SOAP_TYPE___ngw__modifySettingsRequest (822)
 /* Operation wrapper: */
 struct __ngw__modifySettingsRequest
 {
@@ -7993,7 +8001,7 @@ struct __ngw__modifySettingsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifySignaturesRequest
-#define SOAP_TYPE___ngw__modifySignaturesRequest (824)
+#define SOAP_TYPE___ngw__modifySignaturesRequest (826)
 /* Operation wrapper: */
 struct __ngw__modifySignaturesRequest
 {
@@ -8002,7 +8010,7 @@ struct __ngw__modifySignaturesRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__moveItemRequest
-#define SOAP_TYPE___ngw__moveItemRequest (828)
+#define SOAP_TYPE___ngw__moveItemRequest (830)
 /* Operation wrapper: */
 struct __ngw__moveItemRequest
 {
@@ -8011,7 +8019,7 @@ struct __ngw__moveItemRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__positionCursorRequest
-#define SOAP_TYPE___ngw__positionCursorRequest (832)
+#define SOAP_TYPE___ngw__positionCursorRequest (834)
 /* Operation wrapper: */
 struct __ngw__positionCursorRequest
 {
@@ -8020,7 +8028,7 @@ struct __ngw__positionCursorRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__purgeDeletedItemsRequest
-#define SOAP_TYPE___ngw__purgeDeletedItemsRequest (836)
+#define SOAP_TYPE___ngw__purgeDeletedItemsRequest (838)
 /* Operation wrapper: */
 struct __ngw__purgeDeletedItemsRequest
 {
@@ -8029,7 +8037,7 @@ struct __ngw__purgeDeletedItemsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__purgeRequest
-#define SOAP_TYPE___ngw__purgeRequest (840)
+#define SOAP_TYPE___ngw__purgeRequest (842)
 /* Operation wrapper: */
 struct __ngw__purgeRequest
 {
@@ -8038,7 +8046,7 @@ struct __ngw__purgeRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__readCursorRequest
-#define SOAP_TYPE___ngw__readCursorRequest (844)
+#define SOAP_TYPE___ngw__readCursorRequest (846)
 /* Operation wrapper: */
 struct __ngw__readCursorRequest
 {
@@ -8047,7 +8055,7 @@ struct __ngw__readCursorRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeCustomDefinitionRequest
-#define SOAP_TYPE___ngw__removeCustomDefinitionRequest (848)
+#define SOAP_TYPE___ngw__removeCustomDefinitionRequest (850)
 /* Operation wrapper: */
 struct __ngw__removeCustomDefinitionRequest
 {
@@ -8056,7 +8064,7 @@ struct __ngw__removeCustomDefinitionRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeItemRequest
-#define SOAP_TYPE___ngw__removeItemRequest (852)
+#define SOAP_TYPE___ngw__removeItemRequest (854)
 /* Operation wrapper: */
 struct __ngw__removeItemRequest
 {
@@ -8065,7 +8073,7 @@ struct __ngw__removeItemRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeItemsRequest
-#define SOAP_TYPE___ngw__removeItemsRequest (856)
+#define SOAP_TYPE___ngw__removeItemsRequest (858)
 /* Operation wrapper: */
 struct __ngw__removeItemsRequest
 {
@@ -8074,7 +8082,7 @@ struct __ngw__removeItemsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeJunkEntryRequest
-#define SOAP_TYPE___ngw__removeJunkEntryRequest (860)
+#define SOAP_TYPE___ngw__removeJunkEntryRequest (862)
 /* Operation wrapper: */
 struct __ngw__removeJunkEntryRequest
 {
@@ -8083,7 +8091,7 @@ struct __ngw__removeJunkEntryRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeMembersRequest
-#define SOAP_TYPE___ngw__removeMembersRequest (864)
+#define SOAP_TYPE___ngw__removeMembersRequest (866)
 /* Operation wrapper: */
 struct __ngw__removeMembersRequest
 {
@@ -8092,7 +8100,7 @@ struct __ngw__removeMembersRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeProxyAccessRequest
-#define SOAP_TYPE___ngw__removeProxyAccessRequest (868)
+#define SOAP_TYPE___ngw__removeProxyAccessRequest (870)
 /* Operation wrapper: */
 struct __ngw__removeProxyAccessRequest
 {
@@ -8101,7 +8109,7 @@ struct __ngw__removeProxyAccessRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeProxyUserRequest
-#define SOAP_TYPE___ngw__removeProxyUserRequest (872)
+#define SOAP_TYPE___ngw__removeProxyUserRequest (874)
 /* Operation wrapper: */
 struct __ngw__removeProxyUserRequest
 {
@@ -8110,7 +8118,7 @@ struct __ngw__removeProxyUserRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeSignatureRequest
-#define SOAP_TYPE___ngw__removeSignatureRequest (876)
+#define SOAP_TYPE___ngw__removeSignatureRequest (878)
 /* Operation wrapper: */
 struct __ngw__removeSignatureRequest
 {
@@ -8119,7 +8127,7 @@ struct __ngw__removeSignatureRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__replyRequest
-#define SOAP_TYPE___ngw__replyRequest (880)
+#define SOAP_TYPE___ngw__replyRequest (882)
 /* Operation wrapper: */
 struct __ngw__replyRequest
 {
@@ -8128,7 +8136,7 @@ struct __ngw__replyRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__retractRequest
-#define SOAP_TYPE___ngw__retractRequest (884)
+#define SOAP_TYPE___ngw__retractRequest (886)
 /* Operation wrapper: */
 struct __ngw__retractRequest
 {
@@ -8137,7 +8145,7 @@ struct __ngw__retractRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__sendItemRequest
-#define SOAP_TYPE___ngw__sendItemRequest (888)
+#define SOAP_TYPE___ngw__sendItemRequest (890)
 /* Operation wrapper: */
 struct __ngw__sendItemRequest
 {
@@ -8146,7 +8154,7 @@ struct __ngw__sendItemRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__setTimestampRequest
-#define SOAP_TYPE___ngw__setTimestampRequest (892)
+#define SOAP_TYPE___ngw__setTimestampRequest (894)
 /* Operation wrapper: */
 struct __ngw__setTimestampRequest
 {
@@ -8155,7 +8163,7 @@ struct __ngw__setTimestampRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__startFreeBusySessionRequest
-#define SOAP_TYPE___ngw__startFreeBusySessionRequest (896)
+#define SOAP_TYPE___ngw__startFreeBusySessionRequest (898)
 /* Operation wrapper: */
 struct __ngw__startFreeBusySessionRequest
 {
@@ -8164,7 +8172,7 @@ struct __ngw__startFreeBusySessionRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__unacceptRequest
-#define SOAP_TYPE___ngw__unacceptRequest (900)
+#define SOAP_TYPE___ngw__unacceptRequest (902)
 /* Operation wrapper: */
 struct __ngw__unacceptRequest
 {
@@ -8173,7 +8181,7 @@ struct __ngw__unacceptRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__uncompleteRequest
-#define SOAP_TYPE___ngw__uncompleteRequest (904)
+#define SOAP_TYPE___ngw__uncompleteRequest (906)
 /* Operation wrapper: */
 struct __ngw__uncompleteRequest
 {
@@ -8182,7 +8190,7 @@ struct __ngw__uncompleteRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__updateVersionStatusRequest
-#define SOAP_TYPE___ngw__updateVersionStatusRequest (908)
+#define SOAP_TYPE___ngw__updateVersionStatusRequest (910)
 /* Operation wrapper: */
 struct __ngw__updateVersionStatusRequest
 {
@@ -8191,7 +8199,7 @@ struct __ngw__updateVersionStatusRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__cleanEventConfigurationRequest
-#define SOAP_TYPE___ngw__cleanEventConfigurationRequest (912)
+#define SOAP_TYPE___ngw__cleanEventConfigurationRequest (914)
 /* Operation wrapper: */
 struct __ngw__cleanEventConfigurationRequest
 {
@@ -8200,7 +8208,7 @@ struct __ngw__cleanEventConfigurationRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__configureEventsRequest
-#define SOAP_TYPE___ngw__configureEventsRequest (916)
+#define SOAP_TYPE___ngw__configureEventsRequest (918)
 /* Operation wrapper: */
 struct __ngw__configureEventsRequest
 {
@@ -8209,7 +8217,7 @@ struct __ngw__configureEventsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getEventConfigurationRequest
-#define SOAP_TYPE___ngw__getEventConfigurationRequest (920)
+#define SOAP_TYPE___ngw__getEventConfigurationRequest (922)
 /* Operation wrapper: */
 struct __ngw__getEventConfigurationRequest
 {
@@ -8218,7 +8226,7 @@ struct __ngw__getEventConfigurationRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getEventsRequest
-#define SOAP_TYPE___ngw__getEventsRequest (924)
+#define SOAP_TYPE___ngw__getEventsRequest (926)
 /* Operation wrapper: */
 struct __ngw__getEventsRequest
 {
@@ -8227,7 +8235,7 @@ struct __ngw__getEventsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeEventConfigurationRequest
-#define SOAP_TYPE___ngw__removeEventConfigurationRequest (928)
+#define SOAP_TYPE___ngw__removeEventConfigurationRequest (930)
 /* Operation wrapper: */
 struct __ngw__removeEventConfigurationRequest
 {
@@ -8236,7 +8244,7 @@ struct __ngw__removeEventConfigurationRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeEventsRequest
-#define SOAP_TYPE___ngw__removeEventsRequest (932)
+#define SOAP_TYPE___ngw__removeEventsRequest (934)
 /* Operation wrapper: */
 struct __ngw__removeEventsRequest
 {
@@ -8245,7 +8253,7 @@ struct __ngw__removeEventsRequest
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (933)
+#define SOAP_TYPE_SOAP_ENV__Code (935)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -8255,7 +8263,7 @@ struct SOAP_ENV__Code
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (935)
+#define SOAP_TYPE_SOAP_ENV__Detail (937)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -8266,7 +8274,7 @@ struct SOAP_ENV__Detail
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (938)
+#define SOAP_TYPE_SOAP_ENV__Fault (940)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {
@@ -8331,52 +8339,52 @@ typedef std::string ngwt__View;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Day
-#define SOAP_TYPE_ngwt__Day (348)
+#define SOAP_TYPE_ngwt__Day (349)
 typedef unsigned char ngwt__Day;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__DayOfMonth
-#define SOAP_TYPE_ngwt__DayOfMonth (349)
+#define SOAP_TYPE_ngwt__DayOfMonth (350)
 typedef char ngwt__DayOfMonth;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__DayOfYear
-#define SOAP_TYPE_ngwt__DayOfYear (351)
+#define SOAP_TYPE_ngwt__DayOfYear (352)
 typedef short ngwt__DayOfYear;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__GMTOffset
-#define SOAP_TYPE_ngwt__GMTOffset (360)
+#define SOAP_TYPE_ngwt__GMTOffset (361)
 typedef int ngwt__GMTOffset;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Hour
-#define SOAP_TYPE_ngwt__Hour (361)
+#define SOAP_TYPE_ngwt__Hour (362)
 typedef unsigned char ngwt__Hour;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Minute
-#define SOAP_TYPE_ngwt__Minute (371)
+#define SOAP_TYPE_ngwt__Minute (372)
 typedef unsigned char ngwt__Minute;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Month
-#define SOAP_TYPE_ngwt__Month (372)
+#define SOAP_TYPE_ngwt__Month (373)
 typedef unsigned char ngwt__Month;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__uid
-#define SOAP_TYPE_ngwt__uid (381)
+#define SOAP_TYPE_ngwt__uid (382)
 typedef std::string ngwt__uid;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__UUID
-#define SOAP_TYPE_ngwt__UUID (382)
+#define SOAP_TYPE_ngwt__UUID (383)
 typedef std::string ngwt__UUID;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__WeekOfYear
-#define SOAP_TYPE_ngwt__WeekOfYear (386)
+#define SOAP_TYPE_ngwt__WeekOfYear (387)
 typedef short ngwt__WeekOfYear;
 #endif
 
