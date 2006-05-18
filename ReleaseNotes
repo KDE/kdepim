@@ -39,6 +39,9 @@ o Don't attempt to rename the inbox. Especially not to INBOX.
 o Only prepend the indent string in Weighted address completion mode, only
   show headers in Weighted mode. (issue 740)
 
+o Handle encoded headers differently, so that replying to Froms
+  with a real name containing an encoded comma (',') will work. (issue 1228)
+
 
 Features:
 
