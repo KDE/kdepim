@@ -1,7 +1,7 @@
 Current Release is Proko2 2.1.1
 
-
-Changes since Proko2 2.1.0:
+Changes since Proko2 2.1.0 up to Proko2 2.1.1 (released 20060518)
+~~~~~~~
 
 Bugfixes:
 
@@ -56,5 +56,992 @@ o Backport large parts of the online/offline support from 3.5, which makes
 
 o Backport resource colors from KDE 3.5 branch. (issue 1129)
 
-Older Changes:
+
+Release notes for the Kolab 2 KDE Client 2.1.0
+==============================================
+2006-04-07, Bernhard Herzog <bh@intevation.de>
+(20060510ber)
+
+
+Known issues:
+
+* Kontact may be slow when there are many items in the calendar
+  (Kolab/issue1118)
+
+* The kolabwizard has some problems.  Among others, the resource folders
+  are not hidden by default anymore.  (Kolab/issue1206).
+
+* Kpilot may duplicate some calendar or other items when a pilot sync
+  happens at the same time as a kolab sync.  (Kolab/issue1136)
+
+
+Changes since 2.0.6:
+
+Features:
+---------
+
+* Improved LDAP resource. including read/write support.
+  (Backport from 3.5 branch)
+
+* Support for displaying QUOTA information in the IMAP kioslave and KMail,
+  for both disconnected and online IMAP. Persisted across restarts.
+  (Kolab/issue1080).
+
+* When, during a sync, while looking for new messages to upload, we
+  encounter a message that looks like a ghost messages (no subject, no
+  from, no to) we first invalidate the index of that folder and then
+  check if the ghosts are still there. If so, offer to the user to delete
+  those mails and reset the sync for this folder. Only ask once per
+  session, to not be annoying. (Kolab/issue918)
+
+* Support for adding and removing subresources (folders in KMail) from
+  within the resource view in KOrganizer and KAddressbook. As a side effect,
+  support for adding and removing subresources from scripts, via DCOP.
+
+* Implement client side subscription for online IMAP and disconnected IMAP
+  accounts. This basically stores a blacklist of unsubscribed folders
+  (since we want new folders to show up, intially) per account, which is
+  persisted to kconfig. This list is used as a filter during folder
+  listing. (Kolab/issue1095)
+
+* Auto-unsubscribing of folders by groupware folder type. This 
+  allows to only see groupware folders in the account that is set up to
+  contain them, while using a separate (online) IMAP account for mail
+  folders. (Kolab/issue1095)
+
+* Add an option to the wizard to create an online account for the
+  non-groupware folders along with a cached IMAP one which is set to only
+  show groupware folders. (Kolab/issue1095)
+
+
+Bugfixes:
+---------
+
+* Make sure the translation catalogue is loaded, by making sure we 
+  pass our correct name to the Kontact::Plugin base class. 
+  (Kolab/issue1087)
+
+* Make sure that latin1 is selected as a default if we find no matching
+  locale for the fallback codec, and replace "iso " with "iso-" so we have
+  a better chance of finding the locale.
+
+* Finally solve Kolab issue 437 by making sure all defaults lists match.
+
+* Trying to autodetect the codec for vcards is a bad idea, so backport
+  what we do in newer versions for a while now, rely on them being utf8.
+  (Kolab/Issue1115)
+
+* Make the imported ldap slave work with the newimap protocol (to avoid
+  clashes with the one in kdebase <= 3.2 and hook it in.
+
+* Import the ldap library stuff from kdelibs 3.5, since we need to support
+  kdelibs 3.2 which doesn't have it.
+
+* Conditionally use the stuff in libpimldaptools and the copied slave, if
+  we are compiling against kdelibs 3.2
+
+* (kio_imap4) Quote mailbox name in case it contains spaces.
+
+* Fix replying or printing encapsulated messaages from a main reader
+  window. (Proko2 issue993)
+
+* Don't circumvent the scheduler when handling cancel messages, because
+  otherwise proper schedulingID conversion does not happen. 
+  (Kolab/issue1109)
+
+* Don't attempt to fake the schedulingID in temporary scheduling messages,
+  rather rely on the detection of existing incidences which works ok, if
+  the calling code actually uses it, which it didn't, see previous commit.
+  (Kolab/issue1109 second half)
+
+* Display "this event/task has been updated" instead of "this is an
+  invitation" if the sequence number of the ical object is non-zero.
+  (Kolab/issue1109 part 3)
+
+* Fix wrong foreground color being used when "use default colors" is checked.
+
+* In case an update or cancel message is processed for an incidence that
+  cannot be found, inform the user, instead of blindly adding a new
+  version of the incidence. (Kolab/issue1128)
+
+* Use the prettyURL, not the label for error messages and don't 
+  try to delete mail in readonly folders.
+
+* If a folder is readonly and we detect a ghost message, try the index
+  regeneration part once, then put the folder in the set of those to not
+  check again, for this session, so we don't try to remove messages.
+
+* Make sure folders are created locally if there are no annotations at
+  all set (such as for no-content folders). Create all of them if the
+  server doesn't support annotations at all, to be safe. Fixes problems
+  with irregular folder listings on some servers.
+
+* Change the default for hiding the groupware folders to false.
+
+* Also check for an empty subject when trying to find ghost messages.
+
+* Change the buttons to "Store" and "Throw away" as requested.
+
+* Make the saving of encrypted messages as unencrypted work again.
+
+* Cache the utf8 textcodec, because codecForName turns out to be a 
+  performance bottleneck, and it's called in a tight loop for each loaded
+  incidence. Further step towards fixing issue1118.
+
+* Fix the spurious extra characters at the end of inline invitations.
+  (Kolab/issue1118)
+
+* Be sure to reload the addressbook, when we've added a contact.
+  A bit crude, but that's what 3.5 does. (Kolab/issue1084).
+
+* The distribution list code assumes there are no , and ; in the
+  uid. Make sure of that, at least internally, otherwise display names
+  like "Foo, Bar" break.  (Kolab/issue1152)
+
+* Make sure we don't insert ; or , as identifiers in a distlist.
+  (Kolab/issue1152)
+
+* Adjust visual defaults in the certificate manager according to
+  Aegypten issue322.
+
+* Fix potential crash after resetting a sync.
+
+* Fix for kpilot sync conflict warning even when nothing changed in kontact.
+  (Kolab/issue1097)
+
+* Fix for: kpilot sometimes removes first occurrence of a recurring event.
+  (Kolab/issue1135)
+
+* Fix for: kpilot doesn't sync location field of events.
+  (Kolab/issue1134)
+
+* Fix for: Contacts from Palm don's show properly in KAddressBook
+  (Kolab/issue1156)
+
+* Fix for: Kontact produces corrupted event mails that OL cannot understand
+  This failure is a regression, we do not know precisly when it was introduced.
+  (Kolab/issue1175) 
+
+
+Documentation:
+--------------
+
+* Add a section for non-gui options and explain SendMDNsWithoutSender
+  option in the documentation.
+
+
+Release notes for the Kolab KDE Client 2.0.6
+============================================
+2006-01-23, Bernhard Herzog <bh@intevation.de>
+
+
+Changes since 2.0.5
+-------------------
+
+Kontact
+-------
+
+* Handle <tab> like <arrow down> in completion list, to skip section    
+  headers https://intevation.de/roundup/kolab/issue740
+
+* Fix performance problem especially visible with .kde being 
+  nfs-mounted: during IMAP sync, every message would be marked as 
+  'dirty' due to setStatus() calls, even when the status didn't change, 
+  and at the end of the folder this resulted in the index entry for 
+  every message being rewritten
+
+* Properly parse encoded message attachments by making sure the decoded
+  body part is used to construct a new message from. proko2 issue 963
+
+* Backport proper showing of message attachments which are quoted
+  printable encoded.
+
+* Backport ability to hide the icon bar, as per proko2 issue 1003
+
+* Move the summary config sections under a common section, as per proko2
+  issue 911.
+
+* Backport the ability to specify a fallback encoding in addition to an
+  override encoding. Propagate override encodings properly to external
+  reader windows and printing, and make a new page in the configuration
+  dialog for reader window specific things. Rename the tab for the   
+  message list settings to "Message List" from "Headers". Proko2 
+  issue866.
+
+* Make sure the kmail config is reloaded when a kcm based dialog changes
+  one of our settings, by hooking up to the KSettings::dispatcher. 
+  Nicely solves proko2 issue 967.
+
+* Force the configure entry in the Settings meny in composer windows to
+  read "Configure KMail" since it brings up the kmail config dialog, not
+  the Kontact one, even in Kontact, which makes sense, but leads to a
+  confusing lable. Proko2 issue 738 ( c), then 1) )
+
+* Implement a non-gui-exposed option to allow sending of MDN messages 
+  with an SMTP MAIL FROM of <>, which conforms to the rfc, but doesn't 
+  work with many real world servers, since they discard such messages 
+  for spam protection. Still, integrators might want to set it, via 
+  Kiosk, for example.
+
+* Backport improved ldapkio kabc plugin
+
+* As per proko2 issue1019, change the access dropdown to be a 
+  sensitivity drop down.
+
+* Make sure load on demand defaults to false in proko2. (issue 902)
+
+* Warn the user before inviting dummy entry attendees. 
+  (proko2 issue1030)
+
+* Implement operator< on periods, use qHeapSort for sorting them in
+  FreeBusy, and don't sort for each added item when parsing a freebusy
+  ical file, but append the unsorted list then sort once.
+  Together this makes parsing freebusy files O(n*log n) instead of 
+  O(n^3), which is, shall we say, very noticeable.
+
+* Make sure a folder who's incidences-for annotation value changed is
+  reloaded, so that alarms are updated.
+
+* Sync the descriptions used for the summary widget setions of the kcm
+  with the headers used for those plugins in the summary widget itself.
+
+* Let's not lie to ourselves, the addressbook is loaded for any 
+  agenda-item painting. So let's load it right away, not deep within 
+  painting code (which breaks in case of sub-event-loops like with 
+  kio_newldap, since timers fire there...)
+
+* Show the no-information crass-hatch for the periods before and after 
+  the period we have freebusy information for, to be able to tell the
+  difference between "free time" and "we don't know". proko2 issue880
+
+Changes since 2.0.4 (up to internal release 2.0.5)
+------------------------------------------------
+
+Kleopatra
+---------
+ 
+ * Manually translate the new string for proko2 (.desktop file).
+
+ * Add key filter for qualsig keys; change default font/bgcolor of root
+   certs.
+
+kmail
+-----
+
+ * Add a combobox to the general tab of the composer configuration for
+   selecting the autocompletion mode. (proko2 issue 738)
+
+
+
+
+Release notes for the Kolab KDE Client 2.0.4
+============================================
+2005-10-12, Bernhard Herzog <bh@intevation.de>
+
+
+Changes since 2.0.3
+-------------------
+
+kmail
+-----
+
+ * Force content transfer encoding of text/calendar in-the-body mails to
+   7bit because OL is broken and can't deal with qp or base64 in the CN
+   part of ical parameters. Will make this optional next.
+
+ * Make Key_Return open a message in a separate reader window.
+
+ * Issue 950: Enable operations on messages in the separate reader
+   window, by making sure complete messages are set to be complete.
+
+ * A fix for doubled commas when pasting multiline text.
+
+kleopatra
+---------
+
+ * Do not copy the ldap server configuration over to kaddressbook.
+   (Aegypten Issue427)
+
+ * Fix a segfault that could happen when searching for an external
+   certificate (Aegypten Issue376)
+
+
+
+Release notes for the Kolab KDE Client 2.0.3
+============================================
+2005-09-15, Bernhard Herzog <bh@intevation.de>
+
+Since 2.0.2:
+
+ * Don't quote what is already quoted, thereby inadvertedly unquoting CN
+   parts of organizer email addresses (Issue920)
+
+ * Make sure the kmail.antivirusrc file is installed (Issue922)
+
+ * properly strip the UID header by making sure newly added messages are
+   complete and thus uploading of local changes works (Issue929)
+
+ * allow deletion of mails from local caches of read-only folders it
+   mails go away on the server as part of the sync (Issue929)
+
+
+Changes since 2.0.1
+-------------------
+
+ * Disable all but cachedimap accounts from being selectable as base
+   accounts for the main resource folders (Issue863)
+
+ * make it impossible to select chiasmus body encryption together with
+   opengpg or smime signing or encryption. Warn the user before sending
+   a message with only the attachments encrypted, but not the body
+
+ * fix for loss of parenting during conflict resolution in hierarchical
+   todos
+
+ * fix for clicking cancel in an invitation revokation not removing the
+   event (Issue900)
+
+ * Make sure the external reader window is closed if a cancel link was
+   clicked on in an invitation cancelation (Issue859/900)
+
+ * fix for endless loop when moving mails from dimap => local (Issue865)
+
+ * fix mail loss regression introduced by the endless loop fix above
+   (Issue905)
+
+ * Add access to the recent addresses configuration to the Setttings
+   menu of the composer window (Issue738)
+
+ * Don't insert freebusy information if the entry is just a dummy.
+
+ * Make sure entries from the same resource are grouped (and the section
+   header is not repeated) even if they are pseudo entries (KMail
+   addressee auto-completion) (Issue740)
+
+
+
+Release notes for the Kolab KDE Client 2.0.1
+============================================
+2005-08-03, Bernhard Herzog <bh@intevation.de>
+
+
+Changes since 2.0
+-----------------
+
+
+kmail
+-----
+
+ * Aegypten chiasmus:
+
+   - make own dialog instead of KInputDialog, to add a line for custom options
+
+   - remember last selected key, and
+     options. https://intevation.de/roundup/aegypten/issue325
+
+
+ * If an invitation is opened in a secondary window, close that window
+   when the handlers are invoked. Otherwise the user is confused, and
+   the mail underneath moves away, while the secondary window remains
+   open and the user can invoke the handlers again. While that is not
+   strictly a problem, this way is more intuitive, I believe.  (See:
+   https://intevation.de/roundup/kolab/issue859)
+
+ * Key approval dialog fixes (for storing crypto preferences) :
+
+   - create contact in addressbook if it's not there yet (trunk
+     backport, KDE bug #87034).
+
+   - also store the selected keys into the addressbook contact (when
+     preferences were changed).  When the user says "always encrypt with
+     *this* key", it really means with this key, so store it. The other
+     way to store a key in the addressbook was the checkbox in the key
+     selection dialog, but that one doesn't always appear.
+     https://intevation.de/roundup/aegypten/issue371
+
+ * Remove storage format and pending changes information of folder that
+   are deleted, or removed as part of a sync (backport).
+
+ * Don't pollute kmailrc with *-storageFormat=xml entries for
+   non-groupware folders
+
+ * Improve the sent mail folder logic and the readOnly protection to
+   first try the folder specified in the mail, then if there was none,
+   or it's not usable, try the identity one, and if that also fails, the
+   system one (backport).
+
+ * Simplified localizedDefaultFolderName(), fix some uninit vars, and
+   the improved dialog when finding some standard groupware folders on
+   startup (backport).
+
+ * Fix uninit read on startup due to my "troubleshoot imap cache"
+   folder-related action (backport of 432771)
+
+ * If the user has managed to put a message into a folder that she now
+   (on sync) has no longer sufficient rights to put mails into, pop up a
+   helpful dialog explaining the issue and offering to move the mails in
+   question into another folder. If the user decides to move them away,
+   show a folder selector and move. Then continue syncing (backport of
+   432741).
+
+ * If the user has managed to delete a mail from a read only folder,
+   through gui bugs, or that particular skill users have to achieve the
+   impossible, don't attempt to delete on the server, but simply
+   re-download. This also helps if the folder goes from "i can delete"
+   to "i can't delete" between syncs (backport of 432750).
+
+ * Implement triggering of syncs at the end of a succesful folder
+   deletion on the server.
+
+ * Disable the "keep replies in this folder" option on read-only folders.
+
+ * Don't allow messages to be put into read-only folders, use a sane
+   fallback instead.
+
+ * Fix nasty cached imap bug: changes made to the folders while syncing
+   (renames, deletions, creations...)  were "saved" to kmailrc, but
+   kmailrc wasn't synced, so in case of a kmail crash, X crash, power
+   failure, kernel oops...  the settings would be lost, and on the next
+   kmail restart very strange errors would happen when syncing (can't
+   create folder, folder already there, folder missing, etc.)
+
+ * Mark all mail as read in resource folders, nobody is reading xml
+   mails by hand.  
+   https://intevation.de/roundup/kolab/issue837
+
+ * Only start the timer to set message read if the message is currently
+   not yet marked as read.  Avoids problems when the user marks a
+   message as 'new' within the timeout and kmail resetting it moments
+   later again :) (backport of 430147)
+
+ * Tell folders about a change in contents type in the folderstorage and
+   propagate that as an icon change to the foldertree, which makes sure
+   that it has the current type, before rendering the icon. All this to
+   make the right icon appear on newly downloaded folders.
+
+ * Since we removed the GUI for choosing a storage format in the proko2
+   branch, let's also set the correct default. (This only affects people
+   who didn't use kolabwizard)
+
+ * Fixed https://intevation.de/roundup/aegypten/issue366 : don't start a
+   drag after clicking on a mail, when rendering it pops up a dialog
+   (chiasmusdlg or pinentry)
+
+ * Add buttons for triggering the dialogs for editing recent addresses
+   and configuring the completion order to the General tab of the
+   Composer page of the main configuration dialog.
+
+ * Since the entries in the completion popup are by default grouped by
+   source, this adds group header entries to the list and indents the
+   actual entries, to visually distinguish them. The section headings
+   are not selectable neither by mouse nor keyboard and are auto-skipped
+   when traversing the list.
+
+   https://intevation.de/roundup/kolab/issue740
+
+ * Fixed bug when reading storageFormat for newly created groupware
+   folders, turns out that it had been fixed in trunk already :/
+
+ * Close tempfile before starting korganizer, otherwise it'll see an
+   empty file.  (https://intevation.de/roundup/kolab/issue816)
+
+
+korganizer
+----------
+
+ * Backport the filter edit dialog, since this is the easiest way to fix
+   the bugs with the old dialog (it forgot the chosen categories when
+   switching between filters!)
+
+ * Preserve current filter when re-filling filter combo. Was especially
+   annoying when switching filters in the edit filter dialog.
+
+ * Read-only fixes from trunk.
+
+
+kleopatra
+---------
+
+ * Backport marc's trunk commits from some time ago: r357656: Fix
+   Aegypten issue #185: validating a large number of certificates fails
+   You need gpgme 1.0.1 in order for this to work. Otherwise, you will
+   just see a error message "Ambiguous name"...  r406043: Fix memory
+   leak
+
+ * Respect the timeout option in async operations.
+
+ * Support for passing extra options to chiasmusjob.
+
+ * Add a new config entry type of DirPath, which allows us to use a
+   KUrlRequester in direcorties-only mode (aegypten issue 360)
+
+ * Use KURL::path() instead of ::url() for feeding URL requesters, in
+   order to avoid raw strings in the graphical widgets
+
+ * Only show options with level <= Advanced from the chiasmus backend
+
+ * Added "Enter passphrase:" to passphrase dialog (the one that appears
+   when gpg-agent isn't running)
+
+
+doc
+---
+
+ * Add chapter about using chiasmus encryption.
+
+ * Copy editing, XML fixes
+
+
+kaddressbook
+------------
+
+ * Added missing connect, so that the distribution list combo updates
+   after deleting a distribution list.
+
+
+kresources
+----------
+
+ * Skip duplicate incidences in read-only folders and don't offer
+   conflict resolution. The user could otherwise put new mails into
+   read-only folder and would later be unable to sync them up again.
+
+ * Don't update or delete addressees in read-only folders (backport).
+
+
+libkcal
+-------
+
+ * Set error message when parsing an empty file, fixes
+   detailed-error-box with empty details.
+
+
+libkdepim
+---------
+
+ * Fix nested parenthesis in email/name splitting.
+
+ * Don't switch to other contacts on Key_Up/Key_Down when the completion
+   box has been closed already, and I'm simply navigating between
+   fields, it's really really confusing ;)
+
+ * Fixed "when i click on 'Show Details', a window appears and
+   disappears immediately..."  by using a KDialogBase instead of a
+   QTextBrowser(0). This also adds an OK button.
+
+ * Only eat up/down keys, not others. This fixes Alt+letter to access
+   the menu when the cursor is in a composer lineedit.
+
+ * Don't show group headers when we are sorting alphabetically and not
+   grouping at all.
+
+ * Re-fix avoidance of selection of completion source headers, this time
+   only when there is a button pressed, such that there is no more
+   auto-selection on mouse move with no button pressed. Also make sure
+   that there is no fuzzy selection when the mouse leaves the groupbox
+   across the northern edge.
+
+ * Eat whitespace between comma separated addresses which the completion
+   item prefix can cause.
+
+ * Fix key navigation for "resource name separators" feature in
+   completion popup.
+
+ * Factor the completion items munging into a method and don't
+   spuriously clear the items map on all ldap start stop, especially not
+   if there is not ldap query in the first place.
+
+ * Use the resourceName() and not the identifier() for completion group
+   headers.
+
+ * Since the entries in the completion popup are by default grouped by
+   source, this adds group header entries to the list and indents the
+   actual entries, to visually distinguish them. The section headings
+   are not selectable neither by mouse nor keyboard and are auto-skipped
+   when traversing the list.
+
+   https://intevation.de/roundup/kolab/issue740
+
+ * Harmonize strings for the same functionality.
+
+
+mimelib
+-------
+
+ * Fix crash due to storing the char* address of a QString::latin1()
+   call in KMMessage::createDWBodyPart
+
+
+
+Release notes for the Kolab KDE Client 2.0
+==========================================
+2005-06-20, Bernhard Herzog <bh@intevation.de>
+
+
+Changes since 2.0 RC 3
+----------------------
+
+kmail
+------
+
+ * Don't allow operations to be performed on items which are already
+   being operated on. Namely holding down the Del key was triggering
+   multiple Deletes/Moves for the same message pointer, which for any
+   but the first command was dangeling. Quite obvious, in
+   retrospect... (backport)
+
+ * Make sure that the cc is properly taken into account during identity
+   detection on replies. (backport)
+
+ * Don't use KIO::del to delete the local cache when removing a dimap
+   folder. The underlying KMFolderMailDir does unlinks, to avoid a storm
+   of progress dialogs, so let's rely on that. (backport)
+
+ * Show icon as checked when it is.
+   https://intevation.de/roundup/aegypten/issue324.
+
+ * Backport of status setting fix: if the status of single mails was
+   changed locally, but nothing else, the "status changed locally" flag
+   was not set, and the status changes thus lost on sync.
+
+ * Two extra special paranoid sync state resets in impossible code paths
+   just to make sure we don't delete mail unwantedly even if hell
+   freezes over.
+
+ * Updated version number to proko2 2.0
+
+
+kontact
+------
+
+ * Start korgac when starting kontact, so that reminders work even if
+   the user doesn't click on the Calendar icon.
+   https://intevation.de/roundup/kolab/issue789
+
+ * Updated version number to proko2 2.0
+
+
+korganizer
+------
+
+ * The format for kmail serial numbers is kmail:foo/bar, not
+   kmail://foo/bar. Adjust.
+
+ * Much simpler way of starting korgac; don't start korgac from the
+   korganizer part, kontact does it now.
+
+
+libkdepim
+------
+
+ * Remove config(), use the one from KABC instead to avoid two
+   singletons.  Fixes "ldap config changes not immediately honored by
+   kaddressbook" https://intevation.de/roundup/kolab/issue795
+
+ * Very tricky bug in the LDAP parsing code, leading to corrupted
+   entries, e.g.  with 'name' and 'email' being set to the
+   name. QByteArray is explicitely shared, so when we get new contents
+   from the LDIF parser class, we need to detach it before putting it
+   into a list...  https://intevation.de/roundup/kolab/issue796
+
+
+kaddressbook
+------
+
+ * Fix signal/slot connection error
+
+
+
+Release notes for the Kolab KDE Client RC 3
+===========================================
+2005-06-10, Bernhard Herzog <bh@intevation.de>
+
+
+
+Changes since RC 2 (2005-05-08)
+-------------------------------
+
+certmanager
+------
+
+ * Key selection dialog: Work around bug in Qt where disabling and
+   reenabling the widget that has focus does not properly make it
+   refocus. This solves the problem that you had to click in the search
+   line (even while the cursor wash flashing there) to make it editable.
+
+kmail
+------
+
+ * Show resource icons also for folders with unread mail.
+
+ * Only reset the content type to text/plain if it is a multipart
+   currently, otherwise invitation replies get the wrong mime type :/
+   (kolab issue790)
+
+ * Make it possible to configure alphabetical instead of weighted
+   sorting of the completion entries via a checkbox in the completion
+   editor dialog. Make sure changes there are picked up by the currently
+   active addressee lineedits. (kolab issue734)
+
+ * Update version number to rc3
+
+kontact
+------
+
+ * Update version number to rc3
+
+korganizer
+------
+
+ * Import new event template management dialog from trunk, so that
+   templates can be deleted (kolab issue763)
+
+ * Make sure the freebusy retrieval state is reset, when retrieval is
+   not possible (kolab issue787)
+
+kresources
+------
+
+ * Drop completed dates if the task is not completed on writing or
+   reading.
+
+
+
+
+Changes since RC 1 (2005-05-03)
+-------------------------------
+
+KOrganizer
+----------
+
+ * Fix failure to enable "Reminder for first recurrence only" checkbox
+
+KMail
+-----
+
+ * Fix for conflict resolution dialogs when copying resource folders
+
+ * Chiasmus: Make canceling pinentry cancel the operation
+
+ * Fix for conflicting signing or encryption preferences
+
+ * Chiasmus: Implemented body encryption
+
+ * Chiasmus: Implemented body decryption
+
+ * Chiasmus: Fix content-type and chiasmus-charset in both cases 
+   (with and without attachments)
+
+ * Chiasmus: Fix wrong content-transfer-encoding in chiasmus-encrypted mails
+
+ * Add "Troubleshoot IMAP Cache..." to Folder menu (since it's already 
+   in the RMB)
+
+ * Fix for showing the IMAP-related menu item only if there is an IMAP
+   account
+
+ * Fix to no longer show an error dialog when the IMAP server closes the
+   connection
+
+ * Add an additional entry to the settings menu of the composer which
+   allows access to the address completion weight configuration
+
+ * Fix for replying to or forwarding messages after they were opened
+   in a separate reader window
+
+ * Create the default folders in the local language
+
+ * Fix for inline-forwarding or draft-editing mails with a signature
+
+ * Fix to force utf8 encoding on Kolab xml mail parts
+
+ * Use a different mimetype (application/x-vnd.kolab.contact.distlist)
+   for distribution lists, as discussed on kolab-format
+
+ * Fix for dropping local only or distribution list contents of the "to" 
+   field during IDN expansion
+
+ * Remove the global "refresh cache" menu entry
+
+Kolab XML Resource
+------------------
+
+ * fix for reading and writing the pilot sync id and status to emnable
+   pilot syncing
+
+ * Make the scheduling ID an implementation detail not visible
+   to the outside. It was removed from the specification.
+
+ * Drop completed dates if the task is not completed on writing or reading
+
+LDAP Search and Completion
+--------------------------
+
+ * Don't show structural entries, but only real persons, or everything
+   that has an email address
+
+Kontact
+-------  
+
+ * start the calendar part when accepting an invitation and it is not
+   running yet
+
+
+Updated Translations
+
+
+
+Release notes for the Kolab KDE Client RC 1
+===========================================
+2005-05-03, Bernhard Herzog <bh@intevation.de>
+
+
+Note: Many entries here contain references to entries in the kolab issue
+tracker, https://intevation.de/roundup/kolab/.  You can easily look them
+up by appending the reference to that URL, e.g. the URL for issue510 is
+https://intevation.de/roundup/kolab/issue510 .  Some issues are specific
+to the aegypten project (S/MIME for kmail) and can be looked up under
+https://intevation.de/roundup/aegypten/
+
+
+Upgrading from older (pre beta 1) kontact based clients
+-------------------------------------------------------
+
+If you have configured your kdepim installation with an older version of
+the kolabwizard (or have done it manually) you may need to tweak the URL
+Korganizer uses to fetch free/busy lists from the kolab2 server.  The
+url for fetching free/busy lists should be
+
+   https://kolabserver/freebusy/%25EMAIL%25.ifb
+
+Known Bugs
+----------
+
+ - When copying folders conflict resolution dialog boxes come up for the
+   copied events (kolab issue727)
+
+ - kpilot warns about being used with kdelibs 3.2.x even though it has
+   been backported to work in that environment.  Already fixed in CVS.
+
+ - kpilot doesn't work properly yet with kolab resources.  (kolab
+   issue704)
+
+
+Changes since Beta1 (2005-02-03)
+--------------------------------
+
+
+KMail
+-----
+
+ - Fixed deletion of folders with subfolders (kolab issue678)
+
+ - Remove choice between Kolab-XML and ical/vcard as storage format,
+   it's always kolab-xml in proko2.
+
+ - Fixed vanishing special icons when renaming/moving a special folder.
+
+ - Tell the resources when renaming a groupware folder (kolab issue639)
+
+ - Fixed header-list suddenly empty in rare cases.
+
+ - If there is no valid email address in the From header, but a name,
+   display it.
+
+ - Don't let the "No HTML Message" label force a minimum height on the
+   reader widget.
+
+ - Fixed utf8 in freebusy-trigger URLs (kolab issue640)
+
+ - Fixed inline forwarding of opaque signed and encrypted mails with
+   attachments (part of issues 39/266)
+
+ - Don't attempt to sync up changed acls if the user has insufficient
+   rights to do so.
+
+ - Fixed aegypten issue 295: "kmail encrypts entire mail though only
+   attachment was to be encrypted"
+
+ - Aegypten proxy: kleopatra<->kmail communication (aegypten issue296)
+
+ - Aegypten proxy: disable proxy settings when "Ignore HTTP CRL DPs of
+   certificate" is unchecked.
+
+ - Aegypten proxy: use honor-http-proxy option
+
+ - Fixed migration issue for users with an old kpgprc, broke decrypting
+   mails.
+
+ - Vacation GUI extended, to restrict sending of vacation replies for
+   known spam and to addresses outside of the company.
+
+ - "Copy folder to" feature.
+
+ - Fix message-status-handling broken by previous cached imap speedup
+
+ - Fix for syncing a new client with an already existing imap account
+   (used to wrongly disable kolab resource)
+
+ - Fix for inline forwarding of inline invitation mails (content-type
+   text/calendar),
+
+ - and another fix for "inline forwarding a mail consisting of only a
+   top level body part".
+
+ - Fix the fix for completion order when an item would be listed
+   multiple times.
+
+ - Fix temporary filename used for compacting a folder, to ensure no
+   ghost folder appears on kmail restart
+
+ - Escape folder names when displaying them in error dialogs (kolab
+   issue725)
+
+
+Kolab XML Resource
+------------------
+
+ - Fixed off-by-one in month names (kolab issue688)
+
+ - Yearly recurrence fix
+
+ - Fixed mapping of phone types to preserve "business2" and "company"
+   from outlook.
+
+
+Kolab Wizard
+------------
+
+ - Remove kolab1 vs kolab2 choice, since kolab1 isn't available in
+   proko2 branch.
+
+
+KPilot
+------
+
+ - Updated to KDE_3_4_BRANCH's version, with some fixes so that it works
+   with kdelibs-3.2.
+
+
+
+Kleopatra
+---------
+
+ - added Chiasmus support
+
+ - Redesigned automatic config dialog
+
+
+Aegypten Backend
+----------------
+
+ - added chiasmus support
+
+
+Other
+-----
+
+ - Fixed rare crash in kio_imap4
+
+ - Updated translations.
 
