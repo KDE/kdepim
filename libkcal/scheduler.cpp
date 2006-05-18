@@ -311,7 +311,9 @@ bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /*
   bool ret = false;
   const IncidenceBase *toDelete = mCalendar->incidenceFromSchedulingID( incidence->uid() );
   if ( !toDelete ) {
-      KMessageBox::error( 0,
+      Incidence *inc = static_cast<Incidence *>(incidence);
+      if ( inc->revision() > 0 ) // otherwise we are simply denying an initial request
+        KMessageBox::error( 0,
               i18n("The event, task or journal to be canceled could not be found. "
                   "Maybe it has already been deleted, or the calendar that "
                   "contains it is disabled." ) );
