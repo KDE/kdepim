@@ -57,11 +57,8 @@ o Backport large parts of the online/offline support from 3.5, which makes
 o Backport resource colors from KDE 3.5 branch. (issue 1129)
 
 
-Release notes for the Kolab 2 KDE Client 2.1.0
+Release notes for the Kolab 2 KDE Client 2.1.0 (released 2006-04-07)
 ==============================================
-2006-04-07, Bernhard Herzog <bh@intevation.de>
-(20060510ber)
-
 
 Known issues:
 
@@ -212,8 +209,11 @@ Bugfixes:
 * Fix for: kpilot sometimes removes first occurrence of a recurring event.
   (Kolab/issue1135)
 
-* Fix for: kpilot doesn't sync location field of events.
-  (Kolab/issue1134)
+* Fix for: kpilot doesn't sync location field of events. (Kolab/issue1134)
+  The location field in Kontact will be synct to notes text on the palm now.
+  It will appear between star ('*') characters, so kpilot can recognise it,
+  e.g. like "*Georgstrasse 4*". This workaround is necessary because
+  there is no official location field in all palm devices.
 
 * Fix for: Contacts from Palm don's show properly in KAddressBook
   (Kolab/issue1156)
