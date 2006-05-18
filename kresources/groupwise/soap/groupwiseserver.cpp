@@ -33,6 +33,7 @@
 #include <kio/job.h>
 #include <kio/jobclasses.h>
 #include <kio/netaccess.h>
+#include <kprotocolmanager.h>
 #include <ktempfile.h>
 #include <kdebug.h>
 #include <klocale.h>
@@ -111,6 +112,7 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
   if ( mSSL ) {
 //    kdDebug() << "Creating KSSLSocket()" << endl;
     m_sock = new KSSLSocket();
+    m_sock->setTimeout( KProtocolManager::connectTimeout() );
     connect( m_sock, SIGNAL( sslFailure() ), SLOT( slotSslError() ) );
   } else {
     m_sock = new KExtendedSocket();
@@ -126,8 +128,16 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
   int rc = m_sock->connect();
   if ( rc != 0 ) {
     kdError() << "gSoapOpen: connect failed " << rc << endl;
-    mError = i18n("Connect failed: %1.").arg( rc );
-    if ( rc == -1 ) perror( 0 );
+    QString errorMessage;
+    if ( rc == -1 ) {
+      errorMessage = QString::fromLatin1( strerror( errno ) );
+      perror( 0 );
+    }
+    else {
+      if ( rc == -3 )
+        errorMessage = QString::fromLatin1( "Connection timed out.  Check host and port number" );
+    }
+    mError = i18n("Connect failed: %1.").arg( errorMessage );
     return SOAP_INVALID_SOCKET;
   }
   m_sock->enableRead( true );
@@ -308,7 +318,7 @@ bool GroupwiseServer::login()
 
   if ( !checkResponse( result, loginResp.status ) ) return false;
 
-  mSession = loginResp.session;
+  mSession = *(loginResp.session);
 
   if ( mSession.size() == 0 ) // workaround broken loginResponse error reporting
   {
@@ -329,6 +339,7 @@ bool GroupwiseServer::login()
     mUserName = conv.stringToQString( userinfo->name );
     if ( userinfo->email ) mUserEmail = conv.stringToQString( userinfo->email );
     if ( userinfo->uuid ) mUserUuid = conv.stringToQString( userinfo->uuid );
+    // can also get userid here in GW7 (userinfo->userid)
   }
 
   kdDebug() << "USER: name: " << mUserName << " email: " << mUserEmail <<
@@ -744,7 +755,7 @@ std::string GroupwiseServer::getFullIDFor( const QString & gwRecordIDFromIcal )
       std::vector<class ngwt__Folder * >::const_iterator it;
       for ( it = folders->begin(); it != folders->end(); ++it ) {
         ngwt__SystemFolder * fld = dynamic_cast<ngwt__SystemFolder *>( *it );
-        if ( fld && fld->folderType == Calendar )
+        if ( fld && *(fld->folderType) == Calendar )
           if ( !fld->id ) {
             kdError() << "No folder id" << endl;
           } else {
@@ -1042,6 +1053,7 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   request.updates->_delete = 0;
   request.updates->update = item;
   request.notification = 0;
+  request.recurrenceAllInstances = 0;
   _ngwm__modifyItemResponse response;
   mSoap->header->ngwt__session = mSession;
 
@@ -1172,10 +1184,13 @@ bool GroupwiseServer::retractRequest( KCal::Incidence *incidence, RetractCause c
   request.retractingAllInstances = (bool*)soap_malloc( mSoap, 1 );
   request.retractCausedByResend = ( cause == DueToResend );
   request.retractingAllInstances = true;
-  request.retractType = allMailboxes;
+  ngwt__RetractType * rt = new ngwt__RetractType;
+  *rt = allMailboxes;
+  request.retractType = rt;
 
   int result = soap_call___ngw__retractRequest( mSoap, mUrl.latin1(), 0,
                                                     &request, &response );
+  delete rt;
   return checkResponse( result, response.status );
 }
 
@@ -1231,6 +1246,7 @@ bool GroupwiseServer::changeAddressee( const KABC::Addressee &addr )
   request.updates->_delete = 0;
   request.updates->update = contact;
   request.notification = 0;
+  request.recurrenceAllInstances = 0;
 
   _ngwm__modifyItemResponse response;
   mSoap->header->ngwt__session = mSession;
@@ -1366,11 +1382,11 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
         if ( blocks ) {
           std::vector<class ngwt__FreeBusyBlock *>::const_iterator it2;
           for( it2 = blocks->begin(); it2 != blocks->end(); ++it2 ) {
-            QDateTime blockStart = conv.charToQDateTime( (*it2)->startDate, KPimPrefs::timezone() );
-            QDateTime blockEnd = conv.charToQDateTime( (*it2)->endDate, KPimPrefs::timezone() );
+            QDateTime blockStart = conv.charToQDateTime( (*it2)->startDate );
+            QDateTime blockEnd = conv.charToQDateTime( (*it2)->endDate );
             ngwt__AcceptLevel acceptLevel = *(*it2)->acceptLevel;
 
-            /* we need to support these as people use it for checking others' calendars */ 
+            /* TODO: show Free/Busy subject in diagram - we need to support these as people use it for checking others' calendars */ 
 /*            if ( (*it2)->subject )
               std::string subject = *(*it2)->subject;*/
   //          kdDebug() << "BLOCK Subject: " << subject.c_str() << endl;

@@ -72,7 +72,8 @@ ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent,  const char* 
   mSaveConfig = new KCal::ResourceCachedSaveConfig( this );
   mainLayout->addMultiCellWidget( mSaveConfig, 6, 6, 0, 1 );
 
-  connect( settingsButton, SIGNAL( clicked() ), SLOT( slotViewUserSettings() ) );
+  settingsButton->hide();
+  // connect( settingsButton, SIGNAL( clicked() ), SLOT( slotViewUserSettings() ) );
 
 }
 

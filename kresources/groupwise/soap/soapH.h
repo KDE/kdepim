@@ -26,7 +26,7 @@ SOAP_FMAC3 void* SOAP_FMAC4 soap_container_id_forward(struct soap*, const char*,
 SOAP_FMAC3 void SOAP_FMAC4 soap_container_insert(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__DayOfMonth
-#define SOAP_TYPE_ngwt__DayOfMonth (307)
+#define SOAP_TYPE_ngwt__DayOfMonth (349)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__DayOfMonth(struct soap*, char *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__DayOfMonth(struct soap*, const char *, const char*, const char*);
@@ -43,8 +43,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_byte(struct soap*, const char*, int, const ch
 SOAP_FMAC3 char * SOAP_FMAC4 soap_get_byte(struct soap*, char *, const char*, const char*);
 SOAP_FMAC3 char * SOAP_FMAC4 soap_in_byte(struct soap*, const char*, char *, const char*);
 
+#ifndef SOAP_TYPE_ngwt__WeekOfYear
+#define SOAP_TYPE_ngwt__WeekOfYear (386)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__WeekOfYear(struct soap*, short *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__WeekOfYear(struct soap*, const short *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__WeekOfYear(struct soap*, const char*, int, const short *, const char*);
+SOAP_FMAC3 short * SOAP_FMAC4 soap_get_ngwt__WeekOfYear(struct soap*, short *, const char*, const char*);
+SOAP_FMAC3 short * SOAP_FMAC4 soap_in_ngwt__WeekOfYear(struct soap*, const char*, short *, const char*);
+
 #ifndef SOAP_TYPE_ngwt__DayOfYear
-#define SOAP_TYPE_ngwt__DayOfYear (309)
+#define SOAP_TYPE_ngwt__DayOfYear (351)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__DayOfYear(struct soap*, short *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__DayOfYear(struct soap*, const short *, const char*, const char*);
@@ -53,7 +62,7 @@ SOAP_FMAC3 short * SOAP_FMAC4 soap_get_ngwt__DayOfYear(struct soap*, short *, co
 SOAP_FMAC3 short * SOAP_FMAC4 soap_in_ngwt__DayOfYear(struct soap*, const char*, short *, const char*);
 
 #ifndef SOAP_TYPE_short
-#define SOAP_TYPE_short (308)
+#define SOAP_TYPE_short (350)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_short(struct soap*, short *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_short(struct soap*, const short *, const char*, const char*);
@@ -62,7 +71,7 @@ SOAP_FMAC3 short * SOAP_FMAC4 soap_get_short(struct soap*, short *, const char*,
 SOAP_FMAC3 short * SOAP_FMAC4 soap_in_short(struct soap*, const char*, short *, const char*);
 
 #ifndef SOAP_TYPE_ngwt__GMTOffset
-#define SOAP_TYPE_ngwt__GMTOffset (316)
+#define SOAP_TYPE_ngwt__GMTOffset (360)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__GMTOffset(struct soap*, int *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__GMTOffset(struct soap*, const int *, const char*, const char*);
@@ -80,7 +89,7 @@ SOAP_FMAC3 int * SOAP_FMAC4 soap_get_int(struct soap*, int *, const char*, const
 SOAP_FMAC3 int * SOAP_FMAC4 soap_in_int(struct soap*, const char*, int *, const char*);
 
 #ifndef SOAP_TYPE_long
-#define SOAP_TYPE_long (354)
+#define SOAP_TYPE_long (402)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_long(struct soap*, long *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_long(struct soap*, const long *, const char*, const char*);
@@ -89,7 +98,7 @@ SOAP_FMAC3 long * SOAP_FMAC4 soap_get_long(struct soap*, long *, const char*, co
 SOAP_FMAC3 long * SOAP_FMAC4 soap_in_long(struct soap*, const char*, long *, const char*);
 
 #ifndef SOAP_TYPE_ngwt__Month
-#define SOAP_TYPE_ngwt__Month (328)
+#define SOAP_TYPE_ngwt__Month (372)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__Month(struct soap*, unsigned char *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__Month(struct soap*, const unsigned char *, const char*, const char*);
@@ -98,7 +107,7 @@ SOAP_FMAC3 unsigned char * SOAP_FMAC4 soap_get_ngwt__Month(struct soap*, unsigne
 SOAP_FMAC3 unsigned char * SOAP_FMAC4 soap_in_ngwt__Month(struct soap*, const char*, unsigned char *, const char*);
 
 #ifndef SOAP_TYPE_ngwt__Minute
-#define SOAP_TYPE_ngwt__Minute (327)
+#define SOAP_TYPE_ngwt__Minute (371)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__Minute(struct soap*, unsigned char *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__Minute(struct soap*, const unsigned char *, const char*, const char*);
@@ -107,7 +116,7 @@ SOAP_FMAC3 unsigned char * SOAP_FMAC4 soap_get_ngwt__Minute(struct soap*, unsign
 SOAP_FMAC3 unsigned char * SOAP_FMAC4 soap_in_ngwt__Minute(struct soap*, const char*, unsigned char *, const char*);
 
 #ifndef SOAP_TYPE_ngwt__Hour
-#define SOAP_TYPE_ngwt__Hour (317)
+#define SOAP_TYPE_ngwt__Hour (361)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__Hour(struct soap*, unsigned char *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__Hour(struct soap*, const unsigned char *, const char*, const char*);
@@ -116,7 +125,7 @@ SOAP_FMAC3 unsigned char * SOAP_FMAC4 soap_get_ngwt__Hour(struct soap*, unsigned
 SOAP_FMAC3 unsigned char * SOAP_FMAC4 soap_in_ngwt__Hour(struct soap*, const char*, unsigned char *, const char*);
 
 #ifndef SOAP_TYPE_ngwt__Day
-#define SOAP_TYPE_ngwt__Day (306)
+#define SOAP_TYPE_ngwt__Day (348)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__Day(struct soap*, unsigned char *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__Day(struct soap*, const unsigned char *, const char*, const char*);
@@ -125,7 +134,7 @@ SOAP_FMAC3 unsigned char * SOAP_FMAC4 soap_get_ngwt__Day(struct soap*, unsigned 
 SOAP_FMAC3 unsigned char * SOAP_FMAC4 soap_in_ngwt__Day(struct soap*, const char*, unsigned char *, const char*);
 
 #ifndef SOAP_TYPE_unsignedByte
-#define SOAP_TYPE_unsignedByte (11)
+#define SOAP_TYPE_unsignedByte (9)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_unsignedByte(struct soap*, unsigned char *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_unsignedByte(struct soap*, const unsigned char *, const char*, const char*);
@@ -134,7 +143,7 @@ SOAP_FMAC3 unsigned char * SOAP_FMAC4 soap_get_unsignedByte(struct soap*, unsign
 SOAP_FMAC3 unsigned char * SOAP_FMAC4 soap_in_unsignedByte(struct soap*, const char*, unsigned char *, const char*);
 
 #ifndef SOAP_TYPE_unsignedInt
-#define SOAP_TYPE_unsignedInt (10)
+#define SOAP_TYPE_unsignedInt (8)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_unsignedInt(struct soap*, unsigned int *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_unsignedInt(struct soap*, const unsigned int *, const char*, const char*);
@@ -143,7 +152,7 @@ SOAP_FMAC3 unsigned int * SOAP_FMAC4 soap_get_unsignedInt(struct soap*, unsigned
 SOAP_FMAC3 unsigned int * SOAP_FMAC4 soap_in_unsignedInt(struct soap*, const char*, unsigned int *, const char*);
 
 #ifndef SOAP_TYPE_unsignedLong
-#define SOAP_TYPE_unsignedLong (355)
+#define SOAP_TYPE_unsignedLong (403)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_unsignedLong(struct soap*, unsigned long *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_unsignedLong(struct soap*, const unsigned long *, const char*, const char*);
@@ -152,7 +161,7 @@ SOAP_FMAC3 unsigned long * SOAP_FMAC4 soap_get_unsignedLong(struct soap*, unsign
 SOAP_FMAC3 unsigned long * SOAP_FMAC4 soap_in_unsignedLong(struct soap*, const char*, unsigned long *, const char*);
 
 #ifndef SOAP_TYPE_bool
-#define SOAP_TYPE_bool (344)
+#define SOAP_TYPE_bool (392)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_bool(struct soap*, bool *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_bool(struct soap*, const bool *, const char*, const char*);
@@ -165,7 +174,7 @@ SOAP_FMAC3 bool * SOAP_FMAC4 soap_in_bool(struct soap*, const char*, bool *, con
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2bool(struct soap*, const char*, bool *);
 
 #ifndef SOAP_TYPE_ngwe__ItemType
-#define SOAP_TYPE_ngwe__ItemType (341)
+#define SOAP_TYPE_ngwe__ItemType (389)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwe__ItemType(struct soap*, enum ngwe__ItemType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwe__ItemType(struct soap*, const enum ngwe__ItemType *, const char*, const char*);
@@ -178,7 +187,7 @@ SOAP_FMAC3 enum ngwe__ItemType * SOAP_FMAC4 soap_in_ngwe__ItemType(struct soap*,
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwe__ItemType(struct soap*, const char*, enum ngwe__ItemType *);
 
 #ifndef SOAP_TYPE_ngwe__Field
-#define SOAP_TYPE_ngwe__Field (340)
+#define SOAP_TYPE_ngwe__Field (388)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwe__Field(struct soap*, enum ngwe__Field *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwe__Field(struct soap*, const enum ngwe__Field *, const char*, const char*);
@@ -191,7 +200,7 @@ SOAP_FMAC3 enum ngwe__Field * SOAP_FMAC4 soap_in_ngwe__Field(struct soap*, const
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwe__Field(struct soap*, const char*, enum ngwe__Field *);
 
 #ifndef SOAP_TYPE_ngwe__EventType
-#define SOAP_TYPE_ngwe__EventType (339)
+#define SOAP_TYPE_ngwe__EventType (387)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwe__EventType(struct soap*, enum ngwe__EventType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwe__EventType(struct soap*, const enum ngwe__EventType *, const char*, const char*);
@@ -204,7 +213,7 @@ SOAP_FMAC3 enum ngwe__EventType * SOAP_FMAC4 soap_in_ngwe__EventType(struct soap
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwe__EventType(struct soap*, const char*, enum ngwe__EventType *);
 
 #ifndef SOAP_TYPE_ngwt__WeekDay
-#define SOAP_TYPE_ngwt__WeekDay (338)
+#define SOAP_TYPE_ngwt__WeekDay (385)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__WeekDay(struct soap*, enum ngwt__WeekDay *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__WeekDay(struct soap*, const enum ngwt__WeekDay *, const char*, const char*);
@@ -216,8 +225,34 @@ SOAP_FMAC3 enum ngwt__WeekDay * SOAP_FMAC4 soap_in_ngwt__WeekDay(struct soap*, c
 
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__WeekDay(struct soap*, const char*, enum ngwt__WeekDay *);
 
+#ifndef SOAP_TYPE_ngwt__VersionStatus
+#define SOAP_TYPE_ngwt__VersionStatus (384)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__VersionStatus(struct soap*, enum ngwt__VersionStatus *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__VersionStatus(struct soap*, const enum ngwt__VersionStatus *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__VersionStatus(struct soap*, const char*, int, const enum ngwt__VersionStatus *, const char*);
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__VersionStatus2s(struct soap*, enum ngwt__VersionStatus);
+SOAP_FMAC3 enum ngwt__VersionStatus * SOAP_FMAC4 soap_get_ngwt__VersionStatus(struct soap*, enum ngwt__VersionStatus *, const char*, const char*);
+SOAP_FMAC3 enum ngwt__VersionStatus * SOAP_FMAC4 soap_in_ngwt__VersionStatus(struct soap*, const char*, enum ngwt__VersionStatus *, const char*);
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__VersionStatus(struct soap*, const char*, enum ngwt__VersionStatus *);
+
+#ifndef SOAP_TYPE_ngwt__VersionEventType
+#define SOAP_TYPE_ngwt__VersionEventType (383)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__VersionEventType(struct soap*, enum ngwt__VersionEventType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__VersionEventType(struct soap*, const enum ngwt__VersionEventType *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__VersionEventType(struct soap*, const char*, int, const enum ngwt__VersionEventType *, const char*);
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__VersionEventType2s(struct soap*, enum ngwt__VersionEventType);
+SOAP_FMAC3 enum ngwt__VersionEventType * SOAP_FMAC4 soap_get_ngwt__VersionEventType(struct soap*, enum ngwt__VersionEventType *, const char*, const char*);
+SOAP_FMAC3 enum ngwt__VersionEventType * SOAP_FMAC4 soap_in_ngwt__VersionEventType(struct soap*, const char*, enum ngwt__VersionEventType *, const char*);
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__VersionEventType(struct soap*, const char*, enum ngwt__VersionEventType *);
+
 #ifndef SOAP_TYPE_ngwt__StatusTrackingOptions
-#define SOAP_TYPE_ngwt__StatusTrackingOptions (335)
+#define SOAP_TYPE_ngwt__StatusTrackingOptions (380)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__StatusTrackingOptions(struct soap*, enum ngwt__StatusTrackingOptions *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__StatusTrackingOptions(struct soap*, const enum ngwt__StatusTrackingOptions *, const char*, const char*);
@@ -229,8 +264,21 @@ SOAP_FMAC3 enum ngwt__StatusTrackingOptions * SOAP_FMAC4 soap_in_ngwt__StatusTra
 
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__StatusTrackingOptions(struct soap*, const char*, enum ngwt__StatusTrackingOptions *);
 
+#ifndef SOAP_TYPE_ngwt__RuleActionType
+#define SOAP_TYPE_ngwt__RuleActionType (379)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__RuleActionType(struct soap*, enum ngwt__RuleActionType *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__RuleActionType(struct soap*, const enum ngwt__RuleActionType *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__RuleActionType(struct soap*, const char*, int, const enum ngwt__RuleActionType *, const char*);
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__RuleActionType2s(struct soap*, enum ngwt__RuleActionType);
+SOAP_FMAC3 enum ngwt__RuleActionType * SOAP_FMAC4 soap_get_ngwt__RuleActionType(struct soap*, enum ngwt__RuleActionType *, const char*, const char*);
+SOAP_FMAC3 enum ngwt__RuleActionType * SOAP_FMAC4 soap_in_ngwt__RuleActionType(struct soap*, const char*, enum ngwt__RuleActionType *, const char*);
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__RuleActionType(struct soap*, const char*, enum ngwt__RuleActionType *);
+
 #ifndef SOAP_TYPE_ngwt__RetractType
-#define SOAP_TYPE_ngwt__RetractType (334)
+#define SOAP_TYPE_ngwt__RetractType (378)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__RetractType(struct soap*, enum ngwt__RetractType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__RetractType(struct soap*, const enum ngwt__RetractType *, const char*, const char*);
@@ -243,7 +291,7 @@ SOAP_FMAC3 enum ngwt__RetractType * SOAP_FMAC4 soap_in_ngwt__RetractType(struct 
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__RetractType(struct soap*, const char*, enum ngwt__RetractType *);
 
 #ifndef SOAP_TYPE_ngwt__RecipientType
-#define SOAP_TYPE_ngwt__RecipientType (333)
+#define SOAP_TYPE_ngwt__RecipientType (377)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__RecipientType(struct soap*, enum ngwt__RecipientType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__RecipientType(struct soap*, const enum ngwt__RecipientType *, const char*, const char*);
@@ -256,7 +304,7 @@ SOAP_FMAC3 enum ngwt__RecipientType * SOAP_FMAC4 soap_in_ngwt__RecipientType(str
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__RecipientType(struct soap*, const char*, enum ngwt__RecipientType *);
 
 #ifndef SOAP_TYPE_ngwt__PostalAddressType
-#define SOAP_TYPE_ngwt__PostalAddressType (332)
+#define SOAP_TYPE_ngwt__PostalAddressType (376)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__PostalAddressType(struct soap*, enum ngwt__PostalAddressType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__PostalAddressType(struct soap*, const enum ngwt__PostalAddressType *, const char*, const char*);
@@ -269,7 +317,7 @@ SOAP_FMAC3 enum ngwt__PostalAddressType * SOAP_FMAC4 soap_in_ngwt__PostalAddress
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__PostalAddressType(struct soap*, const char*, enum ngwt__PostalAddressType *);
 
 #ifndef SOAP_TYPE_ngwt__PhoneNumberType
-#define SOAP_TYPE_ngwt__PhoneNumberType (331)
+#define SOAP_TYPE_ngwt__PhoneNumberType (375)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__PhoneNumberType(struct soap*, enum ngwt__PhoneNumberType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__PhoneNumberType(struct soap*, const enum ngwt__PhoneNumberType *, const char*, const char*);
@@ -282,7 +330,7 @@ SOAP_FMAC3 enum ngwt__PhoneNumberType * SOAP_FMAC4 soap_in_ngwt__PhoneNumberType
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__PhoneNumberType(struct soap*, const char*, enum ngwt__PhoneNumberType *);
 
 #ifndef SOAP_TYPE_ngwt__OccurrenceType
-#define SOAP_TYPE_ngwt__OccurrenceType (330)
+#define SOAP_TYPE_ngwt__OccurrenceType (374)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__OccurrenceType(struct soap*, enum ngwt__OccurrenceType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__OccurrenceType(struct soap*, const enum ngwt__OccurrenceType *, const char*, const char*);
@@ -295,7 +343,7 @@ SOAP_FMAC3 enum ngwt__OccurrenceType * SOAP_FMAC4 soap_in_ngwt__OccurrenceType(s
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__OccurrenceType(struct soap*, const char*, enum ngwt__OccurrenceType *);
 
 #ifndef SOAP_TYPE_ngwt__NotificationType
-#define SOAP_TYPE_ngwt__NotificationType (329)
+#define SOAP_TYPE_ngwt__NotificationType (373)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__NotificationType(struct soap*, enum ngwt__NotificationType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__NotificationType(struct soap*, const enum ngwt__NotificationType *, const char*, const char*);
@@ -308,7 +356,7 @@ SOAP_FMAC3 enum ngwt__NotificationType * SOAP_FMAC4 soap_in_ngwt__NotificationTy
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__NotificationType(struct soap*, const char*, enum ngwt__NotificationType *);
 
 #ifndef SOAP_TYPE_ngwt__MessageType
-#define SOAP_TYPE_ngwt__MessageType (326)
+#define SOAP_TYPE_ngwt__MessageType (370)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__MessageType(struct soap*, enum ngwt__MessageType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__MessageType(struct soap*, const enum ngwt__MessageType *, const char*, const char*);
@@ -321,7 +369,7 @@ SOAP_FMAC3 enum ngwt__MessageType * SOAP_FMAC4 soap_in_ngwt__MessageType(struct 
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__MessageType(struct soap*, const char*, enum ngwt__MessageType *);
 
 #ifndef SOAP_TYPE_ngwt__MessageList
-#define SOAP_TYPE_ngwt__MessageList (325)
+#define SOAP_TYPE_ngwt__MessageList (369)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__MessageList(struct soap*, enum ngwt__MessageList *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__MessageList(struct soap*, const enum ngwt__MessageList *, const char*, const char*);
@@ -334,7 +382,7 @@ SOAP_FMAC3 enum ngwt__MessageList * SOAP_FMAC4 soap_in_ngwt__MessageList(struct 
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__MessageList(struct soap*, const char*, enum ngwt__MessageList *);
 
 #ifndef SOAP_TYPE_ngwt__LinkType
-#define SOAP_TYPE_ngwt__LinkType (324)
+#define SOAP_TYPE_ngwt__LinkType (368)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__LinkType(struct soap*, enum ngwt__LinkType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__LinkType(struct soap*, const enum ngwt__LinkType *, const char*, const char*);
@@ -347,7 +395,7 @@ SOAP_FMAC3 enum ngwt__LinkType * SOAP_FMAC4 soap_in_ngwt__LinkType(struct soap*,
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__LinkType(struct soap*, const char*, enum ngwt__LinkType *);
 
 #ifndef SOAP_TYPE_ngwt__JunkMatchType
-#define SOAP_TYPE_ngwt__JunkMatchType (323)
+#define SOAP_TYPE_ngwt__JunkMatchType (367)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__JunkMatchType(struct soap*, enum ngwt__JunkMatchType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__JunkMatchType(struct soap*, const enum ngwt__JunkMatchType *, const char*, const char*);
@@ -360,7 +408,7 @@ SOAP_FMAC3 enum ngwt__JunkMatchType * SOAP_FMAC4 soap_in_ngwt__JunkMatchType(str
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__JunkMatchType(struct soap*, const char*, enum ngwt__JunkMatchType *);
 
 #ifndef SOAP_TYPE_ngwt__JunkHandlingListType
-#define SOAP_TYPE_ngwt__JunkHandlingListType (322)
+#define SOAP_TYPE_ngwt__JunkHandlingListType (366)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__JunkHandlingListType(struct soap*, enum ngwt__JunkHandlingListType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__JunkHandlingListType(struct soap*, const enum ngwt__JunkHandlingListType *, const char*, const char*);
@@ -373,7 +421,7 @@ SOAP_FMAC3 enum ngwt__JunkHandlingListType * SOAP_FMAC4 soap_in_ngwt__JunkHandli
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__JunkHandlingListType(struct soap*, const char*, enum ngwt__JunkHandlingListType *);
 
 #ifndef SOAP_TYPE_ngwt__ItemSource
-#define SOAP_TYPE_ngwt__ItemSource (321)
+#define SOAP_TYPE_ngwt__ItemSource (365)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__ItemSource(struct soap*, enum ngwt__ItemSource *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__ItemSource(struct soap*, const enum ngwt__ItemSource *, const char*, const char*);
@@ -386,7 +434,7 @@ SOAP_FMAC3 enum ngwt__ItemSource * SOAP_FMAC4 soap_in_ngwt__ItemSource(struct so
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__ItemSource(struct soap*, const char*, enum ngwt__ItemSource *);
 
 #ifndef SOAP_TYPE_ngwt__ItemSecurity
-#define SOAP_TYPE_ngwt__ItemSecurity (320)
+#define SOAP_TYPE_ngwt__ItemSecurity (364)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__ItemSecurity(struct soap*, enum ngwt__ItemSecurity *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__ItemSecurity(struct soap*, const enum ngwt__ItemSecurity *, const char*, const char*);
@@ -399,7 +447,7 @@ SOAP_FMAC3 enum ngwt__ItemSecurity * SOAP_FMAC4 soap_in_ngwt__ItemSecurity(struc
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__ItemSecurity(struct soap*, const char*, enum ngwt__ItemSecurity *);
 
 #ifndef SOAP_TYPE_ngwt__ItemOptionsPriority
-#define SOAP_TYPE_ngwt__ItemOptionsPriority (319)
+#define SOAP_TYPE_ngwt__ItemOptionsPriority (363)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__ItemOptionsPriority(struct soap*, enum ngwt__ItemOptionsPriority *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__ItemOptionsPriority(struct soap*, const enum ngwt__ItemOptionsPriority *, const char*, const char*);
@@ -412,7 +460,7 @@ SOAP_FMAC3 enum ngwt__ItemOptionsPriority * SOAP_FMAC4 soap_in_ngwt__ItemOptions
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__ItemOptionsPriority(struct soap*, const char*, enum ngwt__ItemOptionsPriority *);
 
 #ifndef SOAP_TYPE_ngwt__ItemClass
-#define SOAP_TYPE_ngwt__ItemClass (318)
+#define SOAP_TYPE_ngwt__ItemClass (362)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__ItemClass(struct soap*, enum ngwt__ItemClass *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__ItemClass(struct soap*, const enum ngwt__ItemClass *, const char*, const char*);
@@ -425,7 +473,7 @@ SOAP_FMAC3 enum ngwt__ItemClass * SOAP_FMAC4 soap_in_ngwt__ItemClass(struct soap
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__ItemClass(struct soap*, const char*, enum ngwt__ItemClass *);
 
 #ifndef SOAP_TYPE_ngwt__Frequency
-#define SOAP_TYPE_ngwt__Frequency (315)
+#define SOAP_TYPE_ngwt__Frequency (359)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__Frequency(struct soap*, enum ngwt__Frequency *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__Frequency(struct soap*, const enum ngwt__Frequency *, const char*, const char*);
@@ -438,7 +486,7 @@ SOAP_FMAC3 enum ngwt__Frequency * SOAP_FMAC4 soap_in_ngwt__Frequency(struct soap
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__Frequency(struct soap*, const char*, enum ngwt__Frequency *);
 
 #ifndef SOAP_TYPE_ngwt__FolderType
-#define SOAP_TYPE_ngwt__FolderType (314)
+#define SOAP_TYPE_ngwt__FolderType (358)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__FolderType(struct soap*, enum ngwt__FolderType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__FolderType(struct soap*, const enum ngwt__FolderType *, const char*, const char*);
@@ -451,7 +499,7 @@ SOAP_FMAC3 enum ngwt__FolderType * SOAP_FMAC4 soap_in_ngwt__FolderType(struct so
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__FolderType(struct soap*, const char*, enum ngwt__FolderType *);
 
 #ifndef SOAP_TYPE_ngwt__FolderACLStatus
-#define SOAP_TYPE_ngwt__FolderACLStatus (313)
+#define SOAP_TYPE_ngwt__FolderACLStatus (357)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__FolderACLStatus(struct soap*, enum ngwt__FolderACLStatus *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__FolderACLStatus(struct soap*, const enum ngwt__FolderACLStatus *, const char*, const char*);
@@ -464,7 +512,7 @@ SOAP_FMAC3 enum ngwt__FolderACLStatus * SOAP_FMAC4 soap_in_ngwt__FolderACLStatus
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__FolderACLStatus(struct soap*, const char*, enum ngwt__FolderACLStatus *);
 
 #ifndef SOAP_TYPE_ngwt__FilterOp
-#define SOAP_TYPE_ngwt__FilterOp (312)
+#define SOAP_TYPE_ngwt__FilterOp (356)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__FilterOp(struct soap*, enum ngwt__FilterOp *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__FilterOp(struct soap*, const enum ngwt__FilterOp *, const char*, const char*);
@@ -476,8 +524,34 @@ SOAP_FMAC3 enum ngwt__FilterOp * SOAP_FMAC4 soap_in_ngwt__FilterOp(struct soap*,
 
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__FilterOp(struct soap*, const char*, enum ngwt__FilterOp *);
 
+#ifndef SOAP_TYPE_ngwt__FilterDate
+#define SOAP_TYPE_ngwt__FilterDate (355)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__FilterDate(struct soap*, enum ngwt__FilterDate *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__FilterDate(struct soap*, const enum ngwt__FilterDate *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FilterDate(struct soap*, const char*, int, const enum ngwt__FilterDate *, const char*);
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__FilterDate2s(struct soap*, enum ngwt__FilterDate);
+SOAP_FMAC3 enum ngwt__FilterDate * SOAP_FMAC4 soap_get_ngwt__FilterDate(struct soap*, enum ngwt__FilterDate *, const char*, const char*);
+SOAP_FMAC3 enum ngwt__FilterDate * SOAP_FMAC4 soap_in_ngwt__FilterDate(struct soap*, const char*, enum ngwt__FilterDate *, const char*);
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__FilterDate(struct soap*, const char*, enum ngwt__FilterDate *);
+
+#ifndef SOAP_TYPE_ngwt__Execution
+#define SOAP_TYPE_ngwt__Execution (354)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__Execution(struct soap*, enum ngwt__Execution *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__Execution(struct soap*, const enum ngwt__Execution *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Execution(struct soap*, const char*, int, const enum ngwt__Execution *, const char*);
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__Execution2s(struct soap*, enum ngwt__Execution);
+SOAP_FMAC3 enum ngwt__Execution * SOAP_FMAC4 soap_get_ngwt__Execution(struct soap*, enum ngwt__Execution *, const char*, const char*);
+SOAP_FMAC3 enum ngwt__Execution * SOAP_FMAC4 soap_in_ngwt__Execution(struct soap*, const char*, enum ngwt__Execution *, const char*);
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__Execution(struct soap*, const char*, enum ngwt__Execution *);
+
 #ifndef SOAP_TYPE_ngwt__DistributionType
-#define SOAP_TYPE_ngwt__DistributionType (311)
+#define SOAP_TYPE_ngwt__DistributionType (353)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__DistributionType(struct soap*, enum ngwt__DistributionType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__DistributionType(struct soap*, const enum ngwt__DistributionType *, const char*, const char*);
@@ -490,7 +564,7 @@ SOAP_FMAC3 enum ngwt__DistributionType * SOAP_FMAC4 soap_in_ngwt__DistributionTy
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__DistributionType(struct soap*, const char*, enum ngwt__DistributionType *);
 
 #ifndef SOAP_TYPE_ngwt__DeltaSyncType
-#define SOAP_TYPE_ngwt__DeltaSyncType (310)
+#define SOAP_TYPE_ngwt__DeltaSyncType (352)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__DeltaSyncType(struct soap*, enum ngwt__DeltaSyncType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__DeltaSyncType(struct soap*, const enum ngwt__DeltaSyncType *, const char*, const char*);
@@ -503,7 +577,7 @@ SOAP_FMAC3 enum ngwt__DeltaSyncType * SOAP_FMAC4 soap_in_ngwt__DeltaSyncType(str
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__DeltaSyncType(struct soap*, const char*, enum ngwt__DeltaSyncType *);
 
 #ifndef SOAP_TYPE_ngwt__CursorSeek
-#define SOAP_TYPE_ngwt__CursorSeek (305)
+#define SOAP_TYPE_ngwt__CursorSeek (347)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__CursorSeek(struct soap*, enum ngwt__CursorSeek *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__CursorSeek(struct soap*, const enum ngwt__CursorSeek *, const char*, const char*);
@@ -516,7 +590,7 @@ SOAP_FMAC3 enum ngwt__CursorSeek * SOAP_FMAC4 soap_in_ngwt__CursorSeek(struct so
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__CursorSeek(struct soap*, const char*, enum ngwt__CursorSeek *);
 
 #ifndef SOAP_TYPE_ngwt__ContactType
-#define SOAP_TYPE_ngwt__ContactType (304)
+#define SOAP_TYPE_ngwt__ContactType (346)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__ContactType(struct soap*, enum ngwt__ContactType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__ContactType(struct soap*, const enum ngwt__ContactType *, const char*, const char*);
@@ -529,7 +603,7 @@ SOAP_FMAC3 enum ngwt__ContactType * SOAP_FMAC4 soap_in_ngwt__ContactType(struct 
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__ContactType(struct soap*, const char*, enum ngwt__ContactType *);
 
 #ifndef SOAP_TYPE_ngwt__CategoryType
-#define SOAP_TYPE_ngwt__CategoryType (303)
+#define SOAP_TYPE_ngwt__CategoryType (345)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__CategoryType(struct soap*, enum ngwt__CategoryType *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__CategoryType(struct soap*, const enum ngwt__CategoryType *, const char*, const char*);
@@ -542,7 +616,7 @@ SOAP_FMAC3 enum ngwt__CategoryType * SOAP_FMAC4 soap_in_ngwt__CategoryType(struc
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__CategoryType(struct soap*, const char*, enum ngwt__CategoryType *);
 
 #ifndef SOAP_TYPE_ngwt__CalendarFolderFlags
-#define SOAP_TYPE_ngwt__CalendarFolderFlags (302)
+#define SOAP_TYPE_ngwt__CalendarFolderFlags (344)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__CalendarFolderFlags(struct soap*, enum ngwt__CalendarFolderFlags *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__CalendarFolderFlags(struct soap*, const enum ngwt__CalendarFolderFlags *, const char*, const char*);
@@ -554,8 +628,34 @@ SOAP_FMAC3 enum ngwt__CalendarFolderFlags * SOAP_FMAC4 soap_in_ngwt__CalendarFol
 
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__CalendarFolderFlags(struct soap*, const char*, enum ngwt__CalendarFolderFlags *);
 
+#ifndef SOAP_TYPE_ngwt__AppointmentConflict
+#define SOAP_TYPE_ngwt__AppointmentConflict (343)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__AppointmentConflict(struct soap*, enum ngwt__AppointmentConflict *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__AppointmentConflict(struct soap*, const enum ngwt__AppointmentConflict *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AppointmentConflict(struct soap*, const char*, int, const enum ngwt__AppointmentConflict *, const char*);
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__AppointmentConflict2s(struct soap*, enum ngwt__AppointmentConflict);
+SOAP_FMAC3 enum ngwt__AppointmentConflict * SOAP_FMAC4 soap_get_ngwt__AppointmentConflict(struct soap*, enum ngwt__AppointmentConflict *, const char*, const char*);
+SOAP_FMAC3 enum ngwt__AppointmentConflict * SOAP_FMAC4 soap_in_ngwt__AppointmentConflict(struct soap*, const char*, enum ngwt__AppointmentConflict *, const char*);
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__AppointmentConflict(struct soap*, const char*, enum ngwt__AppointmentConflict *);
+
+#ifndef SOAP_TYPE_ngwt__AgeAction
+#define SOAP_TYPE_ngwt__AgeAction (342)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__AgeAction(struct soap*, enum ngwt__AgeAction *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__AgeAction(struct soap*, const enum ngwt__AgeAction *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AgeAction(struct soap*, const char*, int, const enum ngwt__AgeAction *, const char*);
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__AgeAction2s(struct soap*, enum ngwt__AgeAction);
+SOAP_FMAC3 enum ngwt__AgeAction * SOAP_FMAC4 soap_get_ngwt__AgeAction(struct soap*, enum ngwt__AgeAction *, const char*, const char*);
+SOAP_FMAC3 enum ngwt__AgeAction * SOAP_FMAC4 soap_in_ngwt__AgeAction(struct soap*, const char*, enum ngwt__AgeAction *, const char*);
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__AgeAction(struct soap*, const char*, enum ngwt__AgeAction *);
+
 #ifndef SOAP_TYPE_ngwt__AcceptLevel
-#define SOAP_TYPE_ngwt__AcceptLevel (301)
+#define SOAP_TYPE_ngwt__AcceptLevel (341)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__AcceptLevel(struct soap*, enum ngwt__AcceptLevel *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__AcceptLevel(struct soap*, const enum ngwt__AcceptLevel *, const char*, const char*);
@@ -568,7 +668,7 @@ SOAP_FMAC3 enum ngwt__AcceptLevel * SOAP_FMAC4 soap_in_ngwt__AcceptLevel(struct 
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__AcceptLevel(struct soap*, const char*, enum ngwt__AcceptLevel *);
 
 #ifndef SOAP_TYPE_ngwe__ItemTypeList
-#define SOAP_TYPE_ngwe__ItemTypeList (300)
+#define SOAP_TYPE_ngwe__ItemTypeList (340)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwe__ItemTypeList(struct soap*, enum ngwe__ItemTypeList *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwe__ItemTypeList(struct soap*, const enum ngwe__ItemTypeList *, const char*, const char*);
@@ -577,7 +677,7 @@ SOAP_FMAC3 enum ngwe__ItemTypeList * SOAP_FMAC4 soap_get_ngwe__ItemTypeList(stru
 SOAP_FMAC3 enum ngwe__ItemTypeList * SOAP_FMAC4 soap_in_ngwe__ItemTypeList(struct soap*, const char*, enum ngwe__ItemTypeList *, const char*);
 
 #ifndef SOAP_TYPE_ngwe__FieldList
-#define SOAP_TYPE_ngwe__FieldList (299)
+#define SOAP_TYPE_ngwe__FieldList (339)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwe__FieldList(struct soap*, enum ngwe__FieldList *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwe__FieldList(struct soap*, const enum ngwe__FieldList *, const char*, const char*);
@@ -586,7 +686,7 @@ SOAP_FMAC3 enum ngwe__FieldList * SOAP_FMAC4 soap_get_ngwe__FieldList(struct soa
 SOAP_FMAC3 enum ngwe__FieldList * SOAP_FMAC4 soap_in_ngwe__FieldList(struct soap*, const char*, enum ngwe__FieldList *, const char*);
 
 #ifndef SOAP_TYPE_ngwt__MessageTypeList
-#define SOAP_TYPE_ngwt__MessageTypeList (297)
+#define SOAP_TYPE_ngwt__MessageTypeList (337)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__MessageTypeList(struct soap*, enum ngwt__MessageTypeList *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__MessageTypeList(struct soap*, const enum ngwt__MessageTypeList *, const char*, const char*);
@@ -595,7 +695,7 @@ SOAP_FMAC3 enum ngwt__MessageTypeList * SOAP_FMAC4 soap_get_ngwt__MessageTypeLis
 SOAP_FMAC3 enum ngwt__MessageTypeList * SOAP_FMAC4 soap_in_ngwt__MessageTypeList(struct soap*, const char*, enum ngwt__MessageTypeList *, const char*);
 
 #ifndef SOAP_TYPE_ngwt__ItemSourceList
-#define SOAP_TYPE_ngwt__ItemSourceList (296)
+#define SOAP_TYPE_ngwt__ItemSourceList (336)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__ItemSourceList(struct soap*, enum ngwt__ItemSourceList *);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__ItemSourceList(struct soap*, const enum ngwt__ItemSourceList *, const char*, const char*);
@@ -604,7 +704,7 @@ SOAP_FMAC3 enum ngwt__ItemSourceList * SOAP_FMAC4 soap_get_ngwt__ItemSourceList(
 SOAP_FMAC3 enum ngwt__ItemSourceList * SOAP_FMAC4 soap_in_ngwt__ItemSourceList(struct soap*, const char*, enum ngwt__ItemSourceList *, const char*);
 
 #ifndef SOAP_TYPE_ngwt__UUID
-#define SOAP_TYPE_ngwt__UUID (337)
+#define SOAP_TYPE_ngwt__UUID (382)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ngwt__UUID(struct soap*, std::string const*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__UUID(struct soap*, std::string *);
@@ -618,7 +718,7 @@ SOAP_FMAC5 std::string * SOAP_FMAC6 soap_instantiate_ngwt__UUID(struct soap*, in
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__UUID(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__uid
-#define SOAP_TYPE_ngwt__uid (336)
+#define SOAP_TYPE_ngwt__uid (381)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ngwt__uid(struct soap*, std::string const*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__uid(struct soap*, std::string *);
@@ -632,7 +732,7 @@ SOAP_FMAC5 std::string * SOAP_FMAC6 soap_instantiate_ngwt__uid(struct soap*, int
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__uid(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__View
-#define SOAP_TYPE_ngwt__View (298)
+#define SOAP_TYPE_ngwt__View (338)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_ngwt__View(struct soap*, std::string const*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__View(struct soap*, std::string *);
@@ -646,7 +746,7 @@ SOAP_FMAC5 std::string * SOAP_FMAC6 soap_instantiate_ngwt__View(struct soap*, in
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__View(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwe__removeEventsResponse
-#define SOAP_TYPE__ngwe__removeEventsResponse (295)
+#define SOAP_TYPE__ngwe__removeEventsResponse (335)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwe__removeEventsResponse(struct soap*, const char*, int, const _ngwe__removeEventsResponse *, const char*);
@@ -658,7 +758,7 @@ SOAP_FMAC5 _ngwe__removeEventsResponse * SOAP_FMAC6 soap_instantiate__ngwe__remo
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwe__removeEventsResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwe__removeEventsRequest
-#define SOAP_TYPE__ngwe__removeEventsRequest (294)
+#define SOAP_TYPE__ngwe__removeEventsRequest (334)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwe__removeEventsRequest(struct soap*, const char*, int, const _ngwe__removeEventsRequest *, const char*);
@@ -670,7 +770,7 @@ SOAP_FMAC5 _ngwe__removeEventsRequest * SOAP_FMAC6 soap_instantiate__ngwe__remov
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwe__removeEventsRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwe__removeEventConfigurationResponse
-#define SOAP_TYPE__ngwe__removeEventConfigurationResponse (293)
+#define SOAP_TYPE__ngwe__removeEventConfigurationResponse (333)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwe__removeEventConfigurationResponse(struct soap*, const char*, int, const _ngwe__removeEventConfigurationResponse *, const char*);
@@ -682,7 +782,7 @@ SOAP_FMAC5 _ngwe__removeEventConfigurationResponse * SOAP_FMAC6 soap_instantiate
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwe__removeEventConfigurationResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwe__removeEventConfigurationRequest
-#define SOAP_TYPE__ngwe__removeEventConfigurationRequest (292)
+#define SOAP_TYPE__ngwe__removeEventConfigurationRequest (332)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwe__removeEventConfigurationRequest(struct soap*, const char*, int, const _ngwe__removeEventConfigurationRequest *, const char*);
@@ -694,7 +794,7 @@ SOAP_FMAC5 _ngwe__removeEventConfigurationRequest * SOAP_FMAC6 soap_instantiate_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwe__removeEventConfigurationRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwe__getEventsResponse
-#define SOAP_TYPE__ngwe__getEventsResponse (291)
+#define SOAP_TYPE__ngwe__getEventsResponse (331)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwe__getEventsResponse(struct soap*, const char*, int, const _ngwe__getEventsResponse *, const char*);
@@ -706,7 +806,7 @@ SOAP_FMAC5 _ngwe__getEventsResponse * SOAP_FMAC6 soap_instantiate__ngwe__getEven
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwe__getEventsResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwe__getEventsRequest
-#define SOAP_TYPE__ngwe__getEventsRequest (290)
+#define SOAP_TYPE__ngwe__getEventsRequest (330)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwe__getEventsRequest(struct soap*, const char*, int, const _ngwe__getEventsRequest *, const char*);
@@ -718,7 +818,7 @@ SOAP_FMAC5 _ngwe__getEventsRequest * SOAP_FMAC6 soap_instantiate__ngwe__getEvent
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwe__getEventsRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwe__getEventConfigurationResponse
-#define SOAP_TYPE__ngwe__getEventConfigurationResponse (289)
+#define SOAP_TYPE__ngwe__getEventConfigurationResponse (329)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwe__getEventConfigurationResponse(struct soap*, const char*, int, const _ngwe__getEventConfigurationResponse *, const char*);
@@ -730,7 +830,7 @@ SOAP_FMAC5 _ngwe__getEventConfigurationResponse * SOAP_FMAC6 soap_instantiate__n
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwe__getEventConfigurationResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwe__getEventConfigurationRequest
-#define SOAP_TYPE__ngwe__getEventConfigurationRequest (288)
+#define SOAP_TYPE__ngwe__getEventConfigurationRequest (328)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwe__getEventConfigurationRequest(struct soap*, const char*, int, const _ngwe__getEventConfigurationRequest *, const char*);
@@ -742,7 +842,7 @@ SOAP_FMAC5 _ngwe__getEventConfigurationRequest * SOAP_FMAC6 soap_instantiate__ng
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwe__getEventConfigurationRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwe__configureEventsResponse
-#define SOAP_TYPE__ngwe__configureEventsResponse (287)
+#define SOAP_TYPE__ngwe__configureEventsResponse (327)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwe__configureEventsResponse(struct soap*, const char*, int, const _ngwe__configureEventsResponse *, const char*);
@@ -754,7 +854,7 @@ SOAP_FMAC5 _ngwe__configureEventsResponse * SOAP_FMAC6 soap_instantiate__ngwe__c
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwe__configureEventsResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwe__configureEventsRequest
-#define SOAP_TYPE__ngwe__configureEventsRequest (286)
+#define SOAP_TYPE__ngwe__configureEventsRequest (326)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwe__configureEventsRequest(struct soap*, const char*, int, const _ngwe__configureEventsRequest *, const char*);
@@ -766,7 +866,7 @@ SOAP_FMAC5 _ngwe__configureEventsRequest * SOAP_FMAC6 soap_instantiate__ngwe__co
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwe__configureEventsRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwe__cleanEventConfigurationResponse
-#define SOAP_TYPE__ngwe__cleanEventConfigurationResponse (285)
+#define SOAP_TYPE__ngwe__cleanEventConfigurationResponse (325)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwe__cleanEventConfigurationResponse(struct soap*, const char*, int, const _ngwe__cleanEventConfigurationResponse *, const char*);
@@ -778,7 +878,7 @@ SOAP_FMAC5 _ngwe__cleanEventConfigurationResponse * SOAP_FMAC6 soap_instantiate_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwe__cleanEventConfigurationResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwe__cleanEventConfigurationRequest
-#define SOAP_TYPE__ngwe__cleanEventConfigurationRequest (284)
+#define SOAP_TYPE__ngwe__cleanEventConfigurationRequest (324)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwe__cleanEventConfigurationRequest(struct soap*, const char*, int, const _ngwe__cleanEventConfigurationRequest *, const char*);
@@ -789,8 +889,20 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwe__cleanEventConfigurationRequest(str
 SOAP_FMAC5 _ngwe__cleanEventConfigurationRequest * SOAP_FMAC6 soap_instantiate__ngwe__cleanEventConfigurationRequest(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwe__cleanEventConfigurationRequest(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE_ngwe__Notify
+#define SOAP_TYPE_ngwe__Notify (323)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwe__Notify(struct soap*, const char*, int, const ngwe__Notify *, const char*);
+SOAP_FMAC3 ngwe__Notify * SOAP_FMAC4 soap_get_ngwe__Notify(struct soap*, ngwe__Notify *, const char*, const char*);
+SOAP_FMAC3 ngwe__Notify * SOAP_FMAC4 soap_in_ngwe__Notify(struct soap*, const char*, ngwe__Notify *, const char*);
+SOAP_FMAC5 ngwe__Notify * SOAP_FMAC6 soap_new_ngwe__Notify(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwe__Notify(struct soap*, ngwe__Notify*);
+SOAP_FMAC5 ngwe__Notify * SOAP_FMAC6 soap_instantiate_ngwe__Notify(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwe__Notify(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE_ngwe__EventTypeList
-#define SOAP_TYPE_ngwe__EventTypeList (283)
+#define SOAP_TYPE_ngwe__EventTypeList (322)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwe__EventTypeList(struct soap*, const char*, int, const ngwe__EventTypeList *, const char*);
@@ -802,7 +914,7 @@ SOAP_FMAC5 ngwe__EventTypeList * SOAP_FMAC6 soap_instantiate_ngwe__EventTypeList
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwe__EventTypeList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwe__EventsList
-#define SOAP_TYPE_ngwe__EventsList (282)
+#define SOAP_TYPE_ngwe__EventsList (321)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwe__EventsList(struct soap*, const char*, int, const ngwe__EventsList *, const char*);
@@ -814,7 +926,7 @@ SOAP_FMAC5 ngwe__EventsList * SOAP_FMAC6 soap_instantiate_ngwe__EventsList(struc
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwe__EventsList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwe__Events
-#define SOAP_TYPE_ngwe__Events (281)
+#define SOAP_TYPE_ngwe__Events (320)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwe__Events(struct soap*, const char*, int, const ngwe__Events *, const char*);
@@ -826,7 +938,7 @@ SOAP_FMAC5 ngwe__Events * SOAP_FMAC6 soap_instantiate_ngwe__Events(struct soap*,
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwe__Events(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwe__EventList
-#define SOAP_TYPE_ngwe__EventList (280)
+#define SOAP_TYPE_ngwe__EventList (319)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwe__EventList(struct soap*, const char*, int, const ngwe__EventList *, const char*);
@@ -838,7 +950,7 @@ SOAP_FMAC5 ngwe__EventList * SOAP_FMAC6 soap_instantiate_ngwe__EventList(struct 
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwe__EventList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwe__EventDefinition
-#define SOAP_TYPE_ngwe__EventDefinition (279)
+#define SOAP_TYPE_ngwe__EventDefinition (318)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwe__EventDefinition(struct soap*, const char*, int, const ngwe__EventDefinition *, const char*);
@@ -850,7 +962,7 @@ SOAP_FMAC5 ngwe__EventDefinition * SOAP_FMAC6 soap_instantiate_ngwe__EventDefini
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwe__EventDefinition(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwe__Event
-#define SOAP_TYPE_ngwe__Event (278)
+#define SOAP_TYPE_ngwe__Event (317)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwe__Event(struct soap*, const char*, int, const ngwe__Event *, const char*);
@@ -862,7 +974,7 @@ SOAP_FMAC5 ngwe__Event * SOAP_FMAC6 soap_instantiate_ngwe__Event(struct soap*, i
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwe__Event(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwe__ContainerList
-#define SOAP_TYPE_ngwe__ContainerList (277)
+#define SOAP_TYPE_ngwe__ContainerList (316)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwe__ContainerList(struct soap*, const char*, int, const ngwe__ContainerList *, const char*);
@@ -873,8 +985,32 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwe__ContainerList(struct soap*, ngwe__C
 SOAP_FMAC5 ngwe__ContainerList * SOAP_FMAC6 soap_instantiate_ngwe__ContainerList(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwe__ContainerList(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE__ngwm__updateVersionStatusResponse
+#define SOAP_TYPE__ngwm__updateVersionStatusResponse (315)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__updateVersionStatusResponse(struct soap*, const char*, int, const _ngwm__updateVersionStatusResponse *, const char*);
+SOAP_FMAC3 _ngwm__updateVersionStatusResponse * SOAP_FMAC4 soap_get__ngwm__updateVersionStatusResponse(struct soap*, _ngwm__updateVersionStatusResponse *, const char*, const char*);
+SOAP_FMAC3 _ngwm__updateVersionStatusResponse * SOAP_FMAC4 soap_in__ngwm__updateVersionStatusResponse(struct soap*, const char*, _ngwm__updateVersionStatusResponse *, const char*);
+SOAP_FMAC5 _ngwm__updateVersionStatusResponse * SOAP_FMAC6 soap_new__ngwm__updateVersionStatusResponse(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__updateVersionStatusResponse(struct soap*, _ngwm__updateVersionStatusResponse*);
+SOAP_FMAC5 _ngwm__updateVersionStatusResponse * SOAP_FMAC6 soap_instantiate__ngwm__updateVersionStatusResponse(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__updateVersionStatusResponse(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__updateVersionStatusRequest
+#define SOAP_TYPE__ngwm__updateVersionStatusRequest (314)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__updateVersionStatusRequest(struct soap*, const char*, int, const _ngwm__updateVersionStatusRequest *, const char*);
+SOAP_FMAC3 _ngwm__updateVersionStatusRequest * SOAP_FMAC4 soap_get__ngwm__updateVersionStatusRequest(struct soap*, _ngwm__updateVersionStatusRequest *, const char*, const char*);
+SOAP_FMAC3 _ngwm__updateVersionStatusRequest * SOAP_FMAC4 soap_in__ngwm__updateVersionStatusRequest(struct soap*, const char*, _ngwm__updateVersionStatusRequest *, const char*);
+SOAP_FMAC5 _ngwm__updateVersionStatusRequest * SOAP_FMAC6 soap_new__ngwm__updateVersionStatusRequest(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__updateVersionStatusRequest(struct soap*, _ngwm__updateVersionStatusRequest*);
+SOAP_FMAC5 _ngwm__updateVersionStatusRequest * SOAP_FMAC6 soap_instantiate__ngwm__updateVersionStatusRequest(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__updateVersionStatusRequest(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE__ngwm__uncompleteResponse
-#define SOAP_TYPE__ngwm__uncompleteResponse (276)
+#define SOAP_TYPE__ngwm__uncompleteResponse (313)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__uncompleteResponse(struct soap*, const char*, int, const _ngwm__uncompleteResponse *, const char*);
@@ -886,7 +1022,7 @@ SOAP_FMAC5 _ngwm__uncompleteResponse * SOAP_FMAC6 soap_instantiate__ngwm__uncomp
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__uncompleteResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__uncompleteRequest
-#define SOAP_TYPE__ngwm__uncompleteRequest (275)
+#define SOAP_TYPE__ngwm__uncompleteRequest (312)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__uncompleteRequest(struct soap*, const char*, int, const _ngwm__uncompleteRequest *, const char*);
@@ -898,7 +1034,7 @@ SOAP_FMAC5 _ngwm__uncompleteRequest * SOAP_FMAC6 soap_instantiate__ngwm__uncompl
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__uncompleteRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__unacceptResponse
-#define SOAP_TYPE__ngwm__unacceptResponse (274)
+#define SOAP_TYPE__ngwm__unacceptResponse (311)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__unacceptResponse(struct soap*, const char*, int, const _ngwm__unacceptResponse *, const char*);
@@ -910,7 +1046,7 @@ SOAP_FMAC5 _ngwm__unacceptResponse * SOAP_FMAC6 soap_instantiate__ngwm__unaccept
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__unacceptResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__unacceptRequest
-#define SOAP_TYPE__ngwm__unacceptRequest (273)
+#define SOAP_TYPE__ngwm__unacceptRequest (310)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__unacceptRequest(struct soap*, const char*, int, const _ngwm__unacceptRequest *, const char*);
@@ -922,7 +1058,7 @@ SOAP_FMAC5 _ngwm__unacceptRequest * SOAP_FMAC6 soap_instantiate__ngwm__unacceptR
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__unacceptRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__startFreeBusySessionResponse
-#define SOAP_TYPE__ngwm__startFreeBusySessionResponse (272)
+#define SOAP_TYPE__ngwm__startFreeBusySessionResponse (309)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__startFreeBusySessionResponse(struct soap*, const char*, int, const _ngwm__startFreeBusySessionResponse *, const char*);
@@ -934,7 +1070,7 @@ SOAP_FMAC5 _ngwm__startFreeBusySessionResponse * SOAP_FMAC6 soap_instantiate__ng
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__startFreeBusySessionResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__startFreeBusySessionRequest
-#define SOAP_TYPE__ngwm__startFreeBusySessionRequest (271)
+#define SOAP_TYPE__ngwm__startFreeBusySessionRequest (308)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__startFreeBusySessionRequest(struct soap*, const char*, int, const _ngwm__startFreeBusySessionRequest *, const char*);
@@ -945,8 +1081,32 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__startFreeBusySessionRequest(struct
 SOAP_FMAC5 _ngwm__startFreeBusySessionRequest * SOAP_FMAC6 soap_instantiate__ngwm__startFreeBusySessionRequest(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__startFreeBusySessionRequest(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE__ngwm__setTimestampResponse
+#define SOAP_TYPE__ngwm__setTimestampResponse (307)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__setTimestampResponse(struct soap*, const char*, int, const _ngwm__setTimestampResponse *, const char*);
+SOAP_FMAC3 _ngwm__setTimestampResponse * SOAP_FMAC4 soap_get__ngwm__setTimestampResponse(struct soap*, _ngwm__setTimestampResponse *, const char*, const char*);
+SOAP_FMAC3 _ngwm__setTimestampResponse * SOAP_FMAC4 soap_in__ngwm__setTimestampResponse(struct soap*, const char*, _ngwm__setTimestampResponse *, const char*);
+SOAP_FMAC5 _ngwm__setTimestampResponse * SOAP_FMAC6 soap_new__ngwm__setTimestampResponse(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__setTimestampResponse(struct soap*, _ngwm__setTimestampResponse*);
+SOAP_FMAC5 _ngwm__setTimestampResponse * SOAP_FMAC6 soap_instantiate__ngwm__setTimestampResponse(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__setTimestampResponse(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__setTimestampRequest
+#define SOAP_TYPE__ngwm__setTimestampRequest (306)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__setTimestampRequest(struct soap*, const char*, int, const _ngwm__setTimestampRequest *, const char*);
+SOAP_FMAC3 _ngwm__setTimestampRequest * SOAP_FMAC4 soap_get__ngwm__setTimestampRequest(struct soap*, _ngwm__setTimestampRequest *, const char*, const char*);
+SOAP_FMAC3 _ngwm__setTimestampRequest * SOAP_FMAC4 soap_in__ngwm__setTimestampRequest(struct soap*, const char*, _ngwm__setTimestampRequest *, const char*);
+SOAP_FMAC5 _ngwm__setTimestampRequest * SOAP_FMAC6 soap_new__ngwm__setTimestampRequest(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__setTimestampRequest(struct soap*, _ngwm__setTimestampRequest*);
+SOAP_FMAC5 _ngwm__setTimestampRequest * SOAP_FMAC6 soap_instantiate__ngwm__setTimestampRequest(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__setTimestampRequest(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE__ngwm__sendItemResponse
-#define SOAP_TYPE__ngwm__sendItemResponse (270)
+#define SOAP_TYPE__ngwm__sendItemResponse (305)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__sendItemResponse(struct soap*, const char*, int, const _ngwm__sendItemResponse *, const char*);
@@ -958,7 +1118,7 @@ SOAP_FMAC5 _ngwm__sendItemResponse * SOAP_FMAC6 soap_instantiate__ngwm__sendItem
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__sendItemResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__sendItemRequest
-#define SOAP_TYPE__ngwm__sendItemRequest (269)
+#define SOAP_TYPE__ngwm__sendItemRequest (304)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__sendItemRequest(struct soap*, const char*, int, const _ngwm__sendItemRequest *, const char*);
@@ -970,7 +1130,7 @@ SOAP_FMAC5 _ngwm__sendItemRequest * SOAP_FMAC6 soap_instantiate__ngwm__sendItemR
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__sendItemRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__retractResponse
-#define SOAP_TYPE__ngwm__retractResponse (268)
+#define SOAP_TYPE__ngwm__retractResponse (303)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__retractResponse(struct soap*, const char*, int, const _ngwm__retractResponse *, const char*);
@@ -982,7 +1142,7 @@ SOAP_FMAC5 _ngwm__retractResponse * SOAP_FMAC6 soap_instantiate__ngwm__retractRe
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__retractResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__retractRequest
-#define SOAP_TYPE__ngwm__retractRequest (267)
+#define SOAP_TYPE__ngwm__retractRequest (302)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__retractRequest(struct soap*, const char*, int, const _ngwm__retractRequest *, const char*);
@@ -994,7 +1154,7 @@ SOAP_FMAC5 _ngwm__retractRequest * SOAP_FMAC6 soap_instantiate__ngwm__retractReq
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__retractRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__replyResponse
-#define SOAP_TYPE__ngwm__replyResponse (266)
+#define SOAP_TYPE__ngwm__replyResponse (301)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__replyResponse(struct soap*, const char*, int, const _ngwm__replyResponse *, const char*);
@@ -1006,7 +1166,7 @@ SOAP_FMAC5 _ngwm__replyResponse * SOAP_FMAC6 soap_instantiate__ngwm__replyRespon
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__replyResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__replyRequest
-#define SOAP_TYPE__ngwm__replyRequest (265)
+#define SOAP_TYPE__ngwm__replyRequest (300)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__replyRequest(struct soap*, const char*, int, const _ngwm__replyRequest *, const char*);
@@ -1018,7 +1178,7 @@ SOAP_FMAC5 _ngwm__replyRequest * SOAP_FMAC6 soap_instantiate__ngwm__replyRequest
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__replyRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__removeSignatureResponse
-#define SOAP_TYPE__ngwm__removeSignatureResponse (264)
+#define SOAP_TYPE__ngwm__removeSignatureResponse (299)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeSignatureResponse(struct soap*, const char*, int, const _ngwm__removeSignatureResponse *, const char*);
@@ -1030,7 +1190,7 @@ SOAP_FMAC5 _ngwm__removeSignatureResponse * SOAP_FMAC6 soap_instantiate__ngwm__r
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeSignatureResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__removeSignatureRequest
-#define SOAP_TYPE__ngwm__removeSignatureRequest (263)
+#define SOAP_TYPE__ngwm__removeSignatureRequest (298)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeSignatureRequest(struct soap*, const char*, int, const _ngwm__removeSignatureRequest *, const char*);
@@ -1041,8 +1201,32 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__removeSignatureRequest(struct soap
 SOAP_FMAC5 _ngwm__removeSignatureRequest * SOAP_FMAC6 soap_instantiate__ngwm__removeSignatureRequest(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeSignatureRequest(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE__ngwm__removeProxyUserResponse
+#define SOAP_TYPE__ngwm__removeProxyUserResponse (297)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeProxyUserResponse(struct soap*, const char*, int, const _ngwm__removeProxyUserResponse *, const char*);
+SOAP_FMAC3 _ngwm__removeProxyUserResponse * SOAP_FMAC4 soap_get__ngwm__removeProxyUserResponse(struct soap*, _ngwm__removeProxyUserResponse *, const char*, const char*);
+SOAP_FMAC3 _ngwm__removeProxyUserResponse * SOAP_FMAC4 soap_in__ngwm__removeProxyUserResponse(struct soap*, const char*, _ngwm__removeProxyUserResponse *, const char*);
+SOAP_FMAC5 _ngwm__removeProxyUserResponse * SOAP_FMAC6 soap_new__ngwm__removeProxyUserResponse(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__removeProxyUserResponse(struct soap*, _ngwm__removeProxyUserResponse*);
+SOAP_FMAC5 _ngwm__removeProxyUserResponse * SOAP_FMAC6 soap_instantiate__ngwm__removeProxyUserResponse(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeProxyUserResponse(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__removeProxyUserRequest
+#define SOAP_TYPE__ngwm__removeProxyUserRequest (296)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeProxyUserRequest(struct soap*, const char*, int, const _ngwm__removeProxyUserRequest *, const char*);
+SOAP_FMAC3 _ngwm__removeProxyUserRequest * SOAP_FMAC4 soap_get__ngwm__removeProxyUserRequest(struct soap*, _ngwm__removeProxyUserRequest *, const char*, const char*);
+SOAP_FMAC3 _ngwm__removeProxyUserRequest * SOAP_FMAC4 soap_in__ngwm__removeProxyUserRequest(struct soap*, const char*, _ngwm__removeProxyUserRequest *, const char*);
+SOAP_FMAC5 _ngwm__removeProxyUserRequest * SOAP_FMAC6 soap_new__ngwm__removeProxyUserRequest(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__removeProxyUserRequest(struct soap*, _ngwm__removeProxyUserRequest*);
+SOAP_FMAC5 _ngwm__removeProxyUserRequest * SOAP_FMAC6 soap_instantiate__ngwm__removeProxyUserRequest(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeProxyUserRequest(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE__ngwm__removeProxyAccessResponse
-#define SOAP_TYPE__ngwm__removeProxyAccessResponse (262)
+#define SOAP_TYPE__ngwm__removeProxyAccessResponse (295)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeProxyAccessResponse(struct soap*, const char*, int, const _ngwm__removeProxyAccessResponse *, const char*);
@@ -1054,7 +1238,7 @@ SOAP_FMAC5 _ngwm__removeProxyAccessResponse * SOAP_FMAC6 soap_instantiate__ngwm_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeProxyAccessResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__removeProxyAccessRequest
-#define SOAP_TYPE__ngwm__removeProxyAccessRequest (261)
+#define SOAP_TYPE__ngwm__removeProxyAccessRequest (294)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeProxyAccessRequest(struct soap*, const char*, int, const _ngwm__removeProxyAccessRequest *, const char*);
@@ -1066,7 +1250,7 @@ SOAP_FMAC5 _ngwm__removeProxyAccessRequest * SOAP_FMAC6 soap_instantiate__ngwm__
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeProxyAccessRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__removeMembersResponse
-#define SOAP_TYPE__ngwm__removeMembersResponse (260)
+#define SOAP_TYPE__ngwm__removeMembersResponse (293)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeMembersResponse(struct soap*, const char*, int, const _ngwm__removeMembersResponse *, const char*);
@@ -1078,7 +1262,7 @@ SOAP_FMAC5 _ngwm__removeMembersResponse * SOAP_FMAC6 soap_instantiate__ngwm__rem
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeMembersResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__removeMembersRequest
-#define SOAP_TYPE__ngwm__removeMembersRequest (259)
+#define SOAP_TYPE__ngwm__removeMembersRequest (292)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeMembersRequest(struct soap*, const char*, int, const _ngwm__removeMembersRequest *, const char*);
@@ -1090,7 +1274,7 @@ SOAP_FMAC5 _ngwm__removeMembersRequest * SOAP_FMAC6 soap_instantiate__ngwm__remo
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeMembersRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__removeJunkEntryResponse
-#define SOAP_TYPE__ngwm__removeJunkEntryResponse (258)
+#define SOAP_TYPE__ngwm__removeJunkEntryResponse (291)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeJunkEntryResponse(struct soap*, const char*, int, const _ngwm__removeJunkEntryResponse *, const char*);
@@ -1102,7 +1286,7 @@ SOAP_FMAC5 _ngwm__removeJunkEntryResponse * SOAP_FMAC6 soap_instantiate__ngwm__r
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeJunkEntryResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__removeJunkEntryRequest
-#define SOAP_TYPE__ngwm__removeJunkEntryRequest (257)
+#define SOAP_TYPE__ngwm__removeJunkEntryRequest (290)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeJunkEntryRequest(struct soap*, const char*, int, const _ngwm__removeJunkEntryRequest *, const char*);
@@ -1114,7 +1298,7 @@ SOAP_FMAC5 _ngwm__removeJunkEntryRequest * SOAP_FMAC6 soap_instantiate__ngwm__re
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeJunkEntryRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__removeItemsResponse
-#define SOAP_TYPE__ngwm__removeItemsResponse (256)
+#define SOAP_TYPE__ngwm__removeItemsResponse (289)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeItemsResponse(struct soap*, const char*, int, const _ngwm__removeItemsResponse *, const char*);
@@ -1126,7 +1310,7 @@ SOAP_FMAC5 _ngwm__removeItemsResponse * SOAP_FMAC6 soap_instantiate__ngwm__remov
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeItemsResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__removeItemsRequest
-#define SOAP_TYPE__ngwm__removeItemsRequest (255)
+#define SOAP_TYPE__ngwm__removeItemsRequest (288)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeItemsRequest(struct soap*, const char*, int, const _ngwm__removeItemsRequest *, const char*);
@@ -1138,7 +1322,7 @@ SOAP_FMAC5 _ngwm__removeItemsRequest * SOAP_FMAC6 soap_instantiate__ngwm__remove
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeItemsRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__removeItemResponse
-#define SOAP_TYPE__ngwm__removeItemResponse (254)
+#define SOAP_TYPE__ngwm__removeItemResponse (287)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeItemResponse(struct soap*, const char*, int, const _ngwm__removeItemResponse *, const char*);
@@ -1150,7 +1334,7 @@ SOAP_FMAC5 _ngwm__removeItemResponse * SOAP_FMAC6 soap_instantiate__ngwm__remove
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeItemResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__removeItemRequest
-#define SOAP_TYPE__ngwm__removeItemRequest (253)
+#define SOAP_TYPE__ngwm__removeItemRequest (286)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeItemRequest(struct soap*, const char*, int, const _ngwm__removeItemRequest *, const char*);
@@ -1162,7 +1346,7 @@ SOAP_FMAC5 _ngwm__removeItemRequest * SOAP_FMAC6 soap_instantiate__ngwm__removeI
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeItemRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__removeCustomDefinitionResponse
-#define SOAP_TYPE__ngwm__removeCustomDefinitionResponse (252)
+#define SOAP_TYPE__ngwm__removeCustomDefinitionResponse (285)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeCustomDefinitionResponse(struct soap*, const char*, int, const _ngwm__removeCustomDefinitionResponse *, const char*);
@@ -1174,7 +1358,7 @@ SOAP_FMAC5 _ngwm__removeCustomDefinitionResponse * SOAP_FMAC6 soap_instantiate__
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeCustomDefinitionResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__removeCustomDefinitionRequest
-#define SOAP_TYPE__ngwm__removeCustomDefinitionRequest (251)
+#define SOAP_TYPE__ngwm__removeCustomDefinitionRequest (284)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeCustomDefinitionRequest(struct soap*, const char*, int, const _ngwm__removeCustomDefinitionRequest *, const char*);
@@ -1186,7 +1370,7 @@ SOAP_FMAC5 _ngwm__removeCustomDefinitionRequest * SOAP_FMAC6 soap_instantiate__n
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeCustomDefinitionRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__readCursorResponse
-#define SOAP_TYPE__ngwm__readCursorResponse (250)
+#define SOAP_TYPE__ngwm__readCursorResponse (283)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__readCursorResponse(struct soap*, const char*, int, const _ngwm__readCursorResponse *, const char*);
@@ -1198,7 +1382,7 @@ SOAP_FMAC5 _ngwm__readCursorResponse * SOAP_FMAC6 soap_instantiate__ngwm__readCu
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__readCursorResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__readCursorRequest
-#define SOAP_TYPE__ngwm__readCursorRequest (249)
+#define SOAP_TYPE__ngwm__readCursorRequest (282)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__readCursorRequest(struct soap*, const char*, int, const _ngwm__readCursorRequest *, const char*);
@@ -1210,7 +1394,7 @@ SOAP_FMAC5 _ngwm__readCursorRequest * SOAP_FMAC6 soap_instantiate__ngwm__readCur
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__readCursorRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__purgeResponse
-#define SOAP_TYPE__ngwm__purgeResponse (248)
+#define SOAP_TYPE__ngwm__purgeResponse (281)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__purgeResponse(struct soap*, const char*, int, const _ngwm__purgeResponse *, const char*);
@@ -1222,7 +1406,7 @@ SOAP_FMAC5 _ngwm__purgeResponse * SOAP_FMAC6 soap_instantiate__ngwm__purgeRespon
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__purgeResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__purgeRequest
-#define SOAP_TYPE__ngwm__purgeRequest (247)
+#define SOAP_TYPE__ngwm__purgeRequest (280)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__purgeRequest(struct soap*, const char*, int, const _ngwm__purgeRequest *, const char*);
@@ -1234,7 +1418,7 @@ SOAP_FMAC5 _ngwm__purgeRequest * SOAP_FMAC6 soap_instantiate__ngwm__purgeRequest
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__purgeRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__purgeDeletedItemsResponse
-#define SOAP_TYPE__ngwm__purgeDeletedItemsResponse (246)
+#define SOAP_TYPE__ngwm__purgeDeletedItemsResponse (279)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__purgeDeletedItemsResponse(struct soap*, const char*, int, const _ngwm__purgeDeletedItemsResponse *, const char*);
@@ -1246,7 +1430,7 @@ SOAP_FMAC5 _ngwm__purgeDeletedItemsResponse * SOAP_FMAC6 soap_instantiate__ngwm_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__purgeDeletedItemsResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__purgeDeletedItemsRequest
-#define SOAP_TYPE__ngwm__purgeDeletedItemsRequest (245)
+#define SOAP_TYPE__ngwm__purgeDeletedItemsRequest (278)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__purgeDeletedItemsRequest(struct soap*, const char*, int, const _ngwm__purgeDeletedItemsRequest *, const char*);
@@ -1258,7 +1442,7 @@ SOAP_FMAC5 _ngwm__purgeDeletedItemsRequest * SOAP_FMAC6 soap_instantiate__ngwm__
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__purgeDeletedItemsRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__positionCursorResponse
-#define SOAP_TYPE__ngwm__positionCursorResponse (244)
+#define SOAP_TYPE__ngwm__positionCursorResponse (277)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__positionCursorResponse(struct soap*, const char*, int, const _ngwm__positionCursorResponse *, const char*);
@@ -1270,7 +1454,7 @@ SOAP_FMAC5 _ngwm__positionCursorResponse * SOAP_FMAC6 soap_instantiate__ngwm__po
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__positionCursorResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__positionCursorRequest
-#define SOAP_TYPE__ngwm__positionCursorRequest (243)
+#define SOAP_TYPE__ngwm__positionCursorRequest (276)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__positionCursorRequest(struct soap*, const char*, int, const _ngwm__positionCursorRequest *, const char*);
@@ -1282,7 +1466,7 @@ SOAP_FMAC5 _ngwm__positionCursorRequest * SOAP_FMAC6 soap_instantiate__ngwm__pos
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__positionCursorRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__moveItemResponse
-#define SOAP_TYPE__ngwm__moveItemResponse (242)
+#define SOAP_TYPE__ngwm__moveItemResponse (275)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__moveItemResponse(struct soap*, const char*, int, const _ngwm__moveItemResponse *, const char*);
@@ -1294,7 +1478,7 @@ SOAP_FMAC5 _ngwm__moveItemResponse * SOAP_FMAC6 soap_instantiate__ngwm__moveItem
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__moveItemResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__moveItemRequest
-#define SOAP_TYPE__ngwm__moveItemRequest (241)
+#define SOAP_TYPE__ngwm__moveItemRequest (274)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__moveItemRequest(struct soap*, const char*, int, const _ngwm__moveItemRequest *, const char*);
@@ -1306,7 +1490,7 @@ SOAP_FMAC5 _ngwm__moveItemRequest * SOAP_FMAC6 soap_instantiate__ngwm__moveItemR
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__moveItemRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifySignaturesResponse
-#define SOAP_TYPE__ngwm__modifySignaturesResponse (240)
+#define SOAP_TYPE__ngwm__modifySignaturesResponse (273)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifySignaturesResponse(struct soap*, const char*, int, const _ngwm__modifySignaturesResponse *, const char*);
@@ -1318,7 +1502,7 @@ SOAP_FMAC5 _ngwm__modifySignaturesResponse * SOAP_FMAC6 soap_instantiate__ngwm__
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifySignaturesResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifySignaturesRequest
-#define SOAP_TYPE__ngwm__modifySignaturesRequest (239)
+#define SOAP_TYPE__ngwm__modifySignaturesRequest (272)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifySignaturesRequest(struct soap*, const char*, int, const _ngwm__modifySignaturesRequest *, const char*);
@@ -1330,7 +1514,7 @@ SOAP_FMAC5 _ngwm__modifySignaturesRequest * SOAP_FMAC6 soap_instantiate__ngwm__m
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifySignaturesRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifySettingsResponse
-#define SOAP_TYPE__ngwm__modifySettingsResponse (238)
+#define SOAP_TYPE__ngwm__modifySettingsResponse (271)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifySettingsResponse(struct soap*, const char*, int, const _ngwm__modifySettingsResponse *, const char*);
@@ -1342,7 +1526,7 @@ SOAP_FMAC5 _ngwm__modifySettingsResponse * SOAP_FMAC6 soap_instantiate__ngwm__mo
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifySettingsResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifySettingsRequest
-#define SOAP_TYPE__ngwm__modifySettingsRequest (237)
+#define SOAP_TYPE__ngwm__modifySettingsRequest (270)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifySettingsRequest(struct soap*, const char*, int, const _ngwm__modifySettingsRequest *, const char*);
@@ -1354,7 +1538,7 @@ SOAP_FMAC5 _ngwm__modifySettingsRequest * SOAP_FMAC6 soap_instantiate__ngwm__mod
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifySettingsRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifyProxyAccessResponse
-#define SOAP_TYPE__ngwm__modifyProxyAccessResponse (236)
+#define SOAP_TYPE__ngwm__modifyProxyAccessResponse (269)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyProxyAccessResponse(struct soap*, const char*, int, const _ngwm__modifyProxyAccessResponse *, const char*);
@@ -1366,7 +1550,7 @@ SOAP_FMAC5 _ngwm__modifyProxyAccessResponse * SOAP_FMAC6 soap_instantiate__ngwm_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifyProxyAccessResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifyProxyAccessRequest
-#define SOAP_TYPE__ngwm__modifyProxyAccessRequest (235)
+#define SOAP_TYPE__ngwm__modifyProxyAccessRequest (268)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyProxyAccessRequest(struct soap*, const char*, int, const _ngwm__modifyProxyAccessRequest *, const char*);
@@ -1378,7 +1562,7 @@ SOAP_FMAC5 _ngwm__modifyProxyAccessRequest * SOAP_FMAC6 soap_instantiate__ngwm__
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifyProxyAccessRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifyPasswordResponse
-#define SOAP_TYPE__ngwm__modifyPasswordResponse (234)
+#define SOAP_TYPE__ngwm__modifyPasswordResponse (267)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyPasswordResponse(struct soap*, const char*, int, const _ngwm__modifyPasswordResponse *, const char*);
@@ -1390,7 +1574,7 @@ SOAP_FMAC5 _ngwm__modifyPasswordResponse * SOAP_FMAC6 soap_instantiate__ngwm__mo
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifyPasswordResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifyPasswordRequest
-#define SOAP_TYPE__ngwm__modifyPasswordRequest (233)
+#define SOAP_TYPE__ngwm__modifyPasswordRequest (266)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyPasswordRequest(struct soap*, const char*, int, const _ngwm__modifyPasswordRequest *, const char*);
@@ -1402,7 +1586,7 @@ SOAP_FMAC5 _ngwm__modifyPasswordRequest * SOAP_FMAC6 soap_instantiate__ngwm__mod
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifyPasswordRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifyJunkMailSettingsResponse
-#define SOAP_TYPE__ngwm__modifyJunkMailSettingsResponse (232)
+#define SOAP_TYPE__ngwm__modifyJunkMailSettingsResponse (265)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyJunkMailSettingsResponse(struct soap*, const char*, int, const _ngwm__modifyJunkMailSettingsResponse *, const char*);
@@ -1414,7 +1598,7 @@ SOAP_FMAC5 _ngwm__modifyJunkMailSettingsResponse * SOAP_FMAC6 soap_instantiate__
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifyJunkMailSettingsResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifyJunkMailSettingsRequest
-#define SOAP_TYPE__ngwm__modifyJunkMailSettingsRequest (231)
+#define SOAP_TYPE__ngwm__modifyJunkMailSettingsRequest (264)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyJunkMailSettingsRequest(struct soap*, const char*, int, const _ngwm__modifyJunkMailSettingsRequest *, const char*);
@@ -1426,7 +1610,7 @@ SOAP_FMAC5 _ngwm__modifyJunkMailSettingsRequest * SOAP_FMAC6 soap_instantiate__n
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifyJunkMailSettingsRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifyJunkEntryResponse
-#define SOAP_TYPE__ngwm__modifyJunkEntryResponse (230)
+#define SOAP_TYPE__ngwm__modifyJunkEntryResponse (263)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyJunkEntryResponse(struct soap*, const char*, int, const _ngwm__modifyJunkEntryResponse *, const char*);
@@ -1438,7 +1622,7 @@ SOAP_FMAC5 _ngwm__modifyJunkEntryResponse * SOAP_FMAC6 soap_instantiate__ngwm__m
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifyJunkEntryResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifyJunkEntryRequest
-#define SOAP_TYPE__ngwm__modifyJunkEntryRequest (229)
+#define SOAP_TYPE__ngwm__modifyJunkEntryRequest (262)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyJunkEntryRequest(struct soap*, const char*, int, const _ngwm__modifyJunkEntryRequest *, const char*);
@@ -1450,7 +1634,7 @@ SOAP_FMAC5 _ngwm__modifyJunkEntryRequest * SOAP_FMAC6 soap_instantiate__ngwm__mo
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifyJunkEntryRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifyItemsResponse
-#define SOAP_TYPE__ngwm__modifyItemsResponse (228)
+#define SOAP_TYPE__ngwm__modifyItemsResponse (261)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyItemsResponse(struct soap*, const char*, int, const _ngwm__modifyItemsResponse *, const char*);
@@ -1462,7 +1646,7 @@ SOAP_FMAC5 _ngwm__modifyItemsResponse * SOAP_FMAC6 soap_instantiate__ngwm__modif
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifyItemsResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifyItemsRequest
-#define SOAP_TYPE__ngwm__modifyItemsRequest (227)
+#define SOAP_TYPE__ngwm__modifyItemsRequest (260)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyItemsRequest(struct soap*, const char*, int, const _ngwm__modifyItemsRequest *, const char*);
@@ -1474,7 +1658,7 @@ SOAP_FMAC5 _ngwm__modifyItemsRequest * SOAP_FMAC6 soap_instantiate__ngwm__modify
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifyItemsRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifyItemResponse
-#define SOAP_TYPE__ngwm__modifyItemResponse (226)
+#define SOAP_TYPE__ngwm__modifyItemResponse (259)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyItemResponse(struct soap*, const char*, int, const _ngwm__modifyItemResponse *, const char*);
@@ -1486,7 +1670,7 @@ SOAP_FMAC5 _ngwm__modifyItemResponse * SOAP_FMAC6 soap_instantiate__ngwm__modify
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifyItemResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__modifyItemRequest
-#define SOAP_TYPE__ngwm__modifyItemRequest (225)
+#define SOAP_TYPE__ngwm__modifyItemRequest (258)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyItemRequest(struct soap*, const char*, int, const _ngwm__modifyItemRequest *, const char*);
@@ -1498,7 +1682,7 @@ SOAP_FMAC5 _ngwm__modifyItemRequest * SOAP_FMAC6 soap_instantiate__ngwm__modifyI
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__modifyItemRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__markUnReadResponse
-#define SOAP_TYPE__ngwm__markUnReadResponse (224)
+#define SOAP_TYPE__ngwm__markUnReadResponse (257)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__markUnReadResponse(struct soap*, const char*, int, const _ngwm__markUnReadResponse *, const char*);
@@ -1510,7 +1694,7 @@ SOAP_FMAC5 _ngwm__markUnReadResponse * SOAP_FMAC6 soap_instantiate__ngwm__markUn
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__markUnReadResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__markUnReadRequest
-#define SOAP_TYPE__ngwm__markUnReadRequest (223)
+#define SOAP_TYPE__ngwm__markUnReadRequest (256)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__markUnReadRequest(struct soap*, const char*, int, const _ngwm__markUnReadRequest *, const char*);
@@ -1522,7 +1706,7 @@ SOAP_FMAC5 _ngwm__markUnReadRequest * SOAP_FMAC6 soap_instantiate__ngwm__markUnR
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__markUnReadRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__markUnPrivateResponse
-#define SOAP_TYPE__ngwm__markUnPrivateResponse (222)
+#define SOAP_TYPE__ngwm__markUnPrivateResponse (255)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__markUnPrivateResponse(struct soap*, const char*, int, const _ngwm__markUnPrivateResponse *, const char*);
@@ -1534,7 +1718,7 @@ SOAP_FMAC5 _ngwm__markUnPrivateResponse * SOAP_FMAC6 soap_instantiate__ngwm__mar
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__markUnPrivateResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__markUnPrivateRequest
-#define SOAP_TYPE__ngwm__markUnPrivateRequest (221)
+#define SOAP_TYPE__ngwm__markUnPrivateRequest (254)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__markUnPrivateRequest(struct soap*, const char*, int, const _ngwm__markUnPrivateRequest *, const char*);
@@ -1546,7 +1730,7 @@ SOAP_FMAC5 _ngwm__markUnPrivateRequest * SOAP_FMAC6 soap_instantiate__ngwm__mark
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__markUnPrivateRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__markReadResponse
-#define SOAP_TYPE__ngwm__markReadResponse (220)
+#define SOAP_TYPE__ngwm__markReadResponse (253)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__markReadResponse(struct soap*, const char*, int, const _ngwm__markReadResponse *, const char*);
@@ -1558,7 +1742,7 @@ SOAP_FMAC5 _ngwm__markReadResponse * SOAP_FMAC6 soap_instantiate__ngwm__markRead
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__markReadResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__markReadRequest
-#define SOAP_TYPE__ngwm__markReadRequest (219)
+#define SOAP_TYPE__ngwm__markReadRequest (252)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__markReadRequest(struct soap*, const char*, int, const _ngwm__markReadRequest *, const char*);
@@ -1570,7 +1754,7 @@ SOAP_FMAC5 _ngwm__markReadRequest * SOAP_FMAC6 soap_instantiate__ngwm__markReadR
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__markReadRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__markPrivateResponse
-#define SOAP_TYPE__ngwm__markPrivateResponse (218)
+#define SOAP_TYPE__ngwm__markPrivateResponse (251)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__markPrivateResponse(struct soap*, const char*, int, const _ngwm__markPrivateResponse *, const char*);
@@ -1582,7 +1766,7 @@ SOAP_FMAC5 _ngwm__markPrivateResponse * SOAP_FMAC6 soap_instantiate__ngwm__markP
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__markPrivateResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__markPrivateRequest
-#define SOAP_TYPE__ngwm__markPrivateRequest (217)
+#define SOAP_TYPE__ngwm__markPrivateRequest (250)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__markPrivateRequest(struct soap*, const char*, int, const _ngwm__markPrivateRequest *, const char*);
@@ -1594,7 +1778,7 @@ SOAP_FMAC5 _ngwm__markPrivateRequest * SOAP_FMAC6 soap_instantiate__ngwm__markPr
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__markPrivateRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__logoutResponse
-#define SOAP_TYPE__ngwm__logoutResponse (216)
+#define SOAP_TYPE__ngwm__logoutResponse (249)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__logoutResponse(struct soap*, const char*, int, const _ngwm__logoutResponse *, const char*);
@@ -1606,7 +1790,7 @@ SOAP_FMAC5 _ngwm__logoutResponse * SOAP_FMAC6 soap_instantiate__ngwm__logoutResp
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__logoutResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__logoutRequest
-#define SOAP_TYPE__ngwm__logoutRequest (215)
+#define SOAP_TYPE__ngwm__logoutRequest (248)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__logoutRequest(struct soap*, const char*, int, const _ngwm__logoutRequest *, const char*);
@@ -1618,7 +1802,7 @@ SOAP_FMAC5 _ngwm__logoutRequest * SOAP_FMAC6 soap_instantiate__ngwm__logoutReque
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__logoutRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__loginResponse
-#define SOAP_TYPE__ngwm__loginResponse (214)
+#define SOAP_TYPE__ngwm__loginResponse (247)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__loginResponse(struct soap*, const char*, int, const _ngwm__loginResponse *, const char*);
@@ -1630,7 +1814,7 @@ SOAP_FMAC5 _ngwm__loginResponse * SOAP_FMAC6 soap_instantiate__ngwm__loginRespon
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__loginResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__loginRequest
-#define SOAP_TYPE__ngwm__loginRequest (213)
+#define SOAP_TYPE__ngwm__loginRequest (246)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__loginRequest(struct soap*, const char*, int, const _ngwm__loginRequest *, const char*);
@@ -1641,8 +1825,32 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__loginRequest(struct soap*, _ngwm__
 SOAP_FMAC5 _ngwm__loginRequest * SOAP_FMAC6 soap_instantiate__ngwm__loginRequest(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__loginRequest(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE__ngwm__getUserListResponse
+#define SOAP_TYPE__ngwm__getUserListResponse (245)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getUserListResponse(struct soap*, const char*, int, const _ngwm__getUserListResponse *, const char*);
+SOAP_FMAC3 _ngwm__getUserListResponse * SOAP_FMAC4 soap_get__ngwm__getUserListResponse(struct soap*, _ngwm__getUserListResponse *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getUserListResponse * SOAP_FMAC4 soap_in__ngwm__getUserListResponse(struct soap*, const char*, _ngwm__getUserListResponse *, const char*);
+SOAP_FMAC5 _ngwm__getUserListResponse * SOAP_FMAC6 soap_new__ngwm__getUserListResponse(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getUserListResponse(struct soap*, _ngwm__getUserListResponse*);
+SOAP_FMAC5 _ngwm__getUserListResponse * SOAP_FMAC6 soap_instantiate__ngwm__getUserListResponse(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getUserListResponse(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__getUserListRequest
+#define SOAP_TYPE__ngwm__getUserListRequest (244)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getUserListRequest(struct soap*, const char*, int, const _ngwm__getUserListRequest *, const char*);
+SOAP_FMAC3 _ngwm__getUserListRequest * SOAP_FMAC4 soap_get__ngwm__getUserListRequest(struct soap*, _ngwm__getUserListRequest *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getUserListRequest * SOAP_FMAC4 soap_in__ngwm__getUserListRequest(struct soap*, const char*, _ngwm__getUserListRequest *, const char*);
+SOAP_FMAC5 _ngwm__getUserListRequest * SOAP_FMAC6 soap_new__ngwm__getUserListRequest(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getUserListRequest(struct soap*, _ngwm__getUserListRequest*);
+SOAP_FMAC5 _ngwm__getUserListRequest * SOAP_FMAC6 soap_instantiate__ngwm__getUserListRequest(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getUserListRequest(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE__ngwm__getTimezoneListResponse
-#define SOAP_TYPE__ngwm__getTimezoneListResponse (212)
+#define SOAP_TYPE__ngwm__getTimezoneListResponse (243)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getTimezoneListResponse(struct soap*, const char*, int, const _ngwm__getTimezoneListResponse *, const char*);
@@ -1654,7 +1862,7 @@ SOAP_FMAC5 _ngwm__getTimezoneListResponse * SOAP_FMAC6 soap_instantiate__ngwm__g
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getTimezoneListResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getTimezoneListRequest
-#define SOAP_TYPE__ngwm__getTimezoneListRequest (211)
+#define SOAP_TYPE__ngwm__getTimezoneListRequest (242)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getTimezoneListRequest(struct soap*, const char*, int, const _ngwm__getTimezoneListRequest *, const char*);
@@ -1665,8 +1873,32 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getTimezoneListRequest(struct soap
 SOAP_FMAC5 _ngwm__getTimezoneListRequest * SOAP_FMAC6 soap_instantiate__ngwm__getTimezoneListRequest(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getTimezoneListRequest(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE__ngwm__getTimestampResponse
+#define SOAP_TYPE__ngwm__getTimestampResponse (241)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getTimestampResponse(struct soap*, const char*, int, const _ngwm__getTimestampResponse *, const char*);
+SOAP_FMAC3 _ngwm__getTimestampResponse * SOAP_FMAC4 soap_get__ngwm__getTimestampResponse(struct soap*, _ngwm__getTimestampResponse *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getTimestampResponse * SOAP_FMAC4 soap_in__ngwm__getTimestampResponse(struct soap*, const char*, _ngwm__getTimestampResponse *, const char*);
+SOAP_FMAC5 _ngwm__getTimestampResponse * SOAP_FMAC6 soap_new__ngwm__getTimestampResponse(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getTimestampResponse(struct soap*, _ngwm__getTimestampResponse*);
+SOAP_FMAC5 _ngwm__getTimestampResponse * SOAP_FMAC6 soap_instantiate__ngwm__getTimestampResponse(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getTimestampResponse(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__getTimestampRequest
+#define SOAP_TYPE__ngwm__getTimestampRequest (240)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getTimestampRequest(struct soap*, const char*, int, const _ngwm__getTimestampRequest *, const char*);
+SOAP_FMAC3 _ngwm__getTimestampRequest * SOAP_FMAC4 soap_get__ngwm__getTimestampRequest(struct soap*, _ngwm__getTimestampRequest *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getTimestampRequest * SOAP_FMAC4 soap_in__ngwm__getTimestampRequest(struct soap*, const char*, _ngwm__getTimestampRequest *, const char*);
+SOAP_FMAC5 _ngwm__getTimestampRequest * SOAP_FMAC6 soap_new__ngwm__getTimestampRequest(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getTimestampRequest(struct soap*, _ngwm__getTimestampRequest*);
+SOAP_FMAC5 _ngwm__getTimestampRequest * SOAP_FMAC6 soap_instantiate__ngwm__getTimestampRequest(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getTimestampRequest(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE__ngwm__getSignaturesResponse
-#define SOAP_TYPE__ngwm__getSignaturesResponse (210)
+#define SOAP_TYPE__ngwm__getSignaturesResponse (239)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getSignaturesResponse(struct soap*, const char*, int, const _ngwm__getSignaturesResponse *, const char*);
@@ -1678,7 +1910,7 @@ SOAP_FMAC5 _ngwm__getSignaturesResponse * SOAP_FMAC6 soap_instantiate__ngwm__get
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getSignaturesResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getSignaturesRequest
-#define SOAP_TYPE__ngwm__getSignaturesRequest (209)
+#define SOAP_TYPE__ngwm__getSignaturesRequest (238)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getSignaturesRequest(struct soap*, const char*, int, const _ngwm__getSignaturesRequest *, const char*);
@@ -1690,7 +1922,7 @@ SOAP_FMAC5 _ngwm__getSignaturesRequest * SOAP_FMAC6 soap_instantiate__ngwm__getS
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getSignaturesRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getSettingsResponse
-#define SOAP_TYPE__ngwm__getSettingsResponse (208)
+#define SOAP_TYPE__ngwm__getSettingsResponse (237)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getSettingsResponse(struct soap*, const char*, int, const _ngwm__getSettingsResponse *, const char*);
@@ -1702,7 +1934,7 @@ SOAP_FMAC5 _ngwm__getSettingsResponse * SOAP_FMAC6 soap_instantiate__ngwm__getSe
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getSettingsResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getSettingsRequest
-#define SOAP_TYPE__ngwm__getSettingsRequest (207)
+#define SOAP_TYPE__ngwm__getSettingsRequest (236)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getSettingsRequest(struct soap*, const char*, int, const _ngwm__getSettingsRequest *, const char*);
@@ -1713,8 +1945,32 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getSettingsRequest(struct soap*, _
 SOAP_FMAC5 _ngwm__getSettingsRequest * SOAP_FMAC6 soap_instantiate__ngwm__getSettingsRequest(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getSettingsRequest(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE__ngwm__getRuleListResponse
+#define SOAP_TYPE__ngwm__getRuleListResponse (235)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getRuleListResponse(struct soap*, const char*, int, const _ngwm__getRuleListResponse *, const char*);
+SOAP_FMAC3 _ngwm__getRuleListResponse * SOAP_FMAC4 soap_get__ngwm__getRuleListResponse(struct soap*, _ngwm__getRuleListResponse *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getRuleListResponse * SOAP_FMAC4 soap_in__ngwm__getRuleListResponse(struct soap*, const char*, _ngwm__getRuleListResponse *, const char*);
+SOAP_FMAC5 _ngwm__getRuleListResponse * SOAP_FMAC6 soap_new__ngwm__getRuleListResponse(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getRuleListResponse(struct soap*, _ngwm__getRuleListResponse*);
+SOAP_FMAC5 _ngwm__getRuleListResponse * SOAP_FMAC6 soap_instantiate__ngwm__getRuleListResponse(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getRuleListResponse(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__getRuleListRequest
+#define SOAP_TYPE__ngwm__getRuleListRequest (234)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getRuleListRequest(struct soap*, const char*, int, const _ngwm__getRuleListRequest *, const char*);
+SOAP_FMAC3 _ngwm__getRuleListRequest * SOAP_FMAC4 soap_get__ngwm__getRuleListRequest(struct soap*, _ngwm__getRuleListRequest *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getRuleListRequest * SOAP_FMAC4 soap_in__ngwm__getRuleListRequest(struct soap*, const char*, _ngwm__getRuleListRequest *, const char*);
+SOAP_FMAC5 _ngwm__getRuleListRequest * SOAP_FMAC6 soap_new__ngwm__getRuleListRequest(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getRuleListRequest(struct soap*, _ngwm__getRuleListRequest*);
+SOAP_FMAC5 _ngwm__getRuleListRequest * SOAP_FMAC6 soap_instantiate__ngwm__getRuleListRequest(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getRuleListRequest(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE__ngwm__getProxyListResponse
-#define SOAP_TYPE__ngwm__getProxyListResponse (206)
+#define SOAP_TYPE__ngwm__getProxyListResponse (233)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getProxyListResponse(struct soap*, const char*, int, const _ngwm__getProxyListResponse *, const char*);
@@ -1726,7 +1982,7 @@ SOAP_FMAC5 _ngwm__getProxyListResponse * SOAP_FMAC6 soap_instantiate__ngwm__getP
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getProxyListResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getProxyListRequest
-#define SOAP_TYPE__ngwm__getProxyListRequest (205)
+#define SOAP_TYPE__ngwm__getProxyListRequest (232)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getProxyListRequest(struct soap*, const char*, int, const _ngwm__getProxyListRequest *, const char*);
@@ -1738,7 +1994,7 @@ SOAP_FMAC5 _ngwm__getProxyListRequest * SOAP_FMAC6 soap_instantiate__ngwm__getPr
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getProxyListRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getProxyAccessListResponse
-#define SOAP_TYPE__ngwm__getProxyAccessListResponse (204)
+#define SOAP_TYPE__ngwm__getProxyAccessListResponse (231)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getProxyAccessListResponse(struct soap*, const char*, int, const _ngwm__getProxyAccessListResponse *, const char*);
@@ -1750,7 +2006,7 @@ SOAP_FMAC5 _ngwm__getProxyAccessListResponse * SOAP_FMAC6 soap_instantiate__ngwm
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getProxyAccessListResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getProxyAccessListRequest
-#define SOAP_TYPE__ngwm__getProxyAccessListRequest (203)
+#define SOAP_TYPE__ngwm__getProxyAccessListRequest (230)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getProxyAccessListRequest(struct soap*, const char*, int, const _ngwm__getProxyAccessListRequest *, const char*);
@@ -1762,7 +2018,7 @@ SOAP_FMAC5 _ngwm__getProxyAccessListRequest * SOAP_FMAC6 soap_instantiate__ngwm_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getProxyAccessListRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getQuickMessagesResponse
-#define SOAP_TYPE__ngwm__getQuickMessagesResponse (202)
+#define SOAP_TYPE__ngwm__getQuickMessagesResponse (229)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getQuickMessagesResponse(struct soap*, const char*, int, const _ngwm__getQuickMessagesResponse *, const char*);
@@ -1774,7 +2030,7 @@ SOAP_FMAC5 _ngwm__getQuickMessagesResponse * SOAP_FMAC6 soap_instantiate__ngwm__
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getQuickMessagesResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getQuickMessagesRequest
-#define SOAP_TYPE__ngwm__getQuickMessagesRequest (201)
+#define SOAP_TYPE__ngwm__getQuickMessagesRequest (228)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getQuickMessagesRequest(struct soap*, const char*, int, const _ngwm__getQuickMessagesRequest *, const char*);
@@ -1785,8 +2041,56 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getQuickMessagesRequest(struct soa
 SOAP_FMAC5 _ngwm__getQuickMessagesRequest * SOAP_FMAC6 soap_instantiate__ngwm__getQuickMessagesRequest(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getQuickMessagesRequest(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE__ngwm__getLibraryListResponse
+#define SOAP_TYPE__ngwm__getLibraryListResponse (227)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getLibraryListResponse(struct soap*, const char*, int, const _ngwm__getLibraryListResponse *, const char*);
+SOAP_FMAC3 _ngwm__getLibraryListResponse * SOAP_FMAC4 soap_get__ngwm__getLibraryListResponse(struct soap*, _ngwm__getLibraryListResponse *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getLibraryListResponse * SOAP_FMAC4 soap_in__ngwm__getLibraryListResponse(struct soap*, const char*, _ngwm__getLibraryListResponse *, const char*);
+SOAP_FMAC5 _ngwm__getLibraryListResponse * SOAP_FMAC6 soap_new__ngwm__getLibraryListResponse(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getLibraryListResponse(struct soap*, _ngwm__getLibraryListResponse*);
+SOAP_FMAC5 _ngwm__getLibraryListResponse * SOAP_FMAC6 soap_instantiate__ngwm__getLibraryListResponse(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getLibraryListResponse(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__getLibraryListRequest
+#define SOAP_TYPE__ngwm__getLibraryListRequest (226)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getLibraryListRequest(struct soap*, const char*, int, const _ngwm__getLibraryListRequest *, const char*);
+SOAP_FMAC3 _ngwm__getLibraryListRequest * SOAP_FMAC4 soap_get__ngwm__getLibraryListRequest(struct soap*, _ngwm__getLibraryListRequest *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getLibraryListRequest * SOAP_FMAC4 soap_in__ngwm__getLibraryListRequest(struct soap*, const char*, _ngwm__getLibraryListRequest *, const char*);
+SOAP_FMAC5 _ngwm__getLibraryListRequest * SOAP_FMAC6 soap_new__ngwm__getLibraryListRequest(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getLibraryListRequest(struct soap*, _ngwm__getLibraryListRequest*);
+SOAP_FMAC5 _ngwm__getLibraryListRequest * SOAP_FMAC6 soap_instantiate__ngwm__getLibraryListRequest(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getLibraryListRequest(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__getLibraryItemResponse
+#define SOAP_TYPE__ngwm__getLibraryItemResponse (225)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getLibraryItemResponse(struct soap*, const char*, int, const _ngwm__getLibraryItemResponse *, const char*);
+SOAP_FMAC3 _ngwm__getLibraryItemResponse * SOAP_FMAC4 soap_get__ngwm__getLibraryItemResponse(struct soap*, _ngwm__getLibraryItemResponse *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getLibraryItemResponse * SOAP_FMAC4 soap_in__ngwm__getLibraryItemResponse(struct soap*, const char*, _ngwm__getLibraryItemResponse *, const char*);
+SOAP_FMAC5 _ngwm__getLibraryItemResponse * SOAP_FMAC6 soap_new__ngwm__getLibraryItemResponse(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getLibraryItemResponse(struct soap*, _ngwm__getLibraryItemResponse*);
+SOAP_FMAC5 _ngwm__getLibraryItemResponse * SOAP_FMAC6 soap_instantiate__ngwm__getLibraryItemResponse(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getLibraryItemResponse(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__getLibraryItemRequest
+#define SOAP_TYPE__ngwm__getLibraryItemRequest (224)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getLibraryItemRequest(struct soap*, const char*, int, const _ngwm__getLibraryItemRequest *, const char*);
+SOAP_FMAC3 _ngwm__getLibraryItemRequest * SOAP_FMAC4 soap_get__ngwm__getLibraryItemRequest(struct soap*, _ngwm__getLibraryItemRequest *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getLibraryItemRequest * SOAP_FMAC4 soap_in__ngwm__getLibraryItemRequest(struct soap*, const char*, _ngwm__getLibraryItemRequest *, const char*);
+SOAP_FMAC5 _ngwm__getLibraryItemRequest * SOAP_FMAC6 soap_new__ngwm__getLibraryItemRequest(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getLibraryItemRequest(struct soap*, _ngwm__getLibraryItemRequest*);
+SOAP_FMAC5 _ngwm__getLibraryItemRequest * SOAP_FMAC6 soap_instantiate__ngwm__getLibraryItemRequest(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getLibraryItemRequest(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE__ngwm__getJunkMailSettingsResponse
-#define SOAP_TYPE__ngwm__getJunkMailSettingsResponse (200)
+#define SOAP_TYPE__ngwm__getJunkMailSettingsResponse (223)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getJunkMailSettingsResponse(struct soap*, const char*, int, const _ngwm__getJunkMailSettingsResponse *, const char*);
@@ -1798,7 +2102,7 @@ SOAP_FMAC5 _ngwm__getJunkMailSettingsResponse * SOAP_FMAC6 soap_instantiate__ngw
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getJunkMailSettingsResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getJunkMailSettingsRequest
-#define SOAP_TYPE__ngwm__getJunkMailSettingsRequest (199)
+#define SOAP_TYPE__ngwm__getJunkMailSettingsRequest (222)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getJunkMailSettingsRequest(struct soap*, const char*, int, const _ngwm__getJunkMailSettingsRequest *, const char*);
@@ -1810,7 +2114,7 @@ SOAP_FMAC5 _ngwm__getJunkMailSettingsRequest * SOAP_FMAC6 soap_instantiate__ngwm
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getJunkMailSettingsRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getJunkEntriesResponse
-#define SOAP_TYPE__ngwm__getJunkEntriesResponse (198)
+#define SOAP_TYPE__ngwm__getJunkEntriesResponse (221)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getJunkEntriesResponse(struct soap*, const char*, int, const _ngwm__getJunkEntriesResponse *, const char*);
@@ -1822,7 +2126,7 @@ SOAP_FMAC5 _ngwm__getJunkEntriesResponse * SOAP_FMAC6 soap_instantiate__ngwm__ge
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getJunkEntriesResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getJunkEntriesRequest
-#define SOAP_TYPE__ngwm__getJunkEntriesRequest (197)
+#define SOAP_TYPE__ngwm__getJunkEntriesRequest (220)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getJunkEntriesRequest(struct soap*, const char*, int, const _ngwm__getJunkEntriesRequest *, const char*);
@@ -1834,7 +2138,7 @@ SOAP_FMAC5 _ngwm__getJunkEntriesRequest * SOAP_FMAC6 soap_instantiate__ngwm__get
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getJunkEntriesRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getItemsResponse
-#define SOAP_TYPE__ngwm__getItemsResponse (196)
+#define SOAP_TYPE__ngwm__getItemsResponse (219)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getItemsResponse(struct soap*, const char*, int, const _ngwm__getItemsResponse *, const char*);
@@ -1846,7 +2150,7 @@ SOAP_FMAC5 _ngwm__getItemsResponse * SOAP_FMAC6 soap_instantiate__ngwm__getItems
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getItemsResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getItemsRequest
-#define SOAP_TYPE__ngwm__getItemsRequest (195)
+#define SOAP_TYPE__ngwm__getItemsRequest (218)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getItemsRequest(struct soap*, const char*, int, const _ngwm__getItemsRequest *, const char*);
@@ -1858,7 +2162,7 @@ SOAP_FMAC5 _ngwm__getItemsRequest * SOAP_FMAC6 soap_instantiate__ngwm__getItemsR
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getItemsRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getItemResponse
-#define SOAP_TYPE__ngwm__getItemResponse (194)
+#define SOAP_TYPE__ngwm__getItemResponse (217)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getItemResponse(struct soap*, const char*, int, const _ngwm__getItemResponse *, const char*);
@@ -1870,7 +2174,7 @@ SOAP_FMAC5 _ngwm__getItemResponse * SOAP_FMAC6 soap_instantiate__ngwm__getItemRe
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getItemResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getItemRequest
-#define SOAP_TYPE__ngwm__getItemRequest (193)
+#define SOAP_TYPE__ngwm__getItemRequest (216)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getItemRequest(struct soap*, const char*, int, const _ngwm__getItemRequest *, const char*);
@@ -1882,7 +2186,7 @@ SOAP_FMAC5 _ngwm__getItemRequest * SOAP_FMAC6 soap_instantiate__ngwm__getItemReq
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getItemRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getFreeBusyResponse
-#define SOAP_TYPE__ngwm__getFreeBusyResponse (192)
+#define SOAP_TYPE__ngwm__getFreeBusyResponse (215)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getFreeBusyResponse(struct soap*, const char*, int, const _ngwm__getFreeBusyResponse *, const char*);
@@ -1894,7 +2198,7 @@ SOAP_FMAC5 _ngwm__getFreeBusyResponse * SOAP_FMAC6 soap_instantiate__ngwm__getFr
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getFreeBusyResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getFreeBusyRequest
-#define SOAP_TYPE__ngwm__getFreeBusyRequest (191)
+#define SOAP_TYPE__ngwm__getFreeBusyRequest (214)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getFreeBusyRequest(struct soap*, const char*, int, const _ngwm__getFreeBusyRequest *, const char*);
@@ -1906,7 +2210,7 @@ SOAP_FMAC5 _ngwm__getFreeBusyRequest * SOAP_FMAC6 soap_instantiate__ngwm__getFre
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getFreeBusyRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getFolderListResponse
-#define SOAP_TYPE__ngwm__getFolderListResponse (190)
+#define SOAP_TYPE__ngwm__getFolderListResponse (213)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getFolderListResponse(struct soap*, const char*, int, const _ngwm__getFolderListResponse *, const char*);
@@ -1918,7 +2222,7 @@ SOAP_FMAC5 _ngwm__getFolderListResponse * SOAP_FMAC6 soap_instantiate__ngwm__get
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getFolderListResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getFolderListRequest
-#define SOAP_TYPE__ngwm__getFolderListRequest (189)
+#define SOAP_TYPE__ngwm__getFolderListRequest (212)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getFolderListRequest(struct soap*, const char*, int, const _ngwm__getFolderListRequest *, const char*);
@@ -1929,8 +2233,56 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getFolderListRequest(struct soap*,
 SOAP_FMAC5 _ngwm__getFolderListRequest * SOAP_FMAC6 soap_instantiate__ngwm__getFolderListRequest(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getFolderListRequest(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE__ngwm__getFolderResponse
+#define SOAP_TYPE__ngwm__getFolderResponse (211)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getFolderResponse(struct soap*, const char*, int, const _ngwm__getFolderResponse *, const char*);
+SOAP_FMAC3 _ngwm__getFolderResponse * SOAP_FMAC4 soap_get__ngwm__getFolderResponse(struct soap*, _ngwm__getFolderResponse *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getFolderResponse * SOAP_FMAC4 soap_in__ngwm__getFolderResponse(struct soap*, const char*, _ngwm__getFolderResponse *, const char*);
+SOAP_FMAC5 _ngwm__getFolderResponse * SOAP_FMAC6 soap_new__ngwm__getFolderResponse(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getFolderResponse(struct soap*, _ngwm__getFolderResponse*);
+SOAP_FMAC5 _ngwm__getFolderResponse * SOAP_FMAC6 soap_instantiate__ngwm__getFolderResponse(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getFolderResponse(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__getFolderRequest
+#define SOAP_TYPE__ngwm__getFolderRequest (210)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getFolderRequest(struct soap*, const char*, int, const _ngwm__getFolderRequest *, const char*);
+SOAP_FMAC3 _ngwm__getFolderRequest * SOAP_FMAC4 soap_get__ngwm__getFolderRequest(struct soap*, _ngwm__getFolderRequest *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getFolderRequest * SOAP_FMAC4 soap_in__ngwm__getFolderRequest(struct soap*, const char*, _ngwm__getFolderRequest *, const char*);
+SOAP_FMAC5 _ngwm__getFolderRequest * SOAP_FMAC6 soap_new__ngwm__getFolderRequest(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getFolderRequest(struct soap*, _ngwm__getFolderRequest*);
+SOAP_FMAC5 _ngwm__getFolderRequest * SOAP_FMAC6 soap_instantiate__ngwm__getFolderRequest(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getFolderRequest(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__getDocumentTypeListResponse
+#define SOAP_TYPE__ngwm__getDocumentTypeListResponse (209)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getDocumentTypeListResponse(struct soap*, const char*, int, const _ngwm__getDocumentTypeListResponse *, const char*);
+SOAP_FMAC3 _ngwm__getDocumentTypeListResponse * SOAP_FMAC4 soap_get__ngwm__getDocumentTypeListResponse(struct soap*, _ngwm__getDocumentTypeListResponse *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getDocumentTypeListResponse * SOAP_FMAC4 soap_in__ngwm__getDocumentTypeListResponse(struct soap*, const char*, _ngwm__getDocumentTypeListResponse *, const char*);
+SOAP_FMAC5 _ngwm__getDocumentTypeListResponse * SOAP_FMAC6 soap_new__ngwm__getDocumentTypeListResponse(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getDocumentTypeListResponse(struct soap*, _ngwm__getDocumentTypeListResponse*);
+SOAP_FMAC5 _ngwm__getDocumentTypeListResponse * SOAP_FMAC6 soap_instantiate__ngwm__getDocumentTypeListResponse(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getDocumentTypeListResponse(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__getDocumentTypeListRequest
+#define SOAP_TYPE__ngwm__getDocumentTypeListRequest (208)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getDocumentTypeListRequest(struct soap*, const char*, int, const _ngwm__getDocumentTypeListRequest *, const char*);
+SOAP_FMAC3 _ngwm__getDocumentTypeListRequest * SOAP_FMAC4 soap_get__ngwm__getDocumentTypeListRequest(struct soap*, _ngwm__getDocumentTypeListRequest *, const char*, const char*);
+SOAP_FMAC3 _ngwm__getDocumentTypeListRequest * SOAP_FMAC4 soap_in__ngwm__getDocumentTypeListRequest(struct soap*, const char*, _ngwm__getDocumentTypeListRequest *, const char*);
+SOAP_FMAC5 _ngwm__getDocumentTypeListRequest * SOAP_FMAC6 soap_new__ngwm__getDocumentTypeListRequest(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getDocumentTypeListRequest(struct soap*, _ngwm__getDocumentTypeListRequest*);
+SOAP_FMAC5 _ngwm__getDocumentTypeListRequest * SOAP_FMAC6 soap_instantiate__ngwm__getDocumentTypeListRequest(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getDocumentTypeListRequest(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE__ngwm__getDeltaInfoResponse
-#define SOAP_TYPE__ngwm__getDeltaInfoResponse (188)
+#define SOAP_TYPE__ngwm__getDeltaInfoResponse (207)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getDeltaInfoResponse(struct soap*, const char*, int, const _ngwm__getDeltaInfoResponse *, const char*);
@@ -1942,7 +2294,7 @@ SOAP_FMAC5 _ngwm__getDeltaInfoResponse * SOAP_FMAC6 soap_instantiate__ngwm__getD
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getDeltaInfoResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getDeltaInfoRequest
-#define SOAP_TYPE__ngwm__getDeltaInfoRequest (187)
+#define SOAP_TYPE__ngwm__getDeltaInfoRequest (206)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getDeltaInfoRequest(struct soap*, const char*, int, const _ngwm__getDeltaInfoRequest *, const char*);
@@ -1954,7 +2306,7 @@ SOAP_FMAC5 _ngwm__getDeltaInfoRequest * SOAP_FMAC6 soap_instantiate__ngwm__getDe
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getDeltaInfoRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getDeltasResponse
-#define SOAP_TYPE__ngwm__getDeltasResponse (186)
+#define SOAP_TYPE__ngwm__getDeltasResponse (205)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getDeltasResponse(struct soap*, const char*, int, const _ngwm__getDeltasResponse *, const char*);
@@ -1966,7 +2318,7 @@ SOAP_FMAC5 _ngwm__getDeltasResponse * SOAP_FMAC6 soap_instantiate__ngwm__getDelt
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getDeltasResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getDeltasRequest
-#define SOAP_TYPE__ngwm__getDeltasRequest (185)
+#define SOAP_TYPE__ngwm__getDeltasRequest (204)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getDeltasRequest(struct soap*, const char*, int, const _ngwm__getDeltasRequest *, const char*);
@@ -1978,7 +2330,7 @@ SOAP_FMAC5 _ngwm__getDeltasRequest * SOAP_FMAC6 soap_instantiate__ngwm__getDelta
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getDeltasRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getCustomListResponse
-#define SOAP_TYPE__ngwm__getCustomListResponse (184)
+#define SOAP_TYPE__ngwm__getCustomListResponse (203)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getCustomListResponse(struct soap*, const char*, int, const _ngwm__getCustomListResponse *, const char*);
@@ -1990,7 +2342,7 @@ SOAP_FMAC5 _ngwm__getCustomListResponse * SOAP_FMAC6 soap_instantiate__ngwm__get
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getCustomListResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getCustomListRequest
-#define SOAP_TYPE__ngwm__getCustomListRequest (183)
+#define SOAP_TYPE__ngwm__getCustomListRequest (202)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getCustomListRequest(struct soap*, const char*, int, const _ngwm__getCustomListRequest *, const char*);
@@ -2002,7 +2354,7 @@ SOAP_FMAC5 _ngwm__getCustomListRequest * SOAP_FMAC6 soap_instantiate__ngwm__getC
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getCustomListRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getCategoryListResponse
-#define SOAP_TYPE__ngwm__getCategoryListResponse (182)
+#define SOAP_TYPE__ngwm__getCategoryListResponse (201)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getCategoryListResponse(struct soap*, const char*, int, const _ngwm__getCategoryListResponse *, const char*);
@@ -2014,7 +2366,7 @@ SOAP_FMAC5 _ngwm__getCategoryListResponse * SOAP_FMAC6 soap_instantiate__ngwm__g
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getCategoryListResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getCategoryListRequest
-#define SOAP_TYPE__ngwm__getCategoryListRequest (181)
+#define SOAP_TYPE__ngwm__getCategoryListRequest (200)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getCategoryListRequest(struct soap*, const char*, int, const _ngwm__getCategoryListRequest *, const char*);
@@ -2026,7 +2378,7 @@ SOAP_FMAC5 _ngwm__getCategoryListRequest * SOAP_FMAC6 soap_instantiate__ngwm__ge
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getCategoryListRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getAttachmentResponse
-#define SOAP_TYPE__ngwm__getAttachmentResponse (180)
+#define SOAP_TYPE__ngwm__getAttachmentResponse (199)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getAttachmentResponse(struct soap*, const char*, int, const _ngwm__getAttachmentResponse *, const char*);
@@ -2038,7 +2390,7 @@ SOAP_FMAC5 _ngwm__getAttachmentResponse * SOAP_FMAC6 soap_instantiate__ngwm__get
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getAttachmentResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getAttachmentRequest
-#define SOAP_TYPE__ngwm__getAttachmentRequest (179)
+#define SOAP_TYPE__ngwm__getAttachmentRequest (198)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getAttachmentRequest(struct soap*, const char*, int, const _ngwm__getAttachmentRequest *, const char*);
@@ -2050,7 +2402,7 @@ SOAP_FMAC5 _ngwm__getAttachmentRequest * SOAP_FMAC6 soap_instantiate__ngwm__getA
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getAttachmentRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getAddressBookListResponse
-#define SOAP_TYPE__ngwm__getAddressBookListResponse (178)
+#define SOAP_TYPE__ngwm__getAddressBookListResponse (197)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getAddressBookListResponse(struct soap*, const char*, int, const _ngwm__getAddressBookListResponse *, const char*);
@@ -2062,7 +2414,7 @@ SOAP_FMAC5 _ngwm__getAddressBookListResponse * SOAP_FMAC6 soap_instantiate__ngwm
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getAddressBookListResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__getAddressBookListRequest
-#define SOAP_TYPE__ngwm__getAddressBookListRequest (177)
+#define SOAP_TYPE__ngwm__getAddressBookListRequest (196)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getAddressBookListRequest(struct soap*, const char*, int, const _ngwm__getAddressBookListRequest *, const char*);
@@ -2074,7 +2426,7 @@ SOAP_FMAC5 _ngwm__getAddressBookListRequest * SOAP_FMAC6 soap_instantiate__ngwm_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getAddressBookListRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__forwardResponse
-#define SOAP_TYPE__ngwm__forwardResponse (176)
+#define SOAP_TYPE__ngwm__forwardResponse (195)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__forwardResponse(struct soap*, const char*, int, const _ngwm__forwardResponse *, const char*);
@@ -2086,7 +2438,7 @@ SOAP_FMAC5 _ngwm__forwardResponse * SOAP_FMAC6 soap_instantiate__ngwm__forwardRe
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__forwardResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__forwardRequest
-#define SOAP_TYPE__ngwm__forwardRequest (175)
+#define SOAP_TYPE__ngwm__forwardRequest (194)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__forwardRequest(struct soap*, const char*, int, const _ngwm__forwardRequest *, const char*);
@@ -2097,8 +2449,32 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__forwardRequest(struct soap*, _ngwm
 SOAP_FMAC5 _ngwm__forwardRequest * SOAP_FMAC6 soap_instantiate__ngwm__forwardRequest(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__forwardRequest(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE__ngwm__executeRuleResponse
+#define SOAP_TYPE__ngwm__executeRuleResponse (193)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__executeRuleResponse(struct soap*, const char*, int, const _ngwm__executeRuleResponse *, const char*);
+SOAP_FMAC3 _ngwm__executeRuleResponse * SOAP_FMAC4 soap_get__ngwm__executeRuleResponse(struct soap*, _ngwm__executeRuleResponse *, const char*, const char*);
+SOAP_FMAC3 _ngwm__executeRuleResponse * SOAP_FMAC4 soap_in__ngwm__executeRuleResponse(struct soap*, const char*, _ngwm__executeRuleResponse *, const char*);
+SOAP_FMAC5 _ngwm__executeRuleResponse * SOAP_FMAC6 soap_new__ngwm__executeRuleResponse(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__executeRuleResponse(struct soap*, _ngwm__executeRuleResponse*);
+SOAP_FMAC5 _ngwm__executeRuleResponse * SOAP_FMAC6 soap_instantiate__ngwm__executeRuleResponse(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__executeRuleResponse(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__executeRuleRequest
+#define SOAP_TYPE__ngwm__executeRuleRequest (192)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__executeRuleRequest(struct soap*, const char*, int, const _ngwm__executeRuleRequest *, const char*);
+SOAP_FMAC3 _ngwm__executeRuleRequest * SOAP_FMAC4 soap_get__ngwm__executeRuleRequest(struct soap*, _ngwm__executeRuleRequest *, const char*, const char*);
+SOAP_FMAC3 _ngwm__executeRuleRequest * SOAP_FMAC4 soap_in__ngwm__executeRuleRequest(struct soap*, const char*, _ngwm__executeRuleRequest *, const char*);
+SOAP_FMAC5 _ngwm__executeRuleRequest * SOAP_FMAC6 soap_new__ngwm__executeRuleRequest(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__executeRuleRequest(struct soap*, _ngwm__executeRuleRequest*);
+SOAP_FMAC5 _ngwm__executeRuleRequest * SOAP_FMAC6 soap_instantiate__ngwm__executeRuleRequest(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__executeRuleRequest(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE__ngwm__destroyCursorResponse
-#define SOAP_TYPE__ngwm__destroyCursorResponse (174)
+#define SOAP_TYPE__ngwm__destroyCursorResponse (191)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__destroyCursorResponse(struct soap*, const char*, int, const _ngwm__destroyCursorResponse *, const char*);
@@ -2110,7 +2486,7 @@ SOAP_FMAC5 _ngwm__destroyCursorResponse * SOAP_FMAC6 soap_instantiate__ngwm__des
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__destroyCursorResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__destroyCursorRequest
-#define SOAP_TYPE__ngwm__destroyCursorRequest (173)
+#define SOAP_TYPE__ngwm__destroyCursorRequest (190)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__destroyCursorRequest(struct soap*, const char*, int, const _ngwm__destroyCursorRequest *, const char*);
@@ -2122,7 +2498,7 @@ SOAP_FMAC5 _ngwm__destroyCursorRequest * SOAP_FMAC6 soap_instantiate__ngwm__dest
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__destroyCursorRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__delegateResponse
-#define SOAP_TYPE__ngwm__delegateResponse (172)
+#define SOAP_TYPE__ngwm__delegateResponse (189)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__delegateResponse(struct soap*, const char*, int, const _ngwm__delegateResponse *, const char*);
@@ -2134,7 +2510,7 @@ SOAP_FMAC5 _ngwm__delegateResponse * SOAP_FMAC6 soap_instantiate__ngwm__delegate
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__delegateResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__delegateRequest
-#define SOAP_TYPE__ngwm__delegateRequest (171)
+#define SOAP_TYPE__ngwm__delegateRequest (188)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__delegateRequest(struct soap*, const char*, int, const _ngwm__delegateRequest *, const char*);
@@ -2146,7 +2522,7 @@ SOAP_FMAC5 _ngwm__delegateRequest * SOAP_FMAC6 soap_instantiate__ngwm__delegateR
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__delegateRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__declineResponse
-#define SOAP_TYPE__ngwm__declineResponse (170)
+#define SOAP_TYPE__ngwm__declineResponse (187)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__declineResponse(struct soap*, const char*, int, const _ngwm__declineResponse *, const char*);
@@ -2158,7 +2534,7 @@ SOAP_FMAC5 _ngwm__declineResponse * SOAP_FMAC6 soap_instantiate__ngwm__declineRe
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__declineResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__declineRequest
-#define SOAP_TYPE__ngwm__declineRequest (169)
+#define SOAP_TYPE__ngwm__declineRequest (186)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__declineRequest(struct soap*, const char*, int, const _ngwm__declineRequest *, const char*);
@@ -2170,7 +2546,7 @@ SOAP_FMAC5 _ngwm__declineRequest * SOAP_FMAC6 soap_instantiate__ngwm__declineReq
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__declineRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__createSignatureResponse
-#define SOAP_TYPE__ngwm__createSignatureResponse (168)
+#define SOAP_TYPE__ngwm__createSignatureResponse (185)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createSignatureResponse(struct soap*, const char*, int, const _ngwm__createSignatureResponse *, const char*);
@@ -2182,7 +2558,7 @@ SOAP_FMAC5 _ngwm__createSignatureResponse * SOAP_FMAC6 soap_instantiate__ngwm__c
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createSignatureResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__createSignatureRequest
-#define SOAP_TYPE__ngwm__createSignatureRequest (167)
+#define SOAP_TYPE__ngwm__createSignatureRequest (184)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createSignatureRequest(struct soap*, const char*, int, const _ngwm__createSignatureRequest *, const char*);
@@ -2194,7 +2570,7 @@ SOAP_FMAC5 _ngwm__createSignatureRequest * SOAP_FMAC6 soap_instantiate__ngwm__cr
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createSignatureRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__createProxyAccessResponse
-#define SOAP_TYPE__ngwm__createProxyAccessResponse (166)
+#define SOAP_TYPE__ngwm__createProxyAccessResponse (183)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createProxyAccessResponse(struct soap*, const char*, int, const _ngwm__createProxyAccessResponse *, const char*);
@@ -2206,7 +2582,7 @@ SOAP_FMAC5 _ngwm__createProxyAccessResponse * SOAP_FMAC6 soap_instantiate__ngwm_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createProxyAccessResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__createProxyAccessRequest
-#define SOAP_TYPE__ngwm__createProxyAccessRequest (165)
+#define SOAP_TYPE__ngwm__createProxyAccessRequest (182)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createProxyAccessRequest(struct soap*, const char*, int, const _ngwm__createProxyAccessRequest *, const char*);
@@ -2218,7 +2594,7 @@ SOAP_FMAC5 _ngwm__createProxyAccessRequest * SOAP_FMAC6 soap_instantiate__ngwm__
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createProxyAccessRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__createJunkEntryResponse
-#define SOAP_TYPE__ngwm__createJunkEntryResponse (164)
+#define SOAP_TYPE__ngwm__createJunkEntryResponse (181)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createJunkEntryResponse(struct soap*, const char*, int, const _ngwm__createJunkEntryResponse *, const char*);
@@ -2230,7 +2606,7 @@ SOAP_FMAC5 _ngwm__createJunkEntryResponse * SOAP_FMAC6 soap_instantiate__ngwm__c
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createJunkEntryResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__createJunkEntryRequest
-#define SOAP_TYPE__ngwm__createJunkEntryRequest (163)
+#define SOAP_TYPE__ngwm__createJunkEntryRequest (180)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createJunkEntryRequest(struct soap*, const char*, int, const _ngwm__createJunkEntryRequest *, const char*);
@@ -2241,8 +2617,32 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__createJunkEntryRequest(struct soap
 SOAP_FMAC5 _ngwm__createJunkEntryRequest * SOAP_FMAC6 soap_instantiate__ngwm__createJunkEntryRequest(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createJunkEntryRequest(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE__ngwm__createItemsResponse
+#define SOAP_TYPE__ngwm__createItemsResponse (179)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createItemsResponse(struct soap*, const char*, int, const _ngwm__createItemsResponse *, const char*);
+SOAP_FMAC3 _ngwm__createItemsResponse * SOAP_FMAC4 soap_get__ngwm__createItemsResponse(struct soap*, _ngwm__createItemsResponse *, const char*, const char*);
+SOAP_FMAC3 _ngwm__createItemsResponse * SOAP_FMAC4 soap_in__ngwm__createItemsResponse(struct soap*, const char*, _ngwm__createItemsResponse *, const char*);
+SOAP_FMAC5 _ngwm__createItemsResponse * SOAP_FMAC6 soap_new__ngwm__createItemsResponse(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__createItemsResponse(struct soap*, _ngwm__createItemsResponse*);
+SOAP_FMAC5 _ngwm__createItemsResponse * SOAP_FMAC6 soap_instantiate__ngwm__createItemsResponse(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createItemsResponse(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE__ngwm__createItemsRequest
+#define SOAP_TYPE__ngwm__createItemsRequest (178)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createItemsRequest(struct soap*, const char*, int, const _ngwm__createItemsRequest *, const char*);
+SOAP_FMAC3 _ngwm__createItemsRequest * SOAP_FMAC4 soap_get__ngwm__createItemsRequest(struct soap*, _ngwm__createItemsRequest *, const char*, const char*);
+SOAP_FMAC3 _ngwm__createItemsRequest * SOAP_FMAC4 soap_in__ngwm__createItemsRequest(struct soap*, const char*, _ngwm__createItemsRequest *, const char*);
+SOAP_FMAC5 _ngwm__createItemsRequest * SOAP_FMAC6 soap_new__ngwm__createItemsRequest(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__createItemsRequest(struct soap*, _ngwm__createItemsRequest*);
+SOAP_FMAC5 _ngwm__createItemsRequest * SOAP_FMAC6 soap_instantiate__ngwm__createItemsRequest(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createItemsRequest(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE__ngwm__createItemResponse
-#define SOAP_TYPE__ngwm__createItemResponse (162)
+#define SOAP_TYPE__ngwm__createItemResponse (177)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createItemResponse(struct soap*, const char*, int, const _ngwm__createItemResponse *, const char*);
@@ -2254,7 +2654,7 @@ SOAP_FMAC5 _ngwm__createItemResponse * SOAP_FMAC6 soap_instantiate__ngwm__create
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createItemResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__createItemRequest
-#define SOAP_TYPE__ngwm__createItemRequest (161)
+#define SOAP_TYPE__ngwm__createItemRequest (176)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createItemRequest(struct soap*, const char*, int, const _ngwm__createItemRequest *, const char*);
@@ -2266,7 +2666,7 @@ SOAP_FMAC5 _ngwm__createItemRequest * SOAP_FMAC6 soap_instantiate__ngwm__createI
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createItemRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__createCursorResponse
-#define SOAP_TYPE__ngwm__createCursorResponse (160)
+#define SOAP_TYPE__ngwm__createCursorResponse (175)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createCursorResponse(struct soap*, const char*, int, const _ngwm__createCursorResponse *, const char*);
@@ -2278,7 +2678,7 @@ SOAP_FMAC5 _ngwm__createCursorResponse * SOAP_FMAC6 soap_instantiate__ngwm__crea
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createCursorResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__createCursorRequest
-#define SOAP_TYPE__ngwm__createCursorRequest (159)
+#define SOAP_TYPE__ngwm__createCursorRequest (174)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createCursorRequest(struct soap*, const char*, int, const _ngwm__createCursorRequest *, const char*);
@@ -2290,7 +2690,7 @@ SOAP_FMAC5 _ngwm__createCursorRequest * SOAP_FMAC6 soap_instantiate__ngwm__creat
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createCursorRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__completeResponse
-#define SOAP_TYPE__ngwm__completeResponse (158)
+#define SOAP_TYPE__ngwm__completeResponse (173)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__completeResponse(struct soap*, const char*, int, const _ngwm__completeResponse *, const char*);
@@ -2302,7 +2702,7 @@ SOAP_FMAC5 _ngwm__completeResponse * SOAP_FMAC6 soap_instantiate__ngwm__complete
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__completeResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__completeRequest
-#define SOAP_TYPE__ngwm__completeRequest (157)
+#define SOAP_TYPE__ngwm__completeRequest (172)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__completeRequest(struct soap*, const char*, int, const _ngwm__completeRequest *, const char*);
@@ -2314,7 +2714,7 @@ SOAP_FMAC5 _ngwm__completeRequest * SOAP_FMAC6 soap_instantiate__ngwm__completeR
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__completeRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__closeFreeBusySessionResponse
-#define SOAP_TYPE__ngwm__closeFreeBusySessionResponse (156)
+#define SOAP_TYPE__ngwm__closeFreeBusySessionResponse (171)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__closeFreeBusySessionResponse(struct soap*, const char*, int, const _ngwm__closeFreeBusySessionResponse *, const char*);
@@ -2326,7 +2726,7 @@ SOAP_FMAC5 _ngwm__closeFreeBusySessionResponse * SOAP_FMAC6 soap_instantiate__ng
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__closeFreeBusySessionResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__closeFreeBusySessionRequest
-#define SOAP_TYPE__ngwm__closeFreeBusySessionRequest (155)
+#define SOAP_TYPE__ngwm__closeFreeBusySessionRequest (170)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__closeFreeBusySessionRequest(struct soap*, const char*, int, const _ngwm__closeFreeBusySessionRequest *, const char*);
@@ -2338,7 +2738,7 @@ SOAP_FMAC5 _ngwm__closeFreeBusySessionRequest * SOAP_FMAC6 soap_instantiate__ngw
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__closeFreeBusySessionRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__addMembersResponse
-#define SOAP_TYPE__ngwm__addMembersResponse (154)
+#define SOAP_TYPE__ngwm__addMembersResponse (169)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__addMembersResponse(struct soap*, const char*, int, const _ngwm__addMembersResponse *, const char*);
@@ -2350,7 +2750,7 @@ SOAP_FMAC5 _ngwm__addMembersResponse * SOAP_FMAC6 soap_instantiate__ngwm__addMem
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__addMembersResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__addMembersRequest
-#define SOAP_TYPE__ngwm__addMembersRequest (153)
+#define SOAP_TYPE__ngwm__addMembersRequest (168)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__addMembersRequest(struct soap*, const char*, int, const _ngwm__addMembersRequest *, const char*);
@@ -2362,7 +2762,7 @@ SOAP_FMAC5 _ngwm__addMembersRequest * SOAP_FMAC6 soap_instantiate__ngwm__addMemb
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__addMembersRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__addItemsResponse
-#define SOAP_TYPE__ngwm__addItemsResponse (152)
+#define SOAP_TYPE__ngwm__addItemsResponse (167)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__addItemsResponse(struct soap*, const char*, int, const _ngwm__addItemsResponse *, const char*);
@@ -2374,7 +2774,7 @@ SOAP_FMAC5 _ngwm__addItemsResponse * SOAP_FMAC6 soap_instantiate__ngwm__addItems
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__addItemsResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__addItemsRequest
-#define SOAP_TYPE__ngwm__addItemsRequest (151)
+#define SOAP_TYPE__ngwm__addItemsRequest (166)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__addItemsRequest(struct soap*, const char*, int, const _ngwm__addItemsRequest *, const char*);
@@ -2386,7 +2786,7 @@ SOAP_FMAC5 _ngwm__addItemsRequest * SOAP_FMAC6 soap_instantiate__ngwm__addItemsR
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__addItemsRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__addItemResponse
-#define SOAP_TYPE__ngwm__addItemResponse (150)
+#define SOAP_TYPE__ngwm__addItemResponse (165)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__addItemResponse(struct soap*, const char*, int, const _ngwm__addItemResponse *, const char*);
@@ -2398,7 +2798,7 @@ SOAP_FMAC5 _ngwm__addItemResponse * SOAP_FMAC6 soap_instantiate__ngwm__addItemRe
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__addItemResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__addItemRequest
-#define SOAP_TYPE__ngwm__addItemRequest (149)
+#define SOAP_TYPE__ngwm__addItemRequest (164)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__addItemRequest(struct soap*, const char*, int, const _ngwm__addItemRequest *, const char*);
@@ -2410,7 +2810,7 @@ SOAP_FMAC5 _ngwm__addItemRequest * SOAP_FMAC6 soap_instantiate__ngwm__addItemReq
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__addItemRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__acceptShareResponse
-#define SOAP_TYPE__ngwm__acceptShareResponse (148)
+#define SOAP_TYPE__ngwm__acceptShareResponse (163)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__acceptShareResponse(struct soap*, const char*, int, const _ngwm__acceptShareResponse *, const char*);
@@ -2422,7 +2822,7 @@ SOAP_FMAC5 _ngwm__acceptShareResponse * SOAP_FMAC6 soap_instantiate__ngwm__accep
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__acceptShareResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__acceptShareRequest
-#define SOAP_TYPE__ngwm__acceptShareRequest (147)
+#define SOAP_TYPE__ngwm__acceptShareRequest (162)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__acceptShareRequest(struct soap*, const char*, int, const _ngwm__acceptShareRequest *, const char*);
@@ -2434,7 +2834,7 @@ SOAP_FMAC5 _ngwm__acceptShareRequest * SOAP_FMAC6 soap_instantiate__ngwm__accept
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__acceptShareRequest(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__acceptResponse
-#define SOAP_TYPE__ngwm__acceptResponse (146)
+#define SOAP_TYPE__ngwm__acceptResponse (161)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__acceptResponse(struct soap*, const char*, int, const _ngwm__acceptResponse *, const char*);
@@ -2446,7 +2846,7 @@ SOAP_FMAC5 _ngwm__acceptResponse * SOAP_FMAC6 soap_instantiate__ngwm__acceptResp
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__acceptResponse(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE__ngwm__acceptRequest
-#define SOAP_TYPE__ngwm__acceptRequest (145)
+#define SOAP_TYPE__ngwm__acceptRequest (160)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__acceptRequest(struct soap*, const char*, int, const _ngwm__acceptRequest *, const char*);
@@ -2457,8 +2857,44 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__acceptRequest(struct soap*, _ngwm_
 SOAP_FMAC5 _ngwm__acceptRequest * SOAP_FMAC6 soap_instantiate__ngwm__acceptRequest(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__acceptRequest(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE_ngwt__VersionEvent
+#define SOAP_TYPE_ngwt__VersionEvent (159)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__VersionEvent(struct soap*, const char*, int, const ngwt__VersionEvent *, const char*);
+SOAP_FMAC3 ngwt__VersionEvent * SOAP_FMAC4 soap_get_ngwt__VersionEvent(struct soap*, ngwt__VersionEvent *, const char*, const char*);
+SOAP_FMAC3 ngwt__VersionEvent * SOAP_FMAC4 soap_in_ngwt__VersionEvent(struct soap*, const char*, ngwt__VersionEvent *, const char*);
+SOAP_FMAC5 ngwt__VersionEvent * SOAP_FMAC6 soap_new_ngwt__VersionEvent(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__VersionEvent(struct soap*, ngwt__VersionEvent*);
+SOAP_FMAC5 ngwt__VersionEvent * SOAP_FMAC6 soap_instantiate_ngwt__VersionEvent(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__VersionEvent(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_ngwt__Version
+#define SOAP_TYPE_ngwt__Version (158)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Version(struct soap*, const char*, int, const ngwt__Version *, const char*);
+SOAP_FMAC3 ngwt__Version * SOAP_FMAC4 soap_get_ngwt__Version(struct soap*, ngwt__Version *, const char*, const char*);
+SOAP_FMAC3 ngwt__Version * SOAP_FMAC4 soap_in_ngwt__Version(struct soap*, const char*, ngwt__Version *, const char*);
+SOAP_FMAC5 ngwt__Version * SOAP_FMAC6 soap_new_ngwt__Version(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__Version(struct soap*, ngwt__Version*);
+SOAP_FMAC5 ngwt__Version * SOAP_FMAC6 soap_instantiate_ngwt__Version(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Version(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_ngwt__UserList
+#define SOAP_TYPE_ngwt__UserList (157)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__UserList(struct soap*, const char*, int, const ngwt__UserList *, const char*);
+SOAP_FMAC3 ngwt__UserList * SOAP_FMAC4 soap_get_ngwt__UserList(struct soap*, ngwt__UserList *, const char*, const char*);
+SOAP_FMAC3 ngwt__UserList * SOAP_FMAC4 soap_in_ngwt__UserList(struct soap*, const char*, ngwt__UserList *, const char*);
+SOAP_FMAC5 ngwt__UserList * SOAP_FMAC6 soap_new_ngwt__UserList(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__UserList(struct soap*, ngwt__UserList*);
+SOAP_FMAC5 ngwt__UserList * SOAP_FMAC6 soap_instantiate_ngwt__UserList(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__UserList(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE_ngwt__UserInfo
-#define SOAP_TYPE_ngwt__UserInfo (144)
+#define SOAP_TYPE_ngwt__UserInfo (156)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__UserInfo(struct soap*, const char*, int, const ngwt__UserInfo *, const char*);
@@ -2470,7 +2906,7 @@ SOAP_FMAC5 ngwt__UserInfo * SOAP_FMAC6 soap_instantiate_ngwt__UserInfo(struct so
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__UserInfo(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__TrustedApplication
-#define SOAP_TYPE_ngwt__TrustedApplication (143)
+#define SOAP_TYPE_ngwt__TrustedApplication (155)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__TrustedApplication(struct soap*, const char*, int, const ngwt__TrustedApplication *, const char*);
@@ -2482,7 +2918,7 @@ SOAP_FMAC5 ngwt__TrustedApplication * SOAP_FMAC6 soap_instantiate_ngwt__TrustedA
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__TrustedApplication(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__TransferFailedStatus
-#define SOAP_TYPE_ngwt__TransferFailedStatus (142)
+#define SOAP_TYPE_ngwt__TransferFailedStatus (154)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__TransferFailedStatus(struct soap*, const char*, int, const ngwt__TransferFailedStatus *, const char*);
@@ -2494,7 +2930,7 @@ SOAP_FMAC5 ngwt__TransferFailedStatus * SOAP_FMAC6 soap_instantiate_ngwt__Transf
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__TransferFailedStatus(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__TimezoneList
-#define SOAP_TYPE_ngwt__TimezoneList (141)
+#define SOAP_TYPE_ngwt__TimezoneList (153)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__TimezoneList(struct soap*, const char*, int, const ngwt__TimezoneList *, const char*);
@@ -2506,7 +2942,7 @@ SOAP_FMAC5 ngwt__TimezoneList * SOAP_FMAC6 soap_instantiate_ngwt__TimezoneList(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__TimezoneList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__TimezoneComponent
-#define SOAP_TYPE_ngwt__TimezoneComponent (140)
+#define SOAP_TYPE_ngwt__TimezoneComponent (152)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__TimezoneComponent(struct soap*, const char*, int, const ngwt__TimezoneComponent *, const char*);
@@ -2518,7 +2954,7 @@ SOAP_FMAC5 ngwt__TimezoneComponent * SOAP_FMAC6 soap_instantiate_ngwt__TimezoneC
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__TimezoneComponent(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Timezone
-#define SOAP_TYPE_ngwt__Timezone (139)
+#define SOAP_TYPE_ngwt__Timezone (151)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Timezone(struct soap*, const char*, int, const ngwt__Timezone *, const char*);
@@ -2530,7 +2966,7 @@ SOAP_FMAC5 ngwt__Timezone * SOAP_FMAC6 soap_instantiate_ngwt__Timezone(struct so
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Timezone(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Task
-#define SOAP_TYPE_ngwt__Task (138)
+#define SOAP_TYPE_ngwt__Task (150)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Task(struct soap*, const char*, int, const ngwt__Task *, const char*);
@@ -2542,7 +2978,7 @@ SOAP_FMAC5 ngwt__Task * SOAP_FMAC6 soap_instantiate_ngwt__Task(struct soap*, int
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Task(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__SystemFolder
-#define SOAP_TYPE_ngwt__SystemFolder (137)
+#define SOAP_TYPE_ngwt__SystemFolder (149)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SystemFolder(struct soap*, const char*, int, const ngwt__SystemFolder *, const char*);
@@ -2554,7 +2990,7 @@ SOAP_FMAC5 ngwt__SystemFolder * SOAP_FMAC6 soap_instantiate_ngwt__SystemFolder(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__SystemFolder(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__StatusTracking
-#define SOAP_TYPE_ngwt__StatusTracking (136)
+#define SOAP_TYPE_ngwt__StatusTracking (148)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__StatusTracking(struct soap*, const char*, int, const ngwt__StatusTracking *, const char*);
@@ -2566,7 +3002,7 @@ SOAP_FMAC5 ngwt__StatusTracking * SOAP_FMAC6 soap_instantiate_ngwt__StatusTracki
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__StatusTracking(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Status
-#define SOAP_TYPE_ngwt__Status (135)
+#define SOAP_TYPE_ngwt__Status (147)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Status(struct soap*, const char*, int, const ngwt__Status *, const char*);
@@ -2577,8 +3013,20 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__Status(struct soap*, ngwt__Status*)
 SOAP_FMAC5 ngwt__Status * SOAP_FMAC6 soap_instantiate_ngwt__Status(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Status(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE_ngwt__SMimeOperation
+#define SOAP_TYPE_ngwt__SMimeOperation (146)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SMimeOperation(struct soap*, const char*, int, const ngwt__SMimeOperation *, const char*);
+SOAP_FMAC3 ngwt__SMimeOperation * SOAP_FMAC4 soap_get_ngwt__SMimeOperation(struct soap*, ngwt__SMimeOperation *, const char*, const char*);
+SOAP_FMAC3 ngwt__SMimeOperation * SOAP_FMAC4 soap_in_ngwt__SMimeOperation(struct soap*, const char*, ngwt__SMimeOperation *, const char*);
+SOAP_FMAC5 ngwt__SMimeOperation * SOAP_FMAC6 soap_new_ngwt__SMimeOperation(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__SMimeOperation(struct soap*, ngwt__SMimeOperation*);
+SOAP_FMAC5 ngwt__SMimeOperation * SOAP_FMAC6 soap_instantiate_ngwt__SMimeOperation(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__SMimeOperation(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE_ngwt__SignatureData
-#define SOAP_TYPE_ngwt__SignatureData (134)
+#define SOAP_TYPE_ngwt__SignatureData (145)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SignatureData(struct soap*, const char*, int, const ngwt__SignatureData *, const char*);
@@ -2590,7 +3038,7 @@ SOAP_FMAC5 ngwt__SignatureData * SOAP_FMAC6 soap_instantiate_ngwt__SignatureData
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__SignatureData(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Signatures
-#define SOAP_TYPE_ngwt__Signatures (133)
+#define SOAP_TYPE_ngwt__Signatures (144)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Signatures(struct soap*, const char*, int, const ngwt__Signatures *, const char*);
@@ -2602,7 +3050,7 @@ SOAP_FMAC5 ngwt__Signatures * SOAP_FMAC6 soap_instantiate_ngwt__Signatures(struc
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Signatures(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Signature
-#define SOAP_TYPE_ngwt__Signature (132)
+#define SOAP_TYPE_ngwt__Signature (143)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Signature(struct soap*, const char*, int, const ngwt__Signature *, const char*);
@@ -2614,7 +3062,7 @@ SOAP_FMAC5 ngwt__Signature * SOAP_FMAC6 soap_instantiate_ngwt__Signature(struct 
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Signature(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__SharedNotification
-#define SOAP_TYPE_ngwt__SharedNotification (131)
+#define SOAP_TYPE_ngwt__SharedNotification (142)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SharedNotification(struct soap*, const char*, int, const ngwt__SharedNotification *, const char*);
@@ -2626,7 +3074,7 @@ SOAP_FMAC5 ngwt__SharedNotification * SOAP_FMAC6 soap_instantiate_ngwt__SharedNo
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__SharedNotification(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__SharedFolderNotification
-#define SOAP_TYPE_ngwt__SharedFolderNotification (130)
+#define SOAP_TYPE_ngwt__SharedFolderNotification (141)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SharedFolderNotification(struct soap*, const char*, int, const ngwt__SharedFolderNotification *, const char*);
@@ -2638,7 +3086,7 @@ SOAP_FMAC5 ngwt__SharedFolderNotification * SOAP_FMAC6 soap_instantiate_ngwt__Sh
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__SharedFolderNotification(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__SharedFolder
-#define SOAP_TYPE_ngwt__SharedFolder (129)
+#define SOAP_TYPE_ngwt__SharedFolder (140)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SharedFolder(struct soap*, const char*, int, const ngwt__SharedFolder *, const char*);
@@ -2650,7 +3098,7 @@ SOAP_FMAC5 ngwt__SharedFolder * SOAP_FMAC6 soap_instantiate_ngwt__SharedFolder(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__SharedFolder(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__SettingsList
-#define SOAP_TYPE_ngwt__SettingsList (128)
+#define SOAP_TYPE_ngwt__SettingsList (139)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SettingsList(struct soap*, const char*, int, const ngwt__SettingsList *, const char*);
@@ -2662,7 +3110,7 @@ SOAP_FMAC5 ngwt__SettingsList * SOAP_FMAC6 soap_instantiate_ngwt__SettingsList(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__SettingsList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__SettingsGroup
-#define SOAP_TYPE_ngwt__SettingsGroup (127)
+#define SOAP_TYPE_ngwt__SettingsGroup (138)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SettingsGroup(struct soap*, const char*, int, const ngwt__SettingsGroup *, const char*);
@@ -2674,7 +3122,7 @@ SOAP_FMAC5 ngwt__SettingsGroup * SOAP_FMAC6 soap_instantiate_ngwt__SettingsGroup
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__SettingsGroup(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Settings
-#define SOAP_TYPE_ngwt__Settings (126)
+#define SOAP_TYPE_ngwt__Settings (137)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Settings(struct soap*, const char*, int, const ngwt__Settings *, const char*);
@@ -2686,7 +3134,7 @@ SOAP_FMAC5 ngwt__Settings * SOAP_FMAC6 soap_instantiate_ngwt__Settings(struct so
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Settings(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__SendOptions
-#define SOAP_TYPE_ngwt__SendOptions (125)
+#define SOAP_TYPE_ngwt__SendOptions (136)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SendOptions(struct soap*, const char*, int, const ngwt__SendOptions *, const char*);
@@ -2698,7 +3146,7 @@ SOAP_FMAC5 ngwt__SendOptions * SOAP_FMAC6 soap_instantiate_ngwt__SendOptions(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__SendOptions(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__SendOptionsRequestReply
-#define SOAP_TYPE_ngwt__SendOptionsRequestReply (124)
+#define SOAP_TYPE_ngwt__SendOptionsRequestReply (135)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SendOptionsRequestReply(struct soap*, const char*, int, const ngwt__SendOptionsRequestReply *, const char*);
@@ -2709,8 +3157,56 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__SendOptionsRequestReply(struct soap
 SOAP_FMAC5 ngwt__SendOptionsRequestReply * SOAP_FMAC6 soap_instantiate_ngwt__SendOptionsRequestReply(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__SendOptionsRequestReply(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE_ngwt__RuleList
+#define SOAP_TYPE_ngwt__RuleList (134)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__RuleList(struct soap*, const char*, int, const ngwt__RuleList *, const char*);
+SOAP_FMAC3 ngwt__RuleList * SOAP_FMAC4 soap_get_ngwt__RuleList(struct soap*, ngwt__RuleList *, const char*, const char*);
+SOAP_FMAC3 ngwt__RuleList * SOAP_FMAC4 soap_in_ngwt__RuleList(struct soap*, const char*, ngwt__RuleList *, const char*);
+SOAP_FMAC5 ngwt__RuleList * SOAP_FMAC6 soap_new_ngwt__RuleList(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__RuleList(struct soap*, ngwt__RuleList*);
+SOAP_FMAC5 ngwt__RuleList * SOAP_FMAC6 soap_instantiate_ngwt__RuleList(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__RuleList(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_ngwt__RuleActionList
+#define SOAP_TYPE_ngwt__RuleActionList (133)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__RuleActionList(struct soap*, const char*, int, const ngwt__RuleActionList *, const char*);
+SOAP_FMAC3 ngwt__RuleActionList * SOAP_FMAC4 soap_get_ngwt__RuleActionList(struct soap*, ngwt__RuleActionList *, const char*, const char*);
+SOAP_FMAC3 ngwt__RuleActionList * SOAP_FMAC4 soap_in_ngwt__RuleActionList(struct soap*, const char*, ngwt__RuleActionList *, const char*);
+SOAP_FMAC5 ngwt__RuleActionList * SOAP_FMAC6 soap_new_ngwt__RuleActionList(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__RuleActionList(struct soap*, ngwt__RuleActionList*);
+SOAP_FMAC5 ngwt__RuleActionList * SOAP_FMAC6 soap_instantiate_ngwt__RuleActionList(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__RuleActionList(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_ngwt__RuleAction
+#define SOAP_TYPE_ngwt__RuleAction (132)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__RuleAction(struct soap*, const char*, int, const ngwt__RuleAction *, const char*);
+SOAP_FMAC3 ngwt__RuleAction * SOAP_FMAC4 soap_get_ngwt__RuleAction(struct soap*, ngwt__RuleAction *, const char*, const char*);
+SOAP_FMAC3 ngwt__RuleAction * SOAP_FMAC4 soap_in_ngwt__RuleAction(struct soap*, const char*, ngwt__RuleAction *, const char*);
+SOAP_FMAC5 ngwt__RuleAction * SOAP_FMAC6 soap_new_ngwt__RuleAction(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__RuleAction(struct soap*, ngwt__RuleAction*);
+SOAP_FMAC5 ngwt__RuleAction * SOAP_FMAC6 soap_instantiate_ngwt__RuleAction(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__RuleAction(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_ngwt__Rule
+#define SOAP_TYPE_ngwt__Rule (131)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Rule(struct soap*, const char*, int, const ngwt__Rule *, const char*);
+SOAP_FMAC3 ngwt__Rule * SOAP_FMAC4 soap_get_ngwt__Rule(struct soap*, ngwt__Rule *, const char*, const char*);
+SOAP_FMAC3 ngwt__Rule * SOAP_FMAC4 soap_in_ngwt__Rule(struct soap*, const char*, ngwt__Rule *, const char*);
+SOAP_FMAC5 ngwt__Rule * SOAP_FMAC6 soap_new_ngwt__Rule(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__Rule(struct soap*, ngwt__Rule*);
+SOAP_FMAC5 ngwt__Rule * SOAP_FMAC6 soap_instantiate_ngwt__Rule(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Rule(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE_ngwt__Rights
-#define SOAP_TYPE_ngwt__Rights (123)
+#define SOAP_TYPE_ngwt__Rights (130)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Rights(struct soap*, const char*, int, const ngwt__Rights *, const char*);
@@ -2722,7 +3218,7 @@ SOAP_FMAC5 ngwt__Rights * SOAP_FMAC6 soap_instantiate_ngwt__Rights(struct soap*,
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Rights(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ReturnNotificationOptions
-#define SOAP_TYPE_ngwt__ReturnNotificationOptions (122)
+#define SOAP_TYPE_ngwt__ReturnNotificationOptions (129)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ReturnNotificationOptions(struct soap*, const char*, int, const ngwt__ReturnNotificationOptions *, const char*);
@@ -2734,7 +3230,7 @@ SOAP_FMAC5 ngwt__ReturnNotificationOptions * SOAP_FMAC6 soap_instantiate_ngwt__R
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ReturnNotificationOptions(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ReturnNotification
-#define SOAP_TYPE_ngwt__ReturnNotification (121)
+#define SOAP_TYPE_ngwt__ReturnNotification (128)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ReturnNotification(struct soap*, const char*, int, const ngwt__ReturnNotification *, const char*);
@@ -2746,7 +3242,7 @@ SOAP_FMAC5 ngwt__ReturnNotification * SOAP_FMAC6 soap_instantiate_ngwt__ReturnNo
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ReturnNotification(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Resource
-#define SOAP_TYPE_ngwt__Resource (120)
+#define SOAP_TYPE_ngwt__Resource (127)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Resource(struct soap*, const char*, int, const ngwt__Resource *, const char*);
@@ -2758,7 +3254,7 @@ SOAP_FMAC5 ngwt__Resource * SOAP_FMAC6 soap_instantiate_ngwt__Resource(struct so
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Resource(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ReferenceInfo
-#define SOAP_TYPE_ngwt__ReferenceInfo (119)
+#define SOAP_TYPE_ngwt__ReferenceInfo (126)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ReferenceInfo(struct soap*, const char*, int, const ngwt__ReferenceInfo *, const char*);
@@ -2770,7 +3266,7 @@ SOAP_FMAC5 ngwt__ReferenceInfo * SOAP_FMAC6 soap_instantiate_ngwt__ReferenceInfo
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ReferenceInfo(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__RecurrenceRule
-#define SOAP_TYPE_ngwt__RecurrenceRule (118)
+#define SOAP_TYPE_ngwt__RecurrenceRule (125)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__RecurrenceRule(struct soap*, const char*, int, const ngwt__RecurrenceRule *, const char*);
@@ -2782,7 +3278,7 @@ SOAP_FMAC5 ngwt__RecurrenceRule * SOAP_FMAC6 soap_instantiate_ngwt__RecurrenceRu
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__RecurrenceRule(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__RecurrenceDateType
-#define SOAP_TYPE_ngwt__RecurrenceDateType (117)
+#define SOAP_TYPE_ngwt__RecurrenceDateType (124)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__RecurrenceDateType(struct soap*, const char*, int, const ngwt__RecurrenceDateType *, const char*);
@@ -2794,7 +3290,7 @@ SOAP_FMAC5 ngwt__RecurrenceDateType * SOAP_FMAC6 soap_instantiate_ngwt__Recurren
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__RecurrenceDateType(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__RecipientStatus
-#define SOAP_TYPE_ngwt__RecipientStatus (116)
+#define SOAP_TYPE_ngwt__RecipientStatus (123)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__RecipientStatus(struct soap*, const char*, int, const ngwt__RecipientStatus *, const char*);
@@ -2806,7 +3302,7 @@ SOAP_FMAC5 ngwt__RecipientStatus * SOAP_FMAC6 soap_instantiate_ngwt__RecipientSt
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__RecipientStatus(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__RecipientList
-#define SOAP_TYPE_ngwt__RecipientList (115)
+#define SOAP_TYPE_ngwt__RecipientList (122)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__RecipientList(struct soap*, const char*, int, const ngwt__RecipientList *, const char*);
@@ -2818,7 +3314,7 @@ SOAP_FMAC5 ngwt__RecipientList * SOAP_FMAC6 soap_instantiate_ngwt__RecipientList
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__RecipientList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Recipient
-#define SOAP_TYPE_ngwt__Recipient (114)
+#define SOAP_TYPE_ngwt__Recipient (121)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Recipient(struct soap*, const char*, int, const ngwt__Recipient *, const char*);
@@ -2830,7 +3326,7 @@ SOAP_FMAC5 ngwt__Recipient * SOAP_FMAC6 soap_instantiate_ngwt__Recipient(struct 
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Recipient(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__QueryTarget
-#define SOAP_TYPE_ngwt__QueryTarget (113)
+#define SOAP_TYPE_ngwt__QueryTarget (120)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__QueryTarget(struct soap*, const char*, int, const ngwt__QueryTarget *, const char*);
@@ -2842,7 +3338,7 @@ SOAP_FMAC5 ngwt__QueryTarget * SOAP_FMAC6 soap_instantiate_ngwt__QueryTarget(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__QueryTarget(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__QueryFolder
-#define SOAP_TYPE_ngwt__QueryFolder (112)
+#define SOAP_TYPE_ngwt__QueryFolder (119)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__QueryFolder(struct soap*, const char*, int, const ngwt__QueryFolder *, const char*);
@@ -2854,7 +3350,7 @@ SOAP_FMAC5 ngwt__QueryFolder * SOAP_FMAC6 soap_instantiate_ngwt__QueryFolder(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__QueryFolder(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Query
-#define SOAP_TYPE_ngwt__Query (111)
+#define SOAP_TYPE_ngwt__Query (118)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Query(struct soap*, const char*, int, const ngwt__Query *, const char*);
@@ -2866,7 +3362,7 @@ SOAP_FMAC5 ngwt__Query * SOAP_FMAC6 soap_instantiate_ngwt__Query(struct soap*, i
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Query(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ProxyList
-#define SOAP_TYPE_ngwt__ProxyList (110)
+#define SOAP_TYPE_ngwt__ProxyList (117)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ProxyList(struct soap*, const char*, int, const ngwt__ProxyList *, const char*);
@@ -2877,8 +3373,20 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__ProxyList(struct soap*, ngwt__Proxy
 SOAP_FMAC5 ngwt__ProxyList * SOAP_FMAC6 soap_instantiate_ngwt__ProxyList(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ProxyList(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE_ngwt__ProxyUser
+#define SOAP_TYPE_ngwt__ProxyUser (116)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ProxyUser(struct soap*, const char*, int, const ngwt__ProxyUser *, const char*);
+SOAP_FMAC3 ngwt__ProxyUser * SOAP_FMAC4 soap_get_ngwt__ProxyUser(struct soap*, ngwt__ProxyUser *, const char*, const char*);
+SOAP_FMAC3 ngwt__ProxyUser * SOAP_FMAC4 soap_in_ngwt__ProxyUser(struct soap*, const char*, ngwt__ProxyUser *, const char*);
+SOAP_FMAC5 ngwt__ProxyUser * SOAP_FMAC6 soap_new_ngwt__ProxyUser(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__ProxyUser(struct soap*, ngwt__ProxyUser*);
+SOAP_FMAC5 ngwt__ProxyUser * SOAP_FMAC6 soap_instantiate_ngwt__ProxyUser(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ProxyUser(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE_ngwt__Proxy
-#define SOAP_TYPE_ngwt__Proxy (109)
+#define SOAP_TYPE_ngwt__Proxy (115)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Proxy(struct soap*, const char*, int, const ngwt__Proxy *, const char*);
@@ -2890,7 +3398,7 @@ SOAP_FMAC5 ngwt__Proxy * SOAP_FMAC6 soap_instantiate_ngwt__Proxy(struct soap*, i
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Proxy(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ProblemList
-#define SOAP_TYPE_ngwt__ProblemList (108)
+#define SOAP_TYPE_ngwt__ProblemList (114)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ProblemList(struct soap*, const char*, int, const ngwt__ProblemList *, const char*);
@@ -2902,7 +3410,7 @@ SOAP_FMAC5 ngwt__ProblemList * SOAP_FMAC6 soap_instantiate_ngwt__ProblemList(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ProblemList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ProblemEntry
-#define SOAP_TYPE_ngwt__ProblemEntry (107)
+#define SOAP_TYPE_ngwt__ProblemEntry (113)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ProblemEntry(struct soap*, const char*, int, const ngwt__ProblemEntry *, const char*);
@@ -2914,7 +3422,7 @@ SOAP_FMAC5 ngwt__ProblemEntry * SOAP_FMAC6 soap_instantiate_ngwt__ProblemEntry(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ProblemEntry(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__PostalAddressList
-#define SOAP_TYPE_ngwt__PostalAddressList (106)
+#define SOAP_TYPE_ngwt__PostalAddressList (112)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__PostalAddressList(struct soap*, const char*, int, const ngwt__PostalAddressList *, const char*);
@@ -2926,7 +3434,7 @@ SOAP_FMAC5 ngwt__PostalAddressList * SOAP_FMAC6 soap_instantiate_ngwt__PostalAdd
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__PostalAddressList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__PostalAddress
-#define SOAP_TYPE_ngwt__PostalAddress (105)
+#define SOAP_TYPE_ngwt__PostalAddress (111)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__PostalAddress(struct soap*, const char*, int, const ngwt__PostalAddress *, const char*);
@@ -2938,7 +3446,7 @@ SOAP_FMAC5 ngwt__PostalAddress * SOAP_FMAC6 soap_instantiate_ngwt__PostalAddress
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__PostalAddress(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__PlainText
-#define SOAP_TYPE_ngwt__PlainText (104)
+#define SOAP_TYPE_ngwt__PlainText (110)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__PlainText(struct soap*, const char*, int, const ngwt__PlainText *, const char*);
@@ -2950,7 +3458,7 @@ SOAP_FMAC5 ngwt__PlainText * SOAP_FMAC6 soap_instantiate_ngwt__PlainText(struct 
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__PlainText(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__PhoneNumber
-#define SOAP_TYPE_ngwt__PhoneNumber (103)
+#define SOAP_TYPE_ngwt__PhoneNumber (109)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__PhoneNumber(struct soap*, const char*, int, const ngwt__PhoneNumber *, const char*);
@@ -2962,7 +3470,7 @@ SOAP_FMAC5 ngwt__PhoneNumber * SOAP_FMAC6 soap_instantiate_ngwt__PhoneNumber(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__PhoneNumber(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__PhoneMessage
-#define SOAP_TYPE_ngwt__PhoneMessage (102)
+#define SOAP_TYPE_ngwt__PhoneMessage (108)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__PhoneMessage(struct soap*, const char*, int, const ngwt__PhoneMessage *, const char*);
@@ -2974,7 +3482,7 @@ SOAP_FMAC5 ngwt__PhoneMessage * SOAP_FMAC6 soap_instantiate_ngwt__PhoneMessage(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__PhoneMessage(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__PhoneList
-#define SOAP_TYPE_ngwt__PhoneList (101)
+#define SOAP_TYPE_ngwt__PhoneList (107)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__PhoneList(struct soap*, const char*, int, const ngwt__PhoneList *, const char*);
@@ -2986,7 +3494,7 @@ SOAP_FMAC5 ngwt__PhoneList * SOAP_FMAC6 soap_instantiate_ngwt__PhoneList(struct 
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__PhoneList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__PhoneFlags
-#define SOAP_TYPE_ngwt__PhoneFlags (100)
+#define SOAP_TYPE_ngwt__PhoneFlags (106)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__PhoneFlags(struct soap*, const char*, int, const ngwt__PhoneFlags *, const char*);
@@ -2998,7 +3506,7 @@ SOAP_FMAC5 ngwt__PhoneFlags * SOAP_FMAC6 soap_instantiate_ngwt__PhoneFlags(struc
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__PhoneFlags(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__PersonalInfo
-#define SOAP_TYPE_ngwt__PersonalInfo (99)
+#define SOAP_TYPE_ngwt__PersonalInfo (105)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__PersonalInfo(struct soap*, const char*, int, const ngwt__PersonalInfo *, const char*);
@@ -3010,7 +3518,7 @@ SOAP_FMAC5 ngwt__PersonalInfo * SOAP_FMAC6 soap_instantiate_ngwt__PersonalInfo(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__PersonalInfo(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Organization
-#define SOAP_TYPE_ngwt__Organization (98)
+#define SOAP_TYPE_ngwt__Organization (104)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Organization(struct soap*, const char*, int, const ngwt__Organization *, const char*);
@@ -3022,7 +3530,7 @@ SOAP_FMAC5 ngwt__Organization * SOAP_FMAC6 soap_instantiate_ngwt__Organization(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Organization(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__OfficeInfo
-#define SOAP_TYPE_ngwt__OfficeInfo (97)
+#define SOAP_TYPE_ngwt__OfficeInfo (103)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__OfficeInfo(struct soap*, const char*, int, const ngwt__OfficeInfo *, const char*);
@@ -3034,7 +3542,7 @@ SOAP_FMAC5 ngwt__OfficeInfo * SOAP_FMAC6 soap_instantiate_ngwt__OfficeInfo(struc
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__OfficeInfo(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Note
-#define SOAP_TYPE_ngwt__Note (96)
+#define SOAP_TYPE_ngwt__Note (102)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Note(struct soap*, const char*, int, const ngwt__Note *, const char*);
@@ -3046,7 +3554,7 @@ SOAP_FMAC5 ngwt__Note * SOAP_FMAC6 soap_instantiate_ngwt__Note(struct soap*, int
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Note(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__NameAndEmail
-#define SOAP_TYPE_ngwt__NameAndEmail (95)
+#define SOAP_TYPE_ngwt__NameAndEmail (101)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__NameAndEmail(struct soap*, const char*, int, const ngwt__NameAndEmail *, const char*);
@@ -3058,7 +3566,7 @@ SOAP_FMAC5 ngwt__NameAndEmail * SOAP_FMAC6 soap_instantiate_ngwt__NameAndEmail(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__NameAndEmail(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__MonthList
-#define SOAP_TYPE_ngwt__MonthList (94)
+#define SOAP_TYPE_ngwt__MonthList (100)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__MonthList(struct soap*, const char*, int, const ngwt__MonthList *, const char*);
@@ -3070,7 +3578,7 @@ SOAP_FMAC5 ngwt__MonthList * SOAP_FMAC6 soap_instantiate_ngwt__MonthList(struct 
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__MonthList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ModifyItem
-#define SOAP_TYPE_ngwt__ModifyItem (93)
+#define SOAP_TYPE_ngwt__ModifyItem (99)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ModifyItem(struct soap*, const char*, int, const ngwt__ModifyItem *, const char*);
@@ -3082,7 +3590,7 @@ SOAP_FMAC5 ngwt__ModifyItem * SOAP_FMAC6 soap_instantiate_ngwt__ModifyItem(struc
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ModifyItem(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__MessagePart
-#define SOAP_TYPE_ngwt__MessagePart (92)
+#define SOAP_TYPE_ngwt__MessagePart (98)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__MessagePart(struct soap*, const char*, int, const ngwt__MessagePart *, const char*);
@@ -3094,7 +3602,7 @@ SOAP_FMAC5 ngwt__MessagePart * SOAP_FMAC6 soap_instantiate_ngwt__MessagePart(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__MessagePart(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__MessageBody
-#define SOAP_TYPE_ngwt__MessageBody (91)
+#define SOAP_TYPE_ngwt__MessageBody (97)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__MessageBody(struct soap*, const char*, int, const ngwt__MessageBody *, const char*);
@@ -3106,7 +3614,7 @@ SOAP_FMAC5 ngwt__MessageBody * SOAP_FMAC6 soap_instantiate_ngwt__MessageBody(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__MessageBody(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Mail
-#define SOAP_TYPE_ngwt__Mail (90)
+#define SOAP_TYPE_ngwt__Mail (96)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Mail(struct soap*, const char*, int, const ngwt__Mail *, const char*);
@@ -3118,7 +3626,7 @@ SOAP_FMAC5 ngwt__Mail * SOAP_FMAC6 soap_instantiate_ngwt__Mail(struct soap*, int
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Mail(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__LinkInfo
-#define SOAP_TYPE_ngwt__LinkInfo (89)
+#define SOAP_TYPE_ngwt__LinkInfo (95)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__LinkInfo(struct soap*, const char*, int, const ngwt__LinkInfo *, const char*);
@@ -3129,8 +3637,32 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__LinkInfo(struct soap*, ngwt__LinkIn
 SOAP_FMAC5 ngwt__LinkInfo * SOAP_FMAC6 soap_instantiate_ngwt__LinkInfo(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__LinkInfo(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE_ngwt__LibraryList
+#define SOAP_TYPE_ngwt__LibraryList (94)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__LibraryList(struct soap*, const char*, int, const ngwt__LibraryList *, const char*);
+SOAP_FMAC3 ngwt__LibraryList * SOAP_FMAC4 soap_get_ngwt__LibraryList(struct soap*, ngwt__LibraryList *, const char*, const char*);
+SOAP_FMAC3 ngwt__LibraryList * SOAP_FMAC4 soap_in_ngwt__LibraryList(struct soap*, const char*, ngwt__LibraryList *, const char*);
+SOAP_FMAC5 ngwt__LibraryList * SOAP_FMAC6 soap_new_ngwt__LibraryList(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__LibraryList(struct soap*, ngwt__LibraryList*);
+SOAP_FMAC5 ngwt__LibraryList * SOAP_FMAC6 soap_instantiate_ngwt__LibraryList(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__LibraryList(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_ngwt__Library
+#define SOAP_TYPE_ngwt__Library (93)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Library(struct soap*, const char*, int, const ngwt__Library *, const char*);
+SOAP_FMAC3 ngwt__Library * SOAP_FMAC4 soap_get_ngwt__Library(struct soap*, ngwt__Library *, const char*, const char*);
+SOAP_FMAC3 ngwt__Library * SOAP_FMAC4 soap_in_ngwt__Library(struct soap*, const char*, ngwt__Library *, const char*);
+SOAP_FMAC5 ngwt__Library * SOAP_FMAC6 soap_new_ngwt__Library(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__Library(struct soap*, ngwt__Library*);
+SOAP_FMAC5 ngwt__Library * SOAP_FMAC6 soap_instantiate_ngwt__Library(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Library(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE_ngwt__JunkHandlingList
-#define SOAP_TYPE_ngwt__JunkHandlingList (88)
+#define SOAP_TYPE_ngwt__JunkHandlingList (92)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__JunkHandlingList(struct soap*, const char*, int, const ngwt__JunkHandlingList *, const char*);
@@ -3142,7 +3674,7 @@ SOAP_FMAC5 ngwt__JunkHandlingList * SOAP_FMAC6 soap_instantiate_ngwt__JunkHandli
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__JunkHandlingList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__JunkEntry
-#define SOAP_TYPE_ngwt__JunkEntry (87)
+#define SOAP_TYPE_ngwt__JunkEntry (91)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__JunkEntry(struct soap*, const char*, int, const ngwt__JunkEntry *, const char*);
@@ -3154,7 +3686,7 @@ SOAP_FMAC5 ngwt__JunkEntry * SOAP_FMAC6 soap_instantiate_ngwt__JunkEntry(struct 
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__JunkEntry(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ItemStatus
-#define SOAP_TYPE_ngwt__ItemStatus (86)
+#define SOAP_TYPE_ngwt__ItemStatus (90)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ItemStatus(struct soap*, const char*, int, const ngwt__ItemStatus *, const char*);
@@ -3166,7 +3698,7 @@ SOAP_FMAC5 ngwt__ItemStatus * SOAP_FMAC6 soap_instantiate_ngwt__ItemStatus(struc
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ItemStatus(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Items
-#define SOAP_TYPE_ngwt__Items (85)
+#define SOAP_TYPE_ngwt__Items (89)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Items(struct soap*, const char*, int, const ngwt__Items *, const char*);
@@ -3178,7 +3710,7 @@ SOAP_FMAC5 ngwt__Items * SOAP_FMAC6 soap_instantiate_ngwt__Items(struct soap*, i
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Items(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ItemRefList
-#define SOAP_TYPE_ngwt__ItemRefList (84)
+#define SOAP_TYPE_ngwt__ItemRefList (88)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ItemRefList(struct soap*, const char*, int, const ngwt__ItemRefList *, const char*);
@@ -3190,7 +3722,7 @@ SOAP_FMAC5 ngwt__ItemRefList * SOAP_FMAC6 soap_instantiate_ngwt__ItemRefList(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ItemRefList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ItemRef
-#define SOAP_TYPE_ngwt__ItemRef (83)
+#define SOAP_TYPE_ngwt__ItemRef (87)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ItemRef(struct soap*, const char*, int, const ngwt__ItemRef *, const char*);
@@ -3202,7 +3734,7 @@ SOAP_FMAC5 ngwt__ItemRef * SOAP_FMAC6 soap_instantiate_ngwt__ItemRef(struct soap
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ItemRef(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ItemOptions
-#define SOAP_TYPE_ngwt__ItemOptions (82)
+#define SOAP_TYPE_ngwt__ItemOptions (86)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ItemOptions(struct soap*, const char*, int, const ngwt__ItemOptions *, const char*);
@@ -3214,7 +3746,7 @@ SOAP_FMAC5 ngwt__ItemOptions * SOAP_FMAC6 soap_instantiate_ngwt__ItemOptions(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ItemOptions(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ItemList
-#define SOAP_TYPE_ngwt__ItemList (81)
+#define SOAP_TYPE_ngwt__ItemList (85)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ItemList(struct soap*, const char*, int, const ngwt__ItemList *, const char*);
@@ -3226,7 +3758,7 @@ SOAP_FMAC5 ngwt__ItemList * SOAP_FMAC6 soap_instantiate_ngwt__ItemList(struct so
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ItemList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ItemChanges
-#define SOAP_TYPE_ngwt__ItemChanges (80)
+#define SOAP_TYPE_ngwt__ItemChanges (84)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ItemChanges(struct soap*, const char*, int, const ngwt__ItemChanges *, const char*);
@@ -3238,7 +3770,7 @@ SOAP_FMAC5 ngwt__ItemChanges * SOAP_FMAC6 soap_instantiate_ngwt__ItemChanges(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ItemChanges(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Item
-#define SOAP_TYPE_ngwt__Item (79)
+#define SOAP_TYPE_ngwt__Item (83)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Item(struct soap*, const char*, int, const ngwt__Item *, const char*);
@@ -3250,7 +3782,7 @@ SOAP_FMAC5 ngwt__Item * SOAP_FMAC6 soap_instantiate_ngwt__Item(struct soap*, int
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Item(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ImAddressList
-#define SOAP_TYPE_ngwt__ImAddressList (78)
+#define SOAP_TYPE_ngwt__ImAddressList (82)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ImAddressList(struct soap*, const char*, int, const ngwt__ImAddressList *, const char*);
@@ -3262,7 +3794,7 @@ SOAP_FMAC5 ngwt__ImAddressList * SOAP_FMAC6 soap_instantiate_ngwt__ImAddressList
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ImAddressList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ImAddress
-#define SOAP_TYPE_ngwt__ImAddress (77)
+#define SOAP_TYPE_ngwt__ImAddress (81)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ImAddress(struct soap*, const char*, int, const ngwt__ImAddress *, const char*);
@@ -3274,7 +3806,7 @@ SOAP_FMAC5 ngwt__ImAddress * SOAP_FMAC6 soap_instantiate_ngwt__ImAddress(struct 
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ImAddress(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Host
-#define SOAP_TYPE_ngwt__Host (76)
+#define SOAP_TYPE_ngwt__Host (80)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Host(struct soap*, const char*, int, const ngwt__Host *, const char*);
@@ -3286,7 +3818,7 @@ SOAP_FMAC5 ngwt__Host * SOAP_FMAC6 soap_instantiate_ngwt__Host(struct soap*, int
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Host(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__GroupMemberList
-#define SOAP_TYPE_ngwt__GroupMemberList (75)
+#define SOAP_TYPE_ngwt__GroupMemberList (79)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__GroupMemberList(struct soap*, const char*, int, const ngwt__GroupMemberList *, const char*);
@@ -3298,7 +3830,7 @@ SOAP_FMAC5 ngwt__GroupMemberList * SOAP_FMAC6 soap_instantiate_ngwt__GroupMember
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__GroupMemberList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__GroupMember
-#define SOAP_TYPE_ngwt__GroupMember (74)
+#define SOAP_TYPE_ngwt__GroupMember (78)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__GroupMember(struct soap*, const char*, int, const ngwt__GroupMember *, const char*);
@@ -3310,7 +3842,7 @@ SOAP_FMAC5 ngwt__GroupMember * SOAP_FMAC6 soap_instantiate_ngwt__GroupMember(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__GroupMember(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Group
-#define SOAP_TYPE_ngwt__Group (73)
+#define SOAP_TYPE_ngwt__Group (77)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Group(struct soap*, const char*, int, const ngwt__Group *, const char*);
@@ -3322,7 +3854,7 @@ SOAP_FMAC5 ngwt__Group * SOAP_FMAC6 soap_instantiate_ngwt__Group(struct soap*, i
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Group(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__FullName
-#define SOAP_TYPE_ngwt__FullName (72)
+#define SOAP_TYPE_ngwt__FullName (76)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FullName(struct soap*, const char*, int, const ngwt__FullName *, const char*);
@@ -3334,7 +3866,7 @@ SOAP_FMAC5 ngwt__FullName * SOAP_FMAC6 soap_instantiate_ngwt__FullName(struct so
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__FullName(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__From
-#define SOAP_TYPE_ngwt__From (71)
+#define SOAP_TYPE_ngwt__From (75)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__From(struct soap*, const char*, int, const ngwt__From *, const char*);
@@ -3346,7 +3878,7 @@ SOAP_FMAC5 ngwt__From * SOAP_FMAC6 soap_instantiate_ngwt__From(struct soap*, int
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__From(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__FreeBusyStats
-#define SOAP_TYPE_ngwt__FreeBusyStats (70)
+#define SOAP_TYPE_ngwt__FreeBusyStats (74)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FreeBusyStats(struct soap*, const char*, int, const ngwt__FreeBusyStats *, const char*);
@@ -3358,7 +3890,7 @@ SOAP_FMAC5 ngwt__FreeBusyStats * SOAP_FMAC6 soap_instantiate_ngwt__FreeBusyStats
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__FreeBusyStats(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__FreeBusyInfoList
-#define SOAP_TYPE_ngwt__FreeBusyInfoList (69)
+#define SOAP_TYPE_ngwt__FreeBusyInfoList (73)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FreeBusyInfoList(struct soap*, const char*, int, const ngwt__FreeBusyInfoList *, const char*);
@@ -3370,7 +3902,7 @@ SOAP_FMAC5 ngwt__FreeBusyInfoList * SOAP_FMAC6 soap_instantiate_ngwt__FreeBusyIn
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__FreeBusyInfoList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__FreeBusyUserList
-#define SOAP_TYPE_ngwt__FreeBusyUserList (68)
+#define SOAP_TYPE_ngwt__FreeBusyUserList (72)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FreeBusyUserList(struct soap*, const char*, int, const ngwt__FreeBusyUserList *, const char*);
@@ -3382,7 +3914,7 @@ SOAP_FMAC5 ngwt__FreeBusyUserList * SOAP_FMAC6 soap_instantiate_ngwt__FreeBusyUs
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__FreeBusyUserList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__FreeBusyInfo
-#define SOAP_TYPE_ngwt__FreeBusyInfo (67)
+#define SOAP_TYPE_ngwt__FreeBusyInfo (71)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FreeBusyInfo(struct soap*, const char*, int, const ngwt__FreeBusyInfo *, const char*);
@@ -3394,7 +3926,7 @@ SOAP_FMAC5 ngwt__FreeBusyInfo * SOAP_FMAC6 soap_instantiate_ngwt__FreeBusyInfo(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__FreeBusyInfo(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__FreeBusyBlock
-#define SOAP_TYPE_ngwt__FreeBusyBlock (66)
+#define SOAP_TYPE_ngwt__FreeBusyBlock (70)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FreeBusyBlock(struct soap*, const char*, int, const ngwt__FreeBusyBlock *, const char*);
@@ -3406,7 +3938,7 @@ SOAP_FMAC5 ngwt__FreeBusyBlock * SOAP_FMAC6 soap_instantiate_ngwt__FreeBusyBlock
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__FreeBusyBlock(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__FreeBusyBlockList
-#define SOAP_TYPE_ngwt__FreeBusyBlockList (65)
+#define SOAP_TYPE_ngwt__FreeBusyBlockList (69)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FreeBusyBlockList(struct soap*, const char*, int, const ngwt__FreeBusyBlockList *, const char*);
@@ -3418,7 +3950,7 @@ SOAP_FMAC5 ngwt__FreeBusyBlockList * SOAP_FMAC6 soap_instantiate_ngwt__FreeBusyB
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__FreeBusyBlockList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__FolderList
-#define SOAP_TYPE_ngwt__FolderList (64)
+#define SOAP_TYPE_ngwt__FolderList (68)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FolderList(struct soap*, const char*, int, const ngwt__FolderList *, const char*);
@@ -3430,7 +3962,7 @@ SOAP_FMAC5 ngwt__FolderList * SOAP_FMAC6 soap_instantiate_ngwt__FolderList(struc
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__FolderList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__FolderACLEntry
-#define SOAP_TYPE_ngwt__FolderACLEntry (63)
+#define SOAP_TYPE_ngwt__FolderACLEntry (67)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FolderACLEntry(struct soap*, const char*, int, const ngwt__FolderACLEntry *, const char*);
@@ -3442,7 +3974,7 @@ SOAP_FMAC5 ngwt__FolderACLEntry * SOAP_FMAC6 soap_instantiate_ngwt__FolderACLEnt
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__FolderACLEntry(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__FolderACL
-#define SOAP_TYPE_ngwt__FolderACL (62)
+#define SOAP_TYPE_ngwt__FolderACL (66)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FolderACL(struct soap*, const char*, int, const ngwt__FolderACL *, const char*);
@@ -3454,7 +3986,7 @@ SOAP_FMAC5 ngwt__FolderACL * SOAP_FMAC6 soap_instantiate_ngwt__FolderACL(struct 
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__FolderACL(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Folder
-#define SOAP_TYPE_ngwt__Folder (61)
+#define SOAP_TYPE_ngwt__Folder (65)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Folder(struct soap*, const char*, int, const ngwt__Folder *, const char*);
@@ -3466,7 +3998,7 @@ SOAP_FMAC5 ngwt__Folder * SOAP_FMAC6 soap_instantiate_ngwt__Folder(struct soap*,
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Folder(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__FilterGroup
-#define SOAP_TYPE_ngwt__FilterGroup (60)
+#define SOAP_TYPE_ngwt__FilterGroup (64)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FilterGroup(struct soap*, const char*, int, const ngwt__FilterGroup *, const char*);
@@ -3478,7 +4010,7 @@ SOAP_FMAC5 ngwt__FilterGroup * SOAP_FMAC6 soap_instantiate_ngwt__FilterGroup(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__FilterGroup(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__FilterEntry
-#define SOAP_TYPE_ngwt__FilterEntry (59)
+#define SOAP_TYPE_ngwt__FilterEntry (63)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FilterEntry(struct soap*, const char*, int, const ngwt__FilterEntry *, const char*);
@@ -3490,7 +4022,7 @@ SOAP_FMAC5 ngwt__FilterEntry * SOAP_FMAC6 soap_instantiate_ngwt__FilterEntry(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__FilterEntry(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__FilterElement
-#define SOAP_TYPE_ngwt__FilterElement (58)
+#define SOAP_TYPE_ngwt__FilterElement (62)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FilterElement(struct soap*, const char*, int, const ngwt__FilterElement *, const char*);
@@ -3502,7 +4034,7 @@ SOAP_FMAC5 ngwt__FilterElement * SOAP_FMAC6 soap_instantiate_ngwt__FilterElement
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__FilterElement(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Filter
-#define SOAP_TYPE_ngwt__Filter (57)
+#define SOAP_TYPE_ngwt__Filter (61)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Filter(struct soap*, const char*, int, const ngwt__Filter *, const char*);
@@ -3514,7 +4046,7 @@ SOAP_FMAC5 ngwt__Filter * SOAP_FMAC6 soap_instantiate_ngwt__Filter(struct soap*,
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Filter(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__EmailAddressList
-#define SOAP_TYPE_ngwt__EmailAddressList (56)
+#define SOAP_TYPE_ngwt__EmailAddressList (60)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__EmailAddressList(struct soap*, const char*, int, const ngwt__EmailAddressList *, const char*);
@@ -3524,6 +4056,54 @@ SOAP_FMAC5 ngwt__EmailAddressList * SOAP_FMAC6 soap_new_ngwt__EmailAddressList(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__EmailAddressList(struct soap*, ngwt__EmailAddressList*);
 SOAP_FMAC5 ngwt__EmailAddressList * SOAP_FMAC6 soap_instantiate_ngwt__EmailAddressList(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__EmailAddressList(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_ngwt__DocumentTypeList
+#define SOAP_TYPE_ngwt__DocumentTypeList (59)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DocumentTypeList(struct soap*, const char*, int, const ngwt__DocumentTypeList *, const char*);
+SOAP_FMAC3 ngwt__DocumentTypeList * SOAP_FMAC4 soap_get_ngwt__DocumentTypeList(struct soap*, ngwt__DocumentTypeList *, const char*, const char*);
+SOAP_FMAC3 ngwt__DocumentTypeList * SOAP_FMAC4 soap_in_ngwt__DocumentTypeList(struct soap*, const char*, ngwt__DocumentTypeList *, const char*);
+SOAP_FMAC5 ngwt__DocumentTypeList * SOAP_FMAC6 soap_new_ngwt__DocumentTypeList(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DocumentTypeList(struct soap*, ngwt__DocumentTypeList*);
+SOAP_FMAC5 ngwt__DocumentTypeList * SOAP_FMAC6 soap_instantiate_ngwt__DocumentTypeList(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DocumentTypeList(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_ngwt__DocumentType
+#define SOAP_TYPE_ngwt__DocumentType (58)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DocumentType(struct soap*, const char*, int, const ngwt__DocumentType *, const char*);
+SOAP_FMAC3 ngwt__DocumentType * SOAP_FMAC4 soap_get_ngwt__DocumentType(struct soap*, ngwt__DocumentType *, const char*, const char*);
+SOAP_FMAC3 ngwt__DocumentType * SOAP_FMAC4 soap_in_ngwt__DocumentType(struct soap*, const char*, ngwt__DocumentType *, const char*);
+SOAP_FMAC5 ngwt__DocumentType * SOAP_FMAC6 soap_new_ngwt__DocumentType(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DocumentType(struct soap*, ngwt__DocumentType*);
+SOAP_FMAC5 ngwt__DocumentType * SOAP_FMAC6 soap_instantiate_ngwt__DocumentType(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DocumentType(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_ngwt__DocumentRef
+#define SOAP_TYPE_ngwt__DocumentRef (57)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DocumentRef(struct soap*, const char*, int, const ngwt__DocumentRef *, const char*);
+SOAP_FMAC3 ngwt__DocumentRef * SOAP_FMAC4 soap_get_ngwt__DocumentRef(struct soap*, ngwt__DocumentRef *, const char*, const char*);
+SOAP_FMAC3 ngwt__DocumentRef * SOAP_FMAC4 soap_in_ngwt__DocumentRef(struct soap*, const char*, ngwt__DocumentRef *, const char*);
+SOAP_FMAC5 ngwt__DocumentRef * SOAP_FMAC6 soap_new_ngwt__DocumentRef(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DocumentRef(struct soap*, ngwt__DocumentRef*);
+SOAP_FMAC5 ngwt__DocumentRef * SOAP_FMAC6 soap_instantiate_ngwt__DocumentRef(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DocumentRef(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_ngwt__Document
+#define SOAP_TYPE_ngwt__Document (56)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Document(struct soap*, const char*, int, const ngwt__Document *, const char*);
+SOAP_FMAC3 ngwt__Document * SOAP_FMAC4 soap_get_ngwt__Document(struct soap*, ngwt__Document *, const char*, const char*);
+SOAP_FMAC3 ngwt__Document * SOAP_FMAC4 soap_in_ngwt__Document(struct soap*, const char*, ngwt__Document *, const char*);
+SOAP_FMAC5 ngwt__Document * SOAP_FMAC6 soap_new_ngwt__Document(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__Document(struct soap*, ngwt__Document*);
+SOAP_FMAC5 ngwt__Document * SOAP_FMAC6 soap_instantiate_ngwt__Document(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Document(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Distribution
 #define SOAP_TYPE_ngwt__Distribution (55)
@@ -3573,8 +4153,32 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DelegatedStatus(struct soap*, ngwt_
 SOAP_FMAC5 ngwt__DelegatedStatus * SOAP_FMAC6 soap_instantiate_ngwt__DelegatedStatus(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DelegatedStatus(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE_ngwt__DayOfYearWeekList
+#define SOAP_TYPE_ngwt__DayOfYearWeekList (51)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DayOfYearWeekList(struct soap*, const char*, int, const ngwt__DayOfYearWeekList *, const char*);
+SOAP_FMAC3 ngwt__DayOfYearWeekList * SOAP_FMAC4 soap_get_ngwt__DayOfYearWeekList(struct soap*, ngwt__DayOfYearWeekList *, const char*, const char*);
+SOAP_FMAC3 ngwt__DayOfYearWeekList * SOAP_FMAC4 soap_in_ngwt__DayOfYearWeekList(struct soap*, const char*, ngwt__DayOfYearWeekList *, const char*);
+SOAP_FMAC5 ngwt__DayOfYearWeekList * SOAP_FMAC6 soap_new_ngwt__DayOfYearWeekList(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DayOfYearWeekList(struct soap*, ngwt__DayOfYearWeekList*);
+SOAP_FMAC5 ngwt__DayOfYearWeekList * SOAP_FMAC6 soap_instantiate_ngwt__DayOfYearWeekList(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DayOfYearWeekList(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_ngwt__DayOfYearWeek
+#define SOAP_TYPE_ngwt__DayOfYearWeek (50)
+#endif
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DayOfYearWeek(struct soap*, const char*, int, const ngwt__DayOfYearWeek *, const char*);
+SOAP_FMAC3 ngwt__DayOfYearWeek * SOAP_FMAC4 soap_get_ngwt__DayOfYearWeek(struct soap*, ngwt__DayOfYearWeek *, const char*, const char*);
+SOAP_FMAC3 ngwt__DayOfYearWeek * SOAP_FMAC4 soap_in_ngwt__DayOfYearWeek(struct soap*, const char*, ngwt__DayOfYearWeek *, const char*);
+SOAP_FMAC5 ngwt__DayOfYearWeek * SOAP_FMAC6 soap_new_ngwt__DayOfYearWeek(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DayOfYearWeek(struct soap*, ngwt__DayOfYearWeek*);
+SOAP_FMAC5 ngwt__DayOfYearWeek * SOAP_FMAC6 soap_instantiate_ngwt__DayOfYearWeek(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DayOfYearWeek(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE_ngwt__DayOfYearList
-#define SOAP_TYPE_ngwt__DayOfYearList (51)
+#define SOAP_TYPE_ngwt__DayOfYearList (49)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DayOfYearList(struct soap*, const char*, int, const ngwt__DayOfYearList *, const char*);
@@ -3585,20 +4189,8 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DayOfYearList(struct soap*, ngwt__D
 SOAP_FMAC5 ngwt__DayOfYearList * SOAP_FMAC6 soap_instantiate_ngwt__DayOfYearList(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DayOfYearList(struct soap*, int, int, void*, const void*, size_t);
 
-#ifndef SOAP_TYPE_ngwt__DayOfWeekList
-#define SOAP_TYPE_ngwt__DayOfWeekList (50)
-#endif
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DayOfWeekList(struct soap*, const char*, int, const ngwt__DayOfWeekList *, const char*);
-SOAP_FMAC3 ngwt__DayOfWeekList * SOAP_FMAC4 soap_get_ngwt__DayOfWeekList(struct soap*, ngwt__DayOfWeekList *, const char*, const char*);
-SOAP_FMAC3 ngwt__DayOfWeekList * SOAP_FMAC4 soap_in_ngwt__DayOfWeekList(struct soap*, const char*, ngwt__DayOfWeekList *, const char*);
-SOAP_FMAC5 ngwt__DayOfWeekList * SOAP_FMAC6 soap_new_ngwt__DayOfWeekList(struct soap*, int);
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DayOfWeekList(struct soap*, ngwt__DayOfWeekList*);
-SOAP_FMAC5 ngwt__DayOfWeekList * SOAP_FMAC6 soap_instantiate_ngwt__DayOfWeekList(struct soap*, int, const char*, const char*, size_t*);
-SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DayOfWeekList(struct soap*, int, int, void*, const void*, size_t);
-
 #ifndef SOAP_TYPE_ngwt__DayOfWeek
-#define SOAP_TYPE_ngwt__DayOfWeek (49)
+#define SOAP_TYPE_ngwt__DayOfWeek (48)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DayOfWeek(struct soap*, const char*, int, const ngwt__DayOfWeek *, const char*);
@@ -3610,7 +4202,7 @@ SOAP_FMAC5 ngwt__DayOfWeek * SOAP_FMAC6 soap_instantiate_ngwt__DayOfWeek(struct 
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DayOfWeek(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__DayOfMonthList
-#define SOAP_TYPE_ngwt__DayOfMonthList (48)
+#define SOAP_TYPE_ngwt__DayOfMonthList (47)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DayOfMonthList(struct soap*, const char*, int, const ngwt__DayOfMonthList *, const char*);
@@ -3622,7 +4214,7 @@ SOAP_FMAC5 ngwt__DayOfMonthList * SOAP_FMAC6 soap_instantiate_ngwt__DayOfMonthLi
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DayOfMonthList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__CustomList
-#define SOAP_TYPE_ngwt__CustomList (47)
+#define SOAP_TYPE_ngwt__CustomList (46)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__CustomList(struct soap*, const char*, int, const ngwt__CustomList *, const char*);
@@ -3634,7 +4226,7 @@ SOAP_FMAC5 ngwt__CustomList * SOAP_FMAC6 soap_instantiate_ngwt__CustomList(struc
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__CustomList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Custom
-#define SOAP_TYPE_ngwt__Custom (46)
+#define SOAP_TYPE_ngwt__Custom (45)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Custom(struct soap*, const char*, int, const ngwt__Custom *, const char*);
@@ -3646,7 +4238,7 @@ SOAP_FMAC5 ngwt__Custom * SOAP_FMAC6 soap_instantiate_ngwt__Custom(struct soap*,
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Custom(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ContainerRef
-#define SOAP_TYPE_ngwt__ContainerRef (45)
+#define SOAP_TYPE_ngwt__ContainerRef (44)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ContainerRef(struct soap*, const char*, int, const ngwt__ContainerRef *, const char*);
@@ -3658,7 +4250,7 @@ SOAP_FMAC5 ngwt__ContainerRef * SOAP_FMAC6 soap_instantiate_ngwt__ContainerRef(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ContainerRef(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ContainerItem
-#define SOAP_TYPE_ngwt__ContainerItem (44)
+#define SOAP_TYPE_ngwt__ContainerItem (43)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ContainerItem(struct soap*, const char*, int, const ngwt__ContainerItem *, const char*);
@@ -3670,7 +4262,7 @@ SOAP_FMAC5 ngwt__ContainerItem * SOAP_FMAC6 soap_instantiate_ngwt__ContainerItem
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ContainerItem(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__ContactFolder
-#define SOAP_TYPE_ngwt__ContactFolder (43)
+#define SOAP_TYPE_ngwt__ContactFolder (42)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ContactFolder(struct soap*, const char*, int, const ngwt__ContactFolder *, const char*);
@@ -3682,7 +4274,7 @@ SOAP_FMAC5 ngwt__ContactFolder * SOAP_FMAC6 soap_instantiate_ngwt__ContactFolder
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ContactFolder(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Contact
-#define SOAP_TYPE_ngwt__Contact (42)
+#define SOAP_TYPE_ngwt__Contact (41)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Contact(struct soap*, const char*, int, const ngwt__Contact *, const char*);
@@ -3694,7 +4286,7 @@ SOAP_FMAC5 ngwt__Contact * SOAP_FMAC6 soap_instantiate_ngwt__Contact(struct soap
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Contact(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__CommentStatus
-#define SOAP_TYPE_ngwt__CommentStatus (41)
+#define SOAP_TYPE_ngwt__CommentStatus (40)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__CommentStatus(struct soap*, const char*, int, const ngwt__CommentStatus *, const char*);
@@ -3706,7 +4298,7 @@ SOAP_FMAC5 ngwt__CommentStatus * SOAP_FMAC6 soap_instantiate_ngwt__CommentStatus
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__CommentStatus(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__CategoryRefList
-#define SOAP_TYPE_ngwt__CategoryRefList (40)
+#define SOAP_TYPE_ngwt__CategoryRefList (39)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__CategoryRefList(struct soap*, const char*, int, const ngwt__CategoryRefList *, const char*);
@@ -3718,7 +4310,7 @@ SOAP_FMAC5 ngwt__CategoryRefList * SOAP_FMAC6 soap_instantiate_ngwt__CategoryRef
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__CategoryRefList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__CategoryList
-#define SOAP_TYPE_ngwt__CategoryList (39)
+#define SOAP_TYPE_ngwt__CategoryList (38)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__CategoryList(struct soap*, const char*, int, const ngwt__CategoryList *, const char*);
@@ -3730,7 +4322,7 @@ SOAP_FMAC5 ngwt__CategoryList * SOAP_FMAC6 soap_instantiate_ngwt__CategoryList(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__CategoryList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Category
-#define SOAP_TYPE_ngwt__Category (38)
+#define SOAP_TYPE_ngwt__Category (37)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Category(struct soap*, const char*, int, const ngwt__Category *, const char*);
@@ -3742,7 +4334,7 @@ SOAP_FMAC5 ngwt__Category * SOAP_FMAC6 soap_instantiate_ngwt__Category(struct so
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Category(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__CalendarItem
-#define SOAP_TYPE_ngwt__CalendarItem (37)
+#define SOAP_TYPE_ngwt__CalendarItem (36)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__CalendarItem(struct soap*, const char*, int, const ngwt__CalendarItem *, const char*);
@@ -3754,7 +4346,7 @@ SOAP_FMAC5 ngwt__CalendarItem * SOAP_FMAC6 soap_instantiate_ngwt__CalendarItem(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__CalendarItem(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__CalendarFolderAttribute
-#define SOAP_TYPE_ngwt__CalendarFolderAttribute (36)
+#define SOAP_TYPE_ngwt__CalendarFolderAttribute (35)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__CalendarFolderAttribute(struct soap*, const char*, int, const ngwt__CalendarFolderAttribute *, const char*);
@@ -3766,7 +4358,7 @@ SOAP_FMAC5 ngwt__CalendarFolderAttribute * SOAP_FMAC6 soap_instantiate_ngwt__Cal
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__CalendarFolderAttribute(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__BoxEntry
-#define SOAP_TYPE_ngwt__BoxEntry (35)
+#define SOAP_TYPE_ngwt__BoxEntry (34)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__BoxEntry(struct soap*, const char*, int, const ngwt__BoxEntry *, const char*);
@@ -3778,7 +4370,7 @@ SOAP_FMAC5 ngwt__BoxEntry * SOAP_FMAC6 soap_instantiate_ngwt__BoxEntry(struct so
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__BoxEntry(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Authentication
-#define SOAP_TYPE_ngwt__Authentication (34)
+#define SOAP_TYPE_ngwt__Authentication (33)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Authentication(struct soap*, const char*, int, const ngwt__Authentication *, const char*);
@@ -3790,7 +4382,7 @@ SOAP_FMAC5 ngwt__Authentication * SOAP_FMAC6 soap_instantiate_ngwt__Authenticati
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Authentication(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__AttachmentItemInfo
-#define SOAP_TYPE_ngwt__AttachmentItemInfo (33)
+#define SOAP_TYPE_ngwt__AttachmentItemInfo (32)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AttachmentItemInfo(struct soap*, const char*, int, const ngwt__AttachmentItemInfo *, const char*);
@@ -3802,7 +4394,7 @@ SOAP_FMAC5 ngwt__AttachmentItemInfo * SOAP_FMAC6 soap_instantiate_ngwt__Attachme
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__AttachmentItemInfo(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__AttachmentInfo
-#define SOAP_TYPE_ngwt__AttachmentInfo (32)
+#define SOAP_TYPE_ngwt__AttachmentInfo (31)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AttachmentInfo(struct soap*, const char*, int, const ngwt__AttachmentInfo *, const char*);
@@ -3814,7 +4406,7 @@ SOAP_FMAC5 ngwt__AttachmentInfo * SOAP_FMAC6 soap_instantiate_ngwt__AttachmentIn
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__AttachmentInfo(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__AttachmentID
-#define SOAP_TYPE_ngwt__AttachmentID (31)
+#define SOAP_TYPE_ngwt__AttachmentID (30)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AttachmentID(struct soap*, const char*, int, const ngwt__AttachmentID *, const char*);
@@ -3826,7 +4418,7 @@ SOAP_FMAC5 ngwt__AttachmentID * SOAP_FMAC6 soap_instantiate_ngwt__AttachmentID(s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__AttachmentID(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Appointment
-#define SOAP_TYPE_ngwt__Appointment (30)
+#define SOAP_TYPE_ngwt__Appointment (29)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Appointment(struct soap*, const char*, int, const ngwt__Appointment *, const char*);
@@ -3838,7 +4430,7 @@ SOAP_FMAC5 ngwt__Appointment * SOAP_FMAC6 soap_instantiate_ngwt__Appointment(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Appointment(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__Alarm
-#define SOAP_TYPE_ngwt__Alarm (29)
+#define SOAP_TYPE_ngwt__Alarm (28)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Alarm(struct soap*, const char*, int, const ngwt__Alarm *, const char*);
@@ -3850,7 +4442,7 @@ SOAP_FMAC5 ngwt__Alarm * SOAP_FMAC6 soap_instantiate_ngwt__Alarm(struct soap*, i
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Alarm(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__AddressBookList
-#define SOAP_TYPE_ngwt__AddressBookList (28)
+#define SOAP_TYPE_ngwt__AddressBookList (27)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AddressBookList(struct soap*, const char*, int, const ngwt__AddressBookList *, const char*);
@@ -3862,7 +4454,7 @@ SOAP_FMAC5 ngwt__AddressBookList * SOAP_FMAC6 soap_instantiate_ngwt__AddressBook
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__AddressBookList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__AddressBookItem
-#define SOAP_TYPE_ngwt__AddressBookItem (27)
+#define SOAP_TYPE_ngwt__AddressBookItem (26)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AddressBookItem(struct soap*, const char*, int, const ngwt__AddressBookItem *, const char*);
@@ -3874,7 +4466,7 @@ SOAP_FMAC5 ngwt__AddressBookItem * SOAP_FMAC6 soap_instantiate_ngwt__AddressBook
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__AddressBookItem(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__AddressBook
-#define SOAP_TYPE_ngwt__AddressBook (26)
+#define SOAP_TYPE_ngwt__AddressBook (25)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AddressBook(struct soap*, const char*, int, const ngwt__AddressBook *, const char*);
@@ -3886,7 +4478,7 @@ SOAP_FMAC5 ngwt__AddressBook * SOAP_FMAC6 soap_instantiate_ngwt__AddressBook(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__AddressBook(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__AccessRightList
-#define SOAP_TYPE_ngwt__AccessRightList (25)
+#define SOAP_TYPE_ngwt__AccessRightList (24)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AccessRightList(struct soap*, const char*, int, const ngwt__AccessRightList *, const char*);
@@ -3898,7 +4490,7 @@ SOAP_FMAC5 ngwt__AccessRightList * SOAP_FMAC6 soap_instantiate_ngwt__AccessRight
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__AccessRightList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__AccessRightEntry
-#define SOAP_TYPE_ngwt__AccessRightEntry (24)
+#define SOAP_TYPE_ngwt__AccessRightEntry (23)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AccessRightEntry(struct soap*, const char*, int, const ngwt__AccessRightEntry *, const char*);
@@ -3910,7 +4502,7 @@ SOAP_FMAC5 ngwt__AccessRightEntry * SOAP_FMAC6 soap_instantiate_ngwt__AccessRigh
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__AccessRightEntry(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__AccessRightChanges
-#define SOAP_TYPE_ngwt__AccessRightChanges (23)
+#define SOAP_TYPE_ngwt__AccessRightChanges (22)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AccessRightChanges(struct soap*, const char*, int, const ngwt__AccessRightChanges *, const char*);
@@ -3922,7 +4514,7 @@ SOAP_FMAC5 ngwt__AccessRightChanges * SOAP_FMAC6 soap_instantiate_ngwt__AccessRi
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__AccessRightChanges(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__AccessRight
-#define SOAP_TYPE_ngwt__AccessRight (22)
+#define SOAP_TYPE_ngwt__AccessRight (21)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AccessRight(struct soap*, const char*, int, const ngwt__AccessRight *, const char*);
@@ -3934,7 +4526,7 @@ SOAP_FMAC5 ngwt__AccessRight * SOAP_FMAC6 soap_instantiate_ngwt__AccessRight(str
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__AccessRight(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__AccessMiscRight
-#define SOAP_TYPE_ngwt__AccessMiscRight (21)
+#define SOAP_TYPE_ngwt__AccessMiscRight (20)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AccessMiscRight(struct soap*, const char*, int, const ngwt__AccessMiscRight *, const char*);
@@ -3946,7 +4538,7 @@ SOAP_FMAC5 ngwt__AccessMiscRight * SOAP_FMAC6 soap_instantiate_ngwt__AccessMiscR
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__AccessMiscRight(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__AccessControlList
-#define SOAP_TYPE_ngwt__AccessControlList (20)
+#define SOAP_TYPE_ngwt__AccessControlList (19)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AccessControlList(struct soap*, const char*, int, const ngwt__AccessControlList *, const char*);
@@ -3958,7 +4550,7 @@ SOAP_FMAC5 ngwt__AccessControlList * SOAP_FMAC6 soap_instantiate_ngwt__AccessCon
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__AccessControlList(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_ngwt__AccessControlListEntry
-#define SOAP_TYPE_ngwt__AccessControlListEntry (19)
+#define SOAP_TYPE_ngwt__AccessControlListEntry (18)
 #endif
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AccessControlListEntry(struct soap*, const char*, int, const ngwt__AccessControlListEntry *, const char*);
@@ -3970,7 +4562,7 @@ SOAP_FMAC5 ngwt__AccessControlListEntry * SOAP_FMAC6 soap_instantiate_ngwt__Acce
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__AccessControlListEntry(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_xsd__language
-#define SOAP_TYPE_xsd__language (18)
+#define SOAP_TYPE_xsd__language (17)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xsd__language(struct soap*, std::string const*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_xsd__language(struct soap*, std::string *);
@@ -3984,7 +4576,7 @@ SOAP_FMAC5 std::string * SOAP_FMAC6 soap_instantiate_xsd__language(struct soap*,
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_xsd__language(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_xsd__duration
-#define SOAP_TYPE_xsd__duration (17)
+#define SOAP_TYPE_xsd__duration (16)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xsd__duration(struct soap*, std::string const*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_xsd__duration(struct soap*, std::string *);
@@ -3998,7 +4590,7 @@ SOAP_FMAC5 std::string * SOAP_FMAC6 soap_instantiate_xsd__duration(struct soap*,
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_xsd__duration(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_xsd__decimal
-#define SOAP_TYPE_xsd__decimal (16)
+#define SOAP_TYPE_xsd__decimal (15)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xsd__decimal(struct soap*, std::string const*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_xsd__decimal(struct soap*, std::string *);
@@ -4012,7 +4604,7 @@ SOAP_FMAC5 std::string * SOAP_FMAC6 soap_instantiate_xsd__decimal(struct soap*, 
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_xsd__decimal(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_xsd__date
-#define SOAP_TYPE_xsd__date (15)
+#define SOAP_TYPE_xsd__date (14)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xsd__date(struct soap*, std::string const*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_xsd__date(struct soap*, std::string *);
@@ -4025,33 +4617,8 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_xsd__date(struct soap*, std::string*);
 SOAP_FMAC5 std::string * SOAP_FMAC6 soap_instantiate_xsd__date(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_xsd__date(struct soap*, int, int, void*, const void*, size_t);
 
-#ifndef SOAP_TYPE_xsd__base64Binary
-#define SOAP_TYPE_xsd__base64Binary (9)
-#endif
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_xsd__base64Binary(struct soap*, const char*, int, const xsd__base64Binary *, const char*);
-SOAP_FMAC3 xsd__base64Binary * SOAP_FMAC4 soap_get_xsd__base64Binary(struct soap*, xsd__base64Binary *, const char*, const char*);
-SOAP_FMAC3 xsd__base64Binary * SOAP_FMAC4 soap_in_xsd__base64Binary(struct soap*, const char*, xsd__base64Binary *, const char*);
-SOAP_FMAC5 xsd__base64Binary * SOAP_FMAC6 soap_new_xsd__base64Binary(struct soap*, int);
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_xsd__base64Binary(struct soap*, xsd__base64Binary*);
-SOAP_FMAC5 xsd__base64Binary * SOAP_FMAC6 soap_instantiate_xsd__base64Binary(struct soap*, int, const char*, const char*, size_t*);
-SOAP_FMAC5 void SOAP_FMAC6 soap_copy_xsd__base64Binary(struct soap*, int, int, void*, const void*, size_t);
-
-#ifndef SOAP_TYPE_xsd__anyURI
-#define SOAP_TYPE_xsd__anyURI (8)
-#endif
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xsd__anyURI(struct soap*, std::string const*);
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_xsd__anyURI(struct soap*, std::string *);
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_xsd__anyURI(struct soap*, const std::string *, const char*, const char*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_xsd__anyURI(struct soap*, const char*, int, const std::string*, const char*);
-SOAP_FMAC3 std::string * SOAP_FMAC4 soap_get_xsd__anyURI(struct soap*, std::string *, const char*, const char*);
-SOAP_FMAC3 std::string * SOAP_FMAC4 soap_in_xsd__anyURI(struct soap*, const char*, std::string*, const char*);
-SOAP_FMAC5 std::string * SOAP_FMAC6 soap_new_xsd__anyURI(struct soap*, int);
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_xsd__anyURI(struct soap*, std::string*);
-SOAP_FMAC5 std::string * SOAP_FMAC6 soap_instantiate_xsd__anyURI(struct soap*, int, const char*, const char*, size_t*);
-SOAP_FMAC5 void SOAP_FMAC6 soap_copy_xsd__anyURI(struct soap*, int, int, void*, const void*, size_t);
-
 #ifndef SOAP_TYPE_std__string
-#define SOAP_TYPE_std__string (7)
+#define SOAP_TYPE_std__string (13)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__string(struct soap*, const std::string *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__string(struct soap*, std::string *);
@@ -4064,10 +4631,21 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__string(struct soap*, std::string*);
 SOAP_FMAC5 std::string * SOAP_FMAC6 soap_instantiate_std__string(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__string(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE_xsd__base64Binary
+#define SOAP_TYPE_xsd__base64Binary (7)
+#endif
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_xsd__base64Binary(struct soap*, const char*, int, const xsd__base64Binary *, const char*);
+SOAP_FMAC3 xsd__base64Binary * SOAP_FMAC4 soap_get_xsd__base64Binary(struct soap*, xsd__base64Binary *, const char*, const char*);
+SOAP_FMAC3 xsd__base64Binary * SOAP_FMAC4 soap_in_xsd__base64Binary(struct soap*, const char*, xsd__base64Binary *, const char*);
+SOAP_FMAC5 xsd__base64Binary * SOAP_FMAC6 soap_new_xsd__base64Binary(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_xsd__base64Binary(struct soap*, xsd__base64Binary*);
+SOAP_FMAC5 xsd__base64Binary * SOAP_FMAC6 soap_instantiate_xsd__base64Binary(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_xsd__base64Binary(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (813)
+#define SOAP_TYPE_SOAP_ENV__Fault (938)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Fault(struct soap*, const struct SOAP_ENV__Fault *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Fault(struct soap*, struct SOAP_ENV__Fault *);
@@ -4081,7 +4659,7 @@ SOAP_FMAC3 struct SOAP_ENV__Fault * SOAP_FMAC4 soap_in_SOAP_ENV__Fault(struct so
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (810)
+#define SOAP_TYPE_SOAP_ENV__Detail (935)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Detail(struct soap*, const struct SOAP_ENV__Detail *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Detail(struct soap*, struct SOAP_ENV__Detail *);
@@ -4095,7 +4673,7 @@ SOAP_FMAC3 struct SOAP_ENV__Detail * SOAP_FMAC4 soap_in_SOAP_ENV__Detail(struct 
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (808)
+#define SOAP_TYPE_SOAP_ENV__Code (933)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Code(struct soap*, const struct SOAP_ENV__Code *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Code(struct soap*, struct SOAP_ENV__Code *);
@@ -4107,7 +4685,7 @@ SOAP_FMAC3 struct SOAP_ENV__Code * SOAP_FMAC4 soap_in_SOAP_ENV__Code(struct soap
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeEventsRequest
-#define SOAP_TYPE___ngw__removeEventsRequest (807)
+#define SOAP_TYPE___ngw__removeEventsRequest (932)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__removeEventsRequest(struct soap*, const struct __ngw__removeEventsRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__removeEventsRequest(struct soap*, struct __ngw__removeEventsRequest *);
@@ -4117,7 +4695,7 @@ SOAP_FMAC3 struct __ngw__removeEventsRequest * SOAP_FMAC4 soap_get___ngw__remove
 SOAP_FMAC3 struct __ngw__removeEventsRequest * SOAP_FMAC4 soap_in___ngw__removeEventsRequest(struct soap*, const char*, struct __ngw__removeEventsRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__removeEventConfigurationRequest
-#define SOAP_TYPE___ngw__removeEventConfigurationRequest (803)
+#define SOAP_TYPE___ngw__removeEventConfigurationRequest (928)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__removeEventConfigurationRequest(struct soap*, const struct __ngw__removeEventConfigurationRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__removeEventConfigurationRequest(struct soap*, struct __ngw__removeEventConfigurationRequest *);
@@ -4127,7 +4705,7 @@ SOAP_FMAC3 struct __ngw__removeEventConfigurationRequest * SOAP_FMAC4 soap_get__
 SOAP_FMAC3 struct __ngw__removeEventConfigurationRequest * SOAP_FMAC4 soap_in___ngw__removeEventConfigurationRequest(struct soap*, const char*, struct __ngw__removeEventConfigurationRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getEventsRequest
-#define SOAP_TYPE___ngw__getEventsRequest (799)
+#define SOAP_TYPE___ngw__getEventsRequest (924)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getEventsRequest(struct soap*, const struct __ngw__getEventsRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getEventsRequest(struct soap*, struct __ngw__getEventsRequest *);
@@ -4137,7 +4715,7 @@ SOAP_FMAC3 struct __ngw__getEventsRequest * SOAP_FMAC4 soap_get___ngw__getEvents
 SOAP_FMAC3 struct __ngw__getEventsRequest * SOAP_FMAC4 soap_in___ngw__getEventsRequest(struct soap*, const char*, struct __ngw__getEventsRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getEventConfigurationRequest
-#define SOAP_TYPE___ngw__getEventConfigurationRequest (795)
+#define SOAP_TYPE___ngw__getEventConfigurationRequest (920)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getEventConfigurationRequest(struct soap*, const struct __ngw__getEventConfigurationRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getEventConfigurationRequest(struct soap*, struct __ngw__getEventConfigurationRequest *);
@@ -4147,7 +4725,7 @@ SOAP_FMAC3 struct __ngw__getEventConfigurationRequest * SOAP_FMAC4 soap_get___ng
 SOAP_FMAC3 struct __ngw__getEventConfigurationRequest * SOAP_FMAC4 soap_in___ngw__getEventConfigurationRequest(struct soap*, const char*, struct __ngw__getEventConfigurationRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__configureEventsRequest
-#define SOAP_TYPE___ngw__configureEventsRequest (791)
+#define SOAP_TYPE___ngw__configureEventsRequest (916)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__configureEventsRequest(struct soap*, const struct __ngw__configureEventsRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__configureEventsRequest(struct soap*, struct __ngw__configureEventsRequest *);
@@ -4157,7 +4735,7 @@ SOAP_FMAC3 struct __ngw__configureEventsRequest * SOAP_FMAC4 soap_get___ngw__con
 SOAP_FMAC3 struct __ngw__configureEventsRequest * SOAP_FMAC4 soap_in___ngw__configureEventsRequest(struct soap*, const char*, struct __ngw__configureEventsRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__cleanEventConfigurationRequest
-#define SOAP_TYPE___ngw__cleanEventConfigurationRequest (787)
+#define SOAP_TYPE___ngw__cleanEventConfigurationRequest (912)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__cleanEventConfigurationRequest(struct soap*, const struct __ngw__cleanEventConfigurationRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__cleanEventConfigurationRequest(struct soap*, struct __ngw__cleanEventConfigurationRequest *);
@@ -4166,8 +4744,18 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__cleanEventConfigurationRequest(struct 
 SOAP_FMAC3 struct __ngw__cleanEventConfigurationRequest * SOAP_FMAC4 soap_get___ngw__cleanEventConfigurationRequest(struct soap*, struct __ngw__cleanEventConfigurationRequest *, const char*, const char*);
 SOAP_FMAC3 struct __ngw__cleanEventConfigurationRequest * SOAP_FMAC4 soap_in___ngw__cleanEventConfigurationRequest(struct soap*, const char*, struct __ngw__cleanEventConfigurationRequest *, const char*);
 
+#ifndef SOAP_TYPE___ngw__updateVersionStatusRequest
+#define SOAP_TYPE___ngw__updateVersionStatusRequest (908)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__updateVersionStatusRequest(struct soap*, const struct __ngw__updateVersionStatusRequest *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__updateVersionStatusRequest(struct soap*, struct __ngw__updateVersionStatusRequest *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__updateVersionStatusRequest(struct soap*, const struct __ngw__updateVersionStatusRequest *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__updateVersionStatusRequest(struct soap*, const char*, int, const struct __ngw__updateVersionStatusRequest *, const char*);
+SOAP_FMAC3 struct __ngw__updateVersionStatusRequest * SOAP_FMAC4 soap_get___ngw__updateVersionStatusRequest(struct soap*, struct __ngw__updateVersionStatusRequest *, const char*, const char*);
+SOAP_FMAC3 struct __ngw__updateVersionStatusRequest * SOAP_FMAC4 soap_in___ngw__updateVersionStatusRequest(struct soap*, const char*, struct __ngw__updateVersionStatusRequest *, const char*);
+
 #ifndef SOAP_TYPE___ngw__uncompleteRequest
-#define SOAP_TYPE___ngw__uncompleteRequest (783)
+#define SOAP_TYPE___ngw__uncompleteRequest (904)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__uncompleteRequest(struct soap*, const struct __ngw__uncompleteRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__uncompleteRequest(struct soap*, struct __ngw__uncompleteRequest *);
@@ -4177,7 +4765,7 @@ SOAP_FMAC3 struct __ngw__uncompleteRequest * SOAP_FMAC4 soap_get___ngw__uncomple
 SOAP_FMAC3 struct __ngw__uncompleteRequest * SOAP_FMAC4 soap_in___ngw__uncompleteRequest(struct soap*, const char*, struct __ngw__uncompleteRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__unacceptRequest
-#define SOAP_TYPE___ngw__unacceptRequest (779)
+#define SOAP_TYPE___ngw__unacceptRequest (900)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__unacceptRequest(struct soap*, const struct __ngw__unacceptRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__unacceptRequest(struct soap*, struct __ngw__unacceptRequest *);
@@ -4187,7 +4775,7 @@ SOAP_FMAC3 struct __ngw__unacceptRequest * SOAP_FMAC4 soap_get___ngw__unacceptRe
 SOAP_FMAC3 struct __ngw__unacceptRequest * SOAP_FMAC4 soap_in___ngw__unacceptRequest(struct soap*, const char*, struct __ngw__unacceptRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__startFreeBusySessionRequest
-#define SOAP_TYPE___ngw__startFreeBusySessionRequest (775)
+#define SOAP_TYPE___ngw__startFreeBusySessionRequest (896)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__startFreeBusySessionRequest(struct soap*, const struct __ngw__startFreeBusySessionRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__startFreeBusySessionRequest(struct soap*, struct __ngw__startFreeBusySessionRequest *);
@@ -4196,8 +4784,18 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__startFreeBusySessionRequest(struct soa
 SOAP_FMAC3 struct __ngw__startFreeBusySessionRequest * SOAP_FMAC4 soap_get___ngw__startFreeBusySessionRequest(struct soap*, struct __ngw__startFreeBusySessionRequest *, const char*, const char*);
 SOAP_FMAC3 struct __ngw__startFreeBusySessionRequest * SOAP_FMAC4 soap_in___ngw__startFreeBusySessionRequest(struct soap*, const char*, struct __ngw__startFreeBusySessionRequest *, const char*);
 
+#ifndef SOAP_TYPE___ngw__setTimestampRequest
+#define SOAP_TYPE___ngw__setTimestampRequest (892)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__setTimestampRequest(struct soap*, const struct __ngw__setTimestampRequest *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__setTimestampRequest(struct soap*, struct __ngw__setTimestampRequest *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__setTimestampRequest(struct soap*, const struct __ngw__setTimestampRequest *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__setTimestampRequest(struct soap*, const char*, int, const struct __ngw__setTimestampRequest *, const char*);
+SOAP_FMAC3 struct __ngw__setTimestampRequest * SOAP_FMAC4 soap_get___ngw__setTimestampRequest(struct soap*, struct __ngw__setTimestampRequest *, const char*, const char*);
+SOAP_FMAC3 struct __ngw__setTimestampRequest * SOAP_FMAC4 soap_in___ngw__setTimestampRequest(struct soap*, const char*, struct __ngw__setTimestampRequest *, const char*);
+
 #ifndef SOAP_TYPE___ngw__sendItemRequest
-#define SOAP_TYPE___ngw__sendItemRequest (771)
+#define SOAP_TYPE___ngw__sendItemRequest (888)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__sendItemRequest(struct soap*, const struct __ngw__sendItemRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__sendItemRequest(struct soap*, struct __ngw__sendItemRequest *);
@@ -4207,7 +4805,7 @@ SOAP_FMAC3 struct __ngw__sendItemRequest * SOAP_FMAC4 soap_get___ngw__sendItemRe
 SOAP_FMAC3 struct __ngw__sendItemRequest * SOAP_FMAC4 soap_in___ngw__sendItemRequest(struct soap*, const char*, struct __ngw__sendItemRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__retractRequest
-#define SOAP_TYPE___ngw__retractRequest (767)
+#define SOAP_TYPE___ngw__retractRequest (884)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__retractRequest(struct soap*, const struct __ngw__retractRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__retractRequest(struct soap*, struct __ngw__retractRequest *);
@@ -4217,7 +4815,7 @@ SOAP_FMAC3 struct __ngw__retractRequest * SOAP_FMAC4 soap_get___ngw__retractRequ
 SOAP_FMAC3 struct __ngw__retractRequest * SOAP_FMAC4 soap_in___ngw__retractRequest(struct soap*, const char*, struct __ngw__retractRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__replyRequest
-#define SOAP_TYPE___ngw__replyRequest (763)
+#define SOAP_TYPE___ngw__replyRequest (880)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__replyRequest(struct soap*, const struct __ngw__replyRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__replyRequest(struct soap*, struct __ngw__replyRequest *);
@@ -4227,7 +4825,7 @@ SOAP_FMAC3 struct __ngw__replyRequest * SOAP_FMAC4 soap_get___ngw__replyRequest(
 SOAP_FMAC3 struct __ngw__replyRequest * SOAP_FMAC4 soap_in___ngw__replyRequest(struct soap*, const char*, struct __ngw__replyRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__removeSignatureRequest
-#define SOAP_TYPE___ngw__removeSignatureRequest (759)
+#define SOAP_TYPE___ngw__removeSignatureRequest (876)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__removeSignatureRequest(struct soap*, const struct __ngw__removeSignatureRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__removeSignatureRequest(struct soap*, struct __ngw__removeSignatureRequest *);
@@ -4236,8 +4834,18 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__removeSignatureRequest(struct soap*, c
 SOAP_FMAC3 struct __ngw__removeSignatureRequest * SOAP_FMAC4 soap_get___ngw__removeSignatureRequest(struct soap*, struct __ngw__removeSignatureRequest *, const char*, const char*);
 SOAP_FMAC3 struct __ngw__removeSignatureRequest * SOAP_FMAC4 soap_in___ngw__removeSignatureRequest(struct soap*, const char*, struct __ngw__removeSignatureRequest *, const char*);
 
+#ifndef SOAP_TYPE___ngw__removeProxyUserRequest
+#define SOAP_TYPE___ngw__removeProxyUserRequest (872)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__removeProxyUserRequest(struct soap*, const struct __ngw__removeProxyUserRequest *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__removeProxyUserRequest(struct soap*, struct __ngw__removeProxyUserRequest *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__removeProxyUserRequest(struct soap*, const struct __ngw__removeProxyUserRequest *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__removeProxyUserRequest(struct soap*, const char*, int, const struct __ngw__removeProxyUserRequest *, const char*);
+SOAP_FMAC3 struct __ngw__removeProxyUserRequest * SOAP_FMAC4 soap_get___ngw__removeProxyUserRequest(struct soap*, struct __ngw__removeProxyUserRequest *, const char*, const char*);
+SOAP_FMAC3 struct __ngw__removeProxyUserRequest * SOAP_FMAC4 soap_in___ngw__removeProxyUserRequest(struct soap*, const char*, struct __ngw__removeProxyUserRequest *, const char*);
+
 #ifndef SOAP_TYPE___ngw__removeProxyAccessRequest
-#define SOAP_TYPE___ngw__removeProxyAccessRequest (755)
+#define SOAP_TYPE___ngw__removeProxyAccessRequest (868)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__removeProxyAccessRequest(struct soap*, const struct __ngw__removeProxyAccessRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__removeProxyAccessRequest(struct soap*, struct __ngw__removeProxyAccessRequest *);
@@ -4247,7 +4855,7 @@ SOAP_FMAC3 struct __ngw__removeProxyAccessRequest * SOAP_FMAC4 soap_get___ngw__r
 SOAP_FMAC3 struct __ngw__removeProxyAccessRequest * SOAP_FMAC4 soap_in___ngw__removeProxyAccessRequest(struct soap*, const char*, struct __ngw__removeProxyAccessRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__removeMembersRequest
-#define SOAP_TYPE___ngw__removeMembersRequest (751)
+#define SOAP_TYPE___ngw__removeMembersRequest (864)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__removeMembersRequest(struct soap*, const struct __ngw__removeMembersRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__removeMembersRequest(struct soap*, struct __ngw__removeMembersRequest *);
@@ -4257,7 +4865,7 @@ SOAP_FMAC3 struct __ngw__removeMembersRequest * SOAP_FMAC4 soap_get___ngw__remov
 SOAP_FMAC3 struct __ngw__removeMembersRequest * SOAP_FMAC4 soap_in___ngw__removeMembersRequest(struct soap*, const char*, struct __ngw__removeMembersRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__removeJunkEntryRequest
-#define SOAP_TYPE___ngw__removeJunkEntryRequest (747)
+#define SOAP_TYPE___ngw__removeJunkEntryRequest (860)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__removeJunkEntryRequest(struct soap*, const struct __ngw__removeJunkEntryRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__removeJunkEntryRequest(struct soap*, struct __ngw__removeJunkEntryRequest *);
@@ -4267,7 +4875,7 @@ SOAP_FMAC3 struct __ngw__removeJunkEntryRequest * SOAP_FMAC4 soap_get___ngw__rem
 SOAP_FMAC3 struct __ngw__removeJunkEntryRequest * SOAP_FMAC4 soap_in___ngw__removeJunkEntryRequest(struct soap*, const char*, struct __ngw__removeJunkEntryRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__removeItemsRequest
-#define SOAP_TYPE___ngw__removeItemsRequest (743)
+#define SOAP_TYPE___ngw__removeItemsRequest (856)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__removeItemsRequest(struct soap*, const struct __ngw__removeItemsRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__removeItemsRequest(struct soap*, struct __ngw__removeItemsRequest *);
@@ -4277,7 +4885,7 @@ SOAP_FMAC3 struct __ngw__removeItemsRequest * SOAP_FMAC4 soap_get___ngw__removeI
 SOAP_FMAC3 struct __ngw__removeItemsRequest * SOAP_FMAC4 soap_in___ngw__removeItemsRequest(struct soap*, const char*, struct __ngw__removeItemsRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__removeItemRequest
-#define SOAP_TYPE___ngw__removeItemRequest (739)
+#define SOAP_TYPE___ngw__removeItemRequest (852)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__removeItemRequest(struct soap*, const struct __ngw__removeItemRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__removeItemRequest(struct soap*, struct __ngw__removeItemRequest *);
@@ -4287,7 +4895,7 @@ SOAP_FMAC3 struct __ngw__removeItemRequest * SOAP_FMAC4 soap_get___ngw__removeIt
 SOAP_FMAC3 struct __ngw__removeItemRequest * SOAP_FMAC4 soap_in___ngw__removeItemRequest(struct soap*, const char*, struct __ngw__removeItemRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__removeCustomDefinitionRequest
-#define SOAP_TYPE___ngw__removeCustomDefinitionRequest (735)
+#define SOAP_TYPE___ngw__removeCustomDefinitionRequest (848)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__removeCustomDefinitionRequest(struct soap*, const struct __ngw__removeCustomDefinitionRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__removeCustomDefinitionRequest(struct soap*, struct __ngw__removeCustomDefinitionRequest *);
@@ -4297,7 +4905,7 @@ SOAP_FMAC3 struct __ngw__removeCustomDefinitionRequest * SOAP_FMAC4 soap_get___n
 SOAP_FMAC3 struct __ngw__removeCustomDefinitionRequest * SOAP_FMAC4 soap_in___ngw__removeCustomDefinitionRequest(struct soap*, const char*, struct __ngw__removeCustomDefinitionRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__readCursorRequest
-#define SOAP_TYPE___ngw__readCursorRequest (731)
+#define SOAP_TYPE___ngw__readCursorRequest (844)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__readCursorRequest(struct soap*, const struct __ngw__readCursorRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__readCursorRequest(struct soap*, struct __ngw__readCursorRequest *);
@@ -4307,7 +4915,7 @@ SOAP_FMAC3 struct __ngw__readCursorRequest * SOAP_FMAC4 soap_get___ngw__readCurs
 SOAP_FMAC3 struct __ngw__readCursorRequest * SOAP_FMAC4 soap_in___ngw__readCursorRequest(struct soap*, const char*, struct __ngw__readCursorRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__purgeRequest
-#define SOAP_TYPE___ngw__purgeRequest (727)
+#define SOAP_TYPE___ngw__purgeRequest (840)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__purgeRequest(struct soap*, const struct __ngw__purgeRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__purgeRequest(struct soap*, struct __ngw__purgeRequest *);
@@ -4317,7 +4925,7 @@ SOAP_FMAC3 struct __ngw__purgeRequest * SOAP_FMAC4 soap_get___ngw__purgeRequest(
 SOAP_FMAC3 struct __ngw__purgeRequest * SOAP_FMAC4 soap_in___ngw__purgeRequest(struct soap*, const char*, struct __ngw__purgeRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__purgeDeletedItemsRequest
-#define SOAP_TYPE___ngw__purgeDeletedItemsRequest (723)
+#define SOAP_TYPE___ngw__purgeDeletedItemsRequest (836)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__purgeDeletedItemsRequest(struct soap*, const struct __ngw__purgeDeletedItemsRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__purgeDeletedItemsRequest(struct soap*, struct __ngw__purgeDeletedItemsRequest *);
@@ -4327,7 +4935,7 @@ SOAP_FMAC3 struct __ngw__purgeDeletedItemsRequest * SOAP_FMAC4 soap_get___ngw__p
 SOAP_FMAC3 struct __ngw__purgeDeletedItemsRequest * SOAP_FMAC4 soap_in___ngw__purgeDeletedItemsRequest(struct soap*, const char*, struct __ngw__purgeDeletedItemsRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__positionCursorRequest
-#define SOAP_TYPE___ngw__positionCursorRequest (719)
+#define SOAP_TYPE___ngw__positionCursorRequest (832)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__positionCursorRequest(struct soap*, const struct __ngw__positionCursorRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__positionCursorRequest(struct soap*, struct __ngw__positionCursorRequest *);
@@ -4337,7 +4945,7 @@ SOAP_FMAC3 struct __ngw__positionCursorRequest * SOAP_FMAC4 soap_get___ngw__posi
 SOAP_FMAC3 struct __ngw__positionCursorRequest * SOAP_FMAC4 soap_in___ngw__positionCursorRequest(struct soap*, const char*, struct __ngw__positionCursorRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__moveItemRequest
-#define SOAP_TYPE___ngw__moveItemRequest (715)
+#define SOAP_TYPE___ngw__moveItemRequest (828)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__moveItemRequest(struct soap*, const struct __ngw__moveItemRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__moveItemRequest(struct soap*, struct __ngw__moveItemRequest *);
@@ -4347,7 +4955,7 @@ SOAP_FMAC3 struct __ngw__moveItemRequest * SOAP_FMAC4 soap_get___ngw__moveItemRe
 SOAP_FMAC3 struct __ngw__moveItemRequest * SOAP_FMAC4 soap_in___ngw__moveItemRequest(struct soap*, const char*, struct __ngw__moveItemRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__modifySignaturesRequest
-#define SOAP_TYPE___ngw__modifySignaturesRequest (711)
+#define SOAP_TYPE___ngw__modifySignaturesRequest (824)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__modifySignaturesRequest(struct soap*, const struct __ngw__modifySignaturesRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__modifySignaturesRequest(struct soap*, struct __ngw__modifySignaturesRequest *);
@@ -4357,7 +4965,7 @@ SOAP_FMAC3 struct __ngw__modifySignaturesRequest * SOAP_FMAC4 soap_get___ngw__mo
 SOAP_FMAC3 struct __ngw__modifySignaturesRequest * SOAP_FMAC4 soap_in___ngw__modifySignaturesRequest(struct soap*, const char*, struct __ngw__modifySignaturesRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__modifySettingsRequest
-#define SOAP_TYPE___ngw__modifySettingsRequest (707)
+#define SOAP_TYPE___ngw__modifySettingsRequest (820)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__modifySettingsRequest(struct soap*, const struct __ngw__modifySettingsRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__modifySettingsRequest(struct soap*, struct __ngw__modifySettingsRequest *);
@@ -4367,7 +4975,7 @@ SOAP_FMAC3 struct __ngw__modifySettingsRequest * SOAP_FMAC4 soap_get___ngw__modi
 SOAP_FMAC3 struct __ngw__modifySettingsRequest * SOAP_FMAC4 soap_in___ngw__modifySettingsRequest(struct soap*, const char*, struct __ngw__modifySettingsRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__modifyProxyAccessRequest
-#define SOAP_TYPE___ngw__modifyProxyAccessRequest (703)
+#define SOAP_TYPE___ngw__modifyProxyAccessRequest (816)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__modifyProxyAccessRequest(struct soap*, const struct __ngw__modifyProxyAccessRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__modifyProxyAccessRequest(struct soap*, struct __ngw__modifyProxyAccessRequest *);
@@ -4377,7 +4985,7 @@ SOAP_FMAC3 struct __ngw__modifyProxyAccessRequest * SOAP_FMAC4 soap_get___ngw__m
 SOAP_FMAC3 struct __ngw__modifyProxyAccessRequest * SOAP_FMAC4 soap_in___ngw__modifyProxyAccessRequest(struct soap*, const char*, struct __ngw__modifyProxyAccessRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__modifyPasswordRequest
-#define SOAP_TYPE___ngw__modifyPasswordRequest (699)
+#define SOAP_TYPE___ngw__modifyPasswordRequest (812)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__modifyPasswordRequest(struct soap*, const struct __ngw__modifyPasswordRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__modifyPasswordRequest(struct soap*, struct __ngw__modifyPasswordRequest *);
@@ -4387,7 +4995,7 @@ SOAP_FMAC3 struct __ngw__modifyPasswordRequest * SOAP_FMAC4 soap_get___ngw__modi
 SOAP_FMAC3 struct __ngw__modifyPasswordRequest * SOAP_FMAC4 soap_in___ngw__modifyPasswordRequest(struct soap*, const char*, struct __ngw__modifyPasswordRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__modifyJunkMailSettingsRequest
-#define SOAP_TYPE___ngw__modifyJunkMailSettingsRequest (695)
+#define SOAP_TYPE___ngw__modifyJunkMailSettingsRequest (808)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__modifyJunkMailSettingsRequest(struct soap*, const struct __ngw__modifyJunkMailSettingsRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__modifyJunkMailSettingsRequest(struct soap*, struct __ngw__modifyJunkMailSettingsRequest *);
@@ -4397,7 +5005,7 @@ SOAP_FMAC3 struct __ngw__modifyJunkMailSettingsRequest * SOAP_FMAC4 soap_get___n
 SOAP_FMAC3 struct __ngw__modifyJunkMailSettingsRequest * SOAP_FMAC4 soap_in___ngw__modifyJunkMailSettingsRequest(struct soap*, const char*, struct __ngw__modifyJunkMailSettingsRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__modifyJunkEntryRequest
-#define SOAP_TYPE___ngw__modifyJunkEntryRequest (691)
+#define SOAP_TYPE___ngw__modifyJunkEntryRequest (804)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__modifyJunkEntryRequest(struct soap*, const struct __ngw__modifyJunkEntryRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__modifyJunkEntryRequest(struct soap*, struct __ngw__modifyJunkEntryRequest *);
@@ -4407,7 +5015,7 @@ SOAP_FMAC3 struct __ngw__modifyJunkEntryRequest * SOAP_FMAC4 soap_get___ngw__mod
 SOAP_FMAC3 struct __ngw__modifyJunkEntryRequest * SOAP_FMAC4 soap_in___ngw__modifyJunkEntryRequest(struct soap*, const char*, struct __ngw__modifyJunkEntryRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__modifyItemRequest
-#define SOAP_TYPE___ngw__modifyItemRequest (687)
+#define SOAP_TYPE___ngw__modifyItemRequest (800)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__modifyItemRequest(struct soap*, const struct __ngw__modifyItemRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__modifyItemRequest(struct soap*, struct __ngw__modifyItemRequest *);
@@ -4417,7 +5025,7 @@ SOAP_FMAC3 struct __ngw__modifyItemRequest * SOAP_FMAC4 soap_get___ngw__modifyIt
 SOAP_FMAC3 struct __ngw__modifyItemRequest * SOAP_FMAC4 soap_in___ngw__modifyItemRequest(struct soap*, const char*, struct __ngw__modifyItemRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__markUnReadRequest
-#define SOAP_TYPE___ngw__markUnReadRequest (683)
+#define SOAP_TYPE___ngw__markUnReadRequest (796)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__markUnReadRequest(struct soap*, const struct __ngw__markUnReadRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__markUnReadRequest(struct soap*, struct __ngw__markUnReadRequest *);
@@ -4427,7 +5035,7 @@ SOAP_FMAC3 struct __ngw__markUnReadRequest * SOAP_FMAC4 soap_get___ngw__markUnRe
 SOAP_FMAC3 struct __ngw__markUnReadRequest * SOAP_FMAC4 soap_in___ngw__markUnReadRequest(struct soap*, const char*, struct __ngw__markUnReadRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__markUnPrivateRequest
-#define SOAP_TYPE___ngw__markUnPrivateRequest (679)
+#define SOAP_TYPE___ngw__markUnPrivateRequest (792)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__markUnPrivateRequest(struct soap*, const struct __ngw__markUnPrivateRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__markUnPrivateRequest(struct soap*, struct __ngw__markUnPrivateRequest *);
@@ -4437,7 +5045,7 @@ SOAP_FMAC3 struct __ngw__markUnPrivateRequest * SOAP_FMAC4 soap_get___ngw__markU
 SOAP_FMAC3 struct __ngw__markUnPrivateRequest * SOAP_FMAC4 soap_in___ngw__markUnPrivateRequest(struct soap*, const char*, struct __ngw__markUnPrivateRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__markReadRequest
-#define SOAP_TYPE___ngw__markReadRequest (675)
+#define SOAP_TYPE___ngw__markReadRequest (788)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__markReadRequest(struct soap*, const struct __ngw__markReadRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__markReadRequest(struct soap*, struct __ngw__markReadRequest *);
@@ -4447,7 +5055,7 @@ SOAP_FMAC3 struct __ngw__markReadRequest * SOAP_FMAC4 soap_get___ngw__markReadRe
 SOAP_FMAC3 struct __ngw__markReadRequest * SOAP_FMAC4 soap_in___ngw__markReadRequest(struct soap*, const char*, struct __ngw__markReadRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__markPrivateRequest
-#define SOAP_TYPE___ngw__markPrivateRequest (671)
+#define SOAP_TYPE___ngw__markPrivateRequest (784)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__markPrivateRequest(struct soap*, const struct __ngw__markPrivateRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__markPrivateRequest(struct soap*, struct __ngw__markPrivateRequest *);
@@ -4457,7 +5065,7 @@ SOAP_FMAC3 struct __ngw__markPrivateRequest * SOAP_FMAC4 soap_get___ngw__markPri
 SOAP_FMAC3 struct __ngw__markPrivateRequest * SOAP_FMAC4 soap_in___ngw__markPrivateRequest(struct soap*, const char*, struct __ngw__markPrivateRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__logoutRequest
-#define SOAP_TYPE___ngw__logoutRequest (667)
+#define SOAP_TYPE___ngw__logoutRequest (780)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__logoutRequest(struct soap*, const struct __ngw__logoutRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__logoutRequest(struct soap*, struct __ngw__logoutRequest *);
@@ -4467,7 +5075,7 @@ SOAP_FMAC3 struct __ngw__logoutRequest * SOAP_FMAC4 soap_get___ngw__logoutReques
 SOAP_FMAC3 struct __ngw__logoutRequest * SOAP_FMAC4 soap_in___ngw__logoutRequest(struct soap*, const char*, struct __ngw__logoutRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__loginRequest
-#define SOAP_TYPE___ngw__loginRequest (663)
+#define SOAP_TYPE___ngw__loginRequest (776)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__loginRequest(struct soap*, const struct __ngw__loginRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__loginRequest(struct soap*, struct __ngw__loginRequest *);
@@ -4476,8 +5084,18 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__loginRequest(struct soap*, const char*
 SOAP_FMAC3 struct __ngw__loginRequest * SOAP_FMAC4 soap_get___ngw__loginRequest(struct soap*, struct __ngw__loginRequest *, const char*, const char*);
 SOAP_FMAC3 struct __ngw__loginRequest * SOAP_FMAC4 soap_in___ngw__loginRequest(struct soap*, const char*, struct __ngw__loginRequest *, const char*);
 
+#ifndef SOAP_TYPE___ngw__getUserListRequest
+#define SOAP_TYPE___ngw__getUserListRequest (772)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getUserListRequest(struct soap*, const struct __ngw__getUserListRequest *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getUserListRequest(struct soap*, struct __ngw__getUserListRequest *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getUserListRequest(struct soap*, const struct __ngw__getUserListRequest *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getUserListRequest(struct soap*, const char*, int, const struct __ngw__getUserListRequest *, const char*);
+SOAP_FMAC3 struct __ngw__getUserListRequest * SOAP_FMAC4 soap_get___ngw__getUserListRequest(struct soap*, struct __ngw__getUserListRequest *, const char*, const char*);
+SOAP_FMAC3 struct __ngw__getUserListRequest * SOAP_FMAC4 soap_in___ngw__getUserListRequest(struct soap*, const char*, struct __ngw__getUserListRequest *, const char*);
+
 #ifndef SOAP_TYPE___ngw__getTimezoneListRequest
-#define SOAP_TYPE___ngw__getTimezoneListRequest (659)
+#define SOAP_TYPE___ngw__getTimezoneListRequest (768)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getTimezoneListRequest(struct soap*, const struct __ngw__getTimezoneListRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getTimezoneListRequest(struct soap*, struct __ngw__getTimezoneListRequest *);
@@ -4486,8 +5104,18 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getTimezoneListRequest(struct soap*, c
 SOAP_FMAC3 struct __ngw__getTimezoneListRequest * SOAP_FMAC4 soap_get___ngw__getTimezoneListRequest(struct soap*, struct __ngw__getTimezoneListRequest *, const char*, const char*);
 SOAP_FMAC3 struct __ngw__getTimezoneListRequest * SOAP_FMAC4 soap_in___ngw__getTimezoneListRequest(struct soap*, const char*, struct __ngw__getTimezoneListRequest *, const char*);
 
+#ifndef SOAP_TYPE___ngw__getTimestampRequest
+#define SOAP_TYPE___ngw__getTimestampRequest (764)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getTimestampRequest(struct soap*, const struct __ngw__getTimestampRequest *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getTimestampRequest(struct soap*, struct __ngw__getTimestampRequest *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getTimestampRequest(struct soap*, const struct __ngw__getTimestampRequest *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getTimestampRequest(struct soap*, const char*, int, const struct __ngw__getTimestampRequest *, const char*);
+SOAP_FMAC3 struct __ngw__getTimestampRequest * SOAP_FMAC4 soap_get___ngw__getTimestampRequest(struct soap*, struct __ngw__getTimestampRequest *, const char*, const char*);
+SOAP_FMAC3 struct __ngw__getTimestampRequest * SOAP_FMAC4 soap_in___ngw__getTimestampRequest(struct soap*, const char*, struct __ngw__getTimestampRequest *, const char*);
+
 #ifndef SOAP_TYPE___ngw__getSignaturesRequest
-#define SOAP_TYPE___ngw__getSignaturesRequest (655)
+#define SOAP_TYPE___ngw__getSignaturesRequest (760)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getSignaturesRequest(struct soap*, const struct __ngw__getSignaturesRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getSignaturesRequest(struct soap*, struct __ngw__getSignaturesRequest *);
@@ -4497,7 +5125,7 @@ SOAP_FMAC3 struct __ngw__getSignaturesRequest * SOAP_FMAC4 soap_get___ngw__getSi
 SOAP_FMAC3 struct __ngw__getSignaturesRequest * SOAP_FMAC4 soap_in___ngw__getSignaturesRequest(struct soap*, const char*, struct __ngw__getSignaturesRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getSettingsRequest
-#define SOAP_TYPE___ngw__getSettingsRequest (651)
+#define SOAP_TYPE___ngw__getSettingsRequest (756)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getSettingsRequest(struct soap*, const struct __ngw__getSettingsRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getSettingsRequest(struct soap*, struct __ngw__getSettingsRequest *);
@@ -4506,8 +5134,18 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getSettingsRequest(struct soap*, const
 SOAP_FMAC3 struct __ngw__getSettingsRequest * SOAP_FMAC4 soap_get___ngw__getSettingsRequest(struct soap*, struct __ngw__getSettingsRequest *, const char*, const char*);
 SOAP_FMAC3 struct __ngw__getSettingsRequest * SOAP_FMAC4 soap_in___ngw__getSettingsRequest(struct soap*, const char*, struct __ngw__getSettingsRequest *, const char*);
 
+#ifndef SOAP_TYPE___ngw__getRuleListRequest
+#define SOAP_TYPE___ngw__getRuleListRequest (752)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getRuleListRequest(struct soap*, const struct __ngw__getRuleListRequest *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getRuleListRequest(struct soap*, struct __ngw__getRuleListRequest *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getRuleListRequest(struct soap*, const struct __ngw__getRuleListRequest *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getRuleListRequest(struct soap*, const char*, int, const struct __ngw__getRuleListRequest *, const char*);
+SOAP_FMAC3 struct __ngw__getRuleListRequest * SOAP_FMAC4 soap_get___ngw__getRuleListRequest(struct soap*, struct __ngw__getRuleListRequest *, const char*, const char*);
+SOAP_FMAC3 struct __ngw__getRuleListRequest * SOAP_FMAC4 soap_in___ngw__getRuleListRequest(struct soap*, const char*, struct __ngw__getRuleListRequest *, const char*);
+
 #ifndef SOAP_TYPE___ngw__getProxyListRequest
-#define SOAP_TYPE___ngw__getProxyListRequest (647)
+#define SOAP_TYPE___ngw__getProxyListRequest (748)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getProxyListRequest(struct soap*, const struct __ngw__getProxyListRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getProxyListRequest(struct soap*, struct __ngw__getProxyListRequest *);
@@ -4517,7 +5155,7 @@ SOAP_FMAC3 struct __ngw__getProxyListRequest * SOAP_FMAC4 soap_get___ngw__getPro
 SOAP_FMAC3 struct __ngw__getProxyListRequest * SOAP_FMAC4 soap_in___ngw__getProxyListRequest(struct soap*, const char*, struct __ngw__getProxyListRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getProxyAccessListRequest
-#define SOAP_TYPE___ngw__getProxyAccessListRequest (643)
+#define SOAP_TYPE___ngw__getProxyAccessListRequest (744)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getProxyAccessListRequest(struct soap*, const struct __ngw__getProxyAccessListRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getProxyAccessListRequest(struct soap*, struct __ngw__getProxyAccessListRequest *);
@@ -4527,7 +5165,7 @@ SOAP_FMAC3 struct __ngw__getProxyAccessListRequest * SOAP_FMAC4 soap_get___ngw__
 SOAP_FMAC3 struct __ngw__getProxyAccessListRequest * SOAP_FMAC4 soap_in___ngw__getProxyAccessListRequest(struct soap*, const char*, struct __ngw__getProxyAccessListRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getQuickMessagesRequest
-#define SOAP_TYPE___ngw__getQuickMessagesRequest (639)
+#define SOAP_TYPE___ngw__getQuickMessagesRequest (740)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getQuickMessagesRequest(struct soap*, const struct __ngw__getQuickMessagesRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getQuickMessagesRequest(struct soap*, struct __ngw__getQuickMessagesRequest *);
@@ -4536,8 +5174,28 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getQuickMessagesRequest(struct soap*, 
 SOAP_FMAC3 struct __ngw__getQuickMessagesRequest * SOAP_FMAC4 soap_get___ngw__getQuickMessagesRequest(struct soap*, struct __ngw__getQuickMessagesRequest *, const char*, const char*);
 SOAP_FMAC3 struct __ngw__getQuickMessagesRequest * SOAP_FMAC4 soap_in___ngw__getQuickMessagesRequest(struct soap*, const char*, struct __ngw__getQuickMessagesRequest *, const char*);
 
+#ifndef SOAP_TYPE___ngw__getLibraryListRequest
+#define SOAP_TYPE___ngw__getLibraryListRequest (736)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getLibraryListRequest(struct soap*, const struct __ngw__getLibraryListRequest *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getLibraryListRequest(struct soap*, struct __ngw__getLibraryListRequest *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getLibraryListRequest(struct soap*, const struct __ngw__getLibraryListRequest *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getLibraryListRequest(struct soap*, const char*, int, const struct __ngw__getLibraryListRequest *, const char*);
+SOAP_FMAC3 struct __ngw__getLibraryListRequest * SOAP_FMAC4 soap_get___ngw__getLibraryListRequest(struct soap*, struct __ngw__getLibraryListRequest *, const char*, const char*);
+SOAP_FMAC3 struct __ngw__getLibraryListRequest * SOAP_FMAC4 soap_in___ngw__getLibraryListRequest(struct soap*, const char*, struct __ngw__getLibraryListRequest *, const char*);
+
+#ifndef SOAP_TYPE___ngw__getLibraryItemRequest
+#define SOAP_TYPE___ngw__getLibraryItemRequest (732)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getLibraryItemRequest(struct soap*, const struct __ngw__getLibraryItemRequest *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getLibraryItemRequest(struct soap*, struct __ngw__getLibraryItemRequest *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getLibraryItemRequest(struct soap*, const struct __ngw__getLibraryItemRequest *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getLibraryItemRequest(struct soap*, const char*, int, const struct __ngw__getLibraryItemRequest *, const char*);
+SOAP_FMAC3 struct __ngw__getLibraryItemRequest * SOAP_FMAC4 soap_get___ngw__getLibraryItemRequest(struct soap*, struct __ngw__getLibraryItemRequest *, const char*, const char*);
+SOAP_FMAC3 struct __ngw__getLibraryItemRequest * SOAP_FMAC4 soap_in___ngw__getLibraryItemRequest(struct soap*, const char*, struct __ngw__getLibraryItemRequest *, const char*);
+
 #ifndef SOAP_TYPE___ngw__getJunkMailSettingsRequest
-#define SOAP_TYPE___ngw__getJunkMailSettingsRequest (635)
+#define SOAP_TYPE___ngw__getJunkMailSettingsRequest (728)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getJunkMailSettingsRequest(struct soap*, const struct __ngw__getJunkMailSettingsRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getJunkMailSettingsRequest(struct soap*, struct __ngw__getJunkMailSettingsRequest *);
@@ -4547,7 +5205,7 @@ SOAP_FMAC3 struct __ngw__getJunkMailSettingsRequest * SOAP_FMAC4 soap_get___ngw_
 SOAP_FMAC3 struct __ngw__getJunkMailSettingsRequest * SOAP_FMAC4 soap_in___ngw__getJunkMailSettingsRequest(struct soap*, const char*, struct __ngw__getJunkMailSettingsRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getJunkEntriesRequest
-#define SOAP_TYPE___ngw__getJunkEntriesRequest (631)
+#define SOAP_TYPE___ngw__getJunkEntriesRequest (724)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getJunkEntriesRequest(struct soap*, const struct __ngw__getJunkEntriesRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getJunkEntriesRequest(struct soap*, struct __ngw__getJunkEntriesRequest *);
@@ -4557,7 +5215,7 @@ SOAP_FMAC3 struct __ngw__getJunkEntriesRequest * SOAP_FMAC4 soap_get___ngw__getJ
 SOAP_FMAC3 struct __ngw__getJunkEntriesRequest * SOAP_FMAC4 soap_in___ngw__getJunkEntriesRequest(struct soap*, const char*, struct __ngw__getJunkEntriesRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getItemsRequest
-#define SOAP_TYPE___ngw__getItemsRequest (627)
+#define SOAP_TYPE___ngw__getItemsRequest (720)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getItemsRequest(struct soap*, const struct __ngw__getItemsRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getItemsRequest(struct soap*, struct __ngw__getItemsRequest *);
@@ -4567,7 +5225,7 @@ SOAP_FMAC3 struct __ngw__getItemsRequest * SOAP_FMAC4 soap_get___ngw__getItemsRe
 SOAP_FMAC3 struct __ngw__getItemsRequest * SOAP_FMAC4 soap_in___ngw__getItemsRequest(struct soap*, const char*, struct __ngw__getItemsRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getItemRequest
-#define SOAP_TYPE___ngw__getItemRequest (623)
+#define SOAP_TYPE___ngw__getItemRequest (716)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getItemRequest(struct soap*, const struct __ngw__getItemRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getItemRequest(struct soap*, struct __ngw__getItemRequest *);
@@ -4577,7 +5235,7 @@ SOAP_FMAC3 struct __ngw__getItemRequest * SOAP_FMAC4 soap_get___ngw__getItemRequ
 SOAP_FMAC3 struct __ngw__getItemRequest * SOAP_FMAC4 soap_in___ngw__getItemRequest(struct soap*, const char*, struct __ngw__getItemRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getFreeBusyRequest
-#define SOAP_TYPE___ngw__getFreeBusyRequest (619)
+#define SOAP_TYPE___ngw__getFreeBusyRequest (712)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getFreeBusyRequest(struct soap*, const struct __ngw__getFreeBusyRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getFreeBusyRequest(struct soap*, struct __ngw__getFreeBusyRequest *);
@@ -4587,7 +5245,7 @@ SOAP_FMAC3 struct __ngw__getFreeBusyRequest * SOAP_FMAC4 soap_get___ngw__getFree
 SOAP_FMAC3 struct __ngw__getFreeBusyRequest * SOAP_FMAC4 soap_in___ngw__getFreeBusyRequest(struct soap*, const char*, struct __ngw__getFreeBusyRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getFolderListRequest
-#define SOAP_TYPE___ngw__getFolderListRequest (615)
+#define SOAP_TYPE___ngw__getFolderListRequest (708)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getFolderListRequest(struct soap*, const struct __ngw__getFolderListRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getFolderListRequest(struct soap*, struct __ngw__getFolderListRequest *);
@@ -4596,8 +5254,28 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getFolderListRequest(struct soap*, con
 SOAP_FMAC3 struct __ngw__getFolderListRequest * SOAP_FMAC4 soap_get___ngw__getFolderListRequest(struct soap*, struct __ngw__getFolderListRequest *, const char*, const char*);
 SOAP_FMAC3 struct __ngw__getFolderListRequest * SOAP_FMAC4 soap_in___ngw__getFolderListRequest(struct soap*, const char*, struct __ngw__getFolderListRequest *, const char*);
 
+#ifndef SOAP_TYPE___ngw__getFolderRequest
+#define SOAP_TYPE___ngw__getFolderRequest (704)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getFolderRequest(struct soap*, const struct __ngw__getFolderRequest *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getFolderRequest(struct soap*, struct __ngw__getFolderRequest *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getFolderRequest(struct soap*, const struct __ngw__getFolderRequest *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getFolderRequest(struct soap*, const char*, int, const struct __ngw__getFolderRequest *, const char*);
+SOAP_FMAC3 struct __ngw__getFolderRequest * SOAP_FMAC4 soap_get___ngw__getFolderRequest(struct soap*, struct __ngw__getFolderRequest *, const char*, const char*);
+SOAP_FMAC3 struct __ngw__getFolderRequest * SOAP_FMAC4 soap_in___ngw__getFolderRequest(struct soap*, const char*, struct __ngw__getFolderRequest *, const char*);
+
+#ifndef SOAP_TYPE___ngw__getDocumentTypeListRequest
+#define SOAP_TYPE___ngw__getDocumentTypeListRequest (700)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getDocumentTypeListRequest(struct soap*, const struct __ngw__getDocumentTypeListRequest *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getDocumentTypeListRequest(struct soap*, struct __ngw__getDocumentTypeListRequest *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getDocumentTypeListRequest(struct soap*, const struct __ngw__getDocumentTypeListRequest *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getDocumentTypeListRequest(struct soap*, const char*, int, const struct __ngw__getDocumentTypeListRequest *, const char*);
+SOAP_FMAC3 struct __ngw__getDocumentTypeListRequest * SOAP_FMAC4 soap_get___ngw__getDocumentTypeListRequest(struct soap*, struct __ngw__getDocumentTypeListRequest *, const char*, const char*);
+SOAP_FMAC3 struct __ngw__getDocumentTypeListRequest * SOAP_FMAC4 soap_in___ngw__getDocumentTypeListRequest(struct soap*, const char*, struct __ngw__getDocumentTypeListRequest *, const char*);
+
 #ifndef SOAP_TYPE___ngw__getDeltaInfoRequest
-#define SOAP_TYPE___ngw__getDeltaInfoRequest (611)
+#define SOAP_TYPE___ngw__getDeltaInfoRequest (696)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getDeltaInfoRequest(struct soap*, const struct __ngw__getDeltaInfoRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getDeltaInfoRequest(struct soap*, struct __ngw__getDeltaInfoRequest *);
@@ -4607,7 +5285,7 @@ SOAP_FMAC3 struct __ngw__getDeltaInfoRequest * SOAP_FMAC4 soap_get___ngw__getDel
 SOAP_FMAC3 struct __ngw__getDeltaInfoRequest * SOAP_FMAC4 soap_in___ngw__getDeltaInfoRequest(struct soap*, const char*, struct __ngw__getDeltaInfoRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getDeltasRequest
-#define SOAP_TYPE___ngw__getDeltasRequest (607)
+#define SOAP_TYPE___ngw__getDeltasRequest (692)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getDeltasRequest(struct soap*, const struct __ngw__getDeltasRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getDeltasRequest(struct soap*, struct __ngw__getDeltasRequest *);
@@ -4617,7 +5295,7 @@ SOAP_FMAC3 struct __ngw__getDeltasRequest * SOAP_FMAC4 soap_get___ngw__getDeltas
 SOAP_FMAC3 struct __ngw__getDeltasRequest * SOAP_FMAC4 soap_in___ngw__getDeltasRequest(struct soap*, const char*, struct __ngw__getDeltasRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getCustomListRequest
-#define SOAP_TYPE___ngw__getCustomListRequest (603)
+#define SOAP_TYPE___ngw__getCustomListRequest (688)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getCustomListRequest(struct soap*, const struct __ngw__getCustomListRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getCustomListRequest(struct soap*, struct __ngw__getCustomListRequest *);
@@ -4627,7 +5305,7 @@ SOAP_FMAC3 struct __ngw__getCustomListRequest * SOAP_FMAC4 soap_get___ngw__getCu
 SOAP_FMAC3 struct __ngw__getCustomListRequest * SOAP_FMAC4 soap_in___ngw__getCustomListRequest(struct soap*, const char*, struct __ngw__getCustomListRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getCategoryListRequest
-#define SOAP_TYPE___ngw__getCategoryListRequest (599)
+#define SOAP_TYPE___ngw__getCategoryListRequest (684)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getCategoryListRequest(struct soap*, const struct __ngw__getCategoryListRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getCategoryListRequest(struct soap*, struct __ngw__getCategoryListRequest *);
@@ -4637,7 +5315,7 @@ SOAP_FMAC3 struct __ngw__getCategoryListRequest * SOAP_FMAC4 soap_get___ngw__get
 SOAP_FMAC3 struct __ngw__getCategoryListRequest * SOAP_FMAC4 soap_in___ngw__getCategoryListRequest(struct soap*, const char*, struct __ngw__getCategoryListRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getAttachmentRequestMessage
-#define SOAP_TYPE___ngw__getAttachmentRequestMessage (595)
+#define SOAP_TYPE___ngw__getAttachmentRequestMessage (680)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getAttachmentRequestMessage(struct soap*, const struct __ngw__getAttachmentRequestMessage *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getAttachmentRequestMessage(struct soap*, struct __ngw__getAttachmentRequestMessage *);
@@ -4647,7 +5325,7 @@ SOAP_FMAC3 struct __ngw__getAttachmentRequestMessage * SOAP_FMAC4 soap_get___ngw
 SOAP_FMAC3 struct __ngw__getAttachmentRequestMessage * SOAP_FMAC4 soap_in___ngw__getAttachmentRequestMessage(struct soap*, const char*, struct __ngw__getAttachmentRequestMessage *, const char*);
 
 #ifndef SOAP_TYPE___ngw__getAddressBookListRequest
-#define SOAP_TYPE___ngw__getAddressBookListRequest (591)
+#define SOAP_TYPE___ngw__getAddressBookListRequest (676)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getAddressBookListRequest(struct soap*, const struct __ngw__getAddressBookListRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getAddressBookListRequest(struct soap*, struct __ngw__getAddressBookListRequest *);
@@ -4657,7 +5335,7 @@ SOAP_FMAC3 struct __ngw__getAddressBookListRequest * SOAP_FMAC4 soap_get___ngw__
 SOAP_FMAC3 struct __ngw__getAddressBookListRequest * SOAP_FMAC4 soap_in___ngw__getAddressBookListRequest(struct soap*, const char*, struct __ngw__getAddressBookListRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__forwardRequest
-#define SOAP_TYPE___ngw__forwardRequest (587)
+#define SOAP_TYPE___ngw__forwardRequest (672)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__forwardRequest(struct soap*, const struct __ngw__forwardRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__forwardRequest(struct soap*, struct __ngw__forwardRequest *);
@@ -4666,8 +5344,18 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__forwardRequest(struct soap*, const cha
 SOAP_FMAC3 struct __ngw__forwardRequest * SOAP_FMAC4 soap_get___ngw__forwardRequest(struct soap*, struct __ngw__forwardRequest *, const char*, const char*);
 SOAP_FMAC3 struct __ngw__forwardRequest * SOAP_FMAC4 soap_in___ngw__forwardRequest(struct soap*, const char*, struct __ngw__forwardRequest *, const char*);
 
+#ifndef SOAP_TYPE___ngw__executeRuleRequest
+#define SOAP_TYPE___ngw__executeRuleRequest (668)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__executeRuleRequest(struct soap*, const struct __ngw__executeRuleRequest *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__executeRuleRequest(struct soap*, struct __ngw__executeRuleRequest *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__executeRuleRequest(struct soap*, const struct __ngw__executeRuleRequest *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__executeRuleRequest(struct soap*, const char*, int, const struct __ngw__executeRuleRequest *, const char*);
+SOAP_FMAC3 struct __ngw__executeRuleRequest * SOAP_FMAC4 soap_get___ngw__executeRuleRequest(struct soap*, struct __ngw__executeRuleRequest *, const char*, const char*);
+SOAP_FMAC3 struct __ngw__executeRuleRequest * SOAP_FMAC4 soap_in___ngw__executeRuleRequest(struct soap*, const char*, struct __ngw__executeRuleRequest *, const char*);
+
 #ifndef SOAP_TYPE___ngw__destroyCursorRequest
-#define SOAP_TYPE___ngw__destroyCursorRequest (583)
+#define SOAP_TYPE___ngw__destroyCursorRequest (664)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__destroyCursorRequest(struct soap*, const struct __ngw__destroyCursorRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__destroyCursorRequest(struct soap*, struct __ngw__destroyCursorRequest *);
@@ -4677,7 +5365,7 @@ SOAP_FMAC3 struct __ngw__destroyCursorRequest * SOAP_FMAC4 soap_get___ngw__destr
 SOAP_FMAC3 struct __ngw__destroyCursorRequest * SOAP_FMAC4 soap_in___ngw__destroyCursorRequest(struct soap*, const char*, struct __ngw__destroyCursorRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__delegateRequest
-#define SOAP_TYPE___ngw__delegateRequest (579)
+#define SOAP_TYPE___ngw__delegateRequest (660)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__delegateRequest(struct soap*, const struct __ngw__delegateRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__delegateRequest(struct soap*, struct __ngw__delegateRequest *);
@@ -4687,7 +5375,7 @@ SOAP_FMAC3 struct __ngw__delegateRequest * SOAP_FMAC4 soap_get___ngw__delegateRe
 SOAP_FMAC3 struct __ngw__delegateRequest * SOAP_FMAC4 soap_in___ngw__delegateRequest(struct soap*, const char*, struct __ngw__delegateRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__declineRequest
-#define SOAP_TYPE___ngw__declineRequest (575)
+#define SOAP_TYPE___ngw__declineRequest (656)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__declineRequest(struct soap*, const struct __ngw__declineRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__declineRequest(struct soap*, struct __ngw__declineRequest *);
@@ -4697,7 +5385,7 @@ SOAP_FMAC3 struct __ngw__declineRequest * SOAP_FMAC4 soap_get___ngw__declineRequ
 SOAP_FMAC3 struct __ngw__declineRequest * SOAP_FMAC4 soap_in___ngw__declineRequest(struct soap*, const char*, struct __ngw__declineRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__createSignatureRequest
-#define SOAP_TYPE___ngw__createSignatureRequest (571)
+#define SOAP_TYPE___ngw__createSignatureRequest (652)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__createSignatureRequest(struct soap*, const struct __ngw__createSignatureRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__createSignatureRequest(struct soap*, struct __ngw__createSignatureRequest *);
@@ -4707,7 +5395,7 @@ SOAP_FMAC3 struct __ngw__createSignatureRequest * SOAP_FMAC4 soap_get___ngw__cre
 SOAP_FMAC3 struct __ngw__createSignatureRequest * SOAP_FMAC4 soap_in___ngw__createSignatureRequest(struct soap*, const char*, struct __ngw__createSignatureRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__createProxyAccessRequest
-#define SOAP_TYPE___ngw__createProxyAccessRequest (567)
+#define SOAP_TYPE___ngw__createProxyAccessRequest (648)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__createProxyAccessRequest(struct soap*, const struct __ngw__createProxyAccessRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__createProxyAccessRequest(struct soap*, struct __ngw__createProxyAccessRequest *);
@@ -4717,7 +5405,7 @@ SOAP_FMAC3 struct __ngw__createProxyAccessRequest * SOAP_FMAC4 soap_get___ngw__c
 SOAP_FMAC3 struct __ngw__createProxyAccessRequest * SOAP_FMAC4 soap_in___ngw__createProxyAccessRequest(struct soap*, const char*, struct __ngw__createProxyAccessRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__createJunkEntryRequest
-#define SOAP_TYPE___ngw__createJunkEntryRequest (563)
+#define SOAP_TYPE___ngw__createJunkEntryRequest (644)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__createJunkEntryRequest(struct soap*, const struct __ngw__createJunkEntryRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__createJunkEntryRequest(struct soap*, struct __ngw__createJunkEntryRequest *);
@@ -4726,8 +5414,18 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__createJunkEntryRequest(struct soap*, c
 SOAP_FMAC3 struct __ngw__createJunkEntryRequest * SOAP_FMAC4 soap_get___ngw__createJunkEntryRequest(struct soap*, struct __ngw__createJunkEntryRequest *, const char*, const char*);
 SOAP_FMAC3 struct __ngw__createJunkEntryRequest * SOAP_FMAC4 soap_in___ngw__createJunkEntryRequest(struct soap*, const char*, struct __ngw__createJunkEntryRequest *, const char*);
 
+#ifndef SOAP_TYPE___ngw__createItemsRequest
+#define SOAP_TYPE___ngw__createItemsRequest (640)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__createItemsRequest(struct soap*, const struct __ngw__createItemsRequest *);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__createItemsRequest(struct soap*, struct __ngw__createItemsRequest *);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__createItemsRequest(struct soap*, const struct __ngw__createItemsRequest *, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__createItemsRequest(struct soap*, const char*, int, const struct __ngw__createItemsRequest *, const char*);
+SOAP_FMAC3 struct __ngw__createItemsRequest * SOAP_FMAC4 soap_get___ngw__createItemsRequest(struct soap*, struct __ngw__createItemsRequest *, const char*, const char*);
+SOAP_FMAC3 struct __ngw__createItemsRequest * SOAP_FMAC4 soap_in___ngw__createItemsRequest(struct soap*, const char*, struct __ngw__createItemsRequest *, const char*);
+
 #ifndef SOAP_TYPE___ngw__createItemRequest
-#define SOAP_TYPE___ngw__createItemRequest (559)
+#define SOAP_TYPE___ngw__createItemRequest (636)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__createItemRequest(struct soap*, const struct __ngw__createItemRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__createItemRequest(struct soap*, struct __ngw__createItemRequest *);
@@ -4737,7 +5435,7 @@ SOAP_FMAC3 struct __ngw__createItemRequest * SOAP_FMAC4 soap_get___ngw__createIt
 SOAP_FMAC3 struct __ngw__createItemRequest * SOAP_FMAC4 soap_in___ngw__createItemRequest(struct soap*, const char*, struct __ngw__createItemRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__createCursorRequest
-#define SOAP_TYPE___ngw__createCursorRequest (555)
+#define SOAP_TYPE___ngw__createCursorRequest (632)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__createCursorRequest(struct soap*, const struct __ngw__createCursorRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__createCursorRequest(struct soap*, struct __ngw__createCursorRequest *);
@@ -4747,7 +5445,7 @@ SOAP_FMAC3 struct __ngw__createCursorRequest * SOAP_FMAC4 soap_get___ngw__create
 SOAP_FMAC3 struct __ngw__createCursorRequest * SOAP_FMAC4 soap_in___ngw__createCursorRequest(struct soap*, const char*, struct __ngw__createCursorRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__completeRequest
-#define SOAP_TYPE___ngw__completeRequest (551)
+#define SOAP_TYPE___ngw__completeRequest (628)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__completeRequest(struct soap*, const struct __ngw__completeRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__completeRequest(struct soap*, struct __ngw__completeRequest *);
@@ -4757,7 +5455,7 @@ SOAP_FMAC3 struct __ngw__completeRequest * SOAP_FMAC4 soap_get___ngw__completeRe
 SOAP_FMAC3 struct __ngw__completeRequest * SOAP_FMAC4 soap_in___ngw__completeRequest(struct soap*, const char*, struct __ngw__completeRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__closeFreeBusySessionRequest
-#define SOAP_TYPE___ngw__closeFreeBusySessionRequest (547)
+#define SOAP_TYPE___ngw__closeFreeBusySessionRequest (624)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__closeFreeBusySessionRequest(struct soap*, const struct __ngw__closeFreeBusySessionRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__closeFreeBusySessionRequest(struct soap*, struct __ngw__closeFreeBusySessionRequest *);
@@ -4767,7 +5465,7 @@ SOAP_FMAC3 struct __ngw__closeFreeBusySessionRequest * SOAP_FMAC4 soap_get___ngw
 SOAP_FMAC3 struct __ngw__closeFreeBusySessionRequest * SOAP_FMAC4 soap_in___ngw__closeFreeBusySessionRequest(struct soap*, const char*, struct __ngw__closeFreeBusySessionRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__addMembersRequest
-#define SOAP_TYPE___ngw__addMembersRequest (543)
+#define SOAP_TYPE___ngw__addMembersRequest (620)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__addMembersRequest(struct soap*, const struct __ngw__addMembersRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__addMembersRequest(struct soap*, struct __ngw__addMembersRequest *);
@@ -4777,7 +5475,7 @@ SOAP_FMAC3 struct __ngw__addMembersRequest * SOAP_FMAC4 soap_get___ngw__addMembe
 SOAP_FMAC3 struct __ngw__addMembersRequest * SOAP_FMAC4 soap_in___ngw__addMembersRequest(struct soap*, const char*, struct __ngw__addMembersRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__addItemsRequest
-#define SOAP_TYPE___ngw__addItemsRequest (539)
+#define SOAP_TYPE___ngw__addItemsRequest (616)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__addItemsRequest(struct soap*, const struct __ngw__addItemsRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__addItemsRequest(struct soap*, struct __ngw__addItemsRequest *);
@@ -4787,7 +5485,7 @@ SOAP_FMAC3 struct __ngw__addItemsRequest * SOAP_FMAC4 soap_get___ngw__addItemsRe
 SOAP_FMAC3 struct __ngw__addItemsRequest * SOAP_FMAC4 soap_in___ngw__addItemsRequest(struct soap*, const char*, struct __ngw__addItemsRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__addItemRequest
-#define SOAP_TYPE___ngw__addItemRequest (535)
+#define SOAP_TYPE___ngw__addItemRequest (612)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__addItemRequest(struct soap*, const struct __ngw__addItemRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__addItemRequest(struct soap*, struct __ngw__addItemRequest *);
@@ -4797,7 +5495,7 @@ SOAP_FMAC3 struct __ngw__addItemRequest * SOAP_FMAC4 soap_get___ngw__addItemRequ
 SOAP_FMAC3 struct __ngw__addItemRequest * SOAP_FMAC4 soap_in___ngw__addItemRequest(struct soap*, const char*, struct __ngw__addItemRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__acceptShareRequest
-#define SOAP_TYPE___ngw__acceptShareRequest (531)
+#define SOAP_TYPE___ngw__acceptShareRequest (608)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__acceptShareRequest(struct soap*, const struct __ngw__acceptShareRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__acceptShareRequest(struct soap*, struct __ngw__acceptShareRequest *);
@@ -4807,7 +5505,7 @@ SOAP_FMAC3 struct __ngw__acceptShareRequest * SOAP_FMAC4 soap_get___ngw__acceptS
 SOAP_FMAC3 struct __ngw__acceptShareRequest * SOAP_FMAC4 soap_in___ngw__acceptShareRequest(struct soap*, const char*, struct __ngw__acceptShareRequest *, const char*);
 
 #ifndef SOAP_TYPE___ngw__acceptRequest
-#define SOAP_TYPE___ngw__acceptRequest (527)
+#define SOAP_TYPE___ngw__acceptRequest (604)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__acceptRequest(struct soap*, const struct __ngw__acceptRequest *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__acceptRequest(struct soap*, struct __ngw__acceptRequest *);
@@ -4819,7 +5517,7 @@ SOAP_FMAC3 struct __ngw__acceptRequest * SOAP_FMAC4 soap_in___ngw__acceptRequest
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (523)
+#define SOAP_TYPE_SOAP_ENV__Header (600)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Header(struct soap*, const struct SOAP_ENV__Header *);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Header(struct soap*, struct SOAP_ENV__Header *);
@@ -4837,7 +5535,7 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_SOAP_ENV__Header(struct soap*, int, int, vo
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_PointerToSOAP_ENV__Detail
-#define SOAP_TYPE_PointerToSOAP_ENV__Detail (814)
+#define SOAP_TYPE_PointerToSOAP_ENV__Detail (939)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToSOAP_ENV__Detail(struct soap*, struct SOAP_ENV__Detail *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToSOAP_ENV__Detail(struct soap*, struct SOAP_ENV__Detail *const*, const char*, const char*);
@@ -4850,7 +5548,7 @@ SOAP_FMAC3 struct SOAP_ENV__Detail ** SOAP_FMAC4 soap_in_PointerToSOAP_ENV__Deta
 #ifndef WITH_NOGLOBAL
 
 #ifndef SOAP_TYPE_PointerToSOAP_ENV__Code
-#define SOAP_TYPE_PointerToSOAP_ENV__Code (809)
+#define SOAP_TYPE_PointerToSOAP_ENV__Code (934)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToSOAP_ENV__Code(struct soap*, struct SOAP_ENV__Code *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToSOAP_ENV__Code(struct soap*, struct SOAP_ENV__Code *const*, const char*, const char*);
@@ -4861,7 +5559,7 @@ SOAP_FMAC3 struct SOAP_ENV__Code ** SOAP_FMAC4 soap_in_PointerToSOAP_ENV__Code(s
 #endif
 
 #ifndef SOAP_TYPE_PointerTo_ngwe__removeEventsResponse
-#define SOAP_TYPE_PointerTo_ngwe__removeEventsResponse (805)
+#define SOAP_TYPE_PointerTo_ngwe__removeEventsResponse (930)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwe__removeEventsResponse(struct soap*, _ngwe__removeEventsResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwe__removeEventsResponse(struct soap*, _ngwe__removeEventsResponse *const*, const char*, const char*);
@@ -4870,7 +5568,7 @@ SOAP_FMAC3 _ngwe__removeEventsResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwe__re
 SOAP_FMAC3 _ngwe__removeEventsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwe__removeEventsResponse(struct soap*, const char*, _ngwe__removeEventsResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwe__removeEventsRequest
-#define SOAP_TYPE_PointerTo_ngwe__removeEventsRequest (804)
+#define SOAP_TYPE_PointerTo_ngwe__removeEventsRequest (929)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwe__removeEventsRequest(struct soap*, _ngwe__removeEventsRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwe__removeEventsRequest(struct soap*, _ngwe__removeEventsRequest *const*, const char*, const char*);
@@ -4879,7 +5577,7 @@ SOAP_FMAC3 _ngwe__removeEventsRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwe__rem
 SOAP_FMAC3 _ngwe__removeEventsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwe__removeEventsRequest(struct soap*, const char*, _ngwe__removeEventsRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwe__removeEventConfigurationResponse
-#define SOAP_TYPE_PointerTo_ngwe__removeEventConfigurationResponse (801)
+#define SOAP_TYPE_PointerTo_ngwe__removeEventConfigurationResponse (926)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwe__removeEventConfigurationResponse(struct soap*, _ngwe__removeEventConfigurationResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwe__removeEventConfigurationResponse(struct soap*, _ngwe__removeEventConfigurationResponse *const*, const char*, const char*);
@@ -4888,7 +5586,7 @@ SOAP_FMAC3 _ngwe__removeEventConfigurationResponse ** SOAP_FMAC4 soap_get_Pointe
 SOAP_FMAC3 _ngwe__removeEventConfigurationResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwe__removeEventConfigurationResponse(struct soap*, const char*, _ngwe__removeEventConfigurationResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwe__removeEventConfigurationRequest
-#define SOAP_TYPE_PointerTo_ngwe__removeEventConfigurationRequest (800)
+#define SOAP_TYPE_PointerTo_ngwe__removeEventConfigurationRequest (925)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwe__removeEventConfigurationRequest(struct soap*, _ngwe__removeEventConfigurationRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwe__removeEventConfigurationRequest(struct soap*, _ngwe__removeEventConfigurationRequest *const*, const char*, const char*);
@@ -4897,7 +5595,7 @@ SOAP_FMAC3 _ngwe__removeEventConfigurationRequest ** SOAP_FMAC4 soap_get_Pointer
 SOAP_FMAC3 _ngwe__removeEventConfigurationRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwe__removeEventConfigurationRequest(struct soap*, const char*, _ngwe__removeEventConfigurationRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwe__getEventsResponse
-#define SOAP_TYPE_PointerTo_ngwe__getEventsResponse (797)
+#define SOAP_TYPE_PointerTo_ngwe__getEventsResponse (922)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwe__getEventsResponse(struct soap*, _ngwe__getEventsResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwe__getEventsResponse(struct soap*, _ngwe__getEventsResponse *const*, const char*, const char*);
@@ -4906,7 +5604,7 @@ SOAP_FMAC3 _ngwe__getEventsResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwe__getEv
 SOAP_FMAC3 _ngwe__getEventsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwe__getEventsResponse(struct soap*, const char*, _ngwe__getEventsResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwe__getEventsRequest
-#define SOAP_TYPE_PointerTo_ngwe__getEventsRequest (796)
+#define SOAP_TYPE_PointerTo_ngwe__getEventsRequest (921)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwe__getEventsRequest(struct soap*, _ngwe__getEventsRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwe__getEventsRequest(struct soap*, _ngwe__getEventsRequest *const*, const char*, const char*);
@@ -4915,7 +5613,7 @@ SOAP_FMAC3 _ngwe__getEventsRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwe__getEve
 SOAP_FMAC3 _ngwe__getEventsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwe__getEventsRequest(struct soap*, const char*, _ngwe__getEventsRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwe__getEventConfigurationResponse
-#define SOAP_TYPE_PointerTo_ngwe__getEventConfigurationResponse (793)
+#define SOAP_TYPE_PointerTo_ngwe__getEventConfigurationResponse (918)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwe__getEventConfigurationResponse(struct soap*, _ngwe__getEventConfigurationResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwe__getEventConfigurationResponse(struct soap*, _ngwe__getEventConfigurationResponse *const*, const char*, const char*);
@@ -4924,7 +5622,7 @@ SOAP_FMAC3 _ngwe__getEventConfigurationResponse ** SOAP_FMAC4 soap_get_PointerTo
 SOAP_FMAC3 _ngwe__getEventConfigurationResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwe__getEventConfigurationResponse(struct soap*, const char*, _ngwe__getEventConfigurationResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwe__getEventConfigurationRequest
-#define SOAP_TYPE_PointerTo_ngwe__getEventConfigurationRequest (792)
+#define SOAP_TYPE_PointerTo_ngwe__getEventConfigurationRequest (917)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwe__getEventConfigurationRequest(struct soap*, _ngwe__getEventConfigurationRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwe__getEventConfigurationRequest(struct soap*, _ngwe__getEventConfigurationRequest *const*, const char*, const char*);
@@ -4933,7 +5631,7 @@ SOAP_FMAC3 _ngwe__getEventConfigurationRequest ** SOAP_FMAC4 soap_get_PointerTo_
 SOAP_FMAC3 _ngwe__getEventConfigurationRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwe__getEventConfigurationRequest(struct soap*, const char*, _ngwe__getEventConfigurationRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwe__configureEventsResponse
-#define SOAP_TYPE_PointerTo_ngwe__configureEventsResponse (789)
+#define SOAP_TYPE_PointerTo_ngwe__configureEventsResponse (914)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwe__configureEventsResponse(struct soap*, _ngwe__configureEventsResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwe__configureEventsResponse(struct soap*, _ngwe__configureEventsResponse *const*, const char*, const char*);
@@ -4942,7 +5640,7 @@ SOAP_FMAC3 _ngwe__configureEventsResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwe_
 SOAP_FMAC3 _ngwe__configureEventsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwe__configureEventsResponse(struct soap*, const char*, _ngwe__configureEventsResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwe__configureEventsRequest
-#define SOAP_TYPE_PointerTo_ngwe__configureEventsRequest (788)
+#define SOAP_TYPE_PointerTo_ngwe__configureEventsRequest (913)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwe__configureEventsRequest(struct soap*, _ngwe__configureEventsRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwe__configureEventsRequest(struct soap*, _ngwe__configureEventsRequest *const*, const char*, const char*);
@@ -4951,7 +5649,7 @@ SOAP_FMAC3 _ngwe__configureEventsRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwe__
 SOAP_FMAC3 _ngwe__configureEventsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwe__configureEventsRequest(struct soap*, const char*, _ngwe__configureEventsRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwe__cleanEventConfigurationResponse
-#define SOAP_TYPE_PointerTo_ngwe__cleanEventConfigurationResponse (785)
+#define SOAP_TYPE_PointerTo_ngwe__cleanEventConfigurationResponse (910)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwe__cleanEventConfigurationResponse(struct soap*, _ngwe__cleanEventConfigurationResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwe__cleanEventConfigurationResponse(struct soap*, _ngwe__cleanEventConfigurationResponse *const*, const char*, const char*);
@@ -4960,7 +5658,7 @@ SOAP_FMAC3 _ngwe__cleanEventConfigurationResponse ** SOAP_FMAC4 soap_get_Pointer
 SOAP_FMAC3 _ngwe__cleanEventConfigurationResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwe__cleanEventConfigurationResponse(struct soap*, const char*, _ngwe__cleanEventConfigurationResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwe__cleanEventConfigurationRequest
-#define SOAP_TYPE_PointerTo_ngwe__cleanEventConfigurationRequest (784)
+#define SOAP_TYPE_PointerTo_ngwe__cleanEventConfigurationRequest (909)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwe__cleanEventConfigurationRequest(struct soap*, _ngwe__cleanEventConfigurationRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwe__cleanEventConfigurationRequest(struct soap*, _ngwe__cleanEventConfigurationRequest *const*, const char*, const char*);
@@ -4968,8 +5666,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwe__cleanEventConfigurationReques
 SOAP_FMAC3 _ngwe__cleanEventConfigurationRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwe__cleanEventConfigurationRequest(struct soap*, _ngwe__cleanEventConfigurationRequest **, const char*, const char*);
 SOAP_FMAC3 _ngwe__cleanEventConfigurationRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwe__cleanEventConfigurationRequest(struct soap*, const char*, _ngwe__cleanEventConfigurationRequest **, const char*);
 
+#ifndef SOAP_TYPE_PointerTo_ngwm__updateVersionStatusResponse
+#define SOAP_TYPE_PointerTo_ngwm__updateVersionStatusResponse (906)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__updateVersionStatusResponse(struct soap*, _ngwm__updateVersionStatusResponse *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__updateVersionStatusResponse(struct soap*, _ngwm__updateVersionStatusResponse *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__updateVersionStatusResponse(struct soap*, const char *, int, _ngwm__updateVersionStatusResponse *const*, const char *);
+SOAP_FMAC3 _ngwm__updateVersionStatusResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__updateVersionStatusResponse(struct soap*, _ngwm__updateVersionStatusResponse **, const char*, const char*);
+SOAP_FMAC3 _ngwm__updateVersionStatusResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__updateVersionStatusResponse(struct soap*, const char*, _ngwm__updateVersionStatusResponse **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__updateVersionStatusRequest
+#define SOAP_TYPE_PointerTo_ngwm__updateVersionStatusRequest (905)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__updateVersionStatusRequest(struct soap*, _ngwm__updateVersionStatusRequest *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__updateVersionStatusRequest(struct soap*, _ngwm__updateVersionStatusRequest *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__updateVersionStatusRequest(struct soap*, const char *, int, _ngwm__updateVersionStatusRequest *const*, const char *);
+SOAP_FMAC3 _ngwm__updateVersionStatusRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__updateVersionStatusRequest(struct soap*, _ngwm__updateVersionStatusRequest **, const char*, const char*);
+SOAP_FMAC3 _ngwm__updateVersionStatusRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__updateVersionStatusRequest(struct soap*, const char*, _ngwm__updateVersionStatusRequest **, const char*);
+
 #ifndef SOAP_TYPE_PointerTo_ngwm__uncompleteResponse
-#define SOAP_TYPE_PointerTo_ngwm__uncompleteResponse (781)
+#define SOAP_TYPE_PointerTo_ngwm__uncompleteResponse (902)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__uncompleteResponse(struct soap*, _ngwm__uncompleteResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__uncompleteResponse(struct soap*, _ngwm__uncompleteResponse *const*, const char*, const char*);
@@ -4978,7 +5694,7 @@ SOAP_FMAC3 _ngwm__uncompleteResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__unco
 SOAP_FMAC3 _ngwm__uncompleteResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__uncompleteResponse(struct soap*, const char*, _ngwm__uncompleteResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__uncompleteRequest
-#define SOAP_TYPE_PointerTo_ngwm__uncompleteRequest (780)
+#define SOAP_TYPE_PointerTo_ngwm__uncompleteRequest (901)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__uncompleteRequest(struct soap*, _ngwm__uncompleteRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__uncompleteRequest(struct soap*, _ngwm__uncompleteRequest *const*, const char*, const char*);
@@ -4987,7 +5703,7 @@ SOAP_FMAC3 _ngwm__uncompleteRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__uncom
 SOAP_FMAC3 _ngwm__uncompleteRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__uncompleteRequest(struct soap*, const char*, _ngwm__uncompleteRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__unacceptResponse
-#define SOAP_TYPE_PointerTo_ngwm__unacceptResponse (777)
+#define SOAP_TYPE_PointerTo_ngwm__unacceptResponse (898)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__unacceptResponse(struct soap*, _ngwm__unacceptResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__unacceptResponse(struct soap*, _ngwm__unacceptResponse *const*, const char*, const char*);
@@ -4996,7 +5712,7 @@ SOAP_FMAC3 _ngwm__unacceptResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__unacce
 SOAP_FMAC3 _ngwm__unacceptResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__unacceptResponse(struct soap*, const char*, _ngwm__unacceptResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__unacceptRequest
-#define SOAP_TYPE_PointerTo_ngwm__unacceptRequest (776)
+#define SOAP_TYPE_PointerTo_ngwm__unacceptRequest (897)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__unacceptRequest(struct soap*, _ngwm__unacceptRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__unacceptRequest(struct soap*, _ngwm__unacceptRequest *const*, const char*, const char*);
@@ -5005,7 +5721,7 @@ SOAP_FMAC3 _ngwm__unacceptRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__unaccep
 SOAP_FMAC3 _ngwm__unacceptRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__unacceptRequest(struct soap*, const char*, _ngwm__unacceptRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__startFreeBusySessionResponse
-#define SOAP_TYPE_PointerTo_ngwm__startFreeBusySessionResponse (773)
+#define SOAP_TYPE_PointerTo_ngwm__startFreeBusySessionResponse (894)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__startFreeBusySessionResponse(struct soap*, _ngwm__startFreeBusySessionResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__startFreeBusySessionResponse(struct soap*, _ngwm__startFreeBusySessionResponse *const*, const char*, const char*);
@@ -5014,7 +5730,7 @@ SOAP_FMAC3 _ngwm__startFreeBusySessionResponse ** SOAP_FMAC4 soap_get_PointerTo_
 SOAP_FMAC3 _ngwm__startFreeBusySessionResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__startFreeBusySessionResponse(struct soap*, const char*, _ngwm__startFreeBusySessionResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__startFreeBusySessionRequest
-#define SOAP_TYPE_PointerTo_ngwm__startFreeBusySessionRequest (772)
+#define SOAP_TYPE_PointerTo_ngwm__startFreeBusySessionRequest (893)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__startFreeBusySessionRequest(struct soap*, _ngwm__startFreeBusySessionRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__startFreeBusySessionRequest(struct soap*, _ngwm__startFreeBusySessionRequest *const*, const char*, const char*);
@@ -5022,8 +5738,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__startFreeBusySessionRequest(s
 SOAP_FMAC3 _ngwm__startFreeBusySessionRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__startFreeBusySessionRequest(struct soap*, _ngwm__startFreeBusySessionRequest **, const char*, const char*);
 SOAP_FMAC3 _ngwm__startFreeBusySessionRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__startFreeBusySessionRequest(struct soap*, const char*, _ngwm__startFreeBusySessionRequest **, const char*);
 
+#ifndef SOAP_TYPE_PointerTo_ngwm__setTimestampResponse
+#define SOAP_TYPE_PointerTo_ngwm__setTimestampResponse (890)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__setTimestampResponse(struct soap*, _ngwm__setTimestampResponse *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__setTimestampResponse(struct soap*, _ngwm__setTimestampResponse *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__setTimestampResponse(struct soap*, const char *, int, _ngwm__setTimestampResponse *const*, const char *);
+SOAP_FMAC3 _ngwm__setTimestampResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__setTimestampResponse(struct soap*, _ngwm__setTimestampResponse **, const char*, const char*);
+SOAP_FMAC3 _ngwm__setTimestampResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__setTimestampResponse(struct soap*, const char*, _ngwm__setTimestampResponse **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__setTimestampRequest
+#define SOAP_TYPE_PointerTo_ngwm__setTimestampRequest (889)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__setTimestampRequest(struct soap*, _ngwm__setTimestampRequest *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__setTimestampRequest(struct soap*, _ngwm__setTimestampRequest *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__setTimestampRequest(struct soap*, const char *, int, _ngwm__setTimestampRequest *const*, const char *);
+SOAP_FMAC3 _ngwm__setTimestampRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__setTimestampRequest(struct soap*, _ngwm__setTimestampRequest **, const char*, const char*);
+SOAP_FMAC3 _ngwm__setTimestampRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__setTimestampRequest(struct soap*, const char*, _ngwm__setTimestampRequest **, const char*);
+
 #ifndef SOAP_TYPE_PointerTo_ngwm__sendItemResponse
-#define SOAP_TYPE_PointerTo_ngwm__sendItemResponse (769)
+#define SOAP_TYPE_PointerTo_ngwm__sendItemResponse (886)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__sendItemResponse(struct soap*, _ngwm__sendItemResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__sendItemResponse(struct soap*, _ngwm__sendItemResponse *const*, const char*, const char*);
@@ -5032,7 +5766,7 @@ SOAP_FMAC3 _ngwm__sendItemResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__sendIt
 SOAP_FMAC3 _ngwm__sendItemResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__sendItemResponse(struct soap*, const char*, _ngwm__sendItemResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__sendItemRequest
-#define SOAP_TYPE_PointerTo_ngwm__sendItemRequest (768)
+#define SOAP_TYPE_PointerTo_ngwm__sendItemRequest (885)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__sendItemRequest(struct soap*, _ngwm__sendItemRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__sendItemRequest(struct soap*, _ngwm__sendItemRequest *const*, const char*, const char*);
@@ -5041,7 +5775,7 @@ SOAP_FMAC3 _ngwm__sendItemRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__sendIte
 SOAP_FMAC3 _ngwm__sendItemRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__sendItemRequest(struct soap*, const char*, _ngwm__sendItemRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__retractResponse
-#define SOAP_TYPE_PointerTo_ngwm__retractResponse (765)
+#define SOAP_TYPE_PointerTo_ngwm__retractResponse (882)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__retractResponse(struct soap*, _ngwm__retractResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__retractResponse(struct soap*, _ngwm__retractResponse *const*, const char*, const char*);
@@ -5050,7 +5784,7 @@ SOAP_FMAC3 _ngwm__retractResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__retract
 SOAP_FMAC3 _ngwm__retractResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__retractResponse(struct soap*, const char*, _ngwm__retractResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__retractRequest
-#define SOAP_TYPE_PointerTo_ngwm__retractRequest (764)
+#define SOAP_TYPE_PointerTo_ngwm__retractRequest (881)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__retractRequest(struct soap*, _ngwm__retractRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__retractRequest(struct soap*, _ngwm__retractRequest *const*, const char*, const char*);
@@ -5059,7 +5793,7 @@ SOAP_FMAC3 _ngwm__retractRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__retractR
 SOAP_FMAC3 _ngwm__retractRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__retractRequest(struct soap*, const char*, _ngwm__retractRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__replyResponse
-#define SOAP_TYPE_PointerTo_ngwm__replyResponse (761)
+#define SOAP_TYPE_PointerTo_ngwm__replyResponse (878)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__replyResponse(struct soap*, _ngwm__replyResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__replyResponse(struct soap*, _ngwm__replyResponse *const*, const char*, const char*);
@@ -5068,7 +5802,7 @@ SOAP_FMAC3 _ngwm__replyResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__replyResp
 SOAP_FMAC3 _ngwm__replyResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__replyResponse(struct soap*, const char*, _ngwm__replyResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__replyRequest
-#define SOAP_TYPE_PointerTo_ngwm__replyRequest (760)
+#define SOAP_TYPE_PointerTo_ngwm__replyRequest (877)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__replyRequest(struct soap*, _ngwm__replyRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__replyRequest(struct soap*, _ngwm__replyRequest *const*, const char*, const char*);
@@ -5077,7 +5811,7 @@ SOAP_FMAC3 _ngwm__replyRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__replyReque
 SOAP_FMAC3 _ngwm__replyRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__replyRequest(struct soap*, const char*, _ngwm__replyRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeSignatureResponse
-#define SOAP_TYPE_PointerTo_ngwm__removeSignatureResponse (757)
+#define SOAP_TYPE_PointerTo_ngwm__removeSignatureResponse (874)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeSignatureResponse(struct soap*, _ngwm__removeSignatureResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeSignatureResponse(struct soap*, _ngwm__removeSignatureResponse *const*, const char*, const char*);
@@ -5086,7 +5820,7 @@ SOAP_FMAC3 _ngwm__removeSignatureResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm_
 SOAP_FMAC3 _ngwm__removeSignatureResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeSignatureResponse(struct soap*, const char*, _ngwm__removeSignatureResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeSignatureRequest
-#define SOAP_TYPE_PointerTo_ngwm__removeSignatureRequest (756)
+#define SOAP_TYPE_PointerTo_ngwm__removeSignatureRequest (873)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeSignatureRequest(struct soap*, _ngwm__removeSignatureRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeSignatureRequest(struct soap*, _ngwm__removeSignatureRequest *const*, const char*, const char*);
@@ -5094,8 +5828,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__removeSignatureRequest(struct
 SOAP_FMAC3 _ngwm__removeSignatureRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__removeSignatureRequest(struct soap*, _ngwm__removeSignatureRequest **, const char*, const char*);
 SOAP_FMAC3 _ngwm__removeSignatureRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeSignatureRequest(struct soap*, const char*, _ngwm__removeSignatureRequest **, const char*);
 
+#ifndef SOAP_TYPE_PointerTo_ngwm__removeProxyUserResponse
+#define SOAP_TYPE_PointerTo_ngwm__removeProxyUserResponse (870)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeProxyUserResponse(struct soap*, _ngwm__removeProxyUserResponse *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeProxyUserResponse(struct soap*, _ngwm__removeProxyUserResponse *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__removeProxyUserResponse(struct soap*, const char *, int, _ngwm__removeProxyUserResponse *const*, const char *);
+SOAP_FMAC3 _ngwm__removeProxyUserResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__removeProxyUserResponse(struct soap*, _ngwm__removeProxyUserResponse **, const char*, const char*);
+SOAP_FMAC3 _ngwm__removeProxyUserResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeProxyUserResponse(struct soap*, const char*, _ngwm__removeProxyUserResponse **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__removeProxyUserRequest
+#define SOAP_TYPE_PointerTo_ngwm__removeProxyUserRequest (869)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeProxyUserRequest(struct soap*, _ngwm__removeProxyUserRequest *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeProxyUserRequest(struct soap*, _ngwm__removeProxyUserRequest *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__removeProxyUserRequest(struct soap*, const char *, int, _ngwm__removeProxyUserRequest *const*, const char *);
+SOAP_FMAC3 _ngwm__removeProxyUserRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__removeProxyUserRequest(struct soap*, _ngwm__removeProxyUserRequest **, const char*, const char*);
+SOAP_FMAC3 _ngwm__removeProxyUserRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeProxyUserRequest(struct soap*, const char*, _ngwm__removeProxyUserRequest **, const char*);
+
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeProxyAccessResponse
-#define SOAP_TYPE_PointerTo_ngwm__removeProxyAccessResponse (753)
+#define SOAP_TYPE_PointerTo_ngwm__removeProxyAccessResponse (866)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeProxyAccessResponse(struct soap*, _ngwm__removeProxyAccessResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeProxyAccessResponse(struct soap*, _ngwm__removeProxyAccessResponse *const*, const char*, const char*);
@@ -5104,7 +5856,7 @@ SOAP_FMAC3 _ngwm__removeProxyAccessResponse ** SOAP_FMAC4 soap_get_PointerTo_ngw
 SOAP_FMAC3 _ngwm__removeProxyAccessResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeProxyAccessResponse(struct soap*, const char*, _ngwm__removeProxyAccessResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeProxyAccessRequest
-#define SOAP_TYPE_PointerTo_ngwm__removeProxyAccessRequest (752)
+#define SOAP_TYPE_PointerTo_ngwm__removeProxyAccessRequest (865)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeProxyAccessRequest(struct soap*, _ngwm__removeProxyAccessRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeProxyAccessRequest(struct soap*, _ngwm__removeProxyAccessRequest *const*, const char*, const char*);
@@ -5113,7 +5865,7 @@ SOAP_FMAC3 _ngwm__removeProxyAccessRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm
 SOAP_FMAC3 _ngwm__removeProxyAccessRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeProxyAccessRequest(struct soap*, const char*, _ngwm__removeProxyAccessRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeMembersResponse
-#define SOAP_TYPE_PointerTo_ngwm__removeMembersResponse (749)
+#define SOAP_TYPE_PointerTo_ngwm__removeMembersResponse (862)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeMembersResponse(struct soap*, _ngwm__removeMembersResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeMembersResponse(struct soap*, _ngwm__removeMembersResponse *const*, const char*, const char*);
@@ -5122,7 +5874,7 @@ SOAP_FMAC3 _ngwm__removeMembersResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__r
 SOAP_FMAC3 _ngwm__removeMembersResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeMembersResponse(struct soap*, const char*, _ngwm__removeMembersResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeMembersRequest
-#define SOAP_TYPE_PointerTo_ngwm__removeMembersRequest (748)
+#define SOAP_TYPE_PointerTo_ngwm__removeMembersRequest (861)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeMembersRequest(struct soap*, _ngwm__removeMembersRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeMembersRequest(struct soap*, _ngwm__removeMembersRequest *const*, const char*, const char*);
@@ -5131,7 +5883,7 @@ SOAP_FMAC3 _ngwm__removeMembersRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__re
 SOAP_FMAC3 _ngwm__removeMembersRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeMembersRequest(struct soap*, const char*, _ngwm__removeMembersRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeJunkEntryResponse
-#define SOAP_TYPE_PointerTo_ngwm__removeJunkEntryResponse (745)
+#define SOAP_TYPE_PointerTo_ngwm__removeJunkEntryResponse (858)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeJunkEntryResponse(struct soap*, _ngwm__removeJunkEntryResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeJunkEntryResponse(struct soap*, _ngwm__removeJunkEntryResponse *const*, const char*, const char*);
@@ -5140,7 +5892,7 @@ SOAP_FMAC3 _ngwm__removeJunkEntryResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm_
 SOAP_FMAC3 _ngwm__removeJunkEntryResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeJunkEntryResponse(struct soap*, const char*, _ngwm__removeJunkEntryResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeJunkEntryRequest
-#define SOAP_TYPE_PointerTo_ngwm__removeJunkEntryRequest (744)
+#define SOAP_TYPE_PointerTo_ngwm__removeJunkEntryRequest (857)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeJunkEntryRequest(struct soap*, _ngwm__removeJunkEntryRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeJunkEntryRequest(struct soap*, _ngwm__removeJunkEntryRequest *const*, const char*, const char*);
@@ -5149,7 +5901,7 @@ SOAP_FMAC3 _ngwm__removeJunkEntryRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__
 SOAP_FMAC3 _ngwm__removeJunkEntryRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeJunkEntryRequest(struct soap*, const char*, _ngwm__removeJunkEntryRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeItemsResponse
-#define SOAP_TYPE_PointerTo_ngwm__removeItemsResponse (741)
+#define SOAP_TYPE_PointerTo_ngwm__removeItemsResponse (854)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeItemsResponse(struct soap*, _ngwm__removeItemsResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeItemsResponse(struct soap*, _ngwm__removeItemsResponse *const*, const char*, const char*);
@@ -5158,7 +5910,7 @@ SOAP_FMAC3 _ngwm__removeItemsResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__rem
 SOAP_FMAC3 _ngwm__removeItemsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeItemsResponse(struct soap*, const char*, _ngwm__removeItemsResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeItemsRequest
-#define SOAP_TYPE_PointerTo_ngwm__removeItemsRequest (740)
+#define SOAP_TYPE_PointerTo_ngwm__removeItemsRequest (853)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeItemsRequest(struct soap*, _ngwm__removeItemsRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeItemsRequest(struct soap*, _ngwm__removeItemsRequest *const*, const char*, const char*);
@@ -5167,7 +5919,7 @@ SOAP_FMAC3 _ngwm__removeItemsRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__remo
 SOAP_FMAC3 _ngwm__removeItemsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeItemsRequest(struct soap*, const char*, _ngwm__removeItemsRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeItemResponse
-#define SOAP_TYPE_PointerTo_ngwm__removeItemResponse (737)
+#define SOAP_TYPE_PointerTo_ngwm__removeItemResponse (850)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeItemResponse(struct soap*, _ngwm__removeItemResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeItemResponse(struct soap*, _ngwm__removeItemResponse *const*, const char*, const char*);
@@ -5176,7 +5928,7 @@ SOAP_FMAC3 _ngwm__removeItemResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__remo
 SOAP_FMAC3 _ngwm__removeItemResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeItemResponse(struct soap*, const char*, _ngwm__removeItemResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeItemRequest
-#define SOAP_TYPE_PointerTo_ngwm__removeItemRequest (736)
+#define SOAP_TYPE_PointerTo_ngwm__removeItemRequest (849)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeItemRequest(struct soap*, _ngwm__removeItemRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeItemRequest(struct soap*, _ngwm__removeItemRequest *const*, const char*, const char*);
@@ -5185,7 +5937,7 @@ SOAP_FMAC3 _ngwm__removeItemRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__remov
 SOAP_FMAC3 _ngwm__removeItemRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeItemRequest(struct soap*, const char*, _ngwm__removeItemRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeCustomDefinitionResponse
-#define SOAP_TYPE_PointerTo_ngwm__removeCustomDefinitionResponse (733)
+#define SOAP_TYPE_PointerTo_ngwm__removeCustomDefinitionResponse (846)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeCustomDefinitionResponse(struct soap*, _ngwm__removeCustomDefinitionResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeCustomDefinitionResponse(struct soap*, _ngwm__removeCustomDefinitionResponse *const*, const char*, const char*);
@@ -5194,7 +5946,7 @@ SOAP_FMAC3 _ngwm__removeCustomDefinitionResponse ** SOAP_FMAC4 soap_get_PointerT
 SOAP_FMAC3 _ngwm__removeCustomDefinitionResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeCustomDefinitionResponse(struct soap*, const char*, _ngwm__removeCustomDefinitionResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__removeCustomDefinitionRequest
-#define SOAP_TYPE_PointerTo_ngwm__removeCustomDefinitionRequest (732)
+#define SOAP_TYPE_PointerTo_ngwm__removeCustomDefinitionRequest (845)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeCustomDefinitionRequest(struct soap*, _ngwm__removeCustomDefinitionRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeCustomDefinitionRequest(struct soap*, _ngwm__removeCustomDefinitionRequest *const*, const char*, const char*);
@@ -5203,7 +5955,7 @@ SOAP_FMAC3 _ngwm__removeCustomDefinitionRequest ** SOAP_FMAC4 soap_get_PointerTo
 SOAP_FMAC3 _ngwm__removeCustomDefinitionRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeCustomDefinitionRequest(struct soap*, const char*, _ngwm__removeCustomDefinitionRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__readCursorResponse
-#define SOAP_TYPE_PointerTo_ngwm__readCursorResponse (729)
+#define SOAP_TYPE_PointerTo_ngwm__readCursorResponse (842)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__readCursorResponse(struct soap*, _ngwm__readCursorResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__readCursorResponse(struct soap*, _ngwm__readCursorResponse *const*, const char*, const char*);
@@ -5212,7 +5964,7 @@ SOAP_FMAC3 _ngwm__readCursorResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__read
 SOAP_FMAC3 _ngwm__readCursorResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__readCursorResponse(struct soap*, const char*, _ngwm__readCursorResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__readCursorRequest
-#define SOAP_TYPE_PointerTo_ngwm__readCursorRequest (728)
+#define SOAP_TYPE_PointerTo_ngwm__readCursorRequest (841)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__readCursorRequest(struct soap*, _ngwm__readCursorRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__readCursorRequest(struct soap*, _ngwm__readCursorRequest *const*, const char*, const char*);
@@ -5221,7 +5973,7 @@ SOAP_FMAC3 _ngwm__readCursorRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__readC
 SOAP_FMAC3 _ngwm__readCursorRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__readCursorRequest(struct soap*, const char*, _ngwm__readCursorRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__purgeResponse
-#define SOAP_TYPE_PointerTo_ngwm__purgeResponse (725)
+#define SOAP_TYPE_PointerTo_ngwm__purgeResponse (838)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__purgeResponse(struct soap*, _ngwm__purgeResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__purgeResponse(struct soap*, _ngwm__purgeResponse *const*, const char*, const char*);
@@ -5230,7 +5982,7 @@ SOAP_FMAC3 _ngwm__purgeResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__purgeResp
 SOAP_FMAC3 _ngwm__purgeResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__purgeResponse(struct soap*, const char*, _ngwm__purgeResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__purgeRequest
-#define SOAP_TYPE_PointerTo_ngwm__purgeRequest (724)
+#define SOAP_TYPE_PointerTo_ngwm__purgeRequest (837)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__purgeRequest(struct soap*, _ngwm__purgeRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__purgeRequest(struct soap*, _ngwm__purgeRequest *const*, const char*, const char*);
@@ -5239,7 +5991,7 @@ SOAP_FMAC3 _ngwm__purgeRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__purgeReque
 SOAP_FMAC3 _ngwm__purgeRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__purgeRequest(struct soap*, const char*, _ngwm__purgeRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__purgeDeletedItemsResponse
-#define SOAP_TYPE_PointerTo_ngwm__purgeDeletedItemsResponse (721)
+#define SOAP_TYPE_PointerTo_ngwm__purgeDeletedItemsResponse (834)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__purgeDeletedItemsResponse(struct soap*, _ngwm__purgeDeletedItemsResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__purgeDeletedItemsResponse(struct soap*, _ngwm__purgeDeletedItemsResponse *const*, const char*, const char*);
@@ -5248,7 +6000,7 @@ SOAP_FMAC3 _ngwm__purgeDeletedItemsResponse ** SOAP_FMAC4 soap_get_PointerTo_ngw
 SOAP_FMAC3 _ngwm__purgeDeletedItemsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__purgeDeletedItemsResponse(struct soap*, const char*, _ngwm__purgeDeletedItemsResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__purgeDeletedItemsRequest
-#define SOAP_TYPE_PointerTo_ngwm__purgeDeletedItemsRequest (720)
+#define SOAP_TYPE_PointerTo_ngwm__purgeDeletedItemsRequest (833)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__purgeDeletedItemsRequest(struct soap*, _ngwm__purgeDeletedItemsRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__purgeDeletedItemsRequest(struct soap*, _ngwm__purgeDeletedItemsRequest *const*, const char*, const char*);
@@ -5257,7 +6009,7 @@ SOAP_FMAC3 _ngwm__purgeDeletedItemsRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm
 SOAP_FMAC3 _ngwm__purgeDeletedItemsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__purgeDeletedItemsRequest(struct soap*, const char*, _ngwm__purgeDeletedItemsRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__positionCursorResponse
-#define SOAP_TYPE_PointerTo_ngwm__positionCursorResponse (717)
+#define SOAP_TYPE_PointerTo_ngwm__positionCursorResponse (830)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__positionCursorResponse(struct soap*, _ngwm__positionCursorResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__positionCursorResponse(struct soap*, _ngwm__positionCursorResponse *const*, const char*, const char*);
@@ -5266,7 +6018,7 @@ SOAP_FMAC3 _ngwm__positionCursorResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__
 SOAP_FMAC3 _ngwm__positionCursorResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__positionCursorResponse(struct soap*, const char*, _ngwm__positionCursorResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__positionCursorRequest
-#define SOAP_TYPE_PointerTo_ngwm__positionCursorRequest (716)
+#define SOAP_TYPE_PointerTo_ngwm__positionCursorRequest (829)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__positionCursorRequest(struct soap*, _ngwm__positionCursorRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__positionCursorRequest(struct soap*, _ngwm__positionCursorRequest *const*, const char*, const char*);
@@ -5275,7 +6027,7 @@ SOAP_FMAC3 _ngwm__positionCursorRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__p
 SOAP_FMAC3 _ngwm__positionCursorRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__positionCursorRequest(struct soap*, const char*, _ngwm__positionCursorRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__moveItemResponse
-#define SOAP_TYPE_PointerTo_ngwm__moveItemResponse (713)
+#define SOAP_TYPE_PointerTo_ngwm__moveItemResponse (826)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__moveItemResponse(struct soap*, _ngwm__moveItemResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__moveItemResponse(struct soap*, _ngwm__moveItemResponse *const*, const char*, const char*);
@@ -5284,7 +6036,7 @@ SOAP_FMAC3 _ngwm__moveItemResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__moveIt
 SOAP_FMAC3 _ngwm__moveItemResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__moveItemResponse(struct soap*, const char*, _ngwm__moveItemResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__moveItemRequest
-#define SOAP_TYPE_PointerTo_ngwm__moveItemRequest (712)
+#define SOAP_TYPE_PointerTo_ngwm__moveItemRequest (825)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__moveItemRequest(struct soap*, _ngwm__moveItemRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__moveItemRequest(struct soap*, _ngwm__moveItemRequest *const*, const char*, const char*);
@@ -5293,7 +6045,7 @@ SOAP_FMAC3 _ngwm__moveItemRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__moveIte
 SOAP_FMAC3 _ngwm__moveItemRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__moveItemRequest(struct soap*, const char*, _ngwm__moveItemRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifySignaturesResponse
-#define SOAP_TYPE_PointerTo_ngwm__modifySignaturesResponse (709)
+#define SOAP_TYPE_PointerTo_ngwm__modifySignaturesResponse (822)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifySignaturesResponse(struct soap*, _ngwm__modifySignaturesResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifySignaturesResponse(struct soap*, _ngwm__modifySignaturesResponse *const*, const char*, const char*);
@@ -5302,7 +6054,7 @@ SOAP_FMAC3 _ngwm__modifySignaturesResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm
 SOAP_FMAC3 _ngwm__modifySignaturesResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifySignaturesResponse(struct soap*, const char*, _ngwm__modifySignaturesResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifySignaturesRequest
-#define SOAP_TYPE_PointerTo_ngwm__modifySignaturesRequest (708)
+#define SOAP_TYPE_PointerTo_ngwm__modifySignaturesRequest (821)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifySignaturesRequest(struct soap*, _ngwm__modifySignaturesRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifySignaturesRequest(struct soap*, _ngwm__modifySignaturesRequest *const*, const char*, const char*);
@@ -5311,7 +6063,7 @@ SOAP_FMAC3 _ngwm__modifySignaturesRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm_
 SOAP_FMAC3 _ngwm__modifySignaturesRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifySignaturesRequest(struct soap*, const char*, _ngwm__modifySignaturesRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifySettingsResponse
-#define SOAP_TYPE_PointerTo_ngwm__modifySettingsResponse (705)
+#define SOAP_TYPE_PointerTo_ngwm__modifySettingsResponse (818)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifySettingsResponse(struct soap*, _ngwm__modifySettingsResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifySettingsResponse(struct soap*, _ngwm__modifySettingsResponse *const*, const char*, const char*);
@@ -5320,7 +6072,7 @@ SOAP_FMAC3 _ngwm__modifySettingsResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__
 SOAP_FMAC3 _ngwm__modifySettingsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifySettingsResponse(struct soap*, const char*, _ngwm__modifySettingsResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifySettingsRequest
-#define SOAP_TYPE_PointerTo_ngwm__modifySettingsRequest (704)
+#define SOAP_TYPE_PointerTo_ngwm__modifySettingsRequest (817)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifySettingsRequest(struct soap*, _ngwm__modifySettingsRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifySettingsRequest(struct soap*, _ngwm__modifySettingsRequest *const*, const char*, const char*);
@@ -5329,7 +6081,7 @@ SOAP_FMAC3 _ngwm__modifySettingsRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__m
 SOAP_FMAC3 _ngwm__modifySettingsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifySettingsRequest(struct soap*, const char*, _ngwm__modifySettingsRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifyProxyAccessResponse
-#define SOAP_TYPE_PointerTo_ngwm__modifyProxyAccessResponse (701)
+#define SOAP_TYPE_PointerTo_ngwm__modifyProxyAccessResponse (814)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifyProxyAccessResponse(struct soap*, _ngwm__modifyProxyAccessResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifyProxyAccessResponse(struct soap*, _ngwm__modifyProxyAccessResponse *const*, const char*, const char*);
@@ -5338,7 +6090,7 @@ SOAP_FMAC3 _ngwm__modifyProxyAccessResponse ** SOAP_FMAC4 soap_get_PointerTo_ngw
 SOAP_FMAC3 _ngwm__modifyProxyAccessResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifyProxyAccessResponse(struct soap*, const char*, _ngwm__modifyProxyAccessResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifyProxyAccessRequest
-#define SOAP_TYPE_PointerTo_ngwm__modifyProxyAccessRequest (700)
+#define SOAP_TYPE_PointerTo_ngwm__modifyProxyAccessRequest (813)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifyProxyAccessRequest(struct soap*, _ngwm__modifyProxyAccessRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifyProxyAccessRequest(struct soap*, _ngwm__modifyProxyAccessRequest *const*, const char*, const char*);
@@ -5347,7 +6099,7 @@ SOAP_FMAC3 _ngwm__modifyProxyAccessRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm
 SOAP_FMAC3 _ngwm__modifyProxyAccessRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifyProxyAccessRequest(struct soap*, const char*, _ngwm__modifyProxyAccessRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifyPasswordResponse
-#define SOAP_TYPE_PointerTo_ngwm__modifyPasswordResponse (697)
+#define SOAP_TYPE_PointerTo_ngwm__modifyPasswordResponse (810)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifyPasswordResponse(struct soap*, _ngwm__modifyPasswordResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifyPasswordResponse(struct soap*, _ngwm__modifyPasswordResponse *const*, const char*, const char*);
@@ -5356,7 +6108,7 @@ SOAP_FMAC3 _ngwm__modifyPasswordResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__
 SOAP_FMAC3 _ngwm__modifyPasswordResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifyPasswordResponse(struct soap*, const char*, _ngwm__modifyPasswordResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifyPasswordRequest
-#define SOAP_TYPE_PointerTo_ngwm__modifyPasswordRequest (696)
+#define SOAP_TYPE_PointerTo_ngwm__modifyPasswordRequest (809)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifyPasswordRequest(struct soap*, _ngwm__modifyPasswordRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifyPasswordRequest(struct soap*, _ngwm__modifyPasswordRequest *const*, const char*, const char*);
@@ -5365,7 +6117,7 @@ SOAP_FMAC3 _ngwm__modifyPasswordRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__m
 SOAP_FMAC3 _ngwm__modifyPasswordRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifyPasswordRequest(struct soap*, const char*, _ngwm__modifyPasswordRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifyJunkMailSettingsResponse
-#define SOAP_TYPE_PointerTo_ngwm__modifyJunkMailSettingsResponse (693)
+#define SOAP_TYPE_PointerTo_ngwm__modifyJunkMailSettingsResponse (806)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifyJunkMailSettingsResponse(struct soap*, _ngwm__modifyJunkMailSettingsResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifyJunkMailSettingsResponse(struct soap*, _ngwm__modifyJunkMailSettingsResponse *const*, const char*, const char*);
@@ -5374,7 +6126,7 @@ SOAP_FMAC3 _ngwm__modifyJunkMailSettingsResponse ** SOAP_FMAC4 soap_get_PointerT
 SOAP_FMAC3 _ngwm__modifyJunkMailSettingsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifyJunkMailSettingsResponse(struct soap*, const char*, _ngwm__modifyJunkMailSettingsResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifyJunkMailSettingsRequest
-#define SOAP_TYPE_PointerTo_ngwm__modifyJunkMailSettingsRequest (692)
+#define SOAP_TYPE_PointerTo_ngwm__modifyJunkMailSettingsRequest (805)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifyJunkMailSettingsRequest(struct soap*, _ngwm__modifyJunkMailSettingsRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifyJunkMailSettingsRequest(struct soap*, _ngwm__modifyJunkMailSettingsRequest *const*, const char*, const char*);
@@ -5383,7 +6135,7 @@ SOAP_FMAC3 _ngwm__modifyJunkMailSettingsRequest ** SOAP_FMAC4 soap_get_PointerTo
 SOAP_FMAC3 _ngwm__modifyJunkMailSettingsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifyJunkMailSettingsRequest(struct soap*, const char*, _ngwm__modifyJunkMailSettingsRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifyJunkEntryResponse
-#define SOAP_TYPE_PointerTo_ngwm__modifyJunkEntryResponse (689)
+#define SOAP_TYPE_PointerTo_ngwm__modifyJunkEntryResponse (802)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifyJunkEntryResponse(struct soap*, _ngwm__modifyJunkEntryResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifyJunkEntryResponse(struct soap*, _ngwm__modifyJunkEntryResponse *const*, const char*, const char*);
@@ -5392,7 +6144,7 @@ SOAP_FMAC3 _ngwm__modifyJunkEntryResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm_
 SOAP_FMAC3 _ngwm__modifyJunkEntryResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifyJunkEntryResponse(struct soap*, const char*, _ngwm__modifyJunkEntryResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifyJunkEntryRequest
-#define SOAP_TYPE_PointerTo_ngwm__modifyJunkEntryRequest (688)
+#define SOAP_TYPE_PointerTo_ngwm__modifyJunkEntryRequest (801)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifyJunkEntryRequest(struct soap*, _ngwm__modifyJunkEntryRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifyJunkEntryRequest(struct soap*, _ngwm__modifyJunkEntryRequest *const*, const char*, const char*);
@@ -5401,7 +6153,7 @@ SOAP_FMAC3 _ngwm__modifyJunkEntryRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__
 SOAP_FMAC3 _ngwm__modifyJunkEntryRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifyJunkEntryRequest(struct soap*, const char*, _ngwm__modifyJunkEntryRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifyItemResponse
-#define SOAP_TYPE_PointerTo_ngwm__modifyItemResponse (685)
+#define SOAP_TYPE_PointerTo_ngwm__modifyItemResponse (798)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifyItemResponse(struct soap*, _ngwm__modifyItemResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifyItemResponse(struct soap*, _ngwm__modifyItemResponse *const*, const char*, const char*);
@@ -5410,7 +6162,7 @@ SOAP_FMAC3 _ngwm__modifyItemResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__modi
 SOAP_FMAC3 _ngwm__modifyItemResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifyItemResponse(struct soap*, const char*, _ngwm__modifyItemResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__modifyItemRequest
-#define SOAP_TYPE_PointerTo_ngwm__modifyItemRequest (684)
+#define SOAP_TYPE_PointerTo_ngwm__modifyItemRequest (797)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__modifyItemRequest(struct soap*, _ngwm__modifyItemRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__modifyItemRequest(struct soap*, _ngwm__modifyItemRequest *const*, const char*, const char*);
@@ -5419,7 +6171,7 @@ SOAP_FMAC3 _ngwm__modifyItemRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__modif
 SOAP_FMAC3 _ngwm__modifyItemRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__modifyItemRequest(struct soap*, const char*, _ngwm__modifyItemRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__markUnReadResponse
-#define SOAP_TYPE_PointerTo_ngwm__markUnReadResponse (681)
+#define SOAP_TYPE_PointerTo_ngwm__markUnReadResponse (794)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__markUnReadResponse(struct soap*, _ngwm__markUnReadResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__markUnReadResponse(struct soap*, _ngwm__markUnReadResponse *const*, const char*, const char*);
@@ -5428,7 +6180,7 @@ SOAP_FMAC3 _ngwm__markUnReadResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__mark
 SOAP_FMAC3 _ngwm__markUnReadResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__markUnReadResponse(struct soap*, const char*, _ngwm__markUnReadResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__markUnReadRequest
-#define SOAP_TYPE_PointerTo_ngwm__markUnReadRequest (680)
+#define SOAP_TYPE_PointerTo_ngwm__markUnReadRequest (793)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__markUnReadRequest(struct soap*, _ngwm__markUnReadRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__markUnReadRequest(struct soap*, _ngwm__markUnReadRequest *const*, const char*, const char*);
@@ -5437,7 +6189,7 @@ SOAP_FMAC3 _ngwm__markUnReadRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__markU
 SOAP_FMAC3 _ngwm__markUnReadRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__markUnReadRequest(struct soap*, const char*, _ngwm__markUnReadRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__markUnPrivateResponse
-#define SOAP_TYPE_PointerTo_ngwm__markUnPrivateResponse (677)
+#define SOAP_TYPE_PointerTo_ngwm__markUnPrivateResponse (790)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__markUnPrivateResponse(struct soap*, _ngwm__markUnPrivateResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__markUnPrivateResponse(struct soap*, _ngwm__markUnPrivateResponse *const*, const char*, const char*);
@@ -5446,7 +6198,7 @@ SOAP_FMAC3 _ngwm__markUnPrivateResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__m
 SOAP_FMAC3 _ngwm__markUnPrivateResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__markUnPrivateResponse(struct soap*, const char*, _ngwm__markUnPrivateResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__markUnPrivateRequest
-#define SOAP_TYPE_PointerTo_ngwm__markUnPrivateRequest (676)
+#define SOAP_TYPE_PointerTo_ngwm__markUnPrivateRequest (789)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__markUnPrivateRequest(struct soap*, _ngwm__markUnPrivateRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__markUnPrivateRequest(struct soap*, _ngwm__markUnPrivateRequest *const*, const char*, const char*);
@@ -5455,7 +6207,7 @@ SOAP_FMAC3 _ngwm__markUnPrivateRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__ma
 SOAP_FMAC3 _ngwm__markUnPrivateRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__markUnPrivateRequest(struct soap*, const char*, _ngwm__markUnPrivateRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__markReadResponse
-#define SOAP_TYPE_PointerTo_ngwm__markReadResponse (673)
+#define SOAP_TYPE_PointerTo_ngwm__markReadResponse (786)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__markReadResponse(struct soap*, _ngwm__markReadResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__markReadResponse(struct soap*, _ngwm__markReadResponse *const*, const char*, const char*);
@@ -5464,7 +6216,7 @@ SOAP_FMAC3 _ngwm__markReadResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__markRe
 SOAP_FMAC3 _ngwm__markReadResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__markReadResponse(struct soap*, const char*, _ngwm__markReadResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__markReadRequest
-#define SOAP_TYPE_PointerTo_ngwm__markReadRequest (672)
+#define SOAP_TYPE_PointerTo_ngwm__markReadRequest (785)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__markReadRequest(struct soap*, _ngwm__markReadRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__markReadRequest(struct soap*, _ngwm__markReadRequest *const*, const char*, const char*);
@@ -5473,7 +6225,7 @@ SOAP_FMAC3 _ngwm__markReadRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__markRea
 SOAP_FMAC3 _ngwm__markReadRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__markReadRequest(struct soap*, const char*, _ngwm__markReadRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__markPrivateResponse
-#define SOAP_TYPE_PointerTo_ngwm__markPrivateResponse (669)
+#define SOAP_TYPE_PointerTo_ngwm__markPrivateResponse (782)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__markPrivateResponse(struct soap*, _ngwm__markPrivateResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__markPrivateResponse(struct soap*, _ngwm__markPrivateResponse *const*, const char*, const char*);
@@ -5482,7 +6234,7 @@ SOAP_FMAC3 _ngwm__markPrivateResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__mar
 SOAP_FMAC3 _ngwm__markPrivateResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__markPrivateResponse(struct soap*, const char*, _ngwm__markPrivateResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__markPrivateRequest
-#define SOAP_TYPE_PointerTo_ngwm__markPrivateRequest (668)
+#define SOAP_TYPE_PointerTo_ngwm__markPrivateRequest (781)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__markPrivateRequest(struct soap*, _ngwm__markPrivateRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__markPrivateRequest(struct soap*, _ngwm__markPrivateRequest *const*, const char*, const char*);
@@ -5491,7 +6243,7 @@ SOAP_FMAC3 _ngwm__markPrivateRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__mark
 SOAP_FMAC3 _ngwm__markPrivateRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__markPrivateRequest(struct soap*, const char*, _ngwm__markPrivateRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__logoutResponse
-#define SOAP_TYPE_PointerTo_ngwm__logoutResponse (665)
+#define SOAP_TYPE_PointerTo_ngwm__logoutResponse (778)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__logoutResponse(struct soap*, _ngwm__logoutResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__logoutResponse(struct soap*, _ngwm__logoutResponse *const*, const char*, const char*);
@@ -5500,7 +6252,7 @@ SOAP_FMAC3 _ngwm__logoutResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__logoutRe
 SOAP_FMAC3 _ngwm__logoutResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__logoutResponse(struct soap*, const char*, _ngwm__logoutResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__logoutRequest
-#define SOAP_TYPE_PointerTo_ngwm__logoutRequest (664)
+#define SOAP_TYPE_PointerTo_ngwm__logoutRequest (777)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__logoutRequest(struct soap*, _ngwm__logoutRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__logoutRequest(struct soap*, _ngwm__logoutRequest *const*, const char*, const char*);
@@ -5509,7 +6261,7 @@ SOAP_FMAC3 _ngwm__logoutRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__logoutReq
 SOAP_FMAC3 _ngwm__logoutRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__logoutRequest(struct soap*, const char*, _ngwm__logoutRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__loginResponse
-#define SOAP_TYPE_PointerTo_ngwm__loginResponse (661)
+#define SOAP_TYPE_PointerTo_ngwm__loginResponse (774)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__loginResponse(struct soap*, _ngwm__loginResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__loginResponse(struct soap*, _ngwm__loginResponse *const*, const char*, const char*);
@@ -5518,7 +6270,7 @@ SOAP_FMAC3 _ngwm__loginResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__loginResp
 SOAP_FMAC3 _ngwm__loginResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__loginResponse(struct soap*, const char*, _ngwm__loginResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__loginRequest
-#define SOAP_TYPE_PointerTo_ngwm__loginRequest (660)
+#define SOAP_TYPE_PointerTo_ngwm__loginRequest (773)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__loginRequest(struct soap*, _ngwm__loginRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__loginRequest(struct soap*, _ngwm__loginRequest *const*, const char*, const char*);
@@ -5526,8 +6278,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__loginRequest(struct soap*, co
 SOAP_FMAC3 _ngwm__loginRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__loginRequest(struct soap*, _ngwm__loginRequest **, const char*, const char*);
 SOAP_FMAC3 _ngwm__loginRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__loginRequest(struct soap*, const char*, _ngwm__loginRequest **, const char*);
 
+#ifndef SOAP_TYPE_PointerTo_ngwm__getUserListResponse
+#define SOAP_TYPE_PointerTo_ngwm__getUserListResponse (770)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getUserListResponse(struct soap*, _ngwm__getUserListResponse *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getUserListResponse(struct soap*, _ngwm__getUserListResponse *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getUserListResponse(struct soap*, const char *, int, _ngwm__getUserListResponse *const*, const char *);
+SOAP_FMAC3 _ngwm__getUserListResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getUserListResponse(struct soap*, _ngwm__getUserListResponse **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getUserListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getUserListResponse(struct soap*, const char*, _ngwm__getUserListResponse **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__getUserListRequest
+#define SOAP_TYPE_PointerTo_ngwm__getUserListRequest (769)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getUserListRequest(struct soap*, _ngwm__getUserListRequest *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getUserListRequest(struct soap*, _ngwm__getUserListRequest *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getUserListRequest(struct soap*, const char *, int, _ngwm__getUserListRequest *const*, const char *);
+SOAP_FMAC3 _ngwm__getUserListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getUserListRequest(struct soap*, _ngwm__getUserListRequest **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getUserListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getUserListRequest(struct soap*, const char*, _ngwm__getUserListRequest **, const char*);
+
 #ifndef SOAP_TYPE_PointerTo_ngwm__getTimezoneListResponse
-#define SOAP_TYPE_PointerTo_ngwm__getTimezoneListResponse (657)
+#define SOAP_TYPE_PointerTo_ngwm__getTimezoneListResponse (766)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getTimezoneListResponse(struct soap*, _ngwm__getTimezoneListResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getTimezoneListResponse(struct soap*, _ngwm__getTimezoneListResponse *const*, const char*, const char*);
@@ -5536,7 +6306,7 @@ SOAP_FMAC3 _ngwm__getTimezoneListResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm_
 SOAP_FMAC3 _ngwm__getTimezoneListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getTimezoneListResponse(struct soap*, const char*, _ngwm__getTimezoneListResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getTimezoneListRequest
-#define SOAP_TYPE_PointerTo_ngwm__getTimezoneListRequest (656)
+#define SOAP_TYPE_PointerTo_ngwm__getTimezoneListRequest (765)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getTimezoneListRequest(struct soap*, _ngwm__getTimezoneListRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getTimezoneListRequest(struct soap*, _ngwm__getTimezoneListRequest *const*, const char*, const char*);
@@ -5544,8 +6314,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getTimezoneListRequest(struct
 SOAP_FMAC3 _ngwm__getTimezoneListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getTimezoneListRequest(struct soap*, _ngwm__getTimezoneListRequest **, const char*, const char*);
 SOAP_FMAC3 _ngwm__getTimezoneListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getTimezoneListRequest(struct soap*, const char*, _ngwm__getTimezoneListRequest **, const char*);
 
+#ifndef SOAP_TYPE_PointerTo_ngwm__getTimestampResponse
+#define SOAP_TYPE_PointerTo_ngwm__getTimestampResponse (762)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getTimestampResponse(struct soap*, _ngwm__getTimestampResponse *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getTimestampResponse(struct soap*, _ngwm__getTimestampResponse *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getTimestampResponse(struct soap*, const char *, int, _ngwm__getTimestampResponse *const*, const char *);
+SOAP_FMAC3 _ngwm__getTimestampResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getTimestampResponse(struct soap*, _ngwm__getTimestampResponse **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getTimestampResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getTimestampResponse(struct soap*, const char*, _ngwm__getTimestampResponse **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__getTimestampRequest
+#define SOAP_TYPE_PointerTo_ngwm__getTimestampRequest (761)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getTimestampRequest(struct soap*, _ngwm__getTimestampRequest *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getTimestampRequest(struct soap*, _ngwm__getTimestampRequest *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getTimestampRequest(struct soap*, const char *, int, _ngwm__getTimestampRequest *const*, const char *);
+SOAP_FMAC3 _ngwm__getTimestampRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getTimestampRequest(struct soap*, _ngwm__getTimestampRequest **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getTimestampRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getTimestampRequest(struct soap*, const char*, _ngwm__getTimestampRequest **, const char*);
+
 #ifndef SOAP_TYPE_PointerTo_ngwm__getSignaturesResponse
-#define SOAP_TYPE_PointerTo_ngwm__getSignaturesResponse (653)
+#define SOAP_TYPE_PointerTo_ngwm__getSignaturesResponse (758)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getSignaturesResponse(struct soap*, _ngwm__getSignaturesResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getSignaturesResponse(struct soap*, _ngwm__getSignaturesResponse *const*, const char*, const char*);
@@ -5554,7 +6342,7 @@ SOAP_FMAC3 _ngwm__getSignaturesResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__g
 SOAP_FMAC3 _ngwm__getSignaturesResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getSignaturesResponse(struct soap*, const char*, _ngwm__getSignaturesResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getSignaturesRequest
-#define SOAP_TYPE_PointerTo_ngwm__getSignaturesRequest (652)
+#define SOAP_TYPE_PointerTo_ngwm__getSignaturesRequest (757)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getSignaturesRequest(struct soap*, _ngwm__getSignaturesRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getSignaturesRequest(struct soap*, _ngwm__getSignaturesRequest *const*, const char*, const char*);
@@ -5563,7 +6351,7 @@ SOAP_FMAC3 _ngwm__getSignaturesRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__ge
 SOAP_FMAC3 _ngwm__getSignaturesRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getSignaturesRequest(struct soap*, const char*, _ngwm__getSignaturesRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getSettingsResponse
-#define SOAP_TYPE_PointerTo_ngwm__getSettingsResponse (649)
+#define SOAP_TYPE_PointerTo_ngwm__getSettingsResponse (754)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getSettingsResponse(struct soap*, _ngwm__getSettingsResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getSettingsResponse(struct soap*, _ngwm__getSettingsResponse *const*, const char*, const char*);
@@ -5572,7 +6360,7 @@ SOAP_FMAC3 _ngwm__getSettingsResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__get
 SOAP_FMAC3 _ngwm__getSettingsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getSettingsResponse(struct soap*, const char*, _ngwm__getSettingsResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getSettingsRequest
-#define SOAP_TYPE_PointerTo_ngwm__getSettingsRequest (648)
+#define SOAP_TYPE_PointerTo_ngwm__getSettingsRequest (753)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getSettingsRequest(struct soap*, _ngwm__getSettingsRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getSettingsRequest(struct soap*, _ngwm__getSettingsRequest *const*, const char*, const char*);
@@ -5580,8 +6368,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getSettingsRequest(struct soa
 SOAP_FMAC3 _ngwm__getSettingsRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getSettingsRequest(struct soap*, _ngwm__getSettingsRequest **, const char*, const char*);
 SOAP_FMAC3 _ngwm__getSettingsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getSettingsRequest(struct soap*, const char*, _ngwm__getSettingsRequest **, const char*);
 
+#ifndef SOAP_TYPE_PointerTo_ngwm__getRuleListResponse
+#define SOAP_TYPE_PointerTo_ngwm__getRuleListResponse (750)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getRuleListResponse(struct soap*, _ngwm__getRuleListResponse *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getRuleListResponse(struct soap*, _ngwm__getRuleListResponse *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getRuleListResponse(struct soap*, const char *, int, _ngwm__getRuleListResponse *const*, const char *);
+SOAP_FMAC3 _ngwm__getRuleListResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getRuleListResponse(struct soap*, _ngwm__getRuleListResponse **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getRuleListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getRuleListResponse(struct soap*, const char*, _ngwm__getRuleListResponse **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__getRuleListRequest
+#define SOAP_TYPE_PointerTo_ngwm__getRuleListRequest (749)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getRuleListRequest(struct soap*, _ngwm__getRuleListRequest *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getRuleListRequest(struct soap*, _ngwm__getRuleListRequest *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getRuleListRequest(struct soap*, const char *, int, _ngwm__getRuleListRequest *const*, const char *);
+SOAP_FMAC3 _ngwm__getRuleListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getRuleListRequest(struct soap*, _ngwm__getRuleListRequest **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getRuleListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getRuleListRequest(struct soap*, const char*, _ngwm__getRuleListRequest **, const char*);
+
 #ifndef SOAP_TYPE_PointerTo_ngwm__getProxyListResponse
-#define SOAP_TYPE_PointerTo_ngwm__getProxyListResponse (645)
+#define SOAP_TYPE_PointerTo_ngwm__getProxyListResponse (746)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getProxyListResponse(struct soap*, _ngwm__getProxyListResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getProxyListResponse(struct soap*, _ngwm__getProxyListResponse *const*, const char*, const char*);
@@ -5590,7 +6396,7 @@ SOAP_FMAC3 _ngwm__getProxyListResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__ge
 SOAP_FMAC3 _ngwm__getProxyListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getProxyListResponse(struct soap*, const char*, _ngwm__getProxyListResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getProxyListRequest
-#define SOAP_TYPE_PointerTo_ngwm__getProxyListRequest (644)
+#define SOAP_TYPE_PointerTo_ngwm__getProxyListRequest (745)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getProxyListRequest(struct soap*, _ngwm__getProxyListRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getProxyListRequest(struct soap*, _ngwm__getProxyListRequest *const*, const char*, const char*);
@@ -5599,7 +6405,7 @@ SOAP_FMAC3 _ngwm__getProxyListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__get
 SOAP_FMAC3 _ngwm__getProxyListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getProxyListRequest(struct soap*, const char*, _ngwm__getProxyListRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getProxyAccessListResponse
-#define SOAP_TYPE_PointerTo_ngwm__getProxyAccessListResponse (641)
+#define SOAP_TYPE_PointerTo_ngwm__getProxyAccessListResponse (742)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getProxyAccessListResponse(struct soap*, _ngwm__getProxyAccessListResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getProxyAccessListResponse(struct soap*, _ngwm__getProxyAccessListResponse *const*, const char*, const char*);
@@ -5608,7 +6414,7 @@ SOAP_FMAC3 _ngwm__getProxyAccessListResponse ** SOAP_FMAC4 soap_get_PointerTo_ng
 SOAP_FMAC3 _ngwm__getProxyAccessListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getProxyAccessListResponse(struct soap*, const char*, _ngwm__getProxyAccessListResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getProxyAccessListRequest
-#define SOAP_TYPE_PointerTo_ngwm__getProxyAccessListRequest (640)
+#define SOAP_TYPE_PointerTo_ngwm__getProxyAccessListRequest (741)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getProxyAccessListRequest(struct soap*, _ngwm__getProxyAccessListRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getProxyAccessListRequest(struct soap*, _ngwm__getProxyAccessListRequest *const*, const char*, const char*);
@@ -5617,7 +6423,7 @@ SOAP_FMAC3 _ngwm__getProxyAccessListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngw
 SOAP_FMAC3 _ngwm__getProxyAccessListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getProxyAccessListRequest(struct soap*, const char*, _ngwm__getProxyAccessListRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getQuickMessagesResponse
-#define SOAP_TYPE_PointerTo_ngwm__getQuickMessagesResponse (637)
+#define SOAP_TYPE_PointerTo_ngwm__getQuickMessagesResponse (738)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getQuickMessagesResponse(struct soap*, _ngwm__getQuickMessagesResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getQuickMessagesResponse(struct soap*, _ngwm__getQuickMessagesResponse *const*, const char*, const char*);
@@ -5626,7 +6432,7 @@ SOAP_FMAC3 _ngwm__getQuickMessagesResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm
 SOAP_FMAC3 _ngwm__getQuickMessagesResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getQuickMessagesResponse(struct soap*, const char*, _ngwm__getQuickMessagesResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getQuickMessagesRequest
-#define SOAP_TYPE_PointerTo_ngwm__getQuickMessagesRequest (636)
+#define SOAP_TYPE_PointerTo_ngwm__getQuickMessagesRequest (737)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getQuickMessagesRequest(struct soap*, _ngwm__getQuickMessagesRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getQuickMessagesRequest(struct soap*, _ngwm__getQuickMessagesRequest *const*, const char*, const char*);
@@ -5634,8 +6440,44 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getQuickMessagesRequest(struc
 SOAP_FMAC3 _ngwm__getQuickMessagesRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getQuickMessagesRequest(struct soap*, _ngwm__getQuickMessagesRequest **, const char*, const char*);
 SOAP_FMAC3 _ngwm__getQuickMessagesRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getQuickMessagesRequest(struct soap*, const char*, _ngwm__getQuickMessagesRequest **, const char*);
 
+#ifndef SOAP_TYPE_PointerTo_ngwm__getLibraryListResponse
+#define SOAP_TYPE_PointerTo_ngwm__getLibraryListResponse (734)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getLibraryListResponse(struct soap*, _ngwm__getLibraryListResponse *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getLibraryListResponse(struct soap*, _ngwm__getLibraryListResponse *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getLibraryListResponse(struct soap*, const char *, int, _ngwm__getLibraryListResponse *const*, const char *);
+SOAP_FMAC3 _ngwm__getLibraryListResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getLibraryListResponse(struct soap*, _ngwm__getLibraryListResponse **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getLibraryListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getLibraryListResponse(struct soap*, const char*, _ngwm__getLibraryListResponse **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__getLibraryListRequest
+#define SOAP_TYPE_PointerTo_ngwm__getLibraryListRequest (733)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getLibraryListRequest(struct soap*, _ngwm__getLibraryListRequest *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getLibraryListRequest(struct soap*, _ngwm__getLibraryListRequest *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getLibraryListRequest(struct soap*, const char *, int, _ngwm__getLibraryListRequest *const*, const char *);
+SOAP_FMAC3 _ngwm__getLibraryListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getLibraryListRequest(struct soap*, _ngwm__getLibraryListRequest **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getLibraryListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getLibraryListRequest(struct soap*, const char*, _ngwm__getLibraryListRequest **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__getLibraryItemResponse
+#define SOAP_TYPE_PointerTo_ngwm__getLibraryItemResponse (730)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getLibraryItemResponse(struct soap*, _ngwm__getLibraryItemResponse *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getLibraryItemResponse(struct soap*, _ngwm__getLibraryItemResponse *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getLibraryItemResponse(struct soap*, const char *, int, _ngwm__getLibraryItemResponse *const*, const char *);
+SOAP_FMAC3 _ngwm__getLibraryItemResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getLibraryItemResponse(struct soap*, _ngwm__getLibraryItemResponse **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getLibraryItemResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getLibraryItemResponse(struct soap*, const char*, _ngwm__getLibraryItemResponse **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__getLibraryItemRequest
+#define SOAP_TYPE_PointerTo_ngwm__getLibraryItemRequest (729)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getLibraryItemRequest(struct soap*, _ngwm__getLibraryItemRequest *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getLibraryItemRequest(struct soap*, _ngwm__getLibraryItemRequest *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getLibraryItemRequest(struct soap*, const char *, int, _ngwm__getLibraryItemRequest *const*, const char *);
+SOAP_FMAC3 _ngwm__getLibraryItemRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getLibraryItemRequest(struct soap*, _ngwm__getLibraryItemRequest **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getLibraryItemRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getLibraryItemRequest(struct soap*, const char*, _ngwm__getLibraryItemRequest **, const char*);
+
 #ifndef SOAP_TYPE_PointerTo_ngwm__getJunkMailSettingsResponse
-#define SOAP_TYPE_PointerTo_ngwm__getJunkMailSettingsResponse (633)
+#define SOAP_TYPE_PointerTo_ngwm__getJunkMailSettingsResponse (726)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getJunkMailSettingsResponse(struct soap*, _ngwm__getJunkMailSettingsResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getJunkMailSettingsResponse(struct soap*, _ngwm__getJunkMailSettingsResponse *const*, const char*, const char*);
@@ -5644,7 +6486,7 @@ SOAP_FMAC3 _ngwm__getJunkMailSettingsResponse ** SOAP_FMAC4 soap_get_PointerTo_n
 SOAP_FMAC3 _ngwm__getJunkMailSettingsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getJunkMailSettingsResponse(struct soap*, const char*, _ngwm__getJunkMailSettingsResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getJunkMailSettingsRequest
-#define SOAP_TYPE_PointerTo_ngwm__getJunkMailSettingsRequest (632)
+#define SOAP_TYPE_PointerTo_ngwm__getJunkMailSettingsRequest (725)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getJunkMailSettingsRequest(struct soap*, _ngwm__getJunkMailSettingsRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getJunkMailSettingsRequest(struct soap*, _ngwm__getJunkMailSettingsRequest *const*, const char*, const char*);
@@ -5653,7 +6495,7 @@ SOAP_FMAC3 _ngwm__getJunkMailSettingsRequest ** SOAP_FMAC4 soap_get_PointerTo_ng
 SOAP_FMAC3 _ngwm__getJunkMailSettingsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getJunkMailSettingsRequest(struct soap*, const char*, _ngwm__getJunkMailSettingsRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getJunkEntriesResponse
-#define SOAP_TYPE_PointerTo_ngwm__getJunkEntriesResponse (629)
+#define SOAP_TYPE_PointerTo_ngwm__getJunkEntriesResponse (722)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getJunkEntriesResponse(struct soap*, _ngwm__getJunkEntriesResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getJunkEntriesResponse(struct soap*, _ngwm__getJunkEntriesResponse *const*, const char*, const char*);
@@ -5662,7 +6504,7 @@ SOAP_FMAC3 _ngwm__getJunkEntriesResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__
 SOAP_FMAC3 _ngwm__getJunkEntriesResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getJunkEntriesResponse(struct soap*, const char*, _ngwm__getJunkEntriesResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getJunkEntriesRequest
-#define SOAP_TYPE_PointerTo_ngwm__getJunkEntriesRequest (628)
+#define SOAP_TYPE_PointerTo_ngwm__getJunkEntriesRequest (721)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getJunkEntriesRequest(struct soap*, _ngwm__getJunkEntriesRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getJunkEntriesRequest(struct soap*, _ngwm__getJunkEntriesRequest *const*, const char*, const char*);
@@ -5671,7 +6513,7 @@ SOAP_FMAC3 _ngwm__getJunkEntriesRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__g
 SOAP_FMAC3 _ngwm__getJunkEntriesRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getJunkEntriesRequest(struct soap*, const char*, _ngwm__getJunkEntriesRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getItemsResponse
-#define SOAP_TYPE_PointerTo_ngwm__getItemsResponse (625)
+#define SOAP_TYPE_PointerTo_ngwm__getItemsResponse (718)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getItemsResponse(struct soap*, _ngwm__getItemsResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getItemsResponse(struct soap*, _ngwm__getItemsResponse *const*, const char*, const char*);
@@ -5680,7 +6522,7 @@ SOAP_FMAC3 _ngwm__getItemsResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getIte
 SOAP_FMAC3 _ngwm__getItemsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getItemsResponse(struct soap*, const char*, _ngwm__getItemsResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getItemsRequest
-#define SOAP_TYPE_PointerTo_ngwm__getItemsRequest (624)
+#define SOAP_TYPE_PointerTo_ngwm__getItemsRequest (717)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getItemsRequest(struct soap*, _ngwm__getItemsRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getItemsRequest(struct soap*, _ngwm__getItemsRequest *const*, const char*, const char*);
@@ -5689,7 +6531,7 @@ SOAP_FMAC3 _ngwm__getItemsRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getItem
 SOAP_FMAC3 _ngwm__getItemsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getItemsRequest(struct soap*, const char*, _ngwm__getItemsRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getItemResponse
-#define SOAP_TYPE_PointerTo_ngwm__getItemResponse (621)
+#define SOAP_TYPE_PointerTo_ngwm__getItemResponse (714)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getItemResponse(struct soap*, _ngwm__getItemResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getItemResponse(struct soap*, _ngwm__getItemResponse *const*, const char*, const char*);
@@ -5698,7 +6540,7 @@ SOAP_FMAC3 _ngwm__getItemResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getItem
 SOAP_FMAC3 _ngwm__getItemResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getItemResponse(struct soap*, const char*, _ngwm__getItemResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getItemRequest
-#define SOAP_TYPE_PointerTo_ngwm__getItemRequest (620)
+#define SOAP_TYPE_PointerTo_ngwm__getItemRequest (713)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getItemRequest(struct soap*, _ngwm__getItemRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getItemRequest(struct soap*, _ngwm__getItemRequest *const*, const char*, const char*);
@@ -5707,7 +6549,7 @@ SOAP_FMAC3 _ngwm__getItemRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getItemR
 SOAP_FMAC3 _ngwm__getItemRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getItemRequest(struct soap*, const char*, _ngwm__getItemRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getFreeBusyResponse
-#define SOAP_TYPE_PointerTo_ngwm__getFreeBusyResponse (617)
+#define SOAP_TYPE_PointerTo_ngwm__getFreeBusyResponse (710)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getFreeBusyResponse(struct soap*, _ngwm__getFreeBusyResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getFreeBusyResponse(struct soap*, _ngwm__getFreeBusyResponse *const*, const char*, const char*);
@@ -5716,7 +6558,7 @@ SOAP_FMAC3 _ngwm__getFreeBusyResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__get
 SOAP_FMAC3 _ngwm__getFreeBusyResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getFreeBusyResponse(struct soap*, const char*, _ngwm__getFreeBusyResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getFreeBusyRequest
-#define SOAP_TYPE_PointerTo_ngwm__getFreeBusyRequest (616)
+#define SOAP_TYPE_PointerTo_ngwm__getFreeBusyRequest (709)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getFreeBusyRequest(struct soap*, _ngwm__getFreeBusyRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getFreeBusyRequest(struct soap*, _ngwm__getFreeBusyRequest *const*, const char*, const char*);
@@ -5725,7 +6567,7 @@ SOAP_FMAC3 _ngwm__getFreeBusyRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getF
 SOAP_FMAC3 _ngwm__getFreeBusyRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getFreeBusyRequest(struct soap*, const char*, _ngwm__getFreeBusyRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getFolderListResponse
-#define SOAP_TYPE_PointerTo_ngwm__getFolderListResponse (613)
+#define SOAP_TYPE_PointerTo_ngwm__getFolderListResponse (706)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getFolderListResponse(struct soap*, _ngwm__getFolderListResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getFolderListResponse(struct soap*, _ngwm__getFolderListResponse *const*, const char*, const char*);
@@ -5734,7 +6576,7 @@ SOAP_FMAC3 _ngwm__getFolderListResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__g
 SOAP_FMAC3 _ngwm__getFolderListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getFolderListResponse(struct soap*, const char*, _ngwm__getFolderListResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getFolderListRequest
-#define SOAP_TYPE_PointerTo_ngwm__getFolderListRequest (612)
+#define SOAP_TYPE_PointerTo_ngwm__getFolderListRequest (705)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getFolderListRequest(struct soap*, _ngwm__getFolderListRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getFolderListRequest(struct soap*, _ngwm__getFolderListRequest *const*, const char*, const char*);
@@ -5742,8 +6584,44 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getFolderListRequest(struct s
 SOAP_FMAC3 _ngwm__getFolderListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getFolderListRequest(struct soap*, _ngwm__getFolderListRequest **, const char*, const char*);
 SOAP_FMAC3 _ngwm__getFolderListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getFolderListRequest(struct soap*, const char*, _ngwm__getFolderListRequest **, const char*);
 
+#ifndef SOAP_TYPE_PointerTo_ngwm__getFolderResponse
+#define SOAP_TYPE_PointerTo_ngwm__getFolderResponse (702)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getFolderResponse(struct soap*, _ngwm__getFolderResponse *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getFolderResponse(struct soap*, _ngwm__getFolderResponse *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getFolderResponse(struct soap*, const char *, int, _ngwm__getFolderResponse *const*, const char *);
+SOAP_FMAC3 _ngwm__getFolderResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getFolderResponse(struct soap*, _ngwm__getFolderResponse **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getFolderResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getFolderResponse(struct soap*, const char*, _ngwm__getFolderResponse **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__getFolderRequest
+#define SOAP_TYPE_PointerTo_ngwm__getFolderRequest (701)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getFolderRequest(struct soap*, _ngwm__getFolderRequest *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getFolderRequest(struct soap*, _ngwm__getFolderRequest *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getFolderRequest(struct soap*, const char *, int, _ngwm__getFolderRequest *const*, const char *);
+SOAP_FMAC3 _ngwm__getFolderRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getFolderRequest(struct soap*, _ngwm__getFolderRequest **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getFolderRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getFolderRequest(struct soap*, const char*, _ngwm__getFolderRequest **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__getDocumentTypeListResponse
+#define SOAP_TYPE_PointerTo_ngwm__getDocumentTypeListResponse (698)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getDocumentTypeListResponse(struct soap*, _ngwm__getDocumentTypeListResponse *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getDocumentTypeListResponse(struct soap*, _ngwm__getDocumentTypeListResponse *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getDocumentTypeListResponse(struct soap*, const char *, int, _ngwm__getDocumentTypeListResponse *const*, const char *);
+SOAP_FMAC3 _ngwm__getDocumentTypeListResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getDocumentTypeListResponse(struct soap*, _ngwm__getDocumentTypeListResponse **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getDocumentTypeListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getDocumentTypeListResponse(struct soap*, const char*, _ngwm__getDocumentTypeListResponse **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__getDocumentTypeListRequest
+#define SOAP_TYPE_PointerTo_ngwm__getDocumentTypeListRequest (697)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getDocumentTypeListRequest(struct soap*, _ngwm__getDocumentTypeListRequest *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getDocumentTypeListRequest(struct soap*, _ngwm__getDocumentTypeListRequest *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getDocumentTypeListRequest(struct soap*, const char *, int, _ngwm__getDocumentTypeListRequest *const*, const char *);
+SOAP_FMAC3 _ngwm__getDocumentTypeListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getDocumentTypeListRequest(struct soap*, _ngwm__getDocumentTypeListRequest **, const char*, const char*);
+SOAP_FMAC3 _ngwm__getDocumentTypeListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getDocumentTypeListRequest(struct soap*, const char*, _ngwm__getDocumentTypeListRequest **, const char*);
+
 #ifndef SOAP_TYPE_PointerTo_ngwm__getDeltaInfoResponse
-#define SOAP_TYPE_PointerTo_ngwm__getDeltaInfoResponse (609)
+#define SOAP_TYPE_PointerTo_ngwm__getDeltaInfoResponse (694)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getDeltaInfoResponse(struct soap*, _ngwm__getDeltaInfoResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getDeltaInfoResponse(struct soap*, _ngwm__getDeltaInfoResponse *const*, const char*, const char*);
@@ -5752,7 +6630,7 @@ SOAP_FMAC3 _ngwm__getDeltaInfoResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__ge
 SOAP_FMAC3 _ngwm__getDeltaInfoResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getDeltaInfoResponse(struct soap*, const char*, _ngwm__getDeltaInfoResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getDeltaInfoRequest
-#define SOAP_TYPE_PointerTo_ngwm__getDeltaInfoRequest (608)
+#define SOAP_TYPE_PointerTo_ngwm__getDeltaInfoRequest (693)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getDeltaInfoRequest(struct soap*, _ngwm__getDeltaInfoRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getDeltaInfoRequest(struct soap*, _ngwm__getDeltaInfoRequest *const*, const char*, const char*);
@@ -5761,7 +6639,7 @@ SOAP_FMAC3 _ngwm__getDeltaInfoRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__get
 SOAP_FMAC3 _ngwm__getDeltaInfoRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getDeltaInfoRequest(struct soap*, const char*, _ngwm__getDeltaInfoRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getDeltasResponse
-#define SOAP_TYPE_PointerTo_ngwm__getDeltasResponse (605)
+#define SOAP_TYPE_PointerTo_ngwm__getDeltasResponse (690)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getDeltasResponse(struct soap*, _ngwm__getDeltasResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getDeltasResponse(struct soap*, _ngwm__getDeltasResponse *const*, const char*, const char*);
@@ -5770,7 +6648,7 @@ SOAP_FMAC3 _ngwm__getDeltasResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getDe
 SOAP_FMAC3 _ngwm__getDeltasResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getDeltasResponse(struct soap*, const char*, _ngwm__getDeltasResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getDeltasRequest
-#define SOAP_TYPE_PointerTo_ngwm__getDeltasRequest (604)
+#define SOAP_TYPE_PointerTo_ngwm__getDeltasRequest (689)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getDeltasRequest(struct soap*, _ngwm__getDeltasRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getDeltasRequest(struct soap*, _ngwm__getDeltasRequest *const*, const char*, const char*);
@@ -5779,7 +6657,7 @@ SOAP_FMAC3 _ngwm__getDeltasRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getDel
 SOAP_FMAC3 _ngwm__getDeltasRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getDeltasRequest(struct soap*, const char*, _ngwm__getDeltasRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getCustomListResponse
-#define SOAP_TYPE_PointerTo_ngwm__getCustomListResponse (601)
+#define SOAP_TYPE_PointerTo_ngwm__getCustomListResponse (686)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getCustomListResponse(struct soap*, _ngwm__getCustomListResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getCustomListResponse(struct soap*, _ngwm__getCustomListResponse *const*, const char*, const char*);
@@ -5788,7 +6666,7 @@ SOAP_FMAC3 _ngwm__getCustomListResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__g
 SOAP_FMAC3 _ngwm__getCustomListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getCustomListResponse(struct soap*, const char*, _ngwm__getCustomListResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getCustomListRequest
-#define SOAP_TYPE_PointerTo_ngwm__getCustomListRequest (600)
+#define SOAP_TYPE_PointerTo_ngwm__getCustomListRequest (685)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getCustomListRequest(struct soap*, _ngwm__getCustomListRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getCustomListRequest(struct soap*, _ngwm__getCustomListRequest *const*, const char*, const char*);
@@ -5797,7 +6675,7 @@ SOAP_FMAC3 _ngwm__getCustomListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__ge
 SOAP_FMAC3 _ngwm__getCustomListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getCustomListRequest(struct soap*, const char*, _ngwm__getCustomListRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getCategoryListResponse
-#define SOAP_TYPE_PointerTo_ngwm__getCategoryListResponse (597)
+#define SOAP_TYPE_PointerTo_ngwm__getCategoryListResponse (682)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getCategoryListResponse(struct soap*, _ngwm__getCategoryListResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getCategoryListResponse(struct soap*, _ngwm__getCategoryListResponse *const*, const char*, const char*);
@@ -5806,7 +6684,7 @@ SOAP_FMAC3 _ngwm__getCategoryListResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm_
 SOAP_FMAC3 _ngwm__getCategoryListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getCategoryListResponse(struct soap*, const char*, _ngwm__getCategoryListResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getCategoryListRequest
-#define SOAP_TYPE_PointerTo_ngwm__getCategoryListRequest (596)
+#define SOAP_TYPE_PointerTo_ngwm__getCategoryListRequest (681)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getCategoryListRequest(struct soap*, _ngwm__getCategoryListRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getCategoryListRequest(struct soap*, _ngwm__getCategoryListRequest *const*, const char*, const char*);
@@ -5815,7 +6693,7 @@ SOAP_FMAC3 _ngwm__getCategoryListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__
 SOAP_FMAC3 _ngwm__getCategoryListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getCategoryListRequest(struct soap*, const char*, _ngwm__getCategoryListRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getAttachmentResponse
-#define SOAP_TYPE_PointerTo_ngwm__getAttachmentResponse (593)
+#define SOAP_TYPE_PointerTo_ngwm__getAttachmentResponse (678)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getAttachmentResponse(struct soap*, _ngwm__getAttachmentResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getAttachmentResponse(struct soap*, _ngwm__getAttachmentResponse *const*, const char*, const char*);
@@ -5824,7 +6702,7 @@ SOAP_FMAC3 _ngwm__getAttachmentResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__g
 SOAP_FMAC3 _ngwm__getAttachmentResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getAttachmentResponse(struct soap*, const char*, _ngwm__getAttachmentResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getAttachmentRequest
-#define SOAP_TYPE_PointerTo_ngwm__getAttachmentRequest (592)
+#define SOAP_TYPE_PointerTo_ngwm__getAttachmentRequest (677)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getAttachmentRequest(struct soap*, _ngwm__getAttachmentRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getAttachmentRequest(struct soap*, _ngwm__getAttachmentRequest *const*, const char*, const char*);
@@ -5833,7 +6711,7 @@ SOAP_FMAC3 _ngwm__getAttachmentRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__ge
 SOAP_FMAC3 _ngwm__getAttachmentRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getAttachmentRequest(struct soap*, const char*, _ngwm__getAttachmentRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getAddressBookListResponse
-#define SOAP_TYPE_PointerTo_ngwm__getAddressBookListResponse (589)
+#define SOAP_TYPE_PointerTo_ngwm__getAddressBookListResponse (674)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getAddressBookListResponse(struct soap*, _ngwm__getAddressBookListResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getAddressBookListResponse(struct soap*, _ngwm__getAddressBookListResponse *const*, const char*, const char*);
@@ -5842,7 +6720,7 @@ SOAP_FMAC3 _ngwm__getAddressBookListResponse ** SOAP_FMAC4 soap_get_PointerTo_ng
 SOAP_FMAC3 _ngwm__getAddressBookListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getAddressBookListResponse(struct soap*, const char*, _ngwm__getAddressBookListResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__getAddressBookListRequest
-#define SOAP_TYPE_PointerTo_ngwm__getAddressBookListRequest (588)
+#define SOAP_TYPE_PointerTo_ngwm__getAddressBookListRequest (673)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getAddressBookListRequest(struct soap*, _ngwm__getAddressBookListRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getAddressBookListRequest(struct soap*, _ngwm__getAddressBookListRequest *const*, const char*, const char*);
@@ -5851,7 +6729,7 @@ SOAP_FMAC3 _ngwm__getAddressBookListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngw
 SOAP_FMAC3 _ngwm__getAddressBookListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getAddressBookListRequest(struct soap*, const char*, _ngwm__getAddressBookListRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__forwardResponse
-#define SOAP_TYPE_PointerTo_ngwm__forwardResponse (585)
+#define SOAP_TYPE_PointerTo_ngwm__forwardResponse (670)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__forwardResponse(struct soap*, _ngwm__forwardResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__forwardResponse(struct soap*, _ngwm__forwardResponse *const*, const char*, const char*);
@@ -5860,7 +6738,7 @@ SOAP_FMAC3 _ngwm__forwardResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__forward
 SOAP_FMAC3 _ngwm__forwardResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__forwardResponse(struct soap*, const char*, _ngwm__forwardResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__forwardRequest
-#define SOAP_TYPE_PointerTo_ngwm__forwardRequest (584)
+#define SOAP_TYPE_PointerTo_ngwm__forwardRequest (669)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__forwardRequest(struct soap*, _ngwm__forwardRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__forwardRequest(struct soap*, _ngwm__forwardRequest *const*, const char*, const char*);
@@ -5868,8 +6746,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__forwardRequest(struct soap*, 
 SOAP_FMAC3 _ngwm__forwardRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__forwardRequest(struct soap*, _ngwm__forwardRequest **, const char*, const char*);
 SOAP_FMAC3 _ngwm__forwardRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__forwardRequest(struct soap*, const char*, _ngwm__forwardRequest **, const char*);
 
+#ifndef SOAP_TYPE_PointerTo_ngwm__executeRuleResponse
+#define SOAP_TYPE_PointerTo_ngwm__executeRuleResponse (666)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__executeRuleResponse(struct soap*, _ngwm__executeRuleResponse *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__executeRuleResponse(struct soap*, _ngwm__executeRuleResponse *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__executeRuleResponse(struct soap*, const char *, int, _ngwm__executeRuleResponse *const*, const char *);
+SOAP_FMAC3 _ngwm__executeRuleResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__executeRuleResponse(struct soap*, _ngwm__executeRuleResponse **, const char*, const char*);
+SOAP_FMAC3 _ngwm__executeRuleResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__executeRuleResponse(struct soap*, const char*, _ngwm__executeRuleResponse **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__executeRuleRequest
+#define SOAP_TYPE_PointerTo_ngwm__executeRuleRequest (665)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__executeRuleRequest(struct soap*, _ngwm__executeRuleRequest *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__executeRuleRequest(struct soap*, _ngwm__executeRuleRequest *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__executeRuleRequest(struct soap*, const char *, int, _ngwm__executeRuleRequest *const*, const char *);
+SOAP_FMAC3 _ngwm__executeRuleRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__executeRuleRequest(struct soap*, _ngwm__executeRuleRequest **, const char*, const char*);
+SOAP_FMAC3 _ngwm__executeRuleRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__executeRuleRequest(struct soap*, const char*, _ngwm__executeRuleRequest **, const char*);
+
 #ifndef SOAP_TYPE_PointerTo_ngwm__destroyCursorResponse
-#define SOAP_TYPE_PointerTo_ngwm__destroyCursorResponse (581)
+#define SOAP_TYPE_PointerTo_ngwm__destroyCursorResponse (662)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__destroyCursorResponse(struct soap*, _ngwm__destroyCursorResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__destroyCursorResponse(struct soap*, _ngwm__destroyCursorResponse *const*, const char*, const char*);
@@ -5878,7 +6774,7 @@ SOAP_FMAC3 _ngwm__destroyCursorResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__d
 SOAP_FMAC3 _ngwm__destroyCursorResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__destroyCursorResponse(struct soap*, const char*, _ngwm__destroyCursorResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__destroyCursorRequest
-#define SOAP_TYPE_PointerTo_ngwm__destroyCursorRequest (580)
+#define SOAP_TYPE_PointerTo_ngwm__destroyCursorRequest (661)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__destroyCursorRequest(struct soap*, _ngwm__destroyCursorRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__destroyCursorRequest(struct soap*, _ngwm__destroyCursorRequest *const*, const char*, const char*);
@@ -5887,7 +6783,7 @@ SOAP_FMAC3 _ngwm__destroyCursorRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__de
 SOAP_FMAC3 _ngwm__destroyCursorRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__destroyCursorRequest(struct soap*, const char*, _ngwm__destroyCursorRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__delegateResponse
-#define SOAP_TYPE_PointerTo_ngwm__delegateResponse (577)
+#define SOAP_TYPE_PointerTo_ngwm__delegateResponse (658)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__delegateResponse(struct soap*, _ngwm__delegateResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__delegateResponse(struct soap*, _ngwm__delegateResponse *const*, const char*, const char*);
@@ -5896,7 +6792,7 @@ SOAP_FMAC3 _ngwm__delegateResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__delega
 SOAP_FMAC3 _ngwm__delegateResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__delegateResponse(struct soap*, const char*, _ngwm__delegateResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__delegateRequest
-#define SOAP_TYPE_PointerTo_ngwm__delegateRequest (576)
+#define SOAP_TYPE_PointerTo_ngwm__delegateRequest (657)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__delegateRequest(struct soap*, _ngwm__delegateRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__delegateRequest(struct soap*, _ngwm__delegateRequest *const*, const char*, const char*);
@@ -5905,7 +6801,7 @@ SOAP_FMAC3 _ngwm__delegateRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__delegat
 SOAP_FMAC3 _ngwm__delegateRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__delegateRequest(struct soap*, const char*, _ngwm__delegateRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__declineResponse
-#define SOAP_TYPE_PointerTo_ngwm__declineResponse (573)
+#define SOAP_TYPE_PointerTo_ngwm__declineResponse (654)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__declineResponse(struct soap*, _ngwm__declineResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__declineResponse(struct soap*, _ngwm__declineResponse *const*, const char*, const char*);
@@ -5914,7 +6810,7 @@ SOAP_FMAC3 _ngwm__declineResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__decline
 SOAP_FMAC3 _ngwm__declineResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__declineResponse(struct soap*, const char*, _ngwm__declineResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__declineRequest
-#define SOAP_TYPE_PointerTo_ngwm__declineRequest (572)
+#define SOAP_TYPE_PointerTo_ngwm__declineRequest (653)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__declineRequest(struct soap*, _ngwm__declineRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__declineRequest(struct soap*, _ngwm__declineRequest *const*, const char*, const char*);
@@ -5923,7 +6819,7 @@ SOAP_FMAC3 _ngwm__declineRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__declineR
 SOAP_FMAC3 _ngwm__declineRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__declineRequest(struct soap*, const char*, _ngwm__declineRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__createSignatureResponse
-#define SOAP_TYPE_PointerTo_ngwm__createSignatureResponse (569)
+#define SOAP_TYPE_PointerTo_ngwm__createSignatureResponse (650)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createSignatureResponse(struct soap*, _ngwm__createSignatureResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createSignatureResponse(struct soap*, _ngwm__createSignatureResponse *const*, const char*, const char*);
@@ -5932,7 +6828,7 @@ SOAP_FMAC3 _ngwm__createSignatureResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm_
 SOAP_FMAC3 _ngwm__createSignatureResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createSignatureResponse(struct soap*, const char*, _ngwm__createSignatureResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__createSignatureRequest
-#define SOAP_TYPE_PointerTo_ngwm__createSignatureRequest (568)
+#define SOAP_TYPE_PointerTo_ngwm__createSignatureRequest (649)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createSignatureRequest(struct soap*, _ngwm__createSignatureRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createSignatureRequest(struct soap*, _ngwm__createSignatureRequest *const*, const char*, const char*);
@@ -5941,7 +6837,7 @@ SOAP_FMAC3 _ngwm__createSignatureRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__
 SOAP_FMAC3 _ngwm__createSignatureRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createSignatureRequest(struct soap*, const char*, _ngwm__createSignatureRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__createProxyAccessResponse
-#define SOAP_TYPE_PointerTo_ngwm__createProxyAccessResponse (565)
+#define SOAP_TYPE_PointerTo_ngwm__createProxyAccessResponse (646)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createProxyAccessResponse(struct soap*, _ngwm__createProxyAccessResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createProxyAccessResponse(struct soap*, _ngwm__createProxyAccessResponse *const*, const char*, const char*);
@@ -5950,7 +6846,7 @@ SOAP_FMAC3 _ngwm__createProxyAccessResponse ** SOAP_FMAC4 soap_get_PointerTo_ngw
 SOAP_FMAC3 _ngwm__createProxyAccessResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createProxyAccessResponse(struct soap*, const char*, _ngwm__createProxyAccessResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__createProxyAccessRequest
-#define SOAP_TYPE_PointerTo_ngwm__createProxyAccessRequest (564)
+#define SOAP_TYPE_PointerTo_ngwm__createProxyAccessRequest (645)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createProxyAccessRequest(struct soap*, _ngwm__createProxyAccessRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createProxyAccessRequest(struct soap*, _ngwm__createProxyAccessRequest *const*, const char*, const char*);
@@ -5959,7 +6855,7 @@ SOAP_FMAC3 _ngwm__createProxyAccessRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm
 SOAP_FMAC3 _ngwm__createProxyAccessRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createProxyAccessRequest(struct soap*, const char*, _ngwm__createProxyAccessRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__createJunkEntryResponse
-#define SOAP_TYPE_PointerTo_ngwm__createJunkEntryResponse (561)
+#define SOAP_TYPE_PointerTo_ngwm__createJunkEntryResponse (642)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createJunkEntryResponse(struct soap*, _ngwm__createJunkEntryResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createJunkEntryResponse(struct soap*, _ngwm__createJunkEntryResponse *const*, const char*, const char*);
@@ -5968,7 +6864,7 @@ SOAP_FMAC3 _ngwm__createJunkEntryResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm_
 SOAP_FMAC3 _ngwm__createJunkEntryResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createJunkEntryResponse(struct soap*, const char*, _ngwm__createJunkEntryResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__createJunkEntryRequest
-#define SOAP_TYPE_PointerTo_ngwm__createJunkEntryRequest (560)
+#define SOAP_TYPE_PointerTo_ngwm__createJunkEntryRequest (641)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createJunkEntryRequest(struct soap*, _ngwm__createJunkEntryRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createJunkEntryRequest(struct soap*, _ngwm__createJunkEntryRequest *const*, const char*, const char*);
@@ -5976,8 +6872,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__createJunkEntryRequest(struct
 SOAP_FMAC3 _ngwm__createJunkEntryRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__createJunkEntryRequest(struct soap*, _ngwm__createJunkEntryRequest **, const char*, const char*);
 SOAP_FMAC3 _ngwm__createJunkEntryRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createJunkEntryRequest(struct soap*, const char*, _ngwm__createJunkEntryRequest **, const char*);
 
+#ifndef SOAP_TYPE_PointerTo_ngwm__createItemsResponse
+#define SOAP_TYPE_PointerTo_ngwm__createItemsResponse (638)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createItemsResponse(struct soap*, _ngwm__createItemsResponse *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createItemsResponse(struct soap*, _ngwm__createItemsResponse *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__createItemsResponse(struct soap*, const char *, int, _ngwm__createItemsResponse *const*, const char *);
+SOAP_FMAC3 _ngwm__createItemsResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__createItemsResponse(struct soap*, _ngwm__createItemsResponse **, const char*, const char*);
+SOAP_FMAC3 _ngwm__createItemsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createItemsResponse(struct soap*, const char*, _ngwm__createItemsResponse **, const char*);
+
+#ifndef SOAP_TYPE_PointerTo_ngwm__createItemsRequest
+#define SOAP_TYPE_PointerTo_ngwm__createItemsRequest (637)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createItemsRequest(struct soap*, _ngwm__createItemsRequest *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createItemsRequest(struct soap*, _ngwm__createItemsRequest *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__createItemsRequest(struct soap*, const char *, int, _ngwm__createItemsRequest *const*, const char *);
+SOAP_FMAC3 _ngwm__createItemsRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__createItemsRequest(struct soap*, _ngwm__createItemsRequest **, const char*, const char*);
+SOAP_FMAC3 _ngwm__createItemsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createItemsRequest(struct soap*, const char*, _ngwm__createItemsRequest **, const char*);
+
 #ifndef SOAP_TYPE_PointerTo_ngwm__createItemResponse
-#define SOAP_TYPE_PointerTo_ngwm__createItemResponse (557)
+#define SOAP_TYPE_PointerTo_ngwm__createItemResponse (634)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createItemResponse(struct soap*, _ngwm__createItemResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createItemResponse(struct soap*, _ngwm__createItemResponse *const*, const char*, const char*);
@@ -5986,7 +6900,7 @@ SOAP_FMAC3 _ngwm__createItemResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__crea
 SOAP_FMAC3 _ngwm__createItemResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createItemResponse(struct soap*, const char*, _ngwm__createItemResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__createItemRequest
-#define SOAP_TYPE_PointerTo_ngwm__createItemRequest (556)
+#define SOAP_TYPE_PointerTo_ngwm__createItemRequest (633)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createItemRequest(struct soap*, _ngwm__createItemRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createItemRequest(struct soap*, _ngwm__createItemRequest *const*, const char*, const char*);
@@ -5995,7 +6909,7 @@ SOAP_FMAC3 _ngwm__createItemRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__creat
 SOAP_FMAC3 _ngwm__createItemRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createItemRequest(struct soap*, const char*, _ngwm__createItemRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__createCursorResponse
-#define SOAP_TYPE_PointerTo_ngwm__createCursorResponse (553)
+#define SOAP_TYPE_PointerTo_ngwm__createCursorResponse (630)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createCursorResponse(struct soap*, _ngwm__createCursorResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createCursorResponse(struct soap*, _ngwm__createCursorResponse *const*, const char*, const char*);
@@ -6004,7 +6918,7 @@ SOAP_FMAC3 _ngwm__createCursorResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__cr
 SOAP_FMAC3 _ngwm__createCursorResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createCursorResponse(struct soap*, const char*, _ngwm__createCursorResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__createCursorRequest
-#define SOAP_TYPE_PointerTo_ngwm__createCursorRequest (552)
+#define SOAP_TYPE_PointerTo_ngwm__createCursorRequest (629)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createCursorRequest(struct soap*, _ngwm__createCursorRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createCursorRequest(struct soap*, _ngwm__createCursorRequest *const*, const char*, const char*);
@@ -6013,7 +6927,7 @@ SOAP_FMAC3 _ngwm__createCursorRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__cre
 SOAP_FMAC3 _ngwm__createCursorRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createCursorRequest(struct soap*, const char*, _ngwm__createCursorRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__completeResponse
-#define SOAP_TYPE_PointerTo_ngwm__completeResponse (549)
+#define SOAP_TYPE_PointerTo_ngwm__completeResponse (626)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__completeResponse(struct soap*, _ngwm__completeResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__completeResponse(struct soap*, _ngwm__completeResponse *const*, const char*, const char*);
@@ -6022,7 +6936,7 @@ SOAP_FMAC3 _ngwm__completeResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__comple
 SOAP_FMAC3 _ngwm__completeResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__completeResponse(struct soap*, const char*, _ngwm__completeResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__completeRequest
-#define SOAP_TYPE_PointerTo_ngwm__completeRequest (548)
+#define SOAP_TYPE_PointerTo_ngwm__completeRequest (625)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__completeRequest(struct soap*, _ngwm__completeRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__completeRequest(struct soap*, _ngwm__completeRequest *const*, const char*, const char*);
@@ -6031,7 +6945,7 @@ SOAP_FMAC3 _ngwm__completeRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__complet
 SOAP_FMAC3 _ngwm__completeRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__completeRequest(struct soap*, const char*, _ngwm__completeRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__closeFreeBusySessionResponse
-#define SOAP_TYPE_PointerTo_ngwm__closeFreeBusySessionResponse (545)
+#define SOAP_TYPE_PointerTo_ngwm__closeFreeBusySessionResponse (622)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__closeFreeBusySessionResponse(struct soap*, _ngwm__closeFreeBusySessionResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__closeFreeBusySessionResponse(struct soap*, _ngwm__closeFreeBusySessionResponse *const*, const char*, const char*);
@@ -6040,7 +6954,7 @@ SOAP_FMAC3 _ngwm__closeFreeBusySessionResponse ** SOAP_FMAC4 soap_get_PointerTo_
 SOAP_FMAC3 _ngwm__closeFreeBusySessionResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__closeFreeBusySessionResponse(struct soap*, const char*, _ngwm__closeFreeBusySessionResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__closeFreeBusySessionRequest
-#define SOAP_TYPE_PointerTo_ngwm__closeFreeBusySessionRequest (544)
+#define SOAP_TYPE_PointerTo_ngwm__closeFreeBusySessionRequest (621)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__closeFreeBusySessionRequest(struct soap*, _ngwm__closeFreeBusySessionRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__closeFreeBusySessionRequest(struct soap*, _ngwm__closeFreeBusySessionRequest *const*, const char*, const char*);
@@ -6049,7 +6963,7 @@ SOAP_FMAC3 _ngwm__closeFreeBusySessionRequest ** SOAP_FMAC4 soap_get_PointerTo_n
 SOAP_FMAC3 _ngwm__closeFreeBusySessionRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__closeFreeBusySessionRequest(struct soap*, const char*, _ngwm__closeFreeBusySessionRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__addMembersResponse
-#define SOAP_TYPE_PointerTo_ngwm__addMembersResponse (541)
+#define SOAP_TYPE_PointerTo_ngwm__addMembersResponse (618)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__addMembersResponse(struct soap*, _ngwm__addMembersResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__addMembersResponse(struct soap*, _ngwm__addMembersResponse *const*, const char*, const char*);
@@ -6058,7 +6972,7 @@ SOAP_FMAC3 _ngwm__addMembersResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__addM
 SOAP_FMAC3 _ngwm__addMembersResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__addMembersResponse(struct soap*, const char*, _ngwm__addMembersResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__addMembersRequest
-#define SOAP_TYPE_PointerTo_ngwm__addMembersRequest (540)
+#define SOAP_TYPE_PointerTo_ngwm__addMembersRequest (617)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__addMembersRequest(struct soap*, _ngwm__addMembersRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__addMembersRequest(struct soap*, _ngwm__addMembersRequest *const*, const char*, const char*);
@@ -6067,7 +6981,7 @@ SOAP_FMAC3 _ngwm__addMembersRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__addMe
 SOAP_FMAC3 _ngwm__addMembersRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__addMembersRequest(struct soap*, const char*, _ngwm__addMembersRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__addItemsResponse
-#define SOAP_TYPE_PointerTo_ngwm__addItemsResponse (537)
+#define SOAP_TYPE_PointerTo_ngwm__addItemsResponse (614)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__addItemsResponse(struct soap*, _ngwm__addItemsResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__addItemsResponse(struct soap*, _ngwm__addItemsResponse *const*, const char*, const char*);
@@ -6076,7 +6990,7 @@ SOAP_FMAC3 _ngwm__addItemsResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__addIte
 SOAP_FMAC3 _ngwm__addItemsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__addItemsResponse(struct soap*, const char*, _ngwm__addItemsResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__addItemsRequest
-#define SOAP_TYPE_PointerTo_ngwm__addItemsRequest (536)
+#define SOAP_TYPE_PointerTo_ngwm__addItemsRequest (613)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__addItemsRequest(struct soap*, _ngwm__addItemsRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__addItemsRequest(struct soap*, _ngwm__addItemsRequest *const*, const char*, const char*);
@@ -6085,7 +6999,7 @@ SOAP_FMAC3 _ngwm__addItemsRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__addItem
 SOAP_FMAC3 _ngwm__addItemsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__addItemsRequest(struct soap*, const char*, _ngwm__addItemsRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__addItemResponse
-#define SOAP_TYPE_PointerTo_ngwm__addItemResponse (533)
+#define SOAP_TYPE_PointerTo_ngwm__addItemResponse (610)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__addItemResponse(struct soap*, _ngwm__addItemResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__addItemResponse(struct soap*, _ngwm__addItemResponse *const*, const char*, const char*);
@@ -6094,7 +7008,7 @@ SOAP_FMAC3 _ngwm__addItemResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__addItem
 SOAP_FMAC3 _ngwm__addItemResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__addItemResponse(struct soap*, const char*, _ngwm__addItemResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__addItemRequest
-#define SOAP_TYPE_PointerTo_ngwm__addItemRequest (532)
+#define SOAP_TYPE_PointerTo_ngwm__addItemRequest (609)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__addItemRequest(struct soap*, _ngwm__addItemRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__addItemRequest(struct soap*, _ngwm__addItemRequest *const*, const char*, const char*);
@@ -6103,7 +7017,7 @@ SOAP_FMAC3 _ngwm__addItemRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__addItemR
 SOAP_FMAC3 _ngwm__addItemRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__addItemRequest(struct soap*, const char*, _ngwm__addItemRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__acceptShareResponse
-#define SOAP_TYPE_PointerTo_ngwm__acceptShareResponse (529)
+#define SOAP_TYPE_PointerTo_ngwm__acceptShareResponse (606)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__acceptShareResponse(struct soap*, _ngwm__acceptShareResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__acceptShareResponse(struct soap*, _ngwm__acceptShareResponse *const*, const char*, const char*);
@@ -6112,7 +7026,7 @@ SOAP_FMAC3 _ngwm__acceptShareResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__acc
 SOAP_FMAC3 _ngwm__acceptShareResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__acceptShareResponse(struct soap*, const char*, _ngwm__acceptShareResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__acceptShareRequest
-#define SOAP_TYPE_PointerTo_ngwm__acceptShareRequest (528)
+#define SOAP_TYPE_PointerTo_ngwm__acceptShareRequest (605)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__acceptShareRequest(struct soap*, _ngwm__acceptShareRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__acceptShareRequest(struct soap*, _ngwm__acceptShareRequest *const*, const char*, const char*);
@@ -6121,7 +7035,7 @@ SOAP_FMAC3 _ngwm__acceptShareRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__acce
 SOAP_FMAC3 _ngwm__acceptShareRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__acceptShareRequest(struct soap*, const char*, _ngwm__acceptShareRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__acceptResponse
-#define SOAP_TYPE_PointerTo_ngwm__acceptResponse (525)
+#define SOAP_TYPE_PointerTo_ngwm__acceptResponse (602)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__acceptResponse(struct soap*, _ngwm__acceptResponse *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__acceptResponse(struct soap*, _ngwm__acceptResponse *const*, const char*, const char*);
@@ -6130,7 +7044,7 @@ SOAP_FMAC3 _ngwm__acceptResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__acceptRe
 SOAP_FMAC3 _ngwm__acceptResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__acceptResponse(struct soap*, const char*, _ngwm__acceptResponse **, const char*);
 
 #ifndef SOAP_TYPE_PointerTo_ngwm__acceptRequest
-#define SOAP_TYPE_PointerTo_ngwm__acceptRequest (524)
+#define SOAP_TYPE_PointerTo_ngwm__acceptRequest (601)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__acceptRequest(struct soap*, _ngwm__acceptRequest *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__acceptRequest(struct soap*, _ngwm__acceptRequest *const*, const char*, const char*);
@@ -6139,7 +7053,7 @@ SOAP_FMAC3 _ngwm__acceptRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__acceptReq
 SOAP_FMAC3 _ngwm__acceptRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__acceptRequest(struct soap*, const char*, _ngwm__acceptRequest **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Alarm
-#define SOAP_TYPE_PointerTongwt__Alarm (522)
+#define SOAP_TYPE_PointerTongwt__Alarm (599)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Alarm(struct soap*, ngwt__Alarm *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Alarm(struct soap*, ngwt__Alarm *const*, const char*, const char*);
@@ -6148,7 +7062,7 @@ SOAP_FMAC3 ngwt__Alarm ** SOAP_FMAC4 soap_get_PointerTongwt__Alarm(struct soap*,
 SOAP_FMAC3 ngwt__Alarm ** SOAP_FMAC4 soap_in_PointerTongwt__Alarm(struct soap*, const char*, ngwt__Alarm **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__PhoneFlags
-#define SOAP_TYPE_PointerTongwt__PhoneFlags (521)
+#define SOAP_TYPE_PointerTongwt__PhoneFlags (598)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__PhoneFlags(struct soap*, ngwt__PhoneFlags *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__PhoneFlags(struct soap*, ngwt__PhoneFlags *const*, const char*, const char*);
@@ -6157,7 +7071,7 @@ SOAP_FMAC3 ngwt__PhoneFlags ** SOAP_FMAC4 soap_get_PointerTongwt__PhoneFlags(str
 SOAP_FMAC3 ngwt__PhoneFlags ** SOAP_FMAC4 soap_in_PointerTongwt__PhoneFlags(struct soap*, const char*, ngwt__PhoneFlags **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__RecurrenceRule
-#define SOAP_TYPE_PointerTongwt__RecurrenceRule (520)
+#define SOAP_TYPE_PointerTongwt__RecurrenceRule (597)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RecurrenceRule(struct soap*, ngwt__RecurrenceRule *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RecurrenceRule(struct soap*, ngwt__RecurrenceRule *const*, const char*, const char*);
@@ -6166,7 +7080,7 @@ SOAP_FMAC3 ngwt__RecurrenceRule ** SOAP_FMAC4 soap_get_PointerTongwt__Recurrence
 SOAP_FMAC3 ngwt__RecurrenceRule ** SOAP_FMAC4 soap_in_PointerTongwt__RecurrenceRule(struct soap*, const char*, ngwt__RecurrenceRule **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__RecurrenceDateType
-#define SOAP_TYPE_PointerTongwt__RecurrenceDateType (519)
+#define SOAP_TYPE_PointerTongwt__RecurrenceDateType (596)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RecurrenceDateType(struct soap*, ngwt__RecurrenceDateType *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RecurrenceDateType(struct soap*, ngwt__RecurrenceDateType *const*, const char*, const char*);
@@ -6174,8 +7088,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__RecurrenceDateType(struct soap
 SOAP_FMAC3 ngwt__RecurrenceDateType ** SOAP_FMAC4 soap_get_PointerTongwt__RecurrenceDateType(struct soap*, ngwt__RecurrenceDateType **, const char*, const char*);
 SOAP_FMAC3 ngwt__RecurrenceDateType ** SOAP_FMAC4 soap_in_PointerTongwt__RecurrenceDateType(struct soap*, const char*, ngwt__RecurrenceDateType **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__SMimeOperation
+#define SOAP_TYPE_PointerTongwt__SMimeOperation (595)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__SMimeOperation(struct soap*, ngwt__SMimeOperation *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__SMimeOperation(struct soap*, ngwt__SMimeOperation *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__SMimeOperation(struct soap*, const char *, int, ngwt__SMimeOperation *const*, const char *);
+SOAP_FMAC3 ngwt__SMimeOperation ** SOAP_FMAC4 soap_get_PointerTongwt__SMimeOperation(struct soap*, ngwt__SMimeOperation **, const char*, const char*);
+SOAP_FMAC3 ngwt__SMimeOperation ** SOAP_FMAC4 soap_in_PointerTongwt__SMimeOperation(struct soap*, const char*, ngwt__SMimeOperation **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__LinkInfo
-#define SOAP_TYPE_PointerTongwt__LinkInfo (518)
+#define SOAP_TYPE_PointerTongwt__LinkInfo (594)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__LinkInfo(struct soap*, ngwt__LinkInfo *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__LinkInfo(struct soap*, ngwt__LinkInfo *const*, const char*, const char*);
@@ -6184,7 +7107,7 @@ SOAP_FMAC3 ngwt__LinkInfo ** SOAP_FMAC4 soap_get_PointerTongwt__LinkInfo(struct 
 SOAP_FMAC3 ngwt__LinkInfo ** SOAP_FMAC4 soap_in_PointerTongwt__LinkInfo(struct soap*, const char*, ngwt__LinkInfo **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ItemOptions
-#define SOAP_TYPE_PointerTongwt__ItemOptions (517)
+#define SOAP_TYPE_PointerTongwt__ItemOptions (593)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemOptions(struct soap*, ngwt__ItemOptions *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ItemOptions(struct soap*, ngwt__ItemOptions *const*, const char*, const char*);
@@ -6193,7 +7116,7 @@ SOAP_FMAC3 ngwt__ItemOptions ** SOAP_FMAC4 soap_get_PointerTongwt__ItemOptions(s
 SOAP_FMAC3 ngwt__ItemOptions ** SOAP_FMAC4 soap_in_PointerTongwt__ItemOptions(struct soap*, const char*, ngwt__ItemOptions **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__AttachmentInfo
-#define SOAP_TYPE_PointerTongwt__AttachmentInfo (516)
+#define SOAP_TYPE_PointerTongwt__AttachmentInfo (592)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AttachmentInfo(struct soap*, ngwt__AttachmentInfo *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AttachmentInfo(struct soap*, ngwt__AttachmentInfo *const*, const char*, const char*);
@@ -6202,7 +7125,7 @@ SOAP_FMAC3 ngwt__AttachmentInfo ** SOAP_FMAC4 soap_get_PointerTongwt__Attachment
 SOAP_FMAC3 ngwt__AttachmentInfo ** SOAP_FMAC4 soap_in_PointerTongwt__AttachmentInfo(struct soap*, const char*, ngwt__AttachmentInfo **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__MessageBody
-#define SOAP_TYPE_PointerTongwt__MessageBody (515)
+#define SOAP_TYPE_PointerTongwt__MessageBody (591)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__MessageBody(struct soap*, ngwt__MessageBody *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__MessageBody(struct soap*, ngwt__MessageBody *const*, const char*, const char*);
@@ -6211,7 +7134,7 @@ SOAP_FMAC3 ngwt__MessageBody ** SOAP_FMAC4 soap_get_PointerTongwt__MessageBody(s
 SOAP_FMAC3 ngwt__MessageBody ** SOAP_FMAC4 soap_in_PointerTongwt__MessageBody(struct soap*, const char*, ngwt__MessageBody **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ReferenceInfo
-#define SOAP_TYPE_PointerTongwt__ReferenceInfo (514)
+#define SOAP_TYPE_PointerTongwt__ReferenceInfo (590)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ReferenceInfo(struct soap*, ngwt__ReferenceInfo *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ReferenceInfo(struct soap*, ngwt__ReferenceInfo *const*, const char*, const char*);
@@ -6220,7 +7143,7 @@ SOAP_FMAC3 ngwt__ReferenceInfo ** SOAP_FMAC4 soap_get_PointerTongwt__ReferenceIn
 SOAP_FMAC3 ngwt__ReferenceInfo ** SOAP_FMAC4 soap_in_PointerTongwt__ReferenceInfo(struct soap*, const char*, ngwt__ReferenceInfo **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__PersonalInfo
-#define SOAP_TYPE_PointerTongwt__PersonalInfo (513)
+#define SOAP_TYPE_PointerTongwt__PersonalInfo (589)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__PersonalInfo(struct soap*, ngwt__PersonalInfo *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__PersonalInfo(struct soap*, ngwt__PersonalInfo *const*, const char*, const char*);
@@ -6229,7 +7152,7 @@ SOAP_FMAC3 ngwt__PersonalInfo ** SOAP_FMAC4 soap_get_PointerTongwt__PersonalInfo
 SOAP_FMAC3 ngwt__PersonalInfo ** SOAP_FMAC4 soap_in_PointerTongwt__PersonalInfo(struct soap*, const char*, ngwt__PersonalInfo **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__OfficeInfo
-#define SOAP_TYPE_PointerTongwt__OfficeInfo (512)
+#define SOAP_TYPE_PointerTongwt__OfficeInfo (588)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__OfficeInfo(struct soap*, ngwt__OfficeInfo *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__OfficeInfo(struct soap*, ngwt__OfficeInfo *const*, const char*, const char*);
@@ -6238,7 +7161,7 @@ SOAP_FMAC3 ngwt__OfficeInfo ** SOAP_FMAC4 soap_get_PointerTongwt__OfficeInfo(str
 SOAP_FMAC3 ngwt__OfficeInfo ** SOAP_FMAC4 soap_in_PointerTongwt__OfficeInfo(struct soap*, const char*, ngwt__OfficeInfo **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__PostalAddressList
-#define SOAP_TYPE_PointerTongwt__PostalAddressList (511)
+#define SOAP_TYPE_PointerTongwt__PostalAddressList (587)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__PostalAddressList(struct soap*, ngwt__PostalAddressList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__PostalAddressList(struct soap*, ngwt__PostalAddressList *const*, const char*, const char*);
@@ -6247,7 +7170,7 @@ SOAP_FMAC3 ngwt__PostalAddressList ** SOAP_FMAC4 soap_get_PointerTongwt__PostalA
 SOAP_FMAC3 ngwt__PostalAddressList ** SOAP_FMAC4 soap_in_PointerTongwt__PostalAddressList(struct soap*, const char*, ngwt__PostalAddressList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__PhoneList
-#define SOAP_TYPE_PointerTongwt__PhoneList (510)
+#define SOAP_TYPE_PointerTongwt__PhoneList (586)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__PhoneList(struct soap*, ngwt__PhoneList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__PhoneList(struct soap*, ngwt__PhoneList *const*, const char*, const char*);
@@ -6256,7 +7179,7 @@ SOAP_FMAC3 ngwt__PhoneList ** SOAP_FMAC4 soap_get_PointerTongwt__PhoneList(struc
 SOAP_FMAC3 ngwt__PhoneList ** SOAP_FMAC4 soap_in_PointerTongwt__PhoneList(struct soap*, const char*, ngwt__PhoneList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ImAddressList
-#define SOAP_TYPE_PointerTongwt__ImAddressList (509)
+#define SOAP_TYPE_PointerTongwt__ImAddressList (585)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ImAddressList(struct soap*, ngwt__ImAddressList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ImAddressList(struct soap*, ngwt__ImAddressList *const*, const char*, const char*);
@@ -6265,7 +7188,7 @@ SOAP_FMAC3 ngwt__ImAddressList ** SOAP_FMAC4 soap_get_PointerTongwt__ImAddressLi
 SOAP_FMAC3 ngwt__ImAddressList ** SOAP_FMAC4 soap_in_PointerTongwt__ImAddressList(struct soap*, const char*, ngwt__ImAddressList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__EmailAddressList
-#define SOAP_TYPE_PointerTongwt__EmailAddressList (508)
+#define SOAP_TYPE_PointerTongwt__EmailAddressList (584)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__EmailAddressList(struct soap*, ngwt__EmailAddressList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__EmailAddressList(struct soap*, ngwt__EmailAddressList *const*, const char*, const char*);
@@ -6274,7 +7197,7 @@ SOAP_FMAC3 ngwt__EmailAddressList ** SOAP_FMAC4 soap_get_PointerTongwt__EmailAdd
 SOAP_FMAC3 ngwt__EmailAddressList ** SOAP_FMAC4 soap_in_PointerTongwt__EmailAddressList(struct soap*, const char*, ngwt__EmailAddressList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__FullName
-#define SOAP_TYPE_PointerTongwt__FullName (507)
+#define SOAP_TYPE_PointerTongwt__FullName (583)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FullName(struct soap*, ngwt__FullName *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FullName(struct soap*, ngwt__FullName *const*, const char*, const char*);
@@ -6282,8 +7205,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__FullName(struct soap*, const c
 SOAP_FMAC3 ngwt__FullName ** SOAP_FMAC4 soap_get_PointerTongwt__FullName(struct soap*, ngwt__FullName **, const char*, const char*);
 SOAP_FMAC3 ngwt__FullName ** SOAP_FMAC4 soap_in_PointerTongwt__FullName(struct soap*, const char*, ngwt__FullName **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__VersionStatus
+#define SOAP_TYPE_PointerTongwt__VersionStatus (582)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__VersionStatus(struct soap*, enum ngwt__VersionStatus *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__VersionStatus(struct soap*, enum ngwt__VersionStatus *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__VersionStatus(struct soap*, const char *, int, enum ngwt__VersionStatus *const*, const char *);
+SOAP_FMAC3 enum ngwt__VersionStatus ** SOAP_FMAC4 soap_get_PointerTongwt__VersionStatus(struct soap*, enum ngwt__VersionStatus **, const char*, const char*);
+SOAP_FMAC3 enum ngwt__VersionStatus ** SOAP_FMAC4 soap_in_PointerTongwt__VersionStatus(struct soap*, const char*, enum ngwt__VersionStatus **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__FolderACL
-#define SOAP_TYPE_PointerTongwt__FolderACL (506)
+#define SOAP_TYPE_PointerTongwt__FolderACL (581)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FolderACL(struct soap*, ngwt__FolderACL *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FolderACL(struct soap*, ngwt__FolderACL *const*, const char*, const char*);
@@ -6291,8 +7223,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__FolderACL(struct soap*, const 
 SOAP_FMAC3 ngwt__FolderACL ** SOAP_FMAC4 soap_get_PointerTongwt__FolderACL(struct soap*, ngwt__FolderACL **, const char*, const char*);
 SOAP_FMAC3 ngwt__FolderACL ** SOAP_FMAC4 soap_in_PointerTongwt__FolderACL(struct soap*, const char*, ngwt__FolderACL **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__RuleActionList
+#define SOAP_TYPE_PointerTongwt__RuleActionList (580)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RuleActionList(struct soap*, ngwt__RuleActionList *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RuleActionList(struct soap*, ngwt__RuleActionList *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__RuleActionList(struct soap*, const char *, int, ngwt__RuleActionList *const*, const char *);
+SOAP_FMAC3 ngwt__RuleActionList ** SOAP_FMAC4 soap_get_PointerTongwt__RuleActionList(struct soap*, ngwt__RuleActionList **, const char*, const char*);
+SOAP_FMAC3 ngwt__RuleActionList ** SOAP_FMAC4 soap_in_PointerTongwt__RuleActionList(struct soap*, const char*, ngwt__RuleActionList **, const char*);
+
+#ifndef SOAP_TYPE_PointerTongwt__Execution
+#define SOAP_TYPE_PointerTongwt__Execution (579)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Execution(struct soap*, enum ngwt__Execution *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Execution(struct soap*, enum ngwt__Execution *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__Execution(struct soap*, const char *, int, enum ngwt__Execution *const*, const char *);
+SOAP_FMAC3 enum ngwt__Execution ** SOAP_FMAC4 soap_get_PointerTongwt__Execution(struct soap*, enum ngwt__Execution **, const char*, const char*);
+SOAP_FMAC3 enum ngwt__Execution ** SOAP_FMAC4 soap_in_PointerTongwt__Execution(struct soap*, const char*, enum ngwt__Execution **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__Query
-#define SOAP_TYPE_PointerTongwt__Query (505)
+#define SOAP_TYPE_PointerTongwt__Query (578)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Query(struct soap*, ngwt__Query *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Query(struct soap*, ngwt__Query *const*, const char*, const char*);
@@ -6300,17 +7250,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__Query(struct soap*, const char
 SOAP_FMAC3 ngwt__Query ** SOAP_FMAC4 soap_get_PointerTongwt__Query(struct soap*, ngwt__Query **, const char*, const char*);
 SOAP_FMAC3 ngwt__Query ** SOAP_FMAC4 soap_in_PointerTongwt__Query(struct soap*, const char*, ngwt__Query **, const char*);
 
-#ifndef SOAP_TYPE_PointerTongwt__FolderType
-#define SOAP_TYPE_PointerTongwt__FolderType (504)
-#endif
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FolderType(struct soap*, enum ngwt__FolderType *const*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FolderType(struct soap*, enum ngwt__FolderType *const*, const char*, const char*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__FolderType(struct soap*, const char *, int, enum ngwt__FolderType *const*, const char *);
-SOAP_FMAC3 enum ngwt__FolderType ** SOAP_FMAC4 soap_get_PointerTongwt__FolderType(struct soap*, enum ngwt__FolderType **, const char*, const char*);
-SOAP_FMAC3 enum ngwt__FolderType ** SOAP_FMAC4 soap_in_PointerTongwt__FolderType(struct soap*, const char*, enum ngwt__FolderType **, const char*);
-
 #ifndef SOAP_TYPE_PointerTongwt__FolderACLStatus
-#define SOAP_TYPE_PointerTongwt__FolderACLStatus (503)
+#define SOAP_TYPE_PointerTongwt__FolderACLStatus (577)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FolderACLStatus(struct soap*, enum ngwt__FolderACLStatus *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FolderACLStatus(struct soap*, enum ngwt__FolderACLStatus *const*, const char*, const char*);
@@ -6318,8 +7259,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__FolderACLStatus(struct soap*, 
 SOAP_FMAC3 enum ngwt__FolderACLStatus ** SOAP_FMAC4 soap_get_PointerTongwt__FolderACLStatus(struct soap*, enum ngwt__FolderACLStatus **, const char*, const char*);
 SOAP_FMAC3 enum ngwt__FolderACLStatus ** SOAP_FMAC4 soap_in_PointerTongwt__FolderACLStatus(struct soap*, const char*, enum ngwt__FolderACLStatus **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__AccessControlList
+#define SOAP_TYPE_PointerTongwt__AccessControlList (576)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AccessControlList(struct soap*, ngwt__AccessControlList *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AccessControlList(struct soap*, ngwt__AccessControlList *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__AccessControlList(struct soap*, const char *, int, ngwt__AccessControlList *const*, const char *);
+SOAP_FMAC3 ngwt__AccessControlList ** SOAP_FMAC4 soap_get_PointerTongwt__AccessControlList(struct soap*, ngwt__AccessControlList **, const char*, const char*);
+SOAP_FMAC3 ngwt__AccessControlList ** SOAP_FMAC4 soap_in_PointerTongwt__AccessControlList(struct soap*, const char*, ngwt__AccessControlList **, const char*);
+
+#ifndef SOAP_TYPE_PointerTongwt__WeekOfYear
+#define SOAP_TYPE_PointerTongwt__WeekOfYear (575)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__WeekOfYear(struct soap*, short *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__WeekOfYear(struct soap*, short *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__WeekOfYear(struct soap*, const char *, int, short *const*, const char *);
+SOAP_FMAC3 short ** SOAP_FMAC4 soap_get_PointerTongwt__WeekOfYear(struct soap*, short **, const char*, const char*);
+SOAP_FMAC3 short ** SOAP_FMAC4 soap_in_PointerTongwt__WeekOfYear(struct soap*, const char*, short **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__OccurrenceType
-#define SOAP_TYPE_PointerTongwt__OccurrenceType (502)
+#define SOAP_TYPE_PointerTongwt__OccurrenceType (574)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__OccurrenceType(struct soap*, enum ngwt__OccurrenceType *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__OccurrenceType(struct soap*, enum ngwt__OccurrenceType *const*, const char*, const char*);
@@ -6328,7 +7287,7 @@ SOAP_FMAC3 enum ngwt__OccurrenceType ** SOAP_FMAC4 soap_get_PointerTongwt__Occur
 SOAP_FMAC3 enum ngwt__OccurrenceType ** SOAP_FMAC4 soap_in_PointerTongwt__OccurrenceType(struct soap*, const char*, enum ngwt__OccurrenceType **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ItemSecurity
-#define SOAP_TYPE_PointerTongwt__ItemSecurity (501)
+#define SOAP_TYPE_PointerTongwt__ItemSecurity (573)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemSecurity(struct soap*, enum ngwt__ItemSecurity *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ItemSecurity(struct soap*, enum ngwt__ItemSecurity *const*, const char*, const char*);
@@ -6337,7 +7296,7 @@ SOAP_FMAC3 enum ngwt__ItemSecurity ** SOAP_FMAC4 soap_get_PointerTongwt__ItemSec
 SOAP_FMAC3 enum ngwt__ItemSecurity ** SOAP_FMAC4 soap_in_PointerTongwt__ItemSecurity(struct soap*, const char*, enum ngwt__ItemSecurity **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ItemClass
-#define SOAP_TYPE_PointerTongwt__ItemClass (500)
+#define SOAP_TYPE_PointerTongwt__ItemClass (572)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemClass(struct soap*, enum ngwt__ItemClass *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ItemClass(struct soap*, enum ngwt__ItemClass *const*, const char*, const char*);
@@ -6346,7 +7305,7 @@ SOAP_FMAC3 enum ngwt__ItemClass ** SOAP_FMAC4 soap_get_PointerTongwt__ItemClass(
 SOAP_FMAC3 enum ngwt__ItemClass ** SOAP_FMAC4 soap_in_PointerTongwt__ItemClass(struct soap*, const char*, enum ngwt__ItemClass **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ItemSource
-#define SOAP_TYPE_PointerTongwt__ItemSource (499)
+#define SOAP_TYPE_PointerTongwt__ItemSource (571)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemSource(struct soap*, enum ngwt__ItemSource *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ItemSource(struct soap*, enum ngwt__ItemSource *const*, const char*, const char*);
@@ -6355,7 +7314,7 @@ SOAP_FMAC3 enum ngwt__ItemSource ** SOAP_FMAC4 soap_get_PointerTongwt__ItemSourc
 SOAP_FMAC3 enum ngwt__ItemSource ** SOAP_FMAC4 soap_in_PointerTongwt__ItemSource(struct soap*, const char*, enum ngwt__ItemSource **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ItemStatus
-#define SOAP_TYPE_PointerTongwt__ItemStatus (498)
+#define SOAP_TYPE_PointerTongwt__ItemStatus (570)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemStatus(struct soap*, ngwt__ItemStatus *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ItemStatus(struct soap*, ngwt__ItemStatus *const*, const char*, const char*);
@@ -6364,7 +7323,7 @@ SOAP_FMAC3 ngwt__ItemStatus ** SOAP_FMAC4 soap_get_PointerTongwt__ItemStatus(str
 SOAP_FMAC3 ngwt__ItemStatus ** SOAP_FMAC4 soap_in_PointerTongwt__ItemStatus(struct soap*, const char*, ngwt__ItemStatus **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__DeltaSyncType
-#define SOAP_TYPE_PointerTongwt__DeltaSyncType (497)
+#define SOAP_TYPE_PointerTongwt__DeltaSyncType (569)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DeltaSyncType(struct soap*, enum ngwt__DeltaSyncType *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DeltaSyncType(struct soap*, enum ngwt__DeltaSyncType *const*, const char*, const char*);
@@ -6373,7 +7332,7 @@ SOAP_FMAC3 enum ngwt__DeltaSyncType ** SOAP_FMAC4 soap_get_PointerTongwt__DeltaS
 SOAP_FMAC3 enum ngwt__DeltaSyncType ** SOAP_FMAC4 soap_in_PointerTongwt__DeltaSyncType(struct soap*, const char*, enum ngwt__DeltaSyncType **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__RecipientStatus
-#define SOAP_TYPE_PointerTongwt__RecipientStatus (496)
+#define SOAP_TYPE_PointerTongwt__RecipientStatus (568)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RecipientStatus(struct soap*, ngwt__RecipientStatus *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RecipientStatus(struct soap*, ngwt__RecipientStatus *const*, const char*, const char*);
@@ -6382,7 +7341,7 @@ SOAP_FMAC3 ngwt__RecipientStatus ** SOAP_FMAC4 soap_get_PointerTongwt__Recipient
 SOAP_FMAC3 ngwt__RecipientStatus ** SOAP_FMAC4 soap_in_PointerTongwt__RecipientStatus(struct soap*, const char*, ngwt__RecipientStatus **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__FreeBusyBlockList
-#define SOAP_TYPE_PointerTongwt__FreeBusyBlockList (495)
+#define SOAP_TYPE_PointerTongwt__FreeBusyBlockList (567)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FreeBusyBlockList(struct soap*, ngwt__FreeBusyBlockList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FreeBusyBlockList(struct soap*, ngwt__FreeBusyBlockList *const*, const char*, const char*);
@@ -6391,7 +7350,7 @@ SOAP_FMAC3 ngwt__FreeBusyBlockList ** SOAP_FMAC4 soap_get_PointerTongwt__FreeBus
 SOAP_FMAC3 ngwt__FreeBusyBlockList ** SOAP_FMAC4 soap_in_PointerTongwt__FreeBusyBlockList(struct soap*, const char*, ngwt__FreeBusyBlockList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__CalendarFolderAttribute
-#define SOAP_TYPE_PointerTongwt__CalendarFolderAttribute (494)
+#define SOAP_TYPE_PointerTongwt__CalendarFolderAttribute (566)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__CalendarFolderAttribute(struct soap*, ngwt__CalendarFolderAttribute *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__CalendarFolderAttribute(struct soap*, ngwt__CalendarFolderAttribute *const*, const char*, const char*);
@@ -6399,17 +7358,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__CalendarFolderAttribute(struct
 SOAP_FMAC3 ngwt__CalendarFolderAttribute ** SOAP_FMAC4 soap_get_PointerTongwt__CalendarFolderAttribute(struct soap*, ngwt__CalendarFolderAttribute **, const char*, const char*);
 SOAP_FMAC3 ngwt__CalendarFolderAttribute ** SOAP_FMAC4 soap_in_PointerTongwt__CalendarFolderAttribute(struct soap*, const char*, ngwt__CalendarFolderAttribute **, const char*);
 
-#ifndef SOAP_TYPE_PointerTongwt__CategoryRefList
-#define SOAP_TYPE_PointerTongwt__CategoryRefList (492)
+#ifndef SOAP_TYPE_PointerTongwt__FilterDate
+#define SOAP_TYPE_PointerTongwt__FilterDate (564)
 #endif
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__CategoryRefList(struct soap*, ngwt__CategoryRefList *const*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__CategoryRefList(struct soap*, ngwt__CategoryRefList *const*, const char*, const char*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__CategoryRefList(struct soap*, const char *, int, ngwt__CategoryRefList *const*, const char *);
-SOAP_FMAC3 ngwt__CategoryRefList ** SOAP_FMAC4 soap_get_PointerTongwt__CategoryRefList(struct soap*, ngwt__CategoryRefList **, const char*, const char*);
-SOAP_FMAC3 ngwt__CategoryRefList ** SOAP_FMAC4 soap_in_PointerTongwt__CategoryRefList(struct soap*, const char*, ngwt__CategoryRefList **, const char*);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FilterDate(struct soap*, enum ngwt__FilterDate *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FilterDate(struct soap*, enum ngwt__FilterDate *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__FilterDate(struct soap*, const char *, int, enum ngwt__FilterDate *const*, const char *);
+SOAP_FMAC3 enum ngwt__FilterDate ** SOAP_FMAC4 soap_get_PointerTongwt__FilterDate(struct soap*, enum ngwt__FilterDate **, const char*, const char*);
+SOAP_FMAC3 enum ngwt__FilterDate ** SOAP_FMAC4 soap_in_PointerTongwt__FilterDate(struct soap*, const char*, enum ngwt__FilterDate **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ContainerRef
-#define SOAP_TYPE_PointerTongwt__ContainerRef (490)
+#define SOAP_TYPE_PointerTongwt__ContainerRef (562)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ContainerRef(struct soap*, ngwt__ContainerRef *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ContainerRef(struct soap*, ngwt__ContainerRef *const*, const char*, const char*);
@@ -6418,7 +7377,7 @@ SOAP_FMAC3 ngwt__ContainerRef ** SOAP_FMAC4 soap_get_PointerTongwt__ContainerRef
 SOAP_FMAC3 ngwt__ContainerRef ** SOAP_FMAC4 soap_in_PointerTongwt__ContainerRef(struct soap*, const char*, ngwt__ContainerRef **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__CategoryType
-#define SOAP_TYPE_PointerTongwt__CategoryType (489)
+#define SOAP_TYPE_PointerTongwt__CategoryType (561)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__CategoryType(struct soap*, enum ngwt__CategoryType *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__CategoryType(struct soap*, enum ngwt__CategoryType *const*, const char*, const char*);
@@ -6427,7 +7386,7 @@ SOAP_FMAC3 enum ngwt__CategoryType ** SOAP_FMAC4 soap_get_PointerTongwt__Categor
 SOAP_FMAC3 enum ngwt__CategoryType ** SOAP_FMAC4 soap_in_PointerTongwt__CategoryType(struct soap*, const char*, enum ngwt__CategoryType **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__AccessMiscRight
-#define SOAP_TYPE_PointerTongwt__AccessMiscRight (488)
+#define SOAP_TYPE_PointerTongwt__AccessMiscRight (560)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AccessMiscRight(struct soap*, ngwt__AccessMiscRight *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AccessMiscRight(struct soap*, ngwt__AccessMiscRight *const*, const char*, const char*);
@@ -6436,7 +7395,7 @@ SOAP_FMAC3 ngwt__AccessMiscRight ** SOAP_FMAC4 soap_get_PointerTongwt__AccessMis
 SOAP_FMAC3 ngwt__AccessMiscRight ** SOAP_FMAC4 soap_in_PointerTongwt__AccessMiscRight(struct soap*, const char*, ngwt__AccessMiscRight **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__AccessRight
-#define SOAP_TYPE_PointerTongwt__AccessRight (487)
+#define SOAP_TYPE_PointerTongwt__AccessRight (559)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AccessRight(struct soap*, ngwt__AccessRight *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AccessRight(struct soap*, ngwt__AccessRight *const*, const char*, const char*);
@@ -6445,7 +7404,7 @@ SOAP_FMAC3 ngwt__AccessRight ** SOAP_FMAC4 soap_get_PointerTongwt__AccessRight(s
 SOAP_FMAC3 ngwt__AccessRight ** SOAP_FMAC4 soap_in_PointerTongwt__AccessRight(struct soap*, const char*, ngwt__AccessRight **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Rights
-#define SOAP_TYPE_PointerTongwt__Rights (486)
+#define SOAP_TYPE_PointerTongwt__Rights (558)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Rights(struct soap*, ngwt__Rights *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Rights(struct soap*, ngwt__Rights *const*, const char*, const char*);
@@ -6454,7 +7413,7 @@ SOAP_FMAC3 ngwt__Rights ** SOAP_FMAC4 soap_get_PointerTongwt__Rights(struct soap
 SOAP_FMAC3 ngwt__Rights ** SOAP_FMAC4 soap_in_PointerTongwt__Rights(struct soap*, const char*, ngwt__Rights **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwe__EventList
-#define SOAP_TYPE_PointerTongwe__EventList (485)
+#define SOAP_TYPE_PointerTongwe__EventList (557)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwe__EventList(struct soap*, ngwe__EventList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwe__EventList(struct soap*, ngwe__EventList *const*, const char*, const char*);
@@ -6463,7 +7422,7 @@ SOAP_FMAC3 ngwe__EventList ** SOAP_FMAC4 soap_get_PointerTongwe__EventList(struc
 SOAP_FMAC3 ngwe__EventList ** SOAP_FMAC4 soap_in_PointerTongwe__EventList(struct soap*, const char*, ngwe__EventList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwe__EventsList
-#define SOAP_TYPE_PointerTongwe__EventsList (484)
+#define SOAP_TYPE_PointerTongwe__EventsList (556)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwe__EventsList(struct soap*, ngwe__EventsList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwe__EventsList(struct soap*, ngwe__EventsList *const*, const char*, const char*);
@@ -6472,7 +7431,7 @@ SOAP_FMAC3 ngwe__EventsList ** SOAP_FMAC4 soap_get_PointerTongwe__EventsList(str
 SOAP_FMAC3 ngwe__EventsList ** SOAP_FMAC4 soap_in_PointerTongwe__EventsList(struct soap*, const char*, ngwe__EventsList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwe__Events
-#define SOAP_TYPE_PointerTongwe__Events (481)
+#define SOAP_TYPE_PointerTongwe__Events (553)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwe__Events(struct soap*, ngwe__Events *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwe__Events(struct soap*, ngwe__Events *const*, const char*, const char*);
@@ -6481,7 +7440,7 @@ SOAP_FMAC3 ngwe__Events ** SOAP_FMAC4 soap_get_PointerTongwe__Events(struct soap
 SOAP_FMAC3 ngwe__Events ** SOAP_FMAC4 soap_in_PointerTongwe__Events(struct soap*, const char*, ngwe__Events **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwe__EventDefinition
-#define SOAP_TYPE_PointerTongwe__EventDefinition (480)
+#define SOAP_TYPE_PointerTongwe__EventDefinition (552)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwe__EventDefinition(struct soap*, ngwe__EventDefinition *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwe__EventDefinition(struct soap*, ngwe__EventDefinition *const*, const char*, const char*);
@@ -6490,7 +7449,7 @@ SOAP_FMAC3 ngwe__EventDefinition ** SOAP_FMAC4 soap_get_PointerTongwe__EventDefi
 SOAP_FMAC3 ngwe__EventDefinition ** SOAP_FMAC4 soap_in_PointerTongwe__EventDefinition(struct soap*, const char*, ngwe__EventDefinition **, const char*);
 
 #ifndef SOAP_TYPE_PointerToxsd__duration
-#define SOAP_TYPE_PointerToxsd__duration (479)
+#define SOAP_TYPE_PointerToxsd__duration (551)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxsd__duration(struct soap*, std::string *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxsd__duration(struct soap*, std::string *const*, const char*, const char*);
@@ -6499,7 +7458,7 @@ SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_get_PointerToxsd__duration(struct soap
 SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_in_PointerToxsd__duration(struct soap*, const char*, std::string **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwe__Event
-#define SOAP_TYPE_PointerTongwe__Event (477)
+#define SOAP_TYPE_PointerTongwe__Event (549)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwe__Event(struct soap*, ngwe__Event *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwe__Event(struct soap*, ngwe__Event *const*, const char*, const char*);
@@ -6508,7 +7467,7 @@ SOAP_FMAC3 ngwe__Event ** SOAP_FMAC4 soap_get_PointerTongwe__Event(struct soap*,
 SOAP_FMAC3 ngwe__Event ** SOAP_FMAC4 soap_in_PointerTongwe__Event(struct soap*, const char*, ngwe__Event **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwe__ContainerList
-#define SOAP_TYPE_PointerTongwe__ContainerList (476)
+#define SOAP_TYPE_PointerTongwe__ContainerList (548)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwe__ContainerList(struct soap*, ngwe__ContainerList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwe__ContainerList(struct soap*, ngwe__ContainerList *const*, const char*, const char*);
@@ -6517,7 +7476,7 @@ SOAP_FMAC3 ngwe__ContainerList ** SOAP_FMAC4 soap_get_PointerTongwe__ContainerLi
 SOAP_FMAC3 ngwe__ContainerList ** SOAP_FMAC4 soap_in_PointerTongwe__ContainerList(struct soap*, const char*, ngwe__ContainerList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwe__ItemTypeList
-#define SOAP_TYPE_PointerTongwe__ItemTypeList (475)
+#define SOAP_TYPE_PointerTongwe__ItemTypeList (547)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwe__ItemTypeList(struct soap*, enum ngwe__ItemTypeList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwe__ItemTypeList(struct soap*, enum ngwe__ItemTypeList *const*, const char*, const char*);
@@ -6526,7 +7485,7 @@ SOAP_FMAC3 enum ngwe__ItemTypeList ** SOAP_FMAC4 soap_get_PointerTongwe__ItemTyp
 SOAP_FMAC3 enum ngwe__ItemTypeList ** SOAP_FMAC4 soap_in_PointerTongwe__ItemTypeList(struct soap*, const char*, enum ngwe__ItemTypeList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwe__EventTypeList
-#define SOAP_TYPE_PointerTongwe__EventTypeList (474)
+#define SOAP_TYPE_PointerTongwe__EventTypeList (546)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwe__EventTypeList(struct soap*, ngwe__EventTypeList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwe__EventTypeList(struct soap*, ngwe__EventTypeList *const*, const char*, const char*);
@@ -6534,8 +7493,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwe__EventTypeList(struct soap*, co
 SOAP_FMAC3 ngwe__EventTypeList ** SOAP_FMAC4 soap_get_PointerTongwe__EventTypeList(struct soap*, ngwe__EventTypeList **, const char*, const char*);
 SOAP_FMAC3 ngwe__EventTypeList ** SOAP_FMAC4 soap_in_PointerTongwe__EventTypeList(struct soap*, const char*, ngwe__EventTypeList **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwe__ItemType
+#define SOAP_TYPE_PointerTongwe__ItemType (545)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwe__ItemType(struct soap*, enum ngwe__ItemType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwe__ItemType(struct soap*, enum ngwe__ItemType *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwe__ItemType(struct soap*, const char *, int, enum ngwe__ItemType *const*, const char *);
+SOAP_FMAC3 enum ngwe__ItemType ** SOAP_FMAC4 soap_get_PointerTongwe__ItemType(struct soap*, enum ngwe__ItemType **, const char*, const char*);
+SOAP_FMAC3 enum ngwe__ItemType ** SOAP_FMAC4 soap_in_PointerTongwe__ItemType(struct soap*, const char*, enum ngwe__ItemType **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwe__FieldList
-#define SOAP_TYPE_PointerTongwe__FieldList (473)
+#define SOAP_TYPE_PointerTongwe__FieldList (544)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwe__FieldList(struct soap*, enum ngwe__FieldList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwe__FieldList(struct soap*, enum ngwe__FieldList *const*, const char*, const char*);
@@ -6544,7 +7512,7 @@ SOAP_FMAC3 enum ngwe__FieldList ** SOAP_FMAC4 soap_get_PointerTongwe__FieldList(
 SOAP_FMAC3 enum ngwe__FieldList ** SOAP_FMAC4 soap_in_PointerTongwe__FieldList(struct soap*, const char*, enum ngwe__FieldList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__FreeBusyUserList
-#define SOAP_TYPE_PointerTongwt__FreeBusyUserList (472)
+#define SOAP_TYPE_PointerTongwt__FreeBusyUserList (543)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FreeBusyUserList(struct soap*, ngwt__FreeBusyUserList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FreeBusyUserList(struct soap*, ngwt__FreeBusyUserList *const*, const char*, const char*);
@@ -6552,8 +7520,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__FreeBusyUserList(struct soap*,
 SOAP_FMAC3 ngwt__FreeBusyUserList ** SOAP_FMAC4 soap_get_PointerTongwt__FreeBusyUserList(struct soap*, ngwt__FreeBusyUserList **, const char*, const char*);
 SOAP_FMAC3 ngwt__FreeBusyUserList ** SOAP_FMAC4 soap_in_PointerTongwt__FreeBusyUserList(struct soap*, const char*, ngwt__FreeBusyUserList **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__RetractType
+#define SOAP_TYPE_PointerTongwt__RetractType (542)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RetractType(struct soap*, enum ngwt__RetractType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RetractType(struct soap*, enum ngwt__RetractType *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__RetractType(struct soap*, const char *, int, enum ngwt__RetractType *const*, const char *);
+SOAP_FMAC3 enum ngwt__RetractType ** SOAP_FMAC4 soap_get_PointerTongwt__RetractType(struct soap*, enum ngwt__RetractType **, const char*, const char*);
+SOAP_FMAC3 enum ngwt__RetractType ** SOAP_FMAC4 soap_in_PointerTongwt__RetractType(struct soap*, const char*, enum ngwt__RetractType **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__ItemList
-#define SOAP_TYPE_PointerTongwt__ItemList (471)
+#define SOAP_TYPE_PointerTongwt__ItemList (541)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemList(struct soap*, ngwt__ItemList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ItemList(struct soap*, ngwt__ItemList *const*, const char*, const char*);
@@ -6562,7 +7539,7 @@ SOAP_FMAC3 ngwt__ItemList ** SOAP_FMAC4 soap_get_PointerTongwt__ItemList(struct 
 SOAP_FMAC3 ngwt__ItemList ** SOAP_FMAC4 soap_in_PointerTongwt__ItemList(struct soap*, const char*, ngwt__ItemList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__CursorSeek
-#define SOAP_TYPE_PointerTongwt__CursorSeek (470)
+#define SOAP_TYPE_PointerTongwt__CursorSeek (540)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__CursorSeek(struct soap*, enum ngwt__CursorSeek *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__CursorSeek(struct soap*, enum ngwt__CursorSeek *const*, const char*, const char*);
@@ -6571,7 +7548,7 @@ SOAP_FMAC3 enum ngwt__CursorSeek ** SOAP_FMAC4 soap_get_PointerTongwt__CursorSee
 SOAP_FMAC3 enum ngwt__CursorSeek ** SOAP_FMAC4 soap_in_PointerTongwt__CursorSeek(struct soap*, const char*, enum ngwt__CursorSeek **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__AccessRightChanges
-#define SOAP_TYPE_PointerTongwt__AccessRightChanges (469)
+#define SOAP_TYPE_PointerTongwt__AccessRightChanges (539)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AccessRightChanges(struct soap*, ngwt__AccessRightChanges *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AccessRightChanges(struct soap*, ngwt__AccessRightChanges *const*, const char*, const char*);
@@ -6580,7 +7557,7 @@ SOAP_FMAC3 ngwt__AccessRightChanges ** SOAP_FMAC4 soap_get_PointerTongwt__Access
 SOAP_FMAC3 ngwt__AccessRightChanges ** SOAP_FMAC4 soap_in_PointerTongwt__AccessRightChanges(struct soap*, const char*, ngwt__AccessRightChanges **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ModifyItem
-#define SOAP_TYPE_PointerTongwt__ModifyItem (466)
+#define SOAP_TYPE_PointerTongwt__ModifyItem (536)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ModifyItem(struct soap*, ngwt__ModifyItem *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ModifyItem(struct soap*, ngwt__ModifyItem *const*, const char*, const char*);
@@ -6589,7 +7566,7 @@ SOAP_FMAC3 ngwt__ModifyItem ** SOAP_FMAC4 soap_get_PointerTongwt__ModifyItem(str
 SOAP_FMAC3 ngwt__ModifyItem ** SOAP_FMAC4 soap_in_PointerTongwt__ModifyItem(struct soap*, const char*, ngwt__ModifyItem **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Host
-#define SOAP_TYPE_PointerTongwt__Host (465)
+#define SOAP_TYPE_PointerTongwt__Host (534)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Host(struct soap*, ngwt__Host *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Host(struct soap*, ngwt__Host *const*, const char*, const char*);
@@ -6597,17 +7574,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__Host(struct soap*, const char 
 SOAP_FMAC3 ngwt__Host ** SOAP_FMAC4 soap_get_PointerTongwt__Host(struct soap*, ngwt__Host **, const char*, const char*);
 SOAP_FMAC3 ngwt__Host ** SOAP_FMAC4 soap_in_PointerTongwt__Host(struct soap*, const char*, ngwt__Host **, const char*);
 
-#ifndef SOAP_TYPE_PointerTongwt__UserInfo
-#define SOAP_TYPE_PointerTongwt__UserInfo (464)
-#endif
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__UserInfo(struct soap*, ngwt__UserInfo *const*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__UserInfo(struct soap*, ngwt__UserInfo *const*, const char*, const char*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__UserInfo(struct soap*, const char *, int, ngwt__UserInfo *const*, const char *);
-SOAP_FMAC3 ngwt__UserInfo ** SOAP_FMAC4 soap_get_PointerTongwt__UserInfo(struct soap*, ngwt__UserInfo **, const char*, const char*);
-SOAP_FMAC3 ngwt__UserInfo ** SOAP_FMAC4 soap_in_PointerTongwt__UserInfo(struct soap*, const char*, ngwt__UserInfo **, const char*);
-
 #ifndef SOAP_TYPE_PointerTongwt__Authentication
-#define SOAP_TYPE_PointerTongwt__Authentication (463)
+#define SOAP_TYPE_PointerTongwt__Authentication (533)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Authentication(struct soap*, ngwt__Authentication *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Authentication(struct soap*, ngwt__Authentication *const*, const char*, const char*);
@@ -6615,8 +7583,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__Authentication(struct soap*, c
 SOAP_FMAC3 ngwt__Authentication ** SOAP_FMAC4 soap_get_PointerTongwt__Authentication(struct soap*, ngwt__Authentication **, const char*, const char*);
 SOAP_FMAC3 ngwt__Authentication ** SOAP_FMAC4 soap_in_PointerTongwt__Authentication(struct soap*, const char*, ngwt__Authentication **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__UserList
+#define SOAP_TYPE_PointerTongwt__UserList (532)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__UserList(struct soap*, ngwt__UserList *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__UserList(struct soap*, ngwt__UserList *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__UserList(struct soap*, const char *, int, ngwt__UserList *const*, const char *);
+SOAP_FMAC3 ngwt__UserList ** SOAP_FMAC4 soap_get_PointerTongwt__UserList(struct soap*, ngwt__UserList **, const char*, const char*);
+SOAP_FMAC3 ngwt__UserList ** SOAP_FMAC4 soap_in_PointerTongwt__UserList(struct soap*, const char*, ngwt__UserList **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__TimezoneList
-#define SOAP_TYPE_PointerTongwt__TimezoneList (462)
+#define SOAP_TYPE_PointerTongwt__TimezoneList (531)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__TimezoneList(struct soap*, ngwt__TimezoneList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__TimezoneList(struct soap*, ngwt__TimezoneList *const*, const char*, const char*);
@@ -6625,7 +7602,7 @@ SOAP_FMAC3 ngwt__TimezoneList ** SOAP_FMAC4 soap_get_PointerTongwt__TimezoneList
 SOAP_FMAC3 ngwt__TimezoneList ** SOAP_FMAC4 soap_in_PointerTongwt__TimezoneList(struct soap*, const char*, ngwt__TimezoneList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Signatures
-#define SOAP_TYPE_PointerTongwt__Signatures (461)
+#define SOAP_TYPE_PointerTongwt__Signatures (530)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Signatures(struct soap*, ngwt__Signatures *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Signatures(struct soap*, ngwt__Signatures *const*, const char*, const char*);
@@ -6634,7 +7611,7 @@ SOAP_FMAC3 ngwt__Signatures ** SOAP_FMAC4 soap_get_PointerTongwt__Signatures(str
 SOAP_FMAC3 ngwt__Signatures ** SOAP_FMAC4 soap_in_PointerTongwt__Signatures(struct soap*, const char*, ngwt__Signatures **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Settings
-#define SOAP_TYPE_PointerTongwt__Settings (460)
+#define SOAP_TYPE_PointerTongwt__Settings (529)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Settings(struct soap*, ngwt__Settings *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Settings(struct soap*, ngwt__Settings *const*, const char*, const char*);
@@ -6642,8 +7619,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__Settings(struct soap*, const c
 SOAP_FMAC3 ngwt__Settings ** SOAP_FMAC4 soap_get_PointerTongwt__Settings(struct soap*, ngwt__Settings **, const char*, const char*);
 SOAP_FMAC3 ngwt__Settings ** SOAP_FMAC4 soap_in_PointerTongwt__Settings(struct soap*, const char*, ngwt__Settings **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__RuleList
+#define SOAP_TYPE_PointerTongwt__RuleList (528)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RuleList(struct soap*, ngwt__RuleList *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RuleList(struct soap*, ngwt__RuleList *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__RuleList(struct soap*, const char *, int, ngwt__RuleList *const*, const char *);
+SOAP_FMAC3 ngwt__RuleList ** SOAP_FMAC4 soap_get_PointerTongwt__RuleList(struct soap*, ngwt__RuleList **, const char*, const char*);
+SOAP_FMAC3 ngwt__RuleList ** SOAP_FMAC4 soap_in_PointerTongwt__RuleList(struct soap*, const char*, ngwt__RuleList **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__ProxyList
-#define SOAP_TYPE_PointerTongwt__ProxyList (459)
+#define SOAP_TYPE_PointerTongwt__ProxyList (527)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ProxyList(struct soap*, ngwt__ProxyList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ProxyList(struct soap*, ngwt__ProxyList *const*, const char*, const char*);
@@ -6652,7 +7638,7 @@ SOAP_FMAC3 ngwt__ProxyList ** SOAP_FMAC4 soap_get_PointerTongwt__ProxyList(struc
 SOAP_FMAC3 ngwt__ProxyList ** SOAP_FMAC4 soap_in_PointerTongwt__ProxyList(struct soap*, const char*, ngwt__ProxyList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__AccessRightList
-#define SOAP_TYPE_PointerTongwt__AccessRightList (458)
+#define SOAP_TYPE_PointerTongwt__AccessRightList (526)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AccessRightList(struct soap*, ngwt__AccessRightList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AccessRightList(struct soap*, ngwt__AccessRightList *const*, const char*, const char*);
@@ -6660,26 +7646,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__AccessRightList(struct soap*, 
 SOAP_FMAC3 ngwt__AccessRightList ** SOAP_FMAC4 soap_get_PointerTongwt__AccessRightList(struct soap*, ngwt__AccessRightList **, const char*, const char*);
 SOAP_FMAC3 ngwt__AccessRightList ** SOAP_FMAC4 soap_in_PointerTongwt__AccessRightList(struct soap*, const char*, ngwt__AccessRightList **, const char*);
 
-#ifndef SOAP_TYPE_PointerTongwt__ItemSourceList
-#define SOAP_TYPE_PointerTongwt__ItemSourceList (457)
+#ifndef SOAP_TYPE_PointerTongwt__LibraryList
+#define SOAP_TYPE_PointerTongwt__LibraryList (525)
 #endif
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemSourceList(struct soap*, enum ngwt__ItemSourceList *const*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ItemSourceList(struct soap*, enum ngwt__ItemSourceList *const*, const char*, const char*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__ItemSourceList(struct soap*, const char *, int, enum ngwt__ItemSourceList *const*, const char *);
-SOAP_FMAC3 enum ngwt__ItemSourceList ** SOAP_FMAC4 soap_get_PointerTongwt__ItemSourceList(struct soap*, enum ngwt__ItemSourceList **, const char*, const char*);
-SOAP_FMAC3 enum ngwt__ItemSourceList ** SOAP_FMAC4 soap_in_PointerTongwt__ItemSourceList(struct soap*, const char*, enum ngwt__ItemSourceList **, const char*);
-
-#ifndef SOAP_TYPE_PointerTongwt__MessageTypeList
-#define SOAP_TYPE_PointerTongwt__MessageTypeList (456)
-#endif
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__MessageTypeList(struct soap*, enum ngwt__MessageTypeList *const*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__MessageTypeList(struct soap*, enum ngwt__MessageTypeList *const*, const char*, const char*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__MessageTypeList(struct soap*, const char *, int, enum ngwt__MessageTypeList *const*, const char *);
-SOAP_FMAC3 enum ngwt__MessageTypeList ** SOAP_FMAC4 soap_get_PointerTongwt__MessageTypeList(struct soap*, enum ngwt__MessageTypeList **, const char*, const char*);
-SOAP_FMAC3 enum ngwt__MessageTypeList ** SOAP_FMAC4 soap_in_PointerTongwt__MessageTypeList(struct soap*, const char*, enum ngwt__MessageTypeList **, const char*);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__LibraryList(struct soap*, ngwt__LibraryList *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__LibraryList(struct soap*, ngwt__LibraryList *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__LibraryList(struct soap*, const char *, int, ngwt__LibraryList *const*, const char *);
+SOAP_FMAC3 ngwt__LibraryList ** SOAP_FMAC4 soap_get_PointerTongwt__LibraryList(struct soap*, ngwt__LibraryList **, const char*, const char*);
+SOAP_FMAC3 ngwt__LibraryList ** SOAP_FMAC4 soap_in_PointerTongwt__LibraryList(struct soap*, const char*, ngwt__LibraryList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__SettingsList
-#define SOAP_TYPE_PointerTongwt__SettingsList (455)
+#define SOAP_TYPE_PointerTongwt__SettingsList (524)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__SettingsList(struct soap*, ngwt__SettingsList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__SettingsList(struct soap*, ngwt__SettingsList *const*, const char*, const char*);
@@ -6688,7 +7665,7 @@ SOAP_FMAC3 ngwt__SettingsList ** SOAP_FMAC4 soap_get_PointerTongwt__SettingsList
 SOAP_FMAC3 ngwt__SettingsList ** SOAP_FMAC4 soap_in_PointerTongwt__SettingsList(struct soap*, const char*, ngwt__SettingsList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__JunkHandlingList
-#define SOAP_TYPE_PointerTongwt__JunkHandlingList (454)
+#define SOAP_TYPE_PointerTongwt__JunkHandlingList (523)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__JunkHandlingList(struct soap*, ngwt__JunkHandlingList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__JunkHandlingList(struct soap*, ngwt__JunkHandlingList *const*, const char*, const char*);
@@ -6697,7 +7674,7 @@ SOAP_FMAC3 ngwt__JunkHandlingList ** SOAP_FMAC4 soap_get_PointerTongwt__JunkHand
 SOAP_FMAC3 ngwt__JunkHandlingList ** SOAP_FMAC4 soap_in_PointerTongwt__JunkHandlingList(struct soap*, const char*, ngwt__JunkHandlingList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__FreeBusyInfoList
-#define SOAP_TYPE_PointerTongwt__FreeBusyInfoList (453)
+#define SOAP_TYPE_PointerTongwt__FreeBusyInfoList (522)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FreeBusyInfoList(struct soap*, ngwt__FreeBusyInfoList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FreeBusyInfoList(struct soap*, ngwt__FreeBusyInfoList *const*, const char*, const char*);
@@ -6706,7 +7683,7 @@ SOAP_FMAC3 ngwt__FreeBusyInfoList ** SOAP_FMAC4 soap_get_PointerTongwt__FreeBusy
 SOAP_FMAC3 ngwt__FreeBusyInfoList ** SOAP_FMAC4 soap_in_PointerTongwt__FreeBusyInfoList(struct soap*, const char*, ngwt__FreeBusyInfoList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__FreeBusyStats
-#define SOAP_TYPE_PointerTongwt__FreeBusyStats (452)
+#define SOAP_TYPE_PointerTongwt__FreeBusyStats (521)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FreeBusyStats(struct soap*, ngwt__FreeBusyStats *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FreeBusyStats(struct soap*, ngwt__FreeBusyStats *const*, const char*, const char*);
@@ -6715,7 +7692,7 @@ SOAP_FMAC3 ngwt__FreeBusyStats ** SOAP_FMAC4 soap_get_PointerTongwt__FreeBusySta
 SOAP_FMAC3 ngwt__FreeBusyStats ** SOAP_FMAC4 soap_in_PointerTongwt__FreeBusyStats(struct soap*, const char*, ngwt__FreeBusyStats **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__FolderList
-#define SOAP_TYPE_PointerTongwt__FolderList (451)
+#define SOAP_TYPE_PointerTongwt__FolderList (520)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FolderList(struct soap*, ngwt__FolderList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FolderList(struct soap*, ngwt__FolderList *const*, const char*, const char*);
@@ -6723,8 +7700,44 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__FolderList(struct soap*, const
 SOAP_FMAC3 ngwt__FolderList ** SOAP_FMAC4 soap_get_PointerTongwt__FolderList(struct soap*, ngwt__FolderList **, const char*, const char*);
 SOAP_FMAC3 ngwt__FolderList ** SOAP_FMAC4 soap_in_PointerTongwt__FolderList(struct soap*, const char*, ngwt__FolderList **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__ItemSourceList
+#define SOAP_TYPE_PointerTongwt__ItemSourceList (519)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemSourceList(struct soap*, enum ngwt__ItemSourceList *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ItemSourceList(struct soap*, enum ngwt__ItemSourceList *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__ItemSourceList(struct soap*, const char *, int, enum ngwt__ItemSourceList *const*, const char *);
+SOAP_FMAC3 enum ngwt__ItemSourceList ** SOAP_FMAC4 soap_get_PointerTongwt__ItemSourceList(struct soap*, enum ngwt__ItemSourceList **, const char*, const char*);
+SOAP_FMAC3 enum ngwt__ItemSourceList ** SOAP_FMAC4 soap_in_PointerTongwt__ItemSourceList(struct soap*, const char*, enum ngwt__ItemSourceList **, const char*);
+
+#ifndef SOAP_TYPE_PointerTongwt__MessageTypeList
+#define SOAP_TYPE_PointerTongwt__MessageTypeList (518)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__MessageTypeList(struct soap*, enum ngwt__MessageTypeList *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__MessageTypeList(struct soap*, enum ngwt__MessageTypeList *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__MessageTypeList(struct soap*, const char *, int, enum ngwt__MessageTypeList *const*, const char *);
+SOAP_FMAC3 enum ngwt__MessageTypeList ** SOAP_FMAC4 soap_get_PointerTongwt__MessageTypeList(struct soap*, enum ngwt__MessageTypeList **, const char*, const char*);
+SOAP_FMAC3 enum ngwt__MessageTypeList ** SOAP_FMAC4 soap_in_PointerTongwt__MessageTypeList(struct soap*, const char*, enum ngwt__MessageTypeList **, const char*);
+
+#ifndef SOAP_TYPE_PointerTongwt__FolderType
+#define SOAP_TYPE_PointerTongwt__FolderType (517)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FolderType(struct soap*, enum ngwt__FolderType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FolderType(struct soap*, enum ngwt__FolderType *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__FolderType(struct soap*, const char *, int, enum ngwt__FolderType *const*, const char *);
+SOAP_FMAC3 enum ngwt__FolderType ** SOAP_FMAC4 soap_get_PointerTongwt__FolderType(struct soap*, enum ngwt__FolderType **, const char*, const char*);
+SOAP_FMAC3 enum ngwt__FolderType ** SOAP_FMAC4 soap_in_PointerTongwt__FolderType(struct soap*, const char*, enum ngwt__FolderType **, const char*);
+
+#ifndef SOAP_TYPE_PointerTongwt__DocumentTypeList
+#define SOAP_TYPE_PointerTongwt__DocumentTypeList (516)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DocumentTypeList(struct soap*, ngwt__DocumentTypeList *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DocumentTypeList(struct soap*, ngwt__DocumentTypeList *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DocumentTypeList(struct soap*, const char *, int, ngwt__DocumentTypeList *const*, const char *);
+SOAP_FMAC3 ngwt__DocumentTypeList ** SOAP_FMAC4 soap_get_PointerTongwt__DocumentTypeList(struct soap*, ngwt__DocumentTypeList **, const char*, const char*);
+SOAP_FMAC3 ngwt__DocumentTypeList ** SOAP_FMAC4 soap_in_PointerTongwt__DocumentTypeList(struct soap*, const char*, ngwt__DocumentTypeList **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__Items
-#define SOAP_TYPE_PointerTongwt__Items (450)
+#define SOAP_TYPE_PointerTongwt__Items (515)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Items(struct soap*, ngwt__Items *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Items(struct soap*, ngwt__Items *const*, const char*, const char*);
@@ -6733,7 +7746,7 @@ SOAP_FMAC3 ngwt__Items ** SOAP_FMAC4 soap_get_PointerTongwt__Items(struct soap*,
 SOAP_FMAC3 ngwt__Items ** SOAP_FMAC4 soap_in_PointerTongwt__Items(struct soap*, const char*, ngwt__Items **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__DeltaInfo
-#define SOAP_TYPE_PointerTongwt__DeltaInfo (449)
+#define SOAP_TYPE_PointerTongwt__DeltaInfo (514)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DeltaInfo(struct soap*, ngwt__DeltaInfo *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DeltaInfo(struct soap*, ngwt__DeltaInfo *const*, const char*, const char*);
@@ -6742,7 +7755,7 @@ SOAP_FMAC3 ngwt__DeltaInfo ** SOAP_FMAC4 soap_get_PointerTongwt__DeltaInfo(struc
 SOAP_FMAC3 ngwt__DeltaInfo ** SOAP_FMAC4 soap_in_PointerTongwt__DeltaInfo(struct soap*, const char*, ngwt__DeltaInfo **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__CustomList
-#define SOAP_TYPE_PointerTongwt__CustomList (448)
+#define SOAP_TYPE_PointerTongwt__CustomList (513)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__CustomList(struct soap*, ngwt__CustomList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__CustomList(struct soap*, ngwt__CustomList *const*, const char*, const char*);
@@ -6751,7 +7764,7 @@ SOAP_FMAC3 ngwt__CustomList ** SOAP_FMAC4 soap_get_PointerTongwt__CustomList(str
 SOAP_FMAC3 ngwt__CustomList ** SOAP_FMAC4 soap_in_PointerTongwt__CustomList(struct soap*, const char*, ngwt__CustomList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__CategoryList
-#define SOAP_TYPE_PointerTongwt__CategoryList (447)
+#define SOAP_TYPE_PointerTongwt__CategoryList (512)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__CategoryList(struct soap*, ngwt__CategoryList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__CategoryList(struct soap*, ngwt__CategoryList *const*, const char*, const char*);
@@ -6760,7 +7773,7 @@ SOAP_FMAC3 ngwt__CategoryList ** SOAP_FMAC4 soap_get_PointerTongwt__CategoryList
 SOAP_FMAC3 ngwt__CategoryList ** SOAP_FMAC4 soap_in_PointerTongwt__CategoryList(struct soap*, const char*, ngwt__CategoryList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__AddressBookList
-#define SOAP_TYPE_PointerTongwt__AddressBookList (446)
+#define SOAP_TYPE_PointerTongwt__AddressBookList (511)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AddressBookList(struct soap*, ngwt__AddressBookList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AddressBookList(struct soap*, ngwt__AddressBookList *const*, const char*, const char*);
@@ -6769,7 +7782,7 @@ SOAP_FMAC3 ngwt__AddressBookList ** SOAP_FMAC4 soap_get_PointerTongwt__AddressBo
 SOAP_FMAC3 ngwt__AddressBookList ** SOAP_FMAC4 soap_in_PointerTongwt__AddressBookList(struct soap*, const char*, ngwt__AddressBookList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Distribution
-#define SOAP_TYPE_PointerTongwt__Distribution (445)
+#define SOAP_TYPE_PointerTongwt__Distribution (510)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Distribution(struct soap*, ngwt__Distribution *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Distribution(struct soap*, ngwt__Distribution *const*, const char*, const char*);
@@ -6778,7 +7791,7 @@ SOAP_FMAC3 ngwt__Distribution ** SOAP_FMAC4 soap_get_PointerTongwt__Distribution
 SOAP_FMAC3 ngwt__Distribution ** SOAP_FMAC4 soap_in_PointerTongwt__Distribution(struct soap*, const char*, ngwt__Distribution **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__View
-#define SOAP_TYPE_PointerTongwt__View (444)
+#define SOAP_TYPE_PointerTongwt__View (509)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__View(struct soap*, std::string *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__View(struct soap*, std::string *const*, const char*, const char*);
@@ -6787,7 +7800,7 @@ SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_get_PointerTongwt__View(struct soap*, 
 SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_in_PointerTongwt__View(struct soap*, const char*, std::string **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Status
-#define SOAP_TYPE_PointerTongwt__Status (443)
+#define SOAP_TYPE_PointerTongwt__Status (508)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Status(struct soap*, ngwt__Status *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Status(struct soap*, ngwt__Status *const*, const char*, const char*);
@@ -6796,7 +7809,7 @@ SOAP_FMAC3 ngwt__Status ** SOAP_FMAC4 soap_get_PointerTongwt__Status(struct soap
 SOAP_FMAC3 ngwt__Status ** SOAP_FMAC4 soap_in_PointerTongwt__Status(struct soap*, const char*, ngwt__Status **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ItemRefList
-#define SOAP_TYPE_PointerTongwt__ItemRefList (442)
+#define SOAP_TYPE_PointerTongwt__ItemRefList (507)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemRefList(struct soap*, ngwt__ItemRefList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ItemRefList(struct soap*, ngwt__ItemRefList *const*, const char*, const char*);
@@ -6804,8 +7817,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__ItemRefList(struct soap*, cons
 SOAP_FMAC3 ngwt__ItemRefList ** SOAP_FMAC4 soap_get_PointerTongwt__ItemRefList(struct soap*, ngwt__ItemRefList **, const char*, const char*);
 SOAP_FMAC3 ngwt__ItemRefList ** SOAP_FMAC4 soap_in_PointerTongwt__ItemRefList(struct soap*, const char*, ngwt__ItemRefList **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__UserInfo
+#define SOAP_TYPE_PointerTongwt__UserInfo (505)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__UserInfo(struct soap*, ngwt__UserInfo *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__UserInfo(struct soap*, ngwt__UserInfo *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__UserInfo(struct soap*, const char *, int, ngwt__UserInfo *const*, const char *);
+SOAP_FMAC3 ngwt__UserInfo ** SOAP_FMAC4 soap_get_PointerTongwt__UserInfo(struct soap*, ngwt__UserInfo **, const char*, const char*);
+SOAP_FMAC3 ngwt__UserInfo ** SOAP_FMAC4 soap_in_PointerTongwt__UserInfo(struct soap*, const char*, ngwt__UserInfo **, const char*);
+
+#ifndef SOAP_TYPE_PointerTongwt__RecipientType
+#define SOAP_TYPE_PointerTongwt__RecipientType (504)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RecipientType(struct soap*, enum ngwt__RecipientType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RecipientType(struct soap*, enum ngwt__RecipientType *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__RecipientType(struct soap*, const char *, int, enum ngwt__RecipientType *const*, const char *);
+SOAP_FMAC3 enum ngwt__RecipientType ** SOAP_FMAC4 soap_get_PointerTongwt__RecipientType(struct soap*, enum ngwt__RecipientType **, const char*, const char*);
+SOAP_FMAC3 enum ngwt__RecipientType ** SOAP_FMAC4 soap_in_PointerTongwt__RecipientType(struct soap*, const char*, enum ngwt__RecipientType **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__Timezone
-#define SOAP_TYPE_PointerTongwt__Timezone (440)
+#define SOAP_TYPE_PointerTongwt__Timezone (502)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Timezone(struct soap*, ngwt__Timezone *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Timezone(struct soap*, ngwt__Timezone *const*, const char*, const char*);
@@ -6814,7 +7845,7 @@ SOAP_FMAC3 ngwt__Timezone ** SOAP_FMAC4 soap_get_PointerTongwt__Timezone(struct 
 SOAP_FMAC3 ngwt__Timezone ** SOAP_FMAC4 soap_in_PointerTongwt__Timezone(struct soap*, const char*, ngwt__Timezone **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Minute
-#define SOAP_TYPE_PointerTongwt__Minute (439)
+#define SOAP_TYPE_PointerTongwt__Minute (501)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Minute(struct soap*, unsigned char *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Minute(struct soap*, unsigned char *const*, const char*, const char*);
@@ -6823,7 +7854,7 @@ SOAP_FMAC3 unsigned char ** SOAP_FMAC4 soap_get_PointerTongwt__Minute(struct soa
 SOAP_FMAC3 unsigned char ** SOAP_FMAC4 soap_in_PointerTongwt__Minute(struct soap*, const char*, unsigned char **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Hour
-#define SOAP_TYPE_PointerTongwt__Hour (438)
+#define SOAP_TYPE_PointerTongwt__Hour (500)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Hour(struct soap*, unsigned char *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Hour(struct soap*, unsigned char *const*, const char*, const char*);
@@ -6831,8 +7862,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__Hour(struct soap*, const char 
 SOAP_FMAC3 unsigned char ** SOAP_FMAC4 soap_get_PointerTongwt__Hour(struct soap*, unsigned char **, const char*, const char*);
 SOAP_FMAC3 unsigned char ** SOAP_FMAC4 soap_in_PointerTongwt__Hour(struct soap*, const char*, unsigned char **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__DayOfWeek
+#define SOAP_TYPE_PointerTongwt__DayOfWeek (499)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DayOfWeek(struct soap*, ngwt__DayOfWeek *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DayOfWeek(struct soap*, ngwt__DayOfWeek *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DayOfWeek(struct soap*, const char *, int, ngwt__DayOfWeek *const*, const char *);
+SOAP_FMAC3 ngwt__DayOfWeek ** SOAP_FMAC4 soap_get_PointerTongwt__DayOfWeek(struct soap*, ngwt__DayOfWeek **, const char*, const char*);
+SOAP_FMAC3 ngwt__DayOfWeek ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfWeek(struct soap*, const char*, ngwt__DayOfWeek **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__Day
-#define SOAP_TYPE_PointerTongwt__Day (437)
+#define SOAP_TYPE_PointerTongwt__Day (498)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Day(struct soap*, unsigned char *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Day(struct soap*, unsigned char *const*, const char*, const char*);
@@ -6841,7 +7881,7 @@ SOAP_FMAC3 unsigned char ** SOAP_FMAC4 soap_get_PointerTongwt__Day(struct soap*,
 SOAP_FMAC3 unsigned char ** SOAP_FMAC4 soap_in_PointerTongwt__Day(struct soap*, const char*, unsigned char **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Month
-#define SOAP_TYPE_PointerTongwt__Month (436)
+#define SOAP_TYPE_PointerTongwt__Month (497)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Month(struct soap*, unsigned char *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Month(struct soap*, unsigned char *const*, const char*, const char*);
@@ -6850,7 +7890,7 @@ SOAP_FMAC3 unsigned char ** SOAP_FMAC4 soap_get_PointerTongwt__Month(struct soap
 SOAP_FMAC3 unsigned char ** SOAP_FMAC4 soap_in_PointerTongwt__Month(struct soap*, const char*, unsigned char **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__TimezoneComponent
-#define SOAP_TYPE_PointerTongwt__TimezoneComponent (435)
+#define SOAP_TYPE_PointerTongwt__TimezoneComponent (496)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__TimezoneComponent(struct soap*, ngwt__TimezoneComponent *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__TimezoneComponent(struct soap*, ngwt__TimezoneComponent *const*, const char*, const char*);
@@ -6859,7 +7899,7 @@ SOAP_FMAC3 ngwt__TimezoneComponent ** SOAP_FMAC4 soap_get_PointerTongwt__Timezon
 SOAP_FMAC3 ngwt__TimezoneComponent ** SOAP_FMAC4 soap_in_PointerTongwt__TimezoneComponent(struct soap*, const char*, ngwt__TimezoneComponent **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ProblemList
-#define SOAP_TYPE_PointerTongwt__ProblemList (434)
+#define SOAP_TYPE_PointerTongwt__ProblemList (495)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ProblemList(struct soap*, ngwt__ProblemList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ProblemList(struct soap*, ngwt__ProblemList *const*, const char*, const char*);
@@ -6868,7 +7908,7 @@ SOAP_FMAC3 ngwt__ProblemList ** SOAP_FMAC4 soap_get_PointerTongwt__ProblemList(s
 SOAP_FMAC3 ngwt__ProblemList ** SOAP_FMAC4 soap_in_PointerTongwt__ProblemList(struct soap*, const char*, ngwt__ProblemList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Signature
-#define SOAP_TYPE_PointerTongwt__Signature (432)
+#define SOAP_TYPE_PointerTongwt__Signature (493)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Signature(struct soap*, ngwt__Signature *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Signature(struct soap*, ngwt__Signature *const*, const char*, const char*);
@@ -6877,7 +7917,7 @@ SOAP_FMAC3 ngwt__Signature ** SOAP_FMAC4 soap_get_PointerTongwt__Signature(struc
 SOAP_FMAC3 ngwt__Signature ** SOAP_FMAC4 soap_in_PointerTongwt__Signature(struct soap*, const char*, ngwt__Signature **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__SignatureData
-#define SOAP_TYPE_PointerTongwt__SignatureData (431)
+#define SOAP_TYPE_PointerTongwt__SignatureData (492)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__SignatureData(struct soap*, ngwt__SignatureData *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__SignatureData(struct soap*, ngwt__SignatureData *const*, const char*, const char*);
@@ -6886,7 +7926,7 @@ SOAP_FMAC3 ngwt__SignatureData ** SOAP_FMAC4 soap_get_PointerTongwt__SignatureDa
 SOAP_FMAC3 ngwt__SignatureData ** SOAP_FMAC4 soap_in_PointerTongwt__SignatureData(struct soap*, const char*, ngwt__SignatureData **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__SettingsGroup
-#define SOAP_TYPE_PointerTongwt__SettingsGroup (429)
+#define SOAP_TYPE_PointerTongwt__SettingsGroup (490)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__SettingsGroup(struct soap*, ngwt__SettingsGroup *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__SettingsGroup(struct soap*, ngwt__SettingsGroup *const*, const char*, const char*);
@@ -6895,7 +7935,7 @@ SOAP_FMAC3 ngwt__SettingsGroup ** SOAP_FMAC4 soap_get_PointerTongwt__SettingsGro
 SOAP_FMAC3 ngwt__SettingsGroup ** SOAP_FMAC4 soap_in_PointerTongwt__SettingsGroup(struct soap*, const char*, ngwt__SettingsGroup **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ReturnNotification
-#define SOAP_TYPE_PointerTongwt__ReturnNotification (428)
+#define SOAP_TYPE_PointerTongwt__ReturnNotification (489)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ReturnNotification(struct soap*, ngwt__ReturnNotification *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ReturnNotification(struct soap*, ngwt__ReturnNotification *const*, const char*, const char*);
@@ -6904,7 +7944,7 @@ SOAP_FMAC3 ngwt__ReturnNotification ** SOAP_FMAC4 soap_get_PointerTongwt__Return
 SOAP_FMAC3 ngwt__ReturnNotification ** SOAP_FMAC4 soap_in_PointerTongwt__ReturnNotification(struct soap*, const char*, ngwt__ReturnNotification **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__StatusTracking
-#define SOAP_TYPE_PointerTongwt__StatusTracking (427)
+#define SOAP_TYPE_PointerTongwt__StatusTracking (488)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__StatusTracking(struct soap*, ngwt__StatusTracking *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__StatusTracking(struct soap*, ngwt__StatusTracking *const*, const char*, const char*);
@@ -6913,7 +7953,7 @@ SOAP_FMAC3 ngwt__StatusTracking ** SOAP_FMAC4 soap_get_PointerTongwt__StatusTrac
 SOAP_FMAC3 ngwt__StatusTracking ** SOAP_FMAC4 soap_in_PointerTongwt__StatusTracking(struct soap*, const char*, ngwt__StatusTracking **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__SendOptionsRequestReply
-#define SOAP_TYPE_PointerTongwt__SendOptionsRequestReply (426)
+#define SOAP_TYPE_PointerTongwt__SendOptionsRequestReply (487)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__SendOptionsRequestReply(struct soap*, ngwt__SendOptionsRequestReply *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__SendOptionsRequestReply(struct soap*, ngwt__SendOptionsRequestReply *const*, const char*, const char*);
@@ -6921,8 +7961,44 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__SendOptionsRequestReply(struct
 SOAP_FMAC3 ngwt__SendOptionsRequestReply ** SOAP_FMAC4 soap_get_PointerTongwt__SendOptionsRequestReply(struct soap*, ngwt__SendOptionsRequestReply **, const char*, const char*);
 SOAP_FMAC3 ngwt__SendOptionsRequestReply ** SOAP_FMAC4 soap_in_PointerTongwt__SendOptionsRequestReply(struct soap*, const char*, ngwt__SendOptionsRequestReply **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__Rule
+#define SOAP_TYPE_PointerTongwt__Rule (485)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Rule(struct soap*, ngwt__Rule *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Rule(struct soap*, ngwt__Rule *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__Rule(struct soap*, const char *, int, ngwt__Rule *const*, const char *);
+SOAP_FMAC3 ngwt__Rule ** SOAP_FMAC4 soap_get_PointerTongwt__Rule(struct soap*, ngwt__Rule **, const char*, const char*);
+SOAP_FMAC3 ngwt__Rule ** SOAP_FMAC4 soap_in_PointerTongwt__Rule(struct soap*, const char*, ngwt__Rule **, const char*);
+
+#ifndef SOAP_TYPE_PointerTongwt__RuleAction
+#define SOAP_TYPE_PointerTongwt__RuleAction (483)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RuleAction(struct soap*, ngwt__RuleAction *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RuleAction(struct soap*, ngwt__RuleAction *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__RuleAction(struct soap*, const char *, int, ngwt__RuleAction *const*, const char *);
+SOAP_FMAC3 ngwt__RuleAction ** SOAP_FMAC4 soap_get_PointerTongwt__RuleAction(struct soap*, ngwt__RuleAction **, const char*, const char*);
+SOAP_FMAC3 ngwt__RuleAction ** SOAP_FMAC4 soap_in_PointerTongwt__RuleAction(struct soap*, const char*, ngwt__RuleAction **, const char*);
+
+#ifndef SOAP_TYPE_PointerTongwt__CategoryRefList
+#define SOAP_TYPE_PointerTongwt__CategoryRefList (482)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__CategoryRefList(struct soap*, ngwt__CategoryRefList *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__CategoryRefList(struct soap*, ngwt__CategoryRefList *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__CategoryRefList(struct soap*, const char *, int, ngwt__CategoryRefList *const*, const char *);
+SOAP_FMAC3 ngwt__CategoryRefList ** SOAP_FMAC4 soap_get_PointerTongwt__CategoryRefList(struct soap*, ngwt__CategoryRefList **, const char*, const char*);
+SOAP_FMAC3 ngwt__CategoryRefList ** SOAP_FMAC4 soap_in_PointerTongwt__CategoryRefList(struct soap*, const char*, ngwt__CategoryRefList **, const char*);
+
+#ifndef SOAP_TYPE_PointerTongwt__Mail
+#define SOAP_TYPE_PointerTongwt__Mail (481)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Mail(struct soap*, ngwt__Mail *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Mail(struct soap*, ngwt__Mail *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__Mail(struct soap*, const char *, int, ngwt__Mail *const*, const char *);
+SOAP_FMAC3 ngwt__Mail ** SOAP_FMAC4 soap_get_PointerTongwt__Mail(struct soap*, ngwt__Mail **, const char*, const char*);
+SOAP_FMAC3 ngwt__Mail ** SOAP_FMAC4 soap_in_PointerTongwt__Mail(struct soap*, const char*, ngwt__Mail **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__ReturnNotificationOptions
-#define SOAP_TYPE_PointerTongwt__ReturnNotificationOptions (425)
+#define SOAP_TYPE_PointerTongwt__ReturnNotificationOptions (480)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ReturnNotificationOptions(struct soap*, ngwt__ReturnNotificationOptions *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ReturnNotificationOptions(struct soap*, ngwt__ReturnNotificationOptions *const*, const char*, const char*);
@@ -6931,7 +8007,7 @@ SOAP_FMAC3 ngwt__ReturnNotificationOptions ** SOAP_FMAC4 soap_get_PointerTongwt_
 SOAP_FMAC3 ngwt__ReturnNotificationOptions ** SOAP_FMAC4 soap_in_PointerTongwt__ReturnNotificationOptions(struct soap*, const char*, ngwt__ReturnNotificationOptions **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__MonthList
-#define SOAP_TYPE_PointerTongwt__MonthList (424)
+#define SOAP_TYPE_PointerTongwt__MonthList (479)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__MonthList(struct soap*, ngwt__MonthList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__MonthList(struct soap*, ngwt__MonthList *const*, const char*, const char*);
@@ -6940,7 +8016,7 @@ SOAP_FMAC3 ngwt__MonthList ** SOAP_FMAC4 soap_get_PointerTongwt__MonthList(struc
 SOAP_FMAC3 ngwt__MonthList ** SOAP_FMAC4 soap_in_PointerTongwt__MonthList(struct soap*, const char*, ngwt__MonthList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__DayOfYearList
-#define SOAP_TYPE_PointerTongwt__DayOfYearList (423)
+#define SOAP_TYPE_PointerTongwt__DayOfYearList (478)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DayOfYearList(struct soap*, ngwt__DayOfYearList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DayOfYearList(struct soap*, ngwt__DayOfYearList *const*, const char*, const char*);
@@ -6948,17 +8024,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DayOfYearList(struct soap*, co
 SOAP_FMAC3 ngwt__DayOfYearList ** SOAP_FMAC4 soap_get_PointerTongwt__DayOfYearList(struct soap*, ngwt__DayOfYearList **, const char*, const char*);
 SOAP_FMAC3 ngwt__DayOfYearList ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfYearList(struct soap*, const char*, ngwt__DayOfYearList **, const char*);
 
-#ifndef SOAP_TYPE_PointerTongwt__DayOfWeekList
-#define SOAP_TYPE_PointerTongwt__DayOfWeekList (422)
+#ifndef SOAP_TYPE_PointerTongwt__DayOfMonthList
+#define SOAP_TYPE_PointerTongwt__DayOfMonthList (477)
 #endif
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DayOfWeekList(struct soap*, ngwt__DayOfWeekList *const*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DayOfWeekList(struct soap*, ngwt__DayOfWeekList *const*, const char*, const char*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DayOfWeekList(struct soap*, const char *, int, ngwt__DayOfWeekList *const*, const char *);
-SOAP_FMAC3 ngwt__DayOfWeekList ** SOAP_FMAC4 soap_get_PointerTongwt__DayOfWeekList(struct soap*, ngwt__DayOfWeekList **, const char*, const char*);
-SOAP_FMAC3 ngwt__DayOfWeekList ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfWeekList(struct soap*, const char*, ngwt__DayOfWeekList **, const char*);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DayOfMonthList(struct soap*, ngwt__DayOfMonthList *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DayOfMonthList(struct soap*, ngwt__DayOfMonthList *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DayOfMonthList(struct soap*, const char *, int, ngwt__DayOfMonthList *const*, const char *);
+SOAP_FMAC3 ngwt__DayOfMonthList ** SOAP_FMAC4 soap_get_PointerTongwt__DayOfMonthList(struct soap*, ngwt__DayOfMonthList **, const char*, const char*);
+SOAP_FMAC3 ngwt__DayOfMonthList ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfMonthList(struct soap*, const char*, ngwt__DayOfMonthList **, const char*);
+
+#ifndef SOAP_TYPE_PointerTongwt__DayOfYearWeekList
+#define SOAP_TYPE_PointerTongwt__DayOfYearWeekList (476)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DayOfYearWeekList(struct soap*, ngwt__DayOfYearWeekList *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DayOfYearWeekList(struct soap*, ngwt__DayOfYearWeekList *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DayOfYearWeekList(struct soap*, const char *, int, ngwt__DayOfYearWeekList *const*, const char *);
+SOAP_FMAC3 ngwt__DayOfYearWeekList ** SOAP_FMAC4 soap_get_PointerTongwt__DayOfYearWeekList(struct soap*, ngwt__DayOfYearWeekList **, const char*, const char*);
+SOAP_FMAC3 ngwt__DayOfYearWeekList ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfYearWeekList(struct soap*, const char*, ngwt__DayOfYearWeekList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Frequency
-#define SOAP_TYPE_PointerTongwt__Frequency (421)
+#define SOAP_TYPE_PointerTongwt__Frequency (475)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Frequency(struct soap*, enum ngwt__Frequency *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Frequency(struct soap*, enum ngwt__Frequency *const*, const char*, const char*);
@@ -6967,7 +8052,7 @@ SOAP_FMAC3 enum ngwt__Frequency ** SOAP_FMAC4 soap_get_PointerTongwt__Frequency(
 SOAP_FMAC3 enum ngwt__Frequency ** SOAP_FMAC4 soap_in_PointerTongwt__Frequency(struct soap*, const char*, enum ngwt__Frequency **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__DelegateeStatus
-#define SOAP_TYPE_PointerTongwt__DelegateeStatus (418)
+#define SOAP_TYPE_PointerTongwt__DelegateeStatus (472)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DelegateeStatus(struct soap*, ngwt__DelegateeStatus *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DelegateeStatus(struct soap*, ngwt__DelegateeStatus *const*, const char*, const char*);
@@ -6976,7 +8061,7 @@ SOAP_FMAC3 ngwt__DelegateeStatus ** SOAP_FMAC4 soap_get_PointerTongwt__Delegatee
 SOAP_FMAC3 ngwt__DelegateeStatus ** SOAP_FMAC4 soap_in_PointerTongwt__DelegateeStatus(struct soap*, const char*, ngwt__DelegateeStatus **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__DelegatedStatus
-#define SOAP_TYPE_PointerTongwt__DelegatedStatus (417)
+#define SOAP_TYPE_PointerTongwt__DelegatedStatus (471)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DelegatedStatus(struct soap*, ngwt__DelegatedStatus *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DelegatedStatus(struct soap*, ngwt__DelegatedStatus *const*, const char*, const char*);
@@ -6985,7 +8070,7 @@ SOAP_FMAC3 ngwt__DelegatedStatus ** SOAP_FMAC4 soap_get_PointerTongwt__Delegated
 SOAP_FMAC3 ngwt__DelegatedStatus ** SOAP_FMAC4 soap_in_PointerTongwt__DelegatedStatus(struct soap*, const char*, ngwt__DelegatedStatus **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__CommentStatus
-#define SOAP_TYPE_PointerTongwt__CommentStatus (416)
+#define SOAP_TYPE_PointerTongwt__CommentStatus (470)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__CommentStatus(struct soap*, ngwt__CommentStatus *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__CommentStatus(struct soap*, ngwt__CommentStatus *const*, const char*, const char*);
@@ -6994,7 +8079,7 @@ SOAP_FMAC3 ngwt__CommentStatus ** SOAP_FMAC4 soap_get_PointerTongwt__CommentStat
 SOAP_FMAC3 ngwt__CommentStatus ** SOAP_FMAC4 soap_in_PointerTongwt__CommentStatus(struct soap*, const char*, ngwt__CommentStatus **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__TransferFailedStatus
-#define SOAP_TYPE_PointerTongwt__TransferFailedStatus (415)
+#define SOAP_TYPE_PointerTongwt__TransferFailedStatus (469)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__TransferFailedStatus(struct soap*, ngwt__TransferFailedStatus *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__TransferFailedStatus(struct soap*, ngwt__TransferFailedStatus *const*, const char*, const char*);
@@ -7003,7 +8088,7 @@ SOAP_FMAC3 ngwt__TransferFailedStatus ** SOAP_FMAC4 soap_get_PointerTongwt__Tran
 SOAP_FMAC3 ngwt__TransferFailedStatus ** SOAP_FMAC4 soap_in_PointerTongwt__TransferFailedStatus(struct soap*, const char*, ngwt__TransferFailedStatus **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Recipient
-#define SOAP_TYPE_PointerTongwt__Recipient (413)
+#define SOAP_TYPE_PointerTongwt__Recipient (467)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Recipient(struct soap*, ngwt__Recipient *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Recipient(struct soap*, ngwt__Recipient *const*, const char*, const char*);
@@ -7012,7 +8097,7 @@ SOAP_FMAC3 ngwt__Recipient ** SOAP_FMAC4 soap_get_PointerTongwt__Recipient(struc
 SOAP_FMAC3 ngwt__Recipient ** SOAP_FMAC4 soap_in_PointerTongwt__Recipient(struct soap*, const char*, ngwt__Recipient **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Filter
-#define SOAP_TYPE_PointerTongwt__Filter (412)
+#define SOAP_TYPE_PointerTongwt__Filter (466)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Filter(struct soap*, ngwt__Filter *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Filter(struct soap*, ngwt__Filter *const*, const char*, const char*);
@@ -7021,7 +8106,7 @@ SOAP_FMAC3 ngwt__Filter ** SOAP_FMAC4 soap_get_PointerTongwt__Filter(struct soap
 SOAP_FMAC3 ngwt__Filter ** SOAP_FMAC4 soap_in_PointerTongwt__Filter(struct soap*, const char*, ngwt__Filter **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__QueryTarget
-#define SOAP_TYPE_PointerTongwt__QueryTarget (411)
+#define SOAP_TYPE_PointerTongwt__QueryTarget (465)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__QueryTarget(struct soap*, ngwt__QueryTarget *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__QueryTarget(struct soap*, ngwt__QueryTarget *const*, const char*, const char*);
@@ -7029,8 +8114,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__QueryTarget(struct soap*, cons
 SOAP_FMAC3 ngwt__QueryTarget ** SOAP_FMAC4 soap_get_PointerTongwt__QueryTarget(struct soap*, ngwt__QueryTarget **, const char*, const char*);
 SOAP_FMAC3 ngwt__QueryTarget ** SOAP_FMAC4 soap_in_PointerTongwt__QueryTarget(struct soap*, const char*, ngwt__QueryTarget **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__ProxyUser
+#define SOAP_TYPE_PointerTongwt__ProxyUser (463)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ProxyUser(struct soap*, ngwt__ProxyUser *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ProxyUser(struct soap*, ngwt__ProxyUser *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__ProxyUser(struct soap*, const char *, int, ngwt__ProxyUser *const*, const char *);
+SOAP_FMAC3 ngwt__ProxyUser ** SOAP_FMAC4 soap_get_PointerTongwt__ProxyUser(struct soap*, ngwt__ProxyUser **, const char*, const char*);
+SOAP_FMAC3 ngwt__ProxyUser ** SOAP_FMAC4 soap_in_PointerTongwt__ProxyUser(struct soap*, const char*, ngwt__ProxyUser **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__ProblemEntry
-#define SOAP_TYPE_PointerTongwt__ProblemEntry (409)
+#define SOAP_TYPE_PointerTongwt__ProblemEntry (461)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ProblemEntry(struct soap*, ngwt__ProblemEntry *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ProblemEntry(struct soap*, ngwt__ProblemEntry *const*, const char*, const char*);
@@ -7039,7 +8133,7 @@ SOAP_FMAC3 ngwt__ProblemEntry ** SOAP_FMAC4 soap_get_PointerTongwt__ProblemEntry
 SOAP_FMAC3 ngwt__ProblemEntry ** SOAP_FMAC4 soap_in_PointerTongwt__ProblemEntry(struct soap*, const char*, ngwt__ProblemEntry **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__PostalAddress
-#define SOAP_TYPE_PointerTongwt__PostalAddress (407)
+#define SOAP_TYPE_PointerTongwt__PostalAddress (459)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__PostalAddress(struct soap*, ngwt__PostalAddress *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__PostalAddress(struct soap*, ngwt__PostalAddress *const*, const char*, const char*);
@@ -7048,7 +8142,7 @@ SOAP_FMAC3 ngwt__PostalAddress ** SOAP_FMAC4 soap_get_PointerTongwt__PostalAddre
 SOAP_FMAC3 ngwt__PostalAddress ** SOAP_FMAC4 soap_in_PointerTongwt__PostalAddress(struct soap*, const char*, ngwt__PostalAddress **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__PhoneNumber
-#define SOAP_TYPE_PointerTongwt__PhoneNumber (405)
+#define SOAP_TYPE_PointerTongwt__PhoneNumber (457)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__PhoneNumber(struct soap*, ngwt__PhoneNumber *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__PhoneNumber(struct soap*, ngwt__PhoneNumber *const*, const char*, const char*);
@@ -7057,7 +8151,7 @@ SOAP_FMAC3 ngwt__PhoneNumber ** SOAP_FMAC4 soap_get_PointerTongwt__PhoneNumber(s
 SOAP_FMAC3 ngwt__PhoneNumber ** SOAP_FMAC4 soap_in_PointerTongwt__PhoneNumber(struct soap*, const char*, ngwt__PhoneNumber **, const char*);
 
 #ifndef SOAP_TYPE_PointerToxsd__date
-#define SOAP_TYPE_PointerToxsd__date (404)
+#define SOAP_TYPE_PointerToxsd__date (456)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxsd__date(struct soap*, std::string *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxsd__date(struct soap*, std::string *const*, const char*, const char*);
@@ -7065,17 +8159,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxsd__date(struct soap*, const char *
 SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_get_PointerToxsd__date(struct soap*, std::string **, const char*, const char*);
 SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_in_PointerToxsd__date(struct soap*, const char*, std::string **, const char*);
 
-#ifndef SOAP_TYPE_PointerToxsd__anyURI
-#define SOAP_TYPE_PointerToxsd__anyURI (403)
-#endif
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxsd__anyURI(struct soap*, std::string *const*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxsd__anyURI(struct soap*, std::string *const*, const char*, const char*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxsd__anyURI(struct soap*, const char *, int, std::string *const*, const char *);
-SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_get_PointerToxsd__anyURI(struct soap*, std::string **, const char*, const char*);
-SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_in_PointerToxsd__anyURI(struct soap*, const char*, std::string **, const char*);
-
 #ifndef SOAP_TYPE_PointerTongwt__ItemRef
-#define SOAP_TYPE_PointerTongwt__ItemRef (402)
+#define SOAP_TYPE_PointerTongwt__ItemRef (455)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemRef(struct soap*, ngwt__ItemRef *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ItemRef(struct soap*, ngwt__ItemRef *const*, const char*, const char*);
@@ -7084,7 +8169,7 @@ SOAP_FMAC3 ngwt__ItemRef ** SOAP_FMAC4 soap_get_PointerTongwt__ItemRef(struct so
 SOAP_FMAC3 ngwt__ItemRef ** SOAP_FMAC4 soap_in_PointerTongwt__ItemRef(struct soap*, const char*, ngwt__ItemRef **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__UUID
-#define SOAP_TYPE_PointerTongwt__UUID (401)
+#define SOAP_TYPE_PointerTongwt__UUID (454)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__UUID(struct soap*, std::string *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__UUID(struct soap*, std::string *const*, const char*, const char*);
@@ -7093,7 +8178,7 @@ SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_get_PointerTongwt__UUID(struct soap*, 
 SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_in_PointerTongwt__UUID(struct soap*, const char*, std::string **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__SharedFolderNotification
-#define SOAP_TYPE_PointerTongwt__SharedFolderNotification (399)
+#define SOAP_TYPE_PointerTongwt__SharedFolderNotification (452)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__SharedFolderNotification(struct soap*, ngwt__SharedFolderNotification *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__SharedFolderNotification(struct soap*, ngwt__SharedFolderNotification *const*, const char*, const char*);
@@ -7102,7 +8187,7 @@ SOAP_FMAC3 ngwt__SharedFolderNotification ** SOAP_FMAC4 soap_get_PointerTongwt__
 SOAP_FMAC3 ngwt__SharedFolderNotification ** SOAP_FMAC4 soap_in_PointerTongwt__SharedFolderNotification(struct soap*, const char*, ngwt__SharedFolderNotification **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__MessagePart
-#define SOAP_TYPE_PointerTongwt__MessagePart (397)
+#define SOAP_TYPE_PointerTongwt__MessagePart (450)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__MessagePart(struct soap*, ngwt__MessagePart *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__MessagePart(struct soap*, ngwt__MessagePart *const*, const char*, const char*);
@@ -7110,8 +8195,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__MessagePart(struct soap*, cons
 SOAP_FMAC3 ngwt__MessagePart ** SOAP_FMAC4 soap_get_PointerTongwt__MessagePart(struct soap*, ngwt__MessagePart **, const char*, const char*);
 SOAP_FMAC3 ngwt__MessagePart ** SOAP_FMAC4 soap_in_PointerTongwt__MessagePart(struct soap*, const char*, ngwt__MessagePart **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__Library
+#define SOAP_TYPE_PointerTongwt__Library (448)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Library(struct soap*, ngwt__Library *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Library(struct soap*, ngwt__Library *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__Library(struct soap*, const char *, int, ngwt__Library *const*, const char *);
+SOAP_FMAC3 ngwt__Library ** SOAP_FMAC4 soap_get_PointerTongwt__Library(struct soap*, ngwt__Library **, const char*, const char*);
+SOAP_FMAC3 ngwt__Library ** SOAP_FMAC4 soap_in_PointerTongwt__Library(struct soap*, const char*, ngwt__Library **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__JunkEntry
-#define SOAP_TYPE_PointerTongwt__JunkEntry (395)
+#define SOAP_TYPE_PointerTongwt__JunkEntry (446)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__JunkEntry(struct soap*, ngwt__JunkEntry *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__JunkEntry(struct soap*, ngwt__JunkEntry *const*, const char*, const char*);
@@ -7120,7 +8214,7 @@ SOAP_FMAC3 ngwt__JunkEntry ** SOAP_FMAC4 soap_get_PointerTongwt__JunkEntry(struc
 SOAP_FMAC3 ngwt__JunkEntry ** SOAP_FMAC4 soap_in_PointerTongwt__JunkEntry(struct soap*, const char*, ngwt__JunkEntry **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__JunkHandlingListType
-#define SOAP_TYPE_PointerTongwt__JunkHandlingListType (394)
+#define SOAP_TYPE_PointerTongwt__JunkHandlingListType (445)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__JunkHandlingListType(struct soap*, enum ngwt__JunkHandlingListType *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__JunkHandlingListType(struct soap*, enum ngwt__JunkHandlingListType *const*, const char*, const char*);
@@ -7129,7 +8223,7 @@ SOAP_FMAC3 enum ngwt__JunkHandlingListType ** SOAP_FMAC4 soap_get_PointerTongwt_
 SOAP_FMAC3 enum ngwt__JunkHandlingListType ** SOAP_FMAC4 soap_in_PointerTongwt__JunkHandlingListType(struct soap*, const char*, enum ngwt__JunkHandlingListType **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Item
-#define SOAP_TYPE_PointerTongwt__Item (392)
+#define SOAP_TYPE_PointerTongwt__Item (443)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Item(struct soap*, ngwt__Item *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Item(struct soap*, ngwt__Item *const*, const char*, const char*);
@@ -7138,7 +8232,7 @@ SOAP_FMAC3 ngwt__Item ** SOAP_FMAC4 soap_get_PointerTongwt__Item(struct soap*, n
 SOAP_FMAC3 ngwt__Item ** SOAP_FMAC4 soap_in_PointerTongwt__Item(struct soap*, const char*, ngwt__Item **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ItemChanges
-#define SOAP_TYPE_PointerTongwt__ItemChanges (391)
+#define SOAP_TYPE_PointerTongwt__ItemChanges (442)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemChanges(struct soap*, ngwt__ItemChanges *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ItemChanges(struct soap*, ngwt__ItemChanges *const*, const char*, const char*);
@@ -7147,7 +8241,7 @@ SOAP_FMAC3 ngwt__ItemChanges ** SOAP_FMAC4 soap_get_PointerTongwt__ItemChanges(s
 SOAP_FMAC3 ngwt__ItemChanges ** SOAP_FMAC4 soap_in_PointerTongwt__ItemChanges(struct soap*, const char*, ngwt__ItemChanges **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__ImAddress
-#define SOAP_TYPE_PointerTongwt__ImAddress (389)
+#define SOAP_TYPE_PointerTongwt__ImAddress (440)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ImAddress(struct soap*, ngwt__ImAddress *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ImAddress(struct soap*, ngwt__ImAddress *const*, const char*, const char*);
@@ -7156,7 +8250,7 @@ SOAP_FMAC3 ngwt__ImAddress ** SOAP_FMAC4 soap_get_PointerTongwt__ImAddress(struc
 SOAP_FMAC3 ngwt__ImAddress ** SOAP_FMAC4 soap_in_PointerTongwt__ImAddress(struct soap*, const char*, ngwt__ImAddress **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__GroupMember
-#define SOAP_TYPE_PointerTongwt__GroupMember (387)
+#define SOAP_TYPE_PointerTongwt__GroupMember (438)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__GroupMember(struct soap*, ngwt__GroupMember *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__GroupMember(struct soap*, ngwt__GroupMember *const*, const char*, const char*);
@@ -7165,7 +8259,7 @@ SOAP_FMAC3 ngwt__GroupMember ** SOAP_FMAC4 soap_get_PointerTongwt__GroupMember(s
 SOAP_FMAC3 ngwt__GroupMember ** SOAP_FMAC4 soap_in_PointerTongwt__GroupMember(struct soap*, const char*, ngwt__GroupMember **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__GroupMemberList
-#define SOAP_TYPE_PointerTongwt__GroupMemberList (386)
+#define SOAP_TYPE_PointerTongwt__GroupMemberList (437)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__GroupMemberList(struct soap*, ngwt__GroupMemberList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__GroupMemberList(struct soap*, ngwt__GroupMemberList *const*, const char*, const char*);
@@ -7174,7 +8268,7 @@ SOAP_FMAC3 ngwt__GroupMemberList ** SOAP_FMAC4 soap_get_PointerTongwt__GroupMemb
 SOAP_FMAC3 ngwt__GroupMemberList ** SOAP_FMAC4 soap_in_PointerTongwt__GroupMemberList(struct soap*, const char*, ngwt__GroupMemberList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__FreeBusyInfo
-#define SOAP_TYPE_PointerTongwt__FreeBusyInfo (384)
+#define SOAP_TYPE_PointerTongwt__FreeBusyInfo (435)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FreeBusyInfo(struct soap*, ngwt__FreeBusyInfo *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FreeBusyInfo(struct soap*, ngwt__FreeBusyInfo *const*, const char*, const char*);
@@ -7183,7 +8277,7 @@ SOAP_FMAC3 ngwt__FreeBusyInfo ** SOAP_FMAC4 soap_get_PointerTongwt__FreeBusyInfo
 SOAP_FMAC3 ngwt__FreeBusyInfo ** SOAP_FMAC4 soap_in_PointerTongwt__FreeBusyInfo(struct soap*, const char*, ngwt__FreeBusyInfo **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__NameAndEmail
-#define SOAP_TYPE_PointerTongwt__NameAndEmail (382)
+#define SOAP_TYPE_PointerTongwt__NameAndEmail (433)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__NameAndEmail(struct soap*, ngwt__NameAndEmail *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__NameAndEmail(struct soap*, ngwt__NameAndEmail *const*, const char*, const char*);
@@ -7192,7 +8286,7 @@ SOAP_FMAC3 ngwt__NameAndEmail ** SOAP_FMAC4 soap_get_PointerTongwt__NameAndEmail
 SOAP_FMAC3 ngwt__NameAndEmail ** SOAP_FMAC4 soap_in_PointerTongwt__NameAndEmail(struct soap*, const char*, ngwt__NameAndEmail **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__AcceptLevel
-#define SOAP_TYPE_PointerTongwt__AcceptLevel (381)
+#define SOAP_TYPE_PointerTongwt__AcceptLevel (432)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AcceptLevel(struct soap*, enum ngwt__AcceptLevel *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AcceptLevel(struct soap*, enum ngwt__AcceptLevel *const*, const char*, const char*);
@@ -7201,7 +8295,7 @@ SOAP_FMAC3 enum ngwt__AcceptLevel ** SOAP_FMAC4 soap_get_PointerTongwt__AcceptLe
 SOAP_FMAC3 enum ngwt__AcceptLevel ** SOAP_FMAC4 soap_in_PointerTongwt__AcceptLevel(struct soap*, const char*, enum ngwt__AcceptLevel **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__FreeBusyBlock
-#define SOAP_TYPE_PointerTongwt__FreeBusyBlock (379)
+#define SOAP_TYPE_PointerTongwt__FreeBusyBlock (430)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FreeBusyBlock(struct soap*, ngwt__FreeBusyBlock *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FreeBusyBlock(struct soap*, ngwt__FreeBusyBlock *const*, const char*, const char*);
@@ -7210,7 +8304,7 @@ SOAP_FMAC3 ngwt__FreeBusyBlock ** SOAP_FMAC4 soap_get_PointerTongwt__FreeBusyBlo
 SOAP_FMAC3 ngwt__FreeBusyBlock ** SOAP_FMAC4 soap_in_PointerTongwt__FreeBusyBlock(struct soap*, const char*, ngwt__FreeBusyBlock **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Folder
-#define SOAP_TYPE_PointerTongwt__Folder (377)
+#define SOAP_TYPE_PointerTongwt__Folder (428)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Folder(struct soap*, ngwt__Folder *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Folder(struct soap*, ngwt__Folder *const*, const char*, const char*);
@@ -7219,7 +8313,7 @@ SOAP_FMAC3 ngwt__Folder ** SOAP_FMAC4 soap_get_PointerTongwt__Folder(struct soap
 SOAP_FMAC3 ngwt__Folder ** SOAP_FMAC4 soap_in_PointerTongwt__Folder(struct soap*, const char*, ngwt__Folder **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__FolderACLEntry
-#define SOAP_TYPE_PointerTongwt__FolderACLEntry (375)
+#define SOAP_TYPE_PointerTongwt__FolderACLEntry (426)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FolderACLEntry(struct soap*, ngwt__FolderACLEntry *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FolderACLEntry(struct soap*, ngwt__FolderACLEntry *const*, const char*, const char*);
@@ -7228,7 +8322,7 @@ SOAP_FMAC3 ngwt__FolderACLEntry ** SOAP_FMAC4 soap_get_PointerTongwt__FolderACLE
 SOAP_FMAC3 ngwt__FolderACLEntry ** SOAP_FMAC4 soap_in_PointerTongwt__FolderACLEntry(struct soap*, const char*, ngwt__FolderACLEntry **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__FilterElement
-#define SOAP_TYPE_PointerTongwt__FilterElement (374)
+#define SOAP_TYPE_PointerTongwt__FilterElement (425)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FilterElement(struct soap*, ngwt__FilterElement *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FilterElement(struct soap*, ngwt__FilterElement *const*, const char*, const char*);
@@ -7236,8 +8330,26 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__FilterElement(struct soap*, co
 SOAP_FMAC3 ngwt__FilterElement ** SOAP_FMAC4 soap_get_PointerTongwt__FilterElement(struct soap*, ngwt__FilterElement **, const char*, const char*);
 SOAP_FMAC3 ngwt__FilterElement ** SOAP_FMAC4 soap_in_PointerTongwt__FilterElement(struct soap*, const char*, ngwt__FilterElement **, const char*);
 
+#ifndef SOAP_TYPE_PointerTongwt__DocumentType
+#define SOAP_TYPE_PointerTongwt__DocumentType (422)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DocumentType(struct soap*, ngwt__DocumentType *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DocumentType(struct soap*, ngwt__DocumentType *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DocumentType(struct soap*, const char *, int, ngwt__DocumentType *const*, const char *);
+SOAP_FMAC3 ngwt__DocumentType ** SOAP_FMAC4 soap_get_PointerTongwt__DocumentType(struct soap*, ngwt__DocumentType **, const char*, const char*);
+SOAP_FMAC3 ngwt__DocumentType ** SOAP_FMAC4 soap_in_PointerTongwt__DocumentType(struct soap*, const char*, ngwt__DocumentType **, const char*);
+
+#ifndef SOAP_TYPE_PointerTongwt__AgeAction
+#define SOAP_TYPE_PointerTongwt__AgeAction (421)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AgeAction(struct soap*, enum ngwt__AgeAction *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AgeAction(struct soap*, enum ngwt__AgeAction *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__AgeAction(struct soap*, const char *, int, enum ngwt__AgeAction *const*, const char *);
+SOAP_FMAC3 enum ngwt__AgeAction ** SOAP_FMAC4 soap_get_PointerTongwt__AgeAction(struct soap*, enum ngwt__AgeAction **, const char*, const char*);
+SOAP_FMAC3 enum ngwt__AgeAction ** SOAP_FMAC4 soap_in_PointerTongwt__AgeAction(struct soap*, const char*, enum ngwt__AgeAction **, const char*);
+
 #ifndef SOAP_TYPE_PointerTongwt__SendOptions
-#define SOAP_TYPE_PointerTongwt__SendOptions (372)
+#define SOAP_TYPE_PointerTongwt__SendOptions (420)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__SendOptions(struct soap*, ngwt__SendOptions *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__SendOptions(struct soap*, ngwt__SendOptions *const*, const char*, const char*);
@@ -7246,7 +8358,7 @@ SOAP_FMAC3 ngwt__SendOptions ** SOAP_FMAC4 soap_get_PointerTongwt__SendOptions(s
 SOAP_FMAC3 ngwt__SendOptions ** SOAP_FMAC4 soap_in_PointerTongwt__SendOptions(struct soap*, const char*, ngwt__SendOptions **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__RecipientList
-#define SOAP_TYPE_PointerTongwt__RecipientList (371)
+#define SOAP_TYPE_PointerTongwt__RecipientList (419)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RecipientList(struct soap*, ngwt__RecipientList *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RecipientList(struct soap*, ngwt__RecipientList *const*, const char*, const char*);
@@ -7255,7 +8367,7 @@ SOAP_FMAC3 ngwt__RecipientList ** SOAP_FMAC4 soap_get_PointerTongwt__RecipientLi
 SOAP_FMAC3 ngwt__RecipientList ** SOAP_FMAC4 soap_in_PointerTongwt__RecipientList(struct soap*, const char*, ngwt__RecipientList **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__From
-#define SOAP_TYPE_PointerTongwt__From (370)
+#define SOAP_TYPE_PointerTongwt__From (418)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__From(struct soap*, ngwt__From *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__From(struct soap*, ngwt__From *const*, const char*, const char*);
@@ -7264,7 +8376,7 @@ SOAP_FMAC3 ngwt__From ** SOAP_FMAC4 soap_get_PointerTongwt__From(struct soap*, n
 SOAP_FMAC3 ngwt__From ** SOAP_FMAC4 soap_in_PointerTongwt__From(struct soap*, const char*, ngwt__From **, const char*);
 
 #ifndef SOAP_TYPE_PointerToint
-#define SOAP_TYPE_PointerToint (369)
+#define SOAP_TYPE_PointerToint (417)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToint(struct soap*, int *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToint(struct soap*, int *const*, const char*, const char*);
@@ -7272,17 +8384,17 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToint(struct soap*, const char *, int,
 SOAP_FMAC3 int ** SOAP_FMAC4 soap_get_PointerToint(struct soap*, int **, const char*, const char*);
 SOAP_FMAC3 int ** SOAP_FMAC4 soap_in_PointerToint(struct soap*, const char*, int **, const char*);
 
-#ifndef SOAP_TYPE_PointerTongwt__DayOfWeek
-#define SOAP_TYPE_PointerTongwt__DayOfWeek (366)
+#ifndef SOAP_TYPE_PointerTongwt__DayOfYearWeek
+#define SOAP_TYPE_PointerTongwt__DayOfYearWeek (415)
 #endif
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DayOfWeek(struct soap*, ngwt__DayOfWeek *const*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DayOfWeek(struct soap*, ngwt__DayOfWeek *const*, const char*, const char*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DayOfWeek(struct soap*, const char *, int, ngwt__DayOfWeek *const*, const char *);
-SOAP_FMAC3 ngwt__DayOfWeek ** SOAP_FMAC4 soap_get_PointerTongwt__DayOfWeek(struct soap*, ngwt__DayOfWeek **, const char*, const char*);
-SOAP_FMAC3 ngwt__DayOfWeek ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfWeek(struct soap*, const char*, ngwt__DayOfWeek **, const char*);
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DayOfYearWeek(struct soap*, ngwt__DayOfYearWeek *const*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DayOfYearWeek(struct soap*, ngwt__DayOfYearWeek *const*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DayOfYearWeek(struct soap*, const char *, int, ngwt__DayOfYearWeek *const*, const char *);
+SOAP_FMAC3 ngwt__DayOfYearWeek ** SOAP_FMAC4 soap_get_PointerTongwt__DayOfYearWeek(struct soap*, ngwt__DayOfYearWeek **, const char*, const char*);
+SOAP_FMAC3 ngwt__DayOfYearWeek ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfYearWeek(struct soap*, const char*, ngwt__DayOfYearWeek **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Custom
-#define SOAP_TYPE_PointerTongwt__Custom (363)
+#define SOAP_TYPE_PointerTongwt__Custom (411)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Custom(struct soap*, ngwt__Custom *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Custom(struct soap*, ngwt__Custom *const*, const char*, const char*);
@@ -7291,7 +8403,7 @@ SOAP_FMAC3 ngwt__Custom ** SOAP_FMAC4 soap_get_PointerTongwt__Custom(struct soap
 SOAP_FMAC3 ngwt__Custom ** SOAP_FMAC4 soap_in_PointerTongwt__Custom(struct soap*, const char*, ngwt__Custom **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__uid
-#define SOAP_TYPE_PointerTongwt__uid (362)
+#define SOAP_TYPE_PointerTongwt__uid (410)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__uid(struct soap*, std::string *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__uid(struct soap*, std::string *const*, const char*, const char*);
@@ -7300,7 +8412,7 @@ SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_get_PointerTongwt__uid(struct soap*, s
 SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_in_PointerTongwt__uid(struct soap*, const char*, std::string **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__Category
-#define SOAP_TYPE_PointerTongwt__Category (359)
+#define SOAP_TYPE_PointerTongwt__Category (407)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Category(struct soap*, ngwt__Category *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Category(struct soap*, ngwt__Category *const*, const char*, const char*);
@@ -7309,7 +8421,7 @@ SOAP_FMAC3 ngwt__Category ** SOAP_FMAC4 soap_get_PointerTongwt__Category(struct 
 SOAP_FMAC3 ngwt__Category ** SOAP_FMAC4 soap_in_PointerTongwt__Category(struct soap*, const char*, ngwt__Category **, const char*);
 
 #ifndef SOAP_TYPE_PointerToxsd__base64Binary
-#define SOAP_TYPE_PointerToxsd__base64Binary (357)
+#define SOAP_TYPE_PointerToxsd__base64Binary (405)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxsd__base64Binary(struct soap*, xsd__base64Binary *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxsd__base64Binary(struct soap*, xsd__base64Binary *const*, const char*, const char*);
@@ -7318,7 +8430,7 @@ SOAP_FMAC3 xsd__base64Binary ** SOAP_FMAC4 soap_get_PointerToxsd__base64Binary(s
 SOAP_FMAC3 xsd__base64Binary ** SOAP_FMAC4 soap_in_PointerToxsd__base64Binary(struct soap*, const char*, xsd__base64Binary **, const char*);
 
 #ifndef SOAP_TYPE_PointerTounsignedLong
-#define SOAP_TYPE_PointerTounsignedLong (356)
+#define SOAP_TYPE_PointerTounsignedLong (404)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTounsignedLong(struct soap*, unsigned long *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTounsignedLong(struct soap*, unsigned long *const*, const char*, const char*);
@@ -7327,7 +8439,7 @@ SOAP_FMAC3 unsigned long ** SOAP_FMAC4 soap_get_PointerTounsignedLong(struct soa
 SOAP_FMAC3 unsigned long ** SOAP_FMAC4 soap_in_PointerTounsignedLong(struct soap*, const char*, unsigned long **, const char*);
 
 #ifndef SOAP_TYPE_PointerTostd__string
-#define SOAP_TYPE_PointerTostd__string (353)
+#define SOAP_TYPE_PointerTostd__string (401)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTostd__string(struct soap*, std::string *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTostd__string(struct soap*, std::string *const*, const char*, const char*);
@@ -7336,7 +8448,7 @@ SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_get_PointerTostd__string(struct soap*,
 SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_in_PointerTostd__string(struct soap*, const char*, std::string **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__AttachmentID
-#define SOAP_TYPE_PointerTongwt__AttachmentID (352)
+#define SOAP_TYPE_PointerTongwt__AttachmentID (400)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AttachmentID(struct soap*, ngwt__AttachmentID *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AttachmentID(struct soap*, ngwt__AttachmentID *const*, const char*, const char*);
@@ -7345,7 +8457,7 @@ SOAP_FMAC3 ngwt__AttachmentID ** SOAP_FMAC4 soap_get_PointerTongwt__AttachmentID
 SOAP_FMAC3 ngwt__AttachmentID ** SOAP_FMAC4 soap_in_PointerTongwt__AttachmentID(struct soap*, const char*, ngwt__AttachmentID **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__AttachmentItemInfo
-#define SOAP_TYPE_PointerTongwt__AttachmentItemInfo (350)
+#define SOAP_TYPE_PointerTongwt__AttachmentItemInfo (398)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AttachmentItemInfo(struct soap*, ngwt__AttachmentItemInfo *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AttachmentItemInfo(struct soap*, ngwt__AttachmentItemInfo *const*, const char*, const char*);
@@ -7354,7 +8466,7 @@ SOAP_FMAC3 ngwt__AttachmentItemInfo ** SOAP_FMAC4 soap_get_PointerTongwt__Attach
 SOAP_FMAC3 ngwt__AttachmentItemInfo ** SOAP_FMAC4 soap_in_PointerTongwt__AttachmentItemInfo(struct soap*, const char*, ngwt__AttachmentItemInfo **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__AddressBook
-#define SOAP_TYPE_PointerTongwt__AddressBook (348)
+#define SOAP_TYPE_PointerTongwt__AddressBook (396)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AddressBook(struct soap*, ngwt__AddressBook *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AddressBook(struct soap*, ngwt__AddressBook *const*, const char*, const char*);
@@ -7363,7 +8475,7 @@ SOAP_FMAC3 ngwt__AddressBook ** SOAP_FMAC4 soap_get_PointerTongwt__AddressBook(s
 SOAP_FMAC3 ngwt__AddressBook ** SOAP_FMAC4 soap_in_PointerTongwt__AddressBook(struct soap*, const char*, ngwt__AddressBook **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__AccessRightEntry
-#define SOAP_TYPE_PointerTongwt__AccessRightEntry (346)
+#define SOAP_TYPE_PointerTongwt__AccessRightEntry (394)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AccessRightEntry(struct soap*, ngwt__AccessRightEntry *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AccessRightEntry(struct soap*, ngwt__AccessRightEntry *const*, const char*, const char*);
@@ -7372,7 +8484,7 @@ SOAP_FMAC3 ngwt__AccessRightEntry ** SOAP_FMAC4 soap_get_PointerTongwt__AccessRi
 SOAP_FMAC3 ngwt__AccessRightEntry ** SOAP_FMAC4 soap_in_PointerTongwt__AccessRightEntry(struct soap*, const char*, ngwt__AccessRightEntry **, const char*);
 
 #ifndef SOAP_TYPE_PointerTobool
-#define SOAP_TYPE_PointerTobool (345)
+#define SOAP_TYPE_PointerTobool (393)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTobool(struct soap*, bool *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTobool(struct soap*, bool *const*, const char*, const char*);
@@ -7381,7 +8493,7 @@ SOAP_FMAC3 bool ** SOAP_FMAC4 soap_get_PointerTobool(struct soap*, bool **, cons
 SOAP_FMAC3 bool ** SOAP_FMAC4 soap_in_PointerTobool(struct soap*, const char*, bool **, const char*);
 
 #ifndef SOAP_TYPE_PointerTongwt__AccessControlListEntry
-#define SOAP_TYPE_PointerTongwt__AccessControlListEntry (342)
+#define SOAP_TYPE_PointerTongwt__AccessControlListEntry (390)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AccessControlListEntry(struct soap*, ngwt__AccessControlListEntry *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AccessControlListEntry(struct soap*, ngwt__AccessControlListEntry *const*, const char*, const char*);
@@ -7390,7 +8502,7 @@ SOAP_FMAC3 ngwt__AccessControlListEntry ** SOAP_FMAC4 soap_get_PointerTongwt__Ac
 SOAP_FMAC3 ngwt__AccessControlListEntry ** SOAP_FMAC4 soap_in_PointerTongwt__AccessControlListEntry(struct soap*, const char*, ngwt__AccessControlListEntry **, const char*);
 
 #ifndef SOAP_TYPE_PointerTounsignedByte
-#define SOAP_TYPE_PointerTounsignedByte (12)
+#define SOAP_TYPE_PointerTounsignedByte (10)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTounsignedByte(struct soap*, unsigned char *const*);
 SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTounsignedByte(struct soap*, unsigned char *const*, const char*, const char*);
@@ -7419,7 +8531,7 @@ SOAP_FMAC3 char ** SOAP_FMAC4 soap_get_string(struct soap*, char **, const char*
 SOAP_FMAC3 char * * SOAP_FMAC4 soap_in_string(struct soap*, const char*, char **, const char*);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__FilterElement
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__FilterElement (493)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__FilterElement (565)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__FilterElement(struct soap*, const std::vector<ngwt__FilterElement * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__FilterElement(struct soap*, std::vector<ngwt__FilterElement * >*);
@@ -7433,7 +8545,7 @@ SOAP_FMAC5 std::vector<ngwt__FilterElement * > * SOAP_FMAC6 soap_instantiate_std
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__FilterElement(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ContainerRef
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ContainerRef (491)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ContainerRef (563)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__ContainerRef(struct soap*, const std::vector<ngwt__ContainerRef * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__ContainerRef(struct soap*, std::vector<ngwt__ContainerRef * >*);
@@ -7447,7 +8559,7 @@ SOAP_FMAC5 std::vector<ngwt__ContainerRef * > * SOAP_FMAC6 soap_instantiate_std_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__ContainerRef(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfngwe__EventType
-#define SOAP_TYPE_std__vectorTemplateOfngwe__EventType (483)
+#define SOAP_TYPE_std__vectorTemplateOfngwe__EventType (555)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfngwe__EventType(struct soap*, const std::vector<enum ngwe__EventType >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfngwe__EventType(struct soap*, std::vector<enum ngwe__EventType >*);
@@ -7461,7 +8573,7 @@ SOAP_FMAC5 std::vector<enum ngwe__EventType > * SOAP_FMAC6 soap_instantiate_std_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfngwe__EventType(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwe__Events
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwe__Events (482)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwe__Events (554)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwe__Events(struct soap*, const std::vector<ngwe__Events * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwe__Events(struct soap*, std::vector<ngwe__Events * >*);
@@ -7475,7 +8587,7 @@ SOAP_FMAC5 std::vector<ngwe__Events * > * SOAP_FMAC6 soap_instantiate_std__vecto
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwe__Events(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwe__Event
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwe__Event (478)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwe__Event (550)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwe__Event(struct soap*, const std::vector<ngwe__Event * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwe__Event(struct soap*, std::vector<ngwe__Event * >*);
@@ -7489,7 +8601,7 @@ SOAP_FMAC5 std::vector<ngwe__Event * > * SOAP_FMAC6 soap_instantiate_std__vector
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwe__Event(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfstring
-#define SOAP_TYPE_std__vectorTemplateOfstring (468)
+#define SOAP_TYPE_std__vectorTemplateOfstring (538)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfstring(struct soap*, const std::vector<char * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfstring(struct soap*, std::vector<char * >*);
@@ -7503,7 +8615,7 @@ SOAP_FMAC5 std::vector<char * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplat
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfstring(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ModifyItem
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ModifyItem (467)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ModifyItem (537)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__ModifyItem(struct soap*, const std::vector<ngwt__ModifyItem * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__ModifyItem(struct soap*, std::vector<ngwt__ModifyItem * >*);
@@ -7516,8 +8628,36 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__Modif
 SOAP_FMAC5 std::vector<ngwt__ModifyItem * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__ModifyItem(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__ModifyItem(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Host
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Host (535)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Host(struct soap*, const std::vector<ngwt__Host * >*);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__Host(struct soap*, std::vector<ngwt__Host * >*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__Host(struct soap*, const std::vector<ngwt__Host * >*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__Host(struct soap*, const char*, int, const std::vector<ngwt__Host * >*, const char*);
+SOAP_FMAC3 std::vector<ngwt__Host * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__Host(struct soap*, std::vector<ngwt__Host * >*, const char*, const char*);
+SOAP_FMAC3 std::vector<ngwt__Host * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__Host(struct soap*, const char*, std::vector<ngwt__Host * >*, const char*);
+SOAP_FMAC5 std::vector<ngwt__Host * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__Host(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__Host(struct soap*, std::vector<ngwt__Host * >*);
+SOAP_FMAC5 std::vector<ngwt__Host * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__Host(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Host(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__UserInfo
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__UserInfo (506)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap*, const std::vector<ngwt__UserInfo * >*);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap*, std::vector<ngwt__UserInfo * >*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap*, const std::vector<ngwt__UserInfo * >*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap*, const char*, int, const std::vector<ngwt__UserInfo * >*, const char*);
+SOAP_FMAC3 std::vector<ngwt__UserInfo * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap*, std::vector<ngwt__UserInfo * >*, const char*, const char*);
+SOAP_FMAC3 std::vector<ngwt__UserInfo * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap*, const char*, std::vector<ngwt__UserInfo * >*, const char*);
+SOAP_FMAC5 std::vector<ngwt__UserInfo * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap*, std::vector<ngwt__UserInfo * >*);
+SOAP_FMAC5 std::vector<ngwt__UserInfo * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Timezone
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Timezone (441)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Timezone (503)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Timezone(struct soap*, const std::vector<ngwt__Timezone * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__Timezone(struct soap*, std::vector<ngwt__Timezone * >*);
@@ -7531,7 +8671,7 @@ SOAP_FMAC5 std::vector<ngwt__Timezone * > * SOAP_FMAC6 soap_instantiate_std__vec
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Timezone(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Signature
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Signature (433)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Signature (494)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Signature(struct soap*, const std::vector<ngwt__Signature * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__Signature(struct soap*, std::vector<ngwt__Signature * >*);
@@ -7545,7 +8685,7 @@ SOAP_FMAC5 std::vector<ngwt__Signature * > * SOAP_FMAC6 soap_instantiate_std__ve
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Signature(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__SettingsGroup
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__SettingsGroup (430)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__SettingsGroup (491)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__SettingsGroup(struct soap*, const std::vector<ngwt__SettingsGroup * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__SettingsGroup(struct soap*, std::vector<ngwt__SettingsGroup * >*);
@@ -7558,8 +8698,36 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__Setti
 SOAP_FMAC5 std::vector<ngwt__SettingsGroup * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__SettingsGroup(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__SettingsGroup(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Rule
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Rule (486)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Rule(struct soap*, const std::vector<ngwt__Rule * >*);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__Rule(struct soap*, std::vector<ngwt__Rule * >*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__Rule(struct soap*, const std::vector<ngwt__Rule * >*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__Rule(struct soap*, const char*, int, const std::vector<ngwt__Rule * >*, const char*);
+SOAP_FMAC3 std::vector<ngwt__Rule * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__Rule(struct soap*, std::vector<ngwt__Rule * >*, const char*, const char*);
+SOAP_FMAC3 std::vector<ngwt__Rule * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__Rule(struct soap*, const char*, std::vector<ngwt__Rule * >*, const char*);
+SOAP_FMAC5 std::vector<ngwt__Rule * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__Rule(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__Rule(struct soap*, std::vector<ngwt__Rule * >*);
+SOAP_FMAC5 std::vector<ngwt__Rule * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__Rule(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Rule(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__RuleAction
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__RuleAction (484)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap*, const std::vector<ngwt__RuleAction * >*);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap*, std::vector<ngwt__RuleAction * >*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap*, const std::vector<ngwt__RuleAction * >*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap*, const char*, int, const std::vector<ngwt__RuleAction * >*, const char*);
+SOAP_FMAC3 std::vector<ngwt__RuleAction * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap*, std::vector<ngwt__RuleAction * >*, const char*, const char*);
+SOAP_FMAC3 std::vector<ngwt__RuleAction * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap*, const char*, std::vector<ngwt__RuleAction * >*, const char*);
+SOAP_FMAC5 std::vector<ngwt__RuleAction * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap*, std::vector<ngwt__RuleAction * >*);
+SOAP_FMAC5 std::vector<ngwt__RuleAction * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE_std__vectorTemplateOfxsd__date
-#define SOAP_TYPE_std__vectorTemplateOfxsd__date (420)
+#define SOAP_TYPE_std__vectorTemplateOfxsd__date (474)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfxsd__date(struct soap*, const std::vector<std::string >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfxsd__date(struct soap*, std::vector<std::string >*);
@@ -7573,7 +8741,7 @@ SOAP_FMAC5 std::vector<std::string > * SOAP_FMAC6 soap_instantiate_std__vectorTe
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfxsd__date(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DelegateeStatus
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DelegateeStatus (419)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DelegateeStatus (473)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__DelegateeStatus(struct soap*, const std::vector<ngwt__DelegateeStatus * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__DelegateeStatus(struct soap*, std::vector<ngwt__DelegateeStatus * >*);
@@ -7587,7 +8755,7 @@ SOAP_FMAC5 std::vector<ngwt__DelegateeStatus * > * SOAP_FMAC6 soap_instantiate_s
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__DelegateeStatus(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Recipient
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Recipient (414)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Recipient (468)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Recipient(struct soap*, const std::vector<ngwt__Recipient * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__Recipient(struct soap*, std::vector<ngwt__Recipient * >*);
@@ -7600,8 +8768,22 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__Recip
 SOAP_FMAC5 std::vector<ngwt__Recipient * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__Recipient(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Recipient(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProxyUser
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProxyUser (464)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap*, const std::vector<ngwt__ProxyUser * >*);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap*, std::vector<ngwt__ProxyUser * >*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap*, const std::vector<ngwt__ProxyUser * >*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap*, const char*, int, const std::vector<ngwt__ProxyUser * >*, const char*);
+SOAP_FMAC3 std::vector<ngwt__ProxyUser * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap*, std::vector<ngwt__ProxyUser * >*, const char*, const char*);
+SOAP_FMAC3 std::vector<ngwt__ProxyUser * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap*, const char*, std::vector<ngwt__ProxyUser * >*, const char*);
+SOAP_FMAC5 std::vector<ngwt__ProxyUser * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap*, std::vector<ngwt__ProxyUser * >*);
+SOAP_FMAC5 std::vector<ngwt__ProxyUser * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProblemEntry
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProblemEntry (410)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProblemEntry (462)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__ProblemEntry(struct soap*, const std::vector<ngwt__ProblemEntry * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__ProblemEntry(struct soap*, std::vector<ngwt__ProblemEntry * >*);
@@ -7615,7 +8797,7 @@ SOAP_FMAC5 std::vector<ngwt__ProblemEntry * > * SOAP_FMAC6 soap_instantiate_std_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__ProblemEntry(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__PostalAddress
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__PostalAddress (408)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__PostalAddress (460)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__PostalAddress(struct soap*, const std::vector<ngwt__PostalAddress * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__PostalAddress(struct soap*, std::vector<ngwt__PostalAddress * >*);
@@ -7629,7 +8811,7 @@ SOAP_FMAC5 std::vector<ngwt__PostalAddress * > * SOAP_FMAC6 soap_instantiate_std
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__PostalAddress(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__PhoneNumber
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__PhoneNumber (406)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__PhoneNumber (458)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__PhoneNumber(struct soap*, const std::vector<ngwt__PhoneNumber * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__PhoneNumber(struct soap*, std::vector<ngwt__PhoneNumber * >*);
@@ -7643,7 +8825,7 @@ SOAP_FMAC5 std::vector<ngwt__PhoneNumber * > * SOAP_FMAC6 soap_instantiate_std__
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__PhoneNumber(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfngwt__Month
-#define SOAP_TYPE_std__vectorTemplateOfngwt__Month (400)
+#define SOAP_TYPE_std__vectorTemplateOfngwt__Month (453)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfngwt__Month(struct soap*, const std::vector<unsigned char >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfngwt__Month(struct soap*, std::vector<unsigned char >*);
@@ -7657,7 +8839,7 @@ SOAP_FMAC5 std::vector<unsigned char > * SOAP_FMAC6 soap_instantiate_std__vector
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfngwt__Month(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__MessagePart
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__MessagePart (398)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__MessagePart (451)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__MessagePart(struct soap*, const std::vector<ngwt__MessagePart * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__MessagePart(struct soap*, std::vector<ngwt__MessagePart * >*);
@@ -7670,8 +8852,22 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__Messa
 SOAP_FMAC5 std::vector<ngwt__MessagePart * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__MessagePart(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__MessagePart(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Library
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Library (449)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Library(struct soap*, const std::vector<ngwt__Library * >*);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__Library(struct soap*, std::vector<ngwt__Library * >*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__Library(struct soap*, const std::vector<ngwt__Library * >*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__Library(struct soap*, const char*, int, const std::vector<ngwt__Library * >*, const char*);
+SOAP_FMAC3 std::vector<ngwt__Library * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__Library(struct soap*, std::vector<ngwt__Library * >*, const char*, const char*);
+SOAP_FMAC3 std::vector<ngwt__Library * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__Library(struct soap*, const char*, std::vector<ngwt__Library * >*, const char*);
+SOAP_FMAC5 std::vector<ngwt__Library * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__Library(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__Library(struct soap*, std::vector<ngwt__Library * >*);
+SOAP_FMAC5 std::vector<ngwt__Library * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__Library(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Library(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__JunkEntry
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__JunkEntry (396)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__JunkEntry (447)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__JunkEntry(struct soap*, const std::vector<ngwt__JunkEntry * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__JunkEntry(struct soap*, std::vector<ngwt__JunkEntry * >*);
@@ -7685,7 +8881,7 @@ SOAP_FMAC5 std::vector<ngwt__JunkEntry * > * SOAP_FMAC6 soap_instantiate_std__ve
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__JunkEntry(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Item
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Item (393)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Item (444)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Item(struct soap*, const std::vector<ngwt__Item * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__Item(struct soap*, std::vector<ngwt__Item * >*);
@@ -7699,7 +8895,7 @@ SOAP_FMAC5 std::vector<ngwt__Item * > * SOAP_FMAC6 soap_instantiate_std__vectorT
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Item(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ImAddress
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ImAddress (390)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ImAddress (441)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__ImAddress(struct soap*, const std::vector<ngwt__ImAddress * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__ImAddress(struct soap*, std::vector<ngwt__ImAddress * >*);
@@ -7713,7 +8909,7 @@ SOAP_FMAC5 std::vector<ngwt__ImAddress * > * SOAP_FMAC6 soap_instantiate_std__ve
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__ImAddress(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__GroupMember
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__GroupMember (388)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__GroupMember (439)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__GroupMember(struct soap*, const std::vector<ngwt__GroupMember * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__GroupMember(struct soap*, std::vector<ngwt__GroupMember * >*);
@@ -7727,7 +8923,7 @@ SOAP_FMAC5 std::vector<ngwt__GroupMember * > * SOAP_FMAC6 soap_instantiate_std__
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__GroupMember(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__FreeBusyInfo
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__FreeBusyInfo (385)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__FreeBusyInfo (436)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__FreeBusyInfo(struct soap*, const std::vector<ngwt__FreeBusyInfo * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__FreeBusyInfo(struct soap*, std::vector<ngwt__FreeBusyInfo * >*);
@@ -7741,7 +8937,7 @@ SOAP_FMAC5 std::vector<ngwt__FreeBusyInfo * > * SOAP_FMAC6 soap_instantiate_std_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__FreeBusyInfo(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__NameAndEmail
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__NameAndEmail (383)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__NameAndEmail (434)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__NameAndEmail(struct soap*, const std::vector<ngwt__NameAndEmail * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__NameAndEmail(struct soap*, std::vector<ngwt__NameAndEmail * >*);
@@ -7755,7 +8951,7 @@ SOAP_FMAC5 std::vector<ngwt__NameAndEmail * > * SOAP_FMAC6 soap_instantiate_std_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__NameAndEmail(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__FreeBusyBlock
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__FreeBusyBlock (380)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__FreeBusyBlock (431)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__FreeBusyBlock(struct soap*, const std::vector<ngwt__FreeBusyBlock * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__FreeBusyBlock(struct soap*, std::vector<ngwt__FreeBusyBlock * >*);
@@ -7769,7 +8965,7 @@ SOAP_FMAC5 std::vector<ngwt__FreeBusyBlock * > * SOAP_FMAC6 soap_instantiate_std
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__FreeBusyBlock(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Folder
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Folder (378)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Folder (429)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Folder(struct soap*, const std::vector<ngwt__Folder * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__Folder(struct soap*, std::vector<ngwt__Folder * >*);
@@ -7783,7 +8979,7 @@ SOAP_FMAC5 std::vector<ngwt__Folder * > * SOAP_FMAC6 soap_instantiate_std__vecto
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Folder(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__FolderACLEntry
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__FolderACLEntry (376)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__FolderACLEntry (427)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__FolderACLEntry(struct soap*, const std::vector<ngwt__FolderACLEntry * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__FolderACLEntry(struct soap*, std::vector<ngwt__FolderACLEntry * >*);
@@ -7797,7 +8993,7 @@ SOAP_FMAC5 std::vector<ngwt__FolderACLEntry * > * SOAP_FMAC6 soap_instantiate_st
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__FolderACLEntry(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfstd__string
-#define SOAP_TYPE_std__vectorTemplateOfstd__string (373)
+#define SOAP_TYPE_std__vectorTemplateOfstd__string (424)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfstd__string(struct soap*, const std::vector<std::string >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfstd__string(struct soap*, std::vector<std::string >*);
@@ -7810,8 +9006,36 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfstd__string(struct s
 SOAP_FMAC5 std::vector<std::string > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfstd__string(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfstd__string(struct soap*, int, int, void*, const void*, size_t);
 
+#ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DocumentType
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DocumentType (423)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap*, const std::vector<ngwt__DocumentType * >*);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap*, std::vector<ngwt__DocumentType * >*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap*, const std::vector<ngwt__DocumentType * >*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap*, const char*, int, const std::vector<ngwt__DocumentType * >*, const char*);
+SOAP_FMAC3 std::vector<ngwt__DocumentType * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap*, std::vector<ngwt__DocumentType * >*, const char*, const char*);
+SOAP_FMAC3 std::vector<ngwt__DocumentType * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap*, const char*, std::vector<ngwt__DocumentType * >*, const char*);
+SOAP_FMAC5 std::vector<ngwt__DocumentType * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap*, std::vector<ngwt__DocumentType * >*);
+SOAP_FMAC5 std::vector<ngwt__DocumentType * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap*, int, int, void*, const void*, size_t);
+
+#ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfYearWeek
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfYearWeek (416)
+#endif
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap*, const std::vector<ngwt__DayOfYearWeek * >*);
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap*, std::vector<ngwt__DayOfYearWeek * >*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap*, const std::vector<ngwt__DayOfYearWeek * >*, const char*, const char*);
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap*, const char*, int, const std::vector<ngwt__DayOfYearWeek * >*, const char*);
+SOAP_FMAC3 std::vector<ngwt__DayOfYearWeek * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap*, std::vector<ngwt__DayOfYearWeek * >*, const char*, const char*);
+SOAP_FMAC3 std::vector<ngwt__DayOfYearWeek * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap*, const char*, std::vector<ngwt__DayOfYearWeek * >*, const char*);
+SOAP_FMAC5 std::vector<ngwt__DayOfYearWeek * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap*, int);
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap*, std::vector<ngwt__DayOfYearWeek * >*);
+SOAP_FMAC5 std::vector<ngwt__DayOfYearWeek * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap*, int, const char*, const char*, size_t*);
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap*, int, int, void*, const void*, size_t);
+
 #ifndef SOAP_TYPE_std__vectorTemplateOfngwt__DayOfYear
-#define SOAP_TYPE_std__vectorTemplateOfngwt__DayOfYear (368)
+#define SOAP_TYPE_std__vectorTemplateOfngwt__DayOfYear (414)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfngwt__DayOfYear(struct soap*, const std::vector<short >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfngwt__DayOfYear(struct soap*, std::vector<short >*);
@@ -7824,22 +9048,8 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfngwt__DayOfYear(stru
 SOAP_FMAC5 std::vector<short > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfngwt__DayOfYear(struct soap*, int, const char*, const char*, size_t*);
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfngwt__DayOfYear(struct soap*, int, int, void*, const void*, size_t);
 
-#ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfWeek
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfWeek (367)
-#endif
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap*, const std::vector<ngwt__DayOfWeek * >*);
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap*, std::vector<ngwt__DayOfWeek * >*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap*, const std::vector<ngwt__DayOfWeek * >*, const char*, const char*);
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap*, const char*, int, const std::vector<ngwt__DayOfWeek * >*, const char*);
-SOAP_FMAC3 std::vector<ngwt__DayOfWeek * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap*, std::vector<ngwt__DayOfWeek * >*, const char*, const char*);
-SOAP_FMAC3 std::vector<ngwt__DayOfWeek * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap*, const char*, std::vector<ngwt__DayOfWeek * >*, const char*);
-SOAP_FMAC5 std::vector<ngwt__DayOfWeek * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap*, int);
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap*, std::vector<ngwt__DayOfWeek * >*);
-SOAP_FMAC5 std::vector<ngwt__DayOfWeek * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap*, int, const char*, const char*, size_t*);
-SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap*, int, int, void*, const void*, size_t);
-
 #ifndef SOAP_TYPE_std__vectorTemplateOfngwt__DayOfMonth
-#define SOAP_TYPE_std__vectorTemplateOfngwt__DayOfMonth (365)
+#define SOAP_TYPE_std__vectorTemplateOfngwt__DayOfMonth (413)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfngwt__DayOfMonth(struct soap*, const std::vector<char >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfngwt__DayOfMonth(struct soap*, std::vector<char >*);
@@ -7853,7 +9063,7 @@ SOAP_FMAC5 std::vector<char > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateO
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfngwt__DayOfMonth(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Custom
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Custom (364)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Custom (412)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Custom(struct soap*, const std::vector<ngwt__Custom * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__Custom(struct soap*, std::vector<ngwt__Custom * >*);
@@ -7867,7 +9077,7 @@ SOAP_FMAC5 std::vector<ngwt__Custom * > * SOAP_FMAC6 soap_instantiate_std__vecto
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Custom(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfngwt__uid
-#define SOAP_TYPE_std__vectorTemplateOfngwt__uid (361)
+#define SOAP_TYPE_std__vectorTemplateOfngwt__uid (409)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfngwt__uid(struct soap*, const std::vector<std::string >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfngwt__uid(struct soap*, std::vector<std::string >*);
@@ -7881,7 +9091,7 @@ SOAP_FMAC5 std::vector<std::string > * SOAP_FMAC6 soap_instantiate_std__vectorTe
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfngwt__uid(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Category
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Category (360)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Category (408)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Category(struct soap*, const std::vector<ngwt__Category * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__Category(struct soap*, std::vector<ngwt__Category * >*);
@@ -7895,7 +9105,7 @@ SOAP_FMAC5 std::vector<ngwt__Category * > * SOAP_FMAC6 soap_instantiate_std__vec
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Category(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfngwt__CalendarFolderFlags
-#define SOAP_TYPE_std__vectorTemplateOfngwt__CalendarFolderFlags (358)
+#define SOAP_TYPE_std__vectorTemplateOfngwt__CalendarFolderFlags (406)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfngwt__CalendarFolderFlags(struct soap*, const std::vector<enum ngwt__CalendarFolderFlags >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfngwt__CalendarFolderFlags(struct soap*, std::vector<enum ngwt__CalendarFolderFlags >*);
@@ -7909,7 +9119,7 @@ SOAP_FMAC5 std::vector<enum ngwt__CalendarFolderFlags > * SOAP_FMAC6 soap_instan
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfngwt__CalendarFolderFlags(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__AttachmentItemInfo
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__AttachmentItemInfo (351)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__AttachmentItemInfo (399)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__AttachmentItemInfo(struct soap*, const std::vector<ngwt__AttachmentItemInfo * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__AttachmentItemInfo(struct soap*, std::vector<ngwt__AttachmentItemInfo * >*);
@@ -7923,7 +9133,7 @@ SOAP_FMAC5 std::vector<ngwt__AttachmentItemInfo * > * SOAP_FMAC6 soap_instantiat
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__AttachmentItemInfo(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__AddressBook
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__AddressBook (349)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__AddressBook (397)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__AddressBook(struct soap*, const std::vector<ngwt__AddressBook * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__AddressBook(struct soap*, std::vector<ngwt__AddressBook * >*);
@@ -7937,7 +9147,7 @@ SOAP_FMAC5 std::vector<ngwt__AddressBook * > * SOAP_FMAC6 soap_instantiate_std__
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__AddressBook(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__AccessRightEntry
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__AccessRightEntry (347)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__AccessRightEntry (395)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__AccessRightEntry(struct soap*, const std::vector<ngwt__AccessRightEntry * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__AccessRightEntry(struct soap*, std::vector<ngwt__AccessRightEntry * >*);
@@ -7951,7 +9161,7 @@ SOAP_FMAC5 std::vector<ngwt__AccessRightEntry * > * SOAP_FMAC6 soap_instantiate_
 SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__AccessRightEntry(struct soap*, int, int, void*, const void*, size_t);
 
 #ifndef SOAP_TYPE_std__vectorTemplateOfPointerTongwt__AccessControlListEntry
-#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__AccessControlListEntry (343)
+#define SOAP_TYPE_std__vectorTemplateOfPointerTongwt__AccessControlListEntry (391)
 #endif
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__AccessControlListEntry(struct soap*, const std::vector<ngwt__AccessControlListEntry * >*);
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__AccessControlListEntry(struct soap*, std::vector<ngwt__AccessControlListEntry * >*);

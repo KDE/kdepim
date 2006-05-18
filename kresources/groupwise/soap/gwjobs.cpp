@@ -366,13 +366,13 @@ void ReadCalendarJob::run()
               totalItems += count;
             }
             kdDebug() << "Folder " <<  (*(*it)->id).c_str() << ", containing " << count << " items." << endl;
-            if ( fld->folderType == Calendar ) {
+            if ( *(fld->folderType) == Calendar ) {
               kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Calendar, physically containing " << count << " items." << endl;
               readCalendarFolder( *(*it)->id, itemCounts );
               haveReadFolder = true;
               *mCalendarFolder = *((*it)->id);
             }
-            else if ( fld->folderType == Checklist ) {
+            else if ( *(fld->folderType) == Checklist ) {
               kdDebug() << "Reading folder " <<  (*(*it)->id).c_str() << ", of type Checklist, physically containing " << count << " items." << endl;
               readCalendarFolder( *(*it)->id, itemCounts );
               haveReadFolder = true;
@@ -562,6 +562,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
           else {
             ngwt__Note *n = dynamic_cast<ngwt__Note *>( *it );
             if ( n ) {
+              kdDebug() << "found a Note" << endl;
               i = conv.convertFromNote( n );
               counts.notes++;
             }
@@ -643,26 +644,22 @@ void UpdateAddressBooksJob::run()
   //request.view = soap_new_std__string( mSoap, -1 );
   //request.view->append("id name version modified ItemChanges");
   request.view = 0;
-  int result = soap_call___ngw__getDeltasRequest( mSoap, mUrl.latin1(),
+  soap_call___ngw__getDeltasRequest( mSoap, mUrl.latin1(),
                                               NULL, &request, &response);
   soap_print_fault( mSoap, stderr );
-
-  if (!mServer->checkResponse( result, response.status ) )
-  {
-    kdError() << "Error when getting addressbook deltas" << endl; 
-    return;
-  }
-
-  std::vector<class ngwt__Item * > *items = &response.items->item;
-  if ( items ) {
+  response.items->item;
+  
+  
+  if ( response.items ) {
+    std::vector<class ngwt__Item * > items = response.items->item;
 #if 1
-    kdDebug() << "ReadAddressBooksJob::UpdateAddressBooksJob() - got " << items->size() << "contacts" << endl;
+    kdDebug() << "ReadAddressBooksJob::UpdateAddressBooksJob() - got " << items.size() << "contacts" << endl;
 #endif
     KABC::Addressee::List contacts;
     ContactConverter converter( mSoap );
 
     std::vector<class ngwt__Item * >::const_iterator it;
-    for ( it = items->begin(); it != items->end(); ++it ) {
+    for ( it = items.begin(); it != items.end(); ++it ) {
       ngwt__Item *item = *it;
 
 #if 1

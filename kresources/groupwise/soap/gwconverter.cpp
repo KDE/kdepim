@@ -110,13 +110,15 @@ std::string* GWConverter::qDateToString( const QDate &date )
 
 QDate GWConverter::stringToQDate( std::string* str )
 {
-  return QDate::fromString( QString::fromUtf8( str->c_str() ) );
+  //NB this ISODate may become unnecessary, if GW stops sending in yyyy-mm-dd format again
+  return QDate::fromString( QString::fromLatin1( str->c_str() ), Qt::ISODate );
 }
 
 QDateTime GWConverter::charToQDateTime( const char *str )
 {
   if ( !str ) return QDateTime();
 //  kdDebug() << "charToQDateTime(): " << str << endl;
+  // as above re Qt::ISODate
   QDateTime dt = QDateTime::fromString( QString::fromUtf8( str ), Qt::ISODate );
 //  kdDebug() << "  " << dt.toString() << endl;
   return dt;

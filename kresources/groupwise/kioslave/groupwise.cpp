@@ -114,7 +114,7 @@ void Groupwise::get( const KURL &url )
       getAddressbook( url );
   } else {
     QString error = i18n("Unknown path. Known paths are '/freebusy/', "
-      "'/calendar/' and '/addressbook/'.");
+        "'/calendar/' and '/addressbook/'.") + QString(" path was %1" ).arg( url.url() );
     errorMessage( error );
   }
   
@@ -134,8 +134,7 @@ QString Groupwise::soapUrl( const KURL &url )
   if ( url.port() ) 
     u += QString::number( url.port() );
   else {
-    if ( useSsl ) u += "8201";
-    else u += "7181";
+    u += "7191";
   }
 
   // check for a soap path in the URL
