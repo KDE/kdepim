@@ -18,7 +18,7 @@ kleopatra         Marc Mutz <mutz@kde.org>
 kmail             Ingo Kloecker <kloecker@kde.org>
                   Don Sanders <sanders@kde.org>
 kmailcvt          Danny Kukawka <danny.kukawka@web.de>
-knode             Roberto Selbach Teixeira <maragato@kde.org>
+knode             Volker Krause <volker.krause@rwth-aachen.de>
 knotes            Michael Brade <brade@kde.org>
 kode              Cornelius Schumacher <schumacher@kde.org>
 konsolekalendar   Allen Winter <winter@kde.org>
@@ -33,12 +33,12 @@ libical           Cornelius Schumacher <schumacher@kde.org>
                   Reinhold Kainhofer <reinhold@kainhofer.com>
 libkcal           Cornelius Schumacher <schumacher@kde.org>
                   Reinhold Kainhofer <reinhold@kainhofer.com>
-libkdenetwork     Marc Mutz <mutz@kde.org>
+libkdepim         Marc Mutz <mutz@kde.org>
                   Mathias Waack <mathias@atoll-net.de> (Scoring)
-                  Ingo Klöcker <ingo.kloecker@epost.de> (kpgp)
+                  Ingo Klöcker <ingo.kloecker@epost.de>
                   Carsten Burghardt <burghardt@kde.org> (kfoldertree, ksubscription, kaccount)
                   Karl-Heinz Zimmer <khz@kde.org> (cryptplugwrapper*)
-libkdepim         Cornelius Schumacher <schumacher@kde.org>
+                  Cornelius Schumacher <schumacher@kde.org>
                   Tobias Koenig <tokoe@kde.org> (addresseeview, kvcarddrag)
                   Zack Rusin <zack@kde.org> (addressesdialog, komposer)
                   Don Sanders <sanders@kde.org> (maillistdrag)
