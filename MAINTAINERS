@@ -1,39 +1,57 @@
-akregator        Frank Osterfeld <frank.osterfeld@kdemail.net>
-kleopatra        Steffen Hansen <hansen@kde.org>
-kaddressbook     Tobias Koenig <tokoe@kde.org>
-                 Cornelius Schumacher <schumacher@kde.org>
-kalarm           David Jarvie <software@astrojar.org.uk>
-kalarmd          Cornelius Schumacher <schumacher@kde.org>
-karm             Thorsten Staerk <dev@staerk.de>
-kdgantt          Kalle Dalheimer <kalle@klaralvdalens-datakonsult.se>
-                 Lutz Rogowski <lutz@klaralvdalens-datakonsult.se>
-kfile-plugins    ?
-kioslaves        ? Marc Mutz <mutz@kde.org>
-kmail            Ingo Kloecker <kloecker@kde.org>
-                 Don Sanders <sanders@kde.org>
-kmailcvt         Danny Kukawka <danny.kukawka@web.de>
-knode            Roberto Selbach Teixeira <maragato@kde.org>
-knotes           Michael Brade <brade@kde.org>
-konsolekalendar  Tuukka Pasanen <illuusio@mailcity.com>
-                 Allen Winter <winter@kde.org>
-kontact          Daniel Molkentin <molkentin@kde.org>
-korganizer       Reinhold Kainhofer <reinhold@kainhofer.com>
-                 Cornelius Schumacher <schumacher@kde.org>
-korn             Mart Kelder <mart.mailing@hccnet.nl>
-ktnef            Michael Goffioul <goffioul@imec.be>
-libical          Cornelius Schumacher <schumacher@kde.org>
-                 Reinhold Kainhofer <reinhold@kainhofer.com>
-libkcal          Cornelius Schumacher <schumacher@kde.org>
-                 Reinhold Kainhofer <reinhold@kainhofer.com>
-libkdenetwork    Marc Mutz <mutz@kde.org>
-                 Mathias Waack <mathias@atoll-net.de> (Scoring)
-                 Ingo Klöcker <ingo.kloecker@epost.de> (kpgp)
-                 Carsten Burghardt <burghardt@kde.org> (kfoldertree, ksubscription, kaccount)
-                 Karl-Heinz Zimmer <khz@kde.org> (cryptplugwrapper*)
-libkdepim        Cornelius Schumacher <schumacher@kde.org>
-                 Tobias Koenig <tokoe@kde.org> (addresseeview, kvcarddrag)
-                 Zack Rusin <zack@kde.org> (addressesdialog, komposer)
-                 Don Sanders <sanders@kde.org> (maillistdrag)
-libkpimexchange  Jan-Pascal van Best <janpascal@vanbest.org>
-libksieve        ? Marc Mutz <mutz@kde.org>
-mimelib          ?
+akonadiserver     ?
+akregator         Frank Osterfeld <frank.osterfeld@kdemail.net>
+kleopatra         Marc Mutz <mutz@kde.org>
+                  Steffen Hansen <hansen@kde.org>
+gpgme             Marc Mutz <mutz@kde.org>
+indexlib          Luís Pedro Coelho <luis@luispedro.org>
+kabc              Tobias Koenig <tokoe@kde.org>
+kaddressbook      Tobias Koenig <tokoe@kde.org>
+                  Cornelius Schumacher <schumacher@kde.org>
+kalarm            David Jarvie <software@astrojar.org.uk>
+kalarmd           Cornelius Schumacher <schumacher@kde.org>
+karm              Thorsten Staerk <dev@staerk.de>
+kdgantt           Kalle Dalheimer <kalle@klaralvdalens-datakonsult.se>
+                  Lutz Rogowski <lutz@klaralvdalens-datakonsult.se>
+kfile-plugins     ?
+kioslave          ?
+kleopatra         Marc Mutz <mutz@kde.org>
+kmail             Ingo Kloecker <kloecker@kde.org>
+                  Don Sanders <sanders@kde.org>
+kmailcvt          Danny Kukawka <danny.kukawka@web.de>
+knode             Roberto Selbach Teixeira <maragato@kde.org>
+knotes            Michael Brade <brade@kde.org>
+kode              Cornelius Schumacher <schumacher@kde.org>
+konsolekalendar   Allen Winter <winter@kde.org>
+kontact           Daniel Molkentin <molkentin@kde.org>
+korganizer        Reinhold Kainhofer <reinhold@kainhofer.com>
+                  Cornelius Schumacher <schumacher@kde.org>
+korn              Mart Kelder <mart.mailing@hccnet.nl>
+kresources        ?
+ktnef             Michael Goffioul <goffioul@imec.be>
+libakonadi        ?
+libical           Cornelius Schumacher <schumacher@kde.org>
+                  Reinhold Kainhofer <reinhold@kainhofer.com>
+libkcal           Cornelius Schumacher <schumacher@kde.org>
+                  Reinhold Kainhofer <reinhold@kainhofer.com>
+libkdenetwork     Marc Mutz <mutz@kde.org>
+                  Mathias Waack <mathias@atoll-net.de> (Scoring)
+                  Ingo Klöcker <ingo.kloecker@epost.de> (kpgp)
+                  Carsten Burghardt <burghardt@kde.org> (kfoldertree, ksubscription, kaccount)
+                  Karl-Heinz Zimmer <khz@kde.org> (cryptplugwrapper*)
+libkdepim         Cornelius Schumacher <schumacher@kde.org>
+                  Tobias Koenig <tokoe@kde.org> (addresseeview, kvcarddrag)
+                  Zack Rusin <zack@kde.org> (addressesdialog, komposer)
+                  Don Sanders <sanders@kde.org> (maillistdrag)
+libkholidays      Allen Winter <winter@kde.org>
+libkholidays_ng   Allen Winter <winter@kde.org>
+libkleo           Marc Mutz <mutz@kde.org>
+libkmime          Marc Mutz <mutz@kde.org>
+libkpgp           Ingo Klöcker <ingo.kloecker@epost.de>
+libkpimidentities Marc Mutz <mutz@kde.org>
+libksieve         Marc Mutz <mutz@kde.org>
+libsyndication    Frank Osterfeld <frank.osterfeld@kdemail.net>
+mimelib           ?
+networkstatus     Will Stephenson <lists@stevello.free-online.co.uk>
+plugins           ?
+qpgpme            Marc Mutz <mutz@kde.org>
+wizards           ?
