@@ -34,6 +34,7 @@
 
 #include <stdint.h>
 #include <iostream>
+#include <config-indexlib.h>
 #include "boost-compat/static_assert.hpp"
 #ifdef HAVE_BOOST
 #include <boost/type_traits.hpp>

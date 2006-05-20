@@ -1,6 +1,8 @@
 #ifndef LPC_FORMAT_H1119018900_INCLUDE_GUARD_
 #define LPC_FORMAT_H1119018900_INCLUDE_GUARD_
 
+#include <config-indexlib.h>
+
 #if defined( HAVE_BOOST ) && defined( DEBUG )
 
 #include <boost/format.hpp>

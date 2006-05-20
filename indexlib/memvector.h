@@ -36,6 +36,8 @@
 #include "manager.h"
 #include "boost-compat/static_assert.hpp"
 #include "boost-compat/scoped_ptr.hpp"
+#include <config-indexlib.h>
+
 #ifdef HAVE_BOOST
 #include <boost/type_traits/is_convertible.hpp>
 #endif

@@ -16,10 +16,6 @@
 /* Define to 1 if you have the <bluetooth/bluetooth.h> header file. */
 #cmakedefine HAVE_BLUETOOTH_BLUETOOTH_H 1
 
-
-/* have boost */
-#define HAVE_BOOST 1
-
 /* Define if the sieve KIO::Slave must be able to talk to timsieved <= 1.1.0
    */
 /* #undef HAVE_BROKEN_TIMSIEVED */

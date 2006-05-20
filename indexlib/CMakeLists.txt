@@ -6,6 +6,8 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  ${KDE4_ENABLE_EXCEPTIONS}")
 # For now we'll do without a configure check.
 add_definitions(-DSTD_NAMESPACE_PREFIX="std::" -DHAVE_STLNAMESPACE)
 
+configure_file (config-indexlib.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-indexlib.h )
+
 ########### next target ###############
 
 set(index_LIB_SRCS 
