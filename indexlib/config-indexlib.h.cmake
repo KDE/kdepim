@@ -1,3 +1,3 @@
 /* have boost */
-#define HAVE_BOOST 1
+#cmakedefine HAVE_BOOST 1
 
