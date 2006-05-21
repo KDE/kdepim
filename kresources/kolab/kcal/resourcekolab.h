@@ -199,6 +199,7 @@ private:
     We can't trust on mUidMap here, because it contains only non-pending uids.
    */
   QMap<QString, QString> mNewIncidencesMap;
+  int mProgressDialogIncidenceLimit;
 };
 
 struct TemporarySilencer {
