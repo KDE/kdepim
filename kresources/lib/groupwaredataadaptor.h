@@ -105,7 +105,8 @@ Q_OBJECT
     }
 
     /**
-      Set progress message shown by progress manager during download.
+      Set progress message shown by progress manager during download. It will
+      be interpreted as rich text, so it might have to be escaped.
     */
     void setDownloadProgressMessage( const QString &v )
     {
@@ -120,7 +121,8 @@ Q_OBJECT
     }
 
     /**
-      Set progress message shown by progress manager during upload.
+      Set progress message shown by progress manager during upload. It will
+      be interpreted as rich text, so it might have to be escaped.
     */
     void setUploadProgressMessage( const QString &v )
     {

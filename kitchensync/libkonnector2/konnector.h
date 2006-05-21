@@ -134,6 +134,9 @@ class KDE_EXPORT Konnector : public KRES::Resource
       Returns a progress item with the given msg. The item is already
       connected to the progressItemCanceled() slot. You can reimplement
       this slot for special needs.
+      Note that @p msg will be interpreted as rich text, so it might have to be
+      escaped.
+      @param msg The label of the progress item.
      */
     KPIM::ProgressItem *progressItem( const QString &msg );
 

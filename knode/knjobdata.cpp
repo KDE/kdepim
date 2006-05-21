@@ -24,6 +24,8 @@
 #include "knnetaccess.h"
 #include "knnntpaccount.h"
 
+#include <qstylesheet.h>
+
 KNJobConsumer::KNJobConsumer()
 {
 }
@@ -120,7 +122,7 @@ void KNJobData::createProgressItem()
     msg = i18n( "Sending message" );
   else {
     if ( acc )
-      msg = acc->name();
+      msg = QStyleSheet::escape( acc->name() );
   }
   bool encr = false;
   if ( acc && acc->encryption() != KNServerInfo::None )
