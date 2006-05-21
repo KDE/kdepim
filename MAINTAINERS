@@ -1,8 +1,6 @@
 akonadiserver     ?
 akregator         Frank Osterfeld <frank.osterfeld@kdemail.net>
-kleopatra         Marc Mutz <mutz@kde.org>
-                  Steffen Hansen <hansen@kde.org>
-gpgme             Marc Mutz <mutz@kde.org>
+gpgmepp           Marc Mutz <mutz@kde.org>
 indexlib          Luís Pedro Coelho <luis@luispedro.org>
 kabc              Tobias Koenig <tokoe@kde.org>
 kaddressbook      Tobias Koenig <tokoe@kde.org>
@@ -14,7 +12,8 @@ kdgantt           Kalle Dalheimer <kalle@klaralvdalens-datakonsult.se>
 kfile-plugins     ?
 kioslave          ?
 kleopatra         Marc Mutz <mutz@kde.org>
-kmail             Ingo Kloecker <kloecker@kde.org>
+                  Steffen Hansen <hansen@kde.org>
+kmail             Ingo Klöcker <kloecker@kde.org>
                   Don Sanders <sanders@kde.org>
 kmailcvt          Danny Kukawka <danny.kukawka@web.de>
 knode             Volker Krause <volker.krause@rwth-aachen.de>
@@ -34,7 +33,7 @@ libkcal           Cornelius Schumacher <schumacher@kde.org>
                   Reinhold Kainhofer <reinhold@kainhofer.com>
 libkdepim         Marc Mutz <mutz@kde.org>
                   Mathias Waack <mathias@atoll-net.de> (Scoring)
-                  Ingo Klöcker <ingo.kloecker@epost.de>
+                  Ingo Klöcker <kloecker@kde.org>
                   Carsten Burghardt <burghardt@kde.org> (kfoldertree, ksubscription, kaccount)
                   Karl-Heinz Zimmer <khz@kde.org> (cryptplugwrapper*)
                   Cornelius Schumacher <schumacher@kde.org>
@@ -45,7 +44,7 @@ libkholidays      Allen Winter <winter@kde.org>
 libkholidays_ng   Allen Winter <winter@kde.org>
 libkleo           Marc Mutz <mutz@kde.org>
 libkmime          Marc Mutz <mutz@kde.org>
-libkpgp           Ingo Klöcker <ingo.kloecker@epost.de>
+libkpgp           Ingo Klöcker <kloecker@kde.org>
 libkpimidentities Marc Mutz <mutz@kde.org>
 libksieve         Marc Mutz <mutz@kde.org>
 libsyndication    Frank Osterfeld <frank.osterfeld@kdemail.net>
