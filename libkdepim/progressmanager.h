@@ -61,7 +61,8 @@ class KDE_EXPORT ProgressItem : public QObject
     const QString& label() const { return mLabel; }
 
     /**
-     * @param v Set the user visible string identifying this item.
+     * @param v Set the user visible string identifying this item. @p v will
+                be interpreted as rich text, so it might have to be escaped.
      */
     void setLabel( const QString& v );
 
@@ -71,6 +72,7 @@ class KDE_EXPORT ProgressItem : public QObject
     const QString& status() const { return mStatus; }
     /**
      * Set the string to be used for showing this item's current status.
+     * @p v will be interpreted as rich text, so it might have to be escaped.
      * @param v The status string.
      */
     void setStatus( const QString& v );
@@ -263,6 +265,9 @@ class KDE_EXPORT ProgressManager : public QObject
       * Creates a ProgressItem with a unique id and the given label.
       * This is the simplest way to aquire a progress item. It will not
       * have a parent and will be set to be cancellable and not using crypto.
+      *
+      * @param label The text to be displayed by progress handlers. It will be
+      *              interpreted as rich text, so it might have to be escaped.
       */
      static ProgressItem * createProgressItem( const QString &label ) {
        return instance()->createProgressItemImpl( 0, getUniqueID(), label,
@@ -275,8 +280,10 @@ class KDE_EXPORT ProgressManager : public QObject
      *
      * @param parent Specify an already existing item as the parent of this one.
      * @param id Used to identify this operation for cancel and progress info.
-     * @param label The text to be displayed by progress handlers
-     * @param status Additional text to be displayed for the item.
+     * @param label The text to be displayed by progress handlers. It will be
+     *              interpreted as rich text, so it might have to be escaped.
+     * @param status Additional text to be displayed for the item. It will be
+     *               interpreted as rich text, so it might have to be escaped.
      * @param canBeCanceled can the user cancel this operation?
      * @param usesCrypto does the operation use secure transports (SSL)
      * Cancelling the parent will cancel the children as well (if they can be

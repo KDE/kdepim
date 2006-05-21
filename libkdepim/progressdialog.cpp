@@ -157,6 +157,9 @@ TransactionItem::TransactionItem( QWidget* parent,
   h->setSpacing( 5 );
 
   mItemLabel = new QLabel( item->label(), h );
+  // always interpret the label text as RichText, but disable word wrapping
+  mItemLabel->setTextFormat( Qt::RichText );
+  mItemLabel->setAlignment( Qt::AlignAuto | Qt::AlignVCenter | Qt::SingleLine );
   h->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
 
   mProgress = new QProgressBar( 100, h );
@@ -174,7 +177,10 @@ TransactionItem::TransactionItem( QWidget* parent,
   h->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
   mSSLLabel = new SSLLabel( h );
   mSSLLabel->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
-  mItemStatus =  new QLabel( item->status(), h );
+  mItemStatus = new QLabel( item->status(), h );
+  // always interpret the status text as RichText, but disable word wrapping
+  mItemStatus->setTextFormat( Qt::RichText );
+  mItemStatus->setAlignment( Qt::AlignAuto | Qt::AlignVCenter | Qt::SingleLine );
   setCrypto( item->usesCrypto() );
   if( first ) hideHLine();
 }
