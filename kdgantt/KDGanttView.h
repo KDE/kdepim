@@ -78,8 +78,7 @@ class KDGanttView : public KDGanttMinimizeSplitter
     Q_PROPERTY( Scale scale READ scale WRITE setScale )
     Q_PROPERTY( YearFormat yearFormat READ yearFormat WRITE setYearFormat )
     Q_PROPERTY( HourFormat hourFormat READ hourFormat WRITE setHourFormat )
-    Q_PROPERTY( bool showMinorTicks READ showMinorTicks WRITE setShowMinorTicks )
-    Q_PROPERTY( bool showMajorTicks READ showMajorTicks WRITE setShowMajorTicks )
+    Q_PROPERTY( ShowTicksType showTicks READ showTicks WRITE setShowTicks )
     Q_PROPERTY( bool editable READ editable WRITE setEditable )
     Q_PROPERTY( QColor textColor READ textColor WRITE setTextColor )
     Q_PROPERTY( int majorScaleCount READ majorScaleCount WRITE setMajorScaleCount )
@@ -109,12 +108,14 @@ class KDGanttView : public KDGanttMinimizeSplitter
     Q_ENUMS( Scale )
     Q_ENUMS( YearFormat )
     Q_ENUMS( HourFormat )
+    Q_ENUMS(ShowTicksType)
 
 public:
     enum Scale { Second = 0, Minute, Hour, Day, Week, Month, Auto };
     enum YearFormat { FourDigit, TwoDigit, TwoDigitApostrophe, NoDate };
     enum HourFormat { Hour_24, Hour_12, Hour_24_FourDigit };
     enum RepaintMode { No, Medium, Always };
+    enum ShowTicksType {  ShowMajorTicks = 0, ShowMinorTicks, ShowNoTicks };
 
     KDGanttView( QWidget* parent = 0, const char* name = 0 );
     ~KDGanttView();
@@ -252,10 +253,8 @@ public:
     YearFormat yearFormat() const;
     void setHourFormat( HourFormat format );
     HourFormat hourFormat() const;
-    void setShowMajorTicks( bool );
-    bool showMajorTicks() const;
-    void setShowMinorTicks( bool );
-    bool showMinorTicks() const;
+    void setShowTicks( ShowTicksType );
+    ShowTicksType showTicks() const;
     void setColumnBackgroundColor( const QDateTime& column,
                                    const QColor& color,
                                    Scale mini =  KDGanttView::Second ,

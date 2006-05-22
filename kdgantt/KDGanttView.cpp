@@ -90,8 +90,8 @@
 
 KDGanttView::KDGanttView( QWidget* parent, const char* name  )
     : KDGanttMinimizeSplitter( Qt::Vertical, parent ),
-      myTimeHeaderScroll(0),
-      myCanvasView(0)
+      myCanvasView(0),
+      myTimeHeaderScroll(0)
 {
   setObjectName( name );
 
@@ -2279,59 +2279,27 @@ KDGanttView::HourFormat KDGanttView::hourFormat() const
 /*!
   Hides/shows the grid for the major ticks of the time header in the gantt view.
 
-  \param show true in order to show ticks, false in order to hide them.
-         If show is true, setShowMinorTicks( false ) is performed automatically
-         to hide the grid of the minor ticks.
-         In order to show now grid, call setShowMinorTicks( false ) and
-         setShowMajorTicks( false ).
-  \sa showMajorTicks(), setShowMinorTicks(), showMinorTicks()
+  \param show Which grid to show. Possible values are ShowMajorTicks,
+              ShowMinorTicks and ShowNoTicks.
+  \sa showTicks()
 */
-void KDGanttView::setShowMajorTicks( bool show )
+void KDGanttView::setShowTicks( ShowTicksType show )
 {
-    myTimeHeader->setShowMajorTicks(show );
+    myTimeHeader->setShowTicks(show );
 }
 
 
 /*!
-  Returns whether the grid is shown on the major scale.
+  Returns which type of grid is shown.
 
-  \return true if ticks are shown on the major scale
-  \sa setShowMajorTicks(), setShowMinorTicks(), showMinorTicks()
+  \return type of grid: ShowMajorTicks, ShowMinorTicks or ShowNoTicks
+  \sa setShowTicks()
 */
-bool KDGanttView::showMajorTicks() const
+KDGanttView::ShowTicksType KDGanttView::showTicks() const
 {
-    return myTimeHeader->showMajorTicks();
+    return myTimeHeader->showTicks();
 }
 
-
-/*!
-  Hides/shows the grid for the minor ticks of the time header in the gantt view.
-
-  \param show true in order to show ticks, false in order to hide them.
-         If show is true, setShowMajorTicks( false ) is performed automatically
-         to hide the grid of the major ticks.
-         In order to show now grid, call setShowMinorTicks( false ) and
-         setShowMajorTicks( false ).
-
-  \sa showMinorTicks(), setShowMajorTicks(), showMajorTicks()
-
-*/
-void KDGanttView::setShowMinorTicks( bool show)
-{
-    myTimeHeader->setShowMinorTicks( show );
-}
-
-
-/*!
-  Returns whether ticks are shown on the minor scale.
-
-  \return true if ticks are shown on the minor scale
-  \sa setShowMinorTicks(), setShowMajorTicks(), showMajorTicks()
-*/
-bool KDGanttView::showMinorTicks() const
-{
-    return myTimeHeader->showMinorTicks();
-}
 
 
 /*!
@@ -3059,12 +3027,18 @@ bool KDGanttView::loadXML( const QDomDocument& doc )
                     setHourFormat( stringToHourFormat( value ) );
             } else if( tagName == "ShowMinorTicks" ) {
                 bool value;
-                if( KDGanttXML::readBoolNode( element, value ) )
-                    setShowMinorTicks( value );
+                if( KDGanttXML::readBoolNode( element, value ) ) {
+                  if ( value ) setShowTicks( ShowMinorTicks );
+                }
             } else if( tagName == "ShowMajorTicks" ) {
                 bool value;
-                if( KDGanttXML::readBoolNode( element, value ) )
-                    setShowMajorTicks( value );
+                if( KDGanttXML::readBoolNode( element, value ) ) {
+                  if ( value ) setShowTicks( ShowMajorTicks );
+                }
+            } else if( tagName == "ShowTicks" ) {
+                int value;
+                if( KDGanttXML::readIntNode( element, value ) )
+                    setShowTicks( (ShowTicksType)value );
             } else if( tagName == "DragEnabled" ) {
                 bool value;
                 if( KDGanttXML::readBoolNode( element, value ) )
@@ -3973,11 +3947,8 @@ QDomDocument KDGanttView::saveXML( bool withPI ) const
     KDGanttXML::createStringNode( doc, docRoot, "HourFormat",
                                   hourFormatToString( hourFormat() ) );
 
-    // the ShowMinorTicks element
-    KDGanttXML::createBoolNode( doc, docRoot, "ShowMinorTicks", showMinorTicks() );
-
-    // the ShowMajorTicks element
-    KDGanttXML::createBoolNode( doc, docRoot, "ShowMajorTicks", showMajorTicks() );
+    // the ShowTicks element
+    KDGanttXML::createIntNode( doc, docRoot, "ShowTicks", showTicks() );
 
     // the Editable element
     KDGanttXML::createBoolNode( doc, docRoot, "Editable", editable() );
@@ -5917,7 +5888,7 @@ QDate KDGanttView::lastYear() const
 */
 void KDGanttView::gotoToday()
 {
-    myTimeHeader->setTimeline( 0 );
+    myTimeHeader->centerToday();
 }
 /*!
   This slot is provided for convenience.
@@ -5925,7 +5896,7 @@ void KDGanttView::gotoToday()
 */
 void KDGanttView::gotoYesterday()
 {
-    myTimeHeader->setTimeline( 1 );
+    myTimeHeader->centerYesterday();
 }
 /*!
   This slot is provided for convenience.
@@ -5933,7 +5904,7 @@ void KDGanttView::gotoYesterday()
 */
 void KDGanttView::gotoCurrentWeek()
 {
-    myTimeHeader->setTimeline( 2 );
+    myTimeHeader->centerCurrentWeek();
 }
 /*!
   This slot is provided for convenience.
@@ -5941,7 +5912,7 @@ void KDGanttView::gotoCurrentWeek()
 */
 void KDGanttView::gotoLastWeek()
 {
-    myTimeHeader->setTimeline( 3 );
+    myTimeHeader->centerLastWeek();
 }
 /*!
   This slot is provided for convenience.
@@ -5949,7 +5920,7 @@ void KDGanttView::gotoLastWeek()
 */
 void KDGanttView::gotoCurrentMonth()
 {
-    myTimeHeader->setTimeline( 4 );
+    myTimeHeader->centerCurrentMonth();
 }
 /*!
   This slot is provided for convenience.
@@ -5957,7 +5928,7 @@ void KDGanttView::gotoCurrentMonth()
 */
 void KDGanttView::gotoLastMonth()
 {
-    myTimeHeader->setTimeline( 5 );
+    myTimeHeader->centerLastMonth();
 }
 /*!
   This slot is provided for convenience.
@@ -5965,7 +5936,7 @@ void KDGanttView::gotoLastMonth()
 */
 void KDGanttView::gotoCurrentYear()
 {
-    myTimeHeader->setTimeline( 6 );
+    myTimeHeader->centerCurrentYear();
 }
 /*!
   This slot is provided for convenience.
@@ -5973,7 +5944,7 @@ void KDGanttView::gotoCurrentYear()
 */
 void KDGanttView::gotoLastYear()
 {
-    myTimeHeader->setTimeline( 7 );
+    myTimeHeader->centerLastYear();
 }
 /*!
   This slot is provided for convenience.
@@ -5986,7 +5957,7 @@ void KDGanttView::gotoLastYear()
 */
 void KDGanttView::selectToday()
 {
-    myTimeHeader->setTimeline( 100 );
+    myTimeHeader->showToday();
 }
 /*!
   This slot is provided for convenience.
@@ -5999,7 +5970,7 @@ void KDGanttView::selectToday()
 */
 void KDGanttView::selectYesterday()
 {
-    myTimeHeader->setTimeline( 101 );
+    myTimeHeader->showYesterday();
 }
 /*!
   This slot is provided for convenience.
@@ -6012,7 +5983,7 @@ void KDGanttView::selectYesterday()
 */
 void KDGanttView::selectCurrentWeek()
 {
-    myTimeHeader->setTimeline( 102 );
+    myTimeHeader->showCurrentWeek();
 }
 /*!
   This slot is provided for convenience.
@@ -6025,7 +5996,7 @@ void KDGanttView::selectCurrentWeek()
 */
 void KDGanttView::selectLastWeek()
 {
-    myTimeHeader->setTimeline( 103);
+    myTimeHeader->showLastWeek();
 }
 /*!
   This slot is provided for convenience.
@@ -6038,7 +6009,7 @@ void KDGanttView::selectLastWeek()
 */
 void KDGanttView::selectCurrentMonth()
 {
-    myTimeHeader->setTimeline( 104 );
+    myTimeHeader->showCurrentMonth();
 }
 /*!
   This slot is provided for convenience.
@@ -6051,7 +6022,7 @@ void KDGanttView::selectCurrentMonth()
 */
 void KDGanttView::selectLastMonth()
 {
-    myTimeHeader->setTimeline( 105 );
+    myTimeHeader->showLastMonth();
 }
 /*!
   This slot is provided for convenience.
@@ -6064,7 +6035,7 @@ void KDGanttView::selectLastMonth()
 */
 void KDGanttView::selectCurrentYear()
 {
-    myTimeHeader->setTimeline( 106 );
+    myTimeHeader->showCurrentYear();
 }
 /*!
   This slot is provided for convenience.
@@ -6077,7 +6048,7 @@ void KDGanttView::selectCurrentYear()
 */
 void KDGanttView::selectLastYear()
 {
-    myTimeHeader->setTimeline( 107 );
+    myTimeHeader->showLastYear();
 }
 
 /*!

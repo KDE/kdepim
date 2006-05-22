@@ -50,6 +50,9 @@
 #include <QPalette>
 #include <QMouseEvent>
 
+#include <kselectaction.h>
+#include <kactioncollection.h>
+
 KDTimeTableWidget:: KDTimeTableWidget( QWidget* parent,KDGanttView* myGantt):QCanvas (parent)
 {
     mMinimumHeight = 0;
@@ -188,7 +191,7 @@ void KDTimeTableWidget::computeVerticalGrid()
     bool colorIterator = true;
 
 
-    if (myGanttView->showMinorTicks()){//minor
+    if ( myGanttView->showTicks() == KDGanttView::ShowMinorTicks ){//minor
         colPen.setWidth(cw);
         QPtrListIterator<KDCanvasRectangle> itcol(columnColorList);
         QPtrListIterator<KDCanvasLine> itgrid(verGridList);
@@ -285,7 +288,8 @@ void KDTimeTableWidget::computeVerticalGrid()
             for ( ; itcol.current(); ++itcol )
                 itcol.current()->hide();
     } else {//major
-        if (myGanttView->showMajorTicks()) {
+        if ( myGanttView->showTicks() == KDGanttView::ShowMinorTicks ||
+             myGanttView->showTicks() == KDGanttView::ShowMajorTicks ) {
             QValueList<int>::iterator intIt = myGanttView->myTimeHeader->majorTicks.begin();
             QValueList<int>::iterator intItEnd = myGanttView->myTimeHeader->majorTicks.end();
             QPtrListIterator<KDCanvasRectangle> itcol(columnColorList);
@@ -763,96 +767,84 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant ):QWi
     setMajorScaleCount( 1 );
     setMinorScaleCount( 1);
     setMinimumColumnWidth( 5 );
-    setYearFormat(KDGanttView::FourDigit );
+    setYearFormat( KDGanttView::FourDigit );
     setHourFormat( KDGanttView::Hour_12 );
     myZoomFactor = 1.0;
     setWeekendBackgroundColor(QColor(220,220,220) );
     setWeekendDays( 6, 7 );
     myGridMinorWidth = 0;
-    myPopupMenu = new QPopupMenu(this);
 
-    int ii = 0;
-    int jjj = 0;
-    QPopupMenu * gotoPopupMenu = new QPopupMenu(this);
-    myPopupMenu->insertItem (tr("Go to start of"),gotoPopupMenu, ++ii);
-    gotoPopupMenu->insertItem( tr("Today"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Yesterday"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Current Week"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Last Week"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Current Month"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Last Month"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Current Year"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Last Year"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
+    actionCollection = new KActionCollection( this );
+    myPopupMenu = new QMenu(this);
 
-    gotoPopupMenu = new QPopupMenu(this);
-    myPopupMenu->insertItem (tr("Show timespan of"),gotoPopupMenu, ++ii);
-    jjj = 100;
-    gotoPopupMenu->insertItem( tr("Today"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Yesterday"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Current Week"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Last Week"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Current Month"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Last Month"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Current Year"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
-    gotoPopupMenu->insertItem( tr("Last Year"),this, SLOT(setTimeline(int)),0 , jjj, jjj );
-    ++jjj;
+    QMenu *gotoAction = myPopupMenu->addMenu( tr("Go to start of") );
+    gotoAction->addAction( tr("Today"), this, SLOT(centerToday()) );
+    gotoAction->addAction( tr("Yesterday"), this, SLOT(centerYesterday()) );
+    gotoAction->addAction( tr("Current Week"), this, SLOT(centerCurrentWeek()) );
+    gotoAction->addAction( tr("Last Week"), this, SLOT(centerLastWeek()) );
+    gotoAction->addAction( tr("Current Month"), this, SLOT(centerCurrentMonth()) );
+    gotoAction->addAction( tr("Last Month"), this, SLOT(centerLastMonth()) );
+    gotoAction->addAction( tr("Current Year"), this, SLOT(centerCurrentYear()) );
+    gotoAction->addAction( tr("Last Year"), this, SLOT(centerLastYear()) );
+    mGotoAction = gotoAction->menuAction();
 
-    QPopupMenu * zoomPopupMenu = new QPopupMenu(this);
-    myPopupMenu->insertItem (tr("Zoom"),zoomPopupMenu, ++ii);
-    zoomPopupMenu->insertItem( tr("Zoom to 100%"),this, SLOT(setSettings(int)),0 ,21,21 );
-    zoomPopupMenu->insertItem( tr("Zoom to fit"),this, SLOT(setSettings(int)),0 ,20,20 );
-    zoomPopupMenu->insertItem( tr("Zoom in (x 2)"),this, SLOT(setSettings(int)),0 ,22,22 );
-    zoomPopupMenu->insertItem( tr("Zoom in (x 6)"),this, SLOT(setSettings(int)),0 ,24,24 );
-    zoomPopupMenu->insertItem( tr("Zoom in (x 12)"),this, SLOT(setSettings(int)),0 ,26,26 );
-    zoomPopupMenu->insertItem( tr("Zoom out (x 1/2)"),this, SLOT(setSettings(int)),0 ,23,23 );
-    zoomPopupMenu->insertItem( tr("Zoom out (x 1/6)"),this, SLOT(setSettings(int)),0 ,25,25 );
-    zoomPopupMenu->insertItem( tr("Zoom out (x 1/12)"),this, SLOT(setSettings(int)),0 ,27,27 );
-    scalePopupMenu = new QPopupMenu(this);
-    myPopupMenu->insertItem (tr("Scale"),scalePopupMenu, ++ii);
-    scalePopupMenu->insertItem( tr("Second"),this, SLOT(setSettings(int)),0 ,0,0 );
-    scalePopupMenu->insertItem( tr("Minute"),this, SLOT(setSettings(int)),0 ,1,1 );
-    scalePopupMenu->insertItem( tr("Hour"),this, SLOT(setSettings(int)),0 ,2,2 );
-    scalePopupMenu->insertItem( tr("Day"),this, SLOT(setSettings(int)),0 ,3,3 );
-    scalePopupMenu->insertItem( tr("Week"),this, SLOT(setSettings(int)),0 ,4,4 );
-    scalePopupMenu->insertItem( tr("Month"),this, SLOT(setSettings(int)),0 ,5,5 );
-    scalePopupMenu->insertItem( tr("Auto"),this, SLOT(setSettings(int)),0 ,6,6 );
-    scalePopupMenu->setCheckable ( true );
-    timePopupMenu = new QPopupMenu(this);
-    myPopupMenu->insertItem (tr("Time Format"),timePopupMenu, ++ii);
-    timePopupMenu->insertItem( tr("24 Hour"),this, SLOT(setSettings(int)),0 ,40,40 );
-    timePopupMenu->insertItem( tr("12 PM Hour"),this, SLOT(setSettings(int)),0 ,41,41 );
-    timePopupMenu->insertItem( tr("24:00 Hour"),this, SLOT(setSettings(int)),0 ,42,42 );
-    yearPopupMenu = new QPopupMenu(this);
-    myPopupMenu->insertItem (tr("Year Format"),yearPopupMenu, ++ii);
-    yearPopupMenu->insertItem( tr("Four Digit"),this, SLOT(setSettings(int)),0 ,50,50 );
-    yearPopupMenu->insertItem( tr("Two Digit"),this, SLOT(setSettings(int)),0 ,51,51 );
-    yearPopupMenu->insertItem( tr("Two Digit Apostrophe"),this, SLOT(setSettings(int)),0 ,52,52 );
-    yearPopupMenu->insertItem( tr("No Date on Minute/Hour Scale"),this, SLOT(setSettings(int)),0 ,53,53 );
+    QMenu *timespanMenu = myPopupMenu->addMenu( tr("Show timespan of") );
+    timespanMenu->addAction( tr("Today"), this, SLOT(showToday()) );
+    timespanMenu->addAction( tr("Yesterday"), this, SLOT(showYesterday()) );
+    timespanMenu->addAction( tr("Current Week"), this, SLOT(showCurrentWeek()) );
+    timespanMenu->addAction( tr("Last Week"), this, SLOT(showLastWeek()) );
+    timespanMenu->addAction( tr("Current Month"), this, SLOT(showCurrentMonth()) );
+    timespanMenu->addAction( tr("Last Month"), this, SLOT(showLastMonth()) );
+    timespanMenu->addAction( tr("Current Year"), this, SLOT(showCurrentYear()) );
+    timespanMenu->addAction( tr("Last Year"), this, SLOT(showLastYear()) );
+    mTimespanAction = timespanMenu->menuAction();
 
-    gridPopupMenu = new QPopupMenu(this);
-    myPopupMenu->insertItem (tr("Grid"),gridPopupMenu, ++ii);
-    gridPopupMenu->insertItem( tr("Show minor grid"),this, SLOT(setSettings(int)),0 ,10,10 );
-    gridPopupMenu->insertItem( tr("Show major grid"),this, SLOT(setSettings(int)),0 ,11,11 );
-    gridPopupMenu->insertItem( tr("Show no grid"),this, SLOT(setSettings(int)),0 ,12,12 );
-    myPopupMenu->insertItem( tr("Print"),this, SLOT(setSettings(int)),0 ,30,30 );
+    QMenu *zoomMenu = myPopupMenu->addMenu( tr("&Zoom") );
+    zoomMenu->addAction( tr("Zoom to 100%"),this, SLOT(zoom1()) );
+    zoomMenu->addAction( tr("Zoom to fit"),this, SLOT(zoomToFit()) );
+    zoomMenu->addAction( tr("Zoom in (x 2)"),this, SLOT(zoom2()) );
+    zoomMenu->addAction( tr("Zoom in (x 6)"),this, SLOT(zoom6()) );
+    zoomMenu->addAction( tr("Zoom in (x 12)"),this, SLOT(zoom12()) );
+    zoomMenu->addAction( tr("Zoom out (x 1/2)"),this, SLOT(zoomOut2()) );
+    zoomMenu->addAction( tr("Zoom out (x 1/6)"),this, SLOT(zoomOut6()) );
+    zoomMenu->addAction( tr("Zoom out (x 1/12)"),this, SLOT(zoomOut12()) );
+    mZoomAction = zoomMenu->menuAction();
+
+    mScaleAction = new KSelectAction( tr("Scale"), actionCollection, "Scale Action" );
+    QStringList scaleItems;
+    scaleItems << tr("Second") << tr("Minute") << tr("Hour") << tr("Day")
+               << tr("Week") << tr("Month") << tr("Auto");
+    mScaleAction->setItems( scaleItems );
+    connect( mScaleAction, SIGNAL( triggered(int) ), this, SLOT( setScale(int) ) );
+    myPopupMenu->addAction( mScaleAction );
+
+    mTimeFormatAction = new KSelectAction( tr("Time Format"), actionCollection, "Time Format" );
+    QStringList timeFormatItems;
+    timeFormatItems << tr("24 Hour") << tr("12 PM Hour") << tr("24:00 Hour");
+    mTimeFormatAction->setItems( timeFormatItems );
+    connect( mTimeFormatAction, SIGNAL( triggered(int) ), this, SLOT( setHourFormat(int) ) );
+    myPopupMenu->addAction( mTimeFormatAction );
+
+
+    mYearFormatAction = new KSelectAction( tr("Year Format"), actionCollection, "Year Format" );
+    QStringList yearFormatItems;
+    yearFormatItems << tr("Four Digit") << tr("Two Digit")
+                    << tr("Two Digit Apostrophe") << tr("No Date on Minute/Hour Scale");
+    mYearFormatAction->setItems( yearFormatItems );
+    connect( mYearFormatAction, SIGNAL( triggered(int) ), this, SLOT( setYearFormat(int) ) );
+    myPopupMenu->addAction( mYearFormatAction );
+
+
+    mGridAction = new KSelectAction( tr("Grid"), actionCollection, "Grid" );
+    QStringList gridItems;
+    gridItems << tr("Show minor grid") << tr("Show major grid") << tr("Show no grid");
+    mGridAction->setItems( gridItems );
+    connect( mGridAction, SIGNAL( triggered(int) ), this, SLOT( gridSettings(int) ) );
+
+    mPrintAction = myPopupMenu->addAction( tr("Print"), myGanttView, SLOT(print()) );
     connect(myPopupMenu, SIGNAL (  aboutToShow () ) , this, SLOT( preparePopupMenu() )) ;
     flagZoomToFit = false;
-    setShowMinorTicks( true );
+    setShowTicks( KDGanttView::ShowMinorTicks );
     myRealEnd =  myHorizonEnd;
     myRealStart = myHorizonStart;
     autoComputeTimeLine = true;
@@ -871,43 +863,26 @@ KDTimeHeaderWidget::~KDTimeHeaderWidget()
 {
     delete myToolTip;
 }
+// FIXME_RK
 void  KDTimeHeaderWidget::preparePopupMenu()
 {
-    int ii = 2;
-    myPopupMenu->setItemVisible ( ++ii, flagShowZoom  );
-    int ci = ii;
-    myPopupMenu->setItemVisible ( ++ii, flagShowScale );
-    myPopupMenu->setItemVisible ( ++ii, flagShowTime );
-    myPopupMenu->setItemVisible ( ++ii, flagShowYear );
-    myPopupMenu->setItemVisible ( ++ii, flagShowGrid);
-    myPopupMenu->setItemVisible ( 30, flagShowPrint );
-    myPopupMenu->changeItem( ci, tr ("Zoom  ") + "(" +QString::number( zoomFactor(), 'f',3) +")" );
-    int i = 0;
-    int id;
-    while ( ( id = scalePopupMenu->idAt( i++ )) >= 0 ) {
-        scalePopupMenu->setItemChecked ( id, false );
-    }
-    scalePopupMenu->setItemChecked ( scalePopupMenu->idAt ( (int)( scale()) ), true );
-    i = 0;
-    while ( ( id = timePopupMenu->idAt( i++ )) >= 0 ) {
-        timePopupMenu->setItemChecked ( id, false );
-    }
-    timePopupMenu->setItemChecked ( timePopupMenu->idAt ( (int)( hourFormat()) ), true );
-    i = 0;
-    while ( ( id = yearPopupMenu->idAt( i++ )) >= 0 ) {
-        yearPopupMenu->setItemChecked ( id, false );
-    }
-    yearPopupMenu->setItemChecked ( yearPopupMenu->idAt ( (int)( yearFormat()) ), true );
-    i = 0;
-    while ( ( id = gridPopupMenu->idAt( i++ )) >= 0 ) {
-        gridPopupMenu->setItemChecked ( id, false );
-    }
+  mZoomAction->setVisible( flagShowZoom );
 
-    gridPopupMenu->setItemChecked ( gridPopupMenu->idAt ( 0 ), showMinorTicks() );
-    gridPopupMenu->setItemChecked ( gridPopupMenu->idAt ( 1 ), showMajorTicks() );
-    gridPopupMenu->setItemChecked ( gridPopupMenu->idAt ( 2 ),
-                                    !(showMajorTicks() || showMinorTicks()) );
-
+  mZoomAction->setText( tr("Zoom  ") + "(" +QString::number( zoomFactor(), 'f',3) +")" );
+  
+  mScaleAction->setVisible( flagShowScale );
+  mScaleAction->setCurrentItem( (int)( scale() ) );
+  
+  mTimeFormatAction->setVisible( flagShowTime );
+  mTimeFormatAction->setCurrentItem( (int)( hourFormat() ) );
+  
+  mYearFormatAction->setVisible( flagShowYear );
+  mYearFormatAction->setCurrentItem( (int)( yearFormat() ) );
+  
+  mPrintAction->setVisible( flagShowPrint );
+  
+  mGridAction->setVisible( flagShowGrid );
+  mGridAction->setCurrentItem( (KDGanttView::ShowTicksType)showTicks() );
 
 }
 
@@ -1045,24 +1020,22 @@ QDateTime KDTimeHeaderWidget::addMajorTickTime( const QDateTime& dt, int fac )
     fac *= myMajorScaleCount;
     switch (myRealScale)
         {
+        case KDGanttView::Minute:
+            fac *= 60;
+            // fall through
         case KDGanttView::Second:
             return dt.addSecs( fac * 60 );
             break;
-        case KDGanttView::Minute:
-            return dt.addSecs( fac * 3600 );
-            break;
+        case KDGanttView::Day:
+            fac *= 7;
+            // fall through
         case KDGanttView::Hour:
             return dt.addDays( fac );
             break;
-        case KDGanttView::Day:
-            return dt.addDays( fac * 7 );
-            break;
         case KDGanttView::Week:
-            //qDebug("return %s ",dt.addMonths( fac ).toString().toLatin1() );
             return dt.addMonths( fac );
             break;
         case KDGanttView::Month:
-            //qDebug("return %s ",dt.addYears( fac ).toString().toLatin1() );
             return dt.addYears( fac );
             break;
         case KDGanttView::Auto:
@@ -1205,8 +1178,7 @@ void KDTimeHeaderWidget::setShowPopupMenu( bool show,
                                            bool showYear,
                                            bool showGrid,
                                            bool showPrint)
-{
-    flagShowPopupMenu = show;
+{    flagShowPopupMenu = show;
     flagShowZoom = showZoom;
     flagShowScale  = showScale;
     flagShowTime  = showTime;
@@ -1220,166 +1192,47 @@ bool KDTimeHeaderWidget::showPopupMenu() const
 {
     return flagShowPopupMenu;
 }
-void KDTimeHeaderWidget::setTimeline( int i )
+void KDTimeHeaderWidget::center(const QDate &dt)
 {
-    bool allowChange = myGanttView->userHorizonChangeEnabled();
-    switch (i) {
+  bool allowChange = myGanttView->userHorizonChangeEnabled();
+  centerDateTime( QDateTime( dt ), allowChange );
+}
+
+void KDTimeHeaderWidget::zoomTo( Scale unit, const QDate &start, const QDate &end )
+{
+  bool allowChange = myGanttView->userHorizonChangeEnabled();
+  setScale( unit, allowChange );
+  zoomToSelectionAndSetStartEnd( QDateTime( start ), QDateTime( end ) );
+}
+
+void KDTimeHeaderWidget::gridSettings( int i )
+{
+  switch (i) {
     case 0:
-        centerDateTime ( QDateTime( today() ), allowChange );
+        setShowTicks( KDGanttView::ShowMajorTicks );
         break;
     case 1:
-        centerDateTime ( QDateTime( yesterday() ), allowChange );
+        setShowTicks( KDGanttView::ShowMinorTicks );
         break;
     case 2:
-        centerDateTime ( QDateTime( currentWeek() ), allowChange );
+        setShowTicks( KDGanttView::ShowNoTicks );
         break;
-    case 3:
-        centerDateTime ( QDateTime( lastWeek() ), allowChange );
-        break;
-    case 4:
-        centerDateTime ( QDateTime( currentMonth() ), allowChange );
-        break;
-    case 5:
-        centerDateTime ( QDateTime( lastMonth() ), allowChange );
-        break;
-    case 6:
-        centerDateTime ( QDateTime( currentYear() ), allowChange );
-        break;
-    case 7:
-        centerDateTime ( QDateTime( lastYear() ), allowChange );
-        break;
-    case 100:
-        setScale( KDGanttView::Hour, false  );
-        zoomToSelectionAndSetStartEnd( QDateTime( today() ), QDateTime( tomorrow() ) );
-        break;
-    case 101:
-        setScale( KDGanttView::Hour, false  );
-        zoomToSelectionAndSetStartEnd( QDateTime( yesterday() ), QDateTime( today() ) );
-        break;
-    case 102:
-        setScale( KDGanttView::Day, false );
-        zoomToSelectionAndSetStartEnd( QDateTime( currentWeek() ), QDateTime( currentWeek().addDays( 7 ) ) );
-        break;
-    case 103:
-        setScale( KDGanttView::Day, false );
-        zoomToSelectionAndSetStartEnd( QDateTime( lastWeek() ), QDateTime( currentWeek() ));
-        break;
-    case 104:
-        setScale( KDGanttView::Day, false );
-        zoomToSelectionAndSetStartEnd( QDateTime( currentMonth() ), QDateTime( currentMonth().addMonths( 1) ) );
-        break;
-    case 105:
-        setScale( KDGanttView::Day, false );
-        zoomToSelectionAndSetStartEnd( QDateTime( lastMonth() ), QDateTime( currentMonth()  ));
-        break;
-    case 106:
-        setScale( KDGanttView::Month, false );
-        zoomToSelectionAndSetStartEnd( QDateTime( currentYear() ), QDateTime( currentYear().addYears( 1) ) );
-        break;
-    case 107:
-        setScale( KDGanttView::Month, false );
-        zoomToSelectionAndSetStartEnd( QDateTime( lastYear() ), QDateTime( currentYear() ) );
-        break;
-    }
+  }
+
 }
-void KDTimeHeaderWidget::setSettings(int i)
+void KDTimeHeaderWidget::setScale( int i )
 {
-
-    switch (i) {
-    case 0:
-        setScale(KDGanttView::Second );
-        break;
-    case 1:
-        setScale(KDGanttView::Minute );
-        break;
-    case 2:
-        setScale(KDGanttView::Hour );
-        break;
-    case 3:
-        setScale(KDGanttView::Day );
-        break;
-    case 4:
-        setScale(KDGanttView::Week );
-        break;
-    case 5:
-        setScale(KDGanttView::Month );
-        break;
-    case 6:
-        setScale(KDGanttView::Auto );
-        break;
-    case 10:
-        setShowMinorTicks( true );
-        break;
-    case 11:
-        setShowMajorTicks( true );{
-
-        }
-        break;
-    case 12:
-        setShowMajorTicks( false );
-        setShowMinorTicks( false);
-        break;
-    case 20:
-        zoomToFit();
-        break;
-    case 21:
-        zoom(1.0);
-        break;
-    case 22:
-        zoom(2.0,false);
-        break;
-    case 23:
-        zoom(0.5,false);
-        break;
-    case 24:
-        zoom(6.0,false);
-        break;
-    case 25:
-        zoom(0.16666,false);
-        break;
-    case 26:
-        zoom(12.0,false);
-        break;
-    case 27:
-        zoom(0.08333,false);
-        break;
-    case 30:
-        myGanttView->print();
-        break;
-    case 40:
-    case 41:
-    case 42:
-        setHourFormat( (KDGanttView::HourFormat) (i - 40) );
-        break;
-    case 50:
-    case 51:
-    case 52:
-    case 53:
-        setYearFormat( (KDGanttView::YearFormat) ( i - 50) );
-        break;
-
-    case 60:
-
-        break;
-
-    case 61:
-
-        break;
-
-    case 62:
-
-        break;
-
-    case 63:
-
-        break;
-
-    case 64:
-
-        break;
-    }
-    // myGanttView->myTimeTable->updateMyContent();
+  setScale( (KDGanttView::Scale)i );
 }
+void KDTimeHeaderWidget::setHourFormat( int i )
+{
+  setHourFormat( (KDGanttView::HourFormat)i );
+}
+void KDTimeHeaderWidget::setYearFormat( int i )
+{
+  setYearFormat( (KDGanttView::YearFormat)i );
+}
+
 void KDTimeHeaderWidget::zoomToFit()
 {
     flagZoomToFit = true;
@@ -1715,58 +1568,27 @@ KDTimeHeaderWidget::HourFormat KDTimeHeaderWidget::hourFormat() const
 
 
 /*!
-  Specifies whether ticks should be shown on the major scale.
+  Specifies if and which ticks should be shown on the scale.
 
-  \param show true in order to show ticks, false in order to hide them
-  \sa showMajorTicks(), setShowMinorTicks(), showMinorTicks()
+  \param ticks ShowTicksType parameter with values of ShowMajorTicks, ShowMinorTicks or ShowNoTicks
+  \sa showTicks()
 */
-void KDTimeHeaderWidget::setShowMajorTicks( bool show )
+void KDTimeHeaderWidget::setShowTicks( KDGanttView::ShowTicksType ticks )
 {
-    flagShowMajorTicks = show;
-    if (show) {
-        setShowMinorTicks(false);
-    }
-    updateTimeTable();
+  flagShowTicks = ticks;
+  updateTimeTable();
 }
 
 
 /*!
   Returns whether ticks are shown on the major scale.
 
-  \return true if ticks are shown on the major scale
-  \sa setShowMajorTicks(), setShowMinorTicks(), showMinorTicks()
+  \return the type of ticks to show (wither ShowMajorTicks, ShowMinorTicks or ShowNoTicks
+  \sa setShowTicks()
 */
-bool KDTimeHeaderWidget::showMajorTicks() const
+KDGanttView::ShowTicksType KDTimeHeaderWidget::showTicks() const
 {
-    return flagShowMajorTicks;
-}
-
-
-/*!
-  Specifies whether ticks should be shown on the minor scale.
-
-  \param show true in order to show ticks, false in order to hide them
-  \sa showMinorTicks(), setShowMajorTicks(), showMajorTicks()
-*/
-void KDTimeHeaderWidget::setShowMinorTicks( bool show )
-{
-    flagShowMinorTicks = show;
-    if (show)
-        setShowMajorTicks(false );
-    //repaintMe();
-    updateTimeTable();
-}
-
-
-/*!
-  Returns whether ticks are shown on the minor scale.
-
-  \return true if ticks are shown on the minor scale
-  \sa setShowMinorTicks(), setShowMajorTicks(), showMajorTicks()
-*/
-bool KDTimeHeaderWidget::showMinorTicks() const
-{
-    return flagShowMinorTicks;
+    return flagShowTicks;
 }
 
 
@@ -1941,13 +1763,14 @@ QDateTime KDTimeHeaderWidget::getDateTimeForIndex(int X, bool local )
 }
 bool KDTimeHeaderWidget::getColumnColor(QColor& col,int coordLow, int coordHigh)
 {
-    if (!flagShowMajorTicks && !flagShowMinorTicks)
+    if ( flagShowTicks == KDGanttView::ShowNoTicks )
         return false;
     QDateTime start,end;
     start = getDateTimeForIndex(coordLow);
     end = getDateTimeForIndex(coordHigh).addSecs(-1);
     Scale tempScale = myRealScale;
-    if (flagShowMajorTicks)
+    if ( myGanttView->showTicks() == KDGanttView::ShowMinorTicks ||
+         myGanttView->showTicks() == KDGanttView::ShowMajorTicks )
         switch (myRealScale)
             {
             case KDGanttView::Second: tempScale = KDGanttView::Minute;  break;
@@ -2167,7 +1990,8 @@ void KDTimeHeaderWidget::updateTimeTable()
     if (flagDoNotRecomputeAfterChange) return;
     // setting the scrolling steps
     int scrollLineStep = myGridMinorWidth;
-    if (showMajorTicks()) {
+    if ( myGanttView->showTicks() == KDGanttView::ShowMinorTicks ||
+         myGanttView->showTicks() == KDGanttView::ShowMajorTicks ) {
         QValueList<int>::iterator intIt = majorTicks.begin();
         scrollLineStep = 5 * myGridMinorWidth;
         if (intIt != majorTicks.end()) {
@@ -3724,43 +3548,31 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     currentConnector =  KDGanttViewItem::NoConnector;
     set_Mouse_Tracking(true);
     new KDCanvasWhatsThis(viewport(),this);
-    onItem = new QPopupMenu( this );
-    QPopupMenu * newMenu = new QPopupMenu( this );
-    QPopupMenu * onView = new QPopupMenu( this );
-    onView->insertItem( tr( "Event" ), this,
-                        SLOT ( newRootItem( int ) ), 0, 0 );
-    onView->insertItem( tr( "Task" ), this,
-                        SLOT ( newRootItem( int ) ), 0, 1);
-    onView->insertItem( tr( "Summary" ), this,
-                        SLOT ( newRootItem( int ) ), 0, 2 );
+    onItem = new QMenu( this );
+    QMenu *onView = onItem->addMenu( tr( "New Root" ) );
+    onView->addAction( tr( "Event" ), this, SLOT( newRootEvent() ) );
+    onView->addAction( tr( "Task" ), this, SLOT( newRootTask() ) );
+    onView->addAction( tr( "Summary" ), this, SLOT( newRootSummary() ) );
 
-    onItem->insertItem( tr( "New Root" ), onView );
-    newMenu->insertItem( tr( "Event" ),
-                         this, SLOT ( newChildItem(  int) ), 0, 0 );
-    newMenu->insertItem( tr( "Task" ),
-                         this, SLOT ( newChildItem( int ) ), 0, 1 );
-    newMenu->insertItem( tr( "Summary" ),
-                         this, SLOT ( newChildItem( int ) ), 0, 2 );
+    QMenu *newMenu = onItem->addMenu( tr( "New Child" ) );
+    newMenu->addAction( tr( "Event" ), this, SLOT( newChildEvent() ) );
+    newMenu->addAction( tr( "Task" ), this, SLOT( newChildTask() ) );
+    newMenu->addAction( tr( "Summary" ), this, SLOT( newChildSummary() ) );
 
-    onItem->insertItem( tr( "New Child" ), newMenu );
-    QPopupMenu * afterMenu = new QPopupMenu( this );
-    afterMenu->insertItem( tr( "Event" ),
-                           this, SLOT ( newChildItem(  int) ), 0, 0+4 );
-    afterMenu->insertItem( tr( "Task" ),
-                           this, SLOT ( newChildItem( int ) ), 0, 1+4 );
-    afterMenu->insertItem( tr( "Summary" ),
-                           this, SLOT ( newChildItem( int ) ), 0, 2+4 );
-    onItem->insertItem( tr( "New After" ), afterMenu );
-    QPopupMenu *pasteMenu = new QPopupMenu( this );
-    pasteMenu->insertItem( tr( "As Root" ),
-                           this, SLOT ( pasteItem( int ) ), 0, 0 );
-    pasteMenu->insertItem( tr( "As Child" ),
-                           this, SLOT ( pasteItem( int ) ), 0, 1 );
-    pasteMenu->insertItem( tr( "After" ),
-                           this, SLOT ( pasteItem( int ) ), 0, 2 );
-    onItem->insertItem( tr( "Paste" ), pasteMenu, 3 );
-    onItem->insertItem( tr( "Cut Item" ), this, SLOT ( cutItem() ) );
-    onItem->setItemEnabled( 3, false );
+    QMenu *afterMenu = onItem->addMenu( tr( "New After" ) );
+    afterMenu->addAction( tr( "Event" ), this, SLOT( newSiblingEvent() ) );
+    afterMenu->addAction( tr( "Task" ), this, SLOT( newSiblingTask() ) );
+    afterMenu->addAction( tr( "Summary" ), this, SLOT( newChildItem( int ) ) );
+    
+    
+    QMenu *pasteMenu = onItem->addMenu( tr( "Paste" ) );
+    pasteMenu->addAction( tr( "As Root" ), this, SLOT ( pasteItemRoot() ) );
+    pasteMenu->addAction( tr( "As Child" ), this, SLOT ( pasteItemChild() ) );
+    pasteMenu->addAction( tr( "After" ), this, SLOT ( pasteItemAfter() ) );
+    mPasteAction = pasteMenu->menuAction();
+    mPasteAction->setEnabled( false );
+
+    onItem->addAction( tr( "Cut Item" ), this, SLOT ( cutItem() ) );
     myMyContentsHeight = 0;
     _showItemAddPopupMenu = false;
 
@@ -3977,7 +3789,7 @@ void  KDGanttCanvasView::cutItem()
     if ( cuttedItem )
         delete cuttedItem;
     cuttedItem = lastClickedItem;
-    onItem->setItemEnabled( 3, true );
+    mPasteAction->setEnabled( true );
 
 }
 // called from the destructor in KDGanttViewItem or KDGanttView
@@ -3989,7 +3801,7 @@ void  KDGanttCanvasView::resetCutPaste( KDGanttViewItem* item )
         cuttedItem = 0;
     }
     if (item == cuttedItem) {
-        onItem->setItemEnabled( 3, false );
+        mPasteAction->setEnabled( false );
         cuttedItem = 0;
     }
 }
@@ -4017,7 +3829,7 @@ void  KDGanttCanvasView::pasteItem( int type )
         ;
     }
     cuttedItem = 0;
-    onItem->setItemEnabled( 3, false );
+    mPasteAction->setEnabled( false );
     mySignalSender->myTimeTable->updateMyContent();
 }
 void  KDGanttCanvasView::newRootItem(int type)
@@ -4031,14 +3843,20 @@ void  KDGanttCanvasView::newRootItem(int type)
 void  KDGanttCanvasView::newChildItem( int type )
 {
     int newType = type;
-    if ( newType >= 4 )  newType -= 4;
     QString newText = "new " + KDGanttViewItem::typeToString( (KDGanttViewItem::Type) newType );
     KDGanttViewItem* par = lastClickedItem;
     KDGanttViewItem* after = 0;
-    if ( type >= 4 ) {
-        par = lastClickedItem->parent();
-        after = lastClickedItem;
-    }
+    KDGanttViewItem* temp = mySignalSender->createNewItem( KDGanttViewItem::typeToString( (KDGanttViewItem::Type)type ),  par, after, newText );
+    if ( temp )
+        mySignalSender->editItem( temp );
+}
+
+void  KDGanttCanvasView::newSiblingItem( int type )
+{
+    int newType = type;
+    QString newText = "new " + KDGanttViewItem::typeToString( (KDGanttViewItem::Type) newType );
+    KDGanttViewItem* par = lastClickedItem->parent();
+    KDGanttViewItem* after = lastClickedItem;
     KDGanttViewItem* temp = mySignalSender->createNewItem( KDGanttViewItem::typeToString( (KDGanttViewItem::Type)type ),  par, after, newText );
     if ( temp )
         mySignalSender->editItem( temp );

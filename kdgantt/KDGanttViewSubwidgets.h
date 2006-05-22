@@ -64,6 +64,8 @@ class KDCanvasWhatsThis;
 class KDToolTip;
 class KDCanvasRectangle;
 class KDTimeHeaderToolTip;
+class KActionCollection;
+class KSelectAction;
 
 class KDTimeHeaderWidget : public QWidget
 {
@@ -73,6 +75,7 @@ public:
    typedef KDGanttView::Scale Scale;
    typedef KDGanttView::YearFormat YearFormat;
    typedef KDGanttView::HourFormat HourFormat;
+   typedef KDGanttView::ShowTicksType ShowTicksType;
    struct DateTimeColor {
      QDateTime datetime;
      QDateTime end;
@@ -84,7 +87,7 @@ public:
        int priority;
    };
    typedef QValueList<DateTimeColor> ColumnColorList;
-  typedef QValueList<DateTimeColor> IntervalColorList;
+   typedef QValueList<DateTimeColor> IntervalColorList;
    /*
      enum Scale { Minute, Hour, Day, Week, Month, Auto };
      enum YearFormat { FourDigit, TwoDigit, TwoDigitApostrophe };
@@ -120,14 +123,12 @@ public:
    void setMinimumColumnWidth( int width );
    int minimumColumnWidth() const;
    void setYearFormat( YearFormat format );
-   KDTimeHeaderWidget::YearFormat yearFormat() const;
+   YearFormat yearFormat() const;
    void setHourFormat( HourFormat format );
-   KDTimeHeaderWidget::HourFormat hourFormat() const;
-   void setShowMajorTicks( bool );
-   bool showMajorTicks() const;
-   void setShowMinorTicks( bool );
-    void setScale( Scale unit, bool update = true );
-   bool showMinorTicks() const;
+   HourFormat hourFormat() const;
+   void setShowTicks( ShowTicksType show = KDGanttView::ShowMajorTicks );
+   ShowTicksType showTicks() const;
+   void setScale( Scale unit, bool update = true );
    void setColumnBackgroundColor( const QDateTime& column,
 				  const QColor& color,
 				  Scale mini =  KDGanttView::Second ,
@@ -207,12 +208,45 @@ public:
     void pendingPaint();
 
 public slots:
-    void setTimeline( int );
-    void setSettings( int );
     void checkWidth( int );
     void addTickRight( int num = 1 );
     void addTickLeft( int num = 1 );
     void preparePopupMenu();
+    
+    void center(const QDate &dt);
+    void centerToday() { center(today()); }
+    void centerYesterday() { center(yesterday()); }
+    void centerCurrentWeek() { center(currentWeek()); }
+    void centerLastWeek() { center(lastWeek()); }
+    void centerCurrentMonth() { center(currentMonth()); }
+    void centerLastMonth() { center(lastMonth()); }
+    void centerCurrentYear() { center(currentYear()); }
+    void centerLastYear() { center(lastYear()); }
+
+    void zoomTo( Scale unit, const QDate &start, const QDate &end );
+    void showToday() { zoomTo( KDGanttView::Hour, today(), tomorrow() ); }
+    void showYesterday() { zoomTo( KDGanttView::Hour, yesterday(), today() ); }
+    void showCurrentWeek() { zoomTo( KDGanttView::Day, currentWeek(), currentWeek().addDays( 7 ) ); }
+    void showLastWeek() { zoomTo( KDGanttView::Day, lastWeek(), currentWeek() ); }
+    void showCurrentMonth() { zoomTo( KDGanttView::Day, currentMonth(), currentMonth().addMonths( 1) ); }
+    void showLastMonth() { zoomTo( KDGanttView::Day, lastMonth(), currentMonth() ); }
+    void showCurrentYear() { zoomTo( KDGanttView::Month, currentYear(), currentYear().addYears( 1) ); }
+    void showLastYear() { zoomTo( KDGanttView::Month, lastYear(), currentYear() ); }
+
+    void zoom1() { zoom(1.0); }
+    void zoom2() { zoom(2.0,false); }
+    void zoomOut2() { zoom(0.5,false); }
+    void zoom6() { zoom(6.0,false); }
+    void zoomOut6() { zoom(0.16666,false); }
+    void zoom12() { zoom(12.0,false); }
+    void zoomOut12() { zoom(0.08333,false); }
+
+    void gridSettings( int i );
+
+    void setScale( int i );
+    void setHourFormat( int i );
+    void setYearFormat( int i );
+
 signals:
     void sizeChanged( int );
 
@@ -241,7 +275,8 @@ private:
     YearFormat myYearFormat;
     HourFormat myHourFormat;
     int myMinimumColumWidth;
-    bool flagShowMajorTicks, flagShowMinorTicks, flagShowPopupMenu;
+    ShowTicksType flagShowTicks;
+    bool flagShowPopupMenu;
     bool flagShowZoom, flagShowScale ,flagShowTime ,flagShowYear;
     bool flagShowGrid ,flagShowPrint;
     bool flagStartTimeSet,flagEndTimeSet;
@@ -262,8 +297,6 @@ private:
     void computeRealScale(QDateTime start);
     int myGridMinorWidth;
     int myMajorGridHeight;
-    QPopupMenu * myPopupMenu, *scalePopupMenu, *timePopupMenu;
-    QPopupMenu * yearPopupMenu, *gridPopupMenu;
     KDGanttView* myGanttView;
     double myZoomFactor;
     int myAutoScaleMinorTickcount;
@@ -293,6 +326,11 @@ private:
     QString mTooltipDateFormat;
     bool mWeekStartsMonday;
     bool mWeekScaleShowNumber;
+    
+    QMenu *myPopupMenu;
+    KActionCollection *actionCollection;
+    KSelectAction *mGridAction, *mScaleAction, *mTimeFormatAction, *mYearFormatAction;
+    QAction *mGotoAction, *mTimespanAction, *mZoomAction, *mPrintAction;
 
 };
 
@@ -547,7 +585,7 @@ protected:
     KDGanttViewItem* getItem(QCanvasItem*);
     KDGanttViewTaskLink* getLink(QCanvasItem*);
     KDCanvasWhatsThis* myWhatsThis;
-    QPopupMenu* onItem;
+    QMenu* onItem;
     bool _showItemAddPopupMenu;
     int myMyContentsHeight;
     int getItemArea(KDGanttViewItem *item, int x);
@@ -567,8 +605,25 @@ private slots:
   void resetScrollBars();
   void cutItem();
   void pasteItem( int );
+  void pasteItemRoot() { pasteItem(0); }
+  void pasteItemChild() { pasteItem(1); }
+  void pasteItemAfter() { pasteItem(2); }
+  
   void newRootItem( int );
+  void newRootEvent() { newRootItem( KDGanttViewItem::Event ); }
+  void newRootTask() { newRootItem( KDGanttViewItem::Task ); }
+  void newRootSummary() { newRootItem( KDGanttViewItem::Summary ); }
+    
   void newChildItem( int );
+  void newChildEvent() { newChildItem( KDGanttViewItem::Event ); }
+  void newChildTask() { newChildItem( KDGanttViewItem::Task ); }
+  void newChildSummary() { newChildItem( KDGanttViewItem::Summary ); }
+  
+  void newSiblingItem( int );
+  void newSiblingEvent() { newSiblingItem( KDGanttViewItem::Event ); }
+  void newSiblingTask() { newSiblingItem( KDGanttViewItem::Task ); }
+  void newSiblingSummary() { newSiblingItem( KDGanttViewItem::Summary ); }
+  
   void slotScrollTimer();
   void myUpdateScrollBars();
 
@@ -579,9 +634,10 @@ private:
     int mScrollBarCheckCounter;
     ScrollBarMode myScrollBarMode;
     QTimer * mScrollbarTimer;
-  KDCanvasToolTip* myToolTip;
+    KDCanvasToolTip* myToolTip;
     QTimer scrollBarTimer;
     QPoint mousePos;
+    QAction *mPasteAction;
 };
 
 #if QT_VERSION >= 0x040000
