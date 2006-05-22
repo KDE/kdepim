@@ -65,7 +65,7 @@ QFile* KNSaveHelper::getFile(const QString &dialogTitle)
   if (url.isEmpty())
     return 0;
 
-  lastPath = url.upURL().url();
+  lastPath = url.upUrl().url();
 
   if (url.isLocalFile()) {
     if (QFileInfo(url.path()).exists() &&

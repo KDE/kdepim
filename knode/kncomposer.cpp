@@ -1023,7 +1023,7 @@ void KNComposer::insertFile(bool clear, bool box)
     if (url.isLocalFile())
       boxName = url.path();
     else
-      boxName = url.prettyURL();
+      boxName = url.prettyUrl();
 
     insertFile(file,clear,box,boxName);
   }

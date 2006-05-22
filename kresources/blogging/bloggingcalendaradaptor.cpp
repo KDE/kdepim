@@ -67,7 +67,7 @@ KIO::TransferJob *BloggingUploadItem::createUploadJob( KPIM::GroupwareDataAdapto
 kDebug()<<"BloggingUploadItem::createUploadJob, adaptor="<<adaptor<<", URL="<<baseurl.url()<<endl;
   Q_ASSERT( adaptor );
   if ( !adaptor || !mAPI ) return 0;
-  kDebug() << "Uploading to: " << url().prettyURL() << endl;
+  kDebug() << "Uploading to: " << url().prettyUrl() << endl;
   mAPI->setURL( baseurl );
   return mAPI->createUploadJob( url(), mPosting );
 }
@@ -77,7 +77,7 @@ KIO::TransferJob *BloggingUploadItem::createUploadNewJob( KPIM::GroupwareDataAda
 kDebug()<<"BloggingUploadItem::createUploadNewJob"<<endl;
   Q_ASSERT( adaptor );
   if ( !adaptor || !mAPI ) return 0;
-  kDebug() << "Uploading new item to: " << baseurl.prettyURL() << endl;
+  kDebug() << "Uploading new item to: " << baseurl.prettyUrl() << endl;
   mAPI->setURL( baseurl );
   return mAPI->createUploadNewJob( mPosting );
 }

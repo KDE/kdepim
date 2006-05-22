@@ -58,7 +58,7 @@ void ResourceLocalDirConfig::loadSettings( KRES::Resource *resource )
 {
   ResourceLocalDir* res = static_cast<ResourceLocalDir*>( resource );
   if ( res ) {
-    mURL->setURL( res->mURL.prettyURL() );
+    mURL->setURL( res->mURL.prettyUrl() );
   } else
     kDebug(5700) << "ERROR: ResourceLocalDirConfig::loadSettings(): no ResourceLocalDir, cast failed" << endl;
 }

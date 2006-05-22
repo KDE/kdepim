@@ -394,12 +394,12 @@ QString CertificateWizardImpl::caEMailAddress() const {
 
 void CertificateWizardImpl::slotURLSelected( const QString& _url )
 {
-  KUrl url = KUrl::fromPathOrURL( _url.trimmed() );
-  storeUR->setURL( url.prettyURL() );
+  KUrl url = KUrl::fromPathOrUrl( _url.trimmed() );
+  storeUR->setURL( url.prettyUrl() );
 }
 
 KUrl CertificateWizardImpl::saveFileUrl() const {
-  return KUrl::fromPathOrURL( storeUR->url().trimmed() );
+  return KUrl::fromPathOrUrl( storeUR->url().trimmed() );
 }
 
 void CertificateWizardImpl::showPage( QWidget * page )
@@ -481,7 +481,7 @@ void CertificateWizardImpl::accept()
       if ( KMessageBox::Cancel == KMessageBox::warningContinueCancel(
                                                                      this,
                                                                      i18n( "A file named \"%1\" already exists. "
-                                                                           "Are you sure you want to overwrite it?", url.prettyURL() ),
+                                                                           "Are you sure you want to overwrite it?", url.prettyUrl() ),
                                                                      i18n( "Overwrite File?" ),
                                                                      i18n( "&Overwrite" ) ) )
         return;

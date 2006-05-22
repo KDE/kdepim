@@ -68,7 +68,7 @@ void ResourceLocalConfig::loadSettings( KRES::Resource *resource )
 {
   ResourceLocal* res = static_cast<ResourceLocal*>( resource );
   if ( res ) {
-    mURL->setURL( res->mURL.prettyURL() );
+    mURL->setURL( res->mURL.prettyUrl() );
     kDebug(5800) << "Format typeid().name(): " << typeid( res->mFormat ).name() << endl;
     if ( typeid( *(res->mFormat) ) == typeid( ICalFormat ) )
       formatGroup->setButton( 0 );

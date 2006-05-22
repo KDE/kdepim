@@ -258,7 +258,7 @@ kDebug()<<"FolderLister::retrieveFolders( "<<u.url()<<" )"<<endl;
 
 void FolderLister::doRetrieveFolder( const KUrl &u )
 {
-  kDebug(7000) << "FolderLister::doRetrieveFolder: " << u.prettyURL() << endl;
+  kDebug(7000) << "FolderLister::doRetrieveFolder: " << u.prettyUrl() << endl;
 
   KUrl url( u );
   if ( adaptor() ) adaptor()->adaptDownloadUrl( url );
@@ -271,13 +271,13 @@ void FolderLister::doRetrieveFolder( const KUrl &u )
       mUrls.append( url );
 
       kDebug(7000) << "FolderLister::retrieveFolders: adjustedURL=" 
-                    << url.prettyURL() << endl;
+                    << url.prettyUrl() << endl;
       connect( listjob, SIGNAL( result( KJob * ) ),
                SLOT( slotListJobResult( KJob * ) ) );
     } else {
       // TODO: Indicate a problem to the user!
       kWarning() << "Unable to create the folder list job for the url " 
-                  << url.prettyURL() << endl;
+                  << url.prettyUrl() << endl;
     }
   }
   if ( mUrls.isEmpty() ) {

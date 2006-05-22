@@ -91,7 +91,7 @@ void ResourceLocal::writeConfig( KConfig* config )
   kDebug(5800) << "ResourceLocal::writeConfig()" << endl;
 
   ResourceCalendar::writeConfig( config );
-  config->writePathEntry( "CalendarURL", mURL.prettyURL() );
+  config->writePathEntry( "CalendarURL", mURL.prettyUrl() );
   QString typeID = typeid( *mFormat ).name();
 
   if ( typeid( *mFormat ) == typeid( ICalFormat ) )

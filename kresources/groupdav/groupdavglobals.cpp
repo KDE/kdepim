@@ -249,7 +249,7 @@ kDebug(5800) << jobData << endl;
     if ( sjob ) remoteId = sjob->url();
     QString fingerprint = extractFingerprint( job, jobData );
     adaptor->calendarItemDownloaded( inc, inc->uid(), remoteId, fingerprint,
-                                     remoteId.prettyURL() );
+                                     remoteId.prettyUrl() );
     return true;
   } else {
     kError() << "Unable to parse iCalendar" << endl;
@@ -280,7 +280,7 @@ kDebug(5800) << jobData << endl;
   if ( sjob ) remoteId = sjob->url();
   QString fingerprint = extractFingerprint( job, jobData );
   adaptor->addressbookItemDownloaded( a, a.uid(), remoteId, fingerprint,
-                                      remoteId.prettyURL() );
+                                      remoteId.prettyUrl() );
   return true;
 }
 

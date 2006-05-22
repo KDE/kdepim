@@ -1236,7 +1236,7 @@ static bool checkOverwrite( const KUrl& url, bool& overwrite, QWidget* w )
          KMessageBox::warningContinueCancel(
                                             w,
                                             i18n( "A file named \"%1\" already exists. "
-                                                  "Are you sure you want to overwrite it?", url.prettyURL() ),
+                                                  "Are you sure you want to overwrite it?", url.prettyUrl() ),
                                             i18n( "Overwrite File?" ),
                                             i18n( "&Overwrite" ) ) )
       return false;

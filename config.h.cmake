@@ -29,9 +29,6 @@
 /* Define to 1 if you have the <crt_externs.h> header file. */
 #cmakedefine HAVE_CRT_EXTERNS_H 1
 
-/* Defines if your system has the crypt function */
-#define HAVE_CRYPT 1
-
 /* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
    */
 #cmakedefine HAVE_DIRENT_H 1

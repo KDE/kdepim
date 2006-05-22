@@ -57,7 +57,7 @@ static const KCmdLineOptions options[] =
 TestLibSyndication::TestLibSyndication(const QString& url)
 {
     KUrl kurl;
-    if (!KUrl::isRelativeURL(url))
+    if (!KUrl::isRelativeUrl(url))
         kurl = KUrl(url);
     else
         kurl = KUrl("file://" + QDir::currentPath() + "/", url);

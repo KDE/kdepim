@@ -206,7 +206,7 @@ void
 IMAP4Protocol::get (const KUrl & _url)
 {
   if (!makeLogin()) return;
-  kDebug(7116) << "IMAP4::get -  " << _url.prettyURL() << endl;
+  kDebug(7116) << "IMAP4::get -  " << _url.prettyUrl() << endl;
   QString aBox, aSequence, aType, aSection, aValidity, aDelimiter, aInfo;
   enum IMAP_TYPE aEnum =
     parseURL (_url, aBox, aSection, aType, aSequence, aValidity, aDelimiter, aInfo);
@@ -235,7 +235,7 @@ IMAP4Protocol::get (const KUrl & _url)
       && selectInfo.uidValidity () != aValidity.toULong ())
   {
     // this url is stale
-    error (ERR_COULD_NOT_READ, _url.prettyURL());
+    error (ERR_COULD_NOT_READ, _url.prettyUrl());
     return;
   }
   else
@@ -417,7 +417,7 @@ IMAP4Protocol::get (const KUrl & _url)
 void
 IMAP4Protocol::listDir (const KUrl & _url)
 {
-  kDebug(7116) << " IMAP4::listDir - " << _url.prettyURL() << endl;
+  kDebug(7116) << " IMAP4::listDir - " << _url.prettyUrl() << endl;
 
   if (_url.path().isEmpty())
   {
@@ -505,7 +505,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
     }
     else
     {
-      error (ERR_CANNOT_ENTER_DIRECTORY, _url.prettyURL());
+      error (ERR_CANNOT_ENTER_DIRECTORY, _url.prettyUrl());
       completeQueue.removeRef (cmd);
       return;
     }
@@ -533,7 +533,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
           cmd = doCommand (imapCommand::clientSearch (query));
           if (cmd->result() != "OK")
           {
-            error(ERR_UNSUPPORTED_ACTION, _url.prettyURL());
+            error(ERR_UNSUPPORTED_ACTION, _url.prettyUrl());
             completeQueue.removeRef (cmd);
             return;
           }
@@ -587,7 +587,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
 
         newUrl.setPath ("/" + myBox + ";UIDVALIDITY=" +
                         QString::number(selectInfo.uidValidity ()));
-        kDebug(7116) << "IMAP4::listDir - redirecting to " << newUrl.prettyURL() << endl;
+        kDebug(7116) << "IMAP4::listDir - redirecting to " << newUrl.prettyUrl() << endl;
         redirection (newUrl);
 
 
@@ -791,14 +791,14 @@ bool IMAP4Protocol::parseReadLine (QByteArray & buffer, long relay)
 void
 IMAP4Protocol::setSubURL (const KUrl & _url)
 {
-  kDebug(7116) << "IMAP4::setSubURL - " << _url.prettyURL() << endl;
+  kDebug(7116) << "IMAP4::setSubURL - " << _url.prettyUrl() << endl;
   KIO::TCPSlaveBase::setSubURL (_url);
 }
 
 void
 IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
 {
-  kDebug(7116) << "IMAP4::put - " << _url.prettyURL() << endl;
+  kDebug(7116) << "IMAP4::put - " << _url.prettyUrl() << endl;
 //  KIO::TCPSlaveBase::put(_url,permissions,overwrite,resume);
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   enum IMAP_TYPE aType =
@@ -812,7 +812,7 @@ IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
     imapCommand *cmd = doCommand (imapCommand::clientCreate (aBox));
 
     if (cmd->result () != "OK") {
-      error (ERR_COULD_NOT_WRITE, _url.prettyURL());
+      error (ERR_COULD_NOT_WRITE, _url.prettyUrl());
       completeQueue.removeRef (cmd);
       return;
     }
@@ -842,7 +842,7 @@ IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
 
     if (result != 0)
     {
-      error (ERR_ABORTED, _url.prettyURL());
+      error (ERR_ABORTED, _url.prettyUrl());
       return;
     }
 
@@ -934,7 +934,7 @@ IMAP4Protocol::put (const KUrl & _url, int, bool, bool)
 void
 IMAP4Protocol::mkdir (const KUrl & _url, int)
 {
-  kDebug(7116) << "IMAP4::mkdir - " << _url.prettyURL() << endl;
+  kDebug(7116) << "IMAP4::mkdir - " << _url.prettyUrl() << endl;
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   parseURL(_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
   kDebug(7116) << "IMAP4::mkdir - create " << aBox << endl;
@@ -943,7 +943,7 @@ IMAP4Protocol::mkdir (const KUrl & _url, int)
   if (cmd->result () != "OK")
   {
     kDebug(7116) << "IMAP4::mkdir - " << cmd->resultInfo() << endl;
-    error (ERR_COULD_NOT_MKDIR, _url.prettyURL());
+    error (ERR_COULD_NOT_MKDIR, _url.prettyUrl());
     completeQueue.removeRef (cmd);
     return;
   }
@@ -967,7 +967,7 @@ IMAP4Protocol::mkdir (const KUrl & _url, int)
       cmd = doCommand(imapCommand::clientCreate(aBox + aDelimiter));
       if (cmd->result () != "OK")
       {
-        error (ERR_COULD_NOT_MKDIR, _url.prettyURL());
+        error (ERR_COULD_NOT_MKDIR, _url.prettyUrl());
         completeQueue.removeRef (cmd);
         return;
       }
@@ -984,7 +984,7 @@ IMAP4Protocol::mkdir (const KUrl & _url, int)
 void
 IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
 {
-  kDebug(7116) << "IMAP4::copy - [" << (overwrite ? "Overwrite" : "NoOverwrite") << "] " << src.prettyURL() << " -> " << dest.prettyURL() << endl;
+  kDebug(7116) << "IMAP4::copy - [" << (overwrite ? "Overwrite" : "NoOverwrite") << "] " << src.prettyUrl() << " -> " << dest.prettyUrl() << endl;
   QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter, sInfo;
   QString dBox, dSequence, dLType, dSection, dValidity, dDelimiter, dInfo;
   enum IMAP_TYPE sType =
@@ -1046,7 +1046,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
             if (cmd->result () == "OK")
               dType = ITYPE_BOX;
             else
-              error (ERR_COULD_NOT_WRITE, dest.prettyURL());
+              error (ERR_COULD_NOT_WRITE, dest.prettyUrl());
           }
           completeQueue.removeRef (cmd);
         }
@@ -1066,7 +1066,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
     if (cmd->result () != "OK")
     {
       kError(5006) << "IMAP4::copy - " << cmd->resultInfo() << endl;
-      error (ERR_COULD_NOT_WRITE, dest.prettyURL());
+      error (ERR_COULD_NOT_WRITE, dest.prettyUrl());
       completeQueue.removeRef (cmd);
       return;
     } else {
@@ -1085,7 +1085,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
   }
   else
   {
-    error (ERR_ACCESS_DENIED, src.prettyURL());
+    error (ERR_ACCESS_DENIED, src.prettyUrl());
     return;
   }
   finished ();
@@ -1094,7 +1094,7 @@ IMAP4Protocol::copy (const KUrl & src, const KUrl & dest, int, bool overwrite)
 void
 IMAP4Protocol::del (const KUrl & _url, bool isFile)
 {
-  kDebug(7116) << "IMAP4::del - [" << (isFile ? "File" : "NoFile") << "] " << _url.prettyURL() << endl;
+  kDebug(7116) << "IMAP4::del - [" << (isFile ? "File" : "NoFile") << "] " << _url.prettyUrl() << endl;
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   enum IMAP_TYPE aType =
     parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
@@ -1110,7 +1110,7 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
         if (!assureBox (aBox, false)) return;
         imapCommand *cmd = doCommand (imapCommand::clientExpunge ());
         if (cmd->result () != "OK") {
-          error (ERR_CANNOT_DELETE, _url.prettyURL());
+          error (ERR_CANNOT_DELETE, _url.prettyUrl());
           completeQueue.removeRef (cmd);
           return;
         }
@@ -1124,7 +1124,7 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
           doCommand (imapCommand::
                      clientStore (aSequence, "+FLAGS.SILENT", "\\DELETED"));
         if (cmd->result () != "OK") {
-          error (ERR_CANNOT_DELETE, _url.prettyURL());
+          error (ERR_CANNOT_DELETE, _url.prettyUrl());
           completeQueue.removeRef (cmd);
           return;
         }
@@ -1171,7 +1171,7 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
         }
         if (!stillOk)
         {
-          error (ERR_COULD_NOT_RMDIR, _url.prettyURL());
+          error (ERR_COULD_NOT_RMDIR, _url.prettyUrl());
           return;
         }
       } else {
@@ -1184,7 +1184,7 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
     {
       imapCommand *cmd = doCommand (imapCommand::clientDelete (aBox));
       if (cmd->result () != "OK") {
-        error (ERR_COULD_NOT_RMDIR, _url.prettyURL());
+        error (ERR_COULD_NOT_RMDIR, _url.prettyUrl());
         completeQueue.removeRef (cmd);
         return;
       }
@@ -1200,7 +1200,7 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
         doCommand (imapCommand::
                    clientStore (aSequence, "+FLAGS.SILENT", "\\DELETED"));
       if (cmd->result () != "OK") {
-        error (ERR_CANNOT_DELETE, _url.prettyURL());
+        error (ERR_CANNOT_DELETE, _url.prettyUrl());
         completeQueue.removeRef (cmd);
         return;
       }
@@ -1210,7 +1210,7 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
 
   case ITYPE_UNKNOWN:
   case ITYPE_ATTACH:
-    error (ERR_CANNOT_DELETE, _url.prettyURL());
+    error (ERR_CANNOT_DELETE, _url.prettyUrl());
     break;
   }
   finished ();
@@ -1294,7 +1294,7 @@ IMAP4Protocol::special (const QByteArray & aData)
       completeQueue.removeRef (cmd);
       error(ERR_SLAVE_DEFINED, i18n("Unsubscribe of folder %1 "
                                     "failed. The server returned: %2",
-             _url.prettyURL(),
+             _url.prettyUrl(),
              cmd->resultInfo()));
       return;
     }
@@ -1315,7 +1315,7 @@ IMAP4Protocol::special (const QByteArray & aData)
       completeQueue.removeRef (cmd);
       error(ERR_SLAVE_DEFINED, i18n("Subscribe of folder %1 "
                                     "failed. The server returned: %2",
-             _url.prettyURL(),
+             _url.prettyUrl(),
              cmd->resultInfo()));
       return;
     }
@@ -1364,7 +1364,7 @@ IMAP4Protocol::special (const QByteArray & aData)
     {
       completeQueue.removeRef (cmd);
       error(ERR_COULD_NOT_WRITE, i18n("Changing the flags of message %1 "
-                                      "failed.", _url.prettyURL()));
+                                      "failed.", _url.prettyUrl()));
       return;
     }
     completeQueue.removeRef (cmd);
@@ -1376,7 +1376,7 @@ IMAP4Protocol::special (const QByteArray & aData)
       {
         completeQueue.removeRef (cmd);
         error(ERR_COULD_NOT_WRITE, i18n("Changing the flags of message %1 "
-                                        "failed.", _url.prettyURL()));
+                                        "failed.", _url.prettyUrl()));
         return;
       }
       completeQueue.removeRef (cmd);
@@ -1417,7 +1417,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     {
       error(ERR_SLAVE_DEFINED, i18n("Setting the Access Control List on folder %1 "
                                       "for user %2 failed. The server returned: %3",
-             _url.prettyURL(),
+             _url.prettyUrl(),
              user,
              cmd->resultInfo()));
       return;
@@ -1436,7 +1436,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     {
       error(ERR_SLAVE_DEFINED, i18n("Deleting the Access Control List on folder %1 "
                                     "for user %2 failed. The server returned: %3",
-             _url.prettyURL(),
+             _url.prettyUrl(),
              user,
              cmd->resultInfo()));
       return;
@@ -1453,7 +1453,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     {
       error(ERR_SLAVE_DEFINED, i18n("Retrieving the Access Control List on folder %1 "
                                      "failed. The server returned: %2",
-             _url.prettyURL(),
+             _url.prettyUrl(),
              cmd->resultInfo()));
       return;
     }
@@ -1480,7 +1480,7 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     {
       error(ERR_SLAVE_DEFINED, i18n("Retrieving the Access Control List on folder %1 "
                                     "failed. The server returned: %2",
-             _url.prettyURL(),
+             _url.prettyUrl(),
              cmd->resultInfo()));
       return;
     }
@@ -1553,7 +1553,7 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
       error(ERR_SLAVE_DEFINED, i18n("Setting the annotation %1 on folder %2 "
                                     " failed. The server returned: %3",
              entry,
-             _url.prettyURL(),
+             _url.prettyUrl(),
              cmd->resultInfo()));
       return;
     }
@@ -1577,7 +1577,7 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
       error(ERR_SLAVE_DEFINED, i18n("Retrieving the annotation %1 on folder %2 "
                                      "failed. The server returned: %3",
              entry,
-             _url.prettyURL(),
+             _url.prettyUrl(),
              cmd->resultInfo()));
       return;
     }
@@ -1598,7 +1598,7 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
 void
 IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, bool overwrite)
 {
-  kDebug(7116) << "IMAP4::rename - [" << (overwrite ? "Overwrite" : "NoOverwrite") << "] " << src.prettyURL() << " -> " << dest.prettyURL() << endl;
+  kDebug(7116) << "IMAP4::rename - [" << (overwrite ? "Overwrite" : "NoOverwrite") << "] " << src.prettyUrl() << " -> " << dest.prettyUrl() << endl;
   QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter, sInfo;
   QString dBox, dSequence, dLType, dSection, dValidity, dDelimiter, dInfo;
   enum IMAP_TYPE sType =
@@ -1641,13 +1641,13 @@ IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, bool overwrite)
     case ITYPE_MSG:
     case ITYPE_ATTACH:
     case ITYPE_UNKNOWN:
-      error (ERR_CANNOT_RENAME, src.prettyURL());
+      error (ERR_CANNOT_RENAME, src.prettyUrl());
       break;
     }
   }
   else
   {
-    error (ERR_CANNOT_RENAME, src.prettyURL());
+    error (ERR_CANNOT_RENAME, src.prettyUrl());
     return;
   }
   finished ();
@@ -1671,7 +1671,7 @@ IMAP4Protocol::dispatch (int command, const QByteArray & data)
 void
 IMAP4Protocol::stat (const KUrl & _url)
 {
-  kDebug(7116) << "IMAP4::stat - " << _url.prettyURL() << endl;
+  kDebug(7116) << "IMAP4::stat - " << _url.prettyUrl() << endl;
   QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
   // parseURL with caching
   enum IMAP_TYPE aType =
@@ -1763,7 +1763,7 @@ IMAP4Protocol::stat (const KUrl & _url)
 
         newUrl.setPath ("/" + aBox + ";UIDVALIDITY=" +
                         QString::number(validity));
-        kDebug(7116) << "IMAP4::stat - redirecting to " << newUrl.prettyURL() << endl;
+        kDebug(7116) << "IMAP4::stat - redirecting to " << newUrl.prettyUrl() << endl;
         redirection (newUrl);
       }
     }
@@ -1777,7 +1777,7 @@ IMAP4Protocol::stat (const KUrl & _url)
       if (validity > 0 && validity != aValidity.toULong ())
       {
         aType = ITYPE_UNKNOWN;
-        kDebug(7116) << "IMAP4::stat - url has invalid validity [" << validity << "d] " << _url.prettyURL() << endl;
+        kDebug(7116) << "IMAP4::stat - url has invalid validity [" << validity << "d] " << _url.prettyUrl() << endl;
       }
     }
   }
@@ -1802,7 +1802,7 @@ IMAP4Protocol::stat (const KUrl & _url)
     break;
 
   case ITYPE_UNKNOWN:
-    error (ERR_DOES_NOT_EXIST, _url.prettyURL());
+    error (ERR_DOES_NOT_EXIST, _url.prettyUrl());
     break;
   }
 

@@ -609,7 +609,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 			break; // Phonebook full
 	}
 	// add URL
-	s = addr->url().prettyURL();
+	s = addr->url().prettyUrl();
 	if (!s.isEmpty() && (entry.subentries_count<GN_PHONEBOOK_SUBENTRIES_MAX_NUMBER)) {
 		subentry->entry_type = GN_PHONEBOOK_ENTRY_URL;
 		strncpy(subentry->data.number, GN_TO(s), sizeof(subentry->data.number)-1);

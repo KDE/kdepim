@@ -81,7 +81,7 @@ void ResourceLocalDir::writeConfig( KConfig *config )
 
   ResourceCalendar::writeConfig( config );
 
-  config->writePathEntry( "CalendarURL", mURL.prettyURL() );
+  config->writePathEntry( "CalendarURL", mURL.prettyUrl() );
 }
 
 void ResourceLocalDir::init()

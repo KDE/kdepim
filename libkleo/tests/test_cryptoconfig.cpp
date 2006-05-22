@@ -84,7 +84,7 @@ int main( int argc, char** argv ) {
             break;
           case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
           case Kleo::CryptoConfigEntry::ArgType_URL:
-            cout << " URL value=" << entry->urlValue().prettyURL().toLocal8Bit().constData();
+            cout << " URL value=" << entry->urlValue().prettyUrl().toLocal8Bit().constData();
             // fallthrough
           case Kleo::CryptoConfigEntry::ArgType_Path:
             // fallthrough

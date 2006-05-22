@@ -280,7 +280,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
     QStringList list;
 
     list.append( i18n( "Web page:" ) );
-    list += addr.url().prettyURL();
+    list += addr.url().prettyUrl();
     parts.push_back( list );
   }
 

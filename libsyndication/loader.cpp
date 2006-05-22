@@ -206,7 +206,7 @@ void Loader::discoverFeeds(const QByteArray &data)
         return;
     }
 
-    if (KUrl::isRelativeURL(s2))
+    if (KUrl::isRelativeUrl(s2))
     {
         if (s2.startsWith("//"))
         {

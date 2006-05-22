@@ -451,7 +451,7 @@ bool kio_sieveProtocol::activate(const KUrl& url)
 	QString filename = url.fileName(false);
 
 	if (filename.isEmpty()) {
-		error(ERR_DOES_NOT_EXIST, url.prettyURL());
+		error(ERR_DOES_NOT_EXIST, url.prettyUrl());
 		return false;
 	}
 
@@ -513,7 +513,7 @@ void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, bool /*overwri
 	QString filename = url.fileName(false);
 
 	if (filename.isEmpty()) {
-		error(ERR_MALFORMED_URL, url.prettyURL());
+		error(ERR_MALFORMED_URL, url.prettyUrl());
 		return;
 	}
 
@@ -674,7 +674,7 @@ void kio_sieveProtocol::get(const KUrl& url)
 	QString filename = url.fileName(false);
 
 	if (filename.isEmpty()) {
-		error(ERR_MALFORMED_URL, url.prettyURL());
+		error(ERR_MALFORMED_URL, url.prettyUrl());
 		return;
 	}
 
@@ -751,7 +751,7 @@ void kio_sieveProtocol::del(const KUrl &url, bool isfile)
 	QString filename = url.fileName(false);
 
 	if (filename.isEmpty()) {
-		error(ERR_MALFORMED_URL, url.prettyURL());
+		error(ERR_MALFORMED_URL, url.prettyUrl());
 		return;
 	}
 
@@ -1099,7 +1099,7 @@ bool kio_sieveProtocol::authenticate()
 /* --------------------------------------------------------------------------- */
 void kio_sieveProtocol::mimetype(const KUrl & url)
 {
-	ksDebug() << "Requesting mimetype for " << url.prettyURL() << endl;
+	ksDebug() << "Requesting mimetype for " << url.prettyUrl() << endl;
 
 	if (url.fileName(false).isEmpty())
 		mimeType( "inode/directory" );

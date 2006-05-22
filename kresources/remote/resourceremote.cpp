@@ -309,7 +309,7 @@ void ResourceRemote::dump() const
 void ResourceRemote::addInfoText( QString &txt ) const
 {
   txt += "<br>";
-  txt += i18n("URL: %1", mDownloadUrl.prettyURL() );
+  txt += i18n("URL: %1", mDownloadUrl.prettyUrl() );
 }
 
 bool ResourceRemote::setValue( const QString &key, const QString &value )

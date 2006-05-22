@@ -190,7 +190,7 @@ void OpenGroupware::getCalendar( const KUrl &_url )
   url.setProtocol( "webdav" );
   url.setPath ( "/zidestore/dav/till/" );
 
-  kDebug(7000) << "getCalendar: " << url.prettyURL() << endl;
+  kDebug(7000) << "getCalendar: " << url.prettyUrl() << endl;
 
   // FIXME do progress handling
   mListEventsJob = KIO::davPropFind( url, props, "0", false );

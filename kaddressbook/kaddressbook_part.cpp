@@ -129,7 +129,7 @@ bool KAddressbookPart::openURL( const KUrl &url )
   if ( !url.isEmpty() )
     mCore->importVCard( url );
 
-  emit setWindowCaption( url.prettyURL() );
+  emit setWindowCaption( url.prettyUrl() );
 
   return true;
 }
