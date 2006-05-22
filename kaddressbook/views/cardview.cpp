@@ -295,7 +295,7 @@ void CardViewItem::paintCard( QPainter *p, const QPalette &pal )
   Q3PtrListIterator<CardViewItem::Field> iter( d->mFieldList );
   QString label, value;
   int yPos = mg + 4 + bFm.height() + fm.height();
-  p->setPen( pal.text() );
+  p->setPen( pal.text().color() );
 
   int fh = fm.height();
   int cln( 0 );
