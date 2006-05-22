@@ -43,7 +43,6 @@
 #include <k3listview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ktrader.h>
 
 #include "addresseewidget.h"
 #include "kabprefs.h"
