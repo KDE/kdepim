@@ -197,7 +197,7 @@ void KTNEFMain::viewFile()
 	else
 		kDebug() << "Mime type from attachment object: " << mimename << endl;
 
-	KRun::runURL(url, mimename);
+	KRun::runUrl(url, mimename, this);
 }
 
 QString KTNEFMain::extractTemp(KTNEFAttach *att)
@@ -213,7 +213,7 @@ void KTNEFMain::viewFileAs()
 	KUrl::List	list;
 	list.append(KUrl::fromPathOrUrl( extractTemp(view_->getSelection()->first()) ));
 
-	KRun::displayOpenWithDialog(list);
+	KRun::displayOpenWithDialog(list, this);
 }
 
 void KTNEFMain::extractFile()
@@ -401,7 +401,7 @@ void KTNEFMain::slotShowMessageText()
 	*( tmpFile.textStream() ) << rtf;
 	tmpFile.close();
 
-	KRun::runURL( KUrl::fromPathOrUrl( tmpFile.name() ), "text/rtf", true );
+	KRun::runUrl( KUrl::fromPathOrUrl( tmpFile.name() ), "text/rtf", this, true );
 }
 
 void KTNEFMain::slotSaveMessageText()
