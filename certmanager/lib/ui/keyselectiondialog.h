@@ -117,6 +117,10 @@ namespace Kleo {
     QStringList smimeFingerprints() const;
 
     bool rememberSelection() const;
+  protected slots:
+    // reimplemented to avoid popping up the help, since we
+    // override the button
+    void slotHelp();
 
   private slots:
     void slotRereadKeys();

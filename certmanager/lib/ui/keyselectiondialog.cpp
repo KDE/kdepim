@@ -485,6 +485,10 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
   }
 }
 
+void Kleo::KeySelectionDialog::slotHelp()
+{
+    emit helpClicked();
+}
 
 void Kleo::KeySelectionDialog::slotStartCertificateManager()
 {
