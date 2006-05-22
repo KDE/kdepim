@@ -71,8 +71,8 @@ void ResourceRemoteConfig::loadSettings( KRES::Resource *resource )
 {
   ResourceRemote *res = static_cast<ResourceRemote *>( resource );
   if ( res ) {
-    mDownloadUrl->setURL( res->downloadUrl().url() );
-    mUploadUrl->setURL( res->uploadUrl().url() );
+    mDownloadUrl->setUrl( res->downloadUrl().url() );
+    mUploadUrl->setUrl( res->uploadUrl().url() );
     mReloadConfig->loadSettings( res );
     mSaveConfig->loadSettings( res );
   } else {

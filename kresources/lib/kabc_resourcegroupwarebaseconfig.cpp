@@ -87,7 +87,7 @@ void ResourceGroupwareBaseConfig::loadSettings( KRES::Resource *res )
     return;
   }
 
-  mURL->setURL( mResource->prefs()->url() );
+  mURL->setUrl( mResource->prefs()->url() );
   mUser->setText( mResource->prefs()->user() );
   mPassword->setText( mResource->prefs()->password() );
 
