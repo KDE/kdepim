@@ -399,7 +399,7 @@ void CertificateWizardImpl::slotURLSelected( const QString& _url )
 }
 
 KUrl CertificateWizardImpl::saveFileUrl() const {
-  return KUrl::fromPathOrUrl( storeUR->url().trimmed() );
+  return storeUR->url();
 }
 
 void CertificateWizardImpl::showPage( QWidget * page )
@@ -430,7 +430,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
   DCOPCString dcopService;
   int result = KDCOPServiceStarter::self()->
     findServiceFor( "DCOP/Mailer", QString(),
-                    QString(), &error, &dcopService );
+                    &error, &dcopService );
   if ( result != 0 ) {
     kDebug() << "Couldn't connect to KMail\n";
     KMessageBox::error( this,

@@ -180,8 +180,8 @@ void KWatchGnuPGConfig::loadConfig()
 {
   KConfig* config = KGlobal::config();
   config->setGroup("WatchGnuPG");
-  mExeED->setURL( config->readEntry( "Executable", "watchgnupg" ) );
-  mSocketED->setURL( config->readEntry( "Socket", QDir::home().canonicalPath()
+  mExeED->setUrl( config->readEntry( "Executable", "watchgnupg" ) );
+  mSocketED->setUrl( config->readEntry( "Socket", QDir::home().canonicalPath()
 										+ "/.gnupg/log-socket") );
   mLogLevelCB->setCurrentIndex( log_level_to_int( config->readEntry( "LogLevel", "basic" ) ) );
 
@@ -198,8 +198,8 @@ void KWatchGnuPGConfig::saveConfig()
 {
   KConfig* config = KGlobal::config();
   config->setGroup("WatchGnuPG");
-  config->writeEntry( "Executable", mExeED->url() );
-  config->writeEntry( "Socket", mSocketED->url() );
+  config->writeEntry( "Executable", mExeED->url().url() );
+  config->writeEntry( "Socket", mSocketED->url().url() );
   config->writeEntry( "LogLevel", log_levels[mLogLevelCB->currentIndex()] );
 
   config->setGroup("LogWindow");
