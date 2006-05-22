@@ -211,7 +211,7 @@ QString KTNEFMain::extractTemp(KTNEFAttach *att)
 void KTNEFMain::viewFileAs()
 {
 	KUrl::List	list;
-	list.append(KUrl::fromPathOrURL( extractTemp(view_->getSelection()->first()) ));
+	list.append(KUrl::fromPathOrUrl( extractTemp(view_->getSelection()->first()) ));
 
 	KRun::displayOpenWithDialog(list);
 }
@@ -401,7 +401,7 @@ void KTNEFMain::slotShowMessageText()
 	*( tmpFile.textStream() ) << rtf;
 	tmpFile.close();
 
-	KRun::runURL( KUrl::fromPathOrURL( tmpFile.name() ), "text/rtf", true );
+	KRun::runURL( KUrl::fromPathOrUrl( tmpFile.name() ), "text/rtf", true );
 }
 
 void KTNEFMain::slotSaveMessageText()
