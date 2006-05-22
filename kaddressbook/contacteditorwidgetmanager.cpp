@@ -29,7 +29,7 @@
 #include <kapplication.h>
 #include <kdialog.h>
 #include <klibloader.h>
-#include <ktrader.h>
+#include <kservicetypetrader.h>
 
 // include non-plugin contact editor widgets
 #include "customfieldswidget.h"
@@ -78,10 +78,10 @@ void ContactEditorWidgetManager::reload()
 {
   mFactories.clear();
   kDebug(5720) << "ContactEditorWidgetManager::reload()" << endl;
-  const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/ContactEditorWidget",
+  const KService::List plugins = KServiceTypeTrader::self()->query( "KAddressBook/ContactEditorWidget",
     QString( "[X-KDE-KAddressBook-CEWPluginVersion] == %1" ).arg( KAB_CEW_PLUGIN_VERSION ) );
 
-  KTrader::OfferList::ConstIterator it;
+  KService::List::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().toLatin1() );
     if ( !factory ) {

@@ -26,7 +26,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <ktrader.h>
+#include <kservicetypetrader.h>
 
 #include <QSignalMapper>
 #include <QTimer>
@@ -202,10 +202,10 @@ void ExtensionManager::createExtensionWidgets()
   }
 
   // load the other extensions
-  const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/Extension",
+  const KService::List plugins = KServiceTypeTrader::self()->query( "KAddressBook/Extension",
     QString( "[X-KDE-KAddressBook-ExtensionPluginVersion] == %1" ).arg( KAB_EXTENSIONWIDGET_PLUGIN_VERSION ) );
 
-  KTrader::OfferList::ConstIterator it;
+  KService::List::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().toLatin1() );
     if ( !factory ) {

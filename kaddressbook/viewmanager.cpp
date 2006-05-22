@@ -40,7 +40,7 @@
 #include <kmessagebox.h>
 #include <k3multipledrag.h>
 #include <ktempdir.h>
-#include <ktrader.h>
+#include <kservicetypetrader.h>
 
 #include "addviewdialog.h"
 #include "addresseeutil.h"
@@ -389,9 +389,9 @@ void ViewManager::scrollDown()
 
 void ViewManager::createViewFactories()
 {
-  const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/View",
+  const KService::List plugins = KServiceTypeTrader::self()->query( "KAddressBook/View",
     QString( "[X-KDE-KAddressBook-ViewPluginVersion] == %1" ).arg(  KAB_VIEW_PLUGIN_VERSION ) );
-  KTrader::OfferList::ConstIterator it;
+  KService::List::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     if ( !(*it)->hasServiceType( "KAddressBook/View" ) )
       continue;

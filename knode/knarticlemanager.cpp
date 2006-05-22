@@ -16,7 +16,7 @@
 #include <QList>
 
 #include <kmessagebox.h>
-#include <kuserprofile.h>
+#include <kmimetypetrader.h>
 #include <kopenwith.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -165,16 +165,16 @@ void KNArticleManager::openContent(KMime::Content *c)
   QString path=saveContentToTemp(c);
   if(path.isNull()) return;
 
-  KService::Ptr offer = KServiceTypeProfile::preferredService(c->contentType()->mimeType(), "Application");
+  KService::Ptr offer = KMimeTypeTrader::self()->preferredService(c->contentType()->mimeType(), "Application");
   KUrl::List lst;
   KUrl url;
   url.setPath(path);
   lst.append(url);
 
   if (offer)
-    KRun::run(*offer, lst);
+    KRun::run(*offer, lst, knGlobals.top);
   else
-    KRun::displayOpenWithDialog(lst);
+    KRun::displayOpenWithDialog(lst, knGlobals.top);
 }
 
 

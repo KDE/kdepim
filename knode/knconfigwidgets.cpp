@@ -24,10 +24,10 @@
 #include <QTextEdit>
 
 #include <kcharsets.h>
-#include <kservicetypeprofile.h>
 #include <klocale.h>
 #include <knumvalidator.h>
 #include <kmessagebox.h>
+#include <kmimetypetrader.h>
 #include <kcolordialog.h>
 #include <kfontdialog.h>
 #include <kfiledialog.h>
@@ -280,13 +280,13 @@ void KNode::IdentityWidget::slotSignatureEdit()
     return;
   }
 
-  KService::Ptr offer = KServiceTypeProfile::preferredService("text/plain", "Application");
+  KService::Ptr offer = KMimeTypeTrader::self()->preferredService("text/plain", "Application");
   KUrl u(fileName);
 
   if (offer)
-    KRun::run(*offer, u);
+    KRun::run(*offer, u, this);
   else
-    KRun::displayOpenWithDialog(u);
+    KRun::displayOpenWithDialog(u, this);
   emit changed( true );
 }
 

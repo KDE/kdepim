@@ -38,7 +38,7 @@
 #include <kmessagebox.h>
 #include <kplugininfo.h>
 #include <kpushbutton.h>
-#include <ktrader.h>
+#include <kservicetypetrader.h>
 
 #include "imaddresswidget.h"
 #include "imeditorbase.h"
@@ -169,7 +169,7 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM )
   //mWidget->btnDown->setEnabled( false );
   mPreferred = preferredIM;
   mPreferred = mPreferred.replace( " on ", QString( QChar( 0xE120 ) ), Qt::CaseSensitive );
-  mProtocols = KPluginInfo::fromServices( KTrader::self()->query( QString::fromLatin1( "KABC/IMProtocol" ) ) );
+  mProtocols = KPluginInfo::fromServices( KServiceTypeTrader::self()->query( QString::fromLatin1( "KABC/IMProtocol" ) ) );
 
   // order the protocols by putting them in a qmap, then sorting the set of keys and recreating the list
   QMap<QString, KPluginInfo *> protocolMap;

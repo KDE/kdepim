@@ -28,7 +28,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ktrader.h>
+#include <kservicetypetrader.h>
 #include <kapplication.h>
 
 #include "core.h"
@@ -121,9 +121,9 @@ void XXPortManager::loadPlugins()
 {
   mXXPortObjects.clear();
 
-  const KTrader::OfferList plugins = KTrader::self()->query( "KAddressBook/XXPort",
+  const KService::List plugins = KServiceTypeTrader::self()->query( "KAddressBook/XXPort",
     QString( "[X-KDE-KAddressBook-XXPortPluginVersion] == %1" ).arg( KAB_XXPORT_PLUGIN_VERSION ) );
-  KTrader::OfferList::ConstIterator it;
+  KService::List::ConstIterator it;
   for ( it = plugins.begin(); it != plugins.end(); ++it ) {
     if ( !(*it)->hasServiceType( "KAddressBook/XXPort" ) )
       continue;

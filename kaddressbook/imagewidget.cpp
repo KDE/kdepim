@@ -231,7 +231,7 @@ void ImageBaseWidget::setImage( const KABC::Picture &photo )
     mImageLabel->setPixmap( px );
     mUseImageUrl->setChecked( false );
   } else {
-    mImageUrl->setURL( photo.url() );
+    mImageUrl->setUrl( photo.url() );
     if ( !photo.url().isEmpty() )
       mUseImageUrl->setChecked( true );
     loadImage();
@@ -259,9 +259,9 @@ KABC::Picture ImageBaseWidget::image() const
 
 void ImageBaseWidget::urlDropped( const KUrl &url )
 {
-  mImageUrl->setURL( url.url() );
+  mImageUrl->setUrl( url );
   loadImage();
-  mImageUrl->setURL( url.url() );
+  mImageUrl->setUrl( url );
 
   emit changed();
 }
@@ -368,7 +368,7 @@ void ImageBaseWidget::slotLoadingComplete( Syndication::Loader *loader,
   }
 
   blockSignals( true );
-  mImageUrl->setURL( feed->image()->url() );
+  mImageUrl->setUrl( feed->image()->url() );
   loadImage();
   blockSignals( false );
   imageChanged();

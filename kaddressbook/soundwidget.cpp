@@ -99,7 +99,7 @@ void SoundWidget::loadContact( KABC::Addressee *addr )
     mPlayButton->setEnabled( true );
     mUseSoundUrl->setChecked( false );
   } else {
-    mSoundUrl->setURL( sound.url() );
+    mSoundUrl->setUrl( sound.url() );
     mPlayButton->setEnabled( false );
     if ( !sound.url().isEmpty() )
       mUseSoundUrl->setChecked( true );
