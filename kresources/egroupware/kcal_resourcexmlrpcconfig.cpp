@@ -78,7 +78,7 @@ void ResourceXMLRPCConfig::loadSettings( KRES::Resource *res )
     return;
   }
 
-  mURL->setURL( resource->prefs()->url() );
+  mURL->setUrl( resource->prefs()->url() );
   mDomain->setText( resource->prefs()->domain() );
   mUser->setText( resource->prefs()->user() );
   mPassword->setText( resource->prefs()->password() );

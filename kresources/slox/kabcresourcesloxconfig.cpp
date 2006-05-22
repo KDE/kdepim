@@ -91,7 +91,7 @@ void ResourceSloxConfig::loadSettings( KRES::Resource *res )
   if ( mRes->resType() == "slox" )
     mFolderButton->setEnabled( false ); // TODO folder selection for SLOX
 
-  mURL->setURL( resource->prefs()->url() );
+  mURL->setUrl( resource->prefs()->url() );
   mUser->setText( resource->prefs()->user() );
   mPassword->setText( resource->prefs()->password() );
   mLastSyncCheck->setChecked( resource->prefs()->useLastSync() );

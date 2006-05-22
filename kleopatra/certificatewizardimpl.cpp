@@ -395,7 +395,7 @@ QString CertificateWizardImpl::caEMailAddress() const {
 void CertificateWizardImpl::slotURLSelected( const QString& _url )
 {
   KUrl url = KUrl::fromPathOrUrl( _url.trimmed() );
-  storeUR->setURL( url.prettyUrl() );
+  storeUR->setUrl( url.prettyUrl() );
 }
 
 KUrl CertificateWizardImpl::saveFileUrl() const {

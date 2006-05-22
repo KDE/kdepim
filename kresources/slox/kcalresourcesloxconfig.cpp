@@ -99,7 +99,7 @@ void KCalResourceSloxConfig::loadSettings( KRES::Resource *resource )
     mTaskButton->setEnabled( false );
   }
   if ( res ) {
-    mDownloadUrl->setURL( res->prefs()->url() );
+    mDownloadUrl->setUrl( res->prefs()->url() );
     mLastSyncCheck->setChecked( res->prefs()->useLastSync() );
     mUserEdit->setText( res->prefs()->user() );
     mPasswordEdit->setText( res->prefs()->password() );

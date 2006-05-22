@@ -24,13 +24,13 @@
 #include <QTextEdit>
 
 #include <kcharsets.h>
+#include <kservicetypeprofile.h>
 #include <klocale.h>
 #include <knumvalidator.h>
 #include <kmessagebox.h>
 #include <kcolordialog.h>
 #include <kfontdialog.h>
 #include <kfiledialog.h>
-#include <kuserprofile.h>
 #include <kopenwith.h>
 #include <kscoringeditor.h>
 #include <kspell.h>
