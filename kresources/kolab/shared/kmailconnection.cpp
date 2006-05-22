@@ -77,7 +77,7 @@ bool KMailConnection::connectToKMail()
     DCOPCString dcopService;
     int result = KDCOPServiceStarter::self()->
       findServiceFor( "DCOP/ResourceBackend/IMAP", QString(),
-                      QString(), &error, &dcopService );
+                      &error, &dcopService );
     if ( result != 0 ) {
       kError(5650) << "Couldn't connect to the IMAP resource backend\n";
       // TODO: You might want to show "error" (if not empty) here,

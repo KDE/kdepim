@@ -71,7 +71,7 @@ void ResourceFeaturePlanConfig::loadSettings( KRES::Resource *res )
   }
 
   Prefs *p = resource->prefs();
-  mFilename->setURL( p->filename() );
+  mFilename->setUrl( p->filename() );
   mFilterEmail->setText( p->filterEmail() );
   mCvsCheck->setChecked( p->useCvs() );
 }

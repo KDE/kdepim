@@ -89,7 +89,7 @@ URLInput::URLInput( QWidget *parent, const QString& title, const QString& defaul
 	: AccountInput( configName )
 {
 	_left = new QLabel( title, parent );
-	_right = new KUrlRequester( "", parent );
+	_right = new KUrlRequester( parent );
 	setValue( defaul );
 }
 
@@ -106,7 +106,7 @@ QString URLInput::value() const
 
 void URLInput::setValue( const QString& value )
 {
-	_right->setURL( value );
+	_right->setUrl( value );
 }
 
 ComboInput::ComboInput( QWidget *parent, const QString& title, const QMap<QString, QString>& list,

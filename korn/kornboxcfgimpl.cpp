@@ -170,10 +170,10 @@ void KornBoxCfgImpl::readEventConfig()
 	this->chMiddlePopup->setChecked( _config->readEntry( "middlepopup", false ) );
 	this->chRightPopup ->setChecked( _config->readEntry( "rightpopup", true ) );
 	
-	this->edCommand->setURL( _config->readEntry( "command", "" ) );
+	this->edCommand->setUrl( _config->readEntry( "command", "" ) );
 	
-	this->edNewRun->setURL( _config->readEntry( "newcommand", "" ) );
-	this->edPlaySound->setURL( _config->readEntry( "sound", "" ) );
+	this->edNewRun->setUrl( _config->readEntry( "newcommand", "" ) );
+	this->edPlaySound->setUrl( _config->readEntry( "sound", "" ) );
 	this->chShowPassive->setChecked( _config->readEntry( "passivepopup", false ) );
 	this->chPassiveDate->setChecked( _config->readEntry( "passivedate", false ) );
 }
@@ -241,10 +241,10 @@ void KornBoxCfgImpl::writeEventConfig( KConfig *config )
 	config->writeEntry( "middlepopup", this->chMiddlePopup->isChecked() );
 	config->writeEntry( "rightpopup",  this->chRightPopup ->isChecked() );
 	
-	config->writeEntry( "command", this->edCommand->url() );
+	config->writeEntry( "command", this->edCommand->url().url() );
 	
-	config->writeEntry( "newcommand", this->edNewRun->url() );
-	config->writeEntry( "sound", this->edPlaySound->url() );
+	config->writeEntry( "newcommand", this->edNewRun->url().url() );
+	config->writeEntry( "sound", this->edPlaySound->url().url() );
 	config->writeEntry( "passivepopup", this->chShowPassive->isChecked() );
 	config->writeEntry( "passivedate", this->chPassiveDate->isChecked() );
 }
