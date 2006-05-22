@@ -157,7 +157,7 @@ kde4_automoc(${kaddressbook_LIB_SRCS})
 
 kde4_add_library(kaddressbook SHARED ${kaddressbook_LIB_SRCS})
 
-target_link_libraries(kaddressbook  ${KDE4_KDECORE_LIBS} syndication kdepim kcal kabc_file kdeprint phononcore )
+target_link_libraries(kaddressbook  ${KDE4_KDECORE_LIBS} syndication kdepim kcal kabc_file_core kdeprint phononcore )
 
 set_target_properties(kaddressbook PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install_targets(${LIB_INSTALL_DIR} kaddressbook )
