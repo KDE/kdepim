@@ -40,6 +40,7 @@
 #if QT_VERSION < 0x040000
 #include "itemAttributeDialog.h"
 #endif
+#include <QtDebug>
 
 #include "qpainter.h"
 
@@ -2177,7 +2178,7 @@ void KDGanttViewItem::loadFromDomElement( QDomElement& element )
                             if ( newItem )
                                 previous = newItem;
                         } else {
-                            qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
+                            qDebug() << "Unrecognized tag name: " << tagName;
                             Q_ASSERT( false );
                         }
                     }
@@ -2185,7 +2186,7 @@ void KDGanttViewItem::loadFromDomElement( QDomElement& element )
                     node = node.nextSibling();
                 }
             } else {
-                qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
+                qDebug() << "Unrecognized tag name: " << tagName;
                 Q_ASSERT( false );
             }
         }

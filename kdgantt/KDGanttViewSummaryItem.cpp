@@ -202,7 +202,7 @@ KDGanttViewItem::Connector  KDGanttViewSummaryItem::getConnector( QPoint p )
         return KDGanttViewItem::NoConnector;
 
     mCurrentConnectorCoordX =  p.x();
-    mCurrentConnectorDiffX =  p.x() - startShape->x();
+    mCurrentConnectorDiffX =  int( p.x() - startShape->x() );
 
     if ( startShape->boundingRect().contains( p ) )
         return KDGanttViewItem::Start;
