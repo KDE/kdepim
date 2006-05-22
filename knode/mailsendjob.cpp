@@ -31,10 +31,10 @@ void KNode::MailSendJob::execute()
   // create url query part
   QStringList query;
   query << "headers=0";
-  query << "from=" + KUrl::encode_string( art->from()->email() );
+  query << "from=" + KUrl::toPercentEncoding( art->from()->email() );
   QList<QByteArray> emails = art->to()->emails();
   foreach ( QByteArray to, emails )
-    query << "to=" + KUrl::encode_string( to );
+    query << "to=" + KUrl::toPercentEncoding( to );
 
   // create url
   KUrl destination = baseUrl();

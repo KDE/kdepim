@@ -845,7 +845,7 @@ void ArticleWidget::displayAttachment( KMime::Content *att, int partNum )
   if ( fileName.isEmpty() ) {
     href = "part://" + QString::number( partNum );
   } else {
-    href = "file:" + KUrl::encode_string( fileName );
+    href = "file:" + KUrl::toPercentEncoding( fileName );
     mAttachementMap[fileName] = partNum;
   }
 

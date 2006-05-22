@@ -154,7 +154,7 @@ int Kleo::GnuPGProcessBase::childStatus( int fd ) {
 }
 
 static QString fromHexEscapedUtf8( const QByteArray & str ) {
-  return KUrl::decode_string( str.data() /* utf-8 */ );
+  return KUrl::fromPercentEncoding( str.data() /* utf-8 */ );
 }
 
 void Kleo::GnuPGProcessBase::parseStatusOutput() {

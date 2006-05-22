@@ -463,7 +463,7 @@ void KNMainWidget::openURL(const KUrl &url)
   }
 
   if (acc) {
-    QString decodedUrl = KUrl::decode_string( url.url() );
+    QString decodedUrl = KUrl::fromPercentEncoding( url.url().toLatin1() );
     bool isMID=decodedUrl.contains('@' );
 
     if (!isMID) {

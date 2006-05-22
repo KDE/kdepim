@@ -254,7 +254,7 @@ Q3DragObject* KNHdrViewItem::dragObject()
   mid = mid.mid( 1, mid.length() - 2 );
   list.append( KDEPIMPROTOCOL_NEWSARTICLE + mid );
   QMap<QString,QString> metadata;
-  metadata["labels"] = KUrl::encode_string( art->subject()->asUnicodeString() );
+  metadata["labels"] = KUrl::toPercentEncoding( art->subject()->asUnicodeString() );
   d->addDragObject( new K3URLDrag( list, metadata, 0L ) );
   d->addDragObject( new Q3StoredDrag( "x-knode-drag/article" , 0L ) );
   d->setPixmap( knGlobals.configManager()->appearance()->icon( KNode::Appearance::posting ) );

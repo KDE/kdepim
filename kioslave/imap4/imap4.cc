@@ -520,7 +520,7 @@ IMAP4Protocol::listDir (const KUrl & _url)
 
     if (!_url.query ().isEmpty ())
     {
-      QString query = KUrl::decode_string (_url.query ());
+      QString query = KUrl::fromPercentEncoding (_url.query().toLatin1());
       query = query.right (query.length () - 1);
       if (!query.isEmpty())
       {
@@ -2221,7 +2221,7 @@ IMAP4Protocol::parseURL (const KUrl & _url, QString & _box,
   retVal = ITYPE_UNKNOWN;
 
   imapParser::parseURL (_url, _box, _section, _type, _uid, _validity, _info);
-//  kDebug(7116) << "URL: query - '" << KUrl::decode_string(_url.query()) << "'" << endl;
+//  kDebug(7116) << "URL: query - '" << KUrl::fromPercentEncoding(_url.query()) << "'" << endl;
 
   // get the delimiter
   QString myNamespace = namespaceForBox( _box );
