@@ -163,7 +163,7 @@ public:
 	 *
 	 * @return false
 	 */
-	virtual bool canReadMail() const { return false; }
+	virtual bool canReadMail() { return false; }
 	
 	
 private:

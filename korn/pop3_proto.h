@@ -44,10 +44,10 @@ public:
 
 	virtual QStringList authList() const { return QStringList::split( '|', "Plain|APOP", false ); }
 	
-	virtual void readSubjectKURL( KURL & kurl, KIO::MetaData & ) { kurl.setPath( kurl.path().replace( "/download/", "/headers/" ) ); }
-	virtual void deleteMailKURL ( KURL & kurl, KIO::MetaData & ) { kurl.setPath( kurl.path().replace( "/download/", "/remove/" ) ); }
-	virtual bool commitDelete () { return true; }
-	virtual void deleteCommitKURL(KURL & kurl, KIO::MetaData & ) { kurl.setPath( "commit" ); }
+	virtual void readSubjectKURL( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( kurl.path().replace( "/download/", "/headers/" ) ); }
+	virtual void deleteMailKURL ( KURL & kurl, KIO::MetaData & ) const { kurl.setPath( kurl.path().replace( "/download/", "/remove/" ) ); }
+	virtual bool commitDelete () const { return true; }
+	virtual void deleteCommitKURL(KURL & kurl, KIO::MetaData & ) const { kurl.setPath( "commit" ); }
 
 	virtual void configFillGroupBoxes( QStringList* ) const;
         virtual void configFields( QPtrVector< QWidget >* vector, const QObject*, QPtrList< AccountInput >* ) const;
