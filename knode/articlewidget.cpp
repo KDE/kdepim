@@ -501,8 +501,10 @@ void ArticleWidget::displayArticle()
       }
     }
     else {
-      if ( !containsPGP )
+      if ( !containsPGP ) {
         QStringList lines = text->decodedText( true, knGlobals.settings()->removeTrailingNewlines() ).split( '\n' );
+        displayBodyBlock( lines );
+      }
     }
 
   }
