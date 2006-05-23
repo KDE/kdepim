@@ -1744,6 +1744,11 @@ void KDGanttView::setShapes( KDGanttViewItem::Type type,
       }
     }
     int index = getIndex( type );
+
+    if ( index < 0 ) {
+      return;
+    }
+
     myDefaultShape [index*3] = start;
     myDefaultShape [index*3+1] = middle;
     myDefaultShape [index*3+2] = end;
@@ -1769,6 +1774,11 @@ bool KDGanttView::shapes( KDGanttViewItem::Type type,
                           KDGanttViewItem::Shape& end ) const
 {
     int index = getIndex( type );
+
+    if ( index < 0 ) {
+        return false;
+    }
+
     start = myDefaultShape [index*3];
     middle = myDefaultShape [index*3+1];
     end = myDefaultShape [index*3+2];
