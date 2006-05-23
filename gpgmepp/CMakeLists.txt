@@ -1,6 +1,4 @@
 
-find_package( Gpgme )
-
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-gpgmepp.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-gpgmepp.h )
 
 add_subdirectory( interfaces )

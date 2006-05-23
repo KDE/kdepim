@@ -11,6 +11,7 @@ include (MacroLibrary)
 find_package(Kode REQUIRED)
 macro_optional_find_package(LIBKDEPIM)
 macro_optional_find_package(Sasl2)
+find_package( Gpgme )
 
 # is this really required here ?
 if (APPLE)
