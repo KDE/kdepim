@@ -18,7 +18,8 @@ set(kmime_LIB_SRCS
    kmime_codec_identity.cpp 
    kmime_parsers.cpp 
    kmime_header_parsing.cpp 
-   kmime_content.cpp 
+   kmime_content.cpp
+   kmime_contentindex.cpp
    kmime_headers.cpp 
    kmime_message.cpp 
    kmime_newsarticle.cpp 

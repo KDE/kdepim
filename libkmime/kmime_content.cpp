@@ -909,5 +909,36 @@ void Content::setForceDefaultCharset( bool b )
   parse();
 }
 
+Content * KMime::Content::content( const ContentIndex & index ) const
+{
+  if ( !index.isValid() )
+    return const_cast<KMime::Content*>( this );
+  ContentIndex idx = index;
+  unsigned int i = idx.pop() - 1; // one-based -> zero-based index
+  if ( i < (unsigned int)d->contents.size() )
+    return d->contents[i]->content( idx );
+  else
+    return 0;
+}
+
+ContentIndex KMime::Content::indexForContent( Content * content ) const
+{
+  int i = d->contents.indexOf( content );
+  if ( i > 0 ) {
+    ContentIndex ci;
+    ci.push( i + 1 ); // zero-based -> one-based index
+    return ci;
+  }
+  // not found, we need to search recursively
+  for ( int i = 0; i < d->contents.size(); ++i ) {
+    ContentIndex ci = d->contents[i]->indexForContent( content );
+    if ( ci.isValid() ) {
+      // found it
+      ci.push( i + 1 ); // zero-based -> one-based index
+      return ci;
+    }
+  }
+  return ContentIndex(); // not found
+}
 
 } // namespace KMime

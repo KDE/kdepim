@@ -81,6 +81,18 @@ target_link_libraries(kmime_util_test  kmime ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LI
 
 add_test(libkmime-kmime_util_test ${EXECUTABLE_OUPUT_PATH}/kmime_util_test)
 
+########### next target ###############
+
+set(contentindextest_SRCS contentindextest.cpp )
+
+kde4_automoc(${contentindextest_SRCS})
+
+kde4_add_executable(contentindextest RUN_UNINSTALLED ${contentindextest_SRCS})
+
+target_link_libraries(contentindextest  kmime ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
+
+add_test(libkmime-contentindextest ${EXECUTABLE_OUPUT_PATH}/contentindextest)
+
 ########### install files ###############
 
 endif(KDE4_BUILD_TESTS)

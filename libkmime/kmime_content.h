@@ -27,6 +27,7 @@ class KMime::Headers::CDisposition;
 class KMime::Headers::List;
 #endif
 
+#include <kmime_contentindex.h>
 #include "kmime_util.h"
 #include "kmime_headers.h"
 
@@ -236,6 +237,21 @@ class KDE_EXPORT Content : public Base {
       @param b True to force usage of the default charset.
     */
     virtual void setForceDefaultCharset( bool b );
+
+    /**
+      Returns the content specified by the given index.
+      If the index doesn't point to an content, 0 is returned, if the index
+      is invalid (empty), this content is returned.
+      @param index the content index
+    */
+    Content* content( const ContentIndex &index ) const;
+
+    /**
+      Returns the ContentIndex for the given content, an invalid index
+      if the content is not found withing the hierarchy.
+      @param content the Content object to search.
+    */
+    ContentIndex indexForContent( Content *content ) const;
 
 
   protected:
