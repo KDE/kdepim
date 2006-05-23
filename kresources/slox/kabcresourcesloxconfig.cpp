@@ -107,7 +107,7 @@ void ResourceSloxConfig::saveSettings( KRES::Resource *res )
     return;
   }
 
-  resource->prefs()->setUrl( mURL->url() );
+  resource->prefs()->setUrl( mURL->url().toString() );
   resource->prefs()->setUser( mUser->text() );
   resource->prefs()->setPassword( mPassword->text() );
   resource->prefs()->setUseLastSync( mLastSyncCheck->isChecked() );

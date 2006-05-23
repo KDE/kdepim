@@ -92,7 +92,7 @@ void ResourceXMLRPCConfig::saveSettings( KRES::Resource *res )
     return;
   }
 
-  resource->prefs()->setUrl( mURL->url() );
+  resource->prefs()->setUrl( mURL->url().toString() );
   resource->prefs()->setDomain( mDomain->text() );
   resource->prefs()->setUser( mUser->text() );
   resource->prefs()->setPassword( mPassword->text() );

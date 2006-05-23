@@ -447,7 +447,7 @@ bool readBrushNode( const QDomElement& element, QBrush& brush )
 bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
 {
     bool ok = true;
-    ulong tempLength;
+    ulong tempLength = 0;
     QString tempData;
     QDomNode node = element.firstChild();
     while( !node.isNull() ) {

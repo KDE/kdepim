@@ -116,7 +116,7 @@ void KCalResourceSloxConfig::saveSettings( KRES::Resource *resource )
 {
   KCalResourceSlox *res = static_cast<KCalResourceSlox*>( resource );
   if ( res ) {
-    res->prefs()->setUrl( mDownloadUrl->url() );
+    res->prefs()->setUrl( mDownloadUrl->url().toString() );
     res->prefs()->setUseLastSync( mLastSyncCheck->isChecked() );
     res->prefs()->setUser( mUserEdit->text() );
     res->prefs()->setPassword( mPasswordEdit->text() );

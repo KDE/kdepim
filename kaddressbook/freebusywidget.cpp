@@ -69,7 +69,7 @@ void FreeBusyWidget::storeContact( KABC::Addressee *addr )
   if ( addr->preferredEmail().isEmpty() )
     return;
 
-  KCal::FreeBusyUrlStore::self()->writeUrl( addr->preferredEmail(), mURL->url() );
+  KCal::FreeBusyUrlStore::self()->writeUrl( addr->preferredEmail(), mURL->url().toString() );
   KCal::FreeBusyUrlStore::self()->sync();
 }
 

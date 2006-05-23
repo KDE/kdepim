@@ -113,7 +113,7 @@ void SoundWidget::storeContact( KABC::Addressee *addr )
   KABC::Sound sound;
 
   if ( mUseSoundUrl->isChecked() )
-    sound.setUrl( mSoundUrl->url() );
+    sound.setUrl( mSoundUrl->url().toString() );
   else
     sound.setData( mSound.data() );
 

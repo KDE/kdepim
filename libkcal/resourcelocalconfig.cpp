@@ -82,7 +82,7 @@ void ResourceLocalConfig::loadSettings( KRES::Resource *resource )
 
 void ResourceLocalConfig::saveSettings( KRES::Resource *resource )
 {
-  QString url = mURL->url();
+  QString url = mURL->url().toString();
 
   if( url.isEmpty() ) {
     KStandardDirs dirs;
