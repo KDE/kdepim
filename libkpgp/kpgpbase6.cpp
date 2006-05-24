@@ -23,6 +23,7 @@
 #include "kpgpbase.h"
 
 #include <string.h> /* strncmp */
+#include <assert.h>
 
 #include <QDateTime>
 //Added by qt3to4:
@@ -667,6 +668,7 @@ Base6::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
 	  fingerprint.replace( idx, 1, "" );
 
         //kDebug(5100)<<"Fingerprint: "<<fingerprint<<endl;
+        assert( subkey != 0 );
         subkey->setFingerprint( fingerprint );
       }
       else

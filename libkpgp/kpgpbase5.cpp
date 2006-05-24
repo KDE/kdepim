@@ -24,6 +24,7 @@
 #include "kpgp.h"
 
 #include <string.h> /* strncmp */
+#include <assert.h>
 
 #include <QRegExp>
 #include <QDateTime>
@@ -660,6 +661,7 @@ Base5::parseKeyData( const QByteArray& output, int& offset, Key* key /* = 0 */ )
       // remove white space from the fingerprint
       for ( int idx = 0 ; (idx = fingerprint.indexOf(' ', idx)) != -1 ; )
 	fingerprint.replace( idx, 1, "" );
+      assert( subkey != 0 );
       subkey->setFingerprint( fingerprint );
       //kDebug(5100)<<"Fingerprint: "<<fingerprint<<endl;
     }

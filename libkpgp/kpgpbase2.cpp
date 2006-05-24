@@ -24,6 +24,7 @@
 #include "kpgp.h"
 
 #include <string.h> /* strncmp */
+#include <assert.h>
 
 #include <QDateTime>
 //Added by qt3to4:
@@ -742,6 +743,7 @@ Base2::parsePublicKeyData( const QByteArray& output, Key* key /* = 0 */ )
 
       if( key == 0 )
         break;
+      assert( subkey != 0 );
 
       int pos = index + 1;
       while( output[pos] == ' ' )

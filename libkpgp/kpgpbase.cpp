@@ -138,12 +138,15 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
   // poll for "There is data to read."
   pollout.fd = pout[0];
   pollout.events = POLLIN;
+  pollout.revents = 0; // init with 0, just in case
   pollerr.fd = perr[0];
   pollerr.events = POLLIN;
+  pollerr.revents = 0; // init with 0, just in case
 
   // poll for "Writing now will not block."
   pollin.fd = pin[1];
   pollin.events = POLLOUT;
+  pollin.revents = 0; // init with 0, just in case
 
   if (!onlyReadFromPGP) {
     if (!input.isEmpty()) {
