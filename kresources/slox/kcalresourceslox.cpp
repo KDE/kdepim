@@ -130,7 +130,7 @@ void KCalResourceSlox::readConfig( const KConfig *config )
   url.setPass( mPrefs->password() );
 
   delete mAccounts;
-  mAccounts = new SloxAccounts( url ); 
+  mAccounts = new SloxAccounts( url );
 }
 
 void KCalResourceSlox::writeConfig( KConfig *config )
@@ -162,8 +162,6 @@ bool KCalResourceSlox::doOpen()
 
 bool KCalResourceSlox::doLoad()
 {
-  kdDebug() << "KCalResourceSlox::load() " << int( this ) << endl;
-
   if ( !mOpen ) {
     kdWarning() << "Warning: resource not open." << endl;
     return true;
@@ -583,28 +581,28 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
 
   int weeklyValue = -1;
   QBitArray days( 7 ); // days, starting with monday
- 
+
   int monthlyValueDay = -1;
   int monthlyValueMonth = -1;
 
   int yearlyValueDay = -1;
   int yearlyMonth = -1;
-  
+
   int monthly2Recurrency = 0;
   int monthly2Day = 0;
   int monthly2ValueMonth = -1;
-  
+
   int yearly2Recurrency = 0;
   int yearly2Day = 0;
   int yearly2Month = -1;
 
   QDomNode n;
-  
+
   for( n = node.firstChild(); !n.isNull(); n = n.nextSibling() ) {
     QDomElement e = n.toElement();
     QString tag = e.tagName();
     QString text = QString::fromUtf8( e.text().latin1() );
-    
+
     if ( tag == "date_sequence" ) {
       type = text;
     } else if ( tag == "daily_value" ) {
@@ -641,9 +639,9 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
       yearly2Month = text.toInt();
     }
   }
-  
+
   Recurrence *r = event->recurrence();
-  
+
   if ( type == "daily" ) {
     r->setDaily( dailyValue, end.date() );
   } else if ( type == "weekly" ) {
@@ -785,8 +783,6 @@ void KCalResourceSlox::slotLoadTodosResult( KIO::Job *job )
 
 void KCalResourceSlox::slotLoadEventsResult( KIO::Job *job )
 {
-  kdDebug() << "KCalResourceSlox::slotLoadEventsResult() " << int( this ) << endl;
-
   if ( job->error() ) {
     loadError( job->errorString() );
   } else {
@@ -895,7 +891,7 @@ void KCalResourceSlox::slotUploadResult( KIO::Job *job )
           kdError() << "Unable to find propstat tag." << endl;
           continue;
         }
-        
+
         QDomNode status = propstat.namedItem( "status" );
         if ( !status.isNull() ) {
           QDomElement statusElement = status.toElement();
