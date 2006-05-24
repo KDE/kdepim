@@ -23,6 +23,7 @@
 #include "kpgpbase.h"
 
 #include <string.h> /* strncmp */
+#include <assert.h>
 
 #include <qdatetime.h>
 
@@ -665,6 +666,7 @@ Base6::parseKeyData( const QCString& output, int& offset, Key* key /* = 0 */ )
 	  fingerprint.replace( idx, 1, "" );
 
         //kdDebug(5100)<<"Fingerprint: "<<fingerprint<<endl;
+        assert( subkey != 0 );
         subkey->setFingerprint( fingerprint );
       }
       else

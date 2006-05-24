@@ -1434,6 +1434,7 @@ Module::assignPGPBase(void)
 
       case tAuto:
         kdDebug(5100) << "Kpgp: assign pgp - auto" << endl;
+        // fall through
       default:
         kdDebug(5100) << "Kpgp: assign pgp - default" << endl;
         if (haveGpg)

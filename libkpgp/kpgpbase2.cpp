@@ -24,6 +24,7 @@
 #include "kpgp.h"
 
 #include <string.h> /* strncmp */
+#include <assert.h>
 
 #include <qdatetime.h>
 
@@ -740,6 +741,7 @@ Base2::parsePublicKeyData( const QCString& output, Key* key /* = 0 */ )
 
       if( key == 0 )
         break;
+      assert( subkey != 0 );
 
       int pos = index + 1;
       while( output[pos] == ' ' )
