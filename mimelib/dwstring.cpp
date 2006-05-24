@@ -227,6 +227,7 @@ DwStringRep::DwStringRep(FILE* aFile, size_t aSize)
     static int pagesize = -1;
     if (pagesize < 0)
 	pagesize = getpagesize();
+    assert(pagesize != 0);
     int tell = ftell(aFile);
     mPageMod = tell % pagesize;
     mSize = aSize;
