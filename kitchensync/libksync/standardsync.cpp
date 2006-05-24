@@ -40,7 +40,7 @@ void StandardSync::syncToTarget( Syncee *source, Syncee *target, bool override )
        sourceEntry = source->nextEntry() ) {
     kdDebug(5250) << "SYNC: sourceEntry: " << sourceEntry->id()
                   << " (" << sourceEntry->name() << ")"
-                  << " " << int( sourceEntry ) << endl;
+                  << " " << long( sourceEntry ) << endl;
     if ( sourceEntry->dontSync() ) {
       kdDebug(5250) << "SYNC:   source don't sync" << endl;
       continue;
@@ -49,7 +49,7 @@ void StandardSync::syncToTarget( Syncee *source, Syncee *target, bool override )
     if ( targetEntry ) {
       kdDebug(5250) << "SYNC:   targetEntry: " << targetEntry->id()
                     << " (" << targetEntry->name() << ")"
-                    << " " << int( targetEntry ) << endl;
+                    << " " << long( targetEntry ) << endl;
       if ( targetEntry->dontSync() ) {
         kdDebug(5250) << "SYNC:   target don't sync" << endl;
         continue;
