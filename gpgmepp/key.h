@@ -144,7 +144,7 @@ namespace GpgME {
     bool canAuthenticate() const;
     bool isQualified() const;
 
-    bool isSecred() const;
+    bool isSecret() const;
 
     unsigned int publicKeyAlgorithm() const;
     const char * publicKeyAlgorithmAsString() const;

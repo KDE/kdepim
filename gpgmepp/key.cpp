@@ -402,6 +402,10 @@ namespace GpgME {
 #endif
   }
 
+  bool Subkey::isSecret() const {
+    return d->subkey && d->subkey->secret;
+  }
+
   unsigned int Subkey::length() const {
     return d->subkey ? d->subkey->length : 0 ;
   }
@@ -750,7 +754,8 @@ namespace GpgME {
   UserID::Signature::Status UserID::Signature::status() const {
     if ( !d->sig )
       return GeneralError;
-    switch ( d->sig->status ) {
+
+    switch ( gpgme_err_code(d->sig->status) ) {
     case GPG_ERR_NO_ERROR:      return NoError;
     case GPG_ERR_SIG_EXPIRED:   return SigExpired;
     case GPG_ERR_KEY_EXPIRED:   return KeyExpired;
