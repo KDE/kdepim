@@ -1,5 +1,5 @@
 /* key.cpp - wraps a gpgme key
-   Copyright (C) 2003 Klarälvdalens Datakonsult AB
+   Copyright (C) 2003 KlarÃ¤lvdalens Datakonsult AB
 
    This file is part of GPGME++.
  
@@ -379,9 +379,13 @@ namespace GpgME {
   bool Subkey::canCertify() const {
     return d->subkey && d->subkey->can_certify;
   }
-  
+
   bool Subkey::canAuthenticate() const {
     return d->subkey && d->subkey->can_authenticate;
+  }
+
+  bool Subkey::isSecret() const {
+    return d->subkey && d->subkey->secret;
   }
 
   unsigned int Subkey::length() const {
@@ -732,7 +736,8 @@ namespace GpgME {
   UserID::Signature::Status UserID::Signature::status() const {
     if ( !d->sig )
       return GeneralError;
-    switch ( d->sig->status ) {
+
+    switch ( gpgme_err_code(d->sig->status) ) {
     case GPG_ERR_NO_ERROR:      return NoError;
     case GPG_ERR_SIG_EXPIRED:   return SigExpired;
     case GPG_ERR_KEY_EXPIRED:   return KeyExpired;

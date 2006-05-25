@@ -1,5 +1,5 @@
 /* key.h - wraps a gpgme key
-   Copyright (C) 2003 Klar‰lvdalens Datakonsult AB
+   Copyright (C) 2003 Klar√§lvdalens Datakonsult AB
 
    This file is part of GPGME++.
  
@@ -142,7 +142,7 @@ namespace GpgME {
     bool canCertify() const;
     bool canAuthenticate() const;
 
-    bool isSecred() const;
+    bool isSecret() const;
 
     unsigned int publicKeyAlgorithm() const;
     const char * publicKeyAlgorithmAsString() const;
