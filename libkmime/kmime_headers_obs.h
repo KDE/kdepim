@@ -38,8 +38,8 @@ class KDE_EXPORT MessageID : public Base {
     virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
     virtual void clear()            { m_id.resize(0); }
-    virtual bool isEmpty()          { return (m_id.isEmpty()); }
-    virtual const char* type()      { return "Message-Id"; }
+    virtual bool isEmpty() const { return (m_id.isEmpty()); }
+    virtual const char* type() const { return "Message-Id"; }
 
     void generate(const QByteArray &fqdn);
 
@@ -58,7 +58,7 @@ class KDE_EXPORT Supersedes : public MessageID {
     Supersedes(Content *p, const QString &s)  : MessageID(p,s)  {}
     ~Supersedes()                   {}
 
-    virtual const char* type()      { return "Supersedes"; }
+    virtual const char* type() const { return "Supersedes"; }
 
 };
 
@@ -81,7 +81,7 @@ class KDE_EXPORT AddressField : public Base {
     virtual void fromUnicodeString(const QString &s, const QByteArray &cs);
     virtual QString asUnicodeString();
     virtual void clear()              { n_ame.truncate(0); e_mail.resize(0); }
-    virtual bool isEmpty()            { return (e_mail.isEmpty() && n_ame.isEmpty()); }
+    virtual bool isEmpty() const      { return (e_mail.isEmpty() && n_ame.isEmpty()); }
 
     bool hasName()                    { return ( !n_ame.isEmpty() ); }
     bool hasEmail()                   { return ( !e_mail.isEmpty() ); }
@@ -108,7 +108,7 @@ class KDE_EXPORT From : public AddressField {
     From(Content *p, const QString &s, const QByteArray &cs) : AddressField(p,s,cs)  {}
     ~From()  {}
 
-    virtual const char* type()      { return "From"; }
+    virtual const char* type() const { return "From"; }
 };
 
 
@@ -122,7 +122,7 @@ class KDE_EXPORT ReplyTo : public AddressField {
     ReplyTo(Content *p, const QString &s, const QByteArray &cs) : AddressField(p,s,cs)  {}
     ~ReplyTo()  {}
 
-    virtual const char* type()      { return "Reply-To"; }
+    virtual const char* type() const { return "Reply-To"; }
 
 };
 
@@ -142,7 +142,7 @@ class KDE_EXPORT MailCopiesTo : public AddressField {
     bool alwaysCopy();
     bool neverCopy();
 
-    virtual const char* type()      { return "Mail-Copies-To"; }
+    virtual const char* type() const { return "Mail-Copies-To"; }
 
 };
 
@@ -161,8 +161,8 @@ class KDE_EXPORT To : public Base {
     virtual void fromUnicodeString(const QString &s, const QByteArray &cs);
     virtual QString asUnicodeString();
     virtual void clear()            { qDeleteAll( a_ddrList ); a_ddrList.clear(); }
-    virtual bool isEmpty()          { return a_ddrList.isEmpty() || a_ddrList.first()->isEmpty(); }
-    virtual const char* type()      { return "To"; }
+    virtual bool isEmpty() const { return a_ddrList.isEmpty() || a_ddrList.first()->isEmpty(); }
+    virtual const char* type() const { return "To"; }
 
     void addAddress(const AddressField &a);
     QList<QByteArray> emails() const;
@@ -183,7 +183,7 @@ class KDE_EXPORT CC : public To {
     CC(Content *p, const QString &s, const QByteArray &cs) : To(p,s,cs)  {}
     ~CC()  {}
 
-    virtual const char* type()      { return "CC"; }
+    virtual const char* type() const { return "CC"; }
 
 };
 
@@ -198,7 +198,7 @@ class KDE_EXPORT BCC : public To {
     BCC(Content *p, const QString &s, const QByteArray &cs) : To(p,s,cs)  {}
     ~BCC()  {}
 
-    virtual const char* type()      { return "BCC"; }
+    virtual const char* type() const { return "BCC"; }
 
 };
 
@@ -217,8 +217,8 @@ class KDE_EXPORT References : public Base {
     virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
     virtual void clear()            { r_ef.resize(0); p_os=0; }
-    virtual bool isEmpty()          { return (r_ef.isEmpty()); }
-    virtual const char* type()      { return "References"; }
+    virtual bool isEmpty() const { return (r_ef.isEmpty()); }
+    virtual const char* type() const { return "References"; }
 
     int count();
     QByteArray first();
@@ -247,8 +247,8 @@ class KDE_EXPORT ContentType : public Base {
     virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
     virtual void clear()            { m_imeType.resize(0); p_arams.resize(0); }
-    virtual bool isEmpty()          { return (m_imeType.isEmpty()); }
-    virtual const char* type()      { return "Content-Type"; }
+    virtual bool isEmpty() const { return (m_imeType.isEmpty()); }
+    virtual const char* type() const { return "Content-Type"; }
 
 
     //mime-type handling
@@ -306,7 +306,7 @@ class KDE_EXPORT CTEncoding : public Base {
     virtual void fromUnicodeString(const QString &s, const QByteArray&);
     virtual QString asUnicodeString();
     virtual void clear()            { d_ecoded=true; c_te=CE7Bit; }
-    virtual const char* type()      { return "Content-Transfer-Encoding"; }
+    virtual const char* type() const { return "Content-Transfer-Encoding"; }
 
     contentEncoding cte()                   { return c_te; }
     void setCte(contentEncoding e)          { c_te=e; }
@@ -336,7 +336,7 @@ class KDE_EXPORT CDisposition : public Base {
     virtual void fromUnicodeString(const QString &s, const QByteArray &cs);
     virtual QString asUnicodeString();
     virtual void clear()            { f_ilename.truncate(0); d_isp=CDinline; }
-    virtual const char* type()      { return "Content-Disposition"; }
+    virtual const char* type() const { return "Content-Disposition"; }
 
     contentDisposition disposition()          { return d_isp; }
     void setDisposition(contentDisposition d) { d_isp=d; }
@@ -364,7 +364,7 @@ class KDE_EXPORT CDescription : public Generics::GUnstructured {
       : Generics::GUnstructured( p, s, cs ) {}
     ~CDescription()  {}
 
-    virtual const char* type()      { return "Content-Description"; }
+    virtual const char* type() const { return "Content-Description"; }
 };
 
 #endif  // __KMIME_HEADERS_OBS_H__

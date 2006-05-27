@@ -30,7 +30,7 @@ QTEST_KDEMAIN( KMimeContentTest, NoGUI )
 
 void KMimeContentTest::testGetHeaderInstance( )
 {
-  // this fails with libkmime4...
+  // stuff that looks trivial but breaks if you mess with virtual method signatures (see r534381)
   Headers::From *myfrom = new Headers::From();
   QCOMPARE( myfrom->type(), "From" );
   Headers::Base *mybase = myfrom;
@@ -38,7 +38,6 @@ void KMimeContentTest::testGetHeaderInstance( )
 
   // getHeaderInstance() is protected, so we need to test it via KMime::Message
   Message *c = new Message();
-  Headers::From *from;
   Headers::From *f1 = c->from( true );
   Headers::From *f2 = c->from( true );
   QCOMPARE( f1, f2 );
