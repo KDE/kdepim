@@ -71,6 +71,7 @@ set(libkdgantt_SRCS
 
 add_subdirectory(kode)
 add_subdirectory(libakonadi)
+add_subdirectory(akonadiresources)
 add_subdirectory(libemailfunctions)
 add_subdirectory(libkcal)
 add_subdirectory(libkdepim)
