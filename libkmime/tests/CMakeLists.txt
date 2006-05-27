@@ -3,7 +3,7 @@ if(KDE4_BUILD_TESTS)
 
 include_directories(
 	${CMAKE_SOURCE_DIR}/libkmime
-	
+
 )
 
 
@@ -92,6 +92,18 @@ kde4_add_executable(contentindextest RUN_UNINSTALLED ${contentindextest_SRCS})
 target_link_libraries(contentindextest  kmime ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
 
 add_test(libkmime-contentindextest ${EXECUTABLE_OUPUT_PATH}/contentindextest)
+
+########### next target ###############
+
+set(kmime_content_test_SRCS kmime_content_test.cpp )
+
+kde4_automoc(${kmime_content_test_SRCS})
+
+kde4_add_executable(kmime_content_test RUN_UNINSTALLED ${kmime_content_test_SRCS})
+
+target_link_libraries(kmime_content_test  kmime ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
+
+add_test(libkmime-contenttest ${EXECUTABLE_OUPUT_PATH}/kmime_content_test)
 
 ########### install files ###############
 
