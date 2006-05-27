@@ -21,6 +21,7 @@
 #include <qtest_kde.h>
 
 #include <kmime_content.h>
+#include <kmime_headers.h>
 #include <kmime_message.h>
 #include <kmime_headers.h>
 using namespace KMime;
@@ -29,6 +30,12 @@ QTEST_KDEMAIN( KMimeContentTest, NoGUI )
 
 void KMimeContentTest::testGetHeaderInstance( )
 {
+  // this fails with libkmime4...
+  Headers::From *myfrom = new Headers::From();
+  QCOMPARE( myfrom->type(), "From" );
+  Headers::Base *mybase = myfrom;
+  QCOMPARE( mybase->type(), "From" );
+
   // getHeaderInstance() is protected, so we need to test it via KMime::Message
   Message *c = new Message();
   Headers::From *from;
