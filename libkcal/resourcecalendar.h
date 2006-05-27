@@ -116,6 +116,19 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual bool isSaving() { return false; }
 
     /**
+      Inhibit or allow saves, overriding the save policy set by setSavePolicy().
+      Inhibiting saves has the same effect as making all resources read-only, except
+      that the inhibit status is not stored in the resource configuration.
+
+      @param inhibit true to inhibit saves, false to allow them
+    */
+    void setInhibitSave( bool inhibit );
+    /**
+      Return whether saves have been inhibited by setInhibitSave().
+     */
+    bool saveInhibited() const;
+
+    /**
       Return object for locking the resource.
     */
     virtual KABC::Lock *lock() = 0;
@@ -389,6 +402,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     bool mReceivedLoadError;
     bool mReceivedSaveError;
     bool mNoReadOnlyOnLoad;
+    bool mInhibitSave;     // true to prevent saves
 
     class Private;
     Private *d;

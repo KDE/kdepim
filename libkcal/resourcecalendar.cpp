@@ -34,7 +34,8 @@ using namespace KCal;
 
 ResourceCalendar::ResourceCalendar( const KConfig *config )
     : KRES::Resource( config ),mResolveConflict( false ),
-      mNoReadOnlyOnLoad( false )
+      mNoReadOnlyOnLoad( false ),
+      mInhibitSave( false )
 {
 }
 
@@ -144,6 +145,8 @@ void ResourceCalendar::loadError( const QString &err )
 
 bool ResourceCalendar::save( Incidence *incidence )
 {
+  if ( mInhibitSave )
+    return true;
   if ( !readOnly() ) {
     kDebug(5800) << "Save resource " + resourceName() << endl;
 
@@ -177,6 +180,16 @@ void ResourceCalendar::saveError( const QString &err )
     msg += err;
   }
   emit resourceSaveError( this, msg );
+}
+
+void ResourceCalendar::setInhibitSave( bool inhibit )
+{
+  mInhibitSave = inhibit;
+}
+
+bool ResourceCalendar::saveInhibited() const
+{
+  return mInhibitSave;
 }
 
 bool ResourceCalendar::setValue( const QString &key, const QString &value )
