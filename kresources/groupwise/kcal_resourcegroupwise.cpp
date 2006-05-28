@@ -122,7 +122,7 @@ void ResourceGroupwise::doClose()
   ResourceCached::doClose();
 }
 
-bool ResourceGroupwise::doLoad()
+bool ResourceGroupwise::doLoad( bool )
 {
   kDebug() << "ResourceGroupwise::load()" << endl;
 
@@ -227,7 +227,7 @@ void ResourceGroupwise::slotJobData( KIO::Job *, const QByteArray &data )
   mJobData.append( data.data() );
 }
 
-bool ResourceGroupwise::doSave()
+bool ResourceGroupwise::doSave( bool )
 {
   kDebug() << "KCal::ResourceGroupwise::doSave()" << endl;
 

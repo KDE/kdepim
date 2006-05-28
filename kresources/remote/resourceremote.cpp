@@ -161,7 +161,7 @@ bool ResourceRemote::useCacheFile() const
   return mUseCacheFile;
 }
 
-bool ResourceRemote::doLoad()
+bool ResourceRemote::doLoad( bool )
 {
   kDebug(5800) << "ResourceRemote::load()" << endl;
 
@@ -237,7 +237,7 @@ void ResourceRemote::slotLoadJobResult( KJob *job )
   emit resourceLoaded( this );
 }
 
-bool ResourceRemote::doSave()
+bool ResourceRemote::doSave( bool )
 {
   kDebug(5800) << "ResourceRemote::save()" << endl;
 

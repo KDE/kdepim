@@ -100,8 +100,8 @@ class KDE_EXPORT ResourceRemote : public ResourceCached
     void slotPercent( KJob *, unsigned long percent );
 
   protected:
-    bool doLoad();
-    bool doSave();
+    bool doLoad( bool syncCache );
+    bool doSave( bool syncCache );
 
     void addInfoText( QString & ) const;
 

@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
 
+    Copyright (c) 2006 David Jarvie <software@astrojar.org.uk>
     Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -59,6 +60,17 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     */
     enum { SaveNever, SaveOnExit, SaveInterval, SaveDelayed, SaveAlways };
 
+    /**
+      Whether to update the cache file when loading a resource, or whether to
+      upload the cache file after saving the resource.
+      Only applicable to genuinely cached resources.
+     */
+    enum CacheAction {
+        DefaultCache,    // use the default action set by setReloadPolicy() or setSavePolicy()
+        NoSyncCache,     // perform a cache-only operation, without downloading or uploading
+        SyncCache        // update the cache file before loading, or upload cache after saving
+    };
+
     ResourceCached( const KConfig * );
     virtual ~ResourceCached();
 
@@ -92,12 +104,28 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     int reloadInterval() const;
 
     /**
+      Inhibit or allow cache reloads when using load(DefaultCache). If inhibited,
+      this overrides the policy set by setReloadPolicy(), preventing any non-explicit
+      reloads from being performed. If not inhibited, reloads take place according
+      to the policy set by setReloadPolicy().
+
+      @param inhibit  true to inhibit reloads, false to allow them
+    */
+    bool inhibitDefaultReload( bool inhibit );
+    bool defaultReloadInhibited() const   { return mInhibitReload; }
+
+    /**
+      Return whether the resource cache has been reloaded since startup.
+     */
+    bool reloaded() const   { return mReloaded; }
+
+    /**
       Set save policy. This controls when the cache is refreshed.
 
       SaveNever     never save
       SaveOnExit    save when resource is exited
       SaveInterval  save regularly after given interval
-      SaveDelayed   save after small delay
+      SaveDelayed   save on every change, after small delay
       SaveAlways    save on every change
     */
     void setSavePolicy( int policy );
@@ -136,6 +164,31 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
       Return time of last save.
     */
     QDateTime lastSave() const;
+
+    /**
+      Load resource data, specifying whether to refresh the cache file first.
+      For a non-cached resource, this method has the same effect as load().
+     */
+    bool load( CacheAction );
+
+    /**
+      Load resource data.
+     */
+    virtual bool load()   { return load( SyncCache ); }
+
+    /**
+      Save the resource data to cache, and optionally upload the cache file afterwards.
+      For a non-cached resource, this method has the same effect as save().
+
+      @param incidence if given as 0, doSave(bool) is called to save all incidences,
+             else doSave(bool, incidence) is called to save only the given one
+    */
+    bool save( CacheAction, Incidence *incidence = 0 );
+
+    /**
+      Save resource data.
+     */
+    virtual bool save( Incidence *incidence = 0 )   { return save( SyncCache, incidence ); }
 
     /**
       Add event to calendar.
@@ -260,13 +313,13 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     Incidence::List deletedIncidences() const;
 
     /**
-      Loads the resource from the cache, this method should be called on load.
+      Load the resource from the cache.
       @return true if the cache file exists, false if not
      */
     bool loadFromCache();
 
     /**
-      Saves the resource back to the cache.
+      Save the resource back to the cache.
      */
     void saveToCache();
 
@@ -301,6 +354,30 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
       reimplement this method. By default, this does not do anything, but can be reimplemented in child classes
      */
     virtual bool doOpen();
+
+    /**
+      Do the actual loading of the resource data. Called by load(CacheAction).
+    */
+    virtual bool doLoad( bool syncCache ) = 0;
+    /**
+      Set the cache-reloaded status.
+      Non-local resources must set this true once the cache has been downloaded successfully.
+     */
+    void setReloaded( bool done )   { mReloaded = done; }
+    /**
+      Do the actual saving of the resource data. Called by save(CacheAction). Saves
+      the resource data to the cache and optionally uploads (if a remote resource).
+
+      @param syncCache if true, the cache will be uploaded to the remote resource. If false,
+                       only the cache will be updated.
+    */
+    virtual bool doSave( bool syncCache ) = 0;
+    /**
+      Do the actual saving of the resource data. Called by save(CacheAction).
+      Save one Incidence. The default implementation calls doSave(bool) to save everything
+    */
+    virtual bool doSave( bool syncCache, Incidence * );
+
     /**
       Check if reload required according to reload policy.
     */
@@ -339,10 +416,16 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     void setIdMapperIdentifier();
 
   private:
+    // Virtual methods which should not be used by derived classes.
+    virtual bool doLoad()   { return doLoad( true ); }
+    virtual bool doSave()   { return doSave( true ); }
+
     int mReloadPolicy;
     int mReloadInterval;
     QTimer mReloadTimer;
-    bool mReloaded;
+    bool mInhibitReload;   // true to prevent downloads by load(DefaultCache)
+    bool mReloaded;        // true once it has been downloaded
+    bool mSavePending;     // true if a save of changes has been scheduled on the timer
 
     int mSavePolicy;
     int mSaveInterval;

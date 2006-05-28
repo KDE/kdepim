@@ -146,7 +146,7 @@ void KCalResourceSlox::writeConfig( KConfig *config )
   ResourceCached::writeConfig( config );
 }
 
-bool KCalResourceSlox::doLoad()
+bool KCalResourceSlox::doLoad( bool )
 {
   kDebug() << "KCalResourceSlox::load() " << long( this ) << endl;
 
@@ -1230,7 +1230,7 @@ bool KCalResourceSlox::confirmSave()
   return result == QDialog::Accepted;
 }
 
-bool KCalResourceSlox::doSave()
+bool KCalResourceSlox::doSave( bool )
 {
   kDebug() << "KCalResourceSlox::save()" << endl;
 

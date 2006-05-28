@@ -74,8 +74,8 @@ class LIBKCAL_EXPORT ResourceLocal : public ResourceCached
     void reload();
 
   protected:
-    virtual bool doLoad();
-    virtual bool doSave();
+    virtual bool doLoad( bool syncCache );
+    virtual bool doSave( bool syncCache );
     /**
       Called by reload() to reload the resource, if it is already open.
       @return true if successful, else false. If true is returned,

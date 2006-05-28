@@ -109,7 +109,7 @@ ResourceLocalDir::~ResourceLocalDir()
   delete mLock;
 }
 
-bool ResourceLocalDir::doLoad()
+bool ResourceLocalDir::doLoad( bool )
 {
   kDebug(5800) << "ResourceLocalDir::load()" << endl;
 
@@ -161,22 +161,19 @@ bool ResourceLocalDir::doFileLoad( CalendarLocal &cal, const QString &fileName )
   return true;
 }
 
-bool ResourceLocalDir::doSave()
+bool ResourceLocalDir::doSave( bool )
 {
   Incidence::List list;
 
   list = addedIncidences();
+  list += changedIncidences();
   for (Incidence::List::iterator it = list.begin(); it != list.end(); ++it)
-    doSave(*it);
-
-  list = changedIncidences();
-  for (Incidence::List::iterator it = list.begin(); it != list.end(); ++it)
-    doSave(*it);
+    doSave(true, *it);
 
   return true;
 }
 
-bool ResourceLocalDir::doSave( Incidence *incidence )
+bool ResourceLocalDir::doSave( bool, Incidence *incidence )
 {
   mDirWatch.stopScan();  // do prohibit the dirty() signal and a following reload()
 

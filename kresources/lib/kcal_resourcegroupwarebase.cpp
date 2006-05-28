@@ -252,7 +252,7 @@ void ResourceGroupwareBase::slotLogoffJobResult( KJob *job )
   emit leaveModality();
 }
 
-bool ResourceGroupwareBase::doLoad()
+bool ResourceGroupwareBase::doLoad( bool )
 {
   kDebug(5800) << "ResourceGroupwareBase::load()" << endl;
 
@@ -302,7 +302,7 @@ void ResourceGroupwareBase::slotDownloadJobResult( KPIM::GroupwareJob *job )
   mDownloadJob = 0;
 }
 
-bool ResourceGroupwareBase::doSave()
+bool ResourceGroupwareBase::doSave( bool )
 {
   kDebug(5800) << "KCal::ResourceGroupwareBase::doSave()" << endl;
 

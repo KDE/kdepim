@@ -122,7 +122,7 @@ void ResourceGroupware::doClose()
   ResourceCached::doClose();
 }
 
-bool ResourceGroupware::doLoad()
+bool ResourceGroupware::doLoad( bool )
 {
   kDebug() << "ResourceGroupware::load()" << endl;
 
@@ -233,7 +233,7 @@ void ResourceGroupware::loadFinished()
   emit resourceLoaded( this );
 }
 
-bool ResourceGroupware::doSave()
+bool ResourceGroupware::doSave( bool )
 {
   kDebug() << "KCal::ResourceGroupware::doSave()" << endl;
 

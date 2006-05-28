@@ -74,8 +74,8 @@ class KDE_EXPORT ResourceTVAnytime : public ResourceCached
     bool doOpen();
     void doClose();
 
-    bool doLoad();
-    bool doSave() { return true; }
+    bool doLoad( bool syncCache );
+    bool doSave( bool ) { return true; }
 
     KABC::Lock *lock();
 

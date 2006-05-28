@@ -197,8 +197,8 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
     void fault( int, const QString&, const QVariant& );
 
   protected:
-    bool doLoad();
-    bool doSave();
+    bool doLoad( bool syncCache );
+    bool doSave( bool syncCache );
 
   private slots:
     void reload();

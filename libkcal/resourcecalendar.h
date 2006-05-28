@@ -357,6 +357,9 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
   protected:
 
     bool mResolveConflict;
+    bool mReceivedLoadError;
+    bool mReceivedSaveError;
+
     /**
       Do the actual loading of the resource data. Called by load().
     */
@@ -399,8 +402,6 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     bool noReadOnlyOnLoad() const;
 
   private:
-    bool mReceivedLoadError;
-    bool mReceivedSaveError;
     bool mNoReadOnlyOnLoad;
     bool mInhibitSave;     // true to prevent saves
 

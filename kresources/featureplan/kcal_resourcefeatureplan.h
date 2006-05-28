@@ -49,8 +49,8 @@ class KDE_EXPORT ResourceFeaturePlan : public ResourceCached
 
     Prefs *prefs();
 
-    bool doLoad();
-    bool doSave();
+    bool doLoad( bool syncCache );
+    bool doSave( bool syncCache );
 
     KABC::Lock *lock();
 

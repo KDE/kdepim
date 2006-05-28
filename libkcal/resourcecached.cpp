@@ -1,6 +1,7 @@
 /*
     This file is part of libkcal.
 
+    Copyright © 2006 by David Jarvie <software@astrojar.org.uk>
     Copyright (c) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -42,8 +43,9 @@ using namespace KCal;
 
 ResourceCached::ResourceCached( const KConfig* config )
   : ResourceCalendar( config ), mCalendar( QLatin1String( "UTC" ) ),
-    mReloadPolicy( ReloadNever ),  mReloadInterval( 10 ), mReloaded( false ),
-    mSavePolicy( SaveNever ), mSaveInterval( 10 ),
+    mReloadPolicy( ReloadNever ),  mReloadInterval( 10 ),
+    mInhibitReload( false ), mReloaded( false ),
+    mSavePending( false ), mSavePolicy( SaveNever ), mSaveInterval( 10 ),
     mIdMapper( "kcal/uidmaps/" )
 {
   connect( &mReloadTimer, SIGNAL( timeout() ), SLOT( slotReload() ) );
@@ -74,6 +76,14 @@ void ResourceCached::setReloadInterval( int minutes )
 int ResourceCached::reloadInterval() const
 {
   return mReloadInterval;
+}
+
+bool ResourceCached::inhibitDefaultReload( bool inhibit )
+{
+  if ( inhibit == mInhibitReload )
+    return false;
+  mInhibitReload = inhibit;
+  return true;
 }
 
 void ResourceCached::setSavePolicy( int i )
@@ -276,6 +286,48 @@ void ResourceCached::clearChanges()
   mDeletedIncidences.clear();
 }
 
+bool ResourceCached::load( CacheAction action )
+{
+  kDebug(5800) << "Loading resource " + resourceName() << endl;
+
+  mReceivedLoadError = false;
+
+  bool success = true;
+  if ( !isOpen() ) success = open();
+  if ( success ) {
+    bool update = false;
+    switch ( action )
+    {
+      case DefaultCache:
+        if ( !mReloaded && !mInhibitReload )
+          update = checkForReload();
+        break;
+      case NoSyncCache:
+        break;
+      case SyncCache:
+        update = true;
+        break;
+    }
+    success = doLoad( update );
+  }
+  if ( !success && !mReceivedLoadError ) loadError();
+
+  // If the resource is read-only, we need to set its incidences to read-only,
+  // too. This can't be done at a lower-level, since the read-only setting
+  // happens at this level
+  if ( !noReadOnlyOnLoad() && readOnly() ) {
+    Incidence::List incidences( rawIncidences() );
+    Incidence::List::Iterator it;
+    for ( it = incidences.begin(); it != incidences.end(); ++it ) {
+      (*it)->setReadOnly( true );
+    }
+  }
+
+  kDebug(5800) << "Done loading resource " + resourceName() << endl;
+
+  return success;
+}
+
 bool ResourceCached::loadFromCache()
 {
   setIdMapperIdentifier();
@@ -292,6 +344,45 @@ bool ResourceCached::loadFromCache()
     }
   }
   return true;
+}
+
+bool ResourceCached::save( CacheAction action, Incidence *incidence )
+{
+  mSavePending = false;
+  if ( saveInhibited() )
+    return true;
+  if ( !readOnly() ) {
+    kDebug(5800) << "Save resource " + resourceName() << endl;
+
+    mReceivedSaveError = false;
+
+    if ( !isOpen() ) return true;
+    bool upload = false;
+    switch ( action )
+    {
+      case DefaultCache:
+        upload = checkForSave();
+        break;
+      case NoSyncCache:
+        break;
+      case SyncCache:
+        upload = true;
+        break;
+    }
+    bool success = incidence ? doSave( upload, incidence ) : doSave( upload );
+    if ( !success && !mReceivedSaveError ) saveError();
+
+    return success;
+  } else {
+    // Read-only, just don't save...
+    kDebug(5800) << "Don't save read-only resource " + resourceName() << endl;
+    return true;
+  }
+}
+
+bool ResourceCached::doSave( bool syncCache, Incidence * )
+{
+  return doSave( syncCache );
 }
 
 void ResourceCached::saveToCache()
@@ -585,7 +676,7 @@ void ResourceCached::slotReload()
 
   kDebug(5800) << "ResourceCached::slotReload()" << endl;
 
-  load();
+  load( SyncCache );
 }
 
 void ResourceCached::slotSave()
@@ -594,18 +685,20 @@ void ResourceCached::slotSave()
 
   kDebug(5800) << "ResourceCached::slotSave()" << endl;
 
-  save();
+  save( SyncCache );
 }
 
 void ResourceCached::checkForAutomaticSave()
 {
   if ( mSavePolicy == SaveAlways )  {
     kDebug(5800) << "ResourceCached::checkForAutomaticSave(): save now" << endl;
+    mSavePending = true;
     mSaveTimer.setSingleShot( true );
     mSaveTimer.start( 1 * 1000 ); // 1 second
   } else if ( mSavePolicy == SaveDelayed ) {
     kDebug(5800) << "ResourceCached::checkForAutomaticSave(): save delayed"
               << endl;
+    mSavePending = true;
     mSaveTimer.setSingleShot( true );
     mSaveTimer.start( 15 * 1000 ); // 15 seconds
   }
@@ -640,6 +733,10 @@ void ResourceCached::addInfoText( QString &txt ) const
 
 void ResourceCached::doClose()
 {
+  if ( mSavePending )
+    mSaveTimer.stop();
+  if ( mSavePending  ||  mSavePolicy == SaveOnExit  ||  mSavePolicy == SaveInterval )
+    save( SyncCache );
   mCalendar.close();
 }
 

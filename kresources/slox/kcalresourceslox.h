@@ -106,8 +106,8 @@ class KDE_EXPORT KCalResourceSlox : public KCal::ResourceCached, public SloxBase
 
   protected:
     void doClose();
-    bool doLoad();
-    bool doSave();
+    bool doLoad( bool syncCache );
+    bool doSave( bool syncCache );
 
     void requestEvents();
     void requestTodos();

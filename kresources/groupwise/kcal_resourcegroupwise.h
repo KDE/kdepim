@@ -59,8 +59,8 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     bool doOpen();
     void doClose();
 
-    bool doLoad();
-    bool doSave();
+    bool doLoad( bool syncCache );
+    bool doSave( bool syncCache );
 
     KABC::Lock *lock();
 

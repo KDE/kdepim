@@ -139,14 +139,14 @@ QDateTime ResourceLocal::readLastModified()
   return fi.lastModified();
 }
 
-bool ResourceLocal::doLoad()
+bool ResourceLocal::doLoad( bool )
 {
   bool success;
 
   if ( !KStandardDirs::exists( mURL.path() ) ) {
     kDebug(5800) << "ResourceLocal::load(): File doesn't exist yet." << endl;
     // Save the empty calendar, so the calendar file will be created.
-    success = doSave();
+    success = doSave( true );
   } else {
     success = mCalendar.load( mURL.path() );
     if ( success ) d->mLastModified = readLastModified();
@@ -155,7 +155,7 @@ bool ResourceLocal::doLoad()
   return success;
 }
 
-bool ResourceLocal::doSave()
+bool ResourceLocal::doSave( bool )
 {
   bool success = mCalendar.save( mURL.path() );
   d->mLastModified = readLastModified();

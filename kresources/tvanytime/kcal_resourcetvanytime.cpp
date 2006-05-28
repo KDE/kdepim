@@ -143,7 +143,7 @@ void ResourceTVAnytime::doClose()
   ResourceCached::doClose();
 }
 
-bool ResourceTVAnytime::doLoad()
+bool ResourceTVAnytime::doLoad( bool )
 {
   kDebug() << "ResourceTVAnytime::load()" << endl;
 
@@ -461,7 +461,7 @@ void ResourceTVAnytime::setSubresourceActive( const QString & subresource, bool 
     {
       s.setActive( active );
       mServiceMap.insert( subresource, s );
-      doLoad();
+      doLoad( true );
       mResourceChangedTimer.start( 150 );
     }
   }

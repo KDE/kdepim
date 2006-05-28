@@ -72,7 +72,7 @@ void ResourceFeaturePlan::writeConfig( KConfig *config )
   mPrefs->writeConfig();
 }
 
-bool ResourceFeaturePlan::doLoad()
+bool ResourceFeaturePlan::doLoad( bool )
 {
   kDebug() << "ResourceFeaturePlan::load()" << endl;
 
@@ -133,7 +133,7 @@ void ResourceFeaturePlan::insertCategories( const Category::List &categories,
   }
 }
 
-bool ResourceFeaturePlan::doSave()
+bool ResourceFeaturePlan::doSave( bool )
 {
   return true;
 }

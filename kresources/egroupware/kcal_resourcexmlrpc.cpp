@@ -219,7 +219,7 @@ void ResourceXMLRPC::doClose()
   mSynchronizer->start();
 }
 
-bool ResourceXMLRPC::doLoad()
+bool ResourceXMLRPC::doLoad( bool )
 {
   kDebug() << "ResourceXMLRPC::load()" << endl;
 
@@ -265,7 +265,7 @@ bool ResourceXMLRPC::doLoad()
   return true;
 }
 
-bool ResourceXMLRPC::doSave()
+bool ResourceXMLRPC::doSave( bool )
 {
   if ( readOnly() || !hasChanges() ) {
     emit resourceSaved( this );

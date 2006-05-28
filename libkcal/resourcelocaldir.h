@@ -77,9 +77,9 @@ class LIBKCAL_EXPORT ResourceLocalDir : public ResourceCached
     void reload( const QString & );
 
   protected:
-    virtual bool doLoad();
-    virtual bool doSave();
-    bool doSave( Incidence * );
+    virtual bool doLoad( bool syncCache );
+    virtual bool doSave( bool syncCache );
+    bool doSave( bool syncCache, Incidence * );
     virtual bool doFileLoad( CalendarLocal &, const QString &fileName );
 
   private:
