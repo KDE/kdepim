@@ -272,6 +272,7 @@ Module::decrypt( Block& block )
   if (0 == pgp) assignPGPBase();
 
   do {
+    // loop as long as the user enters a wrong passphrase and doesn't abort
     // everything ready
     if( prepare( true, &block ) != 1 )
       return FALSE;
