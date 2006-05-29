@@ -302,8 +302,14 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
           offset = alarm->endOffset().asSeconds() + endOffset;
         }
 
-        // Adjust the 'from' date/time and find the next recurrence at or after it
-        qdt = incidence->recurrence()->getNextDateTime( from.addSecs(-offset - 1) );
+        // Find the incidence's earliest alarm
+        QDateTime fromStart = incidence->dtStart().addSecs( offset );
+        if ( fromStart > to )
+          continue;
+        if ( from > fromStart )
+          fromStart = from;   // don't look earlier than the earliest alarm
+        // Adjust the 'fromStart' date/time and find the next recurrence at or after it
+        qdt = incidence->recurrence()->getNextDateTime( fromStart.addSecs(-offset - 1) );
         if ( !qdt.isValid()
         ||   (qdt = qdt.addSecs( offset )) > to )    // remove the adjustment to get the alarm time
         {
@@ -313,13 +319,13 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
           // The alarm has repetitions, so check whether repetitions of previous
           // recurrences fall within the time period.
           bool found = false;
-          qdt = from.addSecs( -offset );
+          qdt = fromStart.addSecs( -offset );
           while ( (qdt = incidence->recurrence()->getPreviousDateTime( qdt )).isValid() ) {
-            int toFrom = qdt.secsTo( from ) - offset;
+            int toFrom = qdt.secsTo( fromStart ) - offset;
             if ( toFrom > alarm->duration() )
               break;     // this recurrence's last repetition is too early, so give up
-            // The last repetition of this recurrence is at or after 'from' time.
-            // Check if a repetition occurs between 'from' and 'to'.
+            // The last repetition of this recurrence is at or after 'fromStart' time.
+            // Check if a repetition occurs between 'fromStart' and 'to'.
             int snooze = alarm->snoozeTime() * 60;   // in seconds
             if ( period >= snooze
             ||   toFrom % snooze == 0
