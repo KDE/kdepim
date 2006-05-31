@@ -24,6 +24,7 @@
  * false, where it signifies an error, thus doesn't need to call error() itself.
  */
 
+#include <config-sieve.h>
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif

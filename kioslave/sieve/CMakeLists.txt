@@ -1,6 +1,7 @@
 
 include_directories( ${SASL2_INCLUDE_DIR}  )
 
+configure_file (config-sieve.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-sieve.h )
 
 ########### next target ###############
 
