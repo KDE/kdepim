@@ -8,38 +8,8 @@
 /* Define to 1 if you have the `snprintf' function. */
 #cmakedefine HAVE_SNPRINTF 1
 
-/* Define to 1 if you have the `socket' function. */
-#cmakedefine HAVE_SOCKET 1
-
 /* Define to 1 if you have the <stdint.h> header file. */
 #cmakedefine HAVE_STDINT_H 1
-
-/* Define if your version of stl is defined in namespace std */
-#define HAVE_STLNAMESPACE 1
-
-/* Define to 1 if you have the <strings.h> header file. */
-#cmakedefine HAVE_STRINGS_H 1
-
-/* Define to 1 if you have the <string.h> header file. */
-#cmakedefine HAVE_STRING_H 1
-
-/* Define if you have strlcat */
-#cmakedefine HAVE_STRLCAT 1
-
-/* Define if you have the strlcat prototype */
-#cmakedefine HAVE_STRLCAT_PROTO 1
-
-/* Define if you have strlcpy */
-#cmakedefine HAVE_STRLCPY 1
-
-/* Define if you have the strlcpy prototype */
-#cmakedefine HAVE_STRLCPY_PROTO 1
-
-/* Define to 1 if you have the <sysent.h> header file. */
-#cmakedefine HAVE_SYSENT_H 1
-
-/* Define to 1 if you have the <sys/bitypes.h> header file. */
-#cmakedefine HAVE_SYS_BITYPES_H 1
 
 /* Define to 1 if you have the <sys/cdefs.h> header file. */
 #cmakedefine HAVE_SYS_CDEFS_H 1

@@ -36,9 +36,6 @@ check_include_files(inttypes.h HAVE_INTTYPES_H)
 check_include_files(malloc.h HAVE_MALLOC_H)
 check_include_files(paths.h HAVE_PATHS_H)
 check_include_files(stdint.h HAVE_STDINT_H)
-check_include_files(strings.h HAVE_STRINGS_H)
-check_include_files(string.h HAVE_STRING_H)
-check_include_files(sysent.h HAVE_SYSENT_H)
 check_include_files(sys/bitypes.h HAVE_SYS_BITYPES_H)
 check_include_files(sys/cdefs.h HAVE_SYS_CDEFS_H)
 check_include_files(sys/dir.h HAVE_SYS_DIR_H)
@@ -58,9 +55,6 @@ check_include_files(values.h HAVE_VALUES_H)
 check_include_files(sys/time.h TM_IN_SYS_TIME)
 check_include_files("sys/time.h;time.h" TIME_WITH_SYS_TIME)
 
-check_function_exists(socket          HAVE_SOCKET)
-check_function_exists(strlcat    HAVE_STRLCAT)
-check_function_exists(strlcpy    HAVE_STRLCPY)
 check_function_exists(unsetenv   HAVE_UNSETENV)
 check_function_exists(usleep     HAVE_USLEEP)
 
@@ -68,8 +62,6 @@ check_symbol_exists(snprintf        "stdio.h"                  HAVE_SNPRINTF)
 check_symbol_exists(vsnprintf       "stdio.h"                  HAVE_VSNPRINTF)
 
 
-check_prototype_exists(strlcat string.h HAVE_STRLCAT_PROTO)
-check_prototype_exists(strlcpy string.h HAVE_STRLCPY_PROTO)
 check_prototype_exists(unsetenv stdlib.h HAVE_UNSETENV_PROTO)
 check_prototype_exists(usleep unistd.h HAVE_USLEEP_PROTO)
 
