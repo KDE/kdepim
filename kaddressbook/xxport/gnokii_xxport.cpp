@@ -30,7 +30,7 @@
 	- create a log file and give user possibility to see it afterwards
 	- handle callergroup value (Friend, VIP, Family, ...) better
 */
-
+#include <config-xxport.h>
 #include "config.h"
 
 #include <QCursor>

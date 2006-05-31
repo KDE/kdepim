@@ -1,6 +1,7 @@
 
 include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${CMAKE_SOURCE_DIR}/kaddressbook  )
 
+configure_file (config-xxport.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-xxport.h )
 
 ########### next target ###############
 
