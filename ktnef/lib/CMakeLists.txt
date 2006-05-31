@@ -1,6 +1,6 @@
 
 include_directories( ${CMAKE_SOURCE_DIR}/ktnef  )
-
+configure_file (config-ktnef.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ktnef.h )
 
 ########### next target ###############
 
