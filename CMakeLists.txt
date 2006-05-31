@@ -8,6 +8,7 @@ include (KDE4Defaults)
 include (MacroLibrary)
 
 
+find_package(QtDBus REQUIRED)
 find_package(Kode REQUIRED)
 macro_optional_find_package(LIBKDEPIM)
 macro_optional_find_package(Sasl2)
@@ -72,6 +73,7 @@ set(libkdgantt_SRCS
 
 add_subdirectory(kode)
 add_subdirectory(libakonadi)
+add_subdirectory(akonadiserver/src/notification)
 add_subdirectory(akonadiresources)
 add_subdirectory(libemailfunctions)
 add_subdirectory(libkcal)
