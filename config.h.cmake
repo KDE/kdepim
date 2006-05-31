@@ -4,6 +4,8 @@
 /* Define if you have cyrus-sasl2 libraries */
 #cmakedefine HAVE_LIBSASL2 1
 
+/* Define if you have the gethostname prototype */
+#cmakedefine HAVE_GETHOSTNAME_PROTO 1
 
 /* Define to 1 if you have the `snprintf' function. */
 #cmakedefine HAVE_SNPRINTF 1

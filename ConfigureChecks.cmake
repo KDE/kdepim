@@ -62,6 +62,7 @@ check_symbol_exists(snprintf        "stdio.h"                  HAVE_SNPRINTF)
 check_symbol_exists(vsnprintf       "stdio.h"                  HAVE_VSNPRINTF)
 
 
+check_prototype_exists(gethostname "stdlib.h;unistd.h" HAVE_GETHOSTNAME_PROTO)
 check_prototype_exists(unsetenv stdlib.h HAVE_UNSETENV_PROTO)
 check_prototype_exists(usleep unistd.h HAVE_USLEEP_PROTO)
 
