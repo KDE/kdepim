@@ -174,11 +174,11 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent )
            SLOT( urlDropped( const KUrl& ) ) );
   connect( mImageUrl, SIGNAL( textChanged( const QString& ) ),
            SIGNAL( changed() ) );
-  connect( mImageUrl, SIGNAL( urlSelected( const QString& ) ),
+  connect( mImageUrl, SIGNAL( urlSelected( const KUrl& ) ),
            SLOT( loadImage() ) );
-  connect( mImageUrl, SIGNAL( urlSelected( const QString& ) ),
+  connect( mImageUrl, SIGNAL( urlSelected( const KUrl& ) ),
            SIGNAL( changed() ) );
-  connect( mImageUrl, SIGNAL( urlSelected( const QString& ) ),
+  connect( mImageUrl, SIGNAL( urlSelected( const KUrl& ) ),
            SLOT( updateGUI() ) );
   connect( mUseImageUrl, SIGNAL( toggled( bool ) ),
            SIGNAL( changed() ) );

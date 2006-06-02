@@ -73,9 +73,9 @@ SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent )
            SLOT( setModified() ) );
   connect( mUseSoundUrl, SIGNAL( toggled( bool ) ),
            mPlayButton, SLOT( setDisabled( bool ) ) );
-  connect( mSoundUrl, SIGNAL( urlSelected( const QString& ) ),
+  connect( mSoundUrl, SIGNAL( urlSelected( const KUrl& ) ),
            SLOT( loadSound() ) );
-  connect( mSoundUrl, SIGNAL( urlSelected( const QString& ) ),
+  connect( mSoundUrl, SIGNAL( urlSelected( const KUrl& ) ),
            SLOT( updateGUI() ) );
   connect( mPlayButton, SIGNAL( clicked() ),
            SLOT( playSound() ) );
