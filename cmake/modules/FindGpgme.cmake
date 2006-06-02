@@ -53,7 +53,6 @@ if (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
 
   if (NOT GPGME_FOUND)
       message(FATAL_ERROR "You are missing gpgme 0.4.5 or higher.
-    Download gpgme >= 0.4.5 from ftp://ftp.gnupg.org/gcrypt/alpha/gpgme
-    or use the --with-gpgme-prefix=/path/where/gpgme/is/installed option.")
+    Download gpgme >= 0.4.5 from ftp://ftp.gnupg.org/gcrypt/alpha/gpgme")
   endif (NOT GPGME_FOUND)
 endif (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
