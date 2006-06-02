@@ -32,7 +32,7 @@
 #include <kdebug.h>
 
 //-----------------------------------------------------------------------------
-QStringList KPIM::splitEmailAddrList(const QString& aStr)
+QStringList KPIM::splitEmailAddrList(const QString& aStr, bool allowSemicolonAsSeparator)
 {
   // Features:
   // - always ignores quoted characters
@@ -78,9 +78,13 @@ QStringList KPIM::splitEmailAddrList(const QString& aStr)
     case '\\' : // quoted character
       index++; // ignore the quoted character
       break;
+    case ';' : // fallthrough, if ; is allowed
+      if ( !allowSemicolonAsSeparator )
+          break; 
     case ',' :
       if (!insidequote && (commentlevel == 0)) {
         addr = aStr.mid(addrstart, index-addrstart);
+        kdDebug() << endl << "Adding: " << addr.simplifyWhiteSpace() << endl;
         if (!addr.isEmpty())
           list += addr.simplifyWhiteSpace();
         addrstart = index+1;
@@ -312,4 +316,10 @@ bool KPIM::compareEmail( const QString& email1, const QString& email2,
 
   return e1Email == e2Email &&
     ( !matchName || ( e1Name == e2Name ) );
+}
+
+
+QStringList KPIM::splitEmailAddrList(const QString& aStr)
+{
+    return splitEmailAddrList( aStr, false ); // don't allow ; by default
 }

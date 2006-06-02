@@ -39,6 +39,7 @@ namespace KPIM {
 // Helper functions
 /** Split a comma separated list of email addresses. */
 QStringList splitEmailAddrList(const QString& aStr);
+QStringList splitEmailAddrList(const QString& aStr, bool allowSemicolonAsSeparator);
 
 /** Return email address from string. Examples:
  * "Stefan Taferner <taferner@kde.org>" returns "taferner@kde.org"
