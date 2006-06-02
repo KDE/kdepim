@@ -113,16 +113,22 @@ void LookAndFeelPage::initGUI()
   layout->setSpacing(KDialogBase::spacingHint());
   layout->setMargin(0);
 
-  Q3ButtonGroup *group = new Q3ButtonGroup(1, Qt::Horizontal,
-                                         i18n("Row Separator"), this);
+  QGroupBox *group = new QGroupBox(i18n("Row Separator"));
   layout->addWidget(group);
 
-  mAlternateButton = new QRadioButton(i18n("Alternating backgrounds"), group);
+  mAlternateButton = new QRadioButton(i18n("Alternating backgrounds"));
   mAlternateButton->setObjectName( "mAlternateButton" );
-  mLineButton = new QRadioButton(i18n("Single line"), group );
+  mLineButton = new QRadioButton(i18n("Single line"));
   mLineButton->setObjectName( "mLineButton" );
-  mNoneButton = new QRadioButton(i18n("None"), group );
+  mNoneButton = new QRadioButton(i18n("None"));
   mNoneButton->setObjectName( "mNoneButton" );
+  QVBoxLayout *updateLayout = new QVBoxLayout;
+  updateLayout->addWidget(mNoneButton);
+  updateLayout->addWidget(mLineButton);
+  updateLayout->addWidget(mAlternateButton);
+
+  group->setLayout(updateLayout);
+
 
   // Background Checkbox/Selector
   QHBoxLayout *backgroundLayout = new QHBoxLayout();
