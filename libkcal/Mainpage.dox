@@ -13,3 +13,7 @@ libkcal development is discussed on the <a
 href="mailto:kde-pim@kde.org">kde-pim@kde.org</a> mailing list.
 
 */
+
+// DOXYGEN_EXCLUDE = libical
+// DOXYGEN_REFERENCES=kresources
+
