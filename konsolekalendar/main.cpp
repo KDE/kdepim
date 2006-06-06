@@ -681,9 +681,8 @@ int main( int argc, char *argv[] )
                 << endl;
 
       if ( remote ) {
-        //TODO: uncomment after 3.5 string freeze
-        //cout << i18n( "Attempting to create a remote file %1" ).
-        // arg( variables.getCalendarFile() ).local8Bit() << endl;
+        cout << i18n( "Attempting to create a remote file %1" ).
+          arg( variables.getCalendarFile() ).local8Bit() << endl;
         return 1;
       } else {
         if ( exists ) {
