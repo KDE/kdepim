@@ -10,6 +10,8 @@ include(MacroBoolTo01)
 # definitions like _GNU_SOURCE that are needed on each platform.
 set(CMAKE_REQUIRED_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS})
 
+OPTION(KDE4_KDEPIM_NEW_DISTRLISTS   "Whether to use new distribution lists, to store them like normal contacts; useful for Kolab") 
+
 macro_bool_to_01(KDE4_KDEPIM_NEW_DISTRLISTS KDEPIM_NEW_DISTRLISTS)
 macro_bool_to_01(SASL2_FOUND HAVE_LIBSASL2)
 macro_bool_to_01(BOOST_FOUND HAVE_BOOST)
