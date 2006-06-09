@@ -19,7 +19,7 @@ libkholidays_la_SOURCES = kholidays.cpp scanholiday.c parseholiday.h parseholida
 #	$(YACC) -p kcal -d -o parseholiday.c parseholiday.y
 #
 #scanholiday.c: parseholiday.h
-#	$(LEX) -Pkcal -B -oscanholiday.c scanholiday.lex
+#	$(LEX) -Pkcal -B -i -oscanholiday.c scanholiday.lex
 #
 #clean:
 #	-rm -f scanholiday.c parseholiday.h parseholiday.c
