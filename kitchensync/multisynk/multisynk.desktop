@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=MultiSynK
+Name[sk]=MultiSynk
 Name[sv]=Multisynk
 GenericName=Synchronization
 GenericName[bg]=Синхронизация
@@ -32,6 +33,7 @@ GenericName[pl]=Synchronizacja
 GenericName[pt]=Sincronização
 GenericName[pt_BR]=Gerenciador de Sincronização
 GenericName[ru]=Синхронизация
+GenericName[sk]=Synchronizácia
 GenericName[sl]=Usklajevanje
 GenericName[sr]=Синхронизација
 GenericName[sr@Latn]=Sinhronizacija
