@@ -22,6 +22,7 @@
 #include "incidenceformatter.h"
 
 #include <libkcal/attachment.h>
+#include <libkcal/incidence.h>
 #include <libkcal/event.h>
 #include <libkcal/todo.h>
 #include <libkcal/journal.h>
@@ -29,6 +30,7 @@
 #include <libkcal/calendarlocal.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/freebusy.h>
+#include <libkcal/recurrence.h>
 
 #include <libkdepim/email.h>
 
@@ -488,3 +490,47 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
   KABC::VCardConverter converter;
   return converter.createVCard( addressee );
 }
+
+
+QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
+{
+  QString result;
+  QString recurrence[]= {i18n("no recurrence", "None"),
+    i18n("Minutely"), i18n("Hourly"), i18n("Daily"),
+    i18n("Weekly"), i18n("Monthly Same Day"), i18n("Monthly Same Position"),
+    i18n("Yearly"), i18n("Yearly"), i18n("Yearly")};
+
+  if ( incidence->doesRecur() ) {
+    Recurrence *recur = incidence->recurrence();
+    // TODO: Merge these two to one of the form "Recurs every 3 days"
+    result += i18n("Recurs: %1\n")
+             .arg( recurrence[ recur->doesRecur() ] );
+    result += i18n("Frequency: %1\n")
+             .arg( incidence->recurrence()->frequency() );
+
+    if ( recur->duration() > 0 ) {
+      result += i18n ("Repeats once", "Repeats %n times", recur->duration());
+      result += '\n';
+    } else {
+      if ( recur->duration() != -1 ) {
+// TODO_Recurrence: What to do with floating
+        QString endstr;
+        if ( incidence->doesFloat() ) {
+          endstr = KGlobal::locale()->formatDate( recur->endDate() );
+        } else {
+          endstr = KGlobal::locale()->formatDateTime( recur->endDateTime() );
+        }
+        result += i18n("Repeat until: %1\n").arg( endstr );
+      } else {
+        result += i18n("Repeats forever\n");
+      }
+    }
+  }
+  QString details = incidence->description();
+  if ( !details.isEmpty() ) {
+    result += i18n("Details:\n%1\n").arg( details );
+  }
+  return result;
+}
+
+

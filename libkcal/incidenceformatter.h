@@ -25,12 +25,14 @@
 #include <qstring.h>
 
 namespace KCal {
+    class Incidence;
 
 class IncidenceFormatter
 {
   public:
     // Transform a TNEF attachment to an iCal or vCard
     static QString msTNEFToVPart( const QByteArray& tnef );
+    static QString recurrenceAsHTML( Incidence * inc );
 };
 
 }
