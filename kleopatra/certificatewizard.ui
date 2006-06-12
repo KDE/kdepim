@@ -83,7 +83,10 @@ The key pair will be generated in a decentralized manner. Please contact your lo
                     <string>On this page, you will configure the cryptographic key length and the type of certificate to create.</string>
                 </property>
                 <property name="alignment">
-                    <set>WordBreak|AlignVCenter</set>
+                    <set>AlignVCenter</set>
+                </property>
+                <property name="wordWrap">
+                    <bool></bool>
                 </property>
             </widget>
             <spacer>
@@ -227,7 +230,10 @@ The key pair will be generated in a decentralized manner. Please contact your lo
                     <string>On this page, you will enter some personal data that will be stored in your certificate and that will help other people to determine that it is actually you who is sending a message.</string>
                 </property>
                 <property name="alignment">
-                    <set>WordBreak|AlignVCenter</set>
+                    <set>AlignVCenter</set>
+                </property>
+                <property name="wordWrap">
+                    <bool>true</bool>
                 </property>
             </widget>
             <spacer row="4" column="0">
@@ -323,7 +329,10 @@ a kmail composer will be opened; you can add detailed information for the CA
 there.&lt;/p&gt;&lt;qt&gt;</string>
                 </property>
                 <property name="alignment">
-                    <set>WordBreak|AlignVCenter</set>
+                    <set>AlignVCenter</set>
+                </property>
+                <property name="wordWrap">
+                    <bool>true</bool>
                 </property>
             </widget>
             <spacer row="1" column="0" rowspan="1" colspan="2">
@@ -486,7 +495,10 @@ If you want to change anything, press Back and make your changes; otherwise, pre
 &lt;/qt&gt;</string>
                 </property>
                 <property name="alignment">
-                    <set>WordBreak|AlignVCenter</set>
+                    <set>AlignVCenter</set>
+                </property>
+                <property name="wordWrap">
+                    <bool>true</bool>
                 </property>
             </widget>
             <widget class="QTextEdit">
