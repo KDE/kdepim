@@ -38,6 +38,7 @@
 #include <libkcal/icalformat.h>
 #include <libkcal/attendee.h>
 #include <libkcal/incidence.h>
+#include <libkcal/incidenceformatter.h>
 
 #include <kpimprefs.h> // for the timezone
 
@@ -191,6 +192,15 @@ static QString meetingDetails( Incidence* incidence, Event* event )
     if ( t.minute() > 0 ) {
       html += i18n( "1 minute ", "%n minutes ",  t.minute() );
     }
+    html += "</td>";
+    html += "</tr>\n";
+  }
+
+  if ( event->doesRecur() ) {
+    html += "<tr>";
+    html += "<td>" + i18n( "Recurrence:" ) + "</td>";
+    html += "<td>";
+    html += IncidenceFormatter::recurrenceAsHTML( event );
     html += "</td>";
     html += "</tr>\n";
   }
