@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
     setenv("LC_ALL", "C", 1);
     KAboutData aboutData("qttest", "qttest", "version");
     KCmdLineArgs::init(argc, argv, &aboutData);
-    KApplication::disableAutoDcopRegistration();
+    // KApplication::disableAutoDcopRegistration();
     KApplication app(false);
     ICalTimeZonesTest tc;
     return QTest::qExec(&tc, argc, argv);

@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
     setenv( "KDEHOME", QFile::encodeName( QDir::homePath() + "/.kde-testresource" ), true );
     setenv( "KDE_FORK_SLAVES", "yes", true ); // simpler, for the final cleanup
 
-    KApplication::disableAutoDcopRegistration();
+    // KApplication::disableAutoDcopRegistration();
     KCmdLineArgs::init(argc,argv,"testresource", 0, 0, 0, 0);
     KCmdLineArgs::addCmdLineOptions( options );
  

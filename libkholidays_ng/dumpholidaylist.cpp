@@ -58,7 +58,7 @@ void displayHolidays( const QList<Holiday> holidays )
 
 int main( int argc, char **argv )
 {
-  KApplication::disableAutoDcopRegistration();
+  // KApplication::disableAutoDcopRegistration();
   KAboutData aboutData( "dumpholidaylist", "Dump XML holiday list to stdout",
                         "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData, KCmdLineArgs::CmdLineArgNone );
