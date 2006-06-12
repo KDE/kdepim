@@ -198,7 +198,7 @@ static QString meetingDetails( Incidence* incidence, Event* event )
 
   if ( event->doesRecur() ) {
     html += "<tr>";
-    html += "<td>" + i18n( "Recurrence:" ) + "</td>";
+    html += "<td valign='top'>" + i18n( "Recurrence:" ) + "</td>";
     html += "<td>";
     html += IncidenceFormatter::recurrenceAsHTML( event );
     html += "</td>";
@@ -238,7 +238,7 @@ static QString taskDetails( Incidence* incidence )
   // Recurrence 
   if ( incidence->doesRecur() ) {
     html += "<tr>";
-    html += "<td>" + i18n( "Recurrence:" ) + "</td>";
+    html += "<td valign='top'>" + i18n( "Recurrence:" ) + "</td>";
     html += "<td>";
     html += IncidenceFormatter::recurrenceAsHTML( incidence );
     html += "</td>";
