@@ -154,7 +154,7 @@ static bool checkQuoteIfNecessary( const QString& input, const QString& expResul
 
 int main(int argc, char *argv[])
 {
-  KApplication::disableAutoDcopRegistration();
+  // KApplication::disableAutoDcopRegistration();
   KCmdLineArgs::init( argc, argv, "testemail", 0, 0, 0, 0 );
   KApplication app( false );
 
