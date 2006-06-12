@@ -97,7 +97,10 @@ This program will help you import your email from your previous email program in
                         <enum>RichText</enum>
                     </property>
                     <property name="alignment">
-                        <set>WordBreak|AlignTop|AlignLeft</set>
+                        <set>AlignTop|AlignLeft</set>
+                    </property>
+                    <property name="wordWrap">
+                        <bool>true</bool>
                     </property>
                     <property name="vAlign" stdset="0">
                     </property>
