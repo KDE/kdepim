@@ -69,7 +69,7 @@ void displayCategory( const Category::List &categories )
 
 int main( int argc, char **argv )
 {
-  KApplication::disableAutoDcopRegistration();
+  // KApplication::disableAutoDcopRegistration();
   KAboutData aboutData( "benchmarkfeaturelist",
                         "Benchmark for feature list XML parser",
                         "0.1" );

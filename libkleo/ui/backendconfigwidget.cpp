@@ -47,7 +47,6 @@
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <kapplication.h>
-#include <dcopclient.h>
 
 #include <QPushButton>
 #include <QLayout>

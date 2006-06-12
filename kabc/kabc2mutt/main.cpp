@@ -43,7 +43,7 @@ static KCmdLineOptions k2moptions[] =
 
 int main( int argc, char **argv )
 {
-  KApplication::disableAutoDcopRegistration();
+  // KApplication::disableAutoDcopRegistration();
   KCmdLineArgs::init( argc, argv, appName, programName, description, version );
   KCmdLineArgs::addCmdLineOptions( k2moptions );
 

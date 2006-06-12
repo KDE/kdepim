@@ -123,8 +123,4 @@ void Kleo::PassphraseDialog::slotCancel() {
 }
 
   
-void Kleo::PassphraseDialog::virtual_hook( int id, void * data ) {
-  return KDialogBase::virtual_hook( id, data );
-}
-
 #include "passphrasedialog.moc"
