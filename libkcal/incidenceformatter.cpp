@@ -503,9 +503,9 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
   if ( incidence->doesRecur() ) {
     Recurrence *recur = incidence->recurrence();
     // TODO: Merge these two to one of the form "Recurs every 3 days"
-    result += i18n("Recurs: %1\n")
+    result += i18n("Recurs: %1<br>")
              .arg( recurrence[ recur->doesRecur() ] );
-    result += i18n("Frequency: %1\n")
+    result += i18n("Frequency: %1<br>")
              .arg( incidence->recurrence()->frequency() );
 
     if ( recur->duration() > 0 ) {
@@ -520,11 +520,24 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
         } else {
           endstr = KGlobal::locale()->formatDateTime( recur->endDateTime() );
         }
-        result += i18n("Repeat until: %1\n").arg( endstr );
+        result += i18n("Repeat until: %1<br>").arg( endstr );
       } else {
-        result += i18n("Repeats forever\n");
+        result += i18n("Repeats forever<br>");
       }
     }
+    const DateList exdates = incidence->exDates();
+    if ( !exdates.isEmpty() )
+      result += i18n("Except: ");
+    DateList::ConstIterator it( exdates.begin() );
+    while ( it != exdates.end() ) {
+        if ( it != exdates.begin() )
+          result += " ,";
+        QDate d(*it++);
+        result += KGlobal::locale()->formatDateTime( d );
+    }
+     if ( !exdates.isEmpty() )
+      result += "<br>";
+
   }
   QString details = incidence->description();
   if ( !details.isEmpty() ) {
