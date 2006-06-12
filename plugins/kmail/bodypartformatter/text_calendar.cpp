@@ -235,6 +235,16 @@ static QString taskDetails( Incidence* incidence )
   html += "<td>" + sSummary + "</td>";
   html += "</tr>\n";
 
+  // Recurrence 
+  if ( incidence->doesRecur() ) {
+    html += "<tr>";
+    html += "<td>" + i18n( "Recurrence:" ) + "</td>";
+    html += "<td>";
+    html += IncidenceFormatter::recurrenceAsHTML( incidence );
+    html += "</td>";
+    html += "</tr>\n";
+  }
+
   // Task Description Row
   html += "<tr>";
   html += "<td>" + i18n( "Description:" ) + "</td>";
