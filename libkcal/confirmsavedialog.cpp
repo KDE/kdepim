@@ -30,10 +30,15 @@
 using namespace KCal;
 
 ConfirmSaveDialog::ConfirmSaveDialog( const QString &destination,
-                                      QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n("Confirm Save"), Ok | Cancel, Ok, parent, name, /*modal*/true )
+                                      QWidget *parent )
+  : KDialog( parent )
 {
-  QFrame *topFrame = makeMainWidget();
+  setCaption( i18n( "Confirm Save" ) );
+  setModal( true );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  QFrame *topFrame = new QFrame( this );
+  setMainWidget( topFrame );
 
   QBoxLayout *topLayout = new QVBoxLayout( topFrame );
   topLayout->setSpacing( spacingHint() );

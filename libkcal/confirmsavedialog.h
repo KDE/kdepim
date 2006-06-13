@@ -25,16 +25,15 @@
 
 #include <libkcal/incidence.h>
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kdepimmacros.h>
 
 namespace KCal {
 
-class KDE_EXPORT ConfirmSaveDialog : public KDialogBase
+class KDE_EXPORT ConfirmSaveDialog : public KDialog
 {
   public:
-    ConfirmSaveDialog( const QString &destination, QWidget *parent,
-                       const char *name = 0 );
+    ConfirmSaveDialog( const QString &destination, QWidget *parent );
 
     void addIncidences( const Incidence::List &incidences,
                         const QString &operation );
