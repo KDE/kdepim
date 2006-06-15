@@ -34,7 +34,7 @@ static KStaticDeleter<DebugDialog> debugDialogDeleter;
 
 DebugDialog::DebugDialog()
  : KDialogBase( Plain, WStyle_DialogBorder | WStyle_StaysOnTop, 0,
-                "Debug Dialog", false, "DebugDialog",
+                "Debug Dialog", false, i18n("Debug Dialog"),
                 User1 | User2 | Ok, Ok, true )
 {
   QWidget *page = plainPage();
