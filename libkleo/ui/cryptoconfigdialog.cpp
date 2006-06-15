@@ -35,13 +35,15 @@
 #include <kacceleratormanager.h>
 
 Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent, const char* name )
-  : KDialogBase( Swallow,
-                 // Remove the "whats's this" button since we have no support for it
-                 Qt::WStyle_Customize | Qt::WStyle_DialogBorder | Qt::WStyle_Maximize | Qt::WStyle_Title | Qt::WStyle_SysMenu,
-                 parent, name, true /*modal*/,
-                 i18n( "Configure" ), Default|Cancel|Apply|Ok|User1,
-                 Ok, true /*separator*/, KGuiItem( i18n( "&Reset" ), "undo" ) )
+  : KDialog( parent)
 {
+  setCaption( i18n( "Configure" ) );
+  setButtons( Default|Cancel|Apply|Ok|User1 );
+  setDefaultButton( Ok );
+  setModal( true );
+  setButtonGuiItem( User1,  KGuiItem( i18n( "&Reset" ), "undo" ) );
+//add style :  Qt::WStyle_Customize | Qt::WStyle_DialogBorder | Qt::WStyle_Maximize | Qt::WStyle_Title | Qt::WStyle_SysMenu
+
   mMainWidget = new CryptoConfigModule( config, this );
   setMainWidget( mMainWidget );
   connect( mMainWidget, SIGNAL( changed() ), SLOT( slotChanged() ) );

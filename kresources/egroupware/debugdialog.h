@@ -21,7 +21,7 @@
 #ifndef DEBUGDIALOG_H
 #define DEBUGDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 class KTextBrowser;
 
@@ -29,7 +29,7 @@ class KTextBrowser;
   A dialog that parses chunks of XML documents and
   displays them in a treeview.
  */
-class DebugDialog : public KDialogBase
+class DebugDialog : public KDialog
 {
   Q_OBJECT
 

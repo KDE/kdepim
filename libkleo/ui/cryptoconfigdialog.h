@@ -32,7 +32,7 @@
 #ifndef CRYPTOCONFIGDIALOG_H
 #define CRYPTOCONFIGDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kdepimmacros.h>
 
 namespace Kleo {
@@ -41,9 +41,9 @@ namespace Kleo {
   class CryptoConfigModule;
 
   /**
-   * Simple KDialogBase wrapper around CryptoConfigModule
+   * Simple KDialog wrapper around CryptoConfigModule
    */
-  class KDE_EXPORT CryptoConfigDialog : public KDialogBase
+  class KDE_EXPORT CryptoConfigDialog : public KDialog
   {
     Q_OBJECT
   public:

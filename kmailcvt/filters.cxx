@@ -17,8 +17,6 @@
 
 #include <kmessagebox.h>
 #include <klocale.h>
-#include <dcopclient.h>
-#include <dcopref.h>
 #include <kurl.h>
 #include <kdebug.h>
 #include <ktoolinvocation.h>

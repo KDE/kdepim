@@ -301,7 +301,7 @@ class EGroupwarePropagator : public KConfigPropagator
 
 EGroupwareWizard::EGroupwareWizard() : KConfigWizard( new EGroupwarePropagator )
 {
-  QFrame *page = createWizardPage( i18n( "eGroupware Server" ) );
+  QWidget *page = createWizardPage( i18n( "eGroupware Server" ) );
 
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );

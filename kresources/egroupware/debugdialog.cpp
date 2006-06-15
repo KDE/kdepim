@@ -28,18 +28,24 @@
 #include <kstaticdeleter.h>
 
 #include <stdlib.h>
-
+#include <klocale.h>
 #include "debugdialog.h"
 
 DebugDialog* DebugDialog::mSelf = 0;
 static KStaticDeleter<DebugDialog> debugDialogDeleter;
 
 DebugDialog::DebugDialog()
- : KDialogBase( Plain, Qt::WStyle_DialogBorder | Qt::WStyle_StaysOnTop, 0,
-                "Debug Dialog", false, "DebugDialog",
-                User1 | User2 | Ok, Ok, true )
+ : KDialog( 0)
 {
-  QWidget *page = plainPage();
+  setCaption( i18n(  "Debug Dialog" ) );
+  setButtons( User1 | User2 | Ok );
+  setDefaultButton( Ok );
+  setModal( false );
+  enableButtonSeparator( true );
+  //add style Qt::WStyle_DialogBorder | Qt::WStyle_StaysOnTop
+
+  QWidget *page = new QWidget(this);
+  setMainWidget( page );
   QVBoxLayout *layout = new QVBoxLayout( page );
   layout->setSpacing( spacingHint() );
   layout->setMargin( marginHint() );

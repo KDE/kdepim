@@ -28,10 +28,13 @@
 #include "sloxfoldermanager.h"
 
 SloxFolderDialog::SloxFolderDialog( SloxFolderManager *manager, FolderType type, QWidget *parent ) :
-  KDialog( parent, i18n("Select Folder"), Ok|Cancel|User1 ),
+  KDialog( parent),
   mManager( manager ),
   mFolderType( type )
 {
+  setCaption( i18n("Select Folder") );
+  setButtons( Ok|Cancel|User1 );
+  setDefaultButton( Ok );
   setButtonGuiItem( User1, KGuiItem( i18n("Reload"), "reload" ) );
   mListView = new K3ListView( this );
   mListView->setRootIsDecorated( true );
