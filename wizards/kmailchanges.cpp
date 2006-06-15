@@ -110,6 +110,11 @@ class CreateDisconnectedImapAccount : public CreateImapAccount
       c.writeEntry( "Name", "Kolab Server" );
       c.writeEntry( "host", KolabConfig::self()->server() );
 
+      // in case the user wants to get rid of some groupware folders
+      if ( KolabConfig::self()->useOnlineForNonGroupware() ) {
+        c.writeEntry( "locally-subscribed-folders", true );
+      }
+
       c.writeEntry( "login",mUser );
 
       if ( KolabConfig::self()->savePassword() ) {
