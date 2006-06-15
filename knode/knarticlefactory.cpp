@@ -1065,8 +1065,10 @@ void KNArticleFactory::slotSendErrorDialogDone()
 
 
 KNSendErrorDialog::KNSendErrorDialog()
-  : KDialog(knGlobals.topWidget, i18n("Errors While Sending"), Close )
+  : KDialog( knGlobals.topWidget )
 {
+  setCaption( i18n("Errors While Sending") );
+  setButtons( Close );
   KVBox *page = new KVBox( this );
   setMainWidget( page );
   setDefaultButton( Close );

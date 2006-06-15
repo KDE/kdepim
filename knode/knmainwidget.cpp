@@ -22,6 +22,7 @@
 #include <QVBoxLayout>
 #include <QMenu>
 #include <QSplitter>
+#include <dbus/qdbus.h>
 #include <ktoolbar.h>
 
 #include <kactioncollection.h>
@@ -81,7 +82,6 @@ using KRecentAddress::RecentAddresses;
 using namespace KNode;
 
 KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
-  DCOPObject("KNodeIface"),
   KVBox( parent ),
   b_lockui( false ),
   m_GUIClient( client )
@@ -217,6 +217,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   p_gp = new Kpgp::Module();
   knGlobals.pgp = p_gp;
 
+  QDBus::sessionBus().registerObject( "/", this, QDBusConnection::ExportSlots );
   //-------------------------------- </CORE> -----------------------------------
 
   //apply saved options
@@ -1885,8 +1886,10 @@ KXMLGUIFactory* KNMainWidget::factory() const
 
 
 KNode::FetchArticleIdDlg::FetchArticleIdDlg( QWidget *parent ) :
-    KDialog( parent, i18n("Fetch Article with ID"), KDialog::Ok | KDialog::Cancel )
+    KDialog( parent )
 {
+  setCaption( i18n("Fetch Article with ID") );
+  setButtons( KDialog::Ok | KDialog::Cancel );
   setModal( true );
   KHBox *page = new KHBox( this );
   setMainWidget( page );

@@ -40,7 +40,6 @@
 #include <keditcl.h>
 
 #include <kabc/addresslineedit.h>
-#include <knodecomposeriface.h>
 
 class Q3GroupBox;
 
@@ -56,9 +55,10 @@ class SpellingFilter;
 class KComboBox;
 class QComboBox;
 /** Message composer window. */
-class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
+class KNComposer : public KMainWindow {
 
   Q_OBJECT
+  Q_CLASSINFO( "D-Bus Interface", "org.kde.knode.composer");
 
   public:
     enum composerResult { CRsendNow, CRsendLater, CRdelAsk,
@@ -82,8 +82,11 @@ class KNComposer : public KMainWindow , virtual public KNodeComposerIface {
 
     void closeEvent(QCloseEvent *e);
 
+  public slots:
     //set data from the given article
-    void initData(const QString &text);
+    Q_SCRIPTABLE void initData(const QString &text);
+
+  public:
 
     /** Inserts at cursor position if clear is false, replaces content otherwise
      * puts the file content into a box if box==true

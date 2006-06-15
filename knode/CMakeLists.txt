@@ -71,8 +71,6 @@ kde4_add_ui_files(knodecommon_LIB_SRCS
    postnewstechnicalwidget_base.ui 
    postnewscomposerwidget_base.ui )
 
-kde4_add_dcop_skels(knodecommon_LIB_SRCS knodecomposeriface.h knodeiface.h )
-
 kde4_add_kcfg_files(knodecommon_LIB_SRCS settings_base.kcfgc )
 
 kde4_add_library(knodecommon SHARED ${knodecommon_LIB_SRCS})

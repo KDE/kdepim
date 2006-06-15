@@ -15,7 +15,7 @@
 #ifndef KNFILTERDIALOG_H
 #define KNFILTERDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 class KNFilterConfigWidget;
 class KNArticleFilter;
@@ -25,7 +25,7 @@ class QCheckBox;
 
 
 /** Filter configuration dialog. */
-class KNFilterDialog : public KDialogBase {
+class KNFilterDialog : public KDialog {
 
   Q_OBJECT
 

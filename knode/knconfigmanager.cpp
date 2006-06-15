@@ -14,7 +14,6 @@
 
 #include "knconfigmanager.h"
 
-#include <kcmultidialog.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kwin.h>

@@ -75,6 +75,8 @@ using KRecentAddress::RecentAddresses;
 #include "knarticlefactory.h"
 #include "settings.h"
 
+#include <dbus/qdbus.h>
+
 KNLineEdit::KNLineEdit( KNComposer::ComposerView *_composerView, bool useCompletion,
                         QWidget *parent )
     : KNLineEditInherited( parent,useCompletion ), composerView( _composerView )
@@ -210,6 +212,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   connect(v_iew->e_dit, SIGNAL(CursorPositionChanged()), SLOT(slotUpdateCursorPos()));
   connect(v_iew->e_dit, SIGNAL(toggle_overwrite_signal()), SLOT(slotUpdateStatusBar()));
 
+  QDBus::sessionBus().registerObject( "/Composer", this, QDBusConnection::ExportSlots );
   //------------------------------- <Actions> --------------------------------------
 
   //file menu
@@ -2561,10 +2564,12 @@ KNComposer::AttachmentViewItem::~AttachmentViewItem()
 
 
 KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, QWidget *parent ) :
-  KDialog( parent, i18n("Attachment Properties"), Help | Ok | Cancel ), a_ttachment(a),
+  KDialog( parent ), a_ttachment(a),
   n_onTextAsText(false)
 {
   //init GUI
+  setCaption( i18n("Attachment Properties") );
+  setButtons( Help | Ok | Cancel );
   QWidget *page=new QWidget(this);
   setMainWidget(page);
   QVBoxLayout *topL=new QVBoxLayout(page);

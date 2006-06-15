@@ -33,11 +33,18 @@
 
 
 KNFilterDialog::KNFilterDialog( KNArticleFilter *f, QWidget *parent )
-  : KDialogBase(Plain, (f->id()==-1)? i18n("New Filter"):i18n("Properties of %1", f->name()),
-                Ok|Cancel|Help, Ok, parent ),
+  : KDialog( parent ),
     fltr(f)
 {
-  QFrame* page=plainPage();
+  if ( f->id() == -1 )
+    setCaption( i18n("New Filter") );
+  else
+    setCaption( i18n("Properties of %1", f->name()) );
+  setButtons( Ok|Cancel|Help );
+  setDefaultButton( Ok );
+
+  QFrame* page = new QFrame( this );
+  setMainWidget( page );
 
   QGroupBox *gb = new QGroupBox( page );
   fname=new KLineEdit(gb);

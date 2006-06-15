@@ -28,7 +28,7 @@
 #include <kio/netaccess.h>
 #include <ktempfile.h>
 #include <kfiledialog.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include "knglobals.h"
 #include "utilities.h"
@@ -166,9 +166,13 @@ QFile* KNLoadHelper::setURL(KUrl url)
 // **** keyboard selection dialog *********************************************
 int KNHelper::selectDialog(QWidget *parent, const QString &caption, const QStringList &options, int initialValue)
 {
-  KDialogBase *dlg=new KDialogBase(KDialogBase::Plain, caption, KDialogBase::Ok|KDialogBase::Cancel,
-                                   KDialogBase::Ok, parent);
-  QFrame *page = dlg->plainPage();
+  KDialog *dlg = new KDialog( parent );
+  dlg->setCaption( caption );
+  dlg->setButtons( KDialog::Ok|KDialog::Cancel );
+  dlg->setDefaultButton( KDialog::Ok );
+
+  QFrame *page = new QFrame( dlg );
+  dlg->setMainWidget( page );
   QHBoxLayout *pageL = new QHBoxLayout(page);
   pageL->setSpacing(5);
   pageL->setMargin(8);

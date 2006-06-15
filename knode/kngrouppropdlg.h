@@ -15,7 +15,7 @@
 #ifndef KNGROUPPROPDLG_H
 #define KNGROUPPROPDLG_H
 
-#include <kdialogbase.h>
+#include <kpagedialog.h>
 
 class QCheckBox;
 class QComboBox;
@@ -31,7 +31,7 @@ namespace KNode {
 
 
 /** News group properties dialog. */
-class KNGroupPropDlg : public KDialogBase  {
+class KNGroupPropDlg : public KPageDialog  {
 
   public:
     KNGroupPropDlg( KNGroup *group, QWidget *parent=0 );

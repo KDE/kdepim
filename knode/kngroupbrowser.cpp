@@ -38,9 +38,11 @@
 
 KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAccount *a,
                                ButtonCodes buttons, bool newCBact, const QString &user1, const QString &user2) :
-  KDialog( parent, caption, buttons | Help | Ok | Cancel ),
+  KDialog( parent ),
   incrementalFilter(false), a_ccount(a)
 {
+  setCaption( caption );
+  setButtons( buttons | Help | Ok | Cancel );
   setButtonGuiItem( User1, user1 );
   setButtonGuiItem( User2, user2 );
   refilterTimer = new QTimer();

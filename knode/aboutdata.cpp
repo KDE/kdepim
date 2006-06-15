@@ -50,6 +50,7 @@ namespace KNode
                   0,
                   "http://knode.sourceforge.net/" )
   {
+    setOrganizationDomain( "kde.org" );
     using KNode::authors;
     for ( unsigned int i = 0 ; i < sizeof authors / sizeof *authors ; ++i )
       addAuthor( authors[i].name, authors[i].desc, authors[i].email );

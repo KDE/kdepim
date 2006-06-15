@@ -36,14 +36,18 @@
 
 
 KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
-  : KDialogBase( Tabbed, i18n("Properties of %1", group->groupname()),
-                 Ok|Cancel|Help, Ok, parent ),
+  : KPageDialog( parent ),
     g_rp(group), n_ickChanged(false)
 {
+  setFaceType( Tabbed );
+  setCaption( i18n("Properties of %1", group->groupname()) );
+  setButtons( Ok|Cancel|Help );
+  setDefaultButton( Ok );
 
   // General tab ===============================================
 
-  QWidget *page = addPage(i18n("&General"));
+  QWidget *page = new QWidget( this );
+  addPage( page, i18n("&General") );
   QVBoxLayout *pageL = new QVBoxLayout(page);
   pageL->setSpacing(3);
 
@@ -157,16 +161,13 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   pageL->addStretch(1);
 
   // Specfic Identity tab =========================================
-  i_dWidget = new KNode::IdentityWidget( g_rp->identity(), knGlobals.instance(), addVBoxPage( i18n("&Identity") ) );
+  i_dWidget = new KNode::IdentityWidget( g_rp->identity(), knGlobals.instance(), this );
+  addPage( i_dWidget, i18n("&Identity") );
 
   // per server cleanup configuration
-  QFrame* cleanupPage = addPage( i18n("&Cleanup") );
-  QVBoxLayout *cleanupLayout = new QVBoxLayout( cleanupPage );
-  cleanupLayout->setSpacing( KDialog::spacingHint() );
-  mCleanupWidget = new KNode::GroupCleanupWidget( g_rp->cleanupConfig(), cleanupPage );
+  mCleanupWidget = new KNode::GroupCleanupWidget( g_rp->cleanupConfig(), this );
+  addPage( mCleanupWidget, i18n("&Cleanup") );
   mCleanupWidget->load();
-  cleanupLayout->addWidget( mCleanupWidget );
-  cleanupLayout->addStretch( 1 );
 
   KNHelper::restoreWindowSize("groupPropDLG", this, sizeHint());
 }

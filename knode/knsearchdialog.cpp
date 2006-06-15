@@ -26,15 +26,16 @@
 using namespace KNode;
 
 KNode::SearchDialog::SearchDialog( searchType type, QWidget *parent ) :
-  KDialog( parent, i18n("Find Articles"),
-               User1 | User2 | Close )
+  KDialog( parent )
 {
   Q_UNUSED( type );
+  setCaption( i18n("Find Articles") );
+  setButtons( User1 | User2 | Close );
   setModal( false );
   setDefaultButton( User1 );
 
   setWindowIcon( SmallIconSet("knode") );
-  setButtonBoxOrientation( Qt::Vertical );
+  setButtonsOrientation( Qt::Vertical );
   setButtonGuiItem( User1, KGuiItem( i18n("&Search"), "mail_find" ) );
   setButtonGuiItem( User2, KGuiItem( i18n("C&lear"), "editclear" ) );
 

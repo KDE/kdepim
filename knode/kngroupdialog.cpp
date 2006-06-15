@@ -285,7 +285,9 @@ void KNGroupDialog::slotUser1()
 void KNGroupDialog::slotUser2()
 {
   QDate lastDate = a_ccount->lastNewFetch();
-  KDialog *dlg = new KDialog( this, i18n("New Groups"), Ok | Cancel );
+  KDialog *dlg = new KDialog( this );
+  dlg->setCaption( i18n("New Groups") );
+  dlg->setButtons( Ok | Cancel );
 
   QGroupBox *btnGrp = new QGroupBox( i18n("Check for New Groups"), dlg );
   dlg->setMainWidget(btnGrp);

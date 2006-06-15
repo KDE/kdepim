@@ -15,6 +15,7 @@
 #ifndef KNCONFIGMANAGER_H
 #define KNCONFIGMANAGER_H
 
+#include <kcmoduleinfo.h>
 #include <kcmultidialog.h>
 
 #include "knconfig.h"

@@ -14,8 +14,6 @@
 #ifndef KNMAINWIDGET_H
 #define KNMAINWIDGET_H
 
-#include "knodeiface.h"
-
 #include <kdialog.h>
 #include <kvbox.h>
 #include "resource.h"
@@ -68,9 +66,10 @@ class KNRemoteArticle;
 class KActionCollection;
 
 /** This is the central part of the KNode GUI. */
-class KDE_EXPORT KNMainWidget : public KVBox, virtual public KNodeIface
+class KDE_EXPORT KNMainWidget : public KVBox
 {
   Q_OBJECT
+  Q_CLASSINFO("D-Bus Interface", "org.kde.knode.knodeiface");
 public:
   KNMainWidget( KXMLGUIClient *client, QWidget* parent );
   ~KNMainWidget();
@@ -106,62 +105,62 @@ public:
   KNode::ArticleWidget* articleViewer() const     { return mArticleViewer; }
   KRSqueezedTextLabel*  statusBarLabelGroup() const { return s_tatusGroup; }
   KRSqueezedTextLabel*  statusBarLabelFilter() const { return s_tatusFilter; }
-  public: //The dcop interface
+  public slots: //The dcop interface
   // Implementation of KNodeIface
   /* Navigation */
   /// Move to the next article
-  virtual void nextArticle();
+  Q_SCRIPTABLE void nextArticle();
   /// Move to the previous article
-  virtual void previousArticle();
+  Q_SCRIPTABLE void previousArticle();
   /// Move to the next unread article
-  virtual void nextUnreadArticle();
+  Q_SCRIPTABLE void nextUnreadArticle();
   /// Move to the next unread thread
-  virtual void nextUnreadThread();
+  Q_SCRIPTABLE void nextUnreadThread();
   /// Move to the next group
-  virtual void nextGroup();
+  Q_SCRIPTABLE void nextGroup();
   /// Move to the previous group
-  virtual void previousGroup();
+  Q_SCRIPTABLE void previousGroup();
 
   /* Group options */
   /// Open the editor to post a new article in the selected group
-  virtual void postArticle();
+  Q_SCRIPTABLE void postArticle();
   /// Fetch the new headers in the selected groups
-  virtual void fetchHeadersInCurrentGroup();
+  Q_SCRIPTABLE void fetchHeadersInCurrentGroup();
   /// Expire the articles in the current group
-  virtual void expireArticlesInCurrentGroup();
+  Q_SCRIPTABLE void expireArticlesInCurrentGroup();
   /// Mark all the articles in the current group as read
-  virtual void markAllAsRead();
+  Q_SCRIPTABLE void markAllAsRead();
   /// Mark all the articles in the current group as unread
-  virtual void markAllAsUnread();
+  Q_SCRIPTABLE void markAllAsUnread();
 
   /* Header view */
   /// Mark the current article as read
-  virtual void markAsRead();
+  Q_SCRIPTABLE void markAsRead();
   /// Mark the current article as unread
-  virtual void markAsUnread();
+  Q_SCRIPTABLE void markAsUnread();
   /// Mark the current thread as read
-  virtual void markThreadAsRead();
+  Q_SCRIPTABLE void markThreadAsRead();
   /// Mark the current thread as unread
-  virtual void markThreadAsUnread();
+  Q_SCRIPTABLE void markThreadAsUnread();
 
   /* Articles */
 
   /// Send the pending articles
-  virtual void sendPendingMessages();
+  Q_SCRIPTABLE void sendPendingMessages();
   /// Delete the current article
-  virtual void deleteArticle();
+  Q_SCRIPTABLE void deleteArticle();
   /// Send the current article
-  virtual void sendNow();
+  Q_SCRIPTABLE void sendNow();
   /// Edit the current article
-  virtual void editArticle();
+  Q_SCRIPTABLE void editArticle();
   /// Fetch all the new article headers
-  virtual void fetchHeaders();
+  Q_SCRIPTABLE void fetchHeaders();
   /// Expire articles in all groups
-  virtual void expireArticles();
+  Q_SCRIPTABLE void expireArticles();
 
   /* Kontact integration */
   /// Process command-line options
-  virtual bool handleCommandLine();
+  Q_SCRIPTABLE bool handleCommandLine();
 
   //end dcop interface
 signals:

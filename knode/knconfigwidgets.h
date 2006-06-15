@@ -15,7 +15,7 @@
 #ifndef KNCONFIGWIDGETS_H
 #define KNCONFIGWIDGETS_H
 
-#include <kdialogbase.h>
+#include <kpagedialog.h>
 #include <kcmodule.h>
 
 #include "ui_nntpaccountdialog_base.h"
@@ -168,7 +168,7 @@ class KDE_EXPORT NntpAccountListWidget : public KCModule, private Ui::NntpAccoun
 
 
 /** News server configuration dialog. */
-class KDE_EXPORT NntpAccountConfDialog : public KDialogBase, private Ui::NntpAccountDialogBase
+class KDE_EXPORT NntpAccountConfDialog : public KPageDialog, private Ui::NntpAccountDialogBase
 {
   Q_OBJECT
 

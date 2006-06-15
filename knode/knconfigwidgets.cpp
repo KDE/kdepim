@@ -436,12 +436,20 @@ void KNode::NntpAccountListWidget::slotSubBtnClicked()
 
 
 KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *parent ) :
-    KDialogBase( Tabbed, (a->id() != -1) ? i18n("Properties of %1", a->name()) : i18n("New Account"),
-                 Ok | Cancel | Help, Ok, parent ),
+    KPageDialog( parent ),
     mAccount( a )
 {
+  if ( a->id() != -1 )
+    setCaption( i18n("Properties of %1", a->name()) );
+  else
+    setCaption( i18n("New Account") );
+  setFaceType( Tabbed );
+  setButtons( Ok | Cancel | Help );
+  setDefaultButton( Ok );
+
   // server config tab
-  QFrame* page = addPage( i18n("Ser&ver") );
+  QFrame* page = new QFrame( this );
+  addPage( page, i18n("Ser&ver") );
   setupUi( page );
 
   mName->setText( a->name() );
@@ -475,17 +483,13 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
   mInterval->setValue( a->checkInterval() );
 
   // identity tab
-  mIdentityWidget = new KNode::IdentityWidget( a->identity(), knGlobals.instance(), addVBoxPage(i18n("&Identity") ) );
+  mIdentityWidget = new KNode::IdentityWidget( a->identity(), knGlobals.instance(), this );
+  addPage( mIdentityWidget, i18n("&Identity") );
 
   // per server cleanup configuration
-  QFrame* cleanupPage = addPage( i18n("&Cleanup") );
-  QVBoxLayout *cleanupLayout = new QVBoxLayout( cleanupPage );
-  cleanupLayout->setSpacing( KDialog::spacingHint() );
-  mCleanupWidget = new GroupCleanupWidget( a->cleanupConfig(), cleanupPage );
+  mCleanupWidget = new GroupCleanupWidget( a->cleanupConfig(), this );
+  addPage( mCleanupWidget, i18n("&Cleanup") );
   mCleanupWidget->load();
-  cleanupLayout->addWidget( mCleanupWidget );
-  cleanupLayout->addStretch( 1 );
-
 
   KNHelper::restoreWindowSize("accNewsPropDLG", this, sizeHint());
 
@@ -1133,9 +1137,12 @@ void KNode::DisplayedHeadersWidget::slotDownBtnClicked()
 
 
 KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *h, QWidget *parent )
-  : KDialog( parent, i18n("Header Properties"), Ok | Cancel | Help ),
+  : KDialog( parent ),
     h_dr(h)
 {
+  setCaption( i18n("Header Properties") );
+  setButtons( Ok | Cancel | Help );
+
   QWidget* page=new QWidget( this );
   setMainWidget( page );
   QGridLayout *topL=new QGridLayout(page);
@@ -1665,8 +1672,11 @@ void KNode::PostNewsTechnicalWidget::slotEditBtnClicked()
 
 
 KNode::XHeaderConfDialog::XHeaderConfDialog( const QString &h, QWidget *parent ) :
-  KDialog( parent, i18n("Additional Header"), Ok | Cancel )
+  KDialog( parent )
 {
+  setCaption( i18n("Additional Header") );
+  setButtons( Ok | Cancel );
+
   KHBox* page = new KHBox( this );
   setMainWidget( page );
 

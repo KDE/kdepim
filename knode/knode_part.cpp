@@ -32,7 +32,6 @@
 #include <kparts/genericfactory.h>
 #include <kparts/statusbarextension.h>
 #include <knotifyclient.h>
-#include <dcopclient.h>
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <kstatusbar.h>
@@ -60,7 +59,8 @@ KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QStringList 
 
   KGlobal::locale()->insertCatalog("libkdepim");
   KGlobal::locale()->insertCatalog("libkpgp");
-  kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
+#warning Port me!
+//   kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
   KGlobal::iconLoader()->addAppDir("knode");
   knGlobals.setInstance( KNodeFactory::instance() );
 
@@ -74,7 +74,8 @@ KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QStringList 
   topLayout->addWidget(mainWidget);
   mainWidget->setFocusPolicy( Qt::ClickFocus );
 
-  kapp->dcopClient()->resume(); // Ok. We are ready for DCOP requests.
+#warning Port me!
+//   kapp->dcopClient()->resume(); // Ok. We are ready for DCOP requests.
 
   KParts::StatusBarExtension* statusBar = new KParts::StatusBarExtension(this);
   statusBar->addStatusBarItem(mainWidget->statusBarLabelFilter(), 10, false);
