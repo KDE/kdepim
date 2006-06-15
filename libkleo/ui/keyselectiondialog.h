@@ -37,7 +37,7 @@
 #ifndef __KLEO_UI_KEYSELECTIONDIALOG_H__
 #define __KLEO_UI_KEYSELECTIONDIALOG_H__
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include <kleo/cryptobackend.h>
 #include <gpgmepp/key.h>
@@ -64,7 +64,7 @@ namespace GpgME {
 
 namespace Kleo {
 
-  class KDE_EXPORT KeySelectionDialog : public KDialogBase {
+  class KDE_EXPORT KeySelectionDialog : public KDialog {
     Q_OBJECT
   public:
 

@@ -111,14 +111,19 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
                                       const std::vector<GpgME::Key> & sender,
                                       QWidget * parent, const char * name,
                                       bool modal )
-  : KDialogBase( Plain, i18n("Encryption Key Approval"), Ok|Cancel, Ok, parent, name, modal ),
+  : KDialog( parent),
     d( 0 )
 {
+  setCaption( i18n("Encryption Key Approval") );
+  setButtons(  Ok|Cancel );
+  setDefaultButton(  Ok );
+  setModal( modal );
   assert( !recipients.empty() );
 
   d = new Private();
 
-  QFrame *page = makeMainWidget();
+  QFrame *page = new QFrame( this );
+  setMainWidget( page );
   QVBoxLayout * vlay = new QVBoxLayout( page );
   vlay->setMargin( 0 );
   vlay->setSpacing( spacingHint() );

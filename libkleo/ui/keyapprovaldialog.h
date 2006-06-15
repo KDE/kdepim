@@ -39,7 +39,7 @@
 
 #include <kleo/enum.h>
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kdepimmacros.h>
 
 #include <kpgpkey.h> // for EncryptPref
@@ -55,7 +55,7 @@ class QStringList;
 
 namespace Kleo {
 
-  class KDE_EXPORT KeyApprovalDialog : public KDialogBase {
+  class KDE_EXPORT KeyApprovalDialog : public KDialog {
     Q_OBJECT
   public:
     struct Item {

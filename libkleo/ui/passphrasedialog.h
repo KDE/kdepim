@@ -49,11 +49,11 @@
 #ifndef __KLEO_UI_PASSPHRASEDIALOG_H__
 #define __KLEO_UI_PASSPHRASEDIALOG_H__
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 namespace Kleo {
 
-  class PassphraseDialog : public KDialogBase {
+  class PassphraseDialog : public KDialog {
     Q_OBJECT
   public:
     PassphraseDialog( const QString & description,

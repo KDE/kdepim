@@ -301,7 +301,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      bool rememberChoice,
 					      QWidget * parent, const char * name,
 					      bool modal )
-  : KDialogBase( Plain, title, Default|Ok|Cancel|Help, Ok, parent, name, modal ),
+  : KDialog( parent),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
@@ -309,6 +309,10 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mKeyUsage( keyUsage ),
     mCurrentContextMenuItem( 0 )
 {
+  setCaption( title );
+  setButtons( Default|Ok|Cancel|Help );
+  setDefaultButton( Ok );
+  setModal( modal );
   init( rememberChoice, extendedSelection, text, QString() );
 }
 
@@ -320,7 +324,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      bool rememberChoice,
 					      QWidget * parent, const char * name,
 					      bool modal )
-  : KDialogBase( Plain, title, Default|Ok|Cancel|Help, Ok, parent, name, modal ),
+  : KDialog(parent),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
@@ -328,6 +332,9 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
     mSearchText( initialQuery ),
     mCurrentContextMenuItem( 0 )
 {
+  setCaption( title );
+  setButtons( Default|Ok|Cancel|Help );
+  setDefaultButton( Ok );
   init( rememberChoice, extendedSelection, text, initialQuery );
 }
 
@@ -353,7 +360,8 @@ kapp->windowIcon().pixmap(miniSize, miniSize) );
   mCheckSelectionTimer = new QTimer( this );
   mStartSearchTimer = new QTimer( this );
 
-  QFrame *page = makeMainWidget();
+  QFrame *page = new QFrame( this );
+  setMainWidget( page );
   QVBoxLayout *topLayout = new QVBoxLayout( page );
   topLayout->setMargin( 0 );
   topLayout->setSpacing( spacingHint() );
@@ -415,8 +423,8 @@ kapp->windowIcon().pixmap(miniSize, miniSize) );
 	   SIGNAL(contextMenu(Kleo::KeyListViewItem*,const QPoint&)),
            SLOT(slotRMB(Kleo::KeyListViewItem*,const QPoint&)) );
 
-  setButtonText( KDialogBase::Default, i18n("&Reread Keys") );
-  setButtonText( KDialogBase::Help, i18n("&Start Certificate Manager") );
+  setButtonText( KDialog::Default, i18n("&Reread Keys") );
+  setButtonText( KDialog::Help, i18n("&Start Certificate Manager") );
   connect( this, SIGNAL(defaultClicked()), this, SLOT(slotRereadKeys()) );
   connect( this, SIGNAL(helpClicked()), this, SLOT(slotStartCertificateManager()) );
 

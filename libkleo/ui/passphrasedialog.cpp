@@ -51,7 +51,7 @@
 #endif
 
 #include "passphrasedialog.h"
-
+#include <QPixmap>
 #include <kpassworddialog.h>
 #include <kiconloader.h>
 #include <klocale.h>
@@ -70,8 +70,12 @@ struct Kleo::PassphraseDialog::Private {
 
 Kleo::PassphraseDialog::PassphraseDialog( const QString & msg, const QString & caption,
 					  QWidget * parent, const char * name, bool modal )
-  : KDialogBase( Plain, caption, Ok|Cancel, Ok, parent, name, modal ), d( 0 )
+  : KDialog( parent ), d( 0 )
 {
+  setCaption( caption );
+  setButtons( Ok|Cancel );
+  setDefaultButton( Ok );
+  setModal( modal );
   d = new Private();
 
   QWidget * w = new QWidget( this );
@@ -98,8 +102,8 @@ Kleo::PassphraseDialog::PassphraseDialog( const QString & msg, const QString & c
   vlay->addWidget( d->lineedit );
 
   connect( d->lineedit, SIGNAL(returnPressed()), SLOT(slotOk()) );
-
-  disableResize();
+#warning "kde4: port it"
+  //disableResize();
 }
 
 
@@ -114,13 +118,13 @@ const char * Kleo::PassphraseDialog::passphrase() const {
 void Kleo::PassphraseDialog::slotOk() {
   const char * pass = passphrase();
   emit finished( pass ? pass : "" );
-  KDialogBase::slotOk();
+  KDialog::accept();
 }
 
 void Kleo::PassphraseDialog::slotCancel() {
   emit canceled();
-  KDialogBase::slotCancel();
+  KDialog::reject();
 }
 
-  
+
 #include "passphrasedialog.moc"

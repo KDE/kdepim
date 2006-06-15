@@ -13,6 +13,7 @@ find_package(Kode REQUIRED)
 macro_optional_find_package(Sasl2)
 macro_optional_find_package(Boost)
 find_package( Gpgme )
+include (FindQtDBus)
 
 # is this really required here ?
 if (APPLE)
