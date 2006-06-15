@@ -26,7 +26,7 @@
 #include <kstaticdeleter.h>
 
 #include <stdlib.h>
-
+#include <klocale.h>
 #include "debugdialog.h"
 
 DebugDialog* DebugDialog::mSelf = 0;
