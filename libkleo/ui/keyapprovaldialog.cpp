@@ -192,7 +192,8 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
                    + sv->horizontalScrollBar()->sizeHint().height()
                    + sv->frameWidth()
                    + spacingHint()
-                   + actionButton( KDialogBase::Cancel )->sizeHint().height()
+#warning Port me!
+//                   + actionButton( KDialogBase::Cancel )->sizeHint().height()
                    + marginHint()
                    + 2;
 

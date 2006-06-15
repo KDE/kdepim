@@ -63,8 +63,11 @@ namespace Kpgp {
 PassphraseDialog::PassphraseDialog( QWidget *parent,
                                     const QString &caption, 
                                     const QString &keyID )
-  :KDialog( parent, caption, Ok|Cancel  )
+  :KDialog( parent )
 {
+  setCaption( caption );
+  setButtons( Ok|Cancel );
+
   KHBox *hbox = new KHBox( this );
   setMainWidget( hbox );
   
@@ -303,11 +306,14 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
                                         const unsigned int allowedKeys,
                                         const bool extendedSelection,
                                         QWidget *parent )
-  : KDialog( parent, title, Default|Ok|Cancel ),
+  : KDialog( parent ),
     mRememberCB( 0 ),
     mAllowedKeys( allowedKeys ),
     mCurrentContextMenuItem( 0 )
 {
+  setCaption( title );
+  setButtons( Default|Ok|Cancel );
+
   if ( qApp )
     KWin::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( K3Icon::Desktop ), IconSize( K3Icon::Desktop ) ),
                     qApp->windowIcon().pixmap( IconSize( K3Icon::Small ), IconSize( K3Icon::Small ) ) );
@@ -1336,11 +1342,14 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
                                       const QVector<KeyIDList>& keyIDs,
                                       const int allowedKeys,
                                       QWidget *parent )
-  : KDialog( parent, i18n("Encryption Key Approval"), Ok|Cancel ),
+  : KDialog( parent ),
     mKeys( keyIDs ),
     mAllowedKeys( allowedKeys ),
     mPrefsChanged( false )
 {
+  setCaption( i18n("Encryption Key Approval") );
+  setButtons( Ok|Cancel );
+
   Kpgp::Module *pgp = Kpgp::Module::getKpgp();
 
   if( pgp == 0 )
@@ -1520,7 +1529,8 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
                    + sv->horizontalScrollBar()->sizeHint().height()
                    + sv->frameWidth()
                    + topLayout->spacing()
-                   + actionButton( KDialog::Cancel )->sizeHint().height()
+#warning Port me!
+//                   + actionButton( KDialog::Cancel )->sizeHint().height()
                    + marginHint()
                    + 2;
   // don't make the dialog too large
@@ -1641,8 +1651,11 @@ KeyApprovalDialog::slotCancel()
 // ------------------------------------------------------------------------
 CipherTextDialog::CipherTextDialog( const QByteArray & text,
                                     const QByteArray & charset, QWidget *parent )
-  :KDialog( parent, i18n("OpenPGP Information"), Ok|Cancel )
+  :KDialog( parent )
 {
+  setCaption( i18n("OpenPGP Information") );
+  setButtons( Ok|Cancel );
+
   // FIXME (post KDE2.2): show some more info, e.g. the output of GnuPG/PGP
   QFrame *page = new QFrame( this );
   setMainWidget( page );
