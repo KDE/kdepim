@@ -272,13 +272,17 @@ void AddressEditWidget::updateAddressEdit()
 AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
                                       int selected, QWidget *parent,
                                       const char *name )
-  : KDialogBase( Plain, i18n( "Edit Address" ), Ok | Cancel, Ok,
-                 parent, name, true, true ),
+  : KDialog(parent),
     mPreviousAddress( 0 )
 {
+  setCaption( i18n( "Edit Address" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  enableButtonSeparator( true );
   mAddressList = list;
 
-  QWidget *page = plainPage();
+  QWidget *page = new QWidget( this );
+  setMainWidget( page );
 
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );
@@ -478,7 +482,7 @@ void AddressEditDialog::updateAddressEdits()
   mPreferredCheckBox->setChecked( a.type() & KABC::Address::Pref );
 
   if ( a.isEmpty() )
-    mCountryCombo->setItemText( mCountryCombo->currentIndex(), 
+    mCountryCombo->setItemText( mCountryCombo->currentIndex(),
        KGlobal::locale()->twoAlphaToCountryName( KGlobal::locale()->country() ) );
 
   mStreetTextEdit->setFocus();
@@ -610,10 +614,14 @@ void AddressEditDialog::fillCountryCombo()
 
 
 AddressTypeDialog::AddressTypeDialog( int type, QWidget *parent )
-  : KDialogBase( Plain, i18n( "Edit Address Type" ), Ok | Cancel, Ok,
-                 parent, "AddressTypeDialog" )
+  : KDialog( parent)
 {
-  QWidget *page = plainPage();
+  setCaption( i18n( "Edit Address Type" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+
+  QWidget *page = new QWidget(this);
+  setMainWidget( page );
   QVBoxLayout *layout = new QVBoxLayout( page );
 
   QGroupBox *box  = new QGroupBox( i18n( "Address Types" ), page );

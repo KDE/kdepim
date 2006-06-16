@@ -27,7 +27,7 @@
 #include <QWidget>
 #include <QLabel>
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kabc/address.h>
 #include <kabc/addressee.h>
 
@@ -90,7 +90,7 @@ class AddressEditWidget : public QWidget
 /**
   Dialog for editing address details.
  */
-class AddressEditDialog : public KDialogBase
+class AddressEditDialog : public KDialog
 {
   Q_OBJECT
 
@@ -138,7 +138,7 @@ class AddressEditDialog : public KDialogBase
 /**
   Dialog for selecting an address type.
  */
-class AddressTypeDialog : public KDialogBase
+class AddressTypeDialog : public KDialog
 {
   public:
     AddressTypeDialog( int type, QWidget *parent );

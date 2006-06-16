@@ -25,7 +25,7 @@
 #define EMAILEDITWIDGET_H
 
 #include <kabc/addressee.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 class Q3ButtonGroup;
 class QCheckBox;
@@ -67,7 +67,7 @@ class EmailEditWidget : public QWidget
     QStringList mEmailList;
 };
 
-class EmailEditDialog : public KDialogBase
+class EmailEditDialog : public KDialog
 {
   Q_OBJECT
 

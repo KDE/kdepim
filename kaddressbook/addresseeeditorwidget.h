@@ -28,7 +28,6 @@
 #include <Q3Dict>
 #include <kabc/addressee.h>
 #include <kdialog.h>
-#include <kjanuswidget.h>
 
 #include "addresseeeditorbase.h"
 #include "contacteditorwidgetmanager.h"

@@ -173,11 +173,13 @@ void EmailEditWidget::textChanged( const QString &text )
 
 EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
                                   const char *name )
-  : KDialogBase( KDialogBase::Plain, i18n( "Edit Email Addresses" ),
-                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Help,
-                 parent, name, true )
+  : KDialog( parent)
 {
-  QWidget *page = plainPage();
+  setCaption( i18n( "Edit Email Addresses" ) );
+  setButtons( KDialog::Ok | KDialog::Cancel );
+  setDefaultButton( KDialog::Help );
+  QWidget *page = new QWidget( this);
+  setMainWidget( page );
 
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );

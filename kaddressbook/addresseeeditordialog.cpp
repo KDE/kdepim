@@ -39,17 +39,20 @@
 
 AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core * /*core*/,
                                               QWidget *parent, const char *name )
-  : KDialogBase( KDialogBase::Plain, i18n( "Edit Contact" ),
-                 KDialogBase::Ok | KDialogBase::Cancel | KDialogBase::Apply,
-                 KDialogBase::Ok, parent, name, false )
+  : KDialog( parent )
 {
+  setCaption( i18n( "Edit Contact" ) );
+  setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Apply );
+  setDefaultButton( KDialog::Ok );
+
   // Set this to be the group leader for all subdialogs - this means
   // modal subdialogs will only affect this dialog, not the other windows
   setAttribute( Qt::WA_GroupLeader );
 
   kDebug(5720) << "AddresseeEditorDialog()" << endl;
 
-  QFrame *page = plainPage();
+  QFrame *page = new QFrame( this );
+  setMainWidget( page );
 
   QVBoxLayout *layout = new QVBoxLayout( page );
 
@@ -61,7 +64,7 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core * /*core*/,
   connect( mEditorWidget, SIGNAL( modified() ), SLOT( widgetModified() ) );
   layout->addWidget( mEditorWidget );
 
-  enableButton( KDialogBase::Apply, false );
+  enableButton( KDialog::Apply, false );
 
   KConfig config( "kaddressbookrc" );
   config.setGroup( "AddresseeEditor" );
@@ -82,7 +85,7 @@ AddresseeEditorDialog::~AddresseeEditorDialog()
 
 void AddresseeEditorDialog::setAddressee( const KABC::Addressee &addr )
 {
-  enableButton( KDialogBase::Apply, false );
+  enableButton( KDialog::Apply, false );
 
   setTitle( addr );
 
@@ -112,9 +115,9 @@ void AddresseeEditorDialog::slotApply()
     QApplication::restoreOverrideCursor();
   }
 
-  enableButton( KDialogBase::Apply, false );
-
-  KDialogBase::slotApply();
+  enableButton( KDialog::Apply, false );
+#warning "kde4: port it"
+  //KDialog::slotApply();
 }
 
 void AddresseeEditorDialog::slotOk()
@@ -124,7 +127,7 @@ void AddresseeEditorDialog::slotOk()
 
   slotApply();
 
-  KDialogBase::slotOk();
+  KDialog::accept();
 
   // Destroy this dialog
   delayedDestruct();
@@ -136,12 +139,12 @@ void AddresseeEditorDialog::widgetModified()
   if ( !addressee.isEmpty() )
     setTitle( addressee );
 
-  enableButton( KDialogBase::Apply, true );
+  enableButton( KDialog::Apply, true );
 }
 
 void AddresseeEditorDialog::slotCancel()
 {
-  KDialogBase::slotCancel();
+  KDialog::reject();
 
   // Destroy this dialog
   delayedDestruct();
