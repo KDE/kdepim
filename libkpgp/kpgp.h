@@ -36,7 +36,7 @@
 #include <QByteArray>
 #include <Q3PtrList>
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include "kpgpkey.h"
 #include <kdepimmacros.h>
