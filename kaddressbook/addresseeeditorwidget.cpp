@@ -43,7 +43,6 @@
 #include <kconfig.h>
 #include <kcombobox.h>
 #include <kdebug.h>
-#include <kdialogbase.h>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <klineedit.h>
@@ -137,8 +136,8 @@ void AddresseeEditorWidget::setupTab1()
   QWidget *tab1 = new QWidget( mTabWidget );
 
   QGridLayout *layout = new QGridLayout( tab1 );
-  layout->setMargin( KDialogBase::marginHint() );
-  layout->setSpacing( KDialogBase::spacingHint() );
+  layout->setMargin( KDialog::marginHint() );
+  layout->setSpacing( KDialog::spacingHint() );
 
   QLabel *label;
   KSeparator* bar;
@@ -282,7 +281,7 @@ void AddresseeEditorWidget::setupTab1()
 
   ///////////////////////////////////////
   KHBox *categoryBox = new KHBox( tab1 );
-  categoryBox->setSpacing( KDialogBase::spacingHint() );
+  categoryBox->setSpacing( KDialog::spacingHint() );
 
   // Categories
   mCategoryButton = new QPushButton( i18n( "Select Categories..." ), categoryBox );
@@ -310,8 +309,8 @@ void AddresseeEditorWidget::setupTab2()
   QWidget *tab2 = new QWidget( mTabWidget );
 
   QGridLayout *layout = new QGridLayout( tab2 );
-  layout->setMargin( KDialogBase::marginHint() );
-  layout->setSpacing( KDialogBase::spacingHint() );
+  layout->setMargin( KDialog::marginHint() );
+  layout->setSpacing( KDialog::spacingHint() );
 
   QLabel *label;
   KSeparator* bar;

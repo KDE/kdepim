@@ -143,10 +143,12 @@ void IMAddressLVI::activate()
 /*===========================================================================*/
 
 IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM )
-  : KDialog( parent, i18n( "Edit Instant Messenging Address" ),
-                 Help | Ok | Cancel ),
+  : KDialog( parent),
     mReadOnly( false )
 {
+  setCaption( i18n( "Edit Instant Messenging Address" ) );
+  setButtons( Help | Ok | Cancel );
+  setDefaultButton( Ok );
   mWidget = new IMEditorBase( this );
   setMainWidget( mWidget );
 
@@ -180,7 +182,7 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM )
 
   QStringList keys = protocolMap.keys();
   keys.sort();
-  QStringList::ConstIterator keyIt = keys.begin();	
+  QStringList::ConstIterator keyIt = keys.begin();
   QStringList::ConstIterator end = keys.end();
   for ( ; keyIt != end; ++keyIt )
       sorted.append( protocolMap[*keyIt] );
@@ -333,7 +335,10 @@ bool IMEditorWidget::isModified() const
 
 void IMEditorWidget::slotAdd()
 {
-  KDialog addDialog( this, i18n( "Add Address" ), KDialog::Ok | KDialog::Cancel );
+  KDialog addDialog( this);
+  addDialog.setCaption( i18n( "Add Address" ) );
+  addDialog.setButtons(  KDialog::Ok | KDialog::Cancel );
+  addDialog.setDefaultButton( KDialog::Ok );
   addDialog.setObjectName( "addaddress" );
 
   IMAddressWidget *addressWid = new IMAddressWidget( &addDialog, mProtocols );
@@ -368,7 +373,10 @@ void IMEditorWidget::slotEdit()
 
   // Just edit the first one selected.
   if ( IMAddressLVI *current = static_cast<IMAddressLVI*>( it.current() ) ) {
-    KDialog editDialog( this, i18n( "Edit Address" ), KDialog::Ok | KDialog::Cancel );
+    KDialog editDialog( this);
+    editDialog.setCaption( i18n( "Edit Address" ) );
+    editDialog.setButtons( KDialog::Ok | KDialog::Cancel );
+    editDialog.setDefaultButton( KDialog::Ok );
     editDialog.setObjectName( "editaddress" );
     IMAddressWidget *addressWid = new IMAddressWidget( &editDialog, mProtocols, current->protocol(),
                                                        current->address(), current->context() ) ;

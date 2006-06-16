@@ -24,7 +24,7 @@
 #ifndef ADDRESSEEEDITORDIALOG_H
 #define ADDRESSEEEDITORDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include <kabc/addressbook.h>
 
@@ -32,7 +32,7 @@ class AddresseeEditorBase;
 class QWidget;
 namespace KAB { class Core; }
 
-class AddresseeEditorDialog : public KDialogBase
+class AddresseeEditorDialog : public KDialog
 {
   Q_OBJECT
 

@@ -35,7 +35,6 @@
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kdialog.h>
-#include <kdialogbase.h>
 #include <klocale.h>
 #include <kprinter.h>
 #include <kglobal.h>
