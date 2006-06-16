@@ -42,7 +42,6 @@
 #include <kaboutdata.h>
 #include <kacceleratormanager.h>
 #include <kapplication.h>
-#include <dcopclient.h>
 #include <kactionclasses.h>
 #include <kcmdlineargs.h>
 #include <kcmultidialog.h>
@@ -96,7 +95,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 {
   mWidget = new QWidget( parent );
   mWidget->setObjectName( name );
-// 
+//
   mIsPart = (parent->metaObject()->className() != "KAddressBookMain");
 
   mAddressBookChangedTimer = new QTimer( this );
@@ -531,8 +530,8 @@ void KABCore::incrementalJumpButtonSearch( const QString& character )
   mViewManager->setSelected( QString(), false );
 
   KABC::AddresseeList list;
-  // FIXME this conversion is only temporarily necessary, until 
-  // KABC::AddresseeList has been ported to QList 
+  // FIXME this conversion is only temporarily necessary, until
+  // KABC::AddresseeList has been ported to QList
   KABC::Addressee::List::ConstIterator tmpIt( mSearchManager->contacts().constBegin() );
   for ( ; tmpIt != mSearchManager->contacts().constEnd(); ++tmpIt ) {
     list.append( *tmpIt );

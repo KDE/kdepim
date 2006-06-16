@@ -37,14 +37,17 @@
 
 AddViewDialog::AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict,
                               QWidget *parent, const char *name )
-  : KDialogBase( KDialogBase::Plain, i18n( "Add View" ),
-                 KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok,
-                 parent, name ),
+  : KDialog( parent),
    mViewFactoryDict( viewFactoryDict )
 {
+  setCaption( i18n( "Add View" ) );
+  setButtons( KDialog::Ok | KDialog::Cancel );
+  setDefaultButton( KDialog::Ok );
+
   mTypeId = 0;
 
-  QWidget *page = plainPage();
+  QWidget *page = new QWidget(this);
+  setMainWidget( page );
 
   QGridLayout *layout = new QGridLayout( page );
   layout->setSpacing( spacingHint() );
@@ -83,7 +86,7 @@ AddViewDialog::AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict,
 
   mTypeGroup->setButton( 0 );
   mViewNameEdit->setFocus();
-  enableButton( KDialogBase::Ok, false );
+  enableButton( KDialog::Ok, false );
 }
 
 AddViewDialog::~AddViewDialog()
@@ -108,7 +111,7 @@ void AddViewDialog::clicked( int id )
 
 void AddViewDialog::textChanged( const QString &text )
 {
-  enableButton( KDialogBase::Ok, !text.isEmpty() );
+  enableButton( KDialog::Ok, !text.isEmpty() );
 }
 
 #include "addviewdialog.moc"

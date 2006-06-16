@@ -25,7 +25,7 @@
 #define PHONEEDITWIDGET_H
 
 #include <kcombobox.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include "addresseeconfig.h"
 //Added by qt3to4:
@@ -129,7 +129,7 @@ class PhoneEditWidget : public QWidget
 /**
   Dialog for editing phone number types.
  */
-class PhoneTypeDialog : public KDialogBase
+class PhoneTypeDialog : public KDialog
 {
   Q_OBJECT
   public:

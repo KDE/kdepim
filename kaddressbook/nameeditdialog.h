@@ -24,7 +24,7 @@
 #ifndef NAMEEDITDIALOG_H
 #define NAMEEDITDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kabc/addressee.h>
 
 #include "addresseeconfig.h"
@@ -37,7 +37,7 @@ class KComboBox;
 /**
   Editor dialog for name details, like given name, family name etc.
 */
-class NameEditDialog : public KDialogBase
+class NameEditDialog : public KDialog
 {
   Q_OBJECT
 

@@ -24,7 +24,7 @@
 #ifndef ADDVIEWDIALOG_H
 #define ADDVIEWDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <q3dict.h>
 #include <QString>
 
@@ -38,7 +38,7 @@ class ViewFactory;
   the view as well as the type. Someday it would be nice for this to be a
   wizard.
  */
-class AddViewDialog : public KDialogBase
+class AddViewDialog : public KDialog
 {
   Q_OBJECT
 

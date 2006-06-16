@@ -300,11 +300,15 @@ void PhoneEditWidget::changed( int pos )
 ///////////////////////////////////////////
 // PhoneTypeDialog
 PhoneTypeDialog::PhoneTypeDialog( int type, QWidget *parent )
-  : KDialogBase( Plain, i18n( "Edit Phone Number" ), Ok | Cancel, Ok,
-                 parent, "PhoneTypeDialog", true ),
+  : KDialog( parent),
     mType( type )
 {
-  QWidget *page = plainPage();
+  setCaption( i18n( "Edit Phone Number" ) );
+  setButtons(  Ok | Cancel );
+  setDefaultButton( Ok );
+  enableButtonSeparator( true );
+  QWidget *page = new QWidget(this);
+  setMainWidget( page );
 
   QVBoxLayout *layout = new QVBoxLayout( page );
   layout->setSpacing( spacingHint() );

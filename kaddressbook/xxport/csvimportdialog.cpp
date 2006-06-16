@@ -39,7 +39,7 @@
 #include <kprogressdialog.h>
 #include <kapplication.h>
 #include <kdebug.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kfiledialog.h>
 #include <klineedit.h>
 #include <klocale.h>

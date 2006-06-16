@@ -50,10 +50,13 @@
 
 NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
                                 bool readOnly, QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Edit Contact Name" ), Help | Ok | Cancel,
-                 Ok, parent, name, true ), mAddressee( addr )
+  : KDialog( parent), mAddressee( addr )
 {
-  QWidget *page = plainPage();
+  setCaption( i18n( "Edit Contact Name" ) );
+  setButtons( Help | Ok | Cancel );
+  setDefaultButton( Ok );
+
+  QWidget *page = new QWidget(this);
   QGridLayout *layout = new QGridLayout( page );
   layout->setSpacing( spacingHint() );
   layout->addItem( new QSpacerItem( 100, 0 ), 0, 2 );

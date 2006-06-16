@@ -24,7 +24,7 @@
 #ifndef ADDHOSTDIALOG_H
 #define ADDHOSTDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kabc/ldapconfigwidget.h>
 #include <libkdepim/ldapclient.h>
 

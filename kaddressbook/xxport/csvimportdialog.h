@@ -24,7 +24,7 @@
 
 #include <kabc/addressbook.h>
 #include <kabc/addresseelist.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include <QList>
 

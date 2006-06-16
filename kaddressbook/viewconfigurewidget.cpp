@@ -89,9 +89,13 @@ KVBox *ViewConfigureWidget::addPage( const QString &item, const QString &header,
 
 ViewConfigureDialog::ViewConfigureDialog( ViewConfigureWidget *wdg, const QString &viewName,
                                           QWidget *parent, const char *name )
-  : KDialogBase( Swallow, i18n( "Modify View: " ) + viewName, Help | Ok | Cancel,
-                 Ok, parent, name, true, true ), mConfigWidget( wdg )
+  : KDialog( parent ), mConfigWidget( wdg )
 {
+  setCaption( i18n( "Modify View: " ) + viewName );
+  setButtons( Help | Ok | Cancel );
+  setDefaultButton( Ok );
+  enableButtonSeparator( true );
+
   setMainWidget( mConfigWidget );
 
   resize( 600, 300 );

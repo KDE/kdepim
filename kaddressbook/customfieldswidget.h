@@ -25,7 +25,7 @@
 #define CUSTOMFIELDSWIDGET_H
 
 #include <kabc/addressee.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <klocale.h>
 
 #include <QMap>

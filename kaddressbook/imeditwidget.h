@@ -25,7 +25,7 @@
 #define IMEDITWIDGET_H
 
 #include <kabc/addressee.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 class Q3ButtonGroup;
 class QCheckBox;

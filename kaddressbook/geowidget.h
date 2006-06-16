@@ -24,7 +24,7 @@
 #ifndef GEOWIDGET_H
 #define GEOWIDGET_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include "contacteditorwidget.h"
 #include <QMouseEvent>
@@ -77,7 +77,7 @@ class GeoWidget : public KAB::ContactEditorWidget
     bool mReadOnly;
 };
 
-class GeoDialog : public KDialogBase
+class GeoDialog : public KDialog
 {
   Q_OBJECT
 

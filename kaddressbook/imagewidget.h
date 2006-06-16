@@ -32,7 +32,7 @@
 #include <QDropEvent>
 
 #include <kabc/picture.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include "contacteditorwidget.h"
 

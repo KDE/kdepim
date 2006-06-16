@@ -51,9 +51,13 @@
 #include "filtereditdialog.h"
 
 FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Edit Address Book Filter" ),
-                 Help | Ok | Cancel, Ok, parent, name, false, true )
+  : KDialog( parent)
 {
+  setCaption( i18n( "Edit Address Book Filter" ) );
+  setButtons( Help | Ok | Cancel );
+  setDefaultButton ( Ok );
+  enableButtonSeparator( true );
+  setModal( false );
   initGUI();
 
   const QStringList cats = KABPrefs::instance()->customCategories();
@@ -119,7 +123,8 @@ void FilterEditDialog::initGUI()
 {
   resize( 490, 300 );
 
-  QWidget *page = plainPage();
+  QWidget *page = new QWidget( this );
+  setMainWidget( page );
   QLabel *label;
 
   QGridLayout *topLayout = new QGridLayout( page );
@@ -169,9 +174,13 @@ void FilterEditDialog::slotHelp()
 }
 
 FilterDialog::FilterDialog( QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Edit Address Book Filters" ),
-                 Ok | Cancel, Ok, parent, name, false, true )
+  : KDialog( parent)
 {
+  setButtons( Ok | Cancel );
+  setDefaultButton ( Ok );
+  setCaption( i18n( "Edit Address Book Filters" ) );
+  enableButtonSeparator( true );
+  setModal( false );
   initGUI();
 }
 
@@ -223,7 +232,7 @@ void FilterDialog::edit()
 
   if ( dlg.exec() ) {
     mFilterList.removeAt(  pos  );
-#warning "kde4: correct ?"	
+#warning "kde4: correct ?"
     mFilterList.insert( pos , dlg.filter() );
   }
 
@@ -262,8 +271,8 @@ void FilterDialog::selectionChanged( Q3ListBoxItem *item )
 void FilterDialog::initGUI()
 {
   resize( 330, 200 );
-
-  QWidget *page = plainPage();
+  QWidget *page = new QWidget( this );
+  setMainWidget( page );
 
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );

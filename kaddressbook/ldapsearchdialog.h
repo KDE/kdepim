@@ -25,7 +25,7 @@
 
 #include <kabc/addressbook.h>
 #include <ldapclient.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 class KAddressBookTableView;
 class KComboBox;

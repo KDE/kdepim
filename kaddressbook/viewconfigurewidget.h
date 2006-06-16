@@ -24,7 +24,7 @@
 #ifndef VIEWCONFIGUREWIDGET_H
 #define VIEWCONFIGUREWIDGET_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kdepimmacros.h>
 #include <QPixmap>
 #include <kvbox.h>
@@ -85,14 +85,14 @@ class KDE_EXPORT ViewConfigureWidget : public KAB::ConfigureWidget
     ViewConfigureFilterPage *mFilterPage;
 };
 
-class ViewConfigureDialog : public KDialogBase
+class ViewConfigureDialog : public KDialog
 {
   Q_OBJECT
 
   public:
     ViewConfigureDialog( ViewConfigureWidget *wdg, const QString &viewName,
                          QWidget *parent, const char *name = 0 );
-    ~ViewConfigureDialog();
+    virtual ~ViewConfigureDialog();
 
     void restoreSettings( KConfig* );
     void saveSettings( KConfig* );

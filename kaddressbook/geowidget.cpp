@@ -174,11 +174,17 @@ void GeoWidget::editGeoData()
 
 
 GeoDialog::GeoDialog( QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Geo Data Input" ), Ok | Cancel, Ok,
-                 parent, name, true, true ),
+  : KDialog( parent ),
     mUpdateSexagesimalInput( true )
 {
-  QFrame *page = plainPage();
+  setCaption( i18n( "Geo Data Input" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  enableButtonSeparator( true );
+  setModal( true );
+
+  QFrame *page = new QFrame(this);
+  setMainWidget( page );
 
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );

@@ -30,7 +30,7 @@
 #include <QPushButton>
 
 #include <kabc/vcardconverter.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
 #include <klocale.h>

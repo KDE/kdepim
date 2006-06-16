@@ -34,11 +34,11 @@ class KLineEdit;
 class KListBox;
 class K3ListView;
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include "filter.h"
 
-class FilterDialog : public KDialogBase
+class FilterDialog : public KDialog
 {
   Q_OBJECT
 
@@ -68,7 +68,7 @@ class FilterDialog : public KDialogBase
     QPushButton *mRemoveButton;
 };
 
-class FilterEditDialog : public KDialogBase
+class FilterEditDialog : public KDialog
 {
     Q_OBJECT
   public:

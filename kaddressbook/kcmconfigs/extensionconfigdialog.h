@@ -24,7 +24,7 @@
 #ifndef EXTENSIONCONFIGDIALOG_H
 #define EXTENSIONCONFIGDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include "extensionwidget.h"
 

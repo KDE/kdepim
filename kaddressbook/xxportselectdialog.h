@@ -26,7 +26,7 @@
 
 #include <kabc/addresseelist.h>
 #include <kabc/field.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include "filter.h"
 

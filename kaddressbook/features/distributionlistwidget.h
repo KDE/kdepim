@@ -25,7 +25,7 @@
 #define DISTRIBUTIONLISTWIDGET_H
 
 #include <config.h> // for KDEPIM_NEW_DISTRLISTS
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <k3listview.h>
 
 #include "extensionwidget.h"
