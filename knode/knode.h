@@ -20,7 +20,7 @@
 #endif
 
 #include <kmainwindow.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include "resource.h"
 
 #include <qglobal.h>
