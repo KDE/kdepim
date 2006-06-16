@@ -18,12 +18,12 @@
 #ifndef MESSAGEPROPERTYDIALOG_H
 #define MESSAGEPROPERTYDIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 class K3ListView;
 class KTNEFMessage;
 
-class MessagePropertyDialog : public KDialogBase
+class MessagePropertyDialog : public KDialog
 {
 	Q_OBJECT
 public:

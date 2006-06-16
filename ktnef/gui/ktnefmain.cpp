@@ -43,7 +43,7 @@
 #include <kstandarddirs.h>
 #include <kaction.h>
 #include <kstdaction.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <ktempfile.h>
 #include <kkeydialog.h>
 

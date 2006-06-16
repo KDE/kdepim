@@ -23,10 +23,13 @@
 #include <klocale.h>
 
 MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg )
-	: KDialogBase( Plain, i18n( "Message Properties" ),
-			KDialogBase::Close|KDialogBase::User1, KDialogBase::Close, parent, "MessagePropertyDialog",
-                        /*modal=*/true, /*separator=*/false, KStdGuiItem::save() )
+	: KDialog( parent)
 {
+  setCaption( i18n( "Message Properties" ) );
+  setButtons( KDialog::Close|KDialog::User1 );
+  setDefaultButton( KDialog::Close );
+  setButtonGuiItem( KDialog::User1,  KStdGuiItem::save() );
+  setModal( true );
 	m_message = msg;
 
 	m_listview = new K3ListView( this );
