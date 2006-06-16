@@ -26,20 +26,17 @@
 
 #include <kdedmodule.h>
 
-#include "clientiface.h"
 #include "network.h"
-#include "serviceiface.h"
 
 struct NetworkStatusStruct;
 
 class NetworkStatusModule : virtual public KDEDModule/*, public ClientIface, ServiceIface*/ // <-spot the multiple inheritance pb
 {
 Q_OBJECT
-K_DCOP
 public:
-	NetworkStatusModule( const DCOPCString & obj );
+	NetworkStatusModule( const QString & obj );
 	~NetworkStatusModule();
-k_dcop:
+public Q_SLOTS: //dbus properties
 	// Client interface
 	QStringList networks();
 	int status( const QString & host );
@@ -52,7 +49,7 @@ k_dcop:
 	void registerNetwork( const QString & networkName, NetworkStatus::Properties properties );
 	void unregisterNetwork( const QString & networkName );
 	void requestShutdown( const QString & networkName );
-k_dcop_signals:
+signals: //dbus signal
 	/**
 	 * A status change occurred for the network(s) used to connect to the given host.
 	 * @param host The host which the application has indicated it is using

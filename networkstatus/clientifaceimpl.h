@@ -24,7 +24,6 @@
 
 #include <QString>
 
-#include "clientiface.h"
 #include "networkstatus.h"
 
 class ClientIfaceImpl : virtual public ClientIface

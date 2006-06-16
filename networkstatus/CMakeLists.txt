@@ -4,13 +4,11 @@
 
 ########### next target ###############
 
-set(libnetworkstatus_SRCS networkstatuscommon.cpp )
+set(libnetworkstatus_SRCS networkstatuscommon.cpp clientadaptor.cpp provideradaptor.cpp serviceadaptor.cpp)
 
 set(kded_networkstatus_PART_SRCS networkstatus.cpp network.cpp ${libnetworkstatus_SRCS})
 
 kde4_automoc(${kded_networkstatus_PART_SRCS})
-
-kde4_add_dcop_skels(kded_networkstatus_PART_SRCS networkstatus.h clientiface.h serviceiface.h )
 
 kde4_add_plugin(kded_networkstatus ${kded_networkstatus_PART_SRCS})
 
@@ -33,9 +31,6 @@ set(networkstatustestservice_SRCS testservice.cpp ${libnetworkstatus_SRCS} )
 
 kde4_automoc(${networkstatustestservice_SRCS})
 
-kde4_add_dcop_skels(networkstatustestservice_SRCS provideriface.h )
-
-kde4_add_dcop_stubs(networkstatustestservice_SRCS serviceiface.h )
 
 kde4_add_executable(networkstatustestservice ${networkstatustestservice_SRCS})
 

@@ -23,7 +23,6 @@
 
 #include <QTimer>
 
-#include <dcopclient.h>
 #include <kapplication.h>
 #include <kdebug.h>
 
@@ -33,7 +32,7 @@
 #include <kdepimmacros.h>
 
 extern "C" {
-	KDE_EXPORT KDEDModule* create_networkstatus( const DCOPCString& obj )
+	KDE_EXPORT KDEDModule* create_networkstatus( const QString& obj )
 	{
 		return new NetworkStatusModule( obj );
 	}
