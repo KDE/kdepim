@@ -32,8 +32,7 @@
 #ifndef CRYPTOCONFIGMODULE_H
 #define CRYPTOCONFIGMODULE_H
 
-#include <kjanuswidget.h>
-
+#include <kpagedialog.h>
 #include <q3valuelist.h>
 #include <QList>
 
@@ -46,7 +45,7 @@ namespace Kleo {
    * Crypto Config Module widget, dynamically generated from CryptoConfig
    * It's a simple QWidget so that it can be embedded into a dialog or into a KCModule.
    */
-  class CryptoConfigModule : public KJanusWidget {
+  class CryptoConfigModule : public KPageDialog {
     Q_OBJECT
   public:
     CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0 );

@@ -38,7 +38,6 @@
 
 #include <klineedit.h>
 #include <klocale.h>
-#include <kdialogbase.h>
 #include <kdebug.h>
 #include <knuminput.h>
 #include <kiconloader.h>
@@ -67,18 +66,21 @@ inline QPixmap loadIcon( QString s ) {
     ->loadIcon( s.replace( QRegExp( "[^a-zA-Z0-9_]" ), "_" ), K3Icon::NoGroup, K3Icon::SizeMedium );
 }
 
-static const KJanusWidget::Face determineJanusFace( const Kleo::CryptoConfig * config ) {
+static const KPageDialog::FaceType determineJanusFace( const Kleo::CryptoConfig * config ) {
   return config && config->componentList().size() < 2
-    ? KJanusWidget::Plain
-    : KJanusWidget::IconList ;
+    ? KPageDialog::Plain
+    : KPageDialog::List ;
 }
 
 Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent )
-  : KJanusWidget( parent, determineJanusFace( config ) ), mConfig( config )
+  : KPageDialog( parent ), mConfig( config )
 {
+  const KPageDialog::FaceType type=determineJanusFace( config );
+  setFaceType(type); 
   QWidget * vbox = 0;
-  if ( face() == Plain ) {
-    vbox = plainPage();
+  if ( type == Plain ) {
+    vbox = new QWidget(this);
+	setMainWidget(vbox);
     QVBoxLayout * vlay = new QVBoxLayout( vbox );
     vlay->setSpacing( KDialog::spacingHint() );
     vlay->setMargin( 0 );
@@ -92,8 +94,11 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
     Q_ASSERT( comp );
     if ( comp->groupList().empty() )
       continue;
-    if ( face() != Plain ) {
-      vbox = addVBoxPage( comp->description(), QString(), loadIcon( comp->iconName() ) );
+    if ( type != Plain ) {
+      vbox = new QWidget();
+	  KPageWidgetItem *pageItem = new KPageWidgetItem( vbox, comp->description() );
+	  pageItem->setIcon(loadIcon( comp->iconName() ));
+	  addPage(pageItem);
     }
     CryptoConfigComponentGUI* compGUI =
       new CryptoConfigComponentGUI( this, comp, vbox, (*it).toLocal8Bit() );
