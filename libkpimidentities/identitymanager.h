@@ -234,7 +234,7 @@ private:
 private:
   KConfig* mConfig;
   bool mReadOnly;
-  OrgKdePimIdentityManagerInterface *iface;
+  OrgKdePimIdentityManagerInterface *mIface;
 };
 
 } // namespace

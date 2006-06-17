@@ -78,8 +78,8 @@ IdentityManager::IdentityManager( bool readonly, QObject * parent, const char * 
   : ConfigManager( parent, name ) //, DCOPObject( newDCOPObjectName() )
 {
   new IdentityManagerAdaptor( this );
-  iface = QDBus::sessionBus().findInterface<OrgKdePimIdentityManagerInterface>("org.kde.pim.IdentityManager", "/");
-  connect( iface, SIGNAL(identityChanged(QString)), this, SLOT(slotIdentityChanged(QString)) );
+  mIface = QDBus::sessionBus().findInterface<OrgKdePimIdentityManagerInterface>("org.kde.pim.IdentityManager", "/");
+  connect( mIface, SIGNAL(identityChanged(QString)), this, SLOT(slotIdentityChanged(QString)) );
 
   mReadOnly = readonly;
   mConfig = new KConfig( "emailidentities", readonly );
@@ -108,6 +108,7 @@ IdentityManager::~IdentityManager()
   kWarning( hasPendingChanges(), 5006 )
     << "IdentityManager: There were uncommitted changes!" << endl;
   delete mConfig;
+  delete mIface;
 }
 
 void IdentityManager::commit()
