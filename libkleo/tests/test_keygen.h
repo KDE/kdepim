@@ -32,7 +32,7 @@
 #ifndef __KLEO_TEST_KEYGEN_H__
 #define __KLEO_TEST_KEYGEN_H__
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 #include <q3cstring.h>
 
@@ -43,10 +43,10 @@ namespace GpgME {
 
 class QLineEdit;
 
-class KeyGenerator : public KDialogBase {
+class KeyGenerator : public KDialog {
   Q_OBJECT
 public:
-  KeyGenerator( QWidget * parent=0, const char * name=0 );
+  KeyGenerator( QWidget * parent=0 );
   ~KeyGenerator();
 
 public slots:

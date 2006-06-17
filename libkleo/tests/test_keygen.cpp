@@ -70,10 +70,16 @@ static const int numKeyParams = sizeof keyParams / sizeof *keyParams;
 
 static const char * protocol = 0;
 
-KeyGenerator::KeyGenerator( QWidget * parent, const char * name )
-  : KDialogBase( parent, name, true, "KeyGenerationJob test",
-		 Close|User1, User1, true, KGuiItem( "Create" ) )
+KeyGenerator::KeyGenerator( QWidget * parent )
+  : KDialog( parent )
 {
+  setModal( true );
+  setCaption( "KeyGenerationJob test" );
+  setButtons( Close|User1 );
+  setDefaultButton( User1 );
+  enableButtonSeparator( true );
+  setButtonGuiItem( User1, KGuiItem( "Create" ) );
+
   QWidget * w = new QWidget( this );
   setMainWidget( w );
 
@@ -152,7 +158,8 @@ int main( int argc, char** argv ) {
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app;
 
-  KeyGenerator * keygen = new KeyGenerator( 0, "KeyGenerator top-level" );
+  KeyGenerator * keygen = new KeyGenerator( 0 );
+  keygen->setObjectName( "KeyGenerator top-level" );
   app.setMainWidget( keygen );
   keygen->show();
 
