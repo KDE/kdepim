@@ -35,7 +35,6 @@
 
 
 //Added by qt3to4:
-#include <dcopobject.h>
 #include <kdepimmacros.h>
 
 class KConfigBase;
@@ -43,6 +42,7 @@ class KConfig;
 class KMKernel;
 class QStringList;
 class KMIdentity;
+class OrgKdePimIdentityManagerInterface;
 
 namespace KPIM {
 
@@ -51,10 +51,10 @@ class Identity;
  * @short Manages the list of identities.
  * @author Marc Mutz <mutz@kde.org>
  **/
-class KDE_EXPORT IdentityManager : public ConfigManager, public DCOPObject
+class KDE_EXPORT IdentityManager : public ConfigManager
 {
   Q_OBJECT
-  K_DCOP
+  Q_CLASSINFO("D-Bus Interface", "org.kde.pim.IdentityManager");
 
 public:
   /**
@@ -215,12 +215,12 @@ protected:
   /** The list that will be seen by the config dialog */
   QList<Identity> mShadowIdentities;
 
-//k_dcop_signals:
-//  void identitiesChanged( QCString appId, QCString objId );
+signals:
+  void identitiesChanged( const QString &id );
 
-k_dcop:
-  // Connected to the DCOP signal
-  void slotIdentitiesChanged( DCOPCString appId, DCOPCString objId );
+private slots:
+  // Connected to the DBus signal
+  void slotIdentitiesChanged( const QString &id );
 
 private:
   void writeConfig() const;
@@ -234,6 +234,7 @@ private:
 private:
   KConfig* mConfig;
   bool mReadOnly;
+  OrgKdePimIdentityManagerInterface *iface;
 };
 
 } // namespace

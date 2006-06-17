@@ -8,7 +8,8 @@ set(kpimidentities_LIB_SRCS identitymanager.cpp identity.cpp identitycombo.cpp $
 
 kde4_automoc(${kpimidentities_LIB_SRCS})
 
-kde4_add_dcop_skels(kpimidentities_LIB_SRCS identitymanager.h )
+qdbus_add_adaptors(kpimidentities_LIB_SRCS org.kde.pim.IdentityManager.xml)
+qdbus_add_interfaces(kpimidentities_LIB_SRCS org.kde.pim.IdentityManager.xml)
 
 kde4_add_library(kpimidentities SHARED ${kpimidentities_LIB_SRCS})
 
