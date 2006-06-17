@@ -42,9 +42,13 @@
 #include <QIcon>
 #include <QHideEvent>
 
-ConfigureDialog::ConfigureDialog( QWidget *parent, const char *name, bool modal )
-  : KCMultiDialog( KDialogBase::IconList, i18n( "Configure" ), parent, name, modal )
+ConfigureDialog::ConfigureDialog( QWidget *parent, bool modal )
+  : KCMultiDialog( parent )
 {
+  setFaceType( KPageDialog::List );
+  setCaption( i18n( "Configure" ) );
+  setModal( modal );
+
   KWin::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( K3Icon::Desktop ), IconSize( K3Icon::Desktop ) ),
                   qApp->windowIcon().pixmap( IconSize( K3Icon::Small ), IconSize( K3Icon::Small ) ) );
   showButton( User1, true );

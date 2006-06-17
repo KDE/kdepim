@@ -265,7 +265,8 @@ void KWatchGnuPGMainWindow::slotQuit()
 void KWatchGnuPGMainWindow::slotConfigure()
 {
   if( !mConfig ) {
-	mConfig = new KWatchGnuPGConfig( this, "config dialog" );
+	mConfig = new KWatchGnuPGConfig( this );
+	mConfig->setObjectName( "config dialog" );
 	connect( mConfig, SIGNAL( reconfigure() ),
 			 this, SLOT( slotReadConfig() ) );
   }

@@ -76,7 +76,6 @@
 #include <kapplication.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <dcopclient.h>
 #include <ktoolbar.h>
 #include <kstatusbar.h>
 #include <kstandarddirs.h>
@@ -401,7 +400,8 @@ void CertManager::slotConfigureGpgME() {
     if ( result == QDialog::Accepted )
     {
       // Tell other apps (e.g. kmail) that the gpgconf data might have changed
-      kapp->dcopClient()->emitDCOPSignal( "KPIM::CryptoConfig", "changed()", QByteArray() );
+#warning Port emitDCOPSignal() usage
+//      kapp->dcopClient()->emitDCOPSignal( "KPIM::CryptoConfig", "changed()", QByteArray() );
     }
   }
 }
@@ -1145,9 +1145,11 @@ void CertManager::slotViewDetails( Kleo::KeyListViewItem * item ) {
     return;
 
   // <UGH>
-  KDialog * dialog = new KDialog( this, i18n("Additional Information for Key"), KDialog::Close );
+  KDialog * dialog = new KDialog( this );
   dialog->setObjectName( "dialog" );
   dialog->setModal( false );
+  dialog->setCaption( i18n("Additional Information for Key") );
+  dialog->setButtons( KDialog::Close );
   dialog->setDefaultButton( KDialog::Close );
 
   CertificateInfoWidgetImpl * top = new CertificateInfoWidgetImpl( item->key(), isRemote(), dialog );

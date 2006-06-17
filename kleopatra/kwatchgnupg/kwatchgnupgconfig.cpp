@@ -70,16 +70,20 @@ static int log_level_to_int( const QString& loglevel )
   }
 }
 
-KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent, const char* name )
-  : KDialogBase( Plain, i18n("Configure KWatchGnuPG"),
-		 Ok|Cancel, Ok, parent, name )
+KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
+  : KDialog( parent )
 {
+  setCaption( i18n("Configure KWatchGnuPG") );
+  setButtons( Ok|Cancel );
+  setDefaultButton( Ok );
+
   // tmp vars:
   QWidget * w;
   QGridLayout * glay;
   Q3GroupBox * group;
 
-  QWidget * top = plainPage();
+  QWidget * top = new QWidget( this );
+  setMainWidget( top ); 
 
   QVBoxLayout * vlay = new QVBoxLayout( top );
   vlay->setSpacing( spacingHint() );

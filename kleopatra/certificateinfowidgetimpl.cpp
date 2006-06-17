@@ -377,11 +377,12 @@ void CertificateInfoWidgetImpl::slotShowCertPathDetails( Q3ListViewItem * item )
 
   assert( itemIndex >= 0 );
 
-  KDialog * dialog =
-    new KDialog( this, i18n("Additional Information for Key"), KDialog::Close );
-	dialog->setObjectName( "dialog" );
-	dialog->setDefaultButton( KDialog::Close );
-	dialog->setModal( false );
+  KDialog * dialog = new KDialog( this );
+  dialog->setObjectName( "dialog" );
+  dialog->setCaption( i18n("Additional Information for Key") );
+  dialog->setButtons( KDialog::Close );
+  dialog->setDefaultButton( KDialog::Close );
+  dialog->setModal( false );
   CertificateInfoWidgetImpl * top =
     new CertificateInfoWidgetImpl( mChain[itemIndex], mExternal, dialog );
   dialog->setMainWidget( top );

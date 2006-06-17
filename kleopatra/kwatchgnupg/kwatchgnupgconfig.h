@@ -33,17 +33,17 @@
 #ifndef KWATCHGNUPGCONFIG_H
 #define KWATCHGNUPGCONFIG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 
 class QCheckBox;
 class QComboBox;
 class QSpinBox;
 class KUrlRequester;
 
-class KWatchGnuPGConfig : public KDialogBase {
+class KWatchGnuPGConfig : public KDialog {
   Q_OBJECT
 public:
-  KWatchGnuPGConfig( QWidget* parent, const char* name = 0 );
+  KWatchGnuPGConfig( QWidget* parent );
 
   void loadConfig();
   void saveConfig();
