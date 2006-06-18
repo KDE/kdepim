@@ -22,7 +22,7 @@
 #ifndef KCAL_CACHESETTINGSDLG_H
 #define KCAL_CACHESETTINGSDLG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kdepimmacros.h>
 
 

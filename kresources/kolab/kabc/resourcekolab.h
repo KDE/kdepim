@@ -34,7 +34,6 @@
 #define KABC_RESOURCEKOLAB_H
 
 #include <libkdepim/resourceabc.h>
-#include <dcopobject.h>
 #include "../shared/resourcekolabbase.h"
 #include "../shared/subresource.h"
 #include <kmail/kmailicalIface.h>
