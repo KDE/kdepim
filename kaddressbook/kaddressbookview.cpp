@@ -22,6 +22,7 @@
 */
 
 #include <QLayout>
+#include <QLabel>
 #include <QMenu>
 //Added by qt3to4:
 #include <QVBoxLayout>

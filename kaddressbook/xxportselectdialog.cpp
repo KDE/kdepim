@@ -50,11 +50,16 @@
 #include "xxportselectdialog.h"
 
 XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
-                                        QWidget* parent, const char* name )
-    : KDialogBase( Plain, i18n( "Choose Which Contacts to Export" ), Help | Ok | Cancel,
-                   Ok, parent, name, true, true ), mCore( core ),
+                                        QWidget* parent )
+    : KDialog( parent ), mCore( core ),
       mUseSorting( sort )
 {
+  setCaption( i18n( "Choose Which Contacts to Export" ) );
+  setButtons( Help | Ok | Cancel );
+  setDefaultButton( Ok );
+  setModal( true );
+  enableButtonSeparator( true );
+
   initGUI();
 
   connect( mFiltersCombo, SIGNAL( activated( int ) ),
@@ -183,7 +188,8 @@ void XXPortSelectDialog::slotHelp()
 
 void XXPortSelectDialog::initGUI()
 {
-  QFrame *page = plainPage();
+  QFrame *page = new QFrame( this );
+  setMainWidget( page );
 
   QVBoxLayout *topLayout = new QVBoxLayout( page );
   topLayout->setSpacing( KDialog::spacingHint() );

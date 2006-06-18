@@ -133,7 +133,7 @@ void SoundWidget::playSound()
   tmp.file()->write( mSound.data() );
   tmp.close();
 
-  Phonon::SimplePlayer* player = new Phonon::SimplePlayer( this );
+  Phonon::SimplePlayer* player = new Phonon::SimplePlayer( Phonon::NotificationCategory, this );
   player->play( tmp.name() );
 
   // we can't remove the sound file from within the program, because

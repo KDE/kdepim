@@ -33,6 +33,7 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <klocale.h>
+#include <kpagewidget.h>
 #include <ktoolinvocation.h>
 
 #include "viewconfigurefieldspage.h"
@@ -46,7 +47,8 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
 {
   QVBoxLayout *topLayout = new QVBoxLayout( this );
 
-  mMainWidget = new KJanusWidget( this, KJanusWidget::IconList );
+  mMainWidget = new KPageWidget( this );
+  mMainWidget->setFaceType( KPageView::List );
   topLayout->addWidget( mMainWidget );
 
   // Add the first page, the attributes
@@ -84,7 +86,10 @@ void ViewConfigureWidget::saveSettings( KConfig *config )
 KVBox *ViewConfigureWidget::addPage( const QString &item, const QString &header,
                                    const QPixmap &pixmap )
 {
-  return mMainWidget->addVBoxPage( item, header, pixmap );
+  KVBox *page = new KVBox( mMainWidget );
+#warning What about the page icon and page header?
+  mMainWidget->addPage( page, item );
+  return page;
 }
 
 ViewConfigureDialog::ViewConfigureDialog( ViewConfigureWidget *wdg, const QString &viewName,

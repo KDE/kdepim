@@ -36,12 +36,12 @@ class Q3ListView;
 class QPushButton;
 class KABCore;
 
-class LDAPSearchDialog : public KDialogBase
+class LDAPSearchDialog : public KDialog
 {
   Q_OBJECT
 
   public:
-    LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core, QWidget* parent, const char* name = 0 );
+    LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core, QWidget* parent );
     ~LDAPSearchDialog();
 
     bool isOK() const { return mIsOK; }

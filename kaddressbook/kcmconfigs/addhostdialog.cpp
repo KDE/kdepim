@@ -35,12 +35,19 @@
 #include <klocale.h>
 #include "addhostdialog.h"
 
-AddHostDialog::AddHostDialog( KPIM::LdapServer *server, QWidget* parent,  const char* name )
-  : KDialogBase( Plain, i18n( "Add Host" ), Ok | Cancel, Ok, parent, name, true, true )
+AddHostDialog::AddHostDialog( KPIM::LdapServer *server, QWidget* parent )
+  : KDialog( parent )
 {
+  setCaption( i18n( "Add Host" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  setModal( true );
+  enableButtonSeparator( true );
+
   mServer = server;
 
-  QWidget *page = plainPage();
+  QWidget *page = new QWidget( this );
+  setMainWidget( page );
   QHBoxLayout *layout = new QHBoxLayout( page );
   layout->setSpacing( spacingHint() );
   layout->setMargin( marginHint() );

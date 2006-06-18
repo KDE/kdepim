@@ -45,11 +45,17 @@
 #include "customfieldswidget.h"
 
 
-AddFieldDialog::AddFieldDialog( QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Add Field" ), Ok | Cancel,
-                 Ok, parent, name, true, true )
+AddFieldDialog::AddFieldDialog( QWidget *parent )
+  : KDialog( parent )
 {
-  QWidget *page = plainPage();
+  setCaption( i18n( "Add Field" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  setModal( true );
+  enableButtonSeparator( true );
+
+  QWidget *page = new QWidget( this );
+  setMainWidget( page );
 
   QGridLayout *layout = new QGridLayout( page );
   layout->setSpacing( spacingHint() );

@@ -42,13 +42,12 @@ class Core;
 
 class KComboBox;
 
-class XXPortSelectDialog : public KDialogBase
+class XXPortSelectDialog : public KDialog
 {
   Q_OBJECT
 
   public:
-    XXPortSelectDialog( KAB::Core *core, bool sort, QWidget* parent,
-                        const char* name = 0 );
+    XXPortSelectDialog( KAB::Core *core, bool sort, QWidget* parent );
 
     KABC::AddresseeList contacts();
 

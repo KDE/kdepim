@@ -31,7 +31,7 @@
 
 #include "configurewidget.h"
 
-class KJanusWidget;
+class KPageWidget;
 
 class QString;
 class KVBox;
@@ -79,7 +79,7 @@ class KDE_EXPORT ViewConfigureWidget : public KAB::ConfigureWidget
                     const QPixmap &pixmap = QPixmap() );
 
   private:
-    KJanusWidget *mMainWidget;
+    KPageWidget *mMainWidget;
 
     ViewConfigureFieldsPage *mFieldsPage;
     ViewConfigureFilterPage *mFilterPage;

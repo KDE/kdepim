@@ -32,12 +32,12 @@ class KLineEdit;
 class QPushButton;
 class QSpinBox;
 
-class AddHostDialog : public KDialogBase
+class AddHostDialog : public KDialog
 {
     Q_OBJECT
 
   public:
-    AddHostDialog( KPIM::LdapServer* server, QWidget* parent = 0, const char* name = 0 );
+    AddHostDialog( KPIM::LdapServer* server, QWidget* parent = 0 );
     ~AddHostDialog();
 
   signals:

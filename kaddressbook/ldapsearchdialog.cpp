@@ -120,13 +120,18 @@ class ContactListItem : public Q3ListViewItem
 };
 
 LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
-                                    QWidget* parent, const char* name )
-  : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), Help | User1 |
-                 Cancel, Default, parent, name, false, true ),
+                                    QWidget* parent )
+  : KDialog( parent ),
     mAddressBook( ab ), mCore( core )
 {
+  setCaption( i18n( "Search for Addresses in Directory" ) );
+  setButtons( Help | User1 | Cancel );
+  setDefaultButton( User1 );
+  setModal( false );
+  enableButtonSeparator( true );
   setButtonGuiItem( KDialog::Cancel, KStdGuiItem::close() );
-  QFrame *page = plainPage();
+  QFrame *page = new QFrame( this );
+  setMainWidget( page );
   QVBoxLayout *topLayout = new QVBoxLayout( page );
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( marginHint() );

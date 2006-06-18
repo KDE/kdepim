@@ -854,7 +854,8 @@ void KABCore::configure()
   // Save the current config so we do not loose anything if the user accepts
   saveSettings();
 
-  KCMultiDialog dlg( mWidget, "", true );
+  KCMultiDialog dlg( mWidget );
+  dlg.setModal( true );
   connect( &dlg, SIGNAL( configCommitted() ),
            this, SLOT( configurationChanged() ) );
 

@@ -65,12 +65,12 @@ typedef struct {
 
 typedef QList<FieldRecord> FieldRecordList;
 
-class AddFieldDialog : public KDialogBase
+class AddFieldDialog : public KDialog
 {
   Q_OBJECT
 
   public:
-    AddFieldDialog( QWidget *parent, const char *name = 0 );
+    AddFieldDialog( QWidget *parent );
 
     QString title() const;
     QString identifier() const;
