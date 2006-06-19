@@ -1,4 +1,44 @@
-Current Release is Proko2 2.1.1
+Current Release is Proko2 2.1.2
+
+Changes since Proko2 2.1.1 up to Proko2 2.1.2 (released FIXME)
+~~~~~~~
+
+Bugfixes
+========
+* Quota informations does not hang anymore for online imap when no
+  quota is set (Proko2 issue 1248)
+
+* Ressources colors doesn't disappear when deletig an event form
+  caledar (Proko2 Issue 1129)
+
+* Don't allow shift-tab to select header separators. 
+  (Proko2 Issue 740)
+
+* Overwrite mode on mail composing now works (Proko2 Issue 1182)
+
+* Printer view config now takes effect without restarting 
+  (Proko2 Issue 1204)
+
+* Creation of subfolders when using online imap is now possible
+  (Proko2 Issue 1258)
+
+* Only warn about events which can't be found on cancel
+  if it's not an initial decline. (Proko2 issue 1248)
+
+* Groupwarefolders (with standard name) are now unsubscribed for 
+  online imap after setup with kolabwizard (Proko2 Issue 1260)
+
+Features
+========
+* Show quota information in the folder tooltip. Even works for 
+  online imap (Proko2 Issue 1215)
+
+* Show information about recurring events in invitation mails 
+  (Proko2 Issue 1226)
+
+* Allow ";" as additional Address seperator (Proko2 Issue 1216)
+
+
 
 Changes since Proko2 2.1.0 up to Proko2 2.1.1 (released 20060518)
 ~~~~~~~
