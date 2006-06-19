@@ -3846,18 +3846,18 @@ information).</para></note>
 </row>
 <row>
   <entry><option>--cancelEvent <replaceable>eventID</replaceable></option></entry>
-  <entry>Cancel the event with the specified event ID.</entry>
+  <entry>Cancel the alarm with the specified event ID.</entry>
 </row>
 <row>
   <entry><option>--triggerEvent <replaceable>eventID</replaceable></option></entry>
-  <entry>Trigger the event with the specified event ID. The action
+  <entry>Trigger the alarm with the specified event ID. The action
   taken is the same as for the
   <link linkend="triggerEvent">triggerEvent()</link> &DCOP;
   call.</entry>
 </row>
 <row>
   <entry><option>--handleEvent <replaceable>eventID</replaceable></option></entry>
-  <entry>Trigger or cancel the event with the specified event
+  <entry>Trigger or cancel the alarm with the specified event
   ID. &kalarm; determines which action to take in the same way as for
   the <link linkend="handleEvent">handleEvent()</link> &DCOP; call.</entry>
 </row>
