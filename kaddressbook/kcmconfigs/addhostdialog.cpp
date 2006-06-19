@@ -111,7 +111,7 @@ AddHostDialog::~AddHostDialog()
 
 void AddHostDialog::slotHostEditChanged( const QString &text )
 {
-  enableButtonOK( !text.isEmpty() );
+  enableButtonOk( !text.isEmpty() );
 }
 
 void AddHostDialog::slotOk()

@@ -342,9 +342,9 @@ void IMEditorWidget::slotAdd()
   addDialog.setObjectName( "addaddress" );
 
   IMAddressWidget *addressWid = new IMAddressWidget( &addDialog, mProtocols );
-  addDialog.enableButtonOK( false );
+  addDialog.enableButtonOk( false );
   connect( addressWid, SIGNAL( inValidState( bool ) ),
-           &addDialog, SLOT( enableButtonOK( bool ) ) );
+           &addDialog, SLOT( enableButtonOk( bool ) ) );
   addDialog.setMainWidget( addressWid );
 
   if ( addDialog.exec() == QDialog::Accepted ) {
@@ -381,7 +381,7 @@ void IMEditorWidget::slotEdit()
     IMAddressWidget *addressWid = new IMAddressWidget( &editDialog, mProtocols, current->protocol(),
                                                        current->address(), current->context() ) ;
     connect( addressWid, SIGNAL( inValidState( bool ) ),
-             &editDialog, SLOT( enableButtonOK( bool ) ) );
+             &editDialog, SLOT( enableButtonOk( bool ) ) );
     editDialog.setMainWidget( addressWid );
 
     if ( editDialog.exec() == QDialog::Accepted ) {

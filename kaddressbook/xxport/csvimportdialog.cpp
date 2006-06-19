@@ -462,7 +462,7 @@ void CSVImportDialog::initGUI()
   setButtonText( User1, i18n( "Apply Template..." ) );
   setButtonText( User2, i18n( "Save Template..." ) );
 
-  enableButtonOK( false );
+  enableButtonOk( false );
   actionButton( User1 )->setEnabled( false );
   actionButton( User2 )->setEnabled( false );
 
@@ -958,7 +958,7 @@ void CSVImportDialog::urlChanged( const QString &file )
 {
   bool state = !file.isEmpty();
 
-  enableButtonOK( state );
+  enableButtonOk( state );
   actionButton( User1 )->setEnabled( state );
   actionButton( User2 )->setEnabled( state );
 }

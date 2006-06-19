@@ -165,7 +165,7 @@ void FilterEditDialog::initGUI()
 
 void FilterEditDialog::filterNameTextChanged( const QString &text )
 {
-  enableButtonOK( !text.isEmpty() );
+  enableButtonOk( !text.isEmpty() );
 }
 
 void FilterEditDialog::slotHelp()
