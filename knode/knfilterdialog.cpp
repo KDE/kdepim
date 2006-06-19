@@ -106,7 +106,7 @@ KNFilterDialog::~KNFilterDialog()
 
 void KNFilterDialog::slotTextChanged( const QString &_text )
 {
-    enableButtonOK( !_text.isEmpty() );
+    enableButtonOk( !_text.isEmpty() );
 }
 
 void KNFilterDialog::slotOk()

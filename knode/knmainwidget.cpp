@@ -1898,7 +1898,7 @@ KNode::FetchArticleIdDlg::FetchArticleIdDlg( QWidget *parent ) :
   edit = new KLineEdit(page);
   label->setBuddy(edit);
   edit->setFocus();
-  enableButtonOK( false );
+  enableButtonOk( false );
   setButtonText( KDialog::Ok, i18n("&Fetch") );
   connect( edit, SIGNAL(textChanged( const QString & )), this, SLOT(slotTextChanged(const QString & )));
   KNHelper::restoreWindowSize("fetchArticleWithID", this, QSize(325,66));
@@ -1911,7 +1911,7 @@ QString KNode::FetchArticleIdDlg::messageId() const
 
 void KNode::FetchArticleIdDlg::slotTextChanged(const QString &_text )
 {
-    enableButtonOK( !_text.isEmpty() );
+    enableButtonOk( !_text.isEmpty() );
 }
 
 
