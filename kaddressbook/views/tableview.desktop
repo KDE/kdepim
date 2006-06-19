@@ -49,6 +49,7 @@ Name[tr]=Tablo Görünümü
 Name[uk]=Вигляд таблицею
 Name[uz]=Жадвал кўринишида
 Name[zh_CN]=表格视图
+Name[zh_TW]=表格檢視
 Type=Service
 ServiceTypes=KAddressBook/View
 X-KDE-KAddressBook-ViewPluginVersion=1

@@ -58,6 +58,7 @@ GenericName[tg]=Идоракунӣ бо дастгоҳи мобилӣ
 GenericName[tr]=Taşınabilir Aygıtlar Yöneticisi
 GenericName[uk]=Робота з мобільними пристроями
 GenericName[zh_CN]=管理移动设备
+GenericName[zh_TW]=管理行動裝置
 
 Comment=A KDE Mobile Devices Manager
 Comment[be]=Кіраваньне мабільнымі прыладамі KDE
@@ -103,6 +104,7 @@ Comment[tg]=Мудири дастгоҳи мобилии KDE
 Comment[tr]=KDE Taşınabilir Aygıtlar Yöneticisi
 Comment[uk]=Менеджер мобільних пристроїв KDE
 Comment[zh_CN]=KDE 移动设备管理器
+Comment[zh_TW]=KDE 行動裝置管理員
 
 X-KDE-StartupNotify=false
 X-DCOP-ServiceType=Unique

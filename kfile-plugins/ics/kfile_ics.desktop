@@ -41,6 +41,7 @@ Name[ta]=ICS தகவல்
 Name[tr]=ICS bilgisi
 Name[uk]=Інформація про ICS
 Name[zh_CN]=ICS 信息
+Name[zh_TW]=ICS 資訊
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_ics
 MimeType=text/calendar

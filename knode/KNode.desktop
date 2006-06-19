@@ -71,6 +71,7 @@ GenericName[ven]=Muvhali wa mafhungo
 GenericName[vi]=Trình đọc News 
 GenericName[xh]=Umfundi weendaba
 GenericName[zh_CN]=新闻阅读器
+GenericName[zh_TW]=新聞閱讀器
 GenericName[zu]=Umfundi wezindaba
 X-KDE-StartupNotify=true
 X-DCOP-ServiceType=Unique

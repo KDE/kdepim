@@ -37,6 +37,7 @@ Name[ta]=செல்லுபடியாகாத விசை
 Name[tr]=Geçerli Olmayan Anahtar
 Name[uk]=Неперевірений ключ
 Name[zh_CN]=未校验的密钥
+Name[zh_TW]=未確認的金鑰
 
 [Key Filter #1]
 was-validated=true
@@ -81,6 +82,7 @@ Name[ta]=காலாவதியான விசை
 Name[tr]=Süresi Dolmuş Anahtar
 Name[uk]=Застарілий ключ
 Name[zh_CN]=过期密钥
+Name[zh_TW]=已過期的金鑰
 
 [Key Filter #2]
 was-validated=true
@@ -122,6 +124,7 @@ Name[ta]=நீக்கிய விசை
 Name[tr]=Geri Alınmış Anahtar
 Name[uk]=Анульований ключ
 Name[zh_CN]=吊销的密钥
+Name[zh_TW]=已廢棄的金鑰
 
 [Key Filter #3]
 was-validated=true
@@ -163,6 +166,7 @@ Name[ta]=நம்பகமான மூல சான்றிதழ்
 Name[tr]=Güvenilir Kök Sertifikası
 Name[uk]=Кореневий сертифікат з довірою
 Name[zh_CN]=可信任的根证书
+Name[zh_TW]=可信任的根憑證
 
 [Key Filter #4]
 was-validated=true
@@ -204,6 +208,7 @@ Name[ta]=நம்பமுடியாத மூல சான்றிதழ்
 Name[tr]=Güvenilmeyen Kök Sertifikası
 Name[uk]=Кореневий сертифікат без довіри
 Name[zh_CN]=未信任的根证书
+Name[zh_TW]=不可信任的根憑證
 
 [Key Filter #5]
 was-validated=true
@@ -248,4 +253,5 @@ Name[tr]=Diğer Anahtarlar
 Name[uk]=Інші ключі
 Name[uz]=Бошқа калитлар
 Name[zh_CN]=其它密钥
+Name[zh_TW]=其他金鑰
 

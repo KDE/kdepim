@@ -41,6 +41,7 @@ Name[tg]=Нусхаи захиравии Konnector
 Name[tr]=Konnector Yedeği
 Name[uk]=Резервна копія Konnector
 Name[zh_CN]=Konnector 备份
+Name[zh_TW]=Konnector 備份
 Icon=
 ServiceTypes=KitchenSync/ActionPart
 X-KDE-Library=libksync_backup

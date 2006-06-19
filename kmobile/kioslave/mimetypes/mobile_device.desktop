@@ -47,6 +47,7 @@ Comment[tg]=Дастгоҳи мобилӣ
 Comment[tr]=Taşınabilir Aygıt
 Comment[uk]=Мобільний пристрій
 Comment[zh_CN]=移动设备
+Comment[zh_TW]=行動裝置
 Icon=kmobile
 Type=MimeType
 MimeType=kdedevice/mobiledevice

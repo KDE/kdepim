@@ -37,6 +37,7 @@ Name[ta]=IMAP சேவையக வழியாக கேஅஞ்சலில�
 Name[tr]=Bir Exchange Sunucusu üzerinde Adres Defteri (deneyimsel)
 Name[uk]=Адресна книга на сервері Exchange (експериментальне)
 Name[zh_CN]=Exchange 服务器上的地址簿(试验性)
+Name[zh_TW]=Exchanger 伺服器的通訊錄(實驗中)
 X-KDE-Library=kabc_newexchange
 Type=Service
 ServiceTypes=KResources/Plugin

@@ -48,6 +48,7 @@ Name[tg]=Варақа
 Name[tr]=Kart Görünümü
 Name[uk]=Вигляд картками
 Name[zh_CN]=卡片视图
+Name[zh_TW]=卡片檢視
 Type=Service
 ServiceTypes=KAddressBook/View
 X-KDE-KAddressBook-ViewPluginVersion=1

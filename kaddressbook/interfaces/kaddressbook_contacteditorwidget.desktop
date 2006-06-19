@@ -41,6 +41,7 @@ Comment[tg]=Муҳаррири алоқоти китоби адресии KDE
 Comment[tr]=Adres Defteri Kişi Düzenleyici Parçacık Eklentisi
 Comment[uk]=Втулок редагування контактів адресної книги
 Comment[zh_CN]=KAddressBook 联系人编辑部件插件
+Comment[zh_TW]=KAddressBook 聯絡人編輯器外掛程式
 
 [PropertyDef::X-KDE-KAddressBook-CEWPluginVersion]
 Type=int

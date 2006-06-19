@@ -42,6 +42,7 @@ Name[tg]=Файлҳои визиткаи электронӣ
 Name[tr]=Elektronik İş Kartı Dosyaları
 Name[uk]=файли електронних візитних карток
 Name[zh_CN]=电子名片文件
+Name[zh_TW]=電子名片檔
 ServiceTypes=ThumbCreator
 MimeTypes=text/x-vcard,text/x-ldif
 X-KDE-Library=ldifvcardthumbnail

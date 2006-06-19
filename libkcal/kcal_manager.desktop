@@ -23,7 +23,7 @@ Name[hi]=कैलेन्डर
 Name[hu]=Naptár
 Name[is]=Dagatal
 Name[it]=Calendario
-Name[ja]=カレンダ
+Name[ja]=カレンダー
 Name[km]=ប្រតិទិន
 Name[lt]=Kalendorius
 Name[ms]=Kalendar
@@ -48,6 +48,7 @@ Name[tr]=Takvim
 Name[uk]=Календар
 Name[uz]=Календар
 Name[zh_CN]=日历
+Name[zh_TW]=行事曆
 Type=Service
 ServiceTypes=KResources/Manager
 

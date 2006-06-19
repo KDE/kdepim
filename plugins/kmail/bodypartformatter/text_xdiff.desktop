@@ -62,6 +62,7 @@ Comment[ta]=text/x-diffக்கான ஒரு பகுதி வடிவம
 Comment[tr]=text/x-diff için bir gövde biçimleyici eklentisi
 Comment[uk]=Втулок форматування для text/x-diff
 Comment[zh_CN]=text/x-diff 的格式化插件
+Comment[zh_TW]=text/x-diff 格式化外掛程式
 [Plugin]
 Type=text/x-diff
 X-KDE-Library=libkmail_bodypartformatter_text_xdiff

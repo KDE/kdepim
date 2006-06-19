@@ -44,6 +44,7 @@ Comment[tg]=Алоқот дар дастгоҳи мобилӣ
 Comment[tr]=Taşınabilir Aygıt Bağlantıları
 Comment[uk]=Контакти у мобільному пристрої
 Comment[zh_CN]=移动设备中的联系人
+Comment[zh_TW]=行動裝置中的聯絡人
 Icon=kaddressbook
 Type=MimeType
 MimeType=inode/addressbook

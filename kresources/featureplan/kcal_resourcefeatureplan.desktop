@@ -28,6 +28,7 @@ Name[sr@Latn]=XML plan mogućnosti
 Name[ta]=XML பண்பு திட்டம்
 Name[tr]=XML Özellik Planı
 Name[zh_CN]=XML 特性计划
+Name[zh_TW]=XML 功能計畫
 X-KDE-Library=kcal_resourcefeatureplan
 Type=Service
 ServiceTypes=KResources/Plugin

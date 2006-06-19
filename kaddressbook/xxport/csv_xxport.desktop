@@ -40,6 +40,7 @@ Name[tg]=Содирот/воридот ба файлҳои CSV
 Name[tr]=KAB CSV XXPort Eklentisi
 Name[uk]=Втулок KAB для обміну через CSV
 Name[zh_CN]=KAB CSV XXPort 插件
+Name[zh_TW]=KAB CSV XXPort 外掛程式
 Comment=Plugin to import and export contacts in CSV format
 Comment[be]=Дапаўненьне для імпарту і экспарту кантактаў у фармаце CSV
 Comment[bg]=Приставка за импорт/експорт на контактите във формат CSV
@@ -81,6 +82,7 @@ Comment[tg]=Модул барои воридот ва содироти алоқ�
 Comment[tr]=CSV biçimindeki bağlantıları alma ve gönderme eklentisi
 Comment[uk]=Втулок для імпорту та експорту контактів у форматі CSV
 Comment[zh_CN]=导入和导出 CSV 格式联系人的插件
+Comment[zh_TW]=以 CSV 格式匯入與匯出聯絡人外掛程式
 Type=Service
 ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1

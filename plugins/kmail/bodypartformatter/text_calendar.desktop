@@ -64,6 +64,7 @@ Comment[tg]=Модули ба андозадарории text/calendar
 Comment[tr]=text/calendar için bir gövde biçimleyici eklentisi
 Comment[uk]=Втулок форматування для text/calendar
 Comment[zh_CN]=text/calendar 的格式化插件
+Comment[zh_TW]=text/calendar 格式化外掛程式
 
 [Plugin]
 Type=text/calendar

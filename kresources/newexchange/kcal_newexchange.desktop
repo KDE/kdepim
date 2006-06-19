@@ -37,6 +37,7 @@ Name[ta]=பரிமாற்ற சேவகனில் நாட்காட
 Name[tr]=Bir Exchange Sunucusu üzerinde Takvim (deneyimsel)
 Name[uk]=Календар на сервері Exchange (експериментальне)
 Name[zh_CN]=Exchange 服务器上的日历(试验性)
+Name[zh_TW]=Exchanger 伺服器上的行事曆(實驗中)
 X-KDE-Library=kcal_newexchange
 Type=Service
 ServiceTypes=KResources/Plugin

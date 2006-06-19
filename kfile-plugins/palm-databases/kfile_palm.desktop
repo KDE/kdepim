@@ -43,6 +43,7 @@ Name[tg]=Иттилоот дар бораи бонки додаҳои PalmOS
 Name[tr]=PalmOS Veritabanı Bilgisi
 Name[uk]=Інформація про базу даних PalmOS
 Name[zh_CN]=PalmOS 数据库信息
+Name[zh_TW]=PalmOS 資料庫資訊
 ServiceTypes=KFilePlugin
 X-KDE-Library=kfile_palm
 MimeType=application/vnd.palm

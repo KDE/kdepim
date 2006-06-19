@@ -39,5 +39,6 @@ Name[sv]=Lägg till i Kitchensyncs plockningsinsticksprogram
 Name[tr]=KitchenSync Plucker Eklentisine Ekle
 Name[uk]=Додати до втулку Plucker у KitchenSync
 Name[zh_CN]=添加到 KitchenSync Plucker 插件
+Name[zh_TW]=Add to KitchenSync Plucker 外掛程式
 Exec=dcop kitchensync PluckerInterface "addPluckerUrl(KURL)" %u
 Icon=knode

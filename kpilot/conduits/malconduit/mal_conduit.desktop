@@ -79,6 +79,7 @@ Comment[ta]=AvantGoஐ கையில் வைத்திருப்பத�
 Comment[tr]=AvantGo içeriğini (ya da genel olarak MAL sunucuları içeriğini) el bilgisayarı ile birleştirir. Bu, web sayfalarını el bilgisayarınızda çevirim dışı olarak görüntülemenizi sağlar.
 Comment[uk]=Синхронізація AvantGo (або вміст серверів MAL) на кишеньковий пристрій . Це дозволяє переглядати веб-сторінки на кишеньковому пристрої без з'єднання з Інтернетом.
 Comment[zh_CN]=将 AvantGo(或 MAL 服务器的内容)同步到手持设备中。这允许您在手持设备中脱机查看 Web 页，比如影讯、电视节目时间表或任何其它网页。
+Comment[zh_TW]=同步 AvantGo (或通常為一 MAL 伺服器內容) 與 handheld。
 Implemented=file
 ServiceTypes=KPilotConduit
 X-KDE-Library=conduit_mal

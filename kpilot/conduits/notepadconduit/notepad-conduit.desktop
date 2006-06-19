@@ -52,6 +52,7 @@ Comment[ta]=இது நோட்பேடின் வரைபடங்கள
 Comment[tr]=Bu bileşen, NotePad çizimlerini yerel bir dosyaya aktarır veya alır.
 Comment[uk]=Цей акведук створює резервну копію нотаток у локальній теці.
 Comment[zh_CN]=此管道将记事本的绘图保存到本地文件夹。
+Comment[zh_TW]=此軟體備份 NotePad 畫的圖到本地端資料夾。
 Implemented=file
 ServiceTypes=KPilotConduit
 X-KDE-Library=conduit_notepad

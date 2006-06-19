@@ -48,6 +48,7 @@ Comment[tg]=Канале, ки дар ҳолати шурӯъ нест.
 Comment[tr]=Bu kanal herhangi bir işlem yapmaz.
 Comment[uk]=Цей акведук нічого не робить.
 Comment[zh_CN]=此管道不做任何事。
+Comment[zh_TW]=不做任何事。
 Implemented=file
 ServiceTypes=KPilotConduit
 X-KDE-Library=conduit_null

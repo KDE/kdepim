@@ -35,6 +35,7 @@ Name[ta]=சேவகனில் பேச்சுரைகள் பத்த
 Name[tr]=Web Günlüğü gibi, bir Sunucuya yazar
 Name[uk]=Журнали як веб-щоденники на сервері
 Name[zh_CN]=日记作为服务器上的博客日志
+Name[zh_TW]=日誌做為伺服器上的部落格
 X-KDE-Library=kcal_blogging
 Type=Service
 ServiceTypes=KResources/Plugin

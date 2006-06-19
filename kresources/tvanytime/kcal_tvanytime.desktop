@@ -34,6 +34,7 @@ Name[sr@Latn]=TV program
 Name[sv]=Tv-tablåer
 Name[uk]=Програма телебачення
 Name[zh_CN]=电视日程安排
+Name[zh_TW]=電視時刻表
 X-KDE-Library=kcal_tvanytime
 Type=Service
 ServiceTypes=KResources/Plugin

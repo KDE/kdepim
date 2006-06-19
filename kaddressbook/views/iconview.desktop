@@ -62,6 +62,7 @@ Name[ven]=Mbonalelo ya aikhono
 Name[vi]=Xem icon 
 Name[xh]=Imboniselo ye Icon
 Name[zh_CN]=图标视图
+Name[zh_TW]=圖示檢視
 Name[zu]=Umboniso we Icon
 Type=Service
 ServiceTypes=KAddressBook/View

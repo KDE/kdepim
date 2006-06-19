@@ -46,6 +46,7 @@ Comment[tg]=Модули намоиши китоби адресии KDE
 Comment[tr]=KAdresDefteri Gösterim Eklentisi
 Comment[uk]=Втулок перегляду адресної книги KAddressBook
 Comment[zh_CN]=KAddressBook 查看插件
+Comment[zh_TW]=KAddressBook 檢視外掛程式
 
 [PropertyDef::X-KDE-KAddressBook-ViewPluginVersion]
 Type=int

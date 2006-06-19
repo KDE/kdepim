@@ -44,6 +44,7 @@ Comment[tg]=Муҳаррири Komposer
 Comment[tr]=Komposer Düzenleyicisi
 Comment[uk]=Редактор Komposer
 Comment[zh_CN]=Komposer 编辑器
+Comment[zh_TW]=Komposer 編輯器
 
 [PropertyDef::X-Komposer-Weight]
 Type=int

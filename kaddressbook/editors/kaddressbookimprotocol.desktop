@@ -43,6 +43,7 @@ Name[tg]=Протоколи мубодилаи иттилооти китоби �
 Name[tr]=KAddressbook Hızlı Mesajlaşma Protokolü
 Name[uk]=Протокол миттєвого зв'язку KAddressbook
 Name[zh_CN]=KAddressbook 即时消息协议
+Name[zh_TW]=KAddressbook 即時通訊協定
 [PropertyDef::X-KDE-InstantMessagingKABCField]
 Type=QString
 

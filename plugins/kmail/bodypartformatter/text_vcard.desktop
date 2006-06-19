@@ -65,6 +65,7 @@ Comment[tg]=Модули ба андозадарории text/vcard
 Comment[tr]=text/vcard için bir gövde biçimleyici eklentisi
 Comment[uk]=Втулок форматування для text/vcard
 Comment[zh_CN]=text/vcard 的格式化插件
+Comment[zh_TW]=text/vCard 格式化外掛程式
 
 [Plugin]
 Type=text/x-vcard

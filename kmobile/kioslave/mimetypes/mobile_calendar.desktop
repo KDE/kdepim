@@ -44,6 +44,7 @@ Comment[tg]=Тақвим дар дастгоҳи мобилӣ
 Comment[tr]=Cep Telefonu Takvimi
 Comment[uk]=Календар у мобільному пристрої
 Comment[zh_CN]=移动电话中的日历
+Comment[zh_TW]=行動裝置中的行事曆
 Icon=korganizer
 Type=MimeType
 MimeType=inode/calendar

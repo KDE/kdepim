@@ -35,6 +35,7 @@ Name[sr@Latn]=KDE Groupware čarobnjak
 Name[sv]=KDE-grupprogramguide
 Name[uk]=Майстер групової роботи для KDE
 Name[zh_CN]=KDE 群件向导
+Name[zh_TW]=KDE 群組精靈
 Exec=groupwarewizard
 Type=Application
 Icon=kontact

@@ -41,6 +41,7 @@ Name[tg]=Мубодилаи иттилоот бо Opera
 Name[tr]=KAB Opera XXPort Eklentisi
 Name[uk]=Name=Втулок KAB для обміну з Opera
 Name[zh_CN]=KAB Opera XXPort 插件
+Name[zh_TW]=KAB Opera XXPort 外掛程式
 Comment=Plugin to import Opera contacts
 Comment[be]=Дапаўненьне для імпарту кантактаў Opera
 Comment[bg]=Приставка за импорт на контактите от Опера
@@ -82,6 +83,7 @@ Comment[tg]=Модул барои воридоти алоқаи Opera
 Comment[tr]=Opera bağlantılarını alma eklentisi
 Comment[uk]=Втулок для імпорту контактів Opera
 Comment[zh_CN]=导入 Opera 联系人的插件
+Comment[zh_TW]=匯入 Opera 聯絡人的外掛程式
 Type=Service
 ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1

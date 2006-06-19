@@ -45,6 +45,7 @@ Comment[tg]=Модули вусъатоти китоби адресии KDE
 Comment[tr]=KAdresDefteri Uzantı Eklentisi
 Comment[uk]=Втулок розширення адресної книги KAddressBook
 Comment[zh_CN]=KAddressBook 扩展插件
+Comment[zh_TW]=KAddressBook 延伸外掛程式
 
 [PropertyDef::X-KDE-KAddressBook-ExtensionPluginVersion]
 Type=int

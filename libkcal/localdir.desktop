@@ -44,6 +44,7 @@ Name[tg]=Тақвимот дар каталоги локалӣ
 Name[tr]=Yerel Dizindeki Takvim
 Name[uk]=Календар у локальному каталозі
 Name[zh_CN]=本地目录中的日历
+Name[zh_TW]=本地目錄中的行事曆
 X-KDE-Library=kcal_localdir
 Type=Service
 ServiceTypes=KResources/Plugin

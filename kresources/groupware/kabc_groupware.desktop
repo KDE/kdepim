@@ -35,6 +35,7 @@ Name[ta]=குழுவாரி சேவகன்
 Name[tr]=Grupyazılımı(Groupware) Sunucusu
 Name[uk]=Сервер Groupware
 Name[zh_CN]=群件服务器
+Name[zh_TW]=群組伺服器
 X-KDE-Library=kabc_groupware
 Type=Service
 ServiceTypes=KResources/Plugin

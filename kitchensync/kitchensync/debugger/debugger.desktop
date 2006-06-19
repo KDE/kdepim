@@ -43,6 +43,7 @@ Name[tg]=Тасҳеҳкунандаи Konnector
 Name[tr]=Konnector Hata Ayıklayıcı
 Name[uk]=Зневадник Konnector
 Name[zh_CN]=Konnector 调试程序
+Name[zh_TW]=Konnector 除錯器
 Icon=
 ServiceTypes=KitchenSync/ActionPart
 X-KDE-Library=libksync_debugger

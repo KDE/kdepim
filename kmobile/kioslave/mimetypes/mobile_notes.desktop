@@ -43,6 +43,7 @@ Comment[tg]=Хабарҳо дар дастгоҳи мобилӣ
 Comment[tr]=Cep Telefonu Notları
 Comment[uk]=Нотатки у мобільному пристрої
 Comment[zh_CN]=移动电话中的便笺
+Comment[zh_TW]=行動裝置中的備忘錄
 Icon=knotes
 Type=MimeType
 MimeType=inode/notes
