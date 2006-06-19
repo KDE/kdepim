@@ -237,7 +237,7 @@ bool ResourceXMLRPC::doLoad()
 
   QMap<QString, QVariant> args, columns;
   args.insert( "start", QDateTime( QDate::currentDate().addDays( -12 ) ) );
-  args.insert( "end", QDateTime( QDate::currentDate().addDays( 12 ) ) );
+  args.insert( "end", QDateTime( QDate::currentDate().addDays( 2000 ) ) );
 
   mServer->call( SearchEventsCommand, args,
                  this, SLOT( listEventsFinished( const QValueList<QVariant>&, const QVariant& ) ),
