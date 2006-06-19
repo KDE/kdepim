@@ -422,7 +422,7 @@ void VCardViewerDialog::updateView()
   mView->setAddressee( *mIt );
 
   KABC::Addressee::List::Iterator it = mIt;
-  actionButton( Apply )->setEnabled( (++it) != mContacts.end() );
+  enableButton( Apply, (++it) != mContacts.end() );
 }
 
 void VCardViewerDialog::slotUser1()

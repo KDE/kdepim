@@ -180,32 +180,12 @@ Kleo::KeyApprovalDialog::KeyApprovalDialog( const std::vector<Item> & recipients
     d->preferences.push_back( cb );
   }
 
-  // calculate the optimal width for the dialog
-  const int dialogWidth = marginHint()
-                  + sv->frameWidth()
-                  + view->sizeHint().width()
-                  + sv->verticalScrollBar()->sizeHint().width()
-                  + sv->frameWidth()
-                  + marginHint()
-                  + 2;
-  // calculate the optimal height for the dialog
-  const int dialogHeight = marginHint()
-                   + fontMetrics().height()
-                   + spacingHint()
-                   + sv->frameWidth()
-                   + view->sizeHint().height()
-                   + sv->horizontalScrollBar()->sizeHint().height()
-                   + sv->frameWidth()
-                   + spacingHint()
-#warning Port me!
-//                   + actionButton( KDialogBase::Cancel )->sizeHint().height()
-                   + marginHint()
-                   + 2;
+  QSize size = sizeHint();
 
   // don't make the dialog too large
   const QRect desk = KGlobalSettings::desktopGeometry( this );
-  setInitialSize( QSize( qMin( dialogWidth, 3 * desk.width() / 4 ),
-			 qMin( dialogHeight, 7 * desk.height() / 8 ) ) );
+  setInitialSize( QSize( qMin( size.width(), 3 * desk.width() / 4 ),
+			 qMin( size.height(), 7 * desk.height() / 8 ) ) );
 }
 
 Kleo::KeyApprovalDialog::~KeyApprovalDialog() {

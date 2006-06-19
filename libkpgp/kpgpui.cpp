@@ -1512,37 +1512,18 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   connect( mChangeButtonGroup, SIGNAL(clicked(int)),
            this, SLOT(slotChangeEncryptionKey(int)) );
 
-  // calculate the optimal width for the dialog
-  int dialogWidth = marginHint()
-                  + sv->frameWidth()
-                  + bigvbox->sizeHint().width()
-                  + sv->verticalScrollBar()->sizeHint().width()
-                  + sv->frameWidth()
-                  + marginHint()
-                  + 2;
-  // calculate the optimal height for the dialog
-  int dialogHeight = marginHint()
-                   + label->sizeHint().height()
-                   + topLayout->spacing()
-                   + sv->frameWidth()
-                   + bigvbox->sizeHint().height()
-                   + sv->horizontalScrollBar()->sizeHint().height()
-                   + sv->frameWidth()
-                   + topLayout->spacing()
-#warning Port me!
-//                   + actionButton( KDialog::Cancel )->sizeHint().height()
-                   + marginHint()
-                   + 2;
+  QSize size = sizeHint();
+
   // don't make the dialog too large
   QRect desk = KGlobalSettings::desktopGeometry(this);
   int screenWidth = desk.width();
-  if( dialogWidth > 3*screenWidth/4 )
-    dialogWidth = 3*screenWidth/4;
+  if( size.width() > 3*screenWidth/4 )
+    size.setWidth( 3*screenWidth/4 );
   int screenHeight = desk.height();
-  if( dialogHeight > 7*screenHeight/8 )
-    dialogHeight = 7*screenHeight/8;
+  if( size.height() > 7*screenHeight/8 )
+    size.setHeight( 7*screenHeight/8 );
 
-  setInitialSize( QSize( dialogWidth, dialogHeight ) );
+  setInitialSize( size );
 }
 
 void

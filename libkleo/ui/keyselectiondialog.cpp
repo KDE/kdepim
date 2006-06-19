@@ -722,18 +722,18 @@ void Kleo::KeySelectionDialog::slotRecheckKey() {
 }
 
 void Kleo::KeySelectionDialog::slotTryOk() {
-#warning Port me!
-//  if ( actionButton( Ok )->isEnabled() )
+  if ( !mSelectedKeys.empty() && checkKeyUsage( mSelectedKeys, mKeyUsage ) )
     slotOk();
 }
 
 void Kleo::KeySelectionDialog::slotOk() {
   if ( mCheckSelectionTimer->isActive() )
     slotCheckSelection();
+
   // button could be disabled again after checking the selected key
-#warning Port me!
-//  if ( !actionButton( Ok )->isEnabled() )
-//    return;
+  if ( !mSelectedKeys.empty() && checkKeyUsage( mSelectedKeys, mKeyUsage ) )
+    return;
+
   mStartSearchTimer->stop();
   accept();
 }
