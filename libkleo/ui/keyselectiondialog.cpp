@@ -299,9 +299,9 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      unsigned int keyUsage,
 					      bool extendedSelection,
 					      bool rememberChoice,
-					      QWidget * parent, const char * name,
+					      QWidget * parent,
 					      bool modal )
-  : KDialog( parent),
+  : KDialog( parent ),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
@@ -322,9 +322,9 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
 					      unsigned int keyUsage,
 					      bool extendedSelection,
 					      bool rememberChoice,
-					      QWidget * parent, const char * name,
+					      QWidget * parent,
 					      bool modal )
-  : KDialog(parent),
+  : KDialog( parent ),
     mOpenPGPBackend( 0 ),
     mSMIMEBackend( 0 ),
     mRememberCB( 0 ),
@@ -335,6 +335,7 @@ Kleo::KeySelectionDialog::KeySelectionDialog( const QString & title,
   setCaption( title );
   setButtons( Default|Ok|Cancel|Help );
   setDefaultButton( Ok );
+  setModal( modal );
   init( rememberChoice, extendedSelection, text, initialQuery );
 }
 

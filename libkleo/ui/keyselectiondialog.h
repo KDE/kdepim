@@ -89,7 +89,7 @@ namespace Kleo {
                         unsigned int keyUsage=AllKeys,
                         bool extendedSelection=false,
 			bool rememberChoice=false,
-                        QWidget * parent=0, const char * name=0,
+                        QWidget * parent=0,
                         bool modal=true );
     KeySelectionDialog( const QString & title,
                         const QString & text,
@@ -97,7 +97,7 @@ namespace Kleo {
                         unsigned int keyUsage=AllKeys,
                         bool extendedSelection=false,
 			bool rememberChoice=false,
-                        QWidget * parent=0, const char * name=0,
+                        QWidget * parent=0,
                         bool modal=true );
     ~KeySelectionDialog();
 
