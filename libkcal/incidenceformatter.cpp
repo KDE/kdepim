@@ -513,45 +513,43 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
     i18n("Weekly"), i18n("Monthly Same Day"), i18n("Monthly Same Position"),
     i18n("Yearly"), i18n("Yearly"), i18n("Yearly")};
 
+   // TODO: Merge these two to one of the form "Recurs every 3 days"
+   // Partially DONE now.
   if ( incidence->doesRecur() ) {
+    QStringList strDays;
     Recurrence *recur = incidence->recurrence();
-    // TODO: Merge these two to one of the form "Recurs every 3 days"
-    result += i18n("Recurs every ");
-
-    if( recur->frequency() == 1 ){
-        switch (recur->doesRecur())
-        {
-           case Recurrence::rDaily:
-            result += i18n("day ").arg(recur->frequency());
-            break;
-           case Recurrence::rWeekly:
-            result += i18n("week").arg(recur->frequency());
-            break;
-        }
-    }
-    else{
-        switch (recur->doesRecur())
-        {
-           case Recurrence::rDaily:
-            result += i18n("%1 days ").arg(recur->frequency());
-            break;
-           case Recurrence::rWeekly:
-            result += i18n("%1 weeks").arg(recur->frequency());
-            break;
-        }
-    }
-
-    if( recur->doesRecur() == Recurrence::rWeekly ){
-       result += i18n(" on ");
-       for( int i = 0; i < 7; i++ ){
-         if( recur->days().testBit(i) ){
-           result += i18n( daysOfWeek[i].day );
-           result += " ";
-         }
+    //For Weekly, setting up the weekdays of recurrence with 
+    //comma as a separator and "and" separating last two
+    //days 
+    if ( recur->doesRecur() == Recurrence::rWeekly ) {
+       for ( int i = 0; i < 7; i++ ) {
+          if ( recur->days().testBit(i) ) {
+            strDays += i18n( daysOfWeek[i].day );
+            int count = 0;
+            for ( int j = i+1; j < 7; j++ ) {
+              if( recur->days().testBit(j) ) 
+                 count++;
+            }
+            if ( count > 1 ) {
+               strDays += i18n(", ");
+            }
+            else if ( count == 1 ) {
+                  strDays += i18n(" and ");
+                 }
+          }
        }
     }
 
- 
+    switch (recur->doesRecur())
+    {
+        case Recurrence::rDaily:
+          result += i18n("Recurs every day. ", "Recurs every %n days.",recur->frequency());
+          break;
+        case Recurrence::rWeekly:
+          result += i18n("Recurs every week on %1. ", "Recurs every %n weeks on %1.",recur->frequency())
+                              .arg(strDays.join(""));
+          break;
+     }
 
     if ( recur->duration() > 0 ) {
       result += i18n ("Repeats once", "Repeats %n times", recur->duration());
