@@ -531,11 +531,9 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
 
     QString strDays;
     if( dayList.count() > 1 ) {
-       strDays = dayList.join(",");
-       strDays.replace( strDays.findRev(','), 1, " and " );
-    }
-    else
-    {
+      strDays = dayList.join(", ");
+      strDays.replace( strDays.findRev(','), 1, " and" );
+    } else {
       strDays = dayList.first();
     }
 
