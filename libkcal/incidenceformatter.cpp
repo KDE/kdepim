@@ -516,28 +516,27 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
    // TODO: Merge these two to one of the form "Recurs every 3 days"
    // Partially DONE now.
   if ( incidence->doesRecur() ) {
-    QStringList strDays;
+    QStringList dayList;
     Recurrence *recur = incidence->recurrence();
     //For Weekly, setting up the weekdays of recurrence with 
     //comma as a separator and "and" separating last two
     //days 
     if ( recur->doesRecur() == Recurrence::rWeekly ) {
        for ( int i = 0; i < 7; i++ ) {
-          if ( recur->days().testBit(i) ) {
-            strDays += i18n( daysOfWeek[i].day );
-            int count = 0;
-            for ( int j = i+1; j < 7; j++ ) {
-              if( recur->days().testBit(j) ) 
-                 count++;
-            }
-            if ( count > 1 ) {
-               strDays += i18n(", ");
-            }
-            else if ( count == 1 ) {
-                  strDays += i18n(" and ");
-                 }
-          }
+         if( recur->days().testBit(i) ) {
+           dayList+= daysOfWeek[i].day;
+         } 
        }
+    }
+
+    QString strDays;
+    if( dayList.count() > 1 ) {
+       strDays = dayList.join(",");
+       strDays.replace( strDays.findRev(','), 1, " and " );
+    }
+    else
+    {
+      strDays = *dayList.at(0);
     }
 
     switch (recur->doesRecur())
@@ -547,7 +546,7 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
           break;
         case Recurrence::rWeekly:
           result += i18n("Recurs every week on %1. ", "Recurs every %n weeks on %1.",recur->frequency())
-                              .arg(strDays.join(""));
+                              .arg(strDays);
           break;
      }
 
