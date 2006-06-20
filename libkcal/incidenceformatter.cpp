@@ -551,7 +551,7 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
      }
 
     if ( recur->duration() > 0 ) {
-      result += i18n ("Repeats once", "Repeats %n times", recur->duration());
+      result += i18n (" Repeats once.", " Repeats %n times.", recur->duration());
       result += '\n';
     } else {
       if ( recur->duration() != -1 ) {
@@ -562,9 +562,9 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
         } else {
           endstr = KGlobal::locale()->formatDateTime( recur->endDateTime() );
         }
-        result += i18n("Repeat until: %1<br>").arg( endstr );
+        result += i18n(" Repeats until: %1.<br>").arg( endstr );
       } else {
-        result += i18n("Repeats forever<br>");
+        result += i18n(" Repeats forever.<br>");
       }
     }
     const DateList exdates = incidence->exDates();
