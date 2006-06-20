@@ -54,6 +54,19 @@
 
 using namespace KCal;
 
+static const struct {
+   const char* day;
+} daysOfWeek[] = {
+	{ I18N_NOOP("Monday") },
+	{ I18N_NOOP("Tuesday") },
+	{ I18N_NOOP("Wednesday") },
+	{ I18N_NOOP("Thursday") },
+	{ I18N_NOOP("Friday") },
+	{ I18N_NOOP("Saturday") },
+	{ I18N_NOOP("Sunday") },
+  };
+
+
 
 static QString stringProp( KTNEFMessage* tnefMsg, const Q_UINT32& key,
                            const QString& fallback = QString::null)
@@ -503,10 +516,42 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
   if ( incidence->doesRecur() ) {
     Recurrence *recur = incidence->recurrence();
     // TODO: Merge these two to one of the form "Recurs every 3 days"
-    result += i18n("Recurs: %1<br>")
-             .arg( recurrence[ recur->doesRecur() ] );
-    result += i18n("Frequency: %1<br>")
-             .arg( incidence->recurrence()->frequency() );
+    result += i18n("Recurs every ");
+
+    if( recur->frequency() == 1 ){
+        switch (recur->doesRecur())
+        {
+           case Recurrence::rDaily:
+            result += i18n("day ").arg(recur->frequency());
+            break;
+           case Recurrence::rWeekly:
+            result += i18n("week").arg(recur->frequency());
+            break;
+        }
+    }
+    else{
+        switch (recur->doesRecur())
+        {
+           case Recurrence::rDaily:
+            result += i18n("%1 days ").arg(recur->frequency());
+            break;
+           case Recurrence::rWeekly:
+            result += i18n("%1 weeks").arg(recur->frequency());
+            break;
+        }
+    }
+
+    if( recur->doesRecur() == Recurrence::rWeekly ){
+       result += i18n(" on ");
+       for( int i = 0; i < 7; i++ ){
+         if( recur->days().testBit(i) ){
+           result += i18n( daysOfWeek[i].day );
+           result += " ";
+         }
+       }
+    }
+
+ 
 
     if ( recur->duration() > 0 ) {
       result += i18n ("Repeats once", "Repeats %n times", recur->duration());
