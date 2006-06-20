@@ -536,7 +536,7 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
     }
     else
     {
-      strDays = *dayList.at(0);
+      strDays = dayList.first();
     }
 
     switch (recur->doesRecur())
