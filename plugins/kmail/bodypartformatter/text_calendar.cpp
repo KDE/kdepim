@@ -136,13 +136,13 @@ static QString meetingDetails( Incidence* incidence, Event* event )
 
   // Meeting Summary Row
   html += "<tr>";
-  html += "<td>" + i18n( "What:" ) + "</td>";
+  html += "<td>" + i18n( "Summary:" ) + "</td>";
   html += "<td>" + sSummary + "</td>";
   html += "</tr>\n";
 
   // Meeting Location Row
   html += "<tr>";
-  html += "<td>" + i18n( "Where:" ) + "</td>";
+  html += "<td>" + i18n( "Location:" ) + "</td>";
   html += "<td>" + sLocation + "</td>";
   html += "</tr>\n";
 
@@ -201,6 +201,16 @@ static QString meetingDetails( Incidence* incidence, Event* event )
     html += "<td valign='top'>" + i18n( "Recurrence:" ) + "</td>";
     html += "<td>";
     html += IncidenceFormatter::recurrenceAsHTML( event );
+    html += "</td>";
+    html += "</tr>\n";
+  }
+
+  QString details = incidence->description();
+  if ( !details.isEmpty() ) {
+    html += "<tr>";
+    html += "<td valign='top'>" + i18n( "Details:" ) + "</td>";
+    html += "<td>";
+    html += i18n( details.latin1() );
     html += "</td>";
     html += "</tr>\n";
   }
