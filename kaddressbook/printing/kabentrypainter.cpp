@@ -415,7 +415,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
       if ( !address.postOfficeBox().isEmpty() )
         line2 += QString::fromLatin1( " - " ) + address.postOfficeBox();
 
-      // print address in american style, this will need localisation:
+      // print address in american style, this will need localisation: (see BUG #80419)
       line3 = address.locality() + ( address.region().isEmpty() ?
               QString::fromLatin1( "" ) : QString::fromLatin1( ", " ) +
               address.region() ) + ( address.postalCode().isEmpty()
