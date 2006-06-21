@@ -508,10 +508,6 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
 QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
 {
   QString result;
-  QString recurrence[]= {i18n("no recurrence", "None"),
-    i18n("Minutely"), i18n("Hourly"), i18n("Daily"),
-    i18n("Weekly"), i18n("Monthly Same Day"), i18n("Monthly Same Position"),
-    i18n("Yearly"), i18n("Yearly"), i18n("Yearly")};
 
    // TODO: Merge these two to one of the form "Recurs every 3 days"
    // Partially DONE now.
@@ -532,7 +528,7 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
     QString strDays;
     if( dayList.count() > 1 ) {
       strDays = dayList.join(", ");
-      strDays.replace( strDays.findRev(','), 1, " and" );
+      strDays.replace( strDays.findRev(','), 1, i18n(" and") );
     } else if( dayList.count() == 1 ) {
       strDays = dayList.first();
     }
@@ -578,10 +574,6 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
      if ( !exdates.isEmpty() )
       result += "<br>";
 
-  }
-  QString details = incidence->description();
-  if ( !details.isEmpty() ) {
-    result += i18n("Details:\n%1\n").arg( details );
   }
   return result;
 }
