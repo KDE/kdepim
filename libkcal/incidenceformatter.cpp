@@ -64,7 +64,9 @@ static const struct {
 	{ I18N_NOOP("Friday") },
 	{ I18N_NOOP("Saturday") },
 	{ I18N_NOOP("Sunday") },
-  };
+};
+
+const int sizeOfDaysOfWeek = sizeof(daysOfWeek) / sizeof(*daysOfWeek);
 
 
 
@@ -504,35 +506,36 @@ QString IncidenceFormatter::msTNEFToVPart( const QByteArray& tnef )
   return converter.createVCard( addressee );
 }
 
+static QString weeklyRecurrenceAsString( Recurrence * recur )
+{
+  Q_ASSERT( recur->doesRecur() == Recurrence::rWeekly );
+
+  //For Weekly, setting up the weekdays of recurrence with 
+  //comma as a separator and "and" separating last two
+  //days 
+  QStringList dayList;
+  for ( int i = 0; i < sizeOfDaysOfWeek; i++ ) {
+    if( recur->days().testBit(i) ) {
+      dayList+= daysOfWeek[i].day;
+    } 
+  }
+
+  QString strDays;
+  if( dayList.count() > 1 ) {
+    strDays = dayList.join(", ");
+    strDays.replace( strDays.findRev(','), 1, i18n(" and") );
+  } else if( dayList.count() == 1 ) {
+    strDays = dayList.first();
+  }
+  return strDays;
+}
 
 QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
 {
   QString result;
 
-   // TODO: Merge these two to one of the form "Recurs every 3 days"
-   // Partially DONE now.
   if ( incidence->doesRecur() ) {
-    QStringList dayList;
     Recurrence *recur = incidence->recurrence();
-    //For Weekly, setting up the weekdays of recurrence with 
-    //comma as a separator and "and" separating last two
-    //days 
-    if ( recur->doesRecur() == Recurrence::rWeekly ) {
-       for ( int i = 0; i < 7; i++ ) {
-         if( recur->days().testBit(i) ) {
-           dayList+= daysOfWeek[i].day;
-         } 
-       }
-    }
-
-    QString strDays;
-    if( dayList.count() > 1 ) {
-      strDays = dayList.join(", ");
-      strDays.replace( strDays.findRev(','), 1, i18n(" and") );
-    } else if( dayList.count() == 1 ) {
-      strDays = dayList.first();
-    }
-
     switch (recur->doesRecur())
     {
         case Recurrence::rDaily:
@@ -540,7 +543,7 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
           break;
         case Recurrence::rWeekly:
           result += i18n("Recurs every week on %1. ", "Recurs every %n weeks on %1.",recur->frequency())
-                              .arg(strDays);
+                              .arg( weeklyRecurrenceAsString( recur ) );
           break;
      }
 
