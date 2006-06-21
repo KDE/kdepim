@@ -44,18 +44,11 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
   KABC::Addressee::List allContacts;
   mContacts.clear();
 
-#if KDE_VERSION >= 319
   KABC::AddresseeList list( mAddressBook->allAddressees() );
   if ( !fields.isEmpty() )
     list.sortByField( fields.first() );
 
   allContacts = list;
-#else
-  KABC::AddressBook::ConstIterator abIt( mAddressBook->begin() );
-  const KABC::AddressBook::ConstIterator abEndIt( mAddressBook->end() );
-  for ( ; abIt != abEndIt; ++abIt )
-    allContacts.append( *abIt );
-#endif
 
 #ifdef KDEPIM_NEW_DISTRLISTS
   // Extract distribution lists from allContacts

@@ -79,19 +79,11 @@ QString LocationMap::createUrl( const KABC::Address &addr )
     return QString();
   }
 
-#if KDE_VERSION >= 319
   return urlTemplate.replace( "%s", addr.street() ).
                      replace( "%r", addr.region() ).
                      replace( "%l", addr.locality() ).
                      replace( "%z", addr.postalCode() ).
                      replace( "%c", addr.countryToISO( addr.country() ) );
-#else
-  return urlTemplate.replace( "%s", addr.street() ).
-                     replace( "%r", addr.region() ).
-                     replace( "%l", addr.locality() ).
-                     replace( "%z", addr.postalCode() ).
-                     replace( "%c", "" );
-#endif
 }
 
 #include "locationmap.moc"

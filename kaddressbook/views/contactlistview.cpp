@@ -176,7 +176,6 @@ QString ContactListViewItem::key(int column, bool ascending) const
   if ( column >= parentListView->columns() )
     return QString();
 
-#if KDE_VERSION >= 319
   Q_UNUSED( ascending )
   if ( parentListView->showIM() ) {
     // in this case, one column is reserved for IM presence
@@ -194,9 +193,6 @@ QString ContactListViewItem::key(int column, bool ascending) const
   }
   else
     return mFields[ column ]->sortKey( mAddressee );
-#else
-  return Q3ListViewItem::key( column, ascending ).toLower();
-#endif
 }
 
 void ContactListViewItem::paintCell(QPainter * p,
