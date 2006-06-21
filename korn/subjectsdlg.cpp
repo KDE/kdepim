@@ -467,12 +467,20 @@ void KornSubjectsDlg::fillDeleteIdList( KMailDrop *drop )
 {
 	_delete->ids->clear();
 	KornMailSubject *current;
-	for( current = _delete->messages->first(); current; current = _delete->messages->next() )
+	
+	for( current = _delete->messages->first(); current; )
+	{
 		if( current->getMailDrop() == drop )
 		{
 			_delete->ids->append( current->getId() );
-			_delete->messages->remove( current );
+			if( _delete->messages->remove( current ) ) 
+				current = _delete->messages->current(); //If successfull, current() is already the next message
+			else
+				current = _delete->messages->next(); // If removal failed, goto the next item 
+		} else {
+			current = _delete->messages->next();  //Goto next item
 		}
+	}
 }
 
 void KornSubjectsDlg::deleteNextMessage()
