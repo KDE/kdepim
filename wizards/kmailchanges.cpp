@@ -212,6 +212,7 @@ class CreateOnlineImapAccount : public CreateImapAccount
       c.writeEntry( "use-ssl", true );
 
       c.writeEntry( "sieve-support", "true" );
+      c.writeEntry( "auto-expunge", "true" );
 
       // locally unsubscribe the default folders
       c.writeEntry( "locally-subscribed-folders", true );
