@@ -210,7 +210,7 @@ static QString meetingDetails( Incidence* incidence, Event* event )
     html += "<tr>";
     html += "<td valign='top'>" + i18n( "Details:" ) + "</td>";
     html += "<td>";
-    html += i18n( details.latin1() );
+    html += details;
     html += "</td>";
     html += "</tr>\n";
   }
@@ -784,5 +784,6 @@ KMail::Interface::BodyPartFormatterPlugin *
 libkmail_bodypartformatter_text_calendar_create_bodypart_formatter_plugin()
 {
   KGlobal::locale()->insertCatalogue( "kmail_text_calendar_plugin" );
+  KGlobal::locale()->insertCatalogue( "libkcal" );
   return new Plugin();
 }
