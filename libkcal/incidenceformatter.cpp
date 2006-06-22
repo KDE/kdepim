@@ -57,13 +57,13 @@ using namespace KCal;
 static const struct {
    const char* day;
 } daysOfWeek[] = {
-	{ I18N_NOOP("Monday") },
-	{ I18N_NOOP("Tuesday") },
-	{ I18N_NOOP("Wednesday") },
-	{ I18N_NOOP("Thursday") },
-	{ I18N_NOOP("Friday") },
-	{ I18N_NOOP("Saturday") },
-	{ I18N_NOOP("Sunday") },
+	{ I18N_NOOP("Mondays") },
+	{ I18N_NOOP("Tuesdays") },
+	{ I18N_NOOP("Wednesdays") },
+	{ I18N_NOOP("Thursdays") },
+	{ I18N_NOOP("Fridays") },
+	{ I18N_NOOP("Saturdays") },
+	{ I18N_NOOP("Sundays") },
 };
 
 const int sizeOfDaysOfWeek = sizeof(daysOfWeek) / sizeof(*daysOfWeek);
@@ -516,7 +516,7 @@ static QString weeklyRecurrenceAsString( Recurrence * recur )
   QStringList dayList;
   for ( int i = 0; i < sizeOfDaysOfWeek; i++ ) {
     if( recur->days().testBit(i) ) {
-      dayList+= daysOfWeek[i].day;
+      dayList+= i18n( daysOfWeek[i].day );
     } 
   }
 
