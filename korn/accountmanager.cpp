@@ -234,7 +234,7 @@ bool AccountManager::hasNewMessages()
 
 void AccountManager::playSound( const QString& file )
 {
-	Phonon::SimplePlayer* player = new Phonon::SimplePlayer( this );
+	Phonon::SimplePlayer* player = new Phonon::SimplePlayer( Phonon::CommunicationCategory,this );
 	player->play( KUrl( file ) );
 }
 
