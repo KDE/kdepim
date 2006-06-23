@@ -68,6 +68,68 @@ static const struct {
 
 const int sizeOfDaysOfWeek = sizeof(daysOfWeek) / sizeof(*daysOfWeek);
 
+static const struct {
+   const int dayNo;
+   const char *date;
+} daysOfMonth[] = {
+       { 1, I18N_NOOP("1st") },
+       { 2, I18N_NOOP("2nd") },
+       { 3, I18N_NOOP("3rd") },
+       { 4, I18N_NOOP("4th") },
+       { 5, I18N_NOOP("5th") },
+       { 6, I18N_NOOP("6th") },
+       { 7, I18N_NOOP("7th") },
+       { 8, I18N_NOOP("8th") },
+       { 9, I18N_NOOP("9th") },
+       { 10, I18N_NOOP("10th") },
+       { 11, I18N_NOOP("11th") },
+       { 12, I18N_NOOP("12th") },
+       { 13, I18N_NOOP("13th") },
+       { 14, I18N_NOOP("14th") },
+       { 15, I18N_NOOP("15th") },
+       { 16, I18N_NOOP("16th") },
+       { 17, I18N_NOOP("17th") },
+       { 18, I18N_NOOP("18th") },
+       { 19, I18N_NOOP("19th") },
+       { 20, I18N_NOOP("20th") },
+       { 21, I18N_NOOP("21st") },
+       { 22, I18N_NOOP("22nd") },
+       { 23, I18N_NOOP("23rd") },
+       { 24, I18N_NOOP("24th") },
+       { 25, I18N_NOOP("25th") },
+       { 26, I18N_NOOP("26th") },
+       { 27, I18N_NOOP("27th") },
+       { 28, I18N_NOOP("28th") },
+       { 29, I18N_NOOP("29th") },
+       { 30, I18N_NOOP("30th") },
+       { 31, I18N_NOOP("31st") },
+       { -1, I18N_NOOP("last day") },
+       { -2, I18N_NOOP("2nd last day") },
+       { -3, I18N_NOOP("3rd last day") },
+       { -4, I18N_NOOP("4th last day") },
+       { -5, I18N_NOOP("5th last day") },
+};
+
+const int sizeOfDaysOfMonth = sizeof (daysOfMonth) / sizeof (*daysOfMonth);
+
+static const struct {
+   const char* month;
+} monthsOfYear[] = {
+	{ I18N_NOOP("January") },
+	{ I18N_NOOP("February") },
+	{ I18N_NOOP("March") },
+	{ I18N_NOOP("April") },
+	{ I18N_NOOP("May") },
+	{ I18N_NOOP("June") },
+	{ I18N_NOOP("July") },
+	{ I18N_NOOP("August") },
+	{ I18N_NOOP("September") },
+	{ I18N_NOOP("October") },
+	{ I18N_NOOP("November") },
+	{ I18N_NOOP("December") }
+};
+
+const int sizeOfMonthsofYear = sizeof(monthsOfYear) / sizeof(*monthsOfYear);
 
 
 static QString stringProp( KTNEFMessage* tnefMsg, const Q_UINT32& key,
@@ -530,6 +592,96 @@ static QString weeklyRecurrenceAsString( Recurrence * recur )
   return strDays;
 }
 
+static QString monthlyPosRecurrenceAsString( Recurrence * recur )
+{
+  Q_ASSERT( recur->doesRecur() == Recurrence::rMonthlyPos );
+
+  QString strDays;
+
+  Recurrence::rMonthPos *tmpDay;
+  /*struct rMonthlyPos {
+    QBitArray rDays;
+    short rPos;
+    bool negative;
+    } 
+   */
+
+  //Recurrence::rMonthPos tmpDay;
+  QPtrList<Recurrence::rMonthPos> tmpDays = recur->monthPositions();
+  for ( tmpDay = tmpDays.first();
+      tmpDay;
+      tmpDay = tmpDays.next() ) {
+
+    QString day;
+    for ( int i = 0; i < sizeOfDaysOfWeek; i++ ) {
+      if( tmpDay->rDays.testBit(i) ) {
+        day = daysOfWeek[i].day;
+        break; 
+      } 
+    }
+
+    strDays += i18n( "%1 %2").arg( daysOfMonth[ tmpDay->rPos ].date ).arg( day );
+  }
+
+  return strDays;
+
+}
+
+static QString monthlyDayRecurrenceAsString( Recurrence * recur )
+{
+  Q_ASSERT( recur->doesRecur() == Recurrence::rMonthlyDay );
+
+  QString strDays;
+
+  int *tmpDay;
+  QPtrList<int> tmpDays = recur->monthDays();
+  for ( tmpDay = tmpDays.first();
+      tmpDay;
+      tmpDay = tmpDays.next() ) {
+
+    strDays += i18n( "%1 ").arg( daysOfMonth[ *tmpDay ].date );
+  }
+
+  return strDays;
+
+}
+
+//rYearlyMonth = 0x0007, 
+static QString yearlMonthRecurrenceAsString( Recurrence * recur )
+{
+   Q_ASSERT( recur->doesRecur() == Recurrence::rYearlyMonth );
+
+  QString strDays;
+ 
+
+  return strDays;
+
+}
+
+//rYearlyDay = 0x0008, 
+static QString yearlyDayRecurrenceAsString( Recurrence * recur )
+{
+   Q_ASSERT( recur->doesRecur() == Recurrence::rYearlyDay );
+
+  QString strDays;
+ 
+
+  return strDays;
+
+}
+
+//rYearlyPos
+static QString yearlyPosRecurrenceAsString( Recurrence * recur )
+{
+   Q_ASSERT( recur->doesRecur() == Recurrence::rYearlyPos );
+
+  QString strDays;
+ 
+
+  return strDays;
+
+}
+
 QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
 {
   QString result;
@@ -545,7 +697,30 @@ QString IncidenceFormatter::recurrenceAsHTML( Incidence * incidence )
           result += i18n("Recurs every week on %1. ", "Recurs every %n weeks on %1.",recur->frequency())
                               .arg( weeklyRecurrenceAsString( recur ) );
           break;
-     }
+        case Recurrence::rMonthlyPos:
+          result += i18n("Recurs on the %1 of every month.", "Recurs on the %1 every %n months.", recur->frequency())
+                              .arg( monthlyPosRecurrenceAsString( recur ) );
+          break;
+        case Recurrence::rMonthlyDay:
+          result += i18n("Recurs on the %1 of every month.", "Recurs on the %1 every %n months.", recur->frequency())
+                              .arg( monthlyDayRecurrenceAsString( recur ) );
+          break;
+        case Recurrence::rYearlyMonth:
+           result += i18n("Recurrence::rYearlyMonth");
+          //result += i18n("Recurs on %1 of every month.", "Recurs on %1 every %n months.", recur->frequency())
+          //                    .arg( monthlyDayRecurrenceAsString( recur ) );
+          break;
+        case Recurrence::rYearlyDay:
+           result += i18n("Recurrence::rYearlyDay");
+          //result += i18n("Recurs on %1 day of every month.", "Recurs on %1 day every %n months.", recur->frequency())
+          //                    .arg( monthlyDayRecurrenceAsString( recur ) );
+          break;
+        case Recurrence::rYearlyPos:
+           result += i18n("Recurrence::rYearlyPos");
+          //result += i18n("Recurs on %1 of every month.", "Recurs on %1 every %n months.", recur->frequency())
+          //                    .arg( monthlyDayRecurrenceAsString( recur ) );
+          break;
+    }
 
     if ( recur->duration() > 0 ) {
       result += i18n (" Repeats once.", " Repeats %n times.", recur->duration());
