@@ -661,7 +661,7 @@ void Kleo::KeySelectionDialog::slotCheckSelection( KeyListViewItem * item ) {
 		       std::back_inserter( mKeysToCheck ),
 		       AlreadyChecked() );
   if ( mKeysToCheck.empty() ) {
-    enableButtonOk( !mSelectedKeys.empty() &&
+    enableButton( Ok, !mSelectedKeys.empty() &&
 		    checkKeyUsage( mSelectedKeys, mKeyUsage ) );
     return;
   }
