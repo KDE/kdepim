@@ -1,4 +1,4 @@
-﻿/*
+/*
  * conversationdelegate.cpp
  *
  * copyright (c) Aron Bostrom <Aron.Bostrom at gmail.com>, 2006 
@@ -20,7 +20,7 @@
  
 #include <QPainter>
 #include <QStyleOptionViewItem>
-#include <QmodelIndex>
+#include <QModelIndex>
 #include <QStyle>
 #include <QBrush>
 #include <QSize>

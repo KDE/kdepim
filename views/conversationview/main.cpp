@@ -41,9 +41,7 @@ int main(int argc, char *argv[])
   QListView *conversationList = new QListView;
   conversationList->setModel(model);
 
-  conversationList->horizontalHeader()->hide();
-  conversationList->verticalHeader()->hide();
-  ConversationDelegate *delegate = new ConversationDelegate(this)
+  ConversationDelegate *delegate = new ConversationDelegate;
   conversationList->setItemDelegate(delegate);
 
 //   ConversationDisplay *conversationDisplay = new ConversationDisplay(this, &data);

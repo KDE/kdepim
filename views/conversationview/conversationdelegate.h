@@ -1,4 +1,4 @@
-﻿/*
+/*
  * conversationdelegate.h
  *
  * copyright (c) Aron Bostrom <Aron.Bostrom at gmail.com>, 2006 
@@ -22,13 +22,10 @@
 #define CONVERSATIONDELEGATE_H
 
 #include <QAbstractItemDelegate>
+#include <QPainter>
 #include <QFontMetrics>
 #include <QModelIndex>
 #include <QSize>
-
-class QAbstractItemModel;
-class QObject;
-class QPainter;
 
 class ConversationDelegate : public QAbstractItemDelegate
 {
