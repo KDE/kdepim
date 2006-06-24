@@ -27,14 +27,20 @@
 #include <QModelIndex>
 #include <QSize>
 
+#include "foldermodel.h"
+
 class ConversationDelegate : public QAbstractItemDelegate
 {
     Q_OBJECT
 public:
-    ConversationDelegate(QObject *parent = 0);
+    ConversationDelegate(DummyKonadiAdapter &adapter, QObject *parent = 0);
+    ~ConversationDelegate();
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+
+private:
+    DummyKonadiAdapter backend;
 
 };
 

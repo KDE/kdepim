@@ -27,14 +27,19 @@
 
 #include "conversationdelegate.h"
 
-ConversationDelegate::ConversationDelegate(QObject *parent) : QAbstractItemDelegate(parent)
+ConversationDelegate::ConversationDelegate(DummyKonadiAdapter &adapter, QObject *parent) : QAbstractItemDelegate(parent)
+{
+  backend = adapter;
+}
+
+ConversationDelegate::~ConversationDelegate()
 {
 }
 
 void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
    painter->setRenderHint(QPainter::Antialiasing);
-//   painter->setPen(Qt::NoPen);
+   painter->setPen(Qt::NoPen);
 
    if (option.state & QStyle::State_Selected)
        painter->setBrush(option.palette.highlight());
@@ -42,17 +47,29 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
        painter->setBrush(Qt::white);
    painter->drawRect(option.rect);
 
-   if (option.state & QStyle::State_Selected)
+   if (option.state & QStyle::State_Selected) {
        painter->setBrush(option.palette.highlightedText());
-   else
+       painter->setPen(QPen(option.palette.highlightedText().color()));      
+   } else {
        painter->setBrush(Qt::black);
-   painter->drawText(5, index.row()*20+18, "Authors");   
-   painter->drawText(85, index.row()*20+18, "Subject");   
+       painter->setPen(Qt::black);
+   }
+   painter->setFont(option.font);
+   DummyKonadiConversation c = backend.conversation(index.row());
+   QString ctitle = c.conversationTitle();
+   QString cauthors = c.author(0);
+   int max = c.count();
+   for (int count = 1; count < max; ++count) {
+      cauthors.append(", ");
+      cauthors.append(c.author(count));
+   }
+  
 
+   painter->drawText(5, (index.row())*(option.fontMetrics.height()+2), 175, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, cauthors);   
+   painter->drawText(185, (index.row())*(option.fontMetrics.height()+2), 310, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctitle);
 }
 
-QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem & /* option */,
-                             const QModelIndex & /* index */) const
+QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-   return QSize(200, 20);
+   return QSize(500, option.fontMetrics.height()+2);
 }

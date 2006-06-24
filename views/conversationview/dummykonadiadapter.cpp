@@ -1,5 +1,5 @@
 /*
- * copyright (c) Aron Boström <Aron.Bostrom at gmail.com>, 2006 
+ * copyright (c) Aron Bostrom <Aron.Bostrom at gmail.com>, 2006 
  *
  * this library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -28,7 +28,7 @@ DummyKonadiAdapter::DummyKonadiAdapter()
     msg->setContent("This is my first post.");
     one->addMessage(*msg);
     msg = new DummyKonadiMessage();
-    msg->setAuthor("Aron Boström");
+    msg->setAuthor("Aron Bostrom");
     msg->setContent("Great! Welcome along.");
     one->addMessage(*msg);
   DummyKonadiConversation *two = new DummyKonadiConversation(&QString("Fwd: Eran d0llars in this oi| inve$tment"));
@@ -42,7 +42,7 @@ DummyKonadiAdapter::DummyKonadiAdapter()
     msg->setContent("Who are you?");
     three->addMessage(*msg);
     msg = new DummyKonadiMessage();
-    msg->setAuthor("Aron Boström");
+    msg->setAuthor("Aron Bostrom");
     msg->setContent("I am you.");
     three->addMessage(*msg);
     msg = new DummyKonadiMessage();
@@ -54,7 +54,7 @@ DummyKonadiAdapter::DummyKonadiAdapter()
     msg->setContent("Well, that explains a lot...");
     three->addMessage(*msg);
     msg = new DummyKonadiMessage();
-    msg->setAuthor("Aron Boström");
+    msg->setAuthor("Aron Bostrom");
     msg->setContent("Hrafnahnef wrote:\n>Well, that explains a lot...\n\nLike what? \n//aron");
     three->addMessage(*msg);
     msg = new DummyKonadiMessage();
@@ -74,16 +74,16 @@ DummyKonadiAdapter::DummyKonadiAdapter()
     msg->setContent("Agreed!\n\nYou wrote:\n>$ whoami\n>hrafnahnef\n>\n>Settled?");
     three->addMessage(*msg);
     msg = new DummyKonadiMessage();
-    msg->setAuthor("Aron Boström");
+    msg->setAuthor("Aron Bostrom");
     msg->setContent("But if I am you, and you are you, then who is me?");
     three->addMessage(*msg);
     msg = new DummyKonadiMessage();
     msg->setAuthor("Anonymous bastard");
-    msg->setContent("That would be me!\n\nAron Boström wrote:\n>But if I am you, and you are you, then who is me?");
+    msg->setContent("That would be me!\n\nAron Bostrom wrote:\n>But if I am you, and you are you, then who is me?");
     three->addMessage(*msg);
     msg = new DummyKonadiMessage();
     msg->setAuthor("Hrafnahnef");
-    msg->setContent("Really?\n\nOn Tue 13 Bastard, anonymous wrote:\n>That would be me!\n>\n>Aron Boström wrote:\n>>But if I am you, and you are you, then who is me?");
+    msg->setContent("Really?\n\nOn Tue 13 Bastard, anonymous wrote:\n>That would be me!\n>\n>Aron Bostrom wrote:\n>>But if I am you, and you are you, then who is me?");
     three->addMessage(*msg);
     msg = new DummyKonadiMessage();
     msg->setAuthor("Supervisor");
@@ -175,4 +175,11 @@ bool DummyKonadiAdapter::tryConversationId(int conversationId) const
   if (conversationId < lowerLimit || conversationId > upperLimit)
     return false;
   return true;
+}
+
+DummyKonadiConversation DummyKonadiAdapter::conversation(int conversationId) const
+{
+  if (!tryConversationId(conversationId)) 
+    return 0;
+  return *(conversations.at(conversationId));
 }

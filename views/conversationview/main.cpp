@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
   QListView *conversationList = new QListView;
   conversationList->setModel(model);
 
-  ConversationDelegate *delegate = new ConversationDelegate;
+  ConversationDelegate *delegate = new ConversationDelegate(data);
   conversationList->setItemDelegate(delegate);
 
 //   ConversationDisplay *conversationDisplay = new ConversationDisplay(this, &data);
@@ -67,6 +67,7 @@ int main(int argc, char *argv[])
   splitter->setSizes(sizes);
 
   splitter->show();*/
+  conversationList->setMinimumWidth(500);
   conversationList->show();
   return app.exec();
 }

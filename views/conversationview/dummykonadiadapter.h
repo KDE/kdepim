@@ -31,6 +31,7 @@ public:
   ~DummyKonadiAdapter();
   int conversationCount() const;
   QString conversationTitle(int conversationId) const;
+  DummyKonadiConversation conversation(int conversationId) const;
   QString messageContent(int conversationId, int messageId) const;
   QString messageAuthor(int conversationId, int messageId) const;
   int messageCount(int conversationId) const;
