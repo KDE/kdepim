@@ -29,7 +29,7 @@
 #include <klocale.h>
 #include <k3listview.h>
 #include <kdebug.h>
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <kstandarddirs.h>
 #include <klineedit.h>
 
@@ -124,7 +124,9 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
 
     if ( s )
     {
-      KDialogBase * dialog = new KDialogBase( qobject_cast<QWidget*>(parent() ), "gwsettingswidget", true, i18n( "GroupWise Settings" ) );
+      KDialog * dialog = new KDialog( qobject_cast<QWidget*>(parent() ) );
+	  dialog->setCaption(i18n( "GroupWise Settings" ) );
+	  dialog->setModal(true);
 //       QVBoxLayout * layout = new QVBoxLayout( dialog );
       GroupWiseSettingsWidget * settingsWidget = new GroupWiseSettingsWidget( dialog );
       dialog->setMainWidget( settingsWidget );

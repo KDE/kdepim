@@ -17,7 +17,7 @@
 
 #include <kscoring.h>
 
-class KDialogBase;
+class KDialog;
 class KNRemoteArticle;
 class KNGroup;
 
