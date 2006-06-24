@@ -904,10 +904,10 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
     KeyID keyId = getKeyId( plvi );
     if( !keyId.isEmpty() ) {
       mKeyIds.append( keyId );
-      enableButtonOk( 1 == keyAdmissibility( plvi, AllowExpensiveTrustCheck ) );
+      enableButton( Ok, 1 == keyAdmissibility( plvi, AllowExpensiveTrustCheck ) );
     }
     else {
-      enableButtonOk( false );
+      enableButton( Ok, false );
     }
   }
   else {
@@ -1016,7 +1016,7 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
     if( !keysToBeChecked.isEmpty() ) {
       keysAllowed = keysAllowed && checkKeys( keysToBeChecked );
     }
-    enableButtonOk( keysAllowed );
+    enableButton( Ok, keysAllowed );
 
     connect( mListView, SIGNAL( selectionChanged() ),
              this,      SLOT( slotSelectionChanged() ) );
