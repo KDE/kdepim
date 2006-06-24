@@ -53,11 +53,11 @@
 
 K_EXPORT_KADDRESSBOOK_XXFILTER( libkaddrbk_vcard_xxport, VCardXXPort )
 
-class VCardViewerDialog : public KDialogBase
+class VCardViewerDialog : public KDialog
 {
   public:
     VCardViewerDialog( const KABC::Addressee::List &list,
-                       QWidget *parent, const char *name = 0 );
+                       QWidget *parent );
 
     KABC::Addressee::List contacts() const;
 
@@ -76,10 +76,10 @@ class VCardViewerDialog : public KDialogBase
     KABC::Addressee::List::Iterator mIt;
 };
 
-class VCardExportSelectionDialog : public KDialogBase
+class VCardExportSelectionDialog : public KDialog
 {
   public:
-    VCardExportSelectionDialog( QWidget *parent, const char *name = 0 );
+    VCardExportSelectionDialog( QWidget *parent );
     ~VCardExportSelectionDialog();
 
     bool exportPrivateFields() const;
@@ -384,12 +384,18 @@ void VCardXXPort::addKey( KABC::Addressee &addr, KABC::Key::Types type )
 // ---------- VCardViewer Dialog ---------------- //
 
 VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list,
-                                      QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Import vCard" ), Yes | No | Apply | Cancel, Yes,
-                 parent, name, true, true, KStdGuiItem::no(), KStdGuiItem::yes() ),
+                                      QWidget *parent )
+  : KDialog( parent ),
     mContacts( list )
 {
-  QFrame *page = plainPage();
+  setCaption( i18n( "Import vCard" ) );
+  setButtons( Yes | No | Apply | Cancel );
+  setDefaultButton( Yes );
+  setModal( true );
+  enableButtonSeparator( true );
+
+  QFrame *page = new QFrame( this );
+  setMainWidget( page );
   QVBoxLayout *layout = new QVBoxLayout( page );
   layout->setSpacing( spacingHint() );
   layout->setMargin( marginHint() );
@@ -458,12 +464,17 @@ void VCardViewerDialog::slotCancel()
 
 // ---------- VCardExportSelection Dialog ---------------- //
 
-VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent,
-                                                        const char *name )
-  : KDialogBase( Plain, i18n( "Select vCard Fields" ), Ok | Cancel, Ok,
-                 parent, name, true, true )
+VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
+  : KDialog( parent )
 {
-  QFrame *page = plainPage();
+  setCaption( i18n( "Select vCard Fields" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  setModal( true );
+  enableButtonSeparator( true );
+
+  QFrame *page = new QFrame( this );
+  setMainWidget( page );
 
   QVBoxLayout *layout = new QVBoxLayout( page );
   layout->setSpacing( spacingHint() );

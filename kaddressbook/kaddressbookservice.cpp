@@ -24,10 +24,14 @@
 #include "core.h"
 
 #include "kaddressbookservice.h"
+#include "serviceadaptor.h"
+#include <dbus/qdbus.h>
 
 KAddressBookService::KAddressBookService( KAB::Core *core )
-  : DCOPObject( "AddressBookServiceIface" ), mCore( core )
+  : mCore( core )
 {
+  new ServiceAdaptor( this );
+  QDBus::sessionBus().registerObject( "/AddressBookService", this, QDBusConnection::ExportAdaptors );
 }
 
 void KAddressBookService::importVCard( const QString& vCard )

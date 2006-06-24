@@ -64,6 +64,7 @@
 #include <libkdepim/categoryselectdialog.h>
 #include <ktoolinvocation.h>
 #include <krandom.h>
+#include <dbus/qdbus.h>
 
 #include "addresseeutil.h"
 #include "addresseeeditordialog.h"
@@ -75,7 +76,6 @@
 #include "kabprefs.h"
 #include "kabtools.h"
 #include "kaddressbookservice.h"
-#include "kaddressbookiface.h"
 #include "ldapsearchdialog.h"
 #include "locationmap.h"
 #include "printing/printingwizard.h"
@@ -185,7 +185,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
 
   KAcceleratorManager::manage( mWidget );
 
-  mKIMProxy = ::KIMProxy::instance( kapp->dcopClient() );
+  mKIMProxy = ::KIMProxy::instance();
 }
 
 KABCore::~KABCore()
@@ -381,8 +381,9 @@ void KABCore::mailVCard( const QStringList &uids )
 void KABCore::startChat()
 {
   QStringList uids = mViewManager->selectedUids();
-  if ( !uids.isEmpty() )
-    mKIMProxy->chatWithContact( uids.first() );
+#warning Port KIMProxy usage!
+//  if ( !uids.isEmpty() )
+//    mKIMProxy->chatWithContact( uids.first() );
 }
 
 void KABCore::browse( const QString& url )
@@ -1278,7 +1279,7 @@ void KABCore::slotContactsUpdated()
   emit contactsUpdated();
 }
 
-bool KABCore::handleCommandLine( KAddressBookIface* iface )
+bool KABCore::handleCommandLine()
 {
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   QString addrStr = args->getOption( "addr" );
@@ -1294,23 +1295,28 @@ bool KABCore::handleCommandLine( KAddressBookIface* iface )
 
   // Can not see why anyone would pass both a uid and an email address, so I'll leave it that two contact editors will show if they do
   if ( !addr.isEmpty() ) {
-    iface->addEmail( addr );
+    QDBusInterfacePtr interface( "org.kde.KAddressbook", "/", "org.kde.KAddressbook.Core" );
+    interface->call( "addEmail", addr );
     doneSomething = true;
   }
 
   if ( !uid.isEmpty() ) {
-    iface->showContactEditor( uid );
+    QDBusInterfacePtr interface( "org.kde.KAddressbook", "/", "org.kde.KAddressbook.Core" );
+    interface->call( "showContactEditor", uid );
     doneSomething = true;
   }
 
   if ( args->isSet( "new-contact" ) ) {
-    iface->newContact();
+    QDBusInterfacePtr interface( "org.kde.KAddressbook", "/", "org.kde.KAddressbook.Core" );
+    interface->call( "newContact" );
     doneSomething = true;
   }
 
   if ( args->count() >= 1 ) {
-    for ( int i = 0; i < args->count(); ++i )
-      iface->importVCard( args->url( i ).url() );
+    for ( int i = 0; i < args->count(); ++i ) {
+      QDBusInterfacePtr interface( "org.kde.KAddressbook", "/", "org.kde.KAddressbook.Core" );
+      interface->call( "importVCard", args->url( i ).url() );
+    }
     doneSomething = true;
   }
   return doneSomething;

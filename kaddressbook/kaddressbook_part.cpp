@@ -37,7 +37,8 @@
 
 #include "kabcore.h"
 #include "kabprefs.h"
-#include "kaddressbookiface.h"
+#include "coreadaptor.h"
+#include <dbus/qdbus.h>
 
 #include "kaddressbook_part.h"
 
@@ -46,7 +47,7 @@ K_EXPORT_COMPONENT_FACTORY( libkaddressbookpart, KAddressbookFactory )
 
 KAddressbookPart::KAddressbookPart( QWidget *parentWidget, QObject *parent,
                                     const QStringList & )
-  : DCOPObject( "KAddressBookIface" ), KParts::ReadOnlyPart( parent )
+  : KParts::ReadOnlyPart( parent )
 {
   setInstance( KAddressbookFactory::instance() );
 
@@ -67,6 +68,9 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, QObject *parent,
   mCore->setStatusBar( statusBar->statusBar() );
 
   setXMLFile( "kaddressbook_part.rc" );
+
+  new CoreAdaptor( this );
+  QDBus::sessionBus().registerObject( "/", this, QDBusConnection::ExportAdaptors );
 }
 
 KAddressbookPart::~KAddressbookPart()
@@ -141,7 +145,7 @@ bool KAddressbookPart::openFile()
 
 bool KAddressbookPart::handleCommandLine()
 {
-  return mCore->handleCommandLine( this );
+  return mCore->handleCommandLine();
 }
 
 void KAddressbookPart::guiActivateEvent( KParts::GUIActivateEvent *e )

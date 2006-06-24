@@ -32,13 +32,13 @@ namespace KAB {
 class ConfigureWidget;
 }
 
-class ExtensionConfigDialog : public KDialogBase
+class ExtensionConfigDialog : public KDialog
 {
   Q_OBJECT
 
   public:
     ExtensionConfigDialog( KAB::ExtensionFactory *factory, KConfig *config,
-                           QWidget *parent, const char *name = 0 );
+                           QWidget *parent );
     ~ExtensionConfigDialog();
 
   protected slots:

@@ -55,16 +55,19 @@
 
 enum { Local = 0, Guess = 1, Latin1 = 2, Uni = 3, MSBug = 4, Codec = 5 };
 
-CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent,
-                                  const char * name )
-  : KDialogBase( Plain, i18n ( "CSV Import Dialog" ), Ok | Cancel | User1 |
-                 User2, Ok, parent, name, true, true ),
+CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent )
+  : KDialog( parent ),
     mAdjustRows( false ),
     mStartLine( 0 ),
     mTextQuote( '"' ),
     mDelimiter( "," ),
     mAddressBook( ab )
 {
+  setCaption( i18n ( "CSV Import Dialog" ) );
+  setButtons( Ok | Cancel | User1 | User2 );
+  setDefaultButton( Ok );
+  setModal( true );
+  enableButtonSeparator( true );
   initGUI();
 
   mTypeMap.insert( i18n( "Undefined" ), Undefined );
@@ -370,7 +373,8 @@ KABC::AddresseeList CSVImportDialog::contacts() const
 
 void CSVImportDialog::initGUI()
 {
-  mPage = plainPage();
+  mPage = new QWidget( this );
+  setMainWidget( mPage );
 
   QGridLayout *layout = new QGridLayout( mPage );
   layout->setSpacing( spacingHint() );
@@ -788,9 +792,7 @@ void CSVImportDialog::slotOk()
       assigned = true;
   }
 
-  if ( assigned )
-    KDialogBase::slotOk();
-  else
+  if ( !assigned )
     KMessageBox::sorry( this, i18n( "You have to assign at least one column." ) );
 }
 

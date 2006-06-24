@@ -163,9 +163,10 @@ ContactListViewItem::ContactListViewItem(const KABC::Addressee &a,
   : K3ListViewItem(parent), mAddressee(a), mFields( fields ),
     parentListView( parent ), mDocument(doc), mIMProxy( proxy )
 {
-  if ( mIMProxy )
-    mHasIM = mIMProxy->isPresent( mAddressee.uid() );
-  else
+#warning Port KIMProxy usage!
+//  if ( mIMProxy )
+//    mHasIM = mIMProxy->isPresent( mAddressee.uid() );
+//  else
     mHasIM = false;
   refresh();
 }
@@ -184,7 +185,8 @@ QString ContactListViewItem::key(int column, bool ascending) const
       // increment by one before converting to string so that -1 is not greater than 1
       // create the sort key by taking the numeric status 0 low, 5 high, and subtracting it from 5
       // so that the default ascending gives online before offline, etc.
-      QString key = QString::number( 5 - ( mIMProxy->presenceNumeric( mAddressee.uid() ) + 1 ) );
+#warning Port KIMProxy usage!
+      QString key /*= QString::number( 5 - ( mIMProxy->presenceNumeric( mAddressee.uid() ) + 1 ) )*/;
       return key;
     }
     else {
@@ -229,9 +231,10 @@ void ContactListViewItem::refresh()
   int i = 0;
   // don't show unknown presence, it's not interesting
   if ( mHasIM ) {
-    if ( mIMProxy->presenceNumeric( mAddressee.uid() ) > 0 )
-      setPixmap( parentListView->imColumn(), mIMProxy->presenceIcon( mAddressee.uid() ) );
-    else
+#warning Port KIMProxy usage!
+//    if ( mIMProxy->presenceNumeric( mAddressee.uid() ) > 0 )
+//      setPixmap( parentListView->imColumn(), mIMProxy->presenceIcon( mAddressee.uid() ) );
+//    else
       setPixmap( parentListView->imColumn(), QPixmap() );
   }
 

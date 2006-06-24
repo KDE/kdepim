@@ -110,7 +110,7 @@ void LookAndFeelPage::saveSettings( KConfig *config )
 void LookAndFeelPage::initGUI()
 {
   QVBoxLayout *layout = new QVBoxLayout(this);
-  layout->setSpacing(KDialogBase::spacingHint());
+  layout->setSpacing(KDialog::spacingHint());
   layout->setMargin(0);
 
   QGroupBox *group = new QGroupBox(i18n("Row Separator"));

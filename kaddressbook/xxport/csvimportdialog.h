@@ -38,13 +38,12 @@ class QPushButton;
 class QRadioButton;
 class Q3Table;
 
-class CSVImportDialog : public KDialogBase
+class CSVImportDialog : public KDialog
 {
   Q_OBJECT
 
   public:
-    CSVImportDialog( KABC::AddressBook *ab, QWidget *parent,
-                     const char *name = 0 );
+    CSVImportDialog( KABC::AddressBook *ab, QWidget *parent );
     ~CSVImportDialog();
 
     KABC::AddresseeList contacts() const;

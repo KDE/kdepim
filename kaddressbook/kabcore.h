@@ -61,7 +61,6 @@ class ExtensionManager;
 class FilterSelectionWidget;
 class IncSearchWidget;
 class JumpButtonBar;
-class KAddressBookIface;
 class KAddressBookService;
 class KIMProxy;
 class LDAPSearchDialog;
@@ -300,7 +299,7 @@ class KDE_EXPORT KABCore : public KAB::Core
       DCOP METHOD: Handle command line arguments, return true if handled
       and false if no args was given. The iface is either the mainwin or the part.
      */
-    bool handleCommandLine( KAddressBookIface* iface );
+    bool handleCommandLine();
 
 
     /**

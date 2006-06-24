@@ -79,7 +79,8 @@ set(kaddressbook_bin_SRCS
 
 kde4_automoc(${kaddressbook_bin_SRCS})
 
-kde4_add_dcop_skels(kaddressbook_bin_SRCS kaddressbookiface.h )
+#kde4_add_dcop_skels(kaddressbook_bin_SRCS kaddressbookiface.h )
+qdbus_add_adaptors(kaddressbook_bin_SRCS org.kde.KAddressbook.Core.xml)
 
 kde4_add_executable(kaddressbook_bin ${kaddressbook_bin_SRCS})
 set_target_properties(kaddressbook_bin PROPERTIES OUTPUT_NAME kaddressbook)
@@ -93,7 +94,8 @@ install_targets(/bin kaddressbook_bin )
 
 set(kaddressbookpart_PART_SRCS kaddressbook_part.cpp )
 
-kde4_add_dcop_skels(kaddressbookpart_PART_SRCS kaddressbookiface.h)
+#kde4_add_dcop_skels(kaddressbookpart_PART_SRCS kaddressbookiface.h)
+qdbus_add_adaptors(kaddressbookpart_PART_SRCS org.kde.KAddressbook.Core.xml)
 
 kde4_automoc(${kaddressbookpart_PART_SRCS})
 
@@ -154,6 +156,7 @@ set(kaddressbook_LIB_SRCS ${libkabinterfaces_SRCS} ${libprinter_SRCS} ${libkabim
 )
 
 kde4_automoc(${kaddressbook_LIB_SRCS})
+qdbus_add_adaptors(kaddressbook_LIB_SRCS ${CMAKE_SOURCE_DIR}/libkdepim/interfaces/org.kde.adressbook.service.xml)
 
 kde4_add_library(kaddressbook SHARED ${kaddressbook_LIB_SRCS})
 

@@ -31,8 +31,6 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 
-#include <dcopclient.h>
-
 #include <kbuttonbox.h>
 #include <kcombobox.h>
 #include <kconfig.h>
@@ -201,9 +199,10 @@ void AddresseeWidget::saveSettings()
   cfg.setGroup( "General" );
   cfg.writeEntry( "FormattedNameType", mFormattedNameCombo->currentIndex() );
 
-  DCOPClient *client = DCOPClient::mainClient();
-  if ( client )
-      client->emitDCOPSignal( "KABC::AddressBookConfig", "changed()", QByteArray() );
+#warning Port me!
+//  DCOPClient *client = DCOPClient::mainClient();
+//  if ( client )
+//      client->emitDCOPSignal( "KABC::AddressBookConfig", "changed()", QByteArray() );
 }
 
 #include "addresseewidget.moc"

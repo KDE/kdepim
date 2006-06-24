@@ -29,8 +29,6 @@
 #include <kapplication.h>
 #include <kmainwindow.h>
 
-#include "kaddressbookiface.h"
-
 class KABCore;
 
 /**
@@ -41,7 +39,7 @@ class KABCore;
   @author Don Sanders <dsanders@kde.org>
   @version 0.1
  */
-class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
+class KAddressBookMain : public KMainWindow
 {
   Q_OBJECT
 
@@ -50,15 +48,15 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
     virtual ~KAddressBookMain();
 
   public slots:
-    virtual void addEmail( QString addr );
-    virtual void importVCard( const QString& vCardURL );
+    void addEmail( QString addr );
+    void importVCard( const QString& vCardURL );
     // FIXME the below was ASYNC, but moc seems to not like that, at present
-    virtual void showContactEditor( QString uid );
-    virtual void newContact();
-    virtual QString getNameByPhone( QString phone );
-    virtual void save();
-    virtual void exit();
-    virtual bool handleCommandLine();
+    void showContactEditor( QString uid );
+    void newContact();
+    QString getNameByPhone( QString phone );
+    void save();
+    void exit();
+    bool handleCommandLine();
 
   protected:
     void initActions();

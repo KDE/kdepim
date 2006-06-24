@@ -190,7 +190,7 @@ void KAddressBookTableView::readConfig( KConfigGroup &cfg )
 
   if ( cfg.readEntry( "InstantMessagingPresence", false ) ) {
     if ( !mIMProxy ) {
-      mIMProxy = KIMProxy::instance( kapp->dcopClient() );
+      mIMProxy = KIMProxy::instance();
       connect( mIMProxy, SIGNAL( sigContactPresenceChanged( const QString& ) ),
                this, SLOT( updatePresence( const QString& ) ) );
     }

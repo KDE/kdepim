@@ -628,10 +628,14 @@ void DistributionListView::dropEvent( QDropEvent *e )
 
 EmailSelector::EmailSelector( const QStringList &emails,
                               const QString &current, QWidget *parent )
-  : KDialogBase( KDialogBase::Plain, i18n("Select Email Address"), Ok, Ok,
-               parent )
+  : KDialog( parent )
 {
-  QFrame *topFrame = plainPage();
+  setCaption( i18n("Select Email Address") );
+  setButtons( Ok );
+  setDefaultButton( Ok );
+
+  QFrame *topFrame = new QFrame( this );
+  setMainWidget( topFrame );
   QBoxLayout *topLayout = new QVBoxLayout( topFrame );
 
   mButtonGroup = new Q3ButtonGroup( 1, Qt::Horizontal, i18n("Email Addresses"),

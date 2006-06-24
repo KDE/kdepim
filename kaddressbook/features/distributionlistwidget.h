@@ -126,7 +126,7 @@ class DistributionListView : public K3ListView
 /**
   @short Helper class
 */
-class EmailSelector : public KDialogBase
+class EmailSelector : public KDialog
 {
   public:
     EmailSelector( const QStringList &emails, const QString &current,

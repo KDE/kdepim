@@ -33,11 +33,17 @@
 #include "extensionwidget.h"
 
 ExtensionConfigDialog::ExtensionConfigDialog( KAB::ExtensionFactory *factory, KConfig *config,
-                                              QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Extension Settings" ), Ok | Cancel, Ok, parent,
-                 name, true, true ), mWidget( 0 ), mConfig( config )
+                                              QWidget *parent )
+  : KDialog(  parent ), mWidget( 0 ), mConfig( config )
 {
-  QFrame *page = plainPage();
+  setCaption( i18n( "Extension Settings" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  enableButtonSeparator( true );
+  setModal( true );
+
+  QFrame *page = new QFrame( this );
+  setMainWidget( page );
   QGridLayout *layout = new QGridLayout( page );
   layout->setSpacing( spacingHint() );
   layout->setMargin( marginHint() );
@@ -56,8 +62,6 @@ ExtensionConfigDialog::~ExtensionConfigDialog()
 void ExtensionConfigDialog::slotOk()
 {
   mWidget->saveSettings( mConfig );
-
-  KDialogBase::slotOk();
 }
 
 #include "extensionconfigdialog.moc"

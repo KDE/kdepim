@@ -31,12 +31,15 @@
 #include <libkdepim/statusbarprogresswidget.h>
 #include <libkdepim/progressdialog.h>
 
+#include <dbus/qdbus.h>
+#include "coreadaptor.h"
+
 #include "kabcore.h"
 
 #include "kaddressbookmain.h"
 
 KAddressBookMain::KAddressBookMain( const QString &file )
-  : DCOPObject( "KAddressBookIface" ), KMainWindow( 0 )
+  : KMainWindow( 0 )
 {
   // Set this to be the group leader for all subdialogs - this means
   // modal subdialogs will only affect this dialog, not the other windows
@@ -73,6 +76,9 @@ KAddressBookMain::KAddressBookMain( const QString &file )
 
   resize( 400, 300 ); // initial size
   setAutoSaveSettings();
+
+  new CoreAdaptor( this );
+  QDBus::sessionBus().registerObject("/", this, QDBusConnection::ExportAdaptors);
 }
 
 KAddressBookMain::~KAddressBookMain()
@@ -117,7 +123,7 @@ void KAddressBookMain::exit()
 
 bool KAddressBookMain::handleCommandLine()
 {
-  return mCore->handleCommandLine( this );
+  return mCore->handleCommandLine();
 }
 
 void KAddressBookMain::saveProperties( KConfig* )

@@ -23,20 +23,16 @@
 #ifndef KADDRESSBOOK_PART_H
 #define KADDRESSBOOK_PART_H
 
-#include <dcopobject.h>
-
 #include <kparts/event.h>
 #include <kparts/factory.h>
 #include <kparts/part.h>
-
-#include "kaddressbookiface.h"
 
 class KAboutData;
 class KInstance;
 
 class KABCore;
 
-class KAddressbookPart: public KParts::ReadOnlyPart, virtual public KAddressBookIface
+class KAddressbookPart: public KParts::ReadOnlyPart
 {
   Q_OBJECT
 

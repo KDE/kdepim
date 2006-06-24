@@ -24,13 +24,13 @@
 #ifndef KADDRESSBOOKSERVICE_H
 #define KADDRESSBOOKSERVICE_H
 
-#include <libkdepim/interfaces/AddressBookServiceIface.h>
+#include <QtCore/QObject>
 
 namespace KAB {
 class Core;
 }
 
-class KAddressBookService : virtual public KPIM::AddressBookServiceIface
+class KAddressBookService : public QObject
 {
   public:
     KAddressBookService( KAB::Core *core );
