@@ -21,7 +21,7 @@ settings.</para>
 <keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo>
 </shortcut>
 <guimenu>File</guimenu>
-<guimenuitem>Save</guimenuitem>
+<guimenuitem>Save As...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -39,7 +39,7 @@ Saves the selected article in a file.</action>
 </keycombo>
 </shortcut>
 <guimenu>File</guimenu>
-<guimenuitem>Print</guimenuitem>
+<guimenuitem>Print...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -54,13 +54,13 @@ Prints the selected article.</action>
 <menuchoice>
 <guimenu>
 File</guimenu>
-<guimenuitem>Send pending messages</guimenuitem>
+<guimenuitem>Send Pending Messages</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>
 <action>
-The messages in the Outbox folder are sent.</action>
+The messages in the <guilabel>Outbox</guilabel> folder are sent.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -128,7 +128,7 @@ Copy the selected text to the clipboard.</action>
 <menuchoice>
 <shortcut><keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
-<guimenuitem>Select all</guimenuitem>
+<guimenuitem>Select All</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -142,15 +142,31 @@ Selects the whole article.</action>
 <term>
 <menuchoice>
 <shortcut>
-<keycap>F4</keycap></shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Search articles</guimenuitem>
+<keycap>F4</keycap></shortcut><guimenu>Edit</guimenu>
+<guimenuitem>Search Articles...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>
 <action>
-Opens the Search Dialog Box for searching in the active group.</action>
+Opens the <guilabel>Search for Articles</guilabel> dialog box for searching in the active group.</action>
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>F</keycap>
+</keycombo>
+</shortcut>
+<guimenu>Edit</guimenu>
+<guimenuitem>Find in Article...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+To be written
 </para>
 </listitem>
 </varlistentry>
@@ -158,7 +174,7 @@ Opens the Search Dialog Box for searching in the active group.</action>
 <term>
 <menuchoice>
 <guimenu>Edit</guimenu>
-<guimenuitem>Fetch article with ID...</guimenuitem>
+<guimenuitem>Fetch Article with ID...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -176,12 +192,14 @@ Enables the download of an article with a specified article-ID.</action>
 <title>
 The <guimenu>View</guimenu> menu</title>
 
+<!--Headers and Attachments missing-->
+
 <variablelist>
 <varlistentry>
 <term>
 <menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>Show Threads</guimenuitem>
+<guimenuitem>Show/Hide Threads</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -193,7 +211,7 @@ When this is activated, &knode; shows discussions as a tree view in the article 
 <term>
 <menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>Expand all threads</guimenuitem>
+<guimenuitem>Expand All Threads</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -207,7 +225,7 @@ is active.</para>
 <term>
 <menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>Collapse all threads</guimenuitem>
+<guimenuitem>Collapse All Threads</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -264,7 +282,7 @@ Allows you to sort the article view.</action>
 <menuchoice>
 <shortcut><keycap>F5</keycap></shortcut>
 <guimenu>View</guimenu>
-<guimenuitem>Refresh list</guimenuitem>
+<guimenuitem>Refresh List</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -274,7 +292,7 @@ Refreshes the article view</action>
 </para>
 </listitem>
 </varlistentry>
-<varlistentry>
+<!--varlistentry>
 <term>
 <menuchoice>
 <guimenu>View</guimenu>
@@ -287,7 +305,7 @@ Refreshes the article view</action>
 When this setting is activated, &knode; shows the complete article header in the article window.</action>
 </para>
 </listitem>
-</varlistentry>
+</varlistentry-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -302,7 +320,7 @@ When this setting is activated, &knode; shows all characters of the complete art
 </para>
 </listitem>
 </varlistentry>
-<varlistentry>
+<!--varlistentry>
 <term>
 <menuchoice>
 <guimenu>View</guimenu>
@@ -314,13 +332,28 @@ When this setting is activated, &knode; shows all characters of the complete art
 <action>Checks the PGP signature in the article.</action>
 </para>
 </listitem>
+</varlistentry-->
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>V</keycap></shortcut>
+<guimenu>View</guimenu>
+<guimenuitem>View Source</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+<action>
+The source code of the active article is opened in a new window.</action>
+</para>
+</listitem>
 </varlistentry>
 <varlistentry>
 <term>
 <menuchoice>
 <shortcut><keycap>X</keycap></shortcut>
 <guimenu>View</guimenu>
-<guimenuitem>Use fixed font</guimenuitem>
+<guimenuitem>Use Fixed Font</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -330,6 +363,9 @@ Activates the configured fixed-width font for the viewer.</action>
 </para>
 </listitem>
 </varlistentry>
+
+<!--Fancy Formatting Y is missing-->
+
 <varlistentry>
 <term>
 <menuchoice>
@@ -356,9 +392,9 @@ The <guimenu>Go</guimenu> menu</title>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycap>B</keycap></shortcut>
+<shortcut><keycap>P</keycap></shortcut>
 <guimenu>Go</guimenu>
-<guimenuitem>Previous article</guimenuitem>
+<guimenuitem>Previous Article</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -373,7 +409,7 @@ Jumps to previous article in the article view.</action>
 <menuchoice>
 <shortcut><keycap>N</keycap></shortcut>
 <guimenu>Go</guimenu>
-<guimenuitem>Next article</guimenuitem>
+<guimenuitem>Next Article</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -386,10 +422,10 @@ Jumps to next article in the article view.</action>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycombo action="simul">&Alt;<keycap>Space</keycap></keycombo>
+<shortcut><keycombo action="simul">&Alt;&Shift;<keycap>Space</keycap></keycombo>
 </shortcut>
 <guimenu>Go</guimenu>
-<guimenuitem>Next unread article</guimenuitem>
+<guimenuitem>Next Unread Article</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -402,9 +438,9 @@ Jumps to the next unread article, and to the first unread article of the next ne
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>Space</keycap></keycombo></shortcut>
+<shortcut><keycombo action="simul">&Shift;<keycap>Space</keycap></keycombo></shortcut>
 <guimenu>Go</guimenu>
-<guimenuitem>Next unread thread</guimenuitem>
+<guimenuitem>Next Unread Thread</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -420,7 +456,7 @@ Jumps to the next unread thread, and to the next unread thread in the next newsg
 <menuchoice>
 <shortcut><keycap>-</keycap></shortcut>
 <guimenu>Go</guimenu>
-<guimenuitem>Previous group</guimenuitem>
+<guimenuitem>Previous Group</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -436,7 +472,7 @@ Jumps to the previous news group in the folder view</action>
 <menuchoice>
 <shortcut><keycap>+</keycap></shortcut>
 <guimenu>Go</guimenu>
-<guimenuitem>Next group</guimenuitem>
+<guimenuitem>Next Group</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -458,7 +494,7 @@ Jumps to the next newsgroup in the folder view</action>
 <term>
 <menuchoice>
 <guimenu>Account</guimenu>
-<guimenuitem>Get new articles in all groups</guimenuitem>
+<guimenuitem>Get New Articles in All Groups</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -472,7 +508,21 @@ Connects with the active account and fetches any new messages.</action>
 <term>
 <menuchoice>
 <guimenu>Account</guimenu>
-<guimenuitem>Subscribe to Newsgroups</guimenuitem>
+<guimenuitem>Get New Articles in All Accounts</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+<action>
+Connects with all account and fetches any new messages.</action>
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Account</guimenu>
+<guimenuitem>Subscribe to Newsgroups...</guimenuitem>
 </menuchoice> 
 </term> 
 <listitem> 
@@ -487,7 +537,7 @@ Opens the Dialog Box for subscribing to newsgroups for the active account.</acti
 <term>
 <menuchoice>
 <guimenu>Account</guimenu>
-<guimenuitem>Expire all groups</guimenuitem>
+<guimenuitem>Expire All Groups</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -539,7 +589,7 @@ The <guimenu>Group</guimenu> menu</title>
 <term>
 <menuchoice>
 <guimenu>Group</guimenu>
-<guimenuitem>Get new articles</guimenuitem>
+<guimenuitem>Get New Articles</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -553,7 +603,7 @@ Connects with the active account and fetches any new messages.</action>
 <term>
 <menuchoice>
 <guimenu>Group</guimenu>
-<guimenuitem>Expire group</guimenuitem>
+<guimenuitem>Expire Group</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -567,7 +617,7 @@ Checks if there are any old articles and, if so, deletes them.</action>
 <term>
 <menuchoice>
 <guimenu>Group</guimenu>
-<guimenuitem>Reorganize group</guimenuitem>
+<guimenuitem>Reorganize Group</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -581,7 +631,7 @@ Rebuilds the article view by using the configured sortings.</action>
 <term>
 <menuchoice>
 <guimenu>Group</guimenu>
-<guimenuitem>Mark all as read</guimenuitem>
+<guimenuitem>Mark All as Read</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -595,13 +645,27 @@ Sets the status of all articles in the active newsgroup to read.</action>
 <term>
 <menuchoice>
 <guimenu>Group</guimenu>
-<guimenuitem>Mark all as unread</guimenuitem>
+<guimenuitem>Mark All as Unread</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>
 <action>
 Sets the status of all articles in the active newsgroup to unread.</action>
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Group</guimenu>
+<guimenuitem>Mark Last as Unread</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+<action>
+To be written.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -623,7 +687,7 @@ Opens the dialog for the group properties.</action>
 <term>
 <menuchoice>
 <guimenu>Group</guimenu>
-<guimenuitem>Unsubscribe</guimenuitem>
+<guimenuitem>Unsubscribe From Group</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -689,7 +753,7 @@ Here you can rename the active folder.</action>
 <term>
 <menuchoice>
 <guimenu>Folder</guimenu>
-<guimenuitem>Import MBox Folder</guimenuitem>
+<guimenuitem>Import MBox Folder...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -703,7 +767,7 @@ With this function it is possible to import an MBox folder into the active folde
 <term>
 <menuchoice>
 <guimenu>Folder</guimenu>
-<guimenuitem>Export as MBox Folder</guimenuitem>
+<guimenuitem>Export as MBox Folder...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -781,9 +845,10 @@ The <guimenu>Article</guimenu> menu</title>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycap>P</keycap></shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
+</shortcut>
 <guimenu>Article</guimenu>
-<guimenuitem>Post To Newsgroup</guimenuitem>
+<guimenuitem>Post to Newsgroup...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -798,7 +863,7 @@ Opens the Composer, with the settings for writing new articles set to those of t
 <menuchoice>
 <shortcut><keycap>R</keycap></shortcut>
 <guimenu>Article</guimenu>
-<guimenuitem>Followup To Newsgroup</guimenuitem>
+<guimenuitem>Followup to Newsgroup</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -813,7 +878,7 @@ Opens the Composer for writing a followup, with the content of the active articl
 <menuchoice>
 <shortcut><keycap>A</keycap></shortcut>
 <guimenu>Article</guimenu>
-<guimenuitem>Reply by Email</guimenuitem>
+<guimenuitem>Reply by Email...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -828,7 +893,7 @@ Opens the Composer for writing an e-mail to the author of the active article.</a
 <menuchoice>
 <shortcut><keycap>F</keycap></shortcut>
 <guimenu>Article</guimenu>
-<guimenuitem>Forward by Email</guimenuitem>
+<guimenuitem>Forward by Email...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -932,27 +997,13 @@ Opens the Composer with the content of the active article; when this article is 
 <menuchoice>
 <shortcut><keycap>O</keycap></shortcut>
 <guimenu>Article</guimenu>
-<guimenuitem>Open in own window</guimenuitem>
+<guimenuitem>Open in Own Window</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
 <para>
 <action>
 The active article is opened in a new window.</action>
-</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Article</guimenu>
-<guimenuitem>View Source</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>
-<action>
-The source code of the active article is opened in a new window.</action>
 </para>
 </listitem>
 </varlistentry>
@@ -998,7 +1049,7 @@ Drafts</guilabel>
 <term>
 <menuchoice>
 <guimenu>Article</guimenu>
-<guimenuitem>Send now</guimenuitem>
+<guimenuitem>Send Now</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1024,8 +1075,7 @@ The <guimenu>Scoring</guimenu> menu</title>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycombo
-	  action="simul">&Ctrl;<keycap>E</keycap></keycombo></shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>E</keycap></keycombo></shortcut>
 <guimenu>Scoring</guimenu>
 <guimenuitem>Edit Scoring Rules...</guimenuitem>
 </menuchoice>
@@ -1041,7 +1091,7 @@ The dialog to edit the scoring rules will be opened.</action>
 <term>
 <menuchoice>
 <guimenu>Scoring</guimenu>
-<guimenuitem>Recalculate scores</guimenuitem>
+<guimenuitem>Recalculate Scores</guimenuitem>
 </menuchoice> 
 </term> 
 <listitem> 
@@ -1123,7 +1173,7 @@ The <guimenu>Settings</guimenu> menu</title>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Show Toolbar</guimenuitem>
+<guimenuitem>Show/Hide Toolbar</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1137,7 +1187,7 @@ This option toggles whether the toolbar is shown or not.</action>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Show Statusbar</guimenuitem>
+<guimenuitem>Show/Hide Statusbar</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1151,8 +1201,10 @@ This option toggles whether the statusbar is shown or not.</action>
 <varlistentry>
 <term>
 <menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>G</keycap></keycombo>
+</shortcut>
 <guimenu>Settings</guimenu>
-<guimenuitem>Show Group view</guimenuitem>
+<guimenuitem>Show/Hide Group View</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1165,8 +1217,10 @@ This option toggles whether the group list is shown or not.</action>
 <varlistentry>
 <term>
 <menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>H</keycap></keycombo>
+</shortcut>
 <guimenu>Settings</guimenu>
-<guimenuitem>Show Header view</guimenuitem>
+<guimenuitem>Show/Hide Header View</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1179,8 +1233,10 @@ This option toggles whether the header view is shown or not.</action>
 <varlistentry>
 <term>
 <menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>J</keycap></keycombo>
+</shortcut>
 <guimenu>Settings</guimenu>
-<guimenuitem>Show Article viewer</guimenuitem>
+<guimenuitem>Show Article Viewer</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1224,7 +1280,7 @@ Opens a dialog for configuring the toolbars.</action>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Configure KNode...</guimenuitem>
+<guimenuitem>Configure &knode;...</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
