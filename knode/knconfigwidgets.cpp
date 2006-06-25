@@ -1031,7 +1031,7 @@ KNode::DisplayedHeadersWidget::HdrItem* KNode::DisplayedHeadersWidget::generateI
   } else
     text="<";
   text+=h->header();
-  text+=">";
+  text+='>';
   return new HdrItem(text,h);
 }
 

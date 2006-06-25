@@ -187,7 +187,7 @@ bool KNGroupListData::writeOut()
         case KNGroup::moderated: temp += " m ";
                                  break;
       }
-      temp += i->description.toUtf8() + "\n";
+      temp += i->description.toUtf8() + '\n';
       f.write(temp.data(),temp.length());
     }
     f.close();

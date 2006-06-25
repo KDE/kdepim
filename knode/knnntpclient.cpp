@@ -161,7 +161,7 @@ void KNNntpClient::doFetchGroups()
     if (!sendCommand("LIST NEWSGROUPS",rep))
       return;
 
-    if (rep == 215) {       // 215 informations follows
+    if (rep == 215) {       // 215 information codes follow
       QString description;
       KNGroupInfo info;
       int pos;
@@ -291,7 +291,7 @@ void KNNntpClient::doCheckNewGroups()
     for (KNGroupInfo *group=tmpList.first(); group; group=tmpList.next()) {
       if (!sendCommand(cmd+group->name.utf8(),rep))
         return;
-      if (rep != 215)        // 215 informations follows
+      if (rep != 215)        // 215 information codes follow
         break;
       desList.clear();
       if (!getMsg(desList))

@@ -297,10 +297,10 @@ void appendTextWPrefix(QString &result, const QString &text, int wrapAt, const Q
 
     if((int)(prefix.length()+txt.length()) > wrapAt) {
       breakPos=findBreakPos(txt,wrapAt-prefix.length());
-      result+=(prefix+txt.left(breakPos)+"\n");
+      result+=(prefix+txt.left(breakPos)+'\n');
       txt.remove(0,breakPos+1);
     } else {
-      result+=(prefix+txt+"\n");
+      result+=(prefix+txt+'\n');
       txt.clear();
     }
   }
@@ -353,7 +353,7 @@ QString KNHelper::rewrapStringList(QStringList text, int wrapAt, QChar quoteChar
       }
     }
 
-    quoted+=thisPrefix+thisLine+"\n";
+    quoted+=thisPrefix+thisLine+'\n';
     lastPrefix=thisPrefix;
   }
 

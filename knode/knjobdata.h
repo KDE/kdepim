@@ -81,7 +81,7 @@ class KNJobItem {
 
 /** Abstract base class for all KNode internal jobs.
  *  This class takes care of:
- *  - progress/status reporting and user interaction (cancelation).
+ *  - progress/status reporting and user interaction (cancellation).
  *  - error handling/reporting.
  *  - easy handling of associated KIO jobs.
  *  To imlpement a new job class, you need to sub-class this class and

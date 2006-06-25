@@ -93,7 +93,7 @@ QString KNGroupSelectDialog::selectedGroups()const
 
   for(; it.current(); ++it) {
     if(!isFirst)
-      ret+=",";
+      ret+=',';
     ret+=(static_cast<GroupItem*>(it.current()))->info.name;
     isFirst=false;
     count++;

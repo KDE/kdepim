@@ -1028,7 +1028,7 @@ void ArticleWidget::processJob( KNJobData * job )
         KMessageBox::error( this, i18n("An error occurred while downloading the article source:\n%1",
             job->errorString() ) );
       else
-        new KNSourceViewWindow( a->head() + "\n" + a->body() );
+        new KNSourceViewWindow( a->head() + '\n' + a->body() );
     }
     delete job;
     delete a;
@@ -1170,7 +1170,7 @@ void ArticleWidget::slotURLClicked( const KUrl &url, bool forceOpen)
       knGlobals.articleManager()->saveContentToFile( c, this );
     return;
   }
-  // let KDE take care of the remaing protocols (http, ftp, etc.)
+  // let KDE take care of the remaining protocols (http, ftp, etc.)
   new KRun( url, this );
 }
 

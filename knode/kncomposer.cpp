@@ -833,7 +833,7 @@ bool KNComposer::applyChanges()
   QString tmp;
   QStringList textLines = v_iew->e_dit->processedText();
   for (QStringList::Iterator it = textLines.begin(); it != textLines.end(); ++it)
-    tmp += *it + "\n";
+    tmp += *it + '\n';
 
   // Sign article if needed
   if ( a_ctPGPsign->isChecked() ) {
@@ -988,7 +988,7 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
     while(!file->atEnd()) {
       line=ts.readLine();
       if (!file->atEnd())
-        line+="\n";
+        line+='\n';
       lst.append(line);
     }
     temp+=KNHelper::rewrapStringList(lst, wrapAt, '|', false, true);
@@ -998,7 +998,7 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
         temp+="| ";
       temp+=ts.readLine();
       if (!file->atEnd())
-        temp += "\n";
+        temp += '\n';
     }
   }
 
@@ -1076,7 +1076,7 @@ void KNComposer::slotArtDelete()
 void KNComposer::slotAppendSig()
 {
   if(!s_ignature.isEmpty()) {
-    v_iew->e_dit->append("\n"+s_ignature);
+    v_iew->e_dit->append('\n'+s_ignature);
     v_iew->e_dit->setModified(true);
   }
 }
@@ -1190,7 +1190,7 @@ void KNComposer::slotToggleDoMail()
       for (QStringList::Iterator it = textLines.begin(); it != textLines.end(); ++it) {
         if (*it == "-- ")   // try to be smart, don't include the signature,
           break;            // kmail will append one, too.
-        tmp+=*it+"\n";
+        tmp+=*it+'\n';
       }
       knGlobals.artFactory->sendMailExternal(v_iew->t_o->text(), v_iew->s_ubject->text(), tmp);
       a_ctDoMail->setChecked(false); //revert
@@ -1282,7 +1282,7 @@ void KNComposer::slotExternalEditor()
     tmp += *it;
     ++it;
     if (it != textLines.end())
-      tmp+="\n";
+      tmp+='\n';
   }
 
   QByteArray local = codec->fromUnicode(tmp);

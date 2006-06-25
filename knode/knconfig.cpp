@@ -128,7 +128,7 @@ QString KNode::Identity::getSignature()
           while(!ts.atEnd()) {
             s_igContents += ts.readLine();
             if (!ts.atEnd())
-              s_igContents += "\n";
+              s_igContents += '\n';
           }
           f.close();
         }
