@@ -71,7 +71,7 @@ QDateTime DummyKonadiConversation::sendTime(int messageId) const
 
 QDateTime DummyKonadiConversation::arrivalTime() const
 {
-  return messages.at(count()).arrivalTime();
+  return messages.at(count()-1).arrivalTime();
 }
 
 QDateTime DummyKonadiConversation::sendTime() const

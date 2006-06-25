@@ -24,12 +24,14 @@
 #include <QStyle>
 #include <QBrush>
 #include <QSize>
+#include <QDateTime>
 
 #include "conversationdelegate.h"
 
 ConversationDelegate::ConversationDelegate(DummyKonadiAdapter &adapter, QObject *parent) : QAbstractItemDelegate(parent)
 {
   backend = adapter;
+  lineWidth = 500;
 }
 
 ConversationDelegate::~ConversationDelegate()
@@ -38,6 +40,7 @@ ConversationDelegate::~ConversationDelegate()
 
 void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+  int lineHeight = option.fontMetrics.height() + 2;
    painter->setRenderHint(QPainter::Antialiasing);
    painter->setPen(Qt::NoPen);
 
@@ -63,13 +66,30 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
       cauthors.append(", ");
       cauthors.append(c.author(count));
    }
-  
+   QDateTime cdatetime = c.arrivalTime();
+   QString ctime = cdatetime.date().toString();
+   ctime.append(" ");
+   ctime.append(cdatetime.time().toString());
 
-   painter->drawText(5, (index.row())*(option.fontMetrics.height()+2), 175, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, cauthors);   
-   painter->drawText(185, (index.row())*(option.fontMetrics.height()+2), 310, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctitle);
+  option.fontMetrics.width(ctime);
+
+  int authorWidth = 175;
+  int margin = 5;
+  int authorPos = margin;
+  int linePos = index.row() * lineHeight;
+  painter->drawText(authorPos, linePos, authorWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, cauthors);
+
+  int subjectPos = authorWidth + 2*margin;
+  int timeWidth = option.fontMetrics.width(ctime);
+  int subjectWidth = lineWidth - subjectPos - timeWidth - 2*margin;
+  painter->drawText(subjectPos, linePos, subjectWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctitle);
+
+  int timePos = lineWidth - margin - timeWidth;
+  painter->drawText(timePos, linePos, timeWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctime);
 }
 
 QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-   return QSize(500, option.fontMetrics.height()+2);
+  int lineHeight = option.fontMetrics.height() + 2;
+  return QSize(lineWidth, lineHeight);
 }

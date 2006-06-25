@@ -41,7 +41,7 @@ public:
 
 private:
     DummyKonadiAdapter backend;
-
+    int lineWidth;
 };
 
 #endif
