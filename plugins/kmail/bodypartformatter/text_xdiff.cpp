@@ -96,7 +96,7 @@ namespace {
       QString chunkStyle( "style=\"color: blue;\"" );
 
       QString html = "<br><div align=\"center\">";
-      html += "<pre " + tableStyle + ">";
+      html += "<pre " + tableStyle + '>';
 
       QStringList lines = diff.split( '\n' );
       for ( QStringList::Iterator it = lines.begin(); it != lines.end(); ++it ) {
@@ -119,7 +119,7 @@ namespace {
             style = "";
           }
         }
-        html += "<span " + style + ">" + line + "</span><br/>";
+        html += "<span " + style + '>' + line + "</span><br/>";
       }
 
       html += "</pre></div>";

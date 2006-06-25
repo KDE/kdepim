@@ -75,13 +75,13 @@ namespace {
 
 class KMInvitationFormatterHelper : public KCal::InvitationFormatterHelper
 {
-  public: 
+  public:
     KMInvitationFormatterHelper( KMail::Interface::BodyPart *bodyPart ) : mBodyPart( bodyPart ) {}
     virtual QString generateLinkURL( const QString &id ) { return mBodyPart->makeLink( id ); }
   private:
     KMail::Interface::BodyPart *mBodyPart;
 };
-    
+
 class Formatter : public KMail::Interface::BodyPartFormatter
 {
   public:
@@ -94,9 +94,9 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       CalendarLocal cl( KPimPrefs::timezone() );
       KMInvitationFormatterHelper helper( bodyPart );
       QString source;
-      /* If the bodypart does not have a charset specified, we need to fall back to
-         utf8, not the KMail fallback encoding, so get the contents as binary and decode
-         explicitely. */
+      /* If the bodypart does not have a charset specified, we need to fall
+         back to utf8, not the KMail fallback encoding, so get the contents
+         as binary and decode explicitly. */
       if ( bodyPart->contentTypeParameter( "charset").isEmpty() ) {
         const QByteArray &ba = bodyPart->asBinary();
         source = QString::fromUtf8(ba);
