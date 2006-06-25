@@ -21,6 +21,7 @@
 
 #include <QString>
 #include <QList>
+#include <QDateTime>
 
 #include "dummykonadimessage.h"
 
@@ -30,10 +31,14 @@ public:
   DummyKonadiConversation(QString *conversationTitle = 0) : title(*conversationTitle) {}
   int count() const;
   QString conversationTitle() const;
+  QDateTime arrivalTime() const;
+  QDateTime sendTime() const;
   DummyKonadiMessage message(int messageId) const;
   void addMessage(DummyKonadiMessage &message);
   QString author(int messageId) const;
   QString content(int messageId) const;
+  QDateTime arrivalTime(int messageId) const;
+  QDateTime sendTime(int messageId) const;
 
 //public signals:
 //  void messageAdded();

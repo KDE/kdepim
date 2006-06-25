@@ -21,6 +21,7 @@
 
 #include <QString>
 #include <QObject>
+#include <QDateTime>
 
 class DummyKonadiMessage
 {
@@ -28,12 +29,17 @@ public:
   DummyKonadiMessage(bool null = false) : nullContent(null) {}
   QString author() const;
   QString content() const;
+  QDateTime sendTime() const { return send; }
+  QDateTime arrivalTime() const { return arrival; }
   void setAuthor(QString newAuthor);
   void setContent(QString newContent);
+  void setArrivalTime(QDateTime dateTime) { arrival = dateTime; }
+  void setSendTime(QDateTime dateTime) { send = dateTime; }
   bool isNull();
 
 private:
   QString conversationAuthor, conversationContent;
+  QDateTime arrival, send;
   bool nullContent;
 };
 

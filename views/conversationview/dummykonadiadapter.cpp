@@ -183,3 +183,23 @@ DummyKonadiConversation DummyKonadiAdapter::conversation(int conversationId) con
     return 0;
   return *(conversations.at(conversationId));
 }
+
+QDateTime DummyKonadiAdapter::messageSendTime(int conversationId, int messageId) const
+{
+  return conversations.at(conversationId)->sendTime(messageId);
+}
+
+QDateTime DummyKonadiAdapter::messageArrivalTime(int conversationId, int messageId) const
+{
+  return conversations.at(conversationId)->arrivalTime(messageId);
+}
+
+QDateTime DummyKonadiAdapter::conversationSendTime(int conversationId) const
+{
+  return conversations.at(conversationId)->sendTime();
+}
+
+QDateTime DummyKonadiAdapter::conversationArrivalTime(int conversationId) const
+{
+  return conversations.at(conversationId)->arrivalTime();
+}

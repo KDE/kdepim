@@ -56,3 +56,33 @@ QString DummyKonadiConversation::content(int messageId) const
     return tmp.content();
   return 0;
 }
+
+QDateTime DummyKonadiConversation::arrivalTime(int messageId) const
+{
+  DummyKonadiMessage tmp = message(messageId);
+  return tmp.arrivalTime();
+}
+
+QDateTime DummyKonadiConversation::sendTime(int messageId) const
+{
+  DummyKonadiMessage tmp = message(messageId);
+  return tmp.sendTime();
+}
+
+QDateTime DummyKonadiConversation::arrivalTime() const
+{
+  return messages.at(count()).arrivalTime();
+}
+
+QDateTime DummyKonadiConversation::sendTime() const
+{
+  int max = count();
+  QDateTime tmp;
+  QDateTime *oldest = new QDateTime(QDate(0, 0, 0), QTime(0, 0));
+  for (int count = 0; count < max; ++count) {
+    tmp = messages.at(count).sendTime();
+    if (tmp > *oldest)
+      oldest = &tmp;
+  }
+  return *oldest;
+}
