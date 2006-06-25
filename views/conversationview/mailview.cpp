@@ -18,6 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#include <QtGlobal>
 #include <QTextFrame>
 #include <QTextFrameFormat>
 #include <QTextLength>
@@ -32,10 +33,21 @@
 //	setReadOnly(true);
 //}
 
+/*
+ * This doesn't work as the QTextLength of the QTextFrameFormat of the root QTextFrame 
+ * of the QTextDocument corresponding to QTextEdit (phew!) is of variable length and 
+ * not of fixed length. I'll have to dive in and check if there is a way to transform 
+ * that to a fixed length.
+ * Another option is to increase the size until it no longer has a scrollbar, but that
+ * is a BAD solution...
+ * Hopefully, KHTML can do what I want. (Though it doesn't seem so.) Or I could convince 
+ * the KHTML hackers this is useful, so they'll add it. Else I have to implement it 
+ * myself. *Dreadfull thought*! :P
+ */
 int MailView::getNeededHeight() const
 {
-	qDebug() << "Dbg: " << document()->rootFrame()->frameFormat().height().rawValue();
-	return document()->rootFrame()->frameFormat().height().rawValue();
+//	qDebug() << "Dbg: " << document()->rootFrame()->frameFormat().height().type() << ", " << qRound(document()->rootFrame()->frameFormat().height().rawValue());
+	return qRound(document()->rootFrame()->frameFormat().height().rawValue());
 }
 
 void MailView::updateHeight()
@@ -43,6 +55,9 @@ void MailView::updateHeight()
 	setMinimumHeight(getNeededHeight());
 }
 
+/** 
+ * Displays the conversation corresponding to the given index in this conversation display.
+ **/
 void MailView::setConversation(const QModelIndex &index)
 {
 	setHtml("");
