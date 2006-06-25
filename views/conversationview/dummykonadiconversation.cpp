@@ -63,6 +63,12 @@ QDateTime DummyKonadiConversation::arrivalTime(int messageId) const
   return tmp.arrivalTime();
 }
 
+QString DummyKonadiConversation::arrivalTimeInText(int messageId) const
+{
+  DummyKonadiMessage tmp = message(messageId);
+  return tmp.arrivalTimeInText();
+}
+
 QDateTime DummyKonadiConversation::sendTime(int messageId) const
 {
   DummyKonadiMessage tmp = message(messageId);
@@ -72,6 +78,11 @@ QDateTime DummyKonadiConversation::sendTime(int messageId) const
 QDateTime DummyKonadiConversation::arrivalTime() const
 {
   return messages.at(count()-1).arrivalTime();
+}
+
+QString DummyKonadiConversation::arrivalTimeInText() const
+{
+  return messages.at(count()-1).arrivalTimeInText();
 }
 
 QDateTime DummyKonadiConversation::sendTime() const

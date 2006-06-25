@@ -41,37 +41,32 @@ ConversationDelegate::~ConversationDelegate()
 void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   int lineHeight = option.fontMetrics.height() + 2;
-   painter->setRenderHint(QPainter::Antialiasing);
-   painter->setPen(Qt::NoPen);
+  painter->setRenderHint(QPainter::Antialiasing);
+  painter->setPen(Qt::NoPen);
 
-   if (option.state & QStyle::State_Selected)
-       painter->setBrush(option.palette.highlight());
-   else
-       painter->setBrush(Qt::white);
-   painter->drawRect(option.rect);
+  if (option.state & QStyle::State_Selected)
+    painter->setBrush(option.palette.highlight());
+  else
+    painter->setBrush(Qt::white);
+  painter->drawRect(option.rect);
 
-   if (option.state & QStyle::State_Selected) {
-       painter->setBrush(option.palette.highlightedText());
-       painter->setPen(QPen(option.palette.highlightedText().color()));      
-   } else {
-       painter->setBrush(Qt::black);
-       painter->setPen(Qt::black);
-   }
-   painter->setFont(option.font);
-   DummyKonadiConversation c = backend.conversation(index.row());
-   QString ctitle = c.conversationTitle();
-   QString cauthors = c.author(0);
-   int max = c.count();
-   for (int count = 1; count < max; ++count) {
-      cauthors.append(", ");
-      cauthors.append(c.author(count));
-   }
-   QDateTime cdatetime = c.arrivalTime();
-   QString ctime = cdatetime.date().toString();
-   ctime.append(" ");
-   ctime.append(cdatetime.time().toString());
-
-  option.fontMetrics.width(ctime);
+  if (option.state & QStyle::State_Selected) {
+    painter->setBrush(option.palette.highlightedText());
+    painter->setPen(QPen(option.palette.highlightedText().color()));      
+  } else {
+    painter->setBrush(Qt::black);
+    painter->setPen(Qt::black);
+  }
+  painter->setFont(option.font);
+  DummyKonadiConversation c = backend.conversation(index.row());
+  QString ctitle = c.conversationTitle();
+  QString ctime = c.arrivalTimeInText();
+  QString cauthors = c.author(0);
+  int max = c.count();
+  for (int count = 1; count < max; ++count) {
+    cauthors.append(", ");
+    cauthors.append(c.author(count));
+  }
 
   int authorWidth = 175;
   int margin = 5;

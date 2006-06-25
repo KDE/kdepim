@@ -17,6 +17,9 @@
  */
 
 #include <QRegExp>
+#include <QDate>
+#include <QTime>
+#include <QDateTime>
 
 #include "dummykonadimessage.h"
 
@@ -46,4 +49,12 @@ void DummyKonadiMessage::setContent(QString content)
 bool DummyKonadiMessage::isNull()
 {
   return nullContent;
+}
+
+QString DummyKonadiMessage::arrivalTimeInText() const
+{
+  QString ctime = arrival.date().toString();
+  ctime.append(" ");
+  ctime.append(arrival.time().toString());
+  return ctime;
 }

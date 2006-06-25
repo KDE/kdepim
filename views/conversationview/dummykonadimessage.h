@@ -31,6 +31,7 @@ public:
   QString content() const;
   QDateTime sendTime() const { return send; }
   QDateTime arrivalTime() const { return arrival; }
+  QString arrivalTimeInText() const;
   void setAuthor(QString newAuthor);
   void setContent(QString newContent);
   void setArrivalTime(QDateTime dateTime) { arrival = dateTime; }

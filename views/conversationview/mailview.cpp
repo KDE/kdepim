@@ -60,29 +60,33 @@ void MailView::updateHeight()
  **/
 void MailView::setConversation(const QModelIndex &index)
 {
-	setHtml("");
-	int conversationId = index.row();
-	int max = backend->messageCount(conversationId)-1;
-        QString tmp = "<H2><A NAME=top>";
-        tmp.append(backend->conversationTitle(conversationId));
-        tmp.append("</A></H2><HR>");
-        append(tmp);
-	for (int count = 0; count < max; ++count) {
-                tmp = "<A NAME=";
-                tmp.append(count);
-                tmp.append("><B>");
-                tmp.append(backend->messageAuthor(conversationId, count));
-                tmp.append("</B></A><BR>");
-                tmp.append(backend->messageContent(conversationId, count));
+  setHtml("");
+  int conversationId = index.row();
+  int max = backend->messageCount(conversationId)-1;
+  QString tmp = "<H2><A NAME=top>";
+  tmp.append(backend->conversationTitle(conversationId));
+  tmp.append("</A></H2><HR>");
+  append(tmp);
+  for (int count = 0; count < max; ++count) {
+    tmp = "<A NAME=";
+    tmp.append(count);
+    tmp.append("><B>");
+    tmp.append(backend->messageAuthor(conversationId, count));
+    tmp.append("</B></A>, ");
+    tmp.append(backend->messageArrivalTimeInText(conversationId, count));
+    tmp.append("<BR>");
+    tmp.append(backend->messageContent(conversationId, count));
 //                tmp.append("<HR>");
-                append(tmp);
-	}
-        tmp = "<A NAME=";
-        tmp.append(max);
-        tmp.append("><B>");
-        tmp.append(backend->messageAuthor(conversationId, max));
-        tmp.append("</B></A><BR>");
-        tmp.append(backend->messageContent(conversationId, max));
-        append(tmp);
-        scrollToAnchor("top");
+    append(tmp);
+  }
+  tmp = "<A NAME=";
+  tmp.append(max);
+  tmp.append("><B>");
+  tmp.append(backend->messageAuthor(conversationId, max));
+  tmp.append("</B></A>, ");
+  tmp.append(backend->messageArrivalTimeInText(conversationId, max));
+  tmp.append("<BR>");
+  tmp.append(backend->messageContent(conversationId, max));
+  append(tmp);
+  scrollToAnchor("top");
 }

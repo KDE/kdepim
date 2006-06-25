@@ -221,6 +221,11 @@ QDateTime DummyKonadiAdapter::messageArrivalTime(int conversationId, int message
   return conversations.at(conversationId)->arrivalTime(messageId);
 }
 
+QString DummyKonadiAdapter::messageArrivalTimeInText(int conversationId, int messageId) const
+{
+  return conversations.at(conversationId)->arrivalTimeInText(messageId);
+}
+
 QDateTime DummyKonadiAdapter::conversationSendTime(int conversationId) const
 {
   return conversations.at(conversationId)->sendTime();
@@ -229,4 +234,9 @@ QDateTime DummyKonadiAdapter::conversationSendTime(int conversationId) const
 QDateTime DummyKonadiAdapter::conversationArrivalTime(int conversationId) const
 {
   return conversations.at(conversationId)->arrivalTime();
+}
+
+QString DummyKonadiAdapter::conversationArrivalTimeInText(int conversationId) const
+{
+  return conversations.at(conversationId)->arrivalTimeInText();
 }

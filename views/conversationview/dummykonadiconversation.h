@@ -32,12 +32,14 @@ public:
   int count() const;
   QString conversationTitle() const;
   QDateTime arrivalTime() const;
+  QString arrivalTimeInText() const;
   QDateTime sendTime() const;
   DummyKonadiMessage message(int messageId) const;
   void addMessage(DummyKonadiMessage &message);
   QString author(int messageId) const;
   QString content(int messageId) const;
   QDateTime arrivalTime(int messageId) const;
+  QString arrivalTimeInText(int messageId) const;
   QDateTime sendTime(int messageId) const;
 
 //public signals:

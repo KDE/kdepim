@@ -34,11 +34,13 @@ public:
   QString conversationTitle(int conversationId) const;
   QDateTime conversationSendTime(int conversationId) const;
   QDateTime conversationArrivalTime(int conversationId) const;
+  QString conversationArrivalTimeInText(int conversationId) const;
   DummyKonadiConversation conversation(int conversationId) const;
   QString messageContent(int conversationId, int messageId) const;
   QString messageAuthor(int conversationId, int messageId) const;
   QDateTime messageSendTime(int conversationId, int messageId) const;
   QDateTime messageArrivalTime(int conversationId, int messageId) const;
+  QString messageArrivalTimeInText(int conversationId, int messageId) const;
   int messageCount(int conversationId) const;
 
 private:
