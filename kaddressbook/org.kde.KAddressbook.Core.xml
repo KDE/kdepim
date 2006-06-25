@@ -1,0 +1,27 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.kde.KAddressbook.Core">
+    <method name="addEmail">
+      <arg name="addr" type="s" direction="in"/>
+    </method>
+    <method name="importVCard">
+      <arg name="vCardURL" type="s" direction="in"/>
+    </method>
+    <method name="showContactEditor">
+      <arg name="uid" type="s" direction="in"/>
+    </method>
+    <method name="newContact">
+    </method>
+    <method name="getNameByPhone">
+      <arg type="s" direction="out"/>
+      <arg name="phone" type="s" direction="in"/>
+    </method>
+    <method name="save">
+    </method>
+    <method name="exit">
+    </method>
+    <method name="handleCommandLine">
+      <arg type="b" direction="out"/>
+    </method>
+  </interface>
+</node>
