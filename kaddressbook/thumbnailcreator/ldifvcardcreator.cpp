@@ -101,7 +101,7 @@ bool VCard_LDIFCreator::readContents( const QString &path )
        addr = addrList[no];
        info = addr.formattedName().simplified();
        if (info.isEmpty())
-          info = addr.givenName() + " " + addr.familyName();
+          info = addr.givenName() + ' ' + addr.familyName();
        info = info.simplified();
        if (info.isEmpty())
          continue;
@@ -118,7 +118,7 @@ bool VCard_LDIFCreator::readContents( const QString &path )
   // prepare the text
   name = addr.formattedName().simplified();
   if ( name.isEmpty() )
-    name = addr.givenName() + " " + addr.familyName();
+    name = addr.givenName() + ' ' + addr.familyName();
   name = name.simplified();
 
 
@@ -130,11 +130,11 @@ bool VCard_LDIFCreator::readContents( const QString &path )
       phoneNumbers.append(pn);
   }
   if ( !phoneNumbers.isEmpty() )
-      text += phoneNumbers.join("\n") + "\n";
+      text += phoneNumbers.join("\n") + '\n';
 
   info = addr.organization().simplified();
   if ( !info.isEmpty() )
-    text += info + "\n";
+    text += info + '\n';
 
   // get an address
   KABC::Address address = addr.address(KABC::Address::Work);
@@ -144,7 +144,7 @@ bool VCard_LDIFCreator::readContents( const QString &path )
     address = addr.address(KABC::Address::Pref);
   info = address.formattedAddress();
   if ( !info.isEmpty() )
-    text += info + "\n";
+    text += info + '\n';
 
   return true;
 }
@@ -152,7 +152,7 @@ bool VCard_LDIFCreator::readContents( const QString &path )
 
 bool VCard_LDIFCreator::createImageSmall()
 {
-  text = name + "\n" + text;
+  text = name + '\n' + text;
 
   if ( !mSplitter ) {
     mSplitter = new KPixmapSplitter;

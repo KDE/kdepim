@@ -308,7 +308,7 @@ void CardViewItem::paintCard( QPainter *p, const QPalette &pal )
 
     if ( drawLabels ) {
       label = trimString( (*iter)->first, labelWidth, fm );
-      p->drawText( labelXPos, yPos, label + ":" );
+      p->drawText( labelXPos, yPos, label + ':' );
     }
 
     for ( cln = 0; cln <= maxLines; cln++ ) {

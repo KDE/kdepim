@@ -39,7 +39,7 @@ static QString uniqueFileName( const KABC::Addressee &addressee, QStringList &ex
 
   uint number = 0;
   do {
-    name = addressee.givenName() + "_" + addressee.familyName() + uniquePart + ".vcf";
+    name = addressee.givenName() + '_' + addressee.familyName() + uniquePart + ".vcf";
     name.replace( ' ', '_' );
     name.replace( '/', '_' );
 
@@ -73,7 +73,7 @@ void KABTools::mailVCards( const QStringList &uids, KABC::AddressBook *ab )
 
     QString fileName = uniqueFileName( addressee, existingFiles );
 
-    QString path = tempDir.name() + "/" + fileName;
+    QString path = tempDir.name() + '/ + fileName;
 
     QFile file( path );
 

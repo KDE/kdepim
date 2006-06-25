@@ -79,7 +79,7 @@ void IMAddressLVI::paintCell( QPainter *p, const QColorGroup &cg,
 
 void IMAddressLVI::setAddress( const QString &address )
 {
-  // irc uses 0xE120 to seperate the nick and the server group.
+  // irc uses 0xE120 to separate the nick and the server group.
   QString serverOrGroup = address.section( QChar( 0xE120 ), 1 );
 
   if ( serverOrGroup.isEmpty() )

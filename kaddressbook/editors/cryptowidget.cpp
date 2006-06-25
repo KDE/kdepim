@@ -161,7 +161,7 @@ void CryptoWidget::loadContact( KABC::Addressee *addr )
   mCryptPref->setCurrentIndex( Kleo::stringToEncryptionPreference( addr->custom( "KADDRESSBOOK",
                                                                                 "CRYPTOENCRYPTPREF" ) ) );
 
-  // We dont use the contents of addr->key(...) because we want just a ref.
+  // We don't use the contents of addr->key(...) because we want just a ref.
   // to the key/cert. stored elsewhere.
 
   mPgpKey->setFingerprints( addr->custom( "KADDRESSBOOK", "OPENPGPFP" ).split( ",", QString::SkipEmptyParts ) );

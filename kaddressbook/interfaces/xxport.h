@@ -61,7 +61,7 @@ class KApplication;
  */
 #define K_EXPORT_KADDRESSBOOK_XXFILTER( libname, XXPortClass ) \
 	K_EXPORT_KADDRESSBOOK_XXFILTER_CATALOG( libname, XXPortClass, NULL )
-	
+
 
 namespace KAB {
 
@@ -74,7 +74,7 @@ class KDE_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
     ~XXPort();
 
     /**
-      Returns the unique identifier of this xxport modul, it should
+      Returns the unique identifier of this xxport module, it should
       be the lowercase name of the import/export format e.g. 'vcard'
      */
     virtual QString identifier() const = 0;

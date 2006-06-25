@@ -101,7 +101,7 @@ class KDE_EXPORT KAddressBookView : public QWidget
 
     /**
       Returns a QString with all the selected email addresses concatenated
-      together with a ',' seperator.
+      together with a ',' separator.
      */
     virtual QString selectedEmails();
 

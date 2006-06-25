@@ -116,7 +116,7 @@ class AddresseeIconViewItem : public K3IconViewItem
       mAddressee = mDocument->findByUid( mAddressee.uid() );
 
       if ( !mAddressee.isEmpty() )
-        setText( mAddressee.givenName() + " " + mAddressee.familyName() );
+        setText( mAddressee.givenName() + ' ' + mAddressee.familyName() );
 
       QPixmap icon;
       QPixmap defaultIcon( KGlobal::iconLoader()->loadIcon( "vcard", K3Icon::Desktop ) );

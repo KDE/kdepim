@@ -196,9 +196,9 @@ class CardViewItem
   caption.
 
   The CardView class is designed to mirror the API of the QListView or
-  QIconView. The CardView is also completely independant of KAddressBook and
+  QIconView. The CardView is also completely independent of KAddressBook and
   can be used elsewhere. With the exception of a few simple config checks,
-  the CardView is also 100% independant of KDE.
+  the CardView is also 100% independent of KDE.
  */
 class CardView : public Q3ScrollView
 {

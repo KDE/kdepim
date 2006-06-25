@@ -161,7 +161,7 @@ void FieldWidget::addField( const QString &identifier, const QString &title,
 
   record.mIdentifier = identifier;
   record.mTitle = title;
-  record.mLabel = new QLabel( title + ":", this );
+  record.mLabel = new QLabel( title + ':', this );
   record.mGlobal = isGlobal;
   if ( type == "integer" ) {
     QSpinBox *wdg = new QSpinBox( this );

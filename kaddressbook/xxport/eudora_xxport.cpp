@@ -188,7 +188,7 @@ QString EudoraXXPort::comment( const QString& line ) const
 
 QString EudoraXXPort::get( const QString& line, const QString& key ) const
 {
-  QString fd = "<" + key + ":";
+  QString fd = '<' + key + ':';
   int b, e;
 
   // Find formatted key, return on error

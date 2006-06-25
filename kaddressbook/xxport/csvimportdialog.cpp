@@ -245,7 +245,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
           a.setOrganization( value );
           break;
         case Note:
-          a.setNote( a.note() + value + "\n" );
+          a.setNote( a.note() + value + '\n' );
           break;
 
         case HomePhone:

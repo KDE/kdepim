@@ -123,7 +123,7 @@ void ViewConfigureFieldsPage::slotShowFields( int index )
 void ViewConfigureFieldsPage::slotSelect()
 {
   // insert selected items in the unselected list to the selected list,
-  // directoy under the current item if selected, or at the bottonm if
+  // directory under the current item if selected, or at the bottonm if
   // nothing is selected in the selected list
   int where = mSelectedBox->currentItem();
   if ( !(where > -1 && mSelectedBox->item( where )->isSelected()) )

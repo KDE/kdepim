@@ -77,7 +77,7 @@ KABC::Addressee::List XXPort::importContacts( const QString& ) const
 
 void XXPort::createImportAction( const QString &label, const QString &data )
 {
-  QString id = "file_import_" + identifier() + ( data.isEmpty() ? QString( "" ) : "_" + data );
+  QString id = "file_import_" + identifier() + ( data.isEmpty() ? QString( "" ) : '_' + data );
   KAction *action = new KAction( label, actionCollection(), id.toLatin1() );
   connect(action, SIGNAL(triggered(bool) ), d->mImportMapper, SLOT( map() ));
 
@@ -88,7 +88,7 @@ void XXPort::createImportAction( const QString &label, const QString &data )
 
 void XXPort::createExportAction( const QString &label, const QString &data )
 {
-  QString id = "file_export_" + identifier() + ( data.isEmpty() ? QString( "" ) : "_" + data );
+  QString id = "file_export_" + identifier() + ( data.isEmpty() ? QString( "" ) : '_' + data );
   KAction *action = new KAction( label, actionCollection(), id.toLatin1() );
   connect(action, SIGNAL(triggered(bool) ), d->mExportMapper, SLOT( map() ));
 

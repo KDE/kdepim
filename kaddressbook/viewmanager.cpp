@@ -481,11 +481,11 @@ void ViewManager::startDrag()
   if ( tempDir.status() == 0 ) {
     QString fileName;
     if ( addrList.count() == 1 )
-      fileName = addrList[ 0 ].givenName() + "_" + addrList[ 0 ].familyName() + ".vcf";
+      fileName = addrList[ 0 ].givenName() + '_' + addrList[ 0 ].familyName() + ".vcf";
     else
       fileName = "contacts.vcf";
 
-    QFile tempFile( tempDir.name() + "/" + fileName );
+    QFile tempFile( tempDir.name() + '/' + fileName );
     if ( tempFile.open( QIODevice::WriteOnly ) ) {
       tempFile.write( vcards );
       tempFile.close();

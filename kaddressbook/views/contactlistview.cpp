@@ -127,7 +127,7 @@ void DynamicTip::maybeTip( const QPoint &pos )
         }
 
       if ( notes[i] == '\n' || doBreak ) {
-        s += notes.mid( a, i - a + (doBreak?1:0) ) +"\n";
+        s += notes.mid( a, i - a + (doBreak?1:0) ) +'\n';
 
         a = i + 1;
         lastSpace = a;

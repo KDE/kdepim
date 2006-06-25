@@ -261,7 +261,7 @@ QString NameEditDialog::formattedName( const KABC::Addressee &addr, int type )
 
   switch ( type ) {
     case SimpleName:
-      name = addr.givenName() + " " + addr.familyName();
+      name = addr.givenName() + ' ' + addr.familyName();
       break;
     case FullName:
       name = addr.assembledName();
@@ -270,7 +270,7 @@ QString NameEditDialog::formattedName( const KABC::Addressee &addr, int type )
       name = addr.familyName() + ", " + addr.givenName();
       break;
     case ReverseName:
-      name = addr.familyName() + " " + addr.givenName();
+      name = addr.familyName() + ' ' + addr.givenName();
       break;
     case Organization:
       name = addr.organization();

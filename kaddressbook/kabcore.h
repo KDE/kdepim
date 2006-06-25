@@ -201,7 +201,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     void deleteContacts( const QStringList &uids );
 
     /**
-      Copys the selected contacts into clipboard for later pasting.
+      Copies the selected contacts into clipboard for later pasting.
      */
     void copyContacts();
 
@@ -315,7 +315,7 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     /**
      * Let the user chose a different resource for the selected contacts.
-     * If the adding to the new resource is successfull, the contact is
+     * If the adding to the new resource is successful, the contact is
      * removed from the old one. */
     void storeContactIn( const QString &uid = QString() );
 

@@ -336,7 +336,7 @@ QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr,
   QString result( "&(|(objectclass=person)(objectclass=groupofnames)(mail=*))(" );
   if( query.isEmpty() )
     // Return a filter that matches everything
-    return result + "|(cn=*)(sn=*)" + ")";
+    return result + "|(cn=*)(sn=*)" + ')';
 
   if ( attr == i18n( "Name" ) ) {
     result += startsWith ? "|(cn=%1*)(sn=%2*)" : "|(cn=*%1*)(sn=*%2*)";
@@ -355,7 +355,7 @@ QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr,
       return result;
     }
   }
-  result += ")";
+  result += ')';
   return result;
 }
 
@@ -377,7 +377,7 @@ void LDAPSearchDialog::slotStartSearch()
 
    // loop in the list and run the KPIM::LdapClients
   mResultListView->clear();
-  Q_FOREACH( KPIM::LdapClient* client , mLdapClientList ) 
+  Q_FOREACH( KPIM::LdapClient* client , mLdapClientList )
     client->startQuery( filter );
 
   saveSettings();
@@ -434,7 +434,7 @@ QString LDAPSearchDialog::selectedEMails() const
         if ( name.isEmpty() ) {
           result << email;
         } else {
-          result << name + " <" + email + ">";
+          result << name + " <" + email + '>';
         }
       }
     }

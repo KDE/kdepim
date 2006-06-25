@@ -51,7 +51,7 @@ bool BookmarkXXPort::exportContacts( const KABC::AddresseeList &list, const QStr
   emit newFolder( i18n( "AddressBook" ), false, "" );
   for ( it = list.begin(); it != list.end(); ++it ) {
     if ( !(*it).url().isEmpty() ) {
-      QString name = (*it).givenName() + " " + (*it).familyName();
+      QString name = (*it).givenName() + ' ' + (*it).familyName();
       emit newBookmark( name, (*it).url().url().toLatin1(), QString( "" ) );
     }
   }

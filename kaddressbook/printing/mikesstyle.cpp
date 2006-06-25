@@ -171,7 +171,7 @@ void MikesStyle::doPaint( QPainter &painter, const KABC::Addressee &addr,
     value = trimString( fields[ i ]->value( addr ), (width - 10) / 4, fm );
 
     yPos += fm.height();
-    painter.drawText( xPos, yPos, label + ":" );
+    painter.drawText( xPos, yPos, label + ':' );
 
     xPos += (width - (2 * margin)) / 4;
     painter.drawText( xPos, yPos, value );
@@ -187,7 +187,7 @@ void MikesStyle::doPaint( QPainter &painter, const KABC::Addressee &addr,
     value = value = trimString( fields[ i ]->value( addr ), (width - 10) / 4, fm );
 
     yPos += fm.height();
-    painter.drawText( xPos, yPos, label + ":" );
+    painter.drawText( xPos, yPos, label + ':' );
 
     xPos += (width - (2 * margin)) / 4;
     painter.drawText( xPos, yPos, value );

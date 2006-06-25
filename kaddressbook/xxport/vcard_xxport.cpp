@@ -114,7 +114,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
   if ( list.isEmpty() ) {
     return ok;
   } else if ( list.count() == 1 ) {
-    url = KFileDialog::getSaveURL( list[ 0 ].givenName() + "_" + list[ 0 ].familyName() + ".vcf" );
+    url = KFileDialog::getSaveURL( list[ 0 ].givenName() + '_' + list[ 0 ].familyName() + ".vcf" );
     if ( url.isEmpty() )
       return true;
 
@@ -134,7 +134,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
 
         KABC::AddresseeList::ConstIterator it;
         for ( it = list.begin(); it != list.end(); ++it ) {
-          url = baseUrl.url() + "/" + (*it).givenName() + "_" + (*it).familyName() + ".vcf";
+          url = baseUrl.url() + '/' + (*it).givenName() + '_' + (*it).familyName() + ".vcf";
 
           bool tmpOk;
           KABC::AddresseeList tmpList;
@@ -202,7 +202,7 @@ KABC::Addressee::List VCardXXPort::importContacts( const QString& ) const
           KIO::NetAccess::removeTempFile( fileName );
         } else {
           QString text = i18n( "<qt>When trying to read the vCard, there was an error opening the file '%1': %2</qt>",
-                               (*it).url(), 
+                               (*it).url(),
                                i18nc( "QFile", file.errorString().toLatin1() ) );
           KMessageBox::error( parentWidget(), text, caption );
           anyFailures = true;

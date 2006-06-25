@@ -398,7 +398,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 			break;
 		   case GN_PHONEBOOK_ENTRY_Note:
 			if (!a->note().isEmpty())
-				s = "\n" + s;
+				s = '\n' + s;
 			a->setNote(a->note()+s);
 			break;
 		   case GN_PHONEBOOK_ENTRY_Number:
@@ -468,7 +468,7 @@ KABC::Addressee::List GNOKIIXXPort::importContacts( const QString& ) const
                      "KAddressbook will behave unresponsively.</qt>") ))
 	  return addrList;
 
-	m_progressDlg = new KProgressDialog( parentWidget(), 
+	m_progressDlg = new KProgressDialog( parentWidget(),
 		i18n("Mobile Phone Import"),
 		i18n("<qt><center>Establishing connection to the Mobile Phone.<br><br>"
 		     "Please wait...</center></qt>") );
@@ -857,7 +857,7 @@ try_next_phone_entry:
 		if (!deleteLabelInitialized) {
 			m_progressDlg->setLabel(
 				i18n("<qt><center>"
-				     "All selected contacts have been sucessfully copied to "
+				     "All selected contacts have been successfully copied to "
 				     "the Mobile Phone.<br><br>"
 				     "Please wait until all remaining orphaned contacts from "
 				     "the Mobile Phone have been deleted.</center></qt>") );

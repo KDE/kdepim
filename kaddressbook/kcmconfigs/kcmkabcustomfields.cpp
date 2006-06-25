@@ -74,6 +74,6 @@ QString KCMKabCustomFields::kabLocalDir()
 {
   QStringList kabdirs;
   kabdirs << locateLocal("data", "kaddressbook/");
-  return kabdirs.filter( QRegExp( "^"+KGlobal::dirs()->localkdedir() ) ).first();
+  return kabdirs.filter( QRegExp( '^'+KGlobal::dirs()->localkdedir() ) ).first();
 }
 
