@@ -121,7 +121,7 @@ void CreateDisconnectedImapAccount::setCustomWriter(
 
 void CreateDisconnectedImapAccount::apply()
 {
-  if ( mEmail.isEmpty() ) mEmail = mUser + "@" + mServer;
+  if ( mEmail.isEmpty() ) mEmail = mUser + '@' + mServer;
 
   KConfig c( "kmailrc" );
   c.setGroup( "General" );
@@ -217,7 +217,7 @@ void CreateDisconnectedImapAccount::apply()
       int i = 2;
       // And if there's already one, number them
       while ( identities.contains( accountName )  ) {
-        accountName = mServer + " " + QString::number( i++ );
+        accountName = mServer + ' ' + QString::number( i++ );
       }
     }
 

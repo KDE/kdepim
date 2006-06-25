@@ -45,7 +45,7 @@ QString serverUrl()
   QString url;
   if ( GroupwiseConfig::self()->useHttps() ) url = "https";
   else url = "http";
-  url += "://" + GroupwiseConfig::self()->host() + ":" +
+  url += "://" + GroupwiseConfig::self()->host() + ':' +
     QString::number( GroupwiseConfig::self()->port() ) + GroupwiseConfig::self()->path();
   return url;
 }
@@ -408,7 +408,7 @@ void GroupwiseWizard::slotAboutToShowPage( QWidget *page )
       int pos = host.lastIndexOf( "." );
       if ( pos > 0 ) pos = host.lastIndexOf( ".", pos - 1 );
       if ( pos > 0 ) host = host.mid( pos + 1 );
-      QString email = GroupwiseConfig::user() + "@" + host;
+      QString email = GroupwiseConfig::user() + '@' + host;
       mEmailEdit->setText( email );
     }
   }

@@ -50,7 +50,7 @@ static QString createURL( const QString &server, bool useSSL, const QString &loc
     url.setProtocol( "http" );
 
   url.setHost( server );
-  url.setPath( "/" + location );
+  url.setPath( '/' + location );
 
   return url.url();
 }

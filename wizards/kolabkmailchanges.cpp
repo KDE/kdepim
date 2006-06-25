@@ -117,7 +117,7 @@ void createKMailChanges( KConfigPropagator::Change::List& changes )
     email = user;
   else
     // Construct the email address. And use it for the username also
-    user = email = user+"@"+KolabConfig::self()->server();
+    user = email = user+'@'+KolabConfig::self()->server();
 
 
   account->setServer( server );
