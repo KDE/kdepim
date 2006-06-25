@@ -17,7 +17,7 @@
  */
 
 #include <QApplication>
-//#include <QSplitter>
+#include <QSplitter>
 #include <QListView>
 #include <QItemSelectionModel>
 #include <QObject>
@@ -27,16 +27,17 @@
 
 #include "foldermodel.h"
 #include "conversationdelegate.h"
-// #include "mydisplaywidget.h"
+#include "mailview.h"
 
 int main(int argc, char *argv[])
 {
   QApplication app(argc, argv);
-//	QSplitter *splitter = new QSplitter;
+	QSplitter *splitter = new QSplitter;
 
   DummyKonadiAdapter data;
 
   QAbstractItemModel *model = new FolderModel(data);
+	MailView *mail = new MailView(&data);
 
   QListView *conversationList = new QListView;
   conversationList->setModel(model);
@@ -52,23 +53,23 @@ int main(int argc, char *argv[])
   QItemSelectionModel *selection = new QItemSelectionModel(model);
   conversationList->setSelectionModel(selection);
 
-//   QObject::connect(conversationList, SIGNAL(clicked(const QModelIndex&)),
-//                    conversationDisplay, SLOT(setConversation(const QModelIndex)));
-//   QObject::connect(conversationList, SIGNAL(activated(const QModelIndex&)),
-//                    conversationDisplay, SLOT(setConversation(const QModelIndex)));
+   QObject::connect(conversationList, SIGNAL(clicked(const QModelIndex&)),
+                    mail, SLOT(setConversation(const QModelIndex)));
+   QObject::connect(conversationList, SIGNAL(activated(const QModelIndex&)),
+                    mail, SLOT(setConversation(const QModelIndex)));
+  QObject::connect(mail, SIGNAL(textChanged()), mail, SLOT(updateHeight()));
 
-/*  splitter->setWindowTitle("Conversations for KMail");
+
+  splitter->setWindowTitle("Conversations for KMail");
   splitter->addWidget(conversationList);
-  splitter->addWidget(conversationDisplay);
+  splitter->addWidget(mail);
   splitter->setStretchFactor(0, 0);
   splitter->setStretchFactor(1, 1);
   QList<int> sizes;
-  sizes << 275 << 650;
+  sizes << 500 << 300;
   splitter->setSizes(sizes);
 
-  splitter->show();*/
-  conversationList->setMinimumWidth(500);
-  conversationList->show();
+  splitter->show();
   return app.exec();
 }
 
