@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#include <QRegExp>
+
 #include "dummykonadimessage.h"
 
 QString DummyKonadiMessage::author() const
@@ -37,6 +39,7 @@ void DummyKonadiMessage::setAuthor(QString author)
 
 void DummyKonadiMessage::setContent(QString content)
 {
+  content.replace(QRegExp("\n"), "<br>");
   conversationContent = content;
 }
 

@@ -23,7 +23,6 @@
 #include <QTextLength>
 #include <QtDebug>
 #include <QTextDocument>
-#include <iostream>
 
 #include "mailview.h"
 
@@ -41,19 +40,25 @@ int MailView::getNeededHeight() const
 
 void MailView::updateHeight()
 {
-	qDebug() << "Setting: " << getNeededHeight();
 	setMinimumHeight(getNeededHeight());
 }
 
-void MailView::setConversations(const QModelIndex index)
+void MailView::setConversation(const QModelIndex &index)
 {
-	std::cout << "a";
 	setHtml("");
-	qDebug() << "Here!";
 	int conversationId = index.row();
-	int max = backend->messageCount(conversationId);
+	int max = backend->messageCount(conversationId)-1;
 	for (int count = 0; count < max; ++count) {
-		append(backend->messageContent(conversationId, count));
-		append("<HR>");
+                QString tmp = "<B>";
+                tmp.append(backend->messageAuthor(conversationId, count));
+                tmp.append("</B><BR>");
+                tmp.append(backend->messageContent(conversationId, count));
+                tmp.append("</HR>");
+                append(tmp);
 	}
+        QString tmp = "<B>";
+        tmp.append(backend->messageAuthor(conversationId, max));
+        tmp.append("</B><BR>");
+        tmp.append(backend->messageContent(conversationId, max));
+        append(tmp);
 }

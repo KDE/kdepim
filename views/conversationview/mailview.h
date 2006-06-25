@@ -36,7 +36,7 @@ public:
 
 public slots:
 	void updateHeight();
-	void setConversations(const QModelIndex index);
+	void setConversation(const QModelIndex &index);
 
 private:
 	DummyKonadiAdapter *backend;

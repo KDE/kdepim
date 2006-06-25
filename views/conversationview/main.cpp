@@ -66,9 +66,10 @@ int main(int argc, char *argv[])
   splitter->setStretchFactor(0, 0);
   splitter->setStretchFactor(1, 1);
   QList<int> sizes;
-  sizes << 500 << 300;
+  sizes << 510 << 300;
   splitter->setSizes(sizes);
 
+  splitter->setMinimumWidth(900);
   splitter->show();
   return app.exec();
 }
