@@ -151,7 +151,7 @@ DummyKonadiAdapter::DummyKonadiAdapter()
     msg->setArrivalTime(QDateTime(QDate(2006, 6, 25), QTime(23, 7)));
     five->addMessage(*msg);
   conversations << one << two << three << four << five;
-  sort();
+//  sort();
 }
 
 DummyKonadiAdapter::~DummyKonadiAdapter()
@@ -162,13 +162,13 @@ DummyKonadiAdapter::~DummyKonadiAdapter()
   }
 }
 
-void DummyKonadiAdapter::sort(bool descending)
+/*void DummyKonadiAdapter::sort(bool descending)
 {
   if (descending)
     qSort(conversations.begin(), conversations.end(), qGreater<DummyKonadiConversation*>());
   else
     qSort(conversations);
-}
+}*/
 
 int DummyKonadiAdapter::conversationCount() const
 {

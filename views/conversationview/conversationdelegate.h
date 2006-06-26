@@ -27,6 +27,7 @@
 #include <QModelIndex>
 #include <QSize>
 #include <QStringList>
+#include <QSortFilterProxyModel>
 
 #include "foldermodel.h"
 
@@ -34,7 +35,7 @@ class ConversationDelegate : public QAbstractItemDelegate
 {
   Q_OBJECT
 public:
-  ConversationDelegate(FolderModel *folderModel, QStringList &me, QObject *parent = 0);
+  ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QStringList &me, QObject *parent = 0);
   ~ConversationDelegate();
 
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -44,7 +45,8 @@ public slots:
   void updateWidth(int pos, int nouse = 0);
 
 private:
-  FolderModel *model;
+  QSortFilterProxyModel *pmodel;
+  FolderModel *fmodel;
   int lineWidth, authorBaseWidth, margin;
   QStringList listOfMe;
 };

@@ -29,10 +29,12 @@
 #include <QRegExp>
 
 #include "conversationdelegate.h"
+#include "dummykonadiconversation.h"
 
-ConversationDelegate::ConversationDelegate(FolderModel *folderModel, QStringList &me, QObject *parent) : QAbstractItemDelegate(parent)
+ConversationDelegate::ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QStringList &me, QObject *parent) : QAbstractItemDelegate(parent)
 {
-  model = folderModel;
+  fmodel = folderModel;
+  pmodel = proxyModel;
   listOfMe = me;
   lineWidth = 510;
   authorBaseWidth = 175;
@@ -63,7 +65,7 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     painter->setPen(Qt::black);
   }
   painter->setFont(option.font);
-  DummyKonadiConversation *c = model->conversation(index.row());
+  DummyKonadiConversation *c = fmodel->conversation(pmodel->mapToSource(index).row());
   QString ctitle = c->conversationTitle();
   QString ctime = c->arrivalTimeInText();
   QString cauthors = c->author(0);

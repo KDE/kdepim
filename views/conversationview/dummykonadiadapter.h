@@ -49,7 +49,7 @@ public:
   bool unreadStatusOfConversation(int index) const;
   QString dateTimeOfConversationInText(int index) const;
   int messageCount(int conversationId) const;
-  void sort(bool descending = true);
+  //void sort(bool descending = true);
 
 
 private:

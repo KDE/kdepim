@@ -45,6 +45,7 @@ QVariant FolderModel::data(const QModelIndex &index, int role) const
       case 3: return backend->nbrOfMessagesInConversation(index.row()); break;
       case 4: return backend->dateTimeOfConversation(index.row()); break;
       case 5: return backend->unreadStatusOfConversation(index.row()); break;
+      case 6: return backend->dateTimeOfConversationInText(index.row()); break;
       default: return QVariant();
     }
   } else

@@ -25,6 +25,7 @@
 #include <QScrollArea>
 #include <QAbstractItemDelegate>
 #include <QStringList>
+#include <QSortFilterProxyModel>
 
 #include "foldermodel.h"
 #include "conversationdelegate.h"
@@ -38,20 +39,24 @@ int main(int argc, char *argv[])
   DummyKonadiAdapter *data = new DummyKonadiAdapter;
 
   FolderModel *model = new FolderModel(data);
+  QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel;
+  proxyModel->setSourceModel(model);
+  proxyModel->sort(4, Qt::AscendingOrder);
+
   MailView *mail = new MailView(model);
 
   QListView *conversationList = new QListView;
-  conversationList->setModel(model);
+  conversationList->setModel(proxyModel);
   conversationList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
   QStringList me;
   me << "Aron Bostrom" << "Hrafnahnef" << "Syllten";
-  ConversationDelegate *delegate = new ConversationDelegate(model, me);
+  ConversationDelegate *delegate = new ConversationDelegate(model, proxyModel, me);
   conversationList->setItemDelegate(delegate);
   conversationList->setUniformItemSizes(true);
 
-  QItemSelectionModel *selection = new QItemSelectionModel(model);
-  conversationList->setSelectionModel(selection);
+//  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
+//  conversationList->setSelectionModel(selection);
 
   QObject::connect(conversationList, SIGNAL(clicked(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(conversationList, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
