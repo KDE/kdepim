@@ -62,19 +62,28 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   QString ctitle = c.conversationTitle();
   QString ctime = c.arrivalTimeInText();
   QString cauthors = c.author(0);
-  int max = c.count();
-  for (int count = 1; count < max; ++count) {
+  int messageCount = c.count();
+  for (int count = 1; count < messageCount; ++count) {
     cauthors.append(", ");
     cauthors.append(c.author(count));
   }
 
-  int authorWidth = 175;
+  QString messageCountText = QString("(%L1)").arg(messageCount);
+  int messageCountWidth = option.fontMetrics.width(messageCountText);
+
   int margin = 5;
+  int authorBaseWidth = 175;
+  int authorWidth = authorBaseWidth - (messageCount > 1 ? messageCountWidth + margin : 0);
   int authorPos = margin;
   int linePos = index.row() * lineHeight;
   painter->drawText(authorPos, linePos, authorWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, cauthors);
 
-  int subjectPos = authorWidth + 2*margin;
+  if (messageCount > 1) {
+    int messageCountPos = 2*margin + authorWidth;
+    painter->drawText(messageCountPos, linePos, messageCountWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, messageCountText);
+  }
+
+  int subjectPos = authorBaseWidth + 2*margin;
   int timeWidth = option.fontMetrics.width(ctime);
   int subjectWidth = lineWidth - subjectPos - timeWidth - 2*margin;
   painter->drawText(subjectPos, linePos, subjectWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctitle);
