@@ -89,17 +89,15 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   int subjectWidth = lineWidth - subjectPos - timeWidth - 2*margin;
   painter->drawText(subjectPos, linePos, subjectWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctitle);
 
-  int timePos = lineWidth - margin - timeWidth;
+  int timePos = qMax(lineWidth - margin - timeWidth, authorBaseWidth + 2*margin);
+  timeWidth = qMax(lineWidth - (timePos + margin), 0);
   painter->drawText(timePos, linePos, timeWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctime);
 }
 
 QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
   int lineHeight = option.fontMetrics.height() + 2;
-  DummyKonadiConversation c = backend.conversation(index.row());
-  int timeWidth = option.fontMetrics.width(c.arrivalTimeInText());
-  int wantedLineWidth = qMin(authorBaseWidth + 2*margin + timeWidth, lineWidth);
-  return QSize(wantedLineWidth, lineHeight);
+  return QSize(0, lineHeight);
 }
 
 void ConversationDelegate::updateWidth(int pos, int /*nouse*/)
