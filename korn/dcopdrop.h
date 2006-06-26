@@ -27,9 +27,6 @@
 
 #include "maildrop.h"
 
-#include <dcopobject.h>
-
-class DCOPDropInterface;
 class KornMailSubject;
 
 class KConfigBase;
@@ -177,14 +174,13 @@ private:
 	QMap< int, KornMailSubject* > *_msgList;
 	QString *_name;
 	int _counter;
-	DCOPDropInterface *_interface;
 	
 	void eraseList( void );
 	
 private slots:
 	void doReadSubjectsASync( void );
 	
-public: //accessed by DCOPDropInterface
+public slots: //accessed by DCOPDropInterface
 	/**
 	 * This function append a message to the box.
 	 * This function is called from DCOPDropInterface.
@@ -204,6 +200,7 @@ public: //accessed by DCOPDropInterface
 	bool removeMessage( int id );
 	
 	//accessed by DCOPDropCfg
+public:
 	/**
 	 * This function returns the dcop name.
 	 * This function is accessed by DCOPDropCfg.

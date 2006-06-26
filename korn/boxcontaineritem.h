@@ -26,7 +26,6 @@
  */
 
 #include "accountmanager.h"
-#include <dcopobject.h>
 #include <QPixmap>
 
 class KornMailSubject;
@@ -49,9 +48,9 @@ template< class T > class QList;
  *
  * @author Mart Kelder <mart.kde@hccnet.nl>
  */
-class BoxContainerItem : public AccountManager, public DCOPObject
+class BoxContainerItem : public AccountManager
 { Q_OBJECT
-  K_DCOP
+  Q_CLASSINFO("D-Bus Interface", "org.kde.korn.BoxContainerItem");
 public:
 	/**
 	 * Standaard QObject-constuctor
@@ -197,8 +196,7 @@ private slots:
 	 * This slot calls showConfig()
 	 */
 	void slotConfigure() { showConfig(); }
-public:
-k_dcop:
+public slots:
 	/**
 	 * This call immediately checked all accounts of this box.
 	 */

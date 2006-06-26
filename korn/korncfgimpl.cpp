@@ -77,7 +77,9 @@ void KornCfgImpl::slotEditBox()
 		return; //No item selected
 	elbBoxes->setEnabled( false );
 	
-	_base = new KDialog( this, "Box Configuration", KDialog::Ok | KDialog::Cancel );
+	_base = new KDialog( this );
+	_base->setCaption( "Box Configuration" );
+	_base->setButtons( KDialog::Ok | KDialog::Cancel );
 	_base->setModal( false );
 	_base->enableButtonSeparator( true );
 	KornBoxCfgImpl *widget = new KornBoxCfgImpl( _base );

@@ -17,6 +17,7 @@
  */
 
 #include "boxcontaineritem.h"
+#include "boxcontaineritemadaptor.h"
 
 #include "mailsubject.h"
 
@@ -37,6 +38,8 @@
 #include <kstdaction.h>
 #include <ktoolinvocation.h>
 
+#include <dbus/qdbus.h>
+
 #include <QBitmap>
 #include <QColor>
 #include <QFont>
@@ -53,7 +56,6 @@
 
 BoxContainerItem::BoxContainerItem( QObject * parent )
 	: AccountManager( parent ),
-	DCOPObject(),
 	_command( new QString )
 {
 	short i;
@@ -75,6 +77,10 @@ BoxContainerItem::BoxContainerItem( QObject * parent )
 		_runSettings[ i ] = false;
 		_popupSettings[ i ] = false;
 	}
+
+	new BoxContainerItemAdaptor( this );
+#warning Put some useful DBus object path here
+	QDBus::sessionBus().registerObject( "/", this, QDBusConnection::ExportAdaptors );
 }
 
 BoxContainerItem::~BoxContainerItem()
@@ -155,7 +161,8 @@ void BoxContainerItem::readConfig( KConfig* config, const int index )
 	*_command = config->readEntry( "command", "" );
 	
 	//Sets the object ID for the DCOP-object
-	this->setObjId( config->readEntry( "name", "" ).toUtf8() );
+#warning Port me to DBus (using DBus object path instead?)
+//	this->setObjId( config->readEntry( "name", "" ).toUtf8() );
 	
 	//Read the settings of the reimplemented class.
 	//It is important to read this after the box-settings, because the
@@ -224,7 +231,8 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject
 	KPassivePopup *popup = new KPassivePopup( parent );
 	popup->setObjectName( "Passive popup" );
 		
-	KVBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( objId().data() ).arg( accountName )
+#warning Port objId() call to DBus!
+	KVBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( /*objId().data()*/"" ).arg( accountName )
 			.arg( total ), "", QPixmap(), 0 );
 	QWidget *mainglayout_wid = new QWidget( mainvlayout );
 	QGridLayout *mainglayout = new QGridLayout( mainglayout_wid );

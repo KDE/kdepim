@@ -17,12 +17,14 @@
  */
 
 #include "dcopdrop.h"
+#include "maildropadaptor.h"
 
-#include "dcopdropif.h"
 #include "mailsubject.h"
 
 #include <kconfigbase.h>
 #include <kdebug.h>
+
+#include <dbus/qdbus.h>
 
 #include <QDateTime>
 #include <QList>
@@ -35,15 +37,14 @@ DCOPDrop::DCOPDrop()
 	_isRunning( false ),
 	_msgList( new QMap< int, KornMailSubject* > ),
 	_name( new QString( "" ) ),
-	_counter( 1 ),
-	_interface( 0 )
+	_counter( 1 )
 {
+	new MailDropAdaptor( this );
 }
 
 DCOPDrop::~DCOPDrop()
 {
 	eraseList();
-	delete _interface;
 	delete _msgList;
 	delete _name;
 }
@@ -201,11 +202,13 @@ QString DCOPDrop::DCOPName() const
 
 void DCOPDrop::setDCOPName( const QString& name)
 {
+#warning Port me (using DBus object path?)
 	*_name = name;
-	if( _interface )
-		_interface->changeName( name );
-	else
-		_interface = new DCOPDropInterface( this, name.toUtf8() );
+//	if( _interface )
+//		_interface->changeName( name );
+//	else
+//		_interface = new DCOPDropInterface( this, name.toUtf8() );
+	QDBus::sessionBus().registerObject( '/' + name, this, QDBusConnection::ExportAdaptors );
 }
 
 #include "dcopdrop.moc"

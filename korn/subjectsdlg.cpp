@@ -61,9 +61,11 @@ int KornSubjectsDlg::SubjectListViewItem::compare( Q3ListViewItem* item, int col
 }
 
 KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
-   : KDialog( parent, i18n( "Messages" ), KDialog::Close ), _mailDrop( new QList< KMailDrop* > ), 
+   : KDialog( parent ), _mailDrop( new QList< KMailDrop* > ), 
  	_subjects(0), _delete(0), mailDlg(0), _canDeleteMaildrop( true )
 {
+	setCaption( i18n( "Messages" ) );
+	setButtons( KDialog::Close );
 	_loadSubjectsCanceled = false;
 	setModal( true );
 	enableButtonSeparator( true );

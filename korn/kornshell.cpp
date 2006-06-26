@@ -60,7 +60,9 @@ void KornShell::optionDlg()
 		return;
 	}
 	
-	_configDialog = new KDialog( (QWidget*)0, i18n( "Korn Configuration" ), KDialog::Ok | KDialog::Cancel | KDialog::Apply );
+	_configDialog = new KDialog( 0 );
+	_configDialog->setCaption( i18n( "Korn Configuration" ) );
+	_configDialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Apply );
 	_configDialog->setModal( false );
 	_configDialog->enableButtonSeparator( true );
 	

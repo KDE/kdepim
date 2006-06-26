@@ -82,7 +82,8 @@ void HVItem::slotShowPassivePopup( QList< KornMailSubject >* list, int total, bo
 
 void HVItem::slotShowPassivePopup( const QString& errorMessage, const QString& name )
 {
-	KPassivePopup::message( QString( "korn-%1-%2" ).arg( objId().constData() ).arg( name ), errorMessage, _label );
+#warning Port objId() usage!
+	KPassivePopup::message( QString( "korn-%1-%2" ).arg( /*objId().constData()*/"" ).arg( name ), errorMessage, _label );
 }
 	
 void HVItem::doPopup()
