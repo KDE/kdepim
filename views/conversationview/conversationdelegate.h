@@ -44,7 +44,7 @@ public slots:
 
 private:
   DummyKonadiAdapter backend;
-  int lineWidth;
+  int lineWidth, authorBaseWidth, margin;
 };
 
 #endif

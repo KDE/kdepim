@@ -25,6 +25,7 @@
 #include <QBrush>
 #include <QSize>
 #include <QDateTime>
+#include <QtDebug>
 
 #include "conversationdelegate.h"
 
@@ -32,6 +33,8 @@ ConversationDelegate::ConversationDelegate(DummyKonadiAdapter &adapter, QObject 
 {
   backend = adapter;
   lineWidth = 500;
+  authorBaseWidth = 175;
+  margin = 5;
 }
 
 ConversationDelegate::~ConversationDelegate()
@@ -71,8 +74,6 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   QString messageCountText = QString("(%L1)").arg(messageCount);
   int messageCountWidth = option.fontMetrics.width(messageCountText);
 
-  int margin = 5;
-  int authorBaseWidth = 175;
   int authorWidth = authorBaseWidth - (messageCount > 1 ? messageCountWidth + margin : 0);
   int authorPos = margin;
   int linePos = index.row() * lineHeight;
@@ -95,7 +96,10 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
   int lineHeight = option.fontMetrics.height() + 2;
-  return QSize(lineWidth, lineHeight);
+  DummyKonadiConversation c = backend.conversation(index.row());
+  int timeWidth = option.fontMetrics.width(c.arrivalTimeInText());
+  int wantedLineWidth = qMin(authorBaseWidth + 2*margin + timeWidth, lineWidth);
+  return QSize(wantedLineWidth, lineHeight);
 }
 
 void ConversationDelegate::updateWidth(int pos, int /*nouse*/)
