@@ -97,3 +97,8 @@ QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem & option, const 
   int lineHeight = option.fontMetrics.height() + 2;
   return QSize(lineWidth, lineHeight);
 }
+
+void ConversationDelegate::updateWidth(int pos, int /*nouse*/)
+{
+  lineWidth = pos;
+}

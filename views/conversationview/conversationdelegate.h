@@ -31,17 +31,20 @@
 
 class ConversationDelegate : public QAbstractItemDelegate
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    ConversationDelegate(DummyKonadiAdapter &adapter, QObject *parent = 0);
-    ~ConversationDelegate();
+  ConversationDelegate(DummyKonadiAdapter &adapter, QObject *parent = 0);
+  ~ConversationDelegate();
 
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+  void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+  QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+
+public slots:
+  void updateWidth(int pos, int nouse = 0);
 
 private:
-    DummyKonadiAdapter backend;
-    int lineWidth;
+  DummyKonadiAdapter backend;
+  int lineWidth;
 };
 
 #endif

@@ -32,12 +32,12 @@
 int main(int argc, char *argv[])
 {
   QApplication app(argc, argv);
-	QSplitter *splitter = new QSplitter;
+  QSplitter *splitter = new QSplitter;
 
   DummyKonadiAdapter data;
 
   QAbstractItemModel *model = new FolderModel(data);
-	MailView *mail = new MailView(&data);
+  MailView *mail = new MailView(&data);
 
   QListView *conversationList = new QListView;
   conversationList->setModel(model);
@@ -45,20 +45,13 @@ int main(int argc, char *argv[])
   ConversationDelegate *delegate = new ConversationDelegate(data);
   conversationList->setItemDelegate(delegate);
 
-//   ConversationDisplay *conversationDisplay = new ConversationDisplay(this, &data);
-//   QScrollArea *scrollArea = new QScrollArea;
-//   scrollArea->setWidget(conversationDisplay);
-//   scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
   QItemSelectionModel *selection = new QItemSelectionModel(model);
   conversationList->setSelectionModel(selection);
 
-   QObject::connect(conversationList, SIGNAL(clicked(const QModelIndex&)),
-                    mail, SLOT(setConversation(const QModelIndex)));
-   QObject::connect(conversationList, SIGNAL(activated(const QModelIndex&)),
-                    mail, SLOT(setConversation(const QModelIndex)));
+  QObject::connect(conversationList, SIGNAL(clicked(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
+  QObject::connect(conversationList, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(mail, SIGNAL(textChanged()), mail, SLOT(updateHeight()));
-
+  QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), delegate, SLOT(updateWidth(int, int)));
 
   splitter->setWindowTitle("Conversations for KMail");
   splitter->addWidget(conversationList);
