@@ -32,7 +32,7 @@
 ConversationDelegate::ConversationDelegate(DummyKonadiAdapter &adapter, QObject *parent) : QAbstractItemDelegate(parent)
 {
   backend = adapter;
-  lineWidth = 500;
+  lineWidth = 510;
   authorBaseWidth = 175;
   margin = 5;
 }
