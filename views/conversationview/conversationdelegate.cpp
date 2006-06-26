@@ -26,12 +26,14 @@
 #include <QSize>
 #include <QDateTime>
 #include <QtDebug>
+#include <QRegExp>
 
 #include "conversationdelegate.h"
 
-ConversationDelegate::ConversationDelegate(DummyKonadiAdapter &adapter, QObject *parent) : QAbstractItemDelegate(parent)
+ConversationDelegate::ConversationDelegate(DummyKonadiAdapter &adapter, QStringList &me, QObject *parent) : QAbstractItemDelegate(parent)
 {
   backend = adapter;
+  listOfMe = me;
   lineWidth = 510;
   authorBaseWidth = 175;
   margin = 5;
@@ -65,10 +67,20 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   QString ctitle = c.conversationTitle();
   QString ctime = c.arrivalTimeInText();
   QString cauthors = c.author(0);
+  QString me;
+  foreach (me, listOfMe) {
+    cauthors.replace(QRegExp(me), "me");
+  }
   int messageCount = c.count();
   for (int count = 1; count < messageCount; ++count) {
-    cauthors.append(", ");
-    cauthors.append(c.author(count));
+    QString tmpAuthor = c.author(count);
+    foreach (me, listOfMe) {
+      tmpAuthor.replace(QRegExp(me), "me");
+    }
+    if (!cauthors.contains(tmpAuthor)) {
+      cauthors.append(", ");
+      cauthors.append(tmpAuthor);
+    }
   }
 
   int dotsWidth = option.fontMetrics.width("...");

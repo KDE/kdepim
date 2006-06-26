@@ -26,6 +26,7 @@
 #include <QFontMetrics>
 #include <QModelIndex>
 #include <QSize>
+#include <QStringList>
 
 #include "foldermodel.h"
 
@@ -33,7 +34,7 @@ class ConversationDelegate : public QAbstractItemDelegate
 {
   Q_OBJECT
 public:
-  ConversationDelegate(DummyKonadiAdapter &adapter, QObject *parent = 0);
+  ConversationDelegate(DummyKonadiAdapter &adapter, QStringList &me, QObject *parent = 0);
   ~ConversationDelegate();
 
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -45,6 +46,7 @@ public slots:
 private:
   DummyKonadiAdapter backend;
   int lineWidth, authorBaseWidth, margin;
+  QStringList listOfMe;
 };
 
 #endif

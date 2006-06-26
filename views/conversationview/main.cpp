@@ -24,6 +24,7 @@
 #include <QList>
 #include <QScrollArea>
 #include <QAbstractItemDelegate>
+#include <QStringList>
 
 #include "foldermodel.h"
 #include "conversationdelegate.h"
@@ -43,7 +44,9 @@ int main(int argc, char *argv[])
   conversationList->setModel(model);
   conversationList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-  ConversationDelegate *delegate = new ConversationDelegate(data);
+  QStringList me;
+  me << "Aron Bostrom" << "Hrafnahnef" << "Syllten";
+  ConversationDelegate *delegate = new ConversationDelegate(data, me);
   conversationList->setItemDelegate(delegate);
 
   QItemSelectionModel *selection = new QItemSelectionModel(model);
