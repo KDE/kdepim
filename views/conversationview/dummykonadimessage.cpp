@@ -58,3 +58,33 @@ QString DummyKonadiMessage::arrivalTimeInText() const
   ctime.append(arrival.time().toString());
   return ctime;
 }
+
+bool DummyKonadiMessage::operator!=(DummyKonadiMessage &compare) const
+{
+  return arrival != compare.arrival;
+}
+
+bool DummyKonadiMessage::operator<(DummyKonadiMessage &compare) const
+{
+  return arrival < compare.arrival;
+}
+
+bool DummyKonadiMessage::operator<=(DummyKonadiMessage &compare) const
+{
+  return arrival <= compare.arrival;
+}
+
+bool DummyKonadiMessage::operator==(DummyKonadiMessage &compare) const
+{
+  return arrival == compare.arrival;
+}
+
+bool DummyKonadiMessage::operator>=(DummyKonadiMessage &compare) const
+{
+  return arrival >= compare.arrival;
+}
+
+bool DummyKonadiMessage::operator>(DummyKonadiMessage &compare) const
+{
+  return arrival > compare.arrival;
+}

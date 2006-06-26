@@ -42,6 +42,7 @@ public:
   QDateTime messageArrivalTime(int conversationId, int messageId) const;
   QString messageArrivalTimeInText(int conversationId, int messageId) const;
   int messageCount(int conversationId) const;
+  void sort(bool descending = true);
 
 private:
   bool tryConversationId(int conversationId) const;

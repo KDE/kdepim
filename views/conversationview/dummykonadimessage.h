@@ -37,6 +37,12 @@ public:
   void setArrivalTime(QDateTime dateTime) { arrival = dateTime; }
   void setSendTime(QDateTime dateTime) { send = dateTime; }
   bool isNull();
+  bool operator!=(DummyKonadiMessage &compare) const;
+  bool operator<(DummyKonadiMessage &compare) const;
+  bool operator<=(DummyKonadiMessage &compare) const;
+  bool operator==(DummyKonadiMessage &compare) const;
+  bool operator>=(DummyKonadiMessage &compare) const;
+  bool operator>(DummyKonadiMessage &compare) const;
 
 private:
   QString conversationAuthor, conversationContent;

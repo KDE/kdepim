@@ -41,6 +41,12 @@ public:
   QDateTime arrivalTime(int messageId) const;
   QString arrivalTimeInText(int messageId) const;
   QDateTime sendTime(int messageId) const;
+  bool operator!=(DummyKonadiConversation &compare) const;
+  bool operator<(DummyKonadiConversation &compare) const;
+  bool operator<=(DummyKonadiConversation &compare) const;
+  bool operator==(DummyKonadiConversation &compare) const;
+  bool operator>=(DummyKonadiConversation &compare) const;
+  bool operator>(DummyKonadiConversation &compare) const;
 
 //public signals:
 //  void messageAdded();

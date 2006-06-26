@@ -97,3 +97,33 @@ QDateTime DummyKonadiConversation::sendTime() const
   }
   return *oldest;
 }
+
+bool DummyKonadiConversation::operator!=(DummyKonadiConversation &compare) const
+{
+  return arrivalTime() != compare.arrivalTime();
+}
+
+bool DummyKonadiConversation::operator<(DummyKonadiConversation &compare) const
+{
+  return arrivalTime() < compare.arrivalTime();
+}
+
+bool DummyKonadiConversation::operator<=(DummyKonadiConversation &compare) const
+{
+  return arrivalTime() <= compare.arrivalTime();
+}
+
+bool DummyKonadiConversation::operator==(DummyKonadiConversation &compare) const
+{
+  return arrivalTime() == compare.arrivalTime();
+}
+
+bool DummyKonadiConversation::operator>=(DummyKonadiConversation &compare) const
+{
+  return arrivalTime() >= compare.arrivalTime();
+}
+
+bool DummyKonadiConversation::operator>(DummyKonadiConversation &compare) const
+{
+  return arrivalTime() > compare.arrivalTime();
+}
