@@ -34,7 +34,7 @@ class ConversationDelegate : public QAbstractItemDelegate
 {
   Q_OBJECT
 public:
-  ConversationDelegate(DummyKonadiAdapter &adapter, QStringList &me, QObject *parent = 0);
+  ConversationDelegate(FolderModel *folderModel, QStringList &me, QObject *parent = 0);
   ~ConversationDelegate();
 
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -44,7 +44,7 @@ public slots:
   void updateWidth(int pos, int nouse = 0);
 
 private:
-  DummyKonadiAdapter backend;
+  FolderModel *model;
   int lineWidth, authorBaseWidth, margin;
   QStringList listOfMe;
 };

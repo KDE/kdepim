@@ -21,9 +21,9 @@
 #include "foldermodel.h"
 
 
-int FolderModel::rowCount(const QModelIndex &parent) const
+int FolderModel::rowCount(const QModelIndex &/*parent*/) const
 {
-  return backend.conversationCount();
+  return backend->conversationCount();
 }
 
 QVariant FolderModel::data(const QModelIndex &index, int role) const
@@ -31,22 +31,42 @@ QVariant FolderModel::data(const QModelIndex &index, int role) const
   if (!index.isValid())
     return QVariant();
 
-  if (index.row() < 0 || index.row() >= backend.conversationCount())
+  if (index.row() < 0 || index.row() >= backend->conversationCount())
     return QVariant();
 
-  if (role == Qt::DisplayRole)
-    return backend.conversationTitle(index.row());
-  else
+  if (index.row() < 0 || index.row() >= backend->conversationCount())
+    return QVariant();
+
+  if (role == Qt::DisplayRole) {
+    switch (index.column()) {
+      case 0: return backend->authorsInConversation(index.row()); break;
+      case 1: return backend->subjectOfConversation(index.row()); break;
+      case 2: return backend->previewOfConversation(index.row()); break;
+      case 3: return backend->nbrOfMessagesInConversation(index.row()); break;
+      case 4: return backend->dateTimeOfConversation(index.row()); break;
+      case 5: return backend->unreadStatusOfConversation(index.row()); break;
+      default: return QVariant();
+    }
+  } else
     return QVariant();
 }
 
-QVariant FolderModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant FolderModel::headerData(int section, Qt::Orientation /*orientation*/, int role) const
 {
   if (role != Qt::DisplayRole)
     return QVariant();
 
-  if (orientation == Qt::Horizontal)
-    return QString("Column %1").arg(section);
-  else
-    return QString("Row %1").arg(section);
+  switch (section) {
+    case 0: return QString(tr("Authors")); break;
+    case 1: return QString(tr("Subject")); break;
+    case 2: return QString(tr("Snippet")); break;
+    case 3: return QString(tr("E-mails")); break;
+    case 4: return QString(tr("Time")); break;
+    default: return QVariant();
+  }
+}
+
+DummyKonadiConversation* FolderModel::conversation(int conversationId) const
+{
+  return backend->conversation(conversationId);
 }

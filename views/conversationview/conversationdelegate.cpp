@@ -30,9 +30,9 @@
 
 #include "conversationdelegate.h"
 
-ConversationDelegate::ConversationDelegate(DummyKonadiAdapter &adapter, QStringList &me, QObject *parent) : QAbstractItemDelegate(parent)
+ConversationDelegate::ConversationDelegate(FolderModel *folderModel, QStringList &me, QObject *parent) : QAbstractItemDelegate(parent)
 {
-  backend = adapter;
+  model = folderModel;
   listOfMe = me;
   lineWidth = 510;
   authorBaseWidth = 175;
@@ -63,17 +63,17 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     painter->setPen(Qt::black);
   }
   painter->setFont(option.font);
-  DummyKonadiConversation c = backend.conversation(index.row());
-  QString ctitle = c.conversationTitle();
-  QString ctime = c.arrivalTimeInText();
-  QString cauthors = c.author(0);
+  DummyKonadiConversation *c = model->conversation(index.row());
+  QString ctitle = c->conversationTitle();
+  QString ctime = c->arrivalTimeInText();
+  QString cauthors = c->author(0);
   QString me;
   foreach (me, listOfMe) {
     cauthors.replace(QRegExp(me), "me");
   }
-  int messageCount = c.count();
+  int messageCount = c->count();
   for (int count = 1; count < messageCount; ++count) {
-    QString tmpAuthor = c.author(count);
+    QString tmpAuthor = c->author(count);
     foreach (me, listOfMe) {
       tmpAuthor.replace(QRegExp(me), "me");
     }
@@ -124,7 +124,7 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   painter->drawText(timePos, linePos, tmpTimeWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctime);
 }
 
-QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
+QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &/*index*/) const
 {
   int lineHeight = option.fontMetrics.height() + 2;
   return QSize(lineWidth, lineHeight);

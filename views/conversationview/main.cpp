@@ -35,10 +35,10 @@ int main(int argc, char *argv[])
   QApplication app(argc, argv);
   QSplitter *splitter = new QSplitter;
 
-  DummyKonadiAdapter data;
+  DummyKonadiAdapter *data = new DummyKonadiAdapter;
 
-  QAbstractItemModel *model = new FolderModel(data);
-  MailView *mail = new MailView(&data);
+  FolderModel *model = new FolderModel(data);
+  MailView *mail = new MailView(model);
 
   QListView *conversationList = new QListView;
   conversationList->setModel(model);
@@ -46,8 +46,9 @@ int main(int argc, char *argv[])
 
   QStringList me;
   me << "Aron Bostrom" << "Hrafnahnef" << "Syllten";
-  ConversationDelegate *delegate = new ConversationDelegate(data, me);
+  ConversationDelegate *delegate = new ConversationDelegate(model, me);
   conversationList->setItemDelegate(delegate);
+  conversationList->setUniformItemSizes(true);
 
   QItemSelectionModel *selection = new QItemSelectionModel(model);
   conversationList->setSelectionModel(selection);

@@ -27,12 +27,6 @@
 
 #include "mailview.h"
 
-//MailView::MailView(QWidget *parent)
-//{
-//	QTextEdit(parent);
-//	setReadOnly(true);
-//}
-
 /*
  * This doesn't work as the QTextLength of the QTextFrameFormat of the root QTextFrame 
  * of the QTextDocument corresponding to QTextEdit (phew!) is of variable length and 
@@ -46,13 +40,12 @@
  */
 int MailView::getNeededHeight() const
 {
-//	qDebug() << "Dbg: " << document()->rootFrame()->frameFormat().height().type() << ", " << qRound(document()->rootFrame()->frameFormat().height().rawValue());
-	return qRound(document()->rootFrame()->frameFormat().height().rawValue());
+  return qRound(document()->rootFrame()->frameFormat().height().rawValue());
 }
 
 void MailView::updateHeight()
 {
-	setMinimumHeight(getNeededHeight());
+  setMinimumHeight(getNeededHeight());
 }
 
 /** 
@@ -61,32 +54,32 @@ void MailView::updateHeight()
 void MailView::setConversation(const QModelIndex &index)
 {
   setHtml("");
-  int conversationId = index.row();
-  int max = backend->messageCount(conversationId)-1;
+  DummyKonadiConversation* conversation = model->conversation(index.row());
+  int max = conversation->count()-1;
   QString tmp = "<H2><A NAME=top>";
-  tmp.append(backend->conversationTitle(conversationId));
+  tmp.append(conversation->conversationTitle());
   tmp.append("</A></H2><HR>");
   append(tmp);
   for (int count = 0; count < max; ++count) {
     tmp = "<A NAME=";
     tmp.append(count);
     tmp.append("><B>");
-    tmp.append(backend->messageAuthor(conversationId, count));
+    tmp.append(conversation->author(count));
     tmp.append("</B></A>, ");
-    tmp.append(backend->messageArrivalTimeInText(conversationId, count));
+    tmp.append(conversation->arrivalTimeInText(count));
     tmp.append("<BR>");
-    tmp.append(backend->messageContent(conversationId, count));
+    tmp.append(conversation->content(count));
 //                tmp.append("<HR>");
     append(tmp);
   }
   tmp = "<A NAME=";
   tmp.append(max);
   tmp.append("><B>");
-  tmp.append(backend->messageAuthor(conversationId, max));
+  tmp.append(conversation->author(max));
   tmp.append("</B></A>, ");
-  tmp.append(backend->messageArrivalTimeInText(conversationId, max));
+  tmp.append(conversation->arrivalTimeInText(max));
   tmp.append("<BR>");
-  tmp.append(backend->messageContent(conversationId, max));
+  tmp.append(conversation->content(max));
   append(tmp);
   scrollToAnchor("top");
 }

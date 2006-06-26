@@ -24,23 +24,23 @@
 #include <QTextEdit>
 #include <QModelIndex>
 
-#include "dummykonadiadapter.h"
+#include "foldermodel.h"
 
 class MailView : public QTextEdit
 {
   Q_OBJECT
 public:
-  MailView(DummyKonadiAdapter *data, QWidget *parent = 0) : QTextEdit(parent), backend(data) { setReadOnly(true); }
+  MailView(FolderModel *folderModel, QWidget *parent = 0) : QTextEdit(parent), model(folderModel) { setReadOnly(true); }
 
-	int getNeededHeight() const;
+  int getNeededHeight() const;
 
 public slots:
-	void updateHeight();
-	void setConversation(const QModelIndex &index);
+  void updateHeight();
+  void setConversation(const QModelIndex &index);
 
 private:
-	DummyKonadiAdapter *backend;
-	
+  FolderModel *model;
+
 };
 
 #endif

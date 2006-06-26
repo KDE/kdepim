@@ -35,14 +35,22 @@ public:
   QDateTime conversationSendTime(int conversationId) const;
   QDateTime conversationArrivalTime(int conversationId) const;
   QString conversationArrivalTimeInText(int conversationId) const;
-  DummyKonadiConversation conversation(int conversationId) const;
+  DummyKonadiConversation* conversation(int conversationId) const;
   QString messageContent(int conversationId, int messageId) const;
   QString messageAuthor(int conversationId, int messageId) const;
   QDateTime messageSendTime(int conversationId, int messageId) const;
   QDateTime messageArrivalTime(int conversationId, int messageId) const;
   QString messageArrivalTimeInText(int conversationId, int messageId) const;
+  QStringList authorsInConversation(int index) const;
+  QString subjectOfConversation(int index) const;
+  QString previewOfConversation(int index) const;
+  int nbrOfMessagesInConversation(int index) const;
+  QDateTime dateTimeOfConversation(int index) const;
+  bool unreadStatusOfConversation(int index) const;
+  QString dateTimeOfConversationInText(int index) const;
   int messageCount(int conversationId) const;
   void sort(bool descending = true);
+
 
 private:
   bool tryConversationId(int conversationId) const;

@@ -213,11 +213,11 @@ bool DummyKonadiAdapter::tryConversationId(int conversationId) const
   return true;
 }
 
-DummyKonadiConversation DummyKonadiAdapter::conversation(int conversationId) const
+DummyKonadiConversation* DummyKonadiAdapter::conversation(int conversationId) const
 {
   if (!tryConversationId(conversationId)) 
     return 0;
-  return *(conversations.at(conversationId));
+  return conversations.at(conversationId);
 }
 
 QDateTime DummyKonadiAdapter::messageSendTime(int conversationId, int messageId) const
@@ -248,4 +248,48 @@ QDateTime DummyKonadiAdapter::conversationArrivalTime(int conversationId) const
 QString DummyKonadiAdapter::conversationArrivalTimeInText(int conversationId) const
 {
   return conversations.at(conversationId)->arrivalTimeInText();
+}
+
+QStringList DummyKonadiAdapter::authorsInConversation(int index) const
+{
+  DummyKonadiConversation *tmp = conversations.at(index);
+  QStringList tmpList;
+  int max = tmp->count();
+  for (int count = 0; count < max; ++count) {
+    tmpList << tmp->author(count);
+  }
+  return tmpList;
+}
+
+
+QString DummyKonadiAdapter::subjectOfConversation(int index) const
+{
+  return conversationTitle(index);
+}
+
+/* TODO */
+QString DummyKonadiAdapter::previewOfConversation(int /*index*/) const
+{
+  return QString("");
+}
+
+int DummyKonadiAdapter::nbrOfMessagesInConversation(int index) const
+{
+  return messageCount(index);
+}
+
+QDateTime DummyKonadiAdapter::dateTimeOfConversation(int index) const
+{
+  return conversationArrivalTime(index);
+}
+
+QString DummyKonadiAdapter::dateTimeOfConversationInText(int index) const
+{
+  return conversationArrivalTimeInText(index);
+}
+
+/* TODO */
+bool DummyKonadiAdapter::unreadStatusOfConversation(int /*index*/) const
+{
+  return false;
 }
