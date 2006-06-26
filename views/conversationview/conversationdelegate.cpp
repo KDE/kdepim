@@ -71,6 +71,8 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     cauthors.append(c.author(count));
   }
 
+  int dotsWidth = option.fontMetrics.width("...");
+
   QString messageCountText = QString("(%L1)").arg(messageCount);
   int messageCountWidth = option.fontMetrics.width(messageCountText);
 
@@ -78,8 +80,12 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   int authorWidth = qMin(authorBaseWidth - (messageCount > 1 ? messageCountWidth + margin : 0), 
                          lineWidth - (messageCount > 1 ? messageCountWidth + 2*margin : 0) - margin);
   int authorPos = margin;
-  painter->drawText(authorPos, linePos, authorWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, cauthors);
-// Add ...'s
+  int tmpAuthorWidth = authorWidth;
+  if (option.fontMetrics.width(cauthors) > authorWidth && authorWidth > dotsWidth) {
+    tmpAuthorWidth = authorWidth - dotsWidth;
+    painter->drawText(authorPos+tmpAuthorWidth, linePos, dotsWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, "...");
+  }
+  painter->drawText(authorPos, linePos, tmpAuthorWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, cauthors);
 
   if (messageCount > 1) {
     int messageCountPos = qMin(2*margin + authorWidth, lineWidth - messageCountWidth - margin);
@@ -89,13 +95,21 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   int subjectPos = authorBaseWidth + 2*margin;
   int timeWidth = option.fontMetrics.width(ctime);
   int subjectWidth = lineWidth - subjectPos - timeWidth - 2*margin;
-  painter->drawText(subjectPos, linePos, subjectWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctitle);
-// Add ...'s
+  int tmpSubjectWidth = subjectWidth;
+  if (option.fontMetrics.width(ctitle) > subjectWidth && subjectWidth > dotsWidth) {
+    tmpSubjectWidth = subjectWidth - dotsWidth;
+    painter->drawText(subjectPos+tmpSubjectWidth, linePos, dotsWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, "...");
+  }
+  painter->drawText(subjectPos, linePos, tmpSubjectWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctitle);
 
   int timePos = qMax(lineWidth - margin - timeWidth, authorBaseWidth + 2*margin);
   timeWidth = qMax(lineWidth - (timePos + margin), 0);
-  painter->drawText(timePos, linePos, timeWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctime);
-// Add ...'s
+  int tmpTimeWidth = timeWidth;
+  if (option.fontMetrics.width(ctime) > timeWidth && timeWidth > dotsWidth) {
+    tmpTimeWidth = timeWidth - dotsWidth;
+    painter->drawText(timePos+tmpTimeWidth, linePos, dotsWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, "...");
+  }
+  painter->drawText(timePos, linePos, tmpTimeWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctime);
 }
 
 QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
