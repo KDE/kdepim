@@ -28,6 +28,16 @@ Bugfixes
 * Groupwarefolders (with standard name) are now unsubscribed for 
   online imap after setup with kolabwizard (Proko2 Issue 1260)
 
+* Subject of MDNs is now translated. (Proko2 issue 1277)
+
+* Enable automatic expunge when a folder is left for the online 
+  IMAP account. (Proko2 Issue 1207)
+
+* Errors during target folder creation in folder copy operations 
+  are now handled without crashing. (Proko2 issue 1279)
+
+
+
 Features
 ========
 * Show quota information in the folder tooltip. Even works for 
@@ -37,6 +47,11 @@ Features
   (Proko2 Issue 1226)
 
 * Allow ";" as additional Address seperator (Proko2 Issue 1216)
+
+* For full mailchecks (more than one folder) do a full folder listing
+  (modulo list-only-open-folders config option) so we detect new shared
+  folders without the need for an explicit listing by the user.
+  (Proko2 Issue 1250)
 
 
 
