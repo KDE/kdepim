@@ -57,8 +57,6 @@
 #include <kdebug.h>
 #include <kdialog.h>
 #include <kurlrequester.h>
-#include <kdcopservicestarter.h>
-#include <dcopclient.h>
 #include <kio/job.h>
 #include <kio/netaccess.h>
 #include <ktoolinvocation.h>
@@ -77,7 +75,6 @@
 #include <QByteArray>
 
 #include <assert.h>
-#include <dcopref.h>
 
 static const unsigned int keyLengths[] = {
   1024, 1532, 2048, 3072, 4096
@@ -427,7 +424,8 @@ static const char* const dcopObjectId = "KMailIface";
 void CertificateWizardImpl::sendCertificate( const QString& email, const QByteArray& certificateData )
 {
   QString error;
-  DCOPCString dcopService;
+#warning Port me to DBus!
+/*  DCOPCString dcopService;
   int result = KDCOPServiceStarter::self()->
     findServiceFor( "DCOP/Mailer", QString(),
                     &error, &dcopService );
@@ -460,7 +458,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
     KMessageBox::error( this,
                         i18n( "DCOP Communication Error, unable to send certificate using KMail." ) );
     return;
-  }
+  }*/
   // All good, close dialog
   CertificateWizard::accept();
 }

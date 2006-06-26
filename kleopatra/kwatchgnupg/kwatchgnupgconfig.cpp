@@ -194,7 +194,7 @@ void KWatchGnuPGConfig::loadConfig()
   mWordWrapCB->setChecked( config->readEntry("WordWrap", false ) );
 
   config->setGroup( QString() );
-  enableButtonOK( false );
+  enableButtonOk( false );
   enableButtonApply( false );
 }
 
@@ -212,13 +212,13 @@ void KWatchGnuPGConfig::saveConfig()
 
   config->setGroup( QString() );
   config->sync();
-  enableButtonOK( false );
+  enableButtonOk( false );
   enableButtonApply( false );
 }
 
 void KWatchGnuPGConfig::slotChanged()
 {
-  enableButtonOK( true );
+  enableButtonOk( true );
   enableButtonApply( true );
 }
 
