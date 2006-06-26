@@ -30,7 +30,7 @@ class MailView : public QTextEdit
 {
   Q_OBJECT
 public:
-  MailView(DummyKonadiAdapter *data, QWidget *parent = 0) : QTextEdit(parent), backend(data) {}
+  MailView(DummyKonadiAdapter *data, QWidget *parent = 0) : QTextEdit(parent), backend(data) { setReadOnly(true); }
 
 	int getNeededHeight() const;
 
