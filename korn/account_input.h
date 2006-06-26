@@ -75,7 +75,7 @@ public:
 	 * @return The configName as used for this config field.
 	 */
 	QString configName() const;
-	
+
 	/**
 	 * Return the value of the configuration object. In most cases, this is the value the user typed in.
 	 * This information will be stored in the configuration file.
@@ -83,7 +83,7 @@ public:
 	 * @return The value of the object
 	 */
 	virtual QString value() const = 0;
-	
+
 	/**
 	 * Implementation should edit there widget such that value() would return the parameter.
 	 *
@@ -102,23 +102,23 @@ private:
 class TextInput : public AccountInput
 {
 public:
-	/** 
-	 * Enum for specifing the type.
+	/**
+	 * Enum for specifying the type.
 	 * text means a normal LineEdit,
 	 * password means that *-sings are used instead of characters.
 	 */
 	enum Type { text, password };
-	
+
 	/**
 	 * Constructor
 	 *
 	 * @param parent The parent widget
 	 * @param title The title that appears on the screen
 	 * @param type The type of TextEdit which is used
-	 * @param defaul The default value of this object
+	 * @param dfault The default value of this object
 	 * @param configName The name it has in the configuration box.
 	 */
-	TextInput( QWidget *parent, const QString& title, Type type, const QString& defaul, const QString& configName );
+	TextInput( QWidget *parent, const QString& title, Type type, const QString& dfault, const QString& configName );
 	/**
 	 * Constructor. Use this one if you want to ensure a number is inserted.
 	 *
@@ -126,10 +126,10 @@ public:
 	 * @param title The title that appears on the screen
 	 * @param min The minimum value that can be inserted
 	 * @param max The maximum value that can be inserted
-	 * @param defaul The default value of this object
+	 * @param dfault The default value of this object
 	 * @param configName The name it has in the configuration box.
 	 */
-	TextInput( QWidget *parent, const QString& title, int min, int max, const QString& defaul, const QString& configName );
+	TextInput( QWidget *parent, const QString& title, int min, int max, const QString& dfault, const QString& configName );
 	/**
 	 * Destructor
 	 */
@@ -171,10 +171,10 @@ public:
 	 * Constructor
 	 * @param parent The parent of this object
 	 * @param title The title of the label next to the URL.
-	 * @param defaul The default value
+	 * @param dfault The default value
 	 * @param configName The name of the configuration entry
 	 */
-	URLInput( QWidget *parent, const QString& title, const QString& defaul, const QString& configName );
+	URLInput( QWidget *parent, const QString& title, const QString& dfault, const QString& configName );
 	/**
 	 * Destructor
 	 */
@@ -213,18 +213,18 @@ private:
 class ComboInput : public AccountInput
 {
 public:
-	/** 
+	/**
 	 * Constructor
 	 *
 	 * @param parent The parent of the widgets which are created
 	 * @param title The title next to the combo box
 	 * @param list A mapping which maps a value in the configuration to a (translated) entry in the
 	 *             combo box.
-	 * @param defaul The default value of the combo box.
+	 * @param dfault The default value of the combo box.
 	 * @param configName The name in which the option is saved.
 	 */
 	ComboInput( QWidget *parent, const QString& title, const QMap<QString,QString>& list,
-	            const QString& defaul, const QString& configName );
+	            const QString& dfault, const QString& configName );
 	/**
 	 * Destructor
 	 */
@@ -236,7 +236,7 @@ public:
 	 */
 	virtual QWidget* leftWidget() { return (QWidget*)_left; }
 	/**
-	 * The right widget (the combo box itselfs)
+	 * The right widget (the combo box itself)
 	 * @return A pointer to the combo box of this object
 	 */
 	virtual QWidget* rightWidget() { return (QWidget*)_right; }
@@ -246,7 +246,7 @@ public:
 	 * @return The value of the currently selected item
 	 */
 	virtual QString value() const;
-	
+
 	/**
 	 * This function sets the combo box to an item which has @p value as value.
 	 *
@@ -262,7 +262,7 @@ private:
 
 /**
  * This is an object for creating a text-box.
- * If has no left widget, as the title is stored in the checkbox itselfs.
+ * If has no left widget, as the title is stored in the checkbox itself.
  */
 class CheckboxInput : public AccountInput
 {
@@ -272,10 +272,10 @@ public:
 	 *
 	 * @param parent The parent for the objects which are created
 	 * @param title The title of the checkbox
-	 * @param defaul The default value ("true" for checked, "false" otherwise")
+	 * @param dfault The default value ("true" for checked, "false" otherwise")
 	 * @param configName The name of the configuration entry of this object
 	 */
-	CheckboxInput( QWidget *parent, const QString& title, const QString& defaul, const QString& configName );
+	CheckboxInput( QWidget *parent, const QString& title, const QString& dfault, const QString& configName );
 	/**
 	 * Destructor
 	 */
@@ -302,7 +302,7 @@ public:
 	/**
 	 * This function can change the state of the checkbox.
 	 * It can check or uncheck it.
-	 * 
+	 *
 	 * @param value If this parameter is "true", the checkbox gets checked,
 	 *              if it is "false", the checkbox get unchecked.
 	 */

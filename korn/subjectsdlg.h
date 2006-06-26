@@ -70,7 +70,7 @@ class KornSubjectsDlg: public KDialog
 		DoubleProgressDialog *progress;
 		bool atRechecking;
 	} *_subjects;
-	
+
 	struct DeleteData
 	{
 		QList< KornMailSubject* > *messages;
@@ -79,14 +79,14 @@ class KornSubjectsDlg: public KDialog
 		KMailDrop *drop;
 		int totalNumberOfMessages;
 	} *_delete;
-	
+
 	K3ListView * _list;
 	KPushButton * invertSelButton;
 	KPushButton * clearSelButton;
 	KPushButton * deleteButton;
 	KPushButton * showButton;
 	KornMailDlg * mailDlg;
-	
+
 	bool _loadSubjectsCanceled, _deleteMailsCanceled;
 	bool _canDeleteMaildrop;
 
@@ -112,18 +112,18 @@ public:
 	 * This functions clears all available KMailDrop's.
 	 */
 	void clear();
-			
+
 	/**
 	 * This function adds a maildrop to the list.
 	 * @param mailDrop The maildrop which have to be added.
 	 */
 	void addMailBox(KMailDrop* mailDrop);
-	
+
 	/**
 	 * This method loads the messages and shows the dialog.
 	 */
 	void loadMessages();
-	
+
 	/**
 	 * Show the KornSubjectsDlg as a modal dialog.
 	 * @param name The name of the box
@@ -143,7 +143,7 @@ private slots:
 	void loadSubjectsCanceled();
 
 	/**
-	 * called if the selction of the list view was changed
+	 * called if the selection of the list view was changed
 	 */
 	void listSelectionChanged();
 
@@ -166,9 +166,9 @@ private slots:
 	 * called if a list view item was double clicked
 	 */
 	void doubleClicked ( Q3ListViewItem *item );
-	
+
 	void closeDialog();
-	
+
 	//Functions for the subjects
 public slots:
 	/**
@@ -187,7 +187,7 @@ private slots:
 	void slotSubjectsCanceled();
 	void subjectAvailable( KornMailSubject* );
 	void subjectsReady( bool );
-	
+
 	//Functions neccesairy for delete
 	//TODO: public, when fillDeleteMessageList is private?
 public slots:
@@ -205,7 +205,7 @@ private:
 private slots:
 	void deleteMailsReady( bool );
 	void slotDeleteCanceled();
-	
+
 };
 
 #endif

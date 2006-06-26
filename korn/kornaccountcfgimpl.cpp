@@ -56,16 +56,16 @@ KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent )
 	_accountinput( new QList< AccountInput* >() )
 {
 	setupUi( this );
-	
+
 	connect( parent, SIGNAL( okClicked() ), this, SLOT( slotOK() ) );
 	connect( parent, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
 	connect( chUseBox, SIGNAL(toggled(bool)), gbNewMail, SLOT(setDisabled(bool)) );
 	connect( chPassivePopup, SIGNAL(toggled(bool)), chPassiveDate, SLOT(setEnabled(bool)) );
 	connect( cbProtocol, SIGNAL(activated(const QString&)), this, SLOT(slotProtocolChanged(const QString&)) );
-	
+
 	this->cbProtocol->insertItems( this->cbProtocol->count(), Protocols::getProtocols() );
 }
-	
+
 KornAccountCfgImpl::~KornAccountCfgImpl()
 {
 	while( !_accountinput->isEmpty() )
@@ -87,13 +87,13 @@ void KornAccountCfgImpl::readConfig( KConfigGroup *config, QMap< QString, QStrin
 	protocol->readEntries( entries );
 
 	(*entries)[ "password" ] = KOrnPassword::readKOrnPassword( boxnr, accountnr, *config );
-	
+
 	for( int xx = 0; xx < _accountinput->size(); ++xx )
 		if( entries->contains( _accountinput->at( xx )->configName() ) )
 			_accountinput->at( xx )->setValue( *(entries->find( _accountinput->at( xx )->configName() ) ) );
-	
+
 	this->edInterval->setText( _config->readEntry( "interval", "300" ) );
-	
+
 	this->chUseBox->setChecked( _config->readEntry( "boxsettings", true ) );
 	this->edRunCommand->setUrl( _config->readEntry( "newcommand", "" ) );
 	this->edPlaySound->setUrl( _config->readEntry( "sound", "" ) );
@@ -110,12 +110,12 @@ void KornAccountCfgImpl::writeConfig()
 
 	if( !protocol )
 	{
-		kWarning() << "An error occured during writing the account information: protocol does not exist" << endl;
+		kWarning() << "An error occurred during writing the account information: protocol does not exist" << endl;
 		return;
 	}
-	
+
 	_config->writeEntry( "protocol", this->cbProtocol->currentText() );
-		
+
 	QMap< QString, QString > *map = new QMap< QString, QString >;
 	QMap< QString, QString >::ConstIterator it;
 	for( int xx = 0; xx < _accountinput->size(); ++xx )
@@ -133,7 +133,7 @@ void KornAccountCfgImpl::writeConfig()
 		_config->writeEntry( it.key(), it.value() );
 
 	delete map;
-	
+
 	_config->writeEntry( "interval", this->edInterval->text().toInt() );
 
 	_config->writeEntry( "boxsettings", this->chUseBox->isChecked() );
@@ -147,7 +147,7 @@ void KornAccountCfgImpl::slotSSLChanged()
 {
 	const Protocol* protocol = Protocols::getProto( this->cbProtocol->currentText() );
 	bool ssl = false;
-	
+
 	if( !protocol )
 		return;
 
@@ -178,7 +178,7 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 	int counter = 1;
 
 	protocol->configFillGroupBoxes( groupBoxes );
-	
+
 	while( !_accountinput->isEmpty() )
 		delete _accountinput->takeFirst();
 
@@ -212,7 +212,7 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 
 	AccountInput *input;
 	protocol->configFields( _groupBoxes, this, _accountinput );
-	
+
 	for( int groupCounter = 0; groupCounter < _groupBoxes->count(); ++groupCounter )
 	{
 		int counter = 0;

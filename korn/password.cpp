@@ -93,13 +93,13 @@ bool KOrnPassword::deleteKOrnPassword( int box, int account )
 	if( !m_wallet->hasFolder( "korn" ) )
 		return false; //It does not exist
 	m_wallet->setFolder( "korn" );
-	
+
 	//Write to wallet
 	if( m_wallet->removeEntry( QString( "account-%1-%2" ).arg( box ).arg( account ) ) != 0 )
 		//Writing failed
 		return false;
-	
-	//Password succesfully stored in the configuration.
+
+	//Password successfully stored in the configuration.
 	return true;
 }
 
@@ -107,7 +107,7 @@ void KOrnPassword::moveKOrnPassword( int boxSrc, int accountSrc, KConfigBase& co
                                      int boxDest, int accountDest, KConfigBase &configDest )
 {
 	QString password;
-	
+
 	password = readKOrnPassword( boxSrc, accountSrc, configSrc );
 	deleteKOrnPassword( boxSrc, accountSrc, configSrc );
 	writeKOrnPassword( boxDest, accountDest, configDest, password );
@@ -153,11 +153,11 @@ void KOrnPassword::rewritePassword( int box, int account, KConfigBase &config, b
 {
 	bool useWallet = m_useWallet;
 	QString password;
-	
+
 	setUseWallet( !newUseWalletValue );
 	password = readKOrnPassword( box, account, config );
 	deleteKOrnPassword( box, account, config );
-	
+
 	setUseWallet( newUseWalletValue );
 	writeKOrnPassword( box, account, config, password );
 
@@ -179,7 +179,7 @@ void KOrnPassword::open()
 
 	delete m_wallet; m_wallet = 0;
 	m_wallet = KWallet::Wallet::openWallet( KWallet::Wallet::NetworkWallet(), 0 );
-	
+
 	if( !m_wallet )
 		m_openFailed = true;
 }
@@ -214,7 +214,7 @@ bool KOrnPassword::writeKOrnPassword( int box, int account, const QString& passw
 	if( !m_useWallet )
 		//Wallet should not be used => saving in the config file
 		return false;
-	
+
 	//Open wallet
 	open();
 
@@ -226,13 +226,13 @@ bool KOrnPassword::writeKOrnPassword( int box, int account, const QString& passw
 	if( !m_wallet->hasFolder( "korn" ) )
 		m_wallet->createFolder( "korn" );
 	m_wallet->setFolder( "korn" );
-	
+
 	//Write to wallet
 	if( m_wallet->writePassword( QString( "account-%1-%2" ).arg( box ).arg( account ), password ) != 0 )
 		//Writing failed
 		return false;
 
-	//Password succesfully stored in the configuration.
+	//Password successfully stored in the configuration.
 	return true;
 }
 

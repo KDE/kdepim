@@ -50,21 +50,21 @@ public:
 	 * Destructor
 	 */
 	~KIO_Subjects( );
-	
+
 	/**
 	 * This function let it start fetching headers.
 	 *
 	 * @param drop the drop to take of the list of message which have to be fetched
 	 */
 	void doReadSubjects( KKioDrop* drop );
-	
+
 	/**
 	 * This function can be used to find out if this class is still valid.
-	 * 
-	 * @return false if an error occured; true otherwise
+	 *
+	 * @return false if an error occurred; true otherwise
 	 */
 	bool valid( ) { return _valid; }
-	
+
 private:
 	KKioDrop *_kio;
 	KUrl *_kurl;
@@ -73,20 +73,20 @@ private:
 	QList<KIO_Single_Subject*> *_jobs;
 	KIO::Slave *_slave;
 	bool _valid;
-	
+
 	//Opens a connection.
 	void getConnection( );
 	//Start a job; the job itself is executed in KIO_Single_Subject
 	void startJob( const QString&, const long );
 	//Disconnect the connection
 	void disConnect( bool );
-	
+
 public slots:
 	/**
 	 * This slot is called when the fetching of messages is canceled (by the user).
 	 */
-	void cancelled( );
-	
+	void canceled( );
+
 private slots:
 	void slotReadSubject( KornMailSubject* );
 	void slotFinished( KIO_Single_Subject* );

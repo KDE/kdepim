@@ -23,10 +23,11 @@
 /**
  * @file
  * This file has one class. That class is used to determine the properties
- * of a protocol. It gives back the way the configuration dialog should look like,
- * and the way the settings are merge together to be usefull for the maildrop.
+ * of a protocol. It gives back the way the configuration dialog should look
+ * like, and the way the settings are merge together to be useful for the
+ * maildrop.
  *
- * The function is to make it possible to use a small number of maildrop's for a 
+ * The function is to make it possible to use a small number of maildrop's for a
  * (relative) big amount of protocols.
  */
 
@@ -65,7 +66,7 @@ public:
 	/**
 	 * This function return another protocol which has to be used given the configuration file.
 	 * This way, it is possible to specify the protocol based on the configuration.
-	 * 
+	 *
 	 * KMail_Proto makes use of this function. It reads the KMail configuration file, and gives the protocol of the
 	 * specified KMail account.
 	 *
@@ -111,8 +112,9 @@ public:
 
 	/**
 	 * This function fills a string list with names of groupboxes.
-	 * If the configuration dialog is called, this account screen can be split up in serveral group boxes.
-	 * The number of them and the names of the groupboxes are coming from this function.
+	 * If the configuration dialog is called, this account screen can
+	 * be split up in several group boxes. The number of them and the
+	 * names of the groupboxes are coming from this function.
 	 * The input field are specified in configFields().
 	 *
 	 * @param list a pointer to an empty list which must be filled with names of group boxes in this function.

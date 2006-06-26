@@ -44,7 +44,7 @@ QString AccountInput::configName() const
 	return *_configName;
 }
 
-TextInput::TextInput( QWidget *parent, const QString& title, Type type, const QString& defaul, const QString& configName )
+TextInput::TextInput( QWidget *parent, const QString& title, Type type, const QString& dfault, const QString& configName )
 	: AccountInput( configName )
 {
 	_left = new QLabel( title, parent );
@@ -57,16 +57,16 @@ TextInput::TextInput( QWidget *parent, const QString& title, Type type, const QS
 		_right->setEchoMode( QLineEdit::Password );
 		break;
 	}
-	setValue( defaul );
+	setValue( dfault );
 }
 
-TextInput::TextInput( QWidget *parent, const QString& title, int min, int max, const QString& defaul, const QString& configName )
+TextInput::TextInput( QWidget *parent, const QString& title, int min, int max, const QString& dfault, const QString& configName )
 	: AccountInput( configName )
 {
 	_left = new QLabel( title, parent );
 	_right = new KLineEdit( "", parent );
 	_right->setValidator( new QIntValidator( min, max, _right ) );
-	setValue( defaul );
+	setValue( dfault );
 }
 
 TextInput::~TextInput()
@@ -85,12 +85,12 @@ void TextInput::setValue( const QString& value )
 	return _right->setText( value );
 }
 
-URLInput::URLInput( QWidget *parent, const QString& title, const QString& defaul, const QString& configName )
+URLInput::URLInput( QWidget *parent, const QString& title, const QString& dfault, const QString& configName )
 	: AccountInput( configName )
 {
 	_left = new QLabel( title, parent );
 	_right = new KUrlRequester( parent );
-	setValue( defaul );
+	setValue( dfault );
 }
 
 URLInput::~URLInput()
@@ -110,7 +110,7 @@ void URLInput::setValue( const QString& value )
 }
 
 ComboInput::ComboInput( QWidget *parent, const QString& title, const QMap<QString, QString>& list,
-                        const QString& defaul, const QString& configName )
+                        const QString& dfault, const QString& configName )
 	: AccountInput( configName )
 	, _list( new QMap< QString, QString >( list ) )
 {
@@ -118,7 +118,7 @@ ComboInput::ComboInput( QWidget *parent, const QString& title, const QMap<QStrin
 	_right = new QComboBox( parent );
 	_right->setInsertPolicy( QComboBox::NoInsert );
 	_right->insertItems( 0, QStringList( _list->values() ) );
-	setValue( defaul );
+	setValue( dfault );
 }
 
 ComboInput::~ComboInput()
@@ -143,11 +143,11 @@ void ComboInput::setValue( const QString& value )
 		_right->setCurrentIndex( -1 );
 }
 
-CheckboxInput::CheckboxInput( QWidget *parent, const QString& title, const QString& defaul, const QString& configName )
+CheckboxInput::CheckboxInput( QWidget *parent, const QString& title, const QString& dfault, const QString& configName )
 	: AccountInput( configName )
 {
 	_right = new QCheckBox( title, parent );
-	setValue( defaul );
+	setValue( dfault );
 }
 
 CheckboxInput::~CheckboxInput()

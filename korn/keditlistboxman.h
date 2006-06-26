@@ -28,7 +28,7 @@ class QString;
 class QWidget;
 
 /**
- * This class is a extention on KEditListBox.
+ * This class is a extension on KEditListBox.
  * It also handles the configuration.
  * @author Mart Kelder (mart.kde@hccnet.nl)
  */
@@ -46,7 +46,7 @@ public:
 	 */
 	KEditListBoxManager(	QWidget *parent = 0, const char *name = 0,
 			bool checkAtEntering=true, KEditListBox::Buttons buttons = All );
-			
+
 	/**
 	 * The save as above, but with other options for KEditListBox.
 	 *
@@ -59,7 +59,7 @@ public:
 	KEditListBoxManager(	const QString& title, QWidget *parent = 0,
 			const char *name = 0, bool checkAtEntering=true,
 			KEditListBox::Buttons buttons = All );
-		
+
 	/**
 	 * The save as above, but with other options for KEditListBox.
 	 */
@@ -67,14 +67,14 @@ public:
 			const KEditListBox::CustomEditor &customEditor,
 			QWidget *parent = 0, const char *name = 0,
 			bool checkAtEntering = true, KEditListBox::Buttons buttons = All );
-	
+
 	/**
 	 * Destructor
-	 */		
+	 */
 	~KEditListBoxManager();
-	
-	
-	/** 
+
+
+	/**
 	 * Set the KConfig object (required before doing something
 	 * @param config The KConfig-object
 	 */
@@ -85,7 +85,7 @@ public:
 	 * @param name The groupname
 	 */
 	void setGroupName( const QString& name );
-	
+
 	/**
 	 * Sets the subGroupName. subGroupName should contain %1 and %2.
 	 * It is used to execute operations on a group and its subgroups.
@@ -93,12 +93,12 @@ public:
 	 */
 	void setSubGroupName( const QString& name );
 private:
-	/** 
+	/**
 	 * This functions is called from and only from the constructor to prevent writing the
 	 * same code for all constructors
 	 */
 	void init();
-	
+
 	/**
 	 * This function reads the names out the config.
 	 */
@@ -110,11 +110,11 @@ private:
 	int _prevCount;
 
 private slots:
-	//These comes directly from the KEditListBox itselfs.
+	//These comes directly from the KEditListBox itself.
 	void slotChanged();
 	void slotAdded( const QString& );
 	void slotRemoved( const QString& );
-	
+
 	void slotActivated( const QModelIndex& item );
 private:
 	/**
@@ -123,26 +123,26 @@ private:
 	 * @param dest The number of the destanation-group
 	 */
 	void moveItem( int src, int dest );
-	
+
 	/**
 	 * This private functions switch to groups: first^=last; last^=first; first^=last
 	 * @param first the first number of a group.
 	 * @param last the second number of a group (and the last number).
 	 */
 	void changeItem( int first, int last );
-	
+
 	/**
 	 * This function is called if the user change the name of the group
 	 */
 	void changedText();
-	
+
 signals:
 	/**
 	 * This signal is emitted when somebody selects an item
 	 * @param text the selected item of the listview
 	 */
 	void activated( const QModelIndex& index );
-	
+
 	/**
 	 * This signal is emitted when defaults have to be set.
 	 * @param name The name of the object: this is filled in the KEditListBox;
@@ -165,7 +165,7 @@ signals:
 	 * @param elem the index of the element which is deleted
 	 */
 	void elementDeleted( int elem );
-	
+
 };
 
 #endif //MK_KEDITLISTBOXMAN_H

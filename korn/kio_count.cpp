@@ -121,7 +121,7 @@ void KIO_Count::count( KKioDrop *drop )
 		kurl.setPort( _protocol->defaultPort( _kio->_ssl ) );
 
 	//Making job to fetch file-list
-	
+
 	_job = KIO::listDir( kurl, false );
 	_job->addMetaData( metadata );
 
@@ -188,7 +188,7 @@ void KIO_Count::disconnectSlave()
 		return; //Protocol doesn't have a connection
 
 	if( !_slave )
-		return; //Slave doens't exist
+		return; //Slave doesn't exist
 
 	//Disconnect slave
 	//KIO::Scheduler::disconnectSlave( _slave );

@@ -53,7 +53,7 @@ public:
 	 * Destructor
 	 */
 	~KIO_Delete( );
-	
+
 	/**
 	 * This function should be called if there are messages to be deleted.
 	 *
@@ -62,14 +62,14 @@ public:
 	 * @return true if succesfull, false otherwise
 	 */
 	bool deleteMails( QList< QVariant > *list, KKioDrop* drop );
-	
+
 	/**
 	 * This function should return false then and only then if an error occurred.
 	 *
-	 * @return false if an error occured; true otherwise
+	 * @return false if an error occurred; true otherwise
 	 */
 	bool valid( ) { return _valid; }
-	
+
 public slots:
 	/**
 	 * If this slot is called, the whole deletion is canceled.
@@ -77,7 +77,7 @@ public slots:
 	void canceled( );
 private slots:
 	void slotResult( KJob* );
-	
+
 private:
 	void disConnect( );
 	bool setupSlave( KUrl kurl, KIO::MetaData metadata, const KIO_Protocol *& protocol );

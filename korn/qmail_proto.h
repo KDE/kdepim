@@ -46,17 +46,17 @@ public:
 	virtual ~QMail_Protocol() {}
 
 	/**
-	 * This function return itselfs
+	 * This function return itself
 	 * This is because it no configuration of this type it is needed
 	 * to use another protocol.
 	 *
 	 * @param config the configuration
-	 * @return itselfs, because never another protocol have to be used.
+	 * @return itself, because never another protocol have to be used.
 	 */
 	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
 
 	/**
-	 * This function duplicates itselfs.
+	 * This function duplicates itself.
 	 *
 	 * @return a copy of itself
 	 */
@@ -120,7 +120,7 @@ public:
 		  else
 		  	kurl.setPath( kurl.path() + "/new" );
 		}
-	 
+
 	/**
 	 * This function returns the name which is used a title in the configuration.
 	 *

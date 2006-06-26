@@ -50,7 +50,7 @@ public:
 	 * Destructor
 	 */
 	~BoxContainer();
-	
+
 	/**
 	 * This method reads the config from a certain KConfig instance.
 	 *
@@ -64,9 +64,9 @@ public:
 	 * @param config The KConfig-instance to write the config to.
 	 */
 	void writeConfig( KConfig *config );
-	
+
 	/**
-	 * Shows all childs and itself
+	 * Shows all children and itself
 	 */
 	virtual void showBox();
 public slots:
@@ -83,7 +83,7 @@ protected:
 	 * @param item The item to be added.
 	 */
 	virtual void addItem( BoxContainerItem* item );
-	
+
 	/**
 	 * This method creates a new BoxContainerItem instance of the same
 	 * type as the BoxContainer.
@@ -91,12 +91,12 @@ protected:
 	 * @return A new instance to a BoxContainerItem of the same type.
 	 */
 	virtual BoxContainerItem* newBoxInstance() const = 0;
-	
+
 	/**
 	 * The list of BoxContainerItems.
 	 */
 	QList< BoxContainerItem* > *_items;
-	
+
 signals:
 	/**
 	 * This signal is used to pass the slotShowConfiguration call through

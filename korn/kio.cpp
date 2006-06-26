@@ -97,16 +97,16 @@ KKioDrop::KKioDrop()
 	//Creating children and connect them to the outside world; this class passes the messages for them...
 	//This class handles all the counting.
 	_count = new KIO_Count( this );
-		
+
 	//This class is responsible for providing the available subjects
 	_subjects = new KIO_Subjects( this );
-			
+
 	//This class is used when a full message has to be read.
 	_read = new KIO_Read( this );
-	
+
 	//This class can delete mails.
 	_delete = new KIO_Delete( this );
-	
+
 	_mailurls = new QList<FileInfo>;
 }
 
@@ -131,20 +131,20 @@ KKioDrop::KKioDrop( KConfigGroup* )
 	//Initialising protocol; if no protocol is set before first use, it will use the first protocol
 	_protocol = Protocols::firstProtocol()->getKIOProtocol(); //The first protocol is the default
 	_kurl->setPort( _protocol->defaultPort( _ssl ) );
-		
+
 	//Creating children and connect them to the outside world; this class passes the messages for them...
 	//This class handles all the counting.
 	_count = new KIO_Count( this );
-	
+
 	//This class is responsible for providing the available subjects
 	_subjects = new KIO_Subjects( this );
-	
+
 	//This class is used when a full message has to be read.
 	_read = new KIO_Read( this );
-	
+
 	//This class can delete mails.
 	_delete = new KIO_Delete( this );
-	
+
 	_mailurls = new QList<FileInfo>;
 
 	//readConfigGroup( *config );
@@ -160,7 +160,7 @@ void KKioDrop::setKioServer(const QString & proto, const QString & server, int p
 		            bool setProtocol )
 {
 	QString auth;
-	
+
 	if( port == -1 )
 		port = _protocol->defaultPort( ssl );
 
@@ -171,12 +171,12 @@ void KKioDrop::setKioServer(const QString & proto, const QString & server, int p
 		if( ! _protocol )
 			_protocol = Protocols::firstProtocol()->getKIOProtocol();
 	}
-			
+
 	_kurl->setProtocol( _protocol->protocol( ssl ) );
 	_kurl->setHost    ( server );
 	_kurl->setPort    ( port );
 	_ssl = ssl;
-	
+
 	//Checking for authentication-settings.
 	//if( _metadata->contains("auth") )
 	//{
@@ -186,7 +186,7 @@ void KKioDrop::setKioServer(const QString & proto, const QString & server, int p
 	//		(*_metadata)["auth"] = auth;
 	//} else
 	*_metadata = metadata;
-		
+
 	_count->stopActiveCount();
 }
 
@@ -204,10 +204,10 @@ void KKioDrop::setUser(const QString & user, const QString & password,
 
 	_valid = _kurl->isValid();
 	emit validChanged( valid() );
-	
+
 	if( ! _valid )
 		kWarning() << i18n( "url is not valid" ) << endl;
-	
+
 	_count->stopActiveCount();
 }
 
@@ -225,7 +225,7 @@ int KKioDrop::port() const
 	return _kurl->port();
 }
 
-QString KKioDrop::user() const 
+QString KKioDrop::user() const
 {
 	return _kurl->user();
 }
@@ -233,7 +233,7 @@ QString KKioDrop::password() const
 {
 	return _password ;
 }
-QString KKioDrop::mailbox() const 
+QString KKioDrop::mailbox() const
 {
 	return _kurl->path();
 }
@@ -245,7 +245,7 @@ QString KKioDrop::auth() const
 void KKioDrop::recheck()
 {
 	_count->count( this );
-		
+
 	return;
 }
 
@@ -279,9 +279,9 @@ bool KKioDrop::canReadSubjects( )
 QVector<KornMailSubject> * KKioDrop::doReadSubjects(bool * )
 {
 	_subjects->doReadSubjects( this );
-	
+
 	/*
-	 * A empty QValueVector is made here. 
+	 * A empty QValueVector is made here.
 	 * After that, the size is expanded to the expected number of subjects.
 	 * This way, reallocation of memmory is minimized, and thus more efficient.
 	 */
@@ -312,8 +312,8 @@ QString KKioDrop::readMail(const QVariant item, bool * )
 
 	return "";
 }
- 
-KMailDrop* KKioDrop::clone() const 
+
+KMailDrop* KKioDrop::clone() const
 {
 	KKioDrop *clone = new KKioDrop;
 
@@ -334,11 +334,11 @@ bool KKioDrop::readConfigGroup( const QMap< QString, QString > &map, const Proto
 	}
 
 	this->setObjectName( *map.find( "name" ) );
-	
+
 	_protocol = protocol->getKIOProtocol();
 	if( !_protocol )
 		_protocol = Protocols::firstProtocol()->getKIOProtocol();
-			
+
 	val = *map.find( "server" );
 	setKioServer( val2, val, (*map.find( "port" )).toInt(), KIO::MetaData(), *map.find( "ssl" ) == "true", false );
 
@@ -346,7 +346,7 @@ bool KKioDrop::readConfigGroup( const QMap< QString, QString > &map, const Proto
 	_kurl->setPath( *map.find( "mailbox" ) );
 
 	_kurl->setPass( *map.find( "password" ) );
-	
+
 	QStringList list = (*map.find( "metadata" )).split( ',', QString::SkipEmptyParts );
 	QStringList::Iterator it;
 	for( it = list.begin(); it != list.end(); ++it )
@@ -355,10 +355,10 @@ bool KKioDrop::readConfigGroup( const QMap< QString, QString > &map, const Proto
 		if( split > 0 )
 			_metadata->insert( (*it).left( split ), (*it).right( (*it).length() - split - 1 ) );
 	}
-	
+
 	_valid = true;
 	emitValidChanged();
-	
+
 	return true;
 }
 
@@ -382,7 +382,7 @@ KKioDrop& KKioDrop::operator = ( const KKioDrop& other )
 //Public slots
 void KKioDrop::readSubjectsCanceled()
 {
-	_subjects->cancelled();
+	_subjects->canceled();
 }
 
 void KKioDrop::readMailCanceled()

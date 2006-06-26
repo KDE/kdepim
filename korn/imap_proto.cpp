@@ -40,7 +40,7 @@ void Imap_Protocol::configFields( QVector< QWidget* >* vector, const QObject* co
 	encrList.insert( "tls=auto", i18n( "TLS if possible" ) );
 	encrList.insert( "tls=on", i18n( "Always TLS" ) );
 	encrList.insert( "tls=off", i18n( "Never TLS" ) );
-	
+
 	QMap< QString, QString > authList;
 	authList.insert( "auth=*", i18n( "Default" ) );
 	authList.insert( "auth=LOGIN", i18n( "LOGIN" ) ); //Note: LOGIN is an authentication method
@@ -52,7 +52,7 @@ void Imap_Protocol::configFields( QVector< QWidget* >* vector, const QObject* co
 	result->append( new ComboInput( vector->at( 0 ), i18n( "Encryption" ), encrList, "tls=auto", "encryption" ) );
 	QObject::connect( (QObject*)result->last()->rightWidget(), SIGNAL( activated( int) ),
 	                  configDialog, SLOT( slotSSLChanged() ) );
-	
+
 	result->append( new TextInput( vector->at( 1 ), i18n( "Username" ), TextInput::text, "", "username" ) );
 	result->append( new TextInput( vector->at( 1 ), i18n( "Mailbox" ), TextInput::text, "INBOX", "mailbox" ) );
 	result->append( new TextInput( vector->at( 1 ), i18n( "Password" ), TextInput::password, "", "password" ) );
@@ -91,7 +91,7 @@ void Imap_Protocol::writeEntries( QMap< QString, QString >* map ) const
 	if( map->contains( "auth" ) )
 	{
 		if( !metadata.isEmpty() )
-			metadata += ",";
+			metadata += ',';
 		metadata += *map->find( "auth" );
 		map->remove( "auth" );
 	}

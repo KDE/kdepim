@@ -33,7 +33,7 @@
 
 class KIO_Protocol;
 class KIO_Single_Subject;
-class KKioDrop; 
+class KKioDrop;
 class KJob;
 class KornMailSubject;
 
@@ -46,7 +46,7 @@ class QString;
 
 /**
  * This class count the number of message available in a mailbox.
- * This class have access to the KKioDrop drop throught friend classes.
+ * This class have access to the KKioDrop drop through friend classes.
  */
 class KIO_Count : public QObject
 { Q_OBJECT
@@ -61,7 +61,7 @@ public:
 	 * Destructor
 	 */
 	~KIO_Count();
-	
+
 	/**
 	 * This function start counting.
 	 * This infomration needed for counting are retrieved through the drop parameter.
@@ -69,14 +69,14 @@ public:
 	 * @param drop the KKioDrop of the account to check
 	 */
 	void count( KKioDrop* drop );
-	
+
 	/**
-	 * This function returns true if no errors occured.
+	 * This function returns true if no errors occurred.
 	 *
-	 * @return false if an error occured; true otherwise
+	 * @return false if an error occurred; true otherwise
 	 */
 	bool valid( ) { return _valid; }
-	
+
 	/**
 	 * This function stops the pending counting.
 	 */
@@ -96,11 +96,11 @@ private:
 private:
 	void showPassive( const QString& );
 	void disconnectSlave();
-	
+
 private slots:
 	void result( KJob* );
 	void entries( KIO::Job*, const KIO::UDSEntryList &list );
-	
+
 	void addtoPassivePopup( KornMailSubject* );
 	void deleteSingleSubject( KIO_Single_Subject* );
 };

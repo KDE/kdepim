@@ -21,7 +21,7 @@
 #define DCOP_PROTO_H
 
 /**
- * @file 
+ * @file
  *
  * This file only have one class: DCOP_Protocol
  */
@@ -48,7 +48,7 @@ template< class T, class S> class QMap;
 /**
  * This class implements a DCOP-protocol.
  * DCOP can be used to add messages to a box, or delete created dcop-messages.
- * This can be usefull in scripts.
+ * This can be useful in scripts.
  */
 class DCOP_Protocol : public Protocol
 {
@@ -64,7 +64,7 @@ public:
 
 	/**
 	 * This function returns a Protocol pointer given a configuration.
-	 * This function always returns itselfs, as the configuration never uses another protocol.
+	 * This function always returns itself, as the configuration never uses another protocol.
 	 */
 	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
 	/**

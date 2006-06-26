@@ -56,12 +56,12 @@ private:
 	KIO::MetaData *_metadata;
 
 	QString _password;
-	
+
 	bool _valid;
-		
+
 	const KIO_Protocol * _protocol;
 	bool _ssl;
-	
+
 	KIO_Count *_count;
 	KIO_Subjects *_subjects;
 	KIO_Read *_read;
@@ -71,14 +71,14 @@ private:
 	int _deleteMailsTotalSteps;
 	//For process
 	KProcess *_process;
-	
+
 	//List of mailurls fetched by the last time emails were counted
 	struct FileInfo {
 		QString name;
 		long size;
 	};
 	QList<FileInfo> *_mailurls;
-	
+
 	/*
 	 * The help-classes of this functions are friend functions, because this way, they can
 	 * access the _kurl and _metadata-values without a function; and this way, no signal or
@@ -119,7 +119,7 @@ public:
 	 */
 	KKioDrop( KConfigGroup* );
 
-	/** 
+	/**
 	 * Set the server that will be checked for new mail.
 	 *
 	 * @param proto the protocol
@@ -127,7 +127,7 @@ public:
 	 * @param port the port number
 	 */
 	void setKioServer( const QString & proto, const QString & server, int port = -1 );
-	/** 
+	/**
 	 * Set the server that will be checked for new mail.
 	 *
 	 * @param proto the protocol for this account
@@ -199,14 +199,14 @@ public:
 	 */
 	virtual void recheck();
 	/**
-	 * This function always rechecks the mailbox, but it cancelled a pending count.
+	 * This function always rechecks the mailbox, but it canceled a pending count.
 	 */
 	virtual void forceRecheck();
 
 	/**
-	 * This function returns false if an errors occured.
+	 * This function returns false if an errors occurred.
 	 *
-	 * @return false if an errors occured; true otherwise
+	 * @return false if an errors occurred; true otherwise
 	 */
 	virtual bool valid();
 
@@ -227,17 +227,17 @@ public:
 	 * @param stop a pointer to a boolean to cancel the function
 	 * @return a list of subjects, of 0 is asynchrone
 	 */
-	virtual QVector<KornMailSubject> * doReadSubjects(bool * stop); 
-	
+	virtual QVector<KornMailSubject> * doReadSubjects(bool * stop);
+
 	/**
 	 * This function checks if it is possible to delete emails.
-	 * 
+	 *
 	 * @return true if it is possible to delete emails; false otherwise
 	 */
 	virtual bool canDeleteMails();
 	/**
 	 * This function deletes a list of emails
-	 * 
+	 *
 	 * @param ids a list of emails id's to delete
 	 * @param stop a pointer to a boolean to cancel the operation
 	 * @return true if succesfull; false otherwise
@@ -260,7 +260,7 @@ public:
 	 */
 	virtual QString readMail(const QVariant id, bool * stop);
 	//TODO: remove *stop from parameter, and the return parameter
-	
+
 	/**
 	 * This function returns a clone of the maildrop.
 	 *
@@ -284,7 +284,7 @@ public:
 	 */
 	//TODO: delete this function (because writing is done during configuration). Note: resetcounter should be written
 	virtual bool writeConfigGroup ( KConfigBase& cfg ) const;
-	
+
 	/**
 	 * This function returns the typename of this maildrop.
 	 * For this class, it always return "kio".
@@ -292,7 +292,7 @@ public:
 	 * @return the type of the Maildrop, for this class always "kio"
 	 */
 	virtual QString type() const { return QString::fromUtf8("kio"); }
-	
+
 	//TODO: synchrone or asynchrone; not both. Delete synchone, asynchrone of both
 	/**
 	 * This function returns if this protocol is synchrone (blocks when checking)
@@ -321,18 +321,18 @@ private:
 	 */
 	void emitRechecked() { emit rechecked(); }
 	void emitChanged( int value ) { emit changed( value, this ); }
-	
+
 	void emitReadSubjectsReady( bool success ) { emit readSubjectsReady( success ); }
 	void emitReadSubjectsRead( KornMailSubject * subject ) { emit readSubject( subject ); }
 	void emitReadSubjectsTotalSteps( int value ) { _readSubjectsTotalSteps = value; emit readSubjectsTotalSteps( value ); }
 	void emitReadSubjectsProgress( int value ) { emit readSubjectsProgress( _readSubjectsTotalSteps - value ); }
-	
+
 	void emitReadMailReady( QString* msg ) { emit readMailReady( msg ); }
-	
+
 	void emitDeleteMailsReady( bool value ) { emit deleteMailsReady( value ); }
 	void emitDeleteMailsTotalSteps( int value ) { _deleteMailsTotalSteps = value; emit deleteMailsTotalSteps( value ); }
 	void emitDeleteMailsProgress( int value ) { emit deleteMailsProgress( _deleteMailsTotalSteps - value ); }
-	
+
 	void emitShowPassivePopup( QList< KornMailSubject > *subject, int total )
 			{ emit showPassivePopup( subject, total, passiveDate(), this->realName() ); }
 	void emitShowPassivePopup( const QString& error )
@@ -343,18 +343,18 @@ private slots:
 	void slotConnectionError( int, const QString& );
 	void slotConnectionWarning( const QString& );
 	void slotConnectionInfoMessage( const QString& );
-	
+
 public slots:
 	/**
-	 * If this slot is called, a pending readSubjects is cancelled
+	 * If this slot is called, a pending readSubjects is canceled
 	 */
 	virtual void readSubjectsCanceled();
 	/**
-	 * If this slot is called, a pending readMail is cancelled
+	 * If this slot is called, a pending readMail is canceled
 	 */
 	virtual void readMailCanceled();
 	/**
-	 * If this slot is called, a pending deleteMail is cancelled
+	 * If this slot is called, a pending deleteMail is canceled
 	 */
 	virtual void deleteMailsCanceled();
 };

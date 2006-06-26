@@ -52,14 +52,14 @@ public:
 	 * In this class, it always returns itself (this).
 	 *
 	 * @param config the configuration group
-	 * @return in this class, it returns a pointer to itselfs
+	 * @return in this class, it returns a pointer to itself
 	 */
 	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
 
 	//TODO: Check if clone() is still used
 	/**
 	 * Return a copy of this class.
-	 * 
+	 *
 	 * @return a new instance of a Pop3 protocol
 	 */
 	virtual KIO_Protocol * clone() const { return new Pop3_Protocol; }
@@ -71,7 +71,7 @@ public:
 	 * @return in this class, it always returns true
 	 */
 	virtual bool connectionBased() const { return true; }
-	
+
 	/**
 	 * This function returns the kioslave which is used.
 	 *
@@ -120,7 +120,7 @@ public:
 	/**
 	 * This function returns the delete type.
 	 * Delete is done with a "get" command.
-	 * 
+	 *
 	 * @return in this class, always get.
 	 */
 	virtual DeleteTypeEnum deleteFunction() const { return get; }
@@ -130,7 +130,7 @@ public:
 	 * @return a stringlist
 	 */
 	virtual QStringList authList() const { return QString( "Plain|APOP" ).split( '|', QString::SkipEmptyParts, Qt::CaseSensitive ); }
-	
+
 	/**
 	 * This function manipuletes a kurl and metadata before the job is executed.
 	 * In this class, the path of the kurl is changed.

@@ -47,11 +47,11 @@ public:
 	 * Destructor
 	 */
 	~KMail_Protocol();
-	
+
 	/**
 	 * This function returns the protocol of the resulting configuration.
 	 * This is not itself, because an real Protocol of type KMail doesn't exist.
-	 * 
+	 *
 	 * @param config The configuration group to read the kmailname from.
 	 * @return A pointer to a Protocol (not newly created) or 0 if an error orrured.
 	 */
@@ -60,7 +60,7 @@ public:
 	 * This gives a new Maildrop back. The maildrop is responsible to execute the configuration.
 	 * In most cases, it will return a new instance of the KKioDrop Maildrop.
 	 * @param config The configuration group to read the kmailname from.
-	 * @return A new KMailDrop, or a 0 pointer if an error occured.
+	 * @return A new KMailDrop, or a 0 pointer if an error occurred.
 	 */
         virtual KMailDrop* createMaildrop( KConfigGroup* config ) const;
 	/**
@@ -113,7 +113,7 @@ public:
 private:
 	QString readPassword( bool store, const KConfigBase &config, int id ) const;
 	QString getTypeAndConfig( const QString& kmailname, KConfig &config, int &nummer ) const;
-	
+
 	static const char* kmailGroupName;
 	static const char* kmailKeyName;
 	static const char* kmailKeyType;

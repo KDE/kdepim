@@ -56,7 +56,7 @@ public:
 	 * Destructor
 	 */
 	~AccountManager();
-	
+
 	/**
 	 * This function is used to read the config.
 	 *
@@ -76,7 +76,7 @@ public:
 	 * @param index The index of the box.
 	 */
 	virtual void writeConfig( KConfig* config, const int index );
-	
+
 	/**
 	 * This method makes a QString which can be used for a tooltip.
 	 * In it, all accounts are summed and the number of new messages of
@@ -102,22 +102,22 @@ protected:
 	virtual void setTooltip( const QString& tooltip ) = 0;
 
 	/**
-	 * This funtion is called if @p command have to be executed.
+	 * This function is called if @p command have to be executed.
 	 * For example, if new email has arrived, and the user setuped KOrn
 	 * to execute a command. Boxes must override this function.
 	 */
 	virtual void runCommand( const QString& command ) = 0;
-	
+
 	/**
 	 * This function can be called by classes that inherit this class.
-	 * If this function is called, all account which are part of this
+	 * If this function is called, all accounts which are part of this
 	 * box are rechecked.
 	 */
 	void doRecheck();
-	
+
 	/**
-	 * If this method is called, the number of new messages of all of its account
-	 * is resetted.
+	 * If this method is called, the number of new messages for all its
+	 * accounts are reset.
 	 */
 	void doReset();
 
@@ -134,7 +134,7 @@ protected:
 	 * This function is called if the user want to stop the account.
 	 */
 	void doStopTimer();
-	
+
 private:
 	struct Dropinfo
 	{
@@ -143,14 +143,14 @@ private:
 		bool newMessages;
 		int reset;
 	};
-	
+
 	QList< KMailDrop* > *_kioList;
 	QList< DCOPDrop* > *_dcopList;
-	
+
 	QMap< KMailDrop*, Dropinfo* > *_dropInfo;
-	
+
 	static KornSubjectsDlg *_subjectsDlg;
-	
+
 protected:
 	int totalMessages();
 	bool hasNewMessages();

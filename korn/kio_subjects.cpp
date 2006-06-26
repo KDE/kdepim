@@ -55,7 +55,7 @@ void KIO_Subjects::doReadSubjects( KKioDrop *drop )
 {
 	QList<KKioDrop::FileInfo>::ConstIterator it;
 	QList<KKioDrop::FileInfo>::ConstIterator end_it = drop->_mailurls->end();
-	
+
 	_kio = drop;
 	_protocol = _kio->_protocol;
 	*_kurl = *_kio->_kurl;
@@ -63,20 +63,20 @@ void KIO_Subjects::doReadSubjects( KKioDrop *drop )
 
 	if( _jobs->count() > 0 )
 		kWarning() << i18n( "Already a slave pending." ) << endl;
-		
+
 	while( !_jobs->isEmpty() )
 		delete _jobs->takeFirst();
-	
+
 	//Open connection
 	getConnection( );
-	
+
 	//Open jobs for easy item in the list
 	for( it = _kio->_mailurls->begin(); it != end_it; it++ )
 		startJob( (*it).name, (*it).size );
-	
+
 	//close connection for trivial situations (empty list)
 	disConnect( true );
-	
+
 	//passing number of subjects for progress bar.
 	_kio->emitReadSubjectsTotalSteps( _jobs->count() );
 }
@@ -91,14 +91,14 @@ void KIO_Subjects::getConnection( )
 		KIO::Scheduler::disconnectSlave( _slave );
 		_slave = 0;
 	}
-	
+
 	if( _protocol->connectionBased( ) )
 	{
 		_protocol->readSubjectConnectKUrl( kurl, metadata );
-		
+
 		if( kurl.port() == 0 )
 			kurl.setPort( _protocol->defaultPort( _kio->_ssl ) );
-		
+
 		if( ! ( _slave = KIO::Scheduler::getConnectedSlave( kurl, metadata ) ) )
 		{
 			kWarning() << i18n( "Not able to open a kio-slave for %1.", _protocol->configName() );
@@ -117,19 +117,19 @@ void KIO_Subjects::startJob( const QString &name, const long size )
 	KUrl kurl = *_kurl;
 	KIO::MetaData metadata = *_metadata;
 	KIO_Single_Subject *subject;
-	
+
 	kurl = name;
-	
+
 	_protocol->readSubjectKUrl( kurl, metadata );
-	
+
 	if( kurl.port() == 0 )
 		kurl.setPort( _protocol->defaultPort( _kio->_ssl ) );
-	
+
 	subject = new KIO_Single_Subject( this, kurl, metadata, _protocol, _slave, name, size );
-	
+
 	connect( subject, SIGNAL( readSubject( KornMailSubject* ) ), this, SLOT( slotReadSubject( KornMailSubject* ) ) );
 	connect( subject, SIGNAL( finished( KIO_Single_Subject* ) ), this, SLOT( slotFinished( KIO_Single_Subject* ) ) );
-	
+
 	_jobs->append( subject );
 }
 
@@ -146,11 +146,11 @@ void KIO_Subjects::disConnect( bool result )
 	}
 }
 
-void KIO_Subjects::cancelled( )
+void KIO_Subjects::canceled( )
 {
 	while( !_jobs->isEmpty() )
 		delete _jobs->takeFirst();
-	
+
 	//_slave died in cancelJob with is by called from the destructor of KIO_Single_Subject,
 	//withs is by called by _jobs->clear because autoRemove equals true.
 	_slave = 0;
@@ -169,9 +169,9 @@ void KIO_Subjects::slotFinished( KIO_Single_Subject* item )
 {
 	item->deleteLater();
 	_jobs->removeAll( item );
-	
+
 	_kio->emitReadSubjectsProgress( _jobs->count( ) );
-	
+
 	disConnect( true ); //Only works when all jobs are finished.
 }
 

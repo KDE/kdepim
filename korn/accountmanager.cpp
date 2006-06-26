@@ -53,18 +53,18 @@ AccountManager::~AccountManager()
 	delete _dcopList;
 	delete _dropInfo;
 }
-	
+
 void AccountManager::readConfig( KConfig* config, const int index )
 {
 	KConfigGroup *masterGroup = new KConfigGroup( config, QString( "korn-%1" ).arg( index ) );
 	QStringList dcop = masterGroup->readEntry( "dcop", QStringList(), ',' );
 	KConfigGroup *accountGroup;
 	int counter = 0;
-		
+
 	while( config->hasGroup( QString( "korn-%1-%2" ).arg( index ).arg( counter ) ) )
 	{
 		accountGroup = new KConfigGroup( config, QString( "korn-%1-%2" ).arg( index ).arg( counter ) );
-		
+
 		const Protocol *proto = Protocols::getProto( accountGroup->readEntry( "protocol" ) );
 		if( !proto )
 		{
@@ -80,12 +80,12 @@ void AccountManager::readConfig( KConfig* config, const int index )
 
 		if( !kiodrop || !configmap || !nproto )
 		{
-			//Error occured when reading for config
+			//Error occurred when reading for config
 			++counter;
 			delete info;
 			continue;
 		}
-		
+
 		//TODO: connect some stuff
 		connect( kiodrop, SIGNAL( changed( int, KMailDrop* ) ), this, SLOT( slotChanged( int, KMailDrop* ) ) );
 		connect( kiodrop, SIGNAL( showPassivePopup( QList< KornMailSubject >*, int, bool, const QString& ) ),
@@ -93,7 +93,7 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		connect( kiodrop, SIGNAL( showPassivePopup( const QString&, const QString& ) ),
 			 this, SLOT( slotShowPassivePopup( const QString&, const QString& ) ) );
 		connect( kiodrop, SIGNAL( validChanged( bool ) ), this, SLOT( slotValidChanged( bool ) ) );
-		
+
 		kiodrop->readGeneralConfigGroup( *masterGroup );
 		if( !kiodrop->readConfigGroup( *accountGroup ) || !kiodrop->readConfigGroup( *configmap, nproto ) )
 		{
@@ -101,44 +101,44 @@ void AccountManager::readConfig( KConfig* config, const int index )
 			delete info;
 			continue;
 		}
-		
+
 		kiodrop->startMonitor();
-		
+
 		_kioList->append( kiodrop );
-		
+
 		info->index = counter;
 		info->reset = accountGroup->readEntry( "reset", 0 );
 		info->msgnr = info->reset;
 		info->newMessages = false;
-		
+
 		_dropInfo->insert( kiodrop, info );
-		
+
 		++counter;
 	}
-	
+
 	QStringList::Iterator it;
 	for( it = dcop.begin(); it != dcop.end(); ++it )
 	{
 		DCOPDrop *dcopdrop = new DCOPDrop;
 		Dropinfo *info = new Dropinfo;
-		
+
 		connect( dcopdrop, SIGNAL( changed( int, KMailDrop* ) ), this, SLOT( slotChanged( int, KMailDrop* ) ) );
 		connect( dcopdrop, SIGNAL( showPassivePopup( QList< KornMailSubject >*, int, bool, const QString& ) ),
 			 this, SLOT( slotShowPassivePopup( QList< KornMailSubject >*, int, bool, const QString& ) ) );
-		
+
 		dcopdrop->readConfigGroup( *masterGroup );
 		dcopdrop->setDCOPName( *it );
-		
+
 		_dcopList->append( dcopdrop );
-		
+
 		info->index = 0;
 		info->reset = 0;
 		info->msgnr = 0;
 		info->newMessages = false;
-		
+
 		_dropInfo->insert( dcopdrop, info );
 	}
-	
+
 	setCount( totalMessages(), hasNewMessages() );
 }
 
@@ -164,7 +164,7 @@ QString AccountManager::getTooltip() const
 	result.sort();
 	return result.join( "\n"  );
 }
-	
+
 void AccountManager::doRecheck()
 {
 	for( int xx = 0; xx < _kioList->size(); ++xx )
@@ -179,22 +179,22 @@ void AccountManager::doReset()
 		it.value()->reset = it.value()->msgnr;
 		it.value()->newMessages = false;
 	}
-	
+
 	setCount( 0, false );
 }
 
 void AccountManager::doView()
 {
 	QMap< KMailDrop*, Dropinfo* >::Iterator it;
-	
+
 	if( !_subjectsDlg )
 		_subjectsDlg = new KornSubjectsDlg();
-	
+
 	_subjectsDlg->clear();
-	
+
 	for( it = _dropInfo->begin(); it != _dropInfo->end(); ++it )
 		_subjectsDlg->addMailBox( it.key() );
-	
+
 	_subjectsDlg->loadMessages();
 }
 
@@ -213,12 +213,12 @@ void AccountManager::doStopTimer()
 int AccountManager::totalMessages()
 {
 	int result = 0;
-	
+
 	QMap< KMailDrop*, Dropinfo* >::Iterator it;
 	for( it = _dropInfo->begin(); it != _dropInfo->end(); ++it )
 		//if( it.date()->msgnr - it.date()->reset > 0 )
 			result += it.value()->msgnr - it.value()->reset;
-	
+
 	return result;
 }
 
@@ -228,7 +228,7 @@ bool AccountManager::hasNewMessages()
 	for( it = _dropInfo->begin(); it != _dropInfo->end(); ++it )
 		if( it.value()->newMessages )
 			return true;
-	
+
 	return false;
 }
 
@@ -241,13 +241,13 @@ void AccountManager::playSound( const QString& file )
 void AccountManager::slotChanged( int count, KMailDrop* mailDrop )
 {
 	bool newMessage;
-	
+
 	Dropinfo *info = _dropInfo->find( mailDrop ).value();
 	info->newMessages = count > info->msgnr || ( count == info->msgnr && info->newMessages );
-	
+
 	newMessage = count > info->msgnr;
-	
-	info->msgnr = count;	
+
+	info->msgnr = count;
 	if( info->msgnr - info->reset < 0 )
 		info->reset = 0;
 

@@ -38,7 +38,7 @@ class QVariant;
 
 /**
  * This class implements a KMailDrop for DCOP-objects.
- * This class handles all new messages which are comming in through DCOP.
+ * This class handles all new messages which are coming in through DCOP.
  */
 class DCOPDrop : public KMailDrop
 { Q_OBJECT
@@ -51,7 +51,7 @@ public:
 	 * Destructor
 	 */
 	virtual ~DCOPDrop();
-	
+
 	/**
 	 * A DCOPDrop cannot produce error messages, so it always returns true.
 	 *
@@ -85,7 +85,7 @@ public:
 	 * @return true is it is 'running'.
 	 */
 	virtual bool running() { return _isRunning; }
-	
+
 	/**
 	 * This function gives a new instance of a DCOPDrop.
 	 *
@@ -106,31 +106,31 @@ public:
 	 * @param map The mapping containing the configuration.
 	 * @param protocol The protocol which comes with the mapping.
 	 *
-	 * @return true is all information is retrieved succesfully.
+	 * @return true is all information is retrieved successfully.
 	 */
 	virtual bool readConfigGroup( const QMap< QString, QString > & map, const Protocol * protocol );
 	/**
 	 * This function writes the information to a config group.
 	 *
 	 * @param config The configuration to write true
-	 * @return true if no error occured.
+	 * @return true if no error occurred.
 	 */
 	virtual bool writeConfigGroup( KConfigBase& config ) const;
 	/**
-	 * This returns the type of the box, in this case allways "dcop".
+	 * This returns the type of the box, in this case always "dcop".
 	 *
 	 * @return "dcop"
 	 */
 	virtual QString type() const;
-	
+
 	/**
 	 * This function should return true if it uses a synchrone comminucation.
-	 * It doens't, so it returns false.
+	 * It doesn't, so it returns false.
 	 *
 	 * @return false
 	 */
 	virtual bool synchrone() const { return false; }
-	
+
 	/**
 	 * Return true if it is possible to read the subjects of new email.
 	 *
@@ -143,7 +143,7 @@ public:
 	 * @return A QValueVector which KornMailSubject* instance for every new mail.
 	 */
 	virtual QVector< KornMailSubject >* doReadSubjects( bool *stop );
-	
+
 	/**
 	 * This function should return true if it is possible to delete emails.
 	 * This is possible, so it always return true.
@@ -159,7 +159,7 @@ public:
 	 * @return true if deleting was succesfull
 	 */
 	virtual bool deleteMails( QList<QVariant> * ids, bool * stop );
-	
+
 	/**
 	 * This function returns true if it is possible to read emails.
 	 * The emails are only given at once as a whole, so reading is impossible.
@@ -167,19 +167,19 @@ public:
 	 * @return false
 	 */
 	virtual bool canReadMail() const { return false; }
-	
-	
+
+
 private:
 	bool _isRunning;
 	QMap< int, KornMailSubject* > *_msgList;
 	QString *_name;
 	int _counter;
-	
+
 	void eraseList( void );
-	
+
 private slots:
 	void doReadSubjectsASync( void );
-	
+
 public slots: //accessed by DCOPDropInterface
 	/**
 	 * This function append a message to the box.
@@ -198,7 +198,7 @@ public slots: //accessed by DCOPDropInterface
 	 * @return true if succesfull, false otherwise
 	 */
 	bool removeMessage( int id );
-	
+
 	//accessed by DCOPDropCfg
 public:
 	/**

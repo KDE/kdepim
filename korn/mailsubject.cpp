@@ -53,9 +53,9 @@ QString KornMailSubject::toString() const
 {
 	QDateTime date;
 	date.setTime_t(_date);
-	return QString("KornMailSubject, Id: ") + (_id?_id->toString():QString("NULL")) + ", " + i18n("Subject:") + " " + _subject
-		+ ", " + i18n("Sender:") + " " + _sender + ", " + i18n("Size:") + " " + QString::number(_size)
-		+ ", " + i18n("Date:") + " " + date.toString(Qt::ISODate);
+	return QString("KornMailSubject, Id: ") + (_id?_id->toString():QString("NULL")) + ", " + i18n("Subject:") + ' ' + _subject
+		+ ", " + i18n("Sender:") + ' ' + _sender + ", " + i18n("Size:") + ' ' + QString::number(_size)
+		+ ", " + i18n("Date:") + ' ' + date.toString(Qt::ISODate);
 }
 
 bool operator<( const KornMailSubject& sub1, const KornMailSubject& sub2 )

@@ -82,7 +82,7 @@ public slots:
 	void setProgressOfBoxes( int number );
 	/**
 	 * This function sets the total number of items for the minor progress bar.
-	 * 
+	 *
 	 * @param number the total number of steps in the minor progress bar
 	 */
 	void setNumberOfSteps( int number );
@@ -102,7 +102,7 @@ private slots:
 signals:
 	/**
 	 * This signal is emitted when the user press the cancel button.
-	 * The pending operation should be cancelled.
+	 * The pending operation should be canceled.
 	 */
 	void cancelPressed();
 };

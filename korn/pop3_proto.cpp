@@ -42,7 +42,7 @@ void Pop3_Protocol::configFields( QVector< QWidget* >* vector, const QObject* co
 	encrList.insert( "tls=auto", i18n( "TLS if possible" ) );
 	encrList.insert( "tls=on", i18n( "Always TLS" ) );
 	encrList.insert( "tls=off", i18n( "Never TLS" ) );
-	
+
 	QMap< QString, QString > authList;
 	authList.insert( "", i18n( "Plain" ) );
 	authList.insert( "auth=APOP", i18n( "APOP" ) );
@@ -52,7 +52,7 @@ void Pop3_Protocol::configFields( QVector< QWidget* >* vector, const QObject* co
 	result->append( new ComboInput( vector->at( 0 ), i18n( "Encryption" ), encrList, "tls=auto", "encryption" ) );
 	QObject::connect( (QObject*)result->last()->rightWidget(), SIGNAL( activated( int) ),
 	                  configDialog, SLOT( slotSSLChanged() ) );
-	
+
 	result->append( new TextInput( vector->at( 1 ), i18n( "Username" ), TextInput::text, "", "username" ) );
 	result->append( new TextInput( vector->at( 1 ), i18n( "Password" ), TextInput::password, "", "password" ) );
 	result->append( new CheckboxInput( vector->at( 1 ), i18n( "Save password" ), "true", "savepassword" ) );
@@ -90,7 +90,7 @@ void Pop3_Protocol::writeEntries( QMap< QString, QString >* map ) const
 	if( map->contains( "auth" ) )
 	{
 		if( !metadata.isEmpty() && ! (*map->find( "auth" )).isEmpty() )
-			metadata += ",";
+			metadata += ',';
 		metadata += *map->find( "auth" );
 		map->remove( "auth" );
 	}

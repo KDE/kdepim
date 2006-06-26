@@ -21,7 +21,7 @@
 
 /**
  * @file
- * 
+ *
  * KIO can handle multiple protocols. But some protocols have their own
  * manipulations of KUrl or MetaData , and some protocols could do more then other
  * protocols. So, this file defines a generic class for specifying the specific
@@ -108,7 +108,7 @@ public:
 	 *
 	 * Because there will never exist an instance of this class, a can override this method.
 	 * The default is false.
-	 * 
+	 *
 	 * Normal, a maildrop is responsable for give this answer, but in the case of kio,
 	 * several kio-protocols have differents results for this function.
 	 *
@@ -120,7 +120,7 @@ public:
 	 *
 	 * Because there will never exist an instance of this class, a can override this method.
 	 * The default is false.
-	 * 
+	 *
 	 * Normal, a maildrop is responsable for give this answer, but in the case of kio,
 	 * several kio-protocols have different resultss for this function.
 	 *
@@ -170,7 +170,7 @@ public:
 	virtual DeleteTypeEnum deleteFunction() const { return del; }
 
 	/**
-	 * The next options are the input for the Authentication Combo, seperated by '|'.
+	 * The next options are the input for the Authentication Combo, separated by '|'.
 	 * The name should be the same as the auth-metadata.
 	 * The default value is a list with only "Plain" in it.
 	 *
@@ -180,7 +180,7 @@ public:
 
 	/**
 	 * This function can manipulate a KUrl which is used after it for connecting.
-	 * 
+	 *
 	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
@@ -196,7 +196,7 @@ public:
 	virtual void recheckConnectKUrl( KUrl &, KIO::MetaData & ) const { }
 	/**
 	 * This function can manipulate a KUrl which is used for checking for new emails.
-	 * 
+	 *
 	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
@@ -213,7 +213,7 @@ public:
 	/**
 	 * This function can manipulate a KUrl which is used after it for connecting.
 	 * After connecting, the connection is used to check for new emails.
-	 * 
+	 *
 	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
@@ -227,7 +227,7 @@ public:
 	virtual void readSubjectConnectKUrl ( KUrl & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
 	/**
 	 * This function can manipulate a KUrl which is used before reading a subject.
-	 * 
+	 *
 	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
@@ -244,7 +244,7 @@ public:
 	/**
 	 * This function can manipulate a KUrl which is used after it for connecting.
 	 * After the connecting, the connection is used to delete emails.
-	 * 
+	 *
 	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
@@ -258,7 +258,7 @@ public:
 	virtual void deleteMailConnectKUrl( KUrl & kurl, KIO::MetaData & ) const { kurl.setPath( "" ); }
 	/**
 	 * This function can manipulate a KUrl which is used to delete an email.
-	 * 
+	 *
 	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
@@ -283,7 +283,7 @@ public:
 	virtual bool commitDelete() const { return false; }
 	/**
 	 * This function can manipulate a KUrl which is used for committing after a deleting operation.
-	 * 
+	 *
 	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.
@@ -300,7 +300,7 @@ public:
 	virtual void deleteCommitKUrl( KUrl &, KIO::MetaData & ) const { }
 	/**
 	 * This function can manipulate a KUrl which is used before reading an email.
-	 * 
+	 *
 	 * This is one of the functions to manipulation a KUrl.
 	 * At some points in the code, a KUrl is used. But sometimes,
 	 * these have to had a little retouch. That is possible with these function.

@@ -46,7 +46,7 @@ public:
 
 	/**
 	 * This function returns a new Protocol* after reading the configuration.
-	 * Because the protocol never changes for this protocol, it returns itselfs.
+	 * Because the protocol never changes for this protocol, it returns itself.
 	 *
 	 * @param config the configuration
 	 * @return for this class, it always returns this
@@ -104,11 +104,11 @@ public:
 	 * @return "File:"
 	 */
 	virtual QString mailboxName() const { return i18n( "File:" ); }
-	
+
 	/**
 	 * This function changes the kurl and metadata before the job is started.
 	 * In this class, some metadata is added.
-	 * 
+	 *
 	 * @param url the url (not touched in this class)
 	 * @param md metadata (changed after running this function)
 	 */

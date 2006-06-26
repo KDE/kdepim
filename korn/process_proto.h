@@ -51,7 +51,7 @@ public:
 
 	/**
 	 * This is an implementation of the pure virtual method Protocol::getProtocol().
-	 * In this class, it returns itselfs.
+	 * In this class, it returns itself.
 	 *
 	 * @param config a configuration (it is ignored in this class)
 	 * @return a pointer to a protocol; in this class always itself.
@@ -81,7 +81,7 @@ public:
 	 * @return a string which represent the type of protocol; in this class always "process"
 	 */
 	virtual QString configName() const { return "process"; }
-				        
+
 	/**
 	 * An implementation of the Protocol::configFillGroupBoxes() method.
 	 * In this class, only groupbox is append.

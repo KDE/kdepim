@@ -30,7 +30,7 @@
 ProcessDrop::ProcessDrop()
 	: KPollableDrop(),
 	_valid( true ),
-	_waitForRechecked( false ), 
+	_waitForRechecked( false ),
 	_process( 0 ),
 	_program( new QString() ),
 	_receivedBuffer( new QByteArray() )
@@ -52,8 +52,8 @@ bool ProcessDrop::valid()
 void ProcessDrop::recheck()
 {
 	_waitForRechecked = true;
-	
-	//Make the process if it doens't exist yet.
+
+	//Make the process if it doesn't exist yet.
 	if( !_process && !_program->isEmpty() )
 	{
 		_process = new KShellProcess;
@@ -67,7 +67,7 @@ void ProcessDrop::recheck()
 	{
 		_valid = _process->start( KProcess::NotifyOnExit, KProcess::Stdout );
 		if( !_valid )
-			kWarning() << i18n( "Could not start process %1", *_program ) << endl; 
+			kWarning() << i18n( "Could not start process %1", *_program ) << endl;
 	}
 
 }
@@ -89,7 +89,7 @@ bool ProcessDrop::readConfigGroup ( const KConfigBase& cfg )
 	//Delete process to make sure nothing of the process actually runs.
 	//It is recreated at first recheck.
 	delete _process; _process = 0;
-	
+
 	return true;
 }
 
@@ -110,7 +110,7 @@ void ProcessDrop::slotDataReceived( KProcess *proc, char* data, int length )
 	int result = -1;
 
 	//Test if the message comes from the right process
-	if( proc != _process ) 
+	if( proc != _process )
 	{
 		kDebug() << "Got wrong process in slotDataReceived()" << endl;
 		return;
