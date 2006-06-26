@@ -80,7 +80,7 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   painter->drawText(authorPos, linePos, authorWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, cauthors);
 
   if (messageCount > 1) {
-    int messageCountPos = 2*margin + authorWidth;
+    int messageCountPos = 2*margin + qMin(authorWidth, lineWidth);
     painter->drawText(messageCountPos, linePos, messageCountWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, messageCountText);
   }
 
@@ -97,7 +97,7 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
   int lineHeight = option.fontMetrics.height() + 2;
-  return QSize(0, lineHeight);
+  return QSize(lineWidth, lineHeight);
 }
 
 void ConversationDelegate::updateWidth(int pos, int /*nouse*/)

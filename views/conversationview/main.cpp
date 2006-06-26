@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
 
   QListView *conversationList = new QListView;
   conversationList->setModel(model);
+  conversationList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
   ConversationDelegate *delegate = new ConversationDelegate(data);
   conversationList->setItemDelegate(delegate);
