@@ -74,13 +74,15 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   QString messageCountText = QString("(%L1)").arg(messageCount);
   int messageCountWidth = option.fontMetrics.width(messageCountText);
 
-  int authorWidth = authorBaseWidth - (messageCount > 1 ? messageCountWidth + margin : 0);
-  int authorPos = margin;
   int linePos = index.row() * lineHeight;
+  int authorWidth = qMin(authorBaseWidth - (messageCount > 1 ? messageCountWidth + margin : 0), 
+                         lineWidth - (messageCount > 1 ? messageCountWidth + 2*margin : 0) - margin);
+  int authorPos = margin;
   painter->drawText(authorPos, linePos, authorWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, cauthors);
+// Add ...'s
 
   if (messageCount > 1) {
-    int messageCountPos = 2*margin + qMin(authorWidth, lineWidth);
+    int messageCountPos = qMin(2*margin + authorWidth, lineWidth - messageCountWidth - margin);
     painter->drawText(messageCountPos, linePos, messageCountWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, messageCountText);
   }
 
@@ -88,10 +90,12 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   int timeWidth = option.fontMetrics.width(ctime);
   int subjectWidth = lineWidth - subjectPos - timeWidth - 2*margin;
   painter->drawText(subjectPos, linePos, subjectWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctitle);
+// Add ...'s
 
   int timePos = qMax(lineWidth - margin - timeWidth, authorBaseWidth + 2*margin);
   timeWidth = qMax(lineWidth - (timePos + margin), 0);
   painter->drawText(timePos, linePos, timeWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctime);
+// Add ...'s
 }
 
 QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
