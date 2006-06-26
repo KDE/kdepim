@@ -4,7 +4,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
 ########### next target ###############
 
-set(kpimidentities_LIB_SRCS identitymanager.cpp identity.cpp identitycombo.cpp ${libemailfunctions_SRCS})
+set(kpimidentities_LIB_SRCS identitymanager.cpp identity.cpp identitycombo.cpp)
 
 kde4_automoc(${kpimidentities_LIB_SRCS})
 

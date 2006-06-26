@@ -2,7 +2,7 @@
 add_subdirectory( pics ) 
 add_subdirectory( filters ) 
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkmime ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkpgp ${CMAKE_SOURCE_DIR}/libemailfunctions  )
+include_directories( ${KDE4_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkmime ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkpgp )
 
 
 ########### next target ###############
@@ -119,7 +119,7 @@ kde4_automoc(${knode_SRCS})
 
 kde4_add_executable(knode ${knode_SRCS})
 
-target_link_libraries(knode  ${KDE4_KDECORE_LIBS} knodecommon )
+target_link_libraries(knode ${KDE4_EMAILFUNCTIONS_LIBS} ${KDE4_KDECORE_LIBS} knodecommon )
 
 install_targets(/bin knode )
 

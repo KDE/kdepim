@@ -1,10 +1,10 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/kmail ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkmime ${CMAKE_SOURCE_DIR}/mimelib ${CMAKE_SOURCE_DIR}/libemailfunctions  )
+include_directories( ${CMAKE_SOURCE_DIR}/kmail ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkmime ${CMAKE_SOURCE_DIR}/mimelib ${KDE4_INCLUDE_DIR} )
 
 
 ########### next target ###############
 
-set(kmail_bodypartformatter_text_vcard_PART_SRCS ${libemailfunctions_SRCS} text_vcard.cpp )
+set(kmail_bodypartformatter_text_vcard_PART_SRCS text_vcard.cpp )
 
 kde4_automoc(${kmail_bodypartformatter_text_vcard_PART_SRCS})
 
@@ -27,7 +27,7 @@ kde4_add_plugin(kmail_bodypartformatter_text_calendar WITH_PREFIX ${kmail_bodypa
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_calendar )
 
-target_link_libraries(kmail_bodypartformatter_text_calendar  ${KDE4_KDECORE_LIBS} kcal kmailprivate )
+target_link_libraries(kmail_bodypartformatter_text_calendar  ${KDE4_EMAILFUNCTIOS_LIBS} ${KDE4_KDECORE_LIBS} kcal kmailprivate )
 
 install_targets(${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_calendar )
 

@@ -10,8 +10,7 @@ include_directories(
 	${CMAKE_BINARY_DIR}/libkcal/libical/src/libical/
 	${CMAKE_SOURCE_DIR}/
 	${CMAKE_SOURCE_DIR}/ktnef
-	${CMAKE_SOURCE_DIR}/libemailfunctions
-	
+        ${KDE4_INCLUDE_DIR}
 )
 
 set(ICALSCRIPTS ${CMAKE_SOURCE_DIR}/libkcal/libical/scripts/ )
@@ -198,7 +197,6 @@ add_custom_command(OUTPUT
 ########### next target ###############
 
 set(kcal_LIB_SRCS ${libversit_SRCS} ${libical_SRCS} ${libicalss_SRCS}
-   ${libemailfunctions_SRCS}
    incidencebase.cpp 
    incidence.cpp 
    journal.cpp 
@@ -252,7 +250,7 @@ kde4_add_kcfg_files(kcal_LIB_SRCS htmlexportsettings.kcfgc )
 
 kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 
-target_link_libraries(kcal  ${KDE4_KDE3SUPPORT_LIBS} ${QT_QTXML_LIBRARY} ktnef kresources kabc  )
+target_link_libraries(kcal ${KDE4_EMAILFUNCTIONS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${QT_QTXML_LIBRARY} ktnef kresources kabc  )
 
 set_target_properties(kcal PROPERTIES VERSION 4.0.0 SOVERSION 4 )
 install_targets(${LIB_INSTALL_DIR} kcal )

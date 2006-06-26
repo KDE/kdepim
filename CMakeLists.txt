@@ -4,6 +4,7 @@ set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules )
 
 # search packages used by KDE
 find_package(KDE4 REQUIRED)
+find_package(KDEPIMLib REQUIRED)
 include (KDE4Defaults)
 include (MacroLibrary)
 
@@ -47,11 +48,6 @@ set(libknoteseditor_SRCS
 	${CMAKE_SOURCE_DIR}/knotes/knoteedit.cpp 
 )
 
-set(libemailfunctions_SRCS 
-	${CMAKE_SOURCE_DIR}/libemailfunctions/email.cpp 
-)
-
-
 set(libkdgantt_SRCS
            ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttView.cpp                   
 	   ${CMAKE_SOURCE_DIR}/kdgantt/KDGanttViewEventItem.cpp
@@ -74,7 +70,6 @@ add_subdirectory(kode)
 add_subdirectory(libakonadi)
 add_subdirectory(akonadiserver/src/notification)
 add_subdirectory(akonadiresources)
-add_subdirectory(libemailfunctions)
 add_subdirectory(libkcal)
 add_subdirectory(libkdepim)
 add_subdirectory(libkholidays)

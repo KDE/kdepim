@@ -53,8 +53,6 @@
         * - <a href="libakonadi/html/index.html"><b>libakonadi</b></a>
         *   (<a href="libakonadi/html/classes.html">classes</a>)\n
         *   <i>Client library for accessing Akonadi, the PIM storage service.</i>
-        * - <a href="libemailfunctions/html/index.html"><b>libemailfunctions</b></a>\n
-        *   <i>A library for general purpose email handling.</i>
         * - <a href="libkcal/html/index.html"><b>libkcal</b></a>
         *   (<a href="libkcal/html/classes.html">classes</a>)\n
         *   <i>A library of calendaring classes.</i>
