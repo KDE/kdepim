@@ -63,6 +63,7 @@ QString AstroSeasons::seasonName( AstroSeasons::Season season )
 
 AstroSeasons::Season AstroSeasons::season( const QDate &date ) const
 {
+// see http://www.hermetic.ch/cal_sw/ve/ve.php
   Season retSeason = None;
 
   int year = date.year();
