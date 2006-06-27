@@ -52,7 +52,7 @@
 #include <kurl.h>
 #include <kxmlguifactory.h>
 
-#include <libemailfunctions/email.h>
+#include <emailfunctions/email.h>
 
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>

@@ -32,7 +32,7 @@
 #include <libkcal/icalformat.h>
 #include <libkcal/freebusy.h>
 
-#include <libemailfunctions/email.h>
+#include <emailfunctions/email.h>
 
 #include <ktnef/ktnefparser.h>
 #include <ktnef/ktnefmessage.h>

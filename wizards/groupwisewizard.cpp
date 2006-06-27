@@ -29,7 +29,7 @@
 #include "kresources/groupwise/kcal_resourcegroupwise.h"
 
 #include <libkcal/resourcecalendar.h>
-#include <libemailfunctions/email.h>
+#include <emailfunctions/email.h>
 
 #include <klineedit.h>
 #include <klocale.h>

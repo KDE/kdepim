@@ -32,7 +32,7 @@
 #include <kiconeffect.h>
 #include <kprocess.h>
 
-#include <libemailfunctions/email.h>
+#include <emailfunctions/email.h>
 
 #include "kndisplayedheader.h"
 #include "knglobals.h"
