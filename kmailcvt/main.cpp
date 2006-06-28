@@ -17,7 +17,6 @@
 
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
-#include <dcopclient.h>
 #include <klocale.h>
 
 #include "kmailcvt.h"
@@ -45,12 +44,7 @@ int main(int argc, char *argv[])
   KApplication a;
   KMailCVT *kmailcvt = new KMailCVT();
   a.setMainWidget(kmailcvt);
-  kmailcvt->show();  
-
-  DCOPClient *client=a.dcopClient();
-  if (!client->attach()) {
-    return 1;
-  }
+  kmailcvt->show();
 
   return a.exec();
 }

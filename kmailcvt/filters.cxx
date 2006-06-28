@@ -20,6 +20,7 @@
 #include <kurl.h>
 #include <kdebug.h>
 #include <ktoolinvocation.h>
+#include <dbus/qdbus.h>
 
 #include "filters.hxx"
 #include "kmailcvt.h"
@@ -133,13 +134,14 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
 {
   KUrl msgURL;
   msgURL.setPath( msgPath );
-  
-  if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
+
+  if ( !QDBus::sessionBus().busService()->nameHasOwner( "kmail" ) )
     KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
 
-  DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopAddMessage", folderName, msgURL, msgStatusFlags );
-  
-  if ( !reply.isValid() )
+  QDBusInterfacePtr kmail("org.kde.kmail", "/KMail", "org.kde.kmail.KMail");
+  QDBusReply<int> reply = kmail->call("dcopAddMessage", folderName, msgURL.url(), msgStatusFlags);
+
+  if ( !reply.isSuccess() )
   {
     info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DCOP communication. "
                        "Make sure <i>kmail</i> is installed." ) );
@@ -169,12 +171,14 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
 {
   KUrl msgURL;
   msgURL.setPath( msgPath );
-  
-  if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
+
+  if ( !QDBus::sessionBus().busService()->nameHasOwner( "kmail" ) )
     KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
 
-  DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopAddMessage_fastImport", folderName, msgURL, msgStatusFlags );
-  if ( !reply.isValid() )
+  QDBusInterfacePtr kmail("org.kde.kmail", "/KMail", "org.kde.kmail.KMail");
+  QDBusReply<int> reply = kmail->call("dcopAddMessage_fastImport", folderName, msgURL.url(), msgStatusFlags);
+
+  if ( !reply.isSuccess() )
   {
     info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DCOP communication. "
                        "Make sure <i>kmail</i> is installed." ) );
@@ -198,14 +202,15 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
 
 bool Filter::endImport()
 {
-    if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
+    if ( !QDBus::sessionBus().busService()->nameHasOwner( "kmail" ) )
     KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
 
-    DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call(  "dcopAddMessage", QString(), QString() );
-    if ( !reply.isValid() ) return false;
+    QDBusInterfacePtr kmail("org.kde.kmail", "/KMail", "org.kde.kmail.KMail");
+    QDBusReply<void> reply = kmail->call("dcopAddMessage", QString(), QString());
+    if ( !reply.isSuccess() ) return false;
 
-    reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopResetAddMessage" );
-    if ( !reply.isValid() ) return false;
+    reply = kmail->call("dcopResetAddMessage");
+    if ( !reply.isSuccess() ) return false;
 
     return true;
 }
