@@ -1,7 +1,6 @@
 Current Release is Proko2 2.1.2
 
-Changes since Proko2 2.1.1 up to Proko2 2.1.2 (released FIXME)
-~~~~~~~
+Changes since Proko2 2.1.1 up to Proko2 2.1.2 (released 26.06.2006)
 
 Bugfixes
 ========
@@ -41,12 +40,12 @@ Bugfixes
 Features
 ========
 * Show quota information in the folder tooltip. Even works for 
-  online imap (Proko2 Issue 1215)
+  online imap (Proko2 Issue 1215)
 
-* Show information about recurring events in invitation mails 
-  (Proko2 Issue 1226)
+* Show detailed information about recurring events in invitation 
+  mails (Proko2 Issue 1226)
 
-* Allow ";" as additional Address seperator (Proko2 Issue 1216)
+* Allow ";" as additional address seperator (Proko2 Issue 1216)
 
 * For full mailchecks (more than one folder) do a full folder listing
   (modulo list-only-open-folders config option) so we detect new shared
@@ -56,7 +55,6 @@ Features
 
 
 Changes since Proko2 2.1.0 up to Proko2 2.1.1 (released 20060518)
-~~~~~~~
 
 Bugfixes:
 
