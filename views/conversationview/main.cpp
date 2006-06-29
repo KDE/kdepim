@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
   QListView *conversationList = new QListView;
   conversationList->setModel(proxyModel);
-  conversationList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+//  conversationList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
   QStringList me;
   me << "Aron Bostrom" << "Hrafnahnef" << "Syllten";
