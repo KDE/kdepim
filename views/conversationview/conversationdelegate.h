@@ -48,9 +48,9 @@ public slots:
 private:
   QSortFilterProxyModel *pmodel;
   FolderModel *fmodel;
-  int lineWidth, authorBaseWidth, margin;
+  int lineWidth, leftBaseWidth, rightBaseWidth, margin;
   QStringList listOfMe;
-  QRect getAuthorsBox(const QStyleOptionViewItem &option, const QRect &messageCountBox = QRect()) const;
+  QRect getAuthorsBox(const QStyleOptionViewItem &option, const QRect &decoBox = QRect()) const;
   QRect getCountBox(const QStyleOptionViewItem &option, const QString &count) const;
 	QString getAuthors(const QStyleOptionViewItem &option, const DummyKonadiConversation *conversation, int maxWidth) const;
 	bool isOdd(int row) const;

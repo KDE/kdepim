@@ -38,7 +38,7 @@ ConversationDelegate::ConversationDelegate(FolderModel *folderModel, QSortFilter
   pmodel = proxyModel;
   listOfMe = me;
 //  lineWidth = 510;
-  authorBaseWidth = 175;
+  leftBaseWidth = 175;
   margin = 5;
 }
 
@@ -84,7 +84,7 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   QString cauthors = getAuthors(option, c, authorsBox.width());//c->author(0);
 	
   int linePos = option.rect.top();
-  int authorWidth = qMin(authorBaseWidth - (messageCount > 1 ? messageCountWidth + margin : 0), 
+  int authorWidth = qMin(leftBaseWidth - (messageCount > 1 ? messageCountWidth + margin : 0), 
                          tmpLineWidth - (messageCount > 1 ? messageCountWidth + 2*margin : 0) - margin);
 //  int authorPos = margin + option.rect.left();
   int tmpAuthorWidth = authorWidth;
@@ -99,7 +99,7 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     painter->drawText(countBox, flags, messageCountText);
   }
 
-  int subjectPos = authorBaseWidth + 2*margin + option.rect.left();
+  int subjectPos = leftBaseWidth + 2*margin + option.rect.left();
   int timeWidth = option.fontMetrics.width(ctime);
   int subjectWidth = tmpLineWidth - subjectPos - timeWidth - 2*margin;
   int tmpSubjectWidth = subjectWidth;
@@ -109,7 +109,7 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   }
   painter->drawText(subjectPos, linePos, tmpSubjectWidth, option.fontMetrics.height(), flags, ctitle);
 
-  int timePos = qMax(tmpLineWidth - margin - timeWidth, authorBaseWidth + 2*margin)+option.rect.left();
+  int timePos = qMax(tmpLineWidth - margin - timeWidth, leftBaseWidth + 2*margin)+option.rect.left();
   timeWidth = qMax(tmpLineWidth - (timePos + margin), 0);
   int tmpTimeWidth = timeWidth;
   if (option.fontMetrics.width(ctime) > timeWidth && timeWidth > dotsWidth) {
@@ -119,12 +119,12 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   painter->drawText(timePos, linePos, tmpTimeWidth, option.fontMetrics.height(), flags, ctime);
 }
 
-inline QRect ConversationDelegate::getAuthorsBox(const QStyleOptionViewItem &option, const QRect &countBox) const
+inline QRect ConversationDelegate::getAuthorsBox(const QStyleOptionViewItem &option, const QRect &decoBox) const
 {
   int y = option.rect.top();
   int x = margin + option.rect.left();
-  int countWidth = countBox.isNull() ? 0 : countBox.width() + margin;
-  int width = authorBaseWidth - countWidth;
+  int decoWidth = decoBox.isNull() ? 0 : decoBox.width() + margin;
+  int width = leftBaseWidth - decoWidth;
 	int height = option.fontMetrics.height();
   return QRect(x, y, width, height);
 }
@@ -168,7 +168,13 @@ inline QRect ConversationDelegate::getCountBox(const QStyleOptionViewItem &optio
 
 /*inline QRect ConversationDelegate::getMiddleBox(const QStyleOptionViewItem &option, const QRect &left, const QRect &right, const QRect &decoBox) const
 {
-	return QRect();
+	if leftBaseWidth + 2*margin + 
+  int y = option.rect.top();
+  int x = margin + option.rect.left();
+  int decoWidth = decoBox.isNull() ? 0 : decoBox.width() + margin;
+  int width = leftBaseWidth - decoWidth;
+	int height = option.fontMetrics.height();
+  return QRect(x, y, width, height);
 }
 
 inline QString ConversationDelegate::getTitle(const QStyleOptionViewItem &option, const) cnst
@@ -180,7 +186,7 @@ inline QString ConversationDelegate::getTitle(const QStyleOptionViewItem &option
 QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &/*index*/) const
 {
   int lineHeight = option.fontMetrics.height() + 2;
-  int rLineWidth = qMax(lineWidth, authorBaseWidth+margin);
+  int rLineWidth = qMax(lineWidth, leftBaseWidth+margin);
   return QSize(rLineWidth, lineHeight);
 }
 
