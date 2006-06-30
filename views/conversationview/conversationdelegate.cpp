@@ -50,11 +50,13 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 {
   painter->setRenderHint(QPainter::Antialiasing);
   painter->setPen(Qt::NoPen);
+  painter->setFont(option.font);
+	int flags = Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine;
 
   if (option.state & QStyle::State_Selected)
     painter->setBrush(option.palette.highlight());
   else {
-		if (index.row() & 0x1)
+		if (isOdd(index.row()))
 	    painter->setBrush(option.palette.alternateBase());
 	  else
 	    painter->setBrush(option.palette.base());
@@ -66,15 +68,14 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   } else {
     painter->setPen(option.palette.text().color());
   }
-  painter->setFont(option.font);
+
   DummyKonadiConversation *c = fmodel->conversation(pmodel->mapToSource(index).row());
   QString ctitle = c->conversationTitle();
   QString ctime = c->arrivalTimeInText();
-  int messageCount = c->count();
 	int tmpLineWidth = option.rect.width();
   int dotsWidth = option.fontMetrics.width("...");
-	int flags = Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine;
 
+  int messageCount = c->count();
   QString messageCountText = QString("(%L1)").arg(messageCount);
   int messageCountWidth = option.fontMetrics.width(messageCountText);
   
@@ -118,18 +119,17 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   painter->drawText(timePos, linePos, tmpTimeWidth, option.fontMetrics.height(), flags, ctime);
 }
 
-QRect ConversationDelegate::getAuthorsBox(const QStyleOptionViewItem &option, const QRect &countBox) const
+inline QRect ConversationDelegate::getAuthorsBox(const QStyleOptionViewItem &option, const QRect &countBox) const
 {
   int y = option.rect.top();
   int x = margin + option.rect.left();
   int countWidth = countBox.isNull() ? 0 : countBox.width() + margin;
-  int width = qMin(authorBaseWidth - countWidth, option.rect.width() - countWidth - 2*margin);
-//                   tmpLineWidth - (messageCountBox != 0 ? messageCountBox.width() + 2*margin : 0) - margin);
+  int width = authorBaseWidth - countWidth;
 	int height = option.fontMetrics.height();
   return QRect(x, y, width, height);
 }
 
-QString ConversationDelegate::getAuthors(const QStyleOptionViewItem &option, const DummyKonadiConversation *conversation, int maxWidth) const
+inline QString ConversationDelegate::getAuthors(const QStyleOptionViewItem &option, const DummyKonadiConversation *conversation, int maxWidth) const
 {
   QString authors = conversation->author(0);
   QString me;
@@ -155,21 +155,32 @@ QString ConversationDelegate::getAuthors(const QStyleOptionViewItem &option, con
   return authors;
 }
 
-QRect ConversationDelegate::getCountBox(const QStyleOptionViewItem &option, const QString &count) const
+inline QRect ConversationDelegate::getCountBox(const QStyleOptionViewItem &option, const QString &count) const
 {
   int y = option.rect.top();
   QRect tmpAuthorBox = getAuthorsBox(option);
-  int right = qMin(tmpAuthorBox.left() + tmpAuthorBox.width(), option.rect.width() - margin);
+  int right = tmpAuthorBox.left() + tmpAuthorBox.width();
 	int width = option.fontMetrics.width(count);
   int x = right - width;
 	int height = option.fontMetrics.height();
   return QRect(x, y, width, height);
 }
 
+/*inline QRect ConversationDelegate::getMiddleBox(const QStyleOptionViewItem &option, const QRect &left, const QRect &right, const QRect &decoBox) const
+{
+	return QRect();
+}
+
+inline QString ConversationDelegate::getTitle(const QStyleOptionViewItem &option, const) cnst
+{
+	return QRect();
+}*/
+
+
 QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &/*index*/) const
 {
   int lineHeight = option.fontMetrics.height() + 2;
-  int rLineWidth = qMax(lineWidth, 150);
+  int rLineWidth = qMax(lineWidth, authorBaseWidth+margin);
   return QSize(rLineWidth, lineHeight);
 }
 
@@ -177,3 +188,5 @@ void ConversationDelegate::updateWidth(int pos, int /*nouse*/)
 {
   lineWidth = pos;
 }
+
+inline bool ConversationDelegate::isOdd(int row) const { return row & 0x1; }

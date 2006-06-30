@@ -53,6 +53,7 @@ private:
   QRect getAuthorsBox(const QStyleOptionViewItem &option, const QRect &messageCountBox = QRect()) const;
   QRect getCountBox(const QStyleOptionViewItem &option, const QString &count) const;
 	QString getAuthors(const QStyleOptionViewItem &option, const DummyKonadiConversation *conversation, int maxWidth) const;
+	bool isOdd(int row) const;
 };
 
 #endif
