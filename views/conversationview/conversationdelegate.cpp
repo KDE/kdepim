@@ -166,18 +166,28 @@ inline QRect ConversationDelegate::getCountBox(const QStyleOptionViewItem &optio
   return QRect(x, y, width, height);
 }
 
-/*inline QRect ConversationDelegate::getMiddleBox(const QStyleOptionViewItem &option, const QRect &left, const QRect &right, const QRect &decoBox) const
+inline QRect ConversationDelegate::getBox(const QStyleOptionViewItem &option, const QRect &left, const QRect &right) const
 {
-	if leftBaseWidth + 2*margin + 
+  int x1 = left.right() + margin;
+  int x2 = right.left() + margin;
+  int width = option.rect.width() - x1 - x2;
+	if (width <= option.rect.width()) return QRect();
   int y = option.rect.top();
-  int x = margin + option.rect.left();
-  int decoWidth = decoBox.isNull() ? 0 : decoBox.width() + margin;
-  int width = leftBaseWidth - decoWidth;
 	int height = option.fontMetrics.height();
-  return QRect(x, y, width, height);
+  return QRect(x1, y, width, height);
 }
 
-inline QString ConversationDelegate::getTitle(const QStyleOptionViewItem &option, const) cnst
+inline void ConversationDelegate::resizeBox(QRect &box, const QRect &deco) const
+{
+	box.setWidth(box.width() - margin - deco.width());
+}
+
+inline bool ConversationDelegate::printDecoBox(const QRect &box, const QRect &deco) const
+{
+	return (box.width() >= margin + 2*deco.width());
+}
+
+/*inline QString ConversationDelegate::getTitle(const QStyleOptionViewItem &option, const) const
 {
 	return QRect();
 }*/

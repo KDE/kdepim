@@ -54,6 +54,9 @@ private:
   QRect getCountBox(const QStyleOptionViewItem &option, const QString &count) const;
 	QString getAuthors(const QStyleOptionViewItem &option, const DummyKonadiConversation *conversation, int maxWidth) const;
 	bool isOdd(int row) const;
+	void resizeBox(QRect &box, const QRect &deco) const;
+	bool printDecoBox(const QRect &box, const QRect &deco) const;
+	QRect getBox(const QStyleOptionViewItem &option, const QRect &left, const QRect &right) const;
 };
 
 #endif
