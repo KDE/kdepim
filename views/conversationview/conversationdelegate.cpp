@@ -24,6 +24,7 @@
 #include <QStyle>
 #include <QBrush>
 #include <QSize>
+#include <QRect>
 #include <QDateTime>
 #include <QtDebug>
 #include <QRegExp>
@@ -36,7 +37,7 @@ ConversationDelegate::ConversationDelegate(FolderModel *folderModel, QSortFilter
   fmodel = folderModel;
   pmodel = proxyModel;
   listOfMe = me;
-  lineWidth = 510;
+//  lineWidth = 510;
   authorBaseWidth = 175;
   margin = 5;
 }
@@ -47,7 +48,7 @@ ConversationDelegate::~ConversationDelegate()
 
 void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-  int lineHeight = option.fontMetrics.height() + 2;
+//  int lineHeight = option.fontMetrics.height() + 2;
   painter->setRenderHint(QPainter::Antialiasing);
   painter->setPen(Qt::NoPen);
 
@@ -73,43 +74,32 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   DummyKonadiConversation *c = fmodel->conversation(pmodel->mapToSource(index).row());
   QString ctitle = c->conversationTitle();
   QString ctime = c->arrivalTimeInText();
-  QString cauthors = c->author(0);
-  QString me;
-  foreach (me, listOfMe) {
-    cauthors.replace(QRegExp(me), "me");
-  }
   int messageCount = c->count();
-  for (int count = 1; count < messageCount; ++count) {
-    QString tmpAuthor = c->author(count);
-    foreach (me, listOfMe) {
-      tmpAuthor.replace(QRegExp(me), "me");
-    }
-    if (!cauthors.contains(tmpAuthor)) {
-      cauthors.append(", ");
-      cauthors.append(tmpAuthor);
-    }
-  }
 	int tmpLineWidth = option.rect.width();
   int dotsWidth = option.fontMetrics.width("...");
+	int flags = Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine;
 
   QString messageCountText = QString("(%L1)").arg(messageCount);
   int messageCountWidth = option.fontMetrics.width(messageCountText);
-
-  int linePos = index.row() * lineHeight;
-  linePos = option.rect.top(); // fixes an ugly bug!! :-)
+  
+	QRect countBox = messageCount > 1 ? getCountBox(option, messageCountText) : QRect();
+	QRect authorsBox = getAuthorsBox(option, countBox);
+  QString cauthors = getAuthors(option, c, authorsBox.width());//c->author(0);
+	
+  int linePos = option.rect.top();
   int authorWidth = qMin(authorBaseWidth - (messageCount > 1 ? messageCountWidth + margin : 0), 
                          tmpLineWidth - (messageCount > 1 ? messageCountWidth + 2*margin : 0) - margin);
-  int authorPos = margin + option.rect.left();
+//  int authorPos = margin + option.rect.left();
   int tmpAuthorWidth = authorWidth;
   if (option.fontMetrics.width(cauthors) > authorWidth && authorWidth > dotsWidth) {
     tmpAuthorWidth = authorWidth - dotsWidth;
-    painter->drawText(authorPos+tmpAuthorWidth, linePos, dotsWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, "...");
+//    painter->drawText(authorPos+tmpAuthorWidth, linePos, dotsWidth, option.fontMetrics.height(), flags, "...");
   }
-  painter->drawText(authorPos, linePos, tmpAuthorWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, cauthors);
+//  painter->drawText(authorPos, linePos, tmpAuthorWidth, option.fontMetrics.height(), flags, cauthors);
 
+  painter->drawText(authorsBox, flags, cauthors);
   if (messageCount > 1) {
-    int messageCountPos = qMin(2*margin + authorWidth, tmpLineWidth - messageCountWidth - margin) + option.rect.left();
-    painter->drawText(messageCountPos, linePos, messageCountWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, messageCountText);
+    painter->drawText(countBox, flags, messageCountText);
   }
 
   int subjectPos = authorBaseWidth + 2*margin + option.rect.left();
@@ -118,24 +108,72 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   int tmpSubjectWidth = subjectWidth;
   if (option.fontMetrics.width(ctitle) > subjectWidth && subjectWidth > dotsWidth) {
     tmpSubjectWidth = subjectWidth - dotsWidth;
-    painter->drawText(subjectPos+tmpSubjectWidth, linePos, dotsWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, "...");
+    painter->drawText(subjectPos+tmpSubjectWidth, linePos, dotsWidth, option.fontMetrics.height(), flags, "...");
   }
-  painter->drawText(subjectPos, linePos, tmpSubjectWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctitle);
+  painter->drawText(subjectPos, linePos, tmpSubjectWidth, option.fontMetrics.height(), flags, ctitle);
 
   int timePos = qMax(tmpLineWidth - margin - timeWidth, authorBaseWidth + 2*margin)+option.rect.left();
   timeWidth = qMax(tmpLineWidth - (timePos + margin), 0);
   int tmpTimeWidth = timeWidth;
   if (option.fontMetrics.width(ctime) > timeWidth && timeWidth > dotsWidth) {
     tmpTimeWidth = timeWidth - dotsWidth;
-    painter->drawText(timePos+tmpTimeWidth, linePos, dotsWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine, "...");
+    painter->drawText(timePos+tmpTimeWidth, linePos, dotsWidth, option.fontMetrics.height(), flags, "...");
   }
-  painter->drawText(timePos, linePos, tmpTimeWidth, option.fontMetrics.height(), Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine, ctime);
+  painter->drawText(timePos, linePos, tmpTimeWidth, option.fontMetrics.height(), flags, ctime);
+}
+
+QRect ConversationDelegate::getAuthorsBox(const QStyleOptionViewItem &option, const QRect &countBox) const
+{
+  int y = option.rect.top();
+  int x = margin + option.rect.left();
+  int countWidth = countBox.isNull() ? 0 : countBox.width() + margin;
+  int width = qMin(authorBaseWidth - countWidth, option.rect.width() - countWidth - 2*margin);
+//                   tmpLineWidth - (messageCountBox != 0 ? messageCountBox.width() + 2*margin : 0) - margin);
+	int height = option.fontMetrics.height();
+  return QRect(x, y, width, height);
+}
+
+QString ConversationDelegate::getAuthors(const QStyleOptionViewItem &option, const DummyKonadiConversation *conversation, int maxWidth) const
+{
+  QString authors = conversation->author(0);
+  QString me;
+  foreach (me, listOfMe) {
+    authors.replace(QRegExp(me), "me");
+  }
+  int messageCount = conversation->count();
+  for (int count = 1; count < messageCount; ++count) {
+    QString tmpAuthor = conversation->author(count);
+    foreach (me, listOfMe) {
+      tmpAuthor.replace(QRegExp(me), tr("me"));
+    }
+    if (!authors.contains(tmpAuthor)) {
+      authors.append(", ");
+      authors.append(tmpAuthor);
+    }
+  }
+  QString dots = QString("...");
+  while (option.fontMetrics.width(authors) > maxWidth && authors.size() > 1) {
+    authors.chop(4);
+    authors.append("...");
+  }
+  return authors;
+}
+
+QRect ConversationDelegate::getCountBox(const QStyleOptionViewItem &option, const QString &count) const
+{
+  int y = option.rect.top();
+  QRect tmpAuthorBox = getAuthorsBox(option);
+  int right = qMin(tmpAuthorBox.left() + tmpAuthorBox.width(), option.rect.width() - margin);
+	int width = option.fontMetrics.width(count);
+  int x = right - width;
+	int height = option.fontMetrics.height();
+  return QRect(x, y, width, height);
 }
 
 QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &/*index*/) const
 {
   int lineHeight = option.fontMetrics.height() + 2;
-  int rLineWidth = qMax(lineWidth, 280);
+  int rLineWidth = qMax(lineWidth, 150);
   return QSize(rLineWidth, lineHeight);
 }
 
