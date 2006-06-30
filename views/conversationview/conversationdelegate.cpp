@@ -56,10 +56,10 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     painter->setBrush(option.palette.highlight());
   else {
   	if (index.row() % 2 == 1)
-	    painter->setBrush(option.palette.background());
+	    painter->setBrush(option.palette.alternateBase());
 	  else
 //	    painter->setBrush(option.palette.textBackground());
-	    painter->setBrush(Qt::white);
+	    painter->setBrush(option.palette.base());
   }
   painter->drawRect(option.rect);
 
