@@ -26,6 +26,7 @@
 #include <QFontMetrics>
 #include <QModelIndex>
 #include <QSize>
+#include <QRect>
 #include <QStringList>
 #include <QSortFilterProxyModel>
 #include <QStyleOptionViewItem>
@@ -56,7 +57,9 @@ private:
 	bool isOdd(int row) const;
 	void resizeBox(QRect &box, const QRect &deco) const;
 	bool printDecoBox(const QRect &box, const QRect &deco) const;
-	QRect getBox(const QStyleOptionViewItem &option, const QRect &left, const QRect &right) const;
+	QRect getMiddleBox(const QStyleOptionViewItem &option, const QRect &left, const QRect &right) const;
+	QRect getRightBox(const QStyleOptionViewItem &option, int neededWidth) const;
+	void chop(const QStyleOptionViewItem &option, QString &orig, int width) const;
 };
 
 #endif
