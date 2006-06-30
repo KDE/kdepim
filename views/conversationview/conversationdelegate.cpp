@@ -58,17 +58,14 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   	if (index.row() % 2 == 1)
 	    painter->setBrush(option.palette.alternateBase());
 	  else
-//	    painter->setBrush(option.palette.textBackground());
 	    painter->setBrush(option.palette.base());
   }
   painter->drawRect(option.rect);
 
   if (option.state & QStyle::State_Selected) {
-    painter->setBrush(option.palette.highlightedText());
-    painter->setPen(QPen(option.palette.highlightedText().color()));      
+    painter->setPen(option.palette.highlightedText().color());      
   } else {
-    painter->setBrush(Qt::black);
-    painter->setPen(Qt::black);
+    painter->setPen(option.palette.text().color());
   }
   painter->setFont(option.font);
   DummyKonadiConversation *c = fmodel->conversation(pmodel->mapToSource(index).row());
