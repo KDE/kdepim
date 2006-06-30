@@ -48,14 +48,13 @@ ConversationDelegate::~ConversationDelegate()
 
 void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-//  int lineHeight = option.fontMetrics.height() + 2;
   painter->setRenderHint(QPainter::Antialiasing);
   painter->setPen(Qt::NoPen);
 
   if (option.state & QStyle::State_Selected)
     painter->setBrush(option.palette.highlight());
   else {
-  	if (index.row() % 2 == 1)
+		if (index.row() & 0x1)
 	    painter->setBrush(option.palette.alternateBase());
 	  else
 	    painter->setBrush(option.palette.base());
