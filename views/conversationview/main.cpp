@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
   FolderModel *model = new FolderModel(data);
   QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel;
   proxyModel->setSourceModel(model);
-  proxyModel->sort(4, Qt::AscendingOrder);
+  proxyModel->sort(2, Qt::AscendingOrder);
 
   MailView *mail = new MailView(model);
 
@@ -73,20 +73,10 @@ int main(int argc, char *argv[])
   header->setMinimumHeight(QFontMetrics(header->font()).height()+4);
   header->setMaximumHeight(QFontMetrics(header->font()).height()+6);
   header->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
-//  header->setContentsMargins(0, 0, 0, 0);
-/*  QSize tmpSize = header->size();
-  tmpSize.setHeight(QFontMetrics(header->font()).height());
-  header->resize(tmpSize);*/
-//  header->setSizeHint(18);
   layout->addWidget(conversationList);
-//  layout->addWidget(new QSpacerItem(1,1));
-//  layout->setRowStretch(0, 0);
   layout->setRowStretch(0, 0);
   layout->setRowStretch(1, 100);
   myWidget->setLayout(layout);
-//  header->setSizeHint(18);
-//  layout->addWidget(new QSpacerItem(1,1));
-//  layout->setRowStretch(0, 0);
 
 //  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
 //  conversationList->setSelectionModel(selection);
