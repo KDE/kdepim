@@ -32,14 +32,15 @@
 #include "conversationdelegate.h"
 #include "dummykonadiconversation.h"
 
-ConversationDelegate::ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QStringList &me, QObject *parent) : QAbstractItemDelegate(parent)
+ConversationDelegate::ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QStringList &me, QHeaderView *header, QObject *parent) : QAbstractItemDelegate(parent)
 {
   fmodel = folderModel;
   pmodel = proxyModel;
   listOfMe = me;
 //  lineWidth = 510;
-  leftBaseWidth = 175;
   margin = 5;
+  h = header;
+  leftBaseWidth = h->sectionSize(0) - 2*margin;
 }
 
 ConversationDelegate::~ConversationDelegate()
@@ -188,5 +189,11 @@ void ConversationDelegate::updateWidth(int pos, int /*nouse*/)
 {
   lineWidth = pos;
 }
+
+void ConversationDelegate::updateAuthorsWidth(int /*nouseA*/, int /*nouseB*/, int size)
+{
+	leftBaseWidth = size - 2*margin;
+}
+
 
 inline bool ConversationDelegate::isOdd(int row) const { return row & 0x1; }

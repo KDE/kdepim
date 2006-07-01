@@ -30,6 +30,7 @@
 #include <QStringList>
 #include <QSortFilterProxyModel>
 #include <QStyleOptionViewItem>
+#include <QHeaderView>
 
 #include "foldermodel.h"
 
@@ -37,7 +38,7 @@ class ConversationDelegate : public QAbstractItemDelegate
 {
   Q_OBJECT
 public:
-  ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QStringList &me, QObject *parent = 0);
+  ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QStringList &me, QHeaderView *header, QObject *parent = 0);
   ~ConversationDelegate();
 
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -45,9 +46,11 @@ public:
 
 public slots:
   void updateWidth(int pos, int nouse = 0);
+  void updateAuthorsWidth(int nouseA, int nouseB, int size);
 
 private:
   QSortFilterProxyModel *pmodel;
+  QHeaderView *h;
   FolderModel *fmodel;
   int lineWidth, leftBaseWidth, rightBaseWidth, margin;
   QStringList listOfMe;

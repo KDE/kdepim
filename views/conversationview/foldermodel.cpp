@@ -28,8 +28,7 @@ int FolderModel::rowCount(const QModelIndex &/*parent*/) const
 
 int FolderModel::columnCount(const QModelIndex &/*parent*/) const
 {
-	return 3;
-//  return backend->conversationCount();
+	return 2;
 }
 
 QVariant FolderModel::data(const QModelIndex &index, int role) const
@@ -46,10 +45,10 @@ QVariant FolderModel::data(const QModelIndex &index, int role) const
   if (role == Qt::DisplayRole) {
     switch (index.column()) {
       case 0: return backend->authorsInConversation(index.row()); break;
-      case 1: return backend->subjectOfConversation(index.row()); break;
+      case 2: return backend->subjectOfConversation(index.row()); break;
       case 4: return backend->previewOfConversation(index.row()); break;
       case 3: return backend->nbrOfMessagesInConversation(index.row()); break;
-      case 2: return backend->dateTimeOfConversation(index.row()); break;
+      case 1: return backend->dateTimeOfConversation(index.row()); break;
       case 5: return backend->unreadStatusOfConversation(index.row()); break;
       case 6: return backend->dateTimeOfConversationInText(index.row()); break;
       default: return QVariant();
@@ -65,7 +64,7 @@ QVariant FolderModel::headerData(int section, Qt::Orientation /*orientation*/, i
 
   switch (section) {
     case 0: return QString(tr("Authors")); break;
-    case 1: return QString(tr("Subject")); break;
+    case 1: return QString(tr("Conversation")); break;
     case 2: return QString(tr("Time")); break;
     case 3: return QString(tr("Snippet")); break;
     case 4: return QString(tr("E-mails")); break;
