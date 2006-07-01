@@ -26,6 +26,12 @@ int FolderModel::rowCount(const QModelIndex &/*parent*/) const
   return backend->conversationCount();
 }
 
+int FolderModel::columnCount(const QModelIndex &/*parent*/) const
+{
+	return 3;
+//  return backend->conversationCount();
+}
+
 QVariant FolderModel::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid())
@@ -60,9 +66,9 @@ QVariant FolderModel::headerData(int section, Qt::Orientation /*orientation*/, i
   switch (section) {
     case 0: return QString(tr("Authors")); break;
     case 1: return QString(tr("Subject")); break;
-    case 2: return QString(tr("Snippet")); break;
-    case 3: return QString(tr("E-mails")); break;
-    case 4: return QString(tr("Time")); break;
+    case 2: return QString(tr("Time")); break;
+    case 3: return QString(tr("Snippet")); break;
+    case 4: return QString(tr("E-mails")); break;
     default: return QVariant();
   }
 }

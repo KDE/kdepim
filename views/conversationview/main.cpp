@@ -19,6 +19,7 @@
 #include <QApplication>
 #include <QSplitter>
 #include <QListView>
+#include <QHeaderView>
 #include <QItemSelectionModel>
 #include <QObject>
 #include <QList>
@@ -26,10 +27,16 @@
 #include <QAbstractItemDelegate>
 #include <QStringList>
 #include <QSortFilterProxyModel>
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QGridLayout>
+#include <QSpacerItem>
+#include <QFontMetrics>
 
 #include "foldermodel.h"
 #include "conversationdelegate.h"
 #include "mailview.h"
+//#include "conversationlistview.h"
 
 int main(int argc, char *argv[])
 {
@@ -55,6 +62,32 @@ int main(int argc, char *argv[])
   conversationList->setItemDelegate(delegate);
   conversationList->setUniformItemSizes(true);
 
+	QHeaderView *header = new QHeaderView(Qt::Horizontal);
+	header->setModel(proxyModel);
+  
+  QWidget *myWidget = new QWidget;
+  QGridLayout *layout = new QGridLayout;
+  layout->setMargin(0);
+  layout->setSpacing(0);
+  layout->addWidget(header);
+  header->setMinimumHeight(QFontMetrics(header->font()).height()+4);
+  header->setMaximumHeight(QFontMetrics(header->font()).height()+6);
+  header->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
+//  header->setContentsMargins(0, 0, 0, 0);
+/*  QSize tmpSize = header->size();
+  tmpSize.setHeight(QFontMetrics(header->font()).height());
+  header->resize(tmpSize);*/
+//  header->setSizeHint(18);
+  layout->addWidget(conversationList);
+//  layout->addWidget(new QSpacerItem(1,1));
+//  layout->setRowStretch(0, 0);
+  layout->setRowStretch(0, 0);
+  layout->setRowStretch(1, 100);
+  myWidget->setLayout(layout);
+//  header->setSizeHint(18);
+//  layout->addWidget(new QSpacerItem(1,1));
+//  layout->setRowStretch(0, 0);
+
 //  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
 //  conversationList->setSelectionModel(selection);
 
@@ -64,7 +97,7 @@ int main(int argc, char *argv[])
   QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), delegate, SLOT(updateWidth(int, int)));
 
   splitter->setWindowTitle("Conversations for KMail");
-  splitter->addWidget(conversationList);
+  splitter->addWidget(myWidget);
   splitter->addWidget(mail);
   splitter->setStretchFactor(0, 0);
   splitter->setStretchFactor(1, 1);
