@@ -61,8 +61,7 @@ kde4_add_ui_files(korn_SRCS
    korncfg.ui 
    progress_dialog.ui )
 
-#kde4_add_dcop_skels(korn_SRCS boxcontaineritem.h dcopdropif.h )
-qdbus_add_adaptors(korn_SRCS org.kde.korn.BoxContainerItem.xml org.kde.korn.MailDrop.xml)
+qt4_add_dbus_adaptors(korn_SRCS org.kde.korn.BoxContainerItem.xml org.kde.korn.MailDrop.xml)
 
 kde4_add_executable(korn ${korn_SRCS})
 
