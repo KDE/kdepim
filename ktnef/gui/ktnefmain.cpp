@@ -60,8 +60,8 @@
 
 #define	NOT_IMPLEMENTED QMessageBox::information(this, "ktnef", "Not implemented yet", QMessageBox::Ok|QMessageBox::Default, 0)
 
-KTNEFMain::KTNEFMain(QWidget *parent, const char *name)
-	: KMainWindow(parent, name)
+KTNEFMain::KTNEFMain( QWidget *parent )
+	: KMainWindow( parent )
 {
 	setupActions();
 	setupStatusbar();

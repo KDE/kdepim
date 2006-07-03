@@ -32,7 +32,7 @@ class KTNEFMain : public KMainWindow
 	Q_OBJECT
 
 public:
-	KTNEFMain(QWidget *parent = 0, const char *name = 0);
+	KTNEFMain(QWidget *parent = 0 );
 	~KTNEFMain();
 
 	void loadFile(const QString& filename);
