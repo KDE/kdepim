@@ -31,7 +31,7 @@
 #include <libkdepim/statusbarprogresswidget.h>
 #include <libkdepim/progressdialog.h>
 
-#include <dbus/qdbus.h>
+#include <QtDBus>
 #include "coreadaptor.h"
 
 #include "kabcore.h"

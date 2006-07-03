@@ -67,7 +67,7 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent )
   setButtons( Ok | Cancel | User1 | User2 );
   setDefaultButton( Ok );
   setModal( true );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
   initGUI();
 
   mTypeMap.insert( i18n( "Undefined" ), Undefined );

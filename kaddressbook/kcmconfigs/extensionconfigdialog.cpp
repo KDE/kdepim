@@ -39,7 +39,7 @@ ExtensionConfigDialog::ExtensionConfigDialog( KAB::ExtensionFactory *factory, KC
   setCaption( i18n( "Extension Settings" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
   setModal( true );
 
   QFrame *page = new QFrame( this );

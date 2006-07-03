@@ -151,7 +151,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
       }
       case KMessageBox::No:
       default: {
-        url = KFileDialog::getSaveURL( "addressbook.vcf" );
+        url = KFileDialog::getSaveURL( KUrl("addressbook.vcf") );
         if ( url.isEmpty() )
           return true;
 
@@ -392,7 +392,7 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list,
   setButtons( Yes | No | Apply | Cancel );
   setDefaultButton( Yes );
   setModal( true );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
 
   QFrame *page = new QFrame( this );
   setMainWidget( page );
@@ -471,7 +471,7 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
   setModal( true );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
 
   QFrame *page = new QFrame( this );
   setMainWidget( page );
