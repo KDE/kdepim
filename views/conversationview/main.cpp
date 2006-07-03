@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
   proxyModel->setSourceModel(model);
   proxyModel->sort(1, Qt::AscendingOrder);
 
-  MailView *mail = new MailView(model);
+  MailView *mail = new MailView(model, proxyModel);
 
   QListView *conversationList = new QListView;
   conversationList->setModel(proxyModel);

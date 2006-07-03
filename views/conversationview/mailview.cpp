@@ -54,7 +54,7 @@ void MailView::updateHeight()
 void MailView::setConversation(const QModelIndex &index)
 {
   setHtml("");
-  DummyKonadiConversation* conversation = model->conversation(index.row());
+  DummyKonadiConversation* conversation = model->conversation((pmodel->mapFromSource(index)).row());
   int max = conversation->count()-1;
   QString tmp = "<H2><A NAME=top>";
   tmp.append(conversation->conversationTitle());
