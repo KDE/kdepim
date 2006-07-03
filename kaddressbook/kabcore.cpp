@@ -1295,27 +1295,27 @@ bool KABCore::handleCommandLine()
 
   // Can not see why anyone would pass both a uid and an email address, so I'll leave it that two contact editors will show if they do
   if ( !addr.isEmpty() ) {
-    QDBusInterfacePtr interface( "org.kde.KAddressbook", "/", "org.kde.KAddressbook.Core" );
-    interface->call( "addEmail", addr );
+    QDBusInterface interface( "org.kde.KAddressbook", "/", "org.kde.KAddressbook.Core" );
+    interface.call( "addEmail", addr );
     doneSomething = true;
   }
 
   if ( !uid.isEmpty() ) {
-    QDBusInterfacePtr interface( "org.kde.KAddressbook", "/", "org.kde.KAddressbook.Core" );
-    interface->call( "showContactEditor", uid );
+    QDBusInterface interface( "org.kde.KAddressbook", "/", "org.kde.KAddressbook.Core" );
+    interface.call( "showContactEditor", uid );
     doneSomething = true;
   }
 
   if ( args->isSet( "new-contact" ) ) {
-    QDBusInterfacePtr interface( "org.kde.KAddressbook", "/", "org.kde.KAddressbook.Core" );
-    interface->call( "newContact" );
+    QDBusInterface interface( "org.kde.KAddressbook", "/", "org.kde.KAddressbook.Core" );
+    interface.call( "newContact" );
     doneSomething = true;
   }
 
   if ( args->count() >= 1 ) {
     for ( int i = 0; i < args->count(); ++i ) {
-      QDBusInterfacePtr interface( "org.kde.KAddressbook", "/", "org.kde.KAddressbook.Core" );
-      interface->call( "importVCard", args->url( i ).url() );
+      QDBusInterface interface( "org.kde.KAddressbook", "/", "org.kde.KAddressbook.Core" );
+      interface.call( "importVCard", args->url( i ).url() );
     }
     doneSomething = true;
   }

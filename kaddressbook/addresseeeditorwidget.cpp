@@ -537,9 +537,9 @@ void AddresseeEditorWidget::load()
 
   mRoleEdit->setText( mAddressee.role() );
   mOrgEdit->setText( mAddressee.organization() );
-  mURLEdit->setURL( mAddressee.url() );
+  mURLEdit->setUrl( mAddressee.url() );
   mURLEdit->home( false );
-  mBlogEdit->setURL( mAddressee.custom( "KADDRESSBOOK", "BlogFeed" ) );
+  mBlogEdit->setUrl( mAddressee.custom( "KADDRESSBOOK", "BlogFeed" ) );
   mNoteEdit->setText( mAddressee.note() );
   mEmailWidget->setEmails( mAddressee.emails() );
   mPhoneEditWidget->setPhoneNumbers( mAddressee.phoneNumbers() );
