@@ -11,11 +11,11 @@ set(kcalkolab_LIB_SRCS ${libresourcekolabshared_SRCS}
    journal.cpp 
    resourcekolab.cpp )
 
-kde4_add_dcop_skels(kcalkolab_LIB_SRCS
-    ${CMAKE_SOURCE_DIR}/kresources/kolab/shared/kmailconnection.h
-    )
+#kde4_add_dcop_skels(kcalkolab_LIB_SRCS
+#    ${CMAKE_SOURCE_DIR}/kresources/kolab/shared/kmailconnection.h
+#    )
 
-kde4_add_dcop_stubs(kcalkolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/kmailicalIface.h )
+#kde4_add_dcop_stubs(kcalkolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/kmailicalIface.h )
 
 kde4_automoc(${kcalkolab_LIB_SRCS})
 

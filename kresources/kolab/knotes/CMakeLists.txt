@@ -6,11 +6,11 @@ include_directories( ${CMAKE_SOURCE_DIR}/kresources/kolab/shared ${CMAKE_SOURCE_
 
 set(knoteskolab_LIB_SRCS resourcekolab.cpp note.cpp ${libresourcekolabshared_SRCS} ${libknotesresources_SRCS})
 
-kde4_add_dcop_skels(knoteskolab_LIB_SRCS
-    ${CMAKE_SOURCE_DIR}/kresources/kolab/shared/kmailconnection.h
-    )
+#kde4_add_dcop_skels(knoteskolab_LIB_SRCS
+#    ${CMAKE_SOURCE_DIR}/kresources/kolab/shared/kmailconnection.h
+#    )
 
-kde4_add_dcop_stubs(knoteskolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/kmailicalIface.h )
+#kde4_add_dcop_stubs(knoteskolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/kmailicalIface.h )
 
 
 kde4_automoc(${knoteskolab_LIB_SRCS})
