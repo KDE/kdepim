@@ -20,7 +20,7 @@
 #include <kurl.h>
 #include <kdebug.h>
 #include <ktoolinvocation.h>
-#include <dbus/qdbus.h>
+#include <QtDBus>
 
 #include "filters.hxx"
 #include "kmailcvt.h"
@@ -135,16 +135,20 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
   KUrl msgURL;
   msgURL.setPath( msgPath );
 
-  if ( !QDBus::sessionBus().busService()->nameHasOwner( "kmail" ) )
+  QDBusConnectionInterface * session = 0;
+  session = QDBus::sessionBus().interface();
+  if ( session && !session->isServiceRegistered( "kmail" ).value() )
     KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
 
-  QDBusInterfacePtr kmail("org.kde.kmail", "/KMail", "org.kde.kmail.KMail");
-  QDBusReply<int> reply = kmail->call("dcopAddMessage", folderName, msgURL.url(), msgStatusFlags);
+  QDBusInterface kmail("org.kde.kmail", "/KMail", "org.kde.kmail.KMail");
+  QDBusReply<int> reply = kmail.call("dcopAddMessage", folderName, msgURL.url(), msgStatusFlags);
 
-  if ( !reply.isSuccess() )
+  if ( !reply.isValid() )
   {
     info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DCOP communication. "
                        "Make sure <i>kmail</i> is installed." ) );
+    info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DBus communication: %1; %2"
+                       "Make sure <i>kmail</i> is installed." ).arg( reply.error().message() ).arg( reply.error().message() ) );
     return false;
   }
 
@@ -172,16 +176,18 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
   KUrl msgURL;
   msgURL.setPath( msgPath );
 
-  if ( !QDBus::sessionBus().busService()->nameHasOwner( "kmail" ) )
+  QDBusConnectionInterface * session = 0;
+  session = QDBus::sessionBus().interface();
+  if ( session && !session->isServiceRegistered( "kmail" ) )
     KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
 
-  QDBusInterfacePtr kmail("org.kde.kmail", "/KMail", "org.kde.kmail.KMail");
-  QDBusReply<int> reply = kmail->call("dcopAddMessage_fastImport", folderName, msgURL.url(), msgStatusFlags);
+  QDBusInterface kmail("org.kde.kmail", "/KMail", "org.kde.kmail.KMail");
+  QDBusReply<int> reply = kmail.call("dcopAddMessage_fastImport", folderName, msgURL.url(), msgStatusFlags);
 
-  if ( !reply.isSuccess() )
+  if ( !reply.isValid() )
   {
-    info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DCOP communication. "
-                       "Make sure <i>kmail</i> is installed." ) );
+    info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DBus communication: %1; %2"
+                       "Make sure <i>kmail</i> is installed." ).arg( reply.error().message() ).arg( reply.error().message() ) );
     return false;
   }
 
@@ -202,15 +208,17 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
 
 bool Filter::endImport()
 {
-    if ( !QDBus::sessionBus().busService()->nameHasOwner( "kmail" ) )
-    KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
+    QDBusConnectionInterface * session = 0;
+    session = QDBus::sessionBus().interface();
+    if ( session && !session->isServiceRegistered( "kmail" ) )
+    	KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
 
-    QDBusInterfacePtr kmail("org.kde.kmail", "/KMail", "org.kde.kmail.KMail");
-    QDBusReply<void> reply = kmail->call("dcopAddMessage", QString(), QString());
-    if ( !reply.isSuccess() ) return false;
+    QDBusInterface kmail("org.kde.kmail", "/KMail", "org.kde.kmail.KMail");
+    QDBusReply<void> reply = kmail.call("dcopAddMessage", QString(), QString());
+    if ( !reply.isValid() ) return false;
 
-    reply = kmail->call("dcopResetAddMessage");
-    if ( !reply.isSuccess() ) return false;
+    reply = kmail.call("dcopResetAddMessage");
+    if ( !reply.isValid() ) return false;
 
     return true;
 }
