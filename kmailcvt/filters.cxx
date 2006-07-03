@@ -135,9 +135,9 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
   KUrl msgURL;
   msgURL.setPath( msgPath );
 
-  QDBusConnectionInterface * session = 0;
-  session = QDBus::sessionBus().interface();
-  if ( session && !session->isServiceRegistered( "kmail" ).value() )
+  QDBusConnectionInterface * sessionBus = 0;
+  sessionBus = QDBus::sessionBus().interface();
+  if ( sessionBus && !sessionBus->isServiceRegistered( "kmail" ).value() )
     KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
 
   QDBusInterface kmail("org.kde.kmail", "/KMail", "org.kde.kmail.KMail");
@@ -176,9 +176,9 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
   KUrl msgURL;
   msgURL.setPath( msgPath );
 
-  QDBusConnectionInterface * session = 0;
-  session = QDBus::sessionBus().interface();
-  if ( session && !session->isServiceRegistered( "kmail" ) )
+  QDBusConnectionInterface * sessionBus = 0;
+  sessionBus = QDBus::sessionBus().interface();
+  if ( sessionBus && !sessionBus->isServiceRegistered( "kmail" ) )
     KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
 
   QDBusInterface kmail("org.kde.kmail", "/KMail", "org.kde.kmail.KMail");
@@ -208,9 +208,9 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
 
 bool Filter::endImport()
 {
-    QDBusConnectionInterface * session = 0;
-    session = QDBus::sessionBus().interface();
-    if ( session && !session->isServiceRegistered( "kmail" ) )
+    QDBusConnectionInterface * sessionBus = 0;
+    sessionBus = QDBus::sessionBus().interface();
+    if ( sessionBus && !sessionBus->isServiceRegistered( "kmail" ) )
     	KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
 
     QDBusInterface kmail("org.kde.kmail", "/KMail", "org.kde.kmail.KMail");
