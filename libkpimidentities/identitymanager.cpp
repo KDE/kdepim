@@ -55,7 +55,7 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 #include <assert.h>
 #include <krandom.h>
 
-#include <dbus/qdbus.h>
+#include <QtDBus>
 
 #include "identitymanagerinterface.h"
 #include "identitymanageradaptor.h"
@@ -78,7 +78,7 @@ IdentityManager::IdentityManager( bool readonly, QObject * parent, const char * 
   : ConfigManager( parent, name ) //, DCOPObject( newDCOPObjectName() )
 {
   new IdentityManagerAdaptor( this );
-  mIface = QDBus::sessionBus().findInterface<OrgKdePimIdentityManagerInterface>("org.kde.pim.IdentityManager", "/");
+  mIface = new OrgKdePimIdentityManagerInterface("org.kde.pim.IdentityManager", "/", QDBus::sessionBus() );
   connect( mIface, SIGNAL(identityChanged(QString)), this, SLOT(slotIdentityChanged(QString)) );
 
   mReadOnly = readonly;
