@@ -306,7 +306,7 @@ PhoneTypeDialog::PhoneTypeDialog( int type, QWidget *parent )
   setCaption( i18n( "Edit Phone Number" ) );
   setButtons(  Ok | Cancel );
   setDefaultButton( Ok );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
   QWidget *page = new QWidget(this);
   setMainWidget( page );
 

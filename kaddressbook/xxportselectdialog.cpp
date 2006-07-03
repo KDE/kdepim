@@ -58,7 +58,7 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
   setButtons( Help | Ok | Cancel );
   setDefaultButton( Ok );
   setModal( true );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
 
   initGUI();
 

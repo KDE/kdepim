@@ -255,7 +255,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   setCaption( i18n( "Edit Address" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
   mAddressList = list;
 
   QWidget *page = new QWidget( this );

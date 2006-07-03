@@ -64,7 +64,7 @@
 #include <libkdepim/categoryselectdialog.h>
 #include <ktoolinvocation.h>
 #include <krandom.h>
-#include <dbus/qdbus.h>
+#include <QtDBus>
 
 #include "addresseeutil.h"
 #include "addresseeeditordialog.h"

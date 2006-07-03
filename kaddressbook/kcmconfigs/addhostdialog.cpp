@@ -42,7 +42,7 @@ AddHostDialog::AddHostDialog( KPIM::LdapServer *server, QWidget* parent )
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
   setModal( true );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
 
   mServer = server;
 

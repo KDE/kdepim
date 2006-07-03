@@ -221,7 +221,7 @@ class SloxPropagator : public KConfigPropagator
 
 SloxWizard::SloxWizard() : KConfigWizard( new SloxPropagator )
 {
-  QFrame *page = createWizardPage( i18n("SUSE LINUX OpenExchange Server") );
+  QWidget *page = createWizardPage( i18n("SUSE LINUX OpenExchange Server") );
 
   QGridLayout *topLayout = new QGridLayout( page );
   topLayout->setSpacing( spacingHint() );

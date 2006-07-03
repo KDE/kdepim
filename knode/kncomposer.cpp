@@ -75,7 +75,7 @@ using KRecentAddress::RecentAddresses;
 #include "knarticlefactory.h"
 #include "settings.h"
 
-#include <dbus/qdbus.h>
+#include <QtDBus>
 
 KNLineEdit::KNLineEdit( KNComposer::ComposerView *_composerView, bool useCompletion,
                         QWidget *parent )

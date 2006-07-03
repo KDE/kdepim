@@ -180,7 +180,7 @@ GeoDialog::GeoDialog( QWidget *parent, const char *name )
   setCaption( i18n( "Geo Data Input" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
   setModal( true );
 
   QFrame *page = new QFrame(this);

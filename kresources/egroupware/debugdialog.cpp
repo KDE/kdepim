@@ -41,7 +41,7 @@ DebugDialog::DebugDialog()
   setButtons( User1 | User2 | Ok );
   setDefaultButton( Ok );
   setModal( false );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
   //add style Qt::WStyle_DialogBorder | Qt::WStyle_StaysOnTop
 
   QWidget *page = new QWidget(this);

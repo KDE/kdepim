@@ -22,7 +22,7 @@
 #include <QVBoxLayout>
 #include <QMenu>
 #include <QSplitter>
-#include <dbus/qdbus.h>
+#include <QtDBus>
 #include <ktoolbar.h>
 
 #include <kactioncollection.h>

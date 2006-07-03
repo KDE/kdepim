@@ -77,7 +77,7 @@ KeyGenerator::KeyGenerator( QWidget * parent )
   setCaption( "KeyGenerationJob test" );
   setButtons( Close|User1 );
   setDefaultButton( User1 );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
   setButtonGuiItem( User1, KGuiItem( "Create" ) );
 
   QWidget * w = new QWidget( this );

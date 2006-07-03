@@ -99,7 +99,7 @@ ViewConfigureDialog::ViewConfigureDialog( ViewConfigureWidget *wdg, const QStrin
   setCaption( i18n( "Modify View: " ) + viewName );
   setButtons( Help | Ok | Cancel );
   setDefaultButton( Ok );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
 
   setMainWidget( mConfigWidget );
 

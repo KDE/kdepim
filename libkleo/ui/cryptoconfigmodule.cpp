@@ -44,6 +44,7 @@
 #include <kglobal.h>
 #include <kinstance.h>
 #include <kurlrequester.h>
+#include <kicon.h>
 
 #include <q3grid.h>
 #include <QLabel>
@@ -97,7 +98,7 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
     if ( type != Plain ) {
       vbox = new QWidget();
 	  KPageWidgetItem *pageItem = new KPageWidgetItem( vbox, comp->description() );
-	  pageItem->setIcon(loadIcon( comp->iconName() ));
+	  pageItem->setIcon( KIcon(loadIcon( comp->iconName() )) );
 	  addPage(pageItem);
     }
     CryptoConfigComponentGUI* compGUI =

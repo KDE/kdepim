@@ -56,7 +56,7 @@ FilterEditDialog::FilterEditDialog( QWidget *parent, const char *name )
   setCaption( i18n( "Edit Address Book Filter" ) );
   setButtons( Help | Ok | Cancel );
   setDefaultButton ( Ok );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
   setModal( false );
   initGUI();
 
@@ -179,7 +179,7 @@ FilterDialog::FilterDialog( QWidget *parent, const char *name )
   setButtons( Ok | Cancel );
   setDefaultButton ( Ok );
   setCaption( i18n( "Edit Address Book Filters" ) );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
   setModal( false );
   initGUI();
 }

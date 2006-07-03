@@ -128,7 +128,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   setButtons( Help | User1 | Cancel );
   setDefaultButton( User1 );
   setModal( false );
-  enableButtonSeparator( true );
+  showButtonSeparator( true );
   setButtonGuiItem( KDialog::Cancel, KStdGuiItem::close() );
   QFrame *page = new QFrame( this );
   setMainWidget( page );
