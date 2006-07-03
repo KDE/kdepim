@@ -223,9 +223,9 @@ CertManager::~CertManager() {
 void CertManager::readConfig( bool noQueryGiven ) {
   KConfig config( "kleopatrarc" );
   config.setGroup( "Display Options" );
-  mHierarchicalView = config.readBoolEntry( "hierarchicalView", false );
+  mHierarchicalView = config.readEntry( "hierarchicalView", false );
   if ( noQueryGiven ) {
-    mNextFindRemote = config.readBoolEntry( "startInRemoteMode", false );
+    mNextFindRemote = config.readEntry( "startInRemoteMode", false );
   }
 }
 
