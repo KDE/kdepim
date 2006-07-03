@@ -178,7 +178,7 @@ void KTNEFMain::loadFile(const QString& filename)
 
 void KTNEFMain::openFile()
 {
-	QString	filename = KFileDialog::getOpenFileName(0,0,this,0);
+	QString	filename = KFileDialog::getOpenFileName(KUrl(),0,this,0);
 	if (!filename.isEmpty()) loadFile(filename);
 }
 
