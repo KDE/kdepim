@@ -82,9 +82,6 @@ namespace Kleo {
   private:
     class Private;
     Private * d;
-  protected:
-    /*! reimplementation */
-    void virtual_hook( int id, void * data );
   };
 
 }

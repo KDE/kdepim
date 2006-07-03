@@ -195,8 +195,4 @@ void Kleo::GnuPGProcessBase::parseStatusOutput() {
   d->statusBuffer = d->statusBuffer.mid( lineStart );
 }
 
-void Kleo::GnuPGProcessBase::virtual_hook( int id, void * data ) {
-  KProcess::virtual_hook( id, data );
-}
-
 #include "gnupgprocessbase.moc"
