@@ -11,7 +11,7 @@
 #define CLIENTADAPTOR_H_220491150471640
 
 #include <QtCore/QObject>
-#include <dbus/qdbus.h>
+#include <QtDBus/QDBusAbstractAdaptor>
 class QByteArray;
 template<class T> class QList;
 template<class Key, class Value> class QMap;

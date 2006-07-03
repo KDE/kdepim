@@ -18,7 +18,7 @@ KornMailDlg::KornMailDlg( QWidget *parent )
 	setButtons( KDialog::User1|KDialog::Close );
 	setButtonGuiItem( User1, KGuiItem(i18n("&Full Message")) );
 	setModal( true );
-	enableButtonSeparator( true );
+	showButtonSeparator( true );
 	QWidget * page = new QWidget( this );
 	setMainWidget(page);
 	QVBoxLayout * topLayout = new QVBoxLayout( page );

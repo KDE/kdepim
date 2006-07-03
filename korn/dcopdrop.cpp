@@ -24,7 +24,6 @@
 #include <kconfigbase.h>
 #include <kdebug.h>
 
-#include <dbus/qdbus.h>
 
 #include <QDateTime>
 #include <QList>

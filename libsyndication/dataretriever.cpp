@@ -142,7 +142,7 @@ void FileRetriever::abort()
 {
     if (d->job)
     {
-        d->job->kill(true);
+        d->job->kill();
         d->job = NULL;
     }
 }

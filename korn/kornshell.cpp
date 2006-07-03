@@ -64,7 +64,7 @@ void KornShell::optionDlg()
 	_configDialog->setCaption( i18n( "Korn Configuration" ) );
 	_configDialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Apply );
 	_configDialog->setModal( false );
-	_configDialog->enableButtonSeparator( true );
+	_configDialog->showButtonSeparator( true );
 	
 	KornCfgImpl *widget = new KornCfgImpl( _configDialog );
 	_configDialog->setMainWidget( widget );

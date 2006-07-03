@@ -11,7 +11,7 @@
 #define PROVIDERADAPTOR_H_220901150471955
 
 #include <QtCore/QObject>
-#include <dbus/qdbus.h>
+#include <QtDBus>
 class QByteArray;
 template<class T> class QList;
 template<class Key, class Value> class QMap;

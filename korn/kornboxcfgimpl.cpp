@@ -270,7 +270,7 @@ void KornBoxCfgImpl::slotEditBox()
 	_base->setCaption( i18n("Box Configuration") );
 	_base->setButtons( KDialog::Ok | KDialog::Cancel );
 	_base->setModal( false );
-	_base->enableButtonSeparator( true );
+	_base->showButtonSeparator( true );
 	KornAccountCfgImpl *widget = new KornAccountCfgImpl( _base );
 
 	_base->setMainWidget( widget );

@@ -68,7 +68,7 @@ KornSubjectsDlg::KornSubjectsDlg( QWidget *parent )
 	setButtons( KDialog::Close );
 	_loadSubjectsCanceled = false;
 	setModal( true );
-	enableButtonSeparator( true );
+	showButtonSeparator( true );
 
 	// The dialog contains a list view and several buttons.
 	// Two box layouts hol dthem.

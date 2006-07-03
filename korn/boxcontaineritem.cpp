@@ -37,8 +37,9 @@
 #include <kshortcut.h>
 #include <kstdaction.h>
 #include <ktoolinvocation.h>
+#include <kvbox.h>
 
-#include <dbus/qdbus.h>
+#include <QtDBus>
 
 #include <QBitmap>
 #include <QColor>
