@@ -24,7 +24,7 @@ endif (APPLE)
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} -DHAVE_CONFIG_H=1)
 link_directories (${KDE4_LIB_DIR})
-include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${QDBUS_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/libkdepim/)
+include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim/)
 
 
 include (ConfigureChecks.cmake)
@@ -69,7 +69,7 @@ set(libkdgantt_SRCS
 
 add_subdirectory(kode)
 add_subdirectory(libakonadi)
-add_subdirectory(akonadiserver/src/notification)
+add_subdirectory(akonadiserver)
 add_subdirectory(akonadiresources)
 add_subdirectory(libkcal)
 add_subdirectory(libkdepim)
