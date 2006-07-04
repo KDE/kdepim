@@ -161,7 +161,7 @@ void BoxContainerItem::readConfig( KConfig* config, const int index )
 	//Read the command
 	*_command = config->readEntry( "command", "" );
 	
-	//Sets the object ID for the DCOP-object
+	//Sets the object ID for the DBUS-object
 #warning Port me to DBus (using DBus object path instead?)
 //	this->setObjId( config->readEntry( "name", "" ).toUtf8() );
 	

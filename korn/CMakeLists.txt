@@ -11,7 +11,7 @@ set(korn_SRCS
    account_input.cpp 
    boxcontainer.cpp 
    boxcontaineritem.cpp 
-   dcopdrop.cpp 
+   dbusdrop.cpp 
    dcop_proto.cpp 
    dockedcontainer.cpp 
    dockeditem.cpp 
@@ -61,7 +61,8 @@ kde4_add_ui_files(korn_SRCS
    korncfg.ui 
    progress_dialog.ui )
 
-qt4_add_dbus_adaptors(korn_SRCS org.kde.korn.BoxContainerItem.xml org.kde.korn.MailDrop.xml)
+qt4_add_dbus_adaptor(korn_SRCS org.kde.korn.BoxContainerItem.xml boxcontaineritem.h BoxContainerItem )
+qt4_add_dbus_adaptor(korn_SRCS org.kde.korn.MailDrop.xml dbusdrop.h DBUSDrop )
 
 kde4_add_executable(korn ${korn_SRCS})
 
@@ -98,7 +99,7 @@ kde4_install_icons( ${ICON_INSTALL_DIR}  hicolor )
 #  account_input.cpp \
 #  boxcontainer.cpp \
 #  boxcontaineritem.cpp boxcontaineritem.skel \
-#  dcopdrop.cpp \
+#  dbusdrop.cpp \
 #  dcopdropif.cpp dcopdropif.skel \
 #  dcop_proto.cpp \
 #  dockedcontainer.cpp \
