@@ -79,7 +79,7 @@ set(kaddressbook_bin_SRCS
 
 kde4_automoc(${kaddressbook_bin_SRCS})
 
-qt4_add_dbus_adaptor(kaddressbook_bin_SRCS org.kde.KAddressbook.Core.xml kaddressbookmain.h KAddressBookMain kaddressbook )
+qt4_add_dbus_adaptor(kaddressbook_bin_SRCS org.kde.KAddressbook.Core.xml kaddressbookmain.h KAddressBookMain kaddressbookadaptor )
 
 kde4_add_executable(kaddressbook_bin ${kaddressbook_bin_SRCS})
 set_target_properties(kaddressbook_bin PROPERTIES OUTPUT_NAME kaddressbook)
@@ -93,7 +93,7 @@ install_targets(/bin kaddressbook_bin )
 
 set(kaddressbookpart_PART_SRCS kaddressbook_part.cpp )
 
-qt4_add_dbus_adaptor(kaddressbookpart_PART_SRCS org.kde.KAddressbook.Core.xmlkaddressbook_part.h KAddressbookPart kaddressbookpart )
+qt4_add_dbus_adaptor(kaddressbookpart_PART_SRCS org.kde.KAddressbook.Core.xmlkaddressbook_part.h KAddressbookPart kaddressbookpartadaptor )
 
 kde4_automoc(${kaddressbookpart_PART_SRCS})
 
