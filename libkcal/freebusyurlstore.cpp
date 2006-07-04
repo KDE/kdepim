@@ -41,7 +41,7 @@ FreeBusyUrlStore *FreeBusyUrlStore::self()
 
 FreeBusyUrlStore::FreeBusyUrlStore()
 {
-  QString configFile = locateLocal( "data", "korganizer/freebusyurls" );
+  QString configFile = KStandardDirs::locateLocal( "data", "korganizer/freebusyurls" );
   mConfig = new KConfig( configFile );
 }
 

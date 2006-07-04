@@ -471,12 +471,12 @@ KRES::IdMapper& ResourceCached::idMapper()
 
 QString ResourceCached::cacheFile() const
 {
-  return locateLocal( "cache", "kcal/kresources/" + identifier() );
+  return KStandardDirs::locateLocal( "cache", "kcal/kresources/" + identifier() );
 }
 
 QString ResourceCached::changesCacheFile( const QString &type ) const
 {
-  return locateLocal( "cache", "kcal/changescache/" + identifier() + '_' + type );
+  return KStandardDirs::locateLocal( "cache", "kcal/changescache/" + identifier() + '_' + type );
 }
 
 void ResourceCached::saveChangesCache( const QMap<Incidence*, bool> &map, const QString &type )

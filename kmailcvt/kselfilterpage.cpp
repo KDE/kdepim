@@ -40,7 +40,7 @@
 
 KSelFilterPage::KSelFilterPage(QWidget *parent, const char *name ) : KSelFilterPageDlg(parent,name) {
 
-	mIntroSidebar->setPixmap(locate("data", "kmailcvt/pics/step1.png"));
+	mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
 	//mFilterList.setAutoDelete( true );
 	connect(mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
 
