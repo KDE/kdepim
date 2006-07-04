@@ -14,12 +14,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_opengroupware )
 
 target_link_libraries(kio_opengroupware  ${KDE4_KDECORE_LIBS} kcal kdepim kio )
 
-install_targets(${PLUGIN_INSTALL_DIR} kio_opengroupware )
+install(TARGETS kio_opengroupware  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR} FILES opengroupware.protocol opengroupwares.protocol )
+install( FILES opengroupware.protocol opengroupwares.protocol  DESTINATION ${SERVICES_INSTALL_DIR})
 
 
 

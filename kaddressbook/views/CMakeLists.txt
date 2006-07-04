@@ -24,7 +24,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_cardview )
 
 target_link_libraries(kaddrbk_cardview  ${KDE4_KDECORE_LIBS} kaddressbook kabc)
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_cardview )
+install(TARGETS kaddrbk_cardview  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -39,7 +39,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_iconview )
 
 target_link_libraries(kaddrbk_iconview  ${KDE4_KDECORE_LIBS} kabc kaddressbook ${LIB_KDE3SUPPORT})
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_iconview )
+install(TARGETS kaddrbk_iconview  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -54,12 +54,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_tableview )
 
 target_link_libraries(kaddrbk_tableview  ${KDE4_KDECORE_LIBS} kabc kaddressbook ${LIB_KDE3SUPPORT})
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_tableview )
+install(TARGETS kaddrbk_tableview  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kaddressbook FILES cardview.desktop iconview.desktop tableview.desktop )
+install( FILES cardview.desktop iconview.desktop tableview.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kaddressbook)
 
 
 

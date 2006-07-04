@@ -15,7 +15,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_csv_xxport)
 
 target_link_libraries(kaddrbk_csv_xxport  ${KDE4_KDECORE_LIBS} kaddressbook kabc)
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_csv_xxport )
+install(TARGETS kaddrbk_csv_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -30,7 +30,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_vcard_xxport )
 
 target_link_libraries(kaddrbk_vcard_xxport  ${KDE4_KDECORE_LIBS} kaddressbook qgpgme )
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_vcard_xxport )
+install(TARGETS kaddrbk_vcard_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -45,7 +45,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_kde2_xxport )
 
 target_link_libraries(kaddrbk_kde2_xxport  ${KDE4_KDECORE_LIBS} kabc kaddressbook)
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_kde2_xxport )
+install(TARGETS kaddrbk_kde2_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -60,7 +60,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_bookmark_xxport )
 
 target_link_libraries(kaddrbk_bookmark_xxport ${KDE4_KDECORE_LIBS} kaddressbook )
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_bookmark_xxport )
+install(TARGETS kaddrbk_bookmark_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -75,7 +75,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_eudora_xxport )
 
 target_link_libraries(kaddrbk_eudora_xxport  ${KDE4_KDECORE_LIBS} kabc kaddressbook)
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_eudora_xxport )
+install(TARGETS kaddrbk_eudora_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -90,7 +90,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_ldif_xxport )
 
 target_link_libraries(kaddrbk_ldif_xxport  ${KDE4_KDECORE_LIBS} kabc kaddressbook )
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_ldif_xxport )
+install(TARGETS kaddrbk_ldif_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -105,7 +105,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_opera_xxport )
 
 target_link_libraries(kaddrbk_opera_xxport  ${KDE4_KDECORE_LIBS} kabc kaddressbook)
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_opera_xxport )
+install(TARGETS kaddrbk_opera_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -120,7 +120,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_pab_xxport )
 
 target_link_libraries(kaddrbk_pab_xxport  ${KDE4_KDECORE_LIBS} kabc kaddressbook)
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_pab_xxport )
+install(TARGETS kaddrbk_pab_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -135,13 +135,13 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_gmx_xxport )
 
 target_link_libraries(kaddrbk_gmx_xxport  ${KDE4_KDECORE_LIBS} kabc kaddressbook )
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_gmx_xxport )
+install(TARGETS kaddrbk_gmx_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kaddressbook FILES csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop                 bookmark_xxport.desktop eudora_xxport.desktop ldif_xxport.desktop                 gnokii_xxport.desktop opera_xxport.desktop pab_xxport.desktop gmx_xxport.desktop )
-install_files( ${DATA_INSTALL_DIR}/kaddressbook FILES csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc            bookmark_xxportui.rc eudora_xxportui.rc ldif_xxportui.rc            opera_xxportui.rc pab_xxportui.rc gmx_xxportui.rc ${gnokii_RCFILE} )
+install( FILES csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop                 bookmark_xxport.desktop eudora_xxport.desktop ldif_xxport.desktop                 gnokii_xxport.desktop opera_xxport.desktop pab_xxport.desktop gmx_xxport.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kaddressbook)
+install( FILES csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc            bookmark_xxportui.rc eudora_xxportui.rc ldif_xxportui.rc            opera_xxportui.rc pab_xxportui.rc gmx_xxportui.rc ${gnokii_RCFILE}  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
 
 
 

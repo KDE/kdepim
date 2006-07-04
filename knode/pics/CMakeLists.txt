@@ -1,7 +1,7 @@
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/knode/pics FILES
+install( FILES
 	stat_edit.png
 	mail.png
 	stat_saved.png
@@ -19,6 +19,7 @@ install_files( ${DATA_INSTALL_DIR}/knode/pics FILES
 	pgp-keys.png
 	group_big.png
 	article.png
+	DESTINATION ${DATA_INSTALL_DIR}/knode/pics 
 )
 kde4_install_icons( ${DATA_INSTALL_DIR}/knode/icons crystalsvg )
 

@@ -27,13 +27,13 @@ set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
 target_link_libraries(kleopatra_bin ${KDE4_KDE3SUPPORT_LIBS} kleopatra kabc kutils )
 
-install_targets(/bin kleopatra_bin )
+install(TARGETS kleopatra_bin  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${XDG_APPS_DIR} FILES kleopatra_import.desktop )
-install_files( ${DATA_INSTALL_DIR}/kleopatra FILES kleopatraui.rc )
+install( FILES kleopatra_import.desktop  DESTINATION ${XDG_APPS_DIR})
+install( FILES kleopatraui.rc  DESTINATION ${DATA_INSTALL_DIR}/kleopatra)
 
 
 

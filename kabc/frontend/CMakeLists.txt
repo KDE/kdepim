@@ -14,7 +14,7 @@ kde4_add_executable(kabcfrontend ${kabcfrontend_SRCS})
 
 target_link_libraries(kabcfrontend  ${KDE4_KDECORE_LIBS} kabc )
 
-install_targets(/bin kabcfrontend )
+install(TARGETS kabcfrontend  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### install files ###############

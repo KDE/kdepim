@@ -4,7 +4,7 @@
 
 ########### install files ###############
 
-install_files( /include/libsyndication/atom FILES category.h constants.h content.h document.h entry.h                   generator.h link.h parser.h person.h source.h atom.h )
+install( FILES category.h constants.h content.h document.h entry.h generator.h link.h parser.h person.h source.h atom.h  DESTINATION ${INCLUDE_INSTALL_DIR}/libsyndication/atom)
 
 
 

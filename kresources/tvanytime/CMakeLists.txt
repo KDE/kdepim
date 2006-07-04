@@ -20,7 +20,7 @@ kde4_add_library(kcal_tvanytime SHARED ${kcal_tvanytime_LIB_SRCS})
 target_link_libraries(kcal_tvanytime  ${KDE4_KDECORE_LIBS} kcal kdepim kcal_tvanytime )
 
 set_target_properties(kcal_tvanytime PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kcal_tvanytime )
+install(TARGETS kcal_tvanytime  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -36,12 +36,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_tvanytime )
 
 target_link_libraries(kcal_tvanytime  ${KDE4_KDECORE_LIBS} )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcal_tvanytime )
+install(TARGETS kcal_tvanytime  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_tvanytime.desktop )
+install( FILES kcal_tvanytime.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
 
 
 

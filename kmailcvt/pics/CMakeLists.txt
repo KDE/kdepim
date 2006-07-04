@@ -4,7 +4,7 @@
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/kmailcvt/pics FILES step1.png )
+install( FILES step1.png  DESTINATION ${DATA_INSTALL_DIR}/kmailcvt/pics)
 
 
 

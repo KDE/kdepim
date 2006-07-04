@@ -18,7 +18,7 @@ kde4_add_library(kcal_resourcefeatureplan SHARED ${kcal_resourcefeatureplan_LIB_
 target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} kcal kdepim kcal_resourcefeatureplan )
 
 set_target_properties(kcal_resourcefeatureplan PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kcal_resourcefeatureplan )
+install(TARGETS kcal_resourcefeatureplan  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -36,7 +36,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_resourcefeatureplan )
 
 target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcal_resourcefeatureplan )
+install(TARGETS kcal_resourcefeatureplan  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -69,7 +69,7 @@ endif(KDE4_BUILD_TESTS)
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_resourcefeatureplan.desktop )
+install( FILES kcal_resourcefeatureplan.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
 
 
 

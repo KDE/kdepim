@@ -15,12 +15,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_sieve )
 
 target_link_libraries(kio_sieve  ${KDE4_KIO_LIBS} ${SASL2_LIBRARIES})
 
-install_targets(${PLUGIN_INSTALL_DIR} kio_sieve )
+install(TARGETS kio_sieve  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR} FILES sieve.protocol )
+install( FILES sieve.protocol  DESTINATION ${SERVICES_INSTALL_DIR})
 
 
 

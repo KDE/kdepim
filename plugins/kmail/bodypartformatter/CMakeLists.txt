@@ -14,7 +14,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_vc
 
 target_link_libraries(kmail_bodypartformatter_text_vcard  ${KDE4_KDECORE_LIBS} kdepim kmime)
 
-install_targets(${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_vcard )
+install(TARGETS kmail_bodypartformatter_text_vcard  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -29,7 +29,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_ca
 
 target_link_libraries(kmail_bodypartformatter_text_calendar  ${KDE4_EMAILFUNCTIOS_LIBS} ${KDE4_KDECORE_LIBS} kcal kmailprivate )
 
-install_targets(${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_calendar )
+install(TARGETS kmail_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -44,12 +44,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_xd
 
 target_link_libraries(kmail_bodypartformatter_text_xdiff  ${KDE4_KDECORE_LIBS} ${QT_QT3SUPPORT_LIBRARY} )
 
-install_targets(${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_xdiff )
+install(TARGETS kmail_bodypartformatter_text_xdiff  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/kmail/plugins/bodypartformatter FILES text_vcard.desktop text_calendar.desktop text_xdiff.desktop )
+install( FILES text_vcard.desktop text_calendar.desktop text_xdiff.desktop  DESTINATION ${DATA_INSTALL_DIR}/kmail/plugins/bodypartformatter)
 
 
 

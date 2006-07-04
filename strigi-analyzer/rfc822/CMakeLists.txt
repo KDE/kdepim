@@ -14,12 +14,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kfile_rfc822 )
 
 target_link_libraries(kfile_rfc822  ${KDE4_KIO_LIBS} )
 
-install_targets(${PLUGIN_INSTALL_DIR} kfile_rfc822 )
+install(TARGETS kfile_rfc822  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR} FILES kfile_rfc822.desktop )
+install( FILES kfile_rfc822.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
 
 
 

@@ -253,7 +253,7 @@ kde4_add_library(kcal SHARED ${kcal_LIB_SRCS})
 target_link_libraries(kcal ${KDE4_EMAILFUNCTIONS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${QT_QTXML_LIBRARY} ktnef kresources kabc  )
 
 set_target_properties(kcal PROPERTIES VERSION 4.0.0 SOVERSION 4 )
-install_targets(${LIB_INSTALL_DIR} kcal )
+install(TARGETS kcal  DESTINATION ${LIB_INSTALL_DIR})
 
 # hack to force ical[ss].h creation
 add_custom_target(ical-headers DEPENDS
@@ -274,7 +274,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_local )
 
 target_link_libraries(kcal_local  ${KDE4_KDECORE_LIBS} kcal )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcal_local )
+install(TARGETS kcal_local  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -289,7 +289,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_localdir )
 
 target_link_libraries(kcal_localdir  ${KDE4_KDECORE_LIBS} kcal )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcal_localdir )
+install(TARGETS kcal_localdir  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -313,9 +313,9 @@ add_subdirectory( tests )
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES local.desktop localdir.desktop )
-install_files( /include/libkcal FILES alarm.h attachment.h attendee.h calendar.h    calendarlocal.h calendarnull.h calendarresources.h calfilter.h calformat.h    calstorage.h customproperties.h dndfactory.h duration.h event.h    exceptions.h filestorage.h freebusy.h htmlexportsettings.h htmlexport.h icaldrag.h    icalformat.h icaltimezones.h incidencebase.h incidence.h incidenceformatter.h    journal.h kcalversion.h listbase.h period.h person.h    qtopiaformat.h recurrencerule.h recurrence.h resourcecached.h resourcecalendar.h    resourcelocalconfig.h resourcelocaldirconfig.h resourcelocaldir.h    resourcelocal.h scheduler.h libkcal_export.h    todo.h vcaldrag.h vcalformat.h )
-install_files( ${SERVICES_INSTALL_DIR}/kresources FILES kcal_manager.desktop )
+install( FILES local.desktop localdir.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
+install( FILES alarm.h attachment.h attendee.h calendar.h    calendarlocal.h calendarnull.h calendarresources.h calfilter.h calformat.h    calstorage.h customproperties.h dndfactory.h duration.h event.h    exceptions.h filestorage.h freebusy.h htmlexportsettings.h htmlexport.h icaldrag.h    icalformat.h icaltimezones.h incidencebase.h incidence.h incidenceformatter.h    journal.h kcalversion.h listbase.h period.h person.h    qtopiaformat.h recurrencerule.h recurrence.h resourcecached.h resourcecalendar.h    resourcelocalconfig.h resourcelocaldirconfig.h resourcelocaldir.h    resourcelocal.h scheduler.h libkcal_export.h    todo.h vcaldrag.h vcalformat.h  DESTINATION ${INCLUDE_INSTALL_DIR}/libkcal)
+install( FILES kcal_manager.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources)
 
 
 

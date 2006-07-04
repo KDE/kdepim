@@ -34,7 +34,7 @@ kde4_add_library(kgroupwarebase SHARED ${kgroupwarebase_LIB_SRCS})
 target_link_libraries(kgroupwarebase  ${KDE4_KDECORE_LIBS} kcal kdepim )
 
 set_target_properties(kgroupwarebase PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kgroupwarebase )
+install(TARGETS kgroupwarebase  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -52,7 +52,7 @@ kde4_add_library(kgroupwaredav SHARED ${kgroupwaredav_LIB_SRCS})
 target_link_libraries(kgroupwaredav  ${KDE4_KDECORE_LIBS} kcal kdepim kgroupwarebase )
 
 set_target_properties(kgroupwaredav PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kgroupwaredav )
+install(TARGETS kgroupwaredav  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### install files ###############

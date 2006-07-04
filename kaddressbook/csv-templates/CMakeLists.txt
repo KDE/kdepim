@@ -4,7 +4,7 @@
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/kaddressbook/csv-templates FILES kaddressbook.desktop outlook2000.desktop yahoo.desktop )
+install( FILES kaddressbook.desktop outlook2000.desktop yahoo.desktop  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook/csv-templates)
 
 
 

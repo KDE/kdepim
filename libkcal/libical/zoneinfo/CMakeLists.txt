@@ -4,7 +4,7 @@
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/libical/zoneinfo FILES zones.tab )
+install( FILES zones.tab  DESTINATION ${DATA_INSTALL_DIR}/libical/zoneinfo)
 
 
 

@@ -4,7 +4,7 @@
 
 ########### install files ###############
 
-install_files( /include/gpgme++/interfaces FILES  )
+#install( FILES   DESTINATION ${INCLUDE_INSTALL_DIR}/gpgme++/interfaces)
 
 
 

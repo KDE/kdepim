@@ -21,7 +21,7 @@ kde4_add_library(kcal_groupdav SHARED ${kcal_groupdav_LIB_SRCS})
 target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav kcal kdepim kcal_groupdav )
 
 set_target_properties(kcal_groupdav PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kcal_groupdav )
+install(TARGETS kcal_groupdav  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -35,7 +35,7 @@ kde4_add_library(kabc_groupdav SHARED ${kabc_groupdav_LIB_SRCS})
 target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav kcal kdepim kabc kabc_groupdav )
 
 set_target_properties(kabc_groupdav PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kabc_groupdav )
+install(TARGETS kabc_groupdav  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -53,7 +53,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_groupdav )
 
 target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcal_groupdav )
+install(TARGETS kcal_groupdav  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -68,13 +68,13 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_groupdav )
 
 target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} )
 
-install_targets(${PLUGIN_INSTALL_DIR} kabc_groupdav )
+install(TARGETS kabc_groupdav  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kabc FILES kabc_groupdav.desktop )
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_groupdav.desktop )
+install( FILES kabc_groupdav.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kabc)
+install( FILES kcal_groupdav.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
 
 install(FILES uninstall.desktop DESTINATION ${kde_servicesdir}/kresources/kabc/ RENAME kabc_opengroupware.desktop)
 install(FILES uninstall.desktop DESTINATION ${kde_servicesdir}/kresources/kcal/ RENAME kcal_opengroupware.desktop)

@@ -4,7 +4,7 @@
 
 ########### install files ###############
 
-install_files( /include/ksieve FILES  )
+#install( FILES   DESTINATION ${INCLUDE_INSTALL_DIR}/ksieve)
 
 
 

@@ -16,7 +16,7 @@ kde4_add_library(kpimidentities SHARED ${kpimidentities_LIB_SRCS})
 target_link_libraries(kpimidentities  ${KDE4_KDEUI_LIBS} kleopatra kdepim )
 
 set_target_properties(kpimidentities PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kpimidentities )
+install(TARGETS kpimidentities  DESTINATION ${LIB_INSTALL_DIR})
 
 
 

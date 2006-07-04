@@ -90,7 +90,7 @@ kde4_add_library(kleopatra SHARED ${kleopatra_LIB_SRCS})
 target_link_libraries(kleopatra  ${KDE4_KDE3SUPPORT_LIBS} qgpgme  )
 
 set_target_properties(kleopatra PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kleopatra )
+install(TARGETS kleopatra  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### install files ###############

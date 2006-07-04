@@ -19,7 +19,7 @@ kde4_add_library(kabckolab SHARED ${kabckolab_LIB_SRCS})
 target_link_libraries(kabckolab  ${KDE4_KDECORE_LIBS}  kresources kabc kcal kdepim)
 
 set_target_properties(kabckolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kabckolab )
+install(TARGETS kabckolab  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -34,12 +34,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_kolab )
 
 target_link_libraries(kabc_kolab  ${KDE4_KDECORE_LIBS} kabckolab kcal )
 
-install_targets(${PLUGIN_INSTALL_DIR} kabc_kolab )
+install(TARGETS kabc_kolab  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kabc FILES kolab.desktop )
+install( FILES kolab.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kabc)
 
 
 

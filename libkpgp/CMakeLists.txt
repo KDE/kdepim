@@ -24,13 +24,13 @@ kde4_add_library(kpgp SHARED ${kpgp_LIB_SRCS})
 target_link_libraries(kpgp  ${KDE4_KDE3SUPPORT_LIBS} )
 
 set_target_properties(kpgp PROPERTIES VERSION 2.2.0 SOVERSION 2 )
-install_targets(${LIB_INSTALL_DIR} kpgp )
+install(TARGETS kpgp  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${KCONF_UPDATE_INSTALL_DIR} FILES kpgp.upd )
-install_programs( ${KCONF_UPDATE_INSTALL_DIR} FILES kpgp-3.1-upgrade-address-data.pl)
+install( FILES kpgp.upd  DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
+install(PROGRAMS FILES kpgp-3.1-upgrade-address-data.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
 
 
 

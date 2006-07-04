@@ -115,14 +115,15 @@ kde4_add_library(syndication SHARED ${syndication_LIB_SRCS})
 target_link_libraries(syndication  ${KDE4_KIO_LIBS}  )
 
 set_target_properties(syndication PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} syndication )
+install(TARGETS syndication  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( /include/libsyndication FILES specificdocument.h abstractparser.h parsercollection.h
+install( FILES specificdocument.h abstractparser.h parsercollection.h
                 documentvisitor.h documentsource.h elementwrapper.h item.h feed.h category.h image.h         
-                enclosure.h person.h global.h dataretriever.h loader.h )
+                enclosure.h person.h global.h dataretriever.h loader.h 
+        DESTINATION ${INCLUDE_INSTALL_DIR}/libsyndication )
 
 
 #original Makefile.am contents follow:

@@ -35,7 +35,7 @@ kde4_add_library(index SHARED ${index_LIB_SRCS})
 target_link_libraries(index  ${KDE4_KDECORE_LIBS} )
 
 set_target_properties(index PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} index )
+install(TARGETS index  DESTINATION ${LIB_INSTALL_DIR})
 
 set(prefix ${CMAKE_INSTALL_PREFIX})
 set(exec_prefix ${CMAKE_INSTALL_PREFIX}/bin)
@@ -46,7 +46,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/indexlib-config.in ${CMAKE_CURRENT_BI
 
 ########### install files ###############
 
-install_files( /include/index FILES create.h index.h lockfile.h )
+install( FILES create.h index.h lockfile.h  DESTINATION ${INCLUDE_INSTALL_DIR}/index)
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/indexlib-config DESTINATION bin )
 
 

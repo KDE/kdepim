@@ -7,7 +7,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
 ########### install files ###############
 
-install_files( /include/kleo FILES  )
+#install( FILES   DESTINATION ${INCLUDE_INSTALL_DIR}/kleo)
 
 
 

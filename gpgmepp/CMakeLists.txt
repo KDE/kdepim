@@ -33,14 +33,15 @@ kde4_add_library(gpgme++ SHARED ${gpgme_LIB_SRCS})
 target_link_libraries(gpgme++ ${KDE4_KDECORE_LIBS} ${GPGME_LIBRARIES})
 
 set_target_properties(gpgme++ PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} gpgme++ )
+install(TARGETS gpgme++  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( /include/gpgme++ FILES  context.h key.h trustitem.h 
+install( FILES context.h key.h trustitem.h 
    eventloopinteractor.h data.h gpgmefw.h result.h keylistresult.h keygenerationresult.h 
-   importresult.h decryptionresult.h verificationresult.h signingresult.h encryptionresult.h engineinfo.h )
+   importresult.h decryptionresult.h verificationresult.h signingresult.h encryptionresult.h engineinfo.h 
+   DESTINATION ${INCLUDE_INSTALL_DIR}/gpgme++ )
 
 
 

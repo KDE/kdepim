@@ -23,9 +23,9 @@ kde4_add_plugin(kio_imap4 ${kio_imap4_PART_SRCS})
 
 target_link_libraries(kio_imap4  ${KDE4_KDE3SUPPORT_LIBS}  ${SASL2_LIBRARIES} kmime  )
 
-install_targets(${PLUGIN_INSTALL_DIR} kio_imap4 )
+install(TARGETS kio_imap4  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR} FILES imap4.protocol imaps.protocol )
+install( FILES imap4.protocol imaps.protocol  DESTINATION ${SERVICES_INSTALL_DIR})

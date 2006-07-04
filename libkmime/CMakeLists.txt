@@ -33,7 +33,7 @@ kde4_add_library(kmime SHARED ${kmime_LIB_SRCS})
 target_link_libraries(kmime  ${KDE4_KIO_LIBS} )
 
 set_target_properties(kmime PROPERTIES VERSION 2.2.0 SOVERSION 2 )
-install_targets(${LIB_INSTALL_DIR} kmime )
+install(TARGETS kmime  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### install files ###############

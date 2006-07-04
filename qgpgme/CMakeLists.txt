@@ -16,12 +16,12 @@ kde4_add_library(qgpgme SHARED ${qgpgme_LIB_SRCS})
 target_link_libraries(qgpgme  ${KDE4_KDECORE_LIBS}  gpgme++ )
 
 set_target_properties(qgpgme PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} qgpgme )
+install(TARGETS qgpgme  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( /include/qgpgme FILES  )
+#install( FILES   DESTINATION ${INCLUDE_INSTALL_DIR}/qgpgme)
 
 
 

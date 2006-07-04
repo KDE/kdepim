@@ -24,7 +24,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kabconfig )
 
 target_link_libraries(kcm_kabconfig  ${KDE4_KIO_LIBS} kdepim kaddressbook )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcm_kabconfig )
+install(TARGETS kcm_kabconfig  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -39,7 +39,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kabldapconfig )
 
 target_link_libraries(kcm_kabldapconfig  ${KDE4_KIO_LIBS} kdepim )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcm_kabldapconfig )
+install(TARGETS kcm_kabldapconfig  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -54,12 +54,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kabcustomfields )
 
 target_link_libraries(kcm_kabcustomfields  ${KDE4_KDEUI_LIBS} kaddressbook )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcm_kabcustomfields )
+install(TARGETS kcm_kabcustomfields  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR} FILES kabconfig.desktop kabldapconfig.desktop                      kabcustomfields.desktop )
+install( FILES kabconfig.desktop kabldapconfig.desktop                      kabcustomfields.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
 
 
 

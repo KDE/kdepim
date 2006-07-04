@@ -86,7 +86,7 @@ set_target_properties(kaddressbook_bin PROPERTIES OUTPUT_NAME kaddressbook)
 
 target_link_libraries(kaddressbook_bin  ${KDE4_KDECORE_LIBS} kaddressbook khtml)
 
-install_targets(/bin kaddressbook_bin )
+install(TARGETS kaddressbook_bin  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### next target ###############
@@ -103,7 +103,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddressbookpart )
 
 target_link_libraries(kaddressbookpart  ${KDE4_KDECORE_LIBS} kaddressbook )
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddressbookpart )
+install(TARGETS kaddressbookpart  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -162,15 +162,15 @@ kde4_add_library(kaddressbook SHARED ${kaddressbook_LIB_SRCS})
 target_link_libraries(kaddressbook  ${KDE4_KDECORE_LIBS} syndication kdepim kcal kabc_file_core kdeprint phononcore )
 
 set_target_properties(kaddressbook PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kaddressbook )
+install(TARGETS kaddressbook  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${XDG_APPS_DIR} FILES kaddressbook.desktop )
-install_files( ${DATA_INSTALL_DIR}/kaddressbook FILES zone.tab )
-install_files( ${DATA_INSTALL_DIR}/kaddressbook FILES kaddressbookui.rc kaddressbook_part.rc )
-install_files( ${SERVICETYPES_INSTALL_DIR} FILES kaddressbook_view.desktop dcopaddressbook.desktop )
+install( FILES kaddressbook.desktop  DESTINATION ${XDG_APPS_DIR})
+install( FILES zone.tab  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
+install( FILES kaddressbookui.rc kaddressbook_part.rc  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
+install( FILES kaddressbook_view.desktop dcopaddressbook.desktop  DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 kde4_install_icons( ${ICON_INSTALL_DIR}  hicolor )
 

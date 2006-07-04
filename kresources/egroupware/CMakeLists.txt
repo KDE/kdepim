@@ -28,7 +28,7 @@ kde4_add_library(kabc_xmlrpc SHARED ${kabc_xmlrpc_LIB_SRCS})
 target_link_libraries(kabc_xmlrpc  ${KDE4_KIO_LIBS} kabc kdepim )
 
 set_target_properties(kabc_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kabc_xmlrpc )
+install(TARGETS kabc_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -49,7 +49,7 @@ kde4_add_library(kcal_xmlrpc SHARED ${kcal_xmlrpc_LIB_SRCS})
 target_link_libraries(kcal_xmlrpc  ${KDE4_KDECORE_LIBS} kcal kdepim )
 
 set_target_properties(kcal_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kcal_xmlrpc )
+install(TARGETS kcal_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -67,7 +67,7 @@ set_target_properties(knotes_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 target_link_libraries(knotes_xmlrpc  ${KDE4_KDECORE_LIBS} kcal kdeprint kdepim )
 
 
-install_targets(${LIB_INSTALL_DIR} knotes_xmlrpc )
+install(TARGETS knotes_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -83,7 +83,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_xmlrpc_plugin )
 
 target_link_libraries(kabc_xmlrpc_plugin  ${KDE4_KDECORE_LIBS} kabc_xmlrpc)
 
-install_targets(${PLUGIN_INSTALL_DIR} kabc_xmlrpc_plugin )
+install(TARGETS kabc_xmlrpc_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -99,7 +99,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_xmlrpc_plugin )
 
 target_link_libraries(kcal_xmlrpc_plugin ${KDE4_KDECORE_LIBS} kcal_xmlrpc)
 
-install_targets(${PLUGIN_INSTALL_DIR} kcal_xmlrpc_plugin )
+install(TARGETS kcal_xmlrpc_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -115,15 +115,15 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} knotes_xmlrpc_plugin )
 
 target_link_libraries(knotes_xmlrpc_plugin ${KDE4_KDECORE_LIBS} knotes_xmlrpc )
 
-install_targets(${PLUGIN_INSTALL_DIR} knotes_xmlrpc_plugin )
+install(TARGETS knotes_xmlrpc_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kresources/knotes FILES knotes_xmlrpc.desktop )
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kabc FILES kabc_xmlrpc.desktop )
-install_files( /include/kabc FILES kabc_resourcexmlrpc.h kcal_resourcexmlrpc.h )
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_xmlrpc.desktop )
+install( FILES knotes_xmlrpc.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/knotes)
+install( FILES kabc_xmlrpc.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kabc)
+install( FILES kabc_resourcexmlrpc.h kcal_resourcexmlrpc.h  DESTINATION ${INCLUDE_INSTALL_DIR}/kabc)
+install( FILES kcal_xmlrpc.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
 
 
 

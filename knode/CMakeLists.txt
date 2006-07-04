@@ -78,7 +78,7 @@ kde4_add_library(knodecommon SHARED ${knodecommon_LIB_SRCS})
 target_link_libraries(knodecommon  ${KDE4_KDECORE_LIBS} kdeprint kwalletclient kmime kpgp kdepim kutils khtml )
 
 set_target_properties(knodecommon PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} knodecommon )
+install(TARGETS knodecommon  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -93,7 +93,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_knode )
 
 target_link_libraries(kcm_knode  ${KDE4_KDECORE_LIBS} knodecommon )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcm_knode )
+install(TARGETS kcm_knode  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -108,7 +108,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} knodepart )
 
 target_link_libraries(knodepart  ${KDE4_KDECORE_LIBS} knodecommon )
 
-install_targets(${PLUGIN_INSTALL_DIR} knodepart )
+install(TARGETS knodepart  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -121,15 +121,15 @@ kde4_add_executable(knode ${knode_SRCS})
 
 target_link_libraries(knode ${KDE4_EMAILFUNCTIONS_LIBS} ${KDE4_KDECORE_LIBS} knodecommon )
 
-install_targets(/bin knode )
+install(TARGETS knode  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR} FILES knewsservice.protocol )
-install_files( ${XDG_APPS_DIR} FILES KNode.desktop )
-install_files( ${SERVICES_INSTALL_DIR} FILES knode_config_identity.desktop knode_config_accounts.desktop knode_config_appearance.desktop knode_config_read_news.desktop knode_config_post_news.desktop knode_config_privacy.desktop knode_config_cleanup.desktop )
-install_files( ${DATA_INSTALL_DIR}/knode FILES headers.rc knodeui.rc knreaderui.rc kncomposerui.rc )
+install( FILES knewsservice.protocol  DESTINATION ${SERVICES_INSTALL_DIR})
+install( FILES KNode.desktop  DESTINATION ${XDG_APPS_DIR})
+install( FILES knode_config_identity.desktop knode_config_accounts.desktop knode_config_appearance.desktop knode_config_read_news.desktop knode_config_post_news.desktop knode_config_privacy.desktop knode_config_cleanup.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
+install( FILES headers.rc knodeui.rc knreaderui.rc kncomposerui.rc  DESTINATION ${DATA_INSTALL_DIR}/knode)
 
 kde4_install_icons( ${ICON_INSTALL_DIR}  hicolor )
 

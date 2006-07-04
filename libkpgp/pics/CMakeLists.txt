@@ -4,8 +4,8 @@
 
 ########### install files ###############
 
-#install_files( ${DATA_INSTALL_DIR}/knode/pics FILES $(kmaildata_DATA) )
-install_files( ${DATA_INSTALL_DIR}/kmail/pics FILES key_ok.png key_bad.png key_unknown.png key.png )
+install( FILES $(kmaildata_DATA DESTINATION ${DATA_INSTALL_DIR}/knode/pics)
+install( FILES key_ok.png key_bad.png key_unknown.png key.png  DESTINATION ${DATA_INSTALL_DIR}/kmail/pics)
 
 
 

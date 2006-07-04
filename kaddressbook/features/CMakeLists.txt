@@ -14,7 +14,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_distributionlist )
 
 target_link_libraries(kaddrbk_distributionlist  ${KDE4_KDECORE_LIBS} kabc kaddressbook ${LIB_KDE3SUPPORT})
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_distributionlist )
+install(TARGETS kaddrbk_distributionlist  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -29,12 +29,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_resourceselection )
 
 target_link_libraries(kaddrbk_resourceselection  ${KDE4_KDECORE_LIBS} kabc kaddressbook)
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_resourceselection )
+install(TARGETS kaddrbk_resourceselection  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kaddressbook FILES distributionlist.desktop resourceselection.desktop )
+install( FILES distributionlist.desktop resourceselection.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kaddressbook)
 
 
 

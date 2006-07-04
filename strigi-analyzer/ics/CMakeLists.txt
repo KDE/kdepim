@@ -14,12 +14,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kfile_ics )
 
 target_link_libraries(kfile_ics  ${KDE4_KDECORE_LIBS} kcal kio )
 
-install_targets(${PLUGIN_INSTALL_DIR} kfile_ics )
+install(TARGETS kfile_ics  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR} FILES kfile_ics.desktop )
+install( FILES kfile_ics.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
 
 
 

@@ -12,7 +12,7 @@ kde4_add_executable(kabc2mutt ${kabc2mutt_SRCS})
 
 target_link_libraries(kabc2mutt  ${KDE4_KDECORE_LIBS} kabc )
 
-install_targets(/bin kabc2mutt )
+install(TARGETS kabc2mutt  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### install files ###############

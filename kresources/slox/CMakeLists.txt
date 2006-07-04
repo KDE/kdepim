@@ -19,7 +19,7 @@ kde4_add_library(kslox SHARED ${kslox_LIB_SRCS})
 target_link_libraries(kslox  ${KDE4_KDECORE_LIBS} kcal kdepim )
 
 set_target_properties(kslox PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kslox )
+install(TARGETS kslox  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -35,7 +35,7 @@ kde4_add_library(kabc_slox SHARED ${kabc_slox_LIB_SRCS})
 target_link_libraries(kabc_slox  ${KDE4_KDECORE_LIBS} kslox kabc kabc_slox )
 
 set_target_properties(kabc_slox PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kabc_slox )
+install(TARGETS kabc_slox  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -51,7 +51,7 @@ kde4_add_library(kcal_slox SHARED ${kcal_slox_LIB_SRCS})
 target_link_libraries(kcal_slox  ${KDE4_KDECORE_LIBS} kslox kcal kcal_slox )
 
 set_target_properties(kcal_slox PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kcal_slox )
+install(TARGETS kcal_slox  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -67,7 +67,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_slox_plugin )
 
 target_link_libraries(kcal_slox_plugin  ${KDE4_KDECORE_LIBS} kcal_slox )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcal_slox_plugin)
+install(TARGETS kcal_slox_plugin DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -83,7 +83,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_slox_plugin )
 
 target_link_libraries(kabc_slox_plugin  ${KDE4_KDECORE_LIBS} kabc_slox )
 
-install_targets(${PLUGIN_INSTALL_DIR} kabc_slox_plugin )
+install(TARGETS kabc_slox_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 
@@ -103,8 +103,8 @@ install_targets(${PLUGIN_INSTALL_DIR} kabc_slox_plugin )
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kabc FILES kabc_slox.desktop kabc_ox.desktop )
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_slox.desktop kcal_ox.desktop )
+install( FILES kabc_slox.desktop kabc_ox.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kabc)
+install( FILES kcal_slox.desktop kcal_ox.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
 
 
 

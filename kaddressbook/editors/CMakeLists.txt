@@ -18,7 +18,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_cryptosettings )
 
 target_link_libraries(kaddrbk_cryptosettings  ${KDE4_KDECORE_LIBS} kabc kleopatra kaddressbook)
 
-install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_cryptosettings )
+install(TARGETS kaddrbk_cryptosettings  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -26,8 +26,8 @@ install_targets(${PLUGIN_INSTALL_DIR} kaddrbk_cryptosettings )
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kaddressbook FILES cryptosettings.desktop )
-install_files( ${SERVICETYPES_INSTALL_DIR} FILES kaddressbookimprotocol.desktop )
+install( FILES cryptosettings.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kaddressbook)
+install( FILES kaddressbookimprotocol.desktop  DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 
 

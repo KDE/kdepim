@@ -22,7 +22,7 @@ kcalkolab kabckolab knoteskolab
 kabc kcal kdepim kpimidentities
 )
 
-install_targets(/bin groupwarewizard )
+install(TARGETS groupwarewizard  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### next target ###############
@@ -37,7 +37,7 @@ kde4_add_executable(egroupwarewizard ${egroupwarewizard_SRCS})
 
 target_link_libraries(egroupwarewizard  ${KDE4_KDECORE_LIBS} kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc kcal kdepim )
 
-install_targets(/bin egroupwarewizard )
+install(TARGETS egroupwarewizard  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### next target ###############
@@ -52,7 +52,7 @@ kde4_add_executable(sloxwizard ${sloxwizard_SRCS})
 
 target_link_libraries(sloxwizard  ${KDE4_KDECORE_LIBS} kcal_slox kabc_slox kcal kabc kdepim )
 
-install_targets(/bin sloxwizard )
+install(TARGETS sloxwizard  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### next target ###############
@@ -71,12 +71,12 @@ kde4_add_executable(kolabwizard ${kolabwizard_SRCS})
 
 target_link_libraries(kolabwizard  ${KDE4_KDECORE_LIBS} kcalkolab kabckolab knoteskolab kcal kdepim kpimidentities )
 
-install_targets(/bin kolabwizard )
+install(TARGETS kolabwizard  DESTINATION ${BIN_INSTALL_DIR} )
 
 ########### install files ###############
 
-install_files( ${XDG_APPS_DIR} FILES groupwarewizard.desktop )
-install_files( ${KCFG_INSTALL_DIR} FILES egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg )
+install( FILES groupwarewizard.desktop  DESTINATION ${XDG_APPS_DIR})
+install( FILES egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 
 
 

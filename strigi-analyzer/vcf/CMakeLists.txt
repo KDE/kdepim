@@ -14,12 +14,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kfile_vcf )
 
 target_link_libraries(kfile_vcf  ${KDE4_KIO_LIBS} )
 
-install_targets(${PLUGIN_INSTALL_DIR} kfile_vcf )
+install(TARGETS kfile_vcf  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR} FILES kfile_vcf.desktop )
+install( FILES kfile_vcf.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
 
 
 

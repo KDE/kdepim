@@ -20,7 +20,7 @@ kde4_add_library(knoteskolab SHARED ${knoteskolab_LIB_SRCS})
 target_link_libraries(knoteskolab  ${KDE4_KDECORE_LIBS} kresources kdeprint kcal kdepim)
 
 set_target_properties(knoteskolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} knoteskolab )
+install(TARGETS knoteskolab  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -35,12 +35,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} knotes_kolab )
 
 target_link_libraries(knotes_kolab  ${KDE4_KDECORE_LIBS} knoteskolab )
 
-install_targets(${PLUGIN_INSTALL_DIR} knotes_kolab )
+install(TARGETS knotes_kolab  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kresources/knotes FILES kolabresource.desktop )
+install( FILES kolabresource.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/knotes)
 
 
 

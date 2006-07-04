@@ -35,7 +35,7 @@ kde4_add_executable(kmailcvt ${kmailcvt_SRCS})
 
 target_link_libraries(kmailcvt  ${KDE4_KDECORE_LIBS} kde3support )
 
-install_targets(/bin kmailcvt )
+install(TARGETS kmailcvt  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### install files ###############

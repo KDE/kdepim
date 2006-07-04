@@ -23,12 +23,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kleopatra )
 
 target_link_libraries(kcm_kleopatra  ${KDE4_KDECORE_LIBS} kleopatra kdeui )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcm_kleopatra )
+install(TARGETS kcm_kleopatra  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR} FILES kleopatra_config_dirserv.desktop  	kleopatra_config_appear.desktop  	kleopatra_config_dnorder.desktop )
+install( FILES kleopatra_config_dirserv.desktop  	kleopatra_config_appear.desktop  	kleopatra_config_dnorder.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
 
 
 

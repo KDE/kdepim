@@ -7,7 +7,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook ${CMAKE_SOURCE_DIR}/kaddre
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/kaddressbook/printing FILES detailed-style.png mike-style.png ringbinder-style.png )
+install( FILES detailed-style.png mike-style.png ringbinder-style.png  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook/printing)
 
 
 

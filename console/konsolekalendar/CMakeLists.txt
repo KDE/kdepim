@@ -23,13 +23,13 @@ kde4_add_executable(konsolekalendar ${konsolekalendar_SRCS})
 
 target_link_libraries(konsolekalendar  ${KDE4_KDECORE_LIBS} kcal kdepim )
 
-install_targets(/bin konsolekalendar )
+install(TARGETS konsolekalendar  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${XDG_APPS_DIR} FILES konsolekalendar.desktop )
-install_files( ${APPLNK_INSTALL_DIR}/Utilities FILES  )
+install( FILES konsolekalendar.desktop  DESTINATION ${XDG_APPS_DIR})
+install( FILES   DESTINATION ${APPLNK_INSTALL_DIR}/Utilities)
 
 
 

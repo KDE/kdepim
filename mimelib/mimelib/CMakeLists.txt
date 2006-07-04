@@ -4,7 +4,7 @@
 
 ########### install files ###############
 
-install_files( /include/mimelib FILES  )
+#install( FILES   DESTINATION /include/mimelib)
 
 
 

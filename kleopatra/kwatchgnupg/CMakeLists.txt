@@ -17,13 +17,13 @@ kde4_add_executable(kwatchgnupg ${kwatchgnupg_SRCS})
 
 target_link_libraries(kwatchgnupg  ${KDE4_KDECORE_LIBS} kleopatra kutils )
 
-install_targets(/bin kwatchgnupg )
+install(TARGETS kwatchgnupg  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${DATA_INSTALL_DIR}/kwatchgnupg/pics FILES kwatchgnupg.png kwatchgnupg2.png )
-install_files( ${DATA_INSTALL_DIR}/kwatchgnupg FILES kwatchgnupgui.rc )
+install( FILES kwatchgnupg.png kwatchgnupg2.png  DESTINATION ${DATA_INSTALL_DIR}/kwatchgnupg/pics)
+install( FILES kwatchgnupgui.rc  DESTINATION ${DATA_INSTALL_DIR}/kwatchgnupg)
 
 
 

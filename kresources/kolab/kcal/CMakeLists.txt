@@ -24,7 +24,7 @@ kde4_add_library(kcalkolab SHARED ${kcalkolab_LIB_SRCS})
 target_link_libraries(kcalkolab  ${KDE4_KDECORE_LIBS} kdepim kcal kresources )
 
 set_target_properties(kcalkolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kcalkolab )
+install(TARGETS kcalkolab  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -39,12 +39,12 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_kolab )
 
 target_link_libraries(kcal_kolab  ${KDE4_KDECORE_LIBS} kcalkolab )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcal_kolab )
+install(TARGETS kcal_kolab  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kolab.desktop )
+install( FILES kolab.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
 
 
 

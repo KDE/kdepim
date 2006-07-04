@@ -15,7 +15,7 @@ kde4_add_library(kcal_groupware SHARED ${kcal_groupware_LIB_SRCS})
 target_link_libraries(kcal_groupware  ${KDE4_KDECORE_LIBS} kcal kdepim kcal_groupware )
 
 set_target_properties(kcal_groupware PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kcal_groupware )
+install(TARGETS kcal_groupware  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -31,7 +31,7 @@ kde4_add_library(kabc_groupware SHARED ${kabc_groupware_LIB_SRCS})
 target_link_libraries(kabc_groupware  ${KDE4_KDECORE_LIBS} kcal kdepim kabc kabc_groupware )
 
 set_target_properties(kabc_groupware PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install_targets(${LIB_INSTALL_DIR} kabc_groupware )
+install(TARGETS kabc_groupware  DESTINATION ${LIB_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -47,7 +47,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_groupware )
 
 target_link_libraries(kcal_groupware  ${KDE4_KDECORE_LIBS} )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcal_groupware )
+install(TARGETS kcal_groupware  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -63,13 +63,13 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_groupware )
 
 target_link_libraries(kabc_groupware  ${KDE4_KDECORE_LIBS} )
 
-install_targets(${PLUGIN_INSTALL_DIR} kabc_groupware )
+install(TARGETS kabc_groupware  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kabc FILES kabc_groupware.desktop )
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kcal_groupware.desktop )
+install( FILES kabc_groupware.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kabc)
+install( FILES kcal_groupware.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
 
 
 

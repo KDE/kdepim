@@ -27,7 +27,7 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kded_networkstatus )
 
 target_link_libraries(kded_networkstatus  ${KDE4_KIO_LIBS}  )
 
-install_targets(${PLUGIN_INSTALL_DIR} kded_networkstatus )
+install(TARGETS kded_networkstatus  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
@@ -47,12 +47,12 @@ kde4_add_executable(networkstatustestservice ${networkstatustestservice_SRCS})
 
 target_link_libraries(networkstatustestservice  ${KDE4_KIO_LIBS}  )
 
-install_targets(/bin networkstatustestservice )
+install(TARGETS networkstatustestservice  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kded FILES networkstatus.desktop )
+install( FILES networkstatus.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kded)
 
 
 

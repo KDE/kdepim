@@ -68,12 +68,12 @@ kde4_add_executable(korn ${korn_SRCS})
 
 target_link_libraries(korn  ${KDE4_KIO_LIBS} phononcore)
 
-install_targets(/bin korn )
+install(TARGETS korn  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${XDG_APPS_DIR} FILES KOrn.desktop )
+install( FILES KOrn.desktop  DESTINATION ${XDG_APPS_DIR})
 
 kde4_install_icons( ${ICON_INSTALL_DIR}  hicolor )
 

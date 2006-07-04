@@ -16,13 +16,13 @@ kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_kabc )
 
 target_link_libraries(kcal_kabc  ${KDE4_KDECORE_LIBS} kcal kdepim )
 
-install_targets(${PLUGIN_INSTALL_DIR} kcal_kabc )
+install(TARGETS kcal_kabc  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### install files ###############
 
-install_files( ${SERVICES_INSTALL_DIR}/kresources/kcal FILES kabc.desktop )
-install_files( /include/libkcal FILES resourcekabc.h resourcekabcconfig.h )
+install( FILES kabc.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
+install( FILES resourcekabc.h resourcekabcconfig.h  DESTINATION ${INCLUDE_INSTALL_DIR}/libkcal)
 
 
 
