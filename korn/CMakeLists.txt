@@ -12,7 +12,7 @@ set(korn_SRCS
    boxcontainer.cpp 
    boxcontaineritem.cpp 
    dbusdrop.cpp 
-   dcop_proto.cpp 
+   dbus_proto.cpp 
    dockedcontainer.cpp 
    dockeditem.cpp 
    hvcontainer.cpp 
