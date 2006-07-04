@@ -22,14 +22,14 @@ set_target_properties(ktnef_bin PROPERTIES OUTPUT_NAME ktnef)
 
 target_link_libraries(ktnef_bin  ${KDE4_KDEUI_LIBS} ktnef )
 
-install_targets(/bin ktnef_bin )
+install(TARGETS ktnef_bin  DESTINATION ${BIN_INSTALL_DIR} )
 
 
 ########### install files ###############
 
-install_files( ${XDG_APPS_DIR} FILES ktnef.desktop )
-install_files( ${DATA_INSTALL_DIR}/ktnef FILES ktnefui.rc )
-install_files( ${MIME_INSTALL_DIR}/application FILES ms-tnef.desktop )
+install( FILES ktnef.desktop  DESTINATION ${XDG_APPS_DIR})
+install( FILES ktnefui.rc  DESTINATION ${DATA_INSTALL_DIR}/ktnef)
+install( FILES ms-tnef.desktop  DESTINATION ${MIME_INSTALL_DIR}/application)
 
 
 
