@@ -16,13 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef DCOPDROP_H
-#define DCOPDROP_H
+#ifndef DBUSDROP_H
+#define DBUSDROP_H
 
 /**
  * @file
  *
- * This file contains the DCOPDrop class.
+ * This file contains the DBUSDrop class.
  */
 
 #include "maildrop.h"
@@ -37,29 +37,29 @@ class QString;
 class QVariant;
 
 /**
- * This class implements a KMailDrop for DCOP-objects.
- * This class handles all new messages which are coming in through DCOP.
+ * This class implements a KMailDrop for DBUS-objects.
+ * This class handles all new messages which are coming in through DBUS.
  */
-class DCOPDrop : public KMailDrop
+class DBUSDrop : public KMailDrop
 { Q_OBJECT
 public:
 	/**
 	 * Constructor: no parameters
 	 */
-	DCOPDrop();
+	DBUSDrop();
 	/**
 	 * Destructor
 	 */
-	virtual ~DCOPDrop();
+	virtual ~DBUSDrop();
 
 	/**
-	 * A DCOPDrop cannot produce error messages, so it always returns true.
+	 * A DBUSDrop cannot produce error messages, so it always returns true.
 	 *
 	 * @return true is the box is valid
 	 */
 	virtual bool valid() { return true; }
 	/**
-	 * This forces the drop to recheck. It is inpossible to recheck dcop,
+	 * This forces the drop to recheck. It is inpossible to recheck DBUS,
 	 * so this function does nothing.
 	 */
 	virtual void recheck();
@@ -87,11 +87,11 @@ public:
 	virtual bool running() { return _isRunning; }
 
 	/**
-	 * This function gives a new instance of a DCOPDrop.
+	 * This function gives a new instance of a DBUSDrop.
 	 *
-	 * @return A new instance of a DCOPDrop.
+	 * @return A new instance of a DBUSDrop.
 	 */
-	virtual KMailDrop* clone() const { return new DCOPDrop; }
+	virtual KMailDrop* clone() const { return new DBUSDrop; }
 
 	/**
 	 * This function reeds the config which are shipped which the group.
@@ -117,9 +117,9 @@ public:
 	 */
 	virtual bool writeConfigGroup( KConfigBase& config ) const;
 	/**
-	 * This returns the type of the box, in this case always "dcop".
+	 * This returns the type of the box, in this case always "dbus".
 	 *
-	 * @return "dcop"
+	 * @return "dbus"
 	 */
 	virtual QString type() const;
 
@@ -180,10 +180,10 @@ private:
 private slots:
 	void doReadSubjectsASync( void );
 
-public slots: //accessed by DCOPDropInterface
+public slots: //accessed by DBUSDropInterface
 	/**
 	 * This function append a message to the box.
-	 * This function is called from DCOPDropInterface.
+	 * This function is called from DBUSDropInterface.
 	 *
 	 * @param subject the subject of the message
 	 * @param message the content of the message
@@ -192,29 +192,29 @@ public slots: //accessed by DCOPDropInterface
 	int addMessage( const QString& subject, const QString& message );
 	/**
 	 * This function removes a messages from the box.
-	 * This function is called from DCOPDropInterface.
+	 * This function is called from DBUSDropInterface.
 	 *
 	 * @param id the message id to be removed
 	 * @return true if succesfull, false otherwise
 	 */
 	bool removeMessage( int id );
 
-	//accessed by DCOPDropCfg
+	//accessed by DBUSDropCfg
 public:
 	/**
-	 * This function returns the dcop name.
-	 * This function is accessed by DCOPDropCfg.
+	 * This function returns the dbus name.
+	 * This function is accessed by DBUSDropCfg.
 	 *
-	 * @return the dcop name
+	 * @return the dbus name
 	 */
-	QString DCOPName() const;
+	QString DBUSName() const;
 	/**
-	 * This function sets the dcop name.
-	 * This function is accessed by DCOPDropCfg.
+	 * This function sets the dbus name.
+	 * This function is accessed by DBUSDropCfg.
 	 *
-	 * @param name the new dcop name
+	 * @param name the new dbus name
 	 */
-	void setDCOPName( const QString& name );
+	void setDBUSName( const QString& name );
 };
 
-#endif //DCOPDROP_H
+#endif //DBUSDROP_H

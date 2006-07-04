@@ -16,7 +16,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "dcopdrop.h"
+#include "dbusdrop.h"
 #include "maildropadaptor.h"
 
 #include "mailsubject.h"
@@ -31,7 +31,7 @@
 #include <QString>
 #include <QTimer>
 
-DCOPDrop::DCOPDrop()
+DBUSDrop::DBUSDrop()
 	: KMailDrop(),
 	_isRunning( false ),
 	_msgList( new QMap< int, KornMailSubject* > ),
@@ -41,63 +41,63 @@ DCOPDrop::DCOPDrop()
 	new MailDropAdaptor( this );
 }
 
-DCOPDrop::~DCOPDrop()
+DBUSDrop::~DBUSDrop()
 {
 	eraseList();
 	delete _msgList;
 	delete _name;
 }
 
-void DCOPDrop::recheck()
+void DBUSDrop::recheck()
 {
 	emit changed( _msgList->count(), this );
 	emit rechecked();
 }
 
-bool DCOPDrop::startMonitor()
+bool DBUSDrop::startMonitor()
 {
 	_isRunning  = true;
 	return true;
 }
 
-bool DCOPDrop::stopMonitor()
+bool DBUSDrop::stopMonitor()
 {
 	_isRunning = false;
 	return true;
 }
 
-bool DCOPDrop::readConfigGroup( const KConfigGroup &cfg )
+bool DBUSDrop::readConfigGroup( const KConfigGroup &cfg )
 {
 	return KMailDrop::readConfigGroup( cfg );
 }
 
-bool DCOPDrop::readConfigGroup( const QMap< QString, QString > &map, const Protocol * )
+bool DBUSDrop::readConfigGroup( const QMap< QString, QString > &map, const Protocol * )
 {
-	if( !map.contains( "dcopname" ) )
-		//The mapping MUST contain dcopname.
+	if( !map.contains( "dbusname" ) )
+		//The mapping MUST contain dbusname.
 		kDebug() << "mapping is niet compleet" << endl;
 
-	this->setDCOPName( *map.find( "dcopname" ) );
+	this->setDBUSName( *map.find( "dbusname" ) );
 	
 	return true;
 }
 
-bool DCOPDrop::writeConfigGroup( KConfigBase& cfg ) const
+bool DBUSDrop::writeConfigGroup( KConfigBase& cfg ) const
 {
 	KMailDrop::writeConfigGroup( cfg );
 
 	KMailDrop::writeConfigGroup( cfg );
 	
-	cfg.writeEntry( "dcopname", *_name );
+	cfg.writeEntry( "dbusname", *_name );
 	return true;
 }
 
-QString DCOPDrop::type() const
+QString DBUSDrop::type() const
 {
-	return QString( "dcop" );
+	return QString( "dbus" );
 }
 
-QVector< KornMailSubject >* DCOPDrop::doReadSubjects( bool * )
+QVector< KornMailSubject >* DBUSDrop::doReadSubjects( bool * )
 {
 	emit readSubjectsTotalSteps( 1 );
 	
@@ -117,7 +117,7 @@ QVector< KornMailSubject >* DCOPDrop::doReadSubjects( bool * )
         return vector;
 }
 
-bool DCOPDrop::deleteMails( QList<QVariant> * ids, bool * )
+bool DBUSDrop::deleteMails( QList<QVariant> * ids, bool * )
 {
 	emit deleteMailsTotalSteps( 1 );
 	
@@ -128,7 +128,7 @@ bool DCOPDrop::deleteMails( QList<QVariant> * ids, bool * )
 			if( _msgList->contains( ids->at( xx ).toInt() ) )
 				_msgList->remove( ids->at( xx ).toInt() );
 		} else {
-			kDebug() << "Got a non-int in DCOPDrop::deleteMails()!" << endl;
+			kDebug() << "Got a non-int in DBUSDrop::deleteMails()!" << endl;
 		}
 		
 	}
@@ -139,7 +139,7 @@ bool DCOPDrop::deleteMails( QList<QVariant> * ids, bool * )
 	return true;
 }
 
-void DCOPDrop::eraseList( void )
+void DBUSDrop::eraseList( void )
 {
 	QMap<int, KornMailSubject* >::iterator it;
 	for( it = _msgList->begin(); it != _msgList->end(); ++it )
@@ -147,7 +147,7 @@ void DCOPDrop::eraseList( void )
 	_msgList->clear();
 }
 
-void DCOPDrop::doReadSubjectsASync( void )
+void DBUSDrop::doReadSubjectsASync( void )
 {
 	QMap<int, KornMailSubject* >::iterator it;
 	for( it = _msgList->begin(); it != _msgList->end(); ++it )
@@ -156,13 +156,13 @@ void DCOPDrop::doReadSubjectsASync( void )
 	emit readSubjectsReady( true );
 }
 
-int DCOPDrop::addMessage( const QString& subject, const QString& message )
+int DBUSDrop::addMessage( const QString& subject, const QString& message )
 {
 	int id = _counter++;
 
 	KornMailSubject *mailsubject = new KornMailSubject( QVariant( id ), this );
 	mailsubject->setSubject( subject );
-	mailsubject->setSender( QString( "DCOP: %1" ).arg( *_name ) );
+	mailsubject->setSender( QString( "DBUS: %1" ).arg( *_name ) );
 	mailsubject->setHeader( message, true );
 	mailsubject->setSize( message.length() );
 	mailsubject->setDate( QDateTime::currentDateTime().toTime_t() );
@@ -181,7 +181,7 @@ int DCOPDrop::addMessage( const QString& subject, const QString& message )
 	return id;
 }
 
-bool DCOPDrop::removeMessage( int id )
+bool DBUSDrop::removeMessage( int id )
 {
 	if( ! _msgList->contains( id ) )
 		return false;
@@ -194,20 +194,20 @@ bool DCOPDrop::removeMessage( int id )
 	return true;
 }
 
-QString DCOPDrop::DCOPName() const
+QString DBUSDrop::DBUSName() const
 {
 	return *_name;
 }
 
-void DCOPDrop::setDCOPName( const QString& name)
+void DBUSDrop::setDBUSName( const QString& name)
 {
 #warning Port me (using DBus object path?)
 	*_name = name;
 //	if( _interface )
 //		_interface->changeName( name );
 //	else
-//		_interface = new DCOPDropInterface( this, name.toUtf8() );
+//		_interface = new DBUSDropInterface( this, name.toUtf8() );
 	QDBus::sessionBus().registerObject( '/' + name, this, QDBusConnection::ExportAdaptors );
 }
 
-#include "dcopdrop.moc"
+#include "dbusdrop.moc"
