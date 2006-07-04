@@ -20,7 +20,7 @@
 #include "dcop_proto.h"
 
 #include "account_input.h"
-#include "dcopdrop.h"
+#include "dbusdrop.h"
 
 #include <kconfigbase.h>
 #include <klocale.h>
@@ -29,39 +29,39 @@
 #include <q3ptrlist.h>
 #include <QVector>
 
-KMailDrop* DCOP_Protocol::createMaildrop( KConfigGroup* ) const
+KMailDrop* DBUS_Protocol::createMaildrop( KConfigGroup* ) const
 {
-	return new DCOPDrop();
+	return new DBUSDrop();
 }
 
-QMap< QString, QString > * DCOP_Protocol::createConfig( KConfigGroup* config, const QString& ) const
+QMap< QString, QString > * DBUS_Protocol::createConfig( KConfigGroup* config, const QString& ) const
 {
 	QMap< QString, QString > *result = new QMap< QString, QString >;
 
-	result->insert( "dcopname", config->readEntry( "dcopname", "korn_dcop" ) );
+	result->insert( "dbusname", config->readEntry( "dbusname", "korn_dbus" ) );
 
 	return result;
 }
 
-QString DCOP_Protocol::configName() const
+QString DBUS_Protocol::configName() const
 {
-	return "dcop";
+	return "dbus";
 }
 
-void DCOP_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
+void DBUS_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const
 {
-	groupBoxes->append( "DCOP" );
+	groupBoxes->append( "DBUS" );
 }
 
-void DCOP_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, QList< AccountInput* >* result ) const
+void DBUS_Protocol::configFields( QVector< QWidget* >* vector, const QObject*, QList< AccountInput* >* result ) const
 {
-	result->append( new TextInput( vector->at( 0 ), i18n( "DCOP name" ), TextInput::text, "korn_dcop", "dcopname" ) );
+	result->append( new TextInput( vector->at( 0 ), i18n( "DBUS name" ), TextInput::text, "korn_dbus", "dbusname" ) );
 }
 
-void DCOP_Protocol::readEntries( QMap< QString, QString >* ) const
+void DBUS_Protocol::readEntries( QMap< QString, QString >* ) const
 {
 }
 
-void DCOP_Protocol::writeEntries( QMap< QString, QString >* ) const
+void DBUS_Protocol::writeEntries( QMap< QString, QString >* ) const
 {
 }

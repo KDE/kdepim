@@ -17,13 +17,13 @@
 */
 
 
-#ifndef DCOP_PROTO_H
-#define DCOP_PROTO_H
+#ifndef DBUS_PROTO_H
+#define DBUS_PROTO_H
 
 /**
  * @file
  *
- * This file only have one class: DCOP_Protocol
+ * This file only have one class: DBUS_Protocol
  */
 
 #include "protocol.h"
@@ -46,21 +46,21 @@ template< class T, class S> class QMap;
 //#include <QString>
 
 /**
- * This class implements a DCOP-protocol.
- * DCOP can be used to add messages to a box, or delete created dcop-messages.
+ * This class implements a DBUS-protocol.
+ * DBUS can be used to add messages to a box, or delete created dbus-messages.
  * This can be useful in scripts.
  */
-class DCOP_Protocol : public Protocol
+class DBUS_Protocol : public Protocol
 {
 public:
 	/**
 	 * Constructor
 	 */
-	DCOP_Protocol() {}
+	DBUS_Protocol() {}
 	/**
 	 * Destructor
 	 */
-	virtual ~DCOP_Protocol() {}
+	virtual ~DBUS_Protocol() {}
 
 	/**
 	 * This function returns a Protocol pointer given a configuration.
@@ -68,7 +68,7 @@ public:
 	 */
 	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
 	/**
-	 * This function creates the maildrop used to count dcop-messages.
+	 * This function creates the maildrop used to count dbus-messages.
 	 * @param config The configuration
 	 */
 	virtual KMailDrop* createMaildrop( KConfigGroup* config ) const;
@@ -81,8 +81,8 @@ public:
 	 */
 	virtual QMap< QString, QString > * createConfig( KConfigGroup* config, const QString& password ) const;
 	/**
-	 * This return the name of this protocol. It is always "dcop".
-	 * @return The name of this protocol: "dcop"
+	 * This return the name of this protocol. It is always "dbus".
+	 * @return The name of this protocol: "dbus"
 	 */
 	virtual QString configName() const;
 

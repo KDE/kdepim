@@ -100,8 +100,8 @@ kde4_install_icons( ${ICON_INSTALL_DIR}  hicolor )
 #  boxcontainer.cpp \
 #  boxcontaineritem.cpp boxcontaineritem.skel \
 #  dbusdrop.cpp \
-#  dcopdropif.cpp dcopdropif.skel \
-#  dcop_proto.cpp \
+#  dbusdropif.cpp dbusdropif.skel \
+#  dbus_proto.cpp \
 #  dockedcontainer.cpp \
 #  dockeditem.cpp \
 #  hvcontainer.cpp \
@@ -148,9 +148,9 @@ kde4_install_icons( ${ICON_INSTALL_DIR}  hicolor )
 #  account_input.h \
 #  boxcontainer.h \
 #  boxcontaineritem.h \
-#  dcop_proto.h \
-#  dcopdrop.h \
-#  dcopdropif.h \
+#  dbus_proto.h \
+#  dbusdrop.h \
+#  dbusdropif.h \
 #  dockeditem.h \
 #  hvcontainer.h \
 #  hvitem.h \

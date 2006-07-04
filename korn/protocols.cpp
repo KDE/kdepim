@@ -28,7 +28,7 @@
 #include "nntp_proto.h"
 //#include "pop3s_proto.h"
 #include "qmail_proto.h"
-#include "dcop_proto.h"
+#include "dbus_proto.h"
 #include "kmail_proto.h"
 
 #include <QHash>
@@ -78,7 +78,7 @@ void Protocols::fillProtocols()
 	addProtocol( new Process_Protocol );
 	addProtocol( new Nntp_Protocol );
 	addProtocol( new QMail_Protocol );
-	addProtocol( new DCOP_Protocol );
+	addProtocol( new DBUS_Protocol );
 	addProtocol( new KMail_Protocol );
 }
 

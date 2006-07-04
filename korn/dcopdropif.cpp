@@ -18,9 +18,9 @@
 
 #include "dcopdropif.h"
 
-#include "dcopdrop.h"
+#include "dbusdrop.h"
 
-DCOPDropInterface::DCOPDropInterface( DCOPDrop* drop, const char * name )
+DCOPDropInterface::DCOPDropInterface( DBUSDrop* drop, const char * name )
 	: DCOPObject( name ),
 	_drop( drop )
 {

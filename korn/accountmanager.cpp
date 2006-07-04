@@ -18,7 +18,7 @@
 
 #include "accountmanager.h"
 
-#include "dcopdrop.h"
+#include "dbusdrop.h"
 #include "kio.h"
 #include "maildrop.h"
 #include "password.h"
@@ -38,7 +38,7 @@ KornSubjectsDlg* AccountManager::_subjectsDlg = 0;
 AccountManager::AccountManager( QObject * parent )
 	: QObject( parent ),
 	_kioList( new QList< KMailDrop* > ),
-	_dcopList( new QList< DCOPDrop* > ),
+	_dbusList( new QList< DBUSDrop* > ),
 	_dropInfo( new QMap< KMailDrop*, Dropinfo* > )
 {
 }
@@ -47,17 +47,17 @@ AccountManager::~AccountManager()
 {
 	while( !_kioList->isEmpty() )
 		delete _kioList->takeFirst();
-	while( !_dcopList->isEmpty() )
-		delete _dcopList->takeFirst();
+	while( !_dbusList->isEmpty() )
+		delete _dbusList->takeFirst();
 	delete _kioList;
-	delete _dcopList;
+	delete _dbusList;
 	delete _dropInfo;
 }
 
 void AccountManager::readConfig( KConfig* config, const int index )
 {
 	KConfigGroup *masterGroup = new KConfigGroup( config, QString( "korn-%1" ).arg( index ) );
-	QStringList dcop = masterGroup->readEntry( "dcop", QStringList(), ',' );
+	QStringList dbus = masterGroup->readEntry( "dbus", QStringList(), ',' );
 	KConfigGroup *accountGroup;
 	int counter = 0;
 
@@ -117,26 +117,26 @@ void AccountManager::readConfig( KConfig* config, const int index )
 	}
 
 	QStringList::Iterator it;
-	for( it = dcop.begin(); it != dcop.end(); ++it )
+	for( it = dbus.begin(); it != dbus.end(); ++it )
 	{
-		DCOPDrop *dcopdrop = new DCOPDrop;
+		DBUSDrop *dbusdrop = new DBUSDrop;
 		Dropinfo *info = new Dropinfo;
 
-		connect( dcopdrop, SIGNAL( changed( int, KMailDrop* ) ), this, SLOT( slotChanged( int, KMailDrop* ) ) );
-		connect( dcopdrop, SIGNAL( showPassivePopup( QList< KornMailSubject >*, int, bool, const QString& ) ),
+		connect( dbusdrop, SIGNAL( changed( int, KMailDrop* ) ), this, SLOT( slotChanged( int, KMailDrop* ) ) );
+		connect( dbusdrop, SIGNAL( showPassivePopup( QList< KornMailSubject >*, int, bool, const QString& ) ),
 			 this, SLOT( slotShowPassivePopup( QList< KornMailSubject >*, int, bool, const QString& ) ) );
 
-		dcopdrop->readConfigGroup( *masterGroup );
-		dcopdrop->setDCOPName( *it );
+		dbusdrop->readConfigGroup( *masterGroup );
+		dbusdrop->setDBUSName( *it );
 
-		_dcopList->append( dcopdrop );
+		_dbusList->append( dbusdrop );
 
 		info->index = 0;
 		info->reset = 0;
 		info->msgnr = 0;
 		info->newMessages = false;
 
-		_dropInfo->insert( dcopdrop, info );
+		_dropInfo->insert( dbusdrop, info );
 	}
 
 	setCount( totalMessages(), hasNewMessages() );

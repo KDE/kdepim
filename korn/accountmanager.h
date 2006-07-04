@@ -27,7 +27,7 @@
 
 #include <QObject>
 
-class DCOPDrop;
+class DBUSDrop;
 class KornSubjectsDlg;
 class KKioDrop;
 class KMailDrop;
@@ -145,7 +145,7 @@ private:
 	};
 
 	QList< KMailDrop* > *_kioList;
-	QList< DCOPDrop* > *_dcopList;
+	QList< DBUSDrop* > *_dbusList;
 
 	QMap< KMailDrop*, Dropinfo* > *_dropInfo;
 
