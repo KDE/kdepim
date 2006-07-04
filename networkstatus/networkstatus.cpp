@@ -56,6 +56,8 @@ public:
 NetworkStatusModule::NetworkStatusModule( const DCOPCString & obj ) : KDEDModule( obj )
 {
 	d = new Private;
+	new ClientAdaptor(this);
+	new ServiceAdaptor(this);
 /*	d->clientIface = new ClientIfaceImpl( this );
 	d->serviceIface = new ServiceIfaceImpl( this );*/
 	connect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QByteArray& ) ) , this, SLOT( unregisteredFromDCOP( const QByteArray& ) ) );

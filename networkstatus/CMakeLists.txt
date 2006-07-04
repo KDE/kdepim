@@ -5,6 +5,17 @@
 ########### next target ###############
 
 set(libnetworkstatus_SRCS networkstatuscommon.cpp clientadaptor.cpp provideradaptor.cpp serviceadaptor.cpp)
+qt4_add_dbus_adaptor( libnetworkstatus_SRCS org.kde.networkstatus.client.xml 
+    networkstatus.h NetworkStatusModule )
+qt4_add_dbus_adaptor( libnetworkstatus_SRCS org.kde.networkstatus.provider.xml 
+    testservice.h TestService )
+qt4_add_dbus_adaptor( libnetworkstatus_SRCS org.kde.networkstatus.service.xml
+    networkstatus.h NetworkStatusModule )
+
+qt4_add_dbus_interfaces( libnetworkstatus_SRCS org.kde.networkstatus.client.xml )
+qt4_add_dbus_interfaces( libnetworkstatus_SRCS org.kde.networkstatus.provider.xml )
+qt4_add_dbus_interfaces( libnetworkstatus_SRCS org.kde.networkstatus.service.xml )
+
 
 set(kded_networkstatus_PART_SRCS networkstatus.cpp network.cpp ${libnetworkstatus_SRCS})
 

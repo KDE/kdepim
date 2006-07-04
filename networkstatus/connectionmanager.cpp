@@ -24,7 +24,7 @@
 #include <kmessagebox.h>
 #include <kstaticdeleter.h>
 
-#include "clientiface_stub.h"
+#include "clientinterface.h"
 #include "networkstatuscommon.h"
 
 #include "connectionmanager.h"
