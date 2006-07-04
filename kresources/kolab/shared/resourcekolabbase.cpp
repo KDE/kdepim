@@ -175,7 +175,7 @@ bool ResourceKolabBase::kmailUpdate( const QString& resource,
 
 QString ResourceKolabBase::configFile( const QString& type ) const
 {
-  return locateLocal( "config",
+  return KStandardDirs::locateLocal( "config",
                       QString( "kresources/kolab/%1rc" ).arg( type ) );
 }
 

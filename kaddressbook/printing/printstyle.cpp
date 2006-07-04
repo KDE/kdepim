@@ -57,7 +57,7 @@ void PrintStyle::setPreview( const QPixmap& image )
 bool PrintStyle::setPreview( const QString& fileName )
 {
   QPixmap preview;
-  QString path = locate( "appdata", "printing/" + fileName );
+  QString path = KStandardDirs::locate( "appdata", "printing/" + fileName );
   if ( path.isEmpty() ) {
     kDebug(5720) << "PrintStyle::setPreview: preview not locatable." << endl;
     return false;

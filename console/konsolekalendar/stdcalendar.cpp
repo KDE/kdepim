@@ -68,7 +68,7 @@ StdCalendar::StdCalendar()
 
     } else {
       // No resource created, i.e. no path found in config => use default path
-      addFileResource( locateLocal( "data", "korganizer/std.ics" ),
+      addFileResource( KStandardDirs::locateLocal( "data", "korganizer/std.ics" ),
                                     i18n( "Default Calendar" ) );
     }
   }

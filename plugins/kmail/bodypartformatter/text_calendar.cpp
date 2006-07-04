@@ -234,7 +234,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool saveFile( const QString& receiver, const QString& iCal,
                    const QString& type ) const
     {
-      KTempFile file( locateLocal( "data", "korganizer/income." + type + '/',
+      KTempFile file( KStandardDirs::locateLocal( "data", "korganizer/income." + type + '/',
                                    true ) );
       QTextStream* ts = file.textStream();
       if ( !ts ) {

@@ -162,6 +162,6 @@ QString TodoStateMapper::filename()
   if ( !file.endsWith( "/" ) ) file += "/";
   file += mIdentifier;
 
-  return locateLocal( "data", file );
+  return KStandardDirs::locateLocal( "data", file );
 }
 

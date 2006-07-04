@@ -103,7 +103,7 @@ void KNFilterManager::prepareShutdown()
 
 void KNFilterManager::loadFilters()
 {
-  QString fname(locate("data","knode/filters/filters.rc") );
+  QString fname(KStandardDirs::locate("data","knode/filters/filters.rc") );
 
   if (!fname.isNull()) {
     KSimpleConfig conf(fname,true);
@@ -126,7 +126,7 @@ void KNFilterManager::loadFilters()
 
 void KNFilterManager::saveFilterLists()
 {
-  QString dir(locateLocal("data","knode/")+"filters/");
+  QString dir(KStandardDirs::locateLocal("data","knode/")+"filters/");
 
   if (dir.isNull()) {
     KNHelper::displayInternalFileError();

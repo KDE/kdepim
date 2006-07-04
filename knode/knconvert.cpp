@@ -186,7 +186,7 @@ void KNConvert::slotStart()
       return;
     }
 
-    QString dataDir=locateLocal("data","knode/");
+    QString dataDir=KStandardDirs::locateLocal("data","knode/");
     t_ar=new KProcess;
     *t_ar << "tar";
     *t_ar << "-cz" << dataDir
@@ -254,7 +254,7 @@ void KNConvert::slotTarExited(KProcess *proc)
 
 bool KNConvert::Converter04::doConvert()
 {
-  QString dir=locateLocal("data","knode/")+"folders/";
+  QString dir=KStandardDirs::locateLocal("data","knode/")+"folders/";
   int num;
   bool error=false;
 

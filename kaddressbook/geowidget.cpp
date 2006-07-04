@@ -423,7 +423,7 @@ void GeoDialog::loadCityList()
   mCityCombo->clear();
   mGeoDataMap.clear();
 
-  QFile file( locate( "data", "kaddressbook/zone.tab" ) );
+  QFile file( KStandardDirs::locate( "data", "kaddressbook/zone.tab" ) );
 
   if ( file.open( QIODevice::ReadOnly ) ) {
     QTextStream s( &file );
@@ -586,7 +586,7 @@ void GeoMapWidget::paintEvent( QPaintEvent* )
   p.setPen( QColor( 255, 0, 0 ) );
   p.setBrush( QColor( 255, 0, 0 ) );
 
-  QPixmap world( locate( "data", "kaddressbook/pics/world.jpg" ) );
+  QPixmap world( KStandardDirs::locate( "data", "kaddressbook/pics/world.jpg" ) );
   p.drawPixmap( 0, 0, world );
 
   double latMid = h / 2;

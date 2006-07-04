@@ -218,7 +218,7 @@ void KNode::Appearance::recreateLVIcons()
 
 KNode::DisplayedHeaders::DisplayedHeaders()
 {
-  QString fname( locate("data","knode/headers.rc") );
+  QString fname( KStandardDirs::locate("data","knode/headers.rc") );
 
   if (!fname.isNull()) {
     KSimpleConfig headerConf(fname,true);
@@ -265,7 +265,7 @@ void KNode::DisplayedHeaders::save()
 
   kDebug(5003) << "KNConfig::DisplayedHeaders::save()" << endl;
 
-  QString dir(locateLocal("data","knode/"));
+  QString dir(KStandardDirs::locateLocal("data","knode/"));
   if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;

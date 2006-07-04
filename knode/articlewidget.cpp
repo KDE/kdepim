@@ -1411,7 +1411,7 @@ void ArticleWidget::slotAddBookmark()
 {
   if ( mCurrentURL.isEmpty() )
     return;
-  QString filename = locateLocal( "data", QString::fromLatin1("konqueror/bookmarks.xml") );
+  QString filename = KStandardDirs::locateLocal( "data", QString::fromLatin1("konqueror/bookmarks.xml") );
   KBookmarkManager *bookManager = KBookmarkManager::managerForFile( filename, false );
   KBookmarkGroup group = bookManager->root();
   group.addBookmark( bookManager, mCurrentURL.url(), mCurrentURL );

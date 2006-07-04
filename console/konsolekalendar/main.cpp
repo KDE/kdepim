@@ -725,7 +725,7 @@ int main( int argc, char *argv[] )
     // an X server, or dcopserver, then put back the following line which
     // supports all resources, not just the standard resource.
     // calendarResource = new StdCalendar();
-    calendarResource = new StdCalendar( locateLocal( "data",
+    calendarResource = new StdCalendar( KStandardDirs::locateLocal( "data",
                                                      "korganizer/std.ics" ),
                                         i18n( "Default Calendar" ) );
   }

@@ -43,7 +43,7 @@ KNode::Settings::Settings() : SettingsBase()
 void KNode::Settings::usrReadConfig( )
 {
   // read extra header configuration
-  QString dir = locateLocal( "data", "knode/" );
+  QString dir = KStandardDirs::locateLocal( "data", "knode/" );
   if ( !dir.isNull() ) {
     QFile f( dir + "xheaders" );
     if ( f.open( QIODevice::ReadOnly ) ) {
@@ -59,7 +59,7 @@ void KNode::Settings::usrReadConfig( )
 void KNode::Settings::usrWriteConfig( )
 {
   // write extra header configuration
-  QString dir = locateLocal( "data", "knode/" );
+  QString dir = KStandardDirs::locateLocal( "data", "knode/" );
   if ( dir.isNull() )
     KNHelper::displayInternalFileError();
   else {

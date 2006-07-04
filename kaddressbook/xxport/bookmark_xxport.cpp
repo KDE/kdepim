@@ -41,7 +41,7 @@ BookmarkXXPort::BookmarkXXPort( KABC::AddressBook *ab, QWidget *parent, const ch
 
 bool BookmarkXXPort::exportContacts( const KABC::AddresseeList &list, const QString& )
 {
-  QString fileName = locateLocal( "data", "kabc/bookmarks.xml" );
+  QString fileName = KStandardDirs::locateLocal( "data", "kabc/bookmarks.xml" );
 
   KBookmarkManager *mgr = KBookmarkManager::managerForFile( fileName, "KAddressbook" );
   KBookmarkDomBuilder *builder = new KBookmarkDomBuilder( mgr->root(), mgr );

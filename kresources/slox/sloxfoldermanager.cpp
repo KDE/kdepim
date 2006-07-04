@@ -112,7 +112,7 @@ QString SloxFolderManager::cacheFile() const
 {
   QString host = mBaseUrl.host();
 
-  QString file = locateLocal( "cache", "slox/folders_" + host );
+  QString file = KStandardDirs::locateLocal( "cache", "slox/folders_" + host );
 
   kDebug() << k_funcinfo << file << endl;
 

@@ -116,7 +116,7 @@ bool KonsoleKalendarAdd::addImportedCalendar()
 
   QString fileName;
   if ( m_variables->getCalendarFile().isEmpty() )
-    fileName = locateLocal( "data", "korganizer/std.ics" );
+    fileName = KStandardDirs::locateLocal( "data", "korganizer/std.ics" );
   else
     fileName = m_variables->getCalendarFile();
 

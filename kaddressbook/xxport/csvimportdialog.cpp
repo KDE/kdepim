@@ -859,7 +859,7 @@ void CSVImportDialog::applyTemplate()
 void CSVImportDialog::saveTemplate()
 {
   QString fileName = KFileDialog::getSaveFileName(
-                     locateLocal( "data", QString( kapp->objectName() ) + "/csv-templates/" ),
+                     KStandardDirs::locateLocal( "data", QString( kapp->objectName() ) + "/csv-templates/" ),
                      "*.desktop", this );
 
   if ( fileName.isEmpty() )
