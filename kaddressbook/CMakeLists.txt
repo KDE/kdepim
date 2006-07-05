@@ -93,7 +93,7 @@ install(TARGETS kaddressbook_bin  DESTINATION ${BIN_INSTALL_DIR} )
 
 set(kaddressbookpart_PART_SRCS kaddressbook_part.cpp )
 
-qt4_add_dbus_adaptor(kaddressbookpart_PART_SRCS org.kde.KAddressbook.Core.xmlkaddressbook_part.h KAddressbookPart kaddressbookpartadaptor )
+qt4_add_dbus_adaptor(kaddressbookpart_PART_SRCS org.kde.KAddressbook.Core.xml kaddressbook_part.h KAddressbookPart kaddressbookpartadaptor )
 
 kde4_automoc(${kaddressbookpart_PART_SRCS})
 

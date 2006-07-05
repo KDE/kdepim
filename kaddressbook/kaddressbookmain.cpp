@@ -32,7 +32,7 @@
 #include <libkdepim/progressdialog.h>
 
 #include <QtDBus>
-#include "coreadaptor.h"
+#include "kaddressbookadaptor.h"
 
 #include "kabcore.h"
 

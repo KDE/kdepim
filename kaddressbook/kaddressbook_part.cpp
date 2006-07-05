@@ -37,7 +37,7 @@
 
 #include "kabcore.h"
 #include "kabprefs.h"
-#include "coreadaptor.h"
+#include "kaddressbookpartadaptor.h"
 #include <QtDBus>
 
 #include "kaddressbook_part.h"
