@@ -111,8 +111,8 @@ void ConversationDelegate::paintRest(QPainter *painter, const QStyleOptionViewIt
 inline QRect ConversationDelegate::getAuthorsBox(const QStyleOptionViewItem &option, const QRect &decoBox) const
 {
   int y = option.rect.top();
-  int x = margin + option.rect.left();
   int decoWidth = decoBox.isNull() ? 0 : decoBox.width() + margin;
+  int x = option.direction == Qt::LeftToRight ? option.rect.left() + margin : option.rect.left() - margin + decoWidth;
   int width = option.rect.width() - decoWidth;
 	int height = option.fontMetrics.height();
   return QRect(x, y, width, height);
@@ -153,7 +153,7 @@ inline QRect ConversationDelegate::getCountBox(const QStyleOptionViewItem &optio
 {
   int right = option.rect.right();
 	int width = option.fontMetrics.width(count);
-  int x = right - width;
+  int x = option.direction == Qt::LeftToRight ? right - width : option.rect.left();
   int y = option.rect.top();
 	int height = option.fontMetrics.height();
   return QRect(x, y, width, height);
@@ -162,8 +162,8 @@ inline QRect ConversationDelegate::getCountBox(const QStyleOptionViewItem &optio
 inline QRect ConversationDelegate::getMiddleBox(const QStyleOptionViewItem &option, /*const QRect &left,*/ const QRect &right) const
 {
 //  int x1 = left.left() + left.width() + margin;
-  int x1 = option.rect.left() + margin;
-  int x2 = right.left() - margin;
+  int x1 = (option.direction == Qt::LeftToRight ? option.rect.left() : right.right()) + margin;
+  int x2 = (option.direction == Qt::LeftToRight ? right.left() : option.rect.right()) - margin;
   int width = x2 - x1;
 	if (width <= 0) return QRect();
   int y = option.rect.top();
@@ -173,8 +173,12 @@ inline QRect ConversationDelegate::getMiddleBox(const QStyleOptionViewItem &opti
 
 inline QRect ConversationDelegate::getRightBox(const QStyleOptionViewItem &option, int neededWidth) const
 {
-  int x2 = option.rect.right() - margin;
-  int x1 = qMax(x2 - neededWidth, option.rect.left() + margin);
+  int x2 = option.direction == Qt::LeftToRight ? 
+  						option.rect.right() - margin : 
+  						qMin(neededWidth + margin, option.rect.right() - margin);
+  int x1 = option.direction == Qt::LeftToRight ? 
+  						qMax(x2 - neededWidth, option.rect.left() + margin) :
+  						option.rect.left() + margin;
   int width = x2 - x1;
   int y = option.rect.top();
 	int height = option.fontMetrics.height();
