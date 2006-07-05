@@ -30,7 +30,7 @@
 #include <QRegExp>
 
 #include "conversationdelegate.h"
-#include "dummykonadiconversation.h"
+#include "conversation.h"
 
 ConversationDelegate::ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QStringList &me, QObject *parent) : QAbstractItemDelegate(parent)
 {
@@ -72,7 +72,7 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 		paintRest(painter, option, fmodel->conversation(pmodel->mapToSource(index).row()));
 }
 
-void ConversationDelegate::paintAuthors(QPainter *painter, const QStyleOptionViewItem &option, const DummyKonadiConversation *c) const
+void ConversationDelegate::paintAuthors(QPainter *painter, const QStyleOptionViewItem &option, const Conversation *c) const
 {
 	int flags = Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine;
 
@@ -89,7 +89,7 @@ void ConversationDelegate::paintAuthors(QPainter *painter, const QStyleOptionVie
     painter->drawText(countBox, flags, messageCountText);
 }
 
-void ConversationDelegate::paintRest(QPainter *painter, const QStyleOptionViewItem &option, const DummyKonadiConversation *c) const
+void ConversationDelegate::paintRest(QPainter *painter, const QStyleOptionViewItem &option, const Conversation *c) const
 {
 	int flags = Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine;
 
@@ -134,7 +134,7 @@ inline QRect ConversationDelegate::getAuthorsBox(const QStyleOptionViewItem &opt
   return QRect(x, y, width, height);
 }
 
-inline QString ConversationDelegate::getAuthors(const QStyleOptionViewItem &option, const DummyKonadiConversation *conversation, const int maxWidth) const
+inline QString ConversationDelegate::getAuthors(const QStyleOptionViewItem &option, const Conversation *conversation, const int maxWidth) const
 {
   QString authors = conversation->author(0);
   QString me;
@@ -215,7 +215,7 @@ QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem &option, const Q
 {
   int lineHeight = option.fontMetrics.height() + 2;
 	int rLineWidth;// = option.fontMetrics.width(text) + 2*margin;
-  DummyKonadiConversation *c = fmodel->conversation(pmodel->mapToSource(index).row());
+  Conversation *c = fmodel->conversation(pmodel->mapToSource(index).row());
   if (index.column() == 0) {
 	  QString text = c->author(0);
 	  QString me;

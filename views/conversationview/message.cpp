@@ -21,37 +21,37 @@
 #include <QTime>
 #include <QDateTime>
 
-#include "dummykonadimessage.h"
+#include "message.h"
 
-QString DummyKonadiMessage::author() const
+QString Message::author() const
 {
   if (nullContent == true) return "";
   return conversationAuthor;
 }
 
-QString DummyKonadiMessage::content() const
+QString Message::content() const
 {
   if (nullContent == true) return "";
   return conversationContent;
 }
 
-void DummyKonadiMessage::setAuthor(QString author)
+void Message::setAuthor(QString author)
 {
   conversationAuthor = author;
 }
 
-void DummyKonadiMessage::setContent(QString content)
+void Message::setContent(QString content)
 {
   content.replace(QRegExp("\n"), "<br>");
   conversationContent = content;
 }
 
-bool DummyKonadiMessage::isNull()
+bool Message::isNull()
 {
   return nullContent;
 }
 
-QString DummyKonadiMessage::arrivalTimeInText() const
+QString Message::arrivalTimeInText() const
 {
   QString ctime = arrival.date().toString();
   ctime.append(" ");
@@ -59,32 +59,32 @@ QString DummyKonadiMessage::arrivalTimeInText() const
   return ctime;
 }
 
-bool DummyKonadiMessage::operator!=(DummyKonadiMessage &compare) const
+bool Message::operator!=(Message &compare) const
 {
   return arrival != compare.arrival;
 }
 
-bool DummyKonadiMessage::operator<(DummyKonadiMessage &compare) const
+bool Message::operator<(Message &compare) const
 {
   return arrival < compare.arrival;
 }
 
-bool DummyKonadiMessage::operator<=(DummyKonadiMessage &compare) const
+bool Message::operator<=(Message &compare) const
 {
   return arrival <= compare.arrival;
 }
 
-bool DummyKonadiMessage::operator==(DummyKonadiMessage &compare) const
+bool Message::operator==(Message &compare) const
 {
   return arrival == compare.arrival;
 }
 
-bool DummyKonadiMessage::operator>=(DummyKonadiMessage &compare) const
+bool Message::operator>=(Message &compare) const
 {
   return arrival >= compare.arrival;
 }
 
-bool DummyKonadiMessage::operator>(DummyKonadiMessage &compare) const
+bool Message::operator>(Message &compare) const
 {
   return arrival > compare.arrival;
 }

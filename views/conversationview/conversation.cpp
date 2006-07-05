@@ -16,76 +16,76 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "dummykonadiconversation.h"
+#include "conversation.h"
 
-int DummyKonadiConversation::count() const
+int Conversation::count() const
 {
   return messages.count();
 }
 
-QString DummyKonadiConversation::conversationTitle() const
+QString Conversation::conversationTitle() const
 {
   return title;
 }
 
-DummyKonadiMessage DummyKonadiConversation::message(int messageId) const
+Message Conversation::message(int messageId) const
 {
   if (messageId < 0 || messageId >= messages.count())
-    return DummyKonadiMessage(true);
+    return Message(true);
   return messages.at(messageId);
 }
 
-void DummyKonadiConversation::addMessage(DummyKonadiMessage &message)
+void Conversation::addMessage(Message &message)
 {
   messages << message;
 //  emit messageAdded();
 }
 
-QString DummyKonadiConversation::author(int messageId) const
+QString Conversation::author(int messageId) const
 {
-  DummyKonadiMessage tmp = message(messageId);
+  Message tmp = message(messageId);
   if (! tmp.isNull())
     return tmp.author();
   return 0;
 }
 
-QString DummyKonadiConversation::content(int messageId) const
+QString Conversation::content(int messageId) const
 {
-  DummyKonadiMessage tmp = message(messageId);
+  Message tmp = message(messageId);
   if (! tmp.isNull())
     return tmp.content();
   return 0;
 }
 
-QDateTime DummyKonadiConversation::arrivalTime(int messageId) const
+QDateTime Conversation::arrivalTime(int messageId) const
 {
-  DummyKonadiMessage tmp = message(messageId);
+  Message tmp = message(messageId);
   return tmp.arrivalTime();
 }
 
-QString DummyKonadiConversation::arrivalTimeInText(int messageId) const
+QString Conversation::arrivalTimeInText(int messageId) const
 {
-  DummyKonadiMessage tmp = message(messageId);
+  Message tmp = message(messageId);
   return tmp.arrivalTimeInText();
 }
 
-QDateTime DummyKonadiConversation::sendTime(int messageId) const
+QDateTime Conversation::sendTime(int messageId) const
 {
-  DummyKonadiMessage tmp = message(messageId);
+  Message tmp = message(messageId);
   return tmp.sendTime();
 }
 
-QDateTime DummyKonadiConversation::arrivalTime() const
+QDateTime Conversation::arrivalTime() const
 {
   return messages.last().arrivalTime();
 }
 
-QString DummyKonadiConversation::arrivalTimeInText() const
+QString Conversation::arrivalTimeInText() const
 {
   return messages.last().arrivalTimeInText();
 }
 
-QDateTime DummyKonadiConversation::sendTime() const
+QDateTime Conversation::sendTime() const
 {
   int max = count();
   QDateTime tmp;
@@ -98,32 +98,32 @@ QDateTime DummyKonadiConversation::sendTime() const
   return *oldest;
 }
 
-bool DummyKonadiConversation::operator!=(DummyKonadiConversation &compare) const
+bool Conversation::operator!=(Conversation &compare) const
 {
   return arrivalTime() != compare.arrivalTime();
 }
 
-bool DummyKonadiConversation::operator<(DummyKonadiConversation &compare) const
+bool Conversation::operator<(Conversation &compare) const
 {
   return arrivalTime() < compare.arrivalTime();
 }
 
-bool DummyKonadiConversation::operator<=(DummyKonadiConversation &compare) const
+bool Conversation::operator<=(Conversation &compare) const
 {
   return arrivalTime() <= compare.arrivalTime();
 }
 
-bool DummyKonadiConversation::operator==(DummyKonadiConversation &compare) const
+bool Conversation::operator==(Conversation &compare) const
 {
   return arrivalTime() == compare.arrivalTime();
 }
 
-bool DummyKonadiConversation::operator>=(DummyKonadiConversation &compare) const
+bool Conversation::operator>=(Conversation &compare) const
 {
   return arrivalTime() >= compare.arrivalTime();
 }
 
-bool DummyKonadiConversation::operator>(DummyKonadiConversation &compare) const
+bool Conversation::operator>(Conversation &compare) const
 {
   return arrivalTime() > compare.arrivalTime();
 }

@@ -72,7 +72,7 @@ QVariant FolderModel::headerData(int section, Qt::Orientation /*orientation*/, i
   }
 }
 
-DummyKonadiConversation* FolderModel::conversation(int conversationId) const
+Conversation* FolderModel::conversation(int conversationId) const
 {
   return backend->conversation(conversationId);
 }

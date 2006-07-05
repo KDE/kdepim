@@ -16,44 +16,44 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef DUMMYKONADICONVERSATION_H
-#define DUMMYKONADICONVERSATION_H
+#ifndef CONVERSATION_H
+#define CONVERSATION_H
 
 #include <QString>
 #include <QList>
 #include <QDateTime>
 
-#include "dummykonadimessage.h"
+#include "message.h"
 
-class DummyKonadiConversation
+class Conversation
 {
 public:
-  DummyKonadiConversation(QString *conversationTitle = 0) : title(*conversationTitle) {}
+  Conversation(QString *conversationTitle = 0) : title(*conversationTitle) {}
   int count() const;
   QString conversationTitle() const;
   QDateTime arrivalTime() const;
   QString arrivalTimeInText() const;
   QDateTime sendTime() const;
-  DummyKonadiMessage message(int messageId) const;
-  void addMessage(DummyKonadiMessage &message);
+  Message message(int messageId) const;
+  void addMessage(Message &message);
   QString author(int messageId) const;
   QString content(int messageId) const;
   QDateTime arrivalTime(int messageId) const;
   QString arrivalTimeInText(int messageId) const;
   QDateTime sendTime(int messageId) const;
-  bool operator!=(DummyKonadiConversation &compare) const;
-  bool operator<(DummyKonadiConversation &compare) const;
-  bool operator<=(DummyKonadiConversation &compare) const;
-  bool operator==(DummyKonadiConversation &compare) const;
-  bool operator>=(DummyKonadiConversation &compare) const;
-  bool operator>(DummyKonadiConversation &compare) const;
+  bool operator!=(Conversation &compare) const;
+  bool operator<(Conversation &compare) const;
+  bool operator<=(Conversation &compare) const;
+  bool operator==(Conversation &compare) const;
+  bool operator>=(Conversation &compare) const;
+  bool operator>(Conversation &compare) const;
 
 //public signals:
 //  void messageAdded();
 
 private:
   QString title;
-  QList<DummyKonadiMessage> messages;
+  QList<Message> messages;
 };
 
 #endif

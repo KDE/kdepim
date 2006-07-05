@@ -10,8 +10,8 @@ INCLUDEPATH += .
 # Input
 HEADERS += conversationdelegate.h \
            dummykonadiadapter.h \
-           dummykonadiconversation.h \
-           dummykonadimessage.h \
+           conversation.h \
+           message.h \
            foldermodel.h \
            mailview.h
 SOURCES += conversationdelegate.cpp \

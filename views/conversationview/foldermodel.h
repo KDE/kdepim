@@ -27,7 +27,7 @@
 #include <QStringList>
 
 #include "dummykonadiadapter.h"
-#include "dummykonadiconversation.h"
+#include "conversation.h"
 
 class FolderModel : public QAbstractListModel
 {
@@ -39,7 +39,7 @@ public:
   int columnCount(const QModelIndex &parent = QModelIndex()) const;
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-  DummyKonadiConversation* conversation(int conversationId) const;
+  Conversation* conversation(int conversationId) const;
 
 private:
   DummyKonadiAdapter* backend;

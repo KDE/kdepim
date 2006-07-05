@@ -23,7 +23,7 @@
 #include <QStringList>
 #include <QDateTime>
 
-#include "dummykonadiconversation.h"
+#include "conversation.h"
 
 class DummyKonadiAdapter
 {
@@ -35,7 +35,7 @@ public:
   QDateTime conversationSendTime(int conversationId) const;
   QDateTime conversationArrivalTime(int conversationId) const;
   QString conversationArrivalTimeInText(int conversationId) const;
-  DummyKonadiConversation* conversation(int conversationId) const;
+  Conversation* conversation(int conversationId) const;
   QString messageContent(int conversationId, int messageId) const;
   QString messageAuthor(int conversationId, int messageId) const;
   QDateTime messageSendTime(int conversationId, int messageId) const;
@@ -54,7 +54,7 @@ public:
 
 private:
   bool tryConversationId(int conversationId) const;
-  QList<DummyKonadiConversation*> conversations;
+  QList<Conversation*> conversations;
 };
 
 #endif

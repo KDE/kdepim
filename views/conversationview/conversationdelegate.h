@@ -42,8 +42,8 @@ public:
   ~ConversationDelegate();
 
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-  void paintAuthors(QPainter *painter, const QStyleOptionViewItem &option, const DummyKonadiConversation *c) const;
-  void paintRest(QPainter *painter, const QStyleOptionViewItem &option, const DummyKonadiConversation *c) const;
+  void paintAuthors(QPainter *painter, const QStyleOptionViewItem &option, const Conversation *c) const;
+  void paintRest(QPainter *painter, const QStyleOptionViewItem &option, const Conversation *c) const;
   QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 
 public slots:
@@ -57,7 +57,7 @@ private:
   QStringList listOfMe;
   QRect getAuthorsBox(const QStyleOptionViewItem &option, const QRect &decoBox = QRect()) const;
   QRect getCountBox(const QStyleOptionViewItem &option, const QString &count) const;
-	QString getAuthors(const QStyleOptionViewItem &option, const DummyKonadiConversation *conversation, int maxWidth) const;
+	QString getAuthors(const QStyleOptionViewItem &option, const Conversation *conversation, int maxWidth) const;
 	bool isOdd(int row) const;
 	void resizeBox(QRect &box, const QRect &deco) const;
 	bool printDecoBox(const QRect &box, const QRect &deco) const;

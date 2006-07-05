@@ -16,17 +16,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef DUMMYKONADIMESSAGE_H
-#define DUMMYKONADIMESSAGE_H
+#ifndef MESSAGE_H
+#define MESSAGE_H
 
 #include <QString>
 #include <QObject>
 #include <QDateTime>
 
-class DummyKonadiMessage
+class Message
 {
 public:
-  DummyKonadiMessage(bool null = false) : nullContent(null) {}
+  Message(bool null = false) : nullContent(null) {}
   QString author() const;
   QString content() const;
   QDateTime sendTime() const { return send; }
@@ -37,12 +37,12 @@ public:
   void setArrivalTime(QDateTime dateTime) { arrival = dateTime; }
   void setSendTime(QDateTime dateTime) { send = dateTime; }
   bool isNull();
-  bool operator!=(DummyKonadiMessage &compare) const;
-  bool operator<(DummyKonadiMessage &compare) const;
-  bool operator<=(DummyKonadiMessage &compare) const;
-  bool operator==(DummyKonadiMessage &compare) const;
-  bool operator>=(DummyKonadiMessage &compare) const;
-  bool operator>(DummyKonadiMessage &compare) const;
+  bool operator!=(Message &compare) const;
+  bool operator<(Message &compare) const;
+  bool operator<=(Message &compare) const;
+  bool operator==(Message &compare) const;
+  bool operator>=(Message &compare) const;
+  bool operator>(Message &compare) const;
 
 private:
   QString conversationAuthor, conversationContent;
