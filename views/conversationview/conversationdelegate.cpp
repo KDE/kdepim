@@ -98,14 +98,30 @@ void ConversationDelegate::paintRest(QPainter *painter, const QStyleOptionViewIt
   QRect timeBox = getRightBox(option, option.fontMetrics.width(ctime)); 
 	QRect subjectBox = getMiddleBox(option, timeBox);
 
-	if (subjectBox.width() > margin) {
-	  chop(option, ctitle, subjectBox.width());
-  	painter->drawText(subjectBox, flags, ctitle);
-  }
 	if (timeBox.width() > margin) {
 		chop(option, ctime, timeBox.width());
   	painter->drawText(timeBox, flags, ctime);
 	}
+
+	if (subjectBox.width() > margin) {
+	  chop(option, ctitle, subjectBox.width());
+  	painter->drawText(subjectBox, flags, ctitle);
+  	if (option.fontMetrics.width(ctitle) < subjectBox.width() - margin) {
+	    painter->setPen(option.palette.shadow().color());
+	    QRect tmp = getSnippetBox(option, subjectBox, option.fontMetrics.width(ctitle));
+	    QString snippet = c->content(0);
+	    painter->drawText(tmp, flags, snippet);
+	  }
+  }
+}
+
+inline QRect ConversationDelegate::getSnippetBox(const QStyleOptionViewItem &option, const QRect &parentBox, int parentWidth) const
+{
+	int width = parentBox.width() - margin - parentWidth;
+  int x = option.direction == Qt::LeftToRight ? parentBox.right() - width : parentBox.left();
+  int y = option.rect.top();
+	int height = option.fontMetrics.height();
+  return QRect(x, y, width, height);
 }
 
 inline QRect ConversationDelegate::getAuthorsBox(const QStyleOptionViewItem &option, const QRect &decoBox) const

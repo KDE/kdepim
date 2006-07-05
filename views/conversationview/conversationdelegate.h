@@ -63,6 +63,7 @@ private:
 	bool printDecoBox(const QRect &box, const QRect &deco) const;
 	QRect getMiddleBox(const QStyleOptionViewItem &option, const QRect &right) const;
 	QRect getRightBox(const QStyleOptionViewItem &option, int neededWidth) const;
+	QRect getSnippetBox(const QStyleOptionViewItem &option, const QRect &parentBox, int parentWidth) const;
 	void chop(const QStyleOptionViewItem &option, QString &orig, int width) const;
 };
 
