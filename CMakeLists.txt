@@ -4,13 +4,12 @@ set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules )
 
 # search packages used by KDE
 find_package(KDE4 REQUIRED)
-find_package(KDEPIMLib REQUIRED)
 include (KDE4Defaults)
 include (MacroLibrary)
 
 
-find_package(Kode REQUIRED)
 find_package(KdepimLibs REQUIRED)
+find_package(Kode REQUIRED)
 
 macro_optional_find_package(Sasl2)
 macro_optional_find_package(Boost)
