@@ -44,7 +44,7 @@
 class Q3GroupBox;
 
 class KProcess;
-class KSpell;
+class K3Spell;
 class K3DictSpellingHighlighter;
 class KSelectAction;
 class KToggleAction;
@@ -125,7 +125,7 @@ class KNComposer : public KMainWindow {
     bool e_xternalEdited;
     KProcess *e_xternalEditor;
     KTempFile *e_ditorTempfile;
-    KSpell *s_pellChecker;
+    K3Spell *s_pellChecker;
     SpellingFilter* mSpellingFilter;
 
     //Attachments
@@ -189,7 +189,7 @@ class KNComposer : public KMainWindow {
     void slotAttachmentRemove(Q3ListViewItem *it);
 
     // spellcheck operation
-    void slotSpellStarted(KSpell *);
+    void slotSpellStarted(K3Spell *);
     void slotSpellDone(const QString&);
     void slotSpellFinished();
 
@@ -291,7 +291,7 @@ class KNComposer::Editor : public KEdit {
     void slotCorrectWord();
 
 protected slots:
-    void slotSpellStarted( KSpell *);
+    void slotSpellStarted( K3Spell *);
     void slotSpellDone(const QString &);
     void slotSpellFinished();
     void slotMisspelling (const QString &, const QStringList &lst, unsigned int);
@@ -315,7 +315,7 @@ protected slots:
 private:
     KNComposer *m_composer;
     KNComposer::ComposerView *m_composerView;
-    KSpell *spell;
+    K3Spell *spell;
     QMap<QString,QStringList> m_replacements;
     QRegExp m_bound;
 };

@@ -28,7 +28,7 @@
 #include <QDragEnterEvent>
 #include <QCloseEvent>
 #include <QLabel>
-#include <kspelldlg.h>
+#include <k3spelldlg.h>
 #include <kdeversion.h>
 #include "addressesdialog.h"
 using KPIM::AddressesDialog;
@@ -46,7 +46,7 @@ using KRecentAddress::RecentAddresses;
 #include <kdebug.h>
 #include <klineedit.h>
 #include <kcombobox.h>
-#include <kspell.h>
+#include <k3spell.h>
 #include <ktempfile.h>
 #include <kpgp.h>
 #include <kpgpblock.h>
@@ -1337,7 +1337,7 @@ void KNComposer::slotSpellcheck()
   a_ctExternalEditor->setEnabled(false);
   a_ctSpellCheck->setEnabled(false);
 
-  s_pellChecker = new KSpell(this, i18n("Spellcheck"), this, SLOT(slotSpellStarted(KSpell *)));
+  s_pellChecker = new K3Spell(this, i18n("Spellcheck"), this, SLOT(slotSpellStarted(KSpell *)));
   QStringList l = K3SpellingHighlighter::personalWords();
   for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
       s_pellChecker->addPersonal( *it );
@@ -1586,7 +1586,7 @@ void KNComposer::slotAttachmentRemove(Q3ListViewItem *)
 //==============================================================================
 
 
-void KNComposer::slotSpellStarted( KSpell *)
+void KNComposer::slotSpellStarted( K3Spell *)
 {
     if( !spellLineEdit )
     {
@@ -1648,7 +1648,7 @@ void KNComposer::slotSpellFinished()
 {
   a_ctExternalEditor->setEnabled(true);
   a_ctSpellCheck->setEnabled(true);
-  KSpell::spellStatus status=s_pellChecker->status();
+  K3Spell::spellStatus status=s_pellChecker->status();
   delete s_pellChecker;
   s_pellChecker=0;
 
@@ -1656,11 +1656,11 @@ void KNComposer::slotSpellFinished()
   delete mSpellingFilter;
   mSpellingFilter = 0;
 
-  if(status==KSpell::Error) {
+  if(status==K3Spell::Error) {
     KMessageBox::error(this, i18n("ISpell could not be started.\n"
     "Please make sure you have ISpell properly configured and in your PATH."));
   }
-  else if(status==KSpell::Crashed) {
+  else if(status==K3Spell::Crashed) {
     v_iew->e_dit->spellcheck_stop();
     KMessageBox::error(this, i18n("ISpell seems to have crashed."));
   }
@@ -1668,7 +1668,7 @@ void KNComposer::slotSpellFinished()
   {
       if( spellLineEdit )
           slotSpellcheck();
-      else if( status == KSpell::FinishedNoMisspellingsEncountered )
+      else if( status == K3Spell::FinishedNoMisspellingsEncountered )
           KMessageBox::information( this, i18n("No misspellings encountered."));
   }
 }
@@ -2414,7 +2414,7 @@ void KNComposer::Editor::contentsContextMenuEvent( QContextMenuEvent */*e*/ )
     }
     else
     {
-        spell = new KSpell(this, i18n("Spellcheck"), this, SLOT(slotSpellStarted(KSpell *)));
+        spell = new K3Spell(this, i18n("Spellcheck"), this, SLOT(slotSpellStarted(K3Spell *)));
         QStringList l = K3SpellingHighlighter::personalWords();
         for ( QStringList::Iterator it = l.begin(); it != l.end(); ++it ) {
             spell->addPersonal( *it );
@@ -2426,7 +2426,7 @@ void KNComposer::Editor::contentsContextMenuEvent( QContextMenuEvent */*e*/ )
     }
 }
 
-void KNComposer::Editor::slotSpellStarted( KSpell *)
+void KNComposer::Editor::slotSpellStarted( K3Spell *)
 {
     spell->check( selectWordUnderCursor(),false );
 }
@@ -2439,15 +2439,15 @@ void KNComposer::Editor::slotSpellDone(const QString &/*newtext*/)
 
 void KNComposer::Editor::slotSpellFinished()
 {
-  KSpell::spellStatus status=spell->status();
+  K3Spell::spellStatus status=spell->status();
   delete spell;
   spell=0;
 
-  if(status==KSpell::Error) {
+  if(status==K3Spell::Error) {
     KMessageBox::error(this, i18n("ISpell could not be started.\n"
     "Please make sure you have ISpell properly configured and in your PATH."));
   }
-  else if(status==KSpell::Crashed) {
+  else if(status==K3Spell::Crashed) {
 
     KMessageBox::error(this, i18n("ISpell seems to have crashed."));
   }

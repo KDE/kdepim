@@ -33,7 +33,8 @@
 #include <kfiledialog.h>
 #include <kopenwith.h>
 #include <kscoringeditor.h>
-#include <kspell.h>
+#include <k3spell.h>
+#include <k3sconfig.h>
 #include <kcombobox.h>
 #include <kpgpui.h>
 #include <kurlcompletion.h>
@@ -1735,7 +1736,7 @@ KNode::PostNewsSpellingWidget::PostNewsSpellingWidget( KInstance *inst, QWidget 
   QVBoxLayout *topL=new QVBoxLayout(this);
   topL->setSpacing(5);
 
-  c_onf = new KSpellConfig( this, 0, false );
+  c_onf = new K3SpellConfig( this, 0, false );
   topL->addWidget(c_onf);
   connect(c_onf, SIGNAL(configChanged()), SLOT(changed()));
 

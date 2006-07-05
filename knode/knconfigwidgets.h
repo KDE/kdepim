@@ -42,7 +42,7 @@ class KConfigBase;
 class KLineEdit;
 class KComboBox;
 class KIntSpinBox;
-class KSpellConfig;
+class K3SpellConfig;
 class KUrlCompletion;
 
 namespace Kpgp {
@@ -582,7 +582,7 @@ class KDE_EXPORT PostNewsSpellingWidget : public KCModule {
     void save();
 
   protected:
-     KSpellConfig *c_onf;
+     K3SpellConfig *c_onf;
 
 };
 
