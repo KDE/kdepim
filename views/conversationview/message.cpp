@@ -46,7 +46,7 @@ void Message::setContent(QString content)
   conversationContent = content;
 }
 
-bool Message::isNull()
+bool Message::isNull() const
 {
   return nullContent;
 }
@@ -87,4 +87,14 @@ bool Message::operator>=(Message &compare) const
 bool Message::operator>(Message &compare) const
 {
   return arrival > compare.arrival;
+}
+
+bool Message::isRead() const
+{
+	return readStatus;
+}
+
+void Message::markAs(bool read) 
+{
+	readStatus = read;
 }

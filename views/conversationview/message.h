@@ -36,7 +36,9 @@ public:
   void setContent(QString newContent);
   void setArrivalTime(QDateTime dateTime) { arrival = dateTime; }
   void setSendTime(QDateTime dateTime) { send = dateTime; }
-  bool isNull();
+  bool isNull() const;
+  bool isRead() const;
+  void markAs(bool read);
   bool operator!=(Message &compare) const;
   bool operator<(Message &compare) const;
   bool operator<=(Message &compare) const;
@@ -47,7 +49,7 @@ public:
 private:
   QString conversationAuthor, conversationContent;
   QDateTime arrival, send;
-  bool nullContent;
+  bool nullContent, readStatus;
 };
 
 #endif
