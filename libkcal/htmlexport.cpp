@@ -682,7 +682,11 @@ QString HtmlExport::styleSheet() const
 
 void HtmlExport::addHoliday( const QDate &date, const QString &name)
 {
-  mHolidayMap[date] = name;
+  if ( mHolidayMap[date].isEmpty() ) {
+    mHolidayMap[date] = name;
+  } else {
+    mHolidayMap[date] = i18nc( "list of holidays", "%1, %2", mHolidayMap[date], name );
+  }
 }
 
 QDate HtmlExport::fromDate() const
