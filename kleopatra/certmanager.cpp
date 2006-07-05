@@ -163,8 +163,8 @@ namespace {
 } // anon namespace
 
 CertManager::CertManager( bool remote, const QString& query, const QString & import,
-			  QWidget* parent, const char* name, Qt::WFlags f )
-  : KMainWindow( parent, name, f|Qt::WDestructiveClose ),
+			  QWidget* parent, Qt::WFlags f )
+  : KMainWindow( parent, f|Qt::WDestructiveClose ),
     mCrlView( 0 ),
     mDirmngrProc( 0 ),
     mHierarchyAnalyser( 0 ),
@@ -664,7 +664,7 @@ void CertManager::slotImportCertFromFile()
 {
   const QString filter = "application/x-x509-ca-cert application/x-pkcs12 application/pkcs7-mime";
   //const QString filter = QString("*.pem *.der *.p7c *.p12|") + i18n("Certificates (*.pem *.der *.p7c *.p12)");
-  slotImportCertFromFile( KFileDialog::getOpenURL( QString(), filter, this,
+  slotImportCertFromFile( KFileDialog::getOpenUrl( KUrl(), filter, this,
                                                    i18n( "Select Certificate File" ) ) );
 }
 
@@ -886,7 +886,7 @@ void CertManager::slotDirmngrExited() {
 */
 void CertManager::importCRLFromFile() {
   QString filter = QString("*.crl *.arl *-crl.der *-arl.der|") + i18n("Certificate Revocation List (*.crl *.arl *-crl.der *-arl.der)");
-  KUrl url = KFileDialog::getOpenURL( QString(),
+  KUrl url = KFileDialog::getOpenUrl( KUrl(),
                                       filter,
                                       this,
                                       i18n( "Select CRL File" ) );
@@ -1257,7 +1257,7 @@ void CertManager::slotCertificateExportResult( const GpgME::Error & err, const Q
   kDebug() << "CertManager::slotCertificateExportResult(): got " << data.size() << " bytes" << endl;
 
   const QString filter = QString("*.pem|") + i18n("ASCII Armored Certificate Bundles (*.pem)");
-  const KUrl url = KFileDialog::getOpenURL( QString(),
+  const KUrl url = KFileDialog::getOpenUrl( KUrl(),
                                       filter,
                                       this,
                                       i18n( "Save Certificate" ) );
@@ -1331,7 +1331,7 @@ void CertManager::slotSecretKeyExportResult( const GpgME::Error & err, const QBy
 
   kDebug() << "CertManager::slotSecretKeyExportResult(): got " << data.size() << " bytes" << endl;
   QString filter = QString("*.p12|") + i18n("PKCS#12 Key Bundle (*.p12)");
-  KUrl url = KFileDialog::getOpenURL( QString(),
+  KUrl url = KFileDialog::getOpenUrl( KUrl(),
                                       filter,
                                       this,
                                       i18n( "Save Certificate" ) );

@@ -27,7 +27,7 @@
 
 class ServiceIface_stub;
 
-class TestService : virtual public QObject, ProviderIface
+class TestService : virtual public QObject
 {
 Q_OBJECT
 public:

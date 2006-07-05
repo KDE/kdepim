@@ -8,7 +8,7 @@ set(kpimidentities_LIB_SRCS identitymanager.cpp identity.cpp identitycombo.cpp)
 
 kde4_automoc(${kpimidentities_LIB_SRCS})
 
-qt4_add_dbus_adaptor(kpimidentities_LIB_SRCS org.kde.pim.IdentityManager.xml identitymanager.h IdentityManager )
+qt4_add_dbus_adaptor(kpimidentities_LIB_SRCS org.kde.pim.IdentityManager.xml identitymanager.h KPIM::IdentityManager )
 qt4_add_dbus_interfaces(kpimidentities_LIB_SRCS org.kde.pim.IdentityManager.xml)
 
 kde4_add_library(kpimidentities SHARED ${kpimidentities_LIB_SRCS})

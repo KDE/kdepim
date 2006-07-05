@@ -60,7 +60,7 @@ KNSaveHelper::~KNSaveHelper()
 
 QFile* KNSaveHelper::getFile(const QString &dialogTitle)
 {
-  url = KFileDialog::getSaveURL(lastPath + s_aveName, QString(), p_arent, dialogTitle);
+  url = KFileDialog::getSaveUrl(lastPath + s_aveName, QString(), p_arent, dialogTitle);
 
   if (url.isEmpty())
     return 0;
@@ -97,7 +97,7 @@ QFile* KNSaveHelper::getFile(const QString &dialogTitle)
 
 //===============================================================================
 
-QString KNLoadHelper::l_astPath;
+KUrl KNLoadHelper::l_astPath;
 
 KNLoadHelper::KNLoadHelper(QWidget *parent)
   : p_arent(parent), f_ile(0)
@@ -118,13 +118,12 @@ QFile* KNLoadHelper::getFile( const QString &dialogTitle )
   if (f_ile)
     return f_ile;
 
-  KUrl url = KFileDialog::getOpenURL( l_astPath,QString(), p_arent, dialogTitle );
+  KUrl url = KFileDialog::getOpenUrl( l_astPath, QString(), p_arent, dialogTitle );
 
   if (url.isEmpty())
     return 0;
 
-  l_astPath = url.url( KUrl::RemoveTrailingSlash );
-  l_astPath.truncate(l_astPath.length()-url.fileName().length());
+  l_astPath = url;
 
   return setURL(url);
 }

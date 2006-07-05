@@ -41,13 +41,12 @@
 
 
 LabelAction::LabelAction( const QString & text,  KActionCollection * parent,
-			  const char* name )
-  : KAction( text, QIcon(), KShortcut(), 0, 0, parent, name )
+			  const QString &name )
+  : KAction( text, parent, name )
 {
-  setToolBarWidgetFactory( this );
 }
 
-QWidget* LabelAction::createToolBarWidget( QToolBar * parent )
+QWidget* LabelAction::createWidget( QWidget * parent )
 {
   QLabel *label = new QLabel( text(), parent );
   label->setObjectName( "kde toolbar widget" );
@@ -73,21 +72,20 @@ QWidget* LabelAction::createToolBarWidget( QToolBar * parent )
 }*/
 
 LineEditAction::LineEditAction( const QString & text, KActionCollection * parent,
-				QObject * receiver, const char * member, const char * name )
-  : KAction( text, QIcon(), KShortcut(), 0, 0, parent, name ),
+				QObject * receiver, const char * member, const QString & name )
+  : KAction( text, parent, name ),
     _le(0), _receiver(receiver), _member(member)
 {
-  setToolBarWidgetFactory( this );
 }
 
-QWidget* LineEditAction::createToolBarWidget( QToolBar * parent )
+QWidget* LineEditAction::createWidget( QWidget * parent )
 {
   _le = new QLineEdit( parent );
   connect( _le, SIGNAL( returnPressed() ), _receiver, _member );
   return _le;
 }
 
-void LineEditAction::destroyToolBarWidget(QWidget* widget)
+void LineEditAction::deleteWidget(QWidget* widget)
 {
   if ( widget == _le )
     _le = 0;
@@ -140,15 +138,14 @@ void LineEditAction::setText( const QString & txt ) {
 
 
 ComboAction::ComboAction( const QStringList & lst,  KActionCollection * parent,
-                          QObject * receiver, const char * member, const char * name,
+                          QObject * receiver, const char * member, const QString & name,
                           int selectedID )
-  : KAction( QString(), QIcon(), KShortcut(), 0, 0, parent, name ),
+  : KAction( QString(), parent, name ),
   _lst(lst), _receiver(receiver), _member(member), _selectedId( selectedID )
 {
-  setToolBarWidgetFactory( this );
 }
 
-QWidget* ComboAction::createToolBarWidget( QToolBar * parent )
+QWidget* ComboAction::createWidget( QWidget * parent )
 {
   KComboBox* box = new KComboBox( parent );
   box->addItems( _lst );

@@ -17,7 +17,7 @@
  */
 
 
-#include "dcop_proto.h"
+#include "dbus_proto.h"
 
 #include "account_input.h"
 #include "dbusdrop.h"

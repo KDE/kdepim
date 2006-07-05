@@ -114,7 +114,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
   if ( list.isEmpty() ) {
     return ok;
   } else if ( list.count() == 1 ) {
-    url = KFileDialog::getSaveURL( list[ 0 ].givenName() + '_' + list[ 0 ].familyName() + ".vcf" );
+    url = KFileDialog::getSaveUrl( list[ 0 ].givenName() + '_' + list[ 0 ].familyName() + ".vcf" );
     if ( url.isEmpty() )
       return true;
 
@@ -128,7 +128,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
 
     switch ( KMessageBox::questionYesNo( parentWidget(), msg, QString(), i18n("Export to Several Files"), i18n("Export to One File") ) ) {
       case KMessageBox::Yes: {
-        KUrl baseUrl = KFileDialog::getExistingURL();
+        KUrl baseUrl = KFileDialog::getExistingUrl();
         if ( baseUrl.isEmpty() )
           return true;
 
@@ -151,7 +151,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
       }
       case KMessageBox::No:
       default: {
-        url = KFileDialog::getSaveURL( KUrl("addressbook.vcf") );
+        url = KFileDialog::getSaveUrl( KUrl("addressbook.vcf") );
         if ( url.isEmpty() )
           return true;
 
@@ -176,7 +176,7 @@ KABC::Addressee::List VCardXXPort::importContacts( const QString& ) const
     addrList = parseVCard( XXPortManager::importData.toAscii() );
   else {
     if ( XXPortManager::importURL.isEmpty() )
-      urls = KFileDialog::getOpenURLs( QString(), "*.vcf|vCards", parentWidget(),
+      urls = KFileDialog::getOpenUrls( KUrl(), "*.vcf|vCards", parentWidget(),
                                        i18n( "Select vCard to Import" ) );
     else
       urls.append( XXPortManager::importURL );

@@ -106,7 +106,7 @@ private:
   KUrl u_rl;
   QFile *f_ile;
   QString t_empName;
-  static QString l_astPath;
+  static KUrl l_astPath;
 
 };
 

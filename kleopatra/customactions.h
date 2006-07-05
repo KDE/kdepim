@@ -39,41 +39,41 @@
 
 class QLineEdit;
 
-class LabelAction : public KAction, public QActionWidgetFactory {
+class LabelAction : public KAction {
   Q_OBJECT
 public:
   LabelAction( const QString & text, KActionCollection * parent,
-	       const char* name );
+	       const QString & name );
 
-  QWidget* createToolBarWidget( QToolBar * parent );
+  QWidget* createWidget( QWidget* parent );
 };
 
-class LineEditAction : public KAction, public QActionWidgetFactory {
+class LineEditAction : public KAction {
   Q_OBJECT
 public:
   LineEditAction( const QString & text, KActionCollection * parent,
-		  QObject * receiver, const char * member, const char * name );
+		  QObject * receiver, const char * member, const QString & name );
 
   void clear();
   void focusAll();
   QString text() const;
   void setText( const QString & txt );
-  QWidget* createToolBarWidget( QToolBar * parent );
-  void destroyToolBarWidget( QWidget* widget );
+  QWidget* createWidget( QWidget* parent );
+  void deleteWidget( QWidget* widget );
 private:
   QLineEdit* _le;
   QObject * _receiver;
   const char * _member;
 };
 
-class ComboAction : public KAction, public QActionWidgetFactory {
+class ComboAction : public KAction {
   Q_OBJECT
 public:
   ComboAction( const QStringList & lst,  KActionCollection * parent,
-               QObject * receiver, const char * member, const char * name,
+               QObject * receiver, const char * member, const QString & name,
                int selectedID );
 
-  QWidget* createToolBarWidget( QToolBar * parent );
+  QWidget* createWidget( QWidget* parent );
 
 private:
   QStringList _lst;

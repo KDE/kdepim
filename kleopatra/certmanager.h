@@ -84,7 +84,7 @@ class KDE_EXPORT CertManager : public KMainWindow {
 public:
     CertManager( bool remote = false, const QString& query = QString(),
 		 const QString& import=QString(),
-		 QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
+		 QWidget * parent=0, Qt::WFlags f=0 );
     ~CertManager();
 
     bool isRemote() const { return mRemote; }

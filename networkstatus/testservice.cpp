@@ -20,7 +20,6 @@
 */
 
 #include <QTimer>
-#include <dcopclient.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
