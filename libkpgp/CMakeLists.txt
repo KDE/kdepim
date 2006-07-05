@@ -30,7 +30,7 @@ install(TARGETS kpgp  DESTINATION ${LIB_INSTALL_DIR})
 ########### install files ###############
 
 install( FILES kpgp.upd  DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
-install(PROGRAMS FILES kpgp-3.1-upgrade-address-data.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
+install(PROGRAMS kpgp-3.1-upgrade-address-data.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
 
 
 
