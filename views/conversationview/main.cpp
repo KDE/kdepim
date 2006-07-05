@@ -51,51 +51,29 @@ int main(int argc, char *argv[])
   proxyModel->setSourceModel(model);
   proxyModel->sort(1, Qt::AscendingOrder);
 
+  QStringList me;
+  me << "Aron Bostrom" << "Hrafnahnef" << "Syllten";
+  ConversationDelegate *delegate = new ConversationDelegate(model, proxyModel, me);
+
   MailView *mail = new MailView(model, proxyModel);
 
   QTreeView *conversationList = new QTreeView;
   conversationList->setModel(proxyModel);
-//  conversationList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-/*	QHeaderView *header = new QHeaderView(Qt::Horizontal);
-	header->setModel(proxyModel);
-	header->setStretchLastSection(true);
-	header->setDefaultSectionSize(185);
-	header->resizeSection(0, 185);
-	header->setResizeMode(0, QHeaderView::Interactive);
-*/		
-
-  QStringList me;
-  me << "Aron Bostrom" << "Hrafnahnef" << "Syllten";
-  ConversationDelegate *delegate = new ConversationDelegate(model, proxyModel, me/*, header*/);
   conversationList->setItemDelegate(delegate);
-//  conversationList->setUniformItemSizes(true);
-
-  
-/*  QWidget *myWidget = new QWidget;
-  QGridLayout *layout = new QGridLayout;
-  layout->setMargin(0);
-  layout->setSpacing(0);
-  layout->addWidget(header);
-  header->setMinimumHeight(QFontMetrics(header->font()).height()+4);
-  header->setMaximumHeight(QFontMetrics(header->font()).height()+6);
-  header->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
-  header->setDefaultAlignment(Qt::AlignLeft);
-  header->setSortIndicator(1, Qt::DescendingOrder);
-  header->setSortIndicatorShown(true);
-  header->setClickable(true);
-  layout->addWidget(conversationList);
-  layout->setRowStretch(0, 0);
-  layout->setRowStretch(1, 100);
-  myWidget->setLayout(layout);
-*/
+//  conversationList->setItemsExpandable(false);
+  conversationList->setRootIsDecorated(false);
+//  conversationList->setAlternatingRowColors(true);
+  conversationList->header()->setDefaultAlignment(Qt::AlignLeft);
+  conversationList->header()->setSortIndicator(1, Qt::AscendingOrder);
+  conversationList->header()->setSortIndicatorShown(true);
+  conversationList->header()->setClickable(true);
+  conversationList->header()->resizeSection(0, 185);
 
 //  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
 //  conversationList->setSelectionModel(selection);
 
   QObject::connect(conversationList, SIGNAL(clicked(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(conversationList, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
-  QObject::connect(mail, SIGNAL(textChanged()), mail, SLOT(updateHeight()));
   QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), delegate, SLOT(updateWidth(int, int)));
 //  QObject::connect(header, SIGNAL(sectionResized(int, int, int)), delegate, SLOT(updateAuthorsWidth(int, int, int)));
 //	QObject::connect(header, SIGNAL(sectionClicked(int)), conversationList, SLOT(switchSorting(int)));
