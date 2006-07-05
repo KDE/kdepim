@@ -32,6 +32,7 @@
 #include <QGridLayout>
 #include <QSpacerItem>
 #include <QFontMetrics>
+#include <QTreeView>
 
 #include "foldermodel.h"
 #include "conversationdelegate.h"
@@ -52,26 +53,26 @@ int main(int argc, char *argv[])
 
   MailView *mail = new MailView(model, proxyModel);
 
-  QListView *conversationList = new QListView;
+  QTreeView *conversationList = new QTreeView;
   conversationList->setModel(proxyModel);
 //  conversationList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-	QHeaderView *header = new QHeaderView(Qt::Horizontal);
+/*	QHeaderView *header = new QHeaderView(Qt::Horizontal);
 	header->setModel(proxyModel);
 	header->setStretchLastSection(true);
 	header->setDefaultSectionSize(185);
 	header->resizeSection(0, 185);
 	header->setResizeMode(0, QHeaderView::Interactive);
-		
+*/		
 
   QStringList me;
   me << "Aron Bostrom" << "Hrafnahnef" << "Syllten";
-  ConversationDelegate *delegate = new ConversationDelegate(model, proxyModel, me, header);
+  ConversationDelegate *delegate = new ConversationDelegate(model, proxyModel, me/*, header*/);
   conversationList->setItemDelegate(delegate);
-  conversationList->setUniformItemSizes(true);
+//  conversationList->setUniformItemSizes(true);
 
   
-  QWidget *myWidget = new QWidget;
+/*  QWidget *myWidget = new QWidget;
   QGridLayout *layout = new QGridLayout;
   layout->setMargin(0);
   layout->setSpacing(0);
@@ -82,10 +83,12 @@ int main(int argc, char *argv[])
   header->setDefaultAlignment(Qt::AlignLeft);
   header->setSortIndicator(1, Qt::DescendingOrder);
   header->setSortIndicatorShown(true);
+  header->setClickable(true);
   layout->addWidget(conversationList);
   layout->setRowStretch(0, 0);
   layout->setRowStretch(1, 100);
   myWidget->setLayout(layout);
+*/
 
 //  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
 //  conversationList->setSelectionModel(selection);
@@ -94,10 +97,11 @@ int main(int argc, char *argv[])
   QObject::connect(conversationList, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(mail, SIGNAL(textChanged()), mail, SLOT(updateHeight()));
   QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), delegate, SLOT(updateWidth(int, int)));
-  QObject::connect(header, SIGNAL(sectionResized(int, int, int)), delegate, SLOT(updateAuthorsWidth(int, int, int)));
+//  QObject::connect(header, SIGNAL(sectionResized(int, int, int)), delegate, SLOT(updateAuthorsWidth(int, int, int)));
+//	QObject::connect(header, SIGNAL(sectionClicked(int)), conversationList, SLOT(switchSorting(int)));
 	
   splitter->setWindowTitle("Conversations for KMail");
-  splitter->addWidget(myWidget);
+  splitter->addWidget(conversationList);
   splitter->addWidget(mail);
   splitter->setStretchFactor(0, 0);
   splitter->setStretchFactor(1, 1);

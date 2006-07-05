@@ -32,15 +32,12 @@
 #include "conversationdelegate.h"
 #include "dummykonadiconversation.h"
 
-ConversationDelegate::ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QStringList &me, QHeaderView *header, QObject *parent) : QAbstractItemDelegate(parent)
+ConversationDelegate::ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QStringList &me, QObject *parent) : QAbstractItemDelegate(parent)
 {
   fmodel = folderModel;
   pmodel = proxyModel;
   listOfMe = me;
-//  lineWidth = 510;
   margin = 5;
-  h = header;
-  leftBaseWidth = h->sectionSize(0) - 2*margin;
 }
 
 ConversationDelegate::~ConversationDelegate()
@@ -52,7 +49,6 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
   painter->setRenderHint(QPainter::Antialiasing);
   painter->setPen(Qt::NoPen);
   painter->setFont(option.font);
-	int flags = Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine;
 
   if (option.state & QStyle::State_Selected)
     painter->setBrush(option.palette.highlight());
@@ -70,7 +66,33 @@ void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     painter->setPen(option.palette.text().color());
   }
 
-  DummyKonadiConversation *c = fmodel->conversation(pmodel->mapToSource(index).row());
+	if (index.column() == 0)
+		paintAuthors(painter, option, fmodel->conversation(pmodel->mapToSource(index).row()));
+	else
+		paintRest(painter, option, fmodel->conversation(pmodel->mapToSource(index).row()));
+}
+
+void ConversationDelegate::paintAuthors(QPainter *painter, const QStyleOptionViewItem &option, const DummyKonadiConversation *c) const
+{
+	int flags = Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine;
+
+  QString ctitle = c->conversationTitle();
+  QString ctime = c->arrivalTimeInText();
+  int messageCount = c->count();
+  QString messageCountText = QString("(%L1)").arg(messageCount);
+	QRect countBox = messageCount > 1 ? getCountBox(option, messageCountText) : QRect();
+	QRect authorsBox = getAuthorsBox(option, countBox);
+  QString cauthors = getAuthors(option, c, authorsBox.width());
+
+  painter->drawText(authorsBox, flags, cauthors);
+  if (messageCount > 1)
+    painter->drawText(countBox, flags, messageCountText);
+}
+
+void ConversationDelegate::paintRest(QPainter *painter, const QStyleOptionViewItem &option, const DummyKonadiConversation *c) const
+{
+	int flags = Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine;
+
   QString ctitle = c->conversationTitle();
   QString ctime = c->arrivalTimeInText();
   int messageCount = c->count();
@@ -100,7 +122,7 @@ inline QRect ConversationDelegate::getAuthorsBox(const QStyleOptionViewItem &opt
   int y = option.rect.top();
   int x = margin + option.rect.left();
   int decoWidth = decoBox.isNull() ? 0 : decoBox.width() + margin;
-  int width = leftBaseWidth - decoWidth;
+  int width = 175 - decoWidth; // leftBaseWidth 
 	int height = option.fontMetrics.height();
   return QRect(x, y, width, height);
 }
@@ -161,7 +183,7 @@ inline QRect ConversationDelegate::getMiddleBox(const QStyleOptionViewItem &opti
 inline QRect ConversationDelegate::getRightBox(const QStyleOptionViewItem &option, int neededWidth) const
 {
   int x2 = option.rect.right() - margin;
-  int x1 = qMax(x2 - neededWidth, option.rect.left() + leftBaseWidth + 2*margin);
+  int x1 = qMax(x2 - neededWidth, option.rect.left() + 175 + 2*margin); //leftBaseWidth 
   int width = x2 - x1;
   int y = option.rect.top();
 	int height = option.fontMetrics.height();
@@ -181,7 +203,7 @@ inline bool ConversationDelegate::printDecoBox(const QRect &box, const QRect &de
 QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &/*index*/) const
 {
   int lineHeight = option.fontMetrics.height() + 2;
-  int rLineWidth = qMax(lineWidth, leftBaseWidth+margin);
+  int rLineWidth = qMax(lineWidth, 175+margin); //leftBaseWidth 
   return QSize(rLineWidth, lineHeight);
 }
 
@@ -189,11 +211,5 @@ void ConversationDelegate::updateWidth(int pos, int /*nouse*/)
 {
   lineWidth = pos;
 }
-
-void ConversationDelegate::updateAuthorsWidth(int /*index*/, int /*oldsize*/, int /*newsize*/)
-{
-//	leftBaseWidth = size - 2*margin;
-}
-
 
 inline bool ConversationDelegate::isOdd(int row) const { return row & 0x1; }

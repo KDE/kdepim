@@ -38,21 +38,22 @@ class ConversationDelegate : public QAbstractItemDelegate
 {
   Q_OBJECT
 public:
-  ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QStringList &me, QHeaderView *header, QObject *parent = 0);
+  ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QStringList &me, /*QHeaderView *header, */QObject *parent = 0);
   ~ConversationDelegate();
 
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+  void paintAuthors(QPainter *painter, const QStyleOptionViewItem &option, const DummyKonadiConversation *c) const;
+  void paintRest(QPainter *painter, const QStyleOptionViewItem &option, const DummyKonadiConversation *c) const;
   QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 
 public slots:
   void updateWidth(int pos, int nouse = 0);
-  void updateAuthorsWidth(int nouseA, int nouseB, int size);
 
 private:
   QSortFilterProxyModel *pmodel;
   QHeaderView *h;
   FolderModel *fmodel;
-  int lineWidth, leftBaseWidth, rightBaseWidth, margin;
+  int lineWidth, margin;
   QStringList listOfMe;
   QRect getAuthorsBox(const QStyleOptionViewItem &option, const QRect &decoBox = QRect()) const;
   QRect getCountBox(const QStyleOptionViewItem &option, const QString &count) const;
