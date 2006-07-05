@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
   FolderModel *model = new FolderModel(data);
   QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel;
   proxyModel->setSourceModel(model);
-  proxyModel->sort(1, Qt::AscendingOrder);
+  proxyModel->sort(1, Qt::DescendingOrder);
 
   ConversationDelegate *delegate = new ConversationDelegate(model, proxyModel);
 
@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
   conversationList->setRootIsDecorated(false);
 //  conversationList->setAlternatingRowColors(true);
   conversationList->header()->setDefaultAlignment(Qt::AlignLeft);
-  conversationList->header()->setSortIndicator(1, Qt::AscendingOrder);
+  conversationList->header()->setSortIndicator(1, Qt::DescendingOrder);
   conversationList->header()->setSortIndicatorShown(true);
   conversationList->header()->setClickable(true);
   conversationList->header()->resizeSection(0, 185);

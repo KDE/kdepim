@@ -154,3 +154,42 @@ QString Conversation::authors() const
   }
   return text;
 }
+
+/**
+ * Tells wether this conversation has any unread messages.
+ */
+bool Conversation::isUnread() const
+{
+	Message tmp;
+	foreach (tmp, messages) {
+		if (!tmp.isRead())
+			return true;
+	}
+	return false;
+}
+
+/**
+ * Returns number of unread messages in this conversation.
+ */
+bool Conversation::numberUnread() const
+{
+	int count = 0;
+	Message tmp;
+	foreach (tmp, messages) {
+		if (tmp.isRead())
+			++count;
+	}
+	return false;
+}
+
+/**
+ * Mark this conversation, and all messages in it, as read or unread
+ * @param read, true for read, false for unread
+ */
+void Conversation::markAs(bool read)
+{
+	Message tmp;
+	foreach (tmp, messages) {
+		tmp.markAs(read);
+	}
+}

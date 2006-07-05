@@ -47,6 +47,9 @@ public:
   QDateTime arrivalTime(int messageId) const;
   QString arrivalTimeInText(int messageId) const;
   QDateTime sendTime(int messageId) const;
+  bool isUnread() const;
+  bool numberUnread() const;
+  void markAs(bool read);
   bool operator!=(Conversation &compare) const;
   bool operator<(Conversation &compare) const;
   bool operator<=(Conversation &compare) const;

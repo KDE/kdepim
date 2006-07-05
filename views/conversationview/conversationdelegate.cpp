@@ -28,6 +28,8 @@
 #include <QDateTime>
 #include <QtDebug>
 #include <QRegExp>
+#include <QFont>
+#include <QFontMetrics>
 
 #include "conversationdelegate.h"
 #include "conversation.h"
@@ -45,69 +47,76 @@ ConversationDelegate::~ConversationDelegate()
 
 void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-  painter->setRenderHint(QPainter::Antialiasing);
+	Conversation *c = fmodel->conversation(pmodel->mapToSource(index).row());
+	painter->setRenderHint(QPainter::Antialiasing);
   painter->setPen(Qt::NoPen);
-  painter->setFont(option.font);
-
+	painter->setFont(option.font);
+ 
   if (option.state & QStyle::State_Selected)
     painter->setBrush(option.palette.highlight());
-  else {
-		if (isOdd(index.row()))
-	    painter->setBrush(option.palette.alternateBase());
-	  else
-	    painter->setBrush(option.palette.base());
-  }
+  else
+	  painter->setBrush(isOdd(index.row()) ? option.palette.alternateBase() : option.palette.base());
   painter->drawRect(option.rect);
 
-  if (option.state & QStyle::State_Selected) {
+  if (option.state & QStyle::State_Selected)
     painter->setPen(option.palette.highlightedText().color());      
-  } else {
+  else
     painter->setPen(option.palette.text().color());
-  }
 
 	if (index.column() == 0)
-		paintAuthors(painter, option, fmodel->conversation(pmodel->mapToSource(index).row()));
+		paintAuthors(painter, option, c);
 	else
-		paintRest(painter, option, fmodel->conversation(pmodel->mapToSource(index).row()));
+		paintRest(painter, option, c);
 }
 
 void ConversationDelegate::paintAuthors(QPainter *painter, const QStyleOptionViewItem &option, const Conversation *c) const
 {
 	int flags = Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine;
-
-  QString ctitle = c->conversationTitle();
-  QString ctime = c->arrivalTimeInText();
+	QFont possiblyBoldFont = option.font;
+  if (c->isUnread())
+  	possiblyBoldFont.setBold(true);
+	QFontMetrics possiblyBoldMetrics(possiblyBoldFont);
   int messageCount = c->count();
   QString messageCountText = QString("(%L1)").arg(messageCount);
-	QRect countBox = messageCount > 1 ? getCountBox(option, messageCountText) : QRect();
+	QRect countBox = messageCount > 1 ? getCountBox(option, possiblyBoldMetrics.width(messageCountText)) : QRect();
 	QRect authorsBox = getAuthorsBox(option, countBox);
   QString cauthors = getAuthors(option, c, authorsBox.width());
 
   painter->drawText(authorsBox, flags, cauthors);
-  if (messageCount > 1)
+  if (messageCount > 1) {
+  	painter->setFont(possiblyBoldFont);
     painter->drawText(countBox, flags, messageCountText);
+  	painter->setFont(option.font);
+  }
 }
 
 void ConversationDelegate::paintRest(QPainter *painter, const QStyleOptionViewItem &option, const Conversation *c) const
 {
 	int flags = Qt::AlignLeft|Qt::AlignTop|Qt::TextSingleLine;
-
-  QString ctitle = c->conversationTitle();
-  QString ctime = c->arrivalTimeInText();
-  QRect timeBox = getRightBox(option, option.fontMetrics.width(ctime)); 
+	QFont possiblyBoldFont = option.font;
+  if (c->isUnread())
+  	possiblyBoldFont.setBold(true);
+	QFontMetrics possiblyBoldMetrics(possiblyBoldFont);
+  QString subject = c->conversationTitle();
+  int subjectWidth = possiblyBoldMetrics.width(subject);
+  QString time = c->arrivalTimeInText();
+  int timeWidth = possiblyBoldMetrics.width(time);
+  QRect timeBox = getRightBox(option, timeWidth); 
 	QRect subjectBox = getMiddleBox(option, timeBox);
 
+	painter->setFont(possiblyBoldFont);
 	if (timeBox.width() > margin) {
-		chop(option, ctime, timeBox.width());
-  	painter->drawText(timeBox, flags, ctime);
+		chop(option.fontMetrics, time, timeBox.width());
+  	painter->drawText(timeBox, flags, time);
 	}
 
 	if (subjectBox.width() > margin) {
-	  chop(option, ctitle, subjectBox.width());
-  	painter->drawText(subjectBox, flags, ctitle);
-  	if (option.fontMetrics.width(ctitle) < subjectBox.width() - margin) {
+	  chop(possiblyBoldMetrics, subject, subjectBox.width());
+  	painter->drawText(subjectBox, flags, subject);
+  	if (subjectWidth < subjectBox.width() - margin) {
+	    painter->setFont(option.font);
 	    painter->setPen(option.palette.shadow().color());
-	    QRect tmp = getSnippetBox(option, subjectBox, option.fontMetrics.width(ctitle));
+	    QRect tmp = getSnippetBox(option, subjectBox, subjectWidth);
 	    QString snippet = c->content(0);
 	    painter->drawText(tmp, flags, snippet);
 	  }
@@ -136,27 +145,26 @@ inline QRect ConversationDelegate::getAuthorsBox(const QStyleOptionViewItem &opt
 inline QString ConversationDelegate::getAuthors(const QStyleOptionViewItem &option, const Conversation *conversation, const int maxWidth) const
 {
   QString authors = conversation->authors();  
-  chop(option, authors, maxWidth);
+  chop(option.fontMetrics, authors, maxWidth);
   return authors;
 }
 
-inline void ConversationDelegate::chop(const QStyleOptionViewItem &option, QString &orig, int width) const
+inline void ConversationDelegate::chop(const QFontMetrics &metrics, QString &orig, int width) const
 {
   QString dots = QString("...");
-  while (option.fontMetrics.width(orig) > width && orig.size() > 4) {
+  while (metrics.width(orig) > width && orig.size() > 4) {
     orig.chop(4);
     orig.append(dots);
   }
 }
 
-inline QRect ConversationDelegate::getCountBox(const QStyleOptionViewItem &option, const QString &count) const
+inline QRect ConversationDelegate::getCountBox(const QStyleOptionViewItem &option, int neededWidth) const
 {
   int right = option.rect.right();
-	int width = option.fontMetrics.width(count);
-  int x = option.direction == Qt::LeftToRight ? right - width : option.rect.left();
+  int x = option.direction == Qt::LeftToRight ? right - neededWidth : option.rect.left();
   int y = option.rect.top();
 	int height = option.fontMetrics.height();
-  return QRect(x, y, width, height);
+  return QRect(x, y, neededWidth, height);
 }
 
 inline QRect ConversationDelegate::getMiddleBox(const QStyleOptionViewItem &option, /*const QRect &left,*/ const QRect &right) const
@@ -197,7 +205,7 @@ inline bool ConversationDelegate::printDecoBox(const QRect &box, const QRect &de
 
 QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-  int lineHeight = option.fontMetrics.height() + 2;
+  int lineHeight = option.fontMetrics.lineSpacing();
 	int rLineWidth;// = option.fontMetrics.width(text) + 2*margin;
   Conversation *c = fmodel->conversation(pmodel->mapToSource(index).row());
   if (index.column() == 0) {

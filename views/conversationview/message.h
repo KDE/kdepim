@@ -26,7 +26,7 @@
 class Message
 {
 public:
-  Message(bool null = false) : nullContent(null) {}
+  Message(bool null = false) : nullContent(null) { readStatus = false; }
   QString author() const;
   QString content() const;
   QDateTime sendTime() const { return send; }

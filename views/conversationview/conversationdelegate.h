@@ -31,6 +31,7 @@
 #include <QSortFilterProxyModel>
 #include <QStyleOptionViewItem>
 #include <QHeaderView>
+#include <QFontMetrics>
 
 #include "foldermodel.h"
 
@@ -55,7 +56,7 @@ private:
   FolderModel *fmodel;
   int lineWidth, margin;
   QRect getAuthorsBox(const QStyleOptionViewItem &option, const QRect &decoBox = QRect()) const;
-  QRect getCountBox(const QStyleOptionViewItem &option, const QString &count) const;
+  QRect getCountBox(const QStyleOptionViewItem &option, int neededWidth) const;
 	QString getAuthors(const QStyleOptionViewItem &option, const Conversation *conversation, int maxWidth) const;
 	bool isOdd(int row) const;
 	void resizeBox(QRect &box, const QRect &deco) const;
@@ -63,7 +64,7 @@ private:
 	QRect getMiddleBox(const QStyleOptionViewItem &option, const QRect &right) const;
 	QRect getRightBox(const QStyleOptionViewItem &option, int neededWidth) const;
 	QRect getSnippetBox(const QStyleOptionViewItem &option, const QRect &parentBox, int parentWidth) const;
-	void chop(const QStyleOptionViewItem &option, QString &orig, int width) const;
+	void chop(const QFontMetrics &metrics, QString &orig, int width) const;
 };
 
 #endif
