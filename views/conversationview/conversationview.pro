@@ -16,8 +16,8 @@ HEADERS += conversationdelegate.h \
            mailview.h
 SOURCES += conversationdelegate.cpp \
            dummykonadiadapter.cpp \
-           dummykonadiconversation.cpp \
-           dummykonadimessage.cpp \
+           conversation.cpp \
+           message.cpp \
            foldermodel.cpp \
            mailview.cpp \
            main.cpp
