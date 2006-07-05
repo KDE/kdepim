@@ -127,3 +127,30 @@ bool Conversation::operator>(Conversation &compare) const
 {
   return arrivalTime() > compare.arrivalTime();
 }
+
+/** 
+ * This function generates a list of authors contributing to this conversation. No author is included twice.
+ * @return a list of authors contributing to this conversation
+ * TODO: feed it with a length to determine how much can be displayed. 
+ * TODO: only display two or three authors: first, first unread and last unread
+ */
+QString Conversation::authors() const
+{
+  QString text = author(0);
+  QString me;
+  foreach (me, listOfMe) {
+    text.replace(QRegExp(me), "me");
+  }
+  int max = count();
+  for (int i = 1; i < max; ++i) {
+    QString tmpAuthor = author(i);
+    foreach (me, listOfMe) {
+      tmpAuthor.replace(QRegExp(me), tr("me"));
+    }
+    if (!text.contains(tmpAuthor)) {
+      text.append(", ");
+      text.append(tmpAuthor);
+    }
+  }
+  return text;
+}

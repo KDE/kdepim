@@ -44,16 +44,16 @@ int main(int argc, char *argv[])
   QApplication app(argc, argv);
   QSplitter *splitter = new QSplitter;
 
-  DummyKonadiAdapter *data = new DummyKonadiAdapter;
+  QStringList me;
+  me << "Aron Bostrom" << "Hrafnahnef" << "Syllten";
+  DummyKonadiAdapter *data = new DummyKonadiAdapter(me);
 
   FolderModel *model = new FolderModel(data);
   QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel;
   proxyModel->setSourceModel(model);
   proxyModel->sort(1, Qt::AscendingOrder);
 
-  QStringList me;
-  me << "Aron Bostrom" << "Hrafnahnef" << "Syllten";
-  ConversationDelegate *delegate = new ConversationDelegate(model, proxyModel, me);
+  ConversationDelegate *delegate = new ConversationDelegate(model, proxyModel);
 
   MailView *mail = new MailView(model, proxyModel);
 

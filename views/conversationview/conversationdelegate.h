@@ -38,7 +38,7 @@ class ConversationDelegate : public QAbstractItemDelegate
 {
   Q_OBJECT
 public:
-  ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QStringList &me, /*QHeaderView *header, */QObject *parent = 0);
+  ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QObject *parent = 0);
   ~ConversationDelegate();
 
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -54,7 +54,6 @@ private:
   QHeaderView *h;
   FolderModel *fmodel;
   int lineWidth, margin;
-  QStringList listOfMe;
   QRect getAuthorsBox(const QStyleOptionViewItem &option, const QRect &decoBox = QRect()) const;
   QRect getCountBox(const QStyleOptionViewItem &option, const QString &count) const;
 	QString getAuthors(const QStyleOptionViewItem &option, const Conversation *conversation, int maxWidth) const;

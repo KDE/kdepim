@@ -22,9 +22,10 @@
 #include "dummykonadiadapter.h"
 #include "message.h"
 
-DummyKonadiAdapter::DummyKonadiAdapter()
+DummyKonadiAdapter::DummyKonadiAdapter(QStringList &manyMe)
 {
-  Conversation* one = new Conversation(&QString("My first post"));
+	listOfMe = manyMe;
+  Conversation* one = new Conversation(manyMe, &QString("My first post"));
     Message* msg;
     msg = new Message();
     msg->setAuthor("Hrafnahnef");
@@ -36,13 +37,13 @@ DummyKonadiAdapter::DummyKonadiAdapter()
     msg->setContent("Great! Welcome along.");
     msg->setArrivalTime(QDateTime(QDate(2006, 6, 23), QTime(17, 20)));
     one->addMessage(*msg);
-  Conversation *two = new Conversation(&QString("Fwd: Eran d0llars in this oi| inve$tment"));
+  Conversation *two = new Conversation(manyMe, &QString("Fwd: Eran d0llars in this oi| inve$tment"));
     msg = new Message();
     msg->setAuthor("Nigeria Shell Inv. inc.");
     msg->setContent("Read this:\n>Dear sire/madame. We have a great opportunity, you can be a millionaire!!! All you have to do is to help as with initial cash in our newst business idea.");
     msg->setArrivalTime(QDateTime(QDate(2006, 6, 23), QTime(13, 19, 52)));
     two->addMessage(*msg);
-  Conversation *three = new Conversation(&QString("[KDE-PSYKO] Hi there!"));
+  Conversation *three = new Conversation(manyMe, &QString("[KDE-PSYKO] Hi there!"));
     msg = new Message();
     msg->setAuthor("Hrafnahnef");
     msg->setContent("Who are you?");
@@ -133,7 +134,7 @@ DummyKonadiAdapter::DummyKonadiAdapter()
     msg->setContent("*Sigh*\n\nAt least not all three of him returned (he or she?).\nAll we can do is to not feed the troll. (I'm getting hungry.)\n\nIn KMail filters I'm about to put my hope.\n\n//*gruntgrunt* from the depth of the woods\n\nAnonymous bastard, Jr. wrote:\n>I'm alive! Death couldn't keep me from this list! I have returned to haunt you from my new brain, and e-mail.");
     msg->setArrivalTime(QDateTime(QDate(2006, 6, 24), QTime(16, 43)));
     three->addMessage(*msg);
-  Conversation *four = new Conversation(&QString("What does 'Hrafnahnef' mean?"));
+  Conversation *four = new Conversation(manyMe, &QString("What does 'Hrafnahnef' mean?"));
     msg = new Message();
     msg->setAuthor("Mr. Troll");
     msg->setContent("What does 'Hrafnahnef' mean. Is it really your true name?");
@@ -144,7 +145,7 @@ DummyKonadiAdapter::DummyKonadiAdapter()
     msg->setContent("It's old norse, meaning 'chief of ravens' (Hrafn=raven; hnef=chief/king). And it's *not* my true name. At least not yet.");
     msg->setArrivalTime(QDateTime(QDate(2006, 6, 24), QTime(12, 1)));
     four->addMessage(*msg);
-  Conversation *five = new Conversation(&QString("foldermodel.h"));
+  Conversation *five = new Conversation(manyMe, &QString("foldermodel.h"));
     msg = new Message();
     msg->setAuthor("Hrafnahnef");
     msg->setContent("#ifndef FOLDERMODEL_H\n#define FOLDERMODEL_H\n\n#include <QVariant>\n#include <QModelIndex>\n#include <QAbstractListModel>\n#include <QStringList>\n\n#include \"dummykonadiadapter.h\"\n\nclass FolderModel : public QAbstractListModel\n{\n  Q_OBJECT\npublic:\n  FolderModel(const DummyKonadiAdapter &dummydata, QObject *parent = 0) : QAbstractListModel(parent), backend(dummydata) {}\n\n  int rowCount(const QModelIndex &parent = QModelIndex()) const;\n  QVariant data(const QModelIndex &index, int role) const;\n  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;\n\nprivate:\n  DummyKonadiAdapter backend;\n};\n\n#endif\n");

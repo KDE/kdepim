@@ -28,7 +28,7 @@
 class DummyKonadiAdapter
 {
 public:
-  DummyKonadiAdapter();
+  DummyKonadiAdapter(QStringList &manyMe);
   ~DummyKonadiAdapter();
   int conversationCount() const;
   QString conversationTitle(int conversationId) const;
@@ -54,7 +54,9 @@ public:
 
 private:
   bool tryConversationId(int conversationId) const;
+
   QList<Conversation*> conversations;
+  QStringList listOfMe;
 };
 
 #endif

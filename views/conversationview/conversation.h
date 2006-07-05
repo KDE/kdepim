@@ -1,4 +1,6 @@
 /*
+ * conversation.h
+ *
  * copyright (c) Aron Bostrom <Aron.Bostrom at gmail.com>, 2006 
  *
  * this library is free software; you can redistribute it and/or modify it
@@ -19,16 +21,19 @@
 #ifndef CONVERSATION_H
 #define CONVERSATION_H
 
+#include <QObject>
 #include <QString>
+#include <QStringList>
 #include <QList>
 #include <QDateTime>
 
 #include "message.h"
 
-class Conversation
+class Conversation : QObject
 {
+	Q_OBJECT
 public:
-  Conversation(QString *conversationTitle = 0) : title(*conversationTitle) {}
+  Conversation(QStringList &manyMe, QString *conversationTitle = 0, QObject *parent = 0) : QObject(parent), title(*conversationTitle), listOfMe(manyMe) {}
   int count() const;
   QString conversationTitle() const;
   QDateTime arrivalTime() const;
@@ -37,6 +42,7 @@ public:
   Message message(int messageId) const;
   void addMessage(Message &message);
   QString author(int messageId) const;
+  QString authors() const;
   QString content(int messageId) const;
   QDateTime arrivalTime(int messageId) const;
   QString arrivalTimeInText(int messageId) const;
@@ -54,6 +60,7 @@ public:
 private:
   QString title;
   QList<Message> messages;
+  QStringList listOfMe;
 };
 
 #endif

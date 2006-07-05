@@ -32,11 +32,10 @@
 #include "conversationdelegate.h"
 #include "conversation.h"
 
-ConversationDelegate::ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QStringList &me, QObject *parent) : QAbstractItemDelegate(parent)
+ConversationDelegate::ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QObject *parent) : QAbstractItemDelegate(parent)
 {
   fmodel = folderModel;
   pmodel = proxyModel;
-  listOfMe = me;
   margin = 5;
 }
 
@@ -136,22 +135,7 @@ inline QRect ConversationDelegate::getAuthorsBox(const QStyleOptionViewItem &opt
 
 inline QString ConversationDelegate::getAuthors(const QStyleOptionViewItem &option, const Conversation *conversation, const int maxWidth) const
 {
-  QString authors = conversation->author(0);
-  QString me;
-  foreach (me, listOfMe) {
-    authors.replace(QRegExp(me), "me");
-  }
-  int messageCount = conversation->count();
-  for (int count = 1; count < messageCount; ++count) {
-    QString tmpAuthor = conversation->author(count);
-    foreach (me, listOfMe) {
-      tmpAuthor.replace(QRegExp(me), tr("me"));
-    }
-    if (!authors.contains(tmpAuthor)) {
-      authors.append(", ");
-      authors.append(tmpAuthor);
-    }
-  }
+  QString authors = conversation->authors();  
   chop(option, authors, maxWidth);
   return authors;
 }
@@ -217,30 +201,14 @@ QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem &option, const Q
 	int rLineWidth;// = option.fontMetrics.width(text) + 2*margin;
   Conversation *c = fmodel->conversation(pmodel->mapToSource(index).row());
   if (index.column() == 0) {
-	  QString text = c->author(0);
-	  QString me;
-	  foreach (me, listOfMe) {
-	    text.replace(QRegExp(me), "me");
-	  }
-	  int max = c->count();
-	  for (int count = 1; count < max; ++count) {
-	    QString tmpAuthor = c->author(count);
-	    foreach (me, listOfMe) {
-	      tmpAuthor.replace(QRegExp(me), tr("me"));
-	    }
-	    if (!text.contains(tmpAuthor)) {
-	      text.append(", ");
-	      text.append(tmpAuthor);
-	    }
-	  }
-	  if (max > 1)
-	  	text.append(QString("(%L1)").arg(max));
+	  QString text = c->authors();
+	  if (c->count() > 1)
+	  	text.append(QString("(%L1)").arg(c->count()));
 		rLineWidth = option.fontMetrics.width(text) + 3*margin;
-	  
   } else {
   	QString text = c->conversationTitle();
   	text.append(c->arrivalTimeInText());
-		rLineWidth = option.fontMetrics.width(text) + 3*margin;
+		rLineWidth = option.fontMetrics.width(text) + 2*margin;
   }
   return QSize(rLineWidth, lineHeight);
 }
