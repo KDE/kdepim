@@ -79,6 +79,9 @@ int main(int argc, char *argv[])
   header->setMinimumHeight(QFontMetrics(header->font()).height()+4);
   header->setMaximumHeight(QFontMetrics(header->font()).height()+6);
   header->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
+  header->setDefaultAlignment(Qt::AlignLeft);
+  header->setSortIndicator(1, Qt::DescendingOrder);
+  header->setSortIndicatorShown(true);
   layout->addWidget(conversationList);
   layout->setRowStretch(0, 0);
   layout->setRowStretch(1, 100);
@@ -91,7 +94,7 @@ int main(int argc, char *argv[])
   QObject::connect(conversationList, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(mail, SIGNAL(textChanged()), mail, SLOT(updateHeight()));
   QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), delegate, SLOT(updateWidth(int, int)));
-  QObject::connect(header, SIGNAL(sectionResized(int, int, int)), conversationList, SLOT(updateAuthorsWidth(int, int, int)));
+  QObject::connect(header, SIGNAL(sectionResized(int, int, int)), delegate, SLOT(updateAuthorsWidth(int, int, int)));
 	
   splitter->setWindowTitle("Conversations for KMail");
   splitter->addWidget(myWidget);

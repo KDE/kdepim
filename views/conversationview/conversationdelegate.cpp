@@ -190,9 +190,9 @@ void ConversationDelegate::updateWidth(int pos, int /*nouse*/)
   lineWidth = pos;
 }
 
-void ConversationDelegate::updateAuthorsWidth(int /*nouseA*/, int /*nouseB*/, int size)
+void ConversationDelegate::updateAuthorsWidth(int /*index*/, int /*oldsize*/, int /*newsize*/)
 {
-	leftBaseWidth = size - 2*margin;
+//	leftBaseWidth = size - 2*margin;
 }
 
 
