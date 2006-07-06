@@ -30,11 +30,11 @@
 
 struct NetworkStatusStruct;
 
-class NetworkStatusModule : virtual public KDEDModule/*, public ClientIface, ServiceIface*/ // <-spot the multiple inheritance pb
+class NetworkStatusModule : public KDEDModule/*, public ClientIface, ServiceIface*/ // <-spot the multiple inheritance pb
 {
 Q_OBJECT
 public:
-	NetworkStatusModule( const QString & obj );
+	NetworkStatusModule();
 	~NetworkStatusModule();
 public Q_SLOTS: //dbus properties
 	// Client interface

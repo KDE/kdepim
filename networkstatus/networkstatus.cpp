@@ -32,9 +32,9 @@
 #include <kdepimmacros.h>
 
 extern "C" {
-	KDE_EXPORT KDEDModule* create_networkstatus( const QString& obj )
+	KDE_EXPORT KDEDModule* create_networkstatus()
 	{
-		return new NetworkStatusModule( obj );
+		return new NetworkStatusModule();
 	}
 }
 
@@ -53,7 +53,7 @@ public:
 
 // CTORS/DTORS
 
-NetworkStatusModule::NetworkStatusModule( const DCOPCString & obj ) : KDEDModule( obj )
+NetworkStatusModule::NetworkStatusModule() : KDEDModule()
 {
 	d = new Private;
 	new ClientAdaptor(this);
