@@ -44,7 +44,7 @@ void PIM::ICalResource::setParameters(const QByteArray &path, const QByteArray &
 {
 }
 
-bool ICalResource::requestItemDelivery( const QString & uid )
+bool ICalResource::requestItemDelivery( const QString & uid, const QString & collection, int type )
 {
     return true;
 }

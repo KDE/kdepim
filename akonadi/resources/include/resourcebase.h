@@ -27,6 +27,7 @@
 #include <kdepim_export.h>
 
 #include "resource.h"
+#include "tracerinterface.h"
 
 namespace PIM {
 
@@ -34,15 +35,34 @@ namespace PIM {
  */
 class AKONADI_RESOURCES_EXPORT ResourceBase : public Resource
 {
-    Q_OBJECT
+  Q_OBJECT
+
   protected:
-    ResourceBase( const QString& type );
-    /* reimpl */
+    /**
+     * Creates a new base resource with the given @param id.
+     *
+     * The id is used to register at the dbus system.
+     */
+    ResourceBase( const QString & id );
+
+    /**
+     * Destroys the base resource.
+     */
     ~ResourceBase();
 
-    void warning( const QString& );
-    void error( const QString& );
-    void log( const QString& );
+    /**
+     * This method shall be used to report warnings.
+     */
+    void warning( const QString& message );
+
+    /**
+     * This method shall be used to report errors.
+     */
+    void error( const QString& message );
+
+  private:
+    class Private;
+    Private* const d;
 };
 
 }

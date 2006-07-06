@@ -34,9 +34,10 @@ class ICalResource : public ResourceBase
 
     void setParameters(const QByteArray &path, const QByteArray &filename, const QByteArray &mimetype );
 
-    bool requestItemDelivery( const QString & uid );
+  public Q_SLOTS:
+    virtual bool requestItemDelivery( const QString & uid, const QString & collection, int type );
 
-  private slots:
+  private Q_SLOTS:
     void done(PIM::Job* job);
 
 };
