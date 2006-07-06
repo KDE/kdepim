@@ -58,6 +58,7 @@
 #include <kdialog.h>
 #include <kurlrequester.h>
 #include <kio/job.h>
+#include <kio/jobuidelegate.h>
 #include <kio/netaccess.h>
 #include <ktoolinvocation.h>
 
@@ -487,7 +488,7 @@ void CertificateWizardImpl::accept()
     }
 
     KIO::Job* uploadJob = KIO::storedPut( _keyData, url, -1, overwrite, false /*resume*/ );
-    uploadJob->setWindow( this );
+    uploadJob->ui()->setWindow( this );
     connect( uploadJob, SIGNAL( result( KJob* ) ),
              this, SLOT( slotUploadResult( KJob* ) ) );
     // Can't press finish again during the upload
@@ -502,7 +503,7 @@ void CertificateWizardImpl::accept()
 void CertificateWizardImpl::slotUploadResult( KJob* job )
 {
   if ( job->error() ) {
-    static_cast<KIO::Job*>(job)->showErrorDialog();
+    static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
     setFinishEnabled( finishPage, true );
   } else {
     // All good, close dialog
