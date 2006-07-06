@@ -3,7 +3,7 @@ set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
 add_subdirectory( conf ) 
 add_subdirectory( kwatchgnupg ) 
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
+include_directories( ${CMAKE_SOURCE_DIR}/libkleo )
 
 ########### next target ###############
 
