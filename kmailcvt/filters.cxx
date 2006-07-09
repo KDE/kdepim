@@ -148,7 +148,7 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
     info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DCOP communication. "
                        "Make sure <i>kmail</i> is installed." ) );
     info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DBus communication: %1; %2"
-                       "Make sure <i>kmail</i> is installed." ).arg( reply.error().message() ).arg( reply.error().message() ) );
+                       "Make sure <i>kmail</i> is installed.", reply.error().message(), reply.error().message() ) );
     return false;
   }
 
@@ -187,7 +187,7 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
   if ( !reply.isValid() )
   {
     info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DBus communication: %1; %2"
-                       "Make sure <i>kmail</i> is installed." ).arg( reply.error().message() ).arg( reply.error().message() ) );
+                       "Make sure <i>kmail</i> is installed.", reply.error().message(), reply.error().message() ) );
     return false;
   }
 
