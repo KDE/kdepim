@@ -58,7 +58,7 @@
 
 
 using namespace KCal;
-
+using namespace KTnef;
 
 /*******************************************************************
  *  Helper functions for the extensive display (event viewer)
