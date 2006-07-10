@@ -22,6 +22,8 @@
 
 #include "ktnefmain.h"
 
+using namespace KTnef;
+
 static const char description[] =
 	I18N_NOOP("Viewer for mail attachments using TNEF format");
 

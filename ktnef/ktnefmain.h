@@ -21,11 +21,10 @@
 #include <kmainwindow.h>
 #include <QString>
 #include <q3listview.h>
-//Added by qt3to4:
 
 class KTNEFView;
-class KTNEFParser;
-class KTNEFAttach;
+#include <ktnef/ktnefparser.h>
+#include <ktnef/ktnefattach.h>
 
 class KTNEFMain : public KMainWindow
 {
@@ -55,7 +54,7 @@ protected slots:
 	void viewSelectionChanged();
 	void viewRightButtonPressed(Q3ListViewItem *item, const QPoint& p, int c);
 	void viewDoubleClicked(Q3ListViewItem*);
-	void viewDragRequested( const QList<KTNEFAttach*>& list );
+    void viewDragRequested( const QList<KTnef::KTNEFAttach*>& list );
     void slotConfigureKeys();
 //protected:
 //	void closeEvent(QCloseEvent *e);
@@ -69,11 +68,11 @@ private:
 	void cleanup();
 
 	void extractTo(const QString& dirname);
-	QString extractTemp(KTNEFAttach *att);
+        QString extractTemp(KTnef::KTNEFAttach *att);
 
 private:
 	KTNEFView	*view_;
-	KTNEFParser	*parser_;
+        KTnef::KTNEFParser	*parser_;
 	QString		filename_;
 	QString		defaultdir_;
 	QString		lastdir_;

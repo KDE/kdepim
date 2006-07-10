@@ -20,11 +20,10 @@
 
 #include <k3listview.h>
 #include <q3ptrlist.h>
-//Added by qt3to4:
 #include <QResizeEvent>
 #include <kdepimmacros.h>
 
-class KTNEFAttach;
+#include <ktnef/ktnefattach.h>
 
 class KDE_EXPORT KTNEFView : public K3ListView
 {
@@ -34,18 +33,18 @@ public:
 	KTNEFView( QWidget *parent = 0 );
 	~KTNEFView();
 
-	void setAttachments(const QList<KTNEFAttach*> &list);
-	QList<KTNEFAttach*>* getSelection();
+        void setAttachments(const QList<KTnef::KTNEFAttach*> &list);
+        QList<KTnef::KTNEFAttach*>* getSelection();
 
 signals:
-	void dragRequested( const QList<KTNEFAttach*>& list );
+        void dragRequested( const QList<KTnef::KTNEFAttach*>& list );
 
 protected:
 	void resizeEvent(QResizeEvent *e);
 	void startDrag();
 
 private:
-	QList<KTNEFAttach*>	attachments_;
+        QList<KTnef::KTNEFAttach*>	attachments_;
 };
 
 #endif

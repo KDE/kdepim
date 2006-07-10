@@ -19,6 +19,8 @@
 #include <ktnef/ktnefattach.h>
 #include "attachpropertydialog.h"
 
+using namespace KTnef;
+
 #include <q3header.h>
 #include <QPixmap>
 #include <QFrame>

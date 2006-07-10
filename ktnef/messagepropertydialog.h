@@ -19,21 +19,20 @@
 #define MESSAGEPROPERTYDIALOG_H
 
 #include <kdialog.h>
-
+#include <ktnef/ktnefmessage.h>
 class K3ListView;
-class KTNEFMessage;
 
 class MessagePropertyDialog : public KDialog
 {
 	Q_OBJECT
 public:
-	MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg );
+	MessagePropertyDialog( QWidget *parent, KTnef::KTNEFMessage *msg );
 
 protected slots:
 	void slotUser1();
 
 private:
-	KTNEFMessage *m_message;
+        KTnef::KTNEFMessage *m_message;
 	K3ListView    *m_listview;
 };
 
