@@ -22,9 +22,10 @@
 #include <QMap>
 #include <QPixmap>
 
-class KTNEFAttach;
-class KTNEFProperty;
-class KTNEFPropertySet;
+#include <ktnef/ktnefattach.h>
+#include <ktnef/ktnefproperty.h>
+#include <ktnef/ktnefpropertyset.h>
+
 class Q3ListView;
 class Q3ListViewItem;
 
@@ -34,18 +35,18 @@ public:
 	AttachPropertyDialog(QWidget *parent = 0, const char *name = 0);
 	~AttachPropertyDialog();
 
-	void setAttachment(KTNEFAttach *attach);
+        void setAttachment(KTnef::KTNEFAttach *attach);
 
 protected slots:
 	void saveClicked();
 
 private:
-	KTNEFAttach *m_attach;
+        KTnef::KTNEFAttach *m_attach;
 };
 
-void formatProperties( const QMap<int,KTNEFProperty*>&, Q3ListView*, Q3ListViewItem*, const QString& = "prop" );
-void formatPropertySet( KTNEFPropertySet*, Q3ListView* );
-void saveProperty( Q3ListView*, KTNEFPropertySet*, QWidget* );
-QPixmap loadRenderingPixmap( KTNEFPropertySet*, const QColor& );
+void formatProperties( const QMap<int,KTnef::KTNEFProperty*>&, Q3ListView*, Q3ListViewItem*, const QString& = "prop" );
+void formatPropertySet( KTnef::KTNEFPropertySet*, Q3ListView* );
+void saveProperty( Q3ListView*, KTnef::KTNEFPropertySet*, QWidget* );
+QPixmap loadRenderingPixmap( KTnef::KTNEFPropertySet*, const QColor& );
 
 #endif

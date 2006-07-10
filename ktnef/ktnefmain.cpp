@@ -16,12 +16,14 @@
  */
 
 #include <kdebug.h>
-#include "ktnefmain.h"
 #include <ktnef/ktnefparser.h>
 #include "ktnefview.h"
 #include <ktnef/ktnefattach.h>
 #include <ktnef/ktnefproperty.h>
 #include <ktnef/ktnefmessage.h>
+using namespace KTnef;
+#include "ktnefmain.h"
+
 #include "attachpropertydialog.h"
 #include "messagepropertydialog.h"
 
@@ -56,7 +58,6 @@
 #include <kedittoolbar.h>
 #include <kstatusbar.h>
 #include <kurl.h>
-
 
 #define	NOT_IMPLEMENTED QMessageBox::information(this, "ktnef", "Not implemented yet", QMessageBox::Ok|QMessageBox::Default, 0)
 

@@ -23,6 +23,8 @@
 #include <klocale.h>
 #include <kstdguiitem.h>
 
+using namespace KTnef;
+
 MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg )
 	: KDialog( parent)
 {

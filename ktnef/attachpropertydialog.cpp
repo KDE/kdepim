@@ -24,7 +24,6 @@
 //#include "qwmf.h"
 
 #include <QLabel>
-//Added by qt3to4:
 #include <QPixmap>
 #include <QTextStream>
 #include <k3listview.h>
@@ -37,6 +36,8 @@
 #include <QDataStream>
 #include <q3picture.h>
 #include <QDateTime>
+
+using namespace KTnef;
 
 AttachPropertyDialog::AttachPropertyDialog(QWidget *parent, const char *name)
 	: AttachPropertyDialogBase(parent, name, true)
