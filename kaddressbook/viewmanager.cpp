@@ -27,6 +27,7 @@
 //Added by qt3to4:
 #include <QHBoxLayout>
 #include <QDropEvent>
+#include <kselectaction.h>
 #include <k3urldrag.h>
 #include <libkdepim/kvcarddrag.h>
 #include <kabc/addressbook.h>

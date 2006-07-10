@@ -21,7 +21,6 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <kactionclasses.h>
 #include <kactioncollection.h>
 #include <kconfig.h>
 #include <kdebug.h>
@@ -30,6 +29,7 @@
 
 #include <QSignalMapper>
 #include <QTimer>
+#include <ktoggleaction.h>
 #include <kvbox.h>
 
 #include "addresseeeditorextension.h"

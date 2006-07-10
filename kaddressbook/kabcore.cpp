@@ -65,6 +65,8 @@
 #include <ktoolinvocation.h>
 #include <krandom.h>
 #include <QtDBus>
+#include <ktoggleaction.h>
+#include <kaction.h>
 
 #include "addresseeutil.h"
 #include "addresseeeditordialog.h"

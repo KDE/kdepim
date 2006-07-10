@@ -29,7 +29,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kurl.h>
-#include <phonon/simpleplayer.h>
+#include <phonon/audioplayer.h>
 
 #include <QList>
 
@@ -234,7 +234,7 @@ bool AccountManager::hasNewMessages()
 
 void AccountManager::playSound( const QString& file )
 {
-	Phonon::SimplePlayer* player = new Phonon::SimplePlayer( Phonon::CommunicationCategory,this );
+	Phonon::AudioPlayer* player = new Phonon::AudioPlayer( Phonon::CommunicationCategory,this );
 	player->play( KUrl( file ) );
 }
 

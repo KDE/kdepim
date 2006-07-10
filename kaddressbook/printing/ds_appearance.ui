@@ -169,7 +169,7 @@
           </widget>
          </item>
          <item row="2" column="1" >
-          <widget class="KFontCombo" name="kfcBodyFont" >
+          <widget class="QFontComboBox" name="kfcBodyFont" >
            <property name="sizePolicy" >
             <sizepolicy>
              <hsizetype>7</hsizetype>
@@ -181,7 +181,7 @@
           </widget>
          </item>
          <item row="3" column="1" >
-          <widget class="KFontCombo" name="kfcDetailsFont" >
+          <widget class="QFontComboBox" name="kfcDetailsFont" >
            <property name="sizePolicy" >
             <sizepolicy>
              <hsizetype>7</hsizetype>
@@ -193,7 +193,7 @@
           </widget>
          </item>
          <item row="4" column="1" >
-          <widget class="KFontCombo" name="kfcFixedFont" />
+          <widget class="QFontComboBox" name="kfcFixedFont" />
          </item>
          <item row="0" column="0" >
           <widget class="QLabel" name="labelHeaderFont" >
@@ -206,7 +206,7 @@
           </widget>
          </item>
          <item row="0" column="1" >
-          <widget class="KFontCombo" name="kfcHeaderFont" >
+          <widget class="QFontComboBox" name="kfcHeaderFont" >
            <property name="sizePolicy" >
             <sizepolicy>
              <hsizetype>7</hsizetype>
@@ -218,7 +218,7 @@
           </widget>
          </item>
          <item row="1" column="1" >
-          <widget class="KFontCombo" name="kfcHeadlineFont" />
+          <widget class="QFontComboBox" name="kfcHeadlineFont" />
          </item>
          <item row="0" column="2" >
           <widget class="QLabel" name="labelHeaderFontSize" >
@@ -405,13 +405,6 @@
    <class>KColorButton</class>
    <extends></extends>
    <header>kcolorbutton.h</header>
-   <container>0</container>
-   <pixmap></pixmap>
-  </customwidget>
-  <customwidget>
-   <class>KFontCombo</class>
-   <extends></extends>
-   <header>kfontcombo.h</header>
    <container>0</container>
    <pixmap></pixmap>
   </customwidget>

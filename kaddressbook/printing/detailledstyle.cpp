@@ -27,7 +27,7 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kdialog.h>
-#include <kfontcombo.h>
+#include <qfontcombobox.h>
 #include <kglobalsettings.h>
 #include <QLayout>
 #include <klocale.h>
