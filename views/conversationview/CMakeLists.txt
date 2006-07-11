@@ -2,7 +2,9 @@ project(conversationview)
 
 find_package(KDE4 REQUIRED)
 include (KDE4Defaults)
-include_directories (${KDE4_KDECORE_INCLUDES} ${QT_INCLUDES})
+include (MacroLibrary)
+
+include_directories (${KDE4_INCLUDES}) # ${QT_INCLUDES}
 add_definitions (${KDE4_DEFINITIONS} ${QT_DEFINITIONS})
 link_directories (${KDE4_LIBRARIES})
 
@@ -22,5 +24,5 @@ kde4_automoc( ${conversationSources} )
 
 kde4_add_executable(conversationview ${conversationSources})
 
-target_link_libraries (conversationview ${KDE4_KDECORE_LIBS} )
+target_link_libraries (conversationview ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS})
 

@@ -33,6 +33,12 @@
 #include <QSpacerItem>
 #include <QFontMetrics>
 
+#include <kapplication.h>
+#include <kaboutdata.h>
+#include <kcmdlineargs.h>
+#include <klocale.h>
+//#include <ktreewidgetsearchline.h>
+
 #include "foldermodel.h"
 #include "conversationdelegate.h"
 #include "conversationview.h"
@@ -40,9 +46,29 @@
 #include "mailview.h"
 //#include "conversationlistview.h"
 
-int main(int argc, char *argv[])
+static const char description[] =
+  I18N_NOOP("A preview of the Google Summer of Code project GMail-style Conversation View for KMail.");
+
+static const char version[] = "0.1";
+
+static KCmdLineOptions options[] =
 {
-  QApplication app(argc, argv);
+//    { "+[URL]", I18N_NOOP( "Document to open" ), 0 },
+  KCmdLineLastOption
+};
+
+int main(int argc, char **argv)
+{
+  KAboutData about("conversationview", I18N_NOOP("conversationview"), version, description,
+		     KAboutData::License_GPL, "(C) 2006 Aron Boström", 0, 0, "Aron.Bostrom@gmail.com");
+  about.addAuthor( "Aron Boström", 0, "Aron.Bostrom@gmail.com" );
+  KCmdLineArgs::init(argc, argv, &about);
+  KCmdLineArgs::addCmdLineOptions( options );
+  KApplication app;
+
+  // no session.. just start up normally
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
   QSplitter *splitter = new QSplitter;
 
   QStringList me;
@@ -60,8 +86,10 @@ int main(int argc, char *argv[])
   cView->setModel(proxyModel);
 
   QGridLayout *layout = new QGridLayout;
+//  KTreeWidgetSearchLineWidget *searchLine = new KTreeWidgetSearchLineWidget(0, cView);
   layout->setSpacing(0);
   layout->setMargin(0);
+ // layout->addWidget(searchLine);
   layout->addWidget(cView);
   ConversationWidget *cWidget = new ConversationWidget;
   cWidget->setLayout(layout);
@@ -83,7 +111,9 @@ int main(int argc, char *argv[])
   splitter->setSizes(sizes);
 
   splitter->setMinimumWidth(900);
+  app.setMainWidget(splitter);
   splitter->show();
+  args->clear();
   return app.exec();
 }
 
