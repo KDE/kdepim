@@ -19,6 +19,7 @@ set ( conversationSources
  conversationview.cpp
  conversationwidget.cpp
  searchline.cpp
+ folderproxymodel.cpp
 )
 
 kde4_automoc( ${conversationSources} )
