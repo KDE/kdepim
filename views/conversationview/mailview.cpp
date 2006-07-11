@@ -83,3 +83,5 @@ void MailView::setConversation(const QModelIndex &index)
   append(tmp);
   scrollToAnchor("top");
 }
+
+#include "mailview.moc"

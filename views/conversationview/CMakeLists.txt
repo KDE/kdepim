@@ -1,0 +1,24 @@
+project(conversationview)
+
+find_package(KDE4 REQUIRED)
+include (KDE4Defaults)
+include_directories (${KDE4_KDECORE_INCLUDES} ${QT_INCLUDES})
+add_definitions (${KDE4_DEFINITIONS} ${QT_DEFINITIONS})
+link_directories (${KDE4_LIBRARIES})
+
+set ( conversationSources 
+ main.cpp 
+ message.cpp 
+ mailview.cpp 
+ foldermodel.cpp 
+ dummykonadiadapter.cpp 
+ conversationdelegate.cpp
+ conversation.cpp
+)
+
+kde4_automoc( ${conversationSources} )
+
+kde4_add_executable(conversationview ${conversationSources})
+
+target_link_libraries (conversationview ${KDE4_KDECORE_LIBS} )
+

@@ -193,3 +193,5 @@ void Conversation::markAs(bool read)
 		tmp.markAs(read);
 	}
 }
+
+#include "conversation.moc"

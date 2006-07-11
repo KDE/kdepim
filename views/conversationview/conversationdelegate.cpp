@@ -227,3 +227,5 @@ void ConversationDelegate::updateWidth(int pos, int /*nouse*/)
 }
 
 inline bool ConversationDelegate::isOdd(int row) const { return row & 0x1; }
+
+#include "conversationdelegate.moc"

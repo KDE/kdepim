@@ -76,3 +76,5 @@ Conversation* FolderModel::conversation(int conversationId) const
 {
   return backend->conversation(conversationId);
 }
+
+#include "foldermodel.moc"

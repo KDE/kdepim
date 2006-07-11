@@ -24,8 +24,8 @@
 
 DummyKonadiAdapter::DummyKonadiAdapter(QStringList &manyMe)
 {
-	listOfMe = manyMe;
-  Conversation* one = new Conversation(manyMe, &QString("My first post"));
+    listOfMe = manyMe;
+    Conversation* one = new Conversation(manyMe, &QString("My first post"));
     Message* msg;
     msg = new Message();
     msg->setAuthor("Hrafnahnef");
