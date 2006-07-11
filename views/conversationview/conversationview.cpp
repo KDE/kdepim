@@ -38,6 +38,7 @@ ConversationView::ConversationView(FolderModel *folderModel, QSortFilterProxyMod
   header()->setSortIndicatorShown(true);
   header()->setClickable(true);
   header()->resizeSection(0, 185);
+//  QObject::connect(header(), SIGNAL(sectionClicked(int)), this, SLOT(swapSort(int)));
 }
 
 
@@ -50,8 +51,9 @@ void ConversationView::updateWidth(int width, int /*nouse*/)
   cDelegate->setWidth(width);
 }
 
-void ConversationView::swapSort(int column)
-{
-}
+// void ConversationView::swapSort(int column)
+// {
+//   cDelegate->pmodel->sort(column, Qt::DescendingOrder);
+// }
 
 #include "conversationview.moc"

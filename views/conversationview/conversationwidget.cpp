@@ -1,5 +1,5 @@
 /*
- * conversationview.h
+ * conversationwidget.cpp
  *
  * copyright (c) Aron Bostrom <Aron.Bostrom at gmail.com>, 2006 
  *
@@ -17,26 +17,17 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-#ifndef CONVERSATIONVIEW_H
-#define CONVERSATIONVIEW_H
 
-#include <QTreeView>
+#include "conversationwidget.h"
 
-#include "conversationdelegate.h"
-
-class ConversationView : public QTreeView
+ConversationWidget::ConversationWidget(QWidget *parent)
+ : QWidget(parent)
 {
-  Q_OBJECT
-public:
-  ConversationView(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QWidget *parent = 0);
-  ~ConversationView();
+}
 
-public slots:
-  void updateWidth(int width, int /*nouse*/);
-//   void swapSort(int column);
 
-private:
-  ConversationDelegate *cDelegate;
-};
+ConversationWidget::~ConversationWidget()
+{
+}
 
-#endif
+#include "conversationwidget.moc"

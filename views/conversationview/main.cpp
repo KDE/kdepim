@@ -36,6 +36,7 @@
 #include "foldermodel.h"
 #include "conversationdelegate.h"
 #include "conversationview.h"
+#include "conversationwidget.h"
 #include "mailview.h"
 //#include "conversationlistview.h"
 
@@ -53,12 +54,17 @@ int main(int argc, char *argv[])
   proxyModel->setSourceModel(model);
   proxyModel->sort(1, Qt::DescendingOrder);
 
-//  ConversationDelegate *delegate = new ConversationDelegate(model, proxyModel);
-
   MailView *mail = new MailView(model, proxyModel);
 
   QTreeView *cView = new ConversationView(model, proxyModel);
   cView->setModel(proxyModel);
+
+  QGridLayout *layout = new QGridLayout;
+  layout->setSpacing(0);
+  layout->setMargin(0);
+  layout->addWidget(cView);
+  ConversationWidget *cWidget = new ConversationWidget;
+  cWidget->setLayout(layout);
 
 //  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
 //  cView->setSelectionModel(selection);
@@ -66,10 +72,9 @@ int main(int argc, char *argv[])
   QObject::connect(cView, SIGNAL(clicked(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(cView, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), cView, SLOT(updateWidth(int, int)));
-//  QObject::connect(header, SIGNAL(sectionClicked(int)), cView, SLOT(switchSorting(int)));
 
   splitter->setWindowTitle("Conversations for KMail");
-  splitter->addWidget(cView);
+  splitter->addWidget(cWidget);
   splitter->addWidget(mail);
   splitter->setStretchFactor(0, 0);
   splitter->setStretchFactor(1, 1);
