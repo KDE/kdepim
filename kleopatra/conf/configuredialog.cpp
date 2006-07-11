@@ -53,9 +53,9 @@ ConfigureDialog::ConfigureDialog( QWidget *parent, bool modal )
                   qApp->windowIcon().pixmap( IconSize( K3Icon::Small ), IconSize( K3Icon::Small ) ) );
   showButton( User1, true );
 
-  addModule( "kleopatra_config_dirserv", false );
-  addModule( "kleopatra_config_appear", false );
-  addModule( "kleopatra_config_dnorder", false );
+  addModule( "kleopatra_config_dirserv" );
+  addModule( "kleopatra_config_appear" );
+  addModule( "kleopatra_config_dnorder" );
 
   // We store the size of the dialog on hide, because otherwise
   // the KCMultiDialog starts with the size of the first kcm, not
