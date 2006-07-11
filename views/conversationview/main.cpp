@@ -26,7 +26,6 @@
 #include <QScrollArea>
 #include <QAbstractItemDelegate>
 #include <QStringList>
-#include <QSortFilterProxyModel>
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QSpacerItem>
@@ -43,6 +42,7 @@
 #include "conversationview.h"
 #include "conversationwidget.h"
 #include "mailview.h"
+#include "folderproxymodel.h"
 //#include "conversationlistview.h"
 
 static const char description[] =
@@ -75,16 +75,11 @@ int main(int argc, char **argv)
   DummyKonadiAdapter *data = new DummyKonadiAdapter(me);
 
   FolderModel *model = new FolderModel(data);
-  QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel;
-  proxyModel->setSourceModel(model);
-  proxyModel->sort(1, Qt::DescendingOrder);
-
+  FolderProxyModel *proxyModel = new FolderProxyModel(model);
   MailView *mail = new MailView(model, proxyModel);
-
   ConversationView *cView = new ConversationView(model, proxyModel);
-  cView->setModel(proxyModel);
-
   ConversationWidget *cWidget = new ConversationWidget(cView);
+  proxyModel->sort(1, Qt::DescendingOrder);
 
 //  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
 //  cView->setSelectionModel(selection);

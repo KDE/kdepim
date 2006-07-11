@@ -22,12 +22,12 @@
 
 int FolderProxyModel::rowCount(const QModelIndex &/*parent*/) const
 {
-  return 5; //sourceModel->conversationCount();
+  return sourceModel->rowCount();
 }
 
 int FolderProxyModel::columnCount(const QModelIndex &/*parent*/) const
 {
-	return 2;
+  return 2;
 }
 
 QVariant FolderProxyModel::data(const QModelIndex &index, int role) const

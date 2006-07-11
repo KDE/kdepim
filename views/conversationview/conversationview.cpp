@@ -33,6 +33,7 @@ ConversationView::ConversationView(FolderModel *folderModel, QSortFilterProxyMod
   sortByColumn(1);
   cDelegate = new ConversationDelegate(folderModel, proxyModel);
   setItemDelegate(cDelegate);
+  setModel(proxyModel);
   header()->setDefaultAlignment(Qt::AlignLeft);
   header()->setSortIndicator(1, Qt::DescendingOrder);
   header()->setSortIndicatorShown(true);

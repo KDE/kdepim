@@ -34,7 +34,10 @@ class FolderProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 public:
-  FolderProxyModel(FolderModel *model, QObject *parent = 0) : QSortFilterProxyModel(parent), sourceModel(model) {}
+  FolderProxyModel(FolderModel *model, QObject *parent = 0) : QSortFilterProxyModel(parent), sourceModel(model) 
+  {
+    setSourceModel(model);
+  }
 
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   int columnCount(const QModelIndex &parent = QModelIndex()) const;
