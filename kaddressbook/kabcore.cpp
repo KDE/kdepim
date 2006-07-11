@@ -42,7 +42,7 @@
 #include <kaboutdata.h>
 #include <kacceleratormanager.h>
 #include <kapplication.h>
-#include <kactionclasses.h>
+
 #include <kcmdlineargs.h>
 #include <kcmultidialog.h>
 #include <kdebug.h>

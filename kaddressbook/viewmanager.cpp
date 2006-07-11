@@ -32,7 +32,7 @@
 #include <libkdepim/kvcarddrag.h>
 #include <kabc/addressbook.h>
 #include <kabc/vcardconverter.h>
-#include <kactionclasses.h>
+
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kdeversion.h>
