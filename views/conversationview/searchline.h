@@ -24,7 +24,6 @@
 #include <QToolButton>
 
 #include <klineedit.h>
-#include <kapplication.h>
 
 class SearchLine : public QWidget
 {

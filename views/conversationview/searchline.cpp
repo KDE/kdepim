@@ -21,39 +21,45 @@
 #include <QIcon>
 #include <QLabel>
 #include <QHBoxLayout>
+#include <QCheckBox>
 
 #include <kiconloader.h>
 #include <klocale.h>
+#include <kapplication.h>
 
 #include "searchline.h"
 
 SearchLine::SearchLine(QWidget *parent) : QWidget(parent)
 {
   clearButton = new QToolButton(this);
-  QIcon icon = SmallIconSet( QApplication::isRightToLeft() ? "clear_left" : "locationbar_erase" );
+  QIcon icon = SmallIconSet(KApplication::isRightToLeft() ? "clear_left" : "locationbar_erase" );
   clearButton->setIcon(icon);
-  clearButton->show();
 
-  QLabel *label = new QLabel( i18n("S&earch:"), this );
-  label->setObjectName( QLatin1String("kmail search toolbar widget") );
+  QLabel *search = new QLabel(i18n("S&earch:"), this);
   searchLine = new KLineEdit(this);
-  searchLine->show();
+  search->setBuddy(searchLine);
 
-  label->setBuddy(searchLine);
-  label->show();
+  QLabel *unread = new QLabel(i18n("Only &unread:"), this);
+  QCheckBox *checkBox = new QCheckBox(this);
+  unread->setBuddy(checkBox);
 
   connect(clearButton, SIGNAL(clicked()), searchLine, SLOT(clear()));
 
   QHBoxLayout* layout = new QHBoxLayout( this );
+  layout->setMargin(0);
   layout->setSpacing( 5 );
   layout->addWidget(clearButton);
-  layout->addWidget(label);
+  layout->addWidget(search);
   layout->addWidget(searchLine);
+  layout->addWidget(unread);
+  layout->addWidget(checkBox);
 }
 
 
 SearchLine::~SearchLine()
 {
+  delete clearButton;
+  delete searchLine;
 }
 
 #include "searchline.moc"
