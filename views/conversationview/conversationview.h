@@ -22,11 +22,13 @@
 
 #include <QTreeView>
 
+#include "conversationdelegate.h"
+
 class ConversationView : public QTreeView
 {
   Q_OBJECT
 public:
-  ConversationView(QWidget *parent = 0);
+  ConversationView(ConversationDelegate *delegate, QWidget *parent = 0);
 
   ~ConversationView();
 
@@ -34,6 +36,8 @@ public slots:
   void updateWidth(int width, int /*nouse*/);
   void swapSort(int column);
 
+private:
+  ConversationDelegate *cDelegate;
 };
 
 #endif

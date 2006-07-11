@@ -46,9 +46,7 @@ public:
   void paintAuthors(QPainter *painter, const QStyleOptionViewItem &option, const Conversation *c) const;
   void paintRest(QPainter *painter, const QStyleOptionViewItem &option, const Conversation *c) const;
   QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-
-public slots:
-  void updateWidth(int pos, int nouse = 0);
+  void setWidth(int width);
 
 private:
   QSortFilterProxyModel *pmodel;

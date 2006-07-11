@@ -221,9 +221,9 @@ QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem &option, const Q
   return QSize(rLineWidth, lineHeight);
 }
 
-void ConversationDelegate::updateWidth(int pos, int /*nouse*/)
+void ConversationDelegate::setWidth( int width)
 {
-  lineWidth = pos;
+  lineWidth = width;
 }
 
 inline bool ConversationDelegate::isOdd(int row) const { return row & 0x1; }

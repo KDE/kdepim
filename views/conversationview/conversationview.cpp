@@ -21,13 +21,15 @@
 #include <QHeaderView>
 
 #include "conversationview.h"
+#include "conversationdelegate.h"
 
-ConversationView::ConversationView(QWidget *parent)
- : QTreeView(parent)
+ConversationView::ConversationView(ConversationDelegate *delegate, QWidget *parent)
+ : QTreeView(parent), cDelegate(delegate)
 {
   setRootIsDecorated(false);
   setSortingEnabled(true);
   sortByColumn(1);
+  setItemDelegate(delegate);
   header()->setDefaultAlignment(Qt::AlignLeft);
   header()->setSortIndicator(1, Qt::DescendingOrder);
   header()->setSortIndicatorShown(true);
@@ -42,6 +44,7 @@ ConversationView::~ConversationView()
 
 void ConversationView::updateWidth(int width, int /*nouse*/)
 {
+  cDelegate->setWidth(width);
 }
 
 void ConversationView::swapSort(int column)

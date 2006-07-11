@@ -32,7 +32,6 @@
 #include <QGridLayout>
 #include <QSpacerItem>
 #include <QFontMetrics>
-#include <QTreeView>
 
 #include "foldermodel.h"
 #include "conversationdelegate.h"
@@ -58,16 +57,15 @@ int main(int argc, char *argv[])
 
   MailView *mail = new MailView(model, proxyModel);
 
-  QTreeView *cView = new ConversationView;
+  QTreeView *cView = new ConversationView(delegate);
   cView->setModel(proxyModel);
-  cView->setItemDelegate(delegate);
 
 //  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
 //  cView->setSelectionModel(selection);
 
   QObject::connect(cView, SIGNAL(clicked(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(cView, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
-  QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), delegate, SLOT(updateWidth(int, int)));
+  QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), cView, SLOT(updateWidth(int, int)));
 //  QObject::connect(header, SIGNAL(sectionResized(int, int, int)), delegate, SLOT(updateAuthorsWidth(int, int, int)));
 //	QObject::connect(header, SIGNAL(sectionClicked(int)), cView, SLOT(switchSorting(int)));
 	
