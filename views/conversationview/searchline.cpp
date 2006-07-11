@@ -44,6 +44,7 @@ SearchLine::SearchLine(QWidget *parent) : QWidget(parent)
   unread->setBuddy(checkBox);
 
   connect(clearButton, SIGNAL(clicked()), searchLine, SLOT(clear()));
+  connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(m_emitUnreadChanged()));
 
   QHBoxLayout* layout = new QHBoxLayout( this );
   layout->setMargin(0);
@@ -60,6 +61,11 @@ SearchLine::~SearchLine()
 {
   delete clearButton;
   delete searchLine;
+}
+
+void SearchLine::m_emitUnreadChanged()
+{
+  emit unreadToggled();
 }
 
 #include "searchline.moc"

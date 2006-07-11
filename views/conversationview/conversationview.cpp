@@ -20,13 +20,13 @@
 
 #include <QHeaderView>
 #include <QSortFilterProxyModel>
+#include <QtDebug>
 
 #include "conversationview.h"
 #include "conversationdelegate.h"
 #include "folderproxymodel.h"
 
-ConversationView::ConversationView(FolderProxyModel *model, QWidget *parent)
- : QTreeView(parent)
+ConversationView::ConversationView(FolderProxyModel *model, QWidget *parent) : QTreeView(parent), m_model(model)
 {
   setRootIsDecorated(false);
   setSortingEnabled(true);
@@ -39,6 +39,8 @@ ConversationView::ConversationView(FolderProxyModel *model, QWidget *parent)
   header()->setSortIndicatorShown(true);
   header()->setClickable(true);
   header()->resizeSection(0, 185);
+  m_model->setDynamicSortFilter(true);
+
 //  QObject::connect(header(), SIGNAL(sectionClicked(int)), this, SLOT(swapSort(int)));
 }
 
@@ -52,6 +54,11 @@ void ConversationView::updateWidth(int width, int /*nouse*/)
   cDelegate->setWidth(width);
 }
 
+void ConversationView::toggleFilterUnread()
+{
+  qDebug() << "View reached.";
+  m_model->toggleFilterUnread();
+}
 // void ConversationView::swapSort(int column)
 // {
 //   cDelegate->pmodel->sort(column, Qt::DescendingOrder);

@@ -31,11 +31,11 @@ class ConversationWidget : public QWidget
 {
   Q_OBJECT
 public:
-  ConversationWidget(ConversationView *conversationView, QWidget *parent = 0);
+  ConversationWidget(ConversationView *view, QWidget *parent = 0);
   ~ConversationWidget();
 
 private:
-  ConversationView *view;
+  ConversationView *m_view;
   QGridLayout *layout;
   SearchLine *searchLine;
 };

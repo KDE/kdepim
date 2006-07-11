@@ -31,7 +31,7 @@
 
 class Conversation : QObject
 {
-	Q_OBJECT
+  Q_OBJECT
 public:
   Conversation(QStringList &manyMe, QString *conversationTitle = 0, QObject *parent = 0) : QObject(parent), title(*conversationTitle), listOfMe(manyMe) {}
   int count() const;

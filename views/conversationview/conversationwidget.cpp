@@ -20,7 +20,7 @@
 
 #include "conversationwidget.h"
 
-ConversationWidget::ConversationWidget(ConversationView *conversationView, QWidget *parent) : QWidget(parent), view(conversationView)
+ConversationWidget::ConversationWidget(ConversationView *view, QWidget *parent) : QWidget(parent), m_view(view)
 {
   searchLine = new SearchLine;
   layout = new QGridLayout;
@@ -28,7 +28,9 @@ ConversationWidget::ConversationWidget(ConversationView *conversationView, QWidg
   layout->setSpacing(0);
   layout->setMargin(0);
   layout->addWidget(searchLine);
-  layout->addWidget(conversationView);
+  layout->addWidget(view);
+
+  connect(searchLine, SIGNAL(unreadToggled()), view, SLOT(toggleFilterUnread()));
 
   setLayout(layout);
 }

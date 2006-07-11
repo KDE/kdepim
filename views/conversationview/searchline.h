@@ -32,6 +32,12 @@ public:
   SearchLine(QWidget *parent = 0);
   ~SearchLine();
 
+signals:
+  void unreadToggled();
+
+private slots:
+  void m_emitUnreadChanged();
+
 private:
   QToolButton *clearButton;
   KLineEdit *searchLine;

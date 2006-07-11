@@ -34,9 +34,11 @@ public:
 
 public slots:
   void updateWidth(int width, int /*nouse*/ = 0);
+  void toggleFilterUnread();
 //   void swapSort(int column);
 
 private:
+  FolderProxyModel *m_model;
   ConversationDelegate *cDelegate;
 };
 

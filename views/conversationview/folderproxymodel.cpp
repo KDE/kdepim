@@ -18,6 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#include <QtDebug>
+
 #include "folderproxymodel.h"
 
 int FolderProxyModel::rowCount(const QModelIndex &/*parent*/) const
@@ -43,6 +45,22 @@ QVariant FolderProxyModel::headerData(int section, Qt::Orientation orientation, 
 Conversation* FolderProxyModel::conversation(const QModelIndex &index) const
 {
   return sourceModel->conversation(mapToSource(index).row());
+}
+
+void FolderProxyModel::toggleFilterUnread()
+{
+  qDebug() << "Proxy reached!";
+  filterUnread = !filterUnread;
+  qDebug() << "filterUnread: " << filterUnread;
+  clear();
+}
+
+bool FolderProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+{
+  qDebug() << "row: " << sourceRow << ", filterUnreadStatus: " << (filterUnread ? sourceModel->conversation(sourceRow)->isUnread() : true);
+  return (sourceModel->conversation(sourceRow)->authors().contains(filterRegExp())
+    || sourceModel->conversation(sourceRow)->conversationTitle().contains(filterRegExp()))
+    && (filterUnread ? sourceModel->conversation(sourceRow)->isUnread() : true);
 }
 
 #include "folderproxymodel.moc"

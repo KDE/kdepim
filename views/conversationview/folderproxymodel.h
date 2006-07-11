@@ -37,6 +37,7 @@ public:
   FolderProxyModel(FolderModel *model, QObject *parent = 0) : QSortFilterProxyModel(parent), sourceModel(model) 
   {
     setSourceModel(model);
+    filterUnread = false;
   }
 
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -45,8 +46,15 @@ public:
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
   Conversation* conversation(const QModelIndex &index) const;
 
+public slots:
+  void toggleFilterUnread();
+
+protected:
+  bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+
 private:
   FolderModel* sourceModel;
+  bool filterUnread;
 };
 
 #endif
