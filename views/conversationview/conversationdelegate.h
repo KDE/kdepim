@@ -33,13 +33,13 @@
 #include <QHeaderView>
 #include <QFontMetrics>
 
-#include "foldermodel.h"
+#include "folderproxymodel.h"
 
 class ConversationDelegate : public QAbstractItemDelegate
 {
   Q_OBJECT
 public:
-  ConversationDelegate(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QObject *parent = 0);
+  ConversationDelegate(FolderProxyModel *model, QObject *parent = 0);
   ~ConversationDelegate();
 
   void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -49,20 +49,19 @@ public:
   void setWidth(int width);
 
 private:
-  QSortFilterProxyModel *pmodel;
   QHeaderView *h;
-  FolderModel *fmodel;
+  FolderProxyModel *model;
   int lineWidth, margin;
   QRect getAuthorsBox(const QStyleOptionViewItem &option, const QRect &decoBox = QRect()) const;
   QRect getCountBox(const QStyleOptionViewItem &option, int neededWidth) const;
-	QString getAuthors(const QStyleOptionViewItem &option, const Conversation *conversation, int maxWidth) const;
-	bool isOdd(int row) const;
-	void resizeBox(QRect &box, const QRect &deco) const;
-	bool printDecoBox(const QRect &box, const QRect &deco) const;
-	QRect getMiddleBox(const QStyleOptionViewItem &option, const QRect &right) const;
-	QRect getRightBox(const QStyleOptionViewItem &option, int neededWidth) const;
-	QRect getSnippetBox(const QStyleOptionViewItem &option, const QRect &parentBox, int parentWidth) const;
-	void chop(const QFontMetrics &metrics, QString &orig, int width) const;
+  QString getAuthors(const QStyleOptionViewItem &option, const Conversation *conversation, int maxWidth) const;
+  bool isOdd(int row) const;
+  void resizeBox(QRect &box, const QRect &deco) const;
+  bool printDecoBox(const QRect &box, const QRect &deco) const;
+  QRect getMiddleBox(const QStyleOptionViewItem &option, const QRect &right) const;
+  QRect getRightBox(const QStyleOptionViewItem &option, int neededWidth) const;
+  QRect getSnippetBox(const QStyleOptionViewItem &option, const QRect &parentBox, int parentWidth) const;
+  void chop(const QFontMetrics &metrics, QString &orig, int width) const;
 };
 
 #endif

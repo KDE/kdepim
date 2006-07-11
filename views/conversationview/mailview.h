@@ -24,14 +24,13 @@
 #include <QTextEdit>
 #include <QModelIndex>
 
-#include "foldermodel.h"
 #include "folderproxymodel.h"
 
 class MailView : public QTextEdit
 {
   Q_OBJECT
 public:
-  MailView(FolderModel *folderModel, FolderProxyModel *proxyModel, QWidget *parent = 0) : QTextEdit(parent), model(folderModel), pmodel(proxyModel) { setReadOnly(true); }
+  MailView(FolderProxyModel *proxyModel, QWidget *parent = 0) : QTextEdit(parent), model(proxyModel) { setReadOnly(true); }
 
   int getNeededHeight() const;
 
@@ -40,8 +39,7 @@ public slots:
   void setConversation(const QModelIndex &index);
 
 private:
-  FolderModel *model;
-  FolderProxyModel *pmodel;
+  FolderProxyModel *model;
 };
 
 #endif

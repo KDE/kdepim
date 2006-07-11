@@ -76,8 +76,8 @@ int main(int argc, char **argv)
 
   FolderModel *model = new FolderModel(data);
   FolderProxyModel *proxyModel = new FolderProxyModel(model);
-  MailView *mail = new MailView(model, proxyModel);
-  ConversationView *cView = new ConversationView(model, proxyModel);
+  MailView *mail = new MailView(proxyModel);
+  ConversationView *cView = new ConversationView(proxyModel);
   ConversationWidget *cWidget = new ConversationWidget(cView);
   proxyModel->sort(1, Qt::DescendingOrder);
 

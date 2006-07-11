@@ -23,12 +23,13 @@
 #include <QTreeView>
 
 #include "conversationdelegate.h"
+#include "folderproxymodel.h"
 
 class ConversationView : public QTreeView
 {
   Q_OBJECT
 public:
-  ConversationView(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QWidget *parent = 0);
+  ConversationView(FolderProxyModel *model, QWidget *parent = 0);
   ~ConversationView();
 
 public slots:

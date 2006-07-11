@@ -23,17 +23,17 @@
 
 #include "conversationview.h"
 #include "conversationdelegate.h"
-#include "foldermodel.h"
+#include "folderproxymodel.h"
 
-ConversationView::ConversationView(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QWidget *parent)
+ConversationView::ConversationView(FolderProxyModel *model, QWidget *parent)
  : QTreeView(parent)
 {
   setRootIsDecorated(false);
   setSortingEnabled(true);
   sortByColumn(1);
-  cDelegate = new ConversationDelegate(folderModel, proxyModel);
+  cDelegate = new ConversationDelegate(model);
   setItemDelegate(cDelegate);
-  setModel(proxyModel);
+  setModel(model);
   header()->setDefaultAlignment(Qt::AlignLeft);
   header()->setSortIndicator(1, Qt::DescendingOrder);
   header()->setSortIndicatorShown(true);
