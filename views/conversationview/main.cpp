@@ -36,6 +36,7 @@
 
 #include "foldermodel.h"
 #include "conversationdelegate.h"
+#include "conversationview.h"
 #include "mailview.h"
 //#include "conversationlistview.h"
 
@@ -57,29 +58,21 @@ int main(int argc, char *argv[])
 
   MailView *mail = new MailView(model, proxyModel);
 
-  QTreeView *conversationList = new QTreeView;
-  conversationList->setModel(proxyModel);
-  conversationList->setItemDelegate(delegate);
-//  conversationList->setItemsExpandable(false);
-  conversationList->setRootIsDecorated(false);
-//  conversationList->setAlternatingRowColors(true);
-  conversationList->header()->setDefaultAlignment(Qt::AlignLeft);
-  conversationList->header()->setSortIndicator(1, Qt::DescendingOrder);
-  conversationList->header()->setSortIndicatorShown(true);
-  conversationList->header()->setClickable(true);
-  conversationList->header()->resizeSection(0, 185);
+  QTreeView *cView = new ConversationView;
+  cView->setModel(proxyModel);
+  cView->setItemDelegate(delegate);
 
 //  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
-//  conversationList->setSelectionModel(selection);
+//  cView->setSelectionModel(selection);
 
-  QObject::connect(conversationList, SIGNAL(clicked(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
-  QObject::connect(conversationList, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
+  QObject::connect(cView, SIGNAL(clicked(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
+  QObject::connect(cView, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), delegate, SLOT(updateWidth(int, int)));
 //  QObject::connect(header, SIGNAL(sectionResized(int, int, int)), delegate, SLOT(updateAuthorsWidth(int, int, int)));
-//	QObject::connect(header, SIGNAL(sectionClicked(int)), conversationList, SLOT(switchSorting(int)));
+//	QObject::connect(header, SIGNAL(sectionClicked(int)), cView, SLOT(switchSorting(int)));
 	
   splitter->setWindowTitle("Conversations for KMail");
-  splitter->addWidget(conversationList);
+  splitter->addWidget(cView);
   splitter->addWidget(mail);
   splitter->setStretchFactor(0, 0);
   splitter->setStretchFactor(1, 1);

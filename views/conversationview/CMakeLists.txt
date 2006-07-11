@@ -14,6 +14,7 @@ set ( conversationSources
  dummykonadiadapter.cpp 
  conversationdelegate.cpp
  conversation.cpp
+ conversationview.cpp
 )
 
 kde4_automoc( ${conversationSources} )
