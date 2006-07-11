@@ -28,8 +28,7 @@ class ConversationView : public QTreeView
 {
   Q_OBJECT
 public:
-  ConversationView(ConversationDelegate *delegate, QWidget *parent = 0);
-
+  ConversationView(FolderModel *folderModel, QSortFilterProxyModel *proxyModel, QWidget *parent = 0);
   ~ConversationView();
 
 public slots:

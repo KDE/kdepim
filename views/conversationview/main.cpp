@@ -53,11 +53,11 @@ int main(int argc, char *argv[])
   proxyModel->setSourceModel(model);
   proxyModel->sort(1, Qt::DescendingOrder);
 
-  ConversationDelegate *delegate = new ConversationDelegate(model, proxyModel);
+//  ConversationDelegate *delegate = new ConversationDelegate(model, proxyModel);
 
   MailView *mail = new MailView(model, proxyModel);
 
-  QTreeView *cView = new ConversationView(delegate);
+  QTreeView *cView = new ConversationView(model, proxyModel);
   cView->setModel(proxyModel);
 
 //  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
@@ -66,9 +66,8 @@ int main(int argc, char *argv[])
   QObject::connect(cView, SIGNAL(clicked(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(cView, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), cView, SLOT(updateWidth(int, int)));
-//  QObject::connect(header, SIGNAL(sectionResized(int, int, int)), delegate, SLOT(updateAuthorsWidth(int, int, int)));
-//	QObject::connect(header, SIGNAL(sectionClicked(int)), cView, SLOT(switchSorting(int)));
-	
+//  QObject::connect(header, SIGNAL(sectionClicked(int)), cView, SLOT(switchSorting(int)));
+
   splitter->setWindowTitle("Conversations for KMail");
   splitter->addWidget(cView);
   splitter->addWidget(mail);
