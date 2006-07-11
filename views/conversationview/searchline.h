@@ -1,5 +1,5 @@
 /*
- * conversationwidget.cpp
+ * searchline.h
  *
  * copyright (c) Aron Bostrom <Aron.Bostrom at gmail.com>, 2006 
  *
@@ -17,27 +17,25 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
+#ifndef MYSEARCHLINE_H
+#define MYSEARCHLINE_H
 
-#include "conversationwidget.h"
+#include <QWidget>
+#include <QToolButton>
 
-ConversationWidget::ConversationWidget(ConversationView *conversationView, QWidget *parent) : QWidget(parent), view(conversationView)
+#include <klineedit.h>
+#include <kapplication.h>
+
+class SearchLine : public QWidget
 {
-  searchLine = new SearchLine;
-  layout = new QGridLayout;
+  Q_OBJECT
+public:
+  SearchLine(QWidget *parent = 0);
+  ~SearchLine();
 
-  layout->setSpacing(0);
-  layout->setMargin(0);
-  layout->addWidget(searchLine);
-  layout->addWidget(conversationView);
+private:
+  QToolButton *clearButton;
+  KLineEdit *searchLine;
+};
 
-  setLayout(layout);
-}
-
-
-ConversationWidget::~ConversationWidget()
-{
-  delete layout;
-  delete searchLine;
-}
-
-#include "conversationwidget.moc"
+#endif

@@ -32,7 +32,7 @@ public:
   ~ConversationView();
 
 public slots:
-  void updateWidth(int width, int /*nouse*/);
+  void updateWidth(int width, int /*nouse*/ = 0);
 //   void swapSort(int column);
 
 private:

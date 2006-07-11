@@ -22,15 +22,22 @@
 #define CONVERSATIONWIDGET_H
 
 #include <QWidget>
+#include <QGridLayout>
+
+#include "conversationview.h"
+#include "searchline.h"
 
 class ConversationWidget : public QWidget
 {
   Q_OBJECT
 public:
-    ConversationWidget(QWidget *parent = 0);
+  ConversationWidget(ConversationView *conversationView, QWidget *parent = 0);
+  ~ConversationWidget();
 
-    ~ConversationWidget();
-
+private:
+  ConversationView *view;
+  QGridLayout *layout;
+  SearchLine *searchLine;
 };
 
 #endif

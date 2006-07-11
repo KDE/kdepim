@@ -29,7 +29,6 @@
 #include <QSortFilterProxyModel>
 #include <QWidget>
 #include <QVBoxLayout>
-#include <QGridLayout>
 #include <QSpacerItem>
 #include <QFontMetrics>
 
@@ -82,17 +81,10 @@ int main(int argc, char **argv)
 
   MailView *mail = new MailView(model, proxyModel);
 
-  QTreeView *cView = new ConversationView(model, proxyModel);
+  ConversationView *cView = new ConversationView(model, proxyModel);
   cView->setModel(proxyModel);
 
-  QGridLayout *layout = new QGridLayout;
-//  KTreeWidgetSearchLineWidget *searchLine = new KTreeWidgetSearchLineWidget(0, cView);
-  layout->setSpacing(0);
-  layout->setMargin(0);
- // layout->addWidget(searchLine);
-  layout->addWidget(cView);
-  ConversationWidget *cWidget = new ConversationWidget;
-  cWidget->setLayout(layout);
+  ConversationWidget *cWidget = new ConversationWidget(cView);
 
 //  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
 //  cView->setSelectionModel(selection);
@@ -116,5 +108,3 @@ int main(int argc, char **argv)
   args->clear();
   return app.exec();
 }
-
-
