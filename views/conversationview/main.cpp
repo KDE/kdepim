@@ -88,7 +88,7 @@ int main(int argc, char **argv)
   QObject::connect(cView, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), cView, SLOT(updateWidth(int, int)));
 
-  splitter->setWindowTitle("Conversations for KMail");
+  splitter->setWindowTitle(i18n("Conversations for KMail"));
   splitter->addWidget(cWidget);
   splitter->addWidget(mail);
   splitter->setStretchFactor(0, 0);

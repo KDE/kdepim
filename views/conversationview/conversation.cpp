@@ -16,6 +16,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#include <klocale.h>
+
 #include "conversation.h"
 
 int Conversation::count() const
@@ -139,13 +141,13 @@ QString Conversation::authors() const
   QString text = author(0);
   QString me;
   foreach (me, listOfMe) {
-    text.replace(QRegExp(me), "me");
+    text.replace(QRegExp(me), i18n("me"));
   }
   int max = count();
   for (int i = 1; i < max; ++i) {
     QString tmpAuthor = author(i);
     foreach (me, listOfMe) {
-      tmpAuthor.replace(QRegExp(me), tr("me"));
+      tmpAuthor.replace(QRegExp(me), i18n("me"));
     }
     if (!text.contains(tmpAuthor)) {
       text.append(", ");
