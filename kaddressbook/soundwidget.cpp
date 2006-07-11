@@ -29,7 +29,7 @@
 #include <klocale.h>
 #include <ktempfile.h>
 #include <kurlrequester.h>
-#include <phonon/simpleplayer.h>
+#include <phonon/audioplayer.h>
 
 #include <QCheckBox>
 #include <QLabel>
@@ -133,7 +133,7 @@ void SoundWidget::playSound()
   tmp.file()->write( mSound.data() );
   tmp.close();
 
-  Phonon::SimplePlayer* player = new Phonon::SimplePlayer( Phonon::NotificationCategory, this );
+  Phonon::AudioPlayer* player = new Phonon::AudioPlayer( Phonon::NotificationCategory, this );
   player->play( tmp.name() );
 
   // we can't remove the sound file from within the program, because
