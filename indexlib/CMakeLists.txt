@@ -38,8 +38,8 @@ set_target_properties(index PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS index  DESTINATION ${LIB_INSTALL_DIR})
 
 set(prefix ${CMAKE_INSTALL_PREFIX})
-set(exec_prefix ${CMAKE_INSTALL_PREFIX}/bin)
-set(libdir ${CMAKE_INSTALL_PREFIX}${LIB_INSTALL_DIR})
+set(exec_prefix ${BIN_INSTALL_DIR})
+set(libdir ${LIB_INSTALL_DIR})
 set(includedir ${INCLUDE_INSTALL_DIR})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/indexlib-config.in ${CMAKE_CURRENT_BINARY_DIR}/indexlib-config @ONLY)
