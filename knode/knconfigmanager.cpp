@@ -80,13 +80,13 @@ void KNConfigManager::slotDialogDone()
 KNConfigDialog::KNConfigDialog( QWidget *parent )
   : KCMultiDialog( parent )
 {
-  addModule ( "knode_config_identity", false );
-  addModule ( "knode_config_accounts", false );
-  addModule ( "knode_config_appearance", false );
-  addModule ( "knode_config_read_news", false );
-  addModule ( "knode_config_post_news", false );
-  addModule ( "knode_config_privacy", false );
-  addModule ( "knode_config_cleanup", false );
+  addModule ( "knode_config_identity" );
+  addModule ( "knode_config_accounts" );
+  addModule ( "knode_config_appearance" );
+  addModule ( "knode_config_read_news" );
+  addModule ( "knode_config_post_news" );
+  addModule ( "knode_config_privacy" );
+  addModule ( "knode_config_cleanup" );
 
   setHelp("anc-setting-your-identity");
 
