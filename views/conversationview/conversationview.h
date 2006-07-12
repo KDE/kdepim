@@ -35,6 +35,7 @@ public:
 public slots:
   void updateWidth(int width, int /*nouse*/ = 0);
   void toggleFilterUnread();
+  void changeFilter(const QString &filter);
 //   void swapSort(int column);
 
 private:

@@ -45,6 +45,7 @@ SearchLine::SearchLine(QWidget *parent) : QWidget(parent)
 
   connect(clearButton, SIGNAL(clicked()), searchLine, SLOT(clear()));
   connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(m_emitUnreadChanged()));
+  connect(searchLine, SIGNAL(textChanged(const QString&)), this, SLOT(m_emitTextChanged(const QString&)));
 
   QHBoxLayout* layout = new QHBoxLayout( this );
   layout->setMargin(0);
@@ -66,6 +67,11 @@ SearchLine::~SearchLine()
 void SearchLine::m_emitUnreadChanged()
 {
   emit unreadToggled();
+}
+
+void SearchLine::m_emitTextChanged(const QString &filter)
+{
+  emit textChanged(filter);
 }
 
 #include "searchline.moc"

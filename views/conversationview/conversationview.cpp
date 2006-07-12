@@ -56,9 +56,16 @@ void ConversationView::updateWidth(int width, int /*nouse*/)
 
 void ConversationView::toggleFilterUnread()
 {
-  qDebug() << "View reached.";
   m_model->toggleFilterUnread();
 }
+
+void ConversationView::changeFilter(const QString &filter)
+{
+  QRegExp regExp(filter, Qt::CaseInsensitive, QRegExp::FixedString);
+  m_model->setFilterRegExp(regExp);
+  m_model->clear();
+}
+
 // void ConversationView::swapSort(int column)
 // {
 //   cDelegate->pmodel->sort(column, Qt::DescendingOrder);

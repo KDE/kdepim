@@ -34,9 +34,11 @@ public:
 
 signals:
   void unreadToggled();
+  void textChanged(const QString &);
 
 private slots:
   void m_emitUnreadChanged();
+  void m_emitTextChanged(const QString &filter);
 
 private:
   QToolButton *clearButton;

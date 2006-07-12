@@ -31,6 +31,7 @@ ConversationWidget::ConversationWidget(ConversationView *view, QWidget *parent) 
   layout->addWidget(view);
 
   connect(searchLine, SIGNAL(unreadToggled()), view, SLOT(toggleFilterUnread()));
+  connect(searchLine, SIGNAL(textChanged(const QString &)), view, SLOT(changeFilter(const QString &)));
 
   setLayout(layout);
 }
