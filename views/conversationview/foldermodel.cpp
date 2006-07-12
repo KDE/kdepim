@@ -18,6 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#include <klocale.h>
+
 #include "foldermodel.h"
 
 
@@ -63,11 +65,11 @@ QVariant FolderModel::headerData(int section, Qt::Orientation /*orientation*/, i
     return QVariant();
 
   switch (section) {
-    case 0: return QString(tr("Authors")); break;
-    case 1: return QString(tr("Conversation")); break;
-    case 2: return QString(tr("Time")); break;
-    case 3: return QString(tr("Snippet")); break;
-    case 4: return QString(tr("E-mails")); break;
+    case 0: return QString(i18n("Authors")); break;
+    case 1: return QString(i18n("Conversation")); break;
+    case 2: return QString(i18n("Time")); break;
+    case 3: return QString(i18n("Snippets")); break;
+    case 4: return QString(i18n("E-mails")); break;
     default: return QVariant();
   }
 }

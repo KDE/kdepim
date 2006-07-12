@@ -1,4 +1,6 @@
 /*
+ * Demo app which shows off the ConversationView
+ *
  * copyright (c) Aron Bostrom <Aron.Bostrom at gmail.com>, 2006 
  *
  * this library is free software; you can redistribute it and/or modify it
@@ -23,6 +25,7 @@
 #include <QItemSelectionModel>
 #include <QObject>
 #include <QList>
+#include <QLabel>
 #include <QScrollArea>
 #include <QAbstractItemDelegate>
 #include <QStringList>
@@ -30,11 +33,22 @@
 #include <QVBoxLayout>
 #include <QSpacerItem>
 #include <QFontMetrics>
+#include <QMainWindow>
+#include <QStatusBar>
+#include <QMenu>
 
 #include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
+#include <kmainwindow.h>
+#include <kstatusbar.h>
+#include <ksqueezedtextlabel.h>
+#include <kmenubar.h>
+#include <kmenu.h>
+#include <kaction.h>
+#include <kactioncollection.h>
+#include <kstdaction.h>
 //#include <ktreewidgetsearchline.h>
 
 #include "foldermodel.h"
@@ -88,7 +102,6 @@ int main(int argc, char **argv)
   QObject::connect(cView, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), cView, SLOT(updateWidth(int, int)));
 
-  splitter->setWindowTitle(i18n("Conversations for KMail"));
   splitter->addWidget(cWidget);
   splitter->addWidget(mail);
   splitter->setStretchFactor(0, 0);
@@ -97,9 +110,33 @@ int main(int argc, char **argv)
   sizes << 510 << 300;
   splitter->setSizes(sizes);
 
-  splitter->setMinimumWidth(900);
-  app.setMainWidget(splitter);
-  splitter->show();
+  KMainWindow *mainWindow = new KMainWindow;
+  mainWindow->setCentralWidget(splitter);
+  mainWindow->setWindowTitle(i18n("Conversations for KMail"));
+//  mainWindow->setMinimumWidth(900);
+  KSqueezedTextLabel *statusLabel = new KSqueezedTextLabel("No Akonadi backend loaded. Using dummy data.");
+  mainWindow->statusBar()->addWidget(statusLabel, 1);
+
+//  KMenuBar *menuBar = mainWindow->menuBar();
+/*  QMenu *fileMenu = menuBar->addMenu(i18n("&File"));
+  QMenu *editMenu = menuBar->addMenu(i18n("&Edit"));
+//  QMenu *helpMenu = menuBar->addMenu(i18n("&Help"));
+  KAction *printAct = KStdAction::print(mainWindow, SLOT(slotPrint()), mainWindow->actionCollection());
+  printAct->setWhatsThis(i18n("Print\n\nOpens a print dialog to let you print the current icon."));
+  KAction *quitAct = KStdAction::quit(mainWindow, SLOT(slotQuit()), mainWindow->actionCollection());
+  printAct->setWhatsThis(i18n("Quit\n\nExits this application."));
+  fileMenu->addAction(printAct);
+  fileMenu->addAction(quitAct);
+  KAction *copyAct = KStdAction::copy(mainWindow, SLOT(slotCopy()), mainWindow->actionCollection());
+  copyAct->setWhatsThis(i18n("Copy\n\nCopies the selected text to the clipboard."));
+  editMenu->addAction(copyAct);*/
+
+  KStdAction::copy(mainWindow, SLOT(slotCopy()), mainWindow->actionCollection())->setWhatsThis(i18n("Copy\n\nCopies the selected text to the clipboard."));
+  KStdAction::print(mail, SLOT(slotPrint()), mainWindow->actionCollection());
+  KStdAction::quit(mail, SLOT(slotQuit()), mainWindow->actionCollection());
+  mainWindow->createGUI();
+  app.setMainWidget(mainWindow);
+  mainWindow->show();
   args->clear();
   return app.exec();
 }

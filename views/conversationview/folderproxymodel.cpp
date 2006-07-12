@@ -55,9 +55,14 @@ void FolderProxyModel::toggleFilterUnread()
 
 bool FolderProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-  return (sourceModel->conversation(sourceRow)->authors().contains(filterRegExp())
-    || sourceModel->conversation(sourceRow)->conversationTitle().contains(filterRegExp()))
-    && (filterUnread ? sourceModel->conversation(sourceRow)->isUnread() : true);
+  Conversation *c = sourceModel->conversation(sourceRow);
+  return (c->authors().contains(m_filter) || c->conversationTitle().contains(m_filter))
+    && (filterUnread ? c->isUnread() : true);
+}
+
+void FolderProxyModel::setFilter( const QString &filter)
+{
+  m_filter = QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString);
 }
 
 #include "folderproxymodel.moc"

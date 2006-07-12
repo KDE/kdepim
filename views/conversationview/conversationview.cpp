@@ -61,8 +61,7 @@ void ConversationView::toggleFilterUnread()
 
 void ConversationView::changeFilter(const QString &filter)
 {
-  QRegExp regExp(filter, Qt::CaseInsensitive, QRegExp::FixedString);
-  m_model->setFilterRegExp(regExp);
+  m_model->setFilter(filter);
   m_model->clear();
 }
 

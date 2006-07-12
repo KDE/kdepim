@@ -25,6 +25,7 @@
 #include <QModelIndex>
 #include <QSortFilterProxyModel>
 #include <QStringList>
+#include <QRegExp>
 
 #include "dummykonadiadapter.h"
 #include "conversation.h"
@@ -39,12 +40,13 @@ public:
     setSourceModel(model);
     filterUnread = false;
   }
-
+  
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   int columnCount(const QModelIndex &parent = QModelIndex()) const;
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
   Conversation* conversation(const QModelIndex &index) const;
+  void setFilter(const QString &filter);
 
 public slots:
   void toggleFilterUnread();
@@ -55,6 +57,7 @@ protected:
 private:
   FolderModel* sourceModel;
   bool filterUnread;
+  QRegExp m_filter;
 };
 
 #endif
