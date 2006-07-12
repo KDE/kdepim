@@ -73,7 +73,7 @@ static KCmdLineOptions options[] =
 int main(int argc, char **argv)
 {
   KAboutData about("conversationview", I18N_NOOP("conversationview"), version, description,
-		     KAboutData::License_GPL, "(C) 2006 Aron Boström", 0, 0, "Aron.Bostrom@gmail.com");
+		     KAboutData::License_LGPL, "(C) 2006 Aron Boström", 0, 0, "Aron.Bostrom@gmail.com");
   about.addAuthor( "Aron Boström", 0, "Aron.Bostrom@gmail.com" );
   KCmdLineArgs::init(argc, argv, &about);
   KCmdLineArgs::addCmdLineOptions( options );
@@ -116,20 +116,6 @@ int main(int argc, char **argv)
 //  mainWindow->setMinimumWidth(900);
   KSqueezedTextLabel *statusLabel = new KSqueezedTextLabel("No Akonadi backend loaded. Using dummy data.");
   mainWindow->statusBar()->addWidget(statusLabel, 1);
-
-//  KMenuBar *menuBar = mainWindow->menuBar();
-/*  QMenu *fileMenu = menuBar->addMenu(i18n("&File"));
-  QMenu *editMenu = menuBar->addMenu(i18n("&Edit"));
-//  QMenu *helpMenu = menuBar->addMenu(i18n("&Help"));
-  KAction *printAct = KStdAction::print(mainWindow, SLOT(slotPrint()), mainWindow->actionCollection());
-  printAct->setWhatsThis(i18n("Print\n\nOpens a print dialog to let you print the current icon."));
-  KAction *quitAct = KStdAction::quit(mainWindow, SLOT(slotQuit()), mainWindow->actionCollection());
-  printAct->setWhatsThis(i18n("Quit\n\nExits this application."));
-  fileMenu->addAction(printAct);
-  fileMenu->addAction(quitAct);
-  KAction *copyAct = KStdAction::copy(mainWindow, SLOT(slotCopy()), mainWindow->actionCollection());
-  copyAct->setWhatsThis(i18n("Copy\n\nCopies the selected text to the clipboard."));
-  editMenu->addAction(copyAct);*/
 
   KStdAction::copy(mainWindow, SLOT(slotCopy()), mainWindow->actionCollection())->setWhatsThis(i18n("Copy\n\nCopies the selected text to the clipboard."));
   KStdAction::print(mail, SLOT(slotPrint()), mainWindow->actionCollection());
