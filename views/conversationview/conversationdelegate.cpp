@@ -113,7 +113,7 @@ void ConversationDelegate::paintRest(QPainter *painter, const QStyleOptionViewIt
     painter->drawText(subjectBox, flags, subject);
     if (subjectWidth < subjectBox.width() - margin) {
       painter->setFont(option.font);
-      painter->setPen(option.palette.shadow().color());
+      painter->setPen(option.palette.dark().color());
       QRect tmp = getSnippetBox(option, subjectBox, subjectWidth);
       QString snippet = c->content(0);
       painter->drawText(tmp, flags, snippet);
