@@ -53,7 +53,7 @@ void FolderProxyModel::toggleFilterUnread()
   clear();
 }
 
-bool FolderProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+bool FolderProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &/*sourceParent*/) const
 {
   Conversation *c = sourceModel->conversation(sourceRow);
   return (c->authors().contains(m_filter) || c->conversationTitle().contains(m_filter))
