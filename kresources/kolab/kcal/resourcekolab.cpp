@@ -213,6 +213,9 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
 
 bool ResourceKolab::doLoad()
 {
+  if (!mUidMap.isEmpty() ) {
+    return true;
+  }
   mUidMap.clear();
 
   return loadAllEvents() & loadAllTodos() & loadAllJournals();
@@ -847,27 +850,7 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
   config.deleteGroup( subResource );
   config.sync();
 
-  // Make a list of all uids to remove
-  Kolab::UidMap::ConstIterator mapIt;
-  QStringList uids;
-  for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
-    if ( mapIt.data().resource() == subResource )
-      // We have a match
-      uids << mapIt.key();
-
-  // Finally delete all the incidences
-  if ( !uids.isEmpty() ) {
-    const bool silent = mSilent;
-    mSilent = true;
-    QStringList::ConstIterator it;
-    for ( it = uids.begin(); it != uids.end(); ++it ) {
-      KCal::Incidence* incidence = mCalendar.incidence( *it );
-      if( incidence )
-        mCalendar.deleteIncidence( incidence );
-      mUidMap.remove( *it );
-    }
-    mSilent = silent;
-  }
+  unloadSubResource( subResource );
 
   emit signalSubresourceRemoved( this, type, subResource );
 }
@@ -928,17 +911,27 @@ bool ResourceKolab::subresourceActive( const QString& subresource ) const
 void ResourceKolab::setSubresourceActive( const QString &subresource, bool v )
 {
   ResourceMap *map = 0;
-
-  if ( mEventSubResources.contains( subresource ) )
+  const char* mimeType = 0;
+  if ( mEventSubResources.contains( subresource ) ) {
      map = &mEventSubResources;
-  if ( mTodoSubResources.contains( subresource ) )
+     mimeType = eventAttachmentMimeType;
+  }
+  if ( mTodoSubResources.contains( subresource ) ) {
      map = &mTodoSubResources;
-  if ( mJournalSubResources.contains( subresource ) )
+     mimeType = todoAttachmentMimeType;
+  }
+  if ( mJournalSubResources.contains( subresource ) ) {
      map = &mJournalSubResources;
+     mimeType = journalAttachmentMimeType;
+  }
 
   if ( map && ( ( *map )[ subresource ].active() != v ) ) {
     ( *map )[ subresource ].setActive( v );
-    doLoad();                     // refresh the mCalendar cache
+    if ( v ) {
+        loadSubResource( subresource, mimeType );
+    } else {
+        unloadSubResource( subresource );
+    }
     mResourceChangedTimer.changeInterval( 100 );
   }
 }
@@ -1019,5 +1012,26 @@ QString ResourceKolab::subresourceIdentifier( Incidence *incidence )
 }
 
 
+bool ResourceKolab::unloadSubResource( const QString& subResource )
+{
+    const bool silent = mSilent;
+    mSilent = true;
+    Kolab::UidMap::Iterator mapIt = mUidMap.begin();
+    while ( mapIt != mUidMap.end() )
+    {
+        Kolab::UidMap::Iterator it = mapIt++;
+        const StorageReference ref = it.data();
+        if ( ref.resource() != subResource ) continue;
+        // FIXME incidence() is expensive
+        KCal::Incidence* incidence = mCalendar.incidence( it.key() );
+        if( incidence ) {
+            incidence->unRegisterObserver( this );
+            mCalendar.deleteIncidence( incidence );
+        }
+        mUidMap.remove( it );
+    }
+    mSilent = silent;
+    return true;
+}
 
 #include "resourcekolab.moc"

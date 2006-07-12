@@ -174,6 +174,7 @@ private:
                               const QString& label, bool writable,
                               bool alarmRelevant, Kolab::ResourceMap& subResource );
   bool loadSubResource( const QString& subResource, const char* mimetype );
+  bool unloadSubResource( const QString& subResource );
 
   QString configFile() const {
     return ResourceKolabBase::configFile( "kcal" );
