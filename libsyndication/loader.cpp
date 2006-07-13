@@ -35,12 +35,12 @@ struct Loader::LoaderPrivate
     retrieverError(0)
     {
     }
-    
+
     ~LoaderPrivate()
     {
         delete retriever;
     }
-    
+
     DataRetriever* retriever;
     Syndication::ErrorCode lastError;
     int retrieverError;
@@ -94,7 +94,7 @@ int Loader::retrieverError() const
 {
     return d->retrieverError;
 }
-        
+
 Syndication::ErrorCode Loader::errorCode() const
 {
     return d->lastError;
@@ -108,7 +108,7 @@ void Loader::abort()
         delete d->retriever;
         d->retriever = 0L;
     }
-    
+
     emit loadingComplete(this, FeedPtr(), Aborted);
     delete this;
 }
@@ -126,12 +126,12 @@ void Loader::slotRetrieverDone(const QByteArray& data, bool success)
     bool isFileRetriever = dynamic_cast<FileRetriever*>(d->retriever) != 0;
     delete d->retriever;
     d->retriever = 0;
-    
+
     if (success)
     {
         DocumentSource src(data, d->url.url());
         feed = parserCollection()->parse(src);
-        
+
         if (parserCollection()->lastError() != Syndication::Success)
         {
             status = parserCollection()->lastError();
@@ -142,7 +142,7 @@ void Loader::slotRetrieverDone(const QByteArray& data, bool success)
     {
         if (isFileRetriever)
         {
-            // retriever is a FileRetriever, so we interpret the 
+            // retriever is a FileRetriever, so we interpret the
             // error code and set lastError accordingly
             status = FileNotFound; // TODO
             std::cout << "file retriever error: " <<  d->retrieverError << std::endl;
@@ -201,7 +201,7 @@ void Loader::discoverFeeds(const QByteArray &data)
         }
     }
 
-    if (s2.isNull()) 
+    if (s2.isNull())
     {
         return;
     }
@@ -210,7 +210,7 @@ void Loader::discoverFeeds(const QByteArray &data)
     {
         if (s2.startsWith("//"))
         {
-            s2=s2.prepend(d->url.protocol()+":");
+            s2=s2.prepend(d->url.protocol()+':');
             d->discoveredFeedURL=s2;
         }
         else if (s2.startsWith("/"))

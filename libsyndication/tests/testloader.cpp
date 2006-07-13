@@ -60,9 +60,9 @@ TestLibSyndication::TestLibSyndication(const QString& url)
     if (!KUrl::isRelativeUrl(url))
         kurl = KUrl(url);
     else
-        kurl = KUrl("file://" + QDir::currentPath() + "/", url);
-    
-    std::cerr << kurl.url().toLocal8Bit().data() << std::endl;    
+        kurl = KUrl("file://" + QDir::currentPath() + '/', url);
+
+    std::cerr << kurl.url().toLocal8Bit().data() << std::endl;
     Loader* loader = Loader::create(this, SLOT(slotLoadingComplete(Syndication::Loader*,
                                     Syndication::FeedPtr,
                                     Syndication::ErrorCode)));
@@ -83,9 +83,9 @@ void TestLibSyndication::slotLoadingComplete(Syndication::Loader* loader,
         std::cerr << "error" << std::endl;
         exit(1);
     }
-    
+
 }
-                    
+
 int main(int argc, char **argv)
 {
     if (argc < 2)
@@ -103,7 +103,7 @@ int main(int argc, char **argv)
     if ( args->count() != 1 ) args->usage();
 
     TestLibSyndication* tester = new TestLibSyndication(args->arg( 0 ));
-    
+
     return app.exec();
 }
 

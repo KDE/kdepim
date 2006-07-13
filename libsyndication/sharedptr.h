@@ -50,16 +50,16 @@ bool operator!=( const SharedPtr<T> &lhs, const SharedPtr<T> &rhs )
  * A reference-counting pointer.
  *
  * This class serves as a replacement for ordinary C++ pointers, allowing
- * you to handle objects as if they are explicitely shared, handling
+ * you to handle objects as if they are explicitly shared, handling
  * reference counting behind the scenes.
  *
- * An explicitely shared object provides very cheap copying since only a
- * pointer is copied and a reference count is updated. When an explicitely
+ * An explicitly shared object provides very cheap copying since only a
+ * pointer is copied and a reference count is updated. When an explicitly
  * shared object goes out of scope, the internal reference count gets
- * decreased. The data which multiple explicitely shared objects share is
+ * decreased. The data which multiple explicitly shared objects share is
  * only deleted when the last object which references it goes out of scope.
  *
- * Explicitely shared objects do not provide copy-on-write semantics; this
+ * Explicitly shared objects do not provide copy-on-write semantics; this
  * means that changing one object will also change all other objects which
  * share the data. Consider this:
  * \code
