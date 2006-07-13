@@ -25,7 +25,7 @@
 #include "dummykonadiadapter.h"
 #include "message.h"
 
-DummyKonadiAdapter::DummyKonadiAdapter(FolderModel *model) : m_model(model)
+DummyKonadiAdapter::DummyKonadiAdapter(FolderModel *model, QObject *parent) : QObject(parent), m_model(model)
 {
   Message* msg;
   msg = new Message();
@@ -278,3 +278,71 @@ DummyKonadiAdapter::~DummyKonadiAdapter()
 {
 }
 
+void DummyKonadiAdapter::newMessage() const
+{
+//  srand(QDateTime::currentDateTime().toTime_t());
+  QList<QString> authors;
+  authors << "Fe" << "Ur" << "The" << "Or" << "Ke" << "He" << "Ni" << "Ar" << "Sol" << "To" << "Ba" << "Mu" << "Li" << "Ngo" << "Do" << "Or";
+  QList<QString> words;
+  words << "haui" << "that" << "skanunga" << "aerliki" << "maen" << "toco" << "withar" << "oraet" << "aldrigh" << "aen" << "<br>\n";
+  QList<QString> subject;
+  subject<<"a"<<"b"<<"c"<<"d"<<"e"<<"f"<<"g"<<"h"<<"h"<<"i"<<"j"<<"k"<<"l"<<"m"<<"n"<<"o"<<"p"<<"q"<<"r"<<"s"<<"t"<<"u"<<"v"<<"w"<<"x"<<"y"<<"z";
+  Message *msg = new Message();
+  msg->setId(rand());
+  QString subj;
+  for ( int i = 3 +rand()%12; i >= 0; --i)
+    subj.append(subject[rand()%subject.count()]);
+  msg->setSubject(subj);
+  QString content;
+  if (rand()%4 == 1) {
+    // A new conversation
+    msg->setParentId(rand());
+    int length = rand()%45 + 5;
+    while (length > 0) {
+      content.append(words[rand()%words.count()]);
+      content.append(" ");
+      --length;
+    }
+  } else if (rand()%4 < 3) {
+    // A reply on a recent conversation
+    Conversation *c = m_model->conversation(rand()%qMin(m_model->rowCount(), 5));
+    Message *m;
+    if (rand()%4 < 3) {
+      // reply on the most recent message in the conversation
+      m = c->message(c->count());
+    } else {
+      // reply on any message in the conversation
+      m = c->message(rand()%c->count());
+    }
+    msg->setParentId(m->id());
+    content = m->content();
+    content.replace(QRegExp("\n"), "\n>");
+    content.append("\n<br>\n<br>");
+    int length = rand()%45 + 5;
+    while (length > 0) {
+      content.append(words[rand()%words.count()]);
+      content.append(" ");
+      --length;
+    }
+  } else {
+    // A reply on any message
+    Conversation *c = m_model->conversation(rand()%qMin(m_model->rowCount(), 5));
+    Message *m = c->message(rand()%c->count());
+    msg->setParentId(m->id());
+    content = m->content();
+    content.replace(QRegExp("\n"), "\n>");
+    content.append("\n<br>\n<br>");
+    int length = rand()%45 + 5;
+    while (length > 0) {
+      content.append(words[rand()%words.count()]);
+      content.append(" ");
+      --length;
+    }
+  }
+  msg->setAuthor(authors[rand()%authors.count()]);
+  msg->setContent(content);
+  msg->setArrivalTime(QDateTime::currentDateTime());
+  m_model->insertMessage(msg);
+}
+
+#include "dummykonadiadapter.moc"

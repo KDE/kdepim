@@ -89,11 +89,12 @@ int main(int argc, char **argv)
   FolderModel *model = new FolderModel(me);
 
   FolderProxyModel *proxyModel = new FolderProxyModel(model);
-  proxyModel->sort(1, Qt::DescendingOrder);
   MailView *mail = new MailView(proxyModel);
   ConversationView *cView = new ConversationView(proxyModel);
-  ConversationWidget *cWidget = new ConversationWidget(cView);
   DummyKonadiAdapter *data = new DummyKonadiAdapter(model);
+  ConversationWidget *cWidget = new ConversationWidget(cView/*, data*/);
+  proxyModel->sort(1, Qt::DescendingOrder);
+  proxyModel->setResortable(true);
 
 //  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
 //  cView->setSelectionModel(selection);
@@ -120,6 +121,7 @@ int main(int argc, char **argv)
   KStdAction::copy(mainWindow, SLOT(slotCopy()), mainWindow->actionCollection())->setWhatsThis(i18n("Copy\n\nCopies the selected text to the clipboard."));
   KStdAction::print(mail, SLOT(slotPrint()), mainWindow->actionCollection());
   KStdAction::quit(mail, SLOT(slotQuit()), mainWindow->actionCollection());
+  KStdAction::openNew(data, SLOT(newMessage()), mainWindow->actionCollection());
   mainWindow->createGUI();
   app.setMainWidget(mainWindow);
   mainWindow->show();

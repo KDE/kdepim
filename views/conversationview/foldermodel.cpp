@@ -78,15 +78,17 @@ Conversation* FolderModel::conversation(int conversationId) const
 
 void FolderModel::insertMessage(Message *m)
 {
-  emit layoutAboutToBeChanged();
   Conversation *c = findConversation(m);
   if (c == 0) {
+    emit layoutAboutToBeChanged();
     m_conversations.push_front(new Conversation(m_me, m));
     insertRows(0, 1);
+    emit layoutChanged();
   } else {
     c->addMessage(m);
+    int row = m_conversations.indexOf(c);
+    emit dataChanged(createIndex(row, 0, row), createIndex(row, 1, row));
   }
-  emit layoutChanged();
 }
 
 Conversation* FolderModel::findConversation(const Message *m) const

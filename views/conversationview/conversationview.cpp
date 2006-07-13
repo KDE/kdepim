@@ -40,8 +40,7 @@ ConversationView::ConversationView(FolderProxyModel *model, QWidget *parent) : Q
   header()->setClickable(true);
   header()->resizeSection(0, 185);
   m_model->setDynamicSortFilter(true);
-
-//  QObject::connect(header(), SIGNAL(sectionClicked(int)), this, SLOT(swapSort(int)));
+  m_model->setHeader(header());
 }
 
 

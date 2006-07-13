@@ -19,13 +19,19 @@
 #ifndef DUMMYKONADIADAPTER_H
 #define DUMMYKONADIADAPTER_H
 
+#include <QObject>
+
 #include "foldermodel.h"
 
-class DummyKonadiAdapter
+class DummyKonadiAdapter : public QObject
 {
+  Q_OBJECT
 public:
-  DummyKonadiAdapter(FolderModel *model);
+  DummyKonadiAdapter(FolderModel *model, QObject *parent = 0);
   ~DummyKonadiAdapter();
+
+public slots:
+  void newMessage() const;
 
 private:
   FolderModel *m_model;

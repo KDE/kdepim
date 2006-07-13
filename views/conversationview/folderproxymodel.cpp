@@ -66,4 +66,11 @@ void FolderProxyModel::setFilter( const QString &filter)
   m_filter = QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString);
 }
 
+void FolderProxyModel::resort()
+{
+//   filterChanged();
+  if (m_resortable && m_header != 0)
+    sort(m_header->sortIndicatorSection(), m_header->sortIndicatorOrder());
+}
+
 #include "folderproxymodel.moc"

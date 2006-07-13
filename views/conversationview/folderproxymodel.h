@@ -26,6 +26,7 @@
 #include <QSortFilterProxyModel>
 #include <QStringList>
 #include <QRegExp>
+#include <QHeaderView>
 
 #include "dummykonadiadapter.h"
 #include "conversation.h"
@@ -39,25 +40,34 @@ public:
   {
     setSourceModel(model);
     filterUnread = false;
+    QObject::connect(model, SIGNAL(rowsInserted(const QModelIndex &, int, int)), this, SLOT(resort()));
+    QObject::connect(model, SIGNAL(layoutChanged()), this, SLOT(resort()));
+    m_resortable = false;
+    m_header = 0;
   }
-  
+
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   int columnCount(const QModelIndex &parent = QModelIndex()) const;
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
   Conversation* conversation(const QModelIndex &index) const;
   void setFilter(const QString &filter);
+  void setHeader(QHeaderView *header) { m_header = header; }
+  bool resortable() const { return m_resortable; }
+  void setResortable(bool enable) { m_resortable = enable; }
 
 public slots:
   void toggleFilterUnread();
+  void resort();
 
 protected:
   bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 private:
   FolderModel* sourceModel;
-  bool filterUnread;
+  bool filterUnread, m_resortable;
   QRegExp m_filter;
+  QHeaderView *m_header;
 };
 
 #endif
