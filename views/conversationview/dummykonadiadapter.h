@@ -27,13 +27,11 @@
 class DummyKonadiAdapter
 {
 public:
-  DummyKonadiAdapter(QAbstractListModel *model, const QStringList &manyMe);
+  DummyKonadiAdapter(QAbstractListModel *model);
   ~DummyKonadiAdapter();
 
 private:
   QAbstractListModel *m_model;
-  QList<Conversation*> conversations;
-  QStringList listOfMe;
 };
 
 #endif

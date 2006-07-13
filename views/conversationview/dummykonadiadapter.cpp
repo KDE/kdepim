@@ -23,7 +23,7 @@
 #include "dummykonadiadapter.h"
 #include "message.h"
 
-DummyKonadiAdapter::DummyKonadiAdapter(QAbstractListModel *model, const QStringList &manyMe) : m_model(model), listOfMe(manyMe)
+DummyKonadiAdapter::DummyKonadiAdapter(QAbstractListModel *model) : m_model(model)
 {
 //    Conversation* one = new Conversation(manyMe, &QString("My first post"));
     Message* msg;
@@ -179,9 +179,5 @@ DummyKonadiAdapter::DummyKonadiAdapter(QAbstractListModel *model, const QStringL
 
 DummyKonadiAdapter::~DummyKonadiAdapter()
 {
-  Conversation* tmpConversation;
-  foreach (tmpConversation, conversations) {
-    delete tmpConversation;
-  }
 }
 

@@ -33,7 +33,12 @@ class FolderModel : public QAbstractListModel
 {
   Q_OBJECT
 public:
-  FolderModel(QObject *parent = 0) : QAbstractListModel(parent) {}
+  /**
+   * Constructs an empty FolderModel.
+   * @param listOfMe is a set of aliases for the user. This model takes ownership of this parameter.
+   */
+  FolderModel(QStringList *listOfMe, QObject *parent = 0) : QAbstractListModel(parent), m_me(listOfMe) {}
+  ~FolderModel() { delete m_me; }
 
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -43,6 +48,7 @@ public:
 
 private:
   QList<Conversation*> m_conversations;
+  QStringList *m_me;
 };
 
 #endif
