@@ -23,13 +23,12 @@
 
 #include <QVariant>
 #include <QModelIndex>
-#include <QAbstractListModel>
+#include <QAbstractItemModel>
 #include <QStringList>
 
-#include "dummykonadiadapter.h"
 #include "conversation.h"
 
-class FolderModel : public QAbstractListModel
+class FolderModel : public QAbstractItemModel
 {
   Q_OBJECT
 public:
@@ -37,7 +36,7 @@ public:
    * Constructs an empty FolderModel.
    * @param listOfMe is a set of aliases for the user. This model takes ownership of this parameter.
    */
-  FolderModel(QStringList *listOfMe, QObject *parent = 0) : QAbstractListModel(parent), m_me(listOfMe) {}
+  FolderModel(QStringList *listOfMe, QObject *parent = 0) : QAbstractItemModel(parent), m_me(listOfMe) {}
   ~FolderModel() { delete m_me; }
 
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -45,6 +44,8 @@ public:
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
   Conversation* conversation(int conversationId) const;
+  QModelIndex index(int row, int column, const QModelIndex &/*parent*/) const { return createIndex(row, column, row); }
+  QModelIndex parent(const QModelIndex &/*parent*/) const { return QModelIndex(); }
 
 private:
   QList<Conversation*> m_conversations;

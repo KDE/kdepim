@@ -23,7 +23,7 @@
 #include "dummykonadiadapter.h"
 #include "message.h"
 
-DummyKonadiAdapter::DummyKonadiAdapter(QAbstractListModel *model) : m_model(model)
+DummyKonadiAdapter::DummyKonadiAdapter(FolderModel *model) : m_model(model)
 {
 //    Conversation* one = new Conversation(manyMe, &QString("My first post"));
     Message* msg;

@@ -19,19 +19,16 @@
 #ifndef DUMMYKONADIADAPTER_H
 #define DUMMYKONADIADAPTER_H
 
-#include <QStringList>
-
-#include "conversation.h"
 #include "foldermodel.h"
 
 class DummyKonadiAdapter
 {
 public:
-  DummyKonadiAdapter(QAbstractListModel *model);
+  DummyKonadiAdapter(FolderModel *model);
   ~DummyKonadiAdapter();
 
 private:
-  QAbstractListModel *m_model;
+  FolderModel *m_model;
 };
 
 #endif
