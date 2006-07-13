@@ -137,7 +137,7 @@ GpgME::Error Kleo::ChiasmusJob::slotProcessExited( KProcess * proc ) {
       mError = 0;
       break;
     default:
-    case 1: // Some error occured
+    case 1: // Some error occurred
       mStderr = mSymCryptRun->stdErr();
       mError = gpg_error( GPG_ERR_GENERAL );
       break;

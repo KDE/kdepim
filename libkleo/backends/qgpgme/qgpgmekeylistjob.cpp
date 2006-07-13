@@ -88,7 +88,7 @@ GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & pats, bool secre
 
   // We could of course just feed them single patterns, and that would
   // probably be easier, but the performance penalty would currently
-  // be noticable.
+  // be noticeable.
 
   while ( const GpgME::Error err = mCtx->startKeyListing( patterns(), mSecretOnly ) ) {
     if ( err.code() == GPG_ERR_LINE_TOO_LONG ) {
@@ -116,7 +116,7 @@ GpgME::KeyListResult Kleo::QGpgMEKeyListJob::exec( const QStringList & pats, boo
 
   // We could of course just feed them single patterns, and that would
   // probably be easier, but the performance penalty would currently
-  // be noticable.
+  // be noticeable.
 
   for (;;) {
     keys.clear();

@@ -67,7 +67,7 @@ namespace Kleo {
 
     /**
        Starts the key generation operation. \a parameters is a
-       backend-specific string containing the paramaters of the key to
+       backend-specific string containing the parameters of the key to
        create (length, capabilities, etc).
     */
     virtual GpgME::Error start( const QString & parameters ) = 0;

@@ -426,7 +426,7 @@ bool hasFeature( Feature );
    a respective MIME object.<br>
    If <b>FALSE</b> the texts returned in \c flatTextPrefix and
    \c flatTextSeparator and \c flatTextPostfix are to be used instead.<br>
-   Allways <b>either</b> the \c content[..] and \c bodyTextVersion
+   Always <b>either</b> the \c content[..] and \c bodyTextVersion
    parameters <b>or</b> the \c flatText[..] parameters are holding
    valid data - never both of them may be used simultaneously
    as plugins will just ignore the parameters not matching their
@@ -446,7 +446,7 @@ bool hasFeature( Feature );
    is NULL or holding a zero-length string it is up to you whether you want
    to add the relevant MIME header yourself, but since it in in the
    responsibility of the plugin implementors to provide you with all
-   neccessary 'Content-[..]' header information you should <b>not need</b>
+   necessary 'Content-[..]' header information you should <b>not need</b>
    to define them if they are not returned by the signing or encrypting
    function - otherwise this may be considered as a bug in the plugin and
    you could report the missing MIME header information to the address
@@ -592,7 +592,7 @@ bool hasFeature( Feature );
         // based on the values returned in structInf.
         // Note: We do _not_ insert line breaks between the parts since
         //       it is the plugin job to provide us with ready-to-use
-        //       texts containing all neccessary line breaks.
+        //       texts containing all necessary line breaks.
         strcpy( myMessageBody, structInf.plainTextPrefix );
         if( structInf.includeCleartext ) {
           strcat( myMessageBody, cleartext );
@@ -661,7 +661,7 @@ struct StructuringInfo {
                                   \c makeMimeObject or \c makeMultiMime
                                   is FALSE) */
   char* contentDispVersion;  /*!< 'Content-Disposition' of the additional
-                                  preceeding the code part (only valid if
+                                  preceding the code part (only valid if
                                   \c contentTypeVersion holds a
                                   non-zero-length string)<br>
                                   (ignore this parameter if either
@@ -848,7 +848,7 @@ struct SignatureMetaData {
    supposed to contain an opaque signed message part. After checking the
    data and verifying the signature the cleartext of the message will be
    returned in \c cleartext.  The user must free the respective memory
-   ocupied by *cleartext.
+   occupied by *cleartext.
 
    Depending on the configuration, MUAs might not need to use this.
    If \c sigmeta is non-null, the

@@ -135,7 +135,7 @@ namespace Kleo {
 
     /**
      * Return value as a string (available for all argtypes)
-     * The returned string can be empty (explicitely set to empty) or null (not set).
+     * The returned string can be empty (explicitly set to empty) or null (not set).
      */
     virtual QString stringValue() const = 0;
 

@@ -566,10 +566,10 @@ static QString splitURL( int mRealArgType, const KUrl& url )
   if ( mRealArgType == 33 ) { // LDAP server
     // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
     Q_ASSERT( url.protocol() == "ldap" );
-    return urlpart_encode( url.host() ) + ":" +
-      QString::number( url.port() ) + ":" +
-      urlpart_encode( url.user() ) + ":" +
-      urlpart_encode( url.pass() ) + ":" +
+    return urlpart_encode( url.host() ) + ':' +
+      QString::number( url.port() ) + ':' +
+      urlpart_encode( url.user() ) + ':' +
+      urlpart_encode( url.pass() ) + ':' +
       // KUrl automatically encoded the query (e.g. for spaces inside it),
       // so decode it before writing it out to gpgconf (issue119)
       urlpart_encode( KUrl::fromPercentEncoding( url.query().mid(1).toLatin1() ) );
