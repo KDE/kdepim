@@ -25,20 +25,23 @@
 
 DummyKonadiAdapter::DummyKonadiAdapter(FolderModel *model) : m_model(model)
 {
-//    Conversation* one = new Conversation(manyMe, &QString("My first post"));
-    Message* msg;
-    msg = new Message();
-    msg->setAuthor("Hrafnahnef");
-    msg->setContent("This is my first post.");
-    msg->setArrivalTime(QDateTime(QDate(2006, 6, 23), QTime(13, 18, 26)));
-    msg->markAs(true);
-//     one->addMessage(*msg);
-    msg = new Message();
-    msg->setAuthor("Aron Bostrom");
-    msg->setContent("Great! Welcome along.");
-    msg->setArrivalTime(QDateTime(QDate(2006, 6, 23), QTime(17, 20)));
-    msg->markAs(true);
-//     one->addMessage(*msg);
+  Message* msg;
+  msg = new Message();
+  msg->setSubject("My first post!");
+  msg->setAuthor("Hrafnahnef");
+  msg->setContent("This is my first post.");
+  msg->setArrivalTime(QDateTime(QDate(2006, 6, 23), QTime(13, 18, 26)));
+  msg->markAs(true);
+  model->insertMessage(msg);
+
+  msg = new Message();
+  msg->setSubject("My first post!");
+  msg->setAuthor("Aron Bostrom");
+  msg->setContent("Great! Welcome along.");
+  msg->setArrivalTime(QDateTime(QDate(2006, 6, 23), QTime(17, 20)));
+  msg->markAs(true);
+  model->insertMessage(msg);
+
 //   Conversation *two = new Conversation(manyMe, &QString("Fwd: Eran d0llars in this oi| inve$tment"));
     msg = new Message();
     msg->setAuthor("Nigeria Shell Inv. inc.");

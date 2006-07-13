@@ -35,9 +35,9 @@ public:
   QString arrivalTimeInText() const;
   void setAuthor(QString newAuthor);
   void setContent(QString newContent);
-  void setArrivalTime(QDateTime dateTime) { arrival = dateTime; }
-  void setSendTime(QDateTime dateTime) { send = dateTime; }
-  void setSubject(QString &subject) { m_subject = subject; }
+  void setArrivalTime(const QDateTime &dateTime) { arrival = dateTime; }
+  void setSendTime(const QDateTime &dateTime) { send = dateTime; }
+  void setSubject(const QString &subject) { m_subject = subject; }
   bool isNull() const;
   bool isRead() const;
   void markAs(bool read);
