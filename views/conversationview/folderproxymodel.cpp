@@ -50,7 +50,8 @@ Conversation* FolderProxyModel::conversation(const QModelIndex &index) const
 void FolderProxyModel::toggleFilterUnread()
 {
   filterUnread = !filterUnread;
-  clear();
+//  clear();
+  filterChanged();
 }
 
 bool FolderProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &/*sourceParent*/) const
