@@ -32,12 +32,16 @@ public:
   QString subject() const { return m_subject; }
   QDateTime sendTime() const { return send; }
   QDateTime arrivalTime() const { return arrival; }
+  unsigned long id() const { return m_id; }
+  unsigned long parentId() const { return m_pid; }
   QString arrivalTimeInText() const;
   void setAuthor(QString newAuthor);
   void setContent(QString newContent);
   void setArrivalTime(const QDateTime &dateTime) { arrival = dateTime; }
   void setSendTime(const QDateTime &dateTime) { send = dateTime; }
   void setSubject(const QString &subject) { m_subject = subject; }
+  void setId(unsigned long id) { m_id = id; }
+  void setParentId(unsigned long parentId) { m_pid = parentId; }
   bool isNull() const;
   bool isRead() const;
   void markAs(bool read);
@@ -52,6 +56,7 @@ private:
   QString conversationAuthor, conversationContent, m_subject;
   QDateTime arrival, send;
   bool nullContent, readStatus;
+  unsigned long m_id, m_pid;
 };
 
 #endif
