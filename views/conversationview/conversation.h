@@ -56,6 +56,7 @@ public:
   bool operator==(Conversation &compare) const;
   bool operator>=(Conversation &compare) const;
   bool operator>(Conversation &compare) const;
+  QString snippet() const { return ""; } // not implemented yet
 
 //public signals:
 //  void messageAdded();

@@ -25,12 +25,12 @@
 
 int FolderModel::rowCount(const QModelIndex &/*parent*/) const
 {
-  return backend->conversationCount();
+  return m_conversations.count();
 }
 
 int FolderModel::columnCount(const QModelIndex &/*parent*/) const
 {
-	return 2;
+  return 2;
 }
 
 QVariant FolderModel::data(const QModelIndex &index, int role) const
@@ -38,21 +38,18 @@ QVariant FolderModel::data(const QModelIndex &index, int role) const
   if (!index.isValid())
     return QVariant();
 
-  if (index.row() < 0 || index.row() >= backend->conversationCount())
-    return QVariant();
-
-  if (index.row() < 0 || index.row() >= backend->conversationCount())
+  if (index.row() < 0 || index.row() >= rowCount())
     return QVariant();
 
   if (role == Qt::DisplayRole) {
     switch (index.column()) {
-      case 0: return backend->authorsInConversation(index.row()); break;
-      case 2: return backend->subjectOfConversation(index.row()); break;
-      case 4: return backend->previewOfConversation(index.row()); break;
-      case 3: return backend->nbrOfMessagesInConversation(index.row()); break;
-      case 1: return backend->dateTimeOfConversation(index.row()); break;
-      case 5: return backend->unreadStatusOfConversation(index.row()); break;
-      case 6: return backend->dateTimeOfConversationInText(index.row()); break;
+      case 0: return m_conversations.at(index.row())->authors(); break;
+      case 1: return m_conversations.at(index.row())->arrivalTime(); break;
+      case 2: return m_conversations.at(index.row())->conversationTitle(); break;
+      case 3: return m_conversations.at(index.row())->count(); break;
+      case 4: return m_conversations.at(index.row())->snippet(); break;
+      case 5: return m_conversations.at(index.row())->isUnread(); break;
+      case 6: return m_conversations.at(index.row())->arrivalTimeInText(); break;
       default: return QVariant();
     }
   } else
@@ -76,7 +73,7 @@ QVariant FolderModel::headerData(int section, Qt::Orientation /*orientation*/, i
 
 Conversation* FolderModel::conversation(int conversationId) const
 {
-  return backend->conversation(conversationId);
+  return m_conversations.at(conversationId);
 }
 
 #include "foldermodel.moc"

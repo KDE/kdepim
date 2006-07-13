@@ -84,16 +84,18 @@ int main(int argc, char **argv)
 
   QSplitter *splitter = new QSplitter;
 
-  QStringList me;
-  me << "Aron Bostrom" << "Hrafnahnef" << "Syllten";
-  DummyKonadiAdapter *data = new DummyKonadiAdapter(me);
-
-  FolderModel *model = new FolderModel(data);
+  FolderModel *model = new FolderModel;
   FolderProxyModel *proxyModel = new FolderProxyModel(model);
   MailView *mail = new MailView(proxyModel);
   ConversationView *cView = new ConversationView(proxyModel);
   ConversationWidget *cWidget = new ConversationWidget(cView);
   proxyModel->sort(1, Qt::DescendingOrder);
+
+
+  QStringList me;
+  me << "Aron Bostrom" << "Hrafnahnef" << "Syllten";
+  DummyKonadiAdapter *data = new DummyKonadiAdapter(model, me);
+
 
 //  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
 //  cView->setSelectionModel(selection);

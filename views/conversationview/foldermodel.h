@@ -33,7 +33,7 @@ class FolderModel : public QAbstractListModel
 {
   Q_OBJECT
 public:
-  FolderModel(DummyKonadiAdapter *dummydata, QObject *parent = 0) : QAbstractListModel(parent) { backend = dummydata; }
+  FolderModel(QObject *parent = 0) : QAbstractListModel(parent) {}
 
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -42,7 +42,7 @@ public:
   Conversation* conversation(int conversationId) const;
 
 private:
-  DummyKonadiAdapter* backend;
+  QList<Conversation*> m_conversations;
 };
 
 #endif
