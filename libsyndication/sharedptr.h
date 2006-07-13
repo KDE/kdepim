@@ -69,7 +69,7 @@ bool operator!=( const SharedPtr<T> &lhs, const SharedPtr<T> &rhs )
  * \endcode
  * The last line of code will clear both v and w, since they share the same
  * QString internally. To acquire a copy of the contained object which is
- * independant of all other copies, use the copy() function, as in:
+ * independent of all other copies, use the copy() function, as in:
  * \code
  * SharedPtr<QString> w = new QString( "Hello" );
  * SharedPtr<QString> v = w.copy(); // Make v a detached copy of w
