@@ -98,3 +98,13 @@ void Message::markAs(bool read)
 {
 	readStatus = read;
 }
+
+bool Message::isRelated(const Message *message) const
+{
+  if (m_id == message->m_id) return true; //duplicate
+  if (m_pid == message->m_pid) return true; //same parent
+  if (m_id == message->m_pid) return true; // this is a child of message
+  if (m_pid == message->m_id) return true; // this is a parent of message
+  if (m_fancySubject == message->m_fancySubject) return true; //fuzzy hit, same subject in this and message
+  return false;
+}

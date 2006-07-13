@@ -48,9 +48,28 @@ public:
   QDateTime arrivalTime(int messageId) const;
   QString arrivalTimeInText(int messageId) const;
   QDateTime sendTime(int messageId) const;
+
+  /**
+  * Tells wether this conversation has any unread messages.
+  */
   bool isUnread() const;
+
+  /**
+  * Returns number of unread messages in this conversation.
+  */
   bool numberUnread() const;
+
+  /**
+  * Mark this conversation, and all messages in it, as read or unread
+  * @param read, true for read, false for unread
+  */
   void markAs(bool read);
+
+  /**
+  * @return true if this Message is a part of this Conversation
+  */
+  bool isRelated(const Message *message) const;
+
   bool operator!=(Conversation &compare) const;
   bool operator<(Conversation &compare) const;
   bool operator<=(Conversation &compare) const;

@@ -161,9 +161,6 @@ QString Conversation::authors() const
   return text;
 }
 
-/**
- * Tells wether this conversation has any unread messages.
- */
 bool Conversation::isUnread() const
 {
 	Message *tmp;
@@ -174,9 +171,6 @@ bool Conversation::isUnread() const
 	return false;
 }
 
-/**
- * Returns number of unread messages in this conversation.
- */
 bool Conversation::numberUnread() const
 {
 	int count = 0;
@@ -188,10 +182,6 @@ bool Conversation::numberUnread() const
 	return false;
 }
 
-/**
- * Mark this conversation, and all messages in it, as read or unread
- * @param read, true for read, false for unread
- */
 void Conversation::markAs(bool read)
 {
 	Message *tmp;
@@ -199,5 +189,16 @@ void Conversation::markAs(bool read)
 		tmp->markAs(read);
 	}
 }
+
+bool Conversation::isRelated(const Message *message) const
+{
+  Message *tmp;
+  foreach (tmp, messages) {
+    if (tmp->isRelated(message))
+      return true;
+  }
+  return false;
+}
+
 
 #include "conversation.moc"

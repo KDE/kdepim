@@ -30,6 +30,7 @@ public:
   QString author() const;
   QString content() const;
   QString subject() const { return m_subject; }
+  QString fancySubject() const { return m_fancySubject; }
   QDateTime sendTime() const { return send; }
   QDateTime arrivalTime() const { return arrival; }
   unsigned long id() const { return m_id; }
@@ -39,12 +40,16 @@ public:
   void setContent(QString newContent);
   void setArrivalTime(const QDateTime &dateTime) { arrival = dateTime; }
   void setSendTime(const QDateTime &dateTime) { send = dateTime; }
-  void setSubject(const QString &subject) { m_subject = subject; }
+  void setSubject(const QString &subject) { m_subject = subject; m_fancySubject = fancify(subject); }
   void setId(unsigned long id) { m_id = id; }
   void setParentId(unsigned long parentId) { m_pid = parentId; }
   bool isNull() const;
   bool isRead() const;
   void markAs(bool read);
+  /**
+  * @return true if this message is related (parent, child or sibling) to message.
+  */
+  bool isRelated(const Message *message) const;
   bool operator!=(Message &compare) const;
   bool operator<(Message &compare) const;
   bool operator<=(Message &compare) const;
@@ -53,7 +58,9 @@ public:
   bool operator>(Message &compare) const;
 
 private:
-  QString conversationAuthor, conversationContent, m_subject;
+  QString fancify(const QString &subject) const { return subject; }
+
+  QString conversationAuthor, conversationContent, m_subject, m_fancySubject;
   QDateTime arrival, send;
   bool nullContent, readStatus;
   unsigned long m_id, m_pid;

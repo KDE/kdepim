@@ -91,6 +91,11 @@ void FolderModel::insertMessage(Message *m)
 
 Conversation* FolderModel::findConversation(const Message *m) const
 {
+  Conversation *tmp;
+  foreach (tmp, m_conversations) {
+    if (tmp->isRelated(m))
+      return tmp;
+  }
   return 0;
 }
 
