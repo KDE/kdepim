@@ -33,14 +33,15 @@ class Conversation : QObject
 {
   Q_OBJECT
 public:
-  Conversation(QStringList &manyMe, QString *conversationTitle = 0, QObject *parent = 0) : QObject(parent), title(*conversationTitle), listOfMe(manyMe) {}
+  Conversation(QStringList *manyMe, Message *message, QObject *parent = 0);
+  ~Conversation();
   int count() const;
   QString conversationTitle() const;
   QDateTime arrivalTime() const;
   QString arrivalTimeInText() const;
   QDateTime sendTime() const;
-  Message message(int messageId) const;
-  void addMessage(Message &message);
+  Message* message(int messageId) const;
+  void addMessage(Message *message);
   QString author(int messageId) const;
   QString authors() const;
   QString content(int messageId) const;
@@ -63,8 +64,8 @@ public:
 
 private:
   QString title;
-  QList<Message> messages;
-  QStringList listOfMe;
+  QList<Message*> messages;
+  QStringList *listOfMe;
 };
 
 #endif

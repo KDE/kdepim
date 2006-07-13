@@ -76,4 +76,9 @@ Conversation* FolderModel::conversation(int conversationId) const
   return m_conversations.at(conversationId);
 }
 
+void FolderModel::insertMessage(Message *m)
+{
+  m_conversations << new Conversation(m_me, m);
+}
+
 #include "foldermodel.moc"

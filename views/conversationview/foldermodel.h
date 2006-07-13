@@ -27,6 +27,7 @@
 #include <QStringList>
 
 #include "conversation.h"
+#include "message.h"
 
 class FolderModel : public QAbstractItemModel
 {
@@ -37,7 +38,14 @@ public:
    * @param listOfMe is a set of aliases for the user. This model takes ownership of this parameter.
    */
   FolderModel(QStringList *listOfMe, QObject *parent = 0) : QAbstractItemModel(parent), m_me(listOfMe) {}
-  ~FolderModel() { delete m_me; }
+  ~FolderModel() 
+  { 
+    Conversation *tmp;
+    foreach (tmp, m_conversations) {
+      delete tmp;
+    }
+    delete m_me; 
+  }
 
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -46,6 +54,11 @@ public:
   Conversation* conversation(int conversationId) const;
   QModelIndex index(int row, int column, const QModelIndex &/*parent*/) const { return createIndex(row, column, row); }
   QModelIndex parent(const QModelIndex &/*parent*/) const { return QModelIndex(); }
+
+  /**
+   * Inserts a Message into this model and take ownership of it. FolderModel will take care of its deletion.
+   */
+  void insertMessage(Message *m);
 
 private:
   QList<Conversation*> m_conversations;

@@ -20,6 +20,20 @@
 
 #include "conversation.h"
 
+Conversation::Conversation(QStringList *manyMe, Message *message, QObject *parent) : QObject(parent), listOfMe(manyMe) 
+{
+  title = message->subject();
+  messages << message;
+}
+
+Conversation::~Conversation()
+{
+  Message *tmp;
+  foreach (tmp, messages) {
+    delete tmp;
+  }
+}
+
 int Conversation::count() const
 {
   return messages.count();
@@ -30,61 +44,51 @@ QString Conversation::conversationTitle() const
   return title;
 }
 
-Message Conversation::message(int messageId) const
+Message* Conversation::message(int messageId) const
 {
   if (messageId < 0 || messageId >= messages.count())
-    return Message(true);
+    return new Message(true);
   return messages.at(messageId);
 }
 
-void Conversation::addMessage(Message &message)
+void Conversation::addMessage(Message *message)
 {
   messages << message;
-//  emit messageAdded();
 }
 
 QString Conversation::author(int messageId) const
 {
-  Message tmp = message(messageId);
-  if (! tmp.isNull())
-    return tmp.author();
-  return 0;
+  return message(messageId)->author();
 }
 
 QString Conversation::content(int messageId) const
 {
-  Message tmp = message(messageId);
-  if (! tmp.isNull())
-    return tmp.content();
-  return 0;
+  return message(messageId)->content();
 }
 
 QDateTime Conversation::arrivalTime(int messageId) const
 {
-  Message tmp = message(messageId);
-  return tmp.arrivalTime();
+  return message(messageId)->arrivalTime();
 }
 
 QString Conversation::arrivalTimeInText(int messageId) const
 {
-  Message tmp = message(messageId);
-  return tmp.arrivalTimeInText();
+  return message(messageId)->arrivalTimeInText();
 }
 
 QDateTime Conversation::sendTime(int messageId) const
 {
-  Message tmp = message(messageId);
-  return tmp.sendTime();
+  return message(messageId)->sendTime();
 }
 
 QDateTime Conversation::arrivalTime() const
 {
-  return messages.last().arrivalTime();
+  return messages.last()->arrivalTime();
 }
 
 QString Conversation::arrivalTimeInText() const
 {
-  return messages.last().arrivalTimeInText();
+  return messages.last()->arrivalTimeInText();
 }
 
 QDateTime Conversation::sendTime() const
@@ -93,7 +97,7 @@ QDateTime Conversation::sendTime() const
   QDateTime tmp;
   QDateTime *oldest = new QDateTime(QDate(0, 0, 0), QTime(0, 0));
   for (int count = 0; count < max; ++count) {
-    tmp = messages.at(count).sendTime();
+    tmp = messages.at(count)->sendTime();
     if (tmp > *oldest)
       oldest = &tmp;
   }
@@ -140,13 +144,13 @@ QString Conversation::authors() const
 {
   QString text = author(0);
   QString me;
-  foreach (me, listOfMe) {
+  foreach (me, *listOfMe) {
     text.replace(QRegExp(me), i18n("me"));
   }
   int max = count();
   for (int i = 1; i < max; ++i) {
     QString tmpAuthor = author(i);
-    foreach (me, listOfMe) {
+    foreach (me, *listOfMe) {
       tmpAuthor.replace(QRegExp(me), i18n("me"));
     }
     if (!text.contains(tmpAuthor)) {
@@ -162,9 +166,9 @@ QString Conversation::authors() const
  */
 bool Conversation::isUnread() const
 {
-	Message tmp;
+	Message *tmp;
 	foreach (tmp, messages) {
-		if (!tmp.isRead())
+		if (!tmp->isRead())
 			return true;
 	}
 	return false;
@@ -176,9 +180,9 @@ bool Conversation::isUnread() const
 bool Conversation::numberUnread() const
 {
 	int count = 0;
-	Message tmp;
+	Message *tmp;
 	foreach (tmp, messages) {
-		if (tmp.isRead())
+		if (tmp->isRead())
 			++count;
 	}
 	return false;
@@ -190,9 +194,9 @@ bool Conversation::numberUnread() const
  */
 void Conversation::markAs(bool read)
 {
-	Message tmp;
+	Message *tmp;
 	foreach (tmp, messages) {
-		tmp.markAs(read);
+		tmp->markAs(read);
 	}
 }
 

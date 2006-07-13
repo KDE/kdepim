@@ -29,6 +29,7 @@ public:
   Message(bool null = false) : nullContent(null) { readStatus = false; }
   QString author() const;
   QString content() const;
+  QString subject() const { return m_subject; }
   QDateTime sendTime() const { return send; }
   QDateTime arrivalTime() const { return arrival; }
   QString arrivalTimeInText() const;
@@ -36,6 +37,7 @@ public:
   void setContent(QString newContent);
   void setArrivalTime(QDateTime dateTime) { arrival = dateTime; }
   void setSendTime(QDateTime dateTime) { send = dateTime; }
+  void setSubject(QString &subject) { m_subject = subject; }
   bool isNull() const;
   bool isRead() const;
   void markAs(bool read);
@@ -47,7 +49,7 @@ public:
   bool operator>(Message &compare) const;
 
 private:
-  QString conversationAuthor, conversationContent;
+  QString conversationAuthor, conversationContent, m_subject;
   QDateTime arrival, send;
   bool nullContent, readStatus;
 };
