@@ -35,10 +35,10 @@ DummyKonadiAdapter::DummyKonadiAdapter(FolderModel *model) : m_model(model)
   model->insertMessage(msg);
 
   msg = new Message();
-  msg->setSubject("My first post!");
+  msg->setSubject("Re: My first post!");
   msg->setAuthor("Aron Bostrom");
   msg->setContent("Great! Welcome along.");
-  msg->setArrivalTime(QDateTime(QDate(2006, 6, 23), QTime(17, 20)));
+  msg->setArrivalTime(QDateTime(QDate::currentDate(), QTime::currentTime()).addDays(-2).addSecs(-(7*3600+807)));
   msg->markAs(true);
   model->insertMessage(msg);
 

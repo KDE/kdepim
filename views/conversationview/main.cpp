@@ -95,15 +95,12 @@ int main(int argc, char **argv)
   ConversationWidget *cWidget = new ConversationWidget(cView);
   DummyKonadiAdapter *data = new DummyKonadiAdapter(model);
 
-
-
 //  QItemSelectionModel *selection = new QItemSelectionModel(proxyModel);
 //  cView->setSelectionModel(selection);
 
   QObject::connect(cView, SIGNAL(clicked(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(cView, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), cView, SLOT(updateWidth(int, int)));
-//  QObject::connect(model, SIGNAL(rowsInserted(const QModelIndex&, int, int)), proxyModel, SLOT(clear()));
 
   splitter->addWidget(cWidget);
   splitter->addWidget(mail);

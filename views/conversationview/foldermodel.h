@@ -38,10 +38,7 @@ public:
    * Constructs an empty FolderModel.
    * @param listOfMe is a set of aliases for the user. This model takes ownership of this parameter.
    */
-  FolderModel(QStringList *listOfMe, QObject *parent = 0) : QAbstractItemModel(parent), m_me(listOfMe) 
-  {
-    QObject::connect(this, SIGNAL(rowsInserted(const QModelIndex&, int, int)), this, SLOT(slotDebug(const QModelIndex, int, int)));
-  }
+  FolderModel(QStringList *listOfMe, QObject *parent = 0) : QAbstractItemModel(parent), m_me(listOfMe) {}
   ~FolderModel() 
   { 
     Conversation *tmp;
@@ -64,9 +61,7 @@ public:
    */
   void insertMessage(Message *m);
   bool insertRows(int /*row*/, int /*count*/, const QModelIndex& parent = QModelIndex());
-
-public slots:
-  void slotDebug(const QModelIndex &/*parent*/, int start, int end) const { qDebug() << start << end; }
+  Conversation* findConversation(const Message *m) const;
 
 private:
   QList<Conversation*> m_conversations;

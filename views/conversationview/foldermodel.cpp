@@ -79,9 +79,19 @@ Conversation* FolderModel::conversation(int conversationId) const
 void FolderModel::insertMessage(Message *m)
 {
   emit layoutAboutToBeChanged();
-  m_conversations.push_front(new Conversation(m_me, m));
-  insertRows(0, 1);
+  Conversation *c = findConversation(m);
+  if (c == 0) {
+    m_conversations.push_front(new Conversation(m_me, m));
+    insertRows(0, 1);
+  } else {
+    c->addMessage(m);
+  }
   emit layoutChanged();
+}
+
+Conversation* FolderModel::findConversation(const Message *m) const
+{
+  return 0;
 }
 
 bool FolderModel::insertRows(int row, int count, const QModelIndex& parent)
