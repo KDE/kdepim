@@ -26,7 +26,7 @@
 #include <QDateTime>
 
 extern "C" {
-  #include <ical.h>
+  #include <kcal/ical/ical.h>
 }
 
 
@@ -154,7 +154,7 @@ bool WebdavHandler::extractStringList( const QDomElement &node, const QString &e
 
 const QString WebdavHandler::getEtagFromHeaders( const QString& headers )
 {
-  int start = headers.indexOf( "etag:", 0, Qt::CaseInsensitive );  
+  int start = headers.indexOf( "etag:", 0, Qt::CaseInsensitive );
   if ( start < 0 ) return QString();
   start += 6;
   return headers.mid( start, headers.indexOf( "\n", start ) - start );
@@ -168,7 +168,7 @@ QDateTime WebdavHandler::utcAsZone( const QDateTime& utc, const QString& timeZon
   QDateTime epoch;
   epoch.setTime_t( 0 );
   time_t v = epoch.secsTo( utc );
-  struct icaltimetype tt = 
+  struct icaltimetype tt =
       icaltime_from_timet_with_zone( v, 0 /*is_date*/,
          icaltimezone_get_builtin_timezone( "UTC" ) );
   int offset = icaltimezone_get_utc_offset(
