@@ -68,7 +68,6 @@ set(libkdgantt_SRCS
 
 add_subdirectory(kode)
 add_subdirectory(akonadi)
-add_subdirectory(libkcal)
 add_subdirectory(libkdepim)
 add_subdirectory(libkholidays)
 add_subdirectory(libkholidays_ng)

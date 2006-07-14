@@ -1,4 +1,0 @@
-The directory libkcal/libical contains version 0.24 of libical with KDE local
-modifications to fix some bugs and let it compile in the kdepim module.
-You may obtain the original distribution from
-  http://sourceforge.net/projects/freeassociation/
