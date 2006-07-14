@@ -22,7 +22,7 @@ install(TARGETS kcal_kabc  DESTINATION ${PLUGIN_INSTALL_DIR})
 ########### install files ###############
 
 install( FILES kabc.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
-install( FILES resourcekabc.h resourcekabcconfig.h  DESTINATION ${INCLUDE_INSTALL_DIR}/libkcal)
+install( FILES resourcekabc.h resourcekabcconfig.h  DESTINATION ${INCLUDE_INSTALL_DIR}/kcal)
 
 
 

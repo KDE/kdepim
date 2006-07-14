@@ -34,7 +34,7 @@
 #include "kolabbase.h"
 
 #include <kabc/addressee.h>
-#include <libkcal/journal.h>
+#include <kcal/journal.h>
 #include <libkdepim/kpimprefs.h>
 #include <kdebug.h>
 #include <QFile>

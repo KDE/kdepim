@@ -32,11 +32,11 @@
 
 #include <libkdepim/progressmanager.h>
 
-#include <libkcal/incidence.h>
-#include <libkcal/calendarlocal.h>
-#include <libkcal/icalformat.h>
+#include <kcal/incidence.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/icalformat.h>
 
-#include <libkcal/resourcecached.h>
+#include <kcal/resourcecached.h>
 
 namespace KIO {
 class FileCopyJob;

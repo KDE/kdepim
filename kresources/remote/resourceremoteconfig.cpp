@@ -32,7 +32,7 @@
 #include <kstandarddirs.h>
 #include <kdialog.h>
 
-#include <libkcal/resourcecachedconfig.h>
+#include <kcal/resourcecachedconfig.h>
 
 #include "resourceremote.h"
 

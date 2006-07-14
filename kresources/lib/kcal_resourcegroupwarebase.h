@@ -24,7 +24,7 @@
 #define KCAL_RESOURCEGROUPWAREBASE_H
 
 #include <kurl.h>
-#include <libkcal/resourcecached.h>
+#include <kcal/resourcecached.h>
 #include <kdepimmacros.h>
 #include <kabc/locknull.h>
 

@@ -34,11 +34,11 @@
 #include <interfaces/bodyparturlhandler.h>
 #include <khtmlparthtmlwriter.h>
 
-#include <libkcal/calendarlocal.h>
-#include <libkcal/icalformat.h>
-#include <libkcal/attendee.h>
-#include <libkcal/incidence.h>
-#include <libkcal/incidenceformatter.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/icalformat.h>
+#include <kcal/attendee.h>
+#include <kcal/incidence.h>
+#include <kcal/incidenceformatter.h>
 
 #include <kpimprefs.h> // for the timezone
 

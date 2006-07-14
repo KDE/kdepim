@@ -28,7 +28,7 @@
  */
 #include "stdcalendar.h"
 
-#include <libkcal/resourcecalendar.h>
+#include <kcal/resourcecalendar.h>
 #include <libkdepim/kpimprefs.h>
 
 #include <kconfig.h>

@@ -33,7 +33,7 @@
 
 #include "event.h"
 
-#include <libkcal/event.h>
+#include <kcal/event.h>
 #include <kdebug.h>
 
 using namespace Kolab;

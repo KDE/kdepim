@@ -30,7 +30,7 @@
 #include <kcodecs.h>
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
-#include <libkcal/freebusyurlstore.h>
+#include <kcal/freebusyurlstore.h>
 #include <libkdepim/kpimprefs.h>
 
 #include "kabc_egroupwareprefs.h"

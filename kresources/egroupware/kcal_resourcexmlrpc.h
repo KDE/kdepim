@@ -33,9 +33,9 @@
 
 #include <kdepimmacros.h>
 
-#include "libkcal/calendarlocal.h"
-#include "libkcal/incidence.h"
-#include "libkcal/resourcecached.h"
+#include <kcal/calendarlocal.h>
+#include <kcal/incidence.h>
+#include <kcal/resourcecached.h>
 #include "todostatemapper.h"
 
 namespace KXMLRPC {

@@ -25,7 +25,7 @@
 
 #include <libkdepim/progressmanager.h>
 
-#include <libkcal/resourcecached.h>
+#include <kcal/resourcecached.h>
 
 #include <kabc/locknull.h>
 #include <kio/job.h>

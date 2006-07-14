@@ -1,8 +1,8 @@
 
 include_directories(
-	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libical
-	${CMAKE_BINARY_DIR}/libkcal/libical/src/libical
-	${CMAKE_SOURCE_DIR}/libkcal/libical/src/libicalss
+	${CMAKE_SOURCE_DIR}/kcal/libical/src/libical
+	${CMAKE_BINARY_DIR}/kcal/libical/src/libical
+	${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss
 	
 )
 

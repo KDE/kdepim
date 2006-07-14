@@ -33,7 +33,7 @@
 
 #include "journal.h"
 
-#include <libkcal/journal.h>
+#include <kcal/journal.h>
 #include <korganizer/version.h>
 #include <kdebug.h>
 

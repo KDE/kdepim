@@ -28,7 +28,7 @@
 #include "kresources/groupwise/kcal_groupwiseprefsbase.h"
 #include "kresources/groupwise/kcal_resourcegroupwise.h"
 
-#include <libkcal/resourcecalendar.h>
+#include <kcal/resourcecalendar.h>
 #include <emailfunctions/email.h>
 
 #include <klineedit.h>

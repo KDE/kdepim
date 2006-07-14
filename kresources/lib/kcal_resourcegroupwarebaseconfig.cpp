@@ -27,7 +27,7 @@
 #include "kresources_groupwareprefs.h"
 #include "folderconfig.h"
 
-#include <libkcal/resourcecachedconfig.h>
+#include <kcal/resourcecachedconfig.h>
 
 #include <klocale.h>
 #include <kdebug.h>

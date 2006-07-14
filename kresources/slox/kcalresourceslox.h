@@ -33,11 +33,11 @@
 #include <kdirwatch.h>
 #include <kdepimmacros.h>
 
-#include <libkcal/incidence.h>
-#include <libkcal/todo.h>
-#include <libkcal/calendarlocal.h>
-#include <libkcal/icalformat.h>
-#include <libkcal/resourcecached.h>
+#include <kcal/incidence.h>
+#include <kcal/todo.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/icalformat.h>
+#include <kcal/resourcecached.h>
 
 namespace KIO {
 class FileCopyJob;

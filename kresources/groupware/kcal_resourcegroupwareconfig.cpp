@@ -29,7 +29,7 @@
 #include <kstandarddirs.h>
 #include <klineedit.h>
 
-#include <libkcal/resourcecachedconfig.h>
+#include <kcal/resourcecachedconfig.h>
 
 #include "kcal_resourcegroupware.h"
 #include "kcal_groupwareprefsbase.h"

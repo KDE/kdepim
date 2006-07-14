@@ -26,7 +26,7 @@
 #include "groupwaredataadaptor.h"
 
 
-#include <libkcal/incidence.h>
+#include <kcal/incidence.h>
 #include <kdepimmacros.h>
 #include <kurl.h>
 

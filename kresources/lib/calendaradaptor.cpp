@@ -23,10 +23,10 @@
 
 #include "calendaradaptor.h"
 
-#include <libkcal/incidence.h>
-#include <libkcal/calendar.h>
-#include <libkcal/resourcecached.h>
-#include <libkcal/icalformat.h>
+#include <kcal/incidence.h>
+#include <kcal/calendar.h>
+#include <kcal/resourcecached.h>
+#include <kcal/icalformat.h>
 
 #include <kio/job.h>
 

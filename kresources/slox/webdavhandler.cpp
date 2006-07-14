@@ -35,7 +35,7 @@
 #include <climits>
 #include <stdlib.h>
 
-#include <libkcal/incidence.h>
+#include <kcal/incidence.h>
 
 #include <libkdepim/kpimprefs.h>
 

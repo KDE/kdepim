@@ -1,7 +1,7 @@
 
 add_subdirectory( pixmaps ) 
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkcal  )
+include_directories( ${CMAKE_SOURCE_DIR}/kcal  )
 
 
 ########### next target ###############

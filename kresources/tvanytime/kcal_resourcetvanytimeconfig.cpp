@@ -34,7 +34,7 @@
 //#include <kstandarddirs.h>
 #include <klineedit.h>
 
-#include <libkcal/resourcecachedconfig.h>
+#include <kcal/resourcecachedconfig.h>
 
 #include "kcal_resourcetvanytime.h"
 #include "kcal_tvanytimeprefs.h"

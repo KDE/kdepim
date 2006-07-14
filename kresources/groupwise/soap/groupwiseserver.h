@@ -33,7 +33,7 @@
 #include <string>
 
 #include <kabc/addressee.h>
-#include <libkcal/freebusy.h>
+#include <kcal/freebusy.h>
 
 #include "gwjobs.h"
 

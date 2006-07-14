@@ -9,9 +9,9 @@
 
 #include <kabcresourcecached.h>
 
-#include <libkcal/icalformat.h>
-#include <libkcal/resourcelocal.h>
-#include <libkcal/calendarresources.h>
+#include <kcal/icalformat.h>
+#include <kcal/resourcelocal.h>
+#include <kcal/calendarresources.h>
 
 #include <iostream>
 

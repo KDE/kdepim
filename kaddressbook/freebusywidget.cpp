@@ -30,7 +30,7 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 
-#include <libkcal/freebusyurlstore.h>
+#include <kcal/freebusyurlstore.h>
 
 #include "freebusywidget.h"
 

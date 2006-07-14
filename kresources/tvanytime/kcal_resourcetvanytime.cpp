@@ -24,9 +24,9 @@
 #include "kcal_tvanytimeprefsbase.h"
 #include "kcal_resourcetvanytimeconfig.h"
 
-#include <libkcal/icalformat.h>
-#include <libkcal/calendarlocal.h>
-#include <libkcal/confirmsavedialog.h>
+#include <kcal/icalformat.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/confirmsavedialog.h>
 
 #include <libkdepim/kpimprefs.h>
 

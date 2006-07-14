@@ -23,8 +23,8 @@
 #include <kabc/addressee.h>
 #include <kabc/resource.h>
 
-#include <libkcal/incidence.h>
-#include <libkcal/resourcecached.h>
+#include <kcal/incidence.h>
+#include <kcal/resourcecached.h>
 
 #include <qtimer.h>
 

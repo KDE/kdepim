@@ -36,7 +36,7 @@
 
 #include "incidence.h"
 
-#include <libkcal/event.h>
+#include <kcal/event.h>
 
 class QDomElement;
 

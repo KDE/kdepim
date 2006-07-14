@@ -32,7 +32,7 @@
 #include <klineedit.h>
 #include <kpushbutton.h>
 
-#include <libkcal/resourcecachedconfig.h>
+#include <kcal/resourcecachedconfig.h>
 
 #include "kcalresourceslox.h"
 #include "kcalsloxprefs.h"

@@ -21,8 +21,8 @@ t it will be useful,
 #include <QDateTime>
 #include <QFile>
 
-#include <libkcal/calendarlocal.h>
-#include <libkcal/todo.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/todo.h>
 
 #include "kfile_ics.h"
 

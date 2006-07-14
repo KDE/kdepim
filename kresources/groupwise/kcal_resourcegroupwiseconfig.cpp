@@ -33,7 +33,7 @@
 #include <kstandarddirs.h>
 #include <klineedit.h>
 
-#include <libkcal/resourcecachedconfig.h>
+#include <kcal/resourcecachedconfig.h>
 
 #include "kcal_resourcegroupwise.h"
 #include "kcal_groupwiseprefs.h"

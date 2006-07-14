@@ -29,7 +29,7 @@
 #include "kresources/kolab/kabc/resourcekolab.h"
 #include "kresources/kolab/knotes/resourcekolab.h"
 
-#include <libkcal/resourcecalendar.h>
+#include <kcal/resourcecalendar.h>
 #include <kabc/resource.h>
 
 #include <klineedit.h>

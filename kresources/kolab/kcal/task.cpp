@@ -33,7 +33,7 @@
 
 #include "task.h"
 
-#include <libkcal/todo.h>
+#include <kcal/todo.h>
 #include <kdebug.h>
 
 using namespace Kolab;

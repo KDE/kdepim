@@ -37,7 +37,7 @@
 
 #include <knotes/resourcemanager.h>
 
-#include <libkcal/icalformat.h>
+#include <kcal/icalformat.h>
 
 #include <kdebug.h>
 #include <kglobal.h>

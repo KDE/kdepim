@@ -21,10 +21,10 @@
 #include <klocale.h>
 #include <kcodecs.h>
 #include <libkdepim/kpimprefs.h>
-#include <libkcal/event.h>
-#include <libkcal/journal.h>
-#include <libkcal/recurrence.h>
-#include <libkcal/kcalversion.h>
+#include <kcal/event.h>
+#include <kcal/journal.h>
+#include <kcal/recurrence.h>
+#include <kcal/kcalversion.h>
 #include <kabc/stdaddressbook.h>
 #include <kabc/addressee.h>
 #include <kdebug.h>

@@ -11,7 +11,7 @@
 
 #include <kurl.h>
 #include <kio/job.h>
-#include <libkcal/journal.h>
+#include <kcal/journal.h>
 
 #include <QObject>
 #include <QString>

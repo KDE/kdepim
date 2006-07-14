@@ -23,8 +23,8 @@
 // with namespace names:
 #include "GroupWiseBinding.nsmap"
 
-#include <libkcal/calendar.h>
-#include <libkcal/incidence.h>
+#include <kcal/calendar.h>
+#include <kcal/incidence.h>
 #include <libkdepim/kpimprefs.h>
 
 #include <kabc/addressee.h>

@@ -39,9 +39,9 @@
 #include <QHash>
 
 #include <kdepimmacros.h>
-#include <libkcal/calendarlocal.h>
-#include <libkcal/icalformat.h>
-#include <libkcal/resourcecalendar.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/icalformat.h>
+#include <kcal/resourcecalendar.h>
 #include "../shared/resourcekolabbase.h"
 
 namespace KCal {

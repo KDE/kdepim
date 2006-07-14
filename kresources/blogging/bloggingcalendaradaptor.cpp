@@ -24,9 +24,9 @@
 #include <kresources/idmapper.h>
 #include <folderlister.h>
 
-#include <libkcal/calendarlocal.h>
-#include <libkcal/icalformat.h>
-#include <libkcal/resourcecached.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/icalformat.h>
+#include <kcal/resourcecached.h>
 
 #include <kdebug.h>
 

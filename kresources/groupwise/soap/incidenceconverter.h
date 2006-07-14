@@ -21,8 +21,8 @@
 #ifndef KABC_GW_INCIDENCECONVERTER_H
 #define KABC_GW_INCIDENCECONVERTER_H
 
-#include <libkcal/event.h>
-#include <libkcal/todo.h>
+#include <kcal/event.h>
+#include <kcal/todo.h>
 
 #include <time.h>
 

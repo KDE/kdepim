@@ -23,7 +23,7 @@
 #include "sloxbase.h"
 #include "webdavhandler.h"
 
-#include <libkcal/freebusyurlstore.h>
+#include <kcal/freebusyurlstore.h>
 
 #include <kstaticdeleter.h>
 #include <kdebug.h>

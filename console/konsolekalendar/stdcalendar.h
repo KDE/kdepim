@@ -23,7 +23,7 @@
 #ifndef KONSOLEKALENDAR_STDCALENDAR_H
 #define KONSOLEKALENDAR_STDCALENDAR_H
 
-#include <libkcal/calendarresources.h>
+#include <kcal/calendarresources.h>
 
 /**
  * @file stdcalendar.h

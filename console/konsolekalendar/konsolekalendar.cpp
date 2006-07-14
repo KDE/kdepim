@@ -41,12 +41,12 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <libkcal/calendarlocal.h>
-#include <libkcal/resourcecalendar.h>
-#include <libkcal/calendarresources.h>
-#include <libkcal/calendar.h>
-#include <libkcal/event.h>
-#include <libkcal/htmlexport.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/resourcecalendar.h>
+#include <kcal/calendarresources.h>
+#include <kcal/calendar.h>
+#include <kcal/event.h>
+#include <kcal/htmlexport.h>
 #include <libkdepim/kpimprefs.h>
 
 #include "konsolekalendar.h"

@@ -38,9 +38,9 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <libkcal/calendarlocal.h>
-#include <libkcal/calendar.h>
-#include <libkcal/event.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/calendar.h>
+#include <kcal/event.h>
 
 #include "konsolekalendarexports.h"
 

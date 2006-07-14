@@ -32,9 +32,9 @@
 
 #include <kapplication.h>
 
-#include <libkcal/calendarlocal.h>
-#include <libkcal/resourcecalendar.h>
-#include <libkcal/event.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/resourcecalendar.h>
+#include <kcal/event.h>
 
 #include "konsolekalendarvariables.h"
 

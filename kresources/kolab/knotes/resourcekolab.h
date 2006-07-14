@@ -35,8 +35,8 @@
 #define KNOTES_RESOURCEKOLAB_H
 
 #include <resourcenotes.h>
-#include <libkcal/incidencebase.h>
-#include <libkcal/calendarlocal.h>
+#include <kcal/incidencebase.h>
+#include <kcal/calendarlocal.h>
 #include "../shared/resourcekolabbase.h"
 #include "../shared/subresource.h"
 #include <kdepimmacros.h>

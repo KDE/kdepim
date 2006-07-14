@@ -28,9 +28,9 @@
 #include <calendaradaptor.h>
 #include <addressbookadaptor.h>
 
-#include <libkcal/calendarlocal.h>
-#include <libkcal/icalformat.h>
-#include <libkcal/resourcecached.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/icalformat.h>
+#include <kcal/resourcecached.h>
 #include <kabc/vcardconverter.h>
 
 #include <kdebug.h>

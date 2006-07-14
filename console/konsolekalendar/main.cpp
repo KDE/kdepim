@@ -53,9 +53,9 @@
 #include <kstandarddirs.h>
 #include <kdebug.h>
 
-#include <libkcal/calformat.h>
-#include <libkcal/calendarresources.h>
-#include <libkcal/resourcelocal.h>
+#include <kcal/calformat.h>
+#include <kcal/calendarresources.h>
+#include <kcal/resourcelocal.h>
 
 #include <QDateTime>
 #include <QFile>

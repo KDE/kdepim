@@ -27,11 +27,10 @@
 
 #include <kconfig.h>
 
-#include "libkcal/incidence.h"
-#include "libkcal/calendarlocal.h"
+#include <kcal/incidence.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/resourcecalendar.h>
 #include <kabc/addressbook.h>
-
-#include "libkcal/resourcecalendar.h"
 
 #include "libkdepim/kdepimmacros.h"
 

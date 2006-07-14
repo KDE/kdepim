@@ -30,7 +30,7 @@
 #include <kstringhandler.h>
 #include <kurl.h>
 
-#include "libkcal/journal.h"
+#include <kcal/journal.h>
 
 #include "knotes/resourcemanager.h"
 

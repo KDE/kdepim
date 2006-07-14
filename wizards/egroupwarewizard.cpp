@@ -28,7 +28,7 @@
 #include "kresources/egroupware/knotes_egroupwareprefs.h"
 #include "kresources/egroupware/knotes_resourcexmlrpc.h"
 
-#include <libkcal/resourcecalendar.h>
+#include <kcal/resourcecalendar.h>
 
 #include <klineedit.h>
 #include <klocale.h>

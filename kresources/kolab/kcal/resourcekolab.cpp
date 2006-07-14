@@ -41,7 +41,7 @@
 #include <kio/uiserver_stub.h>
 #include <kapplication.h>
 #include <dcopclient.h>
-#include <libkcal/icalformat.h>
+#include <kcal/icalformat.h>
 #include <libkdepim/kincidencechooser.h>
 #include <kabc/locknull.h>
 #include <kmainwindow.h>

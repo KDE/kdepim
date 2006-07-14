@@ -35,16 +35,16 @@
 #include <kabc/stdaddressbook.h>
 #include <kabc/locknull.h>
 
-#include "libkcal/vcaldrag.h"
-#include "libkcal/vcalformat.h"
-#include "libkcal/icalformat.h"
-#include "libkcal/exceptions.h"
-#include "libkcal/incidence.h"
-#include "libkcal/event.h"
-#include "libkcal/todo.h"
-#include "libkcal/journal.h"
-#include "libkcal/filestorage.h"
-#include "libkcal/alarm.h"
+#include <kcal/vcaldrag.h>
+#include <kcal/vcalformat.h>
+#include <kcal/icalformat.h>
+#include <kcal/exceptions.h>
+#include <kcal/incidence.h>
+#include <kcal/event.h>
+#include <kcal/todo.h>
+#include <kcal/journal.h>
+#include <kcal/filestorage.h>
+#include <kcal/alarm.h>
 
 #include <kresources/configwidget.h>
 

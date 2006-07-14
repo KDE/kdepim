@@ -31,8 +31,8 @@
 #include <kurl.h>
 #include <kdepimmacros.h>
 
-#include "libkcal/calendarlocal.h"
-#include "libkcal/journal.h"
+#include <kcal/calendarlocal.h>
+#include <kcal/journal.h>
 #include "knotes/resourcenotes.h"
 
 namespace KXMLRPC {

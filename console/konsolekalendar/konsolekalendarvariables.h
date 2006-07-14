@@ -28,11 +28,11 @@
 #ifndef _KONSOLEKALENDARVARIABLES_H_
 #define _KONSOLEKALENDARVARIABLES_H_
 
-#include <libkcal/calendarlocal.h>
-#include <libkcal/calendarresources.h>
-#include <libkcal/resourcelocal.h>
-#include <libkcal/resourcecalendar.h>
-#include <libkcal/event.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/calendarresources.h>
+#include <kcal/resourcelocal.h>
+#include <kcal/resourcecalendar.h>
+#include <kcal/event.h>
 
 #include <QString>
 #include <QDateTime>

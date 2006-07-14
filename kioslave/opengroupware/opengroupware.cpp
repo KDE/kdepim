@@ -29,10 +29,10 @@
 
 #include <libkdepim/kabcresourcecached.h>
 
-#include <libkcal/freebusy.h>
-#include <libkcal/icalformat.h>
-#include <libkcal/scheduler.h>
-#include <libkcal/calendarlocal.h>
+#include <kcal/freebusy.h>
+#include <kcal/icalformat.h>
+#include <kcal/scheduler.h>
+#include <kcal/calendarlocal.h>
 
 #include <kabc/vcardconverter.h>
 

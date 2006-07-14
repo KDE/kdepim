@@ -33,7 +33,7 @@
 
 #include "note.h"
 
-#include <libkcal/journal.h>
+#include <kcal/journal.h>
 #include <knotes/version.h>
 #include <kdebug.h>
 

@@ -26,7 +26,7 @@
 #include "kresources/slox/kcalsloxprefs.h"
 #include "kresources/slox/kcalresourceslox.h"
 
-#include <libkcal/resourcecalendar.h>
+#include <kcal/resourcecalendar.h>
 
 #include <klineedit.h>
 #include <klocale.h>
