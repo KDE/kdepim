@@ -344,6 +344,7 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt
   item->status = 0;
   item->thread = 0;
   item->msgId = 0;
+  item->messageId = 0;
   item->source = 0;
   item->returnSentItemsId = 0;
   item->delivered = 0;
