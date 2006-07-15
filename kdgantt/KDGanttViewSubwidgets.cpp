@@ -50,6 +50,7 @@
 #include <QPalette>
 #include <QMouseEvent>
 
+#include <klocale.h>
 #include <kselectaction.h>
 #include <kactioncollection.h>
 
