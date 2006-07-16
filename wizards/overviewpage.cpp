@@ -108,8 +108,9 @@ void OverViewPage::showWizardEGroupware()
 
 void OverViewPage::showWizardKolab()
 {
-  KolabWizard wizard;
-  wizard.exec();
+#warning Kolab wizard disabled!
+//  KolabWizard wizard;
+//  wizard.exec();
 }
 
 void OverViewPage::showWizardSlox()

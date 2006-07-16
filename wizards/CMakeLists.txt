@@ -1,13 +1,14 @@
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkpimidentities ${CMAKE_SOURCE_DIR}/kcal ${CMAKE_SOURCE_DIR}/kresources/kolab/shared ${CMAKE_SOURCE_DIR}/knotes ${CMAKE_SOURCE_DIR}/libkleo ${CMAKE_SOURCE_DIR}/kresources/lib  )
 
+message( STATUS "Kolab and GroupWise wizards disabled." )
 
 ########### next target ###############
 
 set(groupwarewizard_SRCS groupwarewizard.cpp main.cpp overviewpage.cpp 
     egroupwarewizard.cpp
     sloxwizard.cpp
-    kolabwizard.cpp kmailchanges.cpp kolabkmailchanges.cpp 
+#    kolabwizard.cpp kmailchanges.cpp kolabkmailchanges.cpp 
 )
 
 kde4_automoc(${groupwarewizard_SRCS})
@@ -18,7 +19,7 @@ kde4_add_executable(groupwarewizard ${groupwarewizard_SRCS})
 target_link_libraries(groupwarewizard  ${KDE4_KDECORE_LIBS} 
 kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc
 kcal_slox kabc_slox
-kcalkolab kabckolab knoteskolab
+#kcalkolab kabckolab knoteskolab
 kabc kcal kdepim kpimidentities
 )
 
@@ -63,15 +64,15 @@ set(kolabwizard_SRCS
    kolabkmailchanges.cpp 
    kolabmain.cpp )
 
-kde4_automoc(${kolabwizard_SRCS})
+#kde4_automoc(${kolabwizard_SRCS})
 
-kde4_add_kcfg_files(kolabwizard_SRCS kolabconfig.kcfgc )
+#kde4_add_kcfg_files(kolabwizard_SRCS kolabconfig.kcfgc )
 
-kde4_add_executable(kolabwizard ${kolabwizard_SRCS})
+#kde4_add_executable(kolabwizard ${kolabwizard_SRCS})
 
-target_link_libraries(kolabwizard  ${KDE4_KDECORE_LIBS} kcalkolab kabckolab knoteskolab kcal kdepim kpimidentities )
+#target_link_libraries(kolabwizard  ${KDE4_KDECORE_LIBS} kcalkolab kabckolab knoteskolab kcal kdepim kpimidentities )
 
-install(TARGETS kolabwizard  DESTINATION ${BIN_INSTALL_DIR} )
+#install(TARGETS kolabwizard  DESTINATION ${BIN_INSTALL_DIR} )
 
 ########### install files ###############
 
