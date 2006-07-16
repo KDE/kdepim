@@ -108,4 +108,10 @@ bool FolderModel::insertRows(int row, int count, const QModelIndex& parent)
   return true;
 }
 
+void FolderModel::markConversationAsRead(const QModelIndex& index, bool read)
+{
+  m_conversations.at(index.row())->markAs(read);
+  emit dataChanged(index, index);
+}
+
 #include "foldermodel.moc"

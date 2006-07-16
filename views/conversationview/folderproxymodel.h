@@ -55,6 +55,7 @@ public:
   void setHeader(QHeaderView *header) { m_header = header; }
   bool resortable() const { return m_resortable; }
   void setResortable(bool enable) { m_resortable = enable; }
+  void markConversationAsRead(const QModelIndex& index, bool read = true);
 
 public slots:
   void toggleFilterUnread();

@@ -62,6 +62,7 @@ public:
   void insertMessage(Message *m);
   bool insertRows(int /*row*/, int /*count*/, const QModelIndex& parent = QModelIndex());
   Conversation* findConversation(const Message *m) const;
+  void markConversationAsRead(const QModelIndex& index, bool read = true);
 
 private:
   QList<Conversation*> m_conversations;

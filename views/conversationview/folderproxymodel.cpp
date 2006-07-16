@@ -73,4 +73,9 @@ void FolderProxyModel::resort()
     sort(m_header->sortIndicatorSection(), m_header->sortIndicatorOrder());
 }
 
+void FolderProxyModel:: markConversationAsRead(const QModelIndex& index, bool read)
+{
+  sourceModel->markConversationAsRead(mapToSource(index), read);
+}
+
 #include "folderproxymodel.moc"

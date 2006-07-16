@@ -24,6 +24,7 @@
 #include <QTextLength>
 #include <QtDebug>
 #include <QTextDocument>
+#include <QTimer>
 
 #include "mailview.h"
 
@@ -53,35 +54,43 @@ void MailView::updateHeight()
  **/
 void MailView::setConversation(const QModelIndex &index)
 {
+  m_current = index;
   setHtml("");
-  Conversation* conversation = model->conversation(index);
-  int max = conversation->count()-1;
+  Conversation* c = m_model->conversation(index);
+  int max = c->count()-1;
   QString tmp = "<H2><A NAME=top>";
-  tmp.append(conversation->conversationTitle());
+  tmp.append(c->conversationTitle());
   tmp.append("</A></H2><HR>");
   append(tmp);
   for (int count = 0; count < max; ++count) {
     tmp = "<A NAME=";
     tmp.append(count);
     tmp.append("><B>");
-    tmp.append(conversation->author(count));
+    tmp.append(c->author(count));
     tmp.append("</B></A>, ");
-    tmp.append(conversation->arrivalTimeInText(count));
+    tmp.append(c->arrivalTimeInText(count));
     tmp.append("<BR>");
-    tmp.append(conversation->content(count));
-//                tmp.append("<HR>");
+    tmp.append(c->content(count));
     append(tmp);
   }
   tmp = "<A NAME=";
   tmp.append(max);
   tmp.append("><B>");
-  tmp.append(conversation->author(max));
+  tmp.append(c->author(max));
   tmp.append("</B></A>, ");
-  tmp.append(conversation->arrivalTimeInText(max));
+  tmp.append(c->arrivalTimeInText(max));
   tmp.append("<BR>");
-  tmp.append(conversation->content(max));
+  tmp.append(c->content(max));
   append(tmp);
   scrollToAnchor("top");
+  QTimer::singleShot(3000, this, SLOT(markAsRead()));
+  t.restart();
+}
+
+void MailView::markAsRead()
+{
+  if (t.elapsed() >= 3000)
+    m_model->markConversationAsRead(m_current, true);
 }
 
 #include "mailview.moc"
