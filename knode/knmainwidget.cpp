@@ -138,9 +138,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   h_drView = new KNHeaderView( dummy );
 
   q_uicksearch = new KToolBar( dummy );
-  KAction *resetQuickSearch = new KAction( i18n( "Reset Quick Search" ),
-                                           QApplication::isRightToLeft()
-                                           ? "clear_left" : "locationbar_erase", KShortcut(), 0, 0, actionCollection(), "reset_quicksearch" );
+  KAction *resetQuickSearch = new KAction(KIcon(QApplication::isRightToLeft() ? "clear_left" : "locationbar_erase"),  i18n( "Reset Quick Search" ), actionCollection(), "reset_quicksearch" );
   q_uicksearch->addAction( resetQuickSearch );
   resetQuickSearch->setWhatsThis( i18n( "<b>Reset Quick Search</b><br>"
                                         "Resets the quick search so that "
@@ -714,8 +712,9 @@ void KNMainWidget::initActions()
   a_ctArtDelete->setShortcut(Qt::Key_Delete);
   a_ctArtSendNow = new KAction(KIcon("mail_send"), i18n("Send &Now"), actionCollection(), "article_sendNow");
   connect(a_ctArtSendNow, SIGNAL(triggered(bool)), SLOT(slotArtSendNow()));
-  a_ctArtEdit               = new KAction(i18nc("edit article","&Edit Article..."), "edit", Qt::Key_E , this,
-                              SLOT(slotArtEdit()), actionCollection(), "article_edit");
+  a_ctArtEdit = new KAction(KIcon("edit"), i18nc("edit article","&Edit Article..."), actionCollection(), "article_edit");
+  connect(a_ctArtEdit, SIGNAL(triggered(bool)), SLOT(slotArtEdit()));
+  a_ctArtEdit->setShortcut(Qt::Key_E);
 
   //network
   a_ctNetCancel = new KAction(KIcon("stop"), i18n("Stop &Network"), actionCollection(), "net_stop");
