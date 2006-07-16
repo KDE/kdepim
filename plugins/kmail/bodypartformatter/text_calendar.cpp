@@ -46,7 +46,7 @@
 #include <kmail/kmmessage.h>
 #include <kmail/kmcommands.h>
 
-#include <email.h>
+#include <emailfunctions/email.h>
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -54,7 +54,7 @@
 #include <kglobalsettings.h>
 #include <kiconloader.h>
 #include <kdebug.h>
-#include <kdcopservicestarter.h>
+#include <kdbusservicestarter.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kapplication.h>
@@ -65,9 +65,6 @@
 #include <QTextStream>
 
 #include <kdepimmacros.h>
-
-#include <dcopclient.h>
-#include <dcopref.h>
 
 using namespace KCal;
 
@@ -248,12 +245,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       // Now ensure that korganizer is running; otherwise start it, to prevent surprises
       // (https://intevation.de/roundup/kolab/issue758)
       QString error;
-      DCOPCString dcopService;
-      int result = KDCOPServiceStarter::self()->findServiceFor( "DCOP/Organizer", QString::null, &error, &dcopService );
+      QString dcopService;
+      int result = KDBusServiceStarter::self()->findServiceFor( "DCOP/Organizer", QString::null, &error, &dcopService );
       if ( result == 0 ) {
         // OK, so korganizer (or kontact) is running. Now ensure the object we want is available
         // [that's not the case when kontact was already running, but korganizer not loaded into it...]
-        static const char* const dcopObjectId = "KOrganizerIface";
+#warning Port me to DBus!
+/*        static const char* const dcopObjectId = "KOrganizerIface";
         DCOPCString dummy;
         if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) ) {
           DCOPRef ref( dcopService, dcopService ); // talk to the KUniqueApplication or its kontact wrapper
@@ -263,7 +261,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
             Q_ASSERT( kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) );
           } else
             kWarning() << "Error loading " << dcopService << endl;
-        }
+        }*/
 
         // We don't do anything with it, we just need it to be running so that it handles
         // the incoming directory.
