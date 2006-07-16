@@ -215,11 +215,21 @@ void BoxContainerItem::fillKMenu( KMenu* popupMenu, KActionCollection* actions )
 	popupMenu->insertItem( i18n( "&View Emails" ), this, SLOT( slotView() ) );
 	popupMenu->insertItem( i18n( "R&un Command" ), this, SLOT( slotRunCommand() ) );*/
 	
-	popupMenu->addAction(new KAction( i18n("&Configure"),     KShortcut(), this, SLOT( slotConfigure()  ), actions, "configure" ));
-	popupMenu->addAction(new KAction( i18n("&Recheck"),       KShortcut(), this, SLOT( slotRecheck()    ), actions, "recheck"   ));
-	popupMenu->addAction(new KAction( i18n("R&eset Counter"), KShortcut(), this, SLOT( slotReset()      ), actions, "reset"     ));
-	popupMenu->addAction(new KAction( i18n("&View Emails"),   KShortcut(), this, SLOT( slotView()       ), actions, "view"      ));
-	popupMenu->addAction(new KAction( i18n("R&un Command"),   KShortcut(), this, SLOT( slotRunCommand() ), actions, "run"       ));
+        KAction *action = new KAction( i18n("&Configure"), actions, "configure" );
+        connect(action, SIGNAL(triggered(bool)), SLOT( slotConfigure()  ));
+	popupMenu->addAction(action);
+	action = new KAction( i18n("&Recheck"), actions, "recheck"   );
+        connect(action, SIGNAL(triggered(bool)), SLOT( slotRecheck()    ));
+        popupMenu->addAction(action);
+	action = new KAction( i18n("R&eset Counter"), actions, "reset"     );
+        connect(action, SIGNAL(triggered(bool)), SLOT( slotReset()      ));
+        popupMenu->addAction(action);
+	action = new KAction( i18n("&View Emails"),  actions, "view"      );
+        connect(action, SIGNAL(triggered(bool)), SLOT( slotView()       ));
+        popupMenu->addAction(action);
+	action = new KAction( i18n("R&un Command"),  actions, "run"       );
+        connect(action, SIGNAL(triggered(bool)), SLOT( slotRunCommand() ));
+        popupMenu->addAction(action);
 	popupMenu->addSeparator();
 	popupMenu->addAction( KStdAction::help(      this, SLOT( help()      ), actions ) );
 	popupMenu->addAction( KStdAction::reportBug( this, SLOT( reportBug() ), actions ) );

@@ -527,12 +527,14 @@ void KNMainWidget::initActions()
   //a_ccel=new KAccel(this);
 
   //navigation
-  a_ctNavNextArt            = new KAction( KGuiItem(i18n("&Next Article"), "next",
-                              i18n("Go to next article")), KShortcut("N;Right"), h_drView,
-                              SLOT(nextArticle()), actionCollection(), "go_nextArticle" );
-  a_ctNavPrevArt            = new KAction( KGuiItem(i18n("&Previous Article"), "previous",
-                              i18n("Go to previous article")), KShortcut("P;Left"), h_drView,
-                              SLOT(prevArticle()), actionCollection(), "go_prevArticle" );
+  a_ctNavNextArt            = new KAction( KIcon("next"), i18n("&Next Article"), actionCollection(), "go_nextArticle" );
+  a_ctNavNextArt->setToolTip(i18n("Go to next article"));
+  a_ctNavNextArt->setShortcut(KShortcut("N;Right"));
+  connect(a_ctNavNextArt, SIGNAL(triggered(bool)), h_drView, SLOT(nextArticle()));
+  a_ctNavPrevArt            = new KAction( KIcon("previous"), i18n("&Previous Article"), actionCollection(), "go_prevArticle" );
+  a_ctNavPrevArt->setShortcut(KShortcut("P;Left"));
+  a_ctNavPrevArt->setToolTip(i18n("Go to previous article"));
+  connect(a_ctNavPrevArt, SIGNAL(triggered(bool)), h_drView, SLOT(prevArticle()));
   a_ctNavNextUnreadArt = new KAction(KIcon("1rightarrow"), i18n("Next Unread &Article"), actionCollection(), "go_nextUnreadArticle");
   connect(a_ctNavNextUnreadArt, SIGNAL(triggered(bool)), SLOT(slotNavNextUnreadArt()));
   a_ctNavNextUnreadArt->setShortcut(Qt::ALT+Qt::SHIFT+Qt::Key_Space);
