@@ -26,30 +26,40 @@
 class Message
 {
 public:
-  Message(bool null = false) : nullContent(null) { readStatus = false; }
+  Message(bool null = false) : m_nullContent(null) { m_readStatus = false; }
   QString author() const;
   QString content() const;
   QString subject() const { return m_subject; }
   QString fancySubject() const { return m_fancySubject; }
-  QDateTime sendTime() const { return send; }
-  QDateTime arrivalTime() const { return arrival; }
+  QDateTime sendTime() const { return m_send; }
+  QDateTime arrivalTime() const { return m_arrival; }
   unsigned long id() const { return m_id; }
   unsigned long parentId() const { return m_pid; }
   QString arrivalTimeInText() const;
-  void setAuthor(QString newAuthor);
-  void setContent(QString newContent);
-  void setArrivalTime(const QDateTime &dateTime) { arrival = dateTime; }
-  void setSendTime(const QDateTime &dateTime) { send = dateTime; }
+  void setAuthor(const QString& newAuthor);
+  void setContent(const QString& newContent);
+  void setArrivalTime(const QDateTime &dateTime) { m_arrival = dateTime; }
+  void setSendTime(const QDateTime &dateTime) { m_send = dateTime; }
   void setSubject(const QString &subject) { m_subject = subject; m_fancySubject = fancify(subject); }
   void setId(unsigned long id) { m_id = id; }
   void setParentId(unsigned long parentId) { m_pid = parentId; }
   bool isNull() const;
   bool isRead() const;
+
+  /** 
+  * Marks this message as read or unread. 
+  * @param read true marks message as read, false marks message as unread
+  */
   void markAs(bool read);
+
   /**
   * @return true if this message is related (parent, child or sibling) to message.
   */
   bool isRelated(const Message *message) const;
+
+  /**
+  * @return true if this two messages doesn't have the same arrival date
+  */
   bool operator!=(Message &compare) const;
   bool operator<(Message &compare) const;
   bool operator<=(Message &compare) const;
@@ -60,9 +70,9 @@ public:
 private:
   QString fancify(const QString &subject) const { return subject; }
 
-  QString conversationAuthor, conversationContent, m_subject, m_fancySubject;
-  QDateTime arrival, send;
-  bool nullContent, readStatus;
+  QString m_author, m_content, m_subject, m_fancySubject;
+  QDateTime m_arrival, m_send;
+  bool m_nullContent, m_readStatus;
   unsigned long m_id, m_pid;
 };
 

@@ -25,78 +25,78 @@
 
 QString Message::author() const
 {
-  if (nullContent == true) return "";
-  return conversationAuthor;
+  if (m_nullContent) return "";
+  return m_author;
 }
 
 QString Message::content() const
 {
-  if (nullContent == true) return "";
-  return conversationContent;
+  if (m_nullContent) return "";
+  return m_content;
 }
 
-void Message::setAuthor(QString author)
+void Message::setAuthor(const QString& author)
 {
-  conversationAuthor = author;
+  m_author = author;
 }
 
-void Message::setContent(QString content)
+void Message::setContent(const QString& content)
 {
-  content.replace(QRegExp("\n"), "<br>");
-  conversationContent = content;
+  m_content = content;
+  m_content.replace(QRegExp("\n"), "<br>");
 }
 
 bool Message::isNull() const
 {
-  return nullContent;
+  return m_nullContent;
 }
 
 QString Message::arrivalTimeInText() const
 {
-  QString ctime = arrival.date().toString();
+  QString ctime = m_arrival.date().toString();
   ctime.append(" ");
-  ctime.append(arrival.time().toString());
+  ctime.append(m_arrival.time().toString());
   return ctime;
 }
 
 bool Message::operator!=(Message &compare) const
 {
-  return arrival != compare.arrival;
+  return m_arrival != compare.m_arrival;
 }
 
 bool Message::operator<(Message &compare) const
 {
-  return arrival < compare.arrival;
+  return m_arrival < compare.m_arrival;
 }
 
 bool Message::operator<=(Message &compare) const
 {
-  return arrival <= compare.arrival;
+  return m_arrival <= compare.m_arrival;
 }
 
 bool Message::operator==(Message &compare) const
 {
-  return arrival == compare.arrival;
+  return m_arrival == compare.m_arrival;
 }
 
 bool Message::operator>=(Message &compare) const
 {
-  return arrival >= compare.arrival;
+  return m_arrival >= compare.m_arrival;
 }
 
 bool Message::operator>(Message &compare) const
 {
-  return arrival > compare.arrival;
+  return m_arrival > compare.m_arrival;
 }
 
 bool Message::isRead() const
 {
-	return readStatus;
+	return m_readStatus;
 }
 
 void Message::markAs(bool read) 
 {
-	readStatus = read;
+	m_readStatus = read;
 }
 
 bool Message::isRelated(const Message *message) const
