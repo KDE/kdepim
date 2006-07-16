@@ -19,9 +19,6 @@
  */
 
 #include <QIcon>
-#include <QLabel>
-#include <QHBoxLayout>
-#include <QCheckBox>
 
 #include <kiconloader.h>
 #include <klocale.h>
@@ -31,37 +28,41 @@
 
 SearchLine::SearchLine(QWidget *parent) : QWidget(parent)
 {
-  clearButton = new QToolButton(this);
+  m_clearButton = new QToolButton(this);
   QIcon icon = SmallIconSet(KApplication::isRightToLeft() ? "clear_left" : "locationbar_erase" );
-  clearButton->setIcon(icon);
+  m_clearButton->setIcon(icon);
 
-  QLabel *search = new QLabel(i18n("S&earch:"), this);
-  searchLine = new KLineEdit(this);
-  search->setBuddy(searchLine);
+  m_search = new QLabel(i18n("S&earch:"), this);
+  m_searchLine = new KLineEdit(this);
+  m_search->setBuddy(m_searchLine);
 
-  QLabel *unread = new QLabel(i18n("Only &unread:"), this);
-  QCheckBox *checkBox = new QCheckBox(this);
-  unread->setBuddy(checkBox);
+  m_unread = new QLabel(i18n("Only &unread:"), this);
+  m_checkBox = new QCheckBox(this);
+  m_unread->setBuddy(m_checkBox);
 
-  connect(clearButton, SIGNAL(clicked()), searchLine, SLOT(clear()));
-  connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(m_emitUnreadChanged()));
-  connect(searchLine, SIGNAL(textChanged(const QString&)), this, SLOT(m_emitTextChanged(const QString&)));
+  connect(m_clearButton, SIGNAL(clicked()), m_searchLine, SLOT(clear()));
+  connect(m_checkBox, SIGNAL(stateChanged(int)), this, SLOT(m_emitUnreadChanged()));
+  connect(m_searchLine, SIGNAL(textChanged(const QString&)), this, SLOT(m_emitTextChanged(const QString&)));
 
-  QHBoxLayout* layout = new QHBoxLayout( this );
-  layout->setMargin(0);
-  layout->setSpacing( 5 );
-  layout->addWidget(clearButton);
-  layout->addWidget(search);
-  layout->addWidget(searchLine);
-  layout->addWidget(unread);
-  layout->addWidget(checkBox);
+  m_layout = new QHBoxLayout(this);
+  m_layout->setMargin(0);
+  m_layout->setSpacing(5);
+  m_layout->addWidget(m_clearButton);
+  m_layout->addWidget(m_search);
+  m_layout->addWidget(m_searchLine);
+  m_layout->addWidget(m_unread);
+  m_layout->addWidget(m_checkBox);
 }
 
 
 SearchLine::~SearchLine()
 {
-  delete clearButton;
-  delete searchLine;
+  delete m_clearButton;
+  delete m_searchLine;
+  delete m_search;
+  delete m_unread;
+  delete m_checkBox;
+  delete m_layout;
 }
 
 void SearchLine::m_emitUnreadChanged()

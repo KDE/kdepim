@@ -22,6 +22,9 @@
 
 #include <QWidget>
 #include <QToolButton>
+#include <QLabel>
+#include <QHBoxLayout>
+#include <QCheckBox>
 
 #include <klineedit.h>
 
@@ -41,8 +44,12 @@ private slots:
   void m_emitTextChanged(const QString &filter);
 
 private:
-  QToolButton *clearButton;
-  KLineEdit *searchLine;
+  QToolButton *m_clearButton;
+  KLineEdit *m_searchLine;
+  QLabel *m_search;
+  QLabel *m_unread;
+  QCheckBox *m_checkBox;
+  QHBoxLayout *m_layout;
 };
 
 #endif
