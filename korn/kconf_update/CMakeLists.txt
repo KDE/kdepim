@@ -5,7 +5,7 @@
 ########### install files ###############
 
 install( FILES korn-3-4-config_change.upd korn-3-5-update.upd DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
-install(PROGRAMS FILES korn-3-5-ssl-update.pl korn-3-5-metadata-update.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
+install(PROGRAMS korn-3-5-ssl-update.pl korn-3-5-metadata-update.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
 
 
 
