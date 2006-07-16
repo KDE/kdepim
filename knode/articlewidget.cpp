@@ -182,30 +182,30 @@ void ArticleWidget::initActions()
   ra = new KToggleAction( i18n("&Fancy Headers"), mActionCollection, "view_headers_fancy" );
   connect(ra, SIGNAL(triggered(bool) ), SLOT(slotFancyHeaders()));
   ag->addAction ( ra );
-  mHeaderStyleMenu->insert( ra );
+  mHeaderStyleMenu->addAction( ra );
   ra = new KToggleAction( i18n("&Standard Headers"), mActionCollection, "view_headers_standard" );
   connect(ra, SIGNAL(triggered(bool) ), SLOT(slotStandardHeaders()));
   ag->addAction( ra );
-  mHeaderStyleMenu->insert( ra );
+  mHeaderStyleMenu->addAction( ra );
   ra = new KToggleAction( i18n("&All Headers"), mActionCollection, "view_headers_all" );
   connect(ra, SIGNAL(triggered(bool) ), SLOT(slotAllHeaders()));
   ag->addAction( ra );
-  mHeaderStyleMenu->insert( ra );
+  mHeaderStyleMenu->addAction( ra );
 
   ag = new QActionGroup( this );
   mAttachmentStyleMenu = new KActionMenu( i18n("&Attachments"), mActionCollection, "view_attachments" );
   ra = new KToggleAction( i18n("&As Icon"), mActionCollection, "view_attachments_icon" );
   connect(ra, SIGNAL(triggered(bool) ), SLOT(slotIconAttachments()));
   ag->addAction( ra );
-  mAttachmentStyleMenu->insert( ra );
+  mAttachmentStyleMenu->addAction( ra );
   ra = new KToggleAction( i18n("&Inline"), mActionCollection, "view_attachments_inline" );
   connect(ra, SIGNAL(triggered(bool) ), SLOT(slotInlineAttachments()));
   ag->addAction( ra );
-  mAttachmentStyleMenu->insert( ra );
+  mAttachmentStyleMenu->addAction( ra );
   ra = new KToggleAction( i18n("&Hide"), mActionCollection, "view_attachments_hide" );
   connect(ra, SIGNAL(triggered(bool) ), SLOT(slotHideAttachments()));
   ag->addAction( ra );
-  mAttachmentStyleMenu->insert( ra );
+  mAttachmentStyleMenu->addAction( ra );
 
   mCharsetSelect = new KSelectAction( i18n("Chars&et"), KShortcut(), mActionCollection, "set_charset" );
   mCharsetSelect->setShortcutConfigurable( false );
