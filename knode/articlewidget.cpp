@@ -162,8 +162,8 @@ void ArticleWidget::initActions()
   mForwardAction = new KAction(KIcon("mail_forward"),  i18n("Forw&ard by Email..."), mActionCollection, "article_forward" );
   connect(mForwardAction, SIGNAL(triggered(bool)), SLOT(slotForward()));
   mForwardAction->setShortcut(Qt::Key_F);
-  mCancelAction = new KAction( i18nc("article","&Cancel Article"),
-    0, this, SLOT(slotCancel()), mActionCollection, "article_cancel" );
+  mCancelAction = new KAction( i18nc("article", "&Cancel Article"), mActionCollection, "article_cancel" );
+  connect(mCancelAction, SIGNAL(triggered(bool)), SLOT(slotCancel()));
   mSupersedeAction = new KAction(i18n("S&upersede Article"), mActionCollection, "article_supersede" );
   connect(mSupersedeAction, SIGNAL(triggered(bool) ), SLOT(slotSupersede()));
   mFixedFontToggle = new KToggleAction( i18n("U&se Fixed Font"), mActionCollection, "view_useFixedFont" );
