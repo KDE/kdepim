@@ -17,7 +17,7 @@
 
 #include "messagepropertydialog.h"
 #include "attachpropertydialog.h"
-#include "ktnef/ktnefmessage.h"
+#include <ktnef/ktnefmessage.h>
 
 #include <k3listview.h>
 #include <klocale.h>
