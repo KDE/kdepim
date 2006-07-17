@@ -31,11 +31,10 @@
 #include <QVBoxLayout>
 
 #include <k3wizard.h>
+#include <kabc/addressbook.h>
 
 #include "common/filter.h"
-#include "kabc/addressbook.h"
 #include "printstyle.h"
-
 #include "selectionpage.h"
 #include "stylepage.h"
 
