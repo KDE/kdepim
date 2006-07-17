@@ -79,7 +79,7 @@ IdentityManager::IdentityManager( bool readonly, QObject * parent, const char * 
 {
   new IdentityManagerAdaptor( this );
   mIface = new OrgKdePimIdentityManagerInterface("org.kde.pim.IdentityManager", "/", QDBus::sessionBus() );
-  connect( mIface, SIGNAL(identityChanged(QString)), this, SLOT(slotIdentityChanged(QString)) );
+  connect( mIface, SIGNAL(identitiesChanged(QString)), this, SLOT(slotIdentitiesChanged(QString)) );
 
   mReadOnly = readonly;
   mConfig = new KConfig( "emailidentities", readonly );
