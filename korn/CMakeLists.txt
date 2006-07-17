@@ -1,3 +1,4 @@
+project(korn)
 
 add_subdirectory( kconf_update ) 
 

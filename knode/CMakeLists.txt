@@ -1,4 +1,4 @@
-
+project(knode)
 add_subdirectory( pics ) 
 add_subdirectory( filters ) 
 

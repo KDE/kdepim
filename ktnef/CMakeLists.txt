@@ -1,4 +1,4 @@
-
+project(ktnef)
 add_subdirectory( pics ) 
 
 include_directories( ${CMAKE_SOURCE_DIR}/ktnef  )

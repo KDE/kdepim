@@ -34,8 +34,7 @@
 #ifndef KMAILCONNECTION_H
 #define KMAILCONNECTION_H
 
-#include <dcopobject.h>
-#include <kmail/kmailicalIface.h>
+//#include <kmail/kmailicalIface.h>
 
 class KUrl;
 class DCOPClient;

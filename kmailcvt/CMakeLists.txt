@@ -1,4 +1,4 @@
-
+project(kmailcvt)
 add_subdirectory( pics ) 
 
 

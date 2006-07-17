@@ -117,7 +117,7 @@ bool ResourceKolab::doOpen()
 
   KConfig config( configFile() );
   config.setGroup( "General" );
-  mProgressDialogIncidenceLimit = config.readNumEntry("ProgressDialogIncidenceLimit", 200);
+  mProgressDialogIncidenceLimit = config.readEntry("ProgressDialogIncidenceLimit", 200);
 
   return openResource( config, kmailCalendarContentsType, mEventSubResources )
     && openResource( config, kmailTodoContentsType, mTodoSubResources )

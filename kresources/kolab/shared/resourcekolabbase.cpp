@@ -42,7 +42,6 @@
 #include <kmessagebox.h>
 #include <QTextStream>
 #include <kdebug.h>
-#include <dcopobject.h>
 
 using namespace Kolab;
 
