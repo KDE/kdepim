@@ -27,4 +27,4 @@ KCal::KonsoleKalendarChange manages the event modification capability.
 
 */
 
-// DOXYGEN_REFERENCES = libkcal
+// DOXYGEN_REFERENCES = kcal
