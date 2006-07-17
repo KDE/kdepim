@@ -16,7 +16,7 @@ kde4_automoc(${kslox_LIB_SRCS})
 
 kde4_add_library(kslox SHARED ${kslox_LIB_SRCS})
 
-target_link_libraries(kslox  ${KDE4_KDECORE_LIBS} kcal kdepim )
+target_link_libraries(kslox  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim )
 
 set_target_properties(kslox PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kslox  DESTINATION ${LIB_INSTALL_DIR})
@@ -48,7 +48,7 @@ kde4_add_kcfg_files(kcal_slox_LIB_SRCS kcalsloxprefs.kcfgc )
 
 kde4_add_library(kcal_slox SHARED ${kcal_slox_LIB_SRCS})
 
-target_link_libraries(kcal_slox  ${KDE4_KDECORE_LIBS} kslox kcal kcal_slox )
+target_link_libraries(kcal_slox  ${KDE4_KDECORE_LIBS} kslox ${KDE4_KCAL_LIBS} kcal_slox )
 
 set_target_properties(kcal_slox PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kcal_slox  DESTINATION ${LIB_INSTALL_DIR})
@@ -152,7 +152,7 @@ install( FILES kcal_slox.desktop kcal_ox.desktop  DESTINATION ${SERVICES_INSTALL
 #testsloxaccounts_SOURCES = testsloxaccounts.cpp
 #
 #
-#kcal_servicedir = $(kde_servicesdir)/kresources/kcal
+#kcal_servicedir = $(kde_servicesdir)/kresources/${KDE4_KCAL_LIBS}
 #kcal_service_DATA = kcal_slox.desktop kcal_ox.desktop
 #
 #kabc_servicedir = $(kde_servicesdir)/kresources/kabc

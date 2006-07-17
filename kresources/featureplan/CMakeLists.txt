@@ -15,7 +15,7 @@ kde4_automoc(${kcal_resourcefeatureplan_LIB_SRCS})
 
 kde4_add_library(kcal_resourcefeatureplan SHARED ${kcal_resourcefeatureplan_LIB_SRCS})
 
-target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} kcal kdepim kcal_resourcefeatureplan )
+target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim kcal_resourcefeatureplan )
 
 set_target_properties(kcal_resourcefeatureplan PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kcal_resourcefeatureplan  DESTINATION ${LIB_INSTALL_DIR})
@@ -41,11 +41,11 @@ install(TARGETS kcal_resourcefeatureplan  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### next target ###############
 
+if(KDE4_BUILD_TESTS)
 set(dumpfeaturelist_SRCS dumpfeaturelist.cpp ${libfeatureplancommon_SRCS})
 
 kde4_automoc(${dumpfeaturelist_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(dumpfeaturelist ${dumpfeaturelist_SRCS})
 
@@ -54,12 +54,11 @@ target_link_libraries(dumpfeaturelist  ${KDE4_KDECORE_LIBS} )
 endif(KDE4_BUILD_TESTS)
 
 ########### next target ###############
-
+if(KDE4_BUILD_TESTS)
 set(benchmarkfeaturelist_SRCS benchmarkfeaturelist.cpp ${libfeatureplancommon_SRCS})
 
 kde4_automoc(${benchmarkfeaturelist_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(benchmarkfeaturelist ${benchmarkfeaturelist_SRCS})
 
@@ -101,7 +100,7 @@ install( FILES kcal_resourcefeatureplan.desktop  DESTINATION ${SERVICES_INSTALL_
 #kcal_resourcefeatureplan_la_LIBADD = libkcal_resourcefeatureplan.la
 #kcal_resourcefeatureplan_la_COMPILE_FIRST = kde-features.h prefs.h
 #
-#kcal_servicedir = $(kde_servicesdir)/kresources/kcal
+#kcal_servicedir = $(kde_servicesdir)/kresources/${KDE4_KCAL_LIBS}
 #kcal_service_DATA = kcal_resourcefeatureplan.desktop
 #
 #check_PROGRAMS = dumpfeaturelist benchmarkfeaturelist

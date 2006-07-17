@@ -18,7 +18,7 @@ kde4_automoc(${kcal_groupdav_LIB_SRCS})
 
 kde4_add_library(kcal_groupdav SHARED ${kcal_groupdav_LIB_SRCS})
 
-target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav kcal kdepim kcal_groupdav )
+target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav ${KDE4_KCAL_LIBS} kdepim kcal_groupdav )
 
 set_target_properties(kcal_groupdav PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kcal_groupdav  DESTINATION ${LIB_INSTALL_DIR})
@@ -32,7 +32,7 @@ kde4_automoc(${kabc_groupdav_LIB_SRCS})
 
 kde4_add_library(kabc_groupdav SHARED ${kabc_groupdav_LIB_SRCS})
 
-target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav kcal kdepim kabc kabc_groupdav )
+target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav ${KDE4_KCAL_LIBS} kdepim kabc kabc_groupdav )
 
 set_target_properties(kabc_groupdav PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kabc_groupdav  DESTINATION ${LIB_INSTALL_DIR})
@@ -124,7 +124,7 @@ install(FILES uninstall.desktop DESTINATION ${kde_servicesdir}/kresources/kcal/ 
 #kabc_groupdav_la_LDFLAGS = $(all_libraries) -module -no-undefined $(KDE_PLUGIN)
 #kabc_groupdav_la_LIBADD = libkabc_groupdav.la
 #
-#kcal_servicedir = $(kde_servicesdir)/kresources/kcal
+#kcal_servicedir = $(kde_servicesdir)/kresources/${KDE4_KCAL_LIBS}
 #kcal_service_DATA = kcal_groupdav.desktop
 #
 #kabc_servicedir = $(kde_servicesdir)/kresources/kabc
@@ -134,9 +134,9 @@ install(FILES uninstall.desktop DESTINATION ${kde_servicesdir}/kresources/kcal/ 
 #
 #install-data-local: uninstall.desktop
 #	$(mkinstalldirs) $(DESTDIR)$(kde_servicesdir)/kresources/kabc
-#	$(mkinstalldirs) $(DESTDIR)$(kde_servicesdir)/kresources/kcal
+#	$(mkinstalldirs) $(DESTDIR)$(kde_servicesdir)/kresources/${KDE4_KCAL_LIBS}
 #	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_servicesdir)/kresources/kabc/kabc_opengroupware.desktop
-#	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_servicesdir)/kresources/kcal/kcal_opengroupware.desktop
+#	$(INSTALL_DATA) $(srcdir)/uninstall.desktop $(DESTDIR)$(kde_servicesdir)/kresources/${KDE4_KCAL_LIBS}/kcal_opengroupware.desktop
 #
 #messages: rc.cpp
 #	$(XGETTEXT) *.cpp -o $(podir)/kres_groupdav.pot

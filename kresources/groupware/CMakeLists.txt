@@ -12,7 +12,7 @@ kde4_add_kcfg_files(kcal_groupware_LIB_SRCS kcal_groupwareprefsbase.kcfgc )
 
 kde4_add_library(kcal_groupware SHARED ${kcal_groupware_LIB_SRCS})
 
-target_link_libraries(kcal_groupware  ${KDE4_KDECORE_LIBS} kcal kdepim kcal_groupware )
+target_link_libraries(kcal_groupware  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim kcal_groupware )
 
 set_target_properties(kcal_groupware PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kcal_groupware  DESTINATION ${LIB_INSTALL_DIR})
@@ -28,7 +28,7 @@ kde4_add_kcfg_files(kabc_groupware_LIB_SRCS kabc_groupwareprefs.kcfgc )
 
 kde4_add_library(kabc_groupware SHARED ${kabc_groupware_LIB_SRCS})
 
-target_link_libraries(kabc_groupware  ${KDE4_KDECORE_LIBS} kcal kdepim kabc kabc_groupware )
+target_link_libraries(kabc_groupware  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim kabc kabc_groupware )
 
 set_target_properties(kabc_groupware PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kabc_groupware  DESTINATION ${LIB_INSTALL_DIR})
@@ -108,7 +108,7 @@ install( FILES kcal_groupware.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kreso
 #kabc_groupware_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN)
 #kabc_groupware_la_LIBADD = libkabc_groupware.la
 #
-#kcal_servicedir = $(kde_servicesdir)/kresources/kcal
+#kcal_servicedir = $(kde_servicesdir)/kresources/${KDE4_KCAL_LIBS}
 #kcal_service_DATA = kcal_groupware.desktop
 #
 #kabc_servicedir = $(kde_servicesdir)/kresources/kabc

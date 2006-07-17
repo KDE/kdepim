@@ -31,7 +31,7 @@ kde4_add_kcfg_files(kgroupwarebase_LIB_SRCS kresources_groupwareprefs.kcfgc )
 
 kde4_add_library(kgroupwarebase SHARED ${kgroupwarebase_LIB_SRCS})
 
-target_link_libraries(kgroupwarebase  ${KDE4_KDECORE_LIBS} kcal kdepim )
+target_link_libraries(kgroupwarebase  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim )
 
 set_target_properties(kgroupwarebase PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kgroupwarebase  DESTINATION ${LIB_INSTALL_DIR})
@@ -49,7 +49,7 @@ kde4_automoc(${kgroupwaredav_LIB_SRCS})
 
 kde4_add_library(kgroupwaredav SHARED ${kgroupwaredav_LIB_SRCS})
 
-target_link_libraries(kgroupwaredav  ${KDE4_KDECORE_LIBS} kcal kdepim kgroupwarebase )
+target_link_libraries(kgroupwaredav  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim kgroupwarebase )
 
 set_target_properties(kgroupwaredav PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kgroupwaredav  DESTINATION ${LIB_INSTALL_DIR})

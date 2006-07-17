@@ -46,7 +46,7 @@ kde4_add_kcfg_files(kcal_xmlrpc_LIB_SRCS kcal_egroupwareprefs.kcfgc )
 
 kde4_add_library(kcal_xmlrpc SHARED ${kcal_xmlrpc_LIB_SRCS})
 
-target_link_libraries(kcal_xmlrpc  ${KDE4_KDECORE_LIBS} kcal kdepim )
+target_link_libraries(kcal_xmlrpc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim )
 
 set_target_properties(kcal_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kcal_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
@@ -64,7 +64,7 @@ kde4_add_kcfg_files(knotes_xmlrpc_LIB_SRCS knotes_egroupwareprefs.kcfgc )
 kde4_add_library(knotes_xmlrpc SHARED ${knotes_xmlrpc_LIB_SRCS})
 set_target_properties(knotes_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 
-target_link_libraries(knotes_xmlrpc  ${KDE4_KDECORE_LIBS} kcal kdeprint kdepim )
+target_link_libraries(knotes_xmlrpc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdeprint kdepim )
 
 
 install(TARGETS knotes_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
@@ -191,7 +191,7 @@ install( FILES kcal_xmlrpc.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresourc
 #kabc_servicedir = $(kde_servicesdir)/kresources/kabc
 #kabc_service_DATA = kabc_xmlrpc.desktop
 #
-#kcal_servicedir = $(kde_servicesdir)/kresources/kcal
+#kcal_servicedir = $(kde_servicesdir)/kresources/${KDE4_KCAL_LIBS}
 #kcal_service_DATA = kcal_xmlrpc.desktop
 #
 #knotes_servicedir = $(kde_servicesdir)/kresources/knotes

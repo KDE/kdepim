@@ -27,7 +27,7 @@ kde4_add_plugin(kmail_bodypartformatter_text_calendar WITH_PREFIX ${kmail_bodypa
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_calendar )
 
-target_link_libraries(kmail_bodypartformatter_text_calendar  ${KDE4_EMAILFUNCTIOS_LIBS} ${KDE4_KDECORE_LIBS} kcal kmailprivate )
+target_link_libraries(kmail_bodypartformatter_text_calendar  ${KDE4_EMAILFUNCTIOS_LIBS} ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kmailprivate )
 
 install(TARGETS kmail_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})
 

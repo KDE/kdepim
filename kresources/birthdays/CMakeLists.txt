@@ -14,7 +14,7 @@ kde4_add_plugin(kcal_kabc ${kcal_kabc_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_kabc )
 
-target_link_libraries(kcal_kabc  ${KDE4_KDECORE_LIBS} kcal kdepim )
+target_link_libraries(kcal_kabc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim )
 
 install(TARGETS kcal_kabc  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -44,7 +44,7 @@ install( FILES resourcekabc.h resourcekabcconfig.h  DESTINATION ${INCLUDE_INSTAL
 #libkcalincludedir = $(includedir)/libkcal
 #libkcalinclude_HEADERS = resourcekabc.h resourcekabcconfig.h
 #
-#servicedir = $(kde_servicesdir)/kresources/kcal
+#servicedir = $(kde_servicesdir)/kresources/${KDE4_KCAL_LIBS}
 #service_DATA = kabc.desktop
 #
 #METASOURCES = AUTO

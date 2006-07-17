@@ -10,7 +10,7 @@ kde4_automoc(${kcal_resourceremote_LIB_SRCS})
 
 kde4_add_library(kcal_resourceremote SHARED ${kcal_resourceremote_LIB_SRCS})
 
-target_link_libraries(kcal_resourceremote  ${KDE4_KDECORE_LIBS} kcal kdepim )
+target_link_libraries(kcal_resourceremote  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim )
 
 set_target_properties(kcal_resourceremote PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kcal_resourceremote  DESTINATION ${LIB_INSTALL_DIR})
@@ -33,8 +33,8 @@ install(TARGETS kcal_remote  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install( FILES remote.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
-install( FILES resourceremoteconfig.h resourceremote.h  DESTINATION ${INCLUDE_INSTALL_DIR}/kcal)
+install( FILES remote.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/${KDE4_KCAL_LIBS})
+install( FILES resourceremoteconfig.h resourceremote.h  DESTINATION ${INCLUDE_INSTALL_DIR}/${KDE4_KCAL_LIBS})
 
 
 
@@ -60,7 +60,7 @@ install( FILES resourceremoteconfig.h resourceremote.h  DESTINATION ${INCLUDE_IN
 #libkcalincludedir = $(includedir)/libkcal
 #libkcalinclude_HEADERS = resourceremoteconfig.h resourceremote.h
 #
-#servicedir = $(kde_servicesdir)/kresources/kcal
+#servicedir = $(kde_servicesdir)/kresources/${KDE4_KCAL_LIBS}
 #service_DATA = remote.desktop
 #
 #METASOURCES = AUTO

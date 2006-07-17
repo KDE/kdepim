@@ -18,7 +18,7 @@ kde4_automoc(${kcal_blogging_LIB_SRCS})
 
 kde4_add_library(kcal_blogging SHARED ${kcal_blogging_LIB_SRCS})
 
-target_link_libraries(kcal_blogging  ${KDE4_KDECORE_LIBS} kgroupwarebase kcal kdepim kcal_blogging )
+target_link_libraries(kcal_blogging  ${KDE4_KDECORE_LIBS} kgroupwarebase ${KDE4_KCAL_LIBS} kdepim kcal_blogging )
 
 set_target_properties(kcal_blogging PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kcal_blogging  DESTINATION ${LIB_INSTALL_DIR})
@@ -69,7 +69,7 @@ install( FILES blogging.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/
 #kcal_blogging_la_LDFLAGS = $(all_libraries) -module -no-undefined $(KDE_PLUGIN)
 #kcal_blogging_la_LIBADD = libkcal_blogging.la
 #
-#kcal_servicedir = $(kde_servicesdir)/kresources/kcal
+#kcal_servicedir = $(kde_servicesdir)/kresources/${KDE4_KCAL_LIBS}
 #kcal_service_DATA = blogging.desktop
 #
 #METASOURCES = AUTO

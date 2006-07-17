@@ -21,7 +21,7 @@ kde4_automoc(${kcalkolab_LIB_SRCS})
 
 kde4_add_library(kcalkolab SHARED ${kcalkolab_LIB_SRCS})
 
-target_link_libraries(kcalkolab  ${KDE4_KDECORE_LIBS} kdepim kcal kresources )
+target_link_libraries(kcalkolab  ${KDE4_KDECORE_LIBS} kdepim ${KDE4_KCAL_LIBS} kresources )
 
 set_target_properties(kcalkolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kcalkolab  DESTINATION ${LIB_INSTALL_DIR})
@@ -44,7 +44,7 @@ install(TARGETS kcal_kolab  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install( FILES kolab.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
+install( FILES kolab.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/${KDE4_KCAL_LIBS})
 
 
 
@@ -71,7 +71,7 @@ install( FILES kolab.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kca
 #kcal_kolab_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN) -no-undefined
 #kcal_kolab_la_LIBADD = libkcalkolab.la
 #
-#servicedir = $(kde_servicesdir)/kresources/kcal
+#servicedir = $(kde_servicesdir)/kresources/${KDE4_KCAL_LIBS}
 #service_DATA = kolab.desktop
 #
 #install-data-local: $(srcdir)/../uninstall.desktop
