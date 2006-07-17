@@ -57,7 +57,8 @@ set(knodecommon_LIB_SRCS
    knglobals.cpp 
    kncollectionview.cpp 
    articlewidget.cpp 
-   csshelper.cpp )
+   csshelper.cpp
+   keditcl1.cpp keditcl2.cpp )
 
 kde4_automoc(${knodecommon_LIB_SRCS})
 
