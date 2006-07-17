@@ -36,7 +36,7 @@ kde4_add_kcfg_files(egroupwarewizard_SRCS egroupwareconfig.kcfgc )
 
 kde4_add_executable(egroupwarewizard ${egroupwarewizard_SRCS})
 
-target_link_libraries(egroupwarewizard  ${KDE4_KDECORE_LIBS} kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc kcal kdepim )
+target_link_libraries(egroupwarewizard  ${KDE4_KDECORE_LIBS} kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc ${KDE4_KCAL_LIBS} kdepim )
 
 install(TARGETS egroupwarewizard  DESTINATION ${BIN_INSTALL_DIR} )
 
@@ -51,7 +51,7 @@ kde4_add_kcfg_files(sloxwizard_SRCS sloxconfig.kcfgc )
 
 kde4_add_executable(sloxwizard ${sloxwizard_SRCS})
 
-target_link_libraries(sloxwizard  ${KDE4_KDECORE_LIBS} kcal_slox kabc_slox kcal kabc kdepim )
+target_link_libraries(sloxwizard  ${KDE4_KDECORE_LIBS} kcal_slox kabc_slox ${KDE4_KCAL_LIBS} kabc kdepim )
 
 install(TARGETS sloxwizard  DESTINATION ${BIN_INSTALL_DIR} )
 
