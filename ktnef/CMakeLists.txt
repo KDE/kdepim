@@ -20,7 +20,7 @@ kde4_add_ui3_files(ktnef_bin_SRCS attachpropertydialogbase.ui )
 kde4_add_executable(ktnef_bin ${ktnef_bin_SRCS})
 set_target_properties(ktnef_bin PROPERTIES OUTPUT_NAME ktnef)
 
-target_link_libraries(ktnef_bin  ${KDE4_KDEUI_LIBS} ktnef )
+target_link_libraries(ktnef_bin  ${KDE4_KDEUI_LIBS} ${KDE4_KTNEF_LIBS} )
 
 install(TARGETS ktnef_bin  DESTINATION ${BIN_INSTALL_DIR} )
 
