@@ -2,7 +2,7 @@
 #define KornMailDlg_h
 
 #include <kdialog.h>
-#include <keditcl.h>
+#include <ktextedit.h>
 
 class KornMailSubject;
 class KMailDrop;
@@ -21,7 +21,7 @@ class KornMailDlg : public KDialog
 	/**
 	 * Edit control showing the mail (read only)
 	 */
-	KEdit * _editCtrl;
+	KTextEdit * _kTextEdit;
 
 	/**
 	 * The mail to show

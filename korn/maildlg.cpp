@@ -24,9 +24,9 @@ KornMailDlg::KornMailDlg( QWidget *parent )
 	QVBoxLayout * topLayout = new QVBoxLayout( page );
 	topLayout->setMargin( 0 );
 	topLayout->setSpacing( spacingHint() );
-	_editCtrl = new KEdit(page);
-	topLayout->addWidget(_editCtrl, 10);
-	_editCtrl->setReadOnly(true);
+	_kTextEdit = new KTextEdit(page);
+	topLayout->addWidget(_kTextEdit, 10);
+	_kTextEdit->setReadOnly(true);
 	connect(this, SIGNAL(user1Clicked()), this, SLOT(showFullMessage()));
 	setInitialSize(QSize(QApplication::desktop()->width()*9/10, QApplication::desktop()->height()/2));
 }
@@ -76,7 +76,7 @@ void KornMailDlg::setMailSubject( KornMailSubject * mailSubject )
 	_mailDrop = mailSubject->getMailDrop();
 
 	// show mail
-	_editCtrl->setText(_mailSubject->getHeader());
+	_kTextEdit->setPlainText(_mailSubject->getHeader());
 
 	// disable "Full Message" button if mail is already loaded fully
 	enableButton(User1, !_mailSubject->isHeaderFullMessage() && _mailDrop->canReadMail());
@@ -93,7 +93,7 @@ void KornMailDlg::readMailReady( QString* mail )
 		_mailSubject->setHeader(*mail, true);
 
 		// show fully loaded mail
-		_editCtrl->setText(*mail);
+		_kTextEdit->setPlainText(*mail);
 
 		// disable "Full Message" button
 		enableButton(User1, false);
