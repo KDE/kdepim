@@ -33,8 +33,8 @@ KNFilterSelectAction::KNFilterSelectAction( const QString& text, const QString& 
                                             KActionCollection* parent, const char *name )
   : KActionMenu( KIcon( pix ), text, parent, name ), currentItem(-42)
 {
-  popupMenu()->setCheckable(true);
-  connect(popupMenu(),SIGNAL(activated(int)),this,SLOT(slotMenuActivated(int)));
+  menu()->setCheckable(true);
+  connect(menu(),SIGNAL(activated(int)),this,SLOT(slotMenuActivated(int)));
   setDelayed(false);
 }
 
@@ -46,8 +46,8 @@ KNFilterSelectAction::~KNFilterSelectAction()
 
 void KNFilterSelectAction::setCurrentItem(int id)
 {
-  popupMenu()->setItemChecked(currentItem, false);
-  popupMenu()->setItemChecked(id, true);
+  menu()->setItemChecked(currentItem, false);
+  menu()->setItemChecked(id, true);
   currentItem = id;
 }
 
@@ -320,16 +320,16 @@ void KNFilterManager::updateMenu()
   if(!a_ctFilter)
     return;
 
-  a_ctFilter->popupMenu()->clear();
+  a_ctFilter->menu()->clear();
   KNArticleFilter *f=0;
 
   QList<int>::Iterator it = menuOrder.begin();
   for ( QList<int>::Iterator it = menuOrder.begin(); it != menuOrder.end(); ++it ) {
     if ( (*it) != -1 ) {
       if ( ( f = byID( (*it) ) ) )
-        a_ctFilter->popupMenu()->insertItem( f->translatedName(), f->id() );
+        a_ctFilter->menu()->insertItem( f->translatedName(), f->id() );
     } else
-      a_ctFilter->popupMenu()->addSeparator();
+      a_ctFilter->menu()->addSeparator();
   }
 
   if(currFilter)
