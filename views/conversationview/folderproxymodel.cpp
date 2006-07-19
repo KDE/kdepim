@@ -22,9 +22,34 @@
 
 #include "folderproxymodel.h"
 
+FolderProxyModel::FolderProxyModel(FolderModel *model, QObject *parent) : QSortFilterProxyModel(parent), m_model(model)
+{
+  setSourceModel(m_model);
+  m_filterUnread = false;
+  QObject::connect(m_model, SIGNAL(rowsInserted(const QModelIndex &, int, int)), this, SLOT(resort()));
+  QObject::connect(m_model, SIGNAL(layoutChanged()), this, SLOT(resort()));
+  m_resortable = false;
+  m_header = 0;
+}
+
+void FolderProxyModel::setHeader(QHeaderView *header)
+{
+  m_header = header;
+}
+
+bool FolderProxyModel::resortable() const
+{
+  return m_resortable;
+}
+
+void FolderProxyModel::setResortable(bool enable)
+{
+  m_resortable = enable;
+}
+
 int FolderProxyModel::rowCount(const QModelIndex &/*parent*/) const
 {
-  return sourceModel->rowCount();
+  return m_model->rowCount();
 }
 
 int FolderProxyModel::columnCount(const QModelIndex &/*parent*/) const
@@ -34,31 +59,31 @@ int FolderProxyModel::columnCount(const QModelIndex &/*parent*/) const
 
 QVariant FolderProxyModel::data(const QModelIndex &index, int role) const
 {
-  return sourceModel->data(index, role);
+  return m_model->data(index, role);
 }
 
 QVariant FolderProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-  return sourceModel->headerData(section, orientation, role);
+  return m_model->headerData(section, orientation, role);
 }
 
 Conversation* FolderProxyModel::conversation(const QModelIndex &index) const
 {
-  return sourceModel->conversation(mapToSource(index).row());
+  return m_model->conversation(mapToSource(index).row());
 }
 
 void FolderProxyModel::toggleFilterUnread()
 {
-  filterUnread = !filterUnread;
+  m_filterUnread = !m_filterUnread;
 //  clear();
   filterChanged();
 }
 
 bool FolderProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &/*sourceParent*/) const
 {
-  Conversation *c = sourceModel->conversation(sourceRow);
-  return (c->authors().contains(m_filter) || c->conversationTitle().contains(m_filter))
-    && (filterUnread ? c->isUnread() : true);
+  Conversation *c = m_model->conversation(sourceRow);
+  return (c->authors().contains(m_filter) || c->subject().contains(m_filter))
+    && (m_filterUnread ? c->isUnread() : true);
 }
 
 void FolderProxyModel::setFilter( const QString &filter)
@@ -75,7 +100,7 @@ void FolderProxyModel::resort()
 
 void FolderProxyModel:: markConversationAsRead(const QModelIndex& index, bool read)
 {
-  sourceModel->markConversationAsRead(mapToSource(index), read);
+  m_model->markConversationAsRead(mapToSource(index), read);
 }
 
 #include "folderproxymodel.moc"

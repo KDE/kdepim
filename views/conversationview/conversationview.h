@@ -40,7 +40,7 @@ public slots:
 
 private:
   FolderProxyModel *m_model;
-  ConversationDelegate *cDelegate;
+  ConversationDelegate *m_delegate;
 };
 
 #endif

@@ -34,9 +34,9 @@
 #include "conversationdelegate.h"
 #include "conversation.h"
 
-ConversationDelegate::ConversationDelegate(FolderProxyModel *proxyModel, QObject *parent) : QAbstractItemDelegate(parent), model(proxyModel)
+ConversationDelegate::ConversationDelegate(FolderProxyModel *proxyModel, QObject *parent) : QAbstractItemDelegate(parent), m_model(proxyModel)
 {
-  margin = 5;
+  m_margin = 5;
 }
 
 ConversationDelegate::~ConversationDelegate()
@@ -45,7 +45,7 @@ ConversationDelegate::~ConversationDelegate()
 
 void ConversationDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-  Conversation *c = model->conversation(index);
+  Conversation *c = m_model->conversation(index);
   painter->setRenderHint(QPainter::Antialiasing);
   painter->setPen(Qt::NoPen);
   painter->setFont(option.font);
@@ -95,7 +95,7 @@ void ConversationDelegate::paintRest(QPainter *painter, const QStyleOptionViewIt
   if (c->isUnread())
     possiblyBoldFont.setBold(true);
   QFontMetrics possiblyBoldMetrics(possiblyBoldFont);
-  QString subject = c->conversationTitle();
+  QString subject = c->subject();
   int subjectWidth = possiblyBoldMetrics.width(subject);
   QString time = c->arrivalTimeInText();
   int timeWidth = possiblyBoldMetrics.width(time);
@@ -103,15 +103,15 @@ void ConversationDelegate::paintRest(QPainter *painter, const QStyleOptionViewIt
   QRect subjectBox = getMiddleBox(option, timeBox);
 
   painter->setFont(possiblyBoldFont);
-  if (timeBox.width() > margin) {
+  if (timeBox.width() > m_margin) {
     chop(option.fontMetrics, time, timeBox.width());
     painter->drawText(timeBox, flags, time);
   }
 
-  if (subjectBox.width() > margin) {
+  if (subjectBox.width() > m_margin) {
     chop(possiblyBoldMetrics, subject, subjectBox.width());
     painter->drawText(subjectBox, flags, subject);
-    if (subjectWidth < subjectBox.width() - margin) {
+    if (subjectWidth < subjectBox.width() - m_margin) {
       painter->setFont(option.font);
       painter->setPen(option.palette.dark().color());
       QRect tmp = getSnippetBox(option, subjectBox, subjectWidth);
@@ -123,7 +123,7 @@ void ConversationDelegate::paintRest(QPainter *painter, const QStyleOptionViewIt
 
 inline QRect ConversationDelegate::getSnippetBox(const QStyleOptionViewItem &option, const QRect &parentBox, int parentWidth) const
 {
-  int width = parentBox.width() - margin - parentWidth;
+  int width = parentBox.width() - m_margin - parentWidth;
   int x = option.direction == Qt::LeftToRight ? parentBox.right() - width : parentBox.left();
   int y = option.rect.top();
   int height = option.fontMetrics.height();
@@ -133,8 +133,8 @@ inline QRect ConversationDelegate::getSnippetBox(const QStyleOptionViewItem &opt
 inline QRect ConversationDelegate::getAuthorsBox(const QStyleOptionViewItem &option, const QRect &decoBox) const
 {
   int y = option.rect.top();
-  int decoWidth = decoBox.isNull() ? 0 : decoBox.width() + margin;
-  int x = option.direction == Qt::LeftToRight ? option.rect.left() + margin : option.rect.left() - margin + decoWidth;
+  int decoWidth = decoBox.isNull() ? 0 : decoBox.width() + m_margin;
+  int x = option.direction == Qt::LeftToRight ? option.rect.left() + m_margin : option.rect.left() - m_margin + decoWidth;
   int width = option.rect.width() - decoWidth;
   int height = option.fontMetrics.height();
   return QRect(x, y, width, height);
@@ -167,9 +167,9 @@ inline QRect ConversationDelegate::getCountBox(const QStyleOptionViewItem &optio
 
 inline QRect ConversationDelegate::getMiddleBox(const QStyleOptionViewItem &option, /*const QRect &left,*/ const QRect &right) const
 {
-//  int x1 = left.left() + left.width() + margin;
-  int x1 = (option.direction == Qt::LeftToRight ? option.rect.left() : right.right()) + margin;
-  int x2 = (option.direction == Qt::LeftToRight ? right.left() : option.rect.right()) - margin;
+//  int x1 = left.left() + left.width() + m_margin;
+  int x1 = (option.direction == Qt::LeftToRight ? option.rect.left() : right.right()) + m_margin;
+  int x2 = (option.direction == Qt::LeftToRight ? right.left() : option.rect.right()) - m_margin;
   int width = x2 - x1;
   if (width <= 0) return QRect();
   int y = option.rect.top();
@@ -180,11 +180,11 @@ inline QRect ConversationDelegate::getMiddleBox(const QStyleOptionViewItem &opti
 inline QRect ConversationDelegate::getRightBox(const QStyleOptionViewItem &option, int neededWidth) const
 {
   int x2 = option.direction == Qt::LeftToRight ? 
-                option.rect.right() - margin : 
-                qMin(neededWidth + margin, option.rect.right() - margin);
+                option.rect.right() - m_margin : 
+                qMin(neededWidth + m_margin, option.rect.right() - m_margin);
   int x1 = option.direction == Qt::LeftToRight ? 
-                qMax(x2 - neededWidth, option.rect.left() + margin) :
-                option.rect.left() + margin;
+                qMax(x2 - neededWidth, option.rect.left() + m_margin) :
+                option.rect.left() + m_margin;
   int width = x2 - x1;
   int y = option.rect.top();
   int height = option.fontMetrics.height();
@@ -193,35 +193,35 @@ inline QRect ConversationDelegate::getRightBox(const QStyleOptionViewItem &optio
 
 inline void ConversationDelegate::resizeBox(QRect &box, const QRect &deco) const
 {
-  box.setWidth(box.width() - margin - deco.width());
+  box.setWidth(box.width() - m_margin - deco.width());
 }
 
 inline bool ConversationDelegate::printDecoBox(const QRect &box, const QRect &deco) const
 {
-  return (box.width() >= margin + 2*deco.width());
+  return (box.width() >= m_margin + 2*deco.width());
 }
 
 QSize ConversationDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
   int lineHeight = option.fontMetrics.lineSpacing();
-  int rLineWidth;// = option.fontMetrics.width(text) + 2*margin;
-  Conversation *c = model->conversation(index);
+  int rLineWidth;// = option.fontMetrics.width(text) + 2*m_margin;
+  Conversation *c = m_model->conversation(index);
   if (index.column() == 0) {
     QString text = c->authors();
     if (c->count() > 1)
       text.append(QString("(%L1)").arg(c->count()));
-    rLineWidth = option.fontMetrics.width(text) + 3*margin;
+    rLineWidth = option.fontMetrics.width(text) + 3*m_margin;
   } else {
-    QString text = c->conversationTitle();
+    QString text = c->subject();
     text.append(c->arrivalTimeInText());
-    rLineWidth = option.fontMetrics.width(text) + 2*margin;
+    rLineWidth = option.fontMetrics.width(text) + 2*m_margin;
   }
   return QSize(rLineWidth, lineHeight);
 }
 
 void ConversationDelegate::setWidth( int width)
 {
-  lineWidth = width;
+  m_lineWidth = width;
 }
 
 inline bool ConversationDelegate::isOdd(int row) const { return row & 0x1; }

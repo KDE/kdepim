@@ -36,7 +36,7 @@ public:
   Conversation(QStringList *manyMe, Message *message, QObject *parent = 0);
   ~Conversation();
   int count() const;
-  QString conversationTitle() const;
+  QString subject() const;
   QDateTime arrivalTime() const;
   QString arrivalTimeInText() const;
   QDateTime sendTime() const;
@@ -82,9 +82,9 @@ public:
 //  void messageAdded();
 
 private:
-  QString title;
-  QList<Message*> messages;
-  QStringList *listOfMe;
+  QString m_subject;
+  QList<Message*> m_messages;
+  QStringList *m_listOfMe;
 };
 
 #endif

@@ -31,7 +31,7 @@ class MailView : public QTextEdit
 {
   Q_OBJECT
 public:
-  MailView(FolderProxyModel *model, QWidget *parent = 0) : QTextEdit(parent), m_model(model) { setReadOnly(true); t.start(); m_current = QModelIndex(); }
+  MailView(FolderProxyModel *model, QWidget *parent = 0);
 
   int getNeededHeight() const;
 

@@ -22,6 +22,14 @@
 
 #include "foldermodel.h"
 
+FolderModel::~FolderModel() 
+{ 
+  Conversation *tmp;
+  foreach (tmp, m_conversations) {
+    delete tmp;
+  }
+  delete m_me; 
+}
 
 int FolderModel::rowCount(const QModelIndex &/*parent*/) const
 {
@@ -45,7 +53,7 @@ QVariant FolderModel::data(const QModelIndex &index, int role) const
     switch (index.column()) {
       case 0: return m_conversations.at(index.row())->authors(); break;
       case 1: return m_conversations.at(index.row())->arrivalTime(); break;
-      case 2: return m_conversations.at(index.row())->conversationTitle(); break;
+      case 2: return m_conversations.at(index.row())->subject(); break;
       case 3: return m_conversations.at(index.row())->count(); break;
       case 4: return m_conversations.at(index.row())->snippet(); break;
       case 5: return m_conversations.at(index.row())->isUnread(); break;
@@ -101,7 +109,7 @@ Conversation* FolderModel::findConversation(const Message *m) const
   return 0;
 }
 
-bool FolderModel::insertRows(int row, int count, const QModelIndex& parent)
+bool FolderModel::insertRows(int /*row*/, int /*count*/, const QModelIndex& parent)
 {
   emit beginInsertRows(parent, 0, 0);
   emit endInsertRows();
@@ -112,6 +120,16 @@ void FolderModel::markConversationAsRead(const QModelIndex& index, bool read)
 {
   m_conversations.at(index.row())->markAs(read);
   emit dataChanged(index, index);
+}
+
+QModelIndex FolderModel::index(int row, int column, const QModelIndex &/*parent*/) const 
+{ 
+  return createIndex(row, column, row); 
+}
+
+QModelIndex FolderModel::parent(const QModelIndex &/*parent*/) const 
+{ 
+  return QModelIndex(); 
 }
 
 #include "foldermodel.moc"

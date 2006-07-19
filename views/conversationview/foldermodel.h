@@ -39,22 +39,15 @@ public:
    * @param listOfMe is a set of aliases for the user. This model takes ownership of this parameter.
    */
   FolderModel(QStringList *listOfMe, QObject *parent = 0) : QAbstractItemModel(parent), m_me(listOfMe) {}
-  ~FolderModel() 
-  { 
-    Conversation *tmp;
-    foreach (tmp, m_conversations) {
-      delete tmp;
-    }
-    delete m_me; 
-  }
+  ~FolderModel();
 
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   int columnCount(const QModelIndex &parent = QModelIndex()) const;
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
   Conversation* conversation(int conversationId) const;
-  QModelIndex index(int row, int column, const QModelIndex &/*parent*/) const { return createIndex(row, column, row); }
-  QModelIndex parent(const QModelIndex &/*parent*/) const { return QModelIndex(); }
+  QModelIndex index(int row, int column, const QModelIndex &/*parent*/) const;
+  QModelIndex parent(const QModelIndex &/*parent*/) const;
 
   /**
    * Inserts a Message into this model and take ownership of it. FolderModel will take care of its deletion.

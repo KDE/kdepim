@@ -36,15 +36,7 @@ class FolderProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 public:
-  FolderProxyModel(FolderModel *model, QObject *parent = 0) : QSortFilterProxyModel(parent), sourceModel(model) 
-  {
-    setSourceModel(model);
-    filterUnread = false;
-    QObject::connect(model, SIGNAL(rowsInserted(const QModelIndex &, int, int)), this, SLOT(resort()));
-    QObject::connect(model, SIGNAL(layoutChanged()), this, SLOT(resort()));
-    m_resortable = false;
-    m_header = 0;
-  }
+  FolderProxyModel(FolderModel *model, QObject *parent = 0);
 
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
   int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -52,9 +44,9 @@ public:
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
   Conversation* conversation(const QModelIndex &index) const;
   void setFilter(const QString &filter);
-  void setHeader(QHeaderView *header) { m_header = header; }
-  bool resortable() const { return m_resortable; }
-  void setResortable(bool enable) { m_resortable = enable; }
+  void setHeader(QHeaderView *header);
+  bool resortable() const;
+  void setResortable(bool enable);
   void markConversationAsRead(const QModelIndex& index, bool read = true);
 
 public slots:
@@ -65,8 +57,8 @@ protected:
   bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 private:
-  FolderModel* sourceModel;
-  bool filterUnread, m_resortable;
+  FolderModel* m_model;
+  bool m_filterUnread, m_resortable;
   QRegExp m_filter;
   QHeaderView *m_header;
 };

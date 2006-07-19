@@ -28,6 +28,13 @@
 
 #include "mailview.h"
 
+MailView::MailView(FolderProxyModel *model, QWidget *parent) : QTextEdit(parent), m_model(model) 
+{ 
+  setReadOnly(true); 
+  t.start(); 
+  m_current = QModelIndex(); 
+}
+
 /*
  * This doesn't work as the QTextLength of the QTextFrameFormat of the root QTextFrame 
  * of the QTextDocument corresponding to QTextEdit (phew!) is of variable length and 
@@ -59,7 +66,7 @@ void MailView::setConversation(const QModelIndex &index)
   Conversation* c = m_model->conversation(index);
   int max = c->count()-1;
   QString tmp = "<H2><A NAME=top>";
-  tmp.append(c->conversationTitle());
+  tmp.append(c->subject());
   tmp.append("</A></H2><HR>");
   append(tmp);
   for (int count = 0; count < max; ++count) {

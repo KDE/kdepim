@@ -26,23 +26,23 @@
 class Message
 {
 public:
-  Message(bool null = false) : m_nullContent(null) { m_readStatus = false; }
+  Message(bool null = false);
   QString author() const;
   QString content() const;
-  QString subject() const { return m_subject; }
-  QString fancySubject() const { return m_fancySubject; }
-  QDateTime sendTime() const { return m_send; }
-  QDateTime arrivalTime() const { return m_arrival; }
-  unsigned long id() const { return m_id; }
-  unsigned long parentId() const { return m_pid; }
+  QString subject() const;
+  QString fancySubject() const;
+  QDateTime sendTime() const;
+  QDateTime arrivalTime() const;
+  unsigned long id() const;
+  unsigned long parentId() const;
   QString arrivalTimeInText() const;
   void setAuthor(const QString& newAuthor);
   void setContent(const QString& newContent);
-  void setArrivalTime(const QDateTime &dateTime) { m_arrival = dateTime; }
-  void setSendTime(const QDateTime &dateTime) { m_send = dateTime; }
-  void setSubject(const QString &subject) { m_subject = subject; m_fancySubject = fancify(subject); }
-  void setId(unsigned long id) { m_id = id; }
-  void setParentId(unsigned long parentId) { m_pid = parentId; }
+  void setArrivalTime(const QDateTime &dateTime);
+  void setSendTime(const QDateTime &dateTime);
+  void setSubject(const QString &subject);
+  void setId(unsigned long id);
+  void setParentId(unsigned long parentId);
   bool isNull() const;
   bool isRead() const;
 
@@ -68,7 +68,7 @@ public:
   bool operator>(Message &compare) const;
 
 private:
-  QString fancify(const QString &subject) const { return subject; }
+  QString fancify(const QString &subject) const;
 
   QString m_author, m_content, m_subject, m_fancySubject;
   QDateTime m_arrival, m_send;

@@ -22,25 +22,26 @@
 
 ConversationWidget::ConversationWidget(ConversationView *view, QWidget *parent) : QWidget(parent), m_view(view)
 {
-  searchLine = new SearchLine;
-  layout = new QGridLayout;
+  m_searchLine = new SearchLine;
+  m_layout = new QGridLayout;
 
-  layout->setSpacing(0);
-  layout->setMargin(0);
-  layout->addWidget(searchLine);
-  layout->addWidget(view);
+  m_layout->setSpacing(0);
+  m_layout->setMargin(0);
+  m_layout->addWidget(m_searchLine);
+  m_layout->addWidget(m_view);
 
-  connect(searchLine, SIGNAL(unreadToggled()), view, SLOT(toggleFilterUnread()));
-  connect(searchLine, SIGNAL(textChanged(const QString &)), view, SLOT(changeFilter(const QString &)));
+  connect(m_searchLine, SIGNAL(unreadToggled()), m_view, SLOT(toggleFilterUnread()));
+  connect(m_searchLine, SIGNAL(textChanged(const QString &)), m_view, SLOT(changeFilter(const QString &)));
 
-  setLayout(layout);
+  setLayout(m_layout);
 }
 
 
 ConversationWidget::~ConversationWidget()
 {
-  delete layout;
-  delete searchLine;
+  delete m_layout;
+  delete m_searchLine;
+  delete m_view;
 }
 
 #include "conversationwidget.moc"

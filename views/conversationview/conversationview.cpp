@@ -31,9 +31,9 @@ ConversationView::ConversationView(FolderProxyModel *model, QWidget *parent) : Q
   setRootIsDecorated(false);
   setSortingEnabled(true);
   sortByColumn(1);
-  cDelegate = new ConversationDelegate(model);
-  setItemDelegate(cDelegate);
-  setModel(model);
+  m_delegate = new ConversationDelegate(m_model);
+  setItemDelegate(m_delegate);
+  setModel(m_model);
   header()->setDefaultAlignment(Qt::AlignLeft);
   header()->setSortIndicator(1, Qt::DescendingOrder);
   header()->setSortIndicatorShown(true);
@@ -50,7 +50,7 @@ ConversationView::~ConversationView()
 
 void ConversationView::updateWidth(int width, int /*nouse*/)
 {
-  cDelegate->setWidth(width);
+  m_delegate->setWidth(width);
 }
 
 void ConversationView::toggleFilterUnread()

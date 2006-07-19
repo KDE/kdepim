@@ -49,9 +49,10 @@ public:
   void setWidth(int width);
 
 private:
-  QHeaderView *h;
-  FolderProxyModel *model;
-  int lineWidth, margin;
+  QHeaderView *m_header;
+  FolderProxyModel *m_model;
+  int m_lineWidth, m_margin;
+
   QRect getAuthorsBox(const QStyleOptionViewItem &option, const QRect &decoBox = QRect()) const;
   QRect getCountBox(const QStyleOptionViewItem &option, int neededWidth) const;
   QString getAuthors(const QStyleOptionViewItem &option, const Conversation *conversation, int maxWidth) const;

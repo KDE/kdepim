@@ -20,40 +20,40 @@
 
 #include "conversation.h"
 
-Conversation::Conversation(QStringList *manyMe, Message *message, QObject *parent) : QObject(parent), listOfMe(manyMe) 
+Conversation::Conversation(QStringList *manyMe, Message *message, QObject *parent) : QObject(parent), m_listOfMe(manyMe) 
 {
-  title = message->subject();
-  messages << message;
+  m_subject = message->fancySubject();
+  m_messages << message;
 }
 
 Conversation::~Conversation()
 {
   Message *tmp;
-  foreach (tmp, messages) {
+  foreach (tmp, m_messages) {
     delete tmp;
   }
 }
 
 int Conversation::count() const
 {
-  return messages.count();
+  return m_messages.count();
 }
 
-QString Conversation::conversationTitle() const
+QString Conversation::subject() const
 {
-  return title;
+  return m_subject;
 }
 
 Message* Conversation::message(int messageId) const
 {
-  if (messageId < 0 || messageId >= messages.count())
+  if (messageId < 0 || messageId >= m_messages.count())
     return new Message(true);
-  return messages.at(messageId);
+  return m_messages.at(messageId);
 }
 
 void Conversation::addMessage(Message *message)
 {
-  messages << message;
+  m_messages << message;
 }
 
 QString Conversation::author(int messageId) const
@@ -83,12 +83,12 @@ QDateTime Conversation::sendTime(int messageId) const
 
 QDateTime Conversation::arrivalTime() const
 {
-  return messages.last()->arrivalTime();
+  return m_messages.last()->arrivalTime();
 }
 
 QString Conversation::arrivalTimeInText() const
 {
-  return messages.last()->arrivalTimeInText();
+  return m_messages.last()->arrivalTimeInText();
 }
 
 QDateTime Conversation::sendTime() const
@@ -97,7 +97,7 @@ QDateTime Conversation::sendTime() const
   QDateTime tmp;
   QDateTime *oldest = new QDateTime(QDate(0, 0, 0), QTime(0, 0));
   for (int count = 0; count < max; ++count) {
-    tmp = messages.at(count)->sendTime();
+    tmp = m_messages.at(count)->sendTime();
     if (tmp > *oldest)
       oldest = &tmp;
   }
@@ -144,13 +144,13 @@ QString Conversation::authors() const
 {
   QString text = author(0);
   QString me;
-  foreach (me, *listOfMe) {
+  foreach (me, *m_listOfMe) {
     text.replace(QRegExp(me), i18n("me"));
   }
   int max = count();
   for (int i = 1; i < max; ++i) {
     QString tmpAuthor = author(i);
-    foreach (me, *listOfMe) {
+    foreach (me, *m_listOfMe) {
       tmpAuthor.replace(QRegExp(me), i18n("me"));
     }
     if (!text.contains(tmpAuthor)) {
@@ -164,7 +164,7 @@ QString Conversation::authors() const
 bool Conversation::isUnread() const
 {
 	Message *tmp;
-	foreach (tmp, messages) {
+	foreach (tmp, m_messages) {
 		if (!tmp->isRead())
 			return true;
 	}
@@ -175,7 +175,7 @@ bool Conversation::numberUnread() const
 {
 	int count = 0;
 	Message *tmp;
-	foreach (tmp, messages) {
+	foreach (tmp, m_messages) {
 		if (tmp->isRead())
 			++count;
 	}
@@ -185,7 +185,7 @@ bool Conversation::numberUnread() const
 void Conversation::markAs(bool read)
 {
 	Message *tmp;
-	foreach (tmp, messages) {
+	foreach (tmp, m_messages) {
 		tmp->markAs(read);
 	}
 }
@@ -193,7 +193,7 @@ void Conversation::markAs(bool read)
 bool Conversation::isRelated(const Message *message) const
 {
   Message *tmp;
-  foreach (tmp, messages) {
+  foreach (tmp, m_messages) {
     if (tmp->isRelated(message))
       return true;
   }

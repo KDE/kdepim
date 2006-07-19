@@ -36,8 +36,8 @@ public:
 
 private:
   ConversationView *m_view;
-  QGridLayout *layout;
-  SearchLine *searchLine;
+  QGridLayout *m_layout;
+  SearchLine *m_searchLine;
 };
 
 #endif

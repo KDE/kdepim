@@ -23,6 +23,19 @@
 
 #include "message.h"
 
+Message::Message(bool null) : m_nullContent(null) { m_readStatus = false; }
+QString Message::subject() const { return m_subject; }
+QString Message::fancySubject() const { return m_fancySubject; }
+QDateTime Message::sendTime() const { return m_send; }
+QDateTime Message::arrivalTime() const { return m_arrival; }
+unsigned long Message::id() const { return m_id; }
+unsigned long Message::parentId() const { return m_pid; }
+void Message::setArrivalTime(const QDateTime &dateTime) { m_arrival = dateTime; }
+void Message::setSendTime(const QDateTime &dateTime) { m_send = dateTime; }
+void Message::setSubject(const QString &subject) { m_subject = subject; m_fancySubject = fancify(subject); }
+void Message::setId(unsigned long id) { m_id = id; }
+void Message::setParentId(unsigned long parentId) { m_pid = parentId; }
+
 QString Message::author() const
 {
   if (m_nullContent) return "";
@@ -107,4 +120,9 @@ bool Message::isRelated(const Message *message) const
   if (m_pid == message->m_id) return true; // this is a parent of message
   if (m_fancySubject == message->m_fancySubject) return true; //fuzzy hit, same subject in this and message
   return false;
+}
+
+QString Message::fancify(const QString &subject) const 
+{
+  return subject;
 }
