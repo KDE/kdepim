@@ -29,7 +29,6 @@ install(TARGETS konsolekalendar  DESTINATION ${BIN_INSTALL_DIR} )
 ########### install files ###############
 
 install( FILES konsolekalendar.desktop  DESTINATION ${XDG_APPS_DIR})
-install( FILES   DESTINATION ${APPLNK_INSTALL_DIR}/Utilities)
 
 
 
