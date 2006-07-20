@@ -67,9 +67,15 @@ QVariant FolderProxyModel::headerData(int section, Qt::Orientation orientation, 
   return m_model->headerData(section, orientation, role);
 }
 
+//buggy!
 Conversation* FolderProxyModel::conversation(const QModelIndex &index) const
 {
   return m_model->conversation(mapToSource(index).row());
+}
+
+Conversation* FolderProxyModel::conversation(int id) const
+{
+  return m_model->conversation(id);
 }
 
 void FolderProxyModel::toggleFilterUnread()
@@ -98,9 +104,14 @@ void FolderProxyModel::resort()
     sort(m_header->sortIndicatorSection(), m_header->sortIndicatorOrder());
 }
 
-void FolderProxyModel:: markConversationAsRead(const QModelIndex& index, bool read)
+void FolderProxyModel::markConversationAsRead(int id, bool read)
 {
-  m_model->markConversationAsRead(mapToSource(index), read);
+  m_model->markConversationAsRead(id, read);
+}
+
+int FolderProxyModel::id(const QModelIndex &index) const
+{
+  return mapToSource(index).row();
 }
 
 #include "folderproxymodel.moc"

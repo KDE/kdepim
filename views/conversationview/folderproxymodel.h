@@ -43,11 +43,13 @@ public:
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
   Conversation* conversation(const QModelIndex &index) const;
+  Conversation* conversation(int id) const;
   void setFilter(const QString &filter);
   void setHeader(QHeaderView *header);
   bool resortable() const;
   void setResortable(bool enable);
-  void markConversationAsRead(const QModelIndex& index, bool read = true);
+  void markConversationAsRead(int id, bool read = true);
+  int id(const QModelIndex &index) const;
 
 public slots:
   void toggleFilterUnread();

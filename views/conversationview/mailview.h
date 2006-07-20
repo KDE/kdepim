@@ -42,7 +42,7 @@ public slots:
 
 private:
   FolderProxyModel *m_model;
-  QModelIndex m_current;
+  int m_id;
   QTime t;
 };
 

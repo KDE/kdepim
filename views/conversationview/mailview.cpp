@@ -32,7 +32,7 @@ MailView::MailView(FolderProxyModel *model, QWidget *parent) : QTextEdit(parent)
 { 
   setReadOnly(true); 
   t.start(); 
-  m_current = QModelIndex(); 
+  m_id = -1;
 }
 
 /*
@@ -61,9 +61,9 @@ void MailView::updateHeight()
  **/
 void MailView::setConversation(const QModelIndex &index)
 {
-  m_current = index;
+  m_id = m_model->id(index);
   setHtml("");
-  Conversation* c = m_model->conversation(index);
+  Conversation* c = m_model->conversation(m_id);
   int max = c->count()-1;
   QString tmp = "<H2><A NAME=top>";
   tmp.append(c->subject());
@@ -96,8 +96,8 @@ void MailView::setConversation(const QModelIndex &index)
 
 void MailView::markAsRead()
 {
-  if (t.elapsed() >= 3000)
-    m_model->markConversationAsRead(m_current, true);
+  if (t.elapsed() >= 3000 && m_id >= 0)
+    m_model->markConversationAsRead(m_id, true);
 }
 
 #include "mailview.moc"

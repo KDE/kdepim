@@ -116,10 +116,10 @@ bool FolderModel::insertRows(int /*row*/, int /*count*/, const QModelIndex& pare
   return true;
 }
 
-void FolderModel::markConversationAsRead(const QModelIndex& index, bool read)
+void FolderModel::markConversationAsRead(int id, bool read)
 {
-  m_conversations.at(index.row())->markAs(read);
-  emit dataChanged(index, index);
+  m_conversations.at(id)->markAs(read);
+  emit dataChanged(createIndex(id, 0, id), createIndex(id, 2, id));
 }
 
 QModelIndex FolderModel::index(int row, int column, const QModelIndex &/*parent*/) const 
