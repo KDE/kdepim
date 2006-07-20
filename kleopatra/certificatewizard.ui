@@ -36,6 +36,9 @@
                 <property name="name">
                     <cstring>TextLabel1</cstring>
                 </property>
+                <property name="wordWrap">
+                    <bool>true</bool>
+                </property>
                 <property name="text">
                     <string>&lt;b&gt;Welcome to the Key Generation Wizard.&lt;/b&gt;
 &lt;br&gt;
