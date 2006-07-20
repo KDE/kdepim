@@ -48,6 +48,12 @@ QString Message::content() const
   return m_content;
 }
 
+QString Message::htmlContent() const
+{
+  if (m_nullContent) return "";
+  return m_content;
+}
+
 void Message::setAuthor(const QString& author)
 {
   m_author = author;

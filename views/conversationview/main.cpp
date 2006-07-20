@@ -36,6 +36,7 @@
 #include <QMainWindow>
 #include <QStatusBar>
 #include <QMenu>
+#include <QTimer>
 
 #include <kapplication.h>
 #include <kaboutdata.h>
@@ -92,7 +93,7 @@ int main(int argc, char **argv)
   MailView *mail = new MailView(proxyModel);
   ConversationView *cView = new ConversationView(proxyModel);
   DummyKonadiAdapter *data = new DummyKonadiAdapter(model);
-  ConversationWidget *cWidget = new ConversationWidget(cView/*, data*/);
+  ConversationWidget *cWidget = new ConversationWidget(cView);
   proxyModel->sort(1, Qt::DescendingOrder);
   proxyModel->setResortable(true);
 
@@ -102,6 +103,9 @@ int main(int argc, char **argv)
   QObject::connect(cView, SIGNAL(clicked(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(cView, SIGNAL(activated(const QModelIndex&)), mail, SLOT(setConversation(const QModelIndex)));
   QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), cView, SLOT(updateWidth(int, int)));
+  QTimer *timer = new QTimer();
+  QObject::connect(timer, SIGNAL(timeout()), data, SLOT(newMessage()));
+  timer->start(300);
 
   splitter->addWidget(cWidget);
   splitter->addWidget(mail);
@@ -115,7 +119,7 @@ int main(int argc, char **argv)
   mainWindow->setCentralWidget(splitter);
   mainWindow->setWindowTitle(i18n("Conversations for KMail"));
 //  mainWindow->setMinimumWidth(900);
-  KSqueezedTextLabel *statusLabel = new KSqueezedTextLabel("No Akonadi backend loaded. Using dummy data.");
+  KSqueezedTextLabel *statusLabel = new KSqueezedTextLabel(i18n("No Akonadi backend loaded. Using dummy data."));
   mainWindow->statusBar()->addWidget(statusLabel, 1);
 
   KStdAction::copy(mainWindow, SLOT(slotCopy()), mainWindow->actionCollection())->setWhatsThis(i18n("Copy\n\nCopies the selected text to the clipboard."));

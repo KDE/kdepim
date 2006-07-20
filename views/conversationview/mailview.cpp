@@ -77,7 +77,7 @@ void MailView::setConversation(const QModelIndex &index)
     tmp.append("</B></A>, ");
     tmp.append(c->arrivalTimeInText(count));
     tmp.append("<BR>");
-    tmp.append(c->content(count));
+    tmp.append(c->htmlContent(count));
     append(tmp);
   }
   tmp = "<A NAME=";

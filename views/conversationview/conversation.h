@@ -45,6 +45,7 @@ public:
   QString author(int messageId) const;
   QString authors() const;
   QString content(int messageId) const;
+  QString htmlContent(int messageId) const;
   QDateTime arrivalTime(int messageId) const;
   QString arrivalTimeInText(int messageId) const;
   QDateTime sendTime(int messageId) const;

@@ -29,6 +29,7 @@ public:
   Message(bool null = false);
   QString author() const;
   QString content() const;
+  QString htmlContent() const;
   QString subject() const;
   QString fancySubject() const;
   QDateTime sendTime() const;

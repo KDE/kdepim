@@ -272,6 +272,9 @@ DummyKonadiAdapter::DummyKonadiAdapter(FolderModel *model, QObject *parent) : QO
 //     five->addMessage(*msg);
 //   conversations << one << two << three << four << five;
 //  sort();
+
+  for (int i = 0; i < 500; ++i)
+    newMessage();
 }
 
 DummyKonadiAdapter::~DummyKonadiAdapter()

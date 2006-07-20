@@ -18,6 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#include <QtDebug>
+
 #include <klocale.h>
 
 #include "foldermodel.h"
@@ -97,6 +99,7 @@ void FolderModel::insertMessage(Message *m)
     int row = m_conversations.indexOf(c);
     emit dataChanged(createIndex(row, 0, row), createIndex(row, 1, row));
   }
+  qDebug() << rowCount() << " conversations in folder";
 }
 
 Conversation* FolderModel::findConversation(const Message *m) const

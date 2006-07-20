@@ -66,6 +66,11 @@ QString Conversation::content(int messageId) const
   return message(messageId)->content();
 }
 
+QString Conversation::htmlContent(int messageId) const
+{
+  return message(messageId)->htmlContent();
+}
+
 QDateTime Conversation::arrivalTime(int messageId) const
 {
   return message(messageId)->arrivalTime();
