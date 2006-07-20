@@ -191,7 +191,8 @@ bool Modem::open()
   if ( !lockDevice() )
     return false;
 
-  const char *fdev = QFile::encodeName( (*prefs).serialDevice() ).data();
+  QCString dev = QFile::encodeName( (*prefs).serialDevice() );
+  const char *fdev = dev.data();
   if ( ( fd = ::open( fdev, O_RDWR | O_NOCTTY | O_NONBLOCK ) ) == -1 ) {
     emit errorMessage( i18n( "Unable to open device '%1'. "
                              "Please check that you have sufficient permissions." )
