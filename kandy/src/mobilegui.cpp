@@ -480,7 +480,6 @@ void MobileGui::setClock()
   mScheduler->execute( cmd );
   
   delete[] timeStr;
-  delete theTime;
 }
 
 
