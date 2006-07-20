@@ -44,7 +44,7 @@ install(TARGETS kcal_kolab  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install( FILES kolab.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/${KDE4_KCAL_LIBS})
+install( FILES kolab.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
 
 
 
