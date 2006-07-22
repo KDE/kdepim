@@ -39,6 +39,10 @@ KNode::SearchDialog::SearchDialog( searchType type, QWidget *parent ) :
   setButtonGuiItem( User1, KGuiItem( i18n("&Search"), "mail_find" ) );
   setButtonGuiItem( User2, KGuiItem( i18n("C&lear"), "editclear" ) );
 
+  connect( this, SIGNAL(closeClicked()), SLOT(slotClose()) );
+  connect( this, SIGNAL(user1Clicked()), SLOT(slotUser1()) );
+  connect( this, SIGNAL(user2Clicked()), SLOT(slotUser2()) );
+
   KVBox *filterBox = new KVBox( this );
   setMainWidget( filterBox );
 
