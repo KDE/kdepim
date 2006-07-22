@@ -270,7 +270,7 @@ void MainWindow::makeMenus()
       SLOT( startCurrentTimer() ), actionCollection(),
       "start");
   actionStop = new KAction( i18n("S&top"),
-      QString::fromLatin1("stop"), 0,
+      QString::fromLatin1("stop"), Key_S,
       _taskView,
       SLOT( stopCurrentTimer() ), actionCollection(),
       "stop");
