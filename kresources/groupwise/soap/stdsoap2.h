@@ -153,7 +153,7 @@ A commercial use license is available from Genivia, Inc., contact@genivia.com
 # endif
 #endif
 
-#ifdef __SYMBIAN32__ 
+#ifdef __SYMBIAN32__
 # define SYMBIAN
 # undef WIN32
 #endif
@@ -167,12 +167,6 @@ A commercial use license is available from Genivia, Inc., contact@genivia.com
 #if defined(__hpux)
 # ifndef HP_UX
 #  define HP_UX
-# endif
-#endif
-
-#ifdef __alpha
-# ifndef TRU64
-#  define TRU64 
 # endif
 #endif
 
@@ -297,7 +291,7 @@ A commercial use license is available from Genivia, Inc., contact@genivia.com
 #  define HAVE_WCTOMB
 #  define HAVE_MBTOWC
 #  define HAVE_ISNAN
-# elif defined(TRU64)
+# elif defined(__osf__)
 #  define HAVE_STRRCHR
 #  define HAVE_STRTOD
 #  define HAVE_SSCANF
@@ -553,7 +547,7 @@ extern "C" {
 # define SOAP_SOCKLEN_T SOCKLEN_T
 #elif defined(__socklen_t_defined) || defined(_SOCKLEN_T) || defined(CYGWIN) || defined(FREEBSD) || defined(__FreeBSD__) || defined(__QNX__) || defined(QNX) || defined(_AIX)
 # define SOAP_SOCKLEN_T socklen_t
-#elif defined(IRIX) || defined(WIN32) || defined(__APPLE__) || defined(HP_UX) || defined(SUN_OS) || defined(OPENSERVER) || defined(TRU64) || defined(VXWORKS)
+#elif defined(IRIX) || defined(WIN32) || defined(__APPLE__) || defined(HP_UX) || defined(SUN_OS) || defined(OPENSERVER) || defined(__osf__) || defined(VXWORKS)
 # define SOAP_SOCKLEN_T int
 #else
 # define SOAP_SOCKLEN_T size_t
@@ -709,7 +703,7 @@ extern "C" {
 #endif
 
 #ifdef VXWORKS
-# ifdef __INCmathh 
+# ifdef __INCmathh
 #  include <private/mathP.h>
 #  ifndef HAVE_ISNAN
 #   define HAVE_ISNAN
@@ -718,7 +712,7 @@ extern "C" {
 # endif
 #endif
 
-#ifdef WIN32 
+#ifdef WIN32
 # include <float.h>
 # ifndef HAVE_ISNAN
 #  define HAVE_ISNAN
@@ -1706,7 +1700,7 @@ SOAP_FMAC1 char* SOAP_FMAC2 soap_putsizesoffsets(struct soap*, const char *, con
 SOAP_FMAC1 char* SOAP_FMAC2 soap_putsizes(struct soap*, const char *, const int *, int);
 SOAP_FMAC1 char* SOAP_FMAC2 soap_putoffset(struct soap*, int);
 SOAP_FMAC1 char* SOAP_FMAC2 soap_putoffsets(struct soap*, const int *, int);
- 
+
 SOAP_FMAC1 int SOAP_FMAC2 soap_closesock(struct soap*);
 
 SOAP_FMAC1 struct soap *SOAP_FMAC2 soap_new(void);
