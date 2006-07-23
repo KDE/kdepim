@@ -12,7 +12,7 @@ kde4_add_plugin(ldifvcardthumbnail ${ldifvcardthumbnail_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} ldifvcardthumbnail )
 
-target_link_libraries(ldifvcardthumbnail  ${KDE4_KDECORE_LIBS} kdefx kabc)
+target_link_libraries(ldifvcardthumbnail  ${KDE4_KDECORE_LIBS} ${KDE4_KDEFX_LIBS} kabc)
 
 install(TARGETS ldifvcardthumbnail  DESTINATION ${PLUGIN_INSTALL_DIR})
 
