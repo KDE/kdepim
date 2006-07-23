@@ -12,7 +12,7 @@ kde4_add_plugin(kio_groupwise ${kio_groupwise_PART_SRCS})
 
 kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_groupwise )
 
-target_link_libraries(kio_groupwise  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} gwsoap kdepim kio )
+target_link_libraries(kio_groupwise  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} gwsoap kdepim ${KDE4_KIO_LIBS} )
 
 install(TARGETS kio_groupwise  DESTINATION ${PLUGIN_INSTALL_DIR})
 

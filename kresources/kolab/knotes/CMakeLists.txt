@@ -17,7 +17,7 @@ kde4_automoc(${knoteskolab_LIB_SRCS})
 
 kde4_add_library(knoteskolab SHARED ${knoteskolab_LIB_SRCS})
 
-target_link_libraries(knoteskolab  ${KDE4_KDECORE_LIBS} kresources kdeprint ${KDE4_KCAL_LIBS} kdepim)
+target_link_libraries(knoteskolab  ${KDE4_KDECORE_LIBS} kresources ${KDE4_KDEPRINT_LIBS} ${KDE4_KCAL_LIBS} kdepim)
 
 set_target_properties(knoteskolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS knoteskolab  DESTINATION ${LIB_INSTALL_DIR})

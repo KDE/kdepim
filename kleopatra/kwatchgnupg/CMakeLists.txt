@@ -15,7 +15,7 @@ kde4_automoc(${kwatchgnupg_SRCS})
 
 kde4_add_executable(kwatchgnupg ${kwatchgnupg_SRCS})
 
-target_link_libraries(kwatchgnupg  ${KDE4_KDECORE_LIBS} kleopatra kutils )
+target_link_libraries(kwatchgnupg  ${KDE4_KDECORE_LIBS} kleopatra ${KDE4_KUTILS_LIBS} )
 
 install(TARGETS kwatchgnupg  DESTINATION ${BIN_INSTALL_DIR} )
 

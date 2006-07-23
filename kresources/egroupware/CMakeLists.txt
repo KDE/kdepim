@@ -64,7 +64,7 @@ kde4_add_kcfg_files(knotes_xmlrpc_LIB_SRCS knotes_egroupwareprefs.kcfgc )
 kde4_add_library(knotes_xmlrpc SHARED ${knotes_xmlrpc_LIB_SRCS})
 set_target_properties(knotes_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 
-target_link_libraries(knotes_xmlrpc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdeprint kdepim )
+target_link_libraries(knotes_xmlrpc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KDEPRINT_LIBS} kdepim )
 
 
 install(TARGETS knotes_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
