@@ -21,7 +21,7 @@ kde4_automoc(${kcalkolab_LIB_SRCS})
 
 kde4_add_library(kcalkolab SHARED ${kcalkolab_LIB_SRCS})
 
-target_link_libraries(kcalkolab  ${KDE4_KDECORE_LIBS} kdepim ${KDE4_KCAL_LIBS} kresources )
+target_link_libraries(kcalkolab  ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS} kdepim )
 
 set_target_properties(kcalkolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kcalkolab  DESTINATION ${LIB_INSTALL_DIR})

@@ -32,7 +32,7 @@ kde4_add_kcfg_files(kabc_slox_LIB_SRCS kabcsloxprefs.kcfgc )
 
 kde4_add_library(kabc_slox SHARED ${kabc_slox_LIB_SRCS})
 
-target_link_libraries(kabc_slox  ${KDE4_KDECORE_LIBS} kslox kabc kabc_slox )
+target_link_libraries(kabc_slox  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kslox kabc_slox )
 
 set_target_properties(kabc_slox PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kabc_slox  DESTINATION ${LIB_INSTALL_DIR})

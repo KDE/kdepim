@@ -32,7 +32,7 @@ kde4_automoc(${kabc_groupdav_LIB_SRCS})
 
 kde4_add_library(kabc_groupdav SHARED ${kabc_groupdav_LIB_SRCS})
 
-target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav ${KDE4_KCAL_LIBS} kdepim kabc kabc_groupdav )
+target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav ${KDE4_KCAL_LIBS} kdepim ${KDE4_KABC_LIBS} kabc_groupdav )
 
 set_target_properties(kabc_groupdav PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kabc_groupdav  DESTINATION ${LIB_INSTALL_DIR})

@@ -1,7 +1,8 @@
+project(konsolekalendar)
 
-add_subdirectory( pixmaps ) 
+add_subdirectory(pixmaps) 
 
-include_directories( ${CMAKE_SOURCE_DIR}/kcal  )
+include_directories(${CMAKE_SOURCE_DIR}/kcal)
 
 
 ########### next target ###############
@@ -21,9 +22,9 @@ kde4_automoc(${konsolekalendar_SRCS})
 
 kde4_add_executable(konsolekalendar ${konsolekalendar_SRCS})
 
-target_link_libraries(konsolekalendar  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim )
+target_link_libraries(konsolekalendar  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim)
 
-install(TARGETS konsolekalendar  DESTINATION ${BIN_INSTALL_DIR} )
+install(TARGETS konsolekalendar  DESTINATION ${BIN_INSTALL_DIR})
 
 
 ########### install files ###############

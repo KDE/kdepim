@@ -16,7 +16,7 @@ kde4_automoc(${kabckolab_LIB_SRCS})
 
 kde4_add_library(kabckolab SHARED ${kabckolab_LIB_SRCS})
 
-target_link_libraries(kabckolab  ${KDE4_KDECORE_LIBS}  kresources kabc ${KDE4_KCAL_LIBS} kdepim)
+target_link_libraries(kabckolab  ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KCAL_LIBS} kdepim)
 
 set_target_properties(kabckolab PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kabckolab  DESTINATION ${LIB_INSTALL_DIR})

@@ -25,7 +25,7 @@ kde4_add_kcfg_files(kabc_xmlrpc_LIB_SRCS kabc_egroupwareprefs.kcfgc )
 
 kde4_add_library(kabc_xmlrpc SHARED ${kabc_xmlrpc_LIB_SRCS})
 
-target_link_libraries(kabc_xmlrpc  ${KDE4_KIO_LIBS} kabc kdepim )
+target_link_libraries(kabc_xmlrpc  ${KDE4_KIO_LIBS} ${KDE4_KABC_LIBS} kdepim )
 
 set_target_properties(kabc_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kabc_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
