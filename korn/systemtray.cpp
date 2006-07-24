@@ -27,18 +27,18 @@
 #include <QMouseEvent>
 
 SystemTray::SystemTray( QWidget * parent )
-	: KSystemTray( parent )	
+	: KSystemTrayIcon( parent )
 {
 }
 
 SystemTray::~SystemTray()
 {
 }
-	
+
 void SystemTray::mousePressEvent( QMouseEvent* ee )
 {
 	//Use the general function to determe what must be done
 	emit mouseButtonPressed( ee->button() );
 }
-	
+
 #include "systemtray.moc"

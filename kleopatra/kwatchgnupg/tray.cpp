@@ -40,17 +40,17 @@
 #include <QToolTip>
 
 KWatchGnuPGTray::KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin )
-  : KSystemTray( mainwin )
+  : KSystemTrayIcon( mainwin )
 {
   kDebug() << "KWatchGnuPGTray::KWatchGnuPGTray" << endl;
 
   setObjectName( "KWatchGnuPG Tray Window" );
   KGlobal::iconLoader()->addAppDir( "kwatchgnupg" );
-  
+
   mNormalPix = loadIcon("kwatchgnupg");
   mAttentionPix = loadIcon("kwatchgnupg2");
 
-  setPixmap( mNormalPix );
+  setIcon( mNormalPix );
   this->setToolTip( i18n("KWatchGnuPG Log Viewer") );
 }
 
@@ -60,8 +60,8 @@ KWatchGnuPGTray::~KWatchGnuPGTray()
 
 void KWatchGnuPGTray::setAttention( bool att )
 {
-  if( att ) setPixmap( mAttentionPix );
-  else setPixmap( mNormalPix );
+  if( att ) setIcon( mAttentionPix );
+  else setIcon( mNormalPix );
 }
 
 #include "tray.moc"

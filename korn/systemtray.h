@@ -19,7 +19,7 @@
 #ifndef MK_SYSTEMTRAY_H
 #define MK_SYSTEMTRAY_H
 
-#include <ksystemtray.h>
+#include <ksystemtrayicon.h>
 //Added by qt3to4:
 #include <QMouseEvent>
 
@@ -31,7 +31,7 @@ class QWidget;
  *
  * @author Mart Kelder <mart.kde@hccnet.nl>
  */
-class SystemTray : public KSystemTray
+class SystemTray : public KSystemTrayIcon
 { Q_OBJECT
 public:
 	/**

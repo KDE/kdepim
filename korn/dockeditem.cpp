@@ -37,11 +37,13 @@
 
 DockedItem::DockedItem( QWidget * parent )
 	: BoxContainerItem( parent ),
-	_systemtray( new SystemTray( parent ) )	
+	_systemtray( new SystemTray( parent ) )
 {
 	_systemtray->setObjectName( "System tray" );
-	this->fillKMenu( _systemtray->contextMenu(), _systemtray->actionCollection() );
-	
+        KMenu *menu = new KMenu(parent);
+	this->fillKMenu( menu, _systemtray->actionCollection() );
+        _systemtray->setContextMenu( menu );
+
 	connect( _systemtray, SIGNAL( quitSelected() ), kapp, SLOT( quit() ) );
 	connect( _systemtray, SIGNAL( mouseButtonPressed( Qt::MouseButton ) ),
 		 this, SLOT( mouseButtonPressed( Qt::MouseButton ) ) );
@@ -56,17 +58,18 @@ void DockedItem::showBox()
 {
 	_systemtray->show();
 }
-	
+
 void DockedItem::readConfig( KConfig* config, const int index )
 {
 	BoxContainerItem::readConfig( config, index );
-	
+
 	//No additional information to be loaded.
 }
-	
+
 void DockedItem::setCount( const int count, const bool newMessages )
 {
-	drawLabel( _systemtray, count, newMessages );
+#warning KSystemTray is no QLabel anymore
+	// drawLabel( _systemtray, count, newMessages );
 }
 
 void DockedItem::setTooltip( const QString& tooltip )
@@ -76,13 +79,13 @@ void DockedItem::setTooltip( const QString& tooltip )
 
 void DockedItem::slotShowPassivePopup( QList< KornMailSubject >* list, int total, bool date, const QString& name )
 {
-	showPassivePopup( _systemtray, list, total, name, date );
+        showPassivePopup( _systemtray->parentWidget(), list, total, name, date );
 }
 
 void DockedItem::slotShowPassivePopup( const QString& message, const QString& name )
 {
 #warning Port objId() usage!
-	KPassivePopup::message( QString( "Korn - %1/%2" ).arg( /*objId().constData()*/"" ).arg( name ), message, _systemtray );
+	KPassivePopup::message( QString( "Korn - %1/%2" ).arg( /*objId().constData()*/"" ).arg( name ), message, _systemtray->parentWidget() );
 }
 
 void DockedItem::doPopup()

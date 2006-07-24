@@ -33,12 +33,12 @@
 #ifndef TRAY_H
 #define TRAY_H
 
-#include <ksystemtray.h>
-#include <QPixmap>
+#include <ksystemtrayicon.h>
+#include <QIcon>
 
 class KWatchGnuPGMainWindow;
 
-class KWatchGnuPGTray : public KSystemTray {
+class KWatchGnuPGTray : public KSystemTrayIcon {
   Q_OBJECT
 public:
   KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin );
@@ -47,8 +47,8 @@ public:
 public slots:
   void setAttention( bool att );
 private:
-  QPixmap mNormalPix;
-  QPixmap mAttentionPix;
+  QIcon mNormalPix;
+  QIcon mAttentionPix;
 };
 
 #endif /* TRAY_H */
