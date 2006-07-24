@@ -8,7 +8,7 @@ add_subdirectory( slox )
 add_subdirectory( featureplan ) 
 add_subdirectory( groupdav ) 
 add_subdirectory( birthdays ) 
-
+#add_subdirectory( groupwise )
 
 
 
