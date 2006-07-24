@@ -191,6 +191,7 @@ void ResourceSelection::add()
   }
 
   resource->setResourceName( i18n( "%1 address book" ).arg( type ) );
+  resource->setAddressBook(core()->addressBook());
 
   KRES::ConfigDialog dlg( this, QString( "contact" ), resource );
 
