@@ -1,12 +1,4 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook ${CMAKE_SOURCE_DIR}/kaddressbook/details ${CMAKE_SOURCE_DIR}/kaddressbook/common  )
-
-
-########### next target ###############
-
-
-########### install files ###############
-
 install( FILES detailed-style.png mike-style.png ringbinder-style.png  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook/printing)
 
 
