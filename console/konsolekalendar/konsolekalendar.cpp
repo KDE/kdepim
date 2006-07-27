@@ -47,7 +47,8 @@
 #include <kcal/calendar.h>
 #include <kcal/event.h>
 #include <kcal/htmlexport.h>
-#include <libkdepim/kpimprefs.h>
+
+#include "libkdepim/kpimprefs.h"
 
 #include "konsolekalendar.h"
 #include "konsolekalendaradd.h"
@@ -82,7 +83,7 @@ bool KonsoleKalendar::createCalendar()
   CalendarLocal newCalendar( KPimPrefs::timezone() );
 
   if ( m_variables->isDryRun() ) {
-    cout << i18n( "Create Calendar <Dry Run>: %1" , 
+    cout << i18n( "Create Calendar <Dry Run>: %1" ,
        m_variables->getCalendarFile() ).toLocal8Bit().data()
          << endl;
   } else {
@@ -92,7 +93,7 @@ bool KonsoleKalendar::createCalendar()
               << endl;
 
     if ( m_variables->isVerbose() ) {
-      cout << i18n( "Create Calendar <Verbose>: %1" , 
+      cout << i18n( "Create Calendar <Verbose>: %1" ,
          m_variables->getCalendarFile() ).toLocal8Bit().data()
            << endl;
     }
@@ -433,15 +434,15 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
 
 void KonsoleKalendar::printSpecs()
 {
-  cout << i18n( "  What:  %1" , 
+  cout << i18n( "  What:  %1" ,
      m_variables->getSummary() ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  Begin: %1" , 
+  cout << i18n( "  Begin: %1" ,
      m_variables->getStartDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  End:   %1" , 
+  cout << i18n( "  End:   %1" ,
      m_variables->getEndDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
@@ -450,11 +451,11 @@ void KonsoleKalendar::printSpecs()
          << endl;
   }
 
-  cout << i18n( "  Desc:  %1" , 
+  cout << i18n( "  Desc:  %1" ,
      m_variables->getDescription() ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  Location:  %1" , 
+  cout << i18n( "  Location:  %1" ,
      m_variables->getLocation() ).toLocal8Bit().data()
        << endl;
 }

@@ -43,7 +43,8 @@
 #include <kcal/calendarlocal.h>
 #include <kcal/calendar.h>
 #include <kcal/event.h>
-#include <libkdepim/kpimprefs.h>
+
+#include "libkdepim/kpimprefs.h"
 
 #include "konsolekalendaradd.h"
 
@@ -90,14 +91,14 @@ bool KonsoleKalendarAdd::addEvent()
     event->setLocation( m_variables->getLocation() );
 
     if ( m_variables->getCalendar()->addEvent( event ) ) {
-      cout << i18n( "Success: \"%1\" inserted" , 
+      cout << i18n( "Success: \"%1\" inserted" ,
          m_variables->getSummary() ).toLocal8Bit().data()
            << endl;
 
         m_variables->getCalendar()->save();
 
     } else {
-      cout << i18n( "Failure: \"%1\" not inserted" , 
+      cout << i18n( "Failure: \"%1\" not inserted" ,
          m_variables->getSummary() ).toLocal8Bit().data()
            << endl;
       status = false;
@@ -141,15 +142,15 @@ bool KonsoleKalendarAdd::addImportedCalendar()
 
 void KonsoleKalendarAdd::printSpecs()
 {
-  cout << i18n( "  What:  %1" , 
+  cout << i18n( "  What:  %1" ,
      m_variables->getSummary() ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  Begin: %1" , 
+  cout << i18n( "  Begin: %1" ,
      m_variables->getStartDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  End:   %1" , 
+  cout << i18n( "  End:   %1" ,
      m_variables->getEndDateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
@@ -158,11 +159,11 @@ void KonsoleKalendarAdd::printSpecs()
          << endl;
   }
 
-  cout << i18n( "  Desc:  %1" , 
+  cout << i18n( "  Desc:  %1" ,
      m_variables->getDescription() ).toLocal8Bit().data()
        << endl;
 
-  cout << i18n( "  Location:  %1" , 
+  cout << i18n( "  Location:  %1" ,
      m_variables->getLocation() ).toLocal8Bit().data()
        << endl;
 }

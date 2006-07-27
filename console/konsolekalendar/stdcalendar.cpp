@@ -26,15 +26,17 @@
  * @author Cornelius Schumacher
  * @author Allen Winter
  */
-#include "stdcalendar.h"
-
-#include <kcal/resourcecalendar.h>
-#include <libkdepim/kpimprefs.h>
 
 #include <kconfig.h>
 #include <kstandarddirs.h>
 #include <klocale.h>
 #include <kurl.h>
+
+#include <kcal/resourcecalendar.h>
+
+#include "libkdepim/kpimprefs.h"
+
+#include "stdcalendar.h"
 
 using namespace KCal;
 
