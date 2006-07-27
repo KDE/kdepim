@@ -19,12 +19,6 @@ set_target_properties(qgpgme PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS qgpgme  DESTINATION ${LIB_INSTALL_DIR})
 
 
-########### install files ###############
-
-#install( FILES   DESTINATION ${INCLUDE_INSTALL_DIR}/qgpgme)
-
-
-
 
 #original Makefile.am contents follow:
 

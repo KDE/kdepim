@@ -7,8 +7,9 @@ include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
 ########### install files ###############
 
-#install( FILES   DESTINATION ${INCLUDE_INSTALL_DIR}/kleo)
 
+
+install( FILES enum.h  cryptobackend.h cryptobackendfactory.h cryptoconfig.h dn.h job.h keylistjob.h keygenerationjob.h importjob.h exportjob.h downloadjob.h deletejob.h encryptjob.h decryptjob.h signjob.h verifydetachedjob.h verifyopaquejob.h  decryptverifyjob.h signencryptjob.h refreshkeysjob.h multideletejob.h  hierarchicalkeylistjob.h  keyfilter.h keyfiltermanager.h DESTINATION ${INCLUDE_INSTALL_DIR}/kleo)
 
 
 
