@@ -29,6 +29,7 @@ KonnectorPair::KonnectorPair()
   : mManager( new KonnectorManager ), mConfig( 0 )
 {
   mUid = KApplication::randomString( 10 );
+  mStrategy = ResolveManually;
 }
 
 KonnectorPair::~KonnectorPair()
