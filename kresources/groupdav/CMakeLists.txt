@@ -76,8 +76,8 @@ install(TARGETS kabc_groupdav  DESTINATION ${PLUGIN_INSTALL_DIR})
 install( FILES kabc_groupdav.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kabc)
 install( FILES kcal_groupdav.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal)
 
-install(FILES uninstall.desktop DESTINATION ${kde_servicesdir}/kresources/kabc/ RENAME kabc_opengroupware.desktop)
-install(FILES uninstall.desktop DESTINATION ${kde_servicesdir}/kresources/kcal/ RENAME kcal_opengroupware.desktop)
+install(FILES uninstall.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kabc/ RENAME kabc_opengroupware.desktop)
+install(FILES uninstall.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kresources/kcal/ RENAME kcal_opengroupware.desktop)
 
 
 
