@@ -37,7 +37,7 @@
 #include <kdepimmacros.h>
 
 class QCheckBox;
-class Q3TimeEdit;
+class QTimeEdit;
 class KIntNumInput;
 namespace Kleo {
   class CryptoConfig;
@@ -70,7 +70,7 @@ private:
                                         bool isList );
 
   Kleo::DirectoryServicesWidget* mWidget;
-  Q3TimeEdit* mTimeout;
+  QTimeEdit* mTimeout;
   KIntNumInput* mMaxItems;
   QCheckBox* mAddNewServersCB;
 

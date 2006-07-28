@@ -43,7 +43,7 @@
 
 #include <khbox.h>
 #include <QLabel>
-#include <q3datetimeedit.h>
+#include <qdatetimeedit.h>
 #include <QCheckBox>
 #include <QLayout>
 //Added by qt3to4:
@@ -157,8 +157,8 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( KInstanc
   box->setSpacing( KDialog::spacingHint() );
   lay->addWidget( box );
   QLabel* label = new QLabel( i18n( "LDAP &timeout (minutes:seconds)" ), box );
-  mTimeout = new Q3TimeEdit( box );
-  mTimeout->setDisplay( Q3TimeEdit::Minutes | Q3TimeEdit::Seconds );
+  mTimeout = new QTimeEdit( box );
+  mTimeout->setDisplayFormat( "mm:ss" );
   connect( mTimeout, SIGNAL( valueChanged( const QTime& ) ), this, SLOT( slotChanged() ) );
   label->setBuddy( mTimeout );
   QWidget* stretch = new QWidget( box );

@@ -45,7 +45,7 @@
 
 #include <QLayout>
 #include <QLabel>
-#include <q3textedit.h>
+#include <qtextedit.h>
 #include <QFontMetrics>
 #include <QTimer>
 //Added by qt3to4:
@@ -62,7 +62,7 @@ CRLView::CRLView( QWidget* parent )
 
   topLayout->addWidget( new QLabel( i18n("CRL cache dump:"), this ) );
 
-  _textView = new Q3TextEdit( this );
+  _textView = new QTextEdit( this );
   _textView->setFont( KGlobalSettings::fixedFont() );
   _textView->setTextFormat( Qt::LogText );
   topLayout->addWidget( _textView );

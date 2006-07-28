@@ -36,7 +36,7 @@
 #include <QDialog>
 #include <QString>
 
-class Q3TextEdit;
+class QTextEdit;
 class QPushButton;
 class KProcess;
 class QTimer;
@@ -59,7 +59,7 @@ protected:
   void closeEvent( QCloseEvent * );
 
 private:  
-  Q3TextEdit*   _textView;
+  QTextEdit*   _textView;
   QPushButton* _updateButton;
   QPushButton* _closeButton;
   KProcess*    _process;
