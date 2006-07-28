@@ -53,7 +53,7 @@ KIO_Count::~KIO_Count()
 	delete _metadata;
 }
 
-void KIO_Count::count( KKioDrop *drop )
+void KIO_Count::count( KKioDrop *drop, AccountSettings *settings )
 {
 	if( _new_mailurls )
 		return; //A counting is pending, so no new one is started.
@@ -61,6 +61,7 @@ void KIO_Count::count( KKioDrop *drop )
 	delete _kurl;
 	delete _metadata;
 	_kio = drop;
+	_settings = settings;
 
 	/*
 	 * Saving current settings: all actions are asynchroon, so if someone
@@ -303,7 +304,7 @@ void KIO_Count::entries( KIO::Job* job, const KIO::UDSEntryList &list )
 		if( ! fileinfo.name.isNull() && isFile )
 		{
 			_new_mailurls->append( fileinfo );
-			if( ! old_list.contains( fileinfo.name ) && _kio->passivePopup() )
+			if( ! old_list.contains( fileinfo.name ) && _settings->passivePopup() )
 				showPassive( fileinfo.name );
 		}
 	}

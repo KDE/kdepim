@@ -19,9 +19,9 @@
 class KConfig;
 #include "kornboxcfgimpl.h"
 
-#include "keditlistboxman.h"
 #include "kornaccountcfgimpl.h"
 #include "password.h"
+#include "settings.h"
 
 #include <kconfig.h>
 #include <kcolorbutton.h>
@@ -39,19 +39,20 @@ class KConfig;
 #include <QListView>
 #include <QString>
 
-KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent )
+KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent, Settings *glob_settings, BoxSettings *settings )
 	: QWidget( parent ),
 	Ui_KornBoxCfg(),
-	_config( 0 ),
-	_base( 0 ),
-	_index( -1 )
+	m_glob_settings( glob_settings ),
+	m_settings( settings ),
+	m_base( 0 ),
+	m_index( -1 )
 {
 	setupUi( this );
 	
-	_fonts[ 0 ] = new QFont;
-	_fonts[ 1 ] = new QFont;
-	_anims[ 0 ] = new QString;
-	_anims[ 1 ] = new QString;
+	m_fonts[ 0 ] = new QFont;
+	m_fonts[ 1 ] = new QFont;
+	m_anims[ 0 ] = new QString;
+	m_anims[ 1 ] = new QString;
 
 	lbLeft->setText( i18nc( "Left mousebutton", "Left" ) );
 	if( lbLeft->text() == "Left" )
@@ -63,11 +64,6 @@ KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent )
 	connect( parent, SIGNAL( okClicked() ), this, SLOT( slotOK() ) );
 	connect( parent, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
 	
-	elbAccounts->setTitle( i18n( "Accounts" ) );
-
-	connect( elbAccounts, SIGNAL( elementsSwapped( int, int ) ), this, SLOT( slotAccountsSwapped( int, int ) ) );
-	connect( elbAccounts, SIGNAL( elementDeleted( int ) ), this, SLOT( slotAccountDeleted( int ) ) );
-
 	connect( chNormalText, SIGNAL(toggled(bool)), cbNormalText, SLOT(setEnabled(bool)) );
 	connect( chNewText, SIGNAL(toggled(bool)), cbNewText, SLOT(setEnabled(bool)) );
 	connect( chNormalBack, SIGNAL(toggled(bool)), cbNormalBack, SLOT(setEnabled(bool)) );
@@ -75,9 +71,13 @@ KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent )
 	connect( chNormalIcon, SIGNAL(toggled(bool)), ibNormalIcon, SLOT(setEnabled(bool)) );
 	connect( chNewIcon, SIGNAL(toggled(bool)), ibNewIcon, SLOT(setEnabled(bool)) );
 	connect( chShowPassive, SIGNAL(toggled(bool)), chPassiveDate, SLOT(setEnabled(bool)) );
+	connect( pbAdd, SIGNAL(clicked()), this, SLOT(slotAddAccount()) );
+	connect( pbRemove, SIGNAL(clicked()), this, SLOT(slotRemoveAccount()) );
+	connect( pbMoveUp, SIGNAL(clicked()), this, SLOT(slotMoveUp()) );
+	connect( pbMoveDown, SIGNAL(clicked()), this, SLOT(slotMoveDown()) );
 	connect( pbEdit, SIGNAL(clicked()), this, SLOT(slotEditBox()) );
-	connect( elbAccounts, SIGNAL(activated(const QModelIndex&)), this, SLOT(slotActivated(const QModelIndex&)) );
-	connect( elbAccounts, SIGNAL(setDefaults(const QString&,const int,KConfig*)), this, SLOT(slotSetDefaults(const QString&,const int,KConfig*)) );
+	connect( lsAccounts, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(slotEditBox()) );
+	
 	connect( pbNormalFont, SIGNAL(pressed()), this, SLOT(slotChangeNormalFont()) );
 	connect( pbNewFont, SIGNAL(pressed()), this, SLOT(slotChangeNewFont()) );
 	connect( pbNormalAnim, SIGNAL(released()), this, SLOT(slotChangeNormalAnim()) );
@@ -88,204 +88,238 @@ KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent )
 	connect( chNewAnim, SIGNAL(toggled(bool)), pbNewAnim, SLOT(setEnabled(bool)) );
 	connect( chNormalAnim, SIGNAL(toggled(bool)), this, SLOT(slotNormalAnimToggled(bool)) );
 	connect( chNewAnim, SIGNAL(toggled(bool)), this, SLOT(slotNewAnimToggled(bool)) );
+
+	this->edName->setText( m_settings->boxName() );
+	readViewConfig();
+	readEventConfig();
+	readAccountsConfig();
 }
 
 KornBoxCfgImpl::~KornBoxCfgImpl()
 {
-	delete _fonts[ 0 ];
-	delete _fonts[ 1 ];
-	delete _anims[ 0 ];
-	delete _anims[ 1 ];
+	delete m_fonts[ 0 ];
+	delete m_fonts[ 1 ];
+	delete m_anims[ 0 ];
+	delete m_anims[ 1 ];
 }
 
-void KornBoxCfgImpl::readConfig( KConfig * config, const int index )
+void KornBoxCfgImpl::writeConfig()
 {
-	_config = config;
-	_index = index;
-	
-	_config->setGroup( QString( "korn-%1" ).arg( index ) );
-
-	readViewConfig();
-	readEventConfig();
-	readDCOPConfig();
-	readAccountsConfig();
-}
-
-void KornBoxCfgImpl::writeConfig( KConfig * config, const int index )
-{
-	config->setGroup( QString( "korn-%1" ).arg( index ) );
-	
-	writeViewConfig( config );
-	writeEventConfig( config );
-	writeDCOPConfig( config );
-	writeAccountsConfig( config );
+	m_settings->setBoxName( this->edName->text() );
+	writeViewConfig();
+	writeEventConfig();
 }
 
 //private
 void KornBoxCfgImpl::readViewConfig()
 {
-	this->chNormalText->setChecked(_config->readEntry ( "hasnormalfgcolour", true ) );
-	this->cbNormalText->setColor(  _config->readEntry( "normalfgcolour", QColor( Qt::black ) ) );
-	this->chNewText->setChecked(   _config->readEntry ( "hasnewfgcolour", true ) );
-	this->cbNewText->setColor(     _config->readEntry( "newfgcolour", QColor( Qt::black ) ) );
-	this->chNormalBack->setChecked(_config->readEntry ( "hasnormalbgcolour", false ) );
-	this->cbNormalBack->setColor(  _config->readEntry( "normalbgcolour", QColor( Qt::white ) ) );
-	this->chNewBack->setChecked(   _config->readEntry ( "hasnewbgcolour", false ) );
-	this->cbNewBack->setColor(     _config->readEntry( "newbgcolour", QColor( Qt::white ) ) );
+	this->chNormalText->setChecked( m_settings->hasForegroundColor( BoxSettings::Normal ) );
+	this->cbNormalText->setColor(   m_settings->foregroundColor( BoxSettings::Normal ) );
+	this->chNewText->setChecked(    m_settings->hasForegroundColor( BoxSettings::New ) );
+	this->cbNewText->setColor(      m_settings->foregroundColor( BoxSettings::New ) );
+	this->chNormalBack->setChecked( m_settings->hasBackgroundColor( BoxSettings::Normal ) );
+	this->cbNormalBack->setColor(   m_settings->backgroundColor( BoxSettings::Normal ) );
+	this->chNewBack->setChecked(    m_settings->hasBackgroundColor( BoxSettings::New ) );
+	this->cbNewBack->setColor(      m_settings->backgroundColor( BoxSettings::New ) );
 	
-	this->chNormalIcon->setChecked(_config->readEntry( "hasnormalicon", false ) );
-	this->ibNormalIcon->setIcon(   _config->readEntry    ( "normalicon", "" ) );
-	this->chNewIcon->setChecked(   _config->readEntry( "hasnewicon", false ) );
-	this->ibNewIcon->setIcon(      _config->readEntry    ( "newicon", "" ) );
+	this->chNormalIcon->setChecked( m_settings->hasIcon( BoxSettings::Normal ) );
+	this->ibNormalIcon->setIcon(    m_settings->icon( BoxSettings::Normal ) );
+	this->chNewIcon->setChecked(    m_settings->hasIcon( BoxSettings::New ) );
+	this->ibNewIcon->setIcon(       m_settings->icon( BoxSettings::New ) );
 	
-	this->chNormalFont->setChecked(_config->readEntry( "hasnormalfont", false ) );
-	this->chNewFont->setChecked   (_config->readEntry( "hasnewfont", false ) );
-	this->chNormalAnim->setChecked(_config->readEntry( "hasnormalanim", false ) );
-	this->chNewAnim->setChecked(   _config->readEntry( "hasnewanim", false ) );
-	*_fonts[ 0 ] = _config->readEntry( "normalfont", QFont() );
-	*_fonts[ 1 ] = _config->readEntry( "newfont", QFont() );
-	*_anims[ 0 ] = _config->readEntry    ( "normalanim", "" );
-	*_anims[ 1 ] = _config->readEntry    ( "newanim", "" );
+	this->chNormalFont->setChecked( m_settings->hasFont( BoxSettings::Normal ) );
+	this->chNewFont->setChecked   ( m_settings->hasFont( BoxSettings::New ) );
+	this->chNormalAnim->setChecked( m_settings->hasAnimation( BoxSettings::Normal ) );
+	this->chNewAnim->setChecked(    m_settings->hasAnimation( BoxSettings::New ) );
+	*m_fonts[ 0 ] = m_settings->font( BoxSettings::Normal );
+	*m_fonts[ 1 ] = m_settings->font( BoxSettings::New );
+	*m_anims[ 0 ] = m_settings->animation( BoxSettings::Normal );
+	*m_anims[ 1 ] = m_settings->animation( BoxSettings::New );
 }
 
 void KornBoxCfgImpl::readEventConfig()
 {
-	this->chLeftRecheck  ->setChecked( _config->readEntry( "leftrecheck", true ) );
-	this->chMiddleRecheck->setChecked( _config->readEntry( "middlerecheck", false ) );
-	this->chRightRecheck ->setChecked( _config->readEntry( "rightrecheck", false ) );
+	this->chLeftRecheck  ->setChecked( m_settings->clickCommand( Qt::LeftButton,  BoxSettings::Recheck ) );
+	this->chMiddleRecheck->setChecked( m_settings->clickCommand( Qt::MidButton,   BoxSettings::Recheck ) );
+	this->chRightRecheck ->setChecked( m_settings->clickCommand( Qt::RightButton, BoxSettings::Recheck ) );
 	
-	this->chLeftReset  ->setChecked( _config->readEntry( "leftreset", false ) );
-	this->chMiddleReset->setChecked( _config->readEntry( "middlereset", false ) );
-	this->chRightReset ->setChecked( _config->readEntry( "rightreset", false ) );
+	this->chLeftReset  ->setChecked( m_settings->clickCommand( Qt::LeftButton,  BoxSettings::Reset ) );
+	this->chMiddleReset->setChecked( m_settings->clickCommand( Qt::MidButton,   BoxSettings::Reset ) );
+	this->chRightReset ->setChecked( m_settings->clickCommand( Qt::RightButton, BoxSettings::Reset ) );
 	
-	this->chLeftView  ->setChecked( _config->readEntry( "leftview", false ) );
-	this->chMiddleView->setChecked( _config->readEntry( "middleview", false ) );
-	this->chRightView ->setChecked( _config->readEntry( "rightview", false ) );
+	this->chLeftView  ->setChecked( m_settings->clickCommand( Qt::LeftButton,  BoxSettings::View ) );
+	this->chMiddleView->setChecked( m_settings->clickCommand( Qt::MidButton,   BoxSettings::View ) );
+	this->chRightView ->setChecked( m_settings->clickCommand( Qt::RightButton, BoxSettings::View ) );
 	
-	this->chLeftRun  ->setChecked( _config->readEntry( "leftrun", false ) );
-	this->chMiddleRun->setChecked( _config->readEntry( "middlerun", false ) );
-	this->chRightRun ->setChecked( _config->readEntry( "rightrun", false ) );
+	this->chLeftRun  ->setChecked( m_settings->clickCommand( Qt::LeftButton,  BoxSettings::Run ) );
+	this->chMiddleRun->setChecked( m_settings->clickCommand( Qt::MidButton,   BoxSettings::Run ) );
+	this->chRightRun ->setChecked( m_settings->clickCommand( Qt::RightButton, BoxSettings::Run ) );
 	
-	this->chLeftPopup  ->setChecked( _config->readEntry( "leftpopup", false ) );
-	this->chMiddlePopup->setChecked( _config->readEntry( "middlepopup", false ) );
-	this->chRightPopup ->setChecked( _config->readEntry( "rightpopup", true ) );
+	this->chLeftPopup  ->setChecked( m_settings->clickCommand( Qt::LeftButton,  BoxSettings::Popup ) );
+	this->chMiddlePopup->setChecked( m_settings->clickCommand( Qt::MidButton,   BoxSettings::Popup ) );
+	this->chRightPopup ->setChecked( m_settings->clickCommand( Qt::RightButton, BoxSettings::Popup ) );
 	
-	this->edCommand->setUrl( _config->readEntry( "command", "" ) );
+	this->edCommand->setUrl( m_settings->command() );
 	
-	this->edNewRun->setUrl( _config->readEntry( "newcommand", "" ) );
-	this->edPlaySound->setUrl( _config->readEntry( "sound", "" ) );
-	this->chShowPassive->setChecked( _config->readEntry( "passivepopup", false ) );
-	this->chPassiveDate->setChecked( _config->readEntry( "passivedate", false ) );
+	this->edNewRun->setUrl( m_settings->newCommand() );
+	this->edPlaySound->setUrl( m_settings->sound() );
+	this->chShowPassive->setChecked( m_settings->passivePopup() );
+	this->chPassiveDate->setChecked( m_settings->passiveDate() );
 }
 
 void KornBoxCfgImpl::readAccountsConfig()
 {
-	elbAccounts->setGroupName( QString( "korn-%1-%2" ).arg( _index ) );
-	elbAccounts->setConfig( _config );
+	AccountSettings *setting;
+	int xx = 0;
+
+	while( ( setting = m_settings->account( xx ) ) )
+	{
+		lsAccounts->addItem( setting->accountName() );
+		++xx;
+	}
 }
 	
-void KornBoxCfgImpl::readDCOPConfig()
-{
-	elbDCOP->clear();
-	elbDCOP->insertStringList( _config->readEntry( "dcop", QStringList(), ',' ) );
-}
-	
-void KornBoxCfgImpl::writeViewConfig( KConfig* config )
+void KornBoxCfgImpl::writeViewConfig()
 {
 	QColor invalid;
 	
-	config->writeEntry( "hasnormalfgcolour", this->chNormalText->isChecked() );
-	config->writeEntry( "normalfgcolour",    this->chNormalText->isChecked() ? this->cbNormalText->color() : invalid );
-	config->writeEntry( "hasnewfgcolour",    this->chNewText->isChecked() );
-	config->writeEntry( "newfgcolour",       this->chNewText->isChecked()    ? this->cbNewText->color() : invalid );
-	config->writeEntry( "hasnormalbgcolour", this->chNormalBack->isChecked() );
-	config->writeEntry( "normalbgcolour",    this->chNormalBack->isChecked() ? this->cbNormalBack->color() : invalid );
-	config->writeEntry( "hasnewbgcolour",    this->chNewBack->isChecked() );
-	config->writeEntry( "newbgcolour",       this->chNewBack->isChecked()    ? this->cbNewBack->color() : invalid );
+	m_settings->setHasForegroundColor( BoxSettings::Normal, this->chNormalText->isChecked() );
+	m_settings->setForegroundColor( BoxSettings::Normal, this->chNormalText->isChecked() ? this->cbNormalText->color() : invalid );
+	m_settings->setHasForegroundColor( BoxSettings::New, this->chNewText->isChecked() );
+	m_settings->setForegroundColor( BoxSettings::New, this->chNewText->isChecked() ? this->cbNewText->color() : invalid );
+	m_settings->setHasBackgroundColor( BoxSettings::Normal, this->chNormalBack->isChecked() );
+	m_settings->setBackgroundColor( BoxSettings::Normal, this->chNormalBack->isChecked() ? this->cbNormalBack->color() : invalid );
+	m_settings->setHasBackgroundColor( BoxSettings::New, this->chNewBack->isChecked() );
+	m_settings->setBackgroundColor( BoxSettings::New, this->chNewBack->isChecked() ? this->cbNewBack->color() : invalid );
 	
-	config->writeEntry( "hasnormalicon", this->chNormalIcon->isChecked() );
-	config->writeEntry( "normalicon",    this->chNormalIcon->isChecked() ? this->ibNormalIcon->icon() : "" );
-	config->writeEntry( "hasnewicon",    this->chNewIcon->isChecked() );
-	config->writeEntry( "newicon",       this->chNewIcon->isChecked()    ? this->ibNewIcon->icon() : "" );
+	m_settings->setHasIcon( BoxSettings::Normal, this->chNormalIcon->isChecked() );
+	m_settings->setIcon( BoxSettings::Normal, this->chNormalIcon->isChecked() ? this->ibNormalIcon->icon() : "" );
+	m_settings->setHasIcon( BoxSettings::New, this->chNewIcon->isChecked() );
+	m_settings->setIcon( BoxSettings::New, this->chNewIcon->isChecked() ? this->ibNewIcon->icon() : "" );
 	
-	config->writeEntry( "hasnormalfont", this->chNormalFont->isChecked() );
-	config->writeEntry( "normalfont",    this->chNormalFont->isChecked() ? *_fonts[ 0 ] : QFont() );
-	config->writeEntry( "hasnewfont",    this->chNewFont->isChecked() );
-	config->writeEntry( "newfont",       this->chNewFont->isChecked() ? *_fonts[ 1 ] : QFont() );
-	config->writeEntry( "hasnormalanim", this->chNormalAnim->isChecked() );
-	config->writeEntry( "normalanim",    this->chNormalAnim->isChecked() ? *_anims[ 0 ] : "" );
-	config->writeEntry( "hasnewanim",    this->chNewAnim->isChecked() );
-	config->writeEntry( "newanim",       this->chNewAnim->isChecked() ? *_anims[ 1 ] : "" );
-	
+	m_settings->setHasFont( BoxSettings::Normal, this->chNormalFont->isChecked() );
+	m_settings->setFont( BoxSettings::Normal, this->chNormalFont->isChecked() ? *m_fonts[ 0 ] : QFont() );
+	m_settings->setHasFont( BoxSettings::New, this->chNewFont->isChecked() );
+	m_settings->setFont( BoxSettings::New, this->chNewFont->isChecked() ? *m_fonts[ 1 ] : QFont() );
+	m_settings->setHasAnimation( BoxSettings::Normal, this->chNormalAnim->isChecked() );
+	m_settings->setAnimation( BoxSettings::Normal, this->chNormalAnim->isChecked() ? *m_anims[ 0 ] : "" );
+	m_settings->setHasAnimation( BoxSettings::New, this->chNewAnim->isChecked() );
+	m_settings->setAnimation( BoxSettings::New, this->chNewAnim->isChecked() ? *m_anims[ 1 ] : "" );
 }
 
-void KornBoxCfgImpl::writeEventConfig( KConfig *config )
+void KornBoxCfgImpl::writeEventConfig()
 {
-	config->writeEntry( "leftrecheck",   this->chLeftRecheck  ->isChecked() );
-	config->writeEntry( "middlerecheck", this->chMiddleRecheck->isChecked() );
-	config->writeEntry( "rightrecheck",  this->chRightRecheck ->isChecked() );
+	m_settings->setClickCommand( Qt::LeftButton, BoxSettings::Recheck, this->chLeftRecheck->isChecked() );
+	m_settings->setClickCommand( Qt::MidButton, BoxSettings::Recheck, this->chMiddleRecheck->isChecked() );
+	m_settings->setClickCommand( Qt::RightButton, BoxSettings::Recheck, this->chRightRecheck->isChecked() );
 	
-	config->writeEntry( "leftreset",   this->chLeftReset  ->isChecked() );
-	config->writeEntry( "middlereset", this->chMiddleReset->isChecked() );
-	config->writeEntry( "rightreset",  this->chRightReset ->isChecked() );
+	m_settings->setClickCommand( Qt::LeftButton, BoxSettings::Reset, this->chLeftReset->isChecked() );
+	m_settings->setClickCommand( Qt::MidButton, BoxSettings::Reset, this->chMiddleReset->isChecked() );
+	m_settings->setClickCommand( Qt::RightButton, BoxSettings::Reset, this->chRightReset->isChecked() );
+
+	m_settings->setClickCommand( Qt::LeftButton, BoxSettings::View, this->chLeftView->isChecked() );
+	m_settings->setClickCommand( Qt::MidButton, BoxSettings::View, this->chMiddleView->isChecked() );
+	m_settings->setClickCommand( Qt::RightButton, BoxSettings::View, this->chRightView->isChecked() );
 	
-	config->writeEntry( "leftview",   this->chLeftView  ->isChecked() );
-	config->writeEntry( "middleview", this->chMiddleView->isChecked() );
-	config->writeEntry( "rightview",  this->chRightView ->isChecked() );
+	m_settings->setClickCommand( Qt::LeftButton, BoxSettings::Run, this->chLeftRun->isChecked() );
+	m_settings->setClickCommand( Qt::MidButton, BoxSettings::Run, this->chMiddleRun->isChecked() );
+	m_settings->setClickCommand( Qt::RightButton, BoxSettings::Run, this->chRightRun->isChecked() );
 	
-	config->writeEntry( "leftrun",   this->chLeftRun  ->isChecked()  );
-	config->writeEntry( "middlerun", this->chMiddleRun->isChecked()  );
-	config->writeEntry( "rightrun",  this->chRightRun ->isChecked() );
+	m_settings->setClickCommand( Qt::LeftButton, BoxSettings::Popup, this->chLeftPopup->isChecked() );
+	m_settings->setClickCommand( Qt::MidButton, BoxSettings::Popup, this->chMiddlePopup->isChecked() );
+	m_settings->setClickCommand( Qt::RightButton, BoxSettings::Popup, this->chRightPopup->isChecked() );
+
+	m_settings->setCommand( this->edCommand->url().url() );
 	
-	config->writeEntry( "leftpopup",   this->chLeftPopup  ->isChecked() );
-	config->writeEntry( "middlepopup", this->chMiddlePopup->isChecked() );
-	config->writeEntry( "rightpopup",  this->chRightPopup ->isChecked() );
-	
-	config->writeEntry( "command", this->edCommand->url().url() );
-	
-	config->writeEntry( "newcommand", this->edNewRun->url().url() );
-	config->writeEntry( "sound", this->edPlaySound->url().url() );
-	config->writeEntry( "passivepopup", this->chShowPassive->isChecked() );
-	config->writeEntry( "passivedate", this->chPassiveDate->isChecked() );
+	m_settings->setNewCommand( this->edNewRun->url().url() );
+	m_settings->setSound( this->edPlaySound->url().url() );
+	m_settings->setPassivePopup( this->chShowPassive->isChecked() );
+	m_settings->setPassiveDate( this->chPassiveDate->isChecked() );
 }
 
-void KornBoxCfgImpl::writeAccountsConfig( KConfig * /*config */)
+void KornBoxCfgImpl::slotAddAccount()
 {
+	m_settings->addAccount();
+	lsAccounts->addItem( "new account" );
+	lsAccounts->setCurrentRow( lsAccounts->count() - 1 );
+	slotEditBox();
 }
 
-void KornBoxCfgImpl::writeDCOPConfig( KConfig *config )
+void KornBoxCfgImpl::slotRemoveAccount()
 {
-	config->writeEntry( "dcop", elbDCOP->items(), ',' );
+	if( lsAccounts->currentRow() < 0 )
+		return;
+
+	while( lsAccounts->currentRow() < lsAccounts->count() - 1 )
+		slotMoveDown();
+	
+	m_settings->deleteAccount( lsAccounts->count() - 1 );
+	lsAccounts->takeItem( lsAccounts->count() - 1 );
+}
+
+void KornBoxCfgImpl::slotMoveUp()
+{
+	if( lsAccounts->currentRow() < 1 )
+		return; //Already first, or no item selected
+	m_settings->swapAccounts( lsAccounts->currentRow() - 1, lsAccounts->currentRow() );
+	if( !m_settings->account( lsAccounts->currentRow() ) )
+		kWarning() << "The settings do not match with the list widget" << endl;
+	else
+		lsAccounts->currentItem()->setText( m_settings->account( lsAccounts->currentRow() )->accountName() );
+	lsAccounts->setCurrentRow( lsAccounts->currentRow() - 1 );
+	if( !m_settings->account( lsAccounts->currentRow() ) )
+		kWarning() << "The settings do not match with the list widget" << endl;
+	else
+		lsAccounts->currentItem()->setText( m_settings->account( lsAccounts->currentRow() )->accountName() );
+}
+
+void KornBoxCfgImpl::slotMoveDown()
+{
+	if( lsAccounts->currentRow() < 0 || lsAccounts->currentRow() < lsAccounts->count() - 1 )
+		return; //Already last, or no item selected
+	m_settings->swapAccounts( lsAccounts->currentRow(), lsAccounts->currentRow() + 1 );
+	if( !m_settings->account( lsAccounts->currentRow() ) )
+		kWarning() << "The settings do not match with the list widget" << endl;
+	else
+		lsAccounts->currentItem()->setText( m_settings->account( lsAccounts->currentRow() )->accountName() );
+	lsAccounts->setCurrentRow( lsAccounts->currentRow() + 1 );
+	if( !m_settings->account( lsAccounts->currentRow() ) )
+		kWarning() << "The settings do not match with the list widget" << endl;
+	else
+		lsAccounts->currentItem()->setText( m_settings->account( lsAccounts->currentRow() )->accountName() );
 }
 
 void KornBoxCfgImpl::slotEditBox()
 {
-	if( _base )
+	if( m_base )
 		return; //Already a dialog open
-	if( !elbAccounts->listView()->currentIndex().isValid() ) //TODO: test this
+	if( lsAccounts->currentRow() < 0 ) //TODO: test this
 		return; //No item selected
-	elbAccounts->setEnabled( false );
-	
-	_base = new KDialog( this );
-	_base->setCaption( i18n("Box Configuration") );
-	_base->setButtons( KDialog::Ok | KDialog::Cancel );
-	_base->setModal( false );
-	_base->showButtonSeparator( true );
-	KornAccountCfgImpl *widget = new KornAccountCfgImpl( _base );
+	if( !m_settings->account( lsAccounts->currentRow() ) )
+	{
+		kWarning() << "The settings do not match with the list widget" << endl;
+		return;
+	}
 
-	_base->setMainWidget( widget );
+	lsAccounts->setEnabled( false );
+	pbAdd->setEnabled( false );
+	pbRemove->setEnabled( false );
+	pbMoveUp->setEnabled( false );
+	pbMoveDown->setEnabled( false );
+	pbEdit->setEnabled( false );
 	
-	connect( _base, SIGNAL( finished() ), this, SLOT( slotDialogDestroyed() ) );
+	m_base = new KDialog( this );
+	m_base->setButtons( KDialog::Ok | KDialog::Cancel );
+	m_base->setCaption( i18n("Box Configuration") );
+	m_base->setModal( false );
+	m_base->showButtonSeparator( true );
+	KornAccountCfgImpl *widget = new KornAccountCfgImpl( m_base, m_glob_settings, m_settings->account( lsAccounts->currentRow() ) );
 
-	_group = new KConfigGroup( _config, QString( "korn-%1-%2" ).
-			arg( _index ).arg(elbAccounts->listView()->currentIndex().row() ) );
+	m_base->setMainWidget( widget );
 	
-	QMap< QString, QString > *map = new QMap< QString, QString >( _config->entryMap( QString( "korn-%1-%2" ).
-			                        arg( _index ).arg(elbAccounts->listView()->currentIndex().row() ) ) );
-	widget->readConfig( _group, map, _index, elbAccounts->listView()->currentIndex().row() );
-	delete map;
+	connect( m_base, SIGNAL( finished() ), this, SLOT( slotDialogDestroyed() ) );
 
-	_base->show();
+	m_base->show();
 }
 
 void KornBoxCfgImpl::slotActivated( const QModelIndex& )
@@ -293,59 +327,30 @@ void KornBoxCfgImpl::slotActivated( const QModelIndex& )
 	slotEditBox();
 }
 	
-/*void KornBoxCfgImpl::slotActivated( const QString& )
-{
-	slotEditBox();
-}
-
-void KornBoxCfgImpl::slotActivated( const int )
-{
-	slotEditBox();
-}*/
-
-void KornBoxCfgImpl::slotSetDefaults( const QString& name, const int, KConfig* config )
-{
-	config->writeEntry( "name", name );
-	config->writeEntry( "protocol", "mbox" );
-	config->writeEntry( "host", QString() );
-	config->writeEntry( "port", QString() );
-	config->writeEntry( "username", QString() );
-	config->writeEntry( "mailbox", "/var/spool/mail/" );
-	config->writeEntry( "savepassword", 0 );
-	config->writeEntry( "password", QString() );
-	config->writeEntry( "auth", QString() );
-	config->writeEntry( "interval", 300 );
-	config->writeEntry( "boxsettings", true );
-	config->writeEntry( "command", "" );
-	config->writeEntry( "sound", "" );
-	config->writeEntry( "passivepopup", false );
-	config->writeEntry( "passivedate", false );
-}
-
 void KornBoxCfgImpl::slotChangeNormalAnim()
 {
-	*_anims[ 0 ] = KFileDialog::getOpenFileName( *_anims[ 0 ], ".mng .gif", this, i18n("Normal animation") );
+	*m_anims[ 0 ] = KFileDialog::getOpenFileName( *m_anims[ 0 ], ".mng .gif", this, i18n("Normal animation") );
 }
 
 void KornBoxCfgImpl::slotChangeNewAnim()
 {
-	*_anims[ 1 ] = KFileDialog::getOpenFileName( *_anims[ 1 ], ".mng .gif", this, i18n("Normal animation") );
+	*m_anims[ 1 ] = KFileDialog::getOpenFileName( *m_anims[ 1 ], ".mng .gif", this, i18n("Normal animation") );
 }
 
 void KornBoxCfgImpl::slotChangeNormalFont()
 {
 	KFontDialog fd( this, "font dialog" );
-	fd.setFont( *_fonts[ 0 ], false );
+	fd.setFont( *m_fonts[ 0 ], false );
 	fd.exec();
-	*_fonts[ 0 ] = fd.font();
+	*m_fonts[ 0 ] = fd.font();
 }
 
 void KornBoxCfgImpl::slotChangeNewFont()
 {
 	KFontDialog fd( this, "font dialog" );
-	fd.setFont( *_fonts[ 1 ], false );
+	fd.setFont( *m_fonts[ 1 ], false );
 	fd.exec();
-	*_fonts[ 1 ] = fd.font();
+	*m_fonts[ 1 ] = fd.font();
 }
 
 void KornBoxCfgImpl::slotNormalAnimToggled( bool enabled )
@@ -376,29 +381,25 @@ void KornBoxCfgImpl::slotNewAnimToggled( bool enabled )
 
 void KornBoxCfgImpl::slotOK()
 {
-	writeConfig( _config, _index );
+	writeConfig();
 }
 
 void KornBoxCfgImpl::slotCancel()
 {
-	readConfig( _config, _index );
+	//readConfig( m_config, m_index );
 }
 
 void KornBoxCfgImpl::slotDialogDestroyed()
 {
-	_base->deleteLater(); _base = 0;
-	delete _group;
-	elbAccounts->setEnabled( true );
-}
-
-void KornBoxCfgImpl::slotAccountsSwapped( int account1, int account2 )
-{
-	KOrnPassword::swapKOrnWalletPassword( _index, account1, _index, account2 );
-}
-
-void KornBoxCfgImpl::slotAccountDeleted( int account )
-{
-	KOrnPassword::deleteKOrnPassword( _index, account );
+	m_base->deleteLater(); m_base = 0;
+	lsAccounts->setEnabled( true );
+	pbAdd->setEnabled( true );
+	pbRemove->setEnabled( true );
+	pbMoveUp->setEnabled( true );
+	pbMoveDown->setEnabled( true );
+	pbEdit->setEnabled( true );
+	if( m_settings->account( lsAccounts->currentRow() ) )
+		lsAccounts->currentItem()->setText( m_settings->account( lsAccounts->currentRow() )->accountName() );
 }
 
 #include "kornboxcfgimpl.moc"

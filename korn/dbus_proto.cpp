@@ -21,6 +21,7 @@
 
 #include "account_input.h"
 #include "dbusdrop.h"
+#include "settings.h"
 
 #include <kconfigbase.h>
 #include <klocale.h>
@@ -29,18 +30,14 @@
 #include <q3ptrlist.h>
 #include <QVector>
 
-KMailDrop* DBUS_Protocol::createMaildrop( KConfigGroup* ) const
+KMailDrop* DBUS_Protocol::createMaildrop( AccountSettings* ) const
 {
 	return new DBUSDrop();
 }
 
-QMap< QString, QString > * DBUS_Protocol::createConfig( KConfigGroup* config, const QString& ) const
+QMap< QString, QString > * DBUS_Protocol::createConfig( AccountSettings *settings ) const
 {
-	QMap< QString, QString > *result = new QMap< QString, QString >;
-
-	result->insert( "dbusname", config->readEntry( "dbusname", "korn_dbus" ) );
-
-	return result;
+	return new QMap< QString, QString >( settings->readEntries() );
 }
 
 QString DBUS_Protocol::configName() const

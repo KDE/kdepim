@@ -23,6 +23,7 @@
 #include "korncfgimpl.h"
 #include "hvcontainer.h"
 #include "password.h"
+#include "settings.h"
 
 #include <kapplication.h>
 #include <kconfig.h>
@@ -31,19 +32,18 @@
 
 KornShell::KornShell( QWidget * parent )
 	: QWidget( parent ),
-	_config( new KConfig( "kornrc" ) ),
+	_settings( Settings::self() ),
+	_const_settings( _settings ),
 	_box( 0 ),
 	_configDialog( 0 )
 {
-	_config->checkUpdate( "korn_kde_3_4_config_change", "korn-3-4-config_change.upd" );
+	//_config->checkUpdate( "korn_kde_3_4_config_change", "korn-3-4-config_change.upd" );
+	
 	readConfig();
 }
 
 KornShell::~KornShell()
 {
-	if( _box )
-		_box->writeConfig( _config );
-	delete _config;
 	delete _box;
 }
 
@@ -60,7 +60,7 @@ void KornShell::optionDlg()
 		return;
 	}
 	
-	_configDialog = new KDialog( 0 );
+	_configDialog = new KDialog( (QWidget*)0 );
 	_configDialog->setCaption( i18n( "Korn Configuration" ) );
 	_configDialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Apply );
 	_configDialog->setModal( false );
@@ -79,23 +79,25 @@ void KornShell::readConfig()
 {
 	static bool shownConfig = false;
 	
-	_config->setGroup( "korn" );
-	QChar layout = _config->readEntry( "layout", "Docked" )[0].toUpper();
-	KOrnPassword::setUseWallet( _config->readEntry( "usewallet", false ) );
-	
-	if( layout == 'H' )
+	switch( _const_settings->layout() )
+	{
+	case Settings::Horizontal:
 		_box = new HVContainer( Qt::Horizontal, this );
-	else if( layout == 'V' )
+		break;
+	case Settings::Vertical:
 		_box = new HVContainer( Qt::Vertical, this );
-	else
+		break;
+	case Settings::Docked:
 		_box = new DockedContainer( this );
-
+		break;
+	}
+	
 	connect( _box, SIGNAL( showConfiguration() ), this, SLOT( optionDlg() ) );
 			
-	_box->readConfig( _config );
+	_box->readConfig( _const_settings, _settings );
 
 	//Show configuration dialog of no boxes are configurated
-	if( !_config->hasGroup( "korn-0" ) )
+	if( !_const_settings->getBox( 0 ) )
 		//If user pressed cancel, or did not add a box, close KOrn
 		if( !shownConfig )
 		{
@@ -124,8 +126,6 @@ void KornShell::slotApply()
 	
 	delete _box; _box = 0;
 
-	_config->reparseConfiguration();
-	
 	readConfig();
 	_box->showBox();
 }

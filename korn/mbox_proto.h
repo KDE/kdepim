@@ -51,7 +51,7 @@ public:
 	 * @param config the configuration
 	 * @return for this class, it always returns this
 	 */
-	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
+	virtual const Protocol* getProtocol( AccountSettings* ) const { return this; }
 
 	/**
 	 * This function returns the name of the kioslave.

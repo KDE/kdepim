@@ -31,6 +31,7 @@
 
 #include <kio/global.h> //FIXME: without this, moc-compiler fails.
 
+class AccountSettings;
 class KIO_Protocol;
 class KIO_Single_Subject;
 class KKioDrop;
@@ -68,7 +69,7 @@ public:
 	 *
 	 * @param drop the KKioDrop of the account to check
 	 */
-	void count( KKioDrop* drop );
+	void count( KKioDrop* drop, AccountSettings *settings );
 
 	/**
 	 * This function returns true if no errors occurred.
@@ -83,6 +84,7 @@ public:
 	void stopActiveCount();
 private:
 	KKioDrop *_kio;
+	AccountSettings *_settings;
 	KIO::ListJob *_job;
 	KIO::Slave *_slave;
 	KUrl *_kurl;

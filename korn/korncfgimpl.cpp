@@ -18,14 +18,15 @@
  
 #include "korncfgimpl.h"
 
-#include "keditlistboxman.h"
 #include "kornboxcfgimpl.h"
 #include "password.h"
+#include "settings.h"
 
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kdialog.h>
 #include <klocale.h>
+#include <kmenu.h>
 
 #include <QColor>
 #include <QCheckBox>
@@ -41,157 +42,72 @@
 KornCfgImpl::KornCfgImpl( QWidget * parent )
 	: QWidget( parent ),
 	Ui_KornCfgWidget(),	
-	_config( new KConfig( "kornrc" ) ),
-	_base( 0 )
+	m_settings( Settings::self() ),
+	m_base( 0 )
 {
 	setupUi( this );
-		
-	elbBoxes->setSubGroupName( "korn-%1-%2" );
-	elbBoxes->setGroupName( "korn-%1" );
-	elbBoxes->setConfig( _config );
-	elbBoxes->setTitle( i18n( "Boxes" ) );
-	
+
 	connect( parent, SIGNAL( okClicked() ), this, SLOT( slotOK() ) );
 	connect( parent, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
 	connect( parent, SIGNAL( applyClicked() ), this, SLOT( slotApply() ) );
 
-	connect( elbBoxes, SIGNAL( elementsSwapped( int, int ) ), this, SLOT( slotElementsSwapped( int, int ) ) );
-	connect( elbBoxes, SIGNAL( elementDeleted( int ) ), this, SLOT( slotElementDeleted( int ) ) );
-	connect( elbBoxes, SIGNAL(activated(const QModelIndex&)), this, SLOT(slotActivated(const QModelIndex&)));
-	connect( elbBoxes, SIGNAL(setDefaults(const QString&,const int,KConfig*)), this, SLOT(slotSetDefaults(const QString&,const int,KConfig*)));
+	connect( pbAdd, SIGNAL(clicked()), this, SLOT(slotAdd()) );
+	connect( pbRemove, SIGNAL(clicked()), this, SLOT(slotRemove()) );
+	connect( pbMoveUp, SIGNAL(clicked()), this, SLOT(slotMoveUp()) );
+	connect( pbMoveDown, SIGNAL(clicked()), this, SLOT(slotMoveDown()) );
 	connect( pbEdit, SIGNAL(clicked()), this, SLOT(slotEditBox()) );
+	connect( lsBoxes, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(slotEditBox()) );
+
+	lsBoxes->setSelectionMode( QAbstractItemView::SingleSelection );
 
 	readConfig();
 }
 
 KornCfgImpl::~KornCfgImpl()
 {
-	_config->sync();
 }
 
 void KornCfgImpl::slotEditBox()
 {
-	if( _base )
+	if( m_base )
 		return; //Already a dialog open
-	if( !elbBoxes->listView()->currentIndex().isValid() ) //TODO: test if it works
+	if( lsBoxes->currentRow() < 0 ) //TODO: test if it works
 		return; //No item selected
-	elbBoxes->setEnabled( false );
+	lsBoxes->setEnabled( false );
+	pbAdd->setEnabled( false );
+	pbRemove->setEnabled( false );
+	pbMoveUp->setEnabled( false );
+	pbMoveDown->setEnabled( false );
 	
-	_base = new KDialog( this );
-	_base->setCaption( "Box Configuration" );
-	_base->setButtons( KDialog::Ok | KDialog::Cancel );
-	_base->setModal( false );
-	_base->showButtonSeparator( true );
-	KornBoxCfgImpl *widget = new KornBoxCfgImpl( _base );
+	m_base = new KDialog( this );
+	m_base->setCaption( "Box Configuration" );
+	m_base->setButtons( KDialog::Ok | KDialog::Cancel );
+	m_base->setModal( false );
+	m_base->showButtonSeparator( true );
+	KornBoxCfgImpl *widget = new KornBoxCfgImpl( m_base, m_settings, m_settings->getBox( lsBoxes->currentRow() ) );
 	
-	connect( _base, SIGNAL( finished() ), this, SLOT( slotDialogDestroyed() ) );
+	connect( m_base, SIGNAL( finished() ), this, SLOT( slotDialogDestroyed() ) );
 	
-	_base->setMainWidget( widget );
-	widget->readConfig( _config, elbBoxes->listView()->currentIndex().row() ); //TODO: test if it works
+	m_base->setMainWidget( widget );
 	
-	_base->show();
+	m_base->show();
 }
 
 void KornCfgImpl::slotDialogDestroyed()
 {
-	_base->deleteLater(); _base = 0;
-	elbBoxes->setEnabled( true );
-}
-
-void KornCfgImpl::slotElementsSwapped( int box1, int box2 )
-{
-	int accountnumber1 = 0, accountnumber2 = 0;
-	while( _config->hasGroup( QString( "korn-%1-%2" ).arg( box1 ).arg( accountnumber1 ) ) )
-		++accountnumber1;
-	
-	while( _config->hasGroup( QString( "korn-%1-%2" ).arg( box2 ).arg( accountnumber2 ) ) )
-		++accountnumber2;
-	
-	KOrnPassword::swapKOrnWalletPasswords( box1, accountnumber1, box2, accountnumber2 );
-}
-
-void KornCfgImpl::slotElementDeleted( int box )
-{
-	int accountnumber = 0;
-	while( _config->hasGroup( QString( "korn-%1-%2" ).arg( box ).arg( accountnumber ) ) )
-	{
-		KOrnPassword::deleteKOrnPassword( box, accountnumber );
-		++accountnumber;
-	}
+	m_base->deleteLater(); m_base = 0;
+	lsBoxes->setEnabled( true );
+	pbAdd->setEnabled( true );
+	pbRemove->setEnabled( true );
+	pbMoveUp->setEnabled( true );
+	pbMoveDown->setEnabled( true );
+	if( m_settings->getBox( lsBoxes->currentRow() ) )
+		lsBoxes->currentItem()->setText( m_settings->getBox( lsBoxes->currentRow() )->boxName() );
 }
 
 void KornCfgImpl::slotActivated( const QModelIndex& )
 {
 	slotEditBox();
-}
-
-/*void KornCfgImpl::slotActivated( const QString& )
-{
-	slotEditBox();
-}
-
-void KornCfgImpl::slotActivated( const int )
-{
-	slotEditBox();
-}*/
-
-void KornCfgImpl::slotSetDefaults( const QString& name, const int index, KConfig* config )
-{
-	config->writeEntry( "name", name );
-	config->writeEntry( "hasnormalfgcolour", true );
-	config->writeEntry( "hasnewfgcolour", true );
-	config->writeEntry( "hasnormalbgcolour", false );
-	config->writeEntry( "hasnewbgcolour", false );
-	config->writeEntry( "hasnormalicon", false );
-	config->writeEntry( "hasnewicon", false );
-	config->writeEntry( "hasnormalanim", false );
-	config->writeEntry( "hasnewanim", false );
-	config->writeEntry( "normalfgcolour", QColor(Qt::black) );
-	config->writeEntry( "newfgcolour", QColor(Qt::black) );
-	config->writeEntry( "normalbgcolour", QString() );
-	config->writeEntry( "newbgcolour", QString() );
-	config->writeEntry( "normalicon", QString() );
-	config->writeEntry( "newicon", QString() );
-	config->writeEntry( "normalanim", QString() );
-	config->writeEntry( "newanim", QString() );
-	config->writeEntry( "leftrecheck", true );
-	config->writeEntry( "middlerecheck", false );
-	config->writeEntry( "rightrecheck", false );
-	config->writeEntry( "leftreset", false );
-	config->writeEntry( "middlereset", false );
-	config->writeEntry( "rightreset", false );
-	config->writeEntry( "leftview", false );
-	config->writeEntry( "middleview", false );
-	config->writeEntry( "rightview", false );
-	config->writeEntry( "leftcommand", false );
-	config->writeEntry( "middlecommand", false );
-	config->writeEntry( "rightcommand", false );
-	config->writeEntry( "leftpopup", false );
-	config->writeEntry( "middlepopupk", false );
-	config->writeEntry( "rightpopup", true );
-	config->writeEntry( "command", "" );
-	config->writeEntry( "newcommand", "" );
-	config->writeEntry( "sound", "" );
-	config->writeEntry( "passivepopup", false );
-	config->writeEntry( "passivedate", false );
-	config->writeEntry( "numaccounts", 1 );
-	config->writeEntry( "dcop", QStringList() );
-	config->setGroup( QString( "korn-%1-0" ).arg( index ) );
-	config->writeEntry( "name", name );
-	config->writeEntry( "protocol", "mbox" );
-	config->writeEntry( "server", QString() );
-	config->writeEntry( "port", QString() );
-	config->writeEntry( "username", QString() );
-	config->writeEntry( "mailbox", "/var/spool/mail/" );
-	config->writeEntry( "savepassword", 0 );
-	config->writeEntry( "password", QString() );
-	config->writeEntry( "auth", QString() );
-	config->writeEntry( "interval", 300 );
-	config->writeEntry( "boxsettings", true );
-	config->writeEntry( "command", "" );
-	config->writeEntry( "sound", "" );
-	config->writeEntry( "passivepopup", false );
-	config->writeEntry( "passivedate", false );
 }
 
 void KornCfgImpl::slotOK()
@@ -201,7 +117,7 @@ void KornCfgImpl::slotOK()
 
 void KornCfgImpl::slotCancel()
 {
-	_config->rollback();
+	//m_config->rollback();
 }
 
 void KornCfgImpl::slotApply()
@@ -211,58 +127,122 @@ void KornCfgImpl::slotApply()
 
 void KornCfgImpl::readConfig()
 {
-	_config->setGroup( "korn" );
-	
-	QChar layout = _config->readEntry( "layout" ).trimmed()[0].toUpper();
-	if( layout == QChar( 'H' ) )
-		rbHorizontal->setChecked( true );
-	else if( layout == QChar( 'V' ) )
-		rbVertical->setChecked( true );
-	else
-		rbDocked->setChecked( true );
+	int xx = 0;
+	BoxSettings *setting;
 
-	chUseWallet->setChecked( _config->readEntry( "usewallet", true ) );
+	m_settings->readConfig();
+	
+	switch( m_settings->layout() )
+	{
+	case Settings::Horizontal:
+		rbHorizontal->setChecked( true );
+		break;
+	case Settings::Vertical:
+		rbVertical->setChecked( true );
+		break;
+	case Settings::Docked:
+		rbDocked->setChecked( true );
+		break;
+	}
+	chUseWallet->setChecked( m_settings->useWallet() );
+
+	while( ( setting = m_settings->getBox( xx ) ) )
+	{
+		lsBoxes->addItem( m_settings->getBox( xx )->boxName() );
+		++xx;
+	}
 }
 
 void KornCfgImpl::writeConfig()
 {
-	_config->setGroup( "korn" );
-	
 	if( rbHorizontal->isChecked() )
-		_config->writeEntry( "layout", "Horizontal" );
+		m_settings->setLayout( Settings::Horizontal );
 	if( rbVertical->isChecked() )
-		_config->writeEntry( "layout", "Vertical" );
+		m_settings->setLayout( Settings::Vertical );
 	if( rbDocked->isChecked() )
-		_config->writeEntry( "layout", "Docked" );
+		m_settings->setLayout( Settings::Docked );
 
 	//Default is 'false' here, because if no option is set, KWallet isn't used.
-	if( _config->readEntry( "usewallet", false ) != chUseWallet->isChecked() )
+	//if( m_settings->useWallet() != chUseWallet->isChecked() )
 		//Configuration box changed => setting over configuration
-		rewritePasswords();
+		//rewritePasswords();
 
-	_config->writeEntry( "usewallet", chUseWallet->isChecked() );
-	
-	_config->sync();
+	m_settings->setUseWallet( chUseWallet->isChecked() );
+	m_settings->writeConfig();
 }
 
-void KornCfgImpl::rewritePasswords()
+void KornCfgImpl::slotAdd()
+{
+	m_settings->addBox();
+	lsBoxes->addItem( "new box" );
+	lsBoxes->setCurrentRow( lsBoxes->count() - 1 );
+	slotEditBox();
+}
+
+void KornCfgImpl::slotRemove()
+{
+	if( lsBoxes->currentRow() < 0 )
+		return; // No item selected
+
+	//Move item to behind
+	while( lsBoxes->currentRow() != lsBoxes->count() - 1 )
+		slotMoveDown();
+
+	//Delete box and remove from list
+	m_settings->deleteBox( lsBoxes->count() - 1 );
+	lsBoxes->takeItem( lsBoxes->count() - 1 );
+}
+
+void KornCfgImpl::slotMoveUp()
+{
+	if( lsBoxes->currentRow() < 1 )
+		return; //Already first, or there is no item selected
+	m_settings->swapBox( lsBoxes->currentRow() - 1, lsBoxes->currentRow() );
+	if( !m_settings->getBox( lsBoxes->currentRow() ) )
+		kWarning() << "The settings do not match with the list widget" << endl;
+	else
+		lsBoxes->currentItem()->setText( m_settings->getBox( lsBoxes->currentRow() )->boxName() );
+	lsBoxes->setCurrentRow( lsBoxes->currentRow() - 1 );
+	if( !m_settings->getBox( lsBoxes->currentRow() ) )
+		kWarning() << "The settings do not match with the list widget" << endl;
+	else
+		lsBoxes->currentItem()->setText( m_settings->getBox( lsBoxes->currentRow() )->boxName() );
+}
+
+void KornCfgImpl::slotMoveDown()
+{
+	if( lsBoxes->currentRow() < 0 || lsBoxes->currentRow() + 1 >= lsBoxes->count() )
+		return; //Already last, or there is no item selected
+	m_settings->swapBox( lsBoxes->currentRow(), lsBoxes->currentRow() + 1 );
+	if( !m_settings->getBox( lsBoxes->currentRow() ) )
+		kWarning() << "The settings do not match with the list widget" << endl;
+	else
+		lsBoxes->currentItem()->setText( m_settings->getBox( lsBoxes->currentRow() )->boxName() );
+	lsBoxes->setCurrentRow( lsBoxes->currentRow() + 1 );
+	if( !m_settings->getBox( lsBoxes->currentRow() ) )
+		kWarning() << "The settings do not match with the list widget" << endl;
+	else
+		lsBoxes->currentItem()->setText( m_settings->getBox( lsBoxes->currentRow() )->boxName() );
+}
+
+/*void KornCfgImpl::rewritePasswords()
 {
 	int box = 0 - 1;
 	int account = 0 - 1;
 	KConfigGroup *group;
 
-	while( _config->hasGroup( QString( "korn-%1" ).arg( ++box ) ) )
+	while( m_config->hasGroup( QString( "korn-%1" ).arg( ++box ) ) )
 	{
 		account = 0 - 1;
-		while( _config->hasGroup( QString( "korn-%1-%2" ).arg( box ).arg( ++account ) ) )
+		while( m_config->hasGroup( QString( "korn-%1-%2" ).arg( box ).arg( ++account ) ) )
 		{
-			group = new KConfigGroup( _config, QString( "korn-%1-%2" ).arg( box ).arg( account ) );
+			group = new KConfigGroup( m_config, QString( "korn-%1-%2" ).arg( box ).arg( account ) );
 			KOrnPassword::rewritePassword( box, account, *group, chUseWallet->isChecked() );
 			delete group;
 		}
 	}
 	
-	_config->setGroup( "korn" );
-}
+	m_config->setGroup( "korn" );
+}*/
 
 #include "korncfgimpl.moc"

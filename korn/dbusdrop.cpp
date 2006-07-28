@@ -20,6 +20,7 @@
 #include "maildropadaptor.h"
 
 #include "mailsubject.h"
+#include "settings.h"
 
 #include <kconfigbase.h>
 #include <kdebug.h>
@@ -66,12 +67,12 @@ bool DBUSDrop::stopMonitor()
 	return true;
 }
 
-bool DBUSDrop::readConfigGroup( const KConfigGroup &cfg )
+bool DBUSDrop::readConfig( AccountSettings *cfg )
 {
-	return KMailDrop::readConfigGroup( cfg );
+	return KMailDrop::readConfig( cfg );
 }
 
-bool DBUSDrop::readConfigGroup( const QMap< QString, QString > &map, const Protocol * )
+bool DBUSDrop::readConfigGroup( const QMap< QString, QString > &map, const Protocol * protocol )
 {
 	if( !map.contains( "dbusname" ) )
 		//The mapping MUST contain dbusname.
@@ -82,15 +83,13 @@ bool DBUSDrop::readConfigGroup( const QMap< QString, QString > &map, const Proto
 	return true;
 }
 
-bool DBUSDrop::writeConfigGroup( KConfigBase& cfg ) const
-{
-	KMailDrop::writeConfigGroup( cfg );
-
-	KMailDrop::writeConfigGroup( cfg );
-	
-	cfg.writeEntry( "dbusname", *_name );
-	return true;
-}
+//bool DBUSDrop::writeConfigGroup( KConfigBase& cfg ) const
+//{
+//	KMailDrop::writeConfigGroup( cfg );
+//	
+//	cfg.writeEntry( "dbusname", *_name );
+//	return true;
+//}
 
 QString DBUSDrop::type() const
 {
@@ -171,11 +170,11 @@ int DBUSDrop::addMessage( const QString& subject, const QString& message )
 	
 	emit changed( _msgList->count(), this );
 
-	if( passivePopup() )
+	if( _settings->passivePopup() )
 	{
 		QList< KornMailSubject > list;
 		list.append( *mailsubject );
-		emit showPassivePopup( &list, 1, passiveDate(), this->realName() );
+		emit showPassivePopup( &list, 1, _settings->passiveDate(), this->realName() );
 	}
 	
 	return id;

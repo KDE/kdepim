@@ -27,6 +27,8 @@
 
 #include <QWidget>
 
+class Settings;
+
 class KConfig;
 #include "ui_korncfg.h"
 
@@ -56,18 +58,18 @@ public:
 
 private slots:
 	void slotDialogDestroyed();
-	void slotElementsSwapped( int box1, int box2 );
-	void slotElementDeleted( int box );
 	
 	void slotEditBox();
 	void slotActivated( const QModelIndex& );
-	//void slotActivated( const QString& );
-	//void slotActivated( const int );
-	void slotSetDefaults( const QString&, const int, KConfig* );
 
 	void slotOK();
 	void slotCancel();
 	void slotApply();
+
+	void slotAdd();
+	void slotRemove();
+	void slotMoveUp();
+	void slotMoveDown();
 	
 private:
 	void readConfig();
@@ -75,8 +77,9 @@ private:
 
 	void rewritePasswords();
 	
-	KConfig *_config;
-	KDialog *_base;
+	KConfig *m_config;
+	Settings *m_settings;
+	KDialog *m_base;
 };
 
 

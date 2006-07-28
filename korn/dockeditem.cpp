@@ -59,9 +59,9 @@ void DockedItem::showBox()
 	_systemtray->show();
 }
 
-void DockedItem::readConfig( KConfig* config, const int index )
+void DockedItem::readConfig( BoxSettings* config, BoxSettings *config_settings, const int index )
 {
-	BoxContainerItem::readConfig( config, index );
+	BoxContainerItem::readConfig( config, config_settings, index );
 
 	//No additional information to be loaded.
 }

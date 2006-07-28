@@ -54,7 +54,7 @@ public:
 	 * @param config the configuration group
 	 * @return in this class, it returns a pointer to itself
 	 */
-	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
+	virtual const Protocol* getProtocol( AccountSettings* ) const { return this; }
 
 	//TODO: Check if clone() is still used
 	/**

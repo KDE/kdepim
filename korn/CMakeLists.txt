@@ -18,7 +18,6 @@ set(korn_SRCS
    dockeditem.cpp 
    hvcontainer.cpp 
    hvitem.cpp 
-   keditlistboxman.cpp 
    nntp_proto.cpp 
    maildrop.cpp 
    main.cpp 
@@ -49,7 +48,8 @@ set(korn_SRCS
    systemtray.cpp 
    process_proto.cpp 
    progress_dialog_impl.cpp 
-   qmail_proto.cpp )
+   qmail_proto.cpp
+   settings.cpp )
 
 # run moc on label.h and add the resulting stuff to the korn_SRCS list
 qt4_wrap_cpp(korn_SRCS label.h)

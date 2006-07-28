@@ -20,6 +20,7 @@
 #include "boxcontaineritemadaptor.h"
 
 #include "mailsubject.h"
+#include "settings.h"
 
 #include <kaboutapplication.h>
 #include <kaction.h>
@@ -57,27 +58,8 @@
 
 BoxContainerItem::BoxContainerItem( QObject * parent )
 	: AccountManager( parent ),
-	_command( new QString )
+	_settings( 0 )
 {
-	short i;
-	
-	for( i = 0; i < 2; ++i )
-	{
-		_icons[ i ] = 0;
-		_anims[ i ] = 0;
-		_fgColour[ i ] = 0;
-		_bgColour[ i ] = 0;
-		_fonts[ i ] = 0;
-	}
-	
-	for( i = 0; i < 3; ++i )
-	{
-		_recheckSettings[ i ] = false;
-		_resetSettings[ i ] = false;
-		_viewSettings[ i ] = false;
-		_runSettings[ i ] = false;
-		_popupSettings[ i ] = false;
-	}
 
 	new BoxContainerItemAdaptor( this );
 #warning Put some useful DBus object path here
@@ -86,80 +68,12 @@ BoxContainerItem::BoxContainerItem( QObject * parent )
 
 BoxContainerItem::~BoxContainerItem()
 {
-	delete _command;
 }
 	
-void BoxContainerItem::readConfig( KConfig* config, const int index )
+void BoxContainerItem::readConfig( BoxSettings* settings, BoxSettings *config_box_settings, const int index )
 {
 	//Read information about how the thing have to look like
-	config->setGroup( QString( "korn-%1" ).arg( index ) );
-	if( config->readEntry( "hasnormalicon", false ) )
-		_icons[ 0 ] = new QString( config->readEntry( "normalicon", "" ) );
-	else
-		_icons[ 0 ] = 0;
-	if( config->readEntry( "hasnewicon", false ) )
-		_icons[ 1 ] = new QString( config->readEntry( "newicon", "" ) );
-	else
-		_icons[ 1 ] = 0;
-	
-	if( config->readEntry( "hasnormalanim", false ) )
-		_anims[ 0 ] = new QString( config->readEntry( "normalanim", "" ) );
-	else
-		_anims[ 0 ] = 0;
-	if( config->readEntry( "hasnewanim", false ) )
-		_anims[ 1 ] = new QString( config->readEntry( "newanim", "" ) );
-	else
-		_anims[ 1 ] = 0;
-	
-	if( config->readEntry( "hasnormalfgcolour", false ) )
-		_fgColour[ 0 ] = new QColor( config->readEntry( "normalfgcolour", QColor() ) );
-	else
-		_fgColour[ 0 ] = 0;
-	if( config->readEntry( "hasnewfgcolour", false ) )
-		_fgColour[ 1 ] = new QColor( config->readEntry( "newfgcolour", QColor() ) );
-	else
-		_fgColour[ 1 ] = 0;
-	
-	if( config->readEntry( "hasnormalbgcolour", false ) )
-		_bgColour[ 0 ] = new QColor( config->readEntry( "normalbgcolour", QColor() ) );
-	else
-		_bgColour[ 0 ] = 0;
-	if( config->readEntry( "hasnewbgcolour", false ) )
-		_bgColour[ 1 ] = new QColor( config->readEntry( "newbgcolour", QColor() ) );
-	else
-		_bgColour[ 1 ] = 0;
-	if( config->readEntry( "hasnormalfont", false ) )
-		_fonts[ 0 ] = new QFont( config->readEntry( "normalfont", QFont() ) );
-	else
-		_fonts[ 0 ] = 0;
-	if( config->readEntry( "hasnewfont", false ) )
-		_fonts[ 1 ] = new QFont( config->readEntry( "newfont", QFont() ) );
-	else
-		_fonts[ 1 ] = 0;
-	
-	//Read information about the mappings.
-	_recheckSettings[ 0 ] = config->readEntry( "leftrecheck", true );
-	_recheckSettings[ 1 ] = config->readEntry( "middlerecheck", false );
-	_recheckSettings[ 2 ] = config->readEntry( "rightrecheck", false );
-	
-	_resetSettings[ 0 ] = config->readEntry( "leftreset", false );
-	_resetSettings[ 1 ] = config->readEntry( "middlereset", false );
-	_resetSettings[ 2 ] = config->readEntry( "rightreset", false );
-	
-	_viewSettings[ 0 ] = config->readEntry( "leftview", false );
-	_viewSettings[ 1 ] = config->readEntry( "middleview", false );
-	_viewSettings[ 2 ] = config->readEntry( "rightview", false );
-	
-	_runSettings[ 0 ] = config->readEntry( "leftrun", false );
-	_runSettings[ 1 ] = config->readEntry( "middlerun", false );
-	_runSettings[ 2 ] = config->readEntry( "rightrun", false );
-	
-	_popupSettings[ 0 ] = config->readEntry( "leftpopup", false );
-	_popupSettings[ 1 ] = config->readEntry( "middlepopup", false );
-	_popupSettings[ 2 ] = config->readEntry( "rightpopup", true );
-	
-	//Read the command
-	*_command = config->readEntry( "command", "" );
+	_settings = settings;
 	
 	//Sets the object ID for the DBUS-object
 #warning Port me to DBus (using DBus object path instead?)
@@ -168,7 +82,7 @@ void BoxContainerItem::readConfig( KConfig* config, const int index )
 	//Read the settings of the reimplemented class.
 	//It is important to read this after the box-settings, because the
 	//setCount-function is called in AccountManager::readConfig
-	AccountManager::readConfig( config, index );
+	AccountManager::readConfig( settings, config_box_settings, index );
 }
 
 void BoxContainerItem::runCommand( const QString& cmd )
@@ -185,25 +99,25 @@ void BoxContainerItem::runCommand( const QString& cmd )
 
 void BoxContainerItem::mouseButtonPressed( Qt::MouseButton state )
 {
-	int button;
+	Qt::MouseButton button;
 	if( state & Qt::LeftButton )
-		button = 0;
+		button = Qt::LeftButton;
 	else if( state & Qt::RightButton )
-		button = 2;
+		button = Qt::RightButton;
 	else if( state & Qt::MidButton )
-		button = 1;
+		button = Qt::MidButton;
 	else
 		return; //Invalid mouse button
 
-	if( _recheckSettings[ button ] )
+	if( _settings->clickCommand( button, BoxSettings::Recheck ) )
 		doRecheck();
-	if( _resetSettings[ button ] )
+	if( _settings->clickCommand( button, BoxSettings::Reset ) )
 		doReset();
-	if( _viewSettings[ button ] )
+	if( _settings->clickCommand( button, BoxSettings::View ) )
 		doView();
-	if( _runSettings[ button ] )
+	if( _settings->clickCommand( button, BoxSettings::Run ) )
 		runCommand();
-	if( _popupSettings[ button ] )
+	if( _settings->clickCommand( button, BoxSettings::Popup ) )
 		doPopup();
 }
 
@@ -293,12 +207,18 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject
 void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool newMessages )
 {
 	//This would fail if bool have fome other values.
-	short index = newMessages ? 1 : 0;
+	BoxSettings::State messageState = newMessages ? BoxSettings::New : BoxSettings::Normal;
+
+	if( !_settings )
+	{
+		kWarning() << "Drawing label before settings are initialized!" << endl;
+		return;
+	}
 	
-	bool hasAnim = _anims[ index ] && !_anims[ index ]->isEmpty();
-	bool hasIcon = _icons[ index ] && !_icons[ index ]->isEmpty();
-	bool hasBg = _bgColour[ index ] && _bgColour[ index ]->isValid();
-	bool hasFg = _fgColour[ index ] && _fgColour[ index ]->isValid();
+	bool hasAnim = _settings->hasAnimation( messageState ) && !_settings->animation( messageState ).isEmpty();
+	bool hasIcon = _settings->hasIcon( messageState ) && !_settings->icon( messageState ).isEmpty();
+	bool hasBg = _settings->hasBackgroundColor( messageState ) && _settings->backgroundColor( messageState ).isValid();
+	bool hasFg = _settings->hasForegroundColor( messageState ) && _settings->foregroundColor( messageState ).isValid();
 	
 	QPixmap pixmap;
 	QPalette palette = label->palette();
@@ -312,27 +232,29 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	
 	if( hasAnim )
 	{ //An animation can't have a foreground-colour and can't have a icon.
-		setAnimIcon( label, *_anims[ index ] );
+		setAnimIcon( label, _settings->animation( messageState ) );
 
 		hasFg = false;
 		hasIcon = false;
 	}
 	
 	if( hasIcon )
-		pixmap = KGlobal::iconLoader()->loadIcon( *_icons[ index ], K3Icon::Desktop, K3Icon::SizeSmallMedium );
+		pixmap = KGlobal::iconLoader()->loadIcon( _settings->icon( messageState ), K3Icon::Desktop, K3Icon::SizeSmallMedium );
 	
 	if( hasIcon && hasFg )
 	{
 		if( hasBg )
 		{
-			label->setPixmap( calcComplexPixmap( pixmap, *_fgColour[ index ], _fonts[ index ], count ) );
+			label->setPixmap( calcComplexPixmap( pixmap, _settings->foregroundColor( messageState ),
+						             _settings->font( messageState ), count ) );
 			//label->setBackgroundMode( Qt::FixedColor );
-			//label->setPaletteBackgroundColor( *_bgColour[ index ] );
+			//label->setPaletteBackgroundColor( _settings->backgroundColor( messageState ) );
 			label->setBackgroundRole( QPalette::Window );
-			palette.setColor( label->backgroundRole(), *_bgColour[ index ] );
+			palette.setColor( label->backgroundRole(), _settings->backgroundColor( messageState ) );
 		} else
 		{
-			label->setPixmap( calcComplexPixmap( pixmap, *_fgColour[ index ], _fonts[ index ], count ) );
+			label->setPixmap( calcComplexPixmap( pixmap, _settings->foregroundColor( messageState ),
+						             _settings->font( messageState ), count ) );
 		}
 		return;
 	}
@@ -342,7 +264,7 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 		//label->setBackgroundMode( Qt::FixedColor );
 		//label->setPaletteBackgroundColor( *_bgColour[ index ] );
 		label->setBackgroundRole( QPalette::Window );
-		palette.setColor( label->backgroundRole(), *_bgColour[ index ] );
+		palette.setColor( label->backgroundRole(), _settings->backgroundColor( messageState ) );
 	} else
 	{
 		//label->setBackgroundMode( Qt::X11ParentRelative );
@@ -357,9 +279,9 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 	
 	if( hasFg )
 	{
-		if( _fonts[ index ] )
-			label->setFont( *_fonts[ index ] );
-		palette.setColor( label->foregroundRole(), *_fgColour[ index ] );
+		if( _settings->hasFont( messageState ) )
+			label->setFont( _settings->font( messageState ) );
+		palette.setColor( label->foregroundRole(), _settings->foregroundColor( messageState ) );
 		//label->setPaletteForegroundColor( *_fgColour[ index ] );
 		label->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
 		label->setText( QString::number( count ) );
@@ -375,7 +297,7 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 }
 
 //This function makes a pixmap which is based on icon, but has a number painted on it.
-QPixmap BoxContainerItem::calcComplexPixmap( const QPixmap &icon, const QColor& fgColour, const QFont* font, const int count )
+QPixmap BoxContainerItem::calcComplexPixmap( const QPixmap &icon, const QColor& fgColour, const QFont &font, const int count )
 {
 	QPixmap result( icon );
 	QPainter p;
@@ -383,8 +305,7 @@ QPixmap BoxContainerItem::calcComplexPixmap( const QPixmap &icon, const QColor& 
 	p.setCompositionMode( QPainter::CompositionMode_DestinationOver );
 	p.begin( &result );
 	p.setPen( fgColour );
-	if( font )
-		p.setFont( *font );
+	p.setFont( font );
 	p.drawText( icon.rect(), Qt::AlignCenter, QString::number( count ) );
 	
 	return result;
@@ -414,9 +335,9 @@ void BoxContainerItem::view()
 
 void BoxContainerItem::runCommand()//Possible_unsafe?
 {	
-	if( _command->isEmpty() )
+	if( _settings->command().isEmpty() )
 		return; //Don't execute an empty command
-	runCommand( *_command );
+	runCommand( _settings->command() );
 }
 
 void BoxContainerItem::help()

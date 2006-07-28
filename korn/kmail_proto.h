@@ -24,6 +24,7 @@
 
 #include <QString>
 
+class AccountSettings;
 class KConfig;
 class KConfigBase;
 
@@ -55,14 +56,14 @@ public:
 	 * @param config The configuration group to read the kmailname from.
 	 * @return A pointer to a Protocol (not newly created) or 0 if an error orrured.
 	 */
-	virtual const Protocol* getProtocol( KConfigGroup* config ) const;
+	virtual const Protocol* getProtocol( AccountSettings* config ) const;
 	/**
 	 * This gives a new Maildrop back. The maildrop is responsible to execute the configuration.
 	 * In most cases, it will return a new instance of the KKioDrop Maildrop.
 	 * @param config The configuration group to read the kmailname from.
 	 * @return A new KMailDrop, or a 0 pointer if an error occurred.
 	 */
-        virtual KMailDrop* createMaildrop( KConfigGroup* config ) const;
+        virtual KMailDrop* createMaildrop( AccountSettings* config ) const;
 	/**
 	 * This does the real convertion: given a namen of a KMail account (hidden in config),
 	 * it calculates how the configuration whould have looked in KOrn.
@@ -71,7 +72,7 @@ public:
 	 * @param password The password fetched out of the configuration or KWallet.
 	 * @return A mapping containing the configuration if success, and empty mapping otherwise.
 	 */
-        virtual QMap< QString, QString > * createConfig( KConfigGroup* config, const QString& password ) const;
+        virtual QMap< QString, QString > * createConfig( AccountSettings* config ) const;
 	/**
 	 * The name of thes protocol
 	 *

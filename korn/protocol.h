@@ -32,6 +32,7 @@
  */
 
 class AccountInput;
+class AccountSettings;
 class KConfigGroup;
 class KIO_Protocol;
 class KMailDrop;
@@ -75,7 +76,7 @@ public:
 	 * @param config the configuration group of an account with protocol 'implementation'.
 	 * @return a (new) protocol which states the protocol to use after this function call.
 	 */
-	virtual const Protocol* getProtocol( KConfigGroup* config ) const = 0;
+	virtual const Protocol* getProtocol( AccountSettings *config ) const = 0;
 	/**
 	 * This function returns the mail drop belonging to this protocol.
 	 * The return value of this function also depends on the configuration, just like getProtocol().
@@ -83,7 +84,7 @@ public:
 	 * @param config the configuration of the account
 	 * @return the KMailDrop which should be used for this protocol.
 	 */
-	virtual KMailDrop* createMaildrop( KConfigGroup* config ) const = 0;
+	virtual KMailDrop* createMaildrop( AccountSettings *config ) const = 0;
 	/**
 	 * This function makes a configuration mapping given a the contents of a configuration file.
 	 * The password is shipped apart, because it can be stored in a wallet.
@@ -97,7 +98,7 @@ public:
 	 * @param password the password which could be stored elsewhere
 	 * @return a mapping from a configuration key to a value
 	 */
-	virtual QMap< QString, QString > * createConfig( KConfigGroup* config, const QString& password ) const = 0;
+	virtual QMap< QString, QString > * createConfig( AccountSettings* config ) const = 0;
 
 	/**
 	 * This function return the name of the protocol as it is specified in the configuration file.

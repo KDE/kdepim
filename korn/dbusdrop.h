@@ -27,6 +27,7 @@
 
 #include "maildrop.h"
 
+class AccountSettings;
 class KornMailSubject;
 
 class KConfigBase;
@@ -99,14 +100,12 @@ public:
 	 * @param config The configuration group which contains the info for this account.
 	 * @return The same value as KMailDrop::readConfigGroup( config ) returns.
 	 */
-	virtual bool readConfigGroup( const KConfigGroup& config );
+	virtual bool readConfig( AccountSettings *config );
 	/**
-	 * This function also reeds the configurion, but from a mapping.
+	 * This function reeds the config which are shipped which the group.
 	 *
-	 * @param map The mapping containing the configuration.
-	 * @param protocol The protocol which comes with the mapping.
-	 *
-	 * @return true is all information is retrieved successfully.
+	 * @param config The configuration group which contains the info for this account.
+	 * @return The same value as KMailDrop::readConfigGroup( config ) returns.
 	 */
 	virtual bool readConfigGroup( const QMap< QString, QString > & map, const Protocol * protocol );
 	/**
@@ -115,7 +114,7 @@ public:
 	 * @param config The configuration to write true
 	 * @return true if no error occurred.
 	 */
-	virtual bool writeConfigGroup( KConfigBase& config ) const;
+	//virtual bool writeConfigGroup( KConfigBase& config ) const;
 	/**
 	 * This returns the type of the box, in this case always "dbus".
 	 *
@@ -167,8 +166,6 @@ public:
 	 * @return false
 	 */
 	virtual bool canReadMail() const { return false; }
-
-
 private:
 	bool _isRunning;
 	QMap< int, KornMailSubject* > *_msgList;

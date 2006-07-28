@@ -20,6 +20,8 @@
 #define MK_KORNSHELL_H
 
 class BoxContainer;
+class Settings;
+
 class KDialog;
 
 class KConfig;
@@ -61,7 +63,8 @@ private slots:
 private:
 	void readConfig();
 	
-	KConfig *_config;
+	Settings *_settings;
+	Settings *_const_settings;
 	BoxContainer *_box;
 	KDialog *_configDialog;
 };

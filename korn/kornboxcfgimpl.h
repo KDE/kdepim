@@ -28,6 +28,9 @@
 #include <QWidget>
 #include "ui_kornboxcfg.h"
 
+class BoxSettings;
+class Settings;
+
 class KConfig;
 class KConfigGroup;
 class KDialog;
@@ -49,7 +52,7 @@ public:
 	 *
 	 * @param parent the parent of this object, usually of type KDialog*
 	 */
-	KornBoxCfgImpl( QWidget *parent );
+	KornBoxCfgImpl( QWidget *parent, Settings *glob_settings, BoxSettings *settings );
 	/**
 	 * Destructor
 	 */
@@ -61,7 +64,7 @@ public:
 	 * @param config The config where in which the configuration should be added.
 	 * @param index The index of the selected config. This is the group-number.
 	 */
-	void writeConfig( KConfig * config, const int index );
+	void writeConfig();
 	
 	/**
 	 * This method write the current configuration to a specified KConfig-object.
@@ -76,26 +79,20 @@ private:
 	void readViewConfig();
 	void readEventConfig();
 	void readAccountsConfig();
-	void readDCOPConfig();
 	
-	void writeViewConfig( KConfig* config );
-	void writeEventConfig( KConfig *config );
-	void writeAccountsConfig( KConfig *config );
-	void writeDCOPConfig( KConfig *config );
+	void writeViewConfig();
+	void writeEventConfig();
 	
-	KConfig* _config;
-	KConfigGroup *_group;
-	KDialog *_base;
-	int _index;
-	QString *_anims[ 2 ];
-	QFont *_fonts[ 2 ];
+	Settings *m_glob_settings;
+	BoxSettings *m_settings;
+	KDialog *m_base;
+	int m_index;
+	QString *m_anims[ 2 ];
+	QFont *m_fonts[ 2 ];
 	
 private slots:
 	void slotEditBox();
 	void slotActivated( const QModelIndex& );
-	//void slotActivated( const QString& );
-	//void slotActivated( const int );
-	void slotSetDefaults( const QString&, const int, KConfig* );
 	void slotChangeNormalAnim();
 	void slotChangeNewAnim();
 	void slotChangeNormalFont();
@@ -106,9 +103,10 @@ private slots:
 	void slotOK();
 	void slotCancel();
 	void slotDialogDestroyed();
-	
-	void slotAccountsSwapped( int account1, int account2 );
-	void slotAccountDeleted( int account );
+	void slotAddAccount();
+	void slotRemoveAccount();
+	void slotMoveUp();
+	void slotMoveDown();
 };
 
 #endif //MK_KORNBOXCFGIMPL_H

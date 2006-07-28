@@ -56,7 +56,7 @@ public:
 	 * @param config a configuration (it is ignored in this class)
 	 * @return a pointer to a protocol; in this class always itself.
 	 */
-	virtual const Protocol* getProtocol( KConfigGroup* config ) const;
+	virtual const Protocol* getProtocol( AccountSettings* config ) const;
 	/**
 	 * This is an implementation of the pure virtual method Protocol::createMaildrop()
 	 * In the class, it returns a new pointer to a ProcessDrop.
@@ -64,7 +64,7 @@ public:
 	 * @param config a configuration (which is ignored in this class)
 	 * @return a new instance of a KMailDrop; in this class a new instance of a ProcessDrop
 	 */
-	virtual KMailDrop* createMaildrop( KConfigGroup* config ) const;
+	virtual KMailDrop* createMaildrop( AccountSettings* config ) const;
 	/**
 	 * This is an implementation of the Protocol::createConfig() method.
 	 * In this class, it reads the entry 'program' out the file and put it into the configuartion mapping.
@@ -73,7 +73,7 @@ public:
 	 * @param password the password of this account (ignored in this class)
 	 * @return a new pointer to a configuartion mapping containing the entry and value of 'program'
 	 */
-	virtual QMap< QString, QString > * createConfig( KConfigGroup* config, const QString& password ) const;
+	virtual QMap< QString, QString > * createConfig( AccountSettings* config ) const;
 	/**
 	 * An implementation of the Protocol::configName() method.
 	 * In this class, it always return "process".

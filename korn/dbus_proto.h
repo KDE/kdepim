@@ -29,6 +29,7 @@
 #include "protocol.h"
 
 class AccountInput;
+class AccountSettings;
 class KConfigGroup;
 class KIO_Protocol;
 class KMailDrop;
@@ -66,12 +67,12 @@ public:
 	 * This function returns a Protocol pointer given a configuration.
 	 * This function always returns itself, as the configuration never uses another protocol.
 	 */
-	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
+	virtual const Protocol* getProtocol( AccountSettings* ) const { return this; }
 	/**
 	 * This function creates the maildrop used to count dbus-messages.
 	 * @param config The configuration
 	 */
-	virtual KMailDrop* createMaildrop( KConfigGroup* config ) const;
+	virtual KMailDrop* createMaildrop( AccountSettings* config ) const;
 	/**
 	 * The function converts the information of the configuration file into a mapping.
 	 *
@@ -79,7 +80,7 @@ public:
 	 * @param password the password as obtained from the KWallet
 	 * @return the keys and values of the configuration in a mapping
 	 */
-	virtual QMap< QString, QString > * createConfig( KConfigGroup* config, const QString& password ) const;
+	virtual QMap< QString, QString > * createConfig( AccountSettings *password ) const;
 	/**
 	 * This return the name of this protocol. It is always "dbus".
 	 * @return The name of this protocol: "dbus"

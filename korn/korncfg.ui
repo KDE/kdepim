@@ -8,42 +8,145 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>389</width>
-    <height>443</height>
+    <width>396</width>
+    <height>442</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Korn Configuration</string>
   </property>
-  <layout class="QGridLayout" >
+  <layout class="QVBoxLayout" >
    <property name="margin" >
-    <number>8</number>
+    <number>9</number>
    </property>
    <property name="spacing" >
     <number>6</number>
    </property>
-   <item row="0" column="0" >
+   <item>
     <widget class="QTabWidget" name="tabKornCfg" >
+     <property name="currentIndex" >
+      <number>0</number>
+     </property>
      <widget class="QWidget" name="tabBoxes" >
       <attribute name="title" >
        <string>&amp;Boxes</string>
       </attribute>
       <layout class="QVBoxLayout" >
        <property name="margin" >
-        <number>10</number>
+        <number>9</number>
        </property>
        <property name="spacing" >
         <number>6</number>
        </property>
        <item>
-        <widget class="KEditListBoxManager" name="elbBoxes" />
-       </item>
-       <item>
-        <widget class="QPushButton" name="pbEdit" >
-         <property name="text" >
-          <string>&amp;Edit</string>
+        <layout class="QHBoxLayout" >
+         <property name="margin" >
+          <number>0</number>
          </property>
-        </widget>
+         <property name="spacing" >
+          <number>6</number>
+         </property>
+         <item>
+          <widget class="QListWidget" name="lsBoxes" />
+         </item>
+         <item>
+          <layout class="QVBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="pbAdd" >
+             <property name="text" >
+              <string>&amp;Add</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbRemove" >
+             <property name="text" >
+              <string>&amp;Remove</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbMoveUp" >
+             <property name="text" >
+              <string>Move &amp;Up</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbMoveDown" >
+             <property name="text" >
+              <string>Move &amp;Down</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbEdit" >
+             <property name="text" >
+              <string>&amp;Edit</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </item>
        <item>
         <widget class="QCheckBox" name="chUseWallet" >
@@ -71,7 +174,7 @@
        <item>
         <widget class="QRadioButton" name="rbVertical" >
          <property name="text" >
-          <string>&amp;Vertical</string>
+          <string>V&amp;ertical</string>
          </property>
         </widget>
        </item>
@@ -110,15 +213,6 @@
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction></pixmapfunction>
- <customwidgets>
-  <customwidget>
-   <class>KEditListBoxManager</class>
-   <extends></extends>
-   <header>keditlistboxman.h</header>
-   <container>0</container>
-   <pixmap></pixmap>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

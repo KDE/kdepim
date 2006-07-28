@@ -10,6 +10,7 @@
 
 #include"utils.h"
 #include"polldrop.h"
+#include"settings.h"
 //Added by qt3to4:
 #include <QTimerEvent>
 
@@ -18,16 +19,15 @@ KPollableDrop::KPollableDrop()
 {
 	_timerId = 0;
 	_timerRunning = false;
-	_freq = 300;
 }
 
 
 bool KPollableDrop::startMonitor()
 {
-	if( !running() ) {
+	if( !running() && _settings ) {
 		recheck();
 		
-		_timerId = startTimer( _freq * 1000 );
+		_timerId = startTimer( _settings->interval() * 1000 );
 		_timerRunning = true;
 	}
 
@@ -57,32 +57,15 @@ void KPollableDrop::timerEvent( QTimerEvent *ev )
 	}
 }
 
-bool KPollableDrop::readConfigGroup( const KConfigBase& cfg )
+bool KPollableDrop::readConfig( AccountSettings *settings )
 {
-	KMailDrop::readConfigGroup( cfg );
-
-	setFreq( cfg.readEntry(fu(PollConfigKey), DefaultPoll ) );
-
-	return true;
+	return KMailDrop::readConfig( settings );
 }
 
-bool KPollableDrop::writeConfigGroup( KConfigBase& cfg ) const
+bool KPollableDrop::writeConfigGroup( AccountSettings *settings ) const
 {
-	KMailDrop::writeConfigGroup( cfg );
-
-	cfg.writeEntry(fu(PollConfigKey), freq() );
-
-	return true;
+	return KMailDrop::writeConfigGroup( settings );
 }
-
-//void KPollableDrop::addConfigPage( KDropCfgDialog *dlg )
-//{
-//	dlg->addConfigPage( new KPollCfg( this ) );
-//
-//	KMailDrop::addConfigPage( dlg );
-//}
-
-const char *KPollableDrop::PollConfigKey = "interval";
-const int KPollableDrop::DefaultPoll = 300; // 5 minutes
 
 #include "polldrop.moc"
+

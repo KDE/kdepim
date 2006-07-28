@@ -70,7 +70,7 @@ public:
 	 * This is an implementation of Protocol::createMaildrop().
 	 * Because all kio-protocols uses this maildrop, this is defined in this class.
 	 */
-	virtual KMailDrop* createMaildrop( KConfigGroup* config ) const { return new KKioDrop( config ); }
+	virtual KMailDrop* createMaildrop( AccountSettings* settings ) const { return new KKioDrop( settings ); }
 
 	/**
 	 * This is an implementation of Protocol::createConfig().
@@ -80,7 +80,7 @@ public:
 	 * @param password the password of the box (can come from a Wallet)
 	 * @return a mapping containing the configuration of a kio-account.
 	 */
-	virtual QMap< QString, QString >* createConfig( KConfigGroup *group, const QString& password ) const;
+	virtual QMap< QString, QString >* createConfig( AccountSettings *settings ) const;
 
 	/**
 	 * This function defines a default for the protocolname.

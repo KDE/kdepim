@@ -68,7 +68,7 @@ public:
 	 * @param config The KConfig-instance which contains the settings of this tray-item.
 	 * @param index The index of the box in the configuration file
 	 */
-	virtual void readConfig( KConfig* config, const int index );
+	virtual void readConfig( BoxSettings *config, BoxSettings *config_settings, const int index );
 	
 public slots:	
 	/**

@@ -6,6 +6,7 @@
 #include"kornapp.h"
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <kdebug.h>
 #include <klocale.h>
 
 #include"kornshell.h"
@@ -29,7 +30,7 @@ int main(int argc, char *argv[])
 	
 	KCmdLineArgs::init( argc, argv, &aboutData );
 	KUniqueApplication::addCmdLineOptions();
-	
+
 	if( !KUniqueApplication::start()  ) {
 		// Already running. Should pop up the preferences dialog
 		return 0;

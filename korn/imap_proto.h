@@ -52,7 +52,7 @@ public:
 	 * @param config the configuration to read
 	 * @return a protocol; in this class always itself.
 	 */
-	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
+	virtual const Protocol* getProtocol( AccountSettings* ) const { return this; }
 
 	/**
 	 * This function should return true if the protocol is connection-based.

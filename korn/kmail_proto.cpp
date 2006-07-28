@@ -52,11 +52,16 @@ KMail_Protocol::~KMail_Protocol()
 {
 }
 
-const Protocol* KMail_Protocol::getProtocol( KConfigGroup* config ) const
+const Protocol* KMail_Protocol::getProtocol( AccountSettings* settings ) const
 {
 	KConfig kmailconfig( "kmailrc", true, false );
 	int id;
-	QString type = getTypeAndConfig( config->readEntry( "kmailname" ), kmailconfig, id );
+	QString type;
+
+	if( settings->readEntries().contains( "kmailname" ) )
+		type = getTypeAndConfig( settings->readEntries()[ "kmailname" ], kmailconfig, id );
+	else
+		type = getTypeAndConfig( "", kmailconfig, id );
 
 	if( type == "imap" )
 		return Protocols::getProto( "imap" );
@@ -72,11 +77,16 @@ const Protocol* KMail_Protocol::getProtocol( KConfigGroup* config ) const
 	return 0;
 }
 
-KMailDrop* KMail_Protocol::createMaildrop( KConfigGroup *config ) const
+KMailDrop* KMail_Protocol::createMaildrop( AccountSettings *settings ) const
 {
 	int id;
+	QString type;
+	
 	KConfig kmailconfig( "kmailrc", true, false );
-	QString type = getTypeAndConfig( config->readEntry( "kmailname" ), kmailconfig, id );
+	if( settings->readEntries().contains( "kmailname" ) )
+		type = getTypeAndConfig( settings->readEntries()[ "kmailname" ], kmailconfig, id );
+	else
+		type = getTypeAndConfig( "", kmailconfig, id );
 
 	if( type == "imap" || type == "cachedimap" || type == "pop3" || type == "local" || type == "maildir" )
 		return new KKioDrop();
@@ -85,13 +95,18 @@ KMailDrop* KMail_Protocol::createMaildrop( KConfigGroup *config ) const
 	return 0;
 }
 
-QMap< QString, QString > * KMail_Protocol::createConfig( KConfigGroup* config, const QString& ) const
+QMap< QString, QString > * KMail_Protocol::createConfig( AccountSettings* settings ) const
 {
 	QMap< QString, QString > *result = new QMap<QString, QString>;
 	int id;
+	QString type;
+	
 	KConfig kmailconfig( "kmailrc", true, false );
 	//First: find the account in the configuration and get the type and id out of it.
-	QString type = getTypeAndConfig( config->readEntry( "kmailname" ), kmailconfig, id );
+	if( settings->readEntries().contains( "kmailname" ) )
+		type = getTypeAndConfig( settings->readEntries()[ "kmailname" ], kmailconfig, id );
+	else
+		type = getTypeAndConfig( "", kmailconfig, id );
 	QString metadata;
 
 	if( type == "imap" || type == "cachedimap" )
@@ -109,7 +124,7 @@ QMap< QString, QString > * KMail_Protocol::createConfig( KConfigGroup* config, c
 				metadata += "tls=off";
 		}
 		//Add the fields into the mapping.
-		result->insert( "name", config->readEntry( "name", "" ) );
+		result->insert( "name", settings->accountName() );
 		result->insert( "server", kmailconfig.readEntry( "host", "localhost" ) );
 		result->insert( "port", kmailconfig.readEntry( "port", "143" ) );
 		result->insert( "ssl", kmailconfig.readEntry( "use-ssl", "false" ) );
@@ -133,7 +148,7 @@ QMap< QString, QString > * KMail_Protocol::createConfig( KConfigGroup* config, c
 			else
 				metadata += "tls=off";
 		}
-		result->insert( "name", config->readEntry( "name", "" ) );
+		result->insert( "name", settings->accountName() );
 		result->insert( "server", kmailconfig.readEntry( "host", "localhost" ) );
 		result->insert( "port", kmailconfig.readEntry( "port", "110" ) );
 		result->insert( "ssl", kmailconfig.readEntry( "use-ssl", "false" ) );
@@ -145,7 +160,7 @@ QMap< QString, QString > * KMail_Protocol::createConfig( KConfigGroup* config, c
 	}
 	if( type == "local" ) //mbox
 	{
-		result->insert( "name", config->readEntry( "name", "" ) );
+		result->insert( "name", settings->accountName() );
 		result->insert( "server", "" );
 		result->insert( "port", "0" );
 		result->insert( "ssl", "false" );
@@ -157,7 +172,7 @@ QMap< QString, QString > * KMail_Protocol::createConfig( KConfigGroup* config, c
 	}
 	if( type == "maildir" )
 	{
-		result->insert( "name", config->readEntry( "name", "" ) );
+		result->insert( "name", settings->accountName() );
 		result->insert( "server", "" );
 		result->insert( "port", "0" );
 		result->insert( "ssl", "false" );

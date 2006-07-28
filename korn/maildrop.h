@@ -10,6 +10,7 @@
 #include<qcolor.h>
 #include<qvector.h>
 
+class AccountSettings;
 class Protocol;
 
 class KConfigBase;
@@ -39,61 +40,11 @@ class KMailDrop : public QObject
      */
     enum  Style { Plain, Colour, Icon };
 
-  private:
-
-    QString _caption;
-    QString _clickCmd;
-    QString _nMailCmd;
-    QString _soundFile;
-    Style   _style;
-    QColor  _bgColour;
-    QColor  _fgColour;
-    QColor  _nbgColour;
-    QColor  _nfgColour;
-    QString _icon;
-    QString _nIcon;
-    int     _lastCount;
-    QString _realName;
-    bool    _passivePopup;
-    bool    _passiveDate;
+  protected:
+    int _lastCount;
+    AccountSettings *_settings;
 
   public:
-
-    /** The name of the config key for the type of the mailbox */
-    static const char *TypeConfigKey;
-    /** The name of the config key for the caption (name) of the mailbox */
-    static const char *CaptionConfigKey;
-    /** The name of the config key for the "on click command" of the mailbox */
-    static const char *ClickConfigKey;
-    /** The name of the config key for the new mail command of the mailbox */
-    static const char *NewMailConfigKey;
-    /** The name of the config key for the sound file of the mailbox */
-    static const char *SoundFileConfigKey;
-    /** The name of the config key for the display style of the mailbox */
-    static const char *DisplayStyleConfigKey;
-    /** The name of the config key for the new text color of the mailbox */
-    static const char *NFgColourConfigKey;
-    /** The name of the config key for the new background color of the mailbox */
-    static const char *NBgColourConfigKey;
-    /** The name of the config key for the text color of the mailbox (if there are no new messages) */
-    static const char *FgColourConfigKey;
-    /** The name of the config key for the background color of the mailbox (if there are no new messages) */
-    static const char *BgColourConfigKey;
-    /** The name of the config key for the name of icon file of the mailbox (if there are no new messages) */
-    static const char *IconConfigKey;
-    /** The name of the config key for the name of the icon file of the mailbox (if there are new messages) */
-    static const char *NewMailIconConfigKey;
-    /** The name of the config key for the number of resetted messages of the mailbox. */
-    static const char *ResetCounterConfigKey;
-    /** The name of the config key for the passive popup setting (true/false) of the mailbox */
-    static const char *PassivePopupConfigKey;
-    /** The name of the config key for the passive date setting (true/false) of the mailbox. True means that dates are also printed */
-    static const char *PassiveDateConfigKey; //Enabled date in Passive popup
-    /** The name of the config key for the settings of using the parent box of the mailbox */
-    static const char *UseBoxSettingsConfigKey;
-    /** The name of the config key for the name of the mailbox */
-    static const char *RealNameConfigKey;
-    
     /**
      * KMailDrop Constructor
      */
@@ -114,6 +65,12 @@ class KMailDrop : public QObject
      * @return The number of messages in the mailbox since last count.
      */
     int count() {return _lastCount;};
+
+    QString realName() const;
+
+    QString soundFile() const;
+
+    QString newMailCmd() const;
 
     /** 
      * Recheck the number of letters in this mailbox. Raises the
@@ -168,16 +125,6 @@ class KMailDrop : public QObject
      */
     virtual KMailDrop *clone() const = 0;
 
-    /**
-     * This function reads the settings which can be used by several
-     * accounts. These values can be overwritten by the readConfigGroup
-     * -function.
-     *
-     *@param cfg A configuration object with the group already
-     * set to the configuration for this box
-     */
-    virtual void readGeneralConfigGroup( const KConfigBase& cfg );
-
     /** 
      * Read box configuration from a config group. Subclasses that
      * reimplement this should call the overridden method.
@@ -186,7 +133,7 @@ class KMailDrop : public QObject
      *     the configuration for this box.
      * @return true if read was successful, false otherwise.
      */
-    virtual bool readConfigGroup( const KConfigBase& cfg );
+    virtual bool readConfig( AccountSettings *settings );
     /**
      * This function have a mapping to the configuration, and a protocol for the type of protocol.
      *
@@ -204,7 +151,7 @@ class KMailDrop : public QObject
      *     the configuration for this box.
      * @return true if read was successful, false otherwise.
      */
-    virtual bool writeConfigGroup( KConfigBase& cfg ) const;
+    virtual bool writeConfigGroup( AccountSettings *settings ) const;
 
     /** 
      * Return the type of this monitor, for display and
@@ -296,184 +243,12 @@ class KMailDrop : public QObject
      */
     virtual QString readMail(const QVariant id, bool * stop);
 
-    // data that belongs in every monitor
-    //TODO: replace them by a settings class?
-
-    /**
-     * Get-function for the caption setting
-     *
-     * @return the caption of this Maildrop
-     */
-    QString       caption()       const { return _caption; }
-    /**
-     * Get-function for the click command setting
-     *
-     * @return the click command of this Maildrop
-     */
-    QString       clickCmd()      const { return _clickCmd; }
-    /**
-     * Get-function for the new mail command setting
-     *
-     * @return the new mail command of this Maildrop
-     */
-    QString       newMailCmd()    const { return _nMailCmd; }
-    /**
-     * Get-function for the sound file setting
-     *
-     * @return the sound file of this Maildrop
-     */
-    QString       soundFile()     const { return _soundFile;}
-    /**
-     * Get-function for the back color setting
-     *
-     * @return the back color of this Maildrop
-     */
-    QColor        bgColour()      const { return _bgColour; }
-    /**
-     * Get-function for the text-color setting
-     *
-     * @return the text color (foreground color) of this Maildrop
-     */
-    QColor        fgColour()      const { return _fgColour; }
-    /**
-     * Get-function for the new background color setting
-     *
-     * @return the new background color of this Maildrop
-     */
-    QColor        newBgColour()   const { return _nbgColour; }
-    /**
-     * Get-function for the new text color setting
-     *
-     * @return the new text color of this Maildrop
-     */
-    QColor        newFgColour()   const { return _nfgColour; }
-    /**
-     * Get-function for the icon setting
-     *
-     * @return the icon of this Maildrop
-     */
-    QString       icon()          const { return _icon; }
-    /**
-     * Get-function for the new icon setting
-     *
-     * @return the 'icon if there are new messages' setting of this Maildrop
-     */
-    QString       newIcon()       const { return _nIcon; }
-    /**
-     * Get-function for the style setting
-     *
-     * @return the display style of this Maildrop
-     */
-    Style         displayStyle()  const { return _style; }
-    /**
-     * Get-function for the passive popup setting
-     *
-     * @return true if this maildrop prints a passive popup on new email; false otherwise
-     */
-    bool          passivePopup()  const { return _passivePopup; }
-    /**
-     * Get-function for the passive date setting
-     *
-     * @return true if this maildrop prints dates in the passive popup; false otherwise
-     */
-    bool	  passiveDate()   const { return _passiveDate; }
-    /**
-     * Get-function for the name setting
-     *
-     * @return the real name of this maildrop
-     */
-    QString       realName()      const { return _realName; }
-
-    /**
-     * Set function for caption.
-     *
-     * @param val the new value for this setting
-     */
-    void setCaption(QString val);
-    /**
-     * Set function for click command.
-     *
-     * @param val the new value for this setting
-     */
-    void setClickCmd(QString val);
-    /**
-     * Set function for new mail command.
-     *
-     * @param val the new value for this setting
-     */
-    void setNewMailCmd(QString val);
-    /**
-     * Set function for sound file.
-     *
-     * @param val the new value for this setting
-     */
-    void setSoundFile(QString val);
-    /**
-     * Set function for display style.
-     *
-     * @param val the new value for this setting
-     */
-    void setDisplayStyle(Style val);
-    /**
-     * Set function for background color (when there are no new messages).
-     *
-     * @param val the new value for this setting
-     */
-    void setBgColour(QColor val);
-    /**
-     * Set function for text colour (when there are no new messages).
-     *
-     * @param val the new value for this setting
-     */
-    void setFgColour(QColor val);
-    /**
-     * Set function for background color (when there are new messages).
-     *
-     * @param val the new value for this setting
-     */
-    void setNewBgColour(QColor val);
-    /**
-     * Set function for foreground color (when there are new messages).
-     *
-     * @param val the new value for this setting
-     */
-    void setNewFgColour(QColor val);
-    /**
-     * Set function for icon (when there are no new messages).
-     *
-     * @param val the new value for this setting
-     */
-    void setIcon(QString val);
-    /**
-     * Set function for icon (when there are new messages).
-     *
-     * @param val the new value for this setting
-     */
-    void setNewIcon(QString val);
     /**
      * Set function for reset counter.
      *
      * @param val the new value for this setting
      */
     void setResetCounter(int val);
-    /**
-     * Set function for passive popup.
-     *
-     * @param val the new value for this setting
-     */
-    void setPassivePopup(bool val);
-    /**
-     * Set function for passive date.
-     *
-     * @param val the new value for this setting
-     */
-    void setPassiveDate(bool val);
-    /**
-     * Set function for name.
-     *
-     * @param val the new value for this setting
-     */
-    void setRealName(QString val);
 
     /** 
      * This is called by the manager when it wishes to delete

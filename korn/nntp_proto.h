@@ -50,7 +50,7 @@ public:
 	 * @param config the configuration (not used in this class)
 	 * @return a pointer to a Protocol; in this class, always itself (this)
 	 */
-	virtual const Protocol* getProtocol( KConfigGroup* ) const { return this; }
+	virtual const Protocol* getProtocol( AccountSettings* ) const { return this; }
 
 	/**
 	 * This function returns a new instance of the class.

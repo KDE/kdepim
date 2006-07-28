@@ -23,21 +23,9 @@
 
 #include <QMap>
 
-QMap< QString, QString >* KIO_Protocol::createConfig( KConfigGroup * group, const QString& password ) const
+QMap< QString, QString >* KIO_Protocol::createConfig( AccountSettings *settings ) const
 {
-	QMap< QString, QString > *result = new QMap< QString, QString >;
-
-	result->insert( "name", group->readEntry( "name", "" ) );
-	result->insert( "server", group->readEntry( "server", "" ) );
-	result->insert( "port", group->readEntry( "port", "" ) );
-	result->insert( "username", group->readEntry( "username", "" ) );
-	result->insert( "password", password );
-	result->insert( "mailbox", group->readEntry( "mailbox", "" ) );
-	result->insert( "savepassword", group->readEntry( "savepassword", "false" ) );
-	result->insert( "ssl", group->readEntry( "ssl", "false" ) );
-	result->insert( "metadata", group->readEntry( "metadata", "" ) );
-
-	return result;
+	return new QMap< QString, QString >( settings->readEntries() );
 }
 
 void KIO_Protocol::clearFields( QMap<QString, QString> *map, const KIO_Protocol::Fields fields ) const

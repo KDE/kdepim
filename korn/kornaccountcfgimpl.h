@@ -32,6 +32,9 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
+class AccountSettings;
+class Settings;
+
 class KConfigGroup;
 class KUrlRequester;
 
@@ -58,7 +61,7 @@ public:
 	 *
 	 * @param parent the parent of this object
 	 */
-	KornAccountCfgImpl( QWidget * parent = 0 );
+	KornAccountCfgImpl( QWidget * parent, Settings *grob_settings, AccountSettings *settings );
 	/**
 	 * Destructor
 	 */
@@ -73,7 +76,7 @@ public:
 	 * @param boxnr the number of this box
 	 * @param accountnr the number of this account
 	 */
-	void readConfig( KConfigGroup *config, QMap< QString, QString > *entries, int boxnr, int accountnr );
+	void readConfig();
 	/**
 	 * This function writes the configuration to the configuration group.
 	 * The configuration group is stored after reading.
@@ -99,16 +102,17 @@ private slots:
 	void slotOK();
 	void slotCancel();
 private:
-	KConfigGroup *_config;
-	int _fields;
-	int _urlfields;
-	int _boxnr, _accountnr;
+	Settings *m_glob_settings;
+	AccountSettings *m_settings;
+	int m_fields;
+	int m_urlfields;
+	int m_boxnr, m_accountnr;
 		
-	QVBoxLayout *_vlayout;
-	QHBoxLayout *_protocolLayout;
-	QVector< QWidget* > *_groupBoxes;
+	QVBoxLayout *m_vlayout;
+	QHBoxLayout *m_protocolLayout;
+	QVector< QWidget* > *m_groupBoxes;
 	
-	QList< AccountInput* > *_accountinput;
+	QList< AccountInput* > *m_accountinput;
 };
 
 #endif //MK_KORNACCOUNTCFGIMPL_H

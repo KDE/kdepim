@@ -8,19 +8,45 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>314</width>
-    <height>439</height>
+    <width>324</width>
+    <height>481</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
    <property name="margin" >
-    <number>8</number>
+    <number>9</number>
    </property>
    <property name="spacing" >
     <number>6</number>
    </property>
    <item>
+    <layout class="QHBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="lbName" >
+       <property name="text" >
+        <string>&amp;Name:</string>
+       </property>
+       <property name="buddy" >
+        <cstring>edName</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="edName" />
+     </item>
+    </layout>
+   </item>
+   <item>
     <widget class="QTabWidget" name="tabWidget3" >
+     <property name="currentIndex" >
+      <number>2</number>
+     </property>
      <widget class="QWidget" name="tabView" >
       <attribute name="title" >
        <string>&amp;View</string>
@@ -1295,40 +1321,120 @@
       </attribute>
       <layout class="QVBoxLayout" >
        <property name="margin" >
-        <number>10</number>
+        <number>9</number>
        </property>
        <property name="spacing" >
         <number>6</number>
        </property>
        <item>
-        <widget class="KEditListBoxManager" name="elbAccounts" />
-       </item>
-       <item>
-        <widget class="QPushButton" name="pbEdit" >
-         <property name="text" >
-          <string>E&amp;dit</string>
+        <layout class="QHBoxLayout" >
+         <property name="margin" >
+          <number>0</number>
          </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tabDCOP" >
-      <attribute name="title" >
-       <string>&amp;DCOP</string>
-      </attribute>
-      <layout class="QVBoxLayout" >
-       <property name="margin" >
-        <number>10</number>
-       </property>
-       <property name="spacing" >
-        <number>6</number>
-       </property>
-       <item>
-        <widget class="KEditListBox" name="elbDCOP" >
-         <property name="toolTip" >
-          <string>The names of DCOP-objects by this box. DCOP-objects let other programs add 'virtual' emails to the box.</string>
+         <property name="spacing" >
+          <number>6</number>
          </property>
-        </widget>
+         <item>
+          <widget class="QListWidget" name="lsAccounts" />
+         </item>
+         <item>
+          <layout class="QVBoxLayout" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <property name="spacing" >
+            <number>6</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="pbAdd" >
+             <property name="text" >
+              <string>&amp;Add</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbRemove" >
+             <property name="text" >
+              <string>&amp;Remove</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbMoveUp" >
+             <property name="text" >
+              <string>Move U&amp;p</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbMoveDown" >
+             <property name="text" >
+              <string>Move &amp;Down</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer>
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbEdit" >
+             <property name="text" >
+              <string>E&amp;dit</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
@@ -1340,31 +1446,10 @@
  <pixmapfunction></pixmapfunction>
  <customwidgets>
   <customwidget>
-   <class>KIconButton</class>
-   <extends>QWidget</extends>
-   <header>kicondialog.h</header>
-   <container>1</container>
-   <pixmap></pixmap>
-  </customwidget>
-  <customwidget>
    <class>KUrlRequester</class>
    <extends>QWidget</extends>
    <header>kurlrequester.h</header>
    <container>1</container>
-   <pixmap></pixmap>
-  </customwidget>
-  <customwidget>
-   <class>Q3ListBox</class>
-   <extends></extends>
-   <header>q3listbox.h</header>
-   <container>0</container>
-   <pixmap></pixmap>
-  </customwidget>
-  <customwidget>
-   <class>KEditListBoxManager</class>
-   <extends></extends>
-   <header>keditlistboxman.h</header>
-   <container>0</container>
    <pixmap></pixmap>
   </customwidget>
   <customwidget>
@@ -1375,10 +1460,10 @@
    <pixmap></pixmap>
   </customwidget>
   <customwidget>
-   <class>KEditListBox</class>
-   <extends>Q3ListBox</extends>
-   <header>keditlistbox.h</header>
-   <container>0</container>
+   <class>KIconButton</class>
+   <extends>QWidget</extends>
+   <header>kicondialog.h</header>
+   <container>1</container>
    <pixmap></pixmap>
   </customwidget>
  </customwidgets>

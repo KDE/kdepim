@@ -26,6 +26,9 @@
 #include "polldrop.h"
 #include <QList>
 
+//TODO: remove include below
+#include "settings.h"
+
 class QWidget;
 class KDropDialog;
 class KornMailSubject;
@@ -35,7 +38,6 @@ class KIO_Protocol;
 class KIO_Subjects;
 class KIO_Read;
 class KIO_Delete;
-class KConfigGroup;
 class KUrl;
 template<class> class QList;
 template<class> class QVector;
@@ -90,24 +92,6 @@ private:
 	friend class KIO_Delete;
 	friend class KIO_Single_Subjects;
 public:
-	/** The name of the config key for the protocol */
-	static const char *ProtoConfigKey;
-	/** The name of the config key for the hostname */
-	static const char *HostConfigKey;
-	/** The name of the config key for the port */
-	static const char *PortConfigKey;
-	/** The name of the config key for the username */
-	static const char *UserConfigKey;
-	/** The name of the config key for the mailbox */
-	static const char *MailboxConfigKey;
-	/** The name of the config key for the password */
-	static const char *PassConfigKey;
-	/** The name of the config key for the savepassword (true/false) setting */
-	static const char *SavePassConfigKey;
-	/** The name of the config key for the metadata */
-	static const char *MetadataConfigKey;
-
-public:
 	/**
 	 * KKioDrop Constructor
 	 */
@@ -117,7 +101,7 @@ public:
 	 *
 	 * @param config a configuration group for reading settings out
 	 */
-	KKioDrop( KConfigGroup* );
+	KKioDrop( AccountSettings* );
 
 	/**
 	 * Set the server that will be checked for new mail.
@@ -283,7 +267,7 @@ public:
 	 * @return true if succesfull; false otherwise
 	 */
 	//TODO: delete this function (because writing is done during configuration). Note: resetcounter should be written
-	virtual bool writeConfigGroup ( KConfigBase& cfg ) const;
+	virtual bool writeConfigGroup ( AccountSettings *settings ) const;
 
 	/**
 	 * This function returns the typename of this maildrop.
@@ -334,9 +318,9 @@ private:
 	void emitDeleteMailsProgress( int value ) { emit deleteMailsProgress( _deleteMailsTotalSteps - value ); }
 
 	void emitShowPassivePopup( QList< KornMailSubject > *subject, int total )
-			{ emit showPassivePopup( subject, total, passiveDate(), this->realName() ); }
+			{ emit showPassivePopup( subject, total, _settings->passiveDate(), _settings->accountName() ); }
 	void emitShowPassivePopup( const QString& error )
-	                { if( passivePopup() ) { emit showPassivePopup( error, this->realName() ); } }
+	                { if( _settings->passivePopup() ) { emit showPassivePopup( error, _settings->accountName() ); } }
 	void emitValidChanged() { emit validChanged( valid() ); }
 
 private slots:

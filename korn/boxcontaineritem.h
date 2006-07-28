@@ -29,6 +29,7 @@
 #include <QPixmap>
 
 class KornMailSubject;
+class Settings;
 
 class KActionCollection;
 class KConfig;
@@ -80,7 +81,7 @@ public:
 	 * @param config The KConfigGroup-object which contains the configuration of this box.
 	 * @param index The index of the box used in the config-file
 	 */
-	virtual void readConfig( KConfig* config, const int index );
+	virtual void readConfig( BoxSettings *settings, BoxSettings *, const int index );
 
 public slots:
 	/**
@@ -162,7 +163,7 @@ private:
  	 * @param font the font; 0 is default font.
 	 * @param count the number of messages
 	 */
-	static QPixmap calcComplexPixmap( const QPixmap &icon, const QColor& fgColour, const QFont* font, const int count );
+	static QPixmap calcComplexPixmap( const QPixmap &icon, const QColor& fgColour, const QFont& font, const int count );
 	
 	/**
 	 * This functions sets a movie to a specified label
@@ -170,6 +171,9 @@ private:
 	 * @param anim The path to the animation
 	 */
 	void setAnimIcon( QLabel* label, const QString& anim );
+
+private:
+	BoxSettings *_settings;
 	
 private slots:
 	/**
@@ -196,41 +200,41 @@ private slots:
 	 * This slot calls showConfig()
 	 */
 	void slotConfigure() { showConfig(); }
-public slots:
+public Q_SLOTS:
 	/**
 	 * This call immediately checked all accounts of this box.
 	 */
-	void recheck();
+	Q_SCRIPTABLE void recheck();
 	/**
 	 * This call reset the number of unread messages to 0.
 	 */
-	void reset();
+	Q_SCRIPTABLE void reset();
 	/**
 	 * This call popup's a window with the headers of the new messages.
 	 */
-	void view();
+	Q_SCRIPTABLE void view();
 	/**
 	 * This program executes the command as setup'ed.
 	 */
-	void runCommand(); //Possible_unsafe?
+	Q_SCRIPTABLE void runCommand(); //Possible_unsafe?
 	/**
 	 * This function lets the popup-menu's be displayed.
 	 */
-	void popup();
+	Q_SCRIPTABLE void popup();
 	
 	/**
 	 * This function lets the user edit the configuration
 	 */
-	void showConfig();
+	Q_SCRIPTABLE void showConfig();
 
 	/**
 	 * With this DCOP-call, a user can start the account.
 	 */
-	void startTimer();
+	Q_SCRIPTABLE void startTimer();
 	/**
 	 * With this DCOP-call, a user can stop the account.
 	 */
-	void stopTimer();
+	Q_SCRIPTABLE void stopTimer();
 signals:
 	/**
 	 * This signal is emitted when the user whants to configure something.
@@ -244,37 +248,6 @@ private slots:
 	 * @param proc The instance of the instance which must be deleted.
 	 */
 	void processExited( KProcess* proc );
-
-protected:
-	//This settings are stored here because every implementation needs them.
-	/**
-	 * This QString contains the path of the icons (old, new)
-	 */
-	QString *_icons[ 2 ];
-	/**
-	 * This QString contains the path of the animations (old, new)
-	 */
-	QString *_anims[ 2 ];
-	/**
-	 * This QColor contains the text color of the box (old, new)
-	 */
-	QColor *_fgColour[ 2 ];
-	/**
-	 * This QColor contains the background color of the box (old, new)
-	 */
-	QColor *_bgColour[ 2 ];
-	/**
-	 * This QFont contains the font of the box (old, new)
-	 */
-	QFont *_fonts[ 2 ];
-	
-private:
-	QString *_command;
-	bool _recheckSettings[ 3 ];
-	bool _resetSettings[ 3 ];
-	bool _viewSettings[ 3 ];
-	bool _runSettings[ 3 ];
-	bool _popupSettings[ 3 ];
 };
 
 #endif //MK_BOXCONTAINERITEM_H

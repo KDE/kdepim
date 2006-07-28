@@ -110,7 +110,7 @@ KKioDrop::KKioDrop()
 	_mailurls = new QList<FileInfo>;
 }
 
-KKioDrop::KKioDrop( KConfigGroup* )
+KKioDrop::KKioDrop( AccountSettings* )
 	: KPollableDrop(),
 	_kurl( 0 ),
 	_metadata( 0 ),
@@ -244,7 +244,7 @@ QString KKioDrop::auth() const
 
 void KKioDrop::recheck()
 {
-	_count->count( this );
+	_count->count( this, _settings );
 
 	return;
 }
@@ -252,7 +252,7 @@ void KKioDrop::recheck()
 void KKioDrop::forceRecheck()
 {
 	_count->stopActiveCount();
-	_count->count( this );
+	_count->count( this, _settings );
 
 	return;
 }
@@ -362,15 +362,14 @@ bool KKioDrop::readConfigGroup( const QMap< QString, QString > &map, const Proto
 	return true;
 }
 
-bool KKioDrop::writeConfigGroup( KConfigBase& cfg ) const
+bool KKioDrop::writeConfigGroup( AccountSettings *settings ) const
 {
-	return KPollableDrop::writeConfigGroup( cfg );
+	return KPollableDrop::writeConfigGroup( settings );
 }
 
 KKioDrop& KKioDrop::operator = ( const KKioDrop& other )
 {
 	*_kurl=*other._kurl;
-	setFreq( other.freq() );
 
 	if( other._protocol )
 		_protocol = other._protocol->getKIOProtocol();
@@ -412,14 +411,5 @@ void KKioDrop::slotConnectionInfoMessage( const QString& msg )
 {
 	kDebug() << msg << endl; //Display only in debug modes
 }
-
-const char *KKioDrop::ProtoConfigKey = "protocol";
-const char *KKioDrop::HostConfigKey = "server";
-const char *KKioDrop::PortConfigKey = "port";
-const char *KKioDrop::UserConfigKey = "username";
-const char *KKioDrop::PassConfigKey = "password";
-const char *KKioDrop::MailboxConfigKey = "mailbox";
-const char *KKioDrop::SavePassConfigKey = "savepass";
-const char *KKioDrop::MetadataConfigKey = "metadata";
 
 #include "kio.moc"

@@ -21,6 +21,7 @@
 
 #include "account_input.h"
 #include "process_drop.h"
+#include "settings.h"
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -31,23 +32,19 @@
 #include <QStringList>
 #include <QVector>
 
-const Protocol* Process_Protocol::getProtocol( KConfigGroup* ) const
+const Protocol* Process_Protocol::getProtocol( AccountSettings* ) const
 {
 	return this;
 }
 
-KMailDrop* Process_Protocol::createMaildrop( KConfigGroup* ) const
+KMailDrop* Process_Protocol::createMaildrop( AccountSettings* ) const
 {
 	return new ProcessDrop();
 }
 
-QMap< QString, QString > * Process_Protocol::createConfig( KConfigGroup* config, const QString& ) const
+QMap< QString, QString > * Process_Protocol::createConfig( AccountSettings* settings ) const
 {
-	QMap< QString, QString > *result = new QMap< QString, QString >();
-	
-	result->insert( "program", config->readEntry( "program", "" ) );
-
-	return result;
+	return new QMap< QString, QString >( settings->readEntries() );
 }
 
 void Process_Protocol::configFillGroupBoxes( QStringList* groupBoxes ) const

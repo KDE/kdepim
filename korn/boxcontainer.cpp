@@ -18,6 +18,7 @@
 
 #include "boxcontainer.h"
 #include "boxcontaineritem.h"
+#include "settings.h"
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -37,23 +38,25 @@ BoxContainer::~BoxContainer()
 	delete _items;
 }
 
-void BoxContainer::readConfig( KConfig* config )
+void BoxContainer::readConfig( Settings *settings, Settings *config_settings )
 {
 	int counter = 0;
-	while( config->hasGroup( QString( "korn-%1" ).arg( counter ) ) )
+	while( settings->getBox( counter ) )
 	{
-		config->setGroup( QString( "korn-%1" ).arg( counter ) );
 		BoxContainerItem *item = newBoxInstance();
-		item->readConfig( config, counter );
+		item->readConfig( settings->getBox( counter ), config_settings->getBox( counter ), counter );
 		addItem( item );
 		++counter;
 	}
 }
 
-void BoxContainer::writeConfig( KConfig *config )
+void BoxContainer::writeConfig( Settings *settings )
 {
 	for( int index = 0; index < _items->size(); ++index )
-		_items->at( index )->writeConfig( config, index );
+		if( settings->getBox( index ) )
+			_items->at( index )->writeConfig( settings->getBox( index ), index );
+		else
+			kWarning() << "Could not update information: configuration file does not match real number of boxes" << endl;
 	
 }
 

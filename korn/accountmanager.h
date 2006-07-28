@@ -27,6 +27,7 @@
 
 #include <QObject>
 
+class BoxSettings;
 class DBUSDrop;
 class KornSubjectsDlg;
 class KKioDrop;
@@ -65,7 +66,7 @@ public:
 	 * every box have it's own index. This number is used to get the
 	 * right config-information out of the config parameter.
 	 */
-	virtual void readConfig( KConfig* config, const int index );
+	virtual void readConfig( BoxSettings *settings, BoxSettings *config_box_settings, const int index );
 
 	/**
 	 * This write the configuration into a file. Things that must be right is
@@ -75,7 +76,7 @@ public:
 	 * @param config The KConfig instance to which the configuration is written.
 	 * @param index The index of the box.
 	 */
-	virtual void writeConfig( KConfig* config, const int index );
+	virtual void writeConfig( BoxSettings *settings, const int index );
 
 	/**
 	 * This method makes a QString which can be used for a tooltip.
@@ -145,12 +146,10 @@ private:
 	};
 
 	QList< KMailDrop* > *_kioList;
-	QList< DBUSDrop* > *_dbusList;
-
 	QMap< KMailDrop*, Dropinfo* > *_dropInfo;
-
+	BoxSettings *_config_box_settings;
+	
 	static KornSubjectsDlg *_subjectsDlg;
-
 protected:
 	int totalMessages();
 	bool hasNewMessages();
@@ -159,6 +158,7 @@ private:
 private slots:
 	void slotChanged( int, KMailDrop* );
 	void slotValidChanged( bool );
+	void slotConfigChanged();
 };
 
 #endif //MK_ACCOUNTMANAGER_H

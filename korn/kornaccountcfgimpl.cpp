@@ -23,6 +23,7 @@
 #include "password.h"
 #include "protocol.h"
 #include "protocols.h"
+#include "settings.h"
 
 #include <kconfigbase.h>
 #include <kdebug.h>
@@ -42,18 +43,19 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 
-KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent )
+KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent, Settings *glob_settings, AccountSettings *settings )
 	: QWidget( parent ),
 	Ui_KornAccountCfg(),
-	_config( 0 ),
-	_fields( 0 ),
-	_urlfields( 0 ),
-	_boxnr( 0 ),
-	_accountnr( 0 ),
-	_vlayout( 0 ),
-	_protocolLayout( 0 ),
-	_groupBoxes( 0 ),
-	_accountinput( new QList< AccountInput* >() )
+	m_glob_settings( glob_settings ),
+	m_settings( settings ),
+	m_fields( 0 ),
+	m_urlfields( 0 ),
+	m_boxnr( 0 ),
+	m_accountnr( 0 ),
+	m_vlayout( 0 ),
+	m_protocolLayout( 0 ),
+	m_groupBoxes( 0 ),
+	m_accountinput( new QList< AccountInput* >() )
 {
 	setupUi( this );
 
@@ -68,40 +70,39 @@ KornAccountCfgImpl::KornAccountCfgImpl( QWidget * parent )
 
 KornAccountCfgImpl::~KornAccountCfgImpl()
 {
-	while( !_accountinput->isEmpty() )
-		delete _accountinput->takeFirst();
-	delete _accountinput;
+	while( !m_accountinput->isEmpty() )
+		delete m_accountinput->takeFirst();
+	delete m_accountinput;
 }
 
-void KornAccountCfgImpl::readConfig( KConfigGroup *config, QMap< QString, QString > *entries, int boxnr, int accountnr )
+void KornAccountCfgImpl::readConfig()
 {
-	_config = config;
+	QMap< QString, QString > *entries = new QMap< QString, QString >( m_settings->readEntries() );
 
-	while( !_accountinput->isEmpty() )
-		delete _accountinput->takeFirst();
+	this->edName->setText( m_settings->accountName() );
 
-	this->cbProtocol->setCurrentIndex( this->cbProtocol->findText( _config->readEntry( "protocol", "mbox" ) ) );
+	while( !m_accountinput->isEmpty() )
+		delete m_accountinput->takeFirst();
+
+	this->cbProtocol->setCurrentIndex( this->cbProtocol->findText( m_settings->protocol() ) );
         slotProtocolChanged( this->cbProtocol->currentText() );
-	const Protocol *protocol = Protocols::getProto( _config->readEntry( "protocol", "mbox" ) );
+	const Protocol *protocol = Protocols::getProto( m_settings->protocol() );
 
 	protocol->readEntries( entries );
 
-	(*entries)[ "password" ] = KOrnPassword::readKOrnPassword( boxnr, accountnr, *config );
+	for( int xx = 0; xx < m_accountinput->size(); ++xx )
+		if( entries->contains( m_accountinput->at( xx )->configName() ) )
+			m_accountinput->at( xx )->setValue( *(entries->find( m_accountinput->at( xx )->configName() ) ) );
 
-	for( int xx = 0; xx < _accountinput->size(); ++xx )
-		if( entries->contains( _accountinput->at( xx )->configName() ) )
-			_accountinput->at( xx )->setValue( *(entries->find( _accountinput->at( xx )->configName() ) ) );
+	this->edInterval->setText( QString::number( m_settings->interval() ) );
 
-	this->edInterval->setText( _config->readEntry( "interval", "300" ) );
+	this->chUseBox->setChecked( m_settings->useBoxSettings() );
+	this->edRunCommand->setUrl( m_settings->command() );
+	this->edPlaySound->setUrl( m_settings->sound() );
+	this->chPassivePopup->setChecked( m_settings->passivePopup() );
+	this->chPassiveDate->setChecked( m_settings->passiveDate() );
 
-	this->chUseBox->setChecked( _config->readEntry( "boxsettings", true ) );
-	this->edRunCommand->setUrl( _config->readEntry( "newcommand", "" ) );
-	this->edPlaySound->setUrl( _config->readEntry( "sound", "" ) );
-	this->chPassivePopup->setChecked( _config->readEntry( "passivepopup", false ) );
-	this->chPassiveDate->setChecked( _config->readEntry( "passivedate", false ) );
-
-	_boxnr = boxnr;
-	_accountnr = accountnr;
+	delete entries;
 }
 
 void KornAccountCfgImpl::writeConfig()
@@ -114,33 +115,30 @@ void KornAccountCfgImpl::writeConfig()
 		return;
 	}
 
-	_config->writeEntry( "protocol", this->cbProtocol->currentText() );
+	m_settings->setAccountName( this->edName->text() );
+	m_settings->setProtocol( this->cbProtocol->currentText() );
 
 	QMap< QString, QString > *map = new QMap< QString, QString >;
 	QMap< QString, QString >::ConstIterator it;
-	for( int xx = 0; xx < _accountinput->size(); ++xx )
-		map->insert( _accountinput->at( xx )->configName(), _accountinput->at( xx )->value() );
+	for( int xx = 0; xx < m_accountinput->size(); ++xx )
+		map->insert( m_accountinput->at( xx )->configName(), m_accountinput->at( xx )->value() );
 
 	protocol->writeEntries( map );
 
-	if( map->contains( "password" ) )
-	{
-		KOrnPassword::writeKOrnPassword( _boxnr, _accountnr, *_config, *map->find( "password" ) );
-		map->remove( "password" );
-	}
-
-	for( it = map->begin(); it != map->end(); ++it )
-		_config->writeEntry( it.key(), it.value() );
+	m_settings->writeEntries( *map );
+	
+	//for( it = map->begin(); it != map->end(); ++it )
+	//	m_config->writeEntry( it.key(), it.value() );
 
 	delete map;
 
-	_config->writeEntry( "interval", this->edInterval->text().toInt() );
+	m_settings->setInterval( this->edInterval->text().toInt() );
 
-	_config->writeEntry( "boxsettings", this->chUseBox->isChecked() );
-	_config->writeEntry( "newcommand", this->edRunCommand->url().url() );
-	_config->writeEntry( "sound", this->edPlaySound->url().url() );
-	_config->writeEntry( "passivepopup", this->chPassivePopup->isChecked() );
-	_config->writeEntry( "passivedate", this->chPassiveDate->isChecked() );
+	m_settings->setUseBoxSettings( this->chUseBox->isChecked() );
+	m_settings->setCommand( this->edRunCommand->url().url() );
+	m_settings->setSound( this->edPlaySound->url().url() );
+	m_settings->setPassivePopup( this->chPassivePopup->isChecked() );
+	m_settings->setPassiveDate( this->chPassivePopup->isChecked() );
 }
 
 void KornAccountCfgImpl::slotSSLChanged()
@@ -151,15 +149,15 @@ void KornAccountCfgImpl::slotSSLChanged()
 	if( !protocol )
 		return;
 
-	for( int xx = 0; xx < _accountinput->size(); ++xx )
-		if( ( _accountinput->at( xx )->configName() == "ssl" && _accountinput->at( xx )->value() == "true" ) ||
-		    _accountinput->at( xx )->value() == "ssl" )
+	for( int xx = 0; xx < m_accountinput->size(); ++xx )
+		if( ( m_accountinput->at( xx )->configName() == "ssl" && m_accountinput->at( xx )->value() == "true" ) ||
+		    m_accountinput->at( xx )->value() == "ssl" )
 			ssl = true;
 
-	for( int xx = 0; xx < _accountinput->size(); ++xx )
-		if( _accountinput->at( xx )->configName() == "port" &&
-		    ( _accountinput->at( xx )->value() == QString::number( protocol->defaultPort( !ssl ) ) ) )
-			_accountinput->at( xx )->setValue( QString::number( protocol->defaultPort( ssl ) ) );
+	for( int xx = 0; xx < m_accountinput->size(); ++xx )
+		if( m_accountinput->at( xx )->configName() == "port" &&
+		    ( m_accountinput->at( xx )->value() == QString::number( protocol->defaultPort( !ssl ) ) ) )
+			m_accountinput->at( xx )->setValue( QString::number( protocol->defaultPort( ssl ) ) );
 }
 
 void KornAccountCfgImpl::slotOK()
@@ -179,57 +177,57 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 
 	protocol->configFillGroupBoxes( groupBoxes );
 
-	while( !_accountinput->isEmpty() )
-		delete _accountinput->takeFirst();
+	while( !m_accountinput->isEmpty() )
+		delete m_accountinput->takeFirst();
 
-	if( _groupBoxes )
+	if( m_groupBoxes )
 	{
-		for( int xx = 0; xx < _groupBoxes->size(); ++xx )
-			delete _groupBoxes->at( xx );
-		delete _groupBoxes;
+		for( int xx = 0; xx < m_groupBoxes->size(); ++xx )
+			delete m_groupBoxes->at( xx );
+		delete m_groupBoxes;
 	}
-	delete _protocolLayout;
-	delete _vlayout;
-	_vlayout = new QVBoxLayout( this->server_tab );
-	_vlayout->setSpacing( 10 );
-	_vlayout->setMargin( 10 );
+	delete m_protocolLayout;
+	delete m_vlayout;
+	m_vlayout = new QVBoxLayout( this->server_tab );
+	m_vlayout->setSpacing( 10 );
+	m_vlayout->setMargin( 10 );
 
-	_protocolLayout = new QHBoxLayout();
-	_vlayout->addLayout( _protocolLayout );
-	_protocolLayout->addWidget( this->lbProtocol );
-	_protocolLayout->addWidget( this->cbProtocol );
+	m_protocolLayout = new QHBoxLayout();
+	m_vlayout->addLayout( m_protocolLayout );
+	m_protocolLayout->addWidget( this->lbProtocol );
+	m_protocolLayout->addWidget( this->cbProtocol );
 
 	QStringList::iterator it;
 	counter = 0;
-	_groupBoxes = new QVector< QWidget* >( groupBoxes->count() );
+	m_groupBoxes = new QVector< QWidget* >( groupBoxes->count() );
 	for( it = groupBoxes->begin(); it != groupBoxes->end(); ++it )
 	{
-		(*_groupBoxes)[ counter ] = new QGroupBox( (*it), this->server_tab );
-		_vlayout->addWidget( _groupBoxes->at( counter ) );
+		(*m_groupBoxes)[ counter ] = new QGroupBox( (*it), this->server_tab );
+		m_vlayout->addWidget( m_groupBoxes->at( counter ) );
 		++counter;
 	}
 	delete groupBoxes;
 
 	AccountInput *input;
-	protocol->configFields( _groupBoxes, this, _accountinput );
+	protocol->configFields( m_groupBoxes, this, m_accountinput );
 
-	for( int groupCounter = 0; groupCounter < _groupBoxes->count(); ++groupCounter )
+	for( int groupCounter = 0; groupCounter < m_groupBoxes->count(); ++groupCounter )
 	{
 		int counter = 0;
-		QGridLayout *grid = new QGridLayout( _groupBoxes->at( groupCounter ) );
+		QGridLayout *grid = new QGridLayout( m_groupBoxes->at( groupCounter ) );
 		grid->setSpacing( 10 );
 		grid->setMargin( 15 );
-		for( int xx = 0; xx < _accountinput->size(); ++xx )
+		for( int xx = 0; xx < m_accountinput->size(); ++xx )
 		{
-			input = _accountinput->at( xx );
-			if( input->leftWidget() && _groupBoxes->at( groupCounter ) == input->leftWidget()->parent() )
+			input = m_accountinput->at( xx );
+			if( input->leftWidget() && m_groupBoxes->at( groupCounter ) == input->leftWidget()->parent() )
 			{
 				grid->addWidget( input->leftWidget(), counter, 0 );
-				if( input->rightWidget() && _groupBoxes->at( groupCounter ) == input->rightWidget()->parent() )
+				if( input->rightWidget() && m_groupBoxes->at( groupCounter ) == input->rightWidget()->parent() )
 					grid->addWidget( input->rightWidget(), counter, 1 );
 				++counter;
 			} else {
-				if( input->rightWidget() && _groupBoxes->at( groupCounter ) == input->rightWidget()->parent() )
+				if( input->rightWidget() && m_groupBoxes->at( groupCounter ) == input->rightWidget()->parent() )
 				{
 					grid->addWidget( input->rightWidget(), counter, 1 );
 					++counter;
@@ -237,7 +235,7 @@ void KornAccountCfgImpl::slotProtocolChanged( const QString& proto )
 			}
 		}
 
-		_groupBoxes->at( groupCounter )->show();
+		m_groupBoxes->at( groupCounter )->show();
 	}
 
 	// Enable / disable interval input field

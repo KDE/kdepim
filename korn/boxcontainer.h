@@ -28,6 +28,7 @@
 #include <QObject>
 
 class BoxContainerItem;
+class Settings;
 
 template< class T > class QList;
 
@@ -56,14 +57,14 @@ public:
 	 *
 	 * @param config The KConfig-instance to read the config from.
 	 */
-	void readConfig( KConfig* config );
+	void readConfig( Settings* settings, Settings *config_settings );
 
 	/**
 	 * This method writes the config to a certain KConfig instance.
 	 *
 	 * @param config The KConfig-instance to write the config to.
 	 */
-	void writeConfig( KConfig *config );
+	void writeConfig( Settings *settings );
 
 	/**
 	 * Shows all children and itself

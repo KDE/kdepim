@@ -38,7 +38,6 @@ KornSubjectsDlg* AccountManager::_subjectsDlg = 0;
 AccountManager::AccountManager( QObject * parent )
 	: QObject( parent ),
 	_kioList( new QList< KMailDrop* > ),
-	_dbusList( new QList< DBUSDrop* > ),
 	_dropInfo( new QMap< KMailDrop*, Dropinfo* > )
 {
 }
@@ -47,35 +46,29 @@ AccountManager::~AccountManager()
 {
 	while( !_kioList->isEmpty() )
 		delete _kioList->takeFirst();
-	while( !_dbusList->isEmpty() )
-		delete _dbusList->takeFirst();
 	delete _kioList;
-	delete _dbusList;
 	delete _dropInfo;
 }
 
-void AccountManager::readConfig( KConfig* config, const int index )
+void AccountManager::readConfig( BoxSettings *box_settings, BoxSettings *config_box_settings, const int /*index*/ )
 {
-	KConfigGroup *masterGroup = new KConfigGroup( config, QString( "korn-%1" ).arg( index ) );
-	QStringList dbus = masterGroup->readEntry( "dbus", QStringList(), ',' );
-	KConfigGroup *accountGroup;
 	int counter = 0;
-
-	while( config->hasGroup( QString( "korn-%1-%2" ).arg( index ).arg( counter ) ) )
+	AccountSettings *account_settings;
+	_config_box_settings = config_box_settings;
+		
+	while( ( account_settings = box_settings->account( counter ) ) )
 	{
-		accountGroup = new KConfigGroup( config, QString( "korn-%1-%2" ).arg( index ).arg( counter ) );
+		const Protocol *proto = Protocols::getProto( account_settings->protocol() );
 
-		const Protocol *proto = Protocols::getProto( accountGroup->readEntry( "protocol" ) );
 		if( !proto )
 		{
 			kWarning() << "Protocol werd niet gevonden" << endl;
 			++counter;
 			continue;
 		}
-		QMap< QString, QString > *configmap = proto->createConfig( accountGroup,
-		                                                   KOrnPassword::readKOrnPassword( index, counter, *accountGroup ) );
-		KMailDrop *kiodrop = proto->createMaildrop( accountGroup );
-		const Protocol *nproto = proto->getProtocol( accountGroup );
+		QMap< QString, QString > *configmap = proto->createConfig( account_settings );
+		KMailDrop *kiodrop = proto->createMaildrop( account_settings );
+		const Protocol *nproto = proto->getProtocol( account_settings );
 		Dropinfo *info = new Dropinfo;
 
 		if( !kiodrop || !configmap || !nproto )
@@ -93,9 +86,9 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		connect( kiodrop, SIGNAL( showPassivePopup( const QString&, const QString& ) ),
 			 this, SLOT( slotShowPassivePopup( const QString&, const QString& ) ) );
 		connect( kiodrop, SIGNAL( validChanged( bool ) ), this, SLOT( slotValidChanged( bool ) ) );
-
-		kiodrop->readGeneralConfigGroup( *masterGroup );
-		if( !kiodrop->readConfigGroup( *accountGroup ) || !kiodrop->readConfigGroup( *configmap, nproto ) )
+		connect( account_settings, SIGNAL( configChanged() ), this, SLOT( slotConfigChanged() ) );
+		
+		if( !kiodrop->readConfig( account_settings ) || !kiodrop->readConfigGroup( *configmap, nproto ) )
 		{
 			++counter;
 			delete info;
@@ -107,7 +100,7 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		_kioList->append( kiodrop );
 
 		info->index = counter;
-		info->reset = accountGroup->readEntry( "reset", 0 );
+		info->reset = account_settings->reset();
 		info->msgnr = info->reset;
 		info->newMessages = false;
 
@@ -116,39 +109,16 @@ void AccountManager::readConfig( KConfig* config, const int index )
 		++counter;
 	}
 
-	QStringList::Iterator it;
-	for( it = dbus.begin(); it != dbus.end(); ++it )
-	{
-		DBUSDrop *dbusdrop = new DBUSDrop;
-		Dropinfo *info = new Dropinfo;
-
-		connect( dbusdrop, SIGNAL( changed( int, KMailDrop* ) ), this, SLOT( slotChanged( int, KMailDrop* ) ) );
-		connect( dbusdrop, SIGNAL( showPassivePopup( QList< KornMailSubject >*, int, bool, const QString& ) ),
-			 this, SLOT( slotShowPassivePopup( QList< KornMailSubject >*, int, bool, const QString& ) ) );
-
-		dbusdrop->readConfigGroup( *masterGroup );
-		dbusdrop->setDBUSName( *it );
-
-		_dbusList->append( dbusdrop );
-
-		info->index = 0;
-		info->reset = 0;
-		info->msgnr = 0;
-		info->newMessages = false;
-
-		_dropInfo->insert( dbusdrop, info );
-	}
-
 	setCount( totalMessages(), hasNewMessages() );
 }
 
-void AccountManager::writeConfig( KConfig* config, const int index )
+void AccountManager::writeConfig( BoxSettings *settings, const int /*index*/ )
 {
 	QMap< KMailDrop*, Dropinfo* >::Iterator it;
 	for( it = _dropInfo->begin(); it != _dropInfo->end(); ++it )
 	{
-		config->setGroup( QString( "korn-%1-%2" ).arg( index ).arg( it.value()->index ) );
-		config->writeEntry( "reset", it.value()->reset );
+		if( settings->account( it.value()->index ) )
+			settings->account( it.value()->index )->setReset( it.value()->reset );
 	}
 }
 
@@ -234,7 +204,7 @@ bool AccountManager::hasNewMessages()
 
 void AccountManager::playSound( const QString& file )
 {
-	Phonon::AudioPlayer* player = new Phonon::AudioPlayer( Phonon::CommunicationCategory,this );
+	Phonon::AudioPlayer* player = new Phonon::AudioPlayer( Phonon::CommunicationCategory, this );
 	player->play( KUrl( file ) );
 }
 
@@ -266,6 +236,13 @@ void AccountManager::slotChanged( int count, KMailDrop* mailDrop )
 void AccountManager::slotValidChanged( bool )
 {
 	setTooltip( getTooltip() );
+}
+
+void AccountManager::slotConfigChanged()
+{
+	AccountSettings *settings = qobject_cast< AccountSettings* >( sender() );
+	if( _config_box_settings && _config_box_settings->account( settings->accountNumber() ) )
+		_config_box_settings->account( settings->accountNumber() )->setReset( settings->reset() );
 }
 
 #include "accountmanager.moc"

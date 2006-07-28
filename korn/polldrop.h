@@ -27,18 +27,7 @@ class QTimerEvent;
 class KPollableDrop : public KMailDrop
 {
 	Q_OBJECT
-public:
-	/**
-	 * This is the key such as it is used in the configuration file.
-	 */
-	static const char *PollConfigKey;
-	/**
-	 * The default interval between two checks
-	 */
-	static const int DefaultPoll;
-
 private:
-	int _freq;
 	int _timerId;
 	bool _timerRunning;
 
@@ -69,21 +58,6 @@ public:
 	virtual bool running() { return _timerRunning; };
 
 	/**
-	 * Returns the frequency of this monitor.
-	 * The frequency is the interval between two checks.
-	 *
-	 * @return the frequency of this monitor
-	 */
-	int freq() const { return _freq; }
-	/**
-	 * Sets the frequency of this monitor.
-	 * The frequency is the interval between two checks.
-	 *
-	 * @param freq the new frequency
-	 */
-	void setFreq( int freq );
-
-	/**
 	 * This function reads the configuration cfg.
 	 * Childs classes should reimplement this method and call this one
 	 * if they also have configuration.
@@ -91,7 +65,7 @@ public:
 	 * @param cfg the configuration data
 	 * @return true if succesfull, false otherwise
 	 */
-	virtual bool readConfigGroup ( const KConfigBase& cfg );
+	virtual bool readConfig ( AccountSettings *settings );
 	/**
 	 * This function writes the configuration cfg.
 	 * Childs classes should reimplement this method and call this one
@@ -100,7 +74,7 @@ public:
 	 * @param cfg the configuration data
 	 * @return true if succesfull, false otherwise
 	 */
-	virtual bool writeConfigGroup ( KConfigBase& cfg ) const;
+	virtual bool writeConfigGroup ( AccountSettings *settings ) const;
 
 	//virtual void addConfigPage( KDropCfgDialog * );
 
@@ -112,16 +86,5 @@ protected:
 	 */
 	void timerEvent( QTimerEvent *ev );
 };
-
-inline void KPollableDrop::setFreq( int freq ) 
-{  
-	bool r = running();
-
-	if( r ) stopMonitor();
-
-	_freq = freq; 
- 
-	if( r ) startMonitor(); 
-}
 
 #endif // SSK_POLLDROP_H
