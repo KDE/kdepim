@@ -79,7 +79,7 @@ void KEditListBoxManager::setGroupName( const QString& name )
 		*_groupName = name;
 	else
 		_groupName = new QString( name );
-	
+
 	if( _config )
 		readNames();
 }
@@ -90,7 +90,7 @@ void KEditListBoxManager::setSubGroupName( const QString& name )
 		*_subGroupName = name;
 	else
 		_subGroupName = new QString( name );
-		
+
 	if( _config && _groupName )
 		readNames();
 }
@@ -102,13 +102,13 @@ void KEditListBoxManager::init()
 	connect( this, SIGNAL( removed( const QString& ) ), this, SLOT( slotRemoved( const QString& ) ) );
 
 	connect( this->listView(), SIGNAL( doubleClicked( const QModelIndex&) ), this, SLOT( slotActivated( const QModelIndex& ) ) );
-	connect( this->listView(), SIGNAL( returnPressed( const QModelIndex& ) ), this, SLOT( slotActivated( const QModelIndex& ) ) );
+	//connect( this->listView(), SIGNAL( returnPressed( const QModelIndex& ) ), this, SLOT( slotActivated( const QModelIndex& ) ) );
 }
 
 void KEditListBoxManager::readNames()
 {
 	int number = 0;
-	
+
 	this->clear();
 	while( _config->hasGroup( _groupName->arg( number ) ) )
 	{
@@ -130,19 +130,19 @@ void KEditListBoxManager::slotChanged()
 
 	//_prevCount is invariant under all of these operation
 	//if _prevCount is changed, is wasn't one of those operations.
-	
+
 	if( _prevCount != this->count() )
 		return;
 
 	 if( !_config || !_groupName )
 	 	return;
-	
+
 	//First check if the item was moved up
-	
+
         int ci = currentItem();
         if (ci >= 0)
  		_config->setGroup( _groupName->arg( ci ) );
-	
+
 	if( ci > 0 && this->text( ci - 1 ) == _config->readEntry( "name", QString() ) )
 		changeItem( ci - 1, ci ); //moved down
 	else if( ci >= 0 && ci < this->count() - 1 &&
@@ -156,17 +156,17 @@ void KEditListBoxManager::slotAdded( const QString& name )
 {
 	//Update _prevCount
 	_prevCount = this->count();
-	
+
 	if( !_config || !_groupName )
 	 	return;
-		
+
 	int number = 0;
 	while( _config->hasGroup( _groupName->arg( number ) ) )
 		++number;
-		
+
 	_config->setGroup( _groupName->arg( number ) );
 	_config->writeEntry( "name", name );
-	
+
 	emit setDefaults( name, number, _config );
 }
 
@@ -177,7 +177,7 @@ void KEditListBoxManager::slotRemoved( const QString& name )
 
 	if( !_config || !_groupName )
 	 	return;
-		
+
 	//First: search the item number.
 	int number = 0;
 	int subnumber = 0;
@@ -191,13 +191,13 @@ void KEditListBoxManager::slotRemoved( const QString& name )
 		_config->setGroup( _groupName->arg( number ) );
 		if( name == _config->readEntry( "name", QString() ) )
 			break; //found
-		
+
 		++number; //Try next group
 	}
-	
+
 	if( number < 0 ) //failure
 		return; //do nothing
-	
+
 	_config->deleteGroup( _groupName->arg( number ), KConfig::NLS );
 	emit elementDeleted( number );
 	while( _subGroupName && _config->hasGroup( _subGroupName->arg( number ).arg( subnumber ) ) )
@@ -205,12 +205,12 @@ void KEditListBoxManager::slotRemoved( const QString& name )
 		_config->deleteGroup( _subGroupName->arg( number ).arg( subnumber ) );
 		++subnumber;
 	}
-	
+
 	//rotate groups
 	while( _config->hasGroup( _groupName->arg( number + 1 ) ) )
 	{
-		moveItem( number + 1, number );	
-	
+		moveItem( number + 1, number );
+
 		++number;
 	}
 }
@@ -228,23 +228,23 @@ void KEditListBoxManager::moveItem( int src, int dest )
 
 	*srcList = _config->entryMap( _groupName->arg( src ) );
 	_config->deleteGroup( _groupName->arg( src ) );
-	
+
 	_config->setGroup( _groupName->arg( dest ) );
 	for( it = srcList->begin(); it != srcList->end(); ++it )
 		_config->writeEntry( it.key(), it.value() );
-		
+
 	while( _subGroupName && _config->hasGroup( _subGroupName->arg( src ).arg( subnumber ) ) )
 	{
 		_config->deleteGroup( _subGroupName->arg( dest ).arg( subnumber ) );
 		_config->setGroup( _subGroupName->arg( dest ).arg( subnumber ) );
 		for( it = srcList->begin(); it != srcList->end(); ++it )
 			_config->writeEntry( it.key(), it.value() );
-			
+
 		++subnumber;
 	}
 
 	emit elementsSwapped( src, dest );
-		
+
 	delete srcList;
 }
 
@@ -259,15 +259,15 @@ void KEditListBoxManager::changeItem( int first, int last )
 	*lastList = _config->entryMap( _groupName->arg( last ) );
 	_config->deleteGroup( _groupName->arg( first ) );
 	_config->deleteGroup( _groupName->arg( last ) );
-	
+
 	_config->setGroup( _groupName->arg( last ) );
 	for( it = firstList->begin(); it != firstList->end(); ++it )
 		_config->writeEntry( it.key(), it.value() );
-		
+
 	_config->setGroup( _groupName->arg( first ) );
 	for( it = lastList->begin(); it != lastList->end(); ++it )
 		_config->writeEntry( it.key(), it.value() );
-	
+
 	while( _subGroupName && (
 		_config->hasGroup( _subGroupName->arg( first ).arg( subnumber ) ) ||
 		_config->hasGroup( _subGroupName->arg( last ).arg( subnumber ) ) ) )
@@ -276,20 +276,20 @@ void KEditListBoxManager::changeItem( int first, int last )
 		*lastList = _config->entryMap( _subGroupName->arg( last ).arg( subnumber ) );
 		_config->deleteGroup( _subGroupName->arg( first ).arg( subnumber ) );
 		_config->deleteGroup( _subGroupName->arg( last ).arg( subnumber ) );
-		
+
 		_config->setGroup( _subGroupName->arg( last ).arg( subnumber ) );
 		for( it = firstList->begin(); it != firstList->end(); ++it )
 			_config->writeEntry( it.key(), it.value() );
-		
+
 		_config->setGroup( _subGroupName->arg( first ).arg( subnumber ) );
 		for( it = lastList->begin(); it != lastList->end(); ++it )
 			_config->writeEntry( it.key(), it.value() );
-	
+
 		++subnumber;
 	}
 
 	emit elementsSwapped( first, last );
-		
+
 	delete firstList;
 	delete lastList;
 }
