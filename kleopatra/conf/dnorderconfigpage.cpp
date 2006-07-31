@@ -33,7 +33,7 @@
 
 #include <ui/dnattributeorderconfigwidget.h>
 #include <kleo/dn.h>
-
+#include <kinstance.h>
 #include <kdepimmacros.h>
 
 #include <QLayout>
@@ -72,8 +72,8 @@ void DNOrderConfigPage::slotChanged() {
   emit changed(true);
 }
 
-extern "C" KDE_EXPORT KCModule * create_kleopatra_config_dnorder( KInstance *instance, QWidget *parent=0, const QStringList &args=QStringList() ) {
-    DNOrderConfigPage *page = new DNOrderConfigPage( instance, parent, args );
+extern "C" KDE_EXPORT KCModule * create_kleopatra_config_dnorder( QWidget *parent=0, const QStringList &args=QStringList() ) {
+    DNOrderConfigPage *page = new DNOrderConfigPage( new KInstance( "kleopatra" ), parent, args );
     page->setObjectName( "kleopatra_config_dnorder" );
     return page;
 }

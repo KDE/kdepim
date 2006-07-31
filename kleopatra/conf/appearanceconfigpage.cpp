@@ -37,7 +37,7 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kdebug.h>
-
+#include <kinstance.h>
 #include <kdepimmacros.h>
 
 AppearanceConfigurationPage::AppearanceConfigurationPage( KInstance *instance, QWidget *parent, const QStringList &args )
@@ -72,10 +72,10 @@ void AppearanceConfigurationPage::defaults()
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kleopatra_config_appear( KInstance *instance, QWidget *parent=0, const QStringList &args=QStringList() )
+  KDE_EXPORT KCModule *create_kleopatra_config_appear( QWidget *parent=0, const QStringList &args=QStringList() )
   {
     AppearanceConfigurationPage *page =
-      new AppearanceConfigurationPage( instance, parent, args );
+      new AppearanceConfigurationPage( new KInstance( "kleopatra" ), parent, args );
     page->setObjectName( "kleopatra_config_appear" );
     return page;
   }

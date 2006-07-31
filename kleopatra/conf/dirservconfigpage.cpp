@@ -40,6 +40,7 @@
 #include <kconfig.h>
 #include <knuminput.h>
 #include <kdialog.h>
+#include <kinstance.h> 
 
 #include <khbox.h>
 #include <QLabel>
@@ -263,10 +264,10 @@ void DirectoryServicesConfigurationPage::defaults()
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kleopatra_config_dirserv( KInstance *instance, QWidget *parent=0, const QStringList &args=QStringList() )
+  KDE_EXPORT KCModule *create_kleopatra_config_dirserv( QWidget *parent=0, const QStringList &args=QStringList() )
   {
     DirectoryServicesConfigurationPage *page =
-      new DirectoryServicesConfigurationPage( instance, parent, args );
+      new DirectoryServicesConfigurationPage( new KInstance( "kleopatra" ), parent, args );
     page->setObjectName( "kleopatra_config_dirserv" );
     return page;
   }
