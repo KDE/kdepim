@@ -63,6 +63,7 @@ AddViewDialog::AddViewDialog( Q3Dict<ViewFactory> *viewFactoryDict,
   layout->addWidget( mViewNameEdit, 0, 1 );
 
   mTypeGroup = new Q3ButtonGroup( 0, Qt::Horizontal, i18n( "View Type" ), page );
+  mTypeGroup->setExclusive( true );
   connect( mTypeGroup, SIGNAL( clicked( int ) ), this, SLOT( clicked( int ) ) );
   layout->addWidget( mTypeGroup, 1, 0, 1, 2 );
   QGridLayout *groupLayout = new QGridLayout();
