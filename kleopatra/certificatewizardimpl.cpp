@@ -140,6 +140,8 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent, bool modal, Qt::W
 
     for ( unsigned int i = 0 ; i < numKeyLengths ; ++i )
       keyLengthCB->addItem( i18np("%n bit", "%n bits", keyLengths[i] ) );
+    certTypeBG->setExclusive( true );
+    ButtonGroup7->setExclusive( true );
 }
 
 static bool requirementsAreMet( const CertificateWizardImpl::AttrPairList & list ) {
