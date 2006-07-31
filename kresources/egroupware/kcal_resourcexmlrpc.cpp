@@ -183,8 +183,7 @@ bool ResourceXMLRPC::doOpen()
 {
   kDebug(5800) << "ResourceXMLRPC::doOpen()" << endl;
 
-  if ( mServer )
-    delete mServer;
+  delete mServer;
 
   mServer = new KXMLRPC::Server( KUrl(), this );
   mServer->setUrl( KUrl( mPrefs->url() ) );
