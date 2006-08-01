@@ -37,8 +37,9 @@ int main(int argc, char **argv)
   layout->addWidget(new MailDisplay);
   layout->addWidget(new MailDisplay);
 
-  QScrollArea *scrollarea = new QScrollArea;
-  scrollarea->setWidget(widget);
-  scrollarea->show();
+//  QScrollArea *scrollarea = new QScrollArea;
+//  scrollarea->setWidget(widget);
+//  scrollarea->show();
+  widget->show();
   return app.exec();
 }
