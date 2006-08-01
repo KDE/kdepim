@@ -59,7 +59,7 @@ KonsoleKalendarExports::~KonsoleKalendarExports()
 }
 
 bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts,
-                                          Event *event, QDate date )
+                                          Event *event, const QDate &date )
 {
 
   // Export "Text" Format:
@@ -145,7 +145,7 @@ bool KonsoleKalendarExports::exportAsTxt( QTextStream *ts,
 }
 
 bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
-                                               Event *event, QDate date,
+                                               Event *event, const QDate &date,
                                                bool sameday )
 {
 
@@ -213,7 +213,7 @@ QString KonsoleKalendarExports::processField( const QString &field,
 #define pF( x )  processField( ( x ), dquote )
 
 bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
-                                          Event *event, QDate date )
+                                          Event *event, const QDate &date )
 {
 
   // Export "CSV" Format:

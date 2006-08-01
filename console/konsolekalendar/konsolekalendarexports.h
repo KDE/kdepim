@@ -64,7 +64,7 @@ namespace KCal
      * @param event pointer to the Event to export.
      * @param date is the QDate to be exported for.
      */
-    bool exportAsTxt( QTextStream *ts, Event *event, QDate date );
+    bool exportAsTxt( QTextStream *ts, Event *event, const QDate &date );
     /**
      * Export the Event in Short Text Mode.
      * @param ts pointer to the output QTextStream.
@@ -73,7 +73,7 @@ namespace KCal
      * @param sameday flags that this Event is on the same date as the
      * previously exported Event.
      */
-    bool exportAsTxtShort( QTextStream *ts, Event *event, QDate date,
+    bool exportAsTxtShort( QTextStream *ts, Event *event, const QDate &date,
                            bool sameday );
     /**
      * Export the Event in Comma-Separated Values (CSV) Mode.
@@ -81,7 +81,7 @@ namespace KCal
      * @param event pointer to the Event to export.
      * @param date is the QDate to be exported for.
      */
-    bool exportAsCSV( QTextStream *ts, Event *event, QDate date );
+    bool exportAsCSV( QTextStream *ts, Event *event, const QDate &date );
 
   private:
     KonsoleKalendarVariables *m_variables;
