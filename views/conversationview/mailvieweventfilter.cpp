@@ -33,6 +33,7 @@ bool MailViewEventFilter::eventFilter(QObject *obj, QEvent *event)
     m_viewport->resize(resizeEvent->size());
     m_textedit->resize(resizeEvent->size());
     qDebug() << "TEST";
+    return true;
   }
   return QObject::eventFilter(obj, event);
 }
