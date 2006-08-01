@@ -19,7 +19,7 @@ MailDisplay::MailDisplay(QWidget *parent) : QTextEdit(parent)
   //setReadOnly(true); 
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  viewport()->installEventFilter(new MailViewEventFilter(this, viewport(), this));
+  installEventFilter(new MailViewEventFilter(this, viewport(), this));
 //  m_edit1->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 }
 
