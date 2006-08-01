@@ -63,7 +63,7 @@ namespace KCal
      * Converts QT DateTime to epoch format.
      * @param dt is a QDateTime to convert to an epoch.
      */
-    static uint QDateTime2epoch( QDateTime dt );
+    static uint QDateTime2epoch( const QDateTime &dt );
 
   };
 

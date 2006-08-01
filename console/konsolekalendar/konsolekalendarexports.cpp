@@ -197,14 +197,16 @@ bool KonsoleKalendarExports::exportAsTxtShort( QTextStream *ts,
   return true;
 }
 
-QString KonsoleKalendarExports::processField( QString field, QString dquote )
+QString KonsoleKalendarExports::processField( const QString &field,
+                                              const QString &dquote )
 {
   // little function that processes a field for CSV compliance:
   //   1. Replaces double quotes by a pair of consecutive double quotes
   //   2. Surrounds field with double quotes
 
   QString double_dquote = dquote + dquote;
-  QString retField = dquote + field.replace( dquote, double_dquote ) + dquote;
+  QString retField = field;
+  retField = dquote + retField.replace( dquote, double_dquote ) + dquote;
   return retField;
 }
 

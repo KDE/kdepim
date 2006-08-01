@@ -93,7 +93,7 @@ namespace KCal
      * @param field is the field value to be processed.
      * @param dquote is a QString containing the double quote character.
      */
-    QString processField( QString field, QString dquote );
+    QString processField( const QString &field, const QString &dquote );
 
   };
 

@@ -58,14 +58,14 @@ QDateTime KonsoleKalendarEpoch::epoch2QDateTime( uint epoch )
 }
 
 // Function to convert a QDateTime value into an epoch
-uint KonsoleKalendarEpoch::QDateTime2epoch( QDateTime dt )
+uint KonsoleKalendarEpoch::QDateTime2epoch( const QDateTime &dt )
 {
   // THIS FUNCTION CAN BE OFF BY 1 HOUR DUE TO DAYLIGHT SAVINGS TIME.
   // SORRY QT DOESN'T HANDLE DAYLIGHT SAVINGS TIME.
 
   // Compute #seconds to subtract for local timezone difference from UTC.
-  int offset = QDateTime::currentDateTime( Qt::UTC ).toTime_t()
-             - QDateTime::currentDateTime( Qt::LocalTime ).toTime_t();
+  int offset = QDateTime::currentDateTime().toUTC().toTime_t()
+             - QDateTime::currentDateTime().toTime_t();
   return( dt.toTime_t() - offset );
 }
 

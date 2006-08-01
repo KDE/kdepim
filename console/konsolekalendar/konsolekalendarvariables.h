@@ -123,7 +123,7 @@ namespace KCal
      * Sets start date.
      * @param start is the start date.
      */
-    void setStartDateTime( QDateTime start );
+    void setStartDateTime( const QDateTime &start );
 
     /**
      * Get start date.
@@ -141,7 +141,7 @@ namespace KCal
      * Sets end date.
      * @param end is the enddate.
      */
-    void setEndDateTime( QDateTime end );
+    void setEndDateTime( const QDateTime &end );
 
     /**
      * Get end date.
@@ -159,7 +159,7 @@ namespace KCal
      * Sets the UID, the unique tag for VCard entry.
      * @param uid unique tag for VCard entry.
      */
-    void setUID( QString uid );
+    void setUID( const QString &uid );
 
     /**
      * Get UID, the unique tag for VCard entry.
@@ -211,7 +211,7 @@ namespace KCal
      * Set calendar file
      * @param calendar Calendar files full path.
      */
-    void setCalendarFile( QString calendar );
+    void setCalendarFile( const QString &calendar );
 
     /**
      * Returns fullpath to calendar file.
@@ -223,7 +223,7 @@ namespace KCal
      * Set file to import active calendar.
      * @param calendar Calendar file to import.
      */
-    void setImportFile( QString calendar );
+    void setImportFile( const QString &calendar );
 
     /**
      * Return import filename.
@@ -235,7 +235,7 @@ namespace KCal
      * Add description.
      * @param description to event.
      */
-    void setDescription( QString description );
+    void setDescription( const QString &description );
 
     /**
      * Return description.
@@ -253,7 +253,7 @@ namespace KCal
      * Add location information.
      * @param location location where the event occurs.
      */
-    void setLocation( QString location );
+    void setLocation( const QString &location );
 
     /**
      * Return location information.
@@ -271,7 +271,7 @@ namespace KCal
      * Add summary.
      * @param summary event summary.
      */
-    void setSummary( QString summary );
+    void setSummary( const QString &summary );
 
     /**
      * Get summary.
@@ -324,7 +324,7 @@ namespace KCal
     /**
      * Set output file.
      */
-    void setExportFile( QString export_file );
+    void setExportFile( const QString &export_file );
 
     /**
      * To what file we'll output.
