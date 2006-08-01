@@ -20,11 +20,21 @@ set ( conversationSources
  conversationwidget.cpp
  searchline.cpp
  folderproxymodel.cpp
+ mailvieweventfilter.cpp
+# maildisplay.cpp
+)
+
+set ( tmpSRC 
+ tmp.cpp
+ maildisplay.cpp
+ mailvieweventfilter.cpp
 )
 
 kde4_automoc( ${conversationSources} )
-
 kde4_add_executable(conversationview ${conversationSources})
-
 target_link_libraries (conversationview ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS})
+
+kde4_automoc( ${tmpSRC} )
+kde4_add_executable(tmp ${tmpSRC})
+target_link_libraries (tmp ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS})
 

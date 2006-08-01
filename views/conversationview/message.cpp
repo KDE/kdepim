@@ -51,7 +51,7 @@ QString Message::content() const
 QString Message::htmlContent() const
 {
   if (m_nullContent) return "";
-  return m_content;
+  return m_htmlContent;
 }
 
 void Message::setAuthor(const QString& author)
@@ -62,7 +62,8 @@ void Message::setAuthor(const QString& author)
 void Message::setContent(const QString& content)
 {
   m_content = content;
-  m_content.replace(QRegExp("\n"), "<br>");
+  m_htmlContent = content;
+  m_htmlContent.replace(QRegExp("\n"), "<br>");
 }
 
 bool Message::isNull() const
@@ -120,12 +121,16 @@ void Message::markAs(bool read)
 
 bool Message::isRelated(const Message *message) const
 {
-  if (m_id == message->m_id) return true; //duplicate
-  if (m_pid == message->m_pid) return true; //same parent
   if (m_id == message->m_pid) return true; // this is a child of message
+  if (m_pid == message->m_pid) return true; //same parent
   if (m_pid == message->m_id) return true; // this is a parent of message
-  if (m_fancySubject == message->m_fancySubject) return true; //fuzzy hit, same subject in this and message
+  if (m_id == message->m_id) return true; //duplicate
   return false;
+}
+
+bool Message::isFuzzyRelated(const Message *message) const
+{
+  return (m_fancySubject == message->m_fancySubject);
 }
 
 QString Message::fancify(const QString &subject) const 

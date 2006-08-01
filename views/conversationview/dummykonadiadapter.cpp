@@ -273,7 +273,7 @@ DummyKonadiAdapter::DummyKonadiAdapter(FolderModel *model, QObject *parent) : QO
 //   conversations << one << two << three << four << five;
 //  sort();
 
-  for (int i = 0; i < 500; ++i)
+  for (int i = 0; i < 50; ++i)
     newMessage();
 }
 
@@ -287,7 +287,7 @@ void DummyKonadiAdapter::newMessage() const
   QList<QString> authors;
   authors << "Fe" << "Ur" << "The" << "Or" << "Ke" << "He" << "Ni" << "Ar" << "Sol" << "To" << "Ba" << "Mu" << "Li" << "Ngo" << "Do" << "Or";
   QList<QString> words;
-  words << "haui" << "that" << "skanunga" << "aerliki" << "maen" << "toco" << "withar" << "oraet" << "aldrigh" << "aen" << "<br>\n";
+  words << "haui" << "that" << "skanunga" << "aerliki" << "maen" << "toco" << "withar" << "oraet" << "aldrigh" << "aen" << "\n";
   QList<QString> subject;
   subject<<"a"<<"b"<<"c"<<"d"<<"e"<<"f"<<"g"<<"h"<<"h"<<"i"<<"j"<<"k"<<"l"<<"m"<<"n"<<"o"<<"p"<<"q"<<"r"<<"s"<<"t"<<"u"<<"v"<<"w"<<"x"<<"y"<<"z";
   Message *msg = new Message();
@@ -319,8 +319,8 @@ void DummyKonadiAdapter::newMessage() const
     }
     msg->setParentId(m->id());
     content = m->content();
-    content.replace(QRegExp("\n"), "\n>");
-    content.append("\n<br>\n<br>");
+    content.replace(QRegExp("\n"), "\n&gt; ");
+    content.append("\n\n");
     int length = rand()%45 + 5;
     while (length > 0) {
       content.append(words[rand()%words.count()]);
@@ -333,8 +333,8 @@ void DummyKonadiAdapter::newMessage() const
     Message *m = c->message(rand()%c->count());
     msg->setParentId(m->id());
     content = m->content();
-    content.replace(QRegExp("\n"), "\n>");
-    content.append("\n<br>\n<br>");
+    content.replace(QRegExp("\n"), "\n&gt; ");
+    content.append("\n\n");
     int length = rand()%45 + 5;
     while (length > 0) {
       content.append(words[rand()%words.count()]);

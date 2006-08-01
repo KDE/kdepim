@@ -54,9 +54,14 @@ public:
   void markAs(bool read);
 
   /**
-  * @return true if this message is related (parent, child or sibling) to message.
+  * @return true if this message is related (parent, child or sibling) to message, judging by id's.
   */
   bool isRelated(const Message *message) const;
+
+  /**
+  * @return true if this message is related (parent, child or sibling) to message, judging by subject.
+  */
+  bool isFuzzyRelated(const Message *message) const;
 
   /**
   * @return true if this two messages doesn't have the same arrival date
@@ -71,7 +76,7 @@ public:
 private:
   QString fancify(const QString &subject) const;
 
-  QString m_author, m_content, m_subject, m_fancySubject;
+  QString m_author, m_content, m_htmlContent, m_subject, m_fancySubject;
   QDateTime m_arrival, m_send;
   bool m_nullContent, m_readStatus;
   unsigned long m_id, m_pid;

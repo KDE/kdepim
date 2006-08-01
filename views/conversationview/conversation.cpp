@@ -202,6 +202,10 @@ bool Conversation::isRelated(const Message *message) const
     if (tmp->isRelated(message))
       return true;
   }
+/*  foreach (tmp, m_messages) {
+    if (tmp->isFuzzyRelated(message))
+      return true;
+  }*/
   return false;
 }
 

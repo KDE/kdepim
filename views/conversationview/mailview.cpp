@@ -19,18 +19,52 @@
  */
 
 #include <QtGlobal>
+#include <QtDebug>
+
 #include <QTextFrame>
 #include <QTextFrameFormat>
 #include <QTextLength>
-#include <QtDebug>
 #include <QTextDocument>
 #include <QTimer>
+#include <QModelIndex>
 
+#include "conversation.h"
+#include "folderproxymodel.h"
+#include "foldermodel.h"
 #include "mailview.h"
+#include "mailvieweventfilter.h"
 
-MailView::MailView(FolderProxyModel *model, QWidget *parent) : QTextEdit(parent), m_model(model) 
-{ 
-  setReadOnly(true); 
+MailView::MailView(FolderProxyModel *model, QWidget *parent) : QScrollArea(parent), m_model(model) 
+{
+  m_layout = new QVBoxLayout(this);
+  m_edit1 = new QTextEdit(this);
+  m_edit2 = new QTextEdit(this);
+
+  m_edit1->setHtml("sdf sdfkjdhfkjshf");
+  //m_edit1->setReadOnly(true); 
+  m_edit1->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  m_edit1->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  m_edit1->viewport()->installEventFilter(new MailViewEventFilter(m_edit1, this));
+  m_edit1->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+
+  m_edit2->setHtml("df sdfsdfjsdf kdf d");
+  //m_edit2->setReadOnly(true); 
+  m_edit2->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  m_edit2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  m_edit2->viewport()->installEventFilter(new MailViewEventFilter(m_edit2->viewport(), this));
+  m_edit2->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+
+  m_layout->addWidget(m_edit1);
+  m_layout->addWidget(m_edit2);
+  m_layout->setMargin(15);
+  m_layout->setSpacing(15);
+//   m_layout->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+  setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+//  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  resize(100, 75);
+
+  setLayout(m_layout);
+  resize(100, 75);
   t.start(); 
   m_id = -1;
 }
@@ -48,7 +82,9 @@ MailView::MailView(FolderProxyModel *model, QWidget *parent) : QTextEdit(parent)
  */
 int MailView::getNeededHeight() const
 {
-  return qRound(document()->rootFrame()->frameFormat().height().rawValue());
+//  return qRound(document()->rootFrame()->frameFormat().height().rawValue());
+  qDebug() << m_edit1->viewport()->sizeHint();
+  return -1;
 }
 
 void MailView::updateHeight()
@@ -62,13 +98,13 @@ void MailView::updateHeight()
 void MailView::setConversation(const QModelIndex &index)
 {
   m_id = m_model->id(index);
-  setHtml("");
+  m_edit1->setHtml("");
   Conversation* c = m_model->conversation(m_id);
   int max = c->count()-1;
   QString tmp = "<H2><A NAME=top>";
   tmp.append(c->subject());
   tmp.append("</A></H2><HR>");
-  append(tmp);
+  m_edit1->append(tmp);
   for (int count = 0; count < max; ++count) {
     tmp = "<A NAME=";
     tmp.append(count);
@@ -78,7 +114,7 @@ void MailView::setConversation(const QModelIndex &index)
     tmp.append(c->arrivalTimeInText(count));
     tmp.append("<BR>");
     tmp.append(c->htmlContent(count));
-    append(tmp);
+    m_edit1->append(tmp);
   }
   tmp = "<A NAME=";
   tmp.append(max);
@@ -88,8 +124,8 @@ void MailView::setConversation(const QModelIndex &index)
   tmp.append(c->arrivalTimeInText(max));
   tmp.append("<BR>");
   tmp.append(c->content(max));
-  append(tmp);
-  scrollToAnchor("top");
+  m_edit1->append(tmp);
+  m_edit1->scrollToAnchor("top");
   QTimer::singleShot(3000, this, SLOT(markAsRead()));
   t.restart();
 }

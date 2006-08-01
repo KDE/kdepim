@@ -1,5 +1,5 @@
 /*
- * mailview.h
+ * Demo app which shows off the ConversationView
  *
  * copyright (c) Aron Bostrom <Aron.Bostrom at gmail.com>, 2006 
  *
@@ -18,37 +18,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#ifndef MAILVIEW_H
-#define MAILVIEW_H
-
-#include <QScrollArea>
+#include <QApplication>
 #include <QVBoxLayout>
-#include <QTextEdit>
-#include <QModelIndex>
-#include <QTime>
+#include <QScrollArea>
+#include <QWidget>
 
-#include "folderproxymodel.h"
+#include "maildisplay.h"
 
-class MailView : public QScrollArea
+int main(int argc, char **argv)
 {
-  Q_OBJECT
-public:
-  MailView(FolderProxyModel *model, QWidget *parent = 0);
+  QApplication app(argc, argv);
 
-  int getNeededHeight() const;
+  QWidget *widget = new QWidget;
+  QVBoxLayout *layout = new QVBoxLayout(widget);
+  widget->setLayout(layout);
+  layout->addWidget(new MailDisplay);
+  layout->addWidget(new MailDisplay);
+  layout->addWidget(new MailDisplay);
+  layout->addWidget(new MailDisplay);
 
-public slots:
-  void updateHeight();
-  void setConversation(const QModelIndex &index);
-  void markAsRead();
-
-private:
-  FolderProxyModel *m_model;
-  QTextEdit *m_edit1;
-  QTextEdit *m_edit2;
-  QVBoxLayout *m_layout;
-  int m_id;
-  QTime t;
-};
-
-#endif
+  QScrollArea *scrollarea = new QScrollArea;
+  scrollarea->setWidget(widget);
+  scrollarea->show();
+  return app.exec();
+}

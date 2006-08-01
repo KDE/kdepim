@@ -105,10 +105,11 @@ int main(int argc, char **argv)
   QObject::connect(splitter, SIGNAL(splitterMoved(int, int)), cView, SLOT(updateWidth(int, int)));
   QTimer *timer = new QTimer();
   QObject::connect(timer, SIGNAL(timeout()), data, SLOT(newMessage()));
-  timer->start(300);
+  timer->start(9000);
 
   splitter->addWidget(cWidget);
   splitter->addWidget(mail);
+  mail->show();
   splitter->setStretchFactor(0, 0);
   splitter->setStretchFactor(1, 1);
   QList<int> sizes;
