@@ -22,8 +22,8 @@
 */
 
 #include <QLayout>
-#include <q3progressbar.h>
-#include <q3textbrowser.h>
+#include <QProgressBar>
+#include <QTextBrowser>
 //Added by qt3to4:
 #include <QGridLayout>
 
@@ -46,11 +46,11 @@ PrintProgress::PrintProgress( QWidget *parent, const char *name )
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( KDialog::marginHint() );
 
-  mLogBrowser = new Q3TextBrowser( this );
+  mLogBrowser = new QTextBrowser( this );
   topLayout->addWidget( mLogBrowser, 0, 0 );
 
-  mProgressBar = new Q3ProgressBar( this );
-  mProgressBar->setProgress( 0 );
+  mProgressBar = new QProgressBar( this );
+  mProgressBar->setValue( 0 );
   topLayout->addWidget( mProgressBar, 1, 0 );
 
   resize( QSize( 370, 220 ).expandedTo( minimumSizeHint() ) );
@@ -80,7 +80,7 @@ void PrintProgress::addMessage( const QString &msg )
 
 void PrintProgress::setProgress( int step )
 {
-  mProgressBar->setProgress( step );
+  mProgressBar->setValue( step );
   kapp->processEvents();
 }
 

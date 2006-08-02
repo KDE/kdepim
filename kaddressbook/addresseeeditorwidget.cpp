@@ -28,7 +28,7 @@
 #include <q3listbox.h>
 #include <QPushButton>
 #include <QTabWidget>
-#include <q3textedit.h>
+#include <QTextEdit>
 #include <QToolButton>
 #include <QToolTip>
 //Added by qt3to4:
@@ -427,8 +427,8 @@ void AddresseeEditorWidget::setupTab2()
   label = new QLabel( i18n( "Note:" ), tab2 );
   label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
   layout->addWidget( label, 7, 0 );
-  mNoteEdit = new Q3TextEdit( tab2 );
-  mNoteEdit->setWordWrap( Q3TextEdit::WidgetWidth );
+  mNoteEdit = new QTextEdit( tab2 );
+  mNoteEdit->setWordWrapMode ( QTextOption::WrapAnywhere );
   mNoteEdit->setMinimumSize( mNoteEdit->sizeHint() );
   connect( mNoteEdit, SIGNAL( textChanged() ), SLOT( emitModified() ) );
   label->setBuddy( mNoteEdit );

@@ -32,7 +32,7 @@
 #include <QPushButton>
 #include <q3signal.h>
 #include <QString>
-#include <q3textedit.h>
+#include <QTextEdit>
 #include <QToolButton>
 #include <QToolTip>
 //Added by qt3to4:
