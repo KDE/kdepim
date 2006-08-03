@@ -35,17 +35,13 @@
 #include "kcmkabldapconfig.h"
 
 #include <kdepimmacros.h>
+#include <kgenericfactory.h>
 
-extern "C"
-{
-  KDE_EXPORT KCModule *create_kabldapconfig( QWidget *parent, const char * ) {
-	KInstance *inst = new KInstance("kcmkabldapconfig" );
-    return new KCMKabLdapConfig( inst, parent );
-  }
-}
+typedef KGenericFactory<KCMKabLdapConfig> KCMKabLdapConfigFactory;
+K_EXPORT_COMPONENT_FACTORY( kabldapconfig, KCMKabLdapConfigFactory( "kcmkabldapconfig" ) )
 
-KCMKabLdapConfig::KCMKabLdapConfig( KInstance *inst, QWidget *parent )
-  : KCModule( inst, parent )
+KCMKabLdapConfig::KCMKabLdapConfig( QWidget *parent, const QStringList & )
+  : KCModule( KCMKabLdapConfigFactory::instance(), parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   mConfigWidget = new LDAPOptionsWidget( this );

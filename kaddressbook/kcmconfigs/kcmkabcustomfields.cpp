@@ -30,17 +30,13 @@
 #include <QRegExp>
 
 #include <kdepimmacros.h>
+#include <kgenericfactory.h>
 
-extern "C"
-{
-  KDE_EXPORT KCModule *create_kabcustomfields( QWidget *parent, const char * ) {
-  KInstance *inst= new KInstance("kcmkabcustomfields");
-    return new KCMKabCustomFields( inst, parent );
-  }
-}
+typedef KGenericFactory<KCMKabCustomFields> KCMKabCustomFieldsFactory;
+K_EXPORT_COMPONENT_FACTORY( kabcustomfields, KCMKabCustomFieldsFactory( "kcmkabcustomfields" ) )
 
-KCMKabCustomFields::KCMKabCustomFields( KInstance *inst, QWidget *parent )
-  : KCMDesignerFields( inst,parent )
+KCMKabCustomFields::KCMKabCustomFields( QWidget *parent, const QStringList & )
+  : KCMDesignerFields( KCMKabCustomFieldsFactory::instance(), parent )
 {
 }
 

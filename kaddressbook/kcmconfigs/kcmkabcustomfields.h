@@ -28,7 +28,7 @@
 class KCMKabCustomFields : public KPIM::KCMDesignerFields
 {
   public:
-    KCMKabCustomFields( KInstance *inst, QWidget *parent = 0 );
+    KCMKabCustomFields( QWidget *parent, const QStringList &args );
 
   protected:
     QString localUiDir();

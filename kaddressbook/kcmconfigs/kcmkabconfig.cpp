@@ -34,17 +34,13 @@
 #include "kcmkabconfig.h"
 
 #include <kdepimmacros.h>
+#include <kgenericfactory.h>
 
-extern "C"
-{
-  KDE_EXPORT KCModule *create_kabconfig( QWidget *parent, const char * ) {
-	KInstance *inst = new KInstance("kcmkabconfig" );
-    return new KCMKabConfig( inst , parent );
-  }
-}
+typedef KGenericFactory<KCMKabConfig> KCMKabConfigFactory;
+K_EXPORT_COMPONENT_FACTORY( kabconfig, KCMKabConfigFactory( "kcmkabconfig" ) )
 
-KCMKabConfig::KCMKabConfig( KInstance *inst, QWidget *parent )
-  : KCModule( inst, parent )
+KCMKabConfig::KCMKabConfig( QWidget *parent, const QStringList & )
+  : KCModule( KCMKabConfigFactory::instance(), parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   mConfigWidget = new KABConfigWidget( this, "mConfigWidget" );

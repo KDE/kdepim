@@ -35,7 +35,7 @@ class KCMKabLdapConfig : public KCModule
   Q_OBJECT
 
   public:
-    KCMKabLdapConfig( KInstance *inst, QWidget *parent = 0);
+    KCMKabLdapConfig( QWidget *parent, const QStringList &args );
 
     virtual void load();
     virtual void save();
