@@ -19,7 +19,7 @@
 */
 
 #include <QFile>
-#include <q3filedialog.h>
+#include <kfiledialog.h>
 #include <QLayout>
 //Added by qt3to4:
 #include <QVBoxLayout>
@@ -92,7 +92,7 @@ void DebugDialog::clear()
 
 void DebugDialog::save()
 {
-  QString fileName = Q3FileDialog::getSaveFileName();
+  QString fileName = KFileDialog::getSaveFileName();
   if ( fileName.isEmpty() )
     return;
 
