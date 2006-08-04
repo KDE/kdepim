@@ -504,10 +504,10 @@
                     <property name="name">
                         <cstring>PrioSpinBox</cstring>
                     </property>
-                    <property name="maxValue">
+                    <property name="maximum">
                         <number>199</number>
                     </property>
-                    <property name="minValue">
+                    <property name="minimum">
                         <number>1</number>
                     </property>
                 </widget>
@@ -515,10 +515,10 @@
                     <property name="name">
                         <cstring>PrioSlider</cstring>
                     </property>
-                    <property name="minValue">
+                    <property name="minimum">
                         <number>1</number>
                     </property>
-                    <property name="maxValue">
+                    <property name="maximum">
                         <number>199</number>
                     </property>
                     <property name="orientation">
