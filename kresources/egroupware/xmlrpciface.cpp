@@ -200,7 +200,14 @@ QString Query::marshal( const QVariant &arg ) const
   {
       case QVariant::String:
       case QVariant::CString:
-      return "<value><string>" + arg.toString() + "</string></value>\r\n";
+        {
+        QString result = arg.toString();
+        result = result.replace( "&", "&amp;" );
+        result = result.replace( "\"", "&quot;" );
+        result = result.replace( "<", "&lt;" );
+        result = result.replace( ">", "&gt;" );
+        return "<value><string>" + result + "</string></value>\r\n";
+        }
       case QVariant::Int:
       return "<value><int>" + QString::number( arg.toInt() ) + "</int></value>\r\n";
       case QVariant::Double:
