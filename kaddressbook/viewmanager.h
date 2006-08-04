@@ -31,7 +31,7 @@
 #include <kaddressbookview.h>
 
 class QDropEvent;
-class Q3WidgetStack;
+class QStackedWidget ;
 
 class KAction;
 class KSelectAction;
@@ -152,7 +152,7 @@ class ViewManager : public QWidget
     Q3Dict<ViewFactory> mViewFactoryDict;
     QStringList mViewNameList;
 
-    Q3WidgetStack *mViewWidgetStack;
+    QStackedWidget *mViewWidgetStack;
     KAddressBookView *mActiveView;
 
     KAction *mActionDeleteView;

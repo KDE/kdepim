@@ -23,7 +23,7 @@
 
 #include <QFile>
 #include <QLayout>
-#include <q3widgetstack.h>
+#include <QStackedWidget>
 //Added by qt3to4:
 #include <QHBoxLayout>
 #include <QDropEvent>
@@ -235,7 +235,7 @@ void ViewManager::setActiveView( const QString &name )
   // If we found or created the view, raise it and refresh it
   if ( view ) {
     mActiveView = view;
-    mViewWidgetStack->raiseWidget( view );
+    mViewWidgetStack->setCurrentWidget( view );
     // Set the proper filter in the view. By setting the combo
     // box, the activated slot will be called, which will push
     // the filter to the view and refresh it.
@@ -594,7 +594,7 @@ void ViewManager::initActions()
 void ViewManager::initGUI()
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
-  mViewWidgetStack = new Q3WidgetStack( this );
+  mViewWidgetStack = new QStackedWidget( this );
   layout->addWidget( mViewWidgetStack );
 }
 
