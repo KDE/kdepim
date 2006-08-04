@@ -524,7 +524,7 @@ file by physical or electronic mail, you may find current contact information at
 					<xs:element name="officialVersion" type="xs:unsignedInt" minOccurs="0"/>
 					<xs:element name="currentVersion" type="xs:unsignedInt" minOccurs="0"/>
 					<xs:element name="versionNumber" type="xs:unsignedInt" minOccurs="0"/>
-					<xs:element name="versionDescription" minOccurs="0"/>
+					<xs:element name="versionDescription" type="xs:string" minOccurs="0"/>
 					<xs:element name="fileSize" type="xs:unsignedInt" minOccurs="0"/>
 					<xs:element name="acl" type="tns:AccessControlList" minOccurs="0"/>
 				</xs:sequence>
