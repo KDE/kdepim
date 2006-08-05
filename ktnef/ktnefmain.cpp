@@ -29,6 +29,7 @@ using namespace KTnef;
 
 #include <QMenu>
 //Added by qt3to4:
+#include <kicon.h>
 #include <QTextStream>
 #include <k3listview.h>
 #include <klocale.h>

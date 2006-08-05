@@ -58,7 +58,7 @@
 #include <QTextStream>
 #include <QDateTime>
 #include <kglobal.h>
-
+#include <kicon.h>
 #define WATCHGNUPGBINARY "watchgnupg"
 #define WATCHGNUPGSOCKET ( QDir::home().canonicalPath() + "/.gnupg/log-socket")
 

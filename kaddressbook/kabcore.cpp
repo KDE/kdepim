@@ -67,6 +67,7 @@
 #include <QtDBus>
 #include <ktoggleaction.h>
 #include <kaction.h>
+#include <kicon.h>
 
 #include "addresseeutil.h"
 #include "addresseeeditordialog.h"
