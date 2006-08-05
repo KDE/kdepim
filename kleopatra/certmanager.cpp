@@ -70,6 +70,7 @@
 #include <gpgmepp/key.h>
 
 // KDE
+#include <kicon.h>
 #include <kfiledialog.h>
 #include <kprocess.h>
 #include <kaction.h>
