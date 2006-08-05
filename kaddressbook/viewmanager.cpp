@@ -42,6 +42,7 @@
 #include <k3multipledrag.h>
 #include <ktempdir.h>
 #include <kservicetypetrader.h>
+#include <kicon.h>
 
 #include "addviewdialog.h"
 #include "addresseeutil.h"

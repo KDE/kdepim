@@ -24,7 +24,7 @@
 #include <QSplitter>
 #include <QtDBus>
 #include <ktoolbar.h>
-
+#include <kicon.h>
 #include <kactioncollection.h>
 #include <kinputdialog.h>
 #include <kconfig.h>

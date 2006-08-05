@@ -51,7 +51,7 @@
 #include <ktoggleaction.h>
 #include <kurl.h>
 #include <kxmlguifactory.h>
-
+#include <kicon.h>
 #include <emailfunctions/email.h>
 
 #include <libkpgp/kpgp.h>

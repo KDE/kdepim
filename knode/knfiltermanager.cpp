@@ -19,6 +19,7 @@
 #include <kmenu.h>
 #include <kstandarddirs.h>
 #include <ksimpleconfig.h>
+#include <kicon.h>
 
 #include "utilities.h"
 #include "knglobals.h"

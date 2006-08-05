@@ -62,7 +62,7 @@ using KRecentAddress::RecentAddresses;
 #include <spellingfilter.h>
 #include <kstdguiitem.h>
 #include <ktoggleaction.h>
-
+#include <kicon.h>
 #include <kapplication.h>
 #include "kngroupselectdialog.h"
 #include "utilities.h"
