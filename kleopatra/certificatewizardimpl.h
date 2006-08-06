@@ -71,7 +71,7 @@ private slots:
     void slotResult( const GpgME::KeyGenerationResult & res, const QByteArray & keyData );
     void slotSetValuesFromWhoAmI();
     void slotEnablePersonalDataPageExit();
-    void slotURLSelected( const QString& );
+    void slotURLSelected( const KUrl& );
 
     void slotHelpClicked();
 

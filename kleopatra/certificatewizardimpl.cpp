@@ -127,8 +127,8 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent, bool modal, Qt::W
     // Allow to select remote URLs
     storeUR->setMode( KFile::File );
     storeUR->setFilter( "application/pkcs10" );
-    connect( storeUR, SIGNAL( urlSelected( const QString& ) ),
-             this, SLOT( slotURLSelected( const QString& ) ) );
+    connect( storeUR, SIGNAL( urlSelected( const KUrl& ) ),
+             this, SLOT( slotURLSelected( const KUrl& ) ) );
 
     const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
     caEmailED->setText( config.readEntry( "CAEmailAddress" ) );
@@ -392,9 +392,8 @@ QString CertificateWizardImpl::caEMailAddress() const {
   return caEmailED->text().trimmed();
 }
 
-void CertificateWizardImpl::slotURLSelected( const QString& _url )
+void CertificateWizardImpl::slotURLSelected( const KUrl& url )
 {
-  KUrl url = KUrl( _url.trimmed() );
   storeUR->setUrl( url.prettyUrl() );
 }
 
