@@ -5,52 +5,52 @@ Changes since Proko2 2.1.1 up to Proko2 2.1.2 (released 26.06.2006)
 Bugfixes
 ========
 * Quota informations does not hang anymore for online imap when no
-  quota is set (Proko2 issue 1248)
+  quota is set (kolab/issue1248)
 
-* Ressources colors doesn't disappear when deletig an event form
-  caledar (Proko2 Issue 1129)
+* Ressources colors doesn't disappear when deleting an event form
+  calendar (kolab/issue1129)
 
 * Don't allow shift-tab to select header separators. 
-  (Proko2 Issue 740)
+  (kolab/issue740)
 
-* Overwrite mode on mail composing now works (Proko2 Issue 1182)
+* Overwrite mode on mail composing now works (kolab/issue1182)
 
 * Printer view config now takes effect without restarting 
-  (Proko2 Issue 1204)
+  (kolab/issue1204)
 
 * Creation of subfolders when using online imap is now possible
-  (Proko2 Issue 1258)
+  (kolab/issue1258)
 
 * Only warn about events which can't be found on cancel
-  if it's not an initial decline. (Proko2 issue 1248)
+  if it's not an initial decline. (kolab/issue1248)
 
 * Groupwarefolders (with standard name) are now unsubscribed for 
-  online imap after setup with kolabwizard (Proko2 Issue 1260)
+  online imap after setup with kolabwizard (kolab/issue1260)
 
-* Subject of MDNs is now translated. (Proko2 issue 1277)
+* Subject of MDNs is now translated. (kolab/issue1277)
 
 * Enable automatic expunge when a folder is left for the online 
-  IMAP account. (Proko2 Issue 1207)
+  IMAP account. (kolab/issue1207)
 
 * Errors during target folder creation in folder copy operations 
-  are now handled without crashing. (Proko2 issue 1279)
+  are now handled without crashing. (kolab/issue1279)
 
 
 
 Features
 ========
 * Show quota information in the folder tooltip. Even works for 
-  online imap (Proko2 Issue 1215)
+  online imap (kolab/issue1215)
 
 * Show detailed information about recurring events in invitation 
-  mails (Proko2 Issue 1226)
+  mails (kolab/issue1226)
 
-* Allow ";" as additional address seperator (Proko2 Issue 1216)
+* Allow ";" as additional address seperator (kolab/issue1216)
 
 * For full mailchecks (more than one folder) do a full folder listing
   (modulo list-only-open-folders config option) so we detect new shared
   folders without the need for an explicit listing by the user.
-  (Proko2 Issue 1250)
+  (kolab/issue1250)
 
 
 
@@ -58,18 +58,19 @@ Changes since Proko2 2.1.0 up to Proko2 2.1.1 (released 20060518)
 
 Bugfixes:
 
-o Change the default for hiding groupware folders back to true. (issue 1206)
+o Change the default for hiding groupware folders back to true. 
+  (kolab/issue1206)
 
 o Automatically unsubscribe the default folders and turn on local subscription
-  for the online imap account in the kolab wizard. (issue 1206)
+  for the online imap account in the kolab wizard. (kolab/issue1206)
 
 o Don't list messages in the INBOX if it is the one of the groupware 
   main account and we are in "only groupware folders for this account"
-  mode. (issue 1207)
+  mode. (kolab/issue1207)
 
 o If we are hiding groupware folders, and the account is the groupware
   base account, and it's set to only locally subscribe to groupware folders,
-  hide it completely from the folder tree. (issue 1207)
+  hide it completely from the folder tree. (kolab/issue1207)
 
 o Don't reload the KConfig object of the standard addressbook for every
   incidence during loading, by caching the "thatIsMe" entry. This should
@@ -77,37 +78,38 @@ o Don't reload the KConfig object of the standard addressbook for every
   changes their "thatIsMe" entry in the addressbook, KOrganizer won't
   realize that until the next restart. Given the spectacularly low frequency
   with which that is expected to happen, I think that's worth it. I can't
-  fix it at the root, since that is in kdelibs.  (issue 1118)
+  fix it at the root, since that is in kdelibs.  (kolab/issue1118)
 
 o Also trigger a reload of the folder when a new IncidencesFor annotation 
-  is retrieved from the server. (issue 398)
+  is retrieved from the server. (kolab/issue398)
 
 o Fix of the concurrent KPilot and KMail dImap sync problem. Concurrent sync
   is now blocked. Problem was that on a concurrent sync contacts/tasks/events
-  were duplicated in the dImap folders (issues 1136, 1137)
+  were duplicated in the dImap folders (kolab/issue1136, kolab/issue1137)
 
 o Don't attempt to rename the inbox. Especially not to INBOX.
-  (issue 1185)
+  (kolab/issue1185)
 
 o Only prepend the indent string in Weighted address completion mode, only
-  show headers in Weighted mode. (issue 740)
+  show headers in Weighted mode. (kolab/issue740)
 
 o Handle encoded headers differently, so that replying to Froms
-  with a real name containing an encoded comma (',') will work. (issue 1228)
+  with a real name containing an encoded comma (',') will work. 
+  (kolab/issue1228)
 
 
 Features:
 
 o Non-gui config key that allows to specify after how many 
-  incidences a progress dialog comes up. (issue 1118)
+  incidences a progress dialog comes up. (kolab/issue1118)
 
 o Backport large parts of the online/offline support from 3.5, which makes
   it possible to suspend and resume all network jobs via DCOP. KPilot will
   use this to disable network traffic during a kolab resource sync, for example,
   but the user can also use it to go offline on the road, and thus avoid error
-  messages due to interval mail checks. (issue 1137).
+  messages due to interval mail checks. (kolab/issue1137).
 
-o Backport resource colors from KDE 3.5 branch. (issue 1129)
+o Backport resource colors from KDE 3.5 branch. (kolab/issue1129)
 
 
 Release notes for the Kolab 2 KDE Client 2.1.0 (released 2006-04-07)
@@ -119,10 +121,10 @@ Known issues:
   (Kolab/issue1118)
 
 * The kolabwizard has some problems.  Among others, the resource folders
-  are not hidden by default anymore.  (Kolab/issue1206).
+  are not hidden by default anymore.  (kolab/issue1206).
 
 * Kpilot may duplicate some calendar or other items when a pilot sync
-  happens at the same time as a kolab sync.  (Kolab/issue1136)
+  happens at the same time as a kolab sync.  (kolab/issue1136)
 
 
 Changes since 2.0.6:
@@ -135,33 +137,34 @@ Features:
 
 * Support for displaying QUOTA information in the IMAP kioslave and KMail,
   for both disconnected and online IMAP. Persisted across restarts.
-  (Kolab/issue1080).
+  (kolab/issue1080).
 
 * When, during a sync, while looking for new messages to upload, we
   encounter a message that looks like a ghost messages (no subject, no
   from, no to) we first invalidate the index of that folder and then
   check if the ghosts are still there. If so, offer to the user to delete
   those mails and reset the sync for this folder. Only ask once per
-  session, to not be annoying. (Kolab/issue918)
+  session, to not be annoying. (kolab/issue918)
 
 * Support for adding and removing subresources (folders in KMail) from
   within the resource view in KOrganizer and KAddressbook. As a side effect,
   support for adding and removing subresources from scripts, via DCOP.
+  (kolab/issue849)
 
 * Implement client side subscription for online IMAP and disconnected IMAP
   accounts. This basically stores a blacklist of unsubscribed folders
   (since we want new folders to show up, intially) per account, which is
   persisted to kconfig. This list is used as a filter during folder
-  listing. (Kolab/issue1095)
+  listing. (kolab/issue1095)
 
 * Auto-unsubscribing of folders by groupware folder type. This 
   allows to only see groupware folders in the account that is set up to
   contain them, while using a separate (online) IMAP account for mail
-  folders. (Kolab/issue1095)
+  folders. (kolab/issue1095)
 
 * Add an option to the wizard to create an online account for the
   non-groupware folders along with a cached IMAP one which is set to only
-  show groupware folders. (Kolab/issue1095)
+  show groupware folders. (kolab/issue1095)
 
 
 Bugfixes:
@@ -169,7 +172,7 @@ Bugfixes:
 
 * Make sure the translation catalogue is loaded, by making sure we 
   pass our correct name to the Kontact::Plugin base class. 
-  (Kolab/issue1087)
+  (kolab/issue1087)
 
 * Make sure that latin1 is selected as a default if we find no matching
   locale for the fallback codec, and replace "iso " with "iso-" so we have
@@ -197,22 +200,22 @@ Bugfixes:
 
 * Don't circumvent the scheduler when handling cancel messages, because
   otherwise proper schedulingID conversion does not happen. 
-  (Kolab/issue1109)
+  (kolab/issue1109)
 
 * Don't attempt to fake the schedulingID in temporary scheduling messages,
   rather rely on the detection of existing incidences which works ok, if
   the calling code actually uses it, which it didn't, see previous commit.
-  (Kolab/issue1109 second half)
+  (kolab/issue1109 second half)
 
 * Display "this event/task has been updated" instead of "this is an
   invitation" if the sequence number of the ical object is non-zero.
-  (Kolab/issue1109 part 3)
+  (kolab/issue1109 part 3)
 
 * Fix wrong foreground color being used when "use default colors" is checked.
 
 * In case an update or cancel message is processed for an incidence that
   cannot be found, inform the user, instead of blindly adding a new
-  version of the incidence. (Kolab/issue1128)
+  version of the incidence. (kolab/issue1128)
 
 * Use the prettyURL, not the label for error messages and don't 
   try to delete mail in readonly folders.
@@ -239,17 +242,17 @@ Bugfixes:
   incidence. Further step towards fixing issue1118.
 
 * Fix the spurious extra characters at the end of inline invitations.
-  (Kolab/issue1118)
+  (kolab/issue1118)
 
 * Be sure to reload the addressbook, when we've added a contact.
-  A bit crude, but that's what 3.5 does. (Kolab/issue1084).
+  A bit crude, but that's what 3.5 does. (kolab/issue1084).
 
 * The distribution list code assumes there are no , and ; in the
   uid. Make sure of that, at least internally, otherwise display names
-  like "Foo, Bar" break.  (Kolab/issue1152)
+  like "Foo, Bar" break.  (kolab/issue1152)
 
 * Make sure we don't insert ; or , as identifiers in a distlist.
-  (Kolab/issue1152)
+  (kolab/issue1152)
 
 * Adjust visual defaults in the certificate manager according to
   Aegypten issue322.
@@ -257,23 +260,23 @@ Bugfixes:
 * Fix potential crash after resetting a sync.
 
 * Fix for kpilot sync conflict warning even when nothing changed in kontact.
-  (Kolab/issue1097)
+  (kolab/issue1097)
 
 * Fix for: kpilot sometimes removes first occurrence of a recurring event.
-  (Kolab/issue1135)
+  (kolab/issue1135)
 
-* Fix for: kpilot doesn't sync location field of events. (Kolab/issue1134)
+* Fix for: kpilot doesn't sync location field of events. (kolab/issue1134)
   The location field in Kontact will be synct to notes text on the palm now.
   It will appear between star ('*') characters, so kpilot can recognise it,
   e.g. like "*Georgstrasse 4*". This workaround is necessary because
   there is no official location field in all palm devices.
 
 * Fix for: Contacts from Palm don's show properly in KAddressBook
-  (Kolab/issue1156)
+  (kolab/issue1156)
 
 * Fix for: Kontact produces corrupted event mails that OL cannot understand
   This failure is a regression, we do not know precisly when it was introduced.
-  (Kolab/issue1175) 
+  (kolab/issue1175) 
 
 
 Documentation:
