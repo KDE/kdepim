@@ -121,18 +121,10 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     int saveInterval() const;
 
     /**
-      Set time of last load.
-    */
-    void setLastLoad( const QDateTime & );
-    /**
       Return time of last load.
     */
     QDateTime lastLoad() const;
 
-    /**
-      Set time of last save.
-    */
-    void setLastSave( const QDateTime & );
     /**
       Return time of last save.
     */
