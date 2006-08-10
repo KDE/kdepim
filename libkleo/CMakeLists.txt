@@ -2,7 +2,6 @@
 add_subdirectory( pics )
 add_subdirectory( kleo )
 add_subdirectory( backends )
-add_subdirectory( ui )
 add_subdirectory( tests )
 
 include_directories(${CMAKE_SOURCE_DIR}/libkpgp/ ${CMAKE_BINARY_DIR}/libkleo/backends/chiasmus/  ${GPGME_INCLUDES} )

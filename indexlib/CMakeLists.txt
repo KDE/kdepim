@@ -49,18 +49,3 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/indexlib-config.in ${CMAKE_CURRENT_BI
 install( FILES create.h index.h lockfile.h  DESTINATION ${INCLUDE_INSTALL_DIR}/index)
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/indexlib-config DESTINATION ${BIN_INSTALL_DIR} )
 
-
-
-#original Makefile.am contents follow:
-
-#KDE_CXXFLAGS=-include $(srcdir)/compat.h $(USE_EXCEPTIONS)
-#INCLUDES = $(all_includes)
-#
-#lib_LTLIBRARIES = libindex.la
-#
-#libindex_la_SOURCES = bitstream.cpp compressed.cpp create.cpp exception.cpp ifile.cpp leafdata.cpp leafdatavector.cpp lockfile.cpp logfile.cpp match.cpp mmap_manager.cpp quotes.cpp slow.cpp stringarray.cpp stringset.cpp tokenizer.cpp
-#
-#indexlibincludedir=$(includedir)/index
-#indexlibinclude_HEADERS = create.h index.h lockfile.h
-#bin_SCRIPTS = indexlib-config
-#
