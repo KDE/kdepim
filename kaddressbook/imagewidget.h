@@ -39,8 +39,8 @@
 class KUrlRequester;
 class QCheckBox;
 
-#include <libsyndication/global.h>
-#include <libsyndication/sharedptr.h>
+#include <syndication/global.h>
+#include <syndication/sharedptr.h>
 
 namespace Syndication {
 class Loader;

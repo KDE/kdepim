@@ -33,9 +33,9 @@
 #include <kurlrequester.h>
 #include <kpixmapregionselectordialog.h>
 
-#include <libsyndication/loader.h>
-#include <libsyndication/feed.h>
-#include <libsyndication/image.h>
+#include <syndication/loader.h>
+#include <syndication/feed.h>
+#include <syndication/image.h>
 
 #include <QApplication>
 #include <QCheckBox>
