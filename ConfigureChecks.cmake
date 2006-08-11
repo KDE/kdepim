@@ -58,6 +58,7 @@ check_include_files(sys/time.h TM_IN_SYS_TIME)
 check_include_files("sys/time.h;time.h" TIME_WITH_SYS_TIME)
 
 check_function_exists(unsetenv   HAVE_UNSETENV)
+check_function_exists(setenv     HAVE_SETENV)
 check_function_exists(usleep     HAVE_USLEEP)
 
 check_symbol_exists(snprintf        "stdio.h"                  HAVE_SNPRINTF)
@@ -65,7 +66,9 @@ check_symbol_exists(vsnprintf       "stdio.h"                  HAVE_VSNPRINTF)
 
 
 check_prototype_exists(gethostname "stdlib.h;unistd.h" HAVE_GETHOSTNAME_PROTO)
-check_prototype_exists(unsetenv stdlib.h HAVE_UNSETENV_PROTO)
+check_prototype_exists(getdomainname "stdlib.h;unistd.h;netdb.h" HAVE_GETDOMAINNAME_PROTO)
+check_prototype_exists(unsetenv "stdlib.h" HAVE_UNSETENV_PROTO)
+check_prototype_exists(setenv "stdlib.h" HAVE_SETENV_PROTO)
 check_prototype_exists(usleep unistd.h HAVE_USLEEP_PROTO)
 
 check_type_size("int" SIZEOF_INT)

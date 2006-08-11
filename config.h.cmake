@@ -7,6 +7,15 @@
 /* Define if you have the gethostname prototype */
 #cmakedefine HAVE_GETHOSTNAME_PROTO 1
 
+/* Define if you have the getdomainname prototype */
+#cmakedefine HAVE_GETDOMAINNAME_PROTO 1
+
+/* Define to 1 if you have the `setenv' function. */
+#cmakedefine HAVE_SETENV 1
+
+/* Define to 1 if you have the `setenv' function prototype. */
+#cmakedefine HAVE_SETENV_PROTO 1
+
 /* Define to 1 if you have the `snprintf' function. */
 #cmakedefine HAVE_SNPRINTF 1
 
