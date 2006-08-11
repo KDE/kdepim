@@ -8,8 +8,6 @@ include_directories(
 
 set(libkgroupdav_SRCS groupdavglobals.cpp)
 
-set(kde_servicesdir     ${CMAKE_INSTALL_PREFIX}${SERVICES_INSTALL_DIR})
-
 ########### next target ###############
 
 set(kcal_groupdav_LIB_SRCS groupdavcalendaradaptor.cpp kcal_resourcegroupdav.cpp ${libkgroupdav_SRCS})
