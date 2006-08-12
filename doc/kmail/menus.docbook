@@ -926,16 +926,24 @@ of the currently selected message is not quoted.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Forwards the message to a new recipient. Using <guimenuitem>Inline</guimenuitem>,
-the message's text and some important header fields will be copied to the body of the new message
-with a text marking the forwarded part. Attachments will be forwarded
-as attachments of the new message. Using <guimenuitem>As Attachment</guimenuitem>
-the message and its attachments will become an attachment of the new message. The original message
-headers will be included in the forwarded message, too.
-<guimenuitem>Redirect</guimenuitem> works like forward, except that the message stays the same (even
-the <guilabel>From:</guilabel> field). The user who redirected the message is added in special
-header fields (<literal>Redirect-From</literal>, <literal>Redirect-Date</literal>, <literal>Redirect-To</literal>,
-&etc;).</para>
+<para>Forwards the message to a new recipient.
+Using <guimenuitem>As Attachment</guimenuitem> the message and its attachments
+will become an attachment of the new message. The original message headers will
+be included in the forwarded message, too.
+
+Using <guimenuitem>Inline</guimenuitem>, the message's text and some important
+header fields will be copied to the body of the new message with a text marking
+the forwarded part. Attachments will be forwarded as attachments of the new
+message.
+
+<guimenuitem>As Digest</guimenuitem> concatenates the messages together as a
+MIME digest attachment.
+
+<guimenuitem>Redirect</guimenuitem> works like forward, except that the message
+stays the same (even the <guilabel>From:</guilabel> field). The user who
+redirected the message is added in special header fields (<literal>Redirect-From</literal>,
+<literal>Redirect-Date</literal>, <literal>Redirect-To</literal>, &etc;).
+</para>
 </listitem>
 </varlistentry>
 
