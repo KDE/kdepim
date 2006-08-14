@@ -1,19 +1,28 @@
 project(kdepim)
 
-set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules )
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 # search packages used by KDE
-find_package(KDE4 REQUIRED)
-include (KDE4Defaults)
-include (MacroLibrary)
+find_package (KDE4 REQUIRED)
+include(KDE4Defaults)
+include(MacroLibrary)
 
+macro_init_log_feature()
 
 find_package(KdepimLibs REQUIRED)
 find_package(Kode REQUIRED)
 
+macro_log_feature(X11_Xss_LIB "X Development" "X Window Development Screen Saver Library" "http://xorg.freedesktop.org" TRUE "" "Required to build the KTimeTracker Program")
+
+macro_optional_find_package(Gpgme)
+macro_log_feature(GPGME_FOUND "gpgme" "GnuPG Made Easy Development Libraries" "http://www.gnupg.org/related_software/gpgme" FALSE "" "Needed to provide GNU Privacy Guard support in KDE PIM applications")
+
 macro_optional_find_package(Sasl2)
+macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins")
+
 macro_optional_find_package(Boost)
-find_package( Gpgme )
+macro_log_feature(BOOST_FOUND "boost" "Boost C++ Development Libraries" "http://www.boost.org" FALSE "" "Needed to support the full text indexing feature in KMail")
+
 
 # is this really required here ?
 if (APPLE)
@@ -28,7 +37,7 @@ include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${
 
 include (ConfigureChecks.cmake)
 include (gpgmepp/ConfigureChecks.cmake)
-configure_file (config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h )
+configure_file (config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 
 set(libkabcommon_SRCS 
@@ -86,11 +95,7 @@ add_subdirectory(knode)
 add_subdirectory(kabc)
 add_subdirectory(kaddressbook)
 add_subdirectory(kalarm)
-if(X11_Xss_LIB)
-  add_subdirectory(karm)
-else(X11_Xss_LIB)
-  MESSAGE(STATUS "karm disabled. Install X screen saver library please")
-endif(X11_Xss_LIB)
+add_subdirectory(karm)
 add_subdirectory(kdgantt)
 add_subdirectory(kfile-plugins)
 add_subdirectory(kioslave)
@@ -110,3 +115,5 @@ add_subdirectory(qgpgme)
 add_subdirectory(wizards)
 
 add_subdirectory(cmake)
+
+macro_display_feature_log()
