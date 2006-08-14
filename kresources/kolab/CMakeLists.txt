@@ -14,7 +14,3 @@ add_subdirectory( kabc )
 add_subdirectory( knotes ) 
 add_subdirectory( kcal ) 
 
-
-
-#messages: rc.cpp
-#	$(XGETTEXT) */*.cpp -o $(podir)/kres_kolab.pot

@@ -10,14 +10,3 @@ add_subdirectory( groupdav )
 add_subdirectory( birthdays ) 
 #add_subdirectory( groupwise )
 
-
-
-########### install files ###############
-
-
-
-
-
-#original Makefile.am contents follow:
-
-#SUBDIRS = lib remote egroupware kolab slox featureplan groupdav birthdays
