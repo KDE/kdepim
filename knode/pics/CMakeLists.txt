@@ -21,5 +21,5 @@ install( FILES
 	article.png
 	DESTINATION ${DATA_INSTALL_DIR}/knode/pics 
 )
-kde4_install_icons( ${DATA_INSTALL_DIR}/knode/icons crystalsvg )
+kde4_install_icons( ${DATA_INSTALL_DIR}/knode/icons  )
 
