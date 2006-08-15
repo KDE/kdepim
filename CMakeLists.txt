@@ -7,8 +7,6 @@ find_package (KDE4 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 
-macro_init_log_feature()
-
 find_package(KdepimLibs REQUIRED)
 find_package(Kode REQUIRED)
 
