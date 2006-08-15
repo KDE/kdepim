@@ -46,6 +46,7 @@
 #include <kmainwindow.h>
 #include <klocale.h>
 #include <kinputdialog.h>
+#include <libkcal/calformat.h>
 
 #include <qobject.h>
 #include <qtimer.h>
@@ -418,7 +419,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
                                   Q_UINT32 sernum )
 {
   //kdDebug() << k_funcinfo << _subresource << " " << sernum << endl;
-  const QString &uid = incidence->uid();
+  QString uid = incidence->uid();
   QString subResource = _subresource;
   Kolab::ResourceMap *map = &mEventSubResources; // don't use a ref here!
 
@@ -505,15 +506,21 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
        * unless the folder is read-only, in which case the user should not be
        * offered a means of putting mails in a folder she'll later be unable to
        * upload. Skip the incidence, in this case. */
-      if ( mUidMap.contains( uid )
-          && ( mUidMap[ uid ].resource() == subResource ) ) {
-        if ( (*map)[ subResource ].writable() ) {
-          resolveConflict( incidence, subResource, sernum );
+      if ( mUidMap.contains( uid ) ) {
+        if ( mUidMap[ uid ].resource() == subResource ) {
+          if ( (*map)[ subResource ].writable() ) {
+            resolveConflict( incidence, subResource, sernum );
+          } else {
+            kdWarning( 5650 ) << "Duplicate event in a read-only folder detected! "
+              "Please inform the owner of the folder. " << endl;
+          }
+          return true;
         } else {
-          kdWarning( 5650 ) << "Duplicate event in a read-only folder detected! "
-            "Please inform the owner of the folder. " << endl;
+          // duplicate uid in a different folder, do the internal-uid tango
+          incidence->setSchedulingID( uid );
+          incidence->setUid(CalFormat::createUniqueId( ) );
+          uid = incidence->uid();
         }
-        return true;
       }
       /* Add to the cache if the add didn't come from KOrganizer, in which case
        * we've already added it, and listen to updates from KOrganizer for it. */
