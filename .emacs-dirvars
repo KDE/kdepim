@@ -9,5 +9,5 @@ tab-width: 8
 c-basic-offset: 2
 evaluate: (c-set-offset 'innamespace '0)
 evaluate: (c-set-offset 'access-label '0)
-evaluate: (c-set-offset 'topmost-intro '+)
+;evaluate: (c-set-offset 'topmost-intro '+)
 evaluate: (c-set-offset 'inline-open '+)
