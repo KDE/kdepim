@@ -124,7 +124,6 @@ void FilterLNotes::ImportLNotes(const QString& file) {
                             addMessage_fastImport( inf, folder, tempfile->name() );
 
                         tempfile->unlink();
-                        delete tempfile;
                         state = 0;
 
                         int currentPercentage = (int) ( ( (float) f.pos() / filenameInfo.size() ) * 100 );
