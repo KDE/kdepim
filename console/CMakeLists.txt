@@ -1,4 +1,4 @@
 project(console)
 
 add_subdirectory(konsolekalendar)
-#add_subdirectory(kabcclient)
+add_subdirectory(kabcclient)

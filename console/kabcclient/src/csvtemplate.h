@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #define CSVTEMPLATE_H
 
 // Qt includes
-#include <qmap.h>
+#include <QMap>
 
 // forward declarations
 class KConfigBase;

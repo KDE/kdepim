@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -50,53 +50,53 @@ FormatFactory::~FormatFactory()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-InputFormat* FormatFactory::inputFormat(const QCString& name)
+InputFormat* FormatFactory::inputFormat(const QByteArray& name)
 {
-    if (m_inputFormats.find(name) == m_inputFormats.end()) return 0;
+    if (!m_inputFormats.contains(name)) return 0;
 
     if (name == "search") return new SearchInput();
-    
+
     if (name == "uid") return new UIDInput();
 
     if (name == "vcard") return new VCardInput();
-    
+
     if (name == "email") return new EmailInput();
-    
+
     if (name == "name") return new NameInput();
-    
+
     if (name == "csv")
     {
         if (m_csvtemplateFactory == 0) m_csvtemplateFactory = new CSVTemplateFactory();
-        
+
         return new CSVInput(m_csvtemplateFactory);
     }
-    
+
     if (name == "dialog") return new DialogInput();
-    
+
     return 0;
 }
-    
+
 ///////////////////////////////////////////////////////////////////////////////
 
-OutputFormat* FormatFactory::outputFormat(const QCString& name)
+OutputFormat* FormatFactory::outputFormat(const QByteArray& name)
 {
-    if (m_outputFormats.find(name) == m_outputFormats.end()) return 0;
+    if (!m_outputFormats.contains(name)) return 0;
 
     if (name == "uid") return new UIDOutput();
 
     if (name == "vcard") return new VCardOutput();
-    
+
     if (name == "email") return new EmailOutput();
 
     if (name == "mutt") return new MuttOutput();
-    
+
     if (name == "csv")
     {
         if (m_csvtemplateFactory == 0) m_csvtemplateFactory = new CSVTemplateFactory();
-        
+
         return new CSVOutput(m_csvtemplateFactory);
     }
-    
+
     return 0;
 }
 

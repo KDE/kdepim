@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #include <iostream>
 
 // Qt includes
-#include <qtextcodec.h>
+#include <QTextCodec>
 
 // KDE includes
 #include <kinstance.h>
@@ -76,7 +76,7 @@ int main(int argc, char** argv)
     QTextCodec* codec = QTextCodec::codecForLocale();
     if (!input->setCodec(codec))
     {
-        cerr << "TextCodec '" << codec->name() << endl;
+        cerr << "TextCodec '" << codec->name().data() << endl;
         cerr << "' rejected by input format '" << argv[1] << endl;
 
         // don't forget to delete format instances
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
     codec = QTextCodec::codecForLocale();
     if (!output->setCodec(codec))
     {
-        cerr << "TextCodec '" << codec->name() << endl;
+        cerr << "TextCodec '" << codec->name().data() << endl;
         cerr << "' rejected by output format '" << argv[2] << endl;
 
         // don't forget to delete format instances
@@ -123,10 +123,6 @@ int main(int argc, char** argv)
 
     delete input;
     delete output;
-
-    // in real programs this is called by QApplication or KApplication
-    // respectively
-    QTextCodec::deleteAllCodecs();
 
     return 0;
 }

@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@
 #define CSVTEMPLATEFACTORY_H
 
 // Qt includes
-#include <qmap.h>
-#include <qstringlist.h>
+#include <QMap>
+#include <QStringList>
 
 // forward declarations
 class CSVTemplate;
@@ -37,7 +37,7 @@ public:
     CSVTemplate* createCachedTemplate(const QString& name);
 
     QMap<QString, QString> templateNames();
-    
+
 private:
     QMap<QString, QString> m_templateNames;
     QMap<QString, QString> m_templateFiles;
@@ -48,7 +48,7 @@ private:
     KConfigBase* loadTemplateConfig(const QString& filename) const;
 
     void addTemplateNames(const QString& directory);
-        
+
 private:
     CSVTemplateFactory(const CSVTemplateFactory&);
     CSVTemplateFactory& operator=(const CSVTemplateFactory&);

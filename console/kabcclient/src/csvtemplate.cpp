@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 //
 
 // Qt includes
-#include <qdatetime.h>
+#include <QDateTime>
 
 // KDE includes
 #include <kconfigbase.h>
@@ -42,39 +42,38 @@ CSVTemplate::CSVTemplate(KConfigBase* config) : m_columns(0)
     if (config == 0) return;
 
     QMap<QString, QString> columnMap = config->entryMap("csv column map");
-    
+
     QMap<QString, QString>::const_iterator it    = columnMap.begin();
     QMap<QString, QString>::const_iterator endIt = columnMap.end();
     for (; it != endIt; ++it)
     {
-        if (it.key().isEmpty() || it.data().isEmpty()) continue;
+        if (it.key().isEmpty() || it.value().isEmpty()) continue;
 
         bool ok = false;
         int column = it.key().toInt(&ok);
         if (!ok) continue;
-        
-        int field = it.data().toInt(&ok);
+
+        int field = it.value().toInt(&ok);
         if (!ok) continue;
 
         m_columnToField.insert(column, field);
     }
 
-    KConfigGroupSaver saver(config, "General");
-    KConfigBase* general = saver.config();
-    
-    m_datePattern = general->readEntry("DatePattern");
+    KConfigGroup general(config, "General");
+
+    m_datePattern = general.readEntry("DatePattern");
     if (m_datePattern.isEmpty()) m_datePattern = "Y-M-D";
     createDateFormat();
-    
-    m_columns = general->readNumEntry("Columns");
+
+    m_columns = general.readEntry("Columns", 0);
     if (m_columns < 0) m_columns = 0;
 
-    switch (general->readNumEntry("DelimiterType"))
+    switch (general.readEntry("DelimiterType", 0))
     {
         case 1:
             m_delimiter = ";";
             break;
-            
+
         case 2:
             m_delimiter = "\t";
             break;
@@ -84,20 +83,20 @@ CSVTemplate::CSVTemplate(KConfigBase* config) : m_columns(0)
             break;
 
         case 4:
-            m_delimiter = general->readEntry("DelimiterOther");
+            m_delimiter = general.readEntry("DelimiterOther");
             break;
 
         default:
-            m_delimiter = ",";        
+            m_delimiter = ",";
     }
     if (m_delimiter.isEmpty()) m_delimiter = ",";
 
-    switch (general->readNumEntry("QuoteType"))
+    switch (general.readEntry("QuoteType", 0))
     {
         case 1:
             m_quote = "'";
             break;
-            
+
         case 2:
             break;
 
@@ -116,13 +115,13 @@ QString CSVTemplate::fieldText(int column, const KABC::Addressee& addressee) con
 
     QMap<int, int>::const_iterator it = m_columnToField.find(column);
     if (it == m_columnToField.end()) return QString::null;
-        
+
     QString text;
-    switch (it.data())
+    switch (it.value())
     {
         case  0: // "Formatted Name"
             text = addressee.formattedName();
-            break;            
+            break;
         case  1: // "Family Name"
             text = addressee.familyName();
             break;
@@ -223,7 +222,7 @@ QString CSVTemplate::fieldText(int column, const KABC::Addressee& addressee) con
             text = addressee.note();
             break;
         case 34: // "URL"
-            text = addressee.url().prettyURL();
+            text = addressee.url().prettyUrl();
             break;
         case 35: // "Department"
             break;
@@ -258,15 +257,15 @@ void CSVTemplate::setFieldText(int column, KABC::Addressee& addressee, const QSt
 
     QMap<int, int>::const_iterator it = m_columnToField.find(column);
     if (it == m_columnToField.end()) return;
-    
+
     Address address;
     PhoneNumber phone;
-        
-    switch (it.data())
+
+    switch (it.value())
     {
         case  0: // "Formatted Name"
             addressee.setFormattedName(text);
-            break;            
+            break;
         case  1: // "Family Name"
             addressee.setFamilyName(text);
             break;
@@ -424,7 +423,7 @@ void CSVTemplate::setFieldText(int column, KABC::Addressee& addressee, const QSt
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
+
 CSVTemplate* CSVTemplate::defaultTemplate()
 {
     if (m_defaultTemplate == 0)
@@ -433,14 +432,14 @@ CSVTemplate* CSVTemplate::defaultTemplate()
 
         m_defaultTemplate->m_quote     = "\"";
         m_defaultTemplate->m_delimiter = ",";
-        
+
         m_defaultTemplate->m_columns   = 42;
         for (int i = 0; i < m_defaultTemplate->m_columns; ++i)
         {
-            m_defaultTemplate->m_columnToField[i] = i + 1; 
+            m_defaultTemplate->m_columnToField[i] = i + 1;
         }
     }
-    
+
     return m_defaultTemplate;
 }
 
@@ -457,7 +456,7 @@ CSVTemplate::CSVTemplate(const QString& datePattern)
 QString CSVTemplate::formatDate(const QDateTime& date) const
 {
     if (!date.isValid()) return QString::null;
-    
+
     return date.toString(m_dateFormat);
 }
 
@@ -471,10 +470,10 @@ QDateTime CSVTemplate::parseDate(const QString& text) const
     int month = 0;
     int day   = 0;
 
-    QCString pattern = m_datePattern.ascii();
+    QByteArray pattern = m_datePattern.toAscii();
     bool ok = true;
-    uint pos = 0;
-    for (uint i = 0; ok && i < pattern.length(); ++i)
+    int pos = 0;
+    for (int i = 0; ok && i < pattern.length(); ++i)
     {
         switch (pattern[i])
         {
@@ -489,7 +488,7 @@ QDateTime CSVTemplate::parseDate(const QString& text) const
                     pos += 4;
                 }
                 break;
-                
+
             case 'y': // two digit 19xx year
                 if ((pos + 1) >= text.length())
                 {
@@ -501,7 +500,7 @@ QDateTime CSVTemplate::parseDate(const QString& text) const
                     pos += 2;
                 }
                 break;
-                
+
             case 'M': // two digit month
                 if ((pos + 1) >= text.length())
                 {
@@ -513,7 +512,7 @@ QDateTime CSVTemplate::parseDate(const QString& text) const
                     pos += 2;
                 }
                 break;
-                
+
             case 'm': // one or two digit month
                 if ((pos + 1) < text.length() && text[pos+1].isDigit())
                 {
@@ -526,7 +525,7 @@ QDateTime CSVTemplate::parseDate(const QString& text) const
                     pos += 1;
                 }
                 break;
-                
+
             case 'D': // two digit day
                 if ((pos + 1) >= text.length())
                 {
@@ -538,7 +537,7 @@ QDateTime CSVTemplate::parseDate(const QString& text) const
                     pos += 2;
                 }
                 break;
-                
+
             case 'd': // one or two digit day
                 if ((pos + 1) < text.length() && text[pos+1].isDigit())
                 {
@@ -551,7 +550,7 @@ QDateTime CSVTemplate::parseDate(const QString& text) const
                     pos += 1;
                 }
                 break;
-                
+
             default:
                 ok = QChar(pattern[i]) == text[pos];
                 pos++;
@@ -562,7 +561,7 @@ QDateTime CSVTemplate::parseDate(const QString& text) const
     ok = ok && pos >= text.length();
 
     if (ok && year > 0 && month > 0 && day > 0) return QDateTime(QDate(year, month, day));
-    
+
     return QDateTime();
 }
 
@@ -570,38 +569,38 @@ QDateTime CSVTemplate::parseDate(const QString& text) const
 
 void CSVTemplate::createDateFormat()
 {
-    QCString datePattern = m_datePattern.ascii();
-    
-    for (uint i = 0; i < datePattern.length(); ++i)
+    QByteArray datePattern = m_datePattern.toAscii();
+
+    for (int i = 0; i < datePattern.length(); ++i)
     {
         switch (datePattern[i])
         {
             case 'Y':
                 m_dateFormat.append("yyyy");
                 break;
-        
+
             case 'y':
                 m_dateFormat.append("yy");
                 break;
-        
+
             case 'M':
                 m_dateFormat.append("MM");
                 break;
-    
+
             case 'm':
                 m_dateFormat.append("m");
                 break;
-                
+
             case 'D':
                 m_dateFormat.append("dd");
                 break;
-                
+
             case 'd':
                 m_dateFormat.append("d");
                 break;
-                
+
             default:
-                m_dateFormat.append(datePattern[i]);
+                m_dateFormat.append(QChar::fromAscii(datePattern[i]));
                 break;
         }
     }

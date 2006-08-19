@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -86,7 +86,7 @@ public:
     * However it is recommended to stay consistent with the other format
     * implementations and use a comma separated list
     */
-    virtual bool setOptions(const QCString& options) = 0;
+    virtual bool setOptions(const QByteArray& options) = 0;
 
     /**
     * @brief Returns a translate message about the available format options

@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -36,11 +36,11 @@ class UIDOutput : public OutputFormat
 {
 public:
     virtual QString description() const;
-    
-    virtual bool setOptions(const QCString& options);
-    
+
+    virtual bool setOptions(const QByteArray& options);
+
     virtual bool setCodec(QTextCodec* codec);
-    
+
     virtual bool writeAddressee(const KABC::Addressee& addressee, std::ostream& stream);
     virtual bool writeAddresseeList(const KABC::AddresseeList& addresseeList,
                                     std::ostream& stream);
@@ -54,14 +54,14 @@ class VCardOutput : public OutputFormat
 public:
     VCardOutput();
     virtual ~VCardOutput();
-    
+
     virtual QString description() const;
-    
-    virtual bool setOptions(const QCString& options);
+
+    virtual bool setOptions(const QByteArray& options);
     virtual QString optionUsage() const;
 
     virtual bool setCodec(QTextCodec* codec);
-    
+
     virtual bool writeAddressee(const KABC::Addressee& addressee, std::ostream& stream);
     virtual bool writeAddresseeList(const KABC::AddresseeList& addresseeList,
                                     std::ostream& stream);
@@ -78,12 +78,12 @@ public:
     EmailOutput();
 
     virtual QString description() const;
-    
-    virtual bool setOptions(const QCString& options);
+
+    virtual bool setOptions(const QByteArray& options);
     virtual QString optionUsage() const;
-    
+
     virtual bool setCodec(QTextCodec* codec);
-    
+
     virtual bool writeAddressee(const KABC::Addressee& addressee, std::ostream& stream);
     virtual bool writeAddresseeList(const KABC::AddresseeList& addresseeList,
                                     std::ostream& stream);
@@ -103,12 +103,12 @@ public:
     MuttOutput();
 
     virtual QString description() const;
-    
-    virtual bool setOptions(const QCString& options);
+
+    virtual bool setOptions(const QByteArray& options);
     virtual QString optionUsage() const;
-    
+
     virtual bool setCodec(QTextCodec* codec);
-    
+
     virtual bool writeAddressee(const KABC::Addressee& addressee, std::ostream& stream);
     virtual bool writeAddresseeList(const KABC::AddresseeList& addresseeList,
                                     std::ostream& stream);
@@ -130,12 +130,12 @@ public:
     virtual ~CSVOutput();
 
     virtual QString description() const;
-    
-    virtual bool setOptions(const QCString& options);
+
+    virtual bool setOptions(const QByteArray& options);
     virtual QString optionUsage() const;
-    
+
     virtual bool setCodec(QTextCodec* codec);
-    
+
     virtual bool writeAddressee(const KABC::Addressee& addressee, std::ostream& stream);
     virtual bool writeAddresseeList(const KABC::AddresseeList& addresseeList,
                                     std::ostream& stream);

@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #include <istream>
 
 // Qt includes
-#include <qobject.h>
+#include <QObject>
 
 // forward declarations
 class FormatFactory;
@@ -51,31 +51,34 @@ public:
         Merge,
         Search
     };
-    
+
     KABCClient(Operation operation, FormatFactory* factory);
 
     virtual ~KABCClient();
 
-    bool setInputFormat(const QCString& name);
-    bool setOutputFormat(const QCString& name);
+    bool setInputFormat(const QByteArray& name);
+    bool setOutputFormat(const QByteArray& name);
 
-    bool setInputOptions(const QCString& options);
-    bool setOutputOptions(const QCString& options);
+    bool setInputOptions(const QByteArray& options);
+    bool setOutputOptions(const QByteArray& options);
 
-    bool setInputCodec(const QCString& name);
-    bool setOutputCodec(const QCString& name);
-    
+    bool setInputCodec(const QByteArray& name);
+    bool setOutputCodec(const QByteArray& name);
+
     void setInputStream(std::istream* stream);
-    
+
     bool initOperation();
 
-    inline void setMatchCaseSensitive(bool on) { m_matchCaseSensitive = on; }
+    inline void setMatchCaseSensitivity(Qt::CaseSensitivity sensitivity)
+    {
+        m_matchCaseSensitivity = sensitivity;
+    }
 
     inline void setAllowSaving(bool on) { m_allowSaving = on; }
-    
+
 private:
     Operation m_operation;
-    
+
     FormatFactory* m_formatFactory;
 
     InputFormat*  m_inputFormat;
@@ -83,14 +86,14 @@ private:
 
     QTextCodec* m_inputCodec;
     QTextCodec* m_outputCodec;
-    
+
     KABC::AddressBook* m_addressBook;
 
     std::istream* m_inputStream;
 
-    bool m_matchCaseSensitive;
+    Qt::CaseSensitivity m_matchCaseSensitivity;
     bool m_allowSaving;
-        
+
 private:
     int performAdd();
     int performRemove();
@@ -101,8 +104,8 @@ private:
     void mergeAddressees(KABC::Addressee& master, const KABC::Addressee& slave);
     void mergePictures(KABC::Picture& master, const KABC::Picture slave);
 
-    QTextCodec* codecForName(const QCString& name);
-    
+    QTextCodec* codecForName(const QByteArray& name);
+
 private slots:
     void slotAddressBookLoaded();
 };

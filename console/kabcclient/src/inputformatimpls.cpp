@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #include <iostream>
 
 // Qt includes
-#include <qtextcodec.h>
+#include <QTextCodec>
 
 // KDE includes
 #include <klocale.h>
@@ -47,7 +47,7 @@ QString UIDInput::description() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool UIDInput::setOptions(const QCString& options)
+bool UIDInput::setOptions(const QByteArray& options)
 {
     Q_UNUSED(options)
     return false;
@@ -84,7 +84,7 @@ KABC::Addressee UIDInput::readAddressee(std::istream& stream)
     QString uid = m_codec->toUnicode(line.c_str(), line.size());
 
     addressee.setUid(uid);
-    
+
     return addressee;
 }
 
@@ -112,7 +112,7 @@ VCardInput::~VCardInput()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool VCardInput::setOptions(const QCString& options)
+bool VCardInput::setOptions(const QByteArray& options)
 {
     Q_UNUSED(options)
     return false;
@@ -126,14 +126,16 @@ bool VCardInput::setCodec(QTextCodec* codec)
 
     m_codec = codec;
 
-    if (m_codec->name() != QString::fromUtf8("UTF-8"))
+    QString codecName = QString::fromAscii(m_codec->name());
+
+    if (codecName != QString::fromUtf8("UTF-8"))
     {
         QString warning = i18n("Warning: using codec '%1' with input format vcard, "
                                "but vCards are usually expected to be in UTF-8.");
-        
-        std::cerr << warning.arg(m_codec->name()).local8Bit() << std::endl;
+
+        std::cerr << warning.arg(codecName).toLocal8Bit().data() << std::endl;
     }
-    
+
     return true;
 }
 
@@ -157,13 +159,13 @@ KABC::Addressee VCardInput::readAddressee(std::istream& stream)
     {
         getline(stream, line);
         inputLine = m_codec->toUnicode(line.c_str(), line.size());
-        
+
         input += inputLine;
         input += "\n";
         if (inputLine.startsWith("END:VCARD")) break;
     }
 
-    return m_converter->parseVCard(input);
+    return m_converter->parseVCard(input.toUtf8());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -176,7 +178,7 @@ QString EmailInput::description() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool EmailInput::setOptions(const QCString& options)
+bool EmailInput::setOptions(const QByteArray& options)
 {
     Q_UNUSED(options)
     return false;
@@ -215,10 +217,10 @@ KABC::Addressee EmailInput::readAddressee(std::istream& stream)
     QString email;
     KABC::Addressee::parseEmailAddress(rawEmail, name, email);
 
-    if (!email.isEmpty() && email.find("@") != -1)
+    if (!email.isEmpty() && email.indexOf("@") != -1)
     {
         addressee.insertEmail(email, true);
-    
+
         if (!name.isEmpty())
         {
             addressee.setNameFromString(name);
@@ -226,7 +228,7 @@ KABC::Addressee EmailInput::readAddressee(std::istream& stream)
 
         addressee.setUid(QString::null);
     }
-    
+
     return addressee;
 }
 
@@ -241,7 +243,7 @@ QString SearchInput::description() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool SearchInput::setOptions(const QCString& options)
+bool SearchInput::setOptions(const QByteArray& options)
 {
     Q_UNUSED(options)
     return false;
@@ -280,7 +282,7 @@ KABC::Addressee SearchInput::readAddressee(std::istream& stream)
     QString email;
     KABC::Addressee::parseEmailAddress(rawEmail, name, email);
 
-    if (email.isEmpty() || email.find("@") == -1)
+    if (email.isEmpty() || email.indexOf("@") == -1)
     {
         addressee.insertEmail(rawEmail, true);
     }
@@ -288,7 +290,7 @@ KABC::Addressee SearchInput::readAddressee(std::istream& stream)
     {
         addressee.insertEmail(email, true);
     }
-    
+
     if (!name.isEmpty())
     {
         addressee.setNameFromString(name);
@@ -299,7 +301,7 @@ KABC::Addressee SearchInput::readAddressee(std::istream& stream)
     }
 
     addressee.setUid(QString::null);
-    
+
     return addressee;
 }
 
@@ -314,7 +316,7 @@ QString NameInput::description() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool NameInput::setOptions(const QCString& options)
+bool NameInput::setOptions(const QByteArray& options)
 {
     Q_UNUSED(options)
     return false;
@@ -356,7 +358,7 @@ KABC::Addressee NameInput::readAddressee(std::istream& stream)
     }
 
     addressee.setUid(QString::null);
-    
+
     return addressee;
 }
 
@@ -377,13 +379,13 @@ QString CSVInput::description() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool CSVInput::setOptions(const QCString& options)
+bool CSVInput::setOptions(const QByteArray& options)
 {
     QString name = QString::fromLocal8Bit(options);
     if (name.isEmpty()) return false;
 
     m_template = m_templateFactory->createCachedTemplate(name);
-    
+
     return m_template != 0;
 }
 
@@ -398,12 +400,12 @@ QString CSVInput::optionUsage() const
 
     const QMap<QString, QString> templateNames = m_templateFactory->templateNames();
 
-    QMap<QString, QString>::const_iterator it    = templateNames.begin();    
+    QMap<QString, QString>::const_iterator it    = templateNames.begin();
     QMap<QString, QString>::const_iterator endIt = templateNames.end();
     for (; it != endIt; ++it)
     {
         QString name = it.key();
-        QString templateName = it.data();
+        QString templateName = it.value();
 
         usage += name;
 
@@ -413,7 +415,7 @@ QString CSVInput::optionUsage() const
 
         usage += "\n";
     }
-    
+
     return usage;
 }
 
@@ -435,7 +437,7 @@ KABC::Addressee CSVInput::readAddressee(std::istream& stream)
     if (stream.bad()) return KABC::Addressee();
 
     if (m_template == 0) m_template = CSVTemplate::defaultTemplate();
-    
+
     KABC::Addressee addressee;
 
     std::string line;
@@ -471,23 +473,23 @@ QStringList CSVInput::split(const QString& values) const
     const QString quote     = m_template->quote();
     const QString delimiter = m_template->delimiter();
 
-    if (quote.isEmpty()) return QStringList::split(delimiter, values, true);
-    
+    if (quote.isEmpty()) return values.split(delimiter, QString::KeepEmptyParts);
+
     QString remaining = values;
-    
+
     QStringList list;
     bool quoted = false;
     while (!remaining.isEmpty())
     {
         if (quoted)
         {
-            int quoteIndex = remaining.find(quote);
+            int quoteIndex = remaining.indexOf(quote);
             if (quoteIndex >= 0)
             {
                 list.append(remaining.left(quoteIndex));
                 remaining = remaining.mid(quoteIndex + quote.length());
 
-                if (remaining.find(delimiter) == 0)
+                if (remaining.indexOf(delimiter) == 0)
                 {
                     remaining = remaining.mid(delimiter.length());
                 }
@@ -502,7 +504,7 @@ QStringList CSVInput::split(const QString& values) const
         }
         else
         {
-            int quoteIndex = remaining.find(quote);
+            int quoteIndex = remaining.indexOf(quote);
 
             if (quoteIndex == 0)
             {
@@ -512,9 +514,9 @@ QStringList CSVInput::split(const QString& values) const
             }
             else
             {
-                int delimiterIndex = remaining.find(delimiter);
+                int delimiterIndex = remaining.indexOf(delimiter);
                 if (delimiterIndex >= 0)
-                {            
+                {
                     list.append(remaining.left(delimiterIndex));
                     remaining = remaining.mid(delimiterIndex + delimiter.length());
                 }
@@ -526,7 +528,7 @@ QStringList CSVInput::split(const QString& values) const
             }
         }
     }
-    
+
     return list;
 }
 
@@ -565,7 +567,7 @@ QString DialogInput::description() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool DialogInput::setOptions(const QCString& options)
+bool DialogInput::setOptions(const QByteArray& options)
 {
     Q_UNUSED(options)
     return false;
@@ -576,7 +578,7 @@ bool DialogInput::setOptions(const QCString& options)
 bool DialogInput::setCodec(QTextCodec* codec)
 {
     if (codec == 0) return false;
-    
+
     return true;
 }
 
@@ -602,12 +604,12 @@ KABC::Addressee DialogInput::readAddressee(std::istream& stream)
 
         // using the UID avoid multiple matches by name or email of the addressee
         if (!nextAddressee.isEmpty()) addressee.setUid(nextAddressee.uid());
-        
+
         m_private->addresseeList.pop_front();
     }
     else
         stream.setstate(std::ios_base::eofbit);
-    
+
     return addressee;
 }
 

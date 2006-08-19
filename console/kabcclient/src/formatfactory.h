@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,8 +20,7 @@
 #define FORMATFACTORY_H
 
 // Qt includes
-#include <qcstring.h>
-#include <qvaluelist.h>
+#include <QByteArray>
 
 // forward declarations
 class CSVTemplateFactory;
@@ -31,7 +30,7 @@ class OutputFormat;
 /**
 * A list of strings for format names
 */
-typedef QValueList<QCString> QCStringList;
+typedef QList<QByteArray> QByteArrayList;
 
 /**
 * @defgroup formathandling Handling of various input and output formats
@@ -68,8 +67,8 @@ typedef QValueList<QCString> QCStringList;
 * @code
 * FormatFactory factory;
 *
-* QCStringList inputFormats = factory.inputFormatList();
-* QCStringList::const_iterator it = inputFormats.being();
+* QByteArrayList inputFormats = factory.inputFormatList();
+* QByteArrayList::const_iterator it = inputFormats.being();
 * for (; it != inputFormats.end(); ++it)
 * {
 *     InputFormat* inputFormat = factory.inputFormat(*it);
@@ -78,7 +77,7 @@ typedef QValueList<QCString> QCStringList;
 *     delete inputFormat;
 * }
 *
-* QCStringList outputFormats = factory.outputFormatList();
+* QByteArrayList outputFormats = factory.outputFormatList();
 * it = outputFormats.being();
 * for (; it != outputFormats.end(); ++it)
 * {
@@ -120,7 +119,7 @@ public:
     * @see InputFormat
     * @see outputFormatList()
     */
-    inline QCStringList inputFormatList() const  { return m_inputFormats;  }
+    inline QByteArrayList inputFormatList() const  { return m_inputFormats;  }
 
     /**
     * @brief Returns a list of output formatter names
@@ -135,7 +134,7 @@ public:
     * @see OutputFormat
     * @see inputFormatList()
     */
-    inline QCStringList outputFormatList() const { return m_outputFormats; }
+    inline QByteArrayList outputFormatList() const { return m_outputFormats; }
 
     /**
     * @brief Creates an InputFormat instance for the given name
@@ -151,7 +150,7 @@ public:
     * @see InputFormat
     * @see outputFormat
     */
-    InputFormat* inputFormat(const QCString& name);
+    InputFormat* inputFormat(const QByteArray& name);
 
     /**
     * @brief Creates an OutputFormat instance for the given name
@@ -167,18 +166,18 @@ public:
     * @see InputFormat
     * @see outputFormat
     */
-    OutputFormat* outputFormat(const QCString& name);
+    OutputFormat* outputFormat(const QByteArray& name);
 
 private:
     /**
     * The list of the known InputFormat names
     */
-    QCStringList m_inputFormats;
+    QByteArrayList m_inputFormats;
 
     /**
     * The list if the known OutputFormat names
     */
-    QCStringList m_outputFormats;
+    QByteArrayList m_outputFormats;
 
     /**
     * Factory for the templates of the CSV Input and Output format

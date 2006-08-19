@@ -1,6 +1,6 @@
 //
 //  Copyright (C) 2003 - 2004 Tobias Koenig <tokoe@kde.org>
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -22,12 +22,13 @@
 #include <sstream>
 
 // Qt includes
-#include <qfileinfo.h>
+#include <QFileInfo>
 
 // KDE includes
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
+#include <klocalizedstring.h>
 
 // local includes
 #include "formatfactory.h"
@@ -50,7 +51,7 @@ static KCmdLineOptions cmdLineOptions[] =
     {"L", 0, 0},
     {"list", I18N_NOOP("List all entries in address book"), 0},
     {"nosave",
-     I18N_NOOP("Do not save changes to the addressbook on add/remove operations"), 0}, 
+     I18N_NOOP("Do not save changes to the addressbook on add/remove operations"), 0},
     {"if", 0, 0},
     {"input-format <format>", I18N_NOOP("How to interpret the input data."), "search"},
     {"if-opts", 0, 0},
@@ -68,13 +69,15 @@ static KCmdLineOptions cmdLineOptions[] =
     {"+[input data]", I18N_NOOP("Input to use instead of reading stdin"), 0},
     KCmdLineLastOption
 };
-    
+
 bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory);
 bool checkForCodecHelp(KCmdLineArgs* args);
 
 int handleKABC2Mutt(int argc, char** argv);
 
 void avoidQPixmapWarning(QtMsgType type, const char *msg);
+
+QString optionAsString(KCmdLineArgs* args, const char* option);
 
 using std::cout;
 using std::endl;
@@ -94,24 +97,24 @@ int main(int argc, char** argv)
     {
         return handleKABC2Mutt(argc, argv);
     }
-    
+
     KCmdLineArgs::addCmdLineOptions(cmdLineOptions);
     KCmdLineArgs::init(argc, argv, &aboutData);
-    
+
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
-    
+
     qInstallMsgHandler(avoidQPixmapWarning);
-    KApplication::disableAutoDcopRegistration();
+    //KApplication::disableAutoDcopRegistration();
     bool gui = args->getOption("input-format") == "dialog";
-    KApplication app(gui, gui);
+    KApplication app(gui);
     qInstallMsgHandler(0);
-    
+
     FormatFactory formatFactory;
-    
+
     if (checkForFormatHelp(args, &formatFactory)) return 0;
 
     if (checkForCodecHelp(args)) return 0;
-    
+
     KABCClient::Operation operation = KABCClient::Search;
     if (args->isSet("search"))
     {
@@ -135,15 +138,15 @@ int main(int argc, char** argv)
     }
     else
     {
-        std::cerr << i18n("No operation specified, assuming --search").local8Bit() << endl;
+        std::cerr << i18n("No operation specified, assuming --search").toLocal8Bit().data() << endl;
     }
-    
+
     KABCClient client(operation, &formatFactory);
 
     if (!client.setInputFormat(args->getOption("input-format")))
     {
         const QString error = i18n("Invalid input format \"%1\". See --input-format help");
-        KCmdLineArgs::usage(error.arg(args->getOption("input-format")));
+        KCmdLineArgs::usage(error.arg(optionAsString(args, "input-format")));
         return 1;
     }
 
@@ -153,14 +156,14 @@ int main(int argc, char** argv)
         {
             const QString error = i18n("Invalid options for input format \"%1\". "
                                       "See --input-format-options help");
-            KCmdLineArgs::usage(error.arg(args->getOption("input-format")));
+            KCmdLineArgs::usage(error.arg(optionAsString(args, "input-format")));
         }
     }
-    
+
     if (!client.setOutputFormat(args->getOption("output-format")))
     {
         const QString error = i18n("Invalid output format \"%1\". See --output-format help");
-        KCmdLineArgs::usage(error.arg(args->getOption("output-format")));
+        KCmdLineArgs::usage(error.arg(optionAsString(args, "output-format")));
         return 1;
     }
 
@@ -170,42 +173,42 @@ int main(int argc, char** argv)
         {
             const QString error = i18n("Invalid options for output format \"%1\". "
                                        "See --output-format-options help");
-            KCmdLineArgs::usage(error.arg(args->getOption("output-format")));
+            KCmdLineArgs::usage(error.arg(optionAsString(args, "output-format")));
         }
     }
 
-    QCString codecName = args->getOption("input-codec");
-    if (!args->isSet("input-codec") && args->getOption("input-format") == QCString("vcard"))
+    QByteArray codecName = args->getOption("input-codec");
+    if (!args->isSet("input-codec") && args->getOption("input-format") == QByteArray("vcard"))
         codecName = "UTF8";
-        
+
     if (!client.setInputCodec(codecName))
     {
         const QString error = i18n("Invalid input codec \"%1\"");
-        KCmdLineArgs::usage(error.arg(codecName));
+        KCmdLineArgs::usage(error.arg(QString::fromLocal8Bit(codecName)));
         return 1;
     }
-    
+
     codecName = args->getOption("output-codec");
-    if (!args->isSet("output-codec") && args->getOption("output-format") == QCString("vcard"))
+    if (!args->isSet("output-codec") && args->getOption("output-format") == QByteArray("vcard"))
         codecName = "UTF8";
-        
+
     if (!client.setOutputCodec(codecName))
     {
         const QString error = i18n("Invalid output codec \"%1\"");
-        KCmdLineArgs::usage(error.arg(codecName));
+        KCmdLineArgs::usage(error.arg(QString::fromLocal8Bit(codecName)));
         return 1;
     }
-    
+
     if (args->isSet("match-case"))
     {
-        client.setMatchCaseSensitive(true);
+        client.setMatchCaseSensitivity(Qt::CaseSensitive);
     }
 
     if (!args->isSet("save"))
     {
         client.setAllowSaving(false);
     }
-    
+
     std::stringstream sstream;
     if (args->count() > 0)
     {
@@ -220,13 +223,13 @@ int main(int argc, char** argv)
     {
         client.setInputStream(&std::cin);
     }
-    
+
     if (!client.initOperation())
     {
-        cout << i18n("Unable to perform requested operation").local8Bit() << endl;
+        cout << i18n("Unable to perform requested operation").toLocal8Bit().data() << endl;
         return 1;
     }
-    
+
     return app.exec();
 }
 
@@ -241,22 +244,22 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
         formatHelpRequested = true;
 
         cout << endl;
-        cout << i18n("The following input formats are available:").local8Bit() << endl;
-        
-        QCStringList formats = factory->inputFormatList();
-        QCStringList::const_iterator it    = formats.begin();
-        QCStringList::const_iterator endIt = formats.end();
+        cout << i18n("The following input formats are available:").toLocal8Bit().data() << endl;
+
+        QByteArrayList formats = factory->inputFormatList();
+        QByteArrayList::const_iterator it    = formats.begin();
+        QByteArrayList::const_iterator endIt = formats.end();
         for (; it != endIt; ++it)
         {
             InputFormat* format = factory->inputFormat(*it);
             if (format != 0)
             {
-                cout << *it << ( (*it).length() >= 8 ? "\t" : "\t\t");
-                
+                cout << it->data() << ( (*it).length() >= 8 ? "\t" : "\t\t");
+
                 QString description = format->description();
                 if (description.isEmpty()) description = i18n("No description available");
-                
-                cout << description.local8Bit() << endl;
+
+                cout << description.toLocal8Bit().data() << endl;
                 delete format;
             }
         }
@@ -265,50 +268,50 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
              args->getOption("input-format-options") == "help")
     {
         formatHelpRequested = true;
-        
+
         InputFormat* format = factory->inputFormat(args->getOption("input-format"));
         if (format == 0)
         {
             const QString error = i18n("Invalid input format \"%1\". See --input-format help");
-            KCmdLineArgs::usage(error.arg(args->getOption("input-format")));
+            KCmdLineArgs::usage(error.arg(optionAsString(args, "input-format")));
             exit(1);
         }
 
         QString usage = format->optionUsage();
 
         const QString message =
-            (usage.isEmpty() 
+            (usage.isEmpty()
                 ? i18n("No options available for input format %1")
                 : i18n("The following options are available for input format %1:"));
-        
+
         cout << endl;
-        cout << message.arg(args->getOption("input-format")).local8Bit() << endl;
-        if (!usage.isEmpty()) cout << usage.local8Bit() << endl;
-        
+        cout << message.arg(optionAsString(args, "input-format")).toLocal8Bit().data() << endl;
+        if (!usage.isEmpty()) cout << usage.toLocal8Bit().data() << endl;
+
         delete format;
     }
-    
+
     if (args->isSet("output-format") && args->getOption("output-format") == "help")
     {
         formatHelpRequested = true;
-    
-        cout << endl;        
-        cout << i18n("The following output formats are available:").local8Bit() << endl;
-        
-        QCStringList formats = factory->outputFormatList();
-        QCStringList::const_iterator it    = formats.begin();
-        QCStringList::const_iterator endIt = formats.end();
+
+        cout << endl;
+        cout << i18n("The following output formats are available:").toLocal8Bit().data() << endl;
+
+        QByteArrayList formats = factory->outputFormatList();
+        QByteArrayList::const_iterator it    = formats.begin();
+        QByteArrayList::const_iterator endIt = formats.end();
         for (; it != endIt; ++it)
         {
             OutputFormat* format = factory->outputFormat(*it);
             if (format != 0)
             {
-                cout << *it << ( (*it).length() >= 8 ? "\t" : "\t\t");
-                
+                cout << it->data() << ( (*it).length() >= 8 ? "\t" : "\t\t");
+
                 QString description = format->description();
                 if (description.isEmpty()) description = i18n("No description available");
-                
-                cout << description.local8Bit() << endl;
+
+                cout << description.toLocal8Bit().data() << endl;
                 delete format;
             }
         }
@@ -317,30 +320,30 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
              args->getOption("output-format-options") == "help")
     {
         formatHelpRequested = true;
-        
+
         OutputFormat* format = factory->outputFormat(args->getOption("output-format"));
         if (format == 0)
         {
             const QString error = i18n("Invalid output format \"%1\". See --output-format help");
-            KCmdLineArgs::usage(error.arg(args->getOption("output-format")));
+            KCmdLineArgs::usage(error.arg(optionAsString(args, "output-format")));
             exit(1);
         }
 
         QString usage = format->optionUsage();
 
         const QString message =
-            (usage.isEmpty() 
+            (usage.isEmpty()
                 ? i18n("No options available for output format %1")
                 : i18n("The following options are available for output format %1:"));
-        
+
         cout << endl;
-        cout << message.arg(args->getOption("output-format")).local8Bit() << endl;
-        if (!usage.isEmpty()) cout << usage.local8Bit() << endl;
-        
+        cout << message.arg(optionAsString(args, "output-format")).toLocal8Bit().data() << endl;
+        if (!usage.isEmpty()) cout << usage.toLocal8Bit().data() << endl;
+
         delete format;
     }
-    
-    return formatHelpRequested;   
+
+    return formatHelpRequested;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -352,34 +355,34 @@ bool checkForCodecHelp(KCmdLineArgs* args)
     if (args->isSet("input-codec") && args->getOption("input-codec") == "help")
     {
         codecHelpRequested = true;
-    
+
         cout << i18n("The input codec transforms the input text data into an "
-                     "universal internal format").local8Bit() << endl;
+                     "universal internal format").toLocal8Bit().data() << endl;
         cout << i18n("Default input encoding is 'local' unless input format is 'vcard', "
-                     "in which case the default encoding will be 'utf8'.").local8Bit() << endl;
+                     "in which case the default encoding will be 'utf8'.").toLocal8Bit().data() << endl;
     }
-    
+
     if (args->isSet("output-codec") && args->getOption("output-codec") == "help")
     {
         codecHelpRequested = true;
-    
+
         cout << i18n("The output codec transforms the output text data from the "
-                     "internal format to an 8-bit text format").local8Bit() << endl;
+                     "internal format to an 8-bit text format").toLocal8Bit().data() << endl;
         cout << i18n("Default output encoding is 'local' unless output format is 'vcard', "
-                     "in which case the default encoding will be 'utf8'.").local8Bit() << endl;
+                     "in which case the default encoding will be 'utf8'.").toLocal8Bit().data() << endl;
     }
 
     if (codecHelpRequested)
     {
         cout << i18n("Built-in codecs are UTF8 and LOCAL, respectively using "
-                     "the 8-bit unicode format or your local encoding").local8Bit()
+                     "the 8-bit unicode format or your local encoding").toLocal8Bit().data()
              << endl;
 
         cout << i18n("Other codecs can be specified by their ISO code, for "
                      "example 'ISO 8859-15' for western european languages, "
-                     "including the Euro sign").local8Bit() << endl;
+                     "including the Euro sign").toLocal8Bit().data() << endl;
     }
-    
+
     return codecHelpRequested;
 }
 
@@ -409,10 +412,10 @@ int handleKABC2Mutt(int argc, char** argv)
     aboutData.addAuthor("Tobias König",  I18N_NOOP("Primary Author"),
                         "tokoe@kde.org");
     aboutData.addAuthor("Kevin Krammer", I18N_NOOP("Contributor"), "kevin.krammer@gmx.at");
-    
+
     KCmdLineArgs::addCmdLineOptions(kabc2muttCmdLineOptions);
     KCmdLineArgs::init(argc, argv, &aboutData);
-    
+
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
     KABCClient::Operation operation = KABCClient::List;
@@ -421,14 +424,14 @@ int handleKABC2Mutt(int argc, char** argv)
         operation = KABCClient::Search;
     }
 
-    FormatFactory formatFactory;    
+    FormatFactory formatFactory;
     KABCClient client(operation, &formatFactory);
 
     client.setInputFormat("email");
     client.setOutputFormat("mutt");
 
     QString options = QString::fromLocal8Bit(args->getOption("format"));
-    
+
     if (args->isSet("alternate-key-format"))
     {
         options.append(",altkeys");
@@ -437,38 +440,41 @@ int handleKABC2Mutt(int argc, char** argv)
     {
         options.append(",allemails");
     }
-    
-    client.setMatchCaseSensitive(!args->isSet("ignore-case"));
-        
-    client.setOutputOptions(options.local8Bit());
+
+    if (!args->isSet("ignore-case"))
+    {
+        client.setMatchCaseSensitivity(Qt::CaseSensitive);
+    }
+
+    client.setOutputOptions(options.toLocal8Bit().data());
 
     std::stringstream sstream;
     if (operation == KABCClient::Search)
     {
-        sstream << args->getOption("query") << endl;
+        sstream << args->getOption("query").data() << endl;
         client.setInputStream(&sstream);
     }
-    
+
     qInstallMsgHandler(avoidQPixmapWarning);
-    KApplication::disableAutoDcopRegistration();
-    KApplication app(false, false);
+    //KApplication::disableAutoDcopRegistration();
+    KApplication app(false);
     qInstallMsgHandler(0);
-    
+
     if (!client.initOperation())
     {
-        cout << i18n("Unable to perform requested operation").local8Bit() << endl;
+        cout << i18n("Unable to perform requested operation").toLocal8Bit().data() << endl;
         return 1;
     }
 
     // mutt wants a line of text before the results
-    cout << i18n("Searching KDE addressbook").local8Bit() << endl;
-    
+    cout << i18n("Searching KDE addressbook").toLocal8Bit().data() << endl;
+
     int result =  app.exec();
 
     // in case of no match mutt wants a line of text saying so
     if (result == 2) // Operation Search returns 2 on no match
-        cout << i18n("No matches in KDE addressbook").local8Bit() << endl;
-    
+        cout << i18n("No matches in KDE addressbook").toLocal8Bit().data() << endl;
+
     return result;
 }
 
@@ -478,6 +484,15 @@ void avoidQPixmapWarning(QtMsgType type, const char *msg)
 {
     Q_UNUSED(type)
     Q_UNUSED(msg)
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+QString optionAsString(KCmdLineArgs* args, const char* option)
+{
+    if (args == 0 || option == 0) return QString();
+
+    return QString::fromLocal8Bit(args->getOption(option));
 }
 
 // End of file

@@ -1,3 +1,6 @@
+2006-08-19 krake:
+    * Porting to Qt4/KDE4
+
 2005-11-03 krake:
     * Including documentation about CSV template files in the API docs
 
@@ -7,13 +10,13 @@
 
 2005-09-19 krake:
     * API docs for central format handling classes
-    
+
 2005-09-11 krake:
     * Removed duplicate entry for --search in manpage
-    
+
 2005-09-06 krake:
     * Imported kabcclient into KDE's SVN module kdereview
-    
+
 2005-09-06 krake:
     * Updated FSF address
     * Fixed Debian packaging files
@@ -24,7 +27,7 @@
     * Used dh_make to create a debian subdirectory. It should be possible to
       create Debian packages directly from the unpackaged source archive.
       See INSTALL for hints
-      
+
 # Version 0.8
 2005-08-28 krake:
     * InputFormats: dialog input for selecting contacts rather than reading input or
@@ -33,10 +36,10 @@
 # Version 0.7.2
 2005-08-11 krake:
     * More work on the man page (return values, examples)
-    
+
 2005-08-09 krake:
     * Started working on a man page
-    
+
 # Version 0.7.1
 2005-07-26 krake:
     * Example scripts and CSV templates for creating LaTeX letters
@@ -45,12 +48,12 @@
 2005-07-25 krake:
     * Date parsing/formatting for CSV templates
     * README.csv for information on the usage of CSV templates
-    
+
 2005-07-21 krake:
     * Loading and listing of CSV template files
     * InputFormats: CSV (using KAddressBook's CSV templates)
     * OutputFormats: CSV (using KAddressBook's CSV templates)
-    
+
 2005-07-15 krake:
     * Mapping of CSV columns to addressee fields using KAddressBook CSV templates
 
@@ -64,7 +67,7 @@
     * Let vcard formats warn about non UTF-8 codec (vCards are supposed to be in UTF-8)
     * Use UTF-8 as the default codec if input or output format is vcard to avoid
       warning in standard use cases.
-    
+
 2005-07-09 krake:
     * VCard output format got option to switch vCard version
 
@@ -86,14 +89,14 @@
 # Version 0.5.1
 2005-06-20 krake:
     * "Fixed" version number (wasn't updated after 0.4 release)
-    
+
 2005-06-17 krake:
     * Let --add use UID from input if it is not used in the current
       addressbook. Generate new UID if it is.
     * Added error output when failing to save and when getting ambiguous matches
       in --remove
     * Fixing addressbook load problem when resources fail to open
-    
+
 # Version 0.5
 2005-06-02 krake:
     * Added autoconf/-make support by copying from kdebase

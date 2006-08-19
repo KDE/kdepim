@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
 //  Copyright (C) 2005 Tobias Koenig <tokoe@kde.org>
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -23,12 +23,13 @@
 #include <string>
 
 // Qt includes
-#include <qtextcodec.h>
-#include <qtimer.h>
+#include <QTextCodec>
+#include <QTimer>
 
 // KDE includes
 #include <kapplication.h>
 #include <klocale.h>
+#include <krandom.h>
 
 // KABC includes
 #include <kabc/addressee.h>
@@ -51,7 +52,7 @@ static const char ambiguousMatch[] = I18N_NOOP("Input number %1 matches more tha
 ///////////////////////////////////////////////////////////////////////////////
 
 KABCClient::KABCClient(Operation operation, FormatFactory* factory)
-    : QObject(0, "kabclient"),
+    : QObject(0),
       m_operation(operation),
       m_formatFactory(factory),
       m_inputFormat(0),
@@ -60,13 +61,13 @@ KABCClient::KABCClient(Operation operation, FormatFactory* factory)
       m_outputCodec(0),
       m_addressBook(0),
       m_inputStream(0),
-      m_matchCaseSensitive(false),
+      m_matchCaseSensitivity(Qt::CaseInsensitive),
       m_allowSaving(true)
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
+
 KABCClient::~KABCClient()
 {
     delete m_inputFormat;
@@ -74,8 +75,8 @@ KABCClient::~KABCClient()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
-bool KABCClient::setInputFormat(const QCString& name)
+
+bool KABCClient::setInputFormat(const QByteArray& name)
 {
     switch (m_operation)
     {
@@ -88,8 +89,9 @@ bool KABCClient::setInputFormat(const QCString& name)
             if (name == "uid" || name == "search" || name == "dialog")
             {
                 QString error = i18n("Input format '%1' not usable with operation '%2'");
-                error = error.arg(name).arg((m_operation == Add ? "add" : "merge"));
-                std::cerr << error.local8Bit();
+                QString operation = QString::fromUtf8(m_operation == Add ? "add" : "merge");
+                error = error.arg(QString::fromLocal8Bit(name)).arg(operation);
+                std::cerr << error.toLocal8Bit().data();
                 std::cerr << std::endl;
                 return false;
             }
@@ -104,8 +106,8 @@ bool KABCClient::setInputFormat(const QCString& name)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
-bool KABCClient::setOutputFormat(const QCString& name)
+
+bool KABCClient::setOutputFormat(const QByteArray& name)
 {
     m_outputFormat = m_formatFactory->outputFormat(name);
 
@@ -113,8 +115,8 @@ bool KABCClient::setOutputFormat(const QCString& name)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
-bool KABCClient::setInputOptions(const QCString& options)
+
+bool KABCClient::setInputOptions(const QByteArray& options)
 {
     if (m_operation == List) return true;
 
@@ -124,8 +126,8 @@ bool KABCClient::setInputOptions(const QCString& options)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
-bool KABCClient::setOutputOptions(const QCString& options)
+
+bool KABCClient::setOutputOptions(const QByteArray& options)
 {
     if (m_outputFormat == 0) return false;
 
@@ -133,42 +135,42 @@ bool KABCClient::setOutputOptions(const QCString& options)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
-bool KABCClient::setInputCodec(const QCString& name)
+
+bool KABCClient::setInputCodec(const QByteArray& name)
 {
     if (m_operation == List) return true; // no input -> no input codec
-    
+
     if (m_inputFormat == 0) return false;
 
     m_inputCodec = codecForName(name);
 
     if (m_inputCodec == 0) return false;
-        
+
     return m_inputFormat->setCodec(m_inputCodec);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
-bool KABCClient::setOutputCodec(const QCString& name)
+
+bool KABCClient::setOutputCodec(const QByteArray& name)
 {
     if (m_outputFormat == 0) return false;
 
     m_outputCodec = codecForName(name);
-        
+
     if (m_outputCodec == 0) return false;
 
     return m_outputFormat->setCodec(m_outputCodec);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
+
 void KABCClient::setInputStream(std::istream* stream)
 {
     m_inputStream = stream;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
+
 bool KABCClient::initOperation()
 {
     if (m_inputStream == 0 && m_operation != List) return false;
@@ -178,11 +180,11 @@ bool KABCClient::initOperation()
 //  because in this case AddressBook doesn't emit signals :(
 //  Workaround by loading syncronous and having the slot called by a
 //  single shot timer
-    
+
 //     m_addressBook = KABC::StdAddressBook::self(true);
     m_addressBook = KABC::StdAddressBook::self(false);
     if (m_addressBook == 0) return false;
-    
+
     KABC::StdAddressBook::setAutomaticSave(false);
 
 //     QObject::connect(m_addressBook, SIGNAL(addressBookChanged(AddressBook*)),
@@ -193,7 +195,7 @@ bool KABCClient::initOperation()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
+
 int KABCClient::performAdd()
 {
     // create a set of all currently existing UIDs
@@ -204,17 +206,17 @@ int KABCClient::performAdd()
     {
         uids.insert((*it).uid());
     }
-    
+
     bool wantSave = false;
     while (!m_inputStream->bad() && !m_inputStream->eof())
     {
         Addressee addressee = m_inputFormat->readAddressee(*m_inputStream);
         if (addressee.isEmpty()) continue;
-        
+
         // make sure we really append and don't overwrite
         if (uids.find(addressee.uid()) != uids.end())
         {
-            addressee.setUid(KApplication::randomString(10));
+            addressee.setUid(KRandom::randomString(10));
             uids.insert(addressee.uid());
         }
 
@@ -226,13 +228,13 @@ int KABCClient::performAdd()
     }
 
     if (!wantSave) return 2; // nothing added
-    
+
     if (m_allowSaving)
-    {        
+    {
         Ticket* saveTicket = m_addressBook->requestSaveTicket();
         if (saveTicket == 0)
         {
-            std::cerr << i18n(saveError).local8Bit() << std::endl;
+            std::cerr << i18n(saveError).toLocal8Bit().data() << std::endl;
             return 3;
         }
 
@@ -240,20 +242,20 @@ int KABCClient::performAdd()
 
         if (!saved)
         {
-            std::cerr << i18n(saveError).local8Bit() << std::endl;
+            std::cerr << i18n(saveError).toLocal8Bit().data() << std::endl;
             return 3;
         }
     }
-    
+
     return (m_inputStream->bad() ? 1 : 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
+
 int KABCClient::performRemove()
 {
     bool wantSave = false;
-    
+
     uint count = 0;
     while (!m_inputStream->bad() && !m_inputStream->eof())
     {
@@ -261,7 +263,7 @@ int KABCClient::performRemove()
         if (search.isEmpty()) continue;
 
         count++;
-        
+
         AddresseeList result;
 
         AddressBook::ConstIterator it    = m_addressBook->begin();
@@ -273,16 +275,16 @@ int KABCClient::performRemove()
                 result.append(*it);
             }
             else if (!search.realName().isEmpty() &&
-                     (*it).realName().find(search.realName(), 0, m_matchCaseSensitive) != -1)
+                     (*it).realName().indexOf(search.realName(), 0, m_matchCaseSensitivity) != -1)
             {
                 result.append(*it);
             }
             else if (!search.familyName().isEmpty() &&
-                     (*it).realName().find(search.familyName(), 0, m_matchCaseSensitive) != -1)
+                     (*it).realName().indexOf(search.familyName(), 0, m_matchCaseSensitivity) != -1)
             {
                 if (!search.givenName().isEmpty())
                 {
-                    if ((*it).realName().find(search.givenName(), 0, m_matchCaseSensitive) != -1)
+                    if ((*it).realName().indexOf(search.givenName(), 0, m_matchCaseSensitivity) != -1)
                     {
                         result.append(*it);
                     }
@@ -291,14 +293,14 @@ int KABCClient::performRemove()
                     result.append(*it);
             }
             else if (!search.givenName().isEmpty() &&
-                     (*it).realName().find(search.givenName(), 0, m_matchCaseSensitive) != -1)
+                     (*it).realName().indexOf(search.givenName(), 0, m_matchCaseSensitivity) != -1)
             {
                 result.append(*it);
             }
             else if (!search.preferredEmail().isEmpty())
             {
                 QStringList matches =
-                    (*it).emails().grep(search.preferredEmail(), m_matchCaseSensitive);
+                    (*it).emails().filter(search.preferredEmail(), m_matchCaseSensitivity);
                 if (matches.count() > 0)
                 {
                     result.append(*it);
@@ -313,24 +315,24 @@ int KABCClient::performRemove()
         {
             m_addressBook->removeAddressee(result[0]);
             wantSave = true;
-            
+
             m_outputFormat->writeAddressee(result[0], std::cout);
             std::cout << std::endl;
         }
         else if (result.count() > 1)
         {
-            std::cerr << i18n(ambiguousMatch).arg(count).latin1() << std::endl;
+            std::cerr << i18n(ambiguousMatch).arg(count).toLocal8Bit().data() << std::endl;
         }
     }
 
     if (!wantSave) return 2; // nothing removed
-    
+
     if (m_allowSaving)
     {
         Ticket* saveTicket = m_addressBook->requestSaveTicket();
         if (saveTicket == 0)
         {
-            std::cerr << i18n(saveError).local8Bit() << std::endl;
+            std::cerr << i18n(saveError).toLocal8Bit().data() << std::endl;
             return 3;
         }
 
@@ -338,20 +340,20 @@ int KABCClient::performRemove()
 
         if (!saved)
         {
-            std::cerr << i18n(saveError).local8Bit() << std::endl;
+            std::cerr << i18n(saveError).toLocal8Bit().data() << std::endl;
             return 3;
         }
     }
-    
+
     return (m_inputStream->bad() ? 1 : 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
+
 int KABCClient::performMerge()
 {
     bool wantSave = false;
-    
+
     uint count = 0;
     while (!m_inputStream->bad() && !m_inputStream->eof())
     {
@@ -359,7 +361,7 @@ int KABCClient::performMerge()
         if (addressee.isEmpty()) continue;
 
         count++;
-        
+
         AddresseeList result;
 
         AddressBook::ConstIterator it    = m_addressBook->begin();
@@ -371,17 +373,17 @@ int KABCClient::performMerge()
                 result.append(*it);
             }
             else if (!addressee.realName().isEmpty() &&
-                     (*it).realName().find(addressee.realName(), 0, m_matchCaseSensitive) != -1)
+                     (*it).realName().indexOf(addressee.realName(), 0, m_matchCaseSensitivity) != -1)
             {
                 result.append(*it);
             }
             else if (!addressee.familyName().isEmpty() &&
-                     (*it).realName().find(addressee.familyName(), 0, m_matchCaseSensitive) != -1)
+                     (*it).realName().indexOf(addressee.familyName(), 0, m_matchCaseSensitivity) != -1)
             {
                 if (!addressee.givenName().isEmpty())
                 {
-                    if ((*it).realName().find(addressee.givenName(),
-                                              0, m_matchCaseSensitive) != -1)
+                    if ((*it).realName().indexOf(addressee.givenName(),
+                                              0, m_matchCaseSensitivity) != -1)
                     {
                         result.append(*it);
                     }
@@ -390,14 +392,14 @@ int KABCClient::performMerge()
                     result.append(*it);
             }
             else if (!addressee.givenName().isEmpty() &&
-                     (*it).realName().find(addressee.givenName(), 0, m_matchCaseSensitive) != -1)
+                     (*it).realName().indexOf(addressee.givenName(), 0, m_matchCaseSensitivity) != -1)
             {
                 result.append(*it);
             }
             else if (!addressee.preferredEmail().isEmpty())
             {
                 QStringList matches =
-                    (*it).emails().grep(addressee.preferredEmail(), m_matchCaseSensitive);
+                    (*it).emails().filter(addressee.preferredEmail(), m_matchCaseSensitivity);
                 if (matches.count() > 0)
                 {
                     result.append(*it);
@@ -415,24 +417,24 @@ int KABCClient::performMerge()
 
             m_addressBook->insertAddressee(master);
             wantSave = true;
-            
+
             m_outputFormat->writeAddressee(master, std::cout);
             std::cout << std::endl;
         }
         else if (result.count() > 1)
         {
-            std::cerr << i18n(ambiguousMatch).arg(count).latin1() << std::endl;
+            std::cerr << i18n(ambiguousMatch).arg(count).toLocal8Bit().data() << std::endl;
         }
     }
 
     if (!wantSave) return 2; // nothing merged
-    
+
     if (m_allowSaving)
     {
         Ticket* saveTicket = m_addressBook->requestSaveTicket();
         if (saveTicket == 0)
         {
-            std::cerr << i18n(saveError).local8Bit() << std::endl;
+            std::cerr << i18n(saveError).toLocal8Bit().data() << std::endl;
             return 3;
         }
 
@@ -440,16 +442,16 @@ int KABCClient::performMerge()
 
         if (!saved)
         {
-            std::cerr << i18n(saveError).local8Bit() << std::endl;
+            std::cerr << i18n(saveError).toLocal8Bit().data() << std::endl;
             return 3;
         }
     }
-    
+
     return (m_inputStream->bad() ? 1 : 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
+
 int KABCClient::performList()
 {
     AddresseeList list = m_addressBook->allAddressees();
@@ -458,18 +460,18 @@ int KABCClient::performList()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
+
 int KABCClient::performSearch()
 {
     int resultValue = 2; // i.e. search didn't find any match
-    
+
     AddressBook::ConstIterator endIt = m_addressBook->end();
-    
+
     while (!m_inputStream->bad() && !m_inputStream->eof())
     {
         Addressee search = m_inputFormat->readAddressee(*m_inputStream);
         if (search.isEmpty()) continue;
-        
+
         AddresseeList result;
 
         AddressBook::ConstIterator it = m_addressBook->begin();
@@ -480,16 +482,16 @@ int KABCClient::performSearch()
                 result.append(*it);
             }
             else if (!search.realName().isEmpty() &&
-                     (*it).realName().find(search.realName(), 0, m_matchCaseSensitive) != -1)
+                     (*it).realName().indexOf(search.realName(), 0, m_matchCaseSensitivity) != -1)
             {
                 result.append(*it);
             }
             else if (!search.familyName().isEmpty() &&
-                     (*it).realName().find(search.familyName(), 0, m_matchCaseSensitive) != -1)
+                     (*it).realName().indexOf(search.familyName(), 0, m_matchCaseSensitivity) != -1)
             {
                 if (!search.givenName().isEmpty())
                 {
-                    if ((*it).realName().find(search.givenName(), 0, m_matchCaseSensitive) != -1)
+                    if ((*it).realName().indexOf(search.givenName(), 0, m_matchCaseSensitivity) != -1)
                     {
                         result.append(*it);
                     }
@@ -498,14 +500,14 @@ int KABCClient::performSearch()
                     result.append(*it);
             }
             else if (!search.givenName().isEmpty() &&
-                     (*it).realName().find(search.givenName(), 0, m_matchCaseSensitive) != -1)
+                     (*it).realName().indexOf(search.givenName(), 0, m_matchCaseSensitivity) != -1)
             {
                 result.append(*it);
             }
             else if (!search.preferredEmail().isEmpty())
             {
                 QStringList matches =
-                    (*it).emails().grep(search.preferredEmail(), m_matchCaseSensitive);
+                    (*it).emails().filter(search.preferredEmail(), m_matchCaseSensitivity);
                 if (matches.count() > 0)
                 {
                     result.append(*it);
@@ -516,7 +518,7 @@ int KABCClient::performSearch()
         if (result.count() > 0)
         {
             resultValue = 0;
-            
+
             if (!m_outputFormat->writeAddresseeList(result, std::cout))
             {
                 return 1;
@@ -529,7 +531,7 @@ int KABCClient::performSearch()
 
 ///////////////////////////////////////////////////////////////////////////////
 // taken from KAddressBook/KABCTools (c) Tobias Koenig
-    
+
 void KABCClient::mergePictures(KABC::Picture& master, const KABC::Picture slave)
 {
     if (master.isIntern())
@@ -556,7 +558,7 @@ void KABCClient::mergePictures(KABC::Picture& master, const KABC::Picture slave)
 
 ///////////////////////////////////////////////////////////////////////////////
 // derived from KAddressBook/KABCTools::mergeContacts (c) Tobias Koenig
-        
+
 void KABCClient::mergeAddressees(KABC::Addressee& master, const KABC::Addressee& slave)
 {
     if (slave.isEmpty()) return;
@@ -578,7 +580,7 @@ void KABCClient::mergeAddressees(KABC::Addressee& master, const KABC::Addressee&
     // CATEGORIES
     const QStringList categories       = slave.categories();
     const QStringList masterCategories = master.categories();
-    
+
     QStringList newCategories = masterCategories;
     QStringList::ConstIterator it;
     for (it = categories.begin(); it != categories.end(); ++it)
@@ -595,7 +597,7 @@ void KABCClient::mergeAddressees(KABC::Addressee& master, const KABC::Addressee&
     // EMAIL
     const QStringList emails       = slave.emails();
     const QStringList masterEmails = master.emails();
-    
+
     for (it = emails.begin(); it != emails.end(); ++it)
     {
         if (!masterEmails.contains(*it))
@@ -666,14 +668,14 @@ void KABCClient::mergeAddressees(KABC::Addressee& master, const KABC::Addressee&
     // TEL
     const KABC::PhoneNumber::List phones       = slave.phoneNumbers();
     const KABC::PhoneNumber::List masterPhones = master.phoneNumbers();
-    
+
     KABC::PhoneNumber::List::ConstIterator phoneIt;
     for (phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt)
     {
         if (!masterPhones.contains(*phoneIt))
             master.insertPhoneNumber(*phoneIt);
     }
-        
+
     // TITLE
     if (master.title().isEmpty() && !slave.title().isEmpty())
         master.setTitle(slave.title());
@@ -691,7 +693,7 @@ void KABCClient::mergeAddressees(KABC::Addressee& master, const KABC::Addressee&
     // X-
     const QStringList customs       = slave.customs();
     const QStringList masterCustoms = master.customs();
-    
+
     QStringList newCustoms = masterCustoms;
     for (it = customs.begin(); it != customs.end(); ++it)
     {
@@ -702,56 +704,56 @@ void KABCClient::mergeAddressees(KABC::Addressee& master, const KABC::Addressee&
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
-QTextCodec* KABCClient::codecForName(const QCString& name)
+
+QTextCodec* KABCClient::codecForName(const QByteArray& name)
 {
     if (name.isEmpty()) return 0;
 
-    if (name.lower() == "utf-8" || name.lower() == "utf8" || name == "utf")
+    if (name.toLower() == "utf-8" || name.toLower() == "utf8" || name == "utf")
     {
         return QTextCodec::codecForName("UTF-8");
     }
 
-    if (name.lower() == "local" || name.lower() == "locale")
+    if (name.toLower() == "local" || name.toLower() == "locale")
     {
         return QTextCodec::codecForLocale();
     }
 
-    return QTextCodec::codecForName(name.upper());
+    return QTextCodec::codecForName(name.toUpper());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-    
+
 void KABCClient::slotAddressBookLoaded()
 {
     // disconnect so we are not disturbed during operations
     QObject::disconnect(m_addressBook, SIGNAL(addressBookChanged(AddressBook*)),
                         this, SLOT(slotAddressBookLoaded()));
-    
+
     int result = 1;
-    
+
     switch (m_operation)
     {
         case Add:
             result = performAdd();
             break;
-        
+
         case Remove:
             result = performRemove();
             break;
-        
+
         case Merge:
             result = performMerge();
             break;
-        
+
         case List:
             result = performList();
             break;
-    
+
         case Search:
             result = performSearch();
             break;
-    
+
         default:
             break;
     }

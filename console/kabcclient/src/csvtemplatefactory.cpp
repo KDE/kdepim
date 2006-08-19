@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,12 +17,13 @@
 //
 
 // Qt includes
-#include <qdir.h>
-#include <qfile.h>
-#include <qfileinfo.h>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
 
 // KDE includes
 #include <kconfig.h>
+#include <kinstance.h>
 #include <kstandarddirs.h>
 
 // local includes
@@ -43,7 +44,7 @@ CSVTemplateFactory::~CSVTemplateFactory()
     QMap<QString, CSVTemplate*>::iterator endIt = m_templates.end();
     for (; it != endIt; ++it)
     {
-        CSVTemplate* temp = it.data();
+        CSVTemplate* temp = it.value();
         delete temp;
     }
 }
@@ -72,11 +73,11 @@ CSVTemplate* CSVTemplateFactory::createTemplate(const QString& name)
 CSVTemplate* CSVTemplateFactory::createCachedTemplate(const QString& name)
 {
     if (name.isEmpty()) return 0;
-    
+
     QMap<QString, CSVTemplate*>::iterator it = m_templates.find(name);
     CSVTemplate* temp = 0;
-    if (it != m_templates.end()) temp = it.data();
-    
+    if (it != m_templates.end()) temp = it.value();
+
     if (temp == 0)
     {
         temp = createTemplate(name);
@@ -95,7 +96,7 @@ QMap<QString, QString> CSVTemplateFactory::templateNames()
 {
     if (m_templateNames.isEmpty())
     {
-        addTemplateNames(QDir::currentDirPath());
+        addTemplateNames(QDir::currentPath());
 
         QStringList templateDirs =
             KGlobal::instance()->dirs()->findDirs("data", "kaddressbook/csv-templates");
@@ -121,9 +122,9 @@ QString CSVTemplateFactory::findTemplateFile(const QString& name) const
 
     // check current working directory first
     QFileInfo fileInfo(filename);
-    if (fileInfo.exists() && fileInfo.isReadable()) return fileInfo.absFilePath();
-        
-    return locate("data", "kaddressbook/csv-templates/" + filename);
+    if (fileInfo.exists() && fileInfo.isReadable()) return fileInfo.absoluteFilePath();
+
+    return KStandardDirs::locate("data", "kaddressbook/csv-templates/" + filename);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -142,7 +143,7 @@ KConfigBase* CSVTemplateFactory::loadTemplateConfig(const QString& filename) con
         delete config;
         config = 0;
     }
-    
+
     return config;
 }
 
@@ -154,26 +155,29 @@ void CSVTemplateFactory::addTemplateNames(const QString& directory)
 
     QFileInfo dirInfo(directory);
     if (!dirInfo.isDir()) return;
-    
+
     const QString extension = ".desktop";
-    QDir dir(dirInfo.absFilePath());
-    const QFileInfoList* fileInfos = dir.entryInfoList("*" + extension);
-    QFileInfoListIterator it(*fileInfos);
-    
-    for (; it.current() != 0; ++it)
+    const QStringList filters(QString::fromUtf8("*") + extension);
+    QDir dir(dirInfo.absoluteFilePath());
+    const QFileInfoList fileInfos = dir.entryInfoList(filters);
+
+    QFileInfoList::const_iterator it    = fileInfos.begin();
+    QFileInfoList::const_iterator endIt = fileInfos.end();
+
+    for (; it != endIt; ++it)
     {
-        QFileInfo fileInfo = *(it.current());
+        QFileInfo fileInfo = *it;
 
         if (!fileInfo.isFile()) continue;
         if (!fileInfo.isReadable()) continue;
-        
+
         QString name = fileInfo.fileName();
         name = name.left(name.length() - extension.length());
 
         if (name.isEmpty()) continue;
         if (!m_templateNames[name].isEmpty()) continue;
-                    
-        KConfigBase* templateConfig = loadTemplateConfig(fileInfo.absFilePath());
+
+        KConfigBase* templateConfig = loadTemplateConfig(fileInfo.absoluteFilePath());
         if (templateConfig == 0) continue;
 
         templateConfig->setGroup("Misc");

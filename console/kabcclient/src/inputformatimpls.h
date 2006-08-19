@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -36,11 +36,11 @@ class UIDInput : public InputFormat
 {
 public:
     virtual QString description() const;
-    
-    virtual bool setOptions(const QCString& options);
-    
+
+    virtual bool setOptions(const QByteArray& options);
+
     virtual bool setCodec(QTextCodec* codec);
-    
+
     virtual KABC::Addressee readAddressee(std::istream& stream);
 
 private:
@@ -52,13 +52,13 @@ class VCardInput : public InputFormat
 public:
     VCardInput();
     virtual ~VCardInput();
-    
+
     virtual QString description() const;
-    
-    virtual bool setOptions(const QCString& options);
+
+    virtual bool setOptions(const QByteArray& options);
 
     virtual bool setCodec(QTextCodec* codec);
-    
+
     virtual KABC::Addressee readAddressee(std::istream& stream);
 
 private:
@@ -70,11 +70,11 @@ class EmailInput : public InputFormat
 {
 public:
     virtual QString description() const;
-    
-    virtual bool setOptions(const QCString& options);
-    
+
+    virtual bool setOptions(const QByteArray& options);
+
     virtual bool setCodec(QTextCodec* codec);
-    
+
     virtual KABC::Addressee readAddressee(std::istream& stream);
 
 private:
@@ -85,11 +85,11 @@ class SearchInput : public InputFormat
 {
 public:
     virtual QString description() const;
-    
-    virtual bool setOptions(const QCString& options);
-    
+
+    virtual bool setOptions(const QByteArray& options);
+
     virtual bool setCodec(QTextCodec* codec);
-    
+
     virtual KABC::Addressee readAddressee(std::istream& stream);
 
 private:
@@ -100,11 +100,11 @@ class NameInput : public InputFormat
 {
 public:
     virtual QString description() const;
-    
-    virtual bool setOptions(const QCString& options);
-    
+
+    virtual bool setOptions(const QByteArray& options);
+
     virtual bool setCodec(QTextCodec* codec);
-    
+
     virtual KABC::Addressee readAddressee(std::istream& stream);
 
 private:
@@ -115,14 +115,14 @@ class CSVInput : public InputFormat
 {
 public:
     CSVInput(CSVTemplateFactory* templateFactory);
-    
+
     virtual QString description() const;
-    
-    virtual bool setOptions(const QCString& options);
+
+    virtual bool setOptions(const QByteArray& options);
     virtual QString optionUsage() const;
-    
+
     virtual bool setCodec(QTextCodec* codec);
-    
+
     virtual KABC::Addressee readAddressee(std::istream& stream);
 
 private:
@@ -141,11 +141,11 @@ public:
     virtual ~DialogInput();
 
     virtual QString description() const;
-    
-    virtual bool setOptions(const QCString& options);
-    
+
+    virtual bool setOptions(const QByteArray& options);
+
     virtual bool setCodec(QTextCodec* codec);
-    
+
     virtual KABC::Addressee readAddressee(std::istream& stream);
 
 private:
