@@ -178,7 +178,7 @@ bool KABCClient::initOperation()
 //  Async Loading and starting operation of signal does not work
 //  in case no resources can be loaded and a new standard resource is created
 //  because in this case AddressBook doesn't emit signals :(
-//  Workaround by loading syncronous and having the slot called by a
+//  Workaround by loading synchronous and having the slot called by a
 //  single shot timer
 
 //     m_addressBook = KABC::StdAddressBook::self(true);

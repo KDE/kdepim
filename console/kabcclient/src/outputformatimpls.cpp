@@ -144,7 +144,7 @@ QString VCardOutput::optionUsage() const
     QString usage =
         i18n("Optionally use a different vCard version (default is %1)").arg("3.0");
 
-    usage += "\n";
+    usage += '\n';
 
     usage += "v2.1\t";
     usage += i18n("Uses the vCard version 2.1");
@@ -275,12 +275,12 @@ QString EmailOutput::optionUsage() const
 {
     QString usage = i18n("Comma separated list of: allemails, withname");
 
-    usage += "\n";
+    usage += '\n';
 
     usage += "allemails\t";
     usage += i18n("List all email addresses of each contact");
 
-    usage += "\n";
+    usage += '\n';
 
     usage += "withname\t";
     usage += i18n("Prepend formatted name, e.g\n\t\tJohn Doe <jdoe@foo.com>");
@@ -419,26 +419,26 @@ QString MuttOutput::optionUsage() const
     QString usage =
         i18n("Comma separated list of: allemails, query, alias, altkeys. Default is alias");
 
-    usage += "\n";
+    usage += '\n';
 
     usage += "allemails\t";
     usage += i18n("List all email addresses of each contact");
 
-    usage += "\n";
+    usage += '\n';
 
     usage += "query\t\t";
     usage += i18n("Use mutt's query format, e.g.\n\t\t"
                   "jdoe@foo.com <tab> John Doe\n\t\t"
                   "Conflicts with alias");
 
-    usage += "\n";
+    usage += '\n';
 
     usage += "alias\t\t";
     usage += i18n("Use mutt's alias format, e.g.\n\t\t"
                   "alias JohDoe<tab>John Doe <jdoe@foo.com>\n\t\t"
                   "Conflicts with query");
 
-    usage += "\n";
+    usage += '\n';
 
     usage += "altkeys\t\t";
     usage += i18n("Use alternative keys with alias format, e.g.\n\t\t"
@@ -628,7 +628,7 @@ QString CSVOutput::optionUsage() const
     QString usage =
         i18n("Specify one of the following CSV templates:");
 
-    usage += "\n";
+    usage += '\n';
 
     const QMap<QString, QString> templateNames = m_templateFactory->templateNames();
 
@@ -645,7 +645,7 @@ QString CSVOutput::optionUsage() const
 
         usage += templateName;
 
-        usage += "\n";
+        usage += '\n';
     }
 
     return usage;

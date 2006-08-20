@@ -38,7 +38,7 @@ namespace KABC
 *
 * @note Implementations can call writeAddressee() from writeAddresseeList() if
 * that works for their format restrictions.
-* If writeAddressee() is called from an outside caller, it can savely assume
+* If writeAddressee() is called from an outside caller, it can safely assume
 * that there is no relation between two calls, i.e. the two calls belong to
 * different operations. So in case an implementation needs to write some
 * header or footer it can do so in both writeAddressee() and

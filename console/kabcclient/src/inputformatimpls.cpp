@@ -161,7 +161,7 @@ KABC::Addressee VCardInput::readAddressee(std::istream& stream)
         inputLine = m_codec->toUnicode(line.c_str(), line.size());
 
         input += inputLine;
-        input += "\n";
+        input += '\n';
         if (inputLine.startsWith("END:VCARD")) break;
     }
 
@@ -396,7 +396,7 @@ QString CSVInput::optionUsage() const
     QString usage =
         i18n("Specify one of the following CSV templates:");
 
-    usage += "\n";
+    usage += '\n';
 
     const QMap<QString, QString> templateNames = m_templateFactory->templateNames();
 
@@ -413,7 +413,7 @@ QString CSVInput::optionUsage() const
 
         usage += templateName;
 
-        usage += "\n";
+        usage += '\n';
     }
 
     return usage;
@@ -497,7 +497,7 @@ QStringList CSVInput::split(const QString& values) const
             else
             {
                 list.append(remaining);
-                remaining = QString::null;
+                remaining.clear();
             }
 
             quoted = false;
@@ -523,7 +523,7 @@ QStringList CSVInput::split(const QString& values) const
                 else
                 {
                     list.append(remaining);
-                    remaining = QString::null;
+                    remaining.clear();
                 }
             }
         }

@@ -144,7 +144,7 @@ public:
     *
     * @param name the input format name, as taken from the commandline
     * @return a new InputFormat instance of the input parser associated with
-    *         the given name or @c 0 if the name is unkown to the factory
+    *         the given name or @c 0 if the name is unknown to the factory
     *
     * @see inputFormatList()
     * @see InputFormat
@@ -160,7 +160,7 @@ public:
     *
     * @param name the output format name, as taken from the commandline
     * @return a new OutputFormat instance of the output formatter associated
-    *         with the given name or @c 0 if the name is unkown to the factory
+    *         with the given name or @c 0 if the name is unknown to the factory
     *
     * @see inputFormatList()
     * @see InputFormat
