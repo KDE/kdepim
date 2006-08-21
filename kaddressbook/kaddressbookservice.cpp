@@ -31,7 +31,7 @@ KAddressBookService::KAddressBookService( KAB::Core *core )
   : mCore( core )
 {
   new ServiceAdaptor( this );
-  QDBus::sessionBus().registerObject( "/AddressBookService", this, QDBusConnection::ExportAdaptors );
+  QDBusConnection::sessionBus().registerObject( "/AddressBookService", this, QDBusConnection::ExportAdaptors );
 }
 
 void KAddressBookService::importVCard( const QString& vCard )

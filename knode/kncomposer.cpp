@@ -212,7 +212,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   connect(v_iew->e_dit, SIGNAL(CursorPositionChanged()), SLOT(slotUpdateCursorPos()));
   connect(v_iew->e_dit, SIGNAL(toggle_overwrite_signal()), SLOT(slotUpdateStatusBar()));
 
-  QDBus::sessionBus().registerObject( "/Composer", this, QDBusConnection::ExportSlots );
+  QDBusConnection::sessionBus().registerObject( "/Composer", this, QDBusConnection::ExportScriptableSlots );
   //------------------------------- <Actions> --------------------------------------
 
   //file menu

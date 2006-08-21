@@ -70,7 +70,7 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, QObject *parent,
   setXMLFile( "kaddressbook_part.rc" );
 
   new CoreAdaptor( this );
-  QDBus::sessionBus().registerObject( "/", this, QDBusConnection::ExportAdaptors );
+  QDBusConnection::sessionBus().registerObject( "/", this, QDBusConnection::ExportAdaptors );
 }
 
 KAddressbookPart::~KAddressbookPart()

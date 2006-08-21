@@ -78,7 +78,7 @@ KAddressBookMain::KAddressBookMain( const QString &file )
   setAutoSaveSettings();
 
   new CoreAdaptor( this );
-  QDBus::sessionBus().registerObject("/", this, QDBusConnection::ExportAdaptors);
+  QDBusConnection::sessionBus().registerObject("/", this, QDBusConnection::ExportAdaptors);
 }
 
 KAddressBookMain::~KAddressBookMain()

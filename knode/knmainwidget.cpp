@@ -215,7 +215,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   p_gp = new Kpgp::Module();
   knGlobals.pgp = p_gp;
 
-  QDBus::sessionBus().registerObject( "/", this, QDBusConnection::ExportSlots );
+  QDBusConnection::sessionBus().registerObject( "/", this, QDBusConnection::ExportScriptableSlots );
   //-------------------------------- </CORE> -----------------------------------
 
   //apply saved options

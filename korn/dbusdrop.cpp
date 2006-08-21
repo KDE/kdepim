@@ -206,7 +206,7 @@ void DBUSDrop::setDBUSName( const QString& name)
 //		_interface->changeName( name );
 //	else
 //		_interface = new DBUSDropInterface( this, name.toUtf8() );
-	QDBus::sessionBus().registerObject( '/' + name, this, QDBusConnection::ExportAdaptors );
+	QDBusConnection::sessionBus().registerObject( '/' + name, this, QDBusConnection::ExportAdaptors );
 }
 
 #include "dbusdrop.moc"

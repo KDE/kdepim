@@ -78,7 +78,7 @@ IdentityManager::IdentityManager( bool readonly, QObject * parent, const char * 
   : ConfigManager( parent, name ) //, DCOPObject( newDCOPObjectName() )
 {
   new IdentityManagerAdaptor( this );
-  mIface = new OrgKdePimIdentityManagerInterface("org.kde.pim.IdentityManager", "/", QDBus::sessionBus() );
+  mIface = new OrgKdePimIdentityManagerInterface("org.kde.pim.IdentityManager", "/", QDBusConnection::sessionBus() );
   connect( mIface, SIGNAL(identitiesChanged(QString)), this, SLOT(slotIdentitiesChanged(QString)) );
 
   mReadOnly = readonly;
@@ -162,7 +162,7 @@ void IdentityManager::commit()
   emit ConfigManager::changed(); // normal signal
 
   // DBus signal for other IdentityManager instances
-  emit identitiesChanged( QDBus::sessionBus().baseService() );
+  emit identitiesChanged( QDBusConnection::sessionBus().baseService() );
 }
 
 void IdentityManager::rollback()
@@ -510,7 +510,7 @@ QStringList KPIM::IdentityManager::allEmails() const
 
 void KPIM::IdentityManager::slotIdentitiesChanged( const QString &id )
 {
-  if ( id != QDBus::sessionBus().baseService() ) {
+  if ( id != QDBusConnection::sessionBus().baseService() ) {
     mConfig->reparseConfiguration();
     Q_ASSERT( !hasPendingChanges() );
     readConfig( mConfig );

@@ -63,7 +63,7 @@ BoxContainerItem::BoxContainerItem( QObject * parent )
 
 	new BoxContainerItemAdaptor( this );
 #warning Put some useful DBus object path here
-	QDBus::sessionBus().registerObject( "/", this, QDBusConnection::ExportAdaptors );
+	QDBusConnection::sessionBus().registerObject( "/", this, QDBusConnection::ExportAdaptors );
 }
 
 BoxContainerItem::~BoxContainerItem()
