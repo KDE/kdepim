@@ -58,7 +58,7 @@ class QComboBox;
 class KNComposer : public KMainWindow {
 
   Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.kde.knode.composer");
+  Q_CLASSINFO( "D-Bus Interface", "org.kde.knode.composer")
 
   public:
     enum composerResult { CRsendNow, CRsendLater, CRdelAsk,

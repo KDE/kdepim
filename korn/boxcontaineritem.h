@@ -51,7 +51,7 @@ template< class T > class QList;
  */
 class BoxContainerItem : public AccountManager
 { Q_OBJECT
-  Q_CLASSINFO("D-Bus Interface", "org.kde.korn.BoxContainerItem");
+  Q_CLASSINFO("D-Bus Interface", "org.kde.korn.BoxContainerItem")
 public:
 	/**
 	 * Standaard QObject-constuctor
