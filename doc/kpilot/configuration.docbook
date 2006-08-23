@@ -1028,6 +1028,18 @@ available, please refer to the <link linkend="page-hotsync">HotSync Setup sectio
 handbook.
 </para>
 
+<note id="location-sync"><title>Location of appointments</title>
+<para>
+For syncing the location of appointments there is a special feature build-in,
+because some palm devices do not support a specialised location field in their
+database. The location will be synced in the first line of
+the notes field, e.g. like 
+<computeroutput>*big room, street 20*</computeroutput>.
+If you like to enter a location in your Palm, make sure to only use the first line without linebreaks and start and close the first line 
+with a star (<userinput>*</userinput>).
+</para>
+</note>
+
 </sect2>
 
 

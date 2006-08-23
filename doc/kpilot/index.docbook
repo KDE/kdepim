@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "&kpilot;">
-  <!ENTITY kpilotver "4.4.3">
+  <!ENTITY kpilotver "4.4.3 (with one update for Proko2 2.1.4)">
   <!ENTITY package "kdepim">
   <!ENTITY USB "<acronym>USB</acronym>">
   <!ENTITY PalmOne '<trademark class="registered">PalmOne</trademark>'>
@@ -58,6 +58,10 @@
 	<firstname>Dan</firstname>
 	<surname>Pilone</surname>
 </author>
+<author>
+	<firstname>Bernhard</firstname>
+	<surname>Reiter</surname>
+</author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
@@ -76,10 +80,15 @@
 <holder>Carlos Woelz</holder>
 </copyright>
 
+<copyright>
+<year>2006</year>
+<holder>Bernhard Reiter</holder>
+</copyright>
+
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2004-06-27</date>
+<date>2006-08-23</date>
 <releaseinfo>&kpilotver;</releaseinfo>
 
 <abstract>

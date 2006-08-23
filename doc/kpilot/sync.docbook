@@ -354,8 +354,15 @@ Useful for keeping the clock of the &handheld; accurate.
 <term><guilabel>Calendar (KOrganizer)</guilabel></term>
 <listitem><para>
 Synchronizes the Datebook application with &korganizer; or with a iCalendar file of
-your choice.
-</para></listitem>
+your choice. 
+
+</para>
+<para>
+There is a way to <link linkend="location-sync">sync locations</link> 
+of appointments.
+</para>
+
+</listitem>
 </varlistentry>
 
 <varlistentry>
