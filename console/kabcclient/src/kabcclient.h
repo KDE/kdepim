@@ -36,7 +36,7 @@ namespace KABC
     class AddressBook;
     class Addressee;
     class Picture;
-};
+}
 
 class KABCClient: public QObject
 {

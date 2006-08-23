@@ -27,7 +27,7 @@ namespace KABC
 {
     class Addressee;
     class AddresseeList;
-};
+}
 
 /**
 * @brief Interface for output formatters

@@ -28,7 +28,7 @@ class QTextCodec;
 namespace KABC
 {
     class Addressee;
-};
+}
 
 /**
 * @brief Interface for input format parsers
