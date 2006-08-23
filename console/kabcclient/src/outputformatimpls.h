@@ -24,7 +24,7 @@
 
 // forward declarations
 class CSVTemplate;
-class CSVTemplateFactory;;
+class CSVTemplateFactory;
 class QTextCodec;
 
 namespace KABC
