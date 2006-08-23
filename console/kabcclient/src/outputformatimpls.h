@@ -30,7 +30,7 @@ class QTextCodec;
 namespace KABC
 {
     class VCardConverter;
-};
+}
 
 class UIDOutput : public OutputFormat
 {

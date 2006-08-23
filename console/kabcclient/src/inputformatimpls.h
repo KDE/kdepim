@@ -30,7 +30,7 @@ class DialogInputPrivate;
 namespace KABC
 {
     class VCardConverter;
-};
+}
 
 class UIDInput : public InputFormat
 {
