@@ -9,17 +9,17 @@
  * under the terms of the GNU General Public License, version 2, as
  * published by the Free Software Foundation and available as file
  * GPL_V2 which is distributed along with indexlib.
- * 
+ *
  * Indexlib is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA
- * 
+ *
  * In addition, as a special exception, the copyright holders give
  * permission to link the code of this program with any edition of
  * the Qt library by Trolltech AS, Norway (or with modified versions
@@ -47,11 +47,11 @@ namespace indexlib {
 	/**
 	 * Construct an index from a basename.
 	 *
-	 * Basename can be either a directory in which case the index will consist of a bunch of 
-	 * files in that directory all starting with "index" (this is the prefered usage: an index is a directory)
-	 * or it can be any other partial file name in which casethis name will be the starting name of all the 
+	 * Basename can be either a directory in which case the index will consist of a bunch of
+	 * files in that directory all starting with "index" (this is the preferred usage: an index is a directory)
+	 * or it can be any other partial file name in which casethis name will be the starting name of all the
 	 * index files.
-	 * 
+	 *
 	 * If basename ends with '/' a directory is created if it does not exist.
 	 *
 	 * This will return something like "new quotes(basename)" but by using this, you do not need to include quotes.h
