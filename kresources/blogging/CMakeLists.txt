@@ -18,7 +18,7 @@ kde4_automoc(${kcal_blogging_LIB_SRCS})
 
 kde4_add_library(kcal_blogging SHARED ${kcal_blogging_LIB_SRCS})
 
-target_link_libraries(kcal_blogging  ${KDE4_KDECORE_LIBS} kgroupwarebase ${KDE4_KCAL_LIBS} kdepim kcal_blogging )
+target_link_libraries(kcal_blogging  ${KDE4_KDECORE_LIBS} kgroupwarebase ${KDE4_KCAL_LIBS} kdepim)
 
 set_target_properties(kcal_blogging PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kcal_blogging  DESTINATION ${LIB_INSTALL_DIR})

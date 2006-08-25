@@ -15,7 +15,7 @@ kde4_automoc(${kcal_resourcefeatureplan_LIB_SRCS})
 
 kde4_add_library(kcal_resourcefeatureplan SHARED ${kcal_resourcefeatureplan_LIB_SRCS})
 
-target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim kcal_resourcefeatureplan )
+target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim)
 
 set_target_properties(kcal_resourcefeatureplan PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kcal_resourcefeatureplan  DESTINATION ${LIB_INSTALL_DIR})
