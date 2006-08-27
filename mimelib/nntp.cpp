@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <mimelib/nntp.h>
 #include <config.h>
+#include <kdefakes.h>
 
 #define NNTP_PORT 119
 #define RECV_BUFFER_SIZE  8192
