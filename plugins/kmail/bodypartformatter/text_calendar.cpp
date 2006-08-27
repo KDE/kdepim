@@ -364,7 +364,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           return i18n( "Remove incidence from my calendar" );
       }
 
-      return QString::null;
+      return QString();
     }
 };
 

@@ -366,7 +366,7 @@ QString EGroupwareWizard::validate()
       mXMLRPC->text().isEmpty() )
     return i18n( "Please fill in all fields." );
 
-  return QString::null;
+  return QString();
 }
 
 void EGroupwareWizard::usrReadConfig()

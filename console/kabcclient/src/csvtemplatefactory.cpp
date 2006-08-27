@@ -116,7 +116,7 @@ QMap<QString, QString> CSVTemplateFactory::templateNames()
 
 QString CSVTemplateFactory::findTemplateFile(const QString& name) const
 {
-    if (name.isEmpty()) return QString::null;
+    if (name.isEmpty()) return QString();
 
     QString filename = name + ".desktop";
 

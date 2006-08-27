@@ -369,7 +369,7 @@ QString GroupwiseWizard::validate()
       return i18n( "Please fill in all fields." );
   }
 
-  return QString::null;
+  return QString();
 }
 
 void GroupwiseWizard::usrReadConfig()

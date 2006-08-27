@@ -269,7 +269,7 @@ QString SloxWizard::validate()
       mUserEdit->text().isEmpty() ||
       mPasswordEdit->text().isEmpty() )
     return i18n( "Please fill in all fields." );
-  return QString::null;
+  return QString();
 }
 
 void SloxWizard::usrReadConfig()

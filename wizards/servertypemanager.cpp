@@ -41,7 +41,7 @@ ServerTypeManager::~ServerTypeManager()
 ServerTypeManager* ServerTypeManager::self()
 {
   if ( !mSelf )
-    serverManagerDeleter.setObject( mSelf, new ServerTypeManager( 0, 
+    serverManagerDeleter.setObject( mSelf, new ServerTypeManager( 0,
                                     "ServerTypeManager" ) );
 
   return mSelf;
@@ -56,7 +56,7 @@ QString ServerTypeManager::title( const QString& identifier ) const
 {
   ServerTypeFactoryMap::ConstIterator it = mServerTypeFactoryMap.find( identifier );
   if ( it == mServerTypeFactoryMap.end() )
-    return QString::null;
+    return QString();
   else
     return it.value()->title();
 }

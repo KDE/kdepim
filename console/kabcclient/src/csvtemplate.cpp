@@ -110,11 +110,11 @@ CSVTemplate::CSVTemplate(KConfigBase* config) : m_columns(0)
 
 QString CSVTemplate::fieldText(int column, const KABC::Addressee& addressee) const
 {
-    if (column < 0 || addressee.isEmpty()) return QString::null;
-    if (m_columnToField.isEmpty()) return QString::null;
+    if (column < 0 || addressee.isEmpty()) return QString();
+    if (m_columnToField.isEmpty()) return QString();
 
     QMap<int, int>::const_iterator it = m_columnToField.find(column);
-    if (it == m_columnToField.end()) return QString::null;
+    if (it == m_columnToField.end()) return QString();
 
     QString text;
     switch (it.value())
@@ -455,7 +455,7 @@ CSVTemplate::CSVTemplate(const QString& datePattern)
 
 QString CSVTemplate::formatDate(const QDateTime& date) const
 {
-    if (!date.isValid()) return QString::null;
+    if (!date.isValid()) return QString();
 
     return date.toString(m_dateFormat);
 }

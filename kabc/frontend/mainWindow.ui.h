@@ -22,10 +22,10 @@ class AddresseeItem : public QListViewItem
   public:
     AddresseeItem( QListView *parent, const Addressee &a ) :
       QListViewItem( parent, a.realName(), a.uid() ), mAddressee( a ) {}
-      
+
     void setAddressee( const Addressee &a ) { mAddressee = a; }
     Addressee &addressee() { return mAddressee; }
-    
+
   private:
     Addressee mAddressee;
 };
@@ -33,7 +33,7 @@ class AddresseeItem : public QListViewItem
 void MainWindow::init()
 {
   mAddressBook = KABC::StdAddressBook::self( true );
-  
+
   mCurrentItem = 0;
 
   mEmailListView->header()->hide();
@@ -72,9 +72,9 @@ void MainWindow::loadAddressBook( const QString &fileName )
 
   mAddresseeList->clear();
   mCurrentItem = 0;
-  mCurrentAddress = QString::null;
+  mCurrentAddress.clear();
   readAddressee( Addressee() );
-    
+
   KABC::AddressBook::Iterator it;
   for( it = mAddressBook->begin(); it != mAddressBook->end(); ++it ) {
     new AddresseeItem( mAddresseeList, (*it) );
@@ -85,7 +85,7 @@ void MainWindow::updateAddressee( QListViewItem *item )
 {
   AddresseeItem *addresseeItem = dynamic_cast<AddresseeItem *>( item );
   if ( !addresseeItem ) return;
-    
+
   if (mCurrentItem ) {
     writeAddress( mCurrentAddress );
     writePhone( mCurrentPhone );
@@ -103,8 +103,8 @@ void MainWindow::updateAddressee( QListViewItem *item )
 
 void MainWindow::readAddressee( const KABC::Addressee &a )
 {
-  kDebug() << "MainWindow::readAddressee(): " << a.name() << endl;  
-    
+  kDebug() << "MainWindow::readAddressee(): " << a.name() << endl;
+
   mNameEdit->setText( a.name() );
   mUrlEdit->setText( a.url().url() );
   mAdditionalNameEdit->setText( a.additionalName() );
@@ -121,34 +121,34 @@ void MainWindow::readAddressee( const KABC::Addressee &a )
   mNoteEdit->setText( a.note() );
 //  mLabelEdit->setText( a.label() );
 
-  mEmailListView->clear();  
+  mEmailListView->clear();
   QStringList emails = a.emails();
   QStringList::ConstIterator it3;
   for( it3 = emails.begin(); it3 != emails.end(); ++it3 ) {
     new QListViewItem( mEmailListView, *it3 );
   }
-  
-  mCategoryListView->clear();  
+
+  mCategoryListView->clear();
   QStringList categories = a.categories();
   QStringList::ConstIterator it4;
   for( it4 = categories.begin(); it4 != categories.end(); ++it4 ) {
     new QListViewItem( mCategoryListView, *it4 );
   }
-  
-  mCustomListView->clear();  
+
+  mCustomListView->clear();
   QStringList customs = a.customs();
   QStringList::ConstIterator it5;
   for( it5 = customs.begin(); it5 != customs.end(); ++it5 ) {
     int posDash = (*it5).find( "-" );
     int posColon = (*it5).find( ":" );
-  
+
     QString app = (*it5).left( posDash );
     QString cname = (*it5).mid( posDash + 1, posColon - posDash - 1 );
     QString value = (*it5).mid( posColon + 1 );
-  
+
     new QListViewItem( mCustomListView, app, cname, value );
   }
-  
+
   Address::List addresses = a.addresses();
   mAddressIdCombo->clear();
   Address::List::ConstIterator it;
@@ -156,7 +156,7 @@ void MainWindow::readAddressee( const KABC::Addressee &a )
     mAddressIdCombo->insertItem( (*it).id() );
   }
   if ( mAddressIdCombo->count() > 0 ) mCurrentAddress = mAddressIdCombo->currentText();
-  else mCurrentAddress = QString::null;
+  else mCurrentAddress.clear();
   readAddress( mCurrentAddress );
 
   mPhoneIdCombo->clear();
@@ -176,7 +176,7 @@ KABC::Addressee MainWindow::writeAddressee( const KABC::Addressee &addressee )
   if ( !mUrlEdit->text().isEmpty() ) {
     a.setUrl( KUrl( mUrlEdit->text() ) );
   }
-  
+
   a.setAdditionalName( mAdditionalNameEdit->text() );
   a.setSuffix( mSuffixEdit->text() );
   a.setGivenName( mGivenNameEdit->text() );
@@ -205,11 +205,11 @@ void MainWindow::newEntry()
                                         QString::null, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
-  
+
   Addressee a;
   a.setName( name );
   mAddressBook->insertAddressee( a );
-  
+
   new AddresseeItem( mAddresseeList, a );
 }
 
@@ -227,12 +227,12 @@ void MainWindow::removeEntry()
 void MainWindow::updateAddress( int id )
 {
   if( !mCurrentItem ) return;
-  
+
   writeAddress( mCurrentAddress );
   if ( mAddressIdCombo->count()  > 0 ) {
     mCurrentAddress = mAddressIdCombo->text( id );
   } else {
-    mCurrentAddress = QString::null;
+    mCurrentAddress.clear();
   }
   readAddress( mCurrentAddress );
 }
@@ -240,7 +240,7 @@ void MainWindow::updateAddress( int id )
 KABC::Address MainWindow::writeAddress( const KABC::Address &address )
 {
   Address a( address );
-  
+
   a.setPostOfficeBox( mAddressPostOfficeBoxEdit->text() );
   a.setExtended( mAddressExtendedEdit->text() );
   a.setStreet( mAddressStreetEdit->text() );
@@ -249,7 +249,7 @@ KABC::Address MainWindow::writeAddress( const KABC::Address &address )
   a.setLabel( mAddressLabelEdit->text() );
   a.setPostalCode( mAddressPostalCodeEdit->text() );
   a.setCountry( mAddressCountryEdit->text() );
-  
+
   int type = 0;
   if ( mAddressDomCheck->isChecked() ) type |= Address::Dom;
   if ( mAddressIntlCheck->isChecked() ) type |= Address::Intl;
@@ -259,20 +259,20 @@ KABC::Address MainWindow::writeAddress( const KABC::Address &address )
   if ( mAddressPrefCheck->isChecked() ) type |= Address::Pref;
   if ( mAddressWorkCheck->isChecked() ) type |= Address::Work;
   a.setType( type );
-  
+
   return a;
 }
 
 void MainWindow::writeAddress( const QString &id )
 {
   if ( !mCurrentItem ) return;
- 
+
   if ( id.isEmpty() ) return;
- 
+
   Address address;
   address.setId( id );
   address = writeAddress( address );
- 
+
   mCurrentItem->addressee().insertAddress( address );
 }
 
@@ -286,7 +286,7 @@ void MainWindow::readAddress( const KABC::Address &a )
   mAddressLabelEdit->setText( a.label() );
   mAddressPostalCodeEdit->setText( a.postalCode() );
   mAddressCountryEdit->setText( a.country() );
-  
+
   int type = a.type();
   if ( type & Address::Dom ) mAddressDomCheck->setChecked( true );
   else mAddressDomCheck->setChecked( false );
@@ -318,12 +318,12 @@ void MainWindow::readAddress( const QString &id )
 void MainWindow::updatePhone( int id )
 {
   if( !mCurrentItem ) return;
-  
+
   writePhone( mCurrentPhone );
   if ( mPhoneIdCombo->count()  > 0 ) {
     mCurrentPhone = mPhoneIdCombo->text( id );
   } else {
-    mCurrentPhone = QString::null;
+    mCurrentPhone.clear();
   }
   readPhone( mCurrentPhone );
 }
@@ -333,7 +333,7 @@ KABC::PhoneNumber MainWindow::writePhone( const KABC::PhoneNumber &phoneNumber )
   PhoneNumber p( phoneNumber );
 
   p.setNumber( mPhoneNumberEdit->text() );
-  
+
   int type = 0;
   if ( mPhoneMsgCheck->isChecked() ) type |= PhoneNumber::Msg;
   if ( mPhoneVoiceCheck->isChecked() ) type |= PhoneNumber::Voice;
@@ -350,27 +350,27 @@ KABC::PhoneNumber MainWindow::writePhone( const KABC::PhoneNumber &phoneNumber )
   if ( mPhonePcsCheck->isChecked() ) type |= PhoneNumber::Pcs;
   if ( mPhonePagerCheck->isChecked() ) type |= PhoneNumber::Pager;
   p.setType( type );
-  
+
   return p;
 }
 
 void MainWindow::writePhone( const QString &id )
 {
   if ( !mCurrentItem ) return;
- 
+
   if ( id.isEmpty() ) return;
- 
+
   PhoneNumber p;
   p.setId( id );
   p = writePhone( p );
- 
+
   mCurrentItem->addressee().insertPhoneNumber( p );
 }
 
 void MainWindow::readPhone( const KABC::PhoneNumber &p )
 {
   mPhoneNumberEdit->setText( p.number() );
-  
+
   int type = p.type();
   if ( type & PhoneNumber::Msg ) mPhoneMsgCheck->setChecked( true );
   else mPhoneMsgCheck->setChecked( false );
@@ -417,24 +417,24 @@ void MainWindow::readPhone( const QString &id )
 void MainWindow::newAddress()
 {
   if( !mCurrentItem ) return;
-  
+
   Address address;
   mCurrentItem->addressee().insertAddress( address );
-  
+
   mAddressIdCombo->insertItem( address.id() );
 }
 
 void MainWindow::removeAddress()
 {
   if ( !mCurrentItem ) return;
-  
+
   QString id = mAddressIdCombo->currentText();
   if ( id.isEmpty() ) return;
- 	 
+
   Address address;
   address.setId( id );
   mCurrentItem->addressee().removeAddress( address );
-  
+
   readAddressee( mCurrentItem->addressee() );
 }
 
@@ -448,14 +448,14 @@ void MainWindow::dumpAddressBook()
 void MainWindow::newEmail()
 {
   if ( !mCurrentItem ) return;
-  
+
   bool ok = false;
   QString name = KInputDialog::getText( i18n("New Email Address"),
                                         i18n("Please enter email address:"),
                                         QString::null, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
-  
+
   new QListViewItem( mEmailListView, name );
   mCurrentItem->addressee().insertEmail( name );
 }
@@ -463,7 +463,7 @@ void MainWindow::newEmail()
 void MainWindow::editEmail()
 {
   if ( !mCurrentItem ) return;
-  
+
   QListViewItem *item = mEmailListView->selectedItem();
   if( !item ) return;
 
@@ -484,35 +484,35 @@ void MainWindow::editEmail()
 void MainWindow::removeEmail()
 {
   if ( !mCurrentItem ) return;
-  
+
   QListViewItem *item = mEmailListView->selectedItem();
   if( !item ) return;
 
   mCurrentItem->addressee().removeEmail( item->text( 0 ) );
-  delete item;  
+  delete item;
 }
 
 void MainWindow::newPhoneNumber()
 {
   if ( !mCurrentItem ) return;
-  
+
   PhoneNumber p;
   mCurrentItem->addressee().insertPhoneNumber( p );
-  
+
   mPhoneIdCombo->insertItem( p.id() );
 }
 
 void MainWindow::removePhoneNumber()
 {
   if ( !mCurrentItem ) return;
-  
+
   QString id = mPhoneIdCombo->currentText();
   if ( id.isEmpty() ) return;
-  
+
   PhoneNumber p;
   p.setId( id );
   mCurrentItem->addressee().removePhoneNumber( p );
-  
+
   readAddressee( mCurrentItem->addressee() );
 }
 
@@ -520,14 +520,14 @@ void MainWindow::removePhoneNumber()
 void MainWindow::newCategory()
 {
   if ( !mCurrentItem ) return;
-  
+
   bool ok = false;
   QString name = KInputDialog::getText( i18n("New Category"),
                                         i18n("Please enter category name:"),
                                         QString::null, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
-  
+
   new QListViewItem( mCategoryListView, name );
   mCurrentItem->addressee().insertCategory( name );
 }
@@ -535,7 +535,7 @@ void MainWindow::newCategory()
 void MainWindow::editCategory()
 {
   if ( !mCurrentItem ) return;
-  
+
   QListViewItem *item = mCategoryListView->selectedItem();
   if( !item ) return;
 
@@ -556,19 +556,19 @@ void MainWindow::editCategory()
 void MainWindow::removeCategory()
 {
   if ( !mCurrentItem ) return;
-  
+
   QListViewItem *item = mCategoryListView->selectedItem();
   if( !item ) return;
 
   mCurrentItem->addressee().removeCategory( item->text( 0 ) );
-  delete item;  
+  delete item;
 }
 
 
 void MainWindow::editCustom()
 {
   if ( !mCurrentItem ) return;
-  
+
   QListViewItem *item = mCustomListView->selectedItem();
   if( !item ) return;
 
@@ -585,15 +585,15 @@ void MainWindow::editCustom()
 
   int posDash = name.find( "-" );
   int posColon = name.find( ":" );
-  
+
   QString app = name.left( posDash );
   QString cname = name.mid( posDash + 1, posColon - posDash - 1 );
   QString value = name.mid( posColon + 1 );
-  
+
   item->setText( 0, app );
   item->setText( 1, cname );
   item->setText( 2, value );
-  
+
   mCurrentItem->addressee().removeCustom( app, cname );
   mCurrentItem->addressee().insertCustom( app, cname, value );
 }
@@ -601,7 +601,7 @@ void MainWindow::editCustom()
 void MainWindow::newCustom()
 {
   if ( !mCurrentItem ) return;
-  
+
   bool ok = false;
   QString name = KInputDialog::getText( i18n("New Custom Entry"),
                                         i18n("Please enter custom entry.\n"
@@ -609,14 +609,14 @@ void MainWindow::newCustom()
                                         QString::null, &ok,
                                         this );
   if ( !ok || name.isEmpty() ) return;
-  
+
   int posDash = name.find( "-" );
   int posColon = name.find( ":" );
-  
+
   QString app = name.left( posDash );
   QString cname = name.mid( posDash + 1, posColon - posDash - 1 );
   QString value = name.mid( posColon + 1 );
-  
+
   new QListViewItem( mCustomListView, app, cname, value );
 
   mCurrentItem->addressee().insertCustom( app, cname, value );
@@ -625,7 +625,7 @@ void MainWindow::newCustom()
 void MainWindow::removeCustom()
 {
   if ( !mCurrentItem ) return;
-  
+
   QListViewItem *item = mCustomListView->selectedItem();
   if( !item ) return;
 

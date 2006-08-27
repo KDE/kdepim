@@ -108,7 +108,7 @@ public:
     * of the option-name, e.g. two tabs for length < 8.
     * Default implementation returns @c QString::null
     */
-    virtual QString optionUsage() const { return QString::null; }
+    virtual QString optionUsage() const { return QString(); }
 
     /**
     * @brief Sets the text codec to use
