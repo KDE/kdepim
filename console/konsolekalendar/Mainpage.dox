@@ -1,30 +1,29 @@
-/** \mainpage %KonsoleKalendar API Overview
+/*!
+ * @mainpage KonsoleKalendar API Overview
+ *
+ * @section intro Introduction
+ *
+ * KonsoleKalendar is a command line interface to KDE calendars.
+ * It lets you view, insert, remove, or modify calendar events by way of
+ * the command line or from a scripting language.
+ *
+ * Additionally, KonsoleKalendar can create a new KDE calendar,
+ * export a KDE calendar to a variety of other formats, and
+ * import another KDE calendar.
+ *
+ * @authors
+ * Tuukka Pasanen \<illuusio@mailcity.com\>,
+ * Allen Winter \<winter@kde.org\>,
+ * Cornelius Schumacher \<schumacher@kde.org\>
+ *
+ * @maintainer Allen Winter \<winter@kde.org\>
+ *
+ * @licenses
+ * @gpl
+ *
+ * For questions and discussions about KonsoleKalendar either contact the author
+ * or the <a href="mailto:kde-pim@kde.org">kde-pim@kde.org</a> mailing list.
+ */
 
-\section intro Introduction
-
-%KonsoleKalendar is a command line interface to KDE calendars.
-It lets you view, insert, remove, or modify calendar events by way of
-the command line or from a scripting language.
-Additionally, %KonsoleKalendar can create a new KDE calendar,
-export a KDE calendar to a variety of other formats, and
-import another KDE calendar.
-
-\section map Road Map to the Classes
-
-KCal::KonsoleKalendar is the base class.
-
-KCal::KonsoleKalendarVariables holds all the command line arguments plus some.
-
-KCal::KonsoleKalendarEpoch is for timestamps expressed as epochs.
-
-KCal::KonsoleKalendarExports manages the export functionality.
-
-KCal::KonsoleKalendarAdd manages the event insert capability.
-
-KCal::KonsoleKalendarDelete manages the event removal capability.
-
-KCal::KonsoleKalendarChange manages the event modification capability.
-
-*/
-
+// DOXYGEN_PROJECTNAME=KonsoleKalendar
 // DOXYGEN_REFERENCES = kcal

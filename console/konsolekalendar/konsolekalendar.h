@@ -45,19 +45,22 @@ class QTextStream;
  * Provides the KonsoleKalendar class definition.
  */
 
-namespace KCal
-{
 /**
+ * @brief
  * The base class of the project.
  * @author Tuukka Pasanen
  */
-  class KonsoleKalendar
-  {
+class KonsoleKalendar
+{
   public:
     /**
      * Constructs a KonsoleKalendar object from command line arguments.
+     *
+     * @param variables is a pointer to a #KonsoleKalendarVariables object
+     * containing all the command line arguments.
      */
     KonsoleKalendar( KonsoleKalendarVariables *variables );
+
     /**
      * Destructor
      */
@@ -103,7 +106,6 @@ namespace KCal
     bool createCalendar();
 
   private:
-
     /**
      * Print event specs for dryrun and verbose options
      */
@@ -112,7 +114,8 @@ namespace KCal
     /**
      * Prints event list in many formats
      *
-     * @param eventlist which event we should print
+     * @param ts is the #QTextStream to be printed
+     * @param eventList which event we should print
      * @param dt is the date to use when printing the event for recurring events
      */
     bool printEventList( QTextStream *ts, Event::List *eventList, QDate dt );
@@ -120,6 +123,7 @@ namespace KCal
     /**
      * Prints a single event in many formats
      *
+     * @param ts is the #QTextStream to be printed
      * @param event which we should print
      * @param dt is the date to use when printing the event for recurring events
      */
@@ -139,8 +143,6 @@ namespace KCal
      * This is useful if we like to have same day events to same system
      */
     QDate m_saveDate;
+};
 
-  };
-
-}
 #endif

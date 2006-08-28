@@ -86,13 +86,15 @@ void StdCalendar::addFileResource( const QString &fileName,
     if ( url.isLocalFile() ) {
       kDebug() << "Local resource at " << url << endl;
       resource = mManager->createResource( "file" );
-      if ( resource )
+      if ( resource ) {
         resource->setValue( "File", url.path() );
+      }
     } else {
       kDebug() << "Remote Resource at " << url << endl;
       resource = mManager->createResource( "remote" );
-      if ( resource )
+      if ( resource ) {
         resource->setValue( "URL", url.url() );
+      }
     }
 
     if ( resource ) {

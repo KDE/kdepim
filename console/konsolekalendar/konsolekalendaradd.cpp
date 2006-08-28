@@ -116,10 +116,11 @@ bool KonsoleKalendarAdd::addImportedCalendar()
 // else, import into the standard calendar
 
   QString fileName;
-  if ( m_variables->getCalendarFile().isEmpty() )
+  if ( m_variables->getCalendarFile().isEmpty() ) {
     fileName = KStandardDirs::locateLocal( "data", "korganizer/std.ics" );
-  else
+  } else {
     fileName = m_variables->getCalendarFile();
+  }
 
   CalendarLocal *cal = new CalendarLocal( KPimPrefs::timezone() );
   if ( !cal->load( fileName ) ||

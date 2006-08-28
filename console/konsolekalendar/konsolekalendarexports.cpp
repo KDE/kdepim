@@ -210,7 +210,9 @@ QString KonsoleKalendarExports::processField( const QString &field,
   return retField;
 }
 
+//@cond IGNORE
 #define pF( x )  processField( ( x ), dquote )
+//@endcond
 
 bool KonsoleKalendarExports::exportAsCSV( QTextStream *ts,
                                           Event *event, const QDate &date )

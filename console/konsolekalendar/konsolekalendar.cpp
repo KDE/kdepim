@@ -159,14 +159,13 @@ bool KonsoleKalendar::showInstance()
 
           Event::List sortedList =
             m_variables->getCalendar()->events( EventSortStartDate );
-          if( sortedList.count() > 0 )
-          {
+          if ( sortedList.count() > 0 ) {
             QDate dt, firstdate, lastdate;
             firstdate = sortedList.first()->dtStart().date();
             lastdate = sortedList.last()->dtStart().date();
             for ( dt = firstdate;
                   dt <= lastdate && status != false;
-                  dt = dt.addDays(1) ) {
+                  dt = dt.addDays( 1 ) ) {
               Event::List events =
                 m_variables->getCalendar()->events( dt,
                                                     EventSortStartDate,
@@ -196,7 +195,7 @@ bool KonsoleKalendar::showInstance()
           QDate dt;
           for ( dt = m_variables->getStartDateTime().date();
                 dt <= datetime.date();
-                dt = dt.addDays(1) ) {
+                dt = dt.addDays( 1 ) ) {
             Event::List events =
               m_variables->getCalendar()->events( dt,
                                                   EventSortStartDate,
@@ -218,7 +217,7 @@ bool KonsoleKalendar::showInstance()
           QDate dt;
           for ( dt = m_variables->getStartDateTime().date();
                 dt <= m_variables->getEndDateTime().date() && status != false;
-                dt = dt.addDays(1) ) {
+                dt = dt.addDays( 1 ) ) {
             Event::List events =
               m_variables->getCalendar()->events( dt,
                                                   EventSortStartDate,
@@ -259,7 +258,8 @@ bool KonsoleKalendar::showInstance()
 
         //TODO: get progname and url from the values set in main
         htmlSettings.setCreditName( "KonsoleKalendar" );
-        htmlSettings.setCreditURL( "http://pim.kde.org/components/konsolekalendar.php" );
+        htmlSettings.setCreditURL(
+          "http://pim.kde.org/components/konsolekalendar.php" );
 
         htmlSettings.setExcludePrivate( true );
         htmlSettings.setExcludeConfidential( true );

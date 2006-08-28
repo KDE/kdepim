@@ -35,19 +35,19 @@
  * Provides the KonsoleKalendarEpoch class definition.
  */
 
-namespace KCal
+/**
+ * @brief
+ * Class for timestamps expressed as epochs.
+ * @author Allen Winter
+ */
+class KonsoleKalendarEpoch
 {
-  /**
-   * Class for timestamps expressed as epochs.
-   * @author Allen Winter
-   */
-  class KonsoleKalendarEpoch
-  {
   public:
     /**
      * Constructor.
      */
     KonsoleKalendarEpoch();
+
     /**
      * Destructor
      */
@@ -65,8 +65,6 @@ namespace KCal
      */
     static uint QDateTime2epoch( const QDateTime &dt );
 
-  };
-
-}
+};
 
 #endif

@@ -30,25 +30,45 @@
  * Provides a class for Calendar Resources.
  */
 
-namespace KCal {
-
 /**
+ * @brief
+ * Class for Calendar resources.
  * @author Cornelius Schumacher
  * @author Allen Winter
  */
 class KDE_EXPORT StdCalendar : public KCal::CalendarResources
 {
   public:
+    /**
+     * Default Constructor
+     */
     StdCalendar();
-    StdCalendar( const QString &fileName, const QString &resName );
+
+    /**
+     * Creates a calendar given a @p fileName and a resource.
+     *
+     * @param fileName is a filename containing a calendar.
+     * @param resName is the the name of a resource.
+     */
+     StdCalendar( const QString &fileName, const QString &resName );
+
+    /**
+     * Destructor
+     */
     ~StdCalendar();
 
+    /**
+     * Adds a resource to the calendar given a @p fileName and a resource.
+     *
+     * @param fileName is a filename containing a calendar.
+     * @param resName is the the name of a resource.
+     */
     void addFileResource( const QString &fileName, const QString &resName );
 
   private:
+    //@cond PRIVATE
     KCal::CalendarResourceManager *mManager;
+    //@endcond
 };
-
-}
 
 #endif

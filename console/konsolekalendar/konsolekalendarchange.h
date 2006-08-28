@@ -35,15 +35,14 @@
  * Provides the KonsoleKalendarChange class definition.
  */
 
-namespace KCal
+/**
+ * @brief
+ * Class to manage the Event modification capability.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
+class KonsoleKalendarChange
 {
-  /**
-   * Class to manage the Event modification capability.
-   * @author Tuukka Pasanen
-   * @author Allen Winter
-   */
-  class KonsoleKalendarChange
-  {
   public:
 
     /**
@@ -51,7 +50,8 @@ namespace KCal
      * @param vars is a KonsoleKalendarVariable object with Event information.
      */
     KonsoleKalendarChange( KonsoleKalendarVariables *vars );
-    /**
+
+  /**
      * Destructor
      */
     ~KonsoleKalendarChange();
@@ -62,22 +62,21 @@ namespace KCal
     bool changeEvent();
 
   private:
-
     /**
      * Print Event specs for dryrun and verbose options.
-     * @param event is the Event to print.
+     *
+     * @param event is a pointer to an #Event to print.
      */
     void printSpecs( Event *event );
-    /*
+
+    /**
      * Print Event specs as provided from the command line arguments.
      */
     void printSpecs();
 
-    /**
-     * Variables are here
-     */
+    //@cond PRIVATE
     KonsoleKalendarVariables *m_variables;
-  };
+    //@endcond
+};
 
-}
 #endif

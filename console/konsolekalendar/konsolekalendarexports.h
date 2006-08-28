@@ -37,15 +37,14 @@
  * Provides the KonsoleKalendarExports class definition.
  */
 
-namespace KCal
+/**
+ * @brief
+ * Class to manage the Export functionality.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
+class KonsoleKalendarExports
 {
-  /**
-   * Class to manage the Export functionality.
-   * @author Tuukka Pasanen
-   * @author Allen Winter
-   */
-  class KonsoleKalendarExports
-  {
   public:
 
     /**
@@ -53,6 +52,7 @@ namespace KCal
      * @param vars is a KonsoleKalendarVariable object with Event information.
      */
     KonsoleKalendarExports( KonsoleKalendarVariables *vars = 0 );
+
     /**
      * Destructor
      */
@@ -65,6 +65,7 @@ namespace KCal
      * @param date is the QDate to be exported for.
      */
     bool exportAsTxt( QTextStream *ts, Event *event, const QDate &date );
+
     /**
      * Export the Event in Short Text Mode.
      * @param ts pointer to the output QTextStream.
@@ -75,6 +76,7 @@ namespace KCal
      */
     bool exportAsTxtShort( QTextStream *ts, Event *event, const QDate &date,
                            bool sameday );
+
     /**
      * Export the Event in Comma-Separated Values (CSV) Mode.
      * @param ts pointer to the output QTextStream.
@@ -84,8 +86,11 @@ namespace KCal
     bool exportAsCSV( QTextStream *ts, Event *event, const QDate &date );
 
   private:
+    //@cond PRIVATE
     KonsoleKalendarVariables *m_variables;
     bool m_firstEntry;
+    //@endcond
+
     /**
      * Processes a field for Comma-Separated Value (CSV) compliance:
      *   1. Replaces double quotes by a pair of consecutive double quotes
@@ -95,7 +100,6 @@ namespace KCal
      */
     QString processField( const QString &field, const QString &dquote );
 
-  };
+};
 
-}
 #endif

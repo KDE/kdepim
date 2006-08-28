@@ -35,21 +35,24 @@
  * Provides the KonsoleKalendarDelete class definition.
  */
 
-namespace KCal
+/**
+ * @brief
+ * Class to manage the Event removal capability.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
+class KonsoleKalendarDelete
 {
-  /**
-   * Class to manage the Event removal capability.
-   * @author Tuukka Pasanen
-   * @author Allen Winter
-   */
-  class KonsoleKalendarDelete
-  {
   public:
 
     /**
      * Constructs a KonsoleKalendarDelete object from command line arguments.
+     *
+     * @param vars is a pointer to the #KonsoleKalendarVariables object
+     * which contains all the command line arguments.
      */
     KonsoleKalendarDelete( KonsoleKalendarVariables *vars );
+
     /**
      * Destructor
      */
@@ -64,14 +67,14 @@ namespace KCal
 
     /**
      * Print event specs for dryrun and verbose options.
+     *
+     * @param event is a pointer to an #Event that is to be printed.
      */
     void printSpecs( Event *event );
 
-    /**
-     * What we need to delete
-     */
+    //@cond PRIVATE
     KonsoleKalendarVariables *m_variables;
-  };
+    //@endcond
+};
 
-}
 #endif

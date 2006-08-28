@@ -37,45 +37,46 @@
 #include <QString>
 #include <QDateTime>
 
+using namespace KCal;
+
 /**
  * @file konsolekalendarvariables.h
  * Provides the KonsoleKalendarVariables class definition.
  */
 
-namespace KCal
+/**
+ * ExportType is the type of Export output
+ */
+enum ExportType
 {
-  /**
-   * ExportType is the type of Export output
-   */
-  enum ExportType
-  {
-    /** Export none */
-    ExportTypeNone,
-    /** Export as text (default) */
-    ExportTypeText,
-    /** Export as compact text */
-    ExportTypeTextShort,
-    /** Export HTML for the specified time span */
-    ExportTypeHTML,
-    /** Export HTML for the time span on month boundaries */
-    ExportTypeMonthHTML,
-    /** Export XHTML (NOT AVAILABLE YET) */
-    ExportTypeXHTML,
-    /** Export XML (NOT AVAILABLE YET) */
-    ExportTypeXML,
-    /** Export Comma-Separated Values */
-    ExportTypeCSV,
-    /** Export VCard (NOT AVAILABLE YET) */
-    ExportTypeVCard
-  };
+  /** Export none */
+  ExportTypeNone,
+  /** Export as text (default) */
+  ExportTypeText,
+  /** Export as compact text */
+  ExportTypeTextShort,
+  /** Export HTML for the specified time span */
+  ExportTypeHTML,
+  /** Export HTML for the time span on month boundaries */
+  ExportTypeMonthHTML,
+  /** Export XHTML (NOT AVAILABLE YET) */
+  ExportTypeXHTML,
+  /** Export XML (NOT AVAILABLE YET) */
+  ExportTypeXML,
+  /** Export Comma-Separated Values */
+  ExportTypeCSV,
+  /** Export VCard (NOT AVAILABLE YET) */
+  ExportTypeVCard
+};
 
-  /**
-   * This class provides all the variables for the program.
-   * @author Tuukka Pasanen
-   * @author Allen Winter
-   */
-  class KonsoleKalendarVariables
-  {
+/**
+ * @brief
+ * This class provides all the variables for the program.
+ * @author Tuukka Pasanen
+ * @author Allen Winter
+ */
+class KonsoleKalendarVariables
+{
   public:
     /**
      * Construct an empty KonsoleKalendarVariables object.
@@ -304,25 +305,28 @@ namespace KCal
      * @param floating if true then the Event is floating.
      */
     void setFloating( bool floating );
+
     /**
-     * Return if Event is floating.
+     * Returns if Event is floating.
      */
     bool getFloating();
 
     /**
-     * Set calendar resources for global use.
+     * Sets the calendar resources for global use.
+     *
+     * @param resources is a pointer to the #CalendarResources to use.
      */
-
     void setCalendar( CalendarResources *resources );
 
     /**
      * Get global calendar resources.
      */
-
     CalendarResources *getCalendar();
 
     /**
-     * Set output file.
+     * Sets the output file name to @p export_file.
+     *
+     * @param export_file is the name of the export file.
      */
     void setExportFile( const QString &export_file );
 
@@ -337,7 +341,9 @@ namespace KCal
     bool isExportFile();
 
     /**
-     * Set export type that'll we use.
+     * Sets the #ExportType to use.
+     *
+     * @param exportType is the #ExportType to use.
      */
     void setExportType( ExportType exportType );
 
@@ -347,9 +353,10 @@ namespace KCal
     ExportType getExportType();
 
     /**
-     * Set how many day should be seen.
+     * Sets how many day should be seen.
+     *
+     * @param count is the number of days to be shown.
      */
-
     void setDaysCount( int count );
 
     /**
@@ -364,6 +371,7 @@ namespace KCal
     int getDaysCount();
 
   private:
+    //@cond PRIVATE
     bool m_bIsUID;
     QString m_UID;
     bool m_bIsStartDateTime;
@@ -392,8 +400,7 @@ namespace KCal
     bool m_bDaysCount;
     int m_daysCount;
     CalendarResources *m_calendarResources;
-  };
-
-}
+    //@endcond
+};
 
 #endif

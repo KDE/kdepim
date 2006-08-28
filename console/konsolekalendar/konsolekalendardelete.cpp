@@ -38,7 +38,6 @@
 
 #include "konsolekalendardelete.h"
 
-using namespace KCal;
 using namespace std;
 
 KonsoleKalendarDelete::KonsoleKalendarDelete( KonsoleKalendarVariables *vars )
@@ -92,27 +91,27 @@ bool KonsoleKalendarDelete::deleteEvent()
 
 void KonsoleKalendarDelete::printSpecs( Event *event )
 {
-  cout << i18n( "  UID:   %1" , 
+  cout << i18n( "  UID:   %1" ,
      m_variables->getUID() ).data()
        << endl;
 
-  cout << i18n( "  What:  %1" , 
+  cout << i18n( "  What:  %1",
      event->summary() ).data()
        << endl;
 
-  cout << i18n( "  Begin: %1" , 
+  cout << i18n( "  Begin: %1",
      event->dtStart().toString( Qt::TextDate ) ).data()
        << endl;
 
-  cout << i18n( "  End:   %1" , 
+  cout << i18n( "  End:   %1",
      event->dtEnd().toString( Qt::TextDate ) ).data()
        << endl;
 
-  cout << i18n( "  Desc:  %1" , 
+  cout << i18n( "  Desc:  %1",
      event->description() ).data()
        << endl;
 
-  cout << i18n( "  Location:  %1" , 
+  cout << i18n( "  Location:  %1",
      event->location() ).data()
        << endl;
 }

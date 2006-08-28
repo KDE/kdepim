@@ -36,7 +36,6 @@
 #include <QDateTime>
 #include "konsolekalendarepoch.h"
 
-using namespace KCal;
 using namespace std;
 
 KonsoleKalendarEpoch::KonsoleKalendarEpoch()
