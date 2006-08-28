@@ -93,9 +93,9 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     */
     Event::List rawEventsForDate( const QDate &date, EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
     /**
-      Get unfiltered events for date \a qdt.
+      Get unfiltered events for date \a dt.
     */
-    Event::List rawEventsForDate( const QDateTime &qdt );
+    Event::List rawEventsForDate( const QDateTime &dt );
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events are returned, which are completely included in the range.
@@ -139,10 +139,10 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     */
     Journal::List rawJournalsForDate( const QDate &date );
 
-    /** Return all alarms, which ocur in the given time interval. */
+    /** Return all alarms, which occur in the given time interval. */
     Alarm::List alarms( const QDateTime &from, const QDateTime &to );
 
-    /** Return all alarms, which ocur before given date. */
+    /** Return all alarms, which occur before given date. */
     Alarm::List alarmsTo( const QDateTime &to );
 
     void dump() const;
