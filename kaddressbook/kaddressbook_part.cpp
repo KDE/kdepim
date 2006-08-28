@@ -79,7 +79,7 @@ KAddressbookPart::~KAddressbookPart()
   mCore->saveSettings();
 
   KABPrefs::instance()->writeConfig();
-  closeURL();
+  closeUrl();
 }
 
 KAboutData *KAddressbookPart::createAboutData()

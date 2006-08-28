@@ -792,7 +792,7 @@ void
 IMAP4Protocol::setSubURL (const KUrl & _url)
 {
   kDebug(7116) << "IMAP4::setSubURL - " << _url.prettyUrl() << endl;
-  KIO::TCPSlaveBase::setSubURL (_url);
+  KIO::TCPSlaveBase::setSubUrl (_url);
 }
 
 void

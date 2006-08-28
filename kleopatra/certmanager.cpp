@@ -912,7 +912,7 @@ void CertManager::importCRLFromFile() {
 void CertManager::slotImportCRLJobFinished( KJob *job )
 {
   KIO::FileCopyJob* fcjob = static_cast<KIO::FileCopyJob*>( job );
-  QString tempFilePath = fcjob->destURL().path();
+  QString tempFilePath = fcjob->destUrl().path();
   if ( job->error() ) {
     static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
     QFile::remove( tempFilePath ); // unlink tempfile
