@@ -124,6 +124,8 @@ static void busterminate(void)
 
 static QString businit(void)
 {
+	GNOKII_DEBUG( "Using new gnokii version." );
+
 	GNOKII_DEBUG( QString("Compiled with libgnokii version 0x%1\n").arg(QString::number(LIBGNOKII_VERSION,16)) );
 	GNOKII_DEBUG( QString("Using libgnokii runtime version 0x%1\n").arg(QString::number(gn_lib_version(),16)) );
 
@@ -437,15 +439,16 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 		s = phonenumber->number();
 		if (s.isEmpty()) continue;
 		gn_phonebook_number_type type;
-		switch (phonenumber->type() & ~KABC::PhoneNumber::Pref) {
-			case KABC::PhoneNumber::Home:	type = GN_PHONEBOOK_NUMBER_Home;	break;
-			case KABC::PhoneNumber::Voice:
-			case KABC::PhoneNumber::Work:	type = GN_PHONEBOOK_NUMBER_Work;	break;
-			case KABC::PhoneNumber::Pager:
-			case KABC::PhoneNumber::Cell:	type = GN_PHONEBOOK_NUMBER_Mobile;	break;
-			case KABC::PhoneNumber::Fax:	type = GN_PHONEBOOK_NUMBER_Fax;		break;
-			default:			type = GN_PHONEBOOK_NUMBER_General;	break;
-		}
+		int pn_type = phonenumber->type();
+		if ((pn_type & KABC::PhoneNumber::Cell))
+			type = GN_PHONEBOOK_NUMBER_Mobile;
+		else if ((pn_type & KABC::PhoneNumber::Fax))
+			type = GN_PHONEBOOK_NUMBER_Fax;
+		else if ((pn_type & KABC::PhoneNumber::Home))
+			type = GN_PHONEBOOK_NUMBER_Home;
+		else if ((pn_type & KABC::PhoneNumber::Work))
+			type = GN_PHONEBOOK_NUMBER_Work;
+		else type = GN_PHONEBOOK_NUMBER_General;
 		gn_lib_set_pb_subentry(state, -1 /* index to append entry */,
 			GN_PHONEBOOK_ENTRY_Number, type, makeValidPhone(s).ascii());
 		/*subentry->id = phone_location<<8+entry.subentries_count;*/
@@ -809,6 +812,8 @@ static QString businit(void)
 {
 	gn_error error;
 	char *aux;
+
+	GNOKII_DEBUG( "Using old gnokii version." );
 
 #if defined(LIBGNOKII_VERSION)
 	if (gn_cfg_read_default()<0)
@@ -1207,15 +1212,16 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 		if (s.isEmpty()) continue;
 		subentry->entry_type  = GN_PHONEBOOK_ENTRY_Number;
 		gn_phonebook_number_type type;
-		switch (phonenumber->type() & ~KABC::PhoneNumber::Pref) {
-			case KABC::PhoneNumber::Home:	type = GN_PHONEBOOK_NUMBER_Home;	break;
-			case KABC::PhoneNumber::Voice:
-			case KABC::PhoneNumber::Work:	type = GN_PHONEBOOK_NUMBER_Work;	break;
-			case KABC::PhoneNumber::Pager:
-			case KABC::PhoneNumber::Cell:	type = GN_PHONEBOOK_NUMBER_Mobile;	break;
-			case KABC::PhoneNumber::Fax:	type = GN_PHONEBOOK_NUMBER_Fax;		break;
-			default:			type = GN_PHONEBOOK_NUMBER_General;	break;
-		}
+		int pn_type = phonenumber->type();
+		if ((pn_type & KABC::PhoneNumber::Cell))
+			type = GN_PHONEBOOK_NUMBER_Mobile;
+		else if ((pn_type & KABC::PhoneNumber::Fax))
+			type = GN_PHONEBOOK_NUMBER_Fax;
+		else if ((pn_type & KABC::PhoneNumber::Home))
+			type = GN_PHONEBOOK_NUMBER_Home;
+		else if ((pn_type & KABC::PhoneNumber::Work))
+			type = GN_PHONEBOOK_NUMBER_Work;
+		else type = GN_PHONEBOOK_NUMBER_General;
 		subentry->number_type = type;
 		strncpy(subentry->data.number, makeValidPhone(s).ascii(), sizeof(subentry->data.number)-1);
 		subentry->id = phone_location<<8+entry.subentries_count;
