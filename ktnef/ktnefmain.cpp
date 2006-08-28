@@ -193,7 +193,7 @@ void KTNEFMain::viewFile()
 	if (mimename.isEmpty() || mimename == "application/octet-stream")
 	{
 		kDebug() << "No mime type found in attachment object, trying to guess..." << endl;
-		mimename = KMimeType::findByURL(url, 0, true)->name();
+		mimename = KMimeType::findByUrl(url, 0, true)->name();
 		kDebug() << "Detected mime type: " << mimename << endl;
 	}
 	else
