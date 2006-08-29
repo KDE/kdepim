@@ -13,7 +13,22 @@ strict digraph "inter-dependency graph for kdepim" {
            applications: lightcyan
            code generators or other development tools: orange
            disabled: lightgray
+
+           Shapes:
+           kdepimlibs: box
+           kdepim: ellipse (default)
          */
+
+        /* kdepimlibs */
+        "libemailfunctions"[style=filled, fillcolor=lightyellow, shape=box, URL="emailfunctions/html/index.html"];
+        /* TODO: dependencies incomplete */
+        /*"libkabc"[style=filled, fillcolor=lightyellow, shape=box];*/
+        /*"libkresources"[style=filled, fillcolor=lightyellow, shape=box];*/
+        "libkcal"[style=filled, fillcolor=lightyellow, shape=box, URL="kcal/html/index.html"];
+        "libktnef"[style=filled, fillcolor=lightyellow, shape=box];
+        "libsyndication"[style=filled, fillcolor=lightyellow, shape=box, URL="syndication/html/index.html"];
+
+        /* kdepim */
         "akonadiserver"[style=filled, fillcolor=lightcyan];
         "akregator"[style=filled, fillcolor=lightcyan];
         "gpgmepp"[style=filled, fillcolor=lightyellow, URL="gpgmepp/html/index.html"];
@@ -38,8 +53,6 @@ strict digraph "inter-dependency graph for kdepim" {
         "kresources"[style=filled, fillcolor=palegreen];
         "ktnef"[style=filled, fillcolor=lightcyan];
         "libakonadi"[style=filled, fillcolor=lightyellow, URL="libakonadi/html/index.html"];
-        "libemailfunctions"[style=filled, fillcolor=pink, URL="libemailfunctions/html/index.html"];
-        "libkcal"[style=filled, fillcolor=lightyellow, URL="libkcal/html/index.html"];
         "libkdepim"[style=filled, fillcolor=lightyellow, URL="libkdepim/html/index.html"];
         "libkholidays"[style=filled, fillcolor=lightyellow, URL="libkholidays/html/index.html"];
         "libkholidays_ng"[style=filled, fillcolor=lightyellow, URL="libkholidays_ng/html/index.html"];
@@ -48,7 +61,6 @@ strict digraph "inter-dependency graph for kdepim" {
         "libkpgp"[style=filled, fillcolor=lightyellow, URL="libkpgp/html/index.html"];
         "libkpimidentities"[style=filled, fillcolor=lightyellow, URL="libkpimidentities/html/index.html"];
         "libksieve"[style=filled, fillcolor=lightyellow];
-        "libsyndication"[style=filled, fillcolor=lightyellow, URL="libsyndication/html/index.html"];
         "mimelib"[style=filled, fillcolor=lightyellow];
         "networkstatus"[style=filled, fillcolor=palegreen];
         "plugins"[style=filled, fillcolor=palegreen];
@@ -77,7 +89,6 @@ strict digraph "inter-dependency graph for kdepim" {
         "korganizer" -> "wizards";
         "kresources" -> "karm";
         "kresources" -> "wizards";
-        "ktnef" -> "libkcal";
         "libemailfunctions" -> "kmail";
         "libemailfunctions" -> "knode";
         "libemailfunctions" -> "korganizer";
@@ -94,6 +105,7 @@ strict digraph "inter-dependency graph for kdepim" {
         "libkcal" -> "kresources";
         "libkcal" -> "libkdepim";
         "libkcal" -> "plugins";
+        "libkcal" -> "libktnef"
         "qgpgme" -> "libkleo";
         "gpgmepp" -> "kmail";
         "gpgmepp" -> "kleopatra";
@@ -131,5 +143,10 @@ strict digraph "inter-dependency graph for kdepim" {
         "knode" -> "kontact";
         "libsyndication" -> "akregator";
         "libsyndication" -> "kaddressbook";
+        "libktnef" -> "ktnef";
+        "libktnef" -> "kmail";
+        /* TODO: kabc deps incomplete
+        "libkabc" -> "libkcal";
+        "libkabc" -> "libktnef";*/
 }
 
