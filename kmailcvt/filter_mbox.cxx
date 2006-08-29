@@ -77,6 +77,7 @@ void FilterMBox::import(FilterInfo *info)
                 * get Unicode/UTF-email but KMail can't detect the correct charset.
                 */
                 QCString seperate;
+		QString x_status_flag = "";
 
 		/* check if the first line start with "From " (and not "From: ") and discard the line 
 		 * in this case because some IMAP servers (e.g. Cyrus) don't accept this header line */
@@ -89,14 +90,21 @@ void FilterMBox::import(FilterInfo *info)
 	                tmp.file()->writeBlock( input, l );
 
                 while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
-                       tmp.file()->writeBlock( input, l );
-                       
-                       // workaround to fix hang if a corrupted mbox contains some 
-                       // binary data, for more see bug #106796
-                       if (mbox.at() == filepos)
-                           mbox.at(mbox.size());
-                       else 
-                           filepos = mbox.at();
+			tmp.file()->writeBlock( input, l );
+
+			if ((seperate = input.data()).left(10) == "X-Status: ") {
+				x_status_flag = seperate;
+				x_status_flag.remove("X-Status: ");
+				x_status_flag = x_status_flag.stripWhiteSpace();
+				// qDebug("x_status_flag: %s", x_status_flag.latin1() );		
+			}
+
+			// workaround to fix hang if a corrupted mbox contains some 
+			// binary data, for more see bug #106796
+			if (mbox.at() == filepos)
+			   mbox.at(mbox.size());
+			else 
+			   filepos = mbox.at();
                 }
                 tmp.close();
                 first_msg = false;
@@ -106,9 +114,9 @@ void FilterMBox::import(FilterInfo *info)
                 * addMessage_fastImport == new function, faster and no check for duplicates
                 */
                 if(info->removeDupMsg)
-                    addMessage( info, folderName, tmp.name() );
+                    addMessage( info, folderName, tmp.name(), x_status_flag );
                 else
-                    addMessage_fastImport( info, folderName, tmp.name() );
+                    addMessage_fastImport( info, folderName, tmp.name(), x_status_flag );
 
                 tmp.unlink();
                 int currentPercentage = (int) ( ( (float) mbox.at() / filenameInfo.size() ) * 100 );
