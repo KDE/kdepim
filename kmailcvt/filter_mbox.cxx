@@ -78,10 +78,15 @@ void FilterMBox::import(FilterInfo *info)
                 */
                 QCString seperate;
 
-                if(!first_msg)
+		/* check if the first line start with "From " (and not "From: ") and discard the line 
+		 * in this case because some IMAP servers (e.g. Cyrus) don't accept this header line */
+                if(!first_msg && ((seperate = input.data()).left(5) != "From "))
                     tmp.file()->writeBlock( input, l );
+
                 l = mbox.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
-                tmp.file()->writeBlock( input, l );
+
+		if ((seperate = input.data()).left(5) != "From ")
+	                tmp.file()->writeBlock( input, l );
 
                 while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
                        tmp.file()->writeBlock( input, l );
