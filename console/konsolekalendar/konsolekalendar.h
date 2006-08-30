@@ -59,7 +59,7 @@ class KonsoleKalendar
      * @param variables is a pointer to a #KonsoleKalendarVariables object
      * containing all the command line arguments.
      */
-    KonsoleKalendar( KonsoleKalendarVariables *variables );
+    explicit KonsoleKalendar( KonsoleKalendarVariables *variables );
 
     /**
      * Destructor

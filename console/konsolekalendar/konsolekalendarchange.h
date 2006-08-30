@@ -49,7 +49,7 @@ class KonsoleKalendarChange
      * Constructs a KonsoleKalendarChange object from command line arguments.
      * @param vars is a KonsoleKalendarVariable object with Event information.
      */
-    KonsoleKalendarChange( KonsoleKalendarVariables *vars );
+    explicit KonsoleKalendarChange( KonsoleKalendarVariables *vars );
 
   /**
      * Destructor

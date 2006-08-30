@@ -51,7 +51,7 @@ class KonsoleKalendarDelete
      * @param vars is a pointer to the #KonsoleKalendarVariables object
      * which contains all the command line arguments.
      */
-    KonsoleKalendarDelete( KonsoleKalendarVariables *vars );
+    explicit KonsoleKalendarDelete( KonsoleKalendarVariables *vars );
 
     /**
      * Destructor

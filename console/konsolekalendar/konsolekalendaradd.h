@@ -48,7 +48,7 @@ class KonsoleKalendarAdd
      * Constructs a KonsoleKalendarAdd object from command line arguments.
      * @param vars is a KonsoleKalendarVariable object with Event information.
      */
-    KonsoleKalendarAdd( KonsoleKalendarVariables *vars );
+    explicit KonsoleKalendarAdd( KonsoleKalendarVariables *vars );
     /**
      * Destructor
      */
