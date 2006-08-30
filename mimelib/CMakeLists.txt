@@ -1,3 +1,4 @@
+project(mimelib)
 
 add_subdirectory( mimelib ) 
 
