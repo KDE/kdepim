@@ -2,11 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_resourceselection
 Name=Address Book Management Plugin
-Name[fr]=Module de gestion de carnet d'adresses
-Name[x-test]=xxAddress Book Management Pluginxx
 Comment=Plugin for managing address books
-Comment[fr]=Module pour gérer les carnets d'adresses
-Comment[x-test]=xxPlugin for managing address booksxx
 Type=Service
 ServiceTypes=KAddressBook/Extension
 X-KDE-KAddressBook-ExtensionPluginVersion=1

@@ -3,8 +3,6 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=KAddressBook/Extension
 Comment=KAddressBook Extension Plugin
-Comment[fr]=Module d'extension pour KAddressBook
-Comment[x-test]=xxKAddressBook Extension Pluginxx
 
 [PropertyDef::X-KDE-KAddressBook-ExtensionPluginVersion]
 Type=int

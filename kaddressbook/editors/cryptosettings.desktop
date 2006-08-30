@@ -2,8 +2,6 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_cryptosettings
 Name=Crypto Preferences
-Name[fr]=Préférences de chiffrement
-Name[x-test]=xxCrypto Preferencesxx
 Type=Service
 ServiceTypes=KAddressBook/ContactEditorWidget
 X-KDE-KAddressBook-CEWPluginVersion=1

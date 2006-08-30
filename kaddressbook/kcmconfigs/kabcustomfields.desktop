@@ -12,11 +12,5 @@ X-KDE-ParentComponents=kaddressbook,kontact_kaddressbookplugin
 X-KDE-CfgDlgHierarchy=KAB
 
 Name=Custom Pages
-Name[fr]=Pages personnalisées
-Name[x-test]=xxCustom Pagesxx
 Comment=Configure the Custom Pages
-Comment[fr]=Configurer les pages personnalisées
-Comment[x-test]=xxConfigure the Custom Pagesxx
 Keywords=kaddressbook, configure, settings, custom fields
-Keywords[fr]=carnet d'adresses,adresses,kab,kaddressbook,configurer,paramètres,paramètre,champ,personnalisé
-Keywords[x-test]=xxkaddressbook, configure, settings, custom fieldsxx

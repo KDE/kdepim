@@ -5,8 +5,5 @@ Icon=sms_protocol
 ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/sms
 Comment=SMS Protocol
-Comment[fr]=Protocole SMS
-Comment[x-test]=xxSMS Protocolxx
 Name=SMS
-Name[x-test]=xxSMSxx
 

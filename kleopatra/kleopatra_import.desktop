@@ -1,7 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Kleopatra
-Name[x-test]=xxKleopatraxx
 Type=Application
 Exec=kleopatra --import-certificate %u
 #Icon=kleopatra

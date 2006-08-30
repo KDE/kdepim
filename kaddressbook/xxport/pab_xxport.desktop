@@ -2,11 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_pab_xxport
 Name=KAB MS Exchange Personal Addressbook XXPort Plugin
-Name[fr]=Module d'import / export de carnets d'adresses personnels de MS Exchange pour KAB
-Name[x-test]=xxKAB MS Exchange Personal Addressbook XXPort Pluginxx
 Comment=Plugin to import MS Exchange Personal Address Books
-Comment[fr]=Module d'import des carnets d'adresses personnels MS Exchange
-Comment[x-test]=xxPlugin to import MS Exchange Personal Address Booksxx
 Type=Service
 ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1

@@ -1,11 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=KAddressBook
-Name[fr]=Carnet d'adresses
-Name[x-test]=xxKAddressBookxx
 GenericName=Address Manager
-GenericName[fr]=Gestionnaire d'adresses
-GenericName[x-test]=xxAddress Managerxx
 Exec=kaddressbook %u
 Icon=kaddressbook
 Type=Application
