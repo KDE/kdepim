@@ -21,6 +21,7 @@ macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.
 macro_optional_find_package(Boost)
 macro_log_feature(BOOST_FOUND "boost" "Boost C++ Development Libraries" "http://www.boost.org" FALSE "" "Needed to support the full text indexing feature in KMail")
 
+macro_optional_find_package(GNOKII)
 
 # is this really required here ?
 if (APPLE)

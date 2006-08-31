@@ -140,8 +140,27 @@ install(TARGETS kaddrbk_gmx_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install( FILES csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop                 bookmark_xxport.desktop eudora_xxport.desktop ldif_xxport.desktop                 gnokii_xxport.desktop opera_xxport.desktop pab_xxport.desktop gmx_xxport.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kaddressbook)
-install( FILES csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc            bookmark_xxportui.rc eudora_xxportui.rc ldif_xxportui.rc            opera_xxportui.rc pab_xxportui.rc gmx_xxportui.rc ${gnokii_RCFILE}  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
+if(GNOKII_FOUND)
+   set(kaddrbk_gnokii_xxport_PART_SRCS gnokii_xxport.cpp )
+
+   kde4_automoc(${kaddrbk_gnokii_xxport_PART_SRCS})
+
+   kde4_add_plugin(kaddrbk_gnokii_xxport WITH_PREFIX ${kaddrbk_gnokii_xxport_PART_SRCS})
+
+   kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_gnokii_xxport )
+
+   target_link_libraries(kaddrbk_gnokii_xxport  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} ${GNOKII_LIBRARIES} kaddressbook )
+
+   install(TARGETS kaddrbk_gnokii_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
+   install(FILES gnokii_xxport.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kaddressbook)
+   install(FILES gnokii_xxportui.rc DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
+#libkaddrbk_gnokii_xxport_la_SOURCES = gnokii_xxport.cpp
+#libkaddrbk_gnokii_xxport_la_LIBADD = $(XPMLIB) $(LIB_GNOKII) $(XXLIBS)
+endif(GNOKII_FOUND)
+
+install( FILES csv_xxport.desktop vcard_xxport.desktop kde2_xxport.desktop bookmark_xxport.desktop eudora_xxport.desktop ldif_xxport.desktop opera_xxport.desktop pab_xxport.desktop gmx_xxport.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kaddressbook)
+
+install( FILES csv_xxportui.rc vcard_xxportui.rc kde2_xxportui.rc            bookmark_xxportui.rc eudora_xxportui.rc ldif_xxportui.rc opera_xxportui.rc pab_xxportui.rc gmx_xxportui.rc DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
 
 
 
