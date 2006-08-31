@@ -2,7 +2,11 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_bookmark_xxport
 Name=KAB Bookmark XXPort Plugin
+Name[fr]=Module d'import / export de signets pour KAB
+Name[x-test]=xxKAB Bookmark XXPort Pluginxx
 Comment=Plugin to export the web addresses of the contacts as bookmarks
+Comment[fr]=Module d'export des adresses internet des contacts en signets
+Comment[x-test]=xxPlugin to export the web addresses of the contacts as bookmarksxx
 Type=Service
 ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1

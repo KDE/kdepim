@@ -3,3 +3,5 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=DCOP/AddressBook
 Comment=Address Book with a DCOP interface
+Comment[fr]=Carnet d'adresses avec une interface DCOP
+Comment[x-test]=xxAddress Book with a DCOP interfacexx

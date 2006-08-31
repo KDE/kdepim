@@ -6,6 +6,7 @@ QuoteType=0
 
 [Misc]
 Name=Outlook 2000
+Name[x-test]=xxOutlook 2000xx
 
 [csv column map]
 0=5

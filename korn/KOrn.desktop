@@ -1,6 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
 GenericName=Mail Alert
+GenericName[fr]=Surveillance du courrier électronique
+GenericName[x-test]=xxMail Alertxx
 Exec=korn -caption "%c" %f
 Icon=korn
 Path=
@@ -8,5 +10,6 @@ DocPath=korn/index.html
 Type=Application
 Terminal=false
 Name=Korn
+Name[x-test]=xxKornxx
 X-DCOP-ServiceType=Unique
 Categories=Qt;KDE;Network;X-KDE-More;
