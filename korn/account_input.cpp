@@ -101,7 +101,7 @@ URLInput::~URLInput()
 
 QString URLInput::value() const
 {
-	return _right->url().toString();
+	return _right->url().url();
 }
 
 void URLInput::setValue( const QString& value )

@@ -81,7 +81,7 @@ ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,  cons
 void ResourceGroupwareBaseConfig::loadSettings( KRES::Resource *res )
 {
   mResource = dynamic_cast<ResourceGroupwareBase*>( res );
-  
+
   if ( !mResource ) {
     kDebug(5700) << "ResourceGroupwareBaseConfig::loadSettings(): cast failed" << endl;
     return;
@@ -98,15 +98,15 @@ void ResourceGroupwareBaseConfig::loadSettings( KRES::Resource *res )
 void ResourceGroupwareBaseConfig::saveSettings( KRES::Resource *res )
 {
   ResourceGroupwareBase *resource = dynamic_cast<ResourceGroupwareBase*>( res );
-  
+
   if ( !resource ) {
     kDebug(5700) << "ResourceGroupwareBaseConfig::saveSettings(): cast failed" << endl;
     return;
   }
 
-  resource->prefs()->setUrl( mURL->url().toString() );
+  resource->prefs()->setUrl( mURL->url().url() );
   resource->prefs()->setUser( mUser->text() );
-  resource->prefs()->setPassword( mPassword->text() );  
+  resource->prefs()->setPassword( mPassword->text() );
 
   mFolderConfig->saveSettings();
 }

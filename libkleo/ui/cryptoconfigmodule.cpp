@@ -77,7 +77,7 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
   : KPageDialog( parent ), mConfig( config )
 {
   const KPageDialog::FaceType type=determineJanusFace( config );
-  setFaceType(type); 
+  setFaceType(type);
   QWidget * vbox = 0;
   if ( type == Plain ) {
     vbox = new QWidget(this);
@@ -381,14 +381,12 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
 
 void Kleo::CryptoConfigEntryPath::doSave()
 {
-  KUrl url;
-  url.setPath( mUrlRequester->url().toString() );
-  mEntry->setURLValue( url );
+  mEntry->setURLValue( mUrlRequester->url() );
 }
 
 void Kleo::CryptoConfigEntryPath::doLoad()
 {
-  mUrlRequester->setUrl( mEntry->urlValue().path() );
+  mUrlRequester->setUrl( mEntry->urlValue() );
 }
 
 ////
@@ -411,15 +409,12 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
 
 void Kleo::CryptoConfigEntryDirPath::doSave()
 {
-  KUrl url;
-  url.setPath( mUrlRequester->url().toString() );
-  mEntry->setURLValue( url );
-
+  mEntry->setURLValue( mUrlRequester->url() );
 }
 
 void Kleo::CryptoConfigEntryDirPath::doLoad()
 {
-  mUrlRequester->setUrl( mEntry->urlValue().path() );
+  mUrlRequester->setUrl( mEntry->urlValue() );
 }
 
 ////

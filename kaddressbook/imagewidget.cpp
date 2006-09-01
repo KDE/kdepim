@@ -247,7 +247,7 @@ KABC::Picture ImageBaseWidget::image() const
   KABC::Picture photo;
 
   if ( mUseImageUrl->isChecked() )
-    photo.setUrl( mImageUrl->url().toString() );
+    photo.setUrl( mImageUrl->url().url() );
   else {
     if ( mImageLabel->pixmap() ) {
       photo.setData( mImageLabel->pixmap()->toImage() );

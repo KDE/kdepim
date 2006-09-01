@@ -72,7 +72,7 @@ ResourceXMLRPCConfig::ResourceXMLRPCConfig( QWidget* parent )
 void ResourceXMLRPCConfig::loadSettings( KRES::Resource *res )
 {
   ResourceXMLRPC *resource = dynamic_cast<ResourceXMLRPC*>( res );
-  
+
   if ( !resource ) {
     kDebug(5700) << "ResourceXMLRPCConfig::loadSettings(): cast failed" << endl;
     return;
@@ -87,13 +87,13 @@ void ResourceXMLRPCConfig::loadSettings( KRES::Resource *res )
 void ResourceXMLRPCConfig::saveSettings( KRES::Resource *res )
 {
   ResourceXMLRPC *resource = dynamic_cast<ResourceXMLRPC*>( res );
-  
+
   if ( !resource ) {
     kDebug(5700) << "ResourceXMLRPCConfig::saveSettings(): cast failed" << endl;
     return;
   }
 
-  resource->prefs()->setUrl( mURL->url().toString() );
+  resource->prefs()->setUrl( mURL->url().url() );
   resource->prefs()->setDomain( mDomain->text() );
   resource->prefs()->setUser( mUser->text() );
   resource->prefs()->setPassword( mPassword->text() );
