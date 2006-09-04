@@ -102,7 +102,7 @@
 
 &introduction;
 
-<!-- Using chapter is too big to put in one of it's own, so breaking down to sect1 level -->
+<!-- Using chapter is too big to put in one of its own, so breaking down to sect1 level -->
 
 <chapter id="using-knode"> 
 <title>Working with &knode;</title> 

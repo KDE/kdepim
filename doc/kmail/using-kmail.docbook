@@ -2098,10 +2098,10 @@ Here are some recommendations regarding the supported tools:</para>
 <varlistentry>
   <term>Bogofilter</term>
 <listitem>
-<para>Bogofilter is a bayesian filter, that means it's spam detection 
+<para>Bogofilter is a bayesian filter, that means its spam detection 
 relies on an initial training phase. On the other hand, it's a pretty 
-fast tool. That's why it is recommended to be used by people which 
-primarily want to have a fast spam detection, and which don't worry 
+fast tool. That's why it is recommended to be used by people who 
+primarily want to have a fast spam detection, and who don't worry 
 about the little training in the beginning before the detection rate
 increases significantly.
 </para>
@@ -2111,10 +2111,10 @@ increases significantly.
   <term>SpamAssassin</term>
 <listitem>
 <para>SpamAssassin is a pretty complex tool to fight against spam. 
-Although it's behavior depends heavily on it's configuration, that 
+Although its behavior depends heavily on its configuration, that 
 tool can detect spam quite well without any training. However,
 scanning a message takes a little longer compared to pure bayesian 
-filters. Let's say, it's not the tool of choice for people without
+filters. Let's say it's not the tool of choice for people without
 some background information about SpamAssassin's capabilities.
 </para>
 </listitem>
