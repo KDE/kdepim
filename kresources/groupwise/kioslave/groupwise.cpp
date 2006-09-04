@@ -21,6 +21,8 @@
 
 #include "groupwiseserver.h"
 
+#include <qregexp.h>
+
 #include <libkdepim/kabcresourcecached.h>
 
 #include <libkcal/freebusy.h>
@@ -163,6 +165,12 @@ void Groupwise::getFreeBusy( const KURL &url )
   } else {
     QString email = file.left( file.length() - 4 );
     debugMessage( "Email: " + email );
+
+    // Sanitise local Nuernberg email addresses
+    kdDebug() << "Email before sanitizing: " << email << endl;
+    email = email.replace(QRegExp("\\.EMEA5-1\\.EMEA5" ), "" );
+    email = email.replace(QRegExp("\\.Suse.INTERNET" ), "" );
+    kdDebug() << "Email after sanitizing: " << email << endl;
 
     QString u = soapUrl( url );
 
