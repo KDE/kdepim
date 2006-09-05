@@ -85,9 +85,21 @@ memory_reference<T> operator ++( memory_reference<T> ref ) {
 }
 
 template <typename T>
+memory_reference<T> operator --( memory_reference<T> ref ) {
+	return ref = ref - 1;
+}
+
+template <typename T>
 T operator ++( memory_reference<T> ref, int ) {
 	T v = ref;
 	ref = ref + 1;
+	return v;
+}
+
+template <typename T>
+T operator --( memory_reference<T> ref, int ) {
+	T v = ref;
+	ref = ref - 1;
 	return v;
 }
 
