@@ -10,7 +10,9 @@ include(MacroLibrary)
 find_package(KdepimLibs REQUIRED)
 find_package(Kode REQUIRED)
 
-macro_log_feature(X11_Xss_LIB "X Development" "X Window Development Screen Saver Library" "http://xorg.freedesktop.org" TRUE "" "Required to build the KTimeTracker Program")
+if(UNIX)
+   macro_log_feature(X11_Xss_LIB "X Development" "X Window Development Screen Saver Library" "http://xorg.freedesktop.org" TRUE "" "Required to build the KTimeTracker Program")
+endif(UNIX)
 
 macro_optional_find_package(Gpgme)
 macro_log_feature(GPGME_FOUND "gpgme" "GnuPG Made Easy Development Libraries" "http://www.gnupg.org/related_software/gpgme" FALSE "0.4.5 or greater" "Needed to provide GNU Privacy Guard support in KDE PIM applications")
