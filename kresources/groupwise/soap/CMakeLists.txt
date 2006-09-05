@@ -3,16 +3,15 @@ include_directories( ${CMAKE_SOURCE_DIR}/kresources/groupwise  )
 
 
 ########### next target ###############
-
+if(KDE4_BUILD_TESTS)
 set(soapdebug_SRCS soapdebug.cpp )
 
 kde4_automoc(${soapdebug_SRCS})
 
-if(KDE4_BUILD_TESTS)
 
 kde4_add_executable(soapdebug ${soapdebug_SRCS})
 
-target_link_libraries(soapdebug  ${KDE4_KDECORE_LIBS} gwsoap kdecore ${KDE4_KCAL_LIBS} kdepim )
+target_link_libraries(soapdebug  ${KDE4_KDECORE_LIBS} gwsoap ${KDE4_KCAL_LIBS} kdepim )
 
 endif(KDE4_BUILD_TESTS)
 
