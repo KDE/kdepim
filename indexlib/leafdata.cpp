@@ -117,7 +117,7 @@ void leaf_data::remove_reference( uint32_t ref ) {
 		unsigned nbytes = end().raw() - first.raw();
 		std::memmove( const_cast<unsigned char*>( first.raw() ), next.raw(), nbytes );
 		set_usedbytes( usedbytes() - nbytes );
-		unsigned char* iter = first.raw();
+		unsigned char* iter = const_cast<unsigned char*>( first.raw() );
 		for ( ; iter < end().raw(); ++iter) {
 			if (*iter) --*iter;
 			else {
