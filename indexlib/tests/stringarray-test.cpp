@@ -12,17 +12,16 @@ void cleanup() {
 }
 
 void test_size() {
-	cleanup();
 	stringarray test( fname );
 	test.add( "one" );
 	test.add( "one" );
 	test.add( "one" );
 	test.add( "one" );
 	//BOOST_CHECK_EQUAL( test.size(), 4 );
+	cleanup();
 }
 
 void test_put_recover() {
-	cleanup();
 	stringarray test( fname );
 	BOOST_CHECK_EQUAL( test.add( "one" ), 0 );
 	BOOST_CHECK_EQUAL( test.add( "two" ), 1 );
@@ -34,10 +33,10 @@ void test_put_recover() {
 	BOOST_CHECK_EQUAL( test.get( 2 ), "three" );
 	BOOST_CHECK_EQUAL( test.get( 3 ), "four" );
 
+	cleanup();
 }
 
 void test_persistent() {
-	cleanup();
 	{
 		stringarray test( fname );
 		BOOST_CHECK_EQUAL( test.add( "one" ), 0 );
@@ -55,10 +54,10 @@ void test_persistent() {
 		BOOST_CHECK_EQUAL( test.get( 3 ), "four" );
 
 	}
+	cleanup();
 }
 
 void cstr() {
-	cleanup();
 	stringarray test( fname );
 
 	test.add( "one" );
@@ -72,10 +71,10 @@ void cstr() {
 	BOOST_CHECK( !strcmp( test.get_cstr( 2 ), "three" ) );
 	BOOST_CHECK( !strcmp( test.get_cstr( 3 ), "four" ) );
 
+	cleanup();
 }
 
 void erase() {
-	cleanup();
 	stringarray test( fname );
 
 	test.add( "one" );
@@ -87,7 +86,9 @@ void erase() {
 	BOOST_CHECK_EQUAL( test.get( 0 ), "one" );
 	BOOST_CHECK_EQUAL( test.get( 1 ), "three" );
 	BOOST_CHECK_EQUAL( test.size(), 3u );
+	cleanup();
 }
+
 
 test_suite* get_suite() {
 	test_suite* test = BOOST_TEST_SUITE( "Memvector tests" );
