@@ -18,27 +18,4 @@ target_link_libraries(qgpgme  ${KDE4_KDECORE_LIBS}  gpgme++ )
 set_target_properties(qgpgme PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS qgpgme  DESTINATION ${LIB_INSTALL_DIR})
 
-
-
-#original Makefile.am contents follow:
-
-#SUBDIRS = . tests
-#
-#INCLUDES =  -I$(top_srcdir) $(all_includes)
-#
-#lib_LTLIBRARIES = libqgpgme.la
-#
-#qgpgmedir = $(includedir)/qgpgme
-#qgpgme_HEADERS = eventloopinteractor.h dataprovider.h
-#
-#libqgpgme_la_SOURCES = eventloopinteractor.cpp dataprovider.cpp
-#libqgpgme_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
-#libqgpgme_la_LIBADD = $(LIB_QT) ../gpgmepp/libgpgme++.la
-#
-#METASOURCES = AUTO
-#
-#messages:
-#	$(XGETTEXT) *.cpp *.h -o $(podir)/libqgpgme.pot
-#
-#include $(top_srcdir)/admin/Doxyfile.am
-#
+install(FILES eventloopinteractor.h dataprovider.h DESTINATION ${INCLUDE_INSTALL_DIR}/qgpgme)
