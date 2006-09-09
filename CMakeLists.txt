@@ -10,9 +10,9 @@ include(MacroLibrary)
 find_package(KdepimLibs REQUIRED)
 find_package(Kode REQUIRED)
 
-if(UNIX)
+if(Q_WS_X11)
    macro_log_feature(X11_Xss_LIB "X Development" "X Window Development Screen Saver Library" "http://xorg.freedesktop.org" TRUE "" "Required to build the KTimeTracker Program")
-endif(UNIX)
+endif(Q_WS_X11)
 
 macro_optional_find_package(Gpgme)
 macro_log_feature(GPGME_FOUND "gpgme" "GnuPG Made Easy Development Libraries" "http://www.gnupg.org/related_software/gpgme" FALSE "0.4.5 or greater" "Needed to provide GNU Privacy Guard support in KDE PIM applications")
@@ -77,7 +77,6 @@ set(libkdgantt_SRCS
 )
 
 
-
 add_subdirectory(kode)
 add_subdirectory(akonadi)
 add_subdirectory(libkdepim)
@@ -98,7 +97,11 @@ add_subdirectory(knode)
 add_subdirectory(kabc)
 add_subdirectory(kaddressbook)
 add_subdirectory(kalarm)
+
+if (Q_WS_X11)
 add_subdirectory(karm)
+endif (Q_WS_X11)
+
 add_subdirectory(kdgantt)
 add_subdirectory(kfile-plugins)
 add_subdirectory(kioslave)
