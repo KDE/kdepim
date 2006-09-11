@@ -74,9 +74,9 @@ QDate GWConverter::charToQDate( const char *str )
 }
 
 char *GWConverter::qDateTimeToChar( const QDateTime &dt,
-                                    const QString &timezone )
+                                    const KDateTime::Spec &timeSpec )
 {
-  return qDateTimeToChar( KPimPrefs::localTimeToUtc( dt, timezone ) );
+  return qDateTimeToChar( KPimPrefs::localTimeToUtc( dt, timeSpec ) );
 }
 
 char *GWConverter::qDateTimeToChar( const QDateTime &dt )
@@ -84,9 +84,9 @@ char *GWConverter::qDateTimeToChar( const QDateTime &dt )
   return qStringToChar( dt.toString( "yyyyMMddThhmmZ" ) );
 }
 
-std::string* GWConverter::qDateTimeToString( const QDateTime &dt, const QString &timezone )
+std::string* GWConverter::qDateTimeToString( const QDateTime &dt, const KDateTime::Spec &timeSpec )
 {
-  return qDateTimeToString( KPimPrefs::localTimeToUtc( dt, timezone ) );
+  return qDateTimeToString( KPimPrefs::localTimeToUtc( dt, timeSpec ) );
 }
 
 std::string* GWConverter::qDateTimeToString( const QDateTime &dt )
@@ -125,9 +125,9 @@ QDateTime GWConverter::charToQDateTime( const char *str )
 }
 
 QDateTime GWConverter::charToQDateTime( const char *str,
-                                        const QString &timezone )
+                                        const KDateTime::Spec &timeSpec )
 {
   if ( !str ) return QDateTime();
   QDateTime utc = charToQDateTime( str );
-  return KPimPrefs::utcToLocalTime( utc, timezone );
+  return KPimPrefs::utcToLocalTime( utc, timeSpec );
 }

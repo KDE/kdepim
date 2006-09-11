@@ -80,7 +80,7 @@ bool KonsoleKalendar::importCalendar()
 bool KonsoleKalendar::createCalendar()
 {
   bool status = false;
-  CalendarLocal newCalendar( KPimPrefs::timezone() );
+  CalendarLocal newCalendar( KPimPrefs::timeSpec() );
 
   if ( m_variables->isDryRun() ) {
     cout << i18n( "Create Calendar <Dry Run>: %1" ,
@@ -418,13 +418,14 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
 
   bool found = false;
 
+  KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
   Event::List eventList( m_variables->getCalendar()->
                          rawEventsForDate( startdate.date(),
                                            EventSortStartDate,
                                            SortDirectionAscending ) );
   for ( it = eventList.begin(); it != eventList.end(); ++it ) {
     event = *it;
-    if ( event->dtEnd() == enddate && event->summary() == summary ) {
+    if ( event->dtEnd().toTimeSpec( timeSpec ).dateTime() == enddate && event->summary() == summary ) {
       found = true;
       break;
     }

@@ -451,10 +451,10 @@ void KCalResourceSlox::createEventAttributes( QDomDocument &doc,
   WebdavHandler::addSloxElement( this, doc, parent, fieldName( FolderId ), folderId );
 
   WebdavHandler::addSloxElement( this, doc, parent, fieldName( EventBegin ),
-      WebdavHandler::qDateTimeToSlox( event->dtStart(), timeZoneId() ) );
+      WebdavHandler::kDateTimeToSlox( event->dtStart() ) );
 
   WebdavHandler::addSloxElement( this, doc, parent, fieldName( EventEnd ),
-      WebdavHandler::qDateTimeToSlox( event->dtEnd(), timeZoneId() ) );
+      WebdavHandler::kDateTimeToSlox( event->dtEnd() ) );
 
   WebdavHandler::addSloxElement( this, doc, parent, fieldName( Location ), event->location() );
 
@@ -476,12 +476,12 @@ void KCalResourceSlox::createTodoAttributes( QDomDocument &doc,
 
   if ( todo->hasStartDate() ) {
     WebdavHandler::addSloxElement( this, doc, parent, fieldName( TaskBegin ),
-        WebdavHandler::qDateTimeToSlox( todo->dtStart(), timeZoneId() ) );
+        WebdavHandler::kDateTimeToSlox( todo->dtStart() ) );
   }
 
   if ( todo->hasDueDate() ) {
     WebdavHandler::addSloxElement( this, doc, parent, fieldName( TaskEnd ),
-        WebdavHandler::qDateTimeToSlox( todo->dtDue(), timeZoneId() ) );
+        WebdavHandler::kDateTimeToSlox( todo->dtDue() ) );
   }
 
   int priority = todo->priority();
@@ -581,7 +581,7 @@ void KCalResourceSlox::createRecurrenceAttributes( QDomDocument &doc,
       kDebug() << k_funcinfo << "unsupported recurrence type: " << r->recurrenceType() << endl;
   }
   WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceEnd ),
-                                 WebdavHandler::qDateTimeToSlox( r->endDateTime() ) );
+                                 WebdavHandler::kDateTimeToSlox( r->endDateTime() ) );
   // delete exceptions
   DateList exlist = r->exDates();
   QStringList res;
@@ -704,22 +704,23 @@ void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
   if ( text.isEmpty() ) return;
 
   if ( tag == fieldName( EventBegin ) ) {
-    QDateTime dt;
+    KDateTime dt;
     if ( event->doesFloat() ) {
       if ( type() == "ox" )
-        dt = WebdavHandler::sloxToQDateTime( text, timeZoneId() );
+        dt = WebdavHandler::sloxToKDateTime( text, timeSpec() );
       else
-        dt = WebdavHandler::sloxToQDateTime( text ); // ### is this really correct for SLOX?
+        dt = WebdavHandler::sloxToKDateTime( text ); // ### is this really correct for SLOX?
+      dt.setDateOnly( true );
     } else
-      dt = WebdavHandler::sloxToQDateTime( text, timeZoneId() );
+      dt = WebdavHandler::sloxToKDateTime( text );
     event->setDtStart( dt );
   } else if ( tag == fieldName( EventEnd ) ) {
-    QDateTime dt;
+    KDateTime dt;
     if ( event->doesFloat() ) {
-      dt = WebdavHandler::sloxToQDateTime( text );
+      dt = WebdavHandler::sloxToKDateTime( text );
       dt = dt.addSecs( -1 );
     }
-    else dt = WebdavHandler::sloxToQDateTime( text, timeZoneId() );
+    else dt = WebdavHandler::sloxToKDateTime( text );
     event->setDtEnd( dt );
   } else if ( tag == fieldName( Location ) ) {
     event->setLocation( text );
@@ -731,7 +732,7 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
   QString type;
 
   int dailyValue = -1;
-  QDateTime end;
+  KDateTime end;
 
   int weeklyValue = -1;
   QBitArray days( 7 ); // days, starting with monday
@@ -766,7 +767,7 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
     } else if ( tag == "daily_value" ) {
       dailyValue = text.toInt();
     } else if ( tag == fieldName( RecurrenceEnd ) ) {
-      end = WebdavHandler::sloxToQDateTime( text );
+      end = WebdavHandler::sloxToKDateTime( text );
     } else if ( tag == "weekly_value" ) {
       weeklyValue = text.toInt();
     } else if ( tag.left( 11 ) == "weekly_day_" ) {
@@ -820,7 +821,7 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
       QStringList exdates = text.split( "," );
       QStringList::Iterator it;
       for ( it = exdates.begin(); it != exdates.end(); ++it )
-        deleteExceptions.append( WebdavHandler::sloxToQDateTime( *it ).date() );
+        deleteExceptions.append( WebdavHandler::sloxToKDateTime( *it ).date() );
     }
   }
 
@@ -872,13 +873,13 @@ void KCalResourceSlox::parseTodoAttribute( const QDomElement &e,
   if ( text.isEmpty() ) return;
 
   if ( tag == fieldName( TaskBegin ) ) {
-    QDateTime dt = WebdavHandler::sloxToQDateTime( text );
+    KDateTime dt = WebdavHandler::sloxToKDateTime( text );
     if ( dt.isValid() ) {
       todo->setDtStart( dt );
       todo->setHasStartDate( true );
     }
   } else if ( tag == fieldName( TaskEnd ) ) {
-    QDateTime dt = WebdavHandler::sloxToQDateTime( text );
+    KDateTime dt = WebdavHandler::sloxToKDateTime( text );
     if ( dt.isValid() ) {
       todo->setDtDue( dt );
       todo->setHasDueDate( true );

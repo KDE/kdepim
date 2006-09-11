@@ -23,7 +23,6 @@
 
 #include <q3ptrlist.h>
 #include <QString>
-#include <QDateTime>
 
 #include <kconfig.h>
 
@@ -95,7 +94,7 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     /**
       Get unfiltered events for date \a dt.
     */
-    Event::List rawEventsForDate( const QDateTime &dt );
+    Event::List rawEventsForDate( const KDateTime &dt );
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
       only events are returned, which are completely included in the range.
@@ -140,14 +139,26 @@ class KDE_EXPORT ResourceKABC : public ResourceCalendar
     Journal::List rawJournalsForDate( const QDate &date );
 
     /** Return all alarms, which occur in the given time interval. */
-    Alarm::List alarms( const QDateTime &from, const QDateTime &to );
+    Alarm::List alarms( const KDateTime &from, const KDateTime &to );
 
     /** Return all alarms, which occur before given date. */
-    Alarm::List alarmsTo( const QDateTime &to );
+    Alarm::List alarmsTo( const KDateTime &to );
 
     void dump() const;
 
-    void setTimeZoneId( const QString &timeZoneId );
+    virtual void setTimeSpec( const KDateTime::Spec &timeSpec );
+
+    /**
+       Get the viewing time specification (time zone etc.) for the calendar.
+
+       @return time specification
+    */
+    KDateTime::Spec timeSpec() const;
+
+    virtual void setTimeZoneId( const QString &timeZoneId );
+    virtual QString timeZoneId() const;
+
+    virtual void shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec);
 
   protected:
     bool doOpen();

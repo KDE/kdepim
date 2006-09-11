@@ -84,12 +84,13 @@ bool KonsoleKalendarChange::changeEvent()
         printSpecs();
       }
 
+      KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
       if ( m_variables->isStartDateTime() ) {
-        event->setDtStart( m_variables->getStartDateTime() );
+        event->setDtStart( KDateTime( m_variables->getStartDateTime(), timeSpec ) );
       }
 
       if ( m_variables->isEndDateTime() ) {
-        event->setDtEnd( m_variables->getEndDateTime() );
+        event->setDtEnd( KDateTime( m_variables->getEndDateTime(), timeSpec ) );
       }
 
       event->setFloats( m_variables->getFloating() );
@@ -135,12 +136,13 @@ void KonsoleKalendarChange::printSpecs( Event *event )
      event->summary() ).toLocal8Bit().data()
        << endl;
 
+  KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
   cout << i18n( "  Begin: %1",
-     event->dtStart().toString( Qt::TextDate ) ).toLocal8Bit().data()
+     event->dtStart().toTimeSpec( timeSpec ).dateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  End:   %1",
-     event->dtEnd().toString( Qt::TextDate ) ).toLocal8Bit().data()
+     event->dtEnd().toTimeSpec( timeSpec ).dateTime().toString( Qt::TextDate ) ).toLocal8Bit().data()
        << endl;
 
   cout << i18n( "  Desc:  %1",

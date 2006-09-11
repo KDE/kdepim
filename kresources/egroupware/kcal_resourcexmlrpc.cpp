@@ -23,11 +23,9 @@
 #include <typeinfo>
 
 #include <QApplication>
-#include <QDateTime>
 #include <q3ptrlist.h>
 #include <QStringList>
 #include <QTimer>
-//Added by qt3to4:
 #include <QList>
 
 #include <kabc/locknull.h>
@@ -49,6 +47,7 @@
 #include <kcal/journal.h>
 #include <kcal/filestorage.h>
 #include <kcal/alarm.h>
+#include <kcal/icaltimezones.h>
 
 #include "kcal_egroupwareprefs.h"
 #include "kcal_resourcexmlrpcconfig.h"
@@ -394,9 +393,9 @@ Event::List ResourceXMLRPC::rawEvents( const QDate& start, const QDate& end,
   return mCalendar.rawEvents( start, end, inclusive );
 }
 
-Event::List ResourceXMLRPC::rawEventsForDate( const QDateTime& qdt )
+Event::List ResourceXMLRPC::rawEventsForDate( const KDateTime& dt )
 {
-  return mCalendar.rawEventsForDate( qdt.date() );
+  return mCalendar.rawEventsForDate( dt.date() );
 }
 
 Event::List ResourceXMLRPC::rawEvents()
@@ -490,12 +489,12 @@ Journal *ResourceXMLRPC::journal( const QString& uid )
 }
 
 
-Alarm::List ResourceXMLRPC::alarmsTo( const QDateTime& to )
+Alarm::List ResourceXMLRPC::alarmsTo( const KDateTime& to )
 {
   return mCalendar.alarmsTo( to );
 }
 
-Alarm::List ResourceXMLRPC::alarms( const QDateTime& from, const QDateTime& to )
+Alarm::List ResourceXMLRPC::alarms( const KDateTime& from, const KDateTime& to )
 {
   return mCalendar.alarms( from, to );
 }
@@ -779,8 +778,8 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
   int rInterval = 1;
   int rData = 0;
   int rights = 0;
-  QDateTime rEndDate;
-  QList<QDateTime> rExceptions;
+  KDateTime rEndDate;
+  QList<KDateTime> rExceptions;
 
   QMap<QString, QVariant>::ConstIterator it;
   for ( it = args.begin(); it != args.end(); ++it ) {
@@ -789,10 +788,10 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
     } else if ( it.key() == "rights" ) {
       rights = it.value().toInt();
     } else if ( it.key() == "start" ) {
-      event->setDtStart( it.value().toDateTime() );
+      event->setDtStart( KDateTime( it.value().toDateTime(), timeSpec() ) );
     } else if ( it.key() == "end" ) {
-      QDateTime start = args[ "start" ].toDateTime();
-      QDateTime end = it.value().toDateTime();
+      KDateTime start( args[ "start" ].toDateTime(), timeSpec() );
+      KDateTime end( it.value().toDateTime(), timeSpec() );
       if ( start.time() == end.time() &&
            start.time().hour() == 0 && start.time().minute() == 0 &&
            start.time().second() == 0 ) {
@@ -803,7 +802,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
         event->setHasEndDate( true );
       }
     } else if ( it.key() == "modtime" ) {
-      event->setLastModified( it.value().toDateTime() );
+      event->setLastModified( KDateTime( it.value().toDateTime(), timeSpec() ) );
     } else if ( it.key() == "title" ) {
       event->setSummary( it.value().toString() );
     } else if ( it.key() == "description" ) {
@@ -844,7 +843,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
     } else if ( it.key() == "recur_interval" ) {
       rInterval = it.value().toInt();
     } else if ( it.key() == "recur_enddate" ) {
-      rEndDate = it.value().toDateTime();
+      rEndDate = KDateTime( it.value().toDateTime(), timeSpec() );
     } else if ( it.key() == "recur_data" ) {
       rData = it.value().toInt();
     } else if ( it.key() == "recur_exception" ) {
@@ -852,7 +851,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
       QMap<QString, QVariant>::ConstIterator dateIt;
 
       for ( dateIt = dateList.begin(); dateIt != dateList.end(); ++dateIt )
-        rExceptions.append( (*dateIt).toDateTime() );
+        rExceptions.append( KDateTime( (*dateIt).toDateTime(), timeSpec() ) );
     } else if ( it.key() == "participants" ) {
       const QMap<QString, QVariant> persons = it.value().toMap();
       QMap<QString, QVariant>::ConstIterator personsIt;
@@ -884,7 +883,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
 
         Alarm *vAlarm = event->newAlarm();
         vAlarm->setText( event->summary() );
-        vAlarm->setTime( alarm[ "time" ].toDateTime() );
+        vAlarm->setTime( KDateTime( alarm[ "time" ].toDateTime(), timeSpec() ) );
         vAlarm->setStartOffset( alarm[ "offset" ].toInt() );
         vAlarm->setEnabled( alarm[ "enabled" ].toBool() );
       }
@@ -925,7 +924,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
     if ( rEndDate.date().isValid() )
       re->setEndDate( rEndDate.date() );
 
-    QList<QDateTime>::ConstIterator exIt;
+    QList<KDateTime>::ConstIterator exIt;
     for ( exIt = rExceptions.begin(); exIt != rExceptions.end(); ++exIt )
       re->addExDateTime( *exIt );
   }
@@ -936,15 +935,15 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
 
 void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
 {
-  args.insert( "start", event->dtStart() );
+  args.insert( "start", event->dtStart().toTimeSpec( timeSpec() ).dateTime() );
 
   // handle all day events
   if ( event->doesFloat() )
-    args.insert( "end", event->dtEnd().addDays( 1 ) );
+    args.insert( "end", event->dtEnd().addDays( 1 ).dateTime() );
   else
-    args.insert( "end", event->dtEnd() );
+    args.insert( "end", event->dtEnd().toTimeSpec( timeSpec() ).dateTime() );
 
-  args.insert( "modtime", event->lastModified() );
+  args.insert( "modtime", event->lastModified().toTimeSpec( timeSpec() ).dateTime() );
   args.insert( "title", event->summary() );
   args.insert( "description", event->description() );
   args.insert( "location", event->location() );
@@ -1025,15 +1024,15 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
     }
 
     args.insert( "recur_interval", rec->frequency() );
-    args.insert( "recur_enddate", rec->endDateTime() );
+    args.insert( "recur_enddate", rec->endDateTime().toTimeSpec( timeSpec() ).dateTime() );
 
     //  TODO: Also use exception dates!
-    const QList<QDateTime> dates = event->recurrence()->exDateTimes();
-    QList<QDateTime>::ConstIterator dateIt;
+    const QList<KDateTime> dates = event->recurrence()->exDateTimes();
+    QList<KDateTime>::ConstIterator dateIt;
     QMap<QString, QVariant> exMap;
     int counter = 0;
     for ( dateIt = dates.begin(); dateIt != dates.end(); ++dateIt, ++counter )
-      exMap.insert( QString::number( counter ), *dateIt );
+      exMap.insert( QString::number( counter ), (*dateIt).toTimeSpec( timeSpec() ).dateTime() );
 
     args.insert( "recur_exception", exMap );
   }
@@ -1069,7 +1068,7 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
   QMap<QString, QVariant> alarmMap;
   for ( alarmIt = alarms.begin(); alarmIt != alarms.end(); ++alarmIt ) {
     QMap<QString, QVariant> alarm;
-    alarm.insert( "time", (*alarmIt)->time() );
+    alarm.insert( "time", (*alarmIt)->time().toTimeSpec( timeSpec() ).dateTime() );
     alarm.insert( "offset", (*alarmIt)->startOffset().asSeconds() );
     alarm.insert( "enabled", ( (*alarmIt)->enabled() ? int( 1 ) : int( 0 ) ) );
 
@@ -1101,9 +1100,9 @@ void ResourceXMLRPC::writeTodo( Todo* todo, QMap<QString, QVariant>& args )
   }
   args.insert( "category", catMap );
 
-  args.insert( "datemodified", todo->lastModified() );
-  args.insert( "startdate", todo->dtStart() );
-  args.insert( "enddate", todo->dtDue() );
+  args.insert( "datemodified", todo->lastModified().toTimeSpec( timeSpec() ).dateTime() );
+  args.insert( "startdate", todo->dtStart().toTimeSpec( timeSpec() ).dateTime() );
+  args.insert( "enddate", todo->dtDue().toTimeSpec( timeSpec() ).dateTime() );
 
   // SUBTODO
   Incidence *inc = todo->relatedTo();
@@ -1146,10 +1145,10 @@ void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, 
 
   todo->setCategories( todoCategories );
 
-  todo->setLastModified( args[ "datemodified" ].toDateTime() );
+  todo->setLastModified( KDateTime( args[ "datemodified" ].toDateTime(), timeSpec() ) );
 
   todo->setFloats( true );
-  QDateTime dateTime = args[ "startdate" ].toDateTime();
+  KDateTime dateTime( args[ "startdate" ].toDateTime(), timeSpec() );
   if ( dateTime.isValid() ) {
     todo->setDtStart( dateTime );
     todo->setHasStartDate( true );
@@ -1157,7 +1156,7 @@ void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, 
       todo->setFloats( false );
   }
 
-  dateTime = args[ "enddate" ].toDateTime();
+  dateTime = KDateTime( args[ "enddate" ].toDateTime(), timeSpec() );
   if ( dateTime.isValid() ) {
     todo->setDtDue( dateTime );
     todo->setHasDueDate( true );

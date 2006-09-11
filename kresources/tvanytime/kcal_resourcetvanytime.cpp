@@ -45,6 +45,7 @@
 #include <kresources/configwidget.h>
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
+#include <ktimezones.h>
 #include <ktempfile.h>
 #include <ktar.h>
 #include <kurl.h>
@@ -338,6 +339,8 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
 
   kDebug() << "reading schedule for " << serviceId << " on " << dates << endl;
 
+  const KTimeZone *london = KSystemTimeZones::zone( "Europe/London" );
+
   for( QStringList::Iterator it = dates.begin(); it != dates.end(); ++it )
   {
     ProgramInformationMap progInfoMap = service.programmeInformation();
@@ -399,7 +402,7 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
                     event->setFloats( false );
                     event->setSummary( pi.title() );
                     event->setDescription( pi.synopsis() );
-                    event->setDtStart( KPimPrefs::localTimeToUtc( se.startTime(), "Europe/London" ) );
+                    event->setDtStart( KPimPrefs::localTimeToUtc( se.startTime(), london ) );
                     event->setDuration( se.duration() );
                     event->setLocation( service.name() );
                     event->setCategories( pi.genres() );

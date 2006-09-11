@@ -232,7 +232,7 @@ kDebug(5800) << jobData << endl;
   if ( !adaptor || !job ) return false;
   KCal::CalendarLocal calendar( QString::fromLatin1("UTC") );
   KCal::ICalFormat ical;
-  calendar.setTimeZoneId( adaptor->resource()->timeZoneId() );
+  calendar.setTimeSpec( adaptor->resource()->timeSpec() );
   KCal::Incidence::List incidences;
   if ( ical.fromString( &calendar, jobData ) ) {
     KCal::Incidence::List raw = calendar.rawIncidences();

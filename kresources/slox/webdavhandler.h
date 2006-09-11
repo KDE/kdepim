@@ -25,6 +25,8 @@
 #include <QDateTime>
 #include <qdom.h>
 
+#include <kdatetime.h>
+
 #include <kdepimmacros.h>
 #include <kabc/addressee.h>
 
@@ -69,12 +71,12 @@ class KDE_EXPORT WebdavHandler
                                        const QString &tag,
                                        const QString &text = QString() );
 
-    static QDateTime sloxToQDateTime( const QString &str );
-    static QDateTime sloxToQDateTime( const QString &str,
-                                      const QString &timeZoneId );
-    static QString qDateTimeToSlox( const QDateTime &dt );
-    static QString qDateTimeToSlox( const QDateTime &dt,
-                                    const QString &timeZoneId );
+    static KDateTime sloxToKDateTime( const QString &str );
+    static KDateTime sloxToKDateTime( const QString &str,
+                                      const KDateTime::Spec &timeSpec );
+    static KDE_DEPRECATED QDateTime sloxToQDateTime( const QString &str );
+    static QString kDateTimeToSlox( const KDateTime &dt );
+    static KDE_DEPRECATED QString qDateTimeToSlox( const QDateTime &dt );
 
     static QList<SloxItem> getSloxItems( SloxBase *res, const QDomDocument &doc );
 

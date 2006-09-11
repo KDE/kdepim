@@ -22,10 +22,8 @@
 #ifndef KCAL_RESOURCEXMLRPC_H
 #define KCAL_RESOURCEXMLRPC_H
 
-#include <QDateTime>
 #include <q3ptrlist.h>
 #include <QString>
-//Added by qt3to4:
 #include <QList>
 
 #include <kconfig.h>
@@ -102,7 +100,7 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
     /**
       Get unfiltered events for date \a dt.
      */
-    Event::List rawEventsForDate( const QDateTime& dt );
+    Event::List rawEventsForDate( const KDateTime& dt );
 
     /**
       Get unfiltered events in a range of dates. If inclusive is set to true,
@@ -161,12 +159,12 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceCached
     /**
       Return all alarms, which occur in the given time interval.
      */
-    Alarm::List alarms( const QDateTime& from, const QDateTime& to );
+    Alarm::List alarms( const KDateTime& from, const KDateTime& to );
 
     /**
       Return all alarms, which occur before given date.
      */
-    Alarm::List alarmsTo( const QDateTime& to );
+    Alarm::List alarmsTo( const KDateTime& to );
 
     /**
       Public because needed in MultiCalendar::load()

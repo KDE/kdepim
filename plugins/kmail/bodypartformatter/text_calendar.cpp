@@ -40,7 +40,7 @@
 #include <kcal/incidence.h>
 #include <kcal/incidenceformatter.h>
 
-#include <kpimprefs.h> // for the timezone
+#include <kpimprefs.h> // for the time zone
 
 #include <kmail/callback.h>
 #include <kmail/kmmessage.h>
@@ -88,7 +88,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       if ( !writer )
         // Guard against crashes in createReply()
         return Ok;
-      CalendarLocal cl( KPimPrefs::timezone() );
+      CalendarLocal cl( KPimPrefs::timeSpec() );
       KMInvitationFormatterHelper helper( bodyPart );
       QString source;
       /* If the bodypart does not have a charset specified, we need to fall
@@ -119,7 +119,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
     Incidence* icalToString( const QString& iCal ) const
     {
-      CalendarLocal calendar( KPimPrefs::timezone() ) ;
+      CalendarLocal calendar( KPimPrefs::timeSpec() ) ;
       ICalFormat format;
       ScheduleMessage *message =
         format.parseScheduleMessage( &calendar, iCal );
@@ -217,7 +217,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool mail( Incidence* incidence, KMail::Callback& callback ) const
     {
       ICalFormat format;
-      format.setTimeZone( KPimPrefs::timezone(), false );
+      format.setTimeSpec( KPimPrefs::timeSpec() );
       QString msg = format.createScheduleMessage( incidence,
                                                   Scheduler::Reply );
       QString subject;

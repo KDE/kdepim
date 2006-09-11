@@ -170,23 +170,26 @@ QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt )
   return QString::number( ticks ) + "000";
 }
 
-QString WebdavHandler::qDateTimeToSlox( const QDateTime &dt,
-                                        const QString &timeZoneId )
+QString WebdavHandler::kDateTimeToSlox( const KDateTime &dt )
 {
-  QDateTime utc = KPimPrefs::localTimeToUtc( dt, timeZoneId );
-
-  // secsTo and toTime_t etc also perform a timezone conversion using the system timezone,
-  // but we want to use the calendar timezone, so we have to convert ourself and spoof the tz to UTC before
-  // converting to ticks to prevent this
-  QByteArray origTz = getenv("TZ");
-  setenv( "TZ", "UTC", 1 );
-  uint ticks = utc.toTime_t();
-  if ( origTz.isNull() )
-    unsetenv( "TZ" );
-  else
-    setenv( "TZ", origTz, 1 );
+  uint ticks = dt.toTime_t();
 
   return QString::number( ticks ) + "000";
+}
+
+KDateTime WebdavHandler::sloxToKDateTime( const QString &str )
+{
+  QString s = str.mid( 0, str.length() - 3 );
+  qlonglong ticks = s.toLongLong();
+
+  KDateTime dt;
+  dt.setTime_t( ticks );
+  return dt;
+}
+
+KDateTime WebdavHandler::sloxToKDateTime( const QString &str, const KDateTime::Spec &timeSpec )
+{
+  return sloxToKDateTime( str ).toTimeSpec( timeSpec );
 }
 
 QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
@@ -217,12 +220,6 @@ QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
   }
 
   return dt;
-}
-
-QDateTime WebdavHandler::sloxToQDateTime( const QString &str,
-                                          const QString &timeZoneId )
-{
-  return KPimPrefs::utcToLocalTime( sloxToQDateTime(str), timeZoneId );
 }
 
 QDomElement WebdavHandler::addElement( QDomDocument &doc, QDomNode &node,

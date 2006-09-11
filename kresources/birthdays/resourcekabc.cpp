@@ -22,7 +22,6 @@
 #include <typeinfo>
 #include <stdlib.h>
 
-#include <QDateTime>
 #include <QString>
 #include <q3ptrlist.h>
 
@@ -171,8 +170,8 @@ bool ResourceKABC::doLoad()
       Event *ev = new Event();
       ev->setUid( uid_1+"_KABC_Birthday");
 
-      ev->setDtStart(QDateTime(birthdate));
-      ev->setDtEnd(QDateTime(birthdate));
+      ev->setDtStart(KDateTime(birthdate, KDateTime::ClockTime));
+      ev->setDtEnd(KDateTime(birthdate, KDateTime::ClockTime));
       ev->setHasEndDate(true);
       ev->setFloats(true);
       ev->setTransparency( Event::Transparent );
@@ -187,7 +186,7 @@ bool ResourceKABC::doLoad()
 
       // Set the recurrence
       Recurrence *vRecurrence = ev->recurrence();
-      vRecurrence->setStartDate( birthdate );
+      vRecurrence->setStartDateTime( KDateTime(birthdate, KDateTime::ClockTime) );
       vRecurrence->setYearly( 1 );
       if ( birthdate.month()==2 && birthdate.day()==29 ) {
         vRecurrence->addYearlyDay( 60 );
@@ -199,7 +198,7 @@ bool ResourceKABC::doLoad()
         // Set the alarm
         Alarm* vAlarm = ev->newAlarm();
         vAlarm->setText(summary);
-        vAlarm->setTime(QDateTime(birthdate));
+        vAlarm->setTime(KDateTime(birthdate, KDateTime::ClockTime));
         // 24 hours before
         vAlarm->setStartOffset( -1440 * mAlarmDays );
         vAlarm->setEnabled(true);
@@ -242,8 +241,8 @@ bool ResourceKABC::doLoad()
   }
 
   for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
-    QDateTime anniversary = QDateTime( QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate ) );
-    kDebug(5800) << "found a anniversary " << anniversary.toString() << endl;
+    KDateTime anniversary( QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate ), KDateTime::ClockTime );
+    kDebug(5800) << "found an anniversary " << anniversary.date().toString() << endl;
     QString name;
     QString name_1 = (*addrIt).nickName();
     QString uid_1 = (*addrIt).uid();
@@ -292,7 +291,7 @@ bool ResourceKABC::doLoad()
     }
     // Set the recurrence
     Recurrence *vRecurrence = ev->recurrence();
-    vRecurrence->setStartDate( anniversary.date() );
+    vRecurrence->setStartDateTime( KDateTime( anniversary.date(), KDateTime::ClockTime) );
     vRecurrence->setYearly( 1 );
     if ( anniversary.date().month()==2 && anniversary.date().day()==29 ) {
       vRecurrence->addYearlyDay( 60 );
@@ -407,9 +406,9 @@ Event::List ResourceKABC::rawEvents( const QDate &start, const QDate &end,
   return mCalendar.rawEvents( start, end, inclusive );
 }
 
-Event::List ResourceKABC::rawEventsForDate(const QDateTime &qdt)
+Event::List ResourceKABC::rawEventsForDate(const KDateTime &dt)
 {
-  return mCalendar.rawEventsForDate( qdt.date() );
+  return mCalendar.rawEventsForDate( dt.date() );
 }
 
 Event::List ResourceKABC::rawEvents( EventSortField sortField, SortDirection sortDirection )
@@ -469,14 +468,14 @@ Journal::List ResourceKABC::rawJournalsForDate( const QDate &date )
   return mCalendar.rawJournalsForDate( date );
 }
 
-Alarm::List ResourceKABC::alarmsTo( const QDateTime &to )
+Alarm::List ResourceKABC::alarmsTo( const KDateTime &to )
 {
   return mCalendar.alarmsTo( to );
 }
 
-Alarm::List ResourceKABC::alarms( const QDateTime &from, const QDateTime &to )
+Alarm::List ResourceKABC::alarms( const KDateTime &from, const KDateTime &to )
 {
-//  kDebug(5800) << "ResourceKABC::alarms(" << from.toString() << " - " << to.toString() << ")\n";
+//  kDebug(5800) << "ResourceKABC::alarms(" << from.dateTime().toString() << " - " << to.dateTime().toString() << ")\n";
 
   return mCalendar.alarms( from, to );
 }
@@ -492,9 +491,29 @@ void ResourceKABC::reload()
   emit resourceChanged( this );
 }
 
+void ResourceKABC::setTimeSpec( const KDateTime::Spec &timeSpec )
+{
+  mCalendar.setTimeSpec( timeSpec );
+}
+
+KDateTime::Spec ResourceKABC::timeSpec() const
+{
+  return mCalendar.timeSpec();
+}
+
 void ResourceKABC::setTimeZoneId( const QString& tzid )
 {
   mCalendar.setTimeZoneId( tzid );
+}
+
+QString ResourceKABC::timeZoneId() const
+{
+  return mCalendar.timeZoneId();
+}
+
+void ResourceKABC::shiftTimes(const KDateTime::Spec &oldSpec, const KDateTime::Spec &newSpec)
+{
+  mCalendar.shiftTimes( oldSpec, newSpec );
 }
 
 #include "resourcekabc.moc"

@@ -47,7 +47,7 @@ CalendarUploadItem::CalendarUploadItem( CalendarAdaptor *adaptor, KCal::Incidenc
     setUid( incidence->uid() );
 
     ICalFormat format;
-    format.setTimeZone( adaptor->resource()->timeZoneId(), true );
+    format.setTimeSpec( adaptor->resource()->timeSpec() );
     setData( format.toICalString( incidence ) );
   }
 }

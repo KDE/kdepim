@@ -99,12 +99,13 @@ void KonsoleKalendarDelete::printSpecs( Event *event )
      event->summary() ).data()
        << endl;
 
+  KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
   cout << i18n( "  Begin: %1",
-     event->dtStart().toString( Qt::TextDate ) ).data()
+     event->dtStart().toTimeSpec( timeSpec ).dateTime().toString( Qt::TextDate ) ).data()
        << endl;
 
   cout << i18n( "  End:   %1",
-     event->dtEnd().toString( Qt::TextDate ) ).data()
+     event->dtEnd().toTimeSpec( timeSpec ).dateTime().toString( Qt::TextDate ) ).data()
        << endl;
 
   cout << i18n( "  Desc:  %1",

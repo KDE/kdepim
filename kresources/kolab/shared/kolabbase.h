@@ -39,6 +39,7 @@
 #include <QColor>
 
 class QFile;
+class KTimeZone;
 
 namespace KCal {
   class Incidence;
@@ -164,7 +165,7 @@ protected:
   QDateTime mCreationDate;
   QDateTime mLastModified;
   Sensitivity mSensitivity;
-  QString mTimeZoneId;
+  const KTimeZone *mTimeZone;
 
   // KPilot synchronization stuff
   bool mHasPilotSyncId,  mHasPilotSyncStatus;

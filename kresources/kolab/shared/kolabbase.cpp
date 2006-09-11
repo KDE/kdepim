@@ -36,6 +36,7 @@
 #include <kabc/addressee.h>
 #include <kcal/journal.h>
 #include <libkdepim/kpimprefs.h>
+#include <ktimezones.h>
 #include <kdebug.h>
 #include <QFile>
 
@@ -45,7 +46,8 @@ using namespace Kolab;
 KolabBase::KolabBase( const QString& tz )
   : mCreationDate( QDateTime::currentDateTime() ),
     mLastModified( QDateTime::currentDateTime() ),
-    mSensitivity( Public ), mTimeZoneId( tz ),
+    mSensitivity( Public ),
+    mTimeZone( KSystemTimeZones::zone( tz ) ),
     mHasPilotSyncId( false ),  mHasPilotSyncStatus( false )
 {
 }
@@ -438,10 +440,10 @@ void KolabBase::writeString( QDomElement& element, const QString& tag,
 
 QDateTime KolabBase::localToUTC( const QDateTime& time ) const
 {
-  return KPimPrefs::localTimeToUtc( time, mTimeZoneId );
+  return KPimPrefs::localTimeToUtc( time, mTimeZone );
 }
 
 QDateTime KolabBase::utcToLocal( const QDateTime& time ) const
 {
-  return KPimPrefs::utcToLocalTime( time, mTimeZoneId );
+  return KPimPrefs::utcToLocalTime( time, mTimeZone );
 }

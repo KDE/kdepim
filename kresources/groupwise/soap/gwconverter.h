@@ -21,8 +21,8 @@
 #ifndef KABC_GW_CONVERTER_H
 #define KABC_GW_CONVERTER_H
 
-#include <QDateTime>
 #include <QString>
+#include <kdatetime.h>
 
 #include "soapH.h"
 
@@ -45,13 +45,13 @@ class GWConverter
     std::string* qDateToString( const QDate &string );
     QDate stringToQDate( std::string* );
 
-    char *qDateTimeToChar( const QDateTime &dt, const QString &timezone );
+    char *qDateTimeToChar( const QDateTime &dt, const KDateTime::Spec &timeSpec );
     char *qDateTimeToChar( const QDateTime &dt );
 
     QDateTime charToQDateTime( const char *str );
-    QDateTime charToQDateTime( const char *str, const QString &timezone );
+    QDateTime charToQDateTime( const char *str, const KDateTime::Spec &timeSpec );
 
-    std::string* qDateTimeToString( const QDateTime &string, const QString &timezone );
+    std::string* qDateTimeToString( const QDateTime &string, const KDateTime::Spec &timeSpec );
     std::string* qDateTimeToString( const QDateTime &string );
     
     QDateTime stringToQDateTime( const std::string* );

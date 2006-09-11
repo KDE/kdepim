@@ -83,8 +83,9 @@ bool KonsoleKalendarAdd::addEvent()
 
     Event *event = new Event();
 
-    event->setDtStart( m_variables->getStartDateTime() );
-    event->setDtEnd( m_variables->getEndDateTime() );
+    KDateTime::Spec timeSpec = m_variables->getCalendar()->timeSpec();
+    event->setDtStart( KDateTime( m_variables->getStartDateTime(), timeSpec ) );
+    event->setDtEnd( KDateTime( m_variables->getEndDateTime(), timeSpec ) );
     event->setSummary( m_variables->getSummary() );
     event->setFloats( m_variables->getFloating() );
     event->setDescription( m_variables->getDescription() );
@@ -122,7 +123,7 @@ bool KonsoleKalendarAdd::addImportedCalendar()
     fileName = m_variables->getCalendarFile();
   }
 
-  CalendarLocal *cal = new CalendarLocal( KPimPrefs::timezone() );
+  CalendarLocal *cal = new CalendarLocal( KPimPrefs::timeSpec() );
   if ( !cal->load( fileName ) ||
        !cal->load( m_variables->getImportFile() ) ||
        !cal->save( fileName ) ) {

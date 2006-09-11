@@ -68,7 +68,8 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceNotes
     bool addNote( KCal::Journal* );
     bool deleteNote( KCal::Journal* );
 
-    KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to );
+    KCal::Alarm::List alarms( const KDateTime& from, const KDateTime& to );
+    KDE_DEPRECATED KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to );
 
   protected slots:
     void loginFinished( const QList<QVariant>&, const QVariant& );
