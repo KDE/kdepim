@@ -81,6 +81,7 @@ TransactionItem* TransactionItemView::addTransactionItem( ProgressItem* item, bo
 
 void TransactionItemView::resizeContents( int w, int h )
 {
+  // (handling of QEvent::LayoutHint in QScrollView calls this method)
   //kdDebug(5300) << k_funcinfo << w << "," << h << endl;
   QScrollView::resizeContents( w, h );
   // Tell the layout in the parent (progressdialog) that our size changed
@@ -171,7 +172,7 @@ TransactionItem::TransactionItem( QWidget* parent,
     connect ( mCancelButton, SIGNAL( clicked() ),
               this, SLOT( slotItemCanceled() ));
   }
-  
+
   h = new QHBox( this );
   h->setSpacing( 5 );
   h->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
@@ -181,6 +182,10 @@ TransactionItem::TransactionItem( QWidget* parent,
   // always interpret the status text as RichText, but disable word wrapping
   mItemStatus->setTextFormat( Qt::RichText );
   mItemStatus->setAlignment( Qt::AlignAuto | Qt::AlignVCenter | Qt::SingleLine );
+  // richtext leads to sizeHint acting as if wrapping was enabled though,
+  // so make sure we only ever have the height of one line.
+  mItemStatus->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Ignored ) );
+  mItemStatus->setFixedHeight( mItemLabel->sizeHint().height() );
   setCrypto( item->usesCrypto() );
   if( first ) hideHLine();
 }
