@@ -357,7 +357,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
     if ( progressDialog.wasCancelled() )
       return KABC::AddresseeList();
 
-    progressDialog.progressBar()->advance( 1 );
+    progressDialog.progressBar()->setValue( progressDialog.progressBar()->value() + 1 );
 
     if ( !addrHome.isEmpty() )
       a.insertAddress( addrHome );

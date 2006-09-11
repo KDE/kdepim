@@ -1046,7 +1046,7 @@ bool KeySelectionDialog::checkKeys( const QList<Q3ListViewItem*>& keys ) const
                               QString::fromAscii( getKeyId( *it ) ) ) );
     kapp->processEvents();
     keysAllowed = keysAllowed && ( -1 != keyAdmissibility( *it, AllowExpensiveTrustCheck ) );
-    pProgressDlg->progressBar()->advance( 1 );
+    pProgressDlg->progressBar()->setValue( pProgressDlg->progressBar()->value() + 1 );
     kapp->processEvents();
   }
 
