@@ -501,10 +501,10 @@ bool IncidenceConverter::convertFromCalendarItem( ngwt__CalendarItem* item,
   kDebug() << "SUMMARY: " << incidence->summary() << endl;
 
   if ( item->created )
-    incidence->setCreated( charToQDateTime( item->created, mTimezone ) );
+    incidence->setCreated( charToKDateTime( item->created, mTimezone ) );
 
   if ( item->modified != 0 )
-    incidence->setLastModified( charToQDateTime( item->modified, mTimezone ) );
+    incidence->setLastModified( charToKDateTime( item->modified, mTimezone ) );
 
   getItemDescription( item, incidence );
   getAttendees( item, incidence );

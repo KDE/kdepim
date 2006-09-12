@@ -124,10 +124,17 @@ QDateTime GWConverter::charToQDateTime( const char *str )
   return dt;
 }
 
+KDateTime GWConverter::charToKDateTime( const char *str,
+                                        const KDateTime::Spec &timeSpec )
+{
+  if ( !str ) return KDateTime();
+  QDateTime utc = charToQDateTime( str );
+  utc.setTimeSpec( Qt::UTC );
+  return KDateTime( utc, timeSpec );
+}
+
 QDateTime GWConverter::charToQDateTime( const char *str,
                                         const KDateTime::Spec &timeSpec )
 {
-  if ( !str ) return QDateTime();
-  QDateTime utc = charToQDateTime( str );
-  return KPimPrefs::utcToLocalTime( utc, timeSpec );
+  return charToKDateTime( str, timeSpec ).dateTime();
 }
