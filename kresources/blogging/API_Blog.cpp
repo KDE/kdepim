@@ -84,7 +84,7 @@ kDebug() << "modificationDt="<<modificationDt.toString( Qt::ISODate ) << endl;
   }
   
   j->setCreated( blog->creationDateTime() );
-  j->setLastModified( blog->modificationDateTime() );
+  j->setLastModified( KDateTime(blog->modificationDateTime(), KDateTime::LocalZone) );
   j->setFloats( false );
   kDebug() << "Date for blog " << blog->title() << " is "
             << blog->dateTime().toString()<<endl;
