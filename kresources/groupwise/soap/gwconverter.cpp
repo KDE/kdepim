@@ -76,7 +76,9 @@ QDate GWConverter::charToQDate( const char *str )
 char *GWConverter::qDateTimeToChar( const QDateTime &dt,
                                     const KDateTime::Spec &timeSpec )
 {
-  return qDateTimeToChar( KPimPrefs::localTimeToUtc( dt, timeSpec ) );
+  QDateTime qdt = dt;
+  qdt.setTimeSpec( Qt::LocalTime );
+  return qDateTimeToChar( KDateTime( qdt, timeSpec ).toUtc().dateTime() );
 }
 
 char *GWConverter::qDateTimeToChar( const QDateTime &dt )
@@ -86,7 +88,9 @@ char *GWConverter::qDateTimeToChar( const QDateTime &dt )
 
 std::string* GWConverter::qDateTimeToString( const QDateTime &dt, const KDateTime::Spec &timeSpec )
 {
-  return qDateTimeToString( KPimPrefs::localTimeToUtc( dt, timeSpec ) );
+  QDateTime qdt = dt;
+  qdt.setTimeSpec( Qt::LocalTime );
+  return qDateTimeToString( KDateTime( qdt, timeSpec ).toUtc().dateTime() );
 }
 
 std::string* GWConverter::qDateTimeToString( const QDateTime &dt )

@@ -440,10 +440,14 @@ void KolabBase::writeString( QDomElement& element, const QString& tag,
 
 QDateTime KolabBase::localToUTC( const QDateTime& time ) const
 {
-  return KPimPrefs::localTimeToUtc( time, mTimeZone );
+  QDateTime dt = time;
+  dt.setTimeSpec( Qt::LocalTime );
+  return KDateTime( dt, mTimeZone ).toUtc().dateTime();
 }
 
 QDateTime KolabBase::utcToLocal( const QDateTime& time ) const
 {
-  return KPimPrefs::utcToLocalTime( time, mTimeZone );
+  QDateTime dt = time;
+  dt.setTimeSpec( Qt::UTC );
+  return KDateTime( dt, mTimeZone ).dateTime();
 }

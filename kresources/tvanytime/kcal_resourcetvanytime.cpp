@@ -402,7 +402,9 @@ bool ResourceTVAnytime::readService( const QString & serviceId )
                     event->setFloats( false );
                     event->setSummary( pi.title() );
                     event->setDescription( pi.synopsis() );
-                    event->setDtStart( KPimPrefs::localTimeToUtc( se.startTime(), london ) );
+                    QDateTime dt = se.startTime();
+                    dt.setTimeSpec( Qt::LocalTime );
+                    event->setDtStart( KDateTime( dt, london ).toUtc().dateTime() );
                     event->setDuration( se.duration() );
                     event->setLocation( service.name() );
                     event->setCategories( pi.genres() );
