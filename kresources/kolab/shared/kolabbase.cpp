@@ -45,7 +45,7 @@ using namespace Kolab;
 
 KolabBase::KolabBase( const QString& tz )
   : mCreationDate( QDateTime::currentDateTime() ),
-    mLastModified( QDateTime::currentDateTime() ),
+    mLastModified( KDateTime::currentUtcDateTime() ),
     mSensitivity( Public ),
     mTimeZone( KSystemTimeZones::zone( tz ) ),
     mHasPilotSyncId( false ),  mHasPilotSyncStatus( false )
@@ -65,7 +65,7 @@ void KolabBase::setFields( const KCal::Incidence* incidence )
   setBody( incidence->description() );
   setCategories( incidence->categoriesStr() );
   setCreationDate( localToUTC( incidence->created() ) );
-  setLastModified( localToUTC( incidence->lastModified() ) );
+  setLastModified( incidence->lastModified() );
   setSensitivity( static_cast<Sensitivity>( incidence->secrecy() ) );
   // TODO: Attachments
 }
@@ -76,7 +76,7 @@ void KolabBase::saveTo( KCal::Incidence* incidence ) const
   incidence->setDescription( body() );
   incidence->setCategories( categories() );
   incidence->setCreated( utcToLocal( creationDate() ) );
-  incidence->setLastModified( utcToLocal( lastModified() ) );
+  incidence->setLastModified( lastModified() );
   incidence->setSecrecy( sensitivity() );
   // TODO: Attachments
 }
@@ -102,9 +102,9 @@ void KolabBase::setFields( const KABC::Addressee* addressee )
     creationDate = stringToDateTime( creationString );
     kDebug(5006) << "Creation date loaded\n";
   }
-  QDateTime modified = addressee->revision();
+  KDateTime modified = KDateTime( addressee->revision(), mTimeZone );
   if ( !modified.isValid() )
-    modified = QDateTime::currentDateTime();
+    modified = KDateTime::currentUtcDateTime();
   setLastModified( modified );
   if ( modified < creationDate ) {
     // It's not possible that the modification date is earlier than creation
@@ -139,7 +139,7 @@ void KolabBase::saveTo( KABC::Addressee* addressee ) const
   addressee->setUid( uid() );
   addressee->setNote( body() );
   addressee->setCategories( categories().split( ',', QString::SkipEmptyParts ) );
-  addressee->setRevision( lastModified() );
+  addressee->setRevision( lastModified().toTimeZone( mTimeZone ).dateTime() );
   addressee->insertCustom( "KOLAB", "CreationDate",
                            dateTimeToString( creationDate() ) );
 
@@ -198,12 +198,12 @@ QDateTime KolabBase::creationDate() const
   return mCreationDate;
 }
 
-void KolabBase::setLastModified( const QDateTime& date )
+void KolabBase::setLastModified( const KDateTime& date )
 {
   mLastModified = date;
 }
 
-QDateTime KolabBase::lastModified() const
+KDateTime KolabBase::lastModified() const
 {
   return mLastModified;
 }
@@ -295,7 +295,7 @@ bool KolabBase::loadAttribute( QDomElement& element )
   else if ( tagName == "creation-date" )
     setCreationDate( stringToDateTime( element.text() ) );
   else if ( tagName == "last-modification-date" )
-    setLastModified( stringToDateTime( element.text() ) );
+    setLastModified( KDateTime( stringToDateTime( element.text() ), mTimeZone ) );
   else if ( tagName == "sensitivity" )
     setSensitivity( stringToSensitivity( element.text() ) );
   else if ( tagName == "product-id" )
@@ -319,7 +319,7 @@ bool KolabBase::saveAttributes( QDomElement& element ) const
   writeString( element, "categories", categories() );
   writeString( element, "creation-date", dateTimeToString( creationDate() ) );
   writeString( element, "last-modification-date",
-               dateTimeToString( lastModified() ) );
+               dateTimeToString( lastModified().toTimeZone( mTimeZone ).dateTime() ) );
   writeString( element, "sensitivity", sensitivityToString( sensitivity() ) );
   if ( hasPilotSyncId() )
     writeString( element, "pilot-sync-id", QString::number( pilotSyncId() ) );

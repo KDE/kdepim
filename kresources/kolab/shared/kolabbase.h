@@ -85,8 +85,8 @@ public:
   virtual void setCreationDate( const QDateTime& date );
   virtual QDateTime creationDate() const;
 
-  virtual void setLastModified( const QDateTime& date );
-  virtual QDateTime lastModified() const;
+  virtual void setLastModified( const KDateTime& date );
+  virtual KDateTime lastModified() const;
 
   virtual void setSensitivity( Sensitivity sensitivity );
   virtual Sensitivity sensitivity() const;
@@ -163,7 +163,7 @@ protected:
   QString mBody;
   QString mCategories;
   QDateTime mCreationDate;
-  QDateTime mLastModified;
+  KDateTime mLastModified;
   Sensitivity mSensitivity;
   const KTimeZone *mTimeZone;
 
