@@ -65,5 +65,6 @@ Name=Korn
 Name[eo]=Korno
 Name[hi]=कॉर्न
 Name[ta]=கார்ன்
+Name[zh_TW]=Korn 信件通知
 X-DCOP-ServiceType=Unique
 Categories=Qt;KDE;Network;X-KDE-More;
