@@ -102,9 +102,6 @@
 /* unix newline */
 #define ICAL_UNIX_NEWLINE 1
 
-/* Suffix for lib directories */
-#define KDELIBSUFF "${KDELIBSUFF}"
-
 /* Define to 1 if you want to use the new distribution lists */
 #cmakedefine KDEPIM_NEW_DISTRLISTS 1
 
