@@ -157,7 +157,7 @@ protected:
   static void writeString( QDomElement&, const QString&, const QString& );
 
   QDateTime localToUTC( const QDateTime& time ) const;
-  QDateTime utcToLocal( const QDateTime& time ) const;
+  KDateTime utcToLocal( const QDateTime& time ) const;
 
   QString mUid;
   QString mBody;

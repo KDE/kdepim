@@ -607,9 +607,9 @@ KCal::Event::List ResourceKolab::rawEventsForDate( const QDate& date,
   return mCalendar.rawEventsForDate( date, sortField, sortDirection );
 }
 
-KCal::Event::List ResourceKolab::rawEventsForDate( const QDateTime& qdt )
+KCal::Event::List ResourceKolab::rawEventsForDate( const KDateTime& dt )
 {
-  return mCalendar.rawEventsForDate( qdt );
+  return mCalendar.rawEventsForDate( dt );
 }
 
 KCal::Event::List ResourceKolab::rawEvents( const QDate& start,
@@ -695,13 +695,13 @@ KCal::Journal::List ResourceKolab::rawJournalsForDate( const QDate &date )
   return mCalendar.rawJournalsForDate( date );
 }
 
-KCal::Alarm::List ResourceKolab::alarms( const QDateTime& from,
-                                         const QDateTime& to )
+KCal::Alarm::List ResourceKolab::alarms( const KDateTime& from,
+                                         const KDateTime& to )
 {
   return mCalendar.alarms( from, to );
 }
 
-KCal::Alarm::List ResourceKolab::alarmsTo( const QDateTime& to )
+KCal::Alarm::List ResourceKolab::alarmsTo( const KDateTime& to )
 {
   return mCalendar.alarmsTo(to);
 }

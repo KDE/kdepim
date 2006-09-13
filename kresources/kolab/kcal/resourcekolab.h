@@ -79,7 +79,7 @@ public:
     const QDate& date,
     EventSortField sortField=EventSortUnsorted,
     SortDirection sortDirection=SortDirectionAscending );
-  KCal::Event::List rawEventsForDate( const QDateTime& qdt );
+  KCal::Event::List rawEventsForDate( const KDateTime& dt );
   KCal::Event::List rawEvents( const QDate& start, const QDate& end,
                                bool inclusive = false );
 
@@ -95,8 +95,8 @@ public:
   KCal::Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   KCal::Journal::List rawJournalsForDate( const QDate &date );
 
-  KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to );
-  KCal::Alarm::List alarmsTo( const QDateTime& to );
+  KCal::Alarm::List alarms( const KDateTime& from, const KDateTime& to );
+  KCal::Alarm::List alarmsTo( const KDateTime& to );
 
   void setTimeZoneId( const QString& tzid );
 
