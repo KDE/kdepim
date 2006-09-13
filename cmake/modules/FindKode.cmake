@@ -14,7 +14,7 @@
 
 # check if we are currently building kdepim
 if ( EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepimmacros.h )
-	set( KODE_XML_COMPILER_EXECUTABLE ${CMAKE_BINARY_DIR}/kode/kxml_compiler/kxml_compiler.sh )
+	set( KODE_XML_COMPILER_EXECUTABLE ${CMAKE_BINARY_DIR}/kode/kxml_compiler/kxml_compiler.shell )
 	set( _KODE_XML_COMPILER_DEP kxml_compiler )
 else ( EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepimmacros.h )
 	find_program( KODE_XML_COMPILER_EXECUTABLE NAME kxml_compiler PATHS
