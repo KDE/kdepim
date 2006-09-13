@@ -730,7 +730,7 @@ void KPIM::AddresseeLineEdit::slotCompletion()
 {
   // Called by KLineEdit's keyPressEvent -> new text, update search string
   m_searchString = text();
-  int n = m_searchString.findRev(',');
+  int n = QMAX( m_searchString.findRev(','), m_searchString.findRev(';') );
   if ( n >= 0 ) {
     ++n; // Go past the ","
 
