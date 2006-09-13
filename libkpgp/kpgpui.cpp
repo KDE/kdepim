@@ -417,7 +417,7 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
                                                     const QPoint&, int ) ),
            this,      SLOT( slotRMB( Q3ListViewItem*, const QPoint&, int ) ) );
 
-  setButtonGuiItem( KDialog::Default, i18n("&Reread Keys") );
+  setButtonGuiItem( KDialog::Default, KGuiItem(i18n("&Reread Keys")) );
   connect( this, SIGNAL( defaultClicked() ),
            this, SLOT( slotRereadKeys() ) );
 }

@@ -287,7 +287,7 @@ Module::decrypt( Block& block )
 	     i18n("You just entered an invalid passphrase.\n"
 		  "Do you want to try again, or "
 		  "cancel and view the message undecrypted?"),
-	     i18n("PGP Warning"), i18n("&Retry"));
+	     i18n("PGP Warning"), KGuiItem(i18n("&Retry")));
       QApplication::restoreOverrideCursor();
       if ( ret == KMessageBox::Cancel ) break;
     } else
@@ -347,8 +347,8 @@ Module::encrypt( Block& block,
     QApplication::setOverrideCursor( QCursor(Qt::ArrowCursor) );
     int ret = KMessageBox::warningYesNoCancel( 0, str,
                                                i18n("PGP Warning"),
-                                               i18n("&Retry"),
-                                               i18n("Send &Unsigned") );
+                                               KGuiItem(i18n("&Retry")),
+                                               KGuiItem(i18n("Send &Unsigned")) );
     QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
@@ -376,7 +376,7 @@ Module::encrypt( Block& block,
     QApplication::setOverrideCursor( QCursor(Qt::ArrowCursor) );
     int ret = KMessageBox::warningContinueCancel( 0, str,
                                                   i18n("PGP Warning"),
-                                                  i18n("Send &Unsigned") );
+                                                  KGuiItem(i18n("Send &Unsigned")) );
     QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
@@ -395,8 +395,8 @@ Module::encrypt( Block& block,
     QApplication::setOverrideCursor( QCursor(Qt::ArrowCursor) );
     int ret = KMessageBox::warningYesNoCancel( 0, str,
                                                i18n("PGP Warning"),
-                                               i18n("Send &Encrypted"),
-                                               i18n("Send &Unencrypted") );
+                                               KGuiItem(i18n("Send &Encrypted")),
+                                               KGuiItem(i18n("Send &Unencrypted")) );
     QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
@@ -421,7 +421,7 @@ Module::encrypt( Block& block,
     QApplication::setOverrideCursor( QCursor(Qt::ArrowCursor) );
     int ret = KMessageBox::warningContinueCancel( 0, str,
                                                   i18n("PGP Warning"),
-                                                  i18n("&Send As-Is") );
+                                                  KGuiItem(i18n("&Send As-Is")) );
     QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
@@ -588,7 +588,7 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
     QApplication::setOverrideCursor( QCursor(Qt::ArrowCursor) );
     int ret = KMessageBox::warningContinueCancel( 0, str,
                                                   i18n("PGP Warning"),
-                                                  i18n("Send &Unencrypted") );
+                                                  KGuiItem(i18n("Send &Unencrypted")) );
     QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;
@@ -607,8 +607,8 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
     QApplication::setOverrideCursor( QCursor(Qt::ArrowCursor) );
     int ret = KMessageBox::warningYesNoCancel( 0, str,
                                                i18n("PGP Warning"),
-                                               i18n("Send &Encrypted"),
-                                               i18n("Send &Unencrypted") );
+                                               KGuiItem(i18n("Send &Encrypted")),
+                                               KGuiItem(i18n("Send &Unencrypted")) );
     QApplication::restoreOverrideCursor();
     if( ret == KMessageBox::Cancel ) {
       return Kpgp::Canceled;

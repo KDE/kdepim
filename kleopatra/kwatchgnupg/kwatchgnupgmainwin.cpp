@@ -198,7 +198,7 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
 
 void KWatchGnuPGMainWindow::slotWatcherExited()
 {
-  if( KMessageBox::questionYesNo( this, i18n("The watchgnupg logging process died.\nDo you want to try to restart it?"), QString(), i18n("Try Restart"), i18n("Do Not Try") ) == KMessageBox::Yes ) {
+  if( KMessageBox::questionYesNo( this, i18n("The watchgnupg logging process died.\nDo you want to try to restart it?"), QString(), KGuiItem(i18n("Try Restart")), KGuiItem(i18n("Do Not Try")) ) == KMessageBox::Yes ) {
 	mCentralWidget->append( i18n("====== Restarting logging process =====") );
 	startWatcher();
   } else {
@@ -244,7 +244,7 @@ void KWatchGnuPGMainWindow::slotSaveAs()
 		KMessageBox::warningYesNo( this, i18n("The file named \"%1\" already "
 											  "exists. Are you sure you want "
 											  "to overwrite it?", filename),
-								   i18n("Overwrite File"), i18n("Overwrite"), KStdGuiItem::cancel() ) ) {
+								   i18n("Overwrite File"), KStdGuiItem::overwrite(), KStdGuiItem::cancel() ) ) {
 	  return;
 	}
   }
