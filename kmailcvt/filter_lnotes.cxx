@@ -105,11 +105,12 @@ void FilterLNotes::ImportLNotes(const QString& file) {
                     // new message state
                 case 0:
                     // open temp output file
-                    tempfile = new KTempFile;
                     state = 1;
                     inf->setCurrent(i18n("Message %1", n++));
                     if ( inf->shouldTerminate() )
                         return;
+
+                    tempfile = new KTempFile;
                     // fall through
 
                     // inside a message state
