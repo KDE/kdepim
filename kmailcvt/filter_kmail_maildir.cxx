@@ -114,6 +114,44 @@ void FilterKMail_maildir::importDirContents( FilterInfo *info, const QString& di
     }
 }
 
+
+/**
+ * Extract the X-Status flag from a mailfile 
+ * @param info Information storage for the operation.
+ * @param fileName The full path to the file to import
+ */
+QString FilterKMail_maildir::getMessageFlags( FilterInfo *info, const QString& fileName ) {
+	
+	QString status_flag = "";
+       
+	QFile mailfile( fileName );
+        if (! mailfile.open( IO_ReadOnly ) ) {
+            info->alert( i18n("Unable to open %1, skipping").arg( fileName ) );
+	    return status_flag;
+        } else {
+
+            QByteArray input(MAX_LINE);
+
+            while ( ! mailfile.atEnd() ) {
+                QCString seperate;
+
+                while ( ! mailfile.atEnd() && mailfile.readLine(input.data(),MAX_LINE) ) {
+
+			if ((seperate = input.data()).left(10) == "X-Status: ") {
+				status_flag = seperate;
+				status_flag.remove("X-Status: ");
+				status_flag = status_flag.stripWhiteSpace();
+				// qDebug("status_flag: %s", status_flag.latin1() );
+				break;		
+			}
+		}
+	    }
+	    mailfile.close();
+	}
+	return status_flag;
+}
+
+
 /**
  * Import the files within a Folder.
  * @param info Information storage for the operation.
@@ -131,7 +169,9 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
     int currentFile = 1, numFiles = files.size();
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile, ++currentFile) {
         if(info->shouldTerminate()) return;
+
         QString temp_mailfile = *mailFile;
+
         if (!(temp_mailfile.endsWith(".index") || temp_mailfile.endsWith(".index.ids") ||
                 temp_mailfile.endsWith(".index.sorted") || temp_mailfile.endsWith(".uidcache") )) {
             if(!generatedPath) {
@@ -160,13 +200,15 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
                 generatedPath = true;
             }
 
+	    QString msg_flag = getMessageFlags(info, dir.filePath(*mailFile)); 
+
             if(info->removeDupMsg) {
-                if(! addMessage( info, _path, dir.filePath(*mailFile) )) {
+                if(! addMessage( info, _path, dir.filePath(*mailFile), msg_flag )) {
                     info->addLog( i18n("Could not import %1").arg( *mailFile ) );
                 }
                 info->setCurrent((int) ((float) currentFile / numFiles * 100));
             } else {
-                if(! addMessage_fastImport( info, _path, dir.filePath(*mailFile) )) {
+                if(! addMessage_fastImport( info, _path, dir.filePath(*mailFile), msg_flag )) {
                     info->addLog( i18n("Could not import %1").arg( *mailFile ) );
                 }
                 info->setCurrent((int) ((float) currentFile / numFiles * 100));
@@ -174,3 +216,4 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
         }
     }
 }
+

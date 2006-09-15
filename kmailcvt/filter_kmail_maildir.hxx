@@ -34,6 +34,8 @@ public:
 private:
     QString mailDir;
 
+    QString getMessageFlags(FilterInfo*, const QString&);
+
     void importDirContents(FilterInfo*, const QString&);
     void importFiles(FilterInfo*, const QString&);
 };
