@@ -43,8 +43,8 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
 {
   setCaption( caption );
   setButtons( buttons | Help | Ok | Cancel );
-  setButtonGuiItem( User1, user1 );
-  setButtonGuiItem( User2, user2 );
+  setButtonGuiItem( User1, KGuiItem(user1) );
+  setButtonGuiItem( User2, KGuiItem(user2) );
   refilterTimer = new QTimer();
   refilterTimer->setSingleShot( true );
 

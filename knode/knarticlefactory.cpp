@@ -149,7 +149,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
       if( post && // user wanted to reply by public posting?
           // ask the user if she wants to ignore this F'up-To: poster
           ( KMessageBox::Yes != KMessageBox::questionYesNo(knGlobals.topWidget,
-            i18n("The author has requested a reply by email instead\nof a followup to the newsgroup. (Followup-To: poster)\nDo you want to reply in public anyway?"), QString(), i18n("Reply Public"), i18n("Reply by Email")) ))
+            i18n("The author has requested a reply by email instead\nof a followup to the newsgroup. (Followup-To: poster)\nDo you want to reply in public anyway?"), QString(), KGuiItem(i18n("Reply Public")), KGuiItem(i18n("Reply by Email"))) ))
       {
         art->setDoPost(false);
         art->setDoMail(true);
@@ -288,7 +288,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   bool incAtt = ( !knGlobals.settings()->useExternalMailer() &&
                   ct->isMultipart() && ct->isSubtype("mixed") &&
                   KMessageBox::Yes == KMessageBox::questionYesNo(knGlobals.topWidget,
-                  i18n("This article contains attachments. Do you want them to be forwarded as well?"), QString(), i18n("Forward"), i18n("Do Not Forward"))
+                  i18n("This article contains attachments. Do you want them to be forwarded as well?"), QString(), KGuiItem(i18n("Forward")), KGuiItem(i18n("Do Not Forward")))
                 );
 
   if ( knGlobals.settings()->useOwnCharset() )
@@ -362,11 +362,11 @@ void KNArticleFactory::createCancel(KNArticle *a)
     return;
 
   if( KMessageBox::No == KMessageBox::questionYesNo( knGlobals.topWidget,
-      i18n("Do you really want to cancel this article?"), QString(), i18n("Cancel Article"), KStdGuiItem::cancel() ) )
+      i18n("Do you really want to cancel this article?"), QString(), KGuiItem(i18n("Cancel Article")), KStdGuiItem::cancel() ) )
     return;
 
   bool sendNow;
-  switch (KMessageBox::warningYesNoCancel(knGlobals.topWidget, i18n("Do you want to send the cancel\nmessage now or later?"), i18n("Question"),i18n("&Now"),i18n("&Later"))) {
+  switch (KMessageBox::warningYesNoCancel(knGlobals.topWidget, i18n("Do you want to send the cancel\nmessage now or later?"), i18n("Question"),KGuiItem(i18n("&Now")),KGuiItem(i18n("&Later")))) {
     case KMessageBox::Yes : sendNow = true; break;
     case KMessageBox::No :  sendNow = false; break;
     default :               return;
@@ -442,7 +442,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
     return;
 
   if ( KMessageBox::No==KMessageBox::questionYesNo( knGlobals.topWidget,
-       i18n("Do you really want to supersede this article?"), QString(), i18n("Supersede"), KStdGuiItem::cancel() ) )
+       i18n("Do you really want to supersede this article?"), QString(), KGuiItem(i18n("Supersede")), KStdGuiItem::cancel() ) )
     return;
 
   KNGroup *grp;

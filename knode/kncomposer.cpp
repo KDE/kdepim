@@ -592,7 +592,7 @@ bool KNComposer::hasValidData()
 
     if (groupCount>5)
       if ( KMessageBox::warningYesNo( this, i18n("You are crossposting to more than five newsgroups.\nPlease reconsider whether this is really useful\nand remove groups in which your article is off-topic.\nDo you want to re-edit the article or send it anyway?"),
-            QString(), i18n("&Send"), i18nc("edit article","&Edit") ) != KMessageBox::Yes )
+            QString(), KGuiItem(i18n("&Send")), KGuiItem(i18nc("edit article","&Edit")) ) != KMessageBox::Yes )
         return false;
 
     if ( !followUp && groupCount > 2 ) {
@@ -601,7 +601,7 @@ bool KNComposer::hasValidData()
                 "Please use the \"Followup-To\" header to direct the replies "
                 "to your article into one group.\n"
                 "Do you want to re-edit the article or send it anyway?"),
-           QString(), i18n("&Send"), i18nc("edit article","&Edit"), "missingFollowUpTo" )
+           QString(), KGuiItem(i18n("&Send")), KGuiItem(i18nc("edit article","&Edit")), "missingFollowUpTo" )
            != KMessageBox::Yes )
         return false;
     }
@@ -613,7 +613,7 @@ bool KNComposer::hasValidData()
 
     if (fupCount>5)
       if ( KMessageBox::warningYesNo( this, i18n("You are directing replies to more than five newsgroups.\nPlease reconsider whether this is really useful.\nDo you want to re-edit the article or send it anyway?"),
-            QString(), i18n("&Send"),i18nc("edit article","&Edit") ) != KMessageBox::Yes )
+            QString(), KGuiItem(i18n("&Send")),KGuiItem(i18nc("edit article","&Edit")) ) != KMessageBox::Yes )
         return false;
   }
 
@@ -683,7 +683,7 @@ bool KNComposer::hasValidData()
   if ((textLines>1)&&(notQuoted==1)) {
     if (hasAttributionLine)
       if ( KMessageBox::warningYesNo( this, i18n("Your article seems to consist entirely of quoted text;\ndo you want to re-edit the article or send it anyway?"),
-           QString(), i18n("&Send"), i18nc("edit article","&Edit") ) != KMessageBox::Yes )
+           QString(), KGuiItem(i18n("&Send")), KGuiItem(i18nc("edit article","&Edit")) ) != KMessageBox::Yes )
         return false;
   } else {
     if (notQuoted==0) {
@@ -697,13 +697,13 @@ bool KNComposer::hasValidData()
     if ( KMessageBox::warningYesNo( this,
           i18n("Your article contains lines longer than 80 characters.\n"
                "Do you want to re-edit the article or send it anyway?"),
-          QString(), i18n("&Send"),
-          i18nc("edit article","&Edit") ) != KMessageBox::Yes )
+          QString(), KGuiItem(i18n("&Send")),
+          KGuiItem(i18nc("edit article","&Edit")) ) != KMessageBox::Yes )
       return false;
 
   if (sigLength>8) {
     if ( KMessageBox::warningYesNo( this, i18n("Your signature is more than 8 lines long.\nYou should shorten it to match the widely accepted limit of 4 lines.\nDo you want to re-edit the article or send it anyway?"),
-         QString(), i18n("&Send"), i18nc("edit article","&Edit") ) != KMessageBox::Yes )
+         QString(), KGuiItem(i18n("&Send")), KGuiItem(i18nc("edit article","&Edit")) ) != KMessageBox::Yes )
       return false;
   } else
     if (sigLength>4)
@@ -734,7 +734,7 @@ bool KNComposer::hasValidData()
                         "in the account properties or in the "
                         "group properties.\n"
                         "The article will be sent unsigned." ),
-                   QString(), i18n( "Send Unsigned" ),
+                   QString(), KGuiItem(i18n( "Send Unsigned" )),
                    "sendUnsignedDialog" )
                == KMessageBox::Cancel )
              return false;
@@ -1175,7 +1175,7 @@ void KNComposer::slotToggleDoMail()
   if (a_ctDoMail->isChecked()) {
     if (a_uthorDislikesMailCopies) {
       if ( KMessageBox::warningContinueCancel( this, i18n("The poster does not want a mail copy of your reply (Mail-Copies-To: nobody);\nplease respect their request."),
-                                               QString(), i18n("&Send Copy") ) != KMessageBox::Continue ) {
+                                               QString(), KGuiItem(i18n("&Send Copy")) ) != KMessageBox::Continue ) {
         a_ctDoMail->setChecked(false); //revert
         return;
       }

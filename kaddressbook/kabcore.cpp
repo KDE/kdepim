@@ -519,7 +519,7 @@ void KABCore::setWhoAmI()
   }
 
   QString text( i18n( "<qt>Do you really want to use <b>%1</b> as your new personal contact?</qt>", addrList[ 0 ].assembledName() ) );
-  if ( KMessageBox::questionYesNo( mWidget, text, QString(), i18n( "Use" ), i18n( "Do Not Use" ) ) == KMessageBox::Yes )
+  if ( KMessageBox::questionYesNo( mWidget, text, QString(), KGuiItem(i18n( "Use" )), KGuiItem(i18n( "Do Not Use" )) ) == KMessageBox::Yes )
     static_cast<KABC::StdAddressBook*>( KABC::StdAddressBook::self( true ) )->setWhoAmI( addrList[ 0 ] );
 }
 
@@ -1112,13 +1112,13 @@ void KABCore::initActions()
   mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,
                                       actionCollection(), "options_show_jump_bar" );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
-  mActionJumpBar->setCheckedState( i18n( "Hide Jump Bar" ) );
+  mActionJumpBar->setCheckedState( KGuiItem(i18n( "Hide Jump Bar" )) );
   connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );
 
   mActionDetails = new KToggleAction( i18n( "Show Details" ), 0, 0,
                                       actionCollection(), "options_show_details" );
   mActionDetails->setWhatsThis( i18n( "Toggle whether the details page shall be visible." ) );
-  mActionDetails->setCheckedState( i18n( "Hide Details" ) );
+  mActionDetails->setCheckedState( KGuiItem(i18n( "Hide Details" )) );
   connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
 
   if ( mIsPart )
@@ -1221,7 +1221,7 @@ void KABCore::categoriesSelected( const QStringList &categories )
 {
   bool merge = false;
   QString msg = i18n( "Merge with existing categories?" );
-  if ( KMessageBox::questionYesNo( mWidget, msg, QString(), i18n( "Merge" ), i18n( "Do Not Merge" ) ) == KMessageBox::Yes )
+  if ( KMessageBox::questionYesNo( mWidget, msg, QString(), KGuiItem(i18n( "Merge" )), KGuiItem(i18n( "Do Not Merge" )) ) == KMessageBox::Yes )
     merge = true;
 
   QStringList uids = mViewManager->selectedUids();

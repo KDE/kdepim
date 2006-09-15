@@ -666,7 +666,7 @@ void KNMainWidget::initActions()
   a_ctArtToggleThread->setShortcut(Qt::Key_T);
   a_ctArtToggleShowThreads = new KToggleAction(i18n("Show T&hreads"), actionCollection(), "view_showThreads");
   connect(a_ctArtToggleShowThreads, SIGNAL(triggered(bool) ), SLOT(slotArtToggleShowThreads()));
-  a_ctArtToggleShowThreads->setCheckedState(i18n("Hide T&hreads"));
+  a_ctArtToggleShowThreads->setCheckedState(KGuiItem(i18n("Hide T&hreads")));
 
   a_ctArtToggleShowThreads->setChecked( knGlobals.settings()->showThreads() );
 
@@ -729,7 +729,7 @@ void KNMainWidget::initActions()
 
   a_ctToggleQuickSearch = new KToggleAction(i18n("Show Quick Search"), actionCollection(), "settings_show_quickSearch");
   connect(a_ctToggleQuickSearch, SIGNAL(triggered(bool) ), SLOT(slotToggleQuickSearch()));
-  a_ctToggleQuickSearch->setCheckedState(i18n("Hide Quick Search"));
+  a_ctToggleQuickSearch->setCheckedState(KGuiItem(i18n("Hide Quick Search")));
 }
 
 bool KNMainWidget::firstStart()
@@ -1403,7 +1403,7 @@ void KNMainWidget::slotGrpUnsubscribe()
   kDebug(5003) << "KNMainWidget::slotGrpUnsubscribe()" << endl;
   if(g_rpManager->currentGroup()) {
     if(KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,
-       i18n("Do you really want to unsubscribe from %1?", g_rpManager->currentGroup()->groupname()), QString(), i18n("Unsubscribe"), KStdGuiItem::cancel()))
+       i18n("Do you really want to unsubscribe from %1?", g_rpManager->currentGroup()->groupname()), QString(), KGuiItem(i18n("Unsubscribe")), KStdGuiItem::cancel()))
       if (g_rpManager->unsubscribeGroup(g_rpManager->currentGroup()))
         slotCollectionSelected(0);
   }
