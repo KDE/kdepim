@@ -224,7 +224,7 @@ static QString eventViewerFormatHeader( Incidence *incidence )
 
     if ( incidence->type() == "Event" ) {
       tmpStr += "<img src=\"" +
-                KGlobal::iconLoader()->iconPath( "date", KIcon::Small ) +
+                KGlobal::iconLoader()->iconPath( "appointment", KIcon::Small ) +
                 "\">";
     }
     if ( incidence->type() == "Todo" ) {
