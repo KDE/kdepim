@@ -45,7 +45,6 @@
 #include <klocale.h>
 #include <kinputdialog.h>
 #include <kmessagebox.h>
-#include <kprogressbar.h>
 #include <kstandarddirs.h>
 #include <kurlrequester.h>
 

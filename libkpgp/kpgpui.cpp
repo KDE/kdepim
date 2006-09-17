@@ -19,7 +19,6 @@
 
 
 #include <QLabel>
-
 #include <QToolTip>
 #include <QApplication>
 #include <QTextCodec>
@@ -42,7 +41,6 @@
 #include <k3listview.h>
 #include <kconfigbase.h>
 #include <kconfig.h>
-#include <kprogressbar.h>
 #include <kprogressdialog.h>
 #include <kapplication.h>
 #include <kwin.h>

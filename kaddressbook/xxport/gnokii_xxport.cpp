@@ -34,10 +34,11 @@
 #include "config.h"
 
 #include <QCursor>
+#include <QProgressBar>
+
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kprogressbar.h>
 #include <kguiitem.h>
 #include <kprogressdialog.h>
 #ifdef HAVE_GNOKII_H
@@ -269,7 +270,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
   if (m_progressDlg->wasCancelled())
 	return GN_ERR_NONE;
 
-  KProgressBar* progress = (KProgressBar*)m_progressDlg->progressBar();
+  QProgressBar* progress = (QProgressBar*)m_progressDlg->progressBar();
 
   progress->setValue(0);
   this_filter->processEvents();
@@ -728,7 +729,7 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 	m_progressDlg->show();
   	processEvents();
 
-	KProgressBar* progress = (KProgressBar*)m_progressDlg->progressBar();
+	QProgressBar* progress = (QProgressBar*)m_progressDlg->progressBar();
 
 	KABC::AddresseeList::ConstIterator it;
 	QStringList failedList;
