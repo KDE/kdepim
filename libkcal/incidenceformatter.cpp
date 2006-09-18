@@ -331,7 +331,7 @@ static QString eventViewerFormatEvent( Event *event )
 
   if ( event->categories().count() > 0 ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "1 category", "%n categories", event->categories().count() )+ "</b></td>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "1 Category", "%n Categories", event->categories().count() )+ "</b></td>";
     tmpStr += "<td>" + event->categoriesStr() + "</td>";
     tmpStr += "</tr>";
   }
@@ -396,7 +396,7 @@ static QString eventViewerFormatTodo( Todo *todo )
 
   if ( todo->categories().count() > 0 ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "1 category", "%n categories", todo->categories().count() )+ "</b></td>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "1 Category", "%n Categories", todo->categories().count() )+ "</b></td>";
     tmpStr += "<td>" + todo->categoriesStr() + "</td>";
     tmpStr += "</tr>";
   }
