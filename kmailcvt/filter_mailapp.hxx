@@ -30,7 +30,7 @@ public:
 
 private:
     QStringList mMboxFiles;
-    void traverseDirectory(const QString &);
+    void traverseDirectory(FilterInfo *info, const QString &);
 };
 
 #endif
