@@ -1,2 +1,2 @@
-korganizericondir = $(kde_datadir)/korganizer/icons
-korganizericon_ICON = AUTO                                                                                                                                         
+kdepimicondir = $(kde_datadir)/kdepim/icons
+kdepimicon_ICON = AUTO                                                                                                                                         
