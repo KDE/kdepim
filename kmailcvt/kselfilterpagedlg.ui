@@ -104,8 +104,6 @@ This program will help you import your email from your previous email program in
                     </property>
                     <property name="vAlign" stdset="0">
                     </property>
-                    <property name="wordwrap" stdset="0">
-                    </property>
                 </widget>
                 <widget class="QComboBox">
                     <property name="name">
