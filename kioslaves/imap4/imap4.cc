@@ -1924,20 +1924,19 @@ bool IMAP4Protocol::makeLogin ()
       } else completeQueue.removeRef(cmd);
     }
 
-    if ( myAuth.isEmpty () || myAuth == "*" ) {
-      if ( hasCapability( QString( "LOGINDISABLED" ) ) ) {
-        error( ERR_COULD_NOT_LOGIN, i18n("LOGIN is disabled by the server.") );
+    if (myAuth.isEmpty () || myAuth == "*") {
+      if (hasCapability (QString ("LOGINDISABLED"))) {
+        error (ERR_COULD_NOT_LOGIN, i18n("LOGIN is disabled by the server."));
         closeConnection();
         return false;
       }
-      else {
-        if ( !hasCapability( QString( "AUTH=" ) + myAuth ) ) {
-          error( ERR_COULD_NOT_LOGIN,
-                 i18n("The authentication method %1 is not "
-                      "supported by the server.").arg( myAuth ) );
-          closeConnection();
-          return false;
-        }
+    }
+    else {
+      if (!hasCapability (QString ("AUTH=") + myAuth)) {
+        error (ERR_COULD_NOT_LOGIN, i18n("The authentication method %1 is not "
+          "supported by the server.").arg(myAuth));
+        closeConnection();
+        return false;
       }
     }
 
