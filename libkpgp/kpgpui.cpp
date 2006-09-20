@@ -32,6 +32,7 @@
 #include <QByteArray>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QProgressBar>
 
 #include <klocale.h>
 #include <kpassworddialog.h>

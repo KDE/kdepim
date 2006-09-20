@@ -31,6 +31,7 @@
 #include <q3table.h>
 #include <QTextCodec>
 #include <QToolTip>
+#include <QProgressBar>
 //Added by qt3to4:
 #include <QTextStream>
 #include <QGridLayout>
