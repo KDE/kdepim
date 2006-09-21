@@ -163,7 +163,7 @@ public:
     int horBackgroundLines( QBrush& brush ) const;
     bool saveProject( QIODevice* );
     bool loadProject( QIODevice* );
-    void print( QPrinter* printer = 0 ,
+    void print( QPrinter* printer,
 		bool printListView = true, bool printTimeLine = true,
 		bool printLegend = false );
     QSize drawContents( QPainter* p = 0,
@@ -419,7 +419,8 @@ public slots:
     void selectCurrentYear();
     void selectLastYear();
 
-
+    void print();
+    
 signals:
     void itemDeleted( KDGanttViewItem* );
     void timeIntervallSelected( const QDateTime& start,  const QDateTime&  end);

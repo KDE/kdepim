@@ -802,7 +802,7 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant ):QWi
 
     QMenu *zoomMenu = myPopupMenu->addMenu( tr("&Zoom") );
     zoomMenu->addAction( tr("Zoom to 100%"),this, SLOT(zoom1()) );
-    zoomMenu->addAction( tr("Zoom to fit"),this, SLOT(zoomToFit()) );
+    zoomMenu->addAction( tr("Zoom to fit"),myGanttView, SLOT(zoomToFit()) );
     zoomMenu->addAction( tr("Zoom in (x 2)"),this, SLOT(zoom2()) );
     zoomMenu->addAction( tr("Zoom in (x 6)"),this, SLOT(zoom6()) );
     zoomMenu->addAction( tr("Zoom in (x 12)"),this, SLOT(zoom12()) );

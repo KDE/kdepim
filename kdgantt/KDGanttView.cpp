@@ -1188,6 +1188,13 @@ bool KDGanttView::loadProject( QIODevice* device )
         return false;
 }
 
+// slot, can be connected to menu action
+// Note: This should possibly have a setup dialog so the user can print
+//       something other than the default
+void KDGanttView::print()
+{
+    print(0);
+}
 
 /*!
   Sends a Gantt view to a printer. The printer should already be set
