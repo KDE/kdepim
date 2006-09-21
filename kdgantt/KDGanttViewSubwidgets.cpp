@@ -4077,7 +4077,7 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
                 mySignalSender->gvItemMidClicked( currentItem );
             }
             if ( currentLink )
-                mySignalSender->taskLinkRightClicked( currentLink );
+                mySignalSender->taskLinkMidClicked( currentLink );
             break;
         default:
             break;
