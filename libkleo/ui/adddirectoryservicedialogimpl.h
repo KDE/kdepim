@@ -41,7 +41,9 @@ class AddDirectoryServiceDialogImpl : public QDialog, public Ui::AddDirectorySer
 public:
     AddDirectoryServiceDialogImpl( QWidget* parent = 0, const char* name = 0, bool modal = false, Qt::WFlags fl = 0 );
     ~AddDirectoryServiceDialogImpl();
-
+private slots:
+    void slotAccept();
+    void slotCancel();
 };
 
 #endif // ADDDIRECTORYSERVICEDIALOGIMPL_H

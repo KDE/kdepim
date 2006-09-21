@@ -53,6 +53,8 @@ AddDirectoryServiceDialogImpl::AddDirectoryServiceDialogImpl( QWidget* parent,  
     setModal( modal );
     setupUi(this);
     portED->setValidator( new QIntValidator( 0, 65535, portED ) );
+    connect(PushButton3, SIGNAL(clicked()), SLOT(slotAccept()));
+    connect(PushButton4, SIGNAL(clicked()), SLOT(slotCancel()));
 }
 
 /*
@@ -62,5 +64,16 @@ AddDirectoryServiceDialogImpl::~AddDirectoryServiceDialogImpl()
 {
     // no need to delete child widgets, Qt does it all for us
 }
+
+void AddDirectoryServiceDialogImpl::slotAccept()
+{
+	accept();
+}
+
+void AddDirectoryServiceDialogImpl::slotCancel()
+{
+	reject();
+}
+
 
 #include "adddirectoryservicedialogimpl.moc"
