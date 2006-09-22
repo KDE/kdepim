@@ -60,11 +60,11 @@ static QString asUtf8( const QByteArray &val )
     return QString::fromUtf8( data, val.size() );
 }
 
-static QString join( const KPIM::LdapAttrValue& lst, const QString& sep )
+static QString join( const KLDAP::LdapAttrValue& lst, const QString& sep )
 {
   QString res;
   bool alredy = false;
-  for ( KPIM::LdapAttrValue::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+  for ( KLDAP::LdapAttrValue::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
     if ( alredy )
       res += sep;
     alredy = true;
@@ -104,11 +104,11 @@ static QMap<QString, QString>& adrbookattr2ldap()
 class ContactListItem : public Q3ListViewItem
 {
   public:
-    ContactListItem( Q3ListView* parent, const KPIM::LdapAttrMap& attrs )
+    ContactListItem( Q3ListView* parent, const KLDAP::LdapAttrMap& attrs )
       : Q3ListViewItem( parent ), mAttrs( attrs )
     { }
 
-    KPIM::LdapAttrMap mAttrs;
+    KLDAP::LdapAttrMap mAttrs;
 
     virtual QString text( int col ) const
     {
@@ -256,8 +256,8 @@ void LDAPSearchDialog::restoreSettings()
 
       ldapClient->setAttrs( attrs );
 
-      connect( ldapClient, SIGNAL( result( const KPIM::LdapObject& ) ),
-               this, SLOT( slotAddResult( const KPIM::LdapObject& ) ) );
+      connect( ldapClient, SIGNAL( result( const LdapClient&, const KLDAP::LdapObject& ) ),
+               this, SLOT( slotAddResult( const LdapClient&, const KLDAP::LdapObject& ) ) );
       connect( ldapClient, SIGNAL( done() ),
                this, SLOT( slotSearchDone() ) );
       connect( ldapClient, SIGNAL( error( const QString& ) ),
@@ -309,9 +309,9 @@ void LDAPSearchDialog::cancelQuery()
   }
 }
 
-void LDAPSearchDialog::slotAddResult( const KPIM::LdapObject& obj )
+void LDAPSearchDialog::slotAddResult( const KPIM::LdapClient&, const KLDAP::LdapObject& obj )
 {
-  new ContactListItem( mResultListView, obj.attrs );
+  new ContactListItem( mResultListView, obj.attributes() );
 }
 
 void LDAPSearchDialog::slotSetScope( bool rec )
@@ -475,8 +475,8 @@ void LDAPSearchDialog::slotUser1()
       addr.setNameFromString( asUtf8( cli->mAttrs["cn"].first() ) );
 
       // email
-      KPIM::LdapAttrValue lst = cli->mAttrs["mail"];
-      KPIM::LdapAttrValue::ConstIterator it = lst.begin();
+      KLDAP::LdapAttrValue lst = cli->mAttrs["mail"];
+      KLDAP::LdapAttrValue::ConstIterator it = lst.begin();
       bool pref = true;
       if ( it != lst.end() ) {
         addr.insertEmail( asUtf8( *it ), pref );

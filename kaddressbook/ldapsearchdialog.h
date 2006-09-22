@@ -52,7 +52,7 @@ class LDAPSearchDialog : public KDialog
     void addresseesAdded();
 
   protected slots:
-    void slotAddResult( const KPIM::LdapObject& obj );
+    void slotAddResult( const KPIM::LdapClient &client, const KLDAP::LdapObject& obj );
     void slotSetScope( bool rec );
     void slotStartSearch();
     void slotStopSearch();
