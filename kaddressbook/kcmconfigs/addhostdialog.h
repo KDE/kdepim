@@ -25,6 +25,7 @@
 #define ADDHOSTDIALOG_H
 
 #include <kdialog.h>
+#include <kldap/ldapserver.h>
 #include <kldap/ldapconfigwidget.h>
 #include <libkdepim/ldapclient.h>
 
@@ -37,7 +38,7 @@ class AddHostDialog : public KDialog
     Q_OBJECT
 
   public:
-    AddHostDialog( KPIM::LdapServer* server, QWidget* parent = 0 );
+    AddHostDialog( KLDAP::LdapServer* server, QWidget* parent = 0 );
     ~AddHostDialog();
 
   signals:
@@ -48,7 +49,7 @@ class AddHostDialog : public KDialog
     virtual void slotOk();
   private:
     KLDAP::LdapConfigWidget *mCfg;
-    KPIM::LdapServer *mServer;
+    KLDAP::LdapServer *mServer;
 };
 
 #endif // ADDHOSTDIALOG_H

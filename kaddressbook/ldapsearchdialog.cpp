@@ -245,8 +245,8 @@ void LDAPSearchDialog::restoreSettings()
   } else {
     mIsOK = true;
     for ( int j = 0; j < mNumHosts; ++j ) {
+      KLDAP::LdapServer ldapServer;
       KPIM::LdapClient* ldapClient = new KPIM::LdapClient( 0, this, "ldapclient" );
-      KPIM::LdapServer ldapServer;
       KPIM::LdapSearch::readConfig( ldapServer, config, j, true );
       ldapClient->setServer( ldapServer );
       QStringList attrs;

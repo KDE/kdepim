@@ -35,7 +35,7 @@
 #include <klocale.h>
 #include "addhostdialog.h"
 
-AddHostDialog::AddHostDialog( KPIM::LdapServer *server, QWidget* parent )
+AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget* parent )
   : KDialog( parent )
 {
   setCaption( i18n( "Add Host" ) );
@@ -62,6 +62,7 @@ AddHostDialog::AddHostDialog( KPIM::LdapServer *server, QWidget* parent )
        KLDAP::LdapConfigWidget::W_VER |
        KLDAP::LdapConfigWidget::W_TIMELIMIT |
        KLDAP::LdapConfigWidget::W_SIZELIMIT |
+       KLDAP::LdapConfigWidget::W_PAGESIZE |
        KLDAP::LdapConfigWidget::W_DN |
        KLDAP::LdapConfigWidget::W_SECBOX |
        KLDAP::LdapConfigWidget::W_AUTHBOX,
@@ -70,19 +71,20 @@ AddHostDialog::AddHostDialog( KPIM::LdapServer *server, QWidget* parent )
   layout->addWidget( mCfg );
   mCfg->setHost( mServer->host() );
   mCfg->setPort( mServer->port() );
-  mCfg->setDn( mServer->baseDN() );
+  mCfg->setDn( mServer->baseDn() );
   mCfg->setUser( mServer->user() );
-  mCfg->setBindDn( mServer->bindDN() );
-  mCfg->setPassword( mServer->pwdBindDN() );
+  mCfg->setBindDn( mServer->bindDn() );
+  mCfg->setPassword( mServer->password() );
   mCfg->setTimeLimit( mServer->timeLimit() );
   mCfg->setSizeLimit( mServer->sizeLimit() );
+  mCfg->setPageSize( mServer->pageSize() );
   mCfg->setVersion( mServer->version() );
 
   switch ( mServer->security() ) {
-    case KPIM::LdapServer::TLS:
+    case KLDAP::LdapServer::TLS:
       mCfg->setSecurity( KLDAP::LdapConfigWidget::TLS );
       break;
-    case KPIM::LdapServer::SSL:
+    case KLDAP::LdapServer::SSL:
       mCfg->setSecurity( KLDAP::LdapConfigWidget::SSL );
       break;
     default:
@@ -90,10 +92,10 @@ AddHostDialog::AddHostDialog( KPIM::LdapServer *server, QWidget* parent )
   }
 
   switch ( mServer->auth() ) {
-    case KPIM::LdapServer::Simple:
+    case KLDAP::LdapServer::Simple:
       mCfg->setAuth( KLDAP::LdapConfigWidget::Simple );
       break;
-    case KPIM::LdapServer::SASL:
+    case KLDAP::LdapServer::SASL:
       mCfg->setAuth( KLDAP::LdapConfigWidget::SASL );
       break;
     default:
@@ -118,34 +120,33 @@ void AddHostDialog::slotOk()
 {
   mServer->setHost( mCfg->host() );
   mServer->setPort( mCfg->port() );
-  mServer->setBaseDN( mCfg->dn().trimmed() );
+  mServer->setBaseDn( mCfg->dn().trimmed() );
   mServer->setUser( mCfg->user() );
-  mServer->setBindDN( mCfg->bindDn() );
-  mServer->setPwdBindDN( mCfg->password() );
+  mServer->setBindDn( mCfg->bindDn() );
+  mServer->setPassword( mCfg->password() );
   mServer->setTimeLimit( mCfg->timeLimit() );
   mServer->setSizeLimit( mCfg->sizeLimit() );
+  mServer->setPageSize( mCfg->pageSize() );
   mServer->setVersion( mCfg->version() );
   switch ( mCfg->security() ) {
-    case KLDAP::LdapConfigWidget::None:
-      mServer->setSecurity( KPIM::LdapServer::Sec_None );
-      break;
     case KLDAP::LdapConfigWidget::TLS:
-      mServer->setSecurity( KPIM::LdapServer::TLS );
+      mServer->setSecurity( KLDAP::LdapServer::TLS );
       break;
     case KLDAP::LdapConfigWidget::SSL:
-      mServer->setSecurity( KPIM::LdapServer::SSL );
+      mServer->setSecurity( KLDAP::LdapServer::SSL );
       break;
+    default:
+      mServer->setSecurity( KLDAP::LdapServer::None );
   }
   switch ( mCfg->auth() ) {
-    case KLDAP::LdapConfigWidget::Anonymous:
-      mServer->setSecurity( KPIM::LdapServer::Anonymous );
-      break;
     case KLDAP::LdapConfigWidget::Simple:
-      mServer->setSecurity( KPIM::LdapServer::Simple );
+      mServer->setAuth( KLDAP::LdapServer::Simple );
       break;
     case KLDAP::LdapConfigWidget::SASL:
-      mServer->setSecurity( KPIM::LdapServer::SASL );
+      mServer->setAuth( KLDAP::LdapServer::SASL );
       break;
+    default:
+      mServer->setAuth( KLDAP::LdapServer::Anonymous );
   }
   mServer->setMech( mCfg->mech() );
   KDialog::accept();

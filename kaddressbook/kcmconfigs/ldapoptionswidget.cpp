@@ -47,27 +47,27 @@
 class LDAPItem : public Q3CheckListItem
 {
   public:
-    LDAPItem( Q3ListView *parent, const KPIM::LdapServer &server, bool isActive = false )
+    LDAPItem( Q3ListView *parent, const KLDAP::LdapServer &server, bool isActive = false )
       : Q3CheckListItem( parent, parent->lastItem(), QString(), Q3CheckListItem::CheckBox ),
         mIsActive( isActive )
     {
       setServer( server );
     }
 
-    void setServer( const KPIM::LdapServer &server )
+    void setServer( const KLDAP::LdapServer &server )
     {
       mServer = server;
 
       setText( 0, mServer.host() );
     }
 
-    const KPIM::LdapServer &server() const { return mServer; }
+    const KLDAP::LdapServer &server() const { return mServer; }
 
     void setIsActive( bool isActive ) { mIsActive = isActive; }
     bool isActive() const { return mIsActive; }
 
   private:
-    KPIM::LdapServer mServer;
+    KLDAP::LdapServer mServer;
     bool mIsActive;
 };
 
@@ -120,7 +120,7 @@ void LDAPOptionsWidget::slotItemClicked( Q3ListViewItem *item )
 
 void LDAPOptionsWidget::slotAddHost()
 {
-  KPIM::LdapServer server;
+  KLDAP::LdapServer server;
   AddHostDialog dlg( &server, this );
 
   if ( dlg.exec() && !server.host().isEmpty() ) {
@@ -136,7 +136,7 @@ void LDAPOptionsWidget::slotEditHost()
   if ( !item )
     return;
 
-  KPIM::LdapServer server = item->server();
+  KLDAP::LdapServer server = item->server();
   AddHostDialog dlg( &server, this );
   dlg.setCaption( i18n( "Edit Host" ) );
 
@@ -163,7 +163,7 @@ void LDAPOptionsWidget::slotRemoveHost()
 
 static void swapItems( LDAPItem *item, LDAPItem *other )
 {
-  KPIM::LdapServer server = item->server();
+  KLDAP::LdapServer server = item->server();
   bool isActive = item->isActive();
   item->setServer( other->server() );
   item->setIsActive( other->isActive() );
@@ -207,7 +207,7 @@ void LDAPOptionsWidget::restoreSettings()
 
   uint count = group.readEntry( "NumSelectedHosts", 0);
   for ( uint i = 0; i < count; ++i ) {
-    KPIM::LdapServer server;
+    KLDAP::LdapServer server;
     KPIM::LdapSearch::readConfig( server, config, i, true );
     LDAPItem *item = new LDAPItem( mHostListView, server, true );
     item->setOn( true );
@@ -215,7 +215,7 @@ void LDAPOptionsWidget::restoreSettings()
 
   count = group.readEntry( "NumHosts",0 );
   for ( uint i = 0; i < count; ++i ) {
-    KPIM::LdapServer server;
+    KLDAP::LdapServer server;
     KPIM::LdapSearch::readConfig( server, config, i, false );
     new LDAPItem( mHostListView, server );
   }
@@ -237,7 +237,7 @@ void LDAPOptionsWidget::saveSettings()
     if ( !item )
       continue;
 
-    KPIM::LdapServer server = item->server();
+    KLDAP::LdapServer server = item->server();
     if ( item->isOn() ) {
       KPIM::LdapSearch::writeConfig( server, config, selected, true );
       selected++;
