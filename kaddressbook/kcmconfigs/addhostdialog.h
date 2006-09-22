@@ -25,7 +25,7 @@
 #define ADDHOSTDIALOG_H
 
 #include <kdialog.h>
-#include <kabc/ldapconfigwidget.h>
+#include <kldap/ldapconfigwidget.h>
 #include <libkdepim/ldapclient.h>
 
 class KLineEdit;
@@ -47,7 +47,7 @@ class AddHostDialog : public KDialog
     void slotHostEditChanged( const QString& );
     virtual void slotOk();
   private:
-    KABC::LdapConfigWidget *mCfg;
+    KLDAP::LdapConfigWidget *mCfg;
     KPIM::LdapServer *mServer;
 };
 

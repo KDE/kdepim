@@ -52,19 +52,19 @@ AddHostDialog::AddHostDialog( KPIM::LdapServer *server, QWidget* parent )
   layout->setSpacing( spacingHint() );
   layout->setMargin( marginHint() );
 
-  mCfg = new KABC::LdapConfigWidget(
-       KABC::LdapConfigWidget::W_USER |
-       KABC::LdapConfigWidget::W_PASS |
-       KABC::LdapConfigWidget::W_BINDDN |
-       KABC::LdapConfigWidget::W_REALM |
-       KABC::LdapConfigWidget::W_HOST |
-       KABC::LdapConfigWidget::W_PORT |
-       KABC::LdapConfigWidget::W_VER |
-       KABC::LdapConfigWidget::W_TIMELIMIT |
-       KABC::LdapConfigWidget::W_SIZELIMIT |
-       KABC::LdapConfigWidget::W_DN |
-       KABC::LdapConfigWidget::W_SECBOX |
-       KABC::LdapConfigWidget::W_AUTHBOX,
+  mCfg = new KLDAP::LdapConfigWidget(
+       KLDAP::LdapConfigWidget::W_USER |
+       KLDAP::LdapConfigWidget::W_PASS |
+       KLDAP::LdapConfigWidget::W_BINDDN |
+       KLDAP::LdapConfigWidget::W_REALM |
+       KLDAP::LdapConfigWidget::W_HOST |
+       KLDAP::LdapConfigWidget::W_PORT |
+       KLDAP::LdapConfigWidget::W_VER |
+       KLDAP::LdapConfigWidget::W_TIMELIMIT |
+       KLDAP::LdapConfigWidget::W_SIZELIMIT |
+       KLDAP::LdapConfigWidget::W_DN |
+       KLDAP::LdapConfigWidget::W_SECBOX |
+       KLDAP::LdapConfigWidget::W_AUTHBOX,
         page );
 
   layout->addWidget( mCfg );
@@ -72,32 +72,32 @@ AddHostDialog::AddHostDialog( KPIM::LdapServer *server, QWidget* parent )
   mCfg->setPort( mServer->port() );
   mCfg->setDn( mServer->baseDN() );
   mCfg->setUser( mServer->user() );
-  mCfg->setBindDN( mServer->bindDN() );
+  mCfg->setBindDn( mServer->bindDN() );
   mCfg->setPassword( mServer->pwdBindDN() );
   mCfg->setTimeLimit( mServer->timeLimit() );
   mCfg->setSizeLimit( mServer->sizeLimit() );
-  mCfg->setVer( mServer->version() );
+  mCfg->setVersion( mServer->version() );
 
   switch ( mServer->security() ) {
     case KPIM::LdapServer::TLS:
-      mCfg->setSecTLS();
+      mCfg->setSecurity( KLDAP::LdapConfigWidget::TLS );
       break;
     case KPIM::LdapServer::SSL:
-      mCfg->setSecSSL();
+      mCfg->setSecurity( KLDAP::LdapConfigWidget::SSL );
       break;
     default:
-      mCfg->setSecNO();
+      mCfg->setSecurity( KLDAP::LdapConfigWidget::None );
   }
 
   switch ( mServer->auth() ) {
     case KPIM::LdapServer::Simple:
-      mCfg->setAuthSimple();
+      mCfg->setAuth( KLDAP::LdapConfigWidget::Simple );
       break;
     case KPIM::LdapServer::SASL:
-      mCfg->setAuthSASL();
+      mCfg->setAuth( KLDAP::LdapConfigWidget::SASL );
       break;
     default:
-      mCfg->setAuthAnon();
+      mCfg->setAuth( KLDAP::LdapConfigWidget::Anonymous );
   }
   mCfg->setMech( mServer->mech() );
 
@@ -120,17 +120,33 @@ void AddHostDialog::slotOk()
   mServer->setPort( mCfg->port() );
   mServer->setBaseDN( mCfg->dn().trimmed() );
   mServer->setUser( mCfg->user() );
-  mServer->setBindDN( mCfg->bindDN() );
+  mServer->setBindDN( mCfg->bindDn() );
   mServer->setPwdBindDN( mCfg->password() );
   mServer->setTimeLimit( mCfg->timeLimit() );
   mServer->setSizeLimit( mCfg->sizeLimit() );
-  mServer->setVersion( mCfg->ver() );
-  mServer->setSecurity( KPIM::LdapServer::Sec_None );
-  if ( mCfg->isSecTLS() ) mServer->setSecurity( KPIM::LdapServer::TLS );
-  if ( mCfg->isSecSSL() ) mServer->setSecurity( KPIM::LdapServer::SSL );
-  mServer->setAuth( KPIM::LdapServer::Anonymous );
-  if ( mCfg->isAuthSimple() ) mServer->setAuth( KPIM::LdapServer::Simple );
-  if ( mCfg->isAuthSASL() ) mServer->setAuth( KPIM::LdapServer::SASL );
+  mServer->setVersion( mCfg->version() );
+  switch ( mCfg->security() ) {
+    case KLDAP::LdapConfigWidget::None:
+      mServer->setSecurity( KPIM::LdapServer::Sec_None );
+      break;
+    case KLDAP::LdapConfigWidget::TLS:
+      mServer->setSecurity( KPIM::LdapServer::TLS );
+      break;
+    case KLDAP::LdapConfigWidget::SSL:
+      mServer->setSecurity( KPIM::LdapServer::SSL );
+      break;
+  }
+  switch ( mCfg->auth() ) {
+    case KLDAP::LdapConfigWidget::Anonymous:
+      mServer->setSecurity( KPIM::LdapServer::Anonymous );
+      break;
+    case KLDAP::LdapConfigWidget::Simple:
+      mServer->setSecurity( KPIM::LdapServer::Simple );
+      break;
+    case KLDAP::LdapConfigWidget::SASL:
+      mServer->setSecurity( KPIM::LdapServer::SASL );
+      break;
+  }
   mServer->setMech( mCfg->mech() );
   KDialog::accept();
 }
