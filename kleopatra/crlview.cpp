@@ -64,7 +64,6 @@ CRLView::CRLView( QWidget* parent )
 
   _textView = new QTextEdit( this );
   _textView->setFont( KGlobalSettings::fixedFont() );
-  _textView->setTextFormat( Qt::LogText );
   topLayout->addWidget( _textView );
 
   QHBoxLayout* hbLayout = new QHBoxLayout();
