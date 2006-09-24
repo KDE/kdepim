@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, Mart Kelder (mart.kde@hccnet.nl)
+ * Copyright (C) 2004-2006, Mart Kelder (mart@kelder31.nl)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,8 +68,13 @@ void DockedItem::readConfig( BoxSettings* config, BoxSettings *config_settings, 
 
 void DockedItem::setCount( const int count, const bool newMessages )
 {
-#warning KSystemTray is no QLabel anymore
-	// drawLabel( _systemtray, count, newMessages );
+	QPixmap pixmap( 22, 22 );
+	bool isEmpty = makePixmap( pixmap, count, newMessages );
+
+	_systemtray->setVisible( !isEmpty );
+
+	if( !isEmpty )
+		_systemtray->setIcon( QIcon( pixmap ) );
 }
 
 void DockedItem::setTooltip( const QString& tooltip )

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, Mart Kelder (mart.kde@hccnet.nl)
+ * Copyright (C) 2004-2006, Mart Kelder (mart@kelder31.nl)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -154,6 +154,16 @@ protected:
 	 * @param newMessages are the messages new?
 	 */
 	void drawLabel( QLabel *label, const int count, const bool newMessages );
+	
+	/**
+	 * This function draws a specified configuration into a label
+	 * @param the resulting pixmap (size should be ok already)
+	 * @param label The label to be filled
+	 * @param count the number of new messages
+	 * @param newMessages are the messages new?
+	 * @return true if the pixmap is empty; false otherwise
+	 */
+	bool makePixmap( QPixmap& result, const int count, const bool newMessages );
 	
 private:
 	/**

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, Mart Kelder (mart.kde@hccnet.nl)
+ * Copyright (C) 2004-2006, Mart Kelder (mart@kelder31.nl)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -294,6 +294,54 @@ void BoxContainerItem::drawLabel( QLabel *label, const int count, const bool new
 		label->show();
 	else
 		label->hide();
+}
+
+bool BoxContainerItem::makePixmap( QPixmap& pixmap, const int count, const bool newMessages )
+{
+	BoxSettings::State messageState = newMessages ? BoxSettings::New : BoxSettings::Normal;
+	QPixmap otherPixmap;
+	QPainter p;
+	bool isEmpty = true;
+
+	p.begin( &pixmap );
+
+	//draw background
+	if( _settings->hasBackgroundColor( messageState ) && _settings->backgroundColor( messageState ).isValid() )
+	{
+		//Fill with background color
+		p.fillRect( pixmap.rect(), QBrush( _settings->backgroundColor( messageState ) ) );
+	}
+	else
+	{
+		//Clear background
+		//TODO: Check if it is still works good: transparent might not receive mouse clicks (documentation QIcon)
+		p.fillRect( pixmap.rect(), QBrush( Qt::transparent ) );
+		isEmpty = false;
+	}
+
+	//Draw pixmap
+	if( _settings->hasIcon( messageState ) && !_settings->icon( messageState ).isEmpty() )
+	{
+		otherPixmap = KGlobal::iconLoader()->loadIcon( _settings->icon( messageState ), K3Icon::Desktop, K3Icon::SizeSmallMedium );
+		if( !otherPixmap.isNull() )
+		{
+			p.drawPixmap( pixmap.rect(), otherPixmap, otherPixmap.rect() );
+			isEmpty = false;
+		}
+	}
+
+	//Draw text
+	if( _settings->hasForegroundColor( messageState ) && _settings->foregroundColor( messageState ).isValid() )
+	{
+		p.setFont( _settings->font( messageState ) );
+		p.setPen( _settings->foregroundColor( messageState ) );
+		p.drawText( pixmap.rect(), Qt::AlignCenter, QString::number( count ) );
+		isEmpty = false;
+	}
+	
+	p.end();
+
+	return isEmpty;
 }
 
 //This function makes a pixmap which is based on icon, but has a number painted on it.
