@@ -458,7 +458,7 @@ void KCalResourceSlox::createEventAttributes( QDomDocument &doc,
 
   WebdavHandler::addSloxElement( this, doc, parent, fieldName( Location ), event->location() );
 
-  if ( event->doesFloat() ) {
+  if ( event->floats() ) {
     WebdavHandler::addSloxElement( this, doc, parent, fieldName( FullTime ), boolToStr( true ) );
   } else {
     WebdavHandler::addSloxElement( this, doc, parent, fieldName( FullTime ), boolToStr( false ) );
@@ -705,7 +705,7 @@ void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
 
   if ( tag == fieldName( EventBegin ) ) {
     KDateTime dt;
-    if ( event->doesFloat() ) {
+    if ( event->floats() ) {
       if ( type() == "ox" )
         dt = WebdavHandler::sloxToKDateTime( text, timeSpec() );
       else
@@ -716,7 +716,7 @@ void KCalResourceSlox::parseEventAttribute( const QDomElement &e,
     event->setDtStart( dt );
   } else if ( tag == fieldName( EventEnd ) ) {
     KDateTime dt;
-    if ( event->doesFloat() ) {
+    if ( event->floats() ) {
       dt = WebdavHandler::sloxToKDateTime( text );
       dt = dt.addSecs( -1 );
     }

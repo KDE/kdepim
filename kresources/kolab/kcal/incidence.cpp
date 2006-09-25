@@ -576,7 +576,7 @@ void Incidence::setFields( const KCal::Incidence* incidence )
 {
   KolabBase::setFields( incidence );
 
-  if ( incidence->doesFloat() ) {
+  if ( incidence->floats() ) {
     // This is a floating event. Don't timezone move this one
     mFloatingStatus = AllDay;
     setStartDate( incidence->dtStart().date() );

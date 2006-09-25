@@ -187,7 +187,7 @@ void Event::setFields( const KCal::Event* event )
   Incidence::setFields( event );
 
   if ( event->hasEndDate() ) {
-    if ( event->doesFloat() ) {
+    if ( event->floats() ) {
       // This is a floating event. Don't timezone move this one
       mFloatingStatus = AllDay;
       setEndDate( event->dtEnd().date() );

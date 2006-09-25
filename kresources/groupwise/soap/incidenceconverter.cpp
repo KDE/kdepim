@@ -129,7 +129,7 @@ ngwt__Appointment* IncidenceConverter::convertToAppointment( KCal::Event* event 
     return 0;
   }
 
-  if ( event->doesFloat() ) {
+  if ( event->floats() ) {
     bool *allDayEvent = (bool*)soap_malloc( soap(), 1 );
     (*allDayEvent ) = true;
 
@@ -285,7 +285,7 @@ ngwt__Note* IncidenceConverter::convertToNote( KCal::Journal* journal )
     return 0;
   }
 
-  if ( journal->doesFloat() ) {
+  if ( journal->floats() ) {
     if ( journal->dtStart().isValid() )
       note->startDate = qDateToString( journal->dtStart().date() );
   } else {

@@ -938,7 +938,7 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
   args.insert( "start", event->dtStart().toTimeSpec( timeSpec() ).dateTime() );
 
   // handle all day events
-  if ( event->doesFloat() )
+  if ( event->floats() )
     args.insert( "end", event->dtEnd().addDays( 1 ).dateTime() );
   else
     args.insert( "end", event->dtEnd().toTimeSpec( timeSpec() ).dateTime() );
