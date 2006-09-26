@@ -39,9 +39,12 @@
 
 using namespace KTnef;
 
-AttachPropertyDialog::AttachPropertyDialog(QWidget *parent, const char *name)
-	: AttachPropertyDialogBase(parent, name, true)
+AttachPropertyDialog::AttachPropertyDialog(QWidget *parent)
+	: AttachPropertyDialogBase(parent)
 {
+   setModal(true);
+   connect(close_, SIGNAL(clicked()), this, SLOT(accept()));
+   connect(save_, SIGNAL(clicked()), this, SLOT(saveClicked()));
 }
 
 AttachPropertyDialog::~AttachPropertyDialog()
@@ -74,6 +77,7 @@ void AttachPropertyDialog::setAttachment(KTNEFAttach *attach)
 
 void AttachPropertyDialog::saveClicked()
 {
+	kDebug()<<" AttachPropertyDialog::saveClicked()\n";
 	saveProperty( properties_, m_attach, this );
 }
 

@@ -11,11 +11,12 @@ set(ktnef_bin_SRCS
    ktnefview.cpp 
    attachpropertydialog.cpp 
    messagepropertydialog.cpp 
+   attachpropertydialogbase.cpp
    main.cpp )
 
 kde4_automoc(${ktnef_bin_SRCS})
 
-kde4_add_ui3_files(ktnef_bin_SRCS attachpropertydialogbase.ui )
+kde4_add_ui_files(ktnef_bin_SRCS attachpropertydialogbase.ui )
 
 kde4_add_executable(ktnef_bin ${ktnef_bin_SRCS})
 set_target_properties(ktnef_bin PROPERTIES OUTPUT_NAME ktnef)
