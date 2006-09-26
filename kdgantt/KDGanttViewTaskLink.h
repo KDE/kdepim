@@ -51,15 +51,19 @@ public:
     enum LinkType { None, FinishStart, StartStart, FinishFinish, StartFinish };
 
     KDGanttViewTaskLink( QPtrList<KDGanttViewItem> from,
-                         QPtrList<KDGanttViewItem> to );
+                         QPtrList<KDGanttViewItem> to,
+                         LinkType type = None );
     KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
                          QPtrList<KDGanttViewItem> from,
-                         QPtrList<KDGanttViewItem> to );
+                         QPtrList<KDGanttViewItem> to,
+                         LinkType type = None );
     KDGanttViewTaskLink( KDGanttViewTaskLinkGroup* group,
                          KDGanttViewItem*  from,
-                         KDGanttViewItem* to );
+                         KDGanttViewItem* to,
+                         LinkType type = None );
     KDGanttViewTaskLink( KDGanttViewItem*  from,
-                         KDGanttViewItem* to );
+                         KDGanttViewItem* to,
+                         LinkType type = None);
     ~KDGanttViewTaskLink();
     QPtrList<KDGanttViewItem> from() const;
     QPtrList<KDGanttViewItem> to() const;
@@ -88,6 +92,10 @@ public:
                      QDomElement& parentElement );
     static KDGanttViewTaskLink* createFromDomElement( QDomElement& );
     bool isFromToItem (KDGanttViewItem * item );
+
+    int getLinkType() const;
+    void setLinkType(int type);
+
 private:
     void resetGroup();
     friend class KDGanttViewTaskLinkGroup;
@@ -96,6 +104,13 @@ private:
     QPtrList<KDCanvasLine>* horLineList;
     QPtrList<KDCanvasLine>* verLineList;
     QPtrList<KDCanvasPolygon>* topList;
+    // used when linkType != None    
+    QPtrList<KDCanvasLine>* horLineList2;
+    QPtrList<KDCanvasLine>* verLineList2;
+    QPtrList<KDCanvasLine>* horLineList3;
+    QPtrList<KDCanvasPolygon>* topLeftList;
+    QPtrList<KDCanvasPolygon>* topRightList;
+    
     KDGanttViewTaskLinkGroup* myGroup;
     bool isvisible,ishighlighted;
     QColor myColor, myColorHL;
@@ -103,6 +118,13 @@ private:
     KDTimeTableWidget*  myTimeTable;
     void initTaskLink();
     void showMe( bool );
+    void showMeType( bool );
+    void hide();
+    int xOffset(KDGanttViewItem *item);
+
+    LinkType myLinkType;
+    static QString linkTypeToString( LinkType type );
+    static LinkType stringToLinkType( const QString type );
 };
 
 #endif

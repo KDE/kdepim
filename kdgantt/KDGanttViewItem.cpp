@@ -342,8 +342,17 @@ KDGanttViewItem::Connector  KDGanttViewItem::getConnector( QPoint p )
 {
 
     Q_UNUSED( p )
+            return KDGanttViewItem::NoConnector;
+}
+
+KDGanttViewItem::Connector KDGanttViewItem::getConnector( QPoint p, bool linkMode )
+{
+
+    Q_UNUSED( p )
+    Q_UNUSED( linkMode )
     return KDGanttViewItem::NoConnector;
 }
+
 /*!
   Returns the item with the specified name.
 
@@ -1295,7 +1304,13 @@ QColor KDGanttViewItem::textColor() const
   \enum KDGanttViewItem::Type
 
   This enum is used in order to return the type of a Gantt chart item.
-*/
+ */
+
+/*!
+  \enum KDGanttViewItem::Connector
+
+  This enum is used to define the types of connectors items can have.
+ */
 
 
 /*!
@@ -2905,3 +2920,49 @@ bool KDGanttViewItem::isCalendar( ) const
   this instance variable is true if the item is visible in the Gantt
   view
 */
+
+
+QPoint KDGanttViewItem::middleLeft()
+{
+    return QPoint(myGanttView->myTimeHeader->getCoordX(myStartTime), itemPos()+height()/2);
+}
+
+QPoint KDGanttViewItem::middleRight()
+{
+    return QPoint(myGanttView->myTimeHeader->getCoordX(myEndTime), itemPos()+height()/2);
+}
+
+/*!
+  Moves this items text.
+ */
+void KDGanttViewItem::moveTextCanvas(int x, int y)
+{
+    int mx = x + myTextOffset.x();
+    int my = y + myTextOffset.y();
+    if (myTextOffset.x() != 0)
+        mx -= 2*myItemSize; // keep old behaviour
+        
+    mTextCanvas->move(mx+2*myItemSize,my-myItemSize/2);
+    //qDebug("%s: moveTextCanvas(%d,%d) offset: %d,%d moved to  %d,%d",listViewText(0).latin1(),x,y,myTextOffset.x(),myTextOffset.y(),mx+2*myItemSize,my-myItemSize/2);
+}
+
+void KDGanttViewItem::moveTextCanvas() 
+{
+    QPoint m = myTextOffset+middleRight();
+    mTextCanvas->move(m.x(), m.y()-myItemSize/2);
+}
+
+/*!
+  Sets with how much the item text is offset from the end of the item.
+ */
+void KDGanttViewItem::setTextOffset(QPoint p) 
+{
+    //qDebug("%s: setTextOffset() offset: %d,%d",listViewText(0).latin1(),p.x(),p.y());
+    myTextOffset.setX(p.x());
+    myTextOffset.setY(p.y());
+}
+
+bool KDGanttViewItem::isMyTextCanvas(QCanvasItem *tc)
+{
+    return tc == mTextCanvas;
+}

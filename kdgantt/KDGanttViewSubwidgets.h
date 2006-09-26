@@ -567,6 +567,11 @@ public:
     void insertItemAfter( KDGanttViewItem* , KDGanttViewItem* );
     void setMyVScrollBarMode ( ScrollBarMode );
     ScrollBarMode myVScrollBarMode () const;
+    
+    void setConnectorEnabled(int connector, bool on);
+    bool isConnectorEnabled(int connector) const;
+    void setAllConnectorsEnabled(bool on);
+
 protected:
     friend class KDGanttView;
     friend class KDListView;
@@ -588,8 +593,7 @@ protected:
     QMenu* onItem;
     bool _showItemAddPopupMenu;
     int myMyContentsHeight;
-    int getItemArea(KDGanttViewItem *item, int x);
-    int getLinkType(int from, int to);
+    bool autoScrollEnabled;
 
 signals:
   void heightResized( int );
@@ -630,14 +634,26 @@ private slots:
 private:
     QTime mButtonDownTime;
     bool currentItemChanged;
-    bool userCreateTaskLinksEnabled;
     int mScrollBarCheckCounter;
     ScrollBarMode myScrollBarMode;
     QTimer * mScrollbarTimer;
+    QTimer * myScrollTimer;
     KDCanvasToolTip* myToolTip;
     QTimer scrollBarTimer;
     QPoint mousePos;
     QAction *mPasteAction;
+
+    bool mConnectorStartEnabled;
+    bool mConnectorMiddleEnabled;
+    bool mConnectorEndEnabled;
+    bool mConnectorMoveEnabled;
+    bool mConnectorActualEndEnabled;
+    bool mConnectorLeadEnabled;
+    bool mConnectorTaskLinkStartEnabled;
+    bool mConnectorTaskLinkEndEnabled;
+
+    KDGanttViewItem *mTaskLinkFromItem;
+    QCanvasLine *mLinkLine;
 };
 
 #if QT_VERSION >= 0x040000

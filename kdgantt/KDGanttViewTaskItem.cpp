@@ -152,7 +152,7 @@ KDGanttViewTaskItem::~KDGanttViewTaskItem()
 */
 bool KDGanttViewTaskItem::moveConnector( KDGanttViewItem::Connector c, QPoint p )
 {
-    //qDebug("DIFF %d ",mCurrentConnectorDiffX );
+    //qDebug("DIFF %d , px=",mCurrentConnectorDiffX, p.x() );
     switch( c ) {
     case Start:
         setStartTime( myGanttView->myTimeHeader->getDateTimeForIndex( p.x() ) );
@@ -170,7 +170,8 @@ bool KDGanttViewTaskItem::moveConnector( KDGanttViewItem::Connector c, QPoint p 
             return true;
         }
         break;
-    case TaskLink:
+        case TaskLinkStart:
+        case TaskLinkEnd:
         // handled externally
         break;
     default:
@@ -201,28 +202,119 @@ KDGanttViewItem::Connector  KDGanttViewTaskItem::getConnector( QPoint p )
           p.x() < (int)temp->x() ||
           p.x() > (int)temp->x() + (int)temp->width() )
         return KDGanttViewItem::NoConnector;
+    
+    // Tasks support: Start, TaskLinkStart, Move, TaskLinkEnd, End.
     int miniwid = 4;
-    if ( (int)temp->width() < miniwid )
-        return KDGanttViewItem::TaskLink;
+    if ( (int)temp->width() < miniwid ) {
+        if (myGanttView->isConnectorEnabled(KDGanttViewItem::TaskLinkEnd)) {
+            return KDGanttViewItem::TaskLinkEnd;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::TaskLinkStart)) {
+            return KDGanttViewItem::TaskLinkStart;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::Move)) {
+            return KDGanttViewItem::Move;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::End)) {
+            return KDGanttViewItem::End;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::Start)) {
+            return KDGanttViewItem::Start;
+        } else {
+            return KDGanttViewItem::NoConnector;
+        }
+    }
     int margin = 5;
 
-    if ( (int)temp->width() < 14 ) {
+    if ( (int)temp->width() < 25 ) {
         --margin;
-        if ( (int)temp->width() < 10 )
+        if ( (int)temp->width() < 20 )
             --margin;
-        if ( (int)temp->width() < 8 )
+        if ( (int)temp->width() < 15 )
+            --margin;
+        if ( (int)temp->width() < 10 )
             --margin;
     } else if ( (int)temp->width() > 50 ) {
         margin = 10;
     }
-    if ( p.x() < (int)temp->x() + margin )
-        return KDGanttViewItem::Start;
-    if ( p.x() > (int)temp->x() + (int)temp->width() - margin )
-        return KDGanttViewItem::End;
-    if ( p.x() < (int)temp->x() + (int)temp->width() - margin - margin )
+    //qDebug("p=%d, w=%d: margin=%d",p.x(),(int)temp->width(),margin);
+    if ( p.x() < (int)temp->x() + margin ) {
+        if (myGanttView->isConnectorEnabled(KDGanttViewItem::Start)) {
+            return KDGanttViewItem::Start;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::TaskLinkStart)) {
+            return KDGanttViewItem::TaskLinkStart;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::Move)) {
+            return KDGanttViewItem::Move;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::TaskLinkEnd)) {
+            return KDGanttViewItem::TaskLinkEnd;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::End)) {
+            return KDGanttViewItem::End;
+        } else {
+            return KDGanttViewItem::NoConnector;
+        }
+    }
+    if ( p.x() < (int)temp->x() + margin + margin ) {
+        if (myGanttView->isConnectorEnabled(KDGanttViewItem::TaskLinkStart)) {
+            return KDGanttViewItem::TaskLinkStart;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::Move)) {
+            return KDGanttViewItem::Move;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::Start)) {
+            return KDGanttViewItem::Start; 
+        } else {
+            return KDGanttViewItem::NoConnector;
+        }
+    }
+    if ( p.x() < (int)temp->x() + (int)temp->width() - margin - margin ) {
+        if (myGanttView->isConnectorEnabled(KDGanttViewItem::Move)) {
+            return KDGanttViewItem::Move;
+        } else {
+            return KDGanttViewItem::NoConnector;
+        }
+    }
+    if ( p.x() < (int)temp->x() + (int)temp->width() - margin ) {
+        if (myGanttView->isConnectorEnabled(KDGanttViewItem::TaskLinkEnd)) {
+            return KDGanttViewItem::TaskLinkEnd;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::Move)) {
+            return KDGanttViewItem::Move;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::End)) {
+            return KDGanttViewItem::End;
+        } else {
+            return KDGanttViewItem::NoConnector;
+        }
+    }
+    if ( p.x() >= (int)temp->x() + (int)temp->width() - margin ) {
+        if (myGanttView->isConnectorEnabled(KDGanttViewItem::End)) {
+            return KDGanttViewItem::End;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::ActualEnd)) {
+            return KDGanttViewItem::ActualEnd;
+        } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::TaskLinkEnd)) {
+            return KDGanttViewItem::TaskLinkEnd;
+        } else {
+            return KDGanttViewItem::NoConnector;
+        }
+    }
+    if (myGanttView->isConnectorEnabled(KDGanttViewItem::Move)) {
         return KDGanttViewItem::Move;
+    } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::TaskLinkEnd)) {
+        return KDGanttViewItem::TaskLinkEnd;
+    } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::TaskLinkStart)) {
+        return KDGanttViewItem::TaskLinkStart;
+    } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::End)) {
+        return KDGanttViewItem::End;
+    } else if (myGanttView->isConnectorEnabled(KDGanttViewItem::Start)) {
+        return KDGanttViewItem::Start; 
+    }
+    return KDGanttViewItem::NoConnector;
+}
 
-    return KDGanttViewItem::TaskLink;
+KDGanttViewItem::Connector KDGanttViewTaskItem::getConnector( QPoint p, bool linkMode )
+{
+    if ( !linkMode ) {
+        return getConnector( p );
+    }
+    KDTimeTableWidget *tt = myGanttView->myTimeTable;
+    int start = tt->getCoordX(myStartTime);
+    int end = tt->getCoordX(myEndTime);
+    if ( (end - start)/2 < (p.x() - start) ) {
+        return KDGanttViewItem::TaskLinkEnd;
+    }
+    return KDGanttViewItem::TaskLinkStart;
 }
 
 /*!

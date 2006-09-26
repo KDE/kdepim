@@ -382,6 +382,11 @@ public:
                                                     const QString& lvtext = QString::null,
                                                     const QString& name = QString::null  );
 
+    void setConnectorEnabled( int connector, bool state );
+    bool isConnectorEnabled( int connector ) const;
+    void setAllConnectorsEnabled( bool state );
+    void setAutoScrollEnabled( bool state );
+    
 public slots:
     void editItem( KDGanttViewItem* );
     void zoomToSelection( const QDateTime& start,  const QDateTime&  end);
@@ -450,6 +455,8 @@ signals:
     void gvItemDoubleClicked( KDGanttViewItem* );
     // the point is the global position!!
     void gvContextMenuRequested ( KDGanttViewItem * item, const QPoint & pos );
+    
+    void gvCreateTaskLink( KDGanttViewItem*, KDGanttViewItem::Connector, KDGanttViewItem*, KDGanttViewItem::Connector );
 
     // lv... means item in listview clicked
     void lvCurrentChanged( KDGanttViewItem* );
@@ -472,7 +479,7 @@ signals:
     void taskLinkMidClicked( KDGanttViewTaskLink* );
     void taskLinkRightClicked( KDGanttViewTaskLink* );
     void taskLinkDoubleClicked( KDGanttViewTaskLink* );
-
+    
     void dropped ( QDropEvent * e, KDGanttViewItem* droppedItem, KDGanttViewItem* itemBelowMouse);
     void addOneTickRight();
     void addOneTickLeft();

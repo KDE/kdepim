@@ -631,7 +631,7 @@ void KDTimeTableWidget::simpleUpdate()
 void KDTimeTableWidget::updateMyContent()
 {
     if ( flag_blockUpdating || int_blockUpdating ) {
-        // qDebug("KDTimeTableWidget::updateMyContent() blocked! ");
+        //qDebug("KDTimeTableWidget::updateMyContent() blocked! ");
         return;
     }
     //qDebug("KDTimeTableWidget::updateMyContent() ********************************* ");
@@ -3542,11 +3542,24 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     setVScrollBarMode( QScrollView::AlwaysOn );
     myToolTip = new KDCanvasToolTip(viewport(),this);
     mySignalSender =  sender;
-    userCreateTaskLinksEnabled = false;
     currentItem = 0;
     currentLink = 0;
     cuttedItem = 0;
     currentConnector =  KDGanttViewItem::NoConnector;
+    mConnectorStartEnabled = true;
+    mConnectorMiddleEnabled = true;
+    mConnectorEndEnabled = true;
+    mConnectorMoveEnabled = true;
+    mConnectorActualEndEnabled = true;
+    mConnectorLeadEnabled = true;
+    mConnectorTaskLinkStartEnabled = false;
+    mConnectorTaskLinkEndEnabled = false;
+
+    mTaskLinkFromItem = 0;
+    mLinkLine = new QCanvasLine(canvas);
+    mLinkLine->hide();
+    mLinkLine->setZ(1000); // must be on top
+    
     set_Mouse_Tracking(true);
     new KDCanvasWhatsThis(viewport(),this);
     onItem = new QMenu( this );
@@ -3591,6 +3604,10 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
              this, SLOT( updateMyScrollBars() ) );
     myScrollBarMode = Auto;
     mScrollBarCheckCounter = 20;
+
+    myScrollTimer = new QTimer( this );
+    connect( myScrollTimer, SIGNAL( timeout() ), SLOT( slotScrollTimer() ) );
+    autoScrollEnabled = false;
 }
 
 
@@ -4011,8 +4028,6 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
     if (e->button() == Qt::RightButton ) {
         mySignalSender->gvContextMenuRequested( currentItem, e->globalPos() );
     }
-    if ( !userCreateTaskLinksEnabled && currentConnector == KDGanttViewItem::TaskLink )
-        currentConnector = KDGanttViewItem::Move;
     //qDebug("Connector %d ", currentConnector);
 
     switch( currentConnector ) {
@@ -4026,14 +4041,33 @@ void KDGanttCanvasView::contentsMousePressEvent ( QMouseEvent * e )
     case KDGanttViewItem::Move:
         viewport()->setCursor(Qt::sizeAllCursor);
         break;
-    case KDGanttViewItem::TaskLink:
+    case KDGanttViewItem::TaskLinkStart:
+    case KDGanttViewItem::TaskLinkEnd:
         viewport()->setCursor(Qt::sizeVerCursor);
+        switch ( e->button() ) {
+            case Qt::LeftButton:
+                if ( currentItem ) {
+                    mTaskLinkFromItem = currentItem;
+                    mLinkLine->setPoints(e->pos().x(), e->pos().y(), e->pos().x(), e->pos().y());
+                    mLinkLine->show();
+                }
+                break;
+            case Qt::MidButton:
+                break;
+            case Qt::RightButton:
+                break;
+        }
         break;
     default:
         break;
     }
     mySignalSender->gvMouseButtonPressed( e->button(), currentItem ,  e->globalPos() );
     mButtonDownTime.start();
+    
+    if (autoScrollEnabled && e->button() == Qt::LeftButton) {
+        myScrollTimer->start(50);
+    }
+
 }
 /**
    Handles the mouseevent if a mousekey is released
@@ -4059,8 +4093,30 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
                 mySignalSender->itemLeftClicked( currentItem );
                 mySignalSender->gvItemLeftClicked( currentItem );
             }
+            myScrollTimer->stop();
             if ( currentLink )
                 mySignalSender->taskLinkLeftClicked( currentLink );
+            if (mTaskLinkFromItem) {
+                mLinkLine->hide();
+                canvas()->update();
+                KDGanttViewItem *testItem = 0, *toItem = 0;
+                QCanvasItemList il = canvas() ->collisions ( e->pos() );
+                QCanvasItemList::Iterator it;
+                for ( it = il.begin(); it != il.end(); ++it ) {
+                    if ( getType(*it) == Type_is_KDGanttViewItem ) {
+                        testItem = getItem(*it);
+                        if ( toItem == 0) {
+                            toItem = testItem;
+                        } else if ( testItem->priority() > toItem->priority() ) {
+                            toItem = testItem;
+                        }
+                    }
+                }
+                qDebug("toItem=%x",toItem);
+                if ( toItem && toItem != mTaskLinkFromItem ) {
+                    mySignalSender->gvCreateTaskLink( mTaskLinkFromItem, currentConnector, toItem, toItem->getConnector( e->pos(), true ) );
+                }
+            }
             break;
         case Qt::RightButton:
             {
@@ -4092,6 +4148,7 @@ void KDGanttCanvasView::contentsMouseReleaseEvent ( QMouseEvent * e )
     currentLink = 0;
     currentItem = 0;
     currentConnector =  KDGanttViewItem::NoConnector;
+    mTaskLinkFromItem = 0;
 }
 /**
    Handles the mouseevent if a mousekey is doubleclicked
@@ -4167,6 +4224,8 @@ void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent * e )
 {
     //qDebug("mousemove! ");
     mySignalSender->gvMouseMove( e->button(), currentItem ,  e->globalPos() );
+    if (autoScrollEnabled)
+        mousePos = e->pos()- QPoint(contentsX(),contentsY()); // make mousePos relative 0
     if ( !currentItem && mySignalSender->editable() ) {
         KDGanttViewItem* testItem, *foundItem = 0;
         QCanvasItemList il = canvas() ->collisions ( e->pos() );
@@ -4186,8 +4245,6 @@ void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent * e )
         }
         if ( foundItem ) {
             KDGanttViewItem::Connector connector = foundItem->getConnector( e->pos() );
-            if ( !userCreateTaskLinksEnabled && connector == KDGanttViewItem::TaskLink )
-                connector = KDGanttViewItem::Move;
             //qDebug("FOUNDITEM connector %d",connector );
             switch( connector ) {
             case KDGanttViewItem::Start:
@@ -4200,8 +4257,9 @@ void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent * e )
             case KDGanttViewItem::Move:
                 viewport()->setCursor(Qt::sizeAllCursor);
                 break;
-            case KDGanttViewItem::TaskLink:
-                viewport()->setCursor(Qt::sizeVerCursor);
+                case KDGanttViewItem::TaskLinkStart:
+                case KDGanttViewItem::TaskLinkEnd:
+                    viewport()->setCursor(Qt::sizeVerCursor);
                 break;
             default:
                 viewport()->unsetCursor();
@@ -4214,7 +4272,11 @@ void KDGanttCanvasView::contentsMouseMoveEvent ( QMouseEvent * e )
     }
     if ( !currentItem )
         return;
-    if ( currentConnector == KDGanttViewItem::TaskLink ) {
+    if ( currentConnector == KDGanttViewItem::TaskLinkStart || currentConnector == KDGanttViewItem::TaskLinkEnd) {
+        if (mTaskLinkFromItem) {
+            mLinkLine->setPoints(mLinkLine->startPoint().x(), mLinkLine->startPoint().y(), e->pos().x(), e->pos().y());
+            canvas()->update();
+        }
         return;
     }
     if ( mButtonDownTime.elapsed() > 200 )
@@ -4270,6 +4332,92 @@ KDGanttViewTaskLink*  KDGanttCanvasView::getLink(QCanvasItem* it)
     return 0;
 }
 
+/*
+  Enable or disable a connector.
+ */
+void KDGanttCanvasView::setConnectorEnabled(int connector, bool on)
+{
+    switch (connector) {
+        case KDGanttViewItem::Start:
+            mConnectorStartEnabled = on;
+            break;
+        case KDGanttViewItem::Middle:
+            mConnectorMiddleEnabled = on;
+            break;
+        case KDGanttViewItem::End:
+            mConnectorEndEnabled = on;
+            break;
+        case KDGanttViewItem::Move:
+            mConnectorMoveEnabled = on;
+            break;
+        case KDGanttViewItem::ActualEnd:
+            mConnectorActualEndEnabled = on;
+            break;
+        case KDGanttViewItem::Lead:
+            mConnectorLeadEnabled = on;
+            break;
+        case KDGanttViewItem::TaskLinkStart:
+            mConnectorTaskLinkStartEnabled = on;
+            break;
+        case KDGanttViewItem::TaskLinkEnd:
+            mConnectorTaskLinkEndEnabled = on;
+            break;
+        default:
+            qDebug("setConnectorEnabled: Unknown connector type");
+    }
+}
+
+/*
+  See if a connector is enabled or disabled.
+ */
+bool KDGanttCanvasView::isConnectorEnabled(int connector) const
+{
+    switch (connector) {
+        case KDGanttViewItem::Start:
+            return mConnectorStartEnabled;
+            break;
+        case KDGanttViewItem::Middle:
+            return mConnectorMiddleEnabled;
+            break;
+        case KDGanttViewItem::End:
+            return mConnectorEndEnabled;
+            break;
+        case KDGanttViewItem::Move:
+            return mConnectorMoveEnabled;
+            break;
+        case KDGanttViewItem::ActualEnd:
+            return mConnectorActualEndEnabled;
+            break;
+        case KDGanttViewItem::Lead:
+            return mConnectorLeadEnabled;
+            break;
+        case KDGanttViewItem::TaskLinkStart:
+            return mConnectorTaskLinkStartEnabled;
+            break;
+        case KDGanttViewItem::TaskLinkEnd:
+            return mConnectorTaskLinkEndEnabled;
+            break;
+        default:
+            qDebug("isConnectorEnabled: Unknown connector type");
+    }
+    return false;
+}
+
+/*
+  Enable or disable all connectors.
+ */
+void KDGanttCanvasView::setAllConnectorsEnabled(bool on)
+{
+    mConnectorStartEnabled = on;
+    mConnectorMiddleEnabled = on;
+    mConnectorEndEnabled = on;
+    mConnectorMoveEnabled = on;
+    mConnectorActualEndEnabled = on;
+    mConnectorLeadEnabled = on;
+    mConnectorTaskLinkStartEnabled = on;
+    mConnectorTaskLinkEndEnabled = on;
+}
+
 void KDGanttCanvasView::slotScrollTimer() {
     int mx = mousePos.x();
     int my = mousePos.y();
@@ -4289,42 +4437,3 @@ void KDGanttCanvasView::slotScrollTimer() {
         scrollBy(dx, dy);
 }
 
-int KDGanttCanvasView::getItemArea(KDGanttViewItem *item, int x) {
-    // area can be: no area = 0, Start = 1, Finish = 2
-    // TODO: middle (move, dnd), front, back (resize)
-    KDTimeTableWidget *tt = dynamic_cast<KDTimeTableWidget *>(canvas());
-    if (!tt) {
-        qWarning("Cannot cast canvas to KDTimeTableWidget");
-        return 0;
-    }
-    int area = 0;
-    int start = tt->getCoordX(item->startTime());
-    int end = start;
-    if (item->type() == KDGanttViewItem::Event) {
-        x > start ? area = 2 : area = 1;
-    } else {
-        end = tt->getCoordX(item->endTime());
-        if ((end - start)/2 > (x - start))
-            area = 1;
-        else
-            area = 2;
-    }
-    return area;
-}
-
-int KDGanttCanvasView::getLinkType(int from, int to) {
-    // from, to should be Start = 1 or Finish = 2
-    if ((from == 1) && (to == 1)) {
-        return KDGanttViewTaskLink::StartStart;
-    }
-    if ((from == 1) && (to == 2)) {
-        return KDGanttViewTaskLink::StartFinish;
-    }
-    if ((from == 2) && (to == 1)) {
-        return KDGanttViewTaskLink::FinishStart;
-    }
-    if ((from == 2) && (to == 2)) {
-        return KDGanttViewTaskLink::FinishFinish;
-    }
-    return KDGanttViewTaskLink::None;
-}

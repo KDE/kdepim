@@ -60,6 +60,7 @@ public:
     void setStartTime( const QDateTime& start );
     QDateTime leadTime() const;
 private:
+    virtual KDGanttViewItem::Connector getConnector( QPoint p, bool linkMode );
     void showItem( bool show = true, int coordY = 0 );
     QDateTime* myLeadTime;
     void initItem();

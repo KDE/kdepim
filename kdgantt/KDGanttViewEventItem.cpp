@@ -163,7 +163,8 @@ bool KDGanttViewEventItem::moveConnector( KDGanttViewItem::Connector c, QPoint p
             return true;
         }
         break;
-    case TaskLink:
+     case TaskLinkStart:
+     case TaskLinkEnd:
         // handled externally
         break;
     default:
@@ -193,8 +194,7 @@ KDGanttViewItem::Connector  KDGanttViewEventItem::getConnector( QPoint p )
     mCurrentConnectorCoordX =  p.x();
     mCurrentConnectorDiffX =  int(p.x() - startShape->x());
 
-    if ( startShape->boundingRect().contains( p ) )
-        return KDGanttViewItem::Start;
+    // Eventitems support: Lead, Start, Move, TaskLinkEnd
     QPoint topleft = startShape->boundingRect().topLeft();
     if ( myLeadTime ) {
         if ( startLine->isVisible () ) {
@@ -216,12 +216,56 @@ KDGanttViewItem::Connector  KDGanttViewEventItem::getConnector( QPoint p )
             }
         }
     }
-    QRect boundingRect = QRect(topleft, 
-                               startShape->boundingRect().bottomRight() );
-    if ( boundingRect.contains( p ) )
-        return KDGanttViewItem::Move;
- 
+    QRect boundingRect = QRect(topleft, startShape->boundingRect().bottomRight() );
+    if ( boundingRect.contains( p ) ) {
+        int c = 0;
+        bool start = myGanttView->isConnectorEnabled(KDGanttViewItem::Start);
+        if ( start ) {
+            c++;
+        }
+        bool move = myGanttView->isConnectorEnabled(KDGanttViewItem::Move);
+        if ( move ) {
+            c++;
+        }
+        bool linkEnd = myGanttView->isConnectorEnabled(KDGanttViewItem::TaskLinkEnd);
+        if ( linkEnd ) {
+            c++;
+        }
+        int wid = startShape->boundingRect().width();
+        if (wid < 0) wid = -wid;
+        int margin = wid / c;
+        if (margin == 0 && start) {
+            c--;
+            start = false;
+            margin = wid / c;
+        }
+        if (margin == 0 && move) {
+            c--;
+            move = false;
+            margin = wid / c;
+        }
+        if (start &&  mCurrentConnectorCoordX <= boundingRect.left() + margin ) {
+            return KDGanttViewItem::Start;
+        }
+        if (move &&  mCurrentConnectorCoordX <= boundingRect.left() + margin + margin ) {
+            return KDGanttViewItem::Move;
+        }
+        if (linkEnd &&  mCurrentConnectorCoordX >= boundingRect.right() - margin ) {
+            return KDGanttViewItem::TaskLinkEnd;
+        }
+    }
     return KDGanttViewItem::NoConnector;
+}
+
+KDGanttViewItem::Connector KDGanttViewEventItem::getConnector( QPoint p, bool linkMode )
+{
+    if ( !linkMode ) {
+        return getConnector( p );
+    }
+    if ( startShape->boundingRect().contains( p ) ) {
+        return KDGanttViewItem::TaskLinkStart;
+    }
+    return KDGanttViewItem::NoConnector; // shouldn't happen
 }
 
 /*!
@@ -233,9 +277,6 @@ KDGanttViewItem::Connector  KDGanttViewEventItem::getConnector( QPoint p )
   \param start the start time
   \sa startTime()
 */
-
-
-
 
 void KDGanttViewEventItem::setStartTime( const QDateTime& start )
 {

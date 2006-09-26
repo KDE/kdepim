@@ -63,6 +63,7 @@ public:
     void setStartTime( const QDateTime& start );
     void setEndTime( const QDateTime& end );
 private:
+    virtual KDGanttViewItem::Connector getConnector( QPoint p, bool linkMode );
     void showItem( bool show = true, int coordY = 0 );
     QDateTime* myActualEndTime,*myMiddleTime;
     void initItem();

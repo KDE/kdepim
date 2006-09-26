@@ -6062,11 +6062,64 @@ void KDGanttView::selectCurrentYear()
   and sets the timeline start to the start
   of the selected timespan.
   The scale is set to KDGanttView::Month.
-*/
+ */
 void KDGanttView::selectLastYear()
 {
     myTimeHeader->showLastYear();
 }
+
+/*!
+  \fn void KDGanttView::setConnectorEnabled(int connector, bool state)
+  
+  Enable or disable a connector.
+
+  \param connector The connector to set.
+  \param state The state the connector is set to.
+  \sa isConnectorEnabled()
+ */
+void KDGanttView::setConnectorEnabled(int connector, bool state)
+{
+    myCanvasView->setConnectorEnabled(connector, state);
+}
+
+/*!
+  \fn void KDGanttView::isConnectorEnabled()
+  
+  See if a connector is enabled or disabled.
+  
+  \param connector The connector to check.
+  \return The state of the connector.
+  \sa setConnectorEnabled()
+ */
+bool KDGanttView::isConnectorEnabled(int connector) const
+{
+    return myCanvasView->isConnectorEnabled(connector);
+}
+
+/*!
+  \fn void KDGanttView::setAllConnectorsEnabled(bool state)
+  
+  Enable or disable all connectors.
+  
+  \param state The state the connectors are set to.
+ */
+void KDGanttView::setAllConnectorsEnabled(bool state)
+{
+    myCanvasView->setAllConnectorsEnabled(state);
+}
+
+/*!
+  \fn void KDGanttView::setAutoScrollEnabled( bool state );
+
+  Enables/disables scrolling when LMB is down.
+  
+  \param state If true, auto scrolling is enabled. 
+ */
+void KDGanttView::setAutoScrollEnabled(bool state)
+{
+    myCanvasView->autoScrollEnabled = state;
+}
+
 
 /*!
   \fn addOneTickLeft();
@@ -6283,5 +6336,16 @@ void KDGanttView::selectLastYear()
   Please see setRepaintMode() for a description of the values of this
   enumeration.
 */
+
+/*!
+  \fn void gvCreateTaskLink( KDGanttViewItem* fr, KDGanttViewItem::Connector fc, KDGanttViewItem* to, KDGanttViewItem::Connector tc)
+
+  This signal is emitted whenever two items shall be linked.
+
+  \param fr The item to link from.
+  \param fc The connector to link from.
+  \param to The item to link to.
+  \param tc The connector to link to.
+ */
 
 #include "KDGanttView.moc"

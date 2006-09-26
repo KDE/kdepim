@@ -61,7 +61,7 @@ class KDGanttViewItem : public QListViewItem
 public:
     enum Type { Event = 0, Task, Summary, UnknownType };
     enum Shape { TriangleDown, TriangleUp, Diamond, Square, Circle };
-    enum Connector { NoConnector = 0, Start, Middle, End, Move, TaskLink, ActualEnd, Lead };
+    enum Connector { NoConnector = 0, Start, Middle, End, Move, ActualEnd, Lead, TaskLinkStart, TaskLinkEnd };
 
 protected:
     KDGanttViewItem( Type type, KDGanttView* view,
@@ -96,6 +96,9 @@ protected:
     QCanvasText* textcanvas();
     void generateAndInsertName( const QString& name );
     QString mUid;
+    
+    void moveTextCanvas(int x, int y);
+
 public:
     virtual ~KDGanttViewItem();
 
@@ -209,6 +212,8 @@ private:
     friend class KDGanttViewItemDrag;
     friend class itemAttributeDialog;
 
+    virtual KDGanttViewItem::Connector getConnector( QPoint p, bool linkMode );
+
     static QString shapeToString( Shape shape );
     static Shape stringToShape( const QString& string );
     static QString typeToString( Type type );
@@ -245,6 +250,12 @@ private:
     bool colorDefined,colorHLDefined;
     QPoint getTaskLinkStartCoord(QPoint);
     QPoint getTaskLinkEndCoord();
+    QPoint middleLeft();
+    QPoint middleRight();
+    void moveTextCanvas();
+    void setTextOffset(QPoint p);
+    bool isMyTextCanvas(QCanvasItem *tc);
+    QPoint myTextOffset;
     QString _name;
     bool shapeDefined;
     int _priority;

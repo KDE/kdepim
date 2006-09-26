@@ -63,6 +63,7 @@ public:
     void setEndTime( const QDateTime& end );
     unsigned int getTimeForTimespan( const QDateTime & start, const QDateTime & end );
 private:
+    virtual KDGanttViewItem::Connector getConnector( QPoint p, bool linkMode );
     void showItem( bool show = true, int coordY = 0 );
     void initItem();
     void hideMe();

@@ -175,7 +175,8 @@ bool KDGanttViewSummaryItem::moveConnector( KDGanttViewItem::Connector c, QPoint
             return true;
         }
         break;
-    case TaskLink:
+    case TaskLinkStart:
+    case TaskLinkEnd:
         // handled externally
         break;
     default:
@@ -204,23 +205,62 @@ KDGanttViewItem::Connector  KDGanttViewSummaryItem::getConnector( QPoint p )
     mCurrentConnectorCoordX =  p.x();
     mCurrentConnectorDiffX =  int( p.x() - startShape->x() );
 
-    if ( startShape->boundingRect().contains( p ) )
-        return KDGanttViewItem::Start;
-    if ( endShape->boundingRect().contains( p ) )
-        return KDGanttViewItem::End;
-    if ( myMiddleTime )
-        if ( midShape->boundingRect().contains( p ) )
-            return KDGanttViewItem::Middle;
+    // Summarytasks support: Start, TaskLinkStart, Middle, Move, TaskLinkEnd, End.
+    if ( startShape->boundingRect().contains( p ) ) {
+        int margin = startShape->boundingRect().width() / 2;
+        if ( mCurrentConnectorCoordX < startShape->boundingRect().left() + margin ) {
+            if ( myGanttView->isConnectorEnabled(KDGanttViewItem::Start) ) {
+                return KDGanttViewItem::Start;
+            }
+        }
+        if ( myGanttView->isConnectorEnabled(KDGanttViewItem::TaskLinkStart) ) {
+            return KDGanttViewItem::TaskLinkStart;
+        }
+        return KDGanttViewItem::NoConnector;
+    }
+    if ( endShape->boundingRect().contains( p ) ) {
+        int margin = endShape->boundingRect().width() / 2;
+        if ( mCurrentConnectorCoordX > endShape->boundingRect().left() + margin ) {
+            if ( myGanttView->isConnectorEnabled(KDGanttViewItem::End) ) {
+                return KDGanttViewItem::End;
+            }
+        }
+        if ( myGanttView->isConnectorEnabled(KDGanttViewItem::TaskLinkEnd) ) {
+            return KDGanttViewItem::TaskLinkEnd;
+        }
+        return KDGanttViewItem::NoConnector;
+    }
+    if ( myMiddleTime ) {
+        if ( midShape->boundingRect().contains( p ) &&  myGanttView->isConnectorEnabled(KDGanttViewItem::Middle) ) {
+                return KDGanttViewItem::Middle;
+        }
+    }
     if ( actualEnd && actualEnd->isVisible () ) {
-        if ( actualEnd->boundingRect().contains( p ) )
+        if ( actualEnd->boundingRect().contains( p ) && myGanttView->isConnectorEnabled(KDGanttViewItem::ActualEnd) )
             return KDGanttViewItem::ActualEnd;
     }
     QRect boundingRect = QRect(startShape->boundingRect().topLeft (), 
                                endShape->boundingRect().bottomRight() );
-    if ( boundingRect.contains( p ) )
+    if ( boundingRect.contains( p ) && myGanttView->isConnectorEnabled(KDGanttViewItem::Move) )
         return KDGanttViewItem::Move;
    
     return KDGanttViewItem::NoConnector;
+}
+
+KDGanttViewItem::Connector KDGanttViewSummaryItem::getConnector( QPoint p, bool linkMode )
+{
+    if ( !linkMode ) {
+        return getConnector( p );
+    }
+    QRect boundingRect = QRect(startShape->boundingRect().topLeft (), 
+                               endShape->boundingRect().bottomRight() );
+    if ( boundingRect.contains( p ) ) {
+        int margin = (boundingRect.right() - boundingRect.left()) / 2;
+        if ( boundingRect.left() + margin < p.x() ) {
+           return KDGanttViewItem::TaskLinkEnd;
+        }
+    }
+    return KDGanttViewItem::TaskLinkStart;
 }
 
 
