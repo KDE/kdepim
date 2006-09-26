@@ -1,145 +1,135 @@
-<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
-<class>KSelFilterPageDlg</class>
-<widget class="QWidget">
-    <property name="name">
-        <cstring>KSelFilterPageDlg</cstring>
+<ui version="4.0" stdsetdef="1" >
+  <author></author>
+  <comment></comment>
+  <exportmacro></exportmacro>
+  <class>KSelFilterPageDlg</class>
+  <widget class="QWidget" name="KSelFilterPageDlg" >
+    <property name="geometry" >
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>606</width>
+        <height>461</height>
+      </rect>
     </property>
-    <property name="geometry">
-        <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>606</width>
-            <height>461</height>
-        </rect>
-    </property>
-    <hbox>
-        <property name="name">
-            <cstring>unnamed</cstring>
-        </property>
-        <widget class="QLabel">
-            <property name="name">
-                <cstring>mIntroSidebar</cstring>
-            </property>
-            <property name="sizePolicy">
-                <sizepolicy>
-                    <hsizetype>0</hsizetype>
-                    <vsizetype>0</vsizetype>
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                </sizepolicy>
-            </property>
-            <property name="minimumSize">
-                <size>
-                    <width>170</width>
-                    <height>430</height>
-                </size>
-            </property>
-            <property name="frameShape">
-                <enum>Panel</enum>
-            </property>
-            <property name="frameShadow">
-                <enum>Plain</enum>
-            </property>
-            <property name="lineWidth">
-                <number>0</number>
-            </property>
-            <property name="scaledContents">
-                <bool>true</bool>
-            </property>
-            <property name="indent">
-                <number>0</number>
-            </property>
+    <layout class="QHBoxLayout" >
+      <item>
+        <widget class="QLabel" name="mIntroSidebar" >
+          <property name="sizePolicy" >
+            <sizepolicy>
+              <hsizetype>0</hsizetype>
+              <vsizetype>0</vsizetype>
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+            </sizepolicy>
+          </property>
+          <property name="minimumSize" >
+            <size>
+              <width>170</width>
+              <height>430</height>
+            </size>
+          </property>
+          <property name="frameShape" >
+            <enum>QFrame::Panel</enum>
+          </property>
+          <property name="frameShadow" >
+            <enum>QFrame::Plain</enum>
+          </property>
+          <property name="lineWidth" >
+            <number>0</number>
+          </property>
+          <property name="scaledContents" >
+            <bool>true</bool>
+          </property>
+          <property name="indent" >
+            <number>0</number>
+          </property>
+          <property name="wordWrap" >
+            <bool>false</bool>
+          </property>
         </widget>
-        <spacer>
-            <property name="name">
-                <cstring>spacer56</cstring>
-            </property>
-            <property name="orientation">
-                <enum>Horizontal</enum>
-            </property>
-            <property name="sizeType">
-                <enum>Fixed</enum>
-            </property>
-            <property name="sizeHint">
-                <size>
-                    <width>10</width>
-                    <height>10</height>
-                </size>
-            </property>
+      </item>
+      <item>
+        <spacer name="spacer56" >
+          <property name="sizeHint" >
+            <size>
+              <width>10</width>
+              <height>10</height>
+            </size>
+          </property>
+          <property name="sizeType" >
+            <enum>Fixed</enum>
+          </property>
+          <property name="orientation" >
+            <enum>Horizontal</enum>
+          </property>
         </spacer>
-        <widget class="QLayoutWidget">
-            <property name="name">
-                <cstring>layout19</cstring>
-            </property>
-            <vbox>
-                <property name="name">
-                    <cstring>unnamed</cstring>
-                </property>
-                <widget class="QLabel">
-                    <property name="name">
-                        <cstring>TextLabel6</cstring>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>1</hsizetype>
-                            <vsizetype>1</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                    <property name="text">
-                        <string>&lt;b&gt;Welcome to KMailCVT - The KMail Import Tool&lt;/b&gt;
-&lt;br&gt;&lt;br&gt;
-This program will help you import your email from your previous email program into KMail.&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+      </item>
+      <item>
+        <layout class="QVBoxLayout" >
+          <property name="margin" >
+            <number>0</number>
+          </property>
+          <item>
+            <widget class="QLabel" name="TextLabel6" >
+              <property name="sizePolicy" >
+                <sizepolicy>
+                  <hsizetype>1</hsizetype>
+                  <vsizetype>1</vsizetype>
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                </sizepolicy>
+              </property>
+              <property name="text" >
+                <string>&lt;b>Welcome to KMailCVT - The KMail Import Tool&lt;/b>
+&lt;br>&lt;br>
+This program will help you import your email from your previous email program into KMail.&lt;br>&lt;br>&lt;br>&lt;br>
  Please select the program you would like to import from, then click 'Next'.</string>
-                    </property>
-                    <property name="textFormat">
-                        <enum>RichText</enum>
-                    </property>
-                    <property name="alignment">
-                        <set>AlignTop|AlignLeft</set>
-                    </property>
-                    <property name="wordWrap">
-                        <bool>true</bool>
-                    </property>
-                    <property name="vAlign" stdset="0">
-                    </property>
-                </widget>
-                <widget class="QComboBox">
-                    <property name="name">
-                        <cstring>mFilterCombo</cstring>
-                    </property>
-                    <property name="sizePolicy">
-                        <sizepolicy>
-                            <hsizetype>3</hsizetype>
-                            <vsizetype>0</vsizetype>
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                        </sizepolicy>
-                    </property>
-                </widget>
-                <widget class="QTextEdit">
-                    <property name="name">
-                        <cstring>mDesc</cstring>
-                    </property>
-                    <property name="readOnly">
-                        <bool>true</bool>
-                    </property>
-                </widget>
-                <widget class="QCheckBox">
-                    <property name="name">
-                        <cstring>remDupMsg</cstring>
-                    </property>
-                    <property name="text">
-                        <string>Remove &amp;duplicate messages during import</string>
-                    </property>
-                    <property name="checked">
-                        <bool>false</bool>
-                    </property>
-                </widget>
-            </vbox>
-        </widget>
-    </hbox>
-</widget>
-<layoutdefaults spacing="6" margin="11"/>
-</UI>
+              </property>
+              <property name="textFormat" >
+                <enum>Qt::RichText</enum>
+              </property>
+              <property name="alignment" >
+                <set>Qt::AlignTop|Qt::AlignLeft</set>
+              </property>
+              <property name="wordWrap" >
+                <bool>true</bool>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <widget class="QComboBox" name="mFilterCombo" >
+              <property name="sizePolicy" >
+                <sizepolicy>
+                  <hsizetype>3</hsizetype>
+                  <vsizetype>0</vsizetype>
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                </sizepolicy>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <widget class="Q3TextEdit" name="mDesc" >
+              <property name="readOnly" >
+                <bool>true</bool>
+              </property>
+            </widget>
+          </item>
+          <item>
+            <widget class="QCheckBox" name="remDupMsg" >
+              <property name="text" >
+                <string>Remove &amp;duplicate messages during import</string>
+              </property>
+              <property name="checked" >
+                <bool>false</bool>
+              </property>
+            </widget>
+          </item>
+        </layout>
+      </item>
+    </layout>
+  </widget>
+  <layoutdefault spacing="6" margin="11" />
+  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+</ui>

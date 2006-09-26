@@ -21,7 +21,7 @@
 
 #include "kimportpage.h"
 
-KImportPage::KImportPage(QWidget *parent, const char *name ) : KImportPageDlg(parent,name) {
+KImportPage::KImportPage(QWidget *parent ) : KImportPageDlg(parent) {
 
 	mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
 }

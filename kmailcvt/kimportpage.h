@@ -18,12 +18,21 @@
 #ifndef KIMPORTPAGE_H
 #define KIMPORTPAGE_H
 
-#include "kimportpagedlg.h"
+#include "ui_kimportpagedlg.h"
+
+class KImportPageDlg : public QWidget, public Ui::KImportPageDlg
+{
+public:
+  KImportPageDlg( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
+
 
 class KImportPage : public KImportPageDlg  {
 	Q_OBJECT
 public:
-	KImportPage(QWidget *parent=0, const char *name=0);
+	KImportPage(QWidget *parent=0);
 	~KImportPage();
 };
 

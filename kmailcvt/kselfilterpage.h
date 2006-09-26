@@ -18,15 +18,24 @@
 #ifndef KSELFILTERPAGE_H
 #define KSELFILTERPAGE_H
 
-#include "kselfilterpagedlg.h"
+#include "ui_kselfilterpagedlg.h"
 #include <QList>
 class Filter;
+
+
+class KSelFilterPageDlg : public QWidget, public Ui::KSelFilterPageDlg
+{
+public:
+  KSelFilterPageDlg( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
 
 
 class KSelFilterPage : public KSelFilterPageDlg  {
 	Q_OBJECT
 public:
-	KSelFilterPage(QWidget *parent=0, const char *name=0);
+	KSelFilterPage(QWidget *parent=0);
 	~KSelFilterPage();
 public:
 	void  addFilter(Filter *f);

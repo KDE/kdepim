@@ -28,7 +28,7 @@
 #include <q3listbox.h>
 #include <QLabel>
 
-#include "kimportpagedlg.h"
+#include "kimportpage.h"
 
 class FilterInfo
 {
