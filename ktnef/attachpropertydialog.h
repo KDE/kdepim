@@ -32,7 +32,7 @@ class Q3ListViewItem;
 class AttachPropertyDialog : public AttachPropertyDialogBase
 {
 public:
-	AttachPropertyDialog(QWidget *parent = 0, const char *name = 0);
+	AttachPropertyDialog(QWidget *parent = 0);
 	~AttachPropertyDialog();
 
         void setAttachment(KTnef::KTNEFAttach *attach);
