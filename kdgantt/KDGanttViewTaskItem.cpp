@@ -424,6 +424,10 @@ void KDGanttViewTaskItem::hideMe()
     startShape->hide();
     if ( mTextCanvas )
         mTextCanvas->hide();
+    
+    progressShape->hide();
+    floatStartShape->hide();
+    floatEndShape->hide();
 }
 
 
@@ -440,6 +444,12 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
     }
     float prio = ((float) ( priority() - 100 )) / 100.0;
     startShape->setZ( prio );
+    progressShape->setZ(startShape->z()+0.002); // less than textCanvas
+    progressShape->hide();
+    floatStartShape->setZ(startShape->z()+0.003); // less than textCanvas
+    floatStartShape->hide();
+    floatEndShape->setZ(startShape->z()+0.003); // less than textCanvas
+    floatEndShape->hide();
     if ( mTextCanvas )
         mTextCanvas->setZ( prio + 0.005 );
     if ( displaySubitemsAsGroup() && !parent() && !isOpen() ) {
@@ -454,7 +464,8 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
     }
     //setExpandable(false);
     KDCanvasRectangle* temp = (KDCanvasRectangle*) startShape;
-    int startX, endX, midX = 0,allY;
+    KDCanvasRectangle* progtemp = (KDCanvasRectangle*) progressShape;
+    int startX, endX, midX = 0,allY, progX=0;
     if ( coordY )
         allY = coordY;
     else
@@ -464,6 +475,9 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
     endX = myGanttView->myTimeHeader->getCoordX(myEndTime);
     checkCoord( &endX );
     midX = endX;
+    if (myProgress > 0) {
+        progX = (endX - startX) * myProgress / 100;
+    }
     int hei ;
 #if 0
     bool takedefaultHeight = true ; // pending: make configureable
@@ -508,6 +522,53 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
         temp->setSize(endX-startX,  hei-3 );
     temp->move(startX, allY-hei/2 +2);
     temp->show();
+    if (progX > 0) {
+        // FIXME: For now, just use inverted color for progress
+        QColor c = temp->brush().color();
+        int h, s, v;
+        c.getHsv(&h, &s, &v);
+        h > 359/2 ? h -= 359/2 : h += 359/2;
+        c.setHsv(h, s, v);
+        progtemp->setBrush(QBrush(c));
+    
+        progtemp->setSize(progX, hei-3);
+        progtemp->move(temp->x(), temp->y());
+        progtemp->show();
+    }
+    if (myFloatStartTime.isValid()) {
+        KDCanvasRectangle* floatStartTemp = (KDCanvasRectangle*) floatStartShape;
+        int floatStartX = myGanttView->myTimeHeader->getCoordX(myFloatStartTime);
+        // FIXME: Configurable colors
+        QBrush b(temp->brush().color(), Qt::Dense4Pattern);
+        floatStartTemp->setBrush(b);
+        floatStartTemp->setPen(QPen(Qt::gray));
+        if (floatStartX < startX) {
+            floatStartTemp->setSize(startX - floatStartX, temp->size().height()/2);
+            floatStartTemp->move(floatStartX, temp->y() + temp->size().height()/4);
+        } else {
+            floatStartTemp->setSize(floatStartX - startX, temp->size().height()/2);
+            floatStartTemp->move(startX, temp->y() + temp->size().height()/4);
+        }
+        floatStartTemp->show();
+    }
+    if (myFloatEndTime.isValid()) {
+        KDCanvasRectangle* floatEndTemp = (KDCanvasRectangle*) floatEndShape;
+        int floatEndX = myGanttView->myTimeHeader->getCoordX(myFloatEndTime);
+        // FIXME: Configurable colors
+        QBrush b(temp->brush().color(), Qt::Dense4Pattern);
+        floatEndTemp->setBrush(b);
+        floatEndTemp->setPen(QPen(Qt::gray));
+        int ex = startX + temp->size().width();
+        if (floatEndX > ex) {
+            floatEndTemp->setSize(floatEndX - ex, temp->size().height()/2);
+            floatEndTemp->move(ex, temp->y() + temp->size().height()/4);
+        } else {
+            floatEndTemp->setSize(ex - floatEndX, temp->size().height()/2);
+            floatEndTemp->move(floatEndX, temp->y() + temp->size().height()/4);
+        }
+        floatEndTemp->show();
+    }
+  
     int wid = endX-startX - 4;
     if ( mTextCanvas ) {
         if ( !displaySubitemsAsGroup() && !myGanttView->calendarMode()) {

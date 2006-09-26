@@ -264,6 +264,9 @@ KDGanttViewItem::~KDGanttViewItem()
   if ( startShapeBack ) delete startShapeBack  ;
   if ( midShapeBack ) delete midShapeBack   ;
   if ( endShapeBack ) delete endShapeBack  ;
+  if ( progressShape ) delete  progressShape ;
+  if ( floatStartShape ) delete  floatStartShape ;
+  if ( floatEndShape ) delete  floatEndShape ;
   bool block = myGanttView->myTimeTable->blockUpdating();
   myGanttView->myTimeTable->setBlockUpdating(); 
   myGanttView->myTimeTable->removeItemFromTasklinks( this );
@@ -1710,6 +1713,10 @@ void KDGanttViewItem::initColorAndShapes(Type t)
     startLineBack = 0;
     endLineBack = 0;
     actualEnd = 0; 
+    myProgress = 0;
+    progressShape = 0;
+    floatStartShape = 0;
+    floatEndShape = 0;
     myItemSize = 10;
     mTextCanvas = 0;
     myGanttView = ((KDListView *)listView())->myGanttView;
@@ -1733,6 +1740,9 @@ void KDGanttViewItem::initColorAndShapes(Type t)
         if ( startShape )
             delete startShape;
         startShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
+        if (progressShape)
+            delete progressShape;
+        progressShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
     } else {
         startLine = new KDCanvasLine(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);//KDGanttViewItem );
         endLine = new KDCanvasLine(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
@@ -1746,6 +1756,13 @@ void KDGanttViewItem::initColorAndShapes(Type t)
         //setShapes(myStartShape,myMiddleShape,myEndShape);
         setShapes(myStartShape,myMiddleShape,myEndShape);
     }
+    if (floatStartShape)
+        delete floatStartShape;
+    floatStartShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
+    if (floatEndShape)
+        delete floatEndShape;
+    floatEndShape = (KDCanvasPolygonItem*)new  KDCanvasRectangle(myGanttView->myTimeTable,this,Type_is_KDGanttViewItem);
+
     // set color of shapes
     if (!( colorDefined = (myGanttView->colors(myType,myStartColor,myMiddleColor,myEndColor)))) {
 
@@ -2965,4 +2982,45 @@ void KDGanttViewItem::setTextOffset(QPoint p)
 bool KDGanttViewItem::isMyTextCanvas(QCanvasItem *tc)
 {
     return tc == mTextCanvas;
+}
+
+/*!
+  \fn void KDGanttViewItem::setProgress(int percent)
+  
+  Specifies the progress of this item in percent.
+  Progress is limited to minimum 0, maximum 100.
+
+  \param percent the progress in percent.
+ */
+
+void KDGanttViewItem::setProgress(int percent)
+{
+    myProgress = QMAX(0, percent);
+    myProgress = QMIN(100, myProgress);
+}
+
+/*!
+  \fn void KDGanttViewItem::setFloatStartTime(const QDateTime &start)
+  
+  Specifies the float start time of this item.
+  If the time is invalid, the start float is not shown.
+
+  \param start the float start time
+ */
+void KDGanttViewItem::setFloatStartTime(const QDateTime &start)
+{
+    myFloatStartTime = start;
+}
+    
+/*!
+  \fn void KDGanttViewItem::setFloatEndTime(const QDateTime &end)
+  
+  Specifies the float end time of this item.
+  If the time is invalid, the end float is not shown.
+
+  \param end the float end time
+ */
+void KDGanttViewItem::setFloatEndTime(const QDateTime &end)
+{
+    myFloatEndTime = end;
 }
