@@ -112,7 +112,7 @@
   <!--                                                                      -->
   <!-- The 'holiday calendar' element has the following sub-elements:       -->
   <!--   include: a holiday file to include (not required).                 -->
-  <!--   holiday: a holiday element (1 or more such elements required).     -->
+  <!--   holiday: a holiday element (not required, e.g. if one region has exactly the same holidays as another region, for which the whole holiday file is included).     -->
   <!--                                                                      -->
   <define name="holidayCalendar">
     <element name="holidayCalendar">
@@ -120,9 +120,9 @@
       <zeroOrMore>
         <ref name="include"/>
       </zeroOrMore>
-      <oneOrMore>
+      <zeroOrMore>
         <ref name="holiday"/>
-      </oneOrMore>
+      </zeroOrMore>
     </element>
   </define>
   <define name="holidayCalendar.attlist" combine="interleave">
