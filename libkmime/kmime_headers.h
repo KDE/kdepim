@@ -604,7 +604,7 @@ class KDE_EXPORT Subject : public Generics::GUnstructured {
     virtual const char* type() const { return "Subject"; }
 
     bool isReply() {
-      return ( asUnicodeString().indexOf( "Re:", 0, Qt::CaseInsensitive ) == 0 );
+      return ( asUnicodeString().indexOf( QLatin1String( "Re:" ), 0, Qt::CaseInsensitive ) == 0 );
     }
 };
 
@@ -650,7 +650,7 @@ class KDE_EXPORT Control : public Base {
     virtual bool isEmpty() const    { return (c_trlMsg.isEmpty()); }
     virtual const char* type() const { return "Control"; }
 
-    bool isCancel()                 { return QString(c_trlMsg).contains("cancel", Qt::CaseInsensitive); }
+    bool isCancel()                 { return QString::fromLatin1(c_trlMsg).contains(QLatin1String( "cancel" ), Qt::CaseInsensitive); }
 
   protected:
     QByteArray c_trlMsg;
