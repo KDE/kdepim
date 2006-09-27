@@ -285,6 +285,7 @@ void KDGanttViewEventItem::setStartTime( const QDateTime& start )
     return;
   }
     myStartTime = start;
+    myEndTime = start; // Avoid dangling endtime
     if ( myStartTime < leadTime() )
       setLeadTime( myStartTime );
     else {
