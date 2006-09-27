@@ -444,11 +444,11 @@ void KDGanttViewTaskItem::showItem(bool show, int coordY)
     }
     float prio = ((float) ( priority() - 100 )) / 100.0;
     startShape->setZ( prio );
-    progressShape->setZ(startShape->z()+0.002); // less than textCanvas
+    progressShape->setZ(startShape->z()+0.003); // less than textCanvas
     progressShape->hide();
-    floatStartShape->setZ(startShape->z()+0.003); // less than textCanvas
+    floatStartShape->setZ(startShape->z()-0.003); // less than startShape
     floatStartShape->hide();
-    floatEndShape->setZ(startShape->z()+0.003); // less than textCanvas
+    floatEndShape->setZ(startShape->z()-0.003); // less than startShape
     floatEndShape->hide();
     if ( mTextCanvas )
         mTextCanvas->setZ( prio + 0.005 );

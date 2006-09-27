@@ -360,11 +360,11 @@ void KDGanttViewEventItem::showItem(bool show, int coordY)
   }
   float prio = ((float) ( priority() - 100 )) / 100.0;
   startShape->setZ( prio + 0.0055 );
-  startShapeBack->setZ( prio + 0.003 );
+  startShapeBack->setZ( prio + 0.003 ); // less than mTextCanvas
   startLine->setZ( prio + 0.0015  );
-  floatStartShape->setZ(prio + 0.004);
+  floatStartShape->setZ(prio - 0.003); // less than startShape
   floatStartShape->hide();
-  floatEndShape->setZ(prio + 0.004);
+  floatEndShape->setZ(prio - 0.003); // less than startShape
   floatEndShape->hide();
   if ( mTextCanvas )
       mTextCanvas->setZ( prio + 0.006 );
