@@ -1421,7 +1421,7 @@ void ArticleWidget::slotAddToAddressBook()
 
 void ArticleWidget::slotOpenInAddressBook()
 {
-  KAddrBookExternal::openEmail( mCurrentURL.path(), mCurrentURL.path(), this );
+  KAddrBookExternal::openEmail( mCurrentURL.path(), this );
 }
 
 void ArticleWidget::slotOpenAttachment()

@@ -31,25 +31,53 @@
 #include <unistd.h>
 
 //-----------------------------------------------------------------------------
-void KAddrBookExternal::openEmail( const QString &email, const QString &addr, QWidget *) {
-  //QString email = KMMessage::getEmailAddr(addr);
-  KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-  KABC::Addressee::List addresseeList = addressBook->findByEmail(email);
-  if ( kapp->dcopClient()->isApplicationRegistered( "kaddressbook" ) ){
-    //make sure kaddressbook is loaded, otherwise showContactEditor
-    //won't work as desired, see bug #87233
-    DCOPRef call ( "kaddressbook", "kaddressbook" );
-    call.send( "newInstance()" );
-  }
-  else
-    kapp->startServiceByDesktopName( "kaddressbook" );
+void KAddrBookExternal::openEmail( const QString &addr, QWidget *parent ) {
+  QString email;
+  QString name;
 
-  DCOPRef call( "kaddressbook", "KAddressBookIface" );
-  if( !addresseeList.isEmpty() ) {
-    call.send( "showContactEditor(QString)", addresseeList.first().uid() );
+  KABC::Addressee::parseEmailAddress( addr, name, email );
+
+  KABC::AddressBook *ab = KABC::StdAddressBook::self( true );
+
+  // force a reload of the address book file so that changes that were made
+  // by other programs are loaded
+  ab->asyncLoad();
+
+  // if we have to reload the address book then we should also wait until
+  // it's completely reloaded
+#if KDE_IS_VERSION(3,4,89)
+  // This ugly hack will be removed in 4.0
+  while ( !ab->loadingHasFinished() ) {
+    QApplication::eventLoop()->processEvents( QEventLoop::ExcludeUserInput );
+
+    // use sleep here to reduce cpu usage
+    usleep( 100 );
   }
-  else {
-    call.send( "addEmail(QString)", addr );
+#endif
+
+  KABC::Addressee::List addressees = ab->findByEmail( email );
+
+  if ( addressees.count() > 0 ) {
+    if ( kapp->dcopClient()->isApplicationRegistered( "kaddressbook" ) ){
+      //make sure kaddressbook is loaded, otherwise showContactEditor
+      //won't work as desired, see bug #87233
+      DCOPRef call ( "kaddressbook", "kaddressbook" );
+      call.send( "newInstance()" );
+    }  else {
+      kapp->startServiceByDesktopName( "kaddressbook" );
+    }
+
+    DCOPRef call( "kaddressbook", "KAddressBookIface" );
+    call.send( "showContactEditor(QString)", addressees.first().uid() );
+  } else {
+    //TODO: Enable the better message at the next string unfreeze
+#if 0
+    QString text = i18n("<qt>The email address <b>%1</b> cannot be "
+                        "found in your addressbook.</qt>").arg( email );
+#else
+    QString text = email + " " + i18n( "is not in address book" );
+#endif
+    KMessageBox::information( parent, text, QString::null, "notInAddressBook" );
   }
 }
 
