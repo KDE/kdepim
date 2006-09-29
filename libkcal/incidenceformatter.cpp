@@ -341,7 +341,13 @@ static QString eventViewerFormatEvent( Event *event )
       event->recurrence()->getNextDateTime( QDateTime::currentDateTime() );
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>" + i18n( "Next on" ) + "</b></td>";
-    tmpStr += "<td>" + KGlobal::locale()->formatDateTime( dt, true ) + "</td>";
+    if ( !event->doesFloat() ) {
+      tmpStr += "<td>" +
+                KGlobal::locale()->formatDateTime( dt, true ) + "</td>";
+    } else {
+      tmpStr += "<td>" +
+                KGlobal::locale()->formatDate( dt.date(), true ) + "</td>";
+    }
     tmpStr += "</tr>";
   }
 
@@ -376,7 +382,15 @@ static QString eventViewerFormatTodo( Todo *todo )
   if ( todo->hasDueDate() ) {
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>" + i18n( "Due on" ) + "</b></td>";
-    tmpStr += "<td>" + todo->dtDueStr() + "</td>";
+    if ( !todo->doesFloat() ) {
+      tmpStr += "<td>" +
+                KGlobal::locale()->formatDateTime( todo->dtDue(), true ) +
+                "</td>";
+    } else {
+      tmpStr += "<td>" +
+                KGlobal::locale()->formatDate( todo->dtDue().date(), true ) +
+                "</td>";
+    }
     tmpStr += "</tr>";
   }
 
@@ -420,7 +434,13 @@ static QString eventViewerFormatTodo( Todo *todo )
       todo->recurrence()->getNextDateTime( QDateTime::currentDateTime() );
     tmpStr += "<tr>";
     tmpStr += "<td align=\"right\"><b>" + i18n( "Next on" ) + "</b></td>";
-    tmpStr += "<td>" + KGlobal::locale()->formatDateTime( dt, true ) + "</td>";
+    if ( !todo->doesFloat() ) {
+      tmpStr += "<td>" +
+                KGlobal::locale()->formatDateTime( dt, true ) + "</td>";
+    } else {
+      tmpStr += "<td>" +
+                KGlobal::locale()->formatDate( dt.date(), true ) + "</td>";
+    }
     tmpStr += "</tr>";
   }
 
