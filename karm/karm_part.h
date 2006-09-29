@@ -112,7 +112,7 @@ protected slots:
     void fileOpen();
     void fileSaveAs();
     void slotSelectionChanged();
-
+    void startNewSession(); 
 };
 
 class KInstance;
