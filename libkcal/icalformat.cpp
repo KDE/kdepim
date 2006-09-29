@@ -169,8 +169,10 @@ bool ICalFormat::fromRawString( Calendar *cal, const QCString &text )
           setException(new ErrorFormat(ErrorFormat::ParseErrorKcal));
         }
         success = false;
-      } else
+      } else {
         mLoadedProductId = mImpl->loadedProductId();
+      }
+      icalcomponent_free( comp );
     }
   } else if (icalcomponent_isa(calendar) != ICAL_VCALENDAR_COMPONENT) {
     kdDebug(5800) << "ICalFormat::load(): No VCALENDAR component found" << endl;
@@ -489,7 +491,7 @@ ScheduleMessage *ICalFormat::parseScheduleMessage( Calendar *cal,
   }
 
   kdDebug(5800) << "ICalFormat::parseScheduleMessage() restriction..." << endl;
-  
+
   if (!icalrestriction_check(message)) {
     kdWarning(5800) << k_funcinfo << endl << "libkcal reported a problem while parsing:" << endl;
     kdWarning(5800) << Scheduler::translatedMethodName(method) + ": " + mImpl->extractErrorProperty(c)<< endl;
