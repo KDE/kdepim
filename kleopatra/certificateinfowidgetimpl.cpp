@@ -71,8 +71,8 @@
 #include <QTextCodec>
 
 CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( const GpgME::Key & key, bool external,
-						      QWidget * parent, const char * name )
-  : CertificateInfoWidget( parent, name ),
+						      QWidget * parent )
+  : CertificateInfoWidget( parent ),
     mExternal( external ),
     mFoundIssuer( true ),
     mHaveKeyLocally( false )

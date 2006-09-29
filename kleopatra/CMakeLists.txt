@@ -21,7 +21,9 @@ set(kleopatra_bin_SRCS ${libconf_SRCS}
 
 kde4_automoc(${kleopatra_bin_SRCS})
 
-kde4_add_ui3_files(kleopatra_bin_SRCS certificatewizard.ui certificateinfowidget.ui )
+kde4_add_ui3_files(kleopatra_bin_SRCS certificatewizard.ui )
+
+kde4_add_ui_files(kleopatra_bin_SRCS certificateinfowidget.ui)
 
 kde4_add_executable(kleopatra_bin ${kleopatra_bin_SRCS})
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)

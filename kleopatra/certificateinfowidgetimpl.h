@@ -33,7 +33,7 @@
 #ifndef CERTIFICATEINFOWIDGETIMPL_H
 #define CERTIFICATEINFOWIDGETIMPL_H
 
-#include "certificateinfowidget.h"
+#include "ui_certificateinfowidget.h"
 
 #include <gpgmepp/key.h>
 
@@ -49,11 +49,20 @@ namespace GpgME {
   class KeyListResult;
 }
 
+class CertificateInfoWidget : public QWidget, public Ui::CertificateInfoWidget
+{
+public:
+  CertificateInfoWidget( QWidget *parent ) : QWidget( parent ) {
+    setupUi( this );
+  }
+};
+
+
 class CertificateInfoWidgetImpl : public CertificateInfoWidget {
   Q_OBJECT
 public:
   CertificateInfoWidgetImpl( const GpgME::Key & key, bool external,
-			     QWidget * parent=0, const char * name=0);
+			     QWidget * parent=0);
 
   void setKey( const GpgME::Key & key );
 
