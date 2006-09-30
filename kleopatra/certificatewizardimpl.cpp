@@ -100,8 +100,9 @@ static QString attributeLabel( const QString & attr, bool required ) {
     return attr + ':';
 }
 
-static QString attributeFromKey( QString key ) {
-  return key.remove( '!' );
+static QString attributeFromKey( const QString &key ) {
+  QString t = key;
+  return t.remove( '!' );
 }
 
 static bool availForMod( const QLineEdit * le ) {
@@ -209,7 +210,7 @@ void CertificateWizardImpl::slotGenerateCertificate()
       certParms += "Encrypt";
     else
       certParms += "Sign, Encrypt";
-    certParms += "\n";
+    certParms += '\n';
     certParms += "name-dn: ";
 
     QString email;
