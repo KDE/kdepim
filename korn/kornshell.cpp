@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, Mart Kelder (mart.kde@hccnet.nl)
+ * Copyright (C) 2004-2006, Mart Kelder (mart@kelder31.nl)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,17 +26,32 @@
 
 #include <kapplication.h>
 #include <kconfig.h>
+#include <kdebug.h>
 #include <kdialogbase.h>
 #include <klocale.h>
+
+#include <qtimer.h>
 
 KornShell::KornShell( QWidget * parent, const char * name )
 	: QWidget( parent, name ),
 	_config( new KConfig( "kornrc" ) ),
 	_box( 0 ),
-	_configDialog( 0 )
+	_configDialog( 0 ),
+	_show( false )
 {
 	_config->checkUpdate( "korn_kde_3_4_config_change", "korn-3-4-config_change.upd" );
-	readConfig();
+	if( kapp->isRestored() )
+	{
+		_config->setGroup( "korn" );
+		QTimer::singleShot( _config->readNumEntry( "session_startup_delay", 200 ), this, SLOT(readConfig()) );
+		kdDebug() << "startup delayed" << endl;
+	}
+	else
+	{
+		kdDebug() << "Startup not delayed" << endl;
+		readConfig();
+	}
+
 }
 
 KornShell::~KornShell()
@@ -49,7 +64,10 @@ KornShell::~KornShell()
 
 void KornShell::show()
 {
-	_box->showBox();
+	if( _box )
+		_box->showBox();
+	else
+		_show = true;
 }
 
 void KornShell::optionDlg()
@@ -103,6 +121,13 @@ void KornShell::readConfig()
 		{
 			kapp->quit();
 		}
+
+	if( _show )
+	{
+		// Show is called, but _box wasn't available at that time
+		show();
+		_show = false;
+	}
 }
 
 void KornShell::slotDialogClosed()

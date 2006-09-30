@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, Mart Kelder (mart.kde@hccnet.nl)
+ * Copyright (C) 2004-2006, Mart Kelder (mart@kelder31.nl)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,13 +45,13 @@ public slots:
 private slots:
 	void slotDialogClosed();
 	void slotApply();
-	
-private:
 	void readConfig();
 	
+private:
 	KConfig *_config;
 	BoxContainer *_box;
 	KDialogBase *_configDialog;
+	bool _show;
 };
 
 #endif //MK_KORNSHELL_H
