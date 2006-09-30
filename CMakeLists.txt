@@ -81,9 +81,7 @@ set(libkdgantt_SRCS
 
 
 add_subdirectory(kode)
-if (MYSQL_EMBEDDED_FOUND)
-	add_subdirectory(akonadi)
-endif (MYSQL_EMBEDDED_FOUND)
+add_subdirectory(akonadi)
 add_subdirectory(libkdepim)
 add_subdirectory(libkholidays)
 add_subdirectory(libkholidays_ng)
