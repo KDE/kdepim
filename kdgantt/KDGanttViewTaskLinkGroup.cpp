@@ -348,7 +348,7 @@ KDGanttViewTaskLinkGroup* KDGanttViewTaskLinkGroup::createFromDomElement( QDomEl
                 if( KDGanttXML::readStringNode( element, value ) )
                     name = value;
             } else {
-                qDebug( "Unrecognized tag name: %s", tagName.toLatin1() );
+                qDebug( "Unrecognized tag name: %s", qPrintable(tagName) );
                 Q_ASSERT( false );
             }
         }
