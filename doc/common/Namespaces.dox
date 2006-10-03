@@ -41,9 +41,9 @@ by KNode and (partly) KMail.
 
 */
 
-/** @namespace PIM
+/** @namespace Akonadi 
 
-The PIM namespace contains the classes of Akonadi, the PIM storage service.
+This namespace contains the classes of Akonadi, the PIM storage service.
 
 */
 
