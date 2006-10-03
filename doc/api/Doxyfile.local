@@ -10,4 +10,6 @@ SORT_MEMBER_DOCS = YES
 ## Remove unsightly export macros
 PREDEFINED = KDECORE_EXPORT="" \
 	KDEUI_EXPORT="" \
-	KDE_EXPORT=""
+	KDE_EXPORT="" \
+	Q_SLOTS="slots" \
+	Q_SIGNALS="signals"
