@@ -51,7 +51,7 @@
 	* </td>
 	* <td valign="top">
         * - <a href="libakonadi/html/index.html"><b>libakonadi</b></a>
-        *   (<a href="libakonadi/html/classes.html">classes</a>)\n
+        *   (<a href="akonadi/libakonadi/html/classes.html">classes</a>)\n
         *   <i>Client library for accessing Akonadi, the PIM storage service.</i>
         * - <a href="libkdepim/html/index.html"><b>libkdepim</b></a>
         *   (<a href="libkdepim/html/classes.html">classes</a>)\n
