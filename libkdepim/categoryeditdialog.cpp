@@ -76,6 +76,7 @@ void CategoryEditDialog::fillList()
   }
   mWidget->mButtonRemove->setEnabled( categoriesExist );
   mWidget->mCategories->setSelected( mWidget->mCategories->firstChild(), true );
+  mWidget->mEdit->setText( mWidget->mCategories->currentItem()->text( 0 ) );
 }
 
 void CategoryEditDialog::slotTextChanged(const QString &text)
