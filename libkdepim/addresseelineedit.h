@@ -61,6 +61,7 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
 
     virtual void setFont( const QFont& );
 
+    void setUseSemiColonAsSeparator( bool );
     //static KConfig *config();
 
   public slots:
@@ -93,12 +94,12 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     virtual QPopupMenu *createPopupMenu();
 
     /**
-     * Adds the name of a completion source to the internal list of 
+     * Adds the name of a completion source to the internal list of
      * such sources and returns its index, such that that can be used
      * for insertion of items associated with that source.
      */
     int addCompletionSource( const QString& );
-    
+
     /** return whether we are using sorted or weighted display */
     static KCompletion::CompOrder completionOrder();
 
@@ -131,6 +132,7 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     bool m_completionInitialized;
     bool m_smartPaste;
     bool m_addressBookConnected;
+    bool m_useSemiColonAsSeparator;
 
     //QMap<QString, KABC::Addressee> m_contactMap;
 

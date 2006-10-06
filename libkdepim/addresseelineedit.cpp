@@ -95,7 +95,6 @@ AddresseeLineEdit::AddresseeLineEdit( QWidget* parent, bool useCompletion,
   m_completionInitialized = false;
   m_smartPaste = false;
   m_addressBookConnected = false;
-
   init();
 
   if ( m_useCompletion )
@@ -123,7 +122,7 @@ void AddresseeLineEdit::init()
       ldapSearchDeleter.setObject( s_LDAPSearch, new KPIM::LdapSearch );
       ldapTextDeleter.setObject( s_LDAPText, new QString );
 
-      /* Add completion sources for all ldap server, 0 to n. Added first so 
+      /* Add completion sources for all ldap server, 0 to n. Added first so
        * that they map to the ldapclient::clientNumber() */
       QValueList< LdapClient* > clients =  s_LDAPSearch->clients();
       for ( QValueList<LdapClient*>::iterator it = clients.begin(); it != clients.end(); ++it ) {
@@ -166,6 +165,11 @@ void AddresseeLineEdit::setFont( const QFont& font )
   KLineEdit::setFont( font );
   if ( m_useCompletion )
     completionBox()->setFont( font );
+}
+
+void AddresseeLineEdit::setUseSemiColonAsSeparator( bool useSemiColonAsSeparator )
+{
+  m_useSemiColonAsSeparator = useSemiColonAsSeparator;
 }
 
 void AddresseeLineEdit::keyPressEvent( QKeyEvent *e )
@@ -612,7 +616,7 @@ void AddresseeLineEdit::slotLDAPSearchData( const KPIM::LdapResultList& adrs )
     KABC::Addressee addr;
     addr.setNameFromString( (*it).name );
     addr.setEmails( (*it).email );
-    
+
     addContact( addr, (*it).completionWeight, (*it ).clientNumber  );
   }
 
@@ -661,7 +665,7 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
             completionBox->setCancelledText( m_searchString );
           completionBox->setItems( items );
           completionBox->popup();
-          // we have to install the event filter after popup(), since that 
+          // we have to install the event filter after popup(), since that
           // calls show(), and that's where KCompletionBox installs its filter.
           // We want to be first, though, so do it now.
           if ( s_completion->order() == KCompletion::Weighted )
@@ -730,7 +734,11 @@ void KPIM::AddresseeLineEdit::slotCompletion()
 {
   // Called by KLineEdit's keyPressEvent -> new text, update search string
   m_searchString = text();
-  int n = QMAX( m_searchString.findRev(','), m_searchString.findRev(';') );
+
+  int n = m_searchString.findRev(',');
+  if( m_useSemiColonAsSeparator )
+    n = QMAX( n, m_searchString.findRev(';') );
+
   if ( n >= 0 ) {
     ++n; // Go past the ","
 
@@ -788,8 +796,8 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
       }
       // avoid selection of headers on button press, or move or release while
       // a button is pressed
-      if ( e->type() == QEvent::MouseButtonPress 
-          || me->state() & LeftButton || me->state() & MidButton 
+      if ( e->type() == QEvent::MouseButtonPress
+          || me->state() & LeftButton || me->state() & MidButton
           || me->state() & RightButton ) {
         if ( !item->text().startsWith( s_completionItemIndentString ) ) {
           return true; // eat the event, we don't want anything to happen
@@ -897,7 +905,7 @@ const QStringList KPIM::AddresseeLineEdit::getAdjustedCompletionItems( bool full
     }
     sections[idx].append( *it );
 
-    if ( i > beforeDollarCompletionCount ) { 
+    if ( i > beforeDollarCompletionCount ) {
       // remove the '$$whatever$' part
       int pos = (*it).find( '$', 2 );
       if ( pos < 0 ) // ???
