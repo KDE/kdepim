@@ -226,6 +226,7 @@ public:
 
   void setSignature( const Signature & sig ) { mSignature = sig; }
   Signature & signature() /* _not_ const! */ { return mSignature; }
+  const Signature & signature() const { return mSignature; }
 
 protected:
   /** @return true if the signature is read from the output of a command */
