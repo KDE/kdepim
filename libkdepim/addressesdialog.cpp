@@ -22,6 +22,7 @@
  */
 
 #include "addressesdialog.h"
+#include "ldapsearchdialog.h"
 
 #include <kabc/stdaddressbook.h>
 #include <kabc/distributionlist.h>
@@ -58,13 +59,17 @@ struct AddresseeViewItem::AddresseeViewItemPrivate {
 };
 
 struct AddressesDialog::AddressesDialogPrivate {
-  AddressesDialogPrivate() : ui(0), personal(0), recent(0), toItem(0), ccItem(0), bccItem(0)
+  AddressesDialogPrivate() : 
+    ui(0), personal(0), recent(0), ldap(0),
+    toItem(0), ccItem(0), bccItem(0),
+    ldapSearchDialog(0)
   {}
 
   AddressPickerUI             *ui;
 
   AddresseeViewItem           *personal;
   AddresseeViewItem           *recent;
+  AddresseeViewItem           *ldap;
 
   AddresseeViewItem           *toItem;
   AddresseeViewItem           *ccItem;
@@ -73,6 +78,7 @@ struct AddressesDialog::AddressesDialogPrivate {
   QDict<AddresseeViewItem>     groupDict;
 
   KABC::Addressee::List       recentAddresses;
+  LDAPSearchDialog            *ldapSearchDialog;
 };
 // privates end
 
@@ -455,6 +461,7 @@ AddressesDialog::updateAvailableAddressees()
 
   d->recent = 0;
   updateRecentAddresses();
+  d->ldap = 0;
 
   addDistributionLists();
   if ( d->personal->childCount() > 0 ) {
@@ -556,6 +563,8 @@ AddressesDialog::initConnections()
            SLOT(addSelectedBCC())  );
   connect( d->ui->mSaveAs, SIGNAL(clicked()),
            SLOT(saveAs())  );
+  connect( d->ui->mLdapSearch, SIGNAL(clicked()),
+           SLOT(searchLdap())  );
   connect( d->ui->mRemoveButton, SIGNAL(clicked()),
            SLOT(removeEntry()) );
   connect( d->ui->mAvailableView, SIGNAL(selectionChanged()),
@@ -889,6 +898,45 @@ AddressesDialog::saveAs()
   }
 
   abook->insertAddressee( dlist );
+}
+
+void
+AddressesDialog::searchLdap()
+{
+    if ( !d->ldapSearchDialog ) {
+      d->ldapSearchDialog = new LDAPSearchDialog( this );
+      connect( d->ldapSearchDialog, SIGNAL( addresseesAdded() ),
+               SLOT(ldapSearchResult() ) );
+    }
+    d->ldapSearchDialog->show();
+}
+
+void
+AddressesDialog::ldapSearchResult()
+{
+  static const QString &ldapGroup = KGlobal::staticQString( i18n( "Directory Entries" ) );
+  updateAvailableAddressees();
+  if ( !d->ldap ) {
+    d->ldap = new AddresseeViewItem( d->ui->mAvailableView, ldapGroup );
+    connect(d->ldap, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
+            this, SLOT(availableAddressSelected(AddresseeViewItem*, bool)));
+    d->ldap->setVisible( false );
+    d->groupDict.insert( ldapGroup, d->ldap );
+  }
+
+  QStringList emails = QStringList::split(',', d->ldapSearchDialog->selectedEMails() );
+  QStringList::iterator it( emails.begin() );
+  QStringList::iterator end( emails.end() );
+  for ( ; it != end; ++it ){
+      KABC::Addressee ad;
+      ad.insertEmail( *it );
+      addAddresseeToAvailable( ad, d->ldap );
+
+  }
+
+  if ( d->ldap->childCount() > 0 ) {
+    d->ldap->setVisible( true );
+  }
 }
 
 void

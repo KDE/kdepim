@@ -25,7 +25,8 @@ libkdepim_la_SOURCES = \
   overlaywidget.cpp progressmanager.cpp progressdialog.cpp \
   statusbarprogresswidget.cpp ssllabel.cpp completionordereditor.cpp \
   resourceabc.cpp diffalgo.cpp addresseediffalgo.cpp calendardiffalgo.cpp \
-  htmldiffalgodisplay.cpp broadcaststatus.cpp distributionlist.cpp kaddrbook.cpp
+  htmldiffalgodisplay.cpp broadcaststatus.cpp distributionlist.cpp kaddrbook.cpp \
+  ldapsearchdialog.cpp
 
 noinst_HEADERS = categoryselectdialog.h categoryeditdialog.h ktimeedit.h 
 $(srcdir)/categoryselectdialog.h: categoryselectdialog_base.h

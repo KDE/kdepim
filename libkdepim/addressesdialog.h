@@ -167,6 +167,8 @@ namespace KPIM {
 
     void removeEntry();
     void saveAs();
+    void searchLdap();
+    void ldapSearchResult();
     void launchAddressBook();
 
     void filterChanged( const QString & );
