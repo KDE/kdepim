@@ -290,9 +290,11 @@ void kio_sieveProtocol::changeCheck( const KUrl &url )
 {
 	QString auth;
 
+	// Check the SASL auth mechanism in the 'sasl' metadata...
 	if (!metaData("sasl").isEmpty())
 		auth = metaData("sasl").toUpper();
 	else {
+	// ... and if not found, check the x-mech=AUTH query part of the url.
 		QString query = url.query();
 		if ( query.startsWith("?") ) query.remove( 0, 1 );
 		QStringList q = query.split( "," );
@@ -888,49 +890,49 @@ void kio_sieveProtocol::listDir(const KUrl& url)
 /* ---------------------------------------------------------------------------------- */
 bool kio_sieveProtocol::saslInteract( void *in, AuthInfo &ai )
 {
-  ksDebug() << "sasl_interact" << endl;
-  sasl_interact_t *interact = ( sasl_interact_t * ) in;
+	ksDebug() << "sasl_interact" << endl;
+	sasl_interact_t *interact = ( sasl_interact_t * ) in;
 
-  //some mechanisms do not require username && pass, so it doesn't need a popup
-  //window for getting this info
-  for ( ; interact->id != SASL_CB_LIST_END; interact++ ) {
-    if ( interact->id == SASL_CB_AUTHNAME || 
-         interact->id == SASL_CB_PASS ) {
+	//some mechanisms do not require username && pass, so it doesn't need a popup
+	//window for getting this info
+	for ( ; interact->id != SASL_CB_LIST_END; interact++ ) {
+		if ( interact->id == SASL_CB_AUTHNAME || 
+			interact->id == SASL_CB_PASS ) {
 
-	    if (m_sUser.isEmpty() || m_sPass.isEmpty()) {
-		    if (!openPassDlg(ai)) {
-			    error(ERR_ABORTED, i18n("No authentication details supplied."));
-			    return false;
-		    }
-        m_sUser = ai.username;
-        m_sPass = ai.password;
-	    }
-      break;
-    }
-  }
+			if (m_sUser.isEmpty() || m_sPass.isEmpty()) {
+				if (!openPassDlg(ai)) {
+					error(ERR_ABORTED, i18n("No authentication details supplied."));
+					return false;
+				}
+				m_sUser = ai.username;
+				m_sPass = ai.password;
+			}
+			break;
+		}
+	}
   
-  interact = ( sasl_interact_t * ) in;
-  while( interact->id != SASL_CB_LIST_END ) {
-    ksDebug() << "SASL_INTERACT id: " << interact->id << endl;
-    switch( interact->id ) {
-      case SASL_CB_USER:
-      case SASL_CB_AUTHNAME:
-        ksDebug() << "SASL_CB_[AUTHNAME|USER]: '" << m_sUser << "'" << endl;
-        interact->result = strdup( m_sUser.toUtf8() );
-        interact->len = strlen( (const char *) interact->result );
-        break;
-      case SASL_CB_PASS:
-        ksDebug() << "SASL_CB_PASS: [hidden] " << endl;
-        interact->result = strdup( m_sPass.toUtf8() );
-        interact->len = strlen( (const char *) interact->result );
-        break;
-      default:
-        interact->result = NULL; interact->len = 0;
-        break;
-    }
-    interact++;
-  }
-  return true;
+	interact = ( sasl_interact_t * ) in;
+	while( interact->id != SASL_CB_LIST_END ) {
+		ksDebug() << "SASL_INTERACT id: " << interact->id << endl;
+		switch( interact->id ) {
+			case SASL_CB_USER:
+			case SASL_CB_AUTHNAME:
+				ksDebug() << "SASL_CB_[AUTHNAME|USER]: '" << m_sUser << "'" << endl;
+				interact->result = strdup( m_sUser.toUtf8() );
+				interact->len = strlen( (const char *) interact->result );
+				break;
+			case SASL_CB_PASS:
+				ksDebug() << "SASL_CB_PASS: [hidden] " << endl;
+				interact->result = strdup( m_sPass.toUtf8() );
+				interact->len = strlen( (const char *) interact->result );
+				break;
+			default:
+				interact->result = NULL; interact->len = 0;
+				break;
+		}
+		interact++;
+	}
+	return true;
 }
 
 #define SASLERROR  error(ERR_COULD_NOT_AUTHENTICATE, i18n("An error occurred during authentication: %1", \
@@ -938,12 +940,12 @@ bool kio_sieveProtocol::saslInteract( void *in, AuthInfo &ai )
 
 bool kio_sieveProtocol::authenticate()
 {
-  int result;
-  sasl_conn_t *conn = NULL;
-  sasl_interact_t *client_interact = NULL;
-  const char *out = NULL;
-  uint outlen;
-  const char *mechusing = NULL;
+	int result;
+	sasl_conn_t *conn = NULL;
+	sasl_interact_t *client_interact = NULL;
+	const char *out = NULL;
+	uint outlen;
+	const char *mechusing = NULL;
 	QByteArray challenge;
 
 	/* Retrieve authentication details from user.
@@ -957,57 +959,56 @@ bool kio_sieveProtocol::authenticate()
 	ai.username = m_sUser;
 	ai.password = m_sPass;
 	ai.keepPassword = true;
-  ai.caption = i18n("Sieve Authentication Details");
-  ai.comment = i18n("Please enter your authentication details for your sieve account "
+	ai.caption = i18n("Sieve Authentication Details");
+	ai.comment = i18n("Please enter your authentication details for your sieve account "
 	  "(usually the same as your email password):");
 
-  result = sasl_client_new( "sieve",
-                       m_sServer.toLatin1(),
-                       0, 0, NULL, 0, &conn );
+	result = sasl_client_new( "sieve",
+		m_sServer.toLatin1(), 0, 0, NULL, 0, &conn );
 
-  if ( result != SASL_OK ) {
-    ksDebug() << "sasl_client_new failed with: " << result << endl;
-    SASLERROR
-    return false;
-  }
+	if ( result != SASL_OK ) {
+		ksDebug() << "sasl_client_new failed with: " << result << endl;
+		SASLERROR
+		return false;
+	}
 
 	QStringList strList;
 //	strList.append("NTLM");
 
-  if ( !m_sAuth.isEmpty() )
-    strList.append( m_sAuth );
-  else
-    strList = m_sasl_caps;
+	if ( !m_sAuth.isEmpty() )
+		strList.append( m_sAuth );
+	else
+		strList = m_sasl_caps;
 
-  do {
-    result = sasl_client_start(conn, strList.join(" ").toLatin1(), &client_interact,
-                       &out, &outlen, &mechusing);
+	do {
+		result = sasl_client_start(conn, strList.join(" ").toLatin1(), 
+			&client_interact, &out, &outlen, &mechusing);
 
-    if (result == SASL_INTERACT) 
-      if ( !saslInteract( client_interact, ai ) ) {
-        sasl_dispose( &conn );
-        return false;
-      };
-  } while ( result == SASL_INTERACT );
+		if (result == SASL_INTERACT) 
+			if ( !saslInteract( client_interact, ai ) ) {
+				sasl_dispose( &conn );
+				return false;
+			};
+	} while ( result == SASL_INTERACT );
 
-  if ( result != SASL_CONTINUE && result != SASL_OK ) {
-    ksDebug() << "sasl_client_start failed with: " << result << endl;
-    SASLERROR
-    sasl_dispose( &conn );
-    return false;
-  }
+	if ( result != SASL_CONTINUE && result != SASL_OK ) {
+		ksDebug() << "sasl_client_start failed with: " << result << endl;
+		SASLERROR
+		sasl_dispose( &conn );
+		return false;
+	}
 
 	ksDebug() << "Preferred authentication method is " << mechusing << "." << endl;
 
-  QString firstCommand = "AUTHENTICATE \"" + QString::fromLatin1( mechusing ) + "\"";
-  challenge = QByteArray::fromRawData( out, outlen ).toBase64();
-  if ( !challenge.isEmpty() ) {
-    firstCommand += " \"";
-    firstCommand += QString::fromLatin1( challenge.data(), challenge.size() );
-    firstCommand += "\"";
-  }
+	QString firstCommand = "AUTHENTICATE \"" + QString::fromLatin1( mechusing ) + "\"";
+	challenge = QByteArray::fromRawData( out, outlen ).toBase64();
+	if ( !challenge.isEmpty() ) {
+		firstCommand += " \"";
+		firstCommand += QString::fromLatin1( challenge.data(), challenge.size() );
+		firstCommand += '\"';
+	}
 
-  ksDebug() << "firstCommand: " << firstCommand << endl;
+	ksDebug() << "firstCommand: " << firstCommand << endl;
 	if (!sendData( firstCommand.toLatin1() ))
 		return false;
 	
@@ -1041,33 +1042,31 @@ bool kio_sieveProtocol::authenticate()
 		challenge = QByteArray::fromBase64( QByteArray::fromRawData( r.getAction().data(), qty ) );
 //		ksDebug() << "S:  [" << r.getAction() << "]." << endl;
 
-    do {
-      result = sasl_client_step(conn, challenge.isEmpty() ? 0 : challenge.data(),
-                                  challenge.size(),
-                                  &client_interact,
-                                  &out, &outlen);
+		do {
+			result = sasl_client_step(conn, challenge.isEmpty() ? 0 : challenge.data(),
+				challenge.size(), &client_interact, &out, &outlen);
 
-      if (result == SASL_INTERACT) 
-        if ( !saslInteract( client_interact, ai ) ) {
-          sasl_dispose( &conn );
-          return false;
-        };
-    } while ( result == SASL_INTERACT );
+			if (result == SASL_INTERACT) 
+				if ( !saslInteract( client_interact, ai ) ) {
+					sasl_dispose( &conn );
+					return false;
+				};
+		} while ( result == SASL_INTERACT );
 
-    ksDebug() << "sasl_client_step: " << result << endl;
-    if ( result != SASL_CONTINUE && result != SASL_OK ) {
-      ksDebug() << "sasl_client_step failed with: " << result << endl;
-      SASLERROR
-      sasl_dispose( &conn );
-      return false;
-    }
-   
-    sendData('\"' + QByteArray::fromRawData( out, outlen ).toBase64() + '\"');
+		ksDebug() << "sasl_client_step: " << result << endl;
+		if ( result != SASL_CONTINUE && result != SASL_OK ) {
+			ksDebug() << "sasl_client_step failed with: " << result << endl;
+			SASLERROR
+			sasl_dispose( &conn );
+			return false;
+		}
+  
+		sendData('\"' + QByteArray::fromRawData( out, outlen ).toBase64() + '\"');
 //    ksDebug() << "C-1:  [" << out << "]." << endl;
-  } while ( true );
+	} while ( true );
 
 	ksDebug() << "Challenges finished." << endl;
-  sasl_dispose( &conn );
+	sasl_dispose( &conn );
     
 	if (operationResult() == OK) {
 		// Authentication succeeded.

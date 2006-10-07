@@ -103,7 +103,7 @@ protected:
 	int operationResult();
 
 	bool parseCapabilities(bool requestCapabilities = false);
-  bool saslInteract( void *in, KIO::AuthInfo &ai );
+	bool saslInteract( void *in, KIO::AuthInfo &ai );
 
 	// IOSlave global data
 	uint				m_connMode;
