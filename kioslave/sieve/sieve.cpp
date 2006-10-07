@@ -38,13 +38,8 @@ extern "C" {
 #include <kinstance.h>
 #include <klocale.h>
 #include <kurl.h>
-#include <kcodecs.h>
 #include <kglobal.h>
 
-#include <q3cstring.h>
-
-#include <cstdlib>
-using std::exit;
 #include <sys/stat.h>
 
 #include <kdepimmacros.h>
@@ -87,18 +82,18 @@ extern "C"
 
 		if (argc != 4) {
 			ksDebug() << "Usage: kio_sieve protocol domain-socket1 domain-socket2" << endl;
-			exit(-1);
+			return -1;
 		}
 
-    if ( sasl_client_init( callbacks ) != SASL_OK ) {
-      fprintf(stderr, "SASL library initialization failed!\n");
-      ::exit (-1);
-    }
+		if ( sasl_client_init( callbacks ) != SASL_OK ) {
+			fprintf(stderr, "SASL library initialization failed!\n");
+			return -1;
+		}
 
 		kio_sieveProtocol slave(argv[2], argv[3]);
 		slave.dispatchLoop();
 
-    sasl_done();
+		sasl_done();
 
 		ksDebug() << "*** kio_sieve Done" << endl;
 		return 0;
@@ -124,25 +119,25 @@ const uint kio_sieveResponse::getQuantity() const
 }
 
 /* ---------------------------------------------------------------------------------- */
-const Q3CString& kio_sieveResponse::getAction() const
+const QByteArray& kio_sieveResponse::getAction() const
 {
 	return key;
 }
 
 /* ---------------------------------------------------------------------------------- */
-const Q3CString& kio_sieveResponse::getKey() const
+const QByteArray& kio_sieveResponse::getKey() const
 {
 	return key;
 }
 
 /* ---------------------------------------------------------------------------------- */
-const Q3CString& kio_sieveResponse::getVal() const
+const QByteArray& kio_sieveResponse::getVal() const
 {
 	return val;
 }
 
 /* ---------------------------------------------------------------------------------- */
-const Q3CString& kio_sieveResponse::getExtra() const
+const QByteArray& kio_sieveResponse::getExtra() const
 {
 	return extra;
 }
@@ -155,36 +150,36 @@ void kio_sieveResponse::setQuantity(const uint& newQty)
 }
 
 /* ---------------------------------------------------------------------------------- */
-void kio_sieveResponse::setAction(const Q3CString& newAction)
+void kio_sieveResponse::setAction(const QByteArray& newAction)
 {
 	rType = ACTION;
-	key = newAction.copy();
+	key = newAction;
 }
 
 /* ---------------------------------------------------------------------------------- */
-void kio_sieveResponse::setKey(const Q3CString& newKey)
+void kio_sieveResponse::setKey(const QByteArray& newKey)
 {
 	rType = KEY_VAL_PAIR;
-	key = newKey.copy();
+	key = newKey;
 }
 
 /* ---------------------------------------------------------------------------------- */
-void kio_sieveResponse::setVal(const Q3CString& newVal)
+void kio_sieveResponse::setVal(const QByteArray& newVal)
 {
-	val = newVal.copy();
+	val = newVal;
 }
 
 /* ---------------------------------------------------------------------------------- */
-void kio_sieveResponse::setExtra(const Q3CString& newExtra)
+void kio_sieveResponse::setExtra(const QByteArray& newExtra)
 {
-	extra = newExtra.copy();
+	extra = newExtra;
 }
 
 /* ---------------------------------------------------------------------------------- */
 void kio_sieveResponse::clear()
 {
 	rType = NONE;
-	extra = key = val = Q3CString("");
+	extra = key = val = QByteArray();
 	quantity = 0;
 }
 
@@ -549,7 +544,7 @@ void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, bool /*overwri
 #ifndef HAVE_BROKEN_TIMSIEVED
 	// first, check quota (it's a SHOULD in draft std)
 	if (!sendData("HAVESPACE \"" + filename.toUtf8() + "\" "
-		      + Q3CString().setNum( bufLen )))
+		      + QByteArray::number( bufLen )))
 		return;
 
 	if (!operationSuccessful()) {
@@ -559,7 +554,7 @@ void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, bool /*overwri
 #endif
 
 	if (!sendData("PUTSCRIPT \"" + filename.toUtf8() + "\" {"
-		      + Q3CString().setNum( bufLen ) + "+}"))
+		      + QByteArray::number( bufLen ) + "+}"))
 		return;
 
 	// atEnd() lies so the code below doesn't work.
@@ -609,23 +604,23 @@ void kio_sieveProtocol::put(const KUrl& url, int /*permissions*/, bool /*overwri
 		 * error is reported. */
 		if (r.getAction().length() > 3) {
 			// make a copy of the extra info
-			Q3CString extra = r.getAction().right(r.getAction().length() - 3);
+			QByteArray extra = r.getAction().right(r.getAction().length() - 3);
 
 			// send the extra message off for re-processing
-			receiveData(false, &extra);
+			receiveData(false, extra);
 
 			if (r.getType() == kio_sieveResponse::QUANTITY) {
 				// length of the error message
 				uint len = r.getQuantity();
 
-				Q3CString errmsg(len + 1);
+				QByteArray errmsg(len, 0);
 
 				read(errmsg.data(), len);
 
 				error(ERR_INTERNAL_SERVER,
 						i18n("The script did not upload successfully.\n"
 							"This is probably due to errors in the script.\n"
-							"The server responded:\n%1", QString::fromLatin1( errmsg ) ));
+							"The server responded:\n%1", QString::fromLatin1( errmsg.data(), errmsg.size() ) ));
 
 				// clear the rest of the incoming data
 				receiveData();
@@ -949,7 +944,7 @@ bool kio_sieveProtocol::authenticate()
   const char *out = NULL;
   uint outlen;
   const char *mechusing = NULL;
-    QByteArray challenge, tmp;
+	QByteArray challenge;
 
 	/* Retrieve authentication details from user.
 	 * Note: should this require realm as well as user & pass details
@@ -1005,9 +1000,7 @@ bool kio_sieveProtocol::authenticate()
 	ksDebug() << "Preferred authentication method is " << mechusing << "." << endl;
 
   QString firstCommand = "AUTHENTICATE \"" + QString::fromLatin1( mechusing ) + "\"";
-  tmp.setRawData( out, outlen );
-  KCodecs::base64Encode( tmp, challenge );
-  tmp.resetRawData( out, outlen );
+  challenge = QByteArray::fromRawData( out, outlen ).toBase64();
   if ( !challenge.isEmpty() ) {
     firstCommand += " \"";
     firstCommand += QString::fromLatin1( challenge.data(), challenge.size() );
@@ -1018,8 +1011,6 @@ bool kio_sieveProtocol::authenticate()
 	if (!sendData( firstCommand.toLatin1() ))
 		return false;
 	
-	Q3CString command;
-	
 	do {
 		receiveData();
 		
@@ -1029,7 +1020,7 @@ bool kio_sieveProtocol::authenticate()
 		ksDebug() << "Challenge len  " << r.getQuantity() << endl;
 
 		if (r.getType() != kio_sieveResponse::QUANTITY) {
-      sasl_dispose( &conn );
+			sasl_dispose( &conn );
 			error(ERR_UNSUPPORTED_PROTOCOL,
 					i18n("A protocol error occurred during authentication.\n"
 							"Choose a different authentication method to %1.", mechusing));
@@ -1041,18 +1032,14 @@ bool kio_sieveProtocol::authenticate()
 		receiveData();
 
 		if (r.getType() != kio_sieveResponse::ACTION && r.getAction().length() != qty) {
-      sasl_dispose( &conn );
+			sasl_dispose( &conn );
 			error(ERR_UNSUPPORTED_PROTOCOL,
 					i18n("A protocol error occurred during authentication.\n"
 							"Choose a different authentication method to %1.", mechusing));
 			return false;
 		}
-
-    tmp.setRawData( r.getAction().data(), qty );
-    KCodecs::base64Decode( tmp, challenge );
-    tmp.resetRawData( r.getAction().data(), qty );
+		challenge = QByteArray::fromBase64( QByteArray::fromRawData( r.getAction().data(), qty ) );
 //		ksDebug() << "S:  [" << r.getAction() << "]." << endl;
-//		ksDebug() << "S-1:  [" << QCString(challenge.data(), challenge.size()+1) << "]." << endl;
 
     do {
       result = sasl_client_step(conn, challenge.isEmpty() ? 0 : challenge.data(),
@@ -1075,11 +1062,7 @@ bool kio_sieveProtocol::authenticate()
       return false;
     }
    
-    tmp.setRawData( out, outlen );
-    KCodecs::base64Encode( tmp, challenge );
-    tmp.resetRawData( out, outlen );
-    sendData("\"" + Q3CString( challenge.data(), challenge.size()+1 ) + "\"");
-//    ksDebug() << "C:  [" << QCString(challenge.data(), challenge.size()+1) << "]." << endl;
+    sendData('\"' + QByteArray::fromRawData( out, outlen ).toBase64() + '\"');
 //    ksDebug() << "C-1:  [" << out << "]." << endl;
   } while ( true );
 
@@ -1112,9 +1095,9 @@ void kio_sieveProtocol::mimetype(const KUrl & url)
 
 
 /* --------------------------------------------------------------------------- */
-bool kio_sieveProtocol::sendData(const Q3CString &data)
+bool kio_sieveProtocol::sendData(const QByteArray &data)
 {
-	Q3CString write_buf = data + "\r\n";
+	QByteArray write_buf = data + "\r\n";
 
 	//ksDebug() << "C: " << data << endl;
 
@@ -1130,12 +1113,12 @@ bool kio_sieveProtocol::sendData(const Q3CString &data)
 }
 
 /* --------------------------------------------------------------------------- */
-bool kio_sieveProtocol::receiveData(bool waitForData, Q3CString *reparse)
+bool kio_sieveProtocol::receiveData(bool waitForData, const QByteArray &reparse)
 {
-	Q3CString interpret;
+	QByteArray interpret;
 	int start, end;
 
-	if (!reparse) {
+	if ( reparse.isEmpty() ) {
 		if (!waitForData)
 			// is there data waiting?
 			if (atEnd()) return false;
@@ -1146,10 +1129,10 @@ bool kio_sieveProtocol::receiveData(bool waitForData, Q3CString *reparse)
 		buffer[SIEVE_DEFAULT_RECIEVE_BUFFER-1] = '\0';
 
 		// strip LF/CR
-		interpret = Q3CString(buffer).left(qstrlen(buffer) - 2);
+		interpret = QByteArray(buffer, qstrlen(buffer) - 2);
 
 	} else {
-		interpret = reparse->copy();
+		interpret = reparse;
 	}
 
 	r.clear();
@@ -1217,7 +1200,7 @@ bool kio_sieveProtocol::operationSuccessful()
 {
 	while (receiveData(false)) {
 		if (r.getType() == kio_sieveResponse::ACTION) {
-			Q3CString response = r.getAction().left(2);
+			QByteArray response = r.getAction().left(2);
 			if (response == "OK") {
 				return true;
 			} else if (response == "NO") {
@@ -1231,7 +1214,7 @@ bool kio_sieveProtocol::operationSuccessful()
 int kio_sieveProtocol::operationResult()
 {
 	if (r.getType() == kio_sieveResponse::ACTION) {
-		Q3CString response = r.getAction().left(2);
+		QByteArray response = r.getAction().left(2);
 		if (response == "OK") {
 			return OK;
 		} else if (response == "NO") {

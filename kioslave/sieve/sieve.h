@@ -20,10 +20,9 @@
 #include <kio/authinfo.h>
 
 #include <QString>
-#include <q3cstring.h>
+#include <QByteArray>
 #include <QStringList>
 
-class KDESasl;
 class KUrl;
 
 
@@ -36,26 +35,26 @@ public:
 
 	const uint& getType() const;
 
-	const Q3CString& getAction() const;
+	const QByteArray& getAction() const;
 	const uint getQuantity() const;
-	const Q3CString& getKey() const;
-	const Q3CString& getVal() const;
-	const Q3CString& getExtra() const;
+	const QByteArray& getKey() const;
+	const QByteArray& getVal() const;
+	const QByteArray& getExtra() const;
 
 	void setQuantity(const uint& quantity);
-	void setAction(const Q3CString& newAction);
-	void setKey(const Q3CString& newKey);
-	void setVal(const Q3CString& newVal);
-	void setExtra(const Q3CString& newExtra);
+	void setAction(const QByteArray& newAction);
+	void setKey(const QByteArray& newKey);
+	void setVal(const QByteArray& newVal);
+	void setExtra(const QByteArray& newExtra);
 
 	void clear();
 
 protected:
 	uint		rType;
 	uint		quantity;
-	Q3CString	key;
-	Q3CString	val;
-	Q3CString	extra;
+	QByteArray      key;
+	QByteArray	val;
+	QByteArray	extra;
 };
 
 class kio_sieveProtocol : public KIO::TCPSlaveBase
@@ -98,8 +97,8 @@ protected:
 	void disconnect(bool forcibly = false);
 	void changeCheck( const KUrl &url );
 
-	bool sendData(const Q3CString &data);
-	bool receiveData(bool waitForData = true, Q3CString *reparse = 0);
+	bool sendData(const QByteArray &data);
+	bool receiveData(bool waitForData = true, const QByteArray &reparse = QByteArray() );
 	bool operationSuccessful();
 	int operationResult();
 
