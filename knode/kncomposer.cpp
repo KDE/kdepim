@@ -47,7 +47,7 @@ using KRecentAddress::RecentAddresses;
 #include <klineedit.h>
 #include <kcombobox.h>
 #include <k3spell.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kpgp.h>
 #include <kpgpblock.h>
 #include <kprocess.h>
@@ -405,7 +405,6 @@ KNComposer::~KNComposer()
   delete e_xternalEditor;  // this also kills the editor process if it's still running
 
   if(e_ditorTempfile) {
-    e_ditorTempfile->unlink();
     delete e_ditorTempfile;
   }
 
@@ -1258,16 +1257,14 @@ void KNComposer::slotExternalEditor()
     KMessageBox::sorry(this, i18n("No editor configured.\nPlease do this in the settings dialog."));
 
   if(e_ditorTempfile) {       // shouldn't happen...
-    e_ditorTempfile->unlink();
     delete e_ditorTempfile;
     e_ditorTempfile=0;
   }
 
-  e_ditorTempfile=new KTempFile();
+  e_ditorTempfile=new KTemporaryFile();
 
-  if(e_ditorTempfile->status()!=0) {
+  if(!e_ditorTempfile->open()) {
     KNHelper::displayTempFileError(this);
-    e_ditorTempfile->unlink();
     delete e_ditorTempfile;
     e_ditorTempfile=0;
     return;
@@ -1286,12 +1283,11 @@ void KNComposer::slotExternalEditor()
   }
 
   QByteArray local = codec->fromUnicode(tmp);
-  e_ditorTempfile->file()->write(local.data(),local.length());
-  e_ditorTempfile->file()->flush();
+  e_ditorTempfile->write(local.data(),local.length());
+  e_ditorTempfile->flush();
 
-  if(e_ditorTempfile->status()!=0) {
+  if(!e_ditorTempfile->open()) {
     KNHelper::displayTempFileError(this);
-    e_ditorTempfile->unlink();
     delete e_ditorTempfile;
     e_ditorTempfile=0;
     return;
@@ -1304,20 +1300,19 @@ void KNComposer::slotExternalEditor()
   bool filenameAdded=false;
   for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it ) {
     if ((*it).contains("%f")) {
-      (*it).replace(QRegExp("%f"),e_ditorTempfile->name());
+      (*it).replace(QRegExp("%f"),e_ditorTempfile->fileName());
       filenameAdded=true;
     }
     (*e_xternalEditor) << (*it);
   }
   if(!filenameAdded)    // no %f in the editor command
-    (*e_xternalEditor) << e_ditorTempfile->name();
+    (*e_xternalEditor) << e_ditorTempfile->fileName();
 
   connect(e_xternalEditor, SIGNAL(processExited(KProcess *)),this, SLOT(slotEditorFinished(KProcess *)));
   if(!e_xternalEditor->start()) {
     KMessageBox::error(this, i18n("Unable to start external editor.\nPlease check your configuration in the settings dialog."));
     delete e_xternalEditor;
     e_xternalEditor=0;
-    e_ditorTempfile->unlink();
     delete e_ditorTempfile;
     e_ditorTempfile=0;
     return;
@@ -1529,9 +1524,9 @@ void KNComposer::slotGroupsBtnClicked()
 void KNComposer::slotEditorFinished(KProcess *)
 {
   if(e_xternalEditor->normalExit()) {
-    e_ditorTempfile->file()->close();
-    e_ditorTempfile->file()->open(QIODevice::ReadOnly);
-    insertFile(e_ditorTempfile->file(), true);
+    e_ditorTempfile->flush();
+    e_ditorTempfile->seek(0);
+    insertFile(e_ditorTempfile, true);
     e_xternalEdited=true;
   }
 
@@ -1543,7 +1538,6 @@ void KNComposer::slotCancelEditor()
 {
   delete e_xternalEditor;  // this also kills the editor process if it's still running
   e_xternalEditor=0;
-  e_ditorTempfile->unlink();
   delete e_ditorTempfile;
   e_ditorTempfile=0;
 

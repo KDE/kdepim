@@ -22,7 +22,7 @@
 #include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kdebug.h>
 
 #include "filter_oe.hxx"
@@ -178,8 +178,10 @@ void FilterOE::mbxImport( FilterInfo *info, QDataStream& ds)
 
     while (!ds.atEnd()) {
         quint32 msgNumber, msgSize, msgTextSize;
-        KTempFile tmp;
-        tmp.dataStream()->setByteOrder(QDataStream::LittleEndian);
+        KTemporaryFile tmp;
+        tmp.open();
+        QDataStream ds(&tmp);
+        ds.setByteOrder(QDataStream::LittleEndian);
 
         // Read the messages
         ds >> msgNumber >> msgSize >> msgTextSize; // All seem to be lies...?
@@ -187,22 +189,21 @@ void FilterOE::mbxImport( FilterInfo *info, QDataStream& ds)
         do {
             ds >> msgMagic;
             if (msgMagic != MBX_MAILMAGIC)
-                *tmp.dataStream() << msgMagic;
+                ds << msgMagic;
             else
                 break;
         } while ( !ds.atEnd() );
 
-        tmp.close();
+        tmp.flush();
         /* comment by Danny Kukawka:
          * addMessage() == old function, need more time and check for duplicates
          * addMessage_fastImport == new function, faster and no check for duplicates
          */
         if(info->removeDupMsg)
-            addMessage( info, folderName, tmp.name() );
+            addMessage( info, folderName, tmp.fileName() );
         else
-            addMessage_fastImport( info, folderName, tmp.name() );
+            addMessage_fastImport( info, folderName, tmp.fileName() );
 
-        tmp.unlink();
         if(info->shouldTerminate()) return;
     }
 }
@@ -334,16 +335,18 @@ void FilterOE::dbxReadEmail( FilterInfo *info, QDataStream& ds, int filePos)
     quint32 self, nextAddressOffset, nextAddress=0;
     quint16 blockSize;
     quint8 intCount, unknown;
-    KTempFile tmp;
+    KTemporaryFile tmp;
+    tmp.open();
     bool _break = false;
     int wasAt = ds.device()->pos();
     ds.device()->seek(filePos);
+    QDataStream tempDs (&tmp);
 
     do {
         ds >> self >> nextAddressOffset >> blockSize >> intCount >> unknown >> nextAddress; // _dbx_block_hdrstruct
         QByteArray blockBuffer(blockSize,'\0');
         ds.readRawData(blockBuffer.data(), blockSize);
-        tmp.dataStream()->writeRawData(blockBuffer.data(), blockSize);
+        tempDs.writeRawData(blockBuffer.data(), blockSize);
         // to detect incomplete mails or corrupted archives. See Bug #86119
         if(ds.atEnd()) {
             _break = true;
@@ -351,20 +354,19 @@ void FilterOE::dbxReadEmail( FilterInfo *info, QDataStream& ds, int filePos)
         }
         ds.device()->seek(nextAddress);
     } while (nextAddress != 0);
-    tmp.close();
+    tmp.flush();
 
     if(!_break) {
         if(info->removeDupMsg)
-            addMessage( info, folderName, tmp.name() );
+            addMessage( info, folderName, tmp.fileName() );
         else
-            addMessage_fastImport( info, folderName, tmp.name() );
+            addMessage_fastImport( info, folderName, tmp.fileName() );
 
         currentEmail++;
         int currentPercentage = (int) ( ( (float) currentEmail / totalEmails ) * 100 );
         info->setCurrent(currentPercentage);
         ds.device()->seek(wasAt);
     }
-    tmp.unlink();
 }
 
 /* ------------------- FolderFile support ------------------- */

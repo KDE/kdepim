@@ -38,7 +38,7 @@
 #include <kstandarddirs.h>
 #include <kinputdialog.h>
 #include <kurl.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kmessagebox.h>
 #include <QTextStream>
 #include <kdebug.h>
@@ -141,19 +141,19 @@ bool ResourceKolabBase::kmailUpdate( const QString& resource,
   if ( mimetype.startsWith( "application/x-vnd.kolab" ) ) {
 
     // Save the xml file. Will be deleted at the end of this method
-    KTempFile file;
-    file.setAutoDelete( true );
-    QTextStream* stream = file.textStream();
-    stream->setCodec( "UTF-8" );
-    *stream << xml;
-    file.close();
+    KTemporaryFile file;
+    file.open();
+    QTextStream stream ( &file );
+    stream.setCodec( "UTF-8" );
+    stream << xml;
+    stream.flush();
 
     // Add the xml file as an attachment
     QStringList attachmentURLs = _attachmentURLs;
     QStringList attachmentMimeTypes = _attachmentMimetypes;
     QStringList attachmentNames = _attachmentNames;
     KUrl url;
-    url.setPath( file.name() );
+    url.setPath( file.fileName() );
     url.setFileEncoding( "UTF-8" );
     attachmentURLs.prepend( url.url() );
     attachmentMimeTypes.prepend( mimetype );

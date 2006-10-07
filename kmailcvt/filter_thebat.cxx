@@ -23,7 +23,7 @@
 
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 
 #include <kmessagebox.h>
 
@@ -204,17 +204,17 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
                 QByteArray input(endPos-lastPos,'\0');
                 tbb.read(input.data(), endPos-lastPos);
 
-                KTempFile tmp;
-                tmp.file()->write( input, endPos-lastPos );
-                tmp.close();
+                KTemporaryFile tmp;
+                tmp.open();
+                tmp.write( input, endPos-lastPos );
+                tmp.flush();
 
                 //KMessageBox::warningContinueCancel(info->parent(), "");
                 if(info->removeDupMsg)
-                    addMessage( info, _path, tmp.name() );
+                    addMessage( info, _path, tmp.fileName() );
                 else
-                    addMessage_fastImport( info, _path, tmp.name() );
+                    addMessage_fastImport( info, _path, tmp.fileName() );
 
-                tmp.unlink();
                 lastPos = endPos + 48;
                 tbb.seek(lastPos);
                 info->setCurrent( (int) ( ( (float) tbb.pos() / tbb.size() ) * 100 ));

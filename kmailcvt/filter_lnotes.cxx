@@ -19,7 +19,7 @@
 
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kdebug.h>
 #include <QFileInfo>
 
@@ -92,7 +92,7 @@ void FilterLNotes::ImportLNotes(const QString& file) {
         char ch = 0;
         int state = 0;
         int n = 0;
-        KTempFile *tempfile = 0;
+        KTemporaryFile *tempfile = 0;
 
         // Get folder name
         QFileInfo filenameInfo( file );
@@ -110,7 +110,9 @@ void FilterLNotes::ImportLNotes(const QString& file) {
                     if ( inf->shouldTerminate() )
                         return;
 
-                    tempfile = new KTempFile;
+                    tempfile = new KTemporaryFile;
+                    tempfile->setAutoRemove(false);
+                    tempfile->open();
                     // fall through
 
                     // inside a message state
@@ -120,11 +122,11 @@ void FilterLNotes::ImportLNotes(const QString& file) {
                         tempfile->close();
 
                         if(inf->removeDupMsg)
-                            addMessage( inf, folder, tempfile->name() );
+                            addMessage( inf, folder, tempfile->fileName() );
                         else
-                            addMessage_fastImport( inf, folder, tempfile->name() );
+                            addMessage_fastImport( inf, folder, tempfile->fileName() );
 
-                        tempfile->unlink();
+                        tempfile->setAutoRemove(true);
                         state = 0;
 
                         int currentPercentage = (int) ( ( (float) f.pos() / filenameInfo.size() ) * 100 );
@@ -137,7 +139,7 @@ void FilterLNotes::ImportLNotes(const QString& file) {
                     if (ch == 0x0d) {
                         break;
                     }
-                    tempfile->file()->putChar(ch);
+                    tempfile->putChar(ch);
                     break;
             }
         }
@@ -147,12 +149,12 @@ void FilterLNotes::ImportLNotes(const QString& file) {
         // did Folder end without 0x1a at the end?
         if (state != 0) {
             if(inf->removeDupMsg)
-                addMessage( inf, folder, tempfile->name() );
+                addMessage( inf, folder, tempfile->fileName() );
             else
-                addMessage_fastImport( inf, folder, tempfile->name() );
+                addMessage_fastImport( inf, folder, tempfile->fileName() );
         }
 	if (tempfile) {
-            tempfile->unlink();
+            tempfile->setAutoRemove(true);
             delete tempfile;
         }
  

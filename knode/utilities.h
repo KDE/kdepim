@@ -29,7 +29,7 @@ class QChar;
 class QStringList;
 class QSize;
 
-class KTempFile;
+class KTemporaryFile;
 
 
 //*****************************************************************************
@@ -74,7 +74,7 @@ private:
   QString s_aveName;
   KUrl url;
   QFile* file;
-  KTempFile* tmpFile;
+  KTemporaryFile* tmpFile;
   static QString lastPath;
 
 };

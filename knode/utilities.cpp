@@ -26,7 +26,7 @@
 #include <kglobalsettings.h>
 #include <kdebug.h>
 #include <kio/netaccess.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kfiledialog.h>
 #include <kdialog.h>
 
@@ -50,9 +50,8 @@ KNSaveHelper::~KNSaveHelper()
   } else
     if (tmpFile) {      // network location, initiate transaction
       tmpFile->close();
-      if (KIO::NetAccess::upload(tmpFile->name(),url, 0) == false)
+      if (KIO::NetAccess::upload(tmpFile->fileName(),url, 0) == false)
         KNHelper::displayRemoteFileError();
-      tmpFile->unlink();   // delete temp file
       delete tmpFile;
     }
 }
@@ -83,14 +82,14 @@ QFile* KNSaveHelper::getFile(const QString &dialogTitle)
     }
     return file;
   } else {
-    tmpFile = new KTempFile();
-    if (tmpFile->status()!=0) {
+    tmpFile = new KTemporaryFile();
+    if (!tmpFile->open()) {
       KNHelper::displayTempFileError();
       delete tmpFile;
       tmpFile = 0;
       return 0;
     }
-    return tmpFile->file();
+    return tmpFile;
   }
 }
 

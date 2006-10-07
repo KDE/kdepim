@@ -22,7 +22,7 @@
 
 class Q3ListViewItem;
 
-class KTempFile;
+class KTemporaryFile;
 
 class KNArticle;
 class KNHeaderView;
@@ -119,7 +119,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     KNArticleFilter *f_ilter;
     KNFilterManager *f_ilterMgr;
     KNode::SearchDialog *s_earchDlg;
-    QList<KTempFile*> mTempFiles;
+    QList<KTemporaryFile*> mTempFiles;
     bool d_isableExpander;
 
   public slots:

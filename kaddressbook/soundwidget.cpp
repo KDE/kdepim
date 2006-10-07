@@ -27,7 +27,7 @@
 #include <kiconloader.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kurlrequester.h>
 #include <phonon/audioplayer.h>
 
@@ -128,13 +128,15 @@ void SoundWidget::setReadOnly( bool readOnly )
 
 void SoundWidget::playSound()
 {
-  KTempFile tmp;
+  KTemporaryFile tmp;
+  tmp.setAutoRemove(false);
+  tmp.open();
 
-  tmp.file()->write( mSound.data() );
-  tmp.close();
+  tmp.write( mSound.data() );
+  tmp.flush();
 
   Phonon::AudioPlayer* player = new Phonon::AudioPlayer( Phonon::NotificationCategory, this );
-  player->play( tmp.name() );
+  player->play( tmp.fileName() );
 
   // we can't remove the sound file from within the program, because
   // KAudioPlay uses a async dcop call... :(

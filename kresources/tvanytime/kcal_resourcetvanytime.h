@@ -36,7 +36,7 @@
 
 class QDomDocument; 
 class KTar;
-class KTempFile;
+class KTemporaryFile;
 
 typedef QMap< QString, Service > ServiceMap;
 typedef QMap< QString, QString > UidMap;
@@ -114,7 +114,7 @@ class KDE_EXPORT ResourceTVAnytime : public ResourceCached
     bool mIsShowingError;
 
     QTimer mResourceChangedTimer;
-    KTempFile * mDestination;
+    KTemporaryFile * mDestination;
     KTar * mScheduleArchive;
 
     ServiceMap mServiceMap;

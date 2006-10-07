@@ -21,7 +21,7 @@
 #include <klocale.h>
 #include <kfiledialog.h>
 #include <QRegExp>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kdebug.h>
 
 #include "filter_pmail.hxx"
@@ -178,7 +178,8 @@ void FilterPMail::importMailFolder(const QString& file)
         bool first_msg = true;
         
         while (!f.atEnd()) {
-            KTempFile tempfile;
+            KTemporaryFile tempfile;
+            tempfile.open();
             inf->setCurrent( (int) ( ( (float) f.pos() / f.size() ) * 100 ) );
             
             if(!first_msg) {
@@ -189,25 +190,22 @@ void FilterPMail::importMailFolder(const QString& file)
             // no problem to loose the last line in file. This only contains a seperate char
             while ( ! f.atEnd() &&  (l = f.readLine(input.data(),MAX_LINE))) {
                     if (inf->shouldTerminate()){
-                        tempfile.close();
-                        tempfile.unlink();
                         return;
                     }
                     if ( input.at( 0 ) == 0x1a ) {
                         break;
                     } else {
-                        tempfile.file()->write( input, l );
+                        tempfile.write( input, l );
                     }
             }
-            tempfile.close();
+            tempfile.flush();
             
             if(inf->removeDupMsg)
-                addMessage( inf, folder, tempfile.name() );
+                addMessage( inf, folder, tempfile.fileName() );
             else
-                addMessage_fastImport( inf, folder, tempfile.name() );
+                addMessage_fastImport( inf, folder, tempfile.fileName() );
             
             first_msg = false;
-            tempfile.unlink();
         }
     }
     f.close();
@@ -255,26 +253,24 @@ void FilterPMail::importUnixMailFolder(const QString& file)
         inf->addLog(i18n("Importing %1", QString("../") + QString(pmg_head.folder)));
         l = f.readLine( line.data(),MAX_LINE); // read the first line which is unneeded
         while ( ! f.atEnd() ) {
-            KTempFile tempfile;
+            KTemporaryFile tempfile;
+            tempfile.open();
             
             // we lost the last line, which is the first line of the new message in
             // this lopp, but this is ok, because this is the seperate line with
             // "From ???@???" and we can forget them
             while ( ! f.atEnd() &&  (l = f.readLine(line.data(),MAX_LINE)) && ((seperate = line.data()).left(5) != "From ")) {
-                tempfile.file()->write(line.data(), l);
+                tempfile.write(line.data(), l);
                 if (inf->shouldTerminate()){
-                    tempfile.close();
-                    tempfile.unlink();
                     return;
                 }
             }
-            tempfile.close();
+            tempfile.flush();
             if(inf->removeDupMsg)
-                addMessage( inf, folder, tempfile.name() );
+                addMessage( inf, folder, tempfile.fileName() );
             else
-                addMessage_fastImport( inf, folder, tempfile.name() );
-            tempfile.unlink();   
-            
+                addMessage_fastImport( inf, folder, tempfile.fileName() );
+
             n++;
             inf->setCurrent(i18n("Message %1", n));            
             inf->setCurrent( (int) ( ( (float) f.pos() / f.size() ) * 100 ) );

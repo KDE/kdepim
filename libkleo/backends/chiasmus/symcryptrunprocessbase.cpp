@@ -32,7 +32,7 @@
 
 #include "symcryptrunprocessbase.h"
 
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kdebug.h>
 #include <kshell.h>
 
@@ -64,14 +64,13 @@ bool Kleo::SymCryptRunProcessBase::launch( const QByteArray & input, RunMode rm 
   connect( this, SIGNAL(receivedStderr(KProcess*,char*,int)),
            this, SLOT(slotReceivedStderr(KProcess*,char*,int)) );
   if ( rm == Block ) {
-    KTempFile tempfile;
-    tempfile.setAutoDelete( true );
-    if ( QFile * file = tempfile.file() )
-      file->write( input );
+    KTemporaryFile tempfile;
+    if ( tempfile.open() )
+      tempfile.write( input );
     else
       return false;
-    tempfile.close();
-    *this << "--input" << tempfile.name();
+    tempfile.flush();
+    *this << "--input" << tempfile.fileName();
     addOptions();
     return KProcess::start( Block, All );
   } else {

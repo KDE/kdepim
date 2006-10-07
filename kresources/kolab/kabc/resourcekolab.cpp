@@ -37,7 +37,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kio/observer.h>
 #include <kio/uiserver_stub.h>
 #include <kabc/vcardconverter.h>
@@ -279,7 +279,7 @@ struct AttachmentList {
   QStringList attachmentNames;
   QStringList attachmentMimeTypes;
   QStringList deletedAttachments;
-  QList<KTempFile *> tempFiles;
+  QList<KTemporaryFile *> tempFiles;
 
   void addAttachment( const QString& url, const QString& name, const QString& mimetype ) {
     attachmentURLs.append( url );
@@ -296,11 +296,12 @@ void AttachmentList::updatePictureAttachment( const QImage& image, const QString
 {
   assert( !name.isEmpty() );
   if ( !image.isNull() ) {
-    KTempFile tempFile;
-    image.save( tempFile.file(), "PNG" );
-    tempFile.close();
+    KTemporaryFile tempFile;
+    tempFile.setAutoRemove(false);
+    tempFile.open();
+    image.save( &tempFile, "PNG" );
     KUrl url;
-    url.setPath( tempFile.name() );
+    url.setPath( tempFile.fileName() );
     kDebug(5650) << "picture saved to " << url.path() << endl;
     addAttachment( url.url(), name, "image/png" );
   } else {
@@ -312,11 +313,12 @@ void AttachmentList::updateAttachment( const QByteArray& data, const QString& na
 {
   assert( !name.isEmpty() );
   if ( !data.isNull() ) {
-    KTempFile tempFile;
-    tempFile.file()->write( data );
-    tempFile.close();
+    KTemporaryFile tempFile;
+    tempFile.setAutoRemove(false);
+    tempFile.open();
+    tempFile.write( data );
     KUrl url;
-    url.setPath( tempFile.name() );
+    url.setPath( tempFile.fileName() );
     kDebug(5650) << "data saved to " << url.path() << endl;
     addAttachment( url.url(), name, mimetype );
   } else {
@@ -388,8 +390,8 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     const_cast<Addressee&>(addr).setChanged( false );
   }
 
-  for( QList<KTempFile *>::Iterator it = att.tempFiles.begin(); it != att.tempFiles.end(); ++it ) {
-    (*it)->setAutoDelete( true );
+  for( QList<KTemporaryFile *>::Iterator it = att.tempFiles.begin(); it != att.tempFiles.end(); ++it ) {
+    (*it)->setAutoRemove( true );
     delete (*it);
   }
   return rc;

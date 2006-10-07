@@ -58,7 +58,7 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kapplication.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 
 #include <QUrl>
 #include <QDir>
@@ -231,16 +231,17 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool saveFile( const QString& receiver, const QString& iCal,
                    const QString& type ) const
     {
-      KTempFile file( KStandardDirs::locateLocal( "data", "korganizer/income." + type + '/',
-                                   true ) );
-      QTextStream* ts = file.textStream();
-      if ( !ts ) {
+      KTemporaryFile file;
+      file.setPrefix(KStandardDirs::locateLocal( "data", "korganizer/income." + type + '/', true));
+      file.setAutoRemove(false);
+      if ( !file.open() ) {
         KMessageBox::error( 0, i18n("Could not save file to KOrganizer") );
         return false;
       }
-      ts->setCodec("UTF-8");
-      (*ts) << receiver << '\n' << iCal;
-      file.close();
+      QTextStream ts ( &file );
+      ts.setCodec("UTF-8");
+      ts << receiver << '\n' << iCal;
+      file.flush();
 
       // Now ensure that korganizer is running; otherwise start it, to prevent surprises
       // (https://intevation.de/roundup/kolab/issue758)

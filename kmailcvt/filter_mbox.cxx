@@ -18,7 +18,7 @@
 #include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kdebug.h>
 
 #include "filter_mbox.hxx"
@@ -67,7 +67,8 @@ void FilterMBox::import(FilterInfo *info)
             long l = 0;
 
             while ( ! mbox.atEnd() ) {
-                KTempFile tmp;
+                KTemporaryFile tmp;
+                tmp.open();
                 QIODevice::Offset filepos = 0;
                 /* comment by Danny:
                 * Don't use QTextStream to read from mbox, better use QDataStream. QTextStream only 
@@ -79,12 +80,12 @@ void FilterMBox::import(FilterInfo *info)
                 QByteArray seperate;
 
                 if(!first_msg)
-                    tmp.file()->write( input, l );
+                    tmp.write( input, l );
                 l = mbox.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
-                tmp.file()->write( input, l );
+                tmp.write( input, l );
 
                 while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
-                       tmp.file()->write( input, l );
+                       tmp.write( input, l );
                        
                        // workaround to fix hang if a corrupted mbox contains some 
                        // binary data, for more see bug #106796
@@ -93,7 +94,7 @@ void FilterMBox::import(FilterInfo *info)
                        else 
                            filepos = mbox.pos();
                 }
-                tmp.close();
+                tmp.flush();
                 first_msg = false;
 
                 /* comment by Danny Kukawka:
@@ -101,11 +102,10 @@ void FilterMBox::import(FilterInfo *info)
                 * addMessage_fastImport == new function, faster and no check for duplicates
                 */
                 if(info->removeDupMsg)
-                    addMessage( info, folderName, tmp.name() );
+                    addMessage( info, folderName, tmp.fileName() );
                 else
-                    addMessage_fastImport( info, folderName, tmp.name() );
+                    addMessage_fastImport( info, folderName, tmp.fileName() );
 
-                tmp.unlink();
                 int currentPercentage = (int) ( ( (float) mbox.pos() / filenameInfo.size() ) * 100 );
                 info->setCurrent( currentPercentage );
                 if (currentFile == 1)

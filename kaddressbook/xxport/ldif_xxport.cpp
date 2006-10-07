@@ -42,7 +42,7 @@
 #include <klocale.h>
 #include <kcodecs.h>
 #include <kmessagebox.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kurl.h>
 #include <kabc/ldifconverter.h>
 
@@ -107,18 +107,17 @@ bool LDIFXXPort::exportContacts( const KABC::AddresseeList &list, const QString&
       return true;
 
   if ( !url.isLocalFile() ) {
-    KTempFile tmpFile;
-    if ( tmpFile.status() != 0 ) {
-      QString txt = i18n( "<qt>Unable to open file <b>%1</b>.%2.</qt>",
-                          url.url(), strerror( tmpFile.status() ) );
+    KTemporaryFile tmpFile;
+    if ( !tmpFile.status() ) {
+      QString txt = i18n( "<qt>Unable to open file <b>%1</b></qt>", url.url());
       KMessageBox::error( parentWidget(), txt );
       return false;
     }
 
-    doExport( tmpFile.file(), list );
-    tmpFile.close();
+    doExport( &tmpFile, list );
+    tmpFile.flush();
 
-    return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
+    return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
   } else {
     QString filename = url.path();
     QFile file( filename );

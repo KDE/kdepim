@@ -41,7 +41,7 @@
 #include <klocale.h>
 
 #include <assert.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <QFile>
 #include <stdlib.h>
 #include <QTextCodec>
@@ -248,8 +248,8 @@ Kleo::CryptoConfigGroup* QGpgMECryptoConfigComponent::group(const QString& name 
 
 void QGpgMECryptoConfigComponent::sync( bool runtime )
 {
-  KTempFile tmpFile;
-  tmpFile.setAutoDelete( true );
+  KTemporaryFile tmpFile;
+  tmpFile.open();
 
   QList<QGpgMECryptoConfigEntry *> dirtyEntries;
 
@@ -269,12 +269,12 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
         }
         line += '\n';
         QByteArray line8bit = line.toUtf8(); // encode with utf8, and KProcIO uses utf8 when reading.
-        tmpFile.file()->write( line8bit.data(), line8bit.size()-1 /*no 0*/ );
+        tmpFile.write( line8bit.data(), line8bit.size()-1 /*no 0*/ );
         dirtyEntries.append( it.current() );
       }
     }
   }
-  tmpFile.close();
+  tmpFile.flush();
   if ( dirtyEntries.isEmpty() )
     return;
 
@@ -285,7 +285,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   commandLine += " --change-options ";
   commandLine += KProcess::quote( mName );
   commandLine += " < ";
-  commandLine += KProcess::quote( tmpFile.name() );
+  commandLine += KProcess::quote( tmpFile.fileName() );
 
   //kDebug(5150) << commandLine << endl;
   //system( QCString( "cat " ) + tmpFile.name().toLatin1() ); // DEBUG

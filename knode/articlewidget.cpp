@@ -47,7 +47,7 @@
 #include <kselectaction.h>
 #include <kstandarddirs.h>
 #include <kstdaction.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <ktoggleaction.h>
 #include <kurl.h>
 #include <kxmlguifactory.h>
@@ -969,9 +969,10 @@ void ArticleWidget::updateContents()
 QString ArticleWidget::writeAttachmentToTempFile( KMime::Content *att, int partNum )
 {
   // more or less KMail code
-  KTempFile *tempFile = new KTempFile( QString(), '.' + QString::number( partNum ) );
-  tempFile->setAutoDelete( true );
-  QString fname = tempFile->name();
+  KTemporaryFile *tempFile = new KTemporaryFile();
+  tempFile->setSuffix( '.' + QString::number( partNum ) );
+  tempFile->open();
+  QString fname = tempFile->fileName();
   delete tempFile;
 
   if( ::access( QFile::encodeName( fname ), W_OK ) != 0 )

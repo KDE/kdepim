@@ -124,7 +124,7 @@ class KNComposer : public KMainWindow {
     //edit
     bool e_xternalEdited;
     KProcess *e_xternalEditor;
-    KTempFile *e_ditorTempfile;
+    KTemporaryFile *e_ditorTempfile;
     K3Spell *s_pellChecker;
     SpellingFilter* mSpellingFilter;
 

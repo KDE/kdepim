@@ -35,7 +35,7 @@
 #include <kio/netaccess.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kurl.h>
 #include <kapplication.h>
 #include <libkdepim/addresseeview.h>
@@ -241,13 +241,13 @@ KABC::Addressee::List VCardXXPort::parseVCard( const QByteArray &data ) const
 
 bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data )
 {
-  KTempFile tmpFile;
-  tmpFile.setAutoDelete( true );
+  KTemporaryFile tmpFile;
+  tmpFile.open();
 
-  tmpFile.file()->write( data );
-  tmpFile.close();
+  tmpFile.write( data );
+  tmpFile.flush();
 
-  return KIO::NetAccess::upload( tmpFile.name(), url, parentWidget() );
+  return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
 }
 
 KABC::AddresseeList VCardXXPort::filterContacts( const KABC::AddresseeList &addrList )

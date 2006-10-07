@@ -37,7 +37,7 @@
 #include <kinputdialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 
 #include "keywidget.h"
 
@@ -174,13 +174,14 @@ void KeyWidget::exportKey()
 
   KUrl url = KFileDialog::getSaveUrl();
 
-  KTempFile tempFile;
-  QTextStream *s = tempFile.textStream();
-  s->setCodec( "UTF-8" );
-  (*s) << key.textData();
-  tempFile.close();
+  KTemporaryFile tempFile;
+  tempFile.open();
+  QTextStream s ( &tempFile );
+  s.setCodec( "UTF-8" );
+  s << key.textData();
+  s.flush();
 
-  KIO::NetAccess::upload( tempFile.name(), url, kapp->mainWidget() );
+  KIO::NetAccess::upload( tempFile.fileName(), url, kapp->mainWidget() );
 }
 
 void KeyWidget::updateKeyCombo()

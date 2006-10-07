@@ -46,7 +46,7 @@
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
 #include <ktimezones.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <ktar.h>
 #include <kurl.h>
 
@@ -170,10 +170,12 @@ bool ResourceTVAnytime::doLoad( bool )
 
   clearChanges();
 
-  mDestination = new KTempFile;
+  mDestination = new KTemporaryFile;
+  mDestination->setAutoRemove(false);
+  mDestination->open();
   KUrl url( prefs()->url() );
 
-  KUrl destination = KUrl( mDestination->name() );
+  KUrl destination = KUrl( mDestination->fileName() );
 
   kDebug(5850) << "  SOURCE: " << url.url() << endl;
   kDebug(5850) << "  DESTINATION: " << destination.url() << endl;
@@ -245,7 +247,7 @@ QDomDocument ResourceTVAnytime::archiveFileXml( const QString & name )
 bool ResourceTVAnytime::readSchedule()
 {
   QString uncompress = "application/x-gzip";
-  mScheduleArchive = new KTar( mDestination->name(), uncompress );
+  mScheduleArchive = new KTar( mDestination->fileName(), uncompress );
   mScheduleArchive->open( QIODevice::ReadOnly );
 
   QDomDocument serviceInfo = archiveFileXml( "ServiceInformation.xml" );

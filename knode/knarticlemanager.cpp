@@ -21,7 +21,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kwin.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 
 #include "articlewidget.h"
 #include "knmainwidget.h"
@@ -70,8 +70,7 @@ KNArticleManager::~KNArticleManager()
 
 void KNArticleManager::deleteTempFiles()
 {
-  for ( QList<KTempFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
-    (*it)->unlink();
+  for ( QList<KTemporaryFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
     delete (*it);
   }
   mTempFiles.clear();
@@ -119,7 +118,7 @@ void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
 QString KNArticleManager::saveContentToTemp(KMime::Content *c)
 {
   QString path;
-  KTempFile* tmpFile;
+  KTemporaryFile* tmpFile;
   KMime::Headers::Base *pathHdr=c->getHeaderByType("X-KNode-Tempfile");  // check for existing temp file
 
   if(pathHdr) {
@@ -127,8 +126,8 @@ QString KNArticleManager::saveContentToTemp(KMime::Content *c)
     bool found=false;
 
     // lets see if the tempfile-path is still valid...
-    for ( QList<KTempFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
-      if ( (*it)->name() == path ) {
+    for ( QList<KTemporaryFile*>::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it ) {
+      if ( (*it)->fileName() == path ) {
         found = true;
         break;
       }
@@ -140,19 +139,18 @@ QString KNArticleManager::saveContentToTemp(KMime::Content *c)
       c->removeHeader("X-KNode-Tempfile");
   }
 
-  tmpFile=new KTempFile();
-  if (tmpFile->status()!=0) {
+  tmpFile=new KTemporaryFile();
+  if (!tmpFile->open()) {
     KNHelper::displayTempFileError();
     delete tmpFile;
     return QString();
   }
 
   mTempFiles.append(tmpFile);
-  QFile *f=tmpFile->file();
   QByteArray data=c->decodedContent();
-  f->write(data.data(), data.size());
-  tmpFile->close();
-  path=tmpFile->name();
+  tmpFile->write(data.data(), data.size());
+  tmpFile->flush();
+  path=tmpFile->fileName();
   pathHdr=new KMime::Headers::Generic("X-KNode-Tempfile", c, path, "UTF-8");
   c->setHeader(pathHdr);
 

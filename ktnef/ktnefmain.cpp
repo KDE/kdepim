@@ -47,7 +47,7 @@ using namespace KTnef;
 #include <kaction.h>
 #include <kstdaction.h>
 #include <kdialog.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kkeydialog.h>
 
 #ifdef KDE_NO_COMPAT
@@ -399,11 +399,16 @@ void KTNEFMain::slotShowMessageText()
 {
 	QString rtf = parser_->message()->rtfString();
 	qDebug( "%s", rtf.toLatin1().data() );
-	KTempFile tmpFile( KGlobal::dirs()->localkdedir() + "/share/apps/ktnef/tmp/", "rtf");
-	*( tmpFile.textStream() ) << rtf;
-	tmpFile.close();
+	KTemporaryFile tmpFile;
+	tmpFile.setPrefix(KGlobal::dirs()->localkdedir() + "/share/apps/ktnef/tmp/");
+	tmpFile.setSuffix(".rtf");
+	tmpFile.setAutoRemove(false);
+	tmpFile.open();
+	QTextStream str ( &tmpFile );
+	str << rtf;
+	str.flush();
 
-	KRun::runUrl( KUrl( tmpFile.name() ), "text/rtf", this, true );
+	KRun::runUrl( KUrl( tmpFile.fileName() ), "text/rtf", this, true );
 }
 
 void KTNEFMain::slotSaveMessageText()

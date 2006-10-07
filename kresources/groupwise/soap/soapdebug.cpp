@@ -5,7 +5,7 @@
 #include <kcmdlineargs.h>
 #include <kconfig.h>
 #include <kdebug.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 
 #include <kabcresourcecached.h>
 
@@ -110,8 +110,10 @@ int main( int argc, char **argv )
 #endif
 
 #if 0
-  KTempFile temp;
-  KCal::ResourceLocal resource( temp.name() );
+  KTemporaryFile temp;
+  temp.setautoRemove(false);
+  temp.open();
+  KCal::ResourceLocal resource( temp.fileName() );
   resource.setActive( true );
   KCal::CalendarResources calendar;
   calendar.resourceManager()->add( &resource );

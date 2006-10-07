@@ -83,7 +83,7 @@
 #include <kdebug.h>
 #include <kdialog.h>
 #include <kkeydialog.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kio/job.h>
 #include <kio/jobuidelegate.h>
 #include <kio/netaccess.h>
@@ -898,9 +898,11 @@ void CertManager::importCRLFromFile() {
       startImportCRL( url.path(), false );
       updateImportActions( true );
     } else {
-      KTempFile tempFile;
+      KTemporaryFile tempFile;
+      tempFile.setAutoRemove(false);
+      tempFile.open();
       KUrl destURL;
-      destURL.setPath( tempFile.name() );
+      destURL.setPath( tempFile.fileName() );
       KIO::Job* copyJob = KIO::file_copy( url, destURL, 0600, true, false );
       copyJob->ui()->setWindow( this );
       connect( copyJob, SIGNAL( result( KJob * ) ),

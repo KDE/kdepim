@@ -23,7 +23,7 @@
 #include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 
 
 /** Default constructor. */
@@ -149,9 +149,10 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
         long l = 0;
 
         while (!mbox.atEnd()) {
-            KTempFile tmp;
+            KTemporaryFile tmp;
+            tmp.open();
             /* comment by Danny:
-            * Don't use QTextStream to read from mbox, etter use QDataStream. QTextStream only 
+            * Don't use QTextStream to read from mbox, better use QDataStream. QTextStream only 
             * support Unicode/Latin1/Locale. So you lost information from emails with 
             * charset!=Unicode/Latin1/Locale (e.g. KOI8-R) and Content-Transfer-Encoding != base64 
             * (e.g. 8Bit). It also not help to convert the QTextStream to Unicode. By this you
@@ -160,14 +161,14 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
             QByteArray seperate;
 
             if(!first_msg)
-                tmp.file()->write( input, l );
+                tmp.write( input, l );
             l = mbox.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
-            tmp.file()->write( input, l );
+            tmp.write( input, l );
 
             while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
-                tmp.file()->write( input, l );
+                tmp.write( input, l );
             }
-            tmp.close();
+            tmp.flush();
             first_msg = false;
 
             QString destFolder = rootDir;
@@ -182,11 +183,10 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
              * addMessage_fastImport == new function, faster and no check for duplicates
              */
             if(info->removeDupMsg)
-                addMessage( info, destFolder, tmp.name() );
+                addMessage( info, destFolder, tmp.fileName() );
             else
-                addMessage_fastImport( info, destFolder, tmp.name() );
+                addMessage_fastImport( info, destFolder, tmp.fileName() );
 
-            tmp.unlink();
             int currentPercentage = (int) (((float) mbox.pos() / filenameInfo.size()) * 100);
             info->setCurrent(currentPercentage);
             if (info->shouldTerminate()) return;
