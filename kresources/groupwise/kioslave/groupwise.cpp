@@ -34,7 +34,7 @@
 #include <kinstance.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kdeversion.h>
 
 #include <sys/types.h>

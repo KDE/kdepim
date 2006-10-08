@@ -31,7 +31,7 @@
 #include <kmessagebox.h>
 #include <kprocess.h>
 #include <kstandarddirs.h>
-#include <ktempfile.h>
+#include <ktemporaryfile.h>
 #include <kurl.h>
 
 #include "xxportmanager.h"
