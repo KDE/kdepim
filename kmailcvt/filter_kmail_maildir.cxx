@@ -57,7 +57,7 @@ void FilterKMail_maildir::import( FilterInfo *info )
         info->alert( i18n( "No directory selected." ) );
     }
     /**
-     * If the user only select homedir no import needed because 
+     * If the user only select homedir no import needed because
      * there should be no files and we surely import wrong files.
      */
     else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + "/" ) ) {
@@ -94,7 +94,6 @@ void FilterKMail_maildir::import( FilterInfo *info )
  * Import of a directory contents.
  * @param info Information storage for the operation.
  * @param dirName The name of the directory to import.
- * @param KMailRootDir The directory's root directory in KMail's folder structure.
  */
 void FilterKMail_maildir::importDirContents( FilterInfo *info, const QString& dirName)
 {
