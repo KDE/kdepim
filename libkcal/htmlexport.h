@@ -37,7 +37,7 @@ class QTextStream;
 namespace KCal {
 
 /**
-  This class provides the functions to export a calendar as a HTML page.
+  This class provides the functions to export a calendar as an HTML page.
 */
 class KDE_EXPORT HtmlExport
 {

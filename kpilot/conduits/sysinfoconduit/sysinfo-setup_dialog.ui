@@ -99,7 +99,7 @@
                                     <bool>true</bool>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Select this option to output the system information data as a HTML document.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Select this option to output the system information data as an HTML document.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="1" column="0" rowspan="1" colspan="2">

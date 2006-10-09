@@ -145,7 +145,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
       FancyFormatting = 2,
       AllowROT13 = 4
     };
-    /// convert the given string into a HTML string
+    /// convert the given string into an HTML string
     QString toHtmlString( const QString &line, int flags = ParseURL );
     /// convert the given image into a data:/ URL
     static QString imgToDataUrl( const QImage &image, const char* fmt );
