@@ -25,6 +25,7 @@
 #include <kbookmark.h>
 #include <kbookmarkmanager.h>
 #include <kbookmarkmenu.h>
+#include <konqbookmarkmenu.h>
 #include <kbookmarkdombuilder.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
@@ -59,12 +60,12 @@ bool BookmarkXXPort::exportContacts( const KABC::AddresseeList &list, const QStr
   delete builder;
   mgr->save();
 
-  KBookmarkMenu::DynMenuInfo menu;
+  KonqBookmarkMenu::DynMenuInfo menu;
   menu.name = i18n( "Addressbook Bookmarks" );
   menu.location = fileName;
   menu.type = "xbel";
   menu.show = true;
-  KBookmarkMenu::setDynamicBookmarks( "kabc", menu );
+  KonqBookmarkMenu::setDynamicBookmarks( "kabc", menu );
 
   return true;
 }
