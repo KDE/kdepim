@@ -148,6 +148,8 @@ void FilterLNotes::ImportLNotes(const QString& file) {
 
         // did Folder end without 0x1a at the end?
         if (state != 0) {
+            Q_ASSERT(tempfile);
+
             if(inf->removeDupMsg)
                 addMessage( inf, folder, tempfile->fileName() );
             else
