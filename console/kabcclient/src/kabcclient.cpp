@@ -88,9 +88,9 @@ bool KABCClient::setInputFormat(const QByteArray& name)
         case Merge:
             if (name == "uid" || name == "search" || name == "dialog")
             {
-                QString error = i18n("Input format '%1' not usable with operation '%2'");
                 QString operation = QString::fromUtf8(m_operation == Add ? "add" : "merge");
-                error = error.arg(QString::fromLocal8Bit(name)).arg(operation);
+                QString error = i18n("Input format '%1' not usable with operation '%2'",
+                                     QString::fromLocal8Bit(name), operation);
                 std::cerr << error.toLocal8Bit().data();
                 std::cerr << std::endl;
                 return false;

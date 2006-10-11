@@ -142,7 +142,7 @@ bool VCardOutput::setOptions(const QByteArray& options)
 QString VCardOutput::optionUsage() const
 {
     QString usage =
-        i18n("Optionally use a different vCard version (default is %1)").arg("3.0");
+        i18n("Optionally use a different vCard version (default is %1)", "3.0");
 
     usage += '\n';
 
@@ -165,9 +165,10 @@ bool VCardOutput::setCodec(QTextCodec* codec)
     if (codecName != QString::fromUtf8("UTF-8"))
     {
         QString warning = i18n("Warning: using codec '%1' with output format vcard, "
-                               "but vCards are usually expected to be in UTF-8.");
+                               "but vCards are usually expected to be in UTF-8.",
+                               codecName);
 
-        std::cerr << warning.arg(codecName).toLocal8Bit().data() << std::endl;
+        std::cerr << warning.toLocal8Bit().data() << std::endl;
     }
 
     return true;

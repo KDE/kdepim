@@ -131,9 +131,10 @@ bool VCardInput::setCodec(QTextCodec* codec)
     if (codecName != QString::fromUtf8("UTF-8"))
     {
         QString warning = i18n("Warning: using codec '%1' with input format vcard, "
-                               "but vCards are usually expected to be in UTF-8.");
+                               "but vCards are usually expected to be in UTF-8.",
+                               codecName);
 
-        std::cerr << warning.arg(codecName).toLocal8Bit().data() << std::endl;
+        std::cerr << warning.toLocal8Bit().data() << std::endl;
     }
 
     return true;
