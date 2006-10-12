@@ -142,7 +142,8 @@ bool VCardOutput::setOptions(const QByteArray& options)
 QString VCardOutput::optionUsage() const
 {
     QString usage =
-        i18n("Optionally use a different vCard version (default is %1)", "3.0");
+        i18n("Optionally use a different vCard version (default is %1)",
+             QString::fromAscii("3.0"));
 
     usage += '\n';
 
