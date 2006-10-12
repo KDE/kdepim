@@ -76,7 +76,7 @@
 #include <QRegExp>
 #include <QPushButton>
 //Added by qt3to4:
-#include <Q3Frame>
+#include <QFrame>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
