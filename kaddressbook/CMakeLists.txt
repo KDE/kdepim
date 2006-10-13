@@ -28,7 +28,7 @@ set(libkabcommon_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/common/filter.cpp
 	)
 
-kde4_add_kcfg_files(libkabcommon_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs_base.kcfgc )
+kde4_add_kcfg_files(libkabcommon libkabcommon_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs_base.kcfgc )
 
 set(libkabinterfaces_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/interfaces/configurewidget.cpp 
@@ -76,7 +76,7 @@ set(kaddressbook_bin_SRCS
 	kaddressbookmain.cpp 
 	)
 
-#kde4_add_kcfg_files(kaddressbook_bin_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs_base.kcfgc )
+#kde4_add_kcfg_files(kaddressbook_bin kaddressbook_bin_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs_base.kcfgc )
 
 kde4_automoc(kaddressbook_bin ${kaddressbook_bin_SRCS})
 

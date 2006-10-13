@@ -8,7 +8,7 @@ set(kcal_groupware_LIB_SRCS kcal_resourcegroupware.cpp kcal_resourcegroupwarecon
 
 kde4_automoc(kcal_groupware ${kcal_groupware_LIB_SRCS})
 
-kde4_add_kcfg_files(kcal_groupware_LIB_SRCS kcal_groupwareprefsbase.kcfgc )
+kde4_add_kcfg_files(kcal_groupware kcal_groupware_LIB_SRCS kcal_groupwareprefsbase.kcfgc )
 
 kde4_add_library(kcal_groupware SHARED ${kcal_groupware_LIB_SRCS})
 
@@ -24,7 +24,7 @@ set(kabc_groupware_LIB_SRCS kabc_resourcegroupware.cpp kabc_resourcegroupwarecon
 
 kde4_automoc(kabc_groupware ${kabc_groupware_LIB_SRCS})
 
-kde4_add_kcfg_files(kabc_groupware_LIB_SRCS kabc_groupwareprefs.kcfgc )
+kde4_add_kcfg_files(kabc_groupware kabc_groupware_LIB_SRCS kabc_groupwareprefs.kcfgc )
 
 kde4_add_library(kabc_groupware SHARED ${kabc_groupware_LIB_SRCS})
 

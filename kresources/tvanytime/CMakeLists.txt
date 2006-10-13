@@ -13,7 +13,7 @@ set(kcal_tvanytime_LIB_SRCS
 
 kde4_automoc(kcal_tvanytime ${kcal_tvanytime_LIB_SRCS})
 
-kde4_add_kcfg_files(kcal_tvanytime_LIB_SRCS kcal_tvanytimeprefsbase.kcfgc )
+kde4_add_kcfg_files(kcal_tvanytime kcal_tvanytime_LIB_SRCS kcal_tvanytimeprefsbase.kcfgc )
 
 kde4_add_library(kcal_tvanytime SHARED ${kcal_tvanytime_LIB_SRCS})
 

@@ -28,7 +28,7 @@ set(kabc_slox_LIB_SRCS kabcresourceslox.cpp kabcresourcesloxconfig.cpp )
 
 kde4_automoc(kabc_slox ${kabc_slox_LIB_SRCS})
 
-kde4_add_kcfg_files(kabc_slox_LIB_SRCS kabcsloxprefs.kcfgc )
+kde4_add_kcfg_files(kabc_slox kabc_slox_LIB_SRCS kabcsloxprefs.kcfgc )
 
 kde4_add_library(kabc_slox SHARED ${kabc_slox_LIB_SRCS})
 
@@ -44,7 +44,7 @@ set(kcal_slox_LIB_SRCS kcalresourceslox.cpp kcalresourcesloxconfig.cpp )
 
 kde4_automoc(kcal_slox ${kcal_slox_LIB_SRCS})
 
-kde4_add_kcfg_files(kcal_slox_LIB_SRCS kcalsloxprefs.kcfgc )
+kde4_add_kcfg_files(kcal_slox kcal_slox_LIB_SRCS kcalsloxprefs.kcfgc )
 
 kde4_add_library(kcal_slox SHARED ${kcal_slox_LIB_SRCS})
 

@@ -13,7 +13,7 @@ set(groupwarewizard_SRCS groupwarewizard.cpp main.cpp overviewpage.cpp
 )
 
 kde4_automoc(groupwarewizard ${groupwarewizard_SRCS})
-kde4_add_kcfg_files(groupwarewizard_SRCS egroupwareconfig.kcfgc kolabconfig.kcfgc sloxconfig.kcfgc)
+kde4_add_kcfg_files(groupwarewizard groupwarewizard_SRCS egroupwareconfig.kcfgc kolabconfig.kcfgc sloxconfig.kcfgc)
 
 kde4_add_executable(groupwarewizard ${groupwarewizard_SRCS})
 
@@ -33,7 +33,7 @@ set(egroupwarewizard_SRCS egroupwarewizard.cpp egroupwaremain.cpp)
 
 kde4_automoc(egroupwarewizard ${egroupwarewizard_SRCS})
 
-kde4_add_kcfg_files(egroupwarewizard_SRCS egroupwareconfig.kcfgc)
+kde4_add_kcfg_files(egroupwarewizard egroupwarewizard_SRCS egroupwareconfig.kcfgc)
 
 kde4_add_executable(egroupwarewizard ${egroupwarewizard_SRCS})
 
@@ -48,7 +48,7 @@ set(sloxwizard_SRCS sloxwizard.cpp sloxmain.cpp)
 
 kde4_automoc(sloxwizard ${sloxwizard_SRCS})
 
-kde4_add_kcfg_files(sloxwizard_SRCS sloxconfig.kcfgc)
+kde4_add_kcfg_files(sloxwizard sloxwizard_SRCS sloxconfig.kcfgc)
 
 kde4_add_executable(sloxwizard ${sloxwizard_SRCS})
 
@@ -67,7 +67,7 @@ set(kolabwizard_SRCS
 
 #kde4_automoc(kolabwizard ${kolabwizard_SRCS})
 
-#kde4_add_kcfg_files(kolabwizard_SRCS kolabconfig.kcfgc)
+#kde4_add_kcfg_files(kolabwizard kolabwizard_SRCS kolabconfig.kcfgc)
 
 #kde4_add_executable(kolabwizard ${kolabwizard_SRCS})
 

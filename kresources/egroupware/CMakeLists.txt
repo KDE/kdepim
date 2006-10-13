@@ -16,12 +16,12 @@ set(libegwcommon_SRCS
 
 set(kabc_xmlrpc_LIB_SRCS kabc_resourcexmlrpc.cpp kabc_resourcexmlrpcconfig.cpp ${libkabcommon_SRCS} ${libegwcommon_SRCS})
 
-kde4_add_kcfg_files(kabc_xmlrpc_LIB_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
+kde4_add_kcfg_files(kabc_xmlrpc kabc_xmlrpc_LIB_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
 
 
 kde4_automoc(kabc_xmlrpc ${kabc_xmlrpc_LIB_SRCS})
 
-kde4_add_kcfg_files(kabc_xmlrpc_LIB_SRCS kabc_egroupwareprefs.kcfgc )
+kde4_add_kcfg_files(kabc_xmlrpc kabc_xmlrpc_LIB_SRCS kabc_egroupwareprefs.kcfgc )
 
 kde4_add_library(kabc_xmlrpc SHARED ${kabc_xmlrpc_LIB_SRCS})
 
@@ -38,11 +38,11 @@ set(kcal_xmlrpc_LIB_SRCS ${libegwcommon_SRCS}
    kcal_resourcexmlrpcconfig.cpp 
    todostatemapper.cpp )
 
-kde4_add_kcfg_files(kcal_xmlrpc_LIB_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
+kde4_add_kcfg_files(kcal_xmlrpc kcal_xmlrpc_LIB_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
 
 kde4_automoc(kcal_xmlrpc ${kcal_xmlrpc_LIB_SRCS})
 
-kde4_add_kcfg_files(kcal_xmlrpc_LIB_SRCS kcal_egroupwareprefs.kcfgc )
+kde4_add_kcfg_files(kcal_xmlrpc kcal_xmlrpc_LIB_SRCS kcal_egroupwareprefs.kcfgc )
 
 kde4_add_library(kcal_xmlrpc SHARED ${kcal_xmlrpc_LIB_SRCS})
 
@@ -59,7 +59,7 @@ ${libknotesresources_SRCS})
 
 kde4_automoc(knotes_xmlrpc ${knotes_xmlrpc_LIB_SRCS})
 
-kde4_add_kcfg_files(knotes_xmlrpc_LIB_SRCS knotes_egroupwareprefs.kcfgc )
+kde4_add_kcfg_files(knotes_xmlrpc knotes_xmlrpc_LIB_SRCS knotes_egroupwareprefs.kcfgc )
 
 kde4_add_library(knotes_xmlrpc SHARED ${knotes_xmlrpc_LIB_SRCS})
 set_target_properties(knotes_xmlrpc PROPERTIES VERSION 1.0.0 SOVERSION 1 )

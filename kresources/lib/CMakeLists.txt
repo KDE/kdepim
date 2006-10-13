@@ -27,7 +27,7 @@ set(kgroupwarebase_LIB_SRCS
 
 kde4_automoc(kgroupwarebase ${kgroupwarebase_LIB_SRCS})
 
-kde4_add_kcfg_files(kgroupwarebase_LIB_SRCS kresources_groupwareprefs.kcfgc )
+kde4_add_kcfg_files(kgroupwarebase kgroupwarebase_LIB_SRCS kresources_groupwareprefs.kcfgc )
 
 kde4_add_library(kgroupwarebase SHARED ${kgroupwarebase_LIB_SRCS})
 

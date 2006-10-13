@@ -6,7 +6,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/common  )
 
 set(kcal_kabc_PART_SRCS ${libkabcommon_SRCS} resourcekabc.cpp resourcekabcconfig.cpp )
 
-kde4_add_kcfg_files(kcal_kabc_PART_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
+kde4_add_kcfg_files(kcal_kabc kcal_kabc_PART_SRCS ${CMAKE_SOURCE_DIR}/kaddressbook/common/kabprefs_base.kcfgc )
 
 kde4_automoc(kcal_kabc ${kcal_kabc_PART_SRCS})
 

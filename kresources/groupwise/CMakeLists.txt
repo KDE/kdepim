@@ -18,7 +18,7 @@ kde4_automoc(kcal_groupwise ${kcal_groupwise_LIB_SRCS})
 
 kde4_add_ui_files(kcal_groupwise_LIB_SRCS groupwisesettingswidgetbase.ui )
 
-kde4_add_kcfg_files(kcal_groupwise_LIB_SRCS kcal_groupwiseprefsbase.kcfgc )
+kde4_add_kcfg_files(kcal_groupwise kcal_groupwise_LIB_SRCS kcal_groupwiseprefsbase.kcfgc )
 
 kde4_add_library(kcal_groupwise SHARED ${kcal_groupwise_LIB_SRCS})
 
@@ -34,7 +34,7 @@ set(kabc_groupwise_LIB_SRCS kabc_resourcegroupwise.cpp kabc_resourcegroupwisecon
 
 kde4_automoc(kabc_groupwise ${kabc_groupwise_LIB_SRCS})
 
-kde4_add_kcfg_files(kabc_groupwise_LIB_SRCS kabc_groupwiseprefs.kcfgc )
+kde4_add_kcfg_files(kabc_groupwise kabc_groupwise_LIB_SRCS kabc_groupwiseprefs.kcfgc )
 
 kde4_add_library(kabc_groupwise SHARED ${kabc_groupwise_LIB_SRCS})
 

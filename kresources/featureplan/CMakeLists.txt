@@ -5,7 +5,7 @@
 set(libfeatureplancommon_SRCS)
 
 kode_add_xml_parser(libfeatureplancommon_SRCS kde-features.rng)
-kde4_add_kcfg_files(libfeatureplancommon_SRCS prefs.kcfgc )
+kde4_add_kcfg_files(libfeatureplancommon libfeatureplancommon_SRCS prefs.kcfgc )
 
 ########### next target ###############
 
