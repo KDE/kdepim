@@ -82,7 +82,7 @@ set(kleopatra_LIB_SRCS ${libkleopatra_core_SRCS} ${libkleopatra_ui_SRCS} ${libkl
    cryptplugwrapperlist.cpp 
    cryptplugfactory.cpp )
 
-kde4_automoc(${kleopatra_LIB_SRCS})
+kde4_automoc(kleopatra ${kleopatra_LIB_SRCS})
 
 kde4_add_library(kleopatra SHARED ${kleopatra_LIB_SRCS})
 

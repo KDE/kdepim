@@ -19,7 +19,7 @@ qt4_add_dbus_interfaces( libnetworkstatus_SRCS org.kde.networkstatus.service.xml
 
 set(kded_networkstatus_PART_SRCS networkstatus.cpp network.cpp ${libnetworkstatus_SRCS})
 
-kde4_automoc(${kded_networkstatus_PART_SRCS})
+kde4_automoc(kded_networkstatus ${kded_networkstatus_PART_SRCS})
 
 kde4_add_plugin(kded_networkstatus ${kded_networkstatus_PART_SRCS})
 
@@ -40,7 +40,7 @@ install(TARGETS kded_networkstatus  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(networkstatustestservice_SRCS testservice.cpp ${libnetworkstatus_SRCS} )
 
-kde4_automoc(${networkstatustestservice_SRCS})
+kde4_automoc(networkstatustestservice ${networkstatustestservice_SRCS})
 
 
 kde4_add_executable(networkstatustestservice ${networkstatustestservice_SRCS})

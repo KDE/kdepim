@@ -3,7 +3,7 @@
 if(KDE4_BUILD_TESTS)
 set(dataprovidertest_SRCS dataprovidertest.cpp )
 
-kde4_automoc(${dataprovidertest_SRCS})
+kde4_automoc(dataprovidertest ${dataprovidertest_SRCS})
 
 kde4_add_executable(dataprovidertest ${dataprovidertest_SRCS})
 

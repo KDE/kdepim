@@ -6,7 +6,7 @@
 
 set(kfile_ics_PART_SRCS kfile_ics.cpp )
 
-kde4_automoc(${kfile_ics_PART_SRCS})
+kde4_automoc(kfile_ics ${kfile_ics_PART_SRCS})
 
 kde4_add_plugin(kfile_ics ${kfile_ics_PART_SRCS})
 

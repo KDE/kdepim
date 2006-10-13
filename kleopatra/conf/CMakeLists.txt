@@ -13,7 +13,7 @@ set(kcm_kleopatra_PART_SRCS
    appearanceconfigwidget.cpp 
    dnorderconfigpage.cpp )
 
-kde4_automoc(${kcm_kleopatra_PART_SRCS})
+kde4_automoc(kcm_kleopatra ${kcm_kleopatra_PART_SRCS})
 
 kde4_add_ui3_files(kcm_kleopatra_PART_SRCS appearanceconfigwidgetbase.ui )
 

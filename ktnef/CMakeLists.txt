@@ -14,7 +14,7 @@ set(ktnef_bin_SRCS
    attachpropertydialogbase.cpp
    main.cpp )
 
-kde4_automoc(${ktnef_bin_SRCS})
+kde4_automoc(ktnef_bin ${ktnef_bin_SRCS})
 
 kde4_add_ui_files(ktnef_bin_SRCS attachpropertydialogbase.ui )
 

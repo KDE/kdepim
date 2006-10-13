@@ -28,7 +28,7 @@ set(index_LIB_SRCS
    stringset.cpp 
    tokenizer.cpp )
 
-kde4_automoc(${index_LIB_SRCS})
+kde4_automoc(index ${index_LIB_SRCS})
 
 kde4_add_library(index SHARED ${index_LIB_SRCS})
 

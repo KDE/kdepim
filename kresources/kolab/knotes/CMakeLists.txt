@@ -13,7 +13,7 @@ set(knoteskolab_LIB_SRCS resourcekolab.cpp note.cpp ${libresourcekolabshared_SRC
 #kde4_add_dcop_stubs(knoteskolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/kmailicalIface.h )
 
 
-kde4_automoc(${knoteskolab_LIB_SRCS})
+kde4_automoc(knoteskolab ${knoteskolab_LIB_SRCS})
 
 kde4_add_library(knoteskolab SHARED ${knoteskolab_LIB_SRCS})
 
@@ -27,7 +27,7 @@ install(TARGETS knoteskolab  DESTINATION ${LIB_INSTALL_DIR})
 
 set(knotes_kolab_PART_SRCS resourcekolab_plugin.cpp )
 
-kde4_automoc(${knotes_kolab_PART_SRCS})
+kde4_automoc(knotes_kolab ${knotes_kolab_PART_SRCS})
 
 kde4_add_plugin(knotes_kolab ${knotes_kolab_PART_SRCS})
 

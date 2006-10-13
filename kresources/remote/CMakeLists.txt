@@ -6,7 +6,7 @@
 
 set(kcal_resourceremote_LIB_SRCS resourceremote.cpp resourceremoteconfig.cpp )
 
-kde4_automoc(${kcal_resourceremote_LIB_SRCS})
+kde4_automoc(kcal_resourceremote ${kcal_resourceremote_LIB_SRCS})
 
 kde4_add_library(kcal_resourceremote SHARED ${kcal_resourceremote_LIB_SRCS})
 
@@ -20,7 +20,7 @@ install(TARGETS kcal_resourceremote  DESTINATION ${LIB_INSTALL_DIR})
 
 set(kcal_remote_PART_SRCS resourceremote_plugin.cpp )
 
-kde4_automoc(${kcal_remote_PART_SRCS})
+kde4_automoc(kcal_remote ${kcal_remote_PART_SRCS})
 
 kde4_add_plugin(kcal_remote ${kcal_remote_PART_SRCS})
 

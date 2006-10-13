@@ -12,7 +12,7 @@ set(kabckolab_LIB_SRCS resourcekolab.cpp contact.cpp ${libresourcekolabshared_SR
 
 #kde4_add_dcop_stubs(kabckolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/kmailicalIface.h )
 
-kde4_automoc(${kabckolab_LIB_SRCS})
+kde4_automoc(kabckolab ${kabckolab_LIB_SRCS})
 
 kde4_add_library(kabckolab SHARED ${kabckolab_LIB_SRCS})
 
@@ -26,7 +26,7 @@ install(TARGETS kabckolab  DESTINATION ${LIB_INSTALL_DIR})
 
 set(kabc_kolab_PART_SRCS resourcekolab_plugin.cpp )
 
-kde4_automoc(${kabc_kolab_PART_SRCS})
+kde4_automoc(kabc_kolab ${kabc_kolab_PART_SRCS})
 
 kde4_add_plugin(kabc_kolab ${kabc_kolab_PART_SRCS})
 

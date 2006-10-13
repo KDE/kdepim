@@ -18,7 +18,7 @@ set(konsolekalendar_SRCS
    stdcalendar.cpp 
    main.cpp )
 
-kde4_automoc(${konsolekalendar_SRCS})
+kde4_automoc(konsolekalendar ${konsolekalendar_SRCS})
 
 kde4_add_executable(konsolekalendar ${konsolekalendar_SRCS})
 

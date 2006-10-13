@@ -6,7 +6,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kmail ${CMAKE_SOURCE_DIR}/libkdepim ${C
 
 set(kmail_bodypartformatter_text_vcard_PART_SRCS text_vcard.cpp )
 
-kde4_automoc(${kmail_bodypartformatter_text_vcard_PART_SRCS})
+kde4_automoc(kmail_bodypartformatter_text_vcard ${kmail_bodypartformatter_text_vcard_PART_SRCS})
 
 kde4_add_plugin(kmail_bodypartformatter_text_vcard WITH_PREFIX ${kmail_bodypartformatter_text_vcard_PART_SRCS})
 
@@ -21,7 +21,7 @@ install(TARGETS kmail_bodypartformatter_text_vcard  DESTINATION ${PLUGIN_INSTALL
 
 set(kmail_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp )
 
-kde4_automoc(${kmail_bodypartformatter_text_calendar_PART_SRCS})
+kde4_automoc(kmail_bodypartformatter_text_calendar ${kmail_bodypartformatter_text_calendar_PART_SRCS})
 
 kde4_add_plugin(kmail_bodypartformatter_text_calendar WITH_PREFIX ${kmail_bodypartformatter_text_calendar_PART_SRCS})
 
@@ -36,7 +36,7 @@ install(TARGETS kmail_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INST
 
 set(kmail_bodypartformatter_text_xdiff_PART_SRCS text_xdiff.cpp )
 
-kde4_automoc(${kmail_bodypartformatter_text_xdiff_PART_SRCS})
+kde4_automoc(kmail_bodypartformatter_text_xdiff ${kmail_bodypartformatter_text_xdiff_PART_SRCS})
 
 kde4_add_plugin(kmail_bodypartformatter_text_xdiff WITH_PREFIX ${kmail_bodypartformatter_text_xdiff_PART_SRCS})
 

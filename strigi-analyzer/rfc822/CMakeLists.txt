@@ -6,7 +6,7 @@
 
 set(kfile_rfc822_PART_SRCS kfile_rfc822.cpp )
 
-kde4_automoc(${kfile_rfc822_PART_SRCS})
+kde4_automoc(kfile_rfc822 ${kfile_rfc822_PART_SRCS})
 
 kde4_add_plugin(kfile_rfc822 ${kfile_rfc822_PART_SRCS})
 

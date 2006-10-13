@@ -6,7 +6,7 @@
 
 set(ldifvcardthumbnail_PART_SRCS ldifvcardcreator.cpp )
 
-kde4_automoc(${ldifvcardthumbnail_PART_SRCS})
+kde4_automoc(ldifvcardthumbnail ${ldifvcardthumbnail_PART_SRCS})
 
 kde4_add_plugin(ldifvcardthumbnail ${ldifvcardthumbnail_PART_SRCS})
 

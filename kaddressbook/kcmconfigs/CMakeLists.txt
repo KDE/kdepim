@@ -16,7 +16,7 @@ set(kcm_kabconfig_PART_SRCS
    extensionconfigdialog.cpp 
    addresseewidget.cpp )
 
-kde4_automoc(${kcm_kabconfig_PART_SRCS})
+kde4_automoc(kcm_kabconfig ${kcm_kabconfig_PART_SRCS})
 
 kde4_add_plugin(kcm_kabconfig ${kcm_kabconfig_PART_SRCS})
 
@@ -31,7 +31,7 @@ install(TARGETS kcm_kabconfig  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kcm_kabldapconfig_PART_SRCS addhostdialog.cpp kcmkabldapconfig.cpp ldapoptionswidget.cpp )
 
-kde4_automoc(${kcm_kabldapconfig_PART_SRCS})
+kde4_automoc(kcm_kabldapconfig ${kcm_kabldapconfig_PART_SRCS})
 
 kde4_add_plugin(kcm_kabldapconfig ${kcm_kabldapconfig_PART_SRCS})
 
@@ -46,7 +46,7 @@ install(TARGETS kcm_kabldapconfig  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kcm_kabcustomfields_PART_SRCS kcmkabcustomfields.cpp )
 
-kde4_automoc(${kcm_kabcustomfields_PART_SRCS})
+kde4_automoc(kcm_kabcustomfields ${kcm_kabcustomfields_PART_SRCS})
 
 kde4_add_plugin(kcm_kabcustomfields ${kcm_kabcustomfields_PART_SRCS})
 

@@ -20,7 +20,7 @@ set(ksieve_LIB_SRCS
 	${CMAKE_SOURCE_DIR}/libksieve/shared/error.cpp
 	${libksieve_parser_SRCS})
 
-kde4_automoc(${ksieve_LIB_SRCS})
+kde4_automoc(ksieve ${ksieve_LIB_SRCS})
 
 kde4_add_library(ksieve SHARED ${ksieve_LIB_SRCS})
 

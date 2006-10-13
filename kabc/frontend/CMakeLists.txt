@@ -6,7 +6,7 @@
 
 set(kabcfrontend_SRCS main.cpp)
 
-kde4_automoc(${kabcfrontend_SRCS})
+kde4_automoc(kabcfrontend ${kabcfrontend_SRCS})
 
 kde4_add_ui_files(kabcfrontend_SRCS mainWindow.ui)
 

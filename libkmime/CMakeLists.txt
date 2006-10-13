@@ -26,7 +26,7 @@ set(kmime_LIB_SRCS
    boolflags.cpp 
    kautodeletehash.cpp )
 
-kde4_automoc(${kmime_LIB_SRCS})
+kde4_automoc(kmime ${kmime_LIB_SRCS})
 
 kde4_add_library(kmime SHARED ${kmime_LIB_SRCS})
 

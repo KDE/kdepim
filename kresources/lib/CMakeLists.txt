@@ -25,7 +25,7 @@ set(kgroupwarebase_LIB_SRCS
    kabc_resourcegroupwarebaseconfig.cpp 
    kcal_cachesettingsdlg.cpp )
 
-kde4_automoc(${kgroupwarebase_LIB_SRCS})
+kde4_automoc(kgroupwarebase ${kgroupwarebase_LIB_SRCS})
 
 kde4_add_kcfg_files(kgroupwarebase_LIB_SRCS kresources_groupwareprefs.kcfgc )
 
@@ -45,7 +45,7 @@ set(kgroupwaredav_LIB_SRCS
    webdavhandler.cpp 
    davgroupwareglobals.cpp )
 
-kde4_automoc(${kgroupwaredav_LIB_SRCS})
+kde4_automoc(kgroupwaredav ${kgroupwaredav_LIB_SRCS})
 
 kde4_add_library(kgroupwaredav SHARED ${kgroupwaredav_LIB_SRCS})
 
