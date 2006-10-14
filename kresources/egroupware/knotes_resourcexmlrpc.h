@@ -24,7 +24,6 @@
 
 #include <q3ptrlist.h>
 #include <QString>
-//Added by qt3to4:
 #include <QList>
 
 #include <kconfig.h>
@@ -69,7 +68,6 @@ class KDE_EXPORT ResourceXMLRPC : public ResourceNotes
     bool deleteNote( KCal::Journal* );
 
     KCal::Alarm::List alarms( const KDateTime& from, const KDateTime& to );
-    KDE_DEPRECATED KCal::Alarm::List alarms( const QDateTime& from, const QDateTime& to );
 
   protected slots:
     void loginFinished( const QList<QVariant>&, const QVariant& );

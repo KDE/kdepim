@@ -333,9 +333,3 @@ void ResourceXMLRPC::readNote( const QMap<QString, QVariant>& args, KCal::Journa
 }
 
 #include "knotes_resourcexmlrpc.moc"
-
-// DEPRECATED methods
-KCal::Alarm::List ResourceXMLRPC::alarms( const QDateTime& from, const QDateTime& to )
-{
-  return alarms(KDateTime(from, mCalendar.timeSpec()), KDateTime(to, mCalendar.timeSpec()));
-}
