@@ -33,7 +33,7 @@ KIncidenceFormatter* KIncidenceFormatter::instance()
 }
 KIncidenceFormatter::~KIncidenceFormatter()
 {
- 
+
 }
 KIncidenceFormatter::KIncidenceFormatter()
 {
@@ -59,11 +59,11 @@ void KIncidenceFormatter::setEvent(Event *event)
             addTag("h2",i18n( "Local: " ) +event->summary());
         } else {
             addTag("h2",i18n( "Remote: " ) +event->summary());
-        } 
+        }
         addTag("h3",i18n( "Last modified: " ) + KGlobal::locale()->formatDateTime(event->lastModified(),shortDate, true ) );
         if ( mColorMode )
             mText += "</font>";
-    } 
+    }
 #if 0
     if (event->cancelled ()) {
         mText +="<font color=\"#B00000\">";
@@ -102,14 +102,14 @@ void KIncidenceFormatter::setEvent(Event *event)
     if (event->recurrence()->doesRecur()) {
 
         QString recurText = i18n("No");
-        short recurs = event->recurrence()->doesRecur();  
+        short recurs = event->recurrence()->doesRecur();
         if ( recurs == Recurrence::rMinutely  )
             recurText = i18n("minutely");
         else if ( recurs == Recurrence::rHourly  )
             recurText = i18n("hourly");
         else if ( recurs == Recurrence::rDaily  )
             recurText = i18n("daily");
-        else if ( recurs ==  Recurrence::rWeekly ) 
+        else if ( recurs ==  Recurrence::rWeekly )
             recurText = i18n("weekly");
         else if ( recurs == Recurrence::rMonthlyPos  )
             recurText = i18n("monthly");
@@ -159,7 +159,7 @@ void KIncidenceFormatter::setEvent(Event *event)
     formatReadOnly(event);
     formatAttendees(event);
 
- 
+
 }
 
 void KIncidenceFormatter::setTodo(Todo *event )
@@ -169,7 +169,7 @@ void KIncidenceFormatter::setTodo(Todo *event )
     bool shortDate = true;
     if (mode == 0 )
         addTag("h3",event->summary());
-    else { 
+    else {
         if ( mColorMode == 1 ) {
             mText +="<font color=\"#00A000\">";
         }
@@ -184,7 +184,7 @@ void KIncidenceFormatter::setTodo(Todo *event )
         addTag("h3",i18n( "Last modified: " ) + KGlobal::locale()->formatDateTime(event->lastModified(),shortDate, true ) );
         if ( mColorMode )
             mText += "</font>";
-    } 
+    }
 #if 0
     if (event->cancelled ()) {
         mText +="<font color=\"#B00000\">";
@@ -192,7 +192,7 @@ void KIncidenceFormatter::setTodo(Todo *event )
         mText.append("<br>");
         mText += "</font>";
     }
-#endif    
+#endif
     if (!event->location().isEmpty()) {
         addTag("b",i18n("Location: "));
         mText.append(event->location()+"<br>");
@@ -237,7 +237,7 @@ void KIncidenceFormatter::addTag(const QString & tag,const QString & text)
     QString str = "<" + tag + ">";
     QString tmpText=text;
     QString tmpStr=str;
-    if(number !=-1) 
+    if(number !=-1)
         {
             if (number > 0) {
                 int pos=0;
@@ -282,7 +282,7 @@ void KIncidenceFormatter::formatAttendees(Incidence *event)
     mText.append( event->organizer().fullName() );
 #endif
     if ( !iconPath.isNull() ) {
-      addLink( "mailto:" + event->organizer().email(), // fullName would look nicer, but needs escaping
+      addLink( "MAILTO:" + event->organizer().email(), // fullName would look nicer, but needs escaping
                "<img src=\"" + iconPath + "\">" );
     }
     mText.append( "</li></ul>" );
@@ -319,7 +319,7 @@ void KIncidenceFormatter::formatAttendees(Incidence *event)
 
       if ( !a->email().isEmpty() ) {
         if ( !iconPath.isNull() ) {
-          mText += "<a href=\"mailto:" + a->name() +" "+ "<" + a->email() + ">" + "\">";
+          mText += "<a href=\"MAILTO:" + a->name() +" "+ "<" + a->email() + ">" + "\">";
           mText += "<img src=\"" + iconPath + "\">";
           mText += "</a>\n";
         }

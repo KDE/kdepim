@@ -167,7 +167,7 @@ void AddresseeLineEdit::setFont( const QFont& font )
     completionBox()->setFont( font );
 }
 
-void AddresseeLineEdit::setUseSemiColonAsSeparator( bool useSemiColonAsSeparator )
+void AddresseeLineEdit::allowSemiColonAsSeparator( bool useSemiColonAsSeparator )
 {
   m_useSemiColonAsSeparator = useSemiColonAsSeparator;
 }
@@ -225,7 +225,7 @@ void AddresseeLineEdit::insert( const QString &t )
   }
   newText = lines.join( ", " );
 
-  if ( newText.startsWith("mailto:") ) {
+  if ( newText.startsWith("mailto:") || newText.startsWith("MAILTO:") ) {
     KURL url( newText );
     newText = url.path();
   }
@@ -319,7 +319,7 @@ void AddresseeLineEdit::dropEvent( QDropEvent *e )
       if ( !contents.isEmpty() )
         contents.append( ", " );
       KURL u( *it );
-      if ( u.protocol() == "mailto" ) {
+      if ( u.protocol() == "mailto" || u.protocol() == "MAILTO" ) {
         mailtoURL = true;
         contents.append( (*it).path() );
       }

@@ -61,7 +61,7 @@ class AddresseeLineEdit : public ClickLineEdit, public DCOPObject
 
     virtual void setFont( const QFont& );
 
-    void setUseSemiColonAsSeparator( bool );
+    void allowSemiColonAsSeparator( bool );
     //static KConfig *config();
 
   public slots:
