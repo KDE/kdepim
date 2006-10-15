@@ -366,7 +366,8 @@ display: inline;
 
 #content h1
 {
-display: none;
+/*display: none;*/
+color: #000080;
 }
 
 li.here
