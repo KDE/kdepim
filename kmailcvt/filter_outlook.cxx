@@ -19,7 +19,6 @@
 #include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <ktempfile.h>
 #include <kdebug.h>
 
 #include "filter_outlook.hxx"
