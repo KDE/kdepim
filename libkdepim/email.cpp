@@ -323,3 +323,27 @@ QStringList KPIM::splitEmailAddrList(const QString& aStr)
 {
     return splitEmailAddrList( aStr, false ); // don't allow ; by default
 }
+
+QString KPIM::quotedName( const QString& fullName )
+{
+  static const QString specials("()<>@,.;:[]");
+  // add DQUOTE's if necessary:
+  bool needsQuotes=false;
+  QString result;
+  for (unsigned int i=0; i < fullName.length(); i++) {
+    if ( specials.contains( fullName[i] ) )
+      needsQuotes = true;
+    else if ( fullName[i] == '\\' || fullName[i] == '"' ) {
+      needsQuotes = true;
+      result += '\\';
+    }
+    result += fullName[i];
+  }
+
+  if (needsQuotes) {
+    result.insert(0,'"');
+    result += '"';
+  }
+  return result;
+
+}

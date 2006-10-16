@@ -65,6 +65,8 @@ bool getNameAndMail(const QString& aStr, QString& name, QString& mail);
 bool compareEmail( const QString& email1, const QString& email2,
                    bool matchName );
 
+QString quotedName( const QString& name );
+
 } // namespace
 
 #endif /* EMAIL_H */
