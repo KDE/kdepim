@@ -329,6 +329,7 @@ QString KPIM::quotedName( const QString& fullName )
   static const QString specials("()<>@,.;:[]");
   // add DQUOTE's if necessary:
   bool needsQuotes=false;
+  if ( fullName[0] == '"' && fullName[fullName.length()-1] == '"' ) return fullName;
   QString result;
   for (unsigned int i=0; i < fullName.length(); i++) {
     if ( specials.contains( fullName[i] ) )
