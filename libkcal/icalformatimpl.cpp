@@ -752,7 +752,7 @@ icalproperty *ICalFormatImpl::writeOrganizer( const Person &organizer )
   icalproperty *p = icalproperty_new_organizer("MAILTO:" + organizer.email().utf8());
 
   if (!organizer.name().isEmpty()) {
-    icalproperty_add_parameter( p, icalparameter_new_cn(organizer.name().utf8()) );
+    icalproperty_add_parameter( p, icalparameter_new_cn(organizer.quotedName().utf8()) );
   }
   // TODO: Write dir, senty-by and language
 
@@ -762,10 +762,10 @@ icalproperty *ICalFormatImpl::writeOrganizer( const Person &organizer )
 
 icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
 {
-  icalproperty *p = icalproperty_new_attendee("mailto:" + attendee->email().utf8());
+  icalproperty *p = icalproperty_new_attendee("MAILTO:" + attendee->email().utf8());
 
   if (!attendee->name().isEmpty()) {
-    icalproperty_add_parameter(p,icalparameter_new_cn(attendee->name().utf8()));
+    icalproperty_add_parameter(p,icalparameter_new_cn(attendee->quotedName().utf8()));
   }
 
 

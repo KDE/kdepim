@@ -38,6 +38,8 @@ class Person
 
     QString fullName( ) const;
 
+    QString quotedName() const;
+
     void setName(const QString &);
     QString name() const { return mName; }
     

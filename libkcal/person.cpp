@@ -206,6 +206,20 @@ bool KCal::operator==( const Person& p1, const Person& p2 )
              p1.email() == p2.email() );
 }
 
+// Taken from KABC::Addressee::fullEmail
+QString Person::quotedName() const
+{
+  QString name = mName;
+  QRegExp needQuotes( "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
+  bool weNeedToQuote = name.find( needQuotes ) != -1;
+  if ( weNeedToQuote ) {
+    if ( name[0] != '"' )
+      name.prepend( '"' );
+    if ( name[ name.length()-1 ] != '"' )
+      name.append( '"' );
+  }
+  return name;
+}
 
 QString Person::fullName() const
 {
@@ -215,17 +229,7 @@ QString Person::fullName() const
     if( mEmail.isEmpty() )
       return mName;
     else {
-      // Taken from KABC::Addressee::fullEmail
-      QString name = mName;
-      QRegExp needQuotes( "[^ 0-9A-Za-z\\x0080-\\xFFFF]" );
-      bool weNeedToQuote = name.find( needQuotes ) != -1;
-      if ( weNeedToQuote ) {
-          if ( name[0] != '"' )
-              name.prepend( '"' );
-          if ( name[ name.length()-1 ] != '"' )
-              name.append( '"' );
-      }
-      return name + " <" + mEmail + ">";
+      return quotedName() + " <" + mEmail + ">";
     }
   }
 }
