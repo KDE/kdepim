@@ -174,6 +174,7 @@ public:
   /** Full name of the user */
   QString fullName() const { return mFullName; }
   void setFullName(const QString&);
+  QString quotedName() const;
 
   /** The user's organization (optional) */
   QString organization() const { return mOrganization; }

@@ -478,18 +478,12 @@ void Identity::setVCardFile(const QString &str)
   mVCardFile = str;
 }
 
-
-//-----------------------------------------------------------------------------
-QString Identity::fullEmailAddr(void) const
+QString Identity::quotedName() const
 {
-  if (mFullName.isEmpty()) return mEmailAddr;
-
-  const QString specials("()<>@,.;:[]");
-
-  QString result;
-
+  static const QString specials("()<>@,.;:[]");
   // add DQUOTE's if necessary:
   bool needsQuotes=false;
+  QString result;
   for (unsigned int i=0; i < mFullName.length(); i++) {
     if ( specials.contains( mFullName[i] ) )
       needsQuotes = true;
@@ -504,10 +498,15 @@ QString Identity::fullEmailAddr(void) const
     result.insert(0,'"');
     result += '"';
   }
-
-  result += " <" + mEmailAddr + '>';
-
   return result;
+}
+
+
+//-----------------------------------------------------------------------------
+QString Identity::fullEmailAddr(void) const
+{
+  if (mFullName.isEmpty()) return mEmailAddr;
+  return quotedName() + " <" + mEmailAddr + '>';
 }
 
 //-----------------------------------------------------------------------------

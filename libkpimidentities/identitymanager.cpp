@@ -210,7 +210,7 @@ void IdentityManager::writeConfig() const {
 
       // Also write the default identity to emailsettings
       KEMailSettings es;
-      es.setSetting( KEMailSettings::RealName, (*it).fullName() );
+      es.setSetting( KEMailSettings::RealName, (*it).quotedName() );
       es.setSetting( KEMailSettings::EmailAddress, (*it).emailAddr() );
       es.setSetting( KEMailSettings::Organization, (*it).organization() );
       es.setSetting( KEMailSettings::ReplyToAddress, (*it).replyToAddr() );
