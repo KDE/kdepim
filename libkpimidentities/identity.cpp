@@ -17,6 +17,8 @@
 #include <kconfig.h>
 #include <kurl.h>
 
+#include "email.h"
+
 #include <qfileinfo.h>
 
 #include <sys/types.h>
@@ -480,25 +482,7 @@ void Identity::setVCardFile(const QString &str)
 
 QString Identity::quotedName() const
 {
-  static const QString specials("()<>@,.;:[]");
-  // add DQUOTE's if necessary:
-  bool needsQuotes=false;
-  QString result;
-  for (unsigned int i=0; i < mFullName.length(); i++) {
-    if ( specials.contains( mFullName[i] ) )
-      needsQuotes = true;
-    else if ( mFullName[i] == '\\' || mFullName[i] == '"' ) {
-      needsQuotes = true;
-      result += '\\';
-    }
-    result += mFullName[i];
-  }
-
-  if (needsQuotes) {
-    result.insert(0,'"');
-    result += '"';
-  }
-  return result;
+  return KPIM::quotedName( mFullName );
 }
 
 
