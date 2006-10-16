@@ -580,7 +580,7 @@ void AddresseeView::slotUrlClicked( const QString &url )
 
 void AddresseeView::slotHighlighted( const QString &link )
 {
-  if ( link.startsWith( "mailto:" ) ) {
+  if ( link.toUpper().startsWith( "MAILTO:" ) ) {
     QString email = link.mid( 7 );
 
     emit emailHighlighted( email );

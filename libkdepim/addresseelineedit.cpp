@@ -225,7 +225,7 @@ void AddresseeLineEdit::insert( const QString &t )
   }
   newText = lines.join( ", " );
 
-  if ( newText.startsWith("mailto:") || newText.startsWith("MAILTO:") ) {
+  if ( newText.toUpper().startsWith("MAILTO:") ) {
     KURL url( newText );
     newText = url.path();
   }
@@ -319,7 +319,7 @@ void AddresseeLineEdit::dropEvent( QDropEvent *e )
       if ( !contents.isEmpty() )
         contents.append( ", " );
       KURL u( *it );
-      if ( u.protocol() == "mailto" || u.protocol() == "MAILTO" ) {
+      if ( u.toUpper().protocol() == "MAILTO" ) {
         mailtoURL = true;
         contents.append( (*it).path() );
       }
