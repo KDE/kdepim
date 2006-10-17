@@ -1954,6 +1954,58 @@ AllowSemicolonAsAddressSeparator=false
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>Allow out-of-office settings to be adjusted by the user.</guilabel></term>
+<listitem>
+<para>
+In case you don't want users to be able to upload their own out-of-office scripts to 
+the server you can add:
+
+AllowOutOfOfficeSettings=false
+
+to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
+a line by itself just above the option.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Default domain to limit out-of-office replies to.</guilabel></term>
+<listitem>
+<para>
+When editing vacation (out-of-office) scripts, the user can specify a domain to
+limit the sending of such replies to. To pre-load this setting with a default
+value, add
+
+OutOfOfficeDomain=myMailDomain.test
+
+to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
+a line by itself just above the option.
+
+Applying defaults to the out-of-office configuration dialog via the corresponding 
+button will restore this domain, in case the user has changed it.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Enable sending of out-of-office replies to messages marked as SPAM.</guilabel></term>
+<listitem>
+<para>
+By default, out-of-office replies are not sent to messages marked as SPAM. To override this
+behavior, add
+
+OutOfOfficeReactToSpam=true
+
+to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
+a line by itself just above the option.
+
+Applying defaults to the out-of-office configuration dialog via the corresponding 
+button will restore this setting, in case the user has changed it.
+</para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 </sect2>
 
