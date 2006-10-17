@@ -653,6 +653,8 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
             completionBox->setCurrentItem( item );
             completionBox->setSelected( item, wasSelected );
             completionBox->blockSignals( false );
+          } else {
+            completionBox->clearSelection();
           }
           // Workaround for bug in kdelibs < 3.4.beta2: KCompletionBox didn't resize
           // when calling setItems
@@ -832,7 +834,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
       // to ignore. If so, go one further
       QListBoxItem *itemAbove = completionBox()->item( currentIndex - 1 );
       if ( itemAbove && !itemAbove->text().startsWith( s_completionItemIndentString ) ) {
-        // there is a header above is, check if there is even further up
+        // there is a header above us, check if there is even further up
         // and if so go one up, so it'll be selected
         if ( currentIndex > 1 && completionBox()->item( currentIndex - 2 ) ) {
           //kdDebug() << "EVENTFILTER: Key_Up -> skipping " << currentIndex - 1 << endl;
@@ -842,6 +844,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
             // nothing to skip to, let's stay where we are, but make sure the
             // first header becomes visible, if we are the first real entry
             completionBox()->ensureVisible( 0, 0 );
+            completionBox()->setSelected( currentIndex, true );
         }
         return true;
       }
@@ -856,8 +859,13 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
           completionBox()->setSelected( currentIndex + 2, true );
         } else {
           // nothing to skip to, let's stay where we are
+          completionBox()->setSelected( currentIndex, true );
         }
         return true;
+      }
+      // special case of the last and only item in the list needing selection
+      if ( !itemBelow && currentIndex == 1 ) {
+        completionBox()->setSelected( currentIndex, true );
       }
       // special case of the initial selection, which is unfortunately a header.
       // Setting it to selected tricks KCompletionBox into not treating is special
