@@ -20,7 +20,7 @@
     </property>
     <layout class="QGridLayout" >
       <item rowspan="1" row="1" column="0" colspan="2" >
-        <widget class="Q3Frame" name="Frame3" >
+        <widget class="QFrame" name="Frame3" >
           <property name="frameShape" >
             <enum>HLine</enum>
           </property>

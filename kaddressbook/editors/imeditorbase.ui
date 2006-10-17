@@ -156,8 +156,6 @@
 <layoutfunctions spacing="KDialog::spacingHint"/>
 <includehints>
     <includehint>kpushbutton.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kpushbutton.h</includehint>
     <includehint>k3listview.h</includehint>
     <includehint>kactivelabel.h</includehint>
 </includehints>

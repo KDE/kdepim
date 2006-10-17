@@ -35,7 +35,7 @@
 #include <QLabel>
 #include <QLayout>
 //Added by qt3to4:
-#include <Q3Frame>
+#include <QFrame>
 #include <QGridLayout>
 
 using namespace KABC;
@@ -67,8 +67,8 @@ ResourceGroupwareBaseConfig::ResourceGroupwareBaseConfig( QWidget* parent,  cons
   mainLayout->addWidget( label, 2, 0 );
   mainLayout->addWidget( mPassword, 2, 1 );
 
-  Q3Frame *hline = new Q3Frame( this );
-  hline->setFrameStyle( Q3Frame::HLine | Q3Frame::Sunken );
+  QFrame *hline = new QFrame( this );
+  hline->setFrameStyle( QFrame::HLine | QFrame::Sunken );
 
   mainLayout->addWidget( hline, 3, 0, 1, 2 );
 

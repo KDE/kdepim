@@ -25,7 +25,7 @@
 #include <QLayout>
 //Added by qt3to4:
 #include <QLabel>
-#include <Q3Frame>
+#include <QFrame>
 #include <QHBoxLayout>
 #include <QGridLayout>
 #include <QBoxLayout>
@@ -57,8 +57,8 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
   mAlarmTimeEdit->setText("0");
   topLayout->addWidget(mAlarmTimeEdit, 1, 1 );
 
-  Q3Frame *line = new Q3Frame( this );
-  line->setFrameStyle( Q3Frame::Sunken | Q3Frame::HLine );
+  QFrame *line = new QFrame( this );
+  line->setFrameStyle( QFrame::Sunken | QFrame::HLine );
   topLayout->addWidget( line, 2, 0, 1, 2 );
 
   mUseCategories = new QCheckBox( i18n( "Filter by categories" ), this );
