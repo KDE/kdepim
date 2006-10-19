@@ -26,4 +26,4 @@
  */
 
 // DOXYGEN_PROJECTNAME=KonsoleKalendar
-// DOXYGEN_REFERENCES = kcal
+// DOXYGEN_REFERENCES = kresources kcal
