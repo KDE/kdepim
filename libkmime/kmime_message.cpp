@@ -62,6 +62,10 @@ void Message::assemble()
   if( (h=to(false))!=0 )
     newHead+=h->as7BitString()+"\n";
 
+  //Cc
+  if( (h=cc(false))!=0 )
+    newHead+=h->as7BitString()+"\n";
+
   //Reply-To
   if( (h=replyTo(false))!=0 )
     newHead+=h->as7BitString()+"\n";
