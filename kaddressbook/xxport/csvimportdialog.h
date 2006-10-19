@@ -59,6 +59,7 @@ class CSVImportDialog : public KDialog
     void textChanged ( const QString & );
     void ignoreDuplicatesChanged( int );
     void setFile( const QString& );
+    void setFile( const KUrl & );
     void urlChanged( const QString& );
     void codecChanged();
 

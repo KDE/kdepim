@@ -146,7 +146,7 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent )
 
   connect( mUrlRequester, SIGNAL( returnPressed( const QString& ) ),
            this, SLOT( setFile( const QString& ) ) );
-  connect( mUrlRequester, SIGNAL( urlSelected( const QString& ) ),
+  connect( mUrlRequester, SIGNAL( urlSelected( const KUrl& ) ),
            this, SLOT( setFile( const QString& ) ) );
   connect( mUrlRequester->lineEdit(), SIGNAL( textChanged ( const QString& ) ),
            this, SLOT( urlChanged( const QString& ) ) );
@@ -929,6 +929,11 @@ int CSVImportDialog::typeToPos( uint type ) const
 void CSVImportDialog::ignoreDuplicatesChanged( int )
 {
   fillTable();
+}
+
+void CSVImportDialog::setFile( const KUrl &fileName )
+{
+   setFile(fileName.path());
 }
 
 void CSVImportDialog::setFile( const QString &fileName )
