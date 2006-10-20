@@ -70,13 +70,13 @@ void FilterInfo::setCurrent( const QString& current )
 
 void  FilterInfo::setCurrent( int percent )
 {
-  m_dlg->_done_current->setProgress( percent );
+  m_dlg->_done_current->setValue( percent );
   kapp->processEvents(); // Be careful - back & finish buttons disabled, so only user event that can happen is cancel/close button
 }
 
 void  FilterInfo::setOverall( int percent )
 {
-  m_dlg->_done_overall->setProgress( percent );
+  m_dlg->_done_overall->setValue( percent );
 }
 
 void FilterInfo::addLog( const QString& log )
