@@ -308,7 +308,7 @@
                 <cstring>mLdapSearch</cstring>
             </property>
             <property name="text">
-                <string>Search Directory Service</string>
+                <string>&amp;Search Directory Service</string>
             </property>
         </widget>
     </grid>

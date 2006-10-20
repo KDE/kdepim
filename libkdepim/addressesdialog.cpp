@@ -48,6 +48,7 @@
 
 #include "addresspicker.h"
 #include "distributionlist.h"
+#include "email.h"
 
 namespace KPIM {
 
@@ -60,7 +61,7 @@ struct AddresseeViewItem::AddresseeViewItemPrivate {
 
 struct AddressesDialog::AddressesDialogPrivate {
   AddressesDialogPrivate() : 
-    ui(0), personal(0), recent(0), ldap(0),
+    ui(0), personal(0), recent(0),
     toItem(0), ccItem(0), bccItem(0),
     ldapSearchDialog(0)
   {}
@@ -69,7 +70,6 @@ struct AddressesDialog::AddressesDialogPrivate {
 
   AddresseeViewItem           *personal;
   AddresseeViewItem           *recent;
-  AddresseeViewItem           *ldap;
 
   AddresseeViewItem           *toItem;
   AddresseeViewItem           *ccItem;
@@ -461,7 +461,6 @@ AddressesDialog::updateAvailableAddressees()
 
   d->recent = 0;
   updateRecentAddresses();
-  d->ldap = 0;
 
   addDistributionLists();
   if ( d->personal->childCount() > 0 ) {
@@ -914,28 +913,17 @@ AddressesDialog::searchLdap()
 void
 AddressesDialog::ldapSearchResult()
 {
-  static const QString &ldapGroup = KGlobal::staticQString( i18n( "Directory Entries" ) );
-  updateAvailableAddressees();
-  if ( !d->ldap ) {
-    d->ldap = new AddresseeViewItem( d->ui->mAvailableView, ldapGroup );
-    connect(d->ldap, SIGNAL(addressSelected(AddresseeViewItem*, bool)),
-            this, SLOT(availableAddressSelected(AddresseeViewItem*, bool)));
-    d->ldap->setVisible( false );
-    d->groupDict.insert( ldapGroup, d->ldap );
-  }
-
   QStringList emails = QStringList::split(',', d->ldapSearchDialog->selectedEMails() );
   QStringList::iterator it( emails.begin() );
   QStringList::iterator end( emails.end() );
   for ( ; it != end; ++it ){
+      QString name;
+      QString email;
+      KPIM::getNameAndMail( (*it), name, email );
       KABC::Addressee ad;
-      ad.insertEmail( *it );
-      addAddresseeToAvailable( ad, d->ldap );
-
-  }
-
-  if ( d->ldap->childCount() > 0 ) {
-    d->ldap->setVisible( true );
+      ad.setNameFromString( name );
+      ad.insertEmail( email );
+      addAddresseeToSelected( ad, selectedToItem() );
   }
 }
 
