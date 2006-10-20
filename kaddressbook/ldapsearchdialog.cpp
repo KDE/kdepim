@@ -114,8 +114,8 @@ class ContactListItem : public QListViewItem
 
 LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
                                     QWidget* parent, const char* name )
-  : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), Help | User1 |
-    User2 | User3 | Cancel, Default, parent, name, false, true ),
+  : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), Help | Default | User1 |
+    User2 | User3 |  Cancel, Default, parent, name, false, true ),
     mAddressBook( ab ), mCore( core )
 {
   setButtonCancel( KStdGuiItem::close() );
@@ -181,6 +181,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   setButtonText( User1, i18n( "Unselect All" ) );
   setButtonText( User2, i18n( "Select All" ) );
   setButtonText( User3, i18n( "Add Selected" ) );
+  setButtonText( Default, i18n( "Email Selected" ) );
 
   mNumHosts = 0;
   mIsOK = false;
@@ -533,6 +534,26 @@ void LDAPSearchDialog::slotUser3()
 
   KABLock::self( mAddressBook )->unlock( resource );
   emit addresseesAdded();
+}
+
+void LDAPSearchDialog::slotDefault()
+{
+  QStringList emails;
+  ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
+  while ( cli ) {
+    if ( cli->isSelected() ) {
+      KABC::Addressee addr;
+      // name
+      addr.setNameFromString( asUtf8( cli->mAttrs["cn"].first() ) );
+
+      // email
+      KPIM::LdapAttrValue lst = cli->mAttrs["mail"];
+      addr.insertEmail( asUtf8( *(lst.begin()) ), true );
+      emails << addr.fullEmail();
+    }
+    cli = static_cast<ContactListItem*>( cli->nextSibling() );
+  }
+  mCore->sendMail( emails.join( ", " ) );
 }
 
 #include "ldapsearchdialog.moc"
