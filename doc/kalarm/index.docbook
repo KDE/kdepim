@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
   <!ENTITY kappname "&kalarm;">
   <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
@@ -16,7 +16,6 @@
 <authorgroup>
 <author>
 <firstname>David</firstname>
-<othername></othername>
 <surname>Jarvie</surname>
 <affiliation>
 <address><email>software@astrojar.org.uk</email></address>
@@ -42,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2006-04-09</date>
-<releaseinfo>1.04.03</releaseinfo>
+<date>2006-10-21</date>
+<releaseinfo>1.04.06</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -734,17 +733,15 @@ options:</para>
 
 <itemizedlist>
 <listitem>
-<para>The <guilabel>Confirm acknowledgment</guilabel> checkbox lets
-you specify whether you will be prompted for confirmation when you
-close the alarm message window. This may be used as a safeguard
-against accidental acknowledgment of alarms.</para>
-</listitem>
-
-<listitem>
-<para>Check <guilabel>Sound</guilabel> if you want an audible alarm
-to sound when the alarm message is displayed. Choose:</para>
+<para>The <guilabel>Sound</guilabel> option allows you to select
+whether an audible alarm should sound when the alarm message is
+displayed. Choose:</para>
 
 <itemizedlist>
+<listitem>
+<para><guilabel>None</guilabel> to display the alarm silently.</para>
+</listitem>
+
 <listitem>
 <para><guilabel>Beep</guilabel> to sound a beep.</para>
 </listitem>
@@ -758,11 +755,11 @@ synthesizer, &eg; <application>Festival</application>.</para>
 </listitem>
 
 <listitem>
-<para><guilabel>File</guilabel> to play an audio file. Use the button
-on the right to display the Sound File dialog which lets you select a
-file to play and set volume and repetition options. If you hover the
-mouse over the button, a tooltip will display the audio file currently
-selected.</para>
+<para><guilabel>Sound file</guilabel> to play an audio file. Use the
+button on the right to display the Sound File dialog which lets you
+select a file to play and set volume and repetition options. If you
+hover the mouse over the button, a tooltip will display the audio file
+currently selected.</para>
 
 <note><para>&kalarm; uses the &arts; sound server for repetition and
 volume control. If &kalarm; has been built without &arts; support,
@@ -814,25 +811,6 @@ in the computer's sound level.</para></note>
 the selected sound levels.</para></tip>
 </listitem>
 </itemizedlist>
-</listitem>
-
-<listitem>
-<para>Check <guilabel>Reminder</guilabel> if you want to display a
-reminder in advance of the main alarm and of each of its recurrences
-(if any). Enter how long in advance using the edit controls beside
-the checkbox.</para>
-
-<note><para>You can only display a reminder before each repetition of
-an alarm if the repetitions are set up using the
-<guilabel>Recurrence</guilabel> tab. If the
-<guibutton>Simple Repetition</guibutton> button is used instead, a
-reminder will be displayed before the first occurrence
-only.</para></note>
-
-<para>If the alarm recurs, check <guilabel>Reminder for first
-recurrence only</guilabel> if you only want a reminder before the
-alarm's first recurrence. If this is not checked, the reminder period
-is limited to being less than the recurrence interval.</para>
 </listitem>
 
 <listitem>
@@ -1025,6 +1003,28 @@ after the current time.</para>
 (in hours and minutes) the alarm should be triggered.</para>
 </listitem>
 </itemizedlist>
+
+</sect2>
+
+<sect2>
+<title>Reminder</title>
+
+<para>For a display alarm, check <guilabel>Reminder</guilabel> if you
+want to display a reminder in advance of the main alarm and of each of
+its recurrences (if any). Enter how long in advance using the edit
+controls beside the checkbox.</para>
+
+<note><para>You can only display a reminder before each repetition of
+an alarm if the repetitions are set up using the
+<guilabel>Recurrence</guilabel> tab. If the
+<guibutton>Simple Repetition</guibutton> button is used instead, a
+reminder will be displayed before the first occurrence
+only.</para></note>
+
+<para>If the alarm recurs, check <guilabel>Reminder for first
+recurrence only</guilabel> if you only want a reminder before the
+alarm's first recurrence. If this is not checked, the reminder period
+is limited to being less than the recurrence interval.</para>
 
 </sect2>
 
@@ -1235,6 +1235,12 @@ in the list and press <guibutton>Delete</guibutton>.</para>
 
 <sect2>
 <title>Other controls</title>
+
+<para>For display alarms, the
+<guilabel>Confirm acknowledgment</guilabel> checkbox lets you specify
+whether you will be prompted for confirmation when you close the alarm
+message window. This may be used as a safeguard against accidental
+acknowledgment of alarms.</para>
 
 <para>Select <guilabel>Show in &korganizer;</guilabel> to add the
 alarm to &korganizer;'s active calendar, where it will appear as an
@@ -1456,11 +1462,11 @@ while not running</guilabel> in the Preferences dialog.</para>
 <sect2>
 <title>Displaying &kalarm; in the system tray</title>
 
-<para>You must be running the &kde; desktop or another suitable window
-manager in order to display &kalarm; in the system tray. If &kalarm;
-is running in <quote>continuous</quote> mode, the system tray icon is
-always displayed. These instructions apply only to
-<quote>on-demand</quote> mode. (See
+<para>You must be running the &kde; desktop in order to display
+&kalarm; in the system tray. If &kalarm; is running in
+<quote>continuous</quote> mode, the system tray icon is always
+displayed. These instructions apply only to <quote>on-demand</quote>
+mode. (See
 <link linkend="preferences-general">Configuring &kalarm;</link> for a
 description of run modes.)</para>
 
@@ -1701,22 +1707,6 @@ This displays the configuration dialog.</para>
 &kalarm;'s overall behavior:</para>
 
 <itemizedlist>
-<listitem><para><guilabel>Start alarm monitoring at login</guilabel>:
-This starts alarm monitoring at KDE session login, by starting the
-<application>alarm daemon</application>. Note that in order for alarms
-to be activated, you also need to select appropriate options in the
-<guilabel>Run Mode</guilabel> group box.</para>
-
-<warning><para>This option should always be checked unless you intend
-to discontinue use of &kalarm;.</para></warning>
-
-<note><para>This option is automatically reselected whenever &kalarm;
-is run. So if you have unchecked this option and want to continue to
-prevent the <application>alarm daemon</application> from running at
-login, you need to uncheck this option again each time you run
-&kalarm;.</para></note>
-</listitem>
-
 <listitem><para><guilabel>Run Mode</guilabel> group box: These options
 control &kalarm;'s system tray icon, and also allow some control over
 &kalarm;'s use of system resources by specifying whether or not to run
@@ -1730,6 +1720,13 @@ does not affect the execution of alarms, since it is the
 monitors the alarm list and triggers alarms.</para>
 
 <itemizedlist>
+<listitem><para><guilabel>Run only on demand</guilabel>: &kalarm;
+is run only when an alarm is triggered, if you run it manually, or
+while its system tray icon is displayed. In this mode the system tray
+icon can still be displayed, but closing the system tray icon has no
+effect on any &kalarm; windows.</para>
+</listitem>
+
 <listitem><para><guilabel>Run continuously in system tray</guilabel>:
 &kalarm; runs continuously and the system tray icon is always
 displayed while it is running. In this mode, closing the system tray
@@ -1738,10 +1735,6 @@ visible, quits the application. The options available in this mode
 are:</para>
 
 <itemizedlist>
-<listitem><para><guilabel>Autostart at login</guilabel>: This starts
-&kalarm; at &kde; session login, ensuring that &kalarm; runs at all
-times unless you manually quit.</para>
-</listitem>
 <listitem><para><guilabel>Disable alarms while not running</guilabel>:
 Selecting this option has the effect that alarms will be disabled
 whenever &kalarm;'s system tray icon is not visible.</para>
@@ -1759,22 +1752,37 @@ mode.</para>
 </listitem>
 </itemizedlist>
 
+<!--
 <para>In this mode, if no system tray exists, &kalarm; runs
 continuously in the background and alarms are always enabled.</para>
+-->
 </listitem>
 
-<listitem><para><guilabel>Run only on demand</guilabel>: &kalarm;
-is run only when an alarm is triggered, if you run it manually, or
-while its system tray icon is displayed. In this mode the system tray
-icon can still be displayed, but closing the system tray icon has no
-effect on any &kalarm; windows.</para>
+<listitem><para><guilabel>Autostart at login</guilabel>: In continuous
+mode, this starts &kalarm; at &kde; session login, ensuring that
+&kalarm; runs at all times unless you manually quit.</para>
+</listitem>
 
-<itemizedlist>
 <listitem><para><guilabel>Autostart system tray icon at
-login</guilabel>: This displays &kalarm;'s system tray icon at login.
-&kalarm; will run until the system tray icon is closed.</para>
+login</guilabel>: In on-demand mode, this displays &kalarm;'s system
+tray icon at login. &kalarm; will run until the system tray icon is
+closed.</para>
 </listitem>
-</itemizedlist>
+
+<listitem><para><guilabel>Start alarm monitoring at login</guilabel>:
+This starts alarm monitoring at KDE session login, by starting the
+<application>alarm daemon</application>. Note that in order for alarms
+to be activated, you also need to select appropriate options in the
+<guilabel>Run Mode</guilabel> group box.</para>
+
+<warning><para>This option should always be checked unless you intend
+to discontinue use of &kalarm;.</para></warning>
+
+<note><para>This option is automatically reselected whenever &kalarm;
+is run. So if you have unchecked this option and want to continue to
+prevent the <application>alarm daemon</application> from running at
+login, you need to uncheck this option again each time you run
+&kalarm;.</para></note>
 </listitem>
 </itemizedlist>
 </listitem>
@@ -1823,17 +1831,20 @@ an alarm.</para>
 options control the storage of expired alarms.</para>
 <itemizedlist>
 <listitem><para><guilabel>Keep alarms after expiry</guilabel>:
-Select this option to store expired alarms. Deselect it to keep no
-record of alarms once they have expired.</para>
+Select this option to store expired and deleted alarms. Deselect it
+to keep no record of alarms once they cease to be active. Note that
+deleted alarms are only stored if they have previously been
+triggered. If you delete an alarm before it ever triggers, it is
+discarded.</para>
 </listitem>
 
 <listitem><para><guilabel>Discard expired alarms after</guilabel>:
-Set the number of days to store expired alarms after their last
-activation.</para>
+Set the number of days to store expired and deleted alarms, after which
+they are permanently deleted.</para>
 </listitem>
 
 <listitem><para><guibutton>Clear expired alarms</guibutton>: This
-button discards all currently stored  expired alarms. This has no
+button discards all currently stored expired alarms. This has no
 effect on alarms which subsequently expire; they will continue to be
 stored according to the selected options.</para>
 </listitem>
@@ -2149,9 +2160,8 @@ checkboxes.</para>
 </listitem>
 
 <listitem><para>Set the default sound options. Note that a default
-sound file may be specified even if <guilabel>Sound</guilabel> is
-unchecked, or if <guilabel>Beep</guilabel> or
-<guilabel>Speak</guilabel> is checked.</para>
+sound file may be specified even if the sound type is not set to
+<guilabel>Sound file</guilabel>.</para>
 </listitem>
 </itemizedlist>
 
@@ -4030,15 +4040,15 @@ Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006 David Jarvie <email>s
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 
+&underFDL;               <!-- FDL: do not remove -->
+
+&underGPL;        	 <!-- GPL License -->
+
 <para>Thanks go to the author of the &kde; 1 KAlarm application,
 Stefan Nikolaus <email>stefan.nikolaus@stuco.uni-oldenburg.de</email>,
 who kindly agreed to allow the name &kalarm; to be used by this
 &kde; 2 / &kde; 3 application.
 </para>
-
-&underFDL;               <!-- FDL: do not remove -->
-
-&underGPL;        	 <!-- GPL License -->
 
 </chapter>
 
