@@ -1462,11 +1462,11 @@ while not running</guilabel> in the Preferences dialog.</para>
 <sect2>
 <title>Displaying &kalarm; in the system tray</title>
 
-<para>You must be running the &kde; desktop in order to display
-&kalarm; in the system tray. If &kalarm; is running in
-<quote>continuous</quote> mode, the system tray icon is always
-displayed. These instructions apply only to <quote>on-demand</quote>
-mode. (See
+<para>You must be running the &kde; desktop or another suitable window
+manager in order to display &kalarm; in the system tray. If &kalarm;
+is running in <quote>continuous</quote> mode, the system tray icon is
+always displayed. These instructions apply only to
+<quote>on-demand</quote> mode. (See
 <link linkend="preferences-general">Configuring &kalarm;</link> for a
 description of run modes.)</para>
 
