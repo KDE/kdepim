@@ -25,7 +25,7 @@ set(gpgme_LIB_SRCS
 )
 
 
-kde4_automoc(gpgme ${gpgme_LIB_SRCS})
+kde4_automoc(${gpgme_LIB_SRCS})
 
 kde4_add_library(gpgme++ SHARED ${gpgme_LIB_SRCS})
 

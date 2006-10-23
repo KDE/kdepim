@@ -28,7 +28,7 @@ set(libkabcommon_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/common/filter.cpp
 	)
 
-kde4_add_kcfg_files(libkabcommon libkabcommon_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs_base.kcfgc )
+kde4_add_kcfg_files(libkabcommon_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs_base.kcfgc )
 
 set(libkabinterfaces_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/interfaces/configurewidget.cpp 
@@ -76,9 +76,9 @@ set(kaddressbook_bin_SRCS
 	kaddressbookmain.cpp 
 	)
 
-#kde4_add_kcfg_files(kaddressbook_bin kaddressbook_bin_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs_base.kcfgc )
+#kde4_add_kcfg_files(kaddressbook_bin_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/common/kabprefs_base.kcfgc )
 
-kde4_automoc(kaddressbook_bin ${kaddressbook_bin_SRCS})
+kde4_automoc(${kaddressbook_bin_SRCS})
 
 qt4_add_dbus_adaptor(kaddressbook_bin_SRCS org.kde.KAddressbook.Core.xml kaddressbookmain.h KAddressBookMain kaddressbookadaptor )
 
@@ -96,7 +96,7 @@ set(kaddressbookpart_PART_SRCS kaddressbook_part.cpp )
 
 qt4_add_dbus_adaptor(kaddressbookpart_PART_SRCS org.kde.KAddressbook.Core.xml kaddressbook_part.h KAddressbookPart kaddressbookpartadaptor )
 
-kde4_automoc(kaddressbookpart ${kaddressbookpart_PART_SRCS})
+kde4_automoc(${kaddressbookpart_PART_SRCS})
 
 kde4_add_plugin(kaddressbookpart WITH_PREFIX ${kaddressbookpart_PART_SRCS})
 
@@ -154,7 +154,7 @@ set(kaddressbook_LIB_SRCS ${libkabinterfaces_SRCS} ${libprinter_SRCS} ${libkabim
    kabtools.cpp 
 )
 
-kde4_automoc(kaddressbook ${kaddressbook_LIB_SRCS})
+kde4_automoc(${kaddressbook_LIB_SRCS})
 qt4_add_dbus_adaptor(kaddressbook_LIB_SRCS
 ${CMAKE_SOURCE_DIR}/libkdepim/interfaces/org.kde.adressbook.service.xml kaddressbookservice.h KAddressBookService )
 

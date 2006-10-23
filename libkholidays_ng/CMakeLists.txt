@@ -20,7 +20,7 @@ lunarphase.cpp
 zodiac.cpp
 )
 
-kde4_automoc( kholidays_ng ${kholidays_ng_LIB_SRC} )
+kde4_automoc()
 kode_add_xml_parser( kholidays_ng_LIB_SRC kde-holidays.rng )
 kde4_add_library( kholidays_ng SHARED ${kholidays_ng_LIB_SRC} )
 target_link_libraries( kholidays_ng ${KDE4_KDECORE_LIBS} ${QT_QTXML_LIBRARY} )

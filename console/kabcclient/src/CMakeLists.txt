@@ -16,7 +16,7 @@ SET(kabcclient_SRCS
     inputformatimpls.cpp
     outputformatimpls.cpp)
 
-kde4_automoc(kabcclient ${kabcclient_SRCS})
+kde4_automoc(${kabcclient_SRCS})
 
 kde4_add_executable(kabcclient ${kabcclient_SRCS})
 

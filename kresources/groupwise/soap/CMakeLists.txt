@@ -6,7 +6,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kresources/groupwise  )
 if(KDE4_BUILD_TESTS)
 set(soapdebug_SRCS soapdebug.cpp )
 
-kde4_automoc(soapdebug ${soapdebug_SRCS})
+kde4_automoc(${soapdebug_SRCS})
 
 
 kde4_add_executable(soapdebug ${soapdebug_SRCS})

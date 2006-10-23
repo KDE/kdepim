@@ -6,7 +6,7 @@
 
 set(kfile_vcf_PART_SRCS kfile_vcf.cpp )
 
-kde4_automoc(kfile_vcf ${kfile_vcf_PART_SRCS})
+kde4_automoc(${kfile_vcf_PART_SRCS})
 
 kde4_add_plugin(kfile_vcf ${kfile_vcf_PART_SRCS})
 

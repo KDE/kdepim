@@ -27,7 +27,7 @@ set(kmailcvt_SRCS
    filter_thebat.cxx 
    filter_lnotes.cxx )
 
-kde4_automoc(kmailcvt ${kmailcvt_SRCS})
+kde4_automoc(${kmailcvt_SRCS})
 
 
 kde4_add_ui_files(kmailcvt_SRCS kselfilterpagedlg.ui kimportpagedlg.ui)

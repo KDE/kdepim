@@ -8,7 +8,7 @@ add_subdirectory( tests )
 
 set(qgpgme_LIB_SRCS eventloopinteractor.cpp dataprovider.cpp )
 
-kde4_automoc(qgpgme ${qgpgme_LIB_SRCS})
+kde4_automoc(${qgpgme_LIB_SRCS})
 
 kde4_add_library(qgpgme SHARED ${qgpgme_LIB_SRCS})
 

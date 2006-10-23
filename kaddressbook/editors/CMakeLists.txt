@@ -10,7 +10,7 @@ ${QT_INCLUDES} )
 
 set(kaddrbk_cryptosettings_PART_SRCS cryptowidget.cpp )
 
-kde4_automoc(kaddrbk_cryptosettings ${kaddrbk_cryptosettings_PART_SRCS})
+kde4_automoc(${kaddrbk_cryptosettings_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_cryptosettings WITH_PREFIX ${kaddrbk_cryptosettings_PART_SRCS})
 
