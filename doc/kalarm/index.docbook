@@ -616,7 +616,7 @@ by <menuchoice><guimenu>File</guimenu>
 <guimenuitem>Import Alarms...</guimenuitem></menuchoice>. The
 import function scans the selected calendar file for events containing
 alarms, and copies them (with new unique IDs) into &kalarm;'s calendar.
-Events without alarms, and other types of calendar entry, are
+Events without alarms, and calendar entries other than events, are
 ignored.</para>
 
 <warning><para>If you import alarms from calendar files which were
