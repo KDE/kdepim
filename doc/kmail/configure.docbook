@@ -1970,6 +1970,22 @@ a line by itself just above the option.
 </varlistentry>
 
 <varlistentry>
+<term><guilabel>Allow out-of-office scripts to be uploaded by the user, but no settings changed.</guilabel></term>
+<listitem>
+<para>
+If you want to allow your users to upload their own out-of-office scripts but you do not want them to be 
+able to change the domain to react to and the react-to-spam setting, you can add:
+
+AllowOutOfOfficeUploadButNoSettings=true
+
+to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
+a line by itself just above the option.
+</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
 <term><guilabel>Default domain to limit out-of-office replies to.</guilabel></term>
 <listitem>
 <para>
