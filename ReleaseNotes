@@ -1,4 +1,69 @@
-Current Release is Proko2 2.1.4
+Current Release is Proko2 2.1.5
+
+Features:
+=========
+
+korganizer
+----------
+
+* Issue 1278 Tooltip information and alarm on recurring events.
+
+
+kmail
+----------
+
+* Issue 1385 Add signature at top of reply and insert at cursor position
+
+* Issue 1449 Kiosk option (non-gui) for vacation: react-to-spam and maildomain.
+
+* Issue 1406 Backport new dead letter handling from 3.5 which uses maildir instead
+of mbox and does the shutdown handling a bit more smoothly.
+
+
+libkdepim
+---------
+
+* Issue 539 Adding LDAP results to address selection dialog.
+
+* Issue 892 Button to send email to the selected addresses in LDAP search.
+
+* Issue 1216 Make completion work with semicolon (;) as the separator.
+
+
+Bugfixes:
+=========
+
+kmail
+-----
+
+* Issue1344 Kontact crashes after closing "folder properties" dialog after renaming/moving a folder.
+
+* Issue 1384 Make sure attached emails are never encoded in anything but 7 or 8 bit.
+
+
+korganizer
+----------
+
+* Issue 1288 Printing appointment correctly.
+
+* Issue 1442 Kontact invitation for attendees contains "mailto", should be "MAILTO"?
+
+
+libkdepim
+---------
+
+* Issue1308 Kontact: Address completion does not always work
+
+
+libkpimidentities
+-----------------
+
+* Issue 1436 Kontact generates invitation with unquoted attendee name, bad for commas and umlauts
+
+* Issue 1441 Kontact sends invitations missing last name of Organizer when comma in identity
+
+
+
 
 Changes since Proko2 2.1.3 up to Proko2 2.1.4 (released 21.08.2006)
 
@@ -42,8 +107,8 @@ Bugfixes:
 kmail
 ------
 
-* Parse kolab xml in KMail to find internal uid if present 
-and use it already at the stage of dcop signal emission to 
+* Parse kolab xml in KMail to find internal uid if present
+and use it already at the stage of dcop signal emission to
 avoid errorneous conflict resolution.  (Issue 1298)
 
 * Don't crash when a message is deleted from under the current online
@@ -55,7 +120,7 @@ the target folder in folder copy jobs. (Issue 1279)
 * Fix printing from MainWindow. (Issue 1204)
 
 * Fixing the Date formatting as Fancy format type was messing
-up the German grammar and capitalisation. Changed formatting 
+up the German grammar and capitalisation. Changed formatting
 to Localized. (Issue 1227)
 
 * Don't try to chmod when saving attachments. (Issue 856)
@@ -87,12 +152,12 @@ Bugfixes
 * Ressources colors doesn't disappear when deleting an event form
   calendar (kolab/issue1129)
 
-* Don't allow shift-tab to select header separators. 
+* Don't allow shift-tab to select header separators.
   (kolab/issue740)
 
 * Overwrite mode on mail composing now works (kolab/issue1182)
 
-* Printer view config now takes effect without restarting 
+* Printer view config now takes effect without restarting
   (kolab/issue1204)
 
 * Creation of subfolders when using online imap is now possible
@@ -101,25 +166,25 @@ Bugfixes
 * Only warn about events which can't be found on cancel
   if it's not an initial decline. (kolab/issue1248)
 
-* Groupwarefolders (with standard name) are now unsubscribed for 
+* Groupwarefolders (with standard name) are now unsubscribed for
   online imap after setup with kolabwizard (kolab/issue1260)
 
 * Subject of MDNs is now translated. (kolab/issue1277)
 
-* Enable automatic expunge when a folder is left for the online 
+* Enable automatic expunge when a folder is left for the online
   IMAP account. (kolab/issue1207)
 
-* Errors during target folder creation in folder copy operations 
+* Errors during target folder creation in folder copy operations
   are now handled without crashing. (kolab/issue1279)
 
 
 
 Features
 ========
-* Show quota information in the folder tooltip. Even works for 
+* Show quota information in the folder tooltip. Even works for
   online imap (kolab/issue1215)
 
-* Show detailed information about recurring events in invitation 
+* Show detailed information about recurring events in invitation
   mails (kolab/issue1226)
 
 * Allow ";" as additional address seperator (kolab/issue1216)
@@ -135,13 +200,13 @@ Changes since Proko2 2.1.0 up to Proko2 2.1.1 (released 20060518)
 
 Bugfixes:
 
-o Change the default for hiding groupware folders back to true. 
+o Change the default for hiding groupware folders back to true.
   (kolab/issue1206)
 
 o Automatically unsubscribe the default folders and turn on local subscription
   for the online imap account in the kolab wizard. (kolab/issue1206)
 
-o Don't list messages in the INBOX if it is the one of the groupware 
+o Don't list messages in the INBOX if it is the one of the groupware
   main account and we are in "only groupware folders for this account"
   mode. (kolab/issue1207)
 
@@ -157,7 +222,7 @@ o Don't reload the KConfig object of the standard addressbook for every
   with which that is expected to happen, I think that's worth it. I can't
   fix it at the root, since that is in kdelibs.  (kolab/issue1118)
 
-o Also trigger a reload of the folder when a new IncidencesFor annotation 
+o Also trigger a reload of the folder when a new IncidencesFor annotation
   is retrieved from the server. (kolab/issue398)
 
 o Fix of the concurrent KPilot and KMail dImap sync problem. Concurrent sync
@@ -171,13 +236,13 @@ o Only prepend the indent string in Weighted address completion mode, only
   show headers in Weighted mode. (kolab/issue740)
 
 o Handle encoded headers differently, so that replying to Froms
-  with a real name containing an encoded comma (',') will work. 
+  with a real name containing an encoded comma (',') will work.
   (kolab/issue1228)
 
 
 Features:
 
-o Non-gui config key that allows to specify after how many 
+o Non-gui config key that allows to specify after how many
   incidences a progress dialog comes up. (kolab/issue1118)
 
 o Backport large parts of the online/offline support from 3.5, which makes
@@ -234,7 +299,7 @@ Features:
   persisted to kconfig. This list is used as a filter during folder
   listing. (kolab/issue1095)
 
-* Auto-unsubscribing of folders by groupware folder type. This 
+* Auto-unsubscribing of folders by groupware folder type. This
   allows to only see groupware folders in the account that is set up to
   contain them, while using a separate (online) IMAP account for mail
   folders. (kolab/issue1095)
@@ -247,8 +312,8 @@ Features:
 Bugfixes:
 ---------
 
-* Make sure the translation catalogue is loaded, by making sure we 
-  pass our correct name to the Kontact::Plugin base class. 
+* Make sure the translation catalogue is loaded, by making sure we
+  pass our correct name to the Kontact::Plugin base class.
   (kolab/issue1087)
 
 * Make sure that latin1 is selected as a default if we find no matching
@@ -276,7 +341,7 @@ Bugfixes:
   window. (Proko2 issue993)
 
 * Don't circumvent the scheduler when handling cancel messages, because
-  otherwise proper schedulingID conversion does not happen. 
+  otherwise proper schedulingID conversion does not happen.
   (kolab/issue1109)
 
 * Don't attempt to fake the schedulingID in temporary scheduling messages,
@@ -294,7 +359,7 @@ Bugfixes:
   cannot be found, inform the user, instead of blindly adding a new
   version of the incidence. (kolab/issue1128)
 
-* Use the prettyURL, not the label for error messages and don't 
+* Use the prettyURL, not the label for error messages and don't
   try to delete mail in readonly folders.
 
 * If a folder is readonly and we detect a ghost message, try the index
@@ -314,7 +379,7 @@ Bugfixes:
 
 * Make the saving of encrypted messages as unencrypted work again.
 
-* Cache the utf8 textcodec, because codecForName turns out to be a 
+* Cache the utf8 textcodec, because codecForName turns out to be a
   performance bottleneck, and it's called in a tight loop for each loaded
   incidence. Further step towards fixing issue1118.
 
@@ -353,7 +418,7 @@ Bugfixes:
 
 * Fix for: Kontact produces corrupted event mails that OL cannot understand
   This failure is a regression, we do not know precisly when it was introduced.
-  (kolab/issue1175) 
+  (kolab/issue1175)
 
 
 Documentation:
@@ -374,13 +439,13 @@ Changes since 2.0.5
 Kontact
 -------
 
-* Handle <tab> like <arrow down> in completion list, to skip section    
+* Handle <tab> like <arrow down> in completion list, to skip section
   headers https://intevation.de/roundup/kolab/issue740
 
-* Fix performance problem especially visible with .kde being 
-  nfs-mounted: during IMAP sync, every message would be marked as 
-  'dirty' due to setStatus() calls, even when the status didn't change, 
-  and at the end of the folder this resulted in the index entry for 
+* Fix performance problem especially visible with .kde being
+  nfs-mounted: during IMAP sync, every message would be marked as
+  'dirty' due to setStatus() calls, even when the status didn't change,
+  and at the end of the folder this resulted in the index entry for
   every message being rewritten
 
 * Properly parse encoded message attachments by making sure the decoded
@@ -397,12 +462,12 @@ Kontact
 * Backport the ability to specify a fallback encoding in addition to an
   override encoding. Propagate override encodings properly to external
   reader windows and printing, and make a new page in the configuration
-  dialog for reader window specific things. Rename the tab for the   
-  message list settings to "Message List" from "Headers". Proko2 
+  dialog for reader window specific things. Rename the tab for the
+  message list settings to "Message List" from "Headers". Proko2
   issue866.
 
 * Make sure the kmail config is reloaded when a kcm based dialog changes
-  one of our settings, by hooking up to the KSettings::dispatcher. 
+  one of our settings, by hooking up to the KSettings::dispatcher.
   Nicely solves proko2 issue 967.
 
 * Force the configure entry in the Settings meny in composer windows to
@@ -410,26 +475,26 @@ Kontact
   the Kontact one, even in Kontact, which makes sense, but leads to a
   confusing lable. Proko2 issue 738 ( c), then 1) )
 
-* Implement a non-gui-exposed option to allow sending of MDN messages 
-  with an SMTP MAIL FROM of <>, which conforms to the rfc, but doesn't 
-  work with many real world servers, since they discard such messages 
-  for spam protection. Still, integrators might want to set it, via 
+* Implement a non-gui-exposed option to allow sending of MDN messages
+  with an SMTP MAIL FROM of <>, which conforms to the rfc, but doesn't
+  work with many real world servers, since they discard such messages
+  for spam protection. Still, integrators might want to set it, via
   Kiosk, for example.
 
 * Backport improved ldapkio kabc plugin
 
-* As per proko2 issue1019, change the access dropdown to be a 
+* As per proko2 issue1019, change the access dropdown to be a
   sensitivity drop down.
 
 * Make sure load on demand defaults to false in proko2. (issue 902)
 
-* Warn the user before inviting dummy entry attendees. 
+* Warn the user before inviting dummy entry attendees.
   (proko2 issue1030)
 
 * Implement operator< on periods, use qHeapSort for sorting them in
   FreeBusy, and don't sort for each added item when parsing a freebusy
   ical file, but append the unsorted list then sort once.
-  Together this makes parsing freebusy files O(n*log n) instead of 
+  Together this makes parsing freebusy files O(n*log n) instead of
   O(n^3), which is, shall we say, very noticeable.
 
 * Make sure a folder who's incidences-for annotation value changed is
@@ -438,12 +503,12 @@ Kontact
 * Sync the descriptions used for the summary widget setions of the kcm
   with the headers used for those plugins in the summary widget itself.
 
-* Let's not lie to ourselves, the addressbook is loaded for any 
-  agenda-item painting. So let's load it right away, not deep within 
-  painting code (which breaks in case of sub-event-loops like with 
+* Let's not lie to ourselves, the addressbook is loaded for any
+  agenda-item painting. So let's load it right away, not deep within
+  painting code (which breaks in case of sub-event-loops like with
   kio_newldap, since timers fire there...)
 
-* Show the no-information crass-hatch for the periods before and after 
+* Show the no-information crass-hatch for the periods before and after
   the period we have freebusy information for, to be able to tell the
   difference between "free time" and "we don't know". proko2 issue880
 
@@ -452,7 +517,7 @@ Changes since 2.0.4 (up to internal release 2.0.5)
 
 Kleopatra
 ---------
- 
+
  * Manually translate the new string for proko2 (.desktop file).
 
  * Add key filter for qualsig keys; change default font/bgcolor of root
@@ -639,7 +704,7 @@ kmail
    create folder, folder already there, folder missing, etc.)
 
  * Mark all mail as read in resource folders, nobody is reading xml
-   mails by hand.  
+   mails by hand.
    https://intevation.de/roundup/kolab/issue837
 
  * Only start the timer to set message read if the message is currently
@@ -962,12 +1027,12 @@ KMail
 
  * Chiasmus: Implemented body decryption
 
- * Chiasmus: Fix content-type and chiasmus-charset in both cases 
+ * Chiasmus: Fix content-type and chiasmus-charset in both cases
    (with and without attachments)
 
  * Chiasmus: Fix wrong content-transfer-encoding in chiasmus-encrypted mails
 
- * Add "Troubleshoot IMAP Cache..." to Folder menu (since it's already 
+ * Add "Troubleshoot IMAP Cache..." to Folder menu (since it's already
    in the RMB)
 
  * Fix for showing the IMAP-related menu item only if there is an IMAP
@@ -991,7 +1056,7 @@ KMail
  * Use a different mimetype (application/x-vnd.kolab.contact.distlist)
    for distribution lists, as discussed on kolab-format
 
- * Fix for dropping local only or distribution list contents of the "to" 
+ * Fix for dropping local only or distribution list contents of the "to"
    field during IDN expansion
 
  * Remove the global "refresh cache" menu entry
@@ -1014,7 +1079,7 @@ LDAP Search and Completion
    that has an email address
 
 Kontact
--------  
+-------
 
  * start the calendar part when accepting an invitation and it is not
    running yet
