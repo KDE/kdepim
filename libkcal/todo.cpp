@@ -275,11 +275,17 @@ bool Todo::recurTodo()
 
     if ( ( r->duration() == -1 || ( nextDate.isValid() && endDateTime.isValid()
            && nextDate <= endDateTime ) ) ) {
-      setDtDue( nextDate );
-      while ( !recursAt( dtDue() ) || dtDue() <= QDateTime::currentDateTime() ) {
-        setDtDue( r->getNextDateTime( dtDue() ) );
+
+      while ( !recursAt( nextDate ) || nextDate <= QDateTime::currentDateTime() ) {
+
+        if ( !nextDate.isValid() || nextDate > endDateTime ) {
+          return false;
+        }
+
+        nextDate = r->getNextDateTime( nextDate );
       }
 
+      setDtDue( nextDate );
       setCompleted( false );
       setRevision( revision() + 1 );
 
