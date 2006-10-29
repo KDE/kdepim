@@ -195,14 +195,15 @@ icalcomponent *ICalFormatImpl::writeEvent(Event *event)
 //      if (event->dtEnd().date() != event->dtStart().date()) {
         // +1 day because end date is non-inclusive.
         end = writeICalDate( event->dtEnd().date().addDays( 1 ) );
+        icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
 //      }
     } else {
 //      kdDebug(5800) << " Event " << event->summary() << " has time." << endl;
       if (event->dtEnd() != event->dtStart()) {
         end = writeICalDateTime(event->dtEnd());
+        icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
       }
     }
-    icalcomponent_add_property(vevent,icalproperty_new_dtend(end));
   }
 
 // TODO: resources
@@ -950,6 +951,8 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
   QStringList categories;
   icalproperty_transp transparency;
 
+  bool dtEndProcessed = false;
+
   while (p) {
     icalproperty_kind kind = icalproperty_isa(p);
     switch (kind) {
@@ -968,6 +971,7 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
           event->setDtEnd(readICalDateTime(icaltime, tz));
           event->setFloats( false );
         }
+        dtEndProcessed = true;
         break;
 
       case ICAL_RELATEDTO_PROPERTY:  // related event (parent)
@@ -991,6 +995,12 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
     }
 
     p = icalcomponent_get_next_property(vevent,ICAL_ANY_PROPERTY);
+  }
+
+  // according to rfc2445 the dtend shouldn't be written when it equals
+  // start date. so assign one equal to start date.
+  if ( !dtEndProcessed ) {
+    event->setDtEnd( event->dtStart() );
   }
 
   QString msade = event->nonKDECustomProperty("X-MICROSOFT-CDO-ALLDAYEVENT");
