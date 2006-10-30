@@ -166,6 +166,8 @@ class KDE_EXPORT To : public Base {
 
     void addAddress(const AddressField &a);
     QList<QByteArray> emails() const;
+    QList<QByteArray> names() const;
+    QList<QByteArray> displayNames() const;
 
   protected:
     ObsAddressList a_ddrList;

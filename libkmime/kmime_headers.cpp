@@ -603,7 +603,7 @@ void AddressField::from7BitString(const QByteArray &s)
         pos1=pos2+1;
         pos2=s.indexOf('>', pos1);
         if(pos2!=-1)
-          e_mail=s.mid(pos1, pos2-pos1);
+          e_mail=s.mid(pos1, pos2-pos1).trimmed();
       }
       else return;
     break;
@@ -900,6 +900,23 @@ QList<QByteArray> To::emails() const
   for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it )
     if ( (*it)->hasEmail() )
       l.append( (*it)->email() );
+  return l;
+}
+
+QList<QByteArray> To::names() const
+{
+  QList<QByteArray> l;
+  for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it )
+    if ( (*it)->hasName() )
+      l.append( (*it)->name() );
+  return l;
+}
+
+QList<QByteArray> To::displayNames() const
+{
+  QList<QByteArray> l;
+  for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it )
+      l.append( (*it)->asUnicodeString() ); 
   return l;
 }
 
