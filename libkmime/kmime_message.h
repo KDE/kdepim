@@ -51,6 +51,7 @@ public:
   virtual KMime::Headers::CC* cc(bool create=true)                      { KMime::Headers::CC *p=0; return getHeaderInstance(p, create); }
   virtual KMime::Headers::BCC* bcc(bool create=true)                    { KMime::Headers::BCC *p=0; return getHeaderInstance(p, create); }
   virtual KMime::Headers::References* references(bool create=true)      { KMime::Headers::References *p=0; return getHeaderInstance(p, create); }
+  virtual KMime::Headers::UserAgent* userAgent(bool create=true)        { KMime::Headers::UserAgent *p=0; return getHeaderInstance(p, create); }
   
 protected:
   //hardcoded headers

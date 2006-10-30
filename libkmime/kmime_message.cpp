@@ -62,6 +62,10 @@ void Message::assemble()
   if( (h=to(false))!=0 )
     newHead+=h->as7BitString()+"\n";
 
+  //Cc
+  if( (h=cc(false))!=0 )
+    newHead+=h->as7BitString()+"\n";
+
   //Reply-To
   if( (h=replyTo(false))!=0 )
     newHead+=h->as7BitString()+"\n";
@@ -76,6 +80,10 @@ void Message::assemble()
 
   //Organization
   if( (h=organization(false))!=0 )
+    newHead+=h->as7BitString()+"\n";
+
+  //UserAgent
+  if( (h=userAgent(false))!=0 )
     newHead+=h->as7BitString()+"\n";
 
   //Mime-Version

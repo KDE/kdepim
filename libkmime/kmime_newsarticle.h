@@ -43,8 +43,6 @@ public:
   virtual KMime::Headers::Newsgroups* newsgroups(bool create=true)      { KMime::Headers::Newsgroups *p=0; return getHeaderInstance(p, create); }
   virtual KMime::Headers::FollowUpTo* followUpTo(bool create=true)      { KMime::Headers::FollowUpTo *p=0; return getHeaderInstance(p, create); }
   virtual KMime::Headers::Lines* lines(bool create=true)                { if(!create && l_ines.isEmpty()) return 0; return &l_ines; }
-  virtual KMime::Headers::UserAgent* userAgent(bool create=true)        { KMime::Headers::UserAgent *p=0; return getHeaderInstance(p, create); }
-
 
 protected:
   KMime::Headers::Lines l_ines;
