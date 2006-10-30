@@ -999,7 +999,7 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
 
   // according to rfc2445 the dtend shouldn't be written when it equals
   // start date. so assign one equal to start date.
-  if ( !dtEndProcessed ) {
+  if ( !dtEndProcessed && !event->hasDuration() ) {
     event->setDtEnd( event->dtStart() );
   }
 
