@@ -903,18 +903,18 @@ QList<QByteArray> To::emails() const
   return l;
 }
 
-QList<QByteArray> To::names() const
+QStringList To::names() const
 {
-  QList<QByteArray> l;
+  QStringList l;
   for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it )
     if ( (*it)->hasName() )
       l.append( (*it)->name() );
   return l;
 }
 
-QList<QByteArray> To::displayNames() const
+QStringList To::displayNames() const
 {
-  QList<QByteArray> l;
+  QStringList l;
   for ( ObsAddressList::ConstIterator it = a_ddrList.begin(); it != a_ddrList.end(); ++it )
       l.append( (*it)->asUnicodeString() ); 
   return l;
