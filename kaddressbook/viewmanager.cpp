@@ -480,6 +480,7 @@ void ViewManager::startDrag()
 
   KTempDir tempDir;
   // can't set tempDir to autoDelete, in case of dropping on the desktop, the copy is async...
+  tempDir.setAutoRemove(false);
   if ( tempDir.status() == 0 ) {
     QString fileName;
     if ( addrList.count() == 1 )
