@@ -257,7 +257,7 @@ bool GDotAtom::parse( const char* & scursor, const char * const send,
   QString maybeDotAtom;
   if ( !parseDotAtom( scursor, send, maybeDotAtom, isCRLF ) )
     return false;
-  
+
   mDotAtom = maybeDotAtom;
 
   eatCFWS( scursor, send, isCRLF );
@@ -298,7 +298,7 @@ bool GContentType::parse( const char* & scursor, const char * const send,
 
   //
   // type
-  // 
+  //
 
   QPair<const char*,int> maybeMimeType;
   if ( !parseToken( scursor, send, maybeMimeType, false /* no 8Bit */ ) )
@@ -328,10 +328,10 @@ bool GContentType::parse( const char* & scursor, const char * const send,
 
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) return true; // no parameters
-  
+
   if ( *scursor != ';' ) return false;
   scursor++;
-  
+
   if ( !parseParameterList( scursor, send, mParameterHash, isCRLF ) )
     return false;
 
@@ -356,7 +356,7 @@ bool GCISTokenWithParameterList::parse( const char* & scursor,
 
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) return false;
-  
+
   QPair<const char*,int> maybeToken;
   if ( !parseToken( scursor, send, maybeToken, false /* no 8Bit */ ) )
     return false;
@@ -369,10 +369,10 @@ bool GCISTokenWithParameterList::parse( const char* & scursor,
 
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) return true; // no parameters
-  
+
   if ( *scursor != ';' ) return false;
   scursor++;
-  
+
   if ( !parseParameterList( scursor, send, mParameterHash, isCRLF ) )
     return false;
 
@@ -445,7 +445,7 @@ bool GSingleIdent::parse( const char* & scursor, const char * const send, bool i
 //-----<ReturnPath>-------------------------
 
 bool ReturnPath::parse( const char* & scursor, const char * const send, bool isCRLF ) {
-  
+
   eatCFWS( scursor, send, isCRLF );
   if ( scursor == send ) return false;
 
@@ -460,7 +460,7 @@ bool ReturnPath::parse( const char* & scursor, const char * const send, bool isC
     eatCFWS( scursor, send, isCRLF );
     if ( scursor == send || *scursor != '>' ) return false;
     scursor++;
-    
+
     // prepare a Null mailbox:
     AddrSpec emptyAddrSpec;
     maybeMailbox.displayName = QString::null;
@@ -604,7 +604,7 @@ void AddressField::from7BitString(const QCString &s)
         pos1=pos2+1;
         pos2=s.find('>', pos1);
         if(pos2!=-1)
-          e_mail=s.mid(pos1, pos2-pos1);
+          e_mail=s.mid(pos1, pos2-pos1).stripWhiteSpace();
       }
       else return;
     break;
@@ -920,6 +920,23 @@ void To::emails(QStrList *l)
   for (AddressField *it=a_ddrList->first(); it != 0; it=a_ddrList->next() )
     if( it->hasEmail() )
       l->append( it->email() );
+}
+
+void To::names(QStrList *l)
+{
+    l->clear();
+
+    for (AddressField *it=a_ddrList->first(); it != 0 ; it=a_ddrList->next() )
+        if( it->hasName() )
+            l->append( it->name() );
+}
+
+void To::displayNames(QStrList *l)
+{
+    l->clear();
+
+    for (AddressField *it=a_ddrList->first(); it != 0 ; it=a_ddrList->next() )
+            l->append( it->asUnicodeString() );
 }
 
 //-----</To>-----------------------------------
