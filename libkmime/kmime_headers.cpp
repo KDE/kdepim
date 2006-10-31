@@ -922,7 +922,7 @@ void To::emails(QStrList *l)
       l->append( it->email() );
 }
 
-void To::names(QStrList *l)
+void To::names(QStringList *l)
 {
     l->clear();
 
@@ -931,7 +931,7 @@ void To::names(QStrList *l)
             l->append( it->name() );
 }
 
-void To::displayNames(QStrList *l)
+void To::displayNames(QStringList *l)
 {
     l->clear();
 
