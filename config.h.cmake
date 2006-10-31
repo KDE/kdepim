@@ -93,9 +93,6 @@
 /* Define to 1 if you have the `vsnprintf' function. */
 #cmakedefine HAVE_VSNPRINTF 1
 
-/* Define if you have X11 header files */
-#define HAVE_X11_HEADERS 1
-
 /* safe saves */
 #define ICAL_SAFESAVES 1
 
@@ -104,9 +101,6 @@
 
 /* Define to 1 if you want to use the new distribution lists */
 #cmakedefine KDEPIM_NEW_DISTRLISTS 1
-
-/* Define if we have the old libmal version (<0.40) */
-#define LIBMAL20 1
 
 /* Maximum length of command line arguments */
 #define MAX_CMD_LENGTH 32768
