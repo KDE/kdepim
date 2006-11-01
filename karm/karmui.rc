@@ -1,4 +1,4 @@
-<!DOCTYPE kpartgui ><kpartgui name="karm" version="4" >
+<!DOCTYPE kpartgui ><kpartgui name="karm" version="5" >
 <MenuBar>
   <Menu name="file" >
     <text>&amp;File</text>
@@ -63,6 +63,7 @@
   <Separator />
   <Action name="clip_totals" />
   <Action name="clip_history" />
+  <Action name="clip_session" />
 </Menu>
 
 <State name="readonly">

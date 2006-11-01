@@ -796,16 +796,40 @@ void TaskView::clipTotals()
         i18n("Copy This Task"), i18n("Copy All Tasks") );
     if (response == KMessageBox::Yes) // this task only
     {
-      KApplication::clipboard()->setText(t.totalsAsText(this));
+      KApplication::clipboard()->setText(t.totalsAsText(this, true, TimeKard::TotalTime));
     }
     else // only task
     {
-      KApplication::clipboard()->setText(t.totalsAsText(this, false));
+      KApplication::clipboard()->setText(t.totalsAsText(this, true, TimeKard::TotalTime));
     }
   }
   else
   {
-    KApplication::clipboard()->setText(t.totalsAsText(this));
+    KApplication::clipboard()->setText(t.totalsAsText(this, true, TimeKard::TotalTime));
+  }
+}
+
+void TaskView::clipSession()
+{
+  TimeKard t;
+  if (current_item() && current_item()->isRoot())
+  {
+    int response = KMessageBox::questionYesNo( 0,
+        i18n("Copy session time for just this task and its subtasks, or copy session time for all tasks?"),
+        i18n("Copy Session Time to Clipboard"),
+        i18n("Copy This Task"), i18n("Copy All Tasks") );
+    if (response == KMessageBox::Yes) // this task only
+    {
+      KApplication::clipboard()->setText(t.totalsAsText(this, true, TimeKard::SessionTime));
+    }
+    else // only task
+    {
+      KApplication::clipboard()->setText(t.totalsAsText(this, false, TimeKard::SessionTime));
+    }
+  }
+  else
+  {
+    KApplication::clipboard()->setText(t.totalsAsText(this, true, TimeKard::SessionTime));
   }
 }
 

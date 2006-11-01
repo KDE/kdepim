@@ -179,6 +179,9 @@ class TaskView : public KListView
     /** Copy totals for current and all sub tasks to clipboard. */
     void clipTotals();
 
+    /** Copy session times for current and all sub tasks to clipboard */
+    void clipSession();
+
     /** Copy history for current and all sub tasks to clipboard. */
     void clipHistory();
 

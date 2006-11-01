@@ -45,7 +45,7 @@ const int reportWidth = taskWidth + timeWidth;
 
 const QString cr = QString::fromLatin1("\n");
 
-QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
+QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask, WhichTime which)
 {
   QString retval;
   QString line;
@@ -71,8 +71,8 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
     if (justThisTask)
     {
       // a task's total time includes the sum of all subtask times
-      sum = taskview->current_item()->totalTime();
-      printTask(taskview->current_item(), retval, 0);
+      sum = which == TotalTime ? taskview->current_item()->totalTime() : taskview->current_item()->sessionTime();
+      printTask(taskview->current_item(), retval, 0, which);
     }
     else
     {
@@ -80,9 +80,10 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
       for (Task* task= taskview->current_item(); task;
           task= task->nextSibling())
       {
-        sum += task->totalTime();
-        if ( task->totalTime() )
-          printTask(task, retval, 0);
+        int time = which == TotalTime ? task->totalTime() : task->totalSessionTime();
+        sum += time;
+        if ( time || task->firstChild() )
+                printTask(task, retval, 0, which);
       }
     }
 
@@ -100,13 +101,13 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
 }
 
 // Print out "<indent for level> <task total> <task>", for task and subtasks. Used by totalsAsText.
-void TimeKard::printTask(Task *task, QString &s, int level)
+void TimeKard::printTask(Task *task, QString &s, int level, WhichTime which)
 {
   QString buf;
 
   s += buf.fill(' ', level);
   s += QString(QString::fromLatin1("%1    %2"))
-    .arg(formatTime(task->totalTime()), timeWidth)
+    .arg(formatTime(which == TotalTime?task->totalTime():task->totalSessionTime()), timeWidth)
     .arg(task->name());
   s += cr;
 
@@ -114,8 +115,8 @@ void TimeKard::printTask(Task *task, QString &s, int level)
       subTask;
       subTask = subTask->nextSibling())
   {
-    if ( subTask->totalTime() ) // to avoid 00:00 entries
-      printTask(subTask, s, level+1);
+    int time = which == TotalTime ? subTask->totalTime() : subTask->sessionTime();
+    printTask(subTask, s, level+1, which);
   }
 }
 

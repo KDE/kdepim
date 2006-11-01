@@ -329,6 +329,14 @@ void MainWindow::makeMenus()
       SLOT( clipTotals() ),
       actionCollection(),
       "clip_totals");
+  // actionClipTotals will never be used again, overwrite it
+  actionClipTotals = new KAction( i18n("&Copy Session Time to Clipboard"),
+      QString::fromLatin1("klipper"),
+      0,
+      _taskView,
+      SLOT( clipSession() ),
+      actionCollection(),
+      "clip_session");
   actionClipHistory = new KAction( i18n("Copy &History to Clipboard"),
       QString::fromLatin1("klipper"),
       CTRL+ALT+Key_C,
