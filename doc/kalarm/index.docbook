@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2006-10-21</date>
-<releaseinfo>1.04.06</releaseinfo>
+<date>2006-11-01</date>
+<releaseinfo>1.09.02</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -140,7 +140,7 @@ buttons.</para>
 </tip>
 
 <sect1 id="alarm-list">
-<title>Alarm list</title>
+<title>Alarm List</title>
 
 <para>The main &kalarm; window displays the current list of pending
 alarms, showing their times, repetition intervals, colors, and
@@ -169,8 +169,8 @@ triggers on Monday and Wednesday every third week,
 <quote>Login</quote> for a repeat-at-login alarm).</para>
 
 <para>The alarms may be ordered by date/time, repeat interval, color,
-type or text by clicking on the title bar for the appropriate column.
-To reverse the sort order, click the column title bar again.</para>
+type or text by clicking on the titlebar for the appropriate column.
+To reverse the sort order, click the column titlebar again.</para>
 
 <para>You can optionally show the remaining time until each alarm is
 due, together with, or instead of, the alarm's scheduled time.
@@ -185,26 +185,27 @@ always shown. You can use the
 the default columns to display.</para>
 
 <sect2 id="expired">
-<title>Expired alarms</title>
+<title>Archived Alarms</title>
 
-<para>By default, &kalarm; stores alarms for a limited period once
+<para>By default, &kalarm; archives alarms for a limited period once
 they have expired or been deleted. (But note that alarms which you
 delete are stored only if they have already triggered at least once.)
-You can control whether &kalarm; stores expired alarms, and for how
+You can control whether &kalarm; archives expired alarms, and for how
 long, in the
 <link linkend="preferences-general">Preferences dialog</link>.</para>
 
-<para>Expired alarms may be shown in the alarm list by selecting
-<menuchoice><guimenu>View</guimenu><guimenuitem>Show Expired
-Alarms</guimenuitem></menuchoice>. To hide them again, repeat the
-action. You can use the
+<para>Archived alarms may be shown in the alarm list by selecting
+<menuchoice><guimenu>View</guimenu><guimenuitem>Show Archived
+Alarms</guimenuitem></menuchoice>. To hide them again, select
+<menuchoice><guimenu>View</guimenu><guimenuitem>Hide Archived
+Alarms</guimenuitem></menuchoice>. You can use the
 <link linkend="preferences-view">Preferences dialog</link> to show
-expired alarms by default.</para>
+archived alarms by default.</para>
 
 </sect2>
 
 <sect2 id="search">
-<title>Searching the alarm list</title>
+<title>Searching the Alarm List</title>
 
 <para>You can search through the alarm list to find alarms containing
 a search text. To invoke this, select <menuchoice>
@@ -234,21 +235,21 @@ searched.</para>
 
 <listitem>
 <para>Email alarms: in addition to the subject and body of the email,
-the recipients and the &URL;s of attachments are searched.</para>
+the recipients and the URLs of attachments are searched.</para>
 </listitem>
 </itemizedlist>
 
 <note><para>Only alarms currently shown in the alarm list can be
-selected for searching. So if you want to search expired alarms, you
+selected for searching. So if you want to search archived alarms, you
 must first display them as described in the section above.</para></note>
 </sect2>
 </sect1>
 
 <sect1 id="create-edit">
-<title>Creating and manipulating alarms</title>
+<title>Creating and Manipulating Alarms</title>
 
 <sect2>
-<title>Creating a new alarm</title>
+<title>Creating a New Alarm</title>
 
 <para>To create a new alarm, do one of the following. This displays
 the <link linkend="alarm-edit-dlg">alarm edit dialog</link> through
@@ -290,7 +291,7 @@ various sources:</para>
 <itemizedlist>
 <listitem>
 <para>To base your new alarm on an alarm template, follow the
-instructions in the <link linkend="templates">Alarm templates</link>
+instructions in the <link linkend="templates">Alarm Templates</link>
 section.</para>
 </listitem>
 
@@ -334,7 +335,7 @@ file name.</para>
 <listitem>
 <para>You can automatically create birthday alarms for people in
 &kaddressbook; as described in <link linkend="birthdays">Importing
-birthdays from &kaddressbook;</link>.</para>
+Birthdays from &kaddressbook;</link>.</para>
 </listitem>
 
 </itemizedlist>
@@ -342,7 +343,7 @@ birthdays from &kaddressbook;</link>.</para>
 </sect2>
 
 <sect2 id="edit-alarm">
-<title>Modifying an existing alarm</title>
+<title>Modifying an Existing Alarm</title>
 
 <para>To modify an existing pending alarm (expired alarms cannot be
 amended), do one of the following:</para>
@@ -372,7 +373,7 @@ dialog</link>.</para>
 </sect2>
 
 <sect2>
-<title>Deleting/reactivating an alarm</title>
+<title>Deleting/Reactivating an Alarm</title>
 
 <para>To delete existing alarms, do one of the following:</para>
 
@@ -391,29 +392,29 @@ from the context menu.</para>
 </listitem>
 </itemizedlist>
 
-<para>When you delete an active alarm, it is stored as an expired
-alarm, provided that it has triggered at least once before being
-deleted, and provided that expired alarms are stored at all. (Use the
+<para>When you delete an active alarm, it is archived, provided that
+it has triggered at least once before being deleted, and provided that
+expired alarms are archived at all. (Use the
 <link linkend="preferences-general">Preferences dialog</link> to
-control whether and for how long expired alarms are stored.) When you
-delete an expired alarm, or an active alarm which has not yet
+control whether and for how long archived alarms are stored.) When you
+delete an archived alarm, or an active alarm which has not yet
 triggered, it is removed permanently.</para>
 
-<para>You can reactivate a deleted alarm from the expired alarms list,
+<para>You can reactivate a deleted alarm from the archived alarms list,
 provided that it has not yet expired. To do this, first display
-expired alarms, as described in
-<link linkend="expired">Expired alarms</link>. Then:</para>
+archived alarms, as described in
+<link linkend="expired">Expired Alarms</link>. Then:</para>
 
 <itemizedlist>
 <listitem>
-<para>Select one or more appropriate expired alarms by clicking on
+<para>Select one or more appropriate archived alarms by clicking on
 their entries in the alarm list. Then choose <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Reactivate</guimenuitem>
 </menuchoice>.</para>
 </listitem>
 <listitem>
 <para><mousebutton>Right</mousebutton> click on the desired entries in
-the expired alarm list and choose
+the archived alarm list and choose
 <menuchoice><guimenuitem>Reactivate</guimenuitem></menuchoice>
 from the context menu.</para>
 </listitem>
@@ -422,15 +423,15 @@ from the context menu.</para>
 </sect2>
 
 <sect2>
-<title>Enabling/disabling an alarm</title>
+<title>Enabling/Disabling an Alarm</title>
 
-<para>See <link linkend="enable-disable">Enabling and disabling alarms</link>
+<para>See <link linkend="enable-disable">Enabling and Disabling Alarms</link>
 for how to enable and disable alarms, either individually or as a whole.</para>
 
 </sect2>
 
 <sect2>
-<title>Viewing an alarm</title>
+<title>Viewing an Alarm</title>
 
 <para>To view an existing alarm without the ability to modify it, do
 one of the following:</para>
@@ -456,15 +457,15 @@ dialog</link> in read-only mode.</para>
 </sect2>
 
 <sect2>
-<title>Acknowledging an alarm</title>
+<title>Acknowledging an Alarm</title>
 
-<para>See <link linkend="message-window">Alarm message window</link>
+<para>See <link linkend="message-window">Alarm Message Window</link>
 for how to acknowledge alarms.</para>
 
 </sect2>
 
 <sect2 id="templates">
-<title>Alarm templates</title>
+<title>Alarm Templates</title>
 
 <para>If you frequently want to set up similar alarms, you can create
 an alarm template to avoid having to enter all the details from
@@ -506,7 +507,7 @@ preset the dialog with.</para>
 </itemizedlist>
 
 <sect3>
-<title>Configuring templates</title>
+<title>Configuring Templates</title>
 
 <para>You can create, modify or delete templates using the Alarm
 Templates dialog, or you can create a new alarm template based on an
@@ -555,7 +556,7 @@ prevent accidental deletions.</para>
 </sect3>
 
 <sect3>
-<title>Template edit dialog</title>
+<title>Template Edit Dialog</title>
 
 <para>The template edit dialog is similar to the
 <link linkend="alarm-edit-dlg">alarm edit dialog</link>. The
@@ -580,18 +581,18 @@ use the normal default trigger time for new alarms.</para>
 </listitem>
 
 <listitem>
-<para><guilabel>Time</guilabel> to enter a time when the alarm is to
-be triggered.</para>
+<para>Check <guilabel>Time</guilabel> to enter a time when the alarm
+is to be triggered.</para>
 </listitem>
 
 <listitem>
-<para><guilabel>Any time</guilabel> to specify that the alarm should
-only have a date, not a time.</para>
+<para>Check <guilabel>Any time</guilabel> to specify that the alarm
+should only have a date, not a time.</para>
 </listitem>
 
 <listitem>
-<para><guilabel>Time from now</guilabel> to enter how long (in hours
-and minutes) after the alarm is created, that it should be
+<para>Check <guilabel>Time from now</guilabel> to enter how long (in
+hours and minutes) after the alarm is created, that it should be
 triggered.</para>
 </listitem>
 </itemizedlist>
@@ -608,16 +609,316 @@ for weekly or yearly recurrences, respectively.</para>
 
 </sect2>
 
-<sect2 id="import">
-<title>Importing alarms from external calendars</title>
+<sect2 id="resources">
+<title>Alarm Resources</title>
 
-<para>You can import alarms from other calendar files into &kalarm;,
-by <menuchoice><guimenu>File</guimenu>
-<guimenuitem>Import Alarms...</guimenuitem></menuchoice>. The
-import function scans the selected calendar file for events containing
-alarms, and copies them (with new unique IDs) into &kalarm;'s calendar.
-Events without alarms, and other types of calendar entry, are
-ignored.</para>
+<para>If you only use one computer and work independently, it may not
+matter to you where &kalarm; stores its alarms. But if you need to
+access alarms on more than one computer, or in more than one location
+on your local computer, you can define <quote>alarm resources</quote>
+to tell &kalarm; to use other alarm calendars additional to, or in
+place of, its default ones.</para>
+
+<para>You can view and manipulate resources via the resource list,
+which can be displayed alongside the alarm list in &kalarm;'s main
+window. Alarms from all alarm resources are shown merged together in
+the alarm list. When you save a new alarm, you can set a configuration
+option to determine whether it is automatically saved into the default
+resource, or whether you will be prompted to choose a resource. When
+you edit an existing alarm, it is automatically saved back into its
+original alarm resource.</para>
+
+<sect3>
+<title>Resource Types and Options</title>
+
+<para>Alarm resources are categorized by alarm type and storage type.
+They can be disabled, set read-only, or made the default resource for
+their alarm type.</para>
+
+<variablelist>
+<varlistentry>
+<term>Alarm type</term>
+<listitem>
+<para>The three alarm entity types &ndash; active alarms, archived
+alarms and alarm templates &ndash;
+are stored in separate alarm resources. &kalarm; therefore has three
+standard default resources, one for each type (see 
+<link linkend="faq">Questions and Answers</link> for details), which
+you can change if you wish.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Storage type</term>
+<listitem>
+<para>&kalarm; handles three alarm resource storage
+types:</para>
+
+<itemizedlist>
+<listitem><para>Local file: Alarms are stored in a single local file
+in iCalendar format. &kalarm; uses local file resources by default
+(see <link linkend="faq">Questions and Answers</link> for details).
+<quote>Local files</quote>, in addition to files on the local
+computer, can include alarm calendars on the local network as long as
+their location can be represented by a path name starting with
+<literal>/</literal>.</para>
+</listitem>
+
+<listitem><para>Local directory: Alarms are stored in a local folder,
+each alarm being stored in a separate iCalendar file within the
+folder. This storage method has the advantage that in the event of
+file corruption, you should lose only one alarm, not the entire
+calendar.</para>
+</listitem>
+
+<listitem><para>Remote file: Alarms are stored in a single remote
+file in iCalendar format. This storage method allows you to access
+your alarm data remotely no matter where you are, or enables alarm
+calendars to be viewed by other people. When using remote files,
+&kalarm; works with a local cache of the data.</para>
+
+<warning><para>If a remote alarm calendar is shared between users,
+changes made by one person may not be automatically made available to
+another user, or there could be a time delay before the other user
+sees it. So one user could make a change which is then overwritten by
+another user without either person noticing what has happened. The
+technical reason for this is that a change made by person A will only
+be available to person B after person A's cached copy has first been
+saved to the remote file, and then person B's cached copy
+of the remote file has been reloaded. When and if the calendar is
+saved and reloaded depends on the resource configuration parameters
+which each user has set for that alarm calendar.</para>
+
+<para>Ways to avoid this problem include adjusting the resource save
+and reload configuration parameters, or adopting a policy that users
+other than the alarm calendar's owner should open it in read-only
+mode.</para></warning>
+</listitem>
+</itemizedlist>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Enabled/disabled status</term>
+<listitem>
+<para>Disabling a resource has the same
+effect as removing it, except that it still appears in the resource
+list for easy re-enabling. When disabled, its alarms are ignored and
+do not appear in the alarm list or list of templates. When it is
+re-enabled, its alarms are once again shown and, if it is an active
+alarm resource, made active.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Read-only status</term>
+<listitem>
+<para>A read-only resource's alarms cannot be
+changed or added to. So you cannot edit its alarms, or save new alarms
+to it. Also, it is not possible to defer its alarms, since to do so
+would need the deferral time to be saved into the alarm. After its
+alarms trigger, they are not removed from the resource and archived
+until you or another user accesses the resource in read-write
+mode.</para>
+
+<para>You can set the read-only status of a resource in the resource
+configuration dialog. However, some resources cannot be made
+writeable, for various reasons:</para>
+
+<itemizedlist>
+<listitem><para>If a resource was created by another application, it
+would be unsafe to allow &kalarm; to update it, since differences in
+data format might make it unusable by the creating application.</para>
+</listitem>
+
+<listitem><para>If the resource was created by a later version of
+&kalarm;, data might be lost if your version of &kalarm; updated
+it.</para>
+</listitem>
+
+<listitem><para>If the resource was created by a previous version of
+&kalarm;, data could be lost or it could be made unusable for the
+previous &kalarm; version if your version of &kalarm; updated it. You
+will be prompted whether to convert its format so as to make it
+writeable, bearing in mind the potential compatibility problems if the
+previous &kalarm; version needs to access it again.</para>
+</listitem>
+
+<listitem><para>If you do not have permission to write to the
+resource file or folder.</para>
+</listitem>
+</itemizedlist>
+
+<para>If you need write access to alarms in a resource which cannot be
+made writeable, you can copy its alarms by importing them into a
+writeable resource using the latter resource's
+<menuchoice><guimenuitem>Import...</guimenuitem></menuchoice> context
+menu option (see <link linkend="import">Importing Alarms from External
+Calendars</link>).</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Default resource status</term>
+<listitem>
+<para>One resource of each alarm type can optionally be made the
+default resource for that alarm type. New alarms are automatically
+saved to the default resource for the appropriate alarm type, unless
+you have selected the prompt option for new alarms and templates in the
+<link linkend="preferences-storage">Preferences dialog</link>.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect3>
+
+<sect3>
+<title>Using Resources</title>
+
+<para>You can view and manipulate resources via the resource list,
+which can be displayed or hidden by <menuchoice>
+<guimenu>View</guimenu><guimenuitem>Show Resources</guimenuitem>
+</menuchoice>. You can use the
+<link linkend="preferences-view">Preferences dialog</link> to
+choose whether the resource list should be visible when &kalarm;
+starts up. When using the resource list, first select the alarm
+type using the combo box above the list. Then either click on one of
+the buttons below the list, or <mousebutton>Right</mousebutton> click
+on the appropriate resource in the list and choose an item from the
+context menu. The actions available are:</para>
+
+<variablelist>
+<varlistentry>
+<term><menuchoice><guimenuitem>Add...</guimenuitem></menuchoice></term>
+<listitem>
+<para>Add a resource of the selected type to the list. You are asked
+to choose a storage type, following which the resource configuration
+dialog is displayed, where you can enter the location of the resource
+and its characteristics. If there is no existing alarm resource in
+the specified location, a new one will be created.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Remove</guimenuitem></menuchoice></term>
+<listitem>
+<para>Remove the selected resource from the list. The resource itself
+is left intact; it is simply removed from the list, and may
+subsequently be reinstated in the list if desired.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Edit...</guimenuitem></menuchoice></term>
+<listitem>
+<para>Edit the selected resource. This displays the configuration
+dialog for the selected resource.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Reload</guimenuitem></menuchoice></term>
+<listitem>
+<para>Reload the selected resource. The resource is re-read from its
+storage location, ensuring that there is no discrepancy between what
+&kalarm; displays and the current state of the resource. If the
+resource is shared with other users, any changes which they have made
+will now be seen by &kalarm;.</para>
+
+<warning><para>If you reload a remote resource, any changes to alarms
+which you have made since the resource was last saved will be lost.
+Also, any alarms which have expired since the last save may be
+retriggered.</para></warning>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Save</guimenuitem></menuchoice></term>
+<listitem>
+<para>Save any changes to the selected resource. The resource is
+updated with any alarm changes which have occurred since the last time
+the resource was saved or reloaded. This is only useful for remote
+resources, since local resources are automatically saved after every
+change. You can configure when and how frequently a remote resource
+should be automatically saved, using its configuration dialog (via
+the <menuchoice><guimenuitem>Edit...</guimenuitem></menuchoice>
+context menu option).</para>
+
+<warning><para>If you save a remote resource which is shared with other
+users, any changes which they have made since you last reloaded the
+resource (automatically or manually) will be lost.</para></warning>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Import...</guimenuitem></menuchoice></term>
+<listitem>
+<para>Import alarms from an external calendar file into the selected
+resource. This is described in
+<link linkend="import">Importing Alarms from External Calendars</link>.
+This option is not available for disabled or read-only
+resources.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Show Details</guimenuitem></menuchoice></term>
+<listitem>
+<para>Display details about the selected resource. This shows the
+resource's location, storage type and status information.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Use as Default</guimenuitem></menuchoice></term>
+<listitem>
+<para>Make the selected resource the default resource for the selected
+resource type. This option is not available for disabled or read-only
+resources.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="import">
+<title>Importing Alarms from External Calendars</title>
+
+<para>You can import alarms from other calendar files into &kalarm;.
+The import function scans the selected calendar
+file for events containing alarms, and copies them (with new unique
+IDs) into &kalarm;'s calendar. Events without alarms, and calendar
+entries other than events, are ignored. There are two ways to import
+alarms:</para>
+
+<itemizedlist>
+<listitem>
+<para>Use <menuchoice><guimenu>File</guimenu>
+<guimenuitem>Import Alarms...</guimenuitem></menuchoice> to import
+alarms of all types (active alarms, archived alarms and alarm
+templates) from the calendar.</para>
+
+<para>If you have configured 
+<link linkend="resources">alarm resources</link>, alarms of each type
+will be added to the appropriate default resource, or you will be
+prompted for the resource if you have selected the prompt option for
+new alarms and templates in the
+<link linkend="preferences-storage">Preferences dialog</link>.</para>
+</listitem>
+
+<listitem>
+<para><mousebutton>Right</mousebutton> click on a resource in the
+resource list, and choose
+<menuchoice><guimenuitem>Import...</guimenuitem></menuchoice> from the
+context menu. This imports alarms of the currently selected type into
+that resource. For example, if the selected resource type is alarm
+templates, alarm templates (and not active alarms or archived alarms)
+will be imported.</para>
+</listitem>
+</itemizedlist>
 
 <warning><para>If you import alarms from calendar files which were
 created by applications other than &kalarm;, the alarms may be changed
@@ -630,7 +931,7 @@ as necessary.</para></warning>
 </sect2>
 
 <sect2 id="birthdays">
-<title>Importing birthdays from &kaddressbook;</title>
+<title>Importing Birthdays from &kaddressbook;</title>
 
 <para>You can set up display alarms for birthdays stored in
 &kaddressbook;, by <menuchoice><guimenu>File</guimenu>
@@ -663,14 +964,14 @@ defined in the <guilabel>Alarm Text</guilabel> group box.</para>
 <listitem>
 <para>The remaining controls are the same as for
 <guilabel>Text</guilabel> alarms in the
-<link linkend="alarm-edit-dlg">Alarm Edit dialog</link>.</para>
+<link linkend="alarm-edit-dlg">alarm edit dialog</link>.</para>
 </listitem>
 </itemizedlist>
 
 </sect2>
 
 <sect2 id="undo">
-<title>Undo / redo</title>
+<title>Undo / Redo</title>
 
 <para>You can undo and redo the most recent changes which you have
 made during the current session of &kalarm;. Most actions can be
@@ -702,7 +1003,7 @@ button.</para>
 </sect1>
 
 <sect1 id="alarm-edit-dlg">
-<title>The alarm edit dialog</title>
+<title>The Alarm Edit Dialog</title>
 
 <para>The alarm edit dialog enables you to view and edit an
 alarm.</para>
@@ -720,7 +1021,7 @@ alarm.</para>
 </screenshot>
 
 <sect2>
-<title>Alarm action</title>
+<title>Alarm Action</title>
 
 <para>In the <guilabel>Action</guilabel> group box, select the type
 of alarm:</para>
@@ -801,8 +1102,8 @@ in the <guilabel>Fade time</guilabel> field, and adjust the
 
 <note><para>When possible, &kmix; is used to set volumes. This
 ensures that the volume at which the alarm is played is unaffected by
-any changes in the computer's sound level. If &kmix; is not installed
-(or is older than &kde; 3.1), the volume is set relative to the sound
+any changes in the computer's sound level. If &kmix; is not installed,
+the volume is set relative to the sound
 level current at the time the alarm triggers. So in this case, the
 volume at which the alarm is played will vary depending on any changes
 in the computer's sound level.</para></note>
@@ -979,28 +1280,58 @@ change the deferred time or to cancel the deferral.</para>
 <sect2>
 <title>Time</title>
 
-<para>In the <guilabel>Time</guilabel> group box, select either</para>
+<para>In the <guilabel>Time</guilabel> group box, set the time you
+want the alarm to trigger. For a non-recurring alarm, the date/time
+which you enter must be in the future, or if you enter only a date it
+must be today or later. For a recurring alarm, there are no such
+restrictions since the start date/time will be automatically adjusted
+to the first recurrence due after the current time.</para>
+
+<para>Choose how you will enter the time:</para>
 
 <itemizedlist>
 <listitem>
-<para><guilabel>At date/time</guilabel> to enter the date and time
-when the alarm is to be triggered. Check <guilabel>Any time</guilabel>
-if you want to specify only a date for the alarm: in this case the
-alarm will be displayed at the first opportunity on or after the
-configured start-of-day time, on the specified date.
+<para><guilabel>Date/time</guilabel> to enter the date and time
+when the alarm is to be triggered.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Date</guilabel> if you want to specify only a date
+for the alarm: in this case the alarm will be displayed at the first
+opportunity on or after the configured start-of-day time, on the
+specified date.
 (<link linkend="preferences-general">Configuring &kalarm;</link>
 describes how to set the start-of-day time.)</para>
-
-<para>For a non-recurring alarm, the date/time which you enter must be
-in the future, or if you enter only a date it must be today or later.
-For a recurring alarm, there are no such restrictions since the start
-date/time will be automatically adjusted to the first recurrence due
-after the current time.</para>
 </listitem>
 
 <listitem>
 <para><guilabel>Time from now</guilabel> to enter how long after now
 (in hours and minutes) the alarm should be triggered.</para>
+</listitem>
+</itemizedlist>
+
+<para>Choose the time zone to apply to the alarm. This time zone is
+used for all dates and times relating to this alarm, including
+recurrence and exception dates and times. Normally, you should leave
+the time zone controls unchanged unless you have a good reason to
+change them.</para>
+
+<itemizedlist>
+<listitem>
+<para>In the combo box, choose the time zone which this alarm is to
+use. When creating a new alarm, this is initially set to the time zone
+selected in the
+<link linkend="preferences-general">Preferences dialog</link>, which
+will be your computer's time zone unless you have changed it.</para>
+</listitem>
+
+<listitem>
+<para>Check <guilabel>Ignore time zone</guilabel> if you want to use
+the local computer time (on whichever computer &kalarm; happens to be
+running on at the time), ignoring time zones. You are recommended not
+to use this option if the alarm has a recurrence specified in hours
+and minutes; if you do, the alarm may occur at unexpected times after
+daylight saving time shifts.</para>
 </listitem>
 </itemizedlist>
 
@@ -1108,7 +1439,7 @@ first, followed by the repetition interval set up using the
 <guibutton>Simple Repetition</guibutton> button.</para>
 
 <sect3>
-<title>Simple Repetition dialog</title>
+<title>Simple Repetition Dialog</title>
 
 <para>Check <guilabel>Repeat every</guilabel> to set up a repetition,
 or uncheck it to remove the repetition. If
@@ -1155,7 +1486,7 @@ recurrences.</para></note>
 </sect3>
 
 <sect3>
-<title>Recurrence tab</title>
+<title>Recurrence Tab</title>
 
 <para>In the <guilabel>Recurrence Rule</guilabel> group box, set the
 recurrence type or time period as follows:</para>
@@ -1234,7 +1565,7 @@ in the list and press <guibutton>Delete</guibutton>.</para>
 </sect2>
 
 <sect2>
-<title>Other controls</title>
+<title>Other Controls</title>
 
 <para>For display alarms, the
 <guilabel>Confirm acknowledgment</guilabel> check box lets you specify
@@ -1254,7 +1585,7 @@ not be affected.</para></note>
 
 <para>Press the <guibutton>Load Template</guibutton> button to select
 a template to preset the dialog with, as described in <link
-linkend="create-edit">Creating and manipulating alarms</link>. </para>
+linkend="create-edit">Creating and Manipulating Alarms</link>. </para>
 
 <para>Press the <guibutton>Try</guibutton> button to test the alarm
 and check whether it works correctly. The alarm is executed just as
@@ -1268,7 +1599,7 @@ list.</para>
 </sect1>
 
 <sect1 id="message-window">
-<title>Alarm message window</title>
+<title>Alarm Message Window</title>
 
 <para>When an alarm message is due, it is displayed on each &kde;
 desktop and cannot be covered by ordinary windows, to ensure that
@@ -1366,14 +1697,14 @@ original application.</para>
 <para>As a non-modal window. In this mode, the keyboard focus is
 unaffected when the alarm message window appears, so it will not
 interfere with your typing. However in this mode the window has no
-title bar or frame, so you cannot move it or resize it.</para>
+titlebar or frame, so you cannot move it or resize it.</para>
 </listitem>
 </itemizedlist>
 
 </sect1>
 
 <sect1 id="system-tray">
-<title>System tray operation</title>
+<title>System Tray Operation</title>
 
 <para>&kalarm; may be run as an icon in the system tray. This
 icon allows one-click activation of &kalarm;, and provides both
@@ -1398,7 +1729,7 @@ display its context menu:</para>
 <term><menuchoice><guimenuitem>Enable Alarms</guimenuitem></menuchoice></term>
 <listitem><para><action>Enables monitoring of alarms.</action></para>
 <para>See
-<link linkend="enable-disable">Enabling and disabling alarms</link>
+<link linkend="enable-disable">Enabling and Disabling Alarms</link>
 for details.</para>
 </listitem>
 </varlistentry>
@@ -1407,7 +1738,7 @@ for details.</para>
 <term><menuchoice><guimenuitem>Alarms Enabled</guimenuitem></menuchoice></term>
 <listitem><para><action>Disables monitoring of alarms.</action></para>
 <para>See
-<link linkend="enable-disable">Enabling and disabling alarms</link>
+<link linkend="enable-disable">Enabling and Disabling Alarms</link>
 for details.</para>
 </listitem>
 </varlistentry>
@@ -1460,7 +1791,7 @@ while not running</guilabel> in the Preferences dialog.</para>
 </variablelist>
 
 <sect2>
-<title>Displaying &kalarm; in the system tray</title>
+<title>Displaying &kalarm; in the System Tray</title>
 
 <para>You must be running the &kde; desktop or another suitable window
 manager in order to display &kalarm; in the system tray. If &kalarm;
@@ -1494,7 +1825,7 @@ from the context menu.</para>
 </sect1>
 
 <sect1 id="refreshing">
-<title>Refreshing alarms</title>
+<title>Refreshing Alarms</title>
 
 <para>If in the unlikely event that any alarm was not triggered when
 it should have been, you can refresh the alarm list and trigger any
@@ -1505,12 +1836,12 @@ missed alarms by selecting
 
 <para>&kalarm; retriggers missed alarms by resetting the
 <application>alarm daemon</application>, which is discussed in the
-<link linkend="daemon-reset">Alarm daemon</link> section.</para>
+<link linkend="daemon-reset">Alarm Daemon</link> section.</para>
 
 </sect1>
 
 <sect1 id="enable-disable">
-<title>Enabling and disabling alarms</title>
+<title>Enabling and Disabling Alarms</title>
 
 <para>Alarms may be enabled and disabled either as a whole or
 individually:</para>
@@ -1545,7 +1876,7 @@ the Preferences dialog).</para>
 as alarm monitoring being enabled.</para>
 
 <sect2>
-<title>Enabling alarm monitoring</title>
+<title>Enabling Alarm Monitoring</title>
 
 <para>If &kalarm;'s run mode is <quote>continuous</quote> and you
 have selected <guilabel>Disable alarms while not running</guilabel>
@@ -1576,7 +1907,7 @@ due.</para>
 </sect2>
 
 <sect2>
-<title>Disabling alarm monitoring</title>
+<title>Disabling Alarm Monitoring</title>
 
 <para>There are several ways to disable alarm monitoring, which
 prevents &kalarm; from displaying any further alarms either until you
@@ -1622,7 +1953,7 @@ displays the Service Manager dialog which enables you to stop the
 </sect2>
 
 <sect2>
-<title>Enabling and disabling individual alarms</title>
+<title>Enabling and Disabling Individual Alarms</title>
 
 <para>To enable individual alarms which are currently disabled, do
 one of the following:</para>
@@ -1666,7 +1997,7 @@ from the context menu.</para>
 </sect1>
 
 <sect1 id="quitting">
-<title>Quitting the program</title>
+<title>Quitting the Program</title>
 
 <para>Quit &kalarm; by closing all its windows and the system tray
 icon, or if it is running in <quote>continuous</quote> mode, by
@@ -1787,6 +2118,11 @@ login, you need to uncheck this option again each time you run
 </itemizedlist>
 </listitem>
 
+<listitem><para><guilabel>Time zone</guilabel>: Select your time zone.
+&kalarm; uses this time zone throughout, although you can override
+it for individual alarms.</para>
+</listitem>
+
 <listitem><para><guilabel>Start of day for date-only
 alarms</guilabel>: Set the start-of-day time for the purposes of
 triggering date-only alarms, &ie; ones for which the <guilabel>Any
@@ -1825,30 +2161,6 @@ triggered.</para></note>
 <listitem><para><guilabel>Confirm alarm deletions</guilabel>: Specify
 whether you should be prompted for confirmation each time you delete
 an alarm.</para>
-</listitem>
-
-<listitem><para><guilabel>Expired Alarms</guilabel> group box: These
-options control the storage of expired alarms.</para>
-<itemizedlist>
-<listitem><para><guilabel>Keep alarms after expiry</guilabel>:
-Select this option to store expired and deleted alarms. Deselect it
-to keep no record of alarms once they cease to be active. Note that
-deleted alarms are only stored if they have previously been
-triggered. If you delete an alarm before it ever triggers, it is
-discarded.</para>
-</listitem>
-
-<listitem><para><guilabel>Discard expired alarms after</guilabel>:
-Set the number of days to store expired and deleted alarms, after which
-they are permanently deleted.</para>
-</listitem>
-
-<listitem><para><guibutton>Clear expired alarms</guibutton>: This
-button discards all currently stored expired alarms. This has no
-effect on alarms which subsequently expire; they will continue to be
-stored according to the selected options.</para>
-</listitem>
-</itemizedlist>
 </listitem>
 
 <listitem><para><guilabel>Terminal for Command Alarms</guilabel>:
@@ -1897,6 +2209,64 @@ codes:</para>
 
 <para>When the command alarm is triggered, its command string will be
 quoted before being inserted into the terminal window command.</para>
+</listitem>
+
+</itemizedlist>
+</sect1>
+
+<sect1 id="preferences-storage">
+<title>Storage</title>
+
+<para>The <guilabel>Storage</guilabel> section lets you choose options
+for saving and archiving alarms:</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>New Alarms &amp; Templates</guilabel>: Specify which
+resource to store new alarms and alarm templates in when using
+multiple alarm resources:</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>Store in default resource</guilabel>: New alarms and
+alarm templates are automatically added to the default alarm resource
+without prompting for confirmation.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Prompt for which resource to store in</guilabel>:
+When you create a new alarm or alarm template and there is more than
+one writeable alarm resource, you will be prompted to choose which
+resource to save it in. Note that when alarms are saved on expiry,
+they are always stored in the default archived alarm resource without
+prompting.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem><para><guilabel>Archived Alarms</guilabel> group box: These
+options control the storage of archived alarms.</para>
+
+<itemizedlist>
+<listitem><para><guilabel>Keep alarms after expiry</guilabel>:
+Select this option to archive expired and deleted alarms. Deselect it
+to keep no record of alarms once they cease to be active. Note that
+deleted alarms are only archived if they have previously been
+triggered. If you delete an alarm before it ever triggers, it is
+discarded.</para>
+</listitem>
+
+<listitem><para><guilabel>Discard archived alarms after</guilabel>:
+Set the number of days to store expired and deleted alarms in the
+archive, after which they are permanently deleted.</para>
+</listitem>
+
+<listitem><para><guibutton>Clear archived alarms</guibutton>: This
+button discards all currently archived alarms. This has no effect on
+alarms which subsequently expire or are deleted; they will continue to
+be archived according to the selected options.</para>
+</listitem>
+</itemizedlist>
 </listitem>
 
 </itemizedlist>
@@ -2013,6 +2383,13 @@ aspects of &kalarm;'s appearance:</para>
 <itemizedlist>
 
 <listitem>
+<para><guilabel>Show resources</guilabel>: This option determines
+whether the list of alarm resources is shown when &kalarm; starts up.
+(Once &kalarm; has started, use the <guimenu>View</guimenu> menu to
+show or hide the resource list.)</para>
+</listitem>
+
+<listitem>
 <para><guilabel>Alarm List</guilabel> group box: These options control
 what information is initially shown in the alarm list, when &kalarm;
 starts up. (Once &kalarm; has started, use the <guimenu>View</guimenu>
@@ -2075,14 +2452,14 @@ time at which the alarm is scheduled.</para>
 <listitem><para><guilabel>Message windows have a title bar and take keyboard focus</guilabel>: This
 option controls whether alarm message windows are modal or not, &ie;
 whether they grab the keyboard focus when they appear. See the
-<link linkend="message-window">Alarm message window</link> section for
+<link linkend="message-window">Alarm Message Window</link> section for
 details.</para>
 </listitem>
 
-<listitem><para><guilabel>Show expired alarms</guilabel>: Select this
-option to initially show expired alarms in the alarm list, when
+<listitem><para><guilabel>Show archived alarms</guilabel>: Select this
+option to initially show archived alarms in the alarm list, when
 &kalarm; starts up. (Once &kalarm; has started, use the
-<menuchoice><guimenu>View</guimenu><guimenuitem>Show Expired
+<menuchoice><guimenu>View</guimenu><guimenuitem>Show Archived
 Alarms</guimenuitem></menuchoice> menu option to change what is
 displayed.)</para>
 </listitem>
@@ -2131,7 +2508,7 @@ disabled alarms.</para>
 </listitem>
 
 <listitem><para>Select the color to be used in the alarm list to show
-expired alarms.</para>
+archived alarms.</para>
 </listitem>
 
 </itemizedlist>
@@ -2193,7 +2570,7 @@ self</guilabel> check box.</para>
 </chapter>
 
 <chapter id="cmdline-operation">
-<title>Command line operation</title>
+<title>Command Line Operation</title>
 
 <para>When command line parameters are supplied, &kalarm; does not
 display the list of scheduled alarms as described in <link
@@ -2223,7 +2600,7 @@ must invoke &kalarm; multiple times with a single set of options each
 time.</para>
 
 <sect1 id="cmdline-schedule">
-<title>Schedule a new alarm</title>
+<title>Schedule a New Alarm</title>
 
 <para>The following options are used to schedule a new alarm:</para>
 
@@ -2483,14 +2860,14 @@ a red background at 10 p.m. on the 27th of this month are:</para>
 </sect1>
 
 <sect1 id="cmdline-other">
-<title>Other options</title>
+<title>Other Options</title>
 
 <para>The following options are used to reset or halt the
 <application>alarm daemon</application>, to display the
 <link linkend="alarm-edit-dlg">alarm edit dialog</link>, or to control
 &kalarm;'s display mode.</para>
 
-<para>See the <link linkend="daemon-reset">Alarm daemon</link> section
+<para>See the <link linkend="daemon-reset">Alarm Daemon</link> section
 for a discussion about resetting and stopping the <application>alarm
 daemon</application>.</para>
 
@@ -2545,7 +2922,7 @@ daemon</application>:</para>
 </sect1>
 
 <sect1 id="cmdline-help">
-<title>Help options</title>
+<title>Help Options</title>
 
 <para>The following help options are common to all
 &kde; programs:</para>
@@ -2596,7 +2973,7 @@ daemon</application>:</para>
 </chapter>
 
 <chapter id="daemon">
-<title>Alarm daemon</title>
+<title>Alarm Daemon</title>
 
 <para>The <application>alarm daemon</application>, &kalarmd;, monitors
 &kalarm;'s calendar file for alarms becoming due. When it determines
@@ -2609,7 +2986,7 @@ background, with no user interface. It may be controlled as described
 below.</para>
 
 <sect1 id="daemon-start">
-<title>Starting, resetting and stopping the <application>alarm daemon</application></title>
+<title>Starting, Resetting and Stopping the <application>Alarm Daemon</application></title>
 
 <para>The <application>alarm daemon</application> is normally started
 at &kde; session login (unless you disable auto start in the
@@ -2619,7 +2996,7 @@ reason it is not running, alarm monitoring will not occur and &kalarm;
 will not display or execute any alarms.</para>
 
 <sect2>
-<title>Starting the <application>alarm daemon</application></title>
+<title>Starting the <application>Alarm Daemon</application></title>
 
 <para>To start the <application>alarm daemon</application>, you can
 either run &kalarm; in its default graphical mode (&ie; without any
@@ -2636,7 +3013,7 @@ line:</para>
 </sect2>
 
 <sect2 id="daemon-reset">
-<title>Resetting the <application>alarm daemon</application></title>
+<title>Resetting the <application>Alarm Daemon</application></title>
 
 <para>It is also possible to reset the <application>alarm
 daemon</application> without stopping it. Resetting causes the
@@ -2666,7 +3043,7 @@ the menu command <menuchoice>
 </sect2>
 
 <sect2>
-<title>Stopping the <application>alarm daemon</application></title>
+<title>Stopping the <application>Alarm Daemon</application></title>
 
 <para>Stopping the <application>alarm daemon</application> will
 prevent any further monitoring of scheduled alarm messages until the
@@ -2703,17 +3080,16 @@ and by the command line. &DCOP; calls should be used in preference if
 &kalarm; is already running.</para>
 
 <sect1 id="dcop-interface">
-<title>&DCOP; interface</title>
+<title>&DCOP; Interface</title>
 
 <para>The &DCOP; calls described in this document are all implemented in
 &kalarm;'s <constant>request</constant> &DCOP; object. The interface is
 defined in the file <filename>kalarmiface.h</filename>.</para>
 
-<note><para>In &kalarm; version 1.2, the &DCOP; interface was completely
-revised to allow easier calling of functions, and to conform better to
-the standard &kde; &DCOP; configuration. The old &DCOP; interface is
-currently still usable for compatibility purposes, but will be removed
-at some future date.</para></note>
+<note><para>With the introduction of alarm resources in &kalarm;
+version 1.9, the <parameter>calendarFile</parameter> parameter has been
+removed from those &DCOP; calls which used it. The old pre-version 1.2
+&DCOP; interface is no longer supported.</para></note>
 
 <refentry id="cancelEvent">
 <refmeta>
@@ -2725,26 +3101,16 @@ at some future date.</para></note>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-void cancelEvent(const QString&amp; <replaceable>calendarFile</replaceable>,
-                 const QString&amp; <replaceable>eventID</replaceable>)
+void cancelEvent(const QString&amp; <replaceable>eventID</replaceable>)
 </synopsis>
 
 <refsect2>
 <title>Parameters</title>
 <variablelist>
 <varlistentry>
-<term><parameter>calendarFile</parameter></term>
-<listitem>
-<para>Specifies the &URL; (not path) of the calendar file containing
-the event to be canceled.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term><parameter>eventID</parameter></term>
 <listitem>
-<para>Specifies the unique ID of the event to be canceled, as stored
-in <replaceable>calendarFile</replaceable>.</para>
+<para>Specifies the unique ID of the event to be canceled.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -2755,13 +3121,8 @@ in <replaceable>calendarFile</replaceable>.</para>
 <title>Description</title>
 
 <para><function>cancelEvent()</function> is a &DCOP; call to cancel
-the specified alarm. &kalarm; deletes the alarm from the calendar file
+the specified alarm. &kalarm; deletes the alarm from the calendar 
 without displaying or executing it.</para>
-
-<note><para>The <replaceable>calendarFile</replaceable> parameter is
-only used for integrity checking: if the &URL; does not specify
-&kalarm;'s current default calendar file, the request will be
-ignored.</para></note>
 
 </refsect1>
 </refentry>
@@ -2776,26 +3137,16 @@ ignored.</para></note>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-void triggerEvent(const QString&amp; <replaceable>calendarFile</replaceable>,
-                  const QString&amp; <replaceable>eventID</replaceable>)
+void triggerEvent(const QString&amp; <replaceable>eventID</replaceable>)
 </synopsis>
 
 <refsect2>
 <title>Parameters</title>
 <variablelist>
 <varlistentry>
-<term><parameter>calendarFile</parameter></term>
-<listitem>
-<para>Specifies the &URL; (not path) of the calendar file containing
-the event to be triggered.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term><parameter>eventID</parameter></term>
 <listitem>
-<para>Specifies the unique ID of the event to be triggered, as stored
-in <replaceable>calendarFile</replaceable>.</para>
+<para>Specifies the unique ID of the event to be triggered.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -2808,18 +3159,13 @@ in <replaceable>calendarFile</replaceable>.</para>
 <para><function>triggerEvent()</function> is a &DCOP; call to trigger
 the immediate display or execution of the specified alarm (regardless
 of what time it is scheduled for). &kalarm; retrieves the alarm from
-the calendar file and then displays or executes it.</para>
+the calendar and then displays or executes it.</para>
 
 <para>If the alarm is already due, &kalarm; then deletes all scheduled
 occurrences of the alarm up to the current time, and if no repetitions
-of the alarm still remain, the alarm is deleted from the calendar
-file. If the alarm is not due yet, its scheduled occurrences are left
+of the alarm still remain, the alarm is deleted from the calendar. If
+the alarm is not due yet, its scheduled occurrences are left
 unchanged.</para>
-
-<note><para>The <replaceable>calendarFile</replaceable> parameter is
-only used for integrity checking: if the &URL; does not specify
-&kalarm;'s current default calendar file, the request will be
-ignored.</para></note>
 
 </refsect1>
 </refentry>
@@ -2834,27 +3180,17 @@ ignored.</para></note>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-void handleEvent(const QString&amp; <replaceable>calendarFile</replaceable>,
-                 const QString&amp; <replaceable>eventID</replaceable>)
+void handleEvent(const QString&amp; <replaceable>eventID</replaceable>)
 </synopsis>
 
 <refsect2>
 <title>Parameters</title>
 <variablelist>
 <varlistentry>
-<term><parameter>calendarFile</parameter></term>
-<listitem>
-<para>Specifies the &URL; (not path) of the calendar file containing
-the event to be displayed/executed or canceled.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term><parameter>eventID</parameter></term>
 <listitem>
 <para>Specifies the unique ID of the event to be displayed/executed or
-canceled, as stored in
-<replaceable>calendarFile</replaceable>.</para>
+canceled.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -2866,7 +3202,7 @@ canceled, as stored in
 
 <para><function>handleEvent()</function> is a &DCOP; call to
 display/execute or cancel the specified alarm. &kalarm; retrieves the
-alarm from the calendar file and then determines what action to take
+alarm from the calendar and then determines what action to take
 depending on when the alarm is due.</para>
 
 <itemizedlist>
@@ -2878,15 +3214,9 @@ late-cancel value is set and the alarm is too late, &ie; the scheduled
 trigger time was longer than late-cancel minutes ago, &kalarm; does
 not display or execute the alarm; otherwise, &kalarm; displays or
 executes the alarm. If no repetitions of the alarm are still
-scheduled, &kalarm; then deletes the alarm from the calendar
-file.</para>
+scheduled, &kalarm; then deletes the alarm from the calendar.</para>
 </listitem>
 </itemizedlist>
-
-<note><para>The <replaceable>calendarFile</replaceable> parameter is
-only used for integrity checking: if the &URL; does not specify
-&kalarm;'s current default calendar file, the request will be
-ignored.</para></note>
 
 </refsect1>
 </refentry>
@@ -2957,15 +3287,22 @@ bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>,
 <listitem>
 <para>Specifies the scheduled date, or date and time, at which the
 message should be displayed. For a date-only alarm, the string should
-be in the format <quote>YYYY-MM-DD</quote> (as returned by
+be in the format <quote>YYYY-MM-DD [TZ]</quote> (as returned by
 <methodname>QDate::toString(Qt::ISODate)</methodname>). For an alarm
 with a date and time, the string should be in the format
-<quote>YYYY-MM-DDTHH:MM[:SS]</quote> (as returned by
+<quote>YYYY-MM-DDTHH:MM[:SS] [TZ]</quote> (as returned by
 <methodname>QDateTime::toString(Qt::ISODate)</methodname>) or
-<quote>HH:MM[:SS]</quote> (as returned by
+<quote>HH:MM[:SS] [Clock]</quote> (as returned by
 <methodname>QTime::toString(Qt::ISODate)</methodname>). If no date is
 specified, today's date is used. Note that any seconds value is
 ignored.</para>
+
+<para>If no time zone is specified, the local system time zone is
+assumed. If a time zone specifier <quote>TZ</quote> is present, it
+may be the name of a system time zone (&eg;
+<quote>Europe/London</quote>), <quote>UTC</quote> representing the UTC
+time zone, or <quote>Clock</quote> to use the local computer clock and
+ignore time zones.</para>
 </listitem>
 </varlistentry>
 
@@ -3093,7 +3430,9 @@ repeated. Specify -1 to repeat the alarm indefinitely.</para>
 alarm. If <parameter>dateTime</parameter> includes a time, this
 parameter must also include a time; if <parameter>dateTime</parameter>
 contains only a date, this parameter must also contain only a
-date.</para>
+date. It must not contain a time zone specifier; the same time zone as
+for <parameter>dateTime</parameter> is used to interpret this
+parameter's value.</para>
 </listitem>
 </varlistentry>
 
@@ -3131,8 +3470,8 @@ passed, &kalarm; immediately displays the message (unless the
 <parameter>lateCancel</parameter> value indicates that it is now too
 late to display the alarm, in which case &kalarm; ignores the
 request). If the scheduled time (or a repetition) is in the future,
-&kalarm; adds the alarm message to the calendar file for later
-display.</para>
+&kalarm; adds the alarm message to the default active alarm resource
+for later display.</para>
 </refsect1>
 </refentry>
 
@@ -3198,16 +3537,23 @@ displayed in the message to be scheduled.</para>
 <term><parameter>dateTime</parameter></term>
 <listitem>
 <para>Specifies the scheduled date, or date and time, at which the
-file should be displayed. For a date-only alarm, the string should
-be in the format <quote>YYYY-MM-DD</quote> (as returned by
+message should be displayed. For a date-only alarm, the string should
+be in the format <quote>YYYY-MM-DD [TZ]</quote> (as returned by
 <methodname>QDate::toString(Qt::ISODate)</methodname>). For an alarm
 with a date and time, the string should be in the format
-<quote>YYYY-MM-DDTHH:MM[:SS]</quote> (as returned by
+<quote>YYYY-MM-DDTHH:MM[:SS] [TZ]</quote> (as returned by
 <methodname>QDateTime::toString(Qt::ISODate)</methodname>) or
-<quote>HH:MM[:SS]</quote> (as returned by
+<quote>HH:MM[:SS] [Clock]</quote> (as returned by
 <methodname>QTime::toString(Qt::ISODate)</methodname>). If no date is
 specified, today's date is used. Note that any seconds value is
 ignored.</para>
+
+<para>If no time zone is specified, the local system time zone is
+assumed. If a time zone specifier <quote>TZ</quote> is present, it
+may be the name of a system time zone (&eg;
+<quote>Europe/London</quote>), <quote>UTC</quote> representing the UTC
+time zone, or <quote>Clock</quote> to use the local computer clock and
+ignore time zones.</para>
 </listitem>
 </varlistentry>
 
@@ -3315,7 +3661,9 @@ repeated. Specify -1 to repeat the alarm indefinitely.</para>
 alarm. If <parameter>dateTime</parameter> includes a time, this
 parameter must also include a time; if <parameter>dateTime</parameter>
 contains only a date, this parameter must also contain only a
-date.</para>
+date. It must not contain a time zone specifier; the same time zone as
+for <parameter>dateTime</parameter> is used to interpret this
+parameter's value.</para>
 </listitem>
 </varlistentry>
 
@@ -3404,16 +3752,23 @@ parameter contains a shell command line or a command script.</para>
 <term><parameter>dateTime</parameter></term>
 <listitem>
 <para>Specifies the scheduled date, or date and time, at which the
-command should be executed. For a date-only alarm, the string should
-be in the format <quote>YYYY-MM-DD</quote> (as returned by
+message should be displayed. For a date-only alarm, the string should
+be in the format <quote>YYYY-MM-DD [TZ]</quote> (as returned by
 <methodname>QDate::toString(Qt::ISODate)</methodname>). For an alarm
 with a date and time, the string should be in the format
-<quote>YYYY-MM-DDTHH:MM[:SS]</quote> (as returned by
+<quote>YYYY-MM-DDTHH:MM[:SS] [TZ]</quote> (as returned by
 <methodname>QDateTime::toString(Qt::ISODate)</methodname>) or
-<quote>HH:MM[:SS]</quote> (as returned by
+<quote>HH:MM[:SS] [Clock]</quote> (as returned by
 <methodname>QTime::toString(Qt::ISODate)</methodname>). If no date is
 specified, today's date is used. Note that any seconds value is
 ignored.</para>
+
+<para>If no time zone is specified, the local system time zone is
+assumed. If a time zone specifier <quote>TZ</quote> is present, it
+may be the name of a system time zone (&eg;
+<quote>Europe/London</quote>), <quote>UTC</quote> representing the UTC
+time zone, or <quote>Clock</quote> to use the local computer clock and
+ignore time zones.</para>
 </listitem>
 </varlistentry>
 
@@ -3488,7 +3843,9 @@ repeated. Specify -1 to repeat the alarm indefinitely.</para>
 alarm. If <parameter>dateTime</parameter> includes a time, this
 parameter must also include a time; if <parameter>dateTime</parameter>
 contains only a date, this parameter must also contain only a
-date.</para>
+date. It must not contain a time zone specifier; the same time zone as
+for <parameter>dateTime</parameter> is used to interpret this
+parameter's value.</para>
 </listitem>
 </varlistentry>
 
@@ -3619,16 +3976,23 @@ email attachments.</para>
 <term><parameter>dateTime</parameter></term>
 <listitem>
 <para>Specifies the scheduled date, or date and time, at which the
-email should be sent. For a date-only alarm, the string should
-be in the format <quote>YYYY-MM-DD</quote> (as returned by
+message should be displayed. For a date-only alarm, the string should
+be in the format <quote>YYYY-MM-DD [TZ]</quote> (as returned by
 <methodname>QDate::toString(Qt::ISODate)</methodname>). For an alarm
 with a date and time, the string should be in the format
-<quote>YYYY-MM-DDTHH:MM[:SS]</quote> (as returned by
+<quote>YYYY-MM-DDTHH:MM[:SS] [TZ]</quote> (as returned by
 <methodname>QDateTime::toString(Qt::ISODate)</methodname>) or
-<quote>HH:MM[:SS]</quote> (as returned by
+<quote>HH:MM[:SS] [Clock]</quote> (as returned by
 <methodname>QTime::toString(Qt::ISODate)</methodname>). If no date is
 specified, today's date is used. Note that any seconds value is
 ignored.</para>
+
+<para>If no time zone is specified, the local system time zone is
+assumed. If a time zone specifier <quote>TZ</quote> is present, it
+may be the name of a system time zone (&eg;
+<quote>Europe/London</quote>), <quote>UTC</quote> representing the UTC
+time zone, or <quote>Clock</quote> to use the local computer clock and
+ignore time zones.</para>
 </listitem>
 </varlistentry>
 
@@ -3703,7 +4067,9 @@ repeated. Specify -1 to repeat the alarm indefinitely.</para>
 alarm. If <parameter>dateTime</parameter> includes a time, this
 parameter must also include a time; if <parameter>dateTime</parameter>
 contains only a date, this parameter must also contain only a
-date.</para>
+date. It must not contain a time zone specifier; the same time zone as
+for <parameter>dateTime</parameter> is used to interpret this
+parameter's value.</para>
 </listitem>
 </varlistentry>
 
@@ -3835,7 +4201,7 @@ displayed but is (obviously) not preset with the template.</para>
 </sect1>
 
 <sect1 id="cmdline-interface">
-<title>Command line interface</title>
+<title>Command Line Interface</title>
 
 <para>Command line options are provided to enable other programs (such
 as the <application>alarm daemon</application>) to start up &kalarm;
@@ -3851,8 +4217,8 @@ running; if it is, they should instead use &DCOP; calls to request these
 operations.</para></note>
 
 <para>The command line options for scheduling a new alarm are as
-described in the chapter <link linkend="cmdline-operation">Command line
-operation</link>. The options for triggering and canceling scheduled
+described in the chapter <link linkend="cmdline-operation">Command Line
+Operation</link>. The options for triggering and canceling scheduled
 alarms are as follows:</para>
 
 <note><para>Normal users may also if they wish use these command line
@@ -3868,13 +4234,6 @@ information).</para></note>
 </row>
 </thead>
 <tbody>
-<row>
-  <entry><option>--calendarURL <replaceable>url</replaceable></option></entry>
-  <entry>Use the calendar file with the specified &URL;. This option
-  is only used for integrity checking: if the &URL; doesn't specify
-  &kalarm;'s current default calendar file, the request will be
-  ignored.</entry>
-</row>
 <row>
   <entry><option>--cancelEvent <replaceable>eventID</replaceable></option></entry>
   <entry>Cancel the alarm with the specified event ID.</entry>
@@ -3898,13 +4257,12 @@ information).</para></note>
 
 <para><option>--cancelEvent</option>, <option>--triggerEvent</option>
 and <option>--handleEvent</option> are mutually
-exclusive. <option>--calendarURL</option> is optional, but can only be
-used with one of the other three options.</para>
+exclusive.</para>
 
 <para>Examples are:</para>
 
 <informalexample><screen>
-<prompt>%</prompt> <userinput><command>kalarm</command> <option>--triggerEvent <replaceable>&kalarm;-387486299.702</replaceable></option> <option>--calendarURL <replaceable>file:/home/zaphod/hydra.ics</replaceable></option></userinput>
+<prompt>%</prompt> <userinput><command>kalarm</command> <option>--triggerEvent <replaceable>&kalarm;-387486299.702</replaceable></option></userinput>
 <prompt>%</prompt> <userinput><command>kalarm</command> <option>--cancelEvent <replaceable>&kalarm;-388886299.793</replaceable></option></userinput>
 </screen>
 </informalexample>
@@ -3936,43 +4294,54 @@ to trigger them when they become due.</para>
 <para>What configuration files does &kalarm; use?</para>
 </question>
 <answer>
-<para>The file <filename>$KDEHOME/share/config/kalarmrc</filename>
+<para><filename>$KDEHOME/share/config/kalarmrc</filename>
 holds your &kalarm; preferences.</para>
-
-<para>The calendar file which stores your pending alarms is
-<filename>$KDEHOME/share/apps/kalarm/calendar.ics</filename>, unless
-a different calendar file is specified in the preferences file by a
-<parameter>Calendar</parameter> entry in the
-<parameter>General</parameter> section.</para>
-
-<para>The calendar file which stores your expired alarms is
-<filename>$KDEHOME/share/apps/kalarm/expired.ics</filename>, unless
-a different calendar file is specified in the preferences file by an
-<parameter>ExpiredCalendar</parameter> entry in the
-<parameter>General</parameter> section.</para>
-
-<para>The calendar file which stores your alarm templates is
-<filename>$KDEHOME/share/apps/kalarm/template.ics</filename>, unless
-a different calendar file is specified in the preferences file by a
-<parameter>TemplateCalendar</parameter> entry in the
-<parameter>General</parameter> section.</para>
-
-<para>Details of alarms currently being displayed are stored in the
-calendar file
-<filename>$KDEHOME/share/apps/kalarm/displaying.ics</filename>.</para>
-
+<para><filename>$KDEHOME/share/config/kalarmdrc</filename>
+holds preferences used by the <application>alarm daemon</application>.</para>
+<para>
+<filename>$KDEHOME/share/config/kresources/alarms/stdrc</filename>
+holds your alarm resource configuration.</para>
 </answer>
 </qandaentry>
 
 <qandaentry>
 <question>
-<para>What configuration files does the <application>alarm
-daemon</application> use?</para>
+<para>Where does &kalarm; store its alarms?</para>
 </question>
 <answer>
-<para>The file <filename>$KDEHOME/share/config/kalarmdrc</filename>
-holds your <application>alarm daemon</application> preferences,
-together with details of the &kalarm; client application.</para>
+
+<para>The names of the calendar files which &kalarm; creates the first
+time it is run are as follows (but these may be overridden by entries
+in the <parameter>General</parameter> section of &kalarm;'s preferences
+file):</para>
+
+<itemizedlist>
+<listitem>
+<para><filename>$KDEHOME/share/apps/kalarm/calendar.ics</filename>
+holds active alarms (overridable by the
+<parameter>Calendar</parameter> entry).</para>
+</listitem>
+
+<listitem>
+<para><filename>$KDEHOME/share/apps/kalarm/expired.ics</filename>
+holds archived alarms (overridable by the
+<parameter>ExpiredCalendar</parameter> entry).</para>
+</listitem>
+
+<listitem>
+<para><filename>$KDEHOME/share/apps/kalarm/template.ics</filename>
+holds  alarm templates (overridable by the
+<parameter>TemplateCalendar</parameter> entry).</para>
+</listitem>
+</itemizedlist>
+
+<para>You can find out which calendar files are currently in use by
+viewing each resource's details in the alarm resources list. The file
+names are stored in the alarm resource configuration file.</para>
+
+<para>Details of alarms currently being displayed are stored in the
+calendar file
+<filename>$KDEHOME/share/apps/kalarm/displaying.ics</filename>.</para>
 </answer>
 </qandaentry>
 
@@ -3989,6 +4358,9 @@ Internet Calendaring and Scheduling Core Object Specification
 applications. &kalarm; uses certain non-standard properties in the
 Alarm component, in conformance with RFC2445:
 <literal>X-KDE-KALARM-TYPE</literal>,
+<literal>X-KDE-KALARM-FLAGS</literal>,
+<literal>X-KDE-KALARM-ARCHIVE</literal>,
+<literal>X-KDE-KALARM-LOG</literal>,
 <literal>X-KDE-KALARM-FONTCOLOR</literal>,
 <literal>X-KDE-KALARM-VOLUME</literal>,
 <literal>X-KDE-KALARM-SPEAK</literal>,
@@ -4056,12 +4428,12 @@ who kindly agreed to allow the name &kalarm; to be used by this
 <title>Installation</title>
 
 <sect1 id="getting-kalarm">
-<title>How to obtain &kalarm;</title>
+<title>How to Obtain &kalarm;</title>
 
 &install.intro.documentation;
 
 <para>&kalarm; is available for &kde; 2 and as a standalone package for
-&kde;3 from <ulink url="http://www.astrojar.org.uk/linux/kalarm.html">http://www.astrojar.org.uk/linux/kalarm.html</ulink>
+&kde; 3 from <ulink url="http://www.astrojar.org.uk/linux/kalarm.html">http://www.astrojar.org.uk/linux/kalarm.html</ulink>
 </para>
 
 </sect1>
@@ -4102,7 +4474,7 @@ url="http://www.astrojar.org.uk/linux/kalarm.html">http://www.astrojar.org.uk/li
 </sect1>
 
 <sect1 id="compilation">
-<title>Compilation and installation</title>
+<title>Compilation and Installation</title>
 
 <para>If you cannot obtain a suitable precompiled binary package, you
 need to compile &kalarm; yourself from source files. Get the source
