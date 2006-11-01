@@ -174,7 +174,7 @@ void ResourceSelection::add()
   ResourceItem *i = selectedItem();
   if ( i ) {
     KPIM::ResourceABC *res = dynamic_cast<KPIM::ResourceABC *>( i->resource() );
-    if ( i->isSubResource() || res->canHaveSubresources() ) {
+    if ( i->isSubResource() || ( res && res->canHaveSubresources() ) ) {
       const QString folderName = KInputDialog::getText( i18n( "Add Subresource" ),
           i18n( "Please enter a name for the new subresource" ), QString::null,
           &ok, this );
