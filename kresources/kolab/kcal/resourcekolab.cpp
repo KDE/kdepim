@@ -332,41 +332,50 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
     Incidence* local = mCalendar.incidence( origUid );
     Incidence* localIncidence = 0;
     Incidence* addedIncidence = 0;
+    Incidence*  result = 0;
     if ( local ) {
+      if (*local == *inc) {
+        // real duplicate, remove the second one
+        result = local;
+      } else {
         KIncidenceChooser* ch = new KIncidenceChooser();
         ch->setIncidence( local ,inc );
         if ( KIncidenceChooser::chooseMode == KIncidenceChooser::ask ) {
-            connect ( this, SIGNAL( useGlobalMode() ), ch, SLOT (  useGlobalMode() ) );
-            if ( ch->exec() )
-                if ( KIncidenceChooser::chooseMode != KIncidenceChooser::ask )
-                    emit useGlobalMode() ;
+          connect ( this, SIGNAL( useGlobalMode() ), ch, SLOT (  useGlobalMode() ) );
+          if ( ch->exec() )
+            if ( KIncidenceChooser::chooseMode != KIncidenceChooser::ask )
+              emit useGlobalMode() ;
         }
-        Incidence* result = ch->getIncidence();
-      delete ch;
-      if ( result == local ) {
-          delete inc;
-          localIncidence = local;
-      } else  if ( result == inc ) {
-          addedIncidence = inc;
-      } else if ( result == 0 ) { // take both
-          addedIncidence = inc;
-          addedIncidence->setSummary( i18n("Copy of: %1").arg( addedIncidence->summary() ) );
-          addedIncidence->setUid( CalFormat::createUniqueId() );
-          localIncidence = local;
+        result = ch->getIncidence();
+        delete ch;
       }
-      bool silent = mSilent;
-      mSilent = false;
-      if ( !localIncidence ) {
+    } else {
+      // nothing there locally, just take the new one. Can't Happen (TM)
+      result = inc;
+    }
+    if ( result == local ) {
+        delete inc;
+        localIncidence = local;
+    } else  if ( result == inc ) {
+        addedIncidence = inc;
+    } else if ( result == 0 ) { // take both
+        addedIncidence = inc;
+        addedIncidence->setSummary( i18n("Copy of: %1").arg( addedIncidence->summary() ) );
+        addedIncidence->setUid( CalFormat::createUniqueId() );
+        localIncidence = local;
+    }
+    bool silent = mSilent;
+    mSilent = false;
+    if ( !localIncidence ) {
         deleteIncidence( local ); // remove local from kmail
-      }
-      mUidsPendingDeletion.append( origUid );
-      if ( addedIncidence  ) {
+    }
+    mUidsPendingDeletion.append( origUid );
+    if ( addedIncidence  ) {
         sendKMailUpdate( addedIncidence, subresource, sernum );
-      } else {
+    } else {
         kmailDeleteIncidence( subresource, sernum );// remove new from kmail
-      }
-      mSilent = silent;
-  }
+    }
+    mSilent = silent;
 }
 void ResourceKolab::addIncidence( const char* mimetype, const QString& xml,
                                   const QString& subResource, Q_UINT32 sernum )
@@ -774,8 +783,8 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
   if ( !subresourceActive( subResource ) ) return;
 
   // Can't be in both, by contract
-  if ( mUidsPendingDeletion.contains( uid ) ) {
-    mUidsPendingDeletion.remove( uid );
+  if ( mUidsPendingDeletion.find( uid ) != mUidsPendingDeletion.end() ) {
+    mUidsPendingDeletion.remove( mUidsPendingDeletion.find( uid ) );
   } else if ( mUidsPendingUpdate.contains( uid ) ) {
     // It's good to know if was deleted, but we are waiting on a new one to
     // replace it, so let's just sit tight.
