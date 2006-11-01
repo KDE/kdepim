@@ -328,7 +328,8 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
         delete inc;
         return;
     }
-    Incidence* local = mCalendar.incidence( inc->uid() );
+    const QString origUid = inc->uid();
+    Incidence* local = mCalendar.incidence( origUid );
     Incidence* localIncidence = 0;
     Incidence* addedIncidence = 0;
     if ( local ) {
@@ -343,27 +344,26 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
         Incidence* result = ch->getIncidence();
       delete ch;
       if ( result == local ) {
-          localIncidence = local->clone();
           delete inc;
+          localIncidence = local;
       } else  if ( result == inc ) {
           addedIncidence = inc;
       } else if ( result == 0 ) { // take both
-          localIncidence = local->clone();
-          localIncidence->recreate();
-          localIncidence->setSummary( i18n("Copy of: %1").arg(localIncidence->summary()) );
           addedIncidence = inc;
+          addedIncidence->setSummary( i18n("Copy of: %1").arg( addedIncidence->summary() ) );
+          addedIncidence->setUid( CalFormat::createUniqueId() );
+          localIncidence = local;
       }
       bool silent = mSilent;
       mSilent = false;
-      deleteIncidence( local ); // remove local from kmail
-      kmailDeleteIncidence( subresource, sernum );// remove new from kmail
-      if ( localIncidence ) {
-        addIncidence( localIncidence, subresource, 0  );
-        mUidsPendingAdding.remove( localIncidence->uid() ); // we do want to inform KOrg also
+      if ( !localIncidence ) {
+        deleteIncidence( local ); // remove local from kmail
       }
+      mUidsPendingDeletion.append( origUid );
       if ( addedIncidence  ) {
-        addIncidence( addedIncidence, subresource, 0  );
-        mUidsPendingAdding.remove( addedIncidence->uid() ); // we do want to inform KOrg also
+        sendKMailUpdate( addedIncidence, subresource, sernum );
+      } else {
+        kmailDeleteIncidence( subresource, sernum );// remove new from kmail
       }
       mSilent = silent;
   }
@@ -471,7 +471,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     }
     if ( subResource.isEmpty() )
       return false;
-    
+
     mNewIncidencesMap.insert( uid, subResource );
 
     if ( !sendKMailUpdate( incidence, subResource, sernum ) ) {
