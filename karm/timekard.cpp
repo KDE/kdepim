@@ -116,7 +116,8 @@ void TimeKard::printTask(Task *task, QString &s, int level, WhichTime which)
       subTask = subTask->nextSibling())
   {
     int time = which == TotalTime ? subTask->totalTime() : subTask->sessionTime();
-    printTask(subTask, s, level+1, which);
+    if (time || subTask->firstChild())
+      printTask(subTask, s, level+1, which);
   }
 }
 
