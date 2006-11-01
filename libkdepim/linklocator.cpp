@@ -96,8 +96,8 @@ QString LinkLocator::getUrl()
     {
       ++mPos;
     }
-    /* some URLs really end with:  # / &     */
-    const QString allowedSpecialChars = QString("#/&");
+    /* some URLs really end with:  # / & - _    */
+    const QString allowedSpecialChars = QString("#/&-_");
     while(mPos > start && mText[mPos-1].isPunct() &&
 		    allowedSpecialChars.find(mText[mPos-1]) == -1 )
     {
