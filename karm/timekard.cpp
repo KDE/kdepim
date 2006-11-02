@@ -22,17 +22,19 @@
 
 // #include <iostream>
 
-#include <qdatetime.h>
-#include <qpaintdevicemetrics.h>
-#include <qpainter.h>
-#include <qmap.h>
+#include <QDateTime>
+#include <q3paintdevicemetrics.h>
+#include <QPainter>
+#include <QMap>
+#include <QList>
 
 #include <kglobal.h>
 #include <kdebug.h>
 #include <klocale.h>            // i18n
-#include <event.h>
+#include <kcal/event.h>
 
 #include "karmutility.h"        // formatTime()
+#include "reportcriteria.h"     // settings the user gave in the export dialog
 #include "timekard.h"
 #include "task.h"
 #include "taskview.h"
@@ -45,12 +47,13 @@ const int reportWidth = taskWidth + timeWidth;
 
 const QString cr = QString::fromLatin1("\n");
 
-QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
+QString TimeKard::totalsAsText(TaskView* taskview, ReportCriteria rc)
 {
   QString retval;
   QString line;
   QString buf;
   long sum;
+  bool justThisTask=!rc.allTasks;
 
   line.fill('-', reportWidth);
   line += cr;
@@ -70,19 +73,20 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
   {
     if (justThisTask)
     {
-      // a task's total time includes the sum of all subtask times
-      sum = taskview->current_item()->totalTime();
-      printTask(taskview->current_item(), retval, 0);
+      if (!rc.sessionTimes) sum = taskview->current_item()->totalTime();
+      else sum = taskview->current_item()->totalSessionTime();
+      printTask(taskview->current_item(), retval, 0, rc);
     }
-    else
+    else // print all tasks
     {
       sum = 0;
       for (Task* task= taskview->current_item(); task;
           task= task->nextSibling())
       {
-        sum += task->totalTime();
-        if ( task->totalTime() )
-          printTask(task, retval, 0);
+        if (!rc.sessionTimes) sum += task->totalTime();
+        else sum += task->totalSessionTime();
+        if ( (task->totalTime() && (!rc.sessionTimes)) || (task->totalSessionTime() && rc.sessionTimes) )
+          printTask(task, retval, 0, rc);
       }
     }
 
@@ -100,22 +104,39 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask)
 }
 
 // Print out "<indent for level> <task total> <task>", for task and subtasks. Used by totalsAsText.
-void TimeKard::printTask(Task *task, QString &s, int level)
+void TimeKard::printTask(Task *task, QString &s, int level, const ReportCriteria &rc)
 {
   QString buf;
 
   s += buf.fill(' ', level);
-  s += QString(QString::fromLatin1("%1    %2"))
-    .arg(formatTime(task->totalTime()), timeWidth)
-    .arg(task->name());
+  if (!rc.sessionTimes)
+  {
+    s += QString(QString::fromLatin1("%1    %2"))
+      .arg(formatTime(task->totalTime()), timeWidth)
+      .arg(task->name());
+  }
+  else // print session times
+  {
+    s += QString(QString::fromLatin1("%1    %2"))
+      .arg(formatTime(task->totalSessionTime()), timeWidth)
+      .arg(task->name());
+  }
   s += cr;
 
   for (Task* subTask = task->firstChild();
       subTask;
       subTask = subTask->nextSibling())
   {
-    if ( subTask->totalTime() ) // to avoid 00:00 entries
-      printTask(subTask, s, level+1);
+    if ( !rc.sessionTimes )
+    {
+      if ( subTask->totalTime() ) // to avoid 00:00 entries
+        printTask(subTask, s, level+1, rc);
+    }
+    else
+    {
+      if ( subTask->totalSessionTime() ) // to avoid 00:00 entries
+        printTask(subTask, s, level+1, rc);
+    }
   }
 }
 
@@ -144,7 +165,7 @@ void TimeKard::printTaskHistory(const Task *task,
       sectionsum += taskdaytotals[daytaskkey];  // in seconds
 
       if (daytotals.contains(daykey))
-        daytotals.replace(daykey, daytotals[daykey] + taskdaytotals[daytaskkey]);
+        daytotals.insert(daykey, daytotals[daykey] + taskdaytotals[daytaskkey]);
       else
         daytotals.insert(daykey, taskdaytotals[daytaskkey]);
     }
@@ -188,7 +209,7 @@ QString TimeKard::sectionHistoryAsText(
   line.fill('-', sectionReportWidth);
   line += cr;
 
-  QValueList<HistoryEvent> events;
+  QList<HistoryEvent> events;
   if ( sectionFrom < from && sectionTo > to)
   {
     events = taskview->getHistory(from, to);
@@ -214,7 +235,7 @@ QString TimeKard::sectionHistoryAsText(
   // NNNNN = the VTODO uid.  The value is the total seconds logged against
   // that task on that day.  Note the UID is the todo id, not the event id,
   // so times are accumulated for each task.
-  for (QValueList<HistoryEvent>::iterator event = events.begin(); event != events.end(); ++event)
+  for (QList<HistoryEvent>::iterator event = events.begin(); event != events.end(); ++event)
   {
     QString daykey = (*event).start().date().toString(QString::fromLatin1("yyyyMMdd"));
     QString daytaskkey = QString::fromLatin1("%1_%2")
@@ -222,7 +243,7 @@ QString TimeKard::sectionHistoryAsText(
                          .arg((*event).todoUid());
 
     if (taskdaytotals.contains(daytaskkey))
-      taskdaytotals.replace(daytaskkey,
+      taskdaytotals.insert(daytaskkey,
                             taskdaytotals[daytaskkey] + (*event).duration());
     else
       taskdaytotals.insert(daytaskkey, (*event).duration());
@@ -232,7 +253,7 @@ QString TimeKard::sectionHistoryAsText(
   // section name (e.g. week name)
   retval += cr + cr;
   QString buf;
-  if ( name.length() < (unsigned int)sectionReportWidth )
+  if ( name.length() < sectionReportWidth )
     buf.fill(' ', int((sectionReportWidth - name.length()) / 2));
   retval += buf + name + cr;
 
@@ -307,18 +328,18 @@ QString TimeKard::historyAsText(TaskView* taskview, const QDate& from,
   QString retval;
   retval += totalsOnly ? i18n("Task Totals") : i18n("Task History");
   retval += cr;
-  retval += i18n("From %1 to %2")
-    .arg(KGlobal::locale()->formatDate(from))
-    .arg(KGlobal::locale()->formatDate(to));
+  retval += i18n("From %1 to %2",
+     KGlobal::locale()->formatDate(from),
+     KGlobal::locale()->formatDate(to));
   retval += cr;
-  retval += i18n("Printed on: %1")
-    .arg(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
+  retval += i18n("Printed on: %1",
+     KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
 
   if ( perWeek )
   {
     // output one time card table for each week in the date range
-    QValueList<Week> weeks = Week::weeksFromDateRange(from, to);
-    for (QValueList<Week>::iterator week = weeks.begin(); week != weeks.end(); ++week)
+    QList<Week> weeks = Week::weeksFromDateRange(from, to);
+    for (QList<Week>::iterator week = weeks.begin(); week != weeks.end(); ++week)
     {
       retval += sectionHistoryAsText( taskview, (*week).start(), (*week).end(), from, to, (*week).name(), justThisTask, totalsOnly );
     }
@@ -343,18 +364,18 @@ QDate Week::start() const
 
 QDate Week::end() const
 {
-  return _start.addDays(7);
+  return _start.addDays(6);
 }
 
 QString Week::name() const
 {
-  return i18n("Week of %1").arg(KGlobal::locale()->formatDate(start()));
+  return i18n("Week of %1", KGlobal::locale()->formatDate(start()));
 }
 
-QValueList<Week> Week::weeksFromDateRange(const QDate& from, const QDate& to)
+QList<Week> Week::weeksFromDateRange(const QDate& from, const QDate& to)
 {
   QDate start;
-  QValueList<Week> weeks;
+  QList<Week> weeks;
 
   // The QDate weekNumber() method always puts monday as the first day of the
   // week.

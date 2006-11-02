@@ -23,17 +23,19 @@
 #ifndef KARM_STORAGE_H
 #define KARM_STORAGE_H
 
-#include <qdict.h>
-#include <qptrstack.h>
+#include <q3dict.h>
+#include <q3ptrstack.h>
+//Added by qt3to4:
+#include <QList>
 
-#include "journal.h"
 #include "reportcriteria.h"
 
 #include "desktoplist.h"
 
-#include <calendarresources.h>
 #include <vector>
-#include "resourcecalendar.h"
+#include <kcal/journal.h>
+#include <kcal/calendarresources.h>
+#include <kcal/resourcecalendar.h>
 #include <kdepimmacros.h>
 
 class QDateTime;
@@ -118,32 +120,6 @@ class KarmStorage
      * @param taskview    The list group used in the TaskView
      */
     QString save(TaskView* taskview);
-
-    /**
-     * Read tasks and their total times from a text file (legacy storage).
-     *
-     * This reads from one of the two legacy file formats.  In this version,
-     * the parent task times do not include the sum of all their children's
-     * times.
-     *
-     * The format of the file is zero or more lines of:
-     *    1         task id (a number)
-     *    time      in minutes
-     *    string    task name
-     *    [string]  desktops, in which to count. e.g. "1,2,5" (optional)
-     */
-    QString loadFromFlatFile(TaskView* taskview, const QString& filename);
-
-    /**
-     *  Reads tasks and their total times from text file (legacy).
-     *
-     *  This is the older legacy format, where the task totals included the
-     *  children totals.
-     *
-     *  @see loadFromFlatFile
-     */
-    QString loadFromFlatFileCumulative(TaskView* taskview,
-        const QString& filename);
 
     /**
      Output a report based on contents of ReportCriteria.
@@ -287,7 +263,7 @@ class KarmStorage
     bool isNewStorage(const Preferences* preferences) const;
 
     /** Return a list of start/stop events for the given date range. */
-    QValueList<HistoryEvent> getHistory(const QDate& from, const QDate& to);
+    QList<HistoryEvent> getHistory(const QDate& from, const QDate& to);
 
   private:
     static KarmStorage                *_instance;
@@ -299,7 +275,7 @@ class KarmStorage
     bool parseLine(QString line, long *time, QString *name, int *level,
         DesktopList* desktopList);
     QString writeTaskAsTodo
-      (Task* task, const int level, QPtrStack< KCal::Todo >& parents);
+      (Task* task, const int level, Q3PtrStack< KCal::Todo >& parents);
     bool saveCalendar();
 
     KCal::Event* baseEvent(const Task*);
@@ -349,13 +325,13 @@ class HistoryEvent
     /** Needed to be used in a value list. */
     HistoryEvent() {}
     HistoryEvent(QString uid, QString name, long duration,
-        QDateTime start, QDateTime stop, QString todoUid);
+        KDateTime start, KDateTime stop, QString todoUid);
     QString uid() {return _uid; }
     QString name() {return _name; }
     /** In seconds. */
     long duration() {return _duration; }
-    QDateTime start() {return _start; }
-    QDateTime stop() { return _stop; }
+    KDateTime start() {return _start; }
+    KDateTime stop() { return _stop; }
     QString todoUid() {return _todoUid; }
 
   private:
@@ -363,8 +339,8 @@ class HistoryEvent
     QString _todoUid;
     QString _name;
     long _duration;
-    QDateTime _start;
-    QDateTime _stop;
+    KDateTime _start;
+    KDateTime _stop;
 
 };
 

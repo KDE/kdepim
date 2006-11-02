@@ -107,6 +107,9 @@ class KarmDCOPIface : virtual public DCOPObject
   // may conflict with unitaskmode
   virtual QString stoptimerfor( const QString& taskname ) = 0;
 
+  /** Stop all timers */
+  virtual QString stopalltimers() = 0;
+
   /** delete the current item */
   virtual QString deletetodo() = 0;
 

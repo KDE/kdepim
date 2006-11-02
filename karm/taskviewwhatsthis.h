@@ -10,15 +10,16 @@
 #ifndef TASKVIEWWHATSTHIS_H
 #define TASKVIEWWHATSTHIS_H
 
-#include <qwhatsthis.h>
-#include <klistview.h>
+#include <q3whatsthis.h>
+#include <k3listview.h>
+#include <taskview.h>
 
 /**
 this is the karm-taskview-specific implementation of qwhatsthis
 
 @author Thorsten Staerk
 */
-class TaskViewWhatsThis : public QWhatsThis
+class TaskViewWhatsThis : public Q3WhatsThis
 {
 public:
     TaskViewWhatsThis( QWidget* );
@@ -27,6 +28,6 @@ public:
     QString text ( const QPoint & );
 
 private:
-    KListView* _listView;  // stores the associated listview for column widths
+    TaskView* _listView;  // stores the associated listview for column widths
 };
 #endif

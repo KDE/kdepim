@@ -4,13 +4,12 @@
 #include <kparts/mainwindow.h>
 
 #include "karmerrors.h"
-#include <karmdcopiface.h>
 #include "reportcriteria.h"
 
 class KAccel;
 class KAccelMenuWatch;
 class KarmTray;
-class QListViewItem;
+class Q3ListViewItem;
 class QPoint;
 class QString;
 
@@ -23,7 +22,7 @@ class TaskView;
  * Main window to tie the application together.
  */
 
-class MainWindow : public KParts::MainWindow, virtual public KarmDCOPIface
+class MainWindow : public KParts::MainWindow
 {
   Q_OBJECT
 
@@ -77,6 +76,7 @@ class MainWindow : public KParts::MainWindow, virtual public KarmDCOPIface
     int totalMinutesForTaskId( const QString& taskId );
     QString starttimerfor( const QString &taskname );
     QString stoptimerfor( const QString &taskname );
+    QString stopalltimers();
     QString deletetodo();
     bool    getpromptdelete();
     QString setpromptdelete( bool prompt );
@@ -85,18 +85,17 @@ class MainWindow : public KParts::MainWindow, virtual public KarmDCOPIface
 
   public slots:
     void quit();
-
+	bool save();
   protected slots:
     void keyBindings();
     void startNewSession();
     void resetAllTimes();
     void updateTime( long, long );
     void updateStatusBar();
-    bool save();
     void exportcsvHistory();
     void print();
     void slotSelectionChanged();
-    void contextMenuRequest( QListViewItem*, const QPoint&, int );
+    void contextMenuRequest( Q3ListViewItem*, const QPoint&, int );
     void enableStopAll();
     void disableStopAll();
 //    void timeLoggingChanged( bool on );

@@ -20,17 +20,17 @@
  *
  */
 
-#include <qbuttongroup.h>
-#include <qcheckbox.h>
-#include <qhbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qlineedit.h>
-#include <qpixmap.h>
-#include <qpushbutton.h>
-#include <qstring.h>
-#include <qwidget.h>
-#include <qwhatsthis.h>
+#include <Q3ButtonGroup>
+#include <QCheckBox>
+#include <QLabel>
+#include <QLayout>
+#include <QLineEdit>
+#include <QPixmap>
+#include <QPushButton>
+#include <QString>
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include <kiconloader.h>
 #include <klocale.h>            // i18n
@@ -41,24 +41,27 @@
 
 
 PrintDialog::PrintDialog()
-  : KDialogBase(0, "PrintDialog", true, i18n("Print Dialog"), Ok|Cancel,
-      Ok, true )
+  : KDialog()
 {
+  setObjectName( "PrintDialog" );
   QWidget *page = new QWidget( this );
   setMainWidget(page);
   int year, month;
 
-  QVBoxLayout *layout = new QVBoxLayout(page, KDialog::spacingHint());
+  QVBoxLayout *layout = new QVBoxLayout(page);
+  layout->setSpacing(KDialog::spacingHint());
   layout->addSpacing(10);
   layout->addStretch(1);
 
   // Date Range
-  QGroupBox *rangeGroup = new QGroupBox(1, Horizontal, i18n("Date Range"),
+  Q3GroupBox *rangeGroup = new Q3GroupBox(1, Qt::Horizontal, i18n("Date Range"),
       page);
   layout->addWidget(rangeGroup);
 
   QWidget *rangeWidget = new QWidget(rangeGroup);
-  QHBoxLayout *rangeLayout = new QHBoxLayout(rangeWidget, 0, spacingHint());
+  QHBoxLayout *rangeLayout = new QHBoxLayout(rangeWidget);
+  rangeLayout->setSpacing(spacingHint());
+  rangeLayout->setMargin(0);
 
   rangeLayout->addWidget(new QLabel(i18n("From:"), rangeWidget));
   _from = new KDateEdit(rangeWidget);
@@ -76,8 +79,8 @@ PrintDialog::PrintDialog()
   layout->addStretch(1);
 
   _allTasks = new QComboBox( page );
-  _allTasks->insertItem( i18n( "Selected Task" ) );
-  _allTasks->insertItem( i18n( "All Tasks" ) );
+  _allTasks->addItem( i18n( "Selected Task" ) );
+  _allTasks->addItem( i18n( "All Tasks" ) );
   layout->addWidget( _allTasks );
 
   _perWeek = new QCheckBox( i18n( "Summarize per week" ), page );
@@ -106,7 +109,7 @@ bool PrintDialog::perWeek() const
 
 bool PrintDialog::allTasks() const
 {
-  return _allTasks->currentItem() == 1;
+  return _allTasks->currentIndex() == 1;
 }
 
 bool PrintDialog::totalsOnly() const

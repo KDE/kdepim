@@ -12,7 +12,7 @@ up the status bar, and handles many of the signal-to-slot connections.  It
 holds a pointer to the TaskView and Preferences objects and implements the
 %Karm's DCOP interface (defined in KarmDCOPIface).
 
-TaskView does most of the work in the application.  This KListView subclass
+TaskView does most of the work in the application.  This K3ListView subclass
 sets up the columns in the list, the idle detection timer, the auto save
 timer, and the desktop tracker.  It starts and stops timers, handles importing
 and exporting and displays the edit task dialog in response to user action.

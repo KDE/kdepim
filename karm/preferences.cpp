@@ -1,9 +1,12 @@
 #undef Unsorted // for --enable-final
-#include <qcheckbox.h>
-#include <qlabel.h>
-#include <qstring.h>
-#include <qspinbox.h>
-#include <qlayout.h>
+#include <QCheckBox>
+#include <QLabel>
+#include <QString>
+#include <QSpinBox>
+#include <QLayout>
+#include <QPixmap>
+#include <QVBoxLayout>
+#include <QGridLayout>
 
 #include <kapplication.h>       // kapp
 #include <kconfig.h>
@@ -14,16 +17,22 @@
 #include <klocale.h>            // i18n
 #include <kstandarddirs.h>
 #include <kurlrequester.h>
+#include <kglobal.h>
+#include <kicon.h>
 
 #include "preferences.h"
 
 Preferences *Preferences::_instance = 0;
 
 Preferences::Preferences( const QString& icsFile )
-  : KDialogBase( IconList, i18n("Preferences"), Ok|Cancel, Ok )
+  : KPageDialog()
 {
+  setCaption( i18n("Preferences") );
+  setButtons( Ok|Cancel );
+  setDefaultButton(  Ok );
+  setFaceType( KPageDialog::List );
 
-  setIconListAllVisible( true );
+  //setIconListAllVisible( true );
 
   makeBehaviorPage();
   makeDisplayPage();
@@ -31,7 +40,7 @@ Preferences::Preferences( const QString& icsFile )
 
   load();
 
-  // command-line option overrides what is stored in 
+  // command-line option overrides what is stored in
   if ( ! icsFile.isEmpty() ) _iCalFileV = icsFile;
 
 }
@@ -46,25 +55,43 @@ Preferences *Preferences::instance( const QString &icsfile )
 
 void Preferences::makeBehaviorPage()
 {
-  QPixmap icon = SmallIcon( "kcmsystem", KIcon::SizeMedium);
-  QFrame* behaviorPage = addPage( i18n("Behavior"), i18n("Behavior Settings"),
-      icon );
+  KIcon icon = KIcon( SmallIconSet( "kcmsystem", K3Icon::SizeMedium) );
+  QFrame* behaviorPage = new QFrame();
+  KPageWidgetItem *pageItem = new KPageWidgetItem( behaviorPage, i18n("Behavior"));
+  pageItem->setHeader( i18n("Behavior Settings") );
+  pageItem->setIcon( icon );
+  addPage(pageItem);
 
-  QVBoxLayout* topLevel = new QVBoxLayout( behaviorPage, 0, spacingHint() );
-  QGridLayout* layout = new QGridLayout( topLevel, 2, 2 );
-  layout->setColStretch( 1, 1 );
+  QVBoxLayout* topLevel = new QVBoxLayout( behaviorPage );
+  topLevel->setSpacing( spacingHint() );
+  topLevel->setMargin( 0 );
+  QGridLayout* layout = new QGridLayout();
+  topLevel->addLayout( layout );
+  layout->setColumnStretch( 1, 1 );
 
   _doIdleDetectionW = new QCheckBox
-    ( i18n("Detect desktop as idle after"), behaviorPage, "_doIdleDetectionW");
-  _idleDetectValueW = new QSpinBox
-    (1,60*24, 1, behaviorPage, "_idleDetectValueW");
+    ( i18n("Detect desktop as idle after"), behaviorPage);
+  _doIdleDetectionW->setObjectName( "_doIdleDetectionW" );
+  _idleDetectValueW = new QSpinBox(behaviorPage);
+  _idleDetectValueW->setObjectName( "_idleDetectValueW" );
+  _idleDetectValueW->setRange(1,30*24);
   _idleDetectValueW->setSuffix(i18n(" min"));
   _promptDeleteW = new QCheckBox
-    ( i18n( "Prompt before deleting tasks" ), behaviorPage, "_promptDeleteW" );
+    ( i18n( "Prompt before deleting tasks" ), behaviorPage );
+  _promptDeleteW->setObjectName( "_promptDeleteW" );
+  _uniTaskingW = new QCheckBox
+    ( i18n( "Allow only one timer at a time" ), behaviorPage );
+  _uniTaskingW->setObjectName( "_uniTaskingW" );
+  _uniTaskingW->setWhatsThis( i18n("Unitasking - allow only one task to be timed at a time. Does not stop any timer.") );
+  _trayIconW = new QCheckBox
+    ( i18n( "Place an icon to the SysTray" ), behaviorPage );
+  _trayIconW->setObjectName( "_trayIcon" );
 
   layout->addWidget(_doIdleDetectionW, 0, 0 );
   layout->addWidget(_idleDetectValueW, 0, 1 );
   layout->addWidget(_promptDeleteW, 1, 0 );
+  layout->addWidget(_uniTaskingW, 2, 0);
+  layout->addWidget(_trayIconW, 3, 0);
 
   topLevel->addStretch();
 
@@ -74,59 +101,90 @@ void Preferences::makeBehaviorPage()
 
 void Preferences::makeDisplayPage()
 {
-  QPixmap icon = SmallIcon( "viewmag", KIcon::SizeMedium );
-  QFrame* displayPage = addPage( i18n("Display"), i18n("Display Settings"),
-      icon );
+  KIcon icon = KIcon( SmallIconSet( "viewmag", K3Icon::SizeMedium ) );
 
-  QVBoxLayout* topLevel = new QVBoxLayout( displayPage, 0, spacingHint() );
-  QGridLayout* layout = new QGridLayout( topLevel, 5, 2 );
-  layout->setColStretch( 1, 1 );
+  QFrame* displayPage = new QFrame();
+  KPageWidgetItem *pageItem = new KPageWidgetItem( displayPage, i18n("Display"));
+  pageItem->setHeader( i18n("Display Settings") );
+  pageItem->setIcon( icon );
+  addPage(pageItem);
+
+  QVBoxLayout* topLevel = new QVBoxLayout( displayPage );
+  topLevel->setSpacing( spacingHint() );
+  topLevel->setMargin( 0 );
+  QGridLayout* layout = new QGridLayout();
+  topLevel->addLayout( layout );
+  layout->setColumnStretch( 1, 1 );
 
   QLabel* _displayColumnsLabelW = new QLabel( i18n("Columns displayed:"),
       displayPage );
   _displaySessionW = new QCheckBox ( i18n("Session time"),
-      displayPage, "_displaySessionW");
+      displayPage);
+  _displaySessionW->setObjectName( "_displaySessionW" );
   _displayTimeW = new QCheckBox ( i18n("Cumulative task time"),
-      displayPage, "_displayTimeW");
+      displayPage);
+  _displayTimeW->setObjectName( "_displayTimeW" );
   _displayTotalSessionW = new QCheckBox( i18n("Total session time"),
-      displayPage, "_displayTotalSessionW");
+      displayPage);
+  _displayTotalSessionW->setObjectName( "_displayTotalSessionW" );
   _displayTotalTimeW = new QCheckBox ( i18n("Total task time"),
-      displayPage, "_displayTotalTimeW");
+      displayPage);
+  _displayTotalTimeW->setObjectName( "_displayTotalTimeW" );
+  _displayPerCentCompleteW = new QCheckBox ( i18n("Percent Complete"),
+      displayPage);
+  _displayPerCentCompleteW->setObjectName( "_perCentCompleteW" );
 
-  layout->addMultiCellWidget( _displayColumnsLabelW, 0, 0, 0, 1 );
+  QLabel* _numberFormatW = new QLabel( i18n("Number format:"),
+      displayPage );
+  _decimalFormatW = new QCheckBox( i18n("Decimal"), displayPage );
+  _decimalFormatW->setObjectName( "_decimalDisplayW" );
+
+  layout->addWidget( _displayColumnsLabelW, 0, 1, 1, 2 );
   layout->addWidget(_displaySessionW, 1, 1 );
   layout->addWidget(_displayTimeW, 2, 1 );
   layout->addWidget(_displayTotalSessionW, 3, 1 );
   layout->addWidget(_displayTotalTimeW, 4, 1 );
+  layout->addWidget(_displayPerCentCompleteW, 5, 1 );
+
+  layout->addWidget( _numberFormatW, 0, 2, 1, 1);
+  layout->addWidget( _decimalFormatW, 1, 2 );
 
   topLevel->addStretch();
 }
 
 void Preferences::makeStoragePage()
 {
-  QPixmap icon = SmallIcon( "kfm", KIcon::SizeMedium );
-  QFrame* storagePage = addPage( i18n("Storage"), i18n("Storage Settings"),
-      icon );
+  KIcon icon = KIcon( SmallIconSet( "kfm", K3Icon::SizeMedium ) );
+  QFrame* storagePage = new QFrame();
+  KPageWidgetItem *pageItem = new KPageWidgetItem( storagePage, i18n("Storage") );
+  pageItem->setHeader( i18n("Storage Settings") );
+  pageItem->setIcon( icon );
+  addPage(pageItem);
 
-  QVBoxLayout* topLevel = new QVBoxLayout( storagePage, 0, spacingHint() );
-  QGridLayout* layout = new QGridLayout( topLevel, 4, 2 );
-  layout->setColStretch( 1, 1 );
+  QVBoxLayout* topLevel = new QVBoxLayout( storagePage );
+  topLevel->setSpacing( spacingHint() );
+  topLevel->setMargin( 0 );
+  QGridLayout* layout = new QGridLayout();
+  topLevel->addLayout( layout );
+  layout->setColumnStretch( 1, 1 );
 
   // autosave
-  _doAutoSaveW = new QCheckBox
-    ( i18n("Save tasks every"), storagePage, "_doAutoSaveW" );
-  _autoSaveValueW = new QSpinBox(1, 60*24, 1, storagePage, "_autoSaveValueW");
+  _doAutoSaveW = new QCheckBox( i18n("Save tasks every"), storagePage );
+  _doAutoSaveW->setObjectName( "_doAutoSaveW" );
+  _autoSaveValueW = new QSpinBox(storagePage);
+  _autoSaveValueW->setObjectName( "_autoSaveValueW" );
+  _autoSaveValueW->setRange(1, 60*24);
   _autoSaveValueW->setSuffix(i18n(" min"));
 
   // iCalendar
-  QLabel* _iCalFileLabel = new QLabel( i18n("iCalendar file:"), storagePage);
-  _iCalFileW = new KURLRequester(storagePage, "_iCalFileW");
+  QLabel* _iCalFileLabel = new QLabel( i18n("iCalendar file:"), storagePage );
+  _iCalFileW = new KUrlRequester( storagePage );
   _iCalFileW->setFilter(QString::fromLatin1("*.ics"));
   _iCalFileW->setMode(KFile::File);
 
   // Log time?
-  _loggingW = new QCheckBox 
-    ( i18n("Log history"), storagePage, "_loggingW" );
+  _loggingW = new QCheckBox( i18n("Log history"), storagePage );
+  _loggingW->setObjectName( "_loggingW" );
 
   // add widgets to layout
   layout->addWidget(_doAutoSaveW, 0, 0);
@@ -166,11 +224,14 @@ void Preferences::showDialog()
   _loggingW->setChecked(_loggingV);
 
   _promptDeleteW->setChecked(_promptDeleteV);
+  _uniTaskingW->setChecked(_uniTaskingV);
 
   _displaySessionW->setChecked(_displayColumnV[0]);
   _displayTimeW->setChecked(_displayColumnV[1]);
   _displayTotalSessionW->setChecked(_displayColumnV[2]);
   _displayTotalTimeW->setChecked(_displayColumnV[3]);
+
+  _trayIconW->setChecked(_trayIconV);
 
   // adapt visibility of preference items according
   // to settings
@@ -180,8 +241,15 @@ void Preferences::showDialog()
   show();
 }
 
+void Preferences::slotButtonClicked(int button)
+{
+  kDebug(5970) << "Entering Preferences::slotButtonClicked" << endl;
+  if (button == KDialog::Ok) slotOk();
+}
+
 void Preferences::slotOk()
 {
+  kDebug(5970) << "Entering Preferences::slotOk" << endl;
 
   // storage
   _iCalFileV = _iCalFileW->lineEdit()->text();
@@ -195,21 +263,25 @@ void Preferences::slotOk()
 
   // behavior
   _promptDeleteV = _promptDeleteW->isChecked();
+  _uniTaskingV = _uniTaskingW->isChecked();
 
   // display
   _displayColumnV[0] = _displaySessionW->isChecked();
   _displayColumnV[1] = _displayTimeW->isChecked();
   _displayColumnV[2] = _displayTotalSessionW->isChecked();
   _displayColumnV[3] = _displayTotalTimeW->isChecked();
+  _displayColumnV[4] = _displayPerCentCompleteW->isChecked();
+  _decimalFormatV = _decimalFormatW->isChecked();
+  _trayIconV = _trayIconW->isChecked();
 
   emitSignals();
   save();
-  KDialogBase::slotOk();
+  KDialog::accept();
 }
 
 void Preferences::slotCancel()
 {
-  KDialogBase::slotCancel();
+  KDialog::reject();
 }
 
 void Preferences::idleDetectCheckBoxChanged()
@@ -240,43 +312,54 @@ bool    Preferences::autoSave()                      const { return _doAutoSaveV
 int     Preferences::autoSavePeriod()                const { return _autoSaveValueV; }
 bool    Preferences::logging()                       const { return _loggingV; }
 bool    Preferences::promptDelete()                  const { return _promptDeleteV; }
+bool    Preferences::uniTasking()                    const { return _uniTaskingV; }
 QString Preferences::setPromptDelete(bool prompt)    { _promptDeleteV=prompt; return ""; }
+QString Preferences::setUniTasking(bool b)           { _uniTaskingV=b; return ""; }
 bool    Preferences::displayColumn(int n)            const { return _displayColumnV[n]; }
 QString Preferences::userRealName()                  const { return _userRealName; }
+bool    Preferences::decimalFormat()		     const { return _decimalFormatV; }
+bool    Preferences::trayIcon()                      const { return _trayIconV; }
 
 //---------------------------------------------------------------------------
 //                                  Load and Save
 //---------------------------------------------------------------------------
 void Preferences::load()
 {
-  KConfig &config = *kapp->config();
+  KConfig &config = *KGlobal::config();
 
   config.setGroup( QString::fromLatin1("Idle detection") );
-  _doIdleDetectionV = config.readBoolEntry( QString::fromLatin1("enabled"),
+  _doIdleDetectionV = config.readEntry( QString::fromLatin1("enabled"),
      true );
-  _idleDetectValueV = config.readNumEntry(QString::fromLatin1("period"), 15);
+  _idleDetectValueV = config.readEntry(QString::fromLatin1("period"), 15);
 
   config.setGroup( QString::fromLatin1("Saving") );
   _iCalFileV = config.readPathEntry
-    ( QString::fromLatin1("ical file"), 
-      locateLocal( "appdata", QString::fromLatin1( "karm.ics")));
-  _doAutoSaveV = config.readBoolEntry
+    ( QString::fromLatin1("ical file"),
+      KStandardDirs::locateLocal( "appdata", QString::fromLatin1( "karm.ics")));
+  _doAutoSaveV = config.readEntry
     ( QString::fromLatin1("auto save"), true);
-  _autoSaveValueV = config.readNumEntry
+  _autoSaveValueV = config.readEntry
     ( QString::fromLatin1("auto save period"), 5);
-  _promptDeleteV = config.readBoolEntry
+  _promptDeleteV = config.readEntry
     ( QString::fromLatin1("prompt delete"), true);
-  _loggingV = config.readBoolEntry
+  _uniTaskingV = config.readEntry
+    ( QString::fromLatin1("unitasking"), false);
+  _loggingV = config.readEntry
     ( QString::fromLatin1("logging"), true);
 
-  _displayColumnV[0] = config.readBoolEntry
-    ( QString::fromLatin1("display session time"), true);
-  _displayColumnV[1] = config.readBoolEntry
-    ( QString::fromLatin1("display time"), true);
-  _displayColumnV[2] = config.readBoolEntry
-    ( QString::fromLatin1("display total session time"), true);
-  _displayColumnV[3] = config.readBoolEntry
-    ( QString::fromLatin1("display total time"), true);
+  _displayColumnV[0] = config.readEntry
+    ( QString("display session time"), true);
+  _displayColumnV[1] = config.readEntry
+    ( QString("display time"), true);
+  _displayColumnV[2] = config.readEntry
+    ( QString("display total session time"), true);
+  _displayColumnV[3] = config.readEntry
+    ( QString("display total time"), true);
+  _displayColumnV[4] = config.readEntry
+    ( QString("display percent complete"), false);
+  
+  _trayIconV = config.readEntry
+    ( QString::fromLatin1("tray icon"), true);
 
   KEMailSettings settings;
   _userRealName = settings.getSetting( KEMailSettings::RealName );
@@ -284,28 +367,27 @@ void Preferences::load()
 
 void Preferences::save()
 {
+  kDebug(5970) << "Entering Preferences::save" << endl;
   KConfig &config = *KGlobal::config();
 
-  config.setGroup( QString::fromLatin1("Idle detection"));
-  config.writeEntry( QString::fromLatin1("enabled"), _doIdleDetectionV);
-  config.writeEntry( QString::fromLatin1("period"), _idleDetectValueV);
+  config.setGroup( QString("Idle detection"));
+  config.writeEntry( QString("enabled"), _doIdleDetectionV);
+  config.writeEntry( QString("period"), _idleDetectValueV);
 
-  config.setGroup( QString::fromLatin1("Saving"));
-  config.writePathEntry( QString::fromLatin1("ical file"), _iCalFileV);
-  config.writeEntry( QString::fromLatin1("auto save"), _doAutoSaveV);
-  config.writeEntry( QString::fromLatin1("logging"), _loggingV);
-  config.writeEntry( QString::fromLatin1("auto save period"), _autoSaveValueV);
-  config.writeEntry( QString::fromLatin1("prompt delete"), _promptDeleteV);
+  config.setGroup( QString("Saving"));
+  config.writePathEntry( QString("ical file"), _iCalFileV);
+  config.writeEntry( QString("auto save"), _doAutoSaveV);
+  config.writeEntry( QString("logging"), _loggingV);
+  config.writeEntry( QString("auto save period"), _autoSaveValueV);
+  config.writeEntry( QString("prompt delete"), _promptDeleteV);
+  config.writeEntry( QString("unitasking"), _uniTaskingV);
 
-  config.writeEntry( QString::fromLatin1("display session time"),
-      _displayColumnV[0]);
-  config.writeEntry( QString::fromLatin1("display time"),
-      _displayColumnV[1]);
-  config.writeEntry( QString::fromLatin1("display total session time"),
-      _displayColumnV[2]);
-  config.writeEntry( QString::fromLatin1("display total time"),
-      _displayColumnV[3]);
-
+  config.writeEntry( QString("display session time"), _displayColumnV[0] );
+  config.writeEntry( QString("display time"), _displayColumnV[1] );
+  config.writeEntry( QString("display total session time"), _displayColumnV[2] );
+  config.writeEntry( QString("display total time"), _displayColumnV[3] );
+  config.writeEntry( QString("display percent complete"), _displayColumnV[4] );
+  config.writeEntry( QString("tray icon"), _trayIconV );
   config.sync();
 }
 
@@ -313,7 +395,7 @@ void Preferences::save()
 bool Preferences::readBoolEntry( const QString& key )
 {
   KConfig &config = *KGlobal::config();
-  return config.readBoolEntry ( key, true );
+  return config.readEntry ( key, true );
 }
 
 void Preferences::writeEntry( const QString &key, bool value)

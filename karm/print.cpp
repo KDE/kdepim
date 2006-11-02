@@ -1,8 +1,7 @@
 // #include <iostream>
 
-#include <qdatetime.h>
-#include <qpaintdevicemetrics.h>
-#include <qpainter.h>
+#include <QDateTime>
+#include <QPainter>
 
 #include <kglobal.h>
 #include <klocale.h>            // i18n
@@ -25,10 +24,9 @@ void MyPrinter::print()
   if (setup(0L, i18n("Print Times"))) {
     // setup
     QPainter painter(this);
-    QPaintDeviceMetrics deviceMetrics(this);
     QFontMetrics metrics = painter.fontMetrics();
-    pageHeight = deviceMetrics.height();
-    int pageWidth = deviceMetrics.width();
+    pageHeight = this->height();
+    int pageWidth = this->width();
     xMargin = margins().width();
     yMargin = margins().height();
     yoff = yMargin;
@@ -47,9 +45,9 @@ void MyPrinter::print()
     }
 
     // Calculate the needed width for each of the fields
-    timeWidth = QMAX(metrics.width(i18n("Total")),
+    timeWidth = qMax(metrics.width(i18n("Total")),
                      metrics.width(formatTime(totalTotal)));
-    sessionTimeWidth = QMAX(metrics.width(i18n("Session")),
+    sessionTimeWidth = qMax(metrics.width(i18n("Session")),
                             metrics.width(formatTime(sessionTotal)));
 
     nameFieldWidth = pageWidth - xMargin - timeWidth - sessionTimeWidth - 2*5;
@@ -61,9 +59,9 @@ void MyPrinter::print()
           task = static_cast<Task *>(task->nextSibling()))
     {
       int width = calculateReqNameWidth(task, metrics, 0);
-      maxReqNameFieldWidth = QMAX(maxReqNameFieldWidth, width);
+      maxReqNameFieldWidth = qMax(maxReqNameFieldWidth, width);
     }
-    nameFieldWidth = QMIN(nameFieldWidth, maxReqNameFieldWidth);
+    nameFieldWidth = qMin(nameFieldWidth, maxReqNameFieldWidth);
 
     int realPageWidth = nameFieldWidth + timeWidth + sessionTimeWidth + 2*5;
 
@@ -78,8 +76,8 @@ void MyPrinter::print()
     QString now = KGlobal::locale()->formatDateTime(QDateTime::currentDateTime());
     
     painter.drawText(xMargin, yoff, pageWidth, height,
-         QPainter::AlignCenter, 
-         i18n("KArm - %1").arg(now));
+         Qt::AlignCenter, 
+         i18n("KArm - %1", now));
     
     painter.setFont(origFont);
     yoff += height + 10;
@@ -120,7 +118,7 @@ int MyPrinter::calculateReqNameWidth( Task* task,
               subTask;
               subTask = subTask->nextSibling() ) {
     int subTaskWidth = calculateReqNameWidth(subTask, metrics, level+1);
-    width = QMAX(width, subTaskWidth);
+    width = qMax(width, subTaskWidth);
   }
   return width;
 }
@@ -146,15 +144,15 @@ void MyPrinter::printLine( QString total, QString session, QString name,
   int xoff = xMargin + 10 * level;
   
   painter.drawText( xoff, yoff, nameFieldWidth, lineHeight,
-                    QPainter::AlignLeft, name);
+                    Qt::AlignLeft, name);
   xoff = xMargin + nameFieldWidth;
   
   painter.drawText( xoff, yoff, sessionTimeWidth, lineHeight,
-                    QPainter::AlignRight, session);
+                    Qt::AlignRight, session);
   xoff += sessionTimeWidth+ 5;
   
   painter.drawText( xoff, yoff, timeWidth, lineHeight,
-                    QPainter::AlignRight, total);
+                    Qt::AlignRight, total);
   xoff += timeWidth+5;
 
   yoff += lineHeight;

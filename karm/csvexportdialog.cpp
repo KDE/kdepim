@@ -25,9 +25,9 @@
 #include <klocale.h>
 #include <kpushbutton.h>
 #include <kurlrequester.h>
-#include <qbuttongroup.h>
-#include <qcombobox.h>
-#include <qradiobutton.h>
+#include <q3buttongroup.h>
+#include <QComboBox>
+#include <QRadioButton>
 
 #include "csvexportdialog.h"
 #include "reportcriteria.h"
@@ -38,6 +38,8 @@ CSVExportDialog::CSVExportDialog( ReportCriteria::REPORTTYPE rt,
                                   ) 
   : CSVExportDialogBase( parent, name )
 {
+  connect(btnExportClip, SIGNAL(clicked()), this, SLOT(exPortToClipBoard()));
+  connect(btnExport, SIGNAL(clicked()), this, SLOT(exPortToCSVFile()));
   switch ( rt ) {
     case ReportCriteria::CSVTotalsExport:
       grpDateRange->setEnabled( false );
@@ -72,34 +74,42 @@ void CSVExportDialog::enableTasksToExportQuestion()
   //grpTasksToExport->setEnabled( true );      
 }
 
+void CSVExportDialog::exPortToClipBoard()
+{
+  rc.bExPortToClipBoard=true;
+  accept();
+}
+
+void CSVExportDialog::exPortToCSVFile()
+{
+  rc.bExPortToClipBoard=false;
+  accept();
+}
+
 ReportCriteria CSVExportDialog::reportCriteria()
 {
   rc.url = urlExportTo->url();
   rc.from = dtFrom->date();
   rc.to = dtTo->date();
+  rc.decimalMinutes = (  combodecimalminutes->currentText() == i18n( "Decimal" ) );
+  kDebug(5970) << "rc.decimalMinutes is " << rc.decimalMinutes << endl;
 
-  // Hard code to true for now as the CSV export of totals does not support
-  // this choice currenly and I'm trying to minimize pre-3.3 hacking at the
-  // moment.
-  rc.allTasks = true;
-
-  QString t = grpTimeFormat->selected()->name(); 
-  rc.decimalMinutes = ( t == i18n( "radioDecimal" ) );
-
-  QString d = grpDelimiter->selected()->name(); 
+  QString d = grpDelimiter->selected()->objectName(); 
   if      ( d == "radioComma" )     rc.delimiter = ",";
   else if ( d == "radioTab" )       rc.delimiter = "\t";
   else if ( d == "radioSemicolon" ) rc.delimiter = ";";
   else if ( d == "radioSpace" )     rc.delimiter = " ";
   else if ( d == "radioOther" )     rc.delimiter = txtOther->text();
   else {
-    kdDebug(5970) 
+    kDebug(5970) 
       << "*** CSVExportDialog::reportCriteria: Unexpected delimiter choice '" 
       << d << "'--defaulting to a tab" << endl;
     rc.delimiter = "\t";
   }
 
   rc.quote = cboQuote->currentText();
+  rc.sessionTimes = (i18n("Session Times") == combosessiontimes->currentText());
+  rc.allTasks = (i18n("All Tasks") == comboalltasks->currentText());
 
   return rc;
 }

@@ -20,8 +20,8 @@
 #ifndef _script_h_
 #define _script_h_
 
-//#include <qvariant.h>
-#include <qobject.h>
+//#include <QVariant>
+#include <QObject>
 
 class QDir;
 class QProcess;
@@ -32,9 +32,10 @@ class Script : public QObject
 {
   Q_OBJECT
 public:
-  Script( const QDir& workingDirectory );
+  Script( const QString& workingDirectory );
   virtual ~Script();
-  void addArgument( const QString &arg );
+  void setProgram( const QString &arg );
+  void addArgument( QString arg );
   void setTimeout( int seconds );
   int run();
 private slots:
@@ -44,9 +45,10 @@ private slots:
   void terminate();
 private:
   QProcess *m_proc;
-  int m_status;
   bool m_stderr;
   int m_timeoutInSeconds;
+  QString *program;   // name of the program to start, typically sh, php or perl
+  QString arguments; // typically the name of a test script, e.g. webdav.sh
 };
 
 #endif // _script_h_

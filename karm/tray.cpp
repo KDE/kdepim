@@ -9,37 +9,38 @@
 
 
 // #include <qkeycode.h>
-// #include <qlayout.h>
-#include <qpixmap.h>
-#include <qptrlist.h>
-#include <qstring.h>
-#include <qtimer.h>
-#include <qtooltip.h>
+// #include <QLayout>
+#include <QPixmap>
+#include <q3ptrlist.h>
+#include <QString>
+#include <QTimer>
+#include <QToolTip>
 
 #include <kaction.h>            // actionPreferences()
 #include <kglobal.h>
 #include <kglobalsettings.h>
 #include <kiconloader.h>        // UserIcon
 #include <klocale.h>            // i18n
-#include <kpopupmenu.h>         // plug()
-#include <ksystemtray.h>
+#include <kmenu.h>         // plug()
+#include <ksystemtrayicon.h>
 
 #include "mainwindow.h"
 #include "task.h"
 #include "tray.h"
 
-QPtrVector<QPixmap> *KarmTray::icons = 0;
+Q3PtrVector<QPixmap> *KarmTray::icons = 0;
 
 KarmTray::KarmTray(MainWindow* parent)
-  : KSystemTray(parent, "Karm Tray")
+  : KSystemTrayIcon(parent)
 {
+  setObjectName( "Karm Tray" );
   // the timer that updates the "running" icon in the tray
   _taskActiveTimer = new QTimer(this);
   connect( _taskActiveTimer, SIGNAL( timeout() ), this,
                              SLOT( advanceClock()) );
 
   if (icons == 0) {
-    icons = new QPtrVector<QPixmap>(8);
+    icons = new Q3PtrVector<QPixmap>(8);
     for (int i=0; i<8; i++) {
       QPixmap *icon = new QPixmap();
       QString name;
@@ -49,8 +50,8 @@ KarmTray::KarmTray(MainWindow* parent)
     }
   }
 
-  parent->actionPreferences->plug( contextMenu() ); 
-  parent->actionStopAll->plug( contextMenu() );
+  contextMenu()->addAction( parent->actionPreferences );
+  contextMenu()->addAction( parent->actionStopAll );
 
   resetClock();
   initToolTip();
@@ -72,9 +73,18 @@ KarmTray::KarmTray(MainWindow* parent)
 }
 
 KarmTray::KarmTray(karmPart * parent)
-  : KSystemTray( 0 , "Karm Tray")
+  : KSystemTrayIcon( 0 )
 {
+  setObjectName( "Karm Tray" );
 // it is not convenient if every kpart gets an icon in the systray.
+  _taskActiveTimer = 0;
+}
+
+KarmTray::KarmTray()
+  : KSystemTrayIcon( 0 )
+// will display nothing at all
+{
+  setObjectName( "Karm Tray" );
   _taskActiveTimer = 0;
 }
 
@@ -93,18 +103,18 @@ void KarmTray::insertTitle(QString title)
 
 void KarmTray::startClock()
 {
-  if ( _taskActiveTimer ) 
+  if ( _taskActiveTimer )
   {
     _taskActiveTimer->start(1000);
-    setPixmap( *(*icons)[_activeIcon] );
+    setIcon( *(*icons)[_activeIcon] );
     show();
   }
 }
 
 void KarmTray::stopClock()
 {
-  if ( _taskActiveTimer )  
-  {  
+  if ( _taskActiveTimer )
+  {
     _taskActiveTimer->stop();
     show();
   }
@@ -113,32 +123,32 @@ void KarmTray::stopClock()
 void KarmTray::advanceClock()
 {
   _activeIcon = (_activeIcon+1) % 8;
-  setPixmap( *(*icons)[_activeIcon]);
+  setIcon( *(*icons)[_activeIcon]);
 }
 
 void KarmTray::resetClock()
 {
   _activeIcon = 0;
-  setPixmap( *(*icons)[_activeIcon]);
+  setIcon( *(*icons)[_activeIcon]);
   show();
 }
 
 void KarmTray::initToolTip()
 {
-  updateToolTip(QPtrList<Task> ());
+  updateToolTip(Q3PtrList<Task> ());
 }
 
-void KarmTray::updateToolTip(QPtrList<Task> activeTasks)
+void KarmTray::updateToolTip(Q3PtrList<Task> activeTasks)
 {
   if ( activeTasks.isEmpty() ) {
-    QToolTip::add( this, i18n("No active tasks") );
+    this->setToolTip( i18n("No active tasks") );
     return;
   }
-
-  QFontMetrics fm( QToolTip::font() );
+#warning "qt4 : porting QToolTip::font()"
+  QFontMetrics fm( QFont("helvetica")/*QToolTip::font()*/ );
   const QString continued = i18n( ", ..." );
   const int buffer = fm.boundingRect( continued ).width();
-  const int desktopWidth = KGlobalSettings::desktopGeometry(this).width();
+  const int desktopWidth = KGlobalSettings::desktopGeometry(parentWidget()).width();
   const int maxWidth = desktopWidth - buffer;
 
   QString qTip;
@@ -147,7 +157,7 @@ void KarmTray::updateToolTip(QPtrList<Task> activeTasks)
   // Build the tool tip with all of the names of the active tasks.
   // If at any time the width of the tool tip is larger than the desktop,
   // stop building it.
-  QPtrListIterator<Task> item( activeTasks );
+  Q3PtrListIterator<Task> item( activeTasks );
   for ( int i = 0; item.current(); ++item, ++i ) {
     Task* task = item.current();
     if ( i > 0 )
@@ -162,7 +172,7 @@ void KarmTray::updateToolTip(QPtrList<Task> activeTasks)
     qTip = s;
   }
 
-  QToolTip::add( this, qTip );
+  this->setToolTip( qTip );
 }
 
 #include "tray.moc"

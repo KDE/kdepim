@@ -17,8 +17,8 @@
  *
  */
 
-#ifndef __KFILE_RFC822_H__
-#define __KFILE_RFC822_H__
+#ifndef KFILE_RFC822_H
+#define KFILE_RFC822_H
 
 #include <kfilemetainfo.h>
 

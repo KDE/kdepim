@@ -1,45 +1,44 @@
 #ifndef KARM_TRAY_H
 #define KARM_TRAY_H
 
-#include <qptrvector.h>
-#include <qpixmap.h>
-#include <qptrlist.h>
+#include <q3ptrvector.h>
+#include <QPixmap>
+#include <q3ptrlist.h>
 // experiement
-// #include <kpopupmenu.h>
-#include <ksystemtray.h>
+// #include <kmenu.h>
+#include <ksystemtrayicon.h>
 
 #include "task.h"
 #include "karm_part.h"
 
 class KarmPart;
 
-class QPopupMenu;
 class QTimer;
 
-class KSystemTray;
 class MainWindow;
 // experiment
-// class KPopupMenu;
+// class KMenu;
 
-class KarmTray : public KSystemTray
+class KarmTray : public KSystemTrayIcon
 {
   Q_OBJECT
 
   public:
     KarmTray(MainWindow * parent);
     KarmTray(karmPart * parent);
+    KarmTray();
     ~KarmTray();
 
   private:
     int _activeIcon;
-    static QPtrVector<QPixmap> *icons;
+    static Q3PtrVector<QPixmap> *icons;
     QTimer *_taskActiveTimer;
 
   public slots:
     void startClock();
     void stopClock();
     void resetClock();
-    void updateToolTip( QPtrList<Task> activeTasks);
+    void updateToolTip( Q3PtrList<Task> activeTasks);
     void initToolTip();
 
   protected slots:
@@ -50,7 +49,7 @@ class KarmTray : public KSystemTray
     void insertTitle(QString title);
 
   private:
-    KPopupMenu *trayPopupMenu;
+    KMenu *trayPopupMenu;
     QPopupMenu *trayPopupMenu2;
     */
 };

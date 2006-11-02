@@ -17,8 +17,8 @@
  *
  */
 
-#ifndef __KFILE_VCF_H__
-#define __KFILE_VCF_H__
+#ifndef KFILE_VCF_H
+#define KFILE_VCF_H
 
 #include <kfilemetainfo.h>
 
@@ -29,7 +29,7 @@ class KVcfPlugin: public KFilePlugin
     Q_OBJECT
     
 public:
-    KVcfPlugin( QObject *parent, const char *name, const QStringList& args );
+    KVcfPlugin( QObject *parent, const QStringList& args );
     
     virtual bool readInfo( KFileMetaInfo& info, uint what);
 };

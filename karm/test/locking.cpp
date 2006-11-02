@@ -1,14 +1,14 @@
 #include <assert.h>
 
-#include <qstring.h>
-#include <qfile.h>
-#include <qdir.h>
+#include <QString>
+#include <QFile>
+#include <QDir>
 #include <kcmdlineargs.h>
 #include <kapplication.h>
 
-#include <resourcecalendar.h>
-#include <resourcelocal.h>
-#include <calendarresources.h>
+#include <kcal/resourcecalendar.h>
+#include <kcal/resourcelocal.h>
+#include <kcal/calendarresources.h>
 
 #include "lockerthread.h"
 
@@ -29,7 +29,7 @@ short test1()
 
   if ( !lock ) 
   {
-    kdDebug( 5970 ) << "test1(): failed to lock " << icalfilename << endl;
+    kDebug( 5970 ) << "test1(): failed to lock " << icalfilename << endl;
     rval = 1;
   }
 
@@ -39,7 +39,7 @@ short test1()
     thread.run();
     if ( thread.gotlock() )
     {
-      kdDebug( 5970 ) << "test1(): second thread was able to lock " << icalfilename << endl;
+      kDebug( 5970 ) << "test1(): second thread was able to lock " << icalfilename << endl;
       rval = 1;
     }
   }
@@ -69,7 +69,7 @@ short test2()
   thread.run();
   if ( !thread.gotlock() )
   {
-    kdDebug(5970) << "test2(): second thread was not able to lock " << icalfilename << endl;
+    kDebug(5970) << "test2(): second thread was not able to lock " << icalfilename << endl;
     rval = 1;
   }
 
@@ -95,7 +95,7 @@ short test3()
   lock = calendars->requestSaveTicket( calendar );
   if ( !lock ) 
   {
-    kdDebug( 5970 ) << "test1(): failed to lock " << icalfilename << endl;
+    kDebug( 5970 ) << "test1(): failed to lock " << icalfilename << endl;
     rval = 1;
   }
   calendars->releaseSaveTicket( lock );
@@ -107,7 +107,7 @@ short test3()
     thread.run();
     if ( !thread.gotlock() )
     {
-      kdDebug( 5970 ) << "test1(): second thread was not able to lock " << icalfilename << endl;
+      kDebug( 5970 ) << "test1(): second thread was not able to lock " << icalfilename << endl;
       rval = 1;
     }
   }
@@ -130,13 +130,13 @@ int main( int argc, char *argv[] )
   // Use another directory than the real one, just to keep things clean
   // KDEHOME needs to be writable though, for a ksycoca database
   // FIXME: Delete this directory when done with test.
-  setenv( "KDEHOME", QFile::encodeName( QDir::homeDirPath() + "/.kde-testresource" ), true );
+  setenv( "KDEHOME", QFile::encodeName( QDir::homePath() + "/.kde-testresource" ), true );
 
   // Copied from Till's test in libkcal.  Not sure what this is for.
   setenv( "KDE_FORK_SLAVES", "yes", true ); // simpler, for the final cleanup
 
   // Copied from Till's test in libkcal.  Not sure what this is for.
-  KApplication::disableAutoDcopRegistration();
+  // KApplication::disableAutoDcopRegistration();
 
   KCmdLineArgs::init(argc,argv,"testresourcelocking", 0, 0, 0, 0);
 

@@ -5,12 +5,16 @@
 #ifndef KARM_K_ACCEL_MENU_WATCH_H
 #define KARM_K_ACCEL_MENU_WATCH_H
 
-#include <qobject.h>
-#include <qptrlist.h>
+#include <QObject>
+#include <q3ptrlist.h>
+//Added by qt3to4:
+#include <QMenu>
 
-#include <kaccel.h>
+#include <kstdaccel.h>
 
-class QPopupMenu;
+
+
+class KAccel;
 
 /**
  * Easy updating of menu accels when changing a KAccel object. 
@@ -39,8 +43,8 @@ class KAccelMenuWatch : public QObject
   private:
     enum AccelType { StdAccel, StringAccel };
 
-    typedef struct AccelItem {
-      QPopupMenu  *menu;
+    struct AccelItem {
+      QMenu  *menu;
       int itemId;
 
       AccelType type;
@@ -48,15 +52,15 @@ class KAccelMenuWatch : public QObject
       // only one of these is used at a time
       QString action;
       KStdAccel::StdAccel stdAction;
-    } AccelItem;
+    };
 
     KAccel *_accel;
-    QPtrList<AccelItem> _accList;
-    QPtrList<QPopupMenu> _menuList;
+    Q3PtrList<AccelItem> _accList;
+    Q3PtrList<QMenu> _menuList;
 
-    QPopupMenu  *_menu;
+    QMenu  *_menu;
 
-    KAccelMenuWatch::AccelItem *newAccelItem( QPopupMenu *menu, 
+    KAccelMenuWatch::AccelItem *newAccelItem( QMenu *menu, 
                                               int itemId, AccelType type );
 
   public:
@@ -76,13 +80,13 @@ class KAccelMenuWatch : public QObject
      * with this menu. You can call this function any number of
      * times, so multiple menus can be handled.
      */
-    void setMenu( QPopupMenu *menu );
+    void setMenu( QMenu *menu );
 
     /** 
      * Return the last menu set with KAccelMenuWatch::setMenu(QPopupMenu*),
      * or 0 if none has been set.
      */
-    QPopupMenu *currentMenu() const  { return _menu; }
+    QMenu *currentMenu() const  { return _menu; }
 
     /** 
      * Connect the menu item identified to currentMenu()/id to

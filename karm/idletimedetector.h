@@ -1,12 +1,13 @@
 #ifndef KARM_IDLE_TIME_DETECTOR_H
 #define KARM_IDLE_TIME_DETECTOR_H
 
-#include <qobject.h>
-#include "config.h"     // HAVE_LIBXSS
+#include <QDateTime>
+#include <QObject>
+#include "config-karm.h" // HAVE_LIBXSS
 
 class QTimer;
 
-#ifdef HAVE_LIBXSS
+#if defined(HAVE_LIBXSS) && defined(Q_WS_X11)
  #include <X11/Xlib.h>
  #include <X11/Xutil.h>
  #include <X11/extensions/scrnsaver.h>
@@ -56,6 +57,8 @@ signals:
   void stopAllTimers();
 
 public slots:
+  void revert();
+
   /**
      Sets the maximum allowed idle.
      @param maxIdle Maximum allowed idle time in minutes
@@ -81,21 +84,23 @@ public slots:
 
 
 protected:
-#ifdef HAVE_LIBXSS
-  void informOverrun(int idle);
+#if defined(HAVE_LIBXSS) && defined(Q_WS_X11)
+  void informOverrun();
 #endif // HAVE_LIBXSS
 
 protected slots:
   void check();
 
 private:
-#ifdef HAVE_LIBXSS
+#if defined(HAVE_LIBXSS) && defined(Q_WS_X11)
   XScreenSaverInfo *_mit_info;
 #endif
   bool _idleDetectionPossible;
   bool _overAllIdleDetect; // Based on preferences.
   int _maxIdle;
   QTimer *_timer;
+  QDateTime start;
+  int idleminutes;
 };
 
 #endif // KARM_IDLE_TIME_DETECTOR_H

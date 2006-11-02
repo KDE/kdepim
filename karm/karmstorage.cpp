@@ -27,23 +27,26 @@
 
 #include <cassert>
 
-#include <qfile.h>
-#include <qsize.h>
-#include <qdict.h>
-#include <qdatetime.h>
-#include <qstring.h>
-#include <qstringlist.h>
+#include <QFile>
+#include <QSize>
+#include <q3dict.h>
+#include <QDateTime>
+#include <QString>
+#include <QStringList>
+#include <QList>
+#include <QTextStream>
+#include <QByteArray>
+#include <QProgressBar>
 
-#include "incidence.h"
+#include <kcal/incidence.h>
 #include "kapplication.h"       // kapp
 #include <kdebug.h>
 #include <kemailsettings.h>
 #include <klocale.h>            // i18n
 #include <kmessagebox.h>
-#include <kprogress.h>
-#include <ktempfile.h>
-#include <resourcecalendar.h>
-#include <resourcelocal.h>
+#include <ktemporaryfile.h>
+#include <kcal/resourcecalendar.h>
+#include <kcal/resourcelocal.h>
 #include <resourceremote.h>
 #include <kpimprefs.h>
 #include <taskview.h>
@@ -52,11 +55,8 @@
 #include <kio/netaccess.h>
 #include <kurl.h>
 #include <vector>
-
-//#include <calendarlocal.h>
-//#include <journal.h>
-//#include <event.h>
-//#include <todo.h>
+#include <kpassworddialog.h>
+#include <kprogressdialog.h>
 
 #include "karmstorage.h"
 #include "preferences.h"
@@ -92,6 +92,7 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences, QStri
   // Use KDE_CXXFLAGS=$(USE_EXCEPTIONS) in Makefile.am if you want to use
   // exceptions (David Faure)
 
+  kDebug(5970) << "Entering KarmStorage::load" << endl;
   QString err;
   KEMailSettings settings;
   if ( fileName.isEmpty() ) fileName = preferences->iCalFile();
@@ -123,7 +124,7 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences, QStri
   KCal::ResourceCached *resource;
   if ( remoteResource( _icalfile ) )
   {
-    KURL url( _icalfile );
+    KUrl url( _icalfile );
     resource = new KCal::ResourceRemote( url, url ); // same url for upload and download
   }
   else
@@ -134,13 +135,13 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences, QStri
 
   QObject::connect (_calendar, SIGNAL(resourceChanged(ResourceCalendar *)),
   	            view, SLOT(iCalFileModified(ResourceCalendar *)));
-  _calendar->setTimeZoneId( KPimPrefs::timezone() );
+  _calendar->setTimeSpec( KPimPrefs::timeSpec() );
   _calendar->setResourceName( QString::fromLatin1("KArm") );
   _calendar->open();
   _calendar->load();
 
   // Claim ownership of iCalendar file if no one else has.
-  KCal::Person owner = resource->getOwner();
+  KCal::Person owner = resource->owner();
   if ( owner.isEmpty() )
   {
     resource->setOwner( KCal::Person(
@@ -149,16 +150,16 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences, QStri
   }
 
   // Build task view from iCal data
-  if (!err)
+  if (!err.isEmpty())
   {
     KCal::Todo::List todoList;
     KCal::Todo::List::ConstIterator todo;
-    QDict< Task > map;
+    Q3Dict< Task > map;
 
     // Build dictionary to look up Task object from Todo uid.  Each task is a
     // QListViewItem, and is initially added with the view as the parent.
     todoList = _calendar->rawTodos();
-    kdDebug(5970) << "KarmStorage::load "
+    kDebug(5970) << "KarmStorage::load "
       << "rawTodo count (includes completed todos) ="
       << todoList.count() << endl;
     for( todo = todoList.begin(); todo != todoList.end(); ++todo )
@@ -198,18 +199,19 @@ QString KarmStorage::load (TaskView* view, const Preferences* preferences, QStri
 
         // Complete the loading but return a message
         if ( !newParent )
-          err = i18n("Error loading \"%1\": could not find parent (uid=%2)")
-            .arg(task->name())
-            .arg((*todo)->relatedToUid());
+          err = i18n("Error loading \"%1\": could not find parent (uid=%2)",
+             task->name(),
+             (*todo)->relatedToUid());
 
-        if (!err) task->move( newParent);
+        if (!err.isEmpty()) task->move( newParent);
       }
     }
 
-    kdDebug(5970) << "KarmStorage::load - loaded " << view->count()
+    kDebug(5970) << "KarmStorage::load - loaded " << view->count()
       << " tasks from " << _icalfile << endl;
   }
 
+  buildTaskView(_calendar, view);
   return err;
 }
 
@@ -219,14 +221,25 @@ QString KarmStorage::buildTaskView(KCal::ResourceCalendar *rc, TaskView *view)
   QString err;
   KCal::Todo::List todoList;
   KCal::Todo::List::ConstIterator todo;
-  QDict< Task > map;
+  Q3Dict< Task > map;
+  vector<QString> runningTasks;
+  vector<QDateTime> startTimes;
 
-  // 1. delete old tasks
+  // remember tasks that are running and their start times
+  for ( int i=0; i<view->count(); i++)
+  {
+    if ( view->item_at_index(i)->isRunning() )
+    {
+      runningTasks.push_back( view->item_at_index(i)->uid() );
+      startTimes.push_back( view->item_at_index(i)->lastStart() );
+    }
+  }
+
+  //view->stopAllTimers();
+  // delete old tasks
+
   while (view->item_at_index(0)) view->item_at_index(0)->cut();
 
-  // 1. insert tasks form rc into taskview
-  // 1.1. Build dictionary to look up Task object from Todo uid.  Each task is a
-  // QListViewItem, and is initially added with the view as the parent.
   todoList = rc->rawTodos();
   for( todo = todoList.begin(); todo != todoList.end(); ++todo )
   {
@@ -240,7 +253,6 @@ QString KarmStorage::buildTaskView(KCal::ResourceCalendar *rc, TaskView *view)
   for( todo = todoList.begin(); todo != todoList.end(); ++todo )
   {
     Task* task = map.find( (*todo)->uid() );
-
     // No relatedTo incident just means this is a top-level task.
     if ( (*todo)->relatedTo() )
     {
@@ -248,13 +260,28 @@ QString KarmStorage::buildTaskView(KCal::ResourceCalendar *rc, TaskView *view)
 
       // Complete the loading but return a message
       if ( !newParent )
-        err = i18n("Error loading \"%1\": could not find parent (uid=%2)")
-          .arg(task->name())
-          .arg((*todo)->relatedToUid());
-
-      if (!err) task->move( newParent);
+        err = i18n("Error loading \"%1\": could not find parent (uid=%2)",
+           task->name(),
+           (*todo)->relatedToUid());
+      else task->move( newParent);
     }
   }
+
+  view->clearActiveTasks();
+  // restart tasks that have been running with their start times
+  for ( int i=0; i<view->count(); i++)
+  {
+    for ( int n=0; n<runningTasks.size(); n++)
+    {
+      if ( runningTasks[n] == view->item_at_index(i)->uid() )
+      {
+        view->startTimerFor( view->item_at_index(i), startTimes[n] ); 
+      }
+    }
+  }
+  
+  view->refresh();
+
   return err;
 }
 
@@ -272,10 +299,10 @@ void KarmStorage::closeStorage(TaskView* view)
 
 QString KarmStorage::save(TaskView* taskview)
 {
-  kdDebug(5970) << "entering KarmStorage::save" << endl;
+  kDebug(5970) << "entering KarmStorage::save" << endl;
   QString err;
 
-  QPtrStack< KCal::Todo > parents;
+  Q3PtrStack< KCal::Todo > parents;
 
   for (Task* task=taskview->first_child(); task; task = task->nextSibling())
   {
@@ -289,20 +316,20 @@ QString KarmStorage::save(TaskView* taskview)
 
   if ( err.isEmpty() )
   {
-    kdDebug(5970)
+    kDebug(5970)
       << "KarmStorage::save : wrote "
       << taskview->count() << " tasks to " << _icalfile << endl;
   }
   else
   {
-    kdWarning(5970) << "KarmStorage::save : " << err << endl;
+    kWarning(5970) << "KarmStorage::save : " << err << endl;
   }
 
   return err;
 }
 
 QString KarmStorage::writeTaskAsTodo(Task* task, const int level,
-    QPtrStack< KCal::Todo >& parents )
+    Q3PtrStack< KCal::Todo >& parents )
 {
   QString err;
   KCal::Todo* todo;
@@ -310,7 +337,7 @@ QString KarmStorage::writeTaskAsTodo(Task* task, const int level,
   todo = _calendar->todo(task->uid());
   if ( !todo )
   {
-    kdDebug(5970) << "Could not get todo from calendar" << endl;
+    kDebug(5970) << "Could not get todo from calendar" << endl;
     return "Could not get todo from calendar";
   }
   task->asTodo(todo);
@@ -342,199 +369,6 @@ bool KarmStorage::isNewStorage(const Preferences* preferences) const
 }
 
 //----------------------------------------------------------------------------
-// Routines that handle legacy flat file format.
-// These only stored total and session times.
-//
-
-QString KarmStorage::loadFromFlatFile(TaskView* taskview,
-    const QString& filename)
-{
-  QString err;
-
-  kdDebug(5970)
-    << "KarmStorage::loadFromFlatFile: " << filename << endl;
-
-  QFile f(filename);
-  if( !f.exists() )
-    err = i18n("File \"%1\" not found.").arg(filename);
-
-  if (!err)
-  {
-    if( !f.open( IO_ReadOnly ) )
-      err = i18n("Could not open \"%1\".").arg(filename);
-  }
-
-  if (!err)
-  {
-
-    QString line;
-
-    QPtrStack<Task> stack;
-    Task *task;
-
-    QTextStream stream(&f);
-
-    while( !stream.atEnd() ) {
-      // lukas: this breaks for non-latin1 chars!!!
-      // if ( file.readLine( line, T_LINESIZE ) == 0 )
-      //   break;
-
-      line = stream.readLine();
-      kdDebug(5970) << "DEBUG: line: " << line << "\n";
-
-      if (line.isNull())
-        break;
-
-      long minutes;
-      int level;
-      QString name;
-      DesktopList desktopList;
-      if (!parseLine(line, &minutes, &name, &level, &desktopList))
-        continue;
-
-      unsigned int stackLevel = stack.count();
-      for (unsigned int i = level; i<=stackLevel ; i++) {
-        stack.pop();
-      }
-
-      if (level == 1) {
-        kdDebug(5970) << "KarmStorage::loadFromFlatFile - toplevel task: "
-          << name << " min: " << minutes << "\n";
-        task = new Task(name, minutes, 0, desktopList, taskview);
-        task->setUid(addTask(task, 0));
-      }
-      else {
-        Task *parent = stack.top();
-        kdDebug(5970) << "KarmStorage::loadFromFlatFile - task: " << name
-            << " min: " << minutes << " parent" << parent->name() << "\n";
-        task = new Task(name, minutes, 0, desktopList, parent);
-
-        task->setUid(addTask(task, parent));
-
-        // Legacy File Format (!):
-        parent->changeTimes(0, -minutes);
-        taskview->setRootIsDecorated(true);
-        parent->setOpen(true);
-      }
-      if (!task->uid().isNull())
-        stack.push(task);
-      else
-        delete task;
-    }
-
-    f.close();
-
-  }
-
-  return err;
-}
-
-QString KarmStorage::loadFromFlatFileCumulative(TaskView* taskview,
-    const QString& filename)
-{
-  QString err = loadFromFlatFile(taskview, filename);
-  if (!err)
-  {
-    for (Task* task = taskview->first_child(); task;
-        task = task->nextSibling())
-    {
-      adjustFromLegacyFileFormat(task);
-    }
-  }
-  return err;
-}
-
-bool KarmStorage::parseLine(QString line, long *time, QString *name,
-    int *level, DesktopList* desktopList)
-{
-  if (line.find('#') == 0) {
-    // A comment line
-    return false;
-  }
-
-  int index = line.find('\t');
-  if (index == -1) {
-    // This doesn't seem like a valid record
-    return false;
-  }
-
-  QString levelStr = line.left(index);
-  QString rest = line.remove(0,index+1);
-
-  index = rest.find('\t');
-  if (index == -1) {
-    // This doesn't seem like a valid record
-    return false;
-  }
-
-  QString timeStr = rest.left(index);
-  rest = rest.remove(0,index+1);
-
-  bool ok;
-
-  index = rest.find('\t'); // check for optional desktops string
-  if (index >= 0) {
-    *name = rest.left(index);
-    QString deskLine = rest.remove(0,index+1);
-
-    // now transform the ds string (e.g. "3", or "1,4,5") into
-    // an DesktopList
-    QString ds;
-    int d;
-    int commaIdx = deskLine.find(',');
-    while (commaIdx >= 0) {
-      ds = deskLine.left(commaIdx);
-      d = ds.toInt(&ok);
-      if (!ok)
-        return false;
-
-      desktopList->push_back(d);
-      deskLine.remove(0,commaIdx+1);
-      commaIdx = deskLine.find(',');
-    }
-
-    d = deskLine.toInt(&ok);
-
-    if (!ok)
-      return false;
-
-    desktopList->push_back(d);
-  }
-  else {
-    *name = rest.remove(0,index+1);
-  }
-
-  *time = timeStr.toLong(&ok);
-
-  if (!ok) {
-    // the time field was not a number
-    return false;
-  }
-  *level = levelStr.toInt(&ok);
-  if (!ok) {
-    // the time field was not a number
-    return false;
-  }
-
-  return true;
-}
-
-void KarmStorage::adjustFromLegacyFileFormat(Task* task)
-{
-  // unless the parent is the listView
-  if ( task->parent() )
-    task->parent()->changeTimes(-task->sessionTime(), -task->time());
-
-  // traverse depth first -
-  // as soon as we're in a leaf, we'll substract it's time from the parent
-  // then, while descending back we'll do the same for each node untill
-  // we reach the root
-  for ( Task* subtask = task->firstChild(); subtask;
-      subtask = subtask->nextSibling() )
-    adjustFromLegacyFileFormat(subtask);
-}
-
-//----------------------------------------------------------------------------
 // Routines that handle Comma-Separated Values export file format.
 //
 QString KarmStorage::exportcsvFile( TaskView *taskview,
@@ -545,24 +379,24 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
   QString double_dquote = dquote + dquote;
   bool to_quote = true;
 
-  QString err;
+  QString err=QString();
   Task* task;
   int maxdepth=0;
 
-  kdDebug(5970)
+  kDebug(5970)
     << "KarmStorage::exportcsvFile: " << rc.url << endl;
 
   QString title = i18n("Export Progress");
   KProgressDialog dialog( taskview, 0, title );
   dialog.setAutoClose( true );
   dialog.setAllowCancel( true );
-  dialog.progressBar()->setTotalSteps( 2 * taskview->count() );
+  dialog.progressBar()->setMaximum( 2 * taskview->count() );
 
   // The default dialog was not displaying all the text in the title bar.
   int width = taskview->fontMetrics().width(title) * 3;
   QSize dialogsize;
   dialogsize.setWidth(width);
-  dialog.setInitialSize( dialogsize, true );
+  dialog.setInitialSize( dialogsize );
 
   if ( taskview->count() > 1 ) dialog.show();
 
@@ -572,7 +406,7 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
   int tasknr = 0;
   while ( tasknr < taskview->count() && !dialog.wasCancelled() )
   {
-    dialog.progressBar()->advance( 1 );
+    dialog.progressBar()->setValue( dialog.progressBar()->value() + 1 );
     if ( tasknr % 15 == 0 ) kapp->processEvents(); // repainting is slow
     if ( taskview->item_at_index(tasknr)->depth() > maxdepth )
       maxdepth = taskview->item_at_index(tasknr)->depth();
@@ -584,7 +418,7 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
   while ( tasknr < taskview->count() && !dialog.wasCancelled() )
   {
     task = taskview->item_at_index( tasknr );
-    dialog.progressBar()->advance( 1 );
+    dialog.progressBar()->setValue( dialog.progressBar()->value() + 1 );
     if ( tasknr % 15 == 0 ) kapp->processEvents();
 
     // indent the task in the csv-file:
@@ -631,10 +465,10 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
     QString filename=rc.url.path();
     if (filename.isEmpty()) filename=rc.url.url();
     QFile f( filename );
-    if( !f.open( IO_WriteOnly ) ) {
-        err = i18n( "Could not open \"%1\"." ).arg( filename );
+    if( !f.open( QIODevice::WriteOnly ) ) {
+        err = i18n( "Could not open \"%1\".", filename );
     }
-    if (!err)
+    if (err.length()==0)
     {
       QTextStream stream(&f);
       // Export to file
@@ -644,14 +478,14 @@ QString KarmStorage::exportcsvFile( TaskView *taskview,
   }
   else // use remote file
   {
-    KTempFile tmpFile;
-    if ( tmpFile.status() != 0 ) err = QString::fromLatin1( "Unable to get temporary file" );
+    KTemporaryFile tmpFile;
+    if ( !tmpFile.open() ) err = QString::fromLatin1( "Unable to get temporary file" );
     else
     {
-      QTextStream *stream=tmpFile.textStream();
-      *stream << retval;
-      tmpFile.close();
-      if (!KIO::NetAccess::upload( tmpFile.name(), rc.url, 0 )) err=QString::fromLatin1("Could not upload");
+      QTextStream stream ( &tmpFile );
+      stream << retval;
+      stream.flush();
+      if (!KIO::NetAccess::upload( tmpFile.fileName(), rc.url, 0 )) err=QString::fromLatin1("Could not upload");
     }
   }
 
@@ -698,7 +532,7 @@ bool KarmStorage::removeTask(Task* task)
       i != eventList.end();
       ++i)
   {
-    //kdDebug(5970) << "KarmStorage::removeTask: "
+    //kDebug(5970) << "KarmStorage::removeTask: "
     //  << (*i)->uid() << " - relatedToUid() "
     //  << (*i)->relatedToUid()
     //  << ", relatedTo() = " << (*i)->relatedTo() <<endl;
@@ -784,7 +618,7 @@ long KarmStorage::printTaskHistory (
       sum += taskdaytotals[daytaskkey];  // in seconds
 
       if (daytotals.contains(daykey))
-        daytotals.replace(daykey, daytotals[daykey]+taskdaytotals[daytaskkey]);
+        daytotals.insert(daykey, daytotals[daykey]+taskdaytotals[daytaskkey]);
       else
         daytotals.insert(daykey, taskdaytotals[daytaskkey]);
     }
@@ -839,12 +673,22 @@ QString KarmStorage::report( TaskView *taskview, const ReportCriteria &rc )
 {
   QString err;
   if ( rc.reportType == ReportCriteria::CSVHistoryExport )
-      err = exportcsvHistory( taskview, rc.from, rc.to, rc );
+  {
+      if ( !rc.bExPortToClipBoard )
+        err = exportcsvHistory( taskview, rc.from, rc.to, rc );
+      else
+        err=taskview->clipHistory();
+  }
   else if ( rc.reportType == ReportCriteria::CSVTotalsExport )
+  {
+    if ( !rc.bExPortToClipBoard )
       err = exportcsvFile( taskview, rc );
-  else
+    else 
+      err = taskview->clipTotals( rc );
+  }
+  else {
       // hmmmm ... assert(0)?
-      ;
+  }   
   return err;
 }
 
@@ -864,8 +708,8 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
   QString line, buf;
   long sum;
 
-  QValueList<HistoryEvent> events;
-  QValueList<HistoryEvent>::iterator event;
+  QList<HistoryEvent> events;
+  QList<HistoryEvent>::iterator event;
   QMap<QString, long> taskdaytotals;
   QMap<QString, long> daytotals;
   QString daytaskkey, daykey;
@@ -881,12 +725,12 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
 
   // header
   retval += i18n("Task History\n");
-  retval += i18n("From %1 to %2")
-    .arg(KGlobal::locale()->formatDate(from))
-    .arg(KGlobal::locale()->formatDate(to));
+  retval += i18n("From %1 to %2",
+     KGlobal::locale()->formatDate(from),
+     KGlobal::locale()->formatDate(to));
   retval += cr;
-  retval += i18n("Printed on: %1")
-    .arg(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
+  retval += i18n("Printed on: %1",
+     KGlobal::locale()->formatDateTime(QDateTime::currentDateTime()));
   retval += cr;
 
   day=from;
@@ -907,7 +751,7 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
         .arg((*event).todoUid());
 
     if (taskdaytotals.contains(daytaskkey))
-        taskdaytotals.replace(daytaskkey,
+        taskdaytotals.insert(daytaskkey,
                 taskdaytotals[daytaskkey] + (*event).duration());
     else
         taskdaytotals.insert(daytaskkey, (*event).duration());
@@ -985,10 +829,10 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
     QString filename=rc.url.path();
     if (filename.isEmpty()) filename=rc.url.url();
     QFile f( filename );
-    if( !f.open( IO_WriteOnly ) ) {
-        err = i18n( "Could not open \"%1\"." ).arg( filename );
+    if( !f.open( QIODevice::WriteOnly ) ) {
+        err = i18n( "Could not open \"%1\".", filename );
     }
-    if (!err)
+    if (!err.isEmpty())
     {
       QTextStream stream(&f);
       // Export to file
@@ -998,17 +842,17 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
   }
   else // use remote file
   {
-    KTempFile tmpFile;
-    if ( tmpFile.status() != 0 )
+    KTemporaryFile tmpFile;
+    if ( !tmpFile.open() )
     {
       err = QString::fromLatin1( "Unable to get temporary file" );
     }
     else
     {
-      QTextStream *stream=tmpFile.textStream();
-      *stream << retval;
-      tmpFile.close();
-      if (!KIO::NetAccess::upload( tmpFile.name(), rc.url, 0 )) err=QString::fromLatin1("Could not upload");
+      QTextStream stream ( &tmpFile );
+      stream << retval;
+      stream.flush();
+      if (!KIO::NetAccess::upload( tmpFile.fileName(), rc.url, 0 )) err=QString::fromLatin1("Could not upload");
     }
   }
   return err;
@@ -1034,7 +878,7 @@ bool KarmStorage::bookTime(const Task* task,
 
   // Use a custom property to keep a record of negative durations
   e->setCustomProperty( kapp->instanceName(),
-      QCString("duration"),
+      QByteArray("duration"),
       QString::number(durationInSeconds));
 
   return _calendar->addEvent(e);
@@ -1059,7 +903,7 @@ void KarmStorage::changeTime(const Task* task, const long deltaSeconds)
 
   // Use a custom property to keep a record of negative durations
   e->setCustomProperty( kapp->instanceName(),
-      QCString("duration"),
+      QByteArray("duration"),
       QString::number(deltaSeconds));
 
   _calendar->addEvent(e);
@@ -1102,7 +946,7 @@ KCal::Event* KarmStorage::baseEvent(const Task * task)
 }
 
 HistoryEvent::HistoryEvent(QString uid, QString name, long duration,
-        QDateTime start, QDateTime stop, QString todoUid)
+        KDateTime start, KDateTime stop, QString todoUid)
 {
   _uid = uid;
   _name = name;
@@ -1113,10 +957,10 @@ HistoryEvent::HistoryEvent(QString uid, QString name, long duration,
 }
 
 
-QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
+QList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
     const QDate& to)
 {
-  QValueList<HistoryEvent> retval;
+  QList<HistoryEvent> retval;
   QStringList processed;
   KCal::Event::List events;
   KCal::Event::List::iterator event;
@@ -1139,7 +983,7 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
         processed.append( (*event)->uid());
 
         duration = (*event)->customProperty(kapp->instanceName(),
-            QCString("duration"));
+            QByteArray("duration"));
         if ( ! duration.isNull() )
         {
           if ( (*event)->relatedTo()
@@ -1158,7 +1002,7 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
             // Something is screwy with the ics file, as this KArm history event
             // does not have a todo related to it.  Could have been deleted
             // manually?  We'll continue with report on with report ...
-            kdDebug(5970) << "KarmStorage::getHistory(): "
+            kDebug(5970) << "KarmStorage::getHistory(): "
               << "The event " << (*event)->uid()
               << " is not related to a todo.  Dropped." << endl;
         }
@@ -1171,22 +1015,22 @@ QValueList<HistoryEvent> KarmStorage::getHistory(const QDate& from,
 
 bool KarmStorage::remoteResource( const QString& file ) const
 {
-  QString f = file.lower();
+  QString f = file.toLower();
   bool rval = f.startsWith( "http://" ) || f.startsWith( "ftp://" );
 
-  kdDebug(5970) << "KarmStorage::remoteResource( " << file << " ) returns " << rval  << endl;
+  kDebug(5970) << "KarmStorage::remoteResource( " << file << " ) returns " << rval  << endl;
   return rval;
 }
 
 bool KarmStorage::saveCalendar()
 {
-  kdDebug(5970) << "KarmStorage::saveCalendar" << endl;
+  kDebug(5970) << "KarmStorage::saveCalendar" << endl;
 
   KABC::Lock *lock = _calendar->lock();
   if ( !lock || !lock->lock() )
     return false;
 
-  if ( _calendar && _calendar->save() ) {
+  if ( _calendar->save() ) {
     lock->unlock();
     return true;
   }

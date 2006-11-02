@@ -1,14 +1,16 @@
-#include <qcstring.h>
-#include <qdatetime.h>
-#include <qstring.h>
-#include <qtimer.h>
+#include <q3cstring.h>
+#include <QDateTime>
+#include <QString>
+#include <QTimer>
+#include <QPixmap>
+#include <Q3PtrList>
 
 #include <kiconloader.h>
 
 #include "kapplication.h"       // kapp
 #include "kdebug.h"
 
-#include "event.h"
+#include <kcal/event.h>
 
 #include "karmutility.h"
 #include "task.h"
@@ -19,24 +21,24 @@
 const int gSecondsPerMinute = 60;
 
 
-QPtrVector<QPixmap> *Task::icons = 0;
+Q3PtrVector<QPixmap> *Task::icons = 0;
 
 Task::Task( const QString& taskName, long minutes, long sessionTime,
             DesktopList desktops, TaskView *parent)
-  : QObject(), QListViewItem(parent)
+  : QObject(), Q3ListViewItem(parent)
 { 
   init(taskName, minutes, sessionTime, desktops, 0);
 }
 
 Task::Task( const QString& taskName, long minutes, long sessionTime,
             DesktopList desktops, Task *parent)
-  : QObject(), QListViewItem(parent)
+  : QObject(), Q3ListViewItem(parent)
 {
   init(taskName, minutes, sessionTime, desktops, 0);
 }
 
 Task::Task( KCal::Todo* todo, TaskView* parent )
-  : QObject(), QListViewItem( parent )
+  : QObject(), Q3ListViewItem( parent )
 {
   long minutes = 0;
   QString name;
@@ -61,20 +63,20 @@ void Task::init( const QString& taskName, long minutes, long sessionTime,
            listView(), SLOT( deletingTask( Task* ) ));
 
   if (icons == 0) {
-    icons = new QPtrVector<QPixmap>(8);
+    icons = new Q3PtrVector<QPixmap>(8);
     KIconLoader* kil = new KIconLoader("karm"); // always load icons from the KArm application
     for (int i=0; i<8; i++)
     {
       QPixmap *icon = new QPixmap();
       QString name;
       name.sprintf("watch-%d.xpm",i);
-      *icon = kil->loadIcon( name, KIcon::User );
+      *icon = kil->loadIcon( name, K3Icon::User );
       icons->insert(i,icon);
     }
   }
 
   _removing = false;
-  _name = taskName.stripWhiteSpace();
+  _name = taskName.trimmed();
   _lastStart = QDateTime::currentDateTime();
   _totalTime = _time = minutes;
   _totalSessionTime = _sessionTime = sessionTime;
@@ -94,7 +96,7 @@ Task::~Task() {
   delete _timer;
 }
 
-void Task::setRunning( bool on, KarmStorage* storage )
+void Task::setRunning( bool on, KarmStorage* storage, QDateTime whenStarted  )
 {
   if ( on ) {
     if (isComplete()) return; // don't start if its marked complete
@@ -102,7 +104,7 @@ void Task::setRunning( bool on, KarmStorage* storage )
       _timer->start(1000);
       storage->startTimer(this);
       _currentPic=7;
-      _lastStart = QDateTime::currentDateTime();
+      _lastStart = whenStarted;
       updateActiveIcon();
     }
   }
@@ -128,7 +130,7 @@ bool Task::isRunning() const
 
 void Task::setName( const QString& name, KarmStorage* storage )
 {
-  kdDebug(5970) << "Task:setName: " << name << endl;
+  kDebug(5970) << "Task:setName: " << name << endl;
 
   QString oldname = _name;
   if ( oldname != name ) {
@@ -140,7 +142,7 @@ void Task::setName( const QString& name, KarmStorage* storage )
 
 void Task::setPercentComplete(const int percent, KarmStorage *storage)
 {
-  kdDebug(5970) << "Task::setPercentComplete(" << percent << ", storage): "
+  kDebug(5970) << "Task::setPercentComplete(" << percent << ", storage): "
     << _uid << endl;
 
   if (!percent)
@@ -171,6 +173,8 @@ void Task::setPercentComplete(const int percent, KarmStorage *storage)
     for (Task* child= this->firstChild(); child; child = child->nextSibling())
       child->setPercentComplete(_percentcomplete, storage);
   }
+  // maybe there is a colum "percent completed", so do a ...
+  update(); 
 }
 
 void Task::setPixmapProgress()
@@ -187,7 +191,7 @@ bool Task::isComplete() { return _percentcomplete == 100; }
 
 void Task::removeFromView()
 {
-  for (Task* child= this->firstChild(); child; child= child->nextSibling())
+  while (Task* child = this->firstChild())
     child->removeFromView();
   delete this;
 }
@@ -215,7 +219,7 @@ void Task::changeTimes( long minutesSession, long minutes, KarmStorage* storage)
 
 void Task::changeTotalTimes( long minutesSession, long minutes )
 {
-  kdDebug(5970)
+  kDebug(5970)
     << "Task::changeTotalTimes(" << minutesSession << ", "
     << minutes << ") for " << name() << endl;
 
@@ -237,7 +241,7 @@ void Task::resetTimes()
 
 void Task::changeParentTotalTimes( long minutesSession, long minutes )
 {
-  //kdDebug(5970)
+  //kDebug(5970)
   //  << "Task::changeParentTotalTimes(" << minutesSession << ", "
   //  << minutes << ") for " << name() << endl;
 
@@ -247,9 +251,9 @@ void Task::changeParentTotalTimes( long minutesSession, long minutes )
     parent()->changeTotalTimes( minutesSession, minutes );
 }
 
-bool Task::remove( QPtrList<Task>& activeTasks, KarmStorage* storage)
+bool Task::remove( Q3PtrList<Task>& activeTasks, KarmStorage* storage)
 {
-  kdDebug(5970) << "Task::remove: " << _name << endl;
+  kDebug(5970) << "Task::remove: " << _name << endl;
 
   bool ok = true;
 
@@ -290,7 +294,7 @@ KCal::Todo* Task::asTodo(KCal::Todo* todo) const
 
   Q_ASSERT( todo != NULL );
 
-  kdDebug(5970) << "Task::asTodo: name() = '" << name() << "'" << endl;
+  kDebug(5970) << "Task::asTodo: name() = '" << name() << "'" << endl;
   todo->setSummary( name() );
 
   // Note: if the date start is empty, the KOrganizer GUI will have the
@@ -299,15 +303,15 @@ KCal::Todo* Task::asTodo(KCal::Todo* todo) const
   // todo->setDtStart( current );
 
   todo->setCustomProperty( kapp->instanceName(),
-      QCString( "totalTaskTime" ), QString::number( _time ) );
+      QByteArray( "totalTaskTime" ), QString::number( _time ) );
   todo->setCustomProperty( kapp->instanceName(),
-      QCString( "totalSessionTime" ), QString::number( _sessionTime) );
+      QByteArray( "totalSessionTime" ), QString::number( _sessionTime) );
 
   if (getDesktopStr().isEmpty())
-    todo->removeCustomProperty(kapp->instanceName(), QCString("desktopList"));
+    todo->removeCustomProperty(kapp->instanceName(), QByteArray("desktopList"));
   else
     todo->setCustomProperty( kapp->instanceName(),
-        QCString( "desktopList" ), getDesktopStr() );
+        QByteArray( "desktopList" ), getDesktopStr() );
 
   todo->setOrganizer( Preferences::instance()->userRealName() );
 
@@ -329,20 +333,20 @@ bool Task::parseIncidence( KCal::Incidence* incident, long& minutes,
 
   ok = false;
   minutes = incident->customProperty( kapp->instanceName(),
-      QCString( "totalTaskTime" )).toInt( &ok );
+      QByteArray( "totalTaskTime" )).toInt( &ok );
   if ( !ok )
     minutes = 0;
 
   ok = false;
   sessionMinutes = incident->customProperty( kapp->instanceName(),
-      QCString( "totalSessionTime" )).toInt( &ok );
+      QByteArray( "totalSessionTime" )).toInt( &ok );
   if ( !ok )
     sessionMinutes = 0;
 
   QString desktopList = incident->customProperty( kapp->instanceName(),
-      QCString( "desktopList" ) );
-  QStringList desktopStrList = QStringList::split( QString::fromLatin1(","),
-      desktopList );
+      QByteArray( "desktopList" ) );
+  QStringList desktopStrList = desktopList.split( QString::fromLatin1(","),
+      QString::SkipEmptyParts );
   desktops.clear();
 
   for ( QStringList::iterator iter = desktopStrList.begin();
@@ -356,7 +360,7 @@ bool Task::parseIncidence( KCal::Incidence* incident, long& minutes,
 
   percent_complete = static_cast<KCal::Todo*>(incident)->percentComplete();
 
-  //kdDebug(5970) << "Task::parseIncidence: "
+  //kDebug(5970) << "Task::parseIncidence: "
   //  << name << ", Minutes: " << minutes
   //  <<  ", desktop: " << desktopList << endl;
 
@@ -380,7 +384,7 @@ QString Task::getDesktopStr() const
 
 void Task::cut()
 {
-  //kdDebug(5970) << "Task::cut - " << name() << endl;
+  //kDebug(5970) << "Task::cut - " << name() << endl;
   changeParentTotalTimes( -_totalSessionTime, -_totalTime);
   if ( ! parent())
     listView()->takeItem(this);
@@ -401,12 +405,16 @@ void Task::paste(Task* destination)
 }
 
 void Task::update()
+// Update a row, containing one task
 {
+  kDebug(5970) << "Entering Task::update" << endl;
+  bool b=taskView()->preferences()->decimalFormat();
   setText(0, _name);
-  setText(1, formatTime(_sessionTime));
-  setText(2, formatTime(_time));
-  setText(3, formatTime(_totalSessionTime));
-  setText(4, formatTime(_totalTime));
+  setText(1, formatTime(_sessionTime, b));
+  setText(2, formatTime(_time, b));
+  setText(3, formatTime(_totalSessionTime, b));
+  setText(4, formatTime(_totalTime, b));
+  setText(5, QString::number(_percentcomplete));
 }
 
 void Task::addComment( QString comment, KarmStorage* storage )
@@ -420,7 +428,7 @@ QString Task::comment() const
   return _comment;
 }
 
-int Task::compare ( QListViewItem * i, int col, bool ascending ) const
+int Task::compare ( Q3ListViewItem * i, int col, bool ascending ) const
 {
   long thistime = 0;
   long thattime = 0;

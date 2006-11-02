@@ -27,7 +27,7 @@ test cases:
 @author Thorsten Staerk
 */
 
-#include <qxml.h>
+#include <QtXml>
 #include <klocale.h>
 #include "taskview.h"
 #include "task.h"

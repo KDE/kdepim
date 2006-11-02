@@ -1,22 +1,22 @@
 #ifndef KARM_TASK_VIEW_H
 #define KARM_TASK_VIEW_H
 
-#include <qdict.h>
-#include <qptrlist.h>
-#include <qptrstack.h>
+#include <q3dict.h>
+#include <q3ptrlist.h>
+#include <q3ptrstack.h>
+#include <QMouseEvent>
+#include <QList>
+#include <QTextStream>
 
-#include <klistview.h>
+#include <k3listview.h>
+#include <kcal/resourcecalendar.h>
 
 #include "desktoplist.h"
-#include "resourcecalendar.h"
 #include "karmstorage.h"
 #include "reportcriteria.h"
-#include <qtimer.h>
-//#include "desktoptracker.h"
+#include <QTimer>
 
-//#include "karmutility.h"
-
-class QListBox;
+class Q3ListBox;
 class QString;
 class QTextStream;
 class QTimer;
@@ -38,12 +38,12 @@ using namespace KCal;
  * Container and interface for the tasks.
  */
 
-class TaskView : public KListView
+class TaskView : public K3ListView
 {
   Q_OBJECT
 
   public:
-    TaskView( QWidget *parent = 0, const char *name = 0, const QString &icsfile = "" );
+    TaskView( QWidget *parent = 0, const QString &icsfile = "" );
     virtual ~TaskView();
 
     /**  Return the first item in the view, cast to a Task pointer.  */
@@ -71,16 +71,19 @@ class TaskView : public KListView
     long count();
 
     /** Return list of start/stop events for given date range. */
-    QValueList<HistoryEvent> getHistory(const QDate& from, const QDate& to) const;
+    QList<HistoryEvent> getHistory(const QDate& from, const QDate& to) const;
 
     /** Schedule that we should save very soon */
     void scheduleSave();
+
+    /** Deliver logical Column numbers */
+    int mapToLogiCal( int col );
 
     /** Return preferences user selected on settings dialog. **/
     Preferences *preferences();
 
     /** Add a task to view and storage. */
-    QString addTask( const QString& taskame, long total, long session, const DesktopList& desktops, 
+    QString addTask( const QString& taskame, long total, long session, const DesktopList& desktops,
                      Task* parent = 0 );
 
   public slots:
@@ -105,9 +108,6 @@ class TaskView : public KListView
      /** Used to refresh (e.g. after import) */
     void refresh();
 
-   /** Used to import a legacy file format. */
-    void loadFromFlatFile();
-
     /** used to import tasks from imendio planner */
     QString importPlanner( QString fileName="" );
 
@@ -125,10 +125,10 @@ class TaskView : public KListView
 
     void editTask();
 
-    /** 
+    /**
      * Returns a pointer to storage object.
      *
-     * This is poor object oriented design--the task view should 
+     * This is poor object oriented design--the task view should
      * expose wrappers around the storage methods we want to access instead of
      * giving clients full access to objects that we own.
      *
@@ -160,24 +160,35 @@ class TaskView : public KListView
     void adaptColumns();
     /** receiving signal that a task is being deleted */
     void deletingTask(Task* deletedTask);
-    void startTimerFor( Task* task );
-    void stopTimerFor( Task* task );
+
+    /** starts timer for task.
+     * @param task      task to start timer of
+     * @param startTime if taskview has been modified by another program, we
+                            have to set the starting time to not-now. */
+    void startTimerFor( Task* task, QDateTime startTime = QDateTime::currentDateTime() );
+     void stopTimerFor( Task* task );
+
+    /** clears all active tasks. Needed e.g. if iCal file was modified by
+       another program and taskview is cleared without stopping tasks
+        IF YOU DO NOT KNOW WHAT YOU ARE DOING, CALL stopAllTimers INSTEAD */
+    void clearActiveTasks();
 
     /** User has picked a new iCalendar file on preferences screen. */
     void iCalFileChanged(QString file);
 
     /** Copy totals for current and all sub tasks to clipboard. */
-    void clipTotals();
+    QString clipTotals( const ReportCriteria &rc );
 
     /** Copy history for current and all sub tasks to clipboard. */
-    void clipHistory();
+    QString clipHistory();
 
   signals:
     void totalTimesChanged( long session, long total );
     void updateButtons();
     void timersActive();
     void timersInactive();
-    void tasksChanged( QPtrList<Task> activeTasks );
+    void tasksChanged( Q3PtrList<Task> activeTasks );
+    void setStatusBarText(QString);
 
   private: // member variables
     IdleTimeDetector *_idleTimeDetector;
@@ -185,10 +196,11 @@ class TaskView : public KListView
     QTimer *_autoSaveTimer;
     QTimer *_manualSaveTimer;
     Preferences *_preferences;
-    QPtrList<Task> activeTasks;
-    int previousColumnWidths[4];
+    Q3PtrList<Task> activeTasks;
+    int previousColumnWidths[5];
     DesktopTracker* _desktopTracker;
     bool _isloading;
+    Task* dragTask;
 
     //KCal::CalendarLocal _calendar;
     KarmStorage * _storage;
@@ -200,14 +212,20 @@ class TaskView : public KListView
     void deleteChildTasks( Task *item );
     void addTimeToActiveTasks( int minutes, bool save_data = true );
     /** item state stores if a task is expanded so you can see the subtasks */
-    void restoreItemState( QListViewItem *item );
+    void restoreItemState( Q3ListViewItem *item );
+
+  protected:
+    void startDrag();
+    Q3DragObject* dragObject();
+    void contentsDropEvent(QDropEvent*);
+    bool acceptDrag( QDropEvent* event) const;
 
   protected slots:
     void autoSaveChanged( bool );
     void autoSavePeriodChanged( int period );
     void minuteUpdate();
     /** item state stores if a task is expanded so you can see the subtasks */
-    void itemStateChanged( QListViewItem *item );
+    void itemStateChanged( Q3ListViewItem *item );
     void iCalFileModified(ResourceCalendar *);
 };
 

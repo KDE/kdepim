@@ -6,30 +6,43 @@
 #include "preferences.h"
 #include "tray.h"
 #include "version.h"
-#include <kaccel.h>
 
 #include <kinstance.h>
 #include <kaction.h>
+#include <kactioncollection.h>
 #include <kstdaction.h>
 #include <kfiledialog.h>
 #include <kglobal.h>
 #include <klocale.h>
+#include <kicon.h>
 
-#include <qfile.h>
+#include <QFile>
 #include <qtextstream.h>
-#include <qmultilineedit.h>
+#include <q3multilineedit.h>
+#include <QByteArray>
+#include <Q3PtrList>
+#include <q3popupmenu.h>
+#include <kxmlguifactory.h>
+#include "mainwindow.h"
 
-karmPart::karmPart( QWidget *parentWidget, const char *widgetName,
-                                  QObject *parent, const char *name )
-    : DCOPObject ( "KarmDCOPIface" ), KParts::ReadWritePart(parent, name), 
-    _accel     ( new KAccel( parentWidget ) ),
+#include "karmpartadaptor.h"
+#include <QtDBus>
+
+karmPart::karmPart( QWidget *parentWidget, QObject *parent )
+    : KParts::ReadWritePart(parent),
+#warning Port me!
+//    _accel     ( new KAccel( parentWidget ) ),
     _watcher   ( new KAccelMenuWatch( _accel, parentWidget ) )
 {
+  new KarmPartAdaptor(this);
+  QDBusConnection::sessionBus().registerObject("/Karm", this);
     // we need an instance
     setInstance( karmPartFactory::instance() );
 
     // this should be your custom internal widget
-    _taskView = new TaskView( parentWidget, widgetName );
+    _taskView = new TaskView( parentWidget );
+
+    connect(_taskView, SIGNAL( setStatusBarText(QString)), this, SLOT( setStatusBar(QString) ) );
 
     // setup PreferenceDialog.
     _preferences = Preferences::instance();
@@ -50,16 +63,16 @@ karmPart::karmPart( QWidget *parentWidget, const char *widgetName,
 
   connect( _taskView, SIGNAL( totalTimesChanged( long, long ) ),
            this, SLOT( updateTime( long, long ) ) );
-  connect( _taskView, SIGNAL( selectionChanged ( QListViewItem * )),
+  connect( _taskView, SIGNAL( selectionChanged ( Q3ListViewItem * )),
            this, SLOT(slotSelectionChanged()));
   connect( _taskView, SIGNAL( updateButtons() ),
            this, SLOT(slotSelectionChanged()));
 
   // Setup context menu request handling
   connect( _taskView,
-           SIGNAL( contextMenuRequested( QListViewItem*, const QPoint&, int )),
+           SIGNAL( contextMenuRequested( Q3ListViewItem*, const QPoint&, int )),
            this,
-           SLOT( contextMenuRequest( QListViewItem*, const QPoint&, int )));
+           SLOT( contextMenuRequest( Q3ListViewItem*, const QPoint&, int )));
 
   _tray = new KarmTray( this );
 
@@ -69,8 +82,8 @@ karmPart::karmPart( QWidget *parentWidget, const char *widgetName,
   connect( _taskView, SIGNAL( timersActive() ), this,  SLOT( enableStopAll() ));
   connect( _taskView, SIGNAL( timersInactive() ), _tray, SLOT( stopClock() ) );
   connect( _taskView, SIGNAL( timersInactive() ),  this,  SLOT( disableStopAll()));
-  connect( _taskView, SIGNAL( tasksChanged( QPtrList<Task> ) ),
-                      _tray, SLOT( updateToolTip( QPtrList<Task> ) ));
+  connect( _taskView, SIGNAL( tasksChanged( Q3PtrList<Task> ) ),
+                      _tray, SLOT( updateToolTip( Q3PtrList<Task> ) ));
 
   _taskView->load();
 
@@ -116,109 +129,64 @@ void karmPart::makeMenus()
   actionKeyBindings = KStdAction::keyBindings( this, SLOT( keyBindings() ),
       actionCollection() );
   actionPreferences = KStdAction::preferences(_preferences,
-      SLOT(showDialog()),
-      actionCollection() );
+      SLOT(showDialog()), actionCollection() );
   (void) KStdAction::save( this, SLOT( save() ), actionCollection() );
-  KAction* actionStartNewSession = new KAction( i18n("Start &New Session"),
-      0,
-      this,
-      SLOT( startNewSession() ),
-      actionCollection(),
-      "start_new_session");
-  KAction* actionResetAll = new KAction( i18n("&Reset All Times"),
-      0,
-      this,
-      SLOT( resetAllTimes() ),
-      actionCollection(),
-      "reset_all_times");
-  actionStart = new KAction( i18n("&Start"),
-      QString::fromLatin1("1rightarrow"), Key_S,
-      _taskView,
-      SLOT( startCurrentTimer() ), actionCollection(),
-      "start");
-  actionStop = new KAction( i18n("S&top"),
-      QString::fromLatin1("stop"), 0,
-      _taskView,
-      SLOT( stopCurrentTimer() ), actionCollection(),
-      "stop");
-  actionStopAll = new KAction( i18n("Stop &All Timers"),
-      Key_Escape,
-      _taskView,
-      SLOT( stopAllTimers() ), actionCollection(),
-      "stopAll");
+  KAction *actionStartNewSession = new KAction( i18n("Start &New Session"), actionCollection(), "start_new_session");
+  connect(actionStartNewSession, SIGNAL(triggered(bool)), SLOT( startNewSession() ));
+  KAction *actionResetAll = new KAction( i18n("&Reset All Times"), actionCollection(), "reset_all_times");
+  connect(actionResetAll, SIGNAL(triggered(bool)), SLOT( resetAllTimes() ));
+  actionStart = new KAction(KIcon("1rightarrow"),  i18n("&Start"), actionCollection(), "start");
+  connect(actionStart, SIGNAL(triggered(bool) ), _taskView, SLOT( startCurrentTimer() ));
+  actionStart->setShortcut(Qt::Key_S);
+  actionStop = new KAction(KIcon("stop"),  i18n("S&top"), actionCollection(), "stop");
+  connect(actionStop, SIGNAL(triggered(bool) ), _taskView, SLOT( stopCurrentTimer() ));
+  actionStopAll = new KAction( i18n("Stop &All Timers"), actionCollection(), "stopAll");
+  connect(actionStopAll, SIGNAL(triggered(bool)), _taskView, SLOT( stopAllTimers() ));
+  actionStopAll->setShortcut(Qt::Key_Escape);
   actionStopAll->setEnabled(false);
 
-  actionNew = new KAction( i18n("&New..."),
-      QString::fromLatin1("filenew"), CTRL+Key_N,
-      _taskView,
-      SLOT( newTask() ), actionCollection(),
-      "new_task");
-  actionNewSub = new KAction( i18n("New &Subtask..."),
-      QString::fromLatin1("kmultiple"), CTRL+ALT+Key_N,
-      _taskView,
-      SLOT( newSubTask() ), actionCollection(),
-      "new_sub_task");
-  actionDelete = new KAction( i18n("&Delete"),
-      QString::fromLatin1("editdelete"), Key_Delete,
-      _taskView,
-      SLOT( deleteTask() ), actionCollection(),
-      "delete_task");
-  actionEdit = new KAction( i18n("&Edit..."),
-      QString::fromLatin1("edit"), CTRL + Key_E,
-      _taskView,
-      SLOT( editTask() ), actionCollection(),
-      "edit_task");
+  actionNew = new KAction(KIcon("filenew"),  i18n("&New..."), actionCollection(), "new_task");
+  connect(actionNew, SIGNAL(triggered(bool) ), _taskView, SLOT( newTask() ));
+  actionNew->setShortcut(Qt::CTRL+Qt::Key_N);
+  actionNewSub = new KAction(KIcon("kmultiple"),  i18n("New &Subtask..."), actionCollection(), "new_sub_task");
+  connect(actionNewSub, SIGNAL(triggered(bool) ), _taskView, SLOT( newSubTask() ));
+  actionNewSub->setShortcut(Qt::CTRL+Qt::ALT+Qt::Key_N);
+  actionDelete = new KAction(KIcon("editdelete"),  i18n("&Delete"), actionCollection(), "delete_task");
+  connect(actionDelete, SIGNAL(triggered(bool) ), _taskView, SLOT( deleteTask() ));
+  actionDelete->setShortcut(Qt::Key_Delete);
+  actionEdit = new KAction(KIcon("edit"),  i18n("&Edit..."), actionCollection(), "edit_task");
+  connect(actionEdit, SIGNAL(triggered(bool) ), _taskView, SLOT( editTask() ));
+  actionEdit->setShortcut(Qt::CTRL + Qt::Key_E);
 //  actionAddComment = new KAction( i18n("&Add Comment..."),
 //      QString::fromLatin1("document"),
-//      CTRL+ALT+Key_E,
+//      Qt::CTRL+Qt::ALT+Qt::Key_E,
 //      _taskView,
 //      SLOT( addCommentToTask() ),
 //      actionCollection(),
 //      "add_comment_to_task");
-  actionMarkAsComplete = new KAction( i18n("&Mark as Complete"),
-      QString::fromLatin1("document"),
-      CTRL+Key_M,
-      _taskView,
-      SLOT( markTaskAsComplete() ),
-      actionCollection(),
-      "mark_as_complete");
-  actionMarkAsIncomplete = new KAction( i18n("&Mark as Incomplete"),
-      QString::fromLatin1("document"),
-      CTRL+Key_M,
-      _taskView,
-      SLOT( markTaskAsIncomplete() ),
-      actionCollection(),
-      "mark_as_incomplete");
-  actionClipTotals = new KAction( i18n("&Copy Totals to Clipboard"),
-      QString::fromLatin1("klipper"),
-      CTRL+Key_C,
-      _taskView,
-      SLOT( clipTotals() ),
-      actionCollection(),
-      "clip_totals");
-  actionClipHistory = new KAction( i18n("Copy &History to Clipboard"),
-      QString::fromLatin1("klipper"),
-      CTRL+ALT+Key_C,
-      _taskView,
-      SLOT( clipHistory() ),
-      actionCollection(),
-      "clip_history");
+  actionMarkAsComplete = new KAction(KIcon("document"),  i18n("&Mark as Complete"), actionCollection(), "mark_as_complete");
+  connect(actionMarkAsComplete, SIGNAL(triggered(bool) ), _taskView, SLOT( markTaskAsComplete() ));
+  actionMarkAsComplete->setShortcut(Qt::CTRL+Qt::Key_M);
+  actionMarkAsIncomplete = new KAction(KIcon("document"),  i18n("&Mark as Incomplete"), actionCollection(), "mark_as_incomplete");
+  connect(actionMarkAsIncomplete, SIGNAL(triggered(bool) ), _taskView, SLOT( markTaskAsIncomplete() ));
+  actionMarkAsIncomplete->setShortcut(Qt::CTRL+Qt::Key_M);
+  actionClipTotals = new KAction(KIcon("klipper"),  i18n("&Copy Totals to Clipboard"), actionCollection(), "clip_totals");
+  connect(actionClipTotals, SIGNAL(triggered(bool) ), _taskView, SLOT( clipTotals() ));
+  actionClipTotals->setShortcut(Qt::CTRL+Qt::Key_C);
+  actionClipHistory = new KAction(KIcon("klipper"),  i18n("Copy &History to Clipboard"), actionCollection(), "clip_history");
+  connect(actionClipHistory, SIGNAL(triggered(bool) ), _taskView, SLOT( clipHistory() ));
+  actionClipHistory->setShortcut(Qt::CTRL+Qt::ALT+Qt::Key_C);
 
-  new KAction( i18n("Import &Legacy Flat File..."), 0,
-      _taskView, SLOT(loadFromFlatFile()), actionCollection(),
-      "import_flatfile");
-  new KAction( i18n("&Export to CSV File..."), 0,
-      _taskView, SLOT(exportcsvFile()), actionCollection(),
-      "export_csvfile");
-  new KAction( i18n("Export &History to CSV File..."), 0,
-      this, SLOT(exportcsvHistory()), actionCollection(),
-      "export_csvhistory");
-  new KAction( i18n("Import Tasks From &Planner..."), 0,
-      _taskView, SLOT(importPlanner()), actionCollection(),
-      "import_planner");  
-  new KAction( i18n("Configure KArm..."), 0,
-      _preferences, SLOT(showDialog()), actionCollection(),
-      "configure_karm");  
+  KAction *action = new KAction( i18n("Import &Legacy Flat File..."), actionCollection(), "import_flatfile");
+  connect(action, SIGNAL(triggered(bool) ), _taskView, SLOT(loadFromFlatFile()));
+  action = new KAction( i18n("&Export to CSV File..."), actionCollection(), "export_csvfile");
+  connect(action, SIGNAL(triggered(bool) ), _taskView, SLOT(exportcsvFile()));
+  action = new KAction( i18n("Export &History to CSV File..."), actionCollection(), "export_csvhistory");
+  connect(action, SIGNAL(triggered(bool) ), SLOT(exportcsvHistory()));
+  action = new KAction( i18n("Import Tasks From &Planner..."), actionCollection(), "import_planner");
+  connect(action, SIGNAL(triggered(bool) ), _taskView, SLOT(importPlanner()));
+  action = new KAction( i18n("Configure KArm..."), actionCollection(), "configure_karm");
+  connect(action, SIGNAL(triggered(bool) ), _preferences, SLOT(showDialog()));
 
 /*
   new KAction( i18n("Import E&vents"), 0,
@@ -320,9 +288,15 @@ bool karmPart::openFile()
     _taskView->load(m_file);
 
     // just for fun, set the status bar
-    emit setStatusBarText( m_url.prettyURL() );
+    emit setStatusBarText( m_url.prettyUrl() );
 
     return true;
+}
+
+void karmPart::setStatusBar(const QString & qs)
+{
+  kDebug(5970) << "Entering setStatusBar" << endl;
+  emit setStatusBarText(qs);
 }
 
 bool karmPart::saveFile()
@@ -333,7 +307,7 @@ bool karmPart::saveFile()
 
     // m_file is always local, so we use QFile
     QFile file(m_file);
-    if (file.open(IO_WriteOnly) == false)
+    if (file.open(QIODevice::WriteOnly) == false)
         return false;
 
     // use QTextStream to dump the text to the file
@@ -347,12 +321,12 @@ bool karmPart::saveFile()
 void karmPart::fileOpen()
 {
     // this slot is called whenever the File->Open menu is selected,
-    // the Open shortcut is pressed (usually CTRL+O) or the Open toolbar
+    // the Open shortcut is pressed (usually Qt::CTRL+O) or the Open toolbar
     // button is clicked
     QString file_name = KFileDialog::getOpenFileName();
 
     if (file_name.isEmpty() == false)
-        openURL(file_name);
+        openUrl(file_name);
 }
 
 void karmPart::fileSaveAs()
@@ -385,15 +359,14 @@ karmPartFactory::~karmPartFactory()
     s_instance = 0L;
 }
 
-KParts::Part* karmPartFactory::createPartObject( QWidget *parentWidget, const char *widgetName,
-                                                        QObject *parent, const char *name,
-                                                        const char *classname, const QStringList &args )
+KParts::Part* karmPartFactory::createPartObject( QWidget *parentWidget, QObject *parent,
+                                                 const char* classname, const QStringList &args )
 {
     // Create an instance of our Part
-    karmPart* obj = new karmPart( parentWidget, widgetName, parent, name );
+    karmPart* obj = new karmPart( parentWidget, parent );
 
     // See if we are to be read-write or not
-    if (QCString(classname) == "KParts::ReadOnlyPart")
+    if (QByteArray(classname) == "KParts::ReadOnlyPart")
         obj->setReadWrite(false);
 
     return obj;
@@ -414,9 +387,17 @@ extern "C"
 {
     KDE_EXPORT void* init_libkarmpart()
     {
-	KGlobal::locale()->insertCatalogue("karm");
+	KGlobal::locale()->insertCatalog("karm");
         return new karmPartFactory;
     }
+}
+
+void karmPart::contextMenuRequest( Q3ListViewItem*, const QPoint& point, int )
+{
+    QMenu* pop = dynamic_cast<QMenu*>(
+                          factory()->container( i18n( "task_popup" ), this ) );
+    if ( pop )
+      pop->popup( point );
 }
 
 //----------------------------------------------------------------------------
@@ -457,7 +438,7 @@ QString karmPart::taskIdFromName( const QString &taskname ) const
     rval = _hasTask( task, taskname );
     task = task->nextSibling();
   }
-  
+
   return rval;
 }
 
@@ -468,19 +449,19 @@ void karmPart::quit()
 
 bool karmPart::save()
 {
-  kdDebug(5970) << "Saving time data to disk." << endl;
+  kDebug(5970) << "Saving time data to disk." << endl;
   QString err=_taskView->save();  // untranslated error msg.
-  // TODO:
-  /* if (err.isEmpty()) statusBar()->message(i18n("Successfully saved tasks and history"),1807);
-  else statusBar()->message(i18n(err.ascii()),7707); // no msgbox since save is called when exiting */
+
+  if (err.isEmpty()) setStatusBar(i18n("Successfully saved tasks and history"));
+  else setStatusBar(i18n(err.toAscii())); // no msgbox since save is called when exiting */
   return true;
 }
 
-int karmPart::addTask( const QString& taskname ) 
+int karmPart::addTask( const QString& taskname )
 {
   DesktopList desktopList;
   QString uid = _taskView->addTask( taskname, 0, 0, desktopList );
-  kdDebug(5970) << "MainWindow::addTask( " << taskname << " ) returns " << uid << endl;
+  kDebug(5970) << "MainWindow::addTask( " << taskname << " ) returns " << uid << endl;
   if ( uid.length() > 0 ) return 0;
   else
   {
@@ -492,18 +473,18 @@ int karmPart::addTask( const QString& taskname )
 
 QString karmPart::setPerCentComplete( const QString& taskName, int perCent )
 {
-  int index;
+  int index = -1;
   QString err="no such task";
   for (int i=0; i<_taskView->count(); i++)
   {
     if ((_taskView->item_at_index(i)->name()==taskName))
     {
       index=i;
-      if (err==QString::null) err="task name is abigious";
-      if (err=="no such task") err=QString::null;
+      if (err.isNull()) err="task name is abigious";
+      if (err=="no such task") err=QString();
     }
   }
-  if (err==QString::null) 
+  if (err.isNull() && index>=0 )
   {
     _taskView->item_at_index(index)->setPercentComplete( perCent, _taskView->storage() );
   }
@@ -532,7 +513,7 @@ int karmPart::bookTime
   if ( t == NULL ) rval = KARM_ERR_UID_NOT_FOUND;
 
   // Parse datetime
-  if ( !rval ) 
+  if ( !rval )
   {
     startDate = QDate::fromString( datetime, Qt::ISODate );
     if ( datetime.length() > 10 )  // "YYYY-MM-DD".length() = 10
@@ -566,15 +547,15 @@ int karmPart::bookTime
 QString karmPart::getError( int mkb ) const
 {
   if ( mkb <= KARM_MAX_ERROR_NO ) return m_error[ mkb ];
-  else return i18n( "Invalid error number: %1" ).arg( mkb );
+  else return i18n( "Invalid error number: %1", mkb );
 }
 
 int karmPart::totalMinutesForTaskId( const QString& taskId )
 {
   int rval = 0;
   Task *task, *t;
-  
-  kdDebug(5970) << "MainWindow::totalTimeForTask( " << taskId << " )" << endl;
+
+  kDebug(5970) << "MainWindow::totalTimeForTask( " << taskId << " )" << endl;
 
   // Find task
   task = _taskView->first_child();
@@ -584,14 +565,14 @@ int karmPart::totalMinutesForTaskId( const QString& taskId )
     t = _hasUid( task, taskId );
     task = task->nextSibling();
   }
-  if ( t != NULL ) 
+  if ( t != NULL )
   {
     rval = t->totalTime();
-    kdDebug(5970) << "MainWindow::totalTimeForTask - task found: rval = " << rval << endl;
+    kDebug(5970) << "MainWindow::totalTimeForTask - task found: rval = " << rval << endl;
   }
-  else 
+  else
   {
-    kdDebug(5970) << "MainWindow::totalTimeForTask - task not found" << endl;
+    kDebug(5970) << "MainWindow::totalTimeForTask - task not found" << endl;
     rval = KARM_ERR_UID_NOT_FOUND;
   }
 
@@ -601,7 +582,7 @@ int karmPart::totalMinutesForTaskId( const QString& taskId )
 QString karmPart::_hasTask( Task* task, const QString &taskname ) const
 {
   QString rval = "";
-  if ( task->name() == taskname ) 
+  if ( task->name() == taskname )
   {
     rval = task->uid();
   }
@@ -621,7 +602,7 @@ Task* karmPart::_hasUid( Task* task, const QString &uid ) const
 {
   Task *rval = NULL;
 
-  //kdDebug(5970) << "MainWindow::_hasUid( " << task << ", " << uid << " )" << endl;
+  //kDebug(5970) << "MainWindow::_hasUid( " << task << ", " << uid << " )" << endl;
 
   if ( task->uid() == uid ) rval = task;
   else
@@ -664,6 +645,12 @@ QString karmPart::stoptimerfor( const QString& taskname )
   return err;
 }
 
+QString karmPart::stopalltimers()
+{
+  _taskView->stopAllTimers();
+  return QString();
+}
+
 QString karmPart::exportcsvfile( QString filename, QString from, QString to, int type, bool decimalMinutes, bool allTasks, QString delimiter, QString quote )
 {
   ReportCriteria rc;
@@ -683,7 +670,12 @@ QString karmPart::importplannerfile( QString fileName )
   return _taskView->importPlanner(fileName);
 }
 
+void karmPart::startNewSession() 
+{ 
+  _taskView->startNewSession(); 
+  _taskView->save(); 
+} 
+   
 
-
-#include <qpopupmenu.h>
+#include <q3popupmenu.h>
 #include "karm_part.moc"

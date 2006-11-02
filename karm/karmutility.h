@@ -1,7 +1,7 @@
 #ifndef KARMUTILITY_H
 #define KARMUTILITY_H
 
-#include <qstring.h>
+#include <QString>
 
 /**
  * Format time for output.  All times output on screen or report output go

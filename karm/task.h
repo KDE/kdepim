@@ -2,10 +2,13 @@
 #define KARM_TASK_H
 
 // Required b/c QPtrList is a struct, not a class.
-#include <qptrlist.h>
+#include <q3ptrlist.h>
 
 // Requred b/c/ QPtrVector is a template (?)
-#include <qptrvector.h>
+#include <q3ptrvector.h>
+#include <QPixmap>
+
+#include <QDateTime>
 
 // Required b/c DesktopList is a typedef not a class.
 #include "desktoplist.h"
@@ -19,8 +22,10 @@ class QString;
 class KarmStorage;
 
 class QTimer;
-class KCal::Incidence;
-class KCal::Todo;
+namespace KCal {
+class Incidence;
+class Todo;
+}
 class QObject;
 class QPixmap;
 
@@ -38,7 +43,7 @@ class QPixmap;
  * It can also contain subtasks - these are managed using the
  * QListViewItem class.
  */
-class Task : public QObject, public QListViewItem
+class Task : public QObject, public Q3ListViewItem
 {
   Q_OBJECT
 
@@ -56,9 +61,9 @@ class Task : public QObject, public QListViewItem
     /** return parent Task or null in case of TaskView.
      *  same as QListViewItem::parent()
      */
-    Task* firstChild() const  { return (Task*)QListViewItem::firstChild(); }
-    Task* nextSibling() const { return (Task*)QListViewItem::nextSibling(); }
-    Task* parent() const      { return (Task*)QListViewItem::parent(); }
+    Task* firstChild() const  { return (Task*)Q3ListViewItem::firstChild(); }
+    Task* nextSibling() const { return (Task*)Q3ListViewItem::nextSibling(); }
+    Task* parent() const      { return (Task*)Q3ListViewItem::parent(); }
 
     /** Return task view for this task */
     TaskView* taskView() const {
@@ -86,7 +91,7 @@ class Task : public QObject, public QListViewItem
     void paste(Task* destination);
 
     /** Sort times numerically, not alphabetically.  */
-    int compare ( QListViewItem * i, int col, bool ascending ) const;
+    int compare ( Q3ListViewItem * i, int col, bool ascending ) const;
 
     //@{ timing related functions
 
@@ -176,8 +181,12 @@ class Task : public QObject, public QListViewItem
       /** starts or stops a task
        *  @param on       true or false for starting or stopping a task
        *  @param storage a pointer to a KarmStorage object.
+       *  @param whenStarted time when the task was started. Normally
+				    QDateTime::currentDateTime, but if calendar has 
+				    been changed by another program and being reloaded
+ 				    the task is set to running with another start date
        */
-      void setRunning(bool on, KarmStorage* storage);
+      void setRunning( bool on, KarmStorage* storage, QDateTime whenStarted= QDateTime::currentDateTime());
 
       /** return the state of a task - if it's running or not
        *  @return         true or false depending on whether the task is running
@@ -194,7 +203,16 @@ class Task : public QObject, public QListViewItem
      */
     KCal::Todo* asTodo(KCal::Todo* calendar) const;
 
-    /** Add a comment to this task. */
+    /**
+     *  Set a task's description
+     *  A description is a comment.
+     */
+    void setDescription( QString desc, KarmStorage* storage );
+
+    /** 
+     *  Add a comment to this task. 
+     *  A comment is called "description" in the context of KCal::ToDo
+     */
     void addComment( QString comment, KarmStorage* storage );
 
     /** Retrieve the entire comment for the task. */
@@ -207,7 +225,7 @@ class Task : public QObject, public QListViewItem
      * @param   activeTasks - list of aktive tasks
      * @param storage a pointer to a KarmStorage object.
      */
-    bool remove( QPtrList<Task>& activeTasks, KarmStorage* storage );
+    bool remove( Q3PtrList<Task>& activeTasks, KarmStorage* storage );
 
     /**
      * Update percent complete for this task.
@@ -228,6 +246,9 @@ class Task : public QObject, public QListViewItem
 
     /** Remove current task and all it's children from the view.  */
     void removeFromView();
+
+    /** delivers when the task was started last */
+    QDateTime lastStart() { return _lastStart; }
 
   protected:
     void changeParentTotalTimes( long minutesSession, long minutes );
@@ -279,7 +300,7 @@ class Task : public QObject, public QListViewItem
     DesktopList _desktops;
     QTimer *_timer;
     int _currentPic;
-    static QPtrVector<QPixmap> *icons;
+    static Q3PtrVector<QPixmap> *icons;
 
     /** Don't need to update storage when deleting task from list. */
     bool _removing;

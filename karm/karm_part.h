@@ -4,15 +4,15 @@
 #include <kparts/part.h>
 #include "karmerrors.h"
 #include <kparts/factory.h>
-#include <karmdcopiface.h>
 #include "reportcriteria.h"
+#include <Q3ListView>
 
 class KAccel;
 class KAccelMenuWatch;
 class KarmTray;
 class QWidget;
 class QPainter;
-class KURL;
+class KUrl;
 
 class Preferences;
 class Task;
@@ -23,10 +23,10 @@ class TaskView;
  * application.
  *
  * @short Main Part
- * @author Thorsten Staerk <thorsten@staerk.de>
+ * @author Thorsten Staerk <kde at staerk dot de>
  * @version 0.1
  */
-class karmPart : public KParts::ReadWritePart, virtual public KarmDCOPIface
+class karmPart : public KParts::ReadWritePart
 {
   Q_OBJECT
 
@@ -52,14 +52,14 @@ class karmPart : public KParts::ReadWritePart, virtual public KarmDCOPIface
     KAction*         actionPreferences;
     KAction*         actionClipTotals;
     KAction*         actionClipHistory;
-    QString          m_error[ KARM_MAX_ERROR_NO ];
+    QString          m_error[ KARM_MAX_ERROR_NO + 1 ];
 
     friend class KarmTray;
 
 public:
-    karmPart(QWidget *parentWidget, const char *widgetName,
-             QObject *parent, const char *name);
+    karmPart(QWidget *parentWidget, QObject *parent);
 
+    void contextMenuRequest( Q3ListViewItem*, const QPoint& point, int );
     // DCOP
     void quit();
     virtual bool save();
@@ -76,6 +76,7 @@ public:
     int totalMinutesForTaskId( const QString& taskId );
     QString starttimerfor( const QString &taskname );
     QString stoptimerfor( const QString &taskname );
+    QString stopalltimers();
     QString deletetodo();
     bool    getpromptdelete();
     QString setpromptdelete( bool prompt );
@@ -111,6 +112,10 @@ protected slots:
     void fileOpen();
     void fileSaveAs();
     void slotSelectionChanged();
+    void startNewSession(); 
+
+public slots:
+   void setStatusBar(const QString & qs);
 
 };
 
@@ -123,8 +128,7 @@ class karmPartFactory : public KParts::Factory
 public:
     karmPartFactory();
     virtual ~karmPartFactory();
-    virtual KParts::Part* createPartObject( QWidget *parentWidget, const char *widgetName,
-                                            QObject *parent, const char *name,
+    virtual KParts::Part* createPartObject( QWidget *parentWidget, QObject *parent,
                                             const char *classname, const QStringList &args );
     static KInstance* instance();
  

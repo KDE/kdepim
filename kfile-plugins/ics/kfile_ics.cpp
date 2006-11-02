@@ -18,11 +18,11 @@ t it will be useful,
  *
  */
 
-#include <qdatetime.h>
-#include <qfile.h>
+#include <QDateTime>
+#include <QFile>
 
-#include <libkcal/calendarlocal.h>
-#include <libkcal/todo.h>
+#include <kcal/calendarlocal.h>
+#include <kcal/todo.h>
 
 #include "kfile_ics.h"
 
@@ -33,8 +33,8 @@ using namespace KCal;
 typedef KGenericFactory<ICSPlugin> ICSFactory;
 K_EXPORT_COMPONENT_FACTORY(kfile_ics, ICSFactory( "kfile_ics" ))
 
-ICSPlugin::ICSPlugin( QObject *parent, const char *name, const QStringList& args )
-  : KFilePlugin( parent, name, args )
+ICSPlugin::ICSPlugin( QObject *parent, const QStringList& args )
+  : KFilePlugin( parent, args )
 {
   KFileMimeTypeInfo* info = addMimeTypeInfo( "text/calendar" ); //TODO: vcs !!
 
@@ -61,7 +61,7 @@ bool ICSPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
 
   CalendarLocal cal ( QString::fromLatin1( "UTC" ) );
   if( !cal.load( info.path() ) ) {
-    kdDebug() << "Could not load calendar" << endl;
+    kDebug() << "Could not load calendar" << endl;
     return false;
   }
 

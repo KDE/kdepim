@@ -14,7 +14,7 @@ namespace
 
   void cleanup( int )
   {
-    kdDebug(5970) << i18n("Just caught a software interrupt.") << endl;
+    kDebug(5970) << i18n("Just caught a software interrupt.") << endl;
     kapp->exit();
   }
 }
@@ -29,10 +29,10 @@ int main( int argc, char *argv[] )
 {
   KAboutData aboutData( "karm", I18N_NOOP("KArm"),
       KARM_VERSION, description, KAboutData::License_GPL,
-      "(c) 1997-2004, KDE PIM Developers" );
+      "(c) 1997-2006, KDE PIM Developers" );
 
-  aboutData.addAuthor( "Mark Bucciarelli", I18N_NOOP( "Current Maintainer" ),
-                       "mark@hubcapconsulting.com" );
+  aboutData.addAuthor( "Thorsten Staerk", I18N_NOOP( "Current Maintainer" ),
+                       "kde@staerk.de" );
   aboutData.addAuthor( "Sirtaj Singh Kang", I18N_NOOP( "Original Author" ),
                        "taj@kde.org" );
   aboutData.addAuthor( "Allen Winter",      0, "winterz@verizon.net" );
@@ -42,8 +42,8 @@ int main( int argc, char *argv[] )
   aboutData.addAuthor( "Jan Schaumann",     0, "jschauma@netmeister.org" );
   aboutData.addAuthor( "Jesper Pedersen",   0, "blackie@kde.org" );
   aboutData.addAuthor( "Kalle Dalheimer",   0, "kalle@kde.org" );
+  aboutData.addAuthor( "Mark Bucciarelli",  0, "mark@hubcapconsulting.com" );
   aboutData.addAuthor( "Scott Monachello",  0, "smonach@cox.net" );
-  aboutData.addAuthor( "Thorsten Staerk",   0, "kde@staerk.de" );
   aboutData.addAuthor( "Tomas Pospisek",    0, "tpo_deb@sourcepole.ch" );
   aboutData.addAuthor( "Willi Richert",     0, "w.richert@gmx.net" );
 
@@ -57,11 +57,9 @@ int main( int argc, char *argv[] )
   if ( args->count() > 0 ) 
   {
     QString icsfile = QString::fromLocal8Bit( args->arg( 0 ) );
-    // FIXME: there is probably a Qt or KDE fcn for this test
-    if ( icsfile.startsWith( "/" ) 
-        || icsfile.lower().startsWith( "http://" ) 
-        || icsfile.lower().startsWith( "ftp://" ) 
-        )
+    
+    KUrl* icsfileurl=new KUrl(QString::fromLocal8Bit( args->arg( 0 ) ));
+    if (( icsfileurl->protocol() == "http" ) || ( icsfileurl->protocol() == "ftp" ) || ( icsfileurl->isLocalFile() ))
     {
       // leave as is
       ;
@@ -79,7 +77,7 @@ int main( int argc, char *argv[] )
 
   myApp.setMainWidget( mainWindow );
 
-  if (kapp->isRestored() && KMainWindow::canBeRestored( 1 ))
+  if (kapp->isSessionRestored() && KMainWindow::canBeRestored( 1 ))
     mainWindow->restore( 1, false );
   else
     mainWindow->show();

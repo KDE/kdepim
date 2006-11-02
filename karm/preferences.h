@@ -1,19 +1,20 @@
 #ifndef KARM_PREFERENCES_H
 #define KARM_PREFERENCES_H
 
-#include <kdialogbase.h>
+#include <kpagedialog.h>
+#include <QLabel>
 
 class QCheckBox;
 class QLabel;
 class QSpinBox;
 class QString;
-class KURLRequester;
+class KUrlRequester;
 
 /**
  * Provide an interface to the configuration options for the program.
  */
 
-class Preferences :public KDialogBase
+class Preferences :public KPageDialog
 {
   Q_OBJECT
 
@@ -30,8 +31,12 @@ class Preferences :public KDialogBase
     bool logging() const;
     int autoSavePeriod() const;
     bool promptDelete() const;
+    bool uniTasking() const;
     QString setPromptDelete( bool prompt );
+    QString setUniTasking( bool b );
     bool displayColumn(int n) const;
+    bool decimalFormat() const;
+    bool trayIcon() const;
     QString userRealName() const;
 
     void emitSignals();
@@ -53,6 +58,7 @@ class Preferences :public KDialogBase
     void setupChanged();
 
   protected slots:
+    virtual void slotButtonClicked(int button);
     virtual void slotOk();
     virtual void slotCancel();
     void idleDetectCheckBoxChanged();
@@ -68,17 +74,20 @@ class Preferences :public KDialogBase
     bool _unsavedChanges;
 
     // Widgets
-    QCheckBox *_doIdleDetectionW, *_doAutoSaveW, *_promptDeleteW;
+    QCheckBox *_doIdleDetectionW, *_doAutoSaveW, *_promptDeleteW, *_uniTaskingW,
+              *_trayIconW;
     QCheckBox *_displayTimeW, *_displaySessionW,
-              *_displayTotalTimeW, *_displayTotalSessionW;
+              *_displayTotalTimeW, *_displayTotalSessionW,
+	      *_decimalFormatW, *_displayPerCentCompleteW;
     QCheckBox *_loggingW;
     QLabel    *_idleDetectLabelW, *_displayColumnsLabelW;
     QSpinBox  *_idleDetectValueW, *_autoSaveValueW;
-    KURLRequester *_iCalFileW ;
+    KUrlRequester *_iCalFileW ;
 
     // Values
-    bool _doIdleDetectionV, _doAutoSaveV, _promptDeleteV, _loggingV;
-    bool _displayColumnV[4];
+    bool _doIdleDetectionV, _doAutoSaveV, _promptDeleteV, _loggingV, _uniTaskingV, _trayIconV;
+    bool _displayColumnV[5];
+    bool _decimalFormatV;
     int  _idleDetectValueV, _autoSaveValueV;
     QString _iCalFileV;
 

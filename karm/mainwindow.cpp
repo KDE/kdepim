@@ -6,8 +6,6 @@
 #include <numeric>
 
 #include "kaccelmenuwatch.h"
-#include <dcopclient.h>
-#include <kaccel.h>
 #include <kaction.h>
 #include <kapplication.h>       // kapp
 #include <kconfig.h>
@@ -18,11 +16,11 @@
 #include <kmessagebox.h>
 #include <kstatusbar.h>         // statusBar()
 #include <kstdaction.h>
-#include <qkeycode.h>
-#include <qpopupmenu.h>
-#include <qptrlist.h>
-#include <qstring.h>
-
+#include <qnamespace.h>
+#include <QMenu>
+#include <q3ptrlist.h>
+#include <QString>
+#include <kicon.h>
 #include "karmerrors.h"
 #include "karmutility.h"
 #include "mainwindow.h"
@@ -33,17 +31,23 @@
 #include "timekard.h"
 #include "tray.h"
 #include "version.h"
+#include <kxmlguifactory.h>
+
+#include "karmmainadaptor.h"
+#include <QtDBus>
 
 MainWindow::MainWindow( const QString &icsfile )
-  : DCOPObject ( "KarmDCOPIface" ),
-    KParts::MainWindow(), 
-    _accel     ( new KAccel( this ) ),
+  : KParts::MainWindow(),
+#warning Port me!
+//    _accel     ( new KAccel( this ) ),
     _watcher   ( new KAccelMenuWatch( _accel, this ) ),
     _totalSum  ( 0 ),
     _sessionSum( 0 )
 {
+  new KarmAdaptor(this);
+  QDBusConnection::sessionBus().registerObject("/Karm", this);
 
-  _taskView  = new TaskView( this, 0, icsfile );
+  _taskView  = new TaskView( this, icsfile );
 
   setCentralWidget( _taskView );
   // status bar
@@ -59,7 +63,7 @@ MainWindow::MainWindow( const QString &icsfile )
   // connections
   connect( _taskView, SIGNAL( totalTimesChanged( long, long ) ),
            this, SLOT( updateTime( long, long ) ) );
-  connect( _taskView, SIGNAL( selectionChanged ( QListViewItem * )),
+  connect( _taskView, SIGNAL( selectionChanged ( Q3ListViewItem * )),
            this, SLOT(slotSelectionChanged()));
   connect( _taskView, SIGNAL( updateButtons() ),
            this, SLOT(slotSelectionChanged()));
@@ -68,11 +72,12 @@ MainWindow::MainWindow( const QString &icsfile )
 
   // Setup context menu request handling
   connect( _taskView,
-           SIGNAL( contextMenuRequested( QListViewItem*, const QPoint&, int )),
+           SIGNAL( contextMenuRequested( Q3ListViewItem*, const QPoint&, int )),
            this,
-           SLOT( contextMenuRequest( QListViewItem*, const QPoint&, int )));
+           SLOT( contextMenuRequest( Q3ListViewItem*, const QPoint&, int )));
 
-  _tray = new KarmTray( this );
+  if ( _preferences->trayIcon() ) _tray = new KarmTray( this );
+  else _tray = new KarmTray( );
 
   connect( _tray, SIGNAL( quitSelected() ), SLOT( quit() ) );
 
@@ -80,8 +85,8 @@ MainWindow::MainWindow( const QString &icsfile )
   connect( _taskView, SIGNAL( timersActive() ), this,  SLOT( enableStopAll() ));
   connect( _taskView, SIGNAL( timersInactive() ), _tray, SLOT( stopClock() ) );
   connect( _taskView, SIGNAL( timersInactive() ),  this,  SLOT( disableStopAll()));
-  connect( _taskView, SIGNAL( tasksChanged( QPtrList<Task> ) ),
-                      _tray, SLOT( updateToolTip( QPtrList<Task> ) ));
+  connect( _taskView, SIGNAL( tasksChanged( Q3PtrList<Task> ) ),
+                      _tray, SLOT( updateToolTip( Q3PtrList<Task> ) ));
 
   _taskView->load();
 
@@ -90,27 +95,22 @@ MainWindow::MainWindow( const QString &icsfile )
   _preferences->emitSignals();
   slotSelectionChanged();
 
-  // Register with DCOP
-  if ( !kapp->dcopClient()->isRegistered() ) 
-  {
-    kapp->dcopClient()->registerAs( "karm" );
-    kapp->dcopClient()->setDefaultObject( objId() );
-  }
+  // ToDo: Register with DCOP
 
   // Set up DCOP error messages
-  m_error[ KARM_ERR_GENERIC_SAVE_FAILED ] = 
+  m_error[ KARM_ERR_GENERIC_SAVE_FAILED ] =
     i18n( "Save failed, most likely because the file could not be locked." );
-  m_error[ KARM_ERR_COULD_NOT_MODIFY_RESOURCE ] = 
+  m_error[ KARM_ERR_COULD_NOT_MODIFY_RESOURCE ] =
     i18n( "Could not modify calendar resource." );
-  m_error[ KARM_ERR_MEMORY_EXHAUSTED ] = 
+  m_error[ KARM_ERR_MEMORY_EXHAUSTED ] =
     i18n( "Out of memory--could not create object." );
-  m_error[ KARM_ERR_UID_NOT_FOUND ] = 
+  m_error[ KARM_ERR_UID_NOT_FOUND ] =
     i18n( "UID not found." );
-  m_error[ KARM_ERR_INVALID_DATE ] = 
+  m_error[ KARM_ERR_INVALID_DATE ] =
     i18n( "Invalidate date--format is YYYY-MM-DD." );
-  m_error[ KARM_ERR_INVALID_TIME ] = 
+  m_error[ KARM_ERR_INVALID_TIME ] =
     i18n( "Invalid time--format is YYYY-MM-DDTHH:MM:SS." );
-  m_error[ KARM_ERR_INVALID_DURATION ] = 
+  m_error[ KARM_ERR_INVALID_DURATION ] =
     i18n( "Invalid task duration--must be greater than zero." );
 }
 
@@ -134,22 +134,22 @@ void MainWindow::slotSelectionChanged()
 
 bool MainWindow::save()
 {
-  kdDebug(5970) << "Saving time data to disk." << endl;
+  kDebug(5970) << "Saving time data to disk." << endl;
   QString err=_taskView->save();  // untranslated error msg.
-  if (err.isEmpty()) statusBar()->message(i18n("Successfully saved tasks and history"),1807);
-  else statusBar()->message(i18n(err.ascii()),7707); // no msgbox since save is called when exiting
+  if (err.isEmpty()) statusBar()->showMessage(i18n("Successfully saved tasks and history"),1807);
+  else statusBar()->showMessage(i18n(err.toAscii()),7707); // no msgbox since save is called when exiting
   saveGeometry();
   return true;
 }
 
 void MainWindow::exportcsvHistory()
 {
-  kdDebug(5970) << "Exporting History to disk." << endl;
+  kDebug(5970) << "Exporting History to disk." << endl;
   QString err=_taskView->exportcsvHistory();
-  if (err.isEmpty()) statusBar()->message(i18n("Successfully exported History to CSV-file"),1807);
-  else KMessageBox::error(this, err.ascii());
+  if (err.isEmpty()) statusBar()->showMessage(i18n("Successfully exported History to CSV-file"),1807);
+  else KMessageBox::error(this, err.toAscii());
   saveGeometry();
-  
+
 }
 
 void MainWindow::quit()
@@ -160,7 +160,7 @@ void MainWindow::quit()
 
 MainWindow::~MainWindow()
 {
-  kdDebug(5970) << "MainWindow::~MainWindows: Quitting karm." << endl;
+  kDebug(5970) << "MainWindow::~MainWindows: Quitting karm." << endl;
   _taskView->stopAllTimers();
   save();
   _taskView->closeStorage();
@@ -195,16 +195,16 @@ void MainWindow::updateStatusBar( )
   QString time;
 
   time = formatTime( _sessionSum );
-  statusBar()->changeItem( i18n("Session: %1").arg(time), 0 );
+  statusBar()->changeItem( i18n("Session: %1", time), 0 );
 
   time = formatTime( _totalSum );
-  statusBar()->changeItem( i18n("Total: %1" ).arg(time), 1);
+  statusBar()->changeItem( i18n("Total: %1" , time), 1);
 }
 
 void MainWindow::startStatusBar()
 {
-  statusBar()->insertItem( i18n("Session"), 0, 0, true );
-  statusBar()->insertItem( i18n("Total" ), 1, 0, true );
+  statusBar()->insertPermanentItem( i18n("Session"), 0, 0 );
+  statusBar()->insertPermanentItem( i18n("Total" ), 1, 0);
 }
 
 void MainWindow::saveProperties( KConfig* cfg )
@@ -216,13 +216,13 @@ void MainWindow::saveProperties( KConfig* cfg )
 
 void MainWindow::readProperties( KConfig* cfg )
 {
-  if( cfg->readBoolEntry( "WindowShown", true ))
+  if( cfg->readEntry( "WindowShown", true ))
     show();
 }
 
 void MainWindow::keyBindings()
 {
-  KKeyDialog::configure( actionCollection(), this );
+  KKeyDialog::configure( actionCollection(), KKeyChooser::LetterShortcutsAllowed, this );
 }
 
 void MainWindow::startNewSession()
@@ -252,103 +252,61 @@ void MainWindow::makeMenus()
       SLOT(showDialog()),
       actionCollection() );
   (void) KStdAction::save( this, SLOT( save() ), actionCollection() );
-  KAction* actionStartNewSession = new KAction( i18n("Start &New Session"),
-      0,
-      this,
-      SLOT( startNewSession() ),
-      actionCollection(),
-      "start_new_session");
-  KAction* actionResetAll = new KAction( i18n("&Reset All Times"),
-      0,
-      this,
-      SLOT( resetAllTimes() ),
-      actionCollection(),
-      "reset_all_times");
-  actionStart = new KAction( i18n("&Start"),
-      QString::fromLatin1("1rightarrow"), Key_S,
-      _taskView,
-      SLOT( startCurrentTimer() ), actionCollection(),
-      "start");
-  actionStop = new KAction( i18n("S&top"),
-      QString::fromLatin1("stop"), 0,
-      _taskView,
-      SLOT( stopCurrentTimer() ), actionCollection(),
-      "stop");
-  actionStopAll = new KAction( i18n("Stop &All Timers"),
-      Key_Escape,
-      _taskView,
-      SLOT( stopAllTimers() ), actionCollection(),
-      "stopAll");
+  KAction *actionStartNewSession = new KAction( i18n("Start &New Session"), actionCollection(), "start_new_session");
+  connect(actionStartNewSession, SIGNAL(triggered(bool)), SLOT( startNewSession() ));
+  KAction *actionResetAll = new KAction( i18n("&Reset All Times"), actionCollection(), "reset_all_times");
+  connect(actionResetAll, SIGNAL(triggered(bool)), SLOT( resetAllTimes() ));
+  actionStart = new KAction(KIcon(QString::fromLatin1("1rightarrow")),  i18n("&Start"), actionCollection(), "start");
+  connect(actionStart, SIGNAL(triggered(bool) ), _taskView, SLOT( startCurrentTimer() ));
+  actionStart->setShortcut(Qt::Key_S);
+  actionStop = new KAction(KIcon(QString::fromLatin1("stop")),  i18n("S&top"), actionCollection(), "stop");
+  actionStop->setShortcut(Qt::Key_S);
+  connect(actionStop, SIGNAL(triggered(bool) ), _taskView, SLOT( stopCurrentTimer() ));
+  actionStopAll = new KAction( i18n("Stop &All Timers"), actionCollection(), "stopAll");
+  connect(actionStopAll, SIGNAL(triggered(bool)), _taskView, SLOT( stopAllTimers() ));
+  actionStopAll->setShortcut(Qt::Key_Escape);
   actionStopAll->setEnabled(false);
 
-  actionNew = new KAction( i18n("&New..."),
-      QString::fromLatin1("filenew"), CTRL+Key_N,
-      _taskView,
-      SLOT( newTask() ), actionCollection(),
-      "new_task");
-  actionNewSub = new KAction( i18n("New &Subtask..."),
-      QString::fromLatin1("kmultiple"), CTRL+ALT+Key_N,
-      _taskView,
-      SLOT( newSubTask() ), actionCollection(),
-      "new_sub_task");
-  actionDelete = new KAction( i18n("&Delete"),
-      QString::fromLatin1("editdelete"), Key_Delete,
-      _taskView,
-      SLOT( deleteTask() ), actionCollection(),
-      "delete_task");
-  actionEdit = new KAction( i18n("&Edit..."),
-      QString::fromLatin1("edit"), CTRL + Key_E,
-      _taskView,
-      SLOT( editTask() ), actionCollection(),
-      "edit_task");
+  actionNew = new KAction(KIcon(QString::fromLatin1("filenew")),  i18n("&New..."), actionCollection(), "new_task");
+  connect(actionNew, SIGNAL(triggered(bool) ), _taskView, SLOT( newTask() ));
+  actionNew->setShortcut(Qt::CTRL+Qt::Key_N);
+  actionNewSub = new KAction(KIcon(QString::fromLatin1("kmultiple")),  i18n("New &Subtask..."), actionCollection(), "new_sub_task");
+  connect(actionNewSub, SIGNAL(triggered(bool) ), _taskView, SLOT( newSubTask() ));
+  actionNewSub->setShortcut(Qt::CTRL+Qt::ALT+Qt::Key_N);
+  actionDelete = new KAction(KIcon(QString::fromLatin1("editdelete")),  i18n("&Delete"), actionCollection(), "delete_task");
+  connect(actionDelete, SIGNAL(triggered(bool) ), _taskView, SLOT( deleteTask() ));
+  actionDelete->setShortcut(Qt::Key_Delete);
+  actionEdit = new KAction(KIcon("edit"),  i18n("&Edit..."), actionCollection(), "edit_task");
+  connect(actionEdit, SIGNAL(triggered(bool) ), _taskView, SLOT( editTask() ));
+  actionEdit->setShortcut(Qt::CTRL + Qt::Key_E);
 //  actionAddComment = new KAction( i18n("&Add Comment..."),
 //      QString::fromLatin1("document"),
-//      CTRL+ALT+Key_E,
+//      Qt::CTRL+Qt::ALT+Qt::Key_E,
 //      _taskView,
 //      SLOT( addCommentToTask() ),
 //      actionCollection(),
 //      "add_comment_to_task");
-  actionMarkAsComplete = new KAction( i18n("&Mark as Complete"),
-      QString::fromLatin1("document"),
-      CTRL+Key_M,
-      _taskView,
-      SLOT( markTaskAsComplete() ),
-      actionCollection(),
-      "mark_as_complete");
-  actionMarkAsIncomplete = new KAction( i18n("&Mark as Incomplete"),
-      QString::fromLatin1("document"),
-      CTRL+Key_M,
-      _taskView,
-      SLOT( markTaskAsIncomplete() ),
-      actionCollection(),
-      "mark_as_incomplete");
-  actionClipTotals = new KAction( i18n("&Copy Totals to Clipboard"),
-      QString::fromLatin1("klipper"),
-      CTRL+Key_C,
-      _taskView,
-      SLOT( clipTotals() ),
-      actionCollection(),
-      "clip_totals");
-  actionClipHistory = new KAction( i18n("Copy &History to Clipboard"),
-      QString::fromLatin1("klipper"),
-      CTRL+ALT+Key_C,
-      _taskView,
-      SLOT( clipHistory() ),
-      actionCollection(),
-      "clip_history");
+  actionMarkAsComplete = new KAction(KIcon("document"),  i18n("&Mark as Complete"), actionCollection(), "mark_as_complete");
+  connect(actionMarkAsComplete, SIGNAL(triggered(bool) ), _taskView, SLOT( markTaskAsComplete() ));
+  actionMarkAsComplete->setShortcut(Qt::CTRL+Qt::Key_M);
+  actionMarkAsIncomplete = new KAction(KIcon("document"),  i18n("&Mark as Incomplete"), actionCollection(), "mark_as_incomplete");
+  connect(actionMarkAsIncomplete, SIGNAL(triggered(bool) ), _taskView, SLOT( markTaskAsIncomplete() ));
+  actionMarkAsIncomplete->setShortcut(Qt::CTRL+Qt::Key_M);
+  actionClipTotals = new KAction(KIcon("klipper"),  i18n("&Copy Totals to Clipboard"), actionCollection(), "clip_totals");
+  connect(actionClipTotals, SIGNAL(triggered(bool) ), _taskView, SLOT( clipTotals() ));
+  actionClipTotals->setShortcut(Qt::CTRL+Qt::Key_C);
+  actionClipHistory = new KAction(KIcon("klipper"),  i18n("Copy &History to Clipboard"), actionCollection(), "clip_history");
+  connect(actionClipHistory, SIGNAL(triggered(bool) ), _taskView, SLOT( clipHistory() ));
+  actionClipHistory->setShortcut(Qt::CTRL+Qt::ALT+Qt::Key_C);
 
-  new KAction( i18n("Import &Legacy Flat File..."), 0,
-      _taskView, SLOT(loadFromFlatFile()), actionCollection(),
-      "import_flatfile");
-  new KAction( i18n("&Export to CSV File..."), 0,
-      _taskView, SLOT(exportcsvFile()), actionCollection(),
-      "export_csvfile");
-  new KAction( i18n("Export &History to CSV File..."), 0,
-      this, SLOT(exportcsvHistory()), actionCollection(),
-      "export_csvhistory");
-  new KAction( i18n("Import Tasks From &Planner..."), 0,
-      _taskView, SLOT(importPlanner()), actionCollection(),
-      "import_planner");  
+  KAction *action = new KAction( i18n("Import &Legacy Flat File..."), actionCollection(), "import_flatfile");
+  connect(action, SIGNAL(triggered(bool) ), _taskView, SLOT(loadFromFlatFile()));
+  action = new KAction( i18n("&Export Times..."), actionCollection(), "export_times");
+  connect(action, SIGNAL(triggered(bool) ), _taskView, SLOT(exportcsvFile()));
+  action = new KAction( i18n("Export &History..."), actionCollection(), "export_history");
+  connect(action, SIGNAL(triggered(bool) ), SLOT(exportcsvHistory()));
+  action = new KAction( i18n("Import Tasks From &Planner..."), actionCollection(), "import_planner");
+  connect(action, SIGNAL(triggered(bool) ), _taskView, SLOT(importPlanner()));
 
 /*
   new KAction( i18n("Import E&vents"), 0,
@@ -425,13 +383,13 @@ void MainWindow::loadGeometry()
   if (initialGeometrySet()) setAutoSaveSettings();
   else
   {
-    KConfig &config = *kapp->config();
+    KConfig &config = *KGlobal::config();
 
     config.setGroup( QString::fromLatin1("Main Window Geometry") );
-    int w = config.readNumEntry( QString::fromLatin1("Width"), 100 );
-    int h = config.readNumEntry( QString::fromLatin1("Height"), 100 );
-    w = QMAX( w, sizeHint().width() );
-    h = QMAX( h, sizeHint().height() );
+    int w = config.readEntry( QString::fromLatin1("Width"), 100 );
+    int h = config.readEntry( QString::fromLatin1("Height"), 100 );
+    w = qMax( w, sizeHint().width() );
+    h = qMax( h, sizeHint().height() );
     resize(w, h);
   }
 }
@@ -455,9 +413,9 @@ bool MainWindow::queryClose()
   return KMainWindow::queryClose();
 }
 
-void MainWindow::contextMenuRequest( QListViewItem*, const QPoint& point, int )
+void MainWindow::contextMenuRequest( Q3ListViewItem*, const QPoint& point, int )
 {
-    QPopupMenu* pop = dynamic_cast<QPopupMenu*>(
+    QMenu* pop = dynamic_cast<QMenu*>(
                           factory()->container( i18n( "task_popup" ), this ) );
     if ( pop )
       pop->popup( point );
@@ -501,15 +459,15 @@ QString MainWindow::taskIdFromName( const QString &taskname ) const
     rval = _hasTask( task, taskname );
     task = task->nextSibling();
   }
-  
+
   return rval;
 }
 
-int MainWindow::addTask( const QString& taskname ) 
+int MainWindow::addTask( const QString& taskname )
 {
   DesktopList desktopList;
   QString uid = _taskView->addTask( taskname, 0, 0, desktopList );
-  kdDebug(5970) << "MainWindow::addTask( " << taskname << " ) returns " << uid << endl;
+  kDebug(5970) << "MainWindow::addTask( " << taskname << " ) returns " << uid << endl;
   if ( uid.length() > 0 ) return 0;
   else
   {
@@ -521,18 +479,18 @@ int MainWindow::addTask( const QString& taskname )
 
 QString MainWindow::setPerCentComplete( const QString& taskName, int perCent )
 {
-  int index;
+  int index = -1;
   QString err="no such task";
   for (int i=0; i<_taskView->count(); i++)
   {
     if ((_taskView->item_at_index(i)->name()==taskName))
     {
       index=i;
-      if (err==QString::null) err="task name is abigious";
-      if (err=="no such task") err=QString::null;
+      if (err.isNull()) err="task name is abigious";
+      if (err=="no such task") err=QString();
     }
   }
-  if (err==QString::null) 
+  if (err.isNull() && index>=0)
   {
     _taskView->item_at_index(index)->setPercentComplete( perCent, _taskView->storage() );
   }
@@ -561,7 +519,7 @@ int MainWindow::bookTime
   if ( t == NULL ) rval = KARM_ERR_UID_NOT_FOUND;
 
   // Parse datetime
-  if ( !rval ) 
+  if ( !rval )
   {
     startDate = QDate::fromString( datetime, Qt::ISODate );
     if ( datetime.length() > 10 )  // "YYYY-MM-DD".length() = 10
@@ -595,15 +553,15 @@ int MainWindow::bookTime
 QString MainWindow::getError( int mkb ) const
 {
   if ( mkb <= KARM_MAX_ERROR_NO ) return m_error[ mkb ];
-  else return i18n( "Invalid error number: %1" ).arg( mkb );
+  else return i18n( "Invalid error number: %1", mkb );
 }
 
 int MainWindow::totalMinutesForTaskId( const QString& taskId )
 {
   int rval = 0;
   Task *task, *t;
-  
-  kdDebug(5970) << "MainWindow::totalTimeForTask( " << taskId << " )" << endl;
+
+  kDebug(5970) << "MainWindow::totalTimeForTask( " << taskId << " )" << endl;
 
   // Find task
   task = _taskView->first_child();
@@ -613,14 +571,14 @@ int MainWindow::totalMinutesForTaskId( const QString& taskId )
     t = _hasUid( task, taskId );
     task = task->nextSibling();
   }
-  if ( t != NULL ) 
+  if ( t != NULL )
   {
     rval = t->totalTime();
-    kdDebug(5970) << "MainWindow::totalTimeForTask - task found: rval = " << rval << endl;
+    kDebug(5970) << "MainWindow::totalTimeForTask - task found: rval = " << rval << endl;
   }
-  else 
+  else
   {
-    kdDebug(5970) << "MainWindow::totalTimeForTask - task not found" << endl;
+    kDebug(5970) << "MainWindow::totalTimeForTask - task not found" << endl;
     rval = KARM_ERR_UID_NOT_FOUND;
   }
 
@@ -630,7 +588,7 @@ int MainWindow::totalMinutesForTaskId( const QString& taskId )
 QString MainWindow::_hasTask( Task* task, const QString &taskname ) const
 {
   QString rval = "";
-  if ( task->name() == taskname ) 
+  if ( task->name() == taskname )
   {
     rval = task->uid();
   }
@@ -650,7 +608,7 @@ Task* MainWindow::_hasUid( Task* task, const QString &uid ) const
 {
   Task *rval = NULL;
 
-  //kdDebug(5970) << "MainWindow::_hasUid( " << task << ", " << uid << " )" << endl;
+  //kDebug(5970) << "MainWindow::_hasUid( " << task << ", " << uid << " )" << endl;
 
   if ( task->uid() == uid ) rval = task;
   else
@@ -666,36 +624,42 @@ Task* MainWindow::_hasUid( Task* task, const QString &uid ) const
 }
 QString MainWindow::starttimerfor( const QString& taskname )
 {
-  int index;
+  int index = -1;
   QString err="no such task";
   for (int i=0; i<_taskView->count(); i++)
   {
     if ((_taskView->item_at_index(i)->name()==taskname))
     {
       index=i;
-      if (err==QString::null) err="task name is abigious";
-      if (err=="no such task") err=QString::null;
+      if (err.isNull() ) err="task name is abigious";
+      if (err=="no such task") err=QString();
     }
   }
-  if (err==QString::null) _taskView->startTimerFor( _taskView->item_at_index(index) );
+  if (err.isNull() && index>=0) _taskView->startTimerFor( _taskView->item_at_index(index) );
   return err;
 }
 
 QString MainWindow::stoptimerfor( const QString& taskname )
 {
-  int index;
+  int index=-1;
   QString err="no such task";
   for (int i=0; i<_taskView->count(); i++)
   {
     if ((_taskView->item_at_index(i)->name()==taskname))
     {
       index=i;
-      if (err==QString::null) err="task name is abigious";
-      if (err=="no such task") err=QString::null;
+      if (err.isNull()) err="task name is abigious";
+      if (err=="no such task") err=QString();
     }
   }
-  if (err==QString::null) _taskView->stopTimerFor( _taskView->item_at_index(index) );
+  if (err.isNull() && index>=0) _taskView->stopTimerFor( _taskView->item_at_index(index) );
   return err;
+}
+
+QString MainWindow::stopalltimers()
+{
+  _taskView->stopAllTimers();
+  return QString();
 }
 
 QString MainWindow::exportcsvfile( QString filename, QString from, QString to, int type, bool decimalMinutes, bool allTasks, QString delimiter, QString quote )
@@ -704,11 +668,11 @@ QString MainWindow::exportcsvfile( QString filename, QString from, QString to, i
   rc.url=filename;
   rc.from=QDate::fromString( from );
   if ( rc.from.isNull() ) rc.from=QDate::fromString( from, Qt::ISODate );
-  kdDebug(5970) << "rc.from " << rc.from << endl;
+  kDebug(5970) << "rc.from " << rc.from << endl;
   rc.to=QDate::fromString( to );
   if ( rc.to.isNull() ) rc.to=QDate::fromString( to, Qt::ISODate );
-  kdDebug(5970) << "rc.to " << rc.to << endl;
-  rc.reportType=(ReportCriteria::REPORTTYPE) type;  // history report or totals report 
+  kDebug(5970) << "rc.to " << rc.to << endl;
+  rc.reportType=(ReportCriteria::REPORTTYPE) type;  // history report or totals report
   rc.decimalMinutes=decimalMinutes;
   rc.allTasks=allTasks;
   rc.delimiter=delimiter;

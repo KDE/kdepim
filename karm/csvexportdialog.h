@@ -28,6 +28,10 @@ class CSVExportDialog : public CSVExportDialogBase
 {
   Q_OBJECT
 
+  public slots:
+    void exPortToClipBoard();
+    void exPortToCSVFile();
+
   public:
     CSVExportDialog( ReportCriteria::REPORTTYPE rt,
                      QWidget *parent = 0, 

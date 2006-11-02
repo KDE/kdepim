@@ -22,13 +22,13 @@
 #ifndef KARM_PRINT_DIALOG_H
 #define KARM_PRINT_DIALOG_H
 
-#include <kdialogbase.h>
+#include <kdialog.h>
 #include <libkdepim/kdateedit.h>
 
 class QCheckBox;
 class KDateEdit;
 
-class PrintDialog : public KDialogBase
+class PrintDialog : public KDialog
 {
   Q_OBJECT
 

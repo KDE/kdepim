@@ -26,9 +26,9 @@
 #undef Color // X11 headers
 #undef GrayScale // X11 headers
 #include <kprinter.h>
-//#include <qdate.h>
-
 #include "karmstorage.h"
+#include <QList>
+#include <reportcriteria.h>
 
 class QString;
 class QDate;
@@ -51,7 +51,7 @@ class Week
     Week(QDate from);
     QDate start() const;
     QDate end() const;
-    QValueList<QDate> days() const;
+    QList<QDate> days() const;
 
     /**
      * Returns a list of weeks for the given date range.
@@ -63,7 +63,7 @@ class Week
      * days, one being a Sunday and the other being a Monday, you will get two
      * weeks back in the list.
      */
-    static QValueList<Week> weeksFromDateRange(const QDate& from,
+    static QList<Week> weeksFromDateRange(const QDate& from,
         const QDate& to);
 
     /**
@@ -99,7 +99,7 @@ class TimeKard
      * print the task subtree for a root task and when they want to print
      * all tasks.
      */
-    QString totalsAsText(TaskView* taskview, bool justThisTask = true);
+    QString totalsAsText(TaskView* taskview, ReportCriteria rc);
 
     /**
      * Generates ascii text of weekly task history, for current task on down.
@@ -110,7 +110,7 @@ class TimeKard
         const QDate& to, bool justThisTask, bool perWeek, bool totalsOnly);
 
 private:
-    void printTask(Task *t, QString &s, int level);
+    void printTask(Task *t, QString &s, int level, const ReportCriteria &rc);
 
     void printTaskHistory(const Task *t, const QMap<QString, long>& datamap,
                           QMap<QString, long>& daytotals,

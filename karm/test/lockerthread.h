@@ -1,4 +1,8 @@
-#include <qthread.h>
+#ifndef _lockerthread_h_
+#define _lockerthread_h_
+
+
+#include <QThread>
 
 class QString;
 
@@ -19,3 +23,5 @@ class LockerThread : public QThread
     QString m_icsfile;
     bool    m_gotlock;
 };
+#endif
+

@@ -1,7 +1,7 @@
 /*
  *   karm
  *   This file only: Copyright (C) 1999  Espen Sand, espensa@online.no
- *   Modifications (see CVS log) Copyright (C) 2000 Klar‰lvdalens
+ *   Modifications (see CVS log) Copyright (C) 2000 Klar√§lvdalens
  *   Datakonsult AB <kalle@dalheimer.de>, Jesper Pedersen <blackie@kde.org>
  *
  *
@@ -20,18 +20,22 @@
  *   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
  */
-#include <qbuttongroup.h>
-#include <qcombobox.h>
-#include <qgroupbox.h>
-#include <qhbox.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qlineedit.h>
-#include <qradiobutton.h>
-#include <qsizepolicy.h>
-#include <qstring.h>
-#include <qwidget.h>
-#include <qwhatsthis.h>
+#include <q3buttongroup.h>
+#include <QComboBox>
+#include <q3groupbox.h>
+#include <q3hbox.h>
+#include <QCheckBox>
+#include <QLabel>
+#include <QLayout>
+#include <QLineEdit>
+#include <QRadioButton>
+#include <QSizePolicy>
+#include <QString>
+#include <QWidget>
+
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGridLayout>
 
 #include <klocale.h>            // i18n
 #include <kwinmodule.h>
@@ -39,15 +43,19 @@
 #include "edittaskdialog.h"
 #include "ktimewidget.h"
 #include "kdebug.h"
+#include "kdialog.h"
 
 EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
                                 DesktopList* desktopList)
-  : KDialogBase(0, "EditTaskDialog", true, caption, Ok|Cancel, Ok, true ),
+  : KDialog(),
     origTime( 0 ), origSession( 0 )
 {
+  setObjectName( "EditTaskDialog" );
   QWidget *page = new QWidget( this ); 
   setMainWidget(page);
+#ifdef Q_WS_X11
   KWinModule kwinmodule(0, KWinModule::INFO_DESKTOP);
+#endif
 
   QVBoxLayout *lay1 = new QVBoxLayout(page);
   
@@ -55,12 +63,14 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   lay1->addLayout(lay2);
   
   // The name of the widget
-  QLabel *label = new QLabel( i18n("Task &name:"), page, "name" );
+  QLabel *label = new QLabel( i18n("Task &name:"), page );
+  label->setObjectName( "name" );
   lay2->addWidget( label );
   lay2->addSpacing(5);
   
   
-  _name = new QLineEdit( page, "lineedit" );
+  _name = new QLineEdit( page );
+  _name->setObjectName( "lineedit" );
   
   _name->setMinimumWidth(fontMetrics().maxWidth()*15);
   lay2->addWidget( _name );
@@ -69,8 +79,8 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
 
   // The "Edit Absolut" radio button
   lay1->addSpacing(10);lay1->addStretch(1); 
-  _absoluteRB = new QRadioButton( i18n( "Edit &absolute" ), page,
-                                  "_absoluteRB" );
+  _absoluteRB = new QRadioButton( i18n( "Edit &absolute" ), page );
+  _absoluteRB->setObjectName( "_absoluteRB" );
   lay1->addWidget( _absoluteRB );
   connect( _absoluteRB, SIGNAL( clicked() ), this, SLOT( slotAbsolutePressed() ) );
   
@@ -79,13 +89,17 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   QHBoxLayout *lay5 = new QHBoxLayout();
   lay1->addLayout(lay5);
   lay5->addSpacing(20);
-  QGridLayout *lay3 = new QGridLayout( 2, 2, -1, "lay3" );
+  QGridLayout *lay3 = new QGridLayout();
+  lay3->setObjectName( "lay3" );
+  lay3->setSpacing( -1 );
   lay5->addLayout(lay3);
   
-  _sessionLA = new QLabel( i18n("&Session time: "), page, "session time" );
+  _sessionLA = new QLabel( i18n("&Session time: "), page );
+  _sessionLA->setObjectName( "session time" );
 
   // Time
-  _timeLA = new QLabel( i18n("&Time:"), page, "time" );
+  _timeLA = new QLabel( i18n("&Time:"), page );
+  _timeLA->setObjectName( "time" );
   lay3->addWidget( _timeLA, 0, 0 );
   _timeLA->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, 
                                          (QSizePolicy::SizeType)0, 
@@ -99,7 +113,8 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   // three date entry label controls to the same width.
   _timeLA->setMinimumWidth( fontMetrics().width( _sessionLA->text() ) );
 
-  _timeTW = new KArmTimeWidget( page, "_timeTW" );
+  _timeTW = new KArmTimeWidget( page );
+  _timeTW->setObjectName( "_timeTW" );
   lay3->addWidget( _timeTW, 0, 1 );
   _timeLA->setBuddy( _timeTW );
   
@@ -107,7 +122,8 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   // Session
   lay3->addWidget( _sessionLA, 1, 0 );
 
-  _sessionTW = new KArmTimeWidget( page, "_sessionTW" );
+  _sessionTW = new KArmTimeWidget( page );
+  _sessionTW->setObjectName( "_sessionTW" );
   lay3->addWidget( _sessionTW, 1, 1 );
   _sessionLA->setBuddy( _sessionTW );
   _sessionLA->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, 
@@ -122,7 +138,8 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   lay1->addSpacing(10);
   lay1->addStretch(1);
   _relativeRB = new QRadioButton( i18n( "Edit &relative (apply to both time and"
-                                        " session time)" ), page, "_relativeRB" );
+                                        " session time)" ), page );
+  _relativeRB->setObjectName( "_relativeRB" );
   lay1->addWidget( _relativeRB );
   connect( _relativeRB, SIGNAL( clicked() ), this, SLOT(slotRelativePressed()) );
   
@@ -132,21 +149,26 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   lay4->addSpacing(20);
   
   _operator = new QComboBox(page);
-  _operator->insertItem( QString::fromLatin1( "+" ) );
-  _operator->insertItem( QString::fromLatin1( "-" ) );
+  _operator->addItem( QString::fromLatin1( "+" ) );
+  _operator->addItem( QString::fromLatin1( "-" ) );
   _operator->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)1, 
                                          (QSizePolicy::SizeType)0, 
                                          0, 
                                          0, 
                                          _operator->sizePolicy().hasHeightForWidth()) );
-  //kdDebug() << "text width=" << fontMetrics().width( _sessionLA->text() ) << endl;
+  //kDebug() << "text width=" << fontMetrics().width( _sessionLA->text() ) << endl;
   _operator->setMinimumWidth( fontMetrics().width( _sessionLA->text() ) );
   lay4->addWidget( _operator );
 
   _diffTW = new KArmTimeWidget( page, "_sessionAddTW" );
   lay4->addWidget( _diffTW );
 
+#ifdef Q_WS_X11
   desktopCount = kwinmodule.numberOfDesktops();
+#else
+#warning non-X11 support missing
+  desktopCount = 1;
+#endif
   
   // If desktopList contains higher numbered desktops than desktopCount then
   // delete those from desktopList. This may be the case if the user has
@@ -169,12 +191,13 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   _desktopCB->setEnabled(true);
   lay1->addWidget(_desktopCB);
   
-  QGroupBox* groupBox;
+  Q3GroupBox* groupBox;
   {
     int lines = (int)(desktopCount/2);
     if (lines*2 != desktopCount) lines++; 
-      groupBox = new QButtonGroup( lines, QGroupBox::Horizontal,
-                                   i18n("In Desktop"), page, "_desktopsGB");
+      groupBox = new Q3ButtonGroup( lines, Qt::Horizontal,
+                                   i18n("In Desktop"), page);
+      groupBox->setObjectName( "_desktopsGB" );
   }
   lay1->addWidget(groupBox);
 
@@ -182,11 +205,15 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
 
   lay1->addLayout(lay6);
   for (int i=0; i<desktopCount; i++) {
-    _deskBox.push_back(new QCheckBox(groupBox,QString::number(i).latin1()));
-    _deskBox[i]->setText(kwinmodule.desktopName(i+1));
-    _deskBox[i]->setChecked(false);
+    QCheckBox *tmpBx = new QCheckBox(groupBox);
+    tmpBx->setObjectName( QString::number(i).toLatin1() );
+    _deskBox.push_back( tmpBx );
+#ifdef Q_WS_X11
+    tmpBx->setText(kwinmodule.desktopName(i+1));
+#endif
+    tmpBx->setChecked(false);
 
-    lay6->addWidget(_deskBox[i]);
+    lay6->addWidget(tmpBx);
   }
   // check specified Desktop Check Boxes
   bool enableDesktops = false;
@@ -224,32 +251,32 @@ EditTaskDialog::EditTaskDialog( QString caption, bool editDlg,
   slotRelativePressed();
 
   // Whats this help.
-  QWhatsThis::add( _name,
+  _name->setWhatsThis(
                    i18n( "Enter the name of the task here. "
                          "This name is for your eyes only."));
-  QWhatsThis::add( _absoluteRB,
+  _absoluteRB->setWhatsThis(
                    i18n( "Use this option to set the time spent on this task "
                          "to an absolute value.\n\nFor example, if you have "
                          "worked exactly four hours on this task during the current "
                          "session, you would set the Session time to 4 hr." ) );
-  QWhatsThis::add( _relativeRB,
+  _relativeRB->setWhatsThis(
                    i18n( "Use this option to change the time spent on this task "
                          "relative to its current value.\n\nFor example, if you worked "
                          "on this task for one hour without the timer running, you "
                          "would add 1 hr." ) );
-  QWhatsThis::add( _timeTW,
+  _timeTW->setWhatsThis(
                    i18n( "This is the time the task has been "
                          "running since all times were reset."));
-  QWhatsThis::add( _sessionTW,
+  _sessionTW->setWhatsThis(
                    i18n( "This is the time the task has been running this "
                          "session."));
-  QWhatsThis::add( _diffTW, i18n( "Specify how much time to add or subtract "
+  _diffTW->setWhatsThis( i18n( "Specify how much time to add or subtract "
                                   "to the overall and session time"));
 
-  QWhatsThis::add( _desktopCB, 
+  _desktopCB->setWhatsThis( 
                    i18n( "Use this option to automatically start the timer "
                          "on this task when you switch to the specified desktop(s)." ) );
-  QWhatsThis::add( groupBox, 
+  groupBox->setWhatsThis( 
                    i18n( "Select the desktop(s) that will automatically start the "
                          "timer on this task." ) );
 }
@@ -320,7 +347,7 @@ void EditTaskDialog::status(long *time, long *timeDiff, long *session,
   }
   else {
     int diff = _diffTW->time();
-    if ( _operator->currentItem() == 1) {
+    if ( _operator->currentIndex() == 1) {
       diff = -diff;
     }
     *time = origTime + diff;

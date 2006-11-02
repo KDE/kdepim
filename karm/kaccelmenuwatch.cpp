@@ -5,7 +5,8 @@
 */
 
 #include <assert.h>
-#include <qpopupmenu.h>
+#include <kdebug.h>
+#include <q3popupmenu.h>
 
 #include "kaccelmenuwatch.h"
 
@@ -18,7 +19,7 @@ KAccelMenuWatch::KAccelMenuWatch( KAccel *accel, QObject *parent )
   _menuList.setAutoDelete( false );
 }
 
-void KAccelMenuWatch::setMenu( QPopupMenu *menu )
+void KAccelMenuWatch::setMenu( QMenu *menu )
 {
   assert( menu );
 
@@ -47,9 +48,11 @@ void KAccelMenuWatch::connectAccel( int itemId, KStdAccel::StdAccel accel )
 
 void KAccelMenuWatch::updateMenus()
 {
+  kDebug(5970) << "This is KAccelMenuWatch::updateMenus" << endl;
+/*
   assert( _accel != 0 );
 
-  QPtrListIterator<AccelItem> iter( _accList );
+  Q3PtrListIterator<AccelItem> iter( _accList );
   AccelItem *item;
 
   for( ; (item = iter.current()) ; ++iter ) {
@@ -57,21 +60,23 @@ void KAccelMenuWatch::updateMenus()
     // as descibed in KDE3PORTING.html
     switch( item->type ) {
       case StringAccel:
-        item->menu->setAccel( _accel->shortcut( item->action ).keyCodeQt(), item->itemId );
+#warning Port me!
+//        item->menu->setAccel( _accel->shortcut( item->action ).keyQt(), item->itemId );
         break;
       case StdAccel:
-        item->menu->setAccel( KStdAccel::shortcut( item->stdAction ).keyCodeQt(), item->itemId );
+#warning Port me!
+//        item->menu->setAccel( KStdAccel::shortcut( item->stdAction ).keyQt(), item->itemId );
         break;
       default:
         break;
     }
   }
-
+*/
 }
 
 void KAccelMenuWatch::removeDeadMenu()
 {
-  QPopupMenu *sdr = (QPopupMenu *) sender();
+  QMenu *sdr = (QMenu *) sender();
   assert( sdr );
 
   if ( !_menuList.findRef( sdr ) )
@@ -96,7 +101,7 @@ loop:
   return;
 }
 
-KAccelMenuWatch::AccelItem *KAccelMenuWatch::newAccelItem( QPopupMenu *,
+KAccelMenuWatch::AccelItem *KAccelMenuWatch::newAccelItem( QMenu *,
     int itemId, AccelType type )
 {
   AccelItem *item = new AccelItem;

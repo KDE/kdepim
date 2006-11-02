@@ -11,13 +11,15 @@
 //
 #include "taskviewwhatsthis.h"
 #include <kdebug.h>
-#include <klistview.h>
+#include <k3listview.h>
 #include <klocale.h>
+#include <Q3Header>
+#include <taskview.h>
 
 TaskViewWhatsThis::TaskViewWhatsThis( QWidget* qw )
- : QWhatsThis( qw )
+ : Q3WhatsThis( qw )
 {
-  _listView=(KListView *) qw;
+  _listView=(TaskView *) qw;
 }
 
 TaskViewWhatsThis::~TaskViewWhatsThis()
@@ -26,10 +28,11 @@ TaskViewWhatsThis::~TaskViewWhatsThis()
 
 QString TaskViewWhatsThis::text ( const QPoint & pos )
 {
-  QString desc = QString::null;
-  kdDebug(5970) << "entering TaskViewWhatsThis::text" << endl;
-  kdDebug(5970) << "x-pos:" << pos.x() << endl;
-  if ( pos.x() < _listView->columnWidth( 0 ) ) 
+  QString desc = QString();
+  kDebug(5970) << "entering TaskViewWhatsThis::text" << endl;
+  int logiCol = _listView->mapToLogiCal(_listView->header()->cellAt(pos.x())); // logical Column
+  kDebug(5970) << "logical column is " << logiCol << endl;
+  if ( logiCol == 0 ) 
   {
     desc=i18n("Task Name shows the name of a task or subtask you are working on.");
   }

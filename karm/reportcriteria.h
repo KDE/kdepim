@@ -21,7 +21,7 @@
 #ifndef REPORTCRITERIA_H
 #define REPORTCRITERIA_H
 
-#include <qdatetime.h>
+#include <QDateTime>
 #include <kurl.h>
 class QString;
 
@@ -52,7 +52,7 @@ class ReportCriteria
     /**
      For reports that write to a file, the filename to write to.
      */
-    KURL url;
+    KUrl url;
 
     /**
      For history reports, the lower bound of the date range to report on.
@@ -65,17 +65,25 @@ class ReportCriteria
     QDate   to;
 
     /**
-     True if the report should contain all tasks in Karm.
-
-     Defaults to true.
-     */
-    bool    allTasks;
-
-    /**
      True if the durations should be output in decimal hours.  Otherwise,
      output durations as HH24:MI
      */
     bool    decimalMinutes;
+
+    /**
+     True if user chose to export session times, not all times
+     */
+    bool    sessionTimes;
+
+    /** 
+     True if user chose to export all tasks, not only the selected one
+     */
+    bool    allTasks;
+
+    /**
+     True if a clipboard export is wished, not an export to a file
+     */
+    bool    bExPortToClipBoard;
 
     /**
      The delimiter to use when outputting comma-seperated value reports.
