@@ -23,9 +23,9 @@
 #include <q3asciidict.h>
 #include <QList>
 
-#include <kmime_headers.h>
-#include <kmime_newsarticle.h>
-#include <boolflags.h>
+#include <kmime/kmime_headers.h>
+#include <kmime/kmime_newsarticle.h>
+#include <kmime/boolflags.h>
 
 #include "knjobdata.h"
 

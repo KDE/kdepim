@@ -2,7 +2,7 @@ project(knode)
 add_subdirectory( pics ) 
 add_subdirectory( filters ) 
 
-include_directories( ${KDE4_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkmime ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkpgp )
+include_directories( ${KDE4_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkpgp )
 
 
 ########### next target ###############

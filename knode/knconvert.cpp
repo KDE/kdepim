@@ -33,7 +33,7 @@
 #include <kapplication.h>
 #include <kpushbutton.h>
 
-#include <kmime_util.h>
+#include <kmime/kmime_util.h>
 
 #include "knconvert.h"
 #include "resource.h"

@@ -24,7 +24,7 @@
 
 #include <k3listview.h>
 #include <kfoldertree.h>
-#include <kmime_util.h>
+#include <kmime/kmime_util.h>
 
 class KMenu;
 class KNHdrViewItem;

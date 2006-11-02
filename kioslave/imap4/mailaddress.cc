@@ -25,8 +25,7 @@
 #include "mailaddress.h"
 #include "rfcdecoder.h"
 #include "mimehdrline.h"
-#include <kmime_util.h>
-//Added by qt3to4:
+#include <kmime/kmime_util.h>
 #include <QByteArray>
 #include <Q3PtrList>
 

@@ -20,7 +20,7 @@
 
 #include <kurl.h>
 
-#include <kmime_content.h>
+#include <kmime/kmime_content.h>
 
 #include "knjobdata.h"
 

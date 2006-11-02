@@ -1,5 +1,5 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkmime ${SASL2_INCLUDE_DIR} )
+include_directories( ${SASL2_INCLUDE_DIR} )
 
 
 ########### next target ###############
