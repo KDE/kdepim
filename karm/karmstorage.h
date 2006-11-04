@@ -150,7 +150,7 @@ class KarmStorage
      */
     QString report( TaskView *taskview, const ReportCriteria &rc );
 
-    /*
+    /**
      * Log the change in a task's time.
      *
      * We create an iCalendar event to store each change.  The event start

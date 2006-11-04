@@ -273,7 +273,7 @@ QString KarmStorage::buildTaskView(KCal::ResourceCalendar *rc, TaskView *view)
   // restart tasks that have been running with their start times
   for ( int i=0; i<view->count(); i++)
   {
-    for ( int n=0; n<runningTasks.size(); n++)
+    for ( unsigned int n=0; n<runningTasks.size(); n++)
     {
       if ( runningTasks[n] == view->item_at_index(i)->uid() )
       {
@@ -1072,7 +1072,7 @@ bool KarmStorage::bookTime(const Task* task,
 
 void KarmStorage::changeTime(const Task* task, const long deltaSeconds)
 {
-  kdDebug(5970) << "Entering KarmStorage::changeTime" << endl;
+  kdDebug(5970) << "Entering KarmStorage::changeTime ( " << task->name() << "," << deltaSeconds <<  " )" << endl;
   KCal::Event* e;
   QDateTime end;
 
@@ -1214,7 +1214,7 @@ bool KarmStorage::saveCalendar()
   kdDebug(5970) << "KarmStorage::saveCalendar" << endl;
 
   Event::List evl=_calendar->rawEvents();
-  for (int i=0; i<evl.count(); i++) 
+  for (unsigned int i=0; i<evl.count(); i++) 
   {
     kdDebug() << evl[i]->summary() << endl;
     kdDebug() << evl[i]->dtStart() << endl;

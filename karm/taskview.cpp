@@ -409,7 +409,7 @@ void TaskView::stopAllTimers()
   activeTasks.clear();
   emit updateButtons();
   emit timersInactive();
-  emit tasksChanged( activeTasks);
+  emit tasksChanged( activeTasks );
 }
 
 void TaskView::stopAllTimersAt(QDateTime qdt)
@@ -427,7 +427,7 @@ void TaskView::stopAllTimersAt(QDateTime qdt)
   activeTasks.clear();
   emit updateButtons();
   emit timersInactive();
-  emit tasksChanged( activeTasks);
+  emit tasksChanged( activeTasks );
 }
 
 void TaskView::startNewSession()
