@@ -495,6 +495,8 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
   KNHelper::restoreWindowSize("accNewsPropDLG", this, sizeHint());
 
   setHelp("anc-setting-the-news-account");
+
+  connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
 }
 
 
