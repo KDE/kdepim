@@ -1045,6 +1045,7 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
 
 void KarmStorage::stopTimer(const Task* task)
 {
+  kdDebug(5970) << "Entering KarmStorage::stopTimer" << endl;
   long delta = task->startTime().secsTo(QDateTime::currentDateTime());
   changeTime(task, delta);
 }
@@ -1071,6 +1072,7 @@ bool KarmStorage::bookTime(const Task* task,
 
 void KarmStorage::changeTime(const Task* task, const long deltaSeconds)
 {
+  kdDebug(5970) << "Entering KarmStorage::changeTime" << endl;
   KCal::Event* e;
   QDateTime end;
 
@@ -1211,6 +1213,13 @@ bool KarmStorage::saveCalendar()
 {
   kdDebug(5970) << "KarmStorage::saveCalendar" << endl;
 
+  Event::List evl=_calendar->rawEvents();
+  for (int i=0; i<evl.count(); i++) 
+  {
+    kdDebug() << evl[i]->summary() << endl;
+    kdDebug() << evl[i]->dtStart() << endl;
+    kdDebug() << evl[i]->dtEnd() << endl;
+  }
   KABC::Lock *lock = _calendar->lock();
   if ( !lock || !lock->lock() )
     return false;

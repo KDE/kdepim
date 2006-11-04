@@ -96,6 +96,7 @@ Task::~Task() {
 
 void Task::setRunning( bool on, KarmStorage* storage, QDateTime whenStarted  )
 {
+  kdDebug(5970) << "Entering Task::setRunning" << endl;
   if ( on ) {
     if (isComplete()) return; // don't start if its marked complete
     if (!_timer->isActive()) {

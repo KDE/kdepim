@@ -8,7 +8,9 @@
 #include <klocale.h>    // i18n
 
 IdleTimeDetector::IdleTimeDetector(int maxIdle)
+// Trigger a warning after maxIdle minutes
 {
+  kdDebug(5970) << "IdleTimeDetector::IdleTimeDetector" << endl;
   _maxIdle = maxIdle;
 
 #ifdef HAVE_LIBXSS
@@ -35,6 +37,7 @@ bool IdleTimeDetector::isIdleDetectionPossible()
 
 void IdleTimeDetector::check()
 {
+  kdDebug(5970) << "Entering IdleTimeDetector::check" << endl;
 #ifdef HAVE_LIBXSS
   if (_idleDetectionPossible)
   {
@@ -77,7 +80,7 @@ void IdleTimeDetector::informOverrun(int idleMinutes)
   if (id == 0) {
     // Revert And Stop
     emit(extractTime(idleMinutes+diff));
-    emit(stopAllTimers());
+    emit(stopAllTimersAt(idleStart));
   }
   else if (id == 1) {
     // Revert and Continue
@@ -93,7 +96,9 @@ void IdleTimeDetector::informOverrun(int idleMinutes)
 
 void IdleTimeDetector::startIdleDetection()
 {
+  kdDebug(5970) << "Entering IdleTimeDetector::startIdleDetection" << endl; 
 #ifdef HAVE_LIBXSS
+  kdDebug(5970) << "Starting Timer" << endl;
   if (!_timer->isActive())
     _timer->start(testInterval);
 #endif //HAVE_LIBXSS

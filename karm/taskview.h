@@ -96,6 +96,9 @@ class TaskView : public KListView
     /** Stop all running timers.  */
     void stopAllTimers();
 
+    /** Stop all running timers as if it was qdt */
+    void stopAllTimersAt(QDateTime qdt);
+
     /** Calls newTask dialog with caption "New Task".  */
     void newTask();
 

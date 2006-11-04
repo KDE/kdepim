@@ -81,8 +81,8 @@ TaskView::TaskView(QWidget *parent, const char *name, const QString &icsfile ):K
   _idleTimeDetector = new IdleTimeDetector( _preferences->idlenessTimeout() );
   connect( _idleTimeDetector, SIGNAL( extractTime(int) ),
            this, SLOT( extractTime(int) ));
-  connect( _idleTimeDetector, SIGNAL( stopAllTimers() ),
-           this, SLOT( stopAllTimers() ));
+  connect( _idleTimeDetector, SIGNAL( stopAllTimersAt(QDateTime) ),
+           this, SLOT( stopAllTimersAt(QDateTime) ));
   connect( _preferences, SIGNAL( idlenessTimeout(int) ),
            _idleTimeDetector, SLOT( setMaxIdle(int) ));
   connect( _preferences, SIGNAL( detectIdleness(bool) ),
@@ -352,35 +352,17 @@ QString TaskView::exportcsvHistory()
 
 void TaskView::scheduleSave()
 {
-    _manualSaveTimer->start( 10, true /*single-shot*/ );
+  kdDebug(5970) << "Entering TaskView::scheduleSave" << endl;
+  // save changes a little while after they happen
+  _manualSaveTimer->start( 10, true /*single-shot*/ );
 }
 
 Preferences* TaskView::preferences() { return _preferences; }
 
 QString TaskView::save()
+// This saves the not-running tasks.
 {
-    // DF: this code created a new event for the running task(s),
-    // at every call (very frequent with autosave) !!!
-    // -> if one wants autosave to save the current event, then
-    // Task needs to store the "current event" and we need to update
-    // it before calling save.
-#if 0
-  // Stop then start all timers so history entries are written.  This is
-  // inefficient if more than one task running, but it is correct.  It is
-  // inefficient because the iCalendar file is saved every time a task's
-  // setRunning(false, ...) is called.  For a big ics file, this could be a
-  // drag.  However, it does ensure that the data will be consistent.  And
-  // if the most common use case is that one task is running most of the time,
-  // it won't make any difference.
-  for (unsigned int i = 0; i < activeTasks.count(); i++)
-  {
-    activeTasks.at(i)->setRunning(false, _storage);
-    activeTasks.at(i)->setRunning(true, _storage);
-  }
-
-  // If there was an active task, the iCal file has already been saved.
-  if (activeTasks.count() == 0)
-#endif
+  kdDebug(5970) << "Entering TaskView::save" << endl;
   {
     return _storage->save(this);
   }
@@ -419,8 +401,27 @@ void TaskView::clearActiveTasks()
 
 void TaskView::stopAllTimers()
 {
+  kdDebug(5970) << "Entering TaskView::stopAllTimers()" << endl;
   for ( unsigned int i = 0; i < activeTasks.count(); i++ )
     activeTasks.at(i)->setRunning(false, _storage);
+
+  _idleTimeDetector->stopIdleDetection();
+  activeTasks.clear();
+  emit updateButtons();
+  emit timersInactive();
+  emit tasksChanged( activeTasks);
+}
+
+void TaskView::stopAllTimersAt(QDateTime qdt)
+// stops all timers for the time qdt. This makes sense, if the idletimedetector detected
+// the last work has been done 50 minutes ago.
+{
+  kdDebug(5970) << "Entering TaskView::stopAllTimersAt" << endl;
+  for ( unsigned int i = 0; i < activeTasks.count(); i++ )
+  {
+    activeTasks.at(i)->setRunning(false, _storage);
+    kdDebug() << activeTasks.at(i)->name() << endl;
+  }
 
   _idleTimeDetector->stopIdleDetection();
   activeTasks.clear();
@@ -449,6 +450,7 @@ void TaskView::resetTimeForAllTasks()
 
 void TaskView::stopTimerFor(Task* task)
 {
+  kdDebug(5970) << "Entering stopTimerFor. task = " << task->name() << endl;
   if ( task != 0 && activeTasks.findRef(task) != -1 ) {
     activeTasks.removeRef(task);
     task->setRunning(false, _storage);

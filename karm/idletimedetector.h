@@ -3,6 +3,8 @@
 
 #include <qobject.h>
 #include "config.h"     // HAVE_LIBXSS
+#include <qdatetime.h>
+#include <kdebug.h>
 
 class QTimer;
 
@@ -50,10 +52,11 @@ signals:
   **/
   void extractTime(int minutes);
 
-  /**
-      Tells the listener to stop timing
-   **/
+  /** Tells the listener to stop timing **/
   void stopAllTimers();
+
+  /** Tells the listener to stop timing for QDateTime **/
+  void stopAllTimersAt(QDateTime qdt);
 
 public slots:
   /**
