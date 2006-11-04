@@ -183,7 +183,7 @@ class Task : public QObject, public QListViewItem
 				    been changed by another program and being reloaded
  				    the task is set to running with another start date
        */
-      void setRunning( bool on, KarmStorage* storage, QDateTime whenStarted= QDateTime::currentDateTime());
+      void setRunning( bool on, KarmStorage* storage, QDateTime whenStarted=QDateTime::currentDateTime(), QDateTime whenStopped=QDateTime::currentDateTime());
 
       /** return the state of a task - if it's running or not
        *  @return         true or false depending on whether the task is running

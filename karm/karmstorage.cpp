@@ -1043,10 +1043,10 @@ QString KarmStorage::exportcsvHistory ( TaskView      *taskview,
   return err;
 }
 
-void KarmStorage::stopTimer(const Task* task)
+void KarmStorage::stopTimer(const Task* task, QDateTime when)
 {
   kdDebug(5970) << "Entering KarmStorage::stopTimer" << endl;
-  long delta = task->startTime().secsTo(QDateTime::currentDateTime());
+  long delta = task->startTime().secsTo(when);
   changeTime(task, delta);
 }
 

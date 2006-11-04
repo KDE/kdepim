@@ -94,7 +94,8 @@ Task::~Task() {
   delete _timer;
 }
 
-void Task::setRunning( bool on, KarmStorage* storage, QDateTime whenStarted  )
+void Task::setRunning( bool on, KarmStorage* storage, QDateTime whenStarted, QDateTime whenStopped  )
+// Sets a task running or stopped. If the task is to be stopped, whenStarted is not evaluated.
 {
   kdDebug(5970) << "Entering Task::setRunning" << endl;
   if ( on ) {
@@ -111,7 +112,7 @@ void Task::setRunning( bool on, KarmStorage* storage, QDateTime whenStarted  )
     if (_timer->isActive()) {
       _timer->stop();
       if ( ! _removing ) {
-        storage->stopTimer(this);
+        storage->stopTimer(this, whenStopped);
         setPixmap(1, UserIcon(QString::fromLatin1("empty-watch.xpm")));
       }
     }
