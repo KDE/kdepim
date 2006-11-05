@@ -426,7 +426,7 @@ KNAttachment::KNAttachment(Content *c)
 {
   Headers::ContentType  *t=c->contentType();
   Headers::CTEncoding   *e=c->contentTransferEncoding();
-  Headers::CDescription *d=c->contentDescription(false);
+  Headers::ContentDescription *d=c->contentDescription(false);
 
   n_ame=t->name();
 
