@@ -419,7 +419,7 @@ void TaskView::stopAllTimersAt(QDateTime qdt)
   kdDebug(5970) << "Entering TaskView::stopAllTimersAt" << endl;
   for ( unsigned int i = 0; i < activeTasks.count(); i++ )
   {
-    activeTasks.at(i)->setRunning(false, _storage);
+    activeTasks.at(i)->setRunning(false, _storage, qdt, qdt);
     kdDebug() << activeTasks.at(i)->name() << endl;
   }
 
@@ -692,6 +692,7 @@ void TaskView::deleteTask(bool markingascomplete)
 
 void TaskView::extractTime(int minutes)
 {
+  kdDebug(5970) << "Entering extractTime" << endl;
   addTimeToActiveTasks(-minutes);
 }
 
