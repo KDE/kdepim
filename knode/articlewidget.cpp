@@ -656,16 +656,12 @@ void ArticleWidget::displayHeader()
   if ( mArticle->type() == KMime::Base::ATremote && refs
        && knGlobals.settings()->showRefBar() ) {
     html += "<div class=\"spamheader\">";
-    int refCnt = refs->count(), i = 1;
-    QString id = refs->first();
-    id = id.mid( 1, id.length() - 2 );  // remove <>
     html += QString( "<b>%1</b>" ).arg( i18n("References:") );
 
-    while ( i <= refCnt ) {
-      html += " <a href=\"news:" + id + "\">" + QString::number( i ) + "</a>";
-      id = refs->next();
-      id = id.mid( 1, id.length() - 2 );  // remove <>
-      i++;
+    QList<QByteArray> references = refs->identifiers();
+    for ( int i = 0; i < references.count(); ++i ) {
+      html += " <a href=\"news:" + references.at(references.count() - i - 1)
+          + "\">" + QString::number( i + 1 ) + "</a>";
     }
     html += "</div>";
   }

@@ -881,20 +881,18 @@ KNRemoteArticle* KNGroup::findReference(KNRemoteArticle *a)
 {
   int found=false;
   QByteArray ref_mid;
-  int ref_nr=0;
   KNRemoteArticle *ref_art=0;
 
-  ref_mid=a->references()->first();
+  QList<QByteArray> references = a->references()->identifiers();
 
-  while(!found && !ref_mid.isNull() && ref_nr < SORT_DEPTH) {
-    ref_art=byMessageId(ref_mid);
+  for ( int ref_nr = 0; ref_nr < references.count() && ref_nr < SORT_DEPTH; ++ref_nr ) {
+    ref_mid = '<' + references.at( references.count() - ref_nr - 1 ) + '>';
+    ref_art = byMessageId(ref_mid);
     if(ref_art) {
-      found=true;
       a->setThreadingLevel(ref_nr+1);
       a->setIdRef(ref_art->id());
+      break;
     }
-    ref_nr++;
-    ref_mid=a->references()->next();
   }
 
   return ref_art;

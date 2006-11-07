@@ -189,7 +189,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
     refs = "";
 
   art->references()->from7BitString(refs);
-  art->references()->append(a->messageID()->as7BitString(false));
+  art->references()->appendIdentifier(a->messageID()->as7BitString(false));
 
   //Mail-Copies-To
   bool authorDislikesMailCopies=false;
