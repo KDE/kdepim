@@ -35,7 +35,7 @@
 
 #include <QString>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #ifdef None // X headers
 #  undef None
@@ -43,7 +43,7 @@
 
 namespace KSieve {
 
-  class KDE_EXPORT Error {
+  class KSIEVE_EXPORT Error {
   public:
     enum Type {
       None = 0,
