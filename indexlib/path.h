@@ -34,7 +34,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include <qglobal.h>
 /**
  * Returns whether \param p is the name of a directory
  */
@@ -56,7 +56,11 @@ inline
 bool mkdir_trailing( std::string p ) {
 	while ( p.size() > 1 && p[ p.size() - 1 ] == '/' ) p.resize( p.size() - 1 );
 	if ( p.empty() ) return false;
-	return ::mkdir( p.c_str(), 0755 ) == 0;
+#ifdef Q_OS_WIN	
+	return ::mkdir( p.c_str() ) == 0;
+#else
+	return ::mkdir( p.c_str(), 0755 ) == 0;	
+#endif	
 
 }
 
