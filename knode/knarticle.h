@@ -48,6 +48,8 @@ class KNArticle : public KMime::NewsArticle, public KNJobItem {
     KNArticle(KNArticleCollection *c);
     ~KNArticle();
 
+    virtual void clear();
+
     /** Returns the article id. */
     int id() const            { return i_d; }
     /** Sets the article id.
@@ -78,6 +80,8 @@ class KNArticle : public KMime::NewsArticle, public KNJobItem {
     int i_d; //unique in the given collection
     KNArticleCollection *c_ol;
     KNHdrViewItem *i_tem;
+
+    KMime::BoolFlags f_lags;
 
 }; // KNArticle
 

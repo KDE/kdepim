@@ -41,6 +41,11 @@ KNArticle::~KNArticle()
 }
 
 
+void KNArticle::clear()
+{
+  f_lags.clear();
+}
+
 
 void KNArticle::setListItem(KNHdrViewItem *it)
 {
@@ -588,4 +593,3 @@ void KNAttachment::detach(Content *c)
     i_sAttached=false;
   }
 }
-
