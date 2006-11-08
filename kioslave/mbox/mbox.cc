@@ -160,9 +160,9 @@ void MBoxProtocol::mimetype( const KUrl& url )
 	finished();
 }
 
-void MBoxProtocol::emitError( int errno, const QString& arg )
+void MBoxProtocol::emitError( int _errno, const QString& arg )
 {
 	m_errorState = true;
-	error( errno, arg );
+	error( _errno, arg );
 }
 

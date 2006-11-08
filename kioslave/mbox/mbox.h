@@ -74,7 +74,7 @@ public:
 	 * @param errno The error number to be thrown
 	 * @param arg The argument of the error message of the error number.
 	 */
-	void emitError( int errno, const QString& arg );
+	void emitError( int _errno, const QString& arg );
 private:
 	bool m_errorState;
 };
