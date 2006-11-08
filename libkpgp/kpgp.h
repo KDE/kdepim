@@ -39,7 +39,7 @@
 #include <kdialog.h>
 
 #include "kpgpkey.h"
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 class QLineEdit;
 class QCursor;
@@ -81,7 +81,7 @@ enum Result
 class Base;
 class Block;
 
-class KDE_EXPORT Module
+class KPGP_EXPORT Module
 {
   friend class Block;
 

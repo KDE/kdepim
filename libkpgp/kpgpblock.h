@@ -22,7 +22,7 @@
 #include <QStringList>
 #include <QString>
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #include "kpgp.h"
 
@@ -86,7 +86,7 @@ class Module;
    * BEGIN PGP SIGNED MESSAGE
    *     Used for cleartext signed messages.
    */
-class KDE_EXPORT Block
+class KPGP_EXPORT Block
 {
  public:
 

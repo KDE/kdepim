@@ -31,7 +31,7 @@
 #include <Q3PtrVector>
 #include "kpgp.h"
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 class QString;
 class QRegExp;
@@ -54,7 +54,7 @@ class Key;                  // needed by KeySelectionDialog
 class KeyIDList;            // needed by KeySelectionDialog
 
 /** the passphrase dialog */
-class KDE_EXPORT PassphraseDialog : public KDialog
+class KPGP_EXPORT PassphraseDialog : public KDialog
 {
   Q_OBJECT
 
@@ -74,7 +74,7 @@ class KDE_EXPORT PassphraseDialog : public KDialog
 /** A widget for configuring the pgp interface. Can be included into
     a tabdialog. This widget by itself does not provide an apply/cancel
     button mechanism. */
-class KDE_EXPORT Config : public QWidget
+class KPGP_EXPORT Config : public QWidget
 {
   Q_OBJECT
 
@@ -101,7 +101,7 @@ class KDE_EXPORT Config : public QWidget
 
 // -------------------------------------------------------------------------
 #define KeySelectionDialogSuper KDialog
-class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
+class KPGP_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
 {
   Q_OBJECT
 
@@ -199,7 +199,7 @@ class KDE_EXPORT KeySelectionDialog: public KeySelectionDialogSuper
   static const int sCheckSelectionDelay;
 };
 
-class KDE_EXPORT KeyRequester: public QWidget
+class KPGP_EXPORT KeyRequester: public QWidget
 {
   Q_OBJECT
 
@@ -251,7 +251,7 @@ protected:
 };
 
 
-class KDE_EXPORT PublicKeyRequester : public KeyRequester {
+class KPGP_EXPORT PublicKeyRequester : public KeyRequester {
   Q_OBJECT
 public:
   PublicKeyRequester( QWidget * parent=0, bool multipleKeys=false,
@@ -270,7 +270,7 @@ protected:
 };
 
 
-class KDE_EXPORT SecretKeyRequester : public KeyRequester {
+class KPGP_EXPORT SecretKeyRequester : public KeyRequester {
   Q_OBJECT
 public:
   SecretKeyRequester( QWidget * parent=0, bool multipleKeys=false,
@@ -290,7 +290,7 @@ protected:
 
 
 // -------------------------------------------------------------------------
-class KDE_EXPORT KeyApprovalDialog: public KDialog
+class KPGP_EXPORT KeyApprovalDialog: public KDialog
 {
   Q_OBJECT
 
@@ -324,7 +324,7 @@ class KDE_EXPORT KeyApprovalDialog: public KDialog
 
 
 // -------------------------------------------------------------------------
-class KDE_EXPORT CipherTextDialog: public KDialog
+class KPGP_EXPORT CipherTextDialog: public KDialog
 {
   Q_OBJECT
 
