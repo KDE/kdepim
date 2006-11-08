@@ -41,7 +41,7 @@
 #include <q3cstring.h>
 
 #include <vector>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 namespace GpgME {
   class Error;
@@ -75,7 +75,7 @@ namespace Kleo {
       signal there. Pass "this" as the first argument this QGpgMEJOb's
       ctor. The rest is dealt with automatically.
   */
-  class KDE_EXPORT QGpgMEJob : public GpgME::ProgressProvider, public GpgME::PassphraseProvider {
+  class KLEO_EXPORT QGpgMEJob : public GpgME::ProgressProvider, public GpgME::PassphraseProvider {
   public:
     QGpgMEJob( Kleo::Job * _this, GpgME::Context * context );
     ~QGpgMEJob();

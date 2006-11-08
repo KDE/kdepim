@@ -33,7 +33,7 @@
 #ifndef __KLEO_ENUM_H__
 #define __KLEO_ENUM_H__
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 class QString;
 class QStringList;
@@ -50,12 +50,12 @@ namespace Kleo {
     AutoFormat = AnyOpenPGP|AnySMIME
   };
 
-  KDE_EXPORT QString cryptoMessageFormatToLabel( CryptoMessageFormat f );
+  KLEO_EXPORT QString cryptoMessageFormatToLabel( CryptoMessageFormat f );
 
-  KDE_EXPORT const char * cryptoMessageFormatToString( CryptoMessageFormat f );
-  KDE_EXPORT QStringList cryptoMessageFormatsToStringList( unsigned int f );
-  KDE_EXPORT CryptoMessageFormat stringToCryptoMessageFormat( const QString & s );
-  KDE_EXPORT unsigned int stringListToCryptoMessageFormats( const QStringList & sl );
+  KLEO_EXPORT const char * cryptoMessageFormatToString( CryptoMessageFormat f );
+  KLEO_EXPORT QStringList cryptoMessageFormatsToStringList( unsigned int f );
+  KLEO_EXPORT CryptoMessageFormat stringToCryptoMessageFormat( const QString & s );
+  KLEO_EXPORT unsigned int stringListToCryptoMessageFormats( const QStringList & sl );
 
   enum Action {
     Conflict, DoIt, DontDoIt, Ask, AskOpportunistic, Impossible
@@ -71,9 +71,9 @@ namespace Kleo {
     MaxEncryptionPreference = AskWheneverPossible
   };
 
-  KDE_EXPORT QString encryptionPreferenceToLabel( EncryptionPreference pref );
-  KDE_EXPORT const char* encryptionPreferenceToString( EncryptionPreference pref );
-  KDE_EXPORT EncryptionPreference stringToEncryptionPreference( const QString& str );
+  KLEO_EXPORT QString encryptionPreferenceToLabel( EncryptionPreference pref );
+  KLEO_EXPORT const char* encryptionPreferenceToString( EncryptionPreference pref );
+  KLEO_EXPORT EncryptionPreference stringToEncryptionPreference( const QString& str );
 
   enum SigningPreference {
     UnknownSigningPreference = 0,
@@ -85,9 +85,9 @@ namespace Kleo {
     MaxSigningPreference = AskSigningWheneverPossible
   };
 
-  KDE_EXPORT QString signingPreferenceToLabel( SigningPreference pref ) KDE_EXPORT;
-  KDE_EXPORT const char* signingPreferenceToString( SigningPreference pref ) KDE_EXPORT;
-  KDE_EXPORT SigningPreference stringToSigningPreference( const QString& str );
+  KLEO_EXPORT QString signingPreferenceToLabel( SigningPreference pref ) KLEO_EXPORT;
+  KLEO_EXPORT const char* signingPreferenceToString( SigningPreference pref ) KLEO_EXPORT;
+  KLEO_EXPORT SigningPreference stringToSigningPreference( const QString& str );
 }
 
 #endif // __KLEO_CRYPTOBACKEND_H__

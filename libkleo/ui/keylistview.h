@@ -36,7 +36,7 @@
 #include <k3listview.h>
 
 #include <gpgmepp/key.h>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QByteArray>
@@ -66,7 +66,7 @@ namespace Kleo {
 
   class KeyListView;
 
-  class KDE_EXPORT KeyListViewItem : public Q3ListViewItem {
+  class KLEO_EXPORT KeyListViewItem : public Q3ListViewItem {
   public:
     KeyListViewItem( KeyListView * parent, const GpgME::Key & key );
     KeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::Key & key );
@@ -105,7 +105,7 @@ namespace Kleo {
     GpgME::Key mKey;
   };
 
-  class KDE_EXPORT SubkeyKeyListViewItem : public KeyListViewItem {
+  class KLEO_EXPORT SubkeyKeyListViewItem : public KeyListViewItem {
   public:
     SubkeyKeyListViewItem( KeyListView * parent, const GpgME::Subkey & subkey );
     SubkeyKeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::Subkey & subkey );
@@ -137,7 +137,7 @@ namespace Kleo {
     GpgME::Subkey mSubkey;
   };
 
-  class KDE_EXPORT UserIDKeyListViewItem : public KeyListViewItem {
+  class KLEO_EXPORT UserIDKeyListViewItem : public KeyListViewItem {
   public:
     UserIDKeyListViewItem( KeyListView * parent, const GpgME::UserID & userid );
     UserIDKeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::UserID & userid );
@@ -169,7 +169,7 @@ namespace Kleo {
     GpgME::UserID mUserID;
   };
 
-  class KDE_EXPORT SignatureKeyListViewItem : public KeyListViewItem {
+  class KLEO_EXPORT SignatureKeyListViewItem : public KeyListViewItem {
   public:
     SignatureKeyListViewItem( KeyListView * parent, const GpgME::UserID::Signature & sig );
     SignatureKeyListViewItem( KeyListView * parent, KeyListViewItem * after, const GpgME::UserID::Signature & sig );
@@ -202,12 +202,12 @@ namespace Kleo {
   };
 
 
-  class KDE_EXPORT KeyListView : public K3ListView {
+  class KLEO_EXPORT KeyListView : public K3ListView {
     Q_OBJECT
     friend class KeyListViewItem;
   public:
 
-    class KDE_EXPORT ColumnStrategy {
+    class KLEO_EXPORT ColumnStrategy {
     public:
       virtual ~ColumnStrategy();
       virtual QString title( int column ) const = 0;
@@ -235,7 +235,7 @@ namespace Kleo {
       virtual int signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, const int column ) const;
     };
 
-    class KDE_EXPORT DisplayStrategy {
+    class KLEO_EXPORT DisplayStrategy {
     public:
       virtual ~DisplayStrategy();
       //font

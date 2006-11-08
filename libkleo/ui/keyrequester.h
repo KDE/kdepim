@@ -55,7 +55,7 @@
 #include <kleo/cryptobackend.h>
 
 #include <vector>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 namespace Kleo {
   class KeyListView;
@@ -75,7 +75,7 @@ class QLabel;
 namespace Kleo {
 
   /// Base class for SigningKeyRequester and EncryptionKeyRequester
-  class KDE_EXPORT KeyRequester : public QWidget {
+  class KLEO_EXPORT KeyRequester : public QWidget {
     Q_OBJECT
   public:
     KeyRequester( unsigned int allowedKeys, bool multipleKeys=false,
@@ -160,7 +160,7 @@ namespace Kleo {
   };
 
 
-  class KDE_EXPORT EncryptionKeyRequester : public KeyRequester {
+  class KLEO_EXPORT EncryptionKeyRequester : public KeyRequester {
     Q_OBJECT
   public:
     enum { OpenPGP = 1, SMIME = 2, AllProtocols = OpenPGP|SMIME };
@@ -187,7 +187,7 @@ namespace Kleo {
   };
 
 
-  class KDE_EXPORT SigningKeyRequester : public KeyRequester {
+  class KLEO_EXPORT SigningKeyRequester : public KeyRequester {
     Q_OBJECT
   public:
     enum { OpenPGP = 1, SMIME = 2, AllProtocols = OpenPGP|SMIME };

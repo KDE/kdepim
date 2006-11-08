@@ -34,7 +34,7 @@
 #define __KLEO_UI_DNATTRIBUTEORDERCONFIGWIDGET_H__
 
 #include <QWidget>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 namespace Kleo {
   class DNAttributeMapper;
 }
@@ -43,7 +43,7 @@ class Q3ListViewItem;
 
 namespace Kleo {
 
-  class KDE_EXPORT DNAttributeOrderConfigWidget : public QWidget {
+  class KLEO_EXPORT DNAttributeOrderConfigWidget : public QWidget {
     Q_OBJECT
   public:
     /*! Use Kleo::DNAttributeMapper::instance()->configWidget( parent, name ) instead. */

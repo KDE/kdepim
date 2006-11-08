@@ -34,7 +34,7 @@
 #define __KLEO_PROGRESSBAR_H__
 
 #include <q3progressbar.h>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 class QTimer;
 
 namespace Kleo {
@@ -42,7 +42,7 @@ namespace Kleo {
   /**
      @short A QProgressBar with self-powered busy indicator
   */
-  class KDE_EXPORT ProgressBar : public Q3ProgressBar {
+  class KLEO_EXPORT ProgressBar : public Q3ProgressBar {
     Q_OBJECT
   public:
     ProgressBar( QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );

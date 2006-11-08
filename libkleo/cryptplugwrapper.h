@@ -54,7 +54,7 @@
 #include <QPair>
 #include <QStringList>
 #include <QString>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 
 class KConfigBase;
@@ -450,7 +450,7 @@ private:
 /*!
     \brief This class provides C++ access to the CRYPTPLUG API.
 */
-class KDE_EXPORT CryptPlugWrapper : public Kleo::CryptoBackend::Protocol {
+class KLEO_EXPORT CryptPlugWrapper : public Kleo::CryptoBackend::Protocol {
 public:
     static QString errorIdToText( int errId, bool & isPassphraseError );
 

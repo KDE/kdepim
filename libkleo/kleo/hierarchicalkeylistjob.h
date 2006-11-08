@@ -35,7 +35,7 @@
 
 #include <kleo/keylistjob.h>
 #include <kleo/cryptobackend.h>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #include <gpgmepp/keylistresult.h>
 
@@ -68,7 +68,7 @@ namespace Kleo {
      After result() is emitted, the HierarchicalKeyListJob will
      schedule its own destruction by calling QObject::deleteLater().
   */
-  class KDE_EXPORT HierarchicalKeyListJob : public KeyListJob {
+  class KLEO_EXPORT HierarchicalKeyListJob : public KeyListJob {
     Q_OBJECT
   public:
     HierarchicalKeyListJob( const CryptoBackend::Protocol * protocol,

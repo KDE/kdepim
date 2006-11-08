@@ -41,7 +41,7 @@
 
 #include <kleo/cryptobackend.h>
 #include <gpgmepp/key.h>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 #include <vector>
 //Added by qt3to4:
 #include <QPixmap>
@@ -64,7 +64,7 @@ namespace GpgME {
 
 namespace Kleo {
 
-  class KDE_EXPORT KeySelectionDialog : public KDialog {
+  class KLEO_EXPORT KeySelectionDialog : public KDialog {
     Q_OBJECT
   public:
 

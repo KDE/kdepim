@@ -36,7 +36,7 @@
 #include <kleo/keygenerationjob.h>
 
 #include "qgpgmejob.h"
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 namespace GpgME {
   class Error;
@@ -51,7 +51,7 @@ namespace QGpgME {
 
 namespace Kleo {
 
-  class KDE_EXPORT QGpgMEKeyGenerationJob : public KeyGenerationJob, private QGpgMEJob {
+  class KLEO_EXPORT QGpgMEKeyGenerationJob : public KeyGenerationJob, private QGpgMEJob {
     Q_OBJECT QGPGME_JOB
   public:
     QGpgMEKeyGenerationJob( GpgME::Context * context );

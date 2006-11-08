@@ -35,7 +35,7 @@
 
 #include "kleo/cryptobackendfactory.h"
 
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #ifndef LIBKLEOPATRA_NO_COMPAT
 namespace Kleo {
@@ -47,7 +47,7 @@ class CryptPlugWrapperList;
 
 namespace KMail {
 
-  class KDE_EXPORT CryptPlugFactory : public Kleo::CryptoBackendFactory {
+  class KLEO_EXPORT CryptPlugFactory : public Kleo::CryptoBackendFactory {
     Q_OBJECT
   protected:
     CryptPlugFactory();

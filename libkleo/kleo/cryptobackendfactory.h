@@ -36,7 +36,7 @@
 #include <QObject>
 
 #include "cryptobackend.h"
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 #include <vector>
 #include <map>
@@ -56,7 +56,7 @@ namespace Kleo {
     }
   };
 
-  class KDE_EXPORT CryptoBackendFactory : public QObject {
+  class KLEO_EXPORT CryptoBackendFactory : public QObject {
     Q_OBJECT
   protected:
     CryptoBackendFactory();
