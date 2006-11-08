@@ -2016,19 +2016,22 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
       // Only in AUDIO and EMAIL and PROCEDURE alarms
       case ICAL_ATTACH_PROPERTY: {
         icalattachtype *attach = icalproperty_get_attach(p);
-        QString url = QFile::decodeName(icalattachtype_get_url(attach));
-        switch ( action ) {
-          case ICAL_ACTION_AUDIO:
-            ialarm->setAudioFile( url );
-            break;
-          case ICAL_ACTION_PROCEDURE:
-            ialarm->setProgramFile( url );
-            break;
-          case ICAL_ACTION_EMAIL:
-            ialarm->addMailAttachment( url );
-            break;
-          default:
-            break;
+        icalvalue_kind value_kind = icalvalue_isa(icalproperty_get_value(p) ); 
+        if ( value_kind == ICAL_URI_VALUE ) {
+          QString url = QFile::decodeName(icalattachtype_get_url(attach));
+          switch ( action ) {
+            case ICAL_ACTION_AUDIO:
+              ialarm->setAudioFile( url );
+              break;
+            case ICAL_ACTION_PROCEDURE:
+              ialarm->setProgramFile( url );
+              break;
+            case ICAL_ACTION_EMAIL:
+              ialarm->addMailAttachment( url );
+              break;
+            default:
+              break;
+          }
         }
         break;
       }
