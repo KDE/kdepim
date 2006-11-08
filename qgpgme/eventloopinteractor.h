@@ -24,7 +24,7 @@
 #include <gpgmepp/eventloopinteractor.h>
 
 #include <QObject>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 namespace GpgME {
   class Context;
@@ -35,7 +35,7 @@ namespace GpgME {
   
 namespace QGpgME {
 
-  class KDE_EXPORT EventLoopInteractor : public QObject, public GpgME::EventLoopInteractor {
+  class QGPGME_EXPORT EventLoopInteractor : public QObject, public GpgME::EventLoopInteractor {
     Q_OBJECT
   protected:
     EventLoopInteractor( QObject * parent, const char * name=0 );
