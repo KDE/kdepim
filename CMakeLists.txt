@@ -9,6 +9,7 @@ include(MacroLibrary)
 
 find_package(KdepimLibs REQUIRED)
 find_package(Kode REQUIRED)
+find_package(ZLIB REQUIRED)
 
 if(Q_WS_X11)
    macro_log_feature(X11_Xss_LIB "X Development" "X Window Development Screen Saver Library" "http://xorg.freedesktop.org" TRUE "" "Required to build the KTimeTracker Program")
