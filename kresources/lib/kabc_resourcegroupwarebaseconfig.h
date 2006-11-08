@@ -23,7 +23,7 @@
 #define KABC_RESOURCEGROUPWAREBASECONFIG_H
 
 #include <kresources/configwidget.h>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 class KLineEdit;
 class KUrlRequester;
@@ -36,7 +36,7 @@ namespace KABC {
 
 class ResourceGroupwareBase;
 
-class KDE_EXPORT ResourceGroupwareBaseConfig : public KRES::ConfigWidget
+class KGROUPWAREBASE_EXPORT ResourceGroupwareBaseConfig : public KRES::ConfigWidget
 { 
   Q_OBJECT
 

@@ -27,7 +27,7 @@
 
 
 #include <kcal/incidence.h>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 #include <kurl.h>
 
 namespace KPIM {
@@ -49,7 +49,7 @@ class CalendarUploadItem : public KPIM::GroupwareUploadItem
 };
 
 
-class KDE_EXPORT CalendarAdaptor : public KPIM::GroupwareDataAdaptor
+class KGROUPWAREBASE_EXPORT CalendarAdaptor : public KPIM::GroupwareDataAdaptor
 {
   Q_OBJECT
   public:

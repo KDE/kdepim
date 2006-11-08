@@ -31,7 +31,7 @@
 #include <QByteArray>
 #include <kcal/listbase.h>
 #include <QObject>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 
 namespace KIO {
@@ -49,7 +49,7 @@ class FolderLister;
 class GroupwareDataAdaptor;
 //class GroupwareJob;
 
-class KDE_EXPORT GroupwareUploadItem
+class KGROUPWAREBASE_EXPORT GroupwareUploadItem
 {
   public:
     typedef KCal::ListBase<GroupwareUploadItem> List;
@@ -93,7 +93,7 @@ class KDE_EXPORT GroupwareUploadItem
 };
 
 
-class KDE_EXPORT GroupwareDataAdaptor : public QObject
+class KGROUPWAREBASE_EXPORT GroupwareDataAdaptor : public QObject
 {
 Q_OBJECT
   public:

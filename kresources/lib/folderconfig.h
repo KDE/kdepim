@@ -24,7 +24,7 @@
 #define KPIM_FOLDERCONFIG_H
 
 #include <kurl.h>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 #include <QWidget>
 
 // class K3ListView;
@@ -35,7 +35,7 @@ namespace KPIM {
 
 class FolderLister;
 
-class KDE_EXPORT FolderConfig : public QWidget
+class KGROUPWAREBASE_EXPORT FolderConfig : public QWidget
 {
     Q_OBJECT
   public:

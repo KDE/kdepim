@@ -23,7 +23,7 @@
 #define KCAL_RESOURCEGROUPWAREBASECONFIG_H
 
 #include <kresources/configwidget.h>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 class KPushButton;
 class KLineEdit;
@@ -44,7 +44,7 @@ class CacheSettingsDialog;
 
   @see KCalOpenGroupware
 */
-class KDE_EXPORT ResourceGroupwareBaseConfig : public KRES::ConfigWidget
+class KGROUPWAREBASE_EXPORT ResourceGroupwareBaseConfig : public KRES::ConfigWidget
 {
     Q_OBJECT
   public:

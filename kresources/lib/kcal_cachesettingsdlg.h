@@ -23,7 +23,7 @@
 #define KCAL_CACHESETTINGSDLG_H
 
 #include <kdialog.h>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 
 namespace KRES {
@@ -39,7 +39,7 @@ class ResourceCachedSaveConfig;
   Configuration widget for groupware kioslave resource.
   @see KCalOpenGroupware
 */
-class KDE_EXPORT CacheSettingsDialog : public KDialog
+class KGROUPWAREBASE_EXPORT CacheSettingsDialog : public KDialog
 { 
     Q_OBJECT
   public:

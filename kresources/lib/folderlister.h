@@ -26,7 +26,7 @@
 // #include "kresources_groupwareprefs.h"
 /*#include "groupwareresourcejob.h"*/
 #include <kurl.h>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 
 #include <QString>
@@ -45,7 +45,7 @@ class GroupwareDataAdaptor;
 class GroupwarePrefsBase;
 
 
-class KDE_EXPORT FolderLister : public QObject
+class KGROUPWAREBASE_EXPORT FolderLister : public QObject
 {
     Q_OBJECT
   public:

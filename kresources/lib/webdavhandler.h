@@ -27,9 +27,9 @@
 #include <qdom.h>
 #include <QDateTime>
 #include <kurl.h>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
-class KDE_EXPORT WebdavHandler
+class KGROUPWAREDAV_EXPORT WebdavHandler
 {
   public:
     WebdavHandler();

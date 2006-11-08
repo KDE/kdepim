@@ -26,7 +26,7 @@
 #include "groupwaredataadaptor.h"
 
 #include <kabc/addressee.h>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 #include <kurl.h>
 
 namespace KABC {
@@ -43,7 +43,7 @@ class AddressBookUploadItem : public KPIM::GroupwareUploadItem
                                           : KPIM::GroupwareUploadItem( type ) {}
 };
 
-class KDE_EXPORT AddressBookAdaptor : public KPIM::GroupwareDataAdaptor
+class KGROUPWAREBASE_EXPORT AddressBookAdaptor : public KPIM::GroupwareDataAdaptor
 {
   public:
     AddressBookAdaptor();

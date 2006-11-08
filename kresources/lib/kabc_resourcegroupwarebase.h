@@ -24,7 +24,7 @@
 
 #include <kurl.h>
 #include <kabcresourcecached.h>
-#include <kdepimmacros.h>
+#include <kdepim_export.h>
 
 class KConfig;
 
@@ -40,7 +40,7 @@ namespace KABC {
 
 class AddressBookAdaptor;
 
-class KDE_EXPORT ResourceGroupwareBase : public ResourceCached
+class KGROUPWAREBASE_EXPORT ResourceGroupwareBase : public ResourceCached
 {
   Q_OBJECT
 
