@@ -2018,7 +2018,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
         icalattachtype *attach = icalproperty_get_attach(p);
         icalvalue_kind value_kind = icalvalue_isa(icalproperty_get_value(p) ); 
         if ( value_kind == ICAL_URI_VALUE ) {
-          QString url = QFile::decodeName(icalattachtype_get_url(attach));
+          QString url = QFile::decodeName(icalvalue_get_uri(icalproperty_get_value(p)));
           switch ( action ) {
             case ICAL_ACTION_AUDIO:
               ialarm->setAudioFile( url );
