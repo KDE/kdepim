@@ -18,7 +18,6 @@
 #include <config.h>
 #include <klocale.h>
 #include <kfiledialog.h>
-#include <libgen.h>
 
 #include "filter_plain.hxx"
 
