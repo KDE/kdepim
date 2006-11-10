@@ -15,7 +15,7 @@ kde4_automoc(${kio_mbox_PART_SRCS})
 
 kde4_add_plugin(kio_mbox ${kio_mbox_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_mbox )
+
 
 target_link_libraries(kio_mbox  ${KDE4_KIO_LIBS} )
 

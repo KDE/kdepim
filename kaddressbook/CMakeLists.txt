@@ -100,7 +100,7 @@ kde4_automoc(${kaddressbookpart_PART_SRCS})
 
 kde4_add_plugin(kaddressbookpart WITH_PREFIX ${kaddressbookpart_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddressbookpart )
+
 
 target_link_libraries(kaddressbookpart  ${KDE4_KDECORE_LIBS} kaddressbook )
 

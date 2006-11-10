@@ -20,7 +20,7 @@ kde4_automoc(${kaddrbk_cardview_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_cardview WITH_PREFIX ${kaddrbk_cardview_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_cardview )
+
 
 target_link_libraries(kaddrbk_cardview  ${KDE4_KDECORE_LIBS} kaddressbook kabc)
 
@@ -35,7 +35,7 @@ kde4_automoc(${kaddrbk_iconview_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_iconview WITH_PREFIX ${kaddrbk_iconview_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_iconview )
+
 
 target_link_libraries(kaddrbk_iconview ${KDE4_KABC_LIBS} kaddressbook ${LIB_KDE3SUPPORT})
 
@@ -50,7 +50,7 @@ kde4_automoc(${kaddrbk_tableview_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_tableview WITH_PREFIX ${kaddrbk_tableview_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_tableview )
+
 
 target_link_libraries(kaddrbk_tableview  ${KDE4_KABC_LIBS} kaddressbook ${LIB_KDE3SUPPORT})
 

@@ -23,7 +23,7 @@ kde4_automoc(${kded_networkstatus_PART_SRCS})
 
 kde4_add_plugin(kded_networkstatus ${kded_networkstatus_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kded_networkstatus )
+
 
 target_link_libraries(kded_networkstatus  ${KDE4_KIO_LIBS}  )
 

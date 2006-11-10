@@ -30,7 +30,7 @@ kde4_automoc(${kabc_kolab_PART_SRCS})
 
 kde4_add_plugin(kabc_kolab ${kabc_kolab_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_kolab )
+
 
 target_link_libraries(kabc_kolab  ${KDE4_KDECORE_LIBS} kabckolab ${KDE4_KCAL_LIBS} )
 

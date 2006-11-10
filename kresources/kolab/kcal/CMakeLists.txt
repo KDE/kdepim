@@ -35,7 +35,7 @@ kde4_automoc(${kcal_kolab_PART_SRCS})
 
 kde4_add_plugin(kcal_kolab ${kcal_kolab_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_kolab )
+
 
 target_link_libraries(kcal_kolab  ${KDE4_KDECORE_LIBS} kcalkolab )
 

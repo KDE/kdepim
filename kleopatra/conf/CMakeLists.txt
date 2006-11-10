@@ -19,7 +19,7 @@ kde4_add_ui3_files(kcm_kleopatra_PART_SRCS appearanceconfigwidgetbase.ui )
 
 kde4_add_plugin(kcm_kleopatra ${kcm_kleopatra_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kleopatra )
+
 
 target_link_libraries(kcm_kleopatra  ${KDE4_KDEUI_LIBS} kleopatra )
 

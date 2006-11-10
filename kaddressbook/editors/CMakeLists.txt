@@ -14,7 +14,7 @@ kde4_automoc(${kaddrbk_cryptosettings_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_cryptosettings WITH_PREFIX ${kaddrbk_cryptosettings_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_cryptosettings )
+
 
 target_link_libraries(kaddrbk_cryptosettings  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kleopatra kaddressbook)
 

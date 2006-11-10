@@ -11,7 +11,7 @@ kde4_automoc(${kio_sieve_PART_SRCS})
 
 kde4_add_plugin(kio_sieve ${kio_sieve_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_sieve )
+
 
 target_link_libraries(kio_sieve  ${KDE4_KIO_LIBS} ${SASL2_LIBRARIES})
 

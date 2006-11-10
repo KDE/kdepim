@@ -10,7 +10,7 @@ kde4_automoc(${kfile_rfc822_PART_SRCS})
 
 kde4_add_plugin(kfile_rfc822 ${kfile_rfc822_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kfile_rfc822 )
+
 
 target_link_libraries(kfile_rfc822  ${KDE4_KIO_LIBS} )
 

@@ -90,7 +90,7 @@ kde4_automoc(${kcm_knode_PART_SRCS})
 
 kde4_add_plugin(kcm_knode ${kcm_knode_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_knode )
+
 
 target_link_libraries(kcm_knode  ${KDE4_KDECORE_LIBS} knodecommon )
 
@@ -105,7 +105,7 @@ kde4_automoc(${knodepart_PART_SRCS})
 
 kde4_add_plugin(knodepart WITH_PREFIX ${knodepart_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} knodepart )
+
 
 target_link_libraries(knodepart  ${KDE4_KDECORE_LIBS} knodecommon )
 

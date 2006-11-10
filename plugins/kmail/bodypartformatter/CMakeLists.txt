@@ -10,7 +10,7 @@ kde4_automoc(${kmail_bodypartformatter_text_vcard_PART_SRCS})
 
 kde4_add_plugin(kmail_bodypartformatter_text_vcard WITH_PREFIX ${kmail_bodypartformatter_text_vcard_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_vcard )
+
 
 target_link_libraries(kmail_bodypartformatter_text_vcard  ${KDE4_KDECORE_LIBS} kdepim kmime)
 
@@ -25,7 +25,7 @@ kde4_automoc(${kmail_bodypartformatter_text_calendar_PART_SRCS})
 
 kde4_add_plugin(kmail_bodypartformatter_text_calendar WITH_PREFIX ${kmail_bodypartformatter_text_calendar_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_calendar )
+
 
 target_link_libraries(kmail_bodypartformatter_text_calendar  ${KDE4_EMAILFUNCTIOS_LIBS} ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kmailprivate )
 
@@ -40,7 +40,7 @@ kde4_automoc(${kmail_bodypartformatter_text_xdiff_PART_SRCS})
 
 kde4_add_plugin(kmail_bodypartformatter_text_xdiff WITH_PREFIX ${kmail_bodypartformatter_text_xdiff_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kmail_bodypartformatter_text_xdiff )
+
 
 target_link_libraries(kmail_bodypartformatter_text_xdiff  ${KDE4_KDECORE_LIBS} ${QT_QT3SUPPORT_LIBRARY} )
 

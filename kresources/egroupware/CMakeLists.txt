@@ -79,7 +79,7 @@ kde4_automoc(${kabc_xmlrpc_plugin_PART_SRCS})
 kde4_add_plugin(kabc_xmlrpc_plugin ${kabc_xmlrpc_plugin_PART_SRCS})
 set_target_properties(kabc_xmlrpc_plugin PROPERTIES OUTPUT_NAME kabc_xmlrpc)
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_xmlrpc_plugin )
+
 
 target_link_libraries(kabc_xmlrpc_plugin  ${KDE4_KDECORE_LIBS} kabc_xmlrpc)
 
@@ -95,7 +95,7 @@ kde4_automoc(${kcal_xmlrpc_plugin_PART_SRCS})
 kde4_add_plugin(kcal_xmlrpc_plugin ${kcal_xmlrpc_plugin_PART_SRCS})
 set_target_properties(kcal_xmlrpc_plugin PROPERTIES OUTPUT_NAME kcal_xmlrpc)
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_xmlrpc_plugin )
+
 
 target_link_libraries(kcal_xmlrpc_plugin ${KDE4_KDECORE_LIBS} kcal_xmlrpc)
 
@@ -111,7 +111,7 @@ kde4_automoc(${knotes_xmlrpc_plugin_PART_SRCS})
 kde4_add_plugin(knotes_xmlrpc_plugin ${knotes_xmlrpc_plugin_PART_SRCS})
 set_target_properties(knotes_xmlrpc_plugin PROPERTIES OUTPUT_NAME knotes_xmlrpc)
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} knotes_xmlrpc_plugin )
+
 
 target_link_libraries(knotes_xmlrpc_plugin ${KDE4_KDECORE_LIBS} knotes_xmlrpc )
 

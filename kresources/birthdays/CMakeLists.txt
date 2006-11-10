@@ -12,7 +12,7 @@ kde4_automoc(${kcal_kabc_PART_SRCS})
 
 kde4_add_plugin(kcal_kabc ${kcal_kabc_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_kabc )
+
 
 target_link_libraries(kcal_kabc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim )
 

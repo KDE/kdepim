@@ -10,7 +10,7 @@ kde4_automoc(${kaddrbk_distributionlist_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_distributionlist WITH_PREFIX ${kaddrbk_distributionlist_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_distributionlist )
+
 
 target_link_libraries(kaddrbk_distributionlist  ${KDE4_KABC_LIBS} kaddressbook ${LIB_KDE3SUPPORT})
 
@@ -25,7 +25,7 @@ kde4_automoc(${kaddrbk_resourceselection_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_resourceselection WITH_PREFIX ${kaddrbk_resourceselection_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_resourceselection )
+
 
 target_link_libraries(kaddrbk_resourceselection  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kaddressbook)
 

@@ -32,7 +32,7 @@ kde4_automoc(${kcal_resourcefeatureplan_PART_SRCS})
 
 kde4_add_plugin(kcal_resourcefeatureplan ${kcal_resourcefeatureplan_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_resourcefeatureplan )
+
 
 target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} )
 

@@ -11,7 +11,7 @@ kde4_automoc(${kaddrbk_csv_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_csv_xxport WITH_PREFIX ${kaddrbk_csv_xxport_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_csv_xxport)
+
 
 target_link_libraries(kaddrbk_csv_xxport  ${KDE4_KDECORE_LIBS} kaddressbook ${KDE4_KABC_LIBS})
 
@@ -26,7 +26,7 @@ kde4_automoc(${kaddrbk_vcard_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_vcard_xxport WITH_PREFIX ${kaddrbk_vcard_xxport_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_vcard_xxport )
+
 
 target_link_libraries(kaddrbk_vcard_xxport  ${KDE4_KDECORE_LIBS} kaddressbook qgpgme )
 
@@ -41,7 +41,7 @@ kde4_automoc(${kaddrbk_kde2_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_kde2_xxport WITH_PREFIX ${kaddrbk_kde2_xxport_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_kde2_xxport )
+
 
 target_link_libraries(kaddrbk_kde2_xxport  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kaddressbook)
 
@@ -56,7 +56,7 @@ kde4_automoc(${kaddrbk_bookmark_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_bookmark_xxport WITH_PREFIX ${kaddrbk_bookmark_xxport_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_bookmark_xxport )
+
 
 target_link_libraries(kaddrbk_bookmark_xxport ${KDE4_KDECORE_LIBS} kaddressbook )
 
@@ -71,7 +71,7 @@ kde4_automoc(${kaddrbk_eudora_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_eudora_xxport WITH_PREFIX ${kaddrbk_eudora_xxport_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_eudora_xxport )
+
 
 target_link_libraries(kaddrbk_eudora_xxport  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kaddressbook)
 
@@ -86,7 +86,7 @@ kde4_automoc(${kaddrbk_ldif_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_ldif_xxport WITH_PREFIX ${kaddrbk_ldif_xxport_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_ldif_xxport )
+
 
 target_link_libraries(kaddrbk_ldif_xxport  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kaddressbook )
 
@@ -101,7 +101,7 @@ kde4_automoc(${kaddrbk_opera_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_opera_xxport WITH_PREFIX ${kaddrbk_opera_xxport_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_opera_xxport )
+
 
 target_link_libraries(kaddrbk_opera_xxport  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kaddressbook)
 
@@ -116,7 +116,7 @@ kde4_automoc(${kaddrbk_pab_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_pab_xxport WITH_PREFIX ${kaddrbk_pab_xxport_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_pab_xxport )
+
 
 target_link_libraries(kaddrbk_pab_xxport  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kaddressbook)
 
@@ -131,7 +131,7 @@ kde4_automoc(${kaddrbk_gmx_xxport_PART_SRCS})
 
 kde4_add_plugin(kaddrbk_gmx_xxport WITH_PREFIX ${kaddrbk_gmx_xxport_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_gmx_xxport )
+
 
 target_link_libraries(kaddrbk_gmx_xxport  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kaddressbook )
 
@@ -147,7 +147,7 @@ if(GNOKII_FOUND)
 
    kde4_add_plugin(kaddrbk_gnokii_xxport WITH_PREFIX ${kaddrbk_gnokii_xxport_PART_SRCS})
 
-   kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kaddrbk_gnokii_xxport )
+   
 
    target_link_libraries(kaddrbk_gnokii_xxport  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} ${GNOKII_LIBRARIES} kaddressbook )
 

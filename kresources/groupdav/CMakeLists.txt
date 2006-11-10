@@ -47,7 +47,7 @@ kde4_automoc(${kcal_groupdav_PART_SRCS})
 
 kde4_add_plugin(kcal_groupdav ${kcal_groupdav_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_groupdav )
+
 
 target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} )
 
@@ -62,7 +62,7 @@ kde4_automoc(${kabc_groupdav_PART_SRCS})
 
 kde4_add_plugin(kabc_groupdav ${kabc_groupdav_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_groupdav )
+
 
 target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} )
 

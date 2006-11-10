@@ -10,7 +10,7 @@ kde4_automoc(${kio_opengroupware_PART_SRCS})
 
 kde4_add_plugin(kio_opengroupware ${kio_opengroupware_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kio_opengroupware )
+
 
 target_link_libraries(kio_opengroupware  ${KDE4_KDEIO_LIBS} ${KDE4_KCAL_LIBS} kdepim )
 

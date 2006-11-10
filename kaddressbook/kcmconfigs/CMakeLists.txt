@@ -20,7 +20,7 @@ kde4_automoc(${kcm_kabconfig_PART_SRCS})
 
 kde4_add_plugin(kcm_kabconfig ${kcm_kabconfig_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kabconfig )
+
 
 target_link_libraries(kcm_kabconfig  ${KDE4_KIO_LIBS} kdepim kaddressbook )
 
@@ -35,7 +35,7 @@ kde4_automoc(${kcm_kabldapconfig_PART_SRCS})
 
 kde4_add_plugin(kcm_kabldapconfig ${kcm_kabldapconfig_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kabldapconfig )
+
 
 target_link_libraries(kcm_kabldapconfig  ${KDE4_KIO_LIBS} kdepim )
 
@@ -50,7 +50,7 @@ kde4_automoc(${kcm_kabcustomfields_PART_SRCS})
 
 kde4_add_plugin(kcm_kabcustomfields ${kcm_kabcustomfields_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcm_kabcustomfields )
+
 
 target_link_libraries(kcm_kabcustomfields  ${KDE4_KDEUI_LIBS} kaddressbook )
 

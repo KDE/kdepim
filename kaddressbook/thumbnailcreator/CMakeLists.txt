@@ -10,7 +10,7 @@ kde4_automoc(${ldifvcardthumbnail_PART_SRCS})
 
 kde4_add_plugin(ldifvcardthumbnail ${ldifvcardthumbnail_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} ldifvcardthumbnail )
+
 
 target_link_libraries(ldifvcardthumbnail ${KDE4_KDEFX_LIBS} ${KDE4_KDECORE_LIBS} kabc)
 

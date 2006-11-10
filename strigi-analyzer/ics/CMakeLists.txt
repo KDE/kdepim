@@ -10,7 +10,7 @@ kde4_automoc(${kfile_ics_PART_SRCS})
 
 kde4_add_plugin(kfile_ics ${kfile_ics_PART_SRCS})
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kfile_ics )
+
 
 target_link_libraries(kfile_ics  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KIO_LIBS} )
 

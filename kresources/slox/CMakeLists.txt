@@ -63,7 +63,7 @@ kde4_automoc(${kcal_slox_plugin_PART_SRCS})
 kde4_add_plugin(kcal_slox_plugin ${kcal_slox_plugin_PART_SRCS})
 set_target_properties(kcal_slox_plugin PROPERTIES OUTPUT_NAME kcal_slox)
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kcal_slox_plugin )
+
 
 target_link_libraries(kcal_slox_plugin  ${KDE4_KDECORE_LIBS} kcal_slox )
 
@@ -79,7 +79,7 @@ kde4_automoc(${kabc_slox_plugin_PART_SRCS})
 kde4_add_plugin(kabc_slox_plugin ${kabc_slox_plugin_PART_SRCS})
 set_target_properties(kabc_slox_plugin PROPERTIES OUTPUT_NAME kabc_slox)
 
-kde4_install_libtool_file( ${PLUGIN_INSTALL_DIR} kabc_slox_plugin )
+
 
 target_link_libraries(kabc_slox_plugin  ${KDE4_KDECORE_LIBS} kabc_slox )
 
