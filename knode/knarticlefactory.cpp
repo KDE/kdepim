@@ -222,9 +222,9 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   attribution.replace(QRegExp("%NAME"),name);
   attribution.replace(QRegExp("%EMAIL"),QString::fromLatin1(a->from()->email()));
   attribution.replace(QRegExp("%DATE"),KGlobal::locale()->formatDateTime(a->date()->qdt(),false));
-  QString msid=a->messageID()->asUnicodeString();
-  attribution.replace(QRegExp("%MSIDX"),msid.mid(1,msid.length()-2));          // remove the "<" ">" braces
-  attribution.replace(QRegExp("%MSID"),msid);
+  QString msid = a->messageID()->identifier();
+  attribution.replace( QRegExp("%MSIDX"), msid );
+  attribution.replace( QRegExp("%MSID"), QLatin1Char('<') + msid + QLatin1Char('>') );
   attribution.replace(QRegExp("%GROUP"),g->groupname());
   attribution.replace(QRegExp("%L"),"\n");
   attribution+="\n\n";

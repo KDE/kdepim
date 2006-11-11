@@ -1,15 +1,13 @@
 <ui version="4.0" >
  <author>Volker Krause &lt;volker.krause@rwth-aachen.de></author>
- <comment></comment>
- <exportmacro></exportmacro>
  <class>KNode::PostNewsComposerWidgetBase</class>
- <widget class="KCModule" name="PostNewsComposerWidgetBase" >
+ <widget class="KCModule" native="1" name="KNode::PostNewsComposerWidgetBase" >
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>412</width>
-    <height>443</height>
+    <width>573</width>
+    <height>565</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -79,7 +77,10 @@
       <item>
        <widget class="QLabel" name="label2" >
         <property name="text" >
-         <string>&lt;qt>Placeholders: &lt;b>%NAME&lt;/b>=sender's name, &lt;b>%EMAIL&lt;/b>=sender's address,&lt;br>&lt;b>%DATE&lt;/b>=date, &lt;b>%MSID&lt;/b>=message-id, &lt;b>%GROUP&lt;/b>=group name, &lt;b>%L&lt;/b>=line break&lt;/qt></string>
+         <string>&lt;qt>Placeholders: &lt;b>%NAME&lt;/b>=sender's name, &lt;b>%EMAIL&lt;/b>=sender's address,&lt;br>&lt;b>%DATE&lt;/b>=date, &lt;b>%MSID&lt;/b>=message-id, &lt;b>%MSIDX&lt;/b>=message-id without angle brackets, &lt;b>%GROUP&lt;/b>=group name, &lt;b>%L&lt;/b>=line break&lt;/qt></string>
+        </property>
+        <property name="wordWrap" >
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -165,32 +166,25 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
-   <class>KIntSpinBox</class>
-   <extends></extends>
-   <header>knuminput.h</header>
-   <container>0</container>
-   <pixmap></pixmap>
+   <class>KUrlRequester</class>
+   <extends>QFrame</extends>
+   <header>kurlrequester.h</header>
   </customwidget>
   <customwidget>
    <class>KLineEdit</class>
-   <extends></extends>
+   <extends>QLineEdit</extends>
    <header>klineedit.h</header>
-   <container>0</container>
-   <pixmap></pixmap>
-  </customwidget>
-  <customwidget>
-   <class>KUrlRequester</class>
-   <extends></extends>
-   <header>kurlrequester.h</header>
-   <container>0</container>
-   <pixmap></pixmap>
   </customwidget>
   <customwidget>
    <class>KCModule</class>
-   <extends></extends>
+   <extends>QWidget</extends>
    <header>kcmodule.h</header>
    <container>1</container>
-   <pixmap></pixmap>
+  </customwidget>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
