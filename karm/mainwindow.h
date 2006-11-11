@@ -88,7 +88,7 @@ class MainWindow : public KParts::MainWindow, virtual public KarmDCOPIface
     QString importplannerfile( QString filename );
 
   public slots:
-    bool setStatusBar( QString );
+    void setStatusBar( QString );
     void quit();
 
   protected slots:
