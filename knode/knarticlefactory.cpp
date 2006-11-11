@@ -166,19 +166,18 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   KMime::Headers::ReplyTo *replyTo=a->replyTo(false);
   KMime::Types::Mailbox address;
   if(replyTo && !replyTo->isEmpty()) {
-    if(replyTo->hasName())
-      address.setName(replyTo->name());
-    if(replyTo->hasEmail())
-      address.setAddress(replyTo->email());
+    foreach( KMime::Types::Mailbox mbox, replyTo->mailboxes() )
+      art->to()->addAddress( mbox );
   }
   else {
     KMime::Headers::From *from=a->from();
+    KMime::Types::Mailbox address;
     if(from->hasName())
       address.setName(from->name());
     if(from->hasEmail())
       address.setAddress(from->email());
+    art->to()->addAddress(address);
   }
-  art->to()->addAddress(address);
 
   //References
   KMime::Headers::References *references=a->references(false);
@@ -835,8 +834,12 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
   //Reply-To
   if(id->hasReplyTo()) {
     art->replyTo()->fromUnicodeString( id->replyTo(), knGlobals.settings()->charset().toLatin1() );
-    if (!art->replyTo()->hasEmail())   // the header is invalid => drop it
-      art->removeHeader("Reply-To");
+    foreach ( KMime::Types::Mailbox mbox, art->replyTo()->mailboxes() ) {
+      if ( !mbox.hasAddress() ) {   // the header is invalid => drop it
+        art->removeHeader("Reply-To");
+        break;
+      }
+    }
   }
 
   //Mail-Copies-To
