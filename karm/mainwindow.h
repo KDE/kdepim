@@ -75,15 +75,20 @@ class MainWindow : public KParts::MainWindow, virtual public KarmDCOPIface
     /** @reimp from KarmDCOPIface::getError */
     QString getError( int karmErrorNumber ) const;
     int totalMinutesForTaskId( const QString& taskId );
+    /** start the timer for taskname */
     QString starttimerfor( const QString &taskname );
+    /** stop the timer for taskname */
     QString stoptimerfor( const QString &taskname );
     QString deletetodo();
+    /** shall there be a "really delete" question */
     bool    getpromptdelete();
+    /** set if there will be a "really delete" question */
     QString setpromptdelete( bool prompt );
     QString exportcsvfile( QString filename, QString from, QString to, int type, bool decimalMinutes, bool allTasks, QString delimiter, QString quote );
     QString importplannerfile( QString filename );
 
   public slots:
+    bool setStatusBar( QString );
     void quit();
 
   protected slots:

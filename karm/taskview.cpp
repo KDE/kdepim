@@ -363,9 +363,9 @@ QString TaskView::save()
 // This saves the not-running tasks.
 {
   kdDebug(5970) << "Entering TaskView::save" << endl;
-  {
-    return _storage->save(this);
-  }
+  QString err = _storage->save(this);
+  emit(setStatusBar(err));
+  return err;
 }
 
 void TaskView::startCurrentTimer()

@@ -63,6 +63,8 @@ MainWindow::MainWindow( const QString &icsfile )
            this, SLOT(slotSelectionChanged()));
   connect( _taskView, SIGNAL( updateButtons() ),
            this, SLOT(slotSelectionChanged()));
+  connect( _taskView, SIGNAL( setStatusBar( QString ) ),
+           this, SLOT(setStatusBar( QString )));
 
   loadGeometry();
 
@@ -131,6 +133,11 @@ void MainWindow::slotSelectionChanged()
 //{
 //  actionAddComment->setEnabled( on );
 //}
+
+bool MainWindow::setStatusBar(QString qs)
+{
+  statusBar()->message(i18n(qs.ascii()));
+}
 
 bool MainWindow::save()
 {

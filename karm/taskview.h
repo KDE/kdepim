@@ -10,6 +10,7 @@
 #include "desktoplist.h"
 #include "resourcecalendar.h"
 #include "karmstorage.h"
+#include "mainwindow.h"
 #include "reportcriteria.h"
 #include <qtimer.h>
 //#include "desktoptracker.h"
@@ -194,6 +195,7 @@ class TaskView : public KListView
     void timersActive();
     void timersInactive();
     void tasksChanged( QPtrList<Task> activeTasks );
+    void setStatusBar( QString );
 
   private: // member variables
     IdleTimeDetector *_idleTimeDetector;
