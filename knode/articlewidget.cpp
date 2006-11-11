@@ -1136,8 +1136,8 @@ void ArticleWidget::slotURLClicked( const KUrl &url, bool forceOpen)
   }
   // handle mailto
   if ( url.protocol() == "mailto" ) {
-    KMime::Headers::AddressField addr( mArticle );
-    addr.fromUnicodeString( url.path(), "" );
+    KMime::Types::Mailbox addr;
+    addr.fromUnicodeString( url.path() );
     knGlobals.artFactory->createMail( &addr );
     return;
   }

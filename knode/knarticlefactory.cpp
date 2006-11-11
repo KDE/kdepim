@@ -164,19 +164,19 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
 
   //To
   KMime::Headers::ReplyTo *replyTo=a->replyTo(false);
-  KMime::Headers::AddressField address;
+  KMime::Types::Mailbox address;
   if(replyTo && !replyTo->isEmpty()) {
     if(replyTo->hasName())
       address.setName(replyTo->name());
     if(replyTo->hasEmail())
-      address.setEmail(replyTo->email());
+      address.setAddress(replyTo->email());
   }
   else {
     KMime::Headers::From *from=a->from();
     if(from->hasName())
       address.setName(from->name());
     if(from->hasEmail())
-      address.setEmail(from->email());
+      address.setAddress(from->email());
   }
   art->to()->addAddress(address);
 
@@ -204,7 +204,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
                                 QString(), "mailCopiesToWarning" );
     if (authorWantsMailCopies && mailCopiesTo->hasEmail()) {
       address.setName(mailCopiesTo->name());
-      address.setEmail(mailCopiesTo->email());
+      address.setAddress(mailCopiesTo->email());
       art->to()->clear();
       art->to()->addAddress(address);
     }
@@ -222,7 +222,9 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   attribution.replace(QRegExp("%NAME"),name);
   attribution.replace(QRegExp("%EMAIL"),QString::fromLatin1(a->from()->email()));
   attribution.replace(QRegExp("%DATE"),KGlobal::locale()->formatDateTime(a->date()->qdt(),false));
-  attribution.replace(QRegExp("%MSID"),a->messageID()->asUnicodeString());
+  QString msid=a->messageID()->asUnicodeString();
+  attribution.replace(QRegExp("%MSIDX"),msid.mid(1,msid.length()-2));          // remove the "<" ">" braces
+  attribution.replace(QRegExp("%MSID"),msid);
   attribution.replace(QRegExp("%GROUP"),g->groupname());
   attribution.replace(QRegExp("%L"),"\n");
   attribution+="\n\n";
@@ -262,7 +264,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   //-------------------------- </Body> -----------------------------
 
   if ( art->doMail() && knGlobals.settings()->useExternalMailer() ) {
-    sendMailExternal(address.asUnicodeString(), subject, quoted);
+    sendMailExternal(address.prettyAddress(), subject, quoted);
     art->setDoMail(false);
     if (!art->doPost()) {
       delete art;
@@ -507,10 +509,10 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 }
 
 
-void KNArticleFactory::createMail(KMime::Headers::AddressField *address)
+void KNArticleFactory::createMail(KMime::Types::Mailbox *address)
 {
   if ( knGlobals.settings()->useExternalMailer() ) {
-    sendMailExternal(address->asUnicodeString());
+    sendMailExternal(address->prettyAddress());
     return;
   }
 

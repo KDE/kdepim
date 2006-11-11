@@ -57,7 +57,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     void createForward(KNArticle *a);
     void createCancel(KNArticle *a);
     void createSupersede(KNArticle *a);
-    void createMail(KMime::Headers::AddressField *address);
+    void createMail(KMime::Types::Mailbox *address);
 
     /// Send a mail via an external program.
     void sendMailExternal( const QString &address = QString(), const QString &subject = QString(), const QString &body = QString() );
