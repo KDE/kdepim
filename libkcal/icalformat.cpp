@@ -126,6 +126,7 @@ bool ICalFormat::save( Calendar *calendar, const QString &fileName )
   file.file()->writeBlock( textUtf8.data(), textUtf8.size() - 1 );
 
   if ( !file.close() ) {
+    kdDebug(5800) << "KSaveFile: close: status was " << file.status() << ". See errno.h." << endl;
     setException(new ErrorFormat(ErrorFormat::SaveError,
                  i18n("Could not save '%1'").arg(fileName)));
     return false;
