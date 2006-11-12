@@ -2815,9 +2815,15 @@ time.</para>
   <replaceable>date/time</replaceable></option></entry>
   <entry>Trigger alarm on the date or at the date/time specified.
   Specify a date without a time in the format
-  <replaceable>yyyy-mm-dd</replaceable>; specify a date and time by
-  <replaceable>[[[yyyy-]mm-]dd-]hh:mm</replaceable> (where omitted,
-  date fields default to the values for today).</entry>
+  <replaceable>yyyy-mm-dd [TZ]</replaceable>; specify a date and time
+  by <replaceable>[[[yyyy-]mm-]dd-]hh:mm [TZ]</replaceable> (where
+  omitted, date fields default to the values for today).
+  If no time zone is specified, the local system time zone is
+  assumed. If a time zone specifier <replaceable>TZ</replaceable> is
+  present, it may be the name of a system time zone (&eg;
+  <userinput>Europe/London</userinput>), <userinput>UTC</userinput>
+  representing the UTC time zone, or <userinput>Clock</userinput> to
+  use the local computer clock and ignore time zones.</entry>
 </row>
 <row>
   <entry><option>-v</option>, <option>--volume
@@ -2830,8 +2836,11 @@ time.</para>
   <entry><option>-u</option>, <option>--until
   <replaceable>date/time</replaceable></option></entry>
   <entry>Repeat the alarm until the date or date/time specified.
-  Specify a date without a time in the same format as for
-  <option>--time</option>. <option>--interval</option> must be, and
+  Specify the date or date/time using the same syntax as for
+  <option>--time</option>. Note that if <option>--time</option> is
+  specified, the time zone will be taken from its value and no time
+  zone may be included in the <option>--until</option> value.
+  <option>--interval</option> must be, and
   <option>--repeat</option> and <option>--recurrence</option> cannot
   be, specified with this option.</entry>
 </row>
@@ -3287,22 +3296,22 @@ bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>,
 <listitem>
 <para>Specifies the scheduled date, or date and time, at which the
 message should be displayed. For a date-only alarm, the string should
-be in the format <quote>YYYY-MM-DD [TZ]</quote> (as returned by
-<methodname>QDate::toString(Qt::ISODate)</methodname>). For an alarm
-with a date and time, the string should be in the format
-<quote>YYYY-MM-DDTHH:MM[:SS] [TZ]</quote> (as returned by
+be in the format <replaceable>YYYY-MM-DD [TZ]</replaceable> (as
+returned by <methodname>QDate::toString(Qt::ISODate)</methodname>). For
+an alarm with a date and time, the string should be in the format
+<replaceable>YYYY-MM-DDTHH:MM[:SS] [TZ]</replaceable> (as returned by
 <methodname>QDateTime::toString(Qt::ISODate)</methodname>) or
-<quote>HH:MM[:SS] [Clock]</quote> (as returned by
+<replaceable>HH:MM[:SS] [Clock]</replaceable> (as returned by
 <methodname>QTime::toString(Qt::ISODate)</methodname>). If no date is
 specified, today's date is used. Note that any seconds value is
 ignored.</para>
 
 <para>If no time zone is specified, the local system time zone is
-assumed. If a time zone specifier <quote>TZ</quote> is present, it
-may be the name of a system time zone (&eg;
-<quote>Europe/London</quote>), <quote>UTC</quote> representing the UTC
-time zone, or <quote>Clock</quote> to use the local computer clock and
-ignore time zones.</para>
+assumed. If a time zone specifier <replaceable>TZ</replaceable> is
+present, it may be the name of a system time zone (&eg;
+<userinput>Europe/London</userinput>), <userinput>UTC</userinput>
+representing the UTC time zone, or <userinput>Clock</userinput> to use
+the local computer clock and ignore time zones.</para>
 </listitem>
 </varlistentry>
 
@@ -3538,22 +3547,22 @@ displayed in the message to be scheduled.</para>
 <listitem>
 <para>Specifies the scheduled date, or date and time, at which the
 message should be displayed. For a date-only alarm, the string should
-be in the format <quote>YYYY-MM-DD [TZ]</quote> (as returned by
-<methodname>QDate::toString(Qt::ISODate)</methodname>). For an alarm
-with a date and time, the string should be in the format
-<quote>YYYY-MM-DDTHH:MM[:SS] [TZ]</quote> (as returned by
+be in the format <replaceable>YYYY-MM-DD [TZ]</replaceable> (as
+returned by <methodname>QDate::toString(Qt::ISODate)</methodname>). For
+an alarm with a date and time, the string should be in the format
+<replaceable>YYYY-MM-DDTHH:MM[:SS] [TZ]</replaceable> (as returned by
 <methodname>QDateTime::toString(Qt::ISODate)</methodname>) or
-<quote>HH:MM[:SS] [Clock]</quote> (as returned by
+<replaceable>HH:MM[:SS] [Clock]</replaceable> (as returned by
 <methodname>QTime::toString(Qt::ISODate)</methodname>). If no date is
 specified, today's date is used. Note that any seconds value is
 ignored.</para>
 
 <para>If no time zone is specified, the local system time zone is
-assumed. If a time zone specifier <quote>TZ</quote> is present, it
-may be the name of a system time zone (&eg;
-<quote>Europe/London</quote>), <quote>UTC</quote> representing the UTC
-time zone, or <quote>Clock</quote> to use the local computer clock and
-ignore time zones.</para>
+assumed. If a time zone specifier <replaceable>TZ</replaceable> is
+present, it may be the name of a system time zone (&eg;
+<userinput>Europe/London</userinput>), <userinput>UTC</userinput>
+representing the UTC time zone, or <userinput>Clock</userinput> to use
+the local computer clock and ignore time zones.</para>
 </listitem>
 </varlistentry>
 
@@ -3753,22 +3762,22 @@ parameter contains a shell command line or a command script.</para>
 <listitem>
 <para>Specifies the scheduled date, or date and time, at which the
 message should be displayed. For a date-only alarm, the string should
-be in the format <quote>YYYY-MM-DD [TZ]</quote> (as returned by
-<methodname>QDate::toString(Qt::ISODate)</methodname>). For an alarm
-with a date and time, the string should be in the format
-<quote>YYYY-MM-DDTHH:MM[:SS] [TZ]</quote> (as returned by
+be in the format <replaceable>YYYY-MM-DD [TZ]</replaceable> (as
+returned by <methodname>QDate::toString(Qt::ISODate)</methodname>). For
+an alarm with a date and time, the string should be in the format
+<replaceable>YYYY-MM-DDTHH:MM[:SS] [TZ]</replaceable> (as returned by
 <methodname>QDateTime::toString(Qt::ISODate)</methodname>) or
-<quote>HH:MM[:SS] [Clock]</quote> (as returned by
+<replaceable>HH:MM[:SS] [Clock]</replaceable> (as returned by
 <methodname>QTime::toString(Qt::ISODate)</methodname>). If no date is
 specified, today's date is used. Note that any seconds value is
 ignored.</para>
 
 <para>If no time zone is specified, the local system time zone is
-assumed. If a time zone specifier <quote>TZ</quote> is present, it
-may be the name of a system time zone (&eg;
-<quote>Europe/London</quote>), <quote>UTC</quote> representing the UTC
-time zone, or <quote>Clock</quote> to use the local computer clock and
-ignore time zones.</para>
+assumed. If a time zone specifier <replaceable>TZ</replaceable> is
+present, it may be the name of a system time zone (&eg;
+<userinput>Europe/London</userinput>), <userinput>UTC</userinput>
+representing the UTC time zone, or <userinput>Clock</userinput> to use
+the local computer clock and ignore time zones.</para>
 </listitem>
 </varlistentry>
 
@@ -3977,22 +3986,22 @@ email attachments.</para>
 <listitem>
 <para>Specifies the scheduled date, or date and time, at which the
 message should be displayed. For a date-only alarm, the string should
-be in the format <quote>YYYY-MM-DD [TZ]</quote> (as returned by
-<methodname>QDate::toString(Qt::ISODate)</methodname>). For an alarm
-with a date and time, the string should be in the format
-<quote>YYYY-MM-DDTHH:MM[:SS] [TZ]</quote> (as returned by
+be in the format <replaceable>YYYY-MM-DD [TZ]</replaceable> (as
+returned by <methodname>QDate::toString(Qt::ISODate)</methodname>). For
+an alarm with a date and time, the string should be in the format
+<replaceable>YYYY-MM-DDTHH:MM[:SS] [TZ]</replaceable> (as returned by
 <methodname>QDateTime::toString(Qt::ISODate)</methodname>) or
-<quote>HH:MM[:SS] [Clock]</quote> (as returned by
+<replaceable>HH:MM[:SS] [Clock]</replaceable> (as returned by
 <methodname>QTime::toString(Qt::ISODate)</methodname>). If no date is
 specified, today's date is used. Note that any seconds value is
 ignored.</para>
 
 <para>If no time zone is specified, the local system time zone is
-assumed. If a time zone specifier <quote>TZ</quote> is present, it
-may be the name of a system time zone (&eg;
-<quote>Europe/London</quote>), <quote>UTC</quote> representing the UTC
-time zone, or <quote>Clock</quote> to use the local computer clock and
-ignore time zones.</para>
+assumed. If a time zone specifier <replaceable>TZ</replaceable> is
+present, it may be the name of a system time zone (&eg;
+<userinput>Europe/London</userinput>), <userinput>UTC</userinput>
+representing the UTC time zone, or <userinput>Clock</userinput> to use
+the local computer clock and ignore time zones.</para>
 </listitem>
 </varlistentry>
 
