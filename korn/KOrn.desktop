@@ -11,5 +11,5 @@ Type=Application
 Terminal=false
 Name=Korn
 Name[x-test]=xxKornxx
-X-DCOP-ServiceType=Unique
+X-DBUS-StartupType=Unique
 Categories=Qt;KDE;Network;X-KDE-More;
