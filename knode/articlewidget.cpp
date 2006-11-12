@@ -259,11 +259,11 @@ void ArticleWidget::enableActions()
   mFancyToggle->setEnabled( true );
 
   // only valid for remote articles
-  bool enabled = ( mArticle->type() == KMime::Base::ATremote );
+  bool enabled = ( mArticle->type() == KMime::Content::ATremote );
   mReplyAction->setEnabled( enabled );
   mRemailAction->setEnabled( enabled );
 
-  enabled = ( mArticle->type() == KMime::Base::ATremote
+  enabled = ( mArticle->type() == KMime::Content::ATremote
     || mArticle->collection() == knGlobals.folderManager()->sent() );
   mCancelAction->setEnabled( enabled );
   mSupersedeAction->setEnabled( enabled );
@@ -359,7 +359,7 @@ void ArticleWidget::setArticle( KNArticle *article )
         articleLoadError( mArticle, i18n("Unable to load the article.") );
       else
          // try again for local articles
-        if( mArticle->hasContent() && !( mArticle->type() == KMime::Base::ATremote ) )
+        if( mArticle->hasContent() && !( mArticle->type() == KMime::Content::ATremote ) )
           displayArticle();
     }
   }
@@ -523,7 +523,7 @@ void ArticleWidget::displayArticle()
   mViewer->end();
 
   enableActions();
-  if( mArticle->type() == KMime::Base::ATremote && knGlobals.settings()->autoMark() )
+  if( mArticle->type() == KMime::Content::ATremote && knGlobals.settings()->autoMark() )
     mTimer->start( knGlobals.settings()->autoMarkSeconds() * 1000 );
 }
 
@@ -653,7 +653,7 @@ void ArticleWidget::displayHeader()
 
   // references
   KMime::Headers::References *refs = mArticle->references( false );
-  if ( mArticle->type() == KMime::Base::ATremote && refs
+  if ( mArticle->type() == KMime::Content::ATremote && refs
        && knGlobals.settings()->showRefBar() ) {
     html += "<div class=\"spamheader\">";
     html += QString( "<b>%1</b>" ).arg( i18n("References:") );
@@ -1196,7 +1196,7 @@ void ArticleWidget::slotURLPopup( const QString &url, const QPoint &point )
 
 void ArticleWidget::slotTimeout()
 {
-  if ( mArticle && mArticle->type() == KMime::Base::ATremote && !mArticle->isOrphant() ) {
+  if ( mArticle && mArticle->type() == KMime::Content::ATremote && !mArticle->isOrphant() ) {
     KNRemoteArticle::List l;
     l.append( static_cast<KNRemoteArticle*>( mArticle ) );
     knGlobals.articleManager()->setRead( l, true );
@@ -1239,11 +1239,11 @@ void ArticleWidget::slotFind()
 void ArticleWidget::slotViewSource()
 {
   // local article can be shown directly
-  if ( mArticle && mArticle->type() == KMime::Base::ATlocal && mArticle->hasContent() ) {
+  if ( mArticle && mArticle->type() == KMime::Content::ATlocal && mArticle->hasContent() ) {
     new KNSourceViewWindow( mArticle->encodedContent( false ) );
   } else {
     // download remote article
-    if ( mArticle && mArticle->type() == KMime::Base::ATremote ) {
+    if ( mArticle && mArticle->type() == KMime::Content::ATremote ) {
       KNGroup *g = static_cast<KNGroup*>( mArticle->collection() );
       KNRemoteArticle *a = new KNRemoteArticle( g ); //we need "g" to access the nntp-account
       a->messageID( true )->from7BitString( mArticle->messageID()->as7BitString( false ) );
@@ -1257,7 +1257,7 @@ void ArticleWidget::slotViewSource()
 
 void ArticleWidget::slotReply()
 {
-  if ( mArticle && mArticle->type() == KMime::Base::ATremote )
+  if ( mArticle && mArticle->type() == KMime::Content::ATremote )
     knGlobals.artFactory->createReply( static_cast<KNRemoteArticle*>( mArticle ),
                                        mViewer->selectedText(), true, false );
 }
@@ -1265,7 +1265,7 @@ void ArticleWidget::slotReply()
 
 void ArticleWidget::slotRemail()
 {
-  if ( mArticle && mArticle->type()==KMime::Base::ATremote )
+  if ( mArticle && mArticle->type()==KMime::Content::ATremote )
     knGlobals.artFactory->createReply( static_cast<KNRemoteArticle*>( mArticle ),
                                        mViewer->selectedText(), false, true );
 }

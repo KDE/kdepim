@@ -92,7 +92,7 @@ int KNHdrViewItem::compare( Q3ListViewItem *i, int col, bool ) const
        return text( col ).localeAwareCompare( i->text(col) );
 
     case 2:
-       if (art->type() == KMime::Base::ATremote) {
+       if (art->type() == KMime::Content::ATremote) {
          diff = static_cast<KNRemoteArticle*>( art )->score() - static_cast<KNRemoteArticle*>( otherArticle )->score();
          return (diff < 0 ? -1 : diff > 0 ? 1 : 0);
        } else
@@ -105,7 +105,7 @@ int KNHdrViewItem::compare( Q3ListViewItem *i, int col, bool ) const
     case 4:
        date1 = art->date()->unixTime();
        date2 = otherArticle->date()->unixTime();
-       if (art->type() == KMime::Base::ATremote && static_cast<KNHeaderView*>( listView() )->sortByThreadChangeDate()) {
+       if (art->type() == KMime::Content::ATremote && static_cast<KNHeaderView*>( listView() )->sortByThreadChangeDate()) {
          if (static_cast<KNRemoteArticle*>( art )->subThreadChangeDate() > date1)
            date1 = static_cast<KNRemoteArticle*>( art )->subThreadChangeDate();
          if (static_cast<KNRemoteArticle*>( otherArticle )->subThreadChangeDate() > date2)
@@ -232,7 +232,7 @@ QString KNHdrViewItem::text( int col ) const
   }
 
   if ( col == hv->paintInfo()->scoreCol ) {
-    if ( art->type() == KMime::Base::ATremote )
+    if ( art->type() == KMime::Content::ATremote )
       return QString::number( static_cast<KNRemoteArticle*>( art )->score() );
     else
       return QString();
@@ -266,7 +266,7 @@ int KNHdrViewItem::countUnreadInThread()
 {
   int count = 0;
   if ( knGlobals.settings()->showUnread() ) {
-    if (art->type() == KMime::Base::ATremote) {
+    if (art->type() == KMime::Content::ATremote) {
       count = static_cast<KNRemoteArticle*>( art )->unreadFollowUps();
     }
   }
@@ -276,7 +276,7 @@ int KNHdrViewItem::countUnreadInThread()
 
 bool KNHdrViewItem::greyOut()
 {
-  if (art->type() == KMime::Base::ATremote) {
+  if (art->type() == KMime::Content::ATremote) {
     return !static_cast<KNRemoteArticle*>( art )->hasUnreadFollowUps()
         && static_cast<KNRemoteArticle*>( art )->isRead();
   } else
@@ -286,7 +286,7 @@ bool KNHdrViewItem::greyOut()
 
 bool KNHdrViewItem::firstColBold()
 {
-  if(art->type() == KMime::Base::ATremote)
+  if(art->type() == KMime::Content::ATremote)
     return static_cast<KNRemoteArticle*>( art )->isNew();
   else
     return false;
@@ -295,7 +295,7 @@ bool KNHdrViewItem::firstColBold()
 
 QColor KNHdrViewItem::normalColor()
 {
-  if (art->type()==KMime::Base::ATremote)
+  if (art->type()==KMime::Content::ATremote)
     return static_cast<KNRemoteArticle*>( art )->color();
   else
     return knGlobals.settings()->unreadThreadColor();
