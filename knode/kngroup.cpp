@@ -231,11 +231,13 @@ bool KNGroup::loadHdrs()
       art->subject()->from7BitString( *it );
       ++it;
 
-      art->from()->setEmail( *it );
+      KMime::Types::Mailbox mbox;
+      mbox.setAddress( *it );
       ++it;
 
       if ( (*it) != "0\n" ) // last item has the line ending
-        art->from()->setNameFrom7Bit( (*it).trimmed() );
+        mbox.setNameFrom7Bit( (*it).trimmed() );
+      art->from()->addAddress( mbox );
 
       buffer = f.readLine().trimmed();
       if ( buffer != "0" )
@@ -545,10 +547,14 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 
       ts << art->messageID()->as7BitString(false) << '\t';
       ts << art->subject()->as7BitString(false) << '\t';
-      ts << art->from()->email() << '\t';
 
-      if(art->from()->hasName())
-        ts << art->from()->nameAs7Bit() << '\n';
+      KMime::Types::Mailbox mbox;
+      if ( !art->from()->isEmpty() )
+        mbox = art->from()->mailboxes().first();
+      ts << mbox.address() << '\t';
+
+      if ( mbox.hasName() )
+        ts << KMime::encodeRFC2047String( mbox.name(), art->from()->rfc2047Charset() ) << '\n';
       else
         ts << "0\n";
 

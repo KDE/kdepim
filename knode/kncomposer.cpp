@@ -857,7 +857,7 @@ bool KNComposer::applyChanges()
               codec=KGlobal::locale()->codecForEncoding();
 
           block.setText( codec->fromUnicode(tmpText) );
-          kDebug(5003) << "signing article from " << article()->from()->email() << endl;
+          kDebug(5003) << "signing article from " << article()->from()->addresses() << endl;
           if( block.clearsign( signingKey, codec->name() ) == Kpgp::Ok ) {
               QByteArray result = block.text();
               tmp = codec->toUnicode(result.data(), result.length() );

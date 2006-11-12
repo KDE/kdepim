@@ -171,12 +171,8 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   }
   else {
     KMime::Headers::From *from=a->from();
-    KMime::Types::Mailbox address;
-    if(from->hasName())
-      address.setName(from->name());
-    if(from->hasEmail())
-      address.setAddress(from->email());
-    art->to()->addAddress(address);
+    foreach( KMime::Types::Mailbox mbox, from->mailboxes() )
+      art->to()->addAddress( mbox );
   }
 
   //References
@@ -215,11 +211,12 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
 
   // attribution line
   QString attribution = knGlobals.settings()->intro();
-  QString name(a->from()->name());
-  if (name.isEmpty())
-    name = QString::fromLatin1(a->from()->email());
+  QString name( a->from()->displayNames().join( ", ") );
+  if ( name.isEmpty() && !a->from()->isEmpty() )
+    name = QString::fromLatin1( a->from()->addresses().first() );
   attribution.replace(QRegExp("%NAME"),name);
-  attribution.replace(QRegExp("%EMAIL"),QString::fromLatin1(a->from()->email()));
+  if ( !a->from()->isEmpty() )
+    attribution.replace(QRegExp("%EMAIL"), QString::fromLatin1(a->from()->addresses().first()));
   attribution.replace(QRegExp("%DATE"),KGlobal::locale()->formatDateTime(a->date()->qdt(),false));
   QString msid = a->messageID()->identifier();
   attribution.replace( QRegExp("%MSIDX"), msid );
@@ -812,14 +809,15 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
   //From
   KMime::Headers::From *from=art->from();
   from->setRFC2047Charset( knGlobals.settings()->charset().toLatin1() );
+  KMime::Types::Mailbox mbox;
 
   //name
   if(id->hasName())
-    from->setName(id->name());
+    mbox.setName( id->name() );
 
   //email
   if(id->hasEmail()&&id->emailIsValid())
-    from->setEmail(id->email().toLatin1());
+    mbox.setAddress( id->email().toLatin1() );
   else {
     if ( id->hasEmail() )
       KMessageBox::sorry(knGlobals.topWidget,
@@ -830,6 +828,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
     delete art;
     return 0;
   }
+  from->addAddress( mbox );
 
   //Reply-To
   if(id->hasReplyTo()) {
@@ -878,11 +877,12 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
     for ( XHeader::List::Iterator it = xhdr.begin(); it != xhdr.end(); ++it ) {
       QString value = (*it).value();
       if(origPost) {
-        QString name(origPost->from()->name());
-        if (name.isEmpty())
-          name = QString::fromLatin1(origPost->from()->email());
+        QString name( origPost->from()->displayNames().join(", ") );
+        if ( name.isEmpty() && !origPost->from()->isEmpty() )
+          name = QString::fromLatin1( origPost->from()->addresses().first() );
         value.replace(QRegExp("%NAME"), name);
-        value.replace(QRegExp("%EMAIL"), QString::fromLatin1(origPost->from()->email()));
+        if ( !origPost->from()->isEmpty() )
+          value.replace( QRegExp("%EMAIL"), QString::fromLatin1(origPost->from()->addresses().first() ) );
       }
       else
         if ( value.indexOf( "%NAME" ) != -1 || value.indexOf( "%EMAIL" ) != -1 )
@@ -961,18 +961,18 @@ and cancel (or supersede) it there."));
     bool ownArticle = false;
 
     if (gid && gid->hasName())
-      ownArticle |= ( gid->name() == remArt->from()->name() );
+      ownArticle = ownArticle || remArt->from()->displayNames().contains( gid->name() );
     if (accId && accId->hasName())
-      ownArticle |= ( accId->name() == remArt->from()->name() );
-    ownArticle |= ( defId->name() == remArt->from()->name() );
+      ownArticle = ownArticle || remArt->from()->displayNames().contains( accId->name() );
+    ownArticle = ownArticle || remArt->from()->displayNames().contains( defId->name() );
 
     if(ownArticle) {
       ownArticle = false;
       if(gid && gid->hasEmail())
-        ownArticle |= ( gid->email().toLatin1() == remArt->from()->email() );
+        ownArticle = ownArticle || remArt->from()->addresses().contains( gid->email().toLatin1() );
       if (accId && accId->hasEmail())
-        ownArticle |= ( accId->email().toLatin1() == remArt->from()->email() );
-      ownArticle |= ( defId->email().toLatin1() == remArt->from()->email() );
+        ownArticle = ownArticle || remArt->from()->addresses().contains( accId->email().toLatin1() );
+      ownArticle = ownArticle || remArt->from()->addresses().contains( defId->email().toLatin1() );
     }
 
     if(!ownArticle) {

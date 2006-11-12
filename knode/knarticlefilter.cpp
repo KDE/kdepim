@@ -348,7 +348,10 @@ bool KNArticleFilter::applyFilter(KNRemoteArticle *a)
   if(result) result=age.doFilter(a->date()->ageInDays());
   if(result) result=subject.doFilter(a->subject()->asUnicodeString());
   if(result) {
-    QString tmp = (a->from()->name()+"##") + QString(a->from()->email().data());
+    QString tmp;
+    if ( !a->from()->isEmpty() )
+      tmp = a->from()->displayNames().first() + QLatin1String("##") 
+          + QString::fromLatin1( a->from()->addresses().first() );
     result=from.doFilter(tmp);
   }
   if(result) result=messageId.doFilter(a->messageID()->asUnicodeString());
@@ -370,7 +373,10 @@ bool KNArticleFilter::applyFilter(KNLocalArticle *a)
     if(result) result=age.doFilter(a->date()->ageInDays());
     if(result) result=subject.doFilter(a->subject()->asUnicodeString());
     if(result) {
-      QString tmp = (a->from()->name()+"##") + QString(a->from()->email().data());
+      QString tmp;
+      if ( !a->from()->isEmpty() )
+        tmp = a->from()->displayNames().first() + QLatin1String("##")
+            + QString::fromLatin1( a->from()->addresses().first() );
       result=from.doFilter(tmp);
     }
     if(result) result=messageId.doFilter(a->messageID()->asUnicodeString());

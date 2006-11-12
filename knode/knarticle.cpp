@@ -152,8 +152,8 @@ void KNRemoteArticle::setHeader(Headers::Base *h)
   if(h->is("Message-ID"))
     m_essageID.from7BitString(h->as7BitString(false));
   else if(h->is("From")) {
-    f_rom.setEmail( (static_cast<Headers::From*>(h))->email() );
-    f_rom.setName( (static_cast<Headers::From*>(h))->name() );
+    foreach ( KMime::Types::Mailbox mbox, static_cast<Headers::From*>( h )->mailboxes() )
+      f_rom.addAddress( mbox );
   }
   else if(h->is("References")) {
     r_eferences.from7BitString(h->as7BitString(false));
@@ -186,10 +186,13 @@ void KNRemoteArticle::initListItem()
 {
   if(!i_tem) return;
 
-  if(f_rom.hasName())
-    i_tem->setText(1, f_rom.name());
+  KMime::Types::Mailbox mbox;
+  if ( !f_rom.isEmpty() )
+    mbox = f_rom.mailboxes().first();
+  if ( mbox.hasName() )
+    i_tem->setText( 1, mbox.name() );
   else
-    i_tem->setText(1, QString(f_rom.email()));
+    i_tem->setText( 1, QString::fromLatin1( mbox.address() ) );
 
   updateListItem();
 }
