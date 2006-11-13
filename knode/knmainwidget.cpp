@@ -964,7 +964,7 @@ void KNMainWidget::slotArticleSelected(Q3ListViewItem *i)
   //actions
   bool enabled;
 
-  enabled=( selectedArticle && selectedArticle->type()==KMime::Content::ATremote );
+  enabled=( selectedArticle && selectedArticle->type()==KNArticle::ATremote );
   if(a_ctArtSetArtRead->isEnabled() != enabled) {
     a_ctArtSetArtRead->setEnabled(enabled);
     a_ctArtSetArtUnread->setEnabled(enabled);
@@ -979,7 +979,7 @@ void KNMainWidget::slotArticleSelected(Q3ListViewItem *i)
   a_ctArtOpenNewWindow->setEnabled( selectedArticle && (f_olManager->currentFolder()!=f_olManager->outbox())
                                                     && (f_olManager->currentFolder()!=f_olManager->drafts()));
 
-  enabled=( selectedArticle && selectedArticle->type()==KMime::Content::ATlocal );
+  enabled=( selectedArticle && selectedArticle->type()==KNArticle::ATlocal );
   a_ctArtDelete->setEnabled(enabled);
   a_ctArtSendNow->setEnabled(enabled && (f_olManager->currentFolder()==f_olManager->outbox()));
   a_ctArtEdit->setEnabled(enabled && ((f_olManager->currentFolder()==f_olManager->outbox())||
@@ -1183,7 +1183,7 @@ void KNMainWidget::slotArticleRMB(K3ListView*, Q3ListViewItem *i, const QPoint &
 
   if(i) {
     QMenu *popup;
-    if( (static_cast<KNHdrViewItem*>(i))->art->type()==KMime::Content::ATremote) {
+    if( (static_cast<KNHdrViewItem*>(i))->art->type()==KNArticle::ATremote) {
      popup = static_cast<QMenu *>(factory()->container("remote_popup", m_GUIClient));
     } else {
      popup = static_cast<QMenu *>(factory()->container("local_popup", m_GUIClient));
@@ -1232,7 +1232,7 @@ void KNMainWidget::slotOpenArticle(Q3ListViewItem *item)
   if (item) {
     KNArticle *art=(static_cast<KNHdrViewItem*>(item))->art;
 
-    if ((art->type()==KMime::Content::ATlocal) && ((f_olManager->currentFolder()==f_olManager->outbox())||
+    if ((art->type()==KNArticle::ATlocal) && ((f_olManager->currentFolder()==f_olManager->outbox())||
                                                (f_olManager->currentFolder()==f_olManager->drafts()))) {
       a_rtFactory->edit( static_cast<KNLocalArticle*>(art) );
     } else {
@@ -1706,7 +1706,7 @@ void KNMainWidget::slotScoreLower()
   if( !g_rpManager->currentGroup() )
     return;
 
-  if ( mArticleViewer->article() && mArticleViewer->article()->type() == KMime::Content::ATremote ) {
+  if ( mArticleViewer->article() && mArticleViewer->article()->type() == KNArticle::ATremote ) {
     KNRemoteArticle *ra = static_cast<KNRemoteArticle*>( mArticleViewer->article() );
     s_coreManager->addRule(KNScorableArticle(ra), g_rpManager->currentGroup()->groupname(), -10);
   }
@@ -1719,7 +1719,7 @@ void KNMainWidget::slotScoreRaise()
   if( !g_rpManager->currentGroup() )
     return;
 
-  if ( mArticleViewer->article() && mArticleViewer->article()->type() == KMime::Content::ATremote ) {
+  if ( mArticleViewer->article() && mArticleViewer->article()->type() == KNArticle::ATremote ) {
     KNRemoteArticle *ra = static_cast<KNRemoteArticle*>( mArticleViewer->article() );
     s_coreManager->addRule(KNScorableArticle(ra), g_rpManager->currentGroup()->groupname(), +10);
   }
@@ -1816,7 +1816,7 @@ void KNMainWidget::slotArtEdit()
   if (!f_olManager->currentFolder())
     return;
 
-  if ( mArticleViewer->article() && mArticleViewer->article()->type() == KMime::Content::ATlocal )
+  if ( mArticleViewer->article() && mArticleViewer->article()->type() == KNArticle::ATlocal )
     a_rtFactory->edit( static_cast<KNLocalArticle*>( mArticleViewer->article() ) );
 }
 

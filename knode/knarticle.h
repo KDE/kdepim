@@ -45,10 +45,18 @@ class KNArticle : public KMime::NewsArticle, public KNJobItem {
     /// List of articles.
     typedef QList<KNArticle*> List;
 
+    enum articleType {
+      ATmimeContent,
+      ATremote,
+      ATlocal
+    };
+
     KNArticle(KNArticleCollection *c);
     ~KNArticle();
 
     virtual void clear();
+
+    virtual articleType type() const { return ATmimeContent; }
 
     /** Returns the article id. */
     int id() const            { return i_d; }

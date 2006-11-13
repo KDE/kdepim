@@ -437,13 +437,13 @@ bool KNArticleManager::loadArticle(KNArticle *a)
     return true;
 
   if (a->isLocked()) {
-    if (a->type()==KMime::Content::ATremote)
+    if ( a->type() == KNArticle::ATremote )
       return true;   // locked == we are already loading this article...
     else
       return false;
   }
 
-  if(a->type()==KMime::Content::ATremote) {
+  if ( a->type() == KNArticle::ATremote ) {
     KNGroup *g=static_cast<KNGroup*>(a->collection());
     if(g)
       emitJob( new ArticleFetchJob( this, g->account(), a ) );
@@ -474,7 +474,7 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
   if ( !force && ( ArticleWidget::articleVisible( a ) ) )
     return false;
 
-  if (!force && (a->type()==KMime::Content::ATlocal) &&
+  if (!force && ( a->type()== KNArticle::ATlocal ) &&
       (knGlobals.artFactory->findComposer(static_cast<KNLocalArticle*>(a))!=0))
     return false;
 
@@ -483,7 +483,7 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
       return false;
 
   ArticleWidget::articleRemoved( a );
-  if ( a->type() != KMime::Content::ATlocal )
+  if ( a->type() != KNArticle::ATlocal )
     knGlobals.artFactory->deleteComposerForArticle(static_cast<KNLocalArticle*>(a));
   a->KMime::Content::clear();
   a->updateListItem();

@@ -373,7 +373,7 @@ void KNArticleFactory::createCancel(KNArticle *a)
   KNGroup *grp;
   KNNntpAccount *nntp=0;
 
-  if(a->type()==KMime::Content::ATremote)
+  if ( a->type() == KNArticle::ATremote )
     nntp=(static_cast<KNGroup*>(a->collection()))->account();
   else {
     if(!nntp)
@@ -446,7 +446,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
   KNGroup *grp;
   KNNntpAccount *nntp;
 
-  if(a->type()==KMime::Content::ATremote)
+  if ( a->type() == KNArticle::ATremote )
     nntp=(static_cast<KNGroup*>(a->collection()))->account();
   else {
     KNLocalArticle *la=static_cast<KNLocalArticle*>(a);
@@ -915,7 +915,7 @@ bool KNArticleFactory::cancelAllowed(KNArticle *a)
   if(!a)
     return false;
 
-  if(a->type()==KMime::Content::ATlocal) {
+  if(a->type()==KNArticle::ATlocal) {
     KNLocalArticle *localArt=static_cast<KNLocalArticle*>(a);
 
     if(localArt->doMail() && !localArt->doPost()) {
@@ -951,7 +951,7 @@ and cancel (or supersede) it there."));
 
     return true;
   }
-  else if(a->type()==KMime::Content::ATremote) {
+  else if ( a->type() == KNArticle::ATremote ) {
 
     KNRemoteArticle *remArt=static_cast<KNRemoteArticle*>(a);
     KNGroup *g=static_cast<KNGroup*>(a->collection());
