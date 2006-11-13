@@ -191,17 +191,16 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   bool authorWantsMailCopies=false;
   KMime::Headers::MailCopiesTo *mailCopiesTo=a->mailCopiesTo(false);
 
-  if(mailCopiesTo && !mailCopiesTo->isEmpty() && mailCopiesTo->isValid()) {
+  if( mailCopiesTo && !mailCopiesTo->isEmpty() ) {
     authorDislikesMailCopies = mailCopiesTo->neverCopy();
     authorWantsMailCopies = mailCopiesTo->alwaysCopy();
     if (authorWantsMailCopies)         // warn the user
       KMessageBox::information( knGlobals.topWidget, i18n("The author requested a mail copy of your reply. (Mail-Copies-To header)"),
                                 QString(), "mailCopiesToWarning" );
-    if (authorWantsMailCopies && mailCopiesTo->hasEmail()) {
-      address.setName(mailCopiesTo->name());
-      address.setAddress(mailCopiesTo->email());
+    if ( authorWantsMailCopies && !mailCopiesTo->mailboxes().isEmpty() ) {
       art->to()->clear();
-      art->to()->addAddress(address);
+      foreach ( KMime::Types::Mailbox mbox, mailCopiesTo->mailboxes() )
+        art->to()->addAddress(address);
     }
   }
 
@@ -844,7 +843,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
   //Mail-Copies-To
   if(id->hasMailCopiesTo()) {
     art->mailCopiesTo()->fromUnicodeString( id->mailCopiesTo(), knGlobals.settings()->charset().toLatin1() );
-    if (!art->mailCopiesTo()->isValid())   // the header is invalid => drop it
+    if ( art->mailCopiesTo()->isEmpty() )   // the header is invalid => drop it
       art->removeHeader("Mail-Copies-To");
   }
 
