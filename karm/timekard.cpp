@@ -46,7 +46,9 @@ const int reportWidth = taskWidth + timeWidth;
 const QString cr = QString::fromLatin1("\n");
 
 QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask, WhichTime which)
+// Print the total Times as text. If justThisTask, use activeTask, else, all tasks
 {
+  kdDebug(5970) << "Entering TimeKard::totalsAsText" << endl;
   QString retval;
   QString line;
   QString buf;
@@ -77,9 +79,10 @@ QString TimeKard::totalsAsText(TaskView* taskview, bool justThisTask, WhichTime 
     else
     {
       sum = 0;
-      for (Task* task= taskview->current_item(); task;
+      for (Task* task= taskview->item_at_index(0); task;
           task= task->nextSibling())
       {
+        kdDebug(5970) << "Copying task " << task->name() << endl;
         int time = which == TotalTime ? task->totalTime() : task->totalSessionTime();
         sum += time;
         if ( time || task->firstChild() )

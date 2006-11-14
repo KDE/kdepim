@@ -797,13 +797,13 @@ void TaskView::clipTotals()
         i18n("Copy totals for just this task and its subtasks, or copy totals for all tasks?"),
         i18n("Copy Totals to Clipboard"),
         i18n("Copy This Task"), i18n("Copy All Tasks") );
-    if (response == KMessageBox::Yes) // this task only
+    if (response == KMessageBox::Yes) // This task only
     {
       KApplication::clipboard()->setText(t.totalsAsText(this, true, TimeKard::TotalTime));
     }
-    else // only task
+    else // All tasks
     {
-      KApplication::clipboard()->setText(t.totalsAsText(this, true, TimeKard::TotalTime));
+      KApplication::clipboard()->setText(t.totalsAsText(this, false, TimeKard::TotalTime));
     }
   }
   else
