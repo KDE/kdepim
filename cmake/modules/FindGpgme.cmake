@@ -51,8 +51,8 @@ if (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
       message(STATUS "Found gpgme using ${GPGMECONFIG_EXECUTABLE}.")
   endif (GPGME_LIBRARIES)
 
-  if (NOT GPGME_FOUND)
-      message(FATAL_ERROR "You are missing gpgme 0.4.5 or higher.
-    Download gpgme >= 0.4.5 from ftp://ftp.gnupg.org/gcrypt/alpha/gpgme")
-  endif (NOT GPGME_FOUND)
+  #if (NOT GPGME_FOUND)
+  #    message(FATAL_ERROR "You are missing gpgme 0.4.5 or higher.
+  #  Download gpgme >= 0.4.5 from ftp://ftp.gnupg.org/gcrypt/alpha/gpgme")
+  #endif (NOT GPGME_FOUND)
 endif (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
