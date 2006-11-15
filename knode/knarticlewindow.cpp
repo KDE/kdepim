@@ -64,7 +64,9 @@ bool ArticleWindow::raiseWindowForArticle( KNArticle *art )
 {
   for ( ArticleWindow::List::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
     if ( (*it)->mArticleWidget->article() && (*it)->mArticleWidget->article() == art ) {
+#ifdef Q_OS_UNIX	    
       KWin::activateWindow( (*it)->winId() );
+#endif      
       return true;
     }
   return false;
@@ -76,7 +78,9 @@ bool ArticleWindow::raiseWindowForArticle( const QByteArray &mid )
   for ( ArticleWindow::List::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
     if ( (*it)->mArticleWidget->article() &&
            (*it)->mArticleWidget->article()->messageID()->as7BitString( false ) == mid ) {
+#ifdef Q_OS_UNIX	    
       KWin::activateWindow( (*it)->winId() );
+#endif      
       return true;
     }
 

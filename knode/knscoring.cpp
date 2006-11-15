@@ -134,7 +134,9 @@ void KNScoringManager::configure()
 
   if (dlg) {
     dlg->show();
+#ifdef Q_OS_UNIX    
     KWin::activateWindow(dlg->winId());
+#endif    
   }
 }
 

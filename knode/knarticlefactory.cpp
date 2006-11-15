@@ -566,7 +566,9 @@ void KNArticleFactory::edit(KNLocalArticle *a)
 
   KNComposer *com=findComposer(a);
   if(com) {
+#ifdef Q_OS_UNIX	  
     KWin::activateWindow(com->winId());
+#endif    
     return;
   }
 
@@ -1053,8 +1055,11 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
   if ( delCom ) {
     mCompList.removeAll( com );
     delete com;
-  } else
+  } 
+#ifdef Q_OS_UNIX  
+  else
     KWin::activateWindow(com->winId());
+#endif  
 }
 
 

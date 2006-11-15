@@ -53,8 +53,10 @@ void KNConfigManager::configure()
     connect(d_ialog, SIGNAL(finished()), this, SLOT(slotDialogDone()));
     d_ialog->show();
   }
+#ifdef Q_OS_UNIX  
   else
     KWin::activateWindow(d_ialog->winId());
+#endif  
 }
 
 

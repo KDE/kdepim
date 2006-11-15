@@ -389,7 +389,9 @@ void KNArticleManager::search()
 {
   if(s_earchDlg) {
     s_earchDlg->show();
+#ifdef Q_OS_UNIX    
     KWin::activateWindow(s_earchDlg->winId());
+#endif    
   } else {
     s_earchDlg = new SearchDialog( SearchDialog::STgroupSearch, 0 );
     connect(s_earchDlg, SIGNAL(doSearch(KNArticleFilter*)), this,
