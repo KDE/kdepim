@@ -28,7 +28,7 @@
 
 namespace Kpgp {
 
-typedef enum {
+enum BlockType {
   UnknownBlock = -1,        // BEGIN PGP ???
   NoPgpBlock = 0,
   PgpMessageBlock = 1,      // BEGIN PGP MESSAGE
@@ -37,9 +37,9 @@ typedef enum {
   ClearsignedBlock = 4,     // BEGIN PGP SIGNED MESSAGE
   PublicKeyBlock = 5,       // BEGIN PGP PUBLIC KEY BLOCK
   PrivateKeyBlock = 6       // BEGIN PGP PRIVATE KEY BLOCK (PGP 2.x: ...SECRET...)
-} BlockType;
+};
 
-typedef enum {
+enum MessageStatus{
   OK          =  0x0000,
   CLEARTEXT   =  0x0000,
   RUN_ERR     =  0x0001,
@@ -54,7 +54,7 @@ typedef enum {
   NO_SEC_KEY  =  0x0100, 
   MISSINGKEY  =  0x0200,
   CANCEL      =  0x8000
-} MessageStatus;
+};
   
 class Base;
 class Module;
