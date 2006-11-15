@@ -19,7 +19,7 @@ install(TARGETS kaddrbk_csv_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############
-
+if(GPGME_FOUND)
 set(kaddrbk_vcard_xxport_PART_SRCS vcard_xxport.cpp )
 
 kde4_automoc(${kaddrbk_vcard_xxport_PART_SRCS})
@@ -31,7 +31,7 @@ kde4_add_plugin(kaddrbk_vcard_xxport WITH_PREFIX ${kaddrbk_vcard_xxport_PART_SRC
 target_link_libraries(kaddrbk_vcard_xxport  ${KDE4_KDECORE_LIBS} kaddressbook qgpgme )
 
 install(TARGETS kaddrbk_vcard_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
-
+endif(GPGME_FOUND)
 
 ########### next target ###############
 
