@@ -33,7 +33,7 @@
 
 #include <kabc/field.h>
 #include <klibloader.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #include "filter.h"
 #include "viewconfigurewidget.h"

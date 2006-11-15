@@ -21,7 +21,7 @@
 #define KCALRESOURCEGROUPWISECONFIG_H
 
 #include <kurlrequester.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>

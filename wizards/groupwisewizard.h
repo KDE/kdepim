@@ -21,7 +21,7 @@
 #define GROUPWISEWIZARD_H
 
 #include <kconfigwizard.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 class KLineEdit;
 class QCheckBox;

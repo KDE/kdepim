@@ -42,7 +42,7 @@ extern "C" {
 
 #include <sys/stat.h>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 static const int debugArea = 7122;
 

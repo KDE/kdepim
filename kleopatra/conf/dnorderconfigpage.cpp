@@ -34,7 +34,7 @@
 #include <ui/dnattributeorderconfigwidget.h>
 #include <kleo/dn.h>
 #include <kinstance.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #include <QLayout>
 //Added by qt3to4:

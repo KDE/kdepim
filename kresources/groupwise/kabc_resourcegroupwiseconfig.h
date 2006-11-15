@@ -23,7 +23,7 @@
 #include "soap/groupwiseserver.h"
 
 #include <kresources/configwidget.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #include <QMap>
 

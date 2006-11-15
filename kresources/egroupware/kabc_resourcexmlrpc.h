@@ -24,7 +24,7 @@
 #include <QMap>
 //Added by qt3to4:
 #include <QList>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #include "libkdepim/kabcresourcecached.h"
 

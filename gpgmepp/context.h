@@ -25,7 +25,7 @@
 
 #include <vector>
 #include <utility>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 namespace GpgME {
 

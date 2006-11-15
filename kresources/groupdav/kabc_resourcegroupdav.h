@@ -23,7 +23,7 @@
 #define KABC_RESOURCEGROUPDAV_H
 
 #include "kabc_resourcegroupwarebase.h"
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 namespace KABC {
 

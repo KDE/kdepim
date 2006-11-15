@@ -24,7 +24,7 @@
 #include "webdavhandler.h"
 
 #include <libkdepim/kabcresourcecached.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 #include <kabc/addressee.h>
 
 #include <QMap>

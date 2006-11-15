@@ -28,7 +28,7 @@
 
 #include <kconfig.h>
 #include <kurl.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #include <kcal/calendarlocal.h>
 #include <kcal/journal.h>

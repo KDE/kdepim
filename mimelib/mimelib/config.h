@@ -125,7 +125,7 @@ typedef bool           DwBool;
 #      define DW_EXPORT __declspec(dllimport)
 #   endif
 #else
-#   include <kdepimmacros.h>
+#   include <kdemacros.h>
 #   define DW_EXPORT KDE_EXPORT
 #endif
 

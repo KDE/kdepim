@@ -45,7 +45,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 namespace KABC {
 

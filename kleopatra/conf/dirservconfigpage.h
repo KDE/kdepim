@@ -34,7 +34,7 @@
 
 #include <kcmodule.h>
 #include <kleo/cryptoconfig.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 class QCheckBox;
 class QTimeEdit;

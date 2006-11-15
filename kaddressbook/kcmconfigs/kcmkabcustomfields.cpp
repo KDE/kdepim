@@ -29,7 +29,7 @@
 
 #include <QRegExp>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 #include <kgenericfactory.h>
 
 typedef KGenericFactory<KCMKabCustomFields> KCMKabCustomFieldsFactory;

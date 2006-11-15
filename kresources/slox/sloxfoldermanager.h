@@ -25,7 +25,7 @@
 
 #include <kurl.h>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 namespace KIO {
 class Job;

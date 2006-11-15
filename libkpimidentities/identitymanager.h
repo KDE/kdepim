@@ -35,7 +35,7 @@
 
 
 //Added by qt3to4:
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 class KConfigBase;
 class KConfig;

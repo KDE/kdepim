@@ -29,7 +29,7 @@
 #include "clientifaceimpl.h"
 #include "serviceifaceimpl.h"
 #include "network.h"
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 extern "C" {
 	KDE_EXPORT KDEDModule* create_networkstatus()

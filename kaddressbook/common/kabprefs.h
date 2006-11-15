@@ -25,7 +25,7 @@
 #define KABPREFS_H
 
 #include <QStringList>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 #include "kabprefs_base.h"
 
 class KConfig;

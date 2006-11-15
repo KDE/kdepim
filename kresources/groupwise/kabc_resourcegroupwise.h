@@ -23,7 +23,7 @@
 #include "soap/groupwiseserver.h"
 
 #include <kabcresourcecached.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #include <libkdepim/progressmanager.h>
 

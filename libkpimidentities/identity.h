@@ -9,7 +9,7 @@
 
 #include <kleo/enum.h>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #include <QString>
 #include <QStringList>

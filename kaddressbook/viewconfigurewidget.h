@@ -25,7 +25,7 @@
 #define VIEWCONFIGUREWIDGET_H
 
 #include <kdialog.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 #include <QPixmap>
 #include <kvbox.h>
 

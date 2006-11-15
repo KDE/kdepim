@@ -24,7 +24,7 @@
 #include <gpgmepp/gpgmefw.h>
 #include <gpgmepp/context.h>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 namespace GpgME {
 

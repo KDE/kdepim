@@ -18,7 +18,7 @@
 #include <kconfig.h>
 #include "resource.h"
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 // keep compatibility with the old way
 #define knGlobals (*KNGlobals::self())

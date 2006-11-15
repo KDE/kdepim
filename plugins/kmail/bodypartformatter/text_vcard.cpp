@@ -56,7 +56,7 @@ using KABC::Addressee;
 #include "addresseeview.h"
 using KPIM::AddresseeView;
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 namespace {
 

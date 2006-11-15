@@ -22,7 +22,7 @@
 #include <qglobal.h>
 #include <QList>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 class QListWidget;
 class QLabel;

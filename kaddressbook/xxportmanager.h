@@ -29,7 +29,7 @@
 
 #include <kurl.h>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #include "xxport.h"
 

@@ -34,7 +34,7 @@
 
 #include "kcmkabldapconfig.h"
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 #include <kgenericfactory.h>
 
 typedef KGenericFactory<KCMKabLdapConfig> KCMKabLdapConfigFactory;

@@ -38,7 +38,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kinstance.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 AppearanceConfigurationPage::AppearanceConfigurationPage( KInstance *instance, QWidget *parent, const QStringList &args )
     : KCModule( instance, parent, args )

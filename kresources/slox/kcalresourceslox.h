@@ -31,7 +31,7 @@
 #include <kurl.h>
 #include <kconfig.h>
 #include <kdirwatch.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #include <kcal/incidence.h>
 #include <kcal/todo.h>

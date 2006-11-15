@@ -64,7 +64,7 @@
 #include <QDir>
 #include <QTextStream>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 using namespace KCal;
 

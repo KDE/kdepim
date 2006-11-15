@@ -31,7 +31,7 @@
 #include <kcal/resourcecalendar.h>
 #include <kabc/addressbook.h>
 
-#include "libkdepim/kdepimmacros.h"
+#include "kdemacros.h"
 
 namespace KIO {
 class FileCopyJob;

@@ -36,7 +36,7 @@
 //#include <gpgme.h>
 
 #include <kmainwindow.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 #include <kurl.h>
 #include <q3cstring.h>
 #include <q3ptrlist.h>

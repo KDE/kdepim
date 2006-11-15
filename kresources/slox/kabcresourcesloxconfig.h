@@ -21,7 +21,7 @@
 #define RESOURCESLOXCONFIG_H
 
 #include <kresources/configwidget.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 class QCheckBox;
 class KLineEdit;

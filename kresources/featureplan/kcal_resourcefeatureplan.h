@@ -29,7 +29,7 @@
 
 #include <kabc/locknull.h>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 #include <kconfig.h>
 
 namespace KCal {

@@ -32,7 +32,7 @@
 #include <QHBoxLayout>
 
 #include "core.h"
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 namespace KABC {
 class AddressBook;

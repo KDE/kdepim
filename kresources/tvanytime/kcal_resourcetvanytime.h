@@ -30,7 +30,7 @@
 #include <kabc/locknull.h>
 #include <kio/job.h>
 #include <kconfig.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #include "service.h"
 

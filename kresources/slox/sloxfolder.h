@@ -21,7 +21,7 @@
 #define SLOXFOLDER_H
 
 #include <QString>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 class K3ListViewItem;
 

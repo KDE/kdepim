@@ -25,7 +25,7 @@
 #include "knconfigpages.h"
 #include "knconfigwidgets.h"
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 //
 // common config page with tabs (code mostly taken from kmail)

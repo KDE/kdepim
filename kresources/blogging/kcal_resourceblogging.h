@@ -22,7 +22,7 @@
 #define KCAL_RESOURCEBLOGGING_H
 
 #include <kcal_resourcegroupwarebase.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 namespace KBlog {
 class APIBlog;

@@ -35,7 +35,7 @@
 #include <kabc/field.h>
 #include <kcommand.h>
 #include <kxmlguiclient.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 namespace KABC {
 class AddressBook;

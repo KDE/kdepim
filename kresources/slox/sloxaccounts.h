@@ -21,7 +21,7 @@
 #define SLOXACCOUNTS_H
 
 #include <kabc/addressee.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 #include <QObject>
 
 class KJob;

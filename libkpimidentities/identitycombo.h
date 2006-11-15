@@ -34,7 +34,7 @@
 
 #include <QComboBox>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 class QString;
 

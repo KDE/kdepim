@@ -50,7 +50,7 @@
 //Added by qt3to4:
 #include <QVBoxLayout>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #if 0 // disabled, since it is apparently confusing
 // For sync'ing kabldaprc

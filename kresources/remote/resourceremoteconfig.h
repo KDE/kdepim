@@ -30,7 +30,7 @@
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 namespace KCal {
 

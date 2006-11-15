@@ -23,7 +23,7 @@
 #define RESOURCEFEATUREPLANCONFIG_H
 
 #include <kresources/configwidget.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 class KLineEdit;
 class KUrlRequester;

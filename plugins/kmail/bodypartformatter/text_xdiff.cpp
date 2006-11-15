@@ -46,7 +46,7 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kapplication.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 
 #include <QUrl>

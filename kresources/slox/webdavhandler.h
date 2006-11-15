@@ -27,7 +27,7 @@
 
 #include <kdatetime.h>
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 #include <kabc/addressee.h>
 
 namespace KCal {

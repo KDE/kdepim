@@ -20,7 +20,7 @@
 #ifndef KCAL_RESOURCEBLOGGINGCONFIG_H
 #define KCAL_RESOURCEBLOGGINGCONFIG_H
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 #include <kcal_resourcegroupwarebaseconfig.h>
 
 namespace KCal {

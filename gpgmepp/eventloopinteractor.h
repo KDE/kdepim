@@ -21,7 +21,7 @@
 #ifndef __GPGMEPP_EVENTLOOPINTERACTOR_H__
 #define __GPGMEPP_EVENTLOOPINTERACTOR_H__
 
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 namespace GpgME {
 

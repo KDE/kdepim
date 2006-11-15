@@ -39,7 +39,7 @@
 #include <kcal/calendarlocal.h>
 #include "../shared/resourcekolabbase.h"
 #include "../shared/subresource.h"
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 
 namespace Kolab {

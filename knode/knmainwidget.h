@@ -23,7 +23,7 @@
 //Added by qt3to4:
 #include <QEvent>
 #include <QDropEvent>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 class Q3ListViewItem;
 class QLineEdit;

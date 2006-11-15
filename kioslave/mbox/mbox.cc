@@ -34,7 +34,7 @@
 
 #include <stdlib.h>
 
-#include "kdepimmacros.h"
+#include "kdemacros.h"
 
 #include "mbox.h"
 

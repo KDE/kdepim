@@ -37,7 +37,7 @@
 #include "../shared/resourcekolabbase.h"
 #include "../shared/subresource.h"
 #include <kmail/kmailicalIface.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 namespace KABC {
 

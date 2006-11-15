@@ -101,7 +101,7 @@
 // other
 #include <algorithm>
 #include <assert.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 namespace {
 
   class KDE_EXPORT DisplayStrategy : public Kleo::KeyListView::DisplayStrategy{

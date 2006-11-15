@@ -21,7 +21,7 @@
 #define SLOXUTILS_H
 
 #include <QString>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 namespace KRES {
 class Resource;

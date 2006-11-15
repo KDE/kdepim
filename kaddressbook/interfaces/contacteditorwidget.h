@@ -30,7 +30,7 @@
 
 #include <kabc/addressbook.h>
 #include <klibloader.h>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #define KAB_CEW_PLUGIN_VERSION 1
 

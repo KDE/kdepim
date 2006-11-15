@@ -21,7 +21,7 @@
 #include <k3listview.h>
 #include <q3ptrlist.h>
 #include <QResizeEvent>
-#include <kdepimmacros.h>
+#include <kdemacros.h>
 
 #include <ktnef/ktnefattach.h>
 
