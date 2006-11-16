@@ -65,12 +65,18 @@ class KGROUPWAREDAV_EXPORT WebdavHandler
 
 
     /**
-     * Return the representation of utc time in the time zone indicated by timeZoneId
+     * Return the representation of UTC time in the time zone indicated by timeZoneId
+     *
+     * @param utc UTC time. If its timeSpec() is not Qt::UTC, no conversion is done.
+     * @param timeZoneId time zone name, e.g. Europe/Rekjavik
      */
     static QDateTime utcAsZone( const QDateTime& utc, const QString& timeZoneId );
 
     /**
      * Return the UTC representation of local time in the time zone indicated by timeZoneId 
+     *
+     * @param zone local time. If its timeSpec() is not Qt::LocalTime, no conversion is done.
+     * @param timeZoneId time zone name, e.g. Europe/Rekjavik
      */
     static QDateTime zoneAsUtc( const QDateTime& zone, const QString& timeZoneId );
 };

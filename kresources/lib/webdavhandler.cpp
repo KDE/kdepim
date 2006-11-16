@@ -20,10 +20,10 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-
-#include <kdebug.h>
-
 #include <QDateTime>
+
+#include <ktimezones.h>
+#include <kdebug.h>
 
 #include "webdavhandler.h"
 
@@ -155,45 +155,34 @@ const QString WebdavHandler::getEtagFromHeaders( const QString& headers )
   return headers.mid( start, headers.indexOf( "\n", start ) - start );
 }
 
-//TODO: should not call libical functions directly -- better to make
-//      a new libkcal abstraction method.
 QDateTime WebdavHandler::utcAsZone( const QDateTime& utc, const QString& timeZoneId )
 {
-#warning replace this code with calls to the new KTimeZone class.
-#if 0
-  int daylight;
-  QDateTime epoch;
-  epoch.setTime_t( 0 );
-  time_t v = epoch.secsTo( utc );
-  struct icaltimetype tt =
-      icaltime_from_timet_with_zone( v, 0 /*is_date*/,
-         icaltimezone_get_builtin_timezone( "UTC" ) );
-  int offset = icaltimezone_get_utc_offset(
-    icaltimezone_get_builtin_timezone( timeZoneId.toLatin1() ),
-    &tt, &daylight );
-kDebug() << "Calculated offset of: " << offset << " of timezone: " << timeZoneId << endl;
-  return utc.addSecs( offset );
-#else
-  return utc;
-#endif
+  if ( utc.timeSpec() != Qt::UTC ) {
+    kError() << "WebdavHandler::utcAsZone(): non-UTC time supplied" << endl;
+    return utc;
+  }
+  const KTimeZone *tz = KSystemTimeZones::zone( timeZoneId );
+  if ( !tz ) {
+    // Default to no conversion when time zone not recognized
+    QDateTime local = utc;
+    local.setTimeSpec( Qt::LocalTime );
+    return local;
+  }
+  return tz->toZoneTime( utc );
 }
 
-//TODO: should not call libical functions directly -- better to make
-//      a new libkcal abstraction method.
 QDateTime WebdavHandler::zoneAsUtc( const QDateTime& zone, const QString& timeZoneId )
 {
-#warning replace this code with calls to the new KTimeZone class.
-#if 0
-  int daylight;
-  QDateTime epoch;
-  epoch.setTime_t( 0 );
-  time_t v = epoch.secsTo( zone );
-  struct icaltimetype tt = icaltime_from_timet( v, 0 ); // 0: is_date=false
-  int offset = icaltimezone_get_utc_offset(
-    icaltimezone_get_builtin_timezone( timeZoneId.toLatin1() ),
-    &tt, &daylight );
-  return zone.addSecs( - offset );
-#else
-  return zone;
-#endif
+  if ( zone.timeSpec() == Qt::UTC ) {
+    kError() << "WebdavHandler::zoneAsUtc(): UTC time supplied" << endl;
+    return zone;
+  }
+  const KTimeZone *tz = KSystemTimeZones::zone( timeZoneId );
+  if ( !tz ) {
+    // Default to no conversion when time zone not recognized
+    QDateTime utc = zone;
+    utc.setTimeSpec( Qt::UTC );
+    return utc;
+  }
+  return tz->toUtc( zone );
 }
