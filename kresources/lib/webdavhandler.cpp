@@ -25,11 +25,6 @@
 
 #include <QDateTime>
 
-extern "C" {
-  #include <kcal/ical/ical.h>
-}
-
-
 #include "webdavhandler.h"
 
 WebdavHandler::WebdavHandler()
@@ -164,6 +159,8 @@ const QString WebdavHandler::getEtagFromHeaders( const QString& headers )
 //      a new libkcal abstraction method.
 QDateTime WebdavHandler::utcAsZone( const QDateTime& utc, const QString& timeZoneId )
 {
+#warning replace this code with calls to the new KTimeZone class.
+#if 0
   int daylight;
   QDateTime epoch;
   epoch.setTime_t( 0 );
@@ -176,12 +173,17 @@ QDateTime WebdavHandler::utcAsZone( const QDateTime& utc, const QString& timeZon
     &tt, &daylight );
 kDebug() << "Calculated offset of: " << offset << " of timezone: " << timeZoneId << endl;
   return utc.addSecs( offset );
+#else
+  return utc;
+#endif
 }
 
 //TODO: should not call libical functions directly -- better to make
 //      a new libkcal abstraction method.
 QDateTime WebdavHandler::zoneAsUtc( const QDateTime& zone, const QString& timeZoneId )
 {
+#warning replace this code with calls to the new KTimeZone class.
+#if 0
   int daylight;
   QDateTime epoch;
   epoch.setTime_t( 0 );
@@ -191,4 +193,7 @@ QDateTime WebdavHandler::zoneAsUtc( const QDateTime& zone, const QString& timeZo
     icaltimezone_get_builtin_timezone( timeZoneId.toLatin1() ),
     &tt, &daylight );
   return zone.addSecs( - offset );
+#else
+  return zone;
+#endif
 }
