@@ -535,7 +535,7 @@ void KNAttachment::updateContentInfo()
     c_ontent->contentDescription()->fromUnicodeString(d_escription, "UTF-8");
 
   //Content-Disposition
-  Headers::CDisposition *d=c_ontent->contentDisposition();
+  Headers::ContentDisposition *d=c_ontent->contentDisposition();
   d->setDisposition(Headers::CDattachment);
   d->setFilename(n_ame);
 
