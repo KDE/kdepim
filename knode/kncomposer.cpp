@@ -800,7 +800,7 @@ bool KNComposer::applyChanges()
   if(!text) {
     text=new KMime::Content();
     KMime::Headers::ContentType *type=text->contentType();
-    KMime::Headers::CTEncoding *enc=text->contentTransferEncoding();
+    KMime::Headers::ContentTransferEncoding *enc=text->contentTransferEncoding();
     type->setMimeType("text/plain");
     enc->setDecoded(true);
     text->assemble();
@@ -812,19 +812,19 @@ bool KNComposer::applyChanges()
     if (n_eeds8Bit) {
       text->contentType()->setCharset(c_harset);
       if ( knGlobals.settings()->allow8BitBody() )
-        text->contentTransferEncoding()->setCte(KMime::Headers::CE8Bit);
+        text->contentTransferEncoding()->setEncoding(KMime::Headers::CE8Bit);
       else
-        text->contentTransferEncoding()->setCte(KMime::Headers::CEquPr);
+        text->contentTransferEncoding()->setEncoding(KMime::Headers::CEquPr);
     } else {
       text->contentType()->setCharset("us-ascii");   // fall back to us-ascii
-      text->contentTransferEncoding()->setCte(KMime::Headers::CE7Bit);
+      text->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
     }
   } else {             // save as draft
     text->contentType()->setCharset(c_harset);
     if (c_harset.toLower()=="us-ascii")
-      text->contentTransferEncoding()->setCte(KMime::Headers::CE7Bit);
+      text->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
     else
-      text->contentTransferEncoding()->setCte( knGlobals.settings()->allow8BitBody()
+      text->contentTransferEncoding()->setEncoding( knGlobals.settings()->allow8BitBody()
           ? KMime::Headers::CE8Bit : KMime::Headers::CEquPr );
   }
 

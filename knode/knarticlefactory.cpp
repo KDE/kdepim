@@ -868,9 +868,9 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
   type->setCharset(defChset);
 
   if ( defChset.toLower() == "us-ascii"  )
-    art->contentTransferEncoding()->setCte(KMime::Headers::CE7Bit);
+    art->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
   else
-    art->contentTransferEncoding()->setCte( knGlobals.settings()->allow8BitBody() ? KMime::Headers::CE8Bit : KMime::Headers::CEquPr );
+    art->contentTransferEncoding()->setEncoding( knGlobals.settings()->allow8BitBody() ? KMime::Headers::CE8Bit : KMime::Headers::CEquPr );
 
   //X-Headers
   if(withXHeaders) {

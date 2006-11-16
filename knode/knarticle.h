@@ -324,8 +324,8 @@ class KNAttachment {
     void setDescription(const QString &s) { d_escription=s; h_asChanged=true; }
 
     //Encoding
-    int cte()                             { return e_ncoding.cte(); }
-    void setCte(int e)                    { e_ncoding.setCte( (KMime::Headers::contentEncoding)(e) );
+    int cte()                             { return e_ncoding.encoding(); }
+    void setCte(int e)                    { e_ncoding.setEncoding( (KMime::Headers::contentEncoding)(e) );
                                             h_asChanged=true; }
     bool isFixedBase64()const                  { return f_b64; }
     QString encoding()                    { return e_ncoding.asUnicodeString(); }
@@ -346,7 +346,7 @@ class KNAttachment {
     QString mMimeType;
     QString n_ame,
             d_escription;
-    KMime::Headers::CTEncoding e_ncoding;
+    KMime::Headers::ContentTransferEncoding e_ncoding;
     bool  i_sAttached,
           h_asChanged,
           f_b64;

@@ -433,7 +433,7 @@ KNAttachment::KNAttachment(Content *c)
   : c_ontent(c), l_oadHelper(0), f_ile(0), i_sAttached(true)
 {
   Headers::ContentType  *t=c->contentType();
-  Headers::CTEncoding   *e=c->contentTransferEncoding();
+  Headers::ContentTransferEncoding   *e=c->contentTransferEncoding();
   Headers::ContentDescription *d=c->contentDescription(false);
 
   n_ame=t->name();
@@ -444,12 +444,12 @@ KNAttachment::KNAttachment(Content *c)
 
   setMimeType(t->mimeType());
 
-  if(e->cte()==Headers::CEuuenc) {
+  if(e->encoding()==Headers::CEuuenc) {
     setCte( Headers::CEbase64 );
     updateContentInfo();
   }
   else
-    e_ncoding.setCte( e->cte() );
+    e_ncoding.setEncoding( e->encoding() );
 
 
   h_asChanged=false; // has been set to "true" in setMimeType()
@@ -479,7 +479,7 @@ void KNAttachment::setMimeType(const QString &s)
 
   if ( !mMimeType.contains( "text/", Qt::CaseInsensitive ) ) {
     f_b64=true;
-    e_ncoding.setCte(Headers::CEbase64);
+    e_ncoding.setEncoding(Headers::CEbase64);
   }
   else {
     f_b64=false;
@@ -541,9 +541,9 @@ void KNAttachment::updateContentInfo()
 
   //Content-Transfer-Encoding
   if(i_sAttached)
-    c_ontent->changeEncoding(e_ncoding.cte());
+    c_ontent->changeEncoding(e_ncoding.encoding());
   else
-    c_ontent->contentTransferEncoding()->setCte(e_ncoding.cte());
+    c_ontent->contentTransferEncoding()->setEncoding(e_ncoding.encoding());
 
   c_ontent->assemble();
 
@@ -560,7 +560,7 @@ void KNAttachment::attach(Content *c)
   c_ontent=new Content();
   updateContentInfo();
   Headers::ContentType *type=c_ontent->contentType();
-  Headers::CTEncoding *e=c_ontent->contentTransferEncoding();
+  Headers::ContentTransferEncoding *e=c_ontent->contentTransferEncoding();
   QByteArray data;
 
   data = f_ile->readAll();
@@ -570,10 +570,10 @@ void KNAttachment::attach(Content *c)
     delete c_ontent;
     c_ontent=0;
   } else {
-    if (e_ncoding.cte()==Headers::CEbase64 || !type->isText()) { //encode base64
+    if (e_ncoding.encoding()==Headers::CEbase64 || !type->isText()) { //encode base64
       c_ontent->setBody( KCodecs::base64Encode(data, true) + '\n' );
       //      c_ontent->b_ody += '\n';
-      e->setCte(Headers::CEbase64);
+      e->setEncoding(Headers::CEbase64);
       e->setDecoded(false);
     } else  {
       c_ontent->setBody( data + '\n' );
