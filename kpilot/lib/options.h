@@ -62,7 +62,7 @@
 // of to the KDE debugging facility (it does lose some niftiness then).
 //
 #ifndef DEBUG
-// #define DEBUG			(1)
+#define DEBUG			(1)
 #endif
 // #define DEBUG_CERR			(1)
 
@@ -199,7 +199,7 @@ inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 #define FUNCTIONSETUPL(a) const int fname = a; Q_UNUSED(fname);
 #endif
 
-#define KPILOT_VERSION	"4.6.0 (blivit)"
+#define KPILOT_VERSION	"4.6.7 (tijdelijk)"
 
 
 // Function to expand newlines in rich text to <br>\n
