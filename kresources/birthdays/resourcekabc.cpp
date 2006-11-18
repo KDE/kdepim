@@ -269,7 +269,7 @@ bool ResourceKABC::doLoad()
     }
 
     Event *ev = new Event();
-      ev->setUid( (*it).uid()+"_KABC_Anniversary");
+      ev->setUid( uid_1+"_KABC_Anniversary");
 
     ev->setDtStart(anniversary);
     ev->setDtEnd(anniversary);
@@ -280,7 +280,7 @@ bool ResourceKABC::doLoad()
 
     ev->setCustomProperty( "KABC", "BIRTHDAY", "YES" );
 
-    ev->setCustomProperty( "KABC", "UID-1", (*it).uid() );
+    ev->setCustomProperty( "KABC", "UID-1", uid_1 );
     ev->setCustomProperty( "KABC", "NAME-1", name_1 );
     ev->setCustomProperty( "KABC", "EMAIL-1", email_1 );
     ev->setCustomProperty( "KABC", "ANNIVERSARY", "YES" );
