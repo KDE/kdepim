@@ -14,7 +14,8 @@
   <!ENTITY dn "<acronym>DN</acronym>">
   <!ENTITY ca "<acronym>CA</acronym>">
 
-  <!-- FILE menu -->
+  <!-- Expanded all entities to make them translatable - lueck
+    FILE menu 
   <!ENTITY file-new-key-pair "<menuchoice><guimenu>File</guimenu><guimenuitem>New Key Pair...</guimenuitem></menuchoice>">
   <!ENTITY file-export-certificates "<menuchoice><guimenu>File</guimenu><guimenuitem>Export Certificates...</guimenuitem></menuchoice>">
   <!ENTITY file-export-secret-key "<menuchoice><guimenu>File</guimenu><guimenuitem>Export Secret key...</guimenuitem></menuchoice>">
@@ -22,7 +23,7 @@
   <!ENTITY file-import-crls "<menuchoice><guimenu>File</guimenu><guimenuitem>Import CRLs...</guimenuitem></menuchoice>">
   <!ENTITY file-quit "<menuchoice><shortcut><keycombo action='simul'>&Ctrl;<keycap>Q</keycap></keycombo></shortcut><guimenu>File</guimenu><guimenuitem>Quit</guimenuitem></menuchoice>">
 
-  <!-- VIEW menu -->
+   VIEW menu
   <!ENTITY view-redisplay "<menuchoice><shortcut><keycombo action='simul'><keycap>F5</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem></menuchoice>">
   <!ENTITY view-stop-operation "<menuchoice><shortcut><keycombo action='simul'><keycap>Esc</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Stop Operation</guimenuitem></menuchoice>">
   <!ENTITY view-certificate-details "<menuchoice><guimenu>View</guimenu><guimenuitem>Certificate Details...</guimenuitem></menuchoice>">
@@ -30,24 +31,25 @@
   <!ENTITY view-expand-all "<menuchoice><shortcut><keycombo action='simul'>&Ctrl;<keycap>.</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Expand All</guimenuitem></menuchoice>">
   <!ENTITY view-collapse-all "<menuchoice><shortcut><keycombo action='simul'>&Ctrl;<keycap>,</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Collapse All</guimenuitem></menuchoice>">
 
-  <!-- CERTIFICATES menu -->
+   CERTIFICATES menu 
  <!ENTITY certificates-validate "<menuchoice><shortcut><keycombo action='simul'>&Shift;<keycap>F5</keycap></keycombo></shortcut><guimenu>Certificates</guimenu><guimenuitem>Validate</guimenuitem></menuchoice>">
   <!ENTITY certificates-refresh-crls "<menuchoice><guimenu>Certificates</guimenu><guimenuitem>Refresh CRLs</guimenuitem></menuchoice>">
   <!ENTITY certificates-delete "<menuchoice><shortcut><keycombo action='simul'><keycap>Delete</keycap></keycombo></shortcut><guimenu>Certificates</guimenu><guimenuitem>Delete</guimenuitem></menuchoice>">
   <!ENTITY certificates-download "<menuchoice><guimenu>Certificates</guimenu><guimenuitem>Download</guimenuitem></menuchoice>">
 
-  <!-- CRLS menu -->
+   CRLS menu
   <!ENTITY crls-clear-crl-cache "<menuchoice><guimenu>CRLs</guimenu><guimenuitem>Clear CRL Cache...</guimenuitem></menuchoice>">
   <!ENTITY crls-dump-crl-cache "<menuchoice><guimenu>CRLs</guimenu><guimenuitem>Dump CRL Cache...</guimenuitem></menuchoice>">
 
-  <!-- TOOLS menu -->
+   TOOLS menu 
   <!ENTITY tools-gnupg-log-viewer "<menuchoice><guimenu>Tools</guimenu><guimenuitem>GnuPG Log Viewer...</guimenuitem></menuchoice>">
 
-  <!-- SETTINGS menu -->
+   SETTINGS menu 
   <!ENTITY settings-show-statusbar "<menuchoice><guimenu>Settings</guimenu><guimenuitem>Show Statusbar</guimenuitem></menuchoice>">
   <!ENTITY settings-configure-shortcuts "<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Shortcuts...</guimenuitem></menuchoice>">
   <!ENTITY settings-configure-kleopatra "<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kleopatra;...</guimenuitem></menuchoice>">
   <!ENTITY settings-configure-gpgme-backend "<menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure GpgME Backend...</guimenuitem></menuchoice>">
+   -->
 
   <!-- Command line options -->
   <!ENTITY commandline-option-external "<option>--external</option>">
@@ -193,24 +195,33 @@ user via &gpgsm;'s command line interface.</para>
 
 <para>To see which of the certificates are root certificates, you can
 either compare <guilabel>Subject &dn;</guilabel> and <guilabel>Issuer
-&dn;</guilabel>, or you switch to hierarchical keylist mode with <xref
-linkend="view-hierarchical-key-list"/>.</para>
+&dn;</guilabel>, or you switch to hierarchical keylist mode with <link
+linkend="view-hierarchical-key-list"><menuchoice><guimenu>View</guimenu>
+<guimenuitem>Hierarchical Key List</guimenuitem></menuchoice></link>.</para>
 
 <para>You can see the details of any certificate by double-clicking it
-or using <xref linkend="view-certificate-details"/>. This opens a
+or using <link linkend="view-certificate-details"><menuchoice><guimenu>View</guimenu>
+<guimenuitem>Certificate Details...</guimenuitem></menuchoice></link>. This opens a
 dialog that shows the most common properties of the certificate, its
 certificate chain (&ie; the chain of issuers up to the root-&ca;), and
 a dump of all information the backend is able to extract from the
 certificate.</para>
 
 <para>If you change the keybox without using &kleopatra; (&eg; using
-&gpgsm;'s command line interface), you can refresh the view with <xref
-linkend="view-redisplay"/>.</para>
+&gpgsm;'s command line interface), you can refresh the view with <link
+linkend="view-redisplay"><menuchoice><shortcut><keycombo action='simul'>
+<keycap>F5</keycap></keycombo></shortcut><guimenu>View</guimenu>
+<guimenuitem>Redisplay</guimenuitem></menuchoice></link>.</para>
 
 <para>Since validating a key may take some time (&eg; CRLs might need
 to be fetched), the normal keylisting does not attempt to check the
-validity of keys. For this, <xref linkend="certificates-validate"/>, a
-special variant of <xref linkend="view-redisplay"/>, is provided. It
+validity of keys. For this, <link linkend="certificates-validate">
+<menuchoice><shortcut><keycombo action='simul'>&Shift;<keycap>F5</keycap></keycombo>
+</shortcut><guimenu>Certificates</guimenu><guimenuitem>Validate</guimenuitem></menuchoice></link>, a
+special variant of <link
+linkend="view-redisplay"><menuchoice><shortcut><keycombo action='simul'>
+<keycap>F5</keycap></keycombo></shortcut><guimenu>View</guimenu>
+<guimenuitem>Redisplay</guimenuitem></menuchoice></link>, is provided. It
 either checks the selected certificates, or all keys if none are
 selected.</para>
 
@@ -234,8 +245,10 @@ Certificates</guilabel>, enter some text (&eg; the name of the person
 you want the certificate for) into the line edit, and click on the
 <guilabel>Find</guilabel> icon. The results will be displayed in the
 key list below the search bar, where you can select certificates to
-either look at them with <xref linkend="view-certificate-details"/> or
-download them with <xref linkend="certificates-download"/> into the
+either look at them with <link linkend="view-certificate-details">
+<menuchoice><guimenu>View</guimenu><guimenuitem>Certificate Details...</guimenuitem></menuchoice></link> or
+download them with <link linkend="certificates-download">
+<menuchoice><guimenu>Certificates</guimenu><guimenuitem>Download</guimenuitem></menuchoice></link> into the
 local keybox. Note that you can also download the certificate from the
 details dialog, using the <guilabel>Import to Local</guilabel>
 button.</para>
@@ -245,8 +258,9 @@ button.</para>
 Services</guilabel></link> page of &kleopatra;'s <link
 linkend="configuration">configure dialog</link>.</para>
 
-<para>If you received the certificate as a file, try <xref
-linkend="file-import-certificates"/>. &gpgsm; needs to understand the
+<para>If you received the certificate as a file, try <link
+linkend="file-import-certificates"><menuchoice><guimenu>File</guimenu>
+<guimenuitem>Import Certificates...</guimenuitem></menuchoice></link>. &gpgsm; needs to understand the
 format of the certificate file; please refer to &gpgsm;'s manual for a
 list of supported file formats.</para>
 
@@ -257,14 +271,17 @@ the &ca;. You can do this on the command line with <link
 linkend="commandline-option-import-certificate"><userinput><command>kleopatra
 &commandline-option-import-certificate;
 <filename>filename</filename></command></userinput></link> or from
-within &kleopatra; with <xref linkend="file-import-certificates"/>,
+within &kleopatra; with <link
+linkend="file-import-certificates"><menuchoice><guimenu>File</guimenu>
+<guimenuitem>Import Certificates...</guimenuitem></menuchoice></link>,
 just as you would to for <quote>normal</quote> certificates.</para>
 
 </sect1>
 
 <sect1 id="functions-newkey"><title>Creating New Key Pairs</title>
 
-<para>The menu item <xref linkend="file-new-key-pair"/> starts the
+<para>The menu item <link linkend="file-new-key-pair"><menuchoice>
+<guimenu>File</guimenu><guimenuitem>New Key Pair...</guimenuitem></menuchoice></link> starts the
 certificate-request-creating wizard which will guide you through a
 number of steps to create a certificate request; this request can, on the 
 last page of the wizard, either be sent to a certificate authority (&ca;)
@@ -319,10 +336,15 @@ has some less often used functions that help you manage your local
 keybox.</para>
 
 <para>These functions include deleting certificates from the local
-keybox with <xref linkend="certificates-delete"/>, as well as manual
-handling of CRLs (<xref linkend="certificates-refresh-crls"/>, <xref
-linkend="crls-clear-crl-cache"/>, <xref
-linkend="crls-dump-crl-cache"/>).</para>
+keybox with <link linkend="certificates-delete"><menuchoice><shortcut>
+<keycombo action='simul'><keycap>Delete</keycap></keycombo></shortcut>
+<guimenu>Certificates</guimenu><guimenuitem>Delete</guimenuitem></menuchoice></link>, as well 
+as manual handling of CRLs (<link linkend="certificates-refresh-crls">
+<menuchoice><guimenu>Certificates</guimenu><guimenuitem>Refresh CRLs</guimenuitem>
+</menuchoice></link>, <link linkend="crls-clear-crl-cache"><menuchoice><guimenu>CRLs</guimenu>
+<guimenuitem>Clear CRL Cache...</guimenuitem></menuchoice></link>, <link
+linkend="crls-dump-crl-cache"><menuchoice><guimenu>CRLs</guimenu>
+<guimenuitem>Dump CRL Cache...</guimenuitem></menuchoice></link>).</para>
 
 </sect1>
 
@@ -335,7 +357,7 @@ linkend="crls-dump-crl-cache"/>).</para>
 <variablelist>
 
 <varlistentry id="file-new-key-pair">
-<term>&file-new-key-pair;</term>
+<term><menuchoice><guimenu>File</guimenu><guimenuitem>New Key Pair...</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Creates a new key pair (public and private)</action> and
@@ -349,20 +371,21 @@ mails.</para>
 generation</quote>, since all keys are created locally. &kleopatra;
 (and &gpgsm;) do not support <quote>centralized key generation</quote>
 directly, but you can import the public/secret key bundle that you
-receive from the &ca; in PKCS#12 format via
-&file-import-certificates;.</para>
+receive from the &ca; in PKCS#12 format via <menuchoice><guimenu>File</guimenu>
+<guimenuitem>Import Certificates...</guimenuitem></menuchoice>.</para>
 </listitem>
 </varlistentry>
 
 
 <varlistentry id="file-export-certificates">
-<term>&file-export-certificates;</term>
+<term><menuchoice><guimenu>File</guimenu><guimenuitem>Export Certificates...</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Exports the selected certificates</action> into a file.</para>
 
 <note><para>This exports only the public keys, even if the
-secret key is available. Use &file-export-secret-key; to export both
+secret key is available. Use <menuchoice><guimenu>File</guimenu><guimenuitem>Export 
+Secret key...</guimenuitem></menuchoice> to export both
 public and secret keys into a file, but note that this is almost
 always a bad idea.</para></note>
 </listitem>
@@ -370,7 +393,7 @@ always a bad idea.</para></note>
 
 
 <varlistentry id="file-export-secret-key">
-<term>&file-export-secret-key;</term>
+<term><menuchoice><guimenu>File</guimenu><guimenuitem>Export Secret key...</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Exports both the public and the secret key to a
@@ -386,7 +409,7 @@ among other things.</para></warning>
 
 
 <varlistentry id="file-import-certificates">
-<term>&file-import-certificates;</term>
+<term><menuchoice><guimenu>File</guimenu><guimenuitem>Import Certificates...</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Imports certificates and/or secret keys from files into
@@ -400,7 +423,7 @@ formats.</para>
 
 
 <varlistentry id="file-import-crls">
-<term>&file-import-crls;</term>
+<term><menuchoice><guimenu>File</guimenu><guimenuitem>Import CRLs...</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Lets you manually import CRLs from
@@ -417,7 +440,8 @@ contact the system administrator and ask them to install
 <application>dirmngr</application>.</para></note>
 
 <para>You can view the contents of the local CRL cache from the menu
-item &crls-dump-crl-cache;. This will display a dialog with
+item <menuchoice><guimenu>CRLs</guimenu><guimenuitem>Dump CRL Cache...</guimenuitem>
+</menuchoice>. This will display a dialog with
 information about the CRLs in the cache and the fingerprints of the
 certificates in each CRL.
 </para>
@@ -426,7 +450,8 @@ certificates in each CRL.
 
 
 <varlistentry id="file-quit">
-<term>&file-quit;</term>
+<term><menuchoice><shortcut><keycombo action='simul'>&Ctrl;<keycap>Q</keycap></keycombo></shortcut>
+<guimenu>File</guimenu><guimenuitem>Quit</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Terminates &kleopatra;.</action></para>
@@ -444,7 +469,8 @@ certificates in each CRL.
 <variablelist>
 
 <varlistentry id="view-redisplay">
-<term>&view-redisplay;</term>
+<term><menuchoice><shortcut><keycombo action='simul'><keycap>F5</keycap></keycombo>
+</shortcut><guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Redisplays the selected certificates or refreshes the
@@ -468,7 +494,8 @@ command line interface).</para>
 
 
 <varlistentry id="view-stop-operation">
-<term>&view-stop-operation;</term>
+<term><menuchoice><shortcut><keycombo action='simul'><keycap>Esc</keycap></keycombo></shortcut>
+<guimenu>View</guimenu><guimenuitem>Stop Operation</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Stops (cancels) all pending operations,</action> &eg; a
@@ -483,7 +510,7 @@ behavior.</para></note>
 
 
 <varlistentry id="view-certificate-details">
-<term>&view-certificate-details;</term>
+<term><menuchoice><guimenu>View</guimenu><guimenuitem>Certificate Details...</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Shows the details of the currently selected
@@ -498,7 +525,7 @@ corresponding item in the list view directly.</para>
 
 
 <varlistentry id="view-hierarchical-key-list">
-<term>&view-hierarchical-key-list;</term>
+<term><menuchoice><guimenu>View</guimenu><guimenuitem>Hierarchical Key List</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action> Toggles between hierarchical and flat keylist mode.
@@ -519,11 +546,13 @@ to.</para>
 
 
 <varlistentry id="view-expand-all">
-<term>&view-expand-all;</term>
+<term><menuchoice><shortcut><keycombo action='simul'>&Ctrl;<keycap>.</keycap>
+</keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Expand All</guimenuitem></menuchoice></term>
 
 <listitem>
-<para>(This function is only available when <xref
-linkend="view-hierarchical-key-list"/> is on.)</para>
+<para>(This function is only available when <link
+linkend="view-hierarchical-key-list"><menuchoice><guimenu>View</guimenu>
+<guimenuitem>Hierarchical Key List</guimenuitem></menuchoice></link> is on.)</para>
 
 <para><action>Expands all list items in the certificate list
 view,</action> &ie; makes all items visible.</para>
@@ -539,11 +568,13 @@ itself, of course.</para>
 
 
 <varlistentry id="view-collapse-all">
-<term>&view-collapse-all;</term>
+<term><menuchoice><shortcut><keycombo action='simul'>&Ctrl;<keycap>,</keycap>
+</keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Collapse All</guimenuitem></menuchoice></term>
 
 <listitem>
-<para>(This function is only available when <xref
-linkend="view-hierarchical-key-list"/> is on.)</para>
+<para>(This function is only available when <link
+linkend="view-hierarchical-key-list"><menuchoice><guimenu>View</guimenu>
+<guimenuitem>Hierarchical Key List</guimenuitem></menuchoice></link> is on.)</para>
 
 <para><action>Collapses all list items in the certificate list
 view,</action> &ie; hides all but the top-level items.</para>
@@ -562,12 +593,16 @@ itself, of course.</para>
 <variablelist>
 
 <varlistentry id="certificates-validate">
-<term>&certificates-validate;</term>
+<term><menuchoice><shortcut><keycombo action='simul'>&Shift;<keycap>F5</keycap></keycombo>
+</shortcut><guimenu>Certificates</guimenu><guimenuitem>Validate</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Validates selected (or all) keys.</action></para>
 
-<para>This is similar to <xref linkend="view-redisplay"/>, but
+<para>This is similar to <link
+linkend="view-redisplay"><menuchoice><shortcut><keycombo action='simul'>
+<keycap>F5</keycap></keycombo></shortcut><guimenu>View</guimenu>
+<guimenuitem>Redisplay</guimenuitem></menuchoice></link>, but
 performs a validation of the (selected) keys. Validation here means
 that all relevant CRLs are fetched, and the certificate chain is
 checked for correctness. As a result, invalid or expired keys will be
@@ -588,7 +623,7 @@ decryption).</para></warning>
 
 
 <varlistentry id="certificates-refresh-crls">
-<term>&certificates-refresh-crls;</term>
+<term><menuchoice><guimenu>Certificates</guimenu><guimenuitem>Refresh CRLs</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Fetches the current CRLs for all selected keys,</action>
@@ -616,7 +651,8 @@ uncommon).</para>
 
 
 <varlistentry id="certificates-delete">
-<term>&certificates-delete;</term>
+<term><menuchoice><shortcut><keycombo action='simul'><keycap>Delete</keycap></keycombo></shortcut>
+<guimenu>Certificates</guimenu><guimenuitem>Delete</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Deletes selected certificate(s)</action> from the local keyring.</para>
@@ -626,8 +662,9 @@ keybox. However, since certificates are typically attached to signed
 emails, verifying an email might result in the key just removed to pop
 back into the local keybox. So it is probably best to avoid using this
 function as much as possible. When you are lost, use the <link
-linkend="functions-search">search bar</link> or the <xref
-linkend="view-hierarchical-key-list"/> function to regain control over
+linkend="functions-search">search bar</link> or the <link
+linkend="view-hierarchical-key-list"><menuchoice><guimenu>View</guimenu>
+<guimenuitem>Hierarchical Key List</guimenuitem></menuchoice></link> function to regain control over
 the lot of certificates.</para>
 </listitem>
 </varlistentry>
@@ -635,7 +672,7 @@ the lot of certificates.</para>
 
 
 <varlistentry id="certificates-download">
-<term>&certificates-download;</term>
+<term><menuchoice><guimenu>Certificates</guimenu><guimenuitem>Download</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Downloads the selected certificate(s) from the LDAP to the local keybox.</action></para>
@@ -653,19 +690,19 @@ the lot of certificates.</para>
 <variablelist>
 
 <varlistentry id="crls-clear-crl-cache">
-<term>&crls-clear-crl-cache;</term>
+<term><menuchoice><guimenu>CRLs</guimenu><guimenuitem>Clear CRL Cache...</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Clears the &gpgsm; CRL cache.</action></para>
 
 <para>You probably never need this. You can force a refresh of the CRL
-cache by selecting all certificates and using <xref
-linkend="certificates-refresh-crls"/> instead.</para>
+cache by selecting all certificates and using <link linkend="certificates-refresh-crls"><menuchoice>
+<guimenu>Certificates</guimenu><guimenuitem>Refresh CRLs</guimenuitem></menuchoice></link> instead.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry id="crls-dump-crl-cache">
-<term>&crls-dump-crl-cache;</term>
+<term><menuchoice><guimenu>CRLs</guimenu><guimenuitem>Dump CRL Cache...</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Shows the detailed contents of the &gpgsm; CRL
@@ -682,7 +719,7 @@ cache.</action></para>
 <variablelist>
 
 <varlistentry id="tools-gnupg-log-viewer">
-<term>&tools-gnupg-log-viewer;</term>
+<term><menuchoice><guimenu>Tools</guimenu><guimenuitem>GnuPG Log Viewer...</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Starts <ulink url="help:/kwatchgnupg/index.html">&kwatchgnupg;</ulink></action></para>
@@ -698,7 +735,7 @@ cache.</action></para>
 <variablelist>
 
 <varlistentry id="settings-show-statusbar">
-<term>&settings-show-statusbar;</term>
+<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Show Statusbar</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Toggles the visibility of the bottom status bar.</action></para>
@@ -706,7 +743,7 @@ cache.</action></para>
 </varlistentry>
 
 <varlistentry id="settings-configure-shortcuts">
-<term>&settings-configure-shortcuts;</term>
+<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Shortcuts...</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Opens the standard &kde; shortcut configuration dialog,
@@ -716,7 +753,7 @@ items.</action></para>
 </varlistentry>
 
 <varlistentry id="settings-configure-kleopatra">
-<term>&settings-configure-kleopatra;</term>
+<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kleopatra;...</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Opens &kleopatra;'s configure dialog.</action></para>
@@ -726,7 +763,7 @@ items.</action></para>
 </varlistentry>
 
 <varlistentry id="settings-configure-gpgme-backend">
-<term>&settings-configure-gpgme-backend;</term>
+<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure GpgME Backend...</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Opens a dialog that allows you to configure every aspect of
@@ -786,11 +823,12 @@ keybox.</action></para>
 <term>&commandline-option-import-certificate;</term>
 
 <listitem>
-<para><action>Specifies a file or &URL; from which to import
+<para><action>Specifies a file or URL from which to import
 certificates (or secret keys) from.</action></para>
 
-<para>This is the command line equivalent of <xref
-linkend="file-import-certificates"/>.</para>
+<para>This is the command line equivalent of <link
+linkend="file-import-certificates"><menuchoice><guimenu>File</guimenu>
+<guimenuitem>Import Certificates...</guimenuitem></menuchoice></link>.</para>
 </listitem>
 </varlistentry>
 
@@ -800,8 +838,9 @@ linkend="file-import-certificates"/>.</para>
 
 <chapter id="configuration"><title>Configuring &kleopatra;</title>
 
-<para>&kleopatra;'s configure dialog can be accessed via <xref
-linkend="settings-configure-kleopatra"/>.</para>
+<para>&kleopatra;'s configure dialog can be accessed via <link
+linkend="settings-configure-kleopatra"><menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Configure &kleopatra;...</guimenuitem></menuchoice></link>.</para>
 
 <para>Each of its pages is described in the sections below.</para>
 
@@ -810,8 +849,9 @@ linkend="settings-configure-kleopatra"/>.</para>
 <para>On this page, you can configure which LDAP servers to use for
 certificate searches. You can also configure their order, as well as
 some selected LDAP-related settings from the dynamic backend
-configuration dialog, available via <xref
-linkend="settings-configure-gpgme-backend"/>.</para>
+configuration dialog, available via <link
+linkend="settings-configure-gpgme-backend"><menuchoice><guimenu>Settings</guimenu>
+<guimenuitem>Configure GpgME Backend...</guimenuitem></menuchoice></link>.</para>
 
 <para>To add a new server, click on the <guilabel>Add
 Service...</guilabel> button. In the dialog that appears, you can set
@@ -1260,8 +1300,9 @@ C=DE
 	      <entry><varname>was-validated</varname></entry>
 	      <entry>boolean</entry>
 	      <entry>
-		the key has been validated (see <xref
-		linkend="certificates-validate"/>).
+		the key has been validated (see <link
+		linkend="certificates-validate"><menuchoice><shortcut><keycombo action='simul'>&Shift;<keycap>F5</keycap></keycombo></shortcut>
+		<guimenu>Certificates</guimenu><guimenuitem>Validate</guimenuitem></menuchoice></link>).
 	      </entry>
 	    </row>
 	    <row>
