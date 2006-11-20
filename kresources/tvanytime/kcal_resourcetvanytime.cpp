@@ -45,7 +45,7 @@
 #include <kresources/configwidget.h>
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
-#include <ktimezones.h>
+#include <ksystemtimezone.h>
 #include <ktemporaryfile.h>
 #include <ktar.h>
 #include <kurl.h>

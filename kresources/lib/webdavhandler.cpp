@@ -22,7 +22,7 @@
 
 #include <QDateTime>
 
-#include <ktimezones.h>
+#include <ksystemtimezone.h>
 #include <kdebug.h>
 
 #include "webdavhandler.h"
