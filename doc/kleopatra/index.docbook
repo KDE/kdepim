@@ -21,20 +21,20 @@
   <!ENTITY file-export-secret-key "<menuchoice><guimenu>File</guimenu><guimenuitem>Export Secret key...</guimenuitem></menuchoice>">
   <!ENTITY file-import-certificates "<menuchoice><guimenu>File</guimenu><guimenuitem>Import Certificates...</guimenuitem></menuchoice>">
   <!ENTITY file-import-crls "<menuchoice><guimenu>File</guimenu><guimenuitem>Import CRLs...</guimenuitem></menuchoice>">
-  <!ENTITY file-quit "<menuchoice><shortcut><keycombo action='simul'>&Ctrl;<keycap>Q</keycap></keycombo></shortcut><guimenu>File</guimenu><guimenuitem>Quit</guimenuitem></menuchoice>">
+  <!ENTITY file-quit "<menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo></shortcut><guimenu>File</guimenu><guimenuitem>Quit</guimenuitem></menuchoice>">
 
    VIEW menu
-  <!ENTITY view-redisplay "<menuchoice><shortcut><keycombo action='simul'><keycap>F5</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem></menuchoice>">
-  <!ENTITY view-stop-operation "<menuchoice><shortcut><keycombo action='simul'><keycap>Esc</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Stop Operation</guimenuitem></menuchoice>">
+  <!ENTITY view-redisplay "<menuchoice><shortcut><keycombo action="simul"><keycap>F5</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem></menuchoice>">
+  <!ENTITY view-stop-operation "<menuchoice><shortcut><keycombo action="simul"><keycap>Esc</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Stop Operation</guimenuitem></menuchoice>">
   <!ENTITY view-certificate-details "<menuchoice><guimenu>View</guimenu><guimenuitem>Certificate Details...</guimenuitem></menuchoice>">
   <!ENTITY view-hierarchical-key-list "<menuchoice><guimenu>View</guimenu><guimenuitem>Hierarchical Key List</guimenuitem></menuchoice>">
-  <!ENTITY view-expand-all "<menuchoice><shortcut><keycombo action='simul'>&Ctrl;<keycap>.</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Expand All</guimenuitem></menuchoice>">
-  <!ENTITY view-collapse-all "<menuchoice><shortcut><keycombo action='simul'>&Ctrl;<keycap>,</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Collapse All</guimenuitem></menuchoice>">
+  <!ENTITY view-expand-all "<menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>.</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Expand All</guimenuitem></menuchoice>">
+  <!ENTITY view-collapse-all "<menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>,</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Collapse All</guimenuitem></menuchoice>">
 
    CERTIFICATES menu 
- <!ENTITY certificates-validate "<menuchoice><shortcut><keycombo action='simul'>&Shift;<keycap>F5</keycap></keycombo></shortcut><guimenu>Certificates</guimenu><guimenuitem>Validate</guimenuitem></menuchoice>">
+ <!ENTITY certificates-validate "<menuchoice><shortcut><keycombo action="simul">&Shift;<keycap>F5</keycap></keycombo></shortcut><guimenu>Certificates</guimenu><guimenuitem>Validate</guimenuitem></menuchoice>">
   <!ENTITY certificates-refresh-crls "<menuchoice><guimenu>Certificates</guimenu><guimenuitem>Refresh CRLs</guimenuitem></menuchoice>">
-  <!ENTITY certificates-delete "<menuchoice><shortcut><keycombo action='simul'><keycap>Delete</keycap></keycombo></shortcut><guimenu>Certificates</guimenu><guimenuitem>Delete</guimenuitem></menuchoice>">
+  <!ENTITY certificates-delete "<menuchoice><shortcut><keycombo action="simul"><keycap>Delete</keycap></keycombo></shortcut><guimenu>Certificates</guimenu><guimenuitem>Delete</guimenuitem></menuchoice>">
   <!ENTITY certificates-download "<menuchoice><guimenu>Certificates</guimenu><guimenuitem>Download</guimenuitem></menuchoice>">
 
    CRLS menu
