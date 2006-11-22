@@ -28,7 +28,6 @@
 #include <QHBoxLayout>
 #include <QDropEvent>
 #include <kselectaction.h>
-#include <k3urldrag.h>
 #include <libkdepim/kvcarddrag.h>
 #include <kabc/addressbook.h>
 #include <kabc/vcardconverter.h>
@@ -39,7 +38,6 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <k3multipledrag.h>
 #include <ktempdir.h>
 #include <kservicetypetrader.h>
 #include <kicon.h>
@@ -424,8 +422,10 @@ void ViewManager::dropped( QDropEvent *e )
   if ( e->source() == this )
     return;
 
+  const QMimeData *md = e->mimeData();
+
   QString clipText, vcards;
-	KUrl::List urls = KUrl::List::fromMimeData( e->mimeData() );
+  KUrl::List urls = KUrl::List::fromMimeData( md );
   if ( !urls.isEmpty() ) {
     KUrl::List::ConstIterator it = urls.begin();
     int c = urls.count();
@@ -437,10 +437,10 @@ void ViewManager::dropped( QDropEvent *e )
       }
     } else if ( c == 1 )
       emit urlDropped( *it );
-  } else if ( KVCardDrag::canDecode( e ) ) {
+  } else if ( KVCardDrag::canDecode( md ) ) {
     KABC::Addressee::List list;
 
-    KVCardDrag::decode( e, list );
+    KVCardDrag::fromMimeData( md, list );
 
     KABC::Addressee::List::ConstIterator it;
     for ( it = list.begin(); it != list.end(); ++it ) {
@@ -469,14 +469,14 @@ void ViewManager::startDrag()
   for ( it = uidList.begin(); it != uidList.end(); ++it )
     addrList.append( mCore->addressBook()->findByUid( *it ) );
 
-  K3MultipleDrag *drag = new K3MultipleDrag( this );
+  QDrag *drag = new QDrag( this );
+  QMimeData *mimeData = new QMimeData;
+  drag->setMimeData(mimeData);
 
-  KABC::VCardConverter converter;
-  QByteArray vcards = converter.createVCards( addrList );
+  // Text should be first as the default format. If an application explicitly requests vcard, it will still get it.
+  mimeData->setText( AddresseeUtil::addresseesToEmails( addrList ) );
+  KVCardDrag::populateMimeData( mimeData, addrList );
 
-  // Best text representation is given by textdrag, so it must be first
-  drag->addDragObject( new Q3TextDrag( AddresseeUtil::addresseesToEmails( addrList ), this ) );
-  drag->addDragObject( new KVCardDrag( vcards, this ) );
 
   KTempDir tempDir;
   // can't set tempDir to autoDelete, in case of dropping on the desktop, the copy is async...
@@ -490,16 +490,18 @@ void ViewManager::startDrag()
 
     QFile tempFile( tempDir.name() + '/' + fileName );
     if ( tempFile.open( QIODevice::WriteOnly ) ) {
+      KABC::VCardConverter converter;
+      QByteArray vcards = converter.createVCards( addrList );
       tempFile.write( vcards );
       tempFile.close();
 
-      K3URLDrag *urlDrag = new K3URLDrag( KUrl( tempFile.fileName() ), this );
-      drag->addDragObject( urlDrag );
+      KUrl url( tempFile.fileName() );
+      url.populateMimeData( mimeData );
     }
   }
 
   drag->setPixmap( KGlobal::iconLoader()->loadIcon( "vcard", K3Icon::Desktop ) );
-  drag->dragCopy();
+  drag->start();
 }
 
 void ViewManager::setActiveFilter( int index )

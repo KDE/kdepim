@@ -546,9 +546,9 @@ void DistributionListWidget::dropEvent( QDropEvent *e )
   KABC::DistributionList& dist = *list;
 #endif
 
-  if ( KVCardDrag::canDecode( e ) ) {
-    KABC::Addressee::List lst;
-    KVCardDrag::decode( e, lst );
+  const QMimeData *md = e->mimeData();
+  KABC::Addressee::List lst;
+  if ( KVCardDrag::fromMimeData( md, lst ) ) {
 
     for ( KABC::Addressee::List::ConstIterator it = lst.begin(); it != lst.end(); ++it )
       dist.insertEntry( *it );
@@ -605,14 +605,12 @@ DistributionListView::DistributionListView( QWidget *parent )
 
 void DistributionListView::dragEnterEvent( QDragEnterEvent* e )
 {
-  bool canDecode = Q3TextDrag::canDecode( e );
-  e->setAccepted( canDecode );
+  e->setAccepted( e->mimeData()->hasText() );
 }
 
 void DistributionListView::viewportDragMoveEvent( QDragMoveEvent *e )
 {
-  bool canDecode = Q3TextDrag::canDecode( e );
-  e->setAccepted( canDecode );
+  e->setAccepted( e->mimeData()->hasText() );
 }
 
 void DistributionListView::viewportDropEvent( QDropEvent *e )
