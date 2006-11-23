@@ -22,7 +22,6 @@
 */
 
 #include <QApplication>
-#include <q3dragobject.h>
 #include <QEvent>
 #include <q3iconview.h>
 #include <QLayout>
@@ -132,7 +131,8 @@ AddresseeCardView::~AddresseeCardView()
 
 void AddresseeCardView::dragEnterEvent( QDragEnterEvent *event )
 {
-  if ( Q3TextDrag::canDecode( event ) )
+  const QMimeData *md = event->mimeData();
+  if ( md->hasText() )
     event->accept();
 }
 

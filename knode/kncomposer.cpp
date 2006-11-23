@@ -53,7 +53,6 @@ using KRecentAddress::RecentAddresses;
 #include <kprocess.h>
 #include <k3syntaxhighlighter.h>
 #include <QCursor>
-#include <k3urldrag.h>
 #include <kcompletionbox.h>
 #include <kxmlguifactory.h>
 #include <kstatusbar.h>

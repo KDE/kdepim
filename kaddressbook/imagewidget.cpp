@@ -39,13 +39,11 @@
 
 #include <QApplication>
 #include <QCheckBox>
-#include <q3dragobject.h>
 #include <q3groupbox.h>
 #include <QLabel>
 #include <QLayout>
 #include <QPixmap>
 #include <QToolTip>
-//Added by qt3to4:
 #include <QGridLayout>
 #include <QFrame>
 #include <QHBoxLayout>
@@ -69,22 +67,17 @@ void ImageLabel::setReadOnly( bool readOnly )
 void ImageLabel::startDrag()
 {
   if ( pixmap() && !pixmap()->isNull() ) {
-    Q3ImageDrag *drag = new Q3ImageDrag( pixmap()->toImage(), this );
-    drag->dragCopy();
+    QDrag *drag = new QDrag( this );
+    drag->setMimeData( new QMimeData() );
+    drag->mimeData()->setImageData( pixmap()->toImage() );
+    drag->start();
   }
 }
 
 void ImageLabel::dragEnterEvent( QDragEnterEvent *event )
 {
-  bool accepted = false;
-
-  if ( Q3ImageDrag::canDecode( event ) )
-    accepted = true;
-
-  if ( Q3UriDrag::canDecode( event ) )
-    accepted = true;
-
-  event->setAccepted( accepted );
+  const QMimeData *md = event->mimeData();
+  event->setAccepted( md->hasImage() || md->hasUrls());
 }
 
 void ImageLabel::dropEvent( QDropEvent *event )
@@ -92,23 +85,21 @@ void ImageLabel::dropEvent( QDropEvent *event )
   if ( mReadOnly )
     return;
 
-  if ( Q3ImageDrag::canDecode( event ) ) {
-    QPixmap pm;
-
-    if ( Q3ImageDrag::decode( event, pm ) ) {
-      setPixmap( pm );
+  const QMimeData *md = event->mimeData();
+  if ( md->hasImage() ) {
+      QImage image = qvariant_cast<QImage>(md->imageData());
+      setPixmap( QPixmap::fromImage( image ) );
       emit changed();
-    }
   }
 
-	KUrl::List urls = KUrl::List::fromMimeData( event->mimeData() );
-    if ( urls.isEmpty() ) { // oops, no data
-        event->setAccepted( false );
-        return;
-	}
-
-    emit urlDropped( urls.first() );
-    emit changed();
+  KUrl::List urls = KUrl::List::fromMimeData( md );
+  if ( urls.isEmpty() ) { // oops, no data
+      event->setAccepted( false );
+      return;
+  } else {
+      emit urlDropped( urls.first() );
+      emit changed();
+  }
 }
 
 void ImageLabel::mousePressEvent( QMouseEvent *event )

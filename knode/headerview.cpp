@@ -518,6 +518,7 @@ void KNHeaderView::keyPressEvent(QKeyEvent *e)
 }
 
 
+#warning Port this to QDrag once the view doesnot derive from K3ListView any more
 Q3DragObject* KNHeaderView::dragObject()
 {
   KNHdrViewItem *item = static_cast<KNHdrViewItem*>( itemAt(viewport()->mapFromGlobal(QCursor::pos())) );

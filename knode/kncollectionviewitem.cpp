@@ -16,9 +16,7 @@
 #include <config.h>
 #endif
 
-#include <q3dragobject.h>
 #include <QPainter>
-//Added by qt3to4:
 #include <QPixmap>
 #include <QDropEvent>
 
@@ -104,10 +102,11 @@ int KNCollectionViewItem::compare(Q3ListViewItem *i, int col, bool ascending) co
 
 bool KNCollectionViewItem::acceptDrag(QDropEvent* event) const
 {
-  if (event && coll && coll->type()==KNCollection::CTfolder) {
-    if (event->provides("x-knode-drag/article"))
+  const QMimeData *md = event?event->mimeData():0;
+  if (md && coll && coll->type()==KNCollection::CTfolder) {
+    if ( md->hasFormat("x-knode-drag/article") )
       return !(static_cast<KNFolder*>(coll)->isRootFolder());   // don't drop articles on the root folder
-    else if (event->provides("x-knode-drag/folder"))
+    else if (md->hasFormat("x-knode-drag/folder"))
       return !isSelected();             // don't drop on itself
   }
   return false;

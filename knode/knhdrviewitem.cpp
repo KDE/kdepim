@@ -13,16 +13,13 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <q3dragobject.h>
+#include <QDrag>
 #include <QPainter>
-//Added by qt3to4:
 #include <QPixmap>
 
 #include <kdeversion.h>
 #include <kdebug.h>
-#include <k3multipledrag.h>
 #include <kstringhandler.h>
-#include <k3urldrag.h>
 
 #include <libkdepim/kdepimprotocols.h>
 
@@ -247,7 +244,13 @@ QString KNHdrViewItem::text( int col ) const
 
 Q3DragObject* KNHdrViewItem::dragObject()
 {
-  K3MultipleDrag *d = new K3MultipleDrag( listView()->viewport() );
+#warning Enable this section again, once KNHdrView does not derive from K3ListView any more and can process QDrag (not Q3DragObject)
+return 0;
+#if 0
+  QDrag *drag = new QDrag( listView()->viewport() );
+  QMimeData *md = new QMimeData;
+  drag->setMimeData( md );
+
   KUrl::List list;
   QString mid = art->messageID()->asUnicodeString();
   // for some obscure reason it returns messageid in <>s
@@ -255,10 +258,12 @@ Q3DragObject* KNHdrViewItem::dragObject()
   list.append( KDEPIMPROTOCOL_NEWSARTICLE + mid );
   QMap<QString,QString> metadata;
   metadata["labels"] = KUrl::toPercentEncoding( art->subject()->asUnicodeString() );
-  d->addDragObject( new K3URLDrag( list, metadata, 0L ) );
-  d->addDragObject( new Q3StoredDrag( "x-knode-drag/article" , 0L ) );
-  d->setPixmap( knGlobals.configManager()->appearance()->icon( KNode::Appearance::posting ) );
-  return d;
+  list.populateMimeData( md, metadata );
+  md->setData( "x-knode-drag/article" , QByteArray() );
+
+  drag->setPixmap( knGlobals.configManager()->appearance()->icon( KNode::Appearance::posting ) );
+  return drag;
+#endif
 }
 
 
