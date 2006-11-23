@@ -13,7 +13,6 @@
 
 #include <QString>
 #include <QStringList>
-//Added by qt3to4:
 #include <QList>
 
 class KProcess;
@@ -24,6 +23,7 @@ namespace KPIM {
 class KConfigBase;
 class IdentityList;
 class QDataStream;
+class QMimeData;
 
 namespace KPIM {
 
@@ -282,6 +282,12 @@ public:
 
   static const Identity& null();
   bool isNull() const;
+  
+  static QString mimeDataType();
+  static bool canDecode( const QMimeData* );
+  void populateMimeData( QMimeData* );
+  static Identity fromMimeData( const QMimeData* );
+
 protected:
   // if you add new members, make sure they have an operator= (or the
   // compiler can synthesize one) and amend Identity::operator==,

@@ -18,7 +18,7 @@
 #include <kurl.h>
 
 #include <QFileInfo>
-//Added by qt3to4:
+#include <QMimeData>
 #include <QByteArray>
 
 #include <sys/types.h>
@@ -620,4 +620,36 @@ QString Identity::signatureText( bool * ok ) const
 #endif
 
   return QString();
+}
+
+
+QString Identity::mimeDataType()
+{
+  return "application/x-kmail-identity-drag";
+}
+
+bool Identity::canDecode( const QMimeData*md )
+{
+  return md->hasFormat( mimeDataType() );
+}
+
+void Identity::populateMimeData( QMimeData*md )
+{
+  QByteArray a;
+  {
+    QDataStream s( &a, QIODevice::WriteOnly );
+    s << this;
+  }
+  md->setData( mimeDataType(), a );
+}
+
+Identity Identity::fromMimeData( const QMimeData*md )
+{
+  Identity i;
+  if ( canDecode( md ) ) {
+    QByteArray ba = md->data( mimeDataType() );
+    QDataStream s( &ba, QIODevice::ReadOnly );
+    s >> i;
+  }
+  return i;
 }
