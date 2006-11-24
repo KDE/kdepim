@@ -37,15 +37,11 @@
 #include <kurl.h>
 #include <libkdepim/kpimprefs.h>
 
-#include <kcal/vcaldrag.h>
-#include <kcal/vcalformat.h>
-#include <kcal/icalformat.h>
 #include <kcal/exceptions.h>
 #include <kcal/incidence.h>
 #include <kcal/event.h>
 #include <kcal/todo.h>
 #include <kcal/journal.h>
-#include <kcal/filestorage.h>
 #include <kcal/alarm.h>
 #include <kcal/icaltimezones.h>
 

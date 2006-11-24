@@ -2,12 +2,10 @@
 #include "certlistview.h"
 #include <kurl.h>
 #include <kdebug.h>
-//Added by qt3to4:
 #include <QDragEnterEvent>
 #include <QDragLeaveEvent>
 #include <QDragMoveEvent>
 #include <QDropEvent>
-#include <Q3UriDrag>
 
 CertKeyListView::CertKeyListView( const ColumnStrategy * strategy,
                                   const DisplayStrategy * display,
@@ -24,12 +22,12 @@ void CertKeyListView::contentsDragEnterEvent( QDragEnterEvent * event )
   //  kDebug() << fmt << endl;
 
   // We only accept URL drops. We'll check the mimetype later on.
-  event->setAccepted( Q3UriDrag::canDecode( event ) );
+  event->setAccepted( KUrl::List::canDecode( event->mimeData() ) );
 }
 
 void CertKeyListView::contentsDragMoveEvent( QDragMoveEvent * event )
 {
-  event->setAccepted( Q3UriDrag::canDecode( event ) );
+  event->setAccepted( KUrl::List::canDecode( event->mimeData() ) );
 }
 
 

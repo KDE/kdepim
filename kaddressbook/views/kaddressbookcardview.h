@@ -25,15 +25,13 @@
 */
 
 #include <QString>
-//Added by qt3to4:
-#include <QDragEnterEvent>
 #include <QDropEvent>
 #include <k3iconview.h>
 
 #include "cardview.h"
 #include "kaddressbookview.h"
 
-class QDragEntryEvent;
+class QDragEnterEvent;
 class QDropEvent;
 class KConfig;
 class AddresseeCardView;

@@ -24,12 +24,10 @@
 #include <q3header.h>
 #include <QIcon>
 #include <QImage>
-#include <q3dragobject.h>
 #include <QComboBox>
 #include <QPainter>
 #include <QBrush>
 #include <QEvent>
-//Added by qt3to4:
 #include <QPixmap>
 #include <QDropEvent>
 #include <QMouseEvent>
@@ -329,7 +327,7 @@ void ContactListView::contentsMouseMoveEvent( QMouseEvent *e )
 
 bool ContactListView::acceptDrag(QDropEvent *e) const
 {
-  return Q3TextDrag::canDecode(e);
+  return e->mimeData()->hasText();
 }
 
 void ContactListView::itemDropped(QDropEvent *e)

@@ -29,20 +29,14 @@
 #include <kdebug.h>
 #include <kurl.h>
 #include <kio/job.h>
-#include <kstandarddirs.h>
 
 #include <kabc/stdaddressbook.h>
 #include <kabc/locknull.h>
 
-#include <kcal/vcaldrag.h>
-#include <kcal/vcalformat.h>
-#include <kcal/icalformat.h>
-#include <kcal/exceptions.h>
 #include <kcal/incidence.h>
 #include <kcal/event.h>
 #include <kcal/todo.h>
 #include <kcal/journal.h>
-#include <kcal/filestorage.h>
 #include <kcal/alarm.h>
 
 #include <kresources/configwidget.h>
