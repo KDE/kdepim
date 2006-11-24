@@ -1329,6 +1329,9 @@ SecretKeyRequester::~SecretKeyRequester() {
 KeyIDList SecretKeyRequester::keyRequestHook( Module * pgp ) const {
   assert( pgp );
 
+  if(mKeys.isEmpty())
+     return KeyIDList();
+
   KeyID keyID = mKeys.first();
   keyID = pgp->selectSecretKey( mDialogCaption, mDialogMessage, keyID );
 
