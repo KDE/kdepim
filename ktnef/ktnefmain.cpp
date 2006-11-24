@@ -369,9 +369,11 @@ void KTNEFMain::viewDragRequested( const QList<KTNEFAttach*>& list )
 		urlList << KUrl( extractTemp( *it ) );
 	if ( !list.isEmpty() )
 	{
-#warning Port KURLDrag usage
-//                KURLDrag *urlDrag = new KURLDrag( urlList, this );
-//                urlDrag->dragCopy();
+		QDrag *drag = new QDrag( this );
+		QMimeData *md = new QMimeData;
+		drag->setMimeData( md );
+		urlList.populateMimeData( md );
+		drag->start();
 	}
 }
 
