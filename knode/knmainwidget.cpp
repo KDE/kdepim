@@ -138,19 +138,12 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   h_drView = new KNHeaderView( dummy );
 
   q_uicksearch = new KToolBar( dummy );
-  KAction *resetQuickSearch = new KAction(KIcon(QApplication::isRightToLeft() ? "clear_left" : "locationbar_erase"),  i18n( "Reset Quick Search" ), actionCollection(), "reset_quicksearch" );
-  q_uicksearch->addAction( resetQuickSearch );
-  resetQuickSearch->setWhatsThis( i18n( "<b>Reset Quick Search</b><br>"
-                                        "Resets the quick search so that "
-                                        "all messages are shown again." ) );
-
   QLabel *lbl = new QLabel(i18n("&Search:"),dummy);
   lbl->setObjectName("kde toolbar widget");
   q_uicksearch->addWidget( lbl );
   s_earchLineEdit = new K3ListViewSearchLine( q_uicksearch, h_drView );
   q_uicksearch->addWidget( s_earchLineEdit );
   lbl->setBuddy(s_earchLineEdit);
-  connect( resetQuickSearch, SIGNAL( activated() ), s_earchLineEdit, SLOT( clear() ));
 
   vlay->addWidget(q_uicksearch);
   vlay->addWidget(h_drView);
