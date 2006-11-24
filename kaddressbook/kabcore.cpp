@@ -1068,7 +1068,7 @@ void KABCore::initActions()
 
   action = new KAction(KIcon("identity"),  i18n( "&New Contact..." ), actionCollection(), "file_new_contact" );
   connect(action, SIGNAL(triggered(bool)), SLOT( newContact() ));
-  action->setShortcut(Qt::CTRL+Qt::Key_N);
+  action->setShortcut(QKeySequence(Qt..CTRL+Qt::Key_N));
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers." ) );
 
   mActionMailVCard = new KAction(KIcon("mail_post_to"),  i18n( "Send &Contact..." ), actionCollection(), "file_mail_vcard" );
@@ -1100,7 +1100,7 @@ void KABCore::initActions()
 
   mActionDelete = new KAction(KIcon("editdelete"),  i18n( "&Delete Contact" ), actionCollection(), "edit_delete" );
   connect(mActionDelete, SIGNAL(triggered(bool) ), SLOT( deleteContacts() ));
-  mActionDelete->setShortcut(Qt::Key_Delete);
+  mActionDelete->setShortcut(QKeySequence(Qt..Key_Delete));
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
 
@@ -1146,7 +1146,7 @@ void KABCore::initActions()
 
   KAction *clearLocation = new KAction(KIcon(QApplication::isRightToLeft() ? "clear_left" : "locationbar_erase"),  i18n( "Clear Search Bar" ), actionCollection(), "clear_search" );
   connect(clearLocation, SIGNAL(triggered(bool) ), SLOT( slotClearSearchBar() ));
-  clearLocation->setShortcut(Qt::CTRL+Qt::Key_L);
+  clearLocation->setShortcut(QKeySequence(Qt..CTRL+Qt::Key_L));
   clearLocation->setWhatsThis( i18n( "Clear Search Bar<p>"
 				     "Clears the content of the quick search bar." ) );
 

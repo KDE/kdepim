@@ -217,7 +217,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   //file menu
   KAction *action = new KAction(KIcon("mail_send"), i18n("&Send Now"), actionCollection(), "send_now");
   connect(action, SIGNAL(triggered(bool)), SLOT(slotSendNow()));
-  action->setShortcut(Qt::CTRL + Qt::Key_Return);
+  action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Return));
 
   action = new KAction(KIcon("queue"), i18n("Send &Later"), actionCollection(), "send_later");
   connect(action, SIGNAL(triggered(bool)), SLOT(slotSendLater()));

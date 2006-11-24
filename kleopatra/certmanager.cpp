@@ -271,7 +271,7 @@ void CertManager::createActions() {
 
   action = new KAction(KIcon("stop"),  i18n("Stop Operation"), actionCollection(), "view_stop_operations" );
   connect(action, SIGNAL(triggered(bool) ), SIGNAL(stopOperations()));
-  action->setShortcut(Qt::Key_Escape);
+  action->setShortcut(QKeySequence(Qt::Key_Escape));
   action->setEnabled( false );
 
   action = new KAction(KIcon("filenew"),  i18n("New Key Pair..."), actionCollection(), "file_new_certificate" );
@@ -283,10 +283,10 @@ void CertManager::createActions() {
 
   action = new KAction( i18n("Expand All"), actionCollection(), "view_expandall" );
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotExpandAll()));
-  action->setShortcut(Qt::CTRL+Qt::Key_Period);
+  action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_Period));
   action = new KAction( i18n("Collapse All"), actionCollection(), "view_collapseall" );
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotCollapseAll()));
-  action->setShortcut(Qt::CTRL+Qt::Key_Comma);
+  action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_Comma));
 
   action = new KAction( i18n("Refresh CRLs"), actionCollection(), "certificates_refresh_clr" );
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotRefreshKeys()));
@@ -305,12 +305,12 @@ void CertManager::createActions() {
 
   mDeleteCertificateAction = new KAction(KIcon("editdelete"),  i18n("Delete"), actionCollection(), "edit_delete_certificate" );
   connect(mDeleteCertificateAction, SIGNAL(triggered(bool) ), SLOT(slotDeleteCertificate()));
-  mDeleteCertificateAction->setShortcut(Qt::Key_Delete);
+  mDeleteCertificateAction->setShortcut(QKeySequence(Qt::Key_Delete));
   connectEnableOperationSignal( this, mDeleteCertificateAction );
 
   mValidateCertificateAction = new KAction(KIcon("reload"),  i18n("Validate"), actionCollection(), "certificates_validate" );
   connect(mValidateCertificateAction, SIGNAL(triggered(bool) ), SLOT(slotValidate()));
-  mValidateCertificateAction->setShortcut(Qt::SHIFT + Qt::Key_F5);
+  mValidateCertificateAction->setShortcut(QKeySequence(Qt::SHIFT + Qt::Key_F5));
   connectEnableOperationSignal( this, mValidateCertificateAction );
 
   mImportCertFromFileAction = new KAction( i18n("Import Certificates..."), actionCollection(), "file_import_certificates" );
