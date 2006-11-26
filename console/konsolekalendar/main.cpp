@@ -115,7 +115,7 @@ static KCmdLineOptions options[] =
   { ":",
     I18N_NOOP( "Operation modifiers:" ), 0 },
   { "all",
-    I18N_NOOP( "  View all calendar entries, not only today's" ), 0 },
+    I18N_NOOP( "  View all calendar entries, ignoring date/time options" ), 0 },
   { "next",
     I18N_NOOP( "  View next activity in calendar" ), 0 },
   { "show-next <days>",
