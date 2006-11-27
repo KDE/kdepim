@@ -265,7 +265,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   connect(action, SIGNAL(triggered(bool)), SLOT(slotAttachFile()));
 
   a_ctPGPsign = new KToggleAction(i18n("Sign Article with &PGP"),
-		   "signature", 0,
+		   "signature", KShortcut(),
                    actionCollection(), "sign_article");
 
   a_ctRemoveAttachment = new KAction(i18n("&Remove"), actionCollection(), "remove_attachment");

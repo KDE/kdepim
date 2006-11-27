@@ -264,7 +264,7 @@ void CertManager::createActions() {
   action = KStdAction::redisplay( this, SLOT(slotRedisplay()), actionCollection() );
   // work around the fact that the stdaction has no shortcut
   KShortcut reloadShortcut = KStdAccel::shortcut(KStdAccel::Reload);
-  reloadShortcut.append(Qt::CTRL + Qt::Key_R);
+  reloadShortcut.setAlternate(Qt::CTRL + Qt::Key_R);
   action->setShortcut( reloadShortcut );
 
   connectEnableOperationSignal( this, action );

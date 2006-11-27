@@ -1109,13 +1109,13 @@ void KABCore::initActions()
   mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." ) );
 
   // settings menu
-  mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", 0,
+  mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", KShortcut(),
                                       actionCollection(), "options_show_jump_bar" );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
   mActionJumpBar->setCheckedState( KGuiItem(i18n( "Hide Jump Bar" )) );
   connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );
 
-  mActionDetails = new KToggleAction( i18n( "Show Details" ), 0, 0,
+  mActionDetails = new KToggleAction( i18n( "Show Details" ), 0, KShortcut(),
                                       actionCollection(), "options_show_details" );
   mActionDetails->setWhatsThis( i18n( "Toggle whether the details page shall be visible." ) );
   mActionDetails->setCheckedState( KGuiItem(i18n( "Hide Details" )) );
