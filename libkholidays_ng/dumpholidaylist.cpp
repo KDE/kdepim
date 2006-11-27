@@ -21,13 +21,13 @@
 #include "kde-holidays.h"
 #include "kde-holidays_parser.h"
 
-#include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <kdebug.h>
 
 #include <QFile>
 #include <QTextStream>
+#include <QCoreApplication>
 
 #include <iostream>
 using namespace std;
@@ -58,13 +58,13 @@ void displayHolidays( const QList<Holiday> holidays )
 
 int main( int argc, char **argv )
 {
-  // KApplication::disableAutoDcopRegistration();
   KAboutData aboutData( "dumpholidaylist", "Dump XML holiday list to stdout",
                         "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData, KCmdLineArgs::CmdLineArgNone );
   KCmdLineArgs::addCmdLineOptions( options );
 
-  KApplication app( false );
+  // is a KInstance needed?
+  QCoreApplication app( *KCmdLineArgs::qt_argc(), *KCmdLineArgs::qt_argv() );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
