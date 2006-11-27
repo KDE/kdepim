@@ -22,12 +22,12 @@
 #include "kde-features.h"
 #include "kde-features_parser.h"
 
-#include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <kdebug.h>
 
 #include <QFile>
+#include <QCoreApplication>
 #include <qtextstream.h>
 
 #include <iostream>
@@ -72,7 +72,7 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData, KCmdLineArgs::CmdLineArgNone );
   KCmdLineArgs::addCmdLineOptions( options );
 
-  KApplication app( false );
+  QCoreApplication app(  *KCmdLineArgs::qt_argc(), *KCmdLineArgs::qt_argv() );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
@@ -97,4 +97,5 @@ int main( int argc, char **argv )
   if ( !features.writeFile( out ) ) {
     kError() << "Write error" << endl;
   }
+  return 0;
 }

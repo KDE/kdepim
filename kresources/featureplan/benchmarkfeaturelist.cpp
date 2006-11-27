@@ -22,12 +22,12 @@
 #include "kde-features.h"
 #include "kde-features_parser.h"
 
-#include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <kdebug.h>
 
 #include <QFile>
+#include <QCoreApplication>
 #include <qtextstream.h>
 
 #include <iostream>
@@ -69,14 +69,13 @@ void displayCategory( const Category::List &categories )
 
 int main( int argc, char **argv )
 {
-  // KApplication::disableAutoDcopRegistration();
   KAboutData aboutData( "benchmarkfeaturelist",
                         "Benchmark for feature list XML parser",
                         "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData, KCmdLineArgs::CmdLineArgNone );
   KCmdLineArgs::addCmdLineOptions( options );
 
-  KApplication app( false );
+  QCoreApplication app( *KCmdLineArgs::qt_argc(), *KCmdLineArgs::qt_argv() );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
