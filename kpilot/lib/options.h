@@ -64,7 +64,7 @@
 #ifndef DEBUG
 #define DEBUG			(1)
 #endif
-// #define DEBUG_CERR			(1)
+#define DEBUG_CERR			(1)
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
