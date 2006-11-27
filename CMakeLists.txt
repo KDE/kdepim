@@ -15,8 +15,15 @@ if(Q_WS_X11)
    macro_log_feature(X11_Xss_LIB "X Development" "X Window Development Screen Saver Library" "http://xorg.freedesktop.org" TRUE "" "Required to build the KTimeTracker Program")
 endif(Q_WS_X11)
 
-macro_optional_find_package(Gpgme)
-macro_log_feature(GPGME_FOUND "gpgme" "GnuPG Made Easy Development Libraries" "http://www.gnupg.org/related_software/gpgme" FALSE "0.4.5 or greater" "Needed to provide GNU Privacy Guard support in KDE PIM applications. Necessary to compile KMail.")
+#we require the gpgme package for Unix.
+#we make gpgme optional for non-Unix since it does not exist yet.
+if(UNIX)
+  find_package(Gpgme REQUIRED)
+  macro_log_feature(GPGME_FOUND "gpgme" "GnuPG Made Easy Development Libraries" "http://www.gnupg.org/related_software/gpgme" TRUE "0.4.5 or greater" "Needed to provide GNU Privacy Guard support in KDE PIM applications. Necessary to compile many PIM applications, including KMail.")
+else(UNIX)
+  macro_optional_find_package(Gpgme)
+  macro_log_feature(GPGME_FOUND "gpgme" "GnuPG Made Easy Development Libraries" "http://www.gnupg.org/related_software/gpgme" FALSE "0.4.5 or greater" "Needed to provide GNU Privacy Guard support in KDE PIM applications. Necessary to compile many PIM application, including KMail.")
+endif(UNIX)
 
 macro_optional_find_package(Sasl2)
 macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins")
