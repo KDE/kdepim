@@ -13,7 +13,6 @@ DocPath=kaddressbook/index.html
 Terminal=false
 X-KDE-StartupNotify=true
 X-DBUS-StartupType=Unique
-X-DCOP-ServiceName=kaddressbook
 MimeType=text/directory;text/x-vcard;text/x-ldif
 ServiceTypes=KParts/ReadOnlyPart,Browser/View,DCOP/AddressBook
 X-KDE-Library=libkaddressbookpart
