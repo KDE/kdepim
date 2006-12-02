@@ -647,9 +647,7 @@ void UpdateAddressBooksJob::run()
   soap_call___ngw__getDeltasRequest( mSoap, mUrl.latin1(),
                                               NULL, &request, &response);
   soap_print_fault( mSoap, stderr );
-  response.items->item;
-  
-  
+
   if ( response.items ) {
     std::vector<class ngwt__Item * > items = response.items->item;
 #if 1
