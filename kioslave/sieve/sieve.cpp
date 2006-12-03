@@ -1166,7 +1166,7 @@ bool kio_sieveProtocol::receiveData(bool waitForData, const QByteArray &reparse)
 
 	start = 0;
 
-	end = interpret.indexOf(34, start + 1);
+	end = interpret.indexOf('"', start + 1);
 	if (end == -1) {
 		ksDebug() << "Possible insufficient buffer size." << endl;
 		r.setKey(interpret.right(interpret.length() - start));
@@ -1175,7 +1175,7 @@ bool kio_sieveProtocol::receiveData(bool waitForData, const QByteArray &reparse)
 
 	r.setKey(interpret.mid(start + 1, end - start - 1));
 
-	start = interpret.indexOf(34, end + 1);
+	start = interpret.indexOf('"', end + 1);
 	if (start == -1) {
 		if ((int)interpret.length() > end)
 			// skip " and space
@@ -1184,7 +1184,7 @@ bool kio_sieveProtocol::receiveData(bool waitForData, const QByteArray &reparse)
 		return true;
 	}
 
-	end = interpret.indexOf(34, start + 1);
+	end = interpret.indexOf('"', start + 1);
 	if (end == -1) {
 		ksDebug() << "Possible insufficient buffer size." << endl;
 		r.setVal(interpret.right(interpret.length() - start));
