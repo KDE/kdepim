@@ -55,7 +55,6 @@ using namespace KTnef;
 #endif
 
 #include <krun.h>
-#include <kopenwith.h>
 #include <kedittoolbar.h>
 #include <kstatusbar.h>
 #include <kurl.h>
