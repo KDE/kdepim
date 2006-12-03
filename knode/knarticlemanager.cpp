@@ -17,7 +17,6 @@
 
 #include <kmessagebox.h>
 #include <kmimetypetrader.h>
-#include <kopenwith.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kwin.h>

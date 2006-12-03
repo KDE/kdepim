@@ -31,7 +31,6 @@
 #include <kcolordialog.h>
 #include <kfontdialog.h>
 #include <kfiledialog.h>
-#include <kopenwith.h>
 #include <kscoringeditor.h>
 #include <k3spell.h>
 #include <k3sconfig.h>
