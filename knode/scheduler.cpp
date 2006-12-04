@@ -12,7 +12,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <kapplication.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kio/passdlg.h>
@@ -183,7 +182,7 @@ void Scheduler::slotJobFinished( KNJobData * job )
       bool keep = false;
       if ( KDialog::Accepted == KIO::PasswordDialog::getNameAndPassword( user, pass, &keep,
           i18n("You need to supply a username and a\npassword to access this server"), false,
-          kapp->makeStdCaption( i18n("Authentication Failed") ), account->server(), i18n("Server:") ) ) {
+          i18n("Authentication Failed"), account->server(), i18n("Server:") ) ) {
         account->setNeedsLogon( true );
         account->setUser( user );
         account->setPass( pass );

@@ -33,7 +33,7 @@ KNSourceViewWindow::KNSourceViewWindow( const QString &text )
 
   setAcceptRichText( false );
 
-  setWindowTitle(kapp->makeStdCaption(i18n("Article Source")));
+  setWindowTitle(KInstance::makeStandardCaption(i18n("Article Source"), this));
 #warning "kde4: porting\n";  
   //setPaper( QBrush( knGlobals.settings()->backgroundColor()) );
   setFont( knGlobals.settings()->articleFixedFont() );

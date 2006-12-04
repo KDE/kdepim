@@ -30,7 +30,7 @@
 #include <kstandarddirs.h>
 #include <klineedit.h>
 #include <kprocess.h>
-#include <kapplication.h>
+#include <kinstance.h>
 #include <kpushbutton.h>
 
 #include <kmime/kmime_util.h>
@@ -53,7 +53,7 @@ bool KNConvert::needToConvert(const QString &oldVersion)
 KNConvert::KNConvert(const QString &version)
   : QDialog(0), l_ogList(0), c_onversionDone(false), v_ersion(version)
 {
-  setWindowTitle(kapp->makeStdCaption(i18n("Conversion")));
+  setWindowTitle(KInstance::makeStandardCaption(i18n("Conversion"), this));
   QVBoxLayout *topL=new QVBoxLayout(this);
   topL->setSpacing(5);
   topL->setMargin(5);
