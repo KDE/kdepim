@@ -55,7 +55,8 @@ DebugDialog::DebugDialog()
 
   setButtonText( User1, "Save As..." );
   setButtonText( User2, "Clear" );
-
+  connect(this,SIGNAL(user1Clicked()),this,SLOT(save()));
+  connect(this,SIGNAL(user2Clicked()),this,SLOT(clear()));
   clear();
 }
 

@@ -44,6 +44,7 @@ SloxFolderDialog::SloxFolderDialog( SloxFolderManager *manager, FolderType type,
   setMainWidget( mListView );
   updateFolderView();
   connect( manager, SIGNAL( foldersUpdated() ), SLOT( updateFolderView() ) );
+  connect(this,SIGNAL(user1Clicked()),this,SLOT(slotUser1( )));
 }
 
 SloxFolderDialog::~SloxFolderDialog()
