@@ -352,7 +352,7 @@ linkend="crls-dump-crl-cache"><menuchoice><guimenu>CRLs</guimenu>
 
 <chapter id="menu"><title>Menu Reference</title>
 
-<sect1 id="menufile"><title>File Menu</title>
+<sect1 id="menufile"><title><guimenu>File</guimenu> Menu</title>
 
 <variablelist>
 
@@ -464,7 +464,7 @@ certificates in each CRL.
 
 
 
-<sect1 id="menuview"><title>View Menu</title>
+<sect1 id="menuview"><title><guimenu>View</guimenu> Menu</title>
 
 <variablelist>
 
@@ -588,7 +588,7 @@ itself, of course.</para>
 
 </sect1>
 
-<sect1 id="menucertificates"><title>Certificates Menu</title>
+<sect1 id="menucertificates"><title><guimenu>Certificates</guimenu> Menu</title>
 
 <variablelist>
 
@@ -685,7 +685,7 @@ the lot of certificates.</para>
 
 
 
-<sect1 id="menucrls"><title>CRLs Menu</title>
+<sect1 id="menucrls"><title><guimenu>CRLs</guimenu> Menu</title>
 
 <variablelist>
 
@@ -714,7 +714,7 @@ cache.</action></para>
 
 </sect1>
 
-<sect1 id="menutools"><title>Tools Menu</title>
+<sect1 id="menutools"><title><guimenu>Tools</guimenu> Menu</title>
 
 <variablelist>
 
@@ -733,6 +733,19 @@ cache.</action></para>
 <sect1 id="menusettings"><title>Settings Menu</title>
 
 <variablelist>
+
+<varlistentry id="settings-configure-gpgme-backend">
+<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure GpgME Backend...</guimenuitem></menuchoice></term>
+
+<listitem>
+<para><action>Opens a dialog that allows you to configure every aspect of
+&gpgsm; and other backend modules.</action></para>
+
+<para>This dialog is dynamically built from the output of the
+&gpgconf; utility and may thus change when backend modules are
+updated.</para>
+</listitem>
+</varlistentry>
 
 <varlistentry id="settings-show-statusbar">
 <term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Show Statusbar</guimenuitem></menuchoice></term>
@@ -762,24 +775,11 @@ items.</action></para>
 </listitem>
 </varlistentry>
 
-<varlistentry id="settings-configure-gpgme-backend">
-<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure GpgME Backend...</guimenuitem></menuchoice></term>
-
-<listitem>
-<para><action>Opens a dialog that allows you to configure every aspect of
-&gpgsm; and other backend modules.</action></para>
-
-<para>This dialog is dynamically built from the output of the
-&gpgconf; utility and may thus change when backend modules are
-updated.</para>
-</listitem>
-</varlistentry>
-
 </variablelist>
 
 </sect1>
 
-<sect1 id="menuhelp"><title>Help Menu</title>
+<sect1 id="menuhelp"><title><guimenu>Help</guimenu> Menu</title>
 
 
 <para>The <guimenu>Help</guimenu> menu contains the standard &kde;
@@ -844,7 +844,7 @@ linkend="settings-configure-kleopatra"><menuchoice><guimenu>Settings</guimenu>
 
 <para>Each of its pages is described in the sections below.</para>
 
-<sect1 id="configuration-directory-services"><title>Configuring Directory Services</title>
+<sect1 id="configuration-directory-services"><title>Configuring <guilabel>Directory Services</guilabel></title>
 
 <para>On this page, you can configure which LDAP servers to use for
 certificate searches. You can also configure their order, as well as
@@ -888,7 +888,7 @@ will not result in more returned items.</para></note>
 
 </sect1>
 
-<sect1 id="configuration-appearance"><title>Configuring Visual Appearance</title>
+<sect1 id="configuration-appearance"><title>Configuring visual <guilabel>Appearance</guilabel></title>
 
 <para>&kleopatra; allows you to customize the appearance of
 (validated) keys in the list view. This includes the foreground (text)
@@ -938,7 +938,7 @@ standard font.</para>
 
 </sect1>
 
-<sect1 id="configuration-dn-order"><title>Configuring the Order &dn; Attributes are Shown</title>
+<sect1 id="configuration-dn-order"><title>Configuring the <guilabel>&dn;Attribute Order</guilabel></title>
 
 <para>Although &dn;s are hierarchical, the order of the individual
 components (called relative &dn;s (RDNs), or &dn; attributes) is not
