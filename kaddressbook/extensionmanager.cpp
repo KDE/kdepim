@@ -74,7 +74,7 @@ void ExtensionManager::restoreSettings()
 
 void ExtensionManager::saveSettings()
 {
-  KAction *action;
+  QAction *action;
   int index = 0;
   for (int i = 0; i < mActionList.size(); ++i)
   {
@@ -133,10 +133,8 @@ void ExtensionManager::setActiveExtension( int id )
 void ExtensionManager::createActions()
 {
   mCore->guiClient()->unplugActionList( "extensions_list" );
-#warning "kde4: todo look at this two lines commented"
-  //mActionList.setAutoDelete( true );
+  qDeleteAll( mActionList );
   mActionList.clear();
-  //mActionList.setAutoDelete( false );
 
   delete mMapper;
   mMapper = new QSignalMapper( this );

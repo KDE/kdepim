@@ -48,7 +48,7 @@ class K3Spell;
 class K3DictSpellingHighlighter;
 class KSelectAction;
 class KToggleAction;
-
+class KAction;
 class KNLocalArticle;
 class KNAttachment;
 class SpellingFilter;
@@ -130,7 +130,7 @@ class KNComposer : public KMainWindow {
 
     //Attachments
     QList<KNAttachment*> mDeletedAttachments;
-    QList<KAction*> m_listAction;
+    QList<QAction*> m_listAction;
     bool a_ttChanged;
 
   //------------------------------ <Actions> -----------------------------

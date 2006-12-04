@@ -421,9 +421,9 @@ void CertManager::slotToggleHierarchicalView( bool hier ) {
   mHierarchicalView = hier;
   mKeyListView->setHierarchical( hier );
   mKeyListView->setRootIsDecorated( hier );
-  if ( KAction * act = action("view_expandall") )
+  if ( QAction * act = action("view_expandall") )
     act->setEnabled( hier );
-  if ( KAction * act = action("view_collapseall" ) )
+  if ( QAction * act = action("view_collapseall" ) )
     act->setEnabled( hier );
   if ( KToggleAction * act =
       static_cast<KToggleAction*>( action("view_hierarchical") ) )
