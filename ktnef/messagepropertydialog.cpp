@@ -42,6 +42,7 @@ MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg
 	setMainWidget( m_listview );
 
 	formatPropertySet( m_message, m_listview );
+	connect(this,SIGNAL(user1Clicked()),this,SLOT(slotUser1()));
 }
 
 void MessagePropertyDialog::slotUser1()
