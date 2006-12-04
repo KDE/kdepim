@@ -14,7 +14,7 @@
 
 #include <QByteArray>
 #include <QList>
-
+#include <krun.h>
 #include <kmessagebox.h>
 #include <kmimetypetrader.h>
 #include <klocale.h>

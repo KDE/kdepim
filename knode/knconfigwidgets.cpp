@@ -41,6 +41,7 @@
 #include <kpushbutton.h>
 #include <kstdguiitem.h>
 #include <kvbox.h>
+#include <krun.h>
 
 #include "knaccountmanager.h"
 #include "knconfig.h"
