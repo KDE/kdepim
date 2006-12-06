@@ -621,7 +621,7 @@ ignored.</para>
 
 <warning><para>If you import alarms from calendar files which were
 created by applications other than &kalarm;, the alarms may be changed
-by the import process - even alarm times may change. This depends on
+by the import process &ndash; even alarm times may change. This depends on
 the data storage conventions used by the other application, and is
 unavoidable if those conventions differ from what &kalarm; expects.
 Always check imported alarms for unexpected changes, and adjust them
@@ -1396,7 +1396,8 @@ display its context menu:</para>
 <variablelist>
 <varlistentry>
 <term><menuchoice><guimenuitem>Enable Alarms</guimenuitem></menuchoice></term>
-<listitem><para><action>Enables monitoring of alarms.</action></para>
+<listitem><para><action>Enables monitoring of alarms. This option
+only appears if alarms are currently disabled.</action></para>
 <para>See
 <link linkend="enable-disable">Enabling and disabling alarms</link>
 for details.</para>
@@ -1404,8 +1405,9 @@ for details.</para>
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice><guimenuitem>Alarms Enabled</guimenuitem></menuchoice></term>
-<listitem><para><action>Disables monitoring of alarms.</action></para>
+<term><menuchoice><guimenuitem>Disable Alarms</guimenuitem></menuchoice></term>
+<listitem><para><action>Disables monitoring of alarms. This option
+only appears if alarms are currently enabled.</action></para>
 <para>See
 <link linkend="enable-disable">Enabling and disabling alarms</link>
 for details.</para>
@@ -1580,9 +1582,9 @@ due.</para>
 
 <para>There are several ways to disable alarm monitoring, which
 prevents &kalarm; from displaying any further alarms either until you
-re-enable alarms, or - assuming that the <application>alarm
-daemon</application> is configured to start at login - until the next
-time you log in.</para>
+re-enable alarms, or &ndash; assuming that the <application>alarm
+daemon</application> is configured to start at login &ndash; until the
+next time you log in.</para>
 
 <para>To disable alarms without stopping the <application>alarm
 daemon</application>, do one of the following:</para>
@@ -1590,13 +1592,13 @@ daemon</application>, do one of the following:</para>
 <itemizedlist>
 <listitem>
 <para>Select <menuchoice><guimenu>Actions</guimenu>
-<guimenuitem>Alarms Enabled</guimenuitem></menuchoice>.</para>
+<guimenuitem>Disable Alarms</guimenuitem></menuchoice>.</para>
 </listitem>
 
 <listitem>
 <para><mousebutton>Right</mousebutton> click on the system tray icon
 and choose
-<menuchoice><guimenuitem>Alarms Enabled</guimenuitem></menuchoice>
+<menuchoice><guimenuitem>Disable Alarms</guimenuitem></menuchoice>
 from the context menu.</para>
 </listitem>
 
@@ -3121,10 +3123,10 @@ including the initial occurrence.</para>
 <para><function>scheduleMessage()</function> is a &DCOP; call to
 schedule the specified alarm message for display at the specified date
 and time. It has three forms. The most general form allows an
-arbitrary recurrence to be specified - use this also for non-repeating
-alarms. The other forms provide convenient access to a restricted set
-of alarm recurrence types, one specifying a repetition count and the
-other an end time.</para>
+arbitrary recurrence to be specified &ndash; use this also for
+non-repeating alarms. The other forms provide convenient access to a
+restricted set of alarm recurrence types, one specifying a repetition
+count and the other an end time.</para>
 
 <para>If the scheduled time (including any repetitions) has already
 passed, &kalarm; immediately displays the message (unless the
