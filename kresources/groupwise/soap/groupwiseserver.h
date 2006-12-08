@@ -64,6 +64,8 @@ class GroupWiseBinding;
 
 namespace GroupWise {
 
+enum ErrorCode { RefreshNeeded };
+
 class AddressBook
 {
   public:
@@ -100,7 +102,8 @@ class GroupwiseServer : public QObject
                      const QString &password, QObject *parent );
     ~GroupwiseServer();
 
-    QString error() const { return mError; }
+    int error() const { return mError; }
+    QString errorText() const { return mErrorText; }
 
     bool login();
     bool logout();
@@ -234,7 +237,8 @@ class GroupwiseServer : public QObject
     
     KExtendedSocket *m_sock;
 
-    QString mError;
+    int mError;
+    QString mErrorText;
 
     QString mLogFile;
 };

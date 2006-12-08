@@ -117,7 +117,7 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
   } else {
     m_sock = new KExtendedSocket();
   }
-  mError = QString::null;
+  mErrorText = QString::null;
 
   m_sock->reset();
   m_sock->setBlockingMode( false );
@@ -137,7 +137,7 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
       if ( rc == -3 )
         errorMessage = QString::fromLatin1( "Connection timed out.  Check host and port number" );
     }
-    mError = i18n("Connect failed: %1.").arg( errorMessage );
+    mErrorText = i18n("Connect failed: %1.").arg( errorMessage );
     return SOAP_INVALID_SOCKET;
   }
   m_sock->enableRead( true );
@@ -173,7 +173,7 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
     kdError() << "no open connection" << endl;
     return SOAP_TCP_ERROR;
   }
-  if ( !mError.isEmpty() ) {
+  if ( mError ) {
     kdError() << "SSL is in error state." << endl;
     return SOAP_SSL_ERROR;
   }
@@ -219,7 +219,7 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
     soap->error = SOAP_FAULT;
     return 0;
   }
-  if ( !mError.isEmpty() ) {
+  if ( mError ) {
     kdError() << "SSL is in error state." << endl;
     soap->error = SOAP_SSL_ERROR;
     return 0;
@@ -250,7 +250,8 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
                                   const QString &password, QObject *parent )
   : QObject( parent, "GroupwiseServer" ),
     mUrl( url ), mUser( user ), mPassword( password ),
-    mSSL( url.left(6)=="https:" ), m_sock( 0 )
+    mSSL( url.left(6)=="https:" ), m_sock( 0 ),
+    mError( 0 )
 {
   mBinding = new GroupWiseBinding;
   mSoap = mBinding->soap;
@@ -323,7 +324,7 @@ bool GroupwiseServer::login()
   if ( mSession.size() == 0 ) // workaround broken loginResponse error reporting
   {
     kdDebug() << "Login failed but the server didn't report an error" << endl;
-    mError = i18n( "Login failed, but the GroupWise server did not report an error" );
+    mErrorText = i18n( "Login failed, but the GroupWise server did not report an error" );
     return false;
   }
 
@@ -729,7 +730,12 @@ bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds, const 
   job->setStartSequenceNumber( startSequenceNumber );
 
   job->run();
-
+  if ( job->error() == GroupWise::RefreshNeeded )
+  {
+    mError = 1;
+    mErrorText = "The System Address Book must be refreshed";
+    return false;
+  }
   return true;
 }
 
@@ -1085,7 +1091,7 @@ bool GroupwiseServer::checkResponse( int result, ngwt__Status *status )
     if ( status->description ) {
       msg += " ";
       msg += status->description->c_str();
-      mError = status->description->c_str();
+      mErrorText = status->description->c_str();
     }
     kdError() << msg << endl;
     return false;
@@ -1420,7 +1426,7 @@ void GroupwiseServer::slotSslError()
 {
   kdDebug() << "********************** SSL ERROR" << endl;
 
-  mError = i18n("SSL Error");
+  mErrorText = i18n("SSL Error");
 }
 
 void GroupwiseServer::emitReadAddressBookTotalSize( int s )

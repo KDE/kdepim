@@ -46,11 +46,13 @@ class GWJob
 {
   public:
     GWJob( GroupwiseServer *server, struct soap *soap, const QString &url, const std::string &session );
+    int error() const { return mError; }
   protected:
     GroupwiseServer *mServer;
     struct soap *mSoap;
     QString mUrl;
     const std::string mSession;
+    int mError;
 };
 
 class ReadAddressBooksJob : public GWJob

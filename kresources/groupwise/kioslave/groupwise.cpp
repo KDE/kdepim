@@ -34,6 +34,7 @@
 #include <kabc/vcardconverter.h>
 
 #include <kinstance.h>
+#include <kio/global.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <ktempfile.h>
@@ -198,11 +199,11 @@ void Groupwise::getFreeBusy( const KURL &url )
       kdDebug() << "Login" << endl;
 
       if ( !server.login() ) {
-        errorMessage( i18n("Unable to login: ") + server.error() );
+        errorMessage( i18n("Unable to login: ") + server.errorText() );
       } else {
         kdDebug() << "Read free/busy" << endl;
         if ( !server.readFreeBusy( email, start, end, fb ) ) {
-          errorMessage( i18n("Unable to read free/busy data: ") + server.error() );
+          errorMessage( i18n("Unable to read free/busy data: ") + server.errorText() );
         }
         kdDebug() << "Read free/busy" << endl;
         server.logout();
@@ -244,11 +245,11 @@ void Groupwise::getCalendar( const KURL &url )
 
   kdDebug() << "Login" << endl;
   if ( !server.login() ) {
-    errorMessage( i18n("Unable to login: ") + server.error() );
+    errorMessage( i18n("Unable to login: ") + server.errorText() );
   } else {
     kdDebug() << "Read calendar" << endl;
     if ( !server.readCalendarSynchronous( &calendar ) ) {
-      errorMessage( i18n("Unable to read calendar data: ") + server.error() );
+      errorMessage( i18n("Unable to read calendar data: ") + server.errorText() );
     }
     kdDebug() << "Logout" << endl;
     server.logout();
@@ -305,11 +306,11 @@ void Groupwise::getAddressbook( const KURL &url )
 
     kdDebug() << "Login" << endl;
     if ( !server.login() ) {
-      errorMessage( i18n("Unable to login: ") + server.error() );
+      errorMessage( i18n("Unable to login: ") + server.errorText() );
     } else {
       kdDebug() << "Read Addressbook" << endl;
       if ( !server.readAddressBooksSynchronous( ids ) ) {
-        errorMessage( i18n("Unable to read addressbook data: ") + server.error() );
+        errorMessage( i18n("Unable to read addressbook data: ") + server.errorText() );
       }
       kdDebug() << "Logout" << endl;
       server.logout();
@@ -371,11 +372,12 @@ void Groupwise::updateAddressbook( const KURL &url )
 
     kdDebug() << "Login" << endl;
     if ( !server.login() ) {
-      errorMessage( i18n("Unable to login: ") + server.error() );
+      errorMessage( i18n("Unable to login: ") + server.errorText() );
     } else {
       kdDebug() << "Update Addressbook" << endl;
       if ( !server.updateAddressBooks( ids, lastSequenceNumber ) ) {
-        errorMessage( i18n("Unable to update addressbook data: ") + server.error() );
+        error( KIO::ERR_NO_CONTENT, server.errorText() );
+        //errorMessage( i18n("Unable to update addressbook data: ") + server.errorText() );
       }
       kdDebug() << "Logout" << endl;
       server.logout();

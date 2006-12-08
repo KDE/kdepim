@@ -69,11 +69,11 @@ ResourceGroupwise::ResourceGroupwise( const KURL &url,
 
 void ResourceGroupwise::init()
 {
-  mDownloadJob = 0;
+  mJob = 0;
   mProgress = 0;
   mUpdateSystemAddressBook = false;
   mPrefs = new GroupwisePrefs;
-
+  mState = Start;
   setType( "groupwise" );
 }
 
@@ -197,7 +197,7 @@ void ResourceGroupwise::retrieveAddressBooks()
     }
   }
   else
-    emit loadingError( this, server.error() );
+    emit loadingError( this, server.errorText() );
 }
 
 Ticket *ResourceGroupwise::requestSaveTicket()
@@ -235,77 +235,82 @@ bool ResourceGroupwise::load()
 bool ResourceGroupwise::asyncLoad()
 {
   kdDebug() << "ResourceGroupwise::asyncLoad()" << endl;
+  //mPrefs->readConfig();  TODO: remove if the system addressbook is not read when disabled in config
 
-  if ( mDownloadJob ) {
-    kdDebug() << "Download still in progress" << endl;
-    return true;
+  if ( mState != Start )
+  {
+     kdDebug() << "  Download still in progress" << endl;
+     return true;
   }
 
   loadCache();
 
   if ( addressBooks().isEmpty() ) {
-    kdDebug() << "Retrieving default addressbook list." << endl;
+    kdDebug() << "  Retrieving default addressbook list." << endl;
     retrieveAddressBooks();
     writeAddressBooks();
   }
 
-  QStringList ids = mPrefs->readAddressBooks(); // start with all the address books
-
-  // check if we are fetching the SAB and we previously fetched it
-  if ( ( ids.find( mPrefs->systemAddressBook() ) != ids.end() ) &&
-     mPrefs->lastSequenceNumber() != 0 ) 
+  if ( !systemAddressBookAlreadyPresent() && shouldFetchSystemAddressBook() )
   {
-    kdDebug() << "ResourceGroupwise::asyncLoad() - Found previous sequence number, updating SAB" << endl;
-    ids.remove( mPrefs->systemAddressBook() ); // we don't need to read this one again
-    mUpdateSystemAddressBook = true;
-    if ( ids.isEmpty() )
-    {
-      kdDebug() << "ResourceGroupwise::asyncLoad() - No user addressbooks specified, just updating SAB" << endl;
-      updateAddressBooks();
-      mUpdateSystemAddressBook = false;
-      return true; 
-    }
+    kdDebug() << "  Fetching system addressbook" << endl;
+    fetchAddressBooks( System );
+    return true;
+  }
+  else if ( !shouldFetchSystemAddressBook() )
+  {
+    kdDebug() << "  Fetching user addressbook" << endl;
+    fetchAddressBooks( User );
+    return true;
+  }
+  else
+  {
+    kdDebug() << "  Updating system addressbook" << endl;
+    updateSystemAddressBook(); // we then fetch the user address books after doing this
+  }
+  return true;
+}
+
+void ResourceGroupwise::fetchAddressBooks( BookType bookType )
+{
+  KURL url = createAccessUrl( bookType, Fetch );
+  kdDebug() << k_funcinfo << ( bookType == System ? " System" : " User" ) << " URL: " << url << endl;
+  // sanity check
+  if ( bookType == User && !( mState == SABUptodate || mState == Start ) )
+  {
+    kdDebug() << "  **ERROR** - fetchAddressBooks( User ) called when SAB not up to date" << endl;
+    return;
   }
 
-  KURL url( prefs()->url() );
-  if ( url.protocol() == "http" ) 
-    url.setProtocol( "groupwise" );
-  else 
-    url.setProtocol( "groupwises" );
-
-  url.setPath( url.path() + "/addressbook/" );
-  url.setUser( prefs()->user() );
-  url.setPass( prefs()->password() );
-
-  QString query = "?";
-  QStringList::ConstIterator it;
-  for( it = ids.begin(); it != ids.end(); ++it ) {
-    if ( *it == mPrefs->systemAddressBook() )
-      kdDebug() << "fetching SAB" << (ids.size() > 1 ? ", and user addressbooks" : ", and only SAB" ) << endl;
-    if ( it != ids.begin() ) query += "&";
-    query += "addressbookid=" + *it;
-  }
-  url.setQuery( query );
-
-  kdDebug() << "Download URL: " << url << endl;
-
+  mState = ( bookType == System ? FetchingSAB : FetchingUAB );
   mJobData = QString::null;
 
-  mDownloadJob = KIO::get( url, false, false );
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotFetchJobResult( KIO::Job * ) ) );
-  connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+  mJob = KIO::get( url, false, false );  // TODO: make the GW jobs call finished if the URL 
+                                         // contains no address book IDs
+  kdDebug() << "  Job address: " << mJob << endl;
+  connect( mJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            SLOT( slotReadJobData( KIO::Job *, const QByteArray & ) ) );
-  connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
+  connect( mJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
            SLOT( slotJobPercent( KIO::Job *, unsigned long ) ) );
 
+  if ( bookType == System )
+  {
+    connect( mJob, SIGNAL( result( KIO::Job * ) ),
+           SLOT( fetchSABResult( KIO::Job * ) ) );
+  }
+  else
+  {
+    connect( mJob, SIGNAL( result( KIO::Job * ) ),
+           SLOT( fetchUABResult( KIO::Job * ) ) );
+  }
+
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
-    KPIM::ProgressManager::getUniqueID(), i18n("Downloading addressbook") );
+    KPIM::ProgressManager::getUniqueID(), ( bookType == System ? i18n("Downloading system addressbook") :  i18n("Downloading user addressbooks") ) );
   connect( mProgress,
            SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
            SLOT( cancelLoad() ) );
 
-  return true;
+  return;
 }
 
 bool ResourceGroupwise::save( Ticket *ticket )
@@ -346,117 +351,97 @@ bool ResourceGroupwise::asyncSave( Ticket* )
   return true;
 }
 
-void ResourceGroupwise::slotFetchJobResult( KIO::Job *job )
+void ResourceGroupwise::fetchSABResult( KIO::Job *job )
 {
-  kdDebug() << "ResourceGroupwise::slotFetchJobResult() " << endl;
+  kdDebug() << "ResourceGroupwise::fetchSABResult() " << endl;
 
   if ( job->error() ) {
     kdError() << job->errorString() << endl;
     emit loadingError( this, job->errorString() );
+    // TODO kill the rest of the load sequence as well
   }
 
-  saveCache();
-
-  mDownloadJob = 0;
-  if ( mProgress ) mProgress->setComplete();
-  mProgress = 0;
-
-  // now we fetched addressbooks, if we are using the SAB,  update it with deltas
-  QStringList ids = mPrefs->readAddressBooks();
-  if ( ids.find( mPrefs->systemAddressBook() ) != ids.end() )
+  mJob = 0;
+  mState = SABUptodate;
+  // TODO add delta info progress reporting
+  // update SAB delta info
+  kdDebug() << "  fetched whole SAB, now fetching delta info" << endl;
+  if ( mServer->login() )
   {
-    if ( mUpdateSystemAddressBook )
-    {
-      kdDebug() << "updating system addressbook" << endl;
-      updateAddressBooks();
-      mUpdateSystemAddressBook = false;
-    }
-    else // we just fetched the entire SAB, now get the delta info so we know the last sequence number we have.
-    {
-      kdDebug() << "fetched whole SAB, now fetching delta info" << endl;
-      if ( mServer->login() )
-      {
-        GroupWise::DeltaInfo deltaInfo = mServer->getDeltaInfo( mPrefs->systemAddressBook() );
-        mServer->logout();
-    
-        kdDebug() << "storing delta info to prefs" << endl;
-        mPrefs->setFirstSequenceNumber( deltaInfo.firstSequence );
-        mPrefs->setLastSequenceNumber( deltaInfo.lastSequence );
-        mPrefs->writeConfig();
-        emit loadingFinished( this );
-        addressBook()->emitAddressBookChanged();
-      }
-    }
+    GroupWise::DeltaInfo deltaInfo = mServer->getDeltaInfo( mPrefs->systemAddressBook() );
+    mServer->logout();
+
+    kdDebug() << "  storing delta info to prefs" << endl;
+    mPrefs->setFirstSequenceNumber( deltaInfo.firstSequence );
+    mPrefs->setLastSequenceNumber( deltaInfo.lastSequence );
+    mPrefs->writeConfig();
   }
+
+  fetchAddressBooks( User );
 }
 
-void ResourceGroupwise::slotUpdateJobResult( KIO::Job *job )
+void ResourceGroupwise::fetchUABResult( KIO::Job *job )
 {
-  kdDebug() << "ResourceGroupwise::slotUpdateJobResult() " << endl;
+  kdDebug() << "ResourceGroupwise::fetchUABResult() " << endl;
 
   if ( job->error() ) {
     kdError() << job->errorString() << endl;
     emit loadingError( this, job->errorString() );
   }
-  saveCache();
 
-  emit loadingFinished( this );
-  addressBook()->emitAddressBookChanged();
-  mDownloadJob = 0;
-  if ( mProgress ) mProgress->setComplete();
-  mProgress = 0;
-
+  mJob = 0;
+  mState = Uptodate;
+  loadCompleted();
 }
 
-bool ResourceGroupwise::updateAddressBooks()
+void ResourceGroupwise::updateSABResult( KIO::Job *job )
 {
-  kdDebug() << "ResourceGroupwise::updateAddressBooks() - Updating address books." << endl;
-    
-  if ( mDownloadJob ) {
-    kdWarning() << "Download still in progress" << endl;
-    return false;
+  kdDebug() << "ResourceGroupwise::updateSABResult() " << endl;
+
+  mJob = 0;
+  int errorCode = job->error();
+  if ( errorCode != 0 ) {
+    if ( errorCode == KIO::ERR_NO_CONTENT ) // we need to refresh the SAB
+    {
+      kdDebug() << "  update SAB failed, fetching all of it again" << endl;
+      mPrefs->setLastSequenceNumber( 0 );
+      mPrefs->setFirstSequenceNumber( 0 );
+      fetchAddressBooks( System );
+      return;
+    }
+  }
+  // TODO: update progress info
+  mState = SABUptodate;
+  fetchAddressBooks( User );
+}
+
+void ResourceGroupwise::updateSystemAddressBook()
+{
+  kdDebug() << "ResourceGroupwise::updateSystemAddressBook()" << endl;
+
+  if ( mState != Start ) {
+    kdWarning() << "  Action already in progress" << endl;
+    return;
   }
 
   if ( addressBooks().isEmpty() ) {
-    kdDebug() << "Retrieving default addressbook list." << endl;
+    kdDebug() << "  Retrieving default addressbook list." << endl;
     retrieveAddressBooks();
     writeAddressBooks();
   }
 
-  QStringList ids;
-  ids.append( mPrefs->systemAddressBook() );
-
-  KURL url( prefs()->url() );
-  if ( url.protocol() == "http" ) 
-    url.setProtocol( "groupwise" );
-  else 
-    url.setProtocol( "groupwises" );
-
-  url.setPath( url.path() + "/addressbook/" );
-  url.setUser( prefs()->user() );
-  url.setPass( prefs()->password() );
-
-  QString query = "?";
-  QStringList::ConstIterator it;
-  for( it = ids.begin(); it != ids.end(); ++it ) {
-    if ( it != ids.begin() ) query += "&";
-    query += "addressbookid=" + *it;
-  }
-  query += "&update=true";
-  query += QString::fromLatin1( "&lastSeqNo=%1" ).arg( mPrefs->lastSequenceNumber() );
-
-  url.setQuery( query );
-
-  kdDebug() << "Update URL: " << url << endl;
+  KURL url = createAccessUrl( System, Update, mPrefs->lastSequenceNumber() );
+  kdDebug() << "  Update URL: " << url << endl;
 
   mJobData = QString::null;
 
-  mDownloadJob = KIO::get( url, false, false );
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotUpdateJobResult( KIO::Job * ) ) );
-  connect( mDownloadJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+  mUpdateJob = KIO::get( url, false, false );
+  mUpdateJob->setInteractive( false );
+  connect( mUpdateJob, SIGNAL( result( KIO::Job * ) ),
+           SLOT( updateSABResult( KIO::Job * ) ) );
+  connect( mUpdateJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            SLOT( slotUpdateJobData( KIO::Job *, const QByteArray & ) ) );
-  connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
+  connect( mUpdateJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
            SLOT( slotJobPercent( KIO::Job *, unsigned long ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
@@ -465,12 +450,13 @@ bool ResourceGroupwise::updateAddressBooks()
            SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
            SLOT( cancelLoad() ) );
 
-  return true;
+  return;
 }
 
-void ResourceGroupwise::slotReadJobData( KIO::Job *, const QByteArray &data )
+void ResourceGroupwise::slotReadJobData( KIO::Job *job , const QByteArray &data )
 {
   kdDebug() << "ResourceGroupwise::slotReadJobData()" << endl;
+  kdDebug() << "  Job address: " << job << endl;
 
   mJobData.append( data.data() );
   //mAddrMap.clear(); //ideally we would remove all the contacts from the personal addressbooks and keep the ones from the SAB
@@ -503,8 +489,11 @@ void ResourceGroupwise::slotReadJobData( KIO::Job *, const QByteArray &data )
   mJobData = QString::null;
 }
 
-void ResourceGroupwise::slotUpdateJobData( KIO::Job *, const QByteArray &data )
+void ResourceGroupwise::slotUpdateJobData( KIO::Job *job, const QByteArray &data )
 {
+  kdDebug() << "ResourceGroupwise::slotUpdateJobData()" << endl;
+  kdDebug() << "Job address: " << job << endl;
+#warning maybe ignoring data from job!!
   KABC::VCardConverter conv;
   Addressee::List addressees = conv.parseVCards( mJobData );
   Addressee::List::ConstIterator it;
@@ -548,6 +537,17 @@ void ResourceGroupwise::slotUpdateJobData( KIO::Job *, const QByteArray &data )
   }
 }
 
+void ResourceGroupwise::loadCompleted()
+{
+  if ( mProgress ) 
+    mProgress->setComplete();  //TODO rejig progress reporting
+  mProgress = 0;
+  mState = Start;
+  saveCache();
+  emit loadingFinished( this );
+  addressBook()->emitAddressBookChanged();
+}
+
 void ResourceGroupwise::slotJobPercent( KIO::Job *, unsigned long percent )
 {
   kdDebug() << "ResourceGroupwise::slotJobPercent() " << percent << endl;
@@ -556,11 +556,59 @@ void ResourceGroupwise::slotJobPercent( KIO::Job *, unsigned long percent )
 
 void ResourceGroupwise::cancelLoad()
 {
-  if ( mDownloadJob ) mDownloadJob->kill();
-  mDownloadJob = 0;
+  if ( mJob )
+    mJob->kill();
+  mJob = 0;
   if ( mProgress ) mProgress->setComplete();
   mProgress = 0;
 }
 
+bool ResourceGroupwise::systemAddressBookAlreadyPresent()
+{
+  return ( mPrefs->lastSequenceNumber() != 0 && mPrefs->firstSequenceNumber() != 0 );
+}
+
+bool ResourceGroupwise::shouldFetchSystemAddressBook()
+{
+  QStringList ids = mPrefs->readAddressBooks();
+  return ( ids.find( mPrefs->systemAddressBook() ) != ids.end() );
+}
+
+KURL ResourceGroupwise::createAccessUrl( BookType bookType, AccessMode mode, unsigned int lastSequenceNumber )
+{
+  // set up list of address book IDs to fetch
+  QStringList ids;
+  if ( bookType == System )
+    ids.append( mPrefs->systemAddressBook() );
+  else
+  {
+    ids = mPrefs->readAddressBooks();
+    ids.remove( mPrefs->systemAddressBook() );
+  }
+  
+  KURL url( prefs()->url() );
+  if ( url.protocol() == "http" ) 
+    url.setProtocol( "groupwise" );
+  else 
+    url.setProtocol( "groupwises" );
+
+  url.setPath( url.path() + "/addressbook/" );
+  url.setUser( prefs()->user() );
+  url.setPass( prefs()->password() );
+
+  QString query = "?";
+  QStringList::ConstIterator it;
+  for( it = ids.begin(); it != ids.end(); ++it ) {
+    if ( it != ids.begin() ) query += "&";
+    query += "addressbookid=" + *it;
+  }
+
+  if ( mode == Update && lastSequenceNumber > 0 )
+  {
+    query += QString::fromLatin1( "&update=true&lastSeqNo=%1" ).arg( mPrefs->lastSequenceNumber() );
+  }
+  url.setQuery( query );
+  return url;
+}
 
 #include "kabc_resourcegroupwise.moc"
