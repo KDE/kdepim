@@ -21,7 +21,7 @@
 **
 ** You should have received a copy of the GNU Lesser General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 ** MA 02110-1301, USA.
 */
 
@@ -38,30 +38,109 @@
 class KPilotUser
 {
 public:
-	KPilotUser() { ::memset(&fUser,0,sizeof(struct PilotUser)); }
-	KPilotUser(const PilotUser *user) { fUser = *user; }
+	/** Constructor. Create an empty PilotUser structure. */
+	KPilotUser()
+	{
+		::memset(&fUser,0,sizeof(struct PilotUser));
+	}
+	/** Constructor. Use the given PilotUser structure.
+	*  This creates a copy; no ownership is transferred.
+	*/
+	KPilotUser(const PilotUser *user)
+	{
+		fUser = *user;
+	}
 
-	PilotUser *pilotUser() { return &fUser; }
+	/** Accessor for the whole PilotUser structure. */
+	PilotUser *pilotUser()
+	{
+		return &fUser;
+	}
 
-	const char* getUserName() const     { return fUser.username; }
+	/** @return The username set on the handheld. */
+	const char* getUserName() const
+	{
+		return fUser.username;
+	}
+	/** Set the user name to the given @p name , truncated
+	*  if necessary to the size of the field on the handheld.
+	*/
 	void setUserName(const char *name);
 
-	const int getPasswordLength() const { return fUser.passwordLength; }
-	const char* getPassword() const     { return fUser.password; }
+	/** @return The length of the password on the handheld,
+	*           in bytes.
+	*/
+	const int getPasswordLength() const
+	{
+		return fUser.passwordLength;
+	}
+	/** @return The password on the handheld, NUL terminated. */
+	const char* getPassword() const
+	{
+		return fUser.password;
+	}
+	/** Set the password for the user to @p password , truncated
+	*  to the size of the field on the handheld if needed.
+	*/
 	void setPassword(const char *password);
 
-	unsigned long getUserID() const     { return fUser.userID; }
-	unsigned long getViewerID() const   { return fUser.viewerID; }
+	/** Accessor for the user ID value; returned as a handheld
+	*  long value (4 bytes).
+	*  @note I have no idea what this is for.
+	*/
+	unsigned long getUserID() const
+	{
+		return fUser.userID;
+	}
+	/** Accessor for the viewer ID value; returned as a handheld
+	*  long value (4 bytes).
+	*  @note I have no idea what this is for.
+	*/
+	unsigned long getViewerID() const
+	{
+		return fUser.viewerID;
+	}
 
-	unsigned long getLastSyncPC() const { return fUser.lastSyncPC; }
-	void setLastSyncPC(unsigned long pc) { fUser.lastSyncPC = pc; }
+	/** @return the ID (4 bytes) of the last PC to sync this handheld.
+	 *          This is intended to help identify when the use has
+	 *          changed PCs and needs a new full sync.
+	 */
+	unsigned long getLastSyncPC() const
+	{
+		return fUser.lastSyncPC;
+	}
+	/** Set the ID of the PC syncing the handheld to @p pc . This
+	 *  should be unique in some way (perhaps IP addresses can be
+	 *  used this way, or hostnames).
+	 */
+	void setLastSyncPC(unsigned long pc)
+	{
+		fUser.lastSyncPC = pc;
+	}
 
-	time_t getLastSuccessfulSyncDate() { return fUser.successfulSyncDate; }
+	/** @return the timestamp that the handheld was last synced
+	 *  successfully.
+	 */
+	time_t getLastSuccessfulSyncDate()
+	{
+		return fUser.successfulSyncDate;
+	}
+	/** Set the timestamp for a successful sync. */
 	void setLastSuccessfulSyncDate(time_t when)
-		{ fUser.successfulSyncDate = when; }
+	{
+		fUser.successfulSyncDate = when;
+	}
 
-	time_t getLastSyncDate()           { return fUser.lastSyncDate; }
-	void setLastSyncDate(time_t when) { fUser.lastSyncDate = when; }
+	/** @return the timestamp of the last sync attempt. */
+	time_t getLastSyncDate()
+	{
+		return fUser.lastSyncDate;
+	}
+	/** Set the timestamp of the sync attempt. */
+	void setLastSyncDate(time_t when)
+	{
+		fUser.lastSyncDate = when;
+	}
 
 private:
 	struct PilotUser fUser;
