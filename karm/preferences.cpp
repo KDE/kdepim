@@ -182,7 +182,7 @@ void Preferences::showDialog()
 
 void Preferences::slotOk()
 {
-
+  kdDebug(5970) << "Entering Preferences::slotOk" << endl;
   // storage
   _iCalFileV = _iCalFileW->lineEdit()->text();
 
@@ -209,6 +209,7 @@ void Preferences::slotOk()
 
 void Preferences::slotCancel()
 {
+  kdDebug(5970) << "Entering Preferences::slotCancel" << endl;
   KDialogBase::slotCancel();
 }
 
@@ -224,6 +225,7 @@ void Preferences::autoSaveCheckBoxChanged()
 
 void Preferences::emitSignals()
 {
+  kdDebug(5970) << "Entering Preferences::emitSignals" << endl;
   emit iCalFile( _iCalFileV );
   emit detectIdleness( _doIdleDetectionV );
   emit idlenessTimeout( _idleDetectValueV );

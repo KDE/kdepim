@@ -751,11 +751,16 @@ void TaskView::deletingTask(Task* deletedTask)
 }
 
 void TaskView::iCalFileChanged(QString file)
+// User might have picked a new file in the preferences dialog.
+// This is not iCalFileModified.
 {
   kdDebug(5970) << "TaskView:iCalFileChanged: " << file << endl;
-  stopAllTimers();
-  _storage->save(this);
-  load();
+  if (_storage->icalfile() != file)
+  {
+    stopAllTimers();
+    _storage->save(this);
+    load();
+  }
 }
 
 QValueList<HistoryEvent> TaskView::getHistory(const QDate& from,

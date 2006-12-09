@@ -177,7 +177,9 @@ class TaskView : public KListView
 	 IF YOU DO NOT KNOW WHAT YOU ARE DOING, CALL stopAllTimers INSTEAD */
     void clearActiveTasks();
 
-    /** User has picked a new iCalendar file on preferences screen. */
+    /** User might have picked a new iCalendar file on preferences screen. 
+        Verify the file is not the same as before and load the new one. 
+        This is not iCalFileModified. */
     void iCalFileChanged(QString file);
 
     /** Copy totals for current and all sub tasks to clipboard. */
@@ -226,6 +228,7 @@ class TaskView : public KListView
     void minuteUpdate();
     /** item state stores if a task is expanded so you can see the subtasks */
     void itemStateChanged( QListViewItem *item );
+    /** React on another process having modified the iCal file we rely on. */
     void iCalFileModified(ResourceCalendar *);
 };
 
