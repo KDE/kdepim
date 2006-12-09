@@ -577,7 +577,7 @@ void KNFolder::DynData::setData(KNLocalArticle *a)
   so=a->startOffset();
   eo=a->endOffset();
   sId=a->serverId();
-  ti=a->date()->unixTime();
+  ti=a->date()->dateTime().toTime_t();
 
   flags[0]=a->doMail();
   flags[1]=a->mailed();
@@ -591,7 +591,9 @@ void KNFolder::DynData::setData(KNLocalArticle *a)
 void KNFolder::DynData::getData(KNLocalArticle *a)
 {
   a->setId(id);
-  a->date()->setUnixTime(ti);
+  KDateTime dt;
+  dt.setTime_t( ti );
+  a->date()->setDateTime( dt );
   a->setStartOffset(so);
   a->setEndOffset(eo);
   a->setServerId(sId);

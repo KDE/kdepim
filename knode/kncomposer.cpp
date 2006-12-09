@@ -750,7 +750,7 @@ bool KNComposer::applyChanges()
   KNAttachment *a=0;
 
   //Date
-  a_rticle->date()->setUnixTime();    //set current date+time
+  a_rticle->date()->setDateTime( KDateTime::currentLocalDateTime() );    //set current date+time
 
   //Subject
   a_rticle->subject()->fromUnicodeString(v_iew->s_ubject->text(), c_harset);

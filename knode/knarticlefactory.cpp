@@ -216,7 +216,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, QString selectedText, boo
   attribution.replace(QRegExp("%NAME"),name);
   if ( !a->from()->isEmpty() )
     attribution.replace(QRegExp("%EMAIL"), QString::fromLatin1(a->from()->addresses().first()));
-  attribution.replace(QRegExp("%DATE"),KGlobal::locale()->formatDateTime(a->date()->qdt(),false));
+  attribution.replace( QRegExp("%DATE"), KGlobal::locale()->formatDateTime(a->date()->dateTime().toLocalZone().dateTime(), false) );
   QString msid = a->messageID()->identifier();
   attribution.replace( QRegExp("%MSIDX"), msid );
   attribution.replace( QRegExp("%MSID"), QLatin1Char('<') + msid + QLatin1Char('>') );
@@ -566,9 +566,9 @@ void KNArticleFactory::edit(KNLocalArticle *a)
 
   KNComposer *com=findComposer(a);
   if(com) {
-#ifdef Q_OS_UNIX	  
+#ifdef Q_OS_UNIX
     KWin::activateWindow(com->winId());
-#endif    
+#endif
     return;
   }
 
@@ -854,7 +854,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, QB
     art->organization()->fromUnicodeString( id->orga(), knGlobals.settings()->charset().toLatin1() );
 
   //Date
-  art->date()->setUnixTime(); //set current date+time
+  art->date()->setDateTime( KDateTime::currentLocalDateTime() );
 
   //User-Agent
   if( !knGlobals.settings()->noUserAgent() ) {
@@ -1055,11 +1055,11 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
   if ( delCom ) {
     mCompList.removeAll( com );
     delete com;
-  } 
-#ifdef Q_OS_UNIX  
+  }
+#ifdef Q_OS_UNIX
   else
     KWin::activateWindow(com->winId());
-#endif  
+#endif
 }
 
 

@@ -295,8 +295,8 @@ void KNRemoteArticle::propagateThreadChangedDate()
     idRef=ref->idRef();
   }
 
-  if (date()->unixTime() > ref->date()->unixTime()) {
-    ref->setSubThreadChangeDate(date()->unixTime());
+  if (date()->dateTime() > ref->date()->dateTime()) {
+    ref->setSubThreadChangeDate(date()->dateTime().toTime_t());
   }
 }
 

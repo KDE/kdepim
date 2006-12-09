@@ -248,7 +248,9 @@ bool KNGroup::loadHdrs()
         fileFormatVersion = 0;          // KNode <= 0.4 had no version number
       art->setId(id);
       art->lines()->setNumberOfLines(lines);
-      art->date()->setUnixTime(timeT);
+      KDateTime dt;
+      dt.setTime_t( timeT );
+      art->date()->setDateTime( dt );
 
       if ( fileFormatVersion > 0 ) {
         buffer = f.readLine();
@@ -565,7 +567,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 
       ts << art->id() << ' ';
       ts << art->lines()->numberOfLines() << ' ';
-      ts << art->date()->unixTime() << ' ';
+      ts << art->date()->dateTime().toTime_t() << ' ';
       ts << "2\n";       // version number to achieve backward compatibility easily
 
       ts << art->articleNumber() << '\n';
@@ -786,7 +788,7 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
           //find oldest
           oldest=list.first();
           for ( KNRemoteArticle::List::Iterator it = list.begin(); it != list.end(); ++it )
-            if ( (*it)->date()->unixTime() < oldest->date()->unixTime() )
+            if ( (*it)->date()->dateTime() < oldest->date()->dateTime() )
               oldest = (*it);
 
           //oldest gets idRef 0

@@ -100,8 +100,8 @@ int KNHdrViewItem::compare( Q3ListViewItem *i, int col, bool ) const
        return (diff < 0 ? -1 : diff > 0 ? 1 : 0);
 
     case 4:
-       date1 = art->date()->unixTime();
-       date2 = otherArticle->date()->unixTime();
+       date1 = art->date()->dateTime().toTime_t();
+       date2 = otherArticle->date()->dateTime().toTime_t();
        if (art->type() == KNArticle::ATremote && static_cast<KNHeaderView*>( listView() )->sortByThreadChangeDate()) {
          if (static_cast<KNRemoteArticle*>( art )->subThreadChangeDate() > date1)
            date1 = static_cast<KNRemoteArticle*>( art )->subThreadChangeDate();
@@ -236,7 +236,7 @@ QString KNHdrViewItem::text( int col ) const
   }
 
   if ( col == hv->paintInfo()->dateCol ) {
-    return hv->mDateFormatter.dateString( art->date()->qdt() );
+    return hv->mDateFormatter.dateString( art->date()->dateTime().toLocalZone().dateTime() );
   } else
     return K3ListViewItem::text( col );
 }
