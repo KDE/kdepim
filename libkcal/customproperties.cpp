@@ -1,7 +1,7 @@
 /*
     This file is part of libkcal.
 
-    Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2002,2006 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -64,6 +64,7 @@ void CustomProperties::setCustomProperty(const QCString &app, const QCString &ke
   if (!checkName(property))
     return;
   mProperties[property] = value;
+  customPropertyUpdated();
 }
 
 void CustomProperties::removeCustomProperty(const QCString &app, const QCString &key)
@@ -81,13 +82,16 @@ void CustomProperties::setNonKDECustomProperty(const QCString &name, const QStri
   if (value.isNull() || !checkName(name))
     return;
   mProperties[name] = value;
+  customPropertyUpdated();
 }
 
 void CustomProperties::removeNonKDECustomProperty(const QCString &name)
 {
   QMap<QCString, QString>::Iterator it = mProperties.find(name);
-  if (it != mProperties.end())
+  if (it != mProperties.end()) {
     mProperties.remove(it);
+    customPropertyUpdated();
+  }
 }
 
 QString CustomProperties::nonKDECustomProperty(const QCString &name) const
@@ -100,12 +104,16 @@ QString CustomProperties::nonKDECustomProperty(const QCString &name) const
 
 void CustomProperties::setCustomProperties(const QMap<QCString, QString> &properties)
 {
+  bool changed = false;
   for (QMap<QCString, QString>::ConstIterator it = properties.begin();  it != properties.end();  ++it) {
     // Validate the property name and convert any null string to empty string
     if (checkName(it.key())) {
       mProperties[it.key()] = it.data().isNull() ? QString("") : it.data();
+      changed = true;
     }
   }
+  if (changed)
+    customPropertyUpdated();
 }
 
 QMap<QCString, QString> CustomProperties::customProperties() const

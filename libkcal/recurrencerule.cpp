@@ -1069,7 +1069,7 @@ QDateTime RecurrenceRule::getPreviousDate( const QDateTime& afterDate ) const
 
 // kdDebug(5800) << "    getNext date after " << preDate << endl;
   prev = afterDate;
-  if ( mDuration >= 0 && endDt().isValid() && afterDate >= endDt() )
+  if ( mDuration >= 0 && endDt().isValid() && afterDate > endDt() )
     prev = endDt().addSecs( 1 );
 
   Constraint interval( getPreviousValidDateInterval( prev, recurrenceType() ) );
@@ -1081,7 +1081,10 @@ QDateTime RecurrenceRule::getPreviousDate( const QDateTime& afterDate ) const
     do {
       --dtit;
     } while ( dtit != dts.begin() && (*dtit) >= prev );
-    if ( (*dtit) < prev ) return (*dtit);
+    if ( (*dtit) < prev ) {
+      if ( (*dtit) >= startDt() ) return (*dtit);
+      else return QDateTime();
+    }
   }
 
   // Previous interval. As soon as we find an occurrence, we're done.

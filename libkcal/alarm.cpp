@@ -452,3 +452,8 @@ void Alarm::setParent( Incidence *parent )
 {
   mParent = parent;
 }
+
+void Alarm::customPropertyUpdated()
+{
+  if ( mParent ) mParent->updated();
+}

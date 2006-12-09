@@ -1,7 +1,7 @@
 /*
     This file is part of libkcal.
 
-    Copyright (c) 2002 David Jarvie <software@astrojar.org.uk>
+    Copyright (c) 2002,2006 David Jarvie <software@astrojar.org.uk>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -110,6 +110,14 @@ class LIBKCAL_EXPORT CustomProperties
       Return all custom calendar property key/value pairs.
     */
     QMap<QCString, QString> customProperties() const;
+
+  protected:
+    /**
+      Called when a custom property has been changed.
+      The default implementation does nothing: override in derived classes
+      to perform change processing.
+    */
+    virtual void customPropertyUpdated()  {}
 
   private:
     static bool checkName(const QCString& name);

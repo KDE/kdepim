@@ -334,6 +334,13 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     */
     Incidence *parent() const  { return mParent; }
 
+  protected:
+    /**
+      @copydoc
+      CustomProperties::customPropertyUpdated()
+    */
+    virtual void customPropertyUpdated();
+
   private:
     Incidence *mParent;          // the incidence which this alarm belongs to
     Type mType;                  // type of alarm

@@ -379,3 +379,8 @@ void IncidenceBase::updated()
     o->incidenceUpdated( this );
   }
 }
+
+void IncidenceBase::customPropertyUpdated()
+{
+  updated();
+}
