@@ -369,7 +369,7 @@ void KNArticleFactory::createCancel(KNArticle *a)
     default :               return;
   }
 
-  KNGroup *grp;
+  KNGroup *grp = 0;
   KNNntpAccount *nntp=0;
 
   if ( a->type() == KNArticle::ATremote )
@@ -387,7 +387,8 @@ void KNArticleFactory::createCancel(KNArticle *a)
     nntp=knGlobals.accountManager()->account(la->serverId());
   }
 
-  grp=knGlobals.groupManager()->group(a->newsgroups()->firstGroup(), nntp);
+  if ( !a->newsgroups()->isEmpty() )
+    grp = knGlobals.groupManager()->group(a->newsgroups()->groups().first(), nntp);
 
   QString sig;
   KNLocalArticle *art=newArticle(grp, sig, "us-ascii", false);
@@ -442,7 +443,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
        i18n("Do you really want to supersede this article?"), QString(), KGuiItem(i18n("Supersede")), KStdGuiItem::cancel() ) )
     return;
 
-  KNGroup *grp;
+  KNGroup *grp = 0;
   KNNntpAccount *nntp;
 
   if ( a->type() == KNArticle::ATremote )
@@ -460,7 +461,8 @@ void KNArticleFactory::createSupersede(KNArticle *a)
     }
   }
 
-  grp=knGlobals.groupManager()->group(a->newsgroups()->firstGroup(), nntp);
+  if ( !a->newsgroups()->isEmpty() )
+    grp = knGlobals.groupManager()->group(a->newsgroups()->groups().first(), nntp);
 
   //new article
   QString sig;
@@ -584,11 +586,13 @@ void KNArticleFactory::edit(KNLocalArticle *a)
     KNNntpAccount *acc=knGlobals.accountManager()->account(a->serverId());
     if(acc) {
       KMime::Headers::Newsgroups *grps=a->newsgroups();
-      KNGroup *grp=knGlobals.groupManager()->group(grps->firstGroup(), acc);
-      if (grp && grp->identity())
-        id=grp->identity();
-      else if (acc->identity())
-        id=acc->identity();
+      if ( !grps->isEmpty() ) {
+        KNGroup *grp = knGlobals.groupManager()->group(grps->groups().first(), acc);
+        if (grp && grp->identity())
+          id=grp->identity();
+        else if (acc->identity())
+          id=acc->identity();
+      }
     }
   }
 

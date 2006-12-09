@@ -715,11 +715,13 @@ bool KNComposer::hasValidData()
     KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
     if ( acc ) {
       KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
-      KNGroup *grp = knGlobals.groupManager()->group( grps->firstGroup(), acc );
-      if (grp && grp->identity())
-        signingKey = grp->identity()->signingKey().toLatin1();
-      else if (acc->identity())
-        signingKey = acc->identity()->signingKey().toLatin1();
+      if ( !grps->isEmpty() ) {
+        KNGroup *grp = knGlobals.groupManager()->group( grps->groups().first(), acc );
+        if (grp && grp->identity())
+          signingKey = grp->identity()->signingKey().toLatin1();
+        else if (acc->identity())
+          signingKey = acc->identity()->signingKey().toLatin1();
+      }
     }
 
     // the article can only be signed if we have a key
@@ -840,11 +842,13 @@ bool KNComposer::applyChanges()
       KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
       if ( acc ) {
           KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
-          KNGroup *grp = knGlobals.groupManager()->group( grps->firstGroup(), acc );
-          if (grp && grp->identity())
+          if ( !grps->isEmpty() ) {
+            KNGroup *grp = knGlobals.groupManager()->group( grps->groups().first(), acc );
+            if (grp && grp->identity())
               signingKey = grp->identity()->signingKey().toLatin1();
-          else if (acc->identity())
-               signingKey = acc->identity()->signingKey().toLatin1();
+            else if (acc->identity())
+              signingKey = acc->identity()->signingKey().toLatin1();
+          }
       }
       // now try to sign the article
       if (!signingKey.isEmpty()) {

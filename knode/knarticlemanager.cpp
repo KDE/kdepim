@@ -663,13 +663,13 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
     if( r && knGlobals.settings()->markCrossposts() &&
         handleXPosts && (*it)->newsgroups()->isCrossposted() ) {
 
-      QStringList groups = (*it)->newsgroups()->getGroups();
+      QList<QByteArray> groups = (*it)->newsgroups()->groups();
       KNGroup *targetGroup=0;
       KNRemoteArticle *xp=0;
       KNRemoteArticle::List al;
       QByteArray mid = (*it)->messageID()->as7BitString( false );
 
-      for ( QStringList::Iterator it2 = groups.begin(); it2 != groups.end(); ++it2 ) {
+      for ( QList<QByteArray>::Iterator it2 = groups.begin(); it2 != groups.end(); ++it2 ) {
         targetGroup = knGlobals.groupManager()->group(*it2, g->account());
         if (targetGroup) {
           if (targetGroup->isLoaded() && (xp=targetGroup->byMessageId(mid)) ) {
