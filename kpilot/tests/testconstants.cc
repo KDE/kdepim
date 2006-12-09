@@ -28,26 +28,40 @@
 
 #include "options.h"
 
-#define private public
-#define protected public
-
-#include "pilotDatabase.h"
+#include "pilot.h"
+#include "pilotAppInfo.h"
 
 #include <pi-appinfo.h>
 
 int main(int argc, char **argv)
 {
-	PilotAppInfoBase info;
+#ifdef DEBUG
+	debug_level = 1;
+#endif
+	PilotAppInfoBase info( 0L );
 
-	kdDebug() << "*** Sizes of structures" << endl;
-	kdDebug() << "AppInfoBase: " << sizeof(PilotAppInfoBase) << endl;
-	kdDebug() << "CategoryInfo: " << sizeof(info.categoryInfo()) << endl;
-	kdDebug() << "CategoryInfo: " << sizeof(*info.categoryInfo()) << endl;
-	kdDebug() << "Category names: " << sizeof(info.categoryInfo()->name) << endl;
-	kdDebug() << "Single category: " << sizeof(info.categoryInfo()->name[0]) << endl;
 
-	if ( sizeof(info.categoryInfo()->name[0]) != 16 ) return 1;
-	if ( sizeof(info.categoryInfo()->name) / sizeof(info.categoryInfo()->name[0]) != 16 ) return 1;
+	kdDebug() << "### testconstants\n#" << endl;
+	kdDebug() << "# Sizes of structures\n#" << endl;
+	kdDebug() << "#     AppInfoBase: " << sizeof(PilotAppInfoBase) << endl;
+	kdDebug() << "#    CategoryInfo: " << sizeof(info.categoryInfo()) << endl;
+	kdDebug() << "#    CategoryInfo: " << sizeof(*info.categoryInfo()) << endl;
+	kdDebug() << "#  Category names: " << sizeof(info.categoryInfo()->name) << endl;
+	kdDebug() << "# Single category: " << sizeof(info.categoryInfo()->name[0]) << endl;
+
+	kdDebug() << "#\n# Sanity checking structure sizes\n#" << endl;
+	if ( sizeof(info.categoryInfo()->name[0]) != Pilot::CATEGORY_SIZE )
+	{
+		kdDebug() << "! Category names are not 16 bytes." << endl;
+		return 1;
+	}
+	if ( sizeof(info.categoryInfo()->name) / sizeof(info.categoryInfo()->name[0]) != Pilot::CATEGORY_COUNT )
+	{
+		kdDebug() << "! There are not " << Pilot::CATEGORY_COUNT << " categories available." << endl;
+		return 1;
+	}
+
+	kdDebug() << "# OK.\n" << endl;
 	return 0;
 }
 

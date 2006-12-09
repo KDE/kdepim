@@ -55,8 +55,6 @@ k_dcop:
 	*/
 	virtual ASYNC requestSyncType(QString) = 0;
 	/** Shortcut for using requestSync(1) */
-	virtual ASYNC requestFastSyncNext() = 0;
-	/** Shortcut for using requestSync(2) */
 	virtual ASYNC requestRegularSyncNext() = 0;
 	/** Query what type is set most recently. */
 	virtual int nextSyncType() const = 0;

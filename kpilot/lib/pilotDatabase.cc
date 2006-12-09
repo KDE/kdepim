@@ -1,6 +1,8 @@
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
+** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2005-2006 Adriaan de Groot <groot@kde.org>
 **
 ** This is the abstract base class for databases, which is used both
 ** by local databases and by the serial databases held in the Pilot.
@@ -33,12 +35,11 @@
 #include <pi-appinfo.h>
 
 #include <qstringlist.h>
-#include <qtextcodec.h>
 
 #include <kglobal.h>
 
 #include "pilotDatabase.h"
-#include "pilotAppCategory.h"
+#include "pilotRecord.h"
 
 static int creationCount = 0;
 static QStringList *createdNames = 0L;
@@ -66,23 +67,23 @@ PilotDatabase::PilotDatabase(const QString &s) :
 	}
 }
 
-/* static */ int PilotDatabase::count()
+/* static */ int PilotDatabase::instanceCount()
 {
 	FUNCTIONSETUP;
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": " << creationCount << " databases." << endl;
+	DEBUGLIBRARY << fname << ": " << creationCount << " databases." << endl;
 	if (createdNames)
 	{
-		DEBUGDAEMON << fname << ": "
+		DEBUGLIBRARY << fname << ": "
 			<< createdNames->join(CSL1(",")) << endl;
 	}
 #endif
 	return creationCount;
 }
 
-/* virtual */ RecordIDList PilotDatabase::idList()
+/* virtual */ Pilot::RecordIDList PilotDatabase::idList()
 {
-	RecordIDList l;
+	Pilot::RecordIDList l;
 
 	for (unsigned int i = 0 ; ; i++)
 	{
@@ -95,9 +96,9 @@ PilotDatabase::PilotDatabase(const QString &s) :
 	return l;
 }
 
-/* virtual */ RecordIDList PilotDatabase::modifiedIDList()
+/* virtual */ Pilot::RecordIDList PilotDatabase::modifiedIDList()
 {
-	RecordIDList l;
+	Pilot::RecordIDList l;
 
 	resetDBIndex();
 	while(1)
@@ -110,95 +111,4 @@ PilotDatabase::PilotDatabase(const QString &s) :
 
 	return l;
 }
-
-PilotAppInfoBase::PilotAppInfoBase(PilotDatabase *d) : fC(new struct CategoryAppInfo), fLen(0), fOwn(true)
-{
-	FUNCTIONSETUP;
-	int appLen = MAX_APPINFO_SIZE;
-	unsigned char buffer[MAX_APPINFO_SIZE];
-
-	fLen = appLen = d->readAppBlock(buffer,appLen);
-	unpack_CategoryAppInfo(fC, buffer, appLen);
-}
-
-PilotAppInfoBase::~PilotAppInfoBase()
-{
-	if (fOwn) delete fC;
-}
-
-
-int PilotAppInfoBase::findCategory(const QString &selectedCategory,
-	bool unknownIsUnfiled, struct CategoryAppInfo *info)
-{
-	FUNCTIONSETUP;
-
-	int currentCatID = -1;
-	for (int i=0; i<PILOT_CATEGORY_MAX; i++)
-	{
-		if (!info->name[i][0]) continue;
-		if (selectedCategory ==
-			PilotAppCategory::codec()->toUnicode(info->name[i]))
-		{
-			currentCatID = i;
-			break;
-		}
-	}
-
-#ifdef DEBUG
-	if (-1 == currentCatID)
-	{
-		DEBUGKPILOT << fname << ": Category name "
-			<< selectedCategory << " not found." << endl;
-	}
-	else
-	{
-		DEBUGKPILOT << fname << ": Matched category " << currentCatID << endl;
-	}
-#endif
-
-	if ((currentCatID == -1) && unknownIsUnfiled)
-		currentCatID = 0;
-	return currentCatID;
-}
-
-void PilotAppInfoBase::dumpCategories(const struct CategoryAppInfo &info)
-{
-#ifdef DEBUG
-	FUNCTIONSETUP;
-	DEBUGCONDUIT << fname << " lastUniqueId"
-		<< info.lastUniqueID << endl;
-	for (int i = 0; i < PILOT_CATEGORY_MAX; i++)
-	{
-		if (!info.name[i][0]) continue;
-		DEBUGCONDUIT << fname << ": " << i << " = "
-			<< info.ID[i] << " <"
-			<< info.name[i] << ">" << endl;
-	}
-#else
-	Q_UNUSED(info);
-#endif
-}
-
-void PilotAppInfoBase::dump() const
-{
-	dumpCategories(*categoryInfo());
-}
-
-
-QString PilotAppInfoBase::category(unsigned int i)
-{
-	if (i>=PILOT_CATEGORY_MAX) return QString::null;
-	return PilotAppCategory::codec()->toUnicode(categoryInfo()->name[i],PILOT_CATEGORY_SIZE-1);
-}
-
-bool PilotAppInfoBase::setCategoryName(unsigned int i, const QString &s)
-{
-	if (i>=PILOT_CATEGORY_MAX) return false;
-	int len = PILOT_CATEGORY_SIZE - 1;
-	QCString t = PilotAppCategory::codec()->fromUnicode(s,len);
-	memset(categoryInfo()->name[i],0,PILOT_CATEGORY_SIZE);
-	qstrncpy(categoryInfo()->name[i],t,PILOT_CATEGORY_SIZE);
-	return true;
-}
-
 

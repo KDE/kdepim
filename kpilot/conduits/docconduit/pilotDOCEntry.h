@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 ** MA 02110-1301, USA.
 */
 
@@ -28,14 +28,14 @@
 #ifndef _KPILOT_PILOTDOCENTRY_H
 #define _KPILOT_PILOTDOCENTRY_H
 
-#include <pilotAppCategory.h>
+#include <pilotRecord.h>
 #include "makedoc9.h"
 
 
 class PilotRecord;
 
 
-class PilotDOCEntry:public PilotAppCategory {
+class PilotDOCEntry:public PilotRecordBase {
 private:
 	bool compress;
 	tBuf fText;
@@ -64,10 +64,7 @@ public:
 		compress = compressed;
 	};
 
-protected:
-	void *pack_(void *, int *);
-	void unpack(const void *, int = 0) {
-	}
+	PilotRecord *pack(); // Not const because it can change the compression
 };
 
 

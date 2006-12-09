@@ -33,6 +33,8 @@
 #include <qcheckbox.h>
 #include <qbuttongroup.h>
 #include <qlistview.h>
+
+#include <kaboutdata.h>
 #include <kapplication.h>
 #include <kurlrequester.h>
 
@@ -89,7 +91,17 @@ SysInfoWidgetConfig::SysInfoWidgetConfig(QWidget *w, const char *n) :
 	fConfigWidget(new SysInfoWidget(w))
 {
 	FUNCTIONSETUP;
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,SysInfoConduitFactory::about());
+
+	KAboutData *fAbout = new KAboutData("SysInfoConduit",
+		I18N_NOOP("KPilot System Information conduit"),
+		KPILOT_VERSION,
+		I18N_NOOP("Retrieves System, Hardware, and User Info from the Handheld and stores them to a file."),
+		KAboutData::License_GPL,
+		"(C) 2003, Reinhold Kainhofer");
+	fAbout->addAuthor("Reinhold Kainhofer",
+		I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
+
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,fAbout);
 	fWidget=fConfigWidget;
 
 	QObject::connect(fConfigWidget->fOutputFile,SIGNAL(textChanged(const QString&)),
@@ -121,7 +133,7 @@ void SysInfoWidgetConfig::commit()
 			<< (ci->isOn() ? " on" : " off") << endl;
 #endif
 		int index=ci->text(PART_KEY).toInt();
-		if (0<=index && index<=10) 
+		if (0<=index && index<=10)
 		{
 			const sysinfoEntry_t *p = sysinfoEntries+index;
 			p->mutator(ci->isOn());

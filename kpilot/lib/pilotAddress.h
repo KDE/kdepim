@@ -34,8 +34,8 @@
 
 #include <kabc/addressbook.h>
 
-#include "pilotAppCategory.h"
-#include "pilotDatabase.h"
+#include "pilotRecord.h"
+#include "pilotAppInfo.h"
 
 /** @brief A wrapper class around the Address struct provided by pi-address.h
  *
@@ -78,7 +78,7 @@ namespace KABC
 
 typedef PilotAppInfo<AddressAppInfo,unpack_AddressAppInfo, pack_AddressAppInfo> PilotAddressInfo;
 
-class KDE_EXPORT PilotAddress : public PilotAppCategory
+class KDE_EXPORT PilotAddress : public PilotRecordBase
 {
 public:
 	enum EPhoneType {
@@ -86,14 +86,12 @@ public:
 		ePager, eMobile
 		};
 
-	PilotAddress(struct AddressAppInfo &appInfo) KDE_DEPRECATED ;
-	PilotAddress(struct AddressAppInfo &appInfo, PilotRecord* rec) KDE_DEPRECATED ;
 	PilotAddress(PilotAddressInfo *appinfo, PilotRecord *rec = 0L);
 	PilotAddress(const PilotAddress &copyFrom);
 	PilotAddress& operator=( const PilotAddress &r );
 	bool operator==(const PilotAddress &r);
 
-	~PilotAddress();
+	virtual ~PilotAddress();
 
 	/** Returns a text representation of the address. If richText is true, the
 	 *  text is allowed to contain Qt-HTML tags.
@@ -119,17 +117,17 @@ public:
 	void setField(int field, const QString &text);
 	QString getField(int field) const;
 
-    /**
-      Return list of all email addresses.  This will search through our "phone"
-	  fields and will return only those which are e-mail addresses.
-     */
-    QStringList getEmails() const;
+	/**
+	*   Return list of all email addresses.  This will search through our "phone"
+	*   fields and will return only those which are e-mail addresses.
+	*/
+	QStringList getEmails() const;
 	void setEmails(QStringList emails);
 
-    /**
-	Return list of all phone numbers.  This will search through our "phone"
-	fields and will return only those which are not e-mail addresses.
-	 */
+	/**
+	*   Return list of all phone numbers.  This will search through our "phone"
+	*   fields and will return only those which are not e-mail addresses.
+	*/
 	KABC::PhoneNumber::List getPhoneNumbers() const;
 	void setPhoneNumbers(KABC::PhoneNumber::List list);
 
@@ -139,7 +137,12 @@ public:
 	*  to the category list
 	*  @return false if category labels are full
 	*/
-	inline bool setCategory(const QString &label) { return PilotAppCategory::setCategory(fAppInfo.category,label); } ;
+	inline bool setCategory(const QString &label)
+	{
+		int c = Pilot::insertCategory(&fAppInfo.category,label,false);
+		PilotRecordBase::setCategory(c);
+		return c>=0;
+	} ;
 
 
 	/**
@@ -175,10 +178,7 @@ public:
 	int  getPhoneLabelIndex(int index) const { return fAddressInfo.phoneLabel[index]; }
 
 
-	virtual void *pack_(void *, int *);
-	void unpack(const void *, int = 0) { }
-
-	static const int APP_BUFFER_SIZE;
+	PilotRecord *pack() const;
 
 	const struct Address *address() const { return &fAddressInfo; } ;
 

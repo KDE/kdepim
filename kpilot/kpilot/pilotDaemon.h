@@ -48,6 +48,9 @@ class LoggerDCOP_stub;
 class KPilotDCOP_stub;
 class LogFile;
 
+class KPilotLink;
+class KPilotDeviceLink;
+
 class PilotDaemonTray : public KSystemTray
 {
 	Q_OBJECT
@@ -163,7 +166,6 @@ public slots:
 	virtual ASYNC requestSync(int);
 public:
 	virtual ASYNC requestSyncType(QString);
-	virtual ASYNC requestFastSyncNext();
 	virtual ASYNC requestRegularSyncNext();
 	virtual int nextSyncType() const;
 	virtual ASYNC requestSyncOptions(bool,bool);
@@ -196,7 +198,7 @@ protected:
 	int fPostSyncAction;
 
 protected slots:
-	void startHotSync( KPilotDeviceLink* lnk );
+	void startHotSync( KPilotLink* lnk );
 	void endHotSync();
 
 	void logMessage(const QString &);
@@ -205,6 +207,14 @@ protected slots:
 
 private:
 	int getPilotSpeed();
+
+	/**
+	* Check whether we should do a backup.  This is based on the
+	* KPilotSettings::backupFrequency and uses
+	* SyncAction::BackupFrequency.  This will be expanded, hopefully,
+	* to provide backup scheduling at some point.
+	*/
+	bool shouldBackup();
 
 	bool setupPilotLink();
 

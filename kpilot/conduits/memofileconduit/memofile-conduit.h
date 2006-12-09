@@ -38,7 +38,7 @@ class MemofileConduit : public ConduitAction
 {
 Q_OBJECT
 public:
-	MemofileConduit(KPilotDeviceLink *,
+	MemofileConduit(KPilotLink *,
 		const char *name=0L,
 		const QStringList &args = QStringList());
 	virtual ~MemofileConduit();

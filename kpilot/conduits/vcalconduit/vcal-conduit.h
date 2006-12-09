@@ -52,9 +52,11 @@ public:
 	virtual void addIncidence(KCal::Incidence*);
 	virtual void removeIncidence(KCal::Incidence *);
 	virtual KCal::Incidence *findIncidence(recordid_t);
-	/** Find the incidence based on tosearch's description and date information. Returns 0L if no incidence could be found.
+	/**
+	 * Find the incidence based on tosearch's description and date information.
+	 * Returns 0L if no incidence could be found.
 	 */
-	virtual KCal::Incidence *findIncidence(PilotAppCategory*tosearch);
+	virtual KCal::Incidence *findIncidence(PilotRecordBase *tosearch);
 	virtual KCal::Incidence *getNextIncidence();
 	virtual KCal::Incidence *getNextModifiedIncidence();
 	virtual int count() {return fAllEvents.count();};
@@ -66,7 +68,7 @@ class VCalConduit : public VCalConduitBase
 {
 Q_OBJECT
 public:
-	VCalConduit(KPilotDeviceLink *,
+	VCalConduit(KPilotLink *,
 		const char *name=0L,
 		const QStringList &args = QStringList());
 	virtual ~VCalConduit();
@@ -81,17 +83,19 @@ protected:
 	void _setAppInfo();
 	QString _getCat(const QStringList cats, const QString curr) const;
 
-	virtual PilotAppCategory*newPilotEntry(PilotRecord*r);
+	virtual PilotRecordBase *newPilotEntry(PilotRecord*r);
 	virtual KCal::Incidence*newIncidence();
-	virtual const QString getTitle(PilotAppCategory*de);
+	virtual const QString getTitle(PilotRecordBase *de);
 	virtual VCalConduitSettings *config();
+public:
+	static VCalConduitSettings *theConfig();
 
 protected:
-	virtual PilotRecord *recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e);
+	virtual PilotRecord *recordFromIncidence(PilotRecordBase *de, const KCal::Incidence*e);
 	virtual PilotRecord *recordFromIncidence(PilotDateEntry*de, const KCal::Event*e);
-	virtual KCal::Incidence *incidenceFromRecord(KCal::Incidence *, const PilotAppCategory *);
+	virtual KCal::Incidence *incidenceFromRecord(KCal::Incidence *,
+		const PilotRecordBase  *);
 	virtual KCal::Event *incidenceFromRecord(KCal::Event *, const PilotDateEntry *);
-
 
 	void setStartEndTimes(KCal::Event *,const PilotDateEntry *);
 	void setAlarms(KCal::Event *,const PilotDateEntry *);
@@ -106,7 +110,6 @@ protected:
 	void setCategory(PilotDateEntry *, const KCal::Event *);
 	void setCategory(KCal::Event *, const PilotDateEntry *);
 	struct AppointmentAppInfo fAppointmentAppInfo;
-
-} ;
+};
 
 #endif

@@ -28,9 +28,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-static const char *conduitconfigdialog_id =
-	"$Id$";
-
 #include "options.h"
 
 #include <qlistview.h>
@@ -78,11 +75,13 @@ extern "C"
 {
 	KDE_EXPORT KCModule *create_kpilotconfig( QWidget *parent, const char * )
 	{
+		FUNCTIONSETUP;
 		return new ConduitConfigWidget( parent, "kcmkpilotconfig" );
 	}
 
 	KDE_EXPORT ConfigWizard *create_wizard(QWidget *parent, int m)
 	{
+		FUNCTIONSETUP;
 		return new ConfigWizard(parent,"Wizard", m);
 	}
 }
@@ -217,6 +216,8 @@ ConduitConfigWidgetBase::ConduitConfigWidgetBase(QWidget *parent, const char *n)
 	fConfigureKontact(0L),
 	fActionDescription(0L)
 {
+	FUNCTIONSETUP;
+
 	QWidget *w = 0L; // For spacing purposes only.
 	QHBox *btns = 0L;
 
@@ -346,7 +347,6 @@ ConduitConfigWidget::ConduitConfigWidget(QWidget *parent, const char *n,
 	(void) new ConduitTip(fConduitList);
 	setButtons(Apply);
 
-	(void) conduitconfigdialog_id;
 }
 
 ConduitConfigWidget::~ConduitConfigWidget()
@@ -519,21 +519,25 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 		return;
 	}
 
+	QString libraryName = p->text(CONDUIT_LIBRARY);
+
 #ifdef DEBUG
 	DEBUGKPILOT << fname
 		<< ": Executing conduit "
 		<< p->text(CONDUIT_NAME)
+		<< " (library " << libraryName << ")"
 		<< endl;
 #endif
 
-	if (p->text(CONDUIT_LIBRARY).isEmpty())
+
+	if (libraryName.isEmpty())
 	{
 		fStack->raiseWidget(BROKEN_CONDUIT);
 		warnNoExec(p);
 		return;
 	}
 
-	if (p->text(CONDUIT_LIBRARY).startsWith(CSL1("internal_")))
+	if (libraryName.startsWith(CSL1("internal_")))
 	{
 		fStack->raiseWidget(INTERNAL_CONDUIT);
 		fActionDescription->setText(
@@ -544,18 +548,18 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 		return;
 	}
 
-	if (p->text(CONDUIT_LIBRARY) == CSL1("expln_conduits"))
+	if (libraryName == CSL1("expln_conduits"))
 	{
 		fStack->raiseWidget(CONDUIT_EXPLN);
 		return;
 	}
-	if (p->text(CONDUIT_LIBRARY) == CSL1("expln_general"))
+	if (libraryName == CSL1("expln_general"))
 	{
 		fStack->raiseWidget(GENERAL_EXPLN);
 		return;
 	}
 
-	if (p->text(CONDUIT_LIBRARY) == CSL1("general_about"))
+	if (libraryName == CSL1("general_about"))
 	{
 		fStack->raiseWidget(GENERAL_ABOUT);
 		return;
@@ -564,13 +568,13 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 	QObject *o = 0L;
 
 	// Page 4: General setup
-	if (p->text(CONDUIT_LIBRARY).startsWith(CSL1("general_")))
+	if (libraryName.startsWith(CSL1("general_")))
 	{
 		o = handleGeneralPages(fStack,p);
 	}
 	else
 	{
-		QCString library = QFile::encodeName(p->text(CONDUIT_LIBRARY));
+		QCString library = QFile::encodeName(libraryName);
 
 		KLibFactory *f = KLibLoader::self()->factory(library);
 		if (!f)
@@ -578,7 +582,9 @@ void ConduitConfigWidget::loadAndConfigure(QListViewItem *p) // ,bool exec)
 #ifdef DEBUG
 			DEBUGKPILOT << fname
 				<< ": No conduit library "
-				<< library
+				<< library.data()
+				<< " [" << library.size() << "]"
+				<< " (" << libraryName << ")"
 				<< " found."
 				<< endl;
 #endif

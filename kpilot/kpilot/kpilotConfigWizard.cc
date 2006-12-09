@@ -26,9 +26,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-static const char *conduitconfigwizard_id =
-	"$Id$";
-
 //#include "options.h"
 
 #include <qpushbutton.h>
@@ -78,7 +75,6 @@ ConfigWizard::ConfigWizard(QWidget *parent, const char *n, int m) :
 	page2->fDeviceName->setText( KPilotSettings::pilotDevice() );
 	page2->fPilotRunningPermanently->setChecked( KPilotSettings::startDaemonAtLogin() );
 
-	(void) conduitconfigwizard_id;
 }
 
 ConfigWizard::~ConfigWizard()
@@ -100,7 +96,7 @@ void ConfigWizard::accept()
 	app=(eSyncApp)( page3->fAppType->selectedId() );
 	bool keepPermanently( page2->fPilotRunningPermanently->isChecked() );
 #ifdef DEBUG
-	DEBUGCONDUIT<<fname<<"Keep permanently: "<<keepPermanently<<endl;
+	DEBUGKPILOT<<fname<<"Keep permanently: "<<keepPermanently<<endl;
 #endif
 
 	KPilotSettings::setPilotDevice( devicename );

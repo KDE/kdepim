@@ -28,9 +28,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-static const char *listCat_id =
-	"$Id$";
-
 #include "options.h"
 
 #include <qpainter.h>
@@ -46,7 +43,6 @@ ListCategorizer::ListCategorizer(QWidget * parent,
 {
 	FUNCTIONSETUP;
 	setupWidget();
-	(void) listCat_id;
 }
 
 ListCategorizer::ListCategorizer(const QStringList & i,
@@ -240,7 +236,7 @@ void RichListViewItem::computeHeight(int c)
 	for (int i=0; i<fColumns; i++)
 	{
 		computeHeight(i);
-		h = QMAX(h,fRect[i].height()+2*RVPAD);
+		h = kMax(h,fRect[i].height()+2*RVPAD);
 	}
 
 	setHeight(h);

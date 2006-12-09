@@ -71,10 +71,10 @@
     </connection>
 </connections>
 <layoutdefaults spacing="6" margin="11"/>
-<includehints>
-    <includehint>klistview.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>klineedit.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-</includehints>
+<includes>
+	<include location="system" impldecl="in implementation">klistview.h</include>
+	<include location="system" impldecl="in implementation">kpushbutton.h</include>
+	<include location="system" impldecl="in implementation">klineedit.h</include>
+	<include location="system" impldecl="in implementation">kpushbutton.h</include>
+</includes>
 </UI>

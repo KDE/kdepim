@@ -99,7 +99,7 @@
                                     <bool>true</bool>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>&lt;qt&gt;Select this option to output the system information data as an HTML document.&lt;/qt&gt;</string>
+                                    <string>&lt;qt&gt;Select this option to output the system information data as a HTML document.&lt;/qt&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QRadioButton" row="1" column="0" rowspan="1" colspan="2">
@@ -206,12 +206,9 @@
     <tabstop>tabWidget</tabstop>
 </tabstops>
 <layoutdefaults spacing="6" margin="11"/>
-<includehints>
-    <includehint>kurlrequester.h</includehint>
-    <includehint>klineedit.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-    <includehint>kurlrequester.h</includehint>
-    <includehint>klineedit.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-</includehints>
+<includes>
+    <include location="global" impldecl="in implementation">kurlrequester.h</include>
+    <include location="global" impldecl="in implementation">klineedit.h</include>
+    <include location="global" impldecl="in implementation">kpushbutton.h</include>
+</includes>
 </UI>

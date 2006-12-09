@@ -62,7 +62,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("Null");
-		fAbout = new KAboutData("nullConduit",
+	fAbout = new KAboutData("nullConduit",
 		I18N_NOOP("Null Conduit for KPilot"),
 		KPILOT_VERSION,
 		I18N_NOOP("Configures the Null Conduit for KPilot"),
@@ -77,10 +77,6 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 	fWidget=fConfigWidget;
 	QObject::connect(fConfigWidget->fLogMessage,SIGNAL(textChanged(const QString&)),
 		this,SLOT(modified()));
-	QObject::connect(fConfigWidget->fDatabases,SIGNAL(textChanged(const QString&)),
-		this,SLOT(modified()));
-	QObject::connect(fConfigWidget->fFailImmediately,SIGNAL(toggled(bool)),
-		this,SLOT(modified()));
 }
 
 /* virtual */ void NullConduitConfig::commit()
@@ -92,15 +88,9 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 		<< ": Message="
 		<< fConfigWidget->fLogMessage->text()
 		<< endl;
-	DEBUGCONDUIT << fname
-		<< ": Databases="
-		<< fConfigWidget->fDatabases->text()
-		<< endl;
 #endif
 
 	NullConduitSettings::setLogMessage( fConfigWidget->fLogMessage->text() );
-	NullConduitSettings::setDatabases( fConfigWidget->fDatabases->text() );
-	NullConduitSettings::setFailImmediately( fConfigWidget->fFailImmediately->isChecked());
 	NullConduitSettings::self()->writeConfig();
 	unmodified();
 }
@@ -111,17 +101,10 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 	NullConduitSettings::self()->readConfig();
 
 	fConfigWidget->fLogMessage->setText( NullConduitSettings::logMessage() );
-	fConfigWidget->fDatabases->setText( NullConduitSettings::databases().join(",") );
-	fConfigWidget->fFailImmediately->setChecked( NullConduitSettings::failImmediately() );
-
 #ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Read Message="
 		<< fConfigWidget->fLogMessage->text()
-		<< endl;
-	DEBUGCONDUIT << fname
-		<< ": Read Database="
-		<< fConfigWidget->fDatabases->text()
 		<< endl;
 #endif
 
@@ -133,6 +116,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const char *n) :
 extern "C"
 {
 
+unsigned long version_conduit_null = Pilot::PLUGIN_API;
 void *init_conduit_null()
 {
 	return new ConduitFactory<NullConduitConfig,NullConduit>(0,"nullconduit");

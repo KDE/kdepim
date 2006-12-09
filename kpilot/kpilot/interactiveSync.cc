@@ -2,6 +2,7 @@
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
 ** This file specializes SyncAction to a kind that can have interaction
 ** with the user without the Sync timing out.
@@ -28,9 +29,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
-static const char *interactivesync_id =
-	"$Id$";
-
 #include "options.h"
 
 #include <time.h>
@@ -50,7 +48,6 @@ static const char *interactivesync_id =
 #include <qfileinfo.h>
 #include <qtl.h>
 #include <qstyle.h>
-#include <qtextcodec.h>
 
 #include <kdialogbase.h>
 #include <kglobal.h>
@@ -60,7 +57,7 @@ static const char *interactivesync_id =
 #include <kapplication.h>
 
 #include "pilotUser.h"
-#include "pilotAppCategory.h"
+#include "pilotRecord.h"
 #include "pilotLocalDatabase.h"
 #include "kpilotConfig.h"
 #include "kpilotlink.h"
@@ -68,12 +65,11 @@ static const char *interactivesync_id =
 #include "interactiveSync.moc"
 
 
-CheckUser::CheckUser(KPilotDeviceLink * p, QWidget * vp):
+CheckUser::CheckUser(KPilotLink * p, QWidget * vp):
 	SyncAction(p, vp, "userCheck")
 {
 	FUNCTIONSETUP;
 
-	(void) interactivesync_id;
 }
 
 CheckUser::~CheckUser()
@@ -86,8 +82,8 @@ CheckUser::~CheckUser()
 	FUNCTIONSETUP;
 
 	QString guiUserName = KPilotSettings::userName();
-	QString pilotUserName = PilotAppCategory::codec()->
-		toUnicode(fHandle->getPilotUser()->getUserName());
+// TODO: add userName() to pilotUser class
+	QString pilotUserName = Pilot::fromPilot(fHandle->getPilotUser().getUserName());
 	bool pilotUserEmpty = pilotUserName.isEmpty();
 	// 4 cases to handle:
 	//    guiUserName empty / not empty
@@ -111,8 +107,8 @@ CheckUser::~CheckUser()
 				KMessageBox::Yes)
 			{
 				KPilotSettings::setUserName(defaultUserName);
-				fHandle->getPilotUser()->
-					setUserName(PilotAppCategory::codec()->fromUnicode(defaultUserName));
+				fHandle->getPilotUser()
+					.setUserName(Pilot::toPilot(defaultUserName));
 				guiUserName=defaultUserName;
 				pilotUserName=defaultUserName;
 			}
@@ -146,14 +142,14 @@ CheckUser::~CheckUser()
 				KMessageBox::Yes)
 			{
 #ifdef DEBUG
-				DEBUGDAEMON << fname
+				DEBUGKPILOT << fname
 					<< ": Setting user name in pilot to "
 					<< guiUserName << endl;
 #endif
 
-				QCString l1 = PilotAppCategory::codec()->fromUnicode(guiUserName);
+				QCString l1 = Pilot::toPilot(guiUserName);
 
-				fHandle->getPilotUser()->setUserName(l1.data());
+				fHandle->getPilotUser().setUserName(l1.data());
 				pilotUserName=guiUserName;
 			}
 		}
@@ -179,8 +175,8 @@ CheckUser::~CheckUser()
 				switch (r)
 				{
 				case KMessageBox::Yes:
-					fHandle->getPilotUser()->setUserName(
-						PilotAppCategory::codec()->fromUnicode(guiUserName));
+					fHandle->getPilotUser().setUserName(
+						Pilot::toPilot(guiUserName));
 					pilotUserName=guiUserName;
 					break;
 				case KMessageBox::No:
@@ -198,11 +194,11 @@ CheckUser::~CheckUser()
 
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": User name set to gui<"
 		<< guiUserName
 		<< "> hh<"
-		<< fHandle->getPilotUser()->getUserName() << ">" << endl;
+		<< fHandle->getPilotUser().getUserName() << ">" << endl;
 #endif
 
 	KPilotSettings::writeConfig();
@@ -227,62 +223,52 @@ CheckUser::~CheckUser()
 class RestoreInfo
 {
 public:
-	struct db DBInfo;
+	struct DBInfo DBInfo;
 	QString path;
 } ;
 
-class RestoreAction::RestoreActionPrivate
+class RestoreAction::Private
 {
 public:
-	QString fDatabaseDir;
-	QValueList<RestoreInfo *> fDBList;
+	QString fPreferRestoreDir; /**< Preference setting where to get data from. */
+
+	QValueList<RestoreInfo> fDBList;
 	QTimer fTimer;
-	QValueList<RestoreInfo *>::ConstIterator fDBIterator;
+	QValueList<RestoreInfo>::ConstIterator fDBIterator;
 	int fDBIndex;
 };
 
 
-RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
+RestoreAction::RestoreAction(KPilotLink * p, QWidget * visible ) :
 	SyncAction(p, visible, "restoreAction")
 {
 	FUNCTIONSETUP;
 
-	fP = new RestoreActionPrivate;
-	fP->fDatabaseDir = KGlobal::dirs()->saveLocation("data",
-		CSL1("kpilot/DBBackup/"));
+	fP = new Private;
+}
+
+void RestoreAction::setDirectory( const QString &path )
+{
+	fP->fPreferRestoreDir = path;
 }
 
 /* virtual */ bool RestoreAction::exec()
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
-	DEBUGDAEMON << fname
-		<< ": Restoring from base directory "
-		<< *(PilotLocalDatabase::getDBPath()) << endl;
-#endif
-
-	QString dirname = *(PilotLocalDatabase::getDBPath());
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Restoring user " << dirname << endl;
-#endif
-
-	if (questionYesNo(i18n("<qt>Are you sure you want to completely "
-				"restore your Pilot from the backup directory "
-				"(<i>%1</i>)? This will erase any information "
-				"you currently have on your Pilot.</qt>").
-			arg(dirname),
-			i18n("Restore Pilot")) != KMessageBox::Yes)
+	QString dirname;
+	if (fP->fPreferRestoreDir.isEmpty())
 	{
-		emit logError(i18n("Restore <i>not</i> performed."));
-
-		addSyncLogEntry(i18n("Canceled by user.") + CSL1(" ") +
-			i18n("Restore not performed."));
-		emit syncDone(this);
-
-		return true;
+		dirname = PilotLocalDatabase::getDBPath();
 	}
+	else
+	{
+		dirname = fP->fPreferRestoreDir;
+	}
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Restoring user " << dirname << endl;
+#endif
 
 	QDir dir(dirname, QString::null, QDir::Name,
 		QDir::Files | QDir::Readable | QDir::NoSymLinks);
@@ -298,44 +284,44 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		return false;
 	}
 
+	dirname = dir.absPath();
+	if (questionYesNo(i18n("<qt>Are you sure you want to completely "
+				"restore your Pilot from the backup directory "
+				"(<i>%1</i>)? This will erase any information "
+				"you currently have on your Pilot.</qt>").
+			arg(dirname),
+			i18n("Restore Pilot")) != KMessageBox::Yes)
+	{
+		emit logError(i18n("Restore <i>not</i> performed."));
+
+		addSyncLogEntry(i18n("Canceled by user.") + CSL1(" ") +
+			i18n("Restore not performed."));
+
+		// You might call this an error, but that causes
+		// a frightening message in the log .. and the
+		// user already _knows_ the restore didn't happen.
+		// So instead, act as if everything was ok.
+		delayDone();
+		return true;
+	}
+
+
 	emit logProgress(i18n("Restoring %1...").arg(QString::null),1);
 
 	for (unsigned int i = 0; i < dir.count(); i++)
 	{
 		QString s;
-		RestoreInfo *dbi;
-		struct DBInfo info;
-		struct pi_file *f;
+		RestoreInfo info;
 
-		s = dir[i];
+		s = dirname + QDir::separator() + dir[i];
 
-#ifdef DEBUG
-		DEBUGDAEMON << fname
+		DEBUGKPILOT << fname
 			<< ": Adding " << s << " to restore list." << endl;
-#endif
 
-    char * fileName = qstrdup( QFile::encodeName(dirname + s) );
-    f = pi_file_open( fileName );
-    delete fileName;
-		if (!f)
+		if ( PilotLocalDatabase::infoFromFile( s, &info.DBInfo ) )
 		{
-			kdWarning() << k_funcinfo
-				<< ": Can't open " << s << endl;
-			logMessage(i18n("File '%1' cannot be read.").arg(s));
-			continue;
-		}
-
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-		if (!pi_file_get_info(f, &info))
-#else
-		pi_file_get_info(f,&info);
-		if (true)
-#endif
-		{
-			dbi = new RestoreInfo;
-			memcpy(&dbi->DBInfo,&info,sizeof(struct DBInfo));
-			dbi->path = dirname + s;
-			fP->fDBList.append(dbi);
+			info.path = s;
+			fP->fDBList.append(info);
 		}
 		else
 		{
@@ -343,33 +329,7 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 				<< ": Can't open " << s << endl;
 			logMessage(i18n("File '%1' cannot be read.").arg(s));
 		}
-
-		pi_file_close(f);
-		f = 0L;
 	}
-
-	fP->fDBIndex = 0;
-	fP->fDBIterator = fP->fDBList.begin();
-	fActionStatus = GettingFileInfo;
-
-	QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
-		this, SLOT(getNextFileInfo()));
-
-	fP->fTimer.start(0, false);
-	return true;
-}
-
-/* slot */ void RestoreAction::getNextFileInfo()
-{
-	FUNCTIONSETUP;
-
-	Q_ASSERT(fActionStatus == GettingFileInfo);
-
-	QObject::disconnect(&(fP->fTimer), SIGNAL(timeout()),
-		this, SLOT(getNextFileInfo()));
-	fP->fTimer.stop();
-
-	qBubbleSort(fP->fDBList);
 
 	fP->fDBIndex = 0;
 	fP->fDBIterator = fP->fDBList.begin();
@@ -377,7 +337,9 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 
 	QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
 		this, SLOT(installNextFile()));
+
 	fP->fTimer.start(0, false);
+	return true;
 }
 
 /* slot */ void RestoreAction::installNextFile()
@@ -386,12 +348,9 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 
 	Q_ASSERT(fActionStatus == InstallingFiles);
 
-	const RestoreInfo *dbi = 0L;
 
 	if (fP->fDBIterator == fP->fDBList.end())
 	{
-		QObject::disconnect(&(fP->fTimer), SIGNAL(timeout()),
-			this, SLOT(getNextFileInfo()));
 		fP->fTimer.stop();
 
 		fActionStatus = Done;
@@ -400,12 +359,11 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		return;
 	}
 
-	dbi = *fP->fDBIterator;
+	const RestoreInfo dbi = *(fP->fDBIterator);
 	++(fP->fDBIterator);
 	++(fP->fDBIndex);
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Trying to install " << dbi->path << endl;
-#endif
+
+	DEBUGKPILOT << fname << ": Trying to install " << dbi.path << endl;
 
 	if (openConduit() < 0)
 	{
@@ -418,38 +376,18 @@ RestoreAction::RestoreAction(KPilotDeviceLink * p, QWidget * visible ) :
 		return;
 	}
 
-	QFileInfo databaseInfo(dbi->path);
+	QFileInfo databaseInfo(dbi.path);
 	addSyncLogEntry(databaseInfo.fileName());
 	emit logProgress(i18n("Restoring %1...").arg(databaseInfo.fileName()),
 		(100*fP->fDBIndex) / (fP->fDBList.count()+1)) ;
 
-	char * fileName = qstrdup( dbi->path.utf8() );
-	pi_file *f  = pi_file_open( fileName );
-	delete fileName;
-
-	if (!f)
+	if ( !deviceLink()->installFiles( dbi.path, false /* don't delete */ ) )
 	{
 		kdWarning() << k_funcinfo
-			<< ": Can't open "
-			<< dbi->path << " for restore." << endl;
-		logError(i18n("Cannot open file `%1' for restore.")
-			.arg(databaseInfo.fileName()));
-		return;
-	}
-
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-	if (pi_file_install(f, pilotSocket(), 0) < 0)
-#else
-	if (pi_file_install(f, pilotSocket(), 0, NULL) < 0)
-#endif
-	{
-		kdWarning() << k_funcinfo
-			<< ": Couldn't  restore " << dbi->path << endl;
+			<< ": Couldn't  restore " << dbi.path << endl;
 		logError(i18n("Cannot restore file `%1'.")
 			.arg(databaseInfo.fileName()));
 	}
-
-	pi_file_close(f);
 }
 
 /* virtual */ QString RestoreAction::statusString() const

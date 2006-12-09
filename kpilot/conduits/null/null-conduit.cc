@@ -33,13 +33,6 @@
 
 #include "options.h"
 
-// Something to allow us to check what revision
-// the modules are that make up a binary distribution.
-//
-//
-static const char *null_conduit_id=
-	"$Id$";
-
 // Only include what we really need:
 // First UNIX system stuff, then std C++,
 // then Qt, then KDE, then local includes.
@@ -59,16 +52,14 @@ static const char *null_conduit_id=
 // simple constructor and destructor.
 //
 //
-NullConduit::NullConduit(KPilotDeviceLink *d,
+NullConduit::NullConduit(KPilotLink *d,
 	const char *n,
 	const QStringList &l) :
 	ConduitAction(d,n,l),
-	fDatabase(0L)
+	fDatabase(0L),
+	fFailImmediately( l.contains( CSL1("--fail") ))
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT<<null_conduit_id<<endl;
-#endif
 	fConduitName=i18n("Null");
 }
 
@@ -81,13 +72,12 @@ NullConduit::~NullConduit()
 /* virtual */ bool NullConduit::exec()
 {
 	FUNCTIONSETUP;
-	DEBUGCONDUIT<<null_conduit_id<<endl;
 
-	if ( NullConduitSettings::failImmediately() )
+	DEBUGCONDUIT << fname << ": Mode " << syncMode().name() << endl;
+
+	if ( fFailImmediately )
 	{
-#ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Config says to fail now." << endl;
-#endif
 		emit logError(i18n("NULL conduit is programmed to fail."));
 		return false;
 	}
@@ -98,12 +88,10 @@ NullConduit::~NullConduit()
 		addSyncLogEntry(m);
 	}
 
-#ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Message from null-conduit: "
 		<< m
 		<< endl;
-#endif
 
 	emit syncDone(this);
 	return true;

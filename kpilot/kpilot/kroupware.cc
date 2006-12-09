@@ -40,15 +40,12 @@
 #include "kroupware.h"
 #include "kpilotConfig.h"
 
-static const char *kroupware_id =
-	"$Id$";
-
 KroupwareSync::KroupwareSync(bool pre,int parts,KPilotDeviceLink *p) :
 	SyncAction(p,pre ? "KroupwarePreSync" : "KroupwarePostSync"),
 	fPre(pre),
 	fParts(parts)
 {
-	(void) kroupware_id;
+
 }
 
 /* virtual */ bool KroupwareSync::exec()

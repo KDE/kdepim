@@ -30,9 +30,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-static const char *kpilotconfigdialog_id =
-	"$Id$";
-
 #include "options.h"
 
 #include <pi-version.h>
@@ -103,8 +100,6 @@ DeviceConfigPage::DeviceConfigPage(QWidget * w, const char *n ) : ConfigPage( w,
 #undef CM
 
 	fConduitName = i18n("Device");
-
-	(void) kpilotconfigdialog_id;
 }
 
 void DeviceConfigPage::load()
@@ -242,7 +237,7 @@ SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
 	CM(fSpecialSync, SIGNAL(activated(int)));
-	CM(fFullBackupCheck, SIGNAL(toggled(bool)));
+	CM(fFullSyncCheck, SIGNAL(toggled(bool)));
 	CM(fScreenlockSecure, SIGNAL(toggled(bool)));
 	CM(fConflictResolution, SIGNAL(activated(int)));
 #undef CM
@@ -250,10 +245,9 @@ SyncConfigPage::SyncConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
 	fConduitName = i18n("HotSync");
 }
 
-#define MENU_ITEM_COUNT (5)
+#define MENU_ITEM_COUNT (4)
 static SyncAction::SyncMode::Mode syncTypeMap[MENU_ITEM_COUNT] = {
 	SyncAction::SyncMode::eHotSync,
-	SyncAction::SyncMode::eFastSync,
 	SyncAction::SyncMode::eFullSync,
 	SyncAction::SyncMode::eCopyPCToHH,
 	SyncAction::SyncMode::eCopyHHToPC
@@ -281,7 +275,7 @@ void SyncConfigPage::load()
 		fConfigWidget->fSpecialSync->setCurrentItem(0); /* HotSync */
 	}
 
-	fConfigWidget->fFullBackupCheck->setChecked(KPilotSettings::fullSyncOnPCChange());
+	fConfigWidget->fFullSyncCheck->setChecked(KPilotSettings::fullSyncOnPCChange());
 	fConfigWidget->fConflictResolution->setCurrentItem(KPilotSettings::conflictResolution());
 	fConfigWidget->fScreenlockSecure->setChecked(KPilotSettings::screenlockSecure());
 
@@ -305,7 +299,7 @@ void SyncConfigPage::load()
 	}
 
 	KPilotSettings::setSyncType(synctype);
-	KPilotSettings::setFullSyncOnPCChange(fConfigWidget->fFullBackupCheck->isChecked());
+	KPilotSettings::setFullSyncOnPCChange(fConfigWidget->fFullSyncCheck->isChecked());
 	KPilotSettings::setConflictResolution(fConfigWidget->fConflictResolution->currentItem());
 	KPilotSettings::setScreenlockSecure(fConfigWidget->fScreenlockSecure->isChecked());
 
@@ -313,7 +307,6 @@ void SyncConfigPage::load()
 	KPilotSettings::self()->writeConfig();
 	unmodified();
 }
-
 
 
 BackupConfigPage::BackupConfigPage(QWidget * w, const char *n ) : ConfigPage( w, n )
@@ -332,6 +325,7 @@ BackupConfigPage::BackupConfigPage(QWidget * w, const char *n ) : ConfigPage( w,
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
 	CM(fBackupOnly, SIGNAL(textChanged(const QString &)));
 	CM(fSkipDB, SIGNAL(textChanged(const QString &)));
+	CM(fBackupFrequency, SIGNAL(activated(int)));
 #undef CM
 
 	fConduitName = i18n("Backup");
@@ -346,6 +340,11 @@ void BackupConfigPage::load()
 	fConfigWidget->fBackupOnly->setText(KPilotSettings::skipBackupDB().join(CSL1(",")));
 	fConfigWidget->fSkipDB->setText(KPilotSettings::skipRestoreDB().join(CSL1(",")));
 	fConfigWidget->fRunConduitsWithBackup->setChecked(KPilotSettings::runConduitsWithBackup());
+
+	int backupfreq=KPilotSettings::backupFrequency();
+
+	fConfigWidget->fBackupFrequency->setCurrentItem(backupfreq);
+
 	unmodified();
 }
 
@@ -359,6 +358,7 @@ void BackupConfigPage::load()
 	KPilotSettings::setSkipRestoreDB(
 		QStringList::split(CSL1(","),fConfigWidget->fSkipDB->text()));
 	KPilotSettings::setRunConduitsWithBackup(fConfigWidget->fRunConduitsWithBackup->isChecked());
+	KPilotSettings::setBackupFrequency(fConfigWidget->fBackupFrequency->currentItem());
 
 	KPilotConfig::updateConfigVersion();
 	KPilotSettings::self()->writeConfig();
@@ -500,9 +500,9 @@ void StartExitConfigPage::load()
 	}
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Autostart=" << autostart << endl;
-	DEBUGDAEMON << fname << ": desktop=" << desktopfile << endl;
-	DEBUGDAEMON << fname << ": location=" << location << endl;
+	DEBUGKPILOT << fname << ": Autostart=" << autostart << endl;
+	DEBUGKPILOT << fname << ": desktop=" << desktopfile << endl;
+	DEBUGKPILOT << fname << ": location=" << location << endl;
 #endif
 
 	KPilotSettings::setStartDaemonAtLogin(fConfigWidget->fStartDaemonAtLogin->isChecked());

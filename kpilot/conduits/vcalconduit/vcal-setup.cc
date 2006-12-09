@@ -30,10 +30,10 @@
 #include "options.h"
 
 #include <qbuttongroup.h>
-#include <klocale.h>
+#include <kaboutdata.h>
 
 #include "korganizerConduit.h"
-#include "vcal-factory.h"
+#include "vcal-conduit.h"
 #include "vcal-setup.h"
 
 #include "uiDialog.h"
@@ -41,7 +41,32 @@
 VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
 	VCalWidgetSetupBase(w,n)
 {
-	UIDialog::addAboutPage(fConfigWidget->tabWidget, VCalConduitFactoryBase::about());
+	KAboutData *fAbout = new KAboutData("vcalConduit",
+		I18N_NOOP("VCal Conduit for KPilot"),
+		KPILOT_VERSION,
+		I18N_NOOP("Configures the VCal Conduit for KPilot"),
+		KAboutData::License_GPL,
+		"(C) 2001, Adriaan de Groot\n(C) 2002-2003, Reinhold Kainhofer");
+	fAbout->addAuthor("Adriaan de Groot",
+		I18N_NOOP("Maintainer"),
+		"groot@kde.org",
+		"http://www.kpilot.org/");
+	fAbout->addAuthor("Reinhold Kainhofer",
+		I18N_NOOP("Maintainer"),
+		"reinhold@kainhofer.com",
+		"http://reinhold.kainhofer.com/Linux/");
+	fAbout->addAuthor("Dan Pilone",
+		I18N_NOOP("Original Author"));
+	fAbout->addAuthor("Preston Brown",
+		I18N_NOOP("Original Author"));
+	fAbout->addAuthor("Herwin-Jan Steehouwer",
+		I18N_NOOP("Original Author"));
+	fAbout->addCredit("Cornelius Schumacher",
+		I18N_NOOP("iCalendar port"));
+	fAbout->addCredit("Philipp Hullmann",
+		I18N_NOOP("Bugfixer"));
+
+	UIDialog::addAboutPage(fConfigWidget->tabWidget, fAbout);
 	fConfigWidget->fSyncDestination->setTitle(i18n("Calendar Destination"));
 	fConduitName=i18n("Calendar");
 
@@ -51,4 +76,4 @@ VCalWidgetSetup::VCalWidgetSetup(QWidget *w, const char *n) :
 {
 	return new VCalWidgetSetup(w,n);
 }
-VCalConduitSettings*VCalWidgetSetup::config() { return VCalConduitFactory::config(); }
+VCalConduitSettings*VCalWidgetSetup::config() { return VCalConduit::theConfig(); }

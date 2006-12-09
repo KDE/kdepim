@@ -13,7 +13,7 @@ KPilot works, see HOWTO-CONDUIT.txt)
 C++ Source Code
 ===============
 
-There are coding guidelines for KDE somewhere. I think they say 
+There are coding guidelines for KDE somewhere. I think they say
 indent with 4 spaces, { on same line, } on separate line. I disagree,
 so code I write -- and code I maintain -- slowly mutates to
 
@@ -27,7 +27,7 @@ so code I write -- and code I maintain -- slowly mutates to
 Whether or not anyone else follows is irrelevant, and I do try to
 avoid gratuitous reformatting. Honest.
 
-What I might do every now and then to get stuff "into shape" (and 
+What I might do every now and then to get stuff "into shape" (and
 I'd really appreciate it if you did so too before sending me patches)
 is the following horrible invocation of indent:
 
@@ -72,16 +72,40 @@ unfortunately, kpilotOptions.h is _KPILOT_KPILOTOPTIONS_H. This is
 because the filename and the class don't always match up and not
 every file contains a class of interest.
 
-[I'm going to try to wrap all the #includes with the right #ifndef
-to reduce the number of includes (for the preprocessor) and speed
-up compilation just a little bit.] -- This paragraph has become 
-irrelevant since I found out that sensible C compilers (ie. gcc)
-have support to handle multiple inclusion efficiently, without even
-opening a header file more than once. It *does* mean that the #ifndef
-needs to move to the top of the .h file, but that's no real problem.
 
+DEBUG Output
+============
 
+There are macros defined in options.h (which every source file
+should include) that provide some uniform debugging output.
+These are:
 
+	* FUNCTIONSETUP - Use this at the beginning of every function
+	  (or those that are vaguely interesting). This will print out
+	  a call trace indicator when debugging is on. It also defines
+	  a local symbol fname for use with DEBUG* below.
+	* FUNCTIONSETUPL(level) - Use this at the beginning of a function.
+	  It is like FUNCTIONSETUP but only prints if the debug level
+	  is at least @p level. This avoids excessive debug output from
+	  common functions.
+
+For regular debugging output, use one of the three DEBUG* macros:
+
+	* DEBUGLIBRARY in code in lib/
+	* DEBUGKPILOT in code in kpilot/
+	* DEBUGCONDUIT in code in conduits/
+
+This sends the debug output to the appropriate debug area. A typical
+debug output stream looks like this:
+
+	DEBUGKPILOT << fname << ": "
+		<< actual debug info
+		<< endl;
+
+Here, DEBUGKPILOT depends on what bit of code is being debugged; fname
+is defined by FUNCTIONSETUP and takes care of proper indentation for
+the call trace, the colon is for consistency and the actual debug
+info can be whatever you want.
 
 	Adriaan de Groot
 	March 5th 2001

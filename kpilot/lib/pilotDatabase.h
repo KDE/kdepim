@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2005-2006 Adriaan de Groot <groot@kde.org>
 **
 ** This is the abstract base class for databases, which is used both
 ** by local databases and by the serial databases held in the Pilot.
@@ -31,33 +32,7 @@
 */
 
 
-#include <qstring.h>
-#include <qvaluelist.h>
-
-// Handle all time.h variations properly.
-// Required because pi-macros.h sometimes forgets it.
-//
-#ifdef TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# ifdef HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
-
-#include "pilotLinkVersion.h"
-
-#include <pi-dlp.h>
-
-
-class PilotRecord;
-struct CategoryAppInfo;
-
-typedef QValueList<recordid_t> RecordIDList;
-
+#include "pilot.h"
 
 
 /**
@@ -81,7 +56,7 @@ public:
 	* Debugging information: tally how many databases are created
 	* or destroyed. Returns the count of currently existing databases.
 	*/
-	static int count();
+	static int instanceCount();
 
 	/* -------------------- Abstract interface for subclasses ----------------- */
 
@@ -111,10 +86,11 @@ public:
 
 	/** Returns a QValueList of all record ids in the database.
 	    This implementation is really bad. */
-	virtual RecordIDList idList();
+	virtual Pilot::RecordIDList idList();
+
 	/** Returns a list of all record ids that have been modified in the
 	    database. This implementation is really bad. */
-	virtual RecordIDList modifiedIDList();
+	virtual Pilot::RecordIDList modifiedIDList();
 
 
 	/** Reads a record from database by id, returns record length */
@@ -158,7 +134,7 @@ public:
 	/** Purges all Archived/Deleted records from Palm Pilot database */
 	virtual int cleanup() = 0;
 
-	bool isDBOpen() const { return fDBOpen; }
+	bool isOpen() const { return fDBOpen; }
 
 	/** Returns some sensible human-readable identifier for
 	*   the database. Serial databases get Pilot:, local
@@ -190,149 +166,6 @@ private:
 	bool fDBOpen;
 	QString fName;
 };
-
-/** Base class for all specific kinds of AppInfo. */
-class KDE_EXPORT PilotAppInfoBase
-{
-protected:
-	/** Constructor. This is for use by derived classes (using the template below
-	* only, and says that the category info in the base class aliases data in
-	* the derived class. Remember to call init()!
-	*/
-	PilotAppInfoBase() : fC(0L), fLen(0), fOwn(false) { } ;
-
-	/** Initialize class members after reading header, to alias data elsewhere.
-	* Only for use by the (derived) template classes below.
-	*/
-	void init(struct CategoryAppInfo *c, int len)
-	{
-		fC = c;
-		fLen = len ;
-	} ;
-
-public:
-	/** Maximum size of an AppInfo block, taken roughly from the pilot-link source. */
-	static const int MAX_APPINFO_SIZE=8192;
-
-	/** Constructor, intended for untyped access to the AppInfo only. This throws
-	* away everything but the category information. In this variety, the
-	* CategoryAppInfo structure is owned by the PilotAppInfoBase object.
-	*/
-	PilotAppInfoBase(PilotDatabase *d);
-	/** Destructor. */
-	virtual ~PilotAppInfoBase();
-
-	/** Retrieve the most basic part of the AppInfo block -- the category
-	* information which is guaranteed to be the first 240-odd bytes of
-	* a database.
-	*/
-	struct CategoryAppInfo *categoryInfo() { return fC; } ;
-	/** Const version of the above function. */
-	const struct CategoryAppInfo *categoryInfo() const { return fC; } ;
-	/** Returns the length of the (whole) AppInfo block. */
-	PI_SIZE_T length() const { return fLen; } ;
-
-	/** Search for the given category @p name in the list
-	* of categories; returns the category number. If @p unknownIsUnfiled
-	* is true, then map unknown categories to Unfiled instead of returning
-	* an error number.
-	*
-	* @return >=0   is a specific category based on the text-to-
-	*               category number mapping defined by the Pilot,
-	*               where 0 is always the 'unfiled' category.
-	*  @return -1   means unknown category selected when
-	*               @p unknownIsUnfiled is false.
-	*  @return  0   == Unfiled means unknown category selected when
-	*               @p unknownIsUnfiled is true.
-	*
-	*/
-	static int findCategory(const QString &name, bool unknownIsUnfiled, struct CategoryAppInfo *info);
-	/** Alternative to the above inconvenience function. */
-	int findCategory(const QString &name, bool unknownIsUnfiled = false)
-		{ return findCategory(name,unknownIsUnfiled,categoryInfo()); } ;
-
-	/** For debugging, display all the category names */
-	void dump() const;
-
-	/** For debugging, display category names for the given AppInfo
-	* structure. Called by dump().
-	*/
-	static void dumpCategories(const struct CategoryAppInfo &info);
-
-	/** Gets a single category name. Returns QString::null if there is no
-	* such category number @p i . */
-	QString category(unsigned int i);
-
-	/** Sets a category name. @return true if this succeeded. @return false
-	* on failure, e.g. the index @p i was out of range or the category name
-	* was invalid. Category names that are too long are truncated to 15 characters.
-	*/
-	bool setCategoryName(unsigned int i, const QString &s);
-
-private:
-	struct CategoryAppInfo *fC;
-	PI_SIZE_T fLen;
-	bool fOwn;
-} ;
-
-/** A template class for reading and interpreting AppInfo blocks;
-* the idea is that it handles all the boilerplate code for reading
-* the app block, converting it to the right kind, and then unpacking
-* it. Template parameters are the type (struct, from pilot-link probably)
-* of the interpreted appinfo, and the pack and unpack functions for it
-* (again, from pilot-link).
-*/
-template <typename appinfo,
-	int(*unpack)(appinfo *, unsigned char *, PI_SIZE_T),
-	int(*pack)(appinfo *, unsigned char *, PI_SIZE_T)>
-class PilotAppInfo : public PilotAppInfoBase
-{
-public:
-	/** Constructor. Read the appinfo from database @p d and
-	* interpret it.
-	*/
-	PilotAppInfo(PilotDatabase *d) : PilotAppInfoBase()
-	{
-		int appLen = MAX_APPINFO_SIZE;
-		unsigned char buffer[MAX_APPINFO_SIZE];
-
-		memset(&fInfo,0,sizeof(fInfo));
-		if (d && d->isDBOpen())
-		{
-			appLen = d->readAppBlock(buffer,appLen);
-			(*unpack)(&fInfo, buffer, appLen);
-		}
-		// fInfo is just a struct, so we can point to it anyway.
-		init(&fInfo.category,appLen);
-	} ;
-
-	/** Write this appinfo block to the database @p d; returns
-	* the number of bytes written or -1 on failure. This
-	* function is robust when called with a NULL database @p d.
-	*/
-	int write(PilotDatabase *d)
-	{
-		unsigned char buffer[MAX_APPINFO_SIZE];
-		if (!d || !d->isDBOpen())
-		{
-			return -1;
-		}
-		int appLen = (*pack)(&fInfo, buffer, length());
-		if (appLen > 0)
-		{
-			d->writeAppBlock(buffer,appLen);
-		}
-		return appLen;
-	} ;
-
-	/** Returns a (correctly typed) pointer to the interpreted
-	* appinfo block.
-	*/
-	appinfo *info() { return &fInfo; } ;
-
-protected:
-	appinfo fInfo;
-} ;
 
 /** A template class for reading and interpreting a database. This removes
 * the need for a lot of boilerplate code that does the conversions.

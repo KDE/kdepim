@@ -47,20 +47,6 @@ public:
 	*/
 	PilotLocalDatabase( const QString& path,
 		const QString& name, bool useDefaultPath=true);
-	/**
-	* Opens the local database. A default path is used
-	* ($KDEHOME/share/apps/kpilot/DBBackup)
-	* and if the file is found there, it is opened.
-	* Since a backup messes up the state of the conduits (i.e.
-	* changes on the handheld might no longer be detected after
-	* a backup run, since the conduit assumes the database to have
-	* the state of the previous conduit run,  useConduitDBs=true
-	* opens the database in $KDEHOME/share/apps/kpilot/conduits
-	*
-	* TODO: Deprecate this one.
-	*/
-	PilotLocalDatabase(const QString &name, bool useConduitDBs /* =false */);
-
 
 	/**
 	* Opens the local database. This is primarily for testing
@@ -152,7 +138,7 @@ public:
 	* Accessor functions for the application info block.
 	*/
 	int appInfoSize() const
-		{ if (isDBOpen()) return fAppLen; else return -1; } ;
+		{ if (isOpen()) return fAppLen; else return -1; } ;
 	char *appInfo() { return fAppInfo; } ;
 
 	const struct DBInfo &getDBInfo() const { return fDBInfo; }
@@ -160,6 +146,18 @@ public:
 
 	virtual DBType dbType() const;
 
+	/** Reads local file @p path and fills in the DBInfo
+	*   structure @p d with the DBInfo from the file.
+	*
+	*   @return @c false if d is NULL
+	*   @return @c false if the file @p path does not exist
+	*   @return @c true if reading the DBInfo succeeds
+	*
+	*   @note Relatively expensive operation, since the pilot-link
+	*         library doesn't provide a cheap way of getting this
+	*         information.
+	*/
+	static bool infoFromFile( const QString &path, DBInfo *d );
 
 protected:
 	// Changes any forward slashes to underscores
@@ -183,7 +181,7 @@ private:
 	*/
 public:
 	static void setDBPath(const QString &);
-	static const QString *getDBPath() { return fPathBase; } ;
+	static const QString &getDBPath() { return *fPathBase; } ;
 private:
 	static QString *fPathBase;
 };

@@ -56,8 +56,7 @@
 // the modules are that make up a binary distribution.
 extern "C"
 {
-long version_conduit_doc = KPILOT_PLUGIN_API;
-const char *id_conduit_doc = "$Id$";
+unsigned long version_conduit_doc = Pilot::PLUGIN_API;
 }
 
 QString dirToString(eSyncDirectionEnum dir) {
@@ -78,13 +77,10 @@ QString dirToString(eSyncDirectionEnum dir) {
  *********************************************************************/
 
 
-DOCConduit::DOCConduit(KPilotDeviceLink * o,
+DOCConduit::DOCConduit(KPilotLink * o,
 	const char *n, const QStringList & a):ConduitAction(o, n, a)
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT<<id_conduit_doc<<endl;
-#endif
 	fConduitName=i18n("DOC");
 }
 
@@ -269,9 +265,6 @@ QString DOCConduit::constructTXTFileName(QString name) {
 /* virtual */ bool DOCConduit::exec()
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT<<"Conduit version: "<<id_conduit_doc<<endl;
-#endif
 
 	readConfig();
 	dbnr=0;
@@ -330,7 +323,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo)
 	// instance which points either to a local database or a database on the handheld.
 	PilotDatabase *database = preSyncAction(sinfo);
 
-	if (database && ( !database->isDBOpen() ) ) {
+	if (database && ( !database->isOpen() ) ) {
 #ifdef DEBUG
 		DEBUGCONDUIT<<"Database "<<sinfo.dbinfo.name<<" does not yet exist. Creating it:"<<endl;
 #endif
@@ -342,7 +335,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo)
 		}
 	}
 
-	if (database && database->isDBOpen()) {
+	if (database && database->isOpen()) {
 		DOCConverter docconverter;
 		connect(&docconverter, SIGNAL(logError(const QString &)), SIGNAL(logError(const QString &)));
 		connect(&docconverter, SIGNAL(logMessage(const QString &)), SIGNAL(logMessage(const QString &)));
@@ -720,7 +713,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 
 		if (QFile::exists(sinfo.txtfilename)) sinfo.fPCStatus=eStatNew;
 		else sinfo.fPCStatus=eStatDoesntExist;
-		if (docdb && docdb->isDBOpen()) sinfo.fPalmStatus=eStatNew;
+		if (docdb && docdb->isOpen()) sinfo.fPalmStatus=eStatNew;
 		else sinfo.fPalmStatus=eStatDoesntExist;
 		KPILOT_DELETE(docdb);
 
@@ -771,7 +764,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 #endif
 	}
 
-	if (!docdb || !docdb->isDBOpen()) sinfo.fPalmStatus=eStatDeleted;
+	if (!docdb || !docdb->isOpen()) sinfo.fPalmStatus=eStatDeleted;
 	else if (hhTextChanged(docdb)) {
 #ifdef DEBUG
 		DEBUGCONDUIT<<"Handheld side has changed!"<<endl;

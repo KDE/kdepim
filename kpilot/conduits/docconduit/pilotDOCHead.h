@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 ** MA 02110-1301, USA.
 */
 
@@ -28,12 +28,12 @@
 #ifndef _KPILOT_PILOTDOCHEAD_H
 #define _KPILOT_PILOTDOCHEAD_H
 
-#include <pilotAppCategory.h>
+#include <pilotRecord.h>
 
 class PilotRecord;
 
 
-class PilotDOCHead:public PilotAppCategory {
+class PilotDOCHead:public PilotRecordBase {
  private:
 	static const int textRecordSize;
 
@@ -45,17 +45,15 @@ class PilotDOCHead:public PilotAppCategory {
 	int recordSize;
 	long int position;
 
+	PilotRecord *pack() const;
+
  public:
 	 PilotDOCHead();
 	 PilotDOCHead(PilotRecord * rec);
 	 PilotDOCHead(const PilotDOCHead & e);
-	~PilotDOCHead() {
-	} PilotDOCHead & operator=(const PilotDOCHead & e);
+	~PilotDOCHead() { }
 
-
- protected:
-	void *pack_(void *, int *);
-	void unpack(const void *, int = 0);
+	PilotDOCHead & operator=(const PilotDOCHead & e);
 };
 
 

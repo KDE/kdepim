@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
 ** This file defines SyncActions, which are used to perform some specific
 ** task during a HotSync. Conduits are not included here, nor are
@@ -36,14 +37,13 @@
 class QTimer;
 
 #include "syncAction.h"
-#include "syncStack.h"
 
 class TestLink : public SyncAction
 {
 Q_OBJECT
 
 public:
-	TestLink(KPilotDeviceLink *);
+	TestLink(KPilotLink *);
 
 protected:
 	virtual bool exec();
@@ -54,7 +54,15 @@ class BackupAction : public SyncAction
 Q_OBJECT
 
 public:
-	BackupAction(KPilotDeviceLink *, bool full);
+	/** Constructor. Back up all the databases on
+	*   the link to a directory on the local disk.
+	*   If @p full is @c true, then a full backup,
+	*   including applications, is done. Otherwise,
+	*   only user data is backed-up.
+	*
+	* @see setDirectory()
+	*/
+	BackupAction(KPilotLink *, bool full);
 
 	enum Status { Init,
 		Error,
@@ -66,35 +74,53 @@ public:
 		} ;
 	virtual QString statusString() const;
 
+	/** By default, a path based on the user name (either
+	*   on the handheld or set in KPilot) is used to
+	*   determine the backup directory name ( generally
+	*   $KDEHOME/share/apps/kpilot/DBBackup/_user_name_ ).
+	*   Use setDirectory() to change that and use a given
+	*   @p path as target for the backup. Use an empty
+	*   @p path to restore the default behavior of using
+	*   the username.
+	*/
+	void setDirectory( const QString &path );
+
 protected:
 	virtual bool exec();
 
 private:
-	/**
-	* All manner of support functions for full backup.
-	*/
+	/** Finish the backup and clean up resources. */
 	void endBackup();
-	bool createLocalDatabase(DBInfo *);
-	bool checkBackupDirectory(QString backupDir);
+
+	/** Copy the database indicated by @p info to the local
+	*   disk; returns @c false on failure.
+	*/
+	bool createLocalDatabase(DBInfo *info);
+
+	/** Make sure that the backup directory @p backupDir
+	*   exists and is a directory; returns @c false
+	*   if this is not the case. This method will try
+	*   to create the directory if it doesn't exist yet.
+	*/
+	static bool checkBackupDirectory( const QString &backupDir );
 
 private slots:
+	/** Implementation detail: databases get backed-up
+	*   one at a time because the backup function in
+	*   pilot-link isn't threaded.
+	*/
 	void backupOneDB();
 
 private:
-	QTimer *fTimer;
-	int fDBIndex;
-	QString fBackupDir, fDatabaseDir;
-	bool fFullBackup;
-	QStringList fNoBackupDBs;
-	QValueList<unsigned long> fNoBackupCreators;
-	QStringList mDeviceDBs;
+	class Private;
+	Private *fP;
 } ;
 
 class FileInstallAction : public SyncAction
 {
 Q_OBJECT
 public:
-	FileInstallAction(KPilotDeviceLink *,
+	FileInstallAction(KPilotLink *,
 		const QString &fileDir);
 	virtual ~FileInstallAction();
 
@@ -120,7 +146,7 @@ private:
 class CleanupAction : public SyncAction
 {
 public:
-	CleanupAction(KPilotDeviceLink * p);
+	CleanupAction(KPilotLink * p);
 	virtual ~CleanupAction();
 
 protected:

@@ -28,24 +28,10 @@
 */
 
 
-static const char *options_id =
-	"$Id$";
-
 #include "options.h"
 
 
 #include <iostream>
-
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
 
 #include <qsize.h>
 
@@ -57,7 +43,11 @@ static const char *options_id =
 // to align FUNCTIONSETUP output.
 //
 //
+#ifdef DEBUG
+int debug_level = 1;
+#else
 int debug_level = 0;
+#endif
 const char *debug_spaces =
 	"                                                    ";
 QString rtExpand(const QString &s, bool richText)
@@ -70,56 +60,45 @@ QString rtExpand(const QString &s, bool richText)
 	else
 		return s;
 
-	Q_UNUSED(options_id);
 }
 
 QDateTime readTm(const struct tm &t)
 {
-  QDateTime dt;
-  dt.setDate(QDate(1900 + t.tm_year, t.tm_mon + 1, t.tm_mday));
-  dt.setTime(QTime(t.tm_hour, t.tm_min, t.tm_sec));
-  return dt;
+	QDateTime dt;
+	dt.setDate(QDate(1900 + t.tm_year, t.tm_mon + 1, t.tm_mday));
+	dt.setTime(QTime(t.tm_hour, t.tm_min, t.tm_sec));
+	return dt;
 }
 
 
 
 struct tm writeTm(const QDateTime &dt)
 {
-  struct tm t;
+	struct tm t;
 
-  t.tm_wday = 0; // unimplemented
-  t.tm_yday = 0; // unimplemented
-  t.tm_isdst = 0; // unimplemented
-  t.tm_zone = 0; // unimplemented
+	t.tm_wday = 0; // unimplemented
+	t.tm_yday = 0; // unimplemented
+	t.tm_isdst = 0; // unimplemented
+#ifdef HAVE_STRUCT_TM_TM_ZONE
+	t.tm_zone = 0; // unimplemented
+#endif
 
-  t.tm_year = dt.date().year() - 1900;
-  t.tm_mon = dt.date().month() - 1;
-  t.tm_mday = dt.date().day();
-  t.tm_hour = dt.time().hour();
-  t.tm_min = dt.time().minute();
-  t.tm_sec = dt.time().second();
+	t.tm_year = dt.date().year() - 1900;
+	t.tm_mon = dt.date().month() - 1;
+	t.tm_mday = dt.date().day();
+	t.tm_hour = dt.time().hour();
+	t.tm_min = dt.time().minute();
+	t.tm_sec = dt.time().second();
 
-  return t;
+	return t;
 }
 
 
 
-struct tm writeTm(const QDate &dt)
+struct tm writeTm(const QDate &d)
 {
-  struct tm t;
-
-  t.tm_wday = 0; // unimplemented
-  t.tm_yday = 0; // unimplemented
-  t.tm_isdst = 0; // unimplemented
-
-  t.tm_year = dt.year() - 1900;
-  t.tm_mon = dt.month() - 1;
-  t.tm_mday = dt.day();
-  t.tm_hour = 0;
-  t.tm_min = 0;
-  t.tm_sec = 0;
-
-  return t;
+	QDateTime dt(d);
+	return writeTm(dt);
 }
 
 #ifdef DEBUG
@@ -131,7 +110,8 @@ KPilotDepthCount::KPilotDepthCount(int area, int level, const char *s) :
 	if (debug_level>=fLevel)
 	{
 #ifdef DEBUG_CERR
-		DEBUGKPILOT
+		Q_UNUSED(area);
+		DEBUGLIBRARY
 #else
 		debug(area)
 #endif

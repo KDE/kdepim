@@ -38,7 +38,7 @@ class InternalEditorAction : public SyncAction
 Q_OBJECT
 
 public:
-	InternalEditorAction(KPilotDeviceLink *);
+	InternalEditorAction(KPilotLink *);
 	~InternalEditorAction() {}
 
 protected:

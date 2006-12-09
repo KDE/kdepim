@@ -102,7 +102,6 @@ public slots:
 	void slotRestoreRequested();
 	void slotBackupRequested();
 	void slotHotSyncRequested();
-	void slotFastSyncRequested();
 	void slotFullSyncRequested();
 	void slotHHtoPCRequested();
 	void slotPCtoHHRequested();

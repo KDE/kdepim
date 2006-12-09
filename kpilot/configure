@@ -1,0 +1,178 @@
+#!/bin/sh
+
+# simple configure script for user-friendliness
+
+# file to put output into for cmake to read in...
+OUTFILE=$(dirname $0)/CMakeOptions.txt
+
+# --- FUNCTIONS ---
+
+usage()
+{
+echo "
+
+Hi there.  You can use this script to configure parameters used by cmake.
+Currently, understood parameters are as follows:
+
+  --prefix=PREFIX         install architecture-independent files in PREFIX
+  --enable-debug=ARG      enables debug symbols (yes|no) default=no
+  --enable-tests=ARG      enable test suite (yes|no) default=no
+  --with-pilot-link=PATH  set prefix for pilot-link files [default=check]
+  --with-mal=PATH         set path for libmal files [default=check]
+
+  --show                  show existing configuration values
+
+More obscure options:
+
+  --with-simple-builddir=ARG      use 'build' instead of longer name (yes|no) default=no
+  --with-pilot-link-includes=PATH set include directory for pilot-link
+  --with-pilot-link-lib=PATH      set full path to libpisock.so
+
+"
+}
+
+getvalue()
+{
+	KEY="$1"
+	# use dynamic variable...
+	eval VAL='$'$KEY
+
+	ECHO="$2"
+	
+	if test -n "$VAL"
+	then
+		CMAKE_FLAGS="${CMAKE_FLAGS}-D${KEY}=${VAL} "
+		if [ "$ECHO" = "y" ]
+		then
+			echo "$KEY=\"$VAL\""
+		fi
+	fi
+
+}
+
+outputvalues()
+{
+
+# only include what we're passed
+CMAKE_FLAGS=""
+
+getvalue CMAKE_INSTALL_PREFIX y
+getvalue CMAKE_BUILD_TYPE y
+getvalue ENABLE_TESTS y
+getvalue BUILD_DIR y
+getvalue PILOTLINK_BASE y
+getvalue MAL_BASE y
+getvalue PILOTLINK_INCLUDE_DIR y
+getvalue PILOTLINK_LIBRARY y
+
+echo "CMAKE_FLAGS=$CMAKE_FLAGS"
+}
+
+# --- MAIN ---
+
+# first, if there's no args, don't lose what we had stored (badness).
+# simply show what available arguments are and exit...
+if test -z "$1"; then
+	usage
+	exit
+fi
+
+CMAKE_BUILD_TYPE="normal"
+ENABLE_TESTS="NO"
+
+while test -n "$1"
+do
+	case "$1" in
+		--prefix=*)
+			CMAKE_INSTALL_PREFIX=$(echo $1 | cut -d "=" -f2)
+			;;
+		--enable-debug*)
+			T=$(echo $1 | cut -d "=" -f2 | tr '[A-Z]' '[a-z]')
+			if test "$T" = "$1" || test "yes" = "$T" || test "full" = "$T" ; then
+				CMAKE_BUILD_TYPE=debug
+			else
+				CMAKE_BUILD_TYPE=normal
+			fi
+			;;
+		--enable-test*)
+			T=$(echo "$1" | cut -d = -f2 | tr '[A-Z]' '[a-z]')
+			if test "$T" = "$1" || test "yes" = "$T" ; then
+				ENABLE_TESTS=YES
+			else
+				ENABLE_TESTS=NO
+			fi
+			;;
+		--with-simple-builddir*)
+			T=$(echo "$1" | cut -d = -f2 | tr '[A-Z]' '[a-z]')
+			if test "$T" = "$1" || test "yes" = "$T" ; then
+				BUILD_DIR=build
+			fi
+			;;
+		--with-pilot-link-includes=*)
+			PILOTLINK_INCLUDE_DIR=$(echo $1 | cut -d = -f2)
+			;;
+		--with-pilot-link-lib=*)
+			PILOTLINK_LIBRARY=$(echo $1 | cut -d = -f2)
+			;;
+		--with-pilot-link=*)
+			PILOTLINK_BASE=$(echo $1 | cut -d "=" -f2)
+			;;
+		--with-mal=*)
+			MAL_BASE=$(echo $1 | cut -d "=" -f2)
+			;;
+		--show)
+			echo "Existing configuration values:"
+			cat "$OUTFILE" 2>/dev/null
+			echo "-----------"
+			exit
+			;;
+		*)
+			usage
+			exit
+			;;
+	esac
+
+	shift
+
+done
+
+echo "
+Thanks.  Here are the values I will be using...
+
+$(outputvalues)
+
+To compile KPilot, now run GNU make, like so:
+"
+
+###
+#
+# BSD uses gmake for the GNU make which we need ...
+#
+if uname -s | grep BSD > /dev/null 2>&1 ; then
+	echo "    gmake -f Makefile.cmake"
+else
+	echo "    make -f Makefile.cmake"
+fi
+echo ""
+
+outputvalues > "$OUTFILE.new"
+
+
+###
+#
+# If the configure values have changed, then we should update the 
+# CMakeLists.txt in order to prompt a re-run of cmake.
+#
+update=no
+if test -f "$OUTFILE" ; then
+	diff -q "$OUTFILE" "$OUTFILE.new" > /dev/null 2>&1 || update=yes
+else
+	update=yes
+fi
+if test yes = "$update" ; then
+	cp "$OUTFILE.new" "$OUTFILE"
+	touch CMakeLists.txt
+fi
+rm -f "$OUTFILE.new"
+
+

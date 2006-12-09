@@ -35,7 +35,7 @@ class SysInfoConduit : public ConduitAction
 	Q_OBJECT
 public:
 	SysInfoConduit(
-		KPilotDeviceLink *o,
+		KPilotLink *o,
 		const char *n = 0L,
 		const QStringList &a = QStringList() );
 	virtual ~SysInfoConduit();
@@ -70,7 +70,7 @@ private:
 		eOutputTemplate
 	} fOutputType;
 
-	QPtrList<DBInfo> dblist;
+	DBInfoList dblist;
 	QStringList removeParts;
 	QStringList keepParts;
 	static const QString defaultpage;

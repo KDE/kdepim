@@ -28,9 +28,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-static const char *addresswidget_id =
-	"$Id$";
-
 
 
 #ifndef _KPILOT_OPTIONS_H
@@ -79,9 +76,6 @@ AddressWidget::AddressWidget(QWidget * parent,
 
 	setupWidget();
 	fAddressList.setAutoDelete(true);
-
-	/* NOTREACHED */
-	(void) addresswidget_id;
 }
 
 AddressWidget::~AddressWidget()
@@ -146,7 +140,7 @@ void AddressWidget::showComponent()
 
 	fAddressList.clear();
 
-	if (addressDB->isDBOpen())
+	if (addressDB->isOpen())
 	{
 		KPILOT_DELETE(fAddressAppInfo);
 		fAddressAppInfo = new PilotAddressInfo(addressDB);
@@ -447,7 +441,7 @@ void AddressWidget::slotEditRecord()
 	}
 
 	AddressEditor *editor = new AddressEditor(selectedRecord,
-		fAddressAppInfo->info(), this);
+		fAddressAppInfo, this);
 
 	connect(editor, SIGNAL(recordChangeComplete(PilotAddress *)),
 		this, SLOT(slotUpdateRecord(PilotAddress *)));
@@ -470,7 +464,7 @@ void AddressWidget::slotCreateNewRecord()
 	//
 	PilotDatabase *myDB = new PilotLocalDatabase(dbPath(), CSL1("AddressDB"));
 
-	if (!myDB || !myDB->isDBOpen())
+	if (!myDB || !myDB->isOpen())
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname
@@ -480,7 +474,7 @@ void AddressWidget::slotCreateNewRecord()
 			<< " and got pointer @"
 			<< (long) myDB
 			<< " with status "
-			<< ( myDB ? myDB->isDBOpen() : false )
+			<< ( myDB ? myDB->isOpen() : false )
 			<< endl;
 #endif
 
@@ -497,7 +491,7 @@ void AddressWidget::slotCreateNewRecord()
 	}
 
 	AddressEditor *editor = new AddressEditor(0L,
-		fAddressAppInfo->info(), this);
+		fAddressAppInfo, this);
 
 	connect(editor, SIGNAL(recordChangeComplete(PilotAddress *)),
 		this, SLOT(slotAddRecord(PilotAddress *)));
@@ -517,7 +511,7 @@ void AddressWidget::slotAddRecord(PilotAddress * address)
 		fAddressAppInfo->categoryInfo(), true);
 
 
-	address->PilotAppCategory::setCategory(currentCatID);
+	address->PilotRecordBase::setCategory(currentCatID);
 	fAddressList.append(address);
 	writeAddress(address);
 	// TODO: Just add the new record to the lists
@@ -636,7 +630,7 @@ void AddressWidget::writeAddress(PilotAddress * which,
 	PilotDatabase *myDB = addressDB;
 	bool usemyDB = false;
 
-	if (myDB == 0L || !myDB->isDBOpen())
+	if (myDB == 0L || !myDB->isOpen())
 	{
 		myDB = new PilotLocalDatabase(dbPath(), CSL1("AddressDB"));
 		usemyDB = true;
@@ -645,7 +639,7 @@ void AddressWidget::writeAddress(PilotAddress * which,
 	// Still no valid address database...
 	//
 	//
-	if (!myDB->isDBOpen())
+	if (!myDB->isOpen())
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname << ": Address database is not open" <<
@@ -683,7 +677,7 @@ void AddressWidget::slotExport()
 
 	QString prompt = (currentCatID==-1) ?
 		i18n("Export All Addresses") :
-		i18n("Export Address Category %1").arg(fAddressAppInfo->category(currentCatID)) ;
+		i18n("Export Address Category %1").arg(fAddressAppInfo->categoryName(currentCatID)) ;
 
 
 	QString saveFile = KFileDialog::getSaveFileName(

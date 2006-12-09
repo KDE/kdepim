@@ -34,7 +34,7 @@ class TimeConduit : public ConduitAction
 {
 public:
 	TimeConduit(
-		KPilotDeviceLink *o,
+		KPilotLink *o,
 		const char *n = 0L,
 		const QStringList &a = QStringList() );
 	virtual ~TimeConduit();

@@ -106,7 +106,7 @@ int checkDatabase(const char *path, recordInfo *info)
 	FUNCTIONSETUP;
 
 	PilotLocalDatabase db(QString::fromLatin1(path));
-	if (!db.isDBOpen())
+	if (!db.isOpen())
 	{
 		kdDebug() << "No database " << path << endl;
 		if ( info[0].id == NO_EXIST )
@@ -169,10 +169,10 @@ const char *categoryNames[4] =
 QStringList listCategories()
 {
 	QStringList cats;
-	PilotLocalDatabase *l = new PilotLocalDatabase(SOURCE "/data/MemoDB");
+	PilotLocalDatabase *l = new PilotLocalDatabase("./data/MemoDB");
 	PilotMemoInfo *m = new PilotMemoInfo(l);
 
-	if (!l->isDBOpen()) return cats;
+	if (!l->isOpen()) return cats;
 
 	cats.append(CSL1("Unfiled"));
 	m->dump();
@@ -215,8 +215,8 @@ int checkCategories()
 
 int checkMemo()
 {
-	PilotLocalDatabase *l = new PilotLocalDatabase(SOURCE "/data/MemoDB");
-	if (!l->isDBOpen()) return ERR_NO_EXIST;
+	PilotLocalDatabase *l = new PilotLocalDatabase("./data/MemoDB");
+	if (!l->isOpen()) return ERR_NO_EXIST;
 
 	PilotMemoInfo *m = new PilotMemoInfo(l);
 	m->dump();
@@ -229,7 +229,7 @@ int checkMemo()
 	}
 
 	m->setCategoryName(2,CSL1("Aardvark"));
-	m->write(l);
+	m->dump();
 
 	c = m->category(2);
 	if (c != CSL1("Aardvark"))

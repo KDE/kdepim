@@ -40,6 +40,7 @@
 #include <kabc/stdaddressbook.h>
 #include <kabc/resourcefile.h>
 #include <kio/netaccess.h>
+#include <ksavefile.h>
 
 #include <pilotSerialDatabase.h>
 #include <pilotLocalDatabase.h>
@@ -56,8 +57,7 @@
 //
 extern "C"
 {
-long version_conduit_address = KPILOT_PLUGIN_API;
-const char *id_conduit_address="$Id$";
+unsigned long version_conduit_address = Pilot::PLUGIN_API;
 }
 
 
@@ -86,7 +86,7 @@ static inline void _setPhoneNumber(Addressee &abEntry, int type, const QString &
 
 
 
-AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o, const char *n, const QStringList & a):
+AbbrowserConduit::AbbrowserConduit(KPilotLink * o, const char *n, const QStringList & a):
 		ConduitAction(o, n, a),
 		fAddressAppInfo(0L),
 		addresseeMap(),
@@ -95,9 +95,6 @@ AbbrowserConduit::AbbrowserConduit(KPilotDeviceLink * o, const char *n, const QS
 		ticket(0L)
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT<<id_conduit_address<<endl;
-#endif
 	fConduitName=i18n("Addressbook");
 }
 
@@ -167,6 +164,7 @@ bool AbbrowserConduit::_prepare()
 
 	readConfig();
 	syncedIds.clear();
+	pilotindex = 0;
 
 	return true;
 }
@@ -182,20 +180,26 @@ void AbbrowserConduit::readConfig()
 	SyncAction::ConflictResolution res = (SyncAction::ConflictResolution)AbbrowserSettings::conflictResolution();
 	setConflictResolution(res);
 
-#ifdef DEBUG
 	DEBUGCONDUIT << fname
-		<< ": Settings "
+		<< ": Reading addressbook "
+		<< ( AbbrowserSettings::addressbookType() == AbbrowserSettings::eAbookFile ?
+			AbbrowserSettings::fileName() : CSL1("Standard") )
+		<< endl;
+	DEBUGCONDUIT << fname
+		<< ": "
 		<< " fConflictResolution=" << getConflictResolution()
+		<< " fArchive=" << AbbrowserSettings::archiveDeleted()
+		<< " fFirstTime=" << isFirstSync()
+		<< endl;
+	DEBUGCONDUIT << fname
+		<< ": "
 		<< " fPilotStreetHome=" << AbbrowserSettings::pilotStreet()
 		<< " fPilotFaxHome=" << AbbrowserSettings::pilotFax()
-		<< " fArchive=" << AbbrowserSettings::archiveDeleted()
 		<< " eCustom[0]=" << AbbrowserSettings::custom0()
 		<< " eCustom[1]=" << AbbrowserSettings::custom1()
 		<< " eCustom[2]=" << AbbrowserSettings::custom2()
 		<< " eCustom[3]=" << AbbrowserSettings::custom3()
-		<< " fFirstTime=" << isFirstSync()
 		<< endl;
-#endif
 }
 
 
@@ -382,8 +386,8 @@ void AbbrowserConduit::_getAppInfo()
 void AbbrowserConduit::_setAppInfo()
 {
 	FUNCTIONSETUP;
-	if (fDatabase) fAddressAppInfo->write(fDatabase);
-	if (fLocalDatabase) fAddressAppInfo->write(fLocalDatabase);
+	if (fDatabase) fAddressAppInfo->writeTo(fDatabase);
+	if (fLocalDatabase) fAddressAppInfo->writeTo(fLocalDatabase);
 }
 
 int AbbrowserConduit::getCustom(const int index)
@@ -629,10 +633,10 @@ void AbbrowserConduit::_setCategory(Addressee & abEntry, QString cat)
 
 
 
-#ifdef DEBUG
 void AbbrowserConduit::showAddressee(const Addressee & abAddress)
 {
 	FUNCTIONSETUP;
+#ifdef DEBUG
 	DEBUGCONDUIT << "\tAbbrowser Contact Entry" << endl;
 	if (abAddress.isEmpty()) {
 		DEBUGCONDUIT<< "\t\tEMPTY"<<endl;
@@ -650,6 +654,9 @@ void AbbrowserConduit::showAddressee(const Addressee & abAddress)
 	DEBUGCONDUIT << "\t\tFax = " << getFax(abAddress).number() << endl;
 	DEBUGCONDUIT << "\t\tPager = " << abAddress.phoneNumber(PhoneNumber::Pager).number() << endl;
 	DEBUGCONDUIT << "\t\tCategory = " << abAddress.categories().first() << endl;
+#else
+	Q_UNUSED( abAddress );
+#endif
 }
 
 
@@ -657,6 +664,7 @@ void AbbrowserConduit::showAddressee(const Addressee & abAddress)
 void AbbrowserConduit::showPilotAddress(PilotAddress *pilotAddress)
 {
 	FUNCTIONSETUPL(3);
+#ifdef DEBUG
 	if (debug_level >= 3)
 	{
 	if (!pilotAddress) {
@@ -666,8 +674,10 @@ void AbbrowserConduit::showPilotAddress(PilotAddress *pilotAddress)
 	DEBUGCONDUIT << fname << "\n"
 			<< pilotAddress->getTextRepresentation(false) << endl;
 	}
-}
+#else
+	Q_UNUSED( pilotAddress );
 #endif
+}
 
 
 void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
@@ -703,9 +713,6 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 /* virtual */ bool AbbrowserConduit::exec()
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << id_conduit_address << endl;
-#endif
 
 	_prepare();
 
@@ -717,11 +724,20 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 	}
 	setFirstSync( retrieved );
 
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": First sync now " << isFirstSync() << endl;
-#endif
-
 	_getAppInfo();
+
+	// Local block
+	{
+		QString dbpath = fLocalDatabase->dbPathName();
+		DEBUGCONDUIT << fname << ": Local database path " << dbpath << endl;
+	}
+
+	if ( syncMode().isTest() )
+	{
+		QTimer::singleShot(0, this, SLOT(slotTestRecord()));
+		return true;
+	}
+
 	if(!_loadAddressBook())
 	{
 		emit logError(i18n("Unable to open the addressbook."));
@@ -738,7 +754,6 @@ void AbbrowserConduit::showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 
 	// perform syncing from palm to abbrowser
 	// iterate through all records in palm pilot
-	pilotindex = 0;
 
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": fullsync=" << isFullSync() << ", firstSync=" <<    isFirstSync() << endl;
@@ -1059,10 +1074,27 @@ void AbbrowserConduit::slotCleanup()
 		fLocalDatabase->resetSyncFlags();
 		fLocalDatabase->cleanup();
 	}
+
+	// Write out the sync maps
+	QString syncFile = fLocalDatabase->dbPathName() + CSL1(".sync");
+	DEBUGCONDUIT << fname << ": Writing sync map to " << syncFile << endl;
+	KSaveFile map( syncFile );
+	if ( map.status() == 0 )
+	{
+		DEBUGCONDUIT << fname << ": Writing sync map ..." << endl;
+		(*map.dataStream()) << addresseeMap ;
+		map.close();
+	}
+	// This also picks up errors from map.close()
+	if ( map.status() != 0 )
+	{
+		kdWarning() << k_funcinfo << ": Could not make backup of sync map." << endl;
+	}
+
 	KPILOT_DELETE(fDatabase);
 	KPILOT_DELETE(fLocalDatabase);
 	_saveAddressBook();
-	emit syncDone(this);
+	delayDone();
 }
 
 
@@ -1304,9 +1336,9 @@ bool AbbrowserConduit::_copyToPC(Addressee &pcAddr, PilotAddress*backupAddr,
 	{
 		return false;
 	}
-#ifdef DEBUG
+
 	showPilotAddress(palmAddr);
-#endif
+
 	_copy(pcAddr, palmAddr);
 	_savePCAddr(pcAddr, backupAddr, palmAddr);
 	_writeBackup(palmAddr);
@@ -1320,10 +1352,8 @@ bool AbbrowserConduit::_writeBackup(PilotAddress *backup)
 	FUNCTIONSETUP;
 	if (!backup) return false;
 
-
-#ifdef DEBUG
 	showPilotAddress(backup);
-#endif
+
 	PilotRecord *pilotRec = backup->pack();
 	fLocalDatabase->writeRecord(pilotRec);
 	KPILOT_DELETE(pilotRec);
@@ -1874,7 +1904,7 @@ void AbbrowserConduit::_copy(Addressee &toAbEntry, PilotAddress *fromPiAddr)
 
 
 	int cat = fromPiAddr->category();
-	QString category = fAddressAppInfo->category(cat);
+	QString category = fAddressAppInfo->categoryName(cat);
 	_setCategory(toAbEntry, category);
 #ifdef DEBUG
 	showAddressee(toAbEntry);
@@ -2266,3 +2296,24 @@ Addressee AbbrowserConduit::_findMatch(const PilotAddress & pilotAddress) const
 	return Addressee();
 }
 
+void AbbrowserConduit::slotTestRecord()
+{
+	FUNCTIONSETUP;
+
+	// Get a record and interpret it as an address.
+	PilotRecord *r = fDatabase->readRecordByIndex( pilotindex );
+	if (!r)
+	{
+		delayDone();
+		return;
+	}
+	PilotAddress a(fAddressAppInfo,r);
+	KPILOT_DELETE(r);
+
+	// Process this record.
+	showPilotAddress(&a);
+
+	// Schedule more work.
+	++pilotindex;
+	QTimer::singleShot(0, this, SLOT(slotTestRecord()));
+}

@@ -4,7 +4,7 @@
 **
 ** Copyright (C) 2004 by Adriaan de Groot, Joern Ahrens, Angus Ainslie
 **
-** The code for NotepadActionThread::unpackNotePad was taken from 
+** The code for NotepadActionThread::unpackNotePad was taken from
 ** Angus Ainslies read-notepad.c, which is part of pilot-link.
 ** NotepadActionThread::saveImage is also based on read-notepad.c.
 **
@@ -42,15 +42,15 @@ class NotepadActionThread;
 class NotepadConduit : public ConduitAction
 {
 public:
-	NotepadConduit(KPilotDeviceLink *,
+	NotepadConduit(KPilotLink *,
 		const char *name=0L,
 		const QStringList &args = QStringList());
 	virtual ~NotepadConduit();
 	virtual bool event(QEvent *e);
-	
+
 protected:
 	virtual bool exec();           // From ConduitAction
-	
+
 private:
 	NotepadActionThread *thread;
 };
@@ -62,15 +62,16 @@ private:
 class NotepadActionThread : public QThread
 {
 public:
-	NotepadActionThread(QObject *parent, int pilotSocket);
+	NotepadActionThread(QObject *parent, KPilotLink *link);
 
 	virtual void run();
 	int	getFailed() { return notSaved; }
 	int getSaved() { return saved; }
-		
+
 private:
 	QObject *fParent;
-	int fPilotSocket;
+	KPilotLink *fLink;
+
 	/**
 	 * counts how many notepads couldn't be saved during the sync
 	 */
@@ -79,8 +80,14 @@ private:
 	 * counts how many files a saved during the sync
 	 */
 	int saved;
-	
+
 	int unpackNotePad(struct NotePad *a, unsigned char *buffer, int len);
+
+	/**
+	* Saves a single NotePad structure to disk, using the name in
+	* the Note @p n, or if no name is specified, using the
+	* timestamp in the note.
+	*/
 	void saveImage(struct NotePad *n);
 };
 

@@ -26,8 +26,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
-static const char *logw_id =
-	"$Id$";
 
 #include "options.h"
 
@@ -211,7 +209,6 @@ LogWidget::LogWidget(QWidget * parent) :
 		grid->addColSpacing(3,10);
 	}
 
-	(void) logw_id;
 }
 
 void LogWidget::addMessage(const QString & s)

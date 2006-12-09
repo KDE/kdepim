@@ -184,7 +184,7 @@ void GenericDBWidget::slotSelected(const QString &dbname)
 		currentDB.remove( QRegExp(CSL1(".(pdb|PDB)$")) );
 
 		fDB=new PilotLocalDatabase(dbPath(), currentDB, false);
-		if (!fDB || !fDB->isDBOpen())
+		if (!fDB || !fDB->isOpen())
 		{
 			fDBInfo->setText(i18n("<B>Warning:</B> Cannot read "
 				"database file %1.").arg(currentDB));
@@ -310,7 +310,8 @@ void GenericDBWidget::reset()
 void GenericDBWidget::slotAddRecord()
 {
 	FUNCTIONSETUP;
-	PilotRecord*rec=new PilotRecord(0L, 0, 0, 0, 0);
+	pi_buffer_t *b = pi_buffer_new(0);
+	PilotRecord *rec=new PilotRecord(b, 0, 0, 0);
 	PilotListViewItem*item=new PilotListViewItem(fRecordList,
 		QString::number(-1), QString::number(rec->size()),
 		QString::number(rec->id()), QString::null,

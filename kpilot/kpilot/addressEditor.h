@@ -19,7 +19,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 ** MA 02110-1301, USA.
 */
 
@@ -32,22 +32,23 @@
 
 #include <kdialogbase.h>
 
+#include <pilotAddress.h>
+
 class QLineEdit;
 class PilotAddress;
-struct AddressAppInfo;
 
-class AddressEditor : public KDialogBase 
+class AddressEditor : public KDialogBase
 {
 	Q_OBJECT
 
 
 public:
 	AddressEditor(PilotAddress *address,
-		struct AddressAppInfo *appInfo,
+		PilotAddressInfo *appInfo,
 		QWidget *parent, const char *name=0L);
 	~AddressEditor();
 
- 
+
 signals:
 	void recordChangeComplete ( PilotAddress* );
 
@@ -60,7 +61,7 @@ private:
 	bool fDeleteOnCancel;
 
 	PilotAddress* fAddress;
-	struct AddressAppInfo *fAppInfo;
+	PilotAddressInfo *fAppInfo;
 	// entry fields
 	QLineEdit *fCustom4Field;
 	QLineEdit *fCustom3Field;
@@ -78,7 +79,7 @@ private:
 	QLineEdit *fLastNameField;
 	// phone labels (changing!)
 	QLabel    *m_phoneLabel[5];
-	
+
 	void initLayout();
 	void fillFields();
 	QString phoneLabelText(PilotAddress *, int i);

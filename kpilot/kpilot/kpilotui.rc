@@ -5,7 +5,6 @@
   <Menu name="file" noMerge="1"><text>&amp;File</text>
     <!-- Keep this list synchronized with pilotDaemon.cc and kpilot.cc -->
     <Action name="file_hotsync" />
-    <Action name="file_fastsync" />
     <Action name="file_fullsync" />
     <Action name="file_backup" />
     <Action name="file_restore" />
@@ -28,7 +27,6 @@
 
 <Menu name="rb_popup">
   <Action name="file_hotsync" />
-  <Action name="file_fastsync" />
   <Action name="file_backup" />
   <Action name="file_restore" />
   <Separator />

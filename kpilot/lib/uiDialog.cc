@@ -63,13 +63,6 @@
 	grid->addColSpacing(4, SPACING);
 
 
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Looking for icon for "
-		<< p->appName()
-		<< endl;
-#endif
-
 	QPixmap applicationIcon =
 		l->loadIcon(QString::fromLatin1(p->appName()),
 		KIcon::Desktop,
@@ -78,12 +71,6 @@
 
 	if (applicationIcon.isNull())
 	{
-#ifdef DEBUG
-		DEBUGKPILOT << fname
-			<< ": Looking for icon for "
-			<< "kpilot"
-			<< endl;
-#endif
 		applicationIcon = l->loadIcon(QString::fromLatin1("kpilot"),
 			KIcon::Desktop);
 	}
@@ -94,14 +81,7 @@
 	//
 	text->setText(i18n("Send questions and comments to kdepim-users@kde.org"));
 	text->adjustSize();
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Text size "
-		<< text->size().width()
-		<< ","
-		<< text->size().height()
-		<< endl;
-#endif
+
 	int linewidth = text->size().width();
 	int lineheight = text->size().height();
 
@@ -113,16 +93,16 @@
 
 
 	KActiveLabel *linktext = new KActiveLabel(w);
-	grid->addRowSpacing(1,QMAX(100,6*lineheight));
-	grid->addRowSpacing(2,QMAX(100,6*lineheight));
+	grid->addRowSpacing(1,kMax(100,6*lineheight));
+	grid->addRowSpacing(2,kMax(100,6*lineheight));
 	grid->addColSpacing(2,SPACING+linewidth/2);
 	grid->addColSpacing(3,SPACING+linewidth/2);
 	grid->setRowStretch(1,50);
 	grid->setRowStretch(2,50);
 	grid->setColStretch(2,50);
 	grid->setColStretch(3,50);
-	linktext->setMinimumSize(linewidth,QMAX(260,60+12*lineheight));
-	linktext->setFixedHeight(QMAX(260,60+12*lineheight));
+	linktext->setMinimumSize(linewidth,kMax(260,60+12*lineheight));
+	linktext->setFixedHeight(kMax(260,60+12*lineheight));
 	linktext->setVScrollBarMode(QScrollView::Auto/*AlwaysOn*/);
 	text = new QLabel(w);
 	grid->addMultiCellWidget(text,0,0,2,3);
@@ -203,24 +183,7 @@
 	linktext->append(s);
 	linktext->ensureVisible(0,0);
 
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Size "
-		<< w->size().width()
-		<< ","
-		<< w->size().height()
-		<< endl;
-#endif
-
 	w->adjustSize();
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Adjusted size "
-		<< w->size().width()
-		<< ","
-		<< w->size().height()
-		<< endl;
-#endif
 
 	return w;
 }
@@ -244,15 +207,6 @@
 	{
 		sz.setHeight(tw->size().height());
 	}
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Final size "
-		<< sz.width()
-		<< ","
-		<< sz.height()
-		<< endl;
-#endif
 
 	tw->resize(sz);
 	tw->addTab(w, i18n("About"));

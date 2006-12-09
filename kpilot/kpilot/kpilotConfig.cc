@@ -45,8 +45,6 @@
 #include "kpilotSettings.h"
 #include "kpilotConfig.h"
 
-static const char kpilotconfig_id[] =
-	"$Id$";
 
 // This is a number indicating what configuration version
 // we're dealing with. Whenever new configuration options are

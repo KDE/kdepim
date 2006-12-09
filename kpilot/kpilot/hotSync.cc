@@ -2,6 +2,7 @@
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
 ** This file defines SyncActions, which are used to perform some specific
 ** task during a HotSync. Conduits are not included here, nor are
@@ -30,8 +31,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
-static const char *hotsync_id =
-	"$Id$";
 
 #include "options.h"
 
@@ -40,6 +39,7 @@ static const char *hotsync_id =
 #include <stdio.h>
 
 #include <pi-file.h>
+#include <pi-util.h>
 
 #include <qtimer.h>
 #include <qfile.h>
@@ -47,7 +47,6 @@ static const char *hotsync_id =
 #include <qdir.h>
 #include <qvaluelist.h>
 #include <qregexp.h>
-#include <qtextcodec.h>
 #include <qstringlist.h>
 
 #include <kglobal.h>
@@ -55,7 +54,7 @@ static const char *hotsync_id =
 #include <kapplication.h>
 
 #include "pilotUser.h"
-#include "pilotAppCategory.h"
+#include "pilotRecord.h"
 #include "syncStack.h"
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
@@ -64,12 +63,11 @@ static const char *hotsync_id =
 
 #include "hotSync.moc"
 
-TestLink::TestLink(KPilotDeviceLink * p) :
+TestLink::TestLink(KPilotLink * p) :
 	SyncAction(p, "testLink")
 {
 	FUNCTIONSETUP;
 
-	(void) hotsync_id;
 }
 
 /* virtual */ bool TestLink::exec()
@@ -83,33 +81,22 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 
 	addSyncLogEntry(i18n("Testing.\n"));
 
-#ifdef BRUTE_FORCE
-	for (i=0; i<32; i++)
-#else
-	while ((i = fHandle->getNextDatabase(dbindex,&db)) > 0)
-#endif
+	while ((i = deviceLink()->getNextDatabase(dbindex,&db)) > 0)
 	{
-#ifdef BRUTE_FORCE
-		if (fHandle->getNextDatabase(i,&db) < 1)
-		{
-			DEBUGCONDUIT << fname << ": No database index " << i << endl;
-			continue;
-		}
-#endif
-
 		count++;
 		dbindex = db.index + 1;
 
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Read database " << db.name << endl;
-#endif
+		DEBUGKPILOT << fname
+			<< ": Read database " << db.name
+			<< " with index " << db.index
+			<< endl;
 
 		// Let the Pilot User know what's happening
 		openConduit();
 		// Let the KDE User know what's happening
 		// Pretty sure all database names are in latin1.
 		emit logMessage(i18n("Syncing database %1...")
-			.arg(PilotAppCategory::codec()->toUnicode(db.name)));
+			.arg(Pilot::fromPilot(db.name)));
 
 		kapp->processEvents();
 	}
@@ -119,19 +106,32 @@ TestLink::TestLink(KPilotDeviceLink * p) :
 	return true;
 }
 
-BackupAction::BackupAction(KPilotDeviceLink * p, bool full) :
+class BackupAction::Private
+{
+public:
+	Private() : fTimer(0L) { }
+
+	QTimer *fTimer;
+	bool fFullBackup;
+	QStringList fNoBackupDBs;
+	QValueList<unsigned long> fNoBackupCreators;
+	QStringList fDeviceDBs;
+
+	QString fPreferBackupDir; /**< Directory towrite backup in, overrides default */
+
+	// Remainder is used to hand around info during sync
+
+	int fDBIndex;       /**< Database number we're now doing */
+	QString fBackupDir; /**< Directory to write backup in.*/
+} ;
+
+BackupAction::BackupAction(KPilotLink * p, bool full) :
 	SyncAction(p, "backupAction"),
-	fFullBackup(full)
+	fP( new Private )
 {
 	FUNCTIONSETUP;
 
-	fDatabaseDir = KGlobal::dirs()->saveLocation("data",
-		CSL1("kpilot/DBBackup/"));
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Will write to " << fDatabaseDir << endl;
-	DEBUGCONDUIT << fname << ": Full sync? " << full << endl;
-#endif
+	fP->fFullBackup = full;
 }
 
 /* virtual */ QString BackupAction::statusString() const
@@ -171,6 +171,15 @@ BackupAction::BackupAction(KPilotDeviceLink * p, bool full) :
 	return s;
 }
 
+void BackupAction::setDirectory( const QString &p )
+{
+	fP->fPreferBackupDir = p;
+	if (!p.endsWith(CSL1("/")))
+	{
+		fP->fPreferBackupDir.append(CSL1("/"));
+	}
+}
+
 static inline bool dontBackup(struct DBInfo *info,
 	const QStringList &dbnames,
 	const QValueList<unsigned long> &dbcreators)
@@ -182,7 +191,7 @@ static inline bool dontBackup(struct DBInfo *info,
 	if (dbcreators.findIndex(info->creator) != -1) return true;
 
 	// Now take wildcards into account
-	QString db = PilotAppCategory::codec()->toUnicode(info->name);
+	QString db = Pilot::fromPilot(info->name);
 	for (QStringList::const_iterator i = dbnames.begin(); i != dbnames.end(); ++i)
 	{
 		QRegExp re(*i,true,true); // Wildcard match
@@ -223,8 +232,7 @@ static inline void initNoBackup(QStringList &dbnames,
 		}
 	}
 
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Will skip databases "
+	DEBUGKPILOT << fname << ": Will skip databases "
 		<< dbnames.join(CSL1(",")) << endl;
 	QString creatorids;
 	for (QValueList<unsigned long>::const_iterator i = dbcreators.begin();
@@ -232,35 +240,39 @@ static inline void initNoBackup(QStringList &dbnames,
 	{
 		creatorids.append(CSL1("[%1]").arg(*i,0,16));
 	}
-	DEBUGCONDUIT << fname << ": Will skip creators " << creatorids << endl;
-#endif
+	DEBUGKPILOT << fname << ": Will skip creators " << creatorids << endl;
 }
 
 /* virtual */ bool BackupAction::exec()
 {
 	FUNCTIONSETUP;
 
-	mDeviceDBs = KPilotSettings::deviceDBs();
+	fP->fDeviceDBs = KPilotSettings::deviceDBs();
 
-	fBackupDir =
-		fDatabaseDir +
-		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
-		CSL1("/");
+	if (fP->fPreferBackupDir.isEmpty())
+	{
+		fP->fBackupDir =
+			KGlobal::dirs()->saveLocation("data",CSL1("kpilot/DBBackup/")) +
+			Pilot::fromPilot(deviceLink()->getPilotUser().getUserName()) +
+			CSL1("/");
+	}
+	else
+	{
+		fP->fBackupDir = fP->fPreferBackupDir;
+	}
 
-	logMessage(i18n("Backup directory: %1.").arg(fBackupDir));
+	logMessage(i18n("Backup directory: %1.").arg(fP->fBackupDir));
 
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": This Pilot user's name is \""
-		<< fHandle->getPilotUser()->getUserName() << "\"" << endl;
-	DEBUGCONDUIT << fname
-		<< ": Using backup dir: " << fBackupDir << endl;
-	DEBUGCONDUIT << fname
-		<< ": Full Backup? " << fFullBackup << endl;
-#endif
+		<< deviceLink()->getPilotUser().getUserName() << "\"" << endl;
+	DEBUGKPILOT << fname
+		<< ": Using backup dir: " << fP->fBackupDir << endl;
+	DEBUGKPILOT << fname
+		<< ": Full Backup? " << fP->fFullBackup << endl;
 
 
-	if (fFullBackup)
+	if (fP->fFullBackup)
 	{
 		fActionStatus = FullBackup;
 		addSyncLogEntry(i18n("Full backup started."));
@@ -271,7 +283,7 @@ static inline void initNoBackup(QStringList &dbnames,
 		addSyncLogEntry(i18n("Fast backup started"));
 	}
 
-	if (!checkBackupDirectory(fBackupDir))
+	if (!checkBackupDirectory(fP->fBackupDir))
 	{
 		fActionStatus=BackupIncomplete;
 		// Don't issue an error message, checkBackupDirectory
@@ -279,51 +291,56 @@ static inline void initNoBackup(QStringList &dbnames,
 		return false;
 	}
 
-	initNoBackup( fNoBackupDBs, fNoBackupCreators );
+	initNoBackup( fP->fNoBackupDBs, fP->fNoBackupCreators );
 
-	fTimer = new QTimer( this );
-	QObject::connect( fTimer, SIGNAL( timeout() ),
+	fP->fTimer = new QTimer( this );
+	QObject::connect( fP->fTimer, SIGNAL( timeout() ),
 		this, SLOT( backupOneDB() ) );
 
-	fDBIndex = 0;
+	fP->fDBIndex = 0;
 
-	fTimer->start( 0, false );
+	fP->fTimer->start( 0, false );
 	return true;
 }
 
-bool BackupAction::checkBackupDirectory(QString backupDir)
+bool BackupAction::checkBackupDirectory( const QString &backupDir )
 {
 	FUNCTIONSETUP;
 	QFileInfo fi(backupDir);
 
-	if (!(fi.exists() && fi.isDir()))
+	if (fi.exists() && fi.isDir())
 	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
-			<< ": Need to create backup directory for user "
-			<< fHandle->getPilotUser()->getUserName() << endl;
-#endif
-
-		fi = QFileInfo(fDatabaseDir);
-		if (!(fi.exists() && fi.isDir()))
-		{
-			kdError() << k_funcinfo
-				<< ": Database backup directory "
-				<< "doesn't exist."
-				<< endl;
-			return false;
-		}
-
-		QDir databaseDir(backupDir);
-
-		if (!databaseDir.mkdir(backupDir, true))
-		{
-			kdError() << k_funcinfo
-				<< ": Can't create backup directory." << endl;
-			return false;
-		}
+		return true;
 	}
-	return true;
+
+	if (fi.exists() && !fi.isDir())
+	{
+		kdWarning() << k_funcinfo
+			<< ": Requested backup directory "
+			<< backupDir
+			<< " exists but is not a directory."
+			<< endl;
+		return false;
+	}
+
+	if ( !backupDir.endsWith("/") )
+	{
+		kdWarning() << k_funcinfo
+			<< ": Backup dir does not end with a / "
+			<< endl;
+		return false;
+	}
+
+	Q_ASSERT(!fi.exists());
+
+	DEBUGKPILOT << fname
+		<< ": Creating directory " << backupDir << endl;
+
+	KStandardDirs::makeDir( backupDir );
+
+	fi = QFileInfo(backupDir);
+
+	return fi.exists() && fi.isDir();
 }
 
 /* slot */ void BackupAction::backupOneDB()
@@ -332,15 +349,10 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 
 	struct DBInfo info;
 
-	emit logProgress(QString::null, fDBIndex);
+	emit logProgress(QString::null, fP->fDBIndex);
 
 	if (openConduit() < 0)
 	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
-			<< ": openConduit failed. User cancel?" << endl;
-#endif
-
 		addSyncLogEntry(i18n("Exiting on cancel."));
 		endBackup();
 		fActionStatus = BackupIncomplete;
@@ -348,14 +360,10 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	}
 
 	// TODO: Is there a way to skip unchanged databases?
-	int res = fHandle->getNextDatabase( fDBIndex, &info );
+	int res = deviceLink()->getNextDatabase( fP->fDBIndex, &info );
 	if (res < 0)
 	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Backup complete." << endl;
-#endif
-
-		if ( fFullBackup )
+		if ( fP->fFullBackup )
 			addSyncLogEntry( i18n("Full backup complete.") );
 		else
 			addSyncLogEntry( i18n("Fast backup complete.") );
@@ -364,7 +372,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 		return;
 	}
 
-	fDBIndex = info.index + 1;
+	fP->fDBIndex = info.index + 1;
 
 	char buff[8];
 	memset(buff, 0, 8);
@@ -375,43 +383,37 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 	QString creator = QString::fromLatin1( buff );
 	info.name[33]='\0';
 	QString dbname = QString::fromLatin1( info.name );
-	if ( !mDeviceDBs.contains( creator ) )
-		mDeviceDBs << creator;
-	if ( !mDeviceDBs.contains( dbname ) )
-		mDeviceDBs << dbname;
+	if ( !fP->fDeviceDBs.contains( creator ) )
+		fP->fDeviceDBs << creator;
+	if ( !fP->fDeviceDBs.contains( dbname ) )
+		fP->fDeviceDBs << dbname;
 
 
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Checking to see if we should backup database " << info.name
+	DEBUGKPILOT << fname << ": Checking to see if we should backup database " << info.name
 		<< " [" << QString::number(info.creator,16) << "]" << endl;
-#endif
 
 	// see if user told us not to back this creator or database up...
-	if (dontBackup(&info,fNoBackupDBs,fNoBackupCreators))
+	if (dontBackup(&info,fP->fNoBackupDBs,fP->fNoBackupCreators))
 	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Skipping database " << info.name
+		DEBUGKPILOT << fname << ": Skipping database " << info.name
 			<< " (database in no-backup list)" << endl;
-#endif
 		QString s = i18n("Skipping %1")
-			.arg(PilotAppCategory::codec()->toUnicode(info.name));
+			.arg(Pilot::fromPilot(info.name));
 		addSyncLogEntry(s);
 		return;
 	}
 
 	// don't backup resource databases...
-	if ( (!fFullBackup) && PilotDatabase::isResource(&info))
+	if ( (!fP->fFullBackup) && PilotDatabase::isResource(&info))
 	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Skipping database " << info.name
+		DEBUGKPILOT << fname << ": Skipping database " << info.name
 			<< " (resource database)" << endl;
-#endif
 		// Just skip resource DBs during an update hotsync.
 		return;
 	}
 
 	QString s = i18n("Backing up: %1")
-		.arg(PilotAppCategory::codec()->toUnicode(info.name));
+		.arg(Pilot::fromPilot(info.name));
 	addSyncLogEntry(s);
 
 	if (!createLocalDatabase(&info))
@@ -420,7 +422,7 @@ bool BackupAction::checkBackupDirectory(QString backupDir)
 			<< ": Couldn't create local database for "
 			<< info.name << endl;
 		addSyncLogEntry(i18n("Backup of %1 failed.\n")
-			.arg(PilotAppCategory::codec()->toUnicode(info.name)));
+			.arg(Pilot::fromPilot(info.name)));
 	}
 	else
 	{
@@ -441,28 +443,29 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 {
 	FUNCTIONSETUP;
 
-	QString databaseName(PilotAppCategory::codec()->toUnicode(info->name));
+	QString databaseName(Pilot::fromPilot(info->name));
 	// default this to true.  we will set it to false if there are no modified
 	// records and we are not doing a full sync.
 	bool doBackup = true;
 
 	// make sure that our directory is available...
-	if (!checkBackupDirectory(fBackupDir)) return false;
+	if (!checkBackupDirectory( fP->fBackupDir )) return false;
 
 	// we always need to open the database on the pilot because if we're going to sync
 	// it, we need to reset the "dirty" flags, etc.
-	PilotSerialDatabase*serial=new PilotSerialDatabase(pilotSocket(), databaseName);
-	if (!serial->isDBOpen())
+	PilotDatabase *serial=deviceLink()->database(databaseName);
+	if (!serial->isOpen())
 	{
-#ifdef DEBUG
-		DEBUGCONDUIT<<"Unable to open database "<<info->name<<" to check for modified records and reset sync flags."<<endl;
-#endif
+		DEBUGKPILOT << fname << ": Unable to open database "<<info->name
+			<< " to check for modified records and reset sync flags." << endl;
+		KPILOT_DELETE(serial);
+		return false;
 	}
 
 	// now we look to see if the database on the pilot has at least one changed record
 	// in it.  we do this so that we don't waste time backing up a database that has
 	// not changed.  note: don't bother with this check if we're doing a full backup.
-	if (!fFullBackup && serial->isDBOpen())
+	if (!fP->fFullBackup && serial->isOpen())
 	{
 		int index=0;
 		PilotRecord*rec=serial->readNextModifiedRec(&index);
@@ -492,7 +495,7 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 	// checks and proceed....
 	databaseName.replace('/', CSL1("_"));
 
-	QString fullBackupName = fBackupDir + databaseName;
+	QString fullBackupName = fP->fBackupDir + databaseName;
 
 	if (PilotDatabase::isResource(info))
 	{
@@ -515,8 +518,8 @@ bool BackupAction::createLocalDatabase(DBInfo * info)
 
 	// if we've backed this one up, clean it up so we won't do it again next
 	// sync unless it's truly changed
-	serial=new PilotSerialDatabase(pilotSocket(), databaseName);
-	if (backedUp && serial->isDBOpen())
+	serial=deviceLink()->database(databaseName);
+	if (backedUp && serial->isOpen())
 	{
 		serial->cleanup();
 		serial->resetSyncFlags();
@@ -530,26 +533,26 @@ void BackupAction::endBackup()
 {
 	FUNCTIONSETUP;
 
-	KPILOT_DELETE(fTimer);
-	fDBIndex = (-1);
+	KPILOT_DELETE(fP->fTimer);
+	fP->fDBIndex = (-1);
 	fActionStatus = BackupEnded;
-	mDeviceDBs.sort();
+	fP->fDeviceDBs.sort();
 	QString old( QString::null );
-	QStringList::Iterator itr = mDeviceDBs.begin();
-	while ( itr != mDeviceDBs.end() ) {
+	QStringList::Iterator itr = fP->fDeviceDBs.begin();
+	while ( itr != fP->fDeviceDBs.end() ) {
 		if ( old == *itr ) {
-			itr = mDeviceDBs.remove( itr );
+			itr = fP->fDeviceDBs.remove( itr );
 		} else {
 			old = *itr;
 			++itr;
 		}
 	}
-	KPilotSettings::setDeviceDBs( mDeviceDBs );
+	KPilotSettings::setDeviceDBs( fP->fDeviceDBs );
 
 	emit syncDone(this);
 }
 
-FileInstallAction::FileInstallAction(KPilotDeviceLink * p,
+FileInstallAction::FileInstallAction(KPilotLink * p,
 	const QString & d) :
 	SyncAction(p, "fileInstall"),
 	fDBIndex(-1),
@@ -574,7 +577,7 @@ FileInstallAction::~FileInstallAction()
 	fList = installDir.entryList(QDir::Files |
 		QDir::NoSymLinks | QDir::Readable);
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Installing " << fList.count() << " files" << endl;
 #endif
 
@@ -608,7 +611,7 @@ FileInstallAction::~FileInstallAction()
 	Q_ASSERT((unsigned) fDBIndex <= fList.count());
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Installing file index "
 		<< fDBIndex << " (of " << fList.count() << ")" << endl;
 #endif
@@ -616,7 +619,7 @@ FileInstallAction::~FileInstallAction()
 	if ((!fList.count()) || ((unsigned) fDBIndex >= fList.count()))
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname
+		DEBUGKPILOT << fname
 			<< ": Peculiar file index, bailing out." << endl;
 #endif
 		KPILOT_DELETE(fTimer);
@@ -632,7 +635,7 @@ FileInstallAction::~FileInstallAction()
 	fDBIndex++;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Installing file " << filePath << endl;
+	DEBUGKPILOT << fname << ": Installing file " << filePath << endl;
 #endif
 
 	QString m = i18n("Installing %1").arg(fileName);
@@ -749,7 +752,7 @@ bool FileInstallAction::resourceOK(const QString &fileName, const QString &fileP
 	}
 }
 
-CleanupAction::CleanupAction(KPilotDeviceLink *p)  : SyncAction(p,"cleanupAction")
+CleanupAction::CleanupAction(KPilotLink *p)  : SyncAction(p,"cleanupAction")
 {
 	FUNCTIONSETUP;
 }
@@ -758,7 +761,7 @@ CleanupAction::~CleanupAction()
 {
 #ifdef DEBUG
 	FUNCTIONSETUP;
-	DEBUGCONDUIT << fname
+	DEBUGKPILOT << fname
 		<< ": Deleting @" << (long)this << endl;
 #endif
 }

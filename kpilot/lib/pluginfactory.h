@@ -1,6 +1,6 @@
-#ifndef _KPILOT_PLUGIN_FACTORY_H
-#define _KPILOT_PLUGIN_FACTORY_H
-/* plugin_factory.h                        KPilot
+#ifndef _KPILOT_PLUGINFACTORY_H
+#define _KPILOT_PLUGINFACTORY_H
+/* pluginfactory.h                        KPilot
 **
 ** Copyright (C) 2005 by Adriaan de Groot
 **
@@ -33,7 +33,7 @@
 #include <klibloader.h>
 #include <kdebug.h>
 
-class KPilotDeviceLink;
+class KPilotLink;
 
 /** Template class that defines a conduit's factory. */
 
@@ -68,8 +68,8 @@ protected:
 
 		if (qstrcmp(classname,"SyncAction")==0)
 		{
-			KPilotDeviceLink *d = 0L;
-			if (parent) d = dynamic_cast<KPilotDeviceLink *>(parent);
+			KPilotLink *d = 0L;
+			if (parent) d = dynamic_cast<KPilotLink *>(parent);
 
 			if (d || !parent)
 			{
@@ -82,7 +82,7 @@ protected:
 			else
 			{
 				kdError() << k_funcinfo
-					<< ": Couldn't cast parent to KPilotDeviceLink"
+					<< ": Couldn't cast parent to KPilotLink"
 					<< endl;
 				return 0L;
 			}

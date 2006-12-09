@@ -31,12 +31,7 @@
 
 
 
-static const char *pilotDOCBookmark_id =
-	"$Id$";
-
-
-
-PilotDOCBookmark::PilotDOCBookmark():PilotAppCategory(), pos(0)
+PilotDOCBookmark::PilotDOCBookmark():PilotRecordBase(), pos(0)
 {
 	FUNCTIONSETUP;
 	memset(&bookmarkName[0], 0, 16);
@@ -46,21 +41,21 @@ PilotDOCBookmark::PilotDOCBookmark():PilotAppCategory(), pos(0)
 
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotDOCBookmark()
 */
-PilotDOCBookmark::PilotDOCBookmark(PilotRecord * rec):PilotAppCategory(rec)
+PilotDOCBookmark::PilotDOCBookmark(PilotRecord * rec):PilotRecordBase(rec)
 {
 	if (rec)
 	{
-		strncpy(&bookmarkName[0], (char *) rec->data(), 16);
+		const pi_buffer_t *b = rec->buffer();
+		unsigned int offset = 0;
+		dlp<char *>::read(b,offset,bookmarkName,16);
 		bookmarkName[16]='\0';
-		pos = get_long(&rec->data()[16]);// << 8 + (rec->getData())[17];
+		pos = dlp<long>::read(b,offset);
 	}
-	(void) pilotDOCBookmark_id;
 }
 
 
 
-PilotDOCBookmark::
-PilotDOCBookmark(const PilotDOCBookmark & e):PilotAppCategory(e)
+PilotDOCBookmark::PilotDOCBookmark(const PilotDOCBookmark & e):PilotRecordBase(e)
 {
 	FUNCTIONSETUP;
 	*this = e;
@@ -81,15 +76,12 @@ PilotDOCBookmark & PilotDOCBookmark::operator =(const PilotDOCBookmark & e)
 
 
 
-void *PilotDOCBookmark::pack_(void *buf, int *len)
+PilotRecord *PilotDOCBookmark::pack() const
 {
-	char *tmp = (char *) buf;
-
-//  buf=malloc(16*sizeof(char)+sizeof(long int));
-	strncpy(tmp, &bookmarkName[0], 16);
-	//*(long int *) (tmp + 16) = pos;
-	set_long(tmp + 16, pos);
-	*len = 20;
-	return buf;
+	pi_buffer_t *b = pi_buffer_new( 16 + dlp<long>::size );
+	pi_buffer_append(b, bookmarkName, 16);
+	b->data[16] = 0;
+	dlp<long>::append(b,pos);
+	PilotRecord* rec =  new PilotRecord(b, this);
+	return rec;
 }
-

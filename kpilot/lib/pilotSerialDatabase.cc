@@ -35,32 +35,27 @@
 #include <pi-dlp.h>
 
 #include <qfile.h>
-#include <qtextcodec.h>
 
 #include <klocale.h>
 #include <kdebug.h>
 #include <kglobal.h>
 
-#include "pilotAppCategory.h"
+#include "pilotRecord.h"
 #include "pilotSerialDatabase.h"
+#include "kpilotdevicelink.h"
 
-static const char *pilotSerialDatabase_id =
-	"$Id$";
-
-PilotSerialDatabase::PilotSerialDatabase(int linksocket,
+PilotSerialDatabase::PilotSerialDatabase(KPilotDeviceLink *l,
 	const QString &dbName) :
 	PilotDatabase(dbName),
 	fDBName(QString::null),
 	fDBHandle(-1),
-	fDBSocket(linksocket)
+	fDBSocket(l->pilotSocket())
 {
 	FUNCTIONSETUP;
 	fDBName = dbName;
 
 	openDatabase();
 
-	/* NOTREACHED */
-	(void) pilotSerialDatabase_id;
 }
 
 PilotSerialDatabase::~PilotSerialDatabase()
@@ -80,15 +75,11 @@ QString PilotSerialDatabase::dbPathName() const
 int PilotSerialDatabase::readAppBlock(unsigned char *buffer, int maxLen)
 {
 	FUNCTIONSETUP;
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return -1;
 	}
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-	return dlp_ReadAppBlock(fDBSocket, getDBHandle(), 0, (void *) buffer,
-		maxLen);
-#else
 	pi_buffer_t *buf = pi_buffer_new(maxLen);
 	int r = dlp_ReadAppBlock(fDBSocket, getDBHandle(), 0 /* offset */, maxLen, buf);
 	if (r>=0)
@@ -97,14 +88,13 @@ int PilotSerialDatabase::readAppBlock(unsigned char *buffer, int maxLen)
 	}
 	pi_buffer_free(buf);
 	return r;
-#endif
 }
 
 // Writes the application block info.
 int PilotSerialDatabase::writeAppBlock(unsigned char *buffer, int len)
 {
 	FUNCTIONSETUP;
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return -1;
@@ -117,7 +107,7 @@ int PilotSerialDatabase::recordCount()
 {
 	int idlen;
 	// dlp_ReadOpenDBInfo returns the number of bytes read and sets idlen to the # of recs
-	if (isDBOpen() && dlp_ReadOpenDBInfo(fDBSocket, getDBHandle(), &idlen)>0)
+	if (isOpen() && dlp_ReadOpenDBInfo(fDBSocket, getDBHandle(), &idlen)>0)
 	{
 		return idlen;
 	}
@@ -158,7 +148,7 @@ PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 	FUNCTIONSETUPL(3);
 	int index, attr, category;
 
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
@@ -169,19 +159,11 @@ PilotRecord *PilotSerialDatabase::readRecordById(recordid_t id)
 			<<id<<endl;;
 		return 0L;
 	}
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	PI_SIZE_T size;
-	if (dlp_ReadRecordById(fDBSocket, getDBHandle(), id, buffer, &index,
-			&size, &attr, &category) >= 0)
-		return new PilotRecord(buffer, size, attr, category, id);
-#else
 	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
 	if (dlp_ReadRecordById(fDBSocket,getDBHandle(),id,b,&index,&attr,&category) >= 0)
 	{
 		return new PilotRecord(b, attr, category, id);
 	}
-#endif
 	return 0L;
 }
 
@@ -190,7 +172,7 @@ PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 {
 	FUNCTIONSETUPL(3);
 
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
@@ -200,22 +182,12 @@ PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 	recordid_t id;
 	PilotRecord *rec = 0L;
 
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	PI_SIZE_T size;
-	if (dlp_ReadRecordByIndex(fDBSocket, getDBHandle(), index,
-			buffer, &id, &size, &attr, &category) >= 0)
-	{
-		rec = new PilotRecord(buffer, size, attr, category, id);
-	}
-#else
 	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
 	if (dlp_ReadRecordByIndex(fDBSocket, getDBHandle(), index,
 		b, &id, &attr, &category) >= 0)
 	{
 		rec = new PilotRecord(b, attr, category, id);
 	}
-#endif
 
 
 	return rec;
@@ -228,23 +200,15 @@ PilotRecord *PilotSerialDatabase::readNextRecInCategory(int category)
 	int index, attr;
 	recordid_t id;
 
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
 	}
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	PI_SIZE_T size;
-	if (dlp_ReadNextRecInCategory(fDBSocket, getDBHandle(),
-			category, buffer, &id, &index, &size, &attr) >= 0)
-		return new PilotRecord(buffer, size, attr, category, id);
-#else
 	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
 	if (dlp_ReadNextRecInCategory(fDBSocket, getDBHandle(),
 		category,b,&id,&index,&attr) >= 0)
 		return new PilotRecord(b, attr, category, id);
-#endif
 	return 0L;
 }
 
@@ -255,28 +219,17 @@ PilotRecord *PilotSerialDatabase::readNextModifiedRec(int *ind)
 	int index, attr, category;
 	recordid_t id;
 
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return 0L;
 	}
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-	char buffer[PilotRecord::APP_BUFFER_SIZE];
-	PI_SIZE_T size;
-	if (dlp_ReadNextModifiedRec(fDBSocket, getDBHandle(), (void *) buffer,
-			&id, &index, &size, &attr, &category) >= 0)
-	{
-		if (ind) *ind=index;
-		return new PilotRecord(buffer, size, attr, category, id);
-	}
-#else
 	pi_buffer_t *b = pi_buffer_new(InitialBufferSize);
 	if (dlp_ReadNextModifiedRec(fDBSocket, getDBHandle(), b, &id, &index, &attr, &category) >= 0)
 	{
 		if (ind) *ind=index;
 		return new PilotRecord(b, attr, category, id);
 	}
-#endif
 	return 0L;
 }
 
@@ -287,7 +240,7 @@ recordid_t PilotSerialDatabase::writeRecord(PilotRecord * newRecord)
 	recordid_t newid;
 	int success;
 
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return 0;
@@ -316,7 +269,7 @@ recordid_t PilotSerialDatabase::writeRecord(PilotRecord * newRecord)
 int PilotSerialDatabase::deleteRecord(recordid_t id, bool all)
 {
 	FUNCTIONSETUP;
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo <<": DB not open"<<endl;
 		return -1;
@@ -329,7 +282,7 @@ int PilotSerialDatabase::deleteRecord(recordid_t id, bool all)
 int PilotSerialDatabase::resetSyncFlags()
 {
 	FUNCTIONSETUP;
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return -1;
@@ -341,7 +294,7 @@ int PilotSerialDatabase::resetSyncFlags()
 int PilotSerialDatabase::resetDBIndex()
 {
 	FUNCTIONSETUP;
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return -1;
@@ -353,7 +306,7 @@ int PilotSerialDatabase::resetDBIndex()
 int PilotSerialDatabase::cleanup()
 {
 	FUNCTIONSETUP;
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open" << endl;
 		return -1;
@@ -409,11 +362,11 @@ bool PilotSerialDatabase::createDatabase(long creator, long type, int cardno, in
 	int db;
 
 	// if the database is already open, we cannot create it again. How about completely resetting it? (i.e. deleting it and the createing it again)
-	if (isDBOpen()) return true;
+	if (isOpen()) return true;
 	// The latin1 seems ok, database names are latin1.
 	int res=dlp_CreateDB(fDBSocket,
 		creator, type, cardno, flags, version,
-		PilotAppCategory::codec()->fromUnicode(getDBName()), &db);
+		Pilot::toPilot(getDBName()), &db);
 	if (res<0) {
 		kdError() <<k_funcinfo
 			<< i18n("Cannot create database %1 on the handheld").arg(getDBName())<<endl;
@@ -428,7 +381,7 @@ bool PilotSerialDatabase::createDatabase(long creator, long type, int cardno, in
 void PilotSerialDatabase::closeDatabase()
 {
 	FUNCTIONSETUP;
-	if (!isDBOpen() ) return;
+	if (!isOpen() ) return;
 
 	dlp_CloseDB(fDBSocket, getDBHandle());
 	setDBOpen(false);
@@ -438,9 +391,9 @@ int PilotSerialDatabase::deleteDatabase()
 {
 	FUNCTIONSETUP;
 
-	if (isDBOpen()) closeDatabase();
+	if (isOpen()) closeDatabase();
 
-	return dlp_DeleteDB(fDBSocket, 0, PilotAppCategory::codec()->fromUnicode(fDBName));
+	return dlp_DeleteDB(fDBSocket, 0, Pilot::toPilot(fDBName));
 }
 
 

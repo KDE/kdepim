@@ -52,7 +52,7 @@
 using namespace KHE;
 #endif
 
-InternalEditorAction::InternalEditorAction(KPilotDeviceLink * p) :
+InternalEditorAction::InternalEditorAction(KPilotLink * p) :
 	SyncAction(p, "internalSync")
 {
 	FUNCTIONSETUP;
@@ -97,8 +97,8 @@ void InternalEditorAction::syncDirtyDB()
 
 	PilotRecord*rec=0L;
 	PilotLocalDatabase*localDB=new PilotLocalDatabase(*dbIter, false);
-	PilotSerialDatabase*serialDB=new PilotSerialDatabase(pilotSocket(), *dbIter);
-	if (!localDB->isDBOpen() || !serialDB->isDBOpen())
+	PilotDatabase *serialDB= deviceLink()->database(*dbIter);
+	if (!localDB->isOpen() || !serialDB->isOpen())
 	{
 		emit logError(i18n("Unable to open the serial or local database for %1. "
 			"Skipping it.").arg(*dbIter));
@@ -337,7 +337,7 @@ QTimer::singleShot(0, this, SLOT(syncAppBlockChangedDB()));
 return;
 
 	PilotLocalDatabase*localDB=new PilotLocalDatabase(*dbIter, false);
-	PilotSerialDatabase*serialDB=new PilotSerialDatabase(pilotSocket(), *dbIter);
+	PilotDatabase *serialDB=deviceLink()->database(*dbIter);
 
 	// open the local and the serial database and copy the flags over
 	// TODO: Implement the copying
@@ -374,7 +374,7 @@ void InternalEditorAction::syncAppBlockChangedDB()
 #endif
 
 	PilotLocalDatabase*localDB=new PilotLocalDatabase(*dbIter, false);
-	PilotSerialDatabase*serialDB=new PilotSerialDatabase(pilotSocket(), *dbIter);
+	PilotDatabase *serialDB=deviceLink()->database(*dbIter);
 
 	unsigned char*appBlock=new unsigned char[0xFFFF];
 	int len=localDB->readAppBlock(appBlock, 0xFFFF);

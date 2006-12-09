@@ -40,7 +40,7 @@ bool run_modes(bool test, bool local)
 		<< "local)\n***\n";
 
 
-	for (int m = (int)SyncAction::SyncMode::eFastSync;
+	for (int m = (int)SyncAction::SyncMode::eHotSync;
 		m <= (int) SyncAction::SyncMode::eRestore ;
 		m++)
 	{

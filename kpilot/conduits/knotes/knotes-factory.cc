@@ -114,7 +114,7 @@ KNotesConduitFactory::~KNotesConduitFactory()
 	else
 	if (qstrcmp(c,"SyncAction")==0)
 	{
-		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
+		KPilotLink *d = dynamic_cast<KPilotLink *>(p);
 
 		if (d)
 		{

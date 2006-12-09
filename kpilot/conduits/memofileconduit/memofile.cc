@@ -28,13 +28,10 @@
 #include "memofile.h"
 
 Memofile::Memofile(PilotMemo * memo, QString categoryName, QString fileName, QString baseDirectory) :
-		PilotMemo(memo->text()), _categoryName(categoryName), _filename(fileName),  _baseDirectory(baseDirectory)
+		PilotMemo(memo,memo->text()), _categoryName(categoryName), _filename(fileName),  _baseDirectory(baseDirectory)
 {
 	_lastModified = 0;
 	_size = 0;
-	setAttributes(memo->attributes());
-	PilotAppCategory::setCategory(memo->category());
-	setID(memo->id());
 	_modified = _modifiedByPalm = false;
 }
 
@@ -44,7 +41,7 @@ Memofile::Memofile(recordid_t id, int category, uint lastModifiedTime, uint size
 		_filename(fileName),_baseDirectory(baseDirectory)
 {
 	setID(id);
-	PilotAppCategory::setCategory(category);
+	PilotRecordBase::setCategory(category);
 	_lastModified = lastModifiedTime;
 	_size = size;
 	_modified = _modifiedByPalm = false;
@@ -56,7 +53,7 @@ Memofile::Memofile(int category, QString categoryName, QString fileName, QString
 {
 	setID(0);
 	_new = true;
-	PilotAppCategory::setCategory(category);
+	PilotRecordBase::setCategory(category);
 	_modified = true;
 	_modifiedByPalm = false;
 	_lastModified = 0;

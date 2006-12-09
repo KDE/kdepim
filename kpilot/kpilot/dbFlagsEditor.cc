@@ -31,19 +31,18 @@
 
 #include <qlineedit.h>
 #include <qcheckbox.h>
-#include <qtextcodec.h>
 #include <kdatewidget.h>
 #include <ktimewidget.h>
 #include <kmessagebox.h>
 
-#include "pilotAppCategory.h"
+#include "pilotRecord.h"
 #include "dbFlagsEditor.h"
 #include "dbFlagsEditor_base.h"
 
 
 DBFlagsEditor::DBFlagsEditor(DBInfo*dbinfo, QWidget *parent) :
 	KDialogBase(parent, "FlagsEditor",false,
-		i18n("Edit Database Flags"), Ok|Cancel), 
+		i18n("Edit Database Flags"), Ok|Cancel),
 	dbi(dbinfo)
 {
 	widget=new DBFlagsEditorWidget(this);
@@ -60,7 +59,7 @@ void DBFlagsEditor::slotOk()
 {
 	if (KMessageBox::questionYesNo(this, i18n("Changing the database flags might corrupt the whole database, or make the data unusable. Do not change the values unless you are absolutely sure you know what you are doing.\n\nReally assign these new flags?"), i18n("Changing Database Flags"),i18n("Assign"),KStdGuiItem::cancel())==KMessageBox::Yes)
 	{
-		strlcpy(dbi->name, PilotAppCategory::codec()->fromUnicode(widget->fDBName->text()), 33);
+		Pilot::toPilot(widget->fDBName->text(),dbi->name,33);
 
 		char buff[5];
 		strlcpy(buff, widget->fType->text().latin1(), 5);

@@ -39,7 +39,7 @@ class QGroupBox;
 class QLabel;
 class QPushButton;
 class QTimer;
-class KPilotDeviceLink;
+class KPilotLink;
 
 
 typedef struct conflictEntry {
@@ -56,7 +56,7 @@ class ResolutionDialog : public KDialogBase
 	Q_OBJECT
 
 public:
-	ResolutionDialog( QWidget* parent=0, const QString& caption=i18n("Resolution Dialog"), syncInfoList*sinfo=0L, KPilotDeviceLink*lnk=0L);
+	ResolutionDialog( QWidget* parent=0, const QString& caption=i18n("Resolution Dialog"), syncInfoList*sinfo=0L, KPilotLink*lnk=0L);
 	~ResolutionDialog();
 
 	bool hasConflicts;
@@ -64,7 +64,7 @@ public slots:
 	void _tickle();
 protected:
 	QTimer* tickleTimer;
-	KPilotDeviceLink* fHandle;
+	KPilotLink* fHandle;
 
 protected:
 	QGroupBox* resolutionGroupBox;

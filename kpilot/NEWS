@@ -3,6 +3,8 @@ For more detailed information and musings, see the
 ChangeLog or the README files. There is also the
 history page on www.kpilot.org.
 
+* November 18, 2006: KDE 3.5.5 is getting KPilot backported
+  to it, and KPilot itself now uses CMake as its buildsystem.
 * November 4, 2004: KDE 3.3.1 contains KPilot 4.4.5; there is
   a 4.4.6 available from the website, but it is of dubious
   quality.

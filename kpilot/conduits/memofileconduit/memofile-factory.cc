@@ -39,20 +39,10 @@
 
 #include "setup_base.h"
 #include "memofile-conduit.h"
-#include "memofile-factory.moc"
 #include "memofileSettings.h"
 #include "uiDialog.h"
 
-
-extern "C"
-{
-
-void *init_conduit_memofile()
-{
-	return new MemofileConduitFactory;
-}
-
-}
+#include "pluginfactory.h"
 
 class MemofileConduitConfig : public ConduitConfigBase
 {
@@ -70,7 +60,18 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("Memofile");
-	UIDialog::addAboutPage(fConfigWidget->tabWidget,MemofileConduitFactory::about());
+	KAboutData *about = new KAboutData("MemofileConduit",
+		I18N_NOOP("Memofile Conduit for KPilot"),
+		KPILOT_VERSION,
+		I18N_NOOP("Configures the Memofile Conduit for KPilot"),
+		KAboutData::License_GPL,
+		"(C) 2004, Jason 'vanRijn' Kasper");
+	about->addAuthor("Jason 'vanRijn' Kasper",
+		I18N_NOOP("Primary Author"),
+		"vR@movingparts.net",
+		"http://www.cs.kun.nl/~adridg/kpilot");
+
+	UIDialog::addAboutPage(fConfigWidget->tabWidget,about);
 	fWidget=fConfigWidget;
 	QObject::connect(fConfigWidget->fDirectory,SIGNAL(textChanged(const QString&)),
 		this,SLOT(modified()));
@@ -116,77 +117,17 @@ MemofileConduitConfig::MemofileConduitConfig(QWidget *p, const char *n) :
 	unmodified();
 }
 
-KAboutData *MemofileConduitFactory::fAbout = 0L;
-MemofileConduitFactory::MemofileConduitFactory(QObject *p, const char *n) :
-	KLibFactory(p,n)
-{
-	FUNCTIONSETUP;
 
-	fInstance = new KInstance("Memofileconduit");
-	fAbout = new KAboutData("MemofileConduit",
-		I18N_NOOP("Memofile Conduit for KPilot"),
-		KPILOT_VERSION,
-		I18N_NOOP("Configures the Memofile Conduit for KPilot"),
-		KAboutData::License_GPL,
-		"(C) 2004, Jason 'vanRijn' Kasper");
-	fAbout->addAuthor("Jason 'vanRijn' Kasper",
-		I18N_NOOP("Primary Author"),
-		"vR@movingparts.net",
-		"http://www.cs.kun.nl/~adridg/kpilot");
+
+extern "C"
+{
+
+void *init_conduit_memofile()
+{
+	return new ConduitFactory<MemofileConduitConfig,MemofileConduit>(0,"memofileconduit");
 }
 
-MemofileConduitFactory::~MemofileConduitFactory()
-{
-	FUNCTIONSETUP;
+unsigned long version_conduit_memofile = Pilot::PLUGIN_API;
 
-	KPILOT_DELETE(fInstance);
-	KPILOT_DELETE(fAbout);
 }
-
-/* virtual */ QObject *MemofileConduitFactory::createObject( QObject *p,
-	const char *n,
-	const char *c,
-	const QStringList &a)
-{
-	FUNCTIONSETUP;
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
-		<< ": Creating object of class "
-		<< c
-		<< endl;
-#endif
-
-	if (qstrcmp(c,"ConduitConfigBase")==0)
-	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-		if (w)
-		{
-			return new MemofileConduitConfig(w);
-		}
-		else
-		{
-			return 0L;
-		}
-	}
-	else if (qstrcmp(c,"SyncAction")==0)
-	{
-		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
-
-		if (d)
-		{
-			return new MemofileConduit(d,n,a);
-		}
-		else
-		{
-			kdError() << k_funcinfo
-				<< ": Couldn't cast to KPilotDeviceLink"
-				<< endl;
-			return 0L;
-		}
-	}
-
-	return 0L;
-}
-
 

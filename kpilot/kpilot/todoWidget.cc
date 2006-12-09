@@ -26,9 +26,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-static const char *todowidget_id =
-	"$Id$";
-
 
 #include "options.h"
 
@@ -79,8 +76,6 @@ TodoWidget::TodoWidget(QWidget * parent,
 	setupWidget();
 	fTodoList.setAutoDelete(true);
 
-	/* NOTREACHED */
-	(void) todowidget_id;
 }
 
 TodoWidget::~TodoWidget()
@@ -144,7 +139,7 @@ void TodoWidget::showComponent()
 
 	fTodoList.clear();
 
-	if (fTodoDB->isDBOpen())
+	if (fTodoDB->isOpen())
 	{
 		KPILOT_DELETE(fTodoAppInfo);
 		fTodoAppInfo = new PilotToDoInfo(fTodoDB);
@@ -397,7 +392,7 @@ void TodoWidget::slotCreateNewRecord()
 	//
 	PilotDatabase *myDB = new PilotLocalDatabase(dbPath(), CSL1("ToDoDB"));
 
-	if (!myDB || !myDB->isDBOpen())
+	if (!myDB || !myDB->isOpen())
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname
@@ -407,7 +402,7 @@ void TodoWidget::slotCreateNewRecord()
 			<< " and got pointer @"
 			<< (void *) myDB
 			<< " with status "
-			<< ( myDB ? myDB->isDBOpen() : false )
+			<< ( myDB ? myDB->isOpen() : false )
 			<< endl;
 #endif
 
@@ -444,7 +439,7 @@ void TodoWidget::slotAddRecord(PilotTodoEntry * todo)
 		fTodoAppInfo->categoryInfo(), true);
 
 
-	todo->PilotAppCategory::setCategory(currentCatID);
+	todo->PilotRecordBase::setCategory(currentCatID);
 	fTodoList.append(todo);
 	writeTodo(todo);
 	// TODO: Just add the new record to the lists
@@ -555,7 +550,7 @@ void TodoWidget::writeTodo(PilotTodoEntry * which,
 	PilotDatabase *myDB = todoDB;
 	bool usemyDB = false;
 
-	if (myDB == 0L || !myDB->isDBOpen())
+	if (myDB == 0L || !myDB->isOpen())
 	{
 		myDB = new PilotLocalDatabase(dbPath(), CSL1("ToDoDB"));
 		usemyDB = true;
@@ -564,7 +559,7 @@ void TodoWidget::writeTodo(PilotTodoEntry * which,
 	// Still no valid todo database...
 	//
 	//
-	if (!myDB->isDBOpen())
+	if (!myDB->isOpen())
 	{
 #ifdef DEBUG
 		DEBUGKPILOT << fname << ": Todo database is not open" <<

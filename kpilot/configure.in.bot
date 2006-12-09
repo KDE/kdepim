@@ -1,14 +1,16 @@
 if test "$HAVE_PISOCK" = "0" ; then
 	echo ""
-	echo "You're missing the pisock library for kpilot."
+	echo "You're missing a compatible version of pilot-link for kpilot."
 	echo ""
 	all_tests=bad
 else
 	if test "x$HAVE_BAD_PISOCK" = "xYES" ; then
 		echo ""
-		echo "You have a version of pilot-link < 0.11.8."
-		echo "This version is deprecated and KPilot will soon stop"
-		echo "working with it."
+		echo "You have a version of pilot-link < 0.12.1."
+		echo "This version is old and is known to cause problems"
+		echo "with KPilot.  Please compile KPilot with "
+		echo "pilot-link version 0.12.1 or greater."
 		echo ""
+		all_tests=bad
 	fi
 fi

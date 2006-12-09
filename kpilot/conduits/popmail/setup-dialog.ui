@@ -133,9 +133,9 @@
     </grid>
 </widget>
 <layoutdefaults spacing="6" margin="11"/>
-<includehints>
-    <includehint>klineedit.h</includehint>
-    <includehint>kurlrequester.h</includehint>
-    <includehint>kpushbutton.h</includehint>
-</includehints>
+<includes>
+    <include location="global" impldecl="in implementation">klineedit.h</include>
+    <include location="global" impldecl="in implementation">kurlrequester.h</include>
+    <include location="global" impldecl="in implementation">kpushbutton.h</include>
+</includes>
 </UI>

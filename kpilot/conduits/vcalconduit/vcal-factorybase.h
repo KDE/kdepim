@@ -30,7 +30,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <klibloader.h>
 
 #define RES_PALMOVERRIDES 0
 #define RES_PCOVERRIDES 1
@@ -41,24 +40,5 @@
 #define SYNC_FULL 2
 #define SYNC_MAX SYNC_FULL
 
-class KAboutData;
-class VCalConduitSettings;
-
-class VCalConduitFactoryBase : public KLibFactory
-{
-  Q_OBJECT
-
-public:
-	VCalConduitFactoryBase(QObject * p= 0L,const char * n= 0L):KLibFactory(p,n){};
-	virtual ~VCalConduitFactoryBase();
-	static KAboutData *about() { return fAbout; };
-
-protected:
-	virtual QObject* createObject( QObject* parent = 0,
-		const char* name = 0,
-		const char* classname = "QObject",
-		const QStringList &args = QStringList() )=0;
-	static KAboutData *fAbout;
-};
 
 #endif

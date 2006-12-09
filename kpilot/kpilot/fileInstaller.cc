@@ -29,9 +29,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-static const char *fileinstaller_id =
-	"$Id$";
-
 
 #include "options.h"
 
@@ -58,7 +55,6 @@ FileInstaller::FileInstaller() :
 		CSL1("kpilot/pending_install/"));
 	fPendingCopies = 0;
 
-	(void) fileinstaller_id;
 }
 
 /* virtual */ FileInstaller::~FileInstaller()
@@ -116,7 +112,7 @@ void FileInstaller::deleteFiles(const QStringList &files)
 	}
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Copying " << s << endl;
+	DEBUGKPILOT << fname << ": Copying " << s << endl;
 #endif
 
 	KURL srcName;

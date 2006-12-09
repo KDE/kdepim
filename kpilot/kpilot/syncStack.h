@@ -52,7 +52,7 @@
 * ActionQueue.
 *
 * An ActionQueue is constructed with a @p device. As usual, you should connect
-* the device's deviceReady(KPilotDeviceLink*) signal with the exec() slot --
+* the device's deviceReady(KPilotLink*) signal with the exec() slot --
 * or something to that effect.
 * The ActionQueue will then run all the actions in the queue in sequence.
 *
@@ -65,7 +65,7 @@ public:
 	/** Constructor. Pass in a KPilot device link for it to act on.
 	* It is legal to pass in 0 (NULL) as a device.
 	*/
-	ActionQueue(KPilotDeviceLink *device);
+	ActionQueue(KPilotLink *device);
 
 	virtual ~ActionQueue();
 
@@ -91,6 +91,14 @@ protected:
 	QStringList fConduits;
 
 public:
+	/** Enum values for queueInit(), specifying what
+	*   standard actions to queue automatically.
+	*/
+	enum InitFlags {
+		queueNone=0,
+		queueCheckUser
+	} ;
+
 	/**
 	* Call these queue*() functions to append standard functional
 	* blocks. You should at least call queueInit() and
@@ -106,7 +114,7 @@ public:
 	*   of files to install (checked at exec() time).
 	*/
 
-	void queueInit(bool checkUser = false);
+	void queueInit( InitFlags checkUser = queueNone );
 	void queueConduits(const QStringList &conduits,const SyncAction::SyncMode &e, bool local=false);
 	void queueInstaller(const QString &dir);
 	void queueCleanup();
@@ -129,7 +137,7 @@ protected slots:
 class WelcomeAction : public SyncAction
 {
 public:
-	WelcomeAction(KPilotDeviceLink *);
+	WelcomeAction(KPilotLink *);
 
 protected:
 	virtual bool exec();
@@ -143,7 +151,7 @@ protected:
 class SorryAction : public SyncAction
 {
 public:
-	SorryAction(KPilotDeviceLink *, const QString &s=QString::null);
+	SorryAction(KPilotLink *, const QString &s=QString::null);
 
 protected:
 	virtual bool exec();
@@ -160,7 +168,7 @@ protected:
 class LocalBackupAction : public SyncAction
 {
 public:
-	LocalBackupAction(KPilotDeviceLink *, const QString &);
+	LocalBackupAction(KPilotLink *, const QString &);
 protected:
 	virtual bool exec();
 	QString fDir;
@@ -177,7 +185,7 @@ class ConduitProxy : public ConduitAction
 Q_OBJECT
 
 public:
-	ConduitProxy(KPilotDeviceLink *,
+	ConduitProxy(KPilotLink *,
 		const QString &desktopName,
 		const SyncAction::SyncMode &m);
 

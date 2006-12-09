@@ -27,9 +27,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-static const char *listitems_id =
-	"$Id$";
-
 #include "options.h"
 
 
@@ -68,7 +65,6 @@ PilotListItem::PilotListItem(const QString & text,
 	if (!(count & 0xff))
 		counts();
 #endif
-	(void) listitems_id;
 }
 
 PilotListItem::~PilotListItem()
@@ -110,7 +106,6 @@ PilotCheckListItem::PilotCheckListItem(QListView * parent, const QString & text,
 	if (!(count & 0xff))
 		counts();
 #endif
-	(void) listitems_id;
 }
 
 PilotCheckListItem::~PilotCheckListItem()
@@ -164,7 +159,6 @@ PilotListViewItem::PilotListViewItem( QListView * parent,
 	if (!(count & 0xff))
 		counts();
 #endif
-	(void) listitems_id;
 }
 
 PilotListViewItem::~PilotListViewItem()

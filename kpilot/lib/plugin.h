@@ -41,7 +41,10 @@
 class PilotDatabase;
 class KLibrary;
 
-#define KPILOT_PLUGIN_API	(20050401)
+namespace Pilot
+{
+	static const unsigned int PLUGIN_API = 20061118;
+}
 
 /**
 * The first classe here: ConduitConfigBase is for configuration purposes.
@@ -135,7 +138,7 @@ class KDE_EXPORT ConduitAction : public SyncAction
 {
 Q_OBJECT
 public:
-	ConduitAction(KPilotDeviceLink *,
+	ConduitAction(KPilotLink *,
 		const char *name=0L,
 		const QStringList &args = QStringList());
 	virtual ~ConduitAction();
@@ -188,12 +191,16 @@ protected:
 	} ;
 	void setFirstSync(bool first) { fFirstSync=first; } ;
 
-	PilotDatabase *fDatabase,*fLocalDatabase;
+	PilotDatabase *fDatabase;
+	PilotDatabase *fLocalDatabase; // Guaranteed to be a PilotLocalDatabase
 
 	/**
-	* See openDatabases_ for info on the @p retrieved
-	* parameter. In local mode, @p retrieved is left
-	* unchanged.
+	* Open both the local copy of database @p dbName
+	* and the version on the Pilot. Return true only
+	* if both opens succeed. If the local copy of the database
+	* does not exist, it is retrieved from the handheld. In this
+	* case, retrieved is set to true, otherwise it is left alone
+	* (i.e. retains its value and is not explicitly set to false).
 	*
 	* @param dbName database name to open.
 	* @param retrieved indicator whether the database had to be loaded
@@ -210,38 +217,14 @@ protected:
 	QString fConduitName;
 private:
 	bool fFirstSync;
-
-private:
-	/**
-	* Open both the local copy of database @p dbName
-	* and the version on the Pilot. Return true only
-	* if both opens succeed. If the local copy of the database
-	* does not exist, it is retrieved from the handheld. In this
-	* case, retrieved is set to true, otherwise it is left alone
-	* (i.e. retains its value and is not explicitly set to false).
-	*/
-	bool openDatabases_(const QString &dbName, bool*retrieved=0L);
-
-	/**
-	* Open both databases, but get the fDatabase not from
-	* the Pilot, but from a local database in an alternate
-	* directory. For testing only.
-	*
-	* If @p localPath is QString::null, don't even try to open
-	* fDatabase (the one that is supposed to be on the HH).
-	* Just open the one inteded to be on the PC (fLocalDatabase).
-	*/
-	bool openDatabases_(const QString &dbName,const QString &localPath);
 } ;
 
-/** A class containing only static helper methods. */
-class KDE_EXPORT PluginUtility
+/** A namespace containing only static helper methods. */
+namespace PluginUtility
 {
-public:
-	/** Searches the string list for --handle=NN and returns the number. */
-	static int findHandle(const QStringList &);
-	/** Searches the string list for --modal and returns true if found. */
-	static bool isModal(const QStringList &a);
+	/** Searches the argument list for --foo=bar and returns bar, QString::null if not found.
+	* Don't include the -- in the argname. */
+	QString findArgument(const QStringList &a, const QString argname);
 
 	/**
 	* This function attempts to detect whether or not the given
@@ -251,14 +234,14 @@ public:
 	* The current approach is to ask the DCOP server if the application
 	* has registered.
 	*/
-	static bool isRunning(const QCString &appName);
+	bool isRunning(const QCString &appName);
 
 	/**
 	* Check a given library for its version, returning 0 if no
 	* version symbol is found.
 	*/
-	static long pluginVersion(const KLibrary *);
-	static QString pluginVersionString(const KLibrary *);
+	unsigned long pluginVersion(const KLibrary *);
+	QString pluginVersionString(const KLibrary *);
 } ;
 
 /**

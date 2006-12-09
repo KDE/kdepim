@@ -29,8 +29,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
-static const char *test_id =
-	"$Id$";
 
 #include "options.h"
 
@@ -52,29 +50,43 @@ static const char *test_id =
 
 #include <pi-version.h>
 
-#include "logWidget.h"
 #include "kpilotConfig.h"
 #include "syncStack.h"
 #include "hotSync.h"
 #include "interactiveSync.h"
 
-static KCmdLineOptions kpilotoptions[] = {
+#include "kpilotdevicelink.h"
+#include "kpilotlocallink.h"
+
+static KCmdLineOptions generalOptions[] = {
 	{"p",0,0},
 	{"port <device>",
 		I18N_NOOP("Path to Pilot device node"),
 		"/dev/pilot"},
 	{"l",0,0},
-	{"list", I18N_NOOP("List DBs (default)"), 0},
+	{"list", I18N_NOOP("List DBs"), 0},
 	{"b",0,0},
-	{"backup", I18N_NOOP("Backup instead of list DBs"), 0},
+	{"backup <dest dir>", I18N_NOOP("Backup Pilot to <dest dir>"), 0},
 	{"r",0,0},
-	{"restore", I18N_NOOP("Restore Pilot from backup"), 0},
-	{"L",0,0},
-	{ "conduit-list", I18N_NOOP("List available conduits"), 0},
-	{"E",0,0},
-	{ "conduit-exec <filename>",
+	{"restore <src dir>", I18N_NOOP("Restore Pilot from backup"), 0},
+	{"e",0,0},
+	{ "exec <filename>",
 		I18N_NOOP("Run conduit from desktop file <filename>"),
 		0 },
+	{"c",0,0},
+	{ "check <what>",
+		I18N_NOOP("Run a specific check (with the device)"), "help"},
+	{"s",0,0},
+	{ "show <what>",
+		I18N_NOOP("Show KPilot configuration information"), "help"},
+#ifdef DEBUG
+	{ "debug <level>",
+		I18N_NOOP("Set the debug level"), "1" },
+#endif
+	KCmdLineLastOption
+} ;
+
+static KCmdLineOptions conduitOptions[] = {
 	{ "T",0,0},
 	{ "notest",
 		I18N_NOOP("*Really* run the conduit, not in test mode."),
@@ -89,217 +101,156 @@ static KCmdLineOptions kpilotoptions[] = {
 	{ "PCtoHH",
 		I18N_NOOP("Copy Desktop to Pilot."),
 		0 } ,
-	{ "test-timeout",
-		I18N_NOOP("Run conduit specially designed to timeout."),
+	{ "loop",
+		I18N_NOOP("Repeated perform action - only useful for --list"),
 		0 } ,
-	{ "test-usercheck",
-		I18N_NOOP("Run conduit just for user check."),
-		0 } ,
-	{ "dump-calendar",
-		I18N_NOOP("Dump calendar to stdout."),
-		0 } ,
-#ifdef DEBUG
-	{"debug <level>", I18N_NOOP("Set debugging level"), "0"},
-#endif
 	KCmdLineLastOption
-};
-
-
-static LogWidget *logWidget = 0L;
-static QPushButton *resetButton = 0L;
-
-
+} ;
 
 /**
 *** Conduits - sync actions - for testing specific scenarios.
 **/
 
-class TimeoutAction : public SyncAction
-{
-public:
-	TimeoutAction(KPilotDeviceLink *p) ;
-protected:
-	virtual bool exec();
-} ;
 
-TimeoutAction::TimeoutAction(KPilotDeviceLink *p) :
-	SyncAction(p)
+
+KPilotLink *createLink( bool local )
 {
 	FUNCTIONSETUP;
-}
-
-bool TimeoutAction::exec()
-{
-	FUNCTIONSETUP;
-
-	for (int i = 0; i<3; i++)
+	if (!local)
 	{
-		logMessage( CSL1("Hup two %1").arg(i) );
-		fHandle->tickle();
-		qApp->processEvents();
-		sleep(1);
-	}
-
-	logMessage( CSL1("Now sleeping 65") );
-	qApp->processEvents();
-	sleep(65);
-	return delayDone();
-}
-
-
-
-
-
-
-
-void createLogWidget()
-{
-	LogWidget *w = new LogWidget(0L);
-
-	w->resize(300, 300);
-	w->show();
-	w->setShowTime(true);
-	kapp->setMainWidget(w);
-	logWidget = w;
-
-	resetButton = new QPushButton(i18n("Reset"),w->buttonBox());
-}
-
-static KPilotDeviceLink *deviceLink = 0L;
-
-void createLink()
-{
-	FUNCTIONSETUP;
-
-	deviceLink = new KPilotDeviceLink(0, "deviceLink");
-
-	QObject::connect(deviceLink, SIGNAL(logError(const QString &)),
-		logWidget, SLOT(addError(const QString &)));
-	QObject::connect(deviceLink, SIGNAL(logMessage(const QString &)),
-		logWidget, SLOT(addMessage(const QString &)));
-	QObject::connect(deviceLink,SIGNAL(logProgress(const QString &,int)),
-		logWidget, SLOT(addProgress(const QString &,int)));
-
-}
-
-static ActionQueue *syncStack = 0L;
-
-void connectStack()
-{
-	FUNCTIONSETUP;
-
-	QObject::connect(syncStack, SIGNAL(logError(const QString &)),
-		logWidget, SLOT(addError(const QString &)));
-	QObject::connect(syncStack, SIGNAL(logMessage(const QString &)),
-		logWidget, SLOT(addMessage(const QString &)));
-	QObject::connect(syncStack,SIGNAL(logProgress(const QString &,int)),
-		logWidget, SLOT(addProgress(const QString &,int)));
-	QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
-		logWidget, SLOT(syncDone()));
-
-	if (deviceLink)
-	{
-		QObject::connect(syncStack, SIGNAL(syncDone(SyncAction *)),
-			deviceLink, SLOT(close()));
-		QObject::connect(deviceLink, SIGNAL(deviceReady(KPilotDeviceLink*)), syncStack, SLOT(execConduit()));
-		QObject::connect(resetButton,SIGNAL(clicked()),deviceLink,SLOT(reset()));
-	}
-}
-
-void createConnection(KCmdLineArgs *p)
-{
-	FUNCTIONSETUP;
-
-	QString devicePath = p->getOption("port");
-
-	if (devicePath.isEmpty())
-	{
-		devicePath = "/dev/pilot";
-	}
-
-	deviceLink->reset(devicePath);
-}
-
-int syncTest(KCmdLineArgs *p)
-{
-	FUNCTIONSETUP;
-
-	createLogWidget();
-	createLink();
-
-	syncStack = new ActionQueue(deviceLink);
-
-	if (p->isSet("backup"))
-	{
-		syncStack->queueInit();
-		syncStack->addAction(new BackupAction(deviceLink,true));
-	}
-	else if (p->isSet("restore"))
-	{
-		syncStack->queueInit(0);
-		syncStack->addAction(new RestoreAction(deviceLink));
-	}
-	else if (p->isSet("test-timeout"))
-	{
-		syncStack->queueInit();
-		syncStack->addAction( new TimeoutAction(deviceLink) );
-		syncStack->addAction( new TimeoutAction(deviceLink) );
+		return new KPilotDeviceLink(0, "deviceLink");
 	}
 	else
 	{
-		syncStack->queueInit(p->isSet("test-usercheck") /* whether to run usercheck */);
-		syncStack->addAction(new TestLink(deviceLink));
+		return new KPilotLocalLink(0, "localLink");
 	}
-	syncStack->queueCleanup();
-
-	connectStack();
-	createConnection(p);
-	return kapp->exec();
 }
 
-int execConduit(KCmdLineArgs *p)
+/** If @p loop is true, then instead of quitting at end of
+*   sync, wait for a new sync just like the real daemon does.
+*/
+void connectStack( KPilotLink *l, ActionQueue *a, bool loop = false )
+{
+	FUNCTIONSETUP;
+
+	if (l && a)
+	{
+		QObject::connect(a, SIGNAL(syncDone(SyncAction *)),
+			l, SLOT(close()));
+		if (!loop)
+		{
+			QObject::connect(a, SIGNAL(syncDone(SyncAction *)),
+				kapp, SLOT(quit()));
+		}
+		else
+		{
+			QObject::connect(a, SIGNAL(syncDone(SyncAction *)),
+				l, SLOT(reset()));
+		}
+		QObject::connect(l, SIGNAL(deviceReady(KPilotLink*)),
+			a, SLOT(execConduit()));
+	}
+}
+
+
+
+int exec(const QString &device, const QString &what, KCmdLineArgs *p)
 {
 	FUNCTIONSETUP;
 
 	// get --exec-conduit value
-	QString s = p->getOption("conduit-exec");
-	if (s.isEmpty()) return 1;
+	if (what.isEmpty()) return 1;
 	QStringList l;
-	l.append(s);
-
-	createLogWidget();
+	l.append(what);
 
 	SyncAction::SyncMode::Mode syncMode = SyncAction::SyncMode::eHotSync;
 	if (p->isSet("HHtoPC")) syncMode = SyncAction::SyncMode::eCopyHHToPC;
 	if (p->isSet("PCtoHH")) syncMode = SyncAction::SyncMode::eCopyPCToHH;
 	SyncAction::SyncMode mode(syncMode,p->isSet("test"),p->isSet("local"));
 
-	if (!p->isSet("local"))
-	{
-		createLink();
-
-		syncStack = new ActionQueue(deviceLink);
-		syncStack->queueInit();
-		syncStack->queueConduits(l,mode,false);
-		syncStack->queueCleanup();
-		connectStack();
-		createConnection(p);
-	}
-	else
-	{
-		syncStack = new ActionQueue( 0L );
-		syncStack->queueInit();
-		syncStack->queueConduits(l,mode,false);
-		syncStack->queueCleanup();
-		connectStack();
-		QTimer::singleShot(100,syncStack,SLOT(execConduit()));
-	}
-
-
+	KPilotLink *link = createLink( p->isSet("local") );
+	ActionQueue *syncStack = new ActionQueue( link );
+	syncStack->queueInit( ActionQueue::queueCheckUser );
+	syncStack->queueConduits(l,mode,false);
+	syncStack->queueCleanup();
+	connectStack(link,syncStack);
+	link->reset(device);
 	return kapp->exec();
 }
 
-int listConduits(KCmdLineArgs *)
+int backup(const QString &device, const QString &what, KCmdLineArgs *p)
+{
+	FUNCTIONSETUP;
+	KPilotLink *link = createLink( p->isSet("local") );
+	ActionQueue *syncStack = new ActionQueue( link );
+	syncStack->queueInit();
+	BackupAction *ba = new BackupAction( link, true /* full backup */ );
+	ba->setDirectory( what );
+	syncStack->addAction( ba );
+	syncStack->queueCleanup();
+	connectStack(link,syncStack);
+	link->reset(device);
+	return kapp->exec();
+}
+
+int restore(const QString &device, const QString &what, KCmdLineArgs *p)
+{
+	FUNCTIONSETUP;
+	KPilotLink *link = createLink( p->isSet("local") );
+	ActionQueue *syncStack = new ActionQueue( link );
+	syncStack->queueInit();
+	RestoreAction *ra = new RestoreAction( link );
+	ra->setDirectory( what );
+	syncStack->addAction( ra );
+	syncStack->queueCleanup();
+	connectStack(link,syncStack);
+	link->reset(device);
+	return kapp->exec();
+}
+
+int listDB(const QString &device, KCmdLineArgs *p)
+{
+	FUNCTIONSETUP;
+	KPilotLink *link = createLink( p->isSet("local") );
+	ActionQueue *syncStack = new ActionQueue( link );
+	syncStack->queueInit();
+	syncStack->addAction( new TestLink( link ) );
+	syncStack->queueCleanup();
+	connectStack(link,syncStack, p->isSet("loop") );
+	link->reset(device);
+	return kapp->exec();
+}
+
+int check( const QString &device, const QString &what, KCmdLineArgs *p )
+{
+	FUNCTIONSETUP;
+
+	if ( "help" == what )
+	{
+		std::cout <<
+"You can use the --check option to kpilotTest to run various\n"
+"small checks that require the use of the device. These are:\n"
+"\thelp - show this help\n"
+"\tuser - check the user name on the handheld\n"
+		<< std::endl;
+		return 0;
+	}
+
+	if ( "user" == what )
+	{
+		KPilotLink *link = createLink( p->isSet("local") );
+		ActionQueue *syncStack = new ActionQueue( link );
+		syncStack->queueInit( ActionQueue::queueCheckUser ); // Creates usercheck
+		syncStack->queueCleanup();
+		connectStack(link,syncStack);
+		link->reset(device);
+		return kapp->exec();
+	}
+
+	return 0;
+}
+
+void listConduits()
 {
 	FUNCTIONSETUP;
 
@@ -315,23 +266,78 @@ int listConduits(KCmdLineArgs *)
 	{
 		KSharedPtr < KService > o = (*availList).service();
 
-		std::cout << o->desktopEntryName().latin1() << std::endl;
-		std::cout << "\t" << o->name().latin1()  << std::endl;
+		std::cout << "File:   " << o->desktopEntryName().latin1() << std::endl;
+		std::cout << "  Desc: " << o->name().latin1()  << std::endl;
 		if (!o->library().isEmpty())
 		{
-			std::cout << "\tIn "
+			std::cout << "  Lib : "
 				<< o->library().latin1()
 				<< std::endl;
 		}
 
 		++availList;
 	}
+}
 
-	return 0;
+int show( const QString &what )
+{
+	FUNCTIONSETUP;
+
+	if ( "help" == what )
+	{
+		std::cout <<
+"Displays various bits of KPilot's internal settings. This\n"
+"does not require a device connection or a running KDE desktop.\n"
+"No change to data takes place. The following options are available\n"
+"for display:\n"
+"\thelp     - displays this help\n"
+"\tconduits - displays the list of available conduits\n"
+"\tuser     - displays the user name KPilot expects\n"
+"\tdevice   - displays the device settings in KPilot\n"
+"\tdebug    - displays internal numbers\n"
+		<< std::endl;
+		return 0;
+	}
+
+	if ( "conduits" == what )
+	{
+		listConduits();
+		return 0;
+	}
+
+	if ( "user" == what )
+	{
+		std::cout << "User: " << KPilotSettings::userName().latin1() << std::endl;
+		return 0;
+	}
+
+	if ( "device" == what )
+	{
+		std::cout << "Device:   " << KPilotSettings::pilotDevice().latin1()
+			<< "\nSpeed:    " << KPilotSettings::pilotSpeed()
+			<< "\nEncoding: " << KPilotSettings::encoding().latin1()
+			<< "\nQuirks:   " << KPilotSettings::workarounds()
+			<< std::endl;
+		return 0;
+	}
+
+	if ( "debug" == what )
+	{
+		std::cout << "Debug:  " << KPilotSettings::debug()
+			<< "\nConfig: " << KPilotSettings::configVersion()
+			<< std::endl;
+		return 0;
+	}
+
+	std::cerr << "Unknown --show argument, use --show help for help.\n";
+	return 1;
 }
 
 int main(int argc, char **argv)
 {
+#ifdef DEBUG
+	debug_level = 1;
+#endif
 	FUNCTIONSETUP;
 	KAboutData about("kpilotTest",
 		I18N_NOOP("KPilotTest"),
@@ -340,43 +346,87 @@ int main(int argc, char **argv)
 		KAboutData::License_GPL, "(C) 2001-2004, Adriaan de Groot");
 	about.addAuthor("Adriaan de Groot",
 		I18N_NOOP("KPilot Maintainer"),
-		"groot@kde.org", "http://www.cs.kun.nl/~adridg/kpilot/");
+		"groot@kde.org", "http://www.kpilot.org/");
 
 	KCmdLineArgs::init(argc, argv, &about);
-	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilottest");
+	KCmdLineArgs::addCmdLineOptions(generalOptions,
+		I18N_NOOP("General"));
+	KCmdLineArgs::addCmdLineOptions(conduitOptions,
+		I18N_NOOP("Conduit Actions"),"conduit");
+
 	KApplication::addCmdLineOptions();
 
 	KCmdLineArgs *p = KCmdLineArgs::parsedArgs();
 
+	bool needGUI = false;
 
-	KApplication a;
+	// Some versions need a GUI
+	needGUI |= (p->isSet("check"));
+	needGUI |= (p->isSet("exec")); // assume worst wrt. conduits
+	needGUI |= (p->isSet("restore"));
+
+	KApplication a(needGUI,needGUI);
 #ifdef DEBUG
 	KPilotConfig::getDebugLevel(p);
+	DEBUGKPILOT  << fname << "Created KApplication." << endl;
 #endif
 
-	if ( p->isSet("backup") ||
-		p->isSet("restore") ||
-		p->isSet("list") ||
-		p->isSet("test-timeout") ||
-		p->isSet("test-usercheck") )
+
+	QString device( "/dev/pilot" );
+
+	if ( p->isSet("port") )
 	{
-		return syncTest(p);
+		device = p->getOption("port");
 	}
 
-	if (p->isSet("conduit-list"))
+	if ( p->isSet("check") )
 	{
-		return listConduits(p);
+		return check( device, p->getOption("check"),
+			KCmdLineArgs::parsedArgs("conduit") );
 	}
 
-	if (p->isSet("conduit-exec"))
+	if ( p->isSet("show") )
 	{
-		return execConduit(p);
+		return show( p->getOption("show") );
 	}
 
-	// The default is supposed to be "list"
-	return syncTest(p);
-	/* NOTREACHED */
-	(void) test_id;
+	if ( p->isSet("exec") )
+	{
+		return exec( device, p->getOption("exec"),
+			KCmdLineArgs::parsedArgs("conduit") );
+	}
+
+	if ( p->isSet("list") )
+	{
+		return listDB( device,
+			KCmdLineArgs::parsedArgs("conduit") );
+	}
+
+	if ( p->isSet("backup") )
+	{
+		return backup( device, p->getOption("backup"),
+			KCmdLineArgs::parsedArgs("conduit") );
+	}
+
+	if ( p->isSet("restore") )
+	{
+		return restore( device, p->getOption("restore"),
+			KCmdLineArgs::parsedArgs("conduit") );
+	}
+
+
+
+	std::cout <<
+"Usage: kpilotTest [--port devicename] action\n\n"
+"Where action can be one of:\n"
+"\t--list - list the databases on the handheld\n"
+"\t--show (help | conduits | ...) - show configuration\n"
+"\t--check (help | user | ...) - check device\n"
+"\t--exec conduit - run a single conduit\n"
+"\t--backup - backup the device\n"
+"\t--restore - restore the device from backup\n"
+	<< std::endl;
+	return 1;
 }
 
 

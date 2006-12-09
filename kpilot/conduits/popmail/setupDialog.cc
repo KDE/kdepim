@@ -29,12 +29,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-// This is an old trick so you can determine what revisions
-// make up a binary distribution.
-//
-//
-static const char *setupDialog_id=
-	"$Id$";
 
 #include "options.h"
 
@@ -46,6 +40,7 @@ static const char *setupDialog_id=
 #include <kconfig.h>
 #include <kstandarddirs.h>
 #include <klineedit.h>
+#include <kaboutdata.h>
 
 #include <qcheckbox.h>
 #include <qdir.h>
@@ -70,7 +65,26 @@ PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p,const char *n) :
 {
 	FUNCTIONSETUP;
 	fConduitName = i18n("KMail");
-	UIDialog::addAboutPage(fConfigWidget->fTabWidget,PopMailConduitFactory::about());
+	KAboutData *fAbout = new KAboutData("popmailConduit",
+		I18N_NOOP("Mail Conduit for KPilot"),
+		KPILOT_VERSION,
+		I18N_NOOP("Configures the Mail Conduit for KPilot"),
+		KAboutData::License_GPL,
+		"(C) 2001, Dan Pilone, Michael Kropfberger, Adriaan de Groot");
+	fAbout->addAuthor("Adriaan de Groot",
+		I18N_NOOP("Maintainer"),
+		"groot@kde.org",
+		"http://www.kpilot.org/");
+	fAbout->addAuthor("Dan Pilone",
+		I18N_NOOP("Original Author"));
+	fAbout->addCredit("Michael Kropfberger",
+		I18N_NOOP("POP3 code"));
+	fAbout->addCredit("Marko Gr&ouml;nroos",
+		I18N_NOOP("SMTP support and redesign"),
+		"magi@iki.fi",
+		"http://www.iki.fi/magi/");
+
+	UIDialog::addAboutPage(fConfigWidget->fTabWidget,fAbout);
 	fWidget=fConfigWidget;
 
 #define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
@@ -82,7 +96,6 @@ PopMailWidgetConfig::PopMailWidgetConfig(QWidget *p,const char *n) :
 	connect(fConfigWidget->fSendMode,SIGNAL(activated(int)),
 		this,SLOT(toggleSendMode(int)));
 
-	(void) setupDialog_id;
 }
 
 void PopMailWidgetConfig::commit()

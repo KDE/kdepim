@@ -29,7 +29,7 @@
 */
 
 #include <kdialogbase.h>
-class KPilotDeviceLink;
+class KPilotLink;
 class QTimer;
 class QListView;
 class ResolutionDialogBase;
@@ -42,7 +42,11 @@ class ResolutionDlg : public KDialogBase
     Q_OBJECT
 
 public:
-	ResolutionDlg( QWidget* parent=0, KPilotDeviceLink*fH=0L, QString caption=QString::null, QString helpText=QString::null, ResolutionTable*tab=0L );
+	ResolutionDlg( QWidget* parent=0, 
+		KPilotLink*fH=0L, 
+		const QString &caption=QString(), 
+		const QString &helpText=QString(), 
+		ResolutionTable *tab=0L );
 	~ResolutionDlg();
 
 public slots:
@@ -57,10 +61,10 @@ protected:
 	void adjustButtons(ResolutionTable*tab);
 
 	QTimer* tickleTimer;
-	KPilotDeviceLink* fHandle;
+	KPilotLink* fHandle;
 	ResolutionTable*fTable;
 
 	ResolutionDialogBase*fWidget;
 };
 
-#endif // MYDIALOG_H
+#endif // RESOLUTIONDIALOG_H

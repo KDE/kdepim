@@ -26,8 +26,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-static const char *syncAction_id =
-	"$Id$";
 
 #include "options.h"
 
@@ -57,17 +55,16 @@ static const char *syncAction_id =
 #include "syncAction.moc"
 #include "kpilotlibSettings.h"
 
-SyncAction::SyncAction(KPilotDeviceLink  *p,
+SyncAction::SyncAction(KPilotLink  *p,
 	const char *name) :
 	QObject(p, name),
 	fHandle(p),
 	fParent(0L)
 {
 	FUNCTIONSETUP;
-	(void) syncAction_id;
 }
 
-SyncAction::SyncAction(KPilotDeviceLink *p,
+SyncAction::SyncAction(KPilotLink *p,
 	QWidget * visibleparent,
 	const char *name) :
 	QObject(p, name),
@@ -95,14 +92,14 @@ SyncAction::~SyncAction()
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGLIBRARY << fname
 		<< ": Running conduit " << name() << endl;
 #endif
 
 	bool r = this->exec();
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Exec returned " << r << endl;
+	DEBUGLIBRARY << fname << ": Exec returned " << r << endl;
 #endif
 
 	if (!r)
@@ -131,20 +128,18 @@ static struct
 } maps[] =
 {
 	{ SyncAction::SyncMode::eHotSync, "--hotsync" },
-	{ SyncAction::SyncMode::eFastSync, "--fast" },
 	{ SyncAction::SyncMode::eFullSync, "--full" },
 	{ SyncAction::SyncMode::eCopyPCToHH, "--copyPCToHH" },
 	{ SyncAction::SyncMode::eCopyHHToPC, "--copyHHToPC" },
 	{ SyncAction::SyncMode::eBackup, "--backup" },
 	{ SyncAction::SyncMode::eRestore, "--restore" },
-	{ SyncAction::SyncMode::eFastSync, "--fastsync" },
 	{ SyncAction::SyncMode::eFullSync, "--fullsync" },
 	{ SyncAction::SyncMode::eHotSync, (const char *)0 }
 }
 ;
 
 SyncAction::SyncMode::SyncMode(const QStringList &args) :
-	fMode(eFastSync),
+	fMode(eHotSync),
 	fTest(args.contains("--test")),
 	fLocal(args.contains("--local"))
 {
@@ -162,7 +157,7 @@ SyncAction::SyncMode::SyncMode(const QStringList &args) :
 	if (!maps[i].name)
 	{
 		kdError() << k_funcinfo << "No mode set by arguments "
-			<< args << ", defaulting to FastSync." << endl;
+			<< args << ", defaulting to HotSync." << endl;
 	}
 }
 
@@ -171,11 +166,11 @@ SyncAction::SyncMode::SyncMode(Mode m, bool test, bool local) :
 	fTest(test),
 	fLocal(local)
 {
-	if ( ((int)m<(int)eFastSync) || ((int)m>(int)eRestore) )
+	if ( ((int)m<(int)eHotSync) || ((int)m>(int)eRestore) )
 	{
 		kdError() << k_funcinfo << "Mode value " << (int)m << " is illegal"
-			", defaulting to FastSync." << endl;
-		fMode = eFastSync;
+			", defaulting to HotSync." << endl;
+		fMode = eHotSync;
 	}
 }
 
@@ -210,7 +205,6 @@ QStringList SyncAction::SyncMode::list() const
 {
 	switch(e)
 	{
-	case eFastSync : return i18n("FastSync");
 	case eHotSync : return i18n("HotSync");
 	case eFullSync : return i18n("Full Synchronization");
 	case eCopyPCToHH : return i18n("Copy PC to Handheld");

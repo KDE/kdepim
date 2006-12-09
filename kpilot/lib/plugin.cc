@@ -39,7 +39,6 @@
 #include <qfileinfo.h>
 #include <qdir.h>
 #include <qregexp.h>
-#include <qtextcodec.h>
 
 #include <dcopclient.h>
 #include <kapplication.h>
@@ -49,7 +48,6 @@
 
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
-#include "pilotAppCategory.h"
 
 #include "plugin.moc"
 
@@ -96,7 +94,7 @@ ConduitConfigBase::~ConduitConfigBase()
 	return true;
 }
 
-ConduitAction::ConduitAction(KPilotDeviceLink *p,
+ConduitAction::ConduitAction(KPilotLink *p,
 	const char *name,
 	const QStringList &args) :
 	SyncAction(p,name),
@@ -120,10 +118,10 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 		it != args.end();
 		++it)
 	{
-		DEBUGCONDUIT << fname << ": " << *it << endl;
+		DEBUGLIBRARY << fname << ": " << *it << endl;
 	}
 
-	DEBUGCONDUIT << fname << ": Direction=" << fSyncDirection.name() << endl;
+	DEBUGLIBRARY << fname << ": Direction=" << fSyncDirection.name() << endl;
 #endif
 }
 
@@ -134,18 +132,23 @@ ConduitAction::ConduitAction(KPilotDeviceLink *p,
 	KPILOT_DELETE(fLocalDatabase);
 }
 
-bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
+bool ConduitAction::openDatabases(const QString &name, bool *retrieved)
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
+	DEBUGLIBRARY << fname
 		<< ": Trying to open database "
 		<< name << endl;
-#endif
+	DEBUGLIBRARY << fname
+		<< ": Mode="
+		<< (syncMode().isTest() ? "test " : "")
+		<< (syncMode().isLocal() ? "local " : "")
+		<< endl ;
 
 	KPILOT_DELETE(fLocalDatabase);
-	PilotLocalDatabase *localDB = new PilotLocalDatabase(name, true);
+
+	QString localPathName = PilotLocalDatabase::getDBPath() + name;
+	PilotLocalDatabase *localDB = new PilotLocalDatabase( localPathName );
 
 	if (!localDB)
 	{
@@ -158,69 +161,59 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 	}
 
 	// if there is no backup db yet, fetch it from the palm, open it and set the full sync flag.
-	if (!localDB->isDBOpen() )
+	if (!localDB->isOpen() )
 	{
 		QString dbpath(localDB->dbPathName());
 		KPILOT_DELETE(localDB);
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
-			<< ": Backup database "<< dbpath <<" could not be opened. Will fetch a copy from the palm and do a full sync"<<endl;
-#endif
+		DEBUGLIBRARY << fname
+			<< ": Backup database " << dbpath
+			<< " not found." << endl;
 		struct DBInfo dbinfo;
-		if (fHandle->findDatabase(PilotAppCategory::codec()->fromUnicode( name ), &dbinfo)<0 )
+
+// TODO Extend findDatabase() with extra overload?
+		if (deviceLink()->findDatabase(Pilot::toPilot( name ), &dbinfo)<0 )
 		{
-#ifdef DEBUG
-			DEBUGCONDUIT << fname
-				<< ": Could not get DBInfo for "<<name<<"! "<<endl;
-#endif
+			kdWarning() << k_funcinfo
+				<< ": Could not get DBInfo for " << name << endl;
 			if (retrieved) *retrieved = false;
 			return false;
 		}
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
-				<< ": Found Palm database: "<<dbinfo.name<<endl
-				<<"type = "<< dbinfo.type<<endl
-				<<"creator = "<< dbinfo.creator<<endl
-				<<"version = "<< dbinfo.version<<endl
-				<<"index = "<< dbinfo.index<<endl;
-#endif
+
+		DEBUGLIBRARY << fname
+				<< ": Found Palm database: " << dbinfo.name <<endl
+				<< fname << ": type = " << dbinfo.type
+				<< " creator = " << dbinfo.creator
+				<< " version = " << dbinfo.version
+				<< " index = " << dbinfo.index << endl;
 		dbinfo.flags &= ~dlpDBFlagOpen;
 
 		// make sure the dir for the backup db really exists!
 		QFileInfo fi(dbpath);
-		QString path(QFileInfo(dbpath).dir(TRUE).absPath());
+		QString path(QFileInfo(dbpath).dir(true).absPath());
 		if (!path.endsWith(CSL1("/"))) path.append(CSL1("/"));
 		if (!KStandardDirs::exists(path))
 		{
-#ifdef DEBUG
-			DEBUGCONDUIT << fname << ": Trying to create path for database: <"
+			DEBUGLIBRARY << fname << ": Trying to create path for database: <"
 				<< path << ">" << endl;
-#endif
 			KStandardDirs::makeDir(path);
 		}
 		if (!KStandardDirs::exists(path))
 		{
-#ifdef DEBUG
-			DEBUGCONDUIT << fname << ": Database directory does not exist." << endl;
-#endif
+			DEBUGLIBRARY << fname << ": Database directory does not exist." << endl;
 			if (retrieved) *retrieved = false;
 			return false;
 		}
 
-		if (!fHandle->retrieveDatabase(dbpath, &dbinfo) )
+		if (!deviceLink()->retrieveDatabase(dbpath, &dbinfo) )
 		{
-#ifdef DEBUG
-			DEBUGCONDUIT << fname << ": Could not retrieve database "<<name<<" from the handheld."<<endl;
-#endif
+			kdWarning() << k_funcinfo << ": Could not retrieve database "<<name<<" from the handheld."<<endl;
 			if (retrieved) *retrieved = false;
 			return false;
 		}
-		localDB = new PilotLocalDatabase(name, true);
-		if (!localDB || !localDB->isDBOpen())
+		localDB = new PilotLocalDatabase( localPathName );
+		if (!localDB || !localDB->isOpen())
 		{
-#ifdef DEBUG
-			DEBUGCONDUIT << fname << ": local backup of database "<<name<<" could not be initialized."<<endl;
-#endif
+			kdWarning() << k_funcinfo << ": local backup of database "<<name<<" could not be initialized."<<endl;
 			if (retrieved) *retrieved = false;
 			return false;
 		}
@@ -228,7 +221,7 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 	}
 	fLocalDatabase = localDB;
 
-	fDatabase = new PilotSerialDatabase(pilotSocket(), name /* On pilot */);
+	fDatabase = deviceLink()->database( name );
 
 	if (!fDatabase)
 	{
@@ -239,92 +232,10 @@ bool ConduitAction::openDatabases_(const QString &name, bool *retrieved)
 			<< endl;
 	}
 
-	return (fDatabase && fDatabase->isDBOpen() &&
-	        fLocalDatabase && fLocalDatabase->isDBOpen() );
+	return (fDatabase && fDatabase->isOpen() &&
+	        fLocalDatabase && fLocalDatabase->isOpen() );
 }
 
-// This whole function is for debugging purposes only.
-bool ConduitAction::openDatabases_(const QString &dbName,const QString &localPath)
-{
-	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << ": Doing local test mode for " << dbName << endl;
-#endif
-	if (localPath.isNull())
-	{
-#ifdef DEBUG
-		DEBUGCONDUIT << fname
-			<< ": local mode test for one database only."
-			<< endl;
-#endif
-		fDatabase = new PilotLocalDatabase(dbName,false);
-		fLocalDatabase = 0L;
-		return false;
-	}
-
-	fDatabase = new PilotLocalDatabase(localPath,dbName);
-	fLocalDatabase= new PilotLocalDatabase(dbName, true); // From default
-	if (!fLocalDatabase || !fDatabase)
-	{
-#ifdef DEBUG
-		const QString *where2 = PilotLocalDatabase::getDBPath();
-
-		QString none = CSL1("<null>");
-		DEBUGCONDUIT << fname
-			<< ": Could not open both local copies of \""
-			<< dbName
-			<< "\"" << endl
-			<< "Using \""
-			<< (where2 ? *where2 : none)
-			<< "\" and \""
-			<< (localPath.isEmpty() ? localPath : none)
-			<< "\""
-			<< endl;
-#endif
-	}
-#ifdef DEBUG
-	if (fLocalDatabase)
-	{
-		DEBUGCONDUIT << fname
-			<< ": Opened local database "
-			<< fLocalDatabase->dbPathName()
-			<< (fLocalDatabase->isDBOpen() ? " OK" : "")
-			<< endl;
-	}
-	if (fDatabase)
-	{
-		DEBUGCONDUIT << fname
-			<< ": Opened database "
-			<< fDatabase->dbPathName()
-			<< (fDatabase->isDBOpen() ? " OK" : "")
-			<< endl;
-	}
-#endif
-
-	return (fDatabase && fLocalDatabase);
-}
-
-bool ConduitAction::openDatabases(const QString &dbName, bool *retrieved)
-{
-	FUNCTIONSETUP;
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
-		<< ": Mode="
-		<< (syncMode().isTest() ? "test " : "")
-		<< (syncMode().isLocal() ? "local " : "")
-		<< endl ;
-#endif
-
-	if (syncMode().isLocal())
-	{
-		return openDatabases_(dbName,CSL1("/tmp/"));
-	}
-	else
-	{
-		return openDatabases_(dbName, retrieved);
-	}
-}
 
 bool ConduitAction::changeSync(SyncMode::Mode m)
 {
@@ -338,51 +249,41 @@ bool ConduitAction::changeSync(SyncMode::Mode m)
 	return false;
 }
 
-int PluginUtility::findHandle(const QStringList &a)
+
+namespace PluginUtility
+{
+
+QString findArgument(const QStringList &a, const QString &arg)
 {
 	FUNCTIONSETUP;
 
-	int handle = -1;
-	for (QStringList::ConstIterator i = a.begin();
-		i != a.end(); ++i)
-	{
-		if ((*i).left(7) == CSL1("handle="))
-		{
-			QString s = (*i).mid(7);
-			if (s.isEmpty()) continue;
+	QString search;
 
-			handle = s.toInt();
-#ifdef DEBUG
-			DEBUGCONDUIT << fname
-				<< ": Got handle "
-				<< handle
-				<< endl;
-#endif
-			if (handle<1)
-			{
-				kdWarning() << k_funcinfo
-					<< ": Improbable handle value found."
-					<< endl;
-			}
-			return handle;
+	if (arg.startsWith( CSL1("--") ))
+	{
+		search = arg;
+	}
+	else
+	{
+		search = CSL1("--") + arg;
+	}
+	search.append( CSL1("=") );
+
+
+	QStringList::ConstIterator end = a.end();
+	for (QStringList::ConstIterator i = a.begin(); i != end; ++i)
+	{
+		if ((*i).startsWith( search ))
+		{
+			QString s = (*i).mid(search.length());
+			return s;
 		}
 	}
 
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
-		<< ": No handle= parameter found."
-		<< endl;
-#endif
-
-	return -1;
+	return QString::null;
 }
 
-bool PluginUtility::isModal(const QStringList &a)
-{
-	return a.contains(CSL1("modal"));
-}
-
-/* static */ bool PluginUtility::isRunning(const QCString &n)
+/* static */ bool isRunning(const QCString &n)
 {
 	DCOPClient *dcop = KApplication::kApplication()->dcopClient();
 	QCStringList apps = dcop->registeredApplications();
@@ -390,19 +291,19 @@ bool PluginUtility::isModal(const QStringList &a)
 }
 
 
-/* static */ long PluginUtility::pluginVersion(const KLibrary *lib)
+/* static */ unsigned long pluginVersion(const KLibrary *lib)
 {
 	QString symbol = CSL1("version_");
 	symbol.append(lib->name());
 
 	if (!lib->hasSymbol(symbol.latin1())) return 0;
 
-	long *p = (long *)(lib->symbol(symbol.latin1()));
+	unsigned long *p = (unsigned long *)(lib->symbol(symbol.latin1()));
 	return *p;
 }
 
 
-/* static */ QString PluginUtility::pluginVersionString(const KLibrary *lib)
+/* static */ QString pluginVersionString(const KLibrary *lib)
 {
 	QString symbol= CSL1("id_");
 	symbol.append(lib->name());
@@ -412,4 +313,6 @@ bool PluginUtility::isModal(const QStringList &a)
 	return QString::fromLatin1(*((const char **)(lib->symbol(symbol.latin1()))));
 }
 
+
+}
 

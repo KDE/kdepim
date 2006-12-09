@@ -50,41 +50,25 @@
 #endif
 
 
-// Switch _on_ debugging if it's not off.
-//
-#ifndef NDEBUG
-#ifndef DEBUG
-#define DEBUG				(1)
-#endif
-#endif
-
-// Switch on debugging explicitly. Perhaps send debug to stderr instead
-// of to the KDE debugging facility (it does lose some niftiness then).
-//
-#ifndef DEBUG
-#define DEBUG			(1)
-#endif
-#define DEBUG_CERR			(1)
-
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <unistd.h>     /* For size_t for pilot-link */
 #include <qglobal.h>
-// For KDE_EXPORT with kdelibs 3.3.x
-#include <kdepimmacros.h>
 
-#if (QT_VERSION < 0x030200)
-#error "This is KPilot for KDE3.3 and won't compile with Qt < 3.2.0"
+#if (QT_VERSION < 0x030300)
+#error "This is KPilot for KDE3.5 and won't compile with Qt < 3.3.0"
 #endif
 
 #ifndef KDE_VERSION
 #include <kdeversion.h>
 #endif
 
-#if !(KDE_IS_VERSION(3,3,0))
-#error "This is KPilot for KDE 3.3 and won't compile with KDE < 3.3.0"
+#if !(KDE_IS_VERSION(3,4,0))
+#error "This is KPilot for (really) KDE 3.5 and won't compile with KDE < 3.4.0"
+#endif
+
+#if !(KDE_IS_VERSION(3,5,0))
+#warning "This is KPilot for KDE 3.5 and might not compile with KDE < 3.5.0"
 #endif
 
 #include "pilotLinkVersion.h"
@@ -97,10 +81,11 @@
 #ifdef DEBUG
 #undef NDEBUG
 #undef NO_DEBUG
+#ifndef DEBUG_CERR
+#define DEBUG_CERR
+#endif
 #endif
 #include <kdebug.h>
-
-
 
 extern KDE_EXPORT int debug_level;
 
@@ -116,7 +101,7 @@ extern KDE_EXPORT int debug_level;
 #define DEBUGAREA 		0
 
 #define DEBUGAREA_KPILOT	5510
-#define DEBUGAREA_DAEMON	5511
+#define DEBUGAREA_LIBRARY	5511
 #define DEBUGAREA_CONDUIT	5512
 #define DEBUGAREA_DB		5513
 
@@ -151,10 +136,9 @@ protected:
 #ifdef DEBUG_CERR
 #include <iostream>
 #define DEBUGKPILOT	std::cerr
-#define DEBUGDAEMON	std::cerr
+#define DEBUGLIBRARY	std::cerr
 #define DEBUGCONDUIT	std::cerr
 #define DEBUGDB		std::cerr
-
 using namespace std;
 
 inline std::ostream& operator <<(std::ostream &o, const QString &s)
@@ -169,11 +153,13 @@ inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
 
 #else
 
+#warning "kdDebug()-based debugging is deprecated"
+
 // kddebug based debugging
 //
 //
 #define DEBUGKPILOT	fname.debug(DEBUGAREA_KPILOT)
-#define DEBUGDAEMON	fname.debug(DEBUGAREA_DAEMON)
+#define DEBUGLIBRARY	fname.debug(DEBUGAREA_LIBRARY)
 #define DEBUGCONDUIT	fname.debug(DEBUGAREA_CONDUIT)
 #define DEBUGDB         fname.debug(DEBUGAREA_DB)
 
@@ -188,7 +174,7 @@ inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 #else
 #define DEBUGSTREAM	kndbgstream
 #define DEBUGKPILOT	kndDebug()
-#define DEBUGDAEMON	kndDebug()
+#define DEBUGLIBRARY	kndDebug()
 #define DEBUGCONDUIT	kndDebug()
 #define DEBUGDB         kndDebug()
 
@@ -199,7 +185,7 @@ inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 #define FUNCTIONSETUPL(a) const int fname = a; Q_UNUSED(fname);
 #endif
 
-#define KPILOT_VERSION	"4.6.7 (tijdelijk)"
+#define KPILOT_VERSION	"4.9.0 (depth9)"
 
 
 // Function to expand newlines in rich text to <br>\n

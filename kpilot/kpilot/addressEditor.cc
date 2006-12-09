@@ -19,7 +19,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 ** MA 02110-1301, USA.
 */
 
@@ -51,19 +51,17 @@
 
 #include "addressEditor.moc"
 
-static const char *addressEditor_id =
-	"$Id$";
 
 AddressEditor::AddressEditor(PilotAddress * p,
-	struct AddressAppInfo *appInfo,
+	PilotAddressInfo *appInfo,
 	QWidget * parent,
 	const char *name) :
 	KDialogBase(KDialogBase::Plain,
 		i18n("Address Editor"),
 		Ok | Cancel, Cancel,
 		parent, name, false /* non-modal */ ),
-	fDeleteOnCancel(p == 0L), 
-	fAddress(p), 
+	fDeleteOnCancel(p == 0L),
+	fAddress(p),
 	fAppInfo(appInfo)
 {
 	FUNCTIONSETUP;
@@ -74,7 +72,6 @@ AddressEditor::AddressEditor(PilotAddress * p,
 	connect(parent, SIGNAL(recordChanged(PilotAddress *)),
 		this, SLOT(updateRecord(PilotAddress *)));
 
-	(void) addressEditor_id;
 }
 
 AddressEditor::~AddressEditor()
@@ -116,7 +113,7 @@ QString AddressEditor::phoneLabelText(PilotAddress * addr, int i)
 
 	if (idx >= 0 && idx < 8)	// hard-coded, no constant in pi-address.h
 	{
-		if ((s = fAppInfo->phoneLabels[idx]))
+		if ((s = fAppInfo->info()->phoneLabels[idx]))
 		{
 			ret = s;
 			ret += CSL1(":");
@@ -134,7 +131,7 @@ void AddressEditor::fillFields()
 
 	if (fAddress == 0L)
 	{
-		fAddress = new PilotAddress(*fAppInfo);
+		fAddress = new PilotAddress(fAppInfo);
 		fDeleteOnCancel = true;
 	}
 
@@ -256,7 +253,6 @@ void AddressEditor::initLayout()
 	fAddress->setField(entryCustom4, fCustom4Field->text());
 
 	emit(recordChangeComplete(fAddress));
-        fDeleteOnCancel = false;
 	KDialogBase::slotOk();
 }
 

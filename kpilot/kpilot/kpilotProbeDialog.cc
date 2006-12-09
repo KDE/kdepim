@@ -48,12 +48,10 @@
 #include "pilotUser.h"
 #include "pilotSysInfo.h"
 #include "options.h"
-#include "kpilotlink.h"
+#include "kpilotdevicelink.h"
 
 #include "kpilotProbeDialog.moc"
-#ifndef __PILOTDAEMONDCOP_STUB__
 #include "pilotDaemonDCOP_stub.h"
-#endif
 
 /*
 We can't connect to /dev/ttyUSB0 and /dev/ttyUSB1 at the same time, because that
@@ -277,10 +275,10 @@ void ProbeDialog::connection( KPilotDeviceLink*lnk)
 
 	mActiveLink = lnk;
 	if ( !mActiveLink ) return;
-	KPilotUser*usr( mActiveLink->getPilotUser() );
+	const KPilotUser &usr( mActiveLink->getPilotUser() );
 
-	mUserName = usr->getUserName();
-	mUID = usr->getUserID();
+	mUserName = usr.getUserName();
+	mUID = usr.getUserID();
 	mDevice = mActiveLink->pilotPath();
 
 	fStatus->setText( i18n("Found a connected device on %1").arg(mDevice) );
@@ -296,23 +294,20 @@ void ProbeDialog::connection( KPilotDeviceLink*lnk)
 
 void ProbeDialog::retrieveDBList()
 {
-	QPtrList<DBInfo> dbs = mActiveLink->getDBList();
+	DBInfoList dbs = mActiveLink->getDBList();
 	mDBs.clear();
-	dbs.setAutoDelete( true );
 	char buff[7];
 	buff[0] = '[';
 
-	DBInfo *dbi;
-	for ( dbi = dbs.first(); dbi; dbi = dbs.next() ) {
-		if ( dbi ) {
-			set_long( &buff[1], dbi->creator );
-			buff[5] = ']';
-			buff[6] = '\0';
-			QString cr( buff );
-			mDBs << cr;
-			dbi->name[33]='\0';
-			mDBs << QString( dbi->name );
-		}
+	for ( DBInfoList::ConstIterator i = dbs.begin();
+		i != dbs.end(); ++i )
+	{
+		set_long( &buff[1], (*i).creator );
+		buff[5] = ']';
+		buff[6] = '\0';
+		QString cr( buff );
+		mDBs << cr;
+		mDBs << QString( (*i).name );
 	}
 	mDBs.sort();
 	

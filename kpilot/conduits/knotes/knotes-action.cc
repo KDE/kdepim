@@ -57,8 +57,7 @@
 extern "C"
 {
 
-long version_conduit_knotes = KPILOT_PLUGIN_API;
-const char *id_conduit_knotes = "$Id$" ;
+unsigned long version_conduit_knotes = Pilot::PLUGIN_API;
 
 }
 
@@ -183,7 +182,7 @@ public:
 
 
 
-KNotesAction::KNotesAction(KPilotDeviceLink *o,
+KNotesAction::KNotesAction(KPilotLink *o,
 	const char *n, const QStringList &a) :
 	ConduitAction(o,n ? n : "knotes-conduit",a),
 	fP(new KNotesActionPrivate)
@@ -361,7 +360,6 @@ void KNotesAction::listNotes()
 			listNotes(); // Debugging
 			fActionStatus = MemosToKNotes;
 			break;
-		case SyncAction::SyncMode::eFastSync:
 		case SyncAction::SyncMode::eHotSync:
 		case SyncAction::SyncMode::eFullSync:
 		case SyncAction::SyncMode::eCopyPCToHH:
@@ -396,7 +394,6 @@ void KNotesAction::listNotes()
 				// Impossible!
 				fActionStatus = Done;
 				break;
-			case SyncAction::SyncMode::eFastSync:
 			case SyncAction::SyncMode::eHotSync:
 			case SyncAction::SyncMode::eFullSync:
 				fActionStatus = MemosToKNotes;

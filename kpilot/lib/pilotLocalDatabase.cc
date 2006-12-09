@@ -28,9 +28,6 @@
 */
 
 
-static const char *pilotlocaldatabase_id =
-	"$Id$";
-
 #include "options.h"
 
 #include <stdio.h>
@@ -43,14 +40,14 @@ static const char *pilotlocaldatabase_id =
 #include <qfile.h>
 #include <qregexp.h>
 #include <qdatetime.h>
-#include <qtextcodec.h>
 #include <qvaluevector.h>
 
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>
+#include <ksavefile.h>
 
-#include "pilotAppCategory.h"
+#include "pilotRecord.h"
 #include "pilotLocalDatabase.h"
 
 typedef QValueVector<PilotRecord *> Records;
@@ -72,7 +69,11 @@ public:
 		resetIndex();
 	}
 
-	void resetIndex() { current = 0; pending = -1; }
+	void resetIndex()
+	{
+		current = 0;
+		pending = -1;
+	}
 
 	unsigned int current;
 	int pending;
@@ -91,7 +92,7 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 	fixupDBName();
 	openDatabase();
 
-	if (!isDBOpen() && useDefaultPath)
+	if (!isOpen() && useDefaultPath)
 	{
 		if (fPathBase && !fPathBase->isEmpty())
 		{
@@ -104,38 +105,12 @@ PilotLocalDatabase::PilotLocalDatabase(const QString & path,
 		}
 		fixupDBName();
 		openDatabase();
-		if (!isDBOpen())
+		if (!isOpen())
+		{
 			fPathName=path;
+		}
 	}
 
-	/* NOTREACHED */
-	(void) pilotlocaldatabase_id;
-}
-
-PilotLocalDatabase::PilotLocalDatabase(const QString & dbName,
-	bool useConduitDBs) :
-	PilotDatabase(dbName),
-	fPathName(QString::null),
-	fDBName(dbName),
-	fAppInfo(0L),
-	fAppLen(0),
-	d(0L)
-{
-	FUNCTIONSETUP;
-	if (fPathBase && !fPathBase->isEmpty() )
-	{
-		fPathName = *fPathBase;
-		if (useConduitDBs)
-			fPathName.replace(CSL1("DBBackup/"), CSL1("conduits/"));
-	}
-	else
-	{
-		fPathName = KGlobal::dirs()->saveLocation("data",
-			CSL1("kpilot/")+(useConduitDBs?CSL1("conduits/"):CSL1("DBBackup/")));
-	}
-
-	fixupDBName();
-	openDatabase();
 }
 
 PilotLocalDatabase::PilotLocalDatabase(const QString &dbName) :
@@ -183,20 +158,23 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 {
 	FUNCTIONSETUP;
 
-	// if the database is already open, we cannot create it again. How about completely resetting it? (i.e. deleting it and the createing it again)
-	if (isDBOpen()) {
+	// if the database is already open, we cannot create it again. 
+	// How about completely resetting it? (i.e. deleting it and then
+	// creating it again)
+	if (isOpen()) {
 #ifdef DEBUG
-		DEBUGCONDUIT<<"Database "<<fDBName<<" already open. Cannot recreate it."<<endl;
+		DEBUGLIBRARY << fname << "Database " << fDBName 
+			<< " already open. Cannot recreate it." << endl;
 #endif
 		return true;
 	}
 
 #ifdef DEBUG
-	DEBUGCONDUIT<<"Creating database "<<fDBName<<endl;
+	DEBUGLIBRARY << fname << "Creating database " << fDBName << endl;
 #endif
 
 	// Database names seem to be latin1.
-	memcpy(&fDBInfo.name[0], PilotAppCategory::codec()->fromUnicode(fDBName), 34*sizeof(char));
+	Pilot::toPilot(fDBName, fDBInfo.name, sizeof(fDBInfo.name));
 	fDBInfo.creator=creator;
 	fDBInfo.type=type;
 	fDBInfo.more=0;
@@ -223,14 +201,21 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 int PilotLocalDatabase::deleteDatabase()
 {
 	FUNCTIONSETUP;
-	if (isDBOpen()) closeDatabase();
+	if (isOpen())
+	{
+		closeDatabase();
+	}
 
 	QString dbpath=dbPathName();
 	QFile fl(dbpath);
 	if (QFile::remove(dbPathName()))
+	{
 		return 0;
+	}
 	else
+	{
 		return -1;
+	}
 }
 
 
@@ -242,7 +227,7 @@ int PilotLocalDatabase::readAppBlock(unsigned char *buffer, int size)
 
 	size_t m = kMin((size_t)size,(size_t)fAppLen);
 
-	if (!isDBOpen())
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open!" << endl;
 		memset(buffer,0,m);
@@ -257,7 +242,7 @@ int PilotLocalDatabase::writeAppBlock(unsigned char *buffer, int len)
 {
 	FUNCTIONSETUP;
 
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return -1;
@@ -271,10 +256,17 @@ int PilotLocalDatabase::writeAppBlock(unsigned char *buffer, int len)
 }
 
 
-	// returns the number of records in the database
+// returns the number of records in the database
 int PilotLocalDatabase::recordCount()
 {
-	return d->size();
+	if (d && isOpen())
+	{
+		return d->size();
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 
@@ -283,7 +275,10 @@ QValueList<recordid_t> PilotLocalDatabase::idList()
 {
 	int idlen=recordCount();
 	QValueList<recordid_t> idlist;
-	if (idlen<=0) return idlist;
+	if (idlen<=0)
+	{
+		return idlist;
+	}
 
 	// now create the QValue list from the idarr:
 	for (int i=0; i<idlen; i++)
@@ -299,13 +294,13 @@ PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 {
 	FUNCTIONSETUP;
 
-	d->pending = -1;
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdWarning() << k_funcinfo << fDBName << ": DB not open!" << endl;
 		return 0L;
 	}
 
+	d->pending = -1;
 
 	for (unsigned int i = 0; i < d->size(); i++)
 	{
@@ -324,13 +319,13 @@ PilotRecord *PilotLocalDatabase::readRecordByIndex(int index)
 {
 	FUNCTIONSETUP;
 	d->pending = -1;
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdWarning() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
 #ifdef DEBUG
-	DEBUGKPILOT << "Index=" << index << " Count=" << recordCount() << endl;
+	DEBUGLIBRARY << fname << ": Index=" << index << " Count=" << recordCount() << endl;
 #endif
 	if (index >= recordCount())
 		return 0L;
@@ -345,7 +340,7 @@ PilotRecord *PilotLocalDatabase::readNextRecInCategory(int category)
 {
 	FUNCTIONSETUP;
 	d->pending  = -1;
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdWarning() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
@@ -369,13 +364,13 @@ const PilotRecord *PilotLocalDatabase::findNextNewRecord()
 {
 	FUNCTIONSETUP;
 
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdWarning() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
 #ifdef DEBUG
-	DEBUGKPILOT << fname << ": looking for new record from " << d->current << endl;
+	DEBUGLIBRARY << fname << ": looking for new record from " << d->current << endl;
 #endif
 	// Should this also check for deleted?
 	while ((d->current < d->size())
@@ -396,7 +391,7 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 {
 	FUNCTIONSETUP;
 
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdWarning() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
@@ -411,9 +406,14 @@ PilotRecord *PilotLocalDatabase::readNextModifiedRec(int *ind)
 	}
 
 	if (d->current >= d->size())
+	{
 		return 0L;
+	}
 	PilotRecord *newRecord = new PilotRecord((*d)[d->current]);
-	if (ind) *ind=d->current;
+	if (ind)
+	{
+		*ind=d->current;
+	}
 
 	d->pending = d->current;	// Record which one needs the new id
 	d->current++;	// so we skip it next time
@@ -425,7 +425,7 @@ recordid_t PilotLocalDatabase::updateID(recordid_t id)
 {
 	FUNCTIONSETUP;
 
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0;
@@ -446,7 +446,7 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 {
 	FUNCTIONSETUP;
 
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return 0;
@@ -486,7 +486,7 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 int PilotLocalDatabase::deleteRecord(recordid_t id, bool all)
 {
 	FUNCTIONSETUP;
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo <<": DB not open"<<endl;
 		return -1;
@@ -524,7 +524,7 @@ int PilotLocalDatabase::resetSyncFlags()
 {
 	FUNCTIONSETUP;
 
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdError() << k_funcinfo << ": DB not open!" << endl;
 		return -1;
@@ -541,7 +541,7 @@ int PilotLocalDatabase::resetSyncFlags()
 int PilotLocalDatabase::resetDBIndex()
 {
 	FUNCTIONSETUP;
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdWarning() << k_funcinfo << ": DB not open!" << endl;
 		return -1;
@@ -554,7 +554,7 @@ int PilotLocalDatabase::resetDBIndex()
 int PilotLocalDatabase::cleanup()
 {
 	FUNCTIONSETUP;
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 		kdWarning() << k_funcinfo << ": DB not open!" << endl;
 		return -1;
@@ -602,15 +602,13 @@ void PilotLocalDatabase::openDatabase()
 	pi_file *dbFile;
 
 	setDBOpen(false);
-	char buffer[PATH_MAX];
-	memset(buffer,0,PATH_MAX);
-	strlcpy(buffer,QFile::encodeName(dbPathName()),PATH_MAX);
 
-	dbFile = pi_file_open(buffer);
+	dbFile = pi_file_open( QFile::encodeName(dbPathName()) );
 	if (dbFile == 0L)
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Failed to open " << dbPathName() << endl;
+		QString path = dbPathName();
+		DEBUGLIBRARY << fname << ": Failed to open " << path << endl;
 #endif
 		return;
 	}
@@ -638,10 +636,16 @@ void PilotLocalDatabase::openDatabase()
 	while (pi_file_read_record(dbFile, i,
 			&tmpBuffer, &size, &attr, &cat, &id) == 0)
 	{
-		(*d)[i] = new PilotRecord(tmpBuffer, size, attr, cat, id);
+		pi_buffer_t *b = pi_buffer_new(size);
+		memcpy(b->data,tmpBuffer,size);
+		b->used = size;
+		(*d)[i] = new PilotRecord(b, attr, cat, id);
 		i++;
 	}
 	pi_file_close(dbFile);	// We done with it once we've read it in.
+
+	KSaveFile::backupFile( dbPathName() );
+
 	setDBOpen(true);
 }
 
@@ -650,10 +654,12 @@ void PilotLocalDatabase::closeDatabase()
 	FUNCTIONSETUP;
 	pi_file *dbFile;
 
-	if (isDBOpen() == false)
+	if (!isOpen())
 	{
 #ifdef DEBUG
-		DEBUGCONDUIT << fname << ": Database "<<fDBName<<" is not open. Cannot close and write it"<<endl;
+		DEBUGLIBRARY << fname << ": Database " << fDBName
+			<< " is not open. Cannot close and write it"
+			<< endl;
 #endif
 		return;
 	}
@@ -664,9 +670,10 @@ void PilotLocalDatabase::closeDatabase()
 	strlcpy(buf,QFile::encodeName(newName),PATH_MAX);
 
 #ifdef DEBUG
-	DEBUGCONDUIT << fname
+	QString path = dbPathName();
+	DEBUGLIBRARY << fname
 		<< ": Creating temp file " << buf
-		<< " for the database file " << dbPathName() << endl;
+		<< " for the database file " << path << endl;
 #endif
 
 	dbFile = pi_file_create(buf,&fDBInfo);
@@ -702,7 +709,7 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname
+	DEBUGLIBRARY << fname
 		<< ": Setting default DB path to "
 		<< s
 		<< endl;
@@ -721,5 +728,36 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 /* virtual */ PilotDatabase::DBType PilotLocalDatabase::dbType() const
 {
 	return eLocalDB;
+}
+
+
+/* static */ bool PilotLocalDatabase::infoFromFile( const QString &path, DBInfo *d )
+{
+	FUNCTIONSETUP;
+
+	pi_file *f = 0L;
+
+	if (!d)
+	{
+		return false;
+	}
+	if (!QFile::exists(path))
+	{
+		return false;
+	}
+
+	const char * fileName = QFile::encodeName( path );
+	f = pi_file_open( fileName );
+	if (!f)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Can't open " << path << endl;
+		return false;
+	}
+
+	pi_file_get_info(f,d);
+	pi_file_close(f);
+
+	return true;
 }
 

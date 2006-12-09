@@ -28,7 +28,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "plugin.h"
+#include <plugin.h>
 
 
 class NoteAndMemo;
@@ -39,7 +39,7 @@ class KNotesAction : public ConduitAction
 Q_OBJECT
 public:
 	KNotesAction(
-		KPilotDeviceLink *o,
+		KPilotLink *o,
 		const char *n = 0L,
 		const QStringList &a = QStringList() );
 	virtual ~KNotesAction();

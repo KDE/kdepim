@@ -1,9 +1,10 @@
-/* vcal-factory.cc                      KPilot
+#ifndef _KPILOT_PCTOHHSTATE_H
+#define _KPILOT_PCTOHHSTATE_H
+/* pctohhstate.h                       KPilot
 **
-** Copyright (C) 2002-2003 Reinhold Kainhofer
-** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2006 Bertjan Broeksema
 **
-** This file defines the factory for the vcal-conduit plugin.
+** This file defines the pctohhstate for vcal-conduitbase.
 */
 
 /*
@@ -26,16 +27,28 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include <kaboutdata.h>
 
-#include "vcal-factorybase.moc"
-#include "options.h"
+#include "conduitstate.h"
 
-KAboutData *VCalConduitFactoryBase::fAbout = 0L;
+class VCalConduitBase;
 
-
-VCalConduitFactoryBase::~VCalConduitFactoryBase()
+/**
+ * State that handles copying of records from pc to handheld. 
+ * @see vcal-conduitstate.h
+ */
+class PCToHHState : public ConduitState
 {
-	KPILOT_DELETE(fAbout);
-}
+private:
+	ConduitState *fNextState;
+	int fPilotindex;
 
+public:
+	PCToHHState();
+	virtual ~PCToHHState();
+
+	virtual void startSync( ConduitAction* );
+	virtual void handleRecord( ConduitAction* );
+	virtual void finishSync( ConduitAction* );
+};
+
+#endif

@@ -28,9 +28,9 @@
 */
 #include "options.h"
 
+
 #include <stdlib.h>
 
-#include <qtextcodec.h>
 #include <qdatetime.h>
 
 #include <kglobal.h>
@@ -39,10 +39,8 @@
 
 #include "pilotTodoEntry.h"
 
-static const char *pilotTodoEntry_id = "$Id$";
 
-
-PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo):PilotAppCategory(), fAppInfo(appInfo)
+PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo): fAppInfo(appInfo)
 {
 	FUNCTIONSETUP;
 	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
@@ -50,27 +48,21 @@ PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo):PilotAppCategory(), 
 
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotTodoEntry()
 */
-PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec):PilotAppCategory(rec), fAppInfo(appInfo)
+PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec):PilotRecordBase(rec), fAppInfo(appInfo)
 {
 	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
 	if (rec)
 	{
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 		pi_buffer_t b;
-		b.data = (unsigned char *) rec->getData();
+		b.data = (unsigned char *) rec->data();
 		b.allocated = b.used = rec->size();
 		unpack_ToDo(&fTodoInfo, &b, todo_v1);
-#else
-		unpack_ToDo(&fTodoInfo, (unsigned char *) rec->data(),
-			rec->size());
-#endif
 	}
 
-	(void) pilotTodoEntry_id;
 }
 
 
-PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e):PilotAppCategory(e), fAppInfo(e.fAppInfo)
+PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e):PilotRecordBase( &e ), fAppInfo(e.fAppInfo)
 {
 	FUNCTIONSETUP;
 	::memcpy(&fTodoInfo, &e.fTodoInfo, sizeof(fTodoInfo));
@@ -154,28 +146,26 @@ QString PilotTodoEntry::getTextRepresentation(bool richText)
 
 QString PilotTodoEntry::getCategoryLabel() const
 {
-	return codec()->toUnicode(fAppInfo.category.name[category()]);
+	return Pilot::fromPilot(fAppInfo.category.name[category()]);
 }
 
-void *PilotTodoEntry::pack_(void *buf, int *len)
+PilotRecord *PilotTodoEntry::pack() const
 {
 	int i;
 
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
-	pi_buffer_t b = { 0,0,0 } ;
-	i = pack_ToDo(&fTodoInfo, &b, todo_v1);
-	memcpy(buf,b.data,kMin(i,*len));
-	*len = kMin(i,*len);
-#else
-	i = pack_ToDo(&fTodoInfo, (unsigned char *) buf, *len);
-	*len = i;
-#endif
-	return buf;
+	pi_buffer_t *b = pi_buffer_new( sizeof(fTodoInfo) );
+	i = pack_ToDo(const_cast<ToDo_t *>(&fTodoInfo), b, todo_v1);
+	if (i<0)
+	{
+		return 0;
+	}
+	// pack_ToDo sets b->used
+	return new PilotRecord( b, this );
 }
 
 void PilotTodoEntry::setDescription(const QString &desc)
 {
-	setDescriptionP(codec()->fromUnicode(desc),desc.length());
+	setDescriptionP(Pilot::toPilot(desc),desc.length());
 }
 
 void PilotTodoEntry::setDescriptionP(const char *desc, int len)
@@ -205,12 +195,12 @@ void PilotTodoEntry::setDescriptionP(const char *desc, int len)
 
 QString PilotTodoEntry::getDescription() const
 {
-	return codec()->toUnicode(getDescriptionP());
+	return Pilot::fromPilot(getDescriptionP());
 }
 
 void PilotTodoEntry::setNote(const QString &note)
 {
-	setNoteP(codec()->fromUnicode(note),note.length());
+	setNoteP(Pilot::toPilot(note),note.length());
 }
 
 void PilotTodoEntry::setNoteP(const char *note, int len)
@@ -238,6 +228,6 @@ void PilotTodoEntry::setNoteP(const char *note, int len)
 
 QString PilotTodoEntry::getNote() const
 {
-	return codec()->toUnicode(getNoteP());
+	return Pilot::fromPilot(getNoteP());
 }
 

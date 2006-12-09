@@ -16,9 +16,10 @@ noinst_LTLIBRARIES = libvcalconduit_shared.la
 
 libvcalconduit_shared_la_SOURCES = vcalconduitSettings.kcfgc \
 	korganizerConduit.ui \
-	vcal-factorybase.cc \
 	vcal-setupbase.cc \
-	vcal-conduitbase.cc
+	vcal-conduitbase.cc \
+	cleanupstate.cc deleteunsyncedhhstate.cc deleteunsyncedpcstate.cc \
+	hhtopcstate.cc initstate.cc pctohhstate.cc teststate.cc
 
 conduit_vcal_la_SOURCES = vcal-conduit.cc vcal-factory.cc vcal-setup.cc
 conduit_vcal_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)

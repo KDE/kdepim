@@ -148,23 +148,18 @@ const QString SysInfoConduit::defaultpage = CSL1("KPilot System Information Page
 extern "C"
 {
 
-long version_conduit_sysinfo = KPILOT_PLUGIN_API;
-const char *id_conduit_sysinfo =
-	"$Id$";
+unsigned long version_conduit_sysinfo = Pilot::PLUGIN_API;
 
 }
 
 
 
-SysInfoConduit::SysInfoConduit(KPilotDeviceLink * o,
+SysInfoConduit::SysInfoConduit(KPilotLink * o,
 	const char *n,
 	const QStringList & a) :
 	ConduitAction(o, n, a)
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT<<id_conduit_sysinfo<<endl;
-#endif
 	fConduitName=i18n("System Information");
 }
 
@@ -198,9 +193,6 @@ void SysInfoConduit::readConfig()
 /* virtual */ bool SysInfoConduit::exec()
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT << fname << id_conduit_sysinfo<<endl;
-#endif
 
 	readConfig();
 
@@ -213,7 +205,7 @@ void SysInfoConduit::hardwareInfo()
 	FUNCTIONSETUP;
 	if (fHardwareInfo) {
 		QString unknown = i18n("unknown");
-		
+
 		/* Retrieve values for
 		* - #deviceid#
 		* - #devicename#
@@ -221,17 +213,10 @@ void SysInfoConduit::hardwareInfo()
 		* - #manufactorer#
 		* - #devicetype#
 		*/
-		KPilotSysInfo *sysinfo = fHandle->getSysInfo();
-		if (sysinfo)
-		{
-			fValues[CSL1("deviceid")] = QString::fromLatin1(sysinfo->getProductID());
-		}
-		else
-		{
-			fValues[CSL1("deviceid")] = unknown;
-		}
-		
-		KPilotCard *device = fHandle->getCardInfo();
+		KPilotSysInfo sysinfo = fHandle->getSysInfo();
+		fValues[CSL1("deviceid")] = QString::fromLatin1(sysinfo.getProductID());
+
+		const KPilotCard *device = fHandle->getCardInfo();
 		if (device)
 		{
 			fValues[CSL1("devicename")] = QString::fromLatin1(device->getCardName());
@@ -244,9 +229,9 @@ void SysInfoConduit::hardwareInfo()
 			fValues[CSL1("devicemodel")] = unknown;
 			fValues[CSL1("manufacturer")] = unknown;
 		}
-		
+
 		fValues[CSL1("devicetype")] = unknown;
-		
+
 		KPILOT_DELETE(device);
 		keepParts.append(CSL1("hardware"));
 	} else removeParts.append(CSL1("hardware"));
@@ -261,14 +246,14 @@ void SysInfoConduit::userInfo()
 		 * - #username#
 		 * - #uid#
 		 */
-		KPilotUser*user=fHandle->getPilotUser();
-		fValues[CSL1("username")] = user->getUserName();
-		if (user->getPasswordLength()>0)
+		KPilotUser user=fHandle->getPilotUser();
+		fValues[CSL1("username")] = user.getUserName();
+		if (user.getPasswordLength()>0)
 			fValues[CSL1("pw")] = i18n("Password set");
 		else
 			fValues[CSL1("pw")] = i18n("No password set");
-		fValues[CSL1("uid")] = QString::number(user->getUserID());
-		fValues[CSL1("viewerid")] = QString::number(user->getViewerID());
+		fValues[CSL1("uid")] = QString::number(user.getUserID());
+		fValues[CSL1("viewerid")] = QString::number(user.getViewerID());
 		keepParts.append(CSL1("user"));
 	} else removeParts.append(CSL1("user"));
 	QTimer::singleShot(0, this, SLOT(memoryInfo()));
@@ -283,10 +268,13 @@ void SysInfoConduit::memoryInfo()
 		 * - #totalmem#
 		 * - #freemem#
 		 */
-		KPilotCard*device = fHandle->getCardInfo();
-		fValues[CSL1("rom")] =  QString::number(device->getRomSize()/1024);
-		fValues[CSL1("totalmem")] =  QString::number(device->getRamSize()/1024);
-		fValues[CSL1("freemem")] =  QString::number(device->getRamFree()/1024);
+		const KPilotCard *device = fHandle->getCardInfo();
+		if (device)
+		{
+			fValues[CSL1("rom")] =  QString::number(device->getRomSize()/1024);
+			fValues[CSL1("totalmem")] =  QString::number(device->getRamSize()/1024);
+			fValues[CSL1("freemem")] =  QString::number(device->getRamFree()/1024);
+		}
 		keepParts.append(CSL1("memory"));
 	} else removeParts.append(CSL1("memory"));
 	QTimer::singleShot(0, this, SLOT(storageInfo()));
@@ -299,7 +287,7 @@ void SysInfoConduit::storageInfo()
 		/* Retrieve values for
 		 * - $cards$
 		 */
-		KPilotCard*device = fHandle->getCardInfo(1);
+		const KPilotCard *device = fHandle->getCardInfo(1);
 		if (device) {
 			fValues[CSL1("cards")] = CSL1("%1 (%2, %3 kB of %3 kB free)")
 				.arg(QString::fromLatin1(device->getCardName()))
@@ -322,7 +310,7 @@ void SysInfoConduit::dbListInfo()
 		/* Retrieve values for
 		 * - #dblist(structure)#
 		 */
-		dblist=fHandle->getDBList();
+		dblist=deviceLink()->getDBList();
 		keepParts.append(CSL1("dblist"));
 	} else removeParts.append(CSL1("dblist"));
 	QTimer::singleShot(0, this, SLOT(recNumberInfo()));
@@ -338,28 +326,28 @@ void SysInfoConduit::recNumberInfo()
 		 * - #todos#
 		 * - #memos#
 		 */
-		PilotDatabase*fDatabase;
+		PilotDatabase *fDatabase = 0L;
 		QString ERROR = CSL1("ERROR");
 		fValues[CSL1("addresses")] = ERROR;
 		fValues[CSL1("events")] = ERROR;
 		fValues[CSL1("todos")] = ERROR;
 		fValues[CSL1("memos")] = ERROR;
-		fDatabase = new PilotSerialDatabase(pilotSocket(), CSL1("AddressDB"));
+		fDatabase = deviceLink()->database(CSL1("AddressDB"));
 		if (fDatabase) {
 			fValues[CSL1("addresses")] = QString::number(fDatabase->recordCount());
 			KPILOT_DELETE(fDatabase);
 		}
-		fDatabase = new PilotSerialDatabase(pilotSocket(), CSL1("DatebookDB"));
+		fDatabase = deviceLink()->database(CSL1("DatebookDB"));
 		if (fDatabase) {
 			fValues[CSL1("events")] = QString::number(fDatabase->recordCount());
 			KPILOT_DELETE(fDatabase);
 		}
-		fDatabase = new PilotSerialDatabase(pilotSocket(), CSL1("ToDoDB"));
+		fDatabase = deviceLink()->database(CSL1("ToDoDB"));
 		if (fDatabase) {
 			fValues[CSL1("todos")] = QString::number(fDatabase->recordCount());
 			KPILOT_DELETE(fDatabase);
 		}
-		fDatabase = new PilotSerialDatabase(pilotSocket(), CSL1("MemoDB"));
+		fDatabase = deviceLink()->database(CSL1("MemoDB"));
 		if (fDatabase) {
 			fValues[CSL1("memos")] = QString::number(fDatabase->recordCount());
 			KPILOT_DELETE(fDatabase);
@@ -378,15 +366,15 @@ void SysInfoConduit::syncInfo()
 		 * - #lastsuccsync#
 		 * - #lastsyncpc#
 		 */
-		KPilotUser*user=fHandle->getPilotUser();
-		time_t lastsync = user->getLastSyncDate();
+		KPilotUser user = deviceLink()->getPilotUser();
+		time_t lastsync = user.getLastSyncDate();
 		QDateTime qlastsync;
 		qlastsync.setTime_t(lastsync);
 		fValues[CSL1("lastsync")] = qlastsync.toString(Qt::LocalDate);
-		lastsync = user->getLastSuccessfulSyncDate();
+		lastsync = user.getLastSuccessfulSyncDate();
 		qlastsync.setTime_t(lastsync);
 		fValues[CSL1("lastsuccsync")] = qlastsync.toString(Qt::LocalDate);
-		fValues[CSL1("lastsyncpc")] = QString::number(user->getLastSyncPC());
+		fValues[CSL1("lastsyncpc")] = QString::number(user.getLastSyncPC());
 		keepParts.append(CSL1("sync"));
 	} else removeParts.append(CSL1("sync"));
 	QTimer::singleShot(0, this, SLOT(pcVersionInfo()));
@@ -448,7 +436,8 @@ void SysInfoConduit::palmVersionInfo()
 			.arg(fHandle->getSysInfo()->getMinorVersion())
 			.arg(fHandle->getSysInfo()->getCompatMajorVersion())
 			.arg(fHandle->getSysInfo()->getCompatMinorVersion());*/
-		fValues[CSL1("palmos")] = CSL1("PalmOS %1.%2").arg(fHandle->majorVersion()).arg(fHandle->minorVersion());
+		KPilotSysInfo i = deviceLink()->getSysInfo();
+		fValues[CSL1("palmos")] = CSL1("PalmOS %1.%2").arg(i.getMajorVersion()).arg(i.getMinorVersion());
 
 		keepParts.append(CSL1("palmversion"));
 	} else removeParts.append(CSL1("palmversion"));
@@ -535,8 +524,8 @@ void SysInfoConduit::writeFile()
 	while (re.search(output)>=0){
 		QString dbstring;
 		QString subpatt=re.cap(1);
-		DBInfo*dbi;
-		for (dbi=dblist.first(); dbi; dbi=dblist.next() ) {
+		for (DBInfoList::ConstIterator i = dblist.begin(); i != dblist.end(); ++i ) {
+			DBInfo dbi = *i;
 			QString newpatt(subpatt);
 			char tmpchr[5];
 			::memset(&tmpchr[0], 0, 5);
@@ -552,21 +541,21 @@ void SysInfoConduit::writeFile()
 			 * %8 .. modifyDate
 			 * %9 .. backupDate
 			 */
-			newpatt.replace(CSL1("%0"), QString::fromLatin1(dbi->name));
-			set_long(&tmpchr[0],dbi->type);
+			newpatt.replace(CSL1("%0"), QString::fromLatin1(dbi.name));
+			set_long(&tmpchr[0],dbi.type);
 			newpatt.replace(CSL1("%1"), QString::fromLatin1(tmpchr));
-			set_long(&tmpchr[0],dbi->creator);
+			set_long(&tmpchr[0],dbi.creator);
 			newpatt.replace(CSL1("%2"), QString::fromLatin1(tmpchr));
-			newpatt.replace(CSL1("%3"), QString::number(dbi->index));
-			newpatt.replace(CSL1("%4"), QString::number(dbi->flags));
-			newpatt.replace(CSL1("%5"), QString::number(dbi->miscFlags));
-			newpatt.replace(CSL1("%6"), QString::number(dbi->version));
+			newpatt.replace(CSL1("%3"), QString::number(dbi.index));
+			newpatt.replace(CSL1("%4"), QString::number(dbi.flags));
+			newpatt.replace(CSL1("%5"), QString::number(dbi.miscFlags));
+			newpatt.replace(CSL1("%6"), QString::number(dbi.version));
 			QDateTime tm;
-			tm.setTime_t(dbi->createDate);
+			tm.setTime_t(dbi.createDate);
 			newpatt.replace(CSL1("%7"), tm.toString(Qt::LocalDate));
-			tm.setTime_t(dbi->modifyDate);
+			tm.setTime_t(dbi.modifyDate);
 			newpatt.replace(CSL1("%8"), tm.toString(Qt::LocalDate));
-			tm.setTime_t(dbi->backupDate);
+			tm.setTime_t(dbi.backupDate);
 			newpatt.replace(CSL1("%9"), tm.toString(Qt::LocalDate));
 
 			dbstring.append(newpatt);

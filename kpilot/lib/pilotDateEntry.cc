@@ -31,8 +31,8 @@
 
 #include <stdlib.h>
 
-#include <qtextcodec.h>
 #include <qdatetime.h>
+#include <qregexp.h>
 
 #include <kglobal.h>
 #include <kdebug.h>
@@ -40,11 +40,7 @@
 
 #include "pilotDateEntry.h"
 
-static const char *pilotDateEntry_id = "$Id$";
-const int PilotDateEntry::APP_BUFFER_SIZE = 0xffff;
-
-
-PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo):PilotAppCategory(), fAppInfo(appInfo)
+PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo):PilotRecordBase(), fAppInfo(appInfo)
 {
 	::memset(&fAppointmentInfo, 0, sizeof(struct Appointment));
 }
@@ -52,27 +48,19 @@ PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo):PilotAppCateg
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotDateEntry()
 */
 PilotDateEntry::PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord * rec) :
-	PilotAppCategory(rec),
+	PilotRecordBase(rec),
 	fAppInfo(appInfo)
 {
 	::memset(&fAppointmentInfo, 0, sizeof(fAppointmentInfo));
 	if (rec)
 	{
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
-		pi_buffer_t b;
-		b.data = (unsigned char *) rec->getData();
-		b.allocated = b.used = rec->size();
+		// Construct a fake pi_buffer for unpack_Appointment.
+		// No ownership changes occur here.
+		pi_buffer_t b = { (unsigned char *) rec->data(), rec->size(), rec->size() } ;
 		unpack_Appointment(&fAppointmentInfo, &b, datebook_v1);
-#else
-		unpack_Appointment(&fAppointmentInfo,
-			(unsigned char *) rec->data(), rec->size());
-#endif
 	}
 	return;
 
-	/* NOTREACHED */
-	/* Included to avoid warning that id isn't used. */
-	(void) pilotDateEntry_id;
 }
 
 void PilotDateEntry::_copyExceptions(const PilotDateEntry & e)
@@ -108,7 +96,7 @@ void PilotDateEntry::_copyExceptions(const PilotDateEntry & e)
 
 
 PilotDateEntry::PilotDateEntry(const PilotDateEntry & e) :
-	PilotAppCategory(e),
+	PilotRecordBase(e),
 	fAppInfo(e.fAppInfo)
 {
 	::memcpy(&fAppointmentInfo, &e.fAppointmentInfo,
@@ -300,7 +288,10 @@ unsigned int PilotDateEntry::alarmLeadTime() const
 	if (!isAlarmEnabled()) return 0;
 
 	int adv = getAdvance();
-	if ( adv < 0 ) return 0; // Not possible to enter on the pilot
+	if ( adv < 0 )
+	{
+		return 0; // Not possible to enter on the pilot
+	}
 	unsigned int t = adv;
 	int u = getAdvanceUnits();
 
@@ -318,23 +309,23 @@ unsigned int PilotDateEntry::alarmLeadTime() const
 
 QString PilotDateEntry::getCategoryLabel() const
 {
-	return codec()->toUnicode(fAppInfo.category.name[category()]);
+	return Pilot::categoryName(&(fAppInfo.category),category());
 }
 
-void *PilotDateEntry::pack_(void *buf, int *len)
+PilotRecord *PilotDateEntry::pack() const
 {
 	int i;
 
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
-	pi_buffer_t b = { 0,0,0 } ;
-	i = pack_Appointment(&fAppointmentInfo, &b, datebook_v1);
-	memcpy(buf,b.data,kMin(i,*len));
-	*len = kMin(i,*len);
-#else
-	i = pack_Appointment(&fAppointmentInfo, (unsigned char *) buf, *len);
-	*len = i;
-#endif
-	return buf;
+	pi_buffer_t *b = pi_buffer_new( sizeof(fAppointmentInfo) );
+	i = pack_Appointment(const_cast<Appointment_t *>(&fAppointmentInfo), b, datebook_v1);
+	if (i<0)
+	{
+		// Generic error from the pack_*() functions.
+		return 0;
+	}
+
+	// pack_Appointment sets b->used
+	return new PilotRecord( b, this );
 }
 
 /* setExceptions sets a new set of exceptions. Note that
@@ -403,23 +394,74 @@ void PilotDateEntry::setNoteP(const char *note, int l)
 
 void PilotDateEntry::setNote(const QString &s)
 {
-	QCString t = codec()->fromUnicode(s);
+	QCString t = Pilot::toPilot(s);
 	setNoteP( t.data(),t.length() );
+}
+
+void PilotDateEntry::setLocation(const QString &s)
+{
+	QString note = Pilot::fromPilot(getNoteP());
+	QRegExp rxp = QRegExp("^[Ll]ocation:[^\n]+\n");
+
+	if( s.isNull() )
+	{
+		note.replace(rxp,"");
+	}
+	else
+	{
+		QString location = "Location: " + s + "\n";
+		int pos = note.find(rxp);
+
+		if(pos >= 0)
+		{
+			note.replace( rxp, location );
+		}
+		else
+		{
+			note = location + note;
+			setNote( note );
+		}
+	}
+}
+
+QString PilotDateEntry::getLocation() const
+{
+	// Read the complete note here and not the filtered
+	// one from PilotDateEntry::getNote();
+	QString note = Pilot::fromPilot(getNoteP());
+	QRegExp rxp = QRegExp("^[Ll]ocation:[^\n]+\n");
+	int pos = note.find(rxp, 0);
+
+	if(pos >= 0)
+	{
+		QString location = rxp.capturedTexts().first();
+		rxp = QRegExp("^[Ll]ocation:[\\s|\t]*");
+		location.replace(rxp,"");
+		location.replace("\n", "");
+		return location;
+	}
+	else
+	{
+		return "";
+	}
 }
 
 void PilotDateEntry::setDescription(const QString &s)
 {
-	QCString t = codec()->fromUnicode(s);
+	QCString t = Pilot::toPilot(s);
 	setDescriptionP( t.data(),t.length() );
 }
 
 QString PilotDateEntry::getNote() const
 {
-	return codec()->toUnicode(getNoteP());
+	QString note = Pilot::fromPilot(getNoteP());
+	QRegExp rxp = QRegExp("^[Ll]ocation:[^\n]+\n");
+	note.replace(rxp, "" );
+	return note;
 }
 
 QString PilotDateEntry::getDescription() const
 {
-	return codec()->toUnicode(getDescriptionP());
+	return Pilot::fromPilot(getDescriptionP());
 }
 

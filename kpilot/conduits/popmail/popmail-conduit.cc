@@ -37,9 +37,7 @@
 extern "C"
 {
 
-long version_conduit_popmail = KPILOT_PLUGIN_API;
-const char *id_conduit_popmail =
-	"$Id$";
+unsigned long version_conduit_popmail = Pilot::PLUGIN_API;
 
 }
 
@@ -74,36 +72,19 @@ const char *id_conduit_popmail =
 #include <dcopclient.h>
 #include <ktempfile.h>
 
-#include "pilotAppCategory.h"
+#include "pilotRecord.h"
 #include "pilotSerialDatabase.h"
 
 #include "popmailSettings.h"
 #include "setupDialog.h"
 
-#if 0
-static void reset_Mail(struct Mail *t)
-{
-      t->to = 0;
-      t->from = 0;
-      t->cc = 0;
-      t->bcc = 0;
-      t->subject = 0;
-      t->replyTo = 0;
-      t->sentTo = 0;
-      t->body = 0;
-      t->dated = 0;
-}
-#endif
 
-PopMailConduit::PopMailConduit(KPilotDeviceLink *d,
+PopMailConduit::PopMailConduit(KPilotLink *d,
 	const char *n,
 	const QStringList &l) :
 	ConduitAction(d,n,l)
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT << id_conduit_popmail << endl;
-#endif
 	fConduitName=i18n("KMail");
 }
 
@@ -119,11 +100,9 @@ void PopMailConduit::doSync()
 	int sent_count=0;
 	int mode=MailConduitSettings::syncOutgoing();
 
-#ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": Outgoing mail disposition "
 		<< mode << endl;
-#endif
 
 	if(mode)
 	{
@@ -168,13 +147,11 @@ int PopMailConduit::sendPendingMail(int mode)
 	}
 	else
 	{
-#ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< ": Sent "
 			<< count
 			<< " messages"
 			<< endl;
-#endif
 	}
 
 	return count;
@@ -230,21 +207,17 @@ int PopMailConduit::sendViaKMail()
 
 	while (PilotRecord *pilotRec = fDatabase->readNextRecInCategory(1))
 	{
-#ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< ": Reading "
 			<< count + 1
 			<< "th message"
 			<< endl;
-#endif
 
 		if (pilotRec->isDeleted() || pilotRec->isArchived())
 		{
-#ifdef DEBUG
 			DEBUGCONDUIT << fname
 				<< ": Skipping record."
 				<< endl;
-#endif
 			continue;
 		}
 
@@ -279,7 +252,7 @@ int PopMailConduit::sendViaKMail()
 		}
 
 		unpack_Mail(&theMail,
-			(unsigned char*)pilotRec->getData(),
+			(unsigned char*)pilotRec->data(),
 			pilotRec->size());
 		writeMessageToFile(sendf, theMail);
 
@@ -288,11 +261,11 @@ int PopMailConduit::sendViaKMail()
 		QCString returnType;
 		QDataStream arg(data,IO_WriteOnly);
 
-		arg << kmailOutboxName << t.name();
+		arg << kmailOutboxName << t.name() << CSL1("N") ;
 
 		if (!dcopptr->call("kmail",
 			"KMailIface",
-			"dcopAddMessage(QString,QString)",
+			"dcopAddMessage(QString,QString,QString)",
 			data,
 			returnType,
 			returnValue,
@@ -308,14 +281,12 @@ int PopMailConduit::sendViaKMail()
 			continue;
 		}
 
-#ifdef DEBUG
 		DEBUGCONDUIT << fname
 			<< ": DCOP call returned "
 			<< returnType
 			<< " of "
 			<< (const char *)returnValue
 			<< endl;
-#endif
 
 		// Mark it as filed...
 		pilotRec->setCategory(3);
@@ -327,19 +298,6 @@ int PopMailConduit::sendViaKMail()
 
 		count++;
 	}
-
-#if 0
-	if ((count > 0)  && sendImmediate)
-	{
-		QByteArray data;
-		if (dcopptr->send("kmail","KMailIface","sendQueued",data))
-		{
-			kdWarning() << k_funcinfo
-				<< ": Could not flush queue."
-				<< endl;
-		}
-	}
-#endif
 
 	return count;
 }
@@ -368,16 +326,12 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	mailPipe << "\r\n";
 
 
-#ifdef DEBUG
 	DEBUGCONDUIT << fname << ": To: " << theMail.to << endl;
-#endif
 
 
 	if(theMail.body)
 	{
-#ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Sent body." << endl;
-#endif
 		mailPipe << theMail.body << "\r\n";
 	}
 
@@ -385,9 +339,7 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	QString signature = MailConduitSettings::signature();
 	if(!signature.isEmpty())
 	{
-#ifdef DEBUG
 		DEBUGCONDUIT << fname << ": Reading signature" << endl;
-#endif
 
 		QFile f(signature);
 		if ( f.open(IO_ReadOnly) )
@@ -403,9 +355,7 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	}
 	mailPipe << "\r\n";
 
-#ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Done" << endl;
-#endif
 }
 
 
@@ -415,19 +365,15 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 
 	QString outbox = getKMailOutbox();
 
-#ifdef DEBUG
 	DEBUGCONDUIT << fname
 		<< ": KMail's outbox is "
 		<< outbox
 		<< endl;
-#endif
 }
 
 /* virtual */ bool PopMailConduit::exec()
 {
 	FUNCTIONSETUP;
-	DEBUGCONDUIT << id_conduit_popmail << endl;
-
 
 	if (syncMode().isTest())
 	{
@@ -439,10 +385,9 @@ void PopMailConduit::writeMessageToFile(FILE* sendf, struct Mail& theMail)
 	}
 	else
 	{
-		fDatabase=new PilotSerialDatabase(pilotSocket(),
-			CSL1("MailDB"));
+		fDatabase = deviceLink()->database( CSL1("MailDB") );
 
-		if (!fDatabase || !fDatabase->isDBOpen())
+		if (!fDatabase || !fDatabase->isOpen())
 		{
 			emit logError(i18n("Unable to open mail database on handheld"));
 			KPILOT_DELETE(fDatabase);

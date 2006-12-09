@@ -39,7 +39,7 @@
 #include <qscrollview.h>
 
 
-ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syncInfoList*sinfo, KPilotDeviceLink*lnk )
+ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syncInfoList*sinfo, KPilotLink*lnk )
     : KDialogBase( parent, "resolutionDialog", true, caption, KDialogBase::Ok|KDialogBase::Cancel, KDialogBase::Ok, true), tickleTimer(0L), fHandle(lnk) {
 	FUNCTIONSETUP;
 	syncInfo=sinfo;

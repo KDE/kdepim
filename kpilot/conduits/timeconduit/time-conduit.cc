@@ -29,6 +29,8 @@
 
 #include <time.h>
 
+#include <pilotSysInfo.h>
+
 #include <kconfig.h>
 #include <kdebug.h>
 
@@ -41,22 +43,17 @@
 // the modules are that make up a binary distribution.
 extern "C"
 {
-long version_conduit_time = KPILOT_PLUGIN_API ;
-const char *id_conduit_time =
-	"$Id$";
+unsigned long version_conduit_time = Pilot::PLUGIN_API ;
 }
 
 
 
-TimeConduit::TimeConduit(KPilotDeviceLink * o,
+TimeConduit::TimeConduit(KPilotLink * o,
 	const char *n,
 	const QStringList & a) :
 	ConduitAction(o, n, a)
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT<<id_conduit_time<<endl;
-#endif
 	fConduitName=i18n("Time");
 }
 
@@ -79,7 +76,6 @@ void TimeConduit::readConfig()
 /* virtual */ bool TimeConduit::exec()
 {
 	FUNCTIONSETUP;
-	DEBUGCONDUIT<<id_conduit_time<<endl;
 
 	readConfig();
 
@@ -103,9 +99,9 @@ void TimeConduit::syncHHfromPC()
 	FUNCTIONSETUP;
 	time_t ltime;
 	time(&ltime);
-	QDateTime time=QDateTime::currentDateTime();
 
-	long int major=fHandle->majorVersion(), minor=fHandle->minorVersion();
+	long int major=fHandle->getSysInfo().getMajorVersion(), 
+		 minor=fHandle->getSysInfo().getMinorVersion();
 
 	if (major==3 && (minor==25 || minor==30))
 	{
@@ -113,9 +109,13 @@ void TimeConduit::syncHHfromPC()
 		return;
 	}
 
-	fHandle->setTime(ltime);
-#ifdef DEBUG
-	time.setTime_t(ltime);
-	DEBUGCONDUIT<<fname<<": synced time "<<time.toString()<<" to the handheld"<<endl;
-#endif
+	int sd = pilotSocket();
+	if ( sd > 0 )
+	{
+		dlp_SetSysDateTime( sd, ltime );
+	}
+	else
+	{
+		kdWarning() << k_funcinfo << ": Link is not a real device." << endl;
+	}
 }

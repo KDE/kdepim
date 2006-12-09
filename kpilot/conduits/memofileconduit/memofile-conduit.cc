@@ -29,13 +29,6 @@
 
 #include "options.h"
 
-// Something to allow us to check what revision
-// the modules are that make up a binary distribution.
-//
-//
-static const char *memofile_conduit_id=
-    "$Id$";
-
 // Only include what we really need:
 // First UNIX system stuff, then std C++,
 // then Qt, then KDE, then local includes.
@@ -55,7 +48,7 @@ static const char *memofile_conduit_id=
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include "pilotAppCategory.h"
+#include "pilotRecord.h"
 #include "pilotSerialDatabase.h"
 #include "memofile-factory.h"
 #include "memofile-conduit.h"
@@ -65,7 +58,7 @@ static const char *memofile_conduit_id=
 /**
  * Our workhorse.  This is the main driver for the conduit.
  */
-MemofileConduit::MemofileConduit(KPilotDeviceLink *d,
+MemofileConduit::MemofileConduit(KPilotLink *d,
                                  const char *n,
                                  const QStringList &l) :
 		ConduitAction(d,n,l),
@@ -74,9 +67,6 @@ MemofileConduit::MemofileConduit(KPilotDeviceLink *d,
 		_memofiles(0L)
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT<<memofile_conduit_id<<endl;
-#endif
 	fConduitName=i18n("Memofile");
 	fMemoList.setAutoDelete(true);
 }
@@ -195,7 +185,7 @@ bool MemofileConduit::setAppInfo()
 
 	fCategories = map;
 
-	for (int i = 0; i < PILOT_CATEGORY_MAX; i++)
+	for (unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++)
 	{
 		if (fCategories.contains(i)) {
 			QString name = fCategories[i].left(16);
@@ -272,9 +262,9 @@ bool MemofileConduit::loadPilotCategories()
 	int _category_id=0;
 	int _category_num=0;
 
-	for (int i = 0; i < PILOT_CATEGORY_MAX; i++)
+	for (unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++)
 	{
-		_category_name = fMemoAppInfo->category(i);
+		_category_name = fMemoAppInfo->categoryName(i);
 		if (!_category_name.isEmpty())
 		{
 			_category_name = Memofiles::sanitizeName( _category_name );
@@ -504,8 +494,8 @@ void MemofileConduit::deleteUnsyncedHHRecords()
 	FUNCTIONSETUP;
 	if ( syncMode()==SyncMode::eCopyPCToHH )
 	{
-		RecordIDList ids=fDatabase->idList();
-		RecordIDList::iterator it;
+		Pilot::RecordIDList ids=fDatabase->idList();
+		Pilot::RecordIDList::iterator it;
 		for ( it = ids.begin(); it != ids.end(); ++it )
 		{
 			if (!_memofiles->find(*it))

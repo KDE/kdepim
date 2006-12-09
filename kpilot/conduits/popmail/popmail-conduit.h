@@ -44,7 +44,7 @@ class PilotDatabase;
 class PopMailConduit : public ConduitAction
 {
 public:
-	PopMailConduit(KPilotDeviceLink *d,
+	PopMailConduit(KPilotLink *d,
 		const char *n=0L,
 		const QStringList &l=QStringList());
 	virtual ~PopMailConduit();

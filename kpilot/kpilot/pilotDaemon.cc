@@ -28,8 +28,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-static const char *pilotdaemon_id =
-	"$Id$";
 
 #include "options.h"
 
@@ -54,11 +52,13 @@ static const char *pilotdaemon_id =
 #include <kapplication.h>
 #include <khelpmenu.h>
 
-#include "pilotAppCategory.h"
+#include "pilotRecord.h"
 
 #include "fileInstaller.h"
 #include "pilotUser.h"
 #include "pilotDatabase.h"
+#include "kpilotlink.h"
+#include "kpilotdevicelink.h"
 
 #include "hotSync.h"
 #include "interactiveSync.h"
@@ -87,10 +87,6 @@ PilotDaemonTray::PilotDaemonTray(PilotDaemon * p) :
 	FUNCTIONSETUP;
 	setupWidget();
 	setAcceptDrops(true);
-
-
-	/* NOTREACHED */
-	(void) pilotdaemon_id;
 }
 
 /* virtual */ void PilotDaemonTray::dragEnterEvent(QDragEnterEvent * e)
@@ -149,7 +145,7 @@ void PilotDaemonTray::setupWidget()
 	FUNCTIONSETUP;
 
 	KGlobal::iconLoader()->addAppDir( CSL1("kpilot") );
-	icons[Normal] = loadIcon( CSL1("kpilot") );
+	icons[Normal] = loadIcon( CSL1("kpilotDaemon") );
 	icons[Busy] = loadIcon( CSL1("busysync") );
 	icons[NotListening] = loadIcon( CSL1("nosync") );
 
@@ -176,7 +172,6 @@ void PilotDaemonTray::setupWidget()
 
         // Keep this synchronized with kpilotui.rc and kpilot.cc if at all possible.
 	MI(eHotSync);
-	MI(eFastSync);
 	MI(eFullSync);
 	MI(eBackup);
 	MI(eRestore);
@@ -197,7 +192,7 @@ void PilotDaemonTray::setupWidget()
 
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Finished getting icons" << endl;
+	DEBUGKPILOT << fname << ": Finished getting icons" << endl;
 #endif
 }
 
@@ -318,7 +313,7 @@ PilotDaemon::PilotDaemon() :
 	fNextSyncType.setMode( KPilotSettings::syncType() );
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname
+	DEBUGKPILOT << fname
 		<< ": The daemon is ready with status "
 		<< statusString() << " (" << (int) fDaemonStatus << ")" << endl;
 #endif
@@ -332,7 +327,7 @@ PilotDaemon::~PilotDaemon()
 	KPILOT_DELETE(fSyncStack);
 	KPILOT_DELETE(fInstaller);
 
-	(void) PilotDatabase::count();
+	(void) PilotDatabase::instanceCount();
 }
 
 void PilotDaemon::addInstallFiles(const QStringList &l)
@@ -377,7 +372,7 @@ int PilotDaemon::getPilotSpeed()
 	}
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname
+	DEBUGKPILOT << fname
 		<< ": Speed set to "
 		<< speedname << " (" << speed << ")" << endl;
 #endif
@@ -395,7 +390,7 @@ void PilotDaemon::showTray()
 	if (!fTray)
 	{
 #ifdef DEBUG
-		DEBUGDAEMON << fname << ": No tray icon to display!" << endl;
+		DEBUGKPILOT << fname << ": No tray icon to display!" << endl;
 #endif
 
 		return;
@@ -407,7 +402,7 @@ void PilotDaemon::showTray()
 	fTray->show();
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Tray icon displayed." << endl;
+	DEBUGKPILOT << fname << ": Tray icon displayed." << endl;
 #endif
 
 	updateTrayStatus();
@@ -450,14 +445,15 @@ void PilotDaemon::showTray()
 	KPilotSettings::self()->readConfig();
 	getPilotSpeed();
 
-	(void) PilotAppCategory::setupPilotCodec(KPilotSettings::encoding());
+	(void) Pilot::setupPilotCodec(KPilotSettings::encoding());
+	(void) Pilot::setupPilotCodec(KPilotSettings::encoding());
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname
+	DEBUGKPILOT << fname
 		<< ": Got configuration "
 		<< KPilotSettings::pilotDevice()
 		<< endl;
-	DEBUGDAEMON << fname
+	DEBUGKPILOT << fname
 		<< ": Got conduit list "
 		<< (KPilotSettings::installedConduits().join(CSL1(",")))
 		<< endl;
@@ -469,7 +465,7 @@ void PilotDaemon::showTray()
 	if (fPilotLink)
 	{
 #ifdef DEBUG
-		DEBUGDAEMON << fname
+		DEBUGKPILOT << fname
 			<< ": Resetting with device "
 			<< KPilotSettings::pilotDevice()
 			<< endl;
@@ -477,7 +473,7 @@ void PilotDaemon::showTray()
 
 		fPilotLink->reset( KPilotSettings::pilotDevice() );
 #ifdef DEBUG
-		DEBUGDAEMON << fname
+		DEBUGKPILOT << fname
 			<< ": Using workarounds "
 			<< KPilotSettings::workarounds()
 			<< endl;
@@ -485,7 +481,7 @@ void PilotDaemon::showTray()
 		if ( KPilotSettings::workarounds() == KPilotSettings::eWorkaroundUSB )
 		{
 #ifdef DEBUG
-			DEBUGDAEMON << fname
+			DEBUGKPILOT << fname
 				<< ": Using Zire31 USB workaround." << endl;
 #endif
 			fPilotLink->setWorkarounds(true);
@@ -604,8 +600,8 @@ bool PilotDaemon::setupPilotLink()
 		return false;
 	}
 
-	QObject::connect(fPilotLink, SIGNAL(deviceReady(KPilotDeviceLink*)),
-		this, SLOT(startHotSync(KPilotDeviceLink*)));
+	QObject::connect(fPilotLink, SIGNAL(deviceReady(KPilotLink*)),
+		this, SLOT(startHotSync(KPilotLink*)));
 	// connect the signals emitted by the pilotDeviceLink
 	QObject::connect(fPilotLink, SIGNAL(logError(const QString &)),
 		this, SLOT(logError(const QString &)));
@@ -649,11 +645,6 @@ bool PilotDaemon::setupPilotLink()
 	requestSync(SyncAction::SyncMode::eHotSync);
 }
 
-/* DCOP ASYNC */ void PilotDaemon::requestFastSyncNext()
-{
-	requestSync(SyncAction::SyncMode::eFastSync);
-}
-
 
 /* DCOP ASYNC */ void PilotDaemon::requestSync(int mode)
 {
@@ -674,7 +665,7 @@ bool PilotDaemon::setupPilotLink()
 
 	if (fTray && (fTray->fSyncTypeMenu))
 	{
-		for (int i=((int)SyncAction::SyncMode::eFastSync);
+		for (int i=((int)SyncAction::SyncMode::eHotSync);
 			i<=((int)SyncAction::SyncMode::eRestore) /* Restore */ ;
 			++i)
 		{
@@ -692,7 +683,6 @@ bool PilotDaemon::setupPilotLink()
 
 	// This checks unique prefixes of the names of the various sync types.
 	if (s.startsWith(CSL1("H"))) requestSync(SyncAction::SyncMode::eHotSync);
-	else if (s.startsWith(CSL1("Fa"))) requestSync(SyncAction::SyncMode::eFastSync);
 	else if (s.startsWith(CSL1("Fu"))) requestSync(SyncAction::SyncMode::eFullSync);
 	else if (s.startsWith(CSL1("B"))) requestSync(SyncAction::SyncMode::eBackup);
 	else if (s.startsWith(CSL1("R"))) requestSync(SyncAction::SyncMode::eRestore);
@@ -869,7 +859,7 @@ static void informOthers(KPilotDCOP_stub &kpilot,
 }
 
 static bool isSyncPossible(ActionQueue *fSyncStack,
-	KPilotDeviceLink *pilotLink,
+	KPilotLink *pilotLink,
 	KPilotDCOP_stub &kpilot)
 {
 	FUNCTIONSETUP;
@@ -886,12 +876,12 @@ static bool isSyncPossible(ActionQueue *fSyncStack,
 #ifdef DEBUG
 	if (callstatus != DCOPStub::CallSucceeded)
 	{
-		DEBUGDAEMON << fname <<
+		DEBUGKPILOT << fname <<
 			": Could not call KPilot for status." << endl;
 	}
 	else
 	{
-		DEBUGDAEMON << fname << ": KPilot status " << kpilotstatus << endl;
+		DEBUGKPILOT << fname << ": KPilot status " << kpilotstatus << endl;
 	}
 #endif
 	/**
@@ -942,7 +932,7 @@ static void queueInstaller(ActionQueue *fSyncStack,
 	}
 }
 
-static void queueEditors(ActionQueue *fSyncStack, KPilotDeviceLink *pilotLink)
+static void queueEditors(ActionQueue *fSyncStack, KPilotLink *pilotLink)
 {
 	if (KPilotSettings::internalEditors())
 	{
@@ -963,21 +953,60 @@ static void queueConduits(ActionQueue *fSyncStack,
 	}
 }
 
-/* slot */ void PilotDaemon::startHotSync(KPilotDeviceLink *pilotLink)
+bool PilotDaemon::shouldBackup()
+{
+
+	FUNCTIONSETUP;
+
+	bool ret = false;
+	int backupfreq = KPilotSettings::backupFrequency();
+
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Backup Frequency is: [" << backupfreq <<
+	"]. " << endl;
+#endif
+
+	if ( (fNextSyncType == SyncAction::SyncMode::eHotSync) ||
+		(fNextSyncType == SyncAction::SyncMode::eFullSync) )
+	{
+		/** If we're doing a Hot or Full sync, see if our user has
+		 * configured us to or to not always do a backup.
+		 */
+		if ( backupfreq == SyncAction::eOnRequestOnly )
+		{
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Should not do backup..." << endl;
+#endif
+			ret = false;
+		}
+		else if ( backupfreq == SyncAction::eEveryHotSync )
+		{
+#ifdef DEBUG
+	DEBUGKPILOT << fname << ": Should do backup..." << endl;
+#endif
+			ret = true;
+		}
+	}
+
+	return ret;
+
+}
+
+
+/* slot */ void PilotDaemon::startHotSync(KPilotLink *pilotLink)
 {
 	FUNCTIONSETUP;
 
 	bool pcchanged=false; // If last PC to sync was a different one (implies full sync, normally)
 	QStringList conduits ; // list of conduits to run
 	QString s; // a generic string for stuff
-	KPilotUser *usr = 0L; // Pointer to user data on Pilot
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname
+	DEBUGKPILOT << fname
 		<< ": Starting Sync with type "
 		<< fNextSyncType.name() << endl;
-	DEBUGDAEMON << fname << ": Status is " << shortStatusString() << endl;
-	(void) PilotDatabase::count();
+	DEBUGKPILOT << fname << ": Status is " << shortStatusString() << endl;
+	(void) PilotDatabase::instanceCount();
 #endif
 
 	fDaemonStatus = HOTSYNC_START ;
@@ -1003,19 +1032,35 @@ static void queueConduits(ActionQueue *fSyncStack,
 	// want to sync with a blank palm and then back up the result over her stored backup files,
 	// do a Full Sync when changing the PC or using a different Palm Desktop app.
 	if (fNextSyncType.mode() != SyncAction::SyncMode::eRestore)
-	{
-		// Use gethostid to determine , since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
+	{ // Use gethostid to determine , since JPilot uses 1+(2000000000.0*random()/(RAND_MAX+1.0))
 		// as PC_ID, so using JPilot and KPilot is the same as using two different PCs
-		usr = pilotLink->getPilotUser();
-		pcchanged = usr->getLastSyncPC() !=(unsigned long) gethostid();
-		if (pcchanged && KPilotSettings::fullSyncOnPCChange() )
+		KPilotUser &usr = pilotLink->getPilotUser();
+		pcchanged = usr.getLastSyncPC() !=(unsigned long) gethostid();
+
+		if (pcchanged)
 		{
-			fNextSyncType = SyncAction::SyncMode::eFullSync;
+#ifdef DEBUG
+			DEBUGKPILOT << fname << ": PC changed. Last sync PC: [" << usr.getLastSyncPC()
+				<< "], me: [" << (unsigned long) gethostid() << "]" << endl;
+#endif
+ 			if ( KPilotSettings::fullSyncOnPCChange() )
+			{
+#ifdef DEBUG
+				DEBUGKPILOT << fname << ": Setting sync mode to full sync. " << endl;
+#endif
+				fNextSyncType = SyncAction::SyncMode::eFullSync;
+			}
+			else
+			{
+#ifdef DEBUG
+				DEBUGKPILOT << fname << ": Not changing sync mode because of settings. " << endl;
+#endif
+			}
 		}
 	}
 
 	// Normal case: regular sync.
-	fSyncStack->queueInit(true);
+	fSyncStack->queueInit( ActionQueue::queueCheckUser );
 
 	conduits = KPilotSettings::installedConduits() ;
 
@@ -1039,7 +1084,6 @@ static void queueConduits(ActionQueue *fSyncStack,
 			queueInstaller(fSyncStack,fInstaller,conduits);
 			break;
 		case SyncAction::SyncMode::eFullSync:
-		case SyncAction::SyncMode::eFastSync:
 		case SyncAction::SyncMode::eHotSync:
 			// first install the files, and only then do the conduits
 			// (conduits might want to sync a database that will be installed
@@ -1049,8 +1093,7 @@ static void queueConduits(ActionQueue *fSyncStack,
 			// After running the conduits, install new databases
 			queueInstaller(fSyncStack,fInstaller,conduits);
 			// And sync the remaining databases if needed.
-			if ( (fNextSyncType == SyncAction::SyncMode::eHotSync) ||
-				(fNextSyncType == SyncAction::SyncMode::eFullSync))
+			if (shouldBackup())
 			{
 				fSyncStack->addAction(new BackupAction(pilotLink, (fNextSyncType == SyncAction::SyncMode::eFullSync)));
 			}
@@ -1145,13 +1188,13 @@ launch:
 	}
 	else
 	{
-		QTimer::singleShot(5000,fPilotLink,SLOT(reset()));
+		QTimer::singleShot(10000,fPilotLink,SLOT(reset()));
 	}
 
 	fPostSyncAction = None;
 	requestSync(0);
 
-	(void) PilotDatabase::count();
+	(void) PilotDatabase::instanceCount();
 
 	updateTrayStatus();
 }
@@ -1184,7 +1227,7 @@ void PilotDaemon::slotRunKPilot()
 	else
 	{
 #ifdef DEBUG
-		DEBUGDAEMON << fname
+		DEBUGKPILOT << fname
 			<< ": Started KPilot with DCOP name "
 			<< kpilotDCOP << " (pid " << kpilotPID << ")" << endl;
 #endif
@@ -1285,7 +1328,7 @@ int main(int argc, char **argv)
 		"pilone@slac.com");
 	about.addAuthor("Adriaan de Groot",
 		I18N_NOOP("Maintainer"),
-		"groot@kde.org", "http://www.cs.kun.nl/~adridg/");
+		"groot@kde.org", "http://www.kpilot.org/");
 	about.addAuthor("Reinhold Kainhofer",
 		I18N_NOOP("Developer"),
 		"reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
@@ -1338,7 +1381,7 @@ int main(int argc, char **argv)
 		}
 
 #ifdef DEBUG
-		DEBUGDAEMON << fname
+		DEBUGKPILOT << fname
 			<< ": Configuration version "
 			<< KPilotSettings::configVersion() << endl;
 #endif
@@ -1365,9 +1408,6 @@ int main(int argc, char **argv)
 	gPilotDaemon->showTray();
 
 	return a.exec();
-
-	/* NOTREACHED */
-	(void) pilotdaemon_id;
 }
 
 

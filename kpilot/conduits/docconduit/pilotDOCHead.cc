@@ -32,31 +32,34 @@
 
 
 
-static const char *pilotDOCHead_id =
-	"$Id$";
 const int PilotDOCHead::textRecordSize = 4096;
 
-
-
-PilotDOCHead::PilotDOCHead():PilotAppCategory(),
+PilotDOCHead::PilotDOCHead():PilotRecordBase(),
 version(0),
 spare(0), storyLen(0), numRecords(0), recordSize(textRecordSize), position(0)
 {
 	FUNCTIONSETUP;
-	(void) pilotDOCHead_id;
 }
 
 
 
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotDOCHead()
 */
-PilotDOCHead::PilotDOCHead(PilotRecord * rec):PilotAppCategory(rec)
+PilotDOCHead::PilotDOCHead(PilotRecord * rec):PilotRecordBase(rec)
 {
-	unpack((const void *) rec->data());
+	const unsigned char *b = (const unsigned char *) rec->data();
+	unsigned int offset = 0;
+
+	version = dlp<short>::read(b,offset);
+	spare = dlp<short>::read(b,offset);
+	storyLen = dlp<long>::read(b,offset);
+	numRecords = dlp<short>::read(b,offset);
+	recordSize = dlp<short>::read(b,offset);
+	position = dlp<long>::read(b,offset);
 }
 
 
-PilotDOCHead::PilotDOCHead(const PilotDOCHead & e):PilotAppCategory(e)
+PilotDOCHead::PilotDOCHead(const PilotDOCHead & e):PilotRecordBase(e)
 {
 	FUNCTIONSETUP;
 	*this = e;
@@ -80,40 +83,19 @@ PilotDOCHead & PilotDOCHead::operator =(const PilotDOCHead & e)
 
 
 
-void *PilotDOCHead::pack_(void *buf, int *len)
+
+PilotRecord *PilotDOCHead::pack() const
 {
-	char *tmp = (char *) buf;
+	pi_buffer_t *b = pi_buffer_new(16);
 
-	*len = 16;
-	set_short(tmp, version);
-	tmp+=2;
-	set_short(tmp, spare);
-	tmp+=2;
-	set_long(tmp, storyLen);
-	tmp+=4;
-	set_short(tmp, numRecords);
-	tmp+=2;
-	set_short(tmp, recordSize);
-	tmp+=2;
-	set_short(tmp, position);
-	return buf;
-}
+	dlp<short>::append(b,version);
+	dlp<short>::append(b,spare);
+	dlp<long>::append(b,storyLen);
+	dlp<short>::append(b,numRecords);
+	dlp<short>::append(b,recordSize);
+	dlp<long>::append(b,position);
 
-
-void PilotDOCHead::unpack(const void *buf, int)
-{
-	char *tmp = (char *) buf;
-
-	version = get_short(tmp);
-	tmp+=2;
-	spare = get_short(tmp);
-	tmp+=2;
-	storyLen = get_long(tmp);
-	tmp+=4;
-	numRecords = get_short(tmp);
-	tmp+=2;
-	recordSize = get_short(tmp);
-	tmp+=2;
-	position = get_long(tmp);
+	PilotRecord *rec =  new PilotRecord(b, this);
+	return rec;
 }
 

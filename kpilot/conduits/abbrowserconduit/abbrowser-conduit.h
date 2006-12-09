@@ -56,7 +56,7 @@ class AbbrowserConduit : public ConduitAction
 {
 Q_OBJECT
 public:
-	AbbrowserConduit(KPilotDeviceLink *o,const char *n = 0L,
+	AbbrowserConduit(KPilotLink *o,const char *n = 0L,
 		const QStringList &a = QStringList() );
 	virtual ~AbbrowserConduit();
 
@@ -71,6 +71,8 @@ protected slots:
 	void slotDeleteUnsyncedPCRecords();
 	void slotDeleteUnsyncedHHRecords();
 	void slotCleanup();
+
+	void slotTestRecord();
 
 private:
 
@@ -133,7 +135,6 @@ private:
 /*********************************************************************
                      D E B U G   O U T P U T
  *********************************************************************/
-#ifdef DEBUG
 	/**
 	* Output to console, for debugging only
 	*/
@@ -142,7 +143,7 @@ private:
 	* Output to console, for debugging only
 	*/
 	static void showPilotAddress(PilotAddress *pilotAddress);
-#endif
+
 	void showAdresses(Addressee &pcAddr, PilotAddress *backupAddr,
 		PilotAddress *palmAddr);
 

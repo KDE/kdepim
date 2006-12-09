@@ -27,100 +27,17 @@
 */
 
 #include "options.h"
-
-#include <kapplication.h>
-#include <kinstance.h>
-#include <kaboutdata.h>
+#include "pluginfactory.h"
 
 #include "sysinfo-conduit.h"
 #include "sysinfo-setup.h"
-
-#include "sysinfo-factory.moc"
-
 
 extern "C"
 {
 
 void *init_conduit_sysinfo()
 {
-	return new SysInfoConduitFactory;
+	return new ConduitFactory<SysInfoWidgetConfig,SysInfoConduit>;
 }
 
 }
-
-
-// A number of static variables
-KAboutData *SysInfoConduitFactory::fAbout = 0L;
-
-
-SysInfoConduitFactory::SysInfoConduitFactory(QObject *p, const char *n) :
-	KLibFactory(p,n)
-{
-	FUNCTIONSETUP;
-
-	fInstance = new KInstance("SysInfoConduit");
-	fAbout = new KAboutData("SysInfoConduit",
-		I18N_NOOP("KPilot System Information conduit"),
-		KPILOT_VERSION,
-		I18N_NOOP("Retrieves System, Hardware, and User Info from the Handheld and stores them to a file."),
-		KAboutData::License_GPL,
-		"(C) 2003, Reinhold Kainhofer");
-	fAbout->addAuthor("Reinhold Kainhofer",
-		I18N_NOOP("Primary Author"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/");
-}
-
-SysInfoConduitFactory::~SysInfoConduitFactory()
-{
-	FUNCTIONSETUP;
-
-	KPILOT_DELETE(fInstance);
-	KPILOT_DELETE(fAbout);
-}
-
-/* virtual */ QObject *SysInfoConduitFactory::createObject( QObject *p,
-	const char *n,
-	const char *c,
-	const QStringList &a)
-{
-	FUNCTIONSETUP;
-
-#ifdef DEBUG
-	DEBUGCONDUIT << fname
-		<< ": Creating object of class "
-		<< c
-		<< endl;
-#endif
-
-	if (qstrcmp(c,"ConduitConfigBase")==0)
-	{
-		QWidget *w = dynamic_cast<QWidget *>(p);
-		if (w)
-		{
-			return new SysInfoWidgetConfig(w,"ConduitConfigBase");
-		}
-		else
-		{
-			return 0L;
-		}
-	}
-	else
-	if (qstrcmp(c,"SyncAction")==0)
-	{
-		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
-
-		if (d)
-		{
-			return new SysInfoConduit(d,n,a);
-		}
-		else
-		{
-			kdError() << k_funcinfo
-				<< ": Couldn't cast parent to KPilotDeviceLink"
-				<< endl;
-			return 0L;
-		}
-	}
-
-	return 0L;
-}
-

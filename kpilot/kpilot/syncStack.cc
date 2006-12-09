@@ -29,14 +29,11 @@
 */
 #include "options.h"
 
-static const char *syncStack_id = "$Id$";
-
 #include <unistd.h>
 
 #include <qtimer.h>
 #include <qfile.h>
 #include <qdir.h>
-#include <qtextcodec.h>
 
 #include <kservice.h>
 #include <kservicetype.h>
@@ -49,18 +46,16 @@ static const char *syncStack_id = "$Id$";
 #include "interactiveSync.h"
 #include "fileInstaller.h"
 #include "kpilotSettings.h"
-#include "pilotAppCategory.h"
+#include "pilotRecord.h"
 
 #include "syncStack.moc"
 
 
 
-WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
+WelcomeAction::WelcomeAction(KPilotLink *p) :
 	SyncAction(p,"welcomeAction")
 {
 	FUNCTIONSETUP;
-
-	(void) syncStack_id;
 }
 
 /* virtual */ bool WelcomeAction::exec()
@@ -69,12 +64,12 @@ WelcomeAction::WelcomeAction(KPilotDeviceLink *p) :
 
 	addSyncLogEntry(i18n("KPilot %1 HotSync starting...\n")
 		.arg(QString::fromLatin1(KPILOT_VERSION)));
-	emit logMessage( i18n("Using encoding %1 on the handheld.").arg(PilotAppCategory::codecName()) );
+	emit logMessage( i18n("Using encoding %1 on the handheld.").arg(Pilot::codecName()) );
 	emit syncDone(this);
 	return true;
 }
 
-SorryAction::SorryAction(KPilotDeviceLink *p, const QString &s) :
+SorryAction::SorryAction(KPilotLink *p, const QString &s) :
 	SyncAction(p,"sorryAction"),
 	fMessage(s)
 {
@@ -93,7 +88,7 @@ bool SorryAction::exec()
 	return delayDone();
 }
 
-LocalBackupAction::LocalBackupAction(KPilotDeviceLink *p, const QString &d) :
+LocalBackupAction::LocalBackupAction(KPilotLink *p, const QString &d) :
 	SyncAction(p,"LocalBackupAction"),
 	fDir(d)
 {
@@ -106,7 +101,7 @@ bool LocalBackupAction::exec()
 	startTickle();
 
 	QString dirname = fDir +
-		PilotAppCategory::codec()->toUnicode(fHandle->getPilotUser()->getUserName()) +
+		Pilot::fromPilot(fHandle->getPilotUser().getUserName()) +
 		CSL1("/");
 	QDir dir(dirname,QString::null,QDir::Unsorted,QDir::Files);
 
@@ -135,7 +130,7 @@ bool LocalBackupAction::exec()
 }
 
 
-ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
+ConduitProxy::ConduitProxy(KPilotLink *p,
 	const QString &name,
 	const SyncAction::SyncMode &m) :
 	ConduitAction(p,name.latin1(),m.list()),
@@ -173,15 +168,43 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 		<< endl;
 #endif
 
-	KLibFactory *factory = KLibLoader::self()->factory(
+	KLibrary *library = KLibLoader::self()->library(
 		QFile::encodeName(fLibraryName));
-	if (!factory)
+	if (!library)
 	{
 		kdWarning() << k_funcinfo
 			<< ": Can't load library "
 			<< fLibraryName
+			<< " - "
+			<< KLibLoader::self()->lastErrorMessage()
 			<< endl;
 		addSyncLogEntry(i18n("Could not load conduit %1.").arg(fDesktopName));
+		emit syncDone(this);
+		return true;
+	}
+
+	unsigned long version = PluginUtility::pluginVersion(library);
+	if ( Pilot::PLUGIN_API != version )
+	{
+		kdWarning() << k_funcinfo
+			<< ": Library "
+			<< fLibraryName
+			<< " has version "
+			<< version
+			<< endl;
+		addSyncLogEntry(i18n("Conduit %1 has wrong version (%2).").arg(fDesktopName).arg(version));
+		emit syncDone(this);
+		return true;
+	}
+
+	KLibFactory *factory = library->factory();
+	if (!factory)
+	{
+		kdWarning() << k_funcinfo
+			<< ": Can't find factory in library "
+			<< fLibraryName
+			<< endl;
+		addSyncLogEntry(i18n("Could not initialize conduit %1.").arg(fDesktopName));
 		emit syncDone(this);
 		return true;
 	}
@@ -189,7 +212,7 @@ ConduitProxy::ConduitProxy(KPilotDeviceLink *p,
 	QStringList l = syncMode().list();
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Flags: " << syncMode().name() << endl;
+	DEBUGKPILOT << fname << ": Flags: " << syncMode().name() << endl;
 #endif
 
 	QObject *object = factory->create(fHandle,name(),"SyncAction",l);
@@ -254,7 +277,7 @@ void ConduitProxy::execDone(SyncAction *p)
 }
 
 
-ActionQueue::ActionQueue(KPilotDeviceLink *d) :
+ActionQueue::ActionQueue(KPilotLink *d) :
 	SyncAction(d,"ActionQueue"),
 	fReady(false)
 	// The string lists have default constructors
@@ -268,13 +291,13 @@ ActionQueue::~ActionQueue()
 }
 
 
-void ActionQueue::queueInit(bool checkUser)
+void ActionQueue::queueInit( ActionQueue::InitFlags checkUser)
 {
 	FUNCTIONSETUP;
 
 	addAction(new WelcomeAction(fHandle));
 
-	if (checkUser)
+	if ( ActionQueue::queueCheckUser == checkUser)
 	{
 		addAction(new CheckUser(fHandle));
 	}
@@ -294,14 +317,14 @@ void ActionQueue::queueConduits(const QStringList &l,const SyncAction::SyncMode 
 		if ((*it).startsWith(CSL1("internal_")))
 		{
 #ifdef DEBUG
-			DEBUGDAEMON << fname <<
+			DEBUGKPILOT << fname <<
 				": Ignoring conduit " << *it << endl;
 #endif
 			continue;
 		}
 
 #ifdef DEBUG
-		DEBUGDAEMON << fname
+		DEBUGKPILOT << fname
 			<< ": Creating proxy with mode=" << m.name() << endl;
 #endif
 		ConduitProxy *cp = new ConduitProxy(fHandle,*it,m);
@@ -332,7 +355,7 @@ void ActionQueue::actionCompleted(SyncAction *b)
 	if (b)
 	{
 #ifdef DEBUG
-		DEBUGDAEMON << fname
+		DEBUGKPILOT << fname
 			<< ": Completed action "
 			<< b->name()
 			<< endl;
@@ -369,7 +392,7 @@ void ActionQueue::actionCompleted(SyncAction *b)
 	}
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname
+	DEBUGKPILOT << fname
 		<< ": Will run action "
 		<< a->name()
 		<< endl;

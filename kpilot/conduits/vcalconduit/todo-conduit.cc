@@ -52,10 +52,7 @@
 
 extern "C"
 {
-long version_conduit_todo = KPILOT_PLUGIN_API;
-
-const char *id_conduit_todo = "$Id$";
-
+unsigned long version_conduit_todo = Pilot::PLUGIN_API;
 }
 
 
@@ -82,7 +79,12 @@ int TodoConduitPrivate::updateIncidences()
 void TodoConduitPrivate::removeIncidence(KCal::Incidence *e)
 {
 	fAllTodos.remove(static_cast<KCal::Todo*>(e));
+	if (!fCalendar) return;
 	fCalendar->deleteTodo(static_cast<KCal::Todo*>(e));
+	// now just in case we're in the middle of reading through our list
+	// and we delete something, set reading to false so we start at the
+	// top again next time and don't have problems with our iterator
+	reading = false;
 }
 
 
@@ -100,7 +102,7 @@ KCal::Incidence *TodoConduitPrivate::findIncidence(recordid_t id)
 
 
 
-KCal::Incidence *TodoConduitPrivate::findIncidence(PilotAppCategory*tosearch)
+KCal::Incidence *TodoConduitPrivate::findIncidence(PilotRecordBase *tosearch)
 {
 	PilotTodoEntry*entry=dynamic_cast<PilotTodoEntry*>(tosearch);
 	if (!entry) return 0L;
@@ -169,17 +171,13 @@ KCal::Incidence *TodoConduitPrivate::getNextModifiedIncidence()
  *                          TodoConduit class                               *
  ****************************************************************************/
 
-TodoConduit::TodoConduit(KPilotDeviceLink *d,
+TodoConduit::TodoConduit(KPilotLink *d,
 	const char *n,
-	const QStringList &a) : VCalConduitBase(d,n,a)
+	const QStringList &a) : VCalConduitBase(d,n,a),
+	fTodoAppInfo( 0L )
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT << id_conduit_todo << endl;
-#endif
 	fConduitName=i18n("To-do");
-
-        (void) id_conduit_todo;
 }
 
 
@@ -195,7 +193,13 @@ void TodoConduit::_setAppInfo()
 {
 	FUNCTIONSETUP;
 	// get the address application header information
-	fTodoAppInfo->write(fDatabase);
+
+	if( fTodoAppInfo )
+		DEBUGCONDUIT << fname << ": fTodoAppInfo not null" << endl;
+	if( fDatabase )
+		DEBUGCONDUIT << fname << ": fDatabase not null" << endl;
+
+	fTodoAppInfo->writeTo(fDatabase);
 }
 
 void TodoConduit::_getAppInfo()
@@ -203,6 +207,7 @@ void TodoConduit::_getAppInfo()
 	FUNCTIONSETUP;
 	// get the address application header information
 
+	KPILOT_DELETE( fTodoAppInfo );
 	fTodoAppInfo = new PilotToDoInfo(fDatabase);
 
 #ifdef DEBUG
@@ -212,7 +217,7 @@ void TodoConduit::_getAppInfo()
 
 
 
-const QString TodoConduit::getTitle(PilotAppCategory*de)
+const QString TodoConduit::getTitle(PilotRecordBase *de)
 {
 	PilotTodoEntry*d=dynamic_cast<PilotTodoEntry*>(de);
 	if (d) return QString(d->getDescription());
@@ -237,7 +242,12 @@ void TodoConduit::readConfig()
 #endif
 }
 
-
+void TodoConduit::preSync()
+{
+	FUNCTIONSETUP;
+	VCalConduitBase::preSync();
+	_getAppInfo();
+}
 
 void TodoConduit::postSync()
 {
@@ -251,7 +261,7 @@ void TodoConduit::postSync()
 
 
 
-PilotRecord*TodoConduit::recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e)
+PilotRecord*TodoConduit::recordFromIncidence(PilotRecordBase *de, const KCal::Incidence*e)
 {
 	// don't need to check for null pointers here, the recordFromIncidence(PTE*, KCal::Todo*) will do that.
 	PilotTodoEntry *tde = dynamic_cast<PilotTodoEntry*>(de);
@@ -313,7 +323,7 @@ void TodoConduit::preRecord(PilotRecord*r)
 	FUNCTIONSETUP;
 	if (!categoriesSynced && r)
 	{
-		const PilotAppCategory*de=newPilotEntry(r);
+		const PilotRecordBase *de=newPilotEntry(r);
 		KCal::Incidence *e = fP->findIncidence(r->id());
 		setCategory(dynamic_cast<KCal::Todo*>(e), dynamic_cast<const PilotTodoEntry*>(de));
 	}
@@ -335,14 +345,13 @@ void TodoConduit::setCategory(PilotTodoEntry*de, const KCal::Todo*todo)
  */
 QString TodoConduit::_getCat(const QStringList cats, const QString curr) const
 {
-	int j;
 	if (cats.size()<1) return QString::null;
 	if (cats.contains(curr)) return curr;
 	for ( QStringList::ConstIterator it = cats.begin(); it != cats.end(); ++it )
 	{
-		for (j=1; j<PILOT_CATEGORY_MAX; j++)
+		for (unsigned int j=1; j<Pilot::CATEGORY_COUNT; j++)
 		{
-			QString catName = fTodoAppInfo->category(j);
+			QString catName = fTodoAppInfo->categoryName(j);
 			if (!(*it).isEmpty() && !(*it).compare( catName ) )
 			{
 				return catName;
@@ -352,14 +361,14 @@ QString TodoConduit::_getCat(const QStringList cats, const QString curr) const
 	// If we have a free label, return the first possible cat
 	//
 	// FIXME: Clearly buggy, but I don't know how or why
-	QString lastName = fTodoAppInfo->category(PILOT_CATEGORY_MAX-1);
+	QString lastName = fTodoAppInfo->categoryName(Pilot::CATEGORY_COUNT-1);
 	if (lastName.isEmpty()) return cats.first();
 	return QString::null;
 }
 
 
 
-KCal::Incidence *TodoConduit::incidenceFromRecord(KCal::Incidence *e, const PilotAppCategory *de)
+KCal::Incidence *TodoConduit::incidenceFromRecord(KCal::Incidence *e, const PilotRecordBase *de)
 {
 	return dynamic_cast<KCal::Incidence*>(incidenceFromRecord(dynamic_cast<KCal::Todo*>(e), dynamic_cast<const PilotTodoEntry*>(de)));
 }
@@ -430,25 +439,35 @@ void TodoConduit::setCategory(KCal::Todo *e, const PilotTodoEntry *de)
 	if (!e || !de) return;
 	QStringList cats=e->categories();
 	int cat=de->category();
-	if (0<cat && cat<PILOT_CATEGORY_MAX)
+	if ( (0<cat) && (cat<(int)Pilot::CATEGORY_COUNT) )
 	{
-		QString newcat=fTodoAppInfo->category(cat);
+		QString newcat=fTodoAppInfo->categoryName(cat);
 		if (!cats.contains(newcat))
 		{
 			// if this event only has one category associated with it, then we can
 			// safely assume that what we should be doing here is changing it to match
 			// the palm.  if there's already more than one category in the event, however, we
-			// won't cause data loss--we'll just append what the palm has to the 
+			// won't cause data loss--we'll just append what the palm has to the
 			// event's categories
 			if (cats.count() <=1) cats.clear();
-			
+
 			cats.append( newcat );
 			e->setCategories(cats);
 		}
 	}
 }
 
-VCalConduitSettings *TodoConduit::config()
-{
-  return ToDoConduitFactory::config();
+static VCalConduitSettings *config_vcal = 0L;
+
+VCalConduitSettings *TodoConduit::theConfig() {
+	if (!config_vcal)
+	{
+		config_vcal = new VCalConduitSettings(CSL1("Calendar"));
+	}
+
+	return config_vcal;
+}
+
+VCalConduitSettings *TodoConduit::config() {
+	return theConfig();
 }

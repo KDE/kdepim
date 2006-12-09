@@ -45,10 +45,6 @@
 
 
 
-// Something to allow us to check what revision
-// the modules are that make up a binary distribution.
-const char *doc_converter_id = "$Id$";
-
 #define min(a,b) (a<b)?(a):(b)
 
 
@@ -154,7 +150,6 @@ DOCConverter::DOCConverter(QObject *parent, const char *name):QObject(parent,nam
 	docdb=0L;
 	eSortBookmarks=eSortNone;
 	fBookmarks.setAutoDelete( TRUE );
-	(void) doc_converter_id;
 }
 
 
@@ -441,7 +436,7 @@ bool DOCConverter::convertTXTtoPDB() {
 	}
 #endif
 
-	if (!docdb->isDBOpen()) {
+	if (!docdb->isOpen()) {
 		emit logError(i18n("Unable to open palm doc database %1").arg(docdb->dbPathName()) );
 		return false;
 	}

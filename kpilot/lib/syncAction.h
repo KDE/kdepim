@@ -49,9 +49,9 @@ class KDE_EXPORT SyncAction : public QObject
 Q_OBJECT
 
 public:
-	SyncAction(KPilotDeviceLink *p,
+	SyncAction(KPilotLink *p,
 		const char *name=0L);
-	SyncAction(KPilotDeviceLink *p,
+	SyncAction(KPilotLink *p,
 		QWidget *visibleparent,
 		const char *name=0L);
 	~SyncAction();
@@ -113,11 +113,11 @@ public:
 	void addLogProgress( const QString &msg, int prog ) { emit logProgress( msg, prog ); }
 protected:
 	/** Connection to the device. @todo make private. */
-	KPilotDeviceLink *fHandle;
+	KPilotLink *fHandle;
 	int fActionStatus;
 
 	/** Returns a pointer to the connection to the device. */
-	inline KPilotDeviceLink *deviceLink() const { return fHandle; } ;
+	inline KPilotLink *deviceLink() const { return fHandle; }
 
 	/** Returns the file descriptor for the device link -- that is,
 	* the raw handle to the OS's connection to the device. Use with care.
@@ -146,13 +146,12 @@ public:
 	public:
 		/** Available modes for the sync. */
 		enum Mode {
-		eFastSync=1,
-		eHotSync=2,
-		eFullSync=3,
-		eCopyPCToHH=4,
-		eCopyHHToPC=5,
-		eBackup=6,
-		eRestore=7
+		eHotSync=1,
+		eFullSync=2,
+		eCopyPCToHH=3,
+		eCopyHHToPC=4,
+		eBackup=5,
+		eRestore=6
 		} ;
 
 		/** Create a mode with the given Mode @p m and
@@ -177,7 +176,7 @@ public:
 
 		/** Sets a mode from an integer @p mode, if possible.
 		* If the @p mode is illegal, return false and set the
-		* mode to Fast Sync. As a side effect, options test and local
+		* mode to Hot Sync. As a side effect, options test and local
 		* are reset to false.
 		*/
 		bool setMode(int);
@@ -227,8 +226,7 @@ public:
 		bool isSync() const
 		{
 			return ( fMode==eFullSync ) ||
-				( fMode == eHotSync ) ||
-				( fMode == eFastSync );
+				( fMode == eHotSync ); 
 		} ;
 
 		/** Classify every mode as either a sync (two-way) or copy (one-way) mode. */
@@ -275,6 +273,17 @@ public:
 		eDuplicate,
 		eDelete,
 		eCROffset=-1
+	};
+
+	/**
+	 * This MUST stay in sync with the combobox in
+	 * kpilotConfigDialog_backup.ui.  If it does not, you need to
+	 * either change this enum or the combobox.
+	 */
+	enum BackupFrequency
+	{
+		eEveryHotSync=0,
+		eOnRequestOnly
 	};
 
 protected:

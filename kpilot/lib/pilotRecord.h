@@ -34,20 +34,11 @@
 */
 
 
-#include <time.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <kdemacros.h>
-
 #include "pilotLinkVersion.h"
 
-struct pi_buffer_t;
+#include "pilot.h"
 
-#include <pi-dlp.h>
-#include <pi-file.h>
-
-#define PILOT_CATEGORY_SIZE 16 // (sizeof(((struct CategoryAppInfo *)0)->name[0]))
-#define PILOT_CATEGORY_MAX 16 // ( (sizeof(((struct CategoryAppInfo *)0)->name)) / PILOT_CATEGORY_SIZE )
+#include <pi-buffer.h>
 
 
 /** All entries in the Handheld -- whether interpreted or binary blobs --
@@ -63,42 +54,88 @@ public:
 	* given values.
 	* @param attrib Attributes (bitfield) for this entry.
 	* @param cat Category for this entry. Should be in the
-	*        range 0 <= cat < PILOT_CATEGORY_MAX . Using an
+	*        range 0 <= cat < Pilot::CATEGORY_COUNT . Using an
 	*        invalid category means 0 (unfiled) is used.
 	* @param id Unique ID for this entry. May be 0 (non-unique) as well.
 	*/
 	PilotRecordBase(int attrib=0, int cat=0, recordid_t id=0) :
-		fAttrib(attrib),fCat(cat),fID(id) 
-	{ 
-		if ( !( (0<=cat) && (cat<PILOT_CATEGORY_MAX) ) ) fCat=0; 
+		fAttrib(attrib),fCat(0),fID(id)
+	{
+		setCategory(cat);
 	}
 
-	/** Attributes of this record (deleted, secret, ...); it's a bitfield. */
+	PilotRecordBase( const PilotRecordBase *b ) :
+		fAttrib( b ? b->attributes() : 0 ),
+		fCat( 0 ),
+		fID( b ? b->id() : 0 )
+	{
+		if (b)
+		{
+			setCategory( b->category() );
+		}
+	}
+
+	/** Destructor. Nothing to do for it. */
+	virtual ~PilotRecordBase() { } ;
+
+	/** Attributes of this record (deleted, secret, ...);
+	* it's a bitfield.
+	*/
 	inline int attributes() const { return fAttrib; }
+
 	/** Set the attributes of this record. */
 	inline void  setAttributes(int attrib) { fAttrib = attrib; }
-	int KDE_DEPRECATED getAttrib() const { return attributes(); }
-	void KDE_DEPRECATED setAttrib(int attrib) { setAttributes(attrib); }
 
-	/** Returns the category number 0 <= < PILOT_CATEGORY_MAX of this record. */
-	int   category() const { return fCat; }
-	/** Sets the category number 0 <= < PILOT_CATEGORY_MAX of this record. 
-	* Trying to set an illegal category number files this one under 
+	/** Returns the category number [ 0 .. Pilot::CATEGORY_COUNT-1]
+	* of this record.
+	*/
+	inline int   category() const { return fCat; }
+
+	/** Sets the category number [ 0 .. Pilot::CATEGORY_COUNT-1]
+	* of this record.
+	* Trying to set an illegal category number files this one under
 	* "Unfiled" (which is 0).
 	*/
-	void  setCategory(int cat) { if ( (cat<0) || (cat>=PILOT_CATEGORY_MAX)) cat=0; fCat = cat; }
-	int  KDE_DEPRECATED  getCat() const { return category(); }
-	void KDE_DEPRECATED  setCat(int cat) { return setCategory(cat); }
+	inline void  setCategory(int cat) { if ( (cat<0) || (cat>=(int)Pilot::CATEGORY_COUNT)) cat=0; fCat = cat; }
+
+	/** Sets the category number by looking up the string @p label
+	* in the category table @p info . Leaves the category unchanged
+	* if no match is found and returns @c false.
+	*
+	* @param info AppInfo structure containing the labels (in handheld
+	*        native encoding).
+	* @param label The label to look for.
+	*
+	* @return @c true on success, @c false on failure
+	*/
+	bool setCategory(const struct CategoryAppInfo *info, const QString &label)
+	{
+		if (!info)
+		{
+			return false;
+		}
+
+		int cat = Pilot::findCategory( info, label, false );
+		if ( (cat<0) || (cat>=(int)Pilot::CATEGORY_COUNT) )
+		{
+			return false;
+		}
+		else
+		{
+			setCategory( cat );
+			return true;
+		}
+	}
 
 	/** Returns the record ID for this record. Record IDs are unique for a given
 	* handheld and database.
 	*/
 	inline recordid_t id() const { return fID; }
+
 	/** Sets the record ID for this record. Use with caution -- you ca confuse
 	* the handheld by doing weird things here.
 	*/
 	void setID(recordid_t id) { fID = id; }
-	recordid_t KDE_DEPRECATED getID() const { return id(); }
 
 	/** Accessor for one bit of the record's attributes. Is this record marked
 	* deleted (on the handheld) ? Deleted records are not removed from the
@@ -106,10 +143,12 @@ public:
 	* or so to really get rid of the records from storage.
 	*/
 	inline bool isDeleted() const { return fAttrib & dlpRecAttrDeleted; };
+
 	/** Accessor for one bit of the record's attributes. Is this record secret?
 	* Secret records are not displayed on the desktop by default.
 	*/
 	inline bool isSecret() const { return fAttrib & dlpRecAttrSecret; } ;
+
 	/** Accessor for one bit of the record's attributes. Is this record a
 	* to-be-archived record? When a record is deleted, it may be marked
 	* as "archive on PC" which means the PC should keep a copy. The
@@ -117,11 +156,11 @@ public:
 	* be deleted.
 	*/
 	inline bool isArchived() const { return fAttrib & dlpRecAttrArchived; } ;
+
 	/** Accessor for one bit of the record's attributes. Is this record modified?
 	* Modified records are those that have been modified since the last HotSync.
 	*/
 	inline bool isModified() const { return fAttrib & dlpRecAttrDirty; }
-	inline bool KDE_DEPRECATED isDirty() const { return isModified(); } ;
 
 #define SETTER(a) {\
 		if (d) { fAttrib |= a; } \
@@ -139,10 +178,10 @@ public:
 	/** Mark a record as modified (or not). */
 	inline void setModified(bool d=true) SETTER(dlpRecAttrDirty)
 
-	void KDE_DEPRECATED makeDeleted() { setDeleted(true); }
-	void KDE_DEPRECATED makeSecret() { setSecret(true); }
-	void KDE_DEPRECATED makeArchived() { setArchived(true); }
 #undef SETTER
+
+	/** Returns a text representation of this record. */
+	virtual QString textRepresentation() const;
 
 private:
 	int fAttrib, fCat;
@@ -162,9 +201,8 @@ public:
 	*
 	* This constructor makes a copy of the data buffer (and owns that buffer).
 	*/
-	PilotRecord(void* data, int length, int attrib, int cat, recordid_t uid);
+	PilotRecord(void* data, int length, int attrib, int cat, recordid_t uid) KDE_DEPRECATED;
 
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	/** Constructor. Using the given buffer @p buf (which carries its
 	* own data and length), create a record. Otherwise much like the
 	* above constructor @em except that this record assumes ownership
@@ -176,16 +214,33 @@ public:
 		fData((char *)buf->data),
 		fLen(buf->used),
 		fBuffer(buf)
-	{ fAllocated++; }
-#endif
+	{
+		fAllocated++;
+	}
+
+	/** Constructor. Like the above, only take the attributes, category
+	* and id from the given @p entry.
+	*/
+	PilotRecord( pi_buffer_t *buf, const PilotRecordBase *entry ) :
+		PilotRecordBase( entry ),
+		fData((char *)buf->data),
+		fLen(buf->used),
+		fBuffer(buf)
+	{
+		fAllocated++;
+	}
 
 	/** Destructor. Dispose of the buffers in the right form. */
-	~PilotRecord()
+	virtual ~PilotRecord()
 	{
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
-		if (fBuffer) { pi_buffer_free(fBuffer); } else
-#endif
-		{ delete [] fData; }
+		if (fBuffer)
+		{
+			pi_buffer_free(fBuffer);
+		}
+		else
+		{
+			delete [] fData;
+		}
 		fDeleted++;
 	}
 
@@ -200,24 +255,23 @@ public:
 	*/
 	char *data() const
 	{
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
-		if (fBuffer) return (char *)(fBuffer->data); else
-#endif
-		return fData;
+		if (fBuffer)
+		{
+			return (char *)(fBuffer->data);
+		}
+		else
+		{
+			return fData;
+		}
 	}
-	char *KDE_DEPRECATED getData() const { return data(); }
 
 	/** Returns the size of the data for this record. */
 	int size() const
 	{
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 		if (fBuffer) return fBuffer->used; else
-#endif
 		return fLen;
 	}
-	int KDE_DEPRECATED getLen() const { return size(); }
 
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	/** Returns the data buffer associated with this record. */
 	const pi_buffer_t *buffer() const { return fBuffer; }
 
@@ -232,13 +286,6 @@ public:
 		fLen = b->used;
 		fBuffer = b;
 	}
-#endif
-
-	/** A constant, really left over from PalmOS 4 days, when records
-	* could be 64k in size at most. It is used in various places to
-	* dimension buffers, but should be considered deprecated.
-	*/
-	enum { APP_BUFFER_SIZE = 0xffff } ;
 
 	/** Assignment operator. Makes a copy of the @p orig record. */
 	PilotRecord& operator=(PilotRecord& orig);
@@ -246,12 +293,13 @@ public:
 	/** Sets the data for this record. Makes a copy of the data buffer. */
 	void setData(const char* data, int len);
 
+	/** Returns a text representation of this record. */
+	virtual QString textRepresentation() const;
+
 private:
 	char* fData;
 	int   fLen;
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	pi_buffer_t *fBuffer;
-#endif
 
 public:
 	/**

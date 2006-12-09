@@ -108,12 +108,16 @@
     </entry>
     <entry name="SkipBackupDB" type="StringList">
         <label>Which databases not to backup.</label>
-        <default>[Arng],[PmDB],[lnch],[a86k],FATFS,ImgFile-Foto,Jpeg-Foto</default>
+        <default>[Arng],[PmDB],[lnch],[a86k],FATFS,ImgFile-Foto,Jpeg-Foto,WifiCoreLib</default>
     </entry>
     <entry name="SkipRestoreDB" type="StringList">
         <label>
         </label>
         <default>[AvGo]</default>
+    </entry>
+    <entry name="BackupFrequency" type="UInt">
+        <label></label>
+        <default>0</default>
     </entry>
     <entry name="RunConduitsWithBackup" type="Bool">
         <label></label>

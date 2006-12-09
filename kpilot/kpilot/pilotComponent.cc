@@ -37,18 +37,14 @@
 
 #include <qwidget.h>
 #include <qcombobox.h>
-#include <qtextcodec.h>
 
 #include <kdebug.h>
 
 #include "kpilotConfig.h"
-#include "pilotAppCategory.h"
-#include "pilotDatabase.h"
+#include "pilotRecord.h"
+#include "pilot.h"
 
 #include "pilotComponent.moc"
-
-static const char *pilotComponent_id =
-	"$Id$";
 
 PilotComponent::PilotComponent(QWidget * parent,
 	const char *id,
@@ -65,7 +61,6 @@ PilotComponent::PilotComponent(QWidget * parent,
 			parent->geometry().height());
 	}
 
-	(void) pilotComponent_id;
 }
 
 
@@ -108,7 +103,7 @@ int PilotComponent::findSelectedCategory(QComboBox * fCatList,
 	{
 		QString selectedCategory =
 			fCatList->text(fCatList->currentItem());
-		currentCatID = PilotAppInfoBase::findCategory(selectedCategory, AllIsUnfiled, info);
+		currentCatID = Pilot::findCategory(info, selectedCategory, AllIsUnfiled);
 	}
 
 	if ((currentCatID == -1) && AllIsUnfiled)
@@ -139,7 +134,7 @@ void PilotComponent::populateCategories(QComboBox * c,
 	// the user uses, so no translation is necessary.
 	//
 	//
-	for (int i = 0; i < PILOT_CATEGORY_MAX; i++)
+	for (unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++)
 	{
 		if (info->name[i][0])
 		{
@@ -150,7 +145,7 @@ void PilotComponent::populateCategories(QComboBox * c,
 				<< " with ID: " << (int) info->ID[i] << endl;
 #endif
 
-			c->insertItem(PilotAppCategory::codec()->toUnicode(info->name[i]));
+			c->insertItem(Pilot::fromPilot(info->name[i]));
 		}
 	}
 

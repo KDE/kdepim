@@ -2,7 +2,7 @@
 **
 ** Copyright (C) 2004 by Adriaan de Groot, Joern Ahrens
 **
-** The code for NotepadActionThread::unpackNotePad was taken from 
+** The code for NotepadActionThread::unpackNotePad was taken from
 ** Angus Ainslies read-notepad.c, which is part of pilot-link.
 ** NotepadActionThread::saveImage is also based on read-notepad.c.
 **
@@ -49,22 +49,16 @@
 
 extern "C"
 {
-long version_conduit_notepad = KPILOT_PLUGIN_API;
-const char *id_conduit_notepad =
-	"$Id$";
+unsigned long version_conduit_notepad = Pilot::PLUGIN_API;
 }
 
-NotepadConduit::NotepadConduit(KPilotDeviceLink *d,	const char *n,
-	const QStringList &args) :	ConduitAction(d, n, args)
+NotepadConduit::NotepadConduit(KPilotLink *d, const char *n,
+	const QStringList &args) : ConduitAction(d, n, args)
 {
 	FUNCTIONSETUP;
-#ifdef DEBUG
-	DEBUGCONDUIT << id_conduit_notepad << endl;
-#endif
 	fConduitName=i18n("Notepad");
 	thread = 0L;
 
-	(void) id_conduit_notepad;
 }
 
 NotepadConduit::~NotepadConduit()
@@ -75,7 +69,7 @@ NotepadConduit::~NotepadConduit()
 /* virtual */ bool NotepadConduit::exec()
 {
 	FUNCTIONSETUP;
-	
+
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": In exec() @" << (unsigned long) this << endl;
 #endif
@@ -87,13 +81,13 @@ NotepadConduit::~NotepadConduit()
 		return false;
 	}
 	else {
-		thread = new NotepadActionThread(this, pilotSocket());
+		thread = new NotepadActionThread(this, deviceLink());
 		thread->start();
 		// tickle is disabled due to crashs during sync
 		// -> PADP TX "unexpected package"
 //		startTickle();
 	}
-	
+
 	return true;
 }
 
@@ -113,7 +107,7 @@ bool NotepadConduit::event(QEvent *e)
 		delete thread;
 		return true;
 	}
-	else 
+	else
 		return ConduitAction::event(e);
 }
 
@@ -121,8 +115,8 @@ bool NotepadConduit::event(QEvent *e)
 // NotepadActionThread
 //-----------------------------------------------------------------------------
 
-NotepadActionThread::NotepadActionThread(QObject *parent, int pilotSocket) :
-	fParent(parent), fPilotSocket(pilotSocket), notSaved(0), saved(0)
+NotepadActionThread::NotepadActionThread(QObject *parent, KPilotLink *link) :
+	fParent(parent), fLink(link), notSaved(0), saved(0)
 {
 	FUNCTIONSETUP;
 }
@@ -131,7 +125,7 @@ void NotepadActionThread::run()
 {
 	FUNCTIONSETUP;
 
-	PilotSerialDatabase *db = new PilotSerialDatabase(fPilotSocket, "npadDB");
+	PilotDatabase *db = fLink->database( CSL1("npadDB") );
 
 	int n = db->recordCount();
 
@@ -140,11 +134,14 @@ void NotepadActionThread::run()
 		QValueList<recordid_t> vl = db->idList();
 		QValueList<recordid_t>::iterator it;
 		struct NotePad a;
-		for ( it = vl.begin(); it != vl.end(); ++it ) {
+		for ( it = vl.begin(); it != vl.end(); ++it )
+		{
 			PilotRecord *pr = db->readRecordById(*it);
-			if(pr) {
-				unpack_NotePad(&a, (unsigned char*)pr->getData(), pr->size());
+			if(pr)
+			{
+				unpack_NotePad(&a, (unsigned char*)pr->data(), pr->size());
 				saveImage(&a);
+				free_NotePad(&a);
 			}
 		}
 	}
@@ -152,69 +149,112 @@ void NotepadActionThread::run()
 	QApplication::postEvent(fParent, new QEvent(QEvent::User));
 }
 
+static void saveImageFromBITS(QImage &image, struct NotePad *n, unsigned int width)
+{
+	FUNCTIONSETUP;
+	image.setColor(0, qRgb(0xaa, 0xc1 ,0x91));
+	image.setColor(1, qRgb(0x30, 0x36, 0x29));
+
+	int x = 0;
+	int y = 0;
+	int pos = 0;
+	for(unsigned int i=0; i<n->body.dataLen/2; ++i)
+	{
+		for(int j=0; j<n->data[i].repeat; ++j)
+		{
+			for(int k=0; k<8; ++k)
+			{
+				y = pos / width;
+				x = pos % width ;
+
+				image.setPixel( x, y,
+					(n->data[i].data & 1<<(7-k)) ? 1 : 0 );
+				++pos;
+			}
+		}
+	}
+}
+
+static void saveImageFromUNCOMPRESSED(QImage &image, struct NotePad *n, unsigned int width)
+{
+	FUNCTIONSETUP;
+
+	image.setColor(0, qRgb(0xaa, 0xc1 ,0x91));
+	image.setColor(1, qRgb(0x30, 0x36, 0x29));
+
+	unsigned int pos = 0;
+	unsigned int x,y;
+
+	for (unsigned int i=0; i<n->body.dataLen / 2; ++i)
+	{
+		for (unsigned int k=0; k<8; ++k)
+		{
+			y = pos / width;
+			x = pos % width ;
+
+			image.setPixel( x, y,
+				(n->data[i].repeat & 1<<(7-k)) ? 1 : 0 );
+			++pos;
+		}
+
+		for (unsigned int k=0; k<8; ++k)
+		{
+			y = pos / width;
+			x = pos % width ;
+
+			image.setPixel( x, y,
+				(n->data[i].data & 1<<(7-k)) ? 1 : 0 );
+			++pos;
+		}
+	}
+}
+
 void NotepadActionThread::saveImage(struct NotePad *n)
 {
 	FUNCTIONSETUP;
-	
-    int width = n->body.width + 8;    
-    int height = n->body.height;
-	
-    QImage image(width, height, 8, 2);
-    
-    if(n->body.dataType == NOTEPAD_DATA_BITS)
-    {
-        image.setColor(0, qRgb(0xaa, 0xc1 ,0x91));
-        image.setColor(1, qRgb(0x30, 0x36, 0x29));
 
-        int x = 0;  
-        int y = 0;
-        int pos = 0;
-        for(int i=0; i<n->body.dataLen/2; ++i)
-        {
-            for(int j=0; j<n->data[i].repeat; ++j)
-            {
-                for(int k=0; k<8; ++k)
-                {
-				    y = pos / width;
-				    x = pos % width ;
-        
-				    if(n->data[i].data & 1<<(7-k))
-				        image.setPixel(x,y,1);
-				    else
-                        image.setPixel(x,y,0);
-                    ++pos;
-                }
-	       }
-        }      
-    }
-    else if(n->body.dataType == NOTEPAD_DATA_PNG)
-    {
-        image.loadFromData((uchar*)(n->data), n->body.dataLen);
-    }
-    else
-    {
-        // Unknown data type
-#ifdef DEBUG
-    DEBUGCONDUIT << fname << ": Unknown data type: " << n->body.dataType << endl;
-#endif        
-        return;
-    }
-	
-    QString filename(n->name);
-    if(filename.isEmpty())
-    {
-        filename.sprintf("%4d-%02d-%02d_%02d-%02d-%02d",
-                        n->changeDate.year,
-                        n->changeDate.month,
-                        n->changeDate.day,
-                        n->changeDate.hour,
-                        n->changeDate.min,
-                        n->changeDate.sec);
-                
-    }
-    QString imgname = QString("%1/%2.png").arg(NotepadConduitSettings::outputDirectory()).arg(filename);
-    
-    
+	// Width needs adjusting, based on whether it's low res (+8)
+	// or a hi-res notepad image.
+	int width = n->body.width + ( n->body.width > 160 ? 16 : 8 );
+	int height = n->body.height;
+
+
+	QImage image(width, height, 8, 2);
+
+	switch (n->body.dataType)
+	{
+	case NOTEPAD_DATA_BITS :
+		saveImageFromBITS( image,n,width );
+		break;
+	case NOTEPAD_DATA_UNCOMPRESSED :
+		saveImageFromUNCOMPRESSED( image,n,width );
+		break;
+	case NOTEPAD_DATA_PNG :
+		image.loadFromData((uchar*)(n->data), n->body.dataLen);
+		break;
+	default :
+		// Unknown data type
+		kdWarning() << k_funcinfo << ": Unknown data type: "
+			<< n->body.dataType << endl;
+		return;
+
+		// TODO: Post a warning to the UI
+	}
+
+	QString filename(n->name);
+	if(filename.isEmpty())
+	{
+		filename.sprintf("%4d-%02d-%02d_%02d-%02d-%02d",
+			n->changeDate.year,
+			n->changeDate.month,
+			n->changeDate.day,
+			n->changeDate.hour,
+			n->changeDate.min,
+			n->changeDate.sec);
+	}
+	QString imgname = QString("%1/%2.png").arg(NotepadConduitSettings::outputDirectory()).arg(filename);
+
+
 #ifdef DEBUG
 	DEBUGCONDUIT << fname << ": Notepad " << imgname << endl;
 #endif

@@ -35,10 +35,21 @@
 class PilotRecord;
 class PilotDatabase;
 
+/**
+ * The conduit Null does nothing. Almost nothing, anyway.
+ * It writes a single log message to the sync log and then
+ * completes successfully. For debugging purposes it can
+ * also simulate failure, but that is a very specialized
+ * case available only programmatically.
+ */
 class NullConduit : public ConduitAction
 {
 public:
-	NullConduit(KPilotDeviceLink *,
+	/** Constructor. Special case is if @p contains
+	 *  @c --fail as an argument to the conduit, then
+	 *  the conduit will fail instead of trivially succeeding.
+	 */
+	NullConduit(KPilotLink *,
 		const char *name=0L,
 		const QStringList &args = QStringList());
 	virtual ~NullConduit();
@@ -48,6 +59,7 @@ protected:
 
 protected:
 	PilotDatabase *fDatabase;
+	bool fFailImmediately;
 };
 
 #endif

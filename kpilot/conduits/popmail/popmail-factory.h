@@ -28,30 +28,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <klibloader.h>
-
-class KInstance;
-class KAboutData;
-
-class PopMailConduitFactory : public KLibFactory
-{
-Q_OBJECT
-
-public:
-	PopMailConduitFactory(QObject * = 0L,const char * = 0L);
-	virtual ~PopMailConduitFactory();
-
-	static KAboutData *about() { return fAbout; } ;
-
-protected:
-	virtual QObject* createObject( QObject* parent = 0,
-		const char* name = 0,
-		const char* classname = "QObject",
-		const QStringList &args = QStringList() );
-private:
-	KInstance *fInstance;
-	static KAboutData *fAbout;
-}  ;
 
 extern "C"
 {

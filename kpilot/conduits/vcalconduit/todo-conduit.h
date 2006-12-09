@@ -37,10 +37,8 @@
 #include <pilotTodoEntry.h>
 #include "vcal-conduitbase.h"
 
-class PilotRecord;
 class PilotSerialDatabase;
 class PilotLocalDatabase;
-class PilotTodoEntry;
 
 class TodoConduitPrivate : public VCalConduitPrivateBase
 {
@@ -55,7 +53,7 @@ public:
 	virtual void addIncidence(KCal::Incidence*);
 	virtual void removeIncidence(KCal::Incidence *);
 	virtual KCal::Incidence *findIncidence(recordid_t);
-	virtual KCal::Incidence *findIncidence(PilotAppCategory*tosearch);
+	virtual KCal::Incidence *findIncidence(PilotRecordBase *tosearch);
 	virtual KCal::Incidence *getNextIncidence();
 	virtual KCal::Incidence *getNextModifiedIncidence();
 	virtual int count() {return fAllTodos.count();};
@@ -67,16 +65,16 @@ class TodoConduit : public VCalConduitBase
 {
 Q_OBJECT
 public:
-	TodoConduit(KPilotDeviceLink *,
+	TodoConduit(KPilotLink *,
 		const char *name=0L,
 		const QStringList &args = QStringList());
 	virtual ~TodoConduit();
 
 protected:
-	virtual const QString getTitle(PilotAppCategory*de);
+	virtual const QString getTitle(PilotRecordBase *de);
 
 	virtual const QString dbname() { return CSL1("ToDoDB"); };
-	virtual void preSync() {_getAppInfo(); };
+	virtual void preSync();
 	virtual VCalConduitPrivateBase* newVCalPrivate(KCal::Calendar *fCalendar) {
 		return new TodoConduitPrivate(fCalendar);
 	};
@@ -87,7 +85,7 @@ protected:
 	virtual void postSync();
 	QString _getCat(const QStringList cats, const QString curr) const;
 
-	virtual PilotAppCategory*newPilotEntry(PilotRecord*r) {
+	virtual PilotTodoEntry *newPilotEntry(PilotRecord*r) {
 		FUNCTIONSETUP;
 		if (r) return new PilotTodoEntry(*(fTodoAppInfo->info()), r);
 		else return new PilotTodoEntry(*(fTodoAppInfo->info()));
@@ -96,12 +94,14 @@ protected:
 
 	virtual void preRecord(PilotRecord*r);
 	virtual VCalConduitSettings *config();
+public:
+	static VCalConduitSettings *theConfig();
 
 protected:
 
-	PilotRecord *recordFromIncidence(PilotAppCategory*de, const KCal::Incidence*e);
+	PilotRecord *recordFromIncidence(PilotRecordBase *de, const KCal::Incidence*e);
 	PilotRecord *recordFromTodo(PilotTodoEntry*de, const KCal::Todo*e);
-	KCal::Incidence *incidenceFromRecord(KCal::Incidence *, const PilotAppCategory *);
+	KCal::Incidence *incidenceFromRecord(KCal::Incidence *, const PilotRecordBase *);
 	KCal::Todo *incidenceFromRecord(KCal::Todo *, const PilotTodoEntry *);
 
 	void setCategory(PilotTodoEntry*de, const KCal::Todo*todo);

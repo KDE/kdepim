@@ -59,7 +59,7 @@ public:
 	eSyncDirectionEnum eSyncDirection;
 
 public:
-	DOCConduit(KPilotDeviceLink * o,
+	DOCConduit(KPilotLink * o,
 		const char *n = 0L, const QStringList & a = QStringList());
 	 virtual ~ DOCConduit();
 

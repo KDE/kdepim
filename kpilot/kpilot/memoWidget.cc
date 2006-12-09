@@ -27,8 +27,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-static const char *memowidget_id =
-	"$Id$";
 
 #include "options.h"
 
@@ -47,7 +45,6 @@ static const char *memowidget_id =
 #include <qtextstream.h>
 #include <qwhatsthis.h>
 #include <qlabel.h>
-#include <qtextcodec.h>
 #include <qdatetime.h>
 #include <qptrlist.h>
 
@@ -91,9 +88,6 @@ MemoWidget::MemoWidget(QWidget * parent,
 	setupWidget();
 	d->fMemoList.setAutoDelete(true);
 	slotUpdateButtons();
-
-	/* NOTREACHED */
-	(void) memowidget_id;
 }
 
 MemoWidget::~MemoWidget()
@@ -178,7 +172,7 @@ void MemoWidget::showComponent()
 	//
 	PilotLocalDatabase *memoDB =
 		new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
-	if (memoDB == NULL || !memoDB->isDBOpen())
+	if (memoDB == NULL || !memoDB->isOpen())
 	{
 		kdWarning() << k_funcinfo <<
 			": Can't open local database MemoDB\n";
@@ -366,7 +360,7 @@ void MemoWidget::slotDeleteMemo()
 		DEBUGKPILOT << fname << ": Searching for record to delete (it's fresh)" << endl;
 #endif
 		PilotLocalDatabase *memoDB = new PilotLocalDatabase(dbPath(), CSL1("MemoDB"));
-		if (!memoDB || (!memoDB->isDBOpen()))
+		if (!memoDB || (!memoDB->isOpen()))
 		{
 			// Err.. peculiar.
 			kdWarning() << k_funcinfo << ": Can't open MemoDB" << endl;
@@ -554,8 +548,8 @@ void MemoWidget::saveChangedMemo()
 		(PilotListItem *) fListBox->item(lastSelectedMemo);
 	PilotMemo *currentMemo = (PilotMemo *) p->rec();
 
-	currentMemo->setText(PilotAppCategory::codec()->
-		fromUnicode(fTextWidget->text()));
+// TODO: overload setText in PilotMemo
+	currentMemo->setText(Pilot::toPilot(fTextWidget->text()));
 	writeMemo(currentMemo);
 }
 
@@ -574,21 +568,17 @@ bool MemoWidget::addMemo(const QString &s, int category)
 	{
 		return false;
 	}
-	if ((category<0) || (category>=PILOT_CATEGORY_MAX)) category=0;
+	if ((category<0) || (category>=(int)Pilot::CATEGORY_COUNT))
+	{
+		category=Pilot::Unfiled;
+	}
 
-	char *text = new char[s.length() + 2];
-	if (s.isEmpty())
-	{
-		text[0]=0;
-	}
-	else
-	{
-		strlcpy(text,PilotAppCategory::codec()->fromUnicode(s),s.length()+2);
-	}
-	PilotMemo *aMemo = new PilotMemo(text, 0, 0, category);
+	PilotMemo *aMemo = new PilotMemo();
+	aMemo->setCategory(category);
+	aMemo->setText(s);
+
 	d->fMemoList.append(aMemo);
 	writeMemo(aMemo);
-	delete[]text;
 	updateWidget();
 #ifdef DEBUG
 	DEBUGKPILOT << fname << ": New memo @" << (void *)aMemo << endl;

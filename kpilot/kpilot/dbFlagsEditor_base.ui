@@ -370,9 +370,7 @@
 </tabstops>
 <includes>
     <include location="local" impldecl="in implementation">dbFlagsEditor_base.ui.h</include>
+    <include location="system" impldecl="in implementation">kdatewidget.h</include>
 </includes>
 <layoutdefaults spacing="6" margin="11"/>
-<includehints>
-    <includehint>kdatewidget.h</includehint>
-</includehints>
 </UI>

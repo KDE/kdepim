@@ -5,6 +5,12 @@ for details on how an issue is resolved, since resolved issues are
  periodically purged from this list.
 
 
+* Import pilot-link 0.12 CVS again
+* Implement correct full syncing in memofile conduit.  honestly, we should
+  really have a generic sync engine that knows how to do all of the
+  different sync types and only calls conduits for comparisons, list
+  fetching, pilotid->whateverId persistence and retrieval, etc.  *sigh*  is
+  that what opensync gives us?
 
 Essential
 =========

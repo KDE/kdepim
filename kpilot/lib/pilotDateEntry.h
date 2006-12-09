@@ -32,12 +32,13 @@
 */
 
 #include <qbitarray.h>
+#include <qdatetime.h>
 
 #include <pi-macros.h>
 #include <pi-datebook.h>
 
-#include "pilotAppCategory.h"
-#include "pilotDatabase.h"
+#include "pilotRecord.h"
+#include "pilotAppInfo.h"
 
 namespace KCal
 {
@@ -45,20 +46,23 @@ class Event;
 }
 
 /** This class is a wrapper for pilot-link's datebook entries (struct Appointment). */
-class KDE_EXPORT PilotDateEntry : public PilotAppCategory
+class KDE_EXPORT PilotDateEntry : public PilotRecordBase
 {
 public:
 	/** Constructor. Sets the appinfo structure and zeroes out the appointment. */
 	PilotDateEntry(struct AppointmentAppInfo &appInfo);
 
 	/** Constructor. Interprets the given record as an appointment. */
-	PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord* rec);
+	PilotDateEntry(struct AppointmentAppInfo &appInfo, PilotRecord *rec);
 
 	/** Copy constructor. */
 	PilotDateEntry(const PilotDateEntry &e);
 
 	/** Destructor. */
-	~PilotDateEntry() { free_Appointment(&fAppointmentInfo); }
+	~PilotDateEntry()
+	{
+		free_Appointment(&fAppointmentInfo);
+	}
 
 	/** Assignment operator. */
 	PilotDateEntry& operator=(const PilotDateEntry &e);
@@ -67,7 +71,7 @@ public:
 	* If @p richText is true, then the text representation uses qt style
 	* tags as well.
 	*/
-	virtual QString getTextRepresentation(bool richText=false);
+	QString getTextRepresentation(bool richText=false);
 
 	/** Is this appointment a "floating" appointment?
 	*
@@ -77,13 +81,18 @@ public:
 	*  as opposed to a regular "appointment", which does normally have a time
 	*  associated with it.
 	*/
-	bool doesFloat() const { return fAppointmentInfo.event; }
+	inline bool doesFloat() const
+	{
+		return fAppointmentInfo.event;
+	}
+
 	/** Is this a non-time-related event as opposed to an appointment that has a
 	* time associated with it?.
 	*/
-	inline bool isEvent() const { return doesFloat(); }
-	/** A synonym for isEvent, deprecated. */
-	int KDE_DEPRECATED getEvent() const { return doesFloat(); }
+	inline bool isEvent() const
+	{
+		return doesFloat();
+	}
 
 	/** Sets this appointment's floating status.
 	*
@@ -93,16 +102,26 @@ public:
 	*  as opposed to a regular "appointment", which does normally have a time
 	*  associated with it.
 	*/
-	void setFloats(bool f) { fAppointmentInfo.event = (f ? 1 : 0) /* Force 1 or 0 */ ; }
-	/** Synonym for setFloats() */
-	void KDE_DEPRECATED setEvent(int event) { setFloats( event ); }
+	inline void setFloats(bool f)
+	{
+		fAppointmentInfo.event = (f ? 1 : 0) /* Force 1 or 0 */ ;
+	}
 
 	/** Get the start time of this appointment.  See dtStart() for caveats. */
-	struct tm getEventStart() const { return fAppointmentInfo.begin; }
+	inline struct tm getEventStart() const { return fAppointmentInfo.begin; }
+
 	/** Get a pointer to the start time of this appointment.  See dtStart() for caveats. */
-	const struct tm *getEventStart_p() const { return &fAppointmentInfo.begin; }
+	inline const struct tm *getEventStart_p() const
+	{
+		return &fAppointmentInfo.begin;
+	}
+
 	/** Sets the start time of this appointment. */
-	void setEventStart(struct tm& start) { fAppointmentInfo.begin = start; }
+	inline void setEventStart(struct tm& start)
+	{
+		fAppointmentInfo.begin = start;
+	}
+
 	/** Get the start time of this appointment. For floating appointments, the
 	* time is undefined (perhaps 1 minute past midnight).
 	*
@@ -112,11 +131,23 @@ public:
 	QDateTime dtStart() const;
 
 	/** Get the end time of this appointment.  See dtEnd() for caveats. */
-	struct tm getEventEnd() const { return fAppointmentInfo.end; }
+	inline struct tm getEventEnd() const
+	{
+		return fAppointmentInfo.end;
+	}
+
 	/** Get a pointer to the end time of this appointment.  See dtEnd() for caveats. */
-	const struct tm *getEventEnd_p() const { return &fAppointmentInfo.end; }
+	inline const struct tm *getEventEnd_p() const
+	{
+		return &fAppointmentInfo.end;
+	}
+
 	/** Set the end time of this appointment. */
-	void setEventEnd(struct tm& end) { fAppointmentInfo.end = end; }
+	inline void setEventEnd(struct tm& end)
+	{
+		fAppointmentInfo.end = end;
+	}
+
 	/** Get the end time of this appointment. For floating appointments, the
 	* time is undefined (perhaps 1 minute past midnight).
 	*
@@ -129,13 +160,16 @@ public:
 	* may have an alarm (or not). If it has one, it is also enabled and
 	* causes the Pilot to beep (or whatever is set in the system preferences).
 	*/
-	bool isAlarmEnabled() const { return fAppointmentInfo.alarm; }
-	/** Does this appointment have an alarm set?  See isAlarmEnabled() */
-	int KDE_DEPRECATED getAlarm() const { return fAppointmentInfo.alarm; }
+	inline bool isAlarmEnabled() const
+	{
+		return fAppointmentInfo.alarm;
+	}
+
 	/** Set whether this appointment has an alarm. */
-	void KDE_DEPRECATED setAlarm(int alarm) { fAppointmentInfo.alarm = alarm; }
-	/** Set whether this appointment has an alarm. */
-	void setAlarmEnabled(bool b) { fAppointmentInfo.alarm = (b?1:0) /* Force to known int values */ ; }
+	inline void setAlarmEnabled(bool b)
+	{
+		fAppointmentInfo.alarm = (b?1:0) /* Force to known int values */ ;
+	}
 
 	/** Get the numeric part of "alarm: __ (v) minutes" on the pilot -- you
 	* set the alarm time in two parts, a number and a unit type to use; unit
@@ -146,14 +180,28 @@ public:
 	* @see alarmLeadTime()
 	* @see dtAlarm()
 	*/
-	int getAdvance() const { return fAppointmentInfo.advance; }
+	inline int getAdvance() const
+	{
+		return fAppointmentInfo.advance;
+	}
+
 	/** Set the numeric part of the alarm setting.  See getAdvance for details. */
-	void setAdvance(int advance) { fAppointmentInfo.advance = advance; }
+	inline void setAdvance(int advance)
+	{
+		fAppointmentInfo.advance = advance;
+	}
 
 	/** Returns the units part of the alarm time.  See getAdvance . */
-	int getAdvanceUnits() const { return fAppointmentInfo.advanceUnits; }
+	inline int getAdvanceUnits() const
+	{
+		return fAppointmentInfo.advanceUnits;
+	}
+
 	/** Sets the unites part of the alarm time.  See getAdvance . */
-	void setAdvanceUnits(int units) { fAppointmentInfo.advanceUnits = units; }
+	inline void setAdvanceUnits(int units)
+	{
+		fAppointmentInfo.advanceUnits = units;
+	}
 
 	/** Returns the number of @em seconds "lead time" the alarm should sound
 	* before the actual appointment. This interprets the advance number and units.
@@ -164,43 +212,95 @@ public:
 	/** Returns the absolute date and time that the alarm should sound for
 	* this appointment.
 	*/
-	QDateTime dtAlarm() const { return dtStart().addSecs(-alarmLeadTime()); }
+	inline QDateTime dtAlarm() const
+	{
+		return dtStart().addSecs(-alarmLeadTime());
+	}
 
-  // The following need set routines written
-  repeatTypes getRepeatType() const { return fAppointmentInfo.repeatType; }
-  void setRepeatType(repeatTypes r) { fAppointmentInfo.repeatType = r; }
+	// The following need set routines written
+	inline repeatTypes getRepeatType() const
+	{
+		return fAppointmentInfo.repeatType;
+	}
+	inline void setRepeatType(repeatTypes r)
+	{
+		fAppointmentInfo.repeatType = r;
+	}
 
-  int getRepeatForever() const { return fAppointmentInfo.repeatForever; }
-  void setRepeatForever(int f = 1) { fAppointmentInfo.repeatForever = f; }
+	inline int getRepeatForever() const
+	{
+		return fAppointmentInfo.repeatForever;
+	}
+	inline void setRepeatForever(int f = 1)
+	{
+		fAppointmentInfo.repeatForever = f;
+	}
 
-  struct tm getRepeatEnd() const { return fAppointmentInfo.repeatEnd; }
-  void setRepeatEnd(struct tm tm) { fAppointmentInfo.repeatEnd = tm; }
+	inline struct tm getRepeatEnd() const
+	{
+		return fAppointmentInfo.repeatEnd;
+	}
+	inline void setRepeatEnd(struct tm tm)
+	{
+		fAppointmentInfo.repeatEnd = tm;
+	}
+
 	/** Returns the date and time that the repeat ends. If there is no repeat,
 	* returns an invalid date and time.
 	*/
 	QDateTime dtRepeatEnd() const;
 
-  int getRepeatFrequency() const { return fAppointmentInfo.repeatFrequency; }
-  void setRepeatFrequency(int f) { fAppointmentInfo.repeatFrequency = f; }
+	inline int getRepeatFrequency() const
+	{
+		return fAppointmentInfo.repeatFrequency;
+	}
+	inline void setRepeatFrequency(int f)
+	{
+		fAppointmentInfo.repeatFrequency = f;
+	}
 
-  DayOfMonthType getRepeatDay() const { return fAppointmentInfo.repeatDay; }
-  void setRepeatDay(DayOfMonthType rd) { fAppointmentInfo.repeatDay = rd; };
+	inline DayOfMonthType getRepeatDay() const
+	{
+		return fAppointmentInfo.repeatDay;
+	}
+	inline void setRepeatDay(DayOfMonthType rd)
+	{
+		fAppointmentInfo.repeatDay = rd;
+	};
 
-  const int *getRepeatDays() const { return fAppointmentInfo.repeatDays; }
-  void setRepeatDays(int *rd) {
-    for (int i = 0; i < 7; i++)
-      fAppointmentInfo.repeatDays[i] = rd[i];
-  }
-  void setRepeatDays(QBitArray rba) {
-    for (int i = 0; i < 7; i++)
-      fAppointmentInfo.repeatDays[i] = (rba[i] ? 1 : 0);
-  }
+	inline const int *getRepeatDays() const
+	{
+		return fAppointmentInfo.repeatDays;
+	}
+	inline void setRepeatDays(int *rd)
+	{
+		for (int i = 0; i < 7; i++)
+		{
+			fAppointmentInfo.repeatDays[i] = rd[i];
+		}
+	}
+	inline void setRepeatDays(QBitArray rba)
+	{
+		for (int i = 0; i < 7; i++)
+		{
+			fAppointmentInfo.repeatDays[i] = (rba[i] ? 1 : 0);
+		}
+	}
 
-  int getExceptionCount() const { return fAppointmentInfo.exceptions; }
-  void setExceptionCount(int e) { fAppointmentInfo.exceptions = e; }
+	inline int getExceptionCount() const
+	{
+		return fAppointmentInfo.exceptions;
+	}
+	inline void setExceptionCount(int e)
+	{
+		fAppointmentInfo.exceptions = e;
+	}
 
-  const struct tm *getExceptions() const { return fAppointmentInfo.exception; }
-  void setExceptions(struct tm *e);
+	inline const struct tm *getExceptions() const
+	{
+		return fAppointmentInfo.exception;
+	}
+	void setExceptions(struct tm *e);
 
 	/** Sets the description of the appointment. This is the short string
 	* entered in the day view on the handheld, and it is called the summary
@@ -218,32 +318,53 @@ public:
 	/** Gets the note for this appointment.  See setNote for meaning. */
 	QString getNote() const;
 
+	/**
+	 * Sets the location for the appointment. For now it will be placed within
+	 * the notes on the handheld. It will be placed on one line and starts with:
+	 * Location: {location}. Everything on that line will be counted as location.
+	 * TODO: Make distinguish between handhelds that support the location field
+	 * and the ones that don't. (Shouldn't this be done in the pilot-link lib?)
+	 */
+	void setLocation(const QString &);
+
+	/** Gets the location for this appointment.  See setNote for meaning. */
+	QString getLocation() const;
+
 protected:
 	void  setDescriptionP(const char* desc, int l=-1);
-	const char* getDescriptionP() const { return fAppointmentInfo.description; }
+	const char* getDescriptionP() const
+	{
+		return fAppointmentInfo.description;
+	}
 
 	void  setNoteP(const char* note, int l=-1);
-	const char* getNoteP() const { return fAppointmentInfo.note; }
+	const char* getNoteP() const
+	{
+		return fAppointmentInfo.note;
+	}
 
 public:
-  bool isMultiDay() const {
-    return ((fAppointmentInfo.repeatType == repeatDaily) &&
-            (fAppointmentInfo.repeatFrequency == 1) &&
-            ( !getRepeatForever() ) &&
-            !doesFloat() );
-  }
+	bool isMultiDay() const
+	{
+	return ((fAppointmentInfo.repeatType == repeatDaily) &&
+		(fAppointmentInfo.repeatFrequency == 1) &&
+		( !getRepeatForever() ) &&
+		!doesFloat() );
+	}
 
-  QString getCategoryLabel() const;
-  inline bool setCategory(const QString &label) { return PilotAppCategory::setCategory(fAppInfo.category,label); } ;
-  static const int KDE_DEPRECATED APP_BUFFER_SIZE;
+	QString getCategoryLabel() const;
+	inline bool setCategory(const QString &label)
+	{
+		int c = Pilot::insertCategory(&fAppInfo.category,label,false);
+		PilotRecordBase::setCategory(c);
+		return c>=0;
+	} ;
 
-protected:
-  void *pack_(void *buf, int *size);
-  void unpack(const void *buf, int size = 0) { }
+	PilotRecord *pack() const;
 
 private:
-  struct Appointment fAppointmentInfo;
-        struct AppointmentAppInfo &fAppInfo;
+	struct Appointment fAppointmentInfo;
+	struct AppointmentAppInfo &fAppInfo;
 	void _copyExceptions(const PilotDateEntry &e);
 };
 

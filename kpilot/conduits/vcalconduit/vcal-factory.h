@@ -30,30 +30,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "vcal-factorybase.h"
-
-class KInstance;
-class KAboutData;
-class VCalConduitSettings;
-
-class VCalConduitFactory : public VCalConduitFactoryBase
-{
-    Q_OBJECT
-
-public:
-	VCalConduitFactory(QObject * = 0L,const char * = 0L);
-	virtual ~VCalConduitFactory();
-	static VCalConduitSettings*config();
-	
-protected:
-	virtual QObject* createObject( QObject* parent = 0,
-		const char* name = 0,
-		const char* classname = "QObject",
-		const QStringList &args = QStringList() );
-private:
-	KInstance *fInstance;
-	static VCalConduitSettings*fConfig;
-};
 
 extern "C"
 {

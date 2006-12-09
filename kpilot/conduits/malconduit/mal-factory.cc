@@ -121,7 +121,7 @@ MALConduitFactory::~MALConduitFactory()
 
 	if (qstrcmp(c,"SyncAction")==0)
 	{ 
-		KPilotDeviceLink *d = dynamic_cast<KPilotDeviceLink *>(p);
+		KPilotLink *d = dynamic_cast<KPilotLink *>(p);
 
 		if (d)
 		{
@@ -130,7 +130,7 @@ MALConduitFactory::~MALConduitFactory()
 		else
 		{
 			kdError() << k_funcinfo
-				<< ": Couldn't cast parent to KPilotDeviceLink"
+				<< ": Couldn't cast parent to KPilotLink"
 				<< endl;
 			return 0L;
 		}

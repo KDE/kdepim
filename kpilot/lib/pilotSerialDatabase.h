@@ -35,11 +35,15 @@
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
 
+class KPilotDeviceLink;
 
 class KDE_EXPORT PilotSerialDatabase : public PilotDatabase
 {
+friend class KPilotDeviceLink;
+protected:
+	PilotSerialDatabase( KPilotDeviceLink *l, const QString &dbName);
+
 public:
-	PilotSerialDatabase(int linksocket, const QString &dbName);
 	virtual ~PilotSerialDatabase();
 
 	/** Reads the application block info, returns size */
@@ -114,14 +118,12 @@ private:
 	QString     fDBName;
 	int         fDBHandle;
 	int         fDBSocket;
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	// Pilot-link 0.12 allocates buffers as needed and resizes them.
 	// Start with a buffer that is _probably_ big enough for most 
 	// PIM records, but much smaller than the 64k that we use otherwise.
 	// Might want to add algorithm for trying to optimize the initial 
 	// allocation for a given database.
 	static const int InitialBufferSize = 2048;
-#endif
 };
 
 #endif

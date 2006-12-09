@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
 ** This file specializes SyncAction to a kind that can have interaction
 ** with the user without the Sync timing out.
@@ -38,7 +39,7 @@ class QTimer;
 class CheckUser : public SyncAction
 {
 public:
-	CheckUser(KPilotDeviceLink *p,QWidget *w=0L);
+	CheckUser(KPilotLink *p,QWidget *w=0L);
 	virtual ~CheckUser();
 
 protected:
@@ -49,26 +50,31 @@ class RestoreAction : public SyncAction
 {
 Q_OBJECT
 public:
-	RestoreAction(KPilotDeviceLink *,QWidget *w=0L);
+	RestoreAction(KPilotLink *,QWidget *w=0L);
 
 	typedef enum { InstallingFiles, GettingFileInfo,Done } Status;
 	virtual QString statusString() const;
+
+	/** By default, a path based on the user name (either
+	*   on the handheld or set in KPilot) is used to
+	*   determine the restory directory name ( generally
+	*   $KDEHOME/share/apps/kpilot/DBBackup/_user_name_ ).
+	*   Use setDirectory() to change that and use a given
+	*   @p path as target for the source. Use an empty
+	*   @p path to restore the default behavior of using
+	*   the username.
+	*/
+	void setDirectory( const QString &path );
 
 protected:
 	virtual bool exec();
 
 protected slots:
-	void getNextFileInfo();
 	void installNextFile();
 
 private:
-	// Use a private-d pointer for once (well, in KPilot
-	// parlance it'd be fd, which is confusing, so it's
-	// become a private fP) since we need QList or QPtrList.
-	//
-	//
-	class RestoreActionPrivate;
-	RestoreActionPrivate *fP;
+	class Private;
+	Private *fP;
 } ;
 
 #endif

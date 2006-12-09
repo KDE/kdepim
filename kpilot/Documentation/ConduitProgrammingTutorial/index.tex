@@ -742,7 +742,7 @@ database to not dirty.
 \item\code{virtual int resetDBIndex()} ... Resets next record index to beginning
 \item\code{virtual int cleanup()} ... Purges all Archived/Deleted records 
 from Palm Pilot database
-\item\code{bool isDBOpen()} ... Returns false if the database could not be 
+\item\code{bool isOpen()} ... Returns false if the database could not be 
 opened, e.g. no connection to the handheld or file could not be created.
 \item\code{virtual QString dbPathName()} ... Returns some sensible human-readable 
 identifier for the database. Serial databases get Pilot:, local databases 
@@ -1322,14 +1322,14 @@ bool DOCConduit::doSync(docSyncInfo &sinfo) {
   // instance which points either to a local database or a database on the handheld.
   PilotDatabase *database = preSyncAction(sinfo);
 
-  if (database && ( !database->isDBOpen() ) ) {
+  if (database && ( !database->isOpen() ) ) {
     DEBUGCONDUIT<<"Database "<<sinfo.dbinfo.name<<" does not yet exist. Creating it:"<<endl;
     if (!database->createDatabase(dbcreator(), dbtype()) ) {
       DEBUGCONDUIT<<"Failed"<<endl;
     }
   }
 
-  if (database && database->isDBOpen()) {
+  if (database && database->isOpen()) {
     DOCConverter docconverter;
     connect(&docconverter, SIGNAL(logError(const QString &)), SIGNAL(logError(const QString &)));
     connect(&docconverter, SIGNAL(logMessage(const QString &)), SIGNAL(logMessage(const QString &)));
@@ -1424,7 +1424,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 
     if (QFile::exists(sinfo.docfilename)) sinfo.fPCStatus=eStatNew;
     else sinfo.fPCStatus=eStatDoesntExist;
-    if (docdb && docdb->isDBOpen()) sinfo.fPalmStatus=eStatNew;
+    if (docdb && docdb->isOpen()) sinfo.fPalmStatus=eStatNew;
     else sinfo.fPalmStatus=eStatDoesntExist;
     KPILOT_DELETE(docdb);
     
@@ -1452,7 +1452,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
   } else {
     DEBUGCONDUIT<<"PC side has NOT changed!"<<endl;
   }
-  if (!docdb || !docdb->isDBOpen()) sinfo.fPalmStatus=eStatDeleted;
+  if (!docdb || !docdb->isOpen()) sinfo.fPalmStatus=eStatDeleted;
   else {
     PilotRecord *firstRec = docdb->readRecordByIndex(0);
     PilotDOCHead docHeader(firstRec);

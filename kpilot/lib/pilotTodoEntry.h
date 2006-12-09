@@ -37,36 +37,40 @@
 
 #include <qstring.h>
 
-#include "pilotAppCategory.h"
-#include "pilotDatabase.h"
+#include "pilotRecord.h"
+#include "pilotAppInfo.h"
 
 /** @file This file defines structures wrapped around the ToDo database
 * on the Pilot, based on pilot-link's ToDo stuff.
 */
 
 /** A decoded ToDo item. */
-class KDE_EXPORT PilotTodoEntry : public PilotAppCategory
+class KDE_EXPORT PilotTodoEntry : public PilotRecordBase
 {
 public:
 	/** Create an empty ToDo item */
 	PilotTodoEntry(struct ToDoAppInfo &appInfo);
+
 	/** Create a ToDo item and fill it with data from the uninterpreted record @p rec. */
 	PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec);
+
 	/** Copy an existing ToDo item. */
 	PilotTodoEntry(const PilotTodoEntry &e);
+
 	/** Delete a ToDo item. */
 	~PilotTodoEntry() { free_ToDo(&fTodoInfo); }
 
 	/** Return a string for the ToDo item. If @param richText is true, then
 	* use qt style markup to make the string clearer when displayed.
 	*/
-	virtual QString getTextRepresentation(bool richText=false);
+	QString getTextRepresentation(bool richText=false);
 
 	/** Assign an existing ToDo item to this one. */
 	PilotTodoEntry& operator=(const PilotTodoEntry &e);
 
 	/** Accessor for the Due Date of the ToDo item. */
 	struct tm getDueDate() const { return fTodoInfo.due; }
+
 	/** Set the Due Date for the ToDo item. */
 	void setDueDate(struct tm& d) { fTodoInfo.due = d; }
 
@@ -75,6 +79,7 @@ public:
 	* (not indefinite) or non-0.
 	*/
 	int getIndefinite() const { return fTodoInfo.indefinite; }
+
 	/** Set whether the ToDo is indefinite or not. */
 	void setIndefinite(int i) { fTodoInfo.indefinite = i; }
 
@@ -83,11 +88,13 @@ public:
 	* onto KOrganizer's priority levels.
 	*/
 	int getPriority() const { return fTodoInfo.priority; }
+
 	/** Set the priority of the ToDo. */
 	void setPriority(int p) { fTodoInfo.priority = p; }
 
 	/** Return whether the ToDo is complete (done, finished) or not. */
 	int getComplete() const { return fTodoInfo.complete; }
+
 	/** Set whether the ToDo is done. */
 	void setComplete(int c) { fTodoInfo.complete = c; }
 
@@ -102,6 +109,7 @@ public:
 	* on the handheld). This uses the default codec.
 	*/
 	QString getNote() const;
+
 	/** Set the ToDo item's note. */
 	void  setNote(const QString &note);
 
@@ -112,14 +120,16 @@ public:
 	/** If the label already exists, uses the id; if not, adds the label
 	*  to the category list. @return false if category labels are full.
 	*/
-	inline bool setCategory(const QString &label) { return PilotAppCategory::setCategory(fAppInfo.category,label);  };
-
-	// static const int APP_BUFFER_SIZE;
+	inline bool setCategory(const QString &label) 
+	{
+		int c = Pilot::insertCategory(&fAppInfo.category,label,false);
+		PilotRecordBase::setCategory(c);
+		return c>=0;
+	}
+		
+	PilotRecord *pack() const;
 
 protected:
-	void *pack_(void *buf, int *size);
-	void unpack(const void *buf, int size = 0) { } ;
-
 	const char *getDescriptionP() const { return fTodoInfo.description; } ;
 	void setDescriptionP(const char *, int len=-1) ;
 	const char *getNoteP() const { return fTodoInfo.note; } ;

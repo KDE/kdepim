@@ -43,8 +43,6 @@
 #include "todoEditor_base.h"
 #include "todoEditor.moc"
 
-static const char *todoEditor_id =
-	"$Id$";
 
 TodoEditor::TodoEditor(PilotTodoEntry * p, struct ToDoAppInfo *appInfo,
 	QWidget * parent, const char *name) :
@@ -62,7 +60,6 @@ TodoEditor::TodoEditor(PilotTodoEntry * p, struct ToDoAppInfo *appInfo,
 	connect(parent, SIGNAL(recordChanged(PilotTodoEntry *)),
 		this, SLOT(updateRecord(PilotTodoEntry *)));
 
-	(void) todoEditor_id;
 }
 
 TodoEditor::~TodoEditor()
@@ -149,7 +146,6 @@ void TodoEditor::fillFields()
 	fTodo->setNote(fWidget->fNote->text());
 
 	emit(recordChangeComplete(fTodo));
-	fDeleteOnCancel = false;
 	KDialogBase::slotOk();
 }
 

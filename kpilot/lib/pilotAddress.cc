@@ -28,17 +28,12 @@
 */
 
 
-static const char *pilotadress_id =
-	"$Id$";
-
-#ifndef _KPILOT_OPTIONS_H
 #include "options.h"
-#endif
+
 
 #include <stdlib.h>
 #include <assert.h>
 
-#include <qtextcodec.h>
 #include <qstringlist.h>
 
 #include "pilotAddress.h"
@@ -46,45 +41,8 @@ static const char *pilotadress_id =
 
 #define MAXFIELDS 19
 
-PilotAddress::PilotAddress(struct AddressAppInfo &appInfo,
-	PilotRecord * rec) :
-	PilotAppCategory(rec),
-	fAppInfo(appInfo),
-	fAddressInfo()
-{
-	FUNCTIONSETUPL(4);
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
-	pi_buffer_t b;
-	b.data = (unsigned char *) rec->getData();
-	b.allocated = b.used = rec->size();
-	if (rec) unpack_Address(&fAddressInfo, &b, address_v1);
-#else
-	if (rec) unpack_Address(&fAddressInfo, (unsigned char *) rec->data(), rec->size());
-#endif
-	(void) pilotadress_id;
-	_loadMaps();
-}
-
-PilotAddress::PilotAddress(struct AddressAppInfo &appInfo) :
-	PilotAppCategory(),
-	fAppInfo(appInfo)
-{
-	FUNCTIONSETUPL(4);
-	reset();
-
-	// assign the phoneLabel so it doesn't appear in the pilot as
-	// work for all fields, but at least shows other fields
-	fAddressInfo.phoneLabel[0] = (int) eWork;
-	fAddressInfo.phoneLabel[1] = (int) eHome;
-	fAddressInfo.phoneLabel[2] = (int) eOther;
-	fAddressInfo.phoneLabel[3] = (int) eMobile;
-	fAddressInfo.phoneLabel[4] = (int) eEmail;
-
-	_loadMaps();
-}
-
 PilotAddress::PilotAddress(PilotAddressInfo *info, PilotRecord *rec) :
-	PilotAppCategory(rec),
+	PilotRecordBase(rec),
 	fAppInfo(*(info->info())),
 	fAddressInfo()
 {
@@ -93,14 +51,10 @@ PilotAddress::PilotAddress(PilotAddressInfo *info, PilotRecord *rec) :
 
 	if (rec)
 	{
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 		pi_buffer_t b;
-		b.data = (unsigned char *) rec->getData();
+		b.data = (unsigned char *) rec->data();
 		b.allocated = b.used = rec->size();
 		unpack_Address(&fAddressInfo, &b, address_v1);
-#else
-		unpack_Address(&fAddressInfo, (unsigned char *) rec->data(), rec->size());
-#endif
 	}
 	else
 	{
@@ -115,7 +69,7 @@ PilotAddress::PilotAddress(PilotAddressInfo *info, PilotRecord *rec) :
 }
 
 PilotAddress::PilotAddress(const PilotAddress & copyFrom) :
-	PilotAppCategory(copyFrom),
+	PilotRecordBase(copyFrom),
 	fAppInfo(copyFrom.fAppInfo),
 	fAddressInfo()
 {
@@ -128,7 +82,7 @@ PilotAddress::PilotAddress(const PilotAddress & copyFrom) :
 PilotAddress & PilotAddress::operator = (const PilotAddress & copyFrom)
 {
 	FUNCTIONSETUPL(4);
-	PilotAppCategory::operator = (copyFrom);
+	PilotRecordBase::operator = (copyFrom);
 	_copyAddressInfo(copyFrom.fAddressInfo);
 	return *this;
 }
@@ -226,7 +180,7 @@ QString PilotAddress::getTextRepresentation(bool richText)
 			}
 			else
 				tmp=CSL1("%1: %2");
-			tmp=tmp.arg(PilotAppCategory::codec()->toUnicode(
+			tmp=tmp.arg(Pilot::fromPilot(
 				fAppInfo.phoneLabels[getPhoneLabelIndex(i-entryPhone1)]));
 			tmp=tmp.arg(rtExpand(getField(i), richText));
 			text += tmp;
@@ -296,7 +250,7 @@ QString PilotAddress::getTextRepresentation(bool richText)
 QString PilotAddress::getCategoryLabel() const
 {
 	int cat(category());
-	if (cat>0) return codec()->toUnicode(fAppInfo.category.name[cat]);
+	if (cat>0) return Pilot::fromPilot(fAppInfo.category.name[cat]);
 	else return QString::null;
 }
 
@@ -320,7 +274,7 @@ QStringList PilotAddress::getEmails() const
 	}
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": returning: ["
+	DEBUGLIBRARY << fname << ": returning: ["
 				<< list.size() << "] e-mail addresses." << endl;
 #endif
 	return list;
@@ -335,7 +289,7 @@ KABC::PhoneNumber::List PilotAddress::getPhoneNumbers() const
 
 	int shownPhone = getShownPhone() + entryPhone1;
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": preferred pilot index is: ["
+	DEBUGLIBRARY << fname << ": preferred pilot index is: ["
 				<< shownPhone << "], preferred phone number is: ["
 				<< getField(shownPhone) << "]" << endl;
 #endif
@@ -359,7 +313,7 @@ KABC::PhoneNumber::List PilotAddress::getPhoneNumbers() const
 					if (shownPhone == i) {
 						phoneType |= KABC::PhoneNumber::Pref;
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": found preferred pilot index: ["
+	DEBUGLIBRARY << fname << ": found preferred pilot index: ["
 				<< i << "], text: [" << test << "]" << endl;
 #endif
 					}
@@ -367,7 +321,7 @@ KABC::PhoneNumber::List PilotAddress::getPhoneNumbers() const
 					list.append(ph);
 				} else {
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": whoopsie.  pilot phone number: ["
+	DEBUGLIBRARY << fname << ": whoopsie.  pilot phone number: ["
 				<< test << "], index: [" << i << "], type: ["
 				<< ind << "], has no corresponding PhoneNumber type." << endl;
 #endif
@@ -376,7 +330,7 @@ KABC::PhoneNumber::List PilotAddress::getPhoneNumbers() const
 		}
 	}
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": returning: ["
+	DEBUGLIBRARY << fname << ": returning: ["
 				<< list.size() << "] phone numbers" << endl;
 #endif
 	return list;
@@ -420,7 +374,7 @@ void PilotAddress::setPhoneNumbers(KABC::PhoneNumber::List list)
 			if ( phone.type() & phoneKey)
 			{
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": found pilot type: ["
+	DEBUGLIBRARY << fname << ": found pilot type: ["
 				<< pilotKey << "] ("
 				<< fAppInfo.phoneLabels[pilotKey]
 				<< ") for PhoneNumber: ["
@@ -436,7 +390,7 @@ void PilotAddress::setPhoneNumbers(KABC::PhoneNumber::List list)
 		// if this is the preferred phone number, then set it as such
 		if (phone.type() & KABC::PhoneNumber::Pref) {
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": found preferred PhoneNumber. "
+	DEBUGLIBRARY << fname << ": found preferred PhoneNumber. "
 				<< "setting showPhone to index: ["
 				<< fieldSlot << "], PhoneNumber: ["
 				<< phone.number() << "]" << endl;
@@ -446,7 +400,7 @@ void PilotAddress::setPhoneNumbers(KABC::PhoneNumber::List list)
 	}
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Pilot's showPhone now: ["
+	DEBUGLIBRARY << fname << ": Pilot's showPhone now: ["
 				<< fAddressInfo.showPhone << "]." << endl;
 #endif
 
@@ -455,7 +409,7 @@ void PilotAddress::setPhoneNumbers(KABC::PhoneNumber::List list)
 	QString pref = getField(fAddressInfo.showPhone + entryPhone1);
 	if (fAddressInfo.showPhone < 0 || fAddressInfo.showPhone > 4 || pref.isEmpty()) {
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Pilot's showPhone: ["
+	DEBUGLIBRARY << fname << ": Pilot's showPhone: ["
 				<< fAddressInfo.showPhone
 				<< "] not properly set to a default. trying to set a sensible one."
 				<< endl;
@@ -471,7 +425,7 @@ void PilotAddress::setPhoneNumbers(KABC::PhoneNumber::List list)
 		}
 	}
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Pilot's showPhone now: ["
+	DEBUGLIBRARY << fname << ": Pilot's showPhone now: ["
 				<< fAddressInfo.showPhone << "], and that's final." << endl;
 #endif
 }
@@ -544,7 +498,7 @@ void PilotAddress::_loadMaps()
 
 QString PilotAddress::getField(int field) const
 {
-	return codec()->toUnicode(fAddressInfo.entry[field]);
+	return Pilot::fromPilot(fAddressInfo.entry[field]);
 }
 
 int PilotAddress::_getNextEmptyPhoneSlot() const
@@ -582,7 +536,7 @@ int PilotAddress::setPhoneField(EPhoneType type, const QString &field,
 		{
 			QString custom4Field = getField(entryCustom4);
 			QString typeStr(
-				codec()->toUnicode(fAppInfo.phoneLabels[appPhoneLabelNum]));
+				Pilot::fromPilot(fAppInfo.phoneLabels[appPhoneLabelNum]));
 
 			custom4Field += typeStr + CSL1(" ") + fieldStr;
 			setField(entryCustom4, custom4Field);
@@ -628,7 +582,7 @@ QString PilotAddress::getPhoneField(EPhoneType type, bool checkCustom4) const
 		return QString::null;
 
 	// look for the phone type str
-	QString typeToStr(codec()->toUnicode(fAppInfo.phoneLabels[appTypeNum]));
+	QString typeToStr(Pilot::fromPilot(fAppInfo.phoneLabels[appTypeNum]));
 	QString customField(getField(entryCustom4));
 	int foundField = customField.find(typeToStr);
 
@@ -655,7 +609,7 @@ int PilotAddress::_getAppPhoneLabelNum(const QString & phoneType) const
 	FUNCTIONSETUPL(4);
 	for (int index = 0; index < 8; index++)
 	{
-		if (phoneType == codec()->toUnicode(fAppInfo.phoneLabels[index]))
+		if (phoneType == Pilot::fromPilot(fAppInfo.phoneLabels[index]))
 			return index;
 	}
 
@@ -693,7 +647,7 @@ void PilotAddress::setField(int field, const QString &text)
 	if (!text.isEmpty())
 	{
 		fAddressInfo.entry[field] = (char *) malloc(text.length() + 1);
-		strlcpy(fAddressInfo.entry[field], codec()->fromUnicode(text), text.length() + 1);
+		Pilot::toPilot(text, fAddressInfo.entry[field], text.length()+1);
 	}
 	else
 	{
@@ -701,20 +655,17 @@ void PilotAddress::setField(int field, const QString &text)
 	}
 }
 
-void *PilotAddress::pack_(void *buf, int *len)
+PilotRecord *PilotAddress::pack() const
 {
 	FUNCTIONSETUPL(4);
 	int i;
 
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
-	pi_buffer_t b = { 0,0,0 } ;
-	i = pack_Address(&fAddressInfo, &b, address_v1);
-	memcpy(buf,b.data,kMin(i,*len));
-	*len = kMin(i,*len);
-#else
-	i = pack_Address(&fAddressInfo, (unsigned char *) buf, *len);
-	*len = i;
-#endif
-	return buf;
+	pi_buffer_t *b = pi_buffer_new( sizeof(fAddressInfo) );
+	i = pack_Address(const_cast<Address_t *>(&fAddressInfo), b, address_v1);
+	if (i<0)
+	{
+		return 0L;
+	}
+	// pack_Address sets b->used
+	return new PilotRecord( b, this );
 }
-

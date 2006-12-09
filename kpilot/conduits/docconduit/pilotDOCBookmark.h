@@ -18,7 +18,7 @@
 **
 ** You should have received a copy of the GNU General Public License
 ** along with this program in a file called COPYING; if not, write to
-** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+** the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 ** MA 02110-1301, USA.
 */
 
@@ -28,11 +28,11 @@
 #ifndef _KPILOT_PILOTDOCBOOKMARK_H
 #define _KPILOT_PILOTDOCBOOKMARK_H
 
-#include <pilotAppCategory.h>
+#include <pilotRecord.h>
 class PilotRecord;
 
 
-class PilotDOCBookmark:public PilotAppCategory {
+class PilotDOCBookmark:public PilotRecordBase {
 public:
 	PilotDOCBookmark();
 	PilotDOCBookmark(PilotRecord * rec);
@@ -40,9 +40,7 @@ public:
 	~PilotDOCBookmark() {};
 	PilotDOCBookmark & operator=(const PilotDOCBookmark & e);
 
-protected:
-	void *pack_(void *, int *);
-	void unpack(const void *, int = 0) {}
+	PilotRecord *pack() const;
 
 public:
 	char bookmarkName[17];

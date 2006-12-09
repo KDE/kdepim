@@ -459,7 +459,7 @@ bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 		PilotLocalDatabase*pdbdb=new PilotLocalDatabase(pdbdir, QFileInfo(pdbfile).baseName(), false);
 		if (pdbdb)
 		{
-			if (!pdbdb->isDBOpen())
+			if (!pdbdb->isOpen())
 			{
 #ifdef DEBUG
 				DEBUGCONDUIT<<pdbfile<<" does not yet exist. Creating it"<<endl;
@@ -468,7 +468,7 @@ bool ConverterDlg::convertTXTtoPDB(QString txtdir, QString txtfile,
 				}
 			}
 
-			if (pdbdb->isDBOpen())
+			if (pdbdb->isOpen())
 			{
 				conv->setPDB(pdbdb);
 				conv->setTXTpath(txtdir, txtfile);
@@ -504,7 +504,7 @@ bool ConverterDlg::convertPDBtoTXT(QString pdbdir, QString pdbfile,
 		PilotLocalDatabase*pdbdb=new PilotLocalDatabase(pdbdir, QFileInfo(pdbfile).baseName(), false);
 		if (pdbdb)
 		{
-			if (pdbdb->isDBOpen())
+			if (pdbdb->isOpen())
 			{
 				conv->setPDB(pdbdb);
 				conv->setTXTpath(txtdir, txtfile);

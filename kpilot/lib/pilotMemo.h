@@ -32,19 +32,44 @@
 
 #include <pi-memo.h>
 
-#include "pilotAppCategory.h"
-#include "pilotDatabase.h"
+#include "pilotRecord.h"
+#include "pilotAppInfo.h"
 
-
-class KDE_EXPORT PilotMemo : public PilotAppCategory
+class KDE_EXPORT PilotMemo : public PilotRecordBase
 {
 public:
-	PilotMemo(void) : PilotAppCategory() { } ;
-	PilotMemo(const QString &s) : PilotAppCategory() { setText(s); } ;
+	/**
+	* Constructor. Create an empty memo.
+	*/
+	PilotMemo(void) : PilotRecordBase() { } ;
+
+	/**
+	* Constructor. Create a memo in the Unfiled category with
+	* text @p s .
+	*/
+	PilotMemo(const QString &s) : PilotRecordBase()
+	{
+		setText(s);
+	} ;
+
+	/**
+	* Constructor. Create a memo with the category and
+	* attributes of the given record @p rec, and extract
+	* the text from that record as if it comes from the MemoDB.
+	*/
 	PilotMemo(const PilotRecord* rec);
-	PilotMemo(void *buf) : PilotAppCategory() { unpack(buf, 1); } ;
-	PilotMemo(void *buf, int attr, recordid_t id, int category)
-		: PilotAppCategory(attr, id, category) { unpack(buf, 1); } ;
+
+	/**
+	* Constructor. Create a memo with category and
+	* attributes from the argument @p r, and set the
+	* text of the memo from string @p s.
+	*/
+	PilotMemo(const PilotRecordBase *r, const QString &s) :
+		PilotRecordBase(r)
+	{
+		setText(s);
+	}
+
 	~PilotMemo() { } ;
 
 	virtual QString getTextRepresentation(bool richText=false);
@@ -68,10 +93,6 @@ public:
 	* otherwise.
 	*/
 	QString sensibleTitle() const;
-
-protected:
-	void *pack_(void *, int *);
-	void unpack(const void *, int = 0);
 
 private:
 	QString fText;

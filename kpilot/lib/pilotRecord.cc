@@ -36,21 +36,29 @@
 
 #include <string.h>
 
-#include <qtextcodec.h>
 #include <qregexp.h>
 
 #include <kglobal.h>
 #include <kcharsets.h>
 
-// PilotAppCategory includes pilotRecord and we
-// provide its implementation here as well.
-//
-#include "pilotAppCategory.h"
+#include "pilot.h"
+#include "pilotRecord.h"
 
 
 
-static const char *pilotRecord_id =
-	"$Id$";
+/* virtual */ QString PilotRecordBase::textRepresentation() const
+{
+	return CSL1("[ %1,%2,%3 ]") . arg(attributes(),category(),id());
+}
+
+/* virtual */ QString PilotRecord::textRepresentation() const
+{
+	return CSL1("[ %1,%2 ]")
+		.arg(PilotRecordBase::textRepresentation())
+		.arg(size());
+}
+
+
 
 /* static */ int PilotRecord::fAllocated = 0;
 /* static */ int PilotRecord::fDeleted = 0;
@@ -59,7 +67,7 @@ static const char *pilotRecord_id =
 {
 #ifdef DEBUG
 	FUNCTIONSETUP;
-	DEBUGKPILOT << fname
+	DEBUGLIBRARY << fname
 		<< ": Allocated " << fAllocated
 		<< "  Deleted " << fDeleted << endl;
 #endif
@@ -68,11 +76,8 @@ static const char *pilotRecord_id =
 PilotRecord::PilotRecord(void *data, int len, int attrib, int cat, recordid_t uid) :
 	PilotRecordBase(attrib,cat,uid),
 	fData(0L),
-	fLen(len)
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
-	,
+	fLen(len),
 	fBuffer(0L)
-#endif
 {
 	FUNCTIONSETUPL(4);
 	fData = new char[len];
@@ -80,15 +85,11 @@ PilotRecord::PilotRecord(void *data, int len, int attrib, int cat, recordid_t ui
 	memcpy(fData, data, len);
 
 	fAllocated++;
-	(void) pilotRecord_id;
 }
 
 PilotRecord::PilotRecord(PilotRecord * orig) :
-	PilotRecordBase( orig->attributes(), orig->category(), orig->id() )
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
-	,
+	PilotRecordBase( orig->attributes(), orig->category(), orig->id() ) ,
 	fBuffer(0L)
-#endif
 {
 	FUNCTIONSETUPL(4);
 	fData = new char[orig->size()];
@@ -101,14 +102,12 @@ PilotRecord::PilotRecord(PilotRecord * orig) :
 PilotRecord & PilotRecord::operator = (PilotRecord & orig)
 {
 	FUNCTIONSETUP;
-#if PILOT_LINK_NUMBER >= PILOT_LINK_0_12_0
 	if (fBuffer)
 	{
 		pi_buffer_free(fBuffer);
 		fBuffer=0L;
 		fData=0L;
 	}
-#endif
 
 	if (fData)
 		delete[]fData;
@@ -133,75 +132,3 @@ void PilotRecord::setData(const char *data, int len)
 	fLen = len;
 }
 
-
-/* static */ QTextCodec *PilotAppCategory::pilotCodec = 0L;
-
-/* static */ QTextCodec *PilotAppCategory::setupPilotCodec(const QString &s)
-{
-	FUNCTIONSETUP;
-	QString encoding(KGlobal::charsets()->encodingForName(s));
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname << ": Creating codec " << encoding << endl;
-#endif
-
-	// if the desired codec can't be found, latin1 will be returned anyway, no need to do this manually
-	pilotCodec = KGlobal::charsets()->codecForName(encoding);
-
-#ifdef DEBUG
-	DEBUGKPILOT << fname
-		<< ": Got codec " << codecName() << " for setting "
-		<< s << endl;
-#endif
-	return codec();
-}
-
-/* static */ QString PilotAppCategory::codecName()
-{
-	return QString::fromLatin1(codec()->name());
-}
-
-bool PilotAppCategory::setCategory(struct CategoryAppInfo &info,const QString &label)
-{
-	int emptyAvailable = -1;
-	if (label.isEmpty()) { setCategory(0); return true; }
-	for (int catId = 1; catId < PILOT_CATEGORY_MAX; catId++)
-	{
-		QString aCat;
-		if (!info.name[catId][0])
-		{
-			emptyAvailable=catId; continue;
-		}
-		aCat = codec()->toUnicode(info.name[catId]);
-		if (label == aCat) { setCategory(catId); return true; }
-	}
-	if (emptyAvailable<0) return false;
-	strlcpy(info.name[emptyAvailable], codec()->fromUnicode(label), sizeof(info.name[emptyAvailable]) );
-	setCategory(emptyAvailable);
-	return true;
-}
-
-PilotRecord *PilotAppCategory::pack()
-{
-	int len = PilotRecord::APP_BUFFER_SIZE;
-	void* buff = new unsigned char[len];
-	pack_(buff, &len);
-	PilotRecord* rec =  new PilotRecord(buff, len, attributes(), category(), id());
-	delete [] (unsigned char*)buff;
-	return rec;
-}
-
-QString PilotAppCategory::fromPilot( const char *c, int len )
-{
-	return codec()->toUnicode(c,len);
-}
-
-int PilotAppCategory::toPilot( const QString &s, char *buf, int len)
-{
-	int used = len;
-	QCString cbuf = codec()->fromUnicode(s,used);
-	memset( buf, 0, len );
-	if (used > len) used=len;
-	memcpy( buf, cbuf.data(), used );
-	return used;
-}

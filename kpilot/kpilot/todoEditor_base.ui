@@ -174,7 +174,7 @@
     </connection>
 </connections>
 <layoutdefaults spacing="6" margin="11"/>
-<includehints>
-    <includehint>kdatewidget.h</includehint>
-</includehints>
+<includes>
+    <include location="system" impldecl="in implementation">kdatewidget.h</include>
+</includes>
 </UI>

@@ -44,12 +44,6 @@
 #include "malconduitSettings.h"
 
 
-// Something to allow us to check what revision
-// the modules are that make up a binary distribution.
-const char *MAL_conduit_id =
-	"$Id$";
-
-
 static MALConduit *conduitInstance=0L;
 
 int malconduit_logf(const char *, ...) __attribute__ ((format (printf, 1, 2)));
@@ -113,7 +107,7 @@ static int32 cbItem (void */*out*/,
 #endif
 
  
-MALConduit::MALConduit(KPilotDeviceLink * o,
+MALConduit::MALConduit(KPilotLink * o,
 	const char *n, 
 	const QStringList & a) :
 	ConduitAction(o, n, a)
@@ -124,9 +118,6 @@ MALConduit::MALConduit(KPilotDeviceLink * o,
 	register_printErrorHook(malconduit_logf);
 #endif
 	conduitInstance=this;
-#ifdef DEBUG
-	DEBUGCONDUIT<<MAL_conduit_id<<endl;
-#endif
 	fConduitName=i18n("MAL");
 }
 
@@ -192,7 +183,6 @@ bool MALConduit::skip()
 /* virtual */ bool MALConduit::exec()
 {
 	FUNCTIONSETUP;
-	DEBUGCONDUIT<<MAL_conduit_id<<endl;
 
 	readConfig();
 	
@@ -212,10 +202,6 @@ bool MALConduit::skip()
 		emit logError(i18n("MAL synchronization failed (no SyncInfo)."));
 		return false;
 	}
-
-#ifndef LIBMAL20
-	pInfo->lowres = 1;
-#endif
 
 	QString proxyServer( MALConduitSettings::proxyServer() );
 	int proxyPort( MALConduitSettings::proxyPort() );

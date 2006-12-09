@@ -5,18 +5,9 @@
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <kcfgfile name="kpilotrc"/> 
   <group name="Null-conduit">
-		<entry name="FailImmediately" key="FailNow" type="Bool">
-        <label>Whether the conduit should immediately bail out with an error</label>
-        <default>false</default>
-    </entry>
     <entry name="LogMessage" type="String">
-        <label>The error message if the null conduit is supposed to fail</label>
-        <default>KPilot was here.</default>
+      <label>The error message if the null conduit is supposed to fail</label>
+      <default>KPilot was here.</default>
     </entry>
-		<entry name="Databases" type="StringList">
-				<label>Databases that are skipped on sync</label>
-				<default></default>
-		</entry>
   </group>
-	
 </kcfg>

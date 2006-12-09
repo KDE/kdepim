@@ -29,10 +29,6 @@
 */
 
 
-static const char *kpilot_id =
-	"$Id$";
-
-
 #include "options.h"
 
 #include <qfile.h>
@@ -127,8 +123,6 @@ KPilotInstaller::KPilotInstaller() :
 #endif
 	fConfigureKPilotDialogInUse = false;
 
-	/* NOTREACHED */
-	(void) kpilot_id;
 }
 
 KPilotInstaller::~KPilotInstaller()
@@ -138,7 +132,7 @@ KPilotInstaller::~KPilotInstaller()
 	delete fDaemonStub;
 #ifdef DEBUG
 	PilotRecord::allocationInfo();
-	(void) PilotDatabase::count();
+	(void) PilotDatabase::instanceCount();
 #endif
 }
 
@@ -233,12 +227,14 @@ void KPilotInstaller::readConfig()
 
 	KPilotSettings::self()->readConfig();
 
-	(void) PilotAppCategory::setupPilotCodec(KPilotSettings::encoding());
+	(void) Pilot::setupPilotCodec(KPilotSettings::encoding());
+	(void) Pilot::setupPilotCodec(KPilotSettings::encoding());
+
 	if (fLogWidget)
 	{
 		fLogWidget->addMessage(i18n("Using character set %1 on "
 			"the handheld.")
-			.arg(PilotAppCategory::codecName()));
+			.arg(Pilot::codecName()));
 	}
 }
 
@@ -421,14 +417,6 @@ void KPilotInstaller::slotHotSyncRequested()
 		i18n("Please press the HotSync button."));
 }
 
-void KPilotInstaller::slotFastSyncRequested()
-{
-	FUNCTIONSETUP;
-	setupSync(SyncAction::SyncMode::eFastSync,
-		i18n("Next sync will be a Fast Sync. ") +
-		i18n("Please press the HotSync button."));
-}
-
 void KPilotInstaller::slotFullSyncRequested()
 {
 	FUNCTIONSETUP;
@@ -592,14 +580,6 @@ void KPilotInstaller::initMenu()
 	a->setToolTip(i18n("Next HotSync will be normal HotSync."));
 	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
 		"should be a normal HotSync."));
-	syncPopup->insert(a);
-
-	a = new KAction(i18n("&FastSync"), CSL1("fastsync"), 0,
-		this, SLOT(slotFastSyncRequested()),
-		actionCollection(), "file_fastsync");
-	a->setToolTip(i18n("Next HotSync will be a FastSync."));
-	a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
-		"should be a FastSync (run conduits only)."));
 	syncPopup->insert(a);
 
 	a = new KAction(i18n("Full&Sync"), CSL1("fullsync"), 0,
@@ -1064,7 +1044,7 @@ void KPilotInstaller::componentUpdate()
 	//
 	if (kind)
 	{
-		return ::kpilot_id;
+		return "kpilot.cc";
 	}
 	else
 	{
@@ -1110,7 +1090,7 @@ int main(int argc, char **argv)
 		KPILOT_VERSION,
 		"KPilot - HotSync software for KDE\n\n",
 		KAboutData::License_GPL,
-		"(c) 1998-2000,2001, Dan Pilone (c) 2000-2004, Adriaan de Groot",
+		"(c) 1998-2000,2001, Dan Pilone (c) 2000-2006, Adriaan de Groot",
 		0L,
 		"http://www.kpilot.org/"
 		);
@@ -1119,9 +1099,12 @@ int main(int argc, char **argv)
 		"pilone@slac.com" );
 	about.addAuthor("Adriaan de Groot",
 		I18N_NOOP("Maintainer"),
-		"groot@kde.org", "http://www.cs.kun.nl/~adridg/");
+		"groot@kde.org", "http://www.kpilot.org/");
 	about.addAuthor("Reinhold Kainhofer",
 		I18N_NOOP("Core and conduits developer"), "reinhold@kainhofer.com", "http://reinhold.kainhofer.com/Linux/");
+	about.addAuthor("Jason 'vanRijn' Kasper",
+		I18N_NOOP("Core and conduits developer"),
+		"vR@movingparts.net", "http://movingparts.net/");
 	about.addCredit("Preston Brown", I18N_NOOP("VCal conduit"));
 	about.addCredit("Greg Stern", I18N_NOOP("Abbrowser conduit"));
 	about.addCredit("Chris Molnar", I18N_NOOP("Expenses conduit"));
@@ -1135,6 +1118,8 @@ int main(int argc, char **argv)
 		I18N_NOOP(".ui files"));
 	about.addCredit("Aaron J. Seigo",
 		I18N_NOOP("Bugfixer, coolness"));
+	about.addCredit("Bertjan Broeksema", 
+		I18N_NOOP("VCalconduit state machine, CMake"));
 
 	KCmdLineArgs::init(argc, argv, &about);
 	KCmdLineArgs::addCmdLineOptions(kpilotoptions, "kpilot");
@@ -1222,6 +1207,7 @@ int main(int argc, char **argv)
 		CSL1("share/apps/kpilot/DBBackup"));
 	tp->show();
 	a.setMainWidget(tp);
+	DEBUGKPILOT << fname << ": MINIICON = " << a.miniIconName() << endl;
 	return a.exec();
 }
 

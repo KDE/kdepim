@@ -171,8 +171,8 @@ void ResolutionCheckListItem::updateText()
  *
  *****************************************************************/
 
-ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotDeviceLink*fH,
-	QString caption, QString helpText, ResolutionTable*tab) :
+ResolutionDlg::ResolutionDlg( QWidget* parent, KPilotLink*fH,
+	const QString &caption, const QString &helpText, ResolutionTable*tab) :
 	KDialogBase( parent, "ResolutionDlg", false, caption, Apply|Cancel, Apply),
 	tickleTimer(0L),
 	fHandle(fH),

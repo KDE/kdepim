@@ -1,5 +1,5 @@
-#ifndef PILOTLINKVERSION_H
-#define PILOTLINKVERSION_H
+#ifndef _KPILOT_PILOTLINKVERSION_H
+#define _KPILOT_PILOTLINKVERSION_H
 
 /* pilotLinkVersion.h                           KPilot
 **
@@ -34,7 +34,7 @@
 #include <pi-version.h>
 
 #ifndef PILOT_LINK_VERSION
-#error "You need at least pilot-link version 0.9.5"
+#error "You need at least pilot-link version 0.12.1"
 #endif
 
 
@@ -44,16 +44,13 @@
 #define PILOT_LINK_0_11_0	(1100)
 #define PILOT_LINK_0_11_8	(1108)
 #define PILOT_LINK_0_12_0	(1200)
+#define PILOT_LINK_0_12_1	(1201)
 
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_11_8
-#warning "You need at least pilot-link version 0.11.8 for modern devices"
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_1
+#error "You need at least pilot-link version 0.12.1 for KPilot"
 #endif
 
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-#define PI_SIZE_T int
-#else
 #define PI_SIZE_T size_t
-#endif
 
 
 #endif

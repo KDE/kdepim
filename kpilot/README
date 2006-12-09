@@ -1,35 +1,19 @@
-KPILOT 4.5.0 by Dan Pilone / Adriaan de Groot
+KPILOT 4.6.0 by Adriaan de Groot
 =============================================
 	Additional work by Robert Ambrose,
 	Preston Brown, Adriaan de Groot,
 	Heiko Purnhagen, Joerg Habenicht,
 	David Bishop, Aaron Seigo,
-	Reinhold Kainhofer, Joern Ahrens
+	Reinhold Kainhofer, Joern Ahrens,
+	Jason Kasper,
 	and probably many more.
 
-	KPilot is software for syncing PalmOne handhelds, the 3Com Palm Pilot 
-and IBM Workpad (UNTESTED!) with a machine running some flavor of unix.  By 
-default KPilot attempts to connnect using /dev/pilot which should be a link 
-to the actual serial port, however this is configurable in the settings dialog.
-Modern USB-based devices should be accessed by configuring the USB HotPlug 
-manager for your OS to link /dev/pilot to the correct USB device node.
-
-	Release notes can be found in Documentation/README-4.*. These are
-official announcements of KPilot 4.x releases. There is also a README for
-3.2.1 which is probably not interesting any more.
+	KPilot is software for syncing PalmOS based handhelds
+such as the 3Com Palm Pilot with a machine running some flavor of UNIX.  
 
 	Developer's notes are listed in the file ChangeLog. This is
 probably only of interest if you want to see how certain features developed
 or if certain bugs have been reported before.
-
-	Generic installation instructions can be found in the file
-INSTALL, but note that KPilot is part of the kdepim package and you
-have to configure that package, not KPilot. KPilot does compile and
-install on its own though, once kdepim is configured. Tarballs are
-available from www.kpilot.org for standalone compilation.
-
-	You NEED pilot-link to compile or install KPilot; KPilot is
-currently tested using version 0.11.8 of pilot-link.
 
 	http://www.kpilot.org/
 
@@ -55,4 +39,5 @@ contributions are welcome.  :)  Send mail to kde-pim@kde.org .
 
 	Adriaan de Groot
 	groot@kde.org
-	April 23, 2005
+	November 18, 2006
+

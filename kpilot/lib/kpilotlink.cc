@@ -2,6 +2,7 @@
 **
 ** Copyright (C) 1998-2001 by Dan Pilone
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+** Copyright (C) 2006 Adriaan de Groot <groot@kde.org>
 **
 */
 
@@ -25,7 +26,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-static const char *kpilotlink_id = "$Id$";
 
 #include "options.h"
 
@@ -44,27 +44,239 @@ static const char *kpilotlink_id = "$Id$";
 #include <pi-socket.h>
 #include <pi-dlp.h>
 #include <pi-file.h>
-#if !(PILOT_LINK_NUMBER < PILOT_LINK_0_12_0)
 #include <pi-buffer.h>
-#endif
 
 #include <qdir.h>
 #include <qtimer.h>
 #include <qdatetime.h>
 #include <qsocketnotifier.h>
 #include <qthread.h>
-#include <qtextcodec.h>
 
 #include <kconfig.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
+#include <kurl.h>
+#include <kio/netaccess.h>
 
 #include "pilotUser.h"
 #include "pilotSysInfo.h"
 #include "pilotCard.h"
-#include "pilotAppCategory.h"
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
 
 #include "kpilotlink.moc"
+#include "kpilotdevicelink.moc"
+#include "kpilotlocallink.moc"
+
+/** Class that handles periodically tickling the handheld through
+*   the virtual tickle() method; deals with cancels through the
+*   shared fDone variable.
+*/
+class TickleThread : public QThread
+{
+public:
+	TickleThread(KPilotLink *d, bool *done, int timeout) :
+		QThread(),
+		fHandle(d),
+		fDone(done),
+		fTimeout(timeout)
+	{ };
+	virtual ~TickleThread();
+
+	virtual void run();
+
+	static const int ChecksPerSecond = 5;
+	static const int SecondsPerTickle = 5;
+	static const unsigned int TickleTimeoutEvent = 1066;
+
+private:
+	KPilotLink *fHandle;
+	bool *fDone;
+	int fTimeout;
+} ;
+
+TickleThread::~TickleThread()
+{
+}
+
+void TickleThread::run()
+{
+	FUNCTIONSETUP;
+	int subseconds = ChecksPerSecond;
+	int ticktock = SecondsPerTickle;
+	int timeout = fTimeout;
+#ifdef DEBUG_CERR
+	DEBUGLIBRARY << fname << ": Running for " << timeout << " seconds." << endl;
+	DEBUGLIBRARY << fname << ": Done @" << (void *) fDone << endl;
+#endif
+	while (!(*fDone))
+	{
+		QThread::msleep(1000/ChecksPerSecond);
+		if (!(--subseconds))
+		{
+#ifdef DEBUG_CERR
+// Don't dare use kdDebug() here, we're in a separate thread
+			DEBUGLIBRARY << fname << ": One second." << endl;
+#endif
+			if (timeout)
+			{
+				if (!(--timeout))
+				{
+					QApplication::postEvent(fHandle, new QEvent(static_cast<QEvent::Type>(TickleTimeoutEvent)));
+					break;
+				}
+			}
+			subseconds=ChecksPerSecond;
+			if (!(--ticktock))
+			{
+#ifdef DEBUG_CERR
+				DEBUGLIBRARY << fname << ": Kietel kietel!." << endl;
+#endif
+				ticktock=SecondsPerTickle;
+				fHandle->tickle();
+			}
+		}
+	}
+#ifdef DEBUG_CERR
+	DEBUGLIBRARY << fname << ": Finished." << endl;
+#endif
+}
+
+
+
+
+
+
+
+
+KPilotLink::KPilotLink( QObject *parent, const char *name ) :
+	QObject( parent, name ),
+	fPilotPath(QString::null),
+	fPilotUser(0L),
+	fPilotSysInfo(0L),
+	fTickleDone(true),
+	fTickleThread(0L)
+
+{
+	FUNCTIONSETUP;
+
+	fPilotUser = new KPilotUser();
+	fPilotUser->setUserName( "Henk Westbroek" );
+	fPilotUser->setLastSuccessfulSyncDate( 1139171019 );
+
+	fPilotSysInfo = new KPilotSysInfo();
+	memset(fPilotSysInfo->sysInfo()->prodID, 0, 
+		sizeof(fPilotSysInfo->sysInfo()->prodID));
+	strncpy(fPilotSysInfo->sysInfo()->prodID, "LocalLink", 
+		sizeof(fPilotSysInfo->sysInfo()->prodID)-1);
+	fPilotSysInfo->sysInfo()->prodIDLength = 
+		strlen(fPilotSysInfo->sysInfo()->prodID);
+}
+
+KPilotLink::~KPilotLink()
+{
+	FUNCTIONSETUP;
+	KPILOT_DELETE(fPilotUser);
+	KPILOT_DELETE(fPilotSysInfo);
+}
+
+/* virtual */ bool KPilotLink::event(QEvent *e)
+{
+	if (e->type() == TickleThread::TickleTimeoutEvent)
+	{
+		stopTickle();
+		emit timeout();
+		return true;
+	}
+	else	return QObject::event(e);
+}
+
+/*
+Start a tickle thread with the indicated timeout.
+*/
+void KPilotLink::startTickle(unsigned int timeout)
+{
+	FUNCTIONSETUP;
+
+	Q_ASSERT(fTickleDone);
+
+	/*
+	** We've told the thread to finish up, but it hasn't
+	** done so yet - so wait for it to do so, should be
+	** only 200ms at most.
+	*/
+	if (fTickleDone && fTickleThread)
+	{
+		fTickleThread->wait();
+		KPILOT_DELETE(fTickleThread);
+	}
+
+#ifdef DEBUG
+	DEBUGLIBRARY << fname << ": Done @" << (void *) (&fTickleDone) << endl;
+#endif
+	fTickleDone = false;
+	fTickleThread = new TickleThread(this,&fTickleDone,timeout);
+	fTickleThread->start();
+}
+
+void KPilotLink::stopTickle()
+{
+	FUNCTIONSETUP;
+	fTickleDone = true;
+	if (fTickleThread)
+	{
+		fTickleThread->wait();
+		KPILOT_DELETE(fTickleThread);
+	}
+}
+
+unsigned int KPilotLink::installFiles(const QStringList & l, const bool deleteFiles)
+{
+	FUNCTIONSETUP;
+
+	QStringList::ConstIterator i,e;
+	unsigned int k = 0;
+	unsigned int n = 0;
+	unsigned int total = l.count();
+
+	for (i = l.begin(), e = l.end(); i != e; ++i)
+	{
+		emit logProgress(QString::null,
+			(int) ((100.0 / total) * (float) n));
+
+		if (installFile(*i, deleteFiles))
+			k++;
+		n++;
+	}
+	emit logProgress(QString::null, 100);
+
+	return k;
+}
+
+void KPilotLink::addSyncLogEntry(const QString & entry, bool log)
+{
+	FUNCTIONSETUP;
+	if (entry.isEmpty()) return;
+
+	addSyncLogEntryImpl(entry);
+	if (log)
+	{
+		emit logMessage(entry);
+	}
+}
+
+
+/* virtual */ int KPilotLink::openConduit()
+{
+	return 0;
+}
+
+/* virtual */ int KPilotLink::pilotSocket() const
+{
+	return -1;
+}
+
+
 
 
 // singleton helper class
@@ -77,19 +289,19 @@ public:
 		return mThis;
 	}
 
-	bool canBind( QString device )
+	bool canBind( const QString &device )
 	{
 		showList();
 		return !mBoundDevices.contains( device );
 	}
 
-	void bindDevice( QString device )
+	void bindDevice( const QString &device )
 	{
 		mBoundDevices.append( device );
 		showList();
 	}
 
-	void unbindDevice( QString device )
+	void unbindDevice( const QString &device )
 	{
 		mBoundDevices.remove( device );
 		showList();
@@ -105,9 +317,10 @@ protected:
 private:
 	inline void showList() const
 	{
+		if ( !(mBoundDevices.count() > 0) ) return;
 #ifdef DEBUG
 		FUNCTIONSETUPL(3);
-		DEBUGDAEMON << fname << "Bound devices: "
+		DEBUGLIBRARY << fname << ": Bound devices: "
 			<< ((mBoundDevices.count() > 0) ? mBoundDevices.join(CSL1(", ")) : CSL1("<none>")) << endl;
 #endif
 	}
@@ -117,34 +330,28 @@ KPilotDeviceLink::KPilotDeviceLinkPrivate *KPilotDeviceLink::KPilotDeviceLinkPri
 
 
 KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name, const QString &tempDevice) :
-	QObject(parent, name),
+	KPilotLink(parent, name),
 	fLinkStatus(Init),
-	fTickleDone(true),
-	fTickleThread(0L),
 	fWorkaroundUSB(false),
 	fWorkaroundUSBTimer(0L),
-	fPilotPath(QString::null),
 	fRetries(0),
 	fOpenTimer(0L),
 	fSocketNotifier(0L),
 	fSocketNotifierActive(false),
 	fPilotMasterSocket(-1),
 	fCurrentPilotSocket(-1),
-	fTempDevice(tempDevice),
-	fPilotUser(0L),
-	fPilotSysInfo(0L)
+	fTempDevice(tempDevice)
 {
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname
+	DEBUGLIBRARY << fname
 		<< ": Pilot-link version " << PILOT_LINK_NUMBER
 		<< endl;
 #endif
 
 	messagesMask=0xffffffff;
 
-	(void) kpilotlink_id;
 }
 
 KPilotDeviceLink::~KPilotDeviceLink()
@@ -156,6 +363,12 @@ KPilotDeviceLink::~KPilotDeviceLink()
 	KPILOT_DELETE(fPilotUser);
 }
 
+/* virtual */ bool KPilotDeviceLink::isConnected() const
+{
+	 return fLinkStatus == AcceptedDevice;
+}
+
+
 void KPilotDeviceLink::close()
 {
 	FUNCTIONSETUP;
@@ -165,7 +378,7 @@ void KPilotDeviceLink::close()
 	KPILOT_DELETE(fSocketNotifier);
 	fSocketNotifierActive=false;
 #ifdef DEBUG
-	DEBUGDAEMON << fname
+	DEBUGLIBRARY << fname
 		<< ": Closing sockets "
 		<< fCurrentPilotSocket
 		<< " and "
@@ -348,16 +561,11 @@ bool KPilotDeviceLink::open(QString device)
 	if (fPilotMasterSocket == -1)
 	{
 #ifdef DEBUG
-		DEBUGDAEMON << fname << ": Typing to open " << fRealPilotPath << endl;
+		DEBUGLIBRARY << fname << ": Typing to open " << fRealPilotPath << endl;
 #endif
 
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
-		fPilotMasterSocket = pi_socket(PI_AF_SLP,
-			PI_SOCK_STREAM, PI_PF_PADP);
-#else
 		fPilotMasterSocket = pi_socket(PI_AF_PILOT,
 			PI_SOCK_STREAM, PI_PF_DLP);
-#endif
 
 		if (fPilotMasterSocket<1)
 		{
@@ -368,7 +576,7 @@ bool KPilotDeviceLink::open(QString device)
 		}
 
 #ifdef DEBUG
-		DEBUGDAEMON << fname
+		DEBUGLIBRARY << fname
 			<< ": Got master " << fPilotMasterSocket << endl;
 #endif
 
@@ -378,23 +586,10 @@ bool KPilotDeviceLink::open(QString device)
 	Q_ASSERT(fLinkStatus == CreatedSocket);
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Binding to path " << fPilotPath << endl;
+	DEBUGLIBRARY << fname << ": Binding to path " << fPilotPath << endl;
 #endif
 
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-	struct pi_sockaddr addr;
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
-	addr.pi_family = PI_AF_SLP;
-#else
-	addr.pi_family = PI_AF_PILOT;
-#endif
-	strlcpy(addr.pi_device, QFile::encodeName(device),sizeof(addr.pi_device));
-
-	ret = pi_bind(fPilotMasterSocket,
-		(struct sockaddr *) &addr, sizeof(addr));
-#else
 	ret = pi_bind(fPilotMasterSocket, QFile::encodeName(device));
-#endif
 
 	if (ret >= 0)
 	{
@@ -408,11 +603,11 @@ bool KPilotDeviceLink::open(QString device)
 		QObject::connect(fSocketNotifier, SIGNAL(activated(int)),
 			this, SLOT(acceptDevice()));
 		fSocketNotifierActive=true;
-		
+
 		if (fWorkaroundUSB)
 		{
 #ifdef DEBUG
-			DEBUGDAEMON << fname << ": Adding Z31 workaround." << endl;
+			DEBUGLIBRARY << fname << ": Adding Z31 workaround." << endl;
 #endif
 			// Special case for Zire 31, 72, Tungsten T5,
 			// all of which may make a non-HotSync connection
@@ -423,23 +618,14 @@ bool KPilotDeviceLink::open(QString device)
 				this,SLOT(workaroundUSB()));
 			fWorkaroundUSBTimer->start(5000,true);
 		}
-		
+
 		return true;
 	}
 	else
 	{
 #ifdef DEBUG
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-		DEBUGDAEMON << fname
-			<< ": Tried "
-			<< addr.pi_device
-			<< " and got "
-			<< strerror(errno)
-			<< endl;
-#else
-		DEBUGDAEMON << fname
+		DEBUGLIBRARY << fname
 			<< ": Tried " << device << " and got " << strerror(errno) << endl;
-#endif
 #endif
 
 		if (fRetries < 5)
@@ -536,9 +722,9 @@ void KPilotDeviceLink::acceptDevice()
 	}
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname
+	DEBUGLIBRARY << fname
 		<< ": Found connection on device "<<pilotPath().latin1()<<endl;
-	DEBUGDAEMON << fname
+	DEBUGLIBRARY << fname
 		<< ": Current status "
 		<< statusString()
 		<< " and master " << fPilotMasterSocket << endl;
@@ -604,18 +790,13 @@ void KPilotDeviceLink::acceptDevice()
 #ifdef DEBUG
 	else
 	{
-		DEBUGDAEMON << fname
+		DEBUGLIBRARY << fname
 			<< ": RomVersion=" << fPilotSysInfo->getRomVersion()
 			<< " Locale=" << fPilotSysInfo->getLocale()
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_10_0
-			/* No prodID member */
-#else
 			<< " Product=" << fPilotSysInfo->getProductID()
-#endif
 			<< endl;
 	}
 #endif
-	fPilotSysInfo->boundsCheck();
 
 	emit logProgress(QString::null, 60);
         KPILOT_DELETE(fPilotUser);
@@ -623,17 +804,22 @@ void KPilotDeviceLink::acceptDevice()
 
 	/* Ask the pilot who it is.  And see if it's who we think it is. */
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Reading user info @"
-		<< (long) fPilotUser << endl;
-	DEBUGDAEMON << fname << ": Buffer @"
-		<< (long) fPilotUser->pilotUser() << endl;
+	DEBUGLIBRARY << fname << ": Reading user info @"
+		<< (void *) fPilotUser << endl;
+	DEBUGLIBRARY << fname << ": Buffer @"
+		<< (void *) fPilotUser->pilotUser() << endl;
 #endif
 
 	dlp_ReadUserInfo(fCurrentPilotSocket, fPilotUser->pilotUser());
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname
-		<< ": Read user name " << fPilotUser->getUserName() << endl;
+	const char *n = fPilotUser->getUserName();
+	DEBUGLIBRARY << fname
+		<< ": Read user name "
+		<< ( (!n || !*n) ?
+			"<empty>" :
+			fPilotUser->getUserName() )
+		<< endl;
 #endif
 
 	emit logProgress(i18n("Checking last PC..."), 90);
@@ -642,16 +828,10 @@ void KPilotDeviceLink::acceptDevice()
 	if ((ret=dlp_OpenConduit(fCurrentPilotSocket)) < 0)
 	{
 #ifdef DEBUG
-		DEBUGDAEMON << k_funcinfo
+		DEBUGLIBRARY << k_funcinfo
 			<< ": dlp_OpenConduit returned " << ret << endl;
 #endif
 
-#if 0
-		fLinkStatus = SyncDone;
-		emit logMessage(i18n
-			("Exiting on cancel. All data not restored."));
-		return;
-#endif
 		emit logError(i18n("Could not read user information from the Pilot. "
 			"Perhaps you have a password set on the device?"));
 	}
@@ -665,14 +845,14 @@ void KPilotDeviceLink::acceptDevice()
 void KPilotDeviceLink::workaroundUSB()
 {
 	FUNCTIONSETUP;
-	
+
 	Q_ASSERT((fLinkStatus == DeviceOpen) || (fLinkStatus == WorkaroundUSB));
 	if (fLinkStatus == DeviceOpen)
 	{
 		reset();
 	}
 	fLinkStatus = WorkaroundUSB;
-	
+
 	if (!QFile::exists(fRealPilotPath))
 	{
 		// Fake connection has vanished again.
@@ -688,158 +868,17 @@ void KPilotDeviceLink::workaroundUSB()
 	QTimer::singleShot(1000,this,SLOT(workaroundUSB()));
 }
 
-bool KPilotDeviceLink::tickle() const
+/* virtual */ bool KPilotDeviceLink::tickle()
 {
 	// No FUNCTIONSETUP here because it may be called from
 	// a separate thread.
 	return pi_tickle(pilotSocket()) >= 0;
 }
 
-class TickleThread : public QThread
+/* virtual */ void KPilotDeviceLink::addSyncLogEntryImpl( const QString &entry )
 {
-public:
-	TickleThread(KPilotDeviceLink *d, bool *done, int timeout) :
-		QThread(),
-		fHandle(d),
-		fDone(done),
-		fTimeout(timeout)
-	{ };
-	virtual ~TickleThread();
-
-	virtual void run();
-
-	static const int ChecksPerSecond = 5;
-	static const int SecondsPerTickle = 5;
-
-private:
-	KPilotDeviceLink *fHandle;
-	bool *fDone;
-	int fTimeout;
-} ;
-
-TickleThread::~TickleThread()
-{
-}
-
-void TickleThread::run()
-{
-	FUNCTIONSETUP;
-	int subseconds = ChecksPerSecond;
-	int ticktock = SecondsPerTickle;
-	int timeout = fTimeout;
-#ifdef DEBUG_CERR
-	DEBUGDAEMON << fname << ": Running for " << timeout << " seconds." << endl;
-	DEBUGDAEMON << fname << ": Done @" << (void *) fDone << endl;
-#endif
-	while (!(*fDone))
-	{
-		QThread::msleep(1000/ChecksPerSecond);
-		if (!(--subseconds))
-		{
-#ifdef DEBUG_CERR
-// Don't dare use kdDebug() here, we're in a separate thread
-			DEBUGDAEMON << fname << ": One second." << endl;
-#endif
-			if (timeout)
-			{
-				if (!(--timeout))
-				{
-					QApplication::postEvent(fHandle, new QEvent((QEvent::Type)(KPilotDeviceLink::TickleTimeoutEvent)));
-					break;
-				}
-			}
-			subseconds=ChecksPerSecond;
-			if (!(--ticktock))
-			{
-#ifdef DEBUG_CERR
-				DEBUGDAEMON << fname << ": Kietel kietel!." << endl;
-#endif
-				ticktock=SecondsPerTickle;
-				fHandle->tickle();
-			}
-		}
-	}
-#ifdef DEBUG_CERR
-	DEBUGDAEMON << fname << ": Finished." << endl;
-#endif
-}
-
-/*
-** Deal with events, especially the ones used to signal a timeout
-** in a tickle thread.
-*/
-
-/* virtual */ bool KPilotDeviceLink::event(QEvent *e)
-{
-	if (e->type() == TickleTimeoutEvent)
-	{
-		stopTickle();
-		emit timeout();
-		return true;
-	}
-	else	return QObject::event(e);
-}
-
-/*
-Start a tickle thread with the indicated timeout.
-*/
-void KPilotDeviceLink::startTickle(unsigned int timeout)
-{
-	FUNCTIONSETUP;
-
-	Q_ASSERT(fTickleDone);
-
-	/*
-	** We've told the thread to finish up, but it hasn't
-	** done so yet - so wait for it to do so, should be
-	** only 200ms at most.
-	*/
-	if (fTickleDone && fTickleThread)
-	{
-		fTickleThread->wait();
-		KPILOT_DELETE(fTickleThread);
-	}
-
-#ifdef DEBUG
-	DEBUGDAEMON << fname << ": Done @" << (void *) (&fTickleDone) << endl;
-#endif
-	fTickleDone = false;
-	fTickleThread = new TickleThread(this,&fTickleDone,timeout);
-	fTickleThread->start();
-}
-
-void KPilotDeviceLink::stopTickle()
-{
-	FUNCTIONSETUP;
-	fTickleDone = true;
-	if (fTickleThread)
-	{
-		fTickleThread->wait();
-		KPILOT_DELETE(fTickleThread);
-	}
-}
-
-
-int KPilotDeviceLink::installFiles(const QStringList & l, const bool deleteFiles)
-{
-	FUNCTIONSETUP;
-
-	QStringList::ConstIterator i;
-	int k = 0;
-	int n = 0;
-
-	for (i = l.begin(); i != l.end(); ++i)
-	{
-		emit logProgress(QString::null,
-			(int) ((100.0 / l.count()) * (float) n));
-
-		if (installFile(*i, deleteFiles))
-			k++;
-		n++;
-	}
-	emit logProgress(QString::null, 100);
-
-	return k;
+	dlp_AddSyncLogEntry(fCurrentPilotSocket,
+		const_cast<char *>((const char *)Pilot::toPilot(entry)));
 }
 
 bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
@@ -847,7 +886,7 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Installing file " << f << endl;
+	DEBUGLIBRARY << fname << ": Installing file " << f << endl;
 #endif
 
 	if (!QFile::exists(f))
@@ -869,11 +908,7 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 		return false;
 	}
 
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-	if (pi_file_install(pf, fCurrentPilotSocket, 0) < 0)
-#else
 	if (pi_file_install(pf, fCurrentPilotSocket, 0, 0L) < 0)
-#endif
 	{
 		kdWarning() << k_funcinfo
 			<< ": Cannot pi_file_install " << f << endl;
@@ -889,25 +924,6 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 	return true;
 }
 
-
-void KPilotDeviceLink::addSyncLogEntry(const QString & entry, bool log)
-{
-	FUNCTIONSETUP;
-	if (entry.isEmpty()) return;
-
-	QString t(entry);
-
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_11_0
-	t.append("X");
-#endif
-
-	dlp_AddSyncLogEntry(fCurrentPilotSocket,
-		const_cast<char *>((const char *)PilotAppCategory::codec()->fromUnicode(entry)));
-	if (log)
-	{
-		emit logMessage(entry);
-	}
-}
 
 int KPilotDeviceLink::openConduit()
 {
@@ -969,14 +985,14 @@ void KPilotDeviceLink::finishSync()
 {
 	FUNCTIONSETUP ;
 
-	getPilotUser()->setLastSyncPC((unsigned long) gethostid());
-	getPilotUser()->setLastSyncDate(time(0));
+	getPilotUser().setLastSyncPC((unsigned long) gethostid());
+	getPilotUser().setLastSyncDate(time(0));
 
-	
-#ifdef DEBUG	
-	DEBUGDAEMON << fname << ": Writing username " << getPilotUser()->getUserName() << endl;
+
+#ifdef DEBUG
+	DEBUGLIBRARY << fname << ": Writing username " << getPilotUser().getUserName() << endl;
 #endif
-	dlp_WriteUserInfo(pilotSocket(),getPilotUser()->pilotUser());
+	dlp_WriteUserInfo(pilotSocket(),getPilotUser().pilotUser());
 	addSyncLogEntry(i18n("End of HotSync\n"));
 	endOfSync();
 }
@@ -985,9 +1001,6 @@ int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
 {
 	FUNCTIONSETUP;
 
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-	return dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,index,dbinfo);
-#else
 	pi_buffer_t buf = { 0,0,0 };
 	int r = dlp_ReadDBList(pilotSocket(),0,dlpDBListRAM,index,&buf);
 	if (r >= 0)
@@ -995,12 +1008,11 @@ int KPilotDeviceLink::getNextDatabase(int index,struct DBInfo *dbinfo)
 		memcpy(dbinfo,buf.data,sizeof(struct DBInfo));
 	}
 	return r;
-#endif
 }
 
 // Find a database with the given name. Info about the DB is stored into dbinfo (e.g. to be used later on with retrieveDatabase).
 int KPilotDeviceLink::findDatabase(const char *name, struct DBInfo *dbinfo,
-	int index, long type, long creator)
+	int index, unsigned long type, unsigned long creator)
 {
 	FUNCTIONSETUP;
 	return dlp_FindDBInfo(pilotSocket(), 0, index,
@@ -1013,7 +1025,7 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 	FUNCTIONSETUP;
 
 #ifdef DEBUG
-	DEBUGDAEMON << fname << ": Writing DB <" << info->name << "> "
+	DEBUGLIBRARY << fname << ": Writing DB <" << info->name << "> "
 		<< " to " << fullBackupName << endl;
 #endif
 
@@ -1036,11 +1048,7 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 		return false;
 	}
 
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-	if (pi_file_retrieve(f, pilotSocket(), 0) < 0)
-#else
 	if (pi_file_retrieve(f, pilotSocket(), 0, 0L) < 0)
-#endif
 	{
 		kdWarning() << k_funcinfo
 			<< ": Failed, unable to back up database" << endl;
@@ -1054,26 +1062,13 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 }
 
 
-QPtrList<DBInfo> KPilotDeviceLink::getDBList(int cardno, int flags)
+DBInfoList KPilotDeviceLink::getDBList(int cardno, int flags)
 {
 	bool cont=true;
-	QPtrList<DBInfo>dbs;
+	DBInfoList dbs;
 	int index=0;
 	while (cont)
 	{
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
-		DBInfo*dbi=new DBInfo();
-		if (dlp_ReadDBList(pilotSocket(), cardno, flags, index, dbi)<0)
-		{
-			KPILOT_DELETE(dbi);
-			cont=false;
-		}
-		else
-		{
-			index=dbi->index+1;
-			dbs.append(dbi);
-		}
-#else
 		pi_buffer_t buf = { 0,0,0 };
 		pi_buffer_clear(&buf);
 		// DBInfo*dbi=new DBInfo();
@@ -1083,29 +1078,24 @@ QPtrList<DBInfo> KPilotDeviceLink::getDBList(int cardno, int flags)
 		}
 		else
 		{
-			DBInfo *db_n = 0L;
+			DBInfo db_n;
 			DBInfo *db_it = (DBInfo *)buf.data;
 			int info_count = buf.used / sizeof(struct DBInfo);
 
 			while(info_count>0)
 			{
-				db_n = new DBInfo();
-				memcpy(db_n,db_it,sizeof(struct DBInfo));
+				memcpy(&db_n,db_it,sizeof(struct DBInfo));
 				++db_it;
 				info_count--;
 				dbs.append(db_n);
 			}
-			if (db_n)
-			{
-				index=db_n->index+1;
-			}
+			index=db_n.index+1;
 		}
-#endif
 	}
 	return dbs;
 }
 
-KPilotCard *KPilotDeviceLink::getCardInfo(int card)
+const KPilotCard *KPilotDeviceLink::getCardInfo(int card)
 {
 	KPilotCard *cardinfo=new KPilotCard();
 	if (dlp_ReadStorageInfo(pilotSocket(), card, cardinfo->cardInfo())<0)
@@ -1117,44 +1107,6 @@ KPilotCard *KPilotDeviceLink::getCardInfo(int card)
 		return 0L;
 	};
 	return cardinfo;
-}
-
-QDateTime KPilotDeviceLink::getTime()
-{
-	QDateTime time;
-	time_t palmtime;
-	if (dlp_GetSysDateTime(pilotSocket(), &palmtime))
-	{
-		time.setTime_t(palmtime);
-	}
-	return time;
-}
-
-bool KPilotDeviceLink::setTime(const time_t &pctime)
-{
-//	struct tm time_tm=writeTm(time);
-//	time_t pctime=mktime(&time_tm);
-	return dlp_SetSysDateTime(pilotSocket(), pctime);
-}
-
-
-
-unsigned long KPilotDeviceLink::ROMversion() const
-{
-	unsigned long rom;
-	dlp_ReadFeature(pilotSocket(),
-		makelong(const_cast<char *>("psys")), 1, &rom);
-	return rom;
-}
-unsigned long KPilotDeviceLink::majorVersion() const
-{
-	unsigned long rom=ROMversion();
-	return (((rom >> 28) & 0xf) * 10)+ ((rom >> 24) & 0xf);
-}
-unsigned long KPilotDeviceLink::minorVersion() const
-{
-	unsigned long int rom=ROMversion();
-	return (((rom >> 20) & 0xf) * 10)+ ((rom >> 16) & 0xf);
 }
 
 /* static */ const int KPilotDeviceLink::messagesType=
@@ -1170,17 +1122,312 @@ void KPilotDeviceLink::shouldPrint(int m,const QString &s)
 	}
 }
 
-bool operator < (const db & a, const db & b) {
-	if (a.creator == b.creator)
+PilotDatabase *KPilotDeviceLink::database( const QString &name )
+{
+	return new PilotSerialDatabase( this, name );
+}
+
+
+typedef QPair<QString, struct DBInfo> DatabaseDescriptor;
+typedef QValueList<DatabaseDescriptor> DatabaseDescriptorList;
+
+class KPilotLocalLink::Private
+{
+public:
+	DatabaseDescriptorList fDBs;
+} ;
+
+unsigned int KPilotLocalLink::findAvailableDatabases( KPilotLocalLink::Private &info, const QString &path )
+{
+	FUNCTIONSETUP;
+
+	info.fDBs.clear();
+
+	QDir d(path);
+	if (!d.exists())
 	{
-		if (a.type != b.type)
+		// Perhaps return an error?
+		return 0;
+	}
+
+	// Use this to fake indexes in the list of DBInfo structs
+	unsigned int counter = 0;
+
+	QStringList dbs = d.entryList( CSL1("*.pdb"), QDir::Files | QDir::NoSymLinks | QDir::Readable );
+	for ( QStringList::ConstIterator i = dbs.begin(); i != dbs.end() ; ++i)
+	{
+		struct DBInfo dbi;
+
+		// Remove the trailing 4 characters
+		QString dbname = (*i);
+		dbname.remove(dbname.length()-4,4);
+#ifdef DEBUG
+		QString dbnamecheck = (*i).left((*i).findRev(CSL1(".pdb")));
+		Q_ASSERT(dbname == dbnamecheck);
+#endif
+		if (PilotLocalDatabase::infoFromFile( path + CSL1("/") + (*i), &dbi))
 		{
-			if (a.type == pi_mktag('a', 'p', 'p', 'l'))
-				return false;
-			else
-				return true;
+			DEBUGLIBRARY << fname << ": Loaded "
+				<< dbname << endl;
+			dbi.index = counter;
+			info.fDBs.append( DatabaseDescriptor(dbname,dbi) );
+			++counter;
 		}
 	}
 
-	return a.maxblock < b.maxblock;
+	DEBUGLIBRARY << fname << ": Total " << info.fDBs.count()
+		<< " databases." << endl;
+	return info.fDBs.count();
 }
+
+
+KPilotLocalLink::KPilotLocalLink( QObject *parent, const char *name ) :
+	KPilotLink(parent,name),
+	fReady(false),
+	d( new Private )
+{
+	FUNCTIONSETUP;
+}
+
+KPilotLocalLink::~KPilotLocalLink()
+{
+	FUNCTIONSETUP;
+	KPILOT_DELETE(d);
+}
+
+/* virtual */ QString KPilotLocalLink::statusString() const
+{
+	return fReady ? CSL1("Ready") : CSL1("Waiting") ;
+}
+
+/* virtual */ bool KPilotLocalLink::isConnected() const
+{
+	return fReady;
+}
+
+/* virtual */ void KPilotLocalLink::reset( const QString &p )
+{
+	FUNCTIONSETUP;
+	fPath = p;
+	reset();
+}
+
+/* virtual */ void KPilotLocalLink::reset()
+{
+	FUNCTIONSETUP;
+	QFileInfo info( fPath );
+	fReady = !fPath.isEmpty() && info.exists() && info.isDir() ;
+	if (fReady)
+	{
+		findAvailableDatabases(*d, fPath);
+		QTimer::singleShot(500,this,SLOT(ready()));
+	}
+	else
+	{
+		kdWarning() << k_funcinfo << ": The local link path "
+			<< fPath
+			<< " does not exist or is not a direcotory. No sync will be done."
+			<< endl;
+	}
+}
+
+/* virtual */ void KPilotLocalLink::close()
+{
+	fReady = false;
+}
+
+/* virtual */ bool KPilotLocalLink::tickle()
+{
+	return true;
+}
+
+/* virtual */ const KPilotCard *KPilotLocalLink::getCardInfo(int)
+{
+	return 0;
+}
+
+/* virtual */ void KPilotLocalLink::endOfSync()
+{
+}
+
+/* virtual */ void KPilotLocalLink::finishSync()
+{
+}
+
+/* virtual */ int KPilotLocalLink::openConduit()
+{
+	FUNCTIONSETUP;
+	return 0;
+}
+
+
+/* virtual */ int KPilotLocalLink::getNextDatabase( int index, struct DBInfo *info )
+{
+	FUNCTIONSETUP;
+
+	if ( (index<0) || (index>=(int)d->fDBs.count()) )
+	{
+		kdWarning() << k_funcinfo << ": Index out of range." << endl;
+		return -1;
+	}
+
+	DatabaseDescriptor dd = d->fDBs[index];
+
+	DEBUGLIBRARY << fname << ": Getting database " << dd.first << endl;
+
+	if (info)
+	{
+		*info = dd.second;
+	}
+
+	return index+1;
+}
+
+/* virtual */ int KPilotLocalLink::findDatabase(const char *name, struct DBInfo*info,
+		int index, unsigned long type, unsigned long creator)
+{
+	FUNCTIONSETUP;
+
+	if ( (index<0) || (index>=(int)d->fDBs.count()) )
+	{
+		kdWarning() << k_funcinfo << ": Index out of range." << endl;
+		return -1;
+	}
+
+	if (!name)
+	{
+		kdWarning() << k_funcinfo << ": NULL name." << endl;
+		return -1;
+	}
+
+	QString desiredName = Pilot::fromPilot(name);
+	DEBUGLIBRARY << fname << ": Looking for DB " << desiredName << endl;
+	for ( DatabaseDescriptorList::ConstIterator i = d->fDBs.at(index);
+		i != d->fDBs.end(); ++i)
+	{
+		const DatabaseDescriptor &dd = *i;
+		if (dd.first == desiredName)
+		{
+			if ( (!type || (type == dd.second.type)) &&
+				(!creator || (creator == dd.second.creator)) )
+			{
+				if (info)
+				{
+					*info = dd.second;
+				}
+				return index;
+			}
+		}
+
+		++index;
+	}
+
+	return -1;
+}
+
+/* virtual */ void KPilotLocalLink::addSyncLogEntryImpl(QString const &s)
+{
+	FUNCTIONSETUP;
+	DEBUGLIBRARY << fname << ": " << s << endl ;
+}
+
+/* virtual */ bool KPilotLocalLink::installFile(QString const &path, bool deletefile)
+{
+	FUNCTIONSETUP;
+
+	QFileInfo srcInfo(path);
+	QString canonicalSrcPath = srcInfo.dir().canonicalPath() + CSL1("/") + srcInfo.fileName() ;
+	QString canonicalDstPath = fPath + CSL1("/") + srcInfo.fileName();
+
+	if (canonicalSrcPath == canonicalDstPath)
+	{
+		// That's a cheap copy operation
+		return true;
+	}
+
+	KURL src = KURL::fromPathOrURL( canonicalSrcPath );
+	KURL dst = KURL::fromPathOrURL( canonicalDstPath );
+
+	KIO::NetAccess::file_copy(src,dst,-1,true);
+
+	if (deletefile)
+	{
+		KIO::NetAccess::del(src, 0L);
+	}
+
+	return true;
+}
+
+/* virtual */ bool KPilotLocalLink::retrieveDatabase( const QString &path, struct DBInfo *db )
+{
+	FUNCTIONSETUP;
+
+	QString dbname = Pilot::fromPilot(db->name) + CSL1(".pdb") ;
+	QString sourcefile = fPath + CSL1("/") + dbname ;
+	QString destfile = path ;
+
+	DEBUGLIBRARY << fname << ": src=" << sourcefile << endl;
+	DEBUGLIBRARY << fname << ": dst=" << destfile << endl;
+
+	QFile in( sourcefile );
+	if ( !in.exists() )
+	{
+		kdWarning() << k_funcinfo<< ": Source file " << sourcefile << " doesn't exist." << endl;
+		return false;
+	}
+	if ( !in.open( IO_ReadOnly | IO_Raw ) )
+	{
+		kdWarning() << k_funcinfo << ": Can't read source file " << sourcefile << endl;
+		return false;
+	}
+
+	QFile out( destfile );
+	if ( !out.open( IO_WriteOnly | IO_Truncate | IO_Raw ) )
+	{
+		kdWarning() << k_funcinfo << ": Can't write destination file " << destfile << endl;
+		return false;
+	}
+
+	const Q_ULONG BUF_SIZ = 8192 ;
+	char buf[BUF_SIZ];
+	Q_LONG r;
+
+	while ( (r=in.readBlock(buf,BUF_SIZ))>0 )
+	{
+		out.writeBlock(buf,r);
+	}
+	out.flush();
+	in.close();
+
+	return out.exists();
+}
+
+/* virtual */ DBInfoList KPilotLocalLink::getDBList( int, int )
+{
+	FUNCTIONSETUP;
+	DBInfoList l;
+	for ( DatabaseDescriptorList::ConstIterator i=d->fDBs.begin();
+		i != d->fDBs.end(); ++i)
+	{
+		l.append( (*i).second );
+	}
+	return l;
+}
+
+
+/* virtual */ PilotDatabase *KPilotLocalLink::database( const QString &name )
+{
+	FUNCTIONSETUP;
+	return new PilotLocalDatabase( fPath, name );
+}
+
+
+
+/* slot */ void KPilotLocalLink::ready()
+{
+	if (fReady)
+	{
+		emit deviceReady(this);
+	}
+}
+

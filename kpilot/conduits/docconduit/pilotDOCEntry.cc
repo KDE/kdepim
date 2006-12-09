@@ -31,12 +31,10 @@
 
 
 
-static const char *pilotDOCEntry_id =
-	"$Id$";
 const int PilotDOCEntry::TEXT_SIZE = 4096;
 
 
-PilotDOCEntry::PilotDOCEntry():PilotAppCategory()
+PilotDOCEntry::PilotDOCEntry():PilotRecordBase()
 {
 	FUNCTIONSETUP;
 	compress = false;
@@ -46,16 +44,15 @@ PilotDOCEntry::PilotDOCEntry():PilotAppCategory()
 
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotDOCEntry()
 */
-PilotDOCEntry::PilotDOCEntry(PilotRecord * rec, bool compressed):PilotAppCategory(rec)
+PilotDOCEntry::PilotDOCEntry(PilotRecord * rec, bool compressed):PilotRecordBase(rec)
 {
 	if (rec) fText.setText((unsigned char *) rec->data(), rec->size(), compressed);
 	compress = compressed;
-	(void) pilotDOCEntry_id;
 }
 
 
 
-PilotDOCEntry::PilotDOCEntry(const PilotDOCEntry & e):PilotAppCategory(e)
+PilotDOCEntry::PilotDOCEntry(const PilotDOCEntry & e):PilotRecordBase(e)
 {
 	FUNCTIONSETUP;
 	// See PilotDateEntry::operator = for details
@@ -77,24 +74,19 @@ PilotDOCEntry & PilotDOCEntry::operator =(const PilotDOCEntry & e)
 
 
 
-void *PilotDOCEntry::pack_(void *buf, int *len)
+
+PilotRecord *PilotDOCEntry::pack()
 {
-//      int len;
-	if (compress)
+	int len = compress ? fText.Compress() : fText.Decompress();
+
+	if (len<0)
 	{
-		*len = fText.Compress();
+		return 0L;
 	}
-	else
-	{
-		*len = fText.Decompress();
-	}
-	if (len > 0)
-	{
-//              char*out=new char[len];
-		memcpy(buf, (const char *) fText.text(), *len);
-		return buf;
-	}
-	return 0L;
+
+	pi_buffer_t *b = pi_buffer_new( len + 4 ); // +4 for safety
+	memcpy( b->data, (const char *) fText.text(), len );
+	b->used = len;
+	PilotRecord* rec =  new PilotRecord(b, this);
+	return rec;
 }
-
-

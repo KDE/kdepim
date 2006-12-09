@@ -28,8 +28,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-static const char *fileinstallwidget_id =
-	"$Id$";
 
 #ifndef _KPILOT_OPTIONS_H
 #include "options.h"
@@ -109,7 +107,6 @@ FileInstallWidget::FileInstallWidget(QWidget * parent,
 	connect(fInstaller, SIGNAL(filesChanged()),
 		this, SLOT(refreshFileInstallList()));
 
-	(void) fileinstallwidget_id;
 }
 
 FileInstallWidget::~FileInstallWidget()

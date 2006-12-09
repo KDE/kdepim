@@ -40,7 +40,7 @@ class MALConduit : public ConduitAction
 Q_OBJECT
 public:
 	MALConduit(
-		KPilotDeviceLink *o,
+		KPilotLink *o,
 		const char *n = 0L,
 		const QStringList &a = QStringList() );
 	virtual ~MALConduit();

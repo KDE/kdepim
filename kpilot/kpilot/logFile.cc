@@ -27,8 +27,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
-static const char *logf_id =
-	"$Id$";
 
 #include "options.h"
 
@@ -50,7 +48,6 @@ static const char *logf_id =
 LogFile::LogFile() : DCOPObject("LogIface"), QObject(), fOutfile(0L), fSyncing(false)
 {
 	FUNCTIONSETUP;
-	(void) logf_id;
 }
 
 

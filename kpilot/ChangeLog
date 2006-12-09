@@ -8,11 +8,38 @@ TODO: Figure out why archived records are bad.
 	               record->isDeleted() is false, on sync, but it is modified and
 	               updated on the pc, although that does not change anything.
 
+TODO: store map of pilot-id <-> uid elsewhere (not in the .vcf file)
+TODO: don't make ActionQueue auto-delete the actions in it.
 TODO: provide template-based, interpreted databases much like the
-  AppInfo classes now have.
+      AppInfo classes now have.
 TODO: give the knotes conduit a decent test mode.
 TODO: only re-write a local database if it is changed.
-TODO: move set-category code from subclasses into PilotRecordBase.
+
+2006-10-24  Jason 'vanRijn' Kasper
+* Getting rid of FastSync.  The only difference between it and HotSync was
+  that HotSync did a Backup and FastSync did not.  Having a third
+  permutation because of not having a way to set it in the Backup settings
+  seems wrong.  Also, if one of them is to go, I think that HotSync is much
+  more recognizable and widely used than FastSync.  
+* Allowing finer-grained control around when database backups are done.
+  This is so that users can choose when they want a backup to be done.
+  The problem I need to solve for myself is that since I'm now syncing
+  between 2 PCs, I need a full sync to be done whenever I switch.  But I
+  do not EVER want an automatic backup to be done.  Currently, this is not
+  possible.  Fixing it.  =:)  This will also allow for schedule backups to
+  be done, which is also of interest to me.
+
+2006-01-30  Adriaan de Groot
+* Updated pilot-link to today's CVS, with one change - use of pl_socklen_t
+  in inet.c changed back to socklen_t.
+* Added --loop to kpilotTest to repeatedly run the same action. Only
+  works for --list right now.
+
+2006-01-23  Adriaan de Groot
+* Gosh, where to begin. KPilot moved SVN repositories, changed build
+  systems, had the guts of the device link class refactored, bumped the
+  plugin API version again, and tons more. The commit logs are probably
+  the most useful source of information about what's changed.
 
 2005-08-18  Adriaan de Groot
 * Found out that the PilotAppCategory constructor that takes
