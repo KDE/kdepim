@@ -87,35 +87,47 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
 
     /* STATE CHANGING METHODS */
     /**
-     * Begin asynchronously fetching the system address book , replacing the cached copy
-     */
-    void fetchAddressBooks( BookType booktype );
+    * Begin asynchronously fetching the system address book , replacing the cached copy
+    */
+    void fetchAddressBooks( const BookType booktype );
     /**
-     *  Asynchronously update the system address book
-     */
+    *  Asynchronously update the system address book
+    */
     void updateSystemAddressBook();
     /**
-     * Wrap up the load sequence
-     */
+    * Wrap up the load sequence
+    */
     void loadCompleted();
 
     /** HELPER METHODS **/
     /**
-     * Check to see if a local download of the SAB already exists
-     */
+    * Check to see if a local download of the SAB already exists
+    */
     bool systemAddressBookAlreadyPresent();
     /**
-     * Check if the resource is configured to download the SAB
-     */
+    * Check if the resource is configured to download the SAB
+    */
     bool shouldFetchSystemAddressBook();
+    /**
+    * Check if the resource is configured to download personal address
+    * books
+    */
+    bool shouldFetchUserAddressBooks();
 
     /**
-     * Create a URL for a single addressbook access.
-     * To fetch an address book completely, use mode = Fetch
-     * To just update an addressbook, use mode = Update and give the last sequence number already held
-     * If Update is given without a sequence number, the mode falls back to Fetch
-     */
+    * Create a URL for a single addressbook access.
+    * To fetch an address book completely, use mode = Fetch
+    * To just update an addressbook, use mode = Update and give the ast sequence number already held
+    * If Update is given without a sequence number, the mode falls back to Fetch
+    */
     KURL createAccessUrl( BookType bookType, AccessMode mode, unsigned int lastSequenceNumber = 0 );
+
+    /**
+     * Instantiate and connect the resource's progress item with the
+     * given label and completion percent (used when not loading
+     * the SAB, the progress item starts at 50%
+     */
+    void createProgressItem( const QString & message, const int percent = 0 );
 
   private slots:
     /** STATE CHANGING SLOTS **/
@@ -137,10 +149,10 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     GroupwiseServer *mServer;
 
     KIO::TransferJob *mJob;
-    KIO::TransferJob *mUpdateJob;
     KPIM::ProgressItem *mProgress;
+    KPIM::ProgressItem *mSABProgress;
+    KPIM::ProgressItem *mUABProgress;
     QString mJobData;
-    bool mUpdateSystemAddressBook;
     ResourceState mState;
 };
 

@@ -215,7 +215,7 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
 KABC::Addressee ContactConverter::convertFromAddressBookItem( ngwt__AddressBookItem * addrBkItem )
 {
-  kdDebug() << "ContactConverter::convertFromAddressBookItem()" << endl;
+  //kdDebug() << "ContactConverter::convertFromAddressBookItem()" << endl;
   KABC::Addressee addr;
   if ( !addrBkItem )
   {
@@ -234,7 +234,7 @@ KABC::Addressee ContactConverter::convertFromAddressBookItem( ngwt__AddressBookI
 
 KABC::Addressee ContactConverter::convertFromResource( ngwt__Resource* resource )
 {
-  kdDebug() << "ContactConverter::convertFromResource()" << endl;
+  //kdDebug() << "ContactConverter::convertFromResource()" << endl;
   KABC::Addressee addr = convertFromAddressBookItem( resource );
   if ( !resource )
   {
@@ -254,7 +254,7 @@ KABC::Addressee ContactConverter::convertFromResource( ngwt__Resource* resource 
 
 KABC::Addressee ContactConverter::convertFromGroup( ngwt__Group* group)
 {
-  kdDebug() << "ContactConverter::convertFromGroup()" << endl;
+//  kdDebug() << "ContactConverter::convertFromGroup()" << endl;
   KABC::Addressee addr = convertFromAddressBookItem( group );
   if ( !group )
   {
@@ -267,7 +267,7 @@ KABC::Addressee ContactConverter::convertFromGroup( ngwt__Group* group)
 
 KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
 {
-  kdDebug() << "ContactConverter::convertFromContact()" << endl;
+//  kdDebug() << "ContactConverter::convertFromContact()" << endl;
 
   KABC::Addressee addr = convertFromAddressBookItem( contact );
 

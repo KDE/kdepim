@@ -61,6 +61,8 @@ void ReadAddressBooksJob::run()
 {
   kdDebug() << "ReadAddressBooksJob::run()" << endl;
 
+// alternate read logic added on 20061209, uses the list of address books provided by the job starter instead of asking the server for the address book list again.  Risk might be that the list of address books is stale.
+#if 0
   mSoap->header->ngwt__session = mSession;
   _ngwm__getAddressBookListRequest addressBookListRequest;
   _ngwm__getAddressBookListResponse addressBookListResponse;
@@ -89,6 +91,17 @@ void ReadAddressBooksJob::run()
       }
     }
   }
+#else
+  GWConverter conv( mSoap );
+  QStringList::Iterator it = mAddressBookIds.begin();
+  const QStringList::Iterator end = mAddressBookIds.end();
+  for ( ; it != end; ++it )
+  {
+    std::string* id = conv.qStringToString( *it );
+    readAddressBook( *id );
+    mProgress += 100;
+  }
+#endif
 }
 
 void ReadAddressBooksJob::readAddressBook( std::string &id )
@@ -171,35 +184,50 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 #else
   unsigned int readItems = 0;
   unsigned int readChunkSize = READ_ADDRESS_FOLDER_CHUNK_SIZE;
-  
-  int cursor;
+
+  int cursor = 0;
 
   _ngwm__createCursorRequest cursorRequest;
   _ngwm__createCursorResponse cursorResponse;
 
   cursorRequest.container = id;
   cursorRequest.view = 0;
-  // filter for Contacts until we support Groups
-  cursorRequest.filter = soap_new_ngwt__Filter( mSoap, -1 );
-  ngwt__FilterEntry * fe = soap_new_ngwt__FilterEntry( mSoap, -1 );
-  fe->op = isOf;
-  fe->field = soap_new_std__string( mSoap, -1 );
-  fe->field->append( "@type" );
-  fe->value = soap_new_std__string( mSoap, -1 );
-  fe->value->append( "Contact" );
-  fe->custom = 0;
-  fe->date = 0;
-
-  cursorRequest.filter->element = fe;
-
+  if ( id.find( "GroupWiseSystemAddressBook" ) == 0 )
+  {
+    kdDebug() << "  Book: " << id.c_str() << " is a SAB " << endl;
+    // filter for Contacts until we support Groups
+    cursorRequest.filter = soap_new_ngwt__Filter( mSoap, -1 );
+    ngwt__FilterEntry * fe = soap_new_ngwt__FilterEntry( mSoap, -1 );
+    fe->op = isOf;
+    fe->field = soap_new_std__string( mSoap, -1 );
+    fe->field->append( "@type" );
+    fe->value = soap_new_std__string( mSoap, -1 );
+    fe->value->append( "Contact" );
+    fe->custom = 0;
+    fe->date = 0;
+    cursorRequest.filter->element = fe;
+  }
+  else
+  {
+    kdDebug() << "  Book: " << id.c_str() << " is a personal address book " << endl;
+    cursorRequest.filter = 0;
+  }
+  
   mSoap->header->ngwt__session = mSession;
   soap_call___ngw__createCursorRequest( mSoap, mUrl.latin1(), 0,
                                         &cursorRequest,
                                         &cursorResponse );
   if ( cursorResponse.cursor )
     cursor = *(cursorResponse.cursor);
-  else /* signal error? */
-    return;
+  else
+  {
+    if ( cursorResponse.status && cursorResponse.status->code != 0 )
+    {
+      kdDebug() << "  Couldn't read " << GWConverter::stringToQString(id ) << " : " << GWConverter::stringToQString(cursorResponse.status->description) << endl;
+      //mError = GroupWise::RefreshNeeded;
+    }
+  return;
+  }
 
   _ngwm__readCursorRequest readCursorRequest;
 
@@ -237,7 +265,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
       for( it = readCursorResponse.items->item.begin(); it != readCursorResponse.items->item.end(); ++it ) {
         ngwt__Item *item = *it;
 
-#if 1
+#if 0
         if ( item )
           if ( item->name )
             kdDebug() << "ITEM: " << item->name->c_str() << endl;
@@ -660,7 +688,7 @@ void UpdateAddressBooksJob::run()
     for ( it = items.begin(); it != items.end(); ++it ) {
       ngwt__Item *item = *it;
 
-#if 1
+#if 0
     if ( item )
       if ( item->name )
         kdDebug() << "ITEM: " << item->name->c_str() << endl;

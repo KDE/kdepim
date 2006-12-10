@@ -99,7 +99,7 @@ void KSSLSocket::slotConnected()
 //  kdDebug() << "KSSLSocket::slotConnected() " << (void*)this << endl;
 	if( KSSL::doesSSLWork() )
 	{
-		kdDebug(0) << k_funcinfo << "Trying SSL connection..." << endl;
+//		kdDebug(0) << k_funcinfo << "Trying SSL connection..." << endl;
 		if( !d->kssl )
 		{
 			d->kssl = new KSSL();
@@ -109,7 +109,7 @@ void KSSLSocket::slotConnected()
 			d->kssl->reInitialize();
 		}
 		d->kssl->setPeerHost(host());
-                kdDebug() << "SOCKET STATUS: " << socketStatus() << endl;
+//        kdDebug() << "SOCKET STATUS: " << socketStatus() << endl;
 		int rc = d->kssl->connect( sockfd );
                 if ( rc <= 0 ) {
                   kdError() << "Error connecting KSSL: " << rc << endl;

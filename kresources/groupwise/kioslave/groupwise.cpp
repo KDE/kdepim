@@ -375,7 +375,7 @@ void Groupwise::updateAddressbook( const KURL &url )
       errorMessage( i18n("Unable to login: ") + server.errorText() );
     } else {
       kdDebug() << "Update Addressbook" << endl;
-      if ( !server.updateAddressBooks( ids, lastSequenceNumber ) ) {
+      if ( !server.updateAddressBooks( ids, lastSequenceNumber + 1 ) ) {
         error( KIO::ERR_NO_CONTENT, server.errorText() );
         //errorMessage( i18n("Unable to update addressbook data: ") + server.errorText() );
       }
