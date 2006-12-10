@@ -224,6 +224,44 @@ void ResourceGroupwise::doClose()
   cancelLoad();
 }
 
+bool ResourceGroupwise::save( Ticket *ticket )
+{
+  return asyncSave( ticket );
+}
+
+bool ResourceGroupwise::asyncSave( Ticket* )
+{
+  if ( !mServer->login() ) return false;
+
+  KABC::Addressee::List::Iterator it;
+
+  KABC::Addressee::List addedList = addedAddressees();
+  for ( it = addedList.begin(); it != addedList.end(); ++it ) {
+    if ( mServer->insertAddressee( mPrefs->writeAddressBook(), *it ) ) {
+      clearChange( *it );
+      idMapper().setRemoteId( (*it).uid(), (*it).custom( "GWRESOURCE", "UID" ) );
+    }
+  }
+
+  KABC::Addressee::List changedList = changedAddressees();
+  for ( it = changedList.begin(); it != changedList.end(); ++it ) {
+    if ( mServer->changeAddressee( *it ) )
+      clearChange( *it );
+  }
+
+  KABC::Addressee::List deletedList = deletedAddressees();
+  for ( it = deletedList.begin(); it != deletedList.end(); ++it ) {
+    if ( mServer->removeAddressee( *it ) )
+      clearChange( *it );
+  }
+
+  saveCache();
+
+  mServer->logout();
+
+  return true;
+}
+
 bool ResourceGroupwise::load()
 {
   return asyncLoad();
@@ -322,44 +360,6 @@ void ResourceGroupwise::fetchAddressBooks( const BookType bookType )
   return;
 }
 
-bool ResourceGroupwise::save( Ticket *ticket )
-{
-  return asyncSave( ticket );
-}
-
-bool ResourceGroupwise::asyncSave( Ticket* )
-{
-  if ( !mServer->login() ) return false;
-
-  KABC::Addressee::List::Iterator it;
-
-  KABC::Addressee::List addedList = addedAddressees();
-  for ( it = addedList.begin(); it != addedList.end(); ++it ) {
-    if ( mServer->insertAddressee( mPrefs->writeAddressBook(), *it ) ) {
-      clearChange( *it );
-      idMapper().setRemoteId( (*it).uid(), (*it).custom( "GWRESOURCE", "UID" ) );
-    }
-  }
-
-  KABC::Addressee::List changedList = changedAddressees();
-  for ( it = changedList.begin(); it != changedList.end(); ++it ) {
-    if ( mServer->changeAddressee( *it ) )
-      clearChange( *it );
-  }
-
-  KABC::Addressee::List deletedList = deletedAddressees();
-  for ( it = deletedList.begin(); it != deletedList.end(); ++it ) {
-    if ( mServer->removeAddressee( *it ) )
-      clearChange( *it );
-  }
-
-  saveCache();
-
-  mServer->logout();
-
-  return true;
-}
-
 void ResourceGroupwise::fetchSABResult( KIO::Job *job )
 {
   kdDebug() << "ResourceGroupwise::fetchSABResult() " << endl;
@@ -410,32 +410,6 @@ void ResourceGroupwise::fetchUABResult( KIO::Job *job )
   loadCompleted();
 }
 
-void ResourceGroupwise::updateSABResult( KIO::Job *job )
-{
-  kdDebug() << "ResourceGroupwise::updateSABResult() " << endl;
-
-  mSABProgress->setComplete();
-  mSABProgress = 0;
-  mJob->disconnect( this );
-  mJob = 0;
-
-  int errorCode = job->error();
-  if ( errorCode != 0 ) {
-    if ( errorCode == KIO::ERR_NO_CONTENT ) // we need to refresh the SAB
-    {
-      kdDebug() << "  update SAB failed, fetching all of it again" << endl;
-      mPrefs->setLastSequenceNumber( 0 );
-      mPrefs->setFirstSequenceNumber( 0 );
-      fetchAddressBooks( System );
-      return;
-    }
-  }
-  mState = SABUptodate;
-
-  if ( shouldFetchUserAddressBooks() )
-    fetchAddressBooks( User );
-}
-
 void ResourceGroupwise::updateSystemAddressBook()
 {
   kdDebug() << "ResourceGroupwise::updateSystemAddressBook()" << endl;
@@ -471,6 +445,32 @@ void ResourceGroupwise::updateSystemAddressBook()
            SLOT( slotJobPercent( KIO::Job *, unsigned long ) ) );
 
   return;
+}
+
+void ResourceGroupwise::updateSABResult( KIO::Job *job )
+{
+  kdDebug() << "ResourceGroupwise::updateSABResult() " << endl;
+
+  mSABProgress->setComplete();
+  mSABProgress = 0;
+  mJob->disconnect( this );
+  mJob = 0;
+
+  int errorCode = job->error();
+  if ( errorCode != 0 ) {
+    if ( errorCode == KIO::ERR_NO_CONTENT ) // we need to refresh the SAB
+    {
+      kdDebug() << "  update SAB failed, fetching all of it again" << endl;
+      mPrefs->setLastSequenceNumber( 0 );
+      mPrefs->setFirstSequenceNumber( 0 );
+      fetchAddressBooks( System );
+      return;
+    }
+  }
+  mState = SABUptodate;
+
+  if ( shouldFetchUserAddressBooks() )
+    fetchAddressBooks( User );
 }
 
 void ResourceGroupwise::slotReadJobData( KIO::Job *job , const QByteArray &data )
