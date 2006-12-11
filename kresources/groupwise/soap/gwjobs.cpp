@@ -40,7 +40,7 @@
 
 GWJob::GWJob( GroupwiseServer *server, struct soap *soap, const QString &url,
   const std::string &session )
-  : mServer( server ), mSoap( soap ), mUrl( url ), mSession( session ), mError( 0 )
+  : mServer( server ), mSoap( soap ), mUrl( url ), mSession( session ), mError( GroupWise::NoError )
 {
 }
 
@@ -645,9 +645,14 @@ void UpdateAddressBooksJob::setAddressBookIds( const QStringList &ids )
   kdDebug() << "ADDR IDS: " << ids.join( "," ) << endl;
 }
 
-void UpdateAddressBooksJob::setStartSequenceNumber( const int startSeqNo )
+void UpdateAddressBooksJob::setStartSequenceNumber( const unsigned long startSeqNo )
 {
   mStartSequenceNumber = startSeqNo;
+}
+
+void UpdateAddressBooksJob::setLastPORebuildTime( const unsigned long lastPORebuildTime)
+{
+  mLastPORebuildTime = lastPORebuildTime;
 }
 
 void UpdateAddressBooksJob::run()
@@ -662,9 +667,10 @@ void UpdateAddressBooksJob::run()
   request.container.append( mAddressBookIds.first().latin1() );
   request.deltaInfo = soap_new_ngwt__DeltaInfo( mSoap, -1 );
   request.deltaInfo->count = (int*)soap_malloc( mSoap, sizeof(int) );
-  *( request.deltaInfo->count ) = -1;
+#warning UpdateAddressBooksJob::run() this might need to be called in a loop due to chunking
+  *( request.deltaInfo->count ) = READ_ADDRESS_FOLDER_CHUNK_SIZE;
  /* request.deltaInfo->count = 0;*/
-  request.deltaInfo->lastTimePORebuild = 0;
+  request.deltaInfo->lastTimePORebuild = mLastPORebuildTime;
   request.deltaInfo->firstSequence = (unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );
   *(request.deltaInfo->firstSequence) = mStartSequenceNumber;
   request.deltaInfo->lastSequence = 0; /*(unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );*/
@@ -712,6 +718,4 @@ void UpdateAddressBooksJob::run()
     kdDebug() << "The cached address book is too old, we have to refresh the whole thing." << endl;
     mError = GroupWise::RefreshNeeded;
   }
-//   if ( addressBookListResponse.books ) { 
-//     std::vector<class ngwt__AddressBook * > *addressBooks = &addressBookListResponse.books->book;
 }

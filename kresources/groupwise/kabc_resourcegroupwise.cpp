@@ -43,8 +43,6 @@ ResourceGroupwise::ResourceGroupwise( const KConfig *config )
   if ( config ) {
     readConfig( config );
   }
-
-  initGroupwise();
 }
 
 ResourceGroupwise::ResourceGroupwise( const KURL &url,
@@ -64,7 +62,6 @@ ResourceGroupwise::ResourceGroupwise( const KURL &url,
   mPrefs->setReadAddressBooks( readAddressBooks );
   mPrefs->setWriteAddressBook( writeAddressBook );
 
-  initGroupwise();
 }
 
 void ResourceGroupwise::init()
@@ -76,6 +73,8 @@ void ResourceGroupwise::init()
   mPrefs = new GroupwisePrefs;
   mState = Start;
   setType( "groupwise" );
+
+  initGroupwise();
 }
 
 void ResourceGroupwise::initGroupwise()
@@ -255,6 +254,7 @@ bool ResourceGroupwise::asyncSave( Ticket* )
       clearChange( *it );
   }
 
+  if ( appIsWhiteListedForSAB() )
   saveCache();
 
   mServer->logout();
@@ -278,7 +278,8 @@ bool ResourceGroupwise::asyncLoad()
      return true;
   }
 
-  loadCache();
+  if ( appIsWhiteListedForSAB() )
+    loadCache();
 
   if ( !mProgress )
   {
@@ -294,22 +295,27 @@ bool ResourceGroupwise::asyncLoad()
     writeAddressBooks();
   }
 
-  if ( !systemAddressBookAlreadyPresent() && shouldFetchSystemAddressBook() )
+  SABState sabState = systemAddressBookState();
+  if ( shouldFetchSystemAddressBook() )
   {
-    kdDebug() << "  Fetching system addressbook" << endl;
-    fetchAddressBooks( System );
-    return true;
+    if ( sabState == RefreshNeeded )
+    {
+      kdDebug() << "  Fetching system addressbook" << endl;
+      fetchAddressBooks( System );
+      return true;
+    }
+    else if ( sabState == Stale )
+    {
+      kdDebug() << "  Updating system addressbook" << endl;
+      updateSystemAddressBook(); // we then fetch the user address books after doing this
+      return true;
+    }
   }
-  else if ( !shouldFetchSystemAddressBook() && shouldFetchUserAddressBooks())
+  else if ( shouldFetchUserAddressBooks() )
   {
     kdDebug() << "  Fetching user addressbook" << endl;
     fetchAddressBooks( User );
     return true;
-  }
-  else
-  {
-    kdDebug() << "  Updating system addressbook" << endl;
-    updateSystemAddressBook(); // we then fetch the user address books after doing this
   }
   return true;
 }
@@ -317,6 +323,9 @@ bool ResourceGroupwise::asyncLoad()
 void ResourceGroupwise::fetchAddressBooks( const BookType bookType )
 {
   KURL url = createAccessUrl( bookType, Fetch );
+  if ( !url.isValid() )
+    return;
+
   kdDebug() << k_funcinfo << ( bookType == System ? " System" : " User" ) << " URL: " << url << endl;
   // sanity check
   if ( bookType == User && !( mState == SABUptodate || mState == Start ) )
@@ -327,6 +336,12 @@ void ResourceGroupwise::fetchAddressBooks( const BookType bookType )
 
   mState = ( bookType == System ? FetchingSAB : FetchingUAB );
   mJobData = QString::null;
+
+  if ( mJob )
+  {
+    kdDebug() << "  **ERROR** - fetchAddressBooks() called when a job was already running!" << endl;
+    return;
+  }
 
   mJob = KIO::get( url, false, false );  // TODO: make the GW jobs call finished if the URL 
                                          // contains no address book IDs
@@ -376,21 +391,12 @@ void ResourceGroupwise::fetchSABResult( KIO::Job *job )
   if ( mSABProgress )
     mSABProgress->setComplete();
 
-  // TODO add delta info progress reporting
-  // update SAB delta info
-  kdDebug() << "  fetched whole SAB, now fetching delta info" << endl;
-  if ( mServer->login() )
-  {
-    GroupWise::DeltaInfo deltaInfo = mServer->getDeltaInfo( mPrefs->systemAddressBook() );
-    mServer->logout();
+  storeDeltaInfo();
 
-    kdDebug() << "  storing delta info to prefs" << endl;
-    mPrefs->setFirstSequenceNumber( deltaInfo.firstSequence );
-    mPrefs->setLastSequenceNumber( deltaInfo.lastSequence );
-    mPrefs->writeConfig();
-  }
-
-  fetchAddressBooks( User );
+  if ( shouldFetchUserAddressBooks() )
+    fetchAddressBooks( User );
+  else
+    loadCompleted();
 }
 
 void ResourceGroupwise::fetchUABResult( KIO::Job *job )
@@ -425,7 +431,7 @@ void ResourceGroupwise::updateSystemAddressBook()
     writeAddressBooks();
   }
 
-  KURL url = createAccessUrl( System, Update, /*mPrefs->firstSequenceNumber(),*/ mPrefs->lastSequenceNumber() );
+  KURL url = createAccessUrl( System, Update, mPrefs->lastSequenceNumber(), mPrefs->lastTimePORebuild() );
   kdDebug() << "  Update URL: " << url << endl;
 
   mJobData = QString::null;
@@ -467,26 +473,28 @@ void ResourceGroupwise::updateSABResult( KIO::Job *job )
       return;
     }
   }
+
   mState = SABUptodate;
+  storeDeltaInfo();
 
   if ( shouldFetchUserAddressBooks() )
     fetchAddressBooks( User );
+  else
+    loadCompleted();
 }
 
 void ResourceGroupwise::slotReadJobData( KIO::Job *job , const QByteArray &data )
 {
   kdDebug() << "ResourceGroupwise::slotReadJobData()" << endl;
-  kdDebug() << "  Job address: " << job << endl;
+  Q_UNUSED( job );
 
   mJobData.append( data.data() );
-  //mAddrMap.clear(); //ideally we would remove all the contacts from the personal addressbooks and keep the ones from the SAB
-  // for the moment we will just have to deal with double removal.
 
   KABC::VCardConverter conv;
   QTime profile;
   profile.start();
   Addressee::List addressees = conv.parseVCards( mJobData );
-  kdDebug() << "  parsed " << addressees.count() << " contacts in "  << profile.elapsed() << "ms, now adding to resource..." << endl;
+ // kdDebug() << "  parsed " << addressees.count() << " contacts in "  << profile.elapsed() << "ms, now adding to resource..." << endl;
 
   Addressee::List::ConstIterator it;
   for( it = addressees.begin(); it != addressees.end(); ++it ) {
@@ -512,9 +520,10 @@ void ResourceGroupwise::slotReadJobData( KIO::Job *job , const QByteArray &data 
 void ResourceGroupwise::slotUpdateJobData( KIO::Job *job, const QByteArray &data )
 {
   kdDebug() << "ResourceGroupwise::slotUpdateJobData()" << endl;
-  kdDebug() << "Job address: " << job << endl;
-#warning maybe ignoring data from job!!
+  kdDebug() << "  Job address: " << job << endl;
   KABC::VCardConverter conv;
+  mJobData.append( data.data() );
+
   Addressee::List addressees = conv.parseVCards( mJobData );
   Addressee::List::ConstIterator it;
 
@@ -550,11 +559,12 @@ void ResourceGroupwise::slotUpdateJobData( KIO::Job *job, const QByteArray &data
             removeAddressee( addrToDelete );
           }
         }
-        else 
+        else
           kdError() << "Addressee to delete did not have a remote UID, unable to find the corresponding local contact" << endl;
       }
     }
   }
+  mJobData = QString::null;
 }
 
 void ResourceGroupwise::loadCompleted()
@@ -566,7 +576,8 @@ void ResourceGroupwise::loadCompleted()
   mSABProgress = 0;
   mUABProgress = 0;
   mState = Start;
-  saveCache();
+  if ( appIsWhiteListedForSAB() )
+    saveCache();
   emit loadingFinished( this );
   addressBook()->emitAddressBookChanged();
 }
@@ -591,15 +602,58 @@ void ResourceGroupwise::cancelLoad()
   mState = Start;
 }
 
-bool ResourceGroupwise::systemAddressBookAlreadyPresent()
+ResourceGroupwise::SABState ResourceGroupwise::systemAddressBookState()
 {
-  return ( mPrefs->lastSequenceNumber() != 0 && mPrefs->firstSequenceNumber() != 0 );
+  int storedFirstSequence = mPrefs->firstSequenceNumber();
+  int storedLastSequence = mPrefs->lastSequenceNumber();
+  int storedLastPORebuildTime = mPrefs->lastTimePORebuild();
+
+  kdDebug() << "ResourceGroupwise::systemAddressBookState()" << endl;
+  kdDebug() << "  Stored first seq no: " << storedFirstSequence  << endl;
+  kdDebug() << "  Stored last seq no: " << storedLastSequence << endl;
+  kdDebug() << "  Stored last PO Rebuild time: " << storedLastPORebuildTime << endl;
+
+  kdDebug() << "  Fetching delta info to check if update possible" << endl;
+  if ( mServer->login() )
+  {
+    GroupWise::DeltaInfo deltaInfo = mServer->getDeltaInfo( mPrefs->systemAddressBook() );
+    mServer->logout();
+
+    mServerFirstSequence = deltaInfo.firstSequence;
+    mServerLastSequence = deltaInfo.lastSequence;
+    mServerLastPORebuildTime = deltaInfo.lastTimePORebuild;
+
+    kdDebug() << "  Server first seq no: " << mServerFirstSequence  << endl;
+    kdDebug() << "  Server last seq no: " << mServerLastSequence << endl;
+    kdDebug() << "  Server last PO Rebuild time: " << mServerLastPORebuildTime << endl;
+
+    if ( storedFirstSequence == 0 || storedLastSequence == 0 )
+    {
+      kdDebug() << "  no fetched SAB exists yet, can't update" << endl;
+      return RefreshNeeded;
+    }
+
+    if ( mServerFirstSequence > storedLastSequence || storedLastPORebuildTime != mServerLastPORebuildTime)
+    {
+      kdDebug() << "  New entries since the last fetch are no longer available as deltas, or the PO was rebuilt, refresh needed" << endl;
+      return RefreshNeeded;
+    }
+    
+    if ( mServerLastSequence == storedLastSequence )
+    {
+      kdDebug() << "  The local data is up to date" << endl;
+      return InSync;
+    }
+  }
+  kdDebug() << "  Fallthrough case - returning Stale" << endl;
+  return Stale;
 }
 
 bool ResourceGroupwise::shouldFetchSystemAddressBook()
 {
+  
   QStringList ids = mPrefs->readAddressBooks();
-  return ( ids.find( mPrefs->systemAddressBook() ) != ids.end() );
+  return ( appIsWhiteListedForSAB() && ids.find( mPrefs->systemAddressBook() ) != ids.end() );
 }
 
 bool ResourceGroupwise::shouldFetchUserAddressBooks()
@@ -608,7 +662,7 @@ bool ResourceGroupwise::shouldFetchUserAddressBooks()
   return ( ids.count() > 1 || ids.find( mPrefs->systemAddressBook() ) == ids.end() );
 }
 
-KURL ResourceGroupwise::createAccessUrl( BookType bookType, AccessMode mode, unsigned int lastSequenceNumber )
+KURL ResourceGroupwise::createAccessUrl( BookType bookType, AccessMode mode, unsigned long lastSequenceNumber, unsigned long lastPORebuildTime )
 {
   // set up list of address book IDs to fetch
   QStringList ids;
@@ -619,7 +673,10 @@ KURL ResourceGroupwise::createAccessUrl( BookType bookType, AccessMode mode, uns
     ids = mPrefs->readAddressBooks();
     ids.remove( mPrefs->systemAddressBook() );
   }
-  
+
+  if ( ids.isEmpty() )
+    return KURL();
+
   KURL url( prefs()->url() );
   if ( url.protocol() == "http" ) 
     url.setProtocol( "groupwise" );
@@ -637,12 +694,36 @@ KURL ResourceGroupwise::createAccessUrl( BookType bookType, AccessMode mode, uns
     query += "addressbookid=" + *it;
   }
 
-  if ( mode == Update && lastSequenceNumber > 0 )
+  if ( mode == Update && lastSequenceNumber > 0 && lastPORebuildTime > 0 )
   {
-    query += QString::fromLatin1( "&update=true&lastSeqNo=%1" ).arg( mPrefs->lastSequenceNumber() );
+    query += QString::fromLatin1( "&update=true&lastSeqNo=%1&PORebuildTime=%2" ).arg( lastSequenceNumber ).arg( lastPORebuildTime );;
   }
   url.setQuery( query );
   return url;
+}
+
+void ResourceGroupwise::storeDeltaInfo()
+{
+  // update SAB delta info
+  kdDebug() << "ResourceGroupwise::storeDeltaInfo()" << endl;
+  kdDebug() << "  Server first seq no: " << mServerFirstSequence  << endl;
+  kdDebug() << "  Server last seq no: " << mServerLastSequence << endl;
+  kdDebug() << "  Server last PO Rebuild time: " << mServerLastPORebuildTime << endl;
+
+  mPrefs->setFirstSequenceNumber( mServerFirstSequence );
+  mPrefs->setLastSequenceNumber( mServerLastSequence );
+  mPrefs->setLastTimePORebuild( mServerLastPORebuildTime );
+  mPrefs->writeConfig();
+}
+
+bool ResourceGroupwise::appIsWhiteListedForSAB()
+{
+  if ( !mPrefs->systemAddressBookWhiteList().contains( qApp->argv()[ 0 ] ) )
+  {
+    kdDebug() << "Application " << qApp->argv()[ 0 ] << " is _blacklisted_ to load the SAB" << endl;
+    return false;
+  }
+  return true;
 }
 
 #include "kabc_resourcegroupwise.moc"

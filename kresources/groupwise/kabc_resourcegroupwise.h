@@ -73,6 +73,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     bool asyncLoad();
     bool save( Ticket * );
     bool asyncSave( Ticket * );
+    enum SABState { Stale, InSync, RefreshNeeded };
 
     /**
      * Clears the cached data, in memory and on disk
@@ -103,7 +104,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     /**
     * Check to see if a local download of the SAB already exists
     */
-    bool systemAddressBookAlreadyPresent();
+    SABState systemAddressBookState();
     /**
     * Check if the resource is configured to download the SAB
     */
@@ -120,14 +121,18 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     * To just update an addressbook, use mode = Update and give the ast sequence number already held
     * If Update is given without a sequence number, the mode falls back to Fetch
     */
-    KURL createAccessUrl( BookType bookType, AccessMode mode, unsigned int lastSequenceNumber = 0 );
+    KURL createAccessUrl( BookType bookType, AccessMode mode, unsigned long lastSequenceNumber = 0, unsigned long lastPORebuildTime = 0 );
 
     /**
-     * Instantiate and connect the resource's progress item with the
-     * given label and completion percent (used when not loading
-     * the SAB, the progress item starts at 50%
-     */
-    void createProgressItem( const QString & message, const int percent = 0 );
+    * Persist the last known delta info.  Call after the SAB is up to date.
+    */
+    void storeDeltaInfo();
+
+    /**
+    * Check if the application which has loaded this resource is whitelisted
+    * to load the System Address Book (time-consuming)
+    */
+    bool appIsWhiteListedForSAB();
 
   private slots:
     /** STATE CHANGING SLOTS **/
@@ -141,7 +146,6 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     void slotJobPercent( KIO::Job *job, unsigned long percent );
 
     void cancelLoad();
-
   private:
     GroupwisePrefs *mPrefs;
     GroupWise::AddressBook::List mAddressBooks;
@@ -154,6 +158,9 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     KPIM::ProgressItem *mUABProgress;
     QString mJobData;
     ResourceState mState;
+    int mServerFirstSequence, mServerLastSequence, mServerLastPORebuildTime;
+
+    bool mLimitedMode;
 };
 
 }
