@@ -47,6 +47,7 @@ class PilotCategoryInfo; // ... and category information
 #include <pi-buffer.h>
 
 #include <qstring.h>
+#include <qstringlist.h>
 #include <qvaluelist.h>
 
 /**
@@ -131,7 +132,7 @@ namespace Pilot
 	*/
 	inline QString categoryName(const struct CategoryAppInfo *info, unsigned int i)
 	{
-		if ( i < CATEGORY_COUNT )
+		if ( ( i < CATEGORY_COUNT ) && ( info->name[i][0] ) )
 		{
 			return fromPilot( info->name[i], CATEGORY_SIZE );
 		}
@@ -141,6 +142,28 @@ namespace Pilot
 		}
 	}
 
+	/** Returns a list of all the category names available on the
+	*  handheld. This list is neither ordered nor does it contain
+	*  all sixteen categories -- empty category names on the
+	*  handheld are skipped.
+	*/
+	inline QStringList categoryNames(const struct CategoryAppInfo *info)
+	{
+		QStringList l;
+		if (!info)
+		{
+			return l;
+		}
+		for (unsigned int i=0; i<CATEGORY_COUNT; ++i)
+		{
+			QString s = categoryName(info,i);
+			if (!s.isEmpty())
+			{
+				l.append(s);
+			}
+		}
+		return l;
+	}
 
 	/** Search for the given category @p name in the list
 	* of categories; returns the category number. If @p unknownIsUnfiled
@@ -190,9 +213,9 @@ namespace Pilot
 
 
 template<typename t> struct dlp { } ;
-template<> struct dlp<short> 
-{ 
-	enum { size = 2 }; 
+template<> struct dlp<short>
+{
+	enum { size = 2 };
 
 	static void append(pi_buffer_t *b, short v)
 	{
@@ -222,9 +245,9 @@ template<> struct dlp<short>
 		return r;
 	}
 } ;
-template<> struct dlp<long> 
-{ 
-	enum { size = 4 }; 
+template<> struct dlp<long>
+{
+	enum { size = 4 };
 
 	static void append(pi_buffer_t *b, int v)
 	{
