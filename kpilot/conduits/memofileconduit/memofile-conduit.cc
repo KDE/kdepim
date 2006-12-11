@@ -350,7 +350,7 @@ void MemofileConduit::getAllFromPilot()
 }
 
 /**
- *  Read all memos in from Pilot.
+ *  Read all modified memos in from Pilot.
  */
 void MemofileConduit::getModifiedFromPilot()
 {
