@@ -81,7 +81,6 @@ protected:
 
 	void _getAppInfo();
 	void _setAppInfo();
-	QString _getCat(const QStringList cats, const QString curr) const;
 
 	virtual PilotRecordBase *newPilotEntry(PilotRecord*r);
 	virtual KCal::Incidence*newIncidence();
@@ -97,18 +96,6 @@ protected:
 		const PilotRecordBase  *);
 	virtual KCal::Event *incidenceFromRecord(KCal::Event *, const PilotDateEntry *);
 
-	void setStartEndTimes(KCal::Event *,const PilotDateEntry *);
-	void setAlarms(KCal::Event *,const PilotDateEntry *);
-	void setRecurrence(KCal::Event *,const PilotDateEntry *);
-	void setExceptions(KCal::Event *,const PilotDateEntry *);
-
-	void setStartEndTimes(PilotDateEntry *, const KCal::Event * );
-	void setAlarms(PilotDateEntry *, const KCal::Event * );
-	void setRecurrence(PilotDateEntry *, const KCal::Event * );
-	void setExceptions(PilotDateEntry *, const KCal::Event * );
-
-	void setCategory(PilotDateEntry *, const KCal::Event *);
-	void setCategory(KCal::Event *, const PilotDateEntry *);
 	struct AppointmentAppInfo fAppointmentAppInfo;
 };
 

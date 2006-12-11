@@ -14,11 +14,12 @@ set(conduit_SHARED
 	cleanupstate.cc
 	deleteunsyncedpcstate.cc
 	deleteunsyncedhhstate.cc
+	vcalRecord.cc
 )
 
 kde3_add_kcfg_files(conduit_SHARED vcalconduitSettings.kcfgc)
 kde3_add_ui_files(conduit_SHARED korganizerConduit.ui)
-	
+
 set(conduit_vcal_SRCS
 	${conduit_SHARED}
 	vcal-conduit.cc
@@ -63,6 +64,6 @@ install(
 kde3_install_libtool_file(conduit_todo)
 
 install(
-	FILES vcal-conduit.desktop todo-conduit.desktop 
+	FILES vcal-conduit.desktop todo-conduit.desktop
 	DESTINATION ${KDE3_SERVICES_DIR}
 )
