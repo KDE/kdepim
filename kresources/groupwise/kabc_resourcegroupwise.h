@@ -158,7 +158,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
     KPIM::ProgressItem *mUABProgress;
     QString mJobData;
     ResourceState mState;
-    int mServerFirstSequence, mServerLastSequence, mServerLastPORebuildTime;
+    unsigned long mServerFirstSequence, mServerLastSequence, mServerLastPORebuildTime;
 
     bool mLimitedMode;
 };
