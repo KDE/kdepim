@@ -120,13 +120,13 @@ public:
 	/** If the label already exists, uses the id; if not, adds the label
 	*  to the category list. @return false if category labels are full.
 	*/
-	inline bool setCategory(const QString &label) 
+	inline bool setCategory(const QString &label)
 	{
 		int c = Pilot::insertCategory(&fAppInfo.category,label,false);
 		PilotRecordBase::setCategory(c);
 		return c>=0;
 	}
-		
+
 	PilotRecord *pack() const;
 
 protected:
@@ -138,6 +138,7 @@ protected:
 private:
 	struct ToDo fTodoInfo;
 	struct ToDoAppInfo &fAppInfo;
+	unsigned int fDescriptionSize, fNoteSize;
 };
 
 typedef PilotAppInfo<ToDoAppInfo,unpack_ToDoAppInfo, pack_ToDoAppInfo> PilotToDoInfo;

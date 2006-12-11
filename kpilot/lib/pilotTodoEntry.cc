@@ -40,7 +40,10 @@
 #include "pilotTodoEntry.h"
 
 
-PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo): fAppInfo(appInfo)
+PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo) :
+	fAppInfo(appInfo),
+	fDescriptionSize(0),
+	fNoteSize(0)
 {
 	FUNCTIONSETUP;
 	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
@@ -48,7 +51,11 @@ PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo): fAppInfo(appInfo)
 
 /* initialize the entry from another one. If rec==NULL, this constructor does the same as PilotTodoEntry()
 */
-PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec):PilotRecordBase(rec), fAppInfo(appInfo)
+PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec) :
+	PilotRecordBase(rec),
+	fAppInfo(appInfo),
+	fDescriptionSize(0),
+	fNoteSize(0)
 {
 	::memset(&fTodoInfo, 0, sizeof(struct ToDo));
 	if (rec)
@@ -57,12 +64,27 @@ PilotTodoEntry::PilotTodoEntry(struct ToDoAppInfo &appInfo, PilotRecord * rec):P
 		b.data = (unsigned char *) rec->data();
 		b.allocated = b.used = rec->size();
 		unpack_ToDo(&fTodoInfo, &b, todo_v1);
+		if (fTodoInfo.description)
+		{
+			// Assume size of buffer allocated is just large enough;
+			// count trailing NUL as well.
+			fDescriptionSize = strlen(fTodoInfo.description)+1;
+		}
+		if (fTodoInfo.note)
+		{
+			// Same
+			fNoteSize = strlen(fTodoInfo.note)+1;
+		}
 	}
 
 }
 
 
-PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e):PilotRecordBase( &e ), fAppInfo(e.fAppInfo)
+PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e) :
+	PilotRecordBase( &e ),
+	fAppInfo(e.fAppInfo),
+	fDescriptionSize(0),
+	fNoteSize(0)
 {
 	FUNCTIONSETUP;
 	::memcpy(&fTodoInfo, &e.fTodoInfo, sizeof(fTodoInfo));
@@ -72,7 +94,6 @@ PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e):PilotRecordBase( &e ), 
 
 	setDescriptionP(e.getDescriptionP());
 	setNoteP(e.getNoteP());
-
 }				// end of copy constructor
 
 
@@ -87,6 +108,8 @@ PilotTodoEntry & PilotTodoEntry::operator = (const PilotTodoEntry & e)
 		// See PilotDateEntry::operator = for details
 		fTodoInfo.description = 0L;
 		fTodoInfo.note = 0L;
+		fDescriptionSize = 0;
+		fNoteSize = 0;
 
 		setDescriptionP(e.getDescriptionP());
 		setNoteP(e.getNoteP());
@@ -173,12 +196,17 @@ void PilotTodoEntry::setDescriptionP(const char *desc, int len)
 	KPILOT_FREE(fTodoInfo.description);
 	if (desc && *desc)
 	{
-		if (-1 == len) len=::strlen(desc);
+		if (-1 == len)
+		{
+			len=::strlen(desc);
+		}
 
+		fDescriptionSize = len+1;
 		fTodoInfo.description = (char *)::malloc(len + 1);
 		if (fTodoInfo.description)
 		{
-			strlcpy(fTodoInfo.description, desc, len+1);
+			strncpy(fTodoInfo.description, desc, len);
+			fTodoInfo.description[len] = 0;
 		}
 		else
 		{
@@ -207,12 +235,18 @@ void PilotTodoEntry::setNoteP(const char *note, int len)
 {
 	KPILOT_FREE(fTodoInfo.note);
 	if (note && *note)
-	  {
-	    if (-1 == len) len=::strlen(note);
+	{
+		if (-1 == len)
+		{
+			len=::strlen(note);
+		}
+
+		fNoteSize = len+1;
 		fTodoInfo.note = (char *)::malloc(len + 1);
 		if (fTodoInfo.note)
 		{
-		    strlcpy(fTodoInfo.note, note, len+1);
+			strncpy(fTodoInfo.note, note, len);
+			fTodoInfo.note[len] = 0;
 		}
 		else
 		{
