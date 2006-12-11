@@ -177,6 +177,13 @@ int insertCategory(struct CategoryAppInfo *info,
 {
 	FUNCTIONSETUP;
 
+	if (!info)
+	{
+		kdError() << k_funcinfo << "! Bad CategoryAppInfo pointer" << endl;
+		return -1;
+	}
+
+
 	int c = findCategory(info,label,unknownIsUnfiled);
 	if (c<0)
 	{
@@ -199,7 +206,7 @@ int insertCategory(struct CategoryAppInfo *info,
 		else
 		{
 			kdWarning() << k_funcinfo << "! Category name "
-				<< label 
+				<< label
 				<< " could not be added." << endl;
 			c = -1;
 		}
