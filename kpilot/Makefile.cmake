@@ -22,9 +22,9 @@ all: build-check
 
 check: lib tests
 	$(BUILD_DIR)/tests/testconstants
-	$(BUILD_DIR)/tests/testcategories --datadir=tests/data
-	$(BUILD_DIR)/tests/testaddresses --datadir=tests/data
-	$(BUILD_DIR)/tests/testdatebook --datadir=tests/data
+	$(BUILD_DIR)/tests/testcategories --data-dir=tests/data
+	$(BUILD_DIR)/tests/testaddresses --data-dir=tests/data
+	$(BUILD_DIR)/tests/testdatebook --data-dir=tests/data
 
 install: all
 	@cd "$(BUILD_DIR)" && $(MAKE) install

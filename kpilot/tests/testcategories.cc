@@ -134,7 +134,7 @@ void categoryNames()
 static const KCmdLineOptions options[] =
 {
 	{"verbose", "Verbose output", 0},
-	{"datadir <path>","Set data directory", "."},
+	{"data-dir <path>","Set data directory", "."},
 	KCmdLineLastOption
 };
 
@@ -165,7 +165,7 @@ int main(int argc, char **argv)
 		0L
 	};
 
-	QString datadir = args->getOption("datadir");
+	QString datadir = args->getOption("data-dir");
 
 	DEBUGKPILOT << "### testcategories\n#\n#" << endl;
 	DEBUGKPILOT << "# Listing categories from database files.\n#" << endl;

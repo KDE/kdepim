@@ -41,7 +41,7 @@
 static const KCmdLineOptions options[] =
 {
 	{"verbose", "Verbose output", 0},
-	{"datadir <path>","Set data directory", "."},
+	{"data-dir <path>","Set data directory", "."},
 	KCmdLineLastOption
 };
 
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 #ifdef DEBUG
 	debug_level= (args->isSet("verbose")) ? 4 : 0;
 #endif
-	QString datadir = args->getOption("datadir");
+	QString datadir = args->getOption("data-dir");
 
 	DEBUGKPILOT << "### testaddresses\n#\n#" << endl;
 
