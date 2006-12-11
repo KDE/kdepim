@@ -307,11 +307,6 @@ unsigned int PilotDateEntry::alarmLeadTime() const
 	return t;
 }
 
-QString PilotDateEntry::getCategoryLabel() const
-{
-	return Pilot::categoryName(&(fAppInfo.category),category());
-}
-
 PilotRecord *PilotDateEntry::pack() const
 {
 	int i;

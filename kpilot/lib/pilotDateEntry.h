@@ -352,7 +352,10 @@ public:
 		!doesFloat() );
 	}
 
-	QString getCategoryLabel() const;
+	inline QString getCategoryLabel() const
+	{
+		return Pilot::categoryName(&(fAppInfo.category),category());
+	}
 	inline bool setCategory(const QString &label)
 	{
 		int c = Pilot::insertCategory(&fAppInfo.category,label,false);
@@ -361,6 +364,14 @@ public:
 	} ;
 
 	PilotRecord *pack() const;
+
+	/** @return A reference to the appinfo block of the database
+	*          holding this entry.
+	*/
+	const AppointmentAppInfo &appInfo()
+	{
+		return fAppInfo;
+	}
 
 private:
 	struct Appointment fAppointmentInfo;
