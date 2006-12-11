@@ -158,19 +158,19 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 {
 	FUNCTIONSETUP;
 
-	// if the database is already open, we cannot create it again. 
+	// if the database is already open, we cannot create it again.
 	// How about completely resetting it? (i.e. deleting it and then
 	// creating it again)
 	if (isOpen()) {
 #ifdef DEBUG
-		DEBUGLIBRARY << fname << "Database " << fDBName 
+		DEBUGLIBRARY << fname << ": Database " << fDBName
 			<< " already open. Cannot recreate it." << endl;
 #endif
 		return true;
 	}
 
 #ifdef DEBUG
-	DEBUGLIBRARY << fname << "Creating database " << fDBName << endl;
+	DEBUGLIBRARY << fname << ": Creating database " << fDBName << endl;
 #endif
 
 	// Database names seem to be latin1.
@@ -665,21 +665,24 @@ void PilotLocalDatabase::closeDatabase()
 	}
 
 	QString newName = dbPathName() + CSL1(".new");
-	char buf[PATH_MAX];
-	memset(buf,0,PATH_MAX);
-	strlcpy(buf,QFile::encodeName(newName),PATH_MAX);
-
 #ifdef DEBUG
 	QString path = dbPathName();
 	DEBUGLIBRARY << fname
-		<< ": Creating temp file " << buf
+		<< ": Creating temp file " << newName
 		<< " for the database file " << path << endl;
 #endif
 
-	dbFile = pi_file_create(buf,&fDBInfo);
+	dbFile = pi_file_create(QFile::encodeName(newName),&fDBInfo);
 	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
+
 	for (unsigned int i = 0; i < d->size(); i++)
 	{
+		// How did a NULL pointer sneak in here?
+		if (!(*d)[i])
+		{
+			continue;
+		}
+
 		if (((*d)[i]->id() == 0) && ((*d)[i]->isDeleted()))
 		{
 			// Just ignore it
