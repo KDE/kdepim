@@ -132,7 +132,7 @@
                 <bool>true</bool>
             </property>
         </widget>
-        <widget class="KActiveLabel" row="5" column="0" rowspan="1" colspan="2">
+        <widget class="K3ActiveLabel" row="5" column="0" rowspan="1" colspan="2">
             <property name="name">
                 <cstring>lblWarning</cstring>
             </property>
@@ -157,6 +157,6 @@
 <includehints>
     <includehint>kpushbutton.h</includehint>
     <includehint>k3listview.h</includehint>
-    <includehint>kactivelabel.h</includehint>
+    <includehint>k3activelabel.h</includehint>
 </includehints>
 </UI>

@@ -252,12 +252,12 @@ void KNCleanUp::compactFolder(KNFolder *f)
 
 
 KNCleanUp::ProgressDialog::ProgressDialog( int steps, QWidget *parent ) :
-  QDialog( parent )
+  KDialog( parent )
 {
   const int w=400,
             h=160;
 
-  setWindowTitle(KInstance::makeStandardCaption(i18n("Cleaning Up"), this));
+  setCaption(i18n("Cleaning Up"));
 
   setFixedSize(w,h);
   QFrame *top = new QFrame( this );

@@ -17,6 +17,8 @@
 
 #include <QList>
 
+#include <KDialog>
+
 class QProgressBar;
 class QCloseEvent;
 class QLabel;
@@ -51,7 +53,7 @@ class KNCleanUp {
   protected:
 
     /** Cleanup progress dialog. */
-    class ProgressDialog : public QDialog  {
+    class ProgressDialog : public KDialog  {
 
       public:
         /** Creates a new progress dialog.

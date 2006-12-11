@@ -40,7 +40,7 @@ class Q3ListView;
 class QTextEdit;
 class QToolButton;
 
-class KActiveLabel;
+class K3ActiveLabel;
 class KComboBox;
 class KLineEdit;
 class K3ListView;
@@ -80,7 +80,7 @@ class AddressEditWidget : public QWidget
     AddressTypeCombo *mTypeCombo;
 
     QPushButton *mEditButton;
-    KActiveLabel *mAddressField;
+    K3ActiveLabel *mAddressField;
 
     KABC::Address::List mAddressList;
     KABC::Addressee mAddressee;

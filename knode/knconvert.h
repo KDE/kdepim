@@ -17,12 +17,12 @@
 
 #include <time.h>
 
-#include <QDialog>
 
 #include <qglobal.h>
 #include <QList>
 
 #include <kdemacros.h>
+#include <KDialog>
 
 class QListWidget;
 class QLabel;
@@ -34,7 +34,7 @@ class KProcess;
 
 
 /** Converter framework for older file formats. */
-class KDE_EXPORT KNConvert : public QDialog {
+class KDE_EXPORT KNConvert : public KDialog {
 
   Q_OBJECT
 

@@ -15,6 +15,7 @@
 #include <q3accel.h>
 
 #include <kapplication.h>
+#include <kdialog.h>
 #include <klocale.h>
 
 #include "knsourceviewwindow.h"
@@ -33,7 +34,7 @@ KNSourceViewWindow::KNSourceViewWindow( const QString &text )
 
   setAcceptRichText( false );
 
-  setWindowTitle(KInstance::makeStandardCaption(i18n("Article Source"), this));
+  setWindowTitle(KDialog::makeStandardCaption(i18n("Article Source"), this));
 #warning "kde4: porting\n";  
   //setPaper( QBrush( knGlobals.settings()->backgroundColor()) );
   setFont( knGlobals.settings()->articleFixedFont() );
