@@ -107,8 +107,7 @@ CheckUser::~CheckUser()
 				KMessageBox::Yes)
 			{
 				KPilotSettings::setUserName(defaultUserName);
-				fHandle->getPilotUser()
-					.setUserName(Pilot::toPilot(defaultUserName));
+				fHandle->getPilotUser().setUserName(defaultUserName);
 				guiUserName=defaultUserName;
 				pilotUserName=defaultUserName;
 			}
@@ -147,9 +146,7 @@ CheckUser::~CheckUser()
 					<< guiUserName << endl;
 #endif
 
-				QCString l1 = Pilot::toPilot(guiUserName);
-
-				fHandle->getPilotUser().setUserName(l1.data());
+				fHandle->getPilotUser().setUserName(guiUserName);
 				pilotUserName=guiUserName;
 			}
 		}
@@ -175,8 +172,7 @@ CheckUser::~CheckUser()
 				switch (r)
 				{
 				case KMessageBox::Yes:
-					fHandle->getPilotUser().setUserName(
-						Pilot::toPilot(guiUserName));
+					fHandle->getPilotUser().setUserName(guiUserName);
 					pilotUserName=guiUserName;
 					break;
 				case KMessageBox::No:

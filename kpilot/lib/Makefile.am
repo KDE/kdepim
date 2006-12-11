@@ -22,9 +22,10 @@ libkpilot_la_SOURCES = kpilotlibSettings.kcfgc \
 	pilot.cc \
 	pilotAppInfo.cc pilotRecord.cc pilotDatabase.cc \
 	pilotLocalDatabase.cc pilotSerialDatabase.cc \
-	pilotMemo.cc pilotAddress.cc \
-	pilotDateEntry.cc pilotTodoEntry.cc \
-	pilotStruct.cc
+	pilotMemo.cc \
+	pilotAddress.cc \
+	pilotDateEntry.cc \
+	pilotTodoEntry.cc
 
 libkpilot_la_LDFLAGS = $(PISOCK_LDFLAGS) -no-undefined $(all_libraries) $(KDE_EXTRA_RPATH) $(KDE_RPATH)
 libkpilot_la_LIBADD = $(PISOCK_LIB) $(LIB_KDEUI) $(LIB_KABC) $(top_builddir)/libkcal/libkcal.la

@@ -35,6 +35,8 @@
 
 #include <pi-dlp.h>
 
+#include "pilot.h"
+
 class KPilotUser
 {
 public:
@@ -65,7 +67,10 @@ public:
 	/** Set the user name to the given @p name , truncated
 	*  if necessary to the size of the field on the handheld.
 	*/
-	void setUserName(const char *name);
+	void setUserName( const QString &name)
+	{
+		Pilot::toPilot( name, fUser.username, sizeof(fUser.username) );
+	}
 
 	/** @return The length of the password on the handheld,
 	*           in bytes.
@@ -82,7 +87,10 @@ public:
 	/** Set the password for the user to @p password , truncated
 	*  to the size of the field on the handheld if needed.
 	*/
-	void setPassword(const char *password);
+	void setPassword( const QString &password )
+	{
+		Pilot::toPilot( password, fUser.password, sizeof(fUser.password) );
+	}
 
 	/** Accessor for the user ID value; returned as a handheld
 	*  long value (4 bytes).

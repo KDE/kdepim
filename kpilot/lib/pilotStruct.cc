@@ -27,23 +27,6 @@
 ** MA 02110-1301, USA.
 */
 
-#include "options.h"
-
-#include "pilotUser.h"
-#include "pilotSysInfo.h"
 
 
-
-void KPilotUser::setUserName(const char *name)
-{
-	memset(fUser.username, 0, sizeof(fUser.username));
-	strncpy(fUser.username, name,sizeof(fUser.username)-1);
-}
-
-void KPilotUser::setPassword(const char *password)
-{
-	memset(fUser.password, 0, sizeof(fUser.password));
-	strncpy(fUser.password, password,sizeof(fUser.password)-1);
-	fUser.passwordLength = strlen(fUser.password);
-}
 

@@ -44,7 +44,6 @@ set(lib_SRCS
 	pilotAddress.cc
 	pilotDateEntry.cc
 	pilotTodoEntry.cc
-	pilotStruct.cc
 )
 
 kde3_automoc(${lib_SRCS})
