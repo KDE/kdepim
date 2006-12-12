@@ -81,8 +81,10 @@ public:
 	/** Writes the application block info. */
 	virtual int writeAppBlock(unsigned char* buffer, int len) = 0;
 
-	/** returns the number of records in the database */
-	virtual int recordCount()=0;
+	/** Returns the number of records in the database.
+	 *  If the database is not open, return -1.
+	 */
+	virtual unsigned int recordCount() const=0;
 
 	/** Returns a QValueList of all record ids in the database.
 	    This implementation is really bad. */

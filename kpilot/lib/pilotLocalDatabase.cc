@@ -257,7 +257,7 @@ int PilotLocalDatabase::writeAppBlock(unsigned char *buffer, int len)
 
 
 // returns the number of records in the database
-int PilotLocalDatabase::recordCount()
+unsigned int PilotLocalDatabase::recordCount() const
 {
 	if (d && isOpen())
 	{

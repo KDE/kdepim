@@ -103,7 +103,7 @@ int PilotSerialDatabase::writeAppBlock(unsigned char *buffer, int len)
 }
 
 	// returns the number of records in the database
-int PilotSerialDatabase::recordCount()
+unsigned int PilotSerialDatabase::recordCount() const
 {
 	int idlen;
 	// dlp_ReadOpenDBInfo returns the number of bytes read and sets idlen to the # of recs
@@ -111,7 +111,10 @@ int PilotSerialDatabase::recordCount()
 	{
 		return idlen;
 	}
-	else return -1;
+	else
+	{
+		return 0;
+	}
 }
 
 

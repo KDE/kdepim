@@ -50,8 +50,8 @@ public:
 	virtual int readAppBlock(unsigned char* buffer, int maxLen);
 	/** Writes the application block info. */
 	virtual int writeAppBlock(unsigned char* buffer, int len);
-	/**  returns the number of records in the database */
-	virtual int recordCount();
+	/**  returns the number of records in the database, 0 if not open */
+	virtual unsigned int recordCount() const;
 	/** Returns a QValueList of all record ids in the database. */
 	 virtual QValueList<recordid_t> idList();
 	/** Reads a record from database by id, returns record length */
@@ -109,7 +109,13 @@ public:
 protected:
 	virtual void openDatabase();
 	virtual void closeDatabase();
-	int getDBHandle() { return fDBHandle; }
+	/** Returns the file handle used to communicate with the handheld.
+	*   This is an internal value to be passed to DLP functions.
+	*/
+	int getDBHandle() const
+	{
+		return fDBHandle;
+	}
 
 
 private:
