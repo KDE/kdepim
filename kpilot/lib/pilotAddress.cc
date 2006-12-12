@@ -133,7 +133,7 @@ PilotAddress::~PilotAddress()
 	free_Address(&fAddressInfo);
 }
 
-QString PilotAddress::getTextRepresentation(bool richText)
+QString PilotAddress::getTextRepresentation(bool richText) const
 {
 	QString text, tmp;
 

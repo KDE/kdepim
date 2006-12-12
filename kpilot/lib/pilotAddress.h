@@ -37,6 +37,12 @@
 #include "pilotRecord.h"
 #include "pilotAppInfo.h"
 
+/** Interpreted form of the AppInfo block in the address database. */
+typedef PilotAppInfo<
+	AddressAppInfo,
+	unpack_AddressAppInfo, 
+	pack_AddressAppInfo> PilotAddressInfo;
+
 /** @brief A wrapper class around the Address struct provided by pi-address.h
  *
  * This class allows the user to set and get address field values.
@@ -71,13 +77,6 @@
  * this order is kept. In other languages, main can replaced with
  * Corporation.
  */
-namespace KABC
-{
-	class PhoneNumber;
-}
-
-typedef PilotAppInfo<AddressAppInfo,unpack_AddressAppInfo, pack_AddressAppInfo> PilotAddressInfo;
-
 class KDE_EXPORT PilotAddress : public PilotRecordBase
 {
 public:
@@ -96,7 +95,7 @@ public:
 	/** Returns a text representation of the address. If richText is true, the
 	 *  text is allowed to contain Qt-HTML tags.
 	 */
-	virtual QString getTextRepresentation(bool richText=false);
+	QString getTextRepresentation(bool richText=false) const;
 
 	/** Zeros the internal address info structure, in effect clearing
 	*  out all prior set values

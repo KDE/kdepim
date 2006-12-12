@@ -51,7 +51,8 @@ class KDE_EXPORT PilotRecordBase
 {
 public:
 	/** Constructor. Initialize the characteristics to the
-	* given values.
+	*   given values.
+	*
 	* @param attrib Attributes (bitfield) for this entry.
 	* @param cat Category for this entry. Should be in the
 	*        range 0 <= cat < Pilot::CATEGORY_COUNT . Using an
@@ -64,6 +65,13 @@ public:
 		setCategory(cat);
 	}
 
+	/** Constructor. Initializes the characteristics from
+	 *  the values the given record @p b has. When @p b is
+	 *  NULL (which is allowed), everything is assumed zero.
+	 *  No ownership is transferred.
+	 *
+	 *  @param b Record to take characteristics from.
+	 */
 	PilotRecordBase( const PilotRecordBase *b ) :
 		fAttrib( b ? b->attributes() : 0 ),
 		fCat( 0 ),
@@ -81,22 +89,38 @@ public:
 	/** Attributes of this record (deleted, secret, ...);
 	* it's a bitfield.
 	*/
-	inline int attributes() const { return fAttrib; }
+	inline int attributes() const 
+	{
+		return fAttrib;
+	}
 
 	/** Set the attributes of this record. */
-	inline void  setAttributes(int attrib) { fAttrib = attrib; }
+	inline void  setAttributes(int attrib)
+	{
+		fAttrib = attrib;
+	}
 
 	/** Returns the category number [ 0 .. Pilot::CATEGORY_COUNT-1]
 	* of this record.
 	*/
-	inline int   category() const { return fCat; }
+	inline int   category() const
+	{
+		return fCat;
+	}
 
 	/** Sets the category number [ 0 .. Pilot::CATEGORY_COUNT-1]
 	* of this record.
 	* Trying to set an illegal category number files this one under
 	* "Unfiled" (which is 0).
 	*/
-	inline void  setCategory(int cat) { if ( (cat<0) || (cat>=(int)Pilot::CATEGORY_COUNT)) cat=0; fCat = cat; }
+	inline void  setCategory(int cat)
+	{
+		if ( (cat<0) || (cat>=(int)Pilot::CATEGORY_COUNT))
+		{
+			cat=0;
+		}
+		fCat = cat;
+	}
 
 	/** Sets the category number by looking up the string @p label
 	* in the category table @p info . Leaves the category unchanged
@@ -130,24 +154,36 @@ public:
 	/** Returns the record ID for this record. Record IDs are unique for a given
 	* handheld and database.
 	*/
-	inline recordid_t id() const { return fID; }
+	inline recordid_t id() const
+	{
+		return fID;
+	}
 
 	/** Sets the record ID for this record. Use with caution -- you ca confuse
 	* the handheld by doing weird things here.
 	*/
-	void setID(recordid_t id) { fID = id; }
+	void setID(recordid_t id)
+	{
+		fID = id;
+	}
 
 	/** Accessor for one bit of the record's attributes. Is this record marked
 	* deleted (on the handheld) ? Deleted records are not removed from the
 	* database until a HotSync is done (which normally calls purge deleted
 	* or so to really get rid of the records from storage.
 	*/
-	inline bool isDeleted() const { return fAttrib & dlpRecAttrDeleted; };
+	inline bool isDeleted() const
+	{
+		return fAttrib & dlpRecAttrDeleted;
+	}
 
 	/** Accessor for one bit of the record's attributes. Is this record secret?
 	* Secret records are not displayed on the desktop by default.
 	*/
-	inline bool isSecret() const { return fAttrib & dlpRecAttrSecret; } ;
+	inline bool isSecret() const
+	{
+		return fAttrib & dlpRecAttrSecret;
+	}
 
 	/** Accessor for one bit of the record's attributes. Is this record a
 	* to-be-archived record? When a record is deleted, it may be marked
@@ -155,12 +191,18 @@ public:
 	* PC data correspondng to an archived-but-deleted record must not
 	* be deleted.
 	*/
-	inline bool isArchived() const { return fAttrib & dlpRecAttrArchived; } ;
+	inline bool isArchived() const
+	{
+		return fAttrib & dlpRecAttrArchived;
+	}
 
 	/** Accessor for one bit of the record's attributes. Is this record modified?
 	* Modified records are those that have been modified since the last HotSync.
 	*/
-	inline bool isModified() const { return fAttrib & dlpRecAttrDirty; }
+	inline bool isModified() const
+	{
+		return fAttrib & dlpRecAttrDirty;
+	}
 
 #define SETTER(a) {\
 		if (d) { fAttrib |= a; } \
