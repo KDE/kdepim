@@ -62,34 +62,33 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<sect1 id="what-is-it">
-<title>What is it?</title>
+<sect1 id="what-is-akregator">
+<title>What is &akregator;?</title>
 
 <para>&akregator; is a &kde; application for reading online news feeds. It has a
 powerful, user-friendly interface for reading feeds and the management of
 them.</para>
 
-<para>&akregator; is a lightweight and fast program to display news items
+<para>&akregator; is a lightweight and fast program for displaying news items
 provided by feeds, supporting all commonly-used versions of
 <acronym>RSS</acronym> and Atom feeds. Its interface is similar to those of
-e-mail programs, thus being very intuitive to use. Useful features are searching
-in article titles, management of feeds in folders and setting archiving
-preferences. Feeds can be displayed in a similar manner to e-mails. Websites related to a feed can be shown in &akregator;'s embedded browser or, at the users' choice, opened in an external
-browser.</para>
+e-mail programs, thus hopefully being very familiar to the user. Useful features include searching within article titles, management of feeds in folders and setting archiving
+preferences. Feeds can be displayed in a similar manner to e-mails. Websites related to a feed can be shown in &akregator;'s embedded browser or, at the users' choice, opened in an external browser.</para>
 </sect1>
 
-<sect1 id=" rss-and-atom-feeds">
+<sect1 id="rss-and-atom-feeds">
 <title><acronym>RSS</acronym> and Atom feeds</title>
 
-<para><acronym>RSS</acronym> (Really Simple Syndication) is an &XML;-based format to
-publish news or articles in machine-readable form. An <acronym>RSS</acronym>
+<para><acronym>RSS</acronym> (Really Simple Syndication) is an &XML;-based format used for publishing news or articles in a machine-readable form. An <acronym>RSS</acronym>
 or Atom file is also called a feed. A program that can be used to read such feeds is
-called a feed reader or aggregator, hence the title of the application, &akregator;. It automatically extracts new items from the feed and displays them to the user. The user therefore saves time with regularly-visited websites as they need no longer manually check whether there are new pieces of information available.</para>
+called a feed reader or aggregator, hence the title of the application, &akregator;.</para>
+
+<para>&akregator; automatically extracts new items from the feed and displays them in a human-friendly form to the user. The user can therefore save time with regularly-visited websites, as they need no longer manually check whether there are new pieces of information available.</para>
 <para><acronym>RSS</acronym> is available in different versions which
 are not compatible with each other (this situation caused by competing companies):
 <acronym>RSS</acronym> 0.9, <acronym>RSS</acronym> 1.0 and
 <acronym>RSS</acronym> 2.0. Atom is also an &XML;-based feed language which has
-been redesigned to fit the needs of webloggers and news sites. It also tries to
+been redesigned to fit the needs of webloggers and news sites. Atom attempts to
 replace <acronym>RSS</acronym> feeds and remove the uncertainty with
 incompatiblities in the different <acronym>RSS</acronym> versions.</para>
 
@@ -103,7 +102,7 @@ incompatiblities in the different <acronym>RSS</acronym> versions.</para>
 <para>
 This section describes how to start using &akregator;. It explains the user
 interface and shows you how to add your own feed to the list. This section is
-particularily interesting if you are not yet familiar with the general <acronym>RSS</acronym>/Atom news feeds and feed aggregator concept.
+particularily interesting if you are not yet familiar with the general <acronym>RSS</acronym>/Atom and feed aggregator concept.
 </para>
 
 <sect1 id="main-window">
@@ -166,9 +165,9 @@ summary, or the complete article content.
 
 <sect1 id="add-feed">
 <title>Adding a feed</title>
-<para>&akregator; provides you some default feeds related to &kde;. You
-might want to add your own feeds. Good candidates are news sites you visit
-regularly, for example.</para>
+<para>&akregator; provides you with some default feeds related to &kde; -  of course, you
+probably want to add your own feeds. Good candidates are the news sites you visit
+regularly.</para>
 
 <itemizedlist>
 <listitem><para>
@@ -183,10 +182,10 @@ URL:</guilabel>.
 <textobject><phrase>Add a new feed</phrase></textobject>
 </mediaobject>
 </screenshot>
-</para> </listitem>
+</para></listitem>
 
 <listitem><para>
-Enter <userinput>www.slashdot.org</userinput> in the line edit next
+Enter <userinput>http://www.slashdot.org</userinput> in the line edit next
 to <guilabel>Feed URL</guilabel> and click <guibutton>OK</guibutton>.
 </para></listitem>
 <listitem><para>
@@ -198,13 +197,21 @@ The feed settings dialog appears and you can modify the default options. When yo
 <textobject><phrase>The feed properties dialog</phrase></textobject>
 </mediaobject>
 </screenshot>
-</para> </listitem>
-<listitem><para> 
+</para></listitem>
+<listitem><para>
 Now Slashdot has been added to your feed list.
 </para> </listitem>
 </itemizedlist>
 <para>
-There are multiple other ways to find and add interesting feeds.</para>
+There are multiple other ways to find and add interesting feeds. Within KDE, websites browsed with &konqueror; will display the recognizable &quot;RSS lozenge&quot; in the bottom-right if a compatible news feed is detected at the website:
+<screenshot>
+<screeninfo>Automatically finding feeds through &konqueror;</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="konq.png" format="PNG" /></imageobject>
+<textobject><phrase>Automatically finding feeds through &konqueror;</phrase></textobject>
+</mediaobject>
+</screenshot>
+</para>
 </sect1>
 
 <sect1 id="creating-folder">
