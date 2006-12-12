@@ -62,40 +62,35 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<sect1 id="what-is-it">
-<title>What is it?</title>
+<sect1 id="what-is-akregator">
+<title>What is &akregator;?</title>
 
-<para>&akregator; is a &kde; application for reading news feeds. It has a
-powerful user-friendly interface for reading feeds and for the management of
+<para>&akregator; is a &kde; application for reading online news feeds. It has a
+powerful, user-friendly interface for reading feeds and the management of
 them.</para>
 
-<para>&akregator; is a lightweight and fast program to display news items
-provided by feeds, supporting all commonly used versions of
+<para>&akregator; is a lightweight and fast program for displaying news items
+provided by feeds, supporting all commonly-used versions of
 <acronym>RSS</acronym> and Atom feeds. Its interface is similar to those of
-e-mail programs, thus being very intuitive to use. Useful features are searching
-in article titles, management of feeds in folders and setting archiving
-preferences. Feeds can be displayed like mails. Websites related to a feed can
-be shown in &akregator;'s embedded browser or opened in an external
-browser.</para>
+e-mail programs, thus hopefully being very familiar to the user. Useful features include searching within article titles, management of feeds in folders and setting archiving
+preferences. Feeds can be displayed in a similar manner to e-mails. Websites related to a feed can be shown in &akregator;'s embedded browser or, at the users' choice, opened in an external browser.</para>
 </sect1>
 
-<sect1 id=" rss-and-atom-feeds">
+<sect1 id="rss-and-atom-feeds">
 <title><acronym>RSS</acronym> and Atom feeds</title>
 
-<para><acronym>RSS</acronym> (Real Simple Syndication) is an XML-based format to
-publish news or articles in machine-readable form. An <acronym>RSS</acronym>
-file is also called a feed. A program that can be used to read such feeds is
-called aggregator or feed reader. It automatically extracts new items out of
-the feed and displays them to the user. The user therefore saves the time to
-regularly check on websites whether there are new pieces of information
-available.</para>
+<para><acronym>RSS</acronym> (Really Simple Syndication) is an &XML;-based format used for publishing news or articles in a machine-readable form. An <acronym>RSS</acronym>
+or Atom file is also called a feed. A program that can be used to read such feeds is
+called a feed reader or aggregator, hence the title of the application, &akregator;.</para>
+
+<para>&akregator; automatically extracts new items from the feed and displays them in a human-friendly form to the user. The user can therefore save time with regularly-visited websites, as they need no longer manually check whether there are new pieces of information available.</para>
 <para><acronym>RSS</acronym> is available in different versions which
-are incompatible to each other (caused by competing companies):
+are not compatible with each other (this situation caused by competing companies):
 <acronym>RSS</acronym> 0.9, <acronym>RSS</acronym> 1.0 and
-<acronym>RSS</acronym> 2.0. Atom is also an XML-based feed language which has
-been redesigned to fit the needs of webloggers and news sites. It also tries to
-replace <acronym>RSS</acronym> feeds and remove the irritation about
-incompatiblities in <acronym>RSS</acronym> versions.</para>
+<acronym>RSS</acronym> 2.0. Atom is also an &XML;-based feed language which has
+been redesigned to fit the needs of webloggers and news sites. Atom attempts to
+replace <acronym>RSS</acronym> feeds and remove the uncertainty with
+incompatiblities in the different <acronym>RSS</acronym> versions.</para>
 
 </sect1>
 
@@ -106,10 +101,9 @@ incompatiblities in <acronym>RSS</acronym> versions.</para>
 
 <para>
 This section describes how to start using &akregator;. It explains the user
-interface and shows you how to add your own feed to the list. It is
-particularily interesting if you are not yet familiar with
-<acronym>RSS</acronym>/Atom news feeds
-and feed aggregators.
+interface and shows you how to add your own feed to the list. This section is
+particularily interesting if you are not yet familiar with the
+general <acronym>RSS</acronym>/Atom and feed aggregator concept.
 </para>
 
 <sect1 id="main-window">
@@ -132,9 +126,9 @@ viewer.
 </para>
 <para>
 The feed list is on the left. In the tree, you have news feeds you can
-select. A news feed is a collection of articles, for example, the recent news of
-a news site or the entries of a blog. The default list contains feeds related to
-the KDE project, but of course you can add your own feeds and remove the ones
+select. A news feed is a collection of articles: for example, the recent news of
+a news site or the new entries of a blog. The default list contains feeds related to
+the &kde; project, but of course you can add your own feeds and remove the ones
 you are not interested in.
 <screenshot>
 <screeninfo>All articles are fetched</screeninfo>
@@ -145,10 +139,9 @@ you are not interested in.
 </screenshot>
 </para>
 <para>
-On the upper right, you see the article list. It contains the articles of the
-feed selected in the feed list (if it's empty, you have to fetch the
-feed first). The list shows the headlines of the articles, and the date when
-they were published. By default, the newest articles are on the top.
+In the upper right is the article list. It contains all the articles of the
+feed selected in the feed list (if it is empty, you must first fetch the feed). The list shows the headlines of the articles and the date when
+they were published. By default, the newest articles are at the top.
 <screenshot>
 <screeninfo>The article list</screeninfo>
 <mediaobject>
@@ -158,14 +151,14 @@ they were published. By default, the newest articles are on the top.
 </screenshot>
 </para>
 <para>
-If you select an article, it will be displayed in the article viewer on the
-lower right. Depending on the feed, it contains either only a headline, a short
-summary, or the complete article content. 
+If you select an article, it will be displayed in the article viewer in the
+lower right of the window. Depending on the feed, it contains either only a headline, a short
+summary, or the complete article content.
 <screenshot>
-<screeninfo>Reading an article from Planet KDE</screeninfo>
+<screeninfo>Reading an article from Planet &kde;</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="main-window4.png" format="PNG" /></imageobject>
-<textobject><phrase>Reading an article from Planet KDE</phrase></textobject>
+<textobject><phrase>Reading an article from Planet &kde;</phrase></textobject>
 </mediaobject>
 </screenshot>
 </para>
@@ -173,14 +166,14 @@ summary, or the complete article content.
 
 <sect1 id="add-feed">
 <title>Adding a feed</title>
-<para>&akregator; provides you some default feeds related to &kde;. You
-might want to add your own feeds. Good candidates are news sites you visit
-regularly for example.</para>
+<para>&akregator; provides you with some default feeds related to &kde; -  of course, you
+probably want to add your own feeds. Good candidates are the news sites you visit
+regularly.</para>
 
 <itemizedlist>
 <listitem><para>
 Go to the menu <guimenu>Feed</guimenu> and choose <guimenuitem>Add
-Feed...</guimenuitem> or use the default shortcut (<keycap>Insert</keycap>).
+Feed...</guimenuitem> or use the default keyboard shortcut (<keycap>Insert</keycap>).
 The following dialog appears, with an input line labeled <guilabel>Feed
 URL:</guilabel>.
 <screenshot>
@@ -190,15 +183,17 @@ URL:</guilabel>.
 <textobject><phrase>Add a new feed</phrase></textobject>
 </mediaobject>
 </screenshot>
-</para> </listitem>
+</para></listitem>
 
 <listitem><para>
-Enter <userinput>www.slashdot.org</userinput> in the line edit next
+Enter
+<userinput>www.slashdot.org</userinput>
+or <userinput>http://www.slashdot.org </userinput> in the line edit next
 to <guilabel>Feed URL</guilabel> and click <guibutton>OK</guibutton>.
-</para> </listitem>
+</para></listitem>
 <listitem><para>
-The feed settings dialog appears and you can set other options than
-default ones. When you are happy, click <guibutton>OK</guibutton> again.
+The feed settings dialog appears and you can modify the default options. When
+you are happy with the feed settings, click <guibutton>OK</guibutton> again.
 <screenshot>
 <screeninfo>The feed properties dialog</screeninfo>
 <mediaobject>
@@ -206,29 +201,58 @@ default ones. When you are happy, click <guibutton>OK</guibutton> again.
 <textobject><phrase>The feed properties dialog</phrase></textobject>
 </mediaobject>
 </screenshot>
-</para> </listitem>
-<listitem><para> 
-Now Slashdot has been added in your feed list. 
+</para></listitem>
+<listitem><para>
+Now Slashdot has been added to your feed list.
 </para> </listitem>
 </itemizedlist>
 <para>
-There are multiple other ways to find and add interesting feeds.</para>
+There are multiple other ways to find and add interesting feeds. Within KDE,
+websites browsed with &konqueror; will display the recognizable &quot;RSS
+lozenge&quot;<inlinemediaobject>
+  <imageobject>
+    <imagedata fileref="rss3.png" format="PNG"/>
+  </imageobject>
+    </inlinemediaobject>in the bottom-right if a compatible news feed is
+detected at the website. Just left-click on the icon and choose
+<guimenuitem>Add Feed to &akregator;</guimenuitem>:
+<screenshot>
+<screeninfo>Automatically finding feeds through &konqueror;</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="konq2.png" format="PNG" /></imageobject>
+<textobject><phrase>Automatically finding feeds through &konqueror;</phrase></textobject>
+</mediaobject>
+</screenshot>
+On pages with this RSS icon<inlinemediaobject>
+  <imageobject>
+    <imagedata fileref="rss.png" format="PNG"/>
+  </imageobject>
+    </inlinemediaobject>, right-click on the icon and choose in the context
+    menu <guimenuitem>Add Feed to &akregator;</guimenuitem>:
+    <screenshot>
+      <screeninfo>Automatically finding feeds through &konqueror;</screeninfo>
+      <mediaobject>
+        <imageobject><imagedata fileref="konq.png" format="PNG"
+/></imageobject>
+        <textobject><phrase>Automatically finding feeds through
+            &konqueror;</phrase></textobject>
+</mediaobject>
+</screenshot>
+</para>
 </sect1>
 
 <sect1 id="creating-folder">
 <title>Creating a Folder</title>
 <para>After adding your own feeds, you may want to group them in some way,
-instead of just leaving them unsorted. So let us create a folder for the
-Slashdot feed just added:</para>
+rather than just leave them unsorted. So let us create a folder for the
+Slashdot feed we just added:</para>
 <itemizedlist>
-<listitem><para> Select the parent folder of the new folder. In this example, we
+<listitem><para>Select the parent folder of the new folder. In this example, we
 select <guilabel>All Feeds</guilabel>.
-</para> </listitem>
+</para></listitem>
 <listitem><para>Open <guimenu>Feed</guimenu>
 <guimenuitem>New Folder...</guimenuitem>.
-Enter <userinput>News</userinput> (or come
-up with a better name for what Slashdot actually is) in the line edit and
-choose <guibutton>OK</guibutton>.
+Enter <userinput>News</userinput> (or a more appropriate name for the feed category) in the line edit and choose <guibutton>OK</guibutton>.
 <screenshot>
 <screeninfo>The New Folder dialog</screeninfo>
 <mediaobject>
@@ -237,7 +261,7 @@ choose <guibutton>OK</guibutton>.
 </mediaobject>
 </screenshot>
 </para> </listitem>
-<listitem><para>Now you can drag the Slashdot feed to the new folder. 
+<listitem><para>Now you can drag the Slashdot feed to the new folder.
 <screenshot>
 <screeninfo>The News folder in the feed list</screeninfo>
 <mediaobject>
@@ -250,17 +274,17 @@ choose <guibutton>OK</guibutton>.
 </sect1>
 
 <sect1 id="browsing-inside">
-<title> Browsing inside of &akregator;</title>
-<para>When reading feed articles, you may often want to read the web page that
-belongs to the article. Some articles only contain the headline, not the actual
-content. Then you need to visit the web page to read the complete article. Maybe
+<title>Browsing inside of &akregator;</title>
+<para>When reading feed articles, often you may want to read the web page that
+belongs to the article: some articles only contain the headline, and not the actual
+content. In this case, you need to visit the web page to read the complete article. Or perhaps
 an article links to some website, or you are reading a blog and want to comment
 on an entry. For these situations, &akregator; contains a simple web browser.
 Whenever you follow a link in the article viewer, &akregator; opens the link in
 new tab:</para>
 <note><para>Note that the browser in &akregator; is not intended to replace your
-Favourite Web Browser. It is meant for reading articles, commenting on them, or
-to follow a link quickly. It is not meant for browsing the web in general. It
+favorite Web Browser. It is meant for reading articles, commenting on them, or
+following up a link quickly. It is not meant for browsing the web in general. It
 lacks many features fully-fledged web browsers offer.</para></note>
 </sect1>
 </chapter>
@@ -273,7 +297,7 @@ dialog. The configuration dialog can be found in the menu under <menuchoice>
 </menuchoice></para>
 <sect1 id="general-tab">
 <title>General</title>
-<para></para>
+<para>The General tab contains the basic and otherwise-uncategorizable options of &akregator;.</para>
 <screenshot>
 <screeninfo>The General tab</screeninfo>
 <mediaobject>
@@ -295,21 +319,14 @@ dialog. The configuration dialog can be found in the menu under <menuchoice>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Use notifications for all feeds</guilabel></term>
-<listitem><para>Set gobal notifications for all feeds. This setting will
-override each feed one. When enabled, &akregator; notifies you of all new
-articles fetched in any feed. If you want to enable notifications only for some
-but not all feeds, leave this option disabled and enable it for the specific
-feed in the feed's properties dialog.</para>
+<listitem><para>Set global notifications for all feeds. This setting will
+override the individual notification value of each feed. When enabled, &akregator; will notify you of all new articles fetched in any feed. If you only want to enable notifications for some (but not all) feeds, leave this option disabled and enable notifications for the each specific feed using the individual feed properties dialog.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Use interval fetching</guilabel></term>
-<listitem><para>If this is unchecked, the following setting is not
-available. If this is checked, you can set in <guilabel>Fetch feeds
-every:</guilabel> the interval for &akregator; to fetch the feeds. Note
-that fetching of articles generates traffic and thus costs for the provider
-hosting the feed you're reading. Some sites may even block you, if you fetch the
-feed file too often. In general, 30 minutes is a good choice. </para>
+<listitem><para>If this is unchecked, interval checking is disabled. However, if this is checked, you can set in <guilabel>Fetch feeds
+every:</guilabel> the interval that &akregator; will automatically check for new feed entries. Note that fetching articles generates traffic and therefore may be costly to the provider hosting the feed you're reading. Some sites may even block connections from your computer if you attempt to fetch the feed too often. In general, 30 minutes is a good choice. </para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -350,13 +367,12 @@ start.</para>
 <variablelist>
 <varlistentry>
 <term><guilabel>Use the browser cache (less network traffic)</guilabel></term>
-<listitem><para>When enabled, the KDE-wide browser cache settings are used when
-updating feeds. You can configure the KDE-wide cache either in
+<listitem><para>When enabled, the &kde;-wide browser cache settings are used when
+updating feeds. You can configure the &kde;-wide browser cache either in
 &kcontrolcenter; or in &konqueror; configuration dialog.</para>
 <note><para>You should leave this option enabled whenever possible. Disabling
 this option leads to increased network traffic. The traffic caused by
-aggregators not using caching increases the costs for providers and thus
-decreases the chance that feeds are offered.</para></note>
+aggregators not using caching increases the costs for providers and may decrease the number of feeds are offered in future.</para></note>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -367,9 +383,9 @@ decreases the chance that feeds are offered.</para></note>
 </sect1>
 <sect1 id="archive-tab">
 <title>Archive</title>
-<para>Archiving articles means storing articles links. Here you can limit the
-number and of articles stored and the way archiving is done. These settings are
-global settings, used as default by all feeds. If you want to use a custom
+<para>Archiving articles means storing the links of articles. Here you can limit the
+number of articles stored and the method used for archiving. These settings are
+global settings, used by all feeds within &akregator;. If you want to use a custom
 setting for a feed, you can set it in each feed properties dialog in the archive
 tab.</para>
 <screenshot>
@@ -397,14 +413,12 @@ tab.</para>
 articles are deleted. Note that flagged articles are ignored when counting the
 number of articles: if your limit is 500, and you have 510 unflagged and 50
 flagged articles, &akregator; will ignore the 50 flagged ones and only delete
-the 10 oldest unflagged articles. So in total, 550 articles are kept.</para>
+the 10 oldest unflagged articles. So in this example, 550 articles would be kept.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Delete articles older than:</guilabel></term>
-<listitem><para>Articles older than n days are deleted from the archive, unless
-they have the keep flag set. &akregator; checks for expired articles at startup
-and then once per hour, so expiry may be delayed.</para> </listitem>
+<listitem><para>Articles older than the specified number of days are deleted from the archive, unless they have the keep flag set. &akregator; checks for expired articles at startup and then once per hour, so expiry may be delayed.</para></listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Disable archiving</guilabel></term>
@@ -474,19 +488,19 @@ the change will be applied in the article viewer.</para>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Fixed font:</guilabel></term>
-<listitem><para>If the article uses fixed font, in the article viewer, the
+<listitem><para>If the article uses a fixed-width font in the article viewer, the
 content will be rendered using this font family in Medium font size. </para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Serif font:</guilabel></term>
-<listitem><para>If in the article there are Serif fonts then they will be
+<listitem><para>If the article uses Serif fonts, they will be
 rendered using the family you choose here in Medium font size.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Sans serif font:</guilabel></term>
-<listitem><para>If in the article there are Sans serif fonts then they will be
+<listitem><para>If the article uses Sans-serif fonts, they will be
 rendered using the family you choose here in Medium font size.</para>
 </listitem>
 </varlistentry>
@@ -538,14 +552,14 @@ middle mouse click.</para>
 <varlistentry>
 <term><guilabel>Use default &kde; web browser</guilabel></term>
 <listitem><para>If this is checked, &akregator; will use the web browser
-you set in &kcontrolcenter;. It might be &konqueror; or another browser
+you set in &kcontrolcenter;. It may be the KDE default, &konqueror;, or another browser
 depending on what you set here.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Use this command:</guilabel></term>
-<listitem><para>You can use another web browser for &akregator; than your
-&kde; default. If so, check that option and enter the command for the
+<listitem><para>You can use another web browser for &akregator; other than your
+&kde; default. If you wish to do so, check this option and enter the command for the
 browser, provided it is in your $<envar>PATH</envar>.</para>
 </listitem>
 </varlistentry>
@@ -556,7 +570,7 @@ browser, provided it is in your $<envar>PATH</envar>.</para>
 <varlistentry>
 <term><guilabel>Show tab close button on hover</guilabel></term>
 <listitem><para>If this option is checked, the close button will appear when
-you move your mouse on the left side of the tab title so you can easily
+you move your mouse on the left side of the tab title so you can more easily
 close tabs.</para>
 </listitem>
 </varlistentry>
@@ -566,7 +580,7 @@ close tabs.</para>
 <sect1 id="advanced-tab">
 <title>Advanced</title>
 <para>The Advanced tab allows you to set more advanced options. If you
-are not sure about what they do, you can just leave the dafault ones.</para>
+are not sure about their effect, you can just leave the dafault ones.</para>
 <screenshot>
 <screeninfo>The Advanced tab</screeninfo>
 <mediaobject>
@@ -583,9 +597,7 @@ are not sure about what they do, you can just leave the dafault ones.</para>
 <variablelist>
 <varlistentry>
 <term><guilabel>Archive backend:</guilabel></term>
-<listitem><para>&akregator; currently only uses the Metakit database so
-you don't have much choice but for &kde; 4, &akregator; will offer other
-database backends.</para>
+<listitem><para>&akregator; currently only uses the Metakit database but for &kde; 4, &akregator; will offer other database backends.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -599,9 +611,9 @@ database backends.</para>
 <variablelist>
 <varlistentry>
 <term><guilabel>Mark selected article read after</guilabel></term>
-<listitem><para>Default is 0 second so it means that as soon as
+<listitem><para>Default is 0 seconds, which means that as soon as
 you click on an article it is marked as read. You can choose to mark any
-article as read after n seconds.</para>
+article as read after a specified number of seconds.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
@@ -745,8 +757,8 @@ search for text in the article viewer</para></listitem>
 <guimenu>Edit</guimenu>
 <guimenuitem>Find Next</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Go</action> to the nearest downwards match of the
-last text or regular expression searched for in the article viewer, starting
+<listitem><para><action>Go</action> to the nearest match (down the list) of the
+search term (text or regular expression) searched for within the article viewer, starting
 from cursor position</para></listitem>
 </varlistentry>
 </variablelist>
