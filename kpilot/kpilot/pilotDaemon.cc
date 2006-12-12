@@ -446,7 +446,6 @@ void PilotDaemon::showTray()
 	getPilotSpeed();
 
 	(void) Pilot::setupPilotCodec(KPilotSettings::encoding());
-	(void) Pilot::setupPilotCodec(KPilotSettings::encoding());
 
 #ifdef DEBUG
 	DEBUGKPILOT << fname

@@ -161,15 +161,16 @@ KPilotLink::KPilotLink( QObject *parent, const char *name ) :
 	FUNCTIONSETUP;
 
 	fPilotUser = new KPilotUser();
-	fPilotUser->setUserName( "Henk Westbroek" );
+	strncpy( fPilotUser->pilotUser()->username, "Henk Westbroek",
+		sizeof(fPilotUser->pilotUser()->username)-1);
 	fPilotUser->setLastSuccessfulSyncDate( 1139171019 );
 
 	fPilotSysInfo = new KPilotSysInfo();
-	memset(fPilotSysInfo->sysInfo()->prodID, 0, 
+	memset(fPilotSysInfo->sysInfo()->prodID, 0,
 		sizeof(fPilotSysInfo->sysInfo()->prodID));
-	strncpy(fPilotSysInfo->sysInfo()->prodID, "LocalLink", 
+	strncpy(fPilotSysInfo->sysInfo()->prodID, "LocalLink",
 		sizeof(fPilotSysInfo->sysInfo()->prodID)-1);
-	fPilotSysInfo->sysInfo()->prodIDLength = 
+	fPilotSysInfo->sysInfo()->prodIDLength =
 		strlen(fPilotSysInfo->sysInfo()->prodID);
 }
 
