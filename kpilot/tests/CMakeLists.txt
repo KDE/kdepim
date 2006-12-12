@@ -28,7 +28,7 @@ kde3_add_executable(testdatebook ${testdatebook_SRCS})
 target_link_libraries(testdatebook kpilot ${QT_LIBRARIES})
 add_test(testdatebook ${EXECUTABLE_OUTPUT_PATH}/testdatebook)
 
-set(importdatebook_SRCS importdatebook.cc vcalRecord.cc)
+set(importdatebook_SRCS importdatebook.cc)
 kde3_add_executable(importdatebook ${importdatebook_SRCS})
 target_link_libraries(importdatebook kpilot ${QT_LIBRARIES} kcal)
 add_test(importdatebook ${EXECUTABLE_OUTPUT_PATH}/importdatebook)

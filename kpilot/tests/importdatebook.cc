@@ -40,7 +40,7 @@
 #include "pilot.h"
 #include "pilotDateEntry.h"
 #include "pilotLocalDatabase.h"
-#include "vcalRecord.h"
+#include "../conduits/vcalconduit/vcalRecord.cc"
 
 static const KCmdLineOptions options[] =
 {
