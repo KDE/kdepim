@@ -39,7 +39,6 @@
 */
 class KDE_EXPORT KPilotDeviceLink : public KPilotLink
 {
-// friend class SyncAction;
 friend class PilotSerialDatabase;
 Q_OBJECT
 
@@ -52,7 +51,9 @@ public:
 	*
 	* Call reset() on it to start looking for a device.
 	*/
-	KPilotDeviceLink( QObject *parent = 0, const char *name = 0, const QString &tempDevice = QString::null );
+	KPilotDeviceLink( QObject *parent = 0, 
+		const char *name = 0, 
+		const QString &tempDevice = QString::null );
 	/** Destructor. This rudely ends the communication with the handheld. */
 	virtual ~KPilotDeviceLink();
 
@@ -81,7 +82,9 @@ public:
 	/** Get a human-readable string for the given status @p l. */
 	static QString statusString(LinkStatus l);
 
-
+	// The followin API is the actual implementation of
+	// the KPilotLink API, for documentation see that file.
+	//
 	virtual QString statusString() const;
 	virtual bool isConnected() const;
 	virtual void reset( const QString & );
@@ -126,16 +129,23 @@ public:
 	} ;
 
 	/**
-	* sets an additional device, which should be tried as fallback
-	* usefull for hotplug enviroments
+	* Sets an additional device, which should be tried as fallback.
+	* Useful for hotplug enviroments, this device is used @em once
+	* for accepting a connection.
 	*/
 	void setTempDevice( const QString &device );
 
 private:
+	/** Should we work around the Zire31/72 quirk? @see setWorkarounds() */
 	bool fWorkaroundUSB;
+	/** Timer used to check for a badly-connected Z31/72 */
 	QTimer *fWorkaroundUSBTimer;
 
 private slots:
+	/** This slot is called when we detect a bogus connection from
+	 *  a Z31 or Z72 and the workaround is enabled. It disconnects,
+	 *  then re-enables connections.
+	 */
 	void workaroundUSB();
 
 protected slots:
@@ -156,7 +166,7 @@ protected:
 	* Does the low-level opening of the device and handles the
 	* pilot-link library initialisation.
 	*/
-	bool open( QString device = QString::null );
+	bool open( const QString &device = QString::null );
 
 	/**
 	* Check for device permissions and existence, emitting
@@ -175,7 +185,12 @@ protected:
 	int messagesMask;
 	static const int messagesType;
 
-	void shouldPrint(int,const QString &);
+	/** Print a message @p s which has an id of @p msgid (one of
+	 *  the enum values mentioned above) -- but only if that
+	 *  message has not been suppressed through messagesMask.
+	 *  Printing a message adds it to the messagesMask.
+	 */
+	void shouldPrint(int msgid,const QString &s);
 
 
 

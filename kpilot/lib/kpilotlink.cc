@@ -519,7 +519,7 @@ void KPilotDeviceLink::openDevice()
 	}
 }
 
-bool KPilotDeviceLink::open(QString device)
+bool KPilotDeviceLink::open(const QString &device)
 {
 	FUNCTIONSETUPL(2);
 
@@ -535,11 +535,7 @@ bool KPilotDeviceLink::open(QString device)
 	}
 	fCurrentPilotSocket = (-1);
 
-	if ( device.isEmpty() )
-	{
-		device = pilotPath();
-	}
-	if (device.isEmpty())
+	if (device.isEmpty() && pilotPath().isEmpty())
 	{
 		kdWarning() << k_funcinfo
 			<< ": No point in trying empty device."
@@ -549,12 +545,13 @@ bool KPilotDeviceLink::open(QString device)
 		e = 0;
 		goto errInit;
 	}
-	fRealPilotPath = KStandardDirs::realPath ( device );
+	fRealPilotPath = KStandardDirs::realPath( device.isEmpty() ? fPilotPath : device );
 
 	if ( !KPilotDeviceLinkPrivate::self()->canBind( fRealPilotPath ) ) {
 		msg = i18n("Already listening on that device");
 		e=0;
-		kdWarning() << k_funcinfo <<": Pilot Path " << pilotPath().latin1() << " already connected." << endl;
+		kdWarning() << k_funcinfo << ": Pilot Path " 
+			<< fRealPilotPath << " already connected." << endl;
 		goto errInit;
 	}
 
@@ -587,10 +584,10 @@ bool KPilotDeviceLink::open(QString device)
 	Q_ASSERT(fLinkStatus == CreatedSocket);
 
 #ifdef DEBUG
-	DEBUGLIBRARY << fname << ": Binding to path " << fPilotPath << endl;
+	DEBUGLIBRARY << fname << ": Binding to path " << fRealPilotPath << endl;
 #endif
 
-	ret = pi_bind(fPilotMasterSocket, QFile::encodeName(device));
+	ret = pi_bind(fPilotMasterSocket, QFile::encodeName(fRealPilotPath));
 
 	if (ret >= 0)
 	{
@@ -652,13 +649,20 @@ errInit:
 
 	if (msg.find('%'))
 	{
-		if (fPilotPath.isEmpty())
+		if (fRealPilotPath.isEmpty())
 		{
-			msg = msg.arg(i18n("(empty)"));
+			if (fPilotPath.isEmpty())
+			{
+				msg = msg.arg(i18n("(empty)"));
+			}
+			else
+			{
+				msg = msg.arg(fPilotPath);
+			}
 		}
 		else
 		{
-			msg = msg.arg(fPilotPath);
+			msg = msg.arg(fRealPilotPath);
 		}
 	}
 	switch (e)
