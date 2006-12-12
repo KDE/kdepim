@@ -102,7 +102,8 @@ incompatiblities in the different <acronym>RSS</acronym> versions.</para>
 <para>
 This section describes how to start using &akregator;. It explains the user
 interface and shows you how to add your own feed to the list. This section is
-particularily interesting if you are not yet familiar with the general <acronym>RSS</acronym>/Atom and feed aggregator concept.
+particularily interesting if you are not yet familiar with the
+general <acronym>RSS</acronym>/Atom and feed aggregator concept.
 </para>
 
 <sect1 id="main-window">
@@ -185,11 +186,14 @@ URL:</guilabel>.
 </para></listitem>
 
 <listitem><para>
-Enter <userinput>http://www.slashdot.org</userinput> in the line edit next
+Enter
+<userinput>www.slashdot.org</userinput>
+or <userinput>http://www.slashdot.org </userinput> in the line edit next
 to <guilabel>Feed URL</guilabel> and click <guibutton>OK</guibutton>.
 </para></listitem>
 <listitem><para>
-The feed settings dialog appears and you can modify the default options. When you are happy with the feed settings, click <guibutton>OK</guibutton> again.
+The feed settings dialog appears and you can modify the default options. When
+you are happy with the feed settings, click <guibutton>OK</guibutton> again.
 <screenshot>
 <screeninfo>The feed properties dialog</screeninfo>
 <mediaobject>
@@ -203,12 +207,35 @@ Now Slashdot has been added to your feed list.
 </para> </listitem>
 </itemizedlist>
 <para>
-There are multiple other ways to find and add interesting feeds. Within KDE, websites browsed with &konqueror; will display the recognizable &quot;RSS lozenge&quot; in the bottom-right if a compatible news feed is detected at the website:
+There are multiple other ways to find and add interesting feeds. Within KDE,
+websites browsed with &konqueror; will display the recognizable &quot;RSS
+lozenge&quot;<inlinemediaobject>
+  <imageobject>
+    <imagedata fileref="rss3.png" format="PNG"/>
+  </imageobject>
+    </inlinemediaobject>in the bottom-right if a compatible news feed is
+detected at the website. Just left-click on the icon and choose
+<guimenuitem>Add Feed to &akregator;</guimenuitem>:
 <screenshot>
 <screeninfo>Automatically finding feeds through &konqueror;</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="konq.png" format="PNG" /></imageobject>
+<imageobject><imagedata fileref="konq2.png" format="PNG" /></imageobject>
 <textobject><phrase>Automatically finding feeds through &konqueror;</phrase></textobject>
+</mediaobject>
+</screenshot>
+On pages with this RSS icon<inlinemediaobject>
+  <imageobject>
+    <imagedata fileref="rss.png" format="PNG"/>
+  </imageobject>
+    </inlinemediaobject>, right-click on the icon and choose in the context
+    menu <guimenuitem>Add Feed to &akregator;</guimenuitem>:
+    <screenshot>
+      <screeninfo>Automatically finding feeds through &konqueror;</screeninfo>
+      <mediaobject>
+        <imageobject><imagedata fileref="konq.png" format="PNG"
+/></imageobject>
+        <textobject><phrase>Automatically finding feeds through
+            &konqueror;</phrase></textobject>
 </mediaobject>
 </screenshot>
 </para>
