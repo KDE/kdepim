@@ -31,9 +31,6 @@
             <property name="text">
                 <string>Do full sync when chan&amp;ging PCs</string>
             </property>
-            <property name="accel">
-                <string>Alt+G</string>
-            </property>
             <property name="checked">
                 <bool>true</bool>
             </property>

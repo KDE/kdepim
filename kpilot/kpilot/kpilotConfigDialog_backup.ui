@@ -180,9 +180,6 @@
             <property name="text">
                 <string>Run conduits durin&amp;g a backup sync</string>
             </property>
-            <property name="accel">
-                <string>Alt+G</string>
-            </property>
             <property name="whatsThis" stdset="0">
                 <string>&lt;qt&gt;Check this box to run the selected conduits before every backup. This makes sure the backup is up to date with the last changes from your PC.&lt;/qt&gt;</string>
             </property>
