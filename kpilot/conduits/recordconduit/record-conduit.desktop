@@ -2,7 +2,9 @@
 Encoding=UTF-8
 Type=Service
 Name=Records (Experimental)
+Name[da]=Indspilninger (eksperimentel)
 Name[et]=Kirjed (eksperimentaalne)
+Name[hu]=Rekordok (kísérleti)
 Name[nds]=Logbook (warrt utprobeert)
 Name[pt]=Registos (Experimental)
 Name[pt_BR]=Registos (Experimental)
