@@ -58,7 +58,10 @@ public:
 	PilotTodoEntry(const PilotTodoEntry &e);
 
 	/** Delete a ToDo item. */
-	~PilotTodoEntry() { free_ToDo(&fTodoInfo); }
+	~PilotTodoEntry()
+	{
+		free_ToDo(&fTodoInfo);
+	}
 
 	/** Return a string for the ToDo item. If @param richText is true, then
 	* use qt style markup to make the string clearer when displayed.
@@ -72,31 +75,52 @@ public:
 	struct tm getDueDate() const { return fTodoInfo.due; }
 
 	/** Set the Due Date for the ToDo item. */
-	void setDueDate(struct tm& d) { fTodoInfo.due = d; }
+	void setDueDate(struct tm& d)
+	{
+		fTodoInfo.due = d;
+	}
 
 	/** Return the indefinite status of the ToDo (? that is, whether it
 	* had a Due Date that is relevant or not). Return values are 0
 	* (not indefinite) or non-0.
 	*/
-	int getIndefinite() const { return fTodoInfo.indefinite; }
+	int getIndefinite() const
+	{
+		return fTodoInfo.indefinite;
+	}
 
 	/** Set whether the ToDo is indefinite or not. */
-	void setIndefinite(int i) { fTodoInfo.indefinite = i; }
+	void setIndefinite(int i)
+	{
+		fTodoInfo.indefinite = i;
+	}
 
 	/** Return the priority of the ToDo item. The priority ranges
 	* from 1-5 on the handheld, so this needs to be mapped (perhaps)
 	* onto KOrganizer's priority levels.
 	*/
-	int getPriority() const { return fTodoInfo.priority; }
+	int getPriority() const
+	{
+		return fTodoInfo.priority;
+	}
 
 	/** Set the priority of the ToDo. */
-	void setPriority(int p) { fTodoInfo.priority = p; }
+	void setPriority(int p)
+	{
+		fTodoInfo.priority = p;
+	}
 
 	/** Return whether the ToDo is complete (done, finished) or not. */
-	int getComplete() const { return fTodoInfo.complete; }
+	int getComplete() const
+	{
+		return fTodoInfo.complete;
+	}
 
 	/** Set whether the ToDo is done. */
-	void setComplete(int c) { fTodoInfo.complete = c; }
+	void setComplete(int c)
+	{
+		fTodoInfo.complete = c;
+	}
 
 	/** Get the ToDo item's description (which is the title shown on
 	* the handheld, and the item's Title in KDE). This uses the default codec.

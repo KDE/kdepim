@@ -94,7 +94,7 @@ PilotTodoEntry::PilotTodoEntry(const PilotTodoEntry & e) :
 
 	setDescriptionP(e.getDescriptionP());
 	setNoteP(e.getNoteP());
-}				// end of copy constructor
+}
 
 
 PilotTodoEntry & PilotTodoEntry::operator = (const PilotTodoEntry & e)
@@ -117,7 +117,7 @@ PilotTodoEntry & PilotTodoEntry::operator = (const PilotTodoEntry & e)
 	}
 
 	return *this;
-}				// end of assignment operator
+}
 
 QString PilotTodoEntry::getTextRepresentation(bool richText)
 {
@@ -188,7 +188,14 @@ PilotRecord *PilotTodoEntry::pack() const
 
 void PilotTodoEntry::setDescription(const QString &desc)
 {
-	setDescriptionP(Pilot::toPilot(desc),desc.length());
+	if (desc.length() < fDescriptionSize)
+	{
+		Pilot::toPilot(desc, fTodoInfo.description, fDescriptionSize);
+	}
+	else
+	{
+		setDescriptionP(Pilot::toPilot(desc),desc.length());
+	}
 }
 
 void PilotTodoEntry::setDescriptionP(const char *desc, int len)
@@ -228,7 +235,14 @@ QString PilotTodoEntry::getDescription() const
 
 void PilotTodoEntry::setNote(const QString &note)
 {
-	setNoteP(Pilot::toPilot(note),note.length());
+	if (note.length() < fNoteSize)
+	{
+		Pilot::toPilot(note, fTodoInfo.note, fNoteSize);
+	}
+	else
+	{
+		setNoteP(Pilot::toPilot(note),note.length());
+	}
 }
 
 void PilotTodoEntry::setNoteP(const char *note, int len)
