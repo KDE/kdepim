@@ -33,7 +33,7 @@
 
 #include <pi-appinfo.h>
 
-int main(int argc, char **argv)
+int main(int, char **)
 {
 #ifdef DEBUG
 	debug_level = 1;
