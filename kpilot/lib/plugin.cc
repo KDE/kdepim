@@ -113,7 +113,6 @@ ConduitAction::ConduitAction(KPilotLink *p,
 			cResolution.replace(QRegExp(CSL1("--conflictResolution (\\d*)")), CSL1("\\1")).toInt();
 	}
 
-#ifdef DEBUG
 	for (QStringList::ConstIterator it = args.begin();
 		it != args.end();
 		++it)
@@ -122,7 +121,6 @@ ConduitAction::ConduitAction(KPilotLink *p,
 	}
 
 	DEBUGLIBRARY << fname << ": Direction=" << fSyncDirection.name() << endl;
-#endif
 }
 
 /* virtual */ ConduitAction::~ConduitAction()

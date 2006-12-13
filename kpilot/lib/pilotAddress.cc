@@ -273,10 +273,8 @@ QStringList PilotAddress::getEmails() const
 		}
 	}
 
-#ifdef DEBUG
 	DEBUGLIBRARY << fname << ": returning: ["
-				<< list.size() << "] e-mail addresses." << endl;
-#endif
+		<< list.size() << "] e-mail addresses." << endl;
 	return list;
 }
 
@@ -288,11 +286,10 @@ KABC::PhoneNumber::List PilotAddress::getPhoneNumbers() const
 	QString test;
 
 	int shownPhone = getShownPhone() + entryPhone1;
-#ifdef DEBUG
+
 	DEBUGLIBRARY << fname << ": preferred pilot index is: ["
-				<< shownPhone << "], preferred phone number is: ["
-				<< getField(shownPhone) << "]" << endl;
-#endif
+		<< shownPhone << "], preferred phone number is: ["
+		<< getField(shownPhone) << "]" << endl;
 
 	for (int i = entryPhone1; i <= entryPhone5; i++)
 	{
@@ -312,27 +309,24 @@ KABC::PhoneNumber::List PilotAddress::getPhoneNumbers() const
 					// if this is the preferred phone number, set it as such
 					if (shownPhone == i) {
 						phoneType |= KABC::PhoneNumber::Pref;
-#ifdef DEBUG
-	DEBUGLIBRARY << fname << ": found preferred pilot index: ["
-				<< i << "], text: [" << test << "]" << endl;
-#endif
+						DEBUGLIBRARY << fname << ": found preferred pilot index: ["
+							<< i << "], text: [" << test << "]" << endl;
 					}
 					KABC::PhoneNumber ph(test, phoneType);
 					list.append(ph);
-				} else {
-#ifdef DEBUG
-	DEBUGLIBRARY << fname << ": whoopsie.  pilot phone number: ["
-				<< test << "], index: [" << i << "], type: ["
-				<< ind << "], has no corresponding PhoneNumber type." << endl;
-#endif
+				}
+				else
+				{
+					DEBUGLIBRARY << fname << ": whoopsie.  pilot phone number: ["
+						<< test << "], index: [" << i << "], type: ["
+						<< ind << "], has no corresponding PhoneNumber type." << endl;
 				}
 			}
 		}
 	}
-#ifdef DEBUG
+
 	DEBUGLIBRARY << fname << ": returning: ["
-				<< list.size() << "] phone numbers" << endl;
-#endif
+		<< list.size() << "] phone numbers" << endl;
 	return list;
 }
 
@@ -373,13 +367,12 @@ void PilotAddress::setPhoneNumbers(KABC::PhoneNumber::List list)
 			int phoneKey = it.data();
 			if ( phone.type() & phoneKey)
 			{
-#ifdef DEBUG
-	DEBUGLIBRARY << fname << ": found pilot type: ["
-				<< pilotKey << "] ("
-				<< fAppInfo.phoneLabels[pilotKey]
-				<< ") for PhoneNumber: ["
-				<< phone.number() << "]" << endl;
-#endif
+				DEBUGLIBRARY << fname << ": found pilot type: ["
+					<< pilotKey << "] ("
+					<< fAppInfo.phoneLabels[pilotKey]
+					<< ") for PhoneNumber: ["
+					<< phone.number() << "]" << endl;
+
 				category = pilotKey;
 				break;
 			}
@@ -388,32 +381,28 @@ void PilotAddress::setPhoneNumbers(KABC::PhoneNumber::List list)
 					  phone.number(), true, false);
 
 		// if this is the preferred phone number, then set it as such
-		if (phone.type() & KABC::PhoneNumber::Pref) {
-#ifdef DEBUG
-	DEBUGLIBRARY << fname << ": found preferred PhoneNumber. "
+		if (phone.type() & KABC::PhoneNumber::Pref) 
+		{
+			DEBUGLIBRARY << fname << ": found preferred PhoneNumber. "
 				<< "setting showPhone to index: ["
 				<< fieldSlot << "], PhoneNumber: ["
 				<< phone.number() << "]" << endl;
-#endif
 			fAddressInfo.showPhone = fieldSlot - entryPhone1;
 		}
 	}
 
-#ifdef DEBUG
 	DEBUGLIBRARY << fname << ": Pilot's showPhone now: ["
-				<< fAddressInfo.showPhone << "]." << endl;
-#endif
+		<< fAddressInfo.showPhone << "]." << endl;
 
 	// after setting the numbers, make sure that something sensible is set as the
 	// shownPhone on the Pilot if nothing is yet...
 	QString pref = getField(fAddressInfo.showPhone + entryPhone1);
 	if (fAddressInfo.showPhone < 0 || fAddressInfo.showPhone > 4 || pref.isEmpty()) {
-#ifdef DEBUG
-	DEBUGLIBRARY << fname << ": Pilot's showPhone: ["
-				<< fAddressInfo.showPhone
-				<< "] not properly set to a default. trying to set a sensible one."
-				<< endl;
-#endif
+		DEBUGLIBRARY << fname << ": Pilot's showPhone: ["
+			<< fAddressInfo.showPhone
+			<< "] not properly set to a default. trying to set a sensible one."
+			<< endl;
+
 		for (int i = entryPhone1; i <= entryPhone5; i++)
 		{
 			pref = getField(i);
@@ -424,10 +413,8 @@ void PilotAddress::setPhoneNumbers(KABC::PhoneNumber::List list)
 			}
 		}
 	}
-#ifdef DEBUG
 	DEBUGLIBRARY << fname << ": Pilot's showPhone now: ["
-				<< fAddressInfo.showPhone << "], and that's final." << endl;
-#endif
+		<< fAddressInfo.showPhone << "], and that's final." << endl;
 }
 
 void PilotAddress::setEmails(QStringList list)

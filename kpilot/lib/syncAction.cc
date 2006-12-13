@@ -91,16 +91,12 @@ SyncAction::~SyncAction()
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
 	DEBUGLIBRARY << fname
 		<< ": Running conduit " << name() << endl;
-#endif
 
 	bool r = this->exec();
 
-#ifdef DEBUG
 	DEBUGLIBRARY << fname << ": Exec returned " << r << endl;
-#endif
 
 	if (!r)
 	{

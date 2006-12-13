@@ -65,12 +65,10 @@
 
 /* static */ void PilotRecord::allocationInfo()
 {
-#ifdef DEBUG
 	FUNCTIONSETUP;
 	DEBUGLIBRARY << fname
 		<< ": Allocated " << fAllocated
 		<< "  Deleted " << fDeleted << endl;
-#endif
 }
 
 PilotRecord::PilotRecord(void *data, int len, int attrib, int cat, recordid_t uid) :

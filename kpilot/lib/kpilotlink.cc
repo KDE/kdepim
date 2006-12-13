@@ -105,19 +105,15 @@ void TickleThread::run()
 	int subseconds = ChecksPerSecond;
 	int ticktock = SecondsPerTickle;
 	int timeout = fTimeout;
-#ifdef DEBUG_CERR
-	DEBUGLIBRARY << fname << ": Running for " << timeout << " seconds." << endl;
+	DEBUGLIBRARY << fname << ": Running for " 
+		<< timeout << " seconds." << endl;
 	DEBUGLIBRARY << fname << ": Done @" << (void *) fDone << endl;
-#endif
+
 	while (!(*fDone))
 	{
 		QThread::msleep(1000/ChecksPerSecond);
 		if (!(--subseconds))
 		{
-#ifdef DEBUG_CERR
-// Don't dare use kdDebug() here, we're in a separate thread
-			DEBUGLIBRARY << fname << ": One second." << endl;
-#endif
 			if (timeout)
 			{
 				if (!(--timeout))
@@ -129,17 +125,11 @@ void TickleThread::run()
 			subseconds=ChecksPerSecond;
 			if (!(--ticktock))
 			{
-#ifdef DEBUG_CERR
-				DEBUGLIBRARY << fname << ": Kietel kietel!." << endl;
-#endif
 				ticktock=SecondsPerTickle;
 				fHandle->tickle();
 			}
 		}
 	}
-#ifdef DEBUG_CERR
-	DEBUGLIBRARY << fname << ": Finished." << endl;
-#endif
 }
 
 
@@ -212,9 +202,8 @@ void KPilotLink::startTickle(unsigned int timeout)
 		KPILOT_DELETE(fTickleThread);
 	}
 
-#ifdef DEBUG
 	DEBUGLIBRARY << fname << ": Done @" << (void *) (&fTickleDone) << endl;
-#endif
+
 	fTickleDone = false;
 	fTickleThread = new TickleThread(this,&fTickleDone,timeout);
 	fTickleThread->start();
@@ -319,11 +308,9 @@ private:
 	inline void showList() const
 	{
 		if ( !(mBoundDevices.count() > 0) ) return;
-#ifdef DEBUG
 		FUNCTIONSETUPL(3);
 		DEBUGLIBRARY << fname << ": Bound devices: "
 			<< ((mBoundDevices.count() > 0) ? mBoundDevices.join(CSL1(", ")) : CSL1("<none>")) << endl;
-#endif
 	}
 } ;
 
@@ -345,11 +332,9 @@ KPilotDeviceLink::KPilotDeviceLink(QObject * parent, const char *name, const QSt
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
 	DEBUGLIBRARY << fname
 		<< ": Pilot-link version " << PILOT_LINK_NUMBER
 		<< endl;
-#endif
 
 	messagesMask=0xffffffff;
 
@@ -378,14 +363,14 @@ void KPilotDeviceLink::close()
 	KPILOT_DELETE(fOpenTimer);
 	KPILOT_DELETE(fSocketNotifier);
 	fSocketNotifierActive=false;
-#ifdef DEBUG
+
 	DEBUGLIBRARY << fname
 		<< ": Closing sockets "
 		<< fCurrentPilotSocket
 		<< " and "
 		<< fPilotMasterSocket
 		<< endl;
-#endif
+
 	if (fCurrentPilotSocket != -1)
 	{
 		pi_close(fCurrentPilotSocket);
@@ -719,14 +704,12 @@ void KPilotDeviceLink::acceptDevice()
 		fSocketNotifierActive=false;
 	}
 
-#ifdef DEBUG
 	DEBUGLIBRARY << fname
 		<< ": Found connection on device "<<pilotPath().latin1()<<endl;
 	DEBUGLIBRARY << fname
 		<< ": Current status "
 		<< statusString()
 		<< " and master " << fPilotMasterSocket << endl;
-#endif
 
 	ret = pi_listen(fPilotMasterSocket, 1);
 	if (ret == -1)
@@ -785,7 +768,6 @@ void KPilotDeviceLink::acceptDevice()
 		fLinkStatus=PilotLinkError;
 		return;
 	}
-#ifdef DEBUG
 	else
 	{
 		DEBUGLIBRARY << fname
@@ -794,23 +776,19 @@ void KPilotDeviceLink::acceptDevice()
 			<< " Product=" << fPilotSysInfo->getProductID()
 			<< endl;
 	}
-#endif
 
 	emit logProgress(QString::null, 60);
         KPILOT_DELETE(fPilotUser);
 	fPilotUser = new KPilotUser;
 
 	/* Ask the pilot who it is.  And see if it's who we think it is. */
-#ifdef DEBUG
 	DEBUGLIBRARY << fname << ": Reading user info @"
 		<< (void *) fPilotUser << endl;
 	DEBUGLIBRARY << fname << ": Buffer @"
 		<< (void *) fPilotUser->pilotUser() << endl;
-#endif
 
 	dlp_ReadUserInfo(fCurrentPilotSocket, fPilotUser->pilotUser());
 
-#ifdef DEBUG
 	const char *n = fPilotUser->getUserName();
 	DEBUGLIBRARY << fname
 		<< ": Read user name "
@@ -818,17 +796,14 @@ void KPilotDeviceLink::acceptDevice()
 			"<empty>" :
 			fPilotUser->getUserName() )
 		<< endl;
-#endif
 
 	emit logProgress(i18n("Checking last PC..."), 90);
 
 	/* Tell user (via Pilot) that we are starting things up */
 	if ((ret=dlp_OpenConduit(fCurrentPilotSocket)) < 0)
 	{
-#ifdef DEBUG
-		DEBUGLIBRARY << k_funcinfo
+		DEBUGLIBRARY << fname
 			<< ": dlp_OpenConduit returned " << ret << endl;
-#endif
 
 		emit logError(i18n("Could not read user information from the Pilot. "
 			"Perhaps you have a password set on the device?"));
@@ -883,9 +858,7 @@ bool KPilotDeviceLink::installFile(const QString & f, const bool deleteFile)
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
 	DEBUGLIBRARY << fname << ": Installing file " << f << endl;
-#endif
 
 	if (!QFile::exists(f))
 		return false;
@@ -987,9 +960,8 @@ void KPilotDeviceLink::finishSync()
 	getPilotUser().setLastSyncDate(time(0));
 
 
-#ifdef DEBUG
 	DEBUGLIBRARY << fname << ": Writing username " << getPilotUser().getUserName() << endl;
-#endif
+
 	dlp_WriteUserInfo(pilotSocket(),getPilotUser().pilotUser());
 	addSyncLogEntry(i18n("End of HotSync\n"));
 	endOfSync();
@@ -1022,10 +994,8 @@ bool KPilotDeviceLink::retrieveDatabase(const QString &fullBackupName,
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
 	DEBUGLIBRARY << fname << ": Writing DB <" << info->name << "> "
 		<< " to " << fullBackupName << endl;
-#endif
 
 	struct pi_file *f;
 	if (fullBackupName.isEmpty())
@@ -1159,10 +1129,10 @@ unsigned int KPilotLocalLink::findAvailableDatabases( KPilotLocalLink::Private &
 		// Remove the trailing 4 characters
 		QString dbname = (*i);
 		dbname.remove(dbname.length()-4,4);
-#ifdef DEBUG
+
 		QString dbnamecheck = (*i).left((*i).findRev(CSL1(".pdb")));
 		Q_ASSERT(dbname == dbnamecheck);
-#endif
+
 		if (PilotLocalDatabase::infoFromFile( path + CSL1("/") + (*i), &dbi))
 		{
 			DEBUGLIBRARY << fname << ": Loaded "

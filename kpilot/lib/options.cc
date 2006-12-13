@@ -39,17 +39,20 @@
 #include <kdebug.h>
 #include <kcmdlineargs.h>
 
-// The daemon also has a debug level; debug_spaces is 60 spaces,
-// to align FUNCTIONSETUP output.
-//
-//
 #ifdef DEBUG
 int debug_level = 1;
 #else
 int debug_level = 0;
 #endif
+
+// The daemon also has a debug level; debug_spaces is 60 spaces,
+// to align FUNCTIONSETUP output.
+//
+//
 const char *debug_spaces =
 	"                                                    ";
+
+
 QString rtExpand(const QString &s, bool richText)
 {
 	if (richText)
@@ -101,7 +104,6 @@ struct tm writeTm(const QDate &d)
 	return writeTm(dt);
 }
 
-#ifdef DEBUG
 KPilotDepthCount::KPilotDepthCount(int area, int level, const char *s) :
 	fDepth(depth),
 	fLevel(level),
@@ -133,5 +135,4 @@ QString KPilotDepthCount::indent() const
 }
 
 int KPilotDepthCount::depth = 0;
-#endif
 

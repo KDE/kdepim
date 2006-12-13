@@ -161,17 +161,14 @@ bool PilotLocalDatabase::createDatabase(long creator, long type, int, int flags,
 	// if the database is already open, we cannot create it again.
 	// How about completely resetting it? (i.e. deleting it and then
 	// creating it again)
-	if (isOpen()) {
-#ifdef DEBUG
+	if (isOpen()) 
+	{
 		DEBUGLIBRARY << fname << ": Database " << fDBName
 			<< " already open. Cannot recreate it." << endl;
-#endif
 		return true;
 	}
 
-#ifdef DEBUG
 	DEBUGLIBRARY << fname << ": Creating database " << fDBName << endl;
-#endif
 
 	// Database names seem to be latin1.
 	Pilot::toPilot(fDBName, fDBInfo.name, sizeof(fDBInfo.name));
@@ -331,9 +328,9 @@ PilotRecord *PilotLocalDatabase::readRecordByIndex(int index)
 		kdWarning() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
-#ifdef DEBUG
+
 	DEBUGLIBRARY << fname << ": Index=" << index << " Count=" << recordCount() << endl;
-#endif
+
 	if ( (unsigned int)index >= recordCount() )
 	{
 		return 0L;
@@ -378,9 +375,7 @@ const PilotRecord *PilotLocalDatabase::findNextNewRecord()
 		kdWarning() << k_funcinfo << ": DB not open!" << endl;
 		return 0L;
 	}
-#ifdef DEBUG
 	DEBUGLIBRARY << fname << ": looking for new record from " << d->current << endl;
-#endif
 	// Should this also check for deleted?
 	while ((d->current < d->size())
 		&& ((*d)[d->current]->id() != 0 ))
@@ -615,10 +610,8 @@ void PilotLocalDatabase::openDatabase()
 	dbFile = pi_file_open( QFile::encodeName(dbPathName()) );
 	if (dbFile == 0L)
 	{
-#ifdef DEBUG
 		QString path = dbPathName();
 		DEBUGLIBRARY << fname << ": Failed to open " << path << endl;
-#endif
 		return;
 	}
 
@@ -665,21 +658,17 @@ void PilotLocalDatabase::closeDatabase()
 
 	if (!isOpen())
 	{
-#ifdef DEBUG
 		DEBUGLIBRARY << fname << ": Database " << fDBName
 			<< " is not open. Cannot close and write it"
 			<< endl;
-#endif
 		return;
 	}
 
 	QString newName = dbPathName() + CSL1(".new");
-#ifdef DEBUG
 	QString path = dbPathName();
 	DEBUGLIBRARY << fname
 		<< ": Creating temp file " << newName
 		<< " for the database file " << path << endl;
-#endif
 
 	dbFile = pi_file_create(QFile::encodeName(newName),&fDBInfo);
 	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
@@ -720,12 +709,10 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
 	DEBUGLIBRARY << fname
 		<< ": Setting default DB path to "
 		<< s
 		<< endl;
-#endif
 
 	if (!fPathBase)
 	{
