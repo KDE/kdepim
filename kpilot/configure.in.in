@@ -129,7 +129,7 @@ if test "$HAVE_PISOCK" = "1" ; then
 	#include <pi-version.h>
 	int main()
 	{ if (PILOT_LINK_VERSION==0) {
-            if ((PILOT_LINK_MAJOR==12) && (PILOT_LINK_MINOR>=1)) return (0);
+            if ((PILOT_LINK_MAJOR==12) && (PILOT_LINK_MINOR>=0)) return (0);
 	  }
 	  return (1);
 	}

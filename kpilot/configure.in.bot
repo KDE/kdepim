@@ -6,10 +6,10 @@ if test "$HAVE_PISOCK" = "0" ; then
 else
 	if test "x$HAVE_BAD_PISOCK" = "xYES" ; then
 		echo ""
-		echo "You have a version of pilot-link < 0.12.1."
+		echo "You have a version of pilot-link < 0.12.0."
 		echo "This version is old and is known to cause problems"
 		echo "with KPilot.  Please compile KPilot with "
-		echo "pilot-link version 0.12.1 or greater."
+		echo "pilot-link version 0.12.0 or greater."
 		echo ""
 		all_tests=bad
 	fi

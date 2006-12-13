@@ -34,7 +34,7 @@
 #include <pi-version.h>
 
 #ifndef PILOT_LINK_VERSION
-#error "You need at least pilot-link version 0.12.1"
+#error "You need at least pilot-link version 0.12.0"
 #endif
 
 
@@ -46,8 +46,8 @@
 #define PILOT_LINK_0_12_0	(1200)
 #define PILOT_LINK_0_12_1	(1201)
 
-#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_1
-#error "You need at least pilot-link version 0.12.1 for KPilot"
+#if PILOT_LINK_NUMBER < PILOT_LINK_0_12_0
+#error "You need at least pilot-link version 0.12.0 for KPilot"
 #endif
 
 #define PI_SIZE_T size_t
