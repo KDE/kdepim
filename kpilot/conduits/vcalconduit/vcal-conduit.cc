@@ -242,7 +242,7 @@ PilotRecord *VCalConduit::recordFromIncidence(PilotRecordBase *de, const KCal::I
 		return 0L;
 	}
 
-	const KCal::Event *event = dynamic_cast<KCal::Event *>(e);
+	const KCal::Event *event = dynamic_cast<const KCal::Event *>(e);
 	if (!event)
 	{
 		DEBUGCONDUIT << fname << ": Incidence is not an event." << endl;
@@ -270,7 +270,7 @@ KCal::Incidence *VCalConduit::incidenceFromRecord(KCal::Incidence *e, const Pilo
 		return 0L;
 	}
 
-	const PilotDateEntry *dateEntry = dynamic_cast<PilotDateEntry *>(de);
+	const PilotDateEntry *dateEntry = dynamic_cast<const PilotDateEntry *>(de);
 	if (!dateEntry)
 	{
 		DEBUGCONDUIT << fname << ": HH record not a date entry." << endl;
