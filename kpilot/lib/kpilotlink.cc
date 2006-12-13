@@ -545,12 +545,12 @@ bool KPilotDeviceLink::open(const QString &device)
 		e = 0;
 		goto errInit;
 	}
-	fRealPilotPath = KStandardDirs::realPath( device.isEmpty() ? fPilotPath : device );
+	fRealPilotPath = KStandardDirs::realFilePath( device.isEmpty() ? fPilotPath : device );
 
 	if ( !KPilotDeviceLinkPrivate::self()->canBind( fRealPilotPath ) ) {
 		msg = i18n("Already listening on that device");
 		e=0;
-		kdWarning() << k_funcinfo << ": Pilot Path " 
+		kdWarning() << k_funcinfo << ": Pilot Path "
 			<< fRealPilotPath << " already connected." << endl;
 		goto errInit;
 	}
@@ -558,9 +558,8 @@ bool KPilotDeviceLink::open(const QString &device)
 
 	if (fPilotMasterSocket == -1)
 	{
-#ifdef DEBUG
-		DEBUGLIBRARY << fname << ": Typing to open " << fRealPilotPath << endl;
-#endif
+		DEBUGLIBRARY << fname << ": Typing to open "
+			<< fRealPilotPath << endl;
 
 		fPilotMasterSocket = pi_socket(PI_AF_PILOT,
 			PI_SOCK_STREAM, PI_PF_DLP);
@@ -573,19 +572,16 @@ bool KPilotDeviceLink::open(const QString &device)
 			goto errInit;
 		}
 
-#ifdef DEBUG
 		DEBUGLIBRARY << fname
 			<< ": Got master " << fPilotMasterSocket << endl;
-#endif
 
 		fLinkStatus = CreatedSocket;
 	}
 
 	Q_ASSERT(fLinkStatus == CreatedSocket);
 
-#ifdef DEBUG
-	DEBUGLIBRARY << fname << ": Binding to path " << fRealPilotPath << endl;
-#endif
+	DEBUGLIBRARY << fname << ": Binding to path "
+		<< fRealPilotPath << endl;
 
 	ret = pi_bind(fPilotMasterSocket, QFile::encodeName(fRealPilotPath));
 
@@ -604,9 +600,7 @@ bool KPilotDeviceLink::open(const QString &device)
 
 		if (fWorkaroundUSB)
 		{
-#ifdef DEBUG
 			DEBUGLIBRARY << fname << ": Adding Z31 workaround." << endl;
-#endif
 			// Special case for Zire 31, 72, Tungsten T5,
 			// all of which may make a non-HotSync connection
 			// to the PC. Must detect this and bail quickly.
@@ -621,10 +615,9 @@ bool KPilotDeviceLink::open(const QString &device)
 	}
 	else
 	{
-#ifdef DEBUG
 		DEBUGLIBRARY << fname
-			<< ": Tried " << device << " and got " << strerror(errno) << endl;
-#endif
+			<< ": Tried " << fRealPilotPath << " and got "
+			<< strerror(errno) << endl;
 
 		if (fRetries < 5)
 		{
