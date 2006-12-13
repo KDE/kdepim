@@ -218,7 +218,7 @@ const QString VCalConduit::getTitle(PilotRecordBase *de)
 
 
 
-PilotRecord*VCalConduit::recordFromIncidence(PilotRecordBase *de, const KCal::Incidence*e)
+PilotRecord *VCalConduit::recordFromIncidence(PilotRecordBase *de, const KCal::Incidence*e)
 {
 	FUNCTIONSETUP;
 	if (!de || !e)
@@ -242,7 +242,14 @@ PilotRecord*VCalConduit::recordFromIncidence(PilotRecordBase *de, const KCal::In
 		return 0L;
 	}
 
-	if (VCalRecord::setDateEntry(dateEntry, dynamic_cast<const KCal::Event*>(e)))
+	const KCal::Event *event = dynamic_cast<KCal::Event *>(e);
+	if (!event)
+	{
+		DEBUGCONDUIT << fname << ": Incidence is not an event." << endl;
+		return 0L;
+	}
+
+	if (VCalRecord::setDateEntry(dateEntry, event))
 	{
 		return dateEntry->pack();
 	}
@@ -254,12 +261,30 @@ PilotRecord*VCalConduit::recordFromIncidence(PilotRecordBase *de, const KCal::In
 
 KCal::Incidence *VCalConduit::incidenceFromRecord(KCal::Incidence *e, const PilotRecordBase  *de)
 {
-	return dynamic_cast<KCal::Incidence*>(incidenceFromRecord(dynamic_cast<KCal::Event*>(e), dynamic_cast<const PilotDateEntry*>(de)));
-}
+	FUNCTIONSETUP;
 
-KCal::Event *VCalConduit::incidenceFromRecord(KCal::Event *e, const PilotDateEntry *de)
-{
-	VCalRecord::setEvent(e, de);
+	if (!de || !e)
+	{
+		DEBUGCONDUIT << fname
+			<< ": Got NULL entry or NULL incidence." << endl;
+		return 0L;
+	}
+
+	const PilotDateEntry *dateEntry = dynamic_cast<PilotDateEntry *>(de);
+	if (!dateEntry)
+	{
+		DEBUGCONDUIT << fname << ": HH record not a date entry." << endl;
+		return 0L;
+	}
+
+	KCal::Event *event = dynamic_cast<KCal::Event *>(e);
+	if (!event)
+	{
+		DEBUGCONDUIT << fname << ": Incidence is not an event." << endl;
+		return 0L;
+	}
+
+	VCalRecord::setEvent(event, dateEntry);
 	return e;
 }
 

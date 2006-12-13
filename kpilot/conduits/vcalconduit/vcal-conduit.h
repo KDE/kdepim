@@ -90,11 +90,10 @@ public:
 	static VCalConduitSettings *theConfig();
 
 protected:
-	virtual PilotRecord *recordFromIncidence(PilotRecordBase *de, const KCal::Incidence*e);
-	virtual PilotRecord *recordFromIncidence(PilotDateEntry*de, const KCal::Event*e);
-	virtual KCal::Incidence *incidenceFromRecord(KCal::Incidence *,
-		const PilotRecordBase  *);
-	virtual KCal::Event *incidenceFromRecord(KCal::Event *, const PilotDateEntry *);
+	virtual PilotRecord *recordFromIncidence(PilotRecordBase *de,
+		const KCal::Incidence *e);
+	virtual KCal::Incidence *incidenceFromRecord(KCal::Incidence *e,
+		const PilotRecordBase *de);
 
 	struct AppointmentAppInfo fAppointmentAppInfo;
 };
