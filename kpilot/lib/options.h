@@ -89,26 +89,6 @@
 
 extern KDE_EXPORT int debug_level;
 
-#ifdef DEBUG
-#ifdef __GNUC__
-#define KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(DEBUGAREA,l,__FUNCTION__)
-#else
-#define	KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(DEBUGAREA,l,__FILE__ ":" "__LINE__")
-#endif
-
-#define FUNCTIONSETUP		KPILOT_FNAMEDEF(1)
-#define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF(l)
-#define DEBUGAREA 		0
-
-#define DEBUGAREA_KPILOT	5510
-#define DEBUGAREA_LIBRARY	5511
-#define DEBUGAREA_CONDUIT	5512
-#define DEBUGAREA_DB		5513
-
-#ifdef DEBUG_CERR
-#include <iostream>
-#endif
-
 class KDE_EXPORT KPilotDepthCount
 {
 public:
@@ -129,6 +109,27 @@ protected:
 	int fLevel;
 	const char *fName;
 } ;
+
+
+#ifdef DEBUG
+#ifdef __GNUC__
+#define KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(DEBUGAREA,l,__FUNCTION__)
+#else
+#define	KPILOT_FNAMEDEF(l)	KPilotDepthCount fname(DEBUGAREA,l,__FILE__ ":" "__LINE__")
+#endif
+
+#define FUNCTIONSETUP		KPILOT_FNAMEDEF(1)
+#define FUNCTIONSETUPL(l)	KPILOT_FNAMEDEF(l)
+#define DEBUGAREA 		0
+
+#define DEBUGAREA_KPILOT	5510
+#define DEBUGAREA_LIBRARY	5511
+#define DEBUGAREA_CONDUIT	5512
+#define DEBUGAREA_DB		5513
+
+#ifdef DEBUG_CERR
+#include <iostream>
+#endif
 
 // stderr / iostream-based debugging.
 //
@@ -185,7 +186,7 @@ inline kdbgstream& operator <<(kdbgstream o, const KPilotDepthCount &d)
 #define FUNCTIONSETUPL(a) const int fname = a; Q_UNUSED(fname);
 #endif
 
-#define KPILOT_VERSION	"4.9.0 (depth9)"
+#define KPILOT_VERSION	"4.9.0 (deepsix)"
 
 
 // Function to expand newlines in rich text to <br>\n
