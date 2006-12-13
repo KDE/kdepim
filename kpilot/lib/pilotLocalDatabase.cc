@@ -318,6 +318,13 @@ PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 PilotRecord *PilotLocalDatabase::readRecordByIndex(int index)
 {
 	FUNCTIONSETUP;
+
+	if (index < 0)
+	{
+		DEBUGLIBRARY << fname << ": Index " << index << " is bogus." << endl;
+		return 0L;
+	}
+
 	d->pending = -1;
 	if (!isOpen())
 	{
@@ -327,8 +334,10 @@ PilotRecord *PilotLocalDatabase::readRecordByIndex(int index)
 #ifdef DEBUG
 	DEBUGLIBRARY << fname << ": Index=" << index << " Count=" << recordCount() << endl;
 #endif
-	if (index >= recordCount())
+	if ( (unsigned int)index >= recordCount() )
+	{
 		return 0L;
+	}
 	PilotRecord *newRecord = new PilotRecord((*d)[index]);
 	d->current = index;
 
