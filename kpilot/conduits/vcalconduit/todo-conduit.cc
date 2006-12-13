@@ -194,10 +194,16 @@ void TodoConduit::_setAppInfo()
 	FUNCTIONSETUP;
 	// get the address application header information
 
-	if( fTodoAppInfo )
-		DEBUGCONDUIT << fname << ": fTodoAppInfo not null" << endl;
-	if( fDatabase )
-		DEBUGCONDUIT << fname << ": fDatabase not null" << endl;
+	if( !fTodoAppInfo )
+	{
+		DEBUGCONDUIT << fname << ": fTodoAppInfo is NULL" << endl;
+		return;
+	}
+	if( !fDatabase )
+	{
+		DEBUGCONDUIT << fname << ": fDatabase is NULL" << endl;
+		return;
+	}
 
 	fTodoAppInfo->writeTo(fDatabase);
 }
@@ -209,10 +215,7 @@ void TodoConduit::_getAppInfo()
 
 	KPILOT_DELETE( fTodoAppInfo );
 	fTodoAppInfo = new PilotToDoInfo(fDatabase);
-
-#ifdef DEBUG
 	fTodoAppInfo->dump();
-#endif
 }
 
 
@@ -220,7 +223,10 @@ void TodoConduit::_getAppInfo()
 const QString TodoConduit::getTitle(PilotRecordBase *de)
 {
 	PilotTodoEntry*d=dynamic_cast<PilotTodoEntry*>(de);
-	if (d) return QString(d->getDescription());
+	if (d)
+	{
+		return QString(d->getDescription());
+	}
 	return QString::null;
 }
 
@@ -236,10 +242,10 @@ void TodoConduit::readConfig()
 	//
 	categoriesSynced = config()->conduitVersion()>=CONDUIT_VERSION_CATEGORYSYNC;
 	if (!categoriesSynced && !isFullSync() )
+	{
 		changeSync(SyncMode::eFullSync);
-#ifdef DEBUG
-	DEBUGCONDUIT<<"categoriesSynced="<<categoriesSynced<<endl;
-#endif
+	}
+	DEBUGCONDUIT<<"categoriesSynced=" << categoriesSynced << endl;
 }
 
 void TodoConduit::preSync()
@@ -276,14 +282,15 @@ PilotRecord*TodoConduit::recordFromTodo(PilotTodoEntry*de, const KCal::Todo*todo
 {
 	FUNCTIONSETUP;
 	if (!de || !todo) {
-#ifdef DEBUG
-		DEBUGCONDUIT<<fname<<": NULL todo given... Skipping it"<<endl;
-#endif
+		DEBUGCONDUIT << fname << ": NULL todo given... Skipping it" << endl;
 		return NULL;
 	}
 
 	// set secrecy, start/end times, alarms, recurrence, exceptions, summary and description:
-	if (todo->secrecy()!=KCal::Todo::SecrecyPublic) de->setSecret( true );
+	if (todo->secrecy()!=KCal::Todo::SecrecyPublic)
+	{
+		de->setSecret( true );
+	}
 
 	// update it from the iCalendar Todo.
 
@@ -310,9 +317,7 @@ PilotRecord*TodoConduit::recordFromTodo(PilotTodoEntry*de, const KCal::Todo*todo
 	// what we call description pilot puts as a separate note
 	de->setNote(todo->description());
 
-#ifdef DEBUG
-DEBUGCONDUIT<<"-------- "<<todo->summary()<<endl;
-#endif
+	DEBUGCONDUIT << "-------- " << todo->summary() << endl;
 	return de->pack();
 }
 
@@ -333,7 +338,10 @@ void TodoConduit::preRecord(PilotRecord*r)
 
 void TodoConduit::setCategory(PilotTodoEntry*de, const KCal::Todo*todo)
 {
-	if (!de || !todo) return;
+	if (!de || !todo)
+	{
+		return;
+	}
 	de->setCategory(_getCat(todo->categories(), de->getCategoryLabel()));
 }
 
