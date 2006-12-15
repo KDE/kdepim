@@ -58,7 +58,15 @@ public:
 
 	typedef enum { Error=-1 } Status;
 
-	int status() const { return fActionStatus; } ;
+	/** A syncaction has a status, which can be expressed as an
+	*   integer. Subclasses are expected to define their own status
+	*   values as needed.
+	*/
+	int status() const
+	{
+		return fActionStatus;
+	}
+	/** Return a human-readable representation of the status. */
 	virtual QString statusString() const;
 
 protected:
@@ -90,6 +98,14 @@ signals:
 	void logError(const QString &);
 	void logProgress(const QString &,int);
 
+protected slots:
+	/** This slot emits syncDone(), and does nothing else. This
+	*   is safe, since the method returns immediately after the
+	*   emit -- even if syncDone() causes the SyncAction to be deleted.
+	*/
+	void delayedDoneSlot();
+
+protected:
 	/**
 	* It might not be safe to emit syncDone() from exec().
 	* So instead, call delayDone() to wait for the main event
@@ -99,37 +115,68 @@ signals:
 	* delayDone() returns true, so that return delayDone();
 	* is a sensible final statement in exec().
 	*/
-protected slots:
-	void delayedDoneSlot();
-
-protected:
 	bool delayDone();
 
 public:
+	/** Public API for adding a sync log entry, see the implementation
+	*   in KPilotLink::addSyncLogEntry().
+	* @param e   Message to add to the sync log
+	* @param log If @c true, also add the entry to the log in KPilot
+	* @note Having messages appear on the handheld but not in KPilot
+	*       should be a @em very rare occurrence.
+	*/
 	void addSyncLogEntry(const QString &e,bool log=true)
-		{ if (deviceLink()) { deviceLink()->addSyncLogEntry(e,log); } } ;
-	void addLogMessage( const QString &msg ) { emit logMessage( msg ); }
-	void addLogError( const QString &msg ) { emit logError( msg ); }
-	void addLogProgress( const QString &msg, int prog ) { emit logProgress( msg, prog ); }
+	{
+		if (deviceLink())
+		{
+			deviceLink()->addSyncLogEntry(e,log);
+		}
+	}
+	/** Public API for adding a message to the log in KPilot.
+	*   Adds @p msg to the synclog maintained on the PC.
+	*/
+	void addLogMessage( const QString &msg )
+	{
+		emit logMessage( msg );
+	}
+	/** Log an error message in KPilot (the PC side of things). */
+	void addLogError( const QString &msg )
+	{
+		emit logError( msg );
+	}
+	/** Log progress in KPilot (the PC side of things). */
+	void addLogProgress( const QString &msg, int prog )
+	{
+		emit logProgress( msg, prog );
+	}
 protected:
 	/** Connection to the device. @todo make private. */
 	KPilotLink *fHandle;
 	int fActionStatus;
 
 	/** Returns a pointer to the connection to the device. */
-	inline KPilotLink *deviceLink() const { return fHandle; }
+	inline KPilotLink *deviceLink() const
+	{
+		return fHandle;
+	}
 
 	/** Returns the file descriptor for the device link -- that is,
 	* the raw handle to the OS's connection to the device. Use with care.
 	* May return -1 if there is no device.
 	*/
-	int pilotSocket() const { return deviceLink() ? deviceLink()->pilotSocket() : -1 ; } ;
+	int pilotSocket() const
+	{
+		return deviceLink() ? deviceLink()->pilotSocket() : -1 ;
+	}
 
 	/** Tells the handheld device that someone is talking to it now.
 	* Useful (repeatedly) to inform the user of what is going on.
 	* May return < 0 on error (or if there is no device attached).
 	*/
-	int openConduit() { return deviceLink() ? deviceLink()->openConduit() : -1; } ;
+	int openConduit()
+	{
+		return deviceLink() ? deviceLink()->openConduit() : -1;
+	}
 public:
 	/**
 	* This class encapsulates the different sync modes that
@@ -146,12 +193,12 @@ public:
 	public:
 		/** Available modes for the sync. */
 		enum Mode {
-		eHotSync=1,
-		eFullSync=2,
-		eCopyPCToHH=3,
-		eCopyHHToPC=4,
-		eBackup=5,
-		eRestore=6
+			eHotSync=1,
+			eFullSync=2,
+			eCopyPCToHH=3,
+			eCopyHHToPC=4,
+			eBackup=5,
+			eRestore=6
 		} ;
 
 		/** Create a mode with the given Mode @p m and
@@ -172,7 +219,10 @@ public:
 		/** Returns the kind of sync; this is just incomplete
 		* information, since a test hot sync is very different from
 		* a non-test one. */
-		Mode mode() const { return fMode; };
+		Mode mode() const
+		{
+			return fMode;
+		}
 
 		/** Sets a mode from an integer @p mode, if possible.
 		* If the @p mode is illegal, return false and set the
@@ -180,6 +230,7 @@ public:
 		* are reset to false.
 		*/
 		bool setMode(int);
+
 		/** Sets a mode from a @p mode, if possible. This leaves
 		* the options unchanged, so as to reward properly-typed programming.
 		*/
@@ -187,12 +238,23 @@ public:
 
 		/** Sets options. Returns false if the combination of mode
 		* and the options is impossible. */
-		bool setOptions(bool test, bool local) { fTest=test; fLocal=local; return true; } ;
+		bool setOptions(bool test, bool local)
+		{
+			fTest=test;
+			fLocal=local;
+			return true;
+		}
 
 		/** Shorthand to test for a specific mode enum. This disregards
-		* the mixings local and test.
+		*   the mixings local and test.
 		*/
-		bool operator ==(const Mode &m) const { return mode() == m; } ;
+		bool operator ==(const Mode &m) const
+		{
+			return mode() == m;
+		}
+		/** Longhand comparison. Compares two modes for the same
+		*   mode enum and mixins local and test.
+		*/
 		bool operator ==(const SyncMode &m) const
 		{
 			return ( mode() == m.mode() ) &&
@@ -201,15 +263,20 @@ public:
 		} ;
 
 		/** Accessor for the test part of the mode. Test syncs should
-		* never actually modify data anywhere.
+		*   never actually modify data anywhere.
 		*/
-		bool isTest() const { return fTest; };
+		bool isTest() const
+		{
+			return fTest;
+		}
 
 		/** Accessor for the local part of the mode. Local syncs use a
-		* local database instead of one on the device link.
+		*   local database instead of one on the device link.
 		*/
-		bool isLocal() const { return fLocal; };
-
+		bool isLocal() const
+		{
+			return fLocal;
+		}
 
 		bool isFullSync() const
 		{
@@ -226,7 +293,7 @@ public:
 		bool isSync() const
 		{
 			return ( fMode==eFullSync ) ||
-				( fMode == eHotSync ); 
+				( fMode == eHotSync );
 		} ;
 
 		/** Classify every mode as either a sync (two-way) or copy (one-way) mode. */
@@ -242,6 +309,7 @@ public:
 		* Returns a standard name for each of the sync modes.
 		*/
 		static QString name(Mode);
+
 		/**
 		* Returns a (human readable) name for this particular mode,
 		* including extra information about test and local mode.
