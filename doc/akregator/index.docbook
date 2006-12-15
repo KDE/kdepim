@@ -733,14 +733,6 @@ action="simul">&Ctrl;<keycap>A</keycap></keycombo></shortcut>
 </varlistentry>
 <varlistentry>
 <term><menuchoice>
-<guimenu>Edit</guimenu>
-<guimenuitem>Hard</guimenuitem>
-</menuchoice></term>
-<listitem><para><action>Choose</action> the list of difficult words to
-guess</para></listitem>
-</varlistentry>
-<varlistentry>
-<term><menuchoice>
 <shortcut><keycombo
 action="simul">&Ctrl;<keycap>F</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
