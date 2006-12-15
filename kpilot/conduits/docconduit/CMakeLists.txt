@@ -3,12 +3,12 @@ include_directories(
 )
 
 set(conduit_doc_SRCS
-	makedoc9.cc 
-	pilotDOCHead.cc 
-	pilotDOCEntry.cc 
-	pilotDOCBookmark.cc 
+	makedoc9.cc
+	pilotDOCHead.cc
+	pilotDOCEntry.cc
+	pilotDOCBookmark.cc
 	DOC-converter.cc
-	kpalmdoc_dlg.cc 
+	kpalmdoc_dlg.cc
 	kpalmdoc.cpp
 	doc-factory.cc
 	doc-setup.cc
@@ -18,6 +18,7 @@ set(conduit_doc_SRCS
 
 set(conduit_doc_UIS
 	kpalmdoc_dlgbase.ui
+	doc-setupdialog.ui
 )
 
 set(conduit_doc_KCFGS
@@ -53,7 +54,7 @@ install(
 )
 
 install(
-	FILES kpalmdoc.upd 
+	FILES kpalmdoc.upd
 	DESTINATION ${CMAKE_INSTALL_PREFIX}/share/apps/kconf_update
 )
 

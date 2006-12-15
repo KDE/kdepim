@@ -89,30 +89,30 @@ public slots:
     */
 	void readConfig();
 
-	/** 
+	/**
 	* Check if the database needs to be synced at all.
 	*/
 	bool needsSync(docSyncInfo &sinfo);
 	 /**
-    * If necessary, copy the database from the palm to a local dir. 
+    * If necessary, copy the database from the palm to a local dir.
     * Also initialize the docDBInfo that will be passed to the docconverter
     */
 	PilotDatabase *preSyncAction(docSyncInfo &sinfo) const;
 
 	bool doSync(docSyncInfo &sinfo);
 	 /**
-    * Clean up after the sync. The bool parameter res tells 
+    * Clean up after the sync. The bool parameter res tells
     * the function if the  conversion was successful or not
     */
 	bool postSyncAction(PilotDatabase * dbinfo, docSyncInfo &sinfo, bool res = true);
 
 	bool pcTextChanged(QString txtfn);
 	bool hhTextChanged(PilotDatabase*docdb);
-	
-	/** Opens the database with name dbname. For a local sync, this will be a 
-	 *  PilotLocalDatabase, otherwise it will be a database on the serial device 
+
+	/** Opens the database with name dbname. For a local sync, this will be a
+	 *  PilotLocalDatabase, otherwise it will be a database on the serial device
 	 *  (i.e. an object of class PilotSerialDatabase) */
-	PilotDatabase*openDOCDatabase(QString dbname);
+	PilotDatabase *openDOCDatabase(const QString &dbname);
 
 	QString constructPDBFileName(QString name);
 	QString constructTXTFileName(QString name);

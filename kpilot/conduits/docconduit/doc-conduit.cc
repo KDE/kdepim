@@ -309,8 +309,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo)
 			}
 		}
 		if (!DOCConduitSettings::localSync()) {
-			PilotDatabase *database=new PilotSerialDatabase(pilotSocket(),
-				QString::fromLatin1(sinfo.dbinfo.name));
+			PilotDatabase *database=deviceLink()->database( sinfo.dbinfo.name );
 			if ( database->deleteDatabase() !=0 ) {
 					kdWarning()<<"Unable to delete database "<<sinfo.dbinfo.name<<" from the handheld"<<endl;
 			}
@@ -685,9 +684,15 @@ void DOCConduit::syncDatabases() {
 }
 
 
-PilotDatabase*DOCConduit::openDOCDatabase(QString dbname) {
-	if (DOCConduitSettings::localSync()) return new PilotLocalDatabase(DOCConduitSettings::pDBDirectory(), dbname, false);
-	else return new PilotSerialDatabase(pilotSocket(), dbname);
+PilotDatabase*DOCConduit::openDOCDatabase(const QString &dbname) {
+	if (DOCConduitSettings::localSync())
+	{
+		return new PilotLocalDatabase(DOCConduitSettings::pDBDirectory(), dbname, false);
+	}
+	else
+	{
+		return deviceLink()->database( dbname );
+	}
 }
 
 
@@ -921,8 +926,7 @@ PilotDatabase *DOCConduit::preSyncAction(docSyncInfo &sinfo) const
 	}
 	else
 	{
-		return new PilotSerialDatabase(pilotSocket(),
-			QString::fromLatin1(dbinfo.name));
+		return deviceLink()->database(QString::fromLatin1(dbinfo.name));
 	}
 }
 
@@ -945,7 +949,7 @@ bool DOCConduit::postSyncAction(PilotDatabase * database,
 #endif
 		if (DOCConduitSettings::keepPDBsLocally() && !DOCConduitSettings::localSync())
 		{
-			PilotSerialDatabase*db=new PilotSerialDatabase(pilotSocket(),
+			PilotDatabase*db=deviceLink()->database(
 				QString::fromLatin1(sinfo.dbinfo.name));
 #ifdef DEBUG
 			DEBUGCONDUIT<<"Middle 1 Resetting sync flags for database "
