@@ -55,4 +55,7 @@ if (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
   #    message(FATAL_ERROR "You are missing gpgme 0.4.5 or higher.
   #  Download gpgme >= 0.4.5 from ftp://ftp.gnupg.org/gcrypt/alpha/gpgme")
   #endif (NOT GPGME_FOUND)
+else (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
+  # It was found before, assume it's OK
+  set(GPGME_FOUND TRUE)
 endif (NOT GPGME_LIBRARIES OR NOT GPGME_INCLUDES)
