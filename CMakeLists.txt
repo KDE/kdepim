@@ -19,7 +19,6 @@ endif(Q_WS_X11)
 #we make gpgme optional for non-Unix since it does not exist yet.
 if(UNIX)
   find_package(Gpgme REQUIRED)
-  macro_log_feature(GPGME_FOUND "gpgme" "GnuPG Made Easy Development Libraries" "http://www.gnupg.org/related_software/gpgme" TRUE "0.4.5 or greater" "Needed to provide GNU Privacy Guard support in KDE PIM applications. Necessary to compile many PIM applications, including KMail.")
 else(UNIX)
   macro_optional_find_package(Gpgme)
   macro_log_feature(GPGME_FOUND "gpgme" "GnuPG Made Easy Development Libraries" "http://www.gnupg.org/related_software/gpgme" FALSE "0.4.5 or greater" "Needed to provide GNU Privacy Guard support in KDE PIM applications. Necessary to compile many PIM application, including KMail.")
