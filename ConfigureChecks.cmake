@@ -61,6 +61,8 @@ check_include_files("sys/time.h;time.h" TIME_WITH_SYS_TIME)
 check_function_exists(unsetenv   HAVE_UNSETENV)
 check_function_exists(setenv     HAVE_SETENV)
 check_function_exists(usleep     HAVE_USLEEP)
+check_function_exists(strlcpy    HAVE_STRLCPY)           # kdecore/fakes.c
+check_function_exists(strlcat    HAVE_STRLCAT)           # kdecore/fakes.c
 
 check_symbol_exists(snprintf        "stdio.h"                  HAVE_SNPRINTF)
 check_symbol_exists(vsnprintf       "stdio.h"                  HAVE_VSNPRINTF)
@@ -71,6 +73,8 @@ check_prototype_exists(getdomainname "stdlib.h;unistd.h;netdb.h" HAVE_GETDOMAINN
 check_prototype_exists(unsetenv "stdlib.h" HAVE_UNSETENV_PROTO)
 check_prototype_exists(setenv "stdlib.h" HAVE_SETENV_PROTO)
 check_prototype_exists(usleep unistd.h HAVE_USLEEP_PROTO)
+check_prototype_exists(strlcat string.h             HAVE_STRLCAT_PROTO)
+check_prototype_exists(strlcpy string.h             HAVE_STRLCPY_PROTO)
 
 check_type_size("int" SIZEOF_INT)
 check_type_size("char *"  SIZEOF_CHAR_P)
