@@ -8,13 +8,15 @@ MAL_SUBDIR = malconduit
 endif
 
 SUBDIRS = \
-          knotes \
-          popmail \
-          timeconduit \
-          sysinfoconduit \
+	  abbrowserconduit \
+	  docconduit \
+	  knotes \
 	  memofileconduit \
 	  notepadconduit \
-	  abbrowserconduit vcalconduit
+	  popmail \
+	  sysinfoconduit \
+	  timeconduit \
+	  vcalconduit
 
 ###
 ### Subdirs you might have for experimental purposes:
