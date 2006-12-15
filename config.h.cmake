@@ -81,6 +81,19 @@
 /* Define if you have the usleep prototype */
 #cmakedefine HAVE_USLEEP_PROTO 1
 
+/* Define if you have strlcat (BSD*) */
+#cmakedefine HAVE_STRLCAT 1
+
+/* Define if you have strlcat prototype (BSD*) */
+#cmakedefine HAVE_STRLCAT_PROTO 1
+
+/* Define if you have strlcpy (BSD*) */
+#cmakedefine HAVE_STRLCPY 1
+
+/* Define if you have strlcpy prototype (BSD*) */
+#cmakedefine HAVE_STRLCPY_PROTO 1
+
+
 /* Define to 1 if you have the <values.h> header file. */
 #cmakedefine HAVE_VALUES_H 1
 
