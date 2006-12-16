@@ -345,7 +345,7 @@ QCString Content::encodedContent(bool useCrLf)
   }
   else if(c_ontents && !c_ontents->isEmpty()) { //this is a multipart message
     Headers::ContentType *ct=contentType();
-    QCString boundary="--"+ct->boundary();
+    QCString boundary="\n--"+ct->boundary();
 
     //add all (encoded) contents separated by boundaries
     for(Content *c=c_ontents->first(); c; c=c_ontents->next()) {

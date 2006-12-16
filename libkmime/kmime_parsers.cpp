@@ -72,7 +72,7 @@ bool MultiPart::parse()
         pos2=-1; //break;
       }
       else {
-        part=s_rc.mid(pos1, pos2-pos1);
+        part=s_rc.mid(pos1, pos2-pos1 - 1 ); // pos2 - 1 (\n) is part of the boundary (see RFC 2046, section 5.1.1)
         p_arts.append(part);
         pos2+=blen; //pos2 points now to the first charakter after the boundary
         if(s_rc[pos2]=='-' && s_rc[pos2+1]=='-') { //end-boundary
