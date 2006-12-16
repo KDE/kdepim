@@ -41,7 +41,7 @@ extern "C" {
 QStringList KHolidays::locations()
 {
   QStringList files =
-    KGlobal::dirs()->findAllResources( "data", "libkholidays/holiday_*",
+    KGlobal::dirs()->findAllResources( "data", "libkholidays/" + generateFileName( "*" ),
                                        false, true );
   QStringList locs;
 
@@ -52,10 +52,28 @@ QStringList KHolidays::locations()
   return locs;
 }
 
+QString KHolidays::fileForLocation( const QString &location )
+{
+  return locate( "data", "libkholidays/" + generateFileName( location ) );
+}
+
+QString KHolidays::userPath( bool create )
+{
+  return KGlobal::dirs()->saveLocation( "data", "libkholidays/", create );
+}
+
+QString KHolidays::generateFileName( const QString &location )
+{
+  return "holiday_" + location;
+}
+
+
+
+
 KHolidays::KHolidays( const QString& location )
   : mLocation( location )
 {
-  mHolidayFile = locate( "data", "libkholidays/holiday_" + location );
+  mHolidayFile = fileForLocation( location );
 
   mYearLast = 0;
 }

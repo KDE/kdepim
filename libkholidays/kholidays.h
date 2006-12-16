@@ -41,6 +41,19 @@ class KDE_EXPORT KHolidays {
        object.
     */
     static QStringList locations();
+    /**
+       Return the file name for the holiday file of the given location.
+    */
+    static QString fileForLocation( const QString &location );
+    /**
+       Return the directory for user-specific holiday files (i.e. somewhere below
+       $KDEDIR/share/apps/). Don't automatically create that path by default.
+    */
+    static QString userPath( bool create = false );
+    /** 
+       Generate the filename (without the path) for a given region.
+    */
+    static QString generateFileName( const QString &location );
 
     KHolidays( const QString& location );
     ~KHolidays();
