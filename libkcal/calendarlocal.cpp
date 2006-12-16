@@ -452,7 +452,7 @@ Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,
           eventList.append( event );
         }
       } else {
-        if ( ( s >= start && s <= end ) || ( e >= start && e <= end ) ) {
+        if ( s <= end && e >= start ) {
           eventList.append( event );
         }
       }
