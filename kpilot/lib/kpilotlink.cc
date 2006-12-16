@@ -549,7 +549,7 @@ bool KPilotDeviceLink::open(const QString &device)
 		fPilotMasterSocket = pi_socket(PI_AF_PILOT,
 			PI_SOCK_STREAM, PI_PF_DLP);
 
-		if (fPilotMasterSocket<1)
+		if (fPilotMasterSocket < 0)
 		{
 			e = errno;
 			msg = i18n("Cannot create socket for communicating "
