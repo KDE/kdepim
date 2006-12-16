@@ -577,11 +577,14 @@ bool KPilotDeviceLink::open(const QString &device)
 		fOpenTimer->stop();
 
 		KPilotDeviceLinkPrivate::self()->bindDevice( fRealPilotPath );
+		/*
 		fSocketNotifier = new QSocketNotifier(fPilotMasterSocket,
 			QSocketNotifier::Read, this);
 		QObject::connect(fSocketNotifier, SIGNAL(activated(int)),
 			this, SLOT(acceptDevice()));
+		*/
 		fSocketNotifierActive=true;
+		acceptDevice();
 
 		if (fWorkaroundUSB)
 		{
@@ -712,7 +715,7 @@ void KPilotDeviceLink::acceptDevice()
 		<< " and master " << fPilotMasterSocket << endl;
 
 	ret = pi_listen(fPilotMasterSocket, 1);
-	if (ret == -1)
+	if (ret < 0)
 	{
 		char *s = strerror(errno);
 
@@ -732,7 +735,7 @@ void KPilotDeviceLink::acceptDevice()
 	emit logProgress(QString::null,10);
 
 	fCurrentPilotSocket = pi_accept(fPilotMasterSocket, 0, 0);
-	if (fCurrentPilotSocket == -1)
+	if (fCurrentPilotSocket < 0)
 	{
 		char *s = strerror(errno);
 
@@ -761,7 +764,7 @@ void KPilotDeviceLink::acceptDevice()
 	emit logProgress(QString::null, 30);
 
         KPILOT_DELETE(fPilotSysInfo);
-	fPilotSysInfo = new KPilotSysInfo;
+	fPilotSysInfo = new KPilotSysInfo();
 	if (dlp_ReadSysInfo(fCurrentPilotSocket, fPilotSysInfo->sysInfo()) < 0)
 	{
 		emit logError(i18n("Unable to read system information from Pilot"));
