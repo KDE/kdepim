@@ -577,14 +577,11 @@ bool KPilotDeviceLink::open(const QString &device)
 		fOpenTimer->stop();
 
 		KPilotDeviceLinkPrivate::self()->bindDevice( fRealPilotPath );
-		/*
 		fSocketNotifier = new QSocketNotifier(fPilotMasterSocket,
 			QSocketNotifier::Read, this);
 		QObject::connect(fSocketNotifier, SIGNAL(activated(int)),
 			this, SLOT(acceptDevice()));
-		*/
 		fSocketNotifierActive=true;
-		acceptDevice();
 
 		if (fWorkaroundUSB)
 		{
