@@ -46,8 +46,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2004-09-24</date>
-<releaseinfo>3.3</releaseinfo>
+<date>2006-12-16</date>
+<releaseinfo>3.5.3 (&kde; 3.5.5)</releaseinfo>
 
 <legalnotice>
 &FDLNotice;
@@ -647,7 +647,7 @@ checked.
 <para>You can modify many aspects of &kaddressbook;'s behavior in the
 preferences dialog; the dialog can be opened via
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
-KAddressBook</guimenuitem></menuchoice> or using the toolbar icon.</para>
+KAddressBook...</guimenuitem></menuchoice> or using the toolbar icon.</para>
 
 <screenshot>
 <screeninfo>Configuring &kaddressbook;</screeninfo>
@@ -763,7 +763,7 @@ You can include and exclude servers from the search by selecting or deselecting 
 <keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
 </shortcut>
 <guimenu>File</guimenu>
-<guimenuitem>New Contact</guimenuitem>
+<guimenuitem>New Contact...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the contact editor for adding a new contact</action>.</para></listitem>
 </varlistentry>
@@ -818,7 +818,7 @@ contact</action>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Send email to Contact</guimenuitem>
+<guimenuitem>Send Email to Contact...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the preferred mail program with the currently-selected
 contacts as recipients</action>.</para></listitem>
@@ -827,10 +827,18 @@ contacts as recipients</action>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>Send Contact</guimenuitem>
+<guimenuitem>Send Contact...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the preferred mail program with the currently-selected
 contact details attached as vCard</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
+<guimenuitem>Chat With...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>To be written</action>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -920,6 +928,14 @@ it is in a valid format)</action>.</para></listitem>
 
 <varlistentry>
 <term><menuchoice>
+<guimenu>Edit</guimenu>
+<guimenuitem>Store Contact In...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>To be written</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
 <shortcut>
 <keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo>
 </shortcut>
@@ -932,7 +948,15 @@ it is in a valid format)</action>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>Edit</guimenu>
-<guimenuitem>Set Categories</guimenuitem>
+<guimenuitem>Merge Contacts</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Merge the contact data</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Edit</guimenu>
+<guimenuitem>Select Categories...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens a dialog where you can set the categories
 for the currently-selected contacts; when the selected categories differ
@@ -944,7 +968,7 @@ want to merge these differences or if the categories should be overwritten
 <varlistentry>
 <term><menuchoice>
 <guimenu>Edit</guimenu>
-<guimenuitem>Set Who Am I</guimenuitem>
+<guimenuitem>Set as Personal Contact Data</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Marks the currently selected contact as the 'Who Am I' contact,
 which represents the user's data. You should have such a contact, because other
@@ -970,7 +994,7 @@ to input it separately in every application
 <varlistentry>
 <term><menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>Add View</guimenuitem>
+<guimenuitem>Add View...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens a <link linkend="using-views">dialog</link> for
 creating a new view</action>.</para></listitem>
@@ -1011,7 +1035,7 @@ you can modify the settings of the current view</action>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>Tools</guimenu>
-<guisubmenu>Lookup Addresses in Directory</guisubmenu>
+<guisubmenu>Lookup Addresses in LDAP Directory...</guisubmenu>
 </menuchoice></term>
 <listitem><para><action>Opens the search dialog for addresses located on
 LDAP servers. You can configure the server settings in the
@@ -1062,7 +1086,7 @@ extension bar at the bottom of the main window</action>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Edit Filter</guimenuitem>
+<guimenuitem>Edit Filters...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens a <link linkend="using-filters">dialog</link> where
 you can edit the filters</action>.</para></listitem>
@@ -1090,7 +1114,7 @@ can add and remove toolbuttons for &kaddressbook;'s commands with this option.</
 <varlistentry>
 <term><menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Configure KAddressBook...</guimenuitem>
+<guimenuitem>Configure &kaddressbook;...</guimenuitem>
 </menuchoice></term>
 <listitem><para>Opens the <link linkend="preferences">preferences dialog</link>.</para>
 </listitem>
