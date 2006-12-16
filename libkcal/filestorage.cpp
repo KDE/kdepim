@@ -108,7 +108,7 @@ bool FileStorage::load()
           return false;
         }
       } else {
-        kdDebug(5800) << "Warning! There should be set an exception." << endl;
+        kdDebug(5800) << "Warning! There should be an exception set." << endl;
         return false;
       }
     } else {
@@ -136,7 +136,7 @@ bool FileStorage::save()
     calendar()->setModified( false );
   } else {
     if ( !format->exception() ) {
-      kdDebug(5800) << "FileStorage::save(): Error. There should be set an exception."
+      kdDebug(5800) << "FileStorage::save(): Error. There should be an exception set."
                 << endl;
     } else {
       kdDebug(5800) << "FileStorage::save(): " << format->exception()->message()
