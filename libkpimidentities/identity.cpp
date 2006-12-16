@@ -238,7 +238,7 @@ bool Identity::isNull() const {
   return mIdentity.isEmpty() && mFullName.isEmpty() && mEmailAddr.isEmpty() &&
     mOrganization.isEmpty() && mReplyToAddr.isEmpty() && mBcc.isEmpty() &&
     mVCardFile.isEmpty() &&
-    mFcc.isEmpty() && mDrafts.isEmpty() &&
+    mFcc.isEmpty() && mDrafts.isEmpty() && mTemplates.isEmpty() &&
     mPGPEncryptionKey.isEmpty() && mPGPSigningKey.isEmpty() &&
     mSMIMEEncryptionKey.isEmpty() && mSMIMESigningKey.isEmpty() &&
     mTransport.isEmpty() && mDictionary.isEmpty() &&
@@ -259,7 +259,8 @@ bool Identity::operator==( const Identity & other ) const {
       mSMIMEEncryptionKey == other.mSMIMEEncryptionKey &&
       mSMIMESigningKey == other.mSMIMESigningKey &&
       mPreferredCryptoMessageFormat == other.mPreferredCryptoMessageFormat &&
-      mDrafts == other.mDrafts && mTransport == other.mTransport &&
+      mDrafts == other.mDrafts && mTemplates == other.mTemplates &&
+      mTransport == other.mTransport &&
       mDictionary == other.mDictionary && mSignature == other.mSignature &&
       mXFace == other.mXFace && mXFaceEnabled == other.mXFaceEnabled;
 
@@ -281,6 +282,7 @@ bool Identity::operator==( const Identity & other ) const {
   if ( mSMIMESigningKey != other.mSMIMESigningKey ) kdDebug() << "mSMIMESigningKey differs : " << mSMIMESigningKey << " != " << other.mSMIMESigningKey << endl;
   if ( mPreferredCryptoMessageFormat != other.mPreferredCryptoMessageFormat ) kdDebug() << "mPreferredCryptoMessageFormat differs : " << mPreferredCryptoMessageFormat << " != " << other.mPreferredCryptoMessageFormat << endl;
   if ( mDrafts != other.mDrafts ) kdDebug() << "mDrafts differs : " << mDrafts << " != " << other.mDrafts << endl;
+  if ( mTemplates != other.mTemplates ) kdDebug() << "mTemplates differs : " << mTemplates << " != " << other.mTemplates << endl;
   if ( mTransport != other.mTransport ) kdDebug() << "mTransport differs : " << mTransport << " != " << other.mTransport << endl;
   if ( mDictionary != other.mDictionary ) kdDebug() << "mDictionary differs : " << mDictionary << " != " << other.mDictionary << endl;
   if ( ! ( mSignature == other.mSignature ) ) kdDebug() << "mSignature differs" << endl;
@@ -297,7 +299,8 @@ Identity::Identity( const QString & id, const QString & fullName,
     // Using "" instead of null to make operator==() not fail
     // (readConfig returns "")
     mBcc( "" ), mVCardFile( "" ), mPGPEncryptionKey( "" ), mPGPSigningKey( "" ),
-    mSMIMEEncryptionKey( "" ), mSMIMESigningKey( "" ), mFcc( "" ), mDrafts( "" ), mTransport( "" ),
+    mSMIMEEncryptionKey( "" ), mSMIMESigningKey( "" ), mFcc( "" ),
+    mDrafts( "" ), mTemplates( "" ), mTransport( "" ),
     mDictionary( "" ),
     mXFace( "" ), mXFaceEnabled( false ),
     mIsDefault( false ),
@@ -324,15 +327,18 @@ void Identity::readConfig( const KConfigBase * config )
   mSMIMESigningKey = config->readEntry("SMIME Signing Key").latin1();
   mSMIMEEncryptionKey = config->readEntry("SMIME Encryption Key").latin1();
   mPreferredCryptoMessageFormat = Kleo::stringToCryptoMessageFormat( config->readEntry("Preferred Crypto Message Format", "none" ) );
-  mReplyToAddr = config->readEntry("Reply-To Address");
-  mBcc = config->readEntry("Bcc");
-  mFcc = config->readEntry("Fcc", "sent-mail");
+  mReplyToAddr = config->readEntry( "Reply-To Address" );
+  mBcc = config->readEntry( "Bcc" );
+  mFcc = config->readEntry( "Fcc", "sent-mail" );
   if( mFcc.isEmpty() )
     mFcc = "sent-mail";
-  mDrafts = config->readEntry("Drafts", "drafts");
+  mDrafts = config->readEntry( "Drafts", "drafts" );
   if( mDrafts.isEmpty() )
     mDrafts = "drafts";
-  mTransport = config->readEntry("Transport");
+  mTemplates = config->readEntry( "Templates", "templates" );
+  if( mTemplates.isEmpty() )
+    mTemplates = "templates";
+  mTransport = config->readEntry( "Transport" );
   mDictionary = config->readEntry( "Dictionary" );
   mXFace = config->readEntry( "X-Face" );
   mXFaceEnabled = config->readBoolEntry( "X-FaceEnabled", false );
@@ -362,6 +368,7 @@ void Identity::writeConfig( KConfigBase * config ) const
   config->writeEntry("Transport", mTransport);
   config->writeEntry("Fcc", mFcc);
   config->writeEntry("Drafts", mDrafts);
+  config->writeEntry("Templates", mTemplates);
   config->writeEntry( "Dictionary", mDictionary );
   config->writeEntry( "X-Face", mXFace );
   config->writeEntry( "X-FaceEnabled", mXFaceEnabled );
@@ -385,6 +392,7 @@ QDataStream & KPIM::operator<<( QDataStream & stream, const KPIM::Identity & i )
 		<< i.transport()
 		<< i.fcc()
 		<< i.drafts()
+                << i.templates()
 		<< i.mSignature
                 << i.dictionary()
                 << i.xface()
@@ -409,6 +417,7 @@ QDataStream & KPIM::operator>>( QDataStream & stream, KPIM::Identity & i ) {
 		>> i.mTransport
 		>> i.mFcc
 		>> i.mDrafts
+                >> i.mTemplates
 		>> i.mSignature
                 >> i.mDictionary
                 >> i.mXFace
@@ -541,7 +550,7 @@ void Identity::setSignatureInlineText(const QString &str )
 
 
 //-----------------------------------------------------------------------------
-void Identity::setTransport(const QString &str)
+void Identity::setTransport( const QString &str )
 {
   mTransport = str;
   if ( mTransport.isNull() )
@@ -549,7 +558,7 @@ void Identity::setTransport(const QString &str)
 }
 
 //-----------------------------------------------------------------------------
-void Identity::setFcc(const QString &str)
+void Identity::setFcc( const QString &str )
 {
   mFcc = str;
   if ( mFcc.isNull() )
@@ -557,13 +566,20 @@ void Identity::setFcc(const QString &str)
 }
 
 //-----------------------------------------------------------------------------
-void Identity::setDrafts(const QString &str)
+void Identity::setDrafts( const QString &str )
 {
   mDrafts = str;
   if ( mDrafts.isNull() )
     mDrafts = "";
 }
 
+//-----------------------------------------------------------------------------
+void Identity::setTemplates( const QString &str )
+{
+  mTemplates = str;
+  if ( mTemplates.isNull() )
+    mTemplates = "";
+}
 
 //-----------------------------------------------------------------------------
 void Identity::setDictionary( const QString &str )

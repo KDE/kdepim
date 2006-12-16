@@ -138,7 +138,7 @@ protected:
       KConfigGroup). Called from IdentityManager. */
   void readConfig( const KConfigBase * );
 
-  /** Write configuration to config. Group must be preset (or use 
+  /** Write configuration to config. Group must be preset (or use
       KConfigGroup). Called from IdentityManager. */
   void writeConfig( KConfigBase * ) const;
 
@@ -269,6 +269,11 @@ public:
   QString drafts() const { return mDrafts; }
   void setDrafts(const QString&);
 
+  /** The folder where template messages from this identity will be
+      stored by default. */
+  QString templates() const { return mTemplates; }
+  void setTemplates( const QString& );
+
   /** dictionary which should be used for spell checking */
   QString dictionary() const { return mDictionary; }
   void setDictionary( const QString& );
@@ -292,7 +297,7 @@ protected:
   QString mBcc;
   QString mVCardFile;
   QCString mPGPEncryptionKey, mPGPSigningKey, mSMIMEEncryptionKey, mSMIMESigningKey;
-  QString mFcc, mDrafts, mTransport;
+  QString mFcc, mDrafts, mTemplates, mTransport;
   QString mDictionary;
   QString mXFace;
   bool mXFaceEnabled;
