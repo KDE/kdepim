@@ -78,6 +78,7 @@ IdentityManager::IdentityManager( bool readonly, QObject * parent, const char * 
   : ConfigManager( parent, name ) //, DCOPObject( newDCOPObjectName() )
 {
   new IdentityManagerAdaptor( this );
+#warning "kde4: verify it"  
   mIface = new OrgKdePimIdentityManagerInterface("org.kde.pim.IdentityManager", "/", QDBusConnection::sessionBus() );
   connect( mIface, SIGNAL(identitiesChanged(QString)), this, SLOT(slotIdentitiesChanged(QString)) );
 

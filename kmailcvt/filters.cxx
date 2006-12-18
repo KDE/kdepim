@@ -137,7 +137,8 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
 
   QDBusConnectionInterface * sessionBus = 0;
   sessionBus = QDBusConnection::sessionBus().interface();
-  if ( sessionBus && !sessionBus->isServiceRegistered( "kmail" ).value() )
+#warning "kde4: verify it when kmail dbus call ported"
+  if ( sessionBus && !sessionBus->isServiceRegistered( "org.kde.kmail" ).value() )
     KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
 
   QDBusInterface kmail("org.kde.kmail", "/KMail", "org.kde.kmail.KMail");
