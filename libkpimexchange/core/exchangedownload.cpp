@@ -91,7 +91,7 @@ void ExchangeDownload::download( KCal::Calendar *calendar, const QDate &start,
     //kdDebug() << "Creating progress dialog" << endl;
     mProgress = new ExchangeProgress();
     mProgress->show();
-  
+
     connect( this, SIGNAL( startDownload() ), mProgress,
              SLOT( slotTransferStarted() ) );
     connect( this, SIGNAL(finishDownload() ), mProgress,
@@ -100,7 +100,7 @@ void ExchangeDownload::download( KCal::Calendar *calendar, const QDate &start,
   }
 
   QString sql = dateSelectQuery( start, end.addDays( 1 ) );
- 
+
   kdDebug() << "Exchange download query: " << endl << sql << endl;
 
   increaseDownloads();
@@ -125,13 +125,13 @@ void ExchangeDownload::download( const QDate& start, const QDate& end, bool show
     //kdDebug() << "Creating progress dialog" << endl;
     mProgress = new ExchangeProgress();
     mProgress->show();
-  
+
     connect( this, SIGNAL(startDownload()), mProgress, SLOT(slotTransferStarted()) );
     connect( this, SIGNAL(finishDownload()), mProgress, SLOT(slotTransferFinished()) );
   }
 
   QString sql = dateSelectQuery( start, end.addDays( 1 ) );
- 
+
   increaseDownloads();
 
   KIO::DavJob *job = KIO::davSearch( mAccount->calendarURL(), "DAV:", "sql", sql, false );
@@ -148,7 +148,7 @@ QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end 
   startString.sprintf("%04i/%02i/%02i",start.year(),start.month(),start.day());
   QString endString;
   endString.sprintf("%04i/%02i/%02i",end.year(),end.month(),end.day());
-  QString sql = 
+  QString sql =
         "SELECT \"DAV:href\", \"urn:schemas:calendar:instancetype\", \"urn:schemas:calendar:uid\"\r\n"
         "FROM Scope('shallow traversal of \"\"')\r\n"
         "WHERE \"urn:schemas:calendar:dtend\" > '" + startString + "'\r\n"
@@ -166,7 +166,7 @@ QString ExchangeDownload::dateSelectQuery( const QDate& start, const QDate& end 
   QString endString;
   endString.sprintf( "%04i-%02i-%02iT23:59:59Z", end.year(), end.month(),
                      end.day() );
-  QString sql = 
+  QString sql =
         "SELECT \"DAV:href\", \"urn:schemas:calendar:instancetype\", "
         "\"urn:schemas:calendar:uid\"\r\n"
         "FROM Scope('shallow traversal of \"\"')\r\n"
@@ -193,7 +193,7 @@ void ExchangeDownload::slotSearchResult( KIO::Job *job )
   kdDebug() << "Search result: " << endl << response.toString() << endl;
 
   handleAppointments( response, true );
-  
+
   decreaseDownloads();
 }
 
@@ -210,7 +210,7 @@ void ExchangeDownload::slotMasterResult( KIO::Job *job )
   kdDebug() << "Search (master) result: " << endl << response.toString() << endl;
 
   handleAppointments( response, false );
-  
+
   decreaseDownloads();
 }
 
@@ -231,7 +231,7 @@ void ExchangeDownload::handleAppointments( const QDomDocument &response,
        item = item.nextSibling().toElement() ) {
     //kdDebug() << "Current item:" << item.tagName() << endl;
     QDomNodeList propstats = item.elementsByTagNameNS( "DAV:", "propstat" );
-    // kdDebug() << "Item has " << propstats.count() << " propstat children" << endl; 
+    // kdDebug() << "Item has " << propstats.count() << " propstat children" << endl;
     for( uint i=0; i < propstats.count(); i++ ) {
       QDomElement propstat = propstats.item(i).toElement();
       QDomElement prop = propstat.namedItem( "prop" ).toElement();
@@ -247,7 +247,7 @@ void ExchangeDownload::handleAppointments( const QDomDocument &response,
       }
       int instanceType = instancetypeElement.text().toInt();
       //kdDebug() << "Instance type: " << instanceType << endl;
-    
+
       if ( recurrence && instanceType > 0 ) {
         QDomElement uidElement = prop.namedItem( "uid" ).toElement();
         if ( uidElement.isNull() ) {
@@ -286,7 +286,7 @@ void ExchangeDownload::handleAppointments( const QDomDocument &response,
 void ExchangeDownload::handleRecurrence( QString uid )
 {
   // kdDebug() << "Handling recurrence info for uid=" << uid << endl;
-  QString query = 
+  QString query =
         "SELECT \"DAV:href\", \"urn:schemas:calendar:instancetype\"\r\n"
         "FROM Scope('shallow traversal of \"\"')\r\n"
         "WHERE \"urn:schemas:calendar:uid\" = '" + uid + "'\r\n"
@@ -333,7 +333,7 @@ void ExchangeDownload::readAppointment( const KURL& url )
   addElement( doc, prop, "urn:schemas:calendar:", "exdate" );
   addElement( doc, prop, "urn:schemas:mailheader:", "sensitivity" );
   addElement( doc, prop, "urn:schemas:calendar:", "reminderoffset" );
-  
+
   addElement( doc, prop, "urn:schemas-microsoft-com:office:office",
               "Keywords" );
 
@@ -357,7 +357,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job *job )
 {
   kdDebug() << "slotPropFindResult" << endl;
 
-  int error = job->error(); 
+  int error = job->error();
   if ( error ) {
     job->showErrorDialog( 0 );
     finishUp( ExchangeClient::CommunicationError, job );
@@ -370,7 +370,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job *job )
 
   QDomElement prop = response.documentElement().namedItem( "response" )
                      .namedItem( "propstat" ).namedItem( "prop" ).toElement();
- 
+
   KCal::Event* event = new KCal::Event();
 
   QDomElement uidElement = prop.namedItem( "uid" ).toElement();
@@ -485,7 +485,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job *job )
   QString rrule = prop.namedItem( "rrule" ).toElement().text();
   kdDebug() << "Got rrule: " << rrule << endl;
   if ( !rrule.isEmpty() ) {
-    // Timezone should be handled automatically 
+    // Timezone should be handled automatically
     // because we used mFormat->setTimeZone() earlier
     KCal::RecurrenceRule *rr = event->recurrence()->defaultRRule( true );
 
@@ -522,7 +522,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job *job )
   // 2 Private
   // 3 Company Confidential
   QString sensitivity = prop.namedItem( "sensitivity" ).toElement().text();
-  if ( ! sensitivity.isNull() ) 
+  if ( ! sensitivity.isNull() )
   switch( sensitivity.toInt() ) {
     case 0: event->setSecrecy( KCal::Incidence::SecrecyPublic ); break;
     case 1: event->setSecrecy( KCal::Incidence::SecrecyPrivate ); break;
@@ -540,6 +540,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job *job )
     KCal::Duration offset( - reminder.toInt() );
     KCal::Alarm *alarm = event->newAlarm();
     alarm->setStartOffset( offset );
+    alarm->setDisplayAlarm("");
     alarm->setEnabled( true );
     // TODO: multiple alarms; alarm->setType( KCal::Alarm::xxxx );
   }
@@ -555,7 +556,7 @@ void ExchangeDownload::slotPropFindResult( KIO::Job *job )
 
     /** set the list of attachments/associated files for this event */
     //void setAttachments(const QStringList &attachments);
- 
+
      /** set resources used, such as Office, Car, etc. */
     //void setResources(const QStringList &resources);
 
