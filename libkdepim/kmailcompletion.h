@@ -41,12 +41,12 @@ class KMailCompletion : public KCompletion
     KMailCompletion();
 
     /**
-     * clears internal keyword map and calls KCompletion::clear.
+     * Clears internal keyword map and calls KCompletion::clear.
      */
     virtual void clear();
 
     /**
-     * uses KCompletion::makeCompletion to find email addresses which starts with string.
+     * Uses KCompletion::makeCompletion to find email addresses which starts with string.
      * ignores keywords.
      *
      * @returns email address
@@ -54,7 +54,7 @@ class KMailCompletion : public KCompletion
     QString makeCompletion( const QString &string );
 
     /**
-     * specify keywords for email.
+     * Specify keywords for email.
      *
      * Items may be added with KCompletion::addItem, those will only be returned as match if they
      * are in one of these formats:
@@ -65,7 +65,7 @@ class KMailCompletion : public KCompletion
     void addItemWithKeys( const QString& email, int weight, const QStringList * keyWords);
 
     /**
-     * use internal map to replace all keywords in pMatches whith corrsesponding email addresses.
+     * Uses an internal map to replace all keywords in pMatches whith corrsesponding email addresses.
      */
     virtual void postProcessMatches( QStringList * pMatches )const;
 
