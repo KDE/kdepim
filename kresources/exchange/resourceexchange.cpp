@@ -403,12 +403,30 @@ Alarm::List ResourceExchange::alarmsTo( const QDateTime &to )
   return list;
 }
 
+/* Invoked by korgac when checking alarms. Always updates the cache. */
 Alarm::List ResourceExchange::alarms( const QDateTime &from, const QDateTime &to )
 {
   kdDebug(5800) << "ResourceExchange::alarms(" << from.toString() << " - " << to.toString() << ")\n";
   Alarm::List list;
-  if ( mCache )
-  	list = mCache->alarms( from, to );
+
+  QDate start = from.date();
+  QDate end = to.date();
+
+  if ( mCache ) {
+
+    /* Clear the cache */
+    Event::List oldEvents = mCache->rawEvents( start, end, false );
+
+    Event::List::ConstIterator it;
+    for( it = oldEvents.begin(); it != oldEvents.end(); ++it ) {
+      mCache->deleteEvent( *it );
+    }
+
+    /* Fetch events */
+    mClient->downloadSynchronous( mCache, start, end, false );
+
+    list = mCache->alarms( from, to );
+  }
   return list;
 }
 
