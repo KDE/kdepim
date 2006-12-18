@@ -16,6 +16,7 @@
 
 #include "kmailcvt.h"
 #include <kaboutapplication.h>
+#include <kglobal.h>
 #include <klocale.h>
 #include <QPushButton>
 

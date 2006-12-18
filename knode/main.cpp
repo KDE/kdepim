@@ -14,6 +14,7 @@
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <kglobal.h>
 #include <klocale.h>
 
 #include "knapplication.h"

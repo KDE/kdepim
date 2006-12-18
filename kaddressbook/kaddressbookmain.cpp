@@ -23,6 +23,7 @@
 
 #include <kedittoolbar.h>
 #include <kkeydialog.h>
+#include <kglobal.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstatusbar.h>
