@@ -6338,14 +6338,14 @@ void KDGanttView::setAutoScrollEnabled(bool state)
 */
 
 /*!
-  \fn void gvCreateTaskLink( KDGanttViewItem* fr, KDGanttViewItem::Connector fc, KDGanttViewItem* to, KDGanttViewItem::Connector tc)
+  \fn void gvCreateTaskLink( KDGanttViewItem* fr, int fc, KDGanttViewItem* to, int tc)
 
   This signal is emitted whenever two items shall be linked.
 
   \param fr The item to link from.
-  \param fc The connector to link from.
+  \param fc The KDGanttViewItem::Connector to link from.
   \param to The item to link to.
-  \param tc The connector to link to.
+  \param tc The KDGanttViewItem::Connector to link to.
  */
 
 #include "KDGanttView.moc"

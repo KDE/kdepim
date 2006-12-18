@@ -456,7 +456,7 @@ signals:
     // the point is the global position!!
     void gvContextMenuRequested ( KDGanttViewItem * item, const QPoint & pos );
     
-    void gvCreateTaskLink( KDGanttViewItem*, KDGanttViewItem::Connector, KDGanttViewItem*, KDGanttViewItem::Connector );
+    void gvCreateTaskLink( KDGanttViewItem*, int, KDGanttViewItem*, int );
 
     // lv... means item in listview clicked
     void lvCurrentChanged( KDGanttViewItem* );
