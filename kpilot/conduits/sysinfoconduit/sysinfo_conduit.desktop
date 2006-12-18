@@ -43,6 +43,7 @@ Comment[uk]=Цей акведук записує інформацію про к�
 Comment[zh_CN]=此管道写入您手持设备的信息，并同步至一文件。
 Comment[zh_TW]=此軟體將您的 handheld 資訊寫入檔案。
 Name=System Information
+Name[ar]=معلومات عن النظام
 Name[be]=Сыстэмная інфармацыя
 Name[br]=Titouroù diwar-benn ar reizhiad
 Name[bs]=Sistemske informacije
