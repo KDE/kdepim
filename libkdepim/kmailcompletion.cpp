@@ -90,7 +90,7 @@ void KMailCompletion::postProcessMatches( QStringList * pMatches )const
     return;
 
   //KCompletion has found the keywords for us, we can now map them to mail-addr
-  QMap< QString, bool > mailAddrDistinct; 
+  QMap< QString, bool > mailAddrDistinct; //TODO replace with QSet in KDE4
   for ( QStringList::ConstIterator sit ( pMatches->begin() ), sEnd( pMatches->end() ); sit != sEnd; ++sit ) {
     const QStringList &mailAddr = m_keyMap[ (*sit) ]; //get all mailAddr for this keyword
     for ( QStringList::ConstIterator sit ( mailAddr.begin() ), sEnd( mailAddr.end() ); sit != sEnd; ++sit ) {
