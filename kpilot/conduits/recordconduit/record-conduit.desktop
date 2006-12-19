@@ -2,11 +2,13 @@
 Encoding=UTF-8
 Type=Service
 Name=Records (Experimental)
+Name[ca]=Registres (Experimental)
 Name[da]=Indspilninger (eksperimentel)
 Name[el]=Εγγραφές (Πειραματικό)
 Name[et]=Kirjed (eksperimentaalne)
 Name[fr]=Enregistrements (expérimental)
 Name[hu]=Rekordok (kísérleti)
+Name[it]=Record (sperimentale)
 Name[km]=កំណត់​ត្រា (ពិសោធន៍)
 Name[nds]=Logbook (warrt utprobeert)
 Name[nl]=Opnames (experimenteel)
