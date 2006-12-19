@@ -119,6 +119,7 @@ QString Todo::dtDueDateStr(bool shortfmt) const
   return KGlobal::locale()->formatDate(dtDue( !doesRecur() ).date(),shortfmt);
 }
 
+// TODO: Add shortfmt param!!!
 QString Todo::dtDueStr() const
 {
   return KGlobal::locale()->formatDateTime( dtDue( !doesRecur() ) );
