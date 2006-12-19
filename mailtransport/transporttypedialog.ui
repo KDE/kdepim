@@ -1,0 +1,74 @@
+<ui version="4.0" >
+ <author>Volker Krause &lt;vkrause@kde.org></author>
+ <class>TransportTypeDialog</class>
+ <widget class="QWidget" name="TransportTypeDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>367</width>
+    <height>103</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="margin" >
+    <number>9</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item>
+    <widget class="KButtonGroup" name="kcfg_type" >
+     <property name="title" >
+      <string>Transport Type</string>
+     </property>
+     <property name="current" stdset="0" >
+      <number>0</number>
+     </property>
+     <layout class="QVBoxLayout" >
+      <property name="margin" >
+       <number>9</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QRadioButton" name="smtp" >
+        <property name="text" >
+         <string>SM&amp;TP</string>
+        </property>
+        <property name="checked" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="sendmail" >
+        <property name="text" >
+         <string>&amp;Sendmail</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutfunction spacing="KDialog::spacingHint()" margin="KDialog::marginHint()" />
+ <customwidgets>
+  <customwidget>
+   <class>KButtonGroup</class>
+   <extends>QGroupBox</extends>
+   <header>kbuttongroup.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <includes>
+  <include location="local" >				</include>
+ </includes>
+ <resources/>
+ <connections/>
+</ui>

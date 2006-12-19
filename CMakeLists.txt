@@ -145,5 +145,6 @@ add_subdirectory(qgpgme)
 add_subdirectory(wizards)
 endif(GPGME_FOUND)
 add_subdirectory(cmake)
+add_subdirectory(mailtransport)
 
 macro_display_feature_log()

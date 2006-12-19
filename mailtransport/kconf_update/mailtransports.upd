@@ -1,0 +1,5 @@
+# Migrate kmail's transport settings
+Id=initial-kmail-migration
+File=kmailrc,mailtransports
+ScriptArguments=kmail
+Script=migrate-transports.pl,perl

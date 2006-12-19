@@ -1,0 +1,37 @@
+Mail Transport TODO
+~~~~~~~~~~~~~~~~~~~
+
+General
+-------
+- use own namespace?
+- message sending job classes
+
+Migration
+---------
+- migration from kmail and knode config files
+- password migration within kwallet (for kmail and knode), requires KWallet to
+  be fixed first
+- convert enum valus (eg '-' is not supported by kcfg)
+- reading passwords from config file still using legacy encryption
+
+TransportManager
+----------------
+- deletetion of Transport objects during reload is a problem
+  (create a copy for edit?)
+- load passwords if another instance opens the wallet
+
+TransportComboBox
+-----------------
+- select item by transport id
+- handle ad-hoc transports (see identity dialog)
+- keep selection on update if possible
+
+TransportConfigDialog
+---------------------
+- enforce unique name
+- SMTP auth method discovery (kio_smtp needs to fixed first)
+- Sanity checks as in kmtransport
+
+Transport
+---------
+- fallback to config file password storage

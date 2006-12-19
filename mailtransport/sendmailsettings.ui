@@ -1,0 +1,107 @@
+<ui version="4.0" >
+ <author>Volker Krause &lt;vkrause@kde.org></author>
+ <class>SendmailSettings</class>
+ <widget class="QWidget" name="SendmailSettings" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>159</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" >
+   <property name="margin" >
+    <number>9</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item row="4" column="1" >
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>20</width>
+       <height>21</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0" colspan="4" >
+    <widget class="KSeparator" name="kseparator" />
+   </item>
+   <item row="0" column="0" colspan="3" >
+    <widget class="QLabel" name="titleLabel" >
+     <property name="font" >
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text" >
+      <string>Transport: Sendmail</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" >
+    <widget class="QLabel" name="label_2" >
+     <property name="text" >
+      <string>&amp;Location:</string>
+     </property>
+     <property name="buddy" >
+      <cstring>kcfg_host</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" >
+    <widget class="QLabel" name="nameLabel" >
+     <property name="text" >
+      <string>&amp;Name:</string>
+     </property>
+     <property name="buddy" >
+      <cstring>kcfg_name</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2" >
+    <widget class="KPushButton" name="chooseButton" >
+     <property name="text" >
+      <string>Choos&amp;e...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" >
+    <widget class="KLineEdit" name="kcfg_host" />
+   </item>
+   <item row="2" column="1" >
+    <widget class="KLineEdit" name="kcfg_name" />
+   </item>
+  </layout>
+ </widget>
+ <layoutfunction spacing="KDialog::spacingHint()" margin="KDialog::marginHint()" />
+ <customwidgets>
+  <customwidget>
+   <class>KSeparator</class>
+   <extends>QFrame</extends>
+   <header>kseparator.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
