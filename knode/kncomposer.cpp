@@ -38,7 +38,7 @@ using KRecentAddress::RecentAddresses;
 #include <kmessagebox.h>
 #include <kabc/addresseedialog.h>
 #include <kaction.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
 #include <kmenu.h>
@@ -228,28 +228,28 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   action = new KAction(KIcon("editdelete"), i18n("D&elete"), actionCollection(), "art_delete");
   connect(action, SIGNAL(triggered(bool)), SLOT(slotArtDelete()));
 
-  KStdAction::close(this, SLOT(close()),actionCollection());
+  KStandardAction::close(this, SLOT(close()),actionCollection());
 
   //edit menu
-  KStdAction::undo(this, SLOT(slotUndo()), actionCollection());
-  KStdAction::redo(this, SLOT(slotRedo()), actionCollection());
+  KStandardAction::undo(this, SLOT(slotUndo()), actionCollection());
+  KStandardAction::redo(this, SLOT(slotRedo()), actionCollection());
 
-  KStdAction::cut(this, SLOT(slotCut()), actionCollection());
+  KStandardAction::cut(this, SLOT(slotCut()), actionCollection());
 
 
-  KStdAction::copy(this, SLOT(slotCopy()), actionCollection());
+  KStandardAction::copy(this, SLOT(slotCopy()), actionCollection());
 
-  KStdAction::pasteText(this, SLOT(slotPaste()), actionCollection());
+  KStandardAction::pasteText(this, SLOT(slotPaste()), actionCollection());
 
   action = new KAction(i18n("Paste as &Quotation"), actionCollection(), "paste_quoted");
   connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotPasteAsQuotation()));
 
-  KStdAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
+  KStandardAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
 
-  KStdAction::find(v_iew->e_dit, SLOT(slotFind()), actionCollection());
-  KStdAction::findNext(v_iew->e_dit, SLOT(slotSearchAgain()), actionCollection());
+  KStandardAction::find(v_iew->e_dit, SLOT(slotFind()), actionCollection());
+  KStandardAction::findNext(v_iew->e_dit, SLOT(slotSearchAgain()), actionCollection());
 
-  KStdAction::replace(v_iew->e_dit, SLOT(slotReplace()), actionCollection());
+  KStandardAction::replace(v_iew->e_dit, SLOT(slotReplace()), actionCollection());
 
   //attach menu
   action = new KAction(i18n("Append &Signature"), actionCollection(), "append_signature");
@@ -322,17 +322,17 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   a_ctExternalEditor = new KAction(KIcon("run"), i18n("Start &External Editor"), actionCollection(), "external_editor");
   connect(a_ctExternalEditor, SIGNAL(triggered(bool)), SLOT(slotExternalEditor()));
 
-  a_ctSpellCheck = KStdAction::spelling (this, SLOT(slotSpellcheck()), actionCollection());
+  a_ctSpellCheck = KStandardAction::spelling (this, SLOT(slotSpellcheck()), actionCollection());
 
   //settings menu
   createStandardStatusBarAction();
   setStandardToolBarMenuEnabled(true);
 
-  KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
+  KStandardAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
 
-  KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
+  KStandardAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
 
-  KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
+  KStandardAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
 
   createGUI("kncomposerui.rc");

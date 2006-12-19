@@ -42,7 +42,7 @@
 #include <klocale.h>
 #include <kapplication.h>
 #include <kaction.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 #include <kprocio.h>
 #include <kconfig.h>
 #include <kfiledialog.h>
@@ -103,12 +103,12 @@ void KWatchGnuPGMainWindow::createActions()
   KAction *action = new KAction(KIcon("history_clear"),  i18n("C&lear History"), actionCollection(), "clear_log" );
   connect(action, SIGNAL(triggered(bool) ), SLOT( slotClear() ));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));
-  (void)KStdAction::saveAs( this, SLOT(slotSaveAs()), actionCollection() );
-  (void)KStdAction::close( this, SLOT(close()), actionCollection() );
-  (void)KStdAction::quit( this, SLOT(slotQuit()), actionCollection() );
-  (void)KStdAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
-  ( void )KStdAction::keyBindings(this, SLOT(configureShortcuts()), actionCollection());
-  ( void )KStdAction::configureToolbars(this, SLOT(slotConfigureToolbars()), actionCollection());
+  (void)KStandardAction::saveAs( this, SLOT(slotSaveAs()), actionCollection() );
+  (void)KStandardAction::close( this, SLOT(close()), actionCollection() );
+  (void)KStandardAction::quit( this, SLOT(slotQuit()), actionCollection() );
+  (void)KStandardAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
+  ( void )KStandardAction::keyBindings(this, SLOT(configureShortcuts()), actionCollection());
+  ( void )KStandardAction::configureToolbars(this, SLOT(slotConfigureToolbars()), actionCollection());
 
 #if 0
   (void)new KAction( i18n("Configure KWatchGnuPG..."), QString::fromLatin1("configure"),

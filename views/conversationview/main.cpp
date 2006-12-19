@@ -49,7 +49,7 @@
 #include <kmenu.h>
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 //#include <ktreewidgetsearchline.h>
 
 #include "foldermodel.h"
@@ -123,10 +123,10 @@ int main(int argc, char **argv)
   KSqueezedTextLabel *statusLabel = new KSqueezedTextLabel(i18n("No Akonadi backend loaded. Using dummy data."));
   mainWindow->statusBar()->addWidget(statusLabel, 1);
 
-  KStdAction::copy(mainWindow, SLOT(slotCopy()), mainWindow->actionCollection())->setWhatsThis(i18n("Copy\n\nCopies the selected text to the clipboard."));
-  KStdAction::print(mail, SLOT(slotPrint()), mainWindow->actionCollection());
-  KStdAction::quit(mail, SLOT(slotQuit()), mainWindow->actionCollection());
-  KStdAction::openNew(data, SLOT(newMessage()), mainWindow->actionCollection());
+  KStandardAction::copy(mainWindow, SLOT(slotCopy()), mainWindow->actionCollection())->setWhatsThis(i18n("Copy\n\nCopies the selected text to the clipboard."));
+  KStandardAction::print(mail, SLOT(slotPrint()), mainWindow->actionCollection());
+  KStandardAction::quit(mail, SLOT(slotQuit()), mainWindow->actionCollection());
+  KStandardAction::openNew(data, SLOT(newMessage()), mainWindow->actionCollection());
   mainWindow->createGUI();
   app.setMainWidget(mainWindow);
   mainWindow->show();

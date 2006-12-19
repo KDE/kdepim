@@ -27,7 +27,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kstatusbar.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 
 #include <libkdepim/statusbarprogresswidget.h>
 #include <libkdepim/progressdialog.h>
@@ -142,13 +142,13 @@ bool KAddressBookMain::queryClose()
 
 void KAddressBookMain::initActions()
 {
-  KStdAction::quit( this, SLOT( close() ), actionCollection() );
+  KStandardAction::quit( this, SLOT( close() ), actionCollection() );
 
   KAction *action;
-  action = KStdAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
+  action = KStandardAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
   action->setWhatsThis( i18n( "You will be presented with a dialog, where you can configure the application wide shortcuts." ) );
 
-  KStdAction::configureToolbars( this, SLOT( configureToolbars() ), actionCollection() );
+  KStandardAction::configureToolbars( this, SLOT( configureToolbars() ), actionCollection() );
 }
 
 void KAddressBookMain::configureKeyBindings()

@@ -88,7 +88,7 @@
 #include <kio/jobuidelegate.h>
 #include <kio/netaccess.h>
 #include <kstdaccel.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 #include <ktoggleaction.h>
 #include <kxmlguifactory.h>
 
@@ -259,9 +259,9 @@ static inline void connectEnableOperationSignal( QObject * s, QObject * d ) {
 void CertManager::createActions() {
   KAction * action = 0;
 
-  (void)KStdAction::quit( this, SLOT(close()), actionCollection() );
+  (void)KStandardAction::quit( this, SLOT(close()), actionCollection() );
 
-  action = KStdAction::redisplay( this, SLOT(slotRedisplay()), actionCollection() );
+  action = KStandardAction::redisplay( this, SLOT(slotRedisplay()), actionCollection() );
   // work around the fact that the stdaction has no shortcut
   KShortcut reloadShortcut = KStdAccel::shortcut(KStdAccel::Reload);
   reloadShortcut.setAlternate(Qt::CTRL + Qt::Key_R);
@@ -363,8 +363,8 @@ void CertManager::createActions() {
   mFindAction = new KAction(KIcon("find"),  i18n("Find"), actionCollection(), "find" );
   connect(mFindAction, SIGNAL(triggered(bool)), SLOT(slotSearch()));
 
-  KStdAction::keyBindings( this, SLOT(slotEditKeybindings()), actionCollection() );
-  KStdAction::preferences( this, SLOT(slotShowConfigurationDialog()), actionCollection() );
+  KStandardAction::keyBindings( this, SLOT(slotEditKeybindings()), actionCollection() );
+  KStandardAction::preferences( this, SLOT(slotShowConfigurationDialog()), actionCollection() );
 
   action = new KAction( i18n( "Configure &GpgME Backend" ), actionCollection(), "configure_gpgme" );
   connect(action, SIGNAL(triggered(bool)), SLOT(slotConfigureGpgME()));

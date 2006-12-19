@@ -15,7 +15,7 @@
 
 #include <kwin.h>
 
-#include <kstdaction.h>
+#include <kstandardaction.h>
 #include <kconfig.h>
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -110,10 +110,10 @@ ArticleWindow::ArticleWindow( KNArticle *art )
   mInstances.append( this );
 
   // file menu
-  KStdAction::close( this, SLOT(close()), actionCollection() );
+  KStandardAction::close( this, SLOT(close()), actionCollection() );
 
   // settings menu
-  KStdAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
+  KStandardAction::preferences(knGlobals.top, SLOT(slotSettings()), actionCollection());
 
   setupGUI( ToolBar|Keys|Create, "knreaderui.rc");
 

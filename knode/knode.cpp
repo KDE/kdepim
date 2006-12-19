@@ -16,7 +16,7 @@
 
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 #include <kdebug.h>
 #include <kmenubar.h>
 #include <kiconloader.h>
@@ -42,9 +42,9 @@ KNMainWindow::KNMainWindow( QWidget* parent )
   setStandardToolBarMenuEnabled(true);
 
   //config stuff
-  KStdAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
-  KStdAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
-  KStdAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
+  KStandardAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
+  KStandardAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
+  KStandardAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
 
   m_mainWidget = new KNMainWidget( this, this );
   connect( m_mainWidget, SIGNAL(signalCaptionChangeRequest(const QString&)),

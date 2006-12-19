@@ -30,7 +30,7 @@
 #include <kconfig.h>
 #include <kmessagebox.h>
 #include <kedittoolbar.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 #include <kdebug.h>
 #include <kmenubar.h>
 #include <kiconloader.h>

@@ -55,7 +55,7 @@
 #include <kresources/selectdialog.h>
 #include <kstandarddirs.h>
 #include <kstatusbar.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 #include <kstdguiitem.h>
 #include <kxmlguiclient.h>
 #include <ktoolbar.h>
@@ -1058,11 +1058,11 @@ void KABCore::initActions()
   // file menu
   mActionMail = new KAction(KIcon("mail_send"),  i18n( "&Send Email to Contact..." ), actionCollection(), "file_mail" );
   connect(mActionMail, SIGNAL(triggered(bool)), SLOT( sendMail() ));
-  action = KStdAction::print( this, SLOT( print() ), actionCollection() );
+  action = KStandardAction::print( this, SLOT( print() ), actionCollection() );
   mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
 
-  mActionSave = KStdAction::save( this,
+  mActionSave = KStandardAction::save( this,
                              SLOT( save() ), actionCollection(), "file_sync" );
   mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 
@@ -1087,10 +1087,10 @@ void KABCore::initActions()
   connect(mActionMerge, SIGNAL(triggered(bool) ), SLOT( mergeContacts() ));
 
   // edit menu
-  mActionCopy = KStdAction::copy( this, SLOT( copyContacts() ), actionCollection() );
-  mActionCut = KStdAction::cut( this, SLOT( cutContacts() ), actionCollection() );
-  mActionPaste = KStdAction::paste( this, SLOT( pasteContacts() ), actionCollection() );
-  action = KStdAction::selectAll( this, SLOT( selectAllContacts() ), actionCollection() );
+  mActionCopy = KStandardAction::copy( this, SLOT( copyContacts() ), actionCollection() );
+  mActionCut = KStandardAction::cut( this, SLOT( cutContacts() ), actionCollection() );
+  mActionPaste = KStandardAction::paste( this, SLOT( pasteContacts() ), actionCollection() );
+  action = KStandardAction::selectAll( this, SLOT( selectAllContacts() ), actionCollection() );
   mActionCopy->setWhatsThis( i18n( "Copy the currently selected contact(s) to system clipboard in vCard format." ) );
   mActionCut->setWhatsThis( i18n( "Cuts the currently selected contact(s) to system clipboard in vCard format." ) );
   mActionPaste->setWhatsThis( i18n( "Paste the previously cut or copied contacts from clipboard." ) );
@@ -1126,7 +1126,7 @@ void KABCore::initActions()
     action = new KAction(KIcon("configure"),  i18n( "&Configure Address Book..." ), actionCollection(), "kaddressbook_configure" );
     connect(action, SIGNAL(triggered(bool) ), SLOT( configure() ));
   } else {
-    action = KStdAction::preferences( this, SLOT( configure() ), actionCollection() );
+    action = KStandardAction::preferences( this, SLOT( configure() ), actionCollection() );
   }
 
   action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possibilities to configure KAddressBook." ) );

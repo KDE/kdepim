@@ -36,7 +36,7 @@
 #include <kmenu.h>
 #include <kprocess.h>
 #include <kshortcut.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 #include <ktoolinvocation.h>
 #include <kvbox.h>
 
@@ -145,9 +145,9 @@ void BoxContainerItem::fillKMenu( KMenu* popupMenu, KActionCollection* actions )
         connect(action, SIGNAL(triggered(bool)), SLOT( slotRunCommand() ));
         popupMenu->addAction(action);
 	popupMenu->addSeparator();
-	popupMenu->addAction( KStdAction::help(      this, SLOT( help()      ), actions ) );
-	popupMenu->addAction( KStdAction::reportBug( this, SLOT( reportBug() ), actions ) );
-	popupMenu->addAction( KStdAction::aboutApp(  this, SLOT( about()     ), actions ) );
+	popupMenu->addAction( KStandardAction::help(      this, SLOT( help()      ), actions ) );
+	popupMenu->addAction( KStandardAction::reportBug( this, SLOT( reportBug() ), actions ) );
+	popupMenu->addAction( KStandardAction::aboutApp(  this, SLOT( about()     ), actions ) );
 }
 
 void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject >* list, int total,

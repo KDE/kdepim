@@ -46,7 +46,7 @@
 #include <krun.h>
 #include <kselectaction.h>
 #include <kstandarddirs.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 #include <ktemporaryfile.h>
 #include <ktoggleaction.h>
 #include <kurl.h>
@@ -143,12 +143,12 @@ ArticleWidget::~ArticleWidget()
 
 void ArticleWidget::initActions()
 {
-  mSaveAction = KStdAction::save( this, SLOT(slotSave()), mActionCollection );
+  mSaveAction = KStandardAction::save( this, SLOT(slotSave()), mActionCollection );
   mSaveAction->setText( KStdGuiItem::saveAs().text() );
-  mPrintAction = KStdAction::print( this, SLOT(slotPrint()), mActionCollection );
-  mCopySelectionAction = KStdAction::copy( this, SLOT(slotCopySelection()), mActionCollection );
-  mSelectAllAction = KStdAction::selectAll( this, SLOT(slotSelectAll()), mActionCollection );
-  mFindAction = KStdAction::find( this, SLOT(slotFind()), mActionCollection, "find_in_article" );
+  mPrintAction = KStandardAction::print( this, SLOT(slotPrint()), mActionCollection );
+  mCopySelectionAction = KStandardAction::copy( this, SLOT(slotCopySelection()), mActionCollection );
+  mSelectAllAction = KStandardAction::selectAll( this, SLOT(slotSelectAll()), mActionCollection );
+  mFindAction = KStandardAction::find( this, SLOT(slotFind()), mActionCollection, "find_in_article" );
   mFindAction->setText( i18n("F&ind in Article...") );
   mViewSourceAction = new KAction( i18n("&View Source"), mActionCollection, "article_viewSource" );
   connect(mViewSourceAction, SIGNAL(triggered(bool) ), SLOT(slotViewSource()));
