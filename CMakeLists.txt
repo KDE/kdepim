@@ -95,55 +95,69 @@ add_subdirectory(akonadi)
 add_subdirectory(libkdepim)
 add_subdirectory(libkholidays)
 add_subdirectory(libkholidays_ng)
+
 if(GPGME_FOUND)
-add_subdirectory(libkleo)
+   add_subdirectory(libkleo)
 endif(GPGME_FOUND)
+
 add_subdirectory(libkpgp)
+
 if(GPGME_FOUND)
-add_subdirectory(kleopatra)
-add_subdirectory(libkpimidentities)
+   add_subdirectory(kleopatra)
+   add_subdirectory(libkpimidentities)
 endif(GPGME_FOUND)
+
 add_subdirectory(libksieve)
 add_subdirectory(mimelib)
 add_subdirectory(akregator)
 add_subdirectory(doc)
+
 if(GPGME_FOUND)
-add_subdirectory(gpgmepp)
+   add_subdirectory(gpgmepp)
 endif(GPGME_FOUND)
+
 add_subdirectory(indexlib)
 add_subdirectory(knode)
 add_subdirectory(kabc)
 add_subdirectory(kaddressbook)
+
 if(GPGME_FOUND)
-add_subdirectory(kalarm)
+   add_subdirectory(kalarm)
 endif(GPGME_FOUND)
+
 if (Q_WS_X11)
-add_subdirectory(karm)
+   add_subdirectory(karm)
 endif (Q_WS_X11)
 
 add_subdirectory(kdgantt)
 add_subdirectory(kfile-plugins)
 add_subdirectory(kioslave)
+
 if(GPGME_FOUND)
-add_subdirectory(kmail)
+   add_subdirectory(kmail)
 endif(GPGME_FOUND)
+
 add_subdirectory(kmailcvt)
 add_subdirectory(knotes)
 add_subdirectory(console)
 add_subdirectory(kontact)
+
 if(GPGME_FOUND)
-add_subdirectory(korganizer)
+   add_subdirectory(korganizer)
 endif(GPGME_FOUND)
+
 add_subdirectory(korn)
 add_subdirectory(kresources)
 add_subdirectory(ktnef)
 MESSAGE(STATUS "disabled networkstatus")
 #add_subdirectory(networkstatus)
+
 if(GPGME_FOUND)
-add_subdirectory(plugins)
-add_subdirectory(qgpgme)
-add_subdirectory(wizards)
+   add_subdirectory(plugins)
+   add_subdirectory(qgpgme)
+   add_subdirectory(wizards)
 endif(GPGME_FOUND)
+
 add_subdirectory(cmake)
 add_subdirectory(mailtransport)
 
