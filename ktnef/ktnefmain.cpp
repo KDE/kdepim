@@ -45,7 +45,7 @@ using namespace KTnef;
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <kaction.h>
-#include <kstdaction.h>
+#include <kstandardaction.h>
 #include <kdialog.h>
 #include <ktemporaryfile.h>
 #include <kkeydialog.h>
@@ -89,8 +89,8 @@ KTNEFMain::~KTNEFMain()
 void KTNEFMain::setupActions()
 {
 	// File menu
-	KStdAction::open(this, SLOT(openFile()), actionCollection());
-	KStdAction::quit(kapp, SLOT(quit()), actionCollection());
+	KStandardAction::open(this, SLOT(openFile()), actionCollection());
+	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
 	// Action menu
 	KAction *action = new KAction(KIcon(QString("viewmag")), i18n("View"), actionCollection(), "view_file");
@@ -124,8 +124,8 @@ void KTNEFMain::setupActions()
 
 	createStandardStatusBarAction();
 	setStandardToolBarMenuEnabled(true);
-	KStdAction::configureToolbars(this, SLOT(slotEditToolbars()), actionCollection());
-        KStdAction::keyBindings( this, SLOT( slotConfigureKeys() ), actionCollection() );
+	KStandardAction::configureToolbars(this, SLOT(slotEditToolbars()), actionCollection());
+        KStandardAction::keyBindings( this, SLOT( slotConfigureKeys() ), actionCollection() );
 
 	createGUI();
 }
