@@ -32,6 +32,8 @@
 #include <kmessagebox.h>
 #include <kprotocolinfo.h>
 
+#include <QButtonGroup>
+
 using namespace KPIM;
 
 class KPIM::TransportConfigDialog::Private
@@ -45,6 +47,44 @@ class KPIM::TransportConfigDialog::Private
     KConfigDialogManager* manager;
     KLineEdit* passwordEdit;
     ServerTest* serverTest;
+    QButtonGroup* encryptionGroup;
+    QButtonGroup* authGroup;
+
+    // detected authentication capabilities
+    QList<int> noEncCapa, sslCapa, tlsCapa;
+
+    void resetAuthCapabilities()
+    {
+      noEncCapa.clear();
+      noEncCapa << Transport::EnumAuthenticationType::LOGIN
+                << Transport::EnumAuthenticationType::PLAIN
+                << Transport::EnumAuthenticationType::CRAM_MD5
+                << Transport::EnumAuthenticationType::DIGEST_MD5
+                << Transport::EnumAuthenticationType::NTLM
+                << Transport::EnumAuthenticationType::GSSAPI;
+      sslCapa = tlsCapa = noEncCapa;
+      if ( authGroup )
+        updateAuthCapbilities();
+    }
+
+    void updateAuthCapbilities()
+    {
+      Q_ASSERT( transport->type() == Transport::EnumType::SMTP );
+
+      QList<int> capa = noEncCapa;
+      if ( smtp.ssl->isChecked() )
+        capa = sslCapa;
+      else if ( smtp.tls->isChecked() )
+        capa = tlsCapa;
+
+      for ( int i = 0; i < authGroup->buttons().count(); ++i )
+        authGroup->buttons().at( i )->setEnabled( capa.contains( i ) );
+      // LOGIN doesn't offer anything over PLAIN, requires more server
+      // roundtrips and is not an official SASL mechanism, but a MS-ism,
+      // so only enable it if PLAIN isn't available:
+      if ( capa.contains( Transport::EnumAuthenticationType::PLAIN ) )
+        smtp.login->setEnabled( false );
+    }
 };
 
 TransportConfigDialog::TransportConfigDialog( Transport* transport, QWidget * parent) :
@@ -56,6 +96,8 @@ TransportConfigDialog::TransportConfigDialog( Transport* transport, QWidget * pa
   d->transport = transport;
   d->passwordEdit = 0;
   d->serverTest = 0;
+  d->authGroup = 0;
+  d->resetAuthCapabilities();
 
   setButtons( Ok|Cancel );
   connect( this, SIGNAL(okClicked()), SLOT(save()) );
@@ -66,6 +108,19 @@ TransportConfigDialog::TransportConfigDialog( Transport* transport, QWidget * pa
     {
       d->smtp.setupUi( mainWidget() );
       d->passwordEdit = d->smtp.password;
+
+      d->encryptionGroup = new QButtonGroup( this );
+      d->encryptionGroup->addButton( d->smtp.none );
+      d->encryptionGroup->addButton( d->smtp.ssl );
+      d->encryptionGroup->addButton( d->smtp.tls );
+
+      d->authGroup = new QButtonGroup( this );
+      d->authGroup->addButton( d->smtp.login );
+      d->authGroup->addButton( d->smtp.plain );
+      d->authGroup->addButton( d->smtp.crammd5 );
+      d->authGroup->addButton( d->smtp.digestmd5 );
+      d->authGroup->addButton( d->smtp.ntlm );
+      d->authGroup->addButton( d->smtp.gssapi );
 
       if ( KProtocolInfo::capabilities("smtp").contains("SASL") == 0 ) {
         d->smtp.ntlm->hide();
@@ -148,12 +203,78 @@ void TransportConfigDialog::passwordsLoaded()
     d->passwordEdit->setText( d->transport->password() );
 }
 
+static QList<int> authMethodsFromStringList( const QStringList &list )
+{
+  QList<int> result;
+  for ( QStringList::ConstIterator it = list.begin() ; it != list.end() ; ++it ) {
+    if (  *it == "LOGIN" )
+      result << Transport::EnumAuthenticationType::LOGIN;
+   else if ( *it == "PLAIN" )
+      result << Transport::EnumAuthenticationType::PLAIN;
+    else if ( *it == "CRAM-MD5" )
+      result << Transport::EnumAuthenticationType::CRAM_MD5;
+    else if ( *it == "DIGEST-MD5" )
+      result << Transport::EnumAuthenticationType::DIGEST_MD5;
+    else if ( *it == "NTLM" )
+      result << Transport::EnumAuthenticationType::NTLM;
+    else if ( *it == "GSSAPI" )
+      result << Transport::EnumAuthenticationType::GSSAPI;
+  }
+  return result;
+}
+
+static QList<int> authMethodsFromString( const QString &s )
+{
+  QStringList list;
+  foreach ( QString tmp, s.toUpper().split( '\n', QString::SkipEmptyParts ) )
+    list << tmp.remove( "SASL/" );
+  return authMethodsFromStringList( list );
+}
+
+static void checkHighestEnabledButton( QButtonGroup *group )
+{
+  Q_ASSERT( group );
+
+  for ( int i = group->buttons().count() - 1; i >= 0 ; --i ) {
+    QAbstractButton *b = group->buttons().at( i );
+    if ( b && b->isEnabled() ) {
+      b->animateClick();
+      return;
+    }
+  }
+}
+
 void TransportConfigDialog::smtpCapabilities( const QStringList &capaNormal, const QStringList &capaSSL,
                                               const QString &authNone, const QString &authSSL, const QString &authTLS )
 {
   kDebug() << k_funcinfo << capaNormal << capaSSL << authNone << authSSL << authTLS << endl;
   d->smtp.checkCapabilities->setEnabled( true );
-  // TODO: need to fix kio_smtp first
+
+  // encryption method
+  d->smtp.none->setEnabled( !capaNormal.isEmpty() );
+  d->smtp.ssl->setEnabled( !capaSSL.isEmpty() );
+  d->smtp.tls->setEnabled( capaNormal.indexOf("STARTTLS") != -1 );
+  checkHighestEnabledButton( d->encryptionGroup );
+
+  // authentication methods
+  if ( authNone.isEmpty() && authSSL.isEmpty() && authTLS.isEmpty() ) {
+    // slave doesn't seem to support "* AUTH METHODS" metadata (or server can't do AUTH)
+    d->noEncCapa = authMethodsFromStringList( capaNormal );
+    if ( d->smtp.tls->isEnabled() )
+      d->tlsCapa = d->noEncCapa;
+    else
+      d->tlsCapa.clear();
+    d->sslCapa = authMethodsFromStringList( capaSSL );
+  } else {
+    d->noEncCapa = authMethodsFromString( authNone );
+    d->sslCapa = authMethodsFromString( authSSL );
+    d->tlsCapa = authMethodsFromString( authTLS );
+  }
+  d->updateAuthCapbilities();
+  checkHighestEnabledButton( d->authGroup );
+
+  delete d->serverTest;
+  d->serverTest = 0;
 }
 
 #include "transportconfigdialog.moc"

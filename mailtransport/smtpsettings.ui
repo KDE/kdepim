@@ -226,7 +226,20 @@
        <property name="spacing" >
         <number>6</number>
        </property>
-       <item row="3" column="0" >
+       <item row="2" column="0" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>181</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="3" column="1" >
         <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
@@ -239,51 +252,18 @@
          </property>
         </spacer>
        </item>
-       <item row="2" column="0" >
+       <item row="2" column="1" >
         <widget class="KPushButton" name="checkCapabilities" >
          <property name="text" >
           <string>Check &amp;What the Server Supports</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="0" >
-        <widget class="KButtonGroup" name="kcfg_encryption" >
-         <property name="title" >
-          <string>Encryption</string>
-         </property>
-         <layout class="QVBoxLayout" >
-          <property name="margin" >
-           <number>9</number>
-          </property>
-          <property name="spacing" >
-           <number>6</number>
-          </property>
-          <item>
-           <widget class="QRadioButton" name="none" >
-            <property name="text" >
-             <string>&amp;None</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="ssl" >
-            <property name="text" >
-             <string>&amp;SSL</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="tls" >
-            <property name="text" >
-             <string>&amp;TLS</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="1" column="0" >
+       <item row="1" column="0" colspan="2" >
         <widget class="KButtonGroup" name="kcfg_authenticationType" >
+         <property name="enabled" >
+          <bool>false</bool>
+         </property>
          <property name="title" >
           <string>Authentication Method</string>
          </property>
@@ -339,6 +319,42 @@
          </layout>
         </widget>
        </item>
+       <item row="0" column="0" colspan="2" >
+        <widget class="KButtonGroup" name="kcfg_encryption" >
+         <property name="title" >
+          <string>Encryption</string>
+         </property>
+         <layout class="QVBoxLayout" >
+          <property name="margin" >
+           <number>9</number>
+          </property>
+          <property name="spacing" >
+           <number>6</number>
+          </property>
+          <item>
+           <widget class="QRadioButton" name="none" >
+            <property name="text" >
+             <string>&amp;None</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="ssl" >
+            <property name="text" >
+             <string>&amp;SSL</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="tls" >
+            <property name="text" >
+             <string>&amp;TLS</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -348,9 +364,10 @@
  <layoutfunction spacing="KDialog::spacingHint()" margin="KDialog::marginHint()" />
  <customwidgets>
   <customwidget>
-   <class>KSeparator</class>
-   <extends>QFrame</extends>
-   <header>kseparator.h</header>
+   <class>KButtonGroup</class>
+   <extends>QGroupBox</extends>
+   <header>kbuttongroup.h</header>
+   <container>1</container>
   </customwidget>
   <customwidget>
    <class>KPushButton</class>
@@ -358,15 +375,14 @@
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
+   <class>KSeparator</class>
+   <extends>QFrame</extends>
+   <header>kseparator.h</header>
+  </customwidget>
+  <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KButtonGroup</class>
-   <extends>QGroupBox</extends>
-   <header>kbuttongroup.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
@@ -401,12 +417,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>130</x>
-     <y>233</y>
+     <x>141</x>
+     <y>215</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>156</x>
-     <y>289</y>
+     <x>162</x>
+     <y>242</y>
     </hint>
    </hints>
   </connection>
@@ -417,12 +433,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>217</x>
-     <y>256</y>
+     <x>228</x>
+     <y>215</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>223</x>
-     <y>324</y>
+     <x>229</x>
+     <y>271</y>
     </hint>
    </hints>
   </connection>
@@ -433,12 +449,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>57</x>
-     <y>232</y>
+     <x>68</x>
+     <y>215</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>68</x>
-     <y>291</y>
+     <x>78</x>
+     <y>244</y>
     </hint>
    </hints>
   </connection>
@@ -449,12 +465,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>107</x>
-     <y>256</y>
+     <x>118</x>
+     <y>215</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>91</x>
-     <y>326</y>
+     <x>78</x>
+     <y>273</y>
     </hint>
    </hints>
   </connection>
@@ -465,12 +481,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>189</x>
-     <y>399</y>
+     <x>200</x>
+     <y>334</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>187</x>
-     <y>432</y>
+     <x>193</x>
+     <y>361</y>
     </hint>
    </hints>
   </connection>
@@ -481,12 +497,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>109</x>
-     <y>399</y>
+     <x>120</x>
+     <y>334</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>108</x>
-     <y>434</y>
+     <x>78</x>
+     <y>363</y>
     </hint>
    </hints>
   </connection>
@@ -497,12 +513,28 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>39</x>
-     <y>242</y>
+     <x>50</x>
+     <y>215</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>47</x>
-     <y>344</y>
+     <x>58</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_requiresAuthentication</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_authenticationType</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>215</x>
+     <y>205</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>215</x>
+     <y>285</y>
     </hint>
    </hints>
   </connection>

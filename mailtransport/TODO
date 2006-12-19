@@ -29,8 +29,9 @@ TransportComboBox
 TransportConfigDialog
 ---------------------
 - enforce unique name
-- SMTP auth method discovery (kio_smtp needs to fixed first)
 - Sanity checks as in kmtransport
+- adjust port and available auth methods on encryption change
+- reset enc/auth selection when host changes
 
 Transport
 ---------

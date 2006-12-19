@@ -93,6 +93,7 @@
         <choice name="NTLM"/>
         <choice name="GSSAPI"/>
       </choices>
+      <default>PLAIN</default>
     </entry>
     <entry name="specifyHostname" type="Bool">
       <label><!-- TODO --></label>
