@@ -79,11 +79,6 @@ class KPIM::TransportConfigDialog::Private
 
       for ( int i = 0; i < authGroup->buttons().count(); ++i )
         authGroup->buttons().at( i )->setEnabled( capa.contains( i ) );
-      // LOGIN doesn't offer anything over PLAIN, requires more server
-      // roundtrips and is not an official SASL mechanism, but a MS-ism,
-      // so only enable it if PLAIN isn't available:
-      if ( capa.contains( Transport::EnumAuthenticationType::PLAIN ) )
-        smtp.login->setEnabled( false );
     }
 };
 
@@ -128,6 +123,7 @@ TransportConfigDialog::TransportConfigDialog( Transport* transport, QWidget * pa
       }
 
       connect( d->smtp.checkCapabilities, SIGNAL(clicked()), SLOT(checkSmtpCapabilities()) );
+      connect( d->smtp.kcfg_host, SIGNAL(textChanged(QString)), SLOT(hostNameChanged(QString)) );
       break;
     }
     case Transport::EnumType::Sendmail:
@@ -135,6 +131,7 @@ TransportConfigDialog::TransportConfigDialog( Transport* transport, QWidget * pa
       d->sendmail.setupUi( mainWidget() );
 
       connect( d->sendmail.chooseButton, SIGNAL(clicked()), SLOT(chooseSendmail()) );
+      connect( d->sendmail.kcfg_host, SIGNAL(textChanged(QString)), SLOT(hostNameChanged(QString)) );
     }
   }
 
@@ -149,6 +146,7 @@ TransportConfigDialog::TransportConfigDialog( Transport* transport, QWidget * pa
 
   d->manager = new KConfigDialogManager( this, transport );
   d->manager->updateWidgets();
+  hostNameChanged( d->transport->host() );
 }
 
 TransportConfigDialog::~ TransportConfigDialog()
@@ -220,6 +218,13 @@ static QList<int> authMethodsFromStringList( const QStringList &list )
     else if ( *it == "GSSAPI" )
       result << Transport::EnumAuthenticationType::GSSAPI;
   }
+
+  // LOGIN doesn't offer anything over PLAIN, requires more server
+  // roundtrips and is not an official SASL mechanism, but a MS-ism,
+  // so only enable it if PLAIN isn't available:
+  if ( result.contains( Transport::EnumAuthenticationType::PLAIN ) )
+    result.removeAll( Transport::EnumAuthenticationType::LOGIN );
+
   return result;
 }
 
@@ -247,7 +252,6 @@ static void checkHighestEnabledButton( QButtonGroup *group )
 void TransportConfigDialog::smtpCapabilities( const QStringList &capaNormal, const QStringList &capaSSL,
                                               const QString &authNone, const QString &authSSL, const QString &authTLS )
 {
-  kDebug() << k_funcinfo << capaNormal << capaSSL << authNone << authSSL << authTLS << endl;
   d->smtp.checkCapabilities->setEnabled( true );
 
   // encryption method
@@ -275,6 +279,14 @@ void TransportConfigDialog::smtpCapabilities( const QStringList &capaNormal, con
 
   delete d->serverTest;
   d->serverTest = 0;
+}
+
+void TransportConfigDialog::hostNameChanged( const QString &text )
+{
+  d->resetAuthCapabilities();
+  enableButton( Ok, !text.isEmpty() );
+  for ( int i = 0; i < d->encryptionGroup->buttons().count(); i++ )
+    d->encryptionGroup->buttons().at( i )->setEnabled( true );
 }
 
 #include "transportconfigdialog.moc"
