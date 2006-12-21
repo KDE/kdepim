@@ -34,7 +34,7 @@ KNode::SearchDialog::SearchDialog( searchType type, QWidget *parent ) :
   setModal( false );
   setDefaultButton( User1 );
 
-  setWindowIcon( SmallIconSet("knode") );
+  setWindowIcon( KIcon("knode") );
   setButtonsOrientation( Qt::Vertical );
   setButtonGuiItem( User1, KGuiItem( i18n("&Search"), "mail_find" ) );
   setButtonGuiItem( User2, KGuiItem( i18n("C&lear"), "editclear" ) );
