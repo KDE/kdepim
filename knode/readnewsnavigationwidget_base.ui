@@ -1,20 +1,18 @@
 <ui version="4.0" >
- <author>Volker Krause &lt;volker.krause@rwth-aachen.de></author>
- <comment></comment>
- <exportmacro></exportmacro>
+ <author>Volker Krause &lt;vkrause@kde.org></author>
  <class>KNode::ReadNewsNavigationWidgetBase</class>
- <widget class="KCModule" name="ReadNewsNavigationWidgetBase" >
+ <widget class="KCModule" native="1" name="KNode::ReadNewsNavigationWidgetBase" >
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>306</width>
-    <height>263</height>
+    <width>308</width>
+    <height>329</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
    <property name="margin" >
-    <number>8</number>
+    <number>9</number>
    </property>
    <property name="spacing" >
     <number>6</number>
@@ -22,7 +20,7 @@
    <item>
     <widget class="QGroupBox" name="markAllReadBox" >
      <property name="title" >
-      <string>&quot;Mark All as Read&quot; Triggers Following Actions</string>
+      <string>"Mark All as Read" Triggers Following Actions</string>
      </property>
      <layout class="QVBoxLayout" >
       <property name="margin" >
@@ -44,7 +42,7 @@
    <item>
     <widget class="QGroupBox" name="markThreadReadBox" >
      <property name="title" >
-      <string>&quot;Mark Thread as Read&quot; Triggers Following Actions</string>
+      <string>"Mark Thread as Read" Triggers Following Actions</string>
      </property>
      <layout class="QVBoxLayout" >
       <property name="margin" >
@@ -73,7 +71,7 @@
    <item>
     <widget class="QGroupBox" name="ignoreThreadBox" >
      <property name="title" >
-      <string>&quot;Ignore Thread&quot; Triggers Following Actions</string>
+      <string>"Ignore Thread" Triggers Following Actions</string>
      </property>
      <layout class="QVBoxLayout" >
       <property name="margin" >
@@ -100,13 +98,35 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="leaveGroupBox" >
+     <property name="title" >
+      <string>Leaving a Group Triggers Following Actions</string>
+     </property>
+     <layout class="QVBoxLayout" >
+      <property name="margin" >
+       <number>9</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QCheckBox" name="kcfg_leaveGroupMarkAsRead" >
+        <property name="text" >
+         <string>Mark all articles as read</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer>
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeHint" >
       <size>
-       <width>20</width>
+       <width>290</width>
        <height>16</height>
       </size>
      </property>
@@ -119,12 +139,12 @@
  <customwidgets>
   <customwidget>
    <class>KCModule</class>
-   <extends></extends>
+   <extends>QWidget</extends>
    <header>kcmodule.h</header>
    <container>1</container>
-   <pixmap></pixmap>
   </customwidget>
  </customwidgets>
+ <includes/>
  <resources/>
  <connections/>
 </ui>

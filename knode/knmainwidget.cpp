@@ -1018,7 +1018,9 @@ void KNMainWidget::slotCollectionSelected(Q3ListViewItem *i)
   h_drView->clear();
   slotArticleSelected(0);
 
-  // mark all articles in current group as not new
+  // mark all articles in current group as not new/read
+  if ( knGlobals.settings()->leaveGroupMarkAsRead() )
+    a_rtManager->setAllRead( true );
   a_rtManager->setAllNotNew();
 
   if(i) {
