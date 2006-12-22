@@ -41,7 +41,7 @@ class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
       @param transport The Transport object to configure.
       @param parent The parent widget.
     */
-    TransportConfigDialog( Transport* transport, QWidget* parent = 0 );
+    explicit TransportConfigDialog( Transport* transport, QWidget* parent = 0 );
 
     /**
       Destroys the dialog.

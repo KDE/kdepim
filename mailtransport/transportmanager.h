@@ -82,7 +82,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
 
     /**
       Returns a list of all available transports.
-      Note: The Transport objects become invalid as soon as a change occure, so
+      Note: The Transport objects become invalid as soon as a change occur, so
       they are only suitable for immediate use.
     */
     QList<Transport*> transports() const;
