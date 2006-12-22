@@ -15,3 +15,7 @@ kitchensync_SOURCES = main.cpp splash.cpp
 kitchensync_LDADD = ../libkonnector2/libkonnector.la ./lib/libkitchensyncui.la \
   ../libksync/libksync2.la
 kitchensync_LDFLAGS = $(KDE_RPATH) $(all_libraries)
+
+messages: rc.cpp
+	$(EXTRACTRC) plucker/kspluckerconfigwidget.ui >> rc.cpp
+	$(XGETTEXT) rc.cpp `find . -name \*.h -o -name \*.cpp -o -name \*.c` -o $(podir)/kitchensync.pot

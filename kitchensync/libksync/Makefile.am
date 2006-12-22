@@ -32,3 +32,6 @@ ksinclude_HEADERS = addressbookmerger.h addressbooksyncee.h  \
 noinst_HEADERS    = debug.h
 
 METASOURCES = AUTO
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp *.h -o $(podir)/libksync.pot

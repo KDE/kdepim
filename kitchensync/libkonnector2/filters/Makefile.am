@@ -15,3 +15,6 @@ ksfilterdatadir = $(kde_servicesdir)/kitchensync/filter
 ksfilterdata_DATA = addressbookfilter.desktop calendarfilter.desktop
 
 METASOURCES = AUTO
+
+messages: rc.cpp
+	$(XGETTEXT) *.cpp *.h -o $(podir)/libkitchensync.pot
