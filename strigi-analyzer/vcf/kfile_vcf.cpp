@@ -20,6 +20,7 @@
 #include <kdebug.h>
 #include <config.h>
 #include "kfile_vcf.h"
+#include <kdefakes.h>
 
 #include <kprocess.h>
 #include <klocale.h>
