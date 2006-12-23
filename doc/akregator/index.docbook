@@ -207,7 +207,7 @@ Now Slashdot has been added to your feed list.
 </para> </listitem>
 </itemizedlist>
 <para>
-There are multiple other ways to find and add interesting feeds. Within KDE,
+There are multiple other ways to find and add interesting feeds. Within &kde;,
 websites browsed with &konqueror; will display the recognizable &quot;RSS
 lozenge&quot;<inlinemediaobject>
   <imageobject>
@@ -552,7 +552,7 @@ middle mouse click.</para>
 <varlistentry>
 <term><guilabel>Use default &kde; web browser</guilabel></term>
 <listitem><para>If this is checked, &akregator; will use the web browser
-you set in &kcontrolcenter;. It may be the KDE default, &konqueror;, or another browser
+you set in &kcontrolcenter;. It may be the &kde; default, &konqueror;, or another browser
 depending on what you set here.</para>
 </listitem>
 </varlistentry>
