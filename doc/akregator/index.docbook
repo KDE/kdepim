@@ -280,8 +280,8 @@ belongs to the article: some articles only contain the headline, and not the act
 content. In this case, you need to visit the web page to read the complete article. Or perhaps
 an article links to some website, or you are reading a blog and want to comment
 on an entry. For these situations, &akregator; contains a simple web browser.
-Whenever you follow a link in the article viewer, &akregator; opens the link in
-new tab:</para>
+Whenever you follow a link in the article viewer, by default &akregator; opens the link in
+new tab.</para>
 <note><para>Note that the browser in &akregator; is not intended to replace your
 favorite Web Browser. It is meant for reading articles, commenting on them, or
 following up a link quickly. It is not meant for browsing the web in general. It
@@ -968,7 +968,7 @@ action="simul">&Ctrl; &Shift;<keycap>Return</keycap></keycombo></shortcut>
 <guimenu>Article</guimenu>
 <guimenuitem>Open in External Browser.</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>Open</action> the current article iin
+<listitem><para><action>Open</action> the current article in
 an external browser</para></listitem>
 </varlistentry>
 <varlistentry>
