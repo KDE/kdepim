@@ -53,7 +53,7 @@ install(TARGETS networkstatustestservice  DESTINATION ${BIN_INSTALL_DIR} )
 ########### install files ###############
 
 install( FILES networkstatus.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kded)
-
+install( FILES org.kde.networkstatus.client.xml org.kde.networkstatus.provider.xml org.kde.networkstatus.service.xml DESTINATION ${DBUS_INTERFACES_DIR})
 
 
 

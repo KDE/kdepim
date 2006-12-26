@@ -174,6 +174,6 @@ install( FILES kaddressbook.desktop  DESTINATION ${XDG_APPS_DIR})
 install( FILES zone.tab  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
 install( FILES kaddressbookui.rc kaddressbook_part.rc  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
 install( FILES kaddressbook_view.desktop dcopaddressbook.desktop  DESTINATION ${SERVICETYPES_INSTALL_DIR})
-
+install( FILES org.kde.KAddressbook.Core.xml DESTINATION ${DBUS_INTERFACES_DIR} )
 kde4_install_icons( ${ICON_INSTALL_DIR}   )
 
