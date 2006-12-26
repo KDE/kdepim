@@ -31,10 +31,19 @@ libkpilot_la_LDFLAGS = $(PISOCK_LDFLAGS) -no-undefined $(all_libraries) $(KDE_EX
 libkpilot_la_LIBADD = $(PISOCK_LIB) $(LIB_KDEUI) $(LIB_KABC) $(top_builddir)/libkcal/libkcal.la
 
 kpilotincludedir = $(includedir)/kpilot
-kpilotinclude_HEADERS = kpilotlink.h uiDialog.h \
-	plugin.h pluginfactory.h syncAction.h \
-	pilotRecord.h pilotDatabase.h \
-	pilotLocalDatabase.h pilotSerialDatabase.h
+kpilotinclude_HEADERS = \
+	kpilotlink.h \
+	pilot.h \
+	pilotDatabase.h \
+	pilotLinkVersion.h \
+	pilotLocalDatabase.h \
+	pilotRecord.h \
+	pilotSerialDatabase.h \
+	plugin.h \
+	pluginfactory.h \
+	syncAction.h \
+	uiDialog.h
+
 
 kde_kcfg_DATA = kpilotlib.kcfg
 

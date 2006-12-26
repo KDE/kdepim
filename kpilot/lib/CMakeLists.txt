@@ -55,14 +55,16 @@ kpilot_rpath(kpilot)
 #---------- INSTALL -----------------------*
 set(kpilotinclude_HEADERS
 	kpilotlink.h
-	uiDialog.h
+	pilot.h
+	pilotDatabase.h
+	pilotLinkVersion.h
+	pilotLocalDatabase.h
+	pilotRecord.h
+	pilotSerialDatabase.h
 	plugin.h
 	pluginfactory.h
 	syncAction.h
-	pilotRecord.h
-	pilotDatabase.h
-	pilotLocalDatabase.h
-	pilotSerialDatabase.h
+	uiDialog.h
 )
 
 install(
