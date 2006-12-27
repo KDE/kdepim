@@ -21,7 +21,7 @@
 
 #include <k3listview.h>
 #include <klocale.h>
-#include <kstdguiitem.h>
+#include <KStandardGuiItem>
 
 using namespace KTnef;
 
@@ -31,7 +31,7 @@ MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg
   setCaption( i18n( "Message Properties" ) );
   setButtons( KDialog::Close|KDialog::User1 );
   setDefaultButton( KDialog::Close );
-  setButtonGuiItem( KDialog::User1,  KStdGuiItem::save() );
+  setButtonGuiItem( KDialog::User1,  KStandardGuiItem::save() );
   setModal( true );
 	m_message = msg;
 

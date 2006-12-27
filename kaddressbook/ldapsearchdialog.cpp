@@ -129,7 +129,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   setDefaultButton( User1 );
   setModal( false );
   showButtonSeparator( true );
-  setButtonGuiItem( KDialog::Cancel, KStdGuiItem::close() );
+  setButtonGuiItem( KDialog::Cancel, KStandardGuiItem::close() );
   QFrame *page = new QFrame( this );
   setMainWidget( page );
   QVBoxLayout *topLayout = new QVBoxLayout( page );

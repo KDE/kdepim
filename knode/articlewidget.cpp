@@ -144,7 +144,7 @@ ArticleWidget::~ArticleWidget()
 void ArticleWidget::initActions()
 {
   mSaveAction = KStandardAction::save( this, SLOT(slotSave()), mActionCollection );
-  mSaveAction->setText( KStdGuiItem::saveAs().text() );
+  mSaveAction->setText( KStandardGuiItem::saveAs().text() );
   mPrintAction = KStandardAction::print( this, SLOT(slotPrint()), mActionCollection );
   mCopySelectionAction = KStandardAction::copy( this, SLOT(slotCopySelection()), mActionCollection );
   mSelectAllAction = KStandardAction::selectAll( this, SLOT(slotSelectAll()), mActionCollection );

@@ -414,7 +414,7 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
     gDialog->toUnsubscribe(&lst);
     if (lst.count()>0) {
       if (KMessageBox::Yes == KMessageBox::questionYesNoList((parent!=0)? parent:knGlobals.topWidget,i18n("Do you really want to unsubscribe\nfrom these groups?"),
-                                                              lst, QString(), KGuiItem(i18n("Unsubscribe")), KStdGuiItem::cancel())) {
+                                                              lst, QString(), KGuiItem(i18n("Unsubscribe")), KStandardGuiItem::cancel())) {
         for ( QStringList::Iterator it = lst.begin(); it != lst.end(); ++it ) {
           if((g=group(*it, a)))
             unsubscribeGroup(g);

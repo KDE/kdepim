@@ -359,7 +359,7 @@ void KNArticleFactory::createCancel(KNArticle *a)
     return;
 
   if( KMessageBox::No == KMessageBox::questionYesNo( knGlobals.topWidget,
-      i18n("Do you really want to cancel this article?"), QString(), KGuiItem(i18n("Cancel Article")), KStdGuiItem::cancel() ) )
+      i18n("Do you really want to cancel this article?"), QString(), KGuiItem(i18n("Cancel Article")), KStandardGuiItem::cancel() ) )
     return;
 
   bool sendNow;
@@ -440,7 +440,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
     return;
 
   if ( KMessageBox::No==KMessageBox::questionYesNo( knGlobals.topWidget,
-       i18n("Do you really want to supersede this article?"), QString(), KGuiItem(i18n("Supersede")), KStdGuiItem::cancel() ) )
+       i18n("Do you really want to supersede this article?"), QString(), KGuiItem(i18n("Supersede")), KStandardGuiItem::cancel() ) )
     return;
 
   KNGroup *grp = 0;

@@ -431,7 +431,7 @@ void IMEditorWidget::slotDelete()
 
   if ( KMessageBox::warningContinueCancel( this, i18np( "Do you really want to delete the selected address?",
                                            "Do you really want to delete the %n selected addresses?", num_selected ),
-                                           i18n( "Confirm Delete" ), KStdGuiItem::del() ) != KMessageBox::Continue )
+                                           i18n( "Confirm Delete" ), KStandardGuiItem::del() ) != KMessageBox::Continue )
     return;
 
   Q3ListViewItemIterator it( mWidget->lvAddresses );

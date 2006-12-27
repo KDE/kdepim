@@ -39,7 +39,7 @@
 #include <kurlcompletion.h>
 #include <kiconloader.h>
 #include <kpushbutton.h>
-#include <kstdguiitem.h>
+#include <KStandardGuiItem>
 #include <kvbox.h>
 #include <krun.h>
 

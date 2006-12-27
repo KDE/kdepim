@@ -56,7 +56,7 @@
 #include <kstandarddirs.h>
 #include <kstatusbar.h>
 #include <kstandardaction.h>
-#include <kstdguiitem.h>
+#include <KStandardGuiItem>
 #include <kxmlguiclient.h>
 #include <ktoolbar.h>
 #include <libkdepim/addresseeview.h>
@@ -420,7 +420,7 @@ void KABCore::deleteContacts( const QStringList &uids )
 
     if ( KMessageBox::warningContinueCancelList( mWidget, i18np( "Do you really want to delete this contact?",
                                                  "Do you really want to delete these %n contacts?", uids.count() ),
-                                                 names, QString(), KStdGuiItem::del() ) == KMessageBox::Cancel )
+                                                 names, QString(), KStandardGuiItem::del() ) == KMessageBox::Cancel )
       return;
 
     DeleteCommand *command = new DeleteCommand( mAddressBook, uids );

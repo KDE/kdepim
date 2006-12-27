@@ -30,7 +30,7 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kpushbutton.h>
-#include <kstdguiitem.h>
+#include <KStandardGuiItem>
 
 #include "egroupwarewizard.h"
 #include "kolabwizard.h"
@@ -86,7 +86,7 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
   layout->addWidget( frame, 8, 0, 1, 4 );
 
-  QPushButton *cancelButton = new KPushButton( KStdGuiItem::close(), this );
+  QPushButton *cancelButton = new KPushButton( KStandardGuiItem::close(), this );
   layout->addWidget( cancelButton, 9, 3 );
 
   connect( cancelButton, SIGNAL( clicked() ), this, SIGNAL( cancel() ) );

@@ -87,7 +87,7 @@
 #include <kio/job.h>
 #include <kio/jobuidelegate.h>
 #include <kio/netaccess.h>
-#include <kstdaccel.h>
+#include <kstandardshortcut.h>
 #include <kstandardaction.h>
 #include <ktoggleaction.h>
 #include <kxmlguifactory.h>
@@ -263,7 +263,7 @@ void CertManager::createActions() {
 
   action = KStandardAction::redisplay( this, SLOT(slotRedisplay()), actionCollection() );
   // work around the fact that the stdaction has no shortcut
-  KShortcut reloadShortcut = KStdAccel::shortcut(KStdAccel::Reload);
+  KShortcut reloadShortcut = KStandardShortcut::shortcut(KStandardShortcut::Reload);
   reloadShortcut.setAlternate(Qt::CTRL + Qt::Key_R);
   action->setShortcut( reloadShortcut );
 
@@ -1244,7 +1244,7 @@ static bool checkOverwrite( const KUrl& url, bool& overwrite, QWidget* w )
                                             i18n( "A file named \"%1\" already exists. "
                                                   "Are you sure you want to overwrite it?", url.prettyUrl() ),
                                             i18n( "Overwrite File?" ),
-                                            KStdGuiItem::overwrite() ) )
+                                            KStandardGuiItem::overwrite() ) )
       return false;
     overwrite = true;
   }

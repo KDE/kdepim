@@ -59,7 +59,7 @@ using KRecentAddress::RecentAddresses;
 #include <klocale.h>
 #include <kselectaction.h>
 #include <spellingfilter.h>
-#include <kstdguiitem.h>
+#include <KStandardGuiItem>
 #include <ktoggleaction.h>
 #include <kicon.h>
 #include <kapplication.h>
@@ -891,7 +891,7 @@ void KNComposer::closeEvent(QCloseEvent *e)
   }
   else {
     switch ( KMessageBox::warningYesNoCancel( this, i18n("Do you want to save this article in the draft folder?"),
-                                              QString(), KStdGuiItem::save(), KStdGuiItem::discard() ) ) {
+                                              QString(), KStandardGuiItem::save(), KStandardGuiItem::discard() ) ) {
       case KMessageBox::Yes :
         r_esult=CRsave;
         break;

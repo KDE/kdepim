@@ -41,7 +41,7 @@
 #include <k3listviewsearchline.h>
 #include <khbox.h>
 #include <kselectaction.h>
-#include <kstdaccel.h>
+#include <kstandardshortcut.h>
 #include <ktoggleaction.h>
 #include <kxmlguiclient.h>
 #include <kxmlguifactory.h>
@@ -649,7 +649,7 @@ void KNMainWidget::initActions()
   a_ctArtSearch->setShortcut(QKeySequence(Qt::Key_F4));
   a_ctArtRefreshList = new KAction(KIcon("reload"), i18n("&Refresh List"), actionCollection(), "view_Refresh");
   connect(a_ctArtRefreshList, SIGNAL(triggered(bool)), SLOT(slotArtRefreshList()));
-  a_ctArtRefreshList->setShortcut(KStdAccel::shortcut(KStdAccel::Reload));
+  a_ctArtRefreshList->setShortcut(KStandardShortcut::shortcut(KStandardShortcut::Reload));
   a_ctArtCollapseAll = new KAction(i18n("&Collapse All Threads"), actionCollection(), "view_CollapseAll");
   connect(a_ctArtCollapseAll, SIGNAL(triggered(bool) ), SLOT(slotArtCollapseAll()));
   a_ctArtExpandAll = new KAction(i18n("E&xpand All Threads"), actionCollection(), "view_ExpandAll");
@@ -798,7 +798,7 @@ bool KNMainWidget::requestShutdown()
   if( a_rtFactory->jobsPending() &&
       KMessageBox::No==KMessageBox::warningYesNo(this, i18n(
 "KNode is currently sending articles. If you quit now you might lose these \
-    articles.\nDo you want to quit anyway?"), QString(), KStdGuiItem::quit(), KStdGuiItem::cancel())
+    articles.\nDo you want to quit anyway?"), QString(), KStandardGuiItem::quit(), KStandardGuiItem::cancel())
     )
     return false;
 
@@ -1398,7 +1398,7 @@ void KNMainWidget::slotGrpUnsubscribe()
   kDebug(5003) << "KNMainWidget::slotGrpUnsubscribe()" << endl;
   if(g_rpManager->currentGroup()) {
     if(KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,
-       i18n("Do you really want to unsubscribe from %1?", g_rpManager->currentGroup()->groupname()), QString(), KGuiItem(i18n("Unsubscribe")), KStdGuiItem::cancel()))
+       i18n("Do you really want to unsubscribe from %1?", g_rpManager->currentGroup()->groupname()), QString(), KGuiItem(i18n("Unsubscribe")), KStandardGuiItem::cancel()))
       if (g_rpManager->unsubscribeGroup(g_rpManager->currentGroup()))
         slotCollectionSelected(0);
   }

@@ -68,7 +68,7 @@ KNConvert::KNConvert(const QString &version)
   s_tartBtn->setDefault(true);
   btnL->addStretch(1);
   btnL->addWidget(s_tartBtn);
-  c_ancelBtn=new KPushButton(KStdGuiItem::cancel(), this);
+  c_ancelBtn=new KPushButton(KStandardGuiItem::cancel(), this);
   btnL->addWidget(c_ancelBtn);
 
   connect(s_tartBtn, SIGNAL(clicked()), this, SLOT(slotStart()));

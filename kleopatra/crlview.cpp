@@ -40,7 +40,7 @@
 #include <kprocess.h>
 #include <kmessagebox.h>
 #include <kpushbutton.h>
-#include <kstdguiitem.h>
+#include <KStandardGuiItem>
 #include <kglobalsettings.h>
 
 #include <QLayout>
@@ -70,7 +70,7 @@ CRLView::CRLView( QWidget* parent )
   topLayout->addItem( hbLayout );
 
   _updateButton = new KPushButton( i18n("&Update"), this );
-  _closeButton = new KPushButton( KStdGuiItem::close(), this );
+  _closeButton = new KPushButton( KStandardGuiItem::close(), this );
 
   hbLayout->addWidget( _updateButton );
   hbLayout->addStretch();
