@@ -478,10 +478,10 @@ Event::List CalendarLocal::rawEvents( EventSortField sortField, SortDirection so
 
 bool CalendarLocal::addJournal(Journal *journal)
 {
-  if (journal->dtStart().isValid())
-    kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
-  else
-    kdDebug(5800) << "Adding Journal without a DTSTART" << endl;
+//   if (journal->dtStart().isValid())
+//     kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
+//   else
+//     kdDebug(5800) << "Adding Journal without a DTSTART" << endl;
 
   mJournalList.append(journal);
 
