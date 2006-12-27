@@ -244,7 +244,7 @@ void KWatchGnuPGMainWindow::slotSaveAs()
 		KMessageBox::warningYesNo( this, i18n("The file named \"%1\" already "
 											  "exists. Are you sure you want "
 											  "to overwrite it?", filename),
-								   i18n("Overwrite File"), KStdGuiItem::overwrite(), KStdGuiItem::cancel() ) ) {
+								   i18n("Overwrite File"), KStandardGuiItem::overwrite(), KStandardGuiItem::cancel() ) ) {
 	  return;
 	}
   }
