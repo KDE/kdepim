@@ -92,7 +92,7 @@ Incidence::~Incidence()
     Incidence::List Relations = mRelations;
     List::ConstIterator it;
     for ( it = Relations.begin(); it != Relations.end(); ++it ) {
-        if ( (*it)->relatedTo() == this ) (*it)->setRelatedTo( 0 );
+        if ( (*it)->relatedTo() == this ) (*it)->mRelatedTo = 0;
     }
     if ( relatedTo() ) relatedTo()->removeRelation( this );
 
@@ -102,9 +102,7 @@ Incidence::~Incidence()
 // A string comparison that considers that null and empty are the same
 static bool stringCompare( const QString& s1, const QString& s2 )
 {
-    if ( s1.isEmpty() && s2.isEmpty() )
-        return true;
-    return s1 == s2;
+  return ( s1.isEmpty() && s2.isEmpty() ) || (s1 == s2);
 }
 
 bool Incidence::operator==( const Incidence& i2 ) const
