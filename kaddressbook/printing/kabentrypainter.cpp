@@ -28,7 +28,6 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <knotifyclient.h>
 #include <kprinter.h>
 #include <kurl.h>
 

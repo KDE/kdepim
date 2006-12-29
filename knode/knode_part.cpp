@@ -31,7 +31,6 @@
 #include <kapplication.h>
 #include <kparts/genericfactory.h>
 #include <kparts/statusbarextension.h>
-#include <knotifyclient.h>
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <kstatusbar.h>
