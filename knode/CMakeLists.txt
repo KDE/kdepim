@@ -60,6 +60,9 @@ set(knodecommon_LIB_SRCS
    csshelper.cpp
    keditcl1.cpp keditcl2.cpp )
 
+qt4_add_dbus_adaptor( knodecommon_LIB_SRCS org.kde.knode.xml knmainwidget.h KNMainWidget)
+
+
 kde4_automoc(${knodecommon_LIB_SRCS})
 
 kde4_add_ui_files(knodecommon_LIB_SRCS 
@@ -131,6 +134,7 @@ install( FILES knewsservice.protocol  DESTINATION ${SERVICES_INSTALL_DIR})
 install( FILES KNode.desktop  DESTINATION ${XDG_APPS_DIR})
 install( FILES knode_config_identity.desktop knode_config_accounts.desktop knode_config_appearance.desktop knode_config_read_news.desktop knode_config_post_news.desktop knode_config_privacy.desktop knode_config_cleanup.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
 install( FILES headers.rc knodeui.rc knreaderui.rc kncomposerui.rc  DESTINATION ${DATA_INSTALL_DIR}/knode)
+install(FILES org.kde.knode.xml DESTINATION ${DBUS_INTERFACES_DIR} )
 
 kde4_install_icons( ${ICON_INSTALL_DIR}   )
 

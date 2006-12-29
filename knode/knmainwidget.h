@@ -69,7 +69,6 @@ class KActionCollection;
 class KDE_EXPORT KNMainWidget : public KVBox
 {
   Q_OBJECT
-  Q_CLASSINFO("D-Bus Interface", "org.kde.knode.knodeiface")
 public:
   KNMainWidget( KXMLGUIClient *client, QWidget* parent );
   ~KNMainWidget();
@@ -93,6 +92,7 @@ public:
 
   /** handle URL given as command-line argument */
   void openURL(const KUrl &url);
+  void openURL(const QString &url);
 
   /** update fonts and colors */
   void configChanged();

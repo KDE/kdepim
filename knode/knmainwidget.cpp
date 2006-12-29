@@ -79,6 +79,8 @@ using KRecentAddress::RecentAddresses;
 #include "scheduler.h"
 #include "settings.h"
 
+#include "knodeadaptor.h"
+
 using namespace KNode;
 
 KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
@@ -86,6 +88,8 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   b_lockui( false ),
   m_GUIClient( client )
 {
+  (void) new KnodeAdaptor( this );
+  QDBusConnection::sessionBus().registerObject("/KNode", this);       
   knGlobals.top=this;
   knGlobals.guiClient=client;
   knGlobals.topWidget=this;
@@ -407,6 +411,11 @@ QSize KNMainWidget::sizeHint() const
   return QSize(759,478);    // default optimized for 800x600
 }
 
+
+void KNMainWidget::openURL(const QString &url)
+{
+  openURL(KUrl(url));
+}
 
 void KNMainWidget::openURL(const KUrl &url)
 {
