@@ -65,7 +65,7 @@
 #include <QTextStream>
 
 #include <kdemacros.h>
-
+#include <coreinterface.h>
 using namespace KCal;
 
 namespace {

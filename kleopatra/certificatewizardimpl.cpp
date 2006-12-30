@@ -420,7 +420,6 @@ void CertificateWizardImpl::showPage( QWidget * page )
   }
 }
 
-static const char* const dcopObjectId = "KMailIface";
 /**
   Send the new certificate by mail using KMail
  */
