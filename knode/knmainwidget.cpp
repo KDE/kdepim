@@ -1921,7 +1921,7 @@ void KNode::FetchArticleIdDlg::slotTextChanged(const QString &_text )
 
 
 ////////////////////////////////////////////////////////////////////////
-//////////////////////// DCOP implementation
+//////////////////////// D-Bus implementation
 // Move to the next article
 void KNMainWidget::nextArticle()
 {
@@ -2060,7 +2060,7 @@ bool KNMainWidget::handleCommandLine()
   return doneSomething;
 }
 
-//////////////////////// end DCOP implementation
+//////////////////////// end D-Bus implementation
 ////////////////////////////////////////////////////////////////////////
 
 #include "knmainwidget.moc"
