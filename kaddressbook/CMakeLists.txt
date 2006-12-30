@@ -158,7 +158,7 @@ set(kaddressbook_LIB_SRCS ${libkabinterfaces_SRCS} ${libprinter_SRCS} ${libkabim
 
 kde4_automoc(${kaddressbook_LIB_SRCS})
 qt4_add_dbus_adaptor(kaddressbook_LIB_SRCS
-${CMAKE_SOURCE_DIR}/libkdepim/interfaces/org.kde.adressbook.service.xml kaddressbookservice.h KAddressBookService )
+${CMAKE_SOURCE_DIR}/libkdepim/interfaces/org.kde.addressbook.service.xml kaddressbookservice.h KAddressBookService )
 
 kde4_add_library(kaddressbook SHARED ${kaddressbook_LIB_SRCS})
 
@@ -173,7 +173,7 @@ install(TARGETS kaddressbook  DESTINATION ${LIB_INSTALL_DIR})
 install( FILES kaddressbook.desktop  DESTINATION ${XDG_APPS_DIR})
 install( FILES zone.tab  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
 install( FILES kaddressbookui.rc kaddressbook_part.rc  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
-install( FILES kaddressbook_view.desktop dcopaddressbook.desktop  DESTINATION ${SERVICETYPES_INSTALL_DIR})
+install( FILES kaddressbook_view.desktop dbusaddressbook.desktop  DESTINATION ${SERVICETYPES_INSTALL_DIR})
 install( FILES org.kde.KAddressbook.Core.xml DESTINATION ${DBUS_INTERFACES_DIR} )
 kde4_install_icons( ${ICON_INSTALL_DIR}   )
 

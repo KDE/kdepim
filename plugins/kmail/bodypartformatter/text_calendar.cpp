@@ -247,7 +247,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       // (https://intevation.de/roundup/kolab/issue758)
       QString error;
       QString dcopService;
-      int result = KDBusServiceStarter::self()->findServiceFor( "DCOP/Organizer", QString::null, &error, &dcopService );
+      int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer", QString::null, &error, &dcopService );
       if ( result == 0 ) {
         // OK, so korganizer (or kontact) is running. Now ensure the object we want is available
         // [that's not the case when kontact was already running, but korganizer not loaded into it...]
@@ -268,7 +268,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         // the incoming directory.
       }
       else
-        kWarning() << "Couldn't start DCOP/Organizer: " << dcopService << " " << error << endl;
+        kWarning() << "Couldn't start DBUS/Organizer: " << dcopService << " " << error << endl;
 
       return true;
     }

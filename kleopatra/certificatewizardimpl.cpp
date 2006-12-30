@@ -430,7 +430,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
 #warning Port me to DBus!
 /*  DCOPCString dcopService;
   int result = KDCOPServiceStarter::self()->
-    findServiceFor( "DCOP/Mailer", QString(),
+    findServiceFor( "DBUS/Mailer", QString(),
                     &error, &dcopService );
   if ( result != 0 ) {
     kDebug() << "Couldn't connect to KMail\n";

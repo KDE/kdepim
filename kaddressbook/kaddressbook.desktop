@@ -14,6 +14,6 @@ Terminal=false
 X-KDE-StartupNotify=true
 X-DBUS-StartupType=Unique
 MimeType=text/directory;text/x-vcard;text/x-ldif
-ServiceTypes=KParts/ReadOnlyPart,Browser/View,DCOP/AddressBook
+ServiceTypes=KParts/ReadOnlyPart,Browser/View,DBUS/AddressBook
 X-KDE-Library=libkaddressbookpart
 Categories=Qt;KDE;Office;
