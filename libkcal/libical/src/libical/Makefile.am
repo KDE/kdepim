@@ -67,8 +67,7 @@ libical_la_SOURCES =		\
 	icalderivedvalue.c	\
 	pvl.c			\
 	sspm.c			\
-	vsnprintf.c		\
-	icallangbind.c
+	vsnprintf.c
 
 
 noinst_HEADERS = ical.h		\
@@ -97,8 +96,7 @@ noinst_HEADERS = ical.h		\
 	icalvalueimpl.h		\
 	icalderivedvalue.h	\
 	pvl.h			\
-	sspm.h			\
-	icallangbind.h
+	sspm.h
 
 # ORDERING OF HEADERS IS SIGNIFICANT. Don't change this ordering. It
 # is required to make the combined header ical.h properly
@@ -126,8 +124,7 @@ COMBINEDHEADERS =                       \
 	$(srcdir)/icalerror.h		\
 	$(srcdir)/icalrestriction.h	\
 	$(srcdir)/sspm.h		\
-	$(srcdir)/icalmime.h		\
-	$(srcdir)/icallangbind.h
+	$(srcdir)/icalmime.h
 
 ical.h: $(COMBINEDHEADERS)
 	echo '#ifdef __cplusplus'	  >  ical.h
@@ -230,7 +227,6 @@ icalderivedparameter.lo: icalderivedvalue.h icalderivedproperty.h icalderivedpar
 icalderivedproperty.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 icalderivedvalue.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 icalduration.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
-icallangbind.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 icalmime.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 icalparameter.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
 icalparser.lo: icalderivedvalue.h icalderivedproperty.h icalderivedparameter.h
