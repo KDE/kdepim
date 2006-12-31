@@ -27,15 +27,9 @@
 #define ICALCLASSIFY_H
 
 #include "ical.h"
-#include "icalset.h"
 
 icalproperty_xlicclass icalclassify(icalcomponent* c,icalcomponent* match, 
 			      const char* user);
-
-icalcomponent* icalclassify_find_overlaps(icalset* set, icalcomponent* comp);
-
-char* icalclassify_class_to_string(icalproperty_xlicclass c);
-
 
 #endif /* ICALCLASSIFY_H*/
 

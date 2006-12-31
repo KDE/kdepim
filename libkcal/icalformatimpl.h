@@ -31,7 +31,6 @@
 
 extern "C" {
   #include <ical.h>
-  #include <icalss.h>
 }
 
 namespace KCal {

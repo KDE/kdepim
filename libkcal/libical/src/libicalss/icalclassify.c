@@ -67,57 +67,6 @@ char* icalclassify_lowercase(const char* str)
     return xnew;
 }
 
-/* Return a set of components that intersect in time with comp. For
-component X and Y to intersect:
-    X.DTSTART < Y.DTEND && X.DTEND > Y.DTSTART
-*/
-
-
-icalcomponent* icalclassify_find_overlaps(icalset* set, icalcomponent* comp)
-{
-    icalcomponent *return_set;
-    icalcomponent *c;
-    struct icaltime_span span,compspan;
-    
-    icalerror_clear_errno();
-    compspan = icalcomponent_get_span(comp);
-
-    if(icalerrno != ICAL_NO_ERROR){
-	return 0;
-    }
-
-
-    return_set = icalcomponent_new(ICAL_XROOT_COMPONENT);
-
-    for(c = icalset_get_first_component(set);
-	c != 0;
-	c = icalset_get_next_component(set)){
-
-	icalerror_clear_errno();
-
-	span = icalcomponent_get_span(c);
-
-	if(icalerrno != ICAL_NO_ERROR){
-	    continue;
-	}
-
-	if (compspan.start < span.end && 
-	    compspan.end > span.start){
-
-	    icalcomponent *clone = icalcomponent_new_clone(c);
-
-	    icalcomponent_add_component(return_set,clone);
-	}	
-    }
-
-    if(icalcomponent_count_components(return_set,ICAL_ANY_COMPONENT) !=0){
-	return return_set;
-    } else {
-	icalcomponent_free(return_set);
-	return 0;
-    }
-}
-
 
 
 icalproperty* icalclassify_find_attendee(icalcomponent *c, 

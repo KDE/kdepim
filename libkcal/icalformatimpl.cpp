@@ -31,7 +31,6 @@
 
 extern "C" {
   #include <ical.h>
-  #include <icalss.h>
   #include <icalparser.h>
   #include <icalrestriction.h>
 }
