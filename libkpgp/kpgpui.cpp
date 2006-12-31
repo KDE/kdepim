@@ -1210,7 +1210,7 @@ KeyRequester::KeyRequester( QWidget * parent, bool multipleKeys,
   mEraseButton->setAutoDefault( false );
   mEraseButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum,
                                             QSizePolicy::Minimum ) );
-  mEraseButton->setIcon( SmallIconSet( "clear_left" ) );
+  mEraseButton->setIcon( KIcon( "clear_left" ) );
   mEraseButton->setToolTip( i18n("Clear") );
 
   // the button to call the KeySelectionDialog:
