@@ -14,25 +14,51 @@
 
 $currentGroup = "";
 
+$source = $ARGV[0];
+
+%knode_key_map = (
+  "server", "host",
+  "needsLogon", "auth",
+  "timeout", "",
+  "holdTime", ""
+);
+
 while (<STDIN>) {
     next if /^$/;
     # recognize groups:
     if ( /^\[(.+)\]$/ ) {
         $currentGroup = $1;
-        if ( $currentGroup =~ /^Transport/ ) {
+        if ( $source eq "kmail" && $currentGroup =~ /^Transport/ ) {
             print "# DELETEGROUP [$currentGroup]\n";
-            print "[$currentGroup]\n";
+            $groupid = $currentGroup;
+            $groupid =~ s/^Transport //;
+            print "[Transport kmail-$groupid]\n";
+        }
+        elsif ( $source eq "knode" && $currentGroup eq "MAILSERVER" ) {
+            print "# DELETEGROUP [$currentGroup]\n";
+            print "[Transport knode-0]\n";
+            print "name=KNode Mail Transport\n";
         }
         next;
     };
+
+    ($key,$value) = split /=/;
+    chomp $value;
+
     # Move over keys from the transport groups
-    if ( $currentGroup =~ /^Transport/ ) {
-        print;
+    if ( $source eq "kmail" && $currentGroup =~ /^Transport/ ) {
+        if ( $key eq "authtype" ) {
+            $value =~ s/-/_/g;
+        }
+        print "$key=$value\n";
+    }
+    elsif ( $source eq "knode" && $currentGroup eq "MAILSERVER" ) {
+        $key = $knode_key_map{$key} if exists $knode_key_map{$key};
+        next if $key eq "";
+        print "$key=$value\n";
     }
     # Move over the key for the default transport
-    elsif ( $currentGroup eq 'Composer' ) {
-        ($key,$value) = split /=/;
-        chomp $value;
+    elsif ( $source eq "kmail" && $currentGroup eq 'Composer' ) {
         if ( $key eq 'default-transport' ) {
             print "[General]\n$key=$value\n";
             #print "# DELETE [$currentGroup]$key\n";

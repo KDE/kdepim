@@ -8,10 +8,8 @@ General
 
 Migration
 ---------
-- migration from kmail and knode config files
 - password migration within kwallet (for kmail and knode), requires KWallet to
   be fixed first
-- convert enum valus (eg '-' is not supported by kcfg)
 - reading passwords from config file still using legacy encryption
 
 TransportManager

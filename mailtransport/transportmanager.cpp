@@ -98,12 +98,9 @@ QList< Transport * > TransportManager::transports() const
 
 Transport* TransportManager::createTransport() const
 {
-  int id;
-  do {
-    id = KRandom::random();
-  } while ( mConfig->hasGroup( QString::fromLatin1( "Transport %1" ).arg( id ) ) );
+  int id = createId();
   Transport *t = new Transport( QString::number( id ) );
-  t->setId( createId() );
+  t->setId( id );
   return t;
 }
 
@@ -175,15 +172,16 @@ void TransportManager::readConfig()
   qDeleteAll( mTransports );
   mTransports.clear();
 
-  QRegExp re( "^Transport (\\d+)$" );
+  QRegExp re( "^Transport (.+)$" );
   QStringList groups = mConfig->groupList().filter( re );
   foreach ( QString s, groups ) {
     re.indexIn( s );
     Transport* t = new Transport( re.cap( 1 ) );
-    if ( !t->isNull() )
-      mTransports.append( t );
-    else
-      kWarning() << k_funcinfo << "Found invalid transport id - skipping" << endl;
+    if ( t->id() <= 0 ) {
+      t->setId( createId() );
+      t->writeConfig();
+    }
+    mTransports.append( t );
   }
 
   // read default transport
