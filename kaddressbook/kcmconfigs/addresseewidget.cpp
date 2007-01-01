@@ -38,7 +38,8 @@
 #include <kinputdialog.h>
 #include <klocale.h>
 #include <klineedit.h>
-
+#include <QDBusMessage>
+#include <QDBusConnection>
 #include "addresseewidget.h"
 
 NamePartWidget::NamePartWidget( const QString &title, const QString &label,
@@ -199,10 +200,10 @@ void AddresseeWidget::saveSettings()
   cfg.setGroup( "General" );
   cfg.writeEntry( "FormattedNameType", mFormattedNameCombo->currentIndex() );
 
-#warning Port me!
-//  DCOPClient *client = DCOPClient::mainClient();
-//  if ( client )
-//      client->emitDCOPSignal( "KABC::AddressBookConfig", "changed()", QByteArray() );
+   QDBusMessage message =
+       QDBusMessage::createSignal(QString(), "org.kde.kabc.AddressBookConfig", "changed");
+   QDBusConnection::sessionBus().send(message);
+
 }
 
 #include "addresseewidget.moc"
