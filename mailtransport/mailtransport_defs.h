@@ -30,4 +30,10 @@
 #define DBUS_INTERFACE_NAME "org.kde.pim.TransportManager"
 #define DBUS_OBJECT_PATH "/TransportManager"
 
+#define SMTP_PROTOCOL "smtp"
+#define SMTPS_PROTOCOL "smtps"
+
+#define SMTP_PORT 25
+#define SMTPS_PORT 465
+
 #endif

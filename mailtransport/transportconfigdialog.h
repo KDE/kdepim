@@ -56,6 +56,7 @@ class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
     void smtpCapabilities( const QStringList &capaNormal, const QStringList &capaSSL,
                            const QString &authNone, const QString &authSSL, const QString &authTLS );
     void hostNameChanged( const QString &text );
+    void encryptionChanged( int enc );
 
   private:
     class Private;

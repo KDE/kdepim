@@ -29,7 +29,6 @@ TransportComboBox
 TransportConfigDialog
 ---------------------
 - enforce unique name
-- adjust port and available auth methods on encryption change
 
 Transport
 ---------

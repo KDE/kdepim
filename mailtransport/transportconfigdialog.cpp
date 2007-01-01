@@ -20,6 +20,7 @@
 #include "transportconfigdialog.h"
 #include "transport.h"
 #include "transportmanager.h"
+#include "mailtransport_defs.h"
 
 #include "ui_smtpsettings.h"
 #include "ui_sendmailsettings.h"
@@ -117,13 +118,14 @@ TransportConfigDialog::TransportConfigDialog( Transport* transport, QWidget * pa
       d->authGroup->addButton( d->smtp.ntlm );
       d->authGroup->addButton( d->smtp.gssapi );
 
-      if ( KProtocolInfo::capabilities("smtp").contains("SASL") == 0 ) {
+      if ( KProtocolInfo::capabilities(SMTP_PROTOCOL).contains("SASL") == 0 ) {
         d->smtp.ntlm->hide();
         d->smtp.gssapi->hide();
       }
 
       connect( d->smtp.checkCapabilities, SIGNAL(clicked()), SLOT(checkSmtpCapabilities()) );
       connect( d->smtp.kcfg_host, SIGNAL(textChanged(QString)), SLOT(hostNameChanged(QString)) );
+      connect( d->smtp.kcfg_encryption, SIGNAL(clicked(int)), SLOT(encryptionChanged(int)) );
       break;
     }
     case Transport::EnumType::Sendmail:
@@ -159,7 +161,7 @@ void TransportConfigDialog::checkSmtpCapabilities()
   Q_ASSERT( d->transport->type() == Transport::EnumType::SMTP );
 
   delete d->serverTest;
-  d->serverTest = new ServerTest( "smtp", d->smtp.kcfg_host->text(), d->smtp.kcfg_port->text().toInt() );
+  d->serverTest = new ServerTest( SMTP_PROTOCOL, d->smtp.kcfg_host->text(), d->smtp.kcfg_port->text().toInt() );
   connect( d->serverTest,
            SIGNAL( capabilities(QStringList,QStringList,QString,QString,QString)),
            SLOT( smtpCapabilities(QStringList,QStringList,QString,QString,QString)) );
@@ -287,6 +289,30 @@ void TransportConfigDialog::hostNameChanged( const QString &text )
   enableButton( Ok, !text.isEmpty() );
   for ( int i = 0; i < d->encryptionGroup->buttons().count(); i++ )
     d->encryptionGroup->buttons().at( i )->setEnabled( true );
+}
+
+void TransportConfigDialog::encryptionChanged(int enc)
+{
+  Q_ASSERT( d->transport->type() == Transport::EnumType::SMTP );
+  kDebug() << k_funcinfo << enc << endl;
+
+  // adjust port
+  if ( enc == Transport::EnumEncryption::SSL ) {
+    if ( d->smtp.kcfg_port->text() == QString::number( SMTP_PORT ) )
+      d->smtp.kcfg_port->setText( QString::number( SMTPS_PORT ) );
+  } else {
+    if ( d->smtp.kcfg_port->text() == QString::number( SMTPS_PORT ) )
+      d->smtp.kcfg_port->setText( QString::number( SMTP_PORT ) );
+  }
+
+  // adjust available authentication methods
+  d->updateAuthCapbilities();
+  foreach ( QAbstractButton* b, d->authGroup->buttons() ) {
+    if ( b->isChecked() && !b->isEnabled() ) {
+      checkHighestEnabledButton( d->authGroup );
+      break;
+    }
+  }
 }
 
 #include "transportconfigdialog.moc"
