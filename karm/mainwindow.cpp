@@ -36,7 +36,7 @@
 
 MainWindow::MainWindow( const QString &icsfile )
   : DCOPObject ( "KarmDCOPIface" ),
-    KParts::MainWindow(), 
+    KParts::MainWindow(0,Qt::WStyle_ContextHelp), 
     _accel     ( new KAccel( this ) ),
     _watcher   ( new KAccelMenuWatch( _accel, this ) ),
     _totalSum  ( 0 ),
