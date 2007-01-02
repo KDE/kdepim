@@ -1459,7 +1459,7 @@ void ICalFormatImpl::readRecurrenceRule(icalproperty *rrule,Incidence *incidence
   Recurrence *recur = incidence->recurrence();
 
   struct icalrecurrencetype r = icalproperty_get_rrule(rrule);
-  dumpIcalRecurrence(r);
+//   dumpIcalRecurrence(r);
 
   RecurrenceRule *recurrule = new RecurrenceRule( /*incidence*/ );
   recurrule->setStartDt( incidence->dtStart() );
@@ -1472,7 +1472,7 @@ void ICalFormatImpl::readExceptionRule( icalproperty *rrule, Incidence *incidenc
 //  kdDebug(5800) << "Read recurrence for " << incidence->summary() << endl;
 
   struct icalrecurrencetype r = icalproperty_get_exrule(rrule);
-  dumpIcalRecurrence(r);
+//   dumpIcalRecurrence(r);
 
   RecurrenceRule *recurrule = new RecurrenceRule( /*incidence*/ );
   recurrule->setStartDt( incidence->dtStart() );
