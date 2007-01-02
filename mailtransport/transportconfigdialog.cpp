@@ -92,6 +92,7 @@ TransportConfigDialog::TransportConfigDialog( Transport* transport, QWidget * pa
   d->transport = transport;
   d->passwordEdit = 0;
   d->serverTest = 0;
+  d->encryptionGroup = 0;
   d->authGroup = 0;
   d->resetAuthCapabilities();
 
@@ -287,7 +288,7 @@ void TransportConfigDialog::hostNameChanged( const QString &text )
 {
   d->resetAuthCapabilities();
   enableButton( Ok, !text.isEmpty() );
-  for ( int i = 0; i < d->encryptionGroup->buttons().count(); i++ )
+  for ( int i = 0; d->encryptionGroup && i < d->encryptionGroup->buttons().count(); i++ )
     d->encryptionGroup->buttons().at( i )->setEnabled( true );
 }
 
