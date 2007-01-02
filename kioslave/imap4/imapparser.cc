@@ -166,7 +166,7 @@ static bool sasl_interact( KIO::SlaveBase *slave, KIO::AuthInfo &ai, void *in )
          interact->id == SASL_CB_PASS ) {
 
       if ( ai.username.isEmpty() || ai.password.isEmpty() ) {
-        if (!slave->openPasswdDialog(ai))
+        if (!slave->openPasswordDialog(ai))
           return false;
       }
       break;

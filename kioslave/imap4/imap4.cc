@@ -90,7 +90,7 @@ extern "C" {
 #include <kdebug.h>
 #include <kio/connection.h>
 #include <kio/slaveinterface.h>
-#include <kio/passdlg.h>
+#include <kio/passworddialog.h>
 #include <klocale.h>
 #include <kmimetype.h>
 #include <kcodecs.h>
@@ -1944,7 +1944,7 @@ bool IMAP4Protocol::makeLogin ()
     if (myAuth.isEmpty () || myAuth == "*")
     {
       if (myUser.isEmpty () || myPass.isEmpty ()) {
-        if(openPassDlg (authInfo)) {
+        if(openPasswordDialog (authInfo)) {
           myUser = authInfo.username;
           myPass = authInfo.password;
         }
