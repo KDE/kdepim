@@ -14,7 +14,7 @@
 
 #include <klocale.h>
 #include <kdebug.h>
-#include <kio/passdlg.h>
+#include <kio/passworddialog.h>
 
 #include "knaccountmanager.h"
 #include "knarticle.h"

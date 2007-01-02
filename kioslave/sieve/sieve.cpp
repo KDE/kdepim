@@ -900,7 +900,7 @@ bool kio_sieveProtocol::saslInteract( void *in, AuthInfo &ai )
 			interact->id == SASL_CB_PASS ) {
 
 			if (m_sUser.isEmpty() || m_sPass.isEmpty()) {
-				if (!openPassDlg(ai)) {
+				if (!openPasswordDialog(ai)) {
 					error(ERR_ABORTED, i18n("No authentication details supplied."));
 					return false;
 				}
