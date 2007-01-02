@@ -44,6 +44,11 @@ TransportJob::TransportJob( Transport* transport, QObject * parent ) :
   d->buffer = 0;
 }
 
+TransportJob::~ TransportJob()
+{
+  delete d;
+}
+
 void TransportJob::setSender(const QString & sender)
 {
   d->sender = sender;

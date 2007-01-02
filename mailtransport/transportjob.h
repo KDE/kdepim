@@ -45,6 +45,11 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
     TransportJob( Transport* transport, QObject* parent = 0 );
 
     /**
+      Deletes this transport job.
+    */
+    virtual ~TransportJob();
+
+    /**
       Sets the sender of the mail.
     */
     void setSender( const QString &sender );
