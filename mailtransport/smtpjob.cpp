@@ -24,7 +24,7 @@
 #include <klocale.h>
 #include <kurl.h>
 #include <kio/job.h>
-#include <kio/passdlg.h>
+#include <kio/passworddialog.h>
 
 #include <qbuffer.h>
 
