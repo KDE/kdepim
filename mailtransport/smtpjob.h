@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,32 +17,37 @@
     02110-1301, USA.
 */
 
-#ifndef TRANSPORTMGR_H
-#define TRANSPORTMGR_H
+#ifndef KPIM_SMTPJOB_H
+#define KPIM_SMTPJOB_H
 
-#include <KVBox>
-#include <mailtransport/transportcombobox.h>
+#include <mailtransport/transportjob.h>
 
-class KJob;
-class KLineEdit;
-class QTextEdit;
+namespace KIO {
+class Job;
+}
 
-class TransportMgr : public KVBox
+namespace KPIM {
+
+/**
+  Mail transport job for SMTP.
+*/
+class SmtpJob : public TransportJob
 {
   Q_OBJECT
-
   public:
-    TransportMgr();
+    /**
+      Creates a SendmailJob.
+      @param transport The transport settings.
+      @param parent The parent object.
+    */
+    SmtpJob( Transport* transport, QObject* parent = 0 );
+
+    virtual void start();
 
   private slots:
-    void editBtnClicked();
-    void sendBtnClicked();
-    void jobResult( KJob* job );
-
-  private:
-    KPIM::TransportComboBox* mComboBox;
-    KLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
-    QTextEdit *mMailEdit;
+    void dataRequest( KIO::Job* job, QByteArray &data );
 };
+
+}
 
 #endif

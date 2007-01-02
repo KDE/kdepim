@@ -3,8 +3,9 @@ Mail Transport TODO
 
 General
 -------
-- use own namespace?
-- message sending job classes
+- use own namespace
+- compile with QT_NO_ASCII_CAST and without QT3_SUPPORT
+- fix license/copyright, some of the code is taken from KMail/KNode
 
 Migration
 ---------
@@ -17,6 +18,7 @@ TransportManager
 - deletetion of Transport objects during reload is a problem
   (create a copy for edit?)
 - load passwords if another instance opens the wallet
+- add job scheduler (see knode) for async wallet loading during sending
 
 TransportComboBox
 -----------------
@@ -31,3 +33,18 @@ TransportConfigDialog
 Transport
 ---------
 - fallback to config file password storage
+- use int for port number instead of QString
+
+TransportJob
+------------
+- use QByteArray for addresses instead of QString
+- Transport validity checking
+
+SendmailJob
+-----------
+- implement doKill()
+
+SMTPJob
+-------
+- complete start()
+- implement doKill()

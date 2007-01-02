@@ -22,20 +22,34 @@
 #include <mailtransport/transportconfigdialog.h>
 #include <mailtransport/transportmanager.h>
 #include <mailtransport/transportmanagementwidget.h>
+#include <mailtransport/transportjob.h>
 
 #include <KApplication>
 #include <KCmdLineArgs>
+#include <KLineEdit>
 
 #include <QPushButton>
+#include <QTextEdit>
 
 using namespace KPIM;
 
 TransportMgr::TransportMgr()
 {
+  new TransportManagementWidget( this );
   mComboBox = new TransportComboBox( this );
   QPushButton *b = new QPushButton( "&Edit", this );
   connect( b, SIGNAL(clicked(bool)), SLOT(editBtnClicked()) );
-  new TransportManagementWidget( this );
+  mSenderEdit = new KLineEdit( this );
+  mSenderEdit->setClickMessage( "Sender" );
+  mToEdit = new KLineEdit( this );
+  mToEdit->setClickMessage( "To" );
+  mCcEdit = new KLineEdit( this );
+  mCcEdit->setClickMessage( "Cc" );
+  mBccEdit = new KLineEdit( this );
+  mBccEdit->setClickMessage( "Bcc" );
+  mMailEdit = new QTextEdit( this );
+  b = new QPushButton( "&Send", this );
+  connect( b, SIGNAL(clicked(bool)), SLOT(sendBtnClicked()) );
 }
 
 void TransportMgr::editBtnClicked()
@@ -45,6 +59,19 @@ void TransportMgr::editBtnClicked()
   delete t;
 }
 
+void TransportMgr::sendBtnClicked()
+{
+  TransportJob *job = TransportManager::self()->createTransportJob( mComboBox->currentTransportId() );
+  Q_ASSERT( job );
+  job->setSender( mSenderEdit->text() );
+  job->setTo( mToEdit->text().isEmpty() ? QStringList() : mToEdit->text().split(',') );
+  job->setCc( mCcEdit->text().isEmpty() ? QStringList() : mCcEdit->text().split(',') );
+  job->setBcc( mBccEdit->text().isEmpty() ? QStringList() : mBccEdit->text().split(',') );
+  job->setData( mMailEdit->document()->toPlainText().toLatin1() );
+  connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
+  job->start();
+}
+
 int main( int argc, char** argv )
 {
   KCmdLineArgs::init(argc, argv, "transportmgr", "transportmgr", "Mail Transport Manager Demo", "0" );
@@ -52,6 +79,11 @@ int main( int argc, char** argv )
   TransportMgr* t = new TransportMgr();
   t->show();
   app.exec();
+}
+
+void TransportMgr::jobResult( KJob* job )
+{
+  kDebug() << k_funcinfo << job->error() << job->errorText() << endl;
 }
 
 #include "transportmgr.moc"

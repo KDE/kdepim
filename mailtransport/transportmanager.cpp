@@ -20,6 +20,8 @@
 #include "mailtransport_defs.h"
 #include "transport.h"
 #include "transportmanager.h"
+#include "smtpjob.h"
+#include "sendmailjob.h"
 
 #include <kconfig.h>
 #include <kconfigbase.h>
@@ -76,7 +78,7 @@ Transport* TransportManager::transportById(int id, bool def) const
     if ( t->id() == id )
       return t;
 
-  if ( def )
+  if ( def || id == 0 )
     return transportById( mDefaultTransportId, false );
   return 0;
 }
@@ -110,6 +112,21 @@ void TransportManager::addTransport(Transport * transport)
   mTransports.append( transport );
   validateDefault();
   emitChangesCommitted();
+}
+
+TransportJob* TransportManager::createTransportJob(int transportId)
+{
+  Transport *t = transportById( transportId, false );
+  if ( !t )
+    return 0;
+  switch ( t->type() ) {
+    case Transport::EnumType::SMTP:
+      return new SmtpJob( t, this );
+    case Transport::EnumType::Sendmail:
+      return new SendmailJob( t, this );
+  }
+  Q_ASSERT( false );
+  return 0;
 }
 
 bool KPIM::TransportManager::isEmpty() const

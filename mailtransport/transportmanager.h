@@ -34,6 +34,7 @@ namespace KWallet {
 namespace KPIM {
 
 class Transport;
+class TransportJob;
 
 /**
   Takes care of loading and storing mail transport settings and
@@ -100,6 +101,13 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @param transport The Transport object to add.
     */
     void addTransport( Transport* transport );
+
+    /**
+      Creates a mail transport job for the given transport identifier.
+      Returns 0 if the specified transport is invalid.
+      @param transportId The transport identifier.
+    */
+    TransportJob* createTransportJob( int transportId );
 
   public slots:
     /**

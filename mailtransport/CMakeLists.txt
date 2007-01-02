@@ -6,9 +6,12 @@ set(mailtransport_lib_srcs
   transport.cpp
   transportcombobox.cpp
   transportconfigdialog.cpp
+  transportjob.cpp
   transportmanager.cpp
   transportmanagementwidget.cpp
   transporttypedialog.cpp
+  sendmailjob.cpp
+  smtpjob.cpp
 )
 
 kde4_automoc(${mailtransport_lib_srcs})
