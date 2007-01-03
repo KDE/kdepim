@@ -48,7 +48,7 @@ int main( int argc, char ** argv ) {
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app;
 
-  KGlobal::iconLoader()->addAppDir( "libkleopatra" );
+  app.iconLoader()->addAppDir( "libkleopatra" );
 
   Kleo::KeySelectionDialog dlg( "Kleo::KeySelectionDialog Test",
 				"Please select a key:",
