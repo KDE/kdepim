@@ -1,3 +1,4 @@
+include_directories( ${GPGME_INCLUDES} )
 
 add_subdirectory( tests ) 
 

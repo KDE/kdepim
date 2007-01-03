@@ -1,9 +1,8 @@
+include_directories(  ${GPGME_INCLUDES} )
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-gpgmepp.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-gpgmepp.h )
 
 add_subdirectory( interfaces )
-
-include_directories(  ${GPGME_INCLUDES} )
 
 
 ########### next target ###############

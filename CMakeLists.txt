@@ -18,9 +18,7 @@ endif(Q_WS_X11)
 #we require the gpgme package for Unix.
 #we make gpgme optional for non-Unix since it does not exist yet.
 if(UNIX)
-message(STATUS "gpgme check 1 libs: -${GPGME_LIBRARIES}- inc: -${GPGME_INCLUDES}- found: -${GPGME_FOUND}-")
   find_package(Gpgme REQUIRED)
-message(STATUS "gpgme check 2 libs: -${GPGME_LIBRARIES}- inc: -${GPGME_INCLUDES}- found: -${GPGME_FOUND}-")
 else(UNIX)
   macro_optional_find_package(Gpgme)
   macro_log_feature(GPGME_FOUND "gpgme" "GnuPG Made Easy Development Libraries" "http://www.gnupg.org/related_software/gpgme" FALSE "0.4.5 or greater" "Needed to provide GNU Privacy Guard support in KDE PIM applications. Necessary to compile many PIM application, including KMail.")

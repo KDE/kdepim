@@ -1,3 +1,5 @@
+include_directories( ${GPGME_INCLUDES} )
+
 
 ########### next target ###############
 if(KDE4_BUILD_TESTS)
