@@ -40,6 +40,7 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kiconloader.h>
+#include <kapplication.h>
 #include <klocale.h>
 
 #include "core.h"

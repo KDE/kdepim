@@ -64,7 +64,7 @@ int main( int argc, char** argv )
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   KGlobal::locale()->insertCatalog( "libkleopatra" );
-  KGlobal::iconLoader()->addAppDir( "libkleopatra" );
+  kapp->iconLoader()->addAppDir( "libkleopatra" );
 
   if( !Kleo::CryptoBackendFactory::instance()->smime() ) {
     KMessageBox::error(0,

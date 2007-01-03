@@ -39,6 +39,7 @@
 #include <klineedit.h>
 #include <kurlrequester.h>
 #include <kiconloader.h>
+#include <kapplication.h>
 #include <kimageio.h>
 #include <kconfig.h>
 

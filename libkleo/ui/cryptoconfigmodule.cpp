@@ -36,6 +36,7 @@
 
 #include <kleo/cryptoconfig.h>
 
+#include <kapplication.h>
 #include <klineedit.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -63,7 +64,7 @@
 using namespace Kleo;
 
 inline QPixmap loadIcon( QString s ) {
-  return KGlobal::instance()->iconLoader()
+  return kapp->iconLoader()
     ->loadIcon( s.replace( QRegExp( "[^a-zA-Z0-9_]" ), "_" ), K3Icon::NoGroup, K3Icon::SizeMedium );
 }
 

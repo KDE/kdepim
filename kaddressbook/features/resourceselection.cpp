@@ -33,6 +33,7 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kinputdialog.h>
+#include <kapplication.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kresources/configdialog.h>
