@@ -99,7 +99,11 @@ public:
 	// if DEBUG_CERR is defined, we can't return std::cerr (by value),
 	// since the copy constructor is private!
 #ifndef DEBUG_CERR
+#ifdef NDEBUG
+	inline kndbgstream debug(int area=0)
+#else
 	inline kdbgstream debug(int area=0)
+#endif
 	{ return kdDebug(debug_level >= fLevel, area); }
 #endif
 
