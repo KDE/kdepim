@@ -43,8 +43,10 @@ TransportJob
 SendmailJob
 -----------
 - implement doKill()
+- indicate progress
 
 SMTPJob
 -------
-- complete start()
+- get rid of kmail specific stuff in start()
 - implement doKill()
+- indicate progress

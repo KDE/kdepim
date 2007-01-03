@@ -62,6 +62,11 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     */
     bool isComplete() const;
 
+    /**
+      Returns a string representation of the authentication type.
+    */
+    QString authenticationTypeString() const;
+
   protected:
     /**
       Creates a Transport object. Should only be used by TransportManager.

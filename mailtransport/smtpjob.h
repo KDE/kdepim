@@ -24,6 +24,7 @@
 
 namespace KIO {
 class Job;
+class Slave;
 }
 
 namespace KPIM {
@@ -31,7 +32,7 @@ namespace KPIM {
 /**
   Mail transport job for SMTP.
 */
-class SmtpJob : public TransportJob
+class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
 {
   Q_OBJECT
   public:
@@ -42,10 +43,22 @@ class SmtpJob : public TransportJob
     */
     SmtpJob( Transport* transport, QObject* parent = 0 );
 
+    /**
+      Deletes this job.
+    */
+    virtual ~SmtpJob();
+
     virtual void start();
+
+  protected slots:
+    virtual void slotResult( KJob *job );
+    void slaveError(KIO::Slave *slave, int errorCode, const QString &errorMsg);
 
   private slots:
     void dataRequest( KIO::Job* job, QByteArray &data );
+
+  private:
+    KIO::Slave* mSlave;
 };
 
 }

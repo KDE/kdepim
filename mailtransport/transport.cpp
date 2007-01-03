@@ -62,6 +62,20 @@ bool Transport::isComplete() const
   return !requiresAuthentication() || mPasswordLoaded;
 }
 
+QString Transport::authenticationTypeString() const
+{
+  switch ( authenticationType() ) {
+    case EnumAuthenticationType::LOGIN: return QLatin1String( "LOGIN" );
+    case EnumAuthenticationType::PLAIN: return QLatin1String( "PLAIN" );
+    case EnumAuthenticationType::CRAM_MD5: return QLatin1String( "CRAM-MD5" );
+    case EnumAuthenticationType::DIGEST_MD5: return QLatin1String( "DIGEST-MD5" );
+    case EnumAuthenticationType::NTLM: return QLatin1String( "NTLM" );
+    case EnumAuthenticationType::GSSAPI: return QLatin1String( "GSSAPI" );
+  }
+  Q_ASSERT( false );
+  return QString();
+}
+
 void Transport::usrReadConfig()
 {
   TransportBase::usrReadConfig();

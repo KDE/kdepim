@@ -24,15 +24,51 @@
 #include <klocale.h>
 #include <kurl.h>
 #include <kio/job.h>
+#include <kio/scheduler.h>
+#include <kio/slave.h>
 #include <kio/passworddialog.h>
 
 #include <qbuffer.h>
+#include <qhash.h>
 
 using namespace KPIM;
 
-SmtpJob::SmtpJob(Transport * transport, QObject * parent) :
-    TransportJob( transport, parent )
+static int slavePoolRef = 0;
+static QHash<int,KIO::Slave*> slavePool;
+
+static void removeSlaveFromPool( KIO::Slave *slave, bool disconnect = false )
 {
+  bool found = false;
+  for ( QHash<int,KIO::Slave*>::Iterator it = slavePool.begin(); it != slavePool.end(); ) {
+    if ( it.value() == slave ) {
+      found = true;
+      it = slavePool.erase( it );
+    } else {
+      ++it;
+    }
+  }
+  if ( disconnect && found )
+    KIO::Scheduler::disconnectSlave( slave );
+}
+
+SmtpJob::SmtpJob(Transport * transport, QObject * parent) :
+    TransportJob( transport, parent ),
+    mSlave( 0 )
+{
+  slavePoolRef++;
+  KIO::Scheduler::connect( SIGNAL(slaveError(KIO::Slave*,int,QString)),
+                           this, SLOT(slaveError(KIO::Slave*,int,QString)) );
+}
+
+SmtpJob::~SmtpJob()
+{
+  slavePoolRef--;
+  if ( slavePoolRef == 0 ) {
+    kDebug() << k_funcinfo << "clearing SMTP slave pool " << slavePool.count() << endl;
+    foreach ( KIO::Slave *slave, slavePool.values() )
+      KIO::Scheduler::disconnectSlave( slave );
+    slavePool.clear();
+  }
 }
 
 void SmtpJob::start()
@@ -90,21 +126,6 @@ void SmtpJob::start()
     destination.setPass( transport()->password() );
   }
 
-// TODO: from kmsender.cpp
-//   if (!mSlave || !mInProcess)
-//   {
-//     KIO::MetaData slaveConfig;
-//     slaveConfig.insert("tls", (ti->encryption == "TLS") ? "on" : "off");
-//     if (ti->auth) slaveConfig.insert("sasl", ti->authType);
-//     mSlave = KIO::Scheduler::getConnectedSlave(destination, slaveConfig);
-//   }
-//
-//   if (!mSlave)
-//   {
-//     abort();
-//     return false;
-//   }
-
   // dotstuffing is now done by the slave (see setting of metadata)
   if ( !data().isEmpty() )
     // allow +5% for subsequent LF->CRLF and dotstuffing (an average
@@ -113,17 +134,42 @@ void SmtpJob::start()
 
   destination.setPath("/send");
   destination.setQuery( query );
-  kDebug() << k_funcinfo << destination << endl;
 
-  KIO::Job *job = KIO::put( destination, -1, false, false, false );
-  Q_ASSERT( job );
+  mSlave = slavePool.value( transport()->id() );
+  if ( !mSlave ) {
+    kDebug() << k_funcinfo << "creating new SMTP slave" << endl;
+    KIO::MetaData slaveConfig;
+    slaveConfig.insert( "tls", (transport()->encryption() == Transport::EnumEncryption::TLS) ? "on" : "off" );
+    if ( transport()->requiresAuthentication() )
+      slaveConfig.insert( "sasl", transport()->authenticationTypeString() );
+    mSlave = KIO::Scheduler::getConnectedSlave( destination, slaveConfig );
+    slavePool.insert( transport()->id(), mSlave );
+  } else {
+    kDebug() << k_funcinfo << "re-using existing slave" << endl;
+  }
+
+  KIO::TransferJob *job = KIO::put( destination, -1, false, false, false );
+  if ( !mSlave || !job ) {
+    setError( UserDefinedError );
+    setErrorText( i18n("Unable to create SMTP job.") );
+    emitResult();
+    return;
+  }
+
   job->addMetaData( "lf2crlf+dotstuff", "slave" );
   connect( job, SIGNAL(dataReq(KIO::Job*,QByteArray&)), SLOT(dataRequest(KIO::Job*,QByteArray&)) );
 
   addSubjob( job );
-  // TODO from kmsender.cpp
-/*  KIO::Scheduler::assignJobToSlave(mSlave, mJob);
-  connect(mJob, SIGNAL(result(KJob *)), this, SLOT(result(KJob *))); */
+  KIO::Scheduler::assignJobToSlave( mSlave, job );
+}
+
+void SmtpJob::slotResult(KJob * job)
+{
+  kDebug() << k_funcinfo << job->error() << error() << endl;
+  TransportJob::slotResult( job );
+  removeSlaveFromPool( mSlave, error() != KIO::ERR_SLAVE_DIED );
+  if ( !error() )
+    emitResult();
 }
 
 void SmtpJob::dataRequest(KIO::Job * job, QByteArray & data)
@@ -135,6 +181,17 @@ void SmtpJob::dataRequest(KIO::Job * job, QByteArray & data)
     data = buffer()->read( 32*1024 );
   // TODO: from kmsender.cpp
 //   mSender->emitProgressInfo( mMessageOffset );
+}
+
+void SmtpJob::slaveError(KIO::Slave * slave, int errorCode, const QString & errorMsg)
+{
+  kDebug() << k_funcinfo << errorCode << errorMsg << endl;
+  removeSlaveFromPool( slave, errorCode != KIO::ERR_SLAVE_DIED );
+  if ( mSlave == slave ) {
+    setError( errorCode );
+    setErrorText( KIO::buildErrorString( errorCode, errorMsg ) );
+    emitResult();
+  }
 }
 
 #include "smtpjob.moc"
