@@ -38,6 +38,7 @@ class TransportMgr : public KVBox
     void editBtnClicked();
     void sendBtnClicked();
     void jobResult( KJob* job );
+    void jobPercent( KJob* job, unsigned long percent );
 
   private:
     KPIM::TransportComboBox* mComboBox;

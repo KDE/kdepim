@@ -161,6 +161,8 @@ void SmtpJob::start()
 
   addSubjob( job );
   KIO::Scheduler::assignJobToSlave( mSlave, job );
+
+  setTotalSize( data().length() );
 }
 
 void SmtpJob::slotResult(KJob * job)
@@ -179,8 +181,7 @@ void SmtpJob::dataRequest(KIO::Job * job, QByteArray & data)
     data.clear();
   else
     data = buffer()->read( 32*1024 );
-  // TODO: from kmsender.cpp
-//   mSender->emitProgressInfo( mMessageOffset );
+  setProcessedSize( buffer()->pos() );
 }
 
 void SmtpJob::slaveError(KIO::Slave * slave, int errorCode, const QString & errorMsg)

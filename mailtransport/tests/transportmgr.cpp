@@ -48,6 +48,8 @@ TransportMgr::TransportMgr()
   mBccEdit = new KLineEdit( this );
   mBccEdit->setClickMessage( "Bcc" );
   mMailEdit = new QTextEdit( this );
+  mMailEdit->setAcceptRichText( false );
+  mMailEdit->setLineWrapMode( QTextEdit::NoWrap );
   b = new QPushButton( "&Send", this );
   connect( b, SIGNAL(clicked(bool)), SLOT(sendBtnClicked()) );
 }
@@ -69,6 +71,7 @@ void TransportMgr::sendBtnClicked()
   job->setBcc( mBccEdit->text().isEmpty() ? QStringList() : mBccEdit->text().split(',') );
   job->setData( mMailEdit->document()->toPlainText().toLatin1() );
   connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
+  connect( job, SIGNAL(percent(KJob*,unsigned long)), SLOT(jobPercent(KJob*,unsigned long)) );
   job->start();
 }
 
@@ -84,6 +87,12 @@ int main( int argc, char** argv )
 void TransportMgr::jobResult( KJob* job )
 {
   kDebug() << k_funcinfo << job->error() << job->errorText() << endl;
+}
+
+void TransportMgr::jobPercent(KJob * job, unsigned long percent)
+{
+  Q_UNUSED( job );
+  kDebug() << k_funcinfo << percent << "%" << endl;
 }
 
 #include "transportmgr.moc"

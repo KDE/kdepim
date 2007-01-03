@@ -45,6 +45,7 @@ void SendmailJob::start()
     setErrorText( i18n("Failed to execute mailer program %1", transport()->host()) );
     emitResult();
   }
+  setTotalSize( data().length() );
   wroteStdin();
 }
 
@@ -59,6 +60,7 @@ void SendmailJob::sendmailExited()
 
 void SendmailJob::wroteStdin()
 {
+  setProcessedSize( buffer()->pos() );
   if ( buffer()->atEnd() ) {
     mProcess->closeStdin();
   } else {

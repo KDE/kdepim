@@ -31,6 +31,10 @@ namespace KPIM {
 
 /**
   Mail transport job for SMTP.
+  Internally, all jobs for a specific transport are queued to use the same
+  KIO::Slave. This avoids multiple simultaneous connections to the server,
+  which is not always allowed. Also, re-using an already existing connection
+  avoids the login overhead and can improve performance.
 */
 class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
 {
