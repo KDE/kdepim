@@ -34,6 +34,7 @@
 
 #include <kdebug.h>
 #include <kglobal.h>
+#include <kglobalsettings.h>
 #include <klocale.h>
 #include <kabc/ldifconverter.h>
 #include <kabc/vcardconverter.h>
@@ -188,7 +189,7 @@ bool VCard_LDIFCreator::createImageSmall()
   int posLastLine = mPixmap.height() - (chSize.height() + yborder);
   bool newLine = false;
   Q_ASSERT( posNewLine > 0 );
-  const QPixmap *fontPixmap = &(mSplitter->pixmap());
+  //const QPixmap *fontPixmap = &(mSplitter->pixmap());
 
   for ( int i = 0; i < text.length(); i++ ) {
     if ( x > posNewLine || newLine ) {  // start a new line?

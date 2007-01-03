@@ -58,7 +58,7 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, QObject *parent,
 
   QVBoxLayout *topLayout = new QVBoxLayout( canvas );
 
-  KGlobal::iconLoader()->addAppDir( "kaddressbook" );
+  kapp->iconLoader()->addAppDir( "kaddressbook" );
 
   mCore = new KABCore( this, true, canvas );
   mCore->restoreSettings();

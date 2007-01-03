@@ -50,7 +50,7 @@ KNGlobals::KNGlobals() :
   kDebug(5003) << k_funcinfo << endl;
 
   // find knode icons even when running in kontact
-  KGlobal::iconLoader()->addAppDir("knode");
+  kapp->iconLoader()->addAppDir("knode");
 }
 
 KNGlobals::~KNGlobals( )

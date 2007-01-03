@@ -21,6 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <kapplication.h>
 #include <kabc/sound.h>
 #include <kdebug.h>
 #include <kdialog.h>
@@ -49,7 +50,7 @@ SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent )
   topLayout->setMargin( KDialog::marginHint() );
 
   QLabel *label = new QLabel( this );
-  label->setPixmap( KGlobal::iconLoader()->loadIcon( "multimedia",
+  label->setPixmap( kapp->iconLoader()->loadIcon( "multimedia",
                     K3Icon::Desktop, K3Icon::SizeMedium ) );
   label->setAlignment( Qt::AlignTop );
   topLayout->addWidget( label, 0, 0, 2, 1);

@@ -60,7 +60,7 @@ KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QStringList 
   KGlobal::locale()->insertCatalog("libkpgp");
 #warning Port me!
 //   kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
-  KGlobal::iconLoader()->addAppDir("knode");
+  kapp->iconLoader()->addAppDir("knode");
   knGlobals.setInstance( KNodeFactory::instance() );
 
   // create a canvas to insert our widget
