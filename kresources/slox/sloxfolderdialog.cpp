@@ -18,6 +18,7 @@
 
 #include <QPixmap>
 
+#include <kapplication.h>
 #include <kiconloader.h>
 #include <kguiitem.h>
 #include <kinstance.h>
@@ -89,7 +90,7 @@ void SloxFolderDialog::createFolderViewItem( SloxFolder *folder )
   }
   folder->item->setText( 0, folder->name() );
   folder->item->setText( 1, folder->id() );
-  KGlobal::instance()->iconLoader()->addAppDir( "kmail" );
+  kapp->iconLoader()->addAppDir( "kmail" );
   switch ( folder->type() ) {
     case Calendar:
       folder->item->setPixmap( 0, SmallIcon( "kmgroupware_folder_calendar" ) );

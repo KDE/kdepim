@@ -28,6 +28,7 @@
 #include <QGridLayout>
 
 #include <kabc/resource.h>
+#include <kapplication.h>
 #include <kdialog.h>
 #include <kglobal.h>
 #include <kiconloader.h>
@@ -62,7 +63,7 @@ class ResourceItem : public Q3CheckListItem
         mResourceIdentifier()
     {
       setOn( resource->isActive() );
-      setPixmap( 0, KGlobal::iconLoader()->loadIcon( "contents", K3Icon::Small ) );
+      setPixmap( 0, kapp->iconLoader()->loadIcon( "contents", K3Icon::Small ) );
       mChecked = isOn();
     }
 
@@ -75,7 +76,7 @@ class ResourceItem : public Q3CheckListItem
     {
       KPIM::ResourceABC* res = static_cast<KPIM::ResourceABC *>( mResource );
       setOn( res->subresourceActive( mResourceIdentifier ) );
-      setPixmap( 0, KGlobal::iconLoader()->loadIcon( "contents", K3Icon::Small ) );
+      setPixmap( 0, kapp->iconLoader()->loadIcon( "contents", K3Icon::Small ) );
       mChecked = isOn();
     }
 
