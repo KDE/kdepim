@@ -34,6 +34,7 @@
 
 #include <QApplication>
 #include <QDBusConnection>
+#include <QDBusConnectionInterface>
 #include <QRegExp>
 #include <QStringList>
 
@@ -58,6 +59,10 @@ TransportManager::TransportManager() :
 
   QDBusConnection::sessionBus().connect( QString(), QString(), DBUS_INTERFACE_NAME, "changesCommitted",
                                          this, SLOT(slotTransportsChanged()) );
+
+  mIsMainInstance = QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
+  connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+           SLOT(dbusServiceOwnerChanged(QString,QString,QString)) );
 }
 
 TransportManager::~TransportManager()
@@ -391,7 +396,9 @@ void TransportManager::migrateToWallet()
     return;
   firstRun = false;
 
-  // TODO: check if we are the first instance
+  // check if we are the main instance
+  if ( !mIsMainInstance )
+    return;
 
   // check if migration is needed
   QStringList names;
@@ -414,6 +421,12 @@ void TransportManager::migrateToWallet()
   foreach ( Transport *t, mTransports )
     if ( t->needsWalletMigration() )
       t->migrateToWallet();
+}
+
+void TransportManager::dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner)
+{
+  if ( service == DBUS_SERVICE_NAME && newOwner.isEmpty() )
+    QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
 }
 
 #include "transportmanager.moc"

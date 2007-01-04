@@ -19,7 +19,6 @@ TransportManager
   (create a copy for edit?)
 - load passwords if another instance opens the wallet
 - add job scheduler (see knode) for async wallet loading during sending
-- migrate passwords to wallet only in one instance
 
 TransportComboBox
 -----------------

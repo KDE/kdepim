@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -27,6 +27,7 @@
 
 #define WALLET_FOLDER "mailtransports"
 
+#define DBUS_SERVICE_NAME "org.kde.pim.TransportManager"
 #define DBUS_INTERFACE_NAME "org.kde.pim.TransportManager"
 #define DBUS_OBJECT_PATH "/TransportManager"
 

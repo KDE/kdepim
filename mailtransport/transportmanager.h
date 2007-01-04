@@ -192,6 +192,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
   private slots:
     void slotTransportsChanged();
     void slotWalletOpened( bool success );
+    void dbusServiceOwnerChanged( const QString &service, const QString &oldOwner, const QString &newOwner );
 
   private:
     static TransportManager* mInstance;
@@ -202,6 +203,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     bool mWalletOpenFailed;
     bool mWalletAsyncOpen;
     int mDefaultTransportId;
+    bool mIsMainInstance;
 };
 
 }
