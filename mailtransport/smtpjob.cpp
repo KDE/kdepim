@@ -165,6 +165,16 @@ void SmtpJob::start()
   setTotalSize( data().length() );
 }
 
+bool SmtpJob::doKill()
+{
+  if ( !hasSubjobs() )
+    return false;
+  KIO::SimpleJob *job = static_cast<KIO::SimpleJob*>( subjobs().first() );
+  clearSubjobs();
+  KIO::Scheduler::cancelJob( job );
+  return true;
+}
+
 void SmtpJob::slotResult(KJob * job)
 {
   kDebug() << k_funcinfo << job->error() << error() << endl;

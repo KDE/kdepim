@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -37,6 +37,7 @@ class TransportMgr : public KVBox
   private slots:
     void editBtnClicked();
     void sendBtnClicked();
+    void cancelBtnClicked();
     void jobResult( KJob* job );
     void jobPercent( KJob* job, unsigned long percent );
 
@@ -44,6 +45,7 @@ class TransportMgr : public KVBox
     KPIM::TransportComboBox* mComboBox;
     KLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
     QTextEdit *mMailEdit;
+    KJob *mCurrentJob;
 };
 
 #endif

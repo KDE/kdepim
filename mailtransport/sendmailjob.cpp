@@ -76,4 +76,11 @@ void SendmailJob::receivedStdErr(KProcess * proc, char * data, int len)
   mLastError += QString::fromLocal8Bit( data, len );
 }
 
+bool SendmailJob::doKill()
+{
+  delete mProcess;
+  mProcess = 0;
+  return true;
+}
+
 #include "sendmailjob.moc"

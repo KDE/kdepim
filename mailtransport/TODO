@@ -41,11 +41,6 @@ TransportJob
 - use QByteArray for addresses instead of QString
 - Transport validity checking
 
-SendmailJob
------------
-- implement doKill()
-
 SMTPJob
 -------
 - get rid of kmail specific stuff in start()
-- implement doKill()

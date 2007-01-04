@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -33,7 +33,8 @@
 
 using namespace KPIM;
 
-TransportMgr::TransportMgr()
+TransportMgr::TransportMgr() :
+    mCurrentJob( 0 )
 {
   new TransportManagementWidget( this );
   mComboBox = new TransportComboBox( this );
@@ -52,6 +53,8 @@ TransportMgr::TransportMgr()
   mMailEdit->setLineWrapMode( QTextEdit::NoWrap );
   b = new QPushButton( "&Send", this );
   connect( b, SIGNAL(clicked(bool)), SLOT(sendBtnClicked()) );
+  b = new QPushButton( "&Cancel", this );
+  connect( b, SIGNAL(clicked(bool)), SLOT(cancelBtnClicked()) );
 }
 
 void TransportMgr::editBtnClicked()
@@ -73,6 +76,14 @@ void TransportMgr::sendBtnClicked()
   connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
   connect( job, SIGNAL(percent(KJob*,unsigned long)), SLOT(jobPercent(KJob*,unsigned long)) );
   job->start();
+  mCurrentJob = job;
+}
+
+void TransportMgr::cancelBtnClicked()
+{
+  if ( mCurrentJob )
+    kDebug() << k_funcinfo << "kill success: " << mCurrentJob->kill() << endl;
+  mCurrentJob = 0;
 }
 
 int main( int argc, char** argv )
@@ -87,6 +98,7 @@ int main( int argc, char** argv )
 void TransportMgr::jobResult( KJob* job )
 {
   kDebug() << k_funcinfo << job->error() << job->errorText() << endl;
+  mCurrentJob = 0;
 }
 
 void TransportMgr::jobPercent(KJob * job, unsigned long percent)

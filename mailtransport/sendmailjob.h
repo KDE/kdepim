@@ -42,6 +42,9 @@ class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
 
     virtual void start();
 
+  protected:
+    virtual bool doKill();
+
   private slots:
     void sendmailExited();
     void wroteStdin();
