@@ -49,12 +49,12 @@ namespace Kleo {
   public:
     CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent = 0, const char* name = 0 );
 
-  protected:
-    virtual void slotOk();
-    virtual void slotCancel();
-    virtual void slotDefault();
-    virtual void slotApply();
-    virtual void slotUser1(); // reset
+  protected slots:
+    void slotOk();
+    void slotCancel();
+    void slotDefault();
+    void slotApply();
+    void slotUser1(); // reset
 
   public slots:
     void slotChanged();
