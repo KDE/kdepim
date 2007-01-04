@@ -27,10 +27,6 @@ TransportComboBox
 - handle ad-hoc transports (see identity dialog)
 - keep selection on update if possible
 
-TransportConfigDialog
----------------------
-- enforce unique name
-
 Transport
 ---------
 - use int for port number instead of QString

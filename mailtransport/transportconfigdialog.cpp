@@ -174,6 +174,20 @@ void TransportConfigDialog::save()
   d->manager->updateSettings();
   if ( d->passwordEdit )
     d->transport->setPassword( d->passwordEdit->text() );
+
+  // enforce unique name
+  QStringList existingNames;
+  foreach ( Transport *t, TransportManager::self()->transports() )
+    if ( t->id() != d->transport->id() )
+      existingNames << t->name();
+  int suffix = 1;
+  QString origName = d->transport->name();
+  while ( existingNames.contains( d->transport->name() ) ) {
+    d->transport->setName( i18nc("%1: name; %2: number appended to it to make it unique among a list of names", "%1 %2",
+                           origName, suffix ) );
+    ++suffix;
+  }
+
   d->transport->writeConfig();
 }
 
