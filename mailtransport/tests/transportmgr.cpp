@@ -75,8 +75,8 @@ void TransportMgr::sendBtnClicked()
   job->setData( mMailEdit->document()->toPlainText().toLatin1() );
   connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
   connect( job, SIGNAL(percent(KJob*,unsigned long)), SLOT(jobPercent(KJob*,unsigned long)) );
-  job->start();
   mCurrentJob = job;
+  job->start();
 }
 
 void TransportMgr::cancelBtnClicked()

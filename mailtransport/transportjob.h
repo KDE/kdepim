@@ -74,6 +74,8 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
     */
     void setData( const QByteArray &data );
 
+    virtual void start();
+
   protected:
     /**
       Returns the Transport object containing the mail transport settings.
@@ -110,6 +112,11 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
       processing the data in smaller chunks.
     */
     QBuffer* buffer();
+
+    /**
+      Do the actual work, implement in your subclass.
+    */
+    virtual void doStart() = 0;
 
   private:
     class Private;

@@ -20,6 +20,8 @@
 #include "transport.h"
 #include "transportjob.h"
 
+#include <klocale.h>
+
 #include <qbuffer.h>
 
 using namespace KPIM;
@@ -112,4 +114,15 @@ QBuffer* TransportJob::buffer()
     Q_ASSERT( d->buffer->open( QIODevice::ReadOnly ) );
   }
   return d->buffer;
+}
+
+void KPIM::TransportJob::start()
+{
+  if ( !transport()->isValid() ) {
+    setError( UserDefinedError );
+    setErrorText( i18n("The mail transport \"%1\" is not correcty configured.", transport()->name() ) );
+    emitResult();
+    return;
+  }
+  doStart();
 }

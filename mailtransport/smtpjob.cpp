@@ -71,7 +71,7 @@ SmtpJob::~SmtpJob()
   }
 }
 
-void SmtpJob::start()
+void SmtpJob::doStart()
 {
   QString query = "headers=0&from=";
   query += KUrl::toPercentEncoding( sender() );

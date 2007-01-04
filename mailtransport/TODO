@@ -34,7 +34,6 @@ Transport
 TransportJob
 ------------
 - use QByteArray for addresses instead of QString
-- Transport validity checking
 
 SMTPJob
 -------

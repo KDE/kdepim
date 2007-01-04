@@ -40,9 +40,8 @@ class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
     */
     SendmailJob( Transport* transport, QObject* parent = 0 );
 
-    virtual void start();
-
   protected:
+    virtual void doStart();
     virtual bool doKill();
 
   private slots:

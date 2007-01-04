@@ -52,9 +52,8 @@ class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
     */
     virtual ~SmtpJob();
 
-    virtual void start();
-
   protected:
+    virtual void doStart();
     virtual bool doKill();
 
   protected slots:
