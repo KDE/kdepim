@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -24,6 +24,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kstringhandler.h>
 #include <kwallet.h>
 
 using namespace KPIM;
@@ -32,14 +33,17 @@ using namespace KWallet;
 Transport::Transport( const QString &cfgGroup ) :
     TransportBase( cfgGroup ),
     mPasswordLoaded( false ),
-    mPasswordDirty( false )
+    mPasswordDirty( false ),
+    mStorePasswordInFile( false ),
+    mNeedsWalletMigration( false )
 {
   kDebug() << k_funcinfo << cfgGroup << endl;
+  readConfig();
 }
 
-bool Transport::isNull() const
+bool Transport::isValid() const
 {
-  return id() <= 0;
+  return id() > 0 && !host().isEmpty();
 }
 
 QString Transport::password()
@@ -51,6 +55,7 @@ QString Transport::password()
 
 void Transport::setPassword(const QString & passwd)
 {
+  mPasswordLoaded = true;
   if ( mPassword == passwd )
     return;
   mPasswordDirty = true;
@@ -80,20 +85,21 @@ void Transport::usrReadConfig()
 {
   TransportBase::usrReadConfig();
 
-  // TODO legacy password reading
-
+  // we have everything we need
   if ( !storePassword() || mPasswordLoaded )
     return;
 
+  // try to find a password in the config file otherwise
+  KConfigGroup group( config(), currentGroup() );
+  mPassword = KStringHandler::obscure( group.readEntry( "password" ) );
+  // TODO legacy password migration from KMail/KNode
+
   if ( !mPassword.isEmpty() ) {
-    // migration to kwallet if available
+    mPasswordLoaded = true;
     if ( Wallet::isEnabled() ) {
-//       config.deleteEntry( "pass" );
-      mPasswordDirty = true;
-//       mStorePasswdInConfig = false;
-//       writeConfig( id );
+      mNeedsWalletMigration = true;
     } else {
-//       mStorePasswdInConfig = true;
+      mStorePasswordInFile = true;
     }
   } else {
     // read password if wallet is open, defer otherwise
@@ -104,14 +110,11 @@ void Transport::usrReadConfig()
 
 void Transport::usrWriteConfig()
 {
-  // TODO
-  kDebug() << k_funcinfo << endl;
-
-  if ( requiresAuthentication() && mPasswordDirty ) {
+  if ( requiresAuthentication() && storePassword() && mPasswordDirty ) {
     Wallet *wallet = TransportManager::self()->wallet();
-    if ( !wallet || wallet->writePassword(QString::number(id()), mPassword) ) {
+    if ( !wallet || wallet->writePassword(QString::number(id()), mPassword) != 0 ) {
       // wallet saving failed, ask if we should store in the config file instead
-      if ( KMessageBox::warningYesNo( 0,
+      if ( mStorePasswordInFile || KMessageBox::warningYesNo( 0,
             i18n("KWallet is not available. It is strongly recommended to use "
                 "KWallet for managing your passwords.\n"
                 "However, the password can be stored in the configuration "
@@ -125,7 +128,9 @@ void Transport::usrWriteConfig()
             KGuiItem( i18n("Do Not Store Password") ) )
             == KMessageBox::Yes ) {
         // write to config file
-//         confif()->writeEntry( "password", KNHelper::encryptStr( p_ass ) );
+        KConfigGroup group( config(), currentGroup() );
+        group.writeEntry( "password", KStringHandler::obscure( mPassword ) );
+        mStorePasswordInFile = true;
       }
     }
     mPasswordDirty = false;
@@ -167,4 +172,20 @@ void Transport::readPassword()
   KWallet::Wallet *wallet = TransportManager::self()->wallet();
   if ( wallet )
     wallet->readPassword( QString::number(id()), mPassword );
+}
+
+bool Transport::needsWalletMigration() const
+{
+  return mNeedsWalletMigration;
+}
+
+void Transport::migrateToWallet()
+{
+  kDebug() << k_funcinfo << "migrating " << id() << " to wallet" << endl;
+  mNeedsWalletMigration = false;
+  KConfigGroup group( config(), currentGroup() );
+  group.deleteEntry( "password" );
+  mPasswordDirty = true;
+  mStorePasswordInFile = false;
+  writeConfig();
 }

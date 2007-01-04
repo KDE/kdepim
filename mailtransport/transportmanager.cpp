@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -26,6 +26,8 @@
 #include <kconfig.h>
 #include <kconfigbase.h>
 #include <kdebug.h>
+#include <klocale.h>
+#include <kmessagebox.h>
 #include <krandom.h>
 #include <kstaticdeleter.h>
 #include <kwallet.h>
@@ -50,7 +52,6 @@ TransportManager::TransportManager() :
     mDefaultTransportId( -1 )
 {
   mConfig = new KConfig( "mailtransports" );
-  readConfig();
 
   QDBusConnection::sessionBus().registerObject( DBUS_OBJECT_PATH, this,
       QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals );
@@ -67,8 +68,10 @@ TransportManager::~TransportManager()
 
 TransportManager* TransportManager::self()
 {
-  if ( !mInstance )
+  if ( !mInstance ) {
     sTransportManagerDeleter.setObject( mInstance, new TransportManager() );
+    mInstance->readConfig();
+  }
   return mInstance;
 }
 
@@ -186,20 +189,37 @@ void TransportManager::removeTransport(int id)
 
 void TransportManager::readConfig()
 {
-  qDeleteAll( mTransports );
+  QList<Transport*> oldTransports = mTransports;
   mTransports.clear();
 
   QRegExp re( "^Transport (.+)$" );
   QStringList groups = mConfig->groupList().filter( re );
   foreach ( QString s, groups ) {
     re.indexIn( s );
-    Transport* t = new Transport( re.cap( 1 ) );
+    Transport *t = 0;
+
+    // see if we happen to have that one already
+    foreach ( Transport *old, oldTransports ) {
+      if ( old->currentGroup() == "Transport " + re.cap( 1 ) ) {
+        kDebug() << k_funcinfo << "reloading existing transport: " << s << endl;
+        t = old;
+        t->readConfig();
+        oldTransports.removeAll( old );
+        break;
+      }
+    }
+
+    if ( !t )
+      t = new Transport( re.cap( 1 ) );
     if ( t->id() <= 0 ) {
       t->setId( createId() );
       t->writeConfig();
     }
     mTransports.append( t );
   }
+
+  qDeleteAll( oldTransports );
+  oldTransports.clear();
 
   // read default transport
   KConfigGroup group( mConfig, "General" );
@@ -216,6 +236,7 @@ void TransportManager::readConfig()
     }
   }
   validateDefault();
+  migrateToWallet();
 }
 
 void TransportManager::writeConfig()
@@ -360,6 +381,39 @@ void TransportManager::validateDefault()
       writeConfig();
     }
   }
+}
+
+void TransportManager::migrateToWallet()
+{
+  // check if we tried this already
+  static bool firstRun = true;
+  if ( !firstRun )
+    return;
+  firstRun = false;
+
+  // TODO: check if we are the first instance
+
+  // check if migration is needed
+  QStringList names;
+  foreach ( Transport *t, mTransports )
+    if ( t->needsWalletMigration() )
+      names << t->name();
+  if ( names.isEmpty() )
+    return;
+
+  // ask user if he wants to migrate
+  int result = KMessageBox::questionYesNoList( 0,
+    i18n("The following mail transports store passwords in the configuration file instead in KWallet.\n"
+         "It is recommended to use KWallet for password storage for security reasons.\n"
+         "Do you want to migrate your passwords to KWallet?"),
+    names );
+  if ( result != KMessageBox::Yes )
+    return;
+
+  // perform migration
+  foreach ( Transport *t, mTransports )
+    if ( t->needsWalletMigration() )
+      t->migrateToWallet();
 }
 
 #include "transportmanager.moc"

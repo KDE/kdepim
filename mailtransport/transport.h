@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -40,9 +40,9 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     typedef QList<Transport*> List;
 
     /**
-      Returns true if this transport is empty.
+      Returns true if this transport is valid, ie. has all necessary data set.
     */
-    bool isNull() const;
+    bool isValid() const;
 
     /**
       Returns the password of this transport.
@@ -77,13 +77,25 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     virtual void usrReadConfig();
     virtual void usrWriteConfig();
 
+    /**
+      Returns true if the password was not stored in the wallet.
+    */
+    bool needsWalletMigration() const;
+
+    /**
+      Try to migrate the password from the config file to the wallet.
+    */
+    void migrateToWallet();
+
   private:
     void readPassword();
 
- private:
+  private:
     QString mPassword;
     bool mPasswordLoaded;
     bool mPasswordDirty;
+    bool mStorePasswordInFile;
+    bool mNeedsWalletMigration;
 };
 
 }

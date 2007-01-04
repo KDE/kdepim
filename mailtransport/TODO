@@ -19,6 +19,7 @@ TransportManager
   (create a copy for edit?)
 - load passwords if another instance opens the wallet
 - add job scheduler (see knode) for async wallet loading during sending
+- migrate passwords to wallet only in one instance
 
 TransportComboBox
 -----------------
@@ -32,8 +33,8 @@ TransportConfigDialog
 
 Transport
 ---------
-- fallback to config file password storage
 - use int for port number instead of QString
+- password is not reloaded from wallet on remote change
 
 TransportJob
 ------------

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -187,6 +187,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     int createId() const;
     void prepareWallet();
     void validateDefault();
+    void migrateToWallet();
 
   private slots:
     void slotTransportsChanged();

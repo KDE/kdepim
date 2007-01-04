@@ -4,8 +4,8 @@
   @section Overview
   The mailtransport module provides the following functionality:
   - Shared mail transport settings
-  - GUI elements to configure mail transport settings (implementation incomplete)
-  - Job classes for mail sending (not yet implemented)
+  - GUI elements to configure mail transport settings
+  - Job classes for mail sending
 
   The mailtransport module consists of the following components:
   - a shared library containing the above listed functionality
