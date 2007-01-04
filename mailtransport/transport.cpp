@@ -43,7 +43,7 @@ Transport::Transport( const QString &cfgGroup ) :
 
 bool Transport::isValid() const
 {
-  return id() > 0 && !host().isEmpty();
+  return id() > 0 && !host().isEmpty() && port() <= 65536;
 }
 
 QString Transport::password()

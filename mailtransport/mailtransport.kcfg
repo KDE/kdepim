@@ -33,7 +33,7 @@
       <label>Host name of the server</label>
       <whatsthis>The domain name or numerical address of the SMTP server.</whatsthis>
     </entry>
-    <entry name="port" type="String">
+    <entry name="port" type="UInt">
       <label>Port number of the server</label>
       <whatsthis>The port number that the SMTP server is listening on. The default port is 25.</whatsthis>
       <default>25</default>

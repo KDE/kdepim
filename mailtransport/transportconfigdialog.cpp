@@ -162,7 +162,7 @@ void TransportConfigDialog::checkSmtpCapabilities()
   Q_ASSERT( d->transport->type() == Transport::EnumType::SMTP );
 
   delete d->serverTest;
-  d->serverTest = new ServerTest( SMTP_PROTOCOL, d->smtp.kcfg_host->text(), d->smtp.kcfg_port->text().toInt() );
+  d->serverTest = new ServerTest( SMTP_PROTOCOL, d->smtp.kcfg_host->text(), d->smtp.kcfg_port->value() );
   connect( d->serverTest,
            SIGNAL( capabilities(QStringList,QStringList,QString,QString,QString)),
            SLOT( smtpCapabilities(QStringList,QStringList,QString,QString,QString)) );
@@ -313,11 +313,11 @@ void TransportConfigDialog::encryptionChanged(int enc)
 
   // adjust port
   if ( enc == Transport::EnumEncryption::SSL ) {
-    if ( d->smtp.kcfg_port->text() == QString::number( SMTP_PORT ) )
-      d->smtp.kcfg_port->setText( QString::number( SMTPS_PORT ) );
+    if ( d->smtp.kcfg_port->value() == SMTP_PORT )
+      d->smtp.kcfg_port->setValue( SMTPS_PORT );
   } else {
-    if ( d->smtp.kcfg_port->text() == QString::number( SMTPS_PORT ) )
-      d->smtp.kcfg_port->setText( QString::number( SMTP_PORT ) );
+    if ( d->smtp.kcfg_port->value() == SMTPS_PORT )
+      d->smtp.kcfg_port->setValue( SMTP_PORT );
   }
 
   // adjust available authentication methods

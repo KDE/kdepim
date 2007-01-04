@@ -28,7 +28,6 @@ TransportComboBox
 
 Transport
 ---------
-- use int for port number instead of QString
 - password is not reloaded from wallet on remote change
 
 TransportJob

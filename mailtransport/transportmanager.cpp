@@ -425,6 +425,7 @@ void TransportManager::migrateToWallet()
 
 void TransportManager::dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner)
 {
+  Q_UNUSED( oldOwner );
   if ( service == DBUS_SERVICE_NAME && newOwner.isEmpty() )
     QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
 }

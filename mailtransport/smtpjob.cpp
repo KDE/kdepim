@@ -94,7 +94,7 @@ void SmtpJob::doStart()
 
   destination.setProtocol( (transport()->encryption() == Transport::EnumEncryption::SSL) ? SMTPS_PROTOCOL : SMTP_PROTOCOL );
   destination.setHost( transport()->host() );
-  destination.setPort( transport()->port().toUShort() );
+  destination.setPort( transport()->port() );
 
   if ( transport()->requiresAuthentication() ) {
     if( (transport()->userName().isEmpty() || transport()->password().isEmpty())

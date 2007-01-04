@@ -1,5 +1,6 @@
 File=mailtransport.kcfg
 ClassName=TransportBase
+NameSpace=KPIM
 Mutators=true
 ItemAccessors=true
 SetUserTexts=true
