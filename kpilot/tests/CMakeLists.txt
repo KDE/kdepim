@@ -33,5 +33,10 @@ kde3_add_executable(importdatebook ${importdatebook_SRCS})
 target_link_libraries(importdatebook kpilot ${QT_LIBRARIES} kcal)
 add_test(importdatebook ${EXECUTABLE_OUTPUT_PATH}/importdatebook)
 
+set(importaddresses_SRCS importaddresses.cc)
+kde3_add_executable(importaddresses ${importaddresses_SRCS})
+target_link_libraries(importaddresses kpilot ${QT_LIBRARIES} kabc kabc_file)
+add_test(importaddresses ${EXECUTABLE_OUTPUT_PATH}/importaddresses)
+
 
 
