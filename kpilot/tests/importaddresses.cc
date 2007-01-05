@@ -81,9 +81,9 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	KABC::ResourceFile file( addressfile );
+	KABC::ResourceFile *file = new KABC::ResourceFile( addressfile );
 	KABC::AddressBook book;
-	book.addResource( &file );
+	book.addResource( file );
 	if (!book.load())
 	{
 		kdWarning() << "! Failed to load the address-file <" << addressfile << ">" << endl;
