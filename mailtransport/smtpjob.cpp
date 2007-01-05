@@ -168,7 +168,7 @@ void SmtpJob::doStart()
 bool SmtpJob::doKill()
 {
   if ( !hasSubjobs() )
-    return false;
+    return true;
   KIO::SimpleJob *job = static_cast<KIO::SimpleJob*>( subjobs().first() );
   clearSubjobs();
   KIO::Scheduler::cancelJob( job );
@@ -177,7 +177,6 @@ bool SmtpJob::doKill()
 
 void SmtpJob::slotResult(KJob * job)
 {
-  kDebug() << k_funcinfo << job->error() << error() << endl;
   TransportJob::slotResult( job );
   removeSlaveFromPool( mSlave, error() != KIO::ERR_SLAVE_DIED );
   if ( !error() )
@@ -196,7 +195,6 @@ void SmtpJob::dataRequest(KIO::Job * job, QByteArray & data)
 
 void SmtpJob::slaveError(KIO::Slave * slave, int errorCode, const QString & errorMsg)
 {
-  kDebug() << k_funcinfo << errorCode << errorMsg << endl;
   removeSlaveFromPool( slave, errorCode != KIO::ERR_SLAVE_DIED );
   if ( mSlave == slave ) {
     setError( errorCode );

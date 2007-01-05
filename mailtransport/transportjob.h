@@ -36,6 +36,8 @@ class Transport;
 */
 class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
 {
+  friend class TransportManager;
+
   public:
     /**
       Creates a new mail transport job.
@@ -74,6 +76,12 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
     */
     void setData( const QByteArray &data );
 
+    /**
+      Starts this job. It is recommended to not call this method directly but use
+      TransportManager::schedule() to execute the job instead.
+
+      @see TransportManager::schedule()
+    */
     virtual void start();
 
   protected:

@@ -48,7 +48,7 @@ bool Transport::isValid() const
 
 QString Transport::password()
 {
-  if ( !mPasswordLoaded && requiresAuthentication() && mPassword.isEmpty() )
+  if ( !mPasswordLoaded && requiresAuthentication() && storePassword() && mPassword.isEmpty() )
     TransportManager::self()->loadPasswords();
   return mPassword;
 }
@@ -64,7 +64,7 @@ void Transport::setPassword(const QString & passwd)
 
 bool Transport::isComplete() const
 {
-  return !requiresAuthentication() || mPasswordLoaded;
+  return !requiresAuthentication() || !storePassword() || mPasswordLoaded;
 }
 
 QString Transport::authenticationTypeString() const

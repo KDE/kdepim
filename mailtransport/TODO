@@ -18,7 +18,6 @@ TransportManager
 - deletetion of Transport objects during reload is a problem
   (create a copy for edit?)
 - load passwords if another instance opens the wallet
-- add job scheduler (see knode) for async wallet loading during sending
 
 TransportComboBox
 -----------------

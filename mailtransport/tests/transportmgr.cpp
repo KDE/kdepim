@@ -76,7 +76,7 @@ void TransportMgr::sendBtnClicked()
   connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
   connect( job, SIGNAL(percent(KJob*,unsigned long)), SLOT(jobPercent(KJob*,unsigned long)) );
   mCurrentJob = job;
-  job->start();
+  TransportManager::self()->schedule( job );
 }
 
 void TransportMgr::cancelBtnClicked()

@@ -122,6 +122,21 @@ void TransportManager::addTransport(Transport * transport)
   emitChangesCommitted();
 }
 
+void TransportManager::schedule(TransportJob * job)
+{
+  connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
+
+  // check if the job is waiting for the wallet
+  if ( !job->transport()->isComplete() ) {
+    kDebug() << k_funcinfo << "job waits for wallet: " << job << endl;
+    mWalletQueue << job;
+    loadPasswordsAsync();
+    return;
+  }
+
+  job->start();
+}
+
 TransportJob* TransportManager::createTransportJob(int transportId)
 {
   Transport *t = transportById( transportId, false );
@@ -325,11 +340,20 @@ void TransportManager::loadPasswords()
 {
   foreach ( Transport *t, mTransports )
     t->readPassword();
+
+  // flush the wallet queue
+  foreach ( TransportJob *job, mWalletQueue ) {
+    job->start();
+  }
+  mWalletQueue.clear();
+
   emit passwordsChanged();
 }
 
 void TransportManager::loadPasswordsAsync()
 {
+  kDebug() << k_funcinfo << endl;
+
   // check if there is anything to do at all
   bool found = false;
   foreach ( Transport *t, mTransports ) {
@@ -365,6 +389,7 @@ void TransportManager::loadPasswordsAsync()
 
 void TransportManager::slotWalletOpened( bool success )
 {
+  kDebug() << k_funcinfo << endl;
   mWalletAsyncOpen = false;
   if ( !success ) {
     mWalletOpenFailed = true;
@@ -428,6 +453,11 @@ void TransportManager::dbusServiceOwnerChanged(const QString & service, const QS
   Q_UNUSED( oldOwner );
   if ( service == DBUS_SERVICE_NAME && newOwner.isEmpty() )
     QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
+}
+
+void TransportManager::jobResult(KJob * job)
+{
+  mWalletQueue.removeAll( static_cast<TransportJob*>( job ) );
 }
 
 #include "transportmanager.moc"

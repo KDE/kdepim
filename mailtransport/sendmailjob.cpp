@@ -72,7 +72,6 @@ void SendmailJob::wroteStdin()
 void SendmailJob::receivedStdErr(KProcess * proc, char * data, int len)
 {
   Q_ASSERT( proc == mProcess );
-  kDebug() << k_funcinfo << endl;
   mLastError += QString::fromLocal8Bit( data, len );
 }
 

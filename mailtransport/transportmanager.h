@@ -26,6 +26,7 @@
 #include <QObject>
 
 class KConfig;
+class KJob;
 
 namespace KWallet {
   class Wallet;
@@ -70,6 +71,9 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @param id The identifier of the Transport.
       @param def if set to true, the default transport will be returned if the
       specified Transport object could not be found, 0 otherwise.
+      @returns A Transport object for immediate use. It might become invalid as
+      soon as the event loop is entered again due to remote changes. If you need
+      to store a Transport object, store the transport identifier instead.
     */
     Transport* transportById( int id, bool def = true ) const;
 
@@ -78,6 +82,8 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @param name The transport name.
       @param def if set to true, the default transport will be returned if the
       specified Transport object could not be found, 0 otherwise.
+      @returns A Transport object for immediate use, see transportById() for
+      limitations.
     */
     Transport* transportByName( const QString &name, bool def = true ) const;
 
@@ -108,6 +114,14 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
       @param transportId The transport identifier.
     */
     TransportJob* createTransportJob( int transportId );
+
+    /**
+      Executes the given transport job. This is the preferred way to start
+      transport jobs. It takes care of asynchronously loading passwords from
+      KWallet if necessary.
+      @param job The completely configured transport job to execute.
+    */
+    void schedule( TransportJob* job );
 
   public slots:
     /**
@@ -193,6 +207,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     void slotTransportsChanged();
     void slotWalletOpened( bool success );
     void dbusServiceOwnerChanged( const QString &service, const QString &oldOwner, const QString &newOwner );
+    void jobResult( KJob* job );
 
   private:
     static TransportManager* mInstance;
@@ -204,6 +219,7 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     bool mWalletAsyncOpen;
     int mDefaultTransportId;
     bool mIsMainInstance;
+    QList<TransportJob*> mWalletQueue;
 };
 
 }
