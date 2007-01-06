@@ -20,6 +20,6 @@ kde4_automoc(${kabcclient_SRCS})
 
 kde4_add_executable(kabcclient ${kabcclient_SRCS})
 
-target_link_libraries(kabcclient ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS})
+target_link_libraries(kabcclient ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} )
 
 install(TARGETS kabcclient DESTINATION ${BIN_INSTALL_DIR})
