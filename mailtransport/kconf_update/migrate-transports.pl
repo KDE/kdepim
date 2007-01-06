@@ -16,11 +16,14 @@ $currentGroup = "";
 
 $source = $ARGV[0];
 
+%kmail_key_map = ( "pass", "password-kmail" );
+
 %knode_key_map = (
   "server", "host",
   "needsLogon", "auth",
   "timeout", "",
-  "holdTime", ""
+  "holdTime", "",
+  "pass", "password-knode"
 );
 
 while (<STDIN>) {
@@ -47,6 +50,7 @@ while (<STDIN>) {
 
     # Move over keys from the transport groups
     if ( $source eq "kmail" && $currentGroup =~ /^Transport/ ) {
+        $key = $kmail_key_map{$key} if exists $kmail_key_map{$key};
         if ( $key eq "authtype" ) {
             $value =~ s/-/_/g;
         }

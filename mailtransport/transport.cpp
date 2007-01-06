@@ -20,6 +20,7 @@
 #include "transport.h"
 #include "transportmanager.h"
 #include "mailtransport_defs.h"
+#include "legacydecrypt.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -92,8 +93,12 @@ void Transport::usrReadConfig()
 
   // try to find a password in the config file otherwise
   KConfigGroup group( config(), currentGroup() );
-  mPassword = KStringHandler::obscure( group.readEntry( "password" ) );
-  // TODO legacy password migration from KMail/KNode
+  if ( group.hasKey( "password" ) )
+    mPassword = KStringHandler::obscure( group.readEntry( "password" ) );
+  else if ( group.hasKey( "password-kmail" ) )
+    mPassword = Legacy::decryptKMail( group.readEntry( "password-kmail" ) );
+  else if ( group.hasKey( "password-knode" ) )
+    mPassword = Legacy::decryptKNode( group.readEntry( "password-knode" ) );
 
   if ( !mPassword.isEmpty() ) {
     mPasswordLoaded = true;

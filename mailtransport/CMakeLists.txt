@@ -13,6 +13,7 @@ set(mailtransport_lib_srcs
   sendmailjob.cpp
   smtpjob.cpp
   precommandjob.cpp
+  legacydecrypt.cpp
 )
 
 kde4_automoc(${mailtransport_lib_srcs})
