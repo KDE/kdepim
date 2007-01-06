@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -41,6 +41,9 @@ class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
 
     /**
       Returns identifier of the currently selected mail transport.
+      Note: This returns an invalid id if an adhoc transport is
+      selected.
+      @see isAdHocTransport()
     */
     int currentTransportId() const;
 
@@ -49,6 +52,13 @@ class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
       @param transportId The transport identifier.
     */
     void setCurrentTransport( int transportId );
+
+    /**
+      Returns true if the selected transport is an adhoc transport,
+      ie. an url entered directly (only possible if the setEditable(true)
+      has been called.
+    */
+    bool isAdHocTransport() const;
 
   private slots:
     void fillComboBox();

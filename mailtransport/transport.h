@@ -67,6 +67,12 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     */
     QString authenticationTypeString() const;
 
+    /**
+      Returns true if this is a adhoc transport, ie. a non-perisistent transport
+      configuration based on a url entered by the user.
+    */
+    bool isAdHoc() const;
+
   protected:
     /**
       Creates a Transport object. Should only be used by TransportManager.
@@ -87,6 +93,11 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     */
     void migrateToWallet();
 
+    /**
+      Sets the adhoc flag.
+    */
+    void setAdHoc( bool b );
+
   private:
     void readPassword();
 
@@ -96,6 +107,7 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     bool mPasswordDirty;
     bool mStorePasswordInFile;
     bool mNeedsWalletMigration;
+    bool mIsAdHoc;
 };
 
 }

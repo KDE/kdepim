@@ -35,7 +35,8 @@ Transport::Transport( const QString &cfgGroup ) :
     mPasswordLoaded( false ),
     mPasswordDirty( false ),
     mStorePasswordInFile( false ),
-    mNeedsWalletMigration( false )
+    mNeedsWalletMigration( false ),
+    mIsAdHoc( false )
 {
   kDebug() << k_funcinfo << cfgGroup << endl;
   readConfig();
@@ -43,7 +44,7 @@ Transport::Transport( const QString &cfgGroup ) :
 
 bool Transport::isValid() const
 {
-  return id() > 0 && !host().isEmpty() && port() <= 65536;
+  return (id() > 0 || isAdHoc()) && !host().isEmpty() && port() <= 65536;
 }
 
 QString Transport::password()
@@ -110,6 +111,9 @@ void Transport::usrReadConfig()
 
 void Transport::usrWriteConfig()
 {
+  if ( isAdHoc() )
+    return;
+
   if ( requiresAuthentication() && storePassword() && mPasswordDirty ) {
     Wallet *wallet = TransportManager::self()->wallet();
     if ( !wallet || wallet->writePassword(QString::number(id()), mPassword) != 0 ) {
@@ -188,4 +192,14 @@ void Transport::migrateToWallet()
   mPasswordDirty = true;
   mStorePasswordInFile = false;
   writeConfig();
+}
+
+bool Transport::isAdHoc() const
+{
+  return mIsAdHoc;
+}
+
+void Transport::setAdHoc(bool b)
+{
+  mIsAdHoc = b;
 }

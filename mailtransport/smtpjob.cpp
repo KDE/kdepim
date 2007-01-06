@@ -102,7 +102,7 @@ void SmtpJob::doStart()
     {
       QString user = transport()->userName();
       QString passwd = transport()->password();
-      bool keep = transport()->storePassword();
+      bool keep = !transport()->isAdHoc(); // do not provide keep checkbox for adhoc transports
       int result;
 
 #warning yet another KMail specific thing

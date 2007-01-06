@@ -38,6 +38,7 @@ TransportMgr::TransportMgr() :
 {
   new TransportManagementWidget( this );
   mComboBox = new TransportComboBox( this );
+  mComboBox->setEditable( true );
   QPushButton *b = new QPushButton( "&Edit", this );
   connect( b, SIGNAL(clicked(bool)), SLOT(editBtnClicked()) );
   mSenderEdit = new KLineEdit( this );
@@ -59,6 +60,10 @@ TransportMgr::TransportMgr() :
 
 void TransportMgr::editBtnClicked()
 {
+  if ( mComboBox->isAdHocTransport() ) {
+    kDebug() << k_funcinfo << "Cannot edit adhoc transport!" << endl;
+    return;
+  }
   TransportConfigDialog *t = new TransportConfigDialog( TransportManager::self()->transportById( mComboBox->currentTransportId() ), this );
   t->exec();
   delete t;
@@ -66,8 +71,15 @@ void TransportMgr::editBtnClicked()
 
 void TransportMgr::sendBtnClicked()
 {
-  TransportJob *job = TransportManager::self()->createTransportJob( mComboBox->currentTransportId() );
-  Q_ASSERT( job );
+  TransportJob *job;
+  if ( mComboBox->isAdHocTransport() )
+    job = TransportManager::self()->createTransportJob( mComboBox->currentText() );
+  else
+    job = TransportManager::self()->createTransportJob( mComboBox->currentTransportId() );
+  if ( !job ) {
+    kDebug() << k_funcinfo << "Invalid transport!" << endl;
+    return;
+  }
   job->setSender( mSenderEdit->text() );
   job->setTo( mToEdit->text().isEmpty() ? QStringList() : mToEdit->text().split(',') );
   job->setCc( mCcEdit->text().isEmpty() ? QStringList() : mCcEdit->text().split(',') );

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -23,6 +23,8 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+#include <qlineedit.h>
+
 using namespace KPIM;
 
 TransportComboBox::TransportComboBox(QWidget * parent) :
@@ -34,21 +36,31 @@ TransportComboBox::TransportComboBox(QWidget * parent) :
 
 int TransportComboBox::currentTransportId() const
 {
-  if( currentIndex() > 0 && currentIndex() <= mTransports.count() )
+  if ( currentIndex() == 0 )
+    return 0;
+  if( currentIndex() > 0 && currentIndex() < mTransports.count() )
     return mTransports.at( currentIndex() );
-  return 0;
+  return -1;
 }
 
 void TransportComboBox::setCurrentTransport(int transportId)
 {
   int i = mTransports.indexOf( transportId );
-  if ( i >= 0 && i <= count() )
+  if ( i >= 0 && i < count() )
     setCurrentIndex( i );
+}
+
+bool TransportComboBox::isAdHocTransport() const
+{
+  return currentTransportId() == -1;
 }
 
 void TransportComboBox::fillComboBox()
 {
   int oldTransport = currentTransportId();
+  QString oldText;
+  if ( lineEdit() )
+    oldText = lineEdit()->text();
   clear();
   mTransports.clear();
 
@@ -64,6 +76,8 @@ void TransportComboBox::fillComboBox()
   }
 
   setCurrentTransport( oldTransport );
+  if ( lineEdit() )
+    lineEdit()->setText( oldText );
 }
 
 #include "transportcombobox.moc"

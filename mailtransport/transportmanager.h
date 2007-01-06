@@ -116,6 +116,14 @@ class MAILTRANSPORT_EXPORT TransportManager : public QObject
     TransportJob* createTransportJob( int transportId );
 
     /**
+      Creates a mail transport job for the given transport identifer,
+      transport name or adhoc transport description.
+      Returns 0 if the specified transport is invalid.
+      @param transport A string defining a mail transport.
+    */
+    TransportJob* createTransportJob( const QString &transport );
+
+    /**
       Executes the given transport job. This is the preferred way to start
       transport jobs. It takes care of asynchronously loading passwords from
       KWallet if necessary.

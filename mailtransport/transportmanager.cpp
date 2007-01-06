@@ -24,12 +24,12 @@
 #include "sendmailjob.h"
 
 #include <kconfig.h>
-#include <kconfigbase.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <krandom.h>
 #include <kstaticdeleter.h>
+#include <kurl.h>
 #include <kwallet.h>
 
 #include <QApplication>
@@ -137,7 +137,7 @@ void TransportManager::schedule(TransportJob * job)
   job->start();
 }
 
-TransportJob* TransportManager::createTransportJob(int transportId)
+TransportJob* TransportManager::createTransportJob( int transportId )
 {
   Transport *t = transportById( transportId, false );
   if ( !t )
@@ -152,7 +152,68 @@ TransportJob* TransportManager::createTransportJob(int transportId)
   return 0;
 }
 
-bool KPIM::TransportManager::isEmpty() const
+TransportJob* TransportManager::createTransportJob(const QString & transport)
+{
+  bool ok = false;
+  Transport *t = 0;
+
+  int transportId = transport.toInt( &ok );
+  if ( ok )
+    t = transportById( transportId );
+
+  if ( !t )
+    t = transportByName( transport, false );
+
+  if ( t )
+    return createTransportJob( t->id() );
+
+  KUrl url( transport );
+  if ( !url.isValid() )
+    return 0;
+
+  t = new Transport( "adhoc" );
+  t->setDefaults();
+  t->setName( transport );
+  t->setAdHoc( true );
+
+  if ( url.protocol() == SMTP_PROTOCOL || url.protocol() == SMTPS_PROTOCOL ) {
+    t->setType( Transport::EnumType::SMTP );
+    t->setHost( url.host() );
+    if ( url.protocol() == SMTPS_PROTOCOL ) {
+      t->setEncryption( Transport::EnumEncryption::SSL );
+      t->setPort( SMTPS_PORT );
+    }
+    if ( url.hasPort() )
+      t->setPort( url.port() );
+    if ( url.hasUser() ) {
+      t->setRequiresAuthentication( true );
+      t->setUserName( url.user() );
+    }
+  }
+
+  else if ( url.protocol() == "file" ) {
+    t->setType( Transport::EnumType::Sendmail );
+    t->setHost( url.path( KUrl::RemoveTrailingSlash ) );
+  }
+
+  else {
+    delete t;
+    return 0;
+  }
+
+  switch ( t->type() ) {
+    case Transport::EnumType::SMTP:
+      return new SmtpJob( t, this );
+    case Transport::EnumType::Sendmail:
+      return new SendmailJob( t, this );
+  }
+
+  delete t;
+  Q_ASSERT( false );
+  return 0;
+}
+
+bool TransportManager::isEmpty() const
 {
   return mTransports.isEmpty();
 }

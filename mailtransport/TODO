@@ -19,10 +19,6 @@ TransportManager
   (create a copy for edit?)
 - load passwords if another instance opens the wallet
 
-TransportComboBox
------------------
-- handle ad-hoc transports (see identity dialog)
-
 Transport
 ---------
 - password is not reloaded from wallet on remote change
