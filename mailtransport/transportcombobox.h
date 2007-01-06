@@ -44,8 +44,17 @@ class MAILTRANSPORT_EXPORT TransportComboBox : public KComboBox
     */
     int currentTransportId() const;
 
+    /**
+      Selects the given transport.
+      @param transportId The transport identifier.
+    */
+    void setCurrentTransport( int transportId );
+
   private slots:
     void fillComboBox();
+
+  private:
+    QList<int> mTransports;
 
 };
 

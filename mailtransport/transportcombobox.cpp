@@ -34,14 +34,24 @@ TransportComboBox::TransportComboBox(QWidget * parent) :
 
 int TransportComboBox::currentTransportId() const
 {
-  if ( currentIndex() == 0 || count() == 0 )
-    return 0; // default
-  return TransportManager::self()->transportIds().at( currentIndex() - 1 );
+  if( currentIndex() > 0 && currentIndex() <= mTransports.count() )
+    return mTransports.at( currentIndex() );
+  return 0;
+}
+
+void TransportComboBox::setCurrentTransport(int transportId)
+{
+  int i = mTransports.indexOf( transportId );
+  if ( i >= 0 && i <= count() )
+    setCurrentIndex( i );
 }
 
 void TransportComboBox::fillComboBox()
 {
+  int oldTransport = currentTransportId();
   clear();
+  mTransports.clear();
+
   if ( !TransportManager::self()->isEmpty() ) {
     QString defName = TransportManager::self()->defaultTransportName();
     if ( defName.isEmpty() )
@@ -49,7 +59,11 @@ void TransportComboBox::fillComboBox()
     else
       addItem( i18n( "Default (%1)", defName ) );
     addItems( TransportManager::self()->transportNames() );
+    mTransports << 0;
+    mTransports << TransportManager::self()->transportIds();
   }
+
+  setCurrentTransport( oldTransport );
 }
 
 #include "transportcombobox.moc"

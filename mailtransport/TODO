@@ -21,9 +21,7 @@ TransportManager
 
 TransportComboBox
 -----------------
-- select item by transport id
 - handle ad-hoc transports (see identity dialog)
-- keep selection on update if possible
 
 Transport
 ---------
