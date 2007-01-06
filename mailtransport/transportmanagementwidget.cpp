@@ -116,7 +116,7 @@ void TransportManagementWidget::addClicked()
   Transport *t = TransportManager::self()->createTransport();
   t->setType( tdd.transportType() );
   if ( t->type() == Transport::EnumType::Sendmail )
-    t->setHost( "/usr/sbin/sendmail" );
+    t->setHost( QLatin1String("/usr/sbin/sendmail") );
 
   // configure transport
   TransportConfigDialog tcd( t, this );

@@ -25,14 +25,16 @@
   Internal file containing constant definitions etc.
 */
 
-#define WALLET_FOLDER "mailtransports"
+#define WALLET_FOLDER QLatin1String("mailtransports")
+#define KMAIL_WALLET_FOLDER QLatin1String("kmail")
 
-#define DBUS_SERVICE_NAME "org.kde.pim.TransportManager"
-#define DBUS_INTERFACE_NAME "org.kde.pim.TransportManager"
-#define DBUS_OBJECT_PATH "/TransportManager"
+#define DBUS_SERVICE_NAME QLatin1String("org.kde.pim.TransportManager")
+#define DBUS_INTERFACE_NAME QLatin1String("org.kde.pim.TransportManager")
+#define DBUS_OBJECT_PATH QLatin1String("/TransportManager")
+#define DBUS_CHANGE_SIGNAL QLatin1String("changesCommitted")
 
-#define SMTP_PROTOCOL "smtp"
-#define SMTPS_PROTOCOL "smtps"
+#define SMTP_PROTOCOL QLatin1String("smtp")
+#define SMTPS_PROTOCOL QLatin1String("smtps")
 
 #define SMTP_PORT 25
 #define SMTPS_PORT 465

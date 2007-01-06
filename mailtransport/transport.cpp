@@ -161,13 +161,13 @@ void Transport::readPassword()
       Wallet::keyDoesNotExist(Wallet::NetworkWallet(), WALLET_FOLDER, QString::number(id())) )
   {
     // try migrating password from kmail
-    if ( Wallet::folderDoesNotExist(Wallet::NetworkWallet(), "kmail") ||
-         Wallet::keyDoesNotExist(Wallet::NetworkWallet(), "kmail", QString::fromLatin1("transport-%1").arg( id() ) ) )
+    if ( Wallet::folderDoesNotExist(Wallet::NetworkWallet(), KMAIL_WALLET_FOLDER ) ||
+         Wallet::keyDoesNotExist(Wallet::NetworkWallet(), KMAIL_WALLET_FOLDER, QString::fromLatin1("transport-%1").arg( id() ) ) )
       return;
     kDebug() << k_funcinfo << "migrating password from kmail wallet" << endl;
     KWallet::Wallet *wallet = TransportManager::self()->wallet();
     if ( wallet ) {
-      wallet->setFolder( "kmail" );
+      wallet->setFolder( KMAIL_WALLET_FOLDER );
       wallet->readPassword( QString::fromLatin1("transport-%1").arg( id() ), mPassword );
       wallet->removeEntry( QString::fromLatin1("transport-%1").arg( id() ) );
       wallet->setFolder( WALLET_FOLDER );

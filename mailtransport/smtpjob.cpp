@@ -88,28 +88,27 @@ void SmtpJob::doStart()
 
 void SmtpJob::startSmtpJob()
 {
-  QString query = "headers=0&from=";
-  query += KUrl::toPercentEncoding( sender() );
+  KUrl destination;
+  destination.setProtocol( (transport()->encryption() == Transport::EnumEncryption::SSL) ? SMTPS_PROTOCOL : SMTP_PROTOCOL );
+  destination.setHost( transport()->host() );
+  destination.setPort( transport()->port() );
+
+  destination.addQueryItem( QLatin1String("headers"), QLatin1String("0") );
+  destination.addQueryItem( QLatin1String("from"), sender() );
 
   foreach ( QString str, to() )
-    query += "&to=" + KUrl::toPercentEncoding( str );
+    destination.addQueryItem( QLatin1String("to"), str );
   foreach ( QString str, cc() )
-    query += "&cc=" + KUrl::toPercentEncoding( str );
+    destination.addQueryItem( QLatin1String("cc"), str );
   foreach ( QString str, bcc() )
-    query += "&bcc=" + KUrl::toPercentEncoding( str );
+    destination.addQueryItem( QLatin1String("bcc"), str );
 
   if ( transport()->specifyHostname() )
-    query += "&hostname=" + KUrl::toPercentEncoding( transport()->localHostname() );
+    destination.addQueryItem( QLatin1String("hostname"), transport()->localHostname() );
 
 #warning Argh!
 //   if ( !kmkernel->msgSender()->sendQuotedPrintable() )
 //     query += "&body=8bit";
-
-  KUrl destination;
-
-  destination.setProtocol( (transport()->encryption() == Transport::EnumEncryption::SSL) ? SMTPS_PROTOCOL : SMTP_PROTOCOL );
-  destination.setHost( transport()->host() );
-  destination.setPort( transport()->port() );
 
   if ( transport()->requiresAuthentication() ) {
     if( (transport()->userName().isEmpty() || transport()->password().isEmpty())
@@ -145,18 +144,18 @@ void SmtpJob::startSmtpJob()
   if ( !data().isEmpty() )
     // allow +5% for subsequent LF->CRLF and dotstuffing (an average
     // over 2G-lines gives an average line length of 42-43):
-    query += "&size=" + QString::number( qRound( data().length() * 1.05 ) );
+    destination.addQueryItem( QLatin1String("size"), QString::number( qRound( data().length() * 1.05 ) ) );
 
-  destination.setPath("/send");
-  destination.setQuery( query );
+  destination.setPath( QLatin1String("/send") );
 
   mSlave = slavePool.value( transport()->id() );
   if ( !mSlave ) {
     kDebug() << k_funcinfo << "creating new SMTP slave" << endl;
     KIO::MetaData slaveConfig;
-    slaveConfig.insert( "tls", (transport()->encryption() == Transport::EnumEncryption::TLS) ? "on" : "off" );
+    slaveConfig.insert( QLatin1String("tls"), (transport()->encryption() == Transport::EnumEncryption::TLS)
+        ? QLatin1String("on") : QLatin1String("off") );
     if ( transport()->requiresAuthentication() )
-      slaveConfig.insert( "sasl", transport()->authenticationTypeString() );
+      slaveConfig.insert( QLatin1String("sasl"), transport()->authenticationTypeString() );
     mSlave = KIO::Scheduler::getConnectedSlave( destination, slaveConfig );
     slavePool.insert( transport()->id(), mSlave );
   } else {
@@ -171,7 +170,7 @@ void SmtpJob::startSmtpJob()
     return;
   }
 
-  job->addMetaData( "lf2crlf+dotstuff", "slave" );
+  job->addMetaData( QLatin1String("lf2crlf+dotstuff"), QLatin1String("slave") );
   connect( job, SIGNAL(dataReq(KIO::Job*,QByteArray&)), SLOT(dataRequest(KIO::Job*,QByteArray&)) );
 
   addSubjob( job );

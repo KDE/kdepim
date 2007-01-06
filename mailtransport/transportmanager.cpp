@@ -52,12 +52,12 @@ TransportManager::TransportManager() :
     mWalletAsyncOpen( false ),
     mDefaultTransportId( -1 )
 {
-  mConfig = new KConfig( "mailtransports" );
+  mConfig = new KConfig( QLatin1String("mailtransports") );
 
   QDBusConnection::sessionBus().registerObject( DBUS_OBJECT_PATH, this,
       QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals );
 
-  QDBusConnection::sessionBus().connect( QString(), QString(), DBUS_INTERFACE_NAME, "changesCommitted",
+  QDBusConnection::sessionBus().connect( QString(), QString(), DBUS_INTERFACE_NAME, DBUS_CHANGE_SIGNAL,
                                          this, SLOT(slotTransportsChanged()) );
 
   mIsMainInstance = QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
@@ -171,7 +171,7 @@ TransportJob* TransportManager::createTransportJob(const QString & transport)
   if ( !url.isValid() )
     return 0;
 
-  t = new Transport( "adhoc" );
+  t = new Transport( QLatin1String("adhoc") );
   t->setDefaults();
   t->setName( transport );
   t->setAdHoc( true );
@@ -183,7 +183,7 @@ TransportJob* TransportManager::createTransportJob(const QString & transport)
       t->setEncryption( Transport::EnumEncryption::SSL );
       t->setPort( SMTPS_PORT );
     }
-    if ( url.hasPort() )
+    if ( url.port() != -1 )
       t->setPort( url.port() );
     if ( url.hasUser() ) {
       t->setRequiresAuthentication( true );
@@ -191,7 +191,7 @@ TransportJob* TransportManager::createTransportJob(const QString & transport)
     }
   }
 
-  else if ( url.protocol() == "file" ) {
+  else if ( url.protocol() == QLatin1String("file") ) {
     t->setType( Transport::EnumType::Sendmail );
     t->setHost( url.path( KUrl::RemoveTrailingSlash ) );
   }
@@ -273,7 +273,7 @@ void TransportManager::readConfig()
   QList<Transport*> oldTransports = mTransports;
   mTransports.clear();
 
-  QRegExp re( "^Transport (.+)$" );
+  QRegExp re( QLatin1String("^Transport (.+)$") );
   QStringList groups = mConfig->groupList().filter( re );
   foreach ( QString s, groups ) {
     re.indexIn( s );
@@ -281,7 +281,7 @@ void TransportManager::readConfig()
 
     // see if we happen to have that one already
     foreach ( Transport *old, oldTransports ) {
-      if ( old->currentGroup() == "Transport " + re.cap( 1 ) ) {
+      if ( old->currentGroup() == QLatin1String("Transport ") + re.cap( 1 ) ) {
         kDebug() << k_funcinfo << "reloading existing transport: " << s << endl;
         t = old;
         t->readConfig();

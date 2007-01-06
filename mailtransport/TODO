@@ -4,7 +4,7 @@ Mail Transport TODO
 General
 -------
 - use own namespace
-- compile with QT_NO_ASCII_CAST and without QT3_SUPPORT
+- compile without QT3_SUPPORT
 - fix license/copyright, some of the code is taken from KMail/KNode
 
 Migration

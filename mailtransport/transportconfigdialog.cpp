@@ -119,7 +119,7 @@ TransportConfigDialog::TransportConfigDialog( Transport* transport, QWidget * pa
       d->authGroup->addButton( d->smtp.ntlm );
       d->authGroup->addButton( d->smtp.gssapi );
 
-      if ( KProtocolInfo::capabilities(SMTP_PROTOCOL).contains("SASL") == 0 ) {
+      if ( KProtocolInfo::capabilities(SMTP_PROTOCOL).contains( QLatin1String("SASL") ) == 0 ) {
         d->smtp.ntlm->hide();
         d->smtp.gssapi->hide();
       }
@@ -222,17 +222,17 @@ static QList<int> authMethodsFromStringList( const QStringList &list )
 {
   QList<int> result;
   for ( QStringList::ConstIterator it = list.begin() ; it != list.end() ; ++it ) {
-    if (  *it == "LOGIN" )
+    if (  *it == QLatin1String("LOGIN") )
       result << Transport::EnumAuthenticationType::LOGIN;
-   else if ( *it == "PLAIN" )
+   else if ( *it == QLatin1String("PLAIN") )
       result << Transport::EnumAuthenticationType::PLAIN;
-    else if ( *it == "CRAM-MD5" )
+    else if ( *it == QLatin1String("CRAM-MD5") )
       result << Transport::EnumAuthenticationType::CRAM_MD5;
-    else if ( *it == "DIGEST-MD5" )
+    else if ( *it == QLatin1String("DIGEST-MD5") )
       result << Transport::EnumAuthenticationType::DIGEST_MD5;
-    else if ( *it == "NTLM" )
+    else if ( *it == QLatin1String("NTLM") )
       result << Transport::EnumAuthenticationType::NTLM;
-    else if ( *it == "GSSAPI" )
+    else if ( *it == QLatin1String("GSSAPI") )
       result << Transport::EnumAuthenticationType::GSSAPI;
   }
 
@@ -248,8 +248,8 @@ static QList<int> authMethodsFromStringList( const QStringList &list )
 static QList<int> authMethodsFromString( const QString &s )
 {
   QStringList list;
-  foreach ( QString tmp, s.toUpper().split( '\n', QString::SkipEmptyParts ) )
-    list << tmp.remove( "SASL/" );
+  foreach ( QString tmp, s.toUpper().split( QLatin1Char('\n'), QString::SkipEmptyParts ) )
+    list << tmp.remove( QLatin1String("SASL/") );
   return authMethodsFromStringList( list );
 }
 
@@ -274,7 +274,7 @@ void TransportConfigDialog::smtpCapabilities( const QStringList &capaNormal, con
   // encryption method
   d->smtp.none->setEnabled( !capaNormal.isEmpty() );
   d->smtp.ssl->setEnabled( !capaSSL.isEmpty() );
-  d->smtp.tls->setEnabled( capaNormal.indexOf("STARTTLS") != -1 );
+  d->smtp.tls->setEnabled( capaNormal.indexOf( QLatin1String("STARTTLS") ) != -1 );
   checkHighestEnabledButton( d->encryptionGroup );
 
   // authentication methods

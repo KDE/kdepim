@@ -40,7 +40,7 @@ QString Legacy::decryptKNode(const QString & data)
     val = data[i].toLatin1();
     val -= ' ';
     val = (255-' ') - val;
-    result += (char)(val + ' ');
+    result += QLatin1Char( (char)(val + ' ') );
   }
 
   return result;
