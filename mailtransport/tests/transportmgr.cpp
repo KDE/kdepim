@@ -105,6 +105,7 @@ int main( int argc, char** argv )
   TransportMgr* t = new TransportMgr();
   t->show();
   app.exec();
+  delete t;
 }
 
 void TransportMgr::jobResult( KJob* job )

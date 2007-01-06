@@ -144,9 +144,9 @@ TransportJob* TransportManager::createTransportJob( int transportId )
     return 0;
   switch ( t->type() ) {
     case Transport::EnumType::SMTP:
-      return new SmtpJob( t, this );
+      return new SmtpJob( t->clone(), this );
     case Transport::EnumType::Sendmail:
-      return new SendmailJob( t, this );
+      return new SendmailJob( t->clone(), this );
   }
   Q_ASSERT( false );
   return 0;

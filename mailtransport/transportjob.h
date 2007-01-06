@@ -40,13 +40,6 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
 
   public:
     /**
-      Creates a new mail transport job.
-      @param transport The transport configuration.
-      @param parent The parent object.
-    */
-    TransportJob( Transport* transport, QObject* parent = 0 );
-
-    /**
       Deletes this transport job.
     */
     virtual ~TransportJob();
@@ -85,6 +78,15 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
     virtual void start();
 
   protected:
+    /**
+      Creates a new mail transport job.
+      @param transport The transport configuration. This must be a deep copy of
+      a Transport object, the job takes the ownership of this object.
+      @param parent The parent object.
+      @see TransportManager::createTransportJob()
+    */
+    TransportJob( Transport* transport, QObject* parent = 0 );
+
     /**
       Returns the Transport object containing the mail transport settings.
     */

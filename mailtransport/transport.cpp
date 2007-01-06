@@ -203,3 +203,9 @@ void Transport::setAdHoc(bool b)
 {
   mIsAdHoc = b;
 }
+
+Transport* Transport::clone() const
+{
+  QString id = currentGroup().mid( 10 );
+  return new Transport( id );
+}

@@ -73,6 +73,14 @@ class MAILTRANSPORT_EXPORT Transport : public TransportBase
     */
     bool isAdHoc() const;
 
+    /**
+      Returns a deep copy of this Transport object which will no longer be
+      automatically updated. Use this if you need to store a Transport object
+      over a longer time. However it is recommended to store transport identifiers
+      instead if possible.
+    */
+    Transport* clone() const;
+
   protected:
     /**
       Creates a Transport object. Should only be used by TransportManager.

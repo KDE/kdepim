@@ -48,8 +48,7 @@ TransportJob::TransportJob( Transport* transport, QObject * parent ) :
 
 TransportJob::~ TransportJob()
 {
-  if ( d->transport->isAdHoc() )
-    delete d->transport;
+  delete d->transport;
   delete d;
 }
 

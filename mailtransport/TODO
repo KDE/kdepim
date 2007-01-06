@@ -15,8 +15,6 @@ Migration
 
 TransportManager
 ----------------
-- deletetion of Transport objects during reload is a problem
-  (create a copy for edit?)
 - load passwords if another instance opens the wallet
 
 Transport
@@ -25,6 +23,7 @@ Transport
 
 TransportJob
 ------------
+- execute precommand
 - use QByteArray for addresses instead of QString
 
 SMTPJob

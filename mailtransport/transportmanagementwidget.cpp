@@ -133,9 +133,14 @@ void TransportManagementWidget::editClicked()
   Q_ASSERT( d->ui.transportList->currentItem() );
 
   int currentId = d->ui.transportList->currentItem()->data( 0, Qt::UserRole ).toInt();
-  TransportConfigDialog t( TransportManager::self()->transportById( currentId ), this );
+  Transport* transport = TransportManager::self()->transportById( currentId );
+  if ( !transport )
+    return;
+  transport = transport->clone();
+  TransportConfigDialog t( transport, this );
   t.setCaption( i18n("Modify Transport") );
   t.exec();
+  delete transport;
 }
 
 void TransportManagementWidget::removeClicked()

@@ -38,7 +38,9 @@ class MAILTRANSPORT_EXPORT TransportConfigDialog : public KDialog
     /**
       Creates a new mail transport configuration dialog for the given
       Transport object.
-      @param transport The Transport object to configure.
+      @param transport The Transport object to configure. This must be a deep copy of
+      a Transport object or a newly created one, which hasn't been added to the
+      TransportManager yet.
       @param parent The parent widget.
     */
     explicit TransportConfigDialog( Transport* transport, QWidget* parent = 0 );
