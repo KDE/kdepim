@@ -87,6 +87,7 @@ void TransportMgr::sendBtnClicked()
   job->setData( mMailEdit->document()->toPlainText().toLatin1() );
   connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
   connect( job, SIGNAL(percent(KJob*,unsigned long)), SLOT(jobPercent(KJob*,unsigned long)) );
+  connect( job, SIGNAL(infoMessage(KJob*,QString,QString)), SLOT(jobInfoMessage(KJob*,QString,QString)) );
   mCurrentJob = job;
   TransportManager::self()->schedule( job );
 }
@@ -118,6 +119,13 @@ void TransportMgr::jobPercent(KJob * job, unsigned long percent)
 {
   Q_UNUSED( job );
   kDebug() << k_funcinfo << percent << "%" << endl;
+}
+
+void TransportMgr::jobInfoMessage(KJob * job, const QString & info, const QString & info2)
+{
+  Q_UNUSED( job );
+  kDebug() << k_funcinfo << info << endl;
+  kDebug() << k_funcinfo << info2 << endl;
 }
 
 #include "transportmgr.moc"

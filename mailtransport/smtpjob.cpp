@@ -20,6 +20,7 @@
 #include "smtpjob.h"
 #include "transport.h"
 #include "mailtransport_defs.h"
+#include "precommandjob.h"
 
 #include <klocale.h>
 #include <kurl.h>
@@ -53,7 +54,8 @@ static void removeSlaveFromPool( KIO::Slave *slave, bool disconnect = false )
 
 SmtpJob::SmtpJob(Transport * transport, QObject * parent) :
     TransportJob( transport, parent ),
-    mSlave( 0 )
+    mSlave( 0 ),
+    state( Idle )
 {
   slavePoolRef++;
   KIO::Scheduler::connect( SIGNAL(slaveError(KIO::Slave*,int,QString)),
@@ -72,6 +74,19 @@ SmtpJob::~SmtpJob()
 }
 
 void SmtpJob::doStart()
+{
+  if ( slavePool.contains( transport()->id() ) || transport()->precommand().isEmpty() ) {
+    state = Smtp;
+    startSmtpJob();
+  } else {
+    state = Precommand;
+    PrecommandJob *job = new PrecommandJob( transport()->precommand(), this );
+    addSubjob( job );
+    job->start();
+  }
+}
+
+void SmtpJob::startSmtpJob()
 {
   QString query = "headers=0&from=";
   query += KUrl::toPercentEncoding( sender() );
@@ -169,16 +184,29 @@ bool SmtpJob::doKill()
 {
   if ( !hasSubjobs() )
     return true;
-  KIO::SimpleJob *job = static_cast<KIO::SimpleJob*>( subjobs().first() );
-  clearSubjobs();
-  KIO::Scheduler::cancelJob( job );
-  return true;
+  if ( state == Precommand )
+    return subjobs().first()->kill();
+  else if ( state == Smtp ) {
+    KIO::SimpleJob *job = static_cast<KIO::SimpleJob*>( subjobs().first() );
+    clearSubjobs();
+    KIO::Scheduler::cancelJob( job );
+    return true;
+  }
+  return false;
 }
 
 void SmtpJob::slotResult(KJob * job)
 {
   TransportJob::slotResult( job );
-  removeSlaveFromPool( mSlave, error() != KIO::ERR_SLAVE_DIED );
+  if ( error() && state == Smtp ) {
+    removeSlaveFromPool( mSlave, error() != KIO::ERR_SLAVE_DIED );
+    return;
+  }
+  if ( !error() && state == Precommand ) {
+    state = Smtp;
+    startSmtpJob();
+    return;
+  }
   if ( !error() )
     emitResult();
 }

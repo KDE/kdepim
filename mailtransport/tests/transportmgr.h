@@ -40,6 +40,7 @@ class TransportMgr : public KVBox
     void cancelBtnClicked();
     void jobResult( KJob* job );
     void jobPercent( KJob* job, unsigned long percent );
+    void jobInfoMessage( KJob* job, const QString &info, const QString &info2 );
 
   private:
     KPIM::TransportComboBox* mComboBox;

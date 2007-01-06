@@ -37,6 +37,11 @@ SendmailJob::SendmailJob(Transport * transport, QObject * parent) :
            SLOT(receivedStdErr(KProcess*,char*,int)) );
 }
 
+SendmailJob::~ SendmailJob()
+{
+  delete mProcess;
+}
+
 void SendmailJob::doStart()
 {
   *mProcess << transport()->host() << "-i" << "-f" << sender() << to() << cc() << bcc();

@@ -12,6 +12,7 @@ set(mailtransport_lib_srcs
   transporttypedialog.cpp
   sendmailjob.cpp
   smtpjob.cpp
+  precommandjob.cpp
 )
 
 kde4_automoc(${mailtransport_lib_srcs})

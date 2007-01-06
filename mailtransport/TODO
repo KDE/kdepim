@@ -23,7 +23,6 @@ Transport
 
 TransportJob
 ------------
-- execute precommand
 - use QByteArray for addresses instead of QString
 
 SMTPJob

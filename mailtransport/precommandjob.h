@@ -17,46 +17,46 @@
     02110-1301, USA.
 */
 
-#ifndef KPIM_SENDMAILJOB_H
-#define KPIM_SENDMAILJOB_H
+#ifndef KPIM_PRECOMMANDJOB_H
+#define KPIM_PRECOMMANDJOB_H
 
-#include <mailtransport/transportjob.h>
+#include <kjob.h>
 
 class KProcess;
 
 namespace KPIM {
 
 /**
-  Mail transport job for sendmail.
+  Job to execute commands before connecting to an account.
 */
-class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
+class PrecommandJob : public KJob
 {
   Q_OBJECT
+
   public:
     /**
-      Creates a SendmailJob.
-      @param transport The transport settings.
+      Creates a new precommand job.
+      @param precommand The command to run.
       @param parent The parent object.
     */
-    SendmailJob( Transport* transport, QObject* parent = 0 );
+    PrecommandJob( const QString &precommand, QObject *parent = 0 );
 
     /**
       Destroys this job.
     */
-    virtual ~SendmailJob();
+    virtual ~PrecommandJob();
+
+    virtual void start();
 
   protected:
-    virtual void doStart();
     virtual bool doKill();
 
   private slots:
-    void sendmailExited();
-    void wroteStdin();
-    void receivedStdErr( KProcess *proc, char* data, int len );
+    void processExited(KProcess *process);
 
   private:
-    KProcess* mProcess;
-    QString mLastError;
+    KProcess *mProcess;
+    QString mPrecommand;
 };
 
 }

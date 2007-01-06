@@ -35,6 +35,9 @@ namespace KPIM {
   KIO::Slave. This avoids multiple simultaneous connections to the server,
   which is not always allowed. Also, re-using an already existing connection
   avoids the login overhead and can improve performance.
+
+  Precommands are automatically executed, once per opening a connection to the
+  server (not necessarily once per message).
 */
 class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
 {
@@ -60,11 +63,17 @@ class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
     virtual void slotResult( KJob *job );
     void slaveError(KIO::Slave *slave, int errorCode, const QString &errorMsg);
 
+  private:
+    void startSmtpJob();
+
   private slots:
     void dataRequest( KIO::Job* job, QByteArray &data );
 
   private:
     KIO::Slave* mSlave;
+    enum State {
+      Idle, Precommand, Smtp
+    } state;
 };
 
 }
