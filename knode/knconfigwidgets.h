@@ -22,7 +22,6 @@
 #include "ui_nntpaccountlistwidget_base.h"
 #include "ui_postnewstechnicalwidget_base.h"
 #include "ui_readnewsgeneralwidget_base.h"
-#include "ui_smtpaccountwidget_base.h"
 
 #include <QList>
 //Added by qt3to4:
