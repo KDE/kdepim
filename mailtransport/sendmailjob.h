@@ -40,7 +40,7 @@ class MAILTRANSPORT_EXPORT SendmailJob : public TransportJob
       @param transport The transport settings.
       @param parent The parent object.
     */
-    SendmailJob( Transport* transport, QObject* parent = 0 );
+    explicit SendmailJob( Transport* transport, QObject* parent = 0 );
 
     /**
       Destroys this job.

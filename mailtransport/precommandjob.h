@@ -42,7 +42,7 @@ class PrecommandJob : public KJob
       @param precommand The command to run.
       @param parent The parent object.
     */
-    PrecommandJob( const QString &precommand, QObject *parent = 0 );
+    explicit PrecommandJob( const QString &precommand, QObject *parent = 0 );
 
     /**
       Destroys this job.

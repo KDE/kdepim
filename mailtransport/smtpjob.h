@@ -50,7 +50,7 @@ class MAILTRANSPORT_EXPORT SmtpJob : public TransportJob
       @param transport The transport settings.
       @param parent The parent object.
     */
-    SmtpJob( Transport* transport, QObject* parent = 0 );
+    explicit SmtpJob( Transport* transport, QObject* parent = 0 );
 
     /**
       Deletes this job.

@@ -85,7 +85,7 @@ class MAILTRANSPORT_EXPORT TransportJob : public KCompositeJob
       @param parent The parent object.
       @see TransportManager::createTransportJob()
     */
-    TransportJob( Transport* transport, QObject* parent = 0 );
+    explicit TransportJob( Transport* transport, QObject* parent = 0 );
 
     /**
       Returns the Transport object containing the mail transport settings.
