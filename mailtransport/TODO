@@ -5,7 +5,6 @@ General
 -------
 - use own namespace
 - compile without QT3_SUPPORT
-- fix license/copyright, some of the code is taken from KMail/KNode
 
 Migration
 ---------
