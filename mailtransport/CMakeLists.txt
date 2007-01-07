@@ -35,3 +35,11 @@ set_target_properties(mailtransport PROPERTIES VERSION 1.0.0 SOVERSION 1)
 install(TARGETS mailtransport DESTINATION ${LIB_INSTALL_DIR})
 install(FILES mailtransport.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 
+
+set(mailtransport_kcm_srcs configmodule.cpp)
+kde4_automoc(${mailtransport_kcm_srcs})
+kde4_add_plugin(kcm_mailtransport ${mailtransport_kcm_srcs})
+target_link_libraries(kcm_mailtransport  ${KDE4_KDEUI_LIBS} mailtransport)
+
+install(TARGETS kcm_mailtransport  DESTINATION ${PLUGIN_INSTALL_DIR})
+install(FILES kcm_mailtransport.desktop  DESTINATION ${SERVICES_INSTALL_DIR})

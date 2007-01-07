@@ -4,6 +4,7 @@ Mail Transport TODO
 General
 -------
 - compile without QT3_SUPPORT
+- install mailtransport.upd once KMail and KNode are ported
 
 Migration
 ---------
@@ -13,6 +14,7 @@ Migration
 TransportManager
 ----------------
 - load passwords if another instance opens the wallet
+- add D-Bus interface for sending mails
 
 Transport
 ---------
