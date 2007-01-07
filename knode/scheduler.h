@@ -107,8 +107,8 @@ class Scheduler : public QObject  {
   private:
     /// queue for NNTP jobs
     QList<KNJobData*> nntpJobQueue;
-    /// queue for SMTP jobs
-    QList<KNJobData*> smtpJobQueue;
+    /// all SMTP jobs
+    QList<KNJobData*> smtpJobs;
     /// jobs waiting for async wallet loading
     QList<KNJobData*> mWalletQueue;
 

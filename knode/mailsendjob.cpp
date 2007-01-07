@@ -19,6 +19,7 @@
 #include <mailtransport/transportjob.h>
 
 #include <kdebug.h>
+#include <klocale.h>
 #include <kio/job.h>
 
 using namespace MailTransport;
@@ -34,9 +35,11 @@ void KNode::MailSendJob::execute()
   KNLocalArticle *art = static_cast<KNLocalArticle*>( data() );
 
   TransportJob* job = TransportManager::self()->createTransportJob( mTransportId );
-  if ( !job )
-    // TODO: error handling
-    ;
+  if ( !job ) {
+    setError( KIO::ERR_INTERNAL, i18n("Could not create mail transport job.") );
+    emitFinished();
+    return;
+  }
 
   job->setData( art->encodedContent( true ) );
   job->setSender( art->from()->addresses().first() );

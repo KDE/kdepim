@@ -66,7 +66,8 @@ void Scheduler::addJob(KNJobData *job)
   }
 
   if (job->type()==KNJobData::JTmail) {
-    smtpJobQueue.append(job);
+    smtpJobs.append( job );
+    startJob( job );
   } else {
 
     /*
@@ -107,11 +108,6 @@ void Scheduler::schedule()
     nntpJobQueue.removeFirst();
     startJob( currentNntpJob );
   }
-  if ( !currentSmtpJob && !smtpJobQueue.isEmpty() ) {
-    currentSmtpJob = smtpJobQueue.first();
-    smtpJobQueue.removeFirst();
-    startJob( currentSmtpJob );
-  }
 }
 
 
@@ -119,9 +115,9 @@ void Scheduler::startJob( KNJobData * job )
 {
   job->prepareForExecution();
   if ( job->success() ) {
-    job->execute();
     connect( job, SIGNAL( finished(KNJobData*) ),
              SLOT( slotJobFinished(KNJobData*) ) );
+    job->execute();
   } else
     slotJobFinished( job );
 }
@@ -140,10 +136,10 @@ void Scheduler::cancelJobs( int type, KPIM::ProgressItem * item )
     } else
       ++it;
   }
-  for ( it = smtpJobQueue.begin(); it != smtpJobQueue.end();) {
+  for ( it = smtpJobs.begin(); it != smtpJobs.end();) {
     tmp = *it;
     if ( ( item && tmp->progressItem() == item ) || type == 0 || type == tmp->type() ) {
-      it = smtpJobQueue.erase( it );
+      it = smtpJobs.erase( it );
       tmp->cancel();
       tmp->notifyConsumer();
     } else
@@ -162,9 +158,6 @@ void Scheduler::cancelJobs( int type, KPIM::ProgressItem * item )
   if ( currentNntpJob )
     if ( ( item && currentNntpJob->progressItem() == item ) || type == 0 || type == currentNntpJob->type() )
       currentNntpJob->cancel();
-  if ( currentSmtpJob )
-    if ( ( item && currentSmtpJob->progressItem() == item ) || type == 0 || type == currentSmtpJob->type() )
-      currentSmtpJob->cancel();
 
   updateStatus();
 }
@@ -196,8 +189,7 @@ void Scheduler::slotJobFinished( KNJobData * job )
 
   if ( currentNntpJob && job == currentNntpJob )
     currentNntpJob = 0;
-  if ( currentSmtpJob && job == currentSmtpJob )
-    currentSmtpJob = 0;
+  smtpJobs.removeAll( job );
 
   job->setComplete();
   job->notifyConsumer();
@@ -212,10 +204,8 @@ void Scheduler::slotPasswordsChanged()
   QList<KNJobData*>::ConstIterator it;
   for ( it = mWalletQueue.begin(); it != mWalletQueue.end(); ++it ) {
     (*it)->setStatus( i18n("Waiting...") );
-    if ( (*it)->type() == KNJobData::JTmail )
-      smtpJobQueue.append( (*it) );
-    else
-      nntpJobQueue.append( (*it) );
+    Q_ASSERT( (*it)->type() != KNJobData::JTmail );
+    nntpJobQueue.append( (*it) );
   }
   mWalletQueue.clear();
   schedule();
@@ -230,8 +220,8 @@ void Scheduler::slotCancelJob( KPIM::ProgressItem *item )
 
 void Scheduler::updateStatus( )
 {
-  if ( nntpJobQueue.isEmpty() && smtpJobQueue.isEmpty() && !currentNntpJob
-       && !currentSmtpJob && mWalletQueue.isEmpty() )
+  if ( nntpJobQueue.isEmpty() && smtpJobs.isEmpty() && !currentNntpJob
+       && mWalletQueue.isEmpty() )
     emit netActive( false );
   else
     emit netActive( true );
