@@ -19,15 +19,15 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KPIM_TRANSPORTTYPEDIALOG_H
-#define KPIM_TRANSPORTTYPEDIALOG_H
+#ifndef MAILTRANSPORT_TRANSPORTTYPEDIALOG_H
+#define MAILTRANSPORT_TRANSPORTTYPEDIALOG_H
 
 #include <mailtransport/mailtransport_export.h>
 #include <kdialog.h>
 
 class KButtonGroup;
 
-namespace KPIM {
+namespace MailTransport {
 
 /**
   Dialog to select the type of a new transport.

@@ -22,12 +22,12 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KPIM_LEGACYDECRYPT_H
-#define KPIM_LEGACYDECRYPT_H
+#ifndef MAILTRANSPORT_LEGACYDECRYPT_H
+#define MAILTRANSPORT_LEGACYDECRYPT_H
 
 #include <qstring.h>
 
-namespace KPIM {
+namespace MailTransport {
 
 /**
   Methods to read passwords from config files still using legacy encryption.

@@ -25,7 +25,7 @@
 #include <klocale.h>
 #include <kprocess.h>
 
-using namespace KPIM;
+using namespace MailTransport;
 
 PrecommandJob::PrecommandJob(const QString & precommand, QObject * parent) :
     KJob( parent ),

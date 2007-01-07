@@ -28,7 +28,7 @@
 #include <kstringhandler.h>
 #include <kwallet.h>
 
-using namespace KPIM;
+using namespace MailTransport;
 using namespace KWallet;
 
 Transport::Transport( const QString &cfgGroup ) :

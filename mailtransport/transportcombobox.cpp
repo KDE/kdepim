@@ -25,7 +25,7 @@
 
 #include <qlineedit.h>
 
-using namespace KPIM;
+using namespace MailTransport;
 
 TransportComboBox::TransportComboBox(QWidget * parent) :
     KComboBox( parent )

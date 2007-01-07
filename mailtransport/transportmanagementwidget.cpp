@@ -26,7 +26,7 @@
 #include "transportconfigdialog.h"
 #include "transporttypedialog.h"
 
-using namespace KPIM;
+using namespace MailTransport;
 
 class TransportManagementWidget::Private
 {

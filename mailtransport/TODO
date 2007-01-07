@@ -3,7 +3,6 @@ Mail Transport TODO
 
 General
 -------
-- use own namespace
 - compile without QT3_SUPPORT
 
 Migration

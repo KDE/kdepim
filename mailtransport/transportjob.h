@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef KPIM_TRANSPORTJOB_H
-#define KPIM_TRANSPORTJOB_H
+#ifndef MAILTRANSPORT_TRANSPORTJOB_H
+#define MAILTRANSPORT_TRANSPORTJOB_H
 
 #include <mailtransport/mailtransport_export.h>
 #include <kcompositejob.h>
@@ -26,7 +26,7 @@
 
 class QBuffer;
 
-namespace KPIM {
+namespace MailTransport {
 
 class Transport;
 

@@ -27,7 +27,7 @@
 
 #include <qbuffer.h>
 
-using namespace KPIM;
+using namespace MailTransport;
 
 SendmailJob::SendmailJob(Transport * transport, QObject * parent) :
     TransportJob( transport, parent )

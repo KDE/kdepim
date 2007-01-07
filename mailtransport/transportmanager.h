@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef KPIM_TRANSPORTMANAGER_H
-#define KPIM_TRANSPORTMANAGER_H
+#ifndef MAILTRANSPORT_TRANSPORTMANAGER_H
+#define MAILTRANSPORT_TRANSPORTMANAGER_H
 
 #include <mailtransport/mailtransport_export.h>
 
@@ -32,7 +32,7 @@ namespace KWallet {
   class Wallet;
 }
 
-namespace KPIM {
+namespace MailTransport {
 
 class Transport;
 class TransportJob;

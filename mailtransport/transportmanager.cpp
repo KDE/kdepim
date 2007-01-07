@@ -38,7 +38,7 @@
 #include <QRegExp>
 #include <QStringList>
 
-using namespace KPIM;
+using namespace MailTransport;
 using namespace KWallet;
 
 TransportManager* TransportManager::mInstance = 0;

@@ -19,13 +19,13 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KPIM_TRANSPORTMANAGEMENTWIDGET_H
-#define KPIM_TRANSPORTMANAGEMENTWIDGET_H
+#ifndef MAILTRANSPORT_TRANSPORTMANAGEMENTWIDGET_H
+#define MAILTRANSPORT_TRANSPORTMANAGEMENTWIDGET_H
 
 #include <mailtransport/mailtransport_export.h>
 #include <QtGui/QWidget>
 
-namespace KPIM {
+namespace MailTransport {
 
 /**
   A widget to manage mail transports.

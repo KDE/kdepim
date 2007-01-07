@@ -17,13 +17,13 @@
     02110-1301, USA.
 */
 
-#ifndef KPIM_TRANSPORTCOMBO_H
-#define KPIM_TRANSPORTCOMBO_H
+#ifndef MAILTRANSPORT_TRANSPORTCOMBO_H
+#define MAILTRANSPORT_TRANSPORTCOMBO_H
 
 #include <mailtransport/mailtransport_export.h>
 #include <kcombobox.h>
 
-namespace KPIM {
+namespace MailTransport {
 
 /**
   A combo-box for selecting a mail transport.

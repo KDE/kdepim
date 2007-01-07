@@ -24,7 +24,7 @@
 
 #include "legacydecrypt.h"
 
-using namespace KPIM;
+using namespace MailTransport;
 
 QString Legacy::decryptKMail(const QString & data)
 {

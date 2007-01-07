@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>KPIM::TransportManagementWidget</class>
- <widget class="QWidget" name="KPIM::TransportManagementWidget" >
+ <class>MailTransport::TransportManagementWidget</class>
+ <widget class="QWidget" name="MailTransport::TransportManagementWidget" >
   <property name="geometry" >
    <rect>
     <x>0</x>

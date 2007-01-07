@@ -43,7 +43,7 @@ class TransportMgr : public KVBox
     void jobInfoMessage( KJob* job, const QString &info, const QString &info2 );
 
   private:
-    KPIM::TransportComboBox* mComboBox;
+    MailTransport::TransportComboBox* mComboBox;
     KLineEdit *mSenderEdit, *mToEdit, *mCcEdit, *mBccEdit;
     QTextEdit *mMailEdit;
     KJob *mCurrentJob;

@@ -22,7 +22,7 @@
 #include "transporttypedialog.h"
 #include "ui_transporttypedialog.h"
 
-using namespace KPIM;
+using namespace MailTransport;
 
 TransportTypeDialog::TransportTypeDialog(QWidget * parent) :
     KDialog( parent )

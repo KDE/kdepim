@@ -37,9 +37,9 @@
 
 #include <QButtonGroup>
 
-using namespace KPIM;
+using namespace MailTransport;
 
-class KPIM::TransportConfigDialog::Private
+class MailTransport::TransportConfigDialog::Private
 {
   public:
     Transport *transport;
@@ -49,7 +49,7 @@ class KPIM::TransportConfigDialog::Private
 
     KConfigDialogManager* manager;
     KLineEdit* passwordEdit;
-    ServerTest* serverTest;
+    KPIM::ServerTest* serverTest;
     QButtonGroup* encryptionGroup;
     QButtonGroup* authGroup;
 
@@ -164,7 +164,7 @@ void TransportConfigDialog::checkSmtpCapabilities()
   Q_ASSERT( d->transport->type() == Transport::EnumType::SMTP );
 
   delete d->serverTest;
-  d->serverTest = new ServerTest( SMTP_PROTOCOL, d->smtp.kcfg_host->text(), d->smtp.kcfg_port->value() );
+  d->serverTest = new KPIM::ServerTest( SMTP_PROTOCOL, d->smtp.kcfg_host->text(), d->smtp.kcfg_port->value() );
   connect( d->serverTest,
            SIGNAL( capabilities(QStringList,QStringList,QString,QString,QString)),
            SLOT( smtpCapabilities(QStringList,QStringList,QString,QString,QString)) );

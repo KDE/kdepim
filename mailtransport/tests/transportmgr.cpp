@@ -31,7 +31,7 @@
 #include <QPushButton>
 #include <QTextEdit>
 
-using namespace KPIM;
+using namespace MailTransport;
 
 TransportMgr::TransportMgr() :
     mCurrentJob( 0 )

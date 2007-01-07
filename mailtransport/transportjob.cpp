@@ -24,9 +24,9 @@
 
 #include <qbuffer.h>
 
-using namespace KPIM;
+using namespace MailTransport;
 
-class KPIM::TransportJob::Private
+class MailTransport::TransportJob::Private
 {
   public:
     Transport* transport;
@@ -117,7 +117,7 @@ QBuffer* TransportJob::buffer()
   return d->buffer;
 }
 
-void KPIM::TransportJob::start()
+void TransportJob::start()
 {
   if ( !transport()->isValid() ) {
     setError( UserDefinedError );

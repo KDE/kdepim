@@ -20,14 +20,14 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KPIM_PRECOMMANDJOB_H
-#define KPIM_PRECOMMANDJOB_H
+#ifndef MAILTRANSPORT_PRECOMMANDJOB_H
+#define MAILTRANSPORT_PRECOMMANDJOB_H
 
 #include <kjob.h>
 
 class KProcess;
 
-namespace KPIM {
+namespace MailTransport {
 
 /**
   Job to execute commands before connecting to an account.

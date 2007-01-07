@@ -19,13 +19,13 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KPIM_TRANSPORTCONFIGDIALOG_H
-#define KPIM_TRANSPORTCONFIGDIALOG_H
+#ifndef MAILTRANSPORT_TRANSPORTCONFIGDIALOG_H
+#define MAILTRANSPORT_TRANSPORTCONFIGDIALOG_H
 
 #include <mailtransport/mailtransport_export.h>
 #include <kdialog.h>
 
-namespace KPIM {
+namespace MailTransport {
 
 class Transport;
 

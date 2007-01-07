@@ -19,8 +19,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KPIM_SMTPJOB_H
-#define KPIM_SMTPJOB_H
+#ifndef MAILTRANSPORT_SMTPJOB_H
+#define MAILTRANSPORT_SMTPJOB_H
 
 #include <mailtransport/transportjob.h>
 
@@ -29,7 +29,7 @@ class Job;
 class Slave;
 }
 
-namespace KPIM {
+namespace MailTransport {
 
 /**
   Mail transport job for SMTP.

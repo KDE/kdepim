@@ -34,7 +34,7 @@
 #include <qbuffer.h>
 #include <qhash.h>
 
-using namespace KPIM;
+using namespace MailTransport;
 
 static int slavePoolRef = 0;
 static QHash<int,KIO::Slave*> slavePool;

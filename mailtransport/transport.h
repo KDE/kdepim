@@ -17,15 +17,15 @@
     02110-1301, USA.
 */
 
-#ifndef KPIM_TRANSPORT_H
-#define KPIM_TRANSPORT_H
+#ifndef MAILTRANSPORT_TRANSPORT_H
+#define MAILTRANSPORT_TRANSPORT_H
 
 #include <mailtransport/transportbase.h>
 #include <mailtransport/mailtransport_export.h>
 
 #include <kconfigbase.h>
 
-namespace KPIM {
+namespace MailTransport {
 
 /**
   Represents the settings of a specific mail transport.

@@ -19,14 +19,14 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KPIM_SENDMAILJOB_H
-#define KPIM_SENDMAILJOB_H
+#ifndef MailTransport_SENDMAILJOB_H
+#define MailTransport_SENDMAILJOB_H
 
 #include <mailtransport/transportjob.h>
 
 class KProcess;
 
-namespace KPIM {
+namespace MailTransport {
 
 /**
   Mail transport job for sendmail.
