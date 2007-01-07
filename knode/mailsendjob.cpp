@@ -15,12 +15,17 @@
 #include "knarticle.h"
 #include "knserverinfo.h"
 
+#include <mailtransport/transportmanager.h>
+#include <mailtransport/transportjob.h>
+
 #include <kdebug.h>
 #include <kio/job.h>
 
+using namespace MailTransport;
 
-KNode::MailSendJob::MailSendJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
-  KNJobData( KNJobData::JTmail, c, a, i )
+KNode::MailSendJob::MailSendJob( KNJobConsumer * c, int transportId, KNJobItem * i ) :
+  KNJobData( KNJobData::JTmail, c, 0, i ),
+  mTransportId( transportId )
 {
 }
 
@@ -28,27 +33,23 @@ void KNode::MailSendJob::execute()
 {
   KNLocalArticle *art = static_cast<KNLocalArticle*>( data() );
 
-  // create url query part
-  QStringList query;
-  query << "headers=0";
-  query << "from=" + KUrl::toPercentEncoding( art->from()->addresses().first() );
-  QList<QByteArray> emails = art->to()->addresses();
-  foreach ( QByteArray to, emails )
-    query << "to=" + KUrl::toPercentEncoding( to );
+  TransportJob* job = TransportManager::self()->createTransportJob( mTransportId );
+  if ( !job )
+    // TODO: error handling
+    ;
 
-  // create url
-  KUrl destination = baseUrl();
-  if ( account()->encryption() == KNServerInfo::SSL )
-    destination.setProtocol( "smtps" );
-  else
-    destination.setProtocol( "smtp" );
-  destination.setQuery( query.join( "&" ) );
-  kDebug(5003) << k_funcinfo << destination << endl;
+  job->setData( art->encodedContent( true ) );
+  job->setSender( art->from()->addresses().first() );
 
-  // create job
-  KIO::Job* job = KIO::storedPut( art->encodedContent( true ), destination, -1, false, false, false );
+  // FIXME
+  QStringList to;
+  foreach ( QByteArray b, art->to()->addresses() )
+    to << QString::fromLatin1( b );
+  job->setTo( to );
+
   connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
-  setupKIOJob( job );
+  setupKJob( job );
+  TransportManager::self()->schedule( job );
 }
 
 void KNode::MailSendJob::slotResult( KJob * job )

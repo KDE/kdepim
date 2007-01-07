@@ -165,9 +165,10 @@ void KNode::ArticleListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList
   mArticleList += list;
 }
 
-void KNode::ArticleListJob::slotResult( KJob * job )
+void KNode::ArticleListJob::slotResult( KJob * _job )
 {
-  Q_ASSERT( mJob == job );
+  Q_ASSERT( mJob == _job );
+  KIO::Job *job = static_cast<KIO::Job*>( _job );
   if ( job->error() )
     setError( job->error(), job->errorString() );
   else {
@@ -176,15 +177,15 @@ void KNode::ArticleListJob::slotResult( KJob * job )
 
     setStatus( i18n("Sorting...") );
 
-    if ( mJob->metaData().contains( "FirstSerialNumber" ) ) {
-      int firstSerNum = mJob->metaData()["FirstSerialNumber"].toInt();
+    if ( job->metaData().contains( "FirstSerialNumber" ) ) {
+      int firstSerNum = job->metaData()["FirstSerialNumber"].toInt();
       target->setFirstNr( firstSerNum );
     }
 
     target->insortNewHeaders( mArticleList );
 
-    if ( mJob->metaData().contains( "LastSerialNumber" ) ) {
-      int lastSerNum = mJob->metaData()["LastSerialNumber"].toInt();
+    if ( job->metaData().contains( "LastSerialNumber" ) ) {
+      int lastSerNum = job->metaData()["LastSerialNumber"].toInt();
       target->setLastNr( lastSerNum );
     }
   }

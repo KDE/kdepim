@@ -26,7 +26,7 @@
 class KJob;
 
 namespace KIO {
-  class Job;
+class Job;
 }
 
 class KNJobData;
@@ -175,6 +175,12 @@ class KNJobData : public QObject
      */
     KUrl baseUrl() const;
 
+    /**
+      Connects progress signals.
+      @param job The KJob to setup.
+    */
+    void setupKJob( KJob *job );
+
     /** Sets TLS metadata and connects the given KIO job to the progress item.
      *  @param job The KIO job to setup.
      */
@@ -191,8 +197,8 @@ class KNJobData : public QObject
     /** Cancel status flag. */
     bool mCanceled;
     KNJobConsumer *c_onsumer;
-    /** An associated KIO job. */
-    KIO::Job *mJob;
+    /** An associated KJob. */
+    KJob *mJob;
     /** The progress item representing this job to the user. */
     KPIM::ProgressItem *mProgressItem;
 

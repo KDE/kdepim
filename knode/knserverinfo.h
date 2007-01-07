@@ -24,11 +24,10 @@ namespace KWallet {
 using KWallet::Wallet;
 
 
-/** Represents an account on a mail or news server. */
+/** Represents an account on a news server. */
 class KNServerInfo {
 
   public:
-    enum serverType { STnntp, STsmtp, STpop3 };
     enum Encryption { None, SSL, TLS };
 
     KNServerInfo();
@@ -38,7 +37,6 @@ class KNServerInfo {
     void saveConf(KConfig *conf);
 
     //get
-    serverType type()const         { return t_ype; }
     int id()const                  { return i_d; }
     const QString& server()   { return s_erver; }
     const QString& user()     { return u_ser; }
@@ -50,7 +48,6 @@ class KNServerInfo {
     Encryption encryption() const { return mEncryption; }
 
     //set
-    void setType(serverType t)        { t_ype=t; }
     void setId(int i)                 { i_d=i; }
     void setServer(const QString &s)  { s_erver=s; }
     void setUser(const QString &s)    { u_ser=s; }
@@ -65,8 +62,6 @@ class KNServerInfo {
     void readPassword();
 
   protected:
-    serverType t_ype;
-
     QString  s_erver,
              u_ser,
              p_ass;

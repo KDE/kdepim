@@ -38,13 +38,6 @@ KNAccountManager::KNAccountManager( KNGroupManager *gm, QObject * parent )
   : QObject( parent ), gManager( gm ), c_urrentAccount( 0 ),
   mAsyncOpening( false )
 {
-  s_mtp = new KNServerInfo();
-  s_mtp->setType(KNServerInfo::STsmtp);
-  s_mtp->setId(0);
-  KConfig *conf = knGlobals.config();
-  conf->setGroup("MAILSERVER");
-  s_mtp->readConf(conf);
-
   loadAccounts();
 }
 
@@ -53,7 +46,6 @@ KNAccountManager::~KNAccountManager()
 {
   qDeleteAll( mAccounts );
   mAccounts.clear();
-  delete s_mtp;
   delete mWallet;
   mWallet = 0;
 }
@@ -241,7 +233,6 @@ void KNAccountManager::loadPasswordsAsync()
 
 void KNAccountManager::loadPasswords()
 {
-  s_mtp->readPassword();
   for ( List::Iterator it = mAccounts.begin(); it != mAccounts.end(); ++it )
     (*it)->readPassword();
   emit passwordsChanged();

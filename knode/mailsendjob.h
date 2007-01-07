@@ -24,12 +24,15 @@ class MailSendJob : public KNJobData
 {
   Q_OBJECT
   public:
-    MailSendJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
+    MailSendJob( KNJobConsumer *c, int transportId, KNJobItem *i );
 
     virtual void execute();
 
   private slots:
     void slotResult( KJob *job );
+
+  private:
+    int mTransportId;
 };
 
 }

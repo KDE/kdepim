@@ -46,7 +46,7 @@ Scheduler::~Scheduler()
 void Scheduler::addJob(KNJobData *job)
 {
   // kDebug(5003) << "Scheduler::addJob() : job queued" << endl;
-  if(job->account()==0) {
+  if ( job->type() != KNJobData::JTmail && job->account() == 0 ) {
     job->setError( KIO::ERR_INTERNAL, i18n("Internal Error: No account set for this job.") );
     job->notifyConsumer();
     return;
@@ -57,7 +57,7 @@ void Scheduler::addJob(KNJobData *job)
   emit netActive( true );
 
   // put jobs which are waiting for the wallet into an extra queue
-  if ( !job->account()->readyForLogin() ) {
+  if ( job->account() && !job->account()->readyForLogin() ) {
     kDebug(5003) << k_funcinfo << "Job waits for KWallet." << endl;
     mWalletQueue.append( job );
     knGlobals.accountManager()->loadPasswordsAsync();

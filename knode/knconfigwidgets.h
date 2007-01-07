@@ -189,28 +189,6 @@ class KDE_EXPORT NntpAccountConfDialog : public KPageDialog, private Ui::NntpAcc
 };
 
 
-/** Configuration dialog for the SMTP account */
-class KDE_EXPORT SmtpAccountWidget : public KCModule, private Ui::SmtpAccountWidgetBase {
-
-Q_OBJECT
-
-  public:
-    SmtpAccountWidget( KInstance *inst, QWidget *parent = 0 );
-    ~SmtpAccountWidget() {}
-
-    virtual void load();
-    virtual void save();
-
-  protected slots:
-    void useExternalMailerToggled( bool b );
-    void loginToggled( bool b );
-    void slotPasswordChanged();
-
-  protected:
-    KNServerInfo  *mAccount;
-};
-
-
 /** Appearance configuration widget. */
 class KDE_EXPORT AppearanceWidget : public KCModule
 {

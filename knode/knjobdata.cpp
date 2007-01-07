@@ -110,9 +110,19 @@ void KNJobData::emitFinished()
   QTimer::singleShot( 0, this, SLOT(slotEmitFinished()) );
 }
 
-void KNJobData::setupKIOJob( KIO::Job *job )
+void KNJobData::setupKJob(KJob * job)
 {
   mJob = job;
+  if ( job ) {
+    connect( job, SIGNAL( percent(KJob*, unsigned long) ),
+             SLOT( slotJobPercent(KJob*, unsigned long) ) );
+    connect( job, SIGNAL( infoMessage(KJob*, const QString&) ),
+             SLOT( slotJobInfoMessage(KJob*, const QString&) ) );
+  }
+}
+
+void KNJobData::setupKIOJob( KIO::Job *job )
+{
   if ( job ) {
     if ( account() ) {
       if ( account()->encryption() == KNServerInfo::TLS )
@@ -120,11 +130,8 @@ void KNJobData::setupKIOJob( KIO::Job *job )
       else
         job->addMetaData( "tls", "off" );
     }
-    connect( job, SIGNAL( percent(KJob*, unsigned long) ),
-             SLOT( slotJobPercent(KJob*, unsigned long) ) );
-    connect( job, SIGNAL( infoMessage(KJob*, const QString&) ),
-             SLOT( slotJobInfoMessage(KJob*, const QString&) ) );
   }
+  setupKJob( job );
 }
 
 void KNJobData::createProgressItem()

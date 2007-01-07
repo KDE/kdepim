@@ -73,8 +73,6 @@ class KNAccountManager : public QObject
     bool hasCurrentAccount() const { return c_urrentAccount != 0; }
     /** Returns the current account. */
     KNNntpAccount* currentAccount() const       { return c_urrentAccount; }
-    /** Returns the SMPT account. */
-    KNServerInfo* smtp() const                 { return s_mtp; }
     /** Returns the account with the given id. */
     KNNntpAccount* account( int id );
     /** Returns the list of all accounts. */
@@ -94,7 +92,6 @@ class KNAccountManager : public QObject
     void loadAccounts();
     KNGroupManager *gManager;
     KNNntpAccount *c_urrentAccount;
-    KNServerInfo *s_mtp;
 
   signals:
     void accountAdded(KNNntpAccount *a);

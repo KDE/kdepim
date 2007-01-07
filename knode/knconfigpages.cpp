@@ -16,6 +16,7 @@
 #include <QVBoxLayout>
 
 #include <kcmodule.h>
+#include <kcmoduleloader.h>
 #include <kdebug.h>
 #include <klocale.h>
 
@@ -101,7 +102,8 @@ KNode::AccountsPage::AccountsPage( KInstance *inst,QWidget *parent )
   : KCMTabContainer( inst,parent ) {
 
   addTab( new NntpAccountListWidget( inst, this ), i18n("Newsgroup Servers") );
-  addTab( new SmtpAccountWidget( inst, this ), i18n("Mail Server (SMTP)") );
+  addTab( KCModuleLoader::loadModule( "kcm_mailtransport", KCModuleLoader::Inline, this ),
+          i18n("Mail Server (SMTP)") );
 }
 
 

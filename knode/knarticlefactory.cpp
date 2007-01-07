@@ -26,6 +26,8 @@
 #include <ktoolinvocation.h>
 #include <kvbox.h>
 
+#include <mailtransport/transportmanager.h>
+
 #include "knarticlefactory.h"
 #include "knconfigmanager.h"
 #include "knglobals.h"
@@ -43,6 +45,7 @@
 #include "settings.h"
 
 using namespace KNode;
+using namespace MailTransport;
 
 KNArticleFactory::KNArticleFactory( QObject *parent )
   : QObject( parent ), s_endErrDlg(0)
@@ -658,8 +661,8 @@ void KNArticleFactory::sendArticles( KNLocalArticle::List &l, bool now )
       emitJob(job);
     }
     else if( (*it)->doMail() && !(*it)->mailed() ) {
-      ser = knGlobals.accountManager()->smtp();
-      job = new MailSendJob( this, ser, (*it) );
+      int transportId = TransportManager::self()->defaultTransportId();
+      job = new MailSendJob( this, transportId, (*it) );
       emitJob(job);
     }
   }

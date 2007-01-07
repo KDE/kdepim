@@ -28,7 +28,7 @@ using namespace KWallet;
 #include <QWidget>
 
 KNServerInfo::KNServerInfo() :
-  t_ype( STnntp ), i_d( -1 ), p_ort( 119 ),
+  i_d( -1 ), p_ort( 119 ),
   n_eedsLogon( false ), p_assDirty( false ),
   mPassLoaded( false ),
   mEncryption( None )
@@ -46,14 +46,8 @@ KNServerInfo::~KNServerInfo()
 void KNServerInfo::readConf(KConfig *conf)
 {
   s_erver=conf->readEntry("server", "localhost");
-
-  if(t_ype==STnntp)
-    p_ort=conf->readEntry("port", 119);
-  else
-    p_ort=conf->readEntry("port", 25);
-
-  if(t_ype==STnntp)
-    i_d=conf->readEntry("id", -1);
+  p_ort=conf->readEntry("port", 119);
+  i_d=conf->readEntry("id", -1);
 
   n_eedsLogon=conf->readEntry("needsLogon",false);
   u_ser=conf->readEntry("user");
@@ -87,8 +81,7 @@ void KNServerInfo::saveConf(KConfig *conf)
   conf->writeEntry("server", s_erver);
   if ( p_ort == 0 ) p_ort = 119;
   conf->writeEntry("port", p_ort);
-  if (t_ype==STnntp)
-    conf->writeEntry("id", i_d);
+  conf->writeEntry("id", i_d);
 
   conf->writeEntry("needsLogon", n_eedsLogon);
   conf->writeEntry("user", u_ser);
@@ -131,8 +124,7 @@ void KNServerInfo::saveConf(KConfig *conf)
 
 bool KNServerInfo::operator==(const KNServerInfo &s)
 {
-  return (  (t_ype==s.t_ype)  &&
-            (s_erver==s.s_erver) &&
+  return (  (s_erver==s.s_erver) &&
             (p_ort==s.p_ort) &&
             (n_eedsLogon==s.n_eedsLogon) &&
             (u_ser==s.u_ser) &&

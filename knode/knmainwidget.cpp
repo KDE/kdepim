@@ -89,7 +89,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   m_GUIClient( client )
 {
   (void) new KnodeAdaptor( this );
-  QDBusConnection::sessionBus().registerObject("/KNode", this);       
+  QDBusConnection::sessionBus().registerObject("/KNode", this);
   knGlobals.top=this;
   knGlobals.guiClient=client;
   knGlobals.topWidget=this;
@@ -755,11 +755,12 @@ bool KNMainWidget::firstStart()
   id->setReplyTo(emailConf.readEntry("ReplyAddr"));
   id->save();
 
-  KNServerInfo *smtp=knGlobals.accountManager()->smtp();
+#warning Port me!
+/*  KNServerInfo *smtp=knGlobals.accountManager()->smtp();
   smtp->setServer(emailConf.readEntry("OutgoingServer").toLatin1());
   smtp->setPort(25);
   conf->setGroup("MAILSERVER");
-  smtp->saveConf(conf);
+  smtp->saveConf(conf);*/
 
   conf->setGroup("GENERAL");
   conf->writeEntry("Version", KNODE_VERSION);

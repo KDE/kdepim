@@ -71,7 +71,7 @@ class ArticleListJob : public KNJobData
 
   private slots:
     void slotEntries( KIO::Job *job, const KIO::UDSEntryList &list );
-    void slotResult( KJob *job );
+    void slotResult( KJob *_job );
 
   private:
     KIO::UDSEntryList mArticleList;

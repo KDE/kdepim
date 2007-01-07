@@ -1,62 +1,62 @@
 project(knode)
-add_subdirectory( pics ) 
-add_subdirectory( filters ) 
+add_subdirectory( pics )
+add_subdirectory( filters )
 
 include_directories( ${KDE4_INCLUDE_DIR} ${CMAKE_BINARY_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkpgp )
 
 
 ########### next target ###############
 
-set(knodecommon_LIB_SRCS 
-   knconfigmanager.cpp 
-   knconfig.cpp 
-   knconfigwidgets.cpp 
-   settings.cpp 
-   scheduler.cpp 
-   knjobdata.cpp 
-   mailsendjob.cpp 
-   nntpjobs.cpp 
-   knaccountmanager.cpp 
-   kncollection.cpp 
-   kncollectionviewitem.cpp 
-   knserverinfo.cpp 
-   knnntpaccount.cpp 
-   kngroupmanager.cpp 
-   knarticlecollection.cpp 
-   kngroup.cpp 
-   kngroupbrowser.cpp 
-   kngroupselectdialog.cpp 
-   kngroupdialog.cpp 
-   kngrouppropdlg.cpp 
-   knfoldermanager.cpp 
-   knfolder.cpp 
-   knmemorymanager.cpp 
-   kncleanup.cpp 
-   knconvert.cpp 
-   knarticlemanager.cpp 
-   knarticle.cpp 
-   kndisplayedheader.cpp 
-   knsourceviewwindow.cpp 
-   knarticlewindow.cpp 
-   knhdrviewitem.cpp 
-   kncomposer.cpp 
-   knarticlefactory.cpp 
-   knfiltermanager.cpp 
-   knstatusfilter.cpp 
-   knstringfilter.cpp 
-   knrangefilter.cpp 
-   knarticlefilter.cpp 
-   knfilterconfigwidget.cpp 
-   knfilterdialog.cpp 
-   knsearchdialog.cpp 
-   utilities.cpp 
-   knscoring.cpp 
-   headerview.cpp 
-   knmainwidget.cpp 
-   aboutdata.cpp 
-   knglobals.cpp 
-   kncollectionview.cpp 
-   articlewidget.cpp 
+set(knodecommon_LIB_SRCS
+   knconfigmanager.cpp
+   knconfig.cpp
+   knconfigwidgets.cpp
+   settings.cpp
+   scheduler.cpp
+   knjobdata.cpp
+   mailsendjob.cpp
+   nntpjobs.cpp
+   knaccountmanager.cpp
+   kncollection.cpp
+   kncollectionviewitem.cpp
+   knserverinfo.cpp
+   knnntpaccount.cpp
+   kngroupmanager.cpp
+   knarticlecollection.cpp
+   kngroup.cpp
+   kngroupbrowser.cpp
+   kngroupselectdialog.cpp
+   kngroupdialog.cpp
+   kngrouppropdlg.cpp
+   knfoldermanager.cpp
+   knfolder.cpp
+   knmemorymanager.cpp
+   kncleanup.cpp
+   knconvert.cpp
+   knarticlemanager.cpp
+   knarticle.cpp
+   kndisplayedheader.cpp
+   knsourceviewwindow.cpp
+   knarticlewindow.cpp
+   knhdrviewitem.cpp
+   kncomposer.cpp
+   knarticlefactory.cpp
+   knfiltermanager.cpp
+   knstatusfilter.cpp
+   knstringfilter.cpp
+   knrangefilter.cpp
+   knarticlefilter.cpp
+   knfilterconfigwidget.cpp
+   knfilterdialog.cpp
+   knsearchdialog.cpp
+   utilities.cpp
+   knscoring.cpp
+   headerview.cpp
+   knmainwidget.cpp
+   aboutdata.cpp
+   knglobals.cpp
+   kncollectionview.cpp
+   articlewidget.cpp
    csshelper.cpp
    keditcl1.cpp keditcl2.cpp )
 
@@ -65,21 +65,20 @@ qt4_add_dbus_adaptor( knodecommon_LIB_SRCS org.kde.knode.xml knmainwidget.h KNMa
 
 kde4_automoc(${knodecommon_LIB_SRCS})
 
-kde4_add_ui_files(knodecommon_LIB_SRCS 
-   smtpaccountwidget_base.ui 
-   nntpaccountdialog_base.ui 
-   nntpaccountlistwidget_base.ui 
-   readnewsgeneralwidget_base.ui 
-   readnewsnavigationwidget_base.ui 
-   readnewsviewerwidget_base.ui 
-   postnewstechnicalwidget_base.ui 
+kde4_add_ui_files(knodecommon_LIB_SRCS
+   nntpaccountdialog_base.ui
+   nntpaccountlistwidget_base.ui
+   readnewsgeneralwidget_base.ui
+   readnewsnavigationwidget_base.ui
+   readnewsviewerwidget_base.ui
+   postnewstechnicalwidget_base.ui
    postnewscomposerwidget_base.ui )
 
 kde4_add_kcfg_files(knodecommon_LIB_SRCS settings_base.kcfgc )
 
 kde4_add_library(knodecommon SHARED ${knodecommon_LIB_SRCS})
 
-target_link_libraries(knodecommon  ${KDE4_KDEPRINT_LIBS} kwalletclient ${KDE4_KMIME_LIBS} kpgp kdepim ${KDE4_KUTILS_LIBS} ${KDE4_KHTML_LIBS} )
+target_link_libraries(knodecommon  ${KDE4_KDEPRINT_LIBS} kwalletclient ${KDE4_KMIME_LIBS} kpgp kdepim ${KDE4_KUTILS_LIBS} ${KDE4_KHTML_LIBS} mailtransport)
 
 set_target_properties(knodecommon PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS knodecommon  DESTINATION ${LIB_INSTALL_DIR})
