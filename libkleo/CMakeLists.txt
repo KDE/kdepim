@@ -61,7 +61,6 @@ set(libkleopatra_ui_SRCS
    ${CMAKE_SOURCE_DIR}/libkleo/ui/keylistview.cpp 
    ${CMAKE_SOURCE_DIR}/libkleo/ui/keyselectiondialog.cpp 
    ${CMAKE_SOURCE_DIR}/libkleo/ui/keyrequester.cpp 
-   ${CMAKE_SOURCE_DIR}/libkleo/ui/passphrasedialog.cpp 
    ${CMAKE_SOURCE_DIR}/libkleo/ui/keyapprovaldialog.cpp 
    ${CMAKE_SOURCE_DIR}/libkleo/ui/backendconfigwidget.cpp 
    ${CMAKE_SOURCE_DIR}/libkleo/ui/dnattributeorderconfigwidget.cpp 

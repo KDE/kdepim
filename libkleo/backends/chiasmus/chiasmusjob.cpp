@@ -39,7 +39,6 @@
 #include "symcryptrunprocessbase.h"
 
 #include "kleo/cryptoconfig.h"
-#include "ui/passphrasedialog.h"
 
 #include <gpg-error.h>
 

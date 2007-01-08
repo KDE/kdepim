@@ -47,6 +47,7 @@
 #include <kwin.h>
 #include <kpushbutton.h>
 #include <kglobalsettings.h>
+#include <klineedit.h>
 
 #include "kpgp.h"
 #include "kpgpui.h"
@@ -62,40 +63,17 @@ namespace Kpgp {
 PassphraseDialog::PassphraseDialog( QWidget *parent,
                                     const QString &caption, 
                                     const QString &keyID )
-  :KDialog( parent )
+  :KPasswordDialog( parent )
 {
   setCaption( caption );
   setButtons( Ok|Cancel );
 
-  KHBox *hbox = new KHBox( this );
-  setMainWidget( hbox );
-  
-  hbox->setSpacing( spacingHint() );
-  hbox->setMargin( marginHint() );
-
-  QLabel *label = new QLabel(hbox);
-  label->setPixmap( BarIcon("pgp-keys") );
-
-  QWidget *rightArea = new QWidget( hbox );
-  QVBoxLayout *vlay = new QVBoxLayout( rightArea );
-  vlay->setSpacing( spacingHint() );
-  vlay->setMargin( 0 );
+  setPixmap( BarIcon("pgp-keys") );
 
   if (keyID.isNull())
-    label = new QLabel(i18n("Please enter your OpenPGP passphrase:"),rightArea);
+    setPrompt(i18n("Please enter your OpenPGP passphrase:"));
   else
-    label = new QLabel(i18n("Please enter the OpenPGP passphrase for\n\"%1\":", keyID),
-                       rightArea);
-  lineedit = new KPasswordEdit( rightArea );
-  lineedit->setEchoMode(QLineEdit::Password);
-  lineedit->setMinimumWidth( fontMetrics().maxWidth()*20 );
-  lineedit->setFocus();
-  connect( lineedit, SIGNAL(returnPressed()), this, SLOT(slotOk()) );
-
-  vlay->addWidget( label );
-  vlay->addWidget( lineedit );
-
-//   disableResize();
+    setPrompt(i18n("Please enter the OpenPGP passphrase for\n\"%1\":", keyID) );
 }
 
 
@@ -103,9 +81,9 @@ PassphraseDialog::~PassphraseDialog()
 {
 }
 
-const char * PassphraseDialog::passphrase()
+QString PassphraseDialog::passphrase()
 {
-  return lineedit->password();
+  return password();
 }
 
 

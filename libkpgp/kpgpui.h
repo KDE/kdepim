@@ -29,6 +29,7 @@
 #include <QString>      // is a member in KeyRequester
 #include <QVector> // used in KeyApprovalDialog
 #include <Q3PtrVector>
+#include <kpassworddialog.h>
 #include "kpgp.h"
 
 #include <kdepim_export.h>
@@ -54,7 +55,7 @@ class Key;                  // needed by KeySelectionDialog
 class KeyIDList;            // needed by KeySelectionDialog
 
 /** the passphrase dialog */
-class KPGP_EXPORT PassphraseDialog : public KDialog
+class KPGP_EXPORT PassphraseDialog : public KPasswordDialog
 {
   Q_OBJECT
 
@@ -63,10 +64,7 @@ class KPGP_EXPORT PassphraseDialog : public KDialog
                       const QString &keyID=QString());
     virtual ~PassphraseDialog();
 
-    const char * passphrase();
-
-  private:
-    KPasswordEdit *lineedit;
+    QString passphrase();
 };
 
 

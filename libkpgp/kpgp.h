@@ -335,7 +335,7 @@ private:
   KeyIDList getEncryptionKeys( const QString& person );
 
   /** Set pass phrase */
-  bool setPassPhrase(const char* pass);
+  bool setPassPhrase(const QString &pass);
 
   /** test if the PGP executable is found and if there is a passphrase
       set or given. Returns:

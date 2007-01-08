@@ -210,7 +210,7 @@ Module::prepare( bool needPassPhrase, Block* block )
       QApplication::restoreOverrideCursor();
       if (passdlgResult == QDialog::Accepted) {
         if (!setPassPhrase(passdlg.passphrase())) {
-          if (strlen(passdlg.passphrase()) >= 1024)
+          if ( passdlg.passphrase().length() >= 1024)
              errMsg = i18n("Passphrase is too long, it must contain fewer than 1024 characters.");
           else
              errMsg = i18n("Out of memory.");
@@ -838,15 +838,15 @@ Module::getAsciiPublicKey(const KeyID& keyID)
 }
 
 
-bool Module::setPassPhrase(const char * aPass)
+bool Module::setPassPhrase(const QString& aPass)
 {
   // null out old buffer before we touch the new string.  So in case
   // aPass isn't properly null-terminated, we don't leak secret data.
   wipePassPhrase();
 
-  if (aPass)
+  if (!aPass.isNull())
   {
-    size_t newlen = strlen( aPass );
+    size_t newlen = aPass.length();
     if ( newlen >= 1024 ) {
       // rediculously long passphrase.
       // Maybe someone wants to trick us in malloc()'ing
@@ -865,7 +865,7 @@ bool Module::setPassPhrase(const char * aPass)
 	return false;
       }
     }
-    memcpy( passphrase, aPass, newlen + 1 );
+    memcpy( passphrase, aPass.toLocal8Bit().data(), newlen + 1 );
     havePassPhrase = true;
   }
   return true;

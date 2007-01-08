@@ -38,7 +38,7 @@
 #include "qgpgmeprogresstokenmapper.h"
 
 #include <kleo/job.h>
-#include <ui/passphrasedialog.h>
+#include <kpassworddialog.h>
 
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
@@ -48,6 +48,8 @@
 
 #include <klocale.h>
 #include <kstandarddirs.h>
+#include <kiconloader.h>
+
 
 #include <QString>
 #include <QStringList>
@@ -276,12 +278,15 @@ char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*d
            QString("http://kmail.kde.org/kmail-pgpmime-howto.html") );
   msg += "<br/><br/>";
   msg += i18n( "Enter passphrase:" );
-  Kleo::PassphraseDialog dlg( msg, i18n("Passphrase Dialog") );
+  KPasswordDialog dlg;
+  dlg.setPrompt(msg);
+  dlg.setPixmap( DesktopIcon( "pgp-keys", K3Icon::SizeMedium ) );
+  dlg.setCaption( i18n("Passphrase Dialog") );
   if ( dlg.exec() != QDialog::Accepted ) {
     canceled = true;
     return 0;
   }
   canceled = false;
   // gpgme++ free()s it, and we need to copy as long as dlg isn't deleted :o
-  return strdup( dlg.passphrase() );
+  return strdup( dlg.password().toLocal8Bit() );
 }
