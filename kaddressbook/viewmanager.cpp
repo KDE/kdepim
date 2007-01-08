@@ -33,7 +33,6 @@
 #include <kabc/addressbook.h>
 #include <kabc/vcardconverter.h>
 
-#include <kapplication.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kdeversion.h>
@@ -502,7 +501,7 @@ void ViewManager::startDrag()
     }
   }
 
-  drag->setPixmap( kapp->iconLoader()->loadIcon( "vcard", K3Icon::Desktop ) );
+  drag->setPixmap( KIconLoader::global()->loadIcon( "vcard", K3Icon::Desktop ) );
   drag->start();
 }
 

@@ -33,7 +33,6 @@
 #include <kdebug.h>
 #include <kdialog.h>
 #include <kiconloader.h>
-#include <kapplication.h>
 #include <klocale.h>
 
 #include <QLayout>
@@ -57,7 +56,7 @@ extern "C" {
 CryptoWidgetFactory::CryptoWidgetFactory()
 {
   KGlobal::locale()->insertCatalog( "libkleopatra" );
-  kapp->iconLoader()->addAppDir( "libkleopatra" );
+  KIconLoader::global()->addAppDir( "libkleopatra" );
 }
 
 QString CryptoWidgetFactory::pageTitle() const

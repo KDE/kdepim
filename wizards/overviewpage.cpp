@@ -28,7 +28,6 @@
 #include <kdialog.h>
 #include <kglobal.h>
 #include <kiconloader.h>
-#include <kapplication.h>
 #include <klocale.h>
 #include <kpushbutton.h>
 #include <KStandardGuiItem>
@@ -54,7 +53,7 @@ OverViewPage::OverViewPage( QWidget *parent, const char *name )
   layout->addWidget( label, 0, 0, 1, 3 );
 
   label = new QLabel( this );
-  label->setPixmap( kapp->iconLoader()->loadIcon( "network", K3Icon::Desktop ) );
+  label->setPixmap( KIconLoader::global()->loadIcon( "network", K3Icon::Desktop ) );
   layout->addWidget( label, 0, 3 );
 
   label = new QLabel( "", this );

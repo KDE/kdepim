@@ -39,7 +39,6 @@
 
 #include <kleo/cryptobackendfactory.h>
 
-#include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
 #include <klocale.h>
@@ -64,7 +63,7 @@ int main( int argc, char** argv )
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   KGlobal::locale()->insertCatalog( "libkleopatra" );
-  kapp->iconLoader()->addAppDir( "libkleopatra" );
+  KIconLoader::global()->addAppDir( "libkleopatra" );
 
   if( !Kleo::CryptoBackendFactory::instance()->smime() ) {
     KMessageBox::error(0,

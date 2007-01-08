@@ -35,12 +35,10 @@
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
-#include <kapplication.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kiconloader.h>
-#include <kapplication.h>
 #include <klocale.h>
 
 #include "core.h"
@@ -121,7 +119,7 @@ class AddresseeIconViewItem : public K3IconViewItem
         setText( mAddressee.givenName() + ' ' + mAddressee.familyName() );
 
       QPixmap icon;
-      QPixmap defaultIcon( kapp->iconLoader()->loadIcon( "vcard", K3Icon::Desktop ) );
+      QPixmap defaultIcon( KIconLoader::global()->loadIcon( "vcard", K3Icon::Desktop ) );
       KABC::Picture pic = mAddressee.photo();
       if ( pic.data().isNull() )
         pic = mAddressee.logo();

@@ -27,7 +27,6 @@
 #include <QPixmap>
 #include <QVBoxLayout>
 
-#include <kapplication.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kglobal.h>
@@ -53,7 +52,7 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
 
   // Add the first page, the attributes
   KVBox *page = addPage( i18n( "Fields" ), QString(),
-                         kapp->iconLoader()->loadIcon( "view_detailed",
+                         KIconLoader::global()->loadIcon( "view_detailed",
                          K3Icon::Panel ) );
 
   // Add the select fields page
@@ -61,7 +60,7 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
 
   // Add the second page, the filter selection
   page = addPage( i18n( "Default Filter" ), QString(),
-                  kapp->iconLoader()->loadIcon( "filter",
+                  KIconLoader::global()->loadIcon( "filter",
                   K3Icon::Panel ) );
 
   mFilterPage = new ViewConfigureFilterPage( page );

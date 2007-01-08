@@ -37,7 +37,6 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kiconloader.h>
-#include <kapplication.h>
 #include <QToolTip>
 
 KWatchGnuPGTray::KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin )
@@ -46,7 +45,7 @@ KWatchGnuPGTray::KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin )
   kDebug() << "KWatchGnuPGTray::KWatchGnuPGTray" << endl;
 
   setObjectName( "KWatchGnuPG Tray Window" );
-  kapp->iconLoader()->addAppDir( "kwatchgnupg" );
+  KIconLoader::global()->addAppDir( "kwatchgnupg" );
 
   mNormalPix = loadIcon("kwatchgnupg");
   mAttentionPix = loadIcon("kwatchgnupg2");

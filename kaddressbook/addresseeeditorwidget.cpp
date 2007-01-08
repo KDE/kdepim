@@ -39,7 +39,6 @@
 #include <kabc/resource.h>
 #include <kabc/stdaddressbook.h>
 #include <kacceleratormanager.h>
-#include <kapplication.h>
 #include <kconfig.h>
 #include <kcombobox.h>
 #include <kdebug.h>
@@ -148,7 +147,7 @@ void AddresseeEditorWidget::setupTab1()
 
   // Person icon
   label = new QLabel( tab1 );
-  label->setPixmap( kapp->iconLoader()->loadIcon( "personal", K3Icon::Desktop,
+  label->setPixmap( KIconLoader::global()->loadIcon( "personal", K3Icon::Desktop,
                                                       K3Icon::SizeMedium ) );
   layout->addWidget( label, 0, 0, 2, 1);
 
@@ -203,7 +202,7 @@ void AddresseeEditorWidget::setupTab1()
   //////////////////////////////////////
   // Phone numbers (upper right)
   label = new QLabel( tab1 );
-  label->setPixmap( kapp->iconLoader()->loadIcon( "kaddressbook",
+  label->setPixmap( KIconLoader::global()->loadIcon( "kaddressbook",
                     K3Icon::Desktop, K3Icon::SizeMedium ) );
   layout->addWidget( label, 0, 3, 2, 1 );
 
@@ -217,7 +216,7 @@ void AddresseeEditorWidget::setupTab1()
   //////////////////////////////////////
   // Addresses (lower left)
   label = new QLabel( tab1 );
-  label->setPixmap( kapp->iconLoader()->loadIcon( "kfm_home", K3Icon::Desktop,
+  label->setPixmap( KIconLoader::global()->loadIcon( "kfm_home", K3Icon::Desktop,
                                                      K3Icon::SizeMedium ) );
   layout->addWidget( label, 5, 0, 2, 1);
 
@@ -228,7 +227,7 @@ void AddresseeEditorWidget::setupTab1()
   //////////////////////////////////////
   // Email / Web (lower right)
   label = new QLabel( tab1 );
-  label->setPixmap( kapp->iconLoader()->loadIcon( "email", K3Icon::Desktop,
+  label->setPixmap( KIconLoader::global()->loadIcon( "email", K3Icon::Desktop,
                                                      K3Icon::SizeMedium ) );
   layout->addWidget( label, 5, 3, 2, 1);
 
@@ -245,7 +244,7 @@ void AddresseeEditorWidget::setupTab1()
   homePageLayout->setMargin( 11 );
 
   label = new QLabel( tab1 );
-  label->setPixmap( kapp->iconLoader()->loadIcon( "homepage", K3Icon::Desktop,
+  label->setPixmap( KIconLoader::global()->loadIcon( "homepage", K3Icon::Desktop,
                                                      K3Icon::SizeMedium ) );
   homePageLayout->addWidget( label );
 
@@ -320,7 +319,7 @@ void AddresseeEditorWidget::setupTab2()
 
   // Department
   label = new QLabel( tab2 );
-  label->setPixmap( kapp->iconLoader()->loadIcon( "folder", K3Icon::Desktop,
+  label->setPixmap( KIconLoader::global()->loadIcon( "folder", K3Icon::Desktop,
                                                      K3Icon::SizeMedium ) );
   layout->addWidget( label, 0, 0, 2, 1 );
 
@@ -379,7 +378,7 @@ void AddresseeEditorWidget::setupTab2()
   // Personal info
 
   label = new QLabel( tab2 );
-  label->setPixmap( kapp->iconLoader()->loadIcon( "personal", K3Icon::Desktop,
+  label->setPixmap( KIconLoader::global()->loadIcon( "personal", K3Icon::Desktop,
                                                      K3Icon::SizeMedium ) );
   layout->addWidget( label, 4, 0, 2, 1);
 

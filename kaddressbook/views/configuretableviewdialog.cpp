@@ -32,14 +32,12 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-#include <kapplication.h>
 #include <kdeversion.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <klineedit.h>
 #include <kurlrequester.h>
 #include <kiconloader.h>
-#include <kapplication.h>
 #include <kimageio.h>
 #include <kconfig.h>
 
@@ -50,7 +48,7 @@ ConfigureTableViewWidget::ConfigureTableViewWidget( KABC::AddressBook *ab,
   : ViewConfigureWidget( ab, parent )
 {
   QWidget *page = addPage( i18n( "Look & Feel" ), QString(),
-                           kapp->iconLoader()->loadIcon( "looknfeel",
+                           KIconLoader::global()->loadIcon( "looknfeel",
                            K3Icon::Panel ) );
 
   mPage = new LookAndFeelPage( page );

@@ -21,7 +21,6 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <kapplication.h>
 #include <kabc/geo.h>
 #include <kacceleratormanager.h>
 #include <kcombobox.h>
@@ -61,7 +60,7 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent )
   topLayout->setSpacing( KDialog::spacingHint() );
 
   label = new QLabel( this );
-  label->setPixmap( kapp->iconLoader()->loadIcon( "package_network",
+  label->setPixmap( KIconLoader::global()->loadIcon( "package_network",
                     K3Icon::Desktop, K3Icon::SizeMedium ) );
   label->setAlignment( Qt::AlignTop );
   topLayout->addWidget( label, 0, 0, 4, 1);

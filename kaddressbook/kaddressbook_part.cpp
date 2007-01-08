@@ -26,7 +26,6 @@
 #include <QVBoxLayout>
 
 #include <kaction.h>
-#include <kapplication.h>
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <kinstance.h>
@@ -58,7 +57,7 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, QObject *parent,
 
   QVBoxLayout *topLayout = new QVBoxLayout( canvas );
 
-  kapp->iconLoader()->addAppDir( "kaddressbook" );
+  KIconLoader::global()->addAppDir( "kaddressbook" );
 
   mCore = new KABCore( this, true, canvas );
   mCore->restoreSettings();
