@@ -127,7 +127,7 @@ protected:
 	 * @param menu The menu to be changed.
 	 * @param actions The actions to which the items should be added.
 	 */
-	void fillKMenu( KMenu* menu, KActionCollection* actions ) const;
+	void fillKMenu( KMenu* menu, KActionCollection* actions );
 
 	/**
 	 * This displays the passive popup.

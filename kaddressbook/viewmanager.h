@@ -155,7 +155,7 @@ class ViewManager : public QWidget
     QStackedWidget *mViewWidgetStack;
     KAddressBookView *mActiveView;
 
-    KAction *mActionDeleteView;
+    QAction *mActionDeleteView;
     KSelectAction *mActionSelectView;
 
     FilterSelectionWidget *mFilterSelectionWidget;

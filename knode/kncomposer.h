@@ -135,7 +135,7 @@ class KNComposer : public KMainWindow {
 
   //------------------------------ <Actions> -----------------------------
 
-    KAction       *a_ctExternalEditor,
+    QAction       *a_ctExternalEditor,
                   *a_ctSpellCheck,
                   *a_ctRemoveAttachment,
                   *a_ctAttachmentProperties,

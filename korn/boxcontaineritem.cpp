@@ -121,7 +121,7 @@ void BoxContainerItem::mouseButtonPressed( Qt::MouseButton state )
 		doPopup();
 }
 
-void BoxContainerItem::fillKMenu( KMenu* popupMenu, KActionCollection* actions ) const
+void BoxContainerItem::fillKMenu( KMenu* popupMenu, KActionCollection* actions )
 {
 	/*popupMenu->insertItem( i18n( "&Configure" ), this, SLOT( slotConfigure() ) );
 	popupMenu->insertItem( i18n( "&Recheck" ), this, SLOT( slotRecheck() ) );
@@ -129,19 +129,24 @@ void BoxContainerItem::fillKMenu( KMenu* popupMenu, KActionCollection* actions )
 	popupMenu->insertItem( i18n( "&View Emails" ), this, SLOT( slotView() ) );
 	popupMenu->insertItem( i18n( "R&un Command" ), this, SLOT( slotRunCommand() ) );*/
 	
-        KAction *action = new KAction( i18n("&Configure"), actions, "configure" );
+        KAction *action  = new KAction(i18n("&Configure"), this);
+        actions->addAction("configure", action );
         connect(action, SIGNAL(triggered(bool)), SLOT( slotConfigure()  ));
 	popupMenu->addAction(action);
-	action = new KAction( i18n("&Recheck"), actions, "recheck"   );
+        action  = new KAction(i18n("&Recheck"), this);
+        actions->addAction("recheck", action );
         connect(action, SIGNAL(triggered(bool)), SLOT( slotRecheck()    ));
         popupMenu->addAction(action);
-	action = new KAction( i18n("R&eset Counter"), actions, "reset"     );
+        action  = new KAction(i18n("R&eset Counter"), this);
+        actions->addAction("reset", action );
         connect(action, SIGNAL(triggered(bool)), SLOT( slotReset()      ));
         popupMenu->addAction(action);
-	action = new KAction( i18n("&View Emails"),  actions, "view"      );
+        action  = new KAction(i18n("&View Emails"), this);
+        actions->addAction("view", action );
         connect(action, SIGNAL(triggered(bool)), SLOT( slotView()       ));
         popupMenu->addAction(action);
-	action = new KAction( i18n("R&un Command"),  actions, "run"       );
+        action  = new KAction(i18n("R&un Command"), this);
+        actions->addAction("run", action );
         connect(action, SIGNAL(triggered(bool)), SLOT( slotRunCommand() ));
         popupMenu->addAction(action);
 	popupMenu->addSeparator();

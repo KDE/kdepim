@@ -194,19 +194,19 @@ private:
 
     LineEditAction * mLineEditAction;
     ComboAction * mComboAction;
-    KAction * mFindAction;
-    KAction * mImportCertFromFileAction;
-    KAction * mImportCRLFromFileAction;
-    KAction * mExportCertificateAction;
-    KAction * mViewCertDetailsAction;
-    KAction * mDeleteCertificateAction;
+    QAction * mFindAction;
+    QAction * mImportCertFromFileAction;
+    QAction * mImportCRLFromFileAction;
+    QAction * mExportCertificateAction;
+    QAction * mViewCertDetailsAction;
+    QAction * mDeleteCertificateAction;
 #ifdef NOT_IMPLEMENTED_ANYWAY
     KAction * mRevokeCertificateAction;
     KAction * mExtendCertificateAction;
 #endif
-    KAction * mExportSecretKeyAction;
-    KAction * mDownloadCertificateAction;
-    KAction * mValidateCertificateAction;
+    QAction * mExportSecretKeyAction;
+    QAction * mDownloadCertificateAction;
+    QAction * mValidateCertificateAction;
 
     QString mImportCRLTempFile;
     QString mCurrentQuery;

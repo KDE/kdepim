@@ -42,8 +42,9 @@
 
 LabelAction::LabelAction( const QString & text,  KActionCollection * parent,
 			  const QString &name )
-  : KAction( text, parent, name )
+  : KAction( text, parent )
 {
+  parent->addAction( name, this );
 }
 
 QWidget* LabelAction::createWidget( QWidget * parent )
@@ -73,9 +74,10 @@ QWidget* LabelAction::createWidget( QWidget * parent )
 
 LineEditAction::LineEditAction( const QString & text, KActionCollection * parent,
 				QObject * receiver, const char * member, const QString & name )
-  : KAction( text, parent, name ),
+  : KAction( text, parent ),
     _le(0), _receiver(receiver), _member(member)
 {
+  parent->addAction( name, this );
 }
 
 QWidget* LineEditAction::createWidget( QWidget * parent )
@@ -140,9 +142,10 @@ void LineEditAction::setText( const QString & txt ) {
 ComboAction::ComboAction( const QStringList & lst,  KActionCollection * parent,
                           QObject * receiver, const char * member, const QString & name,
                           int selectedID )
-  : KAction( QString(), parent, name ),
+  : KAction( QString(), parent ),
   _lst(lst), _receiver(receiver), _member(member), _selectedId( selectedID )
 {
+  parent->addAction( name, this );
 }
 
 QWidget* ComboAction::createWidget( QWidget * parent )

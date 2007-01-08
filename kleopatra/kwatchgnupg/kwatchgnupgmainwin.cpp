@@ -42,6 +42,7 @@
 #include <klocale.h>
 #include <kapplication.h>
 #include <kaction.h>
+#include <kactioncollection.h>
 #include <kstandardaction.h>
 #include <kprocio.h>
 #include <kconfig.h>
@@ -100,7 +101,9 @@ void KWatchGnuPGMainWindow::slotClear()
 
 void KWatchGnuPGMainWindow::createActions()
 {
-  KAction *action = new KAction(KIcon("history_clear"),  i18n("C&lear History"), actionCollection(), "clear_log" );
+  QAction *action = actionCollection()->addAction( "clear_log" );
+  action->setIcon( KIcon("history_clear") );
+  action->setText( i18n("C&lear History") );
   connect(action, SIGNAL(triggered(bool) ), SLOT( slotClear() ));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));
   (void)KStandardAction::saveAs( this, SLOT(slotSaveAs()), actionCollection() );

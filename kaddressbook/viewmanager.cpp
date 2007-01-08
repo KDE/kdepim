@@ -28,6 +28,7 @@
 #include <QHBoxLayout>
 #include <QDropEvent>
 #include <kselectaction.h>
+#include <kactioncollection.h>
 #include <libkdepim/kvcarddrag.h>
 #include <kabc/addressbook.h>
 #include <kabc/vcardconverter.h>
@@ -568,30 +569,42 @@ int ViewManager::filterPosition( const QString &name ) const
 
 void ViewManager::initActions()
 {
-  mActionSelectView = new KSelectAction( i18n( "Select View" ), mCore->actionCollection(), "select_view" );
+  KActionCollection *coll = mCore->actionCollection();
+  mActionSelectView = coll->add<KSelectAction>( "select_view" );
+  mActionSelectView->setText( i18n( "Select View" ) );
   mActionSelectView->setMenuAccelsEnabled( false );
   connect( mActionSelectView, SIGNAL( triggered( const QString& ) ),
            SLOT( setActiveView( const QString& ) ) );
 
-  KAction *action;
+  QAction *action;
 
-  action = new KAction(KIcon("configure"),  i18n( "Modify View..." ), mCore->actionCollection(), "view_modify" );
+  action = coll->addAction( "view_modify" );
+  action->setIcon( KIcon("configure") );
+  action->setText( i18n( "Modify View..." ) );
   connect(action, SIGNAL(triggered(bool) ), SLOT( editView() ));
   action->setWhatsThis( i18n( "By pressing this button a dialog opens that allows you to modify the view of the addressbook. There you can add or remove fields that you want to be shown or hidden in the addressbook like the name for example." ) );
 
-  action = new KAction(KIcon("window_new"),  i18n( "Add View..." ), mCore->actionCollection(), "view_add" );
+  action = coll->addAction( "view_add" );
+  action->setIcon( KIcon("window_new") );
+  action->setText( i18n( "Add View..." ) );
   connect(action, SIGNAL(triggered(bool) ), SLOT( addView() ));
   action->setWhatsThis( i18n( "You can add a new view by choosing one from the dialog that appears after pressing the button. You have to give the view a name, so that you can distinguish between the different views." ) );
 
-  mActionDeleteView = new KAction(KIcon("view_remove"),  i18n( "Delete View" ), mCore->actionCollection(), "view_delete" );
+  mActionDeleteView = coll->addAction( "view_delete" );
+  mActionDeleteView->setIcon( KIcon("view_remove") );
+  mActionDeleteView->setText( i18n( "Delete View" ) );
   connect(mActionDeleteView, SIGNAL(triggered(bool) ), SLOT( deleteView() ));
   mActionDeleteView->setWhatsThis( i18n( "By pressing this button you can delete the actual view, which you have added before." ) );
 
-  action = new KAction(KIcon("reload"),  i18n( "Refresh View" ), mCore->actionCollection(), "view_refresh" );
+  action = coll->addAction( "view_refresh" );
+  action->setIcon( KIcon("reload") );
+  action->setText( i18n( "Refresh View" ) );
   connect(action, SIGNAL(triggered(bool) ), SLOT( refreshView() ));
   action->setWhatsThis( i18n( "The view will be refreshed by pressing this button." ) );
 
-  action = new KAction(KIcon("filter"),  i18n( "Edit &Filters..." ), mCore->actionCollection(), "options_edit_filters" );
+  action = coll->addAction( "options_edit_filters" );
+  action->setIcon( KIcon("filter") );
+  action->setText( i18n( "Edit &Filters..." ) );
   connect(action, SIGNAL(triggered(bool) ), SLOT( configureFilters() ));
   action->setWhatsThis( i18n( "Edit the contact filters<p>You will be presented with a dialog, where you can add, remove and edit filters." ) );
 }

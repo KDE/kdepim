@@ -34,6 +34,7 @@
 #define __CUSTOMACTIONS_H__
 
 #include <kaction.h>
+#include <kactioncollection.h>
 
 #include <QStringList>
 

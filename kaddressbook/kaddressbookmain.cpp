@@ -28,6 +28,7 @@
 #include <kmessagebox.h>
 #include <kstatusbar.h>
 #include <kstandardaction.h>
+#include <kactioncollection.h>
 
 #include <libkdepim/statusbarprogresswidget.h>
 #include <libkdepim/progressdialog.h>

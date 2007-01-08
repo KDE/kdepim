@@ -811,7 +811,8 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant ):QWi
     zoomMenu->addAction( tr("Zoom out (x 1/12)"),this, SLOT(zoomOut12()) );
     mZoomAction = zoomMenu->menuAction();
 
-    mScaleAction = new KSelectAction( tr("Scale"), actionCollection, "Scale Action" );
+    mScaleAction  = new KSelectAction(tr("Scale"), this);
+    actionCollection->addAction("Scale Action", mScaleAction );
     QStringList scaleItems;
     scaleItems << tr("Second") << tr("Minute") << tr("Hour") << tr("Day")
                << tr("Week") << tr("Month") << tr("Auto");
@@ -819,7 +820,8 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant ):QWi
     connect( mScaleAction, SIGNAL( triggered(int) ), this, SLOT( setScale(int) ) );
     myPopupMenu->addAction( mScaleAction );
 
-    mTimeFormatAction = new KSelectAction( tr("Time Format"), actionCollection, "Time Format" );
+    mTimeFormatAction  = new KSelectAction(tr("Time Format"), this);
+    actionCollection->addAction("Time Format", mTimeFormatAction );
     QStringList timeFormatItems;
     timeFormatItems << tr("24 Hour") << tr("12 PM Hour") << tr("24:00 Hour");
     mTimeFormatAction->setItems( timeFormatItems );
@@ -827,7 +829,8 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant ):QWi
     myPopupMenu->addAction( mTimeFormatAction );
 
 
-    mYearFormatAction = new KSelectAction( tr("Year Format"), actionCollection, "Year Format" );
+    mYearFormatAction  = new KSelectAction(tr("Year Format"), this);
+    actionCollection->addAction("Year Format", mYearFormatAction );
     QStringList yearFormatItems;
     yearFormatItems << tr("Four Digit") << tr("Two Digit")
                     << tr("Two Digit Apostrophe") << tr("No Date on Minute/Hour Scale");
@@ -836,7 +839,8 @@ KDTimeHeaderWidget:: KDTimeHeaderWidget( QWidget* parent,KDGanttView* gant ):QWi
     myPopupMenu->addAction( mYearFormatAction );
 
 
-    mGridAction = new KSelectAction( tr("Grid"), actionCollection, "Grid" );
+    mGridAction  = new KSelectAction(tr("Grid"), this);
+    actionCollection->addAction("Grid", mGridAction );
     QStringList gridItems;
     gridItems << tr("Show minor grid") << tr("Show major grid") << tr("Show no grid");
     mGridAction->setItems( gridItems );

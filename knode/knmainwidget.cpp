@@ -529,113 +529,213 @@ void KNMainWidget::initActions()
   //a_ccel=new KAccel(this);
 
   //navigation
-  a_ctNavNextArt            = new KAction( KIcon("next"), i18n("&Next Article"), actionCollection(), "go_nextArticle" );
+  a_ctNavNextArt = actionCollection()->addAction("go_nextArticle" );
+  a_ctNavNextArt->setIcon(KIcon("next"));
+  a_ctNavNextArt->setText(i18n("&Next Article"));
   a_ctNavNextArt->setToolTip(i18n("Go to next article"));
-  a_ctNavNextArt->setShortcut(KShortcut("N;Right"));
+  a_ctNavNextArt->setShortcuts(KShortcut("N;Right"));
   connect(a_ctNavNextArt, SIGNAL(triggered(bool)), h_drView, SLOT(nextArticle()));
-  a_ctNavPrevArt            = new KAction( KIcon("previous"), i18n("&Previous Article"), actionCollection(), "go_prevArticle" );
-  a_ctNavPrevArt->setShortcut(KShortcut("P;Left"));
+
+  a_ctNavPrevArt = actionCollection()->addAction("go_prevArticle" );
+  a_ctNavPrevArt->setIcon(KIcon("previous"));
+  a_ctNavPrevArt->setText(i18n("&Previous Article"));
+  a_ctNavPrevArt->setShortcuts(KShortcut("P;Left"));
   a_ctNavPrevArt->setToolTip(i18n("Go to previous article"));
   connect(a_ctNavPrevArt, SIGNAL(triggered(bool)), h_drView, SLOT(prevArticle()));
-  a_ctNavNextUnreadArt = new KAction(KIcon("1rightarrow"), i18n("Next Unread &Article"), actionCollection(), "go_nextUnreadArticle");
+
+  a_ctNavNextUnreadArt = actionCollection()->addAction("go_nextUnreadArticle");
+  a_ctNavNextUnreadArt->setIcon(KIcon("1rightarrow"));
+  a_ctNavNextUnreadArt->setText(i18n("Next Unread &Article"));
   connect(a_ctNavNextUnreadArt, SIGNAL(triggered(bool)), SLOT(slotNavNextUnreadArt()));
   a_ctNavNextUnreadArt->setShortcut(QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_Space));
-  a_ctNavNextUnreadThread = new KAction(KIcon("2rightarrow"), i18n("Next Unread &Thread"), actionCollection(), "go_nextUnreadThread");
+
+  a_ctNavNextUnreadThread = actionCollection()->addAction("go_nextUnreadThread");
+  a_ctNavNextUnreadThread->setIcon(KIcon("2rightarrow"));
+  a_ctNavNextUnreadThread->setText(i18n("Next Unread &Thread"));
   connect(a_ctNavNextUnreadThread, SIGNAL(triggered(bool)), SLOT(slotNavNextUnreadThread()));
   a_ctNavNextUnreadThread->setShortcut(QKeySequence(Qt::SHIFT+Qt::Key_Space));
-  a_ctNavNextGroup = new KAction(KIcon("down"), i18n("Ne&xt Group"), actionCollection(), "go_nextGroup");
+
+  a_ctNavNextGroup = actionCollection()->addAction("go_nextGroup");
+  a_ctNavNextGroup->setIcon(KIcon("down"));
+  a_ctNavNextGroup->setText(i18n("Ne&xt Group"));
   connect(a_ctNavNextGroup, SIGNAL(triggered(bool)), c_olView, SLOT(nextGroup()));
   a_ctNavNextGroup->setShortcut(QKeySequence(Qt::Key_Plus));
-  a_ctNavPrevGroup = new KAction(KIcon("up"), i18n("Pre&vious Group"), actionCollection(), "go_prevGroup");
+
+  a_ctNavPrevGroup = actionCollection()->addAction("go_prevGroup");
+  a_ctNavPrevGroup->setIcon(KIcon("up"));
+  a_ctNavPrevGroup->setText(i18n("Pre&vious Group"));
   connect(a_ctNavPrevGroup, SIGNAL(triggered(bool)), c_olView, SLOT(prevGroup()));
   a_ctNavPrevGroup->setShortcut(QKeySequence(Qt::Key_Minus));
-  a_ctNavReadThrough = new KAction(i18n("Read &Through Articles"), actionCollection(), "go_readThrough");
+
+  a_ctNavReadThrough = actionCollection()->addAction("go_readThrough");
+  a_ctNavReadThrough->setText(i18n("Read &Through Articles"));
   connect(a_ctNavReadThrough, SIGNAL(triggered(bool) ), SLOT(slotNavReadThrough()));
   a_ctNavReadThrough->setShortcut(QKeySequence(Qt::Key_Space));
 
-  KAction *action = new KAction( i18n("Focus on Next Folder"), actionCollection(), "inc_current_folder" );
+  QAction *action = actionCollection()->addAction("inc_current_folder");
+  action->setText(i18n("Focus on Next Folder"));
   connect(action, SIGNAL(triggered(bool) ), c_olView, SLOT(incCurrentFolder()));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_Right));
-  action = new KAction( i18n("Focus on Previous Folder"), actionCollection(), "dec_current_folder" );
+
+  action = actionCollection()->addAction("dec_current_folder");
+  action->setText(i18n("Focus on Previous Folder"));
   connect(action, SIGNAL(triggered(bool) ), c_olView, SLOT(decCurrentFolder()));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_Left));
-  action = new KAction( i18n("Select Folder with Focus"), actionCollection(), "select_current_folder" );
+
+  action = actionCollection()->addAction("select_current_folder");
+  action->setText(i18n("Select Folder with Focus"));
   connect(action, SIGNAL(triggered(bool) ), c_olView, SLOT(selectCurrentFolder()));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_Space));
-  action = new KAction( i18n("Focus on Next Article"), actionCollection(), "inc_current_article" );
+
+  action = actionCollection()->addAction("inc_current_article");
+  action->setText(i18n("Focus on Next Article"));
   connect(action, SIGNAL(triggered(bool) ), h_drView, SLOT(incCurrentArticle()));
   action->setShortcut(QKeySequence(Qt::ALT+Qt::Key_Right));
-  action = new KAction( i18n("Focus on Previous Article"), actionCollection(), "dec_current_article" );
+
+  action = actionCollection()->addAction("dec_current_article");
+  action->setText(i18n("Focus on Previous Article"));
   connect(action, SIGNAL(triggered(bool) ), h_drView, SLOT(decCurrentArticle()));
   action->setShortcut(QKeySequence(Qt::ALT+Qt::Key_Left));
-  action = new KAction( i18n("Select Article with Focus"), actionCollection(), "select_current_article" );
+
+  action = actionCollection()->addAction("select_current_article");
+  action->setText(i18n("Select Article with Focus"));
   connect(action, SIGNAL(triggered(bool) ), h_drView, SLOT(selectCurrentArticle()));
   action->setShortcut(QKeySequence(Qt::ALT+Qt::Key_Space));
 
   //collection-view - accounts
-  a_ctAccProperties = new KAction(KIcon("configure"), i18n("Account &Properties"), actionCollection(), "account_properties");
+  a_ctAccProperties = actionCollection()->addAction("account_properties");
+  a_ctAccProperties->setIcon(KIcon("configure"));
+  a_ctAccProperties->setText(i18n("Account &Properties"));
   connect(a_ctAccProperties, SIGNAL(triggered(bool)), SLOT(slotAccProperties()));
-  a_ctAccRename = new KAction(KIcon("text"), i18n("&Rename Account"), actionCollection(), "account_rename");
+
+  a_ctAccRename = actionCollection()->addAction("account_rename");
+  a_ctAccRename->setIcon(KIcon("text"));
+  a_ctAccRename->setText(i18n("&Rename Account"));
   connect(a_ctAccRename, SIGNAL(triggered(bool)), SLOT(slotAccRename()));
-  a_ctAccSubscribe = new KAction(KIcon("news_subscribe"), i18n("&Subscribe to Newsgroups..."), actionCollection(), "account_subscribe");
+
+  a_ctAccSubscribe = actionCollection()->addAction("account_subscribe");
+  a_ctAccSubscribe->setIcon(KIcon("news_subscribe"));
+  a_ctAccSubscribe->setText(i18n("&Subscribe to Newsgroups..."));
   connect(a_ctAccSubscribe, SIGNAL(triggered(bool)), SLOT(slotAccSubscribe()));
-  a_ctAccExpireAll = new KAction(i18n("&Expire All Groups"), actionCollection(), "account_expire_all");
+
+  a_ctAccExpireAll = actionCollection()->addAction("account_expire_all");
+  a_ctAccExpireAll->setText(i18n("&Expire All Groups"));
   connect(a_ctAccExpireAll, SIGNAL(triggered(bool) ), SLOT(slotAccExpireAll()));
-  a_ctAccGetNewHdrs = new KAction(KIcon("mail_get"), i18n("&Get New Articles in All Groups"), actionCollection(), "account_dnlHeaders");
+
+  a_ctAccGetNewHdrs = actionCollection()->addAction("account_dnlHeaders");
+  a_ctAccGetNewHdrs->setIcon(KIcon("mail_get"));
+  a_ctAccGetNewHdrs->setText(i18n("&Get New Articles in All Groups"));
   connect(a_ctAccGetNewHdrs, SIGNAL(triggered(bool)), SLOT(slotAccGetNewHdrs()));
-  a_ctAccGetNewHdrsAll = new KAction(KIcon("mail_get_all"), i18n("&Get New Articles in All Accounts"), actionCollection(), "account_dnlAllHeaders");
+
+  a_ctAccGetNewHdrsAll = actionCollection()->addAction("account_dnlAllHeaders");
+  a_ctAccGetNewHdrsAll->setIcon(KIcon("mail_get_all"));
+  a_ctAccGetNewHdrsAll->setText(i18n("&Get New Articles in All Accounts"));
   connect(a_ctAccGetNewHdrsAll, SIGNAL(triggered(bool)), SLOT(slotAccGetNewHdrsAll()));
-  a_ctAccDelete = new KAction(KIcon("editdelete"), i18n("&Delete Account"), actionCollection(), "account_delete");
+
+  a_ctAccDelete = actionCollection()->addAction("account_delete");
+  a_ctAccDelete->setIcon(KIcon("editdelete"));
+  a_ctAccDelete->setText(i18n("&Delete Account"));
   connect(a_ctAccDelete, SIGNAL(triggered(bool)), SLOT(slotAccDelete()));
-  a_ctAccPostNewArticle = new KAction(KIcon("mail_new"), i18n("&Post to Newsgroup..."), actionCollection(), "article_postNew");
+
+  a_ctAccPostNewArticle = actionCollection()->addAction("article_postNew");
+  a_ctAccPostNewArticle->setIcon(KIcon("mail_new"));
+  a_ctAccPostNewArticle->setText(i18n("&Post to Newsgroup..."));
   connect(a_ctAccPostNewArticle, SIGNAL(triggered(bool)), SLOT(slotAccPostNewArticle()));
   a_ctAccPostNewArticle->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_N));
 
   //collection-view - groups
-  a_ctGrpProperties = new KAction(KIcon("configure"), i18n("Group &Properties"), actionCollection(), "group_properties");
+  a_ctGrpProperties = actionCollection()->addAction("group_properties");
+  a_ctGrpProperties->setIcon(KIcon("configure"));
+  a_ctGrpProperties->setText(i18n("Group &Properties"));
   connect(a_ctGrpProperties, SIGNAL(triggered(bool)), SLOT(slotGrpProperties()));
-  a_ctGrpRename = new KAction(KIcon("text"), i18n("Rename &Group"), actionCollection(), "group_rename");
+
+  a_ctGrpRename = actionCollection()->addAction("group_rename");
+  a_ctGrpRename->setIcon(KIcon("text"));
+  a_ctGrpRename->setText(i18n("Rename &Group"));
   connect(a_ctGrpRename, SIGNAL(triggered(bool)), SLOT(slotGrpRename()));
-  a_ctGrpGetNewHdrs = new KAction(KIcon("mail_get"), i18n("&Get New Articles"), actionCollection(), "group_dnlHeaders");
+
+  a_ctGrpGetNewHdrs = actionCollection()->addAction("group_dnlHeaders");
+  a_ctGrpGetNewHdrs->setIcon(KIcon("mail_get"));
+  a_ctGrpGetNewHdrs->setText(i18n("&Get New Articles"));
   connect(a_ctGrpGetNewHdrs, SIGNAL(triggered(bool)), SLOT(slotGrpGetNewHdrs()));
-  a_ctGrpExpire = new KAction(KIcon("wizard"), i18n("E&xpire Group"), actionCollection(), "group_expire");
+
+  a_ctGrpExpire = actionCollection()->addAction("group_expire");
+  a_ctGrpExpire->setIcon(KIcon("wizard"));
+  a_ctGrpExpire->setText(i18n("E&xpire Group"));
   connect(a_ctGrpExpire, SIGNAL(triggered(bool)), SLOT(slotGrpExpire()));
-  a_ctGrpReorganize = new KAction(i18n("Re&organize Group"), actionCollection(), "group_reorg");
+
+  a_ctGrpReorganize = actionCollection()->addAction("group_reorg");
+  a_ctGrpReorganize->setText(i18n("Re&organize Group"));
   connect(a_ctGrpReorganize, SIGNAL(triggered(bool) ), SLOT(slotGrpReorganize()));
-  a_ctGrpUnsubscribe = new KAction(KIcon("news_unsubscribe"), i18n("&Unsubscribe From Group"), actionCollection(), "group_unsubscribe");
+
+  a_ctGrpUnsubscribe = actionCollection()->addAction("group_unsubscribe");
+  a_ctGrpUnsubscribe->setIcon(KIcon("news_unsubscribe"));
+  a_ctGrpUnsubscribe->setText(i18n("&Unsubscribe From Group"));
   connect(a_ctGrpUnsubscribe, SIGNAL(triggered(bool)), SLOT(slotGrpUnsubscribe()));
-  a_ctGrpSetAllRead = new KAction(KIcon("goto"), i18n("Mark All as &Read"), actionCollection(), "group_allRead");
+
+  a_ctGrpSetAllRead = actionCollection()->addAction("group_allRead");
+  a_ctGrpSetAllRead->setIcon(KIcon("goto"));
+  a_ctGrpSetAllRead->setText(i18n("Mark All as &Read"));
   connect(a_ctGrpSetAllRead, SIGNAL(triggered(bool)), SLOT(slotGrpSetAllRead()));
-  a_ctGrpSetAllUnread = new KAction(i18n("Mark All as U&nread"), actionCollection(), "group_allUnread");
+
+  a_ctGrpSetAllUnread = actionCollection()->addAction("group_allUnread");
+  a_ctGrpSetAllUnread->setText(i18n("Mark All as U&nread"));
   connect(a_ctGrpSetAllUnread, SIGNAL(triggered(bool) ), SLOT(slotGrpSetAllUnread()));
-  a_ctGrpSetUnread = new KAction(i18n("Mark Last as Unr&ead..."), actionCollection(), "group_unread");
+
+  a_ctGrpSetUnread = actionCollection()->addAction("group_unread");
+  a_ctGrpSetUnread->setText(i18n("Mark Last as Unr&ead..."));
   connect(a_ctGrpSetUnread, SIGNAL(triggered(bool) ), SLOT(slotGrpSetUnread()));
 
-  action = new KAction(KIcon("configure"),  i18n("&Configure KNode..."), actionCollection(), "knode_configure_knode" );
+  action = actionCollection()->addAction("knode_configure_knode");
+  action->setIcon(KIcon("configure"));
+  action->setText(i18n("&Configure KNode..."));
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotSettings()));
 
   //collection-view - folder
-  a_ctFolNew = new KAction(KIcon("folder_new"), i18n("&New Folder"), actionCollection(), "folder_new");
+  a_ctFolNew = actionCollection()->addAction("folder_new");
+  a_ctFolNew->setIcon(KIcon("folder_new"));
+  a_ctFolNew->setText(i18n("&New Folder"));
   connect(a_ctFolNew, SIGNAL(triggered(bool)), SLOT(slotFolNew()));
-  a_ctFolNewChild = new KAction(KIcon("folder_new"), i18n("New &Subfolder"), actionCollection(), "folder_newChild");
+
+  a_ctFolNewChild = actionCollection()->addAction("folder_newChild");
+  a_ctFolNewChild->setIcon(KIcon("folder_new"));
+  a_ctFolNewChild->setText(i18n("New &Subfolder"));
   connect(a_ctFolNewChild, SIGNAL(triggered(bool)), SLOT(slotFolNewChild()));
-  a_ctFolDelete = new KAction(KIcon("editdelete"), i18n("&Delete Folder"), actionCollection(), "folder_delete");
+
+  a_ctFolDelete = actionCollection()->addAction("folder_delete");
+  a_ctFolDelete->setIcon(KIcon("editdelete"));
+  a_ctFolDelete->setText(i18n("&Delete Folder"));
   connect(a_ctFolDelete, SIGNAL(triggered(bool)), SLOT(slotFolDelete()));
-  a_ctFolRename = new KAction(KIcon("text"), i18n("&Rename Folder"), actionCollection(), "folder_rename");
+
+  a_ctFolRename = actionCollection()->addAction("folder_rename");
+  a_ctFolRename->setIcon(KIcon("text"));
+  a_ctFolRename->setText(i18n("&Rename Folder"));
   connect(a_ctFolRename, SIGNAL(triggered(bool)), SLOT(slotFolRename()));
-  a_ctFolCompact = new KAction(KIcon("wizard"), i18n("C&ompact Folder"), actionCollection(), "folder_compact");
+
+  a_ctFolCompact = actionCollection()->addAction("folder_compact");
+  a_ctFolCompact->setIcon(KIcon("wizard"));
+  a_ctFolCompact->setText(i18n("C&ompact Folder"));
   connect(a_ctFolCompact, SIGNAL(triggered(bool)), SLOT(slotFolCompact()));
-  a_ctFolCompactAll = new KAction(i18n("Co&mpact All Folders"), actionCollection(), "folder_compact_all");
+
+  a_ctFolCompactAll = actionCollection()->addAction("folder_compact_all");
+  a_ctFolCompactAll->setText(i18n("Co&mpact All Folders"));
   connect(a_ctFolCompactAll, SIGNAL(triggered(bool) ), SLOT(slotFolCompactAll()));
-  a_ctFolEmpty = new KAction(i18n("&Empty Folder"), actionCollection(), "folder_empty");
+
+  a_ctFolEmpty = actionCollection()->addAction("folder_empty");
+  a_ctFolEmpty->setText(i18n("&Empty Folder"));
   connect(a_ctFolEmpty, SIGNAL(triggered(bool) ), SLOT(slotFolEmpty()));
-  a_ctFolMboxImport = new KAction(i18n("&Import MBox Folder..."), actionCollection(), "folder_MboxImport");
+
+  a_ctFolMboxImport = actionCollection()->addAction("folder_MboxImport");
+  a_ctFolMboxImport->setText(i18n("&Import MBox Folder..."));
   connect(a_ctFolMboxImport, SIGNAL(triggered(bool) ), SLOT(slotFolMBoxImport()));
-  a_ctFolMboxExport = new KAction(i18n("E&xport as MBox Folder..."), actionCollection(), "folder_MboxExport");
+
+  a_ctFolMboxExport = actionCollection()->addAction("folder_MboxExport");
+  a_ctFolMboxExport->setText(i18n("E&xport as MBox Folder..."));
   connect(a_ctFolMboxExport, SIGNAL(triggered(bool) ), SLOT(slotFolMBoxExport()));
 
   //header-view - list-handling
-  a_ctArtSortHeaders        = new KSelectAction(i18n("S&ort"), KShortcut(), actionCollection(), "view_Sort");
+  a_ctArtSortHeaders = actionCollection()->add<KSelectAction>("view_Sort");
+  a_ctArtSortHeaders->setText(i18n("S&ort"));
   QStringList items;
   items += i18n("By &Subject");
   items += i18n("By S&ender");
@@ -645,91 +745,149 @@ void KNMainWidget::initActions()
   a_ctArtSortHeaders->setItems(items);
   a_ctArtSortHeaders->setShortcutConfigurable(false);
   connect(a_ctArtSortHeaders, SIGNAL(activated(int)), this, SLOT(slotArtSortHeaders(int)));
-  a_ctArtSortHeadersKeyb = new KAction(i18n("Sort"), actionCollection(), "view_Sort_Keyb");
+
+  a_ctArtSortHeadersKeyb = actionCollection()->addAction("view_Sort_Keyb");
+  a_ctArtSortHeadersKeyb->setText(i18n("Sort"));
   connect(a_ctArtSortHeadersKeyb, SIGNAL(triggered(bool)), SLOT(slotArtSortHeadersKeyb()));
   a_ctArtSortHeadersKeyb->setShortcut(QKeySequence(Qt::Key_F7));
+
   a_ctArtFilter             = new KNFilterSelectAction(i18n("&Filter"), "filter",
                               actionCollection(), "view_Filter");
   a_ctArtFilter->setShortcutConfigurable(false);
-  a_ctArtFilterKeyb = new KAction(i18n("Filter"), actionCollection(), "view_Filter_Keyb");
+
+  a_ctArtFilterKeyb = actionCollection()->addAction("view_Filter_Keyb");
+  a_ctArtFilterKeyb->setText(i18n("Filter"));
   a_ctArtFilterKeyb->setShortcut(QKeySequence(Qt::Key_F6));
-  a_ctArtSearch = new KAction(KIcon("mail_find"), i18n("&Search Articles..."), actionCollection(), "article_search");
+
+  a_ctArtSearch = actionCollection()->addAction("article_search");
+  a_ctArtSearch->setIcon(KIcon("mail_find"));
+  a_ctArtSearch->setText(i18n("&Search Articles..."));
   connect(a_ctArtSearch, SIGNAL(triggered(bool)), SLOT(slotArtSearch()));
   a_ctArtSearch->setShortcut(QKeySequence(Qt::Key_F4));
-  a_ctArtRefreshList = new KAction(KIcon("reload"), i18n("&Refresh List"), actionCollection(), "view_Refresh");
+
+  a_ctArtRefreshList = actionCollection()->addAction("view_Refresh");
+  a_ctArtRefreshList->setIcon(KIcon("reload"));
+  a_ctArtRefreshList->setText(i18n("&Refresh List"));
   connect(a_ctArtRefreshList, SIGNAL(triggered(bool)), SLOT(slotArtRefreshList()));
-  a_ctArtRefreshList->setShortcut(KStandardShortcut::shortcut(KStandardShortcut::Reload));
-  a_ctArtCollapseAll = new KAction(i18n("&Collapse All Threads"), actionCollection(), "view_CollapseAll");
+  a_ctArtRefreshList->setShortcuts(KStandardShortcut::shortcut(KStandardShortcut::Reload));
+
+  a_ctArtCollapseAll = actionCollection()->addAction("view_CollapseAll");
+  a_ctArtCollapseAll->setText(i18n("&Collapse All Threads"));
   connect(a_ctArtCollapseAll, SIGNAL(triggered(bool) ), SLOT(slotArtCollapseAll()));
-  a_ctArtExpandAll = new KAction(i18n("E&xpand All Threads"), actionCollection(), "view_ExpandAll");
+
+  a_ctArtExpandAll = actionCollection()->addAction("view_ExpandAll");
+  a_ctArtExpandAll->setText(i18n("E&xpand All Threads"));
   connect(a_ctArtExpandAll, SIGNAL(triggered(bool) ), SLOT(slotArtExpandAll()));
-  a_ctArtToggleThread = new KAction(i18n("&Toggle Subthread"), actionCollection(), "thread_toggle");
+
+  a_ctArtToggleThread = actionCollection()->addAction("thread_toggle");
+  a_ctArtToggleThread->setText(i18n("&Toggle Subthread"));
   connect(a_ctArtToggleThread, SIGNAL(triggered(bool) ), SLOT(slotArtToggleThread()));
   a_ctArtToggleThread->setShortcut(QKeySequence(Qt::Key_T));
-  a_ctArtToggleShowThreads = new KToggleAction(i18n("Show T&hreads"), actionCollection(), "view_showThreads");
+
+  a_ctArtToggleShowThreads = actionCollection()->add<KToggleAction>("view_showThreads");
+  a_ctArtToggleShowThreads->setText(i18n("Show T&hreads"));
   connect(a_ctArtToggleShowThreads, SIGNAL(triggered(bool) ), SLOT(slotArtToggleShowThreads()));
   a_ctArtToggleShowThreads->setCheckedState(KGuiItem(i18n("Hide T&hreads")));
 
   a_ctArtToggleShowThreads->setChecked( knGlobals.settings()->showThreads() );
 
   //header-view - remote articles
-  a_ctArtSetArtRead = new KAction(i18n("Mark as &Read"), actionCollection(), "article_read");
+  a_ctArtSetArtRead = actionCollection()->addAction("article_read");
+  a_ctArtSetArtRead->setText(i18n("Mark as &Read"));
   connect(a_ctArtSetArtRead, SIGNAL(triggered(bool) ), SLOT(slotArtSetArtRead()));
   a_ctArtSetArtRead->setShortcut(QKeySequence(Qt::Key_D));
-  a_ctArtSetArtUnread = new KAction(i18n("Mar&k as Unread"), actionCollection(), "article_unread");
+
+  a_ctArtSetArtUnread = actionCollection()->addAction("article_unread");
+  a_ctArtSetArtUnread->setText(i18n("Mar&k as Unread"));
   connect(a_ctArtSetArtUnread, SIGNAL(triggered(bool) ), SLOT(slotArtSetArtUnread()));
   a_ctArtSetArtUnread->setShortcut(QKeySequence(Qt::Key_U));
-  a_ctArtSetThreadRead = new KAction(i18n("Mark &Thread as Read"), actionCollection(), "thread_read");
+
+  a_ctArtSetThreadRead = actionCollection()->addAction("thread_read");
+  a_ctArtSetThreadRead->setText(i18n("Mark &Thread as Read"));
   connect(a_ctArtSetThreadRead, SIGNAL(triggered(bool) ), SLOT(slotArtSetThreadRead()));
   a_ctArtSetThreadRead->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_D));
-  a_ctArtSetThreadUnread = new KAction(i18n("Mark T&hread as Unread"), actionCollection(), "thread_unread");
+
+  a_ctArtSetThreadUnread = actionCollection()->addAction("thread_unread");
+  a_ctArtSetThreadUnread->setText(i18n("Mark T&hread as Unread"));
   connect(a_ctArtSetThreadUnread, SIGNAL(triggered(bool) ), SLOT(slotArtSetThreadUnread()));
   a_ctArtSetThreadUnread->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_U));
-  a_ctArtOpenNewWindow = new KAction(KIcon("window_new"), i18n("Open in Own &Window"), actionCollection(), "article_ownWindow");
+
+  a_ctArtOpenNewWindow = actionCollection()->addAction("article_ownWindow");
+  a_ctArtOpenNewWindow->setIcon(KIcon("window_new"));
+  a_ctArtOpenNewWindow->setText(i18n("Open in Own &Window"));
   connect(a_ctArtOpenNewWindow, SIGNAL(triggered(bool)), SLOT(slotArtOpenNewWindow()));
   a_ctArtOpenNewWindow->setShortcut(QKeySequence(Qt::Key_O));
 
   // scoring
-  a_ctScoresEdit = new KAction(KIcon("edit"), i18n("&Edit Scoring Rules..."), actionCollection(), "scoreedit");
+  a_ctScoresEdit = actionCollection()->addAction("scoreedit");
+  a_ctScoresEdit->setIcon(KIcon("edit"));
+  a_ctScoresEdit->setText(i18n("&Edit Scoring Rules..."));
   connect(a_ctScoresEdit, SIGNAL(triggered(bool)), SLOT(slotScoreEdit()));
   a_ctScoresEdit->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_E));
-  a_ctReScore = new KAction(i18n("Recalculate &Scores"), actionCollection(), "rescore");
+
+  a_ctReScore = actionCollection()->addAction("rescore");
+  a_ctReScore->setText(i18n("Recalculate &Scores"));
   connect(a_ctReScore, SIGNAL(triggered(bool) ), SLOT(slotReScore()));
-  a_ctScoreLower = new KAction(i18n("&Lower Score for Author..."), actionCollection(), "scorelower");
+
+  a_ctScoreLower = actionCollection()->addAction("scorelower");
+  a_ctScoreLower->setText(i18n("&Lower Score for Author..."));
   connect(a_ctScoreLower, SIGNAL(triggered(bool) ), SLOT(slotScoreLower()));
   a_ctScoreLower->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));
-  a_ctScoreRaise = new KAction(i18n("&Raise Score for Author..."), actionCollection(), "scoreraise");
+
+  a_ctScoreRaise = actionCollection()->addAction("scoreraise");
+  a_ctScoreRaise->setText(i18n("&Raise Score for Author..."));
   connect(a_ctScoreRaise, SIGNAL(triggered(bool) ), SLOT(slotScoreRaise()));
   a_ctScoreRaise->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_I));
-  a_ctArtToggleIgnored = new KAction(KIcon("bottom"), i18n("&Ignore Thread"), actionCollection(), "thread_ignore");
+
+  a_ctArtToggleIgnored = actionCollection()->addAction("thread_ignore");
+  a_ctArtToggleIgnored->setIcon(KIcon("bottom"));
+  a_ctArtToggleIgnored->setText(i18n("&Ignore Thread"));
   connect(a_ctArtToggleIgnored, SIGNAL(triggered(bool)), SLOT(slotArtToggleIgnored()));
   a_ctArtToggleIgnored->setShortcut(QKeySequence(Qt::Key_I));
-  a_ctArtToggleWatched = new KAction(KIcon("top"), i18n("&Watch Thread"), actionCollection(), "thread_watch");
+
+  a_ctArtToggleWatched = actionCollection()->addAction("thread_watch");
+  a_ctArtToggleWatched->setIcon(KIcon("top"));
+  a_ctArtToggleWatched->setText(i18n("&Watch Thread"));
   connect(a_ctArtToggleWatched, SIGNAL(triggered(bool)), SLOT(slotArtToggleWatched()));
   a_ctArtToggleWatched->setShortcut(QKeySequence(Qt::Key_W));
 
   //header-view local articles
-  a_ctArtSendOutbox = new KAction(KIcon("mail_send"), i18n("Sen&d Pending Messages"), actionCollection(), "net_sendPending");
+  a_ctArtSendOutbox = actionCollection()->addAction("net_sendPending");
+  a_ctArtSendOutbox->setIcon(KIcon("mail_send"));
+  a_ctArtSendOutbox->setText(i18n("Sen&d Pending Messages"));
   connect(a_ctArtSendOutbox, SIGNAL(triggered(bool)), SLOT(slotArtSendOutbox()));
-  a_ctArtDelete = new KAction(KIcon("editdelete"), i18n("&Delete Article"), actionCollection(), "article_delete");
+
+  a_ctArtDelete = actionCollection()->addAction("article_delete");
+  a_ctArtDelete->setIcon(KIcon("editdelete"));
+  a_ctArtDelete->setText(i18n("&Delete Article"));
   connect(a_ctArtDelete, SIGNAL(triggered(bool)), SLOT(slotArtDelete()));
   a_ctArtDelete->setShortcut(QKeySequence(Qt::Key_Delete));
-  a_ctArtSendNow = new KAction(KIcon("mail_send"), i18n("Send &Now"), actionCollection(), "article_sendNow");
+
+  a_ctArtSendNow = actionCollection()->addAction("article_sendNow");
+  a_ctArtSendNow->setIcon(KIcon("mail_send"));
+  a_ctArtSendNow->setText(i18n("Send &Now"));
   connect(a_ctArtSendNow, SIGNAL(triggered(bool)), SLOT(slotArtSendNow()));
-  a_ctArtEdit = new KAction(KIcon("edit"), i18nc("edit article","&Edit Article..."), actionCollection(), "article_edit");
+
+  a_ctArtEdit = actionCollection()->addAction("article_edit");
+  a_ctArtEdit->setIcon(KIcon("edit"));
+  a_ctArtEdit->setText(i18nc("edit article","&Edit Article..."));
   connect(a_ctArtEdit, SIGNAL(triggered(bool)), SLOT(slotArtEdit()));
   a_ctArtEdit->setShortcut(QKeySequence(Qt::Key_E));
 
   //network
-  a_ctNetCancel = new KAction(KIcon("stop"), i18n("Stop &Network"), actionCollection(), "net_stop");
+  a_ctNetCancel = actionCollection()->addAction("net_stop");
+  a_ctNetCancel->setIcon(KIcon("stop"));
+  a_ctNetCancel->setText(i18n("Stop &Network"));
   connect(a_ctNetCancel, SIGNAL(triggered(bool)), SLOT(slotNetCancel()));
   a_ctNetCancel->setEnabled(false);
 
-  a_ctFetchArticleWithID = new KAction(i18n("&Fetch Article with ID..."), actionCollection(), "fetch_article_with_id");
+  a_ctFetchArticleWithID = actionCollection()->addAction("fetch_article_with_id");
+  a_ctFetchArticleWithID->setText(i18n("&Fetch Article with ID..."));
   connect(a_ctFetchArticleWithID, SIGNAL(triggered(bool) ), SLOT(slotFetchArticleWithID()));
   a_ctFetchArticleWithID->setEnabled(false);
 
-  a_ctToggleQuickSearch = new KToggleAction(i18n("Show Quick Search"), actionCollection(), "settings_show_quickSearch");
+  a_ctToggleQuickSearch = actionCollection()->add<KToggleAction>("settings_show_quickSearch");
+  a_ctToggleQuickSearch->setText(i18n("Show Quick Search"));
   connect(a_ctToggleQuickSearch, SIGNAL(triggered(bool) ), SLOT(slotToggleQuickSearch()));
   a_ctToggleQuickSearch->setCheckedState(KGuiItem(i18n("Hide Quick Search")));
 }

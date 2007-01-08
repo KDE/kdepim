@@ -67,6 +67,7 @@
 #include <QtDBus>
 #include <ktoggleaction.h>
 #include <kaction.h>
+#include <kactioncollection.h>
 #include <kicon.h>
 
 #include "addresseeutil.h"
@@ -1053,37 +1054,48 @@ void KABCore::initActions()
   connect( QApplication::clipboard(), SIGNAL( dataChanged() ),
            SLOT( clipboardDataChanged() ) );
 
-  KAction *action;
+  QAction *action;
+  KActionCollection *coll = actionCollection();
 
   // file menu
-  mActionMail = new KAction(KIcon("mail_send"),  i18n( "&Send Email to Contact..." ), actionCollection(), "file_mail" );
+  mActionMail = coll->addAction( "file_mail" );
+  mActionMail->setIcon( KIcon("mail_send") );
+  mActionMail->setText( i18n( "&Send Email to Contact..." ) );
   connect(mActionMail, SIGNAL(triggered(bool)), SLOT( sendMail() ));
   action = KStandardAction::print( this, SLOT( print() ), actionCollection() );
   mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
 
-  mActionSave = KStandardAction::save( this,
-                             SLOT( save() ), actionCollection(), "file_sync" );
+  mActionSave = KStandardAction::save( this, SLOT( save() ), actionCollection() );
+  actionCollection()->addAction( "file_sync", mActionSave );
   mActionSave->setWhatsThis( i18n( "Save all changes of the address book to the storage backend." ) );
 
-  action = new KAction(KIcon("identity"),  i18n( "&New Contact..." ), actionCollection(), "file_new_contact" );
+  action = coll->addAction( "file_new_contact" );
+  action->setIcon( KIcon("identity") );
+  action->setText( i18n( "&New Contact..." ) );
   connect(action, SIGNAL(triggered(bool)), SLOT( newContact() ));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_N));
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers." ) );
 
-  mActionMailVCard = new KAction(KIcon("mail_post_to"),  i18n( "Send &Contact..." ), actionCollection(), "file_mail_vcard" );
+  mActionMailVCard = coll->addAction( "file_mail_vcard" );
+  mActionMailVCard->setIcon( KIcon("mail_post_to") );
+  mActionMailVCard->setText( i18n( "Send &Contact..." ) );
   connect(mActionMailVCard, SIGNAL(triggered(bool) ), SLOT( mailVCard() ));
   mActionMailVCard->setWhatsThis( i18n( "Send a mail with the selected contact as attachment." ) );
 
-  mActionChat = new KAction( i18n( "Chat &With..." ), actionCollection(), "file_chat" );
+  mActionChat = coll->addAction( "file_chat" );
+  mActionChat->setText( i18n( "Chat &With..." ) );
   connect(mActionChat, SIGNAL(triggered(bool) ), SLOT( startChat() ));
   mActionChat->setWhatsThis( i18n( "Start a chat with the selected contact." ) );
 
-  mActionEditAddressee = new KAction(KIcon("edit"),  i18n( "&Edit Contact..." ), actionCollection(), "file_properties" );
+  mActionEditAddressee = coll->addAction( "file_properties" );
+  mActionEditAddressee->setIcon( KIcon("edit") );
+  mActionEditAddressee->setText( i18n( "&Edit Contact..." ) );
   connect(mActionEditAddressee, SIGNAL(triggered(bool) ), SLOT( editContact() ));
   mActionEditAddressee->setWhatsThis( i18n( "Edit a contact<p>You will be presented with a dialog where you can change all data about a person, including addresses and phone numbers." ) );
 
-  mActionMerge = new KAction( i18n( "&Merge Contacts" ), actionCollection(), "edit_merge" );
+  mActionMerge = coll->addAction( "edit_merge" );
+  mActionMerge->setText( i18n( "&Merge Contacts" ) );
   connect(mActionMerge, SIGNAL(triggered(bool) ), SLOT( mergeContacts() ));
 
   // edit menu
@@ -1098,32 +1110,39 @@ void KABCore::initActions()
 //  mActionUndo->setWhatsThis( i18n( "Undoes the last <b>Cut</b>, <b>Copy</b> or <b>Paste</b>." ) );
 //  mActionRedo->setWhatsThis( i18n( "Redoes the last <b>Cut</b>, <b>Copy</b> or <b>Paste</b>." ) );
 
-  mActionDelete = new KAction(KIcon("editdelete"),  i18n( "&Delete Contact" ), actionCollection(), "edit_delete" );
+  mActionDelete = coll->addAction( "edit_delete" );
+  mActionDelete->setIcon( KIcon("editdelete") );
+  mActionDelete->setText( i18n( "&Delete Contact" ) );
   connect(mActionDelete, SIGNAL(triggered(bool) ), SLOT( deleteContacts() ));
   mActionDelete->setShortcut(QKeySequence(Qt::Key_Delete));
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
 
-  mActionStoreAddresseeIn = new KAction(KIcon("kaddressbook"),  i18n( "St&ore Contact In..." ), actionCollection(), "edit_store_in" );
+  mActionStoreAddresseeIn = coll->addAction( "edit_store_in" );
+  mActionStoreAddresseeIn->setIcon( KIcon("kaddressbook") );
+  mActionStoreAddresseeIn->setText( i18n( "St&ore Contact In..." ) );
   connect(mActionStoreAddresseeIn, SIGNAL(triggered(bool) ), SLOT( storeContactIn() ));
   mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." ) );
 
   // settings menu
-  mActionJumpBar = new KToggleAction( i18n( "Show Jump Bar" ), "next", KShortcut(),
-                                      actionCollection(), "options_show_jump_bar" );
+  mActionJumpBar = coll->add<KToggleAction>( "options_show_jump_bar" );
+  mActionJumpBar->setText( i18n( "Show Jump Bar" ) );
+  mActionJumpBar->setIcon( KIcon( "next" ) );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
   mActionJumpBar->setCheckedState( KGuiItem(i18n( "Hide Jump Bar" )) );
   connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );
 
-  mActionDetails = new KToggleAction( i18n( "Show Details" ), 0, KShortcut(),
-                                      actionCollection(), "options_show_details" );
+  mActionDetails = coll->add<KToggleAction>( "options_show_details" );
+  mActionDetails->setText( i18n( "Show Details" ) );
   mActionDetails->setWhatsThis( i18n( "Toggle whether the details page shall be visible." ) );
   mActionDetails->setCheckedState( KGuiItem(i18n( "Hide Details" )) );
   connect( mActionDetails, SIGNAL( toggled( bool ) ), SLOT( setDetailsVisible( bool ) ) );
 
   if ( mIsPart )
   {
-    action = new KAction(KIcon("configure"),  i18n( "&Configure Address Book..." ), actionCollection(), "kaddressbook_configure" );
+    action = coll->addAction("kaddressbook_configure");
+    action->setIcon(KIcon("configure"));
+    action->setText(i18n("&Configure Address Book..."));
     connect(action, SIGNAL(triggered(bool) ), SLOT( configure() ));
   } else {
     action = KStandardAction::preferences( this, SLOT( configure() ), actionCollection() );
@@ -1132,19 +1151,26 @@ void KABCore::initActions()
   action->setWhatsThis( i18n( "You will be presented with a dialog, that offers you all possibilities to configure KAddressBook." ) );
 
   // misc
-  action = new KAction(KIcon("find"),  i18n( "&Lookup Addresses in LDAP Directory..." ), actionCollection(), "ldap_lookup" );
+  action = coll->addAction( "ldap_lookup" );
+  action->setIcon( KIcon( "find" ) );
+  action->setText( i18n( "&Lookup Addresses in LDAP Directory..." ) );
   connect(action, SIGNAL(triggered(bool)), SLOT( openLDAPDialog() ));
   action->setWhatsThis( i18n( "Search for contacts on a LDAP server<p>You will be presented with a dialog, where you can search for contacts and select the ones you want to add to your local address book." ) );
 
-  mActionWhoAmI = new KAction(KIcon("personal"),  i18n( "Set as Personal Contact Data" ), actionCollection(), "edit_set_personal" );
+  mActionWhoAmI = coll->addAction( "edit_set_personal" );
+  mActionWhoAmI->setIcon( KIcon("personal") );
+  mActionWhoAmI->setText( i18n( "Set as Personal Contact Data" ) );
   connect(mActionWhoAmI, SIGNAL(triggered(bool) ), SLOT( setWhoAmI() ));
   mActionWhoAmI->setWhatsThis( i18n( "Set the personal contact<p>The data of this contact will be used in many other KDE applications, so you do not have to input your personal data several times." ) );
 
-  mActionCategories = new KAction( i18n( "Select Categories..." ), actionCollection(), "edit_set_categories" );
+  mActionCategories = coll->addAction( "edit_set_categories" );
+  mActionCategories->setText( i18n( "Select Categories..." ) );
   connect(mActionCategories, SIGNAL(triggered(bool) ), SLOT( setCategories() ));
   mActionCategories->setWhatsThis( i18n( "Set the categories for all selected contacts." ) );
 
-  KAction *clearLocation = new KAction(KIcon(QApplication::isRightToLeft() ? "clear_left" : "locationbar_erase"),  i18n( "Clear Search Bar" ), actionCollection(), "clear_search" );
+  QAction *clearLocation = coll->addAction( "clear_search" );
+  clearLocation->setIcon( KIcon(QApplication::isRightToLeft() ? "clear_left" : "locationbar_erase") );
+  clearLocation->setText( i18n( "Clear Search Bar" ) );
   connect(clearLocation, SIGNAL(triggered(bool) ), SLOT( slotClearSearchBar() ));
   clearLocation->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));
   clearLocation->setWhatsThis( i18n( "Clear Search Bar<p>"

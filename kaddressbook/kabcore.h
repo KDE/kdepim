@@ -406,20 +406,20 @@ class KDE_EXPORT KABCore : public KAB::Core
 
     QTimer *mAddressBookChangedTimer;
 
-    KAction *mActionPaste;
-    KAction *mActionCut;
-    KAction *mActionDelete;
-    KAction *mActionCopy;
-    KAction *mActionEditAddressee;
-    KAction *mActionStoreAddresseeIn;
-    KAction *mActionMerge;
-    KAction *mActionMail;
-    KAction *mActionMailVCard;
-    KAction *mActionChat;
-    KAction *mActionSave;
-    KAction *mActionDeleteView;
-    KAction *mActionWhoAmI;
-    KAction *mActionCategories;
+    QAction *mActionPaste;
+    QAction *mActionCut;
+    QAction *mActionDelete;
+    QAction *mActionCopy;
+    QAction *mActionEditAddressee;
+    QAction *mActionStoreAddresseeIn;
+    QAction *mActionMerge;
+    QAction *mActionMail;
+    QAction *mActionMailVCard;
+    QAction *mActionChat;
+    QAction *mActionSave;
+    QAction *mActionDeleteView;
+    QAction *mActionWhoAmI;
+    QAction *mActionCategories;
     KToggleAction *mActionJumpBar;
     KToggleAction *mActionDetails;
 

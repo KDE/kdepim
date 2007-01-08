@@ -23,6 +23,7 @@
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <kapplication.h>
+#include <kactioncollection.h>
 
 #include "broadcaststatus.h"
 #include "krsqueezedtextlabel.h"

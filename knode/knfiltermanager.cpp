@@ -32,11 +32,13 @@
 
 KNFilterSelectAction::KNFilterSelectAction( const QString& text, const QString& pix,
                                             KActionCollection* parent, const char *name )
-  : KActionMenu( KIcon( pix ), text, parent, name ), currentItem(-42)
+  : KActionMenu(text, parent), currentItem(-42)
 {
+  setIcon(KIcon(pix));
   menu()->setCheckable(true);
   connect(menu(),SIGNAL(activated(int)),this,SLOT(slotMenuActivated(int)));
   setDelayed(false);
+  parent->addAction(name, this);
 }
 
 
@@ -374,7 +376,7 @@ void KNFilterManager::slotShowFilterChooser()
 }
 
 
-void KNFilterManager::setMenuAction(KNFilterSelectAction *a, KAction *keybA)
+void KNFilterManager::setMenuAction(KNFilterSelectAction *a, QAction *keybA)
 {
   if(a) {
     a_ctFilter = a;

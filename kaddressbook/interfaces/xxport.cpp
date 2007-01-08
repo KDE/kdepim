@@ -25,6 +25,7 @@
 #include <QSignalMapper>
 
 #include <kaction.h>
+#include <kactioncollection.h>
 #include <kinstance.h>
 #include <kmessagebox.h>
 #include <kapplication.h>
@@ -78,7 +79,8 @@ KABC::Addressee::List XXPort::importContacts( const QString& ) const
 void XXPort::createImportAction( const QString &label, const QString &data )
 {
   QString id = "file_import_" + identifier() + ( data.isEmpty() ? QString( "" ) : '_' + data );
-  KAction *action = new KAction( label, actionCollection(), id.toLatin1() );
+  QAction *action = actionCollection()->addAction( id.toLatin1() );
+  action->setText( label );
   connect(action, SIGNAL(triggered(bool) ), d->mImportMapper, SLOT( map() ));
 
   d->mImportMapper->setMapping( action, ( data.isEmpty() ? QString( "<empty>" ) : data ) );
@@ -89,7 +91,8 @@ void XXPort::createImportAction( const QString &label, const QString &data )
 void XXPort::createExportAction( const QString &label, const QString &data )
 {
   QString id = "file_export_" + identifier() + ( data.isEmpty() ? QString( "" ) : '_' + data );
-  KAction *action = new KAction( label, actionCollection(), id.toLatin1() );
+  QAction *action = actionCollection()->addAction( id.toLatin1() );
+  action->setText( label );
   connect(action, SIGNAL(triggered(bool) ), d->mExportMapper, SLOT( map() ));
 
   d->mExportMapper->setMapping( action, ( data.isEmpty() ? QString( "<empty>" ) : data ) );

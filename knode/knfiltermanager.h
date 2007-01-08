@@ -19,6 +19,7 @@
 #include <QList>
 
 #include <kactionmenu.h>
+#include <kactioncollection.h>
 
 namespace KNode {
 class FilterListWidget;
@@ -80,7 +81,7 @@ class KNFilterManager : public QObject
     /** Allow to delay the setup of UI elements, since the knode part may not
      * be available when the config dialog is called.
      */
-    void setMenuAction(KNFilterSelectAction *a, KAction *keybA);
+    void setMenuAction(KNFilterSelectAction *a, QAction *keybA);
 
   protected:
     void loadFilters();
