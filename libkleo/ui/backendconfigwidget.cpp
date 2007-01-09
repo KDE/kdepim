@@ -46,7 +46,6 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
-#include <kapplication.h>
 
 #include <QPushButton>
 #include <QLayout>

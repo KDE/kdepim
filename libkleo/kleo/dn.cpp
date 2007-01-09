@@ -39,7 +39,6 @@
 #include "oidmap.h"
 #include "ui/dnattributeorderconfigwidget.h"
 
-#include <kapplication.h>
 #include <kconfig.h>
 #include <klocale.h>
 

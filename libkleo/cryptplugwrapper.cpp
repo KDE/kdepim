@@ -61,7 +61,6 @@
 
 // kde
 #include <kdebug.h>
-#include <kapplication.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfig.h>

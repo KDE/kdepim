@@ -53,7 +53,6 @@
 
 // KDE
 #include <klocale.h>
-#include <kapplication.h>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kdebug.h>
@@ -75,8 +74,8 @@
 #include <q3popupmenu.h>
 #include <QRegExp>
 #include <QPushButton>
-//Added by qt3to4:
 #include <QFrame>
+#include <QApplication>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
@@ -347,11 +346,11 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
     mSMIMEBackend = Kleo::CryptoBackendFactory::instance()->smime();
 
   QSize dialogSize( 580, 400 );
-  if ( kapp ) {
+  if ( qApp ) {
     int iconSize = IconSize(K3Icon::Desktop);
     int miniSize = IconSize(K3Icon::Small);
-    KWin::setIcons( winId(), kapp->windowIcon().pixmap(iconSize, iconSize),
-kapp->windowIcon().pixmap(miniSize, miniSize) );
+    KWin::setIcons( winId(), qApp->windowIcon().pixmap(iconSize, iconSize),
+                             qApp->windowIcon().pixmap(miniSize, miniSize) );
 
     KConfigGroup dialogConfig( KGlobal::config(), "Key Selection Dialog" );
     dialogSize = dialogConfig.readEntry( "Dialog size", dialogSize );
@@ -376,8 +375,7 @@ kapp->windowIcon().pixmap(miniSize, miniSize) );
   QLineEdit * le = new QLineEdit( page );
   le->setText( initialQuery );
   QToolButton *clearButton = new QToolButton( page );
-  clearButton->setIcon( KIconLoader::global()->loadIconSet(
-              KApplication::isRightToLeft() ? "clear_left":"locationbar_erase", K3Icon::Small, 0 ) );
+  clearButton->setIcon( KIcon( QApplication::isRightToLeft() ? "clear_left":"locationbar_erase" ) );
 
   hlay->addWidget( clearButton );
 

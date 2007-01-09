@@ -43,7 +43,6 @@
 #include <kdialog.h>
 #include <kiconloader.h>
 #include <kconfig.h>
-#include <kapplication.h>
 
 #include <QToolButton>
 #include <QLayout>
