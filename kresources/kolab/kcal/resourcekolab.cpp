@@ -249,7 +249,10 @@ bool ResourceKolab::loadAllJournals()
 {
   removeIncidences( "Journal" );
   mCalendar.deleteAllJournals();
-  return doLoadAll( mJournalSubResources, journalAttachmentMimeType );
+  bool kolabStyle = doLoadAll( mJournalSubResources, journalAttachmentMimeType );
+  bool icalStyle = doLoadAll( mJournalSubResources, incidenceInlineMimeType );
+
+  return kolabStyle && icalStyle;
 }
 
 void ResourceKolab::removeIncidences( const QByteArray& incidenceType )
