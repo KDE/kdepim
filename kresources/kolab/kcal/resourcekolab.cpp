@@ -249,7 +249,10 @@ bool ResourceKolab::loadAllJournals()
 {
   removeIncidences( "Journal" );
   mCalendar.deleteAllJournals();
-  return doLoadAll( mJournalSubResources, journalAttachmentMimeType );
+  bool kolabStyle = doLoadAll( mJournalSubResources, journalAttachmentMimeType );
+  bool icalStyle = doLoadAll( mJournalSubResources, incidenceInlineMimeType );
+
+  return kolabStyle && icalStyle;
 }
 
 void ResourceKolab::removeIncidences( const QCString& incidenceType )
@@ -500,7 +503,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       mUidMap[ uid ] = StorageReference( subResource, sernum );
     } else {
       /* This is a real add, from KMail, we didn't trigger this ourselves.
-       * If this uid already exists in this folder, do conflict resolution, 
+       * If this uid already exists in this folder, do conflict resolution,
        * unless the folder is read-only, in which case the user should not be
        * offered a means of putting mails in a folder she'll later be unable to
        * upload. Skip the incidence, in this case. */
@@ -548,7 +551,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
 
 bool ResourceKolab::addEvent( KCal::Event* event )
 {
-  if ( mUidMap.contains( event->uid() ) ) 
+  if ( mUidMap.contains( event->uid() ) )
     return true; //noop
   else
     return addIncidence( event, QString::null, 0 );
@@ -620,7 +623,7 @@ KCal::Event::List ResourceKolab::rawEvents( const QDate& start,
 
 bool ResourceKolab::addTodo( KCal::Todo* todo )
 {
-  if ( mUidMap.contains( todo->uid() ) ) 
+  if ( mUidMap.contains( todo->uid() ) )
     return true; //noop
   else
     return addIncidence( todo, QString::null, 0 );
@@ -657,7 +660,7 @@ KCal::Todo::List ResourceKolab::rawTodosForDate( const QDate& date )
 
 bool ResourceKolab::addJournal( KCal::Journal* journal )
 {
-  if ( mUidMap.contains( journal->uid() ) ) 
+  if ( mUidMap.contains( journal->uid() ) )
     return true; //noop
   else
     return addIncidence( journal, QString::null, 0 );
