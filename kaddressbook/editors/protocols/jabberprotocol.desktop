@@ -5,6 +5,7 @@ Icon=jabber_protocol
 ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/xmpp
 Comment=Jabber Protocol
+Comment[af]=Jabber protokol
 Comment[be]=Пратакол Jabber
 Comment[bg]=Протокол Jabber
 Comment[br]=Komenad Jabber

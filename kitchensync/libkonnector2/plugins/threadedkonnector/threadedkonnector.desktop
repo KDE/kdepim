@@ -5,6 +5,7 @@ ServiceTypes=KResources/Plugin
 X-KDE-Library=libthreadedkonnector
 
 Name=Demo Konnector for a Threaded Implementation
+Name[af]=Demo Konnector vir 'n multi-draad implementering
 Name[ca]=Demostració de konnector per a una implementació amb fils
 Name[cs]=Demo konektor pro vláknovou implementaci
 Name[cy]=Kysylltydd arddangosol ar gyfer weithredoliant edafeddedig

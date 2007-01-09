@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Comment=This conduit syncs the Memo Pad application with KNotes.
+Comment[af]=Hierdie pad synkroniseer die Memo Pad program met KNotes.
 Comment[bg]=Синхронизация на бележки на КДЕ с мобилни устройства
 Comment[bs]=Ovaj conduit sinhronizuje Memo Pad aplikaciju sa KNotes.
 Comment[ca]=Aquest conducte sincronitza l'aplicació Memo Pad amb Knotes.

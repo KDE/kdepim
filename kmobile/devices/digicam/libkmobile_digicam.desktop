@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Digital Camera
+Name[af]=Digitale Kamera
 Name[ar]=كاميرا رقمية
 Name[bg]=Фотоапарат
 Name[br]=Kamera niverel
@@ -52,6 +53,7 @@ Name[uz]=Фотоапарат
 Name[zh_CN]=数码相机
 Name[zh_TW]=數位相機
 Comment=This driver supports many digital cameras
+Comment[af]=Hierdie drywer ondersteun baie digitale kameras
 Comment[bg]=Драйвер за поддръжка на цифрови фотоапарати и камери
 Comment[bs]=Ovaj drajver podržava mnoge digitalne kamere
 Comment[ca]=Aquest controlador accepta moltes càmeres digitals

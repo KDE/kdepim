@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=Konnector Backup
+Name[af]=Konnector rugsteun kopie
 Name[bs]=Konnector backup
 Name[ca]=Còpia de seguretat Konnector
 Name[cs]=Záloha Konektoru

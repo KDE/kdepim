@@ -18,6 +18,7 @@ Name[ta]=நோட்பேட்
 Name[tg]=Эзоҳот
 Name[zh_CN]=记事本
 Comment=This conduit backs up NotePad drawings to a local folder.
+Comment[af]=Hierdie pad sinkroniseer NotePad tekeninge na 'n plaaslike gids.
 Comment[bg]=Създаване на архивни копия на изображенията създадени с NotePad в локална директория.
 Comment[ca]=Aquest conducte copia els dibuixos NotePad a una carpeta local.
 Comment[cs]=Toto propojení synchronizuje záznamy v PDA s lokálním adresářem.

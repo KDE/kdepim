@@ -7,6 +7,7 @@ X-KDE-Library=libksfilter_calendar
 X-KDE-KitchenSyncFilterType=calendar
 
 Name=Calendar Filter
+Name[af]=Kalender filter
 Name[bg]=Филтър за календара
 Name[br]=Sil deiziadur
 Name[ca]=Filtre per al calendari
@@ -49,6 +50,7 @@ Name[zh_CN]=日历过滤器
 Name[zh_TW]=行事曆過濾器
 
 Comment=Filters events and todos in a calendar
+Comment[af]=Filter afsprake en te-doen itemme in 'n kalender
 Comment[bg]=Филтриране на събитията и задачите в календара
 Comment[ca]=Filtra els esdeveniments i tasques pendents d'un calendari
 Comment[cs]=Filtruje události a úkoly v knize adres

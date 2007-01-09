@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Comment=Send mail from your handheld through KMail.
+Comment[af]=Stuur pos vanaf jou draagbare toestel deur KMail.
 Comment[bg]=Изпращане на поща от мобилно устройство чрез KMail.
 Comment[ca]=Envia correu des de la vostra agenda electrònica a través de KMail.
 Comment[cs]=Odeslání zprávy z PDA přes KMail.
@@ -40,6 +41,7 @@ Comment[uk]=Відсилання пошти з кишенькового прис
 Comment[zh_CN]=通过 KMail 从您的手持设备发送邮件。
 Comment[zh_TW]=透過 KMail 送出您 handheld 的信件。
 Name=Mail
+Name[af]=Pos
 Name[be]=Пошта
 Name[br]=Lizher
 Name[ca]=Correu

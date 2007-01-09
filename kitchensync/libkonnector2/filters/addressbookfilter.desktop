@@ -7,6 +7,7 @@ X-KDE-Library=libksfilter_addressbook
 X-KDE-KitchenSyncFilterType=addressbook
 
 Name=Address Book Filter
+Name[af]=Adres boek filter
 Name[bg]=Филтър за адресника
 Name[br]=Sil karned chomlec'hioù
 Name[ca]=Filtre per a Address Book
@@ -49,6 +50,7 @@ Name[zh_CN]=地址簿过滤器
 Name[zh_TW]=通訊錄過濾器
 
 Comment=Filters contacts in an address book
+Comment[af]=Filter kontakte in 'n adres boek
 Comment[bg]=Филтриране на контактите в адресника
 Comment[ca]=Filtra els contactes d'una llibreta d'adreces
 Comment[cs]=Filtruje kontakty v knize adres

@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=Records (Experimental)
+Name[af]=Rekords (Eksperimenteel)
 Name[ca]=Registres (Experimental)
 Name[cs]=Záznamy (experimentální)
 Name[da]=Indspilninger (eksperimentel)
@@ -25,6 +26,7 @@ Name[sv]=Inspelningar (experimentell)
 Name[uk]=Записи (експериментальний)
 Name[zh_TW]=紀錄（實驗性）
 Comment=This conduit does nothing.
+Comment[af]=Hierdie pad doen niks
 Comment[bg]=Това нещо прави нищо
 Comment[bs]=Ovaj conduit ne radi ništa.
 Comment[ca]=Aquest conducte no fa res.

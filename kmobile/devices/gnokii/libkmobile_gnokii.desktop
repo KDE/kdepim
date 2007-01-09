@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Mobile Phone or Organizer (gnokii)
+Name[af]=Selfoon of Digitale Dagboek (gnokii)
 Name[be]=Мабільны тэлефон ці арганізатар (gnokii)
 Name[bg]=Мобилни телефони или организатори (gnokii)
 Name[bs]=Mobilni telefon ili organizer (gnokii)
@@ -49,6 +50,7 @@ Name[uz]=Уяли телефон ёки органайзер (gnokii)
 Name[zh_CN]=移动电话或 PDA(gnokii)
 Name[zh_TW]=行動電話或數位助理(gnokii)
 Comment=This driver supports many NOKIA and other mobile phones via the gnokii library
+Comment[af]=Hierdie drywer ondersteun baie Nokia en ander selfone d.m.v. die gnokii biblioteek
 Comment[bg]=Драйвер за поддръжка на мобилни телефони, предимно Нокия, чрез библиотеката gnokii
 Comment[bs]=Ovaj drajver podržava mnoge NOKIA i druge mobilne telefone putem gnokii biblioteke
 Comment[ca]=Aquest controlador acepta molts NOKIA i d'altres telèfons mòbils mitjançant la biblioteca «gnokii»

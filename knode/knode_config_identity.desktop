@@ -13,6 +13,7 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Identity
+Name[af]=Identiteit
 Name[be]=Увасабленьне
 Name[bg]=Самоличност
 Name[br]=Anvelezh
@@ -60,6 +61,7 @@ Name[uz]=Шахсият
 Name[zh_CN]=身份
 Name[zh_TW]=身份
 Comment=Personal Information
+Comment[af]=Persoonlike Informasie
 Comment[be]=Пэрсанальная інфармацыя
 Comment[bg]=Управление на личната информация
 Comment[br]=Titouroù diouzhin

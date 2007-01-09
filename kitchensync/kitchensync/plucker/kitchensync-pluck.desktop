@@ -5,6 +5,7 @@ Actions=JPluck-Add;
 
 [Desktop Action JPluck-Add]
 Name=Add to KitchenSync Plucker Plugin
+Name[af]=Voeg by KitchenSync Plucker inprop module
 Name[bg]=Добавяне към приставката KitchenSync Plucker
 Name[ca]=Endollable Plucker per a afegir a KitchenSync
 Name[cs]=Přidat do KitchenSync Plucker modulu

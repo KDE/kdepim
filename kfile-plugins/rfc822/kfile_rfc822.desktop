@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=Email Info
+Name[af]=E-pos informasie
 Name[be]=Інфармацыя аб паведамленьні электроннай пошты
 Name[bg]=Информация за е-поща
 Name[br]=Titouroù postel

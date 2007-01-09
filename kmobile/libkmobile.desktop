@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=kdedevice/mobiledevice
 Name=KDE Mobile Device Lowlevel Hardware Driver
+Name[af]=KDE draagbare toestel laevlak hardeware toestel
 Name[bs]=KDE hardverski drajver niskog nivoa za mobilne uređaje
 Name[ca]=Manegador KDE de dispositius de maquinari mòbil de baix nivell
 Name[cs]=KDE nízkoúrovňový ovladač mobilních zářízení 

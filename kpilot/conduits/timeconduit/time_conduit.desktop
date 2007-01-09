@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Comment=This conduit sets the time on your handheld from the PC clock.
+Comment[af]=Hierdie pad stel die tyd op jou draagbare toestel vanaf die PC horlosie.
 Comment[bg]=Синхронизация на датата и часа на мобилно устройство с часовника на компютъра
 Comment[bs]=Ovaj conduit postavlja vrijeme na vašem ručnom računaru prema PC satu.
 Comment[ca]=Aquest conducte estableix l'hora en la vostra agenda electrònica des del rellotge del PC.
@@ -44,6 +45,7 @@ Comment[uk]=Цей акведук синхронізує час у кишень�
 Comment[zh_CN]=此管道把您手持设备的时间与电脑同步。
 Comment[zh_TW]=此軟體經由 PC 時間設定您的 handheld 時間。
 Name=Time Synchronization
+Name[af]=Tyd sinkronisasie
 Name[be]=Сынхранізацыя часу
 Name[bs]=Sinhronizacija vremena
 Name[ca]=Sincronització horària

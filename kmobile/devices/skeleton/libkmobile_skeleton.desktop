@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Skeleton Device
+Name[af]=Raamwerk Toestel
 Name[bg]=Организатори
 Name[br]=Patrom trobarzhell
 Name[bs]=Skeleton uređaj
@@ -48,6 +49,7 @@ Name[uk]=Прототип пристрою
 Name[zh_CN]=万能设备
 Name[zh_TW]=空殼裝置
 Comment=Mobile Skeleton Device
+Comment[af]=Mobiele raamwerk toestel
 Comment[bg]=Мобилни организатори (устройства)
 Comment[bs]=Mobilni skeleton uređaj
 Comment[ca]=Dispositiu mòbil Skeleton

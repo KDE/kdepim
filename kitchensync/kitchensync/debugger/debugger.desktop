@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=Konnector Debugger
+Name[af]=Konnector Ontfouter
 Name[br]=Dizraener Konnector
 Name[bs]=Konnector debugger
 Name[ca]=Depurador Konnector

@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_pab_xxport
 Name=KAB MS Exchange Personal Addressbook XXPort Plugin
+Name[af]=KAB MS Exchange adresboek XXPort inprop module
 Name[be]=Дапаўненьне KAB "Імпарт пэрсанальнай адраснай кнігі MS Exchange"
 Name[bs]=KAB dodatak za MS Exchange Personal Addressbook XXPort
 Name[ca]=Endollable d'importació/exportació de la llibreta d'adreces personal d'MS Exchange per a KAB
@@ -44,6 +45,7 @@ Name[uk]=Втулок KAB для обміну з персональною адр
 Name[zh_CN]=KAB MS Exchange 个人地址簿 XXPort 插件
 Name[zh_TW]=KAB MS Exchange Personal Addressbook XXPort 外掛程式
 Comment=Plugin to import MS Exchange Personal Address Books
+Comment[af]=Inprop module wat kontakte in MS Exchange adresboek formaat invoer
 Comment[be]=Дапаўненьне для імпарту пэрсанальнай адраснай кнігі MS Exchange
 Comment[bg]=Приставка за импорт на контактите от MS Exchange Personal Address Books
 Comment[bs]=Dodatak za uvoz iz MS Exchange personalnog adresara

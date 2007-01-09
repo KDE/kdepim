@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=KitchenSync/ActionPart
 Name=KitchenSync Manipulator
+Name[af]=KitchenSync Manipuleerder
 Name[ca]=Manipulador KitchenSync
 Name[cs]=KitchenSync manipulátor
 Name[cy]=Trinydd KitchenSync
