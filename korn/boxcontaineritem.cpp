@@ -38,7 +38,7 @@
 #include <kstandardaction.h>
 #include <ktoolinvocation.h>
 #include <kvbox.h>
-
+#include <kinstance.h>
 #include <QtDBus>
 
 #include <QBitmap>
