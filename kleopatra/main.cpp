@@ -39,6 +39,7 @@
 
 #include <kleo/cryptobackendfactory.h>
 
+#include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
 #include <klocale.h>

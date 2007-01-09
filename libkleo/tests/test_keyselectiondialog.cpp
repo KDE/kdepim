@@ -34,7 +34,6 @@
 #include <ui/keyselectiondialog.h>
 #include <gpgmepp/key.h>
 
-#include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <kglobal.h>
@@ -46,9 +45,8 @@
 int main( int argc, char ** argv ) {
   KAboutData aboutData( "test_keyselectiondialog", "KeySelectionDialog Test", "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
 
-  app.iconLoader()->addAppDir( "libkleopatra" );
+  KIconLoader::global()->addAppDir( "libkleopatra" );
 
   Kleo::KeySelectionDialog dlg( "Kleo::KeySelectionDialog Test",
 				"Please select a key:",
