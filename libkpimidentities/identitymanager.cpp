@@ -44,7 +44,6 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 #include <emailfunctions/email.h> // for static helper functions
 
 #include <kemailsettings.h> // for IdentityEntry::fromControlCenter()
-#include <kapplication.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kconfig.h>
