@@ -300,7 +300,7 @@
     </entry>
     <entry name="readThreadColor" type="Color">
       <label>Read Thread</label>
-      <default code="true">kapp->palette().disabled().text()</default>
+      <default code="true">qApp->palette().disabled().text()</default>
     </entry>
     <entry name="unreadThreadColor" type="Color">
       <label>Unread Thread</label>

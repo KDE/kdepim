@@ -22,7 +22,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kwin.h>
-#include <kapplication.h>
 #include <ktoolinvocation.h>
 #include <kvbox.h>
 

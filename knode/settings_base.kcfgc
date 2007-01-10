@@ -5,4 +5,4 @@ Mutators=true
 ItemAccessors=true
 SetUserTexts=true
 Visibility=KDE_EXPORT
-IncludeFiles=kapplication.h
+IncludeFiles=qapplication.h

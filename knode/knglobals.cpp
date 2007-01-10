@@ -14,6 +14,7 @@
 
 #include "knglobals.h"
 
+#include <kglobal.h>
 #include <kconfig.h>
 #include <kiconloader.h>
 #include <kstaticdeleter.h>
@@ -71,7 +72,7 @@ KInstance *KNGlobals::instance() const
 {
   if ( mInstance )
     return mInstance;
-  return KApplication::kApplication();
+  return KGlobal::instance();
 }
 
 

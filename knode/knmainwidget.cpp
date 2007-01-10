@@ -36,7 +36,6 @@
 #include <kiconloader.h>
 #include <kstatusbar.h>
 #include <klocale.h>
-#include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <k3listviewsearchline.h>
 #include <khbox.h>
@@ -338,8 +337,8 @@ void KNMainWidget::updateCaption()
 
 void KNMainWidget::setCursorBusy(bool b)
 {
-  if(b) KApplication::setOverrideCursor(Qt::WaitCursor);
-  else  KApplication::restoreOverrideCursor();
+  if(b) QApplication::setOverrideCursor(Qt::WaitCursor);
+  else  QApplication::restoreOverrideCursor();
 }
 
 
@@ -393,7 +392,7 @@ void KNMainWidget::secureProcessEvents()
     naccel->setEnabled(false);*/
   installEventFilter(this);
 
-  kapp->processEvents();
+  qApp->processEvents();
 
   b_lockui = false;
   if ( mbar )

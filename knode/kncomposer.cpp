@@ -63,7 +63,6 @@ using KRecentAddress::RecentAddresses;
 #include <KStandardGuiItem>
 #include <ktoggleaction.h>
 #include <kicon.h>
-#include <kapplication.h>
 #include "kngroupselectdialog.h"
 #include "utilities.h"
 #include "knglobals.h"
@@ -1821,10 +1820,10 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   e_dit->setMinimumHeight(50);
 
   KConfigGroup config( knGlobals.config(), "VISUAL_APPEARANCE" );
-  QColor defaultColor1( kapp->palette().color( QPalette::Text )); // defaults from kmreaderwin.cpp
-  QColor defaultColor2( kapp->palette().color( QPalette::Text ) );
-  QColor defaultColor3( kapp->palette().color( QPalette::Text ) );
-  QColor defaultForeground( kapp->palette().color( QPalette::Text ) );
+  QColor defaultColor1( qApp->palette().color( QPalette::Text )); // defaults from kmreaderwin.cpp
+  QColor defaultColor2( qApp->palette().color( QPalette::Text ) );
+  QColor defaultColor3( qApp->palette().color( QPalette::Text ) );
+  QColor defaultForeground( qApp->palette().color( QPalette::Text ) );
   QColor col1 = config.readEntry( "ForegroundColor", defaultForeground );
   QColor col2 = config.readEntry( "quote3Color", defaultColor3 );
   QColor col3 = config.readEntry( "quote2Color", defaultColor2 );

@@ -19,8 +19,8 @@
 #include <QLabel>
 #include <QLayout>
 #include <QProgressBar>
-//Added by qt3to4:
 #include <QVBoxLayout>
+#include <QApplication>
 #include <QFrame>
 #include <QTextStream>
 #include <QCloseEvent>
@@ -28,7 +28,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kseparator.h>
-#include <kapplication.h>
 #include <kdebug.h>
 
 #include "knfolder.h"
@@ -63,13 +62,13 @@ void KNCleanUp::start()
   for ( QList<KNArticleCollection*>::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
     if ( (*it)->type() == KNCollection::CTgroup ) {
       d_lg->showMessage( i18n("Deleting expired articles in <b>%1</b>", (*it)->name() ) );
-      kapp->processEvents();
+      qApp->processEvents();
       expireGroup( static_cast<KNGroup*>( (*it) ) );
       d_lg->doProgress();
     }
     else if ( (*it)->type() == KNCollection::CTfolder ) {
       d_lg->showMessage( i18n("Compacting folder <b>%1</b>", (*it)->name() ) );
-      kapp->processEvents();
+      qApp->processEvents();
       compactFolder( static_cast<KNFolder*>( (*it) ) );
       d_lg->doProgress();
     }

@@ -14,6 +14,8 @@
 #include "knode.h"
 #include "knglobals.h"
 
+#include <QApplication>
+
 #include <kkeydialog.h>
 #include <kedittoolbar.h>
 #include <kstandardaction.h>
@@ -22,7 +24,6 @@
 #include <kiconloader.h>
 #include <kstatusbar.h>
 #include <klocale.h>
-#include <kapplication.h>
 #include <kactioncollection.h>
 
 #include "broadcaststatus.h"
@@ -43,7 +44,7 @@ KNMainWindow::KNMainWindow( QWidget* parent )
   setStandardToolBarMenuEnabled(true);
 
   //config stuff
-  KStandardAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
+  KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
   KStandardAction::configureToolbars(this, SLOT(slotConfToolbar()), actionCollection());
   KStandardAction::keyBindings(this, SLOT(slotConfKeys()), actionCollection());
 

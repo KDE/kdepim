@@ -28,7 +28,6 @@
 #include "aboutdata.h"
 #include "kncollectionview.h"
 
-#include <kapplication.h>
 #include <kparts/genericfactory.h>
 #include <kparts/statusbarextension.h>
 #include <kiconloader.h>
@@ -49,12 +48,12 @@ KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QStringList 
   mParentWidget( parentWidget )
 {
   kDebug(5003) << "KNodePart()" << endl;
-  kDebug(5003) << "  InstanceName: " << kapp->instanceName() << endl;
+  kDebug(5003) << "  InstanceName: " << KGlobal::instance()->instanceName() << endl;
 
   setInstance( KNodeFactory::instance() );
 
   kDebug(5003) << "KNodePart()..." << endl;
-  kDebug(5003) << "  InstanceName: " << kapp->instanceName() << endl;
+  kDebug(5003) << "  InstanceName: " << KGlobal::instance()->instanceName() << endl;
 
   KGlobal::locale()->insertCatalog("libkdepim");
   KGlobal::locale()->insertCatalog("libkpgp");

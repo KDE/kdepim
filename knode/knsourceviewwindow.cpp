@@ -14,7 +14,6 @@
 
 #include <q3accel.h>
 
-#include <kapplication.h>
 #include <kdialog.h>
 #include <klocale.h>
 

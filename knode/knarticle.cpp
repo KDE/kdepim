@@ -15,7 +15,7 @@
 
 #include <klocale.h>
 #include <kcodecs.h>
-#include <kmimemagic.h>
+#include <kmimetype.h>
 
 #include "knhdrviewitem.h"
 #include "kngroup.h"
@@ -459,7 +459,7 @@ KNAttachment::KNAttachment(Content *c)
 KNAttachment::KNAttachment(KNLoadHelper *helper)
   : c_ontent(0), l_oadHelper(helper), f_ile(helper->getFile()), i_sAttached(false), h_asChanged(true)
 {
-  setMimeType((KMimeMagic::self()->findFileType(f_ile->fileName()))->mimeType());
+  setMimeType(KMimeType::findByPath(f_ile->fileName())->name());
   n_ame=helper->getURL().fileName();
 }
 

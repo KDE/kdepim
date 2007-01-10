@@ -24,7 +24,6 @@
 #include <ksimpleconfig.h>
 #include <kmessagebox.h>
 #include <klocale.h>
-#include <kapplication.h>
 #include <kglobalsettings.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>

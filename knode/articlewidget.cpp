@@ -32,7 +32,6 @@
 #include <kactioncollection.h>
 #include <kactionmenu.h>
 #include <kaddrbook.h>
-#include <kapplication.h>
 #include <kascii.h>
 #include <kbookmarkmanager.h>
 #include <kcharsets.h>
@@ -1256,7 +1255,7 @@ void ArticleWidget::slotPrint( )
 
 void ArticleWidget::slotCopySelection( )
 {
-  kapp->clipboard()->setText( mViewer->selectedText() );
+  QApplication::clipboard()->setText( mViewer->selectedText() );
 }
 
 
