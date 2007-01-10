@@ -29,7 +29,6 @@
 #include <kinstance.h>
 #include <kiconloader.h>
 #include <kmimetype.h>
-#include <kmimemagic.h>
 #include <kcodecs.h>
 #include <kdebug.h>
 
@@ -690,16 +689,13 @@ mimeHeader::setBodyEncoded (const QByteArray & _arr)
 QString
 mimeHeader::iconName ()
 {
-  QString fileName;
-
-  // FIXME: bug?  Why throw away this data?
-  fileName =
+  QString fileName =
     KMimeType::mimeType (contentType.toLower ())->icon (QString(), false);
-  fileName =
+  QString iconFileName =
     KGlobal::instance ()->iconLoader ()->iconPath (fileName, K3Icon::Desktop);
-//  if (fileName.isEmpty())
-//    fileName = KGlobal::instance()->iconLoader()->iconPath( "unknown", K3Icon::Desktop );
-  return fileName;
+//  if (iconFileName.isEmpty())
+//    iconFileName = KGlobal::instance()->iconLoader()->iconPath( "unknown", K3Icon::Desktop );
+  return iconFileName;
 }
 
 void
@@ -721,19 +717,15 @@ mimeHeader::headerAsString ()
 QString
 mimeHeader::magicSetType (bool aAutoDecode)
 {
-  QString mimetype;
   QByteArray body;
-  KMimeMagicResult *result;
-
-  KMimeMagic::self ()->setFollowLinks (true); // is it necessary ?
 
   if (aAutoDecode)
     body = bodyDecodedBinary ();
   else
     body = postMultipartBody;
 
-  result = KMimeMagic::self ()->findBufferType (body);
-  mimetype = result->mimeType ();
+  KMimeType::Ptr mime = KMimeType::findByContent (body);
+  QString mimetype = mime->name();
   contentType = mimetype;
   return mimetype;
 }
