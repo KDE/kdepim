@@ -20,7 +20,9 @@
 #include <ktnef/ktnefproperty.h>
 #include <ktnef/ktnefpropertyset.h>
 #include <ktnef/ktnefdefs.h>
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //#include "qwmf.h"
 
 #include <QLabel>
@@ -182,7 +184,9 @@ QPixmap loadRenderingPixmap( KTNEFPropertySet *pSet, const QColor& bgColor )
 		if ( type == 1 && w > 0 && h > 0 )
 		{
 			// Load WMF data
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //			QWinMetaFile wmfLoader;
                         QByteArray wmfArray( wmf.toByteArray() );
 			QBuffer wmfBuffer( &wmfArray );
