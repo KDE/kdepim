@@ -4961,7 +4961,9 @@ void KDGanttView::startDrag ()
 /*!
   This method is overridden for internal purposes.
 */
+#ifdef __GNUC__
 #warning "FIXME: This overridden method is not called any more, as it is deprecated"
+#endif
 void KDGanttView::setPaletteBackgroundColor( const QColor& col)
 {
   QPalette pal = palette();

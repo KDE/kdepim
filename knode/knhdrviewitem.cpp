@@ -244,7 +244,9 @@ QString KNHdrViewItem::text( int col ) const
 
 Q3DragObject* KNHdrViewItem::dragObject()
 {
+#ifdef __GNUC__
 #warning Enable this section again, once KNHdrView does not derive from K3ListView any more and can process QDrag (not Q3DragObject)
+#endif
 return 0;
 #if 0
   QDrag *drag = new QDrag( listView()->viewport() );

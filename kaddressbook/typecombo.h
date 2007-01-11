@@ -129,7 +129,9 @@ int TypeCombo<T>::selectedType()
 template <class T>
 typename TypeCombo<T>::Iterator TypeCombo<T>::selectedElement()
 {
+#ifdef __GNUC__
 #warning Ugly porting hack!
+#endif
    typename TypeCombo<T>::Iterator it = mTypeList.begin();
   for ( int i = 0; i < currentIndex(); ++i, ++it );
   return it;

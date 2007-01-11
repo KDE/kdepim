@@ -61,7 +61,9 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 
 using namespace KPIM;
 
+#ifdef __GNUC__
 #warning Port me?
+#endif
 /*static QByteArray newDCOPObjectName()
 {
     static int s_count = 0;
@@ -77,7 +79,9 @@ IdentityManager::IdentityManager( bool readonly, QObject * parent, const char * 
   : ConfigManager( parent, name ) //, DCOPObject( newDCOPObjectName() )
 {
   new IdentityManagerAdaptor( this );
+#ifdef __GNUC__
 #warning "kde4: verify it"  
+#endif
   mIface = new OrgKdePimIdentityManagerInterface("org.kde.pim.IdentityManager", "/", QDBusConnection::sessionBus() );
   connect( mIface, SIGNAL(identitiesChanged(QString)), this, SLOT(slotIdentitiesChanged(QString)) );
 

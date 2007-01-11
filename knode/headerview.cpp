@@ -87,7 +87,9 @@ KNHeaderView::KNHeaderView( QWidget *parent ) :
   connect( knGlobals.articleManager(), SIGNAL(aboutToShowGroup()), SLOT(prepareForGroup()) );
   connect( knGlobals.articleManager(), SIGNAL(aboutToShowFolder()), SLOT(prepareForFolder()) );
 
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //   new KNHeaderViewToolTip( this );
 
   installEventFilter( this );
@@ -518,7 +520,9 @@ void KNHeaderView::keyPressEvent(QKeyEvent *e)
 }
 
 
+#ifdef __GNUC__
 #warning Port this to QDrag once the view doesnot derive from K3ListView any more
+#endif
 Q3DragObject* KNHeaderView::dragObject()
 {
   KNHdrViewItem *item = static_cast<KNHdrViewItem*>( itemAt(viewport()->mapFromGlobal(QCursor::pos())) );
@@ -559,7 +563,9 @@ void KNHeaderView::resetCurrentTime()
 
 //BEGIN: KNHeaderViewToolTip ==================================================
 
+#ifdef __GNUC__
 #warning Port me!
+#endif
 #if 0
 KNHeaderViewToolTip::KNHeaderViewToolTip( KNHeaderView *parent ) :
   QToolTip( parent->viewport() ),

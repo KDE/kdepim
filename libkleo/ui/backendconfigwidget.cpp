@@ -310,7 +310,9 @@ void Kleo::BackendConfigWidget::slotConfigureButtonClicked() {
     int result = dlg.exec();
     if ( result == QDialog::Accepted ) {
       // Tell other users of gpgconf (e.g. the s/mime page) that the gpgconf data might have changed
+#ifdef __GNUC__
 #warning "kde4: port it kapp->dcopClient()->emitDCOPSignal( KPIM::CryptoConfig, changed(), QByteArray() );"
+#endif
 	  //kapp->dcopClient()->emitDCOPSignal( "KPIM::CryptoConfig", "changed()", QByteArray() );
       // and schedule a rescan, in case the updates make a backend valid
       QTimer::singleShot( 0, this, SLOT(slotRescanButtonClicked()) );

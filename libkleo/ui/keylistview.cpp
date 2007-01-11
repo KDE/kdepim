@@ -63,7 +63,9 @@ static const int updateDelayMilliSecs = 500;
 
 namespace {
 
+#ifdef __GNUC__
 #warning Port me!
+#endif
 #if 0
   class ItemToolTip : public QToolTip {
   public:
@@ -174,7 +176,9 @@ Kleo::KeyListView::KeyListView( const ColumnStrategy * columnStrategy, const Dis
 
   this->setToolTip("");
   viewport()->setToolTip(""); // make double sure :)
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //  d->itemToolTip = new ItemToolTip( this );
 }
 

@@ -8868,7 +8868,9 @@ soap_timegm(struct tm *T)
   T->tm_isdst = (t.dstflag != 0);
   return mktime(T);
 #else
+#ifdef __GNUC__
 #warning "time_t (de)serialization is not MT safe on this platform"
+#endif
   time_t t;
   char *tz = getenv("TZ");
   putenv("TZ=UTC");

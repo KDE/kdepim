@@ -61,7 +61,9 @@ BoxContainerItem::BoxContainerItem( QObject * parent )
 {
 
 	new BoxContainerItemAdaptor( this );
+#ifdef __GNUC__
 #warning Put some useful DBus object path here
+#endif
 	QDBusConnection::sessionBus().registerObject( "/", this, QDBusConnection::ExportAdaptors );
 }
 
@@ -75,7 +77,9 @@ void BoxContainerItem::readConfig( BoxSettings* settings, BoxSettings *config_bo
 	_settings = settings;
 	
 	//Sets the object ID for the DBUS-object
+#ifdef __GNUC__
 #warning Port me to DBus (using DBus object path instead?)
+#endif
 //	this->setObjId( config->readEntry( "name", "" ).toUtf8() );
 	
 	//Read the settings of the reimplemented class.
@@ -160,7 +164,9 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject
 	KPassivePopup *popup = new KPassivePopup( parent );
 	popup->setObjectName( "Passive popup" );
 		
+#ifdef __GNUC__
 #warning Port objId() call to DBus!
+#endif
 	KVBox *mainvlayout = popup->standardView( QString( "KOrn - %1/%2 (total: %3)" ).arg( /*objId().data()*/"" ).arg( accountName )
 			.arg( total ), "", QPixmap(), 0 );
 	QWidget *mainglayout_wid = new QWidget( mainvlayout );

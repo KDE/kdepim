@@ -140,7 +140,9 @@ void KWatchGnuPGMainWindow::startWatcher()
   if( mWatcher->isRunning() ) {
 	mWatcher->kill();
 	while( mWatcher->isRunning() ) {
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //	  kapp->eventLoop()->processEvents(QEventLoop::ExcludeUserInput);
 	}
 	mCentralWidget->append(tr("[%1] Log stopped")
@@ -285,7 +287,9 @@ void KWatchGnuPGMainWindow::slotReadConfig()
   mCentralWidget->setWordWrapMode( config->readEntry("WordWrap", false)
 							   ?QTextOption::WordWrap
 							   :QTextOption::NoWrap );
+#ifdef __GNUC__
 #warning "porting kde4: setMaxLogLines ";  
+#endif
   //mCentralWidget->setMaxLogLines( config->readEntry( "MaxLogLen", 10000 ) );
   setGnuPGConfig();
   startWatcher();

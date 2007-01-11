@@ -89,7 +89,9 @@ void DockedItem::slotShowPassivePopup( QList< KornMailSubject >* list, int total
 
 void DockedItem::slotShowPassivePopup( const QString& message, const QString& name )
 {
+#ifdef __GNUC__
 #warning Port objId() usage!
+#endif
 	KPassivePopup::message( QString( "Korn - %1/%2" ).arg( /*objId().constData()*/"" ).arg( name ), message, _systemtray->parentWidget() );
 }
 

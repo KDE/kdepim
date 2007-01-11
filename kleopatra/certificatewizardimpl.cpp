@@ -426,7 +426,9 @@ void CertificateWizardImpl::showPage( QWidget * page )
 void CertificateWizardImpl::sendCertificate( const QString& email, const QByteArray& certificateData )
 {
   QString error;
+#ifdef __GNUC__
 #warning Port me to DBus!
+#endif
 /*  DCOPCString dcopService;
   int result = KDCOPServiceStarter::self()->
     findServiceFor( "DBUS/Mailer", QString(),

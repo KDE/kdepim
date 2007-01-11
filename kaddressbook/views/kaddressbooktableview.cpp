@@ -179,7 +179,9 @@ KABC::Field *KAddressBookTableView::sortField() const
 void KAddressBookTableView::writeConfig( KConfigGroup &cfg )
 {
   KAddressBookView::writeConfig(cfg );
+#ifdef __GNUC__
 #warning "kde4: port to KConfigGroup ";
+#endif
   //mListView->saveLayout( config, config->group() );
 }
 
@@ -214,7 +216,9 @@ void KAddressBookTableView::readConfig( KConfigGroup &cfg )
     mListView->setBackgroundPixmap( cfg.readPathEntry( "BackgroundName" ) );
 
   // Restore the layout of the listview
+#ifdef __GNUC__
 #warning "kde4 port to kconfiggroup"
+#endif
   //mListView->restoreLayout( config, cfg.group() );
 }
 

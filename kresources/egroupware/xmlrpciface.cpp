@@ -203,7 +203,9 @@ QString Query::marshal( const QVariant &arg ) const
   {
       case QVariant::String:
         {
+#ifdef __GNUC__
 #warning Port me!
+#endif
       //case QVariant::CString: 
         QString result = arg.toString();
         result = result.replace( "&", "&amp;" );

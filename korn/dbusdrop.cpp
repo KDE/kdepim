@@ -200,7 +200,9 @@ QString DBUSDrop::DBUSName() const
 
 void DBUSDrop::setDBUSName( const QString& name)
 {
+#ifdef __GNUC__
 #warning Port me (using DBus object path?)
+#endif
 	*_name = name;
 //	if( _interface )
 //		_interface->changeName( name );

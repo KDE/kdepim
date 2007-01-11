@@ -1840,7 +1840,9 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   n_otification=new Q3GroupBox(2, Qt::Horizontal, e_dit);
   l=new QLabel(i18n("You are currently editing the article body\nin an external editor. To continue,you have\nto close the external editor."), n_otification);
   c_ancelEditorBtn=new QPushButton(i18n("&Kill External Editor"), n_otification);
+#ifdef __GNUC__
 #warning Port me?
+#endif
 //   n_otification->setFrameStyle(Q3Frame::Panel | Q3Frame::Raised);
 //   n_otification->setLineWidth(2);
   n_otification->hide();
@@ -2117,7 +2119,9 @@ bool KNComposer::Editor::eventFilter(QObject*o, QEvent* e)
         }
 
         //Execute the popup inline
+#ifdef __GNUC__
 #warning Port me!
+#endif
         int id = -1;//p.exec( mapToGlobal( event->pos() ) );
 
         if( id > -1 )

@@ -54,7 +54,9 @@ QWidget* LabelAction::createWidget( QWidget * parent )
   return label;
 }
 
+#ifdef __GNUC__
 #warning How to port the Kiosk stuff below?
+#endif
 /*int LabelAction::plug( QWidget * widget, int index ) {
   if ( !KAuthorized::authorizeKAction( name() ) )
     return -1;
@@ -94,7 +96,9 @@ void LineEditAction::deleteWidget(QWidget* widget)
   delete widget;
 }
 
+#ifdef __GNUC__
 #warning How to port the Kiosk stuff below?
+#endif
 /*int LineEditAction::plug( QWidget * widget, int index ) {
   if ( !KAuthorized::authorizeKAction( name() ) )
     return -1;
@@ -156,7 +160,9 @@ QWidget* ComboAction::createWidget( QWidget * parent )
   return box;
 }
 
+#ifdef __GNUC__
 #warning How to port the Kiosk stuff below?
+#endif
 /*int ComboAction::plug( QWidget * widget, int index ) {
   if ( !KAuthorized::authorizeKAction( name() ) )
     return -1;

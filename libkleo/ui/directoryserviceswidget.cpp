@@ -107,7 +107,9 @@ Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
 
     downButton->setIcon( BarIconSet( "down", K3Icon::SizeSmall ) );
     downButton->setEnabled( false ); // b/c no item is selected yet
+#ifdef __GNUC__
 #warning "kde4: fix connect signal/slot" ;
+#endif
     connect( addServicePB,SIGNAL( clicked () ),SLOT(slotAddService() ) );
 }
 

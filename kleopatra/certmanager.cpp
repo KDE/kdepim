@@ -431,7 +431,9 @@ void CertManager::slotConfigureGpgME() {
     if ( result == QDialog::Accepted )
     {
       // Tell other apps (e.g. kmail) that the gpgconf data might have changed
+#ifdef __GNUC__
 #warning Port emitDCOPSignal() usage
+#endif
 //      kapp->dcopClient()->emitDCOPSignal( "KPIM::CryptoConfig", "changed()", QByteArray() );
     }
   }

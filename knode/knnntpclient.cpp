@@ -143,7 +143,9 @@ void KNNntpClient::doFetchGroups()
   if (!job->success() || job->canceled())
     return;     // stopped...
 
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //   QSortedVector<KNGroupInfo*> tempVector;
 //   target->groups->toVector(&tempVector);
 //   tempVector.sort();
@@ -193,7 +195,9 @@ void KNNntpClient::doFetchGroups()
             description = QString::fromLocal8Bit(s);
           info.name = name;
 
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //           if ((pos=tempVector.bsearch(&info))!=-1)
 //             tempVector[pos]->description = description;
         }

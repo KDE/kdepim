@@ -108,7 +108,9 @@ void OverViewPage::showWizardEGroupware()
 
 void OverViewPage::showWizardKolab()
 {
+#ifdef __GNUC__
 #warning Kolab wizard disabled!
+#endif
 //  KolabWizard wizard;
 //  wizard.exec();
 }
@@ -121,7 +123,9 @@ void OverViewPage::showWizardSlox()
 
 void OverViewPage::showWizardGroupwise()
 {
+#ifdef __GNUC__
 #warning Re-enable me as soon as we have the new GroupWise resource!
+#endif
 //  GroupwiseWizard wizard;
 //  wizard.exec();
 }

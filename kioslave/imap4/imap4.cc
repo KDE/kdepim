@@ -1750,7 +1750,9 @@ IMAP4Protocol::stat (const KUrl & _url)
       completeQueue.removeRef (cmd);
       validity = getStatus ().uidValidity ();
     }
+#ifdef __GNUC__
 #warning This is temporary since Dec 2000 and makes most of the below code invalid
+#endif
     validity = 0;               // temporary
 
     if (aType == ITYPE_BOX || aType == ITYPE_DIR_AND_BOX)

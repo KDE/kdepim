@@ -108,7 +108,9 @@ void SmtpJob::startSmtpJob()
   if ( transport()->specifyHostname() )
     destination.addQueryItem( QLatin1String("hostname"), transport()->localHostname() );
 
+#ifdef __GNUC__
 #warning Argh!
+#endif
 //   if ( !kmkernel->msgSender()->sendQuotedPrintable() )
 //     query += "&body=8bit";
 
@@ -121,7 +123,9 @@ void SmtpJob::startSmtpJob()
       bool keep = !transport()->isAdHoc(); // do not provide keep checkbox for adhoc transports
       int result;
 
+#ifdef __GNUC__
 #warning yet another KMail specific thing
+#endif
 //       KCursorSaver idle( KBusyPtr::idle() );
       result = KIO::PasswordDialog::getNameAndPassword(
           user, passwd, &keep,

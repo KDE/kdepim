@@ -34,11 +34,15 @@ KNSourceViewWindow::KNSourceViewWindow( const QString &text )
   setAcceptRichText( false );
 
   setWindowTitle(KDialog::makeStandardCaption(i18n("Article Source"), this));
+#ifdef __GNUC__
 #warning "kde4: porting\n";  
+#endif
   //setPaper( QBrush( knGlobals.settings()->backgroundColor()) );
   setFont( knGlobals.settings()->articleFixedFont() );
   setTextColor( knGlobals.settings()->textColor() );
+#ifdef __GNUC__
 #warning "kde4: porting\n";  
+#endif
   //setWordWrap( KTextBrowser::NoWrap );
 
   setPlainText( text );

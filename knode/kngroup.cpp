@@ -498,7 +498,9 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
 
     if (timer.elapsed() > 200) {           // don't flicker
       timer.restart();
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //      if (client) client->updatePercentage((new_cnt*30)/todo);
     }
   }
@@ -750,7 +752,9 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
     if (timer.elapsed() > 200) {           // don't flicker
       timer.restart();
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //      if(client)
 //        client->updatePercentage(30+((foundCnt)*70)/cnt);
     }
@@ -811,7 +815,9 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
       if (timer.elapsed() > 200) {           // don't flicker
         timer.restart();
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //        if (client) client->updatePercentage(30+((bySubCnt+foundCnt)*70)/cnt);
       }
     }

@@ -110,7 +110,9 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
   uint size=f.size()+2;
 
   timer.start();
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //  if (client) client->updatePercentage(0);
 
   if(f.open(QIODevice::ReadOnly)) {
@@ -154,7 +156,9 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
 
       if (timer.elapsed() > 200) {           // don't flicker
         timer.restart();
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //        if (client) client->updatePercentage((f.at()*100)/size);
       }
     }

@@ -251,7 +251,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( result == 0 ) {
         // OK, so korganizer (or kontact) is running. Now ensure the object we want is available
         // [that's not the case when kontact was already running, but korganizer not loaded into it...]
+#ifdef __GNUC__
 #warning Port me to DBus!
+#endif
 /*        static const char* const dcopObjectId = "KOrganizerIface";
         DCOPCString dummy;
         if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) ) {

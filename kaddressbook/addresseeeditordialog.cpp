@@ -116,7 +116,9 @@ void AddresseeEditorDialog::slotApply()
   }
 
   enableButton( KDialog::Apply, false );
+#ifdef __GNUC__
 #warning "kde4: port it"
+#endif
   //KDialog::slotApply();
 }
 

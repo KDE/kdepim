@@ -385,7 +385,9 @@ void KABCore::mailVCard( const QStringList &uids )
 void KABCore::startChat()
 {
   QStringList uids = mViewManager->selectedUids();
+#ifdef __GNUC__
 #warning Port KIMProxy usage!
+#endif
 //  if ( !uids.isEmpty() )
 //    mKIMProxy->chatWithContact( uids.first() );
 }

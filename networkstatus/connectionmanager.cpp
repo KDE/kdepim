@@ -145,7 +145,9 @@ void ConnectionManager::slotStatusChanged( QString host, int status )
 
 bool ConnectionManager::askToConnect( QWidget * mainWidget )
 {
+#ifdef __GNUC__
 	#warning i18n: What the hell are these isolated i18n messages doing here?
+#endif
 	//i18n( "A network connection was disconnected.  The application is now in offline mode.  Do you want the application to resume network operations when the network is available again?" );
 	//i18n( "This application is currently in offline mode.  Do you want to connect?" );
 	//i18nc( "Message shown when a network connection failed.  The placeholder contains the concrete description of the operation eg 'while performing this operation", "A network connection failed %1.  Do you want to place the application in offline mode?" );

@@ -57,7 +57,9 @@ KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QStringList 
 
   KGlobal::locale()->insertCatalog("libkdepim");
   KGlobal::locale()->insertCatalog("libkpgp");
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //   kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
   KIconLoader::global()->addAppDir("knode");
   knGlobals.setInstance( KNodeFactory::instance() );
@@ -72,7 +74,9 @@ KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QStringList 
   topLayout->addWidget(mainWidget);
   mainWidget->setFocusPolicy( Qt::ClickFocus );
 
+#ifdef __GNUC__
 #warning Port me!
+#endif
 //   kapp->dcopClient()->resume(); // Ok. We are ready for DCOP requests.
 
   KParts::StatusBarExtension* statusBar = new KParts::StatusBarExtension(this);
