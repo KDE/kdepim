@@ -70,6 +70,9 @@ AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core * /*core*/,
   config.setGroup( "AddresseeEditor" );
   QSize defaultSize( 750, 570 );
   resize( config.readEntry( "Size", defaultSize ) );
+  connect(this,SIGNAL(okClicked()),SLOT(slotOk()));
+  connect(this,SIGNAL(cancelClicked()),SLOT(slotCancel()));
+  connect(this,SIGNAL(applyClicked()),SLOT(slotApply()));
 }
 
 AddresseeEditorDialog::~AddresseeEditorDialog()

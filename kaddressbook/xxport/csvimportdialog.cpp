@@ -156,6 +156,8 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent )
 
   connect( this, SIGNAL( user2Clicked() ),
            this, SLOT( saveTemplate() ) );
+  connect( this, SIGNAL( okClicked()),
+           this, SLOT( slotOk()));
 }
 
 CSVImportDialog::~CSVImportDialog()
