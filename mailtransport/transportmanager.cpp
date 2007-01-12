@@ -25,6 +25,7 @@
 
 #include <kconfig.h>
 #include <kdebug.h>
+#include <kemailsettings.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <krandom.h>
@@ -86,7 +87,7 @@ Transport* TransportManager::transportById(int id, bool def) const
     if ( t->id() == id )
       return t;
 
-  if ( def || id == 0 )
+  if ( def || (id == 0 && mDefaultTransportId != id) )
     return transportById( mDefaultTransportId, false );
   return 0;
 }
@@ -135,6 +136,19 @@ void TransportManager::schedule(TransportJob * job)
   }
 
   job->start();
+}
+
+void TransportManager::createDefaultTransport()
+{
+  KEMailSettings kes;
+  Transport *t = createTransport();
+  t->setName( i18n("Default Transport") );
+  t->setHost( kes.getSetting( KEMailSettings::OutServer ) );
+  if ( t->isValid() ) {
+    t->writeConfig();
+    addTransport( t );
+  } else
+    kWarning() << k_funcinfo << "KEMailSettings does not contain a vaild transport setting." << endl;
 }
 
 TransportJob* TransportManager::createTransportJob( int transportId )

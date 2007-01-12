@@ -14,6 +14,7 @@ Migration
 TransportManager
 ----------------
 - load passwords if another instance opens the wallet
+- load passwords if application opens wallet
 - add D-Bus interface for sending mails
 
 Transport
