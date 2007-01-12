@@ -426,7 +426,8 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   setButtonText( KDialog::Help, i18n("&Start Certificate Manager") );
   connect( this, SIGNAL(defaultClicked()), this, SLOT(slotRereadKeys()) );
   connect( this, SIGNAL(helpClicked()), this, SLOT(slotStartCertificateManager()) );
-
+  connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()));
+  connect( this, SIGNAL(cancelClicked()),this,SLOT(slotCancel()));
   slotRereadKeys();
 }
 

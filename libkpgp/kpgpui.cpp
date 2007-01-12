@@ -398,6 +398,8 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
   setButtonGuiItem( KDialog::Default, KGuiItem(i18n("&Reread Keys")) );
   connect( this, SIGNAL( defaultClicked() ),
            this, SLOT( slotRereadKeys() ) );
+  connect(this, SIGNAL( okClicked()),SLOT(slotOk()));
+  connect(this,SIGNAL( cancelClicked()),SLOT(slotCancel()));
 }
 
 
@@ -1503,7 +1505,8 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
   int screenHeight = desk.height();
   if( size.height() > 7*screenHeight/8 )
     size.setHeight( 7*screenHeight/8 );
-
+  connect(this,SIGNAL(okClicked()),SLOT(slotOk()));
+  connect(this,SIGNAL(cancelClicked()),SLOT(slotCancel()));
   setInitialSize( size );
 }
 
