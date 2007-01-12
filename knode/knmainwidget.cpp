@@ -51,6 +51,9 @@
 using KPIM::BroadcastStatus;
 using KRecentAddress::RecentAddresses;
 
+#include <mailtransport/transportmanager.h>
+using MailTransport::TransportManager;
+
 //GUI
 #include "knmainwidget.h"
 #include "knarticlewindow.h"
@@ -920,14 +923,8 @@ bool KNMainWidget::firstStart()
   id->setReplyTo(emailConf.readEntry("ReplyAddr"));
   id->save();
 
-#ifdef __GNUC__
-#warning Port me!
-#endif
-/*  KNServerInfo *smtp=knGlobals.accountManager()->smtp();
-  smtp->setServer(emailConf.readEntry("OutgoingServer").toLatin1());
-  smtp->setPort(25);
-  conf->setGroup("MAILSERVER");
-  smtp->saveConf(conf);*/
+  if ( TransportManager::self()->isEmpty() )
+    TransportManager::self()->createDefaultTransport();
 
   conf->setGroup("GENERAL");
   conf->writeEntry("Version", KNODE_VERSION);
