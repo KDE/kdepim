@@ -94,6 +94,7 @@ KNFilterDialog::KNFilterDialog( KNArticleFilter *f, QWidget *parent )
 
   setHelp("anc-using-filters");
   connect( fname,  SIGNAL( textChanged ( const QString & )), this, SLOT( slotTextChanged( const QString & )));
+  connect( this, SIGNAL(okClicked()),this,SLOT(slotOk()));
   slotTextChanged( fname->text() );
 }
 

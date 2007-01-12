@@ -170,6 +170,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   mCleanupWidget->load();
 
   KNHelper::restoreWindowSize("groupPropDLG", this, sizeHint());
+  connect(this,SIGNAL(okClicked()),SLOT(slotOk()));
 }
 
 

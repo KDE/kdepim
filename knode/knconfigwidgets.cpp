@@ -1118,6 +1118,7 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
 
   setHelp("anc-knode-headers");
   slotNameChanged( n_ameE->text() );
+  connect(this,SIGNAL(okClicked()),SLOT(slotOk()));
 }
 
 
