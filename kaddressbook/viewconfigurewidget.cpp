@@ -103,7 +103,7 @@ ViewConfigureDialog::ViewConfigureDialog( ViewConfigureWidget *wdg, const QStrin
   showButtonSeparator( true );
 
   setMainWidget( mConfigWidget );
-
+  connect(this,SIGNAL(helpClicked()),this,SLOT(slotHelp()));
   resize( 600, 300 );
 }
 

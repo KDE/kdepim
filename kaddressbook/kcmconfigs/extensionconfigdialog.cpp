@@ -53,6 +53,7 @@ ExtensionConfigDialog::ExtensionConfigDialog( KAB::ExtensionFactory *factory, KC
   layout->addWidget( mWidget, 0, 0 );
 
   mWidget->restoreSettings( mConfig );
+  connect(this,SIGNAL(okClicked()),this,SLOT(slotOk()));
 }
 
 ExtensionConfigDialog::~ExtensionConfigDialog()

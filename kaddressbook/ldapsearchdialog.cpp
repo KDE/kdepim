@@ -213,6 +213,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   setTabOrder(mFilterCombo, mSearchButton);
   mSearchEdit->setFocus();
   connect(this,SIGNAL(user1Clicked()),this,SLOT(slotUser1()));
+  connect(this,SIGNAL(helpClicked()),this,SLOT(slotHelp()));
   restoreSettings();
 }
 

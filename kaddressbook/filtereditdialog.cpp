@@ -161,6 +161,7 @@ void FilterEditDialog::initGUI()
   gbLayout->addWidget( radio );
 
   topLayout->addWidget( mMatchRuleGroup, 2, 0, 1, 2 );
+  connect(this, SIGNAL(helpClicked()),this,SLOT(slotHelp()));
 }
 
 void FilterEditDialog::filterNameTextChanged( const QString &text )

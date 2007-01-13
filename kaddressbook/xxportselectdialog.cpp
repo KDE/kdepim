@@ -95,6 +95,7 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
   KABC::Field::List::ConstIterator fieldIt;
   for ( fieldIt = mFields.begin(); fieldIt != mFields.end(); ++fieldIt )
     mFieldCombo->addItem( (*fieldIt)->label() );
+  connect(this,SIGNAL(helpClicked()),this,SLOT(slotHelp()));
 }
 
 KABC::AddresseeList XXPortSelectDialog::contacts()

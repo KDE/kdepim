@@ -184,7 +184,7 @@ NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
            this, SLOT( modified() ) );
   connect( mFormattedNameEdit, SIGNAL( textChanged( const QString& ) ),
            this, SLOT( formattedNameChanged( const QString& ) ) );
-
+  connect(this,SIGNAL(helpClicked()),this,SLOT(slotHelp()));
   initTypeCombo();
   mFormattedNameCombo->setCurrentIndex( type );
   mPrefixCombo->lineEdit()->setFocus();

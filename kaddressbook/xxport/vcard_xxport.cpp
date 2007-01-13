@@ -414,8 +414,12 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list,
   setButtonText( Apply, i18n( "Import All..." ) );
 
   mIt = mContacts.begin();
-
+  connect(this,SIGNAL(applyClicked()),this,SLOT(slotApply()));
+  connect(this,SIGNAL(cancelClicked()),this,SLOT(slotCancel()));
   updateView();
+#ifdef __GNUC__
+#warning "kde4: when user1 and user2 is used ? see slotUser1 and slotUser2 defined in this class"
+#endif
 }
 
 KABC::Addressee::List VCardViewerDialog::contacts() const
@@ -433,7 +437,8 @@ void VCardViewerDialog::updateView()
 
 void VCardViewerDialog::slotUser1()
 {
-  mIt = mContacts.erase( mIt );
+
+     	mIt = mContacts.erase( mIt );
 
   if ( mIt == mContacts.end() )
     slotApply();
