@@ -245,7 +245,9 @@ bool Identity::isNull() const {
     mPGPEncryptionKey.isEmpty() && mPGPSigningKey.isEmpty() &&
     mSMIMEEncryptionKey.isEmpty() && mSMIMESigningKey.isEmpty() &&
     mTransport.isEmpty() && mDictionary.isEmpty() &&
+#ifdef HAVE_GPGME
     mPreferredCryptoMessageFormat == Kleo::AutoFormat &&
+#endif
     mSignature.type() == Signature::Disabled &&
     mXFace.isEmpty();
 }
@@ -261,7 +263,9 @@ bool Identity::operator==( const Identity & other ) const {
       mPGPSigningKey == other.mPGPSigningKey &&
       mSMIMEEncryptionKey == other.mSMIMEEncryptionKey &&
       mSMIMESigningKey == other.mSMIMESigningKey &&
+#ifdef HAVE_GPGME
       mPreferredCryptoMessageFormat == other.mPreferredCryptoMessageFormat &&
+#endif
       mDrafts == other.mDrafts && mTransport == other.mTransport &&
       mDictionary == other.mDictionary && mSignature == other.mSignature &&
       mXFace == other.mXFace && mXFaceEnabled == other.mXFaceEnabled;
@@ -303,8 +307,10 @@ Identity::Identity( const QString & id, const QString & fullName,
     mSMIMEEncryptionKey( "" ), mSMIMESigningKey( "" ), mFcc( "" ), mDrafts( "" ), mTransport( "" ),
     mDictionary( "" ),
     mXFace( "" ), mXFaceEnabled( false ),
-    mIsDefault( false ),
-    mPreferredCryptoMessageFormat( Kleo::AutoFormat )
+    mIsDefault( false )
+#ifdef HAVE_GPGME
+    , mPreferredCryptoMessageFormat( Kleo::AutoFormat )
+#endif
 {
 }
 
@@ -326,7 +332,9 @@ void Identity::readConfig( const KConfigBase * config )
   mPGPEncryptionKey = config->readEntry("PGP Encryption Key").toLatin1();
   mSMIMESigningKey = config->readEntry("SMIME Signing Key").toLatin1();
   mSMIMEEncryptionKey = config->readEntry("SMIME Encryption Key").toLatin1();
+#ifdef HAVE_GPGME
   mPreferredCryptoMessageFormat = Kleo::stringToCryptoMessageFormat( config->readEntry("Preferred Crypto Message Format", "none" ) );
+#endif
   mReplyToAddr = config->readEntry("Reply-To Address");
   mBcc = config->readEntry("Bcc");
   mFcc = config->readEntry("Fcc", "sent-mail");
@@ -357,7 +365,11 @@ void Identity::writeConfig( KConfigBase * config ) const
   config->writeEntry("PGP Encryption Key", mPGPEncryptionKey.data());
   config->writeEntry("SMIME Signing Key", mSMIMESigningKey.data());
   config->writeEntry("SMIME Encryption Key", mSMIMEEncryptionKey.data());
+#ifdef HAVE_GPGME
   config->writeEntry("Preferred Crypto Message Format", Kleo::cryptoMessageFormatToString( mPreferredCryptoMessageFormat ) );
+#else
+  config->writeEntry("Preferred Crypto Message Format", QString() );
+#endif
   config->writeEntry("Email Address", mEmailAddr);
   config->writeEntry("Reply-To Address", mReplyToAddr);
   config->writeEntry("Bcc", mBcc);
@@ -391,7 +403,11 @@ QDataStream & KPIM::operator<<( QDataStream & stream, const KPIM::Identity & i )
 		<< i.mSignature
                 << i.dictionary()
                 << i.xface()
-		<< QString( Kleo::cryptoMessageFormatToString( i.mPreferredCryptoMessageFormat ) );
+#ifdef HAVE_GPGME
+                << QString( Kleo::cryptoMessageFormatToString( i.mPreferredCryptoMessageFormat ) );
+#else
+                << QString();
+#endif
 }
 
 QDataStream & KPIM::operator>>( QDataStream & stream, KPIM::Identity & i ) {
@@ -417,7 +433,9 @@ QDataStream & KPIM::operator>>( QDataStream & stream, KPIM::Identity & i ) {
                 >> i.mXFace
 		>> format;
   i.mUoid = uoid;
+#ifdef HAVE_GPGME
   i.mPreferredCryptoMessageFormat = Kleo::stringToCryptoMessageFormat( format.toLatin1() );
+#endif
 
   return stream;
 }

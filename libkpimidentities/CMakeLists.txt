@@ -1,5 +1,7 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
+if(GPGME_FOUND)
+   include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
+endif(GPGME_FOUND)
 
 
 ########### next target ###############
@@ -13,7 +15,11 @@ qt4_add_dbus_interfaces(kpimidentities_LIB_SRCS org.kde.pim.IdentityManager.xml)
 
 kde4_add_library(kpimidentities SHARED ${kpimidentities_LIB_SRCS})
 
-target_link_libraries(kpimidentities  ${KDE4_KDEUI_LIBS} kleopatra kdepim )
+if(GPGME_FOUND)
+   target_link_libraries(kpimidentities  ${KDE4_KDEUI_LIBS} kleopatra kdepim )
+else(GPGME_FOUND)
+   target_link_libraries(kpimidentities  ${KDE4_KDEUI_LIBS} kdepim )
+endif(GPGME_FOUND)
 
 set_target_properties(kpimidentities PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 install(TARGETS kpimidentities  DESTINATION ${LIB_INSTALL_DIR})

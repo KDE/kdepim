@@ -23,6 +23,7 @@ else(UNIX)
   macro_optional_find_package(Gpgme)
   macro_log_feature(GPGME_FOUND "gpgme" "GnuPG Made Easy Development Libraries" "http://www.gnupg.org/related_software/gpgme" FALSE "0.4.5 or greater" "Needed to provide GNU Privacy Guard support in KDE PIM applications. Necessary to compile many PIM application, including KMail.")
 endif(UNIX)
+macro_bool_to_01(GPGME_FOUND HAVE_GPGME)
 
 macro_optional_find_package(Sasl2)
 macro_log_feature(SASL2_FOUND "cyrus-sasl" "Cyrus SASL API" "http://asg.web.cmu.edu/sasl/sasl-library.html" FALSE "" "Needed to support authentication of logins")
@@ -104,8 +105,8 @@ add_subdirectory(libkpgp)
 
 if(GPGME_FOUND)
    add_subdirectory(kleopatra)
-   add_subdirectory(libkpimidentities)
 endif(GPGME_FOUND)
+add_subdirectory(libkpimidentities)
 
 add_subdirectory(libksieve)
 add_subdirectory(mimelib)
@@ -121,9 +122,7 @@ add_subdirectory(knode)
 add_subdirectory(kabc)
 add_subdirectory(kaddressbook)
 
-if(GPGME_FOUND)
-   add_subdirectory(kalarm)
-endif(GPGME_FOUND)
+add_subdirectory(kalarm)
 
 if (Q_WS_X11)
    add_subdirectory(karm)

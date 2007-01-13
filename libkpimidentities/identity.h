@@ -7,7 +7,9 @@
 #ifndef kpim_identity_h
 #define kpim_identity_h
 
+#ifdef HAVE_GPGME
 #include <kleo/enum.h>
+#endif
 
 #include <kdemacros.h>
 
@@ -202,8 +204,10 @@ public:
   QByteArray smimeSigningKey() const { return mSMIMESigningKey; }
   void setSMIMESigningKey( const QByteArray & key );
 
+#ifdef HAVE_GPGME
   Kleo::CryptoMessageFormat preferredCryptoMessageFormat() const { return mPreferredCryptoMessageFormat; }
   void setPreferredCryptoMessageFormat( Kleo::CryptoMessageFormat format ) { mPreferredCryptoMessageFormat = format; }
+#endif
 
   /** email address (without the user name - only name\@host) */
   QString emailAddr() const { return mEmailAddr; }
@@ -305,7 +309,9 @@ protected:
   bool mXFaceEnabled;
   Signature mSignature;
   bool      mIsDefault;
+#ifdef HAVE_GPGME
   Kleo::CryptoMessageFormat mPreferredCryptoMessageFormat;
+#endif
 };
 
 KDE_EXPORT QDataStream & operator<<( QDataStream & stream, const KPIM::Signature & sig );
