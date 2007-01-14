@@ -125,7 +125,7 @@ add_subdirectory(kaddressbook)
 add_subdirectory(kalarm)
 
 if (Q_WS_X11)
-   add_subdirectory(karm)
+   add_subdirectory(ktimetracker)
 endif (Q_WS_X11)
 
 add_subdirectory(kdgantt)
