@@ -54,7 +54,8 @@
 #include <mimelib/msgid.h>
 #include <mimelib/token.h>
 
-static void GetHostName(char* buf, int bufLen);
+#include <kresolver.h>
+
 static DwUint32 GetPid();
 
 
@@ -232,10 +233,6 @@ static char base35chars[] = "0123456789ABCDEFGHIJKLMNPQRSTUVWXYZ";
 
 void DwMsgId::CreateDefault()
 {
-    char hostname[80];
-    hostname[0] = 0;
-    GetHostName(hostname, 80);
-    hostname[79] = 0;
     char scratch[80];
     time_t tt = time(NULL);
     struct tm tms = *localtime(&tt);
@@ -271,7 +268,8 @@ void DwMsgId::CreateDefault()
     scratch[pos++] = char(pid / 10    % 10 + '0');
     scratch[pos++] = char(pid         % 10 + '0');
     scratch[pos++] = '@';
-    char* cp = hostname;
+    QByteArray hostname = KNetwork::KResolver::localHostName().toLocal8Bit();
+    const char* cp = hostname.constData();
     while (*cp && pos < 79) {
         scratch[pos++] = *cp++;
     }
@@ -325,51 +323,6 @@ void DwMsgId::CheckInvariants() const
 //----------------------------------------------------------------------------
 
 #if defined(DW_WIN32)
-#if defined(WINSOCK)
-
-// Winsock version
-
-static void GetHostName(char* buf, int bufLen)
-{
-    WORD wVersionRequested = MAKEWORD(1, 1);
-    WSADATA wsaData;
-    int err = WSAStartup(wVersionRequested, &wsaData);
-    // check winsock version 1.1
-    if (LOBYTE(wsaData.wVersion) == 1 &&
-        HIBYTE(wsaData.wVersion) == 1 &&
-        err == 0) {
-	buf[0] = '\0';
-        if (!gethostname(buf, bufLen))
-	  buf[bufLen-1] = '\0';
-    }
-    else {
-        // cannot find winsock
-        if (DwMsgId::sHostName) {
-            strcpy(hostname, DwMsgId::sHostName);
-        }
-        else {
-            strcpy(hostname, "noname");
-        }
-    }
-    WSACleanup();
-}
-
-#else // !defined(WINSOCK)
-
-// Generic version (no Winsock).  Requires that DwMsgId::sHostName be set.
-
-static void GetHostName(char* buf, int bufLen)
-{
-    if (DwMsgId::sHostName) {
-        strncpy(buf, DwMsgId::sHostName, bufLen);
-        buf[bufLen-1] = 0;
-    }
-    else {
-        strcpy(buf, "noname");
-    }
-}
-
-#endif // !defined(WINSOCK)
 
 typedef unsigned pid_t;
 
@@ -385,13 +338,6 @@ static DwUint32 GetPid()
 //----------------------------------------------------------------------------
 
 #if defined(DW_UNIX)
-
-static void GetHostName(char* buf, int bufLen)
-{
-   buf[0] = '\0';
-   if (!gethostname(buf, bufLen))
-     buf[bufLen-1] = '\0';
-}
 
 static DwUint32 GetPid()
 {

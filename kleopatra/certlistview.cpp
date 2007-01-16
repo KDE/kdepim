@@ -1,4 +1,3 @@
-#include <config.h>
 #include "certlistview.h"
 #include <kurl.h>
 #include <kdebug.h>

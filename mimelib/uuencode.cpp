@@ -24,7 +24,6 @@
 
 #define DW_IMPLEMENTATION
 
-#include <mimelib/config.h>
 #include <mimelib/debug.h>
 #include <stdio.h>
 #include <string.h>

@@ -32,10 +32,6 @@
 #include <QString>
 #include <QTextStream>
 
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-
 #include <utime.h>
 
 ReadMBox::ReadMBox( const UrlInfo* info, MBoxProtocol* parent, bool onlynew, bool savetime )

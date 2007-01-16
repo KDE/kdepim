@@ -29,7 +29,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <mimelib/pop.h>
-#include <config.h>
 #include <kdefakes.h>
 
 #define POP_PORT 110

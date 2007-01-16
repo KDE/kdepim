@@ -18,13 +18,12 @@
 
 #include <kdebug.h>
 
-#include <config.h>
-
 #include "kpgpbase.h"
 #include "kpgp.h"
 #include "kpgpblock.h"
 
 #include <stdlib.h> /* setenv, unsetenv */
+#include <kdefakes.h> /* setenv, unsetenv */
 #include <unistd.h> /* pipe, close, fork, dup2, execl, _exit, write, read */
 #include <sys/poll.h>  /* poll, etc. */
 #include <sys/types.h> /* pid_t */

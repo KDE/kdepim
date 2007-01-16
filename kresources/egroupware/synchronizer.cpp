@@ -19,10 +19,11 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kapplication.h>
+#include <QApplication>
 #include <qeventloop.h>
 
 #include <unistd.h>
+#include <kdefakes.h> // usleep
 
 #include "synchronizer.h"
 

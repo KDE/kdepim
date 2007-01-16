@@ -29,7 +29,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <mimelib/nntp.h>
-#include <config.h>
 #include <kdefakes.h>
 
 #define NNTP_PORT 119
