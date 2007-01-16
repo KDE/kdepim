@@ -16,9 +16,6 @@
 /* Define to 1 if you have the <sys/time.h> header file. */
 #cmakedefine HAVE_SYS_TIME_H 1
 
-/* Define to 1 if you have the <time.h> header file. */
-#cmakedefine HAVE_TIME_H 1
-
 /* Define to 1 if you have the <values.h> header file. */
 /* Needed by ./kresources/slox/webdavhandler.cpp only, to be moved */
 #cmakedefine HAVE_VALUES_H 1
