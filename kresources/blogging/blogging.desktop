@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Journals as Blogs on a Server
+Name[el]=Εφημερίδες ως Blogs σε έναν εξυπηρετητή
 Name[fr]=Journaux (blogs) sur un serveur
 Name[x-test]=xxJournals as Blogs on a Serverxx
 X-KDE-Library=kcal_blogging

@@ -2,9 +2,11 @@
 Encoding=UTF-8
 Type=Service
 Name=Instant Messaging
+Name[el]=Στιγμιαίο Μήνυμα
 Name[fr]=Messagerie instantanée
 Name[x-test]=xxInstant Messagingxx
 Comment=Instant Messaging Address Editor
+Comment[el]=Επεξεργαστής Διευθύνσεων Στιγμιαίων Μηνυμάτων
 Comment[fr]=Éditeur d'adresses de messagerie instantanée
 Comment[x-test]=xxInstant Messaging Address Editorxx
 ServiceTypes=KAddressBook/ContactEditorWidget

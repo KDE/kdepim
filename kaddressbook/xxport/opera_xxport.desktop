@@ -2,9 +2,11 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_opera_xxport
 Name=KAB Opera XXPort Plugin
+Name[el]=Πρόσθετο εισαγωγής Opera του KAB
 Name[fr]=Module d'import / export Opera pour KAB
 Name[x-test]=xxKAB Opera XXPort Pluginxx
 Comment=Plugin to import Opera contacts
+Comment[el]=Πρόσθετο για εισαγωγή επαφών του Opera
 Comment[fr]=Module d'import de contacts Opera
 Comment[x-test]=xxPlugin to import Opera contactsxx
 Type=Service

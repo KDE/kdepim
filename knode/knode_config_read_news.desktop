@@ -13,6 +13,7 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Reading News
+Name[el]=Ανάγνωση νέων
 Name[fr]=Lecture de nouvelles
 Name[x-test]=xxReading Newsxx
 

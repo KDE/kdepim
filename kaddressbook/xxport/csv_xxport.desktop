@@ -2,9 +2,11 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_csv_xxport
 Name=KAB CSV XXPort Plugin
+Name[el]=Πρόσθετο εισαγωγής/εξαγωγής CSV του KAB
 Name[fr]=Module d'import / export CSV pour KAB
 Name[x-test]=xxKAB CSV XXPort Pluginxx
 Comment=Plugin to import and export contacts in CSV format
+Comment[el]=Πρόσθετο για εισαγωγή και εξαγωγή των επαφών μορφής CSV
 Comment[fr]=Module d'import / export de contacts au format CSV
 Comment[x-test]=xxPlugin to import and export contacts in CSV formatxx
 Type=Service

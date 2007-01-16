@@ -13,8 +13,10 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Identity
+Name[el]=Ταυτότητα
 Name[fr]=Identité
 Name[x-test]=xxIdentityxx
 Comment=Personal Information
+Comment[el]=Προσωπικές πληροφορίες
 Comment[fr]=Informations personnelles
 Comment[x-test]=xxPersonal Informationxx

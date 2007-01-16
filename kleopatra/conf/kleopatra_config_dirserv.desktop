@@ -14,11 +14,14 @@ X-KDE-ParentComponents=kleopatra
 X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=Directory Services
+Name[el]=Υπηρεσίες καταλόγου
 Name[fr]=Services de répertoires
 Name[x-test]=xxDirectory Servicesxx
 Comment=Configuration of LDAP directory services
+Comment[el]=Ρυθμίσεις των υπηρεσιών καταλόγου LDAP
 Comment[fr]=Configuration des répertoires LDAP
 Comment[x-test]=xxConfiguration of LDAP directory servicesxx
 Keywords=ldap,directory,services
+Keywords[el]=ldap,κατάλογος,υπηρεσίες
 Keywords[fr]=ldap,dossier,dossiers,service,services
 Keywords[x-test]=xxldap,directory,servicesxx

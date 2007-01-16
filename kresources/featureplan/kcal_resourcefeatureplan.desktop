@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=XML Feature Plan
+Name[el]=Σχέδιο χαρακτηριστικών XML
 Name[fr]=Plan de fonctionnalités XML
 Name[x-test]=xxXML Feature Planxx
 X-KDE-Library=kcal_resourcefeatureplan

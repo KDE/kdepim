@@ -7,6 +7,7 @@ QuoteType=0
 
 [Misc]
 Name=Yahoo! AddressBook
+Name[el]=Βιβλίο διευθύνσεων Yahoo!
 Name[fr]=Carnet d'adresses Yahoo!
 Name[x-test]=xxYahoo! AddressBookxx
 

@@ -5,6 +5,7 @@ Icon=aim_protocol
 ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/aim
 Comment=AIM Protocol
+Comment[el]=Πρωτόκολλο AIM
 Comment[fr]=Protocole AIM
 Comment[x-test]=xxAIM Protocolxx
 Name=AIM

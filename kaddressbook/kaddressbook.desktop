@@ -4,6 +4,7 @@ Name=KAddressBook
 Name[fr]=Carnet d'adresses
 Name[x-test]=xxKAddressBookxx
 GenericName=Address Manager
+GenericName[el]=Διαχειριστής διευθύνσεων
 GenericName[fr]=Gestionnaire d'adresses
 GenericName[x-test]=xxAddress Managerxx
 Exec=kaddressbook %u

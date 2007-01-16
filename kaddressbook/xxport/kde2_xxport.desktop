@@ -2,9 +2,11 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_kde2_xxport
 Name=KAB KDE2 XXPort Plugin
+Name[el]=Πρόσθετο εισαγωγής KDE2 του KAB
 Name[fr]=Module d'import / export de KDE 2 pour KAB
 Name[x-test]=xxKAB KDE2 XXPort Pluginxx
 Comment=Plugin to import the old KDE 2 address book
+Comment[el]=Πρόσθετο για εισαγωγή του παλιού βιβλίου διευθύνσεων του KDE 2
 Comment[fr]=Module d'import du vieux carnet d'adresses de KDE 2
 Comment[x-test]=xxPlugin to import the old KDE 2 address bookxx
 Type=Service

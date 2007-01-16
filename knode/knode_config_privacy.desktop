@@ -13,8 +13,10 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Signing/Verifying
+Name[el]=Υπογραφή/Επαλήθευση
 Name[fr]=Signature/Vérification
 Name[x-test]=xxSigning/Verifyingxx
 Comment=Protect your privacy by signing and verifying postings
+Comment[el]=Προστατεύστε το απόρρητό σας υπογράφοντας και επαληθεύοντας τα μηνύματα
 Comment[fr]=Protection de votre vie privée lors de la signature et vérification des envois
 Comment[x-test]=xxProtect your privacy by signing and verifying postingsxx

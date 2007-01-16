@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=KAddressBook/Extension
 Comment=KAddressBook Extension Plugin
+Comment[el]=Πρόσθετο επέκτασης του KAddressBook
 Comment[fr]=Module d'extension pour KAddressBook
 Comment[x-test]=xxKAddressBook Extension Pluginxx
 

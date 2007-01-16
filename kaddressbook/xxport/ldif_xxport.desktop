@@ -2,9 +2,11 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_ldif_xxport
 Name=KAB LDIF XXPort Plugin
+Name[el]=Πρόσθετο εισαγωγής/εξαγωγής LDIF του KAB
 Name[fr]=Module d'import / export LDIF pour KAB
 Name[x-test]=xxKAB LDIF XXPort Pluginxx
 Comment=Plugin to import and export contacts in Netscape and Mozilla LDIF format
+Comment[el]=Πρόσθετο για εισαγωγή και εξαγωγή επαφών μορφής LDIF του Netscape και Mozilla
 Comment[fr]=Module d'import / export des contacts au format LDIF Mozilla et Netscape
 Comment[x-test]=xxPlugin to import and export contacts in Netscape and Mozilla LDIF formatxx
 Type=Service

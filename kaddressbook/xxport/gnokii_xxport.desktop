@@ -2,9 +2,11 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_gnokii_xxport
 Name=KAB Mobile Phone XXPort Plugin
+Name[el]=Πρόσθετο εισαγωγής/εξαγωγής κινητών τηλεφώνων του KAB
 Name[fr]=Module d'import / export de téléphone portable pour KAB
 Name[x-test]=xxKAB Mobile Phone XXPort Pluginxx
 Comment=Mobile Phone Plugin to Import and Export Addressbook Entries
+Comment[el]=Πρόσθετο για εισαγωγή και εξαγωγή επαφών βιβλίου διευθύνσεων από κινητά τηλέφωνα
 Comment[fr]=Module de téléphone portable pour importer et exporter des entrées du carnet d'adresses
 Comment[x-test]=xxMobile Phone Plugin to Import and Export Addressbook Entriesxx
 Type=Service

@@ -2,9 +2,11 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_eudora_xxport
 Name=KAB Eudora XXPort Plugin
+Name[el]=Πρόσθετο εισαγωγής/εξαγωγής Eudora του KAB
 Name[fr]=Module d'import / export Eudora pour KAB
 Name[x-test]=xxKAB Eudora XXPort Pluginxx
 Comment=Plugin to import and export Eudora contacts
+Comment[el]=Πρόσθετο για εισαγωγή και εξαγωγή επαφών του Eudora
 Comment[fr]=Module d'import / export de contacts Eudora
 Comment[x-test]=xxPlugin to import and export Eudora contactsxx
 Type=Service

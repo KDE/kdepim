@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=ICS information
+Name[el]=Πληροφορίες ICS
 Name[fr]=Information sur ICS
 Name[x-test]=xxICS informationxx
 ServiceTypes=KFilePlugin

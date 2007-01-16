@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_tableview
 Name=Table View
+Name[el]=Προβολή πίνακα
 Name[fr]=Vue en tableaux
 Name[x-test]=xxTable Viewxx
 Type=Service

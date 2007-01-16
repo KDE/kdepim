@@ -1,6 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=SUSE LINUX Openexchange Server
+Name[el]=Εξυπηρετητή SUSE LINUX Openexchange
 Name[fr]=Serveur SUSE Linux Openexchange
 Name[x-test]=xxSUSE LINUX Openexchange Serverxx
 X-KDE-Library=kcal_slox

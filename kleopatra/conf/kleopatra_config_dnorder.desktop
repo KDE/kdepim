@@ -14,11 +14,14 @@ X-KDE-ParentComponents=kleopatra
 X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=DN-Attribute Order
+Name[el]=Σειρά Ιδιότητας DN
 Name[fr]=Ordre des attributs DN
 Name[x-test]=xxDN-Attribute Orderxx
 Comment=Configure the order in which DN attributes are shown
+Comment[el]=Ρύθμιση της σειράς εμφάνισης των ιδιοτήτων DN
 Comment[fr]=Configurer l'ordre dans lequel les attributs DN sont affichés
 Comment[x-test]=xxConfigure the order in which DN attributes are shownxx
 Keywords=DN,order,RDN,attribute
+Keywords[el]=DN,σειρά,RDN,ιδιότητα
 Keywords[fr]=DN,ordre,RDN,attribut
 Keywords[x-test]=xxDN,order,RDN,attributexx

@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=KAddressBook/XXPort
 Comment=KAddressBook Import/Export Plugin
+Comment[el]=Πρόσθετο εισαγωγής/εξαγωγής του KAddressBook
 Comment[fr]=Module d'import / export pour KAddressBook
 Comment[x-test]=xxKAddressBook Import/Export Pluginxx
 
