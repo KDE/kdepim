@@ -31,9 +31,7 @@
  * your version.
  */
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
+#include "config-indexlib.h"
 
 #ifndef HAVE_STLNAMESPACE
 #  include <stddef.h>
