@@ -15,21 +15,21 @@ FIND_PATH(BOOST_INCLUDE_DIR boost/format.hpp
    /usr/local/include
 )
 
-FIND_LIBRARY(BOOST_LIBRARIES NAMES boost_program_options boost_iostreams
-   PATHS
-   /usr/lib
-   /usr/local/lib
-)
+#FIND_LIBRARY(BOOST_LIBRARIES NAMES boost_iostreams
+#   PATHS
+#   /usr/lib
+#   /usr/local/lib
+#)
 
 
-if (BOOST_INCLUDE_DIR AND BOOST_LIBRARIES)
+if (BOOST_INCLUDE_DIR)
    set(BOOST_FOUND TRUE)
-endif (BOOST_INCLUDE_DIR AND BOOST_LIBRARIES)
+endif (BOOST_INCLUDE_DIR)
 
 
 if (BOOST_FOUND)
    if (NOT BOOST_FIND_QUIETLY)
-      message(STATUS "Found boost: ${BOOST_LIBRARIES}")
+      message(STATUS "Found boost: ${BOOST_INCLUDE_DIR}")
    endif (NOT BOOST_FIND_QUIETLY)
 endif (BOOST_FOUND)
 

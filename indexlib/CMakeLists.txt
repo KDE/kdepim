@@ -8,6 +8,7 @@ add_definitions(-DSTD_NAMESPACE_PREFIX="std::" -DHAVE_STLNAMESPACE)
 
 include_directories( ${ZLIB_INCLUDE_DIR} )
 
+macro_bool_to_01(BOOST_FOUND HAVE_BOOST)
 configure_file (config-indexlib.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-indexlib.h )
 
 ########### next target ###############
