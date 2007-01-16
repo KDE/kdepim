@@ -1094,7 +1094,7 @@ unsigned int QWinMetaFile::toDWord( short* parm )
 {
     unsigned int l;
 
-#if !defined( WORDS_BIGENDIAN )
+#if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
     l = *( unsigned int* )( parm );
 #else
     char *bytes;
