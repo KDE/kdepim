@@ -4,5 +4,6 @@ MimeType=application/ms-tnef
 Icon=tar
 Patterns=*.tnf;
 Comment=TNEF File
+Comment[el]=Αρχείο TNEF
 Comment[fr]=Fichier TNEF
 Comment[x-test]=xxTNEF Filexx
