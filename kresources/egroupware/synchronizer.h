@@ -37,14 +37,14 @@
     ...
 
     job = KIO::file_copy( url, file, -1, true );
-    connect( job, SIGNAL( result( KIO::Job * ) ),
-             SLOT( slotResult( KIO::Job * ) ) );
+    connect( job, SIGNAL( result( KJob * ) ),
+             SLOT( slotResult( KJob * ) ) );
 
     mSynchronizer.start(); // will block here until the slot was called
     ...
 
 
-    void slotResult( KIO::Job* )
+    void slotResult( KJob* )
     {
       mSynchronizer.stop();
     }

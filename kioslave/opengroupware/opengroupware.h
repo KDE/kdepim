@@ -47,7 +47,7 @@ class OpenGroupware : public QObject, public KIO::SlaveBase
     void getCalendar( const KUrl &url );
     void getAddressbook( const KUrl &url );
   protected slots:
-    void slotGetCalendarListingResult( KIO::Job* );
+    void slotGetCalendarListingResult( KJob* );
     void slotGetCalendarResult( KJob* );
   private:
     KIO::DavJob *mListEventsJob;

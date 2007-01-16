@@ -242,7 +242,7 @@ void OpenGroupware::slotGetCalendarListingResult( KJob *job )
 }
 
 
-void OpenGroupware::slotGetCalendarResult( KIO::Job *job )
+void OpenGroupware::slotGetCalendarResult( KJob *job )
 {
   Q_UNUSED( job );
 }
