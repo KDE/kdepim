@@ -5,12 +5,15 @@
 
 if include_malconduit
 MAL_SUBDIR = malconduit
+else
+MAL_SUBDIR = 
 endif
 
 SUBDIRS = \
 	  abbrowserconduit \
 	  docconduit \
 	  knotes \
+	  $(MAL_SUBDIR) \
 	  memofileconduit \
 	  notepadconduit \
 	  popmail \
