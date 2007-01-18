@@ -54,8 +54,6 @@ class Identity;
 class KDE_EXPORT IdentityManager : public ConfigManager
 {
   Q_OBJECT
-  Q_CLASSINFO("D-Bus Interface", "org.kde.pim.IdentityManager")
-
 public:
   /**
    * Create an identity manager, which loads the emailidentities file

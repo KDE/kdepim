@@ -61,28 +61,17 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 
 using namespace KPIM;
 
-#ifdef __GNUC__
-#warning Port me?
-#endif
-/*static QByteArray newDCOPObjectName()
-{
-    static int s_count = 0;
-    QByteArray name( "KPIM::IdentityManager" );
-    if ( s_count++ ) {
-      name += '-';
-      name += QByteArray().setNum( s_count );
-    }
-    return name;
-}*/
-
 IdentityManager::IdentityManager( bool readonly, QObject * parent, const char * name )
-  : ConfigManager( parent, name ) //, DCOPObject( newDCOPObjectName() )
+  : ConfigManager( parent, name ) 
 {
   new IdentityManagerAdaptor( this );
+  //TODO verify it
+  QDBusConnection::sessionBus().registerObject( "/IdentityManager", this );
+  
 #ifdef __GNUC__
 #warning "kde4: verify it"  
 #endif
-  mIface = new OrgKdePimIdentityManagerInterface("org.kde.pim.IdentityManager", "/", QDBusConnection::sessionBus() );
+  mIface = new OrgKdePimIdentityManagerInterface("org.kde.pim.IdentityManager", "/IdentityManager", QDBusConnection::sessionBus() );
   connect( mIface, SIGNAL(identitiesChanged(QString)), this, SLOT(slotIdentitiesChanged(QString)) );
 
   mReadOnly = readonly;
@@ -513,7 +502,8 @@ QStringList KPIM::IdentityManager::allEmails() const
 }
 
 void KPIM::IdentityManager::slotIdentitiesChanged( const QString &id )
-{
+{ 
+  kDebug()<<" KPIM::IdentityManager::slotIdentitiesChanged :"<<id<<endl;
   if ( id != QDBusConnection::sessionBus().baseService() ) {
     mConfig->reparseConfiguration();
     Q_ASSERT( !hasPendingChanges() );
