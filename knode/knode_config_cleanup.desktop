@@ -13,6 +13,7 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Cleanup
+Name[ar]=التنظيف
 Name[bg]=Изчистване
 Name[bs]=Čišćenje
 Name[ca]=Neteja

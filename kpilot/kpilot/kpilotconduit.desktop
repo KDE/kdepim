@@ -4,7 +4,6 @@ Type=ServiceType
 X-KDE-ServiceType=KPilotConduit
 Comment=KPilot Conduit
 Comment[af]=Kpilot Pad
-Comment[ar]=أنبوب KPilot
 Comment[az]=KPilot
 Comment[be]=Канал KPilot
 Comment[bg]=Приставка на KPilot

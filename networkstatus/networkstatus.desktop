@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=Network Status Daemon
 Name[af]=Netwerk status bediener
+Name[ar]=مراقب القرص و التنفيذ لحالة الشبكة
 Name[bg]=Демон за състояние на мрежата
 Name[ca]=Dimoni de l'estat de la xarxa
 Name[cs]=Démon stavu sítě

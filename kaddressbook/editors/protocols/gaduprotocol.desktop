@@ -6,6 +6,7 @@ ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/gadu
 Comment=Gadu-Gadu Protocol
 Comment[af]=Gadu-Gadu protokol
+Comment[ar]=ميفاق Gadu-Gadu
 Comment[be]=Пратакол Gadu-Gadu
 Comment[bg]=Протокол Gadu-Gadu
 Comment[br]=Komenad Gadu-Gadu
