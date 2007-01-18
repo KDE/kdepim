@@ -141,7 +141,7 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
     KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
 
   org::kde::kmail::kmail kmail("org.kde.kmail", "/KMail", QDBusConnection::sessionBus());
-  QDBusReply<int> reply = kmail.dcopAddMessage(folderName, msgURL.url(), msgStatusFlags);
+  QDBusReply<int> reply = kmail.dbusAddMessage(folderName, msgURL.url(), msgStatusFlags);
 
   if ( !reply.isValid() )
   {
@@ -181,7 +181,7 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
 
 
   org::kde::kmail::kmail kmail("org.kde.kmail", "/KMail", QDBusConnection::sessionBus());
-  QDBusReply<int> reply = kmail.dcopAddMessage_fastImport(folderName, msgURL.url(), msgStatusFlags);
+  QDBusReply<int> reply = kmail.dbusAddMessage_fastImport(folderName, msgURL.url(), msgStatusFlags);
 
   if ( !reply.isValid() )
   {
@@ -213,10 +213,10 @@ bool Filter::endImport()
     	KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
 
     org::kde::kmail::kmail kmail("org.kde.kmail", "/KMail", QDBusConnection::sessionBus());
-    QDBusReply<int> reply = kmail.dcopAddMessage(QString(), QString(),QString());
+    QDBusReply<int> reply = kmail.dbusAddMessage(QString(), QString(),QString());
     if ( !reply.isValid() ) return false;
 
-    QDBusReply<void> reply2 = kmail.dcopResetAddMessage();
+    QDBusReply<void> reply2 = kmail.dbusResetAddMessage();
     if ( !reply2.isValid() ) return false;
 
     return true;
