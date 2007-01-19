@@ -131,3 +131,41 @@ QDateTime GWConverter::charToQDateTime( const char *str,
   QDateTime utc = charToQDateTime( str );
   return KPimPrefs::utcToLocalTime( utc, timezone );
 }
+
+bool GWConverter::emailsMatch( const QString & email1, const QString & email2 )
+{
+    // eg demo3.po1.dom1@dmz1.provo.novell.com == demo3@dmz1.provo.novell.com
+    if ( email1 == email2 )
+        return true;
+
+    QString shorter, longer;
+    if ( email1.length() < email2.length() )
+    {
+        shorter = email1;
+        longer = email2;
+    }
+    else
+    {
+        shorter = email2;
+        longer = email1;
+    }
+
+    QString shortStem = shorter.section( '@', 0, 0 );
+    QString longStem = longer.section( '@', 0, 0 );
+    QString shortHost = shorter.section( '@', 1, 1 );
+    QString longHost = longer.section( '@', 1, 1 );
+
+    QString extension = longStem.right( longStem.length() - shortStem.length() );
+
+    kdDebug() << "gwconverter::emailsMatch(): " << shorter << " = " << longer << endl;
+    kdDebug() << "shortStem: " << shortStem << ", longStem: " << longStem << ", extension: " << extension << endl;
+
+    if ( longStem.startsWith( shortStem ) && extension.startsWith( "." ) && (
+    shortHost == longHost ) )
+    {
+        kdDebug() << "Looks like a match!" << endl;
+        return true;
+    }
+    return false;
+}
+

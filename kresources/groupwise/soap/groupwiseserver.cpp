@@ -1023,11 +1023,12 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   }
   else  // If I am not the organizer restrict my changes to accept or decline requests or task completion
   {
-    // find myself as attendee.   
+    // find myself as attendee.
+    GWConverter conv( mSoap );
     KCal::Attendee::List attendees = incidence->attendees();
     KCal::Attendee::List::ConstIterator it;
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
-      if ( (*it)->email() == mUserEmail ) {
+      if ( conv.emailsMatch( (*it)->email(), mUserEmail ) ) {
         if ( (*it)->status() == KCal::Attendee::Accepted )
           success &= acceptIncidence( incidence );
         else if ( (*it)->status() == KCal::Attendee::Declined )
