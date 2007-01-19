@@ -604,6 +604,7 @@ AddressTypeDialog::AddressTypeDialog( int type, QWidget *parent )
   QGroupBox *box  = new QGroupBox( i18n( "Address Types" ), page );
   layout->addWidget( box );
   mGroup = new QButtonGroup( box );
+  mGroup->setExclusive ( false );
 
   QHBoxLayout *buttonLayout = new QHBoxLayout( box );
 
