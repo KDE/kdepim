@@ -48,9 +48,10 @@ ConfigureDialog::ConfigureDialog( QWidget *parent, bool modal )
   setFaceType( KPageDialog::List );
   setCaption( i18n( "Configure" ) );
   setModal( modal );
-
+#ifdef Q_OS_UNIX
   KWin::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( K3Icon::Desktop ), IconSize( K3Icon::Desktop ) ),
                   qApp->windowIcon().pixmap( IconSize( K3Icon::Small ), IconSize( K3Icon::Small ) ) );
+#endif
   showButton( User1, true );
 
   addModule( "kleopatra_config_dirserv" );
