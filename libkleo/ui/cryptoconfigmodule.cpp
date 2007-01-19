@@ -67,21 +67,20 @@ inline QPixmap loadIcon( QString s ) {
     ->loadIcon( s.replace( QRegExp( "[^a-zA-Z0-9_]" ), "_" ), K3Icon::NoGroup, K3Icon::SizeMedium );
 }
 
-static const KPageDialog::FaceType determineJanusFace( const Kleo::CryptoConfig * config ) {
+static const KPageView::FaceType determineJanusFace( const Kleo::CryptoConfig * config ) {
   return config && config->componentList().size() < 2
-    ? KPageDialog::Plain
-    : KPageDialog::List ;
+    ? KPageView::Plain
+    : KPageView::List ;
 }
 
 Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent )
-  : KPageDialog( parent ), mConfig( config )
+  : KPageWidget( parent ), mConfig( config )
 {
-  const KPageDialog::FaceType type=determineJanusFace( config );
+  const KPageView::FaceType type=determineJanusFace( config );
   setFaceType(type);
   QWidget * vbox = 0;
   if ( type == Plain ) {
     vbox = new QWidget(this);
-	setMainWidget(vbox);
     QVBoxLayout * vlay = new QVBoxLayout( vbox );
     vlay->setSpacing( KDialog::spacingHint() );
     vlay->setMargin( 0 );
@@ -96,7 +95,7 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
     if ( comp->groupList().empty() )
       continue;
     if ( type != Plain ) {
-      vbox = new QWidget();
+      vbox = new QWidget(parent);
 	  KPageWidgetItem *pageItem = new KPageWidgetItem( vbox, comp->description() );
 	  pageItem->setIcon( KIcon(loadIcon( comp->iconName() )) );
 	  addPage(pageItem);

@@ -45,7 +45,7 @@ namespace Kleo {
    * Crypto Config Module widget, dynamically generated from CryptoConfig
    * It's a simple QWidget so that it can be embedded into a dialog or into a KCModule.
    */
-  class CryptoConfigModule : public KPageDialog {
+  class CryptoConfigModule : public KPageWidget {
     Q_OBJECT
   public:
     CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0 );
