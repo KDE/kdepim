@@ -26,4 +26,4 @@
  */
 
 // DOXYGEN_PROJECTNAME=KonsoleKalendar
-// DOXYGEN_REFERENCES = kresources kcal
+// DOXYGEN_REFERENCES = kdecore kdeui kresources kcal
