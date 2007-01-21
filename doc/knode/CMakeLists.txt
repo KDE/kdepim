@@ -1,21 +1,6 @@
 
-
-
+kde4_create_handbook(index.docbook)
 
 ########### install files ###############
 
-
-
-
-
-#original Makefile.am contents follow:
-
-#
-#KDE_LANG = en
-#KDE_DOCS = AUTO
-#
-## $(srcdir)/translation.po: $(srcdir)/german_original.docbook
-##	xml2pot $(srcdir)/german_original.docbook > german.pot
-##	msgmerge -o $(srcdir)/translation.po $(srcdir)/translation.po german.pot
-##	rm german.pot
-#
+kde4_install_handbook()
