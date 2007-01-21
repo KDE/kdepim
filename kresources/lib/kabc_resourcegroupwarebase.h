@@ -23,7 +23,7 @@
 #define KABC_RESOURCEGROUPWARE_H
 
 #include <kurl.h>
-#include <kabcresourcecached.h>
+#include <kabc/resourcecached.h>
 #include <kdepim_export.h>
 
 class KConfig;

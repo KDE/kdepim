@@ -23,7 +23,7 @@
 #include "sloxbase.h"
 #include "webdavhandler.h"
 
-#include <libkdepim/kabcresourcecached.h>
+#include <kabc/resourcecached.h>
 #include <kdemacros.h>
 #include <kabc/addressee.h>
 

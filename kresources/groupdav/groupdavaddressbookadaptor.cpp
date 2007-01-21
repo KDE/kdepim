@@ -28,7 +28,7 @@
 
 #include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>
-#include <kabcresourcecached.h>
+#include <kabc/resourcecached.h>
 
 #include <kio/job.h>
 #include <kdebug.h>

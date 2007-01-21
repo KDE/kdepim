@@ -25,7 +25,7 @@
 
 #include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>
-#include <libkdepim/kabcresourcecached.h>
+#include <kabc/resourcecached.h>
 #include <kio/job.h>
 
 

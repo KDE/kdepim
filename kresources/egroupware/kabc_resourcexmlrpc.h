@@ -26,7 +26,7 @@
 #include <QList>
 #include <kdemacros.h>
 
-#include "libkdepim/kabcresourcecached.h"
+#include <kabc/resourcecached.h>
 
 class KConfig;
 class Synchronizer;
