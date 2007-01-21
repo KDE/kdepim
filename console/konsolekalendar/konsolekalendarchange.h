@@ -65,7 +65,7 @@ class KonsoleKalendarChange
     /**
      * Print Event specs for dryrun and verbose options.
      *
-     * @param event is a pointer to an #Event to print.
+     * @param event is a pointer to an Event to print.
      */
     void printSpecs( Event *event );
 

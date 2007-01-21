@@ -68,7 +68,7 @@ class KonsoleKalendarDelete
     /**
      * Print event specs for dryrun and verbose options.
      *
-     * @param event is a pointer to an #Event that is to be printed.
+     * @param event is a pointer to an Event that is to be printed.
      */
     void printSpecs( Event *event );
 

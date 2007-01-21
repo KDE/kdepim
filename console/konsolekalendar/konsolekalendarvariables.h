@@ -314,7 +314,7 @@ class KonsoleKalendarVariables
     /**
      * Sets the calendar resources for global use.
      *
-     * @param resources is a pointer to the #CalendarResources to use.
+     * @param resources is a pointer to the CalendarResources to use.
      */
     void setCalendar( CalendarResources *resources );
 
