@@ -33,7 +33,7 @@ namespace KPIM {
 }
 using KPIM::StatusbarProgressWidget;
 using KPIM::ProgressDialog;
-class KRSqueezedTextLabel;
+class KSqueezedTextLabel;
 
 class KNMainWidget;
 class KNHeaderView;
@@ -61,7 +61,7 @@ private:
   KNMainWidget *m_mainWidget;
   StatusbarProgressWidget *mLittleProgress;
   ProgressDialog *mProgressDialog;
-  KRSqueezedTextLabel *mStatusMsgLabel;
+  KSqueezedTextLabel *mStatusMsgLabel;
 private slots:
   void slotShowStatusMsg( const QString& );
 };

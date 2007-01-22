@@ -25,9 +25,9 @@
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <kactioncollection.h>
+#include <ksqueezedtextlabel.h>
 
 #include "broadcaststatus.h"
-#include "krsqueezedtextlabel.h"
 #include "progressdialog.h"
 #include "statusbarprogresswidget.h"
 
@@ -106,7 +106,8 @@ void KNMainWindow::setupStatusBar()
 
   statusBar()->addPermanentWidget( mLittleProgress, 0 );
 
-  mStatusMsgLabel = new KRSqueezedTextLabel( QString(), statusBar() );
+  mStatusMsgLabel = new KSqueezedTextLabel( QString(), statusBar() );
+  mStatusMsgLabel->setTextElideMode( Qt::ElideRight );
   mStatusMsgLabel->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
   statusBar()->addWidget( mStatusMsgLabel, 2 );
   statusBar()->addWidget(m_mainWidget->statusBarLabelFilter(), 2);

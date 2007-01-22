@@ -33,7 +33,7 @@
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <kstatusbar.h>
-#include <krsqueezedtextlabel.h>
+#include <ksqueezedtextlabel.h>
 
 #include <QLayout>
 //Added by qt3to4:

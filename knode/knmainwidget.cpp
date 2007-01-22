@@ -44,9 +44,9 @@
 #include <ktoggleaction.h>
 #include <kxmlguiclient.h>
 #include <kxmlguifactory.h>
+#include <ksqueezedtextlabel.h>
 
 #include "broadcaststatus.h"
-#include "krsqueezedtextlabel.h"
 #include "recentaddresses.h"
 using KPIM::BroadcastStatus;
 using KRecentAddress::RecentAddresses;
@@ -283,9 +283,11 @@ void KNMainWidget::initStatusBar()
   //statusbar
   KMainWindow *mainWin = dynamic_cast<KMainWindow*>(topLevelWidget());
   KStatusBar *sb =  mainWin ? mainWin->statusBar() : 0;
-  s_tatusFilter = new KRSqueezedTextLabel( QString(), sb );
+  s_tatusFilter = new KSqueezedTextLabel( QString(), sb );
+  s_tatusFilter->setTextElideMode( Qt::ElideRight );
   s_tatusFilter->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
-  s_tatusGroup = new KRSqueezedTextLabel( QString(), sb );
+  s_tatusGroup = new KSqueezedTextLabel( QString(), sb );
+  s_tatusGroup->setTextElideMode( Qt::ElideRight );
   s_tatusGroup->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
 }
 

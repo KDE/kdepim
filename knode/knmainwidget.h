@@ -34,7 +34,7 @@ class KUrl;
 class KAction;
 class KToggleAction;
 class KSelectAction;
-class KRSqueezedTextLabel;
+class KSqueezedTextLabel;
 class KLineEdit;
 class KToolBar;
 class KXMLGUIClient;
@@ -103,8 +103,8 @@ public:
   KNHeaderView*       headerView()const      { return h_drView; }
   /** Returns the article viewer. */
   KNode::ArticleWidget* articleViewer() const     { return mArticleViewer; }
-  KRSqueezedTextLabel*  statusBarLabelGroup() const { return s_tatusGroup; }
-  KRSqueezedTextLabel*  statusBarLabelFilter() const { return s_tatusFilter; }
+  KSqueezedTextLabel*  statusBarLabelGroup() const { return s_tatusGroup; }
+  KSqueezedTextLabel*  statusBarLabelFilter() const { return s_tatusFilter; }
   public slots: //The dcop interface
   // Implementation of KNodeIface
   /* Navigation */
@@ -390,8 +390,8 @@ protected slots:
   //--------------------------- </Actions> -----------------------------
 
 private:
-  KRSqueezedTextLabel *s_tatusGroup; // widget used in the statusBar() for the group status
-  KRSqueezedTextLabel *s_tatusFilter;
+  KSqueezedTextLabel *s_tatusGroup; // widget used in the statusBar() for the group status
+  KSqueezedTextLabel *s_tatusFilter;
   KXMLGUIClient *m_GUIClient;
   QSplitter *mPrimarySplitter, *mSecondSplitter;
 };
