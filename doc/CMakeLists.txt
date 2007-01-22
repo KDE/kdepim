@@ -1,5 +1,3 @@
-
-
 add_subdirectory(akregator)
 add_subdirectory(api)
 add_subdirectory(common)
@@ -16,17 +14,10 @@ add_subdirectory(korganizer)
 add_subdirectory(korn)
 add_subdirectory(ktnef)
 add_subdirectory(kwatchgnupg)
-
 ########### install files ###############
-
-
-
-
-
 #original Makefile.am contents follow:
-
 #
-#KDE_LANG = en
-#KDE_DOCS = AUTO
-#SUBDIRS = $(AUTODIRS)
+
+
+
 #
