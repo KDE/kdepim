@@ -360,7 +360,7 @@ QCString multiPartBoundary()
 
 QCString extractHeader(const QCString &src, const char *name)
 {
-  QCString n=QCString(name)+": ";
+  QCString n=QCString(name)+":";
   int pos1=-1, pos2=0, len=src.length()-1;
   bool folded(false);
 
@@ -373,6 +373,9 @@ QCString extractHeader(const QCString &src, const char *name)
 
   if (pos1>-1) {    //there is a header with the given name
     pos1+=n.length(); //skip the name
+    // skip the usual space after the colon
+    if ( src.at( pos1 ) == ' ' )
+      ++pos1;
     pos2=pos1;
 
     if (src[pos2]!='\n') {  // check if the header is not empty
