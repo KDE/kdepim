@@ -5,6 +5,7 @@ Icon=groupwise_protocol
 ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/groupwise
 Comment=Novell GroupWise Messenger
+Comment[af]=Novell GroupWise boodskappe
 Comment[bg]=Месинджър Novell GroupWise
 Comment[cs]=Novell GroupWise komunikátor
 Comment[el]=GroupWise Messenger της Novell

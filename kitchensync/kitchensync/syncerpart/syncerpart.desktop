@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=Synchronizer Part
+Name[af]=Sinkroniseerder Part
 Name[bs]=Dio za sinhronizaciju
 Name[ca]=Part del sincronitzador
 Name[cs]=Komponenta synchronizace
@@ -31,7 +32,7 @@ Name[pl]=Część Synchronizatora
 Name[pt]=Componente de Sincronização
 Name[pt_BR]=Componente do Sincronizador
 Name[ro]=Componentă sincronizare
-Name[ru]=Компонент синхронизации
+Name[ru]=Синхронизация
 Name[sk]=Part pre synchronizáciu
 Name[sr]=Део Synchronizer
 Name[sr@Latn]=Deo Synchronizer

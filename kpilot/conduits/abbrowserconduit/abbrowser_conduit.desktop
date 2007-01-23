@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Comment=This conduit syncs the handheld addressbook with KDE's addressbook.
+Comment[af]=Hierdie pad sinkroniseer die draagbare toestel adresboek met KDE se adresboek.
 Comment[bg]=Синхронизация на адресника на КДЕ с мобилни устройства
 Comment[bs]=Ovaj conduit sinhronizuje adresar ručnog računara sa KDEovim adresarom.
 Comment[ca]=Aquest conducte sincronitza la llibreta d'adreces de la vostra agenda electrònica amb la llibreta d'adreces de KDE.
@@ -45,6 +46,7 @@ Comment[uk]=Цей акведук синхронізує адресну книг
 Comment[zh_CN]=此管道会将您的手持设备与 KDE 的地址簿同步。
 Comment[zh_TW]=此軟體讓您把 KDE 通訊錄與手邊通訊錄同步。
 Name=Addressbook
+Name[af]=Adresboek
 Name[ar]=دفتر العناوين
 Name[az]=Ünvan Dəftəri
 Name[be]=Адрасная кніга

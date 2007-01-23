@@ -584,7 +584,7 @@ void VCalRecord::setCategory(PilotDateEntry *de, const KCal::Event *e)
 	if (eventCategories.size() < 1)
 	{
 		// This event has no categories.
-		de->setCategory(Pilot::Unfiled);
+		((PilotRecordBase *)de)->setCategory(Pilot::Unfiled);
 		return;
 	}
 
@@ -623,6 +623,6 @@ void VCalRecord::setCategory(PilotDateEntry *de, const KCal::Event *e)
 		}
 	}
 
-	de->setCategory(Pilot::Unfiled);
+	((PilotRecordBase *)de)->setCategory(Pilot::Unfiled);
 }
 

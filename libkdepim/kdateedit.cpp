@@ -271,6 +271,7 @@ bool KDateEdit::eventFilter( QObject *object, QEvent *event )
         step = 1;
       else if ( keyEvent->key() == Qt::Key_Down )
         step = -1;
+      // TODO: If it's not an input key, but something like Return, Enter, Tab, etc..., don't eat the keypress, but handle it through to the default eventfilter!
       if ( step && !mReadOnly ) {
         QDate date = parseDate();
         if ( date.isValid() ) {

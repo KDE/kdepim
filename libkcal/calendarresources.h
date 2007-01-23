@@ -73,10 +73,13 @@ class LIBKCAL_EXPORT CalendarResources :
     class DestinationPolicy
     {
       public:
-        DestinationPolicy( CalendarResourceManager *manager ) :
-          mManager( manager ) {}
+        DestinationPolicy( CalendarResourceManager *manager,
+                              QWidget *parent = 0  ) :
+          mManager( manager ), mParent( parent ) {}
 
         virtual ResourceCalendar *destination( Incidence *incidence ) = 0;
+        virtual QWidget *parent() { return mParent; }
+        virtual void setParent( QWidget *newparent ) { mParent = newparent; }
 
       protected:
         CalendarResourceManager *resourceManager()
@@ -84,6 +87,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
       private:
         CalendarResourceManager *mManager;
+        QWidget *mParent;
     };
 
     /**
@@ -92,8 +96,9 @@ class LIBKCAL_EXPORT CalendarResources :
     class StandardDestinationPolicy : public DestinationPolicy
     {
       public:
-        StandardDestinationPolicy( CalendarResourceManager *manager ) :
-          DestinationPolicy( manager ) {}
+        StandardDestinationPolicy( CalendarResourceManager *manager,
+                              QWidget *parent = 0  ) :
+          DestinationPolicy( manager, parent ) {}
 
         ResourceCalendar *destination( Incidence *incidence );
 
@@ -110,13 +115,11 @@ class LIBKCAL_EXPORT CalendarResources :
       public:
         AskDestinationPolicy( CalendarResourceManager *manager,
                               QWidget *parent = 0 ) :
-          DestinationPolicy( manager ), mParent( parent ) {}
+          DestinationPolicy( manager, parent ) {}
 
         ResourceCalendar *destination( Incidence *incidence );
 
       private:
-        QWidget *mParent;
-
         class Private;
         Private *d;
     };
@@ -250,6 +253,23 @@ class LIBKCAL_EXPORT CalendarResources :
        Resource which is queried.
     */
     void setAskDestinationPolicy();
+    
+    /** 
+       Returns the current parent for new dialogs. This is a bad hack, but we need
+       to properly set the parent for the resource selection dialog. Otherwise
+       the dialog will not be modal to the editor dialog in korganizer and 
+       the user can still work in the editor dialog (and thus crash korganizer).
+       Afterwards we need to reset it (to avoid pointers to widgets that are 
+       already deleted) so we also need the accessor
+    */
+    QWidget *dialogParentWidget();
+    /** 
+       Set the widget parent for new dialogs. This is a bad hack, but we need
+       to properly set the parent for the resource selection dialog. Otherwise
+       the dialog will not be modal to the editor dialog in korganizer and 
+       the user can still work in the editor dialog (and thus crash korganizer).
+    */
+    void setDialogParentWidget( QWidget *parent );
 
     /**
        Request ticket for saving the Calendar.  If a ticket is returned the

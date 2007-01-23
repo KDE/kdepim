@@ -13,6 +13,7 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Accounts
+Name[af]=Rekeninge
 Name[ar]=الحسابات
 Name[be]=Рахункі
 Name[bg]=Сметки
@@ -62,6 +63,7 @@ Name[uz]=Ҳисоблар
 Name[zh_CN]=账户
 Name[zh_TW]=帳號
 Comment=Setup for Newsgroup and Mail Servers
+Comment[af]=Opstel van nuus groep en e-pos bedieners
 Comment[bg]=Настройки на групите и пощенските сървъри
 Comment[bs]=Postavke za newsgrupe i mail servere
 Comment[ca]=Configuració dels grups de notícies i servidors de correu

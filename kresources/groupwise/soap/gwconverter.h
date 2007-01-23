@@ -56,7 +56,7 @@ class GWConverter
     
     QDateTime stringToQDateTime( const std::string* );
 
-
+    bool emailsMatch( const QString & email1, const QString & email2 );
   private:
     struct soap* mSoap;
 };

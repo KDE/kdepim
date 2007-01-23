@@ -13,6 +13,8 @@ X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
 
 Name=Reading News
+Name[af]=Lees Nuus
+Name[ar]=قراءة الأخبار
 Name[be]=Чытаньне навін
 Name[bg]=Четене
 Name[bs]=Čitanje Useneta

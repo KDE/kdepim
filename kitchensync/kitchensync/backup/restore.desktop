@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=Konnector Restore
+Name[af]=Konnector Herstel
 Name[bs]=Konnector osvježi
 Name[ca]=Recuperació de còpia de seguretat Konnector
 Name[cs]=Obnova konektoru
@@ -29,7 +30,7 @@ Name[nl]=Konnector-herstel
 Name[nn]=Konnector-gjenoppretting
 Name[pl]=Odtwarzanie dla Konnectora
 Name[pt]=Recuperação do Konnector
-Name[ru]=Восстановление Konnector
+Name[ru]=Восстановление резервной копии
 Name[sk]=Obnova Konnector
 Name[sl]=Povrnitev Konnectorja
 Name[sr]=Konnector поврати

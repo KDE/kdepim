@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_eudora_xxport
 Name=KAB Eudora XXPort Plugin
+Name[af]=KAB Eudora XXPort inprop module
 Name[be]=Дапаўненьне KAB "Імпарт/Экспарт Eudora"
 Name[br]=Lugent XXPorzh Eudora KAB
 Name[bs]=KAB dodatak za Eudora XXPort
@@ -45,6 +46,7 @@ Name[uk]=Втулок KAB для обміну з Eudora
 Name[zh_CN]=KAB Eudora XXPort 插件
 Name[zh_TW]=KAB Eudora XXPort 外掛程式
 Comment=Plugin to import and export Eudora contacts
+Comment[af]=Inprop module wat kontakte in Eudora formaat invoer en uitvoer
 Comment[be]=Дапаўненьне для імпарту і экспарту кантактаў Eudora
 Comment[bg]=Приставка за импорт/експорт на контактите във формат на Eudora
 Comment[bs]=Dodatak za uvoz i izvoz kontakata iz Eudore

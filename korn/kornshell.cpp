@@ -43,7 +43,7 @@ KornShell::KornShell( QWidget * parent, const char * name )
 	if( kapp->isRestored() )
 	{
 		_config->setGroup( "korn" );
-		QTimer::singleShot( _config->readNumEntry( "session_startup_delay", 200 ), this, SLOT(readConfig()) );
+		QTimer::singleShot( _config->readNumEntry( "session_startup_delay", 2000 ), this, SLOT(readConfig()) );
 		kdDebug() << "startup delayed" << endl;
 	}
 	else

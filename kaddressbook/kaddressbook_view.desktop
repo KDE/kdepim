@@ -3,6 +3,7 @@ Encoding=UTF-8
 Type=ServiceType
 X-KDE-ServiceType=KAddressBook/View
 Comment=KAddressBook View Plugin
+Comment[af]=KAddressBook besigtig inprop module
 Comment[be]=Дапаўненьне K Адраснай кнігі "Выгляд"
 Comment[bg]=Приставка за преглед на адресника
 Comment[br]=Lugent gwell KAddressBook

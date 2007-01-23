@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Comment=This conduit syncs the ToDo list from your handheld to KOrganizer.
+Comment[af]=Hierdie pad sinkroniseer die Te-doen lys vanaf jou draagbare toestel na KOrganizer.
 Comment[bg]=Синхронизация на списъка със задачи на мобилно устройство с организатора в КДЕ
 Comment[bs]=Ovaj conduit sinhronizuje listu Zadataka na ručnom računaru sa KOrganizerom.
 Comment[ca]=Aquest conducte sincronitza la llista de pendents des de la vostra agenda electrònica a KOrganizer.
@@ -44,6 +45,8 @@ Comment[uk]=Цей акведук синхронізує список завда
 Comment[zh_CN]=此管道会将您的待办列表与 KOrganizer 同步。
 Comment[zh_TW]=此軟體將您的 handheld 與 KOrganizer 的待辦事項清單同步。
 Name=ToDos (KOrganizer)
+Name[af]=Te-doen (KOrganizer)
+Name[ar]=الواجبات (KOrganizer)
 Name[be]=Заданьні (K Арганізатар)
 Name[br]=Traoù d'ober (KOrganizer)
 Name[bs]=Zadaci (KOrganizer)

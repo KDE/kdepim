@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Type=Service
 Name=Konnector Backup
+Name[af]=Konnector rugsteun kopie
 Name[bs]=Konnector backup
 Name[ca]=Còpia de seguretat Konnector
 Name[cs]=Záloha Konektoru
@@ -31,7 +32,7 @@ Name[nn]=Konnector tryggingskopi
 Name[pl]=Kopia zapasowa Konnectora
 Name[pt]=Salvaguarda do Konnector
 Name[pt_BR]=Backup do Konnector
-Name[ru]=Резервная копия Konnector
+Name[ru]=Создание резервной копии
 Name[se]=Konnector-liigemáŋggus
 Name[sk]=Záloha Konnector
 Name[sl]=Varnostna kopija Konnectorja
