@@ -1940,16 +1940,11 @@ think they are SPAM.
 <term><guilabel>Allow Semicolon As EMail Address Separator (AllowSemicolonAsAddressSeparator)</guilabel></term>
 <listitem>
 <para>
-By default, comma (,) is a separator from email addresses for fields like To,CC and BCC. If semi-colon (;) is needed as additional separator this option can used.
+In RFC2822, the comma (,) is the only allowed separator for email addresses in fields like To, CC and BCC. This option allows to also use the semi-colon (;) as separator. This only affects the user interface, the created messages still use commas only and thus do no violate the standard. 
 
-To enable this feature, add a line reading ( under [Composer] section ) :
-
-AllowSemicolonAsAddressSeparator=true
-
-This feature is on by default as well and can be disabled by changing the above line to :
+The option is enabled by default. To disable the feature, add a line reading (under [Composer] section):
 
 AllowSemicolonAsAddressSeparator=false
-
 </para>
 </listitem>
 </varlistentry>
