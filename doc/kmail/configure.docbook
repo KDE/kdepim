@@ -1923,9 +1923,9 @@ or through KIOSK.
 Send Message Disposition Notifications with an empty sender string. Some servers might be configured to reject
 such messages, so if you are experiencing problems sending MDNs, make sure this option is set to false. To
 enable this feature, add a line reading:
-
-SendMDNsWithEmptySender=true
-
+</para>
+<programlisting>SendMDNsWithEmptySender=true
+</programlisting><para>
 to the [MDN] section of the kmail configuration file. If there is no such section, simply add "[MDN]" on
 a line by itself just above the option.
 
@@ -1943,9 +1943,9 @@ think they are SPAM.
 In RFC2822, the comma (,) is the only allowed separator for email addresses in fields like To, CC and BCC. This option allows to also use the semi-colon (;) as separator. This only affects the user interface, the created messages still use commas only and thus do no violate the standard. 
 
 The option is enabled by default. To disable the feature, add a line reading (under [Composer] section):
-
-AllowSemicolonAsAddressSeparator=false
 </para>
+<programlisting>AllowSemicolonAsAddressSeparator=false
+</programlisting>
 </listitem>
 </varlistentry>
 
@@ -1955,9 +1955,9 @@ AllowSemicolonAsAddressSeparator=false
 <para>
 In case you don't want users to be able to upload their own out-of-office scripts to 
 the server you can add:
-
-AllowOutOfOfficeSettings=false
-
+</para>
+<programlisting>AllowOutOfOfficeSettings=false
+</programlisting><para>
 to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
 a line by itself just above the option.
 </para>
@@ -1970,9 +1970,9 @@ a line by itself just above the option.
 <para>
 If you want to allow your users to upload their own out-of-office scripts but you do not want them to be 
 able to change the domain to react to and the react-to-spam setting, you can add:
-
-AllowOutOfOfficeUploadButNoSettings=true
-
+</para>
+<programlisting>AllowOutOfOfficeUploadButNoSettings=true
+</programlisting><para>
 to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
 a line by itself just above the option.
 </para>
@@ -1987,9 +1987,9 @@ a line by itself just above the option.
 When editing vacation (out-of-office) scripts, the user can specify a domain to
 limit the sending of such replies to. To pre-load this setting with a default
 value, add
-
-OutOfOfficeDomain=myMailDomain.test
-
+</para>
+<programlisting>OutOfOfficeDomain=myMailDomain.test
+</programlisting><para>
 to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
 a line by itself just above the option.
 
@@ -2005,9 +2005,9 @@ button will restore this domain, in case the user has changed it.
 <para>
 By default, out-of-office replies are not sent to messages marked as SPAM. To override this
 behavior, add
-
-OutOfOfficeReactToSpam=true
-
+</para>
+<programlisting>OutOfOfficeReactToSpam=true
+</programlisting><para>
 to the [OutOfOffice] section of the kmail configuration file. If there is no such section, simply add "[OutOfOffice]" on
 a line by itself just above the option.
 
