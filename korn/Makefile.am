@@ -113,7 +113,7 @@ srcdoc:
 		-lqt -lkdeui -lkdecore
 
 messages:
-	$(XGETTEXT) *.{h,cpp} -o $(podir)/korn.pot
+	$(XGETTEXT) *.h *.cpp -o $(podir)/korn.pot
 
 KDE_ICON = korn
 
