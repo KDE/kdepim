@@ -128,7 +128,7 @@ bool VCalFormat::save(Calendar *calendar, const QString &fileName)
     kdDebug(5800) << "Error" << endl;
     return false; // error
   }
-  
+
   return false;
 }
 
@@ -234,7 +234,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
 
   // organizer stuff
   // @TODO: How about the common name?
-  tmpStr = "MAILTO:" + anEvent->organizer().email();
+  tmpStr = "mailto:" + anEvent->organizer().email();
   addPropValue(vtodo, ICOrganizerProp, tmpStr.local8Bit());
 
   // attendees
@@ -246,12 +246,12 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
       curAttendee = *it;
       if (!curAttendee->email().isEmpty() &&
 	  !curAttendee->name().isEmpty())
-        tmpStr = "MAILTO:" + curAttendee->name() + " <" +
+        tmpStr = "mailto:" + curAttendee->name() + " <" +
                  curAttendee->email() + ">";
       else if (curAttendee->name().isEmpty())
-        tmpStr = "MAILTO: " + curAttendee->email();
+        tmpStr = "mailto: " + curAttendee->email();
       else if (curAttendee->email().isEmpty())
-        tmpStr = "MAILTO: " + curAttendee->name();
+        tmpStr = "mailto: " + curAttendee->name();
       else if (curAttendee->name().isEmpty() &&
 	       curAttendee->email().isEmpty())
 	kdDebug(5800) << "warning! this Event has an attendee w/o name or email!" << endl;
@@ -272,7 +272,7 @@ VObject *VCalFormat::eventToVTodo(const Todo *anEvent)
   // summary
   if (!anEvent->summary().isEmpty())
     addPropValue(vtodo, VCSummaryProp, anEvent->summary().local8Bit());
-    
+
   // location
   if (!anEvent->location().isEmpty())
     addPropValue(vtodo, VCLocationProp, anEvent->location().local8Bit());
@@ -396,23 +396,23 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
 
   // attendee and organizer stuff
   // TODO: What to do with the common name?
-  tmpStr = "MAILTO:" + anEvent->organizer().email();
+  tmpStr = "mailto:" + anEvent->organizer().email();
   addPropValue(vevent, ICOrganizerProp, tmpStr.local8Bit());
 
   // TODO: Put this functionality into Attendee class
   if ( anEvent->attendeeCount() > 0 ) {
-    Attendee::List::ConstIterator it;    
+    Attendee::List::ConstIterator it;
     for ( it = anEvent->attendees().begin(); it != anEvent->attendees().end();
           ++it ) {
       Attendee *curAttendee = *it;
       if (!curAttendee->email().isEmpty() &&
 	  !curAttendee->name().isEmpty())
-        tmpStr = "MAILTO:" + curAttendee->name() + " <" +
+        tmpStr = "mailto:" + curAttendee->name() + " <" +
                  curAttendee->email() + ">";
       else if (curAttendee->name().isEmpty())
-        tmpStr = "MAILTO: " + curAttendee->email();
+        tmpStr = "mailto: " + curAttendee->email();
       else if (curAttendee->email().isEmpty())
-        tmpStr = "MAILTO: " + curAttendee->name();
+        tmpStr = "mailto: " + curAttendee->name();
       else if (curAttendee->name().isEmpty() &&
 	       curAttendee->email().isEmpty())
 	kdDebug(5800) << "warning! this Event has an attendee w/o name or email!" << endl;
@@ -540,7 +540,7 @@ VObject* VCalFormat::eventToVEvent(const Event *anEvent)
   // summary
   if (!anEvent->summary().isEmpty())
     addPropValue(vevent, VCSummaryProp, anEvent->summary().local8Bit());
-    
+
   // location
   if (!anEvent->location().isEmpty())
     addPropValue(vevent, VCLocationProp, anEvent->location().local8Bit());
@@ -745,7 +745,7 @@ Todo *VCalFormat::VTodoToEvent(VObject *vtodo)
     deleteStr(s);
   }
 
-  
+
   // location
   if ((vo = isAPropertyOf(vtodo, VCLocationProp)) != 0) {
     s = fakeCString(vObjectUStringZValue(vo));
@@ -1110,8 +1110,8 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
       int rFreq = tmpStr.mid(2, (index-1)).toInt();
       index += 1;
       short tmpDay;
-      // We have to set monthly by day now (using dummy values), because the 
-      // addMonthlyDay calls check for that type of recurrence, and if the 
+      // We have to set monthly by day now (using dummy values), because the
+      // addMonthlyDay calls check for that type of recurrence, and if the
       // recurrence isn't yet set to monthly, addMonthlyDay doesn't do anything
       anEvent->recurrence()->setMonthly( Recurrence::rMonthlyDay, rFreq, -1 );
       if( index == last ) {
@@ -1245,7 +1245,7 @@ Event* VCalFormat::VEventToEvent(VObject *vevent)
     }
     deleteStr(s);
   }
-  
+
   // location
   if ((vo = isAPropertyOf(vevent, VCLocationProp)) != 0) {
     s = fakeCString(vObjectUStringZValue(vo));
@@ -1430,7 +1430,7 @@ QString VCalFormat::qDateTimeToISO(const QDateTime &qdt, bool zulu)
   if (zulu) {
     QDateTime tmpDT(qdt);
     // correct to GMT:
-    tmpDT = tmpDT.addSecs(-vcaltime_utc_offset( tmpDT, mCalendar->timeZoneId())); 
+    tmpDT = tmpDT.addSecs(-vcaltime_utc_offset( tmpDT, mCalendar->timeZoneId()));
     tmpStr.sprintf( "%.2d%.2d%.2dT%.2d%.2d%.2dZ",
                     tmpDT.date().year(), tmpDT.date().month(),
                     tmpDT.date().day(), tmpDT.time().hour(),
@@ -1466,7 +1466,7 @@ QDateTime VCalFormat::ISOToQDateTime(const QString & dtStr)
   QDateTime tmpDT(tmpDate, tmpTime);
   // correct for GMT if string is in Zulu format
   if (dtStr.at(dtStr.length()-1) == 'Z') {
-    tmpDT = tmpDT.addSecs(vcaltime_utc_offset( tmpDT, mCalendar->timeZoneId())); 
+    tmpDT = tmpDT.addSecs(vcaltime_utc_offset( tmpDT, mCalendar->timeZoneId()));
   }
   return tmpDT;
 }

@@ -146,7 +146,7 @@ void IncidenceBase::setOrganizer( const Person &o )
 void IncidenceBase::setOrganizer(const QString &o)
 {
   QString mail( o );
-  if ( mail.startsWith("MAILTO:", false) )
+  if ( mail.startsWith("mailto:", false) )
     mail = mail.remove( 0, 7 );
   // split the string into full name plus email.
   Person organizer( mail );
@@ -240,7 +240,7 @@ void IncidenceBase::addAttendee(Attendee *a, bool doupdate)
 //  kdDebug(5800) << "IncidenceBase::addAttendee()" << endl;
   if (mReadOnly) return;
 //  kdDebug(5800) << "IncidenceBase::addAttendee() weiter" << endl;
-  if (a->name().left(7).upper() == "MAILTO:")
+  if (a->name().left(7).upper() == "mailto:")
     a->setName(a->name().remove(0,7));
 
   mAttendees.append(a);

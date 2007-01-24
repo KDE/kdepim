@@ -749,7 +749,7 @@ void ICalFormatImpl::writeCustomProperties(icalcomponent *parent,CustomPropertie
 
 icalproperty *ICalFormatImpl::writeOrganizer( const Person &organizer )
 {
-  icalproperty *p = icalproperty_new_organizer("MAILTO:" + organizer.email().utf8());
+  icalproperty *p = icalproperty_new_organizer("mailto:" + organizer.email().utf8());
 
   if (!organizer.name().isEmpty()) {
     icalproperty_add_parameter( p, icalparameter_new_cn(organizer.quotedName().utf8()) );
@@ -762,7 +762,7 @@ icalproperty *ICalFormatImpl::writeOrganizer( const Person &organizer )
 
 icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
 {
-  icalproperty *p = icalproperty_new_attendee("MAILTO:" + attendee->email().utf8());
+  icalproperty *p = icalproperty_new_attendee("mailto:" + attendee->email().utf8());
 
   if (!attendee->name().isEmpty()) {
     icalproperty_add_parameter(p,icalparameter_new_cn(attendee->quotedName().utf8()));
@@ -1033,7 +1033,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
       action = ICAL_ACTION_EMAIL;
       QValueList<Person> addresses = alarm->mailAddresses();
       for (QValueList<Person>::Iterator ad = addresses.begin();  ad != addresses.end();  ++ad) {
-        icalproperty *p = icalproperty_new_attendee("MAILTO:" + (*ad).email().utf8());
+        icalproperty *p = icalproperty_new_attendee("mailto:" + (*ad).email().utf8());
         if (!(*ad).name().isEmpty()) {
           icalproperty_add_parameter(p,icalparameter_new_cn((*ad).name().utf8()));
         }
@@ -2016,7 +2016,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
       // Only in AUDIO and EMAIL and PROCEDURE alarms
       case ICAL_ATTACH_PROPERTY: {
         icalattachtype *attach = icalproperty_get_attach(p);
-        icalvalue_kind value_kind = icalvalue_isa(icalproperty_get_value(p) ); 
+        icalvalue_kind value_kind = icalvalue_isa(icalproperty_get_value(p) );
         if ( value_kind == ICAL_URI_VALUE ) {
           QString url = QFile::decodeName(icalvalue_get_uri(icalproperty_get_value(p)));
           switch ( action ) {

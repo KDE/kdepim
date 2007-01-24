@@ -282,7 +282,7 @@ void KIncidenceFormatter::formatAttendees(Incidence *event)
     mText.append( event->organizer().fullName() );
 #endif
     if ( !iconPath.isNull() ) {
-      addLink( "MAILTO:" + event->organizer().email(), // fullName would look nicer, but needs escaping
+      addLink( "mailto:" + event->organizer().email(), // fullName would look nicer, but needs escaping
                "<img src=\"" + iconPath + "\">" );
     }
     mText.append( "</li></ul>" );
@@ -319,7 +319,7 @@ void KIncidenceFormatter::formatAttendees(Incidence *event)
 
       if ( !a->email().isEmpty() ) {
         if ( !iconPath.isNull() ) {
-          mText += "<a href=\"MAILTO:" + a->name() +" "+ "<" + a->email() + ">" + "\">";
+          mText += "<a href=\"mailto:" + a->name() +" "+ "<" + a->email() + ">" + "\">";
           mText += "<img src=\"" + iconPath + "\">";
           mText += "</a>\n";
         }
