@@ -77,7 +77,7 @@
 #include <dcopref.h>
 
 static const unsigned int keyLengths[] = {
-  1024, 1532, 2048, 3072, 4096
+  /*1024, 1532, */ 2048, 3072, 4096
 };
 static const unsigned int numKeyLengths = sizeof keyLengths / sizeof *keyLengths;
 
