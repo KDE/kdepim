@@ -40,7 +40,7 @@
 #include <libkcal/journal.h>
 #include <libkcal/filestorage.h>
 
-#include <kabc/locknull.h>
+#include <kabc/lock.h>
 
 #include <kresources/configwidget.h>
 
@@ -93,7 +93,7 @@ void ResourceRemote::init()
 
   setType( "remote" );
 
-  mLock = new KABC::LockNull( true );
+  mLock = new KABC::Lock( cacheFile() );
 
   enableChangeNotification();
 }
@@ -188,21 +188,25 @@ bool ResourceRemote::doLoad()
 
   emit resourceChanged( this );
 
-  kdDebug() << "Download from: " << mDownloadUrl << endl;
+  if ( mLock->lock() )
+  {
+    kdDebug() << "Download from: " << mDownloadUrl << endl;
 
-  mDownloadJob = KIO::file_copy( mDownloadUrl, KURL( cacheFile() ), -1, true,
-                                 false, !mUseProgressManager );
-  connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( slotLoadJobResult( KIO::Job * ) ) );
-  if ( mUseProgressManager ) {
-    connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
-             SLOT( slotPercent( KIO::Job *, unsigned long ) ) );
-    mProgress = KPIM::ProgressManager::createProgressItem(
-        KPIM::ProgressManager::getUniqueID(), i18n("Downloading Calendar") );
+    mDownloadJob = KIO::file_copy( mDownloadUrl, KURL( cacheFile() ), -1, true,
+                                    false, !mUseProgressManager );
+    connect( mDownloadJob, SIGNAL( result( KIO::Job * ) ),
+            SLOT( slotLoadJobResult( KIO::Job * ) ) );
+    if ( mUseProgressManager ) {
+        connect( mDownloadJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
+                SLOT( slotPercent( KIO::Job *, unsigned long ) ) );
+        mProgress = KPIM::ProgressManager::createProgressItem(
+            KPIM::ProgressManager::getUniqueID(), i18n("Downloading Calendar") );
 
-    mProgress->setProgress( 0 );
+        mProgress->setProgress( 0 );
+    }
   }
-
+  else
+    kdDebug() << "ResourceRemote::load(): cache file is locked - something else must be loading the file" << endl;
   return true;
 }
 
@@ -234,6 +238,7 @@ void ResourceRemote::slotLoadJobResult( KIO::Job *job )
     mProgress = 0;
   }
 
+  mLock->unlock();
   emit resourceLoaded( this );
 }
 
