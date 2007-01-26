@@ -32,10 +32,6 @@
 // config keys:
 static const char configKeyDefaultIdentity[] = "Default Identity";
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-//Added by qt3to4:
 #include <QList>
 
 #include "identitymanager.h"

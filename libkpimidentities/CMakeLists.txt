@@ -1,3 +1,4 @@
+configure_file (config-libkpimidentities.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-libkpimidentities.h)
 
 if(GPGME_FOUND)
    include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
