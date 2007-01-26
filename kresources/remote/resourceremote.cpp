@@ -93,7 +93,7 @@ void ResourceRemote::init()
 
   setType( "remote" );
 
-  mLock = new KABC::LockNull( true );
+  mLock = new KABC::Lock( cacheFile() );
 
   enableChangeNotification();
 }
@@ -188,21 +188,24 @@ bool ResourceRemote::doLoad( bool )
 
   emit resourceChanged( this );
 
-  kDebug() << "Download from: " << mDownloadUrl << endl;
+  if ( mLock->lock() ) {
+    kDebug() << "Download from: " << mDownloadUrl << endl;
 
-  mDownloadJob = KIO::file_copy( mDownloadUrl, KUrl( cacheFile() ), -1, true,
-                                 false, !mUseProgressManager );
-  connect( mDownloadJob, SIGNAL( result( KJob * ) ),
-           SLOT( slotLoadJobResult( KJob * ) ) );
-  if ( mUseProgressManager ) {
-    connect( mDownloadJob, SIGNAL( percent( KJob *, unsigned long ) ),
-             SLOT( slotPercent( KJob *, unsigned long ) ) );
-    mProgress = KPIM::ProgressManager::createProgressItem(
+    mDownloadJob = KIO::file_copy( mDownloadUrl, KUrl( cacheFile() ), -1, true,
+                                   false, !mUseProgressManager );
+    connect( mDownloadJob, SIGNAL( result( KJob * ) ),
+             SLOT( slotLoadJobResult( KJob * ) ) );
+    if ( mUseProgressManager ) {
+      connect( mDownloadJob, SIGNAL( percent( KJob *, unsigned long ) ),
+               SLOT( slotPercent( KJob *, unsigned long ) ) );
+      mProgress = KPIM::ProgressManager::createProgressItem(
         KPIM::ProgressManager::getUniqueID(), i18n("Downloading Calendar") );
 
-    mProgress->setProgress( 0 );
+      mProgress->setProgress( 0 );
+    }
+  } else {
+    kDebug() << "ResourceRemote::load(): cache file is locked - something else must be loading the file" << endl;
   }
-
   return true;
 }
 
@@ -234,6 +237,7 @@ void ResourceRemote::slotLoadJobResult( KJob *job )
     mProgress = 0;
   }
 
+  mLock->unlock();
   emit resourceLoaded( this );
 }
 
@@ -279,7 +283,7 @@ void ResourceRemote::slotSaveJobResult( KJob *job )
     static_cast<KIO::Job*>(job)->showErrorDialog( 0 );
   } else {
     kDebug(5800) << "ResourceRemote::slotSaveJobResult() success" << endl;
-  
+
     Incidence::List::ConstIterator it;
     for( it = mChangedIncidences.begin(); it != mChangedIncidences.end();
          ++it ) {
@@ -287,7 +291,7 @@ void ResourceRemote::slotSaveJobResult( KJob *job )
     }
     mChangedIncidences.clear();
   }
-  
+
   mUploadJob = 0;
 
   emit resourceSaved( this );
