@@ -1,4 +1,59 @@
-Current Release is Proko2 2.1.5
+Current Release is Proko2 2.1.6
+
+Features:
+=========
+
+kmail
+----------
+
+* Issue 1506 Add Kiosk option for mimetypes that are stripped from inlined 
+forwarded mails. Useful for stripping out Toltec or Outlook tnef blobs, for example.
+
+korganizer
+----------
+
+* Issue 1278 Tooltip information and alarm on recurring events.
+
+Bugfixes:
+=========
+
+general
+----------
+
+* Issue 1442 Reverted to "mailto" instead of "MAILTO" everywhere.
+* Issue 1537 Update Copyright years
+
+kmail
+----------
+
+* Issue 1367 Made ".mbox" as a default extension/filter while saving messages.
+* Issue 1467 Documentation: Improve formatting of configuration options
+* Issue 1216 Documentation: Improve documentation of the AllowSemicolonAsAddressSeparator option
+* Issue 1384 Do not base64 encode forwarded messages (violates the RFC)
+* Issue 1385 Enable/Disable actions based on signature absence/presence for an identity
+* Issue 1562 Do not quote RFC2231-encoded filenames of attachments
+
+korganizer
+----------
+
+* Issue 1456 Korganizer crashing when "select resource folder" was cancelled.
+
+certmanager
+----------
+
+* Aegypten issue718: "In the key creation dialog of Kleoptra, the selection
+box for the key length should be reduced by all entry below 2048 bits.
+Currently, anything below 1900 is regarded as too insecure."
+
+mimelib
+----------
+
+* Aegypten Issue 661 Don't add a spurious newline when calling Assemble() on a message that has 
+no headers, as happens when it is a forwarded attachment, for example.
+
+
+
+Changes since Proko2 2.1.4 up to Proko2 2.1.5 (released 2.11.2006)
 
 Features:
 =========
