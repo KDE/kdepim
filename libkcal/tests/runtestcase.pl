@@ -86,21 +86,21 @@ sub checkfile()
   $error = 0;
   $i = 0;
   $line = 1;
-	my $errorlines = 0;
+  my $errorlines = 0;
   while( <READ> ) {
     $out = $_;
     $ref = @ref[$i++];
 
     # DTSTAMP, LAST-MODIFIED and CREATED might be different to the reference...
-    if ( $out =~ /^DTSTAMP:[0-9ZT]+$/ && $ref =~ /^DTSTAMP:[0-9ZT]+$/ ) {
+    if ( $out =~ /^DTSTAMP:[0-9ZT]+\r?$/ && $ref =~ /^DTSTAMP:[0-9ZT]+\r?$/ ) {
       next;
     }
 
-    if ( $out =~ /^LAST-MODIFIED:[0-9ZT]+$/ && $ref =~ /^LAST-MODIFIED:[0-9ZT]+$/ ) {
+    if ( $out =~ /^LAST-MODIFIED:[0-9ZT]+\r?$/ && $ref =~ /^LAST-MODIFIED:[0-9ZT]+\r?$/ ) {
       next;
     }
 
-    if ( $out =~ /^CREATED:[0-9ZT]+$/ && $ref =~ /^CREATED:[0-9ZT]+$/ ) {
+    if ( $out =~ /^CREATED:[0-9ZT]+\r?$/ && $ref =~ /^CREATED:[0-9ZT]+\r?$/ ) {
       next;
     }
 
