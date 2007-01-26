@@ -7,7 +7,7 @@
 #ifndef kpim_identity_h
 #define kpim_identity_h
 
-#include <config-libkpimidentities.h> // HAVE_GPGME
+#include <libkpimidentities/config-libkpimidentities.h> // HAVE_GPGME
 
 #ifdef HAVE_GPGME
 #include <kleo/enum.h>
