@@ -341,7 +341,7 @@ fold_property_line (char *text)
 	/* If this isn't the first line, we need to output a newline and space
 	   first. */
 	if (!first_line) {
-	    icalmemory_append_string (&buf, &buf_ptr, &buf_size, "\n ");
+	    icalmemory_append_string (&buf, &buf_ptr, &buf_size, "\r\n ");
 	}
 	first_line = 0;
 
@@ -433,7 +433,7 @@ icalproperty_as_ical_string (icalproperty* prop)
     char *out_buf;
     const char* kind_string = 0;
 
-    char newline[] = "\n";
+    char newline[] = "\r\n";
 
     
     icalerror_check_arg_rz( (prop!=0),"prop");

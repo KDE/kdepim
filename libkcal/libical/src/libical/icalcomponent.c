@@ -280,11 +280,11 @@ icalcomponent_as_ical_string (icalcomponent* impl)
    char* buf_ptr = 0;
     pvl_elem itr;
 
+/* RFC 2445 explicitly says that the newline is *ALWAYS* a \r\n (CRLF)!!!! */
+char newline[] = "\r\n";
 /* WIN32 automatically adds the \r, Anybody else need it?
 #ifdef ICAL_UNIX_NEWLINE    
-*/
     char newline[] = "\n";
-/*
 #else
     char newline[] = "\r\n";
 #endif
