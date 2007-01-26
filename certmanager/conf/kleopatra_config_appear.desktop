@@ -15,7 +15,7 @@ X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=Appearance
 Name[ar]=المظهر
-Name[be]=Зьнешні выгляд
+Name[be]=Знешні выгляд
 Name[bg]=Външен вид
 Name[br]=Neuziadur
 Name[bs]=Izgled
@@ -67,7 +67,7 @@ Name[zh_CN]=外观
 Comment=Colors & Fonts Configuration
 Comment[af]=Kleur en skrif tipe opstelling
 Comment[ar]=إعدادات الألوان و المحارف
-Comment[be]=Канфігурацыя колераў і шрыфтоў
+Comment[be]=Настаўленні колераў і шрыфтоў
 Comment[bg]=Настройки на цветовете и шрифтовете
 Comment[bs]=Podešavanje boja i fontova
 Comment[ca]=Configuració de colors i fonts

@@ -17,7 +17,7 @@ Name[zh_TW]=KMobile 行動裝置
 GenericName=Manage Mobile Devices
 GenericName[af]=Bestuur draagbare toestelle
 GenericName[ar]=تسيير الأجهزة النقّالة
-GenericName[be]=Кіраваньне мабільнымі прыладамі
+GenericName[be]=Кіраванне мабільнымі прыладамі
 GenericName[bg]=Мобилни устройства
 GenericName[br]=Merañ an trobarhelloù lem-laka
 GenericName[bs]=Upravljajte mobilnim uređajima
@@ -68,7 +68,7 @@ GenericName[zh_TW]=管理行動裝置
 
 Comment=A KDE Mobile Devices Manager
 Comment[af]='n KDE draagbare toestel bestuurder
-Comment[be]=Кіраваньне мабільнымі прыладамі KDE
+Comment[be]=Кіраванне мабільнымі прыладамі KDE
 Comment[bg]=Управление на мобилни устройства
 Comment[bs]=KDE upravitelj mobilnim uređajima
 Comment[ca]=Un gestor de KDE per a dispositius mòbils
