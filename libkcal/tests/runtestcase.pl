@@ -23,13 +23,17 @@
 # This little script runs a test program on a given (calendar) file and 
 # compares the output to a reference file. All discrepancies are shown 
 # to the user. Usage:
-#      runtestcase.pl appname testfile.ics
+#      runtestcase.pl appname identifier testfile.ics
+# 'identifier' is used as a suffix to allow multiple tests on the same input 
+# file during a test run.
+#
 # The application/script appname is required to take two arguments:
 #      appname inputfile outputfile
-# where inputfile is the file to be used as input data, and the ouput of the
-# programm will go to outputfile (=testfile.ics.out if called through 
+# where inputfile is the file to be used as input data, and the output of the
+# program will go to outputfile (=testfile.ics.identifier.out if called through 
 # runtestcase.pl). That outputfile is then compared to the reference file
 # testfile.ics.ref.
+
 
 if ( @ARGV != 3 ) {
   print STDERR "Missing arg! Arguments: testapp identifier filename \n";
@@ -85,11 +89,12 @@ sub checkfile()
 
   $error = 0;
   $i = 0;
-  $line = 1;
+  $line = 0;
   my $errorlines = 0;
   while( <READ> ) {
     $out = $_;
     $ref = @ref[$i++];
+    $line++;
 
     # DTSTAMP, LAST-MODIFIED and CREATED might be different to the reference...
     if ( $out =~ /^DTSTAMP:[0-9ZT]+\r?$/ && $ref =~ /^DTSTAMP:[0-9ZT]+\r?$/ ) {
@@ -118,7 +123,6 @@ sub checkfile()
       }
     }
     
-    $line++;
   }
 
   close READ;
