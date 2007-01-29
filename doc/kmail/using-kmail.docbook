@@ -354,7 +354,7 @@ automatic spellchecking in the <menuchoice><guimenu>Options</guimenu></menuchoic
 <para>To check the spelling of your message using a dialog, select
 <menuchoice><guimenu>Tools</guimenu>
 <guimenuitem>Spelling...</guimenuitem></menuchoice>. &kmail; uses 
-<ulink url="/kspell/">&kspell;</ulink> to
+<ulink url="/kspell/">&sonnet;</ulink> to
 check spelling, which is the &kde; frontend to the 
 <application>ispell</application> or <application>aspell</application> spelling
 checker. Note that you may first need to configure the spellchecker using

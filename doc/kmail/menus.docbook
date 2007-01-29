@@ -2068,9 +2068,9 @@ attachment window.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Uses <ulink url="/kspell/">&kspell;</ulink> to check the spelling in the body of your
+<para>Uses <ulink url="/kspell/">&sonnet;</ulink> to check the spelling in the body of your
 message. Note that
-you have to configure &kspell; with <menuchoice><guimenu>Settings</guimenu>
+you have to configure &sonnet; with <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Spellchecker...</guimenuitem></menuchoice> if you use it for the
 first time.</para>
 </listitem>
@@ -2131,7 +2131,7 @@ tools to change certain properties of the composed text.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Allows you to configure <ulink url="/kspell/">&kspell;</ulink>, &kde;'s spellchecker.</para>
+<para>Allows you to configure <ulink url="/kspell/">&sonnet;</ulink>, &kde;'s spellchecker.</para>
 </listitem>
 </varlistentry>
 
