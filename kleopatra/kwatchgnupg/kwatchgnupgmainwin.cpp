@@ -149,7 +149,7 @@ void KWatchGnuPGMainWindow::startWatcher()
 						   .arg( QDateTime::currentDateTime().toString(Qt::ISODate)));
   }
   mWatcher->clearArguments();
-  KConfig* config = KGlobal::config();
+  KSharedConfig::Ptr config = KGlobal::config();
   config->setGroup("WatchGnuPG");
   *mWatcher << config->readEntry("Executable", WATCHGNUPGBINARY);
   *mWatcher << "--force";
@@ -173,7 +173,7 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
   if ( !cconfig )
     return;
   //Q_ASSERT( cconfig );
-  KConfig* config = KGlobal::config();
+  KSharedConfig::Ptr config = KGlobal::config();
   config->setGroup("WatchGnuPG");
   QStringList comps = cconfig->componentList();
   for( QStringList::const_iterator it = comps.begin(); it != comps.end(); ++it ) {
@@ -282,7 +282,7 @@ void KWatchGnuPGMainWindow::slotConfigure()
 
 void KWatchGnuPGMainWindow::slotReadConfig()
 {
-  KConfig* config = KGlobal::config();
+  KSharedConfig::Ptr config = KGlobal::config();
   config->setGroup("LogWindow");
   mCentralWidget->setWordWrapMode( config->readEntry("WordWrap", false)
 							   ?QTextOption::WordWrap

@@ -23,7 +23,7 @@
 
 // KDE includes
 #include <kconfig.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kstandarddirs.h>
 
 // local includes
@@ -99,7 +99,7 @@ QMap<QString, QString> CSVTemplateFactory::templateNames()
         addTemplateNames(QDir::currentPath());
 
         QStringList templateDirs =
-            KGlobal::instance()->dirs()->findDirs("data", "kaddressbook/csv-templates");
+            KGlobal::mainComponent().dirs()->findDirs("data", "kaddressbook/csv-templates");
 
         QStringList::const_iterator it    = templateDirs.begin();
         QStringList::const_iterator endIt = templateDirs.end();

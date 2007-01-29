@@ -25,7 +25,7 @@
 #define KCMKABLDAPCONFIG_H
 
 #include <kcmodule.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <QWidget>
 
 class LDAPOptionsWidget;

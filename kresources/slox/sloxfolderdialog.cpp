@@ -20,7 +20,7 @@
 
 #include <kiconloader.h>
 #include <kguiitem.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <k3listview.h>
 #include <klocale.h>
 

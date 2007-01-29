@@ -35,7 +35,7 @@ extern "C" {
 #include "sieve.h"
 
 #include <kdebug.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <klocale.h>
 #include <kurl.h>
 #include <kglobal.h>
@@ -76,7 +76,7 @@ extern "C"
 {
 	KDE_EXPORT int kdemain(int argc, char **argv)
 	{
-		KInstance instance("kio_sieve" );
+		KComponentData instance("kio_sieve" );
 		
 		ksDebug() << "*** Starting kio_sieve " << endl;
 

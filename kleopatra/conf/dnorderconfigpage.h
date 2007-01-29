@@ -44,7 +44,7 @@ namespace Kleo {
 class DNOrderConfigPage : public KCModule {
   Q_OBJECT
 public:
-  DNOrderConfigPage( KInstance *instance, QWidget *parent=0, const QStringList &args=QStringList() );
+  DNOrderConfigPage( const KComponentData &instance, QWidget *parent=0, const QStringList &args=QStringList() );
 
   /*! reimplementation */
   void load();

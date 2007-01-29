@@ -35,7 +35,6 @@ KNGlobals* KNGlobals::mSelf = 0;
 static KStaticDeleter<KNGlobals> staticKNGlobalsDeleter;
 
 KNGlobals::KNGlobals() :
-  mInstance( 0 ),
   mScheduler( 0 ),
   mCfgManager( 0 ),
   mAccManager( 0 ),
@@ -68,11 +67,11 @@ KNGlobals * KNGlobals::self()
 }
 
 
-KInstance *KNGlobals::instance() const
+const KComponentData &KNGlobals::componentData() const
 {
-  if ( mInstance )
+  if ( mInstance.isValid() )
     return mInstance;
-  return KGlobal::instance();
+  return KGlobal::mainComponent();
 }
 
 

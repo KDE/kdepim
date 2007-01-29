@@ -40,7 +40,7 @@
 #include <kconfig.h>
 #include <knuminput.h>
 #include <kdialog.h>
-#include <kinstance.h> 
+#include <kcomponentdata.h> 
 
 #include <khbox.h>
 #include <QLabel>
@@ -140,7 +140,7 @@ static const char s_addnewservers_componentName[] = "dirmngr";
 static const char s_addnewservers_groupName[] = "LDAP";
 static const char s_addnewservers_entryName[] = "add-servers";
 
-DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( KInstance *instance, QWidget *parent, const QStringList &args )
+DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KComponentData &instance, QWidget *parent, const QStringList &args )
     : KCModule( instance, parent, args )
 {
   mConfig = Kleo::CryptoBackendFactory::instance()->config();
@@ -267,7 +267,7 @@ extern "C"
   KDE_EXPORT KCModule *create_kleopatra_config_dirserv( QWidget *parent=0, const QStringList &args=QStringList() )
   {
     DirectoryServicesConfigurationPage *page =
-      new DirectoryServicesConfigurationPage( new KInstance( "kleopatra" ), parent, args );
+      new DirectoryServicesConfigurationPage( KComponentData( "kleopatra" ), parent, args );
     page->setObjectName( "kleopatra_config_dirserv" );
     return page;
   }

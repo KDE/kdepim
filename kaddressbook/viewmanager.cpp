@@ -42,6 +42,7 @@
 #include <ktempdir.h>
 #include <kservicetypetrader.h>
 #include <kicon.h>
+#include <kconfiggroup.h>
 
 #include "addviewdialog.h"
 #include "addresseeutil.h"

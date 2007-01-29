@@ -49,7 +49,7 @@
 #include <kprotocolmanager.h>
 #include <ksock.h>
 #include <kdebug.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kio/connection.h>
 #include <kio/slaveinterface.h>
 #include <kio/passdlg.h>

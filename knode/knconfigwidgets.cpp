@@ -61,7 +61,7 @@
 #include "settings.h"
 #include <kpgp.h>
 
-KNode::IdentityWidget::IdentityWidget( Identity *d, KInstance *inst, QWidget *parent ) :
+KNode::IdentityWidget::IdentityWidget( Identity *d, const KComponentData &inst, QWidget *parent ) :
   KCModule( inst ,parent ),
   d_ata( d )
 {
@@ -297,7 +297,7 @@ void KNode::IdentityWidget::slotSignatureEdit()
 
 //BEGIN: NNTP account configuration widgets ----------------------------------
 
-KNode::NntpAccountListWidget::NntpAccountListWidget( KInstance *inst, QWidget *parent ) :
+KNode::NntpAccountListWidget::NntpAccountListWidget( const KComponentData &inst, QWidget *parent ) :
   KCModule( inst, parent )
 {
   setupUi( this );
@@ -484,7 +484,7 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
   mInterval->setValue( a->checkInterval() );
 
   // identity tab
-  mIdentityWidget = new KNode::IdentityWidget( a->identity(), knGlobals.instance(), this );
+  mIdentityWidget = new KNode::IdentityWidget( a->identity(), knGlobals.componentData(), this );
   addPage( mIdentityWidget, i18n("&Identity") );
 
   // per server cleanup configuration
@@ -596,7 +596,7 @@ void KNode::AppearanceWidget::FontListItem::setFont( const QFont &font )
 //===================================================================================
 
 
-KNode::AppearanceWidget::AppearanceWidget( KInstance *inst, QWidget *parent ) :
+KNode::AppearanceWidget::AppearanceWidget( const KComponentData &inst, QWidget *parent ) :
   KCModule(inst, parent )
 {
   QGridLayout *topL = new QGridLayout( this );
@@ -794,7 +794,7 @@ void KNode::AppearanceWidget::slotFontSelectionChanged()
 //=============================================================================================
 
 
-KNode::ReadNewsGeneralWidget::ReadNewsGeneralWidget( KInstance *inst, QWidget *parent ) :
+KNode::ReadNewsGeneralWidget::ReadNewsGeneralWidget( const KComponentData &inst, QWidget *parent ) :
   KCModule( inst, parent )
 {
   setupUi( this );
@@ -830,7 +830,7 @@ void KNode::ReadNewsGeneralWidget::save()
 //=============================================================================================
 
 
-KNode::ReadNewsNavigationWidget::ReadNewsNavigationWidget( KInstance *inst, QWidget *parent ) :
+KNode::ReadNewsNavigationWidget::ReadNewsNavigationWidget( const KComponentData &inst, QWidget *parent ) :
   KCModule( inst, parent )
 {
   KNode::Ui::ReadNewsNavigationWidgetBase ui;
@@ -843,7 +843,7 @@ KNode::ReadNewsNavigationWidget::ReadNewsNavigationWidget( KInstance *inst, QWid
 //=============================================================================================
 
 
-KNode::ReadNewsViewerWidget::ReadNewsViewerWidget( KInstance *inst, QWidget *parent ) :
+KNode::ReadNewsViewerWidget::ReadNewsViewerWidget( const KComponentData &inst, QWidget *parent ) :
   KCModule( inst, parent )
 {
   KNode::Ui::ReadNewsViewerWidgetBase ui;
@@ -856,7 +856,7 @@ KNode::ReadNewsViewerWidget::ReadNewsViewerWidget( KInstance *inst, QWidget *par
 //=============================================================================================
 
 
-KNode::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, KInstance *inst, QWidget *parent ) :
+KNode::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, const KComponentData &inst, QWidget *parent ) :
   KCModule( inst, parent ),
   s_ave( false ),
   d_ata( d )
@@ -1160,7 +1160,7 @@ void KNode::DisplayedHeaderConfDialog::slotNameChanged(const QString& str)
 //=============================================================================================
 
 
-KNode::ScoringWidget::ScoringWidget( KInstance *inst, QWidget *parent ) :
+KNode::ScoringWidget::ScoringWidget( const KComponentData &inst, QWidget *parent ) :
   KCModule( inst, parent )
 {
   QGridLayout *topL = new QGridLayout(this);
@@ -1195,7 +1195,7 @@ KNode::ScoringWidget::ScoringWidget( KInstance *inst, QWidget *parent ) :
 //=============================================================================================
 
 
-KNode::FilterListWidget::FilterListWidget( KInstance *inst, QWidget *parent ) :
+KNode::FilterListWidget::FilterListWidget( const KComponentData &inst, QWidget *parent ) :
   KCModule( inst, parent ),
   f_ilManager( knGlobals.filterManager() )
 {
@@ -1468,7 +1468,7 @@ void KNode::FilterListWidget::slotSelectionChangedMenu()
 //=============================================================================================
 
 
-KNode::PostNewsTechnicalWidget::PostNewsTechnicalWidget( KInstance *inst, QWidget *parent ) :
+KNode::PostNewsTechnicalWidget::PostNewsTechnicalWidget( const KComponentData &inst, QWidget *parent ) :
   KCModule( inst, parent )
 {
   setupUi( this );
@@ -1616,7 +1616,7 @@ QString KNode::XHeaderConfDialog::result() const
 //===================================================================================================
 
 
-KNode::PostNewsComposerWidget::PostNewsComposerWidget( KInstance *inst, QWidget *parent ) :
+KNode::PostNewsComposerWidget::PostNewsComposerWidget( const KComponentData &inst, QWidget *parent ) :
   KCModule( inst, parent )
 {
   KNode::Ui::PostNewsComposerWidgetBase ui;
@@ -1629,7 +1629,7 @@ KNode::PostNewsComposerWidget::PostNewsComposerWidget( KInstance *inst, QWidget 
 //===================================================================================================
 
 
-KNode::PostNewsSpellingWidget::PostNewsSpellingWidget( KInstance *inst, QWidget *parent ) :
+KNode::PostNewsSpellingWidget::PostNewsSpellingWidget( const KComponentData &inst, QWidget *parent ) :
   KCModule( inst, parent )
 {
   QVBoxLayout *topL=new QVBoxLayout(this);
@@ -1656,7 +1656,7 @@ void KNode::PostNewsSpellingWidget::save()
 
 //==============================================================================================================
 
-KNode::PrivacyWidget::PrivacyWidget( KInstance *inst,QWidget *parent ) :
+KNode::PrivacyWidget::PrivacyWidget( const KComponentData &inst,QWidget *parent ) :
   KCModule(inst, parent )
 {
   QBoxLayout *topLayout = new QVBoxLayout(this);
@@ -1801,7 +1801,7 @@ void KNode::GroupCleanupWidget::expUnreadDaysChanged(int value)
 }
 
 
-KNode::CleanupWidget::CleanupWidget( KInstance *inst,QWidget *parent ) :
+KNode::CleanupWidget::CleanupWidget( const KComponentData &inst,QWidget *parent ) :
   KCModule(inst, parent ),
   d_ata( knGlobals.configManager()->cleanup() )
 {

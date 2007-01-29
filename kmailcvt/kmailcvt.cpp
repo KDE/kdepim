@@ -71,7 +71,7 @@ void KMailCVT::reject() {
 
 void KMailCVT::help()
 {
-	KAboutApplication a( KGlobal::instance()->aboutData(), this );
+	KAboutApplication a( KGlobal::mainComponent().aboutData(), this );
 	a.exec();
 }
 

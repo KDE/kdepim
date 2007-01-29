@@ -52,6 +52,7 @@
 #include <kurl.h>
 #include <kurlrequester.h>
 #include <kimproxy.h>
+#include <kconfiggroup.h>
 
 #include "configuretableviewdialog.h"
 #include "contactlistview.h"

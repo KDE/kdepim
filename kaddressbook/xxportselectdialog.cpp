@@ -68,7 +68,7 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
            SLOT( categoryClicked( Q3ListViewItem* ) ) );
 
   // setup filters
-  mFilters = Filter::restore( KGlobal::config(), "Filter" );
+  mFilters = Filter::restore( KGlobal::config().data(), "Filter" );
   Filter::List::ConstIterator filterIt;
   QStringList filters;
   for ( filterIt = mFilters.begin(); filterIt != mFilters.end(); ++filterIt )

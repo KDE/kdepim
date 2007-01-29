@@ -28,7 +28,7 @@
 #include <kaboutdata.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include "kabconfigwidget.h"
 
 #include "kcmkabconfig.h"
@@ -40,7 +40,7 @@ typedef KGenericFactory<KCMKabConfig> KCMKabConfigFactory;
 K_EXPORT_COMPONENT_FACTORY( kabconfig, KCMKabConfigFactory( "kcmkabconfig" ) )
 
 KCMKabConfig::KCMKabConfig( QWidget *parent, const QStringList & )
-  : KCModule( KCMKabConfigFactory::instance(), parent )
+  : KCModule( KCMKabConfigFactory::componentData(), parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   mConfigWidget = new KABConfigWidget( this, "mConfigWidget" );

@@ -36,7 +36,7 @@ typedef KGenericFactory<KCMKabCustomFields> KCMKabCustomFieldsFactory;
 K_EXPORT_COMPONENT_FACTORY( kabcustomfields, KCMKabCustomFieldsFactory( "kcmkabcustomfields" ) )
 
 KCMKabCustomFields::KCMKabCustomFields( QWidget *parent, const QStringList & )
-  : KCMDesignerFields( KCMKabCustomFieldsFactory::instance(), parent )
+  : KCMDesignerFields( KCMKabCustomFieldsFactory::componentData(), parent )
 {
 }
 

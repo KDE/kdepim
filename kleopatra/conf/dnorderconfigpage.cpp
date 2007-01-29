@@ -33,14 +33,14 @@
 
 #include <ui/dnattributeorderconfigwidget.h>
 #include <kleo/dn.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kdemacros.h>
 
 #include <QLayout>
 //Added by qt3to4:
 #include <QVBoxLayout>
 
-DNOrderConfigPage::DNOrderConfigPage( KInstance *instance, QWidget *parent, const QStringList &args )
+DNOrderConfigPage::DNOrderConfigPage( const KComponentData &instance, QWidget *parent, const QStringList &args )
   : KCModule( instance, parent, args )
 {
   QVBoxLayout * vlay = new QVBoxLayout( this );
@@ -73,7 +73,7 @@ void DNOrderConfigPage::slotChanged() {
 }
 
 extern "C" KDE_EXPORT KCModule * create_kleopatra_config_dnorder( QWidget *parent=0, const QStringList &args=QStringList() ) {
-    DNOrderConfigPage *page = new DNOrderConfigPage( new KInstance( "kleopatra" ), parent, args );
+    DNOrderConfigPage *page = new DNOrderConfigPage( KComponentData( "kleopatra" ), parent, args );
     page->setObjectName( "kleopatra_config_dnorder" );
     return page;
 }

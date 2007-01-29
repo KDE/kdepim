@@ -63,7 +63,7 @@ int main( int argc, char **argv )
   KCmdLineArgs::init( argc, argv, &aboutData, KCmdLineArgs::CmdLineArgNone );
   KCmdLineArgs::addCmdLineOptions( options );
 
-  // is a KInstance needed?
+  // is a KComponentData needed?
   QCoreApplication app( *KCmdLineArgs::qt_argc(), *KCmdLineArgs::qt_argv() );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();

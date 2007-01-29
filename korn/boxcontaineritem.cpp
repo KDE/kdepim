@@ -38,7 +38,7 @@
 #include <kstandardaction.h>
 #include <ktoolinvocation.h>
 #include <kvbox.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <QtDBus>
 
 #include <QBitmap>
@@ -411,7 +411,7 @@ void BoxContainerItem::reportBug()
 
 void BoxContainerItem::about()
 {
-	KAboutApplication about( KGlobal::instance()->aboutData(), 0, true );
+	KAboutApplication about( KGlobal::mainComponent().aboutData(), 0, true );
 	about.exec();  //modal: it doesn't recheck anymore
 } 
 

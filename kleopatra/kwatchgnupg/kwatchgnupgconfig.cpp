@@ -182,7 +182,7 @@ void KWatchGnuPGConfig::slotSetHistorySizeUnlimited() {
 
 void KWatchGnuPGConfig::loadConfig()
 {
-  KConfig* config = KGlobal::config();
+  KSharedConfig::Ptr config = KGlobal::config();
   config->setGroup("WatchGnuPG");
   mExeED->setUrl( config->readEntry( "Executable", "watchgnupg" ) );
   mSocketED->setUrl( config->readEntry( "Socket", QDir::home().canonicalPath()
@@ -200,7 +200,7 @@ void KWatchGnuPGConfig::loadConfig()
 
 void KWatchGnuPGConfig::saveConfig()
 {
-  KConfig* config = KGlobal::config();
+  KSharedConfig::Ptr config = KGlobal::config();
   config->setGroup("WatchGnuPG");
   config->writeEntry( "Executable", mExeED->url().url() );
   config->writeEntry( "Socket", mSocketED->url().url() );

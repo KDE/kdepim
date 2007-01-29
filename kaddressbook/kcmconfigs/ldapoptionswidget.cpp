@@ -43,6 +43,7 @@
 #include <q3hbox.h>
 #include <q3vbox.h>
 #include <kiconloader.h>
+#include <kconfiggroup.h>
 
 class LDAPItem : public Q3CheckListItem
 {

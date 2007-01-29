@@ -61,6 +61,7 @@
 #include <kmessagebox.h>
 #include <kprocess.h>
 #include <kpushbutton.h>
+#include <kconfiggroup.h>
 // Qt
 #include <QCheckBox>
 #include <QToolButton>

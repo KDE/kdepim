@@ -24,7 +24,7 @@
 #define KCMKABCUSTOMFIELDS_H
 
 #include <libkdepim/kcmdesignerfields.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 class KCMKabCustomFields : public KPIM::KCMDesignerFields
 {
   public:

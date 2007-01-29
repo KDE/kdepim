@@ -46,6 +46,7 @@
 #include <kconfig.h>
 #include <kshell.h>
 #include <kdebug.h>
+#include <kconfiggroup.h>
 
 #include <QStringList>
 #include <QVariant>

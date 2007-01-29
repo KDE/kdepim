@@ -55,6 +55,7 @@
 #include <assert.h>
 #include <string.h> // for memcpy(3)
 #include <kvbox.h>
+#include <kconfiggroup.h>
 
 const int Kpgp::KeySelectionDialog::sCheckSelectionDelay = 250;
 

@@ -44,6 +44,7 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 #include <kdebug.h>
 #include <kconfig.h>
 #include <kuser.h>
+#include <kconfiggroup.h>
 
 #include <QRegExp>
 

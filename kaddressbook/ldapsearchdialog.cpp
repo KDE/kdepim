@@ -41,6 +41,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktoolinvocation.h>
+#include <kconfiggroup.h>
 
 #include "kabcore.h"
 #include "ldapsearchdialog.h"

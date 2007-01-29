@@ -563,7 +563,7 @@ Settings* Settings::self()
 {
 	if( !m_self )
 	{
-		m_config = new KSharedConfig::Ptr( KGlobal::sharedConfig() );
+		m_config = new KSharedConfig::Ptr( KGlobal::config() );
 		m_self = new Settings();
 		m_self->readConfig();
 	}

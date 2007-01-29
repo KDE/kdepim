@@ -232,7 +232,7 @@ DistributionListWidget::DistributionListWidget( KAB::Core *core, QWidget *parent
   installEventFilter( catcher );
   mContactView->installEventFilter( catcher );
 
-  mContactView->restoreLayout( KGlobal::config(), "DistributionListViewColumns" );
+  mContactView->restoreLayout( KGlobal::config().data(), "DistributionListViewColumns" );
 
   KAcceleratorManager::manage( this );
 }
@@ -243,7 +243,7 @@ DistributionListWidget::~DistributionListWidget()
   delete mManager;
 #endif
 
-  mContactView->saveLayout( KGlobal::config(), "DistributionListViewColumns" );
+  mContactView->saveLayout( KGlobal::config().data(), "DistributionListViewColumns" );
 }
 
 void DistributionListWidget::save()

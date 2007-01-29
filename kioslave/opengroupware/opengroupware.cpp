@@ -36,7 +36,7 @@
 
 #include <kabc/vcardconverter.h>
 
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <ktemporaryfile.h>
@@ -69,7 +69,7 @@ KDE_EXPORT int kdemain( int argc, char **argv );
 
 int kdemain( int argc, char **argv )
 {
-  KInstance instance( "kio_OpenGroupware" );
+  KComponentData instance( "kio_OpenGroupware" );
   
   kDebug(7000) << "Starting kio_OpenGroupware(pid:  " << getpid() << ")" << endl;
   

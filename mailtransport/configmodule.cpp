@@ -29,7 +29,7 @@ typedef KGenericFactory<ConfigModule, QWidget> MailTransportConfigFactory;
 K_EXPORT_COMPONENT_FACTORY( kcm_mailtransport, MailTransportConfigFactory( "mailtrasnport" ) )
 
 ConfigModule::ConfigModule( QWidget * parent, const QStringList & args ) :
-    KCModule( MailTransportConfigFactory::instance(), parent, args )
+    KCModule( MailTransportConfigFactory::componentData(), parent, args )
 {
   setButtons( 0 );
   QVBoxLayout *l = new QVBoxLayout( this );

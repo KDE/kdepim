@@ -53,7 +53,7 @@ namespace Kleo {
 class KDE_EXPORT DirectoryServicesConfigurationPage : public KCModule {
   Q_OBJECT
 public:
-  DirectoryServicesConfigurationPage( KInstance *instance, QWidget *parent=0, const QStringList &args=QStringList() );
+  DirectoryServicesConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QStringList &args=QStringList() );
 
   virtual void load();
   virtual void save();

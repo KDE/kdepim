@@ -32,6 +32,7 @@
 #include <kstaticdeleter.h>
 #include <kurl.h>
 #include <kwallet.h>
+#include <kconfiggroup.h>
 
 #include <QApplication>
 #include <QDBusConnection>

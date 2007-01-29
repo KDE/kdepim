@@ -29,7 +29,7 @@
 
 #include <kaboutdata.h>
 #include <klocale.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include "ldapoptionswidget.h"
 
 #include "kcmkabldapconfig.h"
@@ -41,7 +41,7 @@ typedef KGenericFactory<KCMKabLdapConfig> KCMKabLdapConfigFactory;
 K_EXPORT_COMPONENT_FACTORY( kabldapconfig, KCMKabLdapConfigFactory( "kcmkabldapconfig" ) )
 
 KCMKabLdapConfig::KCMKabLdapConfig( QWidget *parent, const QStringList & )
-  : KCModule( KCMKabLdapConfigFactory::instance(), parent )
+  : KCModule( KCMKabLdapConfigFactory::componentData(), parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
   mConfigWidget = new LDAPOptionsWidget( this );

@@ -26,7 +26,7 @@
 
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kmessagebox.h>
 #include <kapplication.h>
 #include "xxport.h"
@@ -47,7 +47,7 @@ XXPort::XXPort( KABC::AddressBook *ab, QWidget *parent,
     d( new XXPortPrivate )
 {
   setObjectName( name );
-  setInstance( new KInstance( "kaddressbook" ) );
+  setComponentData( KComponentData( "kaddressbook" ) );
 
   d->mExportMapper = new QSignalMapper( this );
   d->mImportMapper = new QSignalMapper( this );

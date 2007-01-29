@@ -27,7 +27,7 @@
 
 #include <kdebug.h>
 #include <klocale.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kglobal.h>
 #include <kurl.h>
 #include <kio/global.h>
@@ -43,7 +43,7 @@ extern "C" { KDE_EXPORT int kdemain(int argc, char* argv[]); }
 int kdemain( int argc, char * argv[] )
 {
 	KLocale::setMainCatalog("kdelibs");
-	KInstance instance("kio_mbox");
+	KComponentData instance("kio_mbox");
 	(void) KGlobal::locale();
 
 	if (argc != 4) {

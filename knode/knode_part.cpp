@@ -48,12 +48,12 @@ KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QStringList 
   mParentWidget( parentWidget )
 {
   kDebug(5003) << "KNodePart()" << endl;
-  kDebug(5003) << "  InstanceName: " << KGlobal::instance()->instanceName() << endl;
+  kDebug(5003) << "  InstanceName: " << KGlobal::mainComponent().componentName() << endl;
 
-  setInstance( KNodeFactory::instance() );
+  setComponentData( KNodeFactory::componentData() );
 
   kDebug(5003) << "KNodePart()..." << endl;
-  kDebug(5003) << "  InstanceName: " << KGlobal::instance()->instanceName() << endl;
+  kDebug(5003) << "  InstanceName: " << KGlobal::mainComponent().componentName() << endl;
 
   KGlobal::locale()->insertCatalog("libkdepim");
   KGlobal::locale()->insertCatalog("libkpgp");
@@ -62,7 +62,7 @@ KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QStringList 
 #endif
 //   kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
   KIconLoader::global()->addAppDir("knode");
-  knGlobals.setInstance( KNodeFactory::instance() );
+  knGlobals.setComponentData( KNodeFactory::componentData() );
 
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget(parentWidget);

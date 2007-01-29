@@ -42,7 +42,7 @@
 #include <knuminput.h>
 #include <kiconloader.h>
 #include <kglobal.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kurlrequester.h>
 #include <kicon.h>
 

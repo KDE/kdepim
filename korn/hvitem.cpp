@@ -42,7 +42,7 @@ HVItem::HVItem( QWidget *parent )
 	_popup( new KMenu( _label ) ),
 	_actions( new KActionCollection( _popup ) )
 {
-	_popup->addTitle( QIcon( qApp->windowIcon().pixmap(IconSize(K3Icon::Small),IconSize(K3Icon::Small)) ), kapp->caption() );
+	_popup->addTitle( QIcon( qApp->windowIcon().pixmap(IconSize(K3Icon::Small),IconSize(K3Icon::Small)) ), KGlobal::caption() );
 	this->fillKMenu( _popup, _actions );
 	_popup->addSeparator();
 	_popup->addAction( KStandardAction::quit( kapp, SLOT( quit() ), _actions ) );

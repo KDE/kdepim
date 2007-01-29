@@ -21,6 +21,7 @@
 
 // KDE includes
 #include <kconfigbase.h>
+#include <kconfiggroup.h>
 
 // KABC includes
 #include <kabc/address.h>

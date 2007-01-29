@@ -37,6 +37,7 @@
 #include <kconfig.h>
 #include <kiconloader.h>
 #include <klocale.h>
+#include <kconfiggroup.h>
 //Added by qt3to4:
 #include <QApplication>
 #include <QIcon>

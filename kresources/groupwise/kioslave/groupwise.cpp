@@ -31,7 +31,7 @@
 #include <kabc/addressee.h>
 #include <kabc/vcardconverter.h>
 
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <ktemporaryfile.h>
@@ -68,7 +68,7 @@ KDE_EXPORT int kdemain( int argc, char **argv );
 
 int kdemain( int argc, char **argv )
 {
-  KInstance instance( "kio_groupwise" );
+  KComponentData instance( "kio_groupwise" );
   
   kDebug(7000) << "Starting kio_groupwise(pid:  " << getpid() << ")" << endl;
   

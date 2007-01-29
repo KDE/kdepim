@@ -79,7 +79,6 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent, const char *na
     mPainter( 0 ),
     mPrintProgress( 0 )
 {
-  KConfig *config;
   QFont font;
   bool kdeFonts;
   QFont standard = KGlobalSettings::generalFont();
@@ -89,7 +88,7 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent, const char *na
 
   addPage( mPageAppearance, i18n( "Detailed Print Style - Appearance" ) );
 
-  config = KGlobal::config();
+  KSharedConfig::Ptr config = KGlobal::config();
   config->setGroup( ConfigSectionName );
 
   kdeFonts = config->readEntry( UseKDEFonts, true );
@@ -157,7 +156,7 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
   QFont comment = QFont("Helvetica", 10, QFont::Normal);
 
   // store the configuration settings:
-  KConfig *config = KGlobal::config();
+  KSharedConfig::Ptr config = KGlobal::config();
   config->setGroup( ConfigSectionName );
   useKDEFonts = mPageAppearance->cbStandardFonts->isChecked();
   config->writeEntry( UseKDEFonts, useKDEFonts );

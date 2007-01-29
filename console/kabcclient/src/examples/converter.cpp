@@ -23,7 +23,7 @@
 #include <QTextCodec>
 
 // KDE includes
-#include <kinstance.h>
+#include <kcomponentdata.h>
 
 // KABC includes
 #include <kabc/addressee.h>
@@ -99,10 +99,10 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    // the KInstance instance is needed for the translation calls
+    // the KComponentData instance is needed for the translation calls
     // inside the format implementations.
     // in real programs this is usually the KApplication object
-    KInstance instance("converter");
+    KComponentData instance("converter");
 
     // as long as there is possibly data on standard input
     // try to read it and convert it

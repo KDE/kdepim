@@ -57,6 +57,7 @@
 #include <kio/jobuidelegate.h>
 #include <kio/netaccess.h>
 #include <ktoolinvocation.h>
+#include <kconfiggroup.h>
 
 // Qt
 #include <QLineEdit>

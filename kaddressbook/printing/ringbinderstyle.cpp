@@ -106,7 +106,7 @@ RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent, const char* 
   addPage( mPageAppearance, i18n( "Ring Binder Printing Style - Appearance" ) );
 
   // applying previous settings
-  KConfig * config = KGlobal::config();
+  KSharedConfig::Ptr config = KGlobal::config();
   config->setGroup( RingBinderConfigSectionName );
   mPageAppearance->cbPhoneNumbers->setChecked( config->readEntry( ShowPhoneNumbers, true ) );
   mPageAppearance->cbEmails->setChecked( config->readEntry( ShowEmailAddresses, true ) );
@@ -135,7 +135,7 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
   progress->setProgress( 0 );
 
   // first write current config settings
-  KConfig *config = KGlobal::config();
+  KSharedConfig::Ptr config = KGlobal::config();
   config->setGroup( RingBinderConfigSectionName );
   config->writeEntry( ShowPhoneNumbers, mPageAppearance->cbPhoneNumbers->isChecked() );
   config->writeEntry( ShowEmailAddresses, mPageAppearance->cbEmails->isChecked() );

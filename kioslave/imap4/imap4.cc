@@ -127,7 +127,7 @@ kdemain (int argc, char **argv)
 {
   kDebug(7116) << "IMAP4::kdemain" << endl;
 
-  KInstance instance ("kio_imap4");
+  KComponentData instance ("kio_imap4");
   if (argc != 4)
   {
     fprintf(stderr, "Usage: kio_imap4 protocol domain-socket1 domain-socket2\n");

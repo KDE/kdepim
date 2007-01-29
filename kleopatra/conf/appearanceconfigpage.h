@@ -44,7 +44,7 @@ namespace Kleo {
 class AppearanceConfigurationPage : public KCModule {
   Q_OBJECT
 public:
-  AppearanceConfigurationPage( KInstance *instance, QWidget *parent=0, const QStringList &args=QStringList() );
+  AppearanceConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QStringList &args=QStringList() );
 
   virtual void load();
   virtual void save();

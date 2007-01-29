@@ -30,7 +30,7 @@
 #include <kstandarddirs.h>
 #include <klineedit.h>
 #include <kprocess.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kpushbutton.h>
 
 #include <kmime/kmime_util.h>

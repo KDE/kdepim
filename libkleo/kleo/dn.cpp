@@ -54,6 +54,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <kglobal.h>
+#include <kconfiggroup.h>
 
 struct Kleo::DN::Private {
   Private() : mRefCount( 0 ) {}

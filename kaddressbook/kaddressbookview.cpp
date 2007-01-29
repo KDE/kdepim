@@ -34,6 +34,7 @@
 #include <klocale.h>
 #include <kxmlguifactory.h>
 #include <kxmlguiclient.h>
+#include <kconfiggroup.h>
 
 #include "core.h"
 #include "searchmanager.h"

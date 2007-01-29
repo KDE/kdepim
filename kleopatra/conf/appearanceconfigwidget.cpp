@@ -48,6 +48,7 @@
 #include <kmessagebox.h>
 #include <kfontdialog.h>
 #include <kcolordialog.h>
+#include <kconfiggroup.h>
 
 #include <QPushButton>
 #include <QLayout>

@@ -19,11 +19,12 @@
 #include "resource.h"
 
 #include <kdemacros.h>
+#include <kcomponentdata.h>
 
 // keep compatibility with the old way
 #define knGlobals (*KNGlobals::self())
 
-class KInstance;
+class KComponentData;
 class KNConfigManager;
 class KNProgress;
 class KNAccountManager;
@@ -71,9 +72,9 @@ class KDE_EXPORT KNGlobals
     Kpgp::Module          *pgp;
     KConfig               *config();
     /** Returns the current instance. */
-    KInstance             *instance() const;
+    const KComponentData &componentData() const;
     /** Sets the current instance. */
-    void setInstance( KInstance *inst ) { mInstance = inst; }
+    void setComponentData( const KComponentData &inst ) { mInstance = inst; }
 
     KNConfigManager       *configManager();
     /** Returns the scheduler. */
@@ -106,7 +107,7 @@ class KDE_EXPORT KNGlobals
 
     KSharedConfig::Ptr c_onfig;
 
-    KInstance *mInstance;
+    KComponentData mInstance;
     KNode::Scheduler      *mScheduler;
     KNConfigManager       *mCfgManager;
     KNAccountManager      *mAccManager;

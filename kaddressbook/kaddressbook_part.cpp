@@ -28,7 +28,7 @@
 #include <kaction.h>
 #include <kdebug.h>
 #include <kiconloader.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <klocale.h>
 #include <kparts/genericfactory.h>
 #include <kparts/statusbarextension.h>
@@ -48,7 +48,7 @@ KAddressbookPart::KAddressbookPart( QWidget *parentWidget, QObject *parent,
                                     const QStringList & )
   : KParts::ReadOnlyPart( parent )
 {
-  setInstance( KAddressbookFactory::instance() );
+  setComponentData( KAddressbookFactory::componentData() );
 
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget( parentWidget );

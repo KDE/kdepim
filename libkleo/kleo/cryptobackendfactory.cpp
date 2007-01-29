@@ -50,6 +50,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
+#include <kconfiggroup.h>
 
 #include <QApplication>
 #include <iterator>

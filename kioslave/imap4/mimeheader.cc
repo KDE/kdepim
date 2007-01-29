@@ -26,7 +26,7 @@
 
 // #include <iostream.h>
 #include <kglobal.h>
-#include <kinstance.h>
+#include <kcomponentdata.h>
 #include <kiconloader.h>
 #include <kmimetype.h>
 #include <kcodecs.h>
@@ -692,9 +692,9 @@ mimeHeader::iconName ()
   QString fileName =
     KMimeType::mimeType (contentType.toLower ())->icon (QString(), false);
   QString iconFileName =
-    KGlobal::instance ()->iconLoader ()->iconPath (fileName, K3Icon::Desktop);
+    KGlobal::mainComponent().iconLoader ()->iconPath (fileName, K3Icon::Desktop);
 //  if (iconFileName.isEmpty())
-//    iconFileName = KGlobal::instance()->iconLoader()->iconPath( "unknown", K3Icon::Desktop );
+//    iconFileName = KGlobal::mainComponent().iconLoader()->iconPath( "unknown", K3Icon::Desktop );
   return iconFileName;
 }
 

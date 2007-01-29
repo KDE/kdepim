@@ -62,6 +62,7 @@ using KRecentAddress::RecentAddresses;
 #include <spellingfilter.h>
 #include <KStandardGuiItem>
 #include <ktoggleaction.h>
+#include <kconfiggroup.h>
 #include <kicon.h>
 #include "kngroupselectdialog.h"
 #include "utilities.h"
@@ -182,8 +183,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
     mSpellingFilter = 0;
     spellLineEdit = false;
 
-  if( knGlobals.instance() )
-    setInstance( knGlobals.instance() );
+  if( knGlobals.componentData().isValid() )
+    setComponentData( knGlobals.componentData() );
 
   // activate dnd of attachments...
   setAcceptDrops(true);

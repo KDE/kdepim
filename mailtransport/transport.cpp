@@ -27,6 +27,7 @@
 #include <kmessagebox.h>
 #include <kstringhandler.h>
 #include <kwallet.h>
+#include <kconfiggroup.h>
 
 using namespace MailTransport;
 using namespace KWallet;

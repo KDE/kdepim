@@ -93,8 +93,8 @@ bool ArticleWindow::raiseWindowForArticle( const QByteArray &mid )
 ArticleWindow::ArticleWindow( KNArticle *art )
   : KMainWindow( 0, "articleWindow" )
 {
-  if ( knGlobals.instance() )
-    setInstance( knGlobals.instance() );
+  if ( knGlobals.componentData().isValid() )
+    setComponentData( knGlobals.componentData() );
 
   if ( art )
     setCaption( art->subject()->asUnicodeString() );

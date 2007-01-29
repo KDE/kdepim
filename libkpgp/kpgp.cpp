@@ -41,6 +41,7 @@
 #include <kconfigbase.h>
 #include <kconfig.h>
 #include <kstaticdeleter.h>
+#include <kconfiggroup.h>
 
 #include "kpgpbase.h"
 #include "kpgpui.h"

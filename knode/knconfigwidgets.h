@@ -75,7 +75,7 @@ class KDE_EXPORT IdentityWidget : public KCModule {
   Q_OBJECT
 
   public:
-    IdentityWidget( Identity *d, KInstance *inst, QWidget *parent = 0 );
+    IdentityWidget( Identity *d, const KComponentData &inst, QWidget *parent = 0 );
     ~IdentityWidget();
 
     void load();
@@ -118,7 +118,7 @@ class KDE_EXPORT NntpAccountListWidget : public KCModule, private Ui::NntpAccoun
 
   public:
     /** Create a new NNTP account list widget. */
-    NntpAccountListWidget( KInstance *inst, QWidget *parent = 0 );
+    NntpAccountListWidget( const KComponentData &inst, QWidget *parent = 0 );
 
     /** Reimplemented from KCModule. */
     virtual void load();
@@ -195,10 +195,10 @@ class KDE_EXPORT AppearanceWidget : public KCModule
 
   public:
     /** Create a new appearance configuration widget.
-     * @param inst The KInstance.
+     * @param inst The KComponentData.
      * @param parent The parent widget.
      */
-    AppearanceWidget( KInstance *inst, QWidget *parent = 0 );
+    AppearanceWidget( const KComponentData &inst, QWidget *parent = 0 );
 
     /** Reimplemented from KCModule. */
     virtual void load();
@@ -298,7 +298,7 @@ class KDE_EXPORT ReadNewsGeneralWidget : public KCModule, KNode::Ui::ReadNewsGen
     /** Create a new general configuration page.
      * @param parent The QWidget parent.
      */
-    ReadNewsGeneralWidget( KInstance *inst, QWidget *parent = 0 );
+    ReadNewsGeneralWidget( const KComponentData &inst, QWidget *parent = 0 );
 
     /** Reimplemented from KCModule. */
     virtual void load();
@@ -314,7 +314,7 @@ class KDE_EXPORT ReadNewsNavigationWidget : public KCModule
     /** Create a new navigation configuration page.
      * @param parent The QWidget parent.
      */
-    ReadNewsNavigationWidget( KInstance *inst, QWidget *parent = 0 );
+    ReadNewsNavigationWidget( const KComponentData &inst, QWidget *parent = 0 );
 };
 
 
@@ -325,7 +325,7 @@ class KDE_EXPORT ReadNewsViewerWidget : public KCModule
     /** Create a new article viewer configuration page.
      * @param parent The QWidget parent.
      */
-    ReadNewsViewerWidget( KInstance *inst, QWidget *parent = 0 );
+    ReadNewsViewerWidget( const KComponentData &inst, QWidget *parent = 0 );
 };
 
 
@@ -335,7 +335,7 @@ class KDE_EXPORT DisplayedHeadersWidget : public KCModule {
   Q_OBJECT
 
   public:
-    DisplayedHeadersWidget( DisplayedHeaders *d, KInstance *inst, QWidget *parent = 0 );
+    DisplayedHeadersWidget( DisplayedHeaders *d, const KComponentData &inst, QWidget *parent = 0 );
 
     /** Reimplemented from KCModule. */
     virtual void load();
@@ -414,7 +414,7 @@ class KDE_EXPORT ScoringWidget : public KCModule
     /** Create a new scoring configuration widget.
      * @param parent The QWidget parent.
      */
-    ScoringWidget( KInstance *inst, QWidget *parent = 0 );
+    ScoringWidget( const KComponentData &inst, QWidget *parent = 0 );
 
   private:
     KScoringEditorWidget *mKsc;
@@ -428,7 +428,7 @@ class KDE_EXPORT FilterListWidget : public KCModule {
   Q_OBJECT
 
   public:
-    FilterListWidget( KInstance *inst, QWidget *parent = 0 );
+    FilterListWidget( const KComponentData &inst, QWidget *parent = 0 );
     ~FilterListWidget();
 
     void load();
@@ -502,7 +502,7 @@ class KDE_EXPORT PostNewsTechnicalWidget : public KCModule, KNode::Ui::PostNewsT
   Q_OBJECT
   public:
     /** Create a new configuration widget for technical posting settings. */
-    PostNewsTechnicalWidget( KInstance *inst, QWidget *parent = 0 );
+    PostNewsTechnicalWidget( const KComponentData &inst, QWidget *parent = 0 );
 
     /** Reimplemented from KCModule. */
     virtual void load();
@@ -545,7 +545,7 @@ class KDE_EXPORT PostNewsComposerWidget : public KCModule
     /** Create a new composer configuration widget.
      * @param parent The parent widget.
      */
-    PostNewsComposerWidget( KInstance *inst, QWidget *parent = 0 );
+    PostNewsComposerWidget( const KComponentData &inst, QWidget *parent = 0 );
 };
 
 
@@ -553,7 +553,7 @@ class KDE_EXPORT PostNewsComposerWidget : public KCModule
 class KDE_EXPORT PostNewsSpellingWidget : public KCModule {
 
   public:
-    PostNewsSpellingWidget( KInstance *inst, QWidget *parent = 0 );
+    PostNewsSpellingWidget( const KComponentData &inst, QWidget *parent = 0 );
     ~PostNewsSpellingWidget();
 
     void save();
@@ -570,7 +570,7 @@ class KDE_EXPORT PrivacyWidget : public KCModule {
   Q_OBJECT
 
   public:
-    PrivacyWidget( KInstance *inst, QWidget *parent = 0 );
+    PrivacyWidget( const KComponentData &inst, QWidget *parent = 0 );
     ~PrivacyWidget();
 
     void save();
@@ -617,7 +617,7 @@ class KDE_EXPORT CleanupWidget : public KCModule {
   Q_OBJECT
 
   public:
-    CleanupWidget( KInstance *inst, QWidget *parent = 0 );
+    CleanupWidget( const KComponentData &inst, QWidget *parent = 0 );
     ~CleanupWidget();
 
     void load();

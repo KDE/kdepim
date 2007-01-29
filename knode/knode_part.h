@@ -33,7 +33,7 @@
 
 #include <QWidget>
 
-class KInstance;
+class KComponentData;
 class KAboutData;
 
 class ActionManager;
