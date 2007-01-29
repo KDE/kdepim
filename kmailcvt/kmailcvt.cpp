@@ -15,7 +15,7 @@
  ***************************************************************************/
 
 #include "kmailcvt.h"
-#include <kaboutapplication.h>
+#include <kaboutapplicationdialog.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <QPushButton>
@@ -71,7 +71,7 @@ void KMailCVT::reject() {
 
 void KMailCVT::help()
 {
-	KAboutApplication a( KGlobal::mainComponent().aboutData(), this );
+	KAboutApplicationDialog a( KGlobal::mainComponent().aboutData(), this );
 	a.exec();
 }
 

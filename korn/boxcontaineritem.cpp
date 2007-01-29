@@ -22,7 +22,7 @@
 #include "mailsubject.h"
 #include "settings.h"
 
-#include <kaboutapplication.h>
+#include <kaboutapplicationdialog.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kbugreport.h>
@@ -411,7 +411,7 @@ void BoxContainerItem::reportBug()
 
 void BoxContainerItem::about()
 {
-	KAboutApplication about( KGlobal::mainComponent().aboutData(), 0, true );
+	KAboutApplicationDialog about( KGlobal::mainComponent().aboutData() );
 	about.exec();  //modal: it doesn't recheck anymore
 } 
 
