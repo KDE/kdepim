@@ -97,7 +97,7 @@ AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
   mAddressField->setTextFormat( Qt::PlainText );
   layout->addWidget( mAddressField );
 
-  mEditButton = new QPushButton( i18n( "&Edit Addresses..." ), this );
+  mEditButton = new QPushButton( i18n( "street/postal", "&Edit Addresses..." ), this );
   connect( mEditButton, SIGNAL( clicked() ), this, SLOT( edit() ) );
 
   layout->addWidget( mEditButton );
@@ -259,7 +259,7 @@ void AddressEditWidget::updateAddressEdit()
 AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
                                       int selected, QWidget *parent,
                                       const char *name )
-  : KDialogBase( Plain, i18n( "Edit Address" ), Ok | Cancel, Ok,
+  : KDialogBase( Plain, i18n( "street/postal", "Edit Address" ), Ok | Cancel, Ok,
                  parent, name, true, true ),
     mPreviousAddress( 0 )
 {
@@ -324,7 +324,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   label->setBuddy( mCountryCombo );
   topLayout->addWidget( mCountryCombo, 6, 1 );
 
-  mPreferredCheckBox = new QCheckBox( i18n( "This is the preferred address" ), page );
+  mPreferredCheckBox = new QCheckBox( i18n( "street/postal", "This is the preferred address" ), page );
   topLayout->addMultiCellWidget( mPreferredCheckBox, 8, 8, 0, 1 );
 
   KSeparator *sep = new KSeparator( KSeparator::HLine, page );
@@ -600,13 +600,13 @@ void AddressEditDialog::fillCountryCombo()
 
 
 AddressTypeDialog::AddressTypeDialog( int type, QWidget *parent )
-  : KDialogBase( Plain, i18n( "Edit Address Type" ), Ok | Cancel, Ok,
+  : KDialogBase( Plain, i18n( "street/postal", "Edit Address Type" ), Ok | Cancel, Ok,
                  parent, "AddressTypeDialog" )
 {
   QWidget *page = plainPage();
   QVBoxLayout *layout = new QVBoxLayout( page );
 
-  mGroup = new QButtonGroup( 2, Horizontal, i18n( "Address Types" ), page );
+  mGroup = new QButtonGroup( 2, Horizontal, i18n( "street/postal", "Address Types" ), page );
   layout->addWidget( mGroup );
 
   mTypeList = KABC::Address::typeList();
