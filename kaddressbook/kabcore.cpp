@@ -197,6 +197,7 @@ KABCore::~KABCore()
   mAddressBook->disconnect();
 
   mAddressBook = 0;
+  // NB For KDE 4 this could probably be tied to KInstance instead
   KABC::StdAddressBook::close();
   mKIMProxy = 0;
 }
