@@ -57,6 +57,8 @@ KABLock *KABLock::self( KABC::AddressBook *ab )
 {
   if ( !mSelf )
     kabLockDeleter.setObject( mSelf, new KABLock( ab ) );
+  else
+    mSelf->mAddressBook = ab;
 
   return mSelf;
 }
