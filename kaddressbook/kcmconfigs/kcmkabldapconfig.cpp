@@ -26,6 +26,7 @@
 #include <qlayout.h>
 
 #include <kaboutdata.h>
+#include <kglobal.h>
 #include <klocale.h>
 
 #include "ldapoptionswidget.h"
@@ -42,6 +43,7 @@ extern "C"
 KCMKabLdapConfig::KCMKabLdapConfig( QWidget *parent, const char *name )
   : KCModule( parent, name )
 {
+  KGlobal::locale()->insertCatalogue("kcmkabconfig");
   QVBoxLayout *layout = new QVBoxLayout( this );
   mConfigWidget = new LDAPOptionsWidget( this );
   layout->addWidget( mConfigWidget );

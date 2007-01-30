@@ -136,6 +136,7 @@ class PageItem : public QCheckListItem
 KCMKabCustomFields::KCMKabCustomFields( QWidget *parent, const char *name )
   : KCModule( parent, name )
 {
+  KGlobal::locale()->insertCatalogue("kcmkabconfig");
   initGUI();
 
   connect( mPageView, SIGNAL( selectionChanged( QListViewItem* ) ),
