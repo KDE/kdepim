@@ -42,7 +42,6 @@ class KConfig;
 class KMKernel;
 class QStringList;
 class KMIdentity;
-class OrgKdePimIdentityManagerInterface;
 
 namespace KPIM {
 
@@ -232,7 +231,6 @@ private:
 private:
   KConfig* mConfig;
   bool mReadOnly;
-  OrgKdePimIdentityManagerInterface *mIface;
 };
 
 } // namespace

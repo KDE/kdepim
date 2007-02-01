@@ -53,23 +53,30 @@ static const char configKeyDefaultIdentity[] = "Default Identity";
 
 #include <QtDBus>
 
-#include "identitymanagerinterface.h"
 #include "identitymanageradaptor.h"
 
 using namespace KPIM;
 
+static QString newDBusObjectName()
+{
+    static int s_count = 0;
+    QString name( "/KPIM_IdentityManager" );
+    if ( s_count++ ) {
+      name += '_';
+      name += QString::number( s_count );
+    }
+    return name;
+}
+
 IdentityManager::IdentityManager( bool readonly, QObject * parent, const char * name )
-  : ConfigManager( parent, name ) 
+  : ConfigManager( parent, name )
 {
   new IdentityManagerAdaptor( this );
-  //TODO verify it
-  QDBusConnection::sessionBus().registerObject( "/IdentityManager", this );
-  
-#ifdef __GNUC__
-#warning "kde4: verify it"  
-#endif
-  mIface = new OrgKdePimIdentityManagerInterface("org.kde.pim.IdentityManager", "/IdentityManager", QDBusConnection::sessionBus() );
-  connect( mIface, SIGNAL(identitiesChanged(QString)), this, SLOT(slotIdentitiesChanged(QString)) );
+  QDBusConnection dbus = QDBusConnection::sessionBus();
+  const QString dbusPath = newDBusObjectName();
+  const QString dbusInterface = "org.kde.pim.IdentityManager";
+  dbus.registerObject( dbusPath, this );
+  dbus.connect( QString(), dbusPath, dbusInterface, "identitiesChanged", this, SLOT(slotIdentitiesChanged(QString)) );
 
   mReadOnly = readonly;
   mConfig = new KConfig( "emailidentities", readonly );
@@ -98,7 +105,6 @@ IdentityManager::~IdentityManager()
   kWarning( hasPendingChanges(), 5006 )
     << "IdentityManager: There were uncommitted changes!" << endl;
   delete mConfig;
-  delete mIface;
 }
 
 void IdentityManager::commit()
@@ -499,12 +505,13 @@ QStringList KPIM::IdentityManager::allEmails() const
 }
 
 void KPIM::IdentityManager::slotIdentitiesChanged( const QString &id )
-{ 
+{
   kDebug()<<" KPIM::IdentityManager::slotIdentitiesChanged :"<<id<<endl;
   if ( id != QDBusConnection::sessionBus().baseService() ) {
     mConfig->reparseConfiguration();
     Q_ASSERT( !hasPendingChanges() );
     readConfig( mConfig );
+    emit ConfigManager::changed();
   }
 }
 
