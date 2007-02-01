@@ -259,8 +259,16 @@ KDGanttView::KDGanttView( QWidget* parent, const char* name  )
 
 KDGanttView::~KDGanttView()
 {
-    clearAll();
-    // delete cut item, if there is any
+    // Don't call clearAll, it recreates widgets inside KDLegendWidget
+  QPtrList<KDGanttViewTaskLink>  tll = taskLinks();
+  tll.setAutoDelete( true );
+  tll.clear();
+  QPtrList<KDGanttViewTaskLinkGroup> tlg = myTaskLinkGroupList;
+  tlg.setAutoDelete( true );
+  tlg.clear();
+  clear();
+
+  // delete cut item, if there is any
     myCanvasView->resetCutPaste( 0 );
     delete myTimeTable;
 }
@@ -6072,7 +6080,7 @@ void KDGanttView::selectLastYear()
 
 /*!
   \fn void KDGanttView::setConnectorEnabled(int connector, bool state)
-  
+
   Enable or disable a connector.
 
   \param connector The connector to set.
@@ -6086,9 +6094,9 @@ void KDGanttView::setConnectorEnabled(int connector, bool state)
 
 /*!
   \fn void KDGanttView::isConnectorEnabled()
-  
+
   See if a connector is enabled or disabled.
-  
+
   \param connector The connector to check.
   \return The state of the connector.
   \sa setConnectorEnabled()
@@ -6100,9 +6108,9 @@ bool KDGanttView::isConnectorEnabled(int connector) const
 
 /*!
   \fn void KDGanttView::setAllConnectorsEnabled(bool state)
-  
+
   Enable or disable all connectors.
-  
+
   \param state The state the connectors are set to.
  */
 void KDGanttView::setAllConnectorsEnabled(bool state)
@@ -6114,8 +6122,8 @@ void KDGanttView::setAllConnectorsEnabled(bool state)
   \fn void KDGanttView::setAutoScrollEnabled( bool state );
 
   Enables/disables scrolling when LMB is down.
-  
-  \param state If true, auto scrolling is enabled. 
+
+  \param state If true, auto scrolling is enabled.
  */
 void KDGanttView::setAutoScrollEnabled(bool state)
 {
