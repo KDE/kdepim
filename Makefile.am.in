@@ -10,7 +10,8 @@
 # Libraries and their upwards dependencies
 COMPILE_AFTER_libemailfunctions = libkcal libkpimidentities kmail korganizer
 COMPILE_AFTER_libkholidays = korganizer kontact
-COMPILE_AFTER_libkcal = kalarm kitchensync konsolekalendar korganizer ksync libkpimexchange kpilot libkdepim karm knotes kresources kfile-plugins
+#COMPILE_AFTER_libkcal = kalarm kitchensync konsolekalendar korganizer ksync libkpimexchange kpilot libkdepim karm knotes kresources kfile-plugins
+COMPILE_AFTER_libkcal = kalarm konsolekalendar korganizer ksync libkpimexchange kpilot libkdepim karm knotes kresources kfile-plugins
 COMPILE_AFTER_mimelib = korn kmail
 COMPILE_AFTER_libkdenetwork = kmail knode
 COMPILE_AFTER_libksieve = kmail
@@ -33,7 +34,7 @@ COMPILE_BEFORE_kalarm = libkdepim libkmime
 COMPILE_BEFORE_kresources = libkpimexchange knotes kaddressbook kode
 COMPILE_BEFORE_wizards = libkdepim kresources korganizer kaddressbook kmail
 COMPILE_BEFORE_korn = libkdenetwork
-COMPILE_BEFORE_kitchensync = libkdepim
+#COMPILE_BEFORE_kitchensync = libkdepim
 COMPILE_BEFORE_akregator = libkdepim
 COMPILE_BEFORE_knotes = libkdepim
 COMPILE_BEFORE_konsolekalendar = libkdepim
