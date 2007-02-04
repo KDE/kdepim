@@ -86,10 +86,9 @@ KVBox *ViewConfigureWidget::addPage( const QString &item, const QString &header,
                                    const QPixmap &pixmap )
 {
   KVBox *page = new KVBox( mMainWidget );
-#ifdef __GNUC__
-#warning What about the page icon and page header?
-#endif
-  mMainWidget->addPage( page, item );
+  KPageWidgetItem*itemPage=mMainWidget->addPage( page, item );
+  itemPage->setHeader(header);
+  itemPage->setIcon(KIcon(pixmap));
   return page;
 }
 
