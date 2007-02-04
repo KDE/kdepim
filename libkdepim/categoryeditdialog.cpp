@@ -23,37 +23,58 @@
 #include <qstringlist.h>
 #include <qlineedit.h>
 #include <qlistview.h>
+#include <qlayout.h>
 #include <qheader.h>
 #include <qpushbutton.h>
 #include <klocale.h>
 
 #include "kpimprefs.h"
 
-#include "categoryeditdialog_base.h"
 #include "categoryeditdialog.h"
 
 using namespace KPIM;
+
+class CategoryEditDialog::Private
+{
+  public:
+    QListView *mView;
+    QPushButton *mAddButton;
+    QPushButton *mEditButton;
+    QPushButton *mDeleteButton;
+};
 
 CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget* parent,
                                         const char* name, bool modal )
   : KDialogBase::KDialogBase( parent, name, modal,
     i18n("Edit Categories"), Ok|Apply|Cancel|Help, Ok, true ),
-    mPrefs( prefs )  
+    mPrefs( prefs ), d( new Private )
 {
-  mWidget = new CategoryEditDialog_base( this, "CategoryEdit" );
-  mWidget->mCategories->header()->hide();
-  setMainWidget( mWidget );
+  QWidget *widget = new QWidget( this );
+  setMainWidget( widget );
+
+  QGridLayout *layout = new QGridLayout( widget, 4, 2, marginHint(), spacingHint() );
+
+  d->mView = new QListView( widget );
+  d->mView->addColumn( "" );
+  d->mView->header()->hide();
+
+  layout->addMultiCellWidget( d->mView, 0, 3, 0, 0 );
+
+  d->mAddButton = new QPushButton( i18n( "Add" ), widget );
+  layout->addWidget( d->mAddButton, 0, 1 );
+
+  d->mEditButton = new QPushButton( i18n( "Edit" ), widget );
+  layout->addWidget( d->mEditButton, 1, 1 );
+
+  d->mDeleteButton = new QPushButton( i18n( "Remove" ), widget );
+  layout->addWidget( d->mDeleteButton, 2, 1 );
+
 
   fillList();
-  
-  connect( mWidget->mCategories, SIGNAL( selectionChanged( QListViewItem * )),
-           SLOT( editItem( QListViewItem * )) );
-  connect( mWidget->mEdit, SIGNAL( textChanged( const QString & )),
-           this, SLOT( slotTextChanged( const QString & )));
-  connect( mWidget->mButtonAdd, SIGNAL( clicked() ),
-           this, SLOT( add() ) );
-  connect( mWidget->mButtonRemove, SIGNAL( clicked() ),
-           this, SLOT( remove() ) );
+
+  connect( d->mAddButton, SIGNAL( clicked() ), this, SLOT( add() ) );
+  connect( d->mEditButton, SIGNAL( clicked() ), this, SLOT( edit() ) );
+  connect( d->mDeleteButton, SIGNAL( clicked() ), this, SLOT( remove() ) );
 }
 
 /*
@@ -61,50 +82,61 @@ CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget* parent,
  */
 CategoryEditDialog::~CategoryEditDialog()
 {
-    // no need to delete child widgets, Qt does it all for us
+  delete d;
 }
 
 void CategoryEditDialog::fillList()
 {
-  mWidget->mCategories->clear();
+  d->mView->clear();
   QStringList::Iterator it;
   bool categoriesExist=false;
   for ( it = mPrefs->mCustomCategories.begin();
         it != mPrefs->mCustomCategories.end(); ++it ) {
-    new QListViewItem( mWidget->mCategories, *it );
+
+    QListViewItem *item = new QListViewItem( d->mView, *it );
+    item->setRenameEnabled( 0, true );
+
     categoriesExist = true;
   }
-  mWidget->mButtonRemove->setEnabled( categoriesExist );
-  mWidget->mCategories->setSelected( mWidget->mCategories->firstChild(), true );
-  mWidget->mEdit->setText( mWidget->mCategories->currentItem()->text( 0 ) );
-}
 
-void CategoryEditDialog::slotTextChanged(const QString &text)
-{
-  QListViewItem *item = mWidget->mCategories->currentItem();
-  if ( item ) {
-    item->setText( 0, text );
-  }
+  d->mEditButton->setEnabled( categoriesExist );
+  d->mDeleteButton->setEnabled( categoriesExist );
+  d->mView->setSelected( d->mView->firstChild(), true );
 }
 
 void CategoryEditDialog::add()
 {
-  if ( !mWidget->mEdit->text().isEmpty() ) {
-    QListViewItem *newItem = new QListViewItem( mWidget->mCategories, "" );
-    // FIXME: Use a better string once string changes are allowed again
-//                                                i18n("New category") );
-    mWidget->mCategories->setSelected( newItem, true );
-    mWidget->mCategories->ensureItemVisible( newItem );
-    mWidget->mButtonRemove->setEnabled( mWidget->mCategories->childCount()>0 );
-  }
+  if ( d->mView->firstChild() )
+    d->mView->setCurrentItem( d->mView->firstChild() );
+
+  QListViewItem *item = new QListViewItem( d->mView, i18n( "New category" ) );
+  item->setRenameEnabled( 0, true );
+
+  d->mView->setSelected( item, true );
+  d->mView->ensureItemVisible( item );
+  item->startRename( 0 );
+
+  bool itemCount = d->mView->childCount() > 0;
+  d->mEditButton->setEnabled( itemCount );
+  d->mDeleteButton->setEnabled( itemCount );
+}
+
+void CategoryEditDialog::edit()
+{
+  if ( d->mView->currentItem() )
+    d->mView->currentItem()->startRename( 0 );
 }
 
 void CategoryEditDialog::remove()
 {
-  if (mWidget->mCategories->currentItem()) {
-    delete mWidget->mCategories->currentItem();
-    mWidget->mCategories->setSelected( mWidget->mCategories->currentItem(), true );
-    mWidget->mButtonRemove->setEnabled( mWidget->mCategories->childCount()>0 );
+  if ( d->mView->currentItem() ) {
+    delete d->mView->currentItem();
+
+    d->mView->setSelected( d->mView->currentItem(), true );
+
+    bool itemCount = d->mView->childCount() > 0;
+    d->mEditButton->setEnabled( itemCount );
+    d->mDeleteButton->setEnabled( itemCount );
   }
 }
 
@@ -118,9 +150,10 @@ void CategoryEditDialog::slotApply()
 {
   mPrefs->mCustomCategories.clear();
 
-  QListViewItem *item = mWidget->mCategories->firstChild();
+  QListViewItem *item = d->mView->firstChild();
   while ( item ) {
-    mPrefs->mCustomCategories.append( item->text(0) );
+    if ( !item->text( 0 ).isEmpty() )
+      mPrefs->mCustomCategories.append( item->text( 0 ) );
     item = item->nextSibling();
   }
   mPrefs->writeConfig();
@@ -134,13 +167,7 @@ void CategoryEditDialog::slotCancel()
   KDialogBase::slotCancel();
 }
 
-void CategoryEditDialog::editItem( QListViewItem *item )
-{
-  mWidget->mEdit->setText( item->text(0) );
-  mWidget->mButtonRemove->setEnabled( true );
-}
-
-void CategoryEditDialog::reload() 
+void CategoryEditDialog::reload()
 {
   fillList();
 }

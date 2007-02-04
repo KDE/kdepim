@@ -26,7 +26,6 @@
 #include <kdepimmacros.h>
 
 class KPimPrefs;
-class CategoryEditDialog_base;
 
 namespace KPIM {
 
@@ -46,20 +45,20 @@ class KDE_EXPORT CategoryEditDialog : public KDialogBase
     void slotOk();
     void slotApply();
     void slotCancel();
-    void slotTextChanged(const QString &text);
     void add();
+    void edit();
     void remove();
-    void editItem( QListViewItem *item );
 
   signals:
     void categoryConfigChanged();
-    
+
   protected:
     void fillList();
 
   private:
     KPimPrefs *mPrefs;
-    CategoryEditDialog_base *mWidget;
+    class Private;
+    Private* const d;
 };
 
 }
