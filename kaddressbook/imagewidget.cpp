@@ -34,10 +34,6 @@
 #include <kurldrag.h>
 #include <libkdepim/kpixmapregionselectordialog.h>
 
-#include <librss/loader.h>
-#include <librss/document.h>
-#include <librss/image.h>
-
 #include <qapplication.h>
 #include <qdragobject.h>
 #include <qeventloop.h>
@@ -52,11 +48,9 @@
 #include "imagewidget.h"
 
 ImageLoader::ImageLoader()
-  : QObject( 0, "ImageLoader" ),
-    mIsLoadingBlog( false )
+  : QObject( 0, "ImageLoader" )
 {
 }
-
 
 KABC::Picture ImageLoader::loadPicture( const KURL &url, bool *ok )
 {
@@ -108,50 +102,6 @@ KABC::Picture ImageLoader::loadPicture( const KURL &url, bool *ok )
   return picture;
 }
 
-KABC::Picture ImageLoader::loadBlog( const KURL &url, bool *ok )
-{
-  RSS::Loader *loader = RSS::Loader::create();
-  connect( loader, SIGNAL( loadingComplete( Loader*, Document, Status ) ),
-           this, SLOT( loadingComplete( Loader*, Document, Status ) ) );
-  loader->loadFrom( url, new RSS::FileRetriever );
-
-  mIsLoadingBlog = true;
-  while ( mIsLoadingBlog ) {
-    qApp->eventLoop()->processEvents( QEventLoop::ExcludeUserInput );
-    usleep( 500 );
-  }
-
-  if ( mPicture.data().isNull() ) {
-    KMessageBox::sorry( 0,
-        i18n( "Blog feed at '%1' does not contain an image." ).arg( url.url() ) );
-    (*ok) = false;
-  }
-  (*ok) = true;
-
-  return mPicture;
-}
-
-void ImageLoader::loadingComplete( RSS::Loader*,
-                                   RSS::Document doc,
-                                   RSS::Status status )
-{
-  mIsLoadingBlog = false;
-
-  if ( status != RSS::Success ) {
-    mPicture = KABC::Picture();
-    return;
-  }
-
-  if ( !doc.image() ) {
-    mPicture = KABC::Picture();
-    return;
-  }
-
-  bool ok = false;
-  KABC::Picture pic = loadPicture( doc.image()->url().url(), &ok );
-  if ( ok )
-    mPicture = pic;
-}
 
 ImageButton::ImageButton( const QString &title, QWidget *parent )
   : QPushButton( title, parent ),
@@ -181,11 +131,6 @@ KABC::Picture ImageButton::picture() const
 void ImageButton::setImageLoader( ImageLoader *loader )
 {
   mImageLoader = loader;
-}
-
-void ImageButton::setBlogFeed( const KURL &url )
-{
-  mBlogFeed = url;
 }
 
 void ImageButton::startDrag()
@@ -272,9 +217,6 @@ void ImageButton::contextMenuEvent( QContextMenuEvent *event )
 {
   QPopupMenu menu( this );
   menu.insertItem( i18n( "Reset" ), this, SLOT( clear() ) );
-  if ( mBlogFeed.isValid() )
-    menu.insertItem( i18n("Get From Blog"), this, SLOT( loadBlog() ) );
-
   menu.exec( event->globalPos() );
 }
 
@@ -291,17 +233,6 @@ void ImageButton::load()
         emit changed();
       }
     }
-  }
-}
-
-void ImageButton::loadBlog()
-{
-  bool ok = false;
-  KABC::Picture pic = mImageLoader->loadBlog( mBlogFeed, &ok );
-  if ( ok ) {
-    mPicture = pic;
-    updateGUI();
-    emit changed();
   }
 }
 
@@ -346,11 +277,6 @@ void ImageBaseWidget::setReadOnly( bool readOnly )
   mImageButton->setReadOnly( mReadOnly );
 }
 
-void ImageBaseWidget::setBlogFeed( const QString &feed )
-{
-  mImageButton->setBlogFeed( feed );
-}
-
 void ImageBaseWidget::setImage( const KABC::Picture &photo )
 {
   mImageButton->setPicture( photo );
@@ -381,7 +307,6 @@ ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent, const char *na
 void ImageWidget::loadContact( KABC::Addressee *addr )
 {
   mPhotoWidget->setImage( addr->photo() );
-  mPhotoWidget->setBlogFeed( addr->custom( "KADDRESSBOOK", "BlogFeed" ) );
   mLogoWidget->setImage( addr->logo() );
 }
 

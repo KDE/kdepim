@@ -32,15 +32,6 @@
 
 #include "contacteditorwidget.h"
 
-#include <librss/global.h>
-
-namespace RSS {
-class Loader;
-class Document;
-}
-
-using namespace RSS;
-
 /**
   Small helper class
  */
@@ -52,13 +43,8 @@ class ImageLoader : public QObject
     ImageLoader();
 
     KABC::Picture loadPicture( const KURL &url, bool *ok );
-    KABC::Picture loadBlog( const KURL &url, bool *ok );
-
-  private slots:
-    void loadingComplete( Loader*, Document, Status );
 
   private:
-    bool mIsLoadingBlog;
     KABC::Picture mPicture;
 };
 
@@ -79,8 +65,6 @@ class ImageButton : public QPushButton
 
     void setImageLoader( ImageLoader *loader );
 
-    void setBlogFeed( const KURL &url );
-
   signals:
     void changed();
     void urlDropped( const KURL& );
@@ -94,7 +78,6 @@ class ImageButton : public QPushButton
 
   private slots:
     void load();
-    void loadBlog();
     void clear();
 
   private:
@@ -102,7 +85,6 @@ class ImageButton : public QPushButton
     void updateGUI();
 
     bool mReadOnly;
-    KURL mBlogFeed;
     QPoint mDragStartPos;
     KABC::Picture mPicture;
 
@@ -117,11 +99,6 @@ class ImageBaseWidget : public QWidget
   public:
     ImageBaseWidget( const QString &title, QWidget *parent, const char *name = 0 );
     ~ImageBaseWidget();
-
-    /**
-      Set URL of blog feed for getting the image.
-     */
-    void setBlogFeed( const QString & );
 
     /**
       Sets the photo object.
