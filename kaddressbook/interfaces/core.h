@@ -140,27 +140,27 @@ class KDE_EXPORT Core : public QObject
     virtual void setContactSelected( const QString &uid ) = 0;
 
     /**
-      DCOP METHOD: Adds the given email address to address book.
+      D-Bus METHOD: Adds the given email address to address book.
      */
     virtual void addEmail( const QString& addr ) = 0;
 
     /**
-      DCOP METHOD: Imports the vCard, located at the given url.
+      D-Bus METHOD: Imports the vCard, located at the given url.
      */
     virtual void importVCard( const KUrl& url ) = 0;
 
     /**
-      DCOP METHOD: Imports the given vCard.
+      D-Bus METHOD: Imports the given vCard.
      */
     virtual void importVCard( const QString& vCard ) = 0;
 
     /**
-      DCOP METHOD: Opens contact editor to input a new contact.
+      D-Bus METHOD: Opens contact editor to input a new contact.
      */
     virtual void newContact() = 0;
 
     /**
-      DCOP METHOD: Returns the name of the contact, that matches the given
+      D-Bus METHOD: Returns the name of the contact, that matches the given
                    phone number.
      */
     virtual QString getNameByPhone( const QString& phone ) = 0;

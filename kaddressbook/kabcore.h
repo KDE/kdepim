@@ -270,33 +270,33 @@ class KDE_EXPORT KABCore : public KAB::Core
     void contactModified( const KABC::Addressee &addr );
 
     /**
-      DCOP METHOD: Adds the given email address to address book.
+      D-Bus METHOD: Adds the given email address to address book.
      */
     virtual void addEmail( const QString& addr );
 
     /**
-      DCOP METHOD: Imports the vCard, located at the given url.
+      D-Bus METHOD: Imports the vCard, located at the given url.
      */
     virtual void importVCard( const KUrl& url );
 
     /**
-      DCOP METHOD: Imports the given vCard.
+      D-Bus METHOD: Imports the given vCard.
      */
     virtual void importVCard( const QString& vCardURL );
 
     /**
-      DCOP METHOD: Opens contact editor to input a new contact.
+      D-Bus METHOD: Opens contact editor to input a new contact.
      */
     virtual void newContact();
 
     /**
-      DCOP METHOD: Returns the name of the contact, that matches the given
+      D-Bus METHOD: Returns the name of the contact, that matches the given
                    phone number.
      */
     virtual QString getNameByPhone( const QString& phone );
 
     /**
-      DCOP METHOD: Handle command line arguments, return true if handled
+      D-Bus METHOD: Handle command line arguments, return true if handled
       and false if no args was given. The iface is either the mainwin or the part.
      */
     bool handleCommandLine();
