@@ -24,6 +24,7 @@
 #include "groupwaredataadaptor.h"
 #include <kdebug.h>
 #include <kio/job.h>
+#include <kio/deletejob.h>
 #include <kresources/idmapper.h>
 
 using namespace KPIM;

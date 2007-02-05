@@ -26,6 +26,7 @@
 #include <kurl.h>
 #include <kio/global.h>
 #include <kio/jobclasses.h>
+#include <kio/deletejob.h>
 #include <kio/scheduler.h>
 
 #include <QList>
@@ -150,7 +151,7 @@ void KIO_Delete::deleteItem( const QVariant item, KUrl kurl, KIO::MetaData metad
 		
 	job->addMetaData( metadata );
 	
-	_jobs->append( dynamic_cast< KIO::Job* >( job ) );
+	_jobs->append( job );
 }
 
 /*
@@ -167,7 +168,7 @@ void KIO_Delete::commitDelete( KUrl kurl, KIO::MetaData metadata, const KIO_Prot
 	job->addMetaData( metadata );
 	connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
 	
-	_jobs->append( dynamic_cast< KIO::Job* >( job ) );
+	_jobs->append( job );
 	
 	if( protocol->connectionBased() )
 		KIO::Scheduler::assignJobToSlave( _slave, job );
