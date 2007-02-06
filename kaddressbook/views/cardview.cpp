@@ -1035,12 +1035,6 @@ void CardView::contentsMousePressEvent( QMouseEvent *e )
 
   // The RMB click
   if ( e->button() & Qt::RightButton ) {
-    // clear previous selection
-    bool blocked = signalsBlocked();
-    blockSignals( true );
-    selectAll( false );
-    blockSignals( blocked );
-
     // select current item
     item->setSelected( true );
 
