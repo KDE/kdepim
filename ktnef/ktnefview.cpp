@@ -26,7 +26,6 @@ using namespace KTnef;
 #include <QFrame>
 #include <QResizeEvent>
 
-#include <kapplication.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -56,7 +55,7 @@ Attachment::Attachment(Q3ListView *parent, KTNEFAttach *attach)
 	if ( !pix.isNull() )
 		setPixmap( 0, pix );
 	else
-		setPixmap(0, mimeType->pixmap(K3Icon::Small));
+		setPixmap(0, KIconLoader::global()->loadMimeTypeIcon( mimeType->iconName(), K3Icon::Small));
 	setDragEnabled( true );
 }
 

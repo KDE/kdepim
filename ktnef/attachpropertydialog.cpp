@@ -32,6 +32,7 @@
 #include <kmimetype.h>
 #include <kdebug.h>
 #include <klocale.h>
+#include <kiconloader.h>
 #include <kmessagebox.h>
 #include <kfiledialog.h>
 #include <QBuffer>
@@ -68,7 +69,7 @@ void AttachPropertyDialog::setAttachment(KTNEFAttach *attach)
 	if ( !pix.isNull() )
 		icon_->setPixmap( pix );
 	else
-		icon_->setPixmap(mimetype->pixmap(K3Icon::Small));
+		icon_->setPixmap(KIconLoader::global()->loadMimeTypeIcon(mimetype->iconName(), K3Icon::Small));
 	description_->setText(mimetype->comment());
 	s.setNum(attach->index());
 	index_->setText(s);
