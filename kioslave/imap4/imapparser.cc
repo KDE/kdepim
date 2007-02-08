@@ -117,7 +117,9 @@ imapParser::sendCommand (imapCommand * aCmd)
            || command == "LISTRIGHTS"
            || command == "MYRIGHTS"
            || command == "GETANNOTATION"
-           || command == "NAMESPACE")
+           || command == "NAMESPACE"
+           || command == "GETQUOTAROOT"
+           || command == "GETQUOTA")
   {
     lastResults.clear ();
   }
@@ -433,6 +435,16 @@ imapParser::parseUntagged (parseString & result)
       parseAnnotation (result);
     }
     break;
+  case 'Q': // QUOTA or QUOTAROOT
+    if ( what.size() > 5 && qstrncmp(what, "QUOTAROOT", what.size()) == 0)
+    {
+      parseQuotaRoot( result );
+    }
+    else if (qstrncmp(what, "QUOTA", what.size()) == 0)
+    {
+      parseQuota( result );
+    }
+
   default:
     //better be a number
     {
@@ -709,6 +721,48 @@ void imapParser::parseAnnotation (parseString & result)
     Q3CString word = parseLiteralC (result, false, false, &outlen);
     lastResults.append (word);
   }
+}
+
+
+void imapParser::parseQuota (parseString & result)
+{
+  // quota_response  ::= "QUOTA" SP astring SP quota_list
+  // quota_list      ::= "(" #quota_resource ")"
+  // quota_resource  ::= atom SP number SP number
+  Q3CString root = parseOneWord( result );
+  if ( root.isEmpty() ) {
+    lastResults.append( "" );
+  } else {
+    lastResults.append( root );
+  }
+  if (result.isEmpty() || result[0] != '(')
+    return;
+  result.pos++;
+  skipWS (result);
+  QStringList triplet;
+  int outlen = 1;
+  while ( outlen && !result.isEmpty() && result[0] != ')' ) {
+    Q3CString word = parseLiteralC (result, false, false, &outlen);
+    triplet.append(word);
+  }
+  lastResults.append( triplet.join(" ") );
+}
+
+void imapParser::parseQuotaRoot (parseString & result)
+{
+  //    quotaroot_response
+  //         ::= "QUOTAROOT" SP astring *(SP astring)
+  parseOneWord (result); // skip mailbox name
+  skipWS (result);
+  if ( result.isEmpty() )
+    return;
+  QStringList roots;
+  int outlen = 1;
+  while ( outlen && !result.isEmpty() ) {
+    Q3CString word = parseLiteralC (result, false, false, &outlen);
+    roots.append (word);
+  }
+  lastResults.append( roots.join(" ") );
 }
 
 void imapParser::parseMyRights (parseString & result)

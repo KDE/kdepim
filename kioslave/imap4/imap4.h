@@ -174,6 +174,7 @@ protected:
 
   /** Send an annotation command which is identified by @p command */
   void specialAnnotateMoreCommand( int command, QDataStream& stream );
+  void specialQuotaCommand( int command, QDataStream& stream );
 
   /** Search current folder, the search string is passed as SECTION */
   void specialSearchCommand( QDataStream& );

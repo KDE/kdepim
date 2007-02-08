@@ -292,6 +292,10 @@ public:
   void parseAnnotation (parseString & result);
   /** @brief parse a NAMESPACE line */
   void parseNamespace (parseString & result);
+  /** @brief parse a QUOTAROOT line */
+  void parseQuotaRoot (parseString & result);
+  /** @brief parse a QUOTA line */
+  void parseQuota (parseString & result);
 
   /**
    * parses the results of a fetch command

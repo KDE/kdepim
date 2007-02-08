@@ -367,7 +367,7 @@ IMAP4Protocol::get (const KUrl & _url)
                     || aUpper.contains("FLAGS")
                     || aUpper.contains("UID")
                     || aUpper.contains("ENVELOPE")
-                    || (aUpper.contains("BODY.PEEK[0]") 
+                    || (aUpper.contains("BODY.PEEK[0]")
                         && (aEnum == ITYPE_BOX || aEnum == ITYPE_DIR_AND_BOX)))
           {
             if (aEnum == ITYPE_BOX || aEnum == ITYPE_DIR_AND_BOX)
@@ -1229,6 +1229,7 @@ IMAP4Protocol::del (const KUrl & _url, bool isFile)
  * ACL commands: data = 'A' + command + URL (KUrl) + command-dependent args
  * AnnotateMore commands: data = 'M' + 'G'et/'S'et + URL + entry + command-dependent args
  * Search: data = 'E' + URL (KUrl)
+ * Quota commands: data = 'Q' + 'R'oot/'G'et/'S'et + URL + entry + command-dependent args
  */
 void
 IMAP4Protocol::special (const QByteArray & aData)
@@ -1344,6 +1345,18 @@ IMAP4Protocol::special (const QByteArray & aData)
       specialAnnotateMoreCommand( cmd, stream );
     } else {
       error( ERR_UNSUPPORTED_ACTION, "ANNOTATEMORE" );
+    }
+    break;
+  }
+  case 'Q':
+  {
+    // quota
+    int cmd;
+    stream >> cmd;
+    if ( hasCapability( "QUOTA" ) ) {
+      specialQuotaCommand( cmd, stream );
+    } else {
+      error( ERR_UNSUPPORTED_ACTION, "QUOTA" );
     }
     break;
   }
@@ -1596,9 +1609,54 @@ IMAP4Protocol::specialAnnotateMoreCommand( int command, QDataStream& stream )
 }
 
 void
+IMAP4Protocol::specialQuotaCommand( int command, QDataStream& stream )
+{
+  // All commands start with the URL to the box
+  KUrl _url;
+  stream >> _url;
+  QString aBox, aSequence, aLType, aSection, aValidity, aDelimiter, aInfo;
+  parseURL (_url, aBox, aSection, aLType, aSequence, aValidity, aDelimiter, aInfo);
+
+  switch( command ) {
+    case 'R': // GETQUOTAROOT
+      {
+        kDebug(7116) << "QUOTAROOT " << aBox << endl;
+        imapCommand *cmd = doCommand(imapCommand::clientGetQuotaroot( aBox ) );
+        if (cmd->result () != "OK")
+        {
+          error(ERR_SLAVE_DEFINED, i18n("Retrieving the quota root inormation on folder %1 "
+                "failed. The server returned: %2")
+              .arg(_url.prettyUrl())
+              .arg(cmd->resultInfo()));
+          return;
+        }
+        infoMessage(getResults().join( "\r" ));
+        finished();
+        break;
+      }
+    case 'G': // GETQUOTA
+      {
+        kDebug(7116) << "GETQUOTA command" << endl;
+        kWarning(7116) << "UNIMPLEMENTED" << endl;
+        break;
+      }
+    case 'S': // SETQUOTA
+      {
+        kDebug(7116) << "SETQUOTA command" << endl;
+        kWarning(7116) << "UNIMPLEMENTED" << endl;
+        break;
+      }
+    default:
+      kWarning(7116) << "Unknown special quota command:" << command << endl;
+      error( ERR_UNSUPPORTED_ACTION, QString(QChar(command)) );
+  }
+}
+
+
+void
 IMAP4Protocol::rename (const KUrl & src, const KUrl & dest, bool overwrite)
 {
-  kDebug(7116) << "IMAP4::rename - [" << (overwrite ? "Overwrite" : "NoOverwrite") << "] " << src.prettyUrl() << " -> " << dest.prettyUrl() << endl;
+  kDebug(7116) << "IMAP4::rename - [" << (overwrite ? "Overwrite" : "NoOverwrite") << "] " << src << " -> " << dest << endl;
   QString sBox, sSequence, sLType, sSection, sValidity, sDelimiter, sInfo;
   QString dBox, dSequence, dLType, dSection, dValidity, dDelimiter, dInfo;
   enum IMAP_TYPE sType =
@@ -2164,7 +2222,7 @@ IMAP4Protocol::doListEntry (const KUrl & _url, const QString & myBox,
           tmp = "message/digest";
         }
 		entry.insert(UDS_MIME_TYPE,tmp);
-        
+
 		mailboxName += '/';
 
         // explicitly set this as a directory for KFileDialog
