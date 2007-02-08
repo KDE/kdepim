@@ -1,5 +1,7 @@
+check_include_files(sys/limits.h HAVE_SYS_LIMITS_H)
+check_include_files(values.h HAVE_VALUES_H)
 
-
+configure_file (config-slox.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-slox.h)
 
 
 ########### next target ###############

@@ -21,7 +21,7 @@
 #include "webdavhandler.h"
 #include "sloxbase.h"
 
-#include "config.h"
+#include "config-slox.h"
 
 #ifdef HAVE_VALUES_H
 #include <values.h>
