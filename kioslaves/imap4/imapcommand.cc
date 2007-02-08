@@ -393,3 +393,10 @@ imapCommand::clientNamespace()
   return new imapCommand("NAMESPACE", "");
 }
 
+imapCommand *
+imapCommand::clientGetQuotaroot( const QString& box )
+{
+  QString parameter = rfcDecoder::toIMAP (box);
+  return new imapCommand ("GETQUOTAROOT", parameter);
+}
+
