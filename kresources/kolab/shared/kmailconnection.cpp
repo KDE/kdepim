@@ -118,7 +118,7 @@ bool KMailConnection::fromKMailAddIncidence( const QString& type,
                                              int format,
                                              const QString& data )
 {
-  if ( format != KMailICalIface::StorageXML 
+  if ( format != KMailICalIface::StorageXML
       && format != KMailICalIface::StorageIcalVcard )
     return false;
 //   kDebug(5650) << "KMailConnection::fromKMailAddIncidence( " << type << ", "
@@ -254,7 +254,7 @@ bool KMailConnection::kmailUpdate( const QString& resource,
     return false;
 }
 
-bool KMailConnection::kmailStorageFormat( KMailICalIface::StorageFormat& type, 
+bool KMailConnection::kmailStorageFormat( KMailICalIface::StorageFormat& type,
                                           const QString& folder )
 {
   bool ok = connectToKMail();
