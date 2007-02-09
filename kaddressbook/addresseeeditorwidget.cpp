@@ -782,8 +782,7 @@ void AddresseeEditorWidget::selectCategories()
   }
 
   mCategorySelectDialog->setSelected( QStringList::split( ",", mCategoryEdit->text() ) );
-  mCategorySelectDialog->show();
-  mCategorySelectDialog->raise();
+  mCategorySelectDialog->exec();
 }
 
 void AddresseeEditorWidget::categoriesSelected( const QStringList &list )
@@ -799,8 +798,7 @@ void AddresseeEditorWidget::editCategories()
              mCategorySelectDialog, SLOT( updateCategoryConfig() ) );
   }
 
-  mCategoryEditDialog->show();
-  mCategoryEditDialog->raise();
+  mCategoryEditDialog->exec();
 }
 
 void AddresseeEditorWidget::emitModified()
