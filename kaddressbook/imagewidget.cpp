@@ -47,8 +47,8 @@
 
 #include "imagewidget.h"
 
-ImageLoader::ImageLoader()
-  : QObject( 0, "ImageLoader" )
+ImageLoader::ImageLoader( QWidget *parent )
+  : QObject( 0, "ImageLoader" ), mParent( parent )
 {
 }
 
@@ -67,7 +67,7 @@ KABC::Picture ImageLoader::loadPicture( const KURL &url, bool *ok )
     image.load( url.path() );
     picture.setData( image );
     (*ok) = true;
-  } else if ( KIO::NetAccess::download( url, tempFile, 0 ) ) {
+  } else if ( KIO::NetAccess::download( url, tempFile, mParent ) ) {
     image.load( tempFile );
     picture.setData( image );
     (*ok) = true;
@@ -76,13 +76,13 @@ KABC::Picture ImageLoader::loadPicture( const KURL &url, bool *ok )
 
   if ( !(*ok) ) {
     // image does not exist (any more)
-    KMessageBox::sorry( 0, i18n( "This contact's image cannot be found." ) );
+    KMessageBox::sorry( mParent, i18n( "This contact's image cannot be found." ) );
     return picture;
   }
 
   QPixmap pixmap = picture.data();
 
-  QPixmap selectedPixmap = KPIM::KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, 0 );
+  QPixmap selectedPixmap = KPIM::KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, mParent );
   if ( selectedPixmap.isNull() ) {
     (*ok) = false;
     return picture;
@@ -248,7 +248,7 @@ ImageBaseWidget::ImageBaseWidget( const QString &title,
                                   QWidget *parent, const char *name )
   : QWidget( parent, name ), mReadOnly( false )
 {
-  mImageLoader = new ImageLoader();
+  mImageLoader = new ImageLoader( this );
 
   QVBoxLayout *topLayout = new QVBoxLayout( this, KDialog::marginHint(),
                                             KDialog::spacingHint() );
