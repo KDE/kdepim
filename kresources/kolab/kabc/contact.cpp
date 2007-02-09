@@ -510,6 +510,8 @@ bool Contact::loadAddressAttribute( QDomElement& element )
         address.type = e.text();
       else if ( tagName == "street" )
         address.street = e.text();
+      else if ( tagName == "pobox" )
+        address.pobox = e.text();
       else if ( tagName == "locality" )
         address.locality = e.text();
       else if ( tagName == "region" )
@@ -537,11 +539,18 @@ void Contact::saveAddressAttributes( QDomElement& element ) const
     element.appendChild( e );
     const Address& a = *it;
     writeString( e, "type", a.type );
-    writeString( e, "street", a.street );
+    if ( !a.street.isEmpty() )
+      writeString( e, "street", a.street );
+    if ( !a.pobox.isEmpty() )
+      writeString( e, "pobox", a.pobox );
+    if ( !a.locality.isEmpty() )
     writeString( e, "locality", a.locality );
-    writeString( e, "region", a.region );
-    writeString( e, "postal-code", a.postalCode );
-    writeString( e, "country", a.country );
+    if ( !a.region.isEmpty() )
+      writeString( e, "region", a.region );
+    if ( !a.postalCode.isEmpty() )
+      writeString( e, "postal-code", a.postalCode );
+    if ( !a.country.isEmpty() )
+      writeString( e, "country", a.country );
   }
 }
 
@@ -1040,6 +1049,7 @@ void Contact::setFields( const KABC::Addressee* addressee )
     Address address;
     address.type = addressTypeToString( (*it).type() );
     address.street = (*it).street();
+    address.pobox = (*it).postOfficeBox();
     address.locality = (*it).locality();
     address.region = (*it).region();
     address.postalCode = (*it).postalCode();
@@ -1208,6 +1218,7 @@ void Contact::saveTo( KABC::Addressee* addressee )
       type |= KABC::Address::Pref;
     address.setType( type );
     address.setStreet( (*it).street );
+    address.setPostOfficeBox( (*it).pobox );
     address.setLocality( (*it).locality );
     address.setRegion( (*it).region );
     address.setPostalCode( (*it).postalCode );
