@@ -118,7 +118,7 @@ bool KMailConnection::fromKMailAddIncidence( const QString& type,
                                              int format,
                                              const QString& data )
 {
-  if ( format != KMailICalIface::StorageXML 
+  if ( format != KMailICalIface::StorageXML
       && format != KMailICalIface::StorageIcalVcard )
     return false;
 //   kdDebug(5650) << "KMailConnection::fromKMailAddIncidence( " << type << ", "
@@ -244,7 +244,7 @@ bool KMailConnection::kmailUpdate( const QString& resource,
                                    const QStringList& attachmentNames,
                                    const QStringList& deletedAttachments )
 {
-  kdDebug(5006) << kdBacktrace() << endl;
+  //kdDebug(5006) << kdBacktrace() << endl;
   if ( connectToKMail() ) {
     sernum = mKMailIcalIfaceStub->update( resource, sernum, subject, plainTextBody, customHeaders,
                                           attachmentURLs, attachmentMimetypes, attachmentNames,
@@ -254,7 +254,7 @@ bool KMailConnection::kmailUpdate( const QString& resource,
     return false;
 }
 
-bool KMailConnection::kmailStorageFormat( KMailICalIface::StorageFormat& type, 
+bool KMailConnection::kmailStorageFormat( KMailICalIface::StorageFormat& type,
                                           const QString& folder )
 {
   bool ok = connectToKMail();

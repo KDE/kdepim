@@ -57,6 +57,7 @@ public:
   public:
     QString type;
     QString street;
+    QString pobox;
     QString locality;
     QString region;
     QString postalCode;
