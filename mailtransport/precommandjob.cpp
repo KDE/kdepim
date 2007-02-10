@@ -47,7 +47,7 @@ void PrecommandJob::start()
 {
   if ( !mProcess->start( KProcess::NotifyOnExit ) ) {
     setError( UserDefinedError );
-    setErrorText( i18n("Could not execute precommand '%1'.") );
+    setErrorText( i18n("Could not execute precommand '%1'.", mPrecommand ) );
     emitResult();
   } else {
     emit infoMessage( this, i18n("Executing precommand"),
