@@ -257,7 +257,7 @@ icalcomponent *ICalFormatImpl::writeFreeBusy(FreeBusy *freebusy,
   //Loops through all the periods in the freebusy object
   QValueList<Period> list = freebusy->busyPeriods();
   QValueList<Period>::Iterator it;
-  icalperiodtype period;
+  icalperiodtype period = icalperiodtype_null_period();
   for (it = list.begin(); it!= list.end(); ++it) {
     period.start = writeICalDateTime((*it).start());
     if ( (*it).hasDuration() ) {
