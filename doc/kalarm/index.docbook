@@ -33,7 +33,7 @@
 </authorgroup>
 
 <copyright>
-<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year>
+<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year>
 <holder>&David.Jarvie;</holder>
 </copyright>
 
@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2006-11-01</date>
-<releaseinfo>1.09.02</releaseinfo>
+<date>2007-02-11</date>
+<releaseinfo>1.09.05</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -55,6 +55,7 @@
 <keyword>kalarm</keyword>
 <keyword>alarm</keyword>
 <keyword>reminder</keyword>
+<keyword>scheduler</keyword>
 </keywordset>
 
 </bookinfo>
@@ -2247,7 +2248,8 @@ prompting.</para>
 </listitem>
 
 <listitem><para><guilabel>Archived Alarms</guilabel> group box: These
-options control the storage of archived alarms.</para>
+options control the storage of archived alarms in the default archived
+alarm resource.</para>
 
 <itemizedlist>
 <listitem><para><guilabel>Keep alarms after expiry</guilabel>:
@@ -2264,7 +2266,9 @@ archive, after which they are permanently deleted.</para>
 </listitem>
 
 <listitem><para><guibutton>Clear archived alarms</guibutton>: This
-button discards all currently archived alarms. This has no effect on
+button discards all currently archived alarms from the default archived
+alarm resource. (Other archived alarm resources are left unchanged in
+case they are shared with other people.) This has no effect on
 alarms which subsequently expire or are deleted; they will continue to
 be archived according to the selected options.</para>
 </listitem>
