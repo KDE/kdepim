@@ -245,22 +245,22 @@ void FieldWidget::clearFields()
 {
   FieldRecordList::ConstIterator fieldIt;
   for ( fieldIt = mFieldList.begin(); fieldIt != mFieldList.end(); ++fieldIt ) {
-    if ( (*fieldIt).mWidget->metaObject()->className() == "QLineEdit" ) {
+    if ( qobject_cast<QLineEdit*>( (*fieldIt).mWidget ) ) {
       QLineEdit *wdg = static_cast<QLineEdit*>( (*fieldIt).mWidget );
       wdg->setText( QString() );
-    } else if ( (*fieldIt).mWidget->metaObject()->className() == "QSpinBox" ) {
+    } else if ( qobject_cast<QSpinBox*>( (*fieldIt).mWidget ) ) {
       QSpinBox *wdg = static_cast<QSpinBox*>( (*fieldIt).mWidget );
       wdg->setValue( 0 );
-    } else if ( (*fieldIt).mWidget->metaObject()->className() == "QCheckBox" ) {
+    } else if ( qobject_cast<QCheckBox*>( (*fieldIt).mWidget ) ) {
       QCheckBox *wdg = static_cast<QCheckBox*>( (*fieldIt).mWidget );
       wdg->setChecked( true );
-    } else if ( (*fieldIt).mWidget->metaObject()->className() == "QDateEdit" ) {
+    } else if ( qobject_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget ) ) {
       Q3DateEdit *wdg = static_cast<Q3DateEdit*>( (*fieldIt).mWidget );
       wdg->setDate( QDate::currentDate() );
-    } else if ( (*fieldIt).mWidget->metaObject()->className() == "QTimeEdit" ) {
+    } else if ( qobject_cast<Q3TimeEdit*>( (*fieldIt).mWidget ) ) {
       Q3TimeEdit *wdg = static_cast<Q3TimeEdit*>( (*fieldIt).mWidget );
       wdg->setTime( QTime::currentTime() );
-    } else if ( (*fieldIt).mWidget->metaObject()->className() == "QDateTimeEdit" ) {
+    } else if ( qobject_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget ) ) {
       Q3DateTimeEdit *wdg = static_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget );
       wdg->setDateTime( QDateTime::currentDateTime() );
     }
@@ -283,22 +283,22 @@ void FieldWidget::loadContact( KABC::Addressee *addr )
     FieldRecordList::ConstIterator fieldIt;
     for ( fieldIt = mFieldList.begin(); fieldIt != mFieldList.end(); ++fieldIt ) {
       if ( (*fieldIt).mIdentifier == name ) {
-        if ( (*fieldIt).mWidget->metaObject()->className() == "QLineEdit" ) {
+        if ( qobject_cast<QLineEdit*>( (*fieldIt).mWidget ) ) {
           QLineEdit *wdg = static_cast<QLineEdit*>( (*fieldIt).mWidget );
           wdg->setText( value );
-        } else if ( (*fieldIt).mWidget->metaObject()->className() == "QSpinBox" ) {
+        } else if ( qobject_cast<QSpinBox*>( (*fieldIt).mWidget ) ) {
           QSpinBox *wdg = static_cast<QSpinBox*>( (*fieldIt).mWidget );
           wdg->setValue( value.toInt() );
-        } else if ( (*fieldIt).mWidget->metaObject()->className() == "QCheckBox" ) {
+        } else if ( qobject_cast<QCheckBox*>( (*fieldIt).mWidget ) ) {
           QCheckBox *wdg = static_cast<QCheckBox*>( (*fieldIt).mWidget );
           wdg->setChecked( value == "true" || value == "1" );
-        } else if ( (*fieldIt).mWidget->metaObject()->className() == "QDateEdit" ) {
+        } else if ( qobject_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget ) ) {
           Q3DateEdit *wdg = static_cast<Q3DateEdit*>( (*fieldIt).mWidget );
           wdg->setDate( QDate::fromString( value, Qt::ISODate ) );
-        } else if ( (*fieldIt).mWidget->metaObject()->className() == "QTimeEdit" ) {
+        } else if ( qobject_cast<Q3TimeEdit*>( (*fieldIt).mWidget ) ) {
           Q3TimeEdit *wdg = static_cast<Q3TimeEdit*>( (*fieldIt).mWidget );
           wdg->setTime( QTime::fromString( value, Qt::ISODate ) );
-        } else if ( (*fieldIt).mWidget->metaObject()->className() == "QDateTimeEdit" ) {
+        } else if ( qobject_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget ) ) {
           Q3DateTimeEdit *wdg = static_cast<Q3DateTimeEdit*>( (*fieldIt).mWidget );
           wdg->setDateTime( QDateTime::fromString( value, Qt::ISODate ) );
         }
@@ -312,22 +312,22 @@ void FieldWidget::storeContact( KABC::Addressee *addr )
   FieldRecordList::ConstIterator it;
   for ( it = mFieldList.begin(); it != mFieldList.end(); ++it ) {
     QString value;
-    if ( (*it).mWidget->metaObject()->className() == "QLineEdit" ) {
+    if ( qobject_cast<QLineEdit*>( (*it).mWidget ) ) {
       QLineEdit *wdg = static_cast<QLineEdit*>( (*it).mWidget );
       value = wdg->text();
-    } else if ( (*it).mWidget->metaObject()->className() == "QSpinBox" ) {
+    } else if ( qobject_cast<QSpinBox*>( (*it).mWidget ) ) {
       QSpinBox *wdg = static_cast<QSpinBox*>( (*it).mWidget );
       value = QString::number( wdg->value() );
-    } else if ( (*it).mWidget->metaObject()->className() == "QCheckBox" ) {
+    } else if ( qobject_cast<QCheckBox*>( (*it).mWidget ) ) {
       QCheckBox *wdg = static_cast<QCheckBox*>( (*it).mWidget );
       value = ( wdg->isChecked() ? "true" : "false" );
-    } else if ( (*it).mWidget->metaObject()->className() == "QDateEdit" ) {
+    } else if ( qobject_cast<Q3DateEdit*>( (*it).mWidget ) ) {
       Q3DateEdit *wdg = static_cast<Q3DateEdit*>( (*it).mWidget );
       value = wdg->date().toString( Qt::ISODate );
-    } else if ( (*it).mWidget->metaObject()->className() == "QTimeEdit" ) {
+    } else if ( qobject_cast<Q3TimeEdit*>( (*it).mWidget )  ) {
       Q3TimeEdit *wdg = static_cast<Q3TimeEdit*>( (*it).mWidget );
       value = wdg->time().toString( Qt::ISODate );
-    } else if ( (*it).mWidget->metaObject()->className() == "QDateTimeEdit" ) {
+    } else if ( qobject_cast<Q3DateTimeEdit*>( (*it).mWidget ) ) {
       Q3DateTimeEdit *wdg = static_cast<Q3DateTimeEdit*>( (*it).mWidget );
       value = wdg->dateTime().toString( Qt::ISODate );
     }
@@ -514,17 +514,17 @@ QStringList CustomFieldsWidget::marshallFields( bool global ) const
       retval.append( (*it).mTitle );
 
       QString type = "text";
-      if ( (*it).mWidget->metaObject()->className() == "QSpinBox" )  {
+      if ( qobject_cast<QSpinBox*>( (*it).mWidget ) )  {
         type = "integer";
-      } else if ( (*it).mWidget->metaObject()->className() == "QCheckBox" ) {
+      } else if ( qobject_cast<QCheckBox*>( (*it).mWidget ) ) {
         type = "boolean";
-      } else if ( (*it).mWidget->metaObject()->className() == "QDateEdit" ) {
+      } else if ( qobject_cast<Q3DateEdit*>( (*it).mWidget ) ) {
         type = "date";
-      } else if ( (*it).mWidget->metaObject()->className() == "QTimeEdit" ) {
+      } else if ( qobject_cast<Q3TimeEdit*>( (*it).mWidget ) ) {
         type = "time";
-      } else if ( (*it).mWidget->metaObject()->className() == "QDateTimeEdit" ) {
+      } else if ( qobject_cast<Q3DateTimeEdit*>( (*it).mWidget ) ) {
         type = "datetime";
-      } else if ( (*it).mWidget->metaObject()->className() == "QLineEdit" ) {
+      } else if ( qobject_cast<QLineEdit*>( (*it).mWidget ) ) {
         type = "text";
       }
 
