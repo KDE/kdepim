@@ -78,13 +78,13 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
 {
   const KPageView::FaceType type=determineJanusFace( config );
   setFaceType(type);
+  QVBoxLayout * vlay = 0;
   QWidget * vbox = 0;
   if ( type == Plain ) {
     vbox = new QWidget(this);
-    QVBoxLayout * vlay = new QVBoxLayout( vbox );
+    vlay = new QVBoxLayout( vbox );
     vlay->setSpacing( KDialog::spacingHint() );
     vlay->setMargin( 0 );
-    vlay->setAutoAdd( true );
   }
 
   const QStringList components = config->componentList();
@@ -102,6 +102,8 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
     }
     CryptoConfigComponentGUI* compGUI =
       new CryptoConfigComponentGUI( this, comp, vbox, (*it).toLocal8Bit() );
+    if ( type == Plain )
+      vlay->addWidget( compGUI );
     // KJanusWidget doesn't seem to have iterators, so we store a copy...
     mComponentGUIs.append( compGUI );
   }
