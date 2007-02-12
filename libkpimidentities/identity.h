@@ -254,6 +254,8 @@ public:
     (useful for retries). */
   QString signatureText( bool * ok=0) const;
 
+  QString signatureRawText() const { return mSignature.rawText(); }
+
   /** The transport that is set for this identity. Used to link a
       transport with an identity. */
   QString transport() const { return mTransport; }
