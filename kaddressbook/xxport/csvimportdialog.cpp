@@ -806,7 +806,7 @@ void CSVImportDialog::applyTemplate()
 
   // load all template files
   QStringList list = KGlobal::dirs()->findAllResources( "data" , QString( kapp->objectName() ) +
-      "/csv-templates/*.desktop", true, true );
+      "/csv-templates/*.desktop", KStandardDirs::Recursive | KStandardDirs::NoDuplicates );
 
   for ( QStringList::iterator it = list.begin(); it != list.end(); ++it )
   {

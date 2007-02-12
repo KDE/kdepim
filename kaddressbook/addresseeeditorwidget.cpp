@@ -478,7 +478,9 @@ void AddresseeEditorWidget::setupCustomFieldsTabs()
 {
   QStringList activePages = KABPrefs::instance()->advancedCustomFields();
 
-  const QStringList list = KGlobal::dirs()->findAllResources( "data", "kaddressbook/contacteditorpages/*.ui", true, true );
+  const QStringList list = KGlobal::dirs()->findAllResources( "data", "kaddressbook/contacteditorpages/*.ui",
+                                                              KStandardDirs::Recursive |
+                                                              KStandardDirs::NoDuplicates );
   for ( QStringList::ConstIterator it = list.begin(); it != list.end(); ++it ) {
     if ( !activePages.contains( (*it).mid( (*it).lastIndexOf('/') + 1 ) )  )
       continue;
