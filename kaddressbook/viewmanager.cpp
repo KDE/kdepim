@@ -432,7 +432,7 @@ void ViewManager::dropped( QDropEvent *e )
     KUrl::List::ConstIterator it = urls.begin();
     int c = urls.count();
     if ( c > 1 ) {
-      QString questionString = i18np( "Import one contact into your addressbook?", "Import %n contacts into your addressbook?", c );
+      QString questionString = i18np( "Import one contact into your addressbook?", "Import %1 contacts into your addressbook?", c );
       if ( KMessageBox::questionYesNo( this, questionString, i18n( "Import Contacts?" ), KGuiItem(i18n( "Import" )), KGuiItem(i18n( "Do Not Import" )) ) == KMessageBox::Yes ) {
         for ( ; it != urls.end(); ++it )
           emit urlDropped( *it );

@@ -423,7 +423,7 @@ void KABCore::deleteContacts( const QStringList &uids )
     }
 
     if ( KMessageBox::warningContinueCancelList( mWidget, i18np( "Do you really want to delete this contact?",
-                                                 "Do you really want to delete these %n contacts?", uids.count() ),
+                                                 "Do you really want to delete these %1 contacts?", uids.count() ),
                                                  names, QString(), KStandardGuiItem::del() ) == KMessageBox::Cancel )
       return;
 
@@ -1301,7 +1301,7 @@ void KABCore::slotClearSearchBar()
 void KABCore::slotContactsUpdated()
 {
   if ( mStatusBar ) {
-    QString msg( i18np( "%n contact matches", "%n contacts matching", mSearchManager->contacts().count() ) );
+    QString msg( i18np( "%1 contact matches", "%1 contacts matching", mSearchManager->contacts().count() ) );
     if ( !mStatusBar->hasItem( 1 ) )
       mStatusBar->insertItem( msg, 1 );
     else

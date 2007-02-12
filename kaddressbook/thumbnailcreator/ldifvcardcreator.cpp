@@ -96,7 +96,7 @@ bool VCard_LDIFCreator::readContents( const QString &path )
   }
   if ( addrList.count()>1 ) {
     // create an overview (list of all names)
-    name = i18np("One contact found:", "%n contacts found:", addrList.count());
+    name = i18np("One contact found:", "%1 contacts found:", addrList.count());
     int no, linenr;
     for (linenr=no=0; linenr<30 && no<addrList.count(); ++no) {
        addr = addrList[no];

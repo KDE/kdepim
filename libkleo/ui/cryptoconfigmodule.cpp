@@ -592,7 +592,7 @@ void Kleo::CryptoConfigEntryLDAPURL::setURLList( const KUrl::List& urlList )
   if ( mURLList.isEmpty() )
     mLabel->setText( i18n( "No server configured yet" ) );
   else
-    mLabel->setText( i18np( "1 server configured", "%n servers configured", mURLList.count() ) );
+    mLabel->setText( i18np( "1 server configured", "%1 servers configured", mURLList.count() ) );
 }
 
 #include "cryptoconfigmodule.moc"

@@ -140,7 +140,7 @@ void FilterOpera::import(FilterInfo *info)
 
                     info->addLog( i18n("Finished importing emails from %1", *mailFile ));
                     if (count_duplicates > 0) {
-                        info->addLog( i18np("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
+                        info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
                     }
                     currentFile++;
                     count_duplicates = 0;

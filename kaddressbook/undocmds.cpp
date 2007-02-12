@@ -44,7 +44,7 @@ DeleteCommand::DeleteCommand( KABC::AddressBook *addressBook,
 
 QString DeleteCommand::name() const
 {
-  return i18np( "Delete Contact", "Delete %n Contacts", mUIDList.count() );
+  return i18np( "Delete Contact", "Delete %1 Contacts", mUIDList.count() );
 }
 
 void DeleteCommand::unexecute()
@@ -95,7 +95,7 @@ PasteCommand::PasteCommand( KAB::Core *core, const KABC::Addressee::List &addres
 
 QString PasteCommand::name() const
 {
-  return i18np( "Paste Contact", "Paste %n Contacts", mAddresseeList.count() );
+  return i18np( "Paste Contact", "Paste %1 Contacts", mAddresseeList.count() );
 }
 
 void PasteCommand::unexecute()
@@ -151,7 +151,7 @@ NewCommand::NewCommand( KABC::AddressBook *addressBook, const KABC::Addressee::L
 
 QString NewCommand::name() const
 {
-  return i18np( "New Contact", "New %n Contacts", mAddresseeList.count() );
+  return i18np( "New Contact", "New %1 Contacts", mAddresseeList.count() );
 }
 
 void NewCommand::unexecute()
@@ -220,7 +220,7 @@ CutCommand::CutCommand( KABC::AddressBook *addressBook, const QStringList &uidLi
 
 QString CutCommand::name() const
 {
-  return i18np( "Cut Contact", "Cut %n Contacts", mUIDList.count() );
+  return i18np( "Cut Contact", "Cut %1 Contacts", mUIDList.count() );
 }
 
 void CutCommand::unexecute()

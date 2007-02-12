@@ -137,7 +137,7 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent, bool modal, Qt::W
 	     this, SLOT( slotSetValuesFromWhoAmI() ) );
 
     for ( unsigned int i = 0 ; i < numKeyLengths ; ++i )
-      keyLengthCB->addItem( i18np("%n bit", "%n bits", keyLengths[i] ) );
+      keyLengthCB->addItem( i18np("%1 bit", "%1 bits", keyLengths[i] ) );
     certTypeBG->setExclusive( true );
     ButtonGroup7->setExclusive( true );
 }

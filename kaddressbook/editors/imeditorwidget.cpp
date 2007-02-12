@@ -430,7 +430,7 @@ void IMEditorWidget::slotDelete()
     return;
 
   if ( KMessageBox::warningContinueCancel( this, i18np( "Do you really want to delete the selected address?",
-                                           "Do you really want to delete the %n selected addresses?", num_selected ),
+                                           "Do you really want to delete the %1 selected addresses?", num_selected ),
                                            i18n( "Confirm Delete" ), KStandardGuiItem::del() ) != KMessageBox::Continue )
     return;
 

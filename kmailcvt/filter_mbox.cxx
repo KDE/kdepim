@@ -132,8 +132,8 @@ void FilterMBox::import(FilterInfo *info)
 
             info->addLog( i18n("Finished importing emails from %1", *filename ));
             if (count_duplicates > 0) {
-                info->addLog( i18np("1 duplicate message not imported to folder %1 in KMail",
-                                   "%n duplicate messages not imported to folder %1 in KMail",
+                info->addLog( i18np("1 duplicate message not imported to folder %2 in KMail",
+                                   "%1 duplicate messages not imported to folder %2 in KMail",
                                    count_duplicates, folderName));
             }
             if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));

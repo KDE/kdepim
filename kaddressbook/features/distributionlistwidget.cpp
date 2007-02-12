@@ -510,7 +510,7 @@ void DistributionListWidget::updateContactView()
   mChangeEmailButton->setEnabled( state );
   mRemoveContactButton->setEnabled( state );
 
-  mEntryCountLabel->setText( i18np( "Count: %n contact", "Count: %n contacts", entryCount ) );
+  mEntryCountLabel->setText( i18np( "Count: %1 contact", "Count: %1 contacts", entryCount ) );
 }
 
 void DistributionListWidget::updateNameCombo()

@@ -421,8 +421,8 @@ void KornSubjectsDlg::deleteMessage()
 		_delete->totalNumberOfMessages = _delete->messages->count();
 	}
 	
-	QString confirmation = i18np(	"Do you really want to delete %n message?",
-					"Do you really want to delete %n messages?", _delete->messages->count() );
+	QString confirmation = i18np(	"Do you really want to delete %1 message?",
+					"Do you really want to delete %1 messages?", _delete->messages->count() );
 	
 	if( KMessageBox::questionYesNo( this, confirmation, i18n( "Confirmation" ), KStandardGuiItem::del(), KStandardGuiItem::cancel() ) != KMessageBox::Yes )
 	{

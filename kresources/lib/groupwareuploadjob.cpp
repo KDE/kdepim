@@ -457,7 +457,7 @@ void GroupwareUploadJob::cancelSave()
 void GroupwareUploadJob::uploadCompleted()
 {
   if ( !mItemsUploadError.isEmpty() ) {
-    error( i18np("1 item could not be uploaded.", "%n items could not be uploaded.", mItemsUploadError.count() ) );
+    error( i18np("1 item could not be uploaded.", "%1 items could not be uploaded.", mItemsUploadError.count() ) );
   }
   KPIM::GroupwareUploadItem::List items( mAddedItems );
   items += mChangedItems;

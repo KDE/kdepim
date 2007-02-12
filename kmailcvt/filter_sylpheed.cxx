@@ -77,7 +77,7 @@ void FilterSylpheed::import( FilterInfo *info )
 
     info->addLog( i18n("Finished importing emails from %1", mailDir ));
     if (count_duplicates > 0) {
-        info->addLog( i18np("1 duplicate message not imported", "%n duplicate messages not imported", count_duplicates));
+        info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
     }
     if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
     count_duplicates = 0;

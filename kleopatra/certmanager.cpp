@@ -502,7 +502,7 @@ void CertManager::updateStatusBarLabels() {
   int total = 0;
   for ( Q3ListViewItemIterator it( mKeyListView ) ; it.current() ; ++it )
     ++total;
-  mStatusLabel->setText( i18np( "%n Key.","%n Keys.", total ) );
+  mStatusLabel->setText( i18np( "%1 Key.","%1 Keys.", total ) );
 }
 
 //
@@ -1100,11 +1100,11 @@ void CertManager::slotDeleteCertificate() {
       return;
 
   const QString msg = keysToDelete.size() > keys.size()
-    ? i18np("Do you really want to delete this certificate and the %1 certificates it certified?",
-	   "Do you really want to delete these %n certificates and the %1 certificates they certified?",
+    ? i18np("Do you really want to delete this certificate and the %2 certificates it certified?",
+	   "Do you really want to delete these %1 certificates and the %2 certificates they certified?",
 	   keys.size(), keysToDelete.size() - keys.size() )
     : i18np("Do you really want to delete this certificate?",
-	   "Do you really want to delete these %n certificates?", keys.size() ) ;
+	   "Do you really want to delete these %1 certificates?", keys.size() ) ;
 
   if ( KMessageBox::warningContinueCancelList( this, msg, keyDisplayNames,
 					       i18n( "Delete Certificates" ),

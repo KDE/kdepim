@@ -600,7 +600,7 @@ void Kleo::KeySelectionDialog::slotKeyListResult( const GpgME::KeyListResult & r
     KMessageBox::information( this,
 			      i18np("<qt>One backend returned truncated output.<br>"
 				   "Not all available keys are shown</qt>",
-			           "<qt>%n backends returned truncated output.<br>"
+			           "<qt>%1 backends returned truncated output.<br>"
 				   "Not all available keys are shown</qt>",
 				   mTruncated),
 			      i18n("Key List Result") );
