@@ -544,7 +544,7 @@ bool KNHeaderView::eventFilter(QObject *o, QEvent *e)
   // right click on header
   if ( e->type() == QEvent::MouseButtonPress &&
        static_cast<QMouseEvent*>(e)->button() == Qt::RightButton &&
-       o->metaObject()->className()=="QHeader" )
+       qobject_cast<Q3Header*>( o ) )
   {
     mPopup->popup( static_cast<QMouseEvent*>(e)->globalPos() );
     return true;

@@ -116,7 +116,7 @@ void KeyGenerator::slotStartKeyGeneration() {
       params += keyParams[i] + ( ": " + mLineEdits[i]->text().trimmed() ) + '\n';
   params += "</GnupgKeyParms>\n";
 
-   const Kleo::CryptoBackend::Protocol * proto = protocol == "openpgp" ? Kleo::CryptoBackendFactory::instance()->openpgp() : Kleo::CryptoBackendFactory::instance()->smime() ;
+   const Kleo::CryptoBackend::Protocol * proto = !strcmp( protocol, "openpgp" ) ? Kleo::CryptoBackendFactory::instance()->openpgp() : Kleo::CryptoBackendFactory::instance()->smime() ;
   if ( !proto )
     proto = Kleo::CryptoBackendFactory::instance()->smime();
   assert( proto );

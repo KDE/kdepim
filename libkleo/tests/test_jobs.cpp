@@ -55,7 +55,7 @@ static const char * protocol = 0;
 
 static void testSign()
 {
-  const Kleo::CryptoBackend::Protocol * proto = protocol == "openpgp" ? Kleo::CryptoBackendFactory::instance()->openpgp() : Kleo::CryptoBackendFactory::instance()->smime() ;
+  const Kleo::CryptoBackend::Protocol * proto = !strcmp( protocol, "openpgp" ) ? Kleo::CryptoBackendFactory::instance()->openpgp() : Kleo::CryptoBackendFactory::instance()->smime() ;
   assert( proto );
 
   kDebug() << "Using protocol " << proto->name() << endl;
