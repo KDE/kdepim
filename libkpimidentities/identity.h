@@ -226,6 +226,7 @@ public:
 
   void setSignature( const Signature & sig ) { mSignature = sig; }
   Signature & signature() /* _not_ const! */ { return mSignature; }
+  const Signature & signature() const { return mSignature; }
 
 protected:
   /** @return true if the signature is read from the output of a command */
@@ -253,8 +254,6 @@ public:
     signature file. If @p prompt is false, no errors will be displayed
     (useful for retries). */
   QString signatureText( bool * ok=0) const;
-
-  QString signatureRawText() const { return mSignature.rawText(); }
 
   /** The transport that is set for this identity. Used to link a
       transport with an identity. */
