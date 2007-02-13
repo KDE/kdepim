@@ -42,7 +42,7 @@
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <klineedit.h>
-#include <klistbox.h>
+#include <k3listbox.h>
 #include <k3listview.h>
 #include <klocale.h>
 #include <ktoolinvocation.h>
@@ -283,7 +283,7 @@ void FilterDialog::initGUI()
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
 
-  mFilterListBox = new KListBox( page );
+  mFilterListBox = new K3ListBox( page );
   topLayout->addWidget( mFilterListBox, 0, 0 );
   connect( mFilterListBox, SIGNAL( selectionChanged( Q3ListBoxItem * ) ),
            SLOT( selectionChanged( Q3ListBoxItem * ) ) );

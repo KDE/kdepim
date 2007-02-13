@@ -34,7 +34,7 @@
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <kdebug.h>
-#include <klistbox.h>
+#include <k3listbox.h>
 #include <klocale.h>
 #include <kprinter.h>
 #include <kstandarddirs.h>

@@ -31,7 +31,7 @@ class QToolButton;
 class QWidget;
 
 class KLineEdit;
-class KListBox;
+class K3ListBox;
 class K3ListView;
 
 #include <kdialog.h>
@@ -62,7 +62,7 @@ class FilterDialog : public KDialog
     Filter::List mFilterList;
     Filter::List mInternalFilterList;
 
-    KListBox *mFilterListBox;
+    K3ListBox *mFilterListBox;
     QPushButton *mAddButton;
     QPushButton *mEditButton;
     QPushButton *mRemoveButton;
