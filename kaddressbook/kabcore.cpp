@@ -977,10 +977,11 @@ void KABCore::addressBookChanged()
   mViewManager->setSelected( QString::null, false );
 
   QString uid = QString::null;
-  if ( !selectedUids.isEmpty() )
+  if ( !selectedUids.isEmpty() ) {
     uid = selectedUids.first();
+    mViewManager->setSelected( uid, true );
+  }
 
-  mViewManager->setSelected( uid, true );
   setContactSelected( uid );
 
   updateCategories();
