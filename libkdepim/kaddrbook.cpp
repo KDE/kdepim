@@ -113,6 +113,37 @@ void KAddrBookExternal::addEmail( const QString& addr, QWidget *parent) {
     a.setNameFromString( name );
     a.insertEmail( email, true );
 
+    {
+      KConfig config( "kaddressbookrc" );
+      config.setGroup( "General" );
+      int type = config.readNumEntry( "FormattedNameType", 1 );
+
+      QString name;
+      switch ( type ) {
+        case 1:
+          name = a.givenName() + " " + a.familyName();
+          break;
+        case 2:
+          name = a.assembledName();
+          break;
+        case 3:
+          name = a.familyName() + ", " + a.givenName();
+          break;
+        case 4:
+          name = a.familyName() + " " + a.givenName();
+          break;
+        case 5:
+          name = a.organization();
+          break;
+        default:
+          name = "";
+          break;
+      }
+      name.simplifyWhiteSpace();
+
+      a.setFormattedName( name );
+    }
+
     if ( !KAddrBookExternal::addAddressee( a ) ) {
       KMessageBox::error( parent, i18n("Cannot save to addressbook.") );
     } else {
