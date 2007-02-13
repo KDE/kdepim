@@ -268,11 +268,11 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
     if ( !addr.url().url().isEmpty() ) {
       QString url;
       if ( linkMask & URLLinks ) {
-        url = (addr.url().url().startsWith( "http://" ) || addr.url().url().startsWith( "https://" ) ? addr.url().url() :
-          "http://" + addr.url().url());
+        url = (addr.url().url().startsWith( "http://" ) || addr.url().url().startsWith( "https://" ) ? addr.url().prettyURL() :
+          "http://" + addr.url().prettyURL());
         url = KStringHandler::tagURLs( url );
       } else {
-        url = addr.url().url();
+        url = addr.url().prettyURL();
       }
       dynamicPart += rowFmtStr.arg( i18n("Homepage") ).arg( url );
     }
