@@ -21,6 +21,7 @@
 
 #include <qheader.h>
 #include <qpixmap.h>
+#include <qtimer.h>
 
 #include <kapplication.h>
 #include <kiconloader.h>
@@ -74,6 +75,7 @@ KTNEFView::KTNEFView(QWidget *parent, const char *name)
 	setSelectionMode(QListView::Extended);
 	setHScrollBarMode(QScrollView::AlwaysOff);
 	setVScrollBarMode(QScrollView::AlwaysOn);
+	QTimer::singleShot( 0, this, SLOT(adjustColumnWidth()) );
 }
 
 KTNEFView::~KTNEFView()
@@ -93,10 +95,7 @@ void KTNEFView::setAttachments(QPtrList<KTNEFAttach> *list)
 
 void KTNEFView::resizeEvent(QResizeEvent *e)
 {
-	int	w = visibleWidth()/2;
-	setColumnWidth(0,w);
-	setColumnWidth(1,w/2);
-	setColumnWidth(2,w/2);
+	adjustColumnWidth();
 	resizeContents(visibleWidth(),visibleHeight());
 	if (e) QListView::resizeEvent(e);
 }
@@ -124,6 +123,14 @@ void KTNEFView::startDrag()
 	}
 	if ( !list.isEmpty() )
 		emit dragRequested( list );
+}
+
+void KTNEFView::adjustColumnWidth()
+{
+	int w = visibleWidth()/2;
+	setColumnWidth(0,w);
+	setColumnWidth(1,w/2);
+	setColumnWidth(2,w/2);
 }
 
 #include "ktnefview.moc"

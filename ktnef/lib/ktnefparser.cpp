@@ -445,6 +445,8 @@ bool KTNEFParser::extractFileTo(const QString& filename, const QString& dirname)
 bool KTNEFParser::openFile(const QString& filename)
 {
 	deleteDevice();
+	delete d->message_;
+	d->message_ = new KTNEFMessage();
 	d->device_ = new QFile( filename );
 	d->deleteDevice_ = true;
 	return parseDevice();
@@ -756,6 +758,7 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 	MAPI_value	mapi;
 	KTNEFProperty *p;
 	QMap<int,KTNEFProperty*>::ConstIterator it;
+	bool foundAttachment = false;
 
 	// some initializations
 	mapi.type = MAPI_TYPE_NONE;
@@ -804,6 +807,14 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 					d->device_->at( d->device_->at() + ( len-4 ) );
 					break;
 				}
+				else if ( mapi.type == MAPI_TYPE_BINARY && attach && attach->offset() < 0 )
+				{
+					foundAttachment = true;
+					int len = mapi.value.toByteArray().size();
+					attach->setSize( len );
+					attach->setOffset( d->device_->at() - len );
+					attach->addAttribute( attATTACHDATA, atpBYTE, QString( "< size=%1 >" ).arg( len ), false );
+				}
 			}
 			kdDebug().form( "MAPI data: size=%d\n", mapi.value.toByteArray().size() );
 			break;
@@ -850,5 +861,22 @@ bool KTNEFParser::readMAPIProperties( QMap<int,KTNEFProperty*>& props, KTNEFAtta
 		}
 		//kdDebug() << "stream: " << d->device_->at() << endl;
 	}
+
+	if ( foundAttachment && attach )
+	{
+		attach->setIndex( attach->property( MAPI_TAG_INDEX ).toUInt() );
+		attach->setDisplaySize( attach->property( MAPI_TAG_SIZE ).toUInt() );
+		QString str = attach->property( MAPI_TAG_DISPLAYNAME ).toString();
+		if ( !str.isEmpty() )
+			attach->setDisplayName( str );
+		attach->setFileName( attach->property( MAPI_TAG_FILENAME ).toString() );
+		str = attach->property( MAPI_TAG_MIMETAG ).toString();
+		if ( !str.isEmpty() )
+			attach->setMimeTag( str );
+		attach->setExtension( attach->property( MAPI_TAG_EXTENSION ).toString() );
+		if ( attach->name().isEmpty() )
+			attach->setName( attach->fileName() );
+	}
+
 	return true;
 }
