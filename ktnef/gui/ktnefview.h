@@ -42,6 +42,9 @@ protected:
 	void resizeEvent(QResizeEvent *e);
 	void startDrag();
 
+private slots:
+	void adjustColumnWidth();
+
 private:
 	QPtrList<KTNEFAttach>	attachments_;
 };
