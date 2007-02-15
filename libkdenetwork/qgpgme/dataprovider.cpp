@@ -46,7 +46,7 @@ QGpgME::QByteArrayDataProvider::~QByteArrayDataProvider() {}
 
 ssize_t QGpgME::QByteArrayDataProvider::read( void * buffer, size_t bufSize ) {
 #ifndef NDEBUG
-  qDebug( "QGpgME::QByteArrayDataProvider::read( %p, %d )", buffer, bufSize );
+  //qDebug( "QGpgME::QByteArrayDataProvider::read( %p, %d )", buffer, bufSize );
 #endif
   if ( bufSize == 0 )
     return 0;
