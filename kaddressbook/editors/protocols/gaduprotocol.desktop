@@ -34,6 +34,7 @@ Comment[lt]=Gadu-Gadu protokolas
 Comment[ms]=Protokol Gadu-Gadu 
 Comment[nb]=Gadu-Gadu-protokoll
 Comment[nds]=Gadu-Gadu-Protokoll
+Comment[ne]=गाडु-गाडु प्रोटोकल
 Comment[nl]=Gadu-Gadu-protocol
 Comment[nn]=Gadu-Gadu-protokoll
 Comment[pl]=Protokół Gadu-Gadu
@@ -53,5 +54,6 @@ Comment[uk]=Протокол Gadu-Gadu
 Comment[zh_CN]=Gadu-Gadu 协议
 Comment[zh_TW]=Gadu-Gadu 協定
 Name=Gadu-Gadu
+Name[ne]=गाडु-गाडु
 Name[ta]=கடு-கடு
 

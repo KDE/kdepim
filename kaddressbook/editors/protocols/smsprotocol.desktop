@@ -33,6 +33,7 @@ Comment[lt]=SMS protokolas
 Comment[ms]=Protokol SMS 
 Comment[nb]=SMS Protokoll
 Comment[nds]=SMS-Protokoll
+Comment[ne]=एसएमएस प्रोटोकल
 Comment[nl]=SMS-protocol
 Comment[nn]=SMS-protokoll
 Comment[pl]=Protokół SMS
@@ -54,5 +55,6 @@ Comment[zh_TW]=SMS 協定
 Name=SMS
 Name[fa]=پیام کوتاه
 Name[km]=សេវា​សារ​ខ្លីៗ
+Name[ne]=एसएमएस
 Name[zh_CN]=短信息
 

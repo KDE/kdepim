@@ -33,6 +33,7 @@ Comment[lt]=AIM protokolas
 Comment[ms]=Protokol AIM 
 Comment[nb]=AIM-protokoll
 Comment[nds]=AIM-Protokoll
+Comment[ne]=एआईएम प्रोटोकल
 Comment[nl]=AIM-protocol
 Comment[nn]=AIM-protokoll
 Comment[pa]=AIM ਪ੍ਰੋਟੋਕਾਲ
@@ -53,4 +54,5 @@ Comment[uk]=Протокол AIM
 Comment[zh_CN]=AIM 协议
 Comment[zh_TW]=AIM 協定
 Name=AIM
+Name[ne]=एआईएम
 

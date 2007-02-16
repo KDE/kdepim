@@ -33,6 +33,7 @@ Comment[lt]=ICQ protokolas
 Comment[ms]=Protokol ICQ 
 Comment[nb]=ICQ-protokoll
 Comment[nds]=ICQ-Protokoll
+Comment[ne]=आईसीक्यू प्रोटोकल
 Comment[nl]=ICQ-protocol
 Comment[nn]=ICQ-protokoll
 Comment[pl]=Protokół ICQ
@@ -52,4 +53,5 @@ Comment[uk]=Протокол ICQ
 Comment[zh_CN]=ICQ 协议
 Comment[zh_TW]=ICQ 協定
 Name=ICQ
+Name[ne]=आईसीक्यू
 
