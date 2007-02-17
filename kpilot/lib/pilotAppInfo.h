@@ -136,8 +136,14 @@ protected:
 * (again, from pilot-link).
 */
 template <typename appinfo,
+#if PILOT_LINK_IS(0,12,2)
+	int(*unpack)(appinfo *, const unsigned char *, PI_SIZE_T),
+	int(*pack)(const appinfo *, unsigned char *, PI_SIZE_T)
+#else
 	int(*unpack)(appinfo *, unsigned char *, PI_SIZE_T),
-	int(*pack)(appinfo *, unsigned char *, PI_SIZE_T)>
+	int(*pack)(appinfo *, unsigned char *, PI_SIZE_T)
+#endif
+	>
 class PilotAppInfo : public PilotAppInfoBase
 {
 public:
