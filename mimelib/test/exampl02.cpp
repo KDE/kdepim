@@ -3,8 +3,6 @@
 // Contents:   Source code for Example 2 -- Parsing a simple message
 // Maintainer: Doug Sauder <dwsauder@fwb.gulf.net>
 // WWW:        http://www.fwb.gulf.net/~dwsauder/mimepp.html
-// $Revision$
-// $Date$
 //
 // Copyright (c) 1996, 1997 Douglas W. Sauder
 // All rights reserved.
