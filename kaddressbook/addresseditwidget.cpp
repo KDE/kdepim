@@ -110,7 +110,7 @@ AddressEditWidget::AddressEditWidget( QWidget *parent, const char *name )
   mAddressField->setAcceptRichText( false );
   layout->addWidget( mAddressField );
 
-  mEditButton = new QPushButton( i18n( "&Edit Addresses..." ), this );
+  mEditButton = new QPushButton( i18nc( "street/postal", "&Edit Addresses..." ), this );
   connect( mEditButton, SIGNAL( clicked() ), this, SLOT( edit() ) );
 
   layout->addWidget( mEditButton );
@@ -252,7 +252,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   : KDialog(parent),
     mPreviousAddress( 0 )
 {
-  setCaption( i18n( "Edit Address" ) );
+  setCaption( i18nc( "street/postal", "Edit Address" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
   showButtonSeparator( true );
@@ -316,7 +316,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   label->setBuddy( mCountryCombo );
   topLayout->addWidget( mCountryCombo, 6, 1 );
 
-  mPreferredCheckBox = new QCheckBox( i18n( "This is the preferred address" ), page );
+  mPreferredCheckBox = new QCheckBox( i18nc( "street/postal", "This is the preferred address" ), page );
   topLayout->addWidget( mPreferredCheckBox, 8, 0, 1, 2 );
 
   KSeparator *sep = new KSeparator( Qt::Horizontal, page );
@@ -593,7 +593,7 @@ void AddressEditDialog::fillCountryCombo()
 AddressTypeDialog::AddressTypeDialog( int type, QWidget *parent )
   : KDialog( parent)
 {
-  setCaption( i18n( "Edit Address Type" ) );
+  setCaption( i18nc( "street/postal", "Edit Address Type" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
 
@@ -601,7 +601,7 @@ AddressTypeDialog::AddressTypeDialog( int type, QWidget *parent )
   setMainWidget( page );
   QVBoxLayout *layout = new QVBoxLayout( page );
 
-  QGroupBox *box  = new QGroupBox( i18n( "Address Types" ), page );
+  QGroupBox *box  = new QGroupBox( i18nc( "street/postal", "Address Types" ), page );
   layout->addWidget( box );
   mGroup = new QButtonGroup( box );
   mGroup->setExclusive ( false );

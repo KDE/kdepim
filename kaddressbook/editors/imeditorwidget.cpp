@@ -146,7 +146,7 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM )
   : KDialog( parent),
     mReadOnly( false )
 {
-  setCaption( i18n( "Edit Instant Messenging Address" ) );
+  setCaption( i18n( "Edit Instant Messaging Address" ) );
   setButtons( Help | Ok | Cancel );
   setDefaultButton( Ok );
   mWidget = new IMEditorBase( this );
@@ -336,7 +336,7 @@ bool IMEditorWidget::isModified() const
 void IMEditorWidget::slotAdd()
 {
   KDialog addDialog( this);
-  addDialog.setCaption( i18n( "Add Address" ) );
+  addDialog.setCaption( i18nc( "Instant messaging", "Add Address" ) );
   addDialog.setButtons(  KDialog::Ok | KDialog::Cancel );
   addDialog.setDefaultButton( KDialog::Ok );
   addDialog.setObjectName( "addaddress" );
@@ -374,7 +374,7 @@ void IMEditorWidget::slotEdit()
   // Just edit the first one selected.
   if ( IMAddressLVI *current = static_cast<IMAddressLVI*>( it.current() ) ) {
     KDialog editDialog( this);
-    editDialog.setCaption( i18n( "Edit Address" ) );
+    editDialog.setCaption( i18nc( "Instant messaging", "Edit Address" ) );
     editDialog.setButtons( KDialog::Ok | KDialog::Cancel );
     editDialog.setDefaultButton( KDialog::Ok );
     editDialog.setObjectName( "editaddress" );
@@ -429,7 +429,8 @@ void IMEditorWidget::slotDelete()
   if ( num_selected == 0 )
     return;
 
-  if ( KMessageBox::warningContinueCancel( this, i18np( "Do you really want to delete the selected address?",
+  if ( KMessageBox::warningContinueCancel( this, i18ncp( "Instant messaging",
+                                           "Do you really want to delete the selected address?",
                                            "Do you really want to delete the %1 selected addresses?", num_selected ),
                                            i18n( "Confirm Delete" ), KStandardGuiItem::del() ) != KMessageBox::Continue )
     return;
